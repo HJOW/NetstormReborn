@@ -15,6 +15,8 @@ internal sealed class FortMapViewer : IDisposable
     private const float DefaultZoom = 1f;
     /// <summary>상단 안내 영역 높이.</summary>
     private const int HeaderHeight = 100;
+    /// <summary>제공된 공식 미션 캡처의 플레이어 1 청록·플레이어 2 빨강을 사용하는 개발용 색상표.</summary>
+    private static readonly IReadOnlyDictionary<int, int> PreviewPlayerColors = new Dictionary<int, int> { [1] = 7, [2] = 2 };
     private readonly FortMap _map;
     private readonly ShapeDatabase _shapes;
     private readonly Palette _palette;
@@ -25,6 +27,8 @@ internal sealed class FortMapViewer : IDisposable
     private readonly FortTerrainPreview _terrain;
     private readonly TypeInfo _terrainType;
     private readonly TypeInfo _fringeType;
+    private readonly TypeInfo _supportTopType;
+    private readonly TypeInfo _supportBottomType;
     private readonly IReadOnlyList<FortTerrainFringeSprite> _fringes;
     private bool _showChunks;
     private Vector2 _camera;
@@ -37,16 +41,18 @@ internal sealed class FortMapViewer : IDisposable
 
     /// <summary>오브젝트 위치를 계산하고 카메라를 플레이어 사제에 맞춘다.</summary>
     public FortMapViewer(GraphicsDevice device, ShapeDatabase shapes, Palette palette, FortFile fort, string name,
-        TypeInfo terrainType, TypeInfo fringeType)
+        TypeCatalog catalog)
     {
         _device = device;
         _shapes = shapes;
         _palette = palette;
         _map = new FortMap(fort);
-        _terrainType = terrainType;
-        _terrain = new FortTerrainPreview(_map, terrainType.Definition);
-        _fringeType = fringeType;
-        _fringes = FortTerrainFringe.Create(_terrain, terrainType.Definition, fringeType.Definition);
+        _terrainType = catalog.Find("isle") ?? throw new InvalidDataException("isle 타입이 없습니다.");
+        _fringeType = catalog.Find("fringe") ?? throw new InvalidDataException("fringe 타입이 없습니다.");
+        _supportTopType = catalog.Find("island") ?? throw new InvalidDataException("island 타입이 없습니다.");
+        _supportBottomType = catalog.Find("islandStalag") ?? throw new InvalidDataException("islandStalag 타입이 없습니다.");
+        _terrain = new FortTerrainPreview(_map, _terrainType.Definition);
+        _fringes = FortTerrainFringe.Create(_terrain, _terrainType.Definition, _fringeType.Definition);
         Name = name;
         _sorted = _map.Objects.OrderBy(o => o.Object.Type.Definition.HasFlag("surface") ? 0 : 1)
             .ThenBy(o => o.Y).ThenBy(o => o.X).ToArray();
@@ -127,6 +133,14 @@ internal sealed class FortMapViewer : IDisposable
         {
             DrawSprite(batch, _fringeType.LoadIndex, MapSpriteFrames.BodyFrame(_fringeType.Definition, fringe.Cluster),
                 Screen(WorldPixels(fringe.X, fringe.Y), center));
+        }
+        // 확인된 3×3 받침은 같은 기준점에서 전용 하단 바위와 윗면을 그린다.
+        foreach (FortIslandSupport support in _terrain.Supports)
+        {
+            int cluster = FortIslandSupports.ColorCluster(support.Owner, PreviewPlayerColors);
+            Vector2 anchor = Screen(WorldPixels(support.X, support.Y), center);
+            DrawSprite(batch, _supportBottomType.LoadIndex, MapSpriteFrames.BodyFrame(_supportBottomType.Definition, cluster), anchor);
+            DrawSprite(batch, _supportTopType.LoadIndex, MapSpriteFrames.BodyFrame(_supportTopType.Definition, cluster), anchor);
         }
         FortMapObject? hovered = null;
         float nearest = 20f * 20f;

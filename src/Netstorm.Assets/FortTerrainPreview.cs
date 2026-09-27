@@ -35,6 +35,9 @@ public sealed class FortTerrainPreview
     /// <summary>원본 생성 규칙 및 캡처와 대조할 본섬 마스크 (y·x 순서).</summary>
     public IReadOnlyList<FortTerrainCell> IslandCells { get; }
 
+    /// <summary>저장된 9칸이 완전한 작은 받침. 별도 island·islandStalag로 표시한다.</summary>
+    public IReadOnlyList<FortIslandSupport> Supports { get; }
+
     /// <summary>영역 통로와 시드 성장 결과에 원본 isle 타일을 대응시킨다.</summary>
     public FortTerrainPreview(FortMap map, TypeDefinition isle)
     {
@@ -90,9 +93,28 @@ public sealed class FortTerrainPreview
         Smooth();
         IslandCells = Enumerable.Range(0, _land.Length).Where(i => _land[i] >= 0)
             .Select(i => new FortTerrainCell(i % WorldSize, i / WorldSize, _land[i])).ToArray();
+        Supports = FortIslandSupports.Find(map.Objects);
+        var supportCells = new HashSet<(int X, int Y)>();
+        // 전용 스프라이트로 그릴 받침은 일반 isle 타일과 fringe가 중복되지 않게 표시한다.
+        foreach (FortIslandSupport support in Supports)
+        {
+            // 받침의 세 행을 등록한다.
+            for (int y = support.Y - FortIslandSupports.Size + 1; y <= support.Y; y++)
+            {
+                // 같은 행의 세 칸을 등록한다.
+                for (int x = support.X - FortIslandSupports.Size + 1; x <= support.X; x++)
+                {
+                    supportCells.Add((x, y));
+                }
+            }
+        }
         // 작은 받침 섬은 noIsland 칸과 createsisland 건물의 발자국으로 따로 구성한다.
         foreach (FortMapObject item in map.Objects)
         {
+            if (supportCells.Contains((item.X, item.Y)))
+            {
+                continue;
+            }
             if (item.Object.Type.Name == "noIsland")
             {
                 int region = -2;
@@ -119,7 +141,7 @@ public sealed class FortTerrainPreview
             for (int x = 0; x < WorldSize; x++)
             {
                 int region = At(x, y);
-                if (region == -1)
+                if (region == -1 || supportCells.Contains((x, y)))
                 {
                     continue;
                 }
