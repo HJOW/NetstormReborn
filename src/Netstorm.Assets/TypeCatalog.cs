@@ -72,7 +72,7 @@ public sealed record TypeInfo(int LoadIndex, string Name, TypeDefinition Definit
 }
 
 /// <summary>
-/// 로딩 목록의 모든 타입을 TAFF 아카이브에서 읽어 이름·플래그를 제공한다.
+/// 로딩 목록의 모든 타입을 읽어 이름·플래그를 제공한다.
 /// </summary>
 public sealed class TypeCatalog
 {
@@ -90,18 +90,25 @@ public sealed class TypeCatalog
 
     /// <summary>아카이브에서 로딩 목록의 .type 을 모두 읽는다</summary>
     /// <param name="archive">netstorm.tarc</param>
-    public TypeCatalog(TaffArchive archive)
+    public TypeCatalog(TaffArchive archive) : this(path => archive.TryFind(path, out TaffEntry entry)
+        ? archive.Read(entry) : throw new InvalidDataException($"아카이브에 타입 파일이 없습니다: {path}"))
+    {
+    }
+
+    /// <summary>디스크 → 아카이브 → 보조 폴더 순서로 타입 정의를 읽는다.</summary>
+    public TypeCatalog(GameFileSystem files) : this(files.ReadAllBytes)
+    {
+    }
+
+    /// <summary>공통 파일 공급자로 로딩 목록을 해석하고 타입 번호·해시를 구성한다.</summary>
+    private TypeCatalog(Func<string, byte[]> read)
     {
         var types = new List<TypeInfo>(TypeLoadOrder.Names.Count);
         // 로딩 목록 순서대로 .type 을 읽고 플래그를 계산한다
         for (int i = 0; i < TypeLoadOrder.Names.Count; i++)
         {
             string name = TypeLoadOrder.Names[i];
-            if (!archive.TryFind($"d/{name}.type", out TaffEntry entry))
-            {
-                throw new InvalidDataException($"아카이브에 {name}.type 이 없습니다.");
-            }
-            TypeDefinition def = TypeDefinition.Parse(archive.Read(entry));
+            TypeDefinition def = TypeDefinition.Parse(OriginalText.Decode(read($"d/{name}.type")));
             (uint f1, uint f2) = ComputeFlags(def.Flags);
             var info = new TypeInfo(i, name, def, f1, f2);
             types.Add(info);

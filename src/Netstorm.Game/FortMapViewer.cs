@@ -39,9 +39,12 @@ internal sealed class FortMapViewer : IDisposable
     /// <summary>로드한 맵 파일의 표시 이름.</summary>
     public string Name { get; }
 
+    /// <summary>실행 설정에서 선택한 언어. 개발용 안내 문구의 번역 여부와는 별개다.</summary>
+    private string Language { get; }
+
     /// <summary>오브젝트 위치를 계산하고 카메라를 플레이어 사제에 맞춘다.</summary>
     public FortMapViewer(GraphicsDevice device, ShapeDatabase shapes, Palette palette, FortFile fort, string name,
-        TypeCatalog catalog)
+        TypeCatalog catalog, string language)
     {
         _device = device;
         _shapes = shapes;
@@ -54,6 +57,7 @@ internal sealed class FortMapViewer : IDisposable
         _terrain = new FortTerrainPreview(_map, _terrainType.Definition);
         _fringes = FortTerrainFringe.Create(_terrain, _terrainType.Definition, _fringeType.Definition);
         Name = name;
+        Language = language;
         _sorted = _map.Objects.OrderBy(o => o.Object.Type.Definition.HasFlag("surface") ? 0 : 1)
             .ThenBy(o => o.Y).ThenBy(o => o.X).ToArray();
         _pixel = new Texture2D(device, 1, 1);
@@ -175,7 +179,7 @@ internal sealed class FortMapViewer : IDisposable
             }
         }
         batch.Draw(_pixel, new Rectangle(0, 0, width, HeaderHeight), new Color(18, 24, 38));
-        batch.DrawString(font, $"맵: {Name} | 오브젝트 {_map.Objects.Count}개 | 확대 {_zoom:0.##}배", new Vector2(16, 10), Color.Gold);
+        batch.DrawString(font, $"맵: {Name} | 오브젝트 {_map.Objects.Count}개 | 확대 {_zoom:0.##}배 | 언어: {Language}", new Vector2(16, 10), Color.Gold);
         batch.DrawString(font, "방향키 / 우클릭: 이동 · 휠: 확대 · Home: 사제 위치 · G: 청크 윤곽 · Esc: 종료", new Vector2(16, 38), Color.White);
         batch.DrawString(font, "다리: 저장 프레임 · 지면: 생성 미리보기 · 지면 변형/그림자/플레이어색은 검증 전", new Vector2(16, 66), Color.LightGray);
         if (hovered != null)

@@ -9,12 +9,16 @@
 dotnet run --project src/Netstorm.Game -- --map savetheisland
 dotnet run --project src/Netstorm.Game -- --map thewarbegins
 dotnet run --project src/Netstorm.Game -- --map originals/d/b0.fort
+dotnet run --project src/Netstorm.Game -- --map savetheisland --language korean
 ```
 
 `--map`이 없으면 기존 애니메이션 확인 화면이다. 파일을 명시하면 해당 파일을 읽고,
-맵 이름을 지정하면 원본 `d/`의 느슨한 파일, 아카이브 순서로 찾는다.
-이 순서는 개발용 선택 규칙이며 원본 게임의 자산 우선순위를 확정한 것은 아니다.
+맵 이름을 지정하면 설정의 `fortSpec`으로 경로를 만들고 공통 `GameFileSystem`에서 찾는다.
+조회 순서는 원본 정적 분석과 같은 데이터 폴더 디스크 → 이름순 `*.tarc` → 보조 폴더다.
 느슨한 파일 탐색과 아카이브 이름 검색은 대소문자를 무시한다.
+설정은 options → setup의 첫 일치 우선 규칙을 사용하고, 맵 팔레트는 `battlePal`·`GamePalSpec`에서 선택한다.
+타입 정의도 공통 파일 시스템에서 읽는다. 언어 선택·미션 대체와 검증 범위는
+[실행 자산·설정·언어 연결](runtime-resources.md)에 정리했다.
 
 * 방향키 또는 마우스 우클릭 드래그: 카메라 이동
 * 마우스 휠: 0.25~4배 확대

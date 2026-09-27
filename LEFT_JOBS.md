@@ -313,7 +313,7 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
 
 ### 6단계. 자산 로더 / 개발용 뷰어 (C#, `Netstorm.Assets` + `Netstorm.Game`) — 🔶 진행 중
 
-`src/Netstorm.Assets/` (MonoGame 비의존), 테스트 `tests/Netstorm.Assets.Tests/` (74개, 전부 통과 — 2026-09-28)
+`src/Netstorm.Assets/` (MonoGame 비의존), 테스트 `tests/Netstorm.Assets.Tests/` (84개, 전부 통과 — 2026-09-28)
 
 - [x] `XorCipher` — TAFF·설정 파일 공용 XOR — 2026-09-27 완료
 - [x] `TaffArchive` — 아카이브 읽기, 대소문자·구분자 무시 이름 검색 — 2026-09-27 완료
@@ -340,7 +340,8 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
   - `ConfigText`(원본 설정 조회 규칙), `ConfigStore`(층·이름 접두어 층·`{키|기본값}`·`{@미션.키}`·이스케이프 치환, `ExpandSpec("missionSpec", 이름)`), `ConfigFile.Get` 첫 일치로 정정
   - `XlatTable`(원본 해석 규칙, 블록 수·고유 원문 수), `GameLanguage`(원본 언어 + korean, OS 언어 대응, 언어 파일 없으면 영어 대체)
   - `MissionScript`(머리 값·섹션·복수 이름 머리·`$명령` 어휘 분석). 원본 스크립트 668개 전수 해석, xlat 4개 언어 블록 수, setup.cfg + config.english 치환 검사
-  - [ ] 남은 일: 조건 태그 `<?조건>…</?>`·인라인 `<$명령,…>`·HTML 부분집합 해석(9단계 인터프리터), 게임 실행 프로젝트에서 설정 층 구성(options → setup → config.<언어>) 연결
+  - [x] 게임 실행 프로젝트 설정·VFS 연결 — 2026-09-28 `GameResources`: options → setup을 한 텍스트로 합쳐 첫 일치 우선 유지, 영어/선택 언어 용어표·xlat·미션 머리 값 공급자 연결. 설정 지정 팔레트·맵 경로 적용, 셰이프·타입도 VFS 조회. `--language` 명시 선택, 설정/OS 언어, 파일별 영어 대체. 신규 검사 10개·전체 84개 통과, 빌드·독일어 확인 화면·한국어 선택 맵 PNG 검증 ([실행과 제한](docs/runtime-resources.md))
+  - [ ] 남은 일: 조건 태그 `<?조건>…</?>`·인라인 `<$명령,…>`·HTML 부분집합 해석(9단계 인터프리터), identity/user/dev/guild 설정 연결·설정 적용과 저장
 - [ ] 셰이프 헤더 bounds/origin 의 의미 확정 후 기준점 처리 정리 (현재는 xmin/ymin 오프셋만 사용)
 - [ ] 개발용 뷰어: 스프라이트·애니메이션·팔레트·`.type` 속성 탐색 (현재는 2단계 확인 화면에 5개 애니메이션만 표시)
 
@@ -402,7 +403,8 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
 - [x] 미션 스크립트 언어 선택 규칙: `<미션>.<언어>` 파일 우선 → 없으면 영어 폴백 (원본의 `.english`/`.german`/`.french` 규칙 확장, 예: `.korean`) — 2026-09-28 `GameLanguage.ResolveFile`
 - [x] 원본 텍스트 Windows-1252 → UTF-8 변환 로딩 — 2026-09-28 `OriginalText` (UTF-8 파일은 그대로)
 - [ ] 한국어 글꼴 렌더링: `fonts/` 의 D2Coding TTC 로드(face 인덱스 0 일반 / 1 Bold), 폰트 폴백 체인(원본 `.chfnt` → D2Coding), 고정폭 글꼴에 맞춘 텍스트 박스 자동 크기 조정 (1.5절)
-- [ ] 게임 내 언어 선택 메뉴 + OS 로케일 자동 감지
+- [ ] 게임 내 언어 선택 메뉴
+  - [x] 실행 시 `--language` → 설정 → OS UI 언어 선택 — 2026-09-28 `GameResources`·실행 프로젝트 연결 (개발용 안내 문구 전체 번역은 미완료)
 - [ ] **1차 지원 언어: 영어, 한국어** (AGENTS.md). 독일어 등 원본 제공 언어는 원본 파일이 있으므로 이후 확장 시 우선 추가
 - [ ] 한국어 번역: UI 문자열, 도움말, 튜토리얼·캠페인 미션 스크립트(`.korean` 파일 신설)
   - 용어 표기는 한국어 플레이 방법 소개 홈페이지(1.6절)의 기존 표기를 참고해 정하고, 용어집(`locale/ko/` 등)으로 관리
@@ -456,7 +458,8 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
 2. `.fort` 남은 섹션(`Territory` 외관·잔여 플래그, `Technology`, `Deck`, `State`) 해석 — `Template.cpp` 의 해당 읽기 함수(디컴파일 126,100~127,840행)
 3. 6단계 나머지: 개발용 스프라이트 탐색 뷰어, 자산 경로 결정(동봉 폴더 → 원본 설치 경로 탐지)
    - **완료(2026-09-28)**: 가상 파일 시스템(디스크 우선 확인), 설정 조회·치환, 번역표, 미션 스크립트 로더 — [vfs.md](docs/formats/vfs.md), [config.md](docs/formats/config.md) "설정 조회 규칙", 테스트 74개 통과
-   - 다음 후보: 게임 실행 프로젝트에 설정 층(options → setup → `config.<언어>`)과 `GameFileSystem` 연결, 조건 태그 `<?…>` 평가 규칙 분석(9단계 준비)
+   - **실행 연결 완료(2026-09-28)**: `GameResources`로 설정·언어 용어표·번역표·미션 머리 값 조회 구성. 팔레트·셰이프·타입·맵은 공통 VFS 조회, `--language`·OS 언어·영어 파일 대체 적용. 전체 84개 검사 통과·빌드 성공, 독일어 확인 화면/한국어 선택 맵 PNG 생성 — [실행 자산·설정·언어](docs/runtime-resources.md)
+   - 다음 후보: 조건 태그 `<?…>` 평가 규칙 분석(9단계 준비), 스프라이트 탐색 뷰어, 창·오디오 설정 적용과 사용자 설정 저장
 4. 4단계: 메인 루프/틱, 다리 생성(`Deck.cpp`, `Bridge.cpp`), 경제 분석
 5. 5단계(영상 분석)와 병행: 공식 캠페인 구성([mission-script.md](docs/formats/mission-script.md))과 영상 대응 확인
 6. (원격 저장소가 생기면) CI 실제 실행 확인

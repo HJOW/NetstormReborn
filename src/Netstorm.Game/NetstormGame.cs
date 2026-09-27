@@ -38,6 +38,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     private readonly GraphicsDeviceManager _graphics;
     private readonly string? _screenshotPath;
     private readonly string? _mapName;
+    private readonly string? _languageName;
     private FortMapViewer? _mapViewer;
     private SpriteBatch? _batch;
     private FontSystem? _fonts;
@@ -55,8 +56,11 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
             IsFullScreen = false,
             SynchronizeWithVerticalRetrace = true,
         };
-        _screenshotPath = ParseScreenshotArgument(Environment.GetCommandLineArgs());
-        _mapName = ParseMapArgument(Environment.GetCommandLineArgs());
+        string[] args = Environment.GetCommandLineArgs();
+        string? screenshot = ParseValueArgument(args, "--screenshot");
+        _screenshotPath = screenshot == null ? null : Path.GetFullPath(screenshot);
+        _mapName = ParseValueArgument(args, "--map");
+        _languageName = ParseValueArgument(args, "--language");
         IsMouseVisible = true;
         Window.AllowUserResizing = true;
         Window.Title = "NetStorm 클론 — 개발 환경 확인";
@@ -90,15 +94,23 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
             return;
         }
         _statusLines.Add($"원본 데이터: {dataDir}");
-        string? palettePath = GameDataLocator.FindFile(dataDir, Path.Combine("d", Palette.GameCol));
-        string? shapesPath = GameDataLocator.FindFile(dataDir, Path.Combine("d", ShapeDatabase.FileName));
-        if (palettePath == null || shapesPath == null)
+        GameResources resources;
+        Palette palette;
+        ShapeDatabase shapes;
+        try
         {
-            _statusLines.Add("팔레트(GIFCLOUD.COL) 또는 _shapes.shp 가 없습니다.");
+            resources = new GameResources(GameFileSystem.Open(dataDir), _languageName);
+            palette = resources.LoadPalette(_mapName == null ? "fortPal" : "battlePal");
+            shapes = resources.LoadShapes();
+        }
+        catch (Exception error) when (error is IOException or ArgumentException)
+        {
+            _statusLines.Add($"원본 자산을 읽지 못했습니다: {error.Message}");
             return;
         }
-        Palette palette = Palette.Load(palettePath);
-        ShapeDatabase shapes = ShapeDatabase.Load(shapesPath);
+        _statusLines.Add($"선택 언어: {resources.Language} | 용어표: {resources.LanguageConfigPath ?? "없음"}");
+        _statusLines.Add($"번역표: {resources.TranslationPath ?? "없음"} | {resources.Translations.Count}개 문구");
+        _statusLines.Add($"용어 확인: {resources.Settings.Expand("{vortex|Temple} / {priest|High Priest}")}");
         int frameTotal = shapes.Blocks.Sum(b => b.Frames.Count);
         _statusLines.Add($"_shapes.shp: 블록 {shapes.Blocks.Count}개, 프레임 {frameTotal}개");
 
@@ -106,7 +118,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         {
             try
             {
-                LoadMap(dataDir, shapes, palette, _mapName);
+                LoadMap(resources, shapes, palette, _mapName);
             }
             catch (Exception error) when (error is IOException or ArgumentException)
             {
@@ -131,29 +143,12 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         }
     }
 
-    /// <summary>지정 파일 또는 원본 d/·아카이브에서 맵을 찾아 뷰어를 만든다. 명시 파일과 느슨한 파일이 우선한다.</summary>
-    private void LoadMap(string dataDir, ShapeDatabase shapes, Palette palette, string name)
+    /// <summary>공통 파일 시스템·설정의 fortSpec으로 맵과 타입을 읽어 뷰어를 만든다.</summary>
+    private void LoadMap(GameResources resources, ShapeDatabase shapes, Palette palette, string name)
     {
-        string archivePath = GameDataLocator.FindFile(dataDir, "netstorm.tarc")
-            ?? throw new FileNotFoundException("netstorm.tarc가 없습니다.");
-        TaffArchive archive = TaffArchive.Open(archivePath);
-        var catalog = new TypeCatalog(archive);
-        string relativeName = name.EndsWith(".fort", StringComparison.OrdinalIgnoreCase) ? name : name + ".fort";
-        string? path = File.Exists(name) ? name : GameDataLocator.FindFile(dataDir, $"d/{relativeName}");
-        byte[] bytes;
-        if (path != null)
-        {
-            bytes = File.ReadAllBytes(path);
-        }
-        else if (archive.TryFind($"d/{relativeName}", out TaffEntry entry))
-        {
-            bytes = archive.Read(entry);
-        }
-        else
-        {
-            throw new FileNotFoundException($"맵 파일을 찾지 못했습니다: {name}");
-        }
-        _mapViewer = new FortMapViewer(GraphicsDevice, shapes, palette, new FortFile(bytes, catalog), name, catalog);
+        TypeCatalog catalog = resources.LoadTypes();
+        _mapViewer = new FortMapViewer(GraphicsDevice, shapes, palette, resources.LoadFort(name, catalog), name,
+            catalog, resources.Language);
         Window.Title = $"NetStorm 클론 — 맵 뷰어: {name}";
     }
 
@@ -241,32 +236,17 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         texture.SaveAsPng(stream, w, h);
     }
 
-    /// <summary>명령줄에서 "--screenshot 경로" 를 찾는다</summary>
-    /// <param name="args">명령줄 인자 (0번은 실행 파일)</param>
-    private static string? ParseScreenshotArgument(string[] args)
-    {
-        // 인자를 차례로 검사
-        for (int i = 1; i < args.Length - 1; i++)
-        {
-            if (args[i] == "--screenshot")
-            {
-                return Path.GetFullPath(args[i + 1]);
-            }
-        }
-        return null;
-    }
-
-    /// <summary>명령줄에서 --map 뒤에 지정한 파일명 또는 경로를 찾는다.</summary>
-    private static string? ParseMapArgument(string[] args)
+    /// <summary>값이 필요한 명령줄 옵션을 찾고 값이 빠졌으면 오류를 보고한다.</summary>
+    private static string? ParseValueArgument(string[] args, string option)
     {
         // 실행 파일 다음 인자부터 옵션과 값을 확인한다.
         for (int i = 1; i < args.Length; i++)
         {
-            if (args[i] == "--map")
+            if (args[i] == option)
             {
                 if (i + 1 == args.Length || args[i + 1].StartsWith("--", StringComparison.Ordinal))
                 {
-                    throw new ArgumentException("--map 뒤에 맵 이름 또는 .fort 파일 경로가 필요합니다.");
+                    throw new ArgumentException($"{option} 뒤에 값이 필요합니다.");
                 }
                 return args[i + 1];
             }

@@ -45,6 +45,8 @@
 * 텍스트는 `OriginalText.Decode` 로 읽는다: UTF-8(BOM 또는 올바른 UTF-8) → 그대로, 그 밖에는 Windows-1252.
   원본 파일은 Windows-1252, 클론에서 새로 만드는 한국어 파일은 UTF-8 이다.
 * 검사: `tests/Netstorm.Assets.Tests/TextResourceTests.cs` — 합성 아카이브로 우선순위 확인, 원본에서 공식 미션(아카이브)·팔레트(디스크) 조회 확인.
+* 2026-09-28 후속: `GameResources`를 통해 게임 실행 프로젝트의 설정·팔레트·셰이프·타입·맵 조회에 연결했다.
+  타입의 느슨한 파일 우선순위와 UTF-8 속성도 검사했다. [실행 자산·설정·언어 연결](../runtime-resources.md)
 
 ## 남은 일
 
