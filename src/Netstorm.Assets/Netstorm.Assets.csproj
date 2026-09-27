@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- 원본 데이터 포맷 로더. MonoGame 에 의존하지 않는다 (테스트·도구·서버에서 재사용) -->
+  <PropertyGroup>
+    <RootNamespace>Netstorm.Assets</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- 실행 파일에서 확인한 영역 청크 모양을 원본 exe 없이 사용할 수 있도록 내장한다. -->
+    <EmbeddedResource Include="TerritoryPatterns.json" />
+  </ItemGroup>
+</Project>

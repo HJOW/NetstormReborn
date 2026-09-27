@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- 멀티플레이 (결정론적 락스텝). 13단계에서 구현 -->
+  <PropertyGroup>
+    <RootNamespace>Netstorm.Net</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Netstorm.Core\Netstorm.Core.csproj" />
+  </ItemGroup>
+</Project>

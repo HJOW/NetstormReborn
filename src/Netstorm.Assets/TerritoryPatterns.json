@@ -1,0 +1,322 @@
+[
+  {
+    "Width": 3,
+    "Height": 3,
+    "Cells": ".L.FAGINH"
+  },
+  {
+    "Width": 3,
+    "Height": 3,
+    "Cells": "FG.BAGINH"
+  },
+  {
+    "Width": 3,
+    "Height": 3,
+    "Cells": "FCGBADINH"
+  },
+  {
+    "Width": 2,
+    "Height": 2,
+    "Cells": "OG.N"
+  },
+  {
+    "Width": 3,
+    "Height": 1,
+    "Cells": "OKM"
+  },
+  {
+    "Width": 3,
+    "Height": 2,
+    "Cells": "OKG..N"
+  },
+  {
+    "Width": 3,
+    "Height": 2,
+    "Cells": "OCM.N."
+  },
+  {
+    "Width": 2,
+    "Height": 2,
+    "Cells": "FGIH"
+  },
+  {
+    "Width": 3,
+    "Height": 2,
+    "Cells": "OG..IM"
+  },
+  {
+    "Width": 3,
+    "Height": 2,
+    "Cells": "OCG.IH"
+  },
+  {
+    "Width": 3,
+    "Height": 2,
+    "Cells": "FKGN.N"
+  },
+  {
+    "Width": 3,
+    "Height": 3,
+    "Cells": ".L.OAM.N."
+  },
+  {
+    "Width": 3,
+    "Height": 3,
+    "Cells": "L..IG..IM"
+  },
+  {
+    "Width": 3,
+    "Height": 3,
+    "Cells": "FKGJ.JIKH"
+  },
+  {
+    "Width": 3,
+    "Height": 3,
+    "Cells": ".L.OAG.IH"
+  },
+  {
+    "Width": 3,
+    "Height": 3,
+    "Cells": "..LOCD.IH"
+  },
+  {
+    "Width": 3,
+    "Height": 2,
+    "Cells": "OCG.IH"
+  },
+  {
+    "Width": 3,
+    "Height": 3,
+    "Cells": "FKGN.J..N"
+  },
+  {
+    "Width": 3,
+    "Height": 2,
+    "Cells": ".FMOH."
+  },
+  {
+    "Width": 3,
+    "Height": 3,
+    "Cells": "L..BKGN.N"
+  },
+  {
+    "Width": 3,
+    "Height": 3,
+    "Cells": ".L.FEGN.N"
+  },
+  {
+    "Width": 4,
+    "Height": 1,
+    "Cells": "PPPP"
+  },
+  {
+    "Width": 2,
+    "Height": 3,
+    "Cells": "PP.P.P"
+  },
+  {
+    "Width": 2,
+    "Height": 3,
+    "Cells": ".PPP.P"
+  },
+  {
+    "Width": 3,
+    "Height": 2,
+    "Cells": "PP..PP"
+  },
+  {
+    "Width": 2,
+    "Height": 2,
+    "Cells": "PPPP"
+  },
+  {
+    "Width": 5,
+    "Height": 1,
+    "Cells": "PPPPP"
+  },
+  {
+    "Width": 4,
+    "Height": 2,
+    "Cells": "PPPP...P"
+  },
+  {
+    "Width": 4,
+    "Height": 2,
+    "Cells": "PPPP..P."
+  },
+  {
+    "Width": 3,
+    "Height": 2,
+    "Cells": "PPP.PP"
+  },
+  {
+    "Width": 3,
+    "Height": 2,
+    "Cells": "PPPP.P"
+  },
+  {
+    "Width": 3,
+    "Height": 3,
+    "Cells": "P..PPP..P"
+  },
+  {
+    "Width": 3,
+    "Height": 3,
+    "Cells": ".P.PP..PP"
+  },
+  {
+    "Width": 3,
+    "Height": 3,
+    "Cells": "..PPPP..P"
+  },
+  {
+    "Width": 4,
+    "Height": 2,
+    "Cells": "PPP...PP"
+  },
+  {
+    "Width": 3,
+    "Height": 3,
+    "Cells": ".P.PPP.P."
+  },
+  {
+    "Width": 3,
+    "Height": 3,
+    "Cells": "P..PP..PP"
+  },
+  {
+    "Width": 6,
+    "Height": 1,
+    "Cells": "PPPPPP"
+  },
+  {
+    "Width": 5,
+    "Height": 2,
+    "Cells": "PPPPP....P"
+  },
+  {
+    "Width": 5,
+    "Height": 2,
+    "Cells": "PPPPP...P."
+  },
+  {
+    "Width": 5,
+    "Height": 2,
+    "Cells": "PPPPP..P.."
+  },
+  {
+    "Width": 5,
+    "Height": 2,
+    "Cells": "PPPP....PP"
+  },
+  {
+    "Width": 4,
+    "Height": 3,
+    "Cells": "PPPP...P...P"
+  },
+  {
+    "Width": 4,
+    "Height": 2,
+    "Cells": "PPPP..PP"
+  },
+  {
+    "Width": 4,
+    "Height": 2,
+    "Cells": "PPPP.P.P"
+  },
+  {
+    "Width": 4,
+    "Height": 2,
+    "Cells": "PPPPP..P"
+  },
+  {
+    "Width": 4,
+    "Height": 3,
+    "Cells": "P...PPPP...P"
+  },
+  {
+    "Width": 4,
+    "Height": 3,
+    "Cells": ".P..PPPP...P"
+  },
+  {
+    "Width": 4,
+    "Height": 3,
+    "Cells": "..P.PPPP..P."
+  },
+  {
+    "Width": 4,
+    "Height": 3,
+    "Cells": "...PPPPP..P."
+  },
+  {
+    "Width": 4,
+    "Height": 3,
+    "Cells": "PPPP..P...P."
+  },
+  {
+    "Width": 4,
+    "Height": 2,
+    "Cells": "PPPP.PP."
+  },
+  {
+    "Width": 3,
+    "Height": 2,
+    "Cells": "PPPPPP"
+  },
+  {
+    "Width": 3,
+    "Height": 3,
+    "Cells": "P..PPP.PP"
+  },
+  {
+    "Width": 3,
+    "Height": 3,
+    "Cells": ".P.PPP.PP"
+  },
+  {
+    "Width": 3,
+    "Height": 3,
+    "Cells": "..PPPP.PP"
+  },
+  {
+    "Width": 4,
+    "Height": 2,
+    "Cells": "PPP..PPP"
+  },
+  {
+    "Width": 3,
+    "Height": 3,
+    "Cells": "P..PP.PPP"
+  },
+  {
+    "Width": 3,
+    "Height": 3,
+    "Cells": "PPPP.P..P"
+  },
+  {
+    "Width": 4,
+    "Height": 2,
+    "Cells": ".PPPPP.P"
+  },
+  {
+    "Width": 3,
+    "Height": 3,
+    "Cells": "P..PPPP.P"
+  },
+  {
+    "Width": 3,
+    "Height": 3,
+    "Cells": ".P.PPPP.P"
+  },
+  {
+    "Width": 4,
+    "Height": 3,
+    "Cells": "..PP..P.PPP."
+  },
+  {
+    "Width": 4,
+    "Height": 3,
+    "Cells": "PPP...PP..P."
+  }
+]

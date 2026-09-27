@@ -1,0 +1,46 @@
+# 개발용 맵 뷰어
+
+원본 `.fort`의 저장된 오브젝트를 16×11px/칸 좌표계로 표시한다.
+원본 데이터 탐색은 기존 `GameDataLocator`를 사용한다 (`NETSTORM_DATA` 지정 가능).
+
+저장소 루트에서 실행:
+
+```powershell
+dotnet run --project src/Netstorm.Game -- --map savetheisland
+dotnet run --project src/Netstorm.Game -- --map thewarbegins
+dotnet run --project src/Netstorm.Game -- --map originals/d/b0.fort
+```
+
+`--map`이 없으면 기존 애니메이션 확인 화면이다. 파일을 명시하면 해당 파일을 읽고,
+맵 이름을 지정하면 원본 `d/`의 느슨한 파일, 아카이브 순서로 찾는다.
+이 순서는 개발용 선택 규칙이며 원본 게임의 자산 우선순위를 확정한 것은 아니다.
+느슨한 파일 탐색과 아카이브 이름 검색은 대소문자를 무시한다.
+
+* 방향키 또는 마우스 우클릭 드래그: 카메라 이동
+* 마우스 휠: 0.25~4배 확대
+* Home: 플레이어 1 사제에 카메라 맞춤
+* G: 진단용 청크 윤곽 표시 전환
+* 오브젝트 기준점 근처에 마우스: 타입, 좌표, 영역, 소유자, 다리 값 표시
+* Esc: 종료
+
+검증용 PNG를 저장하고 자동 종료:
+
+```powershell
+dotnet run --project src/Netstorm.Game -- --map savetheisland --screenshot extracted/screens/fort-map-savetheisland.png
+```
+
+원본 팔레트와 본체 레이어를 사용하는 정적 뷰어다. 저장 프레임이 없는 타입은
+`default` 클러스터를 선택한다. 건물 기준점에 xmin/ymin을 더해 그린다.
+게임의 정확한 깊이 정렬은 미분석이므로 표면 우선, y·x 순서로 표시한다.
+
+다리는 저장된 본체 프레임을 그대로 표시한다. 지면은 원본 연결 패턴과 시드 성장 흐름을
+바탕으로 생성한 **미리보기**이며 원본과 픽셀 단위 일치를 보장하지 않는다.
+원소별 타일 변형, 하단 절벽·그림자, 받침 섬의 정확한 생성은 추가 검증이 필요하다.
+특수 프레임은 위치 표식으로 표시하며, 투명한 논리 지면 `noIsland`는 지면 생성에만 반영한다.
+플레이어별 스프라이트 색상 변환, 그림자, 애니메이션, 컨테이너 내부 오브젝트,
+바리케이드 광선도 아직 그리지 않는다.
+
+현재 원점은 저장 좌표를 사용하는 미션 기준 (1,1)이다. 일반 요새를 여는 경우에도 이 기준으로
+미리보기하며, 원본 요새 편집 원점 (6,6)이나 전투 재배치를 재현하지 않는다.
+분석 근거는 [영역 배치 분석](exe/territory-layout.md)에 정리했다.
+지면과 다리에 대한 검증 범위는 [다리 저장 프레임·지면 생성 분석](exe/terrain-and-bridges.md)을 참고한다.

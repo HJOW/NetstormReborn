@@ -1,0 +1,58 @@
+# 편집기 공통 설정 (https://editorconfig.org)
+root = true
+
+# 모든 파일: UTF-8, 파일 끝 줄바꿈, 줄 끝 공백 제거
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+# PowerShell 스크립트: Windows PowerShell 5.1 이 한글을 올바르게 읽도록 BOM 포함, CRLF
+[*.ps1]
+charset = utf-8-bom
+end_of_line = crlf
+
+# 배치 파일: cmd.exe 호환을 위해 CRLF
+[*.{bat,cmd}]
+end_of_line = crlf
+
+# Markdown: 줄 끝 공백 두 칸이 줄바꿈 의미를 가지므로 유지
+[*.md]
+trim_trailing_whitespace = false
+
+# YAML / JSON: 2칸 들여쓰기
+[*.{yml,yaml,json}]
+indent_size = 2
+
+# MSBuild 프로젝트 / XML: 2칸 들여쓰기
+[*.{csproj,props,targets,xml,slnx}]
+indent_size = 2
+
+# 솔루션 파일: Visual Studio 형식 유지 (CRLF, BOM)
+[*.sln]
+charset = utf-8-bom
+end_of_line = crlf
+indent_style = tab
+
+# C# 코드 스타일
+[*.cs]
+# using 정렬: System 네임스페이스 먼저
+dotnet_sort_system_directives_first = true
+# 파일 범위 네임스페이스 사용 (namespace X;)
+csharp_style_namespace_declarations = file_scoped:suggestion
+# 중괄호는 새 줄에 (Allman 스타일)
+csharp_new_line_before_open_brace = all
+# 형식이 명확할 때만 var 사용
+csharp_style_var_when_type_is_apparent = true:suggestion
+csharp_style_var_for_built_in_types = false:suggestion
+# private 필드 이름은 _camelCase
+dotnet_naming_rule.private_fields_underscore.symbols = private_fields
+dotnet_naming_rule.private_fields_underscore.style = underscore_camel
+dotnet_naming_rule.private_fields_underscore.severity = suggestion
+dotnet_naming_symbols.private_fields.applicable_kinds = field
+dotnet_naming_symbols.private_fields.applicable_accessibilities = private
+dotnet_naming_style.underscore_camel.required_prefix = _
+dotnet_naming_style.underscore_camel.capitalization = camel_case

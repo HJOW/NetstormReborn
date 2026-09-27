@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- 원본 포맷 로더 테스트 (xUnit v3). 원본 데이터가 없으면 해당 테스트는 건너뛴다 -->
+  <PropertyGroup>
+    <!-- xUnit v3 테스트 프로젝트는 실행 파일로 빌드한다 -->
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Netstorm.Assets.Tests</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit.v3" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+  </ItemGroup>
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Netstorm.Assets\Netstorm.Assets.csproj" />
+  </ItemGroup>
+</Project>

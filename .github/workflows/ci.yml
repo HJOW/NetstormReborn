@@ -1,0 +1,32 @@
+# 빌드·테스트 CI
+# 원본 게임 데이터(originals/)는 저장소에 없으므로, 원본이 필요한 테스트는 CI 에서 자동으로 건너뛴다.
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        # Windows 우선 (AGENTS.md). Linux 는 우선순위가 낮지만 빌드 깨짐을 일찍 알기 위해 함께 돌린다
+        os: [windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # global.json 의 SDK 버전(10.0.x)을 설치
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: 복원
+        run: dotnet restore Netstorm.sln
+
+      - name: 빌드
+        run: dotnet build Netstorm.sln --configuration Release --no-restore
+
+      - name: 테스트
+        run: dotnet test Netstorm.sln --configuration Release --no-build --verbosity normal
