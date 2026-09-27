@@ -24,6 +24,8 @@ internal sealed class FortMapViewer : IDisposable
     private readonly FortMapObject[] _sorted;
     private readonly FortTerrainPreview _terrain;
     private readonly TypeInfo _terrainType;
+    private readonly TypeInfo _fringeType;
+    private readonly IReadOnlyList<FortTerrainFringeSprite> _fringes;
     private bool _showChunks;
     private Vector2 _camera;
     private float _zoom = DefaultZoom;
@@ -34,7 +36,8 @@ internal sealed class FortMapViewer : IDisposable
     public string Name { get; }
 
     /// <summary>오브젝트 위치를 계산하고 카메라를 플레이어 사제에 맞춘다.</summary>
-    public FortMapViewer(GraphicsDevice device, ShapeDatabase shapes, Palette palette, FortFile fort, string name, TypeInfo terrainType)
+    public FortMapViewer(GraphicsDevice device, ShapeDatabase shapes, Palette palette, FortFile fort, string name,
+        TypeInfo terrainType, TypeInfo fringeType)
     {
         _device = device;
         _shapes = shapes;
@@ -42,6 +45,8 @@ internal sealed class FortMapViewer : IDisposable
         _map = new FortMap(fort);
         _terrainType = terrainType;
         _terrain = new FortTerrainPreview(_map, terrainType.Definition);
+        _fringeType = fringeType;
+        _fringes = FortTerrainFringe.Create(_terrain, terrainType.Definition, fringeType.Definition);
         Name = name;
         _sorted = _map.Objects.OrderBy(o => o.Object.Type.Definition.HasFlag("surface") ? 0 : 1)
             .ThenBy(o => o.Y).ThenBy(o => o.X).ToArray();
@@ -116,6 +121,12 @@ internal sealed class FortMapViewer : IDisposable
         {
             DrawSprite(batch, _terrainType.LoadIndex, MapSpriteFrames.BodyFrame(_terrainType.Definition, tile.Cluster),
                 Screen(WorldPixels(tile.X, tile.Y), center));
+        }
+        // 절벽은 별도 기준점을 사용하며 본체 지면 위·건물 아래에 표시한다. 원본의 깊이 정렬은 추가 검증 대상이다.
+        foreach (FortTerrainFringeSprite fringe in _fringes)
+        {
+            DrawSprite(batch, _fringeType.LoadIndex, MapSpriteFrames.BodyFrame(_fringeType.Definition, fringe.Cluster),
+                Screen(WorldPixels(fringe.X, fringe.Y), center));
         }
         FortMapObject? hovered = null;
         float nearest = 20f * 20f;

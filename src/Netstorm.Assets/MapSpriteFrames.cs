@@ -11,14 +11,14 @@ public static class MapSpriteFrames
         return BodyFrame(definition, cluster);
     }
 
-    /// <summary>클러스터 번호를 클러스터 우선·레이어 후순 프레임 번호로 옮기고 범위를 검사한다.</summary>
+    /// <summary>레이어별로 클러스터 전체를 저장하므로 본체 레이어의 프레임은 클러스터 번호와 같다.</summary>
     public static int BodyFrame(TypeDefinition definition, int cluster)
     {
         if ((uint)cluster >= (uint)definition.Clusters.Count)
         {
             throw new InvalidDataException($"{definition.Name}: 저장 프레임 {cluster}가 클러스터 범위를 벗어납니다.");
         }
-        return cluster * Math.Max(definition.LayerCount, 1);
+        return cluster;
     }
 
     /// <summary>기본 클러스터가 없으면 원본 로더처럼 첫 클러스터를 사용한다.</summary>

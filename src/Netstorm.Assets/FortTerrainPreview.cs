@@ -282,30 +282,8 @@ public sealed class FortTerrainPreview
         int[] candidates = Candidates(definition, $"{a}{b}", theme);
         if (candidates.Length == 0)
         {
-            // 원본 0041cd20처럼 두 직선 이웃이 지지하는 대각선만 남겨 방향을 정규화한다.
-            int cardinal = ConnectionMask(a);
-            int diagonal = ConnectionMask(b);
-            int supported = 0;
-            // 대각선 비트 i는 직선 비트 i와 이전 직선 비트가 모두 있을 때 유효하다.
-            for (int i = 0; i < 4; i++)
-            {
-                int pair = (1 << i) | (1 << ((i + 3) & 3));
-                if ((cardinal & pair) == pair)
-                {
-                    supported |= 1 << i;
-                }
-            }
-            diagonal &= supported;
-            cardinal = 0;
-            // 유효 대각선으로부터 정규화된 직선 연결을 복원한다.
-            for (int i = 0; i < 4; i++)
-            {
-                if ((diagonal & (1 << i)) != 0)
-                {
-                    cardinal |= (1 << i) | (1 << ((i + 3) & 3));
-                }
-            }
-            candidates = Candidates(definition, $"{MaskOrientation(cardinal)}{MaskOrientation(diagonal)}", theme);
+            (char normalizedA, char normalizedB) = NormalizeOrientation(a, b);
+            candidates = Candidates(definition, $"{normalizedA}{normalizedB}", theme);
         }
         if (candidates.Length == 0)
         {
@@ -324,6 +302,34 @@ public sealed class FortTerrainPreview
             throw new InvalidDataException($"{definition.Name}: 테마 {theme}의 지면 타일이 없습니다.");
         }
         return candidates[(x * 31 + y * 17) % candidates.Length];
+    }
+
+    /// <summary>원본 0041cd20의 방향 정규화: 직선 이웃이 지지하는 대각선만 남기고 직선 방향을 복원한다.</summary>
+    public static (char Cardinal, char Diagonal) NormalizeOrientation(char a, char b)
+    {
+        int cardinal = ConnectionMask(a);
+        int diagonal = ConnectionMask(b);
+        int supported = 0;
+        // 대각선 비트 i는 직선 비트 i와 이전 직선 비트가 모두 있을 때 유효하다.
+        for (int i = 0; i < 4; i++)
+        {
+            int pair = (1 << i) | (1 << ((i + 3) & 3));
+            if ((cardinal & pair) == pair)
+            {
+                supported |= 1 << i;
+            }
+        }
+        diagonal &= supported;
+        cardinal = 0;
+        // 유효 대각선으로부터 정규화된 직선 연결을 복원한다.
+        for (int i = 0; i < 4; i++)
+        {
+            if ((diagonal & (1 << i)) != 0)
+            {
+                cardinal |= (1 << i) | (1 << ((i + 3) & 3));
+            }
+        }
+        return (MaskOrientation(cardinal), MaskOrientation(diagonal));
     }
 
     /// <summary>연결 이름과 원소별 그림 이름에 맞는 타일만 골라 테마가 섞이는 것을 막는다.</summary>

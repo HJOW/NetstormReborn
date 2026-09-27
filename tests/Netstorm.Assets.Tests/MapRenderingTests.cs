@@ -8,9 +8,59 @@ public sealed class MapRenderingTests
     /// <summary>원본 마스크 비교용 월드 한 변의 칸 수.</summary>
     private const int MaskSize = FortFile.WorldChunksX * FortMap.CellsPerChunk;
 
-    /// <summary>저장된 다리 값은 default보다 우선하며 레이어 수를 적용한다.</summary>
+    /// <summary>직선·모서리 지면은 원본 방향 폴백으로 해당 절벽을 찾고 전투의 unlit 변형을 제외한다.</summary>
+    [Theory]
+    [InlineData("EI01", "EA")]
+    [InlineData("HN01", "HA")]
+    [InlineData("IO01", "IA")]
+    [InlineData("AB01", "AB")]
+    public void Fringe_UsesOrientationFallbackAndBattleLighting(string sourceName, string expectedOrientation)
+    {
+        var source = new Cluster(sourceName, ["rim", "fringe"], []);
+        var definition = TypeDefinition.Parse($"""
+            typename fringe
+            {expectedOrientation}01 : lit : "fringe.gif" #0;
+            {expectedOrientation}02 : unlit : "fringe.gif" #1;
+            """);
+        Assert.Equal(0, FortTerrainFringe.SelectCluster(source, definition, 1, 0));
+        Assert.Equal(1, FortTerrainFringe.SelectCluster(source, definition, 1, 0, battleMode: false));
+        Assert.Null(FortTerrainFringe.SelectCluster(source with { Flags = ["rim"] }, definition, 1, 0));
+        Assert.Null(FortTerrainFringe.SelectCluster(source, TypeDefinition.Parse("typename fringe"), 1, 0));
+    }
+
+    /// <summary>공식 맵의 모든 fringe 지면에 하나의 절벽이 있고 원본 이동량·방향·조명 조건을 만족한다.</summary>
+    [Theory]
+    [InlineData("savetheisland")]
+    [InlineData("thewarbegins")]
+    public void Original_FringesFollowGeneratedRim(string name)
+    {
+        var archive = TaffArchive.Open(OriginalData.RequireFile("netstorm.tarc"));
+        var catalog = new TypeCatalog(archive);
+        Assert.True(archive.TryFind($"d/{name}.fort", out TaffEntry entry));
+        TypeDefinition isle = catalog.Find("isle")!.Definition;
+        TypeDefinition fringe = catalog.Find("fringe")!.Definition;
+        var terrain = new FortTerrainPreview(new FortMap(new FortFile(archive.Read(entry), catalog)), isle);
+        var sprites = FortTerrainFringe.Create(terrain, isle, fringe);
+        Assert.NotEmpty(sprites);
+        Assert.Equal(sprites, FortTerrainFringe.Create(terrain, isle, fringe));
+        Assert.Equal(terrain.Tiles.Count(tile => isle.Clusters[tile.Cluster].Flags.Contains("fringe")), sprites.Count);
+        var tiles = terrain.Tiles.ToDictionary(tile => (tile.X, tile.Y));
+        // 실제 지면과 절벽의 관계를 검증하며 원본 전투 모드의 금지 조명 변형이 없는지 검사한다.
+        foreach (FortTerrainFringeSprite sprite in sprites)
+        {
+            FortTerrainTile tile = tiles[(sprite.X, sprite.Y - 4)];
+            Cluster source = isle.Clusters[tile.Cluster];
+            Cluster selected = fringe.Clusters[sprite.Cluster];
+            Assert.Contains("fringe", source.Flags);
+            Assert.Equal(source.Name[0], selected.Name[0]);
+            Assert.DoesNotContain("unlit", selected.Flags);
+            Assert.InRange(MapSpriteFrames.BodyFrame(fringe, sprite.Cluster), 0, fringe.Clusters.Count - 1);
+        }
+    }
+
+    /// <summary>저장된 다리 값은 default보다 우선하며 본체는 그림자 레이어 앞에 연속으로 저장된다.</summary>
     [Fact]
-    public void BridgeStoredFrame_UsesClusterAndLayerStride()
+    public void BridgeStoredFrame_UsesBodyLayerCluster()
     {
         var definition = TypeDefinition.Parse("""
             typename bridge
@@ -20,8 +70,27 @@ public sealed class MapRenderingTests
             """);
         var type = new TypeInfo(0, "bridge", definition, 0, TypeFlagBits.Bridge);
         var obj = new FortObject(0, 0, type, null, null, null, 1, null, 1, []);
-        Assert.Equal(2, MapSpriteFrames.BodyFrame(obj));
+        Assert.Equal(1, MapSpriteFrames.BodyFrame(obj));
         Assert.Throws<InvalidDataException>(() => MapSpriteFrames.BodyFrame(obj with { BridgeShape = 2 }));
+    }
+
+    /// <summary>원본 가이저 기본 B00은 본체 49번이며 그림자 영역으로 건너뛰지 않아야 한다.</summary>
+    [Fact]
+    public void Original_GeyserDefaultUsesBodyInsteadOfShadow()
+    {
+        var archive = TaffArchive.Open(OriginalData.RequireFile("netstorm.tarc"));
+        var type = new TypeCatalog(archive).Find("geyser")!;
+        var obj = new FortObject(0, 0, type, null, null, null, null, null, 0, []);
+        int frameIndex = MapSpriteFrames.BodyFrame(obj);
+        Assert.Equal(49, frameIndex);
+        Assert.Equal("B00", type.Definition.Clusters[frameIndex].Name);
+        var shapes = ShapeDatabase.Load(OriginalData.RequireFile("d/_shapes.shp"));
+        ShapeBlock block = shapes.Blocks[type.LoadIndex];
+        Assert.False(block.Frames[frameIndex].IsSpecial);
+        // 원본 본체는 높이가 큰 광맥이고 뒤쪽 그림자 프레임과 형태가 다르다.
+        Assert.True(block.Frames[frameIndex].YMax - block.Frames[frameIndex].YMin >
+            block.Frames[frameIndex + type.Definition.Clusters.Count].YMax
+            - block.Frames[frameIndex + type.Definition.Clusters.Count].YMin);
     }
 
     /// <summary>원본 연결 표의 A(네 방향), J(세로), K(가로), P(독립)를 확인한다.</summary>

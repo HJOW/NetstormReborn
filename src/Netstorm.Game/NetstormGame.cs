@@ -154,7 +154,8 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
             throw new FileNotFoundException($"맵 파일을 찾지 못했습니다: {name}");
         }
         _mapViewer = new FortMapViewer(GraphicsDevice, shapes, palette, new FortFile(bytes, catalog), name,
-            catalog.Find("isle") ?? throw new InvalidDataException("isle 타입이 없습니다."));
+            catalog.Find("isle") ?? throw new InvalidDataException("isle 타입이 없습니다."),
+            catalog.Find("fringe") ?? throw new InvalidDataException("fringe 타입이 없습니다."));
         Window.Title = $"NetStorm 클론 — 맵 뷰어: {name}";
     }
 
