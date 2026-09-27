@@ -1,8 +1,13 @@
+using System.Security.Cryptography;
+
 namespace Netstorm.Assets.Tests;
 
 /// <summary>저장 프레임과 지면 연결이 원본 데이터에 맞게 해석되는지 확인한다.</summary>
 public sealed class MapRenderingTests
 {
+    /// <summary>원본 마스크 비교용 월드 한 변의 칸 수.</summary>
+    private const int MaskSize = FortFile.WorldChunksX * FortMap.CellsPerChunk;
+
     /// <summary>저장된 다리 값은 default보다 우선하며 레이어 수를 적용한다.</summary>
     [Fact]
     public void BridgeStoredFrame_UsesClusterAndLayerStride()
@@ -59,5 +64,30 @@ public sealed class MapRenderingTests
                 Assert.StartsWith("RA", image, StringComparison.OrdinalIgnoreCase);
             }
         }
+    }
+
+    /// <summary>원본 어셈블리에서 독립 재현한 Python 마스크와 전체 65,536칸·영역별 크기를 대조한다.</summary>
+    [Theory]
+    [InlineData("savetheisland", "68e699f55ad34041f316f4466f6c33d2edb6807833a648462a64ebbc2c505cc8", 0, 1384, 7, 698)]
+    [InlineData("thewarbegins", "b24af563875ef935aa1053d521a6abf8490c4ddea840ac1845b43223fd0436d1", 0, 954, 1, 551)]
+    public void Original_IslandMaskMatchesIndependentReconstruction(string name, string expectedHash,
+        int firstRegion, int firstCount, int secondRegion, int secondCount)
+    {
+        var archive = TaffArchive.Open(OriginalData.RequireFile("netstorm.tarc"));
+        var catalog = new TypeCatalog(archive);
+        Assert.True(archive.TryFind($"d/{name}.fort", out TaffEntry entry));
+        var map = new FortMap(new FortFile(archive.Read(entry), catalog));
+        var terrain = new FortTerrainPreview(map, catalog.Find("isle")!.Definition);
+        var mask = Enumerable.Repeat(byte.MaxValue, MaskSize * MaskSize).ToArray();
+        // 본섬만 비교하여 미확정인 건물·가이저 받침 생성이 기준값에 섞이지 않게 한다.
+        foreach (FortTerrainCell cell in terrain.IslandCells)
+        {
+            Assert.Equal(byte.MaxValue, mask[cell.Y * MaskSize + cell.X]);
+            mask[cell.Y * MaskSize + cell.X] = checked((byte)cell.Region);
+        }
+        Assert.Equal(expectedHash, Convert.ToHexStringLower(SHA256.HashData(mask)));
+        Assert.Equal(firstCount, terrain.IslandCells.Count(cell => cell.Region == firstRegion));
+        Assert.Equal(secondCount, terrain.IslandCells.Count(cell => cell.Region == secondRegion));
+        Assert.Equal(firstCount + secondCount, terrain.IslandCells.Count);
     }
 }

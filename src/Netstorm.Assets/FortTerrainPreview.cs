@@ -3,6 +3,9 @@ namespace Netstorm.Assets;
 /// <summary>원본 지면 타일로 구성한 미리보기 셀. 테마와 변형 선택은 시각 검증 전의 근사다.</summary>
 public sealed record FortTerrainTile(int X, int Y, int Region, string Theme, int Cluster);
 
+/// <summary>타일 외관과 작은 받침을 붙이기 전의 본섬 지면 칸.</summary>
+public sealed record FortTerrainCell(int X, int Y, int Region);
+
 /// <summary>Terrainbuilder의 연결 통로·시드 성장·빈 틈 메우기를 옮긴 개발용 지면 미리보기.</summary>
 public sealed class FortTerrainPreview
 {
@@ -29,6 +32,9 @@ public sealed class FortTerrainPreview
     /// <summary>생성된 타일 목록. 원본과 같은 전투 지형으로 확정한 데이터는 아니다.</summary>
     public IReadOnlyList<FortTerrainTile> Tiles { get; }
 
+    /// <summary>원본 생성 규칙 및 캡처와 대조할 본섬 마스크 (y·x 순서).</summary>
+    public IReadOnlyList<FortTerrainCell> IslandCells { get; }
+
     /// <summary>영역 통로와 시드 성장 결과에 원본 isle 타일을 대응시킨다.</summary>
     public FortTerrainPreview(FortMap map, TypeDefinition isle)
     {
@@ -46,43 +52,44 @@ public sealed class FortTerrainPreview
                 _chunks[(cell.X, cell.Y)] = territory.Index;
             }
         }
-        uint densitySeed = 0;
-        // 원본처럼 모든 연결 통로를 만든 뒤 별도 단계에서 성장시킨다.
+        var ordered = chunks.SelectMany(group => group.Chunks.Select((cell, index) =>
+            (group.Territory, Cell: cell, Index: index, Count: group.Chunks.Count)))
+            .OrderBy(item => item.Cell.Y).ThenBy(item => item.Cell.X).ToArray();
+        // 목표 개수 배열을 영역별로 준비한다.
         foreach (var (territory, cells) in chunks)
         {
-            var targets = new int[cells.Count];
-            _targets[territory.Index] = targets;
-            // 청크마다 중심부와 연결 방향에 맞춘 폭 2칸 통로를 만든다.
-            for (int i = 0; i < cells.Count; i++)
+            _targets[territory.Index] = new int[cells.Count];
+        }
+        // 원본처럼 모든 연결 통로를 만든 뒤 별도 단계에서 성장시킨다.
+        foreach (var (territory, cell, i, _) in ordered)
+        {
+            int x = cell.X * FortMap.CellsPerChunk;
+            int y = cell.Y * FortMap.CellsPerChunk;
+            int cx = x + 4 + (territory.Appearance & 7);
+            int cy = y + 4 + ((9999 - territory.Appearance) & 7);
+            int initial = Fill(cx - 1, cy - 1, cx + 3, cy + 3, territory.Index);
+            int mask = ConnectionMask(cell.Orientation);
+            initial += Fill((mask & 8) != 0 ? x : cx, (mask & 1) != 0 ? y : cy,
+                (mask & 2) != 0 ? x + 16 : cx + 2, (mask & 4) != 0 ? y + 16 : cy + 2, territory.Index);
+            if (i == 1)
             {
-                FortTerrainChunk cell = cells[i];
-                int x = cell.X * FortMap.CellsPerChunk;
-                int y = cell.Y * FortMap.CellsPerChunk;
-                int cx = x + 4 + (territory.Appearance & 7);
-                int cy = y + 4 + ((9999 - territory.Appearance) & 7);
-                int initial = Fill(cx - 1, cy - 1, cx + 3, cy + 3, territory.Index);
-                int mask = ConnectionMask(cell.Orientation);
-                initial += Fill((mask & 8) != 0 ? x : cx, (mask & 1) != 0 ? y : cy,
-                    (mask & 2) != 0 ? x + 16 : cx + 2, (mask & 4) != 0 ? y + 16 : cy + 2, territory.Index);
-                if (i == 1)
-                {
-                    initial += Fill(x + 3, y + 3, x + 13, y + 13, territory.Index);
-                }
-                int percentage = Math.Max(20, Next(ref densitySeed, 30) + 50 - initial * 100 / 256);
-                targets[i] = percentage * 256 / 100;
+                initial += Fill(x + 3, y + 3, x + 13, y + 13, territory.Index);
             }
+            // 원본 004c117e~004c1199는 청크마다 증가 전 영역 카운터로 밀도 시드를 다시 만든다.
+            uint densitySeed = unchecked((uint)i * ChunkSeedStep + territory.Appearance);
+            int percentage = Math.Max(20, Next(ref densitySeed, 30) + 50 - initial * 100 / 256);
+            _targets[territory.Index][i] = percentage * 256 / 100;
         }
         // 청크별 저장 시드로 작은 덩어리를 붙여 비정형 섬을 생성한다.
-        foreach (var (territory, cells) in chunks)
+        foreach (var (territory, cell, i, count) in ordered)
         {
-            // 생성 단계의 영역 청크 카운터는 초기 통로 생성에서 이미 청크 수만큼 증가했다.
-            for (int i = 0; i < cells.Count; i++)
-            {
-                uint seed = unchecked((uint)(cells.Count + i) * ChunkSeedStep + territory.Appearance);
-                Grow(cells[i], territory.Index, _targets[territory.Index][i], ref seed);
-            }
+            // 성장 시 영역 카운터는 초기 통로 생성에서 이미 영역의 전체 청크 수만큼 증가했다.
+            uint seed = unchecked((uint)(count + i) * ChunkSeedStep + territory.Appearance);
+            Grow(cell, territory.Index, _targets[territory.Index][i], ref seed);
         }
         Smooth();
+        IslandCells = Enumerable.Range(0, _land.Length).Where(i => _land[i] >= 0)
+            .Select(i => new FortTerrainCell(i % WorldSize, i / WorldSize, _land[i])).ToArray();
         // 작은 받침 섬은 noIsland 칸과 createsisland 건물의 발자국으로 따로 구성한다.
         foreach (FortMapObject item in map.Objects)
         {
@@ -211,6 +218,11 @@ public sealed class FortTerrainPreview
                 for (int x = 1; x < WorldSize - 1; x++)
                 {
                     if (At(x, y) != -1)
+                    {
+                        continue;
+                    }
+                    // 원본 004c0cf0은 직선 방향에 기존 지면이 있는 빈 칸만 보정 후보로 삼는다.
+                    if (At(x, y - 1) == -1 && At(x + 1, y) == -1 && At(x, y + 1) == -1 && At(x - 1, y) == -1)
                     {
                         continue;
                     }
