@@ -46,7 +46,9 @@ dotnet run --project src/Netstorm.Game -- --map savetheisland --language korean
 반환값 `LoadedMission`에는 실제 파일 경로·사용 언어·해석된 스크립트가 있다.
 영어 파일을 읽어도 전역 선택 언어를 바꾸지 않으며 임시 설정 층은 호출 뒤 제거한다.
 `ConfigStore.MissionLoader`도 연결하여 `{@tutorial1.missionType}` 같은 머리 값 치환에 사용한다.
-미션의 조건 태그·명령 실행·HTML 렌더링은 아직 구현하지 않았다.
+후속 작업에서 `MissionScript.PrepareSection`을 추가하여 변수 치환·조건 태그 평가 후
+표시되는 줄 명령을 추출할 수 있다. [원본 조건 평가 규칙](formats/mission-script.md)을 참고한다.
+미션 명령 실행·HTML 렌더링과 UI 연결은 아직 구현하지 않았다.
 
 ## 검증
 

@@ -15,6 +15,9 @@ public sealed record MissionSection(IReadOnlyList<string> Names, int HeaderLine,
 /// <param name="Line">본문 안의 줄 번호 (0부터)</param>
 public sealed record MissionCommand(string Name, string Arguments, IReadOnlyList<string> Fields, int Line);
 
+/// <summary>변수 치환·조건 평가를 마친 본문과 줄 명령. HTML·인라인 명령의 실행은 포함하지 않는다.</summary>
+public sealed record PreparedMissionSection(string Body, IReadOnlyList<MissionCommand> Commands);
+
 /// <summary>
 /// 미션·메뉴 스크립트 (&lt;이름&gt;.&lt;언어&gt;). 문법: docs/formats/mission-script.md
 /// <list type="bullet">
@@ -88,6 +91,18 @@ public sealed partial class MissionScript
     /// <summary>섹션 본문을 돌려준다. 없으면 null</summary>
     /// <param name="name">섹션 이름 (대괄호 없이)</param>
     public string? GetSection(string name) => TryGetSection(name, out string body) ? body : null;
+
+    /// <summary>섹션의 본문을 치환·조건 평가하고 표시되는 줄 명령을 추출한다. 섹션이 없으면 null.</summary>
+    public PreparedMissionSection? PrepareSection(string name, ConfigStore settings)
+    {
+        string? raw = GetSection(name);
+        if (raw == null)
+        {
+            return null;
+        }
+        string body = MissionConditions.Filter(raw, settings);
+        return new PreparedMissionSection(body, FindCommands(body));
+    }
 
     /// <summary>
     /// 본문에서 $명령=인자 를 모두 찾는다. 조건 태그(&lt;?조건&gt;…&lt;/?&gt;)는 평가하지 않으므로
