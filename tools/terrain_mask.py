@@ -174,6 +174,8 @@ def main():
         data = archive.read(entry)
     sections, _ = split_sections(data)
     rows = sections[SECTION_NAMES.index('Territory')]
+    if len(rows) != 120:
+        raise ValueError('Territory 섹션은 6바이트 레코드 20개여야 합니다.')
     patterns = json.loads((Path(__file__).resolve().parent.parent / 'src/Netstorm.Assets/TerritoryPatterns.json').read_text(encoding='utf-8'))
     land = generate_mask(rows, patterns)
     report = {'map': path.stem, 'sha256': hashlib.sha256(land).hexdigest(),
