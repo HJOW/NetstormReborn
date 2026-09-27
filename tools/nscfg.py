@@ -42,11 +42,16 @@ def encode_text(text: str) -> bytes:
 
 
 def set_value(text: str, key: str, value: str) -> str:
-    """'키 = "값"' 줄의 값을 바꾼다. 키가 없으면 끝에 추가한다"""
-    pattern = re.compile(rf'^(\s*{re.escape(key)}\s*=\s*)"[^"]*"', re.M | re.I)
+    """
+    처음으로 키가 나온 줄을 '키 = "값"' 으로 바꾼다. 키가 없으면 끝에 추가한다.
+    원본은 같은 키가 여러 번 있으면 처음 줄을 쓰므로(docs/formats/config.md "설정 조회 규칙") 첫 줄을 바꿔야 한다.
+    """
+    pattern = re.compile(rf'^([ \t]*)({re.escape(key)})[ \t]*=[^\r\n]*', re.M | re.I)
     if pattern.search(text):
-        return pattern.sub(lambda m: f'{m.group(1)}"{value}"', text, count=1)
+        return pattern.sub(lambda m: f'{m.group(1)}{m.group(2)} = "{value}"', text, count=1)
     newline = "\r\n" if "\r\n" in text else "\n"
+    if text and not text.endswith("\n"):
+        text += newline
     return text + f'{key} = "{value}"{newline}'
 
 

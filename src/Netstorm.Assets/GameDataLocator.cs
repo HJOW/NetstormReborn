@@ -61,14 +61,34 @@ public static class GameDataLocator
     /// <param name="baseDirectory">기준 폴더</param>
     /// <param name="relativePath">상대 경로 (예: "d\GIFCLOUD.COL")</param>
     /// <returns>실제 파일 경로, 없으면 null</returns>
-    public static string? FindFile(string baseDirectory, string relativePath)
+    public static string? FindFile(string baseDirectory, string relativePath) =>
+        FindEntry(baseDirectory, relativePath, lastIsDirectory: false);
+
+    /// <summary>
+    /// 기준 폴더 아래의 하위 폴더를 대소문자 무시로 찾는다. 경로 구분자는 \ 와 / 모두 허용한다.
+    /// </summary>
+    /// <param name="baseDirectory">기준 폴더</param>
+    /// <param name="relativePath">상대 경로 (예: "d")</param>
+    /// <returns>실제 폴더 경로, 없으면 null</returns>
+    public static string? FindDirectory(string baseDirectory, string relativePath) =>
+        FindEntry(baseDirectory, relativePath, lastIsDirectory: true);
+
+    /// <summary>경로 조각을 하나씩 대소문자 무시로 따라가며 파일 또는 폴더를 찾는다</summary>
+    /// <param name="baseDirectory">기준 폴더</param>
+    /// <param name="relativePath">상대 경로</param>
+    /// <param name="lastIsDirectory">마지막 조각이 폴더이면 true, 파일이면 false</param>
+    private static string? FindEntry(string baseDirectory, string relativePath, bool lastIsDirectory)
     {
         string current = baseDirectory;
         string[] parts = relativePath.Split(['\\', '/'], StringSplitOptions.RemoveEmptyEntries);
+        if (!Directory.Exists(current) || (parts.Length == 0 && !lastIsDirectory))
+        {
+            return null;
+        }
         // 경로 조각마다 현재 폴더에서 대소문자 무시로 일치하는 항목을 찾는다
         for (int i = 0; i < parts.Length; i++)
         {
-            bool last = i == parts.Length - 1;
+            bool last = i == parts.Length - 1 && !lastIsDirectory;
             string exact = Path.Combine(current, parts[i]);
             if (last ? File.Exists(exact) : Directory.Exists(exact))
             {

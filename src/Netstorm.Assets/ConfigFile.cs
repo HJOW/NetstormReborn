@@ -51,46 +51,33 @@ public sealed partial class ConfigFile
     }
 
     /// <summary>
-    /// 키의 값을 읽는다. 'key = "값"' 과 'key=값' 두 형식을 모두 지원하며 키는 대소문자를 무시한다.
-    /// 같은 키가 여러 번 나오면 마지막 값을 쓴다 (setup.cfg 에 주석 처리 후 재정의한 예가 있음).
+    /// 키의 원시 값(따옴표 제거, 치환 전)을 읽는다. 'key = "값"' 과 'key=값' 두 형식을 모두 지원하며 키는 대소문자를 무시한다.
+    /// 원본(Config.cpp)과 같이 같은 키가 여러 번 나오면 <b>처음</b> 나온 값을 쓴다. 주석 처리된 줄(//)은 무시한다.
+    /// 끝의 공백·탭은 잘라 낸다. 규칙: <see cref="ConfigText"/>
     /// </summary>
     /// <param name="key">설정 키</param>
     /// <returns>값, 없으면 null</returns>
-    public string? Get(string key)
-    {
-        string? result = null;
-        // 모든 줄을 검사해 마지막으로 나온 값을 취한다
-        foreach (string rawLine in Text.Split('\n'))
-        {
-            int comment = rawLine.IndexOf("//", StringComparison.Ordinal);
-            string line = (comment >= 0 ? rawLine[..comment] : rawLine).Trim();
-            Match m = EntryRegex().Match(line);
-            if (m.Success && string.Equals(m.Groups[1].Value, key, StringComparison.OrdinalIgnoreCase))
-            {
-                result = m.Groups[2].Success && m.Groups[2].Value.Length > 0 ? m.Groups[2].Value : m.Groups[3].Value.Trim();
-            }
-        }
-        return result;
-    }
+    public string? Get(string key) => new ConfigText(Text).GetRaw(key)?.TrimEnd(' ', '\t');
 
     /// <summary>
-    /// 'key = "값"' 형식으로 값을 바꾼다. 키가 없으면 끝에 새 줄로 추가한다.
+    /// 'key = "값"' 형식으로 값을 바꾼다. 처음으로 키가 나온 줄(조회에 쓰이는 줄)을 통째로 바꾸며,
+    /// 키가 없으면 끝에 새 줄로 추가한다. 줄 앞 들여쓰기와 키 표기는 유지하고, 그 줄의 주석은 사라진다.
     /// </summary>
     /// <param name="key">설정 키</param>
     /// <param name="value">새 값</param>
     public void Set(string key, string value)
     {
-        var regex = new Regex($@"^(\s*{Regex.Escape(key)}\s*=\s*)""[^""]*""", RegexOptions.Multiline | RegexOptions.IgnoreCase);
+        var regex = new Regex($@"^([ \t]*)({Regex.Escape(key)})[ \t]*=[^\r\n]*", RegexOptions.Multiline | RegexOptions.IgnoreCase);
         if (regex.IsMatch(Text))
         {
-            Text = regex.Replace(Text, m => $"{m.Groups[1].Value}\"{value}\"", 1);
+            Text = regex.Replace(Text, m => $"{m.Groups[1].Value}{m.Groups[2].Value} = \"{value}\"", 1);
             return;
         }
         string newline = Text.Contains("\r\n", StringComparison.Ordinal) ? "\r\n" : "\n";
+        if (Text.Length > 0 && !Text.EndsWith('\n'))
+        {
+            Text += newline;
+        }
         Text += $"{key} = \"{value}\"{newline}";
     }
-
-    /// <summary>설정 줄: 키 = "값" 또는 키 = 값</summary>
-    [GeneratedRegex(@"^([A-Za-z_][\w.]*)\s*=\s*(?:""([^""]*)""|(.*))$")]
-    private static partial Regex EntryRegex();
 }

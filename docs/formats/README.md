@@ -7,9 +7,10 @@
 | [taff.md](taff.md) | `netstorm.tarc` 아카이브 | 완료 | `tools/taff.py` |
 | [shp.md](shp.md) | `d/_shapes.shp` 스프라이트 | 완료 | `tools/shp.py` |
 | [type.md](type.md) | `.type` 오브젝트 정의 | 문법 완료, 의미 일부 추정 | `tools/typefile.py` |
-| [mission-script.md](mission-script.md) | 미션·메뉴 스크립트 | 문법 개요 | — |
-| [xlat.md](xlat.md) | 원본 다국어 체계 | 포맷 완료 | — |
-| [config.md](config.md) | `options.cfg`, `setup.cfg`, `!color.dat`, 팔레트 | 포맷 완료 | `tools/nscfg.py` |
+| [mission-script.md](mission-script.md) | 미션·메뉴 스크립트 | 문법 개요, 머리·섹션 조회 규칙 완료 | C# `MissionScript` |
+| [xlat.md](xlat.md) | 원본 다국어 체계 | 포맷·해석 규칙 완료 | C# `XlatTable`, `GameLanguage` |
+| [config.md](config.md) | `options.cfg`, `setup.cfg`, `!color.dat`, 팔레트, 설정 조회·치환 규칙 | 포맷·조회·치환 규칙 완료 | `tools/nscfg.py`, C# `ConfigText`, `ConfigStore` |
+| [vfs.md](vfs.md) | 느슨한 파일 + 아카이브 조회 순서 | 정적 분석 완료 | C# `GameFileSystem` |
 | [chfnt.md](chfnt.md) | 비트맵 글꼴 캐시 | 용도 확인 | — |
 | [fort.md](fort.md) | `.fort` 요새/맵 | 컨테이너·오브젝트 레코드 완료 (일부 섹션 내부 미해석) | `tools/fort.py` |
 
