@@ -122,25 +122,21 @@
 
   * 활용 방침: 게임 규칙의 **1차 근거는 원본 데이터·실행 파일 분석**이고, 이 홈페이지는 동작 이해와 교차 검증용으로 쓴다. 내용이 분석 결과와 다르면 원본 동작을 우선하고 차이를 문서에 남긴다.
   * **한국어 용어 참고 자료**로도 쓴다 (12단계 한국어 번역 시 유닛·건물·자원 이름의 기존 한국어 표기 확인).
-* **원본 스크린샷** (AGENTS.md, `screenShots/`): 외부 캡처 도구로 찍어 작업표시줄·창 테두리·바깥 영역이 일부 포함된다. 메인 메뉴·도움말을 제외하면 파일 이름 앞에 미션 이름이 붙는다.
-  클라이언트 영역(1024×768)의 캡처 내 시작 위치는 파일마다 조금씩 다르므로 제목 표시줄·테두리 경계를 측정해 잘라 쓴다.
-
-  | 파일 | 내용 | 클라이언트 시작(캡처 좌표) | 분석 노트 |
-  |---|---|---|---|
-  | `Bridge the Gap - Started.png` | 튜토리얼 1 시작 | (4, 32) | [bridge-the-gap-start.md](docs/screens/bridge-the-gap-start.md) |
-  | `The War Begins! - Started.png` | 캠페인 1-1 시작 | 노트 참고 | [the-war-begins-start.md](docs/screens/the-war-begins-start.md) |
-  | `Save the Islands! - Started.png` | 캠페인 1-3 시작 | 노트 참고 | [save-the-island-start.md](docs/screens/save-the-island-start.md) |
-  | `mainMenu.png` (2026-09-28 추가) | 메인 메뉴 | (2, 33) | 미작성 (5단계 첫 관찰은 아래) |
-  | `help - NetStorm Instructions.png` (2026-09-28 추가) | 메인 메뉴의 도움말 창 | (4, 34) | 미작성 |
-  | `Dissolved Alliance! - Started.png` (2026-09-28 추가) | 캠페인 1-6 시작 (영상 "캠페인 1-6" 과 같은 미션) | (2, 32) | 미작성 |
+* **원본 스크린샷** (AGENTS.md, `screenShots/`, 2026-09-28 기준 42장): 외부 캡처 도구로 찍어 작업표시줄·창 테두리·바깥 영역이 일부 포함된다. 메인 메뉴 계열은 `mainMenu - …`, 미션 화면은 `미션 이름 - 상황` 형식의 파일 이름이다. 모두 원본 1024×768 창 모드.
+  * **전체 목록과 캡처별 관찰: [docs/screens/README.md](docs/screens/README.md)** — 메인 메뉴·Campaign(하위 6개)·Multiplayer·Demo·Help·Edit·Credits·Options(하위 4개), The War Begins!(브리핑·진행 9장·정보 창 3장·게임 메뉴·승리·패배 2장), Dissolved Alliance!(시작 + 섬별 2장), 기존 튜토리얼·캠페인 시작 화면
+  * 클라이언트 영역(1024×768)의 캡처 내 시작 위치는 파일마다 조금씩 다르므로 제목 표시줄·테두리 경계를 측정해 잘라 쓴다.
+  * 원본 카메라는 **위치 이동만 되고 높이·확대 배율은 바꿀 수 없다** (사용자 확인). 그래서 섬 3개가 있는 Dissolved Alliance! 는 한 화면에 담을 수 없어 시점을 옮겨 섬마다 찍었다.
 
 ### 1.7 결과물 화면 요구사항 (2026-09-28 AGENTS.md 추가)
 
 * **풀스크린 모드**를 지원해야 한다 (원본처럼 재실행 오류가 나서는 안 된다 — 1.4절).
 * **화면비 16:9, 16:10, 4:3** 을 지원해야 한다. 원본 기본 해상도 1024×768 과 메인 메뉴 타이틀 그림(640×480)은 4:3 이다.
-  * 결정 필요(7단계): 와이드 화면에서 (a) 게임 맵 시야를 넓혀 보여 줄지, (b) 4:3 영역만 쓰고 레터박스를 둘지. 메뉴·대화상자는 원본처럼 가운데 배치하고 남는 영역은 배경(구름)으로 채우는 방식이 원본 캡처와 맞는다.
+  * **원본은 4:3 해상도만 지원했다** (AGENTS.md·사용자 확인): Options → Resolution 하위 메뉴가 `640 by 480`, `800 by 600`, `1024 by 768` 세 가지뿐 (`mainMenu - Options - Resolution.png`). 따라서 16:9·16:10 은 원본 참고 자료가 없는 **새 기능**이며 동작은 클론에서 설계한다.
+  * 원본 카메라는 확대·축소가 없고 해상도가 곧 보이는 맵 범위다 (640×480 보다 1024×768 이 더 넓게 보임). 와이드 화면에서 맵을 옆으로 더 보여 주는 방식이 원본 해상도 선택의 동작과 가장 가깝다.
+  * 결정 필요(7단계, 5절): 와이드 화면에서 (a) 게임 맵 시야를 넓혀 보여 줄지(권장 후보), (b) 4:3 영역만 쓰고 레터박스를 둘지. 멀티플레이에서 해상도에 따른 시야 차이를 허용할지도 함께 정한다. 메뉴·대화상자는 원본처럼 가운데 배치하고 남는 영역은 배경(구름)으로 채우는 방식이 원본 캡처와 맞는다.
   * 사이드바·미니맵 등 HUD 는 화면 가장자리 기준으로 배치하고, 좌표를 4:3 기준으로 하드코딩하지 않는다.
-* **풀스크린에서 마우스 커서를 화면 끝에 대면 화면(카메라)이 이동**해야 한다 (원본도 지원). 이동 속도·가장자리 폭은 원본 동작을 측정해 맞춘다 (4·5단계). 창 모드에서의 동작 여부는 원본 확인 후 결정.
+* **풀스크린에서 마우스 커서를 화면 끝에 대면 화면(카메라)이 이동**해야 한다 (원본도 지원). 원본은 Options 메뉴의 **`Edge Scroll in Fullscreen`** 선택 항목으로 켜고 끈다 (캡처에서는 켜짐). 이동 속도·가장자리 폭은 원본 동작을 측정해 맞춘다 (4·5단계). 창 모드에서의 동작 여부는 원본 확인 후 결정.
+* 원본 Options 메뉴 전체(설정 화면 구현 기준): Direct Draw / Full Screen, Resolution >, Sound On, Play Music, Wind Noise, Speaker Swap L/R, Sound Effect Volume >(1~5), Music Volume >(1~5), Edge Scroll in Fullscreen, Auto-Demo, Tell Tips at Startup, Pause - Shift-F9, Pass Server Diagnostic
 
 ---
 
@@ -303,8 +299,13 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
 - [ ] **게임 틱**: 고정 프레임 여부, 틱 레이트, 난수 생성기(결정론 확보에 필수)
 - [ ] **좌표계·맵**: 아이소메트릭 투영, 타일 크기, 섬 형태, 높이/레이어, 그리기 순서(정렬 규칙)
 - [ ] **경제**: 가이저(geyser) → Storm Power(게임 내 재화) 수집 흐름, 수집 유닛(collector) 이동, 자원 운반, 제단(altar)·희생, 비용
-- [ ] **다리 건설**: 다리 조각 생성 규칙(모양 풀, 순서, `BridgeDrawRate`), 배치 판정, 연결·붕괴 조건
-- [ ] **건물/유닛**: 배치 규칙, 건설 시간, 원소(Sun/Rain/Wind/Thunder) 별 기술 트리, 연구(기술 획득) 방식
+- [ ] **섬 소유권** — 규칙은 사용자 확인으로 정리됨 (2026-09-28): [docs/gameplay/island-ownership.md](docs/gameplay/island-ownership.md)
+  - 섬 테두리 색 = 소유 플레이어 색. **그 플레이어의 신전이 섬에 있어야 소유권**을 얻는다
+  - 소유한 섬에서만 건물·유닛 배치와 **다리 시작**이 가능. 소유권이 없는 섬은 지나갈 수만 있고 배치·다리 시작 불가
+  - 캡처 근거: The War Begins! 에서 적 신전이 없어지자 적 섬 테두리가 빨강 → 주황(소유자 없음), 지면도 초록으로 바뀜
+  - 남은 일: exe 판정 함수, 소유자 변경 시점, 한 섬에 여러 신전, Outpost(중립 섬 소유), 받침 섬·가이저 바위의 소유권
+- [ ] **다리 건설**: 다리 조각 생성 규칙(모양 풀, 순서, `BridgeDrawRate`), 배치 판정, 연결·붕괴 조건 (다리는 소유한 섬에서만 시작 — 위 소유권 규칙)
+- [ ] **건물/유닛**: 배치 규칙(소유한 섬에만 배치 — 위 소유권 규칙), 건설 시간, 원소(Sun/Rain/Wind/Thunder) 별 기술 트리, 연구(기술 획득) 방식
 - [ ] **전투**: 사거리·명중·피해 공식, 발사체 궤적, 특수 효과(`bomb*` 계열: 마비, 중력, 치유, 반역 등), 방어(차단벽·실드)
 - [ ] **승패 조건**: 프리스트(priest) 사망/포획, 신전(temple) 파괴, 미션 스크립트 이벤트 발생 지점
 - [ ] 미션 스크립트 인터프리터 동작(3단계 문법 명세와 교차 검증)
@@ -337,17 +338,12 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
     (**좌표계 확정**: 위치 바이트 상위=x·하위=y, 청크 i → (i%16, i/16), 미니맵 1px = 2칸, 칸 = 16 × 약 11.25px(→ 캡처 3 에서 16 × 11 로 정정). noIsland = 가이저 받침 바위, 섬 지형 테마 = 신전 원소 추정)
   - [x] 원본 캡처 3: 캠페인 1-3 "Save the Island!" 시작 직후 (유닛·다리·바리케이드 배치) — 2026-09-28 완료: [docs/screens/save-the-island-start.md](docs/screens/save-the-island-start.md)
     (**템플릿 매칭으로 정밀 확정**: 칸 = 정확히 16 × 11px, 모든 타입이 칸 좌표→화면 점에 스프라이트 기준점(0,0)을 그림, TerrNN 청크 = 영역 소속 청크를 y·x 순으로 훑은 것. Sun Barricade = 두 기둥 사이 광선, 미니맵은 다리도 소유자 색으로 표시)
-  - [ ] 원본 캡처 4: 메인 메뉴 (`mainMenu.png`, 2026-09-28 추가) → `docs/screens/main-menu.md` 작성
-    - 첫 관찰: 창 제목 "NetStorm Main Menu". 구름 배경이 클라이언트 전체를 채우고, 타이틀 그림 **640×480 이 클라이언트 (192, 144) 에 정확히 가운데 배치**(캡처 측정). 버튼 8개 2줄: Campaign · Multiplayer · Demo · Help / Edit · Credits · Options · Quit
-    - 할 일: 타이틀 그림·버튼 그림의 원본 자산(`TITLE*.COL` 과 짝인 그림, exe 리소스 비트맵) 찾기, 버튼 좌표·글꼴 측정, 메뉴 정의가 exe 하드코딩인지 스크립트(`tell.english` 등 `$Button=`)인지 확인
-  - [ ] 원본 캡처 5: 도움말 창 (`help - NetStorm Instructions.png`, 2026-09-28 추가) → 관찰 노트 작성
-    - 첫 관찰: 메인 메뉴 위의 돌 테두리 창(클라이언트 약 (288, 41) 에서 450×350, 가로 가운데), 세로 스크롤바, Back/OK 버튼. 본문은 아카이브 `help.english` 의 `<a name="F1Help">` 절과 문구가 일치
-    - 조건 태그 확인: `<?{global.inMission}>…</?>` 의 "F8 로 목표 보기" 줄이 메뉴에서는 보이지 않음 → 조건 평가 구현(`MissionConditions`) 동작과 일치. `~lblue~.` 색 코드는 파란 글자, `<c>drag</c>` 는 노란 글자로 표시됨
-    - 할 일: 창 테두리·스크롤바 그림 자산, 줄 간격·글꼴(`!Arial.*.chfnt` 중 어느 것인지), 링크(`#앵커`, `cmd:Tell,…`, `http…`) 동작 관찰
-  - [ ] 원본 캡처 6: 캠페인 1-6 "Dissolved Alliance!" 시작 직후 (`Dissolved Alliance! - Started.png`, 2026-09-28 추가) → 관찰 노트 작성
-    - 첫 관찰: 창 제목 `NetStorm Mission "Dissolved Alliance!"`. 사이드바 Storm Power 4000 = 미션 헤더 `myStartMoney = 4000`. 눈 덮인 섬(왼쪽)·풀밭 섬(가운데)·붉은 적 영역(오른쪽 끝)이 함께 보여 **섬 테마가 여러 개인 맵** → 지면 원소 선택 규칙 검증 자료. 미니맵(왼쪽 아래)에 흰색·빨간색 영역
-    - 미션: `dissolvedalliance.english`/`.fort` (AI 2명: Prince of Thunder·Duke of Rain, 서로 동맹 `ai2AllyList`/`ai3AllyList`)
-    - 할 일: 맵 뷰어(`--map dissolvedalliance`)·지면 미리보기와 대조(섬 테마·다리·가이저 위치), 사이드바·미니맵 좌표를 기존 캡처와 비교
+  - [x] 원본 캡처 4~42 목록·캡처별 관찰 정리 — 2026-09-28: [docs/screens/README.md](docs/screens/README.md)
+    (메인 메뉴 계열 19장, The War Begins! 19장, Dissolved Alliance! 3장, 도움말 1장. 메인 메뉴 타이틀 그림 640×480 가운데 (192, 144), 도움말 = `help.english` `F1Help` 절(메뉴에서는 `<?{global.inMission}>` F8 줄 숨김 — 조건 평가 구현과 일치), 보유 exe = 10.72 패치판(Credits), Storm Power 색 흰/노랑/빨강 실례, 정보 창·게임 메뉴·결과 창 구성)
+  - [ ] 정밀 노트 작성(좌표·글꼴 측정): 메인 메뉴·대화상자(`docs/screens/main-menu.md`), 도움말 창, 미션 화면 정보 창·게임 메뉴 막대, 결과 창
+    - 할 일: 타이틀·버튼·돌 테두리·스크롤바 그림의 원본 자산 찾기(exe 리소스 비트맵, `TITLE*.COL` 짝 그림), 줄 간격·글꼴(`!Arial.*.chfnt` 중 어느 것인지), 메뉴 정의가 exe 하드코딩인지 스크립트(`offical*.english`·`tell.english` 의 `$Button=`)인지 확인, 도움말 링크(`#앵커`, `cmd:Tell,…`, `http…`) 동작
+  - [ ] Dissolved Alliance! 섬별 캡처(`Playing 1` 플레이어 눈 섬, `Playing 2` Prince of Thunder 돌 섬)와 `--map dissolvedalliance` 지면 미리보기 대조: 섬 테마·테두리 소유자색·다리·가이저 위치. 미션: `dissolvedalliance.english`/`.fort` (AI 2명 Prince of Thunder·Duke of Rain, `ai2AllyList`/`ai3AllyList` 로 서로 동맹)
+  - [ ] The War Begins! 진행 캡처로 **신전 원소 → 지면 테마**(비 → 눈·얼음, 바람 → 갈색 풀밭, 번개 → 어두운 돌, 신전 없음 → 초록 풀밭)와 소유권 변화 확인 (4단계 exe 분석으로 확정)
 - [ ] 메뉴 흐름도(타이틀 → 캠페인/멀티 → 브리핑 → 게임 → 결과)
 - [ ] 애니메이션 속도·연출(건설, 다리 설치, 폭발, 승리/패배), 사운드·음악 재생 타이밍
 - [ ] 수치 검증용 관찰(건설 시간, 공격 간격, 자원 증가 속도) → 4단계 결과와 대조
@@ -436,6 +432,10 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
 - [ ] 이벤트 섹션 트리거 연결 (`[Succeeded]`, `[Failed]`, `[aiNPriestDead]` 등)
 - [ ] 메인 메뉴 / 설정 / 브리핑 / 결과 화면
   - 메인 메뉴 버튼 8개(Campaign, Multiplayer, Demo, Help, Edit, Credits, Options, Quit), 640×480 타이틀 그림 가운데 + 구름 배경 — `mainMenu.png` 기준
+  - 하위 화면 구성은 [docs/screens/README.md](docs/screens/README.md) 1절: Campaign(6묶음·완료 점·잠긴 흐린 글자), Multiplayer(요새 섬 + Multiplayer Options 창), Demo(3개), Help 드롭다운(General Help - F1, Technical Help, Version), Edit(Load Battle Map 2열 목록), Credits(10.72 패치·원본), Options 드롭다운
+  - 미션 흐름: 브리핑(`[A.]`, Review Knowledge / Play Mission) → 게임 → Success!(`[Succeeded]`, Leave Missions / Next Mission) 또는 Failure!(`[Failed]`, Continue) → 재도전 확인(Replay Mission / Leave Missions)
+- [ ] 게임 화면 오브젝트 정보 창(컨텍스트 메뉴): `<이름> Level I`, Owner·Alignment·Class, 명령(Construct >, View Netstorm Knowledge, Put Knowledge into Production >, Upgrade costs N, Salvage gains N, About, Player >), 하위 창은 오른쪽에 열림 — `The War Begins! - * Context Menu.png`
+- [ ] 게임 메뉴 막대(화면 맨 위): Game · View · Options · Players · About. Game = Review Mission Objectives - F8 / Restart Mission, Leave Mission / Quit Game
 - [ ] 튜토리얼 재현 → 튜토리얼 영상과 대조
 
 ### 10단계. AI
@@ -495,6 +495,7 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
 2. **기준 버전**: 원본 1997 동작 vs Ticonderoga 패치(10.7x, 보유 exe) 동작 — 보유 exe 는 패치판이므로 기본적으로 패치판 동작을 따르되, 차이점은 `PatchFixs.txt` 로 문서화
 3. ~~**자산 정책**~~ → **결정됨** (AGENTS.md): 원본 파일 재활용 가능. 저장소에는 커밋하지 않고, 배포 시 필요한 자산을 동봉한다
 4. **멀티플레이 범위**: LAN 만 / 인터넷 로비 포함 / 원본 호환
+5. **와이드 화면(16:9·16:10) 처리**: 원본은 4:3 만 지원하고 카메라 확대가 없다. 맵 시야를 옆으로 넓힐지(원본 해상도 선택 동작과 가장 가까움) / 4:3 + 레터박스로 둘지, 멀티플레이 시야 형평성 포함 (1.7절)
 
 ## 6. 바로 다음 작업
 
@@ -520,7 +521,8 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
    - 다음 후보: 인라인/줄 명령의 인자 파싱·실행 및 HTML UI, 창·오디오 설정 적용과 사용자 설정 저장, 게임 틱 분석 후 동작별 재생 속도
 4. 4단계: 메인 루프/틱, 다리 생성(`Deck.cpp`, `Bridge.cpp`), 경제 분석
 5. 5단계(영상 분석)와 병행: 공식 캠페인 구성([mission-script.md](docs/formats/mission-script.md))과 영상 대응 확인
-   - 2026-09-28 추가 캡처 3장(메인 메뉴·도움말·Dissolved Alliance!)의 관찰 노트 작성 (5단계 캡처 4~6). Dissolved Alliance! 는 섬 테마가 여러 개라 지면 원소 선택 규칙 검증에 우선 활용
+   - 2026-09-28 추가 캡처 목록·관찰 정리 완료 ([docs/screens/README.md](docs/screens/README.md)). 다음은 Dissolved Alliance! 섬별 캡처로 지면 테마·소유자 테두리 대조, 메뉴 화면 정밀 좌표 노트
+   - 섬 소유권 규칙([island-ownership.md](docs/gameplay/island-ownership.md))을 지면 미리보기의 소유자색에 반영: 지금은 저장된 영역 소유자로 칠하지만 원본 규칙은 신전 유무로 소유자 결정
 6. (원격 저장소가 생기면) CI 실제 실행 확인 — `originals/` 포함 후 원본 검증 테스트까지 실행되는지
 7. 7단계 착수 시 화면 요구사항(풀스크린·16:9/16:10/4:3·가장자리 스크롤, 1.7절)을 먼저 설계에 반영
 
