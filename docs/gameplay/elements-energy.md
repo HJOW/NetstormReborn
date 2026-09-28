@@ -92,6 +92,9 @@ Sun 은 아무 원소 공급원으로 채우므로, level 1 유닛(Generator 포
 * 원판 매뉴얼(`GAME.HLP`)의 유닛별 "Energy to Build" 는 위 규칙과 대부분 같다 (Sun 유닛 = Sun × level, Generator = Sun 1, level 2 원소 유닛 = 원소 1 + Sun 1, level 3 = 원소 2 + Sun 1).
 * **다른 점: level 1 원소 유닛** — 매뉴얼은 Bulf = **Thunder 1**, Sail Skater = Wind 1, Acid Barricade = Rain 1 로 자기 원소를 요구한다 (매뉴얼 규칙: 원소 = max(1, level − 1), Sun = 나머지, Generator 는 예외로 Sun).
   현재 규칙대로면 level 1 은 아무 공급원 1개다. 패치판에서 level 1 인 원소 유닛(Bulf·Arc Spire·Crystal Crab)에 무엇이 필요한지 **사용자·exe 확인 필요**.
+  * exe 조사 진행 상황 (2026-09-29, 중단): `Rifttype.cpp` 로더가 `theme` 을 타입 구조체 **+0x98**(첫 글자로 표 `0x592990` 에서 번호 변환), `level` 을 **+0x94 에 level − 1** 로 저장한다.
+    +0x94·+0x98 을 함께 읽는 함수는 `0044ac30`, `00473d00`, `0049b0d0`(타입 플래그 파생), `004cb320`·`004cb3f0`(`Ui.cpp` — 원소·레벨로 유닛 목록을 세는 메뉴용) 다섯 개다.
+    에너지 판정 후보는 아직 읽지 않은 **`0044ac30`·`00473d00`** 이며, 다음에 이 둘부터 확인한다.
 * 레벨·비용 자체도 원판과 패치판이 다르다 (예: Sail Skater 원판 level 1 → 패치 level 2, Acid Barricade 1 → 2, Arc Spire 2 → 1, Crystal Crab 2 → 1). 구현은 패치판 `.type` 을 따른다.
 
 ## 5. 질문과 답 (사용자 확인, 2026-09-28)

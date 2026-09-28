@@ -31,9 +31,9 @@
 |---|---|---|---|---|
 | 1 | **level 1 원소 유닛의 에너지** | 매뉴얼: Bulf = **Thunder 1**, Sail Skater = Wind 1, Acid Barricade = Rain 1 (원소 유닛 level 1 은 자기 원소 1개). Generator 는 Sun 1 | 사용자 확인 규칙: `자기 원소 × (level − 1) + Sun × 1` → level 1 은 **아무 공급원 1개** ([elements-energy.md](../gameplay/elements-energy.md)) | 패치판 `.type` 의 level 1 원소 유닛(Bulf·Arc Spire·Crystal Crab)이 Thunder/Rain 1 인지 아무 1 인지 사용자·exe 확인. 매뉴얼 규칙은 "원소 = max(1, level−1), Sun = 나머지, Generator 는 Sun" 으로 정리됨 |
 | 2 | Thunder Cannon 레벨 | 매뉴얼 개요: Level III (Thunder 2 + Sun 1) / 유닛 항목: Level II (Thunder 1 + Sun 1) | `.type` level 2 | 유닛 항목·`.type` 을 따름 (개요 문장은 오기로 봄) |
-| 3 | 파일 조회 순서 | 패치 10.70 V5.3: "치트 방지로 하드디스크 파일보다 **tarc 를 먼저**" | 정적 분석: 데이터 폴더 디스크 → tarc ([vfs.md](../formats/vfs.md)) | exe 조회 함수 재확인 + Process Monitor 로 동적 확인. 파일 종류별 차이 가능 |
+| 3 | 파일 조회 순서 | 패치 10.70 V5.3: "치트 방지로 하드디스크 파일보다 **tarc 를 먼저**" | 정적 분석: 데이터 폴더 디스크 → tarc ([vfs.md](../formats/vfs.md)) | **재확인 완료(2026-09-29)**: 열기·이름 해석 함수와 모든 호출부가 디스크 우선, 아카이브 우선인 존재 검사도 결과를 있음/없음으로만 씀 → 보유 exe 는 **디스크 우선** 유지. 클론 구현 변경 없음. 원하면 동적 확인 방법은 vfs.md |
 | 4 | `bridgeDrawRate`·`stuffRefreshRate` | 패치 V9.0 에서 CFG 명령 제거 | `options.cfg` 에 값이 남아 있음 | **확인 완료(2026-09-29)**: exe 설정 키 등록(`00441270` 호출)에 두 키가 없다 → `options.cfg` 값은 무시됨. `edgeScrollSpeed`·`maxFPS` 는 등록됨. 미션 머리 값 `aiNBridgeDrawRate`(AI 다리 속도)는 별개로 여전히 쓰임 |
-| 5 | Storm Power 숫자 색 | 매뉴얼: **1000 미만이면 빨강** | 사용자: 흰/노랑/빨강 3단계, 캡처 450·200 빨강, 1400·1650 노랑 | 노랑 기준은 패치판 추가로 보임 → exe 에서 기준값 확인 |
+| 5 | Storm Power 숫자 색 | 매뉴얼: **1000 미만이면 빨강** | 사용자: 흰/노랑/빨강 3단계, 캡처 450·200 빨강, 1400·1650 노랑 | **확인 완료(2026-09-29)**: `Combatgump.cpp` `0043da10` — **SP ≤ 1000 빨강(`~r`), 1001~2000 노랑(`~y`), 2001 이상 흰색(`~w`)**. 형식 `~3~E~%c%d~[I%d.3]`(크기 3·엠보스·색·숫자·SP 아이콘). 캡처 값 전부 일치 |
 | 6 | 건물 배치 위치 | 매뉴얼: 건물은 섬 위에만(다리 끝 불가). 유닛은 내 섬·아군 다리 끝·중립 섬 | 사용자: 빈 섬은 워크샵·알타 가능(사제 도달), 건물형 유닛은 다리 연결 필요 ([island-ownership.md](../gameplay/island-ownership.md)) | 일치. "Stream of Power"(워크샵·아웃포스트에서 SP 줄기가 도달해야 활성화)가 다리 연결 조건의 이유 → 규칙 문서에 반영 |
 | 7 | 알타 위치 | 매뉴얼: 본섬·점령한 적 섬·중립 섬 | 사용자: 빈 섬에도 가능 | 캠페인 "빈 섬" = 멀티의 중립 섬에 해당하는 것으로 보임 |
 | 8 | 멀티 Generator Range | 매뉴얼: short/normal/long 3단계 | exe: 4단계(Very Long 추가), 14/22/30/38 중 30 상한 | 패치판 기준 ([battle-options.md](../exe/battle-options.md)) |
