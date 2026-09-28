@@ -43,7 +43,7 @@
 | `Dissolved Alliance! - Playing 2.png` | Prince of Thunder 섬(번개 신전): 빨간 테두리 |
 | `mainMenu - Multiplayer.png` | 멀티플레이 준비 화면의 자기 섬(신전 없음): 주황 테두리 |
 
-지면 테마도 신전 원소를 따르는 것으로 보인다 (비 → 눈·얼음, 바람 → 갈색 풀밭, 번개 → 어두운 돌, 신전 없음 → 초록 풀밭). 목록: [docs/screens/README.md](../screens/README.md) 5절.
+지면 테마도 신전 원소를 따르는 것으로 보인다 (비 → 눈·얼음, 바람 → 갈색 풀밭, 번개 → 어두운 돌, 신전 없음 → 초록 풀밭). 목록: [docs/screens/README.md](../screens/README.md) 6절.
 
 ## 기존 분석과의 관계
 

@@ -60,7 +60,7 @@
 |---|---|
 | `The War Begins! - Briefing.png` | 시작 브리핑: 미션 스크립트 `[A.]` 절 (제목 `<h2>`, 인용문 갈색 글자, 본문). 버튼 **Review Knowledge / Play Mission**. Storm Power 3000. 배경은 이미 맵 화면 |
 | `The War Begins! - Playing 1.png` | Storm Power 450(빨강). 적 섬은 **갈색 풀밭 + 빨간 테두리** + 회오리 신전(windVortex), 휘리기그(windFlyer)·포대 다수 |
-| `The War Begins! - Playing 2.png` | 1650(노랑). 건물 배치 중 표시(흰 사각형 + 400). 하늘에 반짝이는 별 모양 효과 여러 개 |
+| `The War Begins! - Playing 2.png` | 1650(노랑). 건물 배치 중 표시(흰 사각형 + 400). 하늘의 노란 별 여러 개 = 배치 중인 유닛의 **공격 범위** 표시 (사용자 확인) |
 | `The War Begins! - Playing 3.png` | 사제 정보 창: High Priest Level I / Owner: You / Alignment: None / Class: High Priest / Construct >, View Netstorm Knowledge / About, Player > → 하위 "Construct Building": Temple >, Workshop >, Build Level 1 Altar for 500 |
 | `The War Begins! - High Priest Context Menu.png` | 같은 사제 메뉴를 다른 시점에서 (Storm Power 2800) |
 | `The War Begins! - Playing 4.png` | 2950. 자기 섬에 건설 중인 건물의 **어두운 그림자 모양 표시** |
@@ -76,7 +76,17 @@
 | `The War Begins! - Lose 1.png` | "Failure!" 창: `[Failed]` 절 문구 + **Continue** |
 | `The War Begins! - Lose 2.png` | 이어서 "Would you like to attempt the mission **The War Begins!** again?" (미션 이름 노란 글자) + **Replay Mission / Leave Missions** |
 
-## 4. Dissolved Alliance! (캠페인 1-6)
+## 4. 에너지 공급 범위 (2026-09-28 추가)
+
+선택한 템플·Generator 둘레를 **그 원소 모양 아이콘**이 돌며 공급 범위를 보여 준다 (노란 별은 공격 범위). 측정: [elements-energy.md](../gameplay/elements-energy.md) 6절.
+
+| 파일 | 관찰 |
+|---|---|
+| `Normal Mission - Temple - Generating Range.png` | The War Begins! (일반 미션). Rain Temple 둘레 물방울 아이콘 5개 → 반지름 **30칸** |
+| `Normal Mission - Generator - Generating Range.png` | The War Begins!. 배치 중인 Rain Generator(400) 둘레 물방울 6개 → **30칸** (일반 미션에서는 템플·Generator 동일) |
+| `Tutorial - Temple - Generating Range.png` | 튜토리얼 2 "Secret Workshop". 배치 중인 Wind Temple(5000) 둘레 조개껍데기 아이콘 7개 → **약 14칸** (튜토리얼 일부만 축소) |
+
+## 5. Dissolved Alliance! (캠페인 1-6)
 
 카메라 확대·축소가 없어 섬 3개를 한 화면에 담을 수 없으므로, 시점을 옮겨 섬마다 찍었다.
 
@@ -86,14 +96,14 @@
 | `Dissolved Alliance! - Playing 1.png` | Duke of Rain(소유자 3) 섬 전체: 눈·얼음 지면, 파란 테두리, 비 신전(물웅덩이 모양)과 다른 대형 건물, 수집기·유닛들. 오른쪽에 가운데 섬 가장자리 (2026-09-28 정정: 처음에 플레이어 섬으로 잘못 적었음) |
 | `Dissolved Alliance! - Playing 2.png` | Prince of Thunder 섬 전체: **어두운 회색 돌 지면 + 빨간 테두리**, 번개 신전(전기 구체), 붉은 수정 모양 유닛 다수. 미니맵에 빨간 영역 |
 
-## 5. 여러 캡처에서 나온 추정 (확인 필요)
+## 6. 여러 캡처에서 나온 추정 (확인 필요)
 
 * **섬 지면 테마 = 영역에 있는 신전의 원소** (기존 추정 강화, [the-war-begins-start.md](the-war-begins-start.md)):
   비 신전 → 눈·얼음 지면, 바람(회오리) 신전 → 갈색 풀밭, 번개 신전 → 어두운 돌 지면, **신전이 없으면 초록 풀밭** (The War Begins! 에서 적 신전이 사라진 뒤 초록으로 바뀜, 멀티플레이 준비 화면의 자기 섬도 초록).
   `isle.type` 타일 이름 `RAGRASS`·`WIGRASS`·`THGRASS`·`rgrass` 와의 대응, 해 원소(sun) 의 처리, 바뀌는 시점(즉시/점진)은 exe·동적 분석으로 확인한다.
 * 사이드바 아이콘의 붉은 칠 = 비용 부족, 흐린 목록 글자 = 잠긴 미션.
 
-## 6. 섬 소유권 (사용자 확인, 2026-09-28)
+## 7. 섬 소유권 (사용자 확인, 2026-09-28)
 
 * **섬 테두리 색은 섬의 소유권을 나타낸다.** 캡처에서 플레이어 섬은 파란색, 적 섬은 빨간색, 소유자가 없는 섬은 주황색 테두리다.
 * **그 플레이어의 신전(temple)이 섬에 있어야 소유권을 얻는다.** The War Begins! 에서 적 신전이 없어지자 적 섬 테두리가 빨강 → 주황으로 바뀐 것(`Playing 1` → `Playing 5`)이 이 규칙과 맞는다.
