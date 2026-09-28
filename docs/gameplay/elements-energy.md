@@ -1,7 +1,7 @@
 # 원소·원소 에너지·발전기
 
 > 분석 상태: **사용자 설명(2026-09-28) + `.type` 데이터 대조**. exe 의 에너지 판정 함수는 미확인.
-> 에너지 규칙 질문 A~F 는 모두 사용자 답변으로 확정됨 (5절). 공급 범위는 일반 30칸으로 측정 (6절). 남은 것은 exe 검증.
+> 에너지 규칙 질문 A~F 는 모두 사용자 답변으로 확정됨 (5절). 공급 범위는 일반 30칸·튜토리얼 2 14칸 — 측정과 exe(전투 옵션 Generator Range) 모두 확인 (6절). 남은 것은 에너지 판정 함수 검증.
 
 ## 1. 원소 (사용자 확인)
 
@@ -42,7 +42,7 @@
   * Generator 는 **꽤 넓은 범위** 안에 **자기 원소 에너지 1개분**을 공급한다.
   * Temple 은 원소별로 1종씩(Rain·Wind·Thunder Temple) 있고, **Generator 와 똑같이 자기 원소 에너지 1개분을 같은 범위에** 공급한다 (사용자 확인).
   * 템플이나 Generator 를 선택하면 **그 원소 모양 아이콘**(비 = 물방울, 바람 = 조개껍데기 모양 등)이 둘레를 돌며 공급 범위를 보여 준다. **노란 별은 공급 범위가 아니라 건물형 유닛의 공격 범위** 표시다 (사용자 확인).
-  * **공급 범위 = 반지름 30칸 원 (칸 좌표 거리² ≤ 900)**. 일반 미션에서는 템플·Generator 모두 같다. 튜토리얼 일부(예: 2번 Secret Workshop)는 약 14칸으로 축소되어 있었다 (6절).
+  * **공급 범위 = 반지름 30칸 원 (칸 좌표 거리² ≤ 900)**. 일반 미션에서는 템플·Generator 모두 같다. 튜토리얼 2(Secret Workshop)만 14칸으로 축소된다. 반지름은 전투 옵션 Generator Range 값이다 (6절).
 
 ## 4. 유닛별 필요 에너지
 
@@ -106,12 +106,14 @@ Sun 은 아무 원소 공급원으로 채우므로, level 1 유닛(Generator 포
 | `Normal Mission - Temple - Generating Range.png` (The War Begins!) | Rain Temple | 물방울 | 5 | **30.0칸** | 899.5 | ≤ 0.06 |
 | `Normal Mission - Generator - Generating Range.png` (The War Begins!) | Rain Generator (배치 중, 400) | 물방울 | 6 | **30.0칸** | 900.3 | ≤ 0.07 |
 | Early Missions 영상 606초 (튜토리얼, 우클릭 메뉴 열림) | Wind Temple | 조개껍데기 | 4 | **30.0칸** | ≈ 902 | ≤ 0.01 |
-| `Tutorial - Temple - Generating Range.png` (튜토리얼 2 Secret Workshop) | Wind Temple (배치 중, 5000) | 조개껍데기 | 7 | **약 14칸** | ≈ 198 | ≤ 0.23 |
+| `Tutorial - Temple - Generating Range.png` (튜토리얼 2 Secret Workshop) | Wind Temple (배치 중, 5000) | 조개껍데기 | 7 | **약 14칸** (exe: 14) | ≈ 198 | ≤ 0.23 |
 
 * **일반 공급 범위 = 30칸 (거리² ≤ 900)**. 사용자 설명대로 일반 미션에서는 템플·Generator 가 모두 같다.
-* **튜토리얼 일부는 축소**되어 있다: Secret Workshop(튜토리얼 2) 의 Wind Temple 은 약 14칸 (아이콘이 작고 잔차가 커서 14 또는 √200 ≈ 14.1 중 어느 쪽인지는 미확정). 튜토리얼이 모두 그런 것은 아니다 (Early Missions 영상 606초의 튜토리얼 장면은 30칸).
-* 범위를 줄이는 방법은 미확인: 튜토리얼 미션 머리 값에만 있는 키는 `aiNoTemple`, `aiOff`, `denyAscend`, `denySalvage`, `myProd`, `techAllowed`, `tutorialNumber` 이고 범위를 직접 정하는 키는 없다.
-  `options.cfg`·`setup.cfg` 에도 범위 키가 없다. `.type` 의 `rangeConst`·`rangeVar` 는 로더가 assert 로 막는 옛 속성이다. exe 에서 30 / 900 과 튜토리얼 조건을 찾아야 한다.
+* **튜토리얼 2 만 축소**: Secret Workshop(튜토리얼 2) 의 Wind Temple 은 약 14칸 (exe 로 14칸 확정). 다른 튜토리얼은 일반 30칸이다 (Early Missions 영상 606초의 튜토리얼 장면도 30칸).
+* **exe 확인 (2026-09-29, [battle-options.md](../exe/battle-options.md))**: 반지름은 전투 옵션 **Generator Range** 로 정해진다.
+  범위 표 `{14, 22, 30, 38}`칸(Short·Normal·Long·Very Long)에서 고른 뒤 **14~30칸으로 제한**하고 제곱값으로 비교한다.
+  기본값은 Very Long(38) → 상한에 걸려 **30칸** = 일반 미션 측정값. **튜토리얼 2 처리 함수만** 첫 단계에서 Short(**14칸**)로 바꾼다 → 튜토리얼 2 측정값(약 14칸)의 정확한 값은 **14칸**.
+  (도움말 원판은 short/normal/long 3단계라고 설명하며, 패치판 exe 는 4단계 이름과 30칸 상한을 가진다.)
 * 범위 표시는 `rangeDisplayProcessType` 프로세스로 보인다 (exe 추적 필요).
 
 ### 노란 별 = 공격 범위 (사용자 확인)
