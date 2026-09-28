@@ -217,6 +217,51 @@ public sealed class MapRenderingTests
         }
     }
 
+    /// <summary>원본 AA00 그림은 원소별 3×3 묶음이며 한 묶음의 아홉 칸이 같은 변형을 공유한다.</summary>
+    [Theory]
+    [InlineData("sun")]
+    [InlineData("thunder")]
+    [InlineData("wind")]
+    [InlineData("rain")]
+    public void Original_CoreTilesUseThreeByThreeFrames(string theme)
+    {
+        var archive = TaffArchive.Open(OriginalData.RequireFile("netstorm.tarc"));
+        TypeDefinition isle = new TypeCatalog(archive).Find("isle")!.Definition;
+        int first = FortTerrainPreview.SelectCluster(isle, 'A', 'A', theme, 30, 60);
+        ClusterImageRef image = isle.Clusters[first].Layers[0];
+        int variant = (image.Frame - 47) / 9;
+        Assert.InRange(variant, 0, 3);
+        // 같은 묶음의 세 행과 세 열이 원본 그림 번호의 행 우선 순서를 따른다.
+        for (int dy = 0; dy < 3; dy++)
+        {
+            // 각 행의 세 칸이 같은 그림 묶음 안에 있는지 검사한다.
+            for (int dx = 0; dx < 3; dx++)
+            {
+                int cluster = FortTerrainPreview.SelectCluster(isle, 'A', 'A', theme, 30 + dx, 60 + dy);
+                Assert.Equal(first + dy * 3 + dx, cluster);
+                Assert.Equal("AA00", isle.Clusters[cluster].Name);
+                Assert.Equal(image.Image, isle.Clusters[cluster].Layers[0].Image);
+                Assert.Equal(47 + variant * 9 + dy * 3 + dx, isle.Clusters[cluster].Layers[0].Frame);
+            }
+        }
+    }
+
+    /// <summary>원본 MSVC rand와 99개 표의 고정 시드 재현 결과를 여러 3×3 영역에서 확인한다.</summary>
+    [Theory]
+    [InlineData(0, 0, 2)]
+    [InlineData(30, 60, 1)]
+    [InlineData(33, 60, 2)]
+    [InlineData(99, 123, 3)]
+    [InlineData(255, 255, 2)]
+    public void Original_CoreVariantTableUsesPredictableSeed(int x, int y, int variant)
+    {
+        var archive = TaffArchive.Open(OriginalData.RequireFile("netstorm.tarc"));
+        TypeDefinition isle = new TypeCatalog(archive).Find("isle")!.Definition;
+        int cluster = FortTerrainPreview.SelectCluster(isle, 'A', 'A', "sun", x, y);
+        int sourceFrame = isle.Clusters[cluster].Layers[0].Frame;
+        Assert.Equal(47 + variant * 9 + (y % 3) * 3 + x % 3, sourceFrame);
+    }
+
     /// <summary>원본 어셈블리에서 독립 재현한 Python 마스크와 전체 65,536칸·영역별 크기를 대조한다.</summary>
     [Theory]
     [InlineData("savetheisland", "68e699f55ad34041f316f4466f6c33d2edb6807833a648462a64ebbc2c505cc8", 0, 1384, 7, 698)]

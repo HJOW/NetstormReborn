@@ -25,6 +25,26 @@ public sealed class FortTerrainPreview
     private const uint ChunkSeedStep = 0x10E3;
     /// <summary>원본 성장에서 후보를 찾는 최대 실패 횟수.</summary>
     private const int GrowthRetryLimit = 1000;
+    /// <summary>원본 AA 지면 그림의 한 변 칸 수.</summary>
+    private const int CorePatternSize = 3;
+    /// <summary>원본 AA 지면의 원소별 3×3 변형 개수.</summary>
+    private const int CoreVariantCount = 4;
+    /// <summary>원소 하나가 차지하는 AA 지면 클러스터 개수.</summary>
+    private const int CoreThemeFrameCount = CorePatternSize * CorePatternSize * CoreVariantCount;
+    /// <summary>원본 00455970의 예측 가능 모드에 쓰는 MSVC rand 시드.</summary>
+    private const uint PreviewCoreSeed = 0x38D535u;
+    /// <summary>원본 00455970이 시드 설정 뒤 표 생성 전에 소비하는 최소 rand 호출 수.</summary>
+    private const int CoreSeedWarmupCount = 103;
+    /// <summary>원본 MSVC rand 상태 전이의 곱셈 계수.</summary>
+    private const uint CoreRandomMultiplier = 0x343FDu;
+    /// <summary>원본 MSVC rand 상태 전이의 덧셈 계수.</summary>
+    private const uint CoreRandomIncrement = 0x269EC3u;
+    /// <summary>원본 MSVC rand가 반환하는 15비트 값의 마스크.</summary>
+    private const uint CoreRandomResultMask = 0x7FFFu;
+    /// <summary>원본 004c04b0이 한 번 생성하는 변형 난수표의 항목 수.</summary>
+    private const int CoreVariantTableSize = 99;
+    /// <summary>원본 표 생성식을 고정 시드로 실행한 개발용 3×3 변형 선택표.</summary>
+    private static readonly int[] CoreVariantTable = CreateCoreVariantTable();
     /// <summary>북부터 시계 방향으로 나열한 여덟 이웃 좌표 (VA 0x52f83c/0x52f85c).</summary>
     private static readonly (int X, int Y)[] Neighbors = [(0, -1), (1, -1), (1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1)];
 
@@ -157,7 +177,7 @@ public sealed class FortTerrainPreview
                 string theme = _themes[region];
                 char a = MaskOrientation(NeighborMask(x, y, region, false));
                 char b = MaskOrientation(NeighborMask(x, y, region, true));
-                int cluster = SelectCluster(isle, a, b, theme, x, y);
+                int cluster = SelectCluster(isle, a, b, theme, x, y, region >= 0);
                 tiles.Add(new FortTerrainTile(x, y, region, theme, cluster) { Owner = _owners.GetValueOrDefault(region) });
             }
         }
@@ -312,9 +332,16 @@ public sealed class FortTerrainPreview
         return true;
     }
 
-    /// <summary>원소별 그림 이름과 연결 방향으로 타일을 선택한다. 시각적 변형은 좌표로 고정한다.</summary>
-    public static int SelectCluster(TypeDefinition definition, char a, char b, string theme, int x, int y)
+    /// <summary>원소·연결 방향을 따르고 안쪽 AA 타일은 고정 시드의 원본 99항목 표로 3×3 그림을 선택한다.</summary>
+    public static int SelectCluster(TypeDefinition definition, char a, char b, string theme, int x, int y,
+        bool useCorePattern = true)
     {
+        // 원본 004c04b0은 안쪽 AA 칸을 JJ00 다음의 연속 3×3 그림으로 먼저 선택한다.
+        if (useCorePattern && a == 'A' && b == 'A'
+            && CorePatternCluster(definition, theme, x, y) is int coreCluster)
+        {
+            return coreCluster;
+        }
         int[] candidates = Candidates(definition, $"{a}{b}", theme);
         if (candidates.Length == 0)
         {
@@ -338,6 +365,82 @@ public sealed class FortTerrainPreview
             throw new InvalidDataException($"{definition.Name}: 테마 {theme}의 지면 타일이 없습니다.");
         }
         return candidates[(x * 31 + y * 17) % candidates.Length];
+    }
+
+    /// <summary>JJ00 뒤 원소별 36프레임에서 같은 3×3 묶음의 좌표에 맞는 한 칸을 찾는다.</summary>
+    private static int? CorePatternCluster(TypeDefinition definition, string theme, int x, int y)
+    {
+        int themeIndex = theme switch { "sun" => 0, "thunder" => 1, "wind" => 2, "rain" => 3, _ => -1 };
+        if (themeIndex < 0)
+        {
+            return null;
+        }
+        int placeholder = -1;
+        // 원본 타입 정의에서 3×3 그림 시작 전의 JJ00 자리표시자를 찾는다.
+        for (int i = 0; i < definition.Clusters.Count; i++)
+        {
+            if (definition.Clusters[i].Name == "JJ00")
+            {
+                placeholder = i;
+                break;
+            }
+        }
+        int first = placeholder + 1 + themeIndex * CoreThemeFrameCount;
+        if (placeholder < 0 || first + CoreThemeFrameCount > definition.Clusters.Count)
+        {
+            return null;
+        }
+        // 잘못된 타입 정의에서는 연속 프레임 규칙을 적용하지 않고 기존 방향 폴백을 사용한다.
+        for (int i = first; i < first + CoreThemeFrameCount; i++)
+        {
+            Cluster cluster = definition.Clusters[i];
+            if (cluster.Name != "AA00" || cluster.Layers.Count == 0
+                || MapSpriteFrames.ImageTheme(cluster.Layers[0].Image) != theme)
+            {
+                return null;
+            }
+        }
+        int variant = CoreVariant(x / CorePatternSize, y / CorePatternSize);
+        return first + variant * CorePatternSize * CorePatternSize
+            + (y % CorePatternSize) * CorePatternSize + x % CorePatternSize;
+    }
+
+    /// <summary>원본 004c04b0의 두 좌표 인덱스와 99개 난수표로 변형 번호를 고른다.</summary>
+    private static int CoreVariant(int blockX, int blockY)
+    {
+        int index = (CoreVariantTable[blockY % CoreVariantTableSize]
+            + CoreVariantTable[blockX % CoreVariantTableSize]) % CoreVariantTableSize;
+        return (CoreVariantTable[index] + blockY) % CoreVariantCount;
+    }
+
+    /// <summary>원본 004c04b0처럼 연속 항목의 하위 2비트가 같으면 뒤 항목을 1 올린다.</summary>
+    private static int[] CreateCoreVariantTable()
+    {
+        var values = new int[CoreVariantTableSize];
+        uint state = PreviewCoreSeed;
+        // 원본 00455970은 시드 직후 100개를 버리고 세 값을 추가로 소비한다.
+        for (int i = 0; i < CoreSeedWarmupCount; i++)
+        {
+            NextCoreRandom(ref state);
+        }
+        // 원본이 _rand를 99회 호출해 표를 채우는 순서를 유지한다.
+        for (int i = 0; i < values.Length; i++)
+        {
+            int value = NextCoreRandom(ref state);
+            if (i > 0 && (value & (CoreVariantCount - 1)) == (values[i - 1] & (CoreVariantCount - 1)))
+            {
+                value++;
+            }
+            values[i] = value;
+        }
+        return values;
+    }
+
+    /// <summary>원본 MSVC _rand의 32비트 상태 전이와 15비트 반환값을 재현한다.</summary>
+    private static int NextCoreRandom(ref uint state)
+    {
+        state = unchecked(state * CoreRandomMultiplier + CoreRandomIncrement);
+        return (int)((state >> 16) & CoreRandomResultMask);
     }
 
     /// <summary>원본 0041cd20의 방향 정규화: 직선 이웃이 지지하는 대각선만 남기고 직선 방향을 복원한다.</summary>
