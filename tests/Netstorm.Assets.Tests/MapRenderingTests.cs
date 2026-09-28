@@ -74,6 +74,40 @@ public sealed class MapRenderingTests
         Assert.Throws<InvalidDataException>(() => MapSpriteFrames.BodyFrame(obj with { BridgeShape = 2 }));
     }
 
+    /// <summary>
+    /// 원본 거주지(randframe)는 섬 원소별 그림을 쓴다 (Dissolved Alliance! 캡처: 바람 섬 = 흙집, 비 섬 = 돔).
+    /// 원소마다 해당 그림의 lit 클러스터를 고르고, 저장 프레임이 있으면 그 값을 우선한다.
+    /// </summary>
+    [Theory]
+    [InlineData("sun", "RESIDENCE")]
+    [InlineData("rain", "RARESIDENCE")]
+    [InlineData("wind", "WRESIDENCE")]
+    [InlineData("thunder", "THRESIDENCE")]
+    public void Original_ResidenceUsesTerritoryTheme(string theme, string image)
+    {
+        var archive = TaffArchive.Open(OriginalData.RequireFile("netstorm.tarc"));
+        TypeInfo type = new TypeCatalog(archive).Find("residence")!;
+        var obj = new FortObject(0, 0, type, null, null, null, null, null, 0, []);
+        // 좌표가 달라도 같은 원소 그림 안에서만 고른다
+        foreach ((int x, int y) in new[] { (142, 140), (103, 134), (0, 0) })
+        {
+            Cluster cluster = type.Definition.Clusters[MapSpriteFrames.BodyFrame(new FortMapObject(x, y, 0, obj), theme)];
+            Assert.Equal(image, Path.GetFileNameWithoutExtension(cluster.Layers[0].Image), ignoreCase: true);
+            Assert.Contains("lit", cluster.Flags);
+        }
+        Assert.Equal(3, MapSpriteFrames.BodyFrame(new FortMapObject(0, 0, 0, obj with { Frame = 3 }), theme));
+    }
+
+    /// <summary>원본 그림 이름 접두어로 원소를 판정한다.</summary>
+    [Theory]
+    [InlineData("RAGRASS.GIF", "rain")]
+    [InlineData("THRESIDENCE.GIF", "thunder")]
+    [InlineData("WIGRASS.GIF", "wind")]
+    [InlineData("WRESIDENCE.GIF", "wind")]
+    [InlineData("residence.gif", "sun")]
+    public void ImageTheme_FromPrefix(string image, string theme) =>
+        Assert.Equal(theme, MapSpriteFrames.ImageTheme(image));
+
     /// <summary>원본 가이저 기본 B00은 본체 49번이며 그림자 영역으로 건너뛰지 않아야 한다.</summary>
     [Fact]
     public void Original_GeyserDefaultUsesBodyInsteadOfShadow()

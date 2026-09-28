@@ -164,6 +164,11 @@ public sealed class FortTerrainPreview
         Tiles = tiles;
     }
 
+    /// <summary>영역의 지면 원소 (영역 신전의 theme, 신전이 없거나 영역 밖이면 sun).</summary>
+    /// <param name="territory">영역 번호. null 은 영역 밖(Chaff) 오브젝트</param>
+    public string TerritoryTheme(int? territory) =>
+        territory.HasValue ? _themes.GetValueOrDefault(territory.Value, "sun") : "sun";
+
     /// <summary>방향 문자를 원본 연결 비트로 옮긴다.</summary>
     public static int ConnectionMask(char orientation) => Connections[orientation - 'A'];
     /// <summary>이웃 비트를 원본 방향 문자로 옮긴다.</summary>

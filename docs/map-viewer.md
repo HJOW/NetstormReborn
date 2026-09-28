@@ -22,7 +22,8 @@ dotnet run --project src/Netstorm.Game -- --map savetheisland --language korean
 
 * 방향키 또는 마우스 우클릭 드래그: 카메라 이동
 * 마우스 휠: 0.25~4배 확대
-* Home: 플레이어 1 사제에 카메라 맞춤
+* Home: 시작 카메라로 복귀 — 원본 미션 시작 화면처럼 플레이어 1 사제 칸 기준점을 창 중심에서 (+13, +9) 떨어진 곳에 둔다.
+  1024×768 창이면 사제가 원본 캡처와 같은 (525, 393) 에 그려져, 뷰어 캡처를 원본 캡처와 바로 겹쳐 볼 수 있다 ([측정](screens/dissolved-alliance-start.md) 2절)
 * G: 진단용 청크 윤곽 표시 전환
 * 오브젝트 기준점 근처에 마우스: 타입, 좌표, 영역, 소유자, 다리 값 표시
 * Esc: 종료
@@ -34,7 +35,9 @@ dotnet run --project src/Netstorm.Game -- --map savetheisland --screenshot extra
 ```
 
 원본 팔레트와 본체 레이어를 사용하는 정적 뷰어다. 저장 프레임이 없는 타입은
-`default` 클러스터를 선택한다. 건물 기준점에 xmin/ymin을 더해 그린다.
+`default` 클러스터를 선택한다. 단 `randframe` 거주지(Residence)는 원본 캡처처럼 영역 신전 원소의 그림
+(해·비·바람·번개별 residence 그림) 중 lit 프레임 하나를 좌표로 고정해 고른다 (원본은 무작위, 2026-09-28).
+건물 기준점에 xmin/ymin을 더해 그린다.
 게임의 정확한 깊이 정렬은 미분석이므로 표면 우선, y·x 순서로 표시한다.
 
 다리는 저장된 본체 프레임을 그대로 표시한다. 지면은 원본 연결 패턴과 시드 성장 흐름을

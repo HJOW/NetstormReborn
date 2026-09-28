@@ -7,7 +7,8 @@
 * 좌표를 잴 때는 파일마다 제목 표시줄(약 31~35px)과 왼쪽 테두리(2~4px) 경계를 먼저 측정해 클라이언트 영역 1024×768 을 잘라낸다. 캡처마다 창 위치와 캡처 범위가 조금씩 다르다.
   측정 예: `Bridge the Gap - Started.png` (4, 32), `mainMenu.png` (2, 33), `help - NetStorm Instructions.png` (4, 34), `Dissolved Alliance! - Started.png` (2, 32)
 * 파일 이름 규칙: 메인 메뉴 계열은 `mainMenu - 메뉴 - 하위 메뉴.png`, 미션 화면은 `미션 이름 - 상황.png`
-* 상세 분석 노트가 있는 캡처: [bridge-the-gap-start.md](bridge-the-gap-start.md), [the-war-begins-start.md](the-war-begins-start.md), [save-the-island-start.md](save-the-island-start.md)
+* 상세 분석 노트가 있는 캡처: [bridge-the-gap-start.md](bridge-the-gap-start.md), [the-war-begins-start.md](the-war-begins-start.md), [save-the-island-start.md](save-the-island-start.md), [dissolved-alliance-start.md](dissolved-alliance-start.md)
+* **미션 시작 카메라**: 원본은 플레이어 1 사제 칸 기준점을 클라이언트 약 (525, 393) 에 둔다 (캡처 3장 공통, [dissolved-alliance-start.md](dissolved-alliance-start.md) 2절). 맵 뷰어도 같은 위치로 시작하므로 1024×768 뷰어 캡처와 원본 캡처를 바로 겹쳐 볼 수 있다.
 
 ## 원본 게임 전제 (사용자 확인, 2026-09-28)
 
@@ -81,8 +82,8 @@
 
 | 파일 | 관찰 |
 |---|---|
-| `Dissolved Alliance! - Started.png` | 시작 직후. 왼쪽 **눈 덮인 섬**(플레이어), 가운데 **갈색 풀밭 섬 + 파란 테두리**(회오리 신전), 오른쪽 끝 붉은 영역. Storm Power 4000 = `myStartMoney` |
-| `Dissolved Alliance! - Playing 1.png` | 플레이어 섬 전체: 눈·얼음 지면, 파란 테두리, 비 신전(물웅덩이 모양)과 다른 대형 건물, 수집기·유닛들. 오른쪽에 가운데 섬 가장자리 |
+| `Dissolved Alliance! - Started.png` | 시작 직후. 가운데 **갈색 풀밭 섬 + 파란 테두리**(회오리 = 바람 신전, **플레이어**), 왼쪽 **눈 덮인 섬**(Duke of Rain), 오른쪽 끝 붉은 영역(Prince of Thunder). Storm Power 4000 = `myStartMoney`. 맵 뷰어 대조: [dissolved-alliance-start.md](dissolved-alliance-start.md) |
+| `Dissolved Alliance! - Playing 1.png` | Duke of Rain(소유자 3) 섬 전체: 눈·얼음 지면, 파란 테두리, 비 신전(물웅덩이 모양)과 다른 대형 건물, 수집기·유닛들. 오른쪽에 가운데 섬 가장자리 (2026-09-28 정정: 처음에 플레이어 섬으로 잘못 적었음) |
 | `Dissolved Alliance! - Playing 2.png` | Prince of Thunder 섬 전체: **어두운 회색 돌 지면 + 빨간 테두리**, 번개 신전(전기 구체), 붉은 수정 모양 유닛 다수. 미니맵에 빨간 영역 |
 
 ## 5. 여러 캡처에서 나온 추정 (확인 필요)

@@ -18,7 +18,8 @@
 |---|---|
 | `The War Begins! - Playing 1.png` | 적 신전(회오리)이 있는 적 섬: 빨간 테두리 |
 | `The War Begins! - Playing 5.png` | 적 신전이 없어진 뒤 같은 섬: 주황 테두리 (소유자 없음), 지면도 초록 풀밭으로 바뀜 |
-| `Dissolved Alliance! - Playing 1.png` | 플레이어 섬(비 신전): 파란 테두리 |
+| `Dissolved Alliance! - Started.png` | 플레이어 섬(가운데, 바람 신전): 파란·청록 테두리 |
+| `Dissolved Alliance! - Playing 1.png` | Duke of Rain(소유자 3) 섬(비 신전): 파란 테두리 |
 | `Dissolved Alliance! - Playing 2.png` | Prince of Thunder 섬(번개 신전): 빨간 테두리 |
 | `mainMenu - Multiplayer.png` | 멀티플레이 준비 화면의 자기 섬(신전 없음): 주황 테두리 |
 

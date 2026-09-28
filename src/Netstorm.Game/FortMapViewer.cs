@@ -15,6 +15,11 @@ internal sealed class FortMapViewer : IDisposable
     private const float DefaultZoom = 1f;
     /// <summary>상단 안내 영역 높이.</summary>
     private const int HeaderHeight = 100;
+    /// <summary>
+    /// 원본 미션 시작 화면에서 플레이어 1 사제 칸 기준점이 화면 중심(512, 384)보다 오른쪽·아래로 떨어진 거리.
+    /// 원본 캡처 3장(The War Begins!·Save the Island!·Dissolved Alliance!)에서 (525, 393) ±4px 로 측정했다.
+    /// </summary>
+    private static readonly Vector2 OriginalStartOffset = new(13, 9);
     /// <summary>제공된 공식 미션 캡처의 플레이어 1 청록·플레이어 2 빨강을 사용하는 개발용 색상표.</summary>
     private static readonly IReadOnlyDictionary<int, int> PreviewPlayerColors = new Dictionary<int, int> { [1] = 7, [2] = 2 };
     private readonly FortMap _map;
@@ -67,12 +72,17 @@ internal sealed class FortMapViewer : IDisposable
         CenterOnPriest();
     }
 
-    /// <summary>플레이어 1의 사제를 중심으로 맞추며 없으면 첫 오브젝트를 사용한다.</summary>
+    /// <summary>
+    /// 원본 미션 시작 화면처럼 플레이어 1 사제를 창 중심에서 OriginalStartOffset 만큼 떨어진 곳에 둔다.
+    /// 1024×768 창이면 사제가 원본 캡처와 같은 (525, 393)에 그려져 캡처와 바로 겹쳐 볼 수 있다. 사제가 없으면 첫 오브젝트를 사용한다.
+    /// </summary>
     private void CenterOnPriest()
     {
         FortMapObject? focus = _map.Objects.FirstOrDefault(o => o.Object.Type.Name == "priest" && o.Object.Owner == 1)
             ?? _map.Objects.FirstOrDefault();
-        _camera = focus == null ? Vector2.Zero : WorldPixels(focus.X, focus.Y);
+        // Draw 의 중심점은 안내 영역 때문에 창 중심보다 HeaderHeight/2 아래에 있으므로 그만큼 보정한다.
+        _camera = focus == null ? Vector2.Zero
+            : WorldPixels(focus.X, focus.Y) - OriginalStartOffset + new Vector2(0, HeaderHeight / 2f);
     }
 
     /// <summary>키보드와 마우스로 카메라를 이동하고 확대 배율을 변경한다.</summary>
@@ -161,7 +171,7 @@ internal sealed class FortMapViewer : IDisposable
                 continue;
             }
             Vector2 anchor = Screen(WorldPixels(item.X, item.Y), center);
-            var sprite = GetSprite(item.Object);
+            var sprite = GetSprite(item);
             if (sprite.HasValue)
             {
                 var (texture, offset) = sprite.Value;
@@ -194,10 +204,11 @@ internal sealed class FortMapViewer : IDisposable
         }
     }
 
-    /// <summary>클러스터 번호에서 본체 레이어 프레임을 찾아 필요한 텍스처만 캐시한다.</summary>
-    private (Texture2D Texture, Point Offset)? GetSprite(FortObject obj)
+    /// <summary>클러스터 번호에서 본체 레이어 프레임을 찾아 필요한 텍스처만 캐시한다. 거주지는 영역 원소 그림을 쓴다.</summary>
+    private (Texture2D Texture, Point Offset)? GetSprite(FortMapObject item)
     {
-        return GetTexture(obj.Type.LoadIndex, MapSpriteFrames.BodyFrame(obj));
+        return GetTexture(item.Object.Type.LoadIndex,
+            MapSpriteFrames.BodyFrame(item, _terrain.TerritoryTheme(item.Territory)));
     }
 
     /// <summary>지면 타일을 기준점과 프레임 오프셋에 맞춰 그린다.</summary>
