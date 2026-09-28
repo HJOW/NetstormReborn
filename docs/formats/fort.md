@@ -43,7 +43,7 @@
 | 6 | `Territory` | 영역 표 120바이트 (6바이트 × 20), 모양·방향·생성 플래그·청크 위치 해석 완료 ([분석](../exe/territory-layout.md)) |
 | 7 | `TypeNames` | 타입 번호 변환표 (아래 2절) |
 | 8 | `CompressedData` | (대부분 비어 있음, 미해석) |
-| 9 | `Technology` | 보유 기술 (미해석) |
+| 9 | `Technology` | 타입별 저장 상태 목록 (아래 3절) |
 | 10 | `Money` | f32 — **Storm Power** (게임 내 재화) |
 | 11 | `Deck` | 항목 수 u8 + 타입·확률 가중치·위력·남은 횟수 4바이트 항목 (아래 3절) |
 | 12~14 | `Reserved2`~`Reserved4` | 예약 |
@@ -68,7 +68,9 @@
 
 * 섹션이 비어 있으면 변환 없이 현재 번호를 그대로 쓴다.
 
-## 3. `Deck` — 덱 항목
+## 3. `Deck` / `Technology` — 덱과 타입 상태
+
+### `Deck`
 
 ```text
 [항목 수 N u8] { [타입 번호 u8] [chance u8] [power i8] [numRemaining u8] } × N
@@ -89,6 +91,31 @@
 
 게임에서는 워크샵 우클릭 메뉴로 유닛을 화면 왼쪽 사이드바 "덱"에 등록해야 생산·건설할 수 있다 (사용자 확인).
 이 섹션이 그 덱(등록 목록과 등장 확률)을 저장하는 것으로 추정한다 — [workshop-deck.md](../gameplay/workshop-deck.md) 3절.
+
+### `Technology`
+
+```text
+[항목 수 N u8] { [타입 번호 u8] [saveQA u8]? [saveQB i16]? [목록 플래그 u8] [내용물 목록]? } × N
+```
+
+* `Template.cpp`의 저장 `004bcea0`과 읽기 `004bd130`을 따른다. 타입 번호는 `TypeNames`로
+  변환하고, 해당 타입의 `saveQA`·`saveQB`·`container` 플래그에 따라 뒤의 값을 읽는다.
+  내용물 목록은 `Chaff`의 중첩 내용물과 같은 형식이다.
+* 원본은 타입 구조체의 +0x100 필드와 생성 문맥의 +0xFC 필드가 모두 0일 때 목록 플래그
+  1바이트를 저장한다. 보유한 원본 463개 파일의 모든 항목은 이 경로를 사용한다.
+  다른 경로의 저장 데이터는 아직 검증하지 않았다.
+* 원본 파일의 항목 수는 0·2·3·4·5·26이다. 전체 10,180개 항목에서 목록 플래그는 4,
+  `saveQA`·`saveQB` 값은 없으며 `container` 내용물은 비어 있다. 두 파일
+  (`capturethepriest.fort`, `tacticalcombat.fort`)에는 항목 뒤에 의미가 확인되지 않은
+  0바이트가 하나 더 있어 `FortFile`은 이 경우를 허용하고 원본 섹션 바이트를 보존한다.
+* Save the Island!와 The War Begins!는 각각 26개 항목이다. 첫 항목은 `sunArcher`,
+  목록 플래그 4이고 마지막 항목은 `rainWalker`다. 원본 전체 `.fort`와 공식 맵 두 개를
+  대조한 검사 172개가 통과했다.
+
+`FortFile.Technology`와 `tools/fort.py dump`의 `technology` 항목은 타입 번호와 해석된
+타입·목록 플래그·내용물을 원본 순서로 제공한다. Python 도구의 `verify`도 원본 463개를
+모두 해석했다.
+플레이어의 보유 기술과 이 목록의 관계는 게임 로직 분석 후 확인해야 한다.
 
 ## 4. `Chaff` / `TerrNN` — 청크 오브젝트
 
@@ -156,6 +183,6 @@
 
 ## 6. 남은 일
 
-* `State`, `Technology`, `Badges`, `CoreData`, `Mission`, `CompressedData` 섹션 내부 구조, `Territory` 외관·나머지 플래그
+* `State`, `Badges`, `CoreData`, `Mission`, `CompressedData` 섹션 내부 구조, `Territory` 외관·나머지 플래그
 * 회전된 영역 파일의 실제 동작 및 일반 전투의 섬 재배치 (보유 원본 활성 영역은 모두 방향 0)
 * 섬 지형(영역의 섬 모양)의 생성 방식 — 지형은 오브젝트로 저장되지 않음 (`Territory` 값으로 생성 추정)

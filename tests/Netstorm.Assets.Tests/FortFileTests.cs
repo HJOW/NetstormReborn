@@ -65,6 +65,27 @@ public sealed class FortFileTests
         Assert.Equal("bombSpecialOne", fort.Deck[^1].Type?.Name);
     }
 
+    /// <summary>공식 미션의 Technology가 타입 상태와 container 개수 바이트를 올바르게 읽는지 확인한다.</summary>
+    [Theory]
+    [InlineData("savetheisland")]
+    [InlineData("thewarbegins")]
+    public void Original_TechnologyEntriesMatchSourceFormat(string name)
+    {
+        TaffArchive archive = TaffArchive.Open(OriginalData.RequireFile("netstorm.tarc"));
+        Assert.True(archive.TryFind($"d/{name}.fort", out TaffEntry entry));
+        var fort = new FortFile(archive.Read(entry), new TypeCatalog(archive));
+        Assert.Equal(26, fort.Technology.Count);
+        FortTechnologyEntry first = fort.Technology[0];
+        Assert.Equal(0x47, first.TypeNumber);
+        Assert.Equal("sunArcher", first.Type.Name);
+        Assert.Equal(4, first.ListFlags);
+        Assert.Null(first.QA);
+        Assert.Null(first.QB);
+        FortTechnologyEntry blocker = Assert.Single(fort.Technology, item => item.Type.Name == "thunderBlocker");
+        Assert.Empty(blocker.Contents);
+        Assert.Equal("rainWalker", fort.Technology[^1].Type.Name);
+    }
+
     /// <summary>원본 전체 .fort (느슨한 파일 + 아카이브) 가 예외 없이 해석되고 월드가 256 청크다</summary>
     [Fact]
     public void Original_AllFortsParse()
@@ -92,6 +113,8 @@ public sealed class FortFileTests
             Assert.True(fort.Chaff.Count == ExpectedWorldChunks, $"{name}: Chaff 청크 {fort.Chaff.Count}개");
             ReadOnlySpan<byte> deck = fort.Section("Deck");
             Assert.Equal(deck.IsEmpty ? 0 : deck[0], fort.Deck.Count);
+            ReadOnlySpan<byte> technology = fort.Section("Technology");
+            Assert.Equal(technology.IsEmpty ? 0 : technology[0], fort.Technology.Count);
             var map = new FortMap(fort);
             Assert.Equal(fort.Chaff.Concat(fort.Territories.SelectMany(t => t)).Sum(c => c.Objects.Count), map.Objects.Count);
             // 저장된 다리 프레임이 실제 bridge 본체 클러스터 범위에 들어가는지 전수 검사한다.

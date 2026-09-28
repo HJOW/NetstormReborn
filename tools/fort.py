@@ -236,6 +236,41 @@ def read_contents(r: Reader, conv: dict, catalog: TypeCatalog) -> list:
     return items
 
 
+def read_technology(section: bytes, conv: dict, catalog: TypeCatalog) -> list:
+    """Technology 섹션의 타입별 상태와 선택 필드를 원본 순서대로 읽는다."""
+    if not section:
+        return []
+    r = Reader(section)
+    count = r.u8()
+    items = []
+    # 선언된 타입 상태 개수만큼 번호와 타입 플래그에 따른 선택 필드를 읽는다.
+    for _ in range(count):
+        type_number = r.u8()
+        name = conv.get(type_number)
+        if name is None:
+            raise ValueError(f"Technology 타입 번호 {type_number}를 찾을 수 없음 (위치 {r.pos - 1})")
+        flags, _ = catalog.flags[name]
+        item = {"typeNumber": type_number, "type": name}
+        if flags & F1_SAVE_QA:
+            item["qa"] = r.u8()
+        if flags & F1_SAVE_QB:
+            value = r.u16()
+            # saveQB는 부호 있는 16비트 값이므로 부호 비트를 확장한다.
+            item["qb"] = value - 0x10000 if value >= 0x8000 else value
+        item["listFlags"] = r.u8()
+        if flags & F1_CONTAINER:
+            item["contents"] = read_contents(r, conv, catalog)
+        items.append(item)
+    # 원본 두 파일은 목록 뒤에 0바이트 하나를 덧붙이므로 그 경우만 허용한다.
+    if r.remaining() == 1:
+        if r.u8() == 0:
+            return items
+        raise ValueError(f"Technology 섹션 뒤에 0이 아닌 데이터가 있음 (위치 {r.pos - 1})")
+    if r.remaining() != 0:
+        raise ValueError(f"Technology 섹션 뒤에 예상하지 못한 데이터가 있음 (위치 {r.pos})")
+    return items
+
+
 def read_chunks(section: bytes, conv: dict, catalog: TypeCatalog) -> tuple:
     """Chaff / TerrNN 섹션: [버전 u8] + 청크 레코드('c' + u16 개수 + 오브젝트) 반복. (버전, 청크 목록)"""
     r = Reader(section)
@@ -274,6 +309,7 @@ def parse_fort(data: bytes, catalog: TypeCatalog) -> dict:
     if len(money) == 4:
         result["money"] = struct.unpack("<f", money)[0]
     conv = catalog.conversion(named.get("TypeNames", b""))
+    result["technology"] = read_technology(named.get("Technology", b""), conv, catalog)
     objects = collections.Counter()
     # 오브젝트가 들어 있는 섹션(Chaff, TerrNN)을 해석한다
     for name, section in named.items():

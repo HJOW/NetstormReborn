@@ -38,6 +38,16 @@ public sealed record FortChunk(int Index, IReadOnlyList<FortObject> Objects);
 /// <param name="NumRemaining">남은 사용 횟수</param>
 public sealed record FortDeckEntry(byte TypeNumber, TypeInfo? Type, byte Chance, sbyte Power, byte NumRemaining);
 
+/// <summary>Technology 섹션에 저장된 타입 상태 하나.</summary>
+/// <param name="TypeNumber">파일에 저장된 타입 번호</param>
+/// <param name="Type">TypeNames 변환표로 찾은 타입</param>
+/// <param name="QA">saveQA 타입의 추가 값</param>
+/// <param name="QB">saveQB 타입의 추가 값</param>
+/// <param name="ListFlags">원본 오브젝트 목록 플래그 바이트</param>
+/// <param name="Contents">container 타입의 중첩 내용물</param>
+public sealed record FortTechnologyEntry(byte TypeNumber, TypeInfo Type, byte? QA, short? QB,
+    byte ListFlags, IReadOnlyList<FortContent> Contents);
+
 /// <summary>
 /// .fort (요새 / 미션 맵) 파일. 포맷: docs/formats/fort.md
 /// </summary>
@@ -91,6 +101,9 @@ public sealed class FortFile
 
     /// <summary>Deck: 저장된 항목. 타입 번호는 TypeNames로 해석한다.</summary>
     public IReadOnlyList<FortDeckEntry> Deck { get; }
+
+    /// <summary>Technology: 타입별 저장 상태. 원본 섹션의 항목 순서를 유지한다.</summary>
+    public IReadOnlyList<FortTechnologyEntry> Technology { get; }
 
     /// <summary>Chaff: 월드 전체 청크</summary>
     public IReadOnlyList<FortChunk> Chaff { get; } = [];
@@ -146,6 +159,7 @@ public sealed class FortFile
         }
 
         Dictionary<int, TypeInfo> conversion = BuildConversion(Section("TypeNames"), catalog);
+        Technology = ReadTechnology(Section("Technology"), conversion);
         Deck = ReadDeck(Section("Deck"), conversion);
         Chaff = ReadChunks(Section("Chaff"), conversion);
         var territories = new List<IReadOnlyList<FortChunk>>(TerritoryCount);
@@ -155,6 +169,41 @@ public sealed class FortFile
             territories.Add(ReadChunks(Section($"Terr{i:00}"), conversion));
         }
         Territories = territories;
+    }
+
+    /// <summary>원본 004bcea0/004bd130의 타입별 상태와 container 내용을 읽는다.</summary>
+    private static IReadOnlyList<FortTechnologyEntry> ReadTechnology(ReadOnlySpan<byte> section,
+        Dictionary<int, TypeInfo> conversion)
+    {
+        if (section.IsEmpty)
+        {
+            return [];
+        }
+        var reader = new SpanReader(section);
+        int count = reader.U8();
+        var entries = new List<FortTechnologyEntry>(count);
+        // 타입 플래그에 따라 길이가 달라지는 항목을 원본 순서대로 읽는다.
+        for (int i = 0; i < count; i++)
+        {
+            byte typeNumber = reader.U8();
+            if (!conversion.TryGetValue(typeNumber, out TypeInfo? type))
+            {
+                throw new InvalidDataException($"알 수 없는 기술 타입 번호 {typeNumber} (위치 {reader.Position - 1})");
+            }
+            byte? qa = (type.Flags1 & TypeFlagBits.SaveQA) != 0 ? reader.U8() : null;
+            short? qb = (type.Flags1 & TypeFlagBits.SaveQB) != 0 ? (short)reader.U16() : null;
+            byte listFlags = reader.U8();
+            IReadOnlyList<FortContent> contents = (type.Flags1 & TypeFlagBits.Container) != 0
+                ? ReadContents(ref reader, conversion)
+                : [];
+            entries.Add(new FortTechnologyEntry(typeNumber, type, qa, qb, listFlags, contents));
+        }
+        // 원본 두 파일에는 항목 뒤에 0바이트 하나가 더 있으므로 그 경우만 허용한다.
+        if (reader.Remaining > 1 || (reader.Remaining == 1 && reader.U8() != 0))
+        {
+            throw new InvalidDataException($"Technology 섹션 뒤에 예상하지 못한 데이터가 있습니다 (위치 {reader.Position})");
+        }
+        return entries;
     }
 
     /// <summary>원본 004befd0/004bf190의 개수와 4바이트 카드 항목을 읽는다.</summary>
