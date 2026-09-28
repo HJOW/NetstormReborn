@@ -119,6 +119,6 @@ C# 구현: `TypeFrameTable` (`TypeDefinition.Frames`), 테스트 `TypeFrameTable
 | `orientations` | 10 | 방향 수 |
 | `hpPerSec` | 10 | 초당 피해량 |
 | `height` | 9 | 높이(비행 고도 등) |
-| `spawns`, `crew`, `mana`, `effecttime`, `delayBetweenShots`, `airdamage`, `useairdamage`, `artifactFrame`, `helpText` | 소수 | |
+| `spawns`, `crew`, `mana`, `effecttime`, `delayBetweenShots`, `airdamage`, `useairdamage`, `artifactFrame`, `helpText` | 소수 | `mana`는 타입의 건설 에너지 요구 문자열을 직접 지정한다 ([exe 분석](../exe/energy-requirements.md)) |
 
 설계자 주석에 밸런스 조정 이력이 남아 있다 (예: sunCannon `cost` 200→400, `range` 축소, `hpPerSec` 조정).

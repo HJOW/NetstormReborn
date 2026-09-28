@@ -29,7 +29,7 @@
 
 | # | 항목 | 동봉 문서 | 현재 분석·구현 | 할 일 |
 |---|---|---|---|---|
-| 1 | **level 1 원소 유닛의 에너지** | 매뉴얼: Bulf = **Thunder 1**, Sail Skater = Wind 1, Acid Barricade = Rain 1 (원소 유닛 level 1 은 자기 원소 1개). Generator 는 Sun 1 | 사용자 확인 규칙: `자기 원소 × (level − 1) + Sun × 1` → level 1 은 **아무 공급원 1개** ([elements-energy.md](../gameplay/elements-energy.md)) | 패치판 `.type` 의 level 1 원소 유닛(Bulf·Arc Spire·Crystal Crab)이 Thunder/Rain 1 인지 아무 1 인지 사용자·exe 확인. 매뉴얼 규칙은 "원소 = max(1, level−1), Sun = 나머지, Generator 는 Sun" 으로 정리됨 |
+| 1 | **level 1 원소 유닛의 에너지** | 매뉴얼: Bulf = **Thunder 1**, Sail Skater = Wind 1, Acid Barricade = Rain 1. Generator 는 Sun 1 | 사용자 설명: level 1 은 아무 공급원 1개 ([elements-energy.md](../gameplay/elements-energy.md)) | **exe 정적 분석 완료(2026-09-29)**: `Rifttype.cpp`가 기본 요구 문자열을 생성하고 `Mana.cpp`가 건설 위치에서 검사한다. 패치판 level 1 Bulf·Arc Spire = Thunder 1, Crystal Crab = Rain 1. Generator 3종은 명시 `mana = "s"`로 아무 공급원 1개. 게임 내 교차 원소 배치 재현은 남음 — [energy-requirements.md](../exe/energy-requirements.md) |
 | 2 | Thunder Cannon 레벨 | 매뉴얼 개요: Level III (Thunder 2 + Sun 1) / 유닛 항목: Level II (Thunder 1 + Sun 1) | `.type` level 2 | 유닛 항목·`.type` 을 따름 (개요 문장은 오기로 봄) |
 | 3 | 파일 조회 순서 | 패치 10.70 V5.3: "치트 방지로 하드디스크 파일보다 **tarc 를 먼저**" | 정적 분석: 데이터 폴더 디스크 → tarc ([vfs.md](../formats/vfs.md)) | **재확인 완료(2026-09-29)**: 열기·이름 해석 함수와 모든 호출부가 디스크 우선, 아카이브 우선인 존재 검사도 결과를 있음/없음으로만 씀 → 보유 exe 는 **디스크 우선** 유지. 클론 구현 변경 없음. 원하면 동적 확인 방법은 vfs.md |
 | 4 | `bridgeDrawRate`·`stuffRefreshRate` | 패치 V9.0 에서 CFG 명령 제거 | `options.cfg` 에 값이 남아 있음 | **확인 완료(2026-09-29)**: exe 설정 키 등록(`00441270` 호출)에 두 키가 없다 → `options.cfg` 값은 무시됨. `edgeScrollSpeed`·`maxFPS` 는 등록됨. 미션 머리 값 `aiNBridgeDrawRate`(AI 다리 속도)는 별개로 여전히 쓰임 |

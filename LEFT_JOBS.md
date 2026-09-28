@@ -560,8 +560,8 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
 * 에너지 공급 범위 exe 확인 → [docs/exe/battle-options.md](docs/exe/battle-options.md) (Generator Range 14/22/30/38, 30 상한, 튜토리얼 2 만 14칸, 전투 옵션 21종 표)
 * 불일치 해소 3건: 파일 조회 순서 = **디스크 우선 유지**([vfs.md](docs/formats/vfs.md)), Storm Power 색 = **≤1000 빨강 / ≤2000 노랑 / 그 이상 흰색**(`0043da10`), `bridgeDrawRate`·`stuffRefreshRate` 설정 키는 패치판 exe 에 없음
 
-**중단된 작업 (다음 세션 처음에)**
-* level 1 원소 유닛(Bulf·Arc Spire·Crystal Crab)의 필요 에너지: 타입 구조체 `theme` +0x98, `level − 1` +0x94 까지 확인. 에너지 판정 후보 함수 **`0044ac30`·`00473d00`** 을 읽을 차례 (사용자에게도 질문해 둠)
+**당시 중단된 작업 → 2026-09-29 후속 분석으로 처리**
+* ~~level 1 원소 유닛의 필요 에너지 판정 함수 확인~~ → 타입 구조체 `+0xA0` 요구 문자열, `Rifttype.cpp` `0049b0d0` 생성 및 `Mana.cpp` `004734d0`·`00473330` 검사 확인. 이전 후보 `0044ac30`·`00473d00`은 다른 구조체의 필드였다. 결과는 [energy-requirements.md](docs/exe/energy-requirements.md), 게임 내 재현은 6절 후속 항목에 기록
 
 **커밋되지 않은 변경 (이번 세션 마지막 작업분)**: `LEFT_JOBS.md`, `docs/formats/vfs.md`, `docs/gameplay/elements-energy.md`, `docs/screens/README.md`, `docs/sources/README.md` (그 이전 작업분은 0929 01·02 커밋에 포함됨)
 
@@ -591,8 +591,7 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
 ## 6. 바로 다음 작업
 
 0. **동봉 문서 참고 (2026-09-29 정리)**: 작업 전에 [docs/sources/README.md](docs/sources/README.md) 를 먼저 본다 — 규칙·조작·유닛 수치와 **현재 분석과의 불일치 12건**(3절)이 정리되어 있다. 우선 확인할 것:
-   - level 1 원소 유닛(Bulf·Arc Spire·Crystal Crab)의 필요 에너지 — 사용자 확인 또는 exe 에너지 판정 함수
-     - **진행 상황(2026-09-29 중단)**: 타입 구조체 `theme` = +0x98, `level − 1` = +0x94 확인. 두 필드를 함께 읽는 함수 5개 중 에너지 판정 후보 **`0044ac30`·`00473d00`** 을 다음에 읽는다 ([elements-energy.md](docs/gameplay/elements-energy.md) 4절 "원판 매뉴얼과의 차이")
+   - ~~level 1 원소 유닛(Bulf·Arc Spire·Crystal Crab)의 필요 에너지 exe 분석~~ → **2026-09-29 완료**: `Rifttype.cpp` `0049b0d0`이 타입 `+0xA0`의 기본 요구값을 만들고, `Mana.cpp` `004734d0`·`00473330`이 배치 위치에서 검사한다. Bulf·Arc Spire는 Thunder 1, Crystal Crab은 Rain 1. Generator는 `.type`의 명시 `mana = "s"`로 아무 공급원 1개. 이전 후보 `0044ac30`·`00473d00`은 다른 구조체 필드로 인한 오인. [분석](docs/exe/energy-requirements.md), [유닛 표](docs/gameplay/elements-energy.md) 4절. **후속**: 패치판 게임에서 교차 원소 공급원 아래 세 유닛의 배치 성공/실패를 동적으로 확인
    - ~~파일 조회 순서~~ → 2026-09-29 재확인: 보유 exe 는 **디스크 우선** (열기 22곳·이름 해석 12곳 모두 디스크 먼저, 아카이브 우선 존재 검사 18곳은 결과를 있음/없음으로만 사용). 패치 문서 문장은 이 exe 의 열기 동작과 맞지 않음 — [vfs.md](docs/formats/vfs.md)
    - ~~Storm Power 숫자 색 기준값~~ → 2026-09-29 확인: ≤1000 빨강, 1001~2000 노랑, 그 이상 흰색 (`0043da10`)
 1. 4·6단계: 지면 미리보기를 원본 캡처와 대조하여 정확도를 높이기

@@ -1,7 +1,7 @@
 # 원소·원소 에너지·발전기
 
-> 분석 상태: **사용자 설명(2026-09-28) + `.type` 데이터 대조**. exe 의 에너지 판정 함수는 미확인.
-> 에너지 규칙 질문 A~F 는 모두 사용자 답변으로 확정됨 (5절). 공급 범위는 일반 30칸·튜토리얼 2 14칸 — 측정과 exe(전투 옵션 Generator Range) 모두 확인 (6절). 남은 것은 에너지 판정 함수 검증.
+> 분석 상태: **사용자 설명(2026-09-28) + `.type` 데이터 + 패치판 exe 정적 분석(2026-09-29)**. 건설 에너지 요구 문자열과 배치 판정 경로를 확인했다 ([분석](../exe/energy-requirements.md)).
+> 공급 범위는 일반 30칸·튜토리얼 2 14칸 — 측정과 exe(전투 옵션 Generator Range) 모두 확인 (6절). level 1 원소 유닛의 사용자 설명과 exe 결과가 달라 게임 내 동적 확인은 남아 있다.
 
 ## 1. 원소 (사용자 확인)
 
@@ -46,11 +46,11 @@
 
 ## 4. 유닛별 필요 에너지
 
-**규칙 (사용자 확인, 2026-09-28)**: 필요 에너지 개수 = `.type` 의 `level`, 구성 = **`자기 원소 × (level − 1) + Sun × 1`**.
-Sun 은 아무 원소 공급원으로 채우므로, level 1 유닛(Generator 포함)은 원소와 관계없이 **아무 공급원 1개**, Sun 원소 유닛은 **아무 공급원 level 개**가 필요하다.
-사용자가 확인한 예: Sun Cannon(Sun 1), Ice Cannon(Rain 1 + Sun 1), Vander Tower(Thunder 2 + Sun 1), Generator(아무 1), Balloon·Whirlibase(아무 2).
+**패치판 exe 규칙 (2026-09-29 확인)**: 실제 요구 에너지는 타입 구조체의 `+0xA0` 문자열을 쓴다. `.type`에 `mana`가 없으면 level 1 원소 유닛은 **자기 원소 1**, level 2는 **자기 원소 1 + Sun 1**, level 3은 **자기 원소 2 + Sun 1**이다. Sun 유닛은 level만큼 Sun 에너지가 필요하다. Generator 3종은 `.type`에 **`mana = "s"`**를 직접 지정해 **아무 원소 공급원 1개**가 필요하다 ([exe 분석](../exe/energy-requirements.md)).
 
-아래 표는 이 규칙을 `.type` 데이터에 적용한 것이다. 필요 공급원 = "원소 공급원 개수 + 아무 공급원 개수".
+사용자가 확인한 `자기 원소 × (level − 1) + Sun × 1`은 level 2·3, Sun 유닛, Generator 예외와 결과가 같다. **level 1 비 Sun 유닛 3종은 exe 값과 다르다.**
+
+아래 표는 패치판 `.type`과 exe의 요구 문자열 생성 규칙을 적용한 것이다. 필요 공급원 = "원소 공급원 개수 + 아무 공급원 개수".
 
 | 원소 | 유닛 (타입) | level | 비용 | 필요 공급원 |
 |---|---|---|---|---|
@@ -61,7 +61,7 @@ Sun 은 아무 원소 공급원으로 채우므로, level 1 유닛(Generator 포
 | sun | Balloon `sunBalloon` | 2 | 600 | 아무 2 |
 | sun | Whirlibase `sunaviary` | 2 | (cost 속성 없음) | 아무 2 |
 | rain | **Rain Generator** `rainBattery` | 1 | 400 | 아무 1 |
-| rain | Crystal Crab `rainwalker` | 1 | 500 | 아무 1 |
+| rain | Crystal Crab `rainwalker` | 1 | 500 | Rain 1 |
 | rain | **Ice Cannon** `raincannon` | 2 | 600 | Rain 1 + 아무 1 |
 | rain | Acid Barricade `rainFence` | 2 | 400 | Rain 1 + 아무 1 |
 | rain | Ice Tower `rainBlocker` | 2 | 800 | Rain 1 + 아무 1 |
@@ -74,34 +74,32 @@ Sun 은 아무 원소 공급원으로 채우므로, level 1 유닛(Generator 포
 | wind | Devil Maker `windaviary` | 3 | 800 | Wind 2 + 아무 1 |
 | wind | Air Ship `windBalloon` | 3 | 1200 | Wind 2 + 아무 1 |
 | thunder | **Thunder Generator** `thunderBattery` | 1 | 400 | 아무 1 |
-| thunder | Bulf `bulf` | 1 | 500 | 아무 1 |
-| thunder | Arc Spire `thunderFence` | 1 | 400 | 아무 1 |
+| thunder | Bulf `bulf` | 1 | 500 | Thunder 1 |
+| thunder | Arc Spire `thunderFence` | 1 | 400 | Thunder 1 |
 | thunder | Bulwark `thunderBlocker` | 2 | 800 | Thunder 1 + 아무 1 |
 | thunder | Thunder Cannon `thundercannon` | 2 | 1200 | Thunder 1 + 아무 1 |
 | thunder | **Vander Tower** `thunderArcher` | 3 | 600 | Thunder 2 + 아무 1 |
 
 * 템플(5000)·워크샵(800~1000)·알타·가이저(2000)는 유닛이 아니며 level 이 없다.
 * 이동 유닛(Crab·Skater·Bulf·Balloon·Floater·Air Ship 등)도 **생산하려는 지점**에 같은 에너지가 필요하다 (사용자 확인).
-* 사용자가 직접 확인한 5종 외에는 규칙을 적용한 결과이므로, exe 의 판정 함수로 전 유닛을 검증한다.
+* 위 표의 에너지 구성은 패치판 exe의 타입 기본값 생성과 `.type`의 명시 `mana` 속성을 따른다. 게임 내 실제 배치는 level 1 비 Sun 유닛 3종부터 교차 원소 공급원으로 검증할 수 있다.
 * 발전기 3종: `class = Source of Energy`, **`minUsage = maxUsage = -100`** (음수 = 공급으로 보임).
-* 포대·방벽: `minUsage 20` / `maxUsage 200`(포대) 또는 `20`(방벽). 건설 판정은 공급원 개수·범위 겹침(3절)이고 소모 개념이 없으므로, 이 값은 건설 조건이 아닌 다른 용도일 수 있다. exe 확인 필요.
+* 포대·방벽: `minUsage 20` / `maxUsage 200`(포대) 또는 `20`(방벽). 확인한 건설 에너지 판정은 `mana` 문자열을 사용한다. Usage 값의 다른 용도는 exe 확인 필요.
 * `techBit` 은 기술(지식) 번호로 보인다 (미션 헤더 `myTech` 와의 관계는 미확인).
 
-### 원판 매뉴얼과의 차이 (2026-09-29, [sources/game-manual.md](../sources/game-manual.md) 7절)
+### 원판 매뉴얼·사용자 설명과의 대조 (2026-09-29, [sources/game-manual.md](../sources/game-manual.md) 7절)
 
 * 원판 매뉴얼(`GAME.HLP`)의 유닛별 "Energy to Build" 는 위 규칙과 대부분 같다 (Sun 유닛 = Sun × level, Generator = Sun 1, level 2 원소 유닛 = 원소 1 + Sun 1, level 3 = 원소 2 + Sun 1).
-* **다른 점: level 1 원소 유닛** — 매뉴얼은 Bulf = **Thunder 1**, Sail Skater = Wind 1, Acid Barricade = Rain 1 로 자기 원소를 요구한다 (매뉴얼 규칙: 원소 = max(1, level − 1), Sun = 나머지, Generator 는 예외로 Sun).
-  현재 규칙대로면 level 1 은 아무 공급원 1개다. 패치판에서 level 1 인 원소 유닛(Bulf·Arc Spire·Crystal Crab)에 무엇이 필요한지 **사용자·exe 확인 필요**.
-  * exe 조사 진행 상황 (2026-09-29, 중단): `Rifttype.cpp` 로더가 `theme` 을 타입 구조체 **+0x98**(첫 글자로 표 `0x592990` 에서 번호 변환), `level` 을 **+0x94 에 level − 1** 로 저장한다.
-    +0x94·+0x98 을 함께 읽는 함수는 `0044ac30`, `00473d00`, `0049b0d0`(타입 플래그 파생), `004cb320`·`004cb3f0`(`Ui.cpp` — 원소·레벨로 유닛 목록을 세는 메뉴용) 다섯 개다.
-    에너지 판정 후보는 아직 읽지 않은 **`0044ac30`·`00473d00`** 이며, 다음에 이 둘부터 확인한다.
+* **level 1 원소 유닛** — 사용자 설명은 아무 공급원 1개였으나, 보유 패치판 exe는 `bulf`·`thunderFence`에 **Thunder 1**, `rainwalker`에 **Rain 1**을 생성한다. 원판 매뉴얼의 Bulf = Thunder 1과 일치한다. 설명이 달라진 원인은 확인하지 못했으며 게임 내 배치 확인도 아직 없다.
+  * 타입 로더의 `theme` = `+0x98`, `level − 1` = `+0x94`, 요구 문자열 = `+0xA0`. `FUN_0049b0d0`이 기본 문자열을 만들고 `FUN_004734d0`·`FUN_00473330`이 위치의 공급원과 대조한다 ([상세 분석](../exe/energy-requirements.md)).
+  * 이전에 후보로 적었던 `0044ac30`·`00473d00`의 `+0x94/+0x98`은 **다른 구조체**의 필드다. 에너지 판정 함수가 아니다.
 * 레벨·비용 자체도 원판과 패치판이 다르다 (예: Sail Skater 원판 level 1 → 패치 level 2, Acid Barricade 1 → 2, Arc Spire 2 → 1, Crystal Crab 2 → 1). 구현은 패치판 `.type` 을 따른다.
 
 ## 5. 질문과 답 (사용자 확인, 2026-09-28)
 
 * **A. 섬 소유권 규칙과의 관계** → 배치 불가는 **남의 섬**(다른 플레이어 템플이 있는 섬). 빈 섬은 내 섬과 다리로 연결되면 건물형 유닛 건설 가능, 워크샵·알타는 사제가 도달하기만 하면 가능 — [island-ownership.md](island-ownership.md). 다리가 끊겨도 이미 지은 유닛은 계속 동작한다.
 * **B. 신전의 공급량·범위** → Generator 와 같이 자기 원소 1개분, 같은 범위.
-* **C. 필요 에너지 구성** → `자기 원소 × (level − 1) + Sun × 1` (4절). Generator 도 아무 공급원 1개, Sun level 2 유닛은 아무 공급원 2개가 필요하다.
+* **C. 필요 에너지 구성** → 사용자 설명은 `자기 원소 × (level − 1) + Sun × 1`이었다. 패치판 exe에서 level 1 비 Sun 유닛만 다르게 확인됨 (4절). Generator 는 명시 `mana = "s"`로 아무 공급원 1개, Sun level 2 유닛은 아무 공급원 2개가 필요하다.
 * **D. 공급 1개분의 의미** → 필요 에너지 1개 = 서로 다른 공급원 1개, 범위가 모두 겹쳐야 함. **소모 개념이 아니다** — 같은 공급원 범위 안에 유닛을 여러 개 지을 수 있다.
 * **E. 조건 확인 시점** → **건설(생산) 순간에만** 필요하다. 공급원이 나중에 파괴돼도 지은 유닛은 제 역할을 한다.
 * **F. 이동 유닛** → 이동 유닛도 **생산하려는 지점**에 에너지 공급이 필요하다.
