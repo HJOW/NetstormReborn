@@ -262,6 +262,50 @@ public sealed class MapRenderingTests
         Assert.Equal(47 + variant * 9 + (y % 3) * 3 + x % 3, sourceFrame);
     }
 
+    /// <summary>원본 0049aa90의 가장자리 선택 범위는 원소별 첫 프레임을 건너뛴다.</summary>
+    [Theory]
+    [InlineData("sun", "AB02")]
+    [InlineData("thunder", "AB04")]
+    [InlineData("wind", "AB06")]
+    [InlineData("rain", "AB08")]
+    public void Original_EdgePairSkipsFirstThemeFrame(string theme, string expectedName)
+    {
+        var archive = TaffArchive.Open(OriginalData.RequireFile("netstorm.tarc"));
+        TypeDefinition isle = new TypeCatalog(archive).Find("isle")!.Definition;
+        int cluster = FortTerrainPreview.SelectCluster(isle, 'A', 'B', theme, 30, 60);
+        Assert.Equal(expectedName, isle.Clusters[cluster].Name);
+    }
+
+    /// <summary>후보가 다섯 개인 BF 가장자리는 각 원소의 두 번째부터 다섯 번째만 선택한다.</summary>
+    [Theory]
+    [InlineData("sun", 2, 5)]
+    [InlineData("thunder", 7, 10)]
+    [InlineData("wind", 12, 15)]
+    [InlineData("rain", 17, 20)]
+    public void Original_EdgeRangeSkipsFirstFrame(string theme, int first, int last)
+    {
+        var archive = TaffArchive.Open(OriginalData.RequireFile("netstorm.tarc"));
+        TypeDefinition isle = new TypeCatalog(archive).Find("isle")!.Definition;
+        // 여러 좌표의 변형이 원본의 원소별 유효 범위를 지키는지 확인한다.
+        for (int x = 30; x < 50; x++)
+        {
+            int cluster = FortTerrainPreview.SelectCluster(isle, 'B', 'F', theme, x, 60);
+            string name = isle.Clusters[cluster].Name;
+            Assert.StartsWith("BF", name, StringComparison.Ordinal);
+            Assert.InRange(int.Parse(name[2..]), first, last);
+        }
+    }
+
+    /// <summary>불완전한 받침의 일반 AA 선택이 본섬 전용 AA00 3×3 조각을 사용하지 않는지 확인한다.</summary>
+    [Fact]
+    public void Original_SupportFallbackAvoidsCoreFragments()
+    {
+        var archive = TaffArchive.Open(OriginalData.RequireFile("netstorm.tarc"));
+        TypeDefinition isle = new TypeCatalog(archive).Find("isle")!.Definition;
+        int cluster = FortTerrainPreview.SelectCluster(isle, 'A', 'A', "sun", 30, 60, useCorePattern: false);
+        Assert.NotEqual("AA00", isle.Clusters[cluster].Name);
+    }
+
     /// <summary>원본 어셈블리에서 독립 재현한 Python 마스크와 전체 65,536칸·영역별 크기를 대조한다.</summary>
     [Theory]
     [InlineData("savetheisland", "68e699f55ad34041f316f4466f6c33d2edb6807833a648462a64ebbc2c505cc8", 0, 1384, 7, 698)]

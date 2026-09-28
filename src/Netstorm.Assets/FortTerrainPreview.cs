@@ -364,7 +364,15 @@ public sealed class FortTerrainPreview
         {
             throw new InvalidDataException($"{definition.Name}: 테마 {theme}의 지면 타일이 없습니다.");
         }
-        return candidates[(x * 31 + y * 17) % candidates.Length];
+        return PickEdgeVariant(candidates, x, y);
+    }
+
+    /// <summary>원본 0049aa90의 원소별 후보 범위처럼 첫 프레임을 건너뛰고 변형을 고른다.</summary>
+    private static int PickEdgeVariant(int[] candidates, int x, int y)
+    {
+        int firstVariant = candidates.Length > 1 ? 1 : 0;
+        int variantCount = candidates.Length - firstVariant;
+        return candidates[firstVariant + (x * 31 + y * 17) % variantCount];
     }
 
     /// <summary>JJ00 뒤 원소별 36프레임에서 같은 3×3 묶음의 좌표에 맞는 한 칸을 찾는다.</summary>
@@ -481,7 +489,9 @@ public sealed class FortTerrainPreview
             string actual = image.StartsWith("RA", StringComparison.OrdinalIgnoreCase) ? "rain"
                 : image.StartsWith("TH", StringComparison.OrdinalIgnoreCase) ? "thunder"
                 : image.StartsWith("WI", StringComparison.OrdinalIgnoreCase) ? "wind" : "sun";
-            return cluster.Name.StartsWith(prefix, StringComparison.Ordinal) && actual == theme;
+            // AA00은 본섬의 3×3 조각이므로 가장자리와 불완전한 받침의 일반 후보에서 제외한다.
+            return cluster.Name != "AA00" && cluster.Name.StartsWith(prefix, StringComparison.Ordinal)
+                && actual == theme;
         }).ToArray();
     }
 }
