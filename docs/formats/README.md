@@ -13,11 +13,13 @@
 | [vfs.md](vfs.md) | 느슨한 파일 + 아카이브 조회 순서 | 정적 분석 완료 | C# `GameFileSystem` |
 | [chfnt.md](chfnt.md) | 비트맵 글꼴 캐시 | 용도 확인 | — |
 | [fort.md](fort.md) | `.fort` 요새/맵 | 컨테이너·오브젝트 레코드 완료 (일부 섹션 내부 미해석) | `tools/fort.py` |
+| [hlp.md](hlp.md) | `help/*.HLP` WinHelp | 본문 토픽·그림 추출 완료, 탐색 정보 미검증 | `tools/hlp.py` + helpdeco |
 
 기타:
 * 실행 파일 리소스 추출: `tools/peres.py` (비트맵·문자열·다이얼로그·커서)
 * 실행 파일 디컴파일: `tools/ghidra/run_decomp.ps1` → `extracted/decomp/Netstorm.c`, 모듈 맵 `tools/ghidra/module_map.py` → [../exe/modules.md](../exe/modules.md)
 * 오디오(`sound/*.wav`, `music/*.mus`): 전부 표준 PCM WAV (별도 문서 없음)
+* WinHelp 게임 규칙 요약: [../gameplay/help-manual.md](../gameplay/help-manual.md)
 
 ## 추출 순서 (처음 받은 사람용)
 
@@ -28,3 +30,5 @@ python tools/typefile.py json
 python tools/peres.py originals/Netstorm.exe extracted/res/Netstorm
 powershell -ExecutionPolicy Bypass -File tools/ghidra/run_decomp.ps1   # 약 10~20분
 ```
+
+WinHelp의 `helpdeco` 빌드와 추출 명령은 [hlp.md](hlp.md)의 재현 방법을 따른다.

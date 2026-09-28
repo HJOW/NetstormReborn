@@ -27,7 +27,9 @@
 * 워크샵 메뉴의 `Put Knowledge into Production >` 하위 창 **"Knowledge Available"** 이 등록할 수 있는 목록이다. 머리에 `Production Slots Available:` (남은 생산 칸 수로 보임) 가 있다.
   The War Begins! 의 Sun Workshop Level I 에서는 **Rain Generator, Sun Cannon, Whirlibase** 가 나왔다.
 * `View Current Production >` 은 현재 덱에 등록된 목록을 보는 메뉴로 보인다 (캡처 없음).
-* `Upgrade costs 800` 은 워크샵 레벨 올리기로 보이며, 레벨에 따라 생산 칸 수나 목록이 달라지는지는 미확인이다.
+* `Upgrade costs 800` 은 캡처에 나타난 워크샵 업그레이드 비용이다. `GAME.HLP`는 생산 칸을
+  Level I 2개·II 3개·III 4개로 설명한다 ([도움말의 게임 규칙](help-manual.md)).
+  패치 실행 파일의 실제 판정과 등록 가능한 유닛 목록 변화는 아직 확인하지 않았다.
 
 ### 캡처 대조 (The War Begins!)
 
@@ -50,7 +52,8 @@
 ## 4. 확인할 것 (4·8·9단계)
 
 * exe: 우클릭 처리와 메뉴 구성(`Menugump.cpp`·`Metadisplay.cpp` 등 [모듈 맵](../exe/modules.md)), `Put Knowledge into Production` 의 동작, `Deck.cpp` 의 등록·추첨·`numRemaining` 감소
-* 생산 칸 수(`Production Slots Available`)의 결정 규칙, 워크샵 레벨·업그레이드 효과
+* 도움말에 적힌 생산 칸 수(Level I 2개·II 3개·III 4개)의 패치 실행 파일 판정,
+  워크샵 업그레이드 비용과 목록 변화
 * ~~워크샵 원소와 등록 가능한 유닛의 관계~~ → 사용자 확인(2026-09-28): 워크샵은 **자기 원소 유닛만** 등록, **Sun Workshop 은 예외로 다른 원소의 Generator 도** 등록 가능 (Sun 발전기가 없으므로). Sun Workshop 목록의 Rain Generator 가 그 예 — [elements-energy.md](elements-energy.md)
 * 등록 목록에 나오는 유닛과 기술 획득·`techBit`·미션 `myTech` 의 관계
 * 사이드바에서 유닛을 골라 놓는 조작(좌클릭 선택 → 섬에 배치)과 비용 차감 시점
