@@ -30,6 +30,14 @@ public sealed record FortObject(
 /// <param name="Objects">오브젝트</param>
 public sealed record FortChunk(int Index, IReadOnlyList<FortObject> Objects);
 
+/// <summary>Deck 섹션의 항목 하나 (Deck.cpp 0044f160).</summary>
+/// <param name="TypeNumber">파일에 저장된 타입 번호</param>
+/// <param name="Type">TypeNames 변환표로 찾은 타입. 내장 타입이거나 확인할 수 없으면 null</param>
+/// <param name="Chance">카드 선택 가중치</param>
+/// <param name="Power">카드 위력 (부호 있는 8비트)</param>
+/// <param name="NumRemaining">남은 사용 횟수</param>
+public sealed record FortDeckEntry(byte TypeNumber, TypeInfo? Type, byte Chance, sbyte Power, byte NumRemaining);
+
 /// <summary>
 /// .fort (요새 / 미션 맵) 파일. 포맷: docs/formats/fort.md
 /// </summary>
@@ -46,6 +54,9 @@ public sealed class FortFile
 
     /// <summary>타입 바이트가 이 값 이상이면 다리 조각 약식 표기 (소유자 = 0xFF - 값)</summary>
     private const byte BridgeShorthandMin = 0xF6;
+
+    /// <summary>Deck 섹션의 개수 바이트를 제외한 항목 크기.</summary>
+    private const int DeckEntryByteSize = 4;
 
     /// <summary>원본 월드 폭 (청크 수)</summary>
     public const int WorldChunksX = 16;
@@ -77,6 +88,9 @@ public sealed class FortFile
 
     /// <summary>Money: Storm Power (게임 내 재화, 섹션이 없으면 null)</summary>
     public float? Money { get; }
+
+    /// <summary>Deck: 저장된 항목. 타입 번호는 TypeNames로 해석한다.</summary>
+    public IReadOnlyList<FortDeckEntry> Deck { get; }
 
     /// <summary>Chaff: 월드 전체 청크</summary>
     public IReadOnlyList<FortChunk> Chaff { get; } = [];
@@ -132,6 +146,7 @@ public sealed class FortFile
         }
 
         Dictionary<int, TypeInfo> conversion = BuildConversion(Section("TypeNames"), catalog);
+        Deck = ReadDeck(Section("Deck"), conversion);
         Chaff = ReadChunks(Section("Chaff"), conversion);
         var territories = new List<IReadOnlyList<FortChunk>>(TerritoryCount);
         // 영역 섹션 20개를 차례로 해석
@@ -140,6 +155,31 @@ public sealed class FortFile
             territories.Add(ReadChunks(Section($"Terr{i:00}"), conversion));
         }
         Territories = territories;
+    }
+
+    /// <summary>원본 004befd0/004bf190의 개수와 4바이트 카드 항목을 읽는다.</summary>
+    private static IReadOnlyList<FortDeckEntry> ReadDeck(ReadOnlySpan<byte> section,
+        Dictionary<int, TypeInfo> conversion)
+    {
+        if (section.IsEmpty)
+        {
+            return [];
+        }
+        int count = section[0];
+        if (section.Length != 1 + count * DeckEntryByteSize)
+        {
+            throw new InvalidDataException($"Deck 섹션 길이 오류: 항목 {count}개, 데이터 {section.Length}바이트");
+        }
+        var entries = new List<FortDeckEntry>(count);
+        // 원본 저장 순서대로 각 항목의 타입·가중치·위력·남은 횟수를 읽는다.
+        for (int i = 0; i < count; i++)
+        {
+            int offset = 1 + i * DeckEntryByteSize;
+            byte typeNumber = section[offset];
+            entries.Add(new FortDeckEntry(typeNumber, conversion.GetValueOrDefault(typeNumber),
+                section[offset + 1], unchecked((sbyte)section[offset + 2]), section[offset + 3]));
+        }
+        return entries;
     }
 
     /// <summary>
