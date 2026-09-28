@@ -72,7 +72,7 @@ Windows에서 Save the Island!, The War Begins!, 느슨한 b0.fort를 각각 실
 * 시각적 타일 변형은 좌표로 고정한다. 원본의 전역 난수·프레임 선택 및 3×3 큰 타일 선택은 미구현이다.
 * 완전한 `noIsland` 3×3 묶음은 아래 후속 작업의 전용 받침으로 표시한다.
   나머지는 `noIsland` 셀과 `createsisland` 건물 발자국으로 미리보기한다.
-  절벽 `fringe`는 아래 후속 작업에서 추가했으나, 동적 받침 생성·그림자·흰 가장자리 장식은 미완료다.
+  절벽 `fringe`와 흰 가장자리 장식은 아래 후속 작업에서 추가했다. 동적 받침 생성·그림자는 미완료다.
 * 게임 모드별 특수 섬 생성, 일반 전투 섬 재배치, 패턴 셀의 세부 변형을 검증해야 한다.
 
 ## 본섬 마스크 대조와 밀도 시드 수정 (2026-09-28)
@@ -127,7 +127,7 @@ python tools/terrain_mask.py thewarbegins --capture "screenShots/The War Begins!
 `fringe` 플래그에 따라 절벽을 붙였으며, 아래 후속 작업에서 완전한 저장 묶음을 전용 받침으로 교체했다.
 Save the Island!·The War Begins!에서 아래로 돌출된 바위가 표시되며 원본 캡처와 위치를 시각 대조했다.
 결과는 `extracted/screens/fort-map-fringe-savetheisland.png`, `fort-map-fringe-thewarbegins.png`다.
-원본의 흰 가장자리 장식·정확한 깊이 정렬·원소 및 변형 선택에는 차이가 남아 있다.
+이 단계에서는 흰 가장자리 장식·정확한 깊이 정렬·원소 및 변형 선택에 차이가 있었다.
 
 이 대조 중 본체 프레임 계산 오류도 수정했다. C# 뷰어는 `클러스터 × 레이어 수`를 사용했으나
 이는 [기존 포맷 명세](../formats/shp.md)와 달랐다. `Clientboard.cpp`의 그리기 목록 생성 코드
@@ -168,7 +168,7 @@ Save the Island!의 sunBlocker `(175,94,1)`과 중립 가이저 `(165,137,0)`도
 
 이 구현은 저장된 논리 칸의 정적 복원이다. 원본 배치·드롭·연결 시 받침 생성과 소유자 전파,
 깊이 정렬·그림자·일반 플레이어색은 아직 재현하지 않는다.
-흰 가장자리 장식은 `isle`·`fringe` 원본 프레임만으로 설명되지 않았다.
+이 단계에서 흰 가장자리 장식은 `isle`·`fringe` 원본 프레임만으로 설명되지 않았다.
 이전 조사에서 후보로 적은 `00486440`은 재확인 결과 `Make Local Geysers`를 출력하며
 가이저를 배치하는 함수다. 지면 가장자리 장식의 출발점에서 제외한다.
 `00498220`의 소유자 색상 변환 경로와 `isle.type`의 `rim` 클러스터를 계속 대조해야 한다.
@@ -193,5 +193,31 @@ Save the Island! 뷰어 캡처 `extracted/terrain/player-color-map.png`를 수�
 `current-map.png` 및 `screenShots/Save the Islands! - Started.png`와 육안 대조했다.
 The War Begins!도 `extracted/terrain/player-color-thewarbegins.png`로 저장해 지면 표시를 확인했다.
 본섬 윗면의 갈색 테두리가 청록색으로 바뀌며 원본의 푸른 테두리에 가까워졌다.
-원본의 흰 돌출 장식은 여전히 나타나지 않는다. 장식의 타입·배치 규칙과 일반 플레이어
-설정의 색상 선택, 프레임 변형, 깊이 순서는 별도 조사가 필요하다.
+이 단계에서는 원본의 흰 돌출 장식이 나타나지 않았다. 아래 후속 조사에서
+타입과 배치 경로를 확인했다. 일반 플레이어 설정의 색상 선택, 프레임 변형,
+깊이 순서는 별도 조사가 필요하다.
+
+## 흰 가장자리 장식 edgeFarm (2026-09-28 후속)
+
+원본 캡처의 흰 돌출 모양은 `edgeFarm` 타입의 셰이프 프레임과 일치한다.
+`edgeFarm.type`에도 `isle.type`과 같은 순서로 첫 172개 클러스터가 있으며,
+`AB07` 같은 가장자리 프레임은 `isle`보다 세로로 20픽셀 이상 돌출한다.
+원본 Save the Island! `.fort`에는 `edgeFarm` 오브젝트가 없으므로 저장된 오브젝트 표시만으로는
+이 장식을 볼 수 없다.
+
+`Islandbuilder.cpp`의 `0046da70`은 지면 생성 직후 영역별 `0040e560`을 호출한다.
+이 함수는 영역 청크 수 × 20을 배치 목표로 `edgeFarm`을 시도한다.
+`0040db90`은 `matchframe` 타입을 기존 `isle` 칸에 배치할 때 기존 프레임 번호를 가져와
+그 칸을 `edgeFarm`으로 대체한다. 원본의 프레임 번호를 그대로 사용할 수 있는 이유는
+타입 정의 주석의 프레임 순서 일치 규칙과 셰이프 데이터에서 확인했다.
+`0043bbe0`은 `isle`과 `edgeFarm`에 동일한 방식의 소유자색 변환표를 만든다.
+
+개발용 뷰어의 `FortEdgeFarmPreview`는 `rim` 플래그와 두 타입의 같은 번호·이름을 확인한 뒤
+영역 청크당 20개를 목표로 칸을 고른다. 원본은 전역 난수와 실제 배치 가능 여부로 위치를 정하므로
+현재 위치 선택은 좌표 기반의 재현 가능한 근사다. Save the Island!에서는 220개,
+The War Begins!에서는 180개가 선택되며, 각 칸의 프레임·소유자 대응을 검사했다.
+`extracted/screens/fort-map-edgefarm-savetheisland.png`와
+`fort-map-edgefarm-thewarbegins.png`를 각각 원본 시작 캡처와 육안 비교해
+흰 돌출 장식의 형태가 나타나는 것을 확인했다. 전체 검사 150개가 통과했다.
+개별 배치 위치·겹침 순서·타일 변형의
+픽셀 단위 일치는 검증하지 않았다.

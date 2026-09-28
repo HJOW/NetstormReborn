@@ -32,10 +32,13 @@ internal sealed class FortMapViewer : IDisposable
     private readonly FortMapObject[] _sorted;
     private readonly FortTerrainPreview _terrain;
     private readonly TypeInfo _terrainType;
+    private readonly TypeInfo _edgeFarmType;
     private readonly TypeInfo _fringeType;
     private readonly TypeInfo _supportTopType;
     private readonly TypeInfo _supportBottomType;
     private readonly IReadOnlyList<FortTerrainFringeSprite> _fringes;
+    private readonly IReadOnlyList<FortEdgeFarmTile> _edgeFarms;
+    private readonly HashSet<(int X, int Y)> _edgeFarmCells;
     private bool _showChunks;
     private Vector2 _camera;
     private float _zoom = DefaultZoom;
@@ -58,11 +61,14 @@ internal sealed class FortMapViewer : IDisposable
         _isleColors = new IsleColorRemap(palette);
         _map = new FortMap(fort);
         _terrainType = catalog.Find("isle") ?? throw new InvalidDataException("isle 타입이 없습니다.");
+        _edgeFarmType = catalog.Find("edgeFarm") ?? throw new InvalidDataException("edgeFarm 타입이 없습니다.");
         _fringeType = catalog.Find("fringe") ?? throw new InvalidDataException("fringe 타입이 없습니다.");
         _supportTopType = catalog.Find("island") ?? throw new InvalidDataException("island 타입이 없습니다.");
         _supportBottomType = catalog.Find("islandStalag") ?? throw new InvalidDataException("islandStalag 타입이 없습니다.");
         _terrain = new FortTerrainPreview(_map, _terrainType.Definition);
         _fringes = FortTerrainFringe.Create(_terrain, _terrainType.Definition, _fringeType.Definition);
+        _edgeFarms = FortEdgeFarmPreview.Create(_map, _terrain, _terrainType.Definition, _edgeFarmType.Definition);
+        _edgeFarmCells = _edgeFarms.Select(tile => (tile.X, tile.Y)).ToHashSet();
         Name = name;
         Language = language;
         _sorted = _map.Objects.OrderBy(o => o.Object.Type.Definition.HasFlag("surface") ? 0 : 1)
@@ -141,6 +147,10 @@ internal sealed class FortMapViewer : IDisposable
         // 시드로 생성한 지면을 원본 isle 타일로 그린다.
         foreach (FortTerrainTile tile in _terrain.Tiles)
         {
+            if (_edgeFarmCells.Contains((tile.X, tile.Y)))
+            {
+                continue;
+            }
             int color = PreviewPlayerColors.GetValueOrDefault(tile.Owner);
             DrawSprite(batch, _terrainType.LoadIndex, MapSpriteFrames.BodyFrame(_terrainType.Definition, tile.Cluster),
                 Screen(WorldPixels(tile.X, tile.Y), center), color);
@@ -150,6 +160,13 @@ internal sealed class FortMapViewer : IDisposable
         {
             DrawSprite(batch, _fringeType.LoadIndex, MapSpriteFrames.BodyFrame(_fringeType.Definition, fringe.Cluster),
                 Screen(WorldPixels(fringe.X, fringe.Y), center));
+        }
+        // edgeFarm은 원본의 matchframe으로 해당 isle을 대체한다. 원본과 같은 소유자 색상표를 적용한다.
+        foreach (FortEdgeFarmTile tile in _edgeFarms)
+        {
+            int color = PreviewPlayerColors.GetValueOrDefault(tile.Owner);
+            DrawSprite(batch, _edgeFarmType.LoadIndex, MapSpriteFrames.BodyFrame(_edgeFarmType.Definition, tile.Cluster),
+                Screen(WorldPixels(tile.X, tile.Y), center), color);
         }
         // 확인된 3×3 받침은 같은 기준점에서 전용 하단 바위와 윗면을 그린다.
         foreach (FortIslandSupport support in _terrain.Supports)
@@ -194,7 +211,7 @@ internal sealed class FortMapViewer : IDisposable
         batch.Draw(_pixel, new Rectangle(0, 0, width, HeaderHeight), new Color(18, 24, 38));
         batch.DrawString(font, $"맵: {Name} | 오브젝트 {_map.Objects.Count}개 | 확대 {_zoom:0.##}배 | 언어: {Language}", new Vector2(16, 10), Color.Gold);
         batch.DrawString(font, "방향키 / 우클릭: 이동 · 휠: 확대 · Home: 사제 위치 · G: 청크 윤곽 · Esc: 종료", new Vector2(16, 38), Color.White);
-        batch.DrawString(font, "다리: 저장 프레임 · 지면: 생성 미리보기 · 변형/그림자/일반 플레이어색은 검증 전", new Vector2(16, 66), Color.LightGray);
+        batch.DrawString(font, "다리: 저장 프레임 · 지면/edgeFarm: 생성 미리보기 · 변형/그림자/일반 플레이어색은 검증 전", new Vector2(16, 66), Color.LightGray);
         if (hovered != null)
         {
             string region = hovered.Territory.HasValue ? $"Terr{hovered.Territory:00}" : "Chaff";

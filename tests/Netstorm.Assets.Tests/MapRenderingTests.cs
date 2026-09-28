@@ -58,6 +58,54 @@ public sealed class MapRenderingTests
         }
     }
 
+    /// <summary>공식 맵에서 edgeFarm은 원본 청크별 배치 수와 isle 프레임 대응을 지킨다.</summary>
+    [Theory]
+    [InlineData("savetheisland", 220)]
+    [InlineData("thewarbegins", 180)]
+    public void Original_EdgeFarmsMatchRimFramesAndChunkBudget(string name, int expectedCount)
+    {
+        var archive = TaffArchive.Open(OriginalData.RequireFile("netstorm.tarc"));
+        var catalog = new TypeCatalog(archive);
+        Assert.True(archive.TryFind($"d/{name}.fort", out TaffEntry entry));
+        var map = new FortMap(new FortFile(archive.Read(entry), catalog));
+        TypeDefinition isle = catalog.Find("isle")!.Definition;
+        TypeDefinition edgeFarm = catalog.Find("edgeFarm")!.Definition;
+        var terrain = new FortTerrainPreview(map, isle);
+        var farms = FortEdgeFarmPreview.Create(map, terrain, isle, edgeFarm);
+        Assert.Equal(expectedCount, farms.Count);
+        Assert.Equal(farms, FortEdgeFarmPreview.Create(map, terrain, isle, edgeFarm));
+        Assert.Equal(farms.Count, farms.Select(tile => (tile.X, tile.Y)).Distinct().Count());
+        var tiles = terrain.Tiles.ToDictionary(tile => (tile.X, tile.Y));
+        // 선택된 칸마다 지면과 농장의 방향·원소·소유자가 일치하는지 확인한다.
+        foreach (FortEdgeFarmTile farm in farms)
+        {
+            FortTerrainTile tile = tiles[(farm.X, farm.Y)];
+            Assert.Equal(tile.Region, farm.Region);
+            Assert.Equal(tile.Owner, farm.Owner);
+            Assert.Equal(tile.Cluster, farm.Cluster);
+            Assert.Contains("rim", isle.Clusters[farm.Cluster].Flags);
+            Assert.Equal(isle.Clusters[farm.Cluster].Name, edgeFarm.Clusters[farm.Cluster].Name);
+            Assert.InRange(MapSpriteFrames.BodyFrame(edgeFarm, farm.Cluster), 0, edgeFarm.Clusters.Count - 1);
+        }
+    }
+
+    /// <summary>원본 edgeFarm의 모서리는 isle과 프레임 번호를 공유하되 돌출 높이가 더 크다.</summary>
+    [Fact]
+    public void Original_EdgeFarmFrameExtendsBeyondIsle()
+    {
+        var archive = TaffArchive.Open(OriginalData.RequireFile("netstorm.tarc"));
+        var catalog = new TypeCatalog(archive);
+        var shapes = ShapeDatabase.Load(OriginalData.RequireFile("d/_shapes.shp"));
+        TypeInfo isle = catalog.Find("isle")!;
+        TypeInfo edgeFarm = catalog.Find("edgeFarm")!;
+        int cluster = isle.Definition.Clusters.ToList().FindIndex(item => item.Name == "AB07");
+        Assert.InRange(cluster, 0, edgeFarm.Definition.Clusters.Count - 1);
+        Assert.Equal("AB07", edgeFarm.Definition.Clusters[cluster].Name);
+        ShapeFrame ground = shapes.Blocks[isle.LoadIndex].Frames[cluster];
+        ShapeFrame farm = shapes.Blocks[edgeFarm.LoadIndex].Frames[cluster];
+        Assert.True(farm.Height > ground.Height + 20);
+    }
+
     /// <summary>저장된 다리 값은 default보다 우선하며 본체는 그림자 레이어 앞에 연속으로 저장된다.</summary>
     [Fact]
     public void BridgeStoredFrame_UsesBodyLayerCluster()
