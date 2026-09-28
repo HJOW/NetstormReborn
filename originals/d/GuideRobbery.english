@@ -1,0 +1,11 @@
+title = "Robbery"
+
+[Overview]
+<background="nsstart">
+<h2>The Big Robbery</h2>
+<p>This is my first map so tell me what u think
+
+$Checked=1 Robbery,MissionBegin,Robbery,{Doneassassination},1
+
+$Button=Back,Tell,Campaign
+

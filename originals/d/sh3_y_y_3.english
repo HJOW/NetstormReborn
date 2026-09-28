@@ -1,0 +1,103 @@
+[Header]
+
+missionType = "Tutorial"
+
+missionNumber = "17"
+moreGeysers = "1"
+randGeysers = "0"
+
+myStartMoney = "4000"
+myTech = "rainbattery;rainblocker;raincannon;rainaviary;sunfence;"
+myAllyList = ""
+
+title = "Another Treason?"
+
+ai2Name = "Guard of the King"
+ai2Tech = "thunderbattery;thunderblocker;thundercannon;"
+ai2StartMoney = "50000"
+ai2AllyList = "3;4;"
+ai2Color = "red"
+ai2Collectors = "0"
+ai2BridgeDrawRate = "1"
+ai2GeyserAttachments = "0"
+ai2TimeBetweenMoves = "6"
+ai2Ability = ""
+
+ai3Name = "Evil King"
+ai3Tech = "rainbattery;rainblocker;raincannon;rainaviary;"
+ai3StartMoney = "50000"
+ai3AllyList = "2;4;"
+ai3Color = "white"
+ai3Collectors = "0"
+ai3BridgeDrawRate = "1"
+ai3GeyserAttachments = "0"
+ai3TimeBetweenMoves = "6"
+ai3Ability = ""
+
+ai4Name = "Closest Advicer"
+ai4Tech = "windbattery;windblocker;windarcher;windaviary"
+ai4StartMoney = "50000"
+ai4AllyList = "2;3;"
+ai4Color = "green"
+ai4Collectors = "0"
+ai4BridgeDrawRate = "1"
+ai4GeyserAttachments = "0"
+ai4TimeBetweenMoves = "6"
+ai4Ability = ""
+
+
+[Options]
+
+[A.]
+
+<h2>~lAnother Treason?</h2>
+<i>"I must become a traitor again?"<br>
+--Sunder</i>
+<p>After a two years since the death of the Munder, you become favourite of the Evil King, so he made you a prime minister. Now you have chance to kill him, but... you will be traitor twice. Do you  want to orginize the treason?
+$Button=Its too hard for me!,Tell,Campaign
+$Button=Yes,DoNothing,0
+$Button=No,Tell,No
+
+[No]
+
+<h2>~lIts your choice</h2>
+<p>So you choosed to dont become a traitor. Wise choice.
+
+<$Config,Done{mission.fileName}=1>
+<$Config,Donesh3_y_y_2a=0>
+<$Config,Donesh3_y_y_3b=1>
+$Button=Proceed,MissionBegin,sh3
+
+[@1]
+
+<h2>~lIncoming Message</h2>
+<i>~jFrom: ~qEvil King<br>
+~jTo: ~qSunder</i>
+<p>Aha, you are traitor, you are utter traitor! Prepare for a die, my bodyguards will kill you.
+
+$Button=Accept,DoNothing,0
+$Button=Check your Knowledge,ShowTechnology,55
+
+[Succeeded] [BadTeamDead]
+
+<h2>~lCongratulations?</h2>
+<i>"Unfair way never were good"<br>
+--Sunder</i>
+<p>Evil King is dead, so now you become the ruler of the west-bottom part of Nimbus. Munder now your prime minister and Klod war minister. But after a year...
+
+<$Config,Done{mission.fileName}=1>
+<$Config,Donesh3_y_y_2a=0>
+<$Config,Donesh3_y_y_3a=1>
+$Button=Proceed,MissionBegin,sh3
+
+[Failed]
+
+<h2>~lYou lose...</h2>
+<p>Don't worry if you lose, this is Shit Hard!
+
+$Button=Its too hard for me!,Tell,Campaign
+$Button=Try again!,Tell,TryAgain
+$Button=I am not traitor,Tell,No
+
+
+[END]

@@ -1,0 +1,69 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = "16"
+moreGeysers = "1"
+randGeysers = "1"
+
+myStartMoney = "2000"
+myTech = "sunCannon;thunderBattery;"
+myAllyList = ""
+
+title = "Death 2"
+
+ai2Name = "The priest of Nimbus past"
+ai2Tech = "windBattery;windArcher;windBalloon;"
+ai2StartMoney = "50000"
+ai2AllyList = "3;"
+ai2Color = "red"
+ai2Collectors = "5"
+ai2BridgeDrawRate = "0"
+ai2GeyserAttachments = "1"
+ai2TimeBetweenMoves = "0"
+ai2Ability = ""
+
+ai3Name = "The priest of Nimbus present"
+ai3Tech = "rainCannon;rainBattery;rainBalloon"
+ai3StartMoney = "50000"
+ai3AllyList = "2;"
+ai3Color = "white"
+ai3Collectors = "5"
+ai3BridgeDrawRate = "0"
+ai3GeyserAttachments = "1"
+ai3TimeBetweenMoves = "0"
+ai3Ability = ""
+
+[Options]
+
+[Init]
+<$GetTechnology,100>
+
+[A.]
+<h2>Death 2</h2>
+<i>"What is death but a freedom or the soul?"<br>
+--Unknown</i>
+<p>Again you have failed. Again you have let down the fury of <?{vn_windall}>Wind</?><?!{vn_windall}>Rain</?>. Purely for the pleasure of the furies, you must fight for your right to live again, using only ~gtrees~. and ~ysun cannons~.
+This mission should take about 5 mins max.-It's ridiculously simple
+
+
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>You are granted your life again, now the clock is turned back. Go forth, and fight wisely, for you may not get another chance.....
+<$Config,vn_death=0>
+<$Config,vn_donevnd2=1>
+<$Config,vn_notdonevnd2=0>
+<$Config,vn_alive=1>
+$Button=Leave Hell,tell,guidevn.overview
+
+
+[Failed]
+<h2>Not good enough</h2>
+<p>
+$Button=Retry,Tell,TryAgain
+$Button=Leave,tell,guidevn.overview
+
+[END]

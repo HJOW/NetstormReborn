@@ -1,0 +1,65 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 3
+moreGeysers = 1
+
+myStartMoney = 15000
+myTech = "all"
+myAllyList = ""
+
+title="The_Great_War"
+
+ai2Name = "Narnoosh"
+ai2Tech = ""
+ai2StartMoney = 10000
+ai2GeyserAttachments = 6
+ai2Collectors = 7
+ai2TimeBetweenMoves = 13
+ai2AllyList = "3"
+ai2color = red
+ai2Ability=""
+ai2BridgeDrawRate = 4
+
+ai3Name = "Cratitoo"
+ai3Tech = ""
+ai3StartMoney = 10000
+ai3GeyserAttachments = 6
+ai3Collectors = 7
+ai3TimeBetweenMoves = 13
+ai3AllyList = "2"
+ai3color = white
+ai3Ability=""
+ai3BridgeDrawRate = 4
+
+
+[Options]
+
+[A.]
+<h2>The_Great_War</h2>
+<i>"War is just a more violent form of sport to Nimbians"<br>
+--Killdead the Great Prophet of Nimbus</i>  
+<p>This is it the great war but as you come in to battle your ally decides to change sides,oh dear!
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+You have won and your traitorous friend is dead you must move on and attack the Furies now!
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,Fight_the_Furies
+
+
+
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+You have lost to the traitor and his friend thus your people are doomed!
+$Button=Continue,Tell,TryAgain
+
+
+[END]

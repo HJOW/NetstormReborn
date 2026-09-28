@@ -1,0 +1,90 @@
+[Header]
+missionType = "Tutorial"
+denysalvage=1
+missionNumber = 2
+title="Know thy Path"
+
+
+myStartMoney = 5000
+myTech = {TpVmytech1}
+
+ai2Name = "The Crimson Priest"
+ai2Tech = "windBattery;windWalker;windArcher;windBlocker;windAviary;windBalloon"
+ai2StartMoney = 12000
+ai2GeyserAttachments = 2
+ai2Collectors = 2
+ai3AllyList = "4"
+ai2TimeBetweenMoves = 1
+ai2color = red
+
+
+[@300]
+<h2>~yStatus Report</h2><P>
+<I>Messenger: </I>My Lord, we only have five minutes left!<br>
+<?{TpVc1}>  ~[Isunballoon.1]     </?>
+<?{TpVc2}>  ~[Iwindwalker.36]    </?>
+<?{TpVc4}>  ~[Ibulf.80]    	   </?>
+<?{TpVc3}>  ~[Irainwalker.20]    </?>
+<?{TpVc5}>  ~[Isunwalker.65]     </?>
+$Button=OK,doNothing,0
+
+
+[@480]
+<h2>~yStatus Report</h2><P>
+<I>Messenger: </I>My Lord, we only have two minutes left!<br>
+<?{TpVc1}>  ~[Isunballoon.1]     </?>
+<?{TpVc2}>  ~[Iwindwalker.36]    </?>
+<?{TpVc4}>  ~[Ibulf.80]    	   </?>
+<?{TpVc3}>  ~[Irainwalker.20]    </?>
+<?{TpVc5}>  ~[Isunwalker.65]     </?>
+$Button=OK,doNothing,0
+
+
+[@600]
+<i>{TpVguide}</i> I have misjudge you. I thought that you were worthy of the challenge.
+<P>
+$Button=Quit,MissionAbort,1
+$Button=Plead for Mercy,tell,RETRY
+
+[Options]
+
+[A.]                                  
+<h2>~yKnow thy Path</h2><P>
+<i>{TpVguide}</i> The Crimson Priest is trying to build an Outpost
+on the Southern island. Capture and sacrifice him before it's too late.<P>
+You have 15 minutes.<br>
+
+<?{TpVc1}>  ~[Isunfactory.12]     </?>
+<?{TpVc2}>  ~[Iwindfactory.3]    </?>
+<?{TpVc4}>  ~[Ithunderfactory.3]    	   </?>
+<?{TpVc3}>  ~[Irainfactory.9]    </?>
+
+<$config,TpV1=1 {TpV1}>
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Proceed,tell,test
+
+[ai2PriestDead]
+<H2>~ySuccess</h2><P>
+<i>{TpVguide}</i> <?{Tp_name}> {Tp_yourname}, </?>You have done well, but your journey 
+has just begun.<br>
+~[Ibridge.59]
+
+<$config,TpVpath=1>
+
+<$tell,TECHUSED>
+$Button=Continue,MissionBegin,TpV_t2
+
+[RETRY]
+<i>{TpVguide}</i> You have been granted another chance.<P>
+$OnExit= ,MissionBegin,TpVpath
+
+ 
+[TECHUSED]
+<?{TpVc1}>  <$config,TpVc11=0>  </?>
+<?{TpVc2}>  <$config,TpVc21=0>  </?>
+<?{TpVc3}>  <$config,TpVc31=0>  </?>
+<?{TpVc4}>  <$config,TpVc41=0>  </?>
+<?{TpVc5}>  <$config,TpVc51=0>  </?>
+
+
+[END]

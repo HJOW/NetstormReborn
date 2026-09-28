@@ -1,0 +1,43 @@
+title = "Truth or Dare"
+
+[Overview]
+<background="nsstart">
+<h2>Dare is to your Death (maybe)</h2>
+~wYour friend, Nicole, dares you to jump into a mystical portal you found in the cemetery.  You, of course jump in.  She, realizing she is alone, jumps in after you...<br>
+<br>
+~y"Greetings!" A blue creature says, "I will be your helper.  It was so nice you joined yes.  We needed one more contestent.  She can join you in some of your events (pointing to Nicole).  Now, here is your event sheet.  Pick the ones you want to play."<br>
+<br>
+<br>
+~wYou read the sheet:<br>
+<br>
+<br>
+~qDirections, just push the ones you want to play in.<br>
+<br>
+~rEvent I: Cash Flow<br>
+~kSummary: You have lots of cash, but so does your "enemies".  Fight well, my friend.<br>
+~mPower given: Strength<br>
+<br>
+~rEvent II: I'm Taking You Down With Me<br>
+~kSummary: You and your enemies are very clost together, but no one is allied.<br>
+PLEASE pick this one.  It is very funny to our audience.<br>
+~mPower given: Agility<br>
+<br>
+~rEvent III: No Room<br>
+~kSummary: Four of you have your own island, but there is no room to build on.  Fight for dominence of one of two islands.<br>
+~mPower given: Experience<br>
+<br>
+~rEvent IV: Flying Priests<br>
+~kSummary: Every One's priest went bye bye.  Can you rescue yours before it is too late?<br>
+~mPower given: Logical Thinking<br>
+<br>
+~rEvent V: None Left<br>
+~kSummary: No one has money!  Can you get some?<br>
+~mPower given: Money Management<br>
+
+$Checked= Event I,MissionBegin,Portal1,{DonePortal1},1
+$Checked= Event II,MissionBegin,Portal2,{DonePortal2},2
+$Checked= Event III,MissionBegin,Portal3,{DonePortal3},3
+$Checked= Event IV,MissionBegin,Portal4,{DonePortal4},4
+$Checked= Event V,MissionBegin,Portal6,{DonePortal5},6
+
+$Button=Back,tell,campaign

@@ -1,0 +1,133 @@
+[Header]
+missionType = "Tutorial"
+missionNumber = 6
+moreGeysers =
+
+mystartmoney = 1000000
+myTech = "thunderBattery;thunderBlocker;thunderCannon;thunderArcher;sunFence;sunCannon;sunArcher;windBattery;windArcher;windBlocker;windBalloon;windAviary;rainBattery;rainFence;rainCannon;rainBlocker;rainBalloon;rainAviary"
+
+title = "Final Attack"
+
+ai2Name = "Lord Sayain"
+ai2Tech = "thunderBattery;thunderFence;thunderBlocker;thunderCannon;thunderArcher;bulf;rainBattery;rainWalker;rainBalloon"
+ai2StartMoney = 1000000
+ai2GeysersAttachments = 15
+ai2Collectors = 15
+ai2TimeBetweenMoves = 1
+ai2AllyList = "1;3"
+ai2ability = "!Use_Priest_To_Collect"
+ai2color =
+ai2BridgeDrawRate = 1
+
+ai3Name = "Luitenant Martin"
+ai3Tech = "rainBalloon;rainBattery;rainBlocker;rainCannon;rainFence;rainWalker"
+ai3StartMoney = 1000000 
+ai3GeysersAttachments = 15
+ai3Collectors = 15
+ai3TimeBetweenMoves = 1
+ai3AllyList = "1;2"
+ai3ability = "!Use_Priest_To_Collect"
+ai3color =
+ai3BridgeDrawRate = 1
+
+ai4Name = "Outpost Commander Zilch"
+ai4Tech = "thunderBattery;thunderBlocker;thunderCannon;thunderArcher"
+ai4StartMoney = 1000000
+ai4GeysersAttachments = 15
+ai4Collectors = 15
+ai4TimeBetweenMoves = 1
+ai4AllyList = "5;6;7;8"
+ai4ability = "!Attach_To_Enemy_Island;!Use_Priest_To_Collect;!Collect_Storm_Power"
+ai4color =
+
+ai5Name = "General Cataclysm"
+ai5Tech = "windBattery;windWalker;windArcher;windBlocker;windBalloon;windAviary;"
+ai5StartMoney = 1000000
+ai5GeysersAttachments = 15
+ai5Collectors = 15
+ai5TimeBetweenMoves = 1
+ai5AllyList = "4;6;7;8"
+ai5ability = "!Attach_To_Enemy_Island;!Use_Priest_To_Collect"
+ai5color =
+
+ai6Name = "General Regent"
+ai6Tech = "rainBalloon;rainBattery;rainBlocker;rainCannon;rainFence;rainWalker"
+ai6StartMoney = 1000000
+ai6GeysersAttachments = 15
+ai6Collectors = 15
+ai6TimeBetweenMoves = 1
+ai6AllyList = "4;5;7;8"
+ai6ability = "!Attach_To_Enemy_Island;!Use_Priest_To_Collect"
+ai6color =
+
+ai7Name = "Admiral Hamous"
+ai7Tech = "thunderBattery;thunderFence;thunderBlocker;thunderCannon;thunderArcher;bulf"
+ai7StartMoney = 1000000
+ai7GeysersAttachments = 0
+ai7Collectors = 15
+ai7TimeBetweenMoves = 1
+ai7AllyList = "4;5;6;8"
+ai7ability = "!Attach_To_Enemy_Island;!Use_Priest_To_Collect"
+ai7color =
+
+ai8Name = "Lord Razor"
+ai8Tech = ""
+ai8StartMoney = 
+ai8GeysersAttachments = 0
+ai8Collectors = 0
+ai8TimeBetweenMoves = 0
+ai8AllyList = "4;5;6;7"
+ai8color =
+
+[Options]
+
+[A.]
+<h2>Final Attack!</h2>
+<i>"Extermination or glory?"<br>
+--DDC-Striker-DDC </i>  
+
+<p>This is it. You, DDC-Striker-DDC and Luitenant Martin have reached the center of the Razorian guild. Putting all possible effort in this mission, you have took all Storm Power left in the DDC-Center. Storm Power will not be a problem this mission. Even more a problem are the Razorians you are facing. These are the finest of Razorian members, and hard to defeat. Win this battle, and the Razorians are history. Lose it and DDC will be. All of DDC wish you good luck!
+
+<p>Your mission is to win the battle, ensuring the Razorians death. Lord Razor is the primary target!
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[BadTeamDead]
+<h2>Well done!</h2>
+<p>
+Hurray!!! We have defeated the Razorians and no longer have an enemy guild trying to destroy us! You are truly a great commander!<BR><BR>
+
+DDC-Striker-DDC: "<I>Great battle! Maybe you someday can take a commanding position in DDC!</I>"
+Luitenant Martin: "<I>Oh man. I would never have thought we would even have the slightest change of winning! We have prevailed, my friend.</I>"
+
+<$Config,Done{mission.filename}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,Razorianwar4
+
+[ai2TempleHalfDead]
+<h2>DDC-Striker-DDC is almost defeated</h2>
+<p>My temple is almost destroyed! Some help would really be appreciated!
+
+[ai3TempleHalfDead]
+<h2>Luitenant Martin is under attack</h2>
+<p>I'm nearing my defeat! Help me quickly, my friend!
+
+[ai2PriestDead]
+<p>Lord DDC-Striker-DDC is defeated. Not long after that you and Luitenant Martin also died. Hearing the news, DDC fell apart. The Razorians will live on unpunished, and DDC is gone.
+
+$Button=Continue,Tell,TryAgain
+
+[ai3PriestDead]
+<p>Luitenant Martin is dead. Now it's just you and DDC-Striker-DDC, and you will be defeated.
+
+$Button=Continue,Tell,TryAgain
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+You are dead! After a heroic battle, DDC-Striker-DDC and Luitenant Martin also died. DDC is no more.
+
+$Button=Continue,Tell,TryAgain
+
+[END]

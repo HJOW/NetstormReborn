@@ -1,0 +1,133 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 1
+randomGeysers = 1
+denysalvage = 1
+
+myStartMoney = 3000
+myTech = "sunWalker;sunCannon;sunArcher;sunAviary;sunBalloon;sunBlocker;sunFence;outpost;sunFactory;windBattery"
+
+title="Beginning of the End"
+
+ai2Name = "Apprentice of Rain"
+ai2Tech = "sunWalker;sunArcher;rainBattery;windBattery;rainCannon;rainFence;rainWalker"
+ai2StartMoney = 7000
+ai2GeyserAttachments = 2
+ai2Collectors = 3
+ai2TimeBetweenMoves = 3
+ai2AllyList = ""
+ai2color = red
+ai2Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS;!USE_PRIEST_TO_COLLECT"
+ai2DrawBridgeRate = 2
+
+ai3Name = "Apprentice of Wind"
+ai3Tech = "sunWalker;sunArcher;windBattery;windArcher;windWalker"
+ai3StartMoney = 7000
+ai3GeyserAttachments = 2
+ai3Collectors = 3
+ai3TimeBetweenMoves = 3
+ai3AllyList = ""
+ai3color = white
+ai3Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS;!USE_PRIEST_TO_COLLECT"
+ai3BridgeDrawRate = 2
+
+ai4Name = "Apprentice of Thunder"
+ai4Tech = "sunWalker;sunArcher;bulf;thunderBattery;thunderBlocker;sunCannon"
+ai4StartMoney = 7000
+ai4GeyserAttachments = 2
+ai4Collectors = 3
+ai4TimeBetweenMoves = 3
+ai4AllyList = ""
+ai4color = green
+ai4Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS;!USE_PRIEST_TO_COLLECT"
+ai4BridgeDrawRate = 2
+
+ai5Name = "Low Priest of Nimbian Warfare"
+ai5Tech = "sunWalker;sunArcher;sunCannon;sunFence;sunBlocker;windBattery;windWalker"
+ai5StartMoney = 1000
+ai5GeyserAttachments = 2
+ai5Collectors = 1
+ai5TimeBetweenMoves = 3
+ai5AllyList = "1"
+ai5color = purple
+ai5Ability = "!USE_PRIEST_TO_COLLECT"
+ai5BridgeDrawRate = 2
+
+[init]
+<$Config,pickally1=0>
+<$Config,Donefailedflag=0>
+[Options]
+
+[ai2PriestDead]
+Enemy priest sacrificed.  Good job!  The Furies are pleased and they decide to grant you knowledge.  Choose which Fury you want knowledge from:
+
+$Button=Wind,GetTechnology,70
+$Button=Wind,GetTechnology,100
+$Button=Rain,GetTechnology,101
+$Button=Rain,GetTechnology,108
+
+[ai3PriestDead]
+Enemy priest sacrificed.  Good job!  The Furies are pleased and they decide to grant you knowledge.  Choose which Fury you want knowledge from:
+
+$Button=Thunder,GetTechnology,134
+$Button=Sun,GetTechnology,159
+$Button=Sun,GetTechnology,169
+
+[ai4PriestCaptured]
+$Menu=~[IwindFactory.1]wind,GetTechnology,86
+
+[ai4PriestDead]
+Enemy priest sacrificed.  Good job!  The Fury of Wind has rewarded you with the knowledge of the Wind Workshop.
+$Menu=~[IwindArcher.1]Wind,GetTechnology,140
+
+[ai5TempleHalfDead]
+<h2>You receive a message from the Low Priest of Nimbian Warfare</h2>
+<p>
+I need your help.  I am almost defenseless.
+
+[ai5TempleDead]
+<h2>You receive a message.</h2>
+<p>
+Your ally is soon going to lose his blood on my altar.  You will be next.
+
+[ai5PriestCaptured]
+<h2>You receive a message.<h2>
+<p>
+Your ally has been captured.  You must save him at all cost.
+
+[ai5PriestDead]
+<h2>Your ally is dead.</h2>
+<i>You have failed against the Furies!</i>
+<p>
+They had a good laugh watching you and decided to give you another chance to amuse them.  Don't fail again.</p>
+<$Config,Donefailedflag=1>
+$Button=Next Mission,MissionBegin,Guard
+
+
+[A.]
+<h2>Beginning of the End</h2>
+<i>"When all else fails, pray!"<br>
+--Nimbian Priest on his death bed.</i>  
+<p>The Furies have been quarrelling over who has the best priest.  They have devised a tournament to find out.  They decide to practice on you mortals.  This is the Beginning of the End!
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>You've survived!</h2>
+<p>
+You saved the Low Priest of Nimbian Warfare.
+<$Config,Done{mission.fileName}=1>
+$Button=Next Mission,MissionBegin,Low
+$Button=Leave Missions,MissionAbort,0
+
+[Failed]
+<h2>You have failed against the Furies!</h2>
+<p>
+They had a good laugh watching you and decided to give you another chance to amuse them.  Don't fail again.</p>
+<$Config,Donefailedflag=1>
+$Button=Next Mission,MissionBegin,Guard
+
+[END]

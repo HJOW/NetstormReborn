@@ -1,0 +1,48 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 1
+
+myStartMoney = 2000
+myTech = "rainBattery;rainCannon;windBattery;windBlocker;windArcher"
+
+title="first try"
+
+ai2Name = "Bob"
+ai2Tech = "all"
+ai2StartMoney = 1000000
+ai2GeyserAttachments = 10
+ai2Collectors = 10
+ai2TimeBetweenMoves = 3
+ai2AllyList = ""
+ai2color = green
+ai2Ability = "!STOP_PRIEST_FROM_COLLECTING"
+
+[Options]
+
+[A.]
+<h2>First try</h2>
+<i>"I hope this works."<br>
+--Green Giant with his first map</i>  
+<p>just kill the guy
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+Congratulations!
+
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+Too bad, try again
+
+$Button=Continue,Tell,TryAgain
+
+[END]

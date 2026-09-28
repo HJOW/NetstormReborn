@@ -1,0 +1,169 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 5
+moreGeysers = 5
+
+myStartMoney = 6500
+myTech = "sunaviary;sunBalloon;sunCannon;sunBlocker;sunFence;sunArcher;thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;bulf;rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainwalker;rainFence;rainwalker"
+myAllyList = "4;7"
+
+title="Defend"
+
+ai2Name = "Lord Trallen"
+ai2Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;windarcher;windBattery;windaviary;windballoon;windblocker;rainbattery;sunBlocker;sunArcher"
+ai2StartMoney = 30000
+ai2GeyserAttachments = 4
+ai2Collectors = 7
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3;6"
+ai2color = red
+ai2Ability="!USE_PRIEST_TO_COLLECT"
+ai2BridgeDrawRate = 4
+
+ai3Name = "General Defan"
+ai3Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainwalker;sunBlocker;sunArcher"
+ai3StartMoney = 20000
+ai3GeyserAttachments = 3
+ai3Collectors = 8
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2;6"
+ai3color = white
+ai3Ability="!USE_PRIEST_TO_COLLECT"
+ai3BridgeDrawRate = 4
+
+ai4Name = "Page of Thunder"
+ai4Tech = "thunderbattery;thunderblocker;bulf;suncannon;sunArcher"
+ai4StartMoney = 10000
+ai4GeyserAttachments = 3
+ai4Collectors = 7
+ai4TimeBetweenMoves = 1
+ai4AllyList = "1;7"
+ai4color = green
+ai4Ability="!USE_PRIEST_TO_COLLECT"
+ai4BridgeDrawRate = 4
+
+ai6Name = "Lord Chamberland of Thunder"
+ai6Tech = "windarcher;windBattery;windaviary;windballoon;thunderbattery;thunderarcher;thunderblocker;thundercannon;sunaviary;sunCannon;sunBlocker;sunArcher"
+ai6StartMoney = 50000
+ai6GeyserAttachments = 10
+ai6Collectors = 7
+ai6TimeBetweenMoves = 1
+ai6AllyList = "2;3"
+ai6color = yellow
+ai6Ability="!USE_PRIEST_TO_COLLECT"
+ai6BridgeDrawRate = 4
+
+ai7Name = "Knight of Wind"
+ai7Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;rainbattery"
+ai7StartMoney = 10000
+ai7GeyserAttachments = 3
+ai7Collectors = 7
+ai7TimeBetweenMoves = 2
+ai7AllyList = "1;4"
+ai7color = 
+ai7Ability="!USE_PRIEST_TO_COLLECT;!ATTACH_TO_ENEMY_ISLAND"
+ai7BridgeDrawRate = 4
+
+
+[Options]
+
+[A.]
+<h2>Defend</h2>
+<i>"WAKE UP!"<br>
+--Yelth Dorn (after sneaking his entire army ,past sleeping guards, on to an enemy island)</i>  
+<p>The leader of one of the larger clans left, the Lord Chamberland of Thunder, has decided to take the Isle of Geysers for himself.  He and his generals has gather a sizeable amount of storm power and have begun their attack.  Defend the Isle of Geysers and crush your foe; perhaps his followers may follow you after you defeat him...
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+You have defeated the Lord Chamberland of Thunder!  The final battle approaches as the remaining clans gather and engage in combat.  The some followers of the Lord Chamberland have vowed revenge, but due to their losses they will not likely attack you.  You will not be able to run from this battle if you wish to rule nimbus.
+<p>
+~lDo you wish to continue on?
+
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=~iTO BATTLE!!,MissionBegin,tnron71
+$Button=~rNo,Tell,TryAgain
+
+[ai2TempleHalfDead]
+<h2>Message from Lord Trallen</h2>
+<p>
+I knew this attack would fail....
+
+[ai2TempleDead]
+<h2>Message from Lord Trallen</h2>
+<p>
+Chamberland you are a fool for bringing us here!!
+
+[ai3TempleHalfDead]
+<h2>Intercepted message from General Defan</h2>
+<p>
+I need help here!!
+
+[ai4TempleHalfDead]
+<h2>Message from the Page of Thunder</h2>
+<p>
+I need some help in defending my temple!
+
+[ai4TempleDead]
+<h2>Message from the Lord Chamberland of Thunder</h2>
+<p>
+Hahahaha!!  You weak fools!
+
+[ai4PriestDead]
+<h2>Your ally the Page of Thunder has died!</h2>
+<p>
+The Chamberland's forces pressed on with there attack after the Page's defeat.  Unable to stop the attacks you lost the Isle of Geysers.  The Chamberland continued his attack untill he was crowned the new ruler of Nimbus.
+
+$Button=Continue,Tell,TryAgain
+
+
+[ai6TempleHalfDead]
+<h2>Message from the Lord Chamberland of Thunder</h2>
+<p>
+No!! All my plans...my ambitions!!!  You will pay for this!!
+
+[ai6PriestDead]
+<h2>You have defeated the Lord Chamberland of Thunder!</h2>
+<p>
+After the Chamberland's death many of his remaining followers decide to join you.  Will you be able to take on the others?  The final battle approaches as the remaining clans gather and engage in combat.  The some followers of the Lord Chamberland have vowed revenge, but due to battle they will not likely attack you.  You will not be able to run from this battle if you wish to rule nimbus.
+<p>
+~lDo you wish to continue on?
+
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=~iTO BATTLE!!,MissionBegin,tnron2
+$Button=~rNo,Tell,TryAgain
+
+[ai7TempleHalfDead]
+<h2>Message from the Knight of Wind</h2>
+<p>
+They have destroyed my defences!
+
+[ai7TempleDead]
+<h2>Message from the Knight of Wind</h2>
+<p>
+My Temple has been destroyed!!
+
+[ai7PriestDead]
+<h2>Your ally the Knight of Wind has died!</h2>
+<p>
+The Knight of Wind has fallen under the military might of the Chamberland's forces.  Although you manage to avenge his death, you were unable to defeat the other clans of Nimbus and have failed in you ultimate goal.
+
+$Button=Continue,Tell,TryAgain
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+The Lord Chamberland of Thunder has captured the Isle of Geysers!  With the power of the Isle the Lord Chamberland destroyed all of the opposing clans and is now the new ruler of Nimbus.
+
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+
+

@@ -1,0 +1,134 @@
+[Header]
+missionType = "Tutorial"
+missionNumber = 1
+moreGeysers = 1
+
+mystartmoney = 75300
+myTech = "sunFence;thunderArcher;thunderBattery;thunderBlocker;thunderCannon;thunderFence;bulf;windBattery;windBlocker;windWalker"
+
+title = "Harvestrap"
+
+ai2Name = "Marquis Martin"
+ai2Tech = "sunArcher;sunCannon;windWalker;windArcher;windBlocker;windBalloon;windAviary;windBattery"
+ai2StartMoney = 40000
+ai2GeysersAttachments = 15
+ai2Collectors = 15
+ai2TimeBetweenMoves = 1
+ai2AllyList = "1"
+ai2color = red
+
+ai3Name = "White pirate"
+ai3Tech = "sunArcher;sunAviary;sunBalloon;sunBlocker;sunCannon;sunFence;windBattery"
+ai3StartMoney = 10000 
+ai3GeysersAttachments = 15
+ai3Collectors = 15
+ai3TimeBetweenMoves = 1
+ai3AllyList = "4;5;6"
+ai3ability = "!Use_Priest_To_Collect"
+ai3color = white
+
+ai4Name = "Green pirate"
+ai4Tech = "sunBlocker;windBattery;windBlocker;rainBattery;rainBlocker;rainCannon;thunderBattery;thunderBlocker"
+ai4StartMoney = 10000
+ai4GeysersAttachments = 15
+ai4Collectors = 15
+ai4TimeBetweenMoves = 1
+ai4AllyList = "3;5;6"
+ai4ability = "!Use_Priest_To_Collect"
+ai4color = green
+
+ai5Name = "Magenta pirate"
+ai5Tech = "rainAviary;rainBalloon;rainBattery;rainBlocker;rainCannon;rainFence;rainWalker"
+ai5StartMoney = 10000
+ai5GeysersAttachments = 15
+ai5Collectors = 15
+ai5TimeBetweenMoves = 1
+ai5AllyList = "3;4;6"
+ai5ability = "!Use_Priest_To_Collect"
+ai5color = magenta
+
+ai6Name = "Master pirate"
+ai6Tech = "thunderArcher;thunderBattery;thunderBlocker;thunderCannon;thunderFence;bulf;windBattery;windArcher;rainBattery;rainCannon"
+ai6StartMoney = 20000
+ai6GeysersAttachments = 15
+ai6Collectors = 15
+ai6TimeBetweenMoves = 1
+ai6AllyList = "3;4;5"
+ai6ability = "!Use_Priest_To_Collect"
+ai6color = yellow
+
+ai7Name = ""
+ai7Tech = ""
+ai7StartMoney = 
+ai7GeysersAttachments = 
+ai7Collectors = 
+ai7TimeBetweenMoves = 
+ai7AllyList = 
+ai7color = 
+
+ai8Name = ""
+ai8Tech = ""
+ai8StartMoney = 
+ai8GeysersAttachments = 
+ai8Collectors = 
+ai8TimeBetweenMoves = 
+ai8AllyList = 
+ai8color =
+
+[Options]
+
+[A.]
+<h2>Free yourself and Marquis Martin!</h2>
+<i>"If you do nothing, you'll die. If you lose, you'll die. If you win, it's delay of execution"<br>
+--DDC-Striker-DDC </i>  
+
+<p>You and your colleague (and also your friend) Marquis Martin form the backbone of the guild Da Devil Crew (DDC) because you are the harvesters of storm power. You were told to go to an area extremely rich of storm geysers and harvest it for DDC. While you were harvesting storm power you were suddenly surrounded by four pirate islands. Marquis Martin placed a bridge around your islands so they can't reach you with ground transports.
+
+<p>Your mission is to eliminate all enemy threats.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[BadTeamDead]
+<h2>Well done! We have won the battle!</h2>
+<p>
+We have won a very difficult battle against no less then four pirates! I'm sure we will be promotod for this!
+
+<$Config,Done{mission.filename}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,Razorianwar2
+
+[ai2PriestDead]
+<h2>Marquis Martin is slain</h2>
+<p>The noble Marquis Martin has been offered by the pirates! He stayed loyal to you to the end when the pirates said that if he would join them, he would be saved. He said: "Never I will join you villains!". And now, he is dead.
+
+$Button=Continue,Tell,TryAgain
+
+[ai3PriestDead]
+<p>~[IwindBalloon.D1]
+<h2>A message by air ship</h2>
+<p>We have defeated the white pirate! Well done! Now we must focus on the other pirates!
+
+[ai4PriestDead]
+<p>~[IwindBalloon.D1]
+<h2>A message by air ship</h2>
+<p>Yaaahooo! The green pirate is history!
+
+[ai5PriestDead]
+<p>~[IwindBalloon.D1]
+<h2>A message by air ship</h2>
+<p>Mr. Magenta is gone forever! Hurray! We make a great team!
+
+[ai6PriestDead]
+<p>~[IwindBalloon.D1]
+<h2>A message by air ship</h2>
+<p>Yeah!! The master pirate has been defeated! The hardest part is now over!
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+You are dead! The evil pirates have defeated you!
+
+$Button=Continue,Tell,TryAgain
+
+[END]

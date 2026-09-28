@@ -1,0 +1,50 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 3
+moreGeysers = 1
+
+myStartMoney = 999999
+myTech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence;rainwalker;sunBlocker;sunFence"
+myAllyList = ""
+
+title="1 on 1"
+
+ai2Name = "Hermes"
+ai2Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;thunderbattery;thundercannon;thunderblocker"
+ai2StartMoney = 999999
+ai2GeyserAttachments = 0
+ai2Collectors = 0
+ai2TimeBetweenMoves = 0
+ai2AllyList = ""
+ai2color = red
+ai2Ability=""
+ai2BridgeDrawRate = 1
+
+[Options]
+
+[A.]
+<h2>One on One</h2>
+<i>"Fear is the greatest weapon a person can have"<br>
+--Ass Nimbian General</i>  
+<p>Hint, Hermes isn't good in 1's but just dont play him in the 3 on 2 =P
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+Hey nice work you won.. bravo omego
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+You lost you fucking newbie how the fuck could you lose huh?
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+

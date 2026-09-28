@@ -1,0 +1,75 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = "7"
+moreGeysers = "0"
+randGeysers = "0"
+
+myStartMoney = "2000"
+myTech = ""
+myAllyList = ""
+
+title = "Commando Raid"
+
+ai2Name = "McBane"
+ai2Tech = "sunArcher;"
+ai2StartMoney = "0"
+ai2AllyList = ""
+ai2Color = "red"
+ai2Collectors = "1"
+ai2BridgeDrawRate = "5"
+ai2GeyserAttachments = "0"
+ai2TimeBetweenMoves = "0"
+ai2Ability = ""
+
+[Init]
+
+[Options]
+
+[A.]
+<h2>Fun with flyers</h2>
+<i>~I"When a workshop is destroyed is will seem that your arm is being hacked from your body. When a bridge falls down through the clouds and into the abyss, you will feel that you are falling with it."<br>
+--The Book of Nimbus</i>
+<p>~. Following your recent vicotry, you are being posted ever more dangerous missions. You have been dropped behind enemy lines on a commando mission. The sentries have been drugged, and you must quickly capture the enemy priest, so that we may torture him for battle secrets. Good luck.
+
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+
+
+
+[@300]
+<h2>Too Slow</h2>
+<p>The sentires have recoved and you are easily captured and slain.
+<$Config,vn_death=1>
+<$Config,vn_alive=0>
+$Button=Leave,tell,guidevn.overview
+
+[ai2PriestCaptured]
+<h2>Victory!</h2>
+<p>
+ Field general McBane has been captured. The pure hatred in his eyes tells you it will not be easy to make him speak, but time will tell...... 
+<$Config,vn_donevn7=1>
+You are rewarded with the tech of <?{vn_windall}>~yAirship</?><?!{vn_windall}>~lCloud Floater</?>
+<?{vn_windall}>$Menu=~[IwindBalloon.*],tell,windwin</?>
+<?!{vn_windall}>$Menu=~[IrainBalloon.1],tell,rainwin</?>
+
+[windwin]
+"Onward to Victory"
+<$GetTechnology,141>
+<$Config,vn_tech="windBattery;windArcher;windAviary;sunFence;windWalker;windBalloon;">
+$Button=Next Mission,MissionBegin,vn9
+
+[rainwin]
+"Onward to Victory"
+<$GetTechnology,146>
+<$Config,vn_tech="rainBattery;rainCannon;rainAviary;sunFence;rainWalker;rainBalloon;">
+$Button=Next Mission,MissionBegin,vn9
+
+
+
+[Failed]
+[Succeed]
+
+[END]

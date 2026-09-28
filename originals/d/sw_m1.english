@@ -1,0 +1,340 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 
+randomGeysers = 
+denySalvage = 1
+
+myStartMoney={sw_mvar0}
+
+myTech = {sw_var1}{sw_var2}{sw_var3}{sw_var9}
+
+title = "Apprenticeship"
+
+ai2Name = "Demon Dog of ~oWind~."
+ai2Tech = {sw_var1}{sw_var2}{sw_var3}{sw_var4}
+ai2StartMoney ={sw_mvar1} 
+ai2GeyserAttachments = 4
+ai2Collectors = 5
+ai2TimeBetweenMoves = {sw_mvar2}
+ai2AllyList = "3;4;5;6;7"
+ai2Color = red
+ai2BridgeDrawRate = {sw_mvar2}
+ai2Ability = "!USE_PRIEST_TO_COLLECT;!SACRIFICE_ENEMY_PRIEST;!BUILD_DAIS"
+
+ai3Name = "Demon Dog of ~lRain~."
+ai3Tech = {sw_var1}{sw_var2}{sw_var5}{sw_var6}
+ai3StartMoney ={sw_mvar1} 
+ai3GeyserAttachments = 4
+ai3Collectors = 5
+ai3TimeBetweenMoves = {sw_mvar2}
+ai3AllyList = "2;4;5;6;7"
+ai3Color = white
+ai3BridgeDrawRate = {sw_mvar2}
+ai3Ability = "!USE_PRIEST_TO_COLLECT;!SACRIFICE_ENEMY_PRIEST;!BUILD_DAIS"
+
+ai4Name = "Demon Dog of ~mThunder~."
+ai4Tech = {sw_var1}{sw_var2}{sw_var7}{sw_var8}
+ai4StartMoney = {sw_mvar1}
+ai4GeyserAttachments = 4
+ai4Collectors = 5
+ai4TimeBetweenMoves = {sw_mvar2}
+ai4AllyList = "2;3;5;6;7"
+ai4Color = green
+ai4BidgeDrawRate = {sw_mvar2}
+ai4Ability = "!USE_PRIEST_TO_COLLECT;!SACRIFICE_ENEMY_PRIEST;!BUILD_DAIS"
+
+ai5Name = "Demon Dog of ~oWind~."
+ai5Tech = {sw_var1}{sw_var2}{sw_var3}{sw_var4}
+ai5StartMoney ={sw_mvar1} 
+ai5GeyserAttachments = 4
+ai5Collectors = 5
+ai5TimeBetweenMoves = {sw_mvar2}
+ai5AllyList = "2;3;4;6;7"
+ai5Color = red
+ai5BridgeDrawRate = {sw_mvar2}
+ai5Ability = "!USE_PRIEST_TO_COLLECT;!SACRIFICE_ENEMY_PRIEST;!BUILD_DAIS"
+ai5Off=1
+
+ai6Name = "Demon Dog of ~lRain~."
+ai6Tech = {sw_var1}{sw_var2}{sw_var5}{sw_var6}
+ai6StartMoney ={sw_mvar1} 
+ai6GeyserAttachments = 4
+ai6Collectors = 5
+ai6TimeBetweenMoves = {sw_mvar2}
+ai6AllyList = "2;3;4;5;7"
+ai6Color = white
+ai6BridgeDrawRate = {sw_mvar2}
+ai6Ability = "!USE_PRIEST_TO_COLLECT;!SACRIFICE_ENEMY_PRIEST;!BUILD_DAIS"
+ai6Off=1
+
+ai7Name = "Demon Dog of ~mThunder~."
+ai7Tech = {sw_var1}{sw_var2}{sw_var7}{sw_var8}
+ai7StartMoney = {sw_mvar1}
+ai7GeyserAttachments = 4
+ai7Collectors = 5
+ai7TimeBetweenMoves = {sw_mvar2}
+ai7AllyList = "2;3;4;5;6"
+ai7color = green
+ai7BidgeDrawRate = {sw_mvar2}
+ai7Ability = "!USE_PRIEST_TO_COLLECT;!SACRIFICE_ENEMY_PRIEST;!BUILD_DAIS"
+ai7Off=1
+
+
+
+
+[init]
+<$Config,sw_m1=1>
+<$Config,sw_m2=0>
+<$Config,sw_m3=0>
+<$Config,sw_m4=0>
+<$Config,sw_m5=0>
+<$Config,sw_m6=0>
+<$Config,sw_m7=0>
+<$Config,sw_m8=0>
+<$Config,sw_m9=0>
+<$Config,sw_m10=0>
+<$Config,sw_m11=0>
+<$Config,sw_m12=0>
+<$Config,sw_m13=0>
+<$Config,sw_m14=0>
+<$Config,sw_m15=0>
+<$Config,sw_m16=0>
+<$Config,sw_m17=0>
+<$Config,sw_m18=0>
+<$Config,sw_m19=0>
+<$Config,sw_m20=0>
+<$Config,sw_m21=0>
+<$Config,sw_m22=0>
+<$Config,sw_m23=0>
+<$Config,sw_m24=0>
+<$Config,sw_m25=0>
+<$Config,sw_m30=0>
+
+<$Config,sw_enDead2=0>
+<$Config,sw_enDead3=0>
+<$Config,sw_enDead4=0>
+<$Config,sw_enDead5=0>
+<$Config,sw_enDead6=0>
+<$Config,sw_enDead7=0>
+<$Config,sw_god4="God of ~ySUN~.~[Imanabolt.3]">
+
+[options]
+[A.]
+<$PlaySound,shortThunderCrack.wav>
+                                                     <h2>Apprenticeship~.<a href="#mission1">~[IfortGump.46]</a></h2>
+            ~[Iburied.1]
+<br>                                                             ~1~y<?!{sw_difficulty1}>HARD</?><?{sw_difficulty1}>EASY</?>~.<br>
+After you lost the Great Tournament of the Furies you were cast into
+the mystical Realm of Hades where you fought the King of Hades Priests'
+where you won your right to live freely - in the Realm of Hades that is.
+<br>
+The {sw_god5} has offered you the position of ~kApprentice~. of {sw_hades}<br>
+                                ~yWill you take it?~.
+<br>
+There are four elemental Gods (known to Nimbians as <i>THE FURIES</i>). The God
+of ~lRain~., the God of ~mThunder~., the God of ~oWind~., and the infamous God of ~kDeath~. (King ~rHades~. himself).
+The other Gods created ~rHades~. for all of the lost souls that were sacrificed in battle.  However,
+they needed a ruler of this new realm and therefore, created another God.
+<br>
+{sw_hades} is an immortal God, just like the rest, except he becomes mortal outside of his realm.  If he is lured outside of his
+realm then he can be killed.
+<br>
+            <a href="cmd:ShowTechnology,55"> ~[IfortGump.50] </a>                                                  <a href="cmd:DoNothing,0">~[IfortGump.22] </a>                                            <a href="cmd:Tell,guideHades.overview">~[Ipriest.13]</a><br>
+<a href="cmd:ShowTechnology,55">Review Knowledge</a>                            <a href="cmd:DoNothing,0">Enter Hades Realm</a>                    <a href="cmd:Tell,guideHades.overview">I'm too Scared!</a>
+$OnExit= ,PlaySound,priestMove1.wav
+$Button= ,Tell,A.
+
+
+[ai2PriestDead]
+<h2>You receive a message from the {sw_god5}</h2>
+<p>
+<i>You killed <?{sw_enDead5}>both</?><?!{sw_enDead5}>half</?> of my Demon
+ Dogs of Wind. I'll grant you knowledge.</i>
+<$Config,sw_enDead2=1>
+$OnExit= ,Tell,checkwin
+$Menu=~yWhat did I get?,GetTechnology,70
+
+[ai5PriestDead]
+<h2>You receive a message from the {sw_god5}</h2>
+<p>
+<i>You killed <?{sw_enDead2}>both</?><?!{sw_enDead2}>half</?> of my Demon
+ Dogs of Wind. I'll grant you knowledge.</i>
+<$Config,sw_enDead5=1>
+$OnExit= ,Tell,checkwin
+$Menu=~yWhat did I get?,GetTechnology,70
+
+
+[ai3PriestDead]
+<h2>You receive a message from the {sw_god5}</h2>
+<p>
+<i>You may have killed my Demon Dog of Rain<?!{sw_enDead4}!{sw_enDead6}>, but
+ my Demon Dog of<br>
+                          ~[IthunderCannon.16]<br>
+                Thunder will kill you!</i></?>
+<?{sw_enDead4}><?{sw_enDead6}>, but my other Demon dogs will get you!</?></?>
+<$Config,sw_enDead3=1>
+$OnExit= ,Tell,checkwin
+$Button=Yeah sure!,DoNothing,0
+
+[ai6PriestDead]
+<h2>You receive a message from the {sw_god5}</h2>
+<p>
+<i>You may have killed my Demon Dog of Rain<?!{sw_enDead4}!{sw_enDead6}>, but
+ my Demon Dog of<br>
+                          ~[IthunderCannon.16]<br>
+                Thunder will kill you!</i></?>
+<?{sw_enDead4}><?{sw_enDead6}>, but my other Demon dogs will get you!</?></?>
+<$Config,sw_enDead6=1>
+$OnExit= ,Tell,checkwin
+$Button=Yeah sure!,DoNothing,0
+
+
+[ai4PriestDead]
+Good job! <?{sw_enDead7}>Both of</?><?!{sw_enDead7}>One of</?> the Demon Dogs
+ of Thunder <?{sw_enDead7}>are</?><?!{sw_enDead7}>is</?> dead.
+<$Config,sw_enDead4=1>
+$OnExit= ,Tell,checkwin
+$Button=OK,DoNothing,0
+
+[ai7PriestDead]
+Good job! <?{sw_enDead4}>Both of</?><?!{sw_enDead4}>One of</?> the Demon Dogs
+ of Thunder <?{sw_enDead4}>are</?><?!{sw_enDead4}>is</?> dead.
+<$Config,sw_enDead7=1>
+$OnExit= ,Tell,checkwin
+$Button=OK,DoNothing,0
+
+
+[AllianceBegun]
+<$Config,sw_pickally1=1>
+<$Config,sw_m1=0>
+<$Config,sw_m4=1>
+<$Config,sw_difficulty1=0>
+<$Config,sw_mvar0=5000>
+<$Config,sw_mvar1=6000>
+<$Config,sw_mvar2=5>
+<$Config,sw_mvar3=3000>
+<$Config,sw_mvar4=5>
+<$MisionBegin,mission4>
+
+[AllianceWithdrawn]
+<$Config,sw_pickally1=0>
+<p>You took too long to respond.  The {sw_god5} is going to kill you now.
+<$Config,sw_m1=0>
+<$Config,sw_m2=1>
+<$Config,sw_difficulty1=0>
+<$Config,sw_mvar0=1000>
+<$Config,sw_mvar1=5000>
+<$Config,sw_mvar2=1>
+$Button=Continue,MissionBegin,sw_m2
+
+[NoDeal]
+<$Config,sw_pickally1=0>
+<p>~gFoolish Mortal!<br>
+~wDo you really think I'll let you leave here alive?
+$Button=To Your Death,DoNothing,0
+
+[ai1TempleHalfDead]
+<p>
+It looks as if you are in trouble!
+
+[ai1TempleDead]
+                               Where will you run to now priest?
+<p>
+<h2>                    You receive a message.</h2><br>
+<i>"You fought well, brave priest."      
+<p>
+"I want you to stay here and help me conquer those darn Nimbians.<br>
+If you don't I will kill your Dead Nimbian Butt!"<br>
+                                                     --The {sw_god5}</i>
+<p>
+<i>"Will you be my new apprentice of Hades?<br>
+I will teach you all that I know so we can conquer Nimbus together."</i>
+
+$Button=I'LL BE YOUR NIMBIAN SLAVE,Tell,AllianceBegun
+$Button=I'D RATHER DIE 1000 DEATHS,Tell NoDeal
+$Timeout=25,Tell,AllianceWithdrawn
+
+
+[ai1PriestCaptured]
+<h2>You receive a message from the {sw_god5}.</h2><br>
+<i>"If you beg for mercy on your grovelling knees I might spare you."</i>
+<p>
+It appears that you have been <i>beaten</i>.  Will you beg for your life?
+
+$Button=SPARE ME YOUR HIGNESS,Tell,MercyGranted
+$Button=I'D RATHER KISS A DEAD BULF'S BUTT,Tell,NoMercy
+$Timeout=20,Tell,MercyWithdrawn
+
+
+[MercyGranted]
+<$Config,sw_pickally1=1>
+<$Config,sw_m4=1>
+<$Config,sw_m1=0>
+<$Config,sw_mvar0=5000>
+<$Config,sw_mvar1=6000>
+<$Config,sw_mvar2=5>
+<$Config,sw_mvar3=3000>
+<$Config,sw_mvar4=5>
+<$MissionBegin,sw_m4>
+
+
+[NoMercy]
+<$Config,sw_pickally1=0>
+{sw_god5} says:
+<p>
+<?{sw_difficulty1}>
+<i>"I'll get pleasure watching you burn on my altar.</i>
+<$Config,sw_m24=1>
+<$Config,sw_m1=0>
+$Button=What have I done?,MissionBegin,sw_m24
+</?>
+<?!{sw_difficulty1}>
+<i>"HAW HAW! Foolish mortal. You cower in fear before me. You fight
+with no spirit!"
+<p>"Was the battle too tough for you? You fight like your life doesn't depend
+on it. It does! Perhaps I have underestimated your skill..."
+<p>"I will grant you 1 last chance, then it's off to HADES with you. I will not
+ waste my time with you any longer."
+<p>"If you fail again, I'll get pleasure watching you burn on my altar."</i>
+<$Config,sw_difficulty1=1>
+<$Config,sw_mvar0=4000>
+<$Config,sw_mvar1=1000>
+<$Config,sw_mvar2=8>
+$Button=Try again. Make it easier,MissionBegin,sw_m1
+</?>
+
+[MercyWithdrawn]
+The {sw_god5} quickly changes his mind! He demands worship and devotion!
+Your indecision makes him Furious! Watch out for his anger!
+<$Config,sw_pickally1=0>
+<$Config,sw_m2=1>
+<$Config,sw_m1=0>
+<$Config,sw_difficulty1=0>
+<$Config,sw_mvar0=1000>
+<$Config,sw_mvar1=5000>
+<$Config,sw_mvar2=1>
+$Button=What have I done?,MissionBegin,sw_m2
+
+                                                                                                        [Succeeded][BadTeamDead]
+[checkwin]
+<?{sw_enDead2}><?{sw_enDead3}><?{sw_enDead4}>
+<?{sw_enDead5}><?{sw_enDead6}><?{sw_enDead7}>
+You've killed all of the Demon Dogs!<br>
+~yYou better run for your life now.
+<$PlaySound,forStorm2.wav>
+<$Config,sw_m3=1>
+<$Config,sw_m1=0>
+<$Config,sw_difficulty1=0>
+<$Config,sw_mvar0=8000>
+<$Config,sw_mvar1=3000>
+<$Config,sw_mvar2=2>
+<$Config,sw_mvar3=1>
+$Button=LET ME RUN FOR MY LIFE,MissionBegin,sw_m3
+</?></?></?></?></?></?>
+
+[Failed]
+
+[END]
+

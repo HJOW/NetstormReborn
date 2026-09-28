@@ -1,0 +1,117 @@
+[Header]
+missionType="Tutorial"
+
+missionNumber=3
+moreGeysers=6
+
+myStartMoney=5000
+myTech="rainbattery;rainwalker;raincannon;rainblocker;rainfence;rainaviary;rainballoon"
+myAllyList="2"
+
+title="Battle Simulation"
+
+ai2Name="General Thunder"
+ai2Tech="thunderbattery;bulf;thundercannon;thunderarcher;thunderblocker;thunderfence"
+ai2StartMoney=5000
+ai2GeyserAttachments=3
+ai2Collectors=10
+ai2TimeBetweenMoves=6
+ai2AllyList="1"
+ai2color=orange
+ai2Ability="!USE_PRIEST_TO_COLLECT;!BUILD_DAIS"
+ai2BridgeDrawRate=4
+
+
+ai3Name="Sarge"
+ai3Tech="thunderbattery;bulf;thundercannon;thunderarcher;thunderblocker;thunderfence;windbattery;windwalker;windarcher;windblocker;windaviary;windballoon;rainbattery;rainwalker;raincannon;rainblocker;rainfence;rainaviary;rainballoon;windbattery;windwalker;windarcher;windblocker;windaviary;windballoon"
+ai3StartMoney=5000
+ai3GeyserAttachments=3
+ai3Collectors=10
+ai3TimeBetweenMoves=4
+ai3AllyList="4"
+ai3color=red
+ai3Ability="!USE_PRIEST_TO_COLLECT"
+ai3BridgeDrawRate=4
+
+
+ai4Name="Luitenent of Wind"
+ai4Tech="windbattery;windwalker;windarcher;windblocker;windaviary;windballoon"
+ai4StartMoney=5000
+ai4GeyserAttachments=4
+ai4Collectors=10
+ai4TimeBetweenMoves=4
+ai4AllyList="3"
+ai4color=green
+ai4Ability="!USE_PRIEST_TO_COLLECT"
+ai4BridgeDrawRate=4
+
+[Options]
+
+[A.]
+~[Iicon.6]<h2>**Simulation**</h2>~[Ithundercannon.A10]
+<i>"Practice always makes perfect (Unless you really suck)"<br></i>
+--R3K2 The Menacer Robot~[Iicon.5]
+<p>In this mission you are in a simulation prototype designed specifically for practice.  Your ally here is General Thunder (Do not dissapoint him),you two are going up against Luitenent of wind and Sarge. You are training for the battle of the millenium, you will need all the practice you can get.  
+
+$Button=EQUIPMENT,ShowTechnology,55
+$Button=ENGAGE,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Nice stuff.</h2>
+<p>
+Congrats.  Seems you are ready for the war, well, all we have to do now is prepare...
+
+<$Config,Done{mission.fileName}=3>
+$Button=Take a Brake from this game,MissionAbort,0
+$Button=More simulation(Yay),MissionBegin,Battle4
+
+[Ai2TempleHalfDead]
+<h2>Message From General Thunder:</h2>
+<P>
+WITH AN ALLY COMES RESPONSIBILITY! YOU SHOULD HAVE NOT LET THIS HAPPEN!  NOW HELP ME GET MY PRIEST BACK OR CONSIDER YOURSELF DEMOTED!!!
+
+[Ai2TempleDead]
+<h2>Message From General Thunder:</h2>
+<p>
+I HOPE YOUR HAPPY!  Now it looks like were gonna have to keep doing this again, and again, and again....
+
+[Ai2PriestCaptured]
+<h2>Message From General Thunder:</h2>
+<P>
+MY PRIEST HAS BEEN CAPTURED!  LETS GET HIM BACK, OR YOUR ON YOUR OWN.
+
+[Ai2PriestDead]
+<h2><Message From General Thunder:</h2>
+IM OUT.  MEET YOU IN REALITY CORPRAL.
+
+[Ai3PriestDead]
+<h2>Message From Sarge:</h2>
+<p>
+NICE WORK CORP-RAL...
+<p>
+DISINGAGING....
+
+[Ai4PriestDead]
+<h2>Message From Luitenent of Wind:</h2>
+<p>
+Good job Corpral, meet you in Reality.
+
+[Ai3TempleDead]
+<H2>Message From Sarge:</h2>
+<p>
+Temple De-stroyed....Re-questing back-up....
+
+[ai4TempleDead]
+<h2>Message From Luitenent of Wind:</h2>
+<p>
+I underestimated you, seems that you should get a promotion for all your effort.
+
+[Failed][GoodTeamDead]
+Looks like you need some more practice (or a vacation)
+$Button=PracticePracticePractice,Tell,TryAgain
+$Button=Take a Vacation,missionabort,1
+
+[END]
+
+
+

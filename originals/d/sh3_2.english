@@ -1,0 +1,119 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = "17"
+moreGeysers = "1"
+randGeysers = "0"
+
+myStartMoney = "50000"
+myTech = "thunderbattery;thundercannon;"
+myAllyList = ""
+
+title = "Help to friend"
+
+ai2Name = "Marshall of Evil King"
+ai2Tech = "thunderbattery;thundercannon;"
+ai2StartMoney = "50000"
+ai2AllyList = "3;4;5;"
+ai2Color = "red"
+ai2Collectors = "0"
+ai2BridgeDrawRate = "0"
+ai2GeyserAttachments = "0"
+ai2TimeBetweenMoves = "1"
+ai2Ability = ""
+
+ai3Name = " Wind Major"
+ai3Tech = "windbattery;windwalker;windballoon;windarcher;"
+ai3StartMoney = "50000"
+ai3AllyList = "2;4;5;"
+ai3Color = "white"
+ai3Collectors = "0"
+ai3BridgeDrawRate = "0"
+ai3GeyserAttachments = "0"
+ai3TimeBetweenMoves = "1"
+ai3Ability = ""
+
+ai4Name = "Rain soldier"
+ai4Tech = "rainbattery;rainwalker;rainballoon;rainblocker;raincannon;rainFence;"
+ai4StartMoney = "50000"
+ai4AllyList = "2;3;5;"
+ai4Color = "green"
+ai4Collectors = "0"
+ai4BridgeDrawRate = "0"
+ai4GeyserAttachments = "0"
+ai4TimeBetweenMoves = "1"
+ai4Ability = ""
+
+ai5Name = "Sun Defender"
+ai5Tech = "sunWalker;sunBalloon;sunFence;sunAviary;sunCannon"
+ai5StartMoney = "50000"
+ai5AllyList = "2;3;4;"
+ai5Color = "purple"
+ai5Collectors = "0"
+ai5BridgeDrawRate = "0"
+ai5GeyserAttachments = "0"
+ai5TimeBetweenMoves = "1"
+ai5Ability = "0"
+
+[Options]
+
+[A.]
+<h2>~lHelp to your friend</h2>
+<i>"If you help to your friend he will help to you too"<br>
+--Theory of friendship</i>
+<p>You got the letter from your old friend Munder:<br>
+Dear Sunder!<br>
+Mighty Evil King begin to attack me. I am the peaceful Nimbian and can't fight against those invaders. Can you take control of my soldiers and help me?<br>
+--~jSincerely yours, Munder<br>
+~wIt seems Munder have many money to fight against Invaders of Evil King, so do you want to help him?
+$Button=Its too hard for me!,Tell,Campaign
+$Button=Yes,DoNothing,0
+$Button=No,Tell,no
+
+[Succeeded] [BadTeamDead]
+
+<h2>~lCongratulations!</h2>
+<i>~E"I was more happier, when I win second time"<br>
+--Sunder</i>
+<p>~EYou helped to your old friend Munder! Here is the letter recieved from him:<br>
+
+Dear Sunder!<br>
+Thank you very much. You save me! My lands now free from invaders of Evil King. I hate him, so I found general who will help you in the next battles. His name is Klod Jandor. I hope he will be useful. Also I will help you with moneys. Good luck<br>
+--~jSincerely yours, Munder<br>
+~wYou thought: his general Klod Jandor will be helpful. Now you will attack a frontier of Evil King's kingdom.
+
+<$Config,Done{mission.fileName}=1>
+<$Config,Donesh3_1a=0>
+<$Config,Donesh3_2b=1>
+<$Config,Help=1>
+$Button=Its too hard for me!,Tell,Campaign
+$Button=Proceed,MissionBegin,sh3_y_1
+
+[@1]
+
+<h2>~lIncoming Message</h2>
+<i>~jFrom: ~qMunder<br>
+~jTo: ~qSunder</i>
+<p>Thank you for choosing to help me. Good luck!
+
+$Button=Accept,DoNothing,0
+$Button=Check your Knowledge,ShowTechnology,55
+
+[Failed]
+<h2>~lYou lose...</h2>
+<p>Don't worry if you lose, this is Shit Hard!
+
+$Button=Its too hard for me!,Tell,Campaign
+$Button=Try again!,Tell,TryAgain
+$Button=No I dont want to help,Tell,no
+
+[no]
+<h2>~lYou dont help to your friend</h2>
+<p>Its your choice, so since that time things became much harder...
+<$Config,Done{mission.fileName}=1>
+<$Config,Donesh3_1a=0>
+<$Config,Donesh3_2a=1>
+<$Config,NoHelp=1>
+$Button=Proceed,MissionBegin,sh3_n_1
+
+[END]

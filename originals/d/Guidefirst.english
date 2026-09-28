@@ -1,0 +1,10 @@
+title = "First Try"
+[Overview]
+<background="nsstart">
+
+<h2>Tell me what you think?</h2>
+<p>Any comments please e-mail me at:  ~rgreen.giant@madbbs.com~.
+
+$Checked=1 First Try,MissionBegin,first,{Donefirst},1
+
+$Button=Back,Tell,Campaign

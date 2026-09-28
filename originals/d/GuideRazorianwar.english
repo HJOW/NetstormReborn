@@ -1,0 +1,19 @@
+title = "The Razorian War"
+
+[Overview]
+<background="nsstart">
+<h2>The Razorian War</h2>
+Can u hold up against the Razorians?</i>
+<p>
+Extra single-player missions by <a href="mailto:vsayan@hotmail.com">Striker</a><br>
+
+$Checked=1 Harvestrap,MissionBegin,Razorianwar,{DoneRazorianwar},1
+$Checked=2 Siege,MissionBegin,Razorianwar2,{DoneRazorianwar2},{DoneRazorianwar}
+$Checked=3 The Razorians,MissionBegin,Razorianwar3,{DoneRazorianwar3},{DoneRazorianwar2}
+$Checked=4 A new home for Colonel Boogerman,MissionBegin,Razorianwar4,{DoneRazorianwar4},{DoneRazorianwar3}
+$Checked=5 Ambush!,MissionBegin,Razorianwar5,{DoneRazorianwar5},{DoneRazorianwar4}
+$Checked=6 Final Attack,MissionBegin,Razorianwar6,{DoneRazorianwar6},{DoneRazorianwar5}
+
+$Button=Back,Tell,Campaign
+
+

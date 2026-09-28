@@ -1,0 +1,70 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = "11"
+moreGeysers = "0"
+randGeysers = "1"
+
+myStartMoney = "1500"
+myTech = "outpost;sunFence"
+myAllyList = ""
+
+title = "Wind final"
+
+ai2Name = "Lord of Rain"
+ai2Tech = "rainWalker;rainCannon;rainBattery;sunBlocker;rainBalloon;"
+ai2StartMoney = "99999"
+ai2AllyList = "3;"
+ai2Color = "red"
+ai2Collectors = ""
+ai2BridgeDrawRate = ""
+ai2GeyserAttachments = ""
+ai2TimeBetweenMoves = ""
+ai2Ability = ""
+
+ai3Name = "Lord of Thunder"
+ai3Tech = "thunderCannon;thunderBattery;sunBlocker;sunBalloon"
+ai3StartMoney = "99999"
+ai3AllyList = "2;"
+ai3Color = "white"
+ai3Collectors = ""
+ai3BridgeDrawRate = ""
+ai3GeyserAttachments = ""
+ai3TimeBetweenMoves = ""
+ai3Ability = ""
+
+[Init]
+<$CheatAllTechnology,0>
+
+[Options]
+
+[A.]
+<h2>DOMINATION</h2>
+<i>~I"The universe is ninety-nine percent sky and one percent insland. In the sky, the Wind rules."<br>
+~.--Unknown</i>
+<p>Nimbus is falling under your control, and the people are begging for the mercy of Wind. Your foes have gathered for one last chance to destroy you. If this battle is won, the quest for domination is over. If this battle is lost, new courage will be found in the hearts of the defenders, and Wind may not triumph. Go forth and decide the fate of Nimbus.
+
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[ai3PriestDead]
+~I~iThe Lord or Thunder looks at you with contempt as you complete the ritual. You shudder as his blood spills and runs down the altar, accompanied by a deathly scream that is surely not human. 
+[ai2PriestDead]
+~I~i"You may have defeated me, "~N screams the Lord of Rain ~I"but you shall never destroy the power of Rain! Rain lives on, and one day you will be aninhilated." 
+[Succeeded][BadTeamDead]
+<h2>DOMINATION</h2>
+<p>
+~i~IWind has triumphed. While skirmishes rage on, the people of Rain and Thunder learn of the loss of their leaders. With their morale shattered they will be destroyed in a matter of days. In the years to come, rebel groups will form and die, but know that one day you will meet your end. One day the rebels will grow too strong. One day they will rise and overpower you. One day you will find youself chained to an altar at the hand of your greatest foe. It is then that you will relise that domination is not the way for peace, you will realise that the furies must again be reunited, united by an impossible peace in a neverending war. This day will come, but you'll just have to wait as it is another day and another campaign......
+<$Config,vn_donevn11=1>
+$Button=Leave Missions,tell,guidevn.overview
+
+
+[Failed]
+<h2>Noooo</h2>
+<p>Your very being becomes racked with pain as the secrifice is complete. You feel your very mind unravel and collapse as your dying self gives up the struggle to live.. 
+<$Config,vn_death=1>
+<$Config,vn_alive=0>
+$Button=Die,tell,guidevn.overview
+
+[END]

@@ -1,0 +1,104 @@
+[Header]
+missionType = "Tutorial"
+missionNumber = 1
+moreGeysers = 1
+randGeysers = 1
+
+mystartmoney = 25000
+myTech = "thunderbattery;thunderarcher;thunderFactory;thunderCannon;thunderFence;thunderBlocker"
+
+title = "Onward Into The Storm"
+
+ai2Name = "Kingdom of Inasta"
+ai2Tech = "windBattery;windFactory;windVortex;windWalker;windFlyer;windAviary;windArcher;windBalloon;windBlocker"
+ai2StartMoney = 15000
+ai2GeysersAttachments = 2
+ai2Collectors = 15
+ai2TimeBetweenMoves = 4
+ai2AllyList = ""
+ai2color = red
+
+ai3Name = "Rebels of Inasta"
+ai3Tech = "rainAviary;rainFlyer;rainFence;rainBalloon;rainBlocker;rainVortex;rainBattery;rainFactory"
+ai3StartMoney = 15000
+ai3GeysersAttachments = 2
+ai3Collectors = 15
+ai3AllyList = "1"
+ai3color = white
+
+ai4Name = ""
+ai4Tech = ""
+ai4StartMoney = 
+ai4GeysersAttachments = 
+ai4Collectors = 
+ai4AllyList = 
+ai4color = 
+
+ai5Name = ""
+ai5Tech = ""
+ai5StartMoney =
+ai5GeysersAttachments =
+ai5Collectors =
+ai5AllyList =
+ai5color =
+
+ai6Name = ""
+ai6Tech = ""
+ai6StartMoney = 
+ai6GeysersAttachments = 
+ai6Collectors = 
+ai6TimeBetweenMoves = 
+ai6AllyList = 
+ai6color = 
+
+ai7Name = ""
+ai7Tech = ""
+ai7StartMoney = 
+ai7GeysersAttachments = 
+ai7Collectors = 
+ai7TimeBetweenMoves = 
+ai7AllyList = 
+ai7color = 
+
+ai8Name = ""
+ai8Tech = ""
+ai8StartMoney = 
+ai8GeysersAttachments = 
+ai8Collectors = 
+ai8TimeBetweenMoves = 
+ai8AllyList = 
+ai8color = 
+
+[Options]
+
+[A.]
+<h2>Conquest of Inasta</h2>
+<i>"Those blessed with leadership, power, and the faith of the people are truly devastating enemies (and remarkable allies)."<br>
+-- High Priest of the Water Kingdom of Trinist</i>
+
+<p> In a struggle for more power, you and your followers advance towards the Kingdom of Inasta where a group of rebels are already attacking the stronghold. Aid the rebels and conquer Inasta.
+
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[BadTeamDead]
+<h2>Success at Inasta!</h2>
+<p>You and your people celebrate a glorious victory at the stronghold of Inasta. More rebels join your cause and bring with them new technology. You find a sudden need for storm power, and look towards the Isles of the Golden Sun.
+
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,1
+
+
+[ai3PriestDead]
+<h2>Your ally has fallen!</h2>
+<p>The leader of the allied rebels has fallen! Looks like you're on your own from here.
+
+[Failed]
+<h2>Death...</h2>
+<p>
+Your enemies are successful in crushing your army. Your head is now an ornament on the wall of the Furies' Fortress.
+
+$Button=Continue,Tell,TryAgain
+
+[END]

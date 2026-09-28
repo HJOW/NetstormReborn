@@ -1,0 +1,56 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 2
+moreGeysers = 1
+randGeysers = 1
+
+myStartMoney = 1500
+myTech = "sunWalker;sunarcher;sunballoon;sunFence;sunaviary;outpost;thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence"
+myAllyList = ""
+
+title="The Escape"
+
+ai2Name = "SPU Watchman"
+ai2Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainwalker;sunwalker"
+ai2StartMoney = 10000
+ai2GeyserAttachments = 7
+ai2Collectors = 5
+ai2TimeBetweenMoves = 1
+ai2DrawBridgeRate = 1
+ai2AllyList = "3"
+ai2color = yellow
+
+ai3Name = "SWORD GateKeeper"
+ai3Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;Bulf;sunwalker"
+ai3StartMoney = 15000
+ai3GeyserAttachments = 8
+ai3Collectors = 5
+ai3TimeBetweenMoves = 1
+ai3DrawBridgeRate = 1
+ai3AllyList = "2"
+ai3color = red
+
+[Options]
+
+[A.]
+<h2>The Escape</h2>
+<i>Guldan: ~wCommander, prepare for temple ascend.<br>
+<i>You: ~wRoger that. Count down, 10...9...<br>
+<<<BOOM!>>>  ...   <<<BOOM!>>><br>
+<i>"Guldan...I'm under attack...rescue me..." you yell out. The static between the link is growing stronger and stronger.  You hear last one thing:<br>
+<i>Guldan: ~w...so that the commander can make an outpost.
+$Button=What ya got,ShowTechnology,55
+$Button=Run like hell,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<i>You: ~wOh yes...That's they way, uh uh, we do it.
+<i>Guldan: ~wStop sing...we got more important things to do.
+$Button=What now?,MissionBegin,FWSO4
+
+[Failed]
+<h2>You have failed!</h2>
+<i>Ouch... {Read X-Hints OnTheRun if you need help}
+$Button=Bye Bye,MissionAbort,0
+
+[END]

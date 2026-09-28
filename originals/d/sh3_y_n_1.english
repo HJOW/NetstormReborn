@@ -1,0 +1,100 @@
+[Header]
+
+missionType = "Tutorial"
+
+missionNumber = "17"
+moreGeysers = "0"
+randGeysers = "0"
+
+myStartMoney = "4500"
+myTech = "rainbattery;rainfence;rainblocker;sunfence;sunaviary"
+myAllyList = ""
+
+title = "Kill the Killer"
+
+ai2Name = "Killer"
+ai2Tech = "thunderbattery;thundercannon;thunderblocker;"
+ai2StartMoney = "50000"
+ai2AllyList = "3;"
+ai2Color = "red"
+ai2Collectors = "0"
+ai2BridgeDrawRate = "0"
+ai2GeyserAttachments = "1"
+ai2TimeBetweenMoves = "0"
+ai2Ability = ""
+
+ai3Name = "Thief"
+ai3Tech = "thunderbattery;thundercannon;thunderblocker;"
+ai3StartMoney = "50000"
+ai3AllyList = "2;"
+ai3Color = "white"
+ai3Collectors = "0"
+ai3BridgeDrawRate = "0"
+ai3GeyserAttachments = "1"
+ai3TimeBetweenMoves = "0"
+ai3Ability = ""
+
+ai4Name = "General Klod Jandor"
+ai4Tech = "windbattery;windarcher;windblocker;"
+ai4StartMoney = "3000"
+ai4AllyList = "1;"
+ai4Color = "green"
+ai4Collectors = "6"
+ai4BridgeDrawRate = "0"
+ai4GeyserAttachments = "6"
+ai4TimeBetweenMoves = "0"
+ai4Ability = ""
+
+
+[Options]
+
+[A.]
+
+<h2>~lKill the Killer</h2>
+<i>"He doesn't kill me, now I will kill him"<br>
+--Sunder</i>
+<p>Now you with help of Klod Jandor must kill Killer and Thief. Good luck!
+$Button=Its too hard for me!,Tell,Campaign
+$Button=Play!,DoNothing,0
+
+[@1]
+
+<h2>~lIncoming Message</h2>
+<i>~jFrom: ~qGeneral Klod Jandor<br>
+~jTo: ~qSunder</i>
+<p>They are strong so keep your eyes open.
+
+$Button=Accept,DoNothing,0
+$Button=Check your Knowledge,ShowTechnology,55
+
+[Succeeded] [BadTeamDead]
+
+<h2>~lCongratulations!</h2>
+<i>"No one can stop me"<br>
+--Sunder</i>
+<p>Evil King really annoying you now. You hate him, and Klod Jandor too. You both want to kill him.
+
+<$Config,Done{mission.fileName}=1>
+<$Config,Donesh3_y_2a=0>
+<$Config,Donesh3_y_n_1a=1>
+$Button=Its too hard for me!,Tell,Campaign
+$Button=Proceed,MissionBegin,sh3_y_n_2
+
+[ai4PriestDead]
+
+<h2>~lYou lose...</h2>
+<p>Your ally Klod Jandor is dead! Don't worry if you lose, this is Shit Hard!
+
+$Button=Its too hard for me!,Tell,Campaign
+$Button=Try again!,Tell,TryAgain
+
+[Failed]
+
+<h2>~lYou lose...</h2>
+<p>Don't worry if you lose, this is Shit Hard!
+
+$Button=Its too hard for me!,Tell,Campaign
+$Button=Try again!,Tell,TryAgain
+
+
+[END]

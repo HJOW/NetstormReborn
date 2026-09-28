@@ -1,0 +1,134 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 9
+moreGeysers = 1
+randomGeysers = 1
+
+myStartMoney = 6000
+myTech = "all;outpost"
+myName = Head of Nimbian Warfare
+
+title="Revenge of the Bounties"
+
+ai2Name = "Bounty of Sun"
+ai2Tech = "sunWalker;sunArcher;sunCannon;sunBalloon;sunAviary;sunFence;sunBlocker;windBattery"
+ai2StartMoney = 5000
+ai2GeyserAttachments = 3
+ai2Collectors = 6
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3;4;5;6"
+ai2color = red
+ai2Ability = "!USE_PRIEST_TO_COLLECT"
+ai2DrawBridgeRate = 1
+
+ai3Name = "Bounty of Wind"
+ai3Tech = "windBattery;sunWalker;windArcher;windWalker;windAviary;windBlocker"
+ai3StartMoney = 5000
+ai3GeyserAttachments = 3
+ai3Collectors = 6
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2;4;5;6"
+ai3color = white
+ai3Ability = "!USE_PRIEST_TO_COLLECT"
+ai3BridegDrawRate = 1
+
+ai4Name = "Bounty of Rain"
+ai4Tech = "sunWalker;rainBattery;rainCannon;rainBlocker;rainWalker;rainFence;rainBalloon;rainAviary"
+ai4StartMoney = 5000
+ai4GeyserAttachments = 3
+ai4Collectors = 6
+ai4TimeBetweenMoves = 1
+ai4AllyList = "2;3;5;6"
+ai4color = green
+ai4Ability = "!USE_PRIEST_TO_COLLECT"
+ai4BridgeDrawRate = 1
+
+ai5Name = "Bounty of Thunder"
+ai5Tech = "sunWalker;thunderBattery;thunderCannon;thunderBlocker;bulf;thunderFence;bulf;thunderArcher"
+ai5StartMoney = 5000
+ai5GeyserAttachments = 3
+ai5Collectors = 6
+ai5TimeBetweenMoves = 1
+ai5AllyList = "2;3;4;6"
+ai5color = purple
+ai5Ability = "!USE_PRIEST_TO_COLLECT"
+ai5BridgeDrawRate = 1
+
+ai6Name = "Low Priest of Nimbus"
+ai6Tech = ""
+ai6StartMoney = 2000
+ai6GeyserAttachments = 3
+ai6Collectors = 6
+ai6TimeBetweenMoves = 1
+ai6AllyList = "1"
+ai4color = yellow
+ai4Ability = "!USE_PRIEST_TO_COLLECT"
+ai4BridgeDrawRate = 1
+
+[Options]
+
+[ai2PriestCaptured]
+$Menu=~[IthunderBlocker.1]Thunder,GetTechnology,79
+
+[ai2PriestDead]
+$Menu= ~[IthunderFence.1]Thunder,GetTechnology,149
+
+You receive a message.  You took one of us, so we are taking one of you.
+<$Config,Done{mission.filename}=1>
+$Button = Leave Missions, MissionAbort,0
+$Button = Next Mission, MissionBegin,Kidnapped
+
+[ai3PriestDead]
+You receive a message.  You took one of us, so we are taking one of you.
+<$Config,Done{mission.filename}=1>
+$Button = Leave Missions, MissionAbort,0
+$Button = Next Mission, MissionBegin,Kidnapped
+
+[ai4PriestDead]
+You receive a message.  You took one of us, so we are taking one of you.
+<$Config,Done{mission.filename}=1>
+$Button = Leave Missions, MissionAbort,0
+$Button = Next Mission, MissionBegin,Kidnapped
+
+[ai5PriestDead]
+You receive a message.  You took one of us, so we are taking one of you.
+<$Config,Done{mission.filename}=1>
+$Button = Leave Missions, MissionAbort,0
+$Button = Next Mission, MissionBegin,Kidnapped
+
+[A.]
+
+h2>Revenge of the Bounties</h2>
+<i>We will have our revenge!"<br>
+--Bounty Hunter of Sun</i>  
+<p>After your glorious defeat of the Furies in the tournament the King of Hades was very ticked off because he didn't get invited.  So, he is sending his bounty hunters to kill you.
+
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>WOW!</h2>
+<p>
+You have beaten a poor bounty hunter.
+
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission, MissionBegin,Kidnapped
+
+[Failed]
+<h2>Now, this is more like it.</h2>
+<p>
+Ha!  You got your butt kicked.  Better luck next time.
+
+<$Config,DoneRevenge=0>
+<$Config,DoneHome=0>
+<$Config,DoneThunder=0>
+<$Config,DoneRain=0>
+<$Config,DoneWind=0>
+<$Config,DoneWizards=0>
+<$Config,DoneTourney=0>
+$Button=Next Mission, MissionBegin,Kidnapped
+
+[END]

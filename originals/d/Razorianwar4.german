@@ -1,0 +1,121 @@
+[Header]
+missionType = "Tutorial"
+missionNumber = 4
+moreGeysers = 1
+
+mystartmoney = 20000
+myTech = "thunderArcher;thunderBattery;thunderBlocker;thunderCannon;bulf;sunFence;sunArcher"
+
+title = "A new home for Colonel Boogerman"
+
+ai2Name = "Thunder Boy"
+ai2Tech = "thunderArcher;thunderBattery;thunderBlocker;thunderCannon;rainBattery;rainWalker"
+ai2StartMoney = 20000
+ai2GeysersAttachments = 15
+ai2Collectors = 15
+ai2TimeBetweenMoves = 1
+ai2AllyList = "1;3"
+ai2ability = "!Attach_To_Enemy_Island;!Use_Priest_To_Collect"
+ai2BridgeDrawRate = 1
+ai2color =
+
+ai3Name = "Colonel Boogerman"
+ai3Tech = "windWalker;windArcher;windBlocker;windBalloon;windAviary;windBattery"
+ai3StartMoney = 20000 
+ai3GeysersAttachments = 15
+ai3Collectors = 15
+ai3TimeBetweenMoves = 1
+ai3AllyList = "1;2"
+ai3ability = "!Attach_To_Enemy_Island;!Use_Priest_To_Collect"
+ai3color =
+ai3BridgeDrawRate = 1
+
+ai4Name = "Commander Noizer"
+ai4Tech = "windArcher;windBlocker;windAviary;windBattery;rainAviary;rainBattery;rainBlocker;rainCannon;thunderArcher;thunderCannon;thunderBlocker;thunderBattery;sunAviary;sunBlocker;sunCannon;sunArcher"
+ai4StartMoney = 2000000
+ai4GeysersAttachments = 15
+ai4Collectors = 15
+ai4TimeBetweenMoves = 1
+ai4AllyList = "5;6;7;8"
+ai4ability = "!Attach_To_Enemy_Island;!Use_Priest_To_Collect;!Collect_Storm_Power"
+ai4color =
+
+ai5Name = "Corporal Lamonyla"
+ai5Tech = "rainAviary;rainBalloon;rainBattery;rainBlocker;rainCannon;rainFence;rainWalker"
+ai5StartMoney = 15000
+ai5GeysersAttachments = 15
+ai5Collectors = 15
+ai5TimeBetweenMoves = 1
+ai5AllyList = "4;6;7;8"
+ai5ability = "!Attach_To_Enemy_Island;!Use_Priest_To_Collect"
+ai5color =
+
+ai6Name = "Sergeant Cixx"
+ai6Tech = "windWalker;windArcher;windBlocker;windBalloon;windAviary;windBattery"
+ai6StartMoney = 15000
+ai6GeysersAttachments = 15
+ai6Collectors = 15
+ai6TimeBetweenMoves = 1
+ai6AllyList = "4;5;7;8"
+ai6ability = "!Attach_To_Enemy_Island;!Use_Priest_To_Collect"
+ai6color =
+
+ai7Name = "Luitenant Bridger"
+ai7Tech = "sunArcher;sunAviary;sunBalloon;sunBlocker;sunCannon;sunFence;thunderBattery"
+ai7StartMoney = 1500
+ai7GeysersAttachments = 15
+ai7Collectors = 15
+ai7TimeBetweenMoves = 1
+ai7AllyList = "4;5;7;8"
+ai7ability = "!Attach_To_Enemy_Island;!Use_Priest_To_Collect"
+ai7color = 
+ai7BridgeDrawRate = 0
+
+ai8Name = "Golden Crab"
+ai8Tech = ""
+ai8StartMoney = 5000
+ai8GeysersAttachments = 0
+ai8Collectors = 0
+ai8TimeBetweenMoves = 1
+ai8AllyList = "4;5;6;7"
+ai8color =
+
+[Options]
+
+[A.]
+<h2>Find a new home for Colonel Boogerman!</h2>
+<i>"Being a priest and having no island is like having no arms and legs."<br>
+--Lord Sayain </i>  
+
+<p>During DDC's fights with the Razorians, Colonel Boogerman lost a fight and also his island, but was able to get away in time. He has no island now so you and Thunder Boy were send out to get an island for him. The best target for that were the Razorians so you went to one of their outposts. But unfortunately, Commander Noizer is the owner of an golden crystal crab, which ensures he always has enough money and doesn't need to harvest storm power.
+
+<p>Your mission is to eliminate all enemy threats so Colonel Boogerman once again has an island.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[BadTeamDead]
+<h2>Well done!</h2>
+<p>
+Thanks! Now I have an island again and can I help you against the Razorians.
+
+<$Config,Done{mission.filename}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,Razorianwar5
+
+[ai2PriestDead]
+<p>Thunder Boy has been defeated! Now you have no ally to rely on!
+
+[ai3PriestDead]
+<p>Colonel Boogerman has been sacraficed! That was what the mission was all about.
+
+$Button=Continue,Tell,TryAgain
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+You are dead! The Razorians have won!
+
+$Button=Continue,Tell,TryAgain
+
+[END]

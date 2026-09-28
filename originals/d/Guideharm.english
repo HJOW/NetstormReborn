@@ -1,0 +1,19 @@
+title = "2nd set that is SpinelesS"
+
+[Overview]
+<background="nsstart">
+<h2>The second series</h2>
+<i>Enjoy playing these scenerios :P</i>
+<p>
+spineless@hotmail.com
+
+$Checked=1 Dominos,MissionBegin,harm,{Doneharm},1
+$Checked=2 Broke,MissionBegin,harm2,{Doneharm2},2
+$Checked=3 Silver Island,MissionBegin,harm3,{Doneharm3},3
+$Checked=4 Amnesia,MissionBegin,harm4,{Doneharm4},4
+$Checked=5 suprise attack,MissionBegin,harm5,{Doneharm5},5
+$Checked=6 Trashed Island,MissionBegin,harm6,{Doneharm6},6
+$Checked=7 Wizards first rule,MissionBegin,harm7,{Doneharm7},7
+
+$Button=Back,Tell,Campaign
+

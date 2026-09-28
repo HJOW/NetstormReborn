@@ -1,0 +1,54 @@
+[Header]
+
+missionType="Tutorial"
+missionNumber = 2
+moreGeysers = 1
+myStartMoney = 2000
+myTech = "windBattery;sunCannon;sunarcher;sunAviary"
+
+title= "Traitor"
+
+ai2Name= "Traitor"
+ai2Tech= "thunderbattery;sunCannon;sunarcher"
+ai2StartMoney= 1000
+ai2GeyserAttachments = 2
+ai2Collectors = 7
+ai2TimeBetweenMoves = 1
+ai2AllyList= ""
+ai2color= white
+
+
+[Options]
+
+
+[A.]
+<h2> Ermac lost one of its islands to his traitor. It is rumored EvilDude was
+invalved. <h2>
+<i> "BE ready to destroy my minor competitor. He endangeres your existence.
+As your Boss I give you my permission to destroy him " <br>
+--Thou master, Ermac </i|
+<p>
+Our boss, ERMAC will reward us if we add this traitor island into his greedy hands
+. Who knows, the reward might worth it.  
+
+$Button=Review Knowledge,Show Technology,55
+$Button=PlayMission,DoNothing,0
+
+[Succeeded] [BadTeamDead]
+
+<h2> Yeppie!!!! <h2>
+<p>I am not Impressed ---Ermac
+
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission;Missionbegin;duel
+
+[Failed]
+
+<h2> You suck!!! --Ermac </h2>
+<p> Fuck oFF!! U fool!! Oh, by the way, U OWN me BUCKS!!
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+

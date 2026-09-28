@@ -1,0 +1,88 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 2
+moreGeysers = 3
+
+myStartMoney = 3600
+myTech ="rainBattery;thunderBattery;windBattery;windArcher;windWalker;windBlocker;rainAviary"
+
+
+title="Assult on the Brothers"
+ai2Name = "Rain Brother"
+ai2Tech ="rainwalker;raincannon;rainBattery;rainfence;rainballoon;rainblocker;rainAviary"
+ai2StartMoney = 75000
+ai2GeyserAttachments = 5
+ai2Collectors = 5
+ai2TimeBetweenMoves = 0
+ai2Bridgedrawrate = 0
+ai2color = red
+ai2ability =!USE_PRIEST_TO_COLLECT
+ai2AllyList = "3"
+
+
+ai3Name = "Rain Brother"
+ai3Tech ="rainwalker;raincannon;rainBattery;rainfence;rainballoon;rainblocker;rainAviary"
+ai3StartMoney = 75000
+ai3GeyserAttachments = 5
+ai3Collectors = 5
+ai3TimeBetweenMoves = 0
+ai3Bridgedrawrate = 0
+ai3color = white
+ai3ability =!USE_PRIEST_TO_COLLECT
+ai3AllyList = "2"
+
+
+
+
+
+
+[Options]
+
+[A.]
+<P>"The man-o-war isnt so tuff, if you are insane."
+<P>Apollyon
+<p>You still hunger for more tech. You assult the Rain Brothers.
+$Button=Veiw your stuff,ShowTechnology,55
+$Button=Slay 'em,DoNothing,0
+
+
+
+
+
+[ai2PriestDead]
+what did i ever do?
+<p>You find some tech.
+$Button=Ice Cannon,GetTechnology,129
+
+[ai3PriestDead]
+what did i ever do?
+<p>You find some tech.
+$Button=Crystal Crab,GetTechnology,156
+
+
+
+
+
+
+
+
+
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>You have gotton some tech, you are happy and you move on.
+<$Config,Done{mission.fileName}=1>
+$Button=Onto the next one,MissionBegin,KQ3
+$Button=Chicken!,MissionAbort,0
+
+[Failed]
+<h2>Failure!</h2>
+<p>You somehow lost to them, you arn't that good, are you?
+$Button=Straight to Hell,MissionBegin,KQ96
+
+
+[END]
+
+
+

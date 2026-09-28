@@ -1,0 +1,92 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 2
+moreGeysers = 2
+randGeysers = 1
+
+myStartMoney = 5000
+myTech = "sunWalker;sunarcher;sunballoon;sunFence;sunaviary;outpost;thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence"
+myAllyList = "2"
+
+title="Storage Factory"
+
+ai2Name = "DL Knight"
+ai2Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainwalker;sunwalker"
+ai2StartMoney = 10000
+ai2GeyserAttachments = 7
+ai2Collectors = 4
+ai2TimeBetweenMoves = 1
+ai2DrawBridgeRate = 1
+ai2AllyList = "1"
+ai2color = purple
+
+ai3Name = "SWORD GateKeeper"
+ai3Tech = "sunWalker;sunarcher;sunballoon;suncannon;sunFence;sunaviary;sunBlocker;sunwalker"
+ai3StartMoney = 15000
+ai3GeyserAttachments = 8
+ai3Collectors = 5
+ai3TimeBetweenMoves = 1
+ai3DrawBridgeRate = 1
+ai3AllyList = "4;5;6"
+ai3color = red
+
+ai4Name = "SPU Defender"
+ai4Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;sunwalker"
+ai4StartMoney = 15000
+ai4GeyserAttachments = 8
+ai4Collectors = 5
+ai4TimeBetweenMoves = 1
+ai4DrawBridgeRate = 1
+ai4AllyList = "3;5;6"
+ai4color = yellow
+
+ai5Name = "GOF Defender"
+ai5Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainwalker;sunwalker"
+ai5StartMoney = 15000
+ai5GeyserAttachments = 9
+ai5Collectors = 5
+ai5TimeBetweenMoves = 1
+ai5DrawBridgeRate = 1
+ai5AllyList = "3;4;6"
+ai5color = orange
+
+ai6Name = "SPU Assassin"
+ai6Tech = "thunderbattery;thunderarcher;thunderblocker;thunderfence;Bulf;sunwalker"
+ai6StartMoney = 15000
+ai6GeyserAttachments = 8
+ai6Collectors = 4
+ai6TimeBetweenMoves = 1
+ai6DrawBridgeRate = 1
+ai6AllyList = "3;4;5"
+ai6color = yellow
+
+[Options]
+
+[A.]
+<h2>Storage Factory</h2>
+<i>DL Leader: ~wThe time is at hand to make strikes against the SWORD, SPU, and GOF.  Also, I want to thank you Commander of the FW.<br>
+<i>You: ~wYour welcome...<br>
+<i>Your Leader: ~wThat's are purpose, to help the good.<br>
+<i>DL Leader: ~wI will prove a more then worthy ally.<br>
+<i>Your Leader: ~wSo, does that mean you will help in this Operation?<br>
+<i>DL Leader: ~wMost certainly...But you, commander, have to strike quick.  For they will surely start harvesting the storm power after our preseace is known.<br>
+<i>You: ~wYes, sir.<br>
+$Button=What ya got,ShowTechnology,55
+$Button=Capture the Factory,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<i>You: ~wMission Accomplished!
+<i>DL Leader: ~We shall spread this up 5-way.  One for the DL guild, one for the ^WaR^ guild, one for the FW guild, one for the allaince of Light.
+<i>You: ~wWhat about the fiveth?<br>
+<i>DL Leader: ~wYou get it for your army.<br>
+<i>You: ~wCool...Where to next?<br>
+<i>DL Leader: To my homeland, to fight the SWORD there.
+$Button=OK,MissionBegin,FWSO3
+
+[Failed]
+<h2>You have failed!</h2>
+<i>DL Leader: Can't you accomplish a simple task?
+$Button=Bye Bye,MissionAbort,0
+
+[END]

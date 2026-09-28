@@ -1,0 +1,71 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 3
+moreGeysers = 1
+
+myStartMoney = 999999
+myTech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence;rainwalker;sunBlocker;sunFence"
+myAllyList = "2"
+
+title="3 on 3"
+
+ai2Name = "Cloud"
+ai2Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker"
+ai2StartMoney = 999999
+ai2GeyserAttachments = 0
+ai2Collectors = 0
+ai2TimeBetweenMoves = 0
+ai2AllyList = "1"
+ai2color = red
+ai2Ability=""
+ai2BridgeDrawRate = 1
+
+ai3Name = "Cogz"
+ai3Tech = "rainfence;rainbattery;rainaviary;rainballoon;rainblocker;raincannon"
+ai3StartMoney = 999999
+ai3GeyserAttachments = 0
+ai3Collectors = 0
+ai3TimeBetweenMoves = 0
+ai3AllyList = "4"
+ai3color = white
+ai3Ability=""
+ai3BridgeDrawRate = 1
+
+ai4Name = "Hermes"
+ai4Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker"
+ai4StartMoney = 999999
+ai4GeyserAttachments = 0
+ai4Collectors = 0
+ai4TimeBetweenMoves = 0
+ai4AllyList = "3"
+ai4color = green
+ai4Ability=""
+ai4BridgeDrawRate = 1
+
+[Options]
+
+[A.]
+<h2>2 on 2</h2>
+<i>"The rules of war are simple, kill and dont be fucking killed"<br>
+Ass</i>  
+<p>A Simple 2 on 2 battle, and yes this one is easy.. so if you think ur top shit play the last mission =)
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+Whohooo! kick ass.. now play the 3 on 3 or the last mission..
+$Button=Leave Missions,MissionAbort,0
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+Stupid bitch you lost on the 2nd easiest mission! you deserve to die yuppie!
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+

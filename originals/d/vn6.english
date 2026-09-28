@@ -1,0 +1,121 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = "6"
+moreGeysers = "0"
+randGeysers = "1"
+
+myStartMoney = "15000"
+myTech = "{vn_tech}"
+myAllyList=
+
+title = "Bridge fun?"
+
+ai2Name = "United Priest of Wind"
+ai2Tech = "windArcher;windBattery;windBlocker"
+ai2StartMoney = "50000"
+ai2AllyList = "3;4"
+ai2Color = "red"
+ai2Collectors = "0"
+ai2BridgeDrawRate = "0"
+ai2GeyserAttachments = "1"
+ai2TimeBetweenMoves = "0"
+ai2Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai3Name = "United Priest of Rain"
+ai3Tech = "rainBattery;rainCannon;rainAviary"
+ai3StartMoney = "50000"
+ai3AllyList = "2;4"
+ai3Color = "white"
+ai3Collectors = "0"
+ai3BridgeDrawRate = "0"
+ai3GeyserAttachments = "1"
+ai3TimeBetweenMoves = "0"
+ai3Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai4Name = "United Priest of Thunder"
+ai4Tech = "bulf;thunderBlocker;thunderCannon;thunderBattery"
+ai4StartMoney = "50000"
+ai4AllyList = "2;3"
+ai4Color = "green"
+ai4Collectors = "5"
+ai4BridgeDrawRate = "0"
+ai4GeyserAttachments = "1"
+ai4TimeBetweenMoves = "0"
+ai4Ability = "!USE_PRIEST_TO_COLLECT"
+
+[Options]
+
+
+[Init]
+
+<$Config,vn_ai2dead=0>
+<$Config,vn_ai3dead=0>
+<$Config,vn_ai4dead=0>
+
+[A.]
+<h2>Destroy the Unity</h2>
+<i>~I~l"In the darkest of times the three priests of unity will return again to lift Nimbus from its shame"<br>
+~N--The Book of Nimbus~.</i>
+<p>It becomes increasingly obvious that your victory is inevitable, you are on your way to Storm Pass, the most vital stategic point in all of Nimbus,- if you control it then you control most of  Nimbus. A Dazzling light blinds you for a moment. When it is gone, Three islands block your path. It is the legendary unity of Nimbus. If you can destroy them then surely the time of balance between the furies is over. Taking a deep breath you chant for the construction of a temple.... 
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[ai2PriestDead]
+<$Config,vn_ai2dead=1>
+~I"One third of the unity has been destroyed."
+<?!{vn_ai3dead}><?!{vn_ai4dead}> You sense the weakening of the remaining two priests of unity.</?></?>
+<?!{vn_ai3dead}><?{vn_ai4dead}> You can feel the power of the unity being dissipated around you. One remains to be killed</?></?>
+<?{vn_ai3dead}><?!{vn_ai4dead}> You can feel the power of the unity being dissipated around you. One remains to be killed</?></?>
+<$Menu=~[IsunBlocker.1],tell,stone
+[stone]
+<$GetTechnology,78>
+
+[ai3PriestDead]
+<$Config,vn_ai3dead=1>
+~I"One third of the unity has been destroyed."
+<?!{vn_ai2dead}><?!{vn_ai4dead}> You sense the weakening of the remaining two priests of unity.</?></?>
+<?!{vn_ai2dead}><?{vn_ai4dead}> You can feel the power of the unity being dissipated around you. One remains to be killed.</?></?>
+<?{vn_ai2dead}><?!{vn_ai4dead}> You can feel the power of the unity being dissipated around you. One remains to be killed.</?></?>
+<?!{vn_windall}>$Menu=~[IrainBalloon.1],tel,floater</?>
+<?{vn_windall}>$Menu=~[IwindBalloon.*],tell,airship</?>
+[airship]
+<$GetTechnology,141>
+[floater]
+<$GetTechnology,146>
+
+[ai4PriestDead]
+<$Config,vn_ai4dead=1>
+~I"One third of the unity has been destroyed."
+<?!{vn_ai3dead}><?!{vn_ai2dead}> You sense the weakening of the remaining two priests of unity.</?></?>
+<?!{vn_ai3dead}><?{vn_ai2dead}> You can feel the power of the unity being dissipated around you. One remains to be killed.</?></?>
+<?{vn_ai3dead}><?!{vn_ai2dead}> You can feel the power of the unity being dissipated around you.One remains to be killed.</?></?>
+<?{vn_windall}>$Menu=~[IwindBlocker.1],tell,tower</?>
+<?!{vn_windall}>$Menu=~[IrainBlocker.*],tell,tower</?>
+[tower]
+<?{vn_windall}><$GetTechnology,142></?>
+<?!{vn_windall}><$GetTechnology,147></?>
+
+[Succeeded][BadTeamDead]
+
+<h2>Victory!</h2>
+<p><br>As you complete the sacrifice, the final priest of unity pleads with you ~I"Destroying the other two furies will not solve anything"~. he screams ~I"The only way to achieve peace is for all three to work in harmony"</br>
+<br>~.~I~l"That can never be"~N you say ~I"I canot rest until Nimbus is ruled by the one true fury." "I cannot rest until <?{vn_windall}> Wind</?><?!{vn_windall}> Rain</?> has achieved total ~BDomination"
+</br>
+<$Config,vn_donevn6=1>
+<?{vn_donevn3}><?{vn_windall}><$Config,vn_tech="windBattery;windArcher;outpost;sunFence;windAviary;sunBlocker;windBalloon;windTower;"></?></?>
+<?{vn_donevn4}><?{vn_windall}><$Config,vn_tech="windBattery;windArcher;windAviary;sunFence;windWalker;outpost;sunBlocker;windBalloon;windTower;"></?></?>
+<?{vn_donevn3}><?!{vn_windall}><$Config,vn_tech="rainBattery;rainCannon;outpost;sunFence;rainAviary;sunBlocker;rainBalloon;rainBlocker;"></?></?>
+<?{vn_donevn4}><?!{vn_windall}><$Config,vn_tech="rainBattery;rainCannon;rainAviary;sunFence;rainWalker;outpost;sunBlocker;rainBalloon;rainBlocker;"</?></?>
+
+$Button=Next Mission,MissionBegin,vn9
+
+[ai1TempleDead]
+<h2>Your Temple is destroyed</h2>
+<p>With the source of your power gone the Unity watse no time in sacrificing you. Pain screams through your being as the sacrificial knife bites deep into your felsh. The pain reaches an intensity that can only be experienced by those who would die, and so you do. 
+<$Config,vn_death=1>
+<$Config,vn_alive=0>
+$Button=Leave,tell,guidevn.overview
+
+[END]

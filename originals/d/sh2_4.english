@@ -1,0 +1,80 @@
+[Header]
+missionType = "Tutorial"
+missionNumber = 1
+moreGeysers = 1
+
+mystartmoney = 50000
+myTech = "thunderbattery;thunderarcher;thundercannon;thunderfence;rainbattery;rainaviary;rainwalker;rainballoon;raincannon;windBattery;windarcher;windaviary;windballoon;windblocker;windWalker;outpost;sunWalker;sunArcher;sunBlocker;sunBalloon;sunAviary;sunCannon"
+
+title = "Rebels"
+
+ai2Name = "Rebel #1"
+ai2Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;rainbattery;rainaviary;rainwalker;rainballoon;rainblocker;raincannon;rainFence;windBattery;windarcher;windaviary;windballoon;windblocker;windWalker;outpost;sunWalker;sunArcher;sunBlocker;sunFence;sunBalloon;sunFence;sunAviary;sunCannon"
+ai2StartMoney = 9999999
+ai2GeysersAttachments = 0
+ai2Collectors = 0
+ai2TimeBetweenMoves = 0
+ai2AllyList = "3;4;5"
+ai2color = red
+ai2BridgeDrawRate = 0
+
+ai3Name = "Rebel #2"
+ai3Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;rainbattery;rainaviary;rainwalker;rainballoon;rainblocker;raincannon;rainFence;windBattery;windarcher;windaviary;windballoon;windblocker;windWalker;outpost;sunWalker;sunArcher;sunBlocker;sunFence;sunBalloon;sunFence;sunAviary;sunCannon"
+ai3StartMoney = 9999999
+ai3GeysersAttachments = 0
+ai3Collectors = 0
+ai3TimeBetweenMoves = 0
+ai3AllyList = "2;4;5"
+ai3color = white
+ai3BridgeDrawRate = 0
+
+ai4Name = "Rebel #3"
+ai4Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;rainbattery;rainaviary;rainwalker;rainballoon;rainblocker;raincannon;rainFence;windBattery;windarcher;windaviary;windballoon;windblocker;windWalker;outpost;sunWalker;sunArcher;sunBlocker;sunFence;sunBalloon;sunFence;sunAviary;sunCannon"
+ai4StartMoney = 9999999
+ai4GeysersAttachments = 0
+ai4Collectors = 0
+ai4TimeBetweenMoves = 0
+ai4AllyList = "2;3;5"
+ai4color = green
+ai4BridgeDrawRate = 0
+
+ai5Name = "Rebel #4"
+ai5Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;rainbattery;rainaviary;rainwalker;rainballoon;rainblocker;raincannon;rainFence;windBattery;windarcher;windaviary;windballoon;windblocker;windWalker;outpost;sunWalker;sunArcher;sunBlocker;sunFence;sunBalloon;sunFence;sunAviary;sunCannon"
+ai5StartMoney = 9999999
+ai5GeysersAttachments = 0
+ai5Collectors = 0
+ai5TimeBetweenMoves = 0
+ai5AllyList = "2;3;4"
+ai5color = orange
+ai5BridgeDrawRate = 0
+
+[Options]
+
+[A.]
+<h2>~lRebels</h2>
+<i>"Why I trust to my helpers?"<br>
+--Fooled High Priest</i>
+<p>After dead of Furies in Shit Hard I Remix, you became new ruler of Nimbus. Howewer government made by you decided to organize treason. Now you will fight against your ex-ministers. They are good fighters. Good luck!
+
+$Button=Its too hard for me!,Tell,Campaign
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded] [BadTeamDead]
+<h2>~lCongratulations!</h2>
+<i>"Why we decided to kill you? We thought we could do it..."<br>
+--Last words of your ex-prime minister</i>
+<p>It were hard battle, but you killed traitors. Since that time nimbian begin live in peace forever.
+
+<$Config,Done{mission.filename}=1>
+$Button=Back to menu,Tell,Campaign
+
+[Failed]
+<h2>~lYou lose...</h2>
+<p>Don't worry if you lose, this is Shit Hard!
+
+$Button=Its too hard for me!,Tell,Campaign
+$Button=Try again!,Tell,TryAgain
+
+
+[END]

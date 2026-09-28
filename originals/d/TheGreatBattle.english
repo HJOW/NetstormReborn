@@ -1,0 +1,117 @@
+[header]
+missionType = "Tutorial"
+missionNumber = 11
+moreGeysers = 1
+myStartMoney = 8000
+myTech="suncannon;sunarcher;sunblocker;sunaviary;sunballoon;sunfence;windbattery;windarcher;windwalker;windblocker;windaviary;windballoon;rainbattery;rainwalker;raincannon;rainblocker;rainfence;rainaviary;rainballoon;thunderbattery;thundercannon;thunderblocker;bulf;thunderfence;thunderarcher"
+myAllyList = "4"
+
+ai2Name = "~rCyclone Priest"
+ai2Tech="windbattery;windblocker;windarcher;windwalker;windballoon;windaviary;suncannon;sunwalker;sunballoon"
+ai2StartMoney = 6500
+ai2GeyserAttachments = 10
+ai2Collectors = 6
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3;5"
+
+ai3Name = "~lTempest Priest"
+ai3Tech="rainbattery;raincannon;rainblocker;rainwalker;rainfence;rainaviary;rainballoon;sunwalker;suncannon;sunarcher;sunballoon"
+ai3StartMoney = 6500
+ai3GeyserAttachments = 10
+ai3Collectros = 6
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2;5"
+
+ai4Name = "~gThe Master of the Chidory"
+ai4Tech="thunderbattery;thundercannon;thunderblocker;bulf;thunderarcher;sunwalker;windbattery;windblocker;windwalker;windballoon;windarcher;windaviary"
+ai4StartMoney = 8000
+ai4GeyserAttachments = 15
+ai4Collectors = 8
+ai4TimeBetweenmoves = 1
+ai4AllyList = "1"
+
+ai5Name = "~yStorm Priest"
+ai5Tech="suncannon;sunarcher;sunblocker;sunaviary;sunballoon;sunfence;windbattery;windarcher;windwalker;windblocker;windaviary;windballoon;rainbattery;rainwalker;raincannon;rainblocker;rainfence;rainaviary;rainballoon"
+ai5Startmoney = 10000
+ai5GeyserAttachments = 20
+ai5Collectors = 6
+ai5TimeBetweenMoves = 1
+ai5AllyList = "2;3"
+
+title = "TheGreatBattle"
+
+[Options]
+[A.]
+<h2>~mThe Supreme Ruler</h2>
+<be><i>~yOmnia sunt miseria in bellis civilibus, sed miserius nihil quam ipsa victoria
+--Cicero<br></i>
+<p>
+The final battle is at hand, you know, if you and your ally win this, chaos will be erradicated from the world of <i>~lNimbus</i>, and peace will be restored to the wrold once again.
+$Button=More,Tell,More
+
+[More]
+No info available....
+The only rule is: kill, crush and sacrifice.
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Start - and end,DoNothing,0
+$Button=Bai,Tell,Bail
+
+[Bail]
+Do you wish to retreat from your final battle, now, when all seems to be on your side?
+$Button=Quit,MissionAbort,1
+$Button=Resume Game,DoNothing,0
+
+[@60]
+<h2>~gA message from your ally:</h2>
+<br>Master, I feel, that luck is on our side. We'll win this <i>~rWAR</i>!!!
+$Button=O.K.,DoNothing,0
+
+[ai2PriestCaptured]
+<h2>~gThe master of the Chidory sends you a message:</h2>
+<br>Good work master, now let's sacrifice this infidel, once and for all!
+$Button=Consider it done,DoNothing,0
+
+[ai3PriestCaptured]
+<h2>~gA message from your ally:</h2>
+<br>Nice catch, but don't throw this one back into the sea!!
+$Button=Don't worry,DoNothing,0
+
+[ai4PriestCaptured]
+<h2>~rA message from the enemy:</h2>
+<br>Looks like it's the end for your little ally...
+$Button=Don't count your chickens before they're hatched!,Tell,RSQ
+
+[RSQ]
+~gMaster, save me!!! I don't want to end up on the sacrificial altar.....
+$Button=Help is on the way,DoNothing,0
+$Button=I can't,Tell,No
+$Button=Are you crazy,DoNothing,0
+
+[No]
+~gMaster, it's been good knowing such a good ally, and a true friend.....
+Just promise me you'll win this <i>~rWAR</i>, and avenge my death!
+$Button=I promise,DoNothing,0
+
+[ai5PriestCaptured]
+<h2>~gBring that insolante fool on my Altar, I want to be the one who'll spill his unholy blood!
+$Button=O.K.,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>~lVICTORY!</h2>
+<br>The clouds started lifting since you've defeated the <i>~Priests of Chaos</i>. Peace is restored to the people of <i>~lNIMBUS</i>.
+<br>Your ally sned you a message:
+$Button=Read,Tell,Read
+
+[Read]
+<h2>Hail to you ~mCHAMPION!</h2>
+You've brought peace to this world master, the people idolize you as a GOD, I think that even the <i>~yFuries</i> themselves admire your courage and leadership skills.
+And I am proud to call you <i>~gFRIEND</i>!
+$Button=Thanks,MissionAbort,1
+
+[Failed]
+<h2>~rYou've failed to achieve victory</h2>
+<br>The enemy is victorious, your allied blood is dripping from the enemy altar, looks like <i>~yPeace</i> was only a <i>~lfools dream</i>...
+$Button=Retry mission,MissionBegin,TheGreatBattle
+$Button=I've had enough!,MissionAbort,1
+
+[End] 

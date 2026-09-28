@@ -1,0 +1,191 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 3
+moreGeysers = 1
+
+myStartMoney = 25000
+myTech = "sunaviary;sunBalloon;sunCannon;sunBlocker;sunFence;sunArcher;thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;bulf;rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainwalker;rainFence;rainwalker"    
+myAllyList = ""
+
+title="The Final Strike"
+
+ai2Name = "~kDark Lord"
+ai2Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence;thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;sunBalloon;sunAviary;sunBlocker;sunArcher"
+ai2StartMoney = 10000
+ai2GeyserAttachments = 4
+ai2Collectors = 10
+ai2TimeBetweenMoves = 0
+ai2AllyList = "3;4;5;6;7;8"
+ai2color = red
+ai2Ability="!USE_PRIEST_TO_COLLECT"
+ai2BridgeDrawRate = 0
+
+ai3Name = "~lRain~w Elemental"
+ai3Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;sunBlocker;sunArcher;windarcher;windBattery;windaviary"
+ai3StartMoney = 2500
+ai3GeyserAttachments = 3
+ai3Collectors = 10
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2;4;5;6;7;8"
+ai3color = white
+ai3Ability="!USE_PRIEST_TO_COLLECT;!ENCIRCLE_ENEMY_ISLAND"
+ai3BridgeDrawRate = 4
+
+ai4Name = "~rThunder~w Elemental"
+ai4Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence;thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;sunBalloon;sunAviary;sunBlocker;sunArcher"
+ai4StartMoney = 2000
+ai4GeyserAttachments = 3
+ai4Collectors = 7
+ai4TimeBetweenMoves = 1
+ai4AllyList = "2;3;5;6;7;8"
+ai4color = green
+ai4Ability="!USE_PRIEST_TO_COLLECT"
+ai4BridgeDrawRate = 4
+
+ai6Name = "~ySun~w Elemental"
+ai6Tech = "windBattery;sunCannon;sunFence;sunBalloon;sunAviary;sunBlocker;sunArcher;windarcher;windBattery;windaviary"
+ai6StartMoney = 5000
+ai6GeyserAttachments = 3
+ai6Collectors = 7
+ai6TimeBetweenMoves = 1
+ai6AllyList = "2;3;4;5;7;8"
+ai6color = yellow
+ai6Ability="!USE_PRIEST_TO_COLLECT"
+ai6BridgeDrawRate = 4
+
+ai8Name = "~oWind~w Elemental"
+ai8Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;sunBlocker;sunArcher"
+ai8StartMoney = 2000
+ai8GeyserAttachments = 3
+ai8Collectors = 7
+ai8TimeBetweenMoves = 1
+ai8AllyList = "2;3;4;5;6;7"
+ai8color = orange
+ai8Ability="!USE_PRIEST_TO_COLLECT;!ENCIRCLE_ENEMY_ISLAND"
+ai8BridgeDrawRate = 4
+
+
+
+[Options]
+
+[@1]
+<h2>~kUnknown</h2>
+<p>Hahaha!  Foolish lord!  You should not have taken on us without help!
+
+[@2]
+<p>~l~IYou remember that cold and dark voice....but you cannot remember the man to whom it belongs....
+<p>~N~.Who....who are you?
+
+[@3]
+<h2>~kUnknown</h2>
+<p>What?!  I'm dissapointed!  After destroying my empire, defeated my allies and you do not know who I am?
+ 
+[@4]
+<p>YOU!!  So you were the one who managed to escape!  
+
+[@5]
+<h2>~kDark Lord</h2>
+<p>HA HA HA!  You thought you had destroyed all of us, but I the last surviver of a mighty empire have come back to take my revenge!
+
+[@6]
+<p>What makes you think I won't win this time?
+
+[@7]
+<h2>~kDark Lord</h2>
+<p>Simple the last time you had your allies to help you and protect you.  This time you have no allies to save your worthless hide!  Not to mention you are outnumbered and gunned!
+
+[@8]
+<p>You will see that I do not need my allies to defeat you!
+
+
+[@150]
+<h2>~kDark Lord</h2>
+<p>HAHAHA!!  What's the matter?  Can't you fight back?!
+
+[@600]
+<h2>~kDark Lord</h2>
+<p>Come on now!  You can't defeat us...Why don't you let us kill you swiftly?
+
+[@750]
+<h2>~kDark Lord</h2>
+<p>With my leadership and the Elemental's power I shall crush you and retake what is rightfully mine!
+
+[@900]
+<h2>~kDark Lord</h2>
+<p>Giving up?  So soon?  Ha I though you could put up a better fight than this!
+
+[A.]
+<h2>The Final Strike</h2>
+<i>"The comflict is over when the other side has been destroyed compleatly.  Otherwise..."<br>
+--Unknown.</i>  
+<p>At last you can destroy the only force that keeps you from what you have earned those many months ago.  You have sent your allies to hold back any help the Elementals sent for.  
+<p>It is you against the Elementals now.  Only they stand between you and the control of the skies.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+You have done it!!!!  You have crushed the Elementals and the their leader!!  The last Darklord vowed revenge upon you and he almost did acheive just that!
+<p>The Elementals followers shocked at what happened have layed down their arms and have vowed to serve you and your kingdom!  Although a few resist your rule you decide to let them go...for now is a time to celebrate!!
+<p>You and your allies all gather for a celebration feast and invite all to join.  You finally have what you should have got long ago; the world of Nimbus!
+
+<$Config,Done{mission.fileName}=1>
+$Button=VICTORIOUS!,MissionAbort,0
+
+
+[ai2TempleHalfDead]
+<h2>~kDark Lord</h2>
+<p>
+No!  You will not win again!!! IT ENDS HERE!
+
+[ai2TempleDead]
+<h2>~kDark Lord</h2>
+<p>NOOO!!!   I can't lose after rebuilding this powerful empire again!!
+
+[ai2PriestDead]
+<p>The last Dark Lord falls....or so you hope.....
+
+[ai3TempleHalfDead]
+<h2>~lRain ~wElemental</h2>
+<p>
+Argh!  This can't be happening!!!
+
+[ai3TempleDead]
+<h2>~lRain~w Elemental</h2>
+<p>
+Argh to be bested by the lights of you!
+
+[ai3PriestDead]
+<h2>The ~lRain ~wElemental has died</h2>
+<p>
+You enjoy the sweet taste of revenge.....
+
+[ai4TempleHalfDead]
+<h2>~rThunder~w Elemental</h2>
+<p>
+Gaa!  This can't be!  We are all powerful!
+
+[ai6TempleHalfDead]
+<h2>~ySun~w Elemental</h2>
+<p>
+Fate it seems is dealing me a harsh blow....
+
+[ai8TempleHalfDead]
+<h2>~oWind~w Elemental</h2>
+<p>
+You can't defeat us!  We killed your most powerful ally the Duke and we can do the same to you!
+
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+You took on too much....Your allies will surly perish when they are caught in a pincer attack between the Elementals on one side and their forces on the other....
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+

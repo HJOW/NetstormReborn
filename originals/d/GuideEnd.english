@@ -1,0 +1,26 @@
+title = "The End All"
+
+[Overview]
+<background="nsstart">
+<h2>This is It</h2>
+<p>
+Yes, finally you've finally 
+managed to really piss 
+off the furies now. They 
+are through sending 
+cheap immitation 
+scarecrows to erase 
+you. They have damned 
+you for all eterninity, and 
+now it is time for the final 
+confrontation. There's 
+only room for one at the 
+top, lets hope its you.
+
+
+$Checked=1 ~[Iicon.00]FirsT BlooD~[Iicon.00],MissionBegin,superisland,{Donesuperisland},1
+$Checked=2 ~[Iicon.11]DefenD YouR FrienD~[Iicon.11],MissionBegin,two,{Donetwo},{Donesuperisland}
+$Checked=3 ~[Iicon.06]ThE KnoW-HoW~[Iicon.06],MissionBegin,three,{Donethree},{Donetwo}
+$Checked=4 ~[Iicon.08]WelcominG CommiteE~[Iicon.08],MissionBegin,four,{Donefour},{Donethree}
+$Checked=5 ~[Iicon.12]ThE ReckoninG~[Iicon.12],MissionBegin,five,{Donefive},{Donefour}
+$Button=Back,Tell,Campaign

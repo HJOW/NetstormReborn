@@ -1,0 +1,76 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 3
+moreGeysers = 1
+
+myStartMoney = 15000
+myTech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence"
+
+title="Rebel HQ Under Siege"
+
+ai2Name = "Aquarian"
+ai2Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence"
+ai2StartMoney = 6000
+ai2GeyserAttachments = 2
+ai2Collectors = 2
+ai2TimeBetweenMoves = 1
+ai2AllyList = ""
+ai2color = red
+
+ai3Name = "Logoth"
+ai3Tech = "sunWalker;sunArcher;sunBlocker;sunCannon;thunderbattery"
+ai3StartMoney = 6000
+ai3GeyserAttachments = 2
+ai3Collectors = 3
+ai3TimeBetweenMoves = 1
+ai3AllyList = "1"
+ai3color = white
+ai3BridgeDrawRate = 3
+
+[Options]
+
+[A.]
+<h2>Rebel HQ Under Siege!</h2>
+<i>"Strike slowly and your opponent will be slow to fall, but strike quickly and all shall die quickly."<br>
+--Aquarian, Stream Demon</i>  
+<p>As you were celebrating your magnificent victory over the Lord of Thunder Fortress a messanger burst through the door, exhausted, and handed you a note:
+<p><i>"Please send aid to the rebel HQ immediately, I am under attack from Aquarian and cannot hold out much longer! Please take your island and aid me in this most dire of situations! Leave immediately please!"</i>
+<p>You bid farewell to the Prince of Wind and hurridly set off towards the HQ. When you arrive the situation truly is dire indeed, you must act quickly to save your friend, Logoth, and the entire rebel war effort!
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+Well done! Leaving three of your most trusted generals to guard the HQ you set off on a direct course for the guild master's island...
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,alerted
+
+[ai2TempleHalfDead][!ai3PriestCaptured]
+<h2>Message from Logoth</h2>
+<p>
+Well done, Aquarian is near to death! I owe you a big favour for saving my life!
+
+[ai3TempleHalfDead]
+<h2>Message from Logoth</h2>
+<p>
+Help quickly please!
+
+[ai3PriestDead]
+<h2>Logoth has Perished!</h2>
+<p>
+You have failed to save your dear friend Logoth and the rebel HQ has been captured. Retire in shame or try again!
+
+$Button=Continue,Tell,TryAgain
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+You have failed, the rebel cause is lost! Try again or admit you are not truly a great Nimbian.
+$Button=Continue,Tell,TryAgain
+
+
+[END]

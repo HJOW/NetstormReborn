@@ -1,0 +1,99 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 13
+moreGeysers = 1
+randomGeysers = 1
+
+myStartMoney = 3000
+myTech = "outpost;sunArcher;sunBalloon;sunWalker;windBattery;windBalloon;rainBattery;rainBalloon;thunderBattery;bulf"
+
+title="Enter Hades Domain"
+
+ai2Name = "Apprentice of Hades"
+ai2Tech = "sunWalker;sunArcher;sunCannon;windBattery;windWalker;windArcher;rainBattery;rainCannon;rainFence;rainWalker;thunderBattery;bulf;thunderBlocker"
+ai2StartMoney = 4000 
+ai2GeyserAttachments = 1
+ai2Collectors = 2
+ai2TimeBetweenMoves = 3
+ai2AllyList = "3;4;5"
+ai2color = red 
+ai2Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS;!USE_PRIEST_TO_COLLECT"
+ai2DrawBridgeRate = 3
+
+ai3Name = "Low Priest of Hades"
+ai3Tech = "sunWalker;sunArcher;sunCannon;windBattery;windArcher;windWalker;windBlocker;rainBattery;rainWalker;rainFence;rainCannon;rainBlocker;thunderBattery;bulf;thunderBlocker;thunderCannon"
+ai3StartMoney = 6000 
+ai3GeyserAttachments = 2
+ai3Collectors = 3
+ai3TimeBetweenMoves = 2
+ai3AllyList = "2;4;5"
+ai3color = white
+ai3Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS;!USE_PRIEST_TO_COLLECT"
+ai3BridgeDrawRate = 2
+
+ai4Name = "High Priest of Hades"
+ai4Tech = "all"
+ai4StartMoney = 8000 
+ai4GeyserAttachments = 3
+ai4Collectors = 4
+ai4TimeBetweenMoves = 1
+ai4AllyList = "2;3;5"
+ai4color = purple
+ai4Ability = "!USE_PRIEST_TO_COLLECT"
+ai4BridgeDrawRate = 1
+
+ai5Name = "King of Hades"
+ai5Tech = "outpost;all"
+ai5StartMoney = 10000 
+ai5GeyserAttachments = 4
+ai5Collectors = 5
+ai5TimeBetweenMoves = 1
+ai5AllyList = "2;3;4"
+ai5color = green
+ai5Ability = "!USE_PRIEST_TO_COLLECT"
+ai5BridgeDrawRate = 1
+
+
+[Options]
+
+[ai2PriestDead]
+The Apprentice of Hades just died on your altar.  Good job!  
+
+[ai3PriestDead]
+The Low Priest of Hades is dead.  Merely a low priest.
+
+[ai4PriestDead]
+Excellent!
+
+[ai5PriestDead]
+You killed the King!
+
+[A.]
+<h2>Enter Hades Domain</h2>
+<i>"You will rot here forever!"<br>
+--King of Hades</i>  
+<p>You have successfully lost to the Guardian or have been captured by the Bounties.  Either way you have now entered the Domain of Hades.<br>
+You must fight for your rightful position here in Hades.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Congratulations on your victory!</h2>
+<i>It appears that the King has a vacancy in his staff.</i>
+<p>He has offered you the new Apprentice of Hades position.  Will you take it?  If you don't you will certainly die.<br>
+If you do???  Continued............
+
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+
+[Failed]
+<h2>You have lost your last stand.</h2>
+<p>
+You will be thrown into the endless pit of ~y~LOSERS!  Better luck in your past life - If their is one!  Ha!  Ha!  Ha!
+
+<$Config,Done{mission.filename}=1>
+$Button=Leave Missions,MissionAbort,0
+
+[END]

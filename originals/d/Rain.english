@@ -1,0 +1,52 @@
+[Header]
+
+missionType="Tutorial"
+missionNumber = 9
+moreGeysers = 1
+myStartMoney = 2000
+myTech = "windBattery;windarcher;windAviary;windblocker"
+
+title= "FinalMatch"
+
+ai2Name= "ThunderLeader"
+ai2Tech= "rainBattery;Raincannon;rainAviary;rainblocker"
+ai2StartMoney= 4000
+ai2GeyserAttachments = 2
+ai2Collectors = 7
+ai2TimeBetweenMoves = 1
+ai2AllyList= ""
+ai2color= white
+
+
+[Options]
+
+
+[A.]
+<h2> Final enemy island discovered! <h2>
+<i> "The final hideout of another reformed thunder leader" <br>
+--Scouts </i|
+<p>
+Our scouts discovered a hidden island. It is ruled by a local thunderman.
+He commands this island. He studied well your tactics and victories and now he favors
+the powerfull rain fury. He chose to attack your wind island branch. He hopes
+his rain cannons will win. Prove him wrong by sacrificing the last scum of nimbus. 
+$Button=Review Knowledge,Show Technology,55
+$Button=PlayMission,DoNothing,0
+
+[Succeeded] [BadTeamDead]
+
+<h2> Congratualtions!!!! <h2>
+<p> U just won my campaigh!!!! You just proven that you are not weak, you are smart!!!
+Hope you enjoy it! I hope it was good, now was it?
+<$Config,Done{mission.fileName}=1>
+$Button=Nextmission,MissionAbort,0
+
+[Failed]
+
+<h2> You suck!!! --Temple of light </h2>
+<p> U fool!! U just gave a thunder the power for a major comeback!!!
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+

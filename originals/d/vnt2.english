@@ -1,0 +1,164 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = "13"
+moreGeysers = "1"
+randGeysers = "0"
+
+myStartMoney = "30000"
+myTech ="thunderBattery;thunderCannon;thunderBlocker;"
+myAllyList = ""
+
+title = "Thunder 2"
+
+ai2Name = "Wind 1"
+ai2Tech = "windArcher;windBattery;windBlocker;sunBalloon;"
+ai2StartMoney = "100000"
+ai2AllyList = "3;4;5;6;"
+ai2Color = "red"
+ai2Collectors = "1"
+ai2BridgeDrawRate = ""
+ai2GeyserAttachments = ""
+ai2TimeBetweenMoves = "0"
+ai2Ability = ""
+
+ai3Name = "Rain 1"
+ai3Tech = "rainCannon;rainBattery;sunBalloon;"
+ai3StartMoney = "100000"
+ai3AllyList = "2;4;5;6;"
+ai3Color = "white"
+ai3Collectors = "1"
+ai3BridgeDrawRate = ""
+ai3GeyserAttachments = ""
+ai3TimeBetweenMoves = "0"
+ai3Ability = ""
+
+ai4Name = "Wind 2"
+ai4Tech = "windArcher;windAviary;sunFence;windBattery;sunBalloon;"
+ai4StartMoney = "100000"
+ai4AllyList = "2;3;5;6;"
+ai4Color = "green"
+ai4Collectors = "1"
+ai4BridgeDrawRate = ""
+ai4GeyserAttachments = ""
+ai4TimeBetweenMoves = "0"
+ai4Ability = ""
+
+ai5Name = "Rain 2"
+ai5Tech = "rainCannon;rainBattery;sunBalloon;"
+ai5StartMoney = "100000"
+ai5AllyList = "2;3;4;6;"
+ai5Color = "purple"
+ai5Collectors = "1"
+ai5BridgeDrawRate = ""
+ai5GeyserAttachments = ""
+ai5TimeBetweenMoves = "0"
+ai5Ability = ""
+
+ai6Name = "Wind 3"
+ai6Tech = "windArcher;windAviary;windBattery;windBlocker;sunBalloon;"
+ai6StartMoney = "100000"
+ai6AllyList = "2;3;4;5;"
+ai6Color = "yellow"
+ai6Collectors = "1"
+ai6BridgeDrawRate = ""
+ai6GeyserAttachments = ""
+ai6TimeBetweenMoves = "0"
+ai6Ability = ""
+
+
+[Options]
+
+[A.]
+<h2>Thunder 2</h2>
+<i>~I"The blood of holy men is the elixir of destiny."<br>
+--~.The Book of Nimbus</i>
+<p>Your power has been recognised, and the furies of Wind and Rain have united aginst Thunder, now you must fight to save your soul from eternal damnation.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[heathen]
+<h1>~r~B~ENOOOOOOOOO!!!!!!!!~.</h1>
+So, you don't like bulfs eh? We have ways of dealing with you.....
+$Button=Continue,tell,bulfcycle
+
+[bulfcycle]
+$Timeout=5,tell,escape
+<$Movedialog,tl>
+<$Playsound,bulfMove.wav>
+ $Menu=~[Ibulf.1],tell,bulfcycle2
+[bulfcycle2]
+$Timeout=5,tell,escape
+<$Playsound,bulfMove.wav>
+<$Movedialog,tr>
+ $Menu=~[Ibulf.21],tell,bulfcycle3
+[bulfcycle3]
+$Timeout=5,tell,escape
+<$Playsound,bulfMove.wav>
+<$Movedialog,bl>
+ $Menu=~[Ibulf.51],tell,bulfcycle4
+[bulfcycle4]
+$Timeout=5,tell,escape
+<$Playsound,bulfHurt.wav>
+<$Movedialog,br>
+ $Menu=~[Ibulf.11],tell,bulfcycle
+
+[escape]
+Yeah!! You get a bulf!!! Yeahh!!! They're cool!! YEAH!!! 
+~[Ibulf.1]~[Ibulf.21]~[Ibulf.1]~[Ibulf.21]~[Ibulf.1]~[Ibulf.21]~[Ibulf.1]~[Ibulf.21]Yeah!!!~[Ibulf.11]~[Ibulf.31]~[Ibulf.11]~[Ibulf.31]
+$Menu=~[Ibulf.1]~[Ibulf.11]~[Ibulf.21]~[Ibulf.31],GetTechnology,135
+$Button=I don't want the bulf,tell,heathen
+
+
+[ai1TempleHalfDead]
+You're in trouble... you'd better kick their asses with this cash.
+<$ChangeMoney,200000>
+
+[ai1PriestCaptured]
+The hot air balloon decends upon you, summoning all your strength you try to escape, but it is all you can do to maintain your forcefield......
+
+[ai2PriestDead]
+I get really bored writing enless bits of text for the death of enemies. There are about 30 in this campaign. Impressive huh?
+$Button=Arc Spire,GetTechnology,149
+
+[ai3PriestDead]
+The power of Thunder is strong in your veins. The fury of thunder rewards you with ..
+$Button=Vander Tower,GetTechnology,148
+
+[ai4PriestDead]
+Onward, to Glory!
+$Button=Mystery tech,GetTechnology,100
+[ai5PriestDead]
+
+Yeah!! You get a bulf!!! Yeahh!!! They're cool!! YEAH!!! 
+~[Ibulf.1]~[Ibulf.21]~[Ibulf.1]~[Ibulf.21]~[Ibulf.1]~[Ibulf.21]~[Ibulf.1]~[Ibulf.21]Yeah!!!~[Ibulf.11]~[Ibulf.31]~[Ibulf.11]~[Ibulf.31]
+$Menu=~[Ibulf.1]~[Ibulf.11]~[Ibulf.21]~[Ibulf.31],GetTechnology,135
+$Button=I don't want the bulf,tell,heathen
+
+[ai6PriestDead]
+May the blood of the enemy guide you to the greater glory.
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>You got the Bulf!!!!!       Oh yeah, you beat 5 people too. Well done. Now you must secure victory for thunder by defeating the Lords of Wind and Rain.
+
+
+<$Config,vn_donevnt2=1>
+<$Config,vn_notdonevnt2=0>
+$Button=Next Mission,MissionBegin,vnt3
+
+
+[Failed]
+<h2>Death</h2>
+<p>This mission was quite tricky I suppose, so have another go if you want.....
+$Button=retry,tell,last
+$Button=Try in vain,MissionBegin,vnd3
+<$Config,vn_failthunder=1>
+
+[last]
+Okay then, you can try again....
+<$Config,vn_failthunder=1>
+$Button=Try again,MissionBegin,vnt2
+
+[END]

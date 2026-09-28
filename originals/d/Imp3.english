@@ -1,0 +1,261 @@
+[Header]
+missionType = "Tutorial"
+missionNumber = 1
+moreGeysers=0
+randGeysers=0
+myStartMoney = "35000"
+myTech = ""
+myAllyList = "2"
+ai1Name = "~bYou"
+
+title="X Marks the Spot"
+
+ai2Name = "~lAngelic Warrior"
+ai2Tech = "sunWalker;sunarcher;sunballoon;suncannon;sunaviary;sunBlocker;sunwalker"
+ai2StartMoney = 45000
+ai2AllyList = "1"
+ai2GeyserAttachments = 5
+ai2Collectors = 5
+ai2BridgeDrawRate=1
+ai2TimeBetweenMoves=1
+ai2Color = "lightblue"
+ai2Ability = "!USE_PRIEST_TO_COLLECT;ENCIRLCE_ENEMY_ISLAND;BUILD_DIAS;SACRIFICE_ENEMY_PRIEST;CAPTURE_ENEMY_PRIEST"
+
+ai3Name = "~yImpial Death"
+ai3Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;Bulf;sunwalker"
+ai3StartMoney = 50000
+ai3AllyList = "4"
+ai3GeyserAttachments = 5
+ai3Collectors = 5
+ai3BridgeDrawRate=0
+ai3TimeBetweenMoves=0
+ai3MoneyRechargeRate=8
+ai3Color = "yellow"
+ai3Ability = "!USE_PRIEST_TO_COLLECT;ENCIRLCE_ENEMY_ISLAND;BUILD_DIAS;SACRIFICE_ENEMY_PRIEST;CAPTURE_ENEMY_PRIEST"
+
+ai4Name = "~yImpial Healer"
+ai4Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;sunwalker"
+ai4StartMoney = 50000
+ai4AllyList = "3"
+ai4GeyserAttachments = 5
+ai4Collectors = 5
+ai4BridgeDrawRate=1
+ai4TimeBetweenMoves=0
+ai4MoneyRechargeRate=8
+ai4Color = "yellow"
+ai4Ability = "!USE_PRIEST_TO_COLLECT;ENCIRLCE_ENEMY_ISLAND;BUILD_DIAS;SACRIFICE_ENEMY_PRIEST;CAPTURE_ENEMY_PRIEST"
+
+ai5Name = "~gImp Eater"
+ai5Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;Bulf;sunwalker"
+ai5StartMoney = 50000
+ai5AllyList = "6"
+ai5GeyserAttachments = 9
+ai5Collectors = 5
+ai5BridgeDrawRate=0
+ai5TimeBetweenMoves=0
+ai5MoneyRechargeRate=8
+ai5Color = "green"
+ai5Ability = "!USE_PRIEST_TO_COLLECT;ENCIRLCE_ENEMY_ISLAND;BUILD_DIAS;SACRIFICE_ENEMY_PRIEST;CAPTURE_ENEMY_PRIEST"
+
+ai6Name = "~gImp Hunter"
+ai6Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;sunwalker"
+ai6StartMoney = 50000
+ai6AllyList = "5"
+ai6GeyserAttachments = 9
+ai6Collectors = 10
+ai6BridgeDrawRate=0
+ai6TimeBetweenMoves=0
+ai6MoneyRechargeRate=8
+ai6Color = "green"
+ai6Ability = "!USE_PRIEST_TO_COLLECT;ENCIRLCE_ENEMY_ISLAND;BUILD_DIAS;SACRIFICE_ENEMY_PRIEST;CAPTURE_ENEMY_PRIEST"
+
+ai7Name = "~rDeath Reaper"
+ai7Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;sunwalker"
+ai7StartMoney = 50000
+ai7AllyList = "8"
+ai7GeyserAttachments = 5
+ai7Collectors = 5
+ai7BridgeDrawRate=0
+ai7TimeBetweenMoves=0
+ai7MoneyRechargeRate=8
+ai7Color = "red"
+ai7Ability = "!USE_PRIEST_TO_COLLECT;ENCIRLCE_ENEMY_ISLAND;BUILD_DIAS;SACRIFICE_ENEMY_PRIEST;CAPTURE_ENEMY_PRIEST"
+
+ai8Name = "~rDeathStalker"
+ai8Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;Bulf;sunwalker"
+ai8StartMoney = 50000
+ai8AllyList = "7"
+ai8GeyserAttachments = 9
+ai8Collectors =5
+ai8BridgeDrawRate=0
+ai8TimeBetweenMoves=0
+ai2MoneyRechargeRate=8
+ai8Color = "red"
+ai8Ability = "!USE_PRIEST_TO_COLLECT;ENCIRLCE_ENEMY_ISLAND;BUILD_DIAS;SACRIFICE_ENEMY_PRIEST;CAPTURE_ENEMY_PRIEST"
+
+[Options]
+[A.]
+<h2>~rX~. marks the ~yspot~[Inugget.*]~[Inugget.1]~.</h2>
+Digging for treasure?<br>
+Info is critical here.<br>
+$Button=I Want Info,Tell,Info
+$Button=Don't Want Info,Tell,No
+
+[Info]
+<h2>Info:</h2><br>
+You are denied of the outpost until you kill one of the oter islands (I don't want you to control the middle island).<br>
+To make it hard for you to get the outpost, all the outer islands have instant reaction and thunder power.  Wind islands protect them from close attacks.<br>
+Your ai has sun power.<br>
+All the geysers (until some start popping up) are locating in the middle of the X.<br>
+$Button=Saying of the map,Tell,Say
+$Button=Thanx,Do,Nothing
+
+[Say]
+<i>Steps to find storm power:<br>
+1) Find a island that has no bridges connected to it.<br>
+2) Build a outpost.<br>
+3) Wait an hour.<br>
+4) Dig in the middle.<br>
+...<br>
+--"Storm Power"...Author unknown.
+$Button=Cool,Tell,Info
+
+[No]
+Want to get right to the fight, huh?<br>
+To bad, you got another message.<br>
+$Button=No more messages!,Tell,None
+
+[None]
+I think you shall reconsider.
+$Button=Ok,Tell,Info
+$Button=NO!!!,Tell,HellNo
+
+[HellNo]
+Ok, Have it your way.
+$Button=I WILL,DoNothing,0
+
+[@1]
+Pick you weapon.
+$Menu=~bRain,Tell,A
+$Menu=~kThunder~.,Tell,B
+$Menu=~IWind~.,Tell,C
+$Menu=~ySun,Tell,D
+
+[A]
+You sure?
+$Button=No,Tell,Pick
+$Button=Yes,Tell,DD
+
+[AA]
+<$GetTechnology,76>
+<$GetTechnology,87>
+<$GetTechnology,124>
+<$GetTechnology,129>
+<$GetTechnology,143>
+<$GetTechnology,145>
+<$GetTechnology,156>
+<$GetTechnology,147>
+<$GetTechnology,146>
+$Button=HeeHeeHe,Tell,HaHa
+
+[B]
+You sure?
+$Button=No,Tell,Pick
+$Button=Yes,Tell,DD
+
+[BB]
+<$GetTechnology,77>
+<$GetTechnology,79>
+<$GetTechnology,88>
+<$GetTechnology,125>
+<$GetTechnology,131>
+<$GetTechnology,135>
+<$GetTechnology,148>
+<$GetTechnology,149>
+$Button=HeeHeeHe,Tell,HaHa
+
+[C]
+You sure?
+$Button=No,Tell,Pick
+$Button=Yes,Tell,CC
+
+[CC]
+<$GetTechnology,75>
+<$GetTechnology,86>
+<$GetTechnology,123>
+<$GetTechnology,139>
+<$GetTechnology,140>
+<$GetTechnology,142>
+<$GetTechnology,141>
+<$GetTechnology,137>
+$Button=HeeHeeHe,Tell,HaHa
+
+[D]
+You sure?
+$Button=No,Tell,Pick
+$Button=Yes,Tell,DD
+
+[DD]
+<$GetTechnology,71>
+<$GetTechnology,72>
+<$GetTechnology,75>
+<$GetTechnology,85>
+<$GetTechnology,111>
+<$GetTechnology,128>
+<$GetTechnology,136>
+<$GetTechnology,78>
+<$GetTechnology,70>
+$Button=HeeHeeHe,Tell,HaHa
+
+[HaHa]
+= )<br>
+Have Fun +<br>
+Good Luck<br>
+The Virtuous Warrior<br>
+$Button=Cool,DoNothing,0
+
+[ai2PriestDead]
+That's gotta hurt.<br>
+(Leave is only if YOU died first.)
+$Button=yeah,DoNothing,0
+$Button=Leave,MissionAbort,0
+
+[ai3PriestDead]
+Cool...You got the outpost now.  Hopefully, you will build only one outpost.  NOT on the middle.  But its up to you.<br>  I don't mind if you want to give up some of the challenge and fun for a easier game.
+$Button=Don't worry...I will listen,GetTechnology,126
+
+[ai5PriestDead]
+Cool...You got the outpost now.  Hopefully, you will build only one outpost.  NOT on the middle.  But its up to you.<br>  I don't mind if you want to give up some of the challenge and fun for a easier game.
+$Button=Don't worry...I will listen,GetTechnology,126
+
+[ai8PriestDead]
+Cool...You got the outpost now.  Hopefully, you will build only one outpost.  NOT on the middle.  But its up to you.<br>  I don't mind if you want to give up some of the challenge and fun for a easier game.
+$Button=Don't worry...I will listen,GetTechnology,126
+
+[Succeeded][BadTeamDead]
+<h2>You Have Won!!!</h2>
+<p>~.How can that be?  Try a new mission.  I ~kdare~. you to.
+$Button=New Mission,Tell,Mission
+
+[Failed][ai1PriestDead]
+<h2>Message from the ~kImps~.:</h2>
+<p>~rHahaha...~B~wI told you... Leave from our Imp-ial realms.  Looser.
+$Button=*snicker*,Tell,LaLa
+
+[LaLa]
+$Menu=I want to be resurrected,MissionRestart,0
+$Menu=I want a new mission,Tell,Mission
+$Menu=I wanna leave,AbortMission,0
+$Menu=I want to stay in the game and help my ally,DoNothing,0
+
+[Mission]
+What one?
+$Menu=~qPick your death:,Tell,dope
+$Menu=~mHive Cluster,MissionBegin,Imp1
+$Menu=~kDark Rituals,MissionBegin,Imp2
+$Menu=~yX Marks the Spot,MissionBegin,Imp3
+$Menu=~bRun Like Hell 2,MissionBegin,Imp4
+$Menu=~gProject ~oD~got~oT,MissionBegin,Imp5
+$Button=Back,Tell,LaLa
+
+[END]

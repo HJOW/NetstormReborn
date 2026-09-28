@@ -1,0 +1,84 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 15
+
+myStartMoney = 25000
+myTech = "sunWalker;sunArcher;windarcher;sunBlocker;sunBalloon;sunFence;sunCannon;thunderbattery;rainbattery;windBattery;thunderarcher;thundercannon;rainballoon;rainblocker;raincannon;windaviary;windballoon;windblocker;windWalker"
+
+title="It starts"
+
+ai2Name = "Tristans favorite"
+ai2Tech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;windBattery;thunderbattery;rainbattery;windarcher;windaviary;windballoon;windblocker;windWalker"
+ai2StartMoney = 10000
+ai2GeyserAttachments = 10
+ai2Collectors = 8
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3;4;5"
+ai2color = red
+
+ai3Name = "Tin man"
+ai3Tech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;thunderbattery;rainbattery;windBattery;thunderarcher;thunderblocker;thundercannon;thunderfence"
+ai3StartMoney = 10000
+ai3GeyserAttachments = 2
+ai3Collectors = 8
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2;4;5"
+ai3color = white
+
+ai4Name = "Devastor"
+ai4Tech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;windBattery;thunderbattery;rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence"
+ai4StartMoney = 10000
+ai4GeyserAttachments = 2
+ai4Collectors = 8
+ai4TimeBetweenMoves = 1
+ai4AllyList = "2;3;5"
+ai4color = green
+
+ai5Name = "Wave Surfer"
+ai5Tech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;windBattery;thunderbattery;rainbattery;windarcher;windaviary;windballoon;windblocker;windWalker"
+ai5StartMoney = 10000
+ai5GeyserAttachments = 2
+ai5Collectors = 8
+ai5TimeBetweenMoves = 1
+ai5AllyList = "2;3;4"
+ai5color = magenta
+
+
+
+[Options]
+
+[A.]
+<h2>Tristan</h2>
+<i>"*Tomorrow is a day you will never see*"<br>
+--Tristanovich, </i>
+<p>
+The evil Baron Tristanovich has called in his
+hardened criminal mastermind friends to vanquish
+your retched priestdom from this domain.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>*Your priest will be mine soon enough*</h2>
+<p>
+You have won this battle but not the war.
+<$Config,Done{T2.fort}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,T3
+
+[Failed]
+
+<h2>*I dance on your grave as your relatives are slaughtered*</h2>
+<p>
+Another trophy to add to my collection your
+putrid head will go well next to my stuffed
+warthog.
+Feel lucky? Try again
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+

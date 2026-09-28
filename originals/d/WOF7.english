@@ -1,0 +1,73 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 7
+moreGeysers = 0
+
+myStartMoney = 5000
+myTech = "rainBattery;rainCannon;rainAviary;rainBlocker;rainBalloon"
+
+title = "To the Rescue!"
+
+ai2Name = "Wind god"
+ai2Tech = "windBattery;windArcher;windBalloon;windBlocker;sunFence;sunBalloon"
+ai2StartMoney = 0
+ai2GeyserAttachments = 10
+ai2Collectors = 10
+ai2TimeBetweenMoves = 4
+ai2AllyList = "3"
+ai2Color = red
+ai2Ability = !CAPTURE_ENEMY_PRIEST;!SACRIFICE_ENEMY_PRIEST"
+
+ai3Name = "Loyal Priest"
+ai3Tech = "thunderBattery;thunderCannon;thunderFence;bulf"
+ai3StartMoney = 5000
+ai3GeyserAttachments = 10
+ai3Collectors = 8
+ai3TimeBetweenMoves = 2
+ai3AllyList = "2"
+ai3Color = white
+ai3Ability = "!CAPTURE_ENEMY_PRIEST;!SACRIFICE_ENEMY_PRIEST"
+
+ai4Name = "Elista"
+ai4Tech = ""
+ai4StartMoney = 
+ai4GeyserAttachments = 
+ai4Collectors = 
+ai4TimeBetweenMoves = 
+ai4AllyList = "1"
+ai4Color = green
+
+[Options]
+
+[A.]
+<h2>Voyage</h2>
+<i>"To reach our destinies we must cross many ocenas"
+--Zuluc, Rain High Priest</i>
+<p>The Rain God is pleased with your work and has said he will send you across the Arbian Sea if you return his daughter Elista.He says he will also reveal the location of Arius.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[ai4PriestSaved]
+<h2>Thank You!</h2>
+<p>
+Elista shouts as you carry her away from the Wind God's Camp.The Rain God then sends you to find Arius.
+THE END
+<$Config,Done{mission.fileName}=7>
+$Button=Leave Missions,MissionAbort,1
+$Button=Next Mission,MissionBegin,WOF8
+
+[Failed]
+<h2>You FOOL!!</h2>
+<p>
+The Wind God snarls as he beheads you.
+$Button=Continue,Tell,Tryagain
+
+
+[END]
+
+
+
+
+

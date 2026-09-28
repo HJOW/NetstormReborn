@@ -1,0 +1,380 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 6
+moreGeysers = 0
+
+myStartMoney = 0
+myTech = "sunaviary;sunBalloon;sunCannon;sunBlocker;sunFence;sunArcher;rainbattery"
+myAllyList = "5"
+
+title="Time"
+
+ai2Name = "Thunder Attacker"
+ai2Tech = "thunderbattery;thunderarcher;thundercannon;bulf;thunderblocker"
+ai2StartMoney = 0
+ai2GeyserAttachments = 0
+ai2Collectors = 5
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3;5;6;7"
+ai2color = red
+ai2Ability="!ATTACH_TO_ENEMY_ISLAND"
+ai2BridgeDrawRate = 2
+
+ai3Name = "Thunder Defender"
+ai3Tech = "thunderarcher;thunderblocker"
+ai3StartMoney = 0
+ai3GeyserAttachments = 0
+ai3Collectors = 0
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2;5;6;7"
+ai3color = red
+ai3Ability="!ATTACH_TO_ENEMY_ISLAND"
+ai3BridgeDrawRate = 2
+
+ai5Name = "Master of Wisdom"
+ai5Tech = "windarcher;windBattery;windaviary;windblocker;rainbattery;rainaviary;rainballoon;raincannon;thunderbattery;thunderarcher;thunderblocker;thundercannon;sunBalloon;sunAviary;sunBlocker;suncannon"
+ai5StartMoney = 0
+ai5GeyserAttachments = 0
+ai5Collectors = 5
+ai5TimeBetweenMoves = 0
+ai5AllyList = "1;2;3;6;7"
+ai5color = purple
+ai5Ability=""
+ai5BridgeDrawRate = 0
+
+ai6Name = "Wind Attacker"
+ai6Tech = "windarcher;windBattery;windaviary;windwalker;windballoon;windblocker"
+ai6StartMoney = 0
+ai6GeyserAttachments = 0
+ai6Collectors = 5
+ai6TimeBetweenMoves = 1
+ai6AllyList = "2;3;5;7"
+ai6color = white
+ai6Ability="!ATTACH_TO_ENEMY_ISLAND"
+ai6BridgeDrawRate = 2
+
+
+ai7Name = "Wind Defender"
+ai7Tech = "windarcher;windblocker"
+ai7StartMoney = 0
+ai7GeyserAttachments = 0
+ai7Collectors = 0
+ai7TimeBetweenMoves = 1
+ai7AllyList = "2;3;5;6"
+ai7color = white
+ai7Ability="!ATTACH_TO_ENEMY_ISLAND"
+ai7BridgeDrawRate = 2
+
+
+
+[Options]
+
+[A.]
+<$Config,atstop0=1>
+<$Config,atstop00=0>
+<$Config,atstop000=0>
+<$Config,atstop0000=0>
+<$Config,atstop00000=0>
+<$Config,atstop1=0>
+<$Config,atstop11=0>
+<$Config,atstop111=0>
+<$Config,atstop1111=0>
+<$Config,atstop112=0>
+<$Config,atstop2=0>
+<$Config,atstop3=0>
+<$Config,atstop4=0>
+
+<$Config,attime1=0>
+<$Config,attime11=0>
+<$Config,attime111=0>
+<$Config,attime12=0>
+<$Config,attime2=0>
+<$Config,attime21=0>
+<$Config,attime3=0>
+<$Config,attime31=0>
+<$Config,attime4=0>
+
+
+
+$Timeout=0,Tell,select
+
+
+[select]
+<h2>                   ~[Irainvortex.28]               <br>
+~m                          Level Select                    </h2>
+<p>Welcome.  From here you can play any mission you were able to reach, as well as see the missions you have not yet reached.<br>
+<p>The ~lforward~w button advances the timeline from a branching point.
+The ~rreverse~w button brings the timeline back the to the last branch.<br>
+The ~ichange~w button changes the outcome of the branching mission.  
+$Menu=Seperated,MissionBegin,tnron1
+<?{tnron01}>$Menu=The Duke's Fate,MissionBegin,tnron2</?>
+<?!{tnron01}>$Menu=~kThe Duke's Fate,Tell,select</?>
+
+
+<?{attime1}><?{tnron02}>$Menu=The Flyers,MissionBegin,tnron32</?></?>
+<?{attime1}><?{tnron032}>$Menu=Negotiation,MissionBegin,tnron42</?></?>
+<?{attime1}><?{tnron042}>$Menu=Meeting,MissionBegin,tnron4ex</?></?>
+
+<?{attime1}><?!{tnron02}>$Menu=~kThe Flyers,Tell,select</?></?>
+<?{attime1}><?!{tnron032}>$Menu=~kNegotiation,Tell,select</?></?>
+<?{attime1}><?!{tnron042}>$Menu=~kMeeting,Tell,select</?></?>
+
+<?{attime11}><?{tnron04ex}>$Menu=The Book,MissionBegin,tnron52b</?></?>
+<?{attime12}><?{tnron04exx}>$Menu=Ambition,MissionBegin,tnron52a</?></?>
+<?{attime11}><?{tnron052b}>$Menu=Experiment,MissionBegin,tnron62b</?></?>
+<?{attime12}><?{tnron052a}>$Menu=The Twins,MissionBegin,tnron62a</?></?>
+<?{attime11}><?{tnron062b}>$Menu=Unstable!,MissionBegin,tnron72b</?></?>
+<?{attime12}><?{tnron062a}>$Menu=Reclaim,MissionBegin,tnron72a</?></?>
+<?{attime111}><?{tnron08ex}>$Menu=Invasion,MissinBegin,tnron82</?></?>
+<?{attime111}><?{tnron082}>$Menu=So it Ends...,MissionBegin,tnron92</?></?>
+
+<?{attime11}><?!{tnron04ex}>$Menu=~kThe Book,Tell,select</?></?>
+<?{attime12}><?!{tnron04exx}>$Menu=~kAmbition,Tell,select</?></?>
+<?{attime11}><?!{tnron052b}>$Menu=~kExperiment,Tell,select</?></?>
+<?{attime12}><?!{tnron052a}>$Menu=~kThe Twins,Tell,select</?></?>
+<?{attime11}><?!{tnron062b}>$Menu=~kUnstable!,Tell,select</?></?>
+<?{attime12}><?!{tnron062a}>$Menu=~kReclaim,Tell,select</?></?>
+<?{attime111}><?!{tnron08ex}>$Menu=~kInvasion,Tell,select</?></?>
+<?{attime111}><?!{tnron082}>$Menu=~kSo it Ends...,Tell,select</?></?>
+
+
+
+<?{attime2}><?{tnron022}>$Menu=~lRitual~w,MissionBegin,tnron3ex</?></?>
+<?{attime2}><?{tnron03ex}>$Menu=~lFollowed~w,MissionBegin,tnron31</?></?>
+<?{attime21}><?{tnron031}>$Menu=~lRevenge~w,MissionBegin,tnron41</?></?>
+<?{attime21}><?{tnron041}>$Menu=~lSilence~w,MissionBegin,tnron51</?></?>
+<?{attime21}><?{tnron051}>$Menu=~lDefend~w,MissionBegin,tnron61</?></?>
+<?{attime21}><?{tnron061}>$Menu=~lAttacked~w,MissionBegin,tnron71</?></?>
+<?{attime21}><?{tnron071}>$Menu=~lFinal~w,MissionBegin,tnron81</?></?>
+
+<?{attime2}><?!{tnron022}>$Menu=~kRitual~w,Tell,select</?></?>
+<?{attime2}><?!{tnron03ex}>$Menu=~kFollowed~w,Tell,select</?></?>
+<?{attime21}><?!{tnron031}>$Menu=~kRevenge~w,Tell,select</?></?>
+<?{attime21}><?!{tnron041}>$Menu=~kSilence~w,Tell,select</?></?>
+<?{attime21}><?!{tnron051}>$Menu=~kDefend~w,Tell,select</?></?>
+<?{attime21}><?!{tnron061}>$Menu=~kAttacked~w,Tell,select</?></?>
+<?{attime21}><?!{tnron071}>$Menu=~kFinal~w,Tell,select</?></?>
+
+
+<?{attime3}><?{tnron0311}>$Menu=~yRetreat~w,MissionBegin,tnron43</?></?>
+<?{attime31}><?{tnron043}>$Menu=~yDefence~w,MissionBegin,tnron53</?></?>
+<?{attime31}><?{tnron053}>$Menu=~ySupply Lines~w,MissionBegin,tnron63</?></?>
+<?{attime31}><?{tnron063}>$Menu=~yAmbush~w,MissionBegin,tnron73</?></?>
+<?{attime31}><?{tnron073}>$Menu=~yFrontal Assault~w,MissionBegin,tnron83</?></?>
+<?{attime31}><?{tnron083}>$Menu=~yThe Final Strike~w,MissionBegin,tnron93</?></?>
+
+<?{attime3}><?!{tnron0311}>$Menu=~kRetreat~w,Tell,select</?></?>
+<?{attime31}><?!{tnron043}>$Menu=~kDefence~w,Tell,select</?></?>
+<?{attime31}><?!{tnron053}>$Menu=~kSupply Lines~w,Tell,select</?></?>
+<?{attime31}><?!{tnron063}>$Menu=~kAmbush~w,Tell,select</?></?>
+<?{attime31}><?!{tnron073}>$Menu=~kFrontal Assault~w,Tell,select</?></?>
+<?{attime31}><?!{tnron083}>$Menu=~kThe Final Strike~w,Tell,select</?></?>
+
+
+<?{attime4}><?{tnron0433}>$Menu=~oDefence~w,MissionBegin,tnron53</?></?>
+<?{attime4}><?{tnron054}>$Menu=~oOld Friend~w,MissionBegin,tnron64</?></?>
+<?{attime4}><?{tnron064}>$Menu=~rGauntlet~w,MissionBegin,tnron74</?></?>
+<?{attime4}><?{tnron074}>$Menu=~rCaptured!~w,MissionBegin,tnron84</?></?>
+<?{attime4}><?{tnron084}>$Menu=~rOne on One~w,MissionBegin,tnron94</?></?>
+
+<?{attime4}><?!{tnron0433}>$Menu=~kDefence~w,Tell,select</?></?>
+<?{attime4}><?!{tnron054}>$Menu=~kOld Friend~w,Tell,select</?></?>
+<?{attime4}><?!{tnron064}>$Menu=~kGauntlet~w,Tell,select</?></?>
+<?{attime4}><?!{tnron074}>$Menu=~kCaptured!~w,Tell,select</?></?>
+<?{attime4}><?!{tnron084}>$Menu=~kOne on One~w,Tell,select</?></?>
+
+
+$Button=Forward,Tell,forward
+$Button=Reverse,Tell,reverse
+$Button=Change,Tell,change
+$Button=Leave,Tell,Campaign
+
+
+[forward]
+
+<?{atstop0}>
+<$Config,attime1=1>
+<$Config,atstop0=0>
+<$Config,atstop1=1>
+$Timeout=0,Tell,select
+</?>
+
+<?{atstop1}>
+<$Config,attime11=1>
+<$Config,atstop1=0>
+<$Config,atstop2=1>
+$Timeout=0,Tell,select
+</?>
+
+<?{atstop3}>
+<$Config,attime12=1>
+<$Config,atstop3=0>
+<$Config,atstop2=1>
+$Timeout=0,Tell,select
+</?>
+
+<?{atstop2}>
+<$Config,attime111=1>
+<$Config,atstop4=1>
+$Timeout=0,Tell,select
+</?>
+
+<?{atstop00}>
+<$Config,attime2=1>
+<$Config,atstop00=0>
+<$Config,atstop11=1>
+$Timeout=0,Tell,select
+</?>
+
+<?{atstop11}>
+<$Config,attime21=1>
+<$Config,atstop11=0>
+<$Config,atstop112=1>
+$Timeout=0,Tell,select
+</?>
+
+
+<?{atstop000}>
+<$Config,attime3=1>
+<$Config,atstop000=0>
+<$Config,atstop111=1>
+$Timeout=0,Tell,select
+</?>
+
+<?{atstop111}>
+<$Config,attime31=1>
+<$Config,atstop111=0>
+<$Config,atstop1111=1>
+$Timeout=0,Tell,select
+</?>
+
+<?{atstop0000}>
+<$Config,attime4=1>
+<$Config,atstop0000=0>
+<$Config,atstop00000=1>
+$Timeout=0,Tell,select
+</?>
+
+$Timeout=0,Tell,select
+
+[change]
+
+<?{atstop0}>
+<$Config,atstop0=0>
+<$Config,atstop00=1>
+$Timeout=0,Tell,select
+</?>
+
+<?{atstop00}>
+<$Config,atstop0=1>
+<$Config,atstop00=0>
+$Timeout=0,Tell,select
+</?>
+
+<?{atstop1}>
+<$Config,atstop1=0>
+<$Config,atstop3=1>
+$Timeout=0,Tell,select
+</?>
+
+<?{atstop3}>
+<$Config,atstop1=1>
+<$Config,atstop3=0>
+$Timeout=0,Tell,select
+</?>
+
+<?{atstop11}>
+<$Config,atstop11=0>
+<$Config,atstop000=1>
+$Timeout=0,Tell,select
+</?>
+
+<?{atstop000}>
+<$Config,atstop11=1>
+<$Config,atstop000=0>
+$Timeout=0,Tell,select
+</?>
+
+<?{atstop111}>
+<$Config,atstop111=0>
+<$Config,atstop0000=1>
+$Timeout=0,Tell,select
+</?>
+
+<?{atstop0000}>
+<$Config,atstop111=1>
+<$Config,atstop0000=0>
+$Timeout=0,Tell,select
+</?>
+
+$Timeout=0,Tell,select
+
+[reverse]
+
+
+<?{atstop1}>
+<$Config,attime1=0>
+<$Config,atstop0=1>
+<$Config,atstop1=0>
+$Timeout=0,Tell,select
+</?>
+
+<?{atstop2}>
+<$Config,attime11=0>
+<$Config,attime12=0>
+<$Config,atstop1=1>
+<$Config,atstop2=0>
+<$Config,atstop3=0>
+$Timeout=0,Tell,select
+</?>
+
+<?{atstop4}>
+<$Config,attime111=0>
+<$Config,atstop1=1>
+<$Config,atstop3=0>
+<$Config,atstop4=0>
+$Timeout=0,Tell,select
+</?>
+
+<?{atstop11}>
+<$Config,attime2=0>
+<$Config,atstop00=1>
+<$Config,atstop11=0>
+$Timeout=0,Tell,select
+</?>
+
+<?{atstop112}>
+<$Config,attime21=0>
+<$Config,atstop11=1>
+<$Config,atstop112=0>
+$Timeout=0,Tell,select
+</?>
+
+
+<?{atstop111}>
+<$Config,attime3=0>
+<$Config,atstop000=1>
+<$Config,atstop111=0>
+$Timeout=0,Tell,select
+</?>
+
+<?{atstop1111}>
+<$Config,attime31=0>
+<$Config,atstop111=1>
+<$Config,atstop1111=0>
+$Timeout=0,Tell,select
+</?>
+
+<?{atstop00000}>
+<$Config,attime4=0>
+<$Config,atstop0000=1>
+<$Config,atstop00000=0>
+$Timeout=0,Tell,select
+</?>
+
+$Timeout=0,Tell,select
+
+[END]
+
+

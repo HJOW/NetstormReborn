@@ -1,0 +1,48 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = "1"
+moreGeysers = "1"
+
+myStartMoney = "500"
+myTech = "rainbattery;suncannon;rainaviary;rainblocker;rainfence"
+myAllyList = ""
+
+title = "Escape"
+
+ai2Name = "Melville"
+ai2Tech = "windbattery;windaviary;windarcher;windballoon;windblocker"
+ai2StartMoney = "0"
+ai2Collectors = "1"
+ai2BridgeDrawRate = "0"
+ai2GeyserAttachments = "0"
+ai2TimeBetweenMoves = "0"
+ai2AllyList=""
+
+
+[Options]
+
+[A.]
+<h2>Escape</h2>
+<i>"La la la"<br>
+--I really can't think of good quotes - sorry.</i>
+<p>You're trapped on an island, with your trusty steed, Bulfy. Get to your home island and sacrifice the enemy.
+
+
+$Button=View Stuff,ShowTechnology,55
+$Button=Fight!,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Winner!</h2>
+<p>You won. 
+
+<$Config,Done{mission.fileName}=1>
+$Button=I'm going,MissionAbort,0
+$Button=That was easy - more please,MissionBegin,surrounding
+
+[Failed]
+<h2>DEFEATED</h2>
+<p>Really, how could you lose that? I can't see how it's even possible to fail this mission. What did you do? I mean, the AI doesn't even fight back!
+$Button=Aww,Tell,TryAgain
+
+[END]

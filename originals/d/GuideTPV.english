@@ -1,0 +1,36 @@
+title = "Thunder Point Campaign (TVE)"
+
+[Overview]
+<background="nsstart">
+<center><h2>Thunder Point Campaign (The Var'ca Episode)</h2>
+<P>~B~iHistroy:~w<P>
+The Var'ca is the title given to a single High Priest of the Sameron Faith.  This calling is the holiest 
+amoung the Samerons.  It is written that the Var'ca is 
+the mouthpiece of the furies to the people of Nimbus. It is said that once a Var'ca has died that the furies 
+pick the next Var'ca themselves.  The way they accommplish this is by visiting worthy High Priest through dreams
+and proving them with a series of 5 Trials.  He who passes all five trials 
+assumes the responiblity and title of Var'ca.  
+<P>~B~iPresent:~w<P>
+During Martol's short quest for Nimbus domination, he had the Holy Var'ca killed and appointed 
+himself to the title.  It is believed that the Furies were displeased with Martol and helped destroy him because he proclaimed himself Var'ca falsely, and the Furies will
+not allow a false Var'ca to lead the people. Now, it is time for a new Var'ca to be choosen.
+<P><a href="http://www.geocities.com/TimesSquare/Ring/8655/">Visit Thunder Point</a>
+<P><a href="mailto:JR@upb.byu.edu">Email: jrc</a>
+
+<?!{TpVsetup}>$Checked=Setup,MissionBegin,TpVSetup,{TpVsetup},1</?>
+<?{TpVsetup}> 
+$Checked=Trial 1,MissionBegin,TpV_t1,{TpVpath},{TPVsetup}
+$Checked=Trial 2,MissionBegin,TpV_t2,{TpVfire},{TpVpath}
+$Checked=Trial 3,MissionBegin,TpV_t3,{TpVlisten},{TpVfire}
+$Checked=Trial 4,MissionBegin,TpV_t4,{TpVmoney},{TpVlisten}
+$Checked=Trial 5,MissionBegin,TpV_t5,{TpVchoice},{TpVmoney}
+$Checked= ,tell,blankspace,0,0
+$Checked=Reset,MissionBegin,TpVsetup,0,{TpVpath}
+
+
+
+</?>
+
+
+
+$Button=Back,tell,campaign

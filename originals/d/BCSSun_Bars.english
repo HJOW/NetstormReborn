@@ -1,0 +1,52 @@
+[Header]
+missiontype="tutorial"
+
+missionnumber=6
+moregeysers=1
+
+mystartmoney=10000
+mytech="sunFence;windBattery;sunArcher"
+myallylist=""
+
+title="Sun Barricade"
+
+ai2name="Duke Offense"
+ai2tech="windBattery;rainBattery;thunderBattery;windArcher;sunArcher;sunCannon;thunderCannon;rainCannon;thunderBlocker"
+ai2startmoney=10000
+ai2GeysersAttachments=2
+ai2Collectors=5
+ai2TimeBetweenMoves=4
+
+[Options]
+
+[A.]
+<h2>Sun Barricades</h2>
+<i>~y"Before you launch a good offensive, make sure you have good defense"<br>
+Safe Nimbian</i>
+<p>~wYou got him! you cricled your bridges around a immbolised priest, and they bridges cannot be destroyed, however, you now have a problem, in the rush, you did not organise all your weapons very well.. you barely have anything at all, if you could only defend the bridge long enough for a golem to pick up the priest.......
+<p>~B~E~rObjective:~.~B~w  Sacrafice the enemy priest
+
+$Button=Technology available,ShowTechnology,55
+$Button=Lets do this!,DoNothing,0
+</?>
+
+[ai2priestcaptured]
+<h2>Got Him!</h2>
+The portal which is alowing you to view the battle is beginning to distabilise through the sheer vastness of the power and courage you show, your army suggests that you sacrafice the priest as soon as possible, rather than worry about destroying off all his units.
+
+[succeeded][badteamdead]
+<h2>Success</h2>
+<p>~wYou have done what seems like an impossibility, you have acquired a very useful skil in the process!
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Again!,Tell,TryAgain
+$Button=Another!,MissionBegin,BC1Menu
+
+[Failed]
+<h2>Failure</h2>
+<p>I guess the enemy was too much....
+$Button=Leave Missions,MissionAbort,0
+$Button=Try again,Tell,TryAgain
+$Button=Another!,MissionBegin,BC1Menu
+
+[END]

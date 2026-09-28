@@ -1,0 +1,77 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 3
+moreGeysers = 3
+
+myStartMoney = 10000
+myTech ="rainwalker;rainBattery;rainballoon;rainblocker;rainAviary;rainCannon;sunCannon"
+
+
+title="No Time To Lose"
+
+ai2Name = "Furies Gift"
+ai2Tech ="bulf;thunderArcher;thunderBattery;thunderfence;sunballoon;thunderCannon;thunderblocker;sunBlocker;sunArcher;suncannon;sunAviary;sunfence"
+ai2StartMoney = 50000
+ai2GeyserAttachments = 10
+ai2Collectors = 10
+ai2TimeBetweenMoves = 0
+ai2Bridgedrawrate = 1
+ai2Ability ="!USE_PRIEST_TO_COLLECT"
+ai2AllyList = "1"
+ai2color = red
+
+ai3Name = "Evil Thunder"
+ai3Tech ="bulf;thunderArcher;thunderBattery;thunderfence;sunballoon;thunderCannon;thunderblocker;sunBlocker;sunArcher;suncannon;sunAviary;sunfence"
+ai3StartMoney = 100000
+ai3GeyserAttachments = 10
+ai3Collectors = 10
+ai3TimeBetweenMoves = 0
+ai3Bridgedrawrate = 1
+ai3Ability ="!USE_PRIEST_TO_COLLECT"
+ai3AllyList = "4"
+ai3color = white
+
+ai4Name = "Evil Wind"
+ai4Tech ="windWalker;windBattery;windBlocker;windArcher;windBalloon;windAviary;windFlyer"
+ai4StartMoney = 50000
+ai4GeyserAttachments = 10
+ai4Collectors = 10
+ai4TimeBetweenMoves = 0
+ai4Bridgedrawrate = 1
+ai4Ability ="!USE_PRIEST_TO_COLLECT"
+ai4AllyList = "3"
+ai4color = green
+
+[Options]
+
+[A.]
+~y"Sometimes, the Furies will help, or destroy."
+Twinkies"<P>
+~wYou are in a heated battle over a large cache of geysers. You were starting to lose when a gift from the Furies, appeared. 
+~yDestroy the evil ones. Show the evil ones you are not a push over.
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Fight,DoNothing,0
+
+
+[ai2PriestDead]
+This is the only gift the Furies will give you. Good luck.
+
+[ai3PriestDead]
+Alas, you are better then you look, you shall meet greater challenges latter.
+
+[ai4PriestDead]
+Good job, but I am only the tip of the sword.
+
+
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>Your constant success is making the Evilest One mad. He is most likly to send his strongest henchman later.
+<$Config,Done{mission.fileName}=1>
+
+
+[END]
+
+
+

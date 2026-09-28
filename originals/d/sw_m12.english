@@ -1,0 +1,242 @@
+*(Saved as mission12.fort & mission12.english)
+
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 12
+moreGeysers = 1
+randomGeysers = 1
+denySalvage = 1
+
+myStartMoney = {sw_mvar0} 
+myTech = {sw_var1}{sw_var2}{sw_var3}{sw_var4}{sw_var9} 
+ai1Allylist = "8"
+
+title = "Repelling Hades Forces"
+
+ai8Name =  "Helix the Wind Ambassador"
+ai8Tech = "{sw_var1}{sw_var2}{sw_var3}{sw_var4}"
+ai8StartMoney =4000
+ai8AllyList = "1"
+ai8Color = orange
+ai8Ability = "!USE_PRIEST_TO_COLLECT;!SACRIFICE_ENEMY_PRIEST;!BUILD_DAIS;!CAPTURE_ENEMY_PRIEST"
+ai8BridgeDrawRate={sw_mvar3}
+ai8TimeBetweenMoves={sw_mvar3}
+
+ai3Name = "Elios the Warrior of Hades"
+ai3Tech = "{sw_var1}{sw_var2}{sw_var3}"
+ai3StartMoney =1000 
+ai3AllyList = "4;5;6;7;2"
+ai3Color = white
+ai3Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+ai3BridgeDrawRate={sw_mvar2}
+ai3TimeBetweenMoves={sw_mvar2}
+
+ai4Name = "Hades Lost Soldier 1"
+ai4Tech = "{sw_var1}{sw_var2}"
+ai4StartMoney = {sw_mvar1}
+ai4AllyList = "3;5;6;7;2"
+ai4Color = red
+ai4Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+ai4BridgeDrawRate={sw_mvar2}
+ai4TimeBetweenMoves={sw_mvar2}
+
+ai5Name = "Hades Henchman 1"
+ai5Tech = "{sw_var1}{sw_var2}{sw_var3}"
+ai5StartMoney = {sw_mvar1}
+ai5AllyList = "3;4;6;7;2"
+ai5Color = green
+ai5Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS;"
+ai5BridgeDrawRate={sw_mvar2}
+ai5TimeBetweenMoves={sw_mvar2}
+
+ai6Name = "Hades Lost Soldier 2"
+ai6Tech = "{sw_var1}{sw_var2}{sw_var4}"
+ai6StartMoney = {sw_mvar1}
+ai6AllyList = "3;4;5;7;2"
+ai6Color = purple
+ai6Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+ai6BridgeDrawRate={sw_mvar2}
+ai6TimeBetweenMoves={sw_mvar2}
+
+ai7Name = "Senior Lost Soldier"
+ai7Tech = "{sw_var1}{sw_var2}{sw_var3}{sw_var4}"
+ai7StartMoney = {sw_mvar1}
+ai7AllyList = "3;4;5;6;2"
+ai7Color = cyan
+ai7Ability = "!!USE_PRIEST_TO_COLLECT;!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+ai7BridgeDrawRate={sw_mvar2}
+ai7TimeBetweenMoves={sw_mvar2}
+
+ai2Name = "Hades henchman 2"
+ai2Tech = "{sw_var1}{sw_var2}{sw_var3}{sw_var4}"
+ai2StartMoney ={sw_mvar1}
+ai2AllyList = "3;4;5;6;7"
+ai2Color = yellow
+ai2Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+ai2BridgeDrawRate={sw_mvar2}
+ai2TimeBetweenMoves={sw_mvar2}
+
+[init]
+<$Config,sw_m12=1>
+<$Config,sw_m1=0>
+<$Config,sw_m2=0>
+<$Config,sw_m3=0>
+<$Config,sw_m4=0>
+<$Config,sw_m5=0>
+<$Config,sw_m6=0>
+<$Config,sw_m7=0>
+<$Config,sw_m8=0>
+<$Config,sw_m9=0>
+<$Config,sw_m10=0>
+<$Config,sw_m11=0>
+<$Config,sw_m13=0>
+<$Config,sw_m14=0>
+<$Config,sw_m15=0>
+<$Config,sw_m16=0>
+<$Config,sw_m17=0>
+<$Config,sw_m18=0>
+<$Config,sw_m19=0>
+<$Config,sw_m20=0>
+<$Config,sw_m21=0>
+<$Config,sw_m22=0>
+<$Config,sw_m23=0>
+<$Config,sw_m24=0>
+<$Config,sw_m25=0>
+<$Config,sw_m30=0>
+
+[options]
+[A.]
+<$PlaySound,shortThunderCrack.wav>
+<$PlaySound,ThunderCrack.wav>
+<$PlaySound,ThunderQuietDistant.wav>
+
+                                                   <h2>Repelling Hades Forces<a href="#mission12">~[IfortGump.46]</a></h2>
+<i>Repelling Hades Forces is like trying to stop BULF's from BULFing!<br>
+                                                                                ---SWELBLANDER, Inc. 98-08-01~[Ipriest.33]</i>
+                                                                                      ~[Ibulf.59]<br>
+          ~[Ipriest.112]~[Ilightning.0]~[Ianim.10] ~[Ibulf.36]<br>
+                                                                               ~[Ibulf.40]     ~1~y<?!{sw_difficulty1}>HARD</?><?{sw_difficulty1}>EASY</?>~.<br>
+<br> You must now repel Hades forces from advancing thru Windy City.
+ For if they succeed the realm of Nimbus will change as we know it.
+ For they will have the knowledge and power of Wind to pass on to all of Hades, Forever!
+<p>
+                     <a href="cmd:ShowTechnology,55"> ~[IfortGump.50] </a>                                          <a href="cmd:DoNothing,0">~[IfortGump.22] </a>                                             <a href="cmd:Tell,guideHades.overview">~[Ipriest.13]</a><br>
+          <a href="cmd:ShowTechnology,55">Your Knowledge</a>                              <a href="cmd:DoNothing,0">Evacuate!</a>                                  <a href="cmd:Tell,guideHades.overview">Must Leave</a>
+$OnExit= ,PlaySound,PriestMove1.wav
+$Button= ,Tell,A.
+
+[@2]
+<?!{sw_difficulty1}>
+<$ViewSpot,(200x120)>
+NO! What has {sw_hades} done?<br>
+You look at the bridges...
+$OnExit= ,SetAllBridge,2
+</?>
+<?{sw_difficulty1}>
+<$ViewSpot,(200x120)>
+NO! What has {sw_hades} done?<br>
+You look at the bridges...
+$OnExit= ,SetAllBridge,0
+</?>
+
+[@3]
+<?{sw_difficulty1}>
+<$ViewSpot,(200x120)>
+HAWHAW! The Spell Backfired!
+$Button=A break for us!,DoNothing,0
+</?>
+
+
+
+[ai3PriestDead][ai4PriestDead][ai5PriestDead][ai6PriestDead][ai7PriestDead][ai2PriestDead]
+<$ChangeMoney,1000>
+<h2>One of Hades Lost Warriors have become even more lost, <br>
+On the altar that is!</h2>
+$Button=Fight on!,DoNothing,0
+
+
+[ai8PriestCaptured]
+<h2>You receive a message from {sw_hades}.<br>
+<i>Traitorous priest - Give up now and I won't let you suffer!</i>
+<p>
+Don't give up and Mr. Windy City Ambassador bites it.
+$Button=Can't stop now!,DoNothing,0
+
+[ai8PriestDead]
+<h2>You receive a message from the {sw_god2}.</h2>
+<i>Fear not priest for he was a brave warrior and good leader of his people. <br>
+He would want you to fight on!</i>
+
+[ai1TempleDead]
+<h2>Looks like you aren't a worthy adversary after all!
+
+[ai1PriestCaptured]
+<?{sw_difficulty1}>
+<$PlaySound,ChainRattle24.wav>
+<h2>EGADS! One of {sw_hades}<h2> slaves has Captured you!</h2>
+<p>
+         Visions of you chained to {sw_hades} altar fills your mind!<br>
+                                            ~[IdaisExtraFrames.8]<br>
+<br>
+            You hear evil laughter fill your head! It's {sw_hades}!<br>
+<br>
+  <i>"Ah now Priest, your soul is now mine to torture at will! For your<br>
+      insolence and betrayal of me, I guarantee you that you will be<br>
+                  sacrificed very slowly and very painfully!"</i>
+<p>
+    You groan in horror. This is your worst nightmare come true!
+
+$OnExit= ,PlaySound,PriestStruggleFade02-800.wav
+<$Config,sw_m12=0>
+<$Config,sw_m24=1>
+$Button=OnTo HADES ALTAR!,MissionBegin,sw_m24
+</?>
+
+<?!{sw_difficulty1}>
+<$PlaySound,ChainRattle24.wav>
+<h2>EGADS! One of {sw_hades}<h2> slaves has Captured you!</h2>
+<p>
+         Visions of you chained to {sw_hades} altar fills your mind!<br>
+                                            ~[IdaisExtraFrames.8]<br>
+<br>
+            You hear evil laughter fill your head! It's {sw_hades}!<br>
+<br>
+<i>"I warn you priest, for your disobediance, you will pay dearly! It's off to the
+ depths of destruction for you!"</i>
+<$Config,sw_difficulty1=1>
+<$Config,sw_mvar0=4000>
+<$Config,sw_mvar1=1000>
+<$Config,sw_mvar2=6>
+<$Config,sw_mvar3=1>
+$Button=Try to escape!,Tell,esc
+</?>
+
+[esc]
+You did it! You escaped from your captor!<br>
+Quickly, before {sw_hades} finds out, try the mission again!
+$Button=Try again,MissionBegin,sw_m12
+
+[Succeeded][BadTeamDead]
+                                              <h2>SUCCESS!</h2>
+<$PlaySound,itisDone2.wav>
+<p>
+You have repelled {sw_hades} forces, and have stopped his servants from
+destroying Windy City.
+<p>
+It appears that you have selected the ~oWIND~. fury as your choice of Mentor.
+<p><br>
+<h2>You receive a message from the {sw_god2}</h2>
+<p>
+<i>Well, done Priest. You have proven to be a valuable tool. Aid me in suppressing
+the other Furies, and there will be no stopping us in overtaking Nimbus together!</i>
+<$Config,sw_m12=0>
+<$Config,sw_m18=1>
+<$Config,sw_difficulty1=0>
+<$Config,sw_FuryTrapped=0>
+<$Config,sw_droppedPriest=0>
+$Button=Next Battle,MissionBegin,sw_m18
+
+
+
+[END]

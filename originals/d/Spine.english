@@ -1,0 +1,66 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 1
+
+myStartMoney = 9000
+myTech = "sunWalker;sunArcher;windarcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;thunderbattery;rainbattery;windBattery"
+
+title="Spine"
+
+ai2Name = "SPEEDY"
+ai2Tech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;thunderbattery;rainbattery;windBattery"
+ai2StartMoney = 20000
+ai2GeyserAttachments = 2
+ai2Collectors = 10
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3;4"
+ai2color = red
+
+ai3Name = "The GROWER"
+ai3Tech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;windBattery;thunderbattery;rainbattery"
+ai3StartMoney = 25000
+ai3GeyserAttachments = 2
+ai3Collectors = 10
+ai3TimeBetweenMoves = 2
+ai3AllyList = "2;4"
+ai3color = white
+
+ai4Name = "The SELLER"
+ai4Tech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;windBattery;thunderbattery;rainbattery"
+ai4StartMoney = 25000
+ai4GeyserAttachments = 2
+ai4Collectors = 10
+ai4TimeBetweenMoves = 3
+ai4AllyList = "2;3"
+ai4color = green
+
+[Options]
+
+[A.]
+<h2>Spine</h2>
+<i>"If you come apon a cheater the only thing to do is fill em full of holes."<br>
+--SpinelesS, </i>  
+<p>Ever wondered how the money hack works? Well this Cartel is the supplier of the cash used in the money hack. Kill off the cartel and stop cheaters everywhere.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+You have just killed off the suppliers now to kill all other cheaters
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,1
+
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+Oh no! Because of you cheating will reign supreme for years to come. ASSHOLE!
+$Button=Continue,Tell,TryAgain
+
+
+[END]

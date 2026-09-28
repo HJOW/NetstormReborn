@@ -1,0 +1,15 @@
+title = "TornApart"
+
+[Overview]
+<background = "nsstart">
+<h2>DanielRules</h2>
+<i>It's all fun and games until someone losses an eye.  Then it's a sport.</i>
+<p>
+Hey,I'm Maverick, you may have seen me on Netstorm,you may not have, but this is my first attempt at a Netstorm campaign.  Please bare with me and e-mail me if you have any trouble at <a href="mailto:mav07@hotmail.com">mav07@hotmail.com</a>  Thanx and have fun.
+
+<p>
+This takes place in 1998 at Clear Creek High School. Brad has been chasing afer Megan for the longest time and he'll do anything to get her, even if it means killing you. You must stop his attempts or Megans virginity is lost.
+
+$Checked=1 ~[IplayerBanner.*]Torn Apart~[Iplayer.*],MissionBegin,TornApart,{DoneTornApart},1
+
+$Button=Back,Tell,Campaign

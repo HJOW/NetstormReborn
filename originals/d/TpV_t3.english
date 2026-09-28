@@ -1,0 +1,100 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 6
+title="Day Three"
+
+
+myStartMoney = 10000
+myTech = ""
+
+
+[Options]
+
+
+[A.]
+<h2>~yMorning</h2><P>
+Your intense trial has left you hungry, so you head on over to Denny's for 
+breakfast.  You order yourself a grand slam and it makes you very tired.
+<P>You head home.<br>
+~[Iresidence.6]
+$Button=Leave Missions,MissionAbort,0
+$Button=See Progress,tell,Stats
+$Button=Rest,tell,Rest
+
+
+[REST]
+<h2>~ySleepy</h2><P>
+Upon returning from Denny's you take a nap.
+As you fall asleep, you hear a voice.<p>
+<i>{TpVguide}</i> <?{Tp_name}>{Tp_yourname}, </?>The time has come for you to be tested.
+<P>
+Selected a tech for your Third trial.
+$Checked=Sun,tell,Sun,0,{TpVc11}
+$Checked=Wind,tell,Wind,0,{TpVc21}
+$Checked=Rain,tell,Rain,0,{TpVc31}
+$Checked=Thunder,tell,thunder,0,{TpVc41}
+$Checked=All,tell,All,0,{TpVc51}
+$OnExit= ,MissionBegin,TpVlisten
+
+
+[SUN]
+<$config,TpVc1=1>
+<$config,TpVc2=0>
+<$config,TpVc3=0>
+<$config,TpVc4=0>
+<$config,TpVc5=0>
+<$config,TpVmyTech1={TpVtechSun;}>
+<$config,TpVmyTech2={TpVtechSun2;}>
+
+[WIND]
+<$config,TpVc1=0>
+<$config,TpVc2=1>
+<$config,TpVc3=0>
+<$config,TpVc4=0>
+<$config,TpVc5=0>
+
+<$config,TpVmyTech1={TpVtechWind;}>
+<$config,TpVmyTech2={TpVtechWind2;}>
+
+
+[RAIN]
+<$config,TpVc1=0>
+<$config,TpVc2=0>
+<$config,TpVc3=1>
+<$config,TpVc4=0>
+<$config,TpVc5=0>
+
+<$config,TpVmyTech1={TpVtechRain;}>
+<$config,TpVmyTech2={TpVtechRain2;}>
+
+[THUNDER]
+<$config,TpVc1=0>
+<$config,TpVc2=0>
+<$config,TpVc3=0>
+<$config,TpVc4=1>
+<$config,TpVc5=0>
+
+<$config,TpVmyTech1={TpVtechThunder;}>
+<$config,TpVmyTech2={TpVtechThunder2;}>
+
+
+[ALL]
+<$config,TpVc1=0>
+<$config,TpVc2=0>
+<$config,TpVc3=0>
+<$config,TpVc4=0>
+<$config,TpVc5=1>
+
+<$config,TpVmyTech1={TpVtechAll;}>
+<$config,TpVmyTech2={TpVtechAll2;}>
+
+[Stats]
+<H2>~yStats:</H2><P>
+Number of Attempts at Trial 2: ~i{TpV2}~. <P>
+<H2>~yNotes:</H2><P>
+Each ~i1~. represents one unit of measurement. <br>
+For example, ~i1 1~. equals two.
+$Button=Return to Quest,tell,A.
+
+[END]

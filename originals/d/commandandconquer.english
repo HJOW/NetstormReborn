@@ -1,0 +1,74 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = "4"
+moreGeysers = "1"
+
+myStartMoney = "5000"
+myTech = "rainbattery;rainaviary;rainwalker;rainballoon;raincannon;rainFence;outpost;sunfence"
+myAllyList = ""
+
+title = "Command and Conquer"
+
+ai2Name = "Melville"
+ai2Tech = "windBattery;windarcher;windaviary;windballoon;windblocker;windWalker"
+ai2StartMoney = "5000"
+ai2Collectors = "5"
+ai2BridgeDrawRate = "4"
+ai2GeyserAttachments = "2"
+ai2TimeBetweenMoves = "1"
+ai2AllyList="3;4;5;"
+
+ai3Name = "Kevin"
+ai3Tech = "rainbattery;rainaviary;rainwalker;rainballoon;raincannon;rainFence"
+ai3StartMoney = "5000"
+ai3Collectors = "5"
+ai3BridgeDrawRate = "4"
+ai3GeyserAttachments = "2"
+ai3TimeBetweenMoves = "1"
+ai3AllyList="2;4;5;
+
+ai4Name = "Knuckles"
+ai4Tech = "windBattery;windarcher;windaviary;windballoon;windblocker;windWalker"
+ai4StartMoney = "5000"
+ai4Collectors = "5"
+ai4BridgeDrawRate = "4"
+ai4GeyserAttachments = "2"
+ai4TimeBetweenMoves = "1"
+ai4AllyList="2;3;5;"
+
+ai5Name = "Bill"
+ai5Tech = "thunderBattery;thunderCannon;thunderblocker"
+ai5StartMoney = "5000"
+ai5Collectors = "5"
+ai5BridgeDrawRate = "4"
+ai5GeyserAttachments = "2"
+ai5TimeBetweenMoves = "1"
+ai5AllyList="2;3;4;"
+
+[Options]
+
+[A.]
+<h2>Command and Conquer</h2>
+<i>"Canis cibum non videt."<br>
+--Caecelius, in horto.</i>
+<p>You encounter four enemy islands, all quite nasty. Take over their islands and sacrifice their priests!
+
+$Button=View Stuff,ShowTechnology,55
+$Button=Fo' shizzle,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>YOU ARE VICTORIOUS!</h2>
+<p>Woohoo. Well done.
+
+<$Config,Done{mission.fileName}=1>
+$Button=Flee to the menu,MissionAbort,0
+$Button=I'll have a bit more matey,MissionBegin,defend
+
+[Failed]
+<h2>YOU ARE DEFEATED!</h2>
+<p>Come on, how difficult is this game?
+$Button=Sorry sire,Tell,TryAgain
+
+
+[END]

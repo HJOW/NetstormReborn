@@ -1,0 +1,181 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 14
+moreGeysers = 9
+
+myStartMoney = 6500
+myTech = "thunderFactory;windFactory;sunFactory;thunderbattery;thundercannon;thunderarcher;windbattery;windarcher;thunderblocker;suncannon;sunfence;sunaviary;thunderwalker;windballoon"
+myAllyList = "3;4"
+
+title = "Last Confrontation"
+
+ai2Name = "Lord Gunton"
+ai2Tech = "rainFactory;sunFactory;sunwalker;rainbattery;raincannon;rainaviary;sunarcher;suncannon;rainblocker;rainwalker"
+ai2StartMoney = 800
+ai2Collectors = 4
+ai2GeyserAttachments = 5
+ai2AllyList = "5;6;7"
+ai2TimeBetweenMoves = 1
+ai2color = white
+ai2BridgeDrawRate = 1
+ai2Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai3Name = "Rain Wizard"
+ai3Tech = "sunFactory;rainFactory;sunwalker;rainbattery;sunaviary;rainaviary;sunblocker;raincannon"
+ai3StartMoney = 1000
+ai3Collectors = 5
+ai3GeyserAttachments = 5
+ai3AllyList = "1;4"
+ai3TimeBetweenMoves = 1
+ai3color = white
+ai3BridgeDrawRate = 2
+ai3Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai4Name = "Wind Knight"
+ai4Tech = "sunFactory;windFactory;sunwalker;windbattery;windarcher;suncannon;windblocker"
+ai4StartMoney = 1000
+ai4Collectors = 5
+ai4GeyserAttachments = 5
+ai4AllyList = "1;3"
+ai4TimeBetweenMoves = 1
+ai4color = green
+ai4BridgeDrawRate = 2
+ai4Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai5Name = "Earl of Rain"
+ai5Tech = "rainFactory;sunFactory;sunwalker;rainbattery;suncannon;rainaviary;sunblocker"
+ai5StartMoney = 800
+ai5Collectors = 5
+ai5GeyserAttachments = 3
+ai5AllyList = "2;6;7"
+ai5TimeBetweenMoves = 1
+ai5color = purple
+ai5BridgeDrawRate = 3
+ai5Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai6Name = "Earl of Sun"
+ai6Tech = "sunFactory;sunwalker;windbattery;suncannon;sunarcher;sunblocker;sunaviary"
+ai6StartMoney = 800
+ai6Collectors = 5
+ai6GeyserAttachments = 3
+ai6AllyList = "2;5;7"
+ai6TimeBetweenMoves = 1
+ai6color = yellow
+ai6BridgeDrawRate = 3
+ai6Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai7Name = "Ivanova"
+ai7Tech = "rainFactory;rainbattery;rainwalker;raincannon;rainaviary;rainblocker"
+ai7StartMoney = 1800
+ai7Collectors = 5
+ai7GeyserAttachments = 5
+ai7AllyList = "2;5;6"
+ai7TimeBetweenMoves = 1
+ai7color = cyan
+ai7BridgeDrawRate = 1
+ai7Ability = "!USE_PRIEST_TO_COLLECT"
+
+[@5]
+<h2>~wRain Wizard</h2>
+<p>
+So there you are, Lord Gunton!  This may be our first time meeting, but it will surely be our last.
+
+[@6]
+<h2>~rLord Gunton</h2>
+<p>
+Ah yes...we have been expecting you.  Meet my personal servant, Ivanova.
+
+[@7]
+<h2>~dIvanova</h2>
+<p>
+Welcome.
+
+[@12]
+<h2>~gWind Knight</h2>
+<p>
+We are not here for a beverage, we know your the Dark Lord of Rain and we have come to stop this madness.
+
+[@15]
+<h2>~rLord Gunton</h2>
+<p>
+If you wish to fight me, your time will be short.  I shall rule Nimbus once again and you mortals cannot stop me!  Have at you!
+
+[@18]
+<h2>~lYou</h2>
+<p>
+It shall be us who will emerge victorious and I shall get my bloodthirsty revenge.
+
+[@300]
+<h2>~rLord Gunton</h2>
+<p>
+Hmm...I would have surely thought you would have died by now, I guess your skills have grown, my friend.  But all good things must come to end for you.
+
+[Options]
+
+[A.]
+<h2>Last Confrontation</h2> 
+<i>"Nothing can stop the inevitable ending the furies has provided for us."<br>
+--Nimbian Preacher</i>
+<p>
+You have finnally caught up to Lord Gunton!  Show him true pain and bring and end to his madness!
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Start Mission,DoNothing,0
+
+[Succeed]
+[BadTeamDead]
+
+<h2>Congratulations! Victory!</h2> 
+<p>
+You have defeated your rival and brought an end to the Drak Lord's revival this time.  In the end, you and your allies become bounty hunters and live the life of nomads for the rest of some time.
+<p>
+One thing still puzzles you, the Dark Lord of Wind did mention he was the last to be rivived and you did kill him and Lord Gunton, but what happened to the Dark Lord of Thunder?  You are sure you must have faught him, but nobody else but the two Dark Lords felt anything like them when they were saced.  Seems that the Dark Lord of Thunder is still out there somewhere, plotting his revenge...
+<$Config,Done{mission.filename}=1> 
+$Button=Leave Missions,MissionAbort,0
+$Button=Back to Menu,MissionBegin,b0
+
+[ai2TempleDead]
+<h2>~rLord Gunton</h2>
+<p>
+Gahh this cannot be happening!!!!!!!!
+
+[ai2PriestDead]
+<h2>~lYou</h2>
+<p>
+I end your reign of terror and banish you to the furthest depths of hell.
+
+[ai3TempleHalfDead]
+<h2>~wRain Wizard</h2>
+<p>
+I need help in the very near future.
+
+[ai3PriestDead]
+<h2>Outcome</h2>
+<p>
+With the death of Rain Wizard, you were overwhelmed.
+$Button=Continue,Tell,TryAgain
+
+[ai4TempleHalfDead]
+<h2>~gWind Knight</h2>
+<p>
+I need help here!
+
+[ai4PriestDead]
+<h2>Outcome</h2>
+<p>
+With the death of Wind Knight, you were overwhelmed.
+$Button=Continue,Tell,TryAgain
+
+[ai7TempleDead]
+<h2>~dIvanova</h2>
+<p>
+Looks like I underestimated you fiends.
+
+[Failed]
+<h2>Failure!</h2> 
+<p> 
+Uh oh!  Now Nimbus is ruled by the Dark Lords again =)
+$Button=Continue,Tell,TryAgain
+
+[END]

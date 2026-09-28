@@ -1,0 +1,64 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 1
+
+myStartMoney = 5000
+myTech = "windBattery;windArcher;windWalker;sunCannon;sunArcher;sunAviary;windBlocker"
+
+title="Bridge of Eternity"
+
+ai2Name = "Watchman"
+ai2Tech = ""
+ai2StartMoney = 0
+ai2GeyserAttachments = 0
+ai2Collectors = 0
+ai2TimeBetweenMoves = 1
+ai2AllyList = ""
+ai2color = red
+
+[Options]
+
+[A.]
+<h2>~[Ibridge.*]~mBridge ~wof ~mEternity</h2>
+<i>No one can build a bridge that long<br>
+--Watchman</i> <br>
+<p>In order to get to DeathStar's temple you must bridge your way through  the defences and talk with ~rWatchman
+
+<$PlaySound, somethingCreated.wav>
+$Button=Stuff,ShowTechnology,55
+$Button=Start Bridging,DoNothing,0
+
+[Succeeded][ai2PriestCaptured]
+<h2>Got there!</h2>
+<p>
+As you capture him he says:
+<p>
+Let me live and will give plans for the ~ySun Barricade!
+<p>
+~.You let him live and next mission you will have the ~ySun Barricade!
+
+<$PlaySound, upgradeDone.wav>
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,deathguard
+
+[@100]
+<h2>Keep Building!</h2>
+<p>[IwindBattery.*]Don't forget you need power!
+
+[@250]
+<h2>Hurry Up!</h2>
+<p>Come on hurry up and capture him!
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+Hate to admit it but your
+<p>
+~kKRAP!
+
+$Button=Continue,Tell,TryAgain
+
+[END]

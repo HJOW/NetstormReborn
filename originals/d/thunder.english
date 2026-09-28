@@ -1,0 +1,50 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = "3"
+moreGeysers = "1"
+
+myStartMoney = "5000"
+myTech = "thunderbattery;thundercannon;bulf;thunderarcher;thunderfence;thunderblocker"
+myAllyList = ""
+
+title = "Thunder"
+
+ai2Name = "Seigneur"
+ai2Tech = "windbattery;windaviary;windarcher;windballoon;windblocker"
+ai2StartMoney = "15000"
+ai2Collectors = "5"
+ai2BridgeDrawRate = "1"
+ai2GeyserAttachments = "10"
+ai2TimeBetweenMoves = "0"
+ai2AllyList=""
+ai2ability="!USE_PRIEST_TO_COLLECT"
+
+
+[Options]
+
+[A.]
+<h2>Thunder</h2>
+<i>"I hate these quote bits. I can never think of anything good to put here."<br>
+--me</i>
+<p>Here's some person with wind. You've only got thunder. Have fun!
+<p>Hint: Bulfs rock.
+
+
+$Button=View thunder tech,ShowTechnology,55
+$Button=Go,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Well done</h2>
+<p>Aren't you good?
+
+<$Config,Done{mission.fileName}=1>
+$Button=That's enough,MissionAbort,0
+$Button=More please,MissionBegin,commandandconquer
+
+[Failed]
+<h2>Oh dear</h2>
+<p>That realy was pathetic.
+$Button=Sorry my liege,Tell,TryAgain
+
+[END]

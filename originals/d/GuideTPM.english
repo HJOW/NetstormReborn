@@ -1,0 +1,34 @@
+title = "Thunder Point Campaign (TSE)"
+
+[Overview]
+<background="nsstart">
+<center><h2>Thunder Point Campaign (The Sameron Era)</h2>
+<P>~B~iHistroy:~w<P>
+The Sameron faith was once a great power for good in the land of Nimbus.  But with this power 
+came corruption and the rise of Martol, the seer.  Martol rose through the brotherhood until he 
+became the high priest of Terra, the northern Island.  In Terra, Martol plotted against 
+his fellow brothern and had most of them assasinated before he was linked to their deaths.  By this time it was too late to stop Martol, 
+he had a firm grip on Nimbus. 
+<P>~B~iPresent:~w<P>
+The last of faithful high priests have been captured after months of fighting, and 
+are now in route to Terra for public execution.
+<P><a href="http://www.geocities.com/TimesSquare/Ring/8655/">Visit Thunder Point</a>
+<P><a href="mailto:JR@upb.byu.edu">Email: jrc</a>
+
+<$Config,DoneAllyDead0=0>
+<$Config,DoneAllyDead1=0>
+<$Config,DoneAllyDead2=0>
+
+$Checked=1 No Escape,MissionBegin,fun,{Donefun},1
+
+<?{Donebeenthere0}>  $Checked=2 The Exchange,MissionBegin,defeat,{Donedefeat},{Donebeenthere0} </?>
+<?{Donebeenthere1}> $Checked=2 The Exchange (allies),MissionBegin,defeat1,{Donedefeat1},{Donebeenthere1} </?>
+
+$Checked=3 Aries Point,MissionBegin,gather,{Donegather},{Donefun} 
+
+<?{Donebeenthere2}> $Checked=3 Aries Point (allies),MissionBegin,gather1,{Donegather1},{Donebeenthere2} </?>
+$Checked=4 Seige on Terra,MissionBegin,last,{Donelast},{Donegather} 
+<?{Donebeenthere3}>  $Checked=4 Seige on Terra (allies),MissionBegin,last1,{Donelast1},{Donebeenthere3} </?>
+
+<?{Donebeenthere4}>$Checked=5 The Execution,MissionBegin,execute,{Doneexecute},{Donebeenthere4}</?>
+$Button=Back,tell,campaign

@@ -1,0 +1,85 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 3
+moreGeysers = 2
+
+myStartMoney = 6000
+myTech = "sunWalker;sunArcher;windarcher;sunBlocker;sunBalloon;sunFence;sunCannon;thunderbattery;rainbattery;windBattery;thunderarcher;thundercannon;rainballoon;rainblocker;raincannon;windaviary;windballoon;windblocker;windWalker"
+ally = "2;3"
+
+title="The Island of silver"
+
+ai2Name = "Calius"
+ai2Tech = "sunWalker;sunArcher;windarcher;sunBlocker;sunBalloon;sunFence;sunCannon;thunderbattery;rainbattery;windBattery;thunderarcher;thundercannon;rainballoon;rainblocker;raincannon;windaviary;windballoon;windblocker;windWalker"
+ai2StartMoney = 6000
+ai2GeyserAttachments = 2
+ai2Collectors = 3
+ai2TimeBetweenMoves = 1
+ai2AllyList = "1;3"
+ai2color = red
+
+ai3Name = "Druss"
+ai3Tech = "sunWalker;sunArcher;windarcher;sunBlocker;sunBalloon;sunFence;sunCannon;thunderbattery;rainbattery;windBattery;thunderarcher;thundercannon;rainballoon;rainblocker;raincannon;windaviary;windballoon;windblocker;windWalker"
+ai3StartMoney = 6000
+ai3GeyserAttachments = 2
+ai3Collectors = 3
+ai3TimeBetweenMoves = 1
+ai3AllyList = "1;2"
+ai3color = white
+
+ai4Name = "Consort Death"
+ai4Tech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;windBattery;thunderbattery;rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence"
+ai4StartMoney = 6000
+ai4GeyserAttachments = 2
+ai4Collectors = 3
+ai4TimeBetweenMoves = 1
+ai4AllyList = "5;6"
+ai4color = green
+
+ai5Name = "Consort Drake"
+ai5Tech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;windBattery;thunderbattery;rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence"
+ai5StartMoney = 6000
+ai5GeyserAttachments = 2
+ai5Collectors = 3
+ai5TimeBetweenMoves = 1
+ai5AllyList = "4;6"
+ai5color = magenta
+
+ai6Name = "Consort Galleron"
+ai6Tech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;windBattery;thunderbattery;rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence"
+ai6StartMoney = 6000
+ai6GeyserAttachments = 2
+ai6Collectors = 3
+ai6TimeBetweenMoves = 1
+ai6AllyList = "4;5"
+ai6color = yellow
+
+[Options]
+
+[A.]
+<h2>SpinelesS</h2>
+<i>"huh? whats that you say? time for dinner? good those refried beans went straight to my toes"<br>
+--unknown, </i>  
+<p>while searching for the famed silver Island your allies are circled and trapped.
+free you allies and destroy the Enemy 
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+There dead = )
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,harm4
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+youre dead = ( try again
+$Button=Continue,Tell,TryAgain
+
+
+[END]

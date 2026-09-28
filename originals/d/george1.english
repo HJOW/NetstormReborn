@@ -1,0 +1,127 @@
+[Header]
+missionType ="Tutorial"
+missionNumber =2
+moreGeysers =1
+
+mystartmoney =10000
+myTech ="sunfence;windbattery;outpost;rainBattery;thunderbattery;windarcher;windAviary;thunderCannon;rainballoon;raincannon;"
+
+title ="george1"
+
+ai3Name ="Rainbow"
+ai3Tech ="rainBattery;rainwalker;sunAviary;Rainblocker;"
+ai3StartMoney =10000
+ai3GeysersAttachments =25
+ai3Collectors =2
+ai3TimeBetweenMoves =1
+ai3AllyList ="2"
+ai3color =red
+
+ai2Name ="Hailstone"
+ai2Tech ="rainAviary;rainBattery;rainwalker;suncannon;sunAviary;"
+ai2StartMoney =10000
+ai2GeysersAttachments =25
+ai2Collectors =2
+ai2TimeBetweenMoves =1
+ai2AllyList ="5"
+ai2color =white
+
+ai4Name ="Tornado"
+ai4Tech ="windBattery;windblocker;windWalker;windballoon;windarcher;"
+ai4StartMoney =10000
+ai4GeysersAttachments =25
+ai4Collectors =2
+ai4TimeBetweenMoves =1
+ai4AllyList ="4"
+ai4color =purple
+
+ai5Name ="Thunder n Lightning"
+ai5Tech ="thunderBattery;thunderBlocker;thunderCannon;suncannon;"
+ai5StartMoney =10000
+ai5GeysersAttachments = 25
+ai5Collectors =2
+ai5TimeBetweenMoves =1
+ai5AllyList ="3"
+ai5color =green
+
+[Options]
+
+[A.]
+<h2>you must capture and sacrifice the other enemy priests</h2>
+<i>"to take over the world you must first destroy it"<br>
+--High Priest George, </i> 
+
+<p>~B~rThis map was created by Highlander of ~B~w(~y~BBIT~w~B)~.
+
+<p>Your island drifted into enemy grounds, you must kill them before they have time to act
+
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[@300]
+You get a message from your ~BThunder ~B'n' ~BLightning<br>
+~I"I see you have knowledge or the thunder cannon, it's a pitty you are not using it affectively!"~.<br>
+$Timeout=15,DoNothing,0
+
+[ai4TempleHalfDead]
+<h2>Almost there</h2>
+<p>
+Keep going, you have almost defeated ~BTornado
+
+[ai3TempleHalfDead]
+<h2>Almost there</h2>
+<p>
+Keep going, you have almost defeated ~BRainbow
+
+[ai2TempleHalfDead]
+<h2>Almost there</h2>
+<p>
+Keep going, you have almost defeated ~BHailstone
+
+[ai5TempleHalfDead]
+<h2>Almost there</h2>
+<p>
+Keep going, you have almost defeated ~BThunder ~B'n' ~BLightning
+
+[ai2PriestDead]
+Enemy Priest Sacrificed! Well done!
+The enemy priest's knowledge pours out of him and into your priest. You gain his knowledge
+
+$Button=OK,GetTechnology,143,76,156,72,147
+
+[ai3PriestDead]
+Enemy Priest Sacrificed! Well done!
+The enemy priest's knowledge pours out of him and into your priest. You gain his knowledge
+
+$Button=OK,GetTechnology,76,156,76,72
+
+[ai4PriestDead]
+Enemy Priest Sacrificed! Well done!
+The enemy priest's knowledge pours out of him and into your priest. You gain his knowledge
+
+$Button=OK,GetTechnology,142,75,137,140,141
+
+[ai5PriestDead]
+Enemy Priest Sacrificed! Well done!
+The enemy priest's knowledge pours out of him and into your priest. You gain his knowledge
+
+$Button=OK,GetTechnology,128,131,77,79
+
+
+
+[BadTeamDead]
+<h2>hhmm</h2>
+<p>
+hhmm
+<$Config,Done{mission.filename}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,CursedScen2
+
+[Failed]
+<h2>failure</h2>
+<p>
+Oh well, i gess you can't take on the world after all, maybe next time
+$Button=Continue,Tell,TryAgain
+
+[END]

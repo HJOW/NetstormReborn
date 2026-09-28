@@ -1,0 +1,49 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 2
+moreGeysers = 1
+
+myName = "Apprentice"
+myStartMoney = 10000
+myTech ="windWalker;windBattery;windBlocker;windArcher;windAviary"
+title="Galaff The Thunder Lord"
+
+ai2Name = "Galaff"
+ai2Tech ="thunderArcher;thunderBattery;thunderCannon;thunderBlocker;bulf"
+ai2StartMoney = 1000
+ai2GeyserAttachments = 3
+ai2Collectors = 10
+ai2TimeBetweenMoves = 5
+ai2Bridgedrawrate = 6
+ai2AllyList = 
+ai2color = red
+
+[Options]
+[A.]
+<h>~[Imanabolt.2]~[Imanabolt.2]~[Imanabolt.2]Galaff The Thunder Lord~[Imanabolt.2]~[Imanabolt.2]~[Imanabolt.2]</h><br>
+<i>What the Thunder Lords fear most is the Wind that would blow their own thunder power back towards them...<br>
+-Mewsie, Great Nimbian Warrior</i>
+<p>As you hurredly contact Mewsie, you see something... the enemy is the great thunder lord Galaff!!! The transmission is broken by the Plasma field that rounds his island, you must fight on your own...
+$Button=View the Knowledge of the Old Ones,ShowTechnology,55 
+$Button=Battle Against Galaff,DoNothing,0
+
+[ai2PriestDead]
+Perhaps my ally Charker will kill you.... He is waiting at the Border of Mewsie's Skies... AAHH!!COME CHARKER!!!! DESTROY THIS ALLY OF MEWSIE!!!!! AAAAARRRRRGGGGGHH!!!!!!
+
+[Succeeded][BadTeamDead]
+<h2>As the Furies carry the essence of Galaff to the above you realise that you must tell mewsie of what galaff had said...
+<$Config,Done{mewsie2.fort}=2>
+$Button=Leave Missions,MissionAbort,0
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+You Lost. Try Again?
+$Button=Yes,Tell,TryAgain
+$button=No,tell,MissionAbort,0
+
+[END]
+
+
+

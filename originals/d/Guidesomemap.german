@@ -1,0 +1,21 @@
+title = "Into the duesphere"
+
+[Overview]
+<background="nsstart">
+<h2>The wrath of the furies</h2>
+<i>You and your ally the prince of rain descend into the duesphere.  Had you known what was there you would have turned back</i>
+<p>
+This is my first scenario.  I hope you like it.
+<br>
+Send all feedback to:  Mike74637@aol.com.
+
+$Checked=1 The first encounter,MissionBegin,somemap,{Donesomemap},1
+$Checked=2 The next battle,MissionBegin,windmap,{Donewindmap},{Donesomemap}
+$Checked=3 Betrayal at the worst possible time,MissionBegin,rainmap,{Donerainmap},{Donewindmap}
+$Checked=4 The final challenge,MissionBegin,odd,{Doneodd},{Donerainmap}
+
+
+$Button=Back,Tell,Campaign
+
+
+

@@ -1,0 +1,111 @@
+[Header]
+missionType="Tutorial"
+
+missionNumber=4
+moreGeysers=10
+
+myStartMoney=5000
+myTech="rainbattery;raincannon;rainblocker;rainaviary;sunfence;sunballoon"
+myAllyList="2"
+
+title="The Cometh"
+
+ai2Name="Luitenent of Wind"
+ai2Tech="windbattery;windwalker;windarcher;windblocker;windaviary;windballoon"
+ai2StartMoney=15000
+ai2GeyserAttachments=3
+ai2Collectors=10
+ai2TimeBetweenMoves=3
+ai2AllyList="1"
+ai2color=orange
+ai2Ability="!USE_PRIEST_TO_COLLECT;!BUILD_DAIS"
+ai2BridgeDrawRate=4
+
+ai3Name="Thunder Demon"
+ai3Tech="thunderbattery;bulf;thundercannon;thunderblocker;thunderfence"
+ai3StartMoney=5000
+ai3GeyserAttachments=3
+ai3Collectors=10
+ai3TimeBetweenMoves=4
+ai3AllyList="4"
+ai3color=red
+ai3Ability="!USE_PRIEST_TO_COLLECT"
+ai3BridgeDrawRate=4
+
+ai4Name="High Demon Thundus"
+ai4Tech="thunderbattery;bulf;thundercannon;thunderblocker;thunderfence"
+ai4StartMoney=5000
+ai4GeyserAttachments=4
+ai4Collectors=10
+ai4TimeBetweenMoves=3
+ai4AllyList="3"
+ai4color=green
+ai4Ability="!USE_PRIEST_TO_COLLECT"
+ai4BridgeDrawRate=4
+
+[Options]
+
+[A.]
+
+~[IsunBalloon.a1]<h2>**The Cometh**</h2>
+<i>"Keep your friends close....and your enimies even closer"</i>
+--Some guy said it about 4000 years ago.
+
+<p>Ok, so get this:  You and Luitenent Wind step into the virtual reality prototype thing to practice for the big war thats gonna happen, when, you are inturupted half way through your simulation!  You step out on your island to see the whole Sky is flooded with sky demons!!!  There are battles going on as far as the eye can see, but now you must concentrate on the thunder demon, and the demon master, Thundus, that have come between you and Luitenent wind!  Good luck, you'll need it!
+
+$Button=EQUIPMENT,ShowTechnology,55
+$Button=Kick some demon ass!,DoNothing,0
+
+[Ai3Templedead]
+<h2>Incoming Message:</h2>
+You still are no match for the rest of us!!!
+
+[Ai3PriestDead]
+<h2>Incoming Message:</h2>
+I may be gone, but Thundus will prevail!!!!!
+
+[Ai4TempleHalfDead]
+<h2>Message From Luitenent Wind:</h2>
+Almost got him!!!  Did I mention the destruction of Thunder will abolish the existance of all thunder demons???
+
+[Ai4TempleDead]
+<h2>Message From Luitenent Wind:</h2>
+His temple is gone, now lets get his priest!!!!
+
+[Ai4PriestCaptured]
+<h2>Message From Luitenent Wind:</h2>
+Good!  Now sacrafice him and all the Thunder Demons will be no more!
+
+[Succeeded][Ai4PriestDead]
+<h2>Message from Sarge:</h2>
+NICE JOB COR-PRAL, PLEASE SEND ASS-ISTANCE FAST, THE WIND DEMONS ARE TOO STRONG....
+
+<$Config,Done{mission.fileName}=4>
+$Button=Let Sarge wait,MissionAbort,0
+$Button=HELP SARGE!!!,MissionBegin,Battle5
+
+[ai2Templedead]
+<h2>Message From Luitenent Wind:</h2>
+Aw geez....Protect my priest, im toast.
+
+[ai2PriestCaptured]
+<h2>Message From Luitenent Wind:</h2>
+HELP????!!!!!!
+
+[ai2PriestDead]
+<h2>Message From Luitenent Wind:</h2>
+I hope you can overcome these demons!!, Attack Thundus, if he dies, the battle is over!!!!
+
+[Failed][GoodTeamDead]
+The Fate of nimbus was in your hands, and you lost.  Thanks alot.
+$Button=Try Again Failure?,Tell,TryAgain
+$Button=Get off the computer and make some friends,missionabort,1
+
+[END]
+
+
+
+
+
+
+

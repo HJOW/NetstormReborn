@@ -1,0 +1,454 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 14
+moreGeysers = 1
+randomGeysers = 1
+denySalvage = 0
+
+myStartMoney = {sw_mvar0} 
+myTech = {sw_var1}{sw_var2}{sw_var3}{sw_var4}{sw_var9} 
+ai1AllyList="2;3"
+title = "Evacuation of Rain City"
+
+ai2Name = "Rahn the Warrior of ~lRain"
+ai2Tech = sunWalker;{sw_var1}{sw_var2}{sw_var5}
+ai2StartMoney =3000 
+ai2GeyserAttachments = 4
+ai2Collectors = 5
+ai2TimeBetweenMoves = {sw_mvar2}
+ai2AllyList = "1;3"
+ai2Color = orange
+ai2BridgeDrawRate = {sw_mvar2}
+ai2Ability = "!USE_PRIEST_TO_COLLECT;!SACRIFICE_ENEMY_PRIEST;!BUILD_DAIS;!CAPTURE_ENEMY_PRIEST"
+
+ai3Name = "Ambassador of ~lRain City."
+ai3Tech = sunWalker;{sw_var1}{sw_var2}{sw_var5}{sw_var6}
+ai3StartMoney =3000 
+ai3GeyserAttachments = 4
+ai3Collectors = 5
+ai3TimeBetweenMoves = {sw_mvar2}
+ai3AllyList = "1;2"
+ai3Color = white
+ai3BridgeDrawRate = {sw_mvar2}
+ai3Ability = "!USE_PRIEST_TO_COLLECT;!SACRIFICE_ENEMY_PRIEST;!BUILD_DAIS;!CAPTURE_ENEMY_PRIEST"
+
+ai4Name = "Ambassador of ~rHades"
+ai4Tech = {sw_var1}{sw_var2}{sw_var3}{sw_var4}sunWalker
+ai4StartMoney = 10000
+ai4GeyserAttachments = 4
+ai4Collectors = 5
+ai4TimeBetweenMoves = {sw_mvar3}
+ai4AllyList = "5;6;7;8"
+ai4Color = red
+ai4BridgeDrawRate = {sw_mvar4}
+ai4Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai5Name = "Warrior of ~rHades"
+ai5Tech = {sw_var1}{sw_var2}{sw_var3}{sw_var4}sunWalker
+ai5StartMoney = 3000
+ai5GeyserAttachments = 2
+ai5Collectors = 2
+ai5TimeBetweenMoves = {sw_mvar4}
+ai5AllyList = "4;6;7;8"
+ai5Color = green
+ai5BridgeDrawRate = {sw_mvar4}
+ai5Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+
+ai6Name = "Henchman of ~rHades"
+ai6Tech = {sw_var1}{sw_var2}{sw_var3}{sw_var4}sunWalker
+ai6StartMoney = 3000
+ai6GeyserAttachments = 2
+ai6Collectors = 2
+ai6TimeBetweenMoves = {sw_mvar4}
+ai6AllyList = "4;5;7;8"
+ai6Color = purple
+ai6BridgeDrawRate = {sw_mvar4}
+ai6Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+
+ai7Name = "Low Priest of ~rHades"
+ai7Tech = {sw_var1}{sw_var2}{sw_var3}{sw_var4}sunWalker
+ai7StartMoney = 3000
+ai7GeyserAttachments = 2
+ai7Collectors = 2
+ai7TimeBetweenMoves = {sw_mvar4}
+ai7AllyList = "4;5;6;8"
+ai7Color = yellow
+ai7BridgeDrawRate = {sw_mvar4}
+ai7Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+
+ai8Name = "Warrior of ~rHades"
+ai8Tech = {sw_var1}{sw_var2}{sw_var3}{sw_var4}sunWalker
+ai8StartMoney = 3000
+ai8GeyserAttachments = 2
+ai8Collectors = 2
+ai8TimeBetweenMoves = {sw_mvar4}
+ai8AllyList = "4;5;7;6"
+ai8Color = cyan
+ai8BridgeDrawRate = {sw_mvar4}
+ai8Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+
+[init]
+<$Config,sw_choiceflag=0>
+<$Config,sw_m14=1>
+<$Config,sw_m1=0>
+<$Config,sw_m2=0>
+<$Config,sw_m3=0>
+<$Config,sw_m4=0>
+<$Config,sw_m5=0>
+<$Config,sw_m6=0>
+<$Config,sw_m7=0>
+<$Config,sw_m8=0>
+<$Config,sw_m9=0>
+<$Config,sw_m10=0>
+<$Config,sw_m11=0>
+<$Config,sw_m12=0>
+<$Config,sw_m13=0>
+<$Config,sw_m15=0>
+<$Config,sw_m16=0>
+<$Config,sw_m17=0>
+<$Config,sw_m18=0>
+<$Config,sw_m19=0>
+<$Config,sw_m20=0>
+<$Config,sw_m21=0>
+<$Config,sw_m22=0>
+<$Config,sw_m23=0>
+<$Config,sw_m24=0>
+<$Config,sw_m25=0>
+<$Config,sw_m30=0>
+
+<$Config,sw_enDead4=0>
+<$Config,sw_enDead5=0>
+<$Config,sw_enDead6=0>
+<$Config,sw_enDead7=0>
+<$Config,sw_enDead8=0>
+
+[options]
+[A.]
+<$PlaySound,thunderCannonGrowl.wav>
+
+                  <h2>Evacuation of Rain City<a href="#mission14">~[IfortGump.46]</a></h2>
+<br>
+    ~[Ipriest.56]           ~[IgrowingRainBlocker.9]~[Ianim.41]    ~[IthunderCannon.35]     <br>
+         ~[Ipriest.55]     ~[Ipriest.47]                                                                ~1~y<?!{sw_difficulty1}>HARD</?><?{sw_difficulty1}>EASY</?>~.<br>
+
+After you allied with the ambassador of Rain City the<br>
+warriors of Hades chased after you. Now they have<br>
+your allies trapped.
+ <p>
+You must not only rescue them so you can evacuate<br>
+them to a safer place, but you must kill the<br>
+enemies as well.
+<p>
+             <a href="cmd:ShowTechnology,55"> ~[IfortGump.50] </a>                       <a href="cmd:DoNothing,0">~[IfortGump.22] </a>                         <a href="cmd:Tell,guideHades.overview">~[Ipriest.13]</a><br>
+<a href="cmd:ShowTechnology,55">Your Knowledge</a>             <a href="cmd:DoNothing,0">Evacuate!</a>              <a href="cmd:Tell,guideHades.overview">Leave mission</a>
+<$Tell,sound1>
+$OnExit= ,PlaySound,PriestMove3.wav
+$Button= ,Tell,A.
+
+[sound1]
+<$Config,sw_soundFlag=0>
+$Timeout=0,Tell,sound2
+[sound2]
+<$Config,sw_soundFlag=1>
+$Timeout=0,Tell,sound3
+[sound3]
+<$Config,sw_soundFlag=0>
+$Timeout=0,Tell,sound4
+[sound4]
+<$Config,sw_soundFlag=1>
+$Timeout=0,Tell,sound5
+[sound5]
+<$Config,sw_soundFlag=0>
+<$PlaySound,thunderCannon-1000.wav>
+$Timeout=0,Tell,sound6
+[sound6]
+<$Config,sw_soundFlag=1>
+$Timeout=0,Tell,sound7
+[sound7]
+<$Config,sw_soundFlag=0>
+$Timeout=0,Tell,sound8
+[sound8]
+<$PlaySound,thunderCannonImpact.wav>
+
+[@1]
+<?!{sw_difficulty1}>
+The {sw_god5} speaks to you:<br>
+<i>"Ahh... the traitorous coward! Prepare to die a very unpleasant death!"
+<p>
+"But before that happens, I give you a choice<br>
+Pick either the choice of Chaos, or the Choice of Order"</i>
+<p>
+~IWhat is he babbling about?~., you think to yourself. ~II wonder what he means?~.<br>
+But you have no time to ponder this, you must make the choice offered to you:
+$Button=CHAOS,Tell,Chaos
+$Button=ORDER,Tell,Order
+
+</?>
+
+<?{sw_difficulty1}>
+Before your allies were captured, they planted traps around their Temples. Their traps should
+ take care of the first wave of attackers on their island. But they have no other defenses, and
+ no factories built. So they are of no help to you.
+$Button=Fight ON!,DoNothing,0
+</?>
+
+
+
+
+
+[@2]
+<?!{sw_difficulty1}><?{sw_choiceflag}>
+<$ViewSpot,(151x82)>
+<$Meltdown,6008>
+</?></?>
+<?!{sw_difficulty1}><?!{sw_choiceflag}>
+<$ViewSpot,(205x186)>
+<$DestroyAt,(205x186)>
+</?></?>
+<?{sw_difficulty1}>
+<$ViewSpot,(151x82)>
+<$DestroyAt,(151x82)>
+</?>
+
+[@3]
+<?!{sw_difficulty1}><?{sw_choiceflag}>
+<$ViewSpot,(149x96)>
+<$Meltdown,6011>
+</?></?>
+<?!{sw_difficulty1}><?!{sw_choiceflag}>
+<$DestroyAt,(193x164)>
+</?></?>
+<?{sw_difficulty1}>
+<$ViewSpot,(149x96)>
+<$DestroyAt,(149x96)>
+</?>
+
+[@4]
+<?!{sw_difficulty1}><?{sw_choiceflag}>
+<$ViewSpot,(148x132)>
+<$Meltdown,6019>
+</?></?>
+<?!{sw_difficulty1}><?!{sw_choiceflag}>
+<$DestroyAt,(193x153)>
+</?></?>
+<?{sw_difficulty1}>
+<$ViewSpot,(148x132)>
+<$DestroyAt,(148x132)>
+</?>
+
+
+
+[@5]
+<?!{sw_difficulty1}><?{sw_choiceflag}>
+<$ViewSpot,(158x135)>
+<$Meltdown,6020>
+</?></?>
+<?{sw_difficulty1}>
+<$ViewSpot,(158x135)>
+<$DestroyAt,(158x135)>
+
+
+<$DestroyAt,(174x62)>
+</?>
+
+[@6]
+<?!{sw_difficulty1}><?{sw_choiceflag}>
+<$ViewSpot,(205x186)>
+<$Meltdown,6024>
+</?></?>
+<?{sw_difficulty1}>
+<$ViewSpot,(170x62)>
+<$DestroyAt,(170x62)>
+<$DestroyAt,(178x62)>
+<$DestroyAt,(162x66)>
+</?>
+
+
+[@7]
+<?!{sw_difficulty1}><?{sw_choiceflag}>
+<$ViewSpot,(170x62)>
+<$Meltdown,6114>
+</?></?>
+
+
+
+
+[@8]
+<?!{sw_difficulty1}><?{sw_choiceflag}>
+<$ViewSpot,(178x62)>
+<$Meltdown,6144>
+</?></?>
+<?{sw_difficulty1}>
+<$ViewSpot,(200x125)>
+</?>
+
+[@9]
+<?!{sw_difficulty1}><?{sw_choiceflag}>
+<$ViewSpot,(162x66)>
+<$Meltdown,6210>
+</?></?>
+[@10]
+<?!{sw_difficulty1}><?{sw_choiceflag}>
+<$ViewSpot,(180x126)>
+<$Meltdown,6404>
+</?></?>
+[@11]
+<?!{sw_difficulty1}><?{sw_choiceflag}>
+<$ViewSpot,(198x124)>
+<$Meltdown,6452>
+</?></?>
+[@12]
+<?!{sw_difficulty1}><?{sw_choiceflag}>
+<$ViewSpot,(174x134)>
+<$Meltdown,6551>
+</?></?>
+[@13]
+<?!{sw_difficulty1}><?{sw_choiceflag}>
+<$ViewSpot,(193x153)>
+<$DestroyAt,(193x153)>
+</?></?>
+[@14]
+<?!{sw_difficulty1}><?{sw_choiceflag}>
+<$ViewSpot,(193x164)>
+<$DestroyAt,(193x164)>
+</?></?>
+[@15]
+<?!{sw_difficulty1}><?{sw_choiceflag}>
+What an insane Fury! This Fury must be stopped by any means!
+$Button=Defy Hades,DoNothing,0
+</?></?>
+
+
+[Chaos]
+<i>"CHAOS, it is!"</i>, laughs the evil {sw_hades}!
+<p>
+<$Config,sw_choiceflag=1>
+$Button=OK,DoNothing,0
+
+[Order]
+<i>"ORDER, it shall be"</i>, laughs the demoniacal {sw_hades}!
+<p>
+<$Config,sw_choiceflag=0>
+$Button=OK,DoNothing,0
+
+[ai3PriestCaptured]
+<h2>You receive a message from the {sw_god5}</h2>
+<p>
+I have captured your miserable Ambassador. I'll wait a bit before my warrios sacrifice him to me.
+$Button=OH NO!,DoNothing,0
+
+[ai3PriestDead]
+It is a sad day for the Ambassador is dead!
+<p>
+But you must fight on, for the sake of the Ambassador and his valiant efforts!
+<p>
+~IYou will pay, {sw_hades}~.,you scream out onto the Battle field. ~IIn the end, we
+shall prevail!
+$Button=A moment of silence,DoNothing,0
+
+[ai2PriestCaptured]
+<h2>You receive a message from the {sw_god5}</h2>
+<p>
+I have captured your little toy soldier. I'll wait a bit before my warrios sacrifice him to me.
+$Button=Horror of horrors!,DoNothing,0
+
+[ai2PriestDead]
+<h2>A mighty Warrior of Rain has just gave his life in the aid of Peace. May you be allowed to avenge his death.</h2>
+$Button=On with it!,DoNothing,0
+
+
+[ai5PriestDead]
+<$Config,sw_enDead5=1>
+The <i>Cloud Floater</i> is now yours to command!
+$OnExit= ,Tell,checkwin
+$Menu=~yCloud Floater~[IrainBalloon.16],GetTechnology,146
+
+
+[ai6PriestDead]
+<$Config,sw_enDead6=1>
+Hanging around the Rain Ambassador, you learn some tricks.
+You learn the power of the <i>Rain Cannon</i>
+$OnExit= ,Tell,checkwin
+$Menu=~yRain Cannon~[IrainCannon.3],GetTechnology,129
+
+
+[ai7PriestDead]
+<$Config,sw_enDead7=1>
+You need a source of energy for your new found Tech. The
+Rain Fury grants you this:
+$OnExit= ,Tell,checkwin
+$Menu=~[IrainBattery.*]~yRain Battery,GetTechnology,76
+
+
+[ai8PriestDead]
+<$Config,sw_enDead8=1>
+With the power of rain, you learn the power of Regeneration:
+$OnExit= ,Tell,checkwin
+$Menu=~[IrainBlocker.*]~yIce Tower,GetTechnology,147
+
+[ai4PriestCaptured]
+<h2>You receive a message from the {sw_god5}</h2>
+<p>
+Let my Ambassador go, and I will spare you your soul!
+$Button=No Way HADES!,DoNothing,0
+
+[ai4PriestDead]
+<$Config,sw_enDead4=1>
+It is a great day for the Ambassador of HADES is dead!
+<P>
+~IYou will pay soon enough,
+<br>
+ {sw_hades}~.,you scream out onto the Battle field. ~IIn the end, we
+shall prevail!
+$Button=Continue,Tell,getmanowar
+
+[getmanowar]
+With the power of rain, you learn the power of Annialation
+$OnExit= ,Tell,checkwin
+$Menu=~[IrainAviary.12]~yMan-O-War,GetTechnology,143
+
+
+
+
+
+
+[checkwin]
+<?{sw_enDead8}><?{sw_enDead7}><?{sw_enDead6}>
+<?{sw_enDead5}><?{sw_enDead4}>
+                              <h2>VICTORY!</h2>
+                                     ~[Imog.15]<br>
+         ~[IrainAviary.12]~[IrainVortex.0] ~[IrainAviary.12]<br>
+                          ~[Ipriest.102]      ~[Ipriest.115]          ~[Ipriest.120]
+<p>
+            You've killed all of Hades Warriors.<br>
+               May the Furies grant you speed.<br>
+                        For you will need it!
+<$Config,sw_m14=0>
+<$Config,sw_m20=1>
+<$Config,sw_difficulty1=0>
+$Button=To: Choice of the Furies - Rain,MissionBegin,sw_m20
+</?></?></?></?></?>
+
+[Failed]
+<?{sw_difficulty1}>
+Now you will meet Hades for this traitorous deed!
+<$Config,sw_m14=0>
+<$Config,sw_m24=1>
+$Button=NO! Not HADES ALTAR!,MissionBegin,sw_m24
+</?>
+<?!{sw_difficulty1}>
+Quickly! Try this mission again, before Hades brings you to his realm!
+<$Config,sw_difficulty1=1>
+<$Config,sw_mvar0=8000>
+<$Config,sw_mvar2=1>
+<$Config,sw_mvar3=6>
+<$Config,sw_mvar4=8>
+
+$Button=I must not fail again!,MissionBegin,sw_m14
+</?>
+
+
+
+[END]
+

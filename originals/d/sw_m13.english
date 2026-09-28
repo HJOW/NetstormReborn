@@ -1,0 +1,285 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 13
+moreGeysers = 1
+randomGeysers = 1
+denySalvage = 0
+
+myStartMoney = 4000 
+myTech = {sw_var1}{sw_var2}{sw_var3}{sw_var4}{sw_var9} 
+myAllyList = "2;3;4"
+title = "Evacuation of Rain City"
+
+ai2Name = "Ambassador of Hades"
+ai2Tech = "{sw_var1}{sw_var2}{sw_var3}{sw_var4}sunWalker"
+ai2StartMoney =4000 
+ai2GeyserAttachments = 4
+ai2Collectors = 5
+ai2TimeBetweenMoves = 1
+ai2AllyList = "1;3;4"
+ai2Color = red
+ai2BridgeDrawRate = 3
+ai2Ability = "!USE_PRIEST_TO_COLLECT;!SACRIFICE_ENEMY_PRIEST;!BUILD_DAIS;!CAPTURE_ENEMY_PRIEST"
+
+ai8Name = "Ambassador of ~lRain~ City."
+ai8Tech = {sw_var1}{sw_var2}{sw_var5}{sw_var6}
+ai8StartMoney =10000 
+ai8GeyserAttachments = 4
+ai8Collectors = 5
+ai8TimeBetweenMoves = 1
+ai8AllyList = "7;5;6"
+ai8Color = orange
+ai8BridgeDrawRate = 3
+ai8Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai7Name = "Rahn the Warrior of ~1Rain~."
+ai7Tech = "{sw_var1}{sw_var2}{sw_var5}sunWalker"
+ai7StartMoney = 3000
+ai7GeyserAttachments = 4
+ai7Collectors = 5
+ai7TimeBetweenMoves = 1
+ai7AllyList = "5;6;8"
+ai7Color = cyan
+ai7BridgeDrawRate = 3
+ai7Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai5Name = "Warrior of Rain City"
+ai5Tech = "{sw_var1}{sw_var2}{sw_var6}rainBattery;sunWalker"
+ai5StartMoney = 3000
+ai5GeyserAttachments = 2
+ai5Collectors = 2
+ai5TimeBetweenMoves = 3
+ai5AllyList = "7;6;8"
+ai5Color = yellow
+ai5BridgeDrawRate = 3
+ai5Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+
+ai6Name = "Rain Warrior"
+ai6Tech = "{sw_var1}{sw_var2}{sw_var5}sunWalker"
+ai6StartMoney = 3000
+ai6GeyserAttachments = 2
+ai6Collectors = 2
+ai6TimeBetweenMoves = 3
+ai6AllyList = "7;5;8"
+ai6Color = purple
+ai6BridgeDrawRate = 3
+ai6Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+
+ai4Name = "Low Priest of Hades"
+ai4Tech = "{sw_var1}{sw_var2}{sw_var3}{sw_var4}sunWalker"
+ai4StartMoney = 3000
+ai4GeyserAttachments = 2
+ai4Collectors = 2
+ai4TimeBetweenMoves = 3
+ai4AllyList = "1;2;3"
+ai4Color = white
+ai4BridgeDrawRate = 3
+ai4Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS;!SACRIFICE_ENEMY_PRIEST;!BUILD_DAIS;!CAPTURE_ENEMY_PRIEST"
+
+ai3Name = "Warrior of Hades"
+ai3Tech = "{sw_var1}{sw_var2}{sw_var3}{sw_var4}sunWalker"
+ai3StartMoney = 3000
+ai3GeyserAttachments = 2
+ai3Collectors = 2
+ai3TimeBetweenMoves = 3
+ai3AllyList = "1;2;4"
+ai3Color = green
+ai3BridgeDrawRate = 3
+ai3Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS;!SACRIFICE_ENEMY_PRIEST;!BUILD_DAIS;!CAPTURE_ENEMY_PRIEST"
+
+[init]
+<$Config,sw_m13=1>
+<$Config,sw_m1=0>
+<$Config,sw_m2=0>
+<$Config,sw_m3=0>
+<$Config,sw_m4=0>
+<$Config,sw_m5=0>
+<$Config,sw_m6=0>
+<$Config,sw_m7=0>
+<$Config,sw_m8=0>
+<$Config,sw_m9=0>
+<$Config,sw_m10=0>
+<$Config,sw_m11=0>
+<$Config,sw_m12=0>
+<$Config,sw_m14=0>
+<$Config,sw_m15=0>
+<$Config,sw_m16=0>
+<$Config,sw_m17=0>
+<$Config,sw_m18=0>
+<$Config,sw_m19=0>
+<$Config,sw_m20=0>
+<$Config,sw_m21=0>
+<$Config,sw_m22=0>
+<$Config,sw_m23=0>
+<$Config,sw_m24=0>
+<$Config,sw_m25=0>
+<$Config,sw_m30=0>
+
+<$Config,sw_enDead5=0>
+<$Config,sw_enDead6=0>
+<$Config,sw_enDead7=0>
+<$Config,sw_enDead8=0>
+
+[options]
+[A.]
+<$PlaySound,PriestStruggleFade01.wav>
+<$PlaySound,PriestStruggleFade03.wav>
+                                                     <h2>Rampage of Rain City<a href="#mission13">~[IfortGump.46]</a></h2>
+                                                  ~[Ipriest.62]      ~[Ianim.43]<br>
+                               ~[Ipriest.55]        ~[Ipriest.96]     ~[IrainFactory.6]  ~[Ianim.17]    <br>
+                                    ~[Ipriest.57]                                               ~[Ipriest.48]         ~[Ipriest.26]
+<br>
+After you invaded Windy City and spilt the blood of the Ambassador of Wind<br>
+Hades is sending you into Rain City so as to capture the Ambassador of Rain<br>
+so he can learn the knowledge of the Rain Fury.
+ <p>
+You must Rampage the entire Rain City and spare no priest.<br>
+Sacrifice them all in the name of Hades.<br>
+Then earn the knowledge of the Rain once the ambassador is dead.
+<p>
+                             <a href="cmd:ShowTechnology,55"> ~[IfortGump.50] </a>                                  <a href="cmd:DoNothing,0">~[IfortGump.22] </a>                                    <a href="cmd:Tell,guideHades.overview">~[Ipriest.13]</a><br>
+                <a href="cmd:ShowTechnology,55">Your Knowledge</a>                        <a href="cmd:DoNothing,0">Plunder!</a>                         <a href="cmd:Tell,guideHades.overview">Leave mission</a>
+<$Tell,sound1>
+$OnExit= ,PlaySound,GolemMove5.wav
+$Button= ,Tell,A.
+
+[sound1]
+<$Config,sw_soundFlag=0>
+<$PlaySound,thunderCannonImpact.wav>
+$Timeout=0,Tell,sound2
+[sound2]
+<$Config,sw_soundFlag=1>
+$Timeout=0,Tell,sound3
+[sound3]
+<$Config,sw_soundFlag=0>
+$Timeout=0,Tell,sound4
+[sound4]
+<$Config,sw_soundFlag=1>
+<$PlaySound,PriestSacrifice2.wav>
+$Timeout=0,Tell,sound5
+[sound5]
+<$Config,sw_soundFlag=0>
+<$PlaySound,thunderCannonImpact.wav>
+$Timeout=0,Tell,sound6
+[sound6]
+<$Config,sw_soundFlag=1>
+<$PlaySound,PriestSacrifice4.wav>
+$Timeout=0,Tell,sound7
+[sound7]
+<$Config,sw_soundFlag=0>
+$Timeout=0,Tell,sound8
+[sound8]
+<$PlaySound,thunderCannonImpact.wav>
+<$PlaySound,PriestStruggleFade03.wav>
+
+[ai2PriestDead]
+<h2>You receive a message from the {sw_god5}</h2>
+<p>
+My Ambassador is dead. Don't let another of my men die.
+$Button=I fight harder Mastah!,DoNothing,0
+
+[ai8PriestCaptured]
+<h2>You receive a message from the {sw_god5}</h2>
+<p>
+<i>You have captured that miserable Ambassador. Sacrifice him in my name.
+With the power of rain, you will learn the power of Regeneration:</i>
+$Menu=~[IrainBlocker.*]~yIce Tower,GetTechnology,147
+<$MoveDialog,tr>
+$Button=I don't want Gifts. I want to ALLY with Rain,Tell,AllianceBegun
+$Timeout=25,Tell,AllianceWithdrawn
+
+[AllianceBegun]
+<$Config,sw_m13=0>
+<$Config,sw_m14=1>
+<$Config,sw_mvar0=6000>
+<$Config,sw_mvar2=3>
+<$Config,sw_mvar3=1>
+<$Config,sw_mvar4=3>
+<$Config,sw_difficulty1=0>
+<$MisionBegin,mission14>
+
+[AllianceWithdrawn]
+<$Config,sw_pickally1=0>
+<p>You took too long to respond.  The {sw_god5} learned of your attempted betrayal.<br>
+He is going to kill you now.
+<$Config,sw_m13=0>
+<$Config,sw_m24=1>
+$Button=No! It's a Mistake! I'M SORRY!,MissionBegin,sw_m24
+
+[NoAlliance]
+<$Config,sw_pickally1=0>
+$Button=SAC HIM!,DoNothing,0
+
+[ai8PriestDead]
+<h2>It is a glorious day, for the Ambassador of Rain City is dead!</h2>
+<$Config,sw_enDead8=1>
+$OnExit= ,Tell,checkwin
+$Button=A moment of joy,DoNothing,0
+
+[ai6PriestCaptured]
+<$MoveDialogBox,ml>
+<h2>You receive a message from the {sw_god5}</h2>
+<p>
+You have captured one of Rain's little toy soldier's. Kill him now!
+You need a source of energy for your new found Tech. The
+Rain Fury grants you this:
+$Menu=~[IrainBattery.*]~yRain Battery,GetTechnology,76
+
+[ai7PriestDead]
+A mighty Warrior of Rain has just given his life in the aid of Peace. May his
+ blood be on your hands forever.</h2>
+<$Config,sw_enDead7=1>
+$OnExit= ,Tell,checkwin
+$Button=On with it!,DoNothing,0
+
+[ai5PriestDead]
+The <i>Cloud Floater</i> is now yours to command!
+<$Config,sw_enDead5=1>
+$OnExit= ,Tell,checkwin
+$Menu=~yCloud Floater~[IrainBalloon.16],GetTechnology,146
+
+[ai6PriestDead]
+After killing this warrior, you learn some tricks.
+You learn the power of the <i>Rain Cannon</i>
+<$Config,sw_enDead6=1>
+$OnExit= ,Tell,checkwin
+$Menu=~yRain Cannon~[IrainCannon.3],GetTechnology,129
+
+[ai3PriestDead]
+One of your allies is dead. You must fight even harder now.
+$Button=Lemme at em!,DoNothing,0
+
+[ai4PriestDead]
+It is a sad day in Hades<br>
+for one of his warriors is dead!
+$Button=I'll get revenge!,DoNothing,0
+
+                                                                                         [Succeeded][BadTeamDead]
+[checkwin]
+<?{sw_enDead8}><?{sw_enDead7}><?{sw_enDead5}>
+<?{sw_enDead6}>
+                                  <h2>VICTORY!</h2>
+                                       ~[IsunCannon.24]<br><br><br><br>
+~[IthunderCannon.17]   ~[Ialtar.3]   ~[IthunderCannon.35]<br>
+                                       ~[IsunCannon.11]<br>
+<p>
+                You've killed all of Rain Warriors.<br>
+                   May the Furies grant you speed.<br>
+                            For you will need it!
+<$Config,sw_m13=0>
+<$Config,sw_m15=1>
+<$Config,sw_difficulty1=0>
+$Button=To: Destruction of Thunder City,MissionBegin,sw_m15
+</?></?></?></?>
+
+
+[Failed]
+Now you will meet Hades for you have failed him once too often!
+<$Config,sw_m13=0>
+<$Config,sw_m24=1>
+$Button=NO! Not HADES ALTAR!,MissionBegin,sw_m24
+
+
+[END]
+

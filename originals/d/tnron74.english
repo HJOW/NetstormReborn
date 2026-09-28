@@ -1,0 +1,131 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 3
+moreGeysers = 0
+
+myStartMoney = 1000
+myTech = "sunaviary;sunBalloon;sunCannon;sunBlocker;sunFence;sunArcher;thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;bulf;rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainwalker;rainFence;rainwalker"     																
+myAllyList = "3"
+
+title="Gauntlet"
+
+ai3Name = "~rThunder~w Guard"
+ai3Tech = "thunderbattery;thundercannon;thunderblocker;bulf"
+ai3StartMoney = 550
+ai3GeyserAttachments = 3
+ai3Collectors = 2
+ai3TimeBetweenMoves = 2
+ai3AllyList = "2;4;5;8"
+ai3color = red
+ai3Ability="!USE_PRIEST_TO_COLLECT"
+ai3BridgeDrawRate = 5
+
+ai5Name = "~lRain~w Guard"
+ai5Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainwalker"
+ai5StartMoney = 550
+ai5GeyserAttachments = 3
+ai5Collectors = 2
+ai5TimeBetweenMoves = 0
+ai5AllyList = "2;3;4;8"
+ai5color = white
+ai5Ability="!USE_PRIEST_TO_COLLECT"
+ai5BridgeDrawRate = 1
+
+
+ai2Name = "~ySun~w Guard"
+ai2Tech = "windBattery;sunaviary;sunBalloon;sunCannon;sunBlocker;sunArcher"
+ai2StartMoney = 10000
+ai2GeyserAttachments = 3
+ai2Collectors = 2
+ai2TimeBetweenMoves = 3
+ai2AllyList = "3;4;5;6;7;8"
+ai2color = yellow
+ai2Ability="!USE_PRIEST_TO_COLLECT"
+ai2BridgeDrawRate = 4
+
+ai4Name = "~oWind ~wGuard"
+ai4Tech = "windarcher;windBattery;windballoon;windblocker;windWalker;sunaviary"
+ai4StartMoney = 500
+ai4GeyserAttachments = 15
+ai4Collectors = 2
+ai4TimeBetweenMoves = 1
+ai4AllyList = "2;3;5;6"
+ai4color = orange
+ai4Ability="!USE_PRIEST_TO_COLLECT"
+ai4BridgeDrawRate = 2
+
+ai6Name = Gate Keeper
+ai6AllyList = 1;2;4;7;8
+ai6color = purple
+ai6Ability="!BUILD_BRIDGES"
+
+ai7Name = Gate Keeper
+ai7AllyList = 2;6;8
+ai7color = purple
+
+ai8Name = Gate Keeper
+ai8AllyList = 1;2;3;5;6;7
+ai8color = purple
+
+[Options]
+
+[A.]
+<h2>Gauntlet</h2>
+<i>"A great challange in life is to live it."<br>
+--Rahn, Nimbian General</i>  
+<p>Using the directions the Knight of Wind gave you, you have penetrated deep into the Elemental's empire.  From what you can tell there is very few ways to get close enough to the major leaders and slay them.  After choosing at what looks like the weakest point of the defences you attack.
+<p>Only the guards seperate you and your revenge.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+
+[victory]
+<?{atknight}>
+<h2>Success!</h2>
+<p>
+You have penetrated the Elemental's most inner defence...now only if you can locate them....
+<$Config,Done{mission.fileName}=1>
+<$Config,tnron074=1>
+$Button=Next Mission,MissionBegin,tnron84
+</?>
+
+<?!{atknight}>
+<h2>Success!</h2>
+<p>
+You have penetrated the Elemental's most inner defence...now only if you can locate them....
+<$Config,Donetnron744=1>
+<$Config,tnron074=1>
+$Button=Next Mission,MissionBegin,tnron84
+</?>
+
+[Failed]
+<h2>Failure!</h2>
+<p>The defense was too much for you.....perhaps you should have choosen a better attack point...
+$Button=Continue,Tell,TryAgain
+
+
+[ai2TempleDead]
+<h2>~ySun~w Guard</h2>
+<p>You may defeat me but you still have to face the other three!!!
+
+[ai3TempleDead]
+<h2>~rThunder~w Guard</h2>
+<p>How can this be!!!  The others shall avenge me!
+
+
+[ai4TempleDead]
+<h2>~oWind ~wGuard</h2>
+<p>Curse you!!  My fate is the same of the other two!  
+
+
+[ai5TempleDead]
+<h2>~lRain~w Guard</h2>
+No!!! We have all been beaten!! How can this be so?!?!
+
+[ai5PriestDead]
+$Button=Ok,Tell,victory
+
+[END]
+

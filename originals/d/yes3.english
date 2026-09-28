@@ -1,0 +1,55 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 2
+moreGeysers = 3
+
+myStartMoney = 10000
+myTech = "sunWalker;sunArcher;windarcher;sunBlocker;sunBalloon;sunFence;sunCannon;thunderbattery;rainFence;rainbattery;windBattery;thunderarcher;thundercannon;rainballoon;rainblocker;raincannon;windaviary;windballoon;windblocker;windWalker"
+
+title="Jumble"
+
+ai2Name = "Shadow"
+ai2Tech = "sunWalker;sunArcher;windarcher;sunBlocker;sunBalloon;sunFence;sunCannon;thunderbattery;rainFence;rainbattery;windBattery;thunderarcher;thundercannon;rainballoon;rainblocker;raincannon;windaviary;windballoon;windblocker;windWalker"
+ai2StartMoney = 9000
+ai2GeyserAttachments = 2
+ai2Collectors = 2
+ai2TimeBetweenMoves = 1
+ai2AllyList = ""
+ai2Bridgedrawrate = 1
+ai2ability="!USE_PRIEST_TO_COLLECT;!CONCENTRATE_FIRE;!ENCIRCLE_ENEMY_ISLAND"
+ai2color = yellow
+
+
+[Options]
+
+[A.]
+<i>~[IrainCannon.3]</i>Shadow Showdown at High Noon (on a sunday)<i>~[IsunCannon.2]</i><br>
+<i>"Sir?......You better come look at this "<br>
+                                              --Captain Murdock</i><br>
+<i>"This better be important Captain"<br>
+                                              --General Myra Manes</i><br>
+<i>"Uhh, Very important Sir."<br>
+                                              --Captain Murdock</i>
+<p>I guess you should have seen this one coming.  It fighures that someone would try to rob you after all that.<br>
+
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Leave Mission,MissionAbort,0
+$Button=Play Mission,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>Victory is Yours</h2>
+<p>Now all you have to do is find a place to park, and the hamburger is yours.
+$Button=Leave Missions,MissionAbort,1
+$Button=Next Mission,MissionBegin,obelisk
+
+[Failed]
+<h2>Defeat</h2>
+<p>
+Luckily, the hamburger place is open 24 hours a day.  Good thing, you will need the extra time replaying this level.
+$Button=Continue,Tell,TryAgain
+
+
+[END]

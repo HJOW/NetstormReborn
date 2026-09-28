@@ -1,0 +1,91 @@
+[Header]
+
+missionType = "Tutorial"
+
+missionNumber = "17"
+moreGeysers = "0"
+randGeysers = "0"
+
+myStartMoney = "3500"
+myTech = "windbattery;sunblocker;suncannon;sunfence;"
+myAllyList = ""
+
+title = "Munder's Forces"
+
+ai2Name = "Major of Sunder's Forces"
+ai2Tech = "rainbattery;sunaviary;suncannon;"
+ai2StartMoney = "50000"
+ai2AllyList = "3;4;"
+ai2Color = "red"
+ai2Collectors = "0"
+ai2BridgeDrawRate = "0"
+ai2GeyserAttachments = "1"
+ai2TimeBetweenMoves = "0"
+ai2Ability = ""
+
+ai3Name = "Leutinant of Sunder's Forces"
+ai3Tech = "rainbattery;sunaviary;suncannon;"
+ai3StartMoney = "50000"
+ai3AllyList = "2;4;"
+ai3Color = "white"
+ai3Collectors = "0"
+ai3BridgeDrawRate = "7"
+ai3GeyserAttachments = "1"
+ai3TimeBetweenMoves = "7"
+ai3Ability = ""
+
+ai4Name = "Munder"
+ai4Tech = "rainbattery;sunblocker;"
+ai4StartMoney = "50000"
+ai4AllyList = "2;3;"
+ai4Color = "green"
+ai4Collectors = "6"
+ai4BridgeDrawRate = "0"
+ai4GeyserAttachments = "6"
+ai4TimeBetweenMoves = "0"
+ai4Ability = ""
+
+
+[Options]
+
+[A.]
+
+<h2>~lMunder's Forces</h2>
+<i>"Keep your eyes open"<br>
+--Sunder</i>
+<p>Evil King make you general of his army! He likes yor work. You were moving to Munder's lands to attack his forces but they were faster than you. So you now will fight beetween the soldiers of Munder.
+$Button=Its too hard for me!,Tell,Campaign
+$Button=Play!,DoNothing,0
+
+[@1]
+
+<h2>~lIncoming Message</h2>
+<i>~jFrom: ~qMunder<br>
+~jTo: ~qSunder</i>
+<p>What happened with you? Why you became my enemy? WHy you joined Evil King's forces? I really hate you Sunder! Sleep now in the fire!
+
+$Button=Accept,DoNothing,0
+$Button=Check your Knowledge,ShowTechnology,55
+
+[Succeeded] [BadTeamDead]
+
+<h2>~lCongratulations!</h2>
+<i>"Oh now! He is dead..."<br>
+--Sunder</i>
+<p>Munder is dead. Evil King become the ruler of the west-bootom part of nimbus. He likes your work. Cause place of War Minister were free he decided to give you that work.
+<$Config,Done{mission.fileName}=1>
+<$Config,Donesh3_y_y_1a=0>
+<$Config,Donesh3_y_y_2a=1>
+$Button=Its too hard for me!,Tell,Campaign
+$Button=Proceed,MissionBegin,sh3_y_y_3
+
+[Failed]
+
+<h2>~lYou lose...</h2>
+<p>Don't worry if you lose, this is Shit Hard!
+
+$Button=Its too hard for me!,Tell,Campaign
+$Button=Try again!,Tell,TryAgain
+
+
+[END]

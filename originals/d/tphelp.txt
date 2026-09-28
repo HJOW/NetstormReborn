@@ -1,0 +1,15 @@
+Thunder Point Campaign(TSE) ver 1.0
+
+There are 8 maps total.
+
+fun
+defeat
+defeat1
+gather
+gather1
+last
+last1
+execute
+
+I tried to use most the commands found at NEC.
+thanks swelb for a great site.

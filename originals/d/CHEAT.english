@@ -1,0 +1,65 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 1
+
+myStartMoney = 10000
+myTech = "thunderbattery;bulf;thundercannon;thunderarcher;thunderblocker;thunderfence;windaviary;windballoon;windBattery;windblocker;windWalker;windarcher;rainBattery;rainwalker;rainballoon;raincannon;rainblocker;rainfence;rainaviary"
+title="Fuji1"
+
+ai2Name = "Hell`s Angle"
+ai2Tech = "windaviary;windballoon;windBattery;windblocker;windWalker;windarcher"
+ai2StartMoney = 200000
+ai2GeyserAttachments = 1
+ai2Collectors = 10
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3;4"
+ai2color = red
+
+ai3Name = "The Strange One"
+ai3Tech = "rainBattery;rainwalker;rainballoon;raincannon;rainblocker;rainfence;rainaviary"
+ai3StartMoney = 200000
+ai3GeyserAttachments = 1
+ai3Collectors = 10
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2;4"
+ai3color = white
+
+ai4Name = "The Cheat"
+ai4Tech = "thunderbattery;bulf;thundercannon;thunderarcher;thunderblocker;thunderfence"
+ai4StartMoney = 200000
+ai4GeyserAttachments = 1
+ai4Collectors = 15
+ai4TimeBetweenMoves = 1
+ai4AllyList = "2;3"
+ai4color = green
+
+[Options]
+
+[A.]
+<h2>CHEAT</h2>
+<i>"If You Know they are cheating prove to them cheats never prosper Then rub it in there face`s."<br>
+--Fujicass97, </i>  
+<p>Ever wonded how good at beating a team of cheats you are well this will test you.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+You have just killed off the cheats now go rub it in
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,1
+
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+Oh no! Because of you cheat`s will never give up. ASSHOLE!
+$Button=Continue,Tell,TryAgain
+
+
+[END]

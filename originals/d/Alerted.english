@@ -1,0 +1,99 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 4
+moreGeysers = 1
+
+myStartMoney = 6000
+myTech = "thunderarcher;thunderBattery;thunderCannon;thunderblocker;bulf;sunBalloon;sunCannon;sunArcher"
+
+title="Alerted!"
+
+ai2Name = "Thunder Guard"
+ai2Tech = "thunderbattery;bulf;thunderblocker;thundercannon"
+ai2StartMoney = 10000
+ai2GeyserAttachments = 2
+ai2Collectors = 2
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3;4;5"
+ai2color = red
+ai2BridgeDrawRate = 4
+
+ai3Name = "Wind Guard"
+ai3Tech = "windWalker;windArcher;windBlocker;windAviary;windbattery;windBalloon"
+ai3StartMoney = 10000
+ai3GeyserAttachments = 2
+ai3Collectors = 3
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2;4;5"
+ai3color = white
+ai3BridgeDrawRate = 2
+
+ai4Name = "Rain Guard"
+ai4Tech = "rainCannon;rainBlocker;rainAviary;rainBalloon;rainbattery"
+ai4StartMoney = 10000
+ai4GeyserAttachments = 2
+ai4Collectors = 3
+ai4TimeBetweenMoves = 1
+ai4AllyList = "2;3;5"
+ai4color = green
+ai4BridgeDrawRate = 3
+
+ai5Name = "Watchman"
+ai5Tech = "rainWalker"
+ai5StartMoney = 0
+ai5GeyserAttachments = 2
+ai5Collectors = 3
+ai5TimeBetweenMoves = 1
+ai5AllyList = "4;3;2"
+ai5color = blue
+
+[Options]
+
+[A.]
+<h2>Alerted!</h2>
+<i>"A man of the watch can see for miles if he listens to the call of the Nimbian Eagle."<br>
+--The Book of Nimbus</i>  
+<p>You travel for many days, packed with supplies and men from the rescued Rebel HQ. Ahead of you, you see the fabled 'Storm Crystal Highway' in its glimmering gloriousness. But as you approach the highway you see some watch towers - they have been alerted to your presence! The Watchman darts back behind the lines to play with his pet crystal crab and suddenly from the mists, three guards appear and surround you despite all your best efforts. Sacrifice the guards and kill the cowardly Watchman!
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+Congratulations you have defeated the guards and the puny Watchman. The rest of your quest and satisfying revenge lies ahead...
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,cataclysm
+
+[ai5PriestDead]
+<h2>The Watchman is Dead!</h2>
+<p>
+That was the easy part, kill the rest!
+
+[ai2PriestDead]
+<h2>The Thunder Guard has Perished!</h2>
+<p>
+You have killed the merciless Thunder Guard. With his last dying breaths he says:
+<p><i>
+"Check out those Arc Spires. Quite nice, eh? Maybe you should try them in multiplayer one time. Nice meeting y-..."</i>
+
+[ai4PriestCaptured]
+<h2>The Wind Guard has Been Captured!</h2>
+<p>
+Well done! Now sacrifice him quickly!
+
+[ai3TempleHalfDead]
+<h2>The Rain Guard is Getting Annoyed!</h2>
+<p>
+<i>"It is clear you will not be able to beat us three guards so give up now and stop attacking my temple! You have no chance!"</i>
+<p>You tear the note up and get back to winning this battle...
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+You have been defeated by the guards! The evil guild master laughs at your lack of skill. Try again and prove that you are not the right person to mess with!
+$Button=Continue,Tell,TryAgain
+
+[END]

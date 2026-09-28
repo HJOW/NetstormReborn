@@ -1,0 +1,103 @@
+[Header]
+missionType="Tutorial"
+
+missionNumber=6
+moreGeysers=10
+
+myStartMoney=5000
+myTech="rainbattery;raincannon;rainblocker;rainaviary;rainballoon;suncannon;sunarcher;sunblocker;sunfence;sunaviary"
+myAllyList="2"
+
+title= "2 down, 2 to go."
+
+ai2Name="General Thunder"
+ai2Tech="thunderbattery;bulf;thundercannon;thunderblocker;thunderfence"
+ai2StartMoney=5000
+ai2GeyserAttachments=3
+ai2Collectors=10
+ai2TimeBetweenMoves=3
+ai2AllyList="1"
+ai2color=orange
+ai2Ability="!USE_PRIEST_TO_COLLECT;!BUILD_DAIS;!CAPTURE_ENEMY_PRIEST"
+ai2BridgeDrawRate=4
+
+ai3Name="RAINDOR"
+ai3Tech="rainbattery;raincannon;rainblocker;rainaviary;rainballoon"
+ai3StartMoney=5000
+ai3GeyserAttachments=3
+ai3Collectors=10
+ai3TimeBetweenMoves=3
+ai3AllyList="4;5"
+ai3color=red
+ai3Ability="!USE_PRIEST_TO_COLLECT"
+ai3BridgeDrawRate=3
+
+ai4Name="Rain Beast"
+ai4Tech="rainbattery;raincannon;rainblocker;rainaviary;rainballoon"
+ai4StartMoney=5000
+ai4GeyserAttachments=4
+ai4Collectors=10
+ai4TimeBetweenMoves=6
+ai4AllyList="3;5"
+ai4color=green
+ai4Ability="!USE_PRIEST_TO_COLLECT"
+ai4BridgeDrawRate=4
+
+ai5Name="Rain Beast"
+ai5Tech="rainbattery;raincannon;rainblocker;rainaviary;rainballoon"
+ai5StartMoney=5000
+ai5GeyserAttachments=4
+ai5Collectors=10
+ai5TimeBetweenMoves=5
+ai5AllyList="3;4"
+ai5color=purple
+ai5Ability="!USE_PRIEST_TO_COLLECT"
+ai5BridgeDrawRate=4
+
+[Options]
+
+[A.]
+
+
+<p><h2>**2 down, 2 to go**</h2>
+<p>
+<i>Rain seems harmless, but really, its the toughest of them all</i><br>
+--Homeless Nimbus Guy
+
+<p>You are moving your island to go and find RAINDOR the rain master, when you find your boss, General Thunder is outnumbered by two Rain Beasts and the master himself, RAINDOR.  You go into warp speed and realize that your brakes were damaged in the last battle with the Wind demons.  You fly full speed ahead straight into General Thunder, sending your priest flying off your island into the crossfire of the battle, save your priest first, then kick some rain butt, and remember, RAINDOR dies, all the rain guys dissapear.  
+
+<$Config,Done{mission.fileName}=6>
+$Button=EQUIPEMENT,ShowTechnology,55
+$Button=Rain Beast-Shain Beast,DoNothing,0
+
+[Ai3PriestDead]
+<h2>Incoming Message:</h2>
+You may have won the battle, but you WILL loose the war!!!!
+<p>
+<h1>                 **Briefing**</h1>
+Great!! Now your only one step away from defeating all the demons of the sky!!  As the rest of the remaining demons fight to conquor Nimbus, you must single-handedly defeat the SUN MASTER!  It's not going to be easy, but once again, the fate of Nimbus is in your hands!!!
+$Button=Not Ready?,MissionAbort,0
+$Button=Go into battle!,MissionBegin,Battle7
+
+[Ai4PriestDead]
+<h2>Incoming Message:</h2>
+RAINDOR will prevail!!!!!!!!
+
+[Ai5PriestDead]
+<h2>Incoming Message:</h2>
+Oooooooooooooooh...thats not good...
+
+[Ai2PriestCaptured]
+<h2>Incoming Message:</h2>
+Corperal!  Back me up!!!!
+
+[Ai2PriestDead]
+<h2>Incoming Message:</h2>
+The fate of Nimbus rests in you--Do not fail.
+
+[Failed][GoodTeamDead]
+I really have nothing to say...you got this far, and then you lost!  Oh well, its just a game.
+$Button=Go again,Tell,TryAgain
+$Button=Play something else,misionabort,1
+
+[END]

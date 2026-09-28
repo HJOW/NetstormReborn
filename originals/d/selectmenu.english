@@ -1,0 +1,102 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 1
+
+myStartMoney = 9000
+myTech = "windbattery;sunFence;sunCannon;"
+myAllyList = ""
+
+title="Selection Menu"
+
+myTech = "rainBattery;sunCannon;sunFence;sunBalloon;sunAviary;sunBlocker;sunArcher"
+StartMoney = 5000
+
+ai1Name = "You"
+ai1Tech = "rainBattery;sunCannon;sunFence;sunBalloon;sunAviary;sunBlocker;sunArcher"
+ai1StartMoney = 10000
+ai1GeyserAttachments = 0
+ai1Collectors = 5
+ai1TimeBetweenMoves = 1
+
+ai2Name = "Lightning"
+ai2Tech = "thunderBattery;bulf;thunderarcher;sunCannon;sunBalloon;sunAviary;sunBlocker;sunArcher"
+ai2StartMoney = 10000
+ai2GeyserAttachments = 4
+ai2Collectors = 5
+ai2TimeBetweenMoves = 4
+ai2AllyList = "3;5;6"
+
+
+ai3Name = "Ice Sickle"
+ai3Tech = "rainBattery;rainwalker;raincannon;sunCannon;sunBalloon;sunAviary;sunBlocker;sunArcher"
+ai3StartMoney = 10000
+ai3GeyserAttachments = 4
+ai3Collectors = 5
+ai3TimeBetweenMoves = 3
+ai3AllyList = "2;5;6"
+
+ai5Name = "Thunder"
+ai5Tech = "thunderBattery;bulf;thunderblocker;sunCannon;sunBalloon;sunAviary;sunBlocker;sunArcher"
+ai5StartMoney = 10000
+ai5GeyserAttachments = 4
+ai5Collectors = 5
+ai5TimeBetweenMoves = 4
+ai5AllyList = "2;3;6"
+
+ai6Name = "Gust"
+ai6Tech = "windBattery;windwalker;windblocker;sunCannon;sunBalloon;sunAviary;sunBlocker;sunArcher"
+ai6StartMoney = 10000
+ai6GeyserAttachments = 4
+ai6Collectors = 5
+ai6TimeBetweenMoves = 2
+ai6AllyList = "2;3;5"
+
+demo = 1
+demoRestartTimer = 600
+
+[Demo] 
+<h2>Selection Menu</h2>
+<i>"There is always a choice."<br></i>
+--Unknown
+<p>Pick something from this menu.  Once you do return to the campaign menu and you will the progress of your choice.
+<p>
+
+
+
+<?!{atcampaign1}>$Menu=~wThe Dark Lords,Tell,C1 </?>
+<?{atcampaign1}>$Menu=~yThe Dark Lords,Tell,Demo </?>
+<?!{atcampaign2}>$Menu=~wNew Ruler of Nimbus,Tell,C2 </?>
+<?{atcampaign2}>$Menu=~yNew Ruler of Nimbus,Tell,Demo </?>
+<?!{atcampaign3}>$Menu=~wTrials of Priesthood,Tell,C3 </?>
+<?{atcampaign3}>$Menu=~yTrials of Priesthood,Tell,Demo </?>
+<?{atdemo1}>$Menu=~kDemos,Tell,Demo </?>
+
+$Button=Start the Campaign,Tell,Campaign
+$Button=Play this Demo,DoNothing,0
+
+[C1]
+<$Config,atcampaign1=1>
+<$Config,atcampaign2=0>
+<$Config,atcampaign3=0>
+<$Config,atnocampaign1=1>
+$Timeout=0,Tell,Demo
+
+[C2]
+<$Config,atcampaign2=1>
+<$Config,atcampaign1=0>
+<$Config,atcampaign3=0>
+<$Config,atnocampaign1=1>
+$Timeout=0,Tell,Demo
+
+[C3]
+<$Config,atcampaign3=1>
+<$Config,atcampaign2=0>
+<$Config,atcampaign1=0>
+<$Config,atnocampaign1=1>
+$Timeout=0,Tell,Demo
+
+
+
+[END]

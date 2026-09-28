@@ -1,0 +1,15 @@
+title="Whirlibulf's missions"
+
+[Overview]
+<background="nsstart">
+<h2>~E~mWhirlibulf's missions~.</h2>
+<I>Christmas 2004</I>
+Hopefully you'll find some of these missions different from usual ones.
+
+<a href="http://www.netstormhq.com">~rwww.netstormhq.com</a>
+$Checked=1 Escape,MissionBegin,escape,{Doneescape},1
+$Checked=2 Surrounding,MissionBegin,surrounding,{Donesurrounding},2
+$Checked=3 Thunder,MissionBegin,thunder,{Donethunder},3
+$Checked=4 Command and Conquer,MissionBegin,commandandconquer,{Donecommandandconquer},4
+$Checked=5 Defend,MissionBegin,defend,{Donedefend},5
+$Button=Back,Tell,Campaign

@@ -1,0 +1,316 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 0
+moreGeysers = 0
+
+myStartMoney = 50000
+myTech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence;rainwalker;sunCannon;sunBalloon;sunAviary;sunBlocker;sunFence;sunArcher;windarcher;windBattery;windWalker;windballoon"
+myAllyList = "1;2;3;4;5;6"
+
+title="Credits"
+
+
+ai2Name = "Duke of Thunder
+ai2Tech = "thunderbattery;thundercannon;thunderblocker
+ai2StartMoney = 40000
+ai2TimeBetweenMoves = 1
+ai2AllyList = "1;2;3;4;5;6"
+ai2color = purple
+
+ai3Name = "Knight of Wind
+ai3Tech = "windbattery;windarcher;windblocker;windaviary
+ai3StartMoney = 30000
+ai3TimeBetweenMoves = 1 
+ai3AllyList = "1;2;3;4;5;6"
+ai3color = lightblue
+
+ai4Name = "Govenor of Sun
+ai4Tech = "windbattery;suncannon;sunblocker;sunaviary
+ai4StartMoney = 20000
+ai4TimeBetweenMoves = 2 
+ai4AllyList = "1;2;3;4;5;6"
+ai4color = yellow
+
+ai5Name = "Squire of Rain
+ai5Tech = "rainbattery;raincannon;rainblocker
+ai5StartMoney = 10000
+ai5TimeBetweenMoves = 3
+ai5AllyList = "1;2;3;4;5;6"
+ai5color = orange
+
+ai6Name = "Page of Thunder
+ai6Tech = "thunderbattery;thunderblocker
+ai6StartMoney = 10000
+ai6TimeBetweenMoves = 4 
+ai6AllyList = "1;2;3;4;5;6"
+ai6color = green
+
+ai7Name = "Invader
+ai7Tech = "thunderbattery;thundercannon;thunderblocker;windbattery;windarcher;windaviary
+ai7StartMoney = 70000
+ai7TimeBetweenMoves = 2
+ai7AllyList = "7;8"
+ai7color = red
+
+ai8Name = "Invader
+ai8Tech = "rainbattery;raincannon;rainaviary;suncannon;sunaviary;sunarcher
+ai8StartMoney = 70000
+ai8TimeBetweenMoves = 2
+ai8AllyList = "7;8"
+ai8color = white
+
+
+[Options]
+
+[A.]
+<h2>Credits</h2>
+<i>One thing leads to another so there really is no end...<br>
+-- Unknown</i>  
+<p>Let the credits run through if you like.  Press the "ok" button to quit during the credits.
+$Button=Credits,Tell,c1
+$Button=Leave,MissionAbort,0
+$Timeout=10,Tell,c1
+
+[c1]
+~[Iedgefarm.43]
+<h2>~lProducer</h2>
+<p>Adley Tang   a.k.a. Rahn
+$Timeout=5,Tell,c2
+
+[c2]
+~[Isunfactory.12]
+<h2>~lConcept</h2>
+<p>Adley Tang<br>
+$Timeout=5,Tell,c3
+
+[c3]
+~[Isunwalker.65]
+<h2>~lTesters</h2>
+<p>Adley Tang<br>
+Kevin Hall a.k.a. Silence
+$Timeout=5,Tell,c4
+
+[c4]
+~[Ipriest.167]
+<h2>~lCast</h2>
+<p>You<br>
+Duke of Thunder<br>
+Knight of Wind<br>
+Govenor of Sun<br>
+Squire of Rain<br>
+Page of Thunder<br>
+Prince Valen<br>
+Guard<br>
+Scout<br>
+
+$Timeout=10,Tell,c5
+
+[c5]
+~[Isunfactory.12]
+<p>Lol of Thunder<br>
+Kalin of Rain<br>
+Wern of Thunder<br>
+Polano of Wind<br>
+Warlord Erokan<br>
+The Mighty Kolred<br>
+General Dulark<br>
+General Taloson<br>
+Malzolf the Thunder Lord<br>
+Ranhul the Knight<br>
+Soldier of Thunder<br>
+Olenor of the Storm<br>
+Galolean the Destroyer<br>
+Balarg the Quick<br>
+Envor the Powerful<br>
+Nilan the Storm Lord<br>
+Daggon the Priest Slayer<br>
+Lanhal of Wind & Rain<br>
+Fanhal the Destroyer<br>
+Thalzin the Savage<br>
+Zarkhan the Great
+$Timeout=20,Tell,c6
+
+[c6]
+<h2>Clan of<br>
+~rE~oL~yE~gM~bE~mN~rT~oA~yL~g~S</h2>
+<p>~rThunder ~wElemental<br>
+~lRain ~wElemental<br>
+~oWind ~wElemental<br>
+~ySun ~wElemental<br>
+Storm Lord Nefrin<br>
+Rain Master Wekil<br>
+Wind Lord Kolenkol<br>
+Minion of Thunder<br>
+Minion of Rain<br>
+Calabin the Rain Knight<br>
+Yan-hal the Wind Warrior<br>
+Wind Warrior<br>
+Wind Warrior<br>
+Lord of Rain<br>
+Knight of Thunder<br>
+Scout Leader<br>
+Rain Scout<br>
+Rain Guard<br>
+Commander<br>
+Pentra<br>
+Jolhaz<br>
+Sun Guard<br>
+Thunder Guard<br>
+Wind Guard <br>
+Rain Guard<br>
+Warden<br>
+Jailer<br>
+Jailer<br>
+Guard <br>
+Guard<br>
+$Timeout=30,Tell,c7
+
+[c7]
+~[Isunaviary.31]
+<h2>Clan of<br>
+~mThe Flyers</h2>
+<p>King of the Flyers<br>
+Lord of the Flyers<br>
+Duke of the Flyers<br>
+Master of the Man o' Wars<br>
+Leader of the Whirligigs<br>
+Wind Maker<br>
+$Timeout=10,Tell,c8
+
+[c8]
+~[Iemptygeyser.1]
+<h2>~yChamberland's Court</h2>
+<p>Lord Chamberland of Thunder<br>
+Lord Trallen<br>
+General Defan<br>
+$Timeout=7,Tell,c9
+
+[c9]
+~[Isunfence.9]
+<h2>~gClan of Silence</h2>
+<p>Silence<br>
+Dean of Ice<br>
+Stewart of Thunder<br>
+Pooka<br>
+$Timeout=7,Tell,c10
+
+[c10]
+~[Irainvortex.28]
+<h2>~mWisdom's Isle</h2>
+Master of Wisdom<br>
+Thunder Attacker<br>
+Thunder Defender<br>
+Wind Attacker<br>
+Wind Defender
+$Timeout=8,Tell,c11
+
+[c11]
+~[Ithunderfactory.3]
+<h2>~rClan of Kal-zen</h2>
+The Twins of Kal-zen<br>
+King of Rain<br>
+Lord of Thunder<br>
+Master of Wind<br>
+Minister of Sun<br>
+$Timeout=8,Tell,c12
+
+[c12]
+~[Irainblocker.1]
+<h2>~lKarkol's Army</h2>
+Lord Karkol<br>
+Duke Dralzon<br>
+General Jaloen<br>
+General Carlton<br>
+Soldier of Rain<br>
+Soldier of Rain<br>
+$Timeout=8,Tell,c13
+
+[c13]
+~[Irainfactory.9]
+<h2>~bKingdom of Qazen</h2>
+Warlord Qazen<br>
+General Ikeran<br>
+General Kason<br>
+General Aran<br>
+$Timeout=8,Tell,c14
+
+[c14]
+~[Iemptygeyser.1]
+<h2>~rRyal's Court</h2>
+Ryal the Charmer<br>
+Lord Ipon<br>
+Lord Narvan<br>
+General Yelog<br>
+$Timeout=8,Tell,c15
+
+[c15]
+~[Iwindvortex.20]
+<h2>~gJarkel's Followers</h2>
+Jarkel the Clever<br>
+Galenhol the Great<br>
+Caller of Thunder<br>
+Wilkson the Priest Slayer<br>
+Apollo the Pretender<br>
+Siffan the Striker<br>
+$Timeout=8,Tell,c16
+
+[c16]
+~[Ioutpost.1]
+<h2>~yThanks To</h2>
+<p>Members of NEC
+$Timeout=8,Tell,c17
+
+[c17]
+~[Imog.16]
+<h2>~yAlso Thanks To</h2>
+<p>sleep<br>
+caffine<br>
+Kevin the insane<br>
+T.V.<br>
+junk food<br>
+fish<br>
+Apollo the sun god<br>
+the guy who found the editor<br>
+The copy & paste function<br>
+trees<br>
+utinsils<br>
+erasers<br>
+
+$Timeout=15,Tell,c18
+
+[c18]
+~[Inugget.9]
+<h2>~yAlso Thanks To</h2>
+<p>Activison and Titanic for making a unique and great game.<br>
+And the players who make a Netstorm a nice place to play
+<p>
+$Timeout=10,Tell,c19
+
+[c19]
+~[Ipriest.167]
+<h2>~rERRORS!!</h2>
+<p>~wI do not claim any responsiblity for anything that happens to your computer by you not knowing how to work it.
+<p>Please forgive any spelling errors I've made...AND if you can't e-mail me and I'll fix it.
+<p>Don't hesistate to report to me any bugs in this campaign.  Give me your opinion about it too.  I NEED FEEDBACK!!
+
+$Timeout=15,Tell,c20
+
+[c20]
+~[Iburied.1]
+<h2>~lDONE</h2>
+<p>That's it!  Those are the credits!  Now get outta here and play my campaign!!  Or someone elses campaign!! Or go on-line and play with someone!!  Do SOMETHING!! 
+<p>QUIT STARING AT THE SCREEN!!! DO SOMETHING!!!
+
+$Button=Im Outta Here!,MissionAbort,0
+
+
+[Succeeded][BadTeamDead]
+$Timeout=0,MissionAbort,0
+
+[Failed]
+$Timeout=0,MissionAbort,0
+
+[END]
+
+

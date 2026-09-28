@@ -1,0 +1,89 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 1
+
+myStartMoney = 7500
+myTech = "windBattery;windarcher;windblocker;windwalker"
+myAllyList = ""
+
+title="No Room"
+
+ai2Name = "Andrew"
+ai2Tech = "windBattery;windarcher;windblocker;windwalker"
+ai2StartMoney = 7500
+ai2GeyserAttachments = 5
+ai2Collectors = 5
+ai2TimeBetweenMoves = 1
+ai2AllyList = ""
+ai2color = red
+ai2Ability="!USE_PRIEST_TO_COLLECT"
+ai2BridgeDrawRate = 2
+
+ai3Name = "Corrie"
+ai3Tech = "windBattery;windarcher;windblocker;windwalker"
+ai3StartMoney = 7500
+ai3GeyserAttachments = 5
+ai3Collectors = 5
+ai3TimeBetweenMoves = 1
+ai3AllyList = ""
+ai3color = white
+ai3Ability="!USE_PRIEST_TO_COLLECT"
+ai3BridgeDrawRate = 2
+
+ai4Name = "Mandy"
+ai4Tech = "windBattery;windarcher;windblocker;windwalker"
+ai4StartMoney = 7500
+ai4GeyserAttachments = 5
+ai4Collectors = 5
+ai4TimeBetweenMoves = 1
+ai4AllyList = ""
+ai4color = green
+ai4Ability="!USE_PRIEST_TO_COLLECT"
+ai4BridgeDrawRate = 2
+
+ai5Name = "Michael"
+ai5Tech = "windBattery;windarcher;windblocker;windwalker"
+ai5StartMoney = 7500
+ai5GeyserAttachments = 5
+ai5Collectors = 5
+ai5TimeBetweenMoves = 1
+ai5AllyList = ""
+ai5color = red
+ai5Ability="!USE_PRIEST_TO_COLLECT"
+ai5BridgeDrawRate = 2
+
+
+[Options]
+
+[A.]
+<h2>Event III: No Room</h2>
+<i>"The universe is ninety-nine percent sky and one percent land.  In the sky, the Wind rules" --Unknown<br></i>  
+<p>Good luck, this might be a toughy.
+
+$Button=What you got; what you don't,ShowTechnology,55
+$Button=Play Event,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+You have been given experience.
+$Button=Leave Playing field,MissionAbort,0
+$Button=Event I,MissionBegin,Portal1
+$Button=Event II,MissionBegin,Portal2
+$Button=Event IV,MissionBegin,Portal4
+$Button=Event V,MissionBegin,Portal6
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+Whoa...I seemd to be right...to hard for you.
+$Button=Leave Playing field,MissionAbort,0
+$Button=Event I,MissionBegin,Portal1
+$Button=Event II,MissionBegin,Portal2
+$Button=Event IV,MissionBegin,Portal4
+$Button=Event V,MissionBegin,Portal6
+
+
+[END]

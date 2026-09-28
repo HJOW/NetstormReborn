@@ -1,0 +1,53 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = "1"
+moreGeysers = "0"
+randGeysers = "0"
+
+myStartMoney = "10000"
+myTech = ""
+myAllyList = ""
+
+title = "Bonus Level"
+
+ai2Name = "Evil Meanie"
+ai2Tech = ""
+ai2StartMoney = "0"
+ai2AllyList = ""
+ai2Color = "red"
+ai2Collectors = ""
+ai2BridgeDrawRate = ""
+ai2GeyserAttachments = ""
+ai2TimeBetweenMoves = ""
+ai2Ability = "!BUILD_BRIDGES;"
+
+[Options]
+
+[A.]
+<h2>Bonus Level</h2>
+<i>"What was I thinking about?"<br>
+--The Smart Bulf after getting a thought, starting to try to 
+walk and think, and getting confused.</i>
+<p>The Bulf-God needs your help.  The evil meanie of 
+the elements is threatening his bulfs.  You must help. If 
+you win, the Bulf-God will give you all the knowledge 
+the bulfs have combined.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded]
+<h2>You get all the Bulfs Knowledge!!</h2>
+<p>However, the bulfs don't understand much and so 
+you don't gain any knowledge.  Sorry.
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+
+
+[Failed]
+<h2>You died!!</h2>
+<p>You died!!
+$Button=Continue,Tell,TryAgain
+
+[END]

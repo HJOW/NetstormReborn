@@ -1,0 +1,14 @@
+title = "Sinn des Todes"
+
+[Overview]
+<background="nsstart">
+<h4>Sinn des Todes</h4>
+<i>© 12/97 by RasRic</i>
+<p>
+Erste Kampagne von <i><h4>RasRic</h4></i>Mail an:<c><a href="http://pweb.uunet.de/lotek.h/">Rasrics homepage!</a></c>
+
+
+$Checked=1 RasRicsPhun,MissionBegin,RasRicsPhun,{DoneRasRicsPhun},1
+
+$Button=Back,Tell,Campaign
+

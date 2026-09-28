@@ -1,0 +1,197 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 3
+randGeysers = 1
+moreGeysers = 3
+
+myStartMoney = 10000
+myTech ="rainBattery;thunderBattery;windBattery;sunfence;suncannon;sunballoon;sunblocker;sunAviary;
+sunArcher;outpost"
+
+title="The Gathering"
+
+ai2Name = "Lord Byron"
+ai2Tech ="windwalker;windArcher;windBlocker;sunBalloon;windballoon;windAviary;sunfence;windbattery"
+ai2StartMoney = 12000
+ai2GeyserAttachments = 2
+ai2Collectors = 2
+ai2TimeBetweenMoves = 1
+ai2Bridgedrawrate = 1
+ai2AllyList = "4;5;6;7"
+ai2Ability ="!USE_PRIEST_TO_COLLECT"
+ai2color = white
+
+ai3Name = "Tilgon"
+ai3Tech ="rainwalker;raincannon;rainBattery;rainfence;sunballoon;rainballoon;rainblocker;rainAviary"
+ai3StartMoney = 12000
+ai3GeyserAttachments = 2
+ai3Collectors = 2
+ai3TimeBetweenMoves = 1
+ai3Bridgedrawrate = 1
+ai3AllyList = "1"
+ai3Ability ="!USE_PRIEST_TO_COLLECT;!CAPTURE_ENEMY_PRIEST"
+ai3color = yellow
+
+ai4Name = "Lord Francis"
+ai4Tech ="bulf;thunderArcher;thunderBattery;thunderfence;sunballoon;thunderCannon;thunderblocker"
+ai4StartMoney = 12000
+ai4GeyserAttachments = 2
+ai4Collectors = 2
+ai4TimeBetweenMoves = 1
+ai4Bridgedrawrate = 1
+ai4AllyList = "2;5;6;7"
+ai4Ability ="!USE_PRIEST_TO_COLLECT"
+ai4color = green
+
+ai5Name = "Lord Thomas"
+ai5Tech ="bulf;thunderArcher;thunderBattery;thunderfence;sunballoon;thunderCannon;thunderblocker"
+ai5StartMoney = 12000
+ai5GeyserAttachments = 2
+ai5Collectors = 1
+ai5TimeBetweenMoves = 1
+ai5Bridgedrawrate = 1
+ai5AllyList = "2;4;6;7"
+ai5Ability ="!USE_PRIEST_TO_COLLECT"
+ai5color = purple
+
+ai6Name = "Lord Victor"
+ai6Tech ="rainwalker;raincannon;rainBattery;rainfence;sunballoon;rainballoon;rainblocker;rainAviary"
+ai6StartMoney = 12000
+ai6GeyserAttachments = 2
+ai6Collectors = 2
+ai6TimeBetweenMoves = 1
+ai6Bridgedrawrate = 1
+ai6AllyList = "2;4;5;7"
+ai6Ability ="!USE_PRIEST_TO_COLLECT"
+ai6color = red
+
+ai7Name = "Lord Richard"
+ai7Tech ="rainwalker;raincannon;rainBattery;rainfence;sunballoon;rainballoon;rainblocker;rainAviary"
+ai7StartMoney = 12000
+ai7GeyserAttachments = 2
+ai7Collectors = 2
+ai7TimeBetweenMoves = 1
+ai7Bridgedrawrate = 1
+ai7AllyList = "2;4;5;6"
+ai7Ability ="!USE_PRIEST_TO_COLLECT"
+ai7color = cyan
+
+
+
+[Options]
+
+[A.]
+
+<h2>Aries Point</h2>
+<P>~y
+News of the destroyed outpost has reached Martol, needless to say, he was not pleased.  He has
+decided 
+to take no chances. He has sent five priest to bring you in for public execution.
+<$Config,Donebeenthere2=1>
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Fight,DoNothing,0
+
+
+
+
+[ai2PriestDead]
+The furies are pleased. They decide to grant you knowledge.
+<p>
+$Button=Knowledge,GetTechnology,140
+
+[ai4PriestDead]
+The furies are pleased. They decide to grant you knowledge.
+<p>
+$Button=Knowledge,GetTechnology,131
+
+[ai5PriestDead]
+The furies are pleased. They decide to grant you knowledge.
+<p>
+$Button=Knowledge,GetTechnology,148
+
+[ai6PriestDead]
+The furies are pleased. They decide to grant you knowledge.
+$Button=Knowledge,GetTechnology,129
+
+[ai7PriestDead]
+The furies are pleased. They decide to grant you knowledge.
+<p>
+$Button=Knowledge,GetTechnology,129
+
+[ai3TemplehalfDead]
+~yMy Lord, A messenger has just arrived with grave news.~.
+<P>
+<I>Messenger: </I>Tilgon's Temple has taken substantial damage, Reenforcements are requested.
+<P>
+
+~[IwindWalker,9]
+
+[ai3PriestDead]
+~yAs Tilgon's body is consumed upon the alter, a voice rings out.
+<p>
+<I>TILGON: </I>Lord, Avenge my death.
+<$Config,DoneAllyDead1=1>
+$Button=Test,Tell,surrender
+
+
+[ai1PriestCaptured][SURRENDER]
+<h2>~yCAPTURED~.</h2><br>
+<I>Lord Byron: </I>Throw him into shackles!
+<?!{DoneAllyDead1}>And, sacrifice this spineless Bounty Hunter!  </?>
+<P>
+<I>Lord Byron: </I>Enjoy your last day, for tomorrow you will be sacrificed before the masses
+on Terra.
+<p>
+$Button=OK ,missionbegin,execute
+
+[ai1TemplehalfDead]
+~yMy Lord, A messenger has just arrived with grave news.~.
+<P>
+<I>Messenger: </I>Our Temple has taken substantial damage. What are your orders?
+<P>
+
+~[IwindWalker,9]
+
+$Button=Hold at all Cost,Tell,Stay
+$Button=Surrender,Tell,SURRENDER
+
+[Stay]
+<I>Messenger: </I>It shall be done, my Lord.
+<P>
+~[IwindWalker,9]
+$Button=Send the Messenger Back,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+
+<$Config,Done{mission.fileName}=1>
+<?{DoneAllyDead1}>   $Timeout=0,TELL,NOALLY </?>
+<?!{DoneAllyDead1}>  $Timeout=0,TELL,ALLYLIVED </?>
+
+[NOALLY]
+<h2>~yVictory is Yours</h2><br>
+<I>YOU: </I>Tilgon, your death has been avenged!<br>
+$Menu=Leave Missions,MissionAbort,1
+$Menu=Lay seige to Terra,MissionBegin,last
+
+[ALLYLIVED]
+<h2>~yVictory is Yours</h2><br>
+<I>TILGON: </I>The Collector was no match for our combined force.<br>
+$Menu=Leave Missions,MissionAbort,1
+$Menu=Lay seige to Terra with Tilgon,MissionBegin,last1 
+$Menu=Lay seige to Terra Alone,Tell,PARTING
+
+[PARTING]
+<I>YOU: </I>Tilgon, I feel that I must continue alone. <br>
+<P>
+<I>TILGON: </I>As you wish my Lord. May the Furies watch over you. <br>
+<BR>
+$Button=Continue,MissionBegin,last
+
+
+[END]
+
+
+

@@ -1,0 +1,108 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 7
+moreGeysers = 2
+
+myStartMoney = 3500
+myTech = "sunWalker;sunarcher;sunballoon;sunFence;sunaviary;outpost;thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence"
+myAllyList = ""
+
+title="WHO ARE THEY?"
+
+ai2Name = "SWORD Lord"
+ai2Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence"
+ai2StartMoney = 7500
+ai2GeyserAttachments = 5
+ai2Collectors = 4
+ai2TimeBetweenMoves = "1"
+ai2DrawBridgeRate = 1
+ai2AllyList = "3"
+ai2color = red
+
+ai3Name = "SWORD Assassin"
+ai3Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;Bulf"
+ai3StartMoney = 17500
+ai3GeyserAttachments = 3
+ai3Collectors = 3
+ai3TimeBetweenMoves = "1"
+ai3DrawBridgeRate = 1
+ai3AllyList = "2"
+ai3color = red
+
+ai4Name = "DL Lord"
+ai4Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker"
+ai4StartMoney = 20000
+ai4GeyserAttachments = 7
+ai4Collectors = 5
+ai4TimeBetweenMoves = "1"
+ai4DrawBridgeRate = 1
+ai4AllyList = "5;6;7"
+ai4color = purple
+
+ai5Name = "DL Assassin"
+ai5Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker"
+ai5StartMoney = 20000
+ai5GeyserAttachments = 6
+ai5Collectors = 4
+ai5TimeBetweenMoves = "0"
+ai5DrawBridgeRate = 1
+ai5AllyList = "4;6;7"
+ai5color = purple
+
+ai6Name = "DL Knight"
+ai6Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker"
+ai6StartMoney = 20000
+ai6GeyserAttachments = 6
+ai6Collectors = 6
+ai6TimeBetweenMoves = "1"
+ai6DrawBridgeRate = 1
+ai6AllyList = "4;5;7"
+ai6color = purple
+
+ai7Name = "The Virtuous One"
+ai7Tech = ""
+ai7StartMoney = 0
+ai7GeyserAttachments = 1
+ai7Collectors = 1
+ai7TimeBetweenMoves = 1
+ai7DrawBridgeRate = 1
+ai73AllyList = "4;5;6"
+ai7color = white
+
+ai8Name = "Guldan"
+ai8Tech = ""
+ai8StartMoney = 0
+ai8GeyserAttachments = 1
+ai8Collectors = 1
+ai8TimeBetweenMoves = 1
+ai8DrawBridgeRate = 1
+ai8AllyList = "1"
+ai8color = white
+
+[Options]
+
+[A.]
+<h2>WHO ARE THEY?</h2>
+<i>Guldan: ~wWho they hell are those two guilds?</i><br>
+<i>You: ~wI don't know, but they seem to be to concentrated and destroying the other they don't even acknowledge out presence.</i><br>
+<i>The Virtuous One: ~wWhy are you just sitting there, help me kill these SWORD members.<br>
+<i>You: ~wWhat are you doing.</i><br>
+<i>The Virtuous One: ~wLeading the WIND BRANCH for the Dark Legions to kill these SWORD's.<br>
+<i>You: ~wOk...what should we do...</i><br>
+<i>The Virtuous One: ~wListen you fool, help me kill these SWORD. Out.<br>
+<i>Guldan: ~wOk...I guess you have to fight a unknown enemy.
+
+$Button=What you got,ShowTechnology,55
+$Button=Start Killing,DoNothing,0
+
+[Succeeded][BadTeamDead]
+You won't see the last of these SWORD or the DL.
+$Button=Ok?...?...?,MissionBegin,FW9
+
+[Failed]
+<h2>You have failed</h2>
+The Odds were agianst the SWORD and you still got killed...Perhaps you should have stated out of their way.
+$Button=Bye Bye,MissionAbort,0
+
+[END]

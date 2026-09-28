@@ -1,0 +1,77 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 8
+moreGeysers = 0
+
+myStartMoney = 15000
+myTech = "rainBattery;rainCannon;sunarcher;sunBalloon;sunFence;rainBlocker"
+
+title = "Arius's Test"
+
+ai2Name = "Knight"
+ai2Tech = "windBattery;sunFence;sunBlocker;sunCannon;sunBalloon;sunAviary"
+ai2StartMoney = 5000
+ai2GeyserAttachments = 100
+ai2Collectors = 10
+ai2TimeBetweenMoves = 4
+ai2AllyList = "3;4;6"
+ai2Color = red
+
+ai3Name = "Barbarian"
+ai3Tech = "windBattery;sunCannon;sunBalloon"
+ai3StartMoney = 5000
+ai2GeyserAttachments = 100
+ai2Collectors = 5
+ai3TimeBetweenMoves = 3
+ai3AllyList = "2;4;6"
+ai3Color = white
+
+ai4Name = "Warlock"
+ai4Tech = "windBattery;sunBalloon;sunCannon;sunAviary;sunFence;sunBlocker"
+ai4StartMoney = 5000
+ai4GeyserAttachments = 100
+ai4Collectors = 20
+ai4TimeBetweenMoves = 1
+ai4AllyList = "2;3;6"
+ai4Color = green
+
+ai6Name = "Necromancer"
+ai6Tech = "windBattery;sunBalloon;sunCannon;sunFence;sunAviary"
+ai6StartMoney = 5000
+ai6GeyserAttachments = 100
+ai6Collectors = 15
+ai6TimeBetweenMoves = 2
+ai6AllyList = "2;3;4"
+ai6Color = yellow
+
+[Options]
+
+[A.]
+<h2>Arius's Test</h2>
+<i>"To test is to find out what you need to learn not what you know"
+--Rese,Great Philosipher</i>
+<p>Arius wants to be sure your the one he's been waiting for.He has setup several AI oponents for you to destroy.Each one better than the first.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>AT LAST!</h2>
+<p>
+Arius shouts as he grabs you."We must prepare you for you journey!"
+THE END
+<Config,Done{mission.fileName}=8>
+$Button=Leave Missions,MissionAbort,1
+$Button=Next Mission,MissionBegin,WOF9
+
+[Failed]
+<h2>GO HOME FOOL!</h2>
+<p>
+Arius shouts as the AI crush your forces.
+$Button=Continue,Tell,Tryagain
+
+
+[END]
+
+

@@ -1,0 +1,126 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 9
+
+
+myStartMoney = 20000
+myTech = {TpVmyTech1}{TpVmyTech2}
+
+title="Temple Raid"
+
+ai2Name = "Minion Of Wind"
+ai2Tech ="windwalker;windArcher;windBlocker;sunBalloon;windballoon;windAviary;sunfence;windbattery"
+ai2StartMoney = 15000
+ai2GeyserAttachments = 2
+ai2Collectors = 2
+ai2Ability ="!USE_PRIEST_TO_COLLECT"
+ai2TimeBetweenMoves = 1
+ai2Bridgedrawrate = 1
+ai2AllyList = "3;4;5"
+ai2color = red
+
+ai3Name = "Minion Of Sun"
+ai3Tech = "sunBalloon;sunArcher;suncannon;sunAviary;windbattery"
+ai3StartMoney = 15000
+ai3GeyserAttachments = 2
+ai3Collectors = 2
+ai3Ability ="!USE_PRIEST_TO_COLLECT"
+ai3TimeBetweenMoves = 1
+ai3Bridgedrawrate = 1
+ai3AllyList = "2;4;5"
+ai3color = white
+
+ai4Name = "Minion Of Thunder"
+ai4Tech ="bulf;thunderArcher;thunderBattery;thunderfence;thunderCannon;thunderblocker"
+ai4StartMoney = 15000
+ai4GeyserAttachments = 2
+ai4Collectors = 2
+ai4Ability ="!USE_PRIEST_TO_COLLECT"
+ai4TimeBetweenMoves = 1
+ai4Bridgedrawrate = 1
+ai4AllyList = "2;3;5"
+ai4color = green
+
+ai5Name = "Minion Of Rain"
+ai5Tech ="rainwalker;raincannon;rainBattery;rainfence;rainballoon;rainblocker;rainAviary"
+ai5StartMoney = 15000
+ai5GeyserAttachments = 2
+ai5Collectors = 2
+ai5Ability ="!USE_PRIEST_TO_COLLECT"
+ai5TimeBetweenMoves = 1
+ai5Bridgedrawrate = 1
+ai5AllyList = "2;3;4"
+ai5color = purple
+
+
+
+[init]
+
+
+[Options]
+
+
+[A.]
+<H2>~yTemple Raid</H2><P>
+<I>{TpVguide}</I> The Minion of Wind has a large amount of Storm Crystals stored in his 
+temple. Destroy him and the rest will follow suit.<br>
+<?{TpVc1}>  ~[Isuncannon.28]     </?>
+<?{TpVc2}>  ~[Iwindarcher.100]    </?>
+<?{TpVc3}>  ~[Iraincannon.12]    </?>
+<?{TpVc4}>  ~[IthunderCannon.36]   </?>
+<?{TpVc5}>  ~[Iwindarcher.100]    </?>
+
+<$config,TpV4=1 {TpV4}>
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Fight,tell,test
+
+[ai2templedead]
+<H2>~yStatus Report</H2><P>
+<I>Messenger: </I>My Lord, We have raided the Minion of Wind's temple and have  discovered 20,000
+ Storm Crystals.<br>
+<?{TpVc1}>  ~[Isunballoon.1]     </?>
+<?{TpVc2}>  ~[Iwindwalker.36]    </?>
+<?{TpVc4}>  ~[Ibulf.80]    	   </?>
+<?{TpVc3}>  ~[Irainwalker.20]    </?>
+<?{TpVc5}>  ~[Isunwalker.65]     </?>
+
+$OnExit= ,ChangeMoney,20000
+
+
+[Succeeded][BadTeamDead]
+<h2>~yVictory</h2><P>
+<I>{TpVguide}</I> Ah, I am well pleased with your valor.<P>
+Rest, for tomorrow you will truly be tested. 
+
+<$config,tpvmoney=1>
+
+<$tell,TECHUSED>
+
+$Button= Continue,MissionBegin,TpV_t5
+
+[TECHUSED]
+<?{TpVc1}>  <$config,TpVc11=0>  </?>
+<?{TpVc2}>  <$config,TpVc21=0>  </?>
+<?{TpVc3}>  <$config,TpVc31=0>  </?>
+<?{TpVc4}>  <$config,TpVc41=0>  </?>
+<?{TpVc5}>  <$config,TpVc51=0>  </?>
+
+[ai1priestdead]
+<H2>~yDefeat</h2><P>
+<i>{TpVguide}</i> <?{Tp_name}> {Tp_yourname}, </?>You and your ally have failed to destroy the other minions.
+<P>Your time of trial is now over.<p>
+
+$Button=Quit,MissionAbort,1
+$Button=Plead for Mercy,tell,RETRY
+
+[RETRY]
+<i>{TpVguide}</i> You have been granted another chance.<P>
+$OnExit= ,MissionBegin,TpVlisten
+
+
+[END]
+
+
+

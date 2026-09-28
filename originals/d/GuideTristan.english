@@ -1,0 +1,17 @@
+title = "Avenging Angels"
+
+[Overview]
+<background="nsstart">
+<h2>*The first commandment*</h2>
+<i>Hope u like them :)</i>
+<p>
+I am GOF/T¤°Rèvêlåtíõn°¤
+Sedsmith@Nildram.co.uk
+
+
+$Checked=1 It starts,MissionBegin,T2,{DoneT2},1
+$Checked=2 Boots as black as night,MissionBegin,T3,{DoneT3},2
+$Checked=3 Worn by the emporer,MissionBegin,T4,{DoneT4},3
+$Checked=4 The final challenge,MissionBegin,T5,{DoneT5},4
+$Button=Back,Tell,Campaign
+

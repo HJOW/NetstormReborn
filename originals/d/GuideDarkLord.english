@@ -1,0 +1,10 @@
+title = "Fury of the Dark Lord"
+
+[Overview]
+<background="nsstart">
+<h2>Fury of the Dark Lord</h2>
+<i>The Dark Lord is terrorizing the sky's with his army of Allies and it's is up to you to put a stop to it!</i>
+
+$Checked=1 DarkLord,MissionBegin,Darklord,{Doneharm},1
+
+$Button=Back,Tell,Campaign

@@ -1,0 +1,32 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 3
+moreGeysers = 0
+
+myStartMoney = 
+myTech = ""
+myAllyList = ""
+
+title="Chamberland's Path"
+
+[Options]
+
+[A.]
+<h2>Chamberland's Path</h2>
+<p>You have decided to let Lord Chamberland of Thunder to use the Isle of Geysers for his own plans.  You are not sure if you have made the right decision.
+<p>
+<i>You decide to assist the Chamberland in his first strike.  You then discover how ambitious he really is!  He has decided to fly straight into a major battle.  His positioning has left you surrounded!  Many close clans have decided to focus their attacks on the Isle.  You now have to make sure the Isle stays intact and not in enemy hands.
+<p> ~[IplayerBanner.0]<i>~lMade by Rahn</i>~[IplayerBanner.0] 
+
+
+$Checked=1 Ambition,MissionBegin,tnron52a,{Donetnron52a},{Donetnron4ex},1
+$Checked=2 The Twins,MissionBegin,tnron62a,{Donetnron62a},{Donetnron52a}
+$Checked=3 Reclaim,MissionBegin,tnron72a,{Donetnron72a},{Donetnron62a}
+
+$Button=Back,Tell,Campaign
+
+
+
+
+[END]

@@ -1,0 +1,117 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 2
+
+myStartMoney = 20000
+myTech="rainbattery;thunderbattery;sunwalker;sunarcher;suncannon;sunblocker;sunballoon;sunfence;sunaviary;windbattery;windwalker;windblocker;windarcher;windaviary;windballoon;outpost"
+myAllyList = "2"
+
+title="TotalAnnihilation"
+
+ai2Name = "Punisher"
+ai2Tech = 
+"sunwalker;sunarcher;suncannon;sunblocker;sunfence;sunaviary;rainbattery;rainaviary;raincannon;rainwalker;rainballoon;rainfence;rainblocker"
+ai2StartMoney = 20000
+ai2GeyserAttachments = 2
+ai2Collectors = 5
+ai2TimeBetweenMoves = 1
+ai2AllyList = "1"
+ai2color = red
+
+ai3Name = "Arm Commander"
+ai3Tech =
+"sunwalker;rainbattery;rainfence;raincannon;rainblocker;rainaviary;rainballoon;rainwalker"
+ai3StartMoney = 600
+ai3GeyserAttachments = 2
+ai3Collectors = 3
+ai3TimeBetweenMoves = 1
+ai3AllyList = "4,5"
+ai3color = white
+
+ai4Name = "Krogoth"
+ai4Tech =
+"sunwalker;bulf;thunderbattery;thunderblocker;thundercannon;thunderarcher;thunderfence"
+ai4StartMoney = 600
+ai4GeyserAttachments = 2
+ai4Collectors = 3
+ai4TimeBetweenMoves = 1
+ai4AllyList = "3,5"
+ai4color = Green
+
+ai5Name = "Core Commander"
+ai5Tech = 
+"sunwalker;windbattery;windarcher;windballoon;windwalker;windaviary;windblocker"
+ai5StartMoney = 600
+ai5GeyserAttachments = 2
+ai5Collectors = 3
+ai5TimeBetweenMoves = 1
+ai5AllyList = "4,3"
+ai5color = magenta
+
+[Options]
+
+[A.]
+<h2>TotalAnnihilation</h2>
+<i>"Look before you leap."<br>
+--Unknown </i>
+~[IPriest.99]~[Imog.15]~[ILightning.*]
+<p>Save your friend , "Punisher" before it's too late, and he's already in great danger. You must act quickly!"~rAND A NOTE: YOUR ENEMIES ARE NOT ALL ALLIES SO THEY MIGHT EVEN KILL A PRIEST FOR YA!!<br>
+~[ISunFlyerBomb.14]
+
+
+$Button=What you have,ShowTechnology,55
+$Button=Let's Save Him!!,DoNothing,0
+
+
+[ai2TempleHalfDead]
+<h2>Message by Cloud Floater</h2>
+~[IRainballoon.*]
+<p>
+~mHelp~y!!! ~mI'm ~yrunning ~mout ~yof ~mtime~y!
+
+[ai3PriestDead]
+<h2>Message by Cloud Floater</h2>
+~[IRainballoon.*]
+<p>
+~rExcellent, ~wthe ~rArm ~wCommander ~ris ~wdead~r!!!
+
+[ai4PriestDead]
+<h2>Message by Air Ship</h2>
+~[IWindballoon.*]
+<p>
+~mWell ~ydone!!!
+[ai5priestDead]
+<h2>Message by DustDevil</h2>
+~[IWindFlyer.*]
+<p>
+~rThe ~wCore ~rCommander ~wis ~rHistory!!!
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+Awesome, u have saved your ally and decimated your enemies! But u didn't cheat, did u????
+$Button=Leave Missions,MissionAbort,1
+
+[ai2PriestCaptured]
+<h2>Uh oh!</h2>
+~[Ipriest.15]
+<p>
+Your ally's Priest, has been captured and is now being brought to the altar for the sacrafice, save him now and use all u have!!
+
+[Ai2PriestDead]
+<h2>Failure!</h2>
+<p>
+Punisher has been punished! u lose!!
+$Button=Continue,Tell,TryAgain
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+Punisher has been punished! u lose!!
+~[Ianim.24]
+$Button=Continue,Tell,TryAgain
+
+
+[END]

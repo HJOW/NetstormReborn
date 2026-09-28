@@ -1,0 +1,173 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 3
+moreGeysers = 1
+
+myStartMoney = 20000
+myTech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence;rainwalker;sunCannon;sunBalloon;sunAviary;sunBlocker;sunFence;sunArcher;windarcher;windBattery;windWalker;windballoon"
+myAllyList = "5;7"
+
+title="Escape!"
+
+ai2Name = "General Ikeran"
+ai2Tech = "windarcher;windBattery;windballoon;windblocker;windwalker;windaviary;rainbattery;rainaviary;rainballoon;raincannon;sunaviary;sunblocker"
+ai2StartMoney = 5000
+ai2GeyserAttachments = 4
+ai2Collectors = 5
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3;4;6;8"
+ai2color = red
+ai2Ability="!USE_PRIEST_TO_COLLECT"
+ai2BridgeDrawRate = 4
+
+ai3Name = "Warlord Qazen"
+ai3Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainwalker"
+ai3StartMoney = 5000
+ai3GeyserAttachments = 3
+ai3Collectors = 5
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2;4;6;8"
+ai3color = white
+ai3Ability="!USE_PRIEST_TO_COLLECT"
+ai3BridgeDrawRate = 3
+
+ai4Name = "General Kason"
+ai4Tech = "sunCannon;sunAviary;sunBlocker;sunArcher;windbattery;windarcher;windaviary;windblocker;rainbattery;rainaviary;rainwalker"
+ai4StartMoney = 5000
+ai4GeyserAttachments = 3
+ai4Collectors = 3
+ai4TimeBetweenMoves = 1
+ai4AllyList = "2;3;6;8"
+ai4color = green
+ai4Ability="!USE_PRIEST_TO_COLLECT"
+ai4BridgeDrawRate = 4
+
+
+ai5Name = "Duke of Thunder"
+ai5Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;sunBlocker;sunArcher;sunBalloon"
+ai5StartMoney = 10000
+ai5GeyserAttachments = 3
+ai5Collectors = 7
+ai5TimeBetweenMoves = 1
+ai5AllyList = "1;7"
+ai5color = purple
+ai5Ability="!USE_PRIEST_TO_COLLECT"
+ai5BridgeDrawRate = 4
+
+ai7Name = "Knight of Wind"
+ai7Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;sunArcher;sunBlocker;sunBalloon"
+ai7StartMoney = 20000
+ai7GeyserAttachments = 3
+ai7Collectors = 7
+ai7TimeBetweenMoves = 1
+ai7AllyList = "1;5"
+ai7color = turquoise
+ai7Ability="!USE_PRIEST_TO_COLLECT"
+ai7BridgeDrawRate = 4
+
+ai8Name = "General Aran"
+ai8Tech = "rainbattery;rainballoon;rainaviary;thunderbattery;thundercannon;thunderblocker;thunderarcher"
+ai8StartMoney = 5000
+ai8GeyserAttachments = 3
+ai8Collectors = 7
+ai8TimeBetweenMoves = 1
+ai8AllyList = "2;3;4;6"
+ai8color = orange
+ai8Ability="!USE_PRIEST_TO_COLLECT;!ENCIRCLE_ENEMY_ISLAND"
+ai8BridgeDrawRate = 4
+
+
+
+[Options]
+
+[A.]
+<h2>Escape from the Dark Lords</h2>
+<i>"Fear is the greatest weapon a person can have"<br>
+--Rahn Nimbian General</i>  
+<p>Penetrating Qazen's defences was relitivly easy since his armies were still regrouping after the Chamberland's attack.  After a few small battles you find the Warlord Qazen.  He has not yet set up any sizeable defence for the Isle of Geysers but his most powerful and trusted generals are protecting him.  You must recapture the Isle or else your allies will surely abandon you for lack of foresight. 
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+The Isle of Geysers is back in your hands.  After making a hasty departure from the late Qazen's territory you head for home.  There you and your allies will plan for your final assualt on those who would oppose you. 
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,tnron82ex
+
+[ai2TempleHalfDead]
+<h2>Message from General Ikeran</h2>
+<p>
+You will not win this battle with the Isle of Geysers in our possesion!
+
+[ai2PriestDead]
+<h2>Message from the Duke of Thunder</h2>
+<p>
+We may not be able to take Qazen...he seems far more cunning than the Guardian of Isle of Geysers...
+
+[ai2PriestCaptured]
+<h2>Message from General Ikeran</h2>
+<p>
+I have failed you my liege...please forgive me...
+
+[ai3TempleHalfDead]
+<h2>Message from Qazen</h2>
+<p>
+What?? NO!!! Not now!!!
+
+[ai3TempleDead]
+<h2>Message from Qazen</h2>
+<p>
+Will nothing stop him?!?!
+
+[ai4TempleHalfDead]
+<h2>Message from General Kason</h2>
+<p>
+Blast they have gotton past my defenses...
+
+[ai4PriestDead]
+<h2>Message from the Knight of Wind</h2>
+<p>
+Let us hope we will be able to the same to the rest...
+
+
+[ai5PriestCaptured]
+<h2>Message from the Knight of Wind</h2>
+<p>
+This is not good...can you help him??
+
+[ai5PriestDead]
+<h2>Your ally the Duke of Thunder has died!</h2>
+<p>
+Wave after wave of attacks continued on your island... You manage to hold off the attacks until the Knight of wind also fell against the endless attacks.  Surrounded you were dispatched with ease...
+
+$Button=Continue,Tell,TryAgain
+
+[ai7TempleHalfDead]
+<h2>Message from the Knight of Wind</h2>
+<p>
+I can't hold out much longer...
+
+[ai7PriestDead]
+<h2>Your ally the Knight of Wind has died!</h2>
+<p>
+With the Knight's death the generals of Qazen surrounded your island and layed waste to it....
+
+$Button=Continue,Tell,TryAgain
+
+[ai8PriestDead]
+<h2>Message from the Duke of Thunder</h2>
+<p>
+Good job! Let's finish the rest of them!
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+The Isle of Geysers now in Qazen's hands is used to destroy countless clans untill the remaining Nimbians submitted to the Warlord.
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+

@@ -1,0 +1,32 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 3
+moreGeysers = 0
+
+myStartMoney = 
+myTech = ""
+myAllyList = ""
+
+title="The Power"
+
+[Options]
+
+[A.]
+<h2>The Power</h2>
+<p>You have decided to use the Isle of Geysers for you own purposes.  Although little is known about these Isles that attract storm power, it is belived that the Furies themselves may have created them.  It is known that there are six such islands.  Three of them are large while the others are half the size.  You have decided to take it upon yourself to unlock the secrets of the Isle.  If you do find out how the Isle of Geysers attracts power, you will gain an even larger advantage over your foes!  The first step in your plans is to seek out the ancient tomb belived to contain information about the Isle.  You manage to reach the obsure island but find it has been defended!  
+<p>
+<i>There are five defenders of the Island.  You must fight your way through!  From what little information you obtained, you find that all of the defenders can be destroyed at once.  
+<p> ~[IplayerBanner.0]<i>~lMade by Rahn</i>~[IplayerBanner.0] 
+
+
+$Checked=1 The Book,MissionBegin,tnron52b,{Donetnron52b},{Donetnron4ex},1
+$Checked=2 Experiment,MissionBegin,tnron62b,{Donetnron62b},{Donetnron52b}
+$Checked=3 Unstable!,MissionBegin,tnron72b,{Donetnron72b},{Donetnron62b}
+
+$Button=Back,Tell,Campaign
+
+
+
+
+[END]

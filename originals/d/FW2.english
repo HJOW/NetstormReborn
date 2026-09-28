@@ -1,0 +1,96 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 2
+moreGeysers = 1
+
+myStartMoney = 5000
+myTech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainwalker;sunwalker"
+myAllyList = "3"
+
+title="Barriers of Hope"
+
+ai2Name = "SPU Fighter"
+ai2Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainwalker;sunwalker"
+ai2StartMoney = 10000
+ai2GeyserAttachments = 7
+ai2Collectors = 4
+ai2TimeBetweenMoves = "1"
+ai2AllyList = "4"
+ai2color = yellow
+
+ai3Name = "^WaR^ Lord"
+ai3Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;Bulf;sunwalker"
+ai3StartMoney = 10000
+ai3GeyserAttachments = 6
+ai3Collectors = 4
+ai3TimeBetweenMoves = "1"
+ai3AllyList = "1"
+ai3color = green
+
+ai4Name = "GOF Minion"
+ai4Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;Bulf;sunwalker"
+ai4StartMoney = 17500
+ai4GeyserAttachments = 7
+ai4Collectors = 4
+ai4TimeBetweenMoves = "1"
+ai4AllyList = "2"
+ai4color = orange
+
+[Options]
+
+[A.]
+<h2>~[IsunFence.1]Barriers of Hope~[IsunFence.1]</h2>
+<i>Guldan: ~wSee those glowing walls?  That is the only thing the stands between us and the enemies guns.  What do you think would happen if the barriers are destroyed?<br>
+<i>You: ~wWe die.<br>
+<i>Guldan: ~wCorrect.<br>
+All four of you quickly built barriers around your islands.  They are not really complete or very strong.
+
+$Button=Knock 'um down,Tell,Mom
+
+[Mom]
+~rINCOMING ~wLINK:<br>
+<i>^WaR^ Leader: ~wI need your wind Technology...
+<i>You: ~wFor what?
+<i>^WaR^ Leader: ~wI'm picking up a bunch of men carring wind tech.
+<i>You: ~wOk, I guess.
+<i>Thanx, here's rain technology... Hey, knight, come here...
+
+[Succeeded][BadTeamDead]
+<p>After the priest whas sacrificed, you felt something like electricity flow through you.  The little zap left your body and went South, to the GOF's fortress.
+<$Config,Done{mission.fileName}=1>
+$Button=Travel there,MissionBegin,FW3
+
+[ai3PriestDead]
+<i>^WaR^ Ghost: ~Why did you let me die?<br>
+Good Question?  Do you have an answer?<br>
+I'll give you 10 seconds to come up with one.
+$Timeout=10,Tell,No
+$Button=No,Tell,No
+
+[No]
+<i>^WaR^ Ghost: ~wWhy don't you have an answer???  Here's a question, when do you except to die?
+$Menu=In about 10 years,Tell,Nope
+$Menu=In about 20 years,Tell,Nope
+$Menu=In about 30 years,Tell,Nope
+$Menu=In about 40 years,Tell,Nope
+$Menu=In about 50 years,Tell,Nope
+
+[Nope]
+<i>^WaR^ Ghost: ~wNope, try today.
+$Button=You got 10 seconds to run,MissionAbort,0
+$Timeout=10,Tell,Killed
+
+[Killed]
+The Ghost summons a mass storm that pulls your island into the abyss of the Furies.
+$Button=Bye Bye,MissionAbort,0
+
+[Failed]
+<h2>Failure!</h2>
+<p>Guldan: You let the barriers down!!!<br>
+<p>FW Rogue: It wasn't my fault.<br>
+<p>Guldan: Are you saying it was the commander's fault?<br>
+<p>FW Rouge: Yes.<br>
+$Button=*You have lost your position*,MissionAbort,0
+
+[END]

@@ -1,0 +1,107 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 4
+moreGeysers = 1
+
+myStartMoney = 10000
+myTech = "all"
+myAllyList = ""
+
+title="Fight_the_Furies"
+
+ai2Name = "Marduk"
+ai2Tech = ""
+ai2StartMoney = 5000
+ai2GeyserAttachments = 4
+ai2Collectors = 1
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3;4;5"
+ai2color = red
+ai2Ability=""
+ai2BridgeDrawRate = 4
+
+ai3Name = "Ra"
+ai3Tech = ""
+ai3StartMoney = 5000
+ai3GeyserAttachments = 4
+ai3Collectors = 1
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2;4;5"
+ai3color = white
+ai3Ability=""
+ai3BridgeDrawRate = 4
+
+ai4Name = "Bedi"
+ai4Tech = ""
+ai4StartMoney = 8000
+ai4GeyserAttachments = 4
+ai4Collectors = 1
+ai4TimeBetweenMoves = 1
+ai4AllyList = "2;3;5"
+ai4color = green
+ai4Ability=""
+ai4BridgeDrawRate = 4
+
+ai5Name = "Enki"
+ai5Tech = ""
+ai5StartMoney = 8000
+ai5GeyserAttachments = 4
+ai5Collectors = 1
+ai5TimeBetweenMoves = 1
+ai5AllyList = "2;3;4"
+ai5color = purple
+ai5Ability=""
+ai5BridgeDrawRate = 4
+
+
+
+[Options]
+
+[A.]
+<h2>Impossible</h2>
+<i>"The impossible is only impossible if u believe it to be impossible"<br>
+--Killdead The Great Prophet of Nimbus</i>  
+<p>You have just come back from winning the great war of Nimbus your the RULER but the Furies are jealous of the power you hold over your people and they sent up their finest representatives to whip your butt and show that they still reign supreme!!
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Unbelieveable</h2>
+<p>
+You have destroyed the Furies of Wind,Sun,Rain and Thunder the people all bow down to pay homeage to you and one mother come up bringing her dying son and asks you to heal him as you are now a Furie of unequaled strength and you find that your touch does indeed heal and the people around you scream out your name as you bring Nimbus back to how it once was.
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,nothinghereyet
+
+[ai2PriestDead]
+<h2>Message</h2>
+<p>
+How dare you destroy the Rain Fury now you shall die!
+
+[ai3PriestDead]
+<h2>Message</h2>
+<p>
+How dare you destroy the Wind Fury now you shall die!
+
+[ai4PriestDead]
+<h2>Message</h2>
+<p>
+How dare you destroy the Sun Fury now you shall die!
+
+[ai5PriestDead]
+<h2>Message</h2>
+<p>
+How dare you destroy the Thunder Fury now you shall die!
+
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+The Furies have won!!!And gained sway once again over your people.Your people went on to famine,disease and eventually death because you could not withstand the Furies greed!!!
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+

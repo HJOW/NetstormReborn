@@ -1,0 +1,19 @@
+title = "Evil Ones" 
+
+[Overview]
+<background="nsstart">
+<h2>Evil Ones</h2>
+<i>Avoid many obstacles and dangers as you seek to destroy evil</i>
+<p>
+This is my first attempt at a Netstorm Scenario.  
+<p>
+Version 1.0
+ 
+
+$Checked=1 No Time To Lose,MissionBegin,nttl,{Donenttl},1
+$Checked=2 Night of the Man-o-Wars,MissionBegin,NightOfTheManOWars,{DoneNightOfTheManOWars},{Donenttl},2
+$Checked=3 Furie's Gift,MissionBegin,FuriesGift,{DoneFuriesGift},{DoneNightOfTheManOWars},3
+$Checked=4 Trapped,MissionBegin,Trapped,{DoneTrapped},{DoneFuriesGift},4
+$Checked=5 Evilest's Lair,MissionBegin,EvilestsLair,{DoneEvilestsLair},{DoneTrapped},5
+
+$Button=Back,Tell,Campaign

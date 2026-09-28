@@ -1,0 +1,71 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 12
+moreGeysers = 1
+
+myStartMoney = 3000
+myTech = "sunWalker;sunArcher;sunBalloon;sunCannon;sunBlocker;sunFence;sunaviary;outpost;sunFactory;windBattery;rainBattery;rainWalker;rainFactory;rainCannon;sunCannon;rainBalloon;rainFence;rainBlocker;rainaviary;rainFactory;"
+
+title="Evading Nimbian Hades"
+
+ai2Name = "Bounty Hunter of Thunder"
+ai2Tech = "sunWalker;sunAviary;sunArcher;sunCannon;sunBalloon;sunFence;sunBlocker;thunderBattery;bulf;thunderBlocker;thunderArcher;thunderCannon;thunderFence"
+ai2StartMoney = 8000
+ai2GeyserAttachments = 2
+ai2Collectors = 3
+ai2TimeBetweenMoves = 2
+ai2AllyList = "3"
+ai2color = red
+
+ai3Name = "Bounty Hunter of Wind"
+ai3Tech = "sunWalker;sunArcher;sunCannon;sunBalloon;sunFence;sunBlocker;sunAviary;windBattery;windWalker;windBlocker;windArcher;windBalloon;windAviary"
+ai3StartMoney = 8000
+ai3GeyserAttachments = 2
+ai3Collectors = 3
+ai3TimeBetweenMoves = 2
+ai3AllyList = "2"
+ai3color = white
+
+ai4Name = "The Lost Priest of Nimbus"
+ai4Tech = "1"
+ai4StartMoney = 3000
+ai4GeyserAttachments = 2
+ai4Collectors = 3
+ai4TimeBetweenMoves = 1
+ai4AllyList = "1"
+ai4color = green
+
+[Options]
+[ai3PriestCaptured]
+<h2>You receive a message from The Bounty Hunter of Wind.</h2>
+<p>
+~y~No one can escape the Wind of Hades!<br>
+The Low Priest of Nimbus:  I have been trapped in Hades for 100 years.  I can't go back again.  Help me!  
+
+[A.]
+<h2>Evading Hades</h2>
+<i>"To evade evil is like trying to be all good."<br>
+--Nimbian Priest Caught by The Bounty Hunter of Thunder</i>  
+<p>You barely escaped the guardian.  You did manage to somehow rescue the Lost Priest of Nimbus.  However, no one escapes the clutches of Hades.  You now have two bounty hunters on your tail.  Run, survive!
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Congratulations!</h2>
+<p>
+You have evaded the bounties.  Now prepare yourself for The Beginning of the End.  (What, do that again?  Well, you shouldn't have failed.)
+
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,Bofend
+
+[Failed]
+<h2>Holy Hades!</h2>
+<p>
+You have been captured by the bounties.  Now you will rot in Hades forever.
+
+$Button=Next Mission,MissionBegin,Hades
+
+[END]

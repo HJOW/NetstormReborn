@@ -1,0 +1,60 @@
+Header]
+missionType="Tutorial"
+
+missionNumber = 1
+moreGeysers = 2
+
+myStartMoney = 95000
+myTech = "sunBalloon;windarcher;windBattery;windaviary;windballoon;windblocker;Windwalker;rainBattery;raincannon;rainFence;rainballoon;rainwalker;rainblocker"
+
+title="My First Map"
+
+ai2Name = "Dark Priest of Thunder"
+ai2Tech = "sunBalloon;thunderarcher;thunderCannon;thunderbattery;thunderfence;thunderblocker;bulf"
+ai2StartMoney = 70000
+ai2GeyserAttachments = 2
+ai2Collectors = 10
+ai2TimeBetweenMoves = 6
+ai2AllyList = 3
+ai2color = red
+
+ai3Name = "Dark Priest of Rain"
+ai3Tech = "sunBalloon;rainbattery;rainballoon;raincannon;rainFence"
+ai3StartMoney = 70000
+ai3GeyserAttachments = 2
+ai3Collectors = 10
+ai3TimeBetweenMoves = 4
+ai3AllyList = 2
+ai3color = white
+
+[Options]
+
+[A.]
+<h2>Kill the Dark Priest and Rule Nimbus</h2>
+<p>The insolent fools... The Dark Priests of Rain and Thunder believe
+you are weak. Show these fools who rules Nimbus.
+
+$Button=The Tech the Furies have Given you,ShowTechnology,55
+$Button=Kick Some Evil Ass,DoNothing,O
+
+
+[Suceeded][BadTeamDead]
+<h2>Success!!</h2>
+<p>
+You have taught these fools who reigns the skies of Nimbus... But who
+sent them......?
+<$Config,Done{mission.filename}=1>
+$Button=My First Map,MissionBegin,MyFirstMap
+$Button=Leave Missions,MissionAbort,0
+
+
+[Failed][GoodTeamDead]
+<h2>Failure!!</h2>
+<p>
+You have lost to these puny rebels..... You do not deserve the name you bear!
+You have another chance, use it wisley!!
+$Button=Continue,Tell,TryAgain
+$Button=Leave Missions, MissionAbort,0
+
+[END]
+

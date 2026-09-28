@@ -1,0 +1,136 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 13
+
+myStartMoney = 2000
+myTech = "thunderFactory;windFactory;sunFactory;thunderbattery;thundercannon;thunderarcher;windbattery;windarcher;thunderblocker;suncannon;sunfence"
+myAllyList = "3;4"
+
+title = "Salvation"
+
+ai2Name = "Dark Lord of Wind"
+ai2Tech = "windFactory;windwalker;windbattery;suncannon;windarcher;windaviary;windblocker;sunarcher"
+ai2StartMoney = 600
+ai2Collectors = 4
+ai2GeyserAttachments = 5
+ai2AllyList = "8"
+ai2TimeBetweenMoves = 1
+ai2color = white
+ai2BridgeDrawRate = 1
+ai2Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai3Name = "Rain Wizard"
+ai3Tech = "sunFactory;rainFactory;sunwalker;rainbattery;sunaviary;rainaviary;sunblocker;raincannon"
+ai3StartMoney = 600
+ai3Collectors = 5
+ai3GeyserAttachments = 5
+ai3AllyList = "1;4"
+ai3TimeBetweenMoves = 1
+ai3color = white
+ai3BridgeDrawRate = 3
+ai3Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai4Name = "Wind Knight"
+ai4Tech = "sunFactory;windFactory;sunwalker;windbattery;windarcher;suncannon;sunaviary;windblocker"
+ai4StartMoney = 1000
+ai4Collectors = 5
+ai4GeyserAttachments = 5
+ai4AllyList = "1;3"
+ai4TimeBetweenMoves = 1
+ai4color = green
+ai4BridgeDrawRate = 3
+ai4Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai8Name = "Opeka"
+ai8Tech = "thunderFactory;sunwalker;thunderbattery;thundercannon"
+ai8StartMoney = 1000
+ai8Collectors = 5
+ai8GeyserAttachments = 3
+ai8AllyList = "2"
+ai8TimeBetweenMoves = 2
+ai8color = orange
+ai8BridgeDrawRate = 5
+ai8Ability = "!USE_PRIEST_TO_COLLECT"
+
+[@5]
+<h2>~wRain Wizard</h2>
+<p>
+Thank God you showed up!  This guy is crazy!
+
+[@15]
+<h2>~rDark Lord of Wind</h2>
+<p>
+I was summoned back to Nimbus along with my brothers to reclaim the title once lost.  They have already arived before me and I heard from the Dark Lord of Rain that you threaten to kill him.  I must make sure we shall rule Nimbus once again by killing all threats to us.
+
+[@19]
+<h2>~lYou</h2>
+<p>
+You mean...Lord Gunton is the Dark Lord of Rain?!
+
+[@20]
+<h2>~gWind Knight</h2>
+<p>
+That would explain the followers and you meantioning that he is a master of rain.
+
+[@21]
+<h2>~lYou</h2>
+<p>
+Whatever it means, we better save Rain Wizard quick!  We can think later.
+
+[Options]
+
+[A.]
+<h2>Salvation</h2> 
+<i>"Ties to the past will always snap."<br>
+--Unknown.</i>
+<p>
+You reach Rain Wizard and Dark Lord of Wind just in time.  Better help fast or this could get ugly.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Start Mission,DoNothing,0
+
+[Succeed]
+[BadTeamDead]
+
+<h2>Congratulations! Victory!</h2> 
+<p>
+You have saved Rain Wizard from the Dark Lord of Wind as well as learned some anwsers.  To think that Lord Gunton was the Dark Lord this whole time.  It is time to bring an end to his reign of terror!
+<$Config,Done{mission.filename}=1> 
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,b14
+
+[ai2TempleDead]
+<h2>~rDark Lord of Wind</h2>
+<p>
+Your demise shall be brought and we shall rule Nimbus once again!
+
+[ai3TempleHalfDead]
+<h2>~wRain Wizard</h2>
+<p>
+I hope you got a brilliant plan right now.
+
+[ai3PriestDead]
+<h2>Outcome</h2>
+<p>
+With the death of Rain Wizard, you were overwhelmed in the future.
+$Button=Continue,Tell,TryAgain
+
+[ai4TempleHalfDead]
+<h2>~gWind Knight</h2>
+<p>
+I need help here!
+
+[ai4PriestDead]
+<h2>Outcome</h2>
+<p>
+With the death of Wind Knight, you were overwhelmed.
+$Button=Continue,Tell,TryAgain
+
+[Failed]
+<h2>Failure!</h2> 
+<p> 
+Uh oh!  Now Nimbus is ruled by the Dark Lords again =)
+$Button=Continue,Tell,TryAgain
+
+[END]

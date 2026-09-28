@@ -1,0 +1,122 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 5
+moreGeysers = 0
+
+myStartMoney = 5000
+myTech = "sunCannon;sunBalloon;sunAviary;sunBlocker;sunFence;windbattery"
+myAllyList = "5;6"
+
+title="Cataclysmic Battle"
+
+ai2Name = "Talos the Thunder Demon"
+ai2Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;sunAviary;sunArcher;bulf"
+ai2StartMoney = 20000
+ai2GeyserAttachments = 4
+ai2Collectors = 10
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3;4"
+ai2color = red
+ai2BridgeDrawRate = 3
+ai2Ability="!USE_PRIEST_TO_COLLECT"
+
+ai3Name = "Stremtar the Ice Giant"
+ai3Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon"
+ai3StartMoney = 20000
+ai3GeyserAttachments = 4
+ai3Collectors = 10
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2;4"
+ai3color = white
+ai3BridgeDrawRate = 2
+ai3Ability="!USE_PRIEST_TO_COLLECT"
+
+ai4Name = "Brevak the Wind Witch"
+ai4Tech = "windbattery;windArcher;windAviary;windBlocker;windBalloon"
+ai4StartMoney = 20000
+ai4GeyserAttachments = 4
+ai4Collectors = 10
+ai4TimeBetweenMoves = 1
+ai4AllyList = "2;3"
+ai4color = green
+ai4BridgeDrawRate = 1
+ai4Ability="!USE_PRIEST_TO_COLLECT"
+
+ai5Name = "Yarrick the Mighty"
+ai5Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon"
+ai5StartMoney = 5000
+ai5GeyserAttachments = 4
+ai5Collectors = 5
+ai5TimeBetweenMoves = 1
+ai5AllyList = "1;6"
+ai5color = turquoise
+ai5BridgeDrawRate = 3
+ai5Ability="!ENCIRCLE_ENEMY_ISLAND"
+
+ai6Name = "Warlord Holtar"
+ai6Tech = "thunderBattery;thunderCannon;thunderArcher;bulf;thunderBlocker"
+ai6StartMoney = 5000
+ai6GeyserAttachments = 4
+ai6Collectors = 5
+ai6TimeBetweenMoves = 1
+ai6AllyList = "1;5"
+ai6color = yellow
+ai6BridgeDrawRate = 4
+ai6Ability="!ENCIRCLE_ENEMY_ISLAND"
+
+[Options]
+
+[A.]
+<h2>Cataclysmic Battle</h2>
+<i>"Today we die in the greatest of glory or share the greatest of spoils. Go forward and make your name in the scrolls of future generations!"<br>
+--Warlord Holtar, Your Ally</i>  
+<p>With an army of thousands led by the greatest of Nimbian generals and yourself, you head forward at double pace until you are met by a huge enemy army on the grounds of a wealthy Nimbian. He is caught in the middle of what is to be the greatest battle of all time. At dawn you will attack and death or ultimate glory will await you.
+
+<p>Let the Furies decide the victor. Pray they are on your side!
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Begin the Attack,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+As the last of the enemy is obliterated in painful agony you feel a great rush. Nothing now stands between you and the guildmaster. Tomorrow you will take your rightful revenge!
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,guildmaster
+
+[ai2PriestDead]
+<h2>Talos is Deceased</h2>
+<p>
+Talos has been crushed in your unstoppable onslaught! Bring your hatred and guns to bear on the other two and offer their souls to the Furies!
+
+[ai3PriestCaptured]
+<h2>Sacrifice Her!</h2>
+<p>
+Take the Wind Witch to the altar and purify her evil soul. It is never wise to wait to sacrifice a witch as powerful as her, she knows many nasty spells...
+
+[ai4TempleHalfDead]
+<h2>Message from Stremtar</h2>
+<p>
+<i>"Listen to me foolish man. You have attacked my temple and for this you shall surely die! Help me capture the rest of the rebels and I will not kill your family as well!"</i>
+
+$Button=Ignore Him,DoNothing,0
+
+[ai5TempleHalfDead]
+<h2>Message from Yarrick</h2>
+<p>
+<i>"Please help me my island is under attack! If we work together to improve our defense this will make us stronger in attack as well! Help me!"</i>
+
+[ai6PriestCaptured]
+<h2>Holtar Has Been Captured!</h2>
+<p>
+Warlord Holtar has been captured by the enemy - will you save him in this most dire of situations or stand by like a coward? At this time you really need all the allies you can get!
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+You have failed, the scrolls of future generations tell of your terrible defeat and failure. There may never again be a man as brave! Try again.
+$Button=Continue,Tell,TryAgain
+
+[END]

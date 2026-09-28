@@ -1,0 +1,22 @@
+title = "Wall of Fate" 
+
+[Overview]
+<background="nsstart">
+<h2>Wall of Fate</h2>
+<i>Avoid many obstacles and dangers as you seek The Wall of Fate</i>
+<p>
+This is my first attempt at a Netstorm Scenario.  
+<p>
+Version 4.0
+ 
+
+$Checked=1 The Contest,MissionBegin,WOF1,{DoneWOF1},1
+$Checked=2 The Feud,MissionBegin,WOF2,{DoneWOF2},2
+$Checked=3 A Powerful Ally,MissionBegin,WOF3,{DoneWOF3},3
+$Checked=4 No Time to Kill,MissionBegin,WOF4,{DoneWOF4},4
+$Checked=5 The Devil's Fury,MissionBegin,WOF5,{DoneWOF5},5
+$Checked=6 Fortress of Vergas,MissionBegin,WOF6,{DoneWOF6},6
+$Checked=7 Voyage,MissionBegin,WOF7,{DoneWOF7},7
+$Checked=8 Arius's Test,MissionBegin,WOF8,{DoneWOF8},8
+$Checked=9 The Undertaker,MissionBegin,WOF9,{DoneWOF9},9
+$Button=Back,Tell,Campaign

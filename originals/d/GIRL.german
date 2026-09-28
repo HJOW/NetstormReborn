@@ -1,0 +1,50 @@
+[Header]
+
+missionType="Tutorial"
+missionNumber = 4
+moreGeysers = 1
+myStartMoney = 1000
+myTech = "thunderbattery;sunAviary;sunCannon"
+
+title= "Personal_Revenge"
+
+ai2Name= "Mrs_Girl_of_WAr"
+ai2Tech= "rainbattery;sunCannon;rainAviary"
+ai2StartMoney= 1000
+ai2GeyserAttachments = 2
+ai2Collectors = 6
+ai2TimeBetweenMoves = 1
+ai2AllyList= ""
+ai2color= white
+
+
+[Options]
+
+
+[A.]
+<h2> Revenge! <h2>
+<i> " How do you dare to sac my boyfriend! This will not be tolerated" <br>
+--Mrs Enraged </i|
+<p>
+
+
+$Button=Review Knowledge,Show Technology,55
+$Button=PlayMission,DoNothing,0
+
+[Succeeded] [BadTeamDead]
+
+<h2> Yeppie!!!! <h2>
+<p> Not a flawless victory! --- Ermac
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,sun
+
+[Failed]
+
+<h2> You suck!!! </h2>
+<p> How dare you to come back! After what you did!
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+

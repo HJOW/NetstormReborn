@@ -1,0 +1,121 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 2
+moreGeysers = 1
+randomGeysers = 1
+denySalvage = 1
+myStartMoney = 5000
+myTech = "sunWalker;sunArcher;sunCannon;sunAviary;sunBlocker;sunFence;sunBalloon;sunAviary;windArcher;windBattery"
+
+title="Low Priests Rise to the Call"
+
+ai2Name = "Low Priest of Rain"
+ai2Tech = "sunWalker;sunArcher;rainBattery;rainCannon;rainWalker;sunCannon;rainFence"
+ai2StartMoney = 3000
+ai2GeyserAttachments = 2
+ai2Collectors = 3
+ai2TimeBetweenMoves = 2
+ai2AllyList = "3;4"
+ai2color = red
+ai2Ability = "!USE_PRIEST_TO_COLLECT"
+ai2BridgeDrawRate = 3
+
+ai3Name = "Low Priest of Wind"
+ai3Tech = "sunWalker;sunarcher;windBattery;windArcher;windWalker;sunCannon;windBlocker"
+ai3StartMoney = 3000
+ai3GeyserAttachments = 2
+ai3Collectors = 3
+ai3TimeBetweenMoves = 2
+ai3AllyList = "2;4"
+ai3color = white
+ai3Ability = "!USE_PRIEST_TO_COLLECT"
+ai3BridgeDrawRate = 3
+
+ai4Name = "Low Priest of Thunder"
+ai4Tech = "sunWalker;sunArcher;sunCannon;thunderBlocker;thunderBattery;Bulf;ThunderCannon"
+ai4StartMoney = 3000
+ai4GeyserAttachments = 2
+ai4Collectors = 3
+ai4TimeBetweenMoves = 2
+ai4AllyList = "2;3"
+ai4color = green
+ai4Ability = "!USE_PRIEST_TO_COLLECT"
+ai4BridgeDrawRate = 3
+
+ai5Name = "Low Priest of Nimbian Warfare"
+ai5Tech = "sunWalker;sunarcher;windBattery;sunFence;windArcher;windWalker;sunCannon;"
+ai5StartMoney = 0000
+ai5GeyserAttachments = 1
+ai5Collectors = 1
+ai5TimeBetweenMoves = 5
+ai5AllyList = "1"
+ai5color = purple
+ai5Ability = "!USE_PRIEST_TO_COLLECT"
+ai5BridgeDrawRate = 3
+
+[Options]
+[ai5PriestCaptured]
+<h2>You receive a message from your ally:</h2>
+<p>Ally, I desparately need your help.  I have no money and I have been captured.  Save me!
+
+[ai5PriestDead]
+<h2>You receive a message from the Furies</h2>
+<p>Don't worry about your friend, for you will soon join him.
+
+[ai2PriestDead]
+$Menu=~[IwindWalker.1]Wind,GetTechnology,137
+
+[ai3PriestDead]
+$Menu=~[IwindBlocker.1]Wind,GetTechnology,142
+
+[A.]
+<h2>Low Priests Rise to the Call</h2>
+<i>I will crush you like a grape.<br>
+--The Low Priest of Thunder</i>  
+<p>
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+<h2>You receive a message from the Low Priest of Thunder</h2>
+<p>
+You seem to be a great foe such as myself.  Will you ally with me so we can crush these puny priests?
+
+$Button=YES,Tell,AllianceBegun
+$Button=NO,Tell,NoAlliance
+$Timeout=8,Tell,AllianceWithdrawn
+
+[AllianceBegun]
+<$Config,pickally1=1>
+<$MissionBegin,Low2>
+
+[AllianceWithdrawn]
+<$Config,pickally1=0>
+<p>
+You waited too long to decide.  The Low Priest of Thunder thinks you are poking fun at him.  He withdraws his offer of alliance and warns he will crush you.
+$Button=To Battle,DoNothing,0
+
+[NoAlliance]
+<$Config,pickally1=0>
+<p>
+You reject the Low Priest of Thunders' offer.  Fight on but beware!
+$Button=To Battle,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+You fought well brave priest.
+
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,Tourney
+
+[Failed]
+<h2>You have failed!</h2>
+<p>
+The Furies are feeling lenient towards you because of their lopsided victory.  You are given a second chance.
+
+$Button=Next Mission,MissionBegin,Guard
+
+[END]

@@ -1,0 +1,82 @@
+[header]
+missionType = "Tutorial"
+missionNumber = 6
+moreGeysers  = 1
+myStartMoney = 8000
+myTech="thunderbattery;windbattery;windblocker;windwalker;windballoon;windarcher;thundercannon;bulf;suncannon;sunarcher;sunblocker;sunaviary;sunfence;sunballoon;thunderarcher"
+myAllyList = "4"
+
+ai2Name = "Kukulkan"
+ai2Tech="windbattery;windarcher;suncannon;windwalker;sunwalker;windblocker"
+ai2StartMoney = 4000
+ai2GeyserAttachments = 6
+ai2Collectors = 8
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3"
+
+ai3Name = "Frostimore"
+ai3Tech="rainbattery;raincannon;rainfence;sunblocker;sunarcher;sunwalker;rainballoon;rainaviary"
+ai3StartMoney = 4000
+ai3GeyserAttachments = 10
+ai3Collectors = 10
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2"
+
+
+title = "Endless Struggle For Survival"
+
+[Options]
+[A.]
+<h2>~mEndless Struggle For Survival</h2>
+<br><i>~INemo patriam, quia magna est, amat, sed quia sua.
+--Seneka<br></i>
+<p>
+You stumble upon a hidden base of the enemy.
+This seems to be their base for reserves, this is where they get their power from.
+$Button=More,Tell,More
+
+[More]
+<h2>Your guards report:</h2>
+<br>Master, this seems to be the enemies' base
+for storing and distributing stormpower. What shall we do?
+$Button=Attack,ShowTechnology,55
+$Button=Beats me - I don't know,MissionAbort,1
+
+
+
+[@180]
+<h2>~mSpying action</h2>
+<br>You send out your spies to spy on the enemy for a while.
+$Button=O.K. do it!,DoNothing,0
+
+[@200]
+<h2>~gA message from your spies</h2>
+<br>We have infiltratred the enemy camp, and have found blueprints on
+a secret technology that the enemy has been developing. We've stolen the knowledge
+for you, master. 
+$Button=O.K.,Tell,Share
+$Button=No thanks,DoNothing,0
+
+[Share]
+Here is the enemies' secret technology, master!
+$Button=OK,GetTechnology,139
+
+
+[Succeeded][BadTeamDead]
+<h2>~gVictory</h2>
+<p>
+Looks like the enemy just doesn't know who he's dealing with, master.
+But if only you'd saved your ally in the previous mission...
+Hopefully he's looking down at you right now... He would be very proud of you!
+$Button=Next Mission,MissionBegin,Thundere1
+$Button=I agree - but I've had enought,MissionAbort,1
+
+[Failed]
+<h2>~rA message from the enemy:</h2>
+<p>
+Look at your pitiful selves, you're no match for us, it seems that
+those victories you've conducted earlier were nothing but ~mDUMB LUCK~!
+$Button=Retry Mission,MissionBegin,Thunderd
+$Button=Bail,MissionAbort,1
+
+[End]

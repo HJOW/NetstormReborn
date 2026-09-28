@@ -1,0 +1,400 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 18
+moreGeysers = 1
+randomGeysers = 1
+denySalvage = 0
+myAllyList = "3;6;7;8"
+myStartMoney = 7000 
+myTech = "all;outpost"
+title = "The Choice of the Furies (Wind Version)"
+
+ai2Name = "King Hades: High Priest"
+ai2Tech = {sw_var1}{sw_var2}{sw_var3}{sw_var5}{sw_var7}{sw_var9}
+ai2StartMoney =5000 
+ai2GeyserAttachments = 4
+ai2Collectors = 5
+ai2TimeBetweenMoves = 1
+ai2AllyList = "6;7;8"
+ai2Color = orange
+ai2BridgeDrawRate = 1
+ai2Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai3Name = "Wind Fury: Wind Priest"
+ai3Tech = {sw_var1}{sw_var2}{sw_var3}{sw_var4}{sw_var9}
+ai3StartMoney =5000 
+ai3GeyserAttachments = 4
+ai3Collectors = 5
+ai3TimeBetweenMoves = 1
+ai3AllyList = "1;6;7;8"
+ai3Color = yellow
+ai3BridgeDrawRate = 1
+ai3Ability = "!USE_PRIEST_TO_COLLECT;!SACRIFICE_ENEMY_PRIEST;!BUILD_DAIS;!CAPTURE_ENEMY_PRIEST"
+
+ai4Name = "Rain Fury: Rain Priest"
+ai4Tech = {sw_var1}{sw_var2}{sw_var5}{sw_var6}{sw_var9}
+ai4StartMoney = 5000
+ai4GeyserAttachments = 4
+ai4Collectors = 5
+ai4TimeBetweenMoves = 2
+ai4AllyList = "6;7;8"
+ai4Color = cyan
+ai4BridgeDrawRate = 2
+ai4Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai5Name = "Thunder Fury:Thunder Priest"
+ai5Tech = {sw_var1}{sw_var2}{sw_var7}{sw_var8}{sw_var9}
+ai5StartMoney = 5000
+ai5GeyserAttachments = 4
+ai5Collectors = 5
+ai5TimeBetweenMoves = 3
+ai5AllyList = "6;7;8"
+ai5Color = red
+ai5BridgeDrawRate = 3
+ai5Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai6Name = "Referree #1"
+ai6Tech = sunWalker;{sw_var1}{sw_var2}{sw_var5}{sw_var6}{sw_var7}{sw_var8}{sw_var9}
+ai6StartMoney = 5000
+ai6GeyserAttachments = 4
+ai6Collectors = 5
+ai6TimeBetweenMoves = 1
+ai6AllyList = "1;2;3;4;5;7;8"
+ai6Color = white
+ai6BridgeDrawRate = 1
+ai6Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai7Name = "Referree #2"
+ai7Tech = sunWalker;{sw_var1}{sw_var2}{sw_var5}{sw_var6}{sw_var7}{sw_var8}{sw_var9}
+ai7StartMoney = 5000
+ai7GeyserAttachments = 4
+ai7Collectors = 5
+ai7TimeBetweenMoves = 1
+ai7AllyList = "1;2;3;4;5;6;8"
+ai7Color = green
+ai7BridgeDrawRate = 1
+ai7Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai8Name = "Referree #3"
+ai8Tech = sunWalker;{sw_var1}{sw_var2}{sw_var5}{sw_var6}{sw_var7}{sw_var8}{sw_var9}
+ai8StartMoney = 5000
+ai8GeyserAttachments = 4
+ai8Collectors = 5
+ai8TimeBetweenMoves = 1
+ai8AllyList = "1;2;3;4;5;6;7"
+ai8Color = purple
+ai8BridgeDrawRate = 1
+ai8Ability = "!USE_PRIEST_TO_COLLECT"
+
+[init]
+<$Config,sw_droppedPriest=0>
+<$Config,sw_m18=1>
+<$Config,sw_m1=0>
+<$Config,sw_m2=0>
+<$Config,sw_m3=0>
+<$Config,sw_m4=0>
+<$Config,sw_m5=0>
+<$Config,sw_m6=0>
+<$Config,sw_m7=0>
+<$Config,sw_m8=0>
+<$Config,sw_m9=0>
+<$Config,sw_m10=0>
+<$Config,sw_m11=0>
+<$Config,sw_m12=0>
+<$Config,sw_m13=0>
+<$Config,sw_m14=0>
+<$Config,sw_m15=0>
+<$Config,sw_m16=0>
+<$Config,sw_m17=0>
+<$Config,sw_m19=0>
+<$Config,sw_m20=0>
+<$Config,sw_m21=0>
+<$Config,sw_m22=0>
+<$Config,sw_m23=0>
+<$Config,sw_m24=0>
+<$Config,sw_m25=0>
+<$Config,sw_m30=0>
+
+<$Config,sw_enDead2=0>
+<$Config,sw_enDead3=0>
+<$Config,sw_enDead4=0>
+<$Config,sw_enDead5=0>
+
+[options]
+[A.]
+                                             <h2>Choice of the Furies (wind)<a href="#mission18">~[IfortGump.46]</a></h2>
+                                                ~[IwindVortex.20]
+<br>
+Meet the ~[ImanaBolt.1]~[ImanaBolt.2]~[ImanaBolt.0]Fury clan. This is the moment of all moments for your ally and
+ master - King of the dark realm, {sw_hades}. Just remember, that even though you capture them (that is if you can) and
+ sacrifice them, they still do not die. For you can only kill a Fury on his
+ own turf - In the duesphere.
+<br>
+There are 3 referees ~[Ipriest.24]~[Ipriest.34]~[Ipriest.44] in this battle arena. They are neutral referees, meaning
+ they will not attack you. They are there merely to declare a winner (and to
+ make sure that you don't cheat).
+<p>
+Now, you are about to be given some choices (that is if the Furies decide to
+ give them 2 you). You must choose wisely. As of now you are allied with the ~[ImanaBolt.0]Wind Fury. Good Luck!
+<br>
+            <a href="cmd:ShowTechnology,55"> ~[IfortGump.50] </a>                                                  <a href="cmd:DoNothing,0">~[IfortGump.22] </a>                                              <a href="cmd:Tell,guideHades.overview">~[Ipriest.13]</a><br>
+<a href="cmd:ShowTechnology,55">Review Knowledge</a>                            <a href="cmd:DoNothing,0">Enter Hades Realm</a>                    <a href="cmd:Tell,guideHades.overview">I don't wanna Play</a>
+
+<$PlaySound,somethingCreated.wav>
+                        <h2>You receive a message from the {sw_god2}</h2>
+<i>Ally, you must aid me in my, er, I mean our conquest. Do whatever it takes to win.</i>
+<$AddRandom,100>     
+<$PlaySound,forWind2.wav>
+$OnExit= ,PlaySound,GolemMove2.wav
+$Button= ,Tell,A.
+
+[@2]
+<$MoveDialog,tl>
+<h2>You receive a message from the {sw_god5}.</h2>
+<i>You will pay for turning traitor! I will make sure of that.</i>
+<p>All of a sudden the skies turn dark and fill with mysterious clouds. You sense evil spirits floating all around you.
+In the dark dense background you hear a familiar voice chanting. You recognize the voice - It is the {sw_god5}.His chants grow stronger<br>
+~r~I"I call upon the power of Darkness. Give me the Power of the darkness. I cast the spell of ...~.
+<p>All of a sudden you hear a loud noise.
+<$PlaySound,forStorm2.wav>
+$Button=What is Hades up to?,tell,spell1
+
+[spell1]
+<$AddRandom,100>     
+<$AddRandom,101>     
+<$AddRandom,100>     
+<$AddRandom,101>     
+<$MoveDialog,tr>
+<p>~IWhat was that? you wonder!<br>
+What are all these trees doing here?
+<$Lightning>
+$OnExit= ,PlaySound,ManOWarFire-500.wav
+$Button=?,DoNothing,0
+
+[@3]
+<$AddRandom,134>
+<$AddRandom,134>
+<$AddRandom,134>
+
+[@4]
+<$AddRandom,134>
+<$AddRandom,134>
+<$AddRandom,134>
+
+[@5]
+<$AddRandom,134>
+<$AddRandom,134>
+<$AddRandom,134>
+<$AddRandom,134>
+
+[@6]
+<$PlaySound,teleportEffect.wav>
+<$AddRandom,134>
+<$AddRandom,134>
+<$AddRandom,134>
+<$AddRandom,134>
+<$AddRandom,134>
+
+[@7]
+<$AddRandom,134>
+<$AddRandom,134>
+<$AddRandom,134>
+<$AddRandom,134>
+<$AddRandom,134>
+<$AddRandom,134>
+
+[@8]
+<$AddRandom,134>
+<$AddRandom,134>
+<$AddRandom,134>
+<$AddRandom,134>
+<$AddRandom,134>
+<$AddRandom,134>
+<$AddRandom,134>
+
+[@9]
+<$AddRandom,134>
+<$AddRandom,134>
+<$AddRandom,134>
+<$AddRandom,134>
+<$AddRandom,134>
+<$AddRandom,134>
+<$AddRandom,134>
+<$AddRandom,134>
+
+[@10]
+<$PlaySound,teleportEffect.wav>
+<$AddRandom,134>
+<$AddRandom,134>
+<$AddRandom,134>
+<$AddRandom,134>
+<$AddRandom,134>
+<$AddRandom,134>
+<$AddRandom,134>
+<$AddRandom,134>
+<$AddRandom,134>
+
+[@11]
+<$MoveDialog,tr>
+<$AddRandom,134>
+<$AddRandom,134>
+<$AddRandom,134>
+<$AddRandom,134>
+<$AddRandom,134>
+<$AddRandom,134>
+<$AddRandom,134>
+<$AddRandom,134>
+<$AddRandom,134>
+<$AddRandom,134>
+
+
+[@12]
+Oh, no. He's at it again...
+<$MoveDialog,tr>
+<$SendBucks,2>
+<$PlaySound,bell.wav>
+$Button=What happened now?,tell,spell2
+
+
+[spell2]
+<$MoveDialog,tr>
+You lost some storm Crystals. Dang! That Hurt!
+$Button=Ok,DoNothing,0
+
+
+
+[@20]
+<$PlaySound,beamOver03.wav>
+<$MoveDialog,tr>
+You hear something strange.<br>
+It's the {sw_god5}, chanting another spell!
+<$SendBucks,2>
+$Menu= Will he ever stop?,Tell,spell4
+
+[spell4]
+<$InflictDamage,6538>
+
+
+[@30]
+<$AddRandom,101>   
+<$PlaySound,ambient02.wav>
+
+
+[ai2PriestCaptured]
+<$PlaySound,priestPickUp.wav>
+    <h2>You recieve a message from the<br>
+            {sw_god5}</h2>
+<p>
+                       ~y~BLet me go, you idiot!<br>
+               Can't you see I'm you're maker?
+<p>
+<i>Here is some extra money if you drop me!</i>
+$Button=Drop priest,config,sw_droppedPriest=1
+$Button=No Way - Your blood is mine,DoNothing,0
+
+
+[ai2PriestSaved]
+<?{sw_droppedPriest}>
+The {sw_god5} gives you storm crystals for letting him go! Check your island out...
+<$PlaySound,bell.wav>
+<$AddRandom,154>
+<$AddRandom,154>
+<$AddRandom,154>
+<$AddRandom,154>
+<$AddRandom,154>
+<$AddRandom,154>
+<$AddRandom,154>
+<$AddRandom,154>
+$Button=kewl,DoNothing,0
+</?>
+
+
+
+[ai2PriestDead]
+<$Config,sw_enDead2=1>
+<$PlaySound,priestSacrifice2.wav>
+<h2>You receive a message from the {sw_god2}  </h2>
+<p>~y~IHaha! Hades is gonna be trapped forever now. Wait until I get
+ my hands on the rest of them.
+<$PlaySound,whale.wav>
+$OnExit= ,Tell,checkwin
+$Button=OK,DoNothing,0
+
+[ai3PriestCaptured]
+<h2>You receive a message from the {sw_god2}</h2>
+<p>Please help me Ally!
+<$PlaySound,priestStruggleFade01.wav>
+$Button=HURRY!,DoNothing,0
+
+[ai3PriestDead]
+<$Config,sw_enDead3=1>
+<?!{sw_windFuryTrapped}>
+<h2>You receive a message from the {sw_god5}</h2>
+<p>
+Hahaha! Wind is trapped again. See ya in another 10 years. Hahahaha.
+<$Config,sw_var3="">
+<$Config,sw_var4="">
+<p>
+You must restart, however because the wind Fury has been trapped, you have lost
+all the wind Tech!
+<$Config,sw_windFuryTrapped=1>
+$Button=Restart mission,MissionBegin,sw_m18
+</?>
+
+[ai4PriestCaptured]
+<h2>You receive a message from the {sw_god2}</h2>
+<p>Sacrifice him before he escapes!
+<$PlaySound,priestStruggleFade01.wav>
+$Button=I WILL!,DoNothing,0
+
+[ai4PriestDead]
+<$Config,sw_enDead4=1>
+<h2>You receive a message from the {sw_god2}.</h2>
+<p>Hahaha! Rain is trapped. See ya in 10 years. Hahahaha.
+$OnExit= ,Tell,checkwin
+$Button=KEWL,DoNothing,0
+
+[ai5PriestCaptured]
+<h2>You receive a message from the {sw_god2}</h2>
+<p>I want to here the Thunder Fury scream in anguish!
+<$PlaySound,priestStruggleFade01.wav>
+$Button=YOU WILL SOON ENOUGH!,DoNothing,0
+
+[ai5PriestDead]
+<$Config,sw_enDead5=1>
+<h2>You receive a message from {sw_god2}</h2>
+<p>Hahaha! Thunder is trapped again. See ya in another 10 years. Hahahaha.
+$OnExit= ,Tell,checkwin
+$Button=Ok,DoNothing,0
+
+
+
+[ai1PriestCaptured]
+<h2>You receive a message from the {sw_god2}.</h2><br>
+<i>"I will try to rescue you, ally."</i>
+<p>
+Besides, I can use the Storm Power myself.
+<$PlaySound,treasonCast.wav>
+$Button=OK,DoNothing,0
+
+                                                                                                     [Succeeded][BadTeamDead]
+[checkwin]
+<?{sw_enDead2}><?{sw_enDead4}>
+<?{sw_enDead5}>
+<$PlaySound,collapse.wav>
+<h2>WOW! All of the Furies are trapped as Nimbian priests.</h2>
+<$Config,sw_var3="windArcher;windWalker;windBlocker;">
+<$Config,sw_var4="windBalloon;windAviary;">
+<$Config,sw_m18=0>
+<$Config,sw_m21=1>
+<$Config,sw_difficulty1=0>
+$Button=Next Mission,MissionBegin,sw_m21
+</?></?></?>
+
+[Failed][GoodTeamDead]
+You must win this battle! This does not get any easier!
+$Button=Retry,MissionBegin,sw_m18
+
+[END]
+

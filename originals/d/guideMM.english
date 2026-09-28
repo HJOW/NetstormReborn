@@ -1,0 +1,11 @@
+title = "MasterMind"
+
+
+[Overview]
+<background="nsstart">
+<h2>Ready???</h2>
+<i>Let the mind challenge begin</i>
+<P>
+$Checked=1 MasterMind,MissionBegin,MasterMind,{DoneMasterMind},1
+
+$Button=Back,Tell,Campaign

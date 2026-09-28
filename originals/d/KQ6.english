@@ -1,0 +1,60 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 5
+moreGeysers = 3
+
+myStartMoney = 15000
+myTech ="rainBattery;windBattery;thunderBattery;rainCannon;rainBlocker;rainAviary;rainfence;rainBalloon;windArcher;windBlocker;windAviary;windBallon;windWalker;thunderCannon;thunderBlocker;thunderFence;bulf;thunderArcher"
+
+
+title="UnKnown"
+ai2Name = "Mystery Man"
+ai2Tech ="windBattery;sunCannon;sunAviary;sunArcher;sunFence;sunBalloon"
+ai2StartMoney = 1500000
+ai2GeyserAttachments = 15
+ai2Collectors = 50
+ai2TimeBetweenMoves = 0
+ai2Bridgedrawrate = 0
+ai2color = red
+ai2ability ="!USE_PRIEST_TO_COLLECT"
+
+
+
+
+
+[Options]
+
+[A.]
+<P>"The Unknown can be scary"
+<P>Apollyon
+<p>A small island approaches, you ask who he is, he says nothing. Then he opens an assult on your Island
+<p>~i"I am the unknown Sun Kid, There is a Sun Fury, but noone knows him. You will most likly defeat me, but i don't care, for since i am a god, i can never truly die. 
+$Button=Veiw your stuff,ShowTechnology,55
+$Button=Fight,DoNothing,0
+
+
+[ai2PriestDead]
+Aieeee
+
+
+[Succeeded][BadTeamDead]
+<h2>You Have crushed them!</h2>
+<p>You have defeated the never known Sun Kid. So it is. You have completed you quest. But Nimbus will never be safe, or peaceful, so your job as a knight will have to stay for all eterity.
+<p>Since you have come so far, you will not be left without a parting gift.
+<p>~[Isunflyerbomb.7]~[Ipriest.144]~[Isunflyerbomb.3] 
+<p> the gift? immortality.
+<$Config,Done{mission.fileName}=1>
+
+$Button=Try again?,NextMission,KQ1
+
+[Failed]
+<h2>Failure!</h2>
+<p>You Lost. He gives a spell that warps you back into time to when you started 
+$Button=Warp Back,NextMission,KQ1
+
+
+[END]
+
+
+

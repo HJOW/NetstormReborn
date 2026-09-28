@@ -1,0 +1,40 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 99
+moreGeysers = 1
+
+myStartMoney = 10000
+myTech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence"
+myAllyList = ""
+
+title="Are You Ready For This?"
+
+ai2Name = "Simulation Guy"
+ai2Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence"
+ai2StartMoney = 17500
+ai2GeyserAttachments = 10
+ai2Collectors = 8
+ai2TimeBetweenMoves = 1
+ai2DrawBridgeRate = 1
+ai2AllyList = ""
+ai2color = white
+
+[Options]
+
+[A.]
+<h2>~[IrainCannon.3]Simulation: Are You Ready For This?~[IrainCannon.9]</h2>
+<i>Mysterious Voice: ~wI will raise you and your allies to life if you complete this test to see if you are worthy.
+
+$Button=Ok...,DoNothing,0
+
+[Succeeded][ai2PriestDead]
+<i>Mysterious Voice: ~wYou are back on the Road to life.
+<$Config,Done{mission.fileName}=1>
+$Button=Travel the Road,MissionBegin,FW3
+
+[Failed]
+<h2>Failure!</h2>
+<i>Too bad, you have to die, forever.  Well, at least till Judgement Day.
+
+[END]

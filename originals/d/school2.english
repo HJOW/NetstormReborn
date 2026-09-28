@@ -1,0 +1,64 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 2
+moreGeysers = 1
+
+myStartMoney = 6500
+myTech = "thunderArcher;thunderBattery;thunderCannon;thunderFence;thunderBlocker;bulf"
+
+title="2nd Day At School"
+
+ai2Name = "John"
+ai2Tech = "thunderArcher;thunderBattery;thunderCannon;thunderFence;thunderBlocker;bulf"
+ai2StartMoney = 6500
+ai2GeyserAttachments = 4
+ai2Collectors = 4
+ai2TimeBetweenMoves = 3
+ai2AllyList = "3;4"
+ai2color = red
+
+ai3Name = "Emily"
+ai3Tech = "thunderArcher;thunderBattery;thunderCannon;thunderFence;thunderBlocker;bulf"
+ai3StartMoney = 3000
+ai3GeyserAttachments = 4
+ai3Collectors = 4
+ai3TimeBetweenMoves = 3
+ai3AllyList = "2;4"
+ai3color = white
+
+ai4Name = "Jordan"
+ai4Tech = "thunderArcher;thunderBattery;thunderCannon;thunderFence;thunderBlocker;bulf"
+ai4StartMoney = 6500
+ai4GeyserAttachments = 4
+ai4Collectors = 4
+ai4TimeBetweenMoves = 3
+ai4AllyList = "2;3"
+ai4color = green
+
+[Options]
+
+[A.]
+<h2>Your Second Day at School</h2>
+<i>"To learn is to become smarter."<br>
+--Your School Teacher</i>  
+<p>~rWell, its your second day at school and things arent going good.
+First off, everyone makes fun of you, and nobody likes you name: Helios
+The one bad thing, is they want to beat you up!!! Show them you are
+stronger than them and BEAT THIER BUTTS!!!!!!
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+Success, the bullys that thought you were a wuss are now being mocked because they lost to you! HAHAHAHAH!!!!
+~yCONGRATS!!...
+
+<$Config,Done{school3.english}=1>
+$Button=Next Mission,MissionBegin,nextmission
+
+[Failed]
+Oh no! The bullys have betean you up very badly... uh oh... now everyone will be picking on you...
+They have let you have a rematch against them... hope you can win however...
+$Button=Next Mission,MissionBegin,hardermission
+[END]

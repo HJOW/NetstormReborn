@@ -1,0 +1,193 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 6
+moreGeysers = 0
+
+myStartMoney = 0
+myTech = "sunaviary;sunBalloon;sunCannon;sunBlocker;sunFence;sunArcher;rainbattery"
+myAllyList = ""
+
+title="The Book"
+
+ai2Name = "Thunder Attacker"
+ai2Tech = "thunderbattery;thunderarcher;thundercannon;bulf;thunderblocker"
+ai2StartMoney = 1000000
+ai2GeyserAttachments = 0
+ai2Collectors = 5
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3;5;6;7"
+ai2color = red
+ai2Ability="!ATTACH_TO_ENEMY_ISLAND"
+ai2BridgeDrawRate = 2
+
+ai3Name = "Thunder Defender"
+ai3Tech = "thunderarcher;thunderblocker"
+ai3StartMoney = 500000
+ai3GeyserAttachments = 0
+ai3Collectors = 0
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2;5;6;7"
+ai3color = red
+ai3Ability="!ATTACH_TO_ENEMY_ISLAND"
+ai3BridgeDrawRate = 2
+
+ai5Name = "Master of Wisdom"
+ai5Tech = "windarcher;windBattery;windaviary;windblocker;rainbattery;rainaviary;rainballoon;raincannon;thunderbattery;thunderarcher;thunderblocker;thundercannon;sunBalloon;sunAviary;sunBlocker;suncannon"
+ai5StartMoney = 1000000
+ai5GeyserAttachments = 0
+ai5Collectors = 5
+ai5TimeBetweenMoves = 1
+ai5AllyList = "2;3;6;7"
+ai5color = purple
+ai5Ability=""
+ai5BridgeDrawRate = 1
+
+ai6Name = "Wind Attacker"
+ai6Tech = "windarcher;windBattery;windaviary;windwalker;windballoon;windblocker"
+ai6StartMoney = 1000000
+ai6GeyserAttachments = 0
+ai6Collectors = 5
+ai6TimeBetweenMoves = 1
+ai6AllyList = "2;3;5;7"
+ai6color = white
+ai6Ability="!ATTACH_TO_ENEMY_ISLAND"
+ai6BridgeDrawRate = 2
+
+
+ai7Name = "Wind Defender"
+ai7Tech = "windarcher;windblocker"
+ai7StartMoney = 500000
+ai7GeyserAttachments = 0
+ai7Collectors = 0
+ai7TimeBetweenMoves = 1
+ai7AllyList = "2;3;5;6"
+ai7color = white
+ai7Ability="!ATTACH_TO_ENEMY_ISLAND"
+ai7BridgeDrawRate = 2
+
+
+
+[Options]
+
+[A.]
+<h2>The Book</h2>
+<i>"Some things are not always what they seem."<br>
+--Book of Nimbus</i>  
+<p>You arrive at the Master of Knowledge's Isle.  You must defeat him in order to obtain the ancient book with the knowledge you seek.  As you move closer to the island you find you have forgot all the technology you've learned....save the sun.  This will be harder than expected...
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+Cheers of victory erupts in the air as you sacrafice the last priest!  You have destroyed the Darklords, captured the isle of geysers and won numerous battles!  And most of all, fought off everyone who tried to take the seat of power which was rightfully yours!  How you rule these skies is up to you....but be warned, should you rule unwisely, someone may destroy you as you have done to the Darklords.... 
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,tnron62b
+
+[ai5PriestCaptured]
+<h2>Message from the Master of Wisdom</h2>
+<p>
+You have proven yourself, I will let you enter my library.  Seek what you need and take what you wish.  Know this you can only take one book, so choose carefully...
+$Button=Thank you,Tell,m1
+
+[m1]
+<h2>Message from the Master of Wisdom</h2>
+<p>
+Now be on your way and do not worry about my minions, I created them and I can create more.  I have also restored your ablility to build the technology you have learn over you ambitous quest.
+
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,tnron62b
+
+[ai5TempleHalfDead]
+<h2>Message from the Master of Wisdom</h2>
+<p>
+Only a fool would destroy the very thing he seeks...
+
+[ai5TempleDead]
+<h2>Message from the Master of Wisdom</h2>
+<p>
+You are a fool!!  My temple is destroyed and all the knowledge that layed within it as well!!
+
+$Button=Failed,Tell,TryAgain
+
+[ai2PriestDead]
+<h2>Technology Gained!</h2>
+<p>
+You have received the knowledge of the Thunder Cannon!
+<p>~[IthunderCannon.*]
+
+$Button=OK,GetTechnology,131
+
+[ai3PriestDead]
+<h2>Technology Gained!</h2>
+<p>
+You have received the knowledge of the Bulwark!
+<p>~[IthunderBlocker.*]
+
+$Button=OK,GetTechnology,79
+
+[ai6PriestDead]
+<h2>Technology Gained!</h2>
+<p>
+You have received the knowledge of the Crossbow!
+<p>~[IwindArcher.*]
+
+$Button=OK,GetTechnology,140
+
+[ai7PriestDead]
+<h2>Technology Gained!</h2>
+<p>
+You have received the knowledge of the Wind Tower
+<p>~[IwindBlocker.*]
+
+$Button=OK,GetTechnology,142
+
+[ai2TempleDead]
+<h2>Technology Gained!</h2>
+<p>
+You have received the knowledge of the Thunder Generator!
+<p>~[IthunderBattery.*]
+
+$Button=OK,GetTechnology,77
+
+[ai3TempleDead]
+<h2>Technology Gained!</h2>
+<p>
+You have received the knowledge of the Arc Spire!
+<p>~[IthunderFence.*]
+
+$Button=OK,GetTechnology,149
+
+[ai6TempleDead]
+<h2>Technology Gained!</h2>
+<p>
+You have received the knowledge of the Wind Generator!
+<p>~[IwindBattery.*]
+
+$Button=OK,GetTechnology,75
+
+[ai7TempleDead]
+<h2>Technology Gained!</h2>
+<p>
+You have received the knowledge of the Sail Skater!
+<p>~[IwindWalker.*]
+
+$Button=OK,GetTechnology,137
+
+
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+Your quest for knowledge has prematurly ended your life.
+
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+
+

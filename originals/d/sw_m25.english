@@ -1,0 +1,219 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber =25 
+
+myStartMoney = 1300
+title = "Sacrifice"
+
+ai2Name = "Volunteer"
+ai2Tech="sunWalker"
+ai2Color = red
+ai2Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai3Name = "Volunteer"
+ai3Tech="sunWalker"
+ai3Color = red
+ai3Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai4Name = "Volunteer"
+ai4Tech="sunWalker"
+ai4Color = red
+ai4Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai5Name = "Volunteer"
+ai5Tech="sunWalker"
+ai5Color = red
+ai5Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai6Name = "Volunteer"
+ai6Tech="sunWalker"
+ai6Color = red
+ai6Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai7Name = "Volunteer"
+ai7Tech="sunWalker"
+ai7Color = red
+ai7Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai8Name = "Volunteer"
+ai8Tech="sunWalker"
+ai8Color = red
+ai8Ability = "!USE_PRIEST_TO_COLLECT"
+
+[init]
+<$Config,sw_m25=1>
+<$Config,sw_m1=0>
+<$Config,sw_m2=0>
+<$Config,sw_m3=0>
+<$Config,sw_m4=0>
+<$Config,sw_m5=0>
+<$Config,sw_m6=0>
+<$Config,sw_m7=0>
+<$Config,sw_m8=0>
+<$Config,sw_m9=0>
+<$Config,sw_m10=0>
+<$Config,sw_m11=0>
+<$Config,sw_m12=0>
+<$Config,sw_m13=0>
+<$Config,sw_m14=0>
+<$Config,sw_m15=0>
+<$Config,sw_m16=0>
+<$Config,sw_m17=0>
+<$Config,sw_m18=0>
+<$Config,sw_m19=0>
+<$Config,sw_m20=0>
+<$Config,sw_m21=0>
+<$Config,sw_m22=0>
+<$Config,sw_m23=0>
+<$Config,sw_m24=0>
+<$Config,sw_m30=0>
+
+<$Config,sw_mvar2=0>
+<$Config,sw_mvar3=2>
+<$Config,sw_mvar4=0>
+<$Config,sw_mvar5=0>
+<$Config,sw_mvar6=0>
+<$Config,sw_mvar7=0>
+<$Config,sw_mvar8=0>
+<$Config,sw_mvar9=0>
+
+[options]
+[A.]
+                                              <h2>SACRIFICE!  <a href="#mission25">~[IfortGump.46]</a></h2>
+                                          ~[IsunAviary.31]
+<br>
+This is it, it's do or die time! The Final Confrontation is here!
+<p>
+Knowing that you are heavily outnumbered and outgunned, seven of your top
+Lieutenants have come forth to you, and have volunteered their life for the
+chance that with their Sacrifice, a gift will be granted to you. Despite your
+protests, they demand that you pick one of them and sacrifice them, so you may
+finally destroy the evil ~rHADES~..
+<br>
+
+$Button=More,Tell,A2
+
+[A2]
+                                          <h2>SACRIFICE!  <a href="#mission25">~[IfortGump.46]</a></h2>
+                                      ~[IsunAviary.31]
+<br>
+However, you have heard rumors that the {sw_god5} has twisted the will of a few
+of these once good men. You don't know which ones are spies and which are your
+true allies - for to be bestowed a grand gift, it requires a pure and honest
+soul!
+<p>
+You pace the ground in front of these brave men... How can you condemn one to their
+death? And what if it's one of ~rHADES~. tortured puppets? What evil will be unleashed?
+<p>
+You can't wait any longer. You must pick. You just wish that it was you to be sacrificed,
+and not one of these brave Priests.
+<p>
+                  <a href="cmd:ShowTechnology,55"> ~[IfortGump.50] </a>                            <a href="cmd:DoNothing,0">~[IfortGump.22] </a>                     <a href="cmd:Tell,guideHades.overview">~[Ipriest.13]</a><br>
+        <a href="cmd:ShowTechnology,55">Review Knowledge</a>      <a href="cmd:DoNothing,0">    Let's Do It!   </a>      <a href="cmd:Tell,guideHades.overview">Leave HELL</a>
+
+$OnExit= ,PlaySound,priestMove1.wav
+$Button= ,Tell,A.
+[@5]
+You only have a few minutes to sacrifice one priest. If you do not, then the final battle
+will start, without any special abilities you may recieve (note: the final battle is extremely
+tough! You need all the help you can get!
+$Button=OK I'll sacrifice,DoNothing,0
+
+[@60]
+You have 2 minutes left....
+$Button=OK I'll sacrifice,DoNothing,0
+[@120]
+One minute. You'd better hurry!
+$Button=OK I'll sacrifice,DoNothing,0
+[@180]
+<$MissionBegin,sw_m25a>
+
+[ai2PriestCaptured][ai3PriestCaptured][ai4PriestCaptured][ai5PriestCaptured][ai6PriestCaptured][ai7PriestCaptured][ai8PriestCaptured]
+<$PlaySound,forStorm2.wav>
+The priest bravely climbs onto your Sail Skater and awaits his doom..
+$Button=OK,DoNothing,0
+
+
+[ai2PriestDead]
+<$PlaySound,TreasonCast.wav>
+Who Hoo. You have been given a gift of Treason! When the battle starts, a number
+of enemy weapons will be miraculously transformed to your weapons!
+<p>
+This priest, and your friend, did not die in vain! With his sacrifice, he may have
+paved the way for all of Nimbus' victory!
+<$Config,sw_mvar2=1>
+$Button=Lets battle!,MissionBegin,sw_m25a
+
+[ai3PriestDead]
+<$PlaySound,paralysisCast.wav>
+You have been granted the power to slow your enemies! When the battle starts, the enemies
+will move much slower than they normally would have!
+<p>
+This priest, and your friend, did not die in vain! With his sacrifice, he may have
+paved the way for all of Nimbus' victory!
+<$Config,sw_mvar3=6>
+<$Config,sw_mvar9=1>
+$Button=Lets battle!,MissionBegin,sw_m25a
+
+[ai4PriestDead]
+<$PlaySound,devastationCast.wav>
+You have been granted the power of mass destruction! When the battle starts, a number of the enemies
+weapons will be severely damage! 
+<p>
+This priest, and your friend, did not die in vain! With his sacrifice, he may have
+paved the way for all of Nimbus' victory!
+<$Config,sw_mvar4=1>
+$Button=Lets battle!,MissionBegin,sw_m25a
+
+[ai5PriestDead]
+<$PlaySound,decimationCast.wav>
+You have been granted the power of destruction! When the battle starts, a number of the enemies
+weapons will be destroyed! 
+<p>
+This priest, and your friend, did not die in vain! With his sacrifice, he may have
+paved the way for all of Nimbus' victory!
+<$Config,sw_mvar5=1>
+$Button=Lets battle!,MissionBegin,sw_m25a
+
+[ai6PriestDead]
+<$PlaySound,bell.wav>
+Storm Crystals pour down from the heavens, as you recieve this gift. It is as if the
+Gods wept because an innocent and pure life was sacrificed. 
+<p>
+This priest, and your friend, did not die in vain! With his sacrifice, he may have
+paved the way for all of Nimbus' victory!
+<$Config,sw_mvar6=1>
+$Button=Lets battle!,MissionBegin,sw_m25a
+
+[ai7PriestDead]
+<$PlaySound,priestSacrifice4.wav>
+Oh no! This soul was not pure, and was corrupted by {sw_hades}! You wonder what
+ evil has been unleashed because of this!
+<p>
+This poor twisted shell of a once mighty and benevolant priest, is now in {sw_hades}
+ realm, being tortured unmercifully.
+<$Config,sw_mvar7=1>
+$Button=Lets battle!,MissionBegin,sw_m25a
+
+[ai8PriestDead]
+<$PlaySound,priestSacrifice4.wav>
+Oh no! This soul was not pure, and was corrupted by {sw_hades}! You wonder what
+ evil has been unleashed because of this!
+<p>
+This poor twisted shell of a once mighty and benevolant priest, is now in {sw_hades}
+ realm, being tortured unmercifully.
+<$Config,sw_mvar8=1>
+$Button=Lets battle!,MissionBegin,sw_m25a
+
+
+[Succeeded][BadTeamDead]
+You can't win this mission!
+$Button=I cheated,DoNothing,0
+
+
+[Failed]
+You can't fail this mission!
+$Button=I cheated,DoNothing,0
+
+[END]

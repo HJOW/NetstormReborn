@@ -1,0 +1,163 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 6
+
+myStartMoney = 1600
+myTech = "windFactory;windarcher;windbattery;sunfence;sunballoon;suncannon"
+myAllyList = "3;4"
+
+title = "Offensive"
+
+ai2Name = "Wind Bandit"
+ai2Tech = "windFactory;sunwalker;windarcher;windbattery;windaviary;windblocker"
+ai2StartMoney = 000
+ai2Collectors = 2
+ai2GeyserAttachments = 5
+ai2AllyList = "5;6"
+ai2TimeBetweenMoves = 1
+ai2color = red
+ai2BridgeDrawRate = 2
+ai2Ability = "!BUILD_BLOCKERS_WHEN_BUILDINGS_HARMED;!USE_PRIEST_TO_COLLECT"
+
+ai3Name = "Rain Wizard"
+ai3Tech = "sunFactory;rainFactory;sunwalker;rainbattery;rainaviary;sunaviary;sunblocker"
+ai3StartMoney = 2800
+ai3Collectors = 6
+ai3GeyserAttachments = 5
+ai3AllyList = "1;4"
+ai3TimeBetweenMoves = 1
+ai3color = white
+ai3BridgeDrawRate = 3
+ai3Ability = "!BUILD_BLOCKERS_WHEN_BUILDINGS_HARMED;!USE_PRIEST_TO_COLLECT"
+
+ai4Name = "Wind Knight"
+ai4Tech = "sunFactory;windFactory;sunwalker;windbattery;windarcher;suncannon;windblocker"
+ai4StartMoney = 2800
+ai4Collectors = 6
+ai4GeyserAttachments = 5
+ai4AllyList = "1;3"
+ai4TimeBetweenMoves = 1
+ai4color = green
+ai4BridgeDrawRate = 3
+ai4Ability = "!BUILD_BLOCKERS_WHEN_BUILDINGS_HARMED;!USE_PRIEST_TO_COLLECT"
+
+ai5Name = "Thunder Bandit"
+ai5Tech = "thunderFactory;sunwalker;thunderbattery;thundercannon;thunderblocker;thunderarcher"
+ai5StartMoney = 000
+ai5Collectors = 2
+ai5GeyserAttachments = 5
+ai5AllyList = "2;6"
+ai5TimeBetweenMoves = 1
+ai5color = purple
+ai5BridgeDrawRate = 2
+ai5Ability = "!BUILD_BLOCKERS_WHEN_BUILDINGS_HARMED;!USE_PRIEST_TO_COLLECT"
+
+ai6Name = "Sun Thief"
+ai6Tech = "sunFactory;sunwalker;thunderbattery;suncannon;sunblocker;sunaviary"
+ai6StartMoney = 000
+ai6Collectors = 2
+ai6GeyserAttachments = 5
+ai6AllyList = "2;5"
+ai6TimeBetweenMoves = 1
+ai6color = purple
+ai6BridgeDrawRate = 2
+ai6Ability = "!BUILD_BLOCKERS_WHEN_BUILDINGS_HARMED;!USE_PRIEST_TO_COLLECT"
+
+[@3]
+<h2>~ySun Thief</h2>
+<p>
+Enemy islands approaching!!!!
+
+[@7]
+<h2>~gWind Knight</h2>
+<p>
+Looks like we have company...
+
+[@10]
+<h2>~wRain Wizard</h2>
+<p>
+They will regret fighting us.
+
+[Options]
+
+[A.]
+<h2>Offensive</h2> 
+<i>"For a good Offence, One must have a good Defence."<br>
+--Old Proverb</i>
+<p>You and your newly formed allies head toward Lord Gunton and his growing powers.
+Then you come upon a couple of bandits who don't look friendly.  Make them pay for delaying you!
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeed]
+[BadTeamDead]
+
+<h2>Congratulations! Victory!</h2> 
+<p>You have defeated the bandits.  Now continue on towards Lord Gunton!
+<$Config,Done{mission.filename}=1> 
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,b7
+
+[ai1TempleHalfDead]
+<h2>~sThunder Bandit</h2>
+<p>
+I want YOUR temple to BURN!!!!!!
+
+[ai2PriestCaptured]
+<h2>~rWind Bandit</h2>
+<p>
+You fools! I shall not perish like this!
+
+[ai2PriestDead]
+<h2>~gWind Knight</h2>
+<p>
+One down!
+
+[ai3TempleHalfDead]
+<h2>~wRain Wizard</h2>
+<p>
+Help me! I am in grave danger!
+
+[ai3PriestDead]
+<h2>~gWind Knight</h2>
+<p>
+I shall have your head for this!
+$Button=Continue,Tell,TryAgain
+
+[ai4TempleHalfDead]
+<h2>~gWind Knight</h2>
+<p>
+I need help here!
+
+[ai4PriestDead]
+<h2>~wRain Wizard</h2>
+<p>
+It seems that you are responsable for his death...I shall see to it that your head will have a bounty on it.
+$Button=Continue,Tell,TryAgain
+
+[ai5PriestCaptured]
+<h2>~sThunder Bandit</h2>
+<p>
+Blast It!!!!!  We give!!! Just cease your attack and we will let you go through.
+$Button=Accept,Tell,Purple
+
+[Purple]
+<h2>~gWind Knight</h2>
+<p>
+Thats more like it.  Come on, lets go!
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,b7
+
+[ai6PriestCaptured]
+<h2>~ySun Thief</h2>
+<p>
+Ack!  You shall pay for this!
+
+[Failed]
+<h2>Failure!</h2> 
+<p> 
+You have died in battle, what happened to your allies is unknowed, as you are dead.  Try Again!
+$Button=Continue,Tell,TryAgain
+
+[END]

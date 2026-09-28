@@ -1,0 +1,237 @@
+*(Saved as mission9.fort & mission9.english)
+
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 9
+moreGeysers = 1
+randomGeysers = 1
+denySalvage = {sw_mvar1}
+
+myStartMoney = {sw_mvar0}
+myTech = {sw_var1}{sw_var2}{sw_var3}{sw_var4}{sw_var9} 
+ai1allylist = "3;5"
+
+title = "Slave to the King (Attack on Thunder Village)"
+
+ai2Name =  "Thor the Thunder King"
+ai2Tech = {sw_var1}{sw_var2}{sw_var4}{sw_var7}{sw_var8}
+ai2StartMoney =4000
+ai2AllyList = "4;6;7;8"
+ai2Color = red
+ai2Ability = "!USE_PRIEST_TO_COLLECT"
+ai2TimeBetweenMoves = {sw_mvar2}
+ai2BridgeDrawRate = {sw_mvar2}
+
+
+ai3Name = "Siam the Warrior of Hades"
+ai3Tech = {sw_var1}{sw_var2}{sw_var3}
+ai3StartMoney ={sw_mvar0} 
+ai3AllyList = "1;5"
+ai3Color = cyan
+ai3Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS;!SACRIFICE_ENEMY_PRIEST;!BUILD_DAIS;!CAPTURE_ENEMY_PRIEST"
+
+ai3TimeBetweenMoves = 3
+ai3BridgeDrawRate = 3
+
+
+ai4Name = "Thud the Thunder Warrior"
+ai4Tech = {sw_var1}{sw_var2}{sw_var3}
+ai4StartMoney = 1000
+ai4AllyList = "2;6;7;8"
+ai4Color = yellow
+ai4Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+ai4TimeBetweenMoves = {sw_mvar2}
+ai4BridgeDrawRate = {sw_mvar2}
+
+
+ai5Name = "Sham the Henchman"
+ai5Tech = "{sw_var1}{sw_var2}"
+ai5StartMoney = {sw_mvar2}
+ai5AllyList = "1;3"
+ai5Color = orange
+ai5Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS;!SACRIFICE_ENEMY_PRIEST;!BUILD_DAIS;!CAPTURE_ENEMY_PRIEST"
+ai5TimeBetweenMoves = 3
+ai5BridgeDrawRate = 3
+
+ai6Name = "Boom the Thunder Warrior"
+ai6Tech = "{sw_var1}{sw_var2}{sw_var4}"
+ai6StartMoney = 1000
+ai6AllyList = "2;4;7;8"
+ai6Color = white
+ai6Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+ai6TimeBetweenMoves = {sw_mvar2}
+ai6BridgeDrawRate = {sw_mvar2}
+
+ai7Name = "Blam the Thunder Warrior"
+ai7Tech = "{sw_var1}{sw_var2}{sw_var3}{sw_var4}{sw_var7}"
+ai7StartMoney = 2000
+ai7AllyList = "2;4;6;8"
+ai7Color = purple
+ai7Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+ai7TimeBetweenMoves = {sw_mvar2}
+ai7BridgeDrawRate = {sw_mvar2}
+
+ai8Name = "Splatum the Thunder Warrior"
+ai8Tech = "{sw_var1}{sw_var2}{sw_var3}{sw_var4}{sw_var7}"
+ai8StartMoney = 2000
+ai8AllyList = "2;4;6;7"
+ai8Color = green
+ai8Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+ai8TimeBetweenMoves = {sw_mvar2}
+ai8BridgeDrawRate = {sw_mvar2}
+
+[init]
+<$Config,sw_m9=1>
+<$Config,sw_m1=0>
+<$Config,sw_m2=0>
+<$Config,sw_m3=0>
+<$Config,sw_m4=0>
+<$Config,sw_m5=0>
+<$Config,sw_m6=0>
+<$Config,sw_m7=0>
+<$Config,sw_m8=0>
+<$Config,sw_m10=0>
+<$Config,sw_m11=0>
+<$Config,sw_m12=0>
+<$Config,sw_m13=0>
+<$Config,sw_m14=0>
+<$Config,sw_m15=0>
+<$Config,sw_m16=0>
+<$Config,sw_m17=0>
+<$Config,sw_m18=0>
+<$Config,sw_m19=0>
+<$Config,sw_m20=0>
+<$Config,sw_m21=0>
+<$Config,sw_m22=0>
+<$Config,sw_m23=0>
+<$Config,sw_m24=0>
+<$Config,sw_m25=0>
+<$Config,sw_m30=0>
+
+[options]
+[A.]
+<$Playsound,thunderCannonRoar.wav>
+                 <h2>Slave to the King (Attack on Thunder Village)<a href="#mission9">~[IfortGump.46]</a></h2>
+                                                 ~[IthunderFactory.3]
+<br>                                                                                                  ~1~y<?!{sw_difficulty1}>HARD</?><?{sw_difficulty1}>EASY</?>~.<br>
+<i>There is nothing quite like the roar of a Thunder Cannon<br>
+                                                   ---Warrior of Thunder Village</i>
+<br>
+After your last mission the {sw_god5} was exuberant. However,
+ he still wants the power of Thunder! You must venture to the Thunder
+  Village and sac everyone you can in the name of Hades.
+<p>
+<i>"Bring me more souls!"</i> cries the King as you climb aboard your island.
+Just as you are landing on Thunder Village you hear a loud crash. ~I"What
+ in the world?"~., you think to yourself."
+<p>
+It is Sham the Henchman. His pilot has just crashed his island into yours.
+ During the crash you noticed a shape fall from the island.
+ It was Sham and he landed right onto a Thunder Warrior's Island.
+ Now you must rescue him!
+<p>
+            <a href="cmd:ShowTechnology,55"> ~[IfortGump.50] </a>                                                   <a href="cmd:DoNothing,0">~[IfortGump.22] </a>                                             <a href="cmd:Tell,guideHades.overview">~[Ipriest.13]</a><br>
+<a href="cmd:ShowTechnology,55">Review Knowledge</a>                           <a href="cmd:DoNothing,0">Let's save Sham!</a>                               <a href="cmd:Tell,guideHades.overview">Outta here!</a>
+$OnExit= ,PlaySound,golemMove2.wav
+$Button= ,Tell,A.
+
+
+[ai7PriestDead]
+Another Priest has fallen before you; his soul sent forevermore to the
+BOWELS OF ~[IsunFlyerBomb.0]~r~BHELL~[IsunFlyerBomb.2]
+<p>
+King {sw_hades} is pleased! He grants you knowledge...
+$Menu=~[IthunderBattery.*]~yThunder Battery,GetTechnology,77
+
+[ai6PriestDead]
+You've been granted the most powerful of all weapons! The coveted Thunder Cannon!
+$Menu=~yThunder Cannon~[IthunderCannon.16],GetTechnology,131
+
+[ai8PriestDead]
+One more Priest sacrificed. The <br>
+{sw_god5} is very pleased!
+<$ChangeMoney,1500>
+$Button=OK,DoNothing,0
+
+[ai4PriestDead]
+It has been rumored that the Storm Crystals that fall from the heavens are
+actually tears of joy from the Furies....
+<p>
+If that's so, then the {sw_god5} must be esctatic over another lost soul sent
+to him - for the Storm Crystals have just poured down from the heavens...
+<p>
+You shudder as you think of what endless torture these hapless victims will
+experience..
+<p>
+Oh well. Better them than you!
+<$ChangeMoney,5000>
+$Button=Continue,DoNothing,0
+
+[ai5PriestCaptured]
+Sham, a henchman of<br>
+{sw_hades} calls out to you:<br>
+<i>"In the name of Hades you must save me!"</i>
+$Button=I'll try,DoNothing,0
+                       
+[ai5PriestDead]
+<i>"Hades will be furious if you fail him now!</i>
+$Button=OK,DoNothing,0
+
+[ai2TempleHalfDead]
+<i>Have mercy young Warrior!<br>
+                    --Thor</i>
+$Button=OK,DoNothing,0
+
+[ai2TempleDead]
+The thunder King pleads with you:<br>
+<i>"I beg you! I will train you in the knowledge of Thunder."</i>
+<p>
+You think to yourself: Hum! Not! Hades would be furious. Plus he will teach me.
+$Button=OK,DoNothing,0
+
+[ai2PriestCaptured]
+<i>"Please!"</i>, the thunder King wails, <i>"Don't sacrifice me. Together
+we can fight Hades and rule the Skies!"</i>
+<p>
+~I"Shutup old fool and bow before the spirit of Hades!"~., you cry
+$Button=OK,DoNothing,0
+
+[ai2PriestDead]
+~I"Hah! Oppose the God of ~kDEATH~.~I? I think not!"
+<$ChangeMoney,1250>
+$Button=OK,DoNothing,0
+
+[Succeeded][BadTeamDead]
+A giant rumbling begins, and your island shakes uncontrollably!
+Flames erupt from Nimbus and shoot up high into the Stratosphere, all
+around your island! Instantly you gasp for breath, but your lungs feel
+like they are burning inside your chest! You fall to your knees, unable
+to breathe!
+<p>
+A moment later, you can breathe again, as the flames subside, as does the
+skaing.
+<p>
+The God of {sw_hades} appears before you. He laughs with glee.
+"GET UP, groveler. You have done well.."<br>
+"Did you like the show I put on for you? You have made me very happy - so far.
+Now continue with your destruction. Attack Sun City!"
+<p>
+You stammer, ~I"Ya...Yes, Ma..Ma.. Master. I will obey!"~.
+<$Config,sw_m10=1>
+<$Config,sw_m9=0>
+$Button=Let's Go!,MissionBegin,sw_m10
+
+
+[Failed]
+You receive a message from the King of Thunder Village.<br>
+<i>"Run back to your master, you poor excuse for a Nimbian warrior!"</i>
+<p>
+But you can't run because Hades demands souls and knowledge. You must try again.
+<$Config,sw_difficulty1=1>
+<$Config,sw_mvar0=4000>
+<$Config,sw_mvar2=7>
+<$Config,sw_mvar1=0>
+$Button=Try Again,MissionBegin,sw_m9
+
+[END]

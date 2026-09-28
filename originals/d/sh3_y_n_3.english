@@ -1,0 +1,108 @@
+[Header]
+
+missionType = "Tutorial"
+
+missionNumber = "17"
+moreGeysers = "1"
+randGeysers = "0"
+
+myStartMoney = "4500"
+myTech = "rainbattery;sunblocker;suncannon;sunarcher;sunaviary;sunfence;"
+myAllyList = ""
+
+title = "The Queen"
+
+ai2Name = "The Queen"
+ai2Tech = "thunderbattery;thundercannon;thunderblocker;"
+ai2StartMoney = "50000"
+ai2AllyList = ""
+ai2Color = "red"
+ai2Collectors = "0"
+ai2BridgeDrawRate = "0"
+ai2GeyserAttachments = "1"
+ai2TimeBetweenMoves = "0"
+ai2Ability = ""
+
+[Options]
+
+[A.]
+
+<h2>~lThe Queen</h2>
+<i>~E"Woman... its too many means for men"<br>
+--Sunder</i>
+<p>~EYou became the ruler of west bottom part of Nimbus but then you visited the Marzech region of your new country suddenly Queen (Marcella Wolden) of dead Evil King attacked you. Do you want to fight against this very beautiful women?
+$Button=Its too hard for me!,Tell,Campaign
+$Button=Yes,Tell,Yes
+$Button=No,Tell,No
+
+[Yes]
+
+<h2>~lIncoming Message</h2>
+<i>~E~jFrom: ~qYou<br>
+~jTo: ~qMarcella Wolden</i>
+<p>~EYou attacked me not fair. Now you will die.
+
+$Button=Proceed,Tell,answ_yes
+
+[answ_yes]
+
+<h2>~lIncoming Message</h2>
+<i>~E~jFrom: ~qMarcella Wolden<br>
+~jTo: ~qSunder</i>
+<p>~ETry!
+$Button=Its too hard for me!,Tell,Campaign
+$Button=Check your Knowledge,ShowTechnology,55
+$Button=Proceed,DoNothing,0
+
+[No]
+
+<h2>~lIts your choice</h2>
+<i>~E"We must be wise...sometime"<br>
+--Sunder</i>
+<p>~EWise choice, you will talk to Marcella Wolden about it.
+
+$Button=Proceed,Tell,No_q
+
+[No_q]
+
+<h2>~lIncoming Message</h2>
+<i>~E~jFrom: ~qYou<br>
+~jTo: ~qMarcella Wolden</i>
+<p>~EI never attacked enemies like you attacking me now. I always fight in fair battles. How can you fight like this against me? Notice: you will be eliminated anyway from by Klod and his forces. So I promise you: if you will not attack me, I will save you. Its your choice.
+
+$Button=Proceed,Tell,answ_no
+
+[answ_no]
+
+<h2>~lIncoming Message</h2>
+<i>~E~jFrom: ~qMarcella Wolden<br>
+~jTo: ~qSunder</i>
+<p>~EHard choice...I must kill you... Cause you kill my wife... No...No...No, never...Give me more time...I must think...oo...ok
+
+<$Config,Done{mission.fileName}=1>
+<$Config,Donesh3_y_n_2a=0>
+<$Config,Donesh3_y_n_3a=1>
+
+$Button=Proceed,MissionBegin,sh3
+
+[Succeeded] [BadTeamDead]
+
+<h2>~lCongratulations?</h2>
+<i>~E"Why, why?"<br>
+--Sunder</i>
+<p>~EMarcella Wolden is dead now and it seems nothing wrong with your new country. But after a year...
+
+<$Config,Done{mission.fileName}=1>
+<$Config,Donesh3_y_n_2a=0>
+<$Config,Donesh3_y_n_3b=1>
+$Button=Proceed,MissionBegin,sh3
+
+[Failed]
+
+<h2>~lYou lose...</h2>
+<p>Don't worry if you lose, this is Shit Hard!
+
+$Button=Its too hard for me!,Tell,Campaign
+$Button=Try again!,Tell,TryAgain
+
+[END]

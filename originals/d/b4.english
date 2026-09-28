@@ -1,0 +1,79 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 4
+denySalvage = 1
+
+myStartMoney = 0
+myTech = "sunFactory;suncannon;sunblocker;rainbattery"
+
+title = "Escape"
+
+ai2Name = "Jailer"
+ai2Tech = "windFactory;windwalker;windbattery;windarcher;windblocker"
+ai2StartMoney = 1000
+ai2Collectors = 4
+ai2GeyserAttachments = 6
+ai2TimeBetweenMoves = 1
+ai2color = red
+ai2BridgeDrawRate = 1
+ai2Ability = "!BUILD_BLOCKERS_WHEN_BUILDINGS_HARMED;!FOCUS_ON_THINGS_THAT_ATTACK_BUILDINGS;!SACRIFICE_ENEMY_PRIEST"
+
+[@5]
+<h2>Your People</h2>
+<p>
+We must help our lord!  Gather the storm power, we are attacking!
+
+[@30]
+<h2>~rJailer</h2>
+<p>
+I see you over there...but I warn you, I don't like rowdy captives...
+
+[Options]
+
+[A.]
+<h2>Escape!</h2> 
+<i>"Even the slightest gusts of wind can also be a mighty tornado."<br>
+--Lord of Wind</i>
+<p>You wake up in an unknown island...on an ENEMY ISLAND!!!
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeed]
+[BadTeamDead]
+
+<h2>Congratulations! Victory!</h2> 
+<p>You have broken free!  Now to find out where you are and get your revenge on that coward lord!
+<$Config,Done{mission.filename}=1> 
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,b5
+
+[ai1TempleDead]
+<h2>Outcome</h2>
+<p>
+With the death of your temple, you were imprisoned for the rest of your life.
+$Button=Continue,Tell,TryAgain
+
+[ai2TempleHalfDead]
+<h2>~rJailer</h2>
+<p>
+I shall end this revolt personally!
+
+[ai2PriestCaptured]
+<h2>~rJailer</h2>
+<p>
+Lord Gunton shall hear of this!
+
+[ai2PriestDead]
+<h2>~gWindFury</h2>
+<p>
+Well done.  I shall give you some of my power as a reward for the journey ahead.
+
+[Failed]
+<h2>Failure!</h2> 
+<p> 
+Looks like your adventure has ended even before it has started!
+$Button=Continue,Tell,TryAgain
+
+[END]

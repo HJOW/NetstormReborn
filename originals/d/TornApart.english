@@ -1,0 +1,56 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 1
+
+myStartMoney = 5000
+myTech = "rainbattery;raincannon;rainblocker;rainaviary;rainballoon;rainFlyer;rainFence;rainBlocker;rainVortex"
+title="TornApart"
+
+ai2Name = "Megan"
+ai2Tech = "rainVortex;rainCannon;rainBattery;rainAviary;rainFlyer;rainFence;rainBalloon;rainBlocker"
+ai2StartMoney = 10000
+ai2GeyserAttachments = 3
+ai2Collectors = 10
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3"
+ai2color = yellow
+
+ai3Name = "Brad"
+ai3Tech = "windWalker;windFlyer;windAviary;windArcher;windBalloon;windBlocker"
+ai3StartMoney = 5000
+ai3GeyserAttachments = 3
+ai3Collectors = 10
+ai3TimeBetweenMoves = 2
+ai3AllyList = "2"
+ai3color = red
+
+[Options]
+
+[A.]
+<p><h2>Torn Apart</h2>
+<i>Rain seems harmless, but really, its the toughest of them all</i><br>
+--Maverick
+<p>You are moving your island to go and find Brad the Megan Lover, when you find your boss, Meg-de-Trashy-Ho is Having sex with Brad.  You go into warp speed and realize that your brakes were damaged in the last battle with the Wind demons.  You fly full speed ahead straight into Meg-de-Trashy-Ho, sending your priest flying off your island into the crossfire of the battle, save your priest first, then kick some Brad and megan ass, and remember if u die, The Furies will rag on u for the rest of your life.
+
+$Button=guess what I gave u,ShowTechnology,55
+$Button=Play,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>How dare u kill my lover, now I will cut off your penis and throw it into the abyss that is , Jetonne's ass.</h2>
+<p>
+You are victorious now you are a true priest and master of the furies
+
+$Button=Give it another shot,Tell,TryAgain
+$Button=Leave Missions,MissionAbort,1
+
+
+[Failed]
+<h2>I really have nothing to say...you got this far, and then you lost! U suck u moron, how dare u lose to the computer! You will be forever shunned.</h2>
+<p>
+You now will burn in hell forever. You disapointed me! 
+$Button=Go again,Tell,TryAgain
+
+
+[END]

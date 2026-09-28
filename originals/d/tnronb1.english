@@ -1,0 +1,37 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 3
+moreGeysers = 0
+
+myStartMoney = 
+myTech = ""
+myAllyList = ""
+
+title="T.N.R.O.N (Avenge the Duke)"
+
+[Options]
+
+[A.]
+<h2>The New Ruler of Nimbus (Part 2)</h2>
+<p>Your strongest ally the Duke of Thunder has been slain upon the Altar of the Elemental clan.  You will not let his death go unavenged!  After regrouping you are attacked by the Elemental Clan's scouts....it seems they wish to finish you off!
+<p>
+<i>You must defend yourself and avenge your friend's death.  Once done you must continue your quest.
+<p> ~[IplayerBanner.0]<i>~lMade by Rahn</i>~[IplayerBanner.0] 
+
+
+$Checked=1 Ritual,MissionBegin,tnron3ex,{Donetnron3ex},{Donetnron22},1
+$Checked=2 Followed,MissionBegin,tnron31,{Donetnron31},{Donetnron3ex}
+$Checked=3 Revenge,MissionBegin,tnron41,{Donetnron41},{Donetnron31}
+$Checked=4 Silence,MissionBegin,tnron51,{Donetnron51},{Donetnron41}
+$Checked=5 Defend,MissionBegin,tnron61,{Donetnron61},{Donetnron51}
+$Checked=6 Attacked,MissionBegin,tnron71,{Donetnron71},{Donetnron61}
+$Checked=7 Final,MissionBegin,tnron81,{Donetnron81},{Donetnron71}
+
+
+$Button=Back,Tell,Campaign
+
+
+
+
+[END]

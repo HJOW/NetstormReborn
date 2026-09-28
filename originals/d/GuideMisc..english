@@ -1,0 +1,11 @@
+title = "Different Maps"
+
+[Overview]
+<background="nsstart">
+<h2>You have been chosen.</h2>
+<p>
+These are a bunch of single player, single missions.  There is no reason you can't go ahead.
+<p>
+$Checked= Rescue the Girl,MissionBegin,GirlFriend,{DoneGirlFriend},1
+$Checked= Run Like Hell,MissionBegin,RunLikeHell,{DoneRunLikeHell),1
+$Button=Back,Tell,Campaign

@@ -1,0 +1,70 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 4
+moreGeysers = 2
+randGeysers = 1
+
+myStartMoney = 100000
+myTech = "windarcher;windBattery;windaviary;windblocker;windwalker;windballoon;suncannon"
+myAllyList = "3"
+
+title = "To the Death"
+
+ai2Name = "Michael"
+ai2Tech = "bulf;sunballoon;sunaviary;thundercannon;thunderarcher;thunderblocker;thunderbattery"
+ai2StartMoney = 100000
+ai2GeysersAttachments = 10
+ai2Collectors = 5
+ai2TimeBetweenMoves = 1
+ai2BridgeDrawRate = 1
+ai2ability = "CONCRETE_FIRE;!USE_PRIEST_TO_COLLECT;CAPTURE_ENEMY_PRIEST;SACRIFICE_ENEMY_PRIEST;BULD_DIAS;FOCUS_ON_THINGS_THAT_ATTACK_BUILDINGS"
+ai2AllyList = "4"
+ai2color = blue
+
+ai3Name = "Andrew"
+ai3Tech = "sunwalker;sunballoon;suncannon;sunarcher;sunaviary;sunblocker;windbattery"
+ai3StartMoney = 100000
+ai3GeysersAttachments = 10
+ai3Collectors = 5
+ai3TimeBetweenMoves = 1
+ai3BridgeDrawRate = 1
+ai3ability = "CONCRETE_FIRE;!USE_PRIEST_TO_COLLECT;CAPTURE_ENEMY_PRIEST;SACRIFICE_ENEMY_PRIEST;BULD_DIAS;FOCUS_ON_THINGS_THAT_ATTACK_BUILDINGS"
+ai3AllyList = "1"
+ai3color = blue
+
+ai4Name = "Nicole"
+ai4Tech = "rainwalker;rainballoon;raincannon;rainaviary;rainblocker;rainbattery;sunarcher"
+ai4StartMoney = 100000
+ai4GeysersAttachments = 10
+ai4Collectors = 5
+ai4TimeBetweenMoves = 1
+ai4BridgeDrawRate = 1
+ai4ability = "CONCRETE_FIRE;!USE_PRIEST_TO_COLLECT;CAPTURE_ENEMY_PRIEST;SACRIFICE_ENEMY_PRIEST;BULD_DIAS;FOCUS_ON_THINGS_THAT_ATTACK_BUILDINGS"
+ai4AllyList = "2"
+ai4color = blue
+
+
+
+[Options]
+
+[A.]
+<h2>Crossroads</h2>
+<i>Confusing, yes...Hard, yes...Impossibe? maybe...</i>
+<br>
+
+$Button=What you got,ShowTechnology,55
+$Button=This, This...,DoNothing,0
+
+[Secceeded][BadTeamDead]
+<h2>Heeheehe.  Was that cool or no?
+
+$button=But Mommy...can't I play in the mud for another minute?,MissionAbort,0
+
+[Failed]
+<h2>You have failed!</h2>
+
+$Button=Da Da Da!,MissionAbort,0
+
+
+[END]

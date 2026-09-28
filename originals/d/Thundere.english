@@ -1,0 +1,90 @@
+[header]
+missionType = "Tutorial"
+missionNumber = 8
+moreGeysers = 1
+myStartMoney = 10000
+myTech="thunderbattery;thundercannon;thunderblocker;thunderfence;bulf;windbattery;windarcher;windblocker;windaviary;windwalker;windballoon;suncannon;sunarcher;sunballoon;sunfence"
+
+
+ai2Name = "Florence"
+ai2Tech="windbattery;sunwalker;suncannon;sunarcher;sunaviary;sunblocker;sunballoon;sunfence"
+ai2StartMoney = 6000
+ai2GeyserAttachments = 10
+ai2Collectors = 15
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3"
+ai2AllyList = "1"
+
+ai3Name = "Sun Prince"
+ai3Tech="thunderbattery;thunderfence;thunderblocker;suncannon;sunarcher;sunwalker;sunballoon;bulf"
+ai3StartMoney = 7500
+ai3GeyserAttachments = 10
+ai3Collectors = 20
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2"
+
+title = "Unwanted Guests"
+
+[Options]
+[A.]
+<h2>~mUnwanted Guests</h2>
+<br><i>~INemo repente fuit turpissimus.<br>
+<br>--unknown author<br></i>
+<p>
+While you were away battleing, one of your servants has been ambushed by the <i>~rSun Prince</i>.
+He couldn't hold out for long enough for you to arrive and save him, so he capitulated.
+Now he fights for the <i>~rSun Prince</i>. You must find a way to save him.
+$Button=More,Tell,More
+
+[More]
+<h2>~gA message from the prince of the Chidory</h2>
+<br>I am sorry master, but I can't fight along side with you today,
+it seems that while I was away, my Island also got attacked, and now I must defend it.<br>
+<br>I shall keep in touch with you, and report how things are going back here.<br>
+$Button=O.K. - we'll keep in touch,ShowTechnology,55
+$Button=Start Mission,DoNothing,0
+$Button=This can wait - I'll come to your aid,MissionBegin,Chidory
+$Button=Bail,MissionAbort,1
+
+[@120]
+<h2>~yA message from Florence</h2>
+Master, I knew you'd come, but I can't help you because I'm
+trapped in a Force Field. If you kill the <i>~rSun Prince</i> then I
+will be free.
+$Button=O.K.,DoNothing,0
+
+[@180]
+<h2><i>~gThe master of the Chidory sends you a message:</h2></i>
+<br>Master, the odds aren't looking any good here, I wish you were here, to help me, but no matter.
+Hopefuly I can outwhip this.
+$Button=Now there's nothing I can't do to help you,DoNothing,0
+
+
+[ai3PriestCaptured]
+~yI can feel that the forcefield is fading master!
+$Button=Just a little longer,DoNothing,0
+
+[ai3PriestDead]
+<h2>~gThank you master</h2>
+<br>thank you for freeing me! And now I shall rule this place! It is time...
+for you to <i>~DIE!</i><br>
+$Button=Oh realy?!,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>~mVictory!</h2>
+You have defeated the <i>~rSun Priest</i>!
+But it looks like it was too late for your former ally, he wanted ultimate power, and now he is in hell with the rest of your enemies.
+$Button=More,Tell,Ally
+
+[Ally]
+<h2>~gA message from you ally</h2><br>
+Help me master! I've lost the war, and the enemy has captured me!<br>
+Please hurry!
+$Button=End Mission,MissionAbort,1
+$Button=Next Mission,MissionBegin,Resque
+
+[Failed]
+<h2>You've failed to achieve victory!</h2>
+
+[End] 

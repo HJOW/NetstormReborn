@@ -1,0 +1,49 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 9
+
+myStartMoney = 999999999
+myTech = "sunwalker;sunblocker;sunballoon;sunfence;suncannon;sunarcher;sunaviary;windballoon;windarcher;windaviary;windwalker;windbattery;windblocker"
+
+title = "Menu"
+
+ai2Name = "General Trap"
+ai2Tech = "sunwalker;sunblocker;sunfence;suncannon;sunarcher;sunaviary;rainfence;rainwalker;rainballoon;raincannon;rainblocker;rainaviary;rainbattery;windarcher;windaviary;windwalker;windbattery;windblocker;thunderblocker;thundercannon;thunderbattery;thunderarcher"
+ai2StartMoney = 100000
+ai2Collectors = 9
+ai2GeyserAttachments = 9
+ai2color = red
+ai2BridgeDrawRate = 1
+ai2TimeBetweenMoves= 1
+ai2Ability = "!USE_PRIEST_TO_COLLECT"
+
+[Options]
+
+[A.]
+<h2>The Story...</h2> 
+<p>Finally! You have manage to create the spell of unlimited storm crystals! Now you can crush them all! Now you can pay all your enemies! now you can... OUR ISLAND IS UNDER ATTACK! What?! Where?! When?! They're approaching from the east! Eh from the north! Ahh they're everywhere!!! Well, you were so close to conquer the entire Netstorm world but... you were attacked by the famous General Trap, the one who ripped out empires and now he's going to kill you... OUR PRIEST HAS BEEN... No wait!! Don't kill me! I'm the only one who knows the unlimited money spell! yes of coures yes yes yes yes yes! Wshew, that was close.. and now he's taking you to his empire... well then, he gives you time to reveal your secret and meanwhile goes to his daily swim... TRY TO ESCAPE!!! .
+
+$Button=Quit the Campaign,MissionAbort,0
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play,DoNothing,0
+
+[Succeed]
+[BadTeamDead]
+
+<h2>Congratulations! Victory!</h2> 
+<p>You did it! You crazy winner!!!!!.
+<$Config,Done{mission.filename}=1> 
+$Button=Leave Missions,MissionAbort,0
+
+[Failed]
+<h2>Failure!</h2> 
+<p> 
+That is just...pitiful.
+
+$Button=Leave Missions,MissionAbort,0
+$Button=RETRY!!!,Tell,TryAgain
+
+[END]
+

@@ -1,0 +1,68 @@
+[Header]
+missionType="Tutorial"
+missionNumber = 1
+moreGeysers = 1
+myStartMoney = 2000
+myTech = "sunBalloon;windBattery;sunAviary;sunarcher;sunblocker;sunCannon;sunFence"
+
+title= "Attack!"
+
+ai2Name= "Rain slave"
+ai2Tech= "rainBattery;rainAviary;Raincannon"
+ai2StartMoney= 2000
+ai2BridgeDrawRate= 1
+ai2GeyserAttachments = 2
+ai2Collectors = 4
+ai2TimeBetweenMoves = 1
+ai2AllyList= "3;4"
+ai2color= white
+
+ai3Name= "The Thunder Mastermind"
+ai3Tech= "thunderBattery;Thundercannon;thunderarcher;thunderblocker"
+ai3StartMoney= 1000
+ai3GeyserAttachments = 2
+ai3Collectors = 4
+ai3TimeBetweenMoves = 1
+ai3AllyList= "2;4"
+ai3color= purple
+
+ai4Name= "Wind slave"
+ai4Tech= "windballoon;windBattery;windAviary;windarcher;windblocker;Raincannon;rainBlocker;rainFence"
+ai4StartMoney= 900
+ai4GeyserAttachments = 2
+ai4Collectors = 5
+ai4TimeBetweenMoves= 1
+ai4Allylist= "2;3"
+ai3color= green
+
+[Options]
+
+[A.]
+<h2> Sun temple is attacked!! <h2>
+<i> "Help!" <br>
+--Ancient sun temple brothers </i|
+<p>
+Help!! The evil thunder empire attacked us! They have assimulated your hard
+earned islands!! After the mighty thunder - wind - rain kingdom assimulates us
+You will be next!! You have no chance of defeting then after we are assimulated
+Your only hope is to attack now! ---Wise and Ancient rising sun.
+$Button=Review Knowledge,Show Technology,55
+$Button=PlayMission,DoNothing,0
+
+[Succeeded] [BadTeamDead]
+
+<h2> Yeppie!!!! <h2>
+<p> U  won!!! Thunder is no more! The islands are now free!
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,strike
+
+[Failed]
+
+<h2> You suck!!! </h2>
+<p> Fuck oFF!! The bitching thunder is now the master!
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+

@@ -1,0 +1,220 @@
+SWELB, we need a little time delay to have the player break free of the bridges. Whatdaya tink???
+
+
+
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 21
+moreGeysers = 1
+randomGeysers = 1
+denySalvage = 1
+
+myAllyList = ""
+myStartMoney = 6000 
+myTech = all
+
+title = "A Taste of Freedom"
+
+ai2Name = "Hades Bounty Hunter 1"
+ai2Tech = "{sw_var1}{sw_var2}{sw_var3}{sw_var5}sunWalker"
+ai2StartMoney =1000 
+ai2GeyserAttachments = 4
+ai2Collectors = 5
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3;4;5;6;8"
+ai2Color = orange
+ai2BridgeDrawRate = 1
+ai2Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai3Name = "Hades High Wind Priest"
+ai3Tech = "{sw_var1}{sw_var2}{sw_var3}{sw_var4}sunWalker"
+ai3StartMoney =5000 
+ai3GeyserAttachments = 4
+ai3Collectors = 5
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2;4;5;6;8"
+ai3Color = yellow
+ai3BridgeDrawRate = 1
+ai3Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai4Name = "Rain Fury: High Priest"
+ai4Tech = "{sw_var1}{sw_var2}{sw_var5}{sw_var6}sunWalker"
+ai4StartMoney = 5000
+ai4GeyserAttachments = 4
+ai4Collectors = 5
+ai4TimeBetweenMoves = 1
+ai4AllyList = "2;3;5;6;8"
+ai4Color = purple
+ai4BridgeDrawRate = 1
+ai4Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai5Name = "Thunder Fury: High Priest"
+ai5Tech = "{sw_var1}{sw_var2}{sw_var7}{sw_var8}sunWalker"
+ai5StartMoney = 5000
+ai5GeyserAttachments = 4
+ai5Collectors = 5
+ai5TimeBetweenMoves = 1
+ai5AllyList = "2;3;4;6;8"
+ai5Color = green
+ai5BridgeDrawRate = 1
+ai5Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai6Name = "Hades Bounty Hunter 2"
+ai6Tech = "{sw_var1}{sw_var2}{sw_var3}{sw_var6}{sw_var8}sunWalker"
+ai6StartMoney = 1000
+ai6GeyserAttachments = 4
+ai6Collectors = 5
+ai6TimeBetweenMoves = 1
+ai6AllyList = "2;3;4;5;8"
+ai6Color = white
+ai6BridgeDrawRate = 1
+ai6Ability = "!USE_PRIEST_TO_COLLECT"
+  
+ai8Name = "Hades Bounty Hunter 3"
+ai8Tech = "{sw_var1}{sw_var2}{sw_var3}{sw_var6}{sw_var8}sunWalker"
+ai8StartMoney = 1000
+ai8GeyserAttachments = 4
+ai8Collectors = 5
+ai8TimeBetweenMoves = 1
+ai8AllyList = "2;3;4;5;6"
+ai8BridgeDrawRate = 1
+ai8Ability = "!USE_PRIEST_TO_COLLECT"
+
+[init]
+<$Config,sw_m21=1>
+<$Config,sw_m1=0>
+<$Config,sw_m2=0>
+<$Config,sw_m3=0>
+<$Config,sw_m4=0>
+<$Config,sw_m5=0>
+<$Config,sw_m6=0>
+<$Config,sw_m7=0>
+<$Config,sw_m8=0>
+<$Config,sw_m9=0>
+<$Config,sw_m10=0>
+<$Config,sw_m11=0>
+<$Config,sw_m12=0>
+<$Config,sw_m13=0>
+<$Config,sw_m14=0>
+<$Config,sw_m15=0>
+<$Config,sw_m16=0>
+<$Config,sw_m17=0>
+<$Config,sw_m18=0>
+<$Config,sw_m19=0>
+<$Config,sw_m20=0>
+<$Config,sw_m22=0>
+<$Config,sw_m23=0>
+<$Config,sw_m24=0>
+<$Config,sw_m25=0>
+<$Config,sw_m30=0>
+
+<$Config,sw_mvar0=0>
+<$Config,sw_mvar1=0>
+<$Config,sw_mvar2=0>
+<$Config,sw_mvar3=0>
+<$Config,sw_mvar4=0>
+<$Config,sw_mvar5=0>
+<$Config,sw_mvar6=0>
+<$Config,sw_mvar7=0>
+
+[options]
+[A.]
+        <h2>A taste of Freedom~.<a href="#mission21">~[IfortGump.46]</a></h2>
+You have a choice of what you may start the mission with. You may pick one
+ selection from the Allies' Ability, and one selection from the Enemie's Ability.
+ <p>
+ You only have 1 chance! Good luck!
+$Menu=*****~[Iflag.5] Allies' ABILITY ~[Iflag.5]*****,Tell,A.
+$Menu=~[Inugget.2]<?{sw_mvar0}>~y</?>     More Storm Power     ~[Inugget.2],Tell,morePower
+$Menu=~[Iburied.0]<?{sw_mvar2}>~y</?>            A Few Spells            ~[Iburied.0],Tell,spells
+$Menu=~[Ibridge.44]<?{sw_mvar1}>~y</?>          Crack all Bridges           ~[Ibridge.44],Tell,collectMore
+
+$Menu=     ,Tell,A.
+$Menu=*****~[Iflag.5] Enemies' ABILITY ~[Iflag.5]*****,Tell,A.
+$Menu=~[Inugget.2]<?{sw_mvar3}>~y</?>     Less Storm Power     ~[Inugget.2],Tell,lessPower
+$Menu=~[IsunWalker.52]<?{sw_mvar4}>~y</?>          Collect Less           ~[IsunWalker.16],Tell,collectLess
+$Menu=~[Ipriest.16]<?{sw_mvar6}>~y</?>     Slower Movement     ~[Ipriest.40],Tell,priestSlower
+$Menu=~[Ibridge.18]<?{sw_mvar5}>~y</?>           Bridge Slower            ~[Ibridge.18],Tell,bridgeSlower
+
+$Button=OK I made my Choice. This is what I want,Tell,choiceDone
+
+
+
+[priestSlower]
+<$Config,sw_mvar6=1>
+<$Config,sw_mvar5=0>
+<$Config,sw_mvar4=0>
+<$Config,sw_mvar3=0>
+<$Tell,A.>
+
+[bridgeSlower]
+<$Config,sw_mvar6=0>
+<$Config,sw_mvar5=1>
+<$Config,sw_mvar4=0>
+<$Config,sw_mvar3=0>
+<$Tell,A.>
+
+[collectLess]
+<$Config,sw_mvar6=0>
+<$Config,sw_mvar5=0>
+<$Config,sw_mvar4=1>
+<$Config,sw_mvar3=0>
+<$Tell,A.>
+
+
+[lessPower]
+<$Config,sw_mvar6=0>
+<$Config,sw_mvar5=0>
+<$Config,sw_mvar4=0>
+<$Config,sw_mvar3=1>
+<$Tell,A.>
+
+[spells]
+<$Config,sw_mvar2=1>
+<$Config,sw_mvar1=0>
+<$Config,sw_mvar0=0>
+<$Tell,A.>
+
+[collectMore]
+<$Config,sw_mvar2=0>
+<$Config,sw_mvar1=1>
+<$Config,sw_mvar0=0>
+<$Tell,A.>
+
+[morePower]
+<$Config,sw_mvar2=0>
+<$Config,sw_mvar1=0>
+<$Config,sw_mvar0=1>
+<$Tell,A.>
+
+[choiceDone]
+<$Tell,readytogo>
+
+[readytogo]
+<?{sw_mvar0}><$Config,sw_mvar0=12000></?>
+<?!{sw_mvar0}><$Config,sw_mvar0=6000></?>
+<?{sw_mvar1}><$Config,sw_mvar1=1></?>
+<?!{sw_mvar1}><$Config,sw_mvar1=0></?>
+<?{sw_mvar2}><$Config,sw_mvar2=1></?>
+<?!{sw_mvar2}><$Config,sw_mvar2=0></?>
+<?{sw_mvar3}><$Config,sw_mvar3=400></?>
+<?!{sw_mvar3}><$Config,sw_mvar3=3000></?>
+<?{sw_mvar4}><$Config,sw_mvar4=1></?>
+<?!{sw_mvar4}><$Config,sw_mvar4=3></?>
+<?{sw_mvar5}><$Config,sw_mvar5=8></?>
+<?!{sw_mvar5}><$Config,sw_mvar5=2></?>
+<?{sw_mvar6}><$Config,sw_mvar6=8></?>
+<?!{sw_mvar6}><$Config,sw_mvar6=2></?>
+<$PlaySound,itIsDone.wav>
+You have made your choice! Get ready to play <i>A Taste Of Freedom</i>
+$Button=I am ready to play!,MissionBegin,sw_m21a
+
+[Succeeded][BadTeamDead]
+this should not occur!
+[Failed][GoodTeamDead]
+this should not occur!
+
+
+[END]
+

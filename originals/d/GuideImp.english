@@ -1,0 +1,40 @@
+title = "Impossible Senerios"
+
+[Overview]
+<background="nsstart">
+<h2>~[Itreetwo.0]Welcome...         To your DEATH!~.~[Itreethree.0]</h2><br>
+<i>"Oh oh, you're in trouble.  Gotta kill the priest on the double.          <br>
+                                                                             <br>
+~[Ipriest.O08] ~[IsunFlyerBomb.14]    ~wShhh... He's consulting his magic pool.<br>
+~wThe Priest whispers,                                                         <br>
+"~iMagic pool that is blue, Tell me what I gotta do.~w"                          <br>
+The pool rises and says, "~iBeat these senerios I have set before you!~w"        <br>
+                                                                             <br>
+~.There is little/no story line for these maps.                           <br>
+If you want that, check out "~y~EFW Part I: Shattered Guilds + II: The Offensive Strike~w"~. and swelb's "~y~EThe Choice~w"~. and Rahn's "~y~EThe New Leader of Nimbus~w"~..<br>
+<a href="http://www.geocities.com/TimesSquare/Arena/7792/">~lNEC IS DA PLACE TO BE</a><br>
+<br>
+~mMade by the Virtuous Warrior<br>
+~kDying~w_~rRealms~k@juno.com~m ~w- <a href="mailto:Dying_Realms@juno.com">~lE-mail me for comments/critism/bugs.</a><br>
+<br>~.
+~5~qNote~w: You can play these in any order.  If you win any four, you get a special mission. HeeHeeHe.<br>
+~qSide Note~w: DO NOT CHEAT!!!  That messes up some of these maps.<br>
+~qAnother Note~w: ~EDO NOT~. ~k~E~5CHEAT~w ~.IN ~EMULTI-PLAYER~....<br>
+~6(Unless of course, you ~Isuck~. ~6to bad to take loosing like a ~Itrue~. ~6man (~Itrue~. ~6lady.))<br>~.
+<br>
+~[Ipriest.99]~[Ifortgump.*]~[Ilightning.*]~[Ianim.19]~rT~oh~yi~rs~o i~ys~r d~oa~y b~ro~om~yb~i!<br>
+<br>
+$Checked=Pick Your Death:,MissionBegin,Imp999,{Doneimp999},{Doneimp998}
+$Checked=   -~mHive Cluster,MissionBegin,Imp1,{DoneImp1},1
+$Checked=   -~kDark ~rRituals,MissionBegin,Imp2,{DoneImp2},1
+$Checked=   -~yX Marks The Spot,MissionBegin,Imp3,{DoneImp3},1
+$Checked=   -~lRun Like Hell 2,MissionBegin,Imp4,{DoneImp4},1
+$Checked=   -~gProject: ~oD~go~gt~oT~.,MissionBegin,Imp5,{DoneImp5},1
+$Checked=Special Mission:,MissionBegin,Imp999,{DoneImp999},{DoneImp998}
+<?{DoneImp2}> <?{DoneImp3}> <?{DoneImp4}> <?{DoneImp5}> $Checked=   -~mY~yo~ku~gr ~wD~oe~ra~bt~qt,MissionBegin,Imp99,{DoneImp2},{DoneImp3},{DoneImp4},{DoneImp5}   </?> </?> </?> </?>
+<?{DoneImp1}> <?{DoneImp3}> <?{DoneImp4}> <?{DoneImp5}> $Checked=   -~mY~yo~ku~gr ~wD~oe~ra~bt~qt,MissionBegin,Imp99,{DoneImp1},{DoneImp3},{DoneImp4},{DoneImp5}   </?> </?> </?> </?>
+<?{DoneImp1}> <?{DoneImp2}> <?{DoneImp4}> <?{DoneImp5}> $Checked=   -~mY~yo~ku~gr ~wD~oe~ra~bt~qt,MissionBegin,Imp99,{DoneImp1},{DoneImp2},{DoneImp4},{DoneImp5}   </?> </?> </?> </?>
+<?{DoneImp1}> <?{DoneImp2}> <?{DoneImp3}> <?{DoneImp5}> $Checked=   -~mY~yo~ku~gr ~wD~oe~ra~bt~qt,MissionBegin,Imp99,{DoneImp1},{DoneImp2},{DoneImp3},{DoneImp5}   </?> </?> </?> </?>
+<?{DoneImp1}> <?{DoneImp2}> <?{DoneImp3}> <?{DoneImp4}> $Checked=   -~mY~yo~ku~gr ~wD~oe~ra~bt~qt,MissionBegin,Imp99,{DoneImp1},{DoneImp2},{DoneImp3},{DoneImp4}   </?> </?> </?> </?>
+$Button=Be a coward and leave,Tell,Campaign
+$Button=ReadMe,MissionBegin,Imp66

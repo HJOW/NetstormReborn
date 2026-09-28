@@ -1,0 +1,122 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 3
+moreGeysers = 1
+
+myStartMoney = 5000
+myTech = "windbattery;rainbattery;thunderbattery;outpost;windarcher;windblocker;windaviary;windwalker;rainwalker;bulf"
+myallylist = "4"
+
+title="Thunder"
+
+ai2Name = "Bad Thunder Guy"
+ai2Tech = "thunderbattery;thundercannon;bulf"
+ai2StartMoney = 10000
+ai2GeyserAttachments = 3
+ai2Collectors = 3
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3;5"
+ai2color = red
+
+ai3Name = "Real Bad Thunder Guy"
+ai3Tech = "thunderbattery;thundercannon;bulf"
+ai3StartMoney = 10000
+ai3GeyserAttachments = 3
+ai3Collectors = 3
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2;5"
+ai3color = green
+
+ai4Name = "Grand High Priest of Wind
+ai4Tech = "windbattery;windblocker;windarcher;windaviary;windballoon"
+ai4StartMoney = 10000
+ai4GeyserAttachments = 3
+ai4Collectors = 2
+ai4TimeBetweenMoves = 1
+ai4AllyList = "1"
+ai4Color = purple
+
+ai5Name = "Really Nasty Thunder Guy"
+ai5Tech = "thunderbattery;thundercannon;thunderarcher;bulf"
+ai5StartMoney = 10000
+ai5GeyserAttachments = 3
+ai5Collectors = 3
+ai5TimeBetweenMoves = 1
+ai5AllyList = "2;3"
+ai5color = white
+
+[Options]
+
+[A.]
+<h2>~B~I~kTHUNDER</h2>
+<i>"When the going gets tough, the tough get going"<br>
+--Some Guy</i>  
+<p>Ok it's you and a semi-decent ally against 3 thunder guys.
+<p>Everybody starts with 10k (except you).
+$Button=That sounds fair...,Tell,More
+
+[More]
+<p>~B~E~l      Of course it is.  So anyway it's a pretty basic map going on here, but in it's own ways its still kind of unique.  The idea was to force the player to have to harvest enough storm power to afford defense for him and his ally at the same time.  I added a couple of spells and some bridges for the ais to use for easier thunder cannon placement.  You also have the option to win the map when you've destroyed one of the computers temples.  You'll see how it all works.
+                                                         -Mike Byrne aka Australian_Dingo
+$Button=Thanks,Tell,More2
+$Button=ai2temple,Tell,ai2templedead
+
+[More2]
+<p>~B~E~l"Expect to go permanently deaf."
+<br>
+				--~B~lThe book of nimbus
+$Button=What do I have again?,ShowTechnology,55
+$Button='Nuff said,DoNothing,0
+
+[ai4priestdead]
+<h2>Oh No!</h2>
+~B(Without your ally the grand high priest of wind you are quickly overcome by your foes.)
+
+$Button=Oh well screw it im leaving,MissionAbort,0
+$Button=Restart the mission,MissionBegin,Mike3
+
+[ai2TempleDead]
+~B~E~wWell, I think if you've been able to survive and kill someone's temple, you're just about done.  At this point I'll let you win the mission now... or if you are just having way too much fun with this map you can keep playing until you've sacrificed all the bad guys.
+
+$Button=I'm done here,Tell,Victory
+$Button=THIS IS TOO FUN,Keep Going,DoNothing,0
+
+[ai3TempleDead]
+~B~E~wWell, I think if you've been able to survive and kill someone's temple, you're just about done.  At this point I'll let you win the mission now... or if you are just having way too much fun with this map you can keep playing until you've sacrificed all the bad guys.
+
+$Button=I'm done here,Tell,Victory
+$Button=Keep Going,DoNothing,0
+
+[ai5TempleDead]
+~B~E~wWell, I think if you've been able to survive and kill someone's temple, you're just about done.  At this point I'll let you win the mission now... or if you are just having way too much fun with this map you can keep playing until you've sacrificed all the bad guys.
+
+$Button=I'm done here,Tell,Victory
+$Button=Keep Going,DoNothing,0
+
+[Victory]
+<h2>It's a win.</h2>
+<p>
+~B~E~iGood job with them thunder guys.
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Who's Next,MissionBegin,Mike4
+
+
+[Succeeded][BadTeamDead]
+<h2>It's a win.</h2>
+<p>
+~B~E~iGood job with them thunder guys.
+
+$Button=Leave Missions,MissionAbort,0
+$Button=Who's Next,MissionBegin,Mike4
+
+[Failed]
+<h2>You got sacked!</h2>
+<p>
+Oh well you and your ally got sacrificed to the thunder fury.
+
+$Button=Continue,Tell,TryAgain
+$Button=Gimme Another Shot,MissionBegin,Mike3
+
+[END]

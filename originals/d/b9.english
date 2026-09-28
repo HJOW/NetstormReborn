@@ -1,0 +1,145 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 9
+
+myStartMoney = 1600
+myTech = "thunderFactory;sunFactory;suncannon;sunblocker;thunderbattery;thundercannon;thunderarcher;sunballoon"
+myAllyList = "3;4"
+
+title = "Through the Darkening Skies"
+
+ai2Name = "General Dusty"
+ai2Tech = "windFactory;sunwalker;windbattery;windaviary;windblocker;windarcher"
+ai2StartMoney = 1000
+ai2Collectors = 4
+ai2GeyserAttachments = 5
+ai2AllyList = "5;6;"
+ai2TimeBetweenMoves = 1
+ai2color = red
+ai2BridgeDrawRate = 1
+ai2Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai3Name = "Rain Wizard"
+ai3Tech = "sunFactory;rainFactory;sunwalker;rainbattery;rainaviary;sunaviary;sunblocker;raincannon"
+ai3StartMoney = 1000
+ai3Collectors = 4
+ai3GeyserAttachments = 5
+ai3AllyList = "1;4"
+ai3TimeBetweenMoves = 1
+ai3color = white
+ai3BridgeDrawRate = 2
+ai3Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai4Name = "Wind Knight"
+ai4Tech = "sunFactory;windFactory;sunwalker;windbattery;windarcher;suncannon;windblocker"
+ai4StartMoney = 1000
+ai4Collectors = 4
+ai4GeyserAttachments = 5
+ai4AllyList = "1;3"
+ai4TimeBetweenMoves = 1
+ai4color = green
+ai4BridgeDrawRate = 2
+ai4Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai5Name = "Captain Foreway"
+ai5Tech = "thunderFactory;sunFactory;sunwalker;thunderbattery;sunaviary;thunderarcher;thundercannon"
+ai5StartMoney = 1000
+ai5Collectors = 4
+ai5GeyserAttachments = 5
+ai5AllyList = "2;6;"
+ai5TimeBetweenMoves = 1
+ai5color = purple
+ai5BridgeDrawRate = 1
+ai5Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai6Name = "Sargent Drizzle"
+ai6Tech = "rainFactory;sunFactory;sunwalker;raincannon;rainbattery;rainblocker;suncannon;sunarcher"
+ai6StartMoney = 1000
+ai6Collectors = 4
+ai6GeyserAttachments = 5
+ai6AllyList = "2;5;"
+ai6TimeBetweenMoves = 1
+ai6color = yellow
+ai6BridgeDrawRate = 1
+ai6Ability = "!USE_PRIEST_TO_COLLECT"
+
+[@22]
+<h2>~lYou</h2>
+<p>
+Come on!  It is now or never!
+
+[@25]
+<h2>~gWind Knight</h2>
+<p>
+Lets do this!
+
+[@30]
+<h2>~rGeneral Dusty</h2>
+<p>
+At last a challange, but it will be us who shall emerge from this battle victorious.
+
+[Options]
+
+[A.]
+<h2>Through the Darkening Skies</h2> 
+<i>"You can either win the greatest of battles, or die trying."<br>
+--Handbook of War</i>
+<p>It appears as if Lord Gunton sent his 3 most trusted allies to stop your quest.  Break through this opposition or else you shall perish.
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeed]
+[BadTeamDead]
+
+<h2>Congratulations! Victory!</h2> 
+<p>
+You have defeated Lord Gunton's best servants!  Your victory shall not be that far away now!
+<$Config,Done{mission.filename}=1> 
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,b10
+
+[ai2PriestCaptured]
+<h2>~rGeneral Dusty</h2>
+<p>
+May the winds of nimbus tear you apart!
+
+[ai3TempleHalfDead]
+<h2>~wRain Wizard</h2>
+<p>
+Im under attack!
+
+[ai3PriestDead]
+<h2>Outcome</h2>
+<p>
+With the death of Rain Wizard,  you lost your right flank and the enemy looped around you and you died.
+$Button=Continue,Tell,TryAgain
+
+[ai4TempleHalfDead]
+<h2>~gWind Knight</h2>
+<p>
+I need help here!
+
+[ai4PriestDead]
+<h2>Outcome</h2>
+<p>
+With the death of Wind Knight,  you were greatly outnumbered and soon perished.
+$Button=Continue,Tell,TryAgain
+
+[ai5PriestCaptured]
+<h2>~sCaptain Foreway</h2>
+<p>
+Grah!!!!  Die you fools!
+
+[ai6PriestCaptured]
+<h2>~ySargent Drizzle</h2>
+<p>
+You will soon be down to your knees as well.
+
+[Failed]
+<h2>Failure!</h2> 
+<p> 
+You have died in battle and what happened to your allies is irrelevant, but they probally died.
+$Button=Continue,Tell,TryAgain
+
+[END]

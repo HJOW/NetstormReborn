@@ -1,0 +1,100 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 3
+
+myStartMoney = 1000
+myTech ="rainwalker;raincannon;rainBattery;rainfence;rainballoon;rainblocker;rainAviary;outpost"
+myAllyList ="4"
+
+title="Treason"
+ai2Name = "Splish Splash"
+ai2Tech ="rainwalker;raincannon;rainBattery;rainfence;rainballoon;rainblocker;rainAviary"
+ai2StartMoney = 10000
+ai2GeyserAttachments = 15
+ai2Collectors = 10
+ai2TimeBetweenMoves = 0
+ai2Bridgedrawrate = 1
+ai2color = red
+
+ai3Name = "Sun Pirate"
+ai3Tech ="sunballoon;sunBlocker;sunArcher;suncannon;sunAviary;sunfence"
+ai3StartMoney = 10000
+ai3GeyserAttachments = 20
+ai3Collectors = 20
+ai3TimeBetweenMoves = 0
+ai3Bridgedrawrate = 1
+ai3Ability ="!USE_PRIEST_TO_COLLECT"
+ai3color = white
+
+ai4Name = "Prisoner"
+ai4Tech ="rainBattery;rainAviary"
+ai4StartMoney = 10000
+ai4GeyserAttachments = 20
+ai4Collectors = 20
+ai4TimeBetweenMoves = 0
+ai4Bridgedrawrate = 1
+ai4Ability ="!USE_PRIEST_TO_COLLECT"
+ai4color = green
+ai4AllyList = "1"
+
+
+
+
+
+[Options]
+
+[A.]
+<P>"Treason is delightful"
+<P>Twinkies
+<p>You are a gang of bounty hunters that hunt pirates.
+<p>Your first mission is to destroy the Sun Pirate. Save his prisioner.
+<p>Also, your ally has rebelled aginast you. Kill him to.
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Fight,DoNothing,0
+
+
+[ai2PriestDead]
+You have Defeated me, but you still won't beat me!
+
+[ai3PriestDead]
+Aieeeeeeeeeee!!
+
+[ai4PriestDead]
+Ack!
+
+
+
+[ai2PriestCaptured]
+Oh No! I am  doomed!
+
+
+
+[ai3PriestCaptured]
+Lemme go please?
+
+
+[ai4PriestCaptured]
+Ack!
+
+
+
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>Your Trader of an ally is dead. and so is the pirate
+<$Config,Done{mission.fileName}=1>
+$Button=Next Mission,MissionBegin,POW2
+$Button=Leave Missions,MissionAbort,0
+
+[Failed]
+<h2>Failure!</h2>
+<p>You have been sacrificed or the prisioner has. Bad!
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+
+
+

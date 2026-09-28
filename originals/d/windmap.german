@@ -1,0 +1,63 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 2
+moreGeysers = 1
+
+myStartMoney = 5000
+myTech ="thunderfence;thunderBlocker;sunWalker;bulf;thunderCannon;thunderArcher;thunderBlocker;thunderBattery" 
+myAllyList = "2"
+title="Wind Fury"
+
+ai2Name = "Prince_of_Rain"
+ai2Tech = "sunWalker;rainBattery;rainBlocker;rainWalker;rainCannon;rainBalloon;rainAviary"
+ai3StartMoney = 5000
+ai2GeyserAttachments = 5
+ai2Collectors = 5
+ai2TimeBetweenMoves = 1
+ai2AllyList = "1"
+ai2ability="!USE_PRIEST_TO_COLLECT"
+ai2color = red
+
+ai3Name = "Wind_Fury"
+ai3Tech = "sunwalker;windBattery;windAviary;windWalker;windArcher;windBlocker;windBalloon"
+ai3StartMoney = 100000
+ai3GeyserAttachments = 5
+ai3Collectors = 1
+ai3TimeBetweenMoves = 1
+ai3ability="!USE_PRIEST_TO_COLLECT"
+ai3color = white
+
+
+[Options]
+
+
+[A.]
+<h2>Wind Fury</h2>
+<i>"You won't know what killed you"--General of wind</i>
+<p>You have defeated the thunder fury but there was a side effect you are now the thunder fury and now it seems wind seeks your strength. 
+<p>Defeat him and you will have the speed of the wind!
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>yeah</h2>
+<p>You are now the quickest being in the universe.
+<P>But what of the rain fury.
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,1
+$Button=Next Mission,MissionBegin,rainmap
+
+[Failed]
+<h2>Defeat</h2>
+<p>You lost and now the wind fury has the power he needs to rule nimbus.
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+
+
+
+
+

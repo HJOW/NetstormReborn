@@ -1,0 +1,76 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+title="OutLook"
+
+
+myStartMoney = 10000
+myTech = ""
+
+[INIT]
+<$config,Tp_yourname="">
+<$config,Tp_name=0>
+
+
+[Options]
+
+
+[A.]
+<h2>~yOutLook</h2><P>
+You are standing on your island looking out amoung the clouds.  Most of 
+the Sameron Leadership have been killed.  The faith of your people grows weak.
+You think to yourself,<br> "~iThe Var'ca must be choosen soon~.".<br>
+~[Iresidence.6]
+
+$Button=Leave Missions,MissionAbort,0
+$Button=Rest,tell,Rest
+
+[REST]
+
+As Night falls, you drift into a deep sleep.<p>
+<i>{TpVguide}</i> <?{Tp_name}> {Tp_yourname}, </?>The time has come for you to be tested.
+<P>
+Selected a tech for your first trial.
+$Checked=Wind,tell,Wind,0,{TpVc21}
+$Checked=Rain,tell,Rain,0,{TpVc31}
+$Checked=Sun,tell,Sun,0,{TpVc11}
+$Checked=Thunder,tell,thunder,0,{TpVc41}
+$Checked=All,tell,All,0,0
+$OnExit= ,MissionBegin,TpVpath
+
+
+[SUN]
+<$config,TpVc1=1>
+<$config,TpVc2=0>
+<$config,TpVc3=0>
+<$config,TpVc4=0>
+
+<$config,TpVmyTech1={TpVtechSun1;}>
+
+[WIND]
+<$config,TpVc1=0>
+<$config,TpVc2=1>
+<$config,TpVc3=0>
+<$config,TpVc4=0>
+
+<$config,TpVmyTech1={TpVtechWind1;}>
+
+[RAIN]
+<$config,TpVc1=0>
+<$config,TpVc2=0>
+<$config,TpVc3=1>
+<$config,TpVc4=0>
+
+<$config,TpVmyTech1={TpVtechRain1;}>
+
+[THUNDER]
+<$config,TpVc1=0>
+<$config,TpVc2=0>
+<$config,TpVc3=0>
+<$config,TpVc4=1>
+
+<$config,TpVmyTech1={TpVtechThunder1;}>
+
+
+[END]

@@ -1,0 +1,121 @@
+[Header]
+missionType = "Tutorial"
+
+
+missionNumber = 4
+randGeysers = 1
+moreGeysers = 3
+
+myStartMoney = 10000
+myTech = "All;outpost"
+
+
+
+title="Terra"
+
+ai2Name = "Martol"
+ai2Tech = "windwalker;windArcher;windBlocker;sunBalloon;windballoon;windAviary;sunfence;windbattery"
+ai2StartMoney = 12000
+ai2GeyserAttachments = 2
+ai2Collectors = 2
+ai2TimeBetweenMoves = 1
+ai2Bridgedrawrate = 1
+ai2AllyList = "3;4;5"
+ai2Ability ="!USE_PRIEST_TO_COLLECT"
+ai2color = white
+
+ai3Name = "Lord Yelca"
+ai3Tech = "rainwalker;raincannon;rainBattery;rainfence;sunballoon;rainballoon;rainblocker;rainAviary"
+ai3StartMoney = 12000
+ai3GeyserAttachments = 2
+ai3Collectors = 2
+ai3TimeBetweenMoves = 1
+ai3Bridgedrawrate = 1
+ai3AllyList = "2;4;5"
+ai3Ability ="!USE_PRIEST_TO_COLLECT"
+ai3color = red
+
+ai4Name = "Lord Tylos"
+ai4Tech = "bulf;thunderArcher;thunderBattery;thunderfence;sunballoon;thunderCannon;thunderblocker"
+ai4StartMoney = 12000
+ai4GeyserAttachments = 2
+ai4Collectors = 2
+ai4TimeBetweenMoves = 1
+ai4Bridgedrawrate = 1
+ai4AllyList = "2;3;5"
+ai4Ability ="!USE_PRIEST_TO_COLLECT"
+ai4color = green
+
+ai5Name = "Lord Solvis"
+ai5Tech = "windwalker;windArcher;windBlocker;sunBalloon;windballoon;windAviary;sunfence;windbattery"
+ai5StartMoney = 12000
+ai5GeyserAttachments = 2
+ai5Collectors = 1
+ai5TimeBetweenMoves = 1
+ai5Bridgedrawrate = 1
+ai5AllyList = "2;3;4"
+ai5Ability ="!USE_PRIEST_TO_COLLECT"
+ai5color = purple
+
+
+
+
+[Options]
+
+[A.]
+
+<h2>Terra </h2>
+<i>"Divide and Conquer"--unknown</i>
+<P>~y
+You are looking upon Terra, Martol's stronghold.  
+Revenge thy brethern!
+
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Attack,DoNothing,0
+
+[ai1TemplehalfDead]
+~yMy Lord, A messenger has just arrived From Martol.~.
+<P>
+<I>Messenger: </I>Repent my child, and I will have mercy upon you.
+<P>
+
+~[IwindWalker,9]
+
+$Button=Kill the Messenger,DoNothing,0
+$Button=Beg for mercy,Tell,SURRENDER
+
+[ai1PriestCaptured]
+<h2>~yCAPTURED~.</h2><br>
+<I>Martol: </I>Throw him into shackles!
+<P>
+<I>Martol: </I>Enjoy your last moments of life, for you will soon be consumed upon the alter!
+<p>
+
+
+[Failed][SURRENDER]
+<H2>~yFoolish priest~.</H2>
+<P>
+<I>Martol: </I> Did you really think that you could challenge my power. 
+<P>
+~y You are consumed upon the alter, and the Sameron faith dies along with you. 
+$Button=Campaign Over,MissionAbort,1
+
+
+
+[Succeeded][BadTeamDead]
+
+<h2>~yFreedom</h2>
+<P>
+Martol reign has ended!
+<P>
+It is time to rebuild, but only time will heal the scars caused by Martol.
+
+<$Config,Done{mission.fileName}=1>
+$Button=Campaign Over,MissionAbort,1
+
+
+[END]
+
+
+

@@ -1,0 +1,24 @@
+title = "Against evil thunder"
+
+[Overview]
+<background="nsstart">
+<h2>Against the wealthy thunder lords</h2>
+<p>It is your job as the true Nimbian protector to destroy the powerfull Thunder lords! Also keep in mind that this is my beta version
+If you find any bugs then you can go ahead and fix them. I know you have better knowledge in this than I do.
+Please send your comments and opinions to me. Enjoy my tiny campaign...
+<p>~[Inugget.4]<i>Alex Tatarov</i> - <a href="mailto:tatarovo@cadvision.com">tatarovo@cadvision.com</a>
+
+$Checked=0 SUPPLY,MissionBegin,supply,{Donesupply},1
+$Checked=1 KEEP,MissionBegin,keep,{Donekeep},{Donesupply}
+$Checked=2 DUEL,MissionBegin,duel,{Doneduel},{Donekeep}
+$Checked=3 GIRL,MissionBegin,girl,{Donegirl},{Doneduel}
+$Checked=4 SUN,MissionBegin,sun,{Donesun},{Donegirl}
+$Checked=5 Temple,MissionBegin,temple,{Donetemple},{Donesun}
+$Checked=6 Strike,MissionBegin,strike,{Donestrike},{Donetemple}
+$Checked=7 Rebel,MissionBegin,rebel,{Donerebel},{Donestrike}
+$Checked=8 Wind,MissionBegin,win,{Donewind},{Donerebel}
+$Checked=9 Rain,MissionBegin,rain,{Donerain},{Donewind}
+$Checked=10 Thief,MissionBegin,thief,{Donethief},{Donerain}
+
+$Button=Back,Tell,Campaign
+

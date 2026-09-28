@@ -1,0 +1,130 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 8
+moreGeysers = 1
+randomGeysers = 1
+
+myStartMoney = 5000
+myTech = "all"
+myName = Master High Priest of Nimbus
+
+title="Nimbus Homecoming"
+
+ai2Name = "Nimbian High Priest of Sun"
+ai2Tech = "sunWalker;sunArcher;sunCannon;sunBlocker;sunAviary;sunBalloon;sunFence;windBattery"
+ai2StartMoney = 2000
+ai2GeyserAttachments = 2
+ai2Collectors = 3
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3;4;5;7;8"
+ai2color = red
+ai2Ability = "!USE_PRIEST_TO_COLLECT"
+ai2DrawBridgeRate = 1
+
+ai3Name = "Nimbian High Priest of Wind"
+ai3Tech = "sunWalker;windBattery;windArcher;windBalloon;windBlocker;windAviary;windWalker"
+ai3StartMoney = 2000
+ai3GeyserAttachments = 2
+ai3Collectors = 3
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2;4;5;7;8"
+ai3color = white
+ai3Ability = "!USE_PRIEST_TO_COLLECT"
+ai3BridgeDrawRate = 1
+
+ai4Name = "Nimbian High Priest of Rain"
+ai4Tech = "sunWalker;rainBattery;rainAviary;rainBlocker;rainWalker;rainCannon;rainBalloon;rainFence"
+ai4StartMoney = 2000
+ai4GeyserAttachments = 2
+ai4Collectors = 3
+ai4TimeBetweenMoves = 1
+ai4AllyList = "2;3;5;7;8"
+ai4color = purple
+ai4Ability = "!USE_PRIEST_TO_COLLECT"
+ai4BridgeDrawRate = 1
+
+ai5Name = "Nimbian High Priest of Thunder"
+ai5Tech = "sunWalker;thunderBattery;thunderCannon;thunderBlocker;thunderArcher;bulf;thunderArcher"
+ai5StartMoney = 2000
+ai5GeyserAttachments = 2
+ai5Collectors = 3
+ai5TimeBetweenMoves = 1
+ai5AllyList = "2;3;4;7;8"
+ai5color = yellow
+ai5Ability = "!USE_PRIEST_TO_COLLECT"
+ai5BridgeDrawRate = 1
+
+ai6Name = "Lost Priest of Nimbus"
+ai6Tech = "sunWalker;sunBalloon;windBattery;sunArcher;sunCannon;sunAviary;sunBlocker;sunFence"
+ai6StartMoney = 2000
+ai6GeyserAttachments = 2
+ai6Collectors = 3
+ai6TimeBetweenMoves = 1
+ai6AllyList = "1"
+ai6color = green
+ai6Ability = "!USE_PRIEST_TO_COLLECT"
+ai6BridgeDrawRate = 1
+
+ai7Name = "Nimbian High Priest of War"
+ai7Tech = "all"
+ai7StartMoney = 2000
+ai7GeyserAttachments = 2
+ai7Collectors = 3
+ai7TimeBetweenMoves = 1
+ai7AllyList = "2;3;4;5;6;8
+ai7color = cyan
+ai7Ability = "!USE_PRIEST_TO_COLLECT"
+ai7BridgeDrawRate = 1
+
+ai8Name = "Nimbian High Priest of Peace"
+ai8Tech = "all"
+ai8StartMoney = 2000
+ai8GeyserAttachments = 2
+ai8Collectors = 3
+ai8TimeBetweenMoves = 1
+ai8AllyList = "2;3;4;5;7"
+ai8color = orange
+ai8Ability = "!USE_PRIEST_TO_COLLECT"
+ai8BridgeDrawRate = 1
+
+[Options]
+[ai2PriestDead]
+You get an extra 2500 storm crystals!
+mymoney = +2500
+
+[A.]
+<h2>Nimbus Homecoming</h2>
+<i>"Help me for I'm surrounded by greedy back stabbers!"<br>
+--Yourself</i>  
+<p>
+After winning the tournament, you were transported back to Nimbus.  Word got around and some of the other priests are growing jealous.  Prepare yourself for a Nimbus Homecoming.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Outstanding!</h2>
+<p>
+You truly are the Master High Priest of Nimbus.  The Nimbian King appoints you as Guardian of Nimbus for returning his long lost son.  May your title serve you well and long.
+
+<$Config,Done{mission.fileName}=1>
+$Button= Next Mission,MissionBegin,Revenge
+$Button= Leave Missions,MissionAbort,0
+
+
+[Failed]
+<h2>You failed!</h2>
+<i>Hopefully you took out a couple with you.</i>
+<p>
+It is pretty bad - JEALOUSY - that is.  You deserve a second chance for hanging in for a while.
+
+<$Config,DoneHome=0>
+<$Config,DoneThunder=0>
+<$Config,DoneRain=0>
+<$Config,DoneWind=0>
+<$Config,DoneWizards=0>
+<$Config,DoneTourney=0>
+$Button=Continue,Tell,Try Again
+
+[END]

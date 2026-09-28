@@ -1,0 +1,10 @@
+title = "First Map Of Many"
+
+[Overview]
+<background="nsstart">
+<h2>You must fight.</h2>
+<p>
+These idiots believe they can defeat you.... Show them them numbers do not matter
+<p>
+$Checked= First Map,MissionBegin,Tester,{DoneTester},1
+$Button=Back,Tell,Campaign

@@ -1,0 +1,17 @@
+title = "FuryOlympics"
+
+[Overview]
+<background="nsstart">
+<h2>Fury Olympics</h2>
+<i>Let's Play NetStorm !</i>
+<p>
+The first Fury Olympics...Your last Fury Olympics...
+DarkTroopa@juno.com for ideas
+
+$Checked=1 FuryOlympics,MissionBegin,FuryOlympics,{DoneFuryOlympics},1
+
+$Button=Back,Tell,Campaign
+
+
+
+

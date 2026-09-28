@@ -1,0 +1,36 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 4
+moreGeysers = 0
+
+myStartMoney = 0
+myTech = ""
+myAllyList = ""
+
+title="T.N.R.O.N. (New Allies)"
+
+[Options]
+
+[A.]
+<h2>The New Ruler of Nimbus (Part 2)</h2>
+<p>Since you were able save the Duke from near immpossible odds, many Nimbian clans have devoted their loyalty to you.  Now you only need a few more allies to take complete control!
+<p>
+<i>Search for new allies and friends.  You must be able to challange the strongest clans in all of Nimbus to obtain total control.
+<p> ~[IplayerBanner.0]<i>~lMade by Rahn</i>~[IplayerBanner.0] 
+
+
+$Checked=1 The Flyers,MissionBegin,tnron32,{tnron32},{Donetnron22},1
+$Checked=2 Negotiation,MissionBegin,tnron42,{tnron42},{Donetnron32}
+$Checked=3 Meeting,MissionBegin,tnron4ex,{tnron4ex},{Donetnron42}
+$Checked=4 ~l~EChamberland's Path,MissionBegin,tnronc1,{tnronc1},1
+$Checked=5 ~m~EThe Power,MissionBegin,tnronc2,{tnronc2},1
+$Checked=6 Invasion,MissinBegin,tnron82,{tnron82},{Donetnron8ex}
+$Checked=7 So it Ends...,MissionBegin,tnron92,{tnron91},{Donetnron82}
+
+
+$Button=Back,Tell,Campaign
+
+
+
+[END]

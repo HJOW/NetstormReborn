@@ -1,0 +1,113 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 2
+
+myStartMoney = 3000
+myTech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker"
+
+title="Shattered Guilds"
+
+ai2Name = "^WaR^ Lord"
+ai2Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;sunwalker;bulf"
+ai2StartMoney = 7500
+ai2GeyserAttachments = 5
+ai2Collectors = 7
+ai2TimeBetweenMoves = "1"
+ai2AllyList = ""
+ai2color = green
+
+ai3Name = "SPU Minion"
+ai3Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon"
+ai3StartMoney = 7500
+ai3GeyserAttachments = 2
+ai3Collectors = 3
+ai3TimeBetweenMoves = "1"
+ai3AllyList = "4"
+ai3color = yellow
+
+ai4Name = "GOF Minion"
+ai4Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;sunwalker"
+ai4StartMoney = 7500
+ai4GeyserAttachments = 2
+ai4Collectors = 3
+ai4TimeBetweenMoves = "1"
+ai4AllyList = "3"
+ai4color = orange
+
+[Options]
+
+[A.]
+<h2>Shattered Guilds</h2>
+<i>When you make a new enemy, the thunder rumbles in delight, but when you make a new ally, the enemies shake in fright."<br>
+--The DeathWalker, The Virtuous Warrior</i><br>
+<p>It all comes down to this...For years your guilds have been fighting for dominion.  Kill the other guilds 2nd-in-command to weaken them.
+
+$Button=Let's Begin,Tell,Alliance
+
+[Alliance]
+<h>A message comes from the ^WaR^ Guild:</h><br>
+We have to unite, can't you see what's happening?  Our homes are being burned, women and children slaughtered, and the GOF and SPU are running unchecked.  Our alliance will be whole, for we have the same purpose in mind: Destroy all evilness.<br>
+Shall the ^WaR^ and FW unite?  It is your decision...<br>
+$Menu=Ally with the ^WaR^,Tell,War
+$Menu=Request alliance with SPU and GOF,Tell,SPU
+
+[War]
+<i>^WaR^ Leader: ~wAlliance complete, now we, the Alliance of ~yLight~w, shall kill the other guilds.
+$Button=Time to Kick Ass,MissionBegin,FW1b
+
+[SPU]
+<i>SPU Leader: ~wRequest denyed.<br>
+<i>GOF Leader: ~wToo bad, now the slaughtering shall begin.<br>
+<i>SPU Leader: ~wWho shall we take down first?<br>
+$Button=Turn off Link,DoNothing,0
+
+[Death]
+"Now, that was a stupid thing to do," you mutter, as you are being carried to the altar.  As they untie you hands,you notice the cereominal dagger, you have a choice:
+$Button=Run Like Hell,Tell,Run
+$Button=Kill the Priest with the dagger,Tell,Dagger
+$Button=Stay There,Tell,Stay
+
+[Run]
+You start running.  You look back to see if any one was chasing you...No body, except that thunder bolt, does that count as a threat?  I would think so...
+$Button=*You Are Dead*,MissionAbort,0
+
+[Dagger]
+As the dagger slides down his chest, the thunder screams with delight.  Lighting strikes the 9 adjectent spots around you, then strikes you.
+$Button=*You Are Dead*,MissionAbort,0
+
+[Stay]
+The priest leaves for a couple minutes and then returns.  He seems very puzzled.<br>
+^WaR^ Priest: Our Leader wants to speak with you.<br>
+You walk into his sacred temple.<br>
+^WaR^ Leader: You were winning and then surrendered, why is that?  Perhaps you want our alliance?
+$Button=Yes,Tell,Yes
+$Button=Hell No,Tell,No
+
+[Yes]
+^WaR^ Leader: ~wFinally, now let's kill the others, but not here...
+$Button=Flee the area,MissionBegin,FW2
+
+[No]
+^WaR^ Leader: ~wProceed with the sacrifice.
+$Button=*You Have Died*,MissionAbort,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<i>Guldan: ~wSomehow you won, that's all that matters...But you should have accepted their alliance.
+<$Config,Done{mission.fileName}=1>
+$Menu=Yeah...I know...*sigh...I resign from my job,MissionAbort,0
+
+[ai1TempleHalfDead]
+<i>^WaR^ Leader: ~wYou should have accepted our alliance...<br>
+One day your going to regret your decisions...
+$Button=Keep Fighting Them,DoNothing,0
+$Button=Surrender Your Life,Tell,Death
+
+[Failed]
+<h2>Failure!</h2>
+<p>You have proved unworthy of being your guild's 2nd-in-command, even if it was 2 vs 1 vs 1.
+$Button=*You Have Died*,MissionAbort,0
+
+[END]

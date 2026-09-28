@@ -1,0 +1,156 @@
+[Header]
+missionType = "Tutorial"
+missionNumber = 1
+moreGeysers = 1
+
+mystartmoney = "0"
+myTech = "all"
+
+title = "Choose your campaign"
+
+[Options]
+
+[A.]
+
+<?!{first1}>$Timeout=0,Tell,first</?>
+
+<h2>~lFirst war of Nimbus</h2>
+<i>~E"I have no enemies to kill"<br>
+--You</i>
+<p>~ENow you have them! This is the HARDEST campaign ever (I just hope). You never played campaigns harder than that (I just hope). Plus this campaign is interesting (with good storyline I hope) and its have many different branches. Yea I used variables and if/then statement. May be its the worst of use it but they are working. Sounds good? Hop to the first level and try to finish it. I bet you cant do that from the first time. You will be the nimbian named Sunder and you will fight against the mighty Evil King. Good luck! You will need it... I JUST HOPE! :)
+<br><br>~E~[Iflare.C20]~wM~qa~jf~I~i¡~.~E~[Iicon.12]~B~wZ~[Iicon.12]~l—›~j¿?~[Iraincannonmissile.08]
+
+$Checked=~B~xYou were attacked,DoNothing,0
+
+$Checked=<?{Donesh3_1}></?><?!{Donesh3_1}>~B~E</?>~i—›~jCoward Neighbors,MissionBegin,sh3_1,{Donesh3_1},<?{Donesh3_1}>0</?><?!{Donesh3_1}>1</?>
+
+<?{Donesh3_1a}>$Checked=~B~E~i—›~jHelp to friend</?><?{Donesh3_2}>$Checked=~i—›~jHelp to friend</?>,MissionBegin,sh3_2,{Donesh3_2},<?{Donesh3_2}>0</?><?!{Donesh3_2}>1</?>
+
+<?{Help}>$Checked=~B~xHelped to Munder</?>,DoNothing,0
+
+<?{NoHelp}>$Checked=~B~xDon't helped to Munder</?>,DoNothing,0
+
+<?{Donesh3_2a}>$Checked=~B~E~i—›~jInvasion</?><?{Donesh3_n_1}>$Checked=~i—›~jInvasion</?>,MissionBegin,sh3_n_1,{Donesh3_n_1},<?{Donesh3_n_1}>0</?><?!{Donesh3_n_1}>1</?>
+
+<?{Donesh3_n_1a}>$Checked=~B~E~i—›~jBlocade</?><?{Donesh3_n_2}>$Checked=~i—›~jBlocade</?>,MissionBegin,sh3_n_2,{Donesh3_n_2},<?{Donesh3_n_2}>0</?><?!{Donesh3_n_2}>1</?>
+
+<?{Donesh3_2b}>$Checked=~B~E~i—›~jGuardians of the Frontier</?><?{Donesh3_y_1}>$Checked=~i—›~jGuardians of the Frontier</?>,MissionBegin,sh3_y_1,{Donesh3_y_1},<?{Donesh3_y_1}>0</?><?!{Donesh3_y_1}>1</?>
+
+<?{Donesh3_y_1a}>$Checked=~B~E~i—›~jSneak Attack</?><?{Donesh3_y_2}>$Checked=~i—›~jSneak Attack</?>,MissionBegin,sh3_y_2,{Donesh3_y_2},<?{Donesh3_y_2}>0</?><?!{Donesh3_y_2}>1</?>
+
+<?{Donesh3_y_2a}>$Checked=~B~xWaited for Klod Jandor</?><?{Donesh3_y_n_1}>$Checked=~B~xWaited for Klod Jandor</?>,DoNothing,0
+
+<?{Donesh3_y_2b}>$Checked=~B~xRecruited into Evil King's forces</?><?{Donesh3_y_y_1}>$Checked=~B~xRecruited into Evil King's forces</?>,DoNothing,0
+
+<?{Donesh3_y_2a}>$Checked=~B~E~i—›~jKill the Killer</?><?{Donesh3_y_n_1}>$Checked=~i—›~jKill the Killer</?>,MissionBegin,sh3_y_n_1,{Donesh3_y_n_1},<?{Donesh3_y_n_1}>0</?><?!{Donesh3_y_n_1}>1</?>
+
+<?{Donesh3_y_n_1a}>$Checked=~B~E~i—›~jResidence of the Evil King</?><?{Donesh3_y_n_2}>$Checked=~i—›~jResidence of the Evil King</?>,MissionBegin,sh3_y_n_2,{Donesh3_y_n_2},<?{Donesh3_y_n_2}>0</?><?!{Donesh3_y_n_2}>1</?>
+
+<?{Donesh3_y_n_2a}>$Checked=~B~E~i—›~jThe Queen</?><?{Donesh3_y_n_3}>$Checked=~i—›~jThe Queen</?>,MissionBegin,sh3_y_n_3,{Donesh3_y_n_3},<?{Donesh3_y_n_3}>0</?><?!{Donesh3_y_n_3}>1</?>
+
+<?{Donesh3_y_2b}>$Checked=~B~E~i—›~jKlod Jandor's Death</?><?{Donesh3_y_y_1}>$Checked=~i—›~jKlod Jandor's Death</?>,MissionBegin,sh3_y_y_1,{Donesh3_y_y_1},<?{Donesh3_y_y_1}>0</?><?!{Donesh3_y_y_1}>1</?>
+
+<?{Donesh3_y_y_1a}>$Checked=~B~E~i—›~jMunder's Forces</?><?{Donesh3_y_y_2}>$Checked=~i—›~jMunder's Forces</?>,MissionBegin,sh3_y_y_2,{Donesh3_y_y_2},<?{Donesh3_y_y_2}>0</?><?!{Donesh3_y_y_2}>1</?>
+
+<?{Donesh3_y_y_2a}>$Checked=~B~E~i—›~jAntother Treason?</?><?{Donesh3_y_y_3}>$Checked=~i—›~jAnother Treason?</?>,MissionBegin,sh3_y_y_3,{Donesh3_y_y_3},<?{Donesh3_y_y_3}>0</?><?!{Donesh3_y_y_3}>1</?>
+
+$Button=Additional,Tell,Additional
+$Button=Clear Shit Hard III,Tell,Clearm
+$Button=Its too hard for me!,MissionBegin,sh_over
+
+[Clearm]
+
+<h2>~lClear the Shit Hard III (First war of Nimbus)</h2>
+<i>~E"Begin from the beginning..."<br>
+--Reborn words</i>
+<p>~EDo you really want to clear?
+
+$Button=Yes,Tell,Clear
+$Button=No,Tell,A.
+
+[Clear]
+<h2>~lGo Back</h2>
+<p>~EShit Hard III (First War of Nimbus) were cleared.
+<$Config,Donesh3_1=0>
+<$Config,first1=0>
+<$Config,Donesh3_2=0>
+<$Config,Donesh3_y_1=0>
+<$Config,Donesh3_y_1a=0>
+<$Config,Donesh3_n_1=0>
+<$Config,Donesh3_n_1a=0>
+<$Config,Donesh3_n_2=0>
+<$Config,Donesh3_y_n_1=0>
+<$Config,Donesh3_y_n_1a=0>
+<$Config,Donesh3_y_n_2=0>
+<$Config,Donesh3_y_n_2a=0>
+<$Config,Donesh3_y_n_3a=0>
+<$Config,Donesh3_y_n_3b=0>
+<$Config,Donesh3_y_n_3=0>
+<$Config,Donesh3_y_y_1=0>
+<$Config,Donesh3_y_y_1a=0>
+<$Config,Donesh3_y_y_2a=0>
+<$Config,Donesh3_y_y_2=0>
+<$Config,Donesh3_y_y_3=0>
+<$Config,Donesh3_y_y_3a=0>
+<$Config,Donesh3_y_y_3b=0>
+<$Config,Donesh3_1a=0>
+<$Config,Donesh3_2a=0>
+<$Config,Donesh3_2b=0>
+<$Config,Donesh3_y_2a=0>
+<$Config,Donesh3_y_2b=0>
+<$Config,Donesh3_y_2=0>
+<$Config,Help=0>
+<$Config,NoHelp=0>
+
+$Button=Back,Tell,A.
+
+[Additional]
+
+<h2>~lAdditional</h2>
+<i>~E"Here is something else"<br>
+--~E~[Iflare.C20]~wM~qa~jf~I~i¡~.~E~[Iicon.12]~B~wZ~[Iicon.12]~l—›~j¿?~[Iraincannonmissile.08]</i>
+
+<p>~EAdditional stuff. I hope you will look here.
+
+$Menu=~B~E~i—›~jCredits,Tell,Credit
+$Menu=~B~E~i—›~jTips,Tell,Tipz
+$Menu=~B~E~i—›~jDemo,MissionBegin,sh3_demo,{Donesh3_demo},1
+
+$Button=Back,Tell,A.
+
+[Credit]
+
+<h2>~lCredits</h2>
+
+<p>Currently n/a
+
+$Button=Back,Tell,Additional
+
+[Tipz]
+
+<h2>~lTipz</h2>
+
+<p>Currently n/a
+
+$Button=Back,Tell,Additional
+
+[first]
+
+<h2>~lWelcome!</h2>
+
+<p><br>~3~w~EMaf¡oZo proudly presents:
+
+<$Config,first1=1>
+$Timeout=1,Tell,first2
+
+[first2]
+
+<h2>~l                    </h2>
+
+<p>~E~wThe Campaign:<br><br>
+
+~3~E~rF~oi~yr~is~jt~w W~ja~qr of ~jN~wi~im~yb~ou~rs
+
+$Timeout=2,Tell,A.
+
+[END]

@@ -1,0 +1,57 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 4
+moreGeysers = 3
+randGeysers = 3
+
+myStartMoney = 6500
+myTech = "windarcher;windBattery;windaviary;windblocker;windwalker;windballoon;outpost"
+myAllyList = ""
+
+title = "If you are brave"
+
+ai2Name = "Michael"
+ai2Tech = "bulf;sunballoon;sunaviary;thundercannon;thunderarcher;thunderblocker;thunderbattery"
+ai2StartMoney = 2500
+ai2GeysersAttachments = 10
+ai2Collectors = 5
+ai2TimeBetweenMoves = 1
+ai2BridgeDrawRate = 1
+ai2ability = "CONCRETE_FIRE;!USE_PRIEST_TO_COLLECT;CAPTURE_ENEMY_PRIEST;SACRIFICE_ENEMY_PRIEST;BULD_DIAS;FOCUS_ON_THINGS_THAT_ATTACK_BUILDINGS"
+ai2AllyList = ""
+ai2color = red
+
+ai3Name = "Kelley
+ai3Tech = "rainwalker;rainballoon;raincannon;rainaviary;rainblocker;rainbattery"
+ai3StartMoney = 2500
+ai3GeysersAttachments = 10
+ai3Collectors = 5
+ai3TimeBetweenMoves = 1
+ai3BridgeDrawRate = 1
+ai3ability = "CONCRETE_FIRE;!USE_PRIEST_TO_COLLECT;CAPTURE_ENEMY_PRIEST;SACRIFICE_ENEMY_PRIEST;BULD_DIAS;FOCUS_ON_THINGS_THAT_ATTACK_BUILDINGS"
+ai3AllyList = ""
+ai3color = white
+
+[Options]
+
+[A.]
+<h2>Crossroads</h2>
+<i>When you are out numbered, it is best to have a fortress far away, so you can see your enemy coming..."</i>
+<br>
+
+$Button=What you got,ShowTechnology,55
+$Button=...is Dangerous..,DoNothing,0
+
+[Secceeded][BadTeamDead]
+<h2>Heeheehe.  Was that cool or no?
+
+$button=But Mommy...can't I play in the mud for another minute?,MissionAbort,0
+
+[Failed]
+<h2>What a dork...</h2>
+
+$Button=Da Da Da!,MissionAbort,0
+
+
+[END]

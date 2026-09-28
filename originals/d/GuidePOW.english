@@ -1,0 +1,17 @@
+title = "Pirates of War"
+
+[Overview]
+<background="nsstart">
+<h2>Pirates of War</h2>
+<p>Pirates have been plaging Nimbus for years. its your job to take care of them. 
+<p>~[Inugget.4]<i>Made by Twinkie</i>~[Inugget.4]
+
+$Checked=1 Treason,MissionBegin,POW1,{DonePOW1},1
+$Checked=2 Pirate Raid,MissionBegin,POW2,{DonePOW2},{DonePOW1}
+$Checked=3 Wall,MissionBegin,POW3,{DonePOW3},{DonePOW2}
+$Checked=4 Cornered,MissionBegin,POW4,{DonePOW4},{DonePOW3}
+$Checked=5 Dominos,MissionBegin,POW5,{DonePOW5},{DonePOW4}
+$Checked=6 Captain,MissionBegin,POW6,{Doneguildmaster},{DonePOW5}
+
+$Button=Back,Tell,Campaign
+

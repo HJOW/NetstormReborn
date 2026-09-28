@@ -1,0 +1,164 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 5
+moreGeysers = 3
+
+myStartMoney = 25000
+myTech ="rainwalker;raincannon;rainBattery;rainballoon;rainblocker;rainAviary;rainFence"
+
+
+title = "Dominos"
+ai2Name = " Master Skipper Wind"
+ai2Tech ="windBattery;windWalker;windBalloon;windAviary;windArcher;windblocker"
+ai2StartMoney = 100000
+ai2GeyserAttachments = 20
+ai2Collectors = 1
+ai2TimeBetweenMoves = 0
+ai2Bridgedrawrate = 0
+ai2color = red
+ai2AllyList = "3;4;5;6;8"
+
+ai3Name = "Master Skipper Rain"
+ai3Tech ="rainwalker;raincannon;rainBattery;rainballoon;rainblocker;rainAviary;rainFence"
+ai3StartMoney = 100000
+ai3GeyserAttachments = 20
+ai3Collectors = 1
+ai3TimeBetweenMoves = 0
+ai3Bridgedrawrate = 0
+ai3Ability ="!USE_PRIEST_TO_COLLECT"
+ai3color = white
+ai3AllyList = "2;4;5;6;8"
+
+ai4Name = "Master Skipper Thunder"
+ai4Tech ="thunderBattery;thunderCannon;thunderArcher;bulf;thunderFence;thunderBlocker"
+ai4StartMoney = 100000
+ai4GeyserAttachments = 20
+ai4Collectors = 1
+ai4TimeBetweenMoves = 0
+ai4Bridgedrawrate = 0
+ai4Ability ="!USE_PRIEST_TO_COLLECT"
+ai4color = green
+ai4AllyList = "2;3;5;6;8"
+
+ai5Name = "First Mate Wind"
+ai5Tech ="windBattery;windWalker;windBalloon;windAviary;windArcher;windblocker"
+ai5StartMoney = 200000
+ai5GeyserAttachments = 20
+ai5Collectors = 1
+ai5TimeBetweenMoves = 0
+ai5Bridgedrawrate = 0
+ai5color = purple
+ai5AllyList = "2;3;4;6;8"
+
+ai6Name = "First Mate Rain"
+ai6Tech ="rainwalker;raincannon;rainBattery;rainballoon;rainblocker;rainAviary;rainFence"
+ai6StartMoney = 200000
+ai6GeyserAttachments = 20
+ai6Collectors = 1
+ai6TimeBetweenMoves = 0
+ai6Bridgedrawrate = 0
+ai6Ability ="!USE_PRIEST_TO_COLLECT"
+ai6color = yellow
+ai6AllyList = "2;3;4;5;8"
+
+ai8Name = "First Mate Thunder"
+ai8Tech ="thunderBattery;thunderCannon;thunderArcher;bulf;thunderFence;thunderBlocker"
+ai8StartMoney = 200000
+ai8GeyserAttachments = 20
+ai8Collectors = 1
+ai8TimeBetweenMoves = 0
+ai8Bridgedrawrate = 0
+ai8Ability ="!USE_PRIEST_TO_COLLECT"
+ai8color = orange
+ai8AllyList = "2;3;4;5;6"
+
+
+
+[Options]
+
+[A.]
+<P>"Once one domino falls, the rest will follow."
+
+Twinkies
+<p>This is the Final battle until you reach the Captain. He has sent 6 of his strongest crew to kill you.
+Slay the pirates and save your priest!
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Fight,DoNothing,0
+
+
+[ai2PriestDead]
+Arrrggggggg!!
+
+[ai3PriestDead]
+Aieeeeeeeeeee!!
+
+[ai4PriestDead]
+Ack!
+
+[ai5PriestDead]
+NOOO!
+
+[ai6PriestDead]
+Fury dang it!
+
+[ai7PriestDead]
+This can;t be happening
+
+
+
+[ai2PriestCaptured]
+Oh No! I am  doomed!
+
+
+
+[ai3PriestCaptured]
+Lemme go please?
+
+
+[ai4PriestCaptured]
+Ack!
+
+[ai5PriestCaptured]
+Crap!
+
+[ai6PriestCaptured]
+Oh No!!! I can't lose....not to you!
+
+[ai7PriestCaptured]
+Dang
+[ai2TempleHalfDead]
+Help me!
+
+[ai3TempleHalfDead]
+Oh Fudge!
+
+[ai4TempleHalfDead]
+Grrrrr!
+
+[ai5TempleHalfDead]
+Stop!
+
+[ai6TempleHalfDead]
+Dont even think about it
+
+[ai7TempleHalfDead]
+Uh-Oh
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>You have saved your priest and killed the pirates. Good Boy/Girl!!
+<$Config,Done{mission.fileName}=1>
+$Button=Next Mission,MissionBegin,POW6
+$Button=Leave Missions,MissionAbort,0
+
+[Failed]
+<h2>Failure!</h2>
+<p>You have been sacrificed and the pirates run rampent throughout Nimbus. Bad!
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+
+
+

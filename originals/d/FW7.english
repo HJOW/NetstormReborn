@@ -1,0 +1,119 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 7
+moreGeysers = 2
+
+myStartMoney = 1000
+myTech = "sunWalker;sunarcher;sunballoon;sunFence;sunaviary;outpost;thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence"
+myAllyList = "2;3"
+
+title="Incident at Fortress 0984"
+
+ai2Name = "FW Warrior"
+ai2Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence;rainwalker;sunwalker"
+ai2StartMoney = 10000
+ai2GeyserAttachments = 9
+ai2Collectors = 5
+ai2TimeBetweenMoves = "2"
+ai2DrawBridgeRate = 1
+ai2AllyList = "1;3"
+ai2color = lightblue
+
+ai3Name = "^WaR^ Fighter"
+ai3Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker"
+ai3StartMoney = 10000
+ai3GeyserAttachments = 1
+ai3Collectors = 1
+ai3TimeBetweenMoves = "1"
+ai3AllyList = "1;2"
+ai3color = green
+
+ai4Name = "SPU Warlord"
+ai4Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;Bulf"
+ai4StartMoney = 15000
+ai4GeyserAttachments = 7
+ai4Collectors = 5
+ai4TimeBetweenMoves = "1"
+ai4AllyList = "5;6;7"
+ai4color = yellow
+
+ai5Name = "SPU Commander"
+ai5Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker"
+ai5StartMoney = 20000
+ai5GeyserAttachments = 10
+ai5Collectors = 10
+ai5TimeBetweenMoves = "1"
+ai5DrawBrigdeRate = 1
+ai5AllyList = "4;6;7"
+ai5color = orange
+
+ai6Name = "SPU Knight"
+ai6Tech = "sunWalker;sunarcher;sunballoon;suncannon;sunFence;sunaviary;sunBlocker"
+ai6StartMoney = 10000
+ai6GeyserAttachments = 8
+ai6Collectors = 5
+ai6TimeBetweenMoves = "1"
+ai6AllyList = "4;5;7"
+ai6color = red
+
+ai7Name = "GOF Fighter"
+ai7Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence"
+ai7StartMoney = 10000
+ai7GeyserAttachments = 5
+ai7Collectors = 3
+ai7TimeBetweenMoves = "1"
+ai7DrawBrigdeRate = 2
+ai7AllyList = "4;5;6"
+ai7color = white
+
+[Options]
+
+[A.]
+<h2>Incident at Fortress 0984</h2>
+<i>Guldan: ~wSee that SPU Commander and Warlord?</i><br>
+<i>You: ~wYeah, and they mean trouble.</i><br>
+<i>Guldan: ~wPerhaps not...You are getting some back up.</i><br>
+<i>You: ~wCool, what rank is he?</i><br>
+<i>Guldan: ~wYou mean she, and she is a rogue.</i><br>
+<i>You: ~wGreat!</i><br>
+<p>Make sure you friend doesn't die.  Also, kill the SPU's.
+
+$Button=What you got,Tell,Show
+$Button=Start the Fighting,Tell,Fight
+
+[Show]
+~rINCOMING ~wLINK:<br>
+<i>?: ~wI am the Virtuos Warrior.  Listen, all you have to do is take out the commander, I will do the rest.<br>
+REMEBER, get the commander.
+$Button=Ok,ShowTechnology,55
+
+[Fight]
+~rINCOMING ~wLINK:<br>
+<i>?: ~wI am the Virtuos Warrior.  Listen, all you have to do is take out the commander, I will do the rest.<br>
+REMEBER, get the commander.
+$Button=Ok,DoNothing,0
+
+[Cool]
+~rINCOMING ~wLINK<br>
+The Virtuous One: I told you I would take care of them.  Now, a new threat arises.  SWORD is attacking my people, the ???.
+$Button=Save Them,MissionBegin,FW8
+
+[Succeeded][BadTeamDead]
+As you listen to the Commander yell in agony, you hear a faint sound.  It gets louder and lounder until you run away screaming.  You look back to see the enemies disintegrate.  A large explosion rocks your island and throw's the enimies into the abyss.
+$Button=Cool,Tell,Cool
+
+[ai2PriestDead]
+<i>^WaR^ Leader: You will die just like that member you let die...
+$Button=Wait...What is this mystical Portal?,MissionBegin,FWT3
+
+[ai3PriestDead]
+<i>^WaR^ Leader: You will die just like that member you let die...
+$Button=Wait...What is this mystical Portal?,MissionBegin,FWT3
+
+[Failed]
+<h2>You have failed</h2>
+You are the screams of your people fade as everything becomes dark.
+$Button=No...Wait...What is this portal I found?,MissionBegin,FWT3
+
+[END]

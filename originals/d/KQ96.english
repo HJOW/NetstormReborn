@@ -1,0 +1,89 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 0
+
+myStartMoney = 55000
+myTech ="rainBattery;thunderBattery;windBattery;windArcher;windWalker;windBlocker;rainAviary"
+
+
+title="Death Realm II"
+ai2Name = "Thunder Greaper II"
+ai2Tech ="thunderBattery;thunderCannon;thunderBlocker;thunderArcher;thunderFence;bulf"
+ai2StartMoney = 1000000
+ai2GeyserAttachments = 1
+ai2Collectors = 2
+ai2TimeBetweenMoves = 0
+ai2Bridgedrawrate = 0
+ai2color = red
+ai2ability =!USE_PRIEST_TO_COLLECT
+ai2AllyList = "3"
+
+ai3Name = "Wind Greaper"
+ai3Tech ="windBattery;windArcher;windAviary;windBalloon;windWalker;windBlocker"
+ai3StartMoney = 1000000
+ai3GeyserAttachments = 1
+ai3Collectors = 2
+ai3TimeBetweenMoves = 0
+ai3Bridgedrawrate = 0
+ai3color = white
+ai3ability =!USE_PRIEST_TO_COLLECT
+ai3AllyList = "2"
+
+
+
+
+[Options]
+
+[A.]
+<P>"Death Can be a blesing, or a curse."
+<P>Apollyon
+<p>You have been sacrificed, and you have been sent to the Realm of Death. Here, if you can defeat the Greapers, you have a chance to go back in time to when the battle first began, in other words, a fresh start, something that is very, very rare in Nimbus, and only high priest, such as yourself, are allowed to do this, meaning the citizens of your island will all be gone, and you will be alone. Your population will grow eventionly, and your island will be strong once more. Geysers cannot exist in the Death Realm, meaning you must survive off Kill Reward and your starting money alone.
+<p>Each mission has a harder Death Realm. And, if you are lucky, a Greaper might feel pity for one with such high odds against you, and become a traitor and ally with you.
+<p>It's up to you to save yourself and be sent back to the Realm of Life.
+$Button=Veiw your stuff,ShowTechnology,55
+$Button=Get Outta hell!,DoNothing,0
+
+
+
+
+
+[ai2PriestDead]
+Very well. You will be sent back to the Realm of Life.
+<p>~lyou are a skilled player. I shall grant you the Thunder Cannon.
+$Button=Thunder Cannon,GetTechnology,131
+
+[ai3PriestDead]
+Very well. You will be sent back to the Realm of Life.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>You get back to the Realm of Life
+<$Config,Done{mission.fileName}=1>
+$Button=Back in Time,MissionBegin,KQ2
+
+
+[Failed]
+<h2>Failure!</h2>
+<p>You are trapped for eterity. You must restart your quest
+$Button=Restart,MissionBegin,KQ1
+
+
+[END]
+
+
+

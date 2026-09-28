@@ -1,0 +1,128 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 5
+moreGeysers = 0
+
+myStartMoney = 500
+myTech = "sunaviary;sunBalloon;sunCannon;sunBlocker;sunFence;sunArcher;thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;bulf;rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainwalker;rainFence;rainwalker"     																
+myAllyList = "4;6;7;8"
+
+title="Sacrafice"
+
+ai2Name = "Prisoner"
+ai2Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon"
+ai2StartMoney = 10000
+ai2GeyserAttachments = 5
+ai2Collectors = 10
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3;4;5"
+ai2color = red
+ai2Ability="!USE_PRIEST_TO_COLLECT;!SACRIFICE_ENEMY_PRIEST"
+ai2BridgeDrawRate = 4
+
+ai3Name = " "
+ai3Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;sunBlocker;sunArcher"
+ai3StartMoney = 10000
+ai3GeyserAttachments = 5
+ai3Collectors = 10
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2;4;5"
+ai3color = white
+ai3Ability="!USE_PRIEST_TO_COLLECT;!ENCIRCLE_ENEMY_ISLAND"
+ai3BridgeDrawRate = 4
+
+ai4Name = "Page of Thunder"
+ai4Tech = "sunCannon;sunFence;sunBalloon;sunAviary;sunBlocker;sunArcher;rainbattery;raincannon"
+ai4StartMoney = 0
+ai4GeyserAttachments = 5
+ai4Collectors = 7
+ai4TimeBetweenMoves = 1
+ai4AllyList = "1;6;7;8"
+ai4color = green
+ai4Ability="!USE_PRIEST_TO_COLLECT"
+ai4BridgeDrawRate = 4
+
+ai5Name = "Image of the Duke"
+ai5Tech = "sunCannon;sunFence;sunBalloon;sunAviary;sunBlocker;sunArcher;rainbattery;raincannon"
+ai5StartMoney = 0
+ai5GeyserAttachments = 5
+ai5Collectors = 7
+ai5TimeBetweenMoves = 1
+ai5AllyList = ""
+ai5color = purple
+ai5Ability="!USE_PRIEST_TO_COLLECT"
+ai5BridgeDrawRate = 4
+
+
+ai6Name = "Govener of Sun"
+ai6Tech = "windBattery;sunCannon;sunFence;sunBalloon;sunAviary;sunBlocker;sunArcher"
+ai6StartMoney = 0
+ai6GeyserAttachments = 5
+ai6Collectors = 7
+ai6TimeBetweenMoves = 1
+ai6AllyList = "1;4;7;8"
+ai6color = yellow
+ai6Ability="!USE_PRIEST_TO_COLLECT"
+ai6BridgeDrawRate = 4
+
+ai7Name = "Knight of Wind"
+ai7Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;rainbattery"
+ai7StartMoney = 0
+ai7GeyserAttachments = 5
+ai7Collectors = 7
+ai7TimeBetweenMoves = 1
+ai7AllyList = "1;4;6;8"
+ai7color = cyan
+ai7Ability="!USE_PRIEST_TO_COLLECT;!ENCIRCLE_ENEMY_ISLAND"
+ai7BridgeDrawRate = 4
+
+ai8Name = "Squire of Rain"
+ai8Tech = "rainBattery;rainblocker;raincannon;sunCannon;sunFence;sunBalloon;sunAviary;sunBlocker;sunArcher"
+ai8StartMoney =0
+ai8GeyserAttachments = 5
+ai8Collectors = 7
+ai8TimeBetweenMoves = 1
+ai8AllyList = "1;4;6;7"
+ai8color = orange
+ai8Ability="!USE_PRIEST_TO_COLLECT;!ENCIRCLE_ENEMY_ISLAND"
+ai8BridgeDrawRate = 4
+
+
+
+[Options]
+
+[A.]
+
+<h2>Somewhere in your Territory...</h2>
+<p>
+While you were planning your next attack on your enemies, a messanger suddenly approaches your island....
+
+$Button=Ok,Tell,m1
+
+[m1]
+<h2>Messanger: </h2>
+<p>Sir please forgive my intrusion but I have urgent news!
+$Button=Oh?,Tell,m2
+
+[m2]
+<h2>Messanger: </h2>
+<p>Our front lines are under massive attack!!!
+Our outposts have fallen and are engaging our main defenses...
+You must help out quickly!!  I shall inform the others!
+
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Very Well,MissionBegin,tnron82
+
+
+
+[Succeeded][BadTeamDead]
+
+
+[Failed]
+
+
+[END]
+
+

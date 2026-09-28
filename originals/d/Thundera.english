@@ -1,0 +1,114 @@
+[header]
+missionType = "Tutorial"
+missionNumber = 1
+moreGeysers = 1
+myStartMoney = 800
+myTech="thunderbattery;bulf;thunderblocker;
+
+ai2Name = "Kukulkan"
+ai2Tech="windbattery;windblocker;windarcher;windballoon;windwalker;
+ai2StartMoney = 1000
+ai2GeyserAttachments = 8
+ai2Collectors = 12
+ai2TimeBetweenMoves = 2
+
+title = "Survival"
+
+[Options]
+[A.]
+<h2>Survival</h2>
+<br><i>~IOmnia sunt miseria in bellis civilibus, sed miserius nihil quam ipsa victoria. 
+~--Cicero<br></i>
+<p>
+Your kingdom is running dangerously low on stormpower, and an enemy island has besieged you.
+With only one type of technology you can't survive. Your only hope is to gather enough 
+stormpower to pay for espionage missions, and aquire advanced types of technologies.
+$Button=More,Tell,More
+
+[More]
+Note:
+<br>Only by gathering enough stormpower will you be able to conduct espionage missions.
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Start Mission,DoNothing,0
+$Button=Bail,MissionAbort,1
+
+[@100]
+Looks like you've aquired some stormpower, now shall we conduct
+espionage missions?
+$Button=Sure,Tell,ESP1
+$Button=I don't know,DoNothing,0
+
+[ESP1]
+<h2>Success!</h2>
+Technology stolen!
+$Button=Let's see it,GetTechnology,131
+
+[@200]
+Do you want to preform more espionage missions?
+$Button=Yes,Tell,Yes
+$Button=No,DoNothing,0
+
+[Yes]
+Your spies have managed to steal 3 technologies, and you can choose
+which one you want.
+$Button=Wind,GetTechnology,75
+$Button=Rain,GetTechnology,76
+$Button=Thunder,GetTechnology,148
+
+[@300]
+Send spies?
+$Button=Yes,Tell,Sure
+$Button=No,DoNothing,0
+
+[Sure]
+Technology stolen!
+You may choose of the following:
+$Button=Wind,GetTechnology,140
+$Button=Rain,GetTechnology,147
+$Button=Thunder,GetTechnology,149
+$Button=Sun,GetTechnology,128
+$Button=Sun1,GetTechnology,136
+$Button=Sun2,GetTechnology,71
+
+[@400]
+Send spies?
+$Button=Sure,Tell,Send
+$Button=No,DoNothing,0
+
+[Send]
+<h2>Failiure</h2>
+Your Spies have been caught in action and have been executed.
+$Button=That's not good,DoNothing,0
+$Button=Send Spies Again,Tell,SendSpies
+
+[SendSpies]
+<h2>Mission Successful</h2>
+Your new spies have succeeded in stealing a technology from the enemy.
+$Button=Let's see what they've got,Tell,Got
+
+[Got]
+The following technologies were stolen:
+$Button=Sun,GetTechnology,111
+$Button=Sun1,GetTechnology,136
+$Button=Wind,GetTechnolog,142
+
+[@500]
+<h2>A message from the <i>~renemy</i></h2>
+"So I see, that you've been spying a lot on me lateley.
+That isn't very nice of you. I shall put a stronger guard this time
+so that we won't have more of these incidents. 'Cause we don't want
+YOU to gain any of our technology, now, do we?
+$Button=What ever,DoNothing,0
+$Button=O.K.,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+You've won! Even though the odds were on the side of enemy, you've managed to come
+out victorious from this battle.
+$Button=Next Mission,MissionBegin,Alliance
+$Button=Leave Mission,MissionAbort,1
+
+[Failed]
+<h2>Failiure!</h2>
+You've failed to achieve victory!
+$Button=Try Again,Tell,TryAgain

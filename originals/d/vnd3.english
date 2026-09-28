@@ -1,0 +1,134 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = "17"
+moreGeysers = "0"
+randGeysers = "0"
+
+myStartMoney = "100000"
+myTech = "sunCannon;sunArcher;sunFence;sunBlocker;windBattery;"
+myAllyList = ""
+
+title = "Death 3"
+
+ai2Name = "Wind Demon"
+ai2Tech = "windArcher;windBattery;windBalloon"
+ai2StartMoney = "50000"
+ai2AllyList = "3;4;5;"
+ai2Color = "red"
+ai2Collectors = "5"
+ai2BridgeDrawRate = "0"
+ai2GeyserAttachments = "0"
+ai2TimeBetweenMoves = "0"
+ai2Ability = ""
+
+ai3Name = "Thunder Demon"
+ai3Tech = "thunderCannon;thunderBattery;"
+ai3StartMoney = "50000"
+ai3AllyList = "2;4;5;"
+ai3Color = "white"
+ai3Collectors = "5"
+ai3BridgeDrawRate = "0"
+ai3GeyserAttachments = "0"
+ai3TimeBetweenMoves = "0"
+ai3Ability = ""
+
+ai4Name = "Rain Demon"
+ai4Tech = "rainCannon;rainBattery;rainBalloon;"
+ai4StartMoney = "50000"
+ai4AllyList = "2;3;5;"
+ai4Color = "green"
+ai4Collectors = "5"
+ai4BridgeDrawRate = "0"
+ai4GeyserAttachments = "1"
+ai4TimeBetweenMoves = "0"
+ai4Ability = ""
+
+ai5Name = "Thunder devil"
+ai5Tech = "thunderCannon;thunderBattery;"
+ai5StartMoney = "50000"
+ai5AllyList = "2;3;4;"
+ai5Color = "purple"
+ai5Collectors = "5"
+ai5BridgeDrawRate = "0"
+ai5GeyserAttachments = "1"
+ai5TimeBetweenMoves = "0"
+ai5Ability = "0"
+
+[Options]
+
+[A.]
+<h2>Death 3</h2>
+<i>~I"The price of failure far outweigh the rewards of success."<br>
+--Azarkomo The Wise</i>
+<p>You blew it. You don't deserve another chance, and you won't get one--- unless you can survive this mission for 15 mins ( it can be done ) 
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[@900]
+hehe, well done, you survived 15 mins, so ya get to live again.....
+<$Config,vn_death=0>
+<$Config,vn_alive=1>
+<$Config,vn_donevnd1=0>
+<$Config,vn_notdonevnd1=1>
+<$Config,vn_donevnd2=0>
+<$Config,vn_notdonevnd2=1>
+<$Config,vn_failthunder=0>
+$Button=Leave hell,tell,guidevn.overview
+
+[Succeeded][BadTeamDead]
+
+<h2>You shouldn't see this</h2>
+<p>This mission is supposed to be impossible, so if you are reading this then you're either amazingly good as Netstorm, or you're reading the .english file. Or maybe you've been using hacks eh? Just in case you're hacking, this mission resets the entire campaign when you read this anyway. That'll teach ya to cheat.
+
+<$Config,vn_alive=1>
+<$Config,vn_notdonevnd1=1>
+<$Config,vn_notdonevnd2=1>
+<$Config,vn_notdonevnt1=1>
+<$Config,vn_notdonevnt2=1>
+<$Config,vn_failthunder=0>
+<$Config,vn_windall=1>
+<$Config,vn_speed=1>
+<$Config,vn_donevn1=0>
+<$Config,vn_donevn2=0>
+<$Config,vn_donevn3=0>
+<$Config,vn_donevn4=0>
+<$Config,vn_donevn5=0>
+<$Config,vn_donevn6=0>
+<$Config,vn_donevn7=0>
+<$Config,vn_donevn8=0>
+<$Config,vn_donevn9=0>
+<$Config,vn_donevn10=0>
+<$Config,vn_donevn11=0>
+$Button=Give me the missions back,tell,notachance
+
+[notachance]
+hmmmm
+
+<$Config,vn_death=0>
+<$Config,vn_donevnt1=0>
+<$Config,vn_donevnt2=0>
+<$Config,vn_donevnt3=0>
+<$Config,vn_donevnd1=0>
+<$Config,vn_donevnd2=0>
+<$Config,vn_donevnd3=0>
+<$Config,vn_donetrialfast=0>
+<$Config,vn_donetrialslow=0>
+<$Config,vn_donevn3withally=0>
+<$Config,vn_donevn3withoutally=0>
+<$Config,vn_donevn4withally=0>
+<$Config,vn_donevn4withoutally=0>
+$Button=Please,tell,haha
+
+[haha]
+No.
+
+$Button=Leave Missions,tell,guidevn.overview
+
+
+[Failed]
+<h2>You lost</h2>
+<p>You are doomed to die an eternity of deaths. Try again.
+$Button=Retry,MissionBegin,vnd3
+
+[END]

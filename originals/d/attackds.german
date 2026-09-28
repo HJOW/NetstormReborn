@@ -1,0 +1,114 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 3
+moreGeysers = 1
+randGeyserd = 1
+
+myStartMoney = 10000
+myTech = "windBattery;windArcher;windWalker;sunCannon;sunArcher;sunAviary;windBlocker;windAviary;windFlyer;sunFence;windBalloon"
+myAllyList = "5;6"
+
+title="Attack on Death Star"
+
+ai2Name = "Guard 1"
+ai2Tech = ""rainBattery;sunCannon;sunArcher;sunAviary;sunBalloon;rainBlocker;rainWalker;rainFence;rainCannon"
+ai2StartMoney = 5000
+ai2GeyserAttachments = 2
+ai2Collectors =3
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3;4"
+ai2color = white
+ai3BridgeDrawRate = 4
+
+ai3Name = "Guard 2"
+ai3Tech = "rainBattery;sunCannon;sunArcher;sunAviary;sunBalloon;rainBlocker;rainWalker;rainFence;rainCannon"
+ai3StartMoney = 5000
+ai3GeyserAttachments = 2
+ai3Collectors = 3
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2;4"
+ai3color = green
+ai3BridgeDrawRate = 4
+
+ai4Name = "Death Star"
+ai4Tech = "rainBattery;sunCannon;sunArcher;sunAviary;sunBalloon;rainBlocker;rainWalker;rainFence"
+ai4StartMoney = 5000
+ai4GeyserAttachments = 2
+ai4Collectors = 3
+ai4TimeBetweenMoves = 1
+ai4AllyList = "2;3"
+ai4color = purple
+ai4BridgeDrawRate = 3
+
+ai5Name = "Helping Friend 1"
+ai5Tech = ""rainBattery;sunCannon;sunArcher;sunAviary;sunBalloon;rainBlocker;rainWalker;rainFence;rainCannon"
+ai5StartMoney = 5000
+ai5GeyserAttachments = 2
+ai5Collectors =3
+ai5TimeBetweenMoves = 1
+ai5AllyList = "1;6"
+ai5color = yellow
+ai5BridgeDrawRate = 4
+ai5Ability = CAPTURE_ENEMY_PRIEST
+
+ai6Name = "Helping Friend 2"
+ai6Tech = ""rainBattery;sunCannon;sunArcher;sunAviary;sunBalloon;rainBlocker;rainWalker;rainFence;rainCannon"
+ai6StartMoney = 5000
+ai6GeyserAttachments = 2
+ai6Collectors =3
+ai6TimeBetweenMoves = 1
+ai6AllyList = "1;5"
+ai6color = orange
+ai6BridgeDrawRate = 4
+ai6Ability = CAPTURE_ENEMY_PRIEST
+
+[Options]
+
+[A.]
+<h2>~[Iisland.*]~kAttack ~won ~kDeath~tStar</h2><br>
+<i>"You like the others shall die"<br>
+--Death Star</i>  
+<p>Now you face the almighty ~kDeath~tStar.
+<p>~.You and your two allys must kill ~kDeath~tStar
+
+$Button=stuff,ShowTechnology,55
+$Button=Kill him!,DoNothing,0
+
+[ai2PriestDead]
+<h2>Guard one is dead!</h2><br>
+<p>Now kill ~kDeath~tStar
+
+[ai3PriestDead]
+<h2>Guard two is Dead!</h2><br>
+<p>Now kill ~kDeath~tStar
+
+[@800]
+<h2>Keep Fighting!</h2>
+<p> You can do it!
+
+[@1800]
+<h2>Don't Give Up Now!</h2>
+<p>Don't give up, keep fighting to the very end!
+
+[ai4TempleHalfDead]
+<h2>~kDeath~tStar ~.has almost Perished!</h2>
+<p>Keep fighting my friend!
+
+[Succeeded][ai4PriestDead]
+<h2>Sucsess</h2><br>
+<p>~kDeath~tStar ~.has been given to the furies now peace has come to Nimbus! Now you've got to escape!
+
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,escape
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+The ~kDeath~tStar ~.has killed you! Not Suprised!
+Let him take over Nimbus or give it another shot!
+
+$Button=Continue,Tell,TryAgain
+
+[END]

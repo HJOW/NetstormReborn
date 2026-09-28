@@ -1,0 +1,71 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 3
+
+myStartMoney = 600
+myTech ="rainBattery;thunderBattery;windBattery;windArcher;windWalker;windBlocker;"
+
+
+title="First Day"
+ai2Name = "Little Rain"
+ai2Tech ="rainBattery;rainCannon;rainBlocker;rainAviary;rainWalker;rainBalloon"
+ai2StartMoney = 75000
+ai2GeyserAttachments = 5
+ai2Collectors = 5
+ai2TimeBetweenMoves = 0
+ai2Bridgedrawrate = 0
+ai2color = red
+ai2ability =!USE_PRIEST_TO_COLLECT
+
+
+
+
+[Options]
+
+[A.]
+<P>"Rain is a constint, flowing force that cannot be ignored."
+<P>Apollyon
+<p>You are a knight fresh outta knight school. You crave power, technology. You start your quest by attacking Little Rain.
+<p>The basic knight tech are the Wind Generator, Rain Generator, Thunder Generator, X-Bow,Wind Tower, and the Sail Skater.
+
+$Button=Veiw your stuff,ShowTechnology,55
+$Button=Kill,DoNothing,0
+
+
+
+
+
+[ai2PriestDead]
+What did i do to deserv death?
+$Button=Man-o-War,GetTechnology,143
+
+
+
+
+
+
+
+
+
+
+
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>You have gotten the Man-o-War, and you love its ability to kill.
+<$Config,Done{mission.fileName}=1>
+$Button=Onto the next one,MissionBegin,KQ2
+$Button=Leave?!,MissionAbort,0
+
+[Failed]
+<h2>Failure!</h2>
+<p>You have lost, and are sent to the Realm of Death
+$Button=To Hell,MissionBegin,KQ95
+
+
+[END]
+
+
+

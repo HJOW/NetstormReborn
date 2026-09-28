@@ -1,0 +1,55 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 1
+
+myStartMoney = 6000
+myTech = "thunderBattery;bulf;thundercannon;thunderarcher;thunderblocker;rainfence;rainBattery"
+
+ai2Name = "Stormy Sam"
+ai2Tech = "windBattery;windwalker;windballoon;windarcher;windblocker;windAviary"
+ai2StartMoney = 8000
+ai2GeyserAttachments = 8
+ai2Collectors = 4
+ai2TimeBetweenMoves = 4
+
+ai8Name = "Mac Leisure"
+ai8Tech = "rainballoon;raincannon;rainBattery;rainwalker;rainblocker;rainfence;rainAviary"
+ai8StartMoney = 200
+ai8GeyserAttachments = 4
+ai8Collectors = 1
+ai8TimeBetweenMoves = 2
+ai8Ability = "!ATTACH_TO_ENEMY_ISLAND;!ENCIRCLE_ENEMY_ISLAND"
+
+title="Four Cornered Room"
+
+[Options]
+
+[A.]
+<h2>Sum...sum...sum...</h2>
+...as I see in my four cornered room<br>
+(War "Platinum Jazz" 1977)
+<p>
+An old map, first try to create a mission.<br>
+<i>I hope you enjoy it!</i>
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>Congrats!</h2>
+<p>
+You have well done! Try the next challenge to show your real strength!
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,1
+
+[Failed]
+<h2>Badbadbad!</h2>
+<p>
+You are a loser! Listen to Acid-Jazz, learn, and try again!
+<c>Dig it?</c>
+$Button=Continue,Tell,TryAgain
+
+
+[END]

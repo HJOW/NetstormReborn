@@ -1,0 +1,216 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 3
+moreGeysers = 0
+
+myStartMoney = 3000
+myTech = "sunaviary;sunBalloon;sunCannon;sunBlocker;sunFence;sunArcher;thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;bulf;rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainwalker;rainFence;rainwalker"     																
+myAllyList = ""
+
+title="Old Friend"
+
+ai3Name = "Lord of Rain"
+ai3Tech = "rainbattery;raincannon;rainblocker;rainwalker;rainballoon;rainaviary"
+ai3StartMoney = 7500
+ai3GeyserAttachments = 3
+ai3Collectors = 7
+ai3TimeBetweenMoves = 1
+ai3AllyList = "5;7"
+ai3color = white
+ai3Ability="!USE_PRIEST_TO_COLLECT"
+ai3BridgeDrawRate = 1
+
+ai5Name = "Knight of Thunder"
+ai5Tech = "thunderbattery;thundercannon;thunderblocker;bulf"
+ai5StartMoney = 10000
+ai5GeyserAttachments = 15
+ai5Collectors = 10
+ai5TimeBetweenMoves = 0
+ai5AllyList = "3;7"
+ai5color = purple
+ai5Ability="!USE_PRIEST_TO_COLLECT"
+ai5BridgeDrawRate = 1
+
+ai7Name = "Knight of Wind"
+ai7Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker"
+ai7StartMoney = 10000
+ai7GeyserAttachments = 15
+ai7Collectors = 5
+ai7TimeBetweenMoves = 1
+ai7AllyList = "3;5"
+ai7color = lightblue
+ai7Ability="!USE_PRIEST_TO_COLLECT"
+ai7BridgeDrawRate = 2
+
+
+
+[Options]
+
+[init]
+<$Config,atpriest3=1>
+<$Config,atpriest5=1>
+<$Config,atknight=1>
+
+[@1]
+KNIGHT!!  W-why are you on THEIR side?!? 
+$Timeout=5,DoNothing,0
+
+[@2]
+<h2>~gKnight of Wind</h2> 
+<p>I....I have no choice...
+$Timeout=5,DoNothing,0
+
+[@3]
+~l~IYou plead to him:
+<p> ~N~.There is ALWAYS a choice!
+$Timeout=7,DoNothing,0
+
+[@4]
+<h2>~gKnight of Wind</h2> 
+<p>Maybe so but this is the one I have made...I must kill you! 
+
+[@5]
+But I don't understand!!
+$Timeout=5,DoNothing,0
+
+[@6]
+<h2>~gKnight of Wind</h2> 
+I can't help you...  Oth....
+$Timeout=5,DoNothing,0
+
+[@7]
+<h2>Lord of ~lRain</h2>
+<p>SILENCE!!!!
+$Timeout=5,DoNothing,0
+
+[@8]
+<h2>Lord of ~lRain</h2>
+<p>You shall NOT speak to this scum anymore....lest you wish to lose MORE than your pitiful life!
+$Timeout=10,DoNothing,0
+
+[@9]
+<p>Please Knight!!  Listen too me! 
+<p>~l~IYou get no response from the Knight of Wind....other than that of all his weapons aimed at you....
+<p>Still you wonder why the Knight has sided with the Elementals....
+
+$Timeout=20,DoNothing,0
+
+[A.]
+<h2>Old Friend</h2>
+<i>"Know who your enemies are, as well as your friends.  For they can be both and you may not realize it till it's too late."<br>
+--Charles Tyran</i>  
+<p>While on a patrol you encounter some hostiles.  Among them is the Knight of Wind!  Stunned at this new development you were caught off guard and was attacked before you could retreat.  Against the Knight of Wind and 2 other followers of the Elementals your chances of survival look bleak....
+<p>Can you really kill your friend....you know you can with the other two but this battle is different...
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[win]
+<?!{atpriest3}>
+$Timeout=0,Tell,win2
+</?>
+
+[win2]
+<?!{atpriest5}>
+$Timeout=0,Tell,win3
+</?>
+
+[win3]
+<h2>~gKnight of Wind</h2>
+<p>So...you've killed both of them.....I will not fight you anymore..
+<p>You must finish me!
+$Button=Yes,Tell,win1
+$Button=No,Tell,win4
+
+[win4]
+<p>I can't do that Knight!!  You are still my friend!
+<p>Why can't you join us again?
+$Button=Ok,Tell,win5
+$Timeout=10,Tell,win5
+
+[win5]
+<h2>~gKnight of Wind</h2>
+<p>It is because of the same reason I must fight you.  They have held my family....my men....and my friends hostage.  If I do not help them they will kill them one by one....
+<p>I have no idea where they are!  I've alreadly lost 5 of my closest friends..my children are next...I can't bear to lose any more of them....
+$Button=Ok,Tell,win6
+$Timeout=20,Tell,win6
+
+[win6]
+<p>So I guess we go our seperate ways now....I wish I could help you....
+$Button=Ok,Tell,win7
+$Timeout=10,Tell,win7
+
+[win7]
+<h2>~gKnight of Wind</h2>
+<p>The only reason why all those people are in danger is because of me....If you kill me they will not have a reason to kill them.  They want to rule Nimbus not destroy it, they will not kill if they don't have a reason too.  Trust me they are not like the Dark Lords....ruthless and destructive.
+<p>You can kill me now and end my torment...but if I live we will end up fighting again...
+
+$Button=Yes,Tell,win1
+$Button=No,Tell,win8
+
+[win8]
+<h2>Success!</h2>
+<p>And so you both go your seperate ways.  
+<p>A few days later you decide to sneak into the Elemental's domain.  You have worked out the details and now are ready to execute it.
+<$Config,Done{mission.fileName}=1>
+<$Config,Donetnron744=0>
+<$Config,Donetnron844=0>
+<$Config,Donetnron944=0>
+<$Config,atknight=1>
+<$Config,tnron064=1>
+
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,tnron74
+
+[Succeeded][BadTeamDead]
+$Timeout=0,Tell,win1
+
+[win1]
+<h2>Success??</h2>
+<p>
+You have killed your friend the Knight of Wind...You had no other choice it seems....You vow to take revenge for the loss of the Duke of Thunder and now the spilled blood of the Knight upon your alter!
+<$Config,Donetnron644=1>
+<$Config,Donetnron74=0>
+<$Config,Donetnron84=0>
+<$Config,Donetnron94=0>
+<$Config,atknight=0>
+<$Config,tnron64=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,tnron74
+
+[ai3TempleHalfDead]
+<h2>~lLord of Rain</h2>
+<p>Stop this insane attack!  You will surly lose!
+
+[ai3PriestDead]
+<$Config,atpriest3=0>
+$Timeout=0,Tell,win
+
+[ai5TempleDead]
+<h2>~mKnight of Thunder</h2>
+<p>I've failed!  This isn't fair!!!  We should of won this fight easily!!
+
+[ai5PriestDead]
+<$Config,atpriest5=0>
+$Timeout=0,tell,win
+
+[ai7PriestCaptured]
+<h2>~gKnight of Wind</h2>
+<p>Kill me an be done with it!  I cannot continue living on like this!  Do it as a favor for me!  
+<p>I cannot become your ally again...If you release me I must continue to fight you and your forces.....I do not want to continue to help in the destruction of you and your friends....If only things were different....
+
+[ai7PriestDead]
+<p>You have killed your friend as he asked you two....You feel even more alone as you have just lost yet another close friend....
+<p>The Duke...and now the knight......You now want revenge more than ever on the sole force that has turned your life into a living nightmare.
+
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+You have been killed by the Elemental's forces...to make things worse it was your friend who helped in destroying you!
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+

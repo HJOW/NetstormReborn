@@ -1,0 +1,88 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = "1"
+moreGeysers = "1"
+randGeysers = "1"
+myStartMoney = 6500
+myTech = "sunballoon;sunfence;sunblocker;suncannon;sunarcher;windBattery;thunderbattery;rainbattery;windarcher;windaviary;windballoon;windblocker;windWalker;outpost"
+myAllyList = ""
+
+title="cornered"
+
+ai2Name = "Wind guy"
+ai2Tech = "windBattery;thunderbattery;rainbattery;windarcher;windaviary;windballoon;windblocker;windWalker"
+ai2StartMoney = "6500"
+ai2AllyList = "3;4"
+ai2Color = "red"
+ai2Collectors = "10"
+ai2BridgeDrawRate = "1"
+ai2GeyserAttachments = "100"
+ai2TimeBetweenMoves = "0"
+ai2Ability = ""
+
+ai3Name = "Thunder guy"
+ai3Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence"
+ai3StartMoney = 6500
+ai3GeyserAttachments = 10
+ai3Collectors = 10
+ai3TimeBetweenMoves = 0
+ai3AllyList = "2;4"
+ai3color = magenta
+
+ai4Name = "Rain guy"
+ai4Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence"
+ai4StartMoney = 6500
+ai4GeyserAttachments = 10
+ai4Collectors = 10
+ai4TimeBetweenMoves = 0
+ai4AllyList = "2;3"
+ai4color = white
+
+
+[Options]
+
+[A.]
+<h2>Cornered<i>~[Ithunderfence.E3]</i><i>~[IsunCannon.2]</i>
+<br><i>"Ok, I have to put something here so I am just typing whatever I want.                                 <br>
+                                                                          --Fallen_Lord<br><br>
+<i>"Still just typing whatever to fill this space up"<br>                     
+                                                                                        --Fallen_Lord</i><br>
+<p>
+I think you got the basic idea of this game down, so I ain't gonna say nothin cept be sure to kill everything.<br><br>
+<p>
+The Furies have sent out their finest armies to stop you.  Why do they want to pick on you?  Well because they have absolutally nothing better to do!<br>
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Leave Mission,MissionAbort,0
+$Button=Play Mission,DoNothing,0
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+your dead! Now there's a big surprise! try again
+$Button=Continue,Tell,TryAgain
+
+[Succeeded][BadTeamDead]
+<h2>Oh so you think you can beat my shitty level eh? try this one!</h2>
+<p>
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,gainpower
+
+[ai2PriestDead]
+<h2>I'm dead you bastard!</h2>
+<p>
+I'll get you next time gadget NEXT TIME(damnit wrong show!)(take out gadget and it still works!)
+
+[ai3PriestDead]
+<h2>I'm dead you bastard!</h2>
+<p>
+I'll be BACK! (ya ya, it's corny I know)(oh well, live with it)
+
+[ai4PriestDead]
+<h2>I'm dead you bastard!</h2>
+<p>
+Damn I hate it when I lose! 
+
+[END]

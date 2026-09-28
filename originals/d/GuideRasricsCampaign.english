@@ -1,0 +1,14 @@
+title = "The meaning of death"
+
+[Overview]
+<background="nsstart">
+<h4>The meaning of death</h4>
+<i>© 12/97 by RasRic</i>
+<p>
+This is the first campaign of <i><h4>RasRic</h4></i> If you like it send some words to <c><a href="http://pweb.uunet.de/lotek.h/">Rasrics homepage!</a></c>
+
+
+$Checked=1 RasRicsPhun,MissionBegin,RasRicsPhun,{DoneRasRicsPhun},1
+
+$Button=Back,Tell,Campaign
+

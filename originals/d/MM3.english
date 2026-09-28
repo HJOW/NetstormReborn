@@ -1,0 +1,62 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 3
+moreGeysers = 3
+randGeysers = 1
+
+myStartMoney = 25000
+myTech = "windarcher;windBattery;thundercannon;thunderBattery;raincannon;sunarcher;suncannon;rainbattery"
+
+title = "To the Death"
+
+ai2Name = "Michael"
+ai2Tech = "sunwalker;windarcher;windBattery;thundercannon;thunderBattery;raincannon;sunarcher;suncannon;rainbattery"
+ai2StartMoney = 25000
+ai2GeysersAttachments = 10
+ai2Collectors = 5
+ai2TimeBetweenMoves = 1
+ai2BridgeDrawRate = 3
+ai2ability = "CONCRETE_FIRE;!USE_PRIEST_TO_COLLECT;CAPTURE_ENEMY_PRIEST;SACRIFICE_ENEMY_PRIEST;BULD_DIAS;FOCUS_ON_THINGS_THAT_ATTACK_BUILDINGS;ATTACH_TO_ENEMY_ISLAND"
+ai2AllyList = ""
+ai2color = white
+
+[Options]
+
+[A.]
+<h2>To YOUR death</h2>
+<i>"But Mommy, if I fight, I will die...</i>
+<br>
+<p>~kMessage From Michael<br>
+Turn back know...
+
+$Button=What you got,ShowTechnology,55
+$Button=Hell No,DoNothing,0
+
+[ai2PriestCaptured]
+<p>~.You ass.<p>
+
+$button=Your Mama,DoNothing,0
+
+[ai2TempleHalfDead]
+<p>Taking the coward way in?<br>
+
+$button=Sure,DoNothing,0
+
+[ai2TempleDead]
+<p>Life for a life, home for a home...
+
+[Secceeded][ai2PriestDead]
+<h2>Heeheehe.
+<p>What do you think?  Are  you worthy to play mission 4?
+
+$button=Maybe...,MissionBegin,MM4
+$button=Daddy, I found a flower,MissionAbort,0
+
+[Failed]
+<h2>You have failed!</h2>
+
+$Button=Da Da DUH!,MissionAbort,0
+
+
+[END]

@@ -1,0 +1,27 @@
+title = "Face The Furies"
+
+[Overview]
+<background="nsstart">
+<h2>face The Furies</h2>
+<i>Face the furies and beat the Furies and you will have great knowlage!</i>
+<BR>
+any comments,suggestions? Let me know
+<BR>
+<Center>Email: ~kdjpanish@dynanet.com </center>
+<BR> 
+<BR>
+<Center> my icq ~k5310602 </center>
+<BR>
+<BR>
+<Center>My NetStorm Nick is --~B~E~qLioN~wZÌPPÝ™ </center>
+$Checked=1 ~[IplayerBanner.*]Face The Furies~[Iplayer.*],MissionBegin,facethefuries,{Donefacethefuries},1
+
+$Button=Back,Tell,Campaign
+
+
+
+
+
+
+
+

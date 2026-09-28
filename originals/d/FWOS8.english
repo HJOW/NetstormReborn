@@ -1,0 +1,64 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 8
+moreGeysers = 1
+randGeysers = 1
+
+myStartMoney = 7500
+myTech = "outpost;thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence"
+myAllyList = "2"
+
+title="Ally 4 Life"
+
+ai2Name = "War Prisoner"
+ai2Tech = "sunWalker;sunarcher;sunballoon;suncannon;sunFence;sunaviary;sunBlocker;sunwalker"
+ai2StartMoney = 7500
+ai2GeyserAttachments = 7
+ai2Collectors = 5
+ai2TimeBetweenMoves=1
+ai2DrawBridgeRate=1
+ai2AllyList = "1"
+ai2color = white
+
+ai3Name = "SPU Knight"
+ai3Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence;rainwalker;sunwalker"
+ai3StartMoney = 15000
+ai3GeyserAttachments = 8
+ai3Collectors = 5
+ai3TimeBetweenMoves=1
+ai3DrawBridgeRate=1
+ai3AllyList = "4"
+ai3color = yellow
+
+ai4Name = "SWORD Assassin"
+ai4Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;Bulf;sunwalker"
+ai4StartMoney = 15000
+ai4GeyserAttachments = 9
+ai4Collectors = 5
+ai4TimeBetweenMoves=1
+ai4drawBridgeRate=1
+ai4AllyList = "3"
+ai4color = orange
+
+[Options]
+
+[A.]
+<h2>Ally 4 Life</h2>
+<i>Guldan: ~wGood choice, commander.  Now all we have to is defend him.<br>
+<i>You: ~wOk...
+$Button=What ya got,ShowTechnology,55
+$Button=Umm...Attack...,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<i>Guldan: ~wIt's time to start Opertion: Take-Out.<br>
+<i>You: ~wHuh?<br>
+<i>Guldan: ~wThis is deadly serious.  Do what I say exactly.<br>
+$Button=Sure...,MissionBegin,FWSO9
+
+[Failed]
+<h2>You have failed!</h2>
+<i>Dope...that doesn't mean you can't kill the SPU's still...wait, I guess it does.
+$Button=Bye Bye,MissionAbort,0
+
+[END]

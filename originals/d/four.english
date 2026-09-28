@@ -1,0 +1,110 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = "4"
+moreGeysers = "1"
+randGeysers = "1"
+
+myStartMoney = "1000"
+myTech = "rainFence;windBalloon;rainBalloon;windArcher;rainWalker;windAviary;rainCannon;rainAviary;outpost;rainBattery;sunFence;sunCannon;windWalker;thunderCannon;thunderBattery;thunderArcher;sunAviary;windBattery;windBlocker;"
+myAllyList = "2;"
+
+title = "Welcoming Comitee"
+
+ai2Name = "Element Queen"
+ai2Tech = "rainFence;windBalloon;rainBalloon;windArcher;rainWalker;windAviary;rainCannon;rainAviary;rainBattery;sunFence;sunCannon;sunArcher;windWalker;thunderCannon;thunderBattery;thunderArcher;sunAviary;windBattery;windBlocker;"
+ai2StartMoney = "0"
+ai2AllyList = "1;"
+ai2Color = "red"
+ai2Collectors = "5"
+ai2BridgeDrawRate = "1"
+ai2GeyserAttachments = "5"
+ai2TimeBetweenMoves = "1"
+ai2Ability = ""
+
+ai3Name = "Young Rain"
+ai3Tech = "rainFence;rainBalloon;rainWalker;rainCannon;rainBlocker;rainAviary;rainBattery;"
+ai3StartMoney = "5000"
+ai3AllyList = "4;5;"
+ai3Color = "white"
+ai3Collectors = "5"
+ai3BridgeDrawRate = "1"
+ai3GeyserAttachments = "5"
+ai3TimeBetweenMoves = "1"
+ai3Ability = ""
+
+ai4Name = "Young Thunder"
+ai4Tech = "thunderFence;bulf;thunderBlocker;thunderCannon;thunderBattery;thunderArcher;"
+ai4StartMoney = "5000"
+ai4AllyList = "3;5;"
+ai4Color = "green"
+ai4Collectors = "5"
+ai4BridgeDrawRate = "1"
+ai4GeyserAttachments = "5"
+ai4TimeBetweenMoves = "1"
+ai4Ability = ""
+
+ai5Name = "Young Wind"
+ai5Tech = "windBalloon;windArcher;windAviary;windWalker;windBattery;windBlocker;"
+ai5StartMoney = "5000"
+ai5AllyList = "3;4;"
+ai5Color = "purple"
+ai5Collectors = "5"
+ai5BridgeDrawRate = "1"
+ai5GeyserAttachments = "5"
+ai5TimeBetweenMoves = "1"
+ai5Ability = ""
+
+[Options]
+
+[A.]
+<h2>Welcoming Comitee</h2>
+<i>~y"How Does it feel to be hunted?"~w<br>
+--~B~E~rBad Guy</i><br>
+<i>~y"You Tell Me!"~w<br>
+--~B~E~mJean Claude VanDamme~w<br>
+<p>With the Queen's small travelling Temple in tow, you set off with you Super Island towards the center of the storm...Where the furies eternally rest...The furies' sons have decided to kill you before you arrive to make their fathers proud. Slaughter the young evils and trudge forward.
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>No Turning Back Now</h2>
+<p>The Furies will surely want your head now, for killing their offspring. Continue onward brave warrior of Nimbus.
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,five
+
+[ai2TempleDead]
+<h2>Ouch...</h2>
+<p>I can no longer bridge with you my ally, for they have taken my temple.
+
+[ai2PriestCaptured]
+<h2>Got a Minute ???</h2>
+<p>Good ally could you please send some reinforcements, I have been captured !!!
+
+[ai2PriestDead]
+<h2>The Queen Hath Perished</h2>
+<p>A tear drops from yor eye as you hear the faint screams on a far away alter...The Queen is no more.
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Continue,Tell,TryAgain
+
+[ai3TempleDead]
+<h2>Father Help Me !!!</h2>
+<p>You hear the cries of the foolish Youngster...But alas he confronted you too far from home, his cries fall on dead ears...
+
+[ai4TempleDead]
+<h2>Father Help Me !!!</h2>
+<p>You hear the cries of the foolish Youngster...But alas he confronted you too far from home, his cries fall on dead ears...
+
+[ai5TempleDead]
+<h2>Father Help Me !!!</h2>
+<p>You hear the cries of the foolish Youngster...But alas he confronted you too far from home, his cries fall on dead ears...
+
+[Failed]
+<h2>That Musta Hurt</h2>
+<p>I hope the queen can defeat the furies alone...You were not quite fast enough, butter luck next time.
+$Button=Leave Missions,MissionAbort,0
+$Button=Continue,Tell,TryAgain
+
+[END]

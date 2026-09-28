@@ -1,0 +1,61 @@
+[header]
+missionType = "Tutorial"
+missionNumber = 4
+moreGeysers = 1
+myStartMoney = 4000
+myTech="thunderbattery;thundercannon;bulf;thunderblocker;thunderfence;thunderarcher;sunarcher;suncannon;sunfence;sunblocker;sunballoon;sunaviary;
+
+ai2Name = "Kukulkan"
+ai2Tech="windbattery;windarcher;windblocker;sunwalker;suncannon"
+ai2StartMoney = 10000
+ai2GeyserAttachments = 10
+ai2Collectors = 10
+ai2TimeBetweenMoves = 2
+
+title = "Financial Problems"
+
+[Options]
+[A.]
+<h2>~mFinancial Problems</h2>
+<br><i>~y"Vivere est militare"
+--Seneka<br></i>
+<p>~w
+Your island is running dangerously low on strompower, and the only nearest site
+is to the East. But be aware, that the enemy also wants to get there first, so be quick!
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Start Mission,DonNothing,0
+$Button=Bail,MissionAbort,1
+
+[ai2PriestCaptured]
+<h2>~rA message from the enemy:</h2>
+<br>This is not fair, you've must have cheated!<br>
+$Button=Cheated MY ASS!,Tell,Ass
+$Button=Whatever,Tell,Indiferent
+
+[Ass]
+You write a letter back at the enemy:
+<h2>~lCheater, my ass!</h2>
+<br>You realy think that I have cheated?
+Then prove it!
+<br>
+$Button=Send,DoNothing,0
+$Button=Don't send,DoNothing,0
+
+[Indiferent]
+<h2>~rAnother message from the enemy</h2>
+Your indiference only proves that you realy are a CHEATER!
+$Button=Buzz off,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>~rA message from the enemy</h2>
+I demand a rematch!
+$Button=Demand all you want,MissionAbort,1
+$Button=O.K. this time I'll go easy on you,Tell,TryAgain
+$Button=Next Mission,Missionbegin,ThunderC
+
+[TryAgain]
+You kindly give your oponent a rematch.
+$Button=Yes,MissionBegin,Thunderb
+$Button=No,MissionAbort,1
+
+[End]

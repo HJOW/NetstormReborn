@@ -1,0 +1,27 @@
+title = "Fury College"
+
+[Overview]
+<background="nsstart">
+<h2>My Campaign</h2>
+<p>
+This campaign takes place where you, 
+Helios, must goto 
+Fury College and 
+become the smartest 
+student they have had. 
+Along the way, you will 
+have to fight some tough 
+bullies, so watch out!!!</p>
+
+$Checked=~k~BMissions:,MissionBegin,LALA3,{DoneLALA3},{DoneLALA7}
+$Checked=1 Day 1,MissionBegin,school1,{Doneschool1},1
+$Checked=2 Day 2,MissionBegin,school2,{Doneschool2},{Doneschool1}
+$Checked=3 Day 3,MissionBegin,school3,{Doneschool3},{Doneschool2}
+$Checked=4 Day 4,MissionBegin,school4,{Doneschool4},{Doneschool3}
+$Checked= ,MissionBegin,LALA,{DoneLALA},{DoneLALALA1}
+$Checked=~k~BSpecial Missions:,MissionBegin,LALA3,{DoneLALA3},{DoneLALALA3}
+$Checked=5 Relationships,MissionBegin,school5b,{Doneschool5},{Doneschool4}
+$Checked=6 The Fight,MissionBegin,school6b,{Doneschool6b}{Doneschool5}
+$Checked=7 The Wedding,MissionBegin,school7b,{Doneschool7b},{Doneschool6b}
+
+$Button=Back,Tell,Campaign

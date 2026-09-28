@@ -1,0 +1,133 @@
+[Header]
+missionType = "Tutorial"
+missionNumber = 3
+moreGeysers = 1
+
+mystartmoney = 25000
+myTech = "thunderBattery;thunderCannon;thunderArcher;thunderBlocker;rainBattery;rainWalker;rainBalloon;;rainFence;sunFence;sunAviary"
+
+title = "Surprise Attack"
+
+ai2Name = "Defense Island Cristalvobol"
+ai2Tech = "windBattery;windBlocker;windArcher;windBalloon;windWalker;thunderBattery;thunderCannon;thunderBlocker"
+ai2StartMoney = 25000
+ai2GeysersAttachments = 15
+ai2Collectors = 15
+ai2TimeBetweenMoves = 1
+ai2AllyList = "1;3;4"
+ai2ability = "Build_Blockers_When_Buildings_Harmed;!Attach_To_Enemy_Island;!Use_Priest_To_Collect;"
+ai2color =
+ai2BridgeDrawRate = 1
+
+ai3Name = "DDC-Center South"
+ai3Tech = "rainBattery;rainCannon;rainBlocker;rainAviary"
+ai3StartMoney = 1000000
+ai3GeysersAttachments = 15
+ai3Collectors = 15
+ai3TimeBetweenMoves = 1
+ai3AllyList = "1;2;4"
+ai3ability = "!Capture_Enemy_Priest;!Collect_Storm_Power;!Attach_To_Enemy_Island;"
+ai3color =
+
+ai4Name = "DDC-Center North"
+ai4Tech = "thunderBattery;thunderCannon;thunderBlocker;thunderArcher"
+ai4StartMoney = 1000000
+ai4eysersAttachments = 15
+ai4ollectors = 15
+ai4TimeBetweenMoves = 1
+ai4AllyList = "1;2;3"
+ai4ability = "!Capture_Enemy_Priest;!Collect_Storm_Power;!Attach_To_Enemy_Island;"
+ai4color =
+
+ai5Name = "General Harcor"
+ai5Tech = "thunderBattery;thunderCannon;thunderBlocker;thunderArcher;rainBattery;rainWalker"
+ai5StartMoney = 12500
+ai5GeysersAttachments = 15
+ai5Collectors = 15
+ai5TimeBetweenMoves = 1
+ai5AllyList = "6;7;8"
+ai5ability = "!Use_Priest_To_Collect"
+ai5color =
+ai5BridgeDrawRate = 1
+
+ai6Name = "Luitenant Gaber"
+ai6Tech = "windBattery;windArcher;windBlocker;windWalker;windBalloon;windAviary"
+ai6StartMoney = 10000
+ai6GeysersAttachments = 15
+ai6Collectors = 15
+ai6TimeBetweenMoves = 1
+ai6AllyList = "5;7;8"
+ai6ability = "!Use_Priest_To_Collect;"
+ai6color =
+ai6BridgeDrawRate = 2
+
+ai7Name = "Luitenant Base"
+ai7Tech = "rainBattery;rainCannon;rainBlocker;rainAviary;rainWalker;rainBalloon"
+ai7StartMoney = 10000
+ai7GeysersAttachments = 15
+ai7Collectors = 15
+ai7TimeBetweenMoves = 1
+ai7AllyList = "5;6;8"
+ai7ability = "!Use_Priest_To_Collect;"
+ai7color =
+ai7BridgeDrawRate = 2
+
+ai8Name = "Sergeant Promo"
+ai8Tech = "windBattery;sunCannon;sunArcher;sunBalloon;sunWalker;sunBlocker;sunAviary"
+ai8StartMoney = 10000
+ai8GeysersAttachments = 15
+ai8Collectors = 15
+ai8TimeBetweenMoves = 1
+ai8AllyList = "5;6;7"
+ai8ability = "!Use_Priest_To_Collect;"
+ai8color =
+ai8BridgeDrawRate = 3
+
+[Options]
+
+[A.]
+<h2>Surprise Attack</h2>
+<i>"Oh oh..."<br>
+--=DDC=Striker</i>  
+
+<p>Fighting a valiant battle, you defeated the War Fortress. Unfortunately, this was just a trick to lure you away. In the meanwhile, the Razorians set up a great scale attack against the DDC-Center! You received the emergency message, calling all islands back to the DDC-Center. Only you and Defense Island Cristalvobol (DIC) could reach it in time to prevent the destruction of DDC.
+
+<p>DIC: "<i>Hurry up, the attack has already begun! There are four islands of Wind, Sun, Rain and Thunder! Let's destroy those villains!</i>"
+
+<p>Your mission is to defeat the Razorians attacking the DDC-Center.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[BadTeamDead]
+<h2>Well done!</h2>
+<p>
+We have won and narrowly escaped from destruction! You are truly a great commander!
+
+<$Config,Done{mission.filename}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,Razorianreturn4
+
+[ai2PriestDead]
+<p>Defense Island Cristalvobol is gone! Now it's gonna be a lot harder!
+
+$Button=Continue,DoNothing,0
+
+[ai3PriestDead]
+<p>DDC-Center South has been defeated! DDC, now without command center is falling apart as we speak!
+
+$Button=Continue,Tell,TryAgain
+
+[ai4PriestDead]
+<p>DDC-Center North is lost! Without storm power, DDC soon lost the battle.
+
+$Button=Continue,Tell,TryAgain
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+You are dead! The DDC-Center is also defeated and that ends DDC's existance!
+
+$Button=Continue,Tell,TryAgain
+
+[END]

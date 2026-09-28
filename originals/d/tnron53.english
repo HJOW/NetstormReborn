@@ -1,0 +1,178 @@
+
+
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 1
+
+myStartMoney = 2000
+myTech = "sunaviary;sunBalloon;sunCannon;sunBlocker;sunFence;sunArcher;thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;bulf;rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainwalker;rainFence"     																
+title="Defence"
+
+
+ai2Name = "Commander"
+ai2Tech = "thunderbattery;thunderblocker;thundercannon;bulf"
+ai2StartMoney = 10000
+ai2GeyserAttachments = 4
+ai2Collectors = 10
+ai2TimeBetweenMoves = 0
+ai2AllyList = "3;4"
+ai2color = red
+ai2Ability="!USE_PRIEST_TO_COLLECT"
+ai2BridgeDrawRate = 4
+
+ai3Name = "Pentra"
+ai3Tech = "thunderbattery;thunderarcher;thundercannon;rainbattery;rainaviary;rainballoon;rainblocker"
+ai3StartMoney = 10000
+ai3GeyserAttachments = 3
+ai3Collectors = 10
+ai3TimeBetweenMoves = 0
+ai3AllyList = "2;4"
+ai3color = white
+ai3Ability="!USE_PRIEST_TO_COLLECT"
+ai3BridgeDrawRate = 4
+
+ai4Name = "Jolhaz"
+ai4Tech = "thunderbattery;thunderarcher;thundercannon;windbattery;windblocker;windarcher;windwalker"
+ai4StartMoney = 10000
+ai4GeyserAttachments = 3
+ai4Collectors = 7
+ai4TimeBetweenMoves = 1
+ai4AllyList = "2;3"
+ai4color = green
+ai4Ability="!USE_PRIEST_TO_COLLECT"
+ai4BridgeDrawRate = 4
+
+ai5Name = "Guard"
+ai5Tech = "thunderbattery;sunaviary;sunBalloon;sunCannon"
+ai5StartMoney = 25000
+ai8MoneyRechargeRate=600
+ai5GeyserAttachments = 3
+ai5Collectors = 4
+ai5TimeBetweenMoves = 0
+ai5AllyList = "1;6;7;8"
+ai5color = yellow
+ai5Ability="!USE_PRIEST_TO_COLLECT;!BUILD_DAIS;!CAPTURE_ENEMY_PRIEST"
+ai5BridgeDrawRate = 4
+
+ai6Name = "Guard"
+ai6Tech = "windbattery;sunaviary;sunBalloon;sunBlocker"
+ai6StartMoney = 5000
+ai6GeyserAttachments = 3
+ai6Collectors = 4
+ai6TimeBetweenMoves = 3
+ai6AllyList = "1;5;7;8"
+ai6color = yellow
+ai6Ability="!USE_PRIEST_TO_COLLECT;!BUILD_DAIS;!CAPTURE_ENEMY_PRIEST"
+ai6BridgeDrawRate = 4
+
+ai7Name = "Guard"
+ai7Tech = "windbattery;sunBalloon;sunCannon;sunBlocker"
+ai7StartMoney = 5000
+ai7GeyserAttachments = 3
+ai7Collectors = 4
+ai7TimeBetweenMoves = 3
+ai7AllyList = "1;5;6;8"
+ai7color = yellow
+ai7Ability="!USE_PRIEST_TO_COLLECT;!BUILD_DAIS;!CAPTURE_ENEMY_PRIEST"
+ai7BridgeDrawRate = 4
+
+ai8Name = "Guard"
+ai8Tech = "rainbattery;sunBalloon;sunCannon;sunArcher"
+ai8StartMoney = 25000
+ai8MoneyRechargeRate=600
+ai8GeyserAttachments = 5
+ai8Collectors = 4
+ai8TimeBetweenMoves = 0
+ai8AllyList = "1;5;6;7"
+ai8color = yellow
+ai8Ability="!USE_PRIEST_TO_COLLECT;!BUILD_DAIS;!CAPTURE_ENEMY_PRIEST"
+ai8BridgeDrawRate = 4
+
+[@1]
+<h2>~yGuard</h2>
+<p>Glad you could join us milord.  We couldn't hold them off much longer without help!
+$Timeout=10,DoNothing,0
+
+[@120]
+<h2>Message from the ~rAttacking Commander</h2>
+<p>Surrender while you can!  We are laying siege to all of your domain!  Once we are through your defence it will be a matter of time before you all perish!
+$Timeout=15,DoNothing,0
+
+[@121]
+<p>I shall not go down without a fight!  
+<p>~I~lBut you do realize that his words hold truth... for if they can get through you... your empire shall fall...
+$Timeout=15,DoNothing,0
+
+[Options]
+
+[A.]
+<h2>Defence</h2>
+<i>"Pick a weak point and rush it"<br>
+--Yulge Zeal, Nimbian General.</i>  
+<p>After another retreat you are yet again on the defensive.  You have made it to your territory but your enemies have already launch an attack on you.  You assign your strongest generals to aid in the defence of your borders.
+<p>You yourself are also defending your borders.  The guards at the frontline are ill equipt to handle such an attack by themselfs.  With their help you must push back the attacking force.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+You have suffered many losses but you have survived to live another day.  
+<p>
+You quickly rush to the aid of your other allies and repell the invasion...You know this will not be the last attack to come...
+
+<?{Donetnron43}>
+<$Config,Done{mission.fileName}=1>
+<$Config,tnron053=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,tnron63
+</?>
+
+<?{Donetnron433}>
+<$Config,tnron054=1>
+<$Config,Donetnron54=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,tnron64
+</?>
+
+
+[ai5TempleHalfDead]
+<h2>~yGuard</h2>
+<p>I need some assistance here my defences are down!
+
+[ai5PriestCaptured]
+<h2>~YGuard</h2>
+<p>Do not worry about me!  Make sure this slimes goes down with me!
+
+[ai6TempleHalfDead]
+<h2>~YGuard</h2>
+<p>AAAA!!!  I can't hold them off!!!  I'm taking too much damage!!!!
+
+[ai6TempleDead]
+<h2>~YGuard</h2>
+<p>Nooooo!!!!
+
+[ai6PriestDead]
+<h2>~YGuard</h2>
+<p>Let's make sure he didn't die in vain!
+
+[ai7PriestCaptured]
+<h2>~YGuard</h2>
+<p>It has been an honour fighting along side with you milord.
+
+[ai8PriestDead]
+<h2>~YGuard</h2>
+<p>Another casualty of war......
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+The attackers were too much for you and your guards.....Overwhelmed by the onslaught your entire empire was dismantled in a matter of days.
+$Button=Continue,Tell,TryAgain
+
+[END]
+
+

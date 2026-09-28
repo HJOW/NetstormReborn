@@ -1,0 +1,199 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 3
+moreGeysers = 0
+
+myStartMoney = 20000
+myTech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence;rainwalker;sunCannon;sunBalloon;sunAviary;sunBlocker;sunFence;sunArcher;windarcher;windBattery;windWalker;windballoon"
+myAllyList = "5;7"
+
+title="The Twins"
+
+ai2Name = "The Twins of Kal-Zan"
+ai2Tech = "windarcher;windBattery;windballoon;windblocker;rainbattery;rainaviary;rainballoon;raincannon;thunderbattery;thunderarcher;thunderblocker;thundercannon"
+ai2StartMoney = 5000
+ai2GeyserAttachments = 4
+ai2Collectors = 5
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3;4;6;8"
+ai2color = red
+ai2Ability="!USE_PRIEST_TO_COLLECT"
+ai2BridgeDrawRate = 4
+
+ai3Name = "King of Rain"
+ai3Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;windarcher;windBattery;windaviary;;windblocker"
+ai3StartMoney = 5000
+ai3GeyserAttachments = 3
+ai3Collectors = 5
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2;4;6;8"
+ai3color = white
+ai3Ability="!USE_PRIEST_TO_COLLECT;!ENCIRCLE_ENEMY_ISLAND"
+ai3BridgeDrawRate = 4
+
+ai4Name = "Lord of Thunder"
+ai4Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;sunCannon;sunBalloon;sunAviary;sunBlocker;sunArcher"
+ai4StartMoney = 5000
+ai4GeyserAttachments = 3
+ai4Collectors = 3
+ai4TimeBetweenMoves = 1
+ai4AllyList = "2;3;6;8"
+ai4color = green
+ai4Ability="!USE_PRIEST_TO_COLLECT"
+ai4BridgeDrawRate = 4
+
+
+ai5Name = "Duke of Thunder"
+ai5Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;sunBlocker;sunArcher;sunBalloon"
+ai5StartMoney = 10000
+ai5GeyserAttachments = 3
+ai5Collectors = 7
+ai5TimeBetweenMoves = 1
+ai5AllyList = "1;7"
+ai5color = purple
+ai5Ability="!USE_PRIEST_TO_COLLECT"
+ai5BridgeDrawRate = 4
+
+ai6Name = "Minister of Sun"
+ai6Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;sunCannon;sunBalloon;sunAviary;sunBlocker;sunArcher"
+ai6StartMoney = 5000
+ai6GeyserAttachments = 3
+ai6Collectors = 3
+ai6TimeBetweenMoves = 1
+ai6AllyList = "2;3;4;8"
+ai6color = yellow
+ai6Ability="!USE_PRIEST_TO_COLLECT"
+ai6BridgeDrawRate = 4
+
+ai7Name = "Knight of Wind"
+ai7Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;sunArcher;sunBlocker;sunBalloon"
+ai7StartMoney = 20000
+ai7GeyserAttachments = 3
+ai7Collectors = 7
+ai7TimeBetweenMoves = 1
+ai7AllyList = "1;5"
+ai7color = turquoise
+ai7Ability="!USE_PRIEST_TO_COLLECT"
+ai7BridgeDrawRate = 4
+
+ai8Name = "Master of Wind"
+ai8Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;sunCannon;sunAviary;sunBlocker;sunArcher"
+ai8StartMoney = 5000
+ai8GeyserAttachments = 3
+ai8Collectors = 7
+ai8TimeBetweenMoves = 1
+ai8AllyList = "2;3;4;6"
+ai8color = orange
+ai8Ability="!USE_PRIEST_TO_COLLECT;!ENCIRCLE_ENEMY_ISLAND"
+ai8BridgeDrawRate = 4
+
+
+
+[Options]
+
+[A.]
+<h2>The Twins</h2>
+<i>"No man should turn his back on a foe, unless he's dead of course"<br>
+--The Great Warlord Falcon</i>  
+<p>The Twins of Kal-Zan seeing you as a great threat decide to dispose of you so they can take their place on the seat of power.  While one Twin distracts your allies you are surrounded by the Twin's armies.  You must not linger too lond or you will be destoyed with ease.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+You have escaped yet another attack and trap set by your enemies.  During your celebration feast a battered man with the banner of the Lord Chamberland's clan enter an immediate silence fell apon the room.  He brings news of how the Lord Chamberland engaged the Mighty Warlord Qazen.  In his mad ravings he describes how the Lord Chamberland cleaved right through the Warlord's defences and engaged him.  He had almost defeated him when Qazen made a last ditch attack that devatstated the Chamberland defences.  He also tells of how he barely escaped just as Qazen's armies decended on the downed defences.  You do not know if the Lord Chamberland of Thunder survied but you do know that you must reclaim the island.  If not you and your allies will not have enough storm power to launch any attacks, not to mention maintaining the border lines.  You gather your troops along with the Duke of Thunder and the Knight of Wind and head off to Qazen's terriory.
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,72a
+
+[ai2TempleHalfDead]
+<h2>Message from the Knight of Wind</h2>
+<p>
+Keep it up....we may still survive this yet!
+
+[ai2PriestDead]
+<h2>Message from the Duke of Thunder</h2>
+<p>
+Good Job!  Victory is moments away!
+
+[ai2PriestCaptured]
+<h2>Message from the Storm Lord</h2>
+<p>
+You won't have the chance to kill me!  My Army will destroy you!
+
+[ai3TempleHalfDead]
+<h2>Message from the King of Rain</h2>
+<p>
+You won't be able to stop me!  Withdraw now and I might be merciful.
+
+[ai3PriestDead]
+<h2>The King of Rain has perished</h2>
+<p>
+Only a matter of time now before another falls before your millitary genius!
+
+[ai4TempleHalfDead]
+<h2>Message from the Lord of Thunder</h2>
+<p>
+Your are just lucky! but your luck will not last!
+
+[ai4PriestDead]
+<h2>Message from the Duke of Thunder</h2>
+<p>
+With him dead our task will become easier.
+
+[ai5TempleHalfDead]
+<h2>Message from the Duke of Thunder</h2>
+<p>
+They have gotten through!  I'm under attack!
+
+[ai5PriestCaptured]
+<h2>Message from the Knight of Wind</h2>
+<p>
+Quick, we must help our friend!
+
+[ai5PriestDead]
+<h2>Your ally the Duke of Thunder has died!</h2>
+<p>
+Soon after the Duke of Thunder fell, your ally the Knight of Wind and you soon fell upon the incoming onslaught.
+
+$Button=Continue,Tell,TryAgain
+
+[ai6TempleDead]
+<h2>Message from the Knight of Wind</h2>
+<p>
+He was weak...the others won't be so easy to destroy.
+
+[ai7TempleHalfDead]
+<h2>Message from the Knight of Wind</h2>
+<p>
+I am in need of your help my friend!
+
+[ai7PriestCaptured]
+<h2>Message from the Knight of Wind</h2>
+<p>
+Hurry, I don't have much time left!
+
+[ai7PriestDead]
+<h2>Your ally the Knight of Wind has died!</h2>
+<p>
+As the Knight of Wind died, the Duke of Thunder made an attack.  Unfortunatly he failed and you both were captured.
+
+$Button=Continue,Tell,TryAgain
+
+[ai8PriestDead]
+<h2>Message from the Knight of Wind</h2>
+<p>
+Our south flank is almost clear.....
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+The Dark Lords have won.  You and your clan is captured and doomed.
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+

@@ -1,0 +1,849 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 4
+moreGeysers = 0
+
+myStartMoney = 6500
+myTech = ""
+myAllyList = ""
+
+title="Priesthood"
+
+ai6Name = "~iLord Kalrek"
+ai6Tech = "windbattery;suncannon;sunarcher;sunblocker;sunaviary;sunballoon;sunwalker"
+ai6StartMoney = 1500
+ai6GeyserAttachments = 5
+ai6Collectors = 5
+ai6TimeBetweenMoves = 1
+ai6AllyList = ""
+ai6color = yellow
+ai6Ability="!USE_PRIEST_TO_COLLECT;!BUILD_DAIS"
+ai6BridgeDrawRate = 3
+
+
+[inti]
+<$Config,atmentor=1>
+
+
+[@1]
+<$Config,atobjective1=0>
+<$Config,atobjective2=0>
+<$Config,atobjective3=0>
+<$Config,atobjective4=0>
+<$Config,atobjective5=0>
+<$Config,atobjective6=0>
+<$Config,atobjective7=0>
+<$Config,atobjective8=0>
+<$Config,atweapon0=0>
+<h2>~iKalrek</h2>
+<p>You are almost ready.
+$Timeout=3,DoNothing,0
+
+[@2]
+<h2>~iKalrek</h2>
+<p>You have become skilled in the ways of battle.
+$Timeout=5,DoNothing,0
+
+[@3]
+<h2>~iKalrek</h2>
+<p>And have show that you are indeed a warrior.
+$Timeout=4,DoNothing,0
+
+[@4]
+<h2>~iKalrek</h2>
+<p>Now is the time to see how well you have learned.
+$Timeout=4,DoNothing,0
+
+[@5]
+<h2>~iKalrek</h2>
+<p>For once you have defeated me you shall be able to seek out your destiny as a High Priest of Nimbus!
+$Timeout=7,DoNothing,0
+
+[@6]
+<h2>~iKalrek</h2>
+<p>I shall give you the victory once you have destroyed my temple or have captured me.
+$Timeout=5,DoNothing,0
+
+[@7]
+<h2>~iKalrek</h2>
+<p>Now let the battle begin!
+$Timeout=3,DoNothing,0
+
+[@300]
+<h2>~iKalrek</h2>
+<p>Come now!  I was expecting more of a fight from you.
+$Timeout=4,DoNothing,0
+
+[@600]
+<h2>~iKalrek</h2>
+<p>You dissapoint me, why do you hesistate?
+$Timeout=4,DoNothing,0
+
+[@900]
+<h2>~iKalrek</h2>
+<p>What is the matter with you today?
+$Timeout=4,DoNothing,0
+
+[@1200]
+<h2>~iKalrek</h2>
+<p>I truly thought that you would have done far better than this pathetic display.
+$Timeout=5,DoNothing,0
+
+
+
+[Options]
+
+[A.]
+<h2>Priesthood</h2>
+<i>"It is easy to manipulate the uneducated."<br>
+-- Aquan Zeral, Teacher</i>  
+<p>Your training nears it's compleation.  Now you must prove yourself worthy to become a High Priest of Nimbus....
+
+<?!{atweapon0}>$Button=Prepare,Tell,OldTech</?>
+<?{atweapon0}>$Button=Review Knowledge,ShowTechnology,55</?>
+$Button=Play Mission,DoNothing,0
+
+[TechMenuLV1]
+<h2>Sacrifice!</h2>
+<p>Glory be to the Furies!  You may choose a Level 1 unit as your reward, or Upgrade to get higher level units.</?>
+$Menu=~yWind~.,Tell,TechMenuLV1</?>
+<?{atweapon1}>$Menu=~kWind Generator (Level 1),Tell,TechMenuLV1</?>
+<?!{atweapon1}>$Menu=~wWind Generator (Level 1) ,Tell,windbattery</?>
+<?{atweapon2}>$Menu=~kSail Skater (Level 1),Tell,TechMenuLV1</?>
+<?!{atweapon2}>$Menu=~kSail Skater (Level 1),Tell,TechMenuLV1</?>
+$Menu=~k-----------------------------------------~.,Tell,TechMenuLV1</?>
+$Menu=~yRain~.,Tell,TechMenuLV1</?>
+<?{atweapon7}>$Menu=~kRain Generator (Level 1),Tell,TechMenuLV1</?>
+<?!{atweapon7}>$Menu=~wRain Generator (Level 1),Tell,rainbattery</?>
+<?{atweapon8}>$Menu=~kAcid Barricade (Level 1),Tell,TechMenuLV1</?>
+<?!{atweapon8}>$Menu=~kAcid Barricade (Level 1),Tell,TechMenuLV1</?>
+$Menu=~k-----------------------------------------~.,Tell,TechMenuLV1</?>
+$Menu=~yThunder~.,Tell,TechMenuLV1</?>
+<?{atweapon13}>$Menu=~kThunder Generator (Level 1),Tell,TechMenuLV1</?>
+<?!{atweapon13}>$Menu=~wThunder Generator (Level 1),Tell,thunderbattery</?>
+<?{atweapon14}>$Menu=~kBulf (Level 1),Tell,TechMenuLV1</?>
+<?!{atweapon14}>$Menu=~kBulf (Level 1),Tell,TechMenuLV1</?>
+$Menu=~k-----------------------------------------~.,Tell,TechMenuLV1</?>
+$Menu=~ySun~.,Tell,TechMenuLV1</?>
+<?{atweapon20}>$Menu=~kSun Cannon (Level 1),Tell,TechMenuLV1</?>
+<?!{atweapon20}>$Menu=~wSun Cannon (Level 1),Tell,suncannon</?>
+<?{atweapon21}>$Menu=~kSun Disc Thrower (Level 1),Tell,TechMenuLV1</?>
+<?!{atweapon21}>$Menu=~wSun Disc Thrower (Level 1),Tell,sunarcher</?>
+<?{atweapon22}>$Menu=~kStone Tower (Level 1),Tell,TechMenuLV1</?>
+<?!{atweapon22}>$Menu=~wStone Tower (Level 1),Tell,sunblocker</?>
+<?{atweapon23}>$Menu=~kSun Barricade (Level 1),Tell,TechMenuLV1</?>
+<?!{atweapon23}>$Menu=~kSun Barricade (Level 1),Tell,TechMenuLV1</?>
+$Menu=~k-----------------------------------------~.,Tell,TechMenuLV1</?>
+$Menu=~wUpgrade Altar to Level 2,Tell,Altar2
+$Menu=~wGet 5.000 ~[Inugget.0],Tell,Altar0
+
+
+
+
+[TechMenuLV2]
+<h2>Sacrifice!</h2>
+<p>Glory be to the Furies!  You may choose a Level 2 unit as your reward, or Upgrade to get higher level units.</?>
+$Menu=~yWind~.,Tell,TechMenuLV2</?>
+<?{atweapon3}>$Menu=~kCrossbow (Level 2),Tell,TechMenuLV2</?>
+<?!{atweapon3}>$Menu=~kCrossbow (Level 2),Tell,TechMenuLV2</?>
+<?{atweapon4}>$Menu=~kWind Tower (Level 2),Tell,TechMenuLV2</?>
+<?!{atweapon4}>$Menu=~kWind Tower (Level 2),Tell,TechMenuLV2</?>
+$Menu=~k-----------------------------------------~.,Tell,TechMenuLV2</?>
+$Menu=~yRain~.,Tell,TechMenuLV2</?>
+<?{atweapon9}>$Menu=~kIce Cannon (Level 2),Tell,TechMenuLV2</?>
+<?!{atweapon9}>$Menu=~kIce Cannon (Level 2),Tell,TechMenuLV2</?>
+<?{atweapon10}>$Menu=~kIce Tower (Level 2),Tell,TechMenuLV2</?>
+<?!{atweapon10}>$Menu=~kIce Tower (Level 2),Tell,TechMenuLV2</?>
+<?{atweapon11}>$Menu=~kCrystal Crab (Level 2),Tell,TechMenuLV2</?>
+<?!{atweapon11}>$Menu=~kCrystal Crab (Level 2),Tell,TechMenuLV2</?>
+$Menu=~k-----------------------------------------~.,Tell,TechMenuLV2</?>
+$Menu=~yThunder~.,Tell,TechMenuLV2</?>
+<?{atweapon15}>$Menu=~kThunder Cannon (Level 2),Tell,TechMenuLV2</?>
+<?!{atweapon15}>$Menu=~kThunder Cannon (Level 2),Tell,TechMenuLV2</?>
+<?{atweapon16}>$Menu=~kBulwark,Tell (Level 2),TechMenuLV2</?>
+<?!{atweapon16}>$Menu=~kBulwark,Tell (Level 2),Tell,TechMenuLV2</?>
+<?{atweapon17}>$Menu=~kArc Spire,Tell (Level 2),TechMenuLV2</?>
+<?!{atweapon17}>$Menu=~kArc Spire,Tell (Level 2),Tell,TechMenuLV2</?>
+$Menu=~k-----------------------------------------~.,Tell,TechMenuLV2</?>
+$Menu=~ySun~.,Tell,TechMenuLV2</?>
+<?{atweapon25}>$Menu=~kWhirlibase (Level 2),Tell,TechMenuLV2</?>
+<?!{atweapon25}>$Menu=~wWhirlibase (Level 2),Tell,sunaviary</?>
+<?{atweapon24}>$Menu=~kBalloon (Level 2),Tell,TechMenuLV2</?>
+<?!{atweapon24}>$Menu=~wBalloon (Level 2),Tell,sunballoon</?>
+$Menu=~k-----------------------------------------~.,Tell,TechMenuLV2</?>
+$Menu=~kUpgrade Altar to Level 3,Tell,TechMenuLV2
+$Menu=~wGet 5.000 ~[Inugget.0],Tell,Altar0
+
+
+
+[windbattery]
+<$Config,atweapon1=1>
+<$Config,ataltar2=0>
+<$Config,ataltar3=0>
+<$GetTechnology,75>
+$Timeout=0,DoNothing,0
+
+[windwalker]
+<$Config,atweapon2=1>
+<$Config,ataltar2=0>
+<$Config,ataltar3=0>
+<$GetTechnology,137>
+$Timeout=0,DoNothing,0
+
+[windarcher]
+<$Config,atweapon3=1>
+<$Config,ataltar2=0>
+<$Config,ataltar3=0>
+<$GetTechnology,140>
+$Timeout=0,DoNothing,0
+
+[windblocker]
+<$Config,atweapon4=1>
+<$Config,ataltar2=0>
+<$Config,ataltar3=0>
+<$GetTechnology,142>
+$Timeout=0,DoNothing,0
+
+[windaviary]
+<$Config,atweapon5=1>
+<$Config,ataltar2=0>
+<$Config,ataltar3=0>
+<$GetTechnology,139>
+$Timeout=0,DoNothing,0
+
+[windballoon]
+<$Config,atweapon6=1>
+<$Config,ataltar2=0>
+<$Config,ataltar3=0>
+<$GetTechnology,141>
+$Timeout=0,DoNothing,0
+
+[rainbattery]
+<$Config,atweapon7=1>
+<$Config,ataltar2=0>
+<$Config,ataltar3=0>
+<$GetTechnology,76>
+$Timeout=0,DoNothing,0
+
+[rainfence]
+<$Config,atweapon8=1>
+<$Config,ataltar2=0>
+<$Config,ataltar3=0>
+<$GetTechnology,145>
+$Timeout=0,DoNothing,0
+
+[raincannon]
+<$Config,atweapon9=1>
+<$Config,ataltar2=0>
+<$Config,ataltar3=0>
+<$GetTechnology,129>
+$Timeout=0,DoNothing,0
+
+[rainblocker]
+<$Config,atweapon10=1>
+<$Config,ataltar2=0>
+<$Config,ataltar3=0>
+<$GetTechnology,147>
+$Timeout=0,DoNothing,0
+
+[rainwalker]
+<$Config,atweapon11=1>
+<$Config,ataltar2=0>
+<$Config,ataltar3=0>
+<$GetTechnology,156>
+$Timeout=0,DoNothing,0
+
+[rainaviary]
+<$Config,atweapon12=1>
+<$Config,ataltar2=0>
+<$Config,ataltar3=0>
+<$GetTechnology,143>
+$Timeout=0,DoNothing,0
+
+[rainballoon]
+<$Config,atweapon13=1>
+<$Config,ataltar2=0>
+<$Config,ataltar3=0>
+<$GetTechnology,146>
+$Timeout=0,DoNothing,0
+
+[thunderbattery]
+<$Config,atweapon14=1>
+<$Config,ataltar2=0>
+<$Config,ataltar3=0>
+<$GetTechnology,77>
+$Timeout=0,DoNothing,0
+
+[bulf]
+<$Config,atweapon15=1>
+<$Config,ataltar2=0>
+<$Config,ataltar3=0>
+<$GetTechnology,135>
+$Timeout=0,DoNothing,0
+
+[thundercannon]
+<$Config,atweapon16=1>
+<$Config,ataltar2=0>
+<$Config,ataltar3=0>
+<$GetTechnology,131>
+$Timeout=0,DoNothing,0
+
+[thunderblocker]
+<$Config,atweapon17=1>
+<$Config,ataltar2=0>
+<$Config,ataltar3=0>
+<$GetTechnology,79>
+$Timeout=0,DoNothing,0
+
+[thunderfence]
+<$Config,atweapon18=1>
+<$Config,ataltar2=0>
+<$Config,ataltar3=0>
+<$GetTechnology,149>
+$Timeout=0,DoNothing,0
+
+[thunderarcher]
+<$Config,atweapon19=1>
+<$Config,ataltar2=0>
+<$Config,ataltar3=0>
+<$GetTechnology,148>
+$Timeout=0,DoNothing,0
+
+[suncannon]
+<$Config,atweapon20=1>
+<$Config,ataltar2=0>
+<$Config,ataltar3=0>
+<$GetTechnology,128>
+$Timeout=0,Tell,end4
+
+[sunarcher]
+<$Config,atweapon21=1>
+<$Config,ataltar2=0>
+<$Config,ataltar3=0>
+<$GetTechnology,71>
+$Timeout=0,Tell,end4
+
+[sunblocker]
+<$Config,atweapon22=1>
+<$Config,ataltar2=0>
+<$Config,ataltar3=0>
+<$GetTechnology,78>
+$Timeout=0,Tell,end4
+
+[sunfence]
+<$Config,atweapon23=1>
+<$Config,ataltar2=0>
+<$Config,ataltar3=0>
+<$GetTechnology,136>
+$Timeout=0,DoNothing,0
+
+[sunballoon]
+<$Config,atweapon24=1>
+<$Config,ataltar2=0>
+<$Config,ataltar3=0>
+<$GetTechnology,111>
+$Timeout=0,Tell,end4
+
+[sunaviary]
+<$Config,atweapon25=1>
+<$Config,ataltar2=0>
+<$Config,ataltar3=0>
+<$GetTechnology,72>
+$Timeout=0,Tell,end4
+
+[altar0]
+<$ChangeMoney,5000>
+<$Config,ataltar2=0>
+<$Config,ataltar3=0>
+$Timeout=0,DoNothing,0
+
+[altar1]
+<?{ataltar3}>$Timeout=0,Tell,TechMenuLV3</?>
+<?!{ataltar3}>$Timeout=0,Tell,TechMenuLV1</?>
+
+[altar2]
+<$Config,ataltar2=1>
+$Timeout=0,Tell,end4
+
+[altar3]
+<$Config,ataltar2=0>
+<$Config,ataltar3=1>
+$Timeout=0,DoNothing,0
+
+
+
+
+
+[OldTech]
+<?{atOld3weapon1}>
+<$Config,atweapon1=1>
+<$GetTechnology,75></?>
+<?!{atOld3weapon1}>
+<$Config,atweapon1=0></?>
+$Timeout=0,Tell,owindwalker
+
+
+[owindwalker]
+<?{atOld3weapon2}>
+<$Config,atweapon2=1>
+<$GetTechnology,137></?>
+<?!{atOld3weapon2}>
+<$Config,atweapon2=0></?>
+$Timeout=0,Tell,owindarcher
+
+[owindarcher]
+<?{atOld3weapon3}>
+<$Config,atweapon3=1>
+<$GetTechnology,140></?>
+<?!{atOld3weapon3}>
+<$Config,atweapon3=0></?>
+$Timeout=0,Tell,owindblocker
+
+[owindblocker]
+<?{atOld3weapon4}>
+<$Config,atweapon4=1>
+<$GetTechnology,142></?>
+<?!{atOld3weapon4}>
+<$Config,atweapon4=0></?>
+$Timeout=0,Tell,owindaviary
+
+[owindaviary]
+<?{atOld3weapon5}>
+<$Config,atweapon5=1>
+<$GetTechnology,139></?>
+<?!{atOld3weapon5}>
+<$Config,atweapon5=0></?>
+$Timeout=0,Tell,owindballoon
+
+[owindballoon]
+<?{atOld3weapon6}>
+<$Config,atweapon6=1>
+<$GetTechnology,141></?>
+<?!{atOld3weapon6}>
+<$Config,atweapon6=0></?>
+$Timeout=0,Tell,orainbattery
+
+[orainbattery]
+<?{atOld3weapon7}>
+<$Config,atweapon7=1>
+<$GetTechnology,76></?>
+<?!{atOld3weapon7}>
+<$Config,atweapon7=0></?>
+$Timeout=0,Tell,orainfence
+
+[orainfence]
+<?{atOld3weapon8}>
+<$Config,atweapon8=1>
+<$GetTechnology,145></?>
+<?!{atOld3weapon8}>
+<$Config,atweapon8=0></?>
+$Timeout=0,Tell,oraincannon
+
+[oraincannon]
+<?{atOld3weapon9}>
+<$Config,atweapon9=1>
+<$GetTechnology,129></?>
+<?!{atOld3weapon9}>
+<$Config,atweapon9=0></?>
+$Timeout=0,Tell,orainblocker
+
+[orainblocker]
+<?{atOld3weapon10}>
+<$Config,atweapon10=1>
+<$GetTechnology,147></?>
+<?!{atOld3weapon10}>
+<$Config,atweapon10=0></?>
+$Timeout=0,Tell,orainwalker
+
+[orainwalker]
+<?{atOld3weapon11}>
+<$Config,atweapon11=1>
+<$GetTechnology,156></?>
+<?!{atOld3weapon11}>
+<$Config,atweapon11=0></?>
+$Timeout=0,Tell,orainaviary
+
+[orainaviary]
+<?{atOld3weapon12}>
+<$Config,atweapon12=1>
+<$GetTechnology,143></?>
+<?!{atOld3weapon12}>
+<$Config,atweapon12=0></?>
+$Timeout=0,Tell,orainballoon
+
+[orainballoon]
+<?{atOld3weapon13}>
+<$Config,atweapon13=1>
+<$GetTechnology,146></?>
+<?!{atOld3weapon13}>
+<$Config,atweapon13=0></?>
+$Timeout=0,Tell,othunderbattery
+
+[othunderbattery]
+<?{atOld3weapon14}>
+<$Config,atweapon14=1>
+<$GetTechnology,77></?>
+<?!{atOld3weapon14}>
+<$Config,atweapon14=0></?>
+$Timeout=0,Tell,obulf
+
+[obulf]
+<?{atOld3weapon15}>
+<$Config,atweapon15=1>
+<$GetTechnology,135></?>
+<?!{atOld3weapon15}>
+<$Config,atweapon15=0></?>
+$Timeout=0,Tell,othundercannon
+
+[othundercannon]
+<?{atOld3weapon16}>
+<$Config,atweapon16=1>
+<$GetTechnology,131></?>
+<?!{atOld3weapon16}>
+<$Config,atweapon16=0></?>
+$Timeout=0,Tell,othunderblocker
+
+[othunderblocker]
+<?{atOld3weapon17}>
+<$Config,atweapon17=1>
+<$GetTechnology,79></?>
+<?!{atOld3weapon17}>
+<$Config,atweapon17=0></?>
+$Timeout=0,Tell,othunderfence
+
+[othunderfence]
+<?{atOld3weapon18}>
+<$Config,atweapon18=1>
+<$GetTechnology,149></?>
+<?!{atOld3weapon18}>
+<$Config,atweapon18=0></?>
+$Timeout=0,Tell,othunderarcher
+
+[othunderarcher]
+<?{atOld3weapon19}>
+<$Config,atweapon19=1>
+<$GetTechnology,148></?>
+<?!{atOld3weapon19}>
+<$Config,atweapon19=0></?>
+$Timeout=0,Tell,osuncannon
+
+[osuncannon]
+<?{atOld3weapon20}>
+<$Config,atweapon20=1>
+<$GetTechnology,128></?>
+<?!{atOld3weapon20}>
+<$Config,atweapon20=0></?>
+$Timeout=0,Tell,osunarcher
+
+[osunarcher]
+<?{atOld3weapon21}>
+<$Config,atweapon21=1>
+<$GetTechnology,71></?>
+<?!{atOld3weapon21}>
+<$Config,atweapon21=0></?>
+$Timeout=0,Tell,osunblocker
+
+[osunblocker]
+<?{atOld3weapon22}>
+<$Config,atweapon22=1>
+<$GetTechnology,78></?>
+<?!{atOld3weapon22}>
+<$Config,atweapon22=0></?>
+$Timeout=0,Tell,osunfence
+
+[osunfence]
+<?{atOld3weapon23}>
+<$Config,atweapon23=1>
+<$GetTechnology,136></?>
+<?!{atOld3weapon23}>
+<$Config,atweapon23=0></?>
+$Timeout=0,Tell,osunballoon
+
+[osunballoon]
+<?{atOld3weapon24}>
+<$Config,atweapon24=1>
+<$GetTechnology,111></?>
+<?!{atOld3weapon24}>
+<$Config,atweapon24=0></?>
+$Timeout=0,Tell,osunaviary
+
+[osunaviary]
+<?{atOld3weapon25}>
+<$Config,atweapon25=1>
+<$GetTechnology,72></?>
+<?!{atOld3weapon25}>
+<$Config,atweapon25=0></?>
+$Timeout=0,DoNothing,0
+
+
+
+[SaveTech]
+<?{atweapon1}>
+<$Config,atOld5weapon1=1></?>
+<?!{atweapon1}>
+<$Config,atOld5weapon1=0></?>
+$Timeout=0,Tell,dwindwalker
+
+[dwindwalker]
+<?{atweapon2}>
+<$Config,atOld5weapon2=1></?>
+<?!{atweapon2}>
+<$Config,atOld5weapon2=0></?>
+$Timeout=0,Tell,dwindarcher
+
+[dwindarcher]
+<?{atweapon3}>
+<$Config,atOld5weapon3=1></?>
+<?!{atweapon3}>
+<$Config,atOld5weapon3=0></?>
+$Timeout=0,Tell,dwindblocker
+
+[dwindblocker]
+<?{atweapon4}>
+<$Config,atOld5weapon4=1></?>
+<?!{atweapon4}>
+<$Config,atOld5weapon4=0></?>
+$Timeout=0,Tell,dwindaviary
+
+[dwindaviary]
+<?{atweapon5}>
+<$Config,atOld5weapon5=1></?>
+<?!{atweapon5}>
+<$Config,atOld5weapon5=0></?>
+$Timeout=0,Tell,dwindballoon
+
+[dwindballoon]
+<?{atweapon6}>
+<$Config,atOld5weapon6=1></?>
+<?!{atweapon6}>
+<$Config,atOld5weapon6=0></?>
+$Timeout=0,Tell,drainbattery
+
+[drainbattery]
+<?{atweapon7}>
+<$Config,atOld5weapon7=1></?>
+<?!{atweapon7}>
+<$Config,atOld5weapon7=0></?>
+$Timeout=0,Tell,drainfence
+
+[drainfence]
+<?{atweapon8}>
+<$Config,atOld5weapon8=1></?>
+<?!{atweapon8}>
+<$Config,atOld5weapon8=0></?>
+$Timeout=0,Tell,draincannon
+
+[draincannon]
+<?{atweapon9}>
+<$Config,atOld5weapon9=1></?>
+<?!{atweapon9}>
+<$Config,atOld5weapon9=0></?>
+$Timeout=0,Tell,drainblocker
+
+[drainblocker]
+<?{atweapon10}>
+<$Config,atOld5weapon10=1></?>
+<?!{atweapon10}>
+<$Config,atOld5weapon10=0></?>
+$Timeout=0,Tell,drainwalker
+
+[drainwalker]
+<?{atweapon11}>
+<$Config,atOld5weapon11=1></?>
+<?!{atweapon11}>
+<$Config,atOld5weapon11=0></?>
+$Timeout=0,Tell,drainaviary
+
+[drainaviary]
+<?{atweapon12}>
+<$Config,atOld5weapon12=1></?>
+<?!{atweapon12}>
+<$Config,atOld5weapon12=0></?>
+$Timeout=0,Tell,drainballoon
+
+[drainballoon]
+<?{atweapon13}>
+<$Config,atOld5weapon13=1></?>
+<?!{atweapon13}>
+<$Config,atOld5weapon13=0></?>
+$Timeout=0,Tell,dthunderbattery
+
+[dthunderbattery]
+<?{atweapon14}>
+<$Config,atOld5weapon14=1></?>
+<?!{atweapon14}>
+<$Config,atOld5weapon14=0></?>
+$Timeout=0,Tell,dbulf
+
+[dbulf]
+<?{atweapon15}>
+<$Config,atOld5weapon15=1></?>
+<?!{atweapon15}>
+<$Config,atOld5weapon15=0></?>
+$Timeout=0,Tell,dthundercannon
+
+[dthundercannon]
+<?{atweapon16}>
+<$Config,atOld5weapon16=1></?>
+<?!{atweapon16}>
+<$Config,atOld5weapon16=0></?>
+$Timeout=0,Tell,dthunderblocker
+
+[dthunderblocker]
+<?{atweapon17}>
+<$Config,atOld5weapon17=1></?>
+<?!{atweapon17}>
+<$Config,atOld5weapon17=0></?>
+$Timeout=0,Tell,dthunderfence
+
+[dthunderfence]
+<?{atweapon18}>
+<$Config,atOld5weapon18=1></?>
+<?!{atweapon18}>
+<$Config,atOld5weapon18=0></?>
+$Timeout=0,Tell,dthunderarcher
+
+[dthunderarcher]
+<?{atweapon19}>
+<$Config,atOld5weapon19=1></?>
+<?!{atweapon19}>
+<$Config,atOld5weapon19=0></?>
+$Timeout=0,Tell,dsuncannon
+
+[dsuncannon]
+<?{atweapon20}>
+<$Config,atOld5weapon20=1></?>
+<?!{atweapon20}>
+<$Config,atOld5weapon20=0></?>
+$Timeout=0,Tell,dsunarcher
+
+[dsunarcher]
+<?{atweapon21}>
+<$Config,atOld5weapon21=1></?>
+<?!{atweapon21}>
+<$Config,atOld5weapon21=0></?>
+$Timeout=0,Tell,dsunblocker
+
+[dsunblocker]
+<?{atweapon22}>
+<$Config,atOld5weapon22=1></?>
+<?!{atweapon22}>
+<$Config,atOld5weapon22=0></?>
+$Timeout=0,Tell,dsunfence
+
+[dsunfence]
+<?{atweapon23}>
+<$Config,atOld5weapon23=1></?>
+<?!{atweapon23}>
+<$Config,atOld5weapon23=0></?>
+$Timeout=0,Tell,dsunballoon
+
+[dsunballoon]
+<?{atweapon24}>
+<$Config,atOld5weapon24=1></?>
+<?!{atweapon24}>
+<$Config,atOld5weapon24=0></?>
+$Timeout=0,Tell,dsunaviary
+
+[dsunaviary]
+<?{atweapon25}>
+<$Config,atOld5weapon25=1></?>
+<?!{atweapon25}>
+<$Config,atOld5weapon25=0></?>
+$Timeout=0,Tell,end5
+
+
+[ai6TempleDead]
+<h2>~iKalrek</h2>
+<p>Well done!  Well done!
+$Button=Ok,Tell,end1
+$Timeout=2,Tell,end1
+
+[ai6PriestCaptured]
+<h2>~iKalrek</h2>
+$Button=Ok,Tell,end1
+$Timeout=2,Tell,end1
+
+[end1]
+<h2>~iKalrek</h2>
+<p>You truly are worthy of becoming a priest.
+$Button=Ok,Tell,end2
+$Timeout=4,Tell,end2
+
+[end2]
+<h2>~iKalrek</h2>
+<p>Now you must seek your destiny in the skies of Nimbus.
+$Button=Ok,Tell,end3
+$Timeout=5,Tell,end3
+
+[end3]
+<h2>~iKalrek</h2>
+<p>But before you leave let me offer you one more thing...
+<?{ataltar2}>$Timeout=5,Tell,TechMenuLV2
+$Button=Ok,Tell,TechMenuLV2</?>
+<?!{ataltar2}>$Timeout=5,Tell,Altar1
+$Button=Ok,Tell,Altar1</?>
+
+[end4]
+<h2>~iKalrek</h2>
+<p>Very well.  Now it is time for us to part....
+$Button=Ok,Tell,SaveTech
+$Timeout=5,Tell,SaveTech
+
+[end5]
+<p>~I~lYou think for a moment and realize that perhaps it was not quite time for you to leave.
+<p>~I~lAlthough you have learned much, killing Kalrek would gain you even more power...And compleate mastery over the Sun technologies, not just partial control.
+
+$Button=Fight,Tell,end61
+$Button=Leave,Tell,end62
+
+[end61]
+<h2>~iKalrek</h2>
+<p>So this is how you repay me for teaching you the ways of Priesthood?
+$Button=Ok,Tell,end71
+$Timeout=5,Tell,end71
+
+[end71]
+<$Config,atobjective1=0>
+<$Config,atobjective2=0>
+<$Config,atobjective3=0>
+<$Config,atobjective4=0>
+<$Config,atobjective5=0>
+<$Config,atobjective6=0>
+<$Config,atobjective7=0>
+<$Config,atobjective8=0>
+<$Config,atweapon0=0>
+<h2>~iKalrek</h2>
+<p>Im not that surprised.  I suspected that you had lust for power when I first met you...
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,palace5
+
+[end62]
+<h2>~iKalrek</h2>
+<p>I'm glad that you haven't let power gone to your head.  Perhaps we shall meet again.  
+<p>And don't be surprised that I knew what you were thinking, I have learned much in my 120 years of life.
+<$Config,atobjective1=0>
+<$Config,atobjective2=0>
+<$Config,atobjective3=0>
+<$Config,atobjective4=0>
+<$Config,atobjective5=0>
+<$Config,atobjective6=0>
+<$Config,atobjective7=0>
+<$Config,atobjective8=0>
+<$Config,atweapon0=0>
+<$Config,atpath0=1>
+<$Config,Donepalace0=1>
+<$Config,Donepalace1=0>
+<$Config,Donepalace2=0>
+<$Config,Donepalace3=0>
+<$Config,Donepalace4=0>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,palacemain
+
+
+
+[END]
+
+

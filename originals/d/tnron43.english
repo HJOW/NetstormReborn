@@ -1,0 +1,412 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 1
+
+myStartMoney = 0
+myTech = "sunaviary;sunBalloon;sunCannon;sunBlocker;sunFence;sunArcher;thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;bulf;rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainwalker;rainFence;rainwalker"     																
+title="Retreat"
+
+ai2Name = "Master of the Man o'Wars"
+ai2Tech = "sunBalloon;sunBlocker;rainbattery;rainaviary;rainballoon"
+ai2StartMoney = 10000
+ai2GeyserAttachments = 4
+ai2Collectors = 10
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3;4;5;6"
+ai2color = red
+ai2Ability="!USE_PRIEST_TO_COLLECT!ATTACH_TO_ENEMY_ISLAND;!BUILD_DAIS;!CAPTURE_ENEMY_PRIEST"
+ai2BridgeDrawRate = 4
+
+ai3Name = "King of the Flyers"
+ai3Tech = "sunBlocker;rainbattery;rainaviary;rainballoon;windBattery;windaviary;windballoon"
+ai3StartMoney = 10000
+ai3GeyserAttachments = 3
+ai3Collectors = 10
+ai3TimeBetweenMoves = 0
+ai3AllyList = "2;4;5;6"
+ai3color = white
+ai3Ability="!BUILD_DAIS;!USE_PRIEST_TO_COLLECT"
+ai3BridgeDrawRate = 4
+
+ai4Name = "Lord of the Flyers"
+ai4Tech = "sunBlocker;rainbattery;rainaviary;rainballoon;windBattery;windaviary;windballoon"
+ai4StartMoney = 10000
+ai4GeyserAttachments = 3
+ai4Collectors = 7
+ai4TimeBetweenMoves = 1
+ai4AllyList = "2;3;5;6"
+ai4color = green
+ai4Ability="!USE_PRIEST_TO_COLLECT;!BUILD_DAIS;"
+ai4BridgeDrawRate = 4
+
+ai5Name = "Duke of the Flyers"
+ai5Tech = "sunBlocker;sunCannon;rainbattery;rainaviary;rainballoon;windBattery;windaviary;windballoon"
+ai5StartMoney = 10000
+ai5GeyserAttachments = 3
+ai5Collectors = 7
+ai5TimeBetweenMoves = 1
+ai5AllyList = "2;3;4;6"
+ai5color = purple
+ai5Ability="!USE_PRIEST_TO_COLLECT;!BUILD_DAIS;"
+ai5BridgeDrawRate = 4
+
+ai6Name = "Leader of the Whirligigs"
+ai6Tech = "sunBalloon;sunAviary;sunBlocker"
+ai6StartMoney = 7500
+ai6GeyserAttachments = 3
+ai6Collectors = 7
+ai6TimeBetweenMoves = 1
+ai6AllyList = "2;3;4;5"
+ai6color = yellow
+ai6Ability="!USE_PRIEST_TO_COLLECT!ATTACH_TO_ENEMY_ISLAND;!BUILD_DAIS;!CAPTURE_ENEMY_PRIEST"
+ai6BridgeDrawRate = 4
+
+ai7Name = "Knight of Wind"
+ai7off=1
+ai7Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;rainbattery"
+ai7StartMoney = 4000
+ai7GeyserAttachments = 3
+ai7Collectors = 7
+ai7TimeBetweenMoves = 1
+ai7AllyList = "1;8"
+ai7color = cyan
+ai7Ability="!USE_PRIEST_TO_COLLECT;!ATTACH_TO_ENEMY_ISLAND"
+ai7BridgeDrawRate = 4
+
+ai8Name = "Squire of Rain"
+ai8Tech = "rainBattery;rainblocker;raincannon;sunCannon;sunFence;sunBalloon;sunAviary;sunBlocker;sunArcher"
+ai8StartMoney = 0
+ai8GeyserAttachments = 5
+ai8Collectors = 7
+ai8TimeBetweenMoves = 1
+ai8AllyList = "1;7"
+ai8color = orange
+ai8Ability="!USE_PRIEST_TO_COLLECT;!ENCIRCLE_ENEMY_ISLAND;!CAPTURE_ENEMY_PRIEST"
+ai8BridgeDrawRate = 4
+
+[init]
+<$Config,knight=1>
+<$Config,squire=1>
+
+[@1]
+<h2>~gKnight of Wind</h2> 
+<p>Our retreat is being blocked!!  
+$Timeout=5,DoNothing,0
+
+[@2]
+~l~I You shout to the Knight:
+<p>~N~.~wQuick try to flank them!  
+$Timeout=5,DoNothing,0
+
+[@3]
+<h2>~gKnight of Wind</h2> 
+<p>I can't!!!  I've been surrounded....I'll try to get out.....
+$Timeout=5,DoNothing,0
+
+[@60]
+<h2>~gKnight of Wind</h2> 
+<p>Blast!! It's no use!  I'm being overwhelmed by their attacks!!
+$Timeout=5,DoNothing,0
+
+[@61]
+<h2>~oSquire of Rain</h2>
+<p>We can't stay here!!  The Elementals will catch up with us within the hour!!!
+$Timeout=10,DoNothing,0
+
+[@62]
+<h2>~gKnight of Wind</h2> 
+<p>Save yourselves!!  Go without me!!
+$Timeout=5,DoNothing,0
+
+$Button=Leave...,Tell,leave
+$Button=No...,DoNothing,0
+$Timeout=6,Tell,stay
+
+[@300]
+<h2>~oSquire of Rain</h2>
+<p>I think we have 55 more minutes till the Elementals reach us.
+$Timeout=10,DoNothing,0
+
+[@301]
+<p>Which means we have 3/4 of an hour to save the Knight...
+$Timeout=10,DoNothing,0
+
+[@302]
+<h2>~oSquire of Rain</h2>
+<p>You think we will reach our territory with a ten minute head start?
+$Timeout=10,DoNothing,0
+
+[@303]
+<p>Let's not think about what will happen if it isn't enough...
+$Timeout=10,DoNothing,0
+
+[@304]
+<h2>~oSquire of Rain</h2>
+<p>You should put the Knight on your island when we fall back.  Mine may not make it out of here.
+$Timeout=10,DoNothing,0
+
+[@1200]
+~I~lYou glance at the sun's posistion.....Only one half hour left.....
+$Timeout=10,DoNothing,0
+
+[@2160]
+~l~IFourteen minutes left........
+$Timeout=10,DoNothing,0
+
+[@2700]
+~l~IFive minutes left....you begin to sweat and feel your heart pounding.....
+$Timeout=10,DoNothing,0
+
+[@3000]
+<?!{knight}>
+<h2>~oSquire of Rain</h2>
+We can't stay here any longer!  The Elementals are aproaching!
+$Timeout=10,DoNothing,0
+</?>
+<?!{squire}>
+<h2>~gKnight of Wind</h2> 
+We must leave the squire behind or the Elementals will trap and destroy all of us!
+$Timeout=10,DoNothing,0
+
+[@3001]
+<?!{knight}>
+~l~IWe just can't LEAVE!
+$Timeout=10,DoNothing,0
+</?>
+
+<?!{squire}>
+Blast!  We can't afford to lose any more allies and friends!
+$Timeout=10,DoNothing,0
+</?>
+
+
+[@3002]
+<?!{knight}>
+<h2>~oSquire of Rain</h2>
+We have no choice...it's either we leave to fight another day or perish!
+$Timeout=10,DoNothing,0
+</?>
+
+<?!{squire}>
+<h2>~gKnight of Wind</h2> 
+Our clan will be destroyed if both of us perish!  The squire made a sacrafice here today...we must live to tell others about it.
+$Timeout=10,DoNothing,0
+</?>
+
+[@3003]
+<?!{knight}>
+~l~I......
+$Timeout=10,DoNothing,0
+</?>
+
+<?!{squire}>
+~l~IFarewell my friend....I'm sorry.....You will not be forgoten!
+$Timeout=10,DoNothing,0
+</?>
+
+[@3004]
+<?!{knight}>
+~l~I....Your right......I'm sorry Knight....I'll be back for you!
+
+<$Config,Donetnron433=1>
+<$Config,Donetnron43=0>
+<$Config,Donetnron53=0>
+<$Config,Donetnron63=0>
+<$Config,Donetnron73=0>
+<$Config,Donetnron83=0>
+<$Config,tnron0433=1>
+
+
+$Timeout=10,MissionBegin,tnron53
+$Button=Next Mission,MissionBegin,tnron53
+</?>
+
+<?!{squire}>
+<h2>~gKnight of Wind</h2> 
+~l~IWe must hurry we still have to out manuver what's left of the Flyers...goodbye friend...
+
+<$Config,Done{mission.fileName}=1>
+<$Config,Donetnron433=0>
+<$Config,Donetnron54=0>
+<$Config,Donetnron64=0>
+<$Config,Donetnron74=0>
+<$Config,Donetnron84=0>
+<$Config,tnron043=1>
+
+$Timeout=10,MissionBegin,tnron53
+$Button=Next Mission,MissionBegin,tnron53
+</?>
+
+[stay]
+<h2>~gKnight of Wind</h2> 
+<p>I'll take your silence as no you won't go....
+$Timeout=4,DoNothing,0
+
+[leave]
+<$Config,Donetnron433=1>
+<$Config,Donetnron43=0>
+<$Config,Donetnron53=0>
+<$Config,Donetnron63=0>
+<$Config,Donetnron73=0>
+<$Config,Donetnron83=0>
+<$Config,tnron0433=1>
+
+$Timeout=0,MissionBegin,tnron53
+
+[Options]
+
+[A.]
+<h2>Retreat</h2>
+<i>"Advance backwards!!  We don't retreat men!"<br>
+--Varkol Adex, Nimbian General.</i>  
+<p>Forced to retreat or face certain doom after failing to dispatch the Elemental's scouts, your path of retreat has been blocked off.
+<p>You have to get through the barriacde or you shall be greatly outnumbered and outgunned.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>YOU CHEATER YOU!!!  Or so I assume =)
+
+<$Config,Done{mission.fileName}=1>
+<$Config,Donetnron433=0>
+<$Config,Donetnron54=0>
+<$Config,Donetnron64=0>
+<$Config,Donetnron74=0>
+<$Config,Donetnron84=0>
+<$Config,tnron043=1>
+
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,tnron53
+
+[ai2TempleHalfDead]
+<h2>~rMaster of the Man o'Wars</h2>
+<p>
+You can't win this battle!  It's hopeless!  Surrender now!
+
+[ai2TempleDead]
+<h2>~rMaster of the Man o'Wars</h2>
+<p>
+Gaaa!!! NO!  I may fall but you shall two in the end!
+
+[ai3TempleDead]
+<h2>~lKing of the Flyers</h2>
+<p>
+How can this be!?!?!?
+
+[ai4TempleHalfDead]
+<h2>~gLord of the Flyers</h2>
+<p>
+Retreat now fools!  Our allies the Elementals will be here soon.  Granted they'll make short work of you!
+
+[ai5TempleHalfDead]
+<h2>~mDuke of the Flyers</h2>
+<p>
+Argh!!  How can you get past my defence's??  HOW?!?!
+
+[ai6TempleHalfDead]
+<h2>~yLeader of the Whirligigs</h2>
+<p>That's right waste your time on me!  You will not make it out of here alive! HAHAHAH!
+
+[ai7PriestCaptured]
+<h2>Message from the Flyers</h2>
+<p>
+Heh heh....We got ourselves a prisoner.
+<$Config,knight=0>
+$Button=Ok,Tell,cap
+$Timeout=3,Tell,cap
+
+[ai7PriestSaved]
+<?!{squire}>
+<h2>~gKnight of Wind</h2> 
+<p>Thank you but we must now save the squire!
+</?>
+<?{squire}>
+<h2>~gKnight of Wind</h2> 
+<p>Thank you.  Now let's get out of here!
+<$Config,knight=1>
+
+<$Config,Done{mission.fileName}=1>
+<$Config,Donetnron433=0>
+<$Config,Donetnron54=0>
+<$Config,Donetnron64=0>
+<$Config,Donetnron74=0>
+<$Config,Donetnron84=0>
+<$Config,tnron043=1>
+
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,tnron53
+</?>
+
+
+
+[cap]
+<h2>~oSquire of Rain</h2>
+<p>We have to save him!
+$Button=Ok,Tell,cap2
+$Timeout=3,Tell,cap2
+
+[cap2]
+<h2>Message from the Flyers</h2>
+<p>
+We doubt it!  Our new allies the Elementals are on their way here!
+$Button=Ok,Tell,cap3
+$Timeout=3,Tell,cap3
+
+[cap3]
+<h2>~gKnight of Wind</h2> 
+<p>They are too strong!!!  Go before we are all doomed!!!
+$Button=No,Tell,cap4
+$Button=Leave,Tell,leave
+$Timeout=3,Tell,cap4
+
+[cap4]
+No we are staying!!!
+$Button=Ok,Tell,cap5
+$Timeout=2,Tell,cap5
+
+[cap5]
+<h2>~oSquire of Rain</h2>
+<p>We won't leave without you!
+
+[ai8PriestSaved]
+<?!{knight}>
+<h2>~oSquire of Rain</h2>
+<p>Ok now that you've saved me, lets get the Knight out of there.
+</?>
+<?{knight}>
+<h2>~gKnight of Wind</h2> 
+<p>Ok ok let's go!
+<$Config,squire=1>
+
+<$Config,Done{mission.fileName}=1>
+<$Config,Donetnron433=0>
+<$Config,Donetnron54=0>
+<$Config,Donetnron64=0>
+<$Config,Donetnron74=0>
+<$Config,Donetnron84=0>
+<$Config,tnron043=1>
+
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,tnron53
+</?>
+
+[ai8riestCaptured]
+<h2>Message from the Flyers</h2>
+<p>
+This is a good day!  Yet another prisioner!
+<$Config,squire=0>
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+The Flyers were too much for you....
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+
+

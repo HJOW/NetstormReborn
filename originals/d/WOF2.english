@@ -1,0 +1,55 @@
+[Header]
+missionType = "Tutorial"
+missionNumber = 2
+
+moreGeysers = 1
+myStartMoney = 400
+myTech = "sunCannon;sunAviary;sunBlocker;rainBattery;sunBalloon"
+
+title = "Feud"
+
+ai2Name = "Gen.Twist"
+ai2Tech = "windBlocker;windarcher;windWalker;windBattery"
+ai2StartMoney = 2000
+ai2GeyserAttachments = 2
+ai2Collectors = 5
+ai2TimeBetweenMoves = 8
+ai2AllyList =
+ai2Color = red
+
+ai3Name = "Gen.Cross"
+ai3Tech = "windBattery;windarcher;windWalker;windBlocker"
+ai3StartMoney = 2000
+ai3GeyserAttachments = 2
+ai3Collectors = 5
+ai3TimeBetweenMoves = 8
+ai3AllyList = 
+ai3Color = white
+
+[Options]
+
+[A.]
+<h2>The Feud</h2>
+<i>"In the field we must never become divide,because we will fail."
+--Gen.Rainjun,Nimbian War Tactics</i>
+<p>The evil God of Wind sent his best generals to destroy you.However before they reach your island, they begin a feud and attack each other.Destroy both generals. 
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Excellent!</h2>
+<p>
+The Wind God howls an angry howl that sends you flying into the storm.
+THE END
+<$Config,Done{mission.fileName}=2>
+$Button=Leave Missions,MissionAbort,1
+$Button=Next MissionBegin,WOF3
+
+[Failed]
+<p>
+Even with the advantages your foes ripped apart your corpse.
+$Button=Continue,Tell,Tryagain
+
+
+[END]

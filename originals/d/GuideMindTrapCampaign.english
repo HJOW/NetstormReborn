@@ -1,0 +1,14 @@
+title = "MindTrap"
+
+[Overview]
+<background="nsstart">
+<h2>MindTrap</h2>
+<i>Let's Storm some ass!!</i>
+<p>
+My second try at creation. :O) Send comments to Deus, 
+Email:  deus@zebra.net<br>
+
+$Checked=1 MindTrap,MissionBegin,MindTrap,{DoneMindTrap},1
+
+$Button=Back,Tell,Campaign
+

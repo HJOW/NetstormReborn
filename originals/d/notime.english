@@ -1,0 +1,65 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 1
+randGeysers = 1
+
+myStartMoney = 10000
+myTech = "thunderBattery;bulf;thundercannon;thunderarcher;thunderblocker;rainfence;rainBattery;sunballoon;suncannon;sunarcher;sunfence"
+
+ai2Name = "Boredom"
+ai2Tech = "windBattery;windwalker;windballoon;windarcher;windblocker;windAviary;sunballoon;suncannon;sunarcher;sunfence"
+ai2StartMoney = 10000
+ai2GeyserAttachments = 4
+ai2Collectors = 3
+ai2TimeBetweenMoves = 3
+ai2Ability = "!COLLECT_STORM_POWER;!ATTACH_TO_ENEMY_ISLAND;!ENCIRCLE_ENEMY_ISLAND"
+ai2BridgeDrawRate = 1
+
+ai3Name = "Ignorance"
+ai3Tech = "rainballoon;raincannon;rainBattery;rainwalker;rainblocker;rainfence;rainAviary;sunballoon;suncannon;sunarcher;sunfence"
+ai3StartMoney = 10000
+ai3GeyserAttachments = 4
+ai3Collectors = 3
+ai3TimeBetweenMoves = 3
+ai3Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS;!REPEAT_SUCCESSFUL_DROPS"
+ai3BridgeDrawRate = 1
+
+title="No time to play"
+
+[Options]
+
+[A.]
+<h2>No time to play</h2>
+Never no time to play, gotta make moves with no delay<br>
+(Guru: "Jazzmatazz" 1993)
+<p>
+These bulfs are too heavy!<br>
+All priests were captured by Count Intent, but you mananged to ecape.
+Your way home was free, but the stupid bulfs....<br>
+<i>Have fun! RasRic</i>
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[ai1priestCaptured]
+<h2>Dont try this at home!</h2>
+<p>
+~3~o There are TWO ways out~[Ipriest.E3]
+
+[Succeeded][BadTeamDead]
+<h2>Congrats!</h2>
+<p>
+You have well done! Try the next challenge to show your real strength!
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,1
+
+[Failed]
+<h2>Ohbadohbadohbad!</h2>
+<p>
+Thats lame!
+<c>Making plans will replace coincidents by errors</c>
+$Button=Continue,Tell,TryAgain
+
+
+[END]

@@ -1,0 +1,35 @@
+[Header]
+missionType = "Tutorial"
+missionNumber = 1
+moreGeysers = 0
+
+mystartmoney = "0"
+myTech = "all"
+
+title = "Choose your campaign"
+
+[Options]
+
+[A.]
+
+<h2>~lChoose your campaign!</h2>
+<i>~E"All for you choose, its a real freedom"<br>
+--High Priest of Nimbus</i>
+<p>~EHere are the bunch of maps.
+$Checked=~B~xShit Hard I,DoNothing,0
+$Checked=~B~E~i—›~jShit Hard I,MissionBegin,sh1_1,{Donesh1_1},1
+$Checked=~B~E~i—›~jWrath of the Furies (Remix),MissionBegin,sh1_2,{Donesh1_2},1
+$Checked=~B~xShit Hard II,DoNothing,0
+$Checked=~B~E~i—›~jShit Hard II Easy,MissionBegin,sh2_1,{Donesh2_1},1
+$Checked=~B~E~i—›~jShit Hard II Normal,MissionBegin,sh2_2,{Donesh2_2},1
+$Checked=~B~E~i—›~jShit Hard II Hard,MissionBegin,sh2_3,{Donesh2_3},1
+$Checked=~B~E~i—›~jRebels (Remix) Impossible,MissionBegin,sh2_4,{Donesh2_4},1
+$Checked=~B~xShit Hard III (First War of Nimbus),DoNothing,0
+$Checked=~B~E~i—›~jFirst war of Nimbus ~w(NEW!),MissionBegin,sh3,{Donesh3},1
+$Checked=~B~xShit Hard Information (n/a),DoNothing,0
+$Checked=~B~E~i—›~jShit Hard Credits,MissionBegin,sh_cr,{Donesh_cr},1
+$Checked=~B~E~i—›~jShit Hard Tips,MissionBegin,sh_tip,{Donesh_tip},1
+
+$Button=Its too hard for me!,Tell,Campaign
+
+[END]

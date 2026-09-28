@@ -1,0 +1,169 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 3
+moreGeysers = 0
+
+myStartMoney = 4000
+myTech = "sunaviary;sunBalloon;sunCannon;sunBlocker;sunFence;sunArcher;thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;bulf;rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainwalker;rainFence;rainwalker"     																
+myAllyList = "3;7"
+
+title="Captured"
+
+ai2Name = "Warden"
+ai2Tech = "thunderbattery;thundercannon;thunderblocker;thunderarcher;rainbattery;raincannon;rainaviary;rainballoon"
+ai2StartMoney = 2500
+ai2GeyserAttachments = 4
+ai2Collectors = 7
+ai2TimeBetweenMoves = 1
+ai2AllyList = "4;5;6;8"
+ai2color = red
+ai2Ability="!USE_PRIEST_TO_COLLECT"
+ai2BridgeDrawRate = 4
+
+ai3Name = "Prisoner"
+ai3Tech = "thunderbattery;thundercannon;bulf;windbattery;windaviary;windblocker;sunaviary;sunballoon;sunblocker"
+ai3StartMoney = 20000
+ai3GeyserAttachments = 3
+ai3Collectors = 5
+ai3TimeBetweenMoves = 1
+ai3AllyList = "1;7"
+ai3color = white
+ai3Ability="!USE_PRIEST_TO_COLLECT"
+ai3BridgeDrawRate = 5
+
+ai4Name = "Jailer"
+ai4Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;bulf"
+ai4StartMoney = 2500
+ai4GeyserAttachments = 3
+ai4Collectors = 7
+ai4TimeBetweenMoves = 1
+ai4AllyList = "2;5;6;8"
+ai4color = green
+ai4Ability="!USE_PRIEST_TO_COLLECT"
+ai4BridgeDrawRate = 4
+
+
+ai5Name = "Jailer"
+ai5Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;bulf"
+ai5StartMoney = 2500
+ai5GeyserAttachments = 3
+ai5Collectors = 7
+ai5TimeBetweenMoves = 1
+ai5AllyList = "2;4;6;8"
+ai5color = purple
+ai5Ability="!USE_PRIEST_TO_COLLECT"
+ai5BridgeDrawRate = 4
+
+ai6Name = "Guard"
+ai6Tech = "windBattery;sunCannon;sunAviary;sunBlocker;sunArcher;sunballoon;windarcher;windBalloon;windaviary"
+ai6StartMoney = 10000
+ai6GeyserAttachments = 15
+ai6Collectors = 3
+ai6TimeBetweenMoves = 0
+ai6AllyList = "2;4;5;8"
+ai6color = yellow
+ai6Ability="!USE_PRIEST_TO_COLLECT"
+ai6BridgeDrawRate = 0
+
+ai7Name = "Prisoner"
+ai7Tech = "windbattery;windarcher;windballoon;rainbattery;rainaviary;rainblocker;sunblocker;sunballoon;sunaviary"
+ai7StartMoney = 20000
+ai7GeyserAttachments = 3
+ai7Collectors = 7
+ai7TimeBetweenMoves = 1
+ai7AllyList = "1;5"
+ai7color = lightblue
+ai7Ability="!USE_PRIEST_TO_COLLECT;!ENCIRCLE_ENEMY_ISLAND"
+ai7BridgeDrawRate = 4
+
+ai8Name = "Guard"
+ai8Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;sunArcher;suncannon"
+ai8StartMoney = 10000
+ai8GeyserAttachments = 3
+ai8Collectors = 3
+ai8TimeBetweenMoves = 0
+ai8AllyList = "2;4;5;6"
+ai8color = orange
+ai8Ability="!USE_PRIEST_TO_COLLECT"
+ai8BridgeDrawRate = 0
+
+[@1]
+<h2>~lCellmate</h2>
+<p>Psst hey.  You want out of here right?  Well we managed to keep a heal spell hidden away from our jailers.  It might be what you need to get past those acid barriacdes....
+[@2]
+<h2>~lCellmate</h2>
+<p>If you can get to your island to the south you may have a chance.  Everyone is sleeping..even the guards!  So don't worry about any big response from them...The weapons are manned 24 hours a day so don't expect them to be idle.
+
+[@80]
+<p>~l~IHmm... Those guards could be a problem later on...better capture them.
+[@200]
+<p>~l~IThis could be a bit tricky...
+[@320]
+<p>~l~IThat sun workshop has just gotta go. 
+[@430]
+<p>~l~II wonder if I should take out those ice cannons....
+
+
+
+
+[Options]
+
+[A.]
+<h2>Captured</h2>
+<i>"What do mean don't kill the priest??  WHAT?  Hostage??  For what?!?!"<br>
+--unknown.</i>  
+<p>After penetrating through the defences you were quickly overwhelmed and captured.  Now you are trapped on an island with some other prisoners.  Escaping will be difficult...if not immpossible.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<?{atknight}>
+<h2>Success!</h2>
+<p>
+You have escaped!!!!   After a short conversation with the men you have saved you discover who your true enemy is....a Dark Lord!  
+<$Config,Done{mission.fileName}=1>
+<$Config,tnron084=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,tnron94
+</?>
+
+<?!{atknight}>
+<h2>Success!</h2>
+<p>
+You have escaped!!!!   After a short conversation with the men you have saved you discover who your true enemy is....a Dark Lord!  
+<$Config,Donetnron844=1>
+<$Config,tnron084=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,tnron944
+</?>
+
+[ai2TempleHalfDead]
+<h2>~rWarden</h2>
+<p>
+Argh!  How on Nimbus did you get out of that prision island!!
+
+[ai2PriestCaptured]
+<h2>~rWarden</h2>
+<p>Been the warden of this prison encampment for 15 years!  And this is the FIRST time anyone has broken out!!
+
+[ai7PriestCaptured]
+<h2>~gPrisoner</h2>
+<p>Some help please!!
+
+[ai7PriestDead]
+<$Config,atknight=0>
+$Timeout=0,DoNothing,0
+
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+You were caught trying to escape...you been sentenced to a plank walking at sunrise!
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+

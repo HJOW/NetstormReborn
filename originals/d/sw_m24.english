@@ -1,0 +1,208 @@
+*(Saved as mission24.fort & mission24.english)
+
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 24
+denySalvage=1
+myStartMoney = 0200 
+myTech = {sw_var1}{sw_var2}{sw_var3}{sw_var4}{sw_var5}{sw_var6}{sw_var7}{sw_var8}
+
+title = "Hades Altar"
+
+ai2Name = "King ~rHADES"
+ai2Tech = {sw_var1}{sw_var2}{sw_var3}{sw_var4}{sw_var5}{sw_var6}{sw_var7}{sw_var8}
+ai2StartMoney = 40000
+ai2Color = red
+ai2TimeBetweenMoves=0
+ai2BridgeDrawRate=0
+ai2Collectors=5
+ai2GeyserAttachments = 0
+ai2Off=0
+ai2Ability = "SACRIFICE_ENEMY_PRIEST;BUILD_DAIS"
+
+ai3Name = "Poor Nimbian soul"
+
+
+[init]
+<$Config,sw_m24=1>
+<$Config,sw_m1=0>
+<$Config,sw_m2=0>
+<$Config,sw_m3=0>
+<$Config,sw_m4=0>
+<$Config,sw_m5=0>
+<$Config,sw_m6=0>
+<$Config,sw_m7=0>
+<$Config,sw_m8=0>
+<$Config,sw_m9=0>
+<$Config,sw_m10=0>
+<$Config,sw_m11=0>
+<$Config,sw_m12=0>
+<$Config,sw_m13=0>
+<$Config,sw_m14=0>
+<$Config,sw_m15=0>
+<$Config,sw_m16=0>
+<$Config,sw_m17=0>
+<$Config,sw_m18=0>
+<$Config,sw_m19=0>
+<$Config,sw_m20=0>
+<$Config,sw_m21=0>
+<$Config,sw_m22=0>
+<$Config,sw_m23=0>
+<$Config,sw_m25=0>
+<$Config,sw_m30=0>
+
+
+[options]
+[A.]
+                                                <h2>Hades Altar<a href="#mission24">~[IfortGump.46]</a></h2>
+
+                                        ~[Ialtar.89]
+<br>
+                                                        ~1~yNO WAY OUT!~.<br>
+<br>
+<i>"Do not fear Death! For if you do, your soul will taunt you forever.
+Just lay back on the altar and close your eyes. Say your prayers to your
+God if you wish. for even he can't save you now. Your soul is mine!"
+<i>"There is nothing here my failing Apprentice but ~[IbombExplodeLarge.1]~kDEATH~[IbombExplodeLarge.1]<i>."
+<p>
+"Fear not for it will be over soon."~.
+<p>
+After your last mission the {sw_god5} was furious.<br>
+Yet he has a tingling up his immortal spine. For he is getting another soul.
+Not just any soul, but the soul of a Nimbus Priest. YOURS!! HAHAHA!<br>
+<p>
+
+            <a href="cmd:ShowTechnology,55"> ~[IfortGump.50] </a>                                        <a href="cmd:DoNothing,0">~[IfortGump.22] </a>                                 <a href="cmd:Tell,cantleave">~[Ipriest.13]</a><br>
+<a href="cmd:ShowTechnology,55">Review Knowledge</a>                         <a href="cmd:DoNothing,0">Onward!</a>                      <a href="cmd:Tell,cantleave">Leave quickly!</a>
+<$PlaySound,PriestStruggleFade03.wav>
+$OnExit= ,PlaySound,PriestStruggleFade01.wav
+
+$Button= ,Tell,A.
+
+[cantleave]
+Yeah, sure! Like you think the {sw_god5} is gonna let you walk right outta here?
+I don't think so! You gotta pay your dues....
+$Button=OK OK. Continue then,DoNothing,0
+
+[@2]
+<$MoveDialog,tr>
+~I"What the heck?"~., you think to yourself. ~I"What can I do with only 200 storm Crystals.
+I don't even have enough for a workshop!"
+$Button=OH OH,DoNothing,0
+
+[@10]
+<$ViewSpot,(72x67)>
+<$MoveDialog,tr>
+Hmm... Looks like hell is very busy today. Lots of souls need sacrificing. There's a few billion
+souls in front of you....
+<p>
+{sw_god5} has pulled some strings down here, however, and he's moved you up a couple of billion
+spots in the line. He assures you that you'll be next... 
+$Button=Gee thanks (I think!),DoNothing,0
+
+
+[@30]
+Wow, you never realized how busy {sw_hades} was! You have to wait for your turn
+to be sacrificed! (This is one of Hell's torments (hehe)
+$Button=Hurry it up, will ya! I only have eternity!,DoNothing,0
+
+[@60]
+The {sw_god5} pretends to whine....
+<p>
+<i>"So many souls to sacrifice, so little time...."</i>
+<p>
+$Button=This Fury is cruel!,DoNothing,0
+
+[@110]
+You brazenly speak up:
+~I"Uhh.... {sw_god5}~I, can you hurry it up some? I've been waiting to
+be sacrificed for an eternity, it seems...."
+$Button=OK,DoNothing,0
+
+[@115]
+The {sw_god5} laughs long and hard....
+<p>
+<i>"Ahh, young apprentice. So eager to encounter ~[IbombExplodeLarge.1]~kDEATH
+~[IbombExplodeLarge.1]<i>? You will wait your turn</i>
+$Button=SOMEONE GET ME OUTTA HERE!,DoNothing,0
+
+
+
+[ai1TempleHalfDead]
+The {sw_god5} cackles with glee.
+<i>"Observe how I am totally destroying all your hopes for saving yourself!"
+<p>
+"But I am not totally without pity.. hehe... here's some storm crystals for ya!"
+<p>
+"What's that, not enough? Sorry, I'm fresh out of storm crystals... hehe! Mebbe later I'll give you
+more...."
+<p>
+"Now, if you'll excuse me, I have a sacrifice to perform..."
+
+<$Changemoney,500>
+$Button=Hoo boy!,DoNothing,0
+
+[ai1TempleDead]
+The {sw_god5} cackles with glee.
+<i>"Observe how I am totally destroying all your hopes for saving yourself!"
+<p>
+"But I am not totally without pity.. hehe... here's some stormpower for ya!
+You may build yourself another temple and a workshop...."
+<$Changemoney,6000>
+$Button=Hoo boy!,DoNothing,0
+
+[ai1PriestCaptured]
+You whine and say it's not fair! You didn't have a chance!
+<p>
+The {sw_god5} erupts in insane cackling
+<p>
+<i>"HAWHAWHAW! Of course it wasn't fair! I told you, your soul is mine now.
+I'm just having some fun before I sacrifice you..."
+<p>
+"But I think you're right, it wasn't fair. You didn't have enough Storm Crystals.
+Here, take some now! HEHEHE!"</i>
+<$Changemoney,100000>
+$Button=ENOUGH!,DoNothing,0
+
+
+
+[Failed]
+                   <h2>Finally, you have been sacrificed!</h2>
+<p>
+                                     ~[Ialtar.7]
+<br>
+  At last your soul has been released! However, {sw_hades}<br>
+           now has it, and you will forever be tormented in<br>
+                   THE BOWELS OF ~r~B~[Ipriest.103]~[IsunFlyerBomb.0]HELL~[IsunFlyerBomb.2]~[Ipriest.133]~.!
+<p>
+           Unless, of course, you would like to try again?
+<$Config,sw_m1=0>
+<$Config,sw_m2=0>
+<$Config,sw_m3=0>
+<$Config,sw_m4=0>
+<$Config,sw_m5=0>
+<$Config,sw_m6=0>
+<$Config,sw_m7=0>
+<$Config,sw_m8=0>
+<$Config,sw_m9=0>
+<$Config,sw_m10=0>
+<$Config,sw_m11=0>
+<$Config,sw_m12=0>
+<$Config,sw_m13=0>
+<$Config,sw_m14=0>
+<$Config,sw_m15=0>
+<$Config,sw_m16=0>
+<$Config,sw_m17=0>
+<$Config,sw_m18=0>
+<$Config,sw_m19=0>
+<$Config,sw_m20=0>
+<$Config,sw_m21=0>
+<$Config,sw_m22=0>
+<$Config,sw_m23=0>
+<$Config,sw_m24=0>
+<$Config,sw_m25=0>
+<$Config,sw_difficulty1=0>
+$Button=OK,Tell,Campaign
+
+[END]

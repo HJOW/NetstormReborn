@@ -1,0 +1,65 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = "5"
+moreGeysers = "1"
+
+myStartMoney = "15000"
+myTech = "rainbattery;sunfence;sunblocker"
+myAllyList = ""
+
+title = "Defend"
+
+ai2Name = "DIE"
+ai2Tech = "thunderbattery;thundercannon"
+ai2StartMoney = "5000"
+ai2Collectors = "0"
+ai2BridgeDrawRate = "4"
+ai2GeyserAttachments = "2"
+ai2TimeBetweenMoves = "1"
+ai2AllyList="3;4;"
+
+ai3Name = "KILL"
+ai3Tech = "windBattery;windarcher;windaviary"
+ai3StartMoney = "15000"
+ai3Collectors = "0"
+ai3BridgeDrawRate = "4"
+ai3GeyserAttachments = "2"
+ai3TimeBetweenMoves = "1"
+ai3AllyList="2;4;
+
+ai4Name = "Santa"
+ai4Tech = "rainbattery;raincannon;rainaviary"
+ai4StartMoney = "15000"
+ai4Collectors = "0"
+ai4BridgeDrawRate = "4"
+ai4GeyserAttachments = "2"
+ai4TimeBetweenMoves = "1"
+ai4AllyList="2;3;"
+
+
+[Options]
+
+[A.]
+<h2>Command and Conquer</h2>
+<i>"This mission was so easy"<br>
+--me</i>
+<p>In a freak coincidence, you have managed to immobilise the three enemy priests at the same time as when the enemies decide to kill you, and moreover, you have nothing to defend yourself with but stone towers and sun barricades! Can you sacrifise all three priests before you succumb to your death-involving fate?
+
+
+$Button=What do I use?,ShowTechnology,55
+$Button=Why not,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>YOU ARE WINNER!</h2>
+<p>You fended them of with your powerful skills of defence! You are hailed victorius by your minions, who have gathered in millions to witness the spectacle of your victory! You are knighted the new king of Nimbus! You are great, you are very good, etc. Well done.
+
+<$Config,Done{mission.fileName}=1>
+$Button=Night night,MissionAbort,0
+
+[Failed]
+<h2>BOOM</h2>
+<p>You lost. I mean, come on, is there something you don't understand about this game?
+$Button=Sorry mate,Tell,TryAgain
+
+[END]

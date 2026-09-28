@@ -1,0 +1,82 @@
+[HEADER]
+missionType = "Tutorial"
+
+missionNumber = 2
+moreGeysers = 2
+
+myStartMoney = 5000
+myTech = "rainbattery;raincannon;rainaviary;rainballoon;rainfence;rainblocker"
+myAllyList = ""
+
+title="The warning"
+
+ai2Name = "Wind Heretic"
+ai2Tech = "windbattery;windarcher;windaviary;windballoon;windblocker"
+ai2StartMoney = 10000
+ai2GeyserAttachments = 4
+ai2Collectors=4
+Ai2TimeBetweenMoves = 4
+ai2AllyList = ""
+Ai2color = yellow
+ai2Ability="!USE_PRIEST_TO_COLLECT"
+ai2BridgeDrawRate = 4
+
+[Options]
+
+[A.]
+~[Iicon.1]<h2>**The warning**</h2>
+<i>"Eat, Sleep, then kick some ass."<br></i>
+--Captain Sachmose of the Sachmonians
+<p>
+The attack from the demons is getting closer and closer.  Many other islands of Nimbus have reported attacks by Wind, Thunder, Rain and even Sun demons.  Although the casulties are far greater of the demons than us Nimbians, the attacks are getting stronger and stronger, until one day the Attack of the millenium cometh.  Watch your back.
+<p>
+~[Imana.1]~[Imana.2]~[Imana.3]~[Imana.4]~[Imana.5]~[Imana.6]
+$Button=Availible Stuff,ShowTechnology,55
+$Button=Kick butt,DoNothing,0	
+
+[ai2TempleHalfDead]
+<h2>Message from Wind Heretic:</h2><br>
+<p>You fool!  Lord Windserge is unhappy.
+
+[ai2TempleDead]
+<h2>Message from Wind Heretic:</h2><br>
+<p>
+Next time will not be so easy...
+
+[ai2PriestCaptured]
+<h2>Message from Wind Heretic:</h2>
+<p>
+Nooooooooooooooooooooo!  I will be hung for this!
+
+[ai2PriestSaved]
+<h2>Message from Wind Heretic:</h2>
+<p>
+Yes!  The demons of the sky must have taken pity on me.
+
+[Succeeded][BadTeamDead]
+<h2>Message from Wind Heretic--</h2>
+<p>
+You Just wait, the attack is not far.
+
+<$Config,Done{mission.fileName}=2>
+$Button=I suck and i'm gonna leave,MissionAbort,1
+$Button=Go train for the attack,MissionBegin,Battle3
+
+[Failed][GoodTeamdead]
+<p>
+<h1>Ha HA HA HA HA HA HA HA HA HA....</h1>
+
+$Button=Rematch??,Tell,Tryagain
+$Button=Take a break,missionabort,1
+
+[END]
+
+
+
+
+
+
+
+
+
+

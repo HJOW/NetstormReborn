@@ -1,0 +1,304 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber =23 
+
+myStartMoney = 0
+title = "Assassination of the Furies"
+myTech="sunWalker;rainBattery;thunderBattery;windBattery"
+
+ai2Name = "Volunteer"
+ai2Tech="sunWalker"
+ai2AllyList="3;4;5;6;7;8"
+ai2Ability = "!USE_PRIEST_TO_COLLECT;!BUILD_DAIS"
+
+ai3Name = "Volunteer"
+ai3Tech="sunWalker"
+ai3AllyList="2;4;5;6;7;8"
+ai3Ability = "!USE_PRIEST_TO_COLLECT;!BUILD_DAIS"
+
+ai4Name = "Volunteer"
+ai4Tech="sunWalker"
+ai4AllyList="3;2;5;6;7;8"
+ai4Ability = "!USE_PRIEST_TO_COLLECT;!BUILD_DAIS"
+
+ai5Name = "Volunteer"
+ai5Tech="sunWalker"
+ai5AllyList="3;4;2;6;7;8"
+ai5Ability = "!USE_PRIEST_TO_COLLECT;!BUILD_DAIS"
+
+ai6Name = "Volunteer"
+ai6Tech="sunWalker"
+ai6AllyList="3;4;5;2;7;8"
+ai6Ability = "!USE_PRIEST_TO_COLLECT;!BUILD_DAIS"
+
+ai7Name = "Volunteer"
+ai7Tech="sunWalker"
+ai7AllyList="3;4;5;6;2;8"
+ai7Ability = "!USE_PRIEST_TO_COLLECT;!BUILD_DAIS"
+
+ai8Name = "Volunteer"
+ai8Tech="sunWalker"
+ai8AllyList="3;4;5;6;7;2"
+ai8Ability = "!USE_PRIEST_TO_COLLECT;!BUILD_DAIS"
+
+[init]
+<$Config,sw_m30=1>
+<$Config,sw_m1=0>
+<$Config,sw_m2=0>
+<$Config,sw_m3=0>
+<$Config,sw_m4=0>
+<$Config,sw_m5=0>
+<$Config,sw_m6=0>
+<$Config,sw_m7=0>
+<$Config,sw_m8=0>
+<$Config,sw_m9=0>
+<$Config,sw_m10=0>
+<$Config,sw_m11=0>
+<$Config,sw_m12=0>
+<$Config,sw_m13=0>
+<$Config,sw_m14=0>
+<$Config,sw_m15=0>
+<$Config,sw_m16=0>
+<$Config,sw_m17=0>
+<$Config,sw_m18=0>
+<$Config,sw_m19=0>
+<$Config,sw_m20=0>
+<$Config,sw_m21=0>
+<$Config,sw_m22=0>
+<$Config,sw_m23=0>
+<$Config,sw_m24=0>
+<$Config,sw_m25=0>
+
+
+[options]
+
+[A.]
+                                                <h2>Congratulations! <a href="#mission30">~[IfortGump.46]</a></h2>
+<br>
+You've made it all the way through the Campaign! Well done! Even when there was overwhelming odds
+ against you, and with the evil {sw_hades} betraying you in the end, you were able
+ to win your freedom!
+<p>
+Priests from all over come to welcome you! A special BULF envoy will deliver you to your
+welcoming party!
+<p>
+            ~[Ipriest.84]     ~[IBulf.76]         ~[IBulf.27]      ~[Ibulf.73]       ~[IBulf.24]         ~[IBulf.50]<br>
+Bulfs? Err you ask if there is something else to pick you up. For BULFs are slow
+ and BULFs are stoopid, and they're not comfortable to ride on.... and...
+<p>
+<i>"Nonsense!"~., declares your ally. <i>"Come join us in Celebration. Take a BULF ride over
+ to our island. Believe me, you won't regret it!"~.
+<p>
+~I"Well"~., you think to yourself. ~I"The party looks like real fun..."<br>
+                   "And it is a Celebration for me....."<br>
+"How would it look, if the Guest of Honor wasn't at his own party?"
+<p>
+~.OK! You agree to catch a ride to the Priest's island. After all, what could possibbly happen?
+ The island's only a minute away. You could walk over...
+$Button=Wait for BULF,DoNothing,0
+
+[@1]
+<$MoveDialog,tl>
+You get ready to be piced up
+
+[@4]
+Here come the BULFs now! Wow, a bunch of BULFs are coming!
+<$MoveDialog,tr>
+<$ViewSpot,(132x145)>
+<$StartSmoke,6006>
+<$StartSmoke,6040>
+<$StartSmoke,6067>
+<$StartSmoke,6068>
+<$StartSmoke,6085>
+<$StartSmoke,6086>
+<$StartSmoke,6110>
+<$StartSmoke,6140>
+<$StartSmoke,6161>
+<$StartSmoke,6177>
+$OnExit= ,PlaySound,BulfHurt.wav
+
+[@5]
+<$ViewSpot,(130x145)>
+
+[@6]
+<$ViewSpot,(128x145)>
+[@7]
+<$ViewSpot,(126x145)>
+
+[@8]
+<$StartSmoke,6006>
+<$StartSmoke,6040>
+<$StartSmoke,6067>
+<$StartSmoke,6068>
+<$StartSmoke,6085>
+<$StartSmoke,6086>
+<$StartSmoke,6110>
+<$StartSmoke,6140>
+<$StartSmoke,6161>
+<$StartSmoke,6177>
+<$ViewSpot,(124x145)>
+
+[@9]
+<$ViewSpot,(122x145)>
+
+[@10]
+<$ViewSpot,(120x145)>
+What's that smoke you see coming from the generators?
+<$MoveDialog,tl>
+$OnExit= ,PlaySound,BulfHurt.wav
+$Button=?,DoNothing,0
+
+[@11]
+<$ViewSpot,(118x145)>
+<$StartSmoke,6006>
+<$StartSmoke,6040>
+<$StartSmoke,6067>
+<$StartSmoke,6068>
+<$StartSmoke,6085>
+<$StartSmoke,6086>
+<$StartSmoke,6110>
+<$StartSmoke,6140>
+<$StartSmoke,6161>
+<$StartSmoke,6177>
+<$PlaySound,BulfHurt.wav>
+
+[@12]
+<$ViewSpot,(116x145)>
+
+[@13]
+<$ViewSpot,(114x145)>
+<$StartSmoke,6006>
+<$StartSmoke,6040>
+<$StartSmoke,6067>
+<$StartSmoke,6068>
+<$StartSmoke,6085>
+<$StartSmoke,6086>
+<$StartSmoke,6110>
+<$StartSmoke,6140>
+<$StartSmoke,6161>
+<$StartSmoke,6177>
+
+[@14]
+<$ViewSpot,(112x145)>
+<$InflictDamage,6006>
+<$InflictDamage,6040>
+<$InflictDamage,6067>
+<$InflictDamage,6068>
+<$InflictDamage,6085>
+<$InflictDamage,6086>
+<$InflictDamage,6110>
+<$InflictDamage,6140>
+<$InflictDamage,6161>
+<$InflictDamage,6177>
+
+[@15]
+<$ViewSpot,(110x145)>
+
+[@16]
+<$MoveDialog,tl>
+Ahh... BULF's ...... there's something wrong here!
+
+[@17]
+<$StartSmoke,6006>
+<$StartSmoke,6040>
+<$StartSmoke,6067>
+<$StartSmoke,6068>
+<$StartSmoke,6085>
+<$StartSmoke,6086>
+<$StartSmoke,6110>
+<$StartSmoke,6140>
+<$StartSmoke,6161>
+<$StartSmoke,6177>
+
+[@23]
+<$StartSmoke,6006>
+<$StartSmoke,6040>
+<$StartSmoke,6067>
+<$StartSmoke,6068>
+<$StartSmoke,6085>
+<$StartSmoke,6086>
+<$StartSmoke,6110>
+<$StartSmoke,6140>
+<$StartSmoke,6161>
+<$StartSmoke,6177>
+
+[@26]
+<$StartSmoke,6006>
+<$StartSmoke,6040>
+<$StartSmoke,6067>
+<$StartSmoke,6068>
+<$StartSmoke,6085>
+<$StartSmoke,6086>
+<$StartSmoke,6110>
+<$StartSmoke,6140>
+<$StartSmoke,6161>
+<$StartSmoke,6177>
+
+
+
+[@27]
+<$MoveDialog,tl>
+<$ViewSpot,(113x145)>
+~I"Ahh... BULF's ...... BULFs! Wake up! Stop already!"
+
+[@32]
+<$MeltDown,6068>
+
+
+[@34]
+<$MoveDialog,tl>
+<$ViewSpot,(111x145)>
+~I"Hey! STOP YOU DOPES! THE BRIDGE IS OUT! Put ME DOWN!"
+<$MeltDown,6085>
+
+[@36]
+<$MoveDialog,tl>
+~I"Help! These idiots aren't stopping!"~., you scream in vain as the bulfs continue
+on their way, heedless of the disaster that's about to happen...
+
+[@42]
+<$MoveDialog,tl>
+AHHH! You plummet from the sky! The last thing you remember thinking is:
+<p>~IGAWD, those BULFs are stoopid!
+$Button=Continue,DoNothing,0
+
+
+[@47]
+<$MoveDialog,tl>
+After waking up in the Hospital a week later, with just about every bone broken in your body,
+you KNEW YOU SHOULDN'T HAVE AGREED TO BE PICKED UP BY A BULF!
+<p>
+You hope you make a speedy recovery, so you can join the Celebration (which is still
+ going on!
+$Button=More,Tell,dne
+
+[dne]
+                                          This ends THE BOWELS OF ~r~[Ipriest.103]~[IsunFlyerBomb.0]HELL~[IsunFlyerBomb.2]~[Ipriest.133]~.
+<br>
+                                                     We hope you enjoyed it!
+<p>
+This is only one of a number of paths you can take in this Campaign. If you would
+ like, go to THE BOWELS OF ~r~[Ipriest.103]~[IsunFlyerBomb.0]HELL~[IsunFlyerBomb.2]~[Ipriest.133]~.
+ and select the RESET button. Then you can replay the Campaign over and try different things!
+<p>
+There are about 30 Maps in this Campaign with lots and lots of time spent making this.
+ Indeed, Highlander and I spent close to a month making it! If you have any comments or
+ (hint hint) praise, please E-mail us. We'd appreciate it!
+<p>
+                               A joint venture ~[Ipriest.101]<a href="cmd:MissionBegin,sw_m51">~[Imog.15]</a>~[Ipriest.133] by: ~B~I~ySwelbLander~.<br><br>
+                                      <a href="mailto:MVieira220@aol.com">~[Ipriest.76]swelb</a>                            <a href="mailto:kohlmp@transcom.scott.af.mil">Highlander~[Ipriest.150]</a>~.<br>
+                                ~[Iicon.6]~mNEC~[Iicon.6]~y~BBULF ~.~kin training~.>                  ~[Iicon.12]~y~BBulf~[Iicon.12]~.~kin training~.~[Iicon.4]
+$Button=LEAVE,Tell,guideHades.overview
+
+
+[Succeeded][BadTeamDead]
+You can't win this mission!
+$Button=I cheeted,DoNothing,0
+
+
+[Failed]
+You can't fail this mission!
+$Button=I cheeted,DoNothing,0
+
+[END]

@@ -1,0 +1,248 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 6
+moreGeysers = 5
+
+myStartMoney = 10000
+myTech = "sunCannon;sunBalloon;sunAviary;sunBlocker;sunFence;sunArcher;windarcher;windBattery;windballoon;windWalker;thunderbattery;thunderarcher;thunderblocker;thunderfence;rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence;rainwalker"
+myAllyList = "6;7;8"
+
+title="Dark Lords"
+
+ai2Name = "~kDark Lord~w of the ~yFuries"
+ai2Tech = "windarcher;windBattery;windaviary;windblocker;windWalker;thunderbattery;thunderarcher;thunderblocker;thundercannon;rainbattery;rainaviary;rainballoon;raincannon"
+ai2StartMoney = 100000
+ai2GeyserAttachments = 4
+ai2Collectors = 10
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3;4;5"
+ai2color = red
+ai2Ability="!USE_PRIEST_TO_COLLECT"
+ai2BridgeDrawRate = 4
+
+ai3Name = "~kDark Lord~w of ~lRain"
+ai3Tech = "rainbattery;rainaviary;rainblocker;raincannon;rainWalker;sunBlocker;sunArcher;sunBalloon"
+ai3StartMoney = 100000
+ai3GeyserAttachments = 3
+ai3Collectors = 10
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2;4;5"
+ai3color = white
+ai3Ability="!USE_PRIEST_TO_COLLECT;!ENCIRCLE_ENEMY_ISLAND"
+ai3BridgeDrawRate = 4
+
+ai4Name = "~kDark Lord~w of ~rThunder"
+ai4Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;sunBlocker;sunBalloon"
+ai4StartMoney = 100000
+ai4GeyserAttachments = 3
+ai4Collectors = 7
+ai4TimeBetweenMoves = 1
+ai4AllyList = "2;3;5"
+ai4color = green
+ai4Ability="!USE_PRIEST_TO_COLLECT"
+ai4BridgeDrawRate = 4
+
+
+ai8Name = "Duke of Thunder"
+ai8Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;sunArcher;sunBalloon;sunAviary;rainbattery"
+ai8StartMoney = 100000
+ai8GeyserAttachments = 3
+ai8Collectors = 7
+ai8TimeBetweenMoves = 1
+ai8AllyList = "1;6;7"
+ai8color = purple
+ai8Ability="!USE_PRIEST_TO_COLLECT"
+ai8BridgeDrawRate = 4
+
+ai6Name = "Govener of Sun"
+ai6Tech = "windBattery;sunCannon;sunFence;sunBalloon;sunAviary;sunBlocker;sunArcher"
+ai6StartMoney = 10000
+ai6GeyserAttachments = 3
+ai6Collectors = 7
+ai6TimeBetweenMoves = 1
+ai6AllyList = "1;8;7"
+ai6color = yellow
+ai6Ability="!USE_PRIEST_TO_COLLECT"
+ai6BridgeDrawRate = 4
+
+ai7Name = "Knight of Wind"
+ai7Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;rainbattery"
+ai7StartMoney = 10000
+ai7GeyserAttachments = 3
+ai7Collectors = 7
+ai7TimeBetweenMoves = 1
+ai7AllyList = "1;8;6"
+ai7color = cyan
+ai7Ability="!USE_PRIEST_TO_COLLECT;!ENCIRCLE_ENEMY_ISLAND"
+ai7BridgeDrawRate = 4
+
+ai5Name = "~kDark Lord ~wof ~oWind"
+ai5Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;sunBlocker;sunArcher"
+ai5StartMoney = 100000
+ai5GeyserAttachments = 3
+ai5Collectors = 7
+ai5TimeBetweenMoves = 1
+ai5AllyList = "2;3;4"
+ai5color = orange
+ai5Ability="!USE_PRIEST_TO_COLLECT"
+ai5BridgeDrawRate = 4
+
+[@1]
+<h2>~kDark Lord~w of the ~yFuries</h2>
+<p>Welcome.  
+<p>Welcome to your doom!
+
+[@2]
+<h2>~kDark Lord ~wof ~oWind</h2>
+<p>Did you think you got here on your own?
+
+[@3]
+<h2>~kDark Lord ~wof ~lRain</h2>
+<p>It gets boring being the undisputed rulers of all Nimbus.
+
+[@4]
+<h2>~kDark Lord ~wof ~rThunder</h2>
+<p>Haha time for us to have some fun by destroying the likes of you!!
+
+[@5]
+<p>It shall be us who will emerge victorious from this battle!
+
+[@6]
+<h2>~gKnight of Wind</h2>
+<p>Your reign of terror shall end this day!
+
+[@7]
+<h2>~kDark Lord ~wof ~lRain</h2>
+<p>Haha!  We shall show you our power! 
+
+[@8]
+<h2>~kDark Lord~w of the ~yFuries</h2>
+<p>We promise to make your deaths as painful as possible!  Hahaha!
+
+[@120]
+<h2>~kDark Lord ~wof ~rThunder</h2>
+<p>Give up?  Hahaha!
+
+[@121]
+<h2>~kDark Lord ~wof ~oWind</h2>
+<p>Please don't!  This is so ammusing!
+
+[@122]
+<h2>~mDuke of Thunder</h2>
+<p>Laugh while you can!  For you won't be smileing when you are bound to our alters!!!
+
+[@300]
+<h2>~kDark Lord~w of the ~yFuries</h2>
+<p>Amazing!  I'd have expected for you to perish by now.  Such a pity you resisted our rule...you would have gotten great respect for your talents.
+
+[@301]
+<h2>~mDuke of Thunder</h2>
+<p>We shall get respect once you all die by our hands!!
+
+[@302]
+<h2>~yGovenor of Sun</h2>
+<p>Never would we work for slime like you!
+
+[@303]
+<h2>~gKnight of Wind</h2>
+<p>Respect through terror?  I think not!  
+
+[@304]
+<p>Nimbians everywhere will remember this day!  The day the Dark Lords fell!!
+
+[@304]
+<h2>~kDark Lord~w of the ~yFuries</h2>
+<p>Haha!  Such words from one so young!!  You will not live to regret your decision to battle us!
+
+[Options]
+
+[A.]
+<h2>The Fall of the Dark Lords</h2>
+<i>"Everything has a weakpoint.....without it there would be no hope."<br>
+--unknown</i>  
+<p>Your chance to bring down the Dark Lords is at hand.  Your allies have distracted the Dark Lord's minions, so it is you against the Lords.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+You have done it!  The Dark Lords are dead!  Their reign of terror is over.  For now you can rest...Other battle shall arise as Nimbians surly will try to claim the throne of Nimbus for themselves...
+
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+
+[ai2PriestDead]
+<h2>Message from the Remaining ~kDark Lords</h2>
+<p>
+You may have won this battle...but we will have revenge one you.
+
+[ai2PriestCaptured]
+<h2>~kDark Lord ~wof the ~yFuries</h2>
+<p>
+Let me go!  You will not win!
+
+[ai3PriestCaptured]
+<h2>Message from the ~kDark Lord~w of ~lRain</h2>
+<p>
+You fool!  We can't be defeated...
+
+[ai3TempleDead]
+<h2>Message from the~k Dark Lord~w of ~lRain</h2>
+<p>
+How can this be!?!?
+
+[ai4TempleDead]
+<h2>Message from the ~kDark Lord~w of ~rThunder</h2>
+<p>
+No!  You will pay for this!
+
+[ai4PriestCaptured]
+<h2>~mDuke of Thunder</h2>
+<p> 
+We still have few more of them to capture....
+
+[ai8PriestDead]
+<h2>Your ally the Duke of Thunder has died!</h2>
+<p>
+Quickly taking advantage of your new weakness the Lords destroy you and your allies.
+
+$Button=Continue,Tell,TryAgain
+
+[ai6PriestDead]
+<h2>Your ally the Govener of Sun has died!</h2>
+<p>
+With your right flank exposed the Dark Lords loop around and begin to attack your island.  You are soon defeated.
+
+$Button=Continue,Tell,TryAgain
+
+[ai7PriestDead]
+<h2>Your ally the Knight of Wind has died!</h2>
+<p>
+After the Knight of wind fell the Dark Lords continued their attack on the Duke of Thunder.  Their combined efforts destroy him as well.  After a short while later you also are defeated.
+
+$Button=Continue,Tell,TryAgain
+
+[ai5TempleDead]
+<h2>~kDark Lord ~wof ~oWind</h2>
+<p>
+Curse you and your pitiful resistance!
+
+[ai5PriestDead]
+<h2>~gKnight of Wind</h2>
+<p>
+We have to finsh the others....
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+You have failed in your quest.
+
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+
+

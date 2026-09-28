@@ -1,0 +1,121 @@
+[Header]
+missionType = "Tutorial"
+missionNumber = 1
+moreGeysers = 1
+
+mystartmoney = 10000
+myTech = "windBattery;windWalker;windArcher;windBlocker;windBalloon;windAviary"
+
+title = "Scout island under attack"
+
+ai2Name = "Scout Island Delta"
+ai2Tech = "rainBalloon;rainBattery;rainBlocker;rainCannon;rainWalker;rainAviary"
+ai2StartMoney = 25000
+ai2GeysersAttachments = 15
+ai2Collectors = 15
+ai2TimeBetweenMoves = 1
+ai2AllyList = "1"
+ai2ability = "!Use_Priest_To_Collect"
+ai2color =
+ai2BridgeDrawRate = 1
+
+ai3Name = "Sergeant Chesterfield"
+ai3Tech = "windBattery;windWalker;windArcher;windBlocker;windBalloon"
+ai3StartMoney = 10000 
+ai3GeysersAttachments = 15
+ai3Collectors = 15
+ai3TimeBetweenMoves = 1
+ai3AllyList = "4"
+ai3ability = "!Use_Priest_To_Collect"
+ai3color =
+
+ai4Name = "Corporal Blutch"
+ai4Tech = "rainBalloon;rainBattery;rainBlocker;rainCannon;rainWalker"
+ai4StartMoney = 10000
+ai4GeysersAttachments = 15
+ai4Collectors = 15
+ai4TimeBetweenMoves = 1
+ai4AllyList = "3"
+ai4ability = "!Use_Priest_To_Collect;"
+ai4color =
+
+ai5Name = ""
+ai5Tech = ""
+ai5StartMoney =
+ai5GeysersAttachments =
+ai5Collectors =
+ai5TimeBetweenMoves =
+ai5AllyList = ""
+ai5ability = ""
+ai5color =
+
+ai6Name = ""
+ai6Tech = ""
+ai6StartMoney =
+ai6GeysersAttachments =
+ai6Collectors =
+ai6TimeBetweenMoves =
+ai6AllyList = ""
+ai6ability = ""
+ai6color =
+
+ai7Name = ""
+ai7Tech = ""
+ai7StartMoney =
+ai7GeysersAttachments =
+ai7Collectors =
+ai7TimeBetweenMoves =
+ai7AllyList = ""
+ai7ability = ""
+ai7color =
+
+ai8Name = ""
+ai8Tech = ""
+ai8StartMoney =
+ai8GeysersAttachments =
+ai8Collectors =
+ai8TimeBetweenMoves =
+ai8AllyList = ""
+ai8ability = ""
+ai8color =
+
+[Options]
+
+[A.]
+<h2>Scout island under attack!</h2>
+<i>"I think something is wrong here, really wrong"<br>
+--=DDC=Striker </i>  
+
+<p>After the almost forgotten victory over the Razorians, there happened little at DDC. DDC's number of Defense and Scout Islands were shrinking to a minimum because of decay. Years later, you suddenly received a message from the only Scout Island left:
+
+<p>"<I>Mayday, mayday! This is Scout Island Delta (SID)! We're under attack by a strong force of enemy islands! Please send reinforcements or we won't make it back!</I>"<BR><BR>
+
+<p>Arriving there, the scout island already was under attack. SID: "<I>Thanks for getting here in time. Without you I won't last long anymore, however. Hurry up!</I>"
+
+<p>Your mission is to rescue SID and also to find out who those attackers are.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[BadTeamDead]
+<h2>Well done!</h2>
+<p>
+Thanks for coming to the rescue! I wouldn't have made it without you! DDC has told me that Scout Islands Alpha, Beta and Zeta are going back to service!
+
+<$Config,Done{mission.filename}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,Razorianreturn2
+
+[ai2PriestDead]
+<p>SID is lost. That leaves us without Scout Islands and virtually blind against enemy attacks!
+
+$Button=Continue,Tell,TryAgain
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+You are dead! Without you, SID is lost and defeated.
+
+$Button=Continue,Tell,TryAgain
+
+[END]

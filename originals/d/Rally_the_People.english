@@ -1,0 +1,62 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 1
+
+myStartMoney = 5000
+myTech = "windBattery;sunCannon;sunFence;sunBalloon;sunAviary;sunBlocker;sunArcher"
+myAllyList = ""
+
+title="Rally_the_People"
+
+ai2Name = "Rattick"
+ai2Tech = "windBattery;sunCannon;sunFence;sunBalloon;sunAviary;sunBlocker;sunArcher"
+ai2StartMoney = 5000
+ai2GeyserAttachments = 4
+ai2Collectors = 1
+ai2TimeBetweenMoves = 10
+ai2AllyList = ""
+ai2color = red
+ai2Ability=""
+ai2BridgeDrawRate = 4
+
+
+[Options]
+
+[A.]
+<h2>Rally_the_People</h2>
+<i>"United you survive divided you die"<br>
+--Killdead the Great Nimbian Prophet</i>  
+<p>You are trying to rally the people against the Furies whose war has torn your people apart but one person will not turn against them and the Great Council will not help you unless the vote is unaminous destroy the opposed!!
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+By defeating Rattick you have won the vote of the council but the dead nimbians son Kilrathi is nowhere to be found.
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,The_Test
+
+[ai2PriestDead]
+<h2>Message from Kilrathi</h2>
+<p>
+My father Rattick has perished under your knife thus I am sworn that one day my knife shall bury itself in your heart and my father shall be avenged!!
+
+[ai2TempleDead]
+<h2>Message from Rattick</h2>
+<p>
+I will never cast my vote in your favour you will still have to kill me!!!!
+
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+Rattick has defeated you and has told the Furies what you tried to do and everyone (except Rattick)was punished severely and most died but the ones that survived will curse your name as long as they live!!
+$Button=Continue,Tell,TryAgain
+
+
+[END]

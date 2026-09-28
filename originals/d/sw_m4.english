@@ -1,0 +1,248 @@
+*1(Saved as mission4.fort & mission4.english)
+
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 4
+moreGeysers = 1
+randomGeysers = 1
+denySalvage = 1
+
+myStartMoney = {sw_mvar0} 
+myTech ="{sw_var1}{sw_var2}{sw_var9}"
+myAllylist = "2;3"
+
+
+title = "Slave to the King (Attack on Sun Village)"
+
+ai2Name = Hamic the henchman
+ai2Tech = {sw_var1}{sw_var2}
+ai2StartMoney ={sw_mvar3}
+ai2AllyList = "1;3"
+ai2Color = purple
+ai2Collectors = 4
+ai2GeyserAttachments = 2
+ai2TimeBetweenMoves={sw_mvar4}
+ai2BridgeDrawRate={sw_mvar4}
+ai2Ability = "!BUILD_DAIS;!SACRIFICE_ENEMY_PRIEST;!CAPTURE_ENEMY_PRIEST"
+
+ai3Name = Hamuc the henchman
+ai3Tech = {sw_var1}{sw_var2}{sw_var3}
+ai3StartMoney ={sw_mvar3}
+ai3AllyList = "1;2"
+ai3Color = yellow
+ai3Collectors = 4
+ai3GeyserAttachments = 2
+ai3TimeBetweenMoves={sw_mvar4}
+ai3BridgeDrawRate={sw_mvar4}
+ai3Ability = "!BUILD_DAIS;!SACRIFICE_ENEMY_PRIEST;!CAPTURE_ENEMY_PRIEST"
+
+ai4Name = Nalic, King of Sun Village
+ai4Tech = {sw_var1}{sw_var2}{sw_var3}{sw_var4}
+ai4StartMoney = {sw_mvar1}
+ai4AllyList = "5;6;7"
+ai4Color = green
+ai4Collectors = 4
+ai4GeyserAttachments = 2
+ai4TimeBetweenMoves={sw_mvar2}
+ai4BridgeDrawRate={sw_mvar2}
+ai4Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai5Name = Naloc the Sun Warrior
+ai5Tech = "{sw_var1}{sw_var2}sunWalker"
+ai5StartMoney = {sw_mvar1}
+ai5AllyList = "4;6;7"
+ai5Color = cyan
+ai5Collectors = 4
+ai5GeyserAttachments = 2
+ai5TimeBetweenMoves={sw_mvar2}
+ai5BridgeDrawRate={sw_mvar2}
+ai5Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai6Name = Nalac the Sun Warrior
+ai6Tech = "{sw_var1}{sw_var2}sunWalker"
+ai6StartMoney = {sw_mvar1}
+ai6AllyList = "4;5;7"
+ai6Color = white
+ai6Collectors = 4
+ai6GeyserAttachments = 2
+ai6TimeBetweenMoves={sw_mvar2}
+ai6BridgeDrawRate={sw_mvar2}
+ai6Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai7Name = Nalec the Sun Warrior
+ai7Tech = "{sw_var1}{sw_var2}sunWalker"
+ai7StartMoney = {sw_mvar1}
+ai7AllyList = "4;5;6"
+ai7Color = red
+ai7Collectors = 4
+ai7GeyserAttachments = 2
+ai7TimeBetweenMoves={sw_mvar2}
+ai7BridgeDrawRate={sw_mvar2}
+ai7Ability = "!USE_PRIEST_TO_COLLECT"
+
+[init]
+<$Config,sw_m4=1>
+<$Config,sw_m1=0>
+<$Config,sw_m2=0>
+<$Config,sw_m3=0>
+<$Config,sw_m5=0>
+<$Config,sw_m6=0>
+<$Config,sw_m7=0>
+<$Config,sw_m8=0>
+<$Config,sw_m9=0>
+<$Config,sw_m10=0>
+<$Config,sw_m11=0>
+<$Config,sw_m12=0>
+<$Config,sw_m13=0>
+<$Config,sw_m14=0>
+<$Config,sw_m15=0>
+<$Config,sw_m16=0>
+<$Config,sw_m17=0>
+<$Config,sw_m18=0>
+<$Config,sw_m19=0>
+<$Config,sw_m20=0>
+<$Config,sw_m21=0>
+<$Config,sw_m22=0>
+<$Config,sw_m23=0>
+<$Config,sw_m24=0>
+<$Config,sw_m25=0>
+<$Config,sw_m30=0>
+
+<$Config,sw_soundFlag=0>
+
+[options]
+[A.]
+                          <h2>Slave to the King (Attack on Sun Village)<a href="#mission4">~[IfortGump.46]</a></h2>
+                                                 ~[IsunFlyer.3]      ~[IsunFlyer.5]<br>
+                                                         ~[IsunFlyerBomb.4] <br>
+                                  ~[Ipriest.107]        ~[IsunFlyerBomb.3]~[IsunBlocker.0] ~[IsunCannon.14]~[IsunFlyerBomb.5]    ~1~y<?!{sw_difficulty1}>HARD</?><?{sw_difficulty1}>EASY</?>~.<br><br>
+<br>
+
+              <i>This is the first of many missions as the new Apprentice of Hades</i>
+<p>
+                Your first mission is to capture and kill the King of Sun Village.<br>
+  You must travel to the Realm of Sun where the only tech useful to you is sun.<br>
+
+<br>
+            <a href="cmd:ShowTechnology,55"> ~[IfortGump.50] </a>                                                  <a href="cmd:DoNothing,0">~[IfortGump.22] </a>                                            <a href="cmd:Tell,guideHades.overview">~[Ipriest.13]</a><br>
+<a href="cmd:ShowTechnology,55">Review Knowledge</a>                          <a href="cmd:DoNothing,0">Let the Killin Begin</a>                     <a href="cmd:Tell,guideHades.overview">I wanna Leave!</a>
+<$Tell,sound1>
+$OnExit= ,PlaySound,golemMove1.wav
+$Button= ,Tell,A.
+
+[sound1]
+<$Playsound,whirligigSpinSlow.wav>
+$Timeout=0,Tell,sound2
+
+[sound2]
+$Timeout=0,Tell,sound3
+
+[sound3]
+<$Playsound,whirligigSpinSlow.wav>
+$Timeout=0,Tell,sound4
+
+[sound4]
+$Timeout=0,Tell,sound5
+
+[sound5]
+<$Playsound,whirligigSpinSlow.wav>
+<$Playsound,whirligigFire-1000.wav>
+
+$Timeout=0,Tell,sound6
+
+[sound6]
+$Timeout=0,Tell,sound7
+
+[sound7]
+<$Playsound,whirligigSpinSlow.wav>
+$Timeout=0,Tell,sound8
+
+[sound8]
+<?!{sw_soundFlag}>
+<$Config,sw_soundFlag=1>
+<$Tell,sound1>
+</?>
+
+
+[@1]
+<?{sw_difficulty1}>
+<$DestroyAt,(61x107)>
+<$DestroyAt,(92x40)>
+<$DestroyAt,(124x137)>
+<$DestroyAt,(125x40)>
+<$DestroyAt,(45x136)>
+<$DestroyAt,(93x49)>
+<$DestroyAt,(77x65)>
+<$DestroyAt,(58x118)>
+<$DestroyAt,(45x128)>
+<$DestroyAt,(105x60)>
+<$DestroyAt,(108x69)>
+<$DestroyAt,(112x139)>
+<$DestroyAt,(140x43)>
+<$DestroyAt,(133x41)>
+<$DestroyAt,(142x57)>
+</?>
+<?!{sw_difficulty1}>
+<$SendBucks,2>
+<$SendBucks,2>
+</?>
+
+[@60]
+<?!{sw_difficulty1}>
+<$ChangeMoney,2000>
+<$SendBucks,5>
+<$SendBucks,5>
+</?>
+
+[@80]
+<?!{sw_difficulty1}>
+<$ChangeMoney,2000>
+<$SendBucks,6>
+<$SendBucks,6>
+</?>
+
+[@120]
+<?!{sw_difficulty1}>
+<$ChangeMoney,2000>
+<$SendBucks,7>
+<$SendBucks,7>
+</?>
+
+
+[ai4PriestDead]
+{sw_god5} laughs evilly<br>
+<i>"Ahh... my prized pet is doing quite well. I must reward you with ~yPOWER"~.
+$Menu=~ySail Skater ~[IwindWalker.23],GetTechnology,137
+
+[ai6PriestDead]
+{sw_god5} laughs evilly<br>
+<i>"Crush them all, my puppet. Keep up the Carnage and the Destruction!"</i>
+$Menu=~[IwindBlocker.2]~yWind Tower,GetTechnology,142
+
+
+
+
+[Succeeded][BadTeamDead]
+You won! You have destroyed the Sun Village and all those Wimpy Warriors!<br>
+Now, onto more destruction and Sacrifice!
+<$Config,sw_m4=0>
+<$Config,sw_m5=1>
+<$Config,sw_difficulty1=0>
+<$Config,sw_mvar0=8000>
+<$Config,sw_mvar1=3000>
+<$Config,sw_mvar2=2>
+$Button=Next mission,MissionBegin,sw_m5
+
+[Failed]
+<$Config,sw_difficulty1=1>
+<$Config,sw_mvar0=8000>
+<$Config,sw_mvar1=5000>
+<$Config,sw_mvar2=8>
+<$Config,sw_mvar3=5000>
+<$Config,sw_mvar4=2>
+You better retry this mission quickly before the {sw_god5} finds out.
+$Button=Try again,MissionBegin,sw_m4
+$Button=Leave,Tell,guideHades.overview
+
+[END]

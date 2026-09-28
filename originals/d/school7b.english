@@ -1,0 +1,58 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 7
+moreGeysers = 2
+
+myStartMoney = 500
+myTech = "windWalker;windBattery;windBlocker;windArcher;windBalloon;windAviary"
+
+title="Your Wedding!!!"
+
+ai2Name = "Lysandre"
+ai2Tech = "windWalker;windBattery;windBlocker;windArcher;windBalloon;windAviary"
+ai2StartMoney = 500
+ai2GeyserAttachments = 5
+ai2Collectors = 5
+ai2TimeBetweenMoves = 1
+ai2AllyList = "1"
+ai2color = red
+
+ai3Name = "Unknown Figure"
+ai3Tech = "windWalker;windBattery;windBlocker;windArcher;windBalloon;windAviary"
+ai3StartMoney = 3000
+ai3GeyserAttachments = 2
+ai3Collectors = 3
+ai3TimeBetweenMoves = 3
+ai3AllyList = ""
+ai3color = yellow
+
+[Options]
+
+[A.]
+<h2>Your wedding!</h2>
+<p>It has been now 5 years, and you and Lysandre are getting ~y~E~BMARRIED~.!! During the
+service, and strange Unknown Figure stood up and wants to fight you to the death!! ?? hmm... 
+might as well kill him and finish the ceremony.
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+You have defeated the Unknown Figure and you and Lysandre get married.(I will continue
+this mission when I get the time. It will be called "Helios' Return". I'm not giving
+away to much info on it yet, but hang in there, it will be out!!!!
+
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+The Unkown Figure has beaten you. It has turned out to be David, resurected from the dead!!
+He evetually gets a major makeover and marrys Lysandre. Too bad!!!
+
+$Button=Continue,Tell,TryAgain
+
+[END]

@@ -1,0 +1,66 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 2
+moreGeysers = 1
+
+myStartMoney = 50000
+myTech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;rainBattery;windBattery;thunderBattery;thunderArcher;windArcher;thunderCannon;windBlocker;windAviary"
+
+title="Big Brothers"
+
+ai2Name = "Mr. Rain"
+ai2Tech = "sunWalker;sunCannon;sunArcher;rainBattery;rainCannon;rainAviary;rainFence;rainBalloon;rainBlocker;rainWalker"
+ai2StartMoney = 6000
+ai2GeyserAttachments = 2
+ai2Collectors = 10
+ai2TimeBetweenMoves = 3
+ai2AllyList = "3,4"
+ai2color = red
+ai3Name = "Mr. Wind"
+ai3Tech = "sunWalker;sunCannon;sunArcher;windWalker;windArcher;windBlocker;windBalloon;windAviary;windBattery"
+ai3StartMoney = 6000
+ai3GeyserAttachments = 2
+ai3Collectors = 10
+ai3TimeBetweenMoves = 3
+ai3AllyList = "2,4"
+ai3color = white
+ai4Name = "Mr.Thunder"
+ai4Tech = "sunWalker;sunArcher;sunCannon;thunderBattery;thunderArcher;thunderCannon;bulf;thunderBlocker;thunderFence"
+ai4StartMoney = 6000
+ai4GeyserAttachments = 2
+ai4Collectors = 10
+ai4TimeBetweenMoves = 3
+ai4AllyList = "2,3"
+ai4color = green
+
+[Options]
+
+[A.]
+<h2>Bros. of Badness</h2>
+<i>"Hey! You messin' with my chicken?"<br>
+--Big Brother</i>
+<p>
+Kill the Brothers of Badness to rule the world of Nimbus!
+Have fun......
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+You've defeated The Brothers of Badness!
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,1
+
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+HeHe! The mean dudes just rocked your pathetic but!  Haha.
+$Button=Continue,Tell,TryAgain
+
+
+[END]

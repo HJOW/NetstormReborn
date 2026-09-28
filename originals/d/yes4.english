@@ -1,0 +1,54 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 2
+moreGeysers = 3
+
+myStartMoney = 0
+myTech = "sunWalker;sunArcher;windarcher;sunBlocker;sunBalloon;sunFence;sunCannon;thunderbattery;rainFence;rainbattery;windBattery;thunderarcher;thundercannon;rainballoon;rainblocker;raincannon;windaviary;windballoon;windblocker;windWalker"
+
+title="Jumble"
+
+ai2Name = "Fast Food Fred"
+ai2Tech = "rainFence;rainbattery;rainballoon;rainblocker;raincannon"
+ai2StartMoney = 1000
+ai2GeyserAttachments = 2
+ai2Collectors = 2
+ai2TimeBetweenMoves = 1
+ai2AllyList = ""
+ai2Bridgedrawrate = 1
+ai2ability="!USE_PRIEST_TO_COLLECT;!CONCENTRATE_FIRE;!ENCIRCLE_ENEMY_ISLAND"
+ai2color = yellow
+
+
+[Options]
+
+[A.]
+<i>~[IrainCannon.3]</i>Shadow Showdown at High Noon (on a sunday)<i>~[IsunCannon.2]</i><br>
+<i>"Oh shit, I forgot my wallet.  Mabe I'll just get a glass of water. "<br>
+                                              --General Myra Manes</i><br>
+<i>"A glass of water, I'll give you water."<br>
+                                              --Fast Food Fred</i><br>
+
+<p>How could you forget your wallet after all that.  What kind of Idiot goes out to buy dinner for a whole army then forgets to bring money.  Oh well,  if Fast Food Fred doesn't kill you, you can break into the store and take the food.<br>
+
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Leave Mission,MissionAbort,0
+$Button=Play Mission,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>Victory is Yours</h2>
+<p>Yes, you finally got the hamburger.  
+$Button=Leave Missions,MissionAbort,1
+$Button=Next Mission,MissionBegin,obelisk
+
+[Failed]
+<h2>Defeat</h2>
+<p>
+How could you die now?  Damnit get back in there.
+$Button=Continue,Tell,TryAgain
+
+
+[END]

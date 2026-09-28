@@ -1,0 +1,69 @@
+[header]
+missionType = "Tutorial"
+missionNumber = 9
+moreGeysers = 1
+myStartMoney = 12500
+myTech="outpost;thunderbattery;thundercannon;thunderarcher;thunderblocker;bulf;thunderfence;rainbattery;raincannon;rainaviary;rainblocker;rainwalker;rainballoon;rainfence"
+myAllyList = "4"
+
+ai2Name = "Kukulkan"
+ai2Tech="windbattery;windarcher;windaviary;windblocker;suncannon;sunarcher;sunwalker"
+ai2StartMoney = 8000
+ai2GeyserAttachments = 8
+ai2Collectors = 16
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3"
+
+ai3Name = "Strombringer"
+ai3Tech="windbattery;windarcher;windaviary;windwalker;windblocker;windballoon;suncannon;sunarcher;sunblocker;sunwalker;sunballoon;sunfence"
+ai3StartMoney = 10000
+ai3GeyserAttachments = 20
+ai3Collectors = 50
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2"
+
+ai4Name = "The master of the Chidory"
+ai4Tech="thunderbattery;thundercannon;thunderarcher;thunderblocker;bulf;sunwalker;windbattery;windaviary;windblocker;windwalker;windballoon"
+ai4StartMoney = 3500
+ai4GeyserAttachments = 15
+ai4Collectors = 30
+ai4TimeBetweenMoves = 1
+ai4AllyList = "1"
+
+title = "The rescue"
+
+[Options]
+[A.]
+<h2>~mThe Rescue</h2>
+<br><i>~yIncertum est quo te loco mors exspectat; itaque tu illam omni loco exspecta. 
+--Seneka<br></i>
+<p>
+While you were away, your ally was cought by surprise. He has been fighting an already lost battle. Now he has been captured,
+and he waits for you to come and rescue him...
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Let's free him!,DoNothing,0
+$Button=Bail,MissionAbort,1
+
+[@10]
+<h2>~gA message from your ally:</h2>
+<br>Master, help me, I am trapped in this accursed cage! Please help me!! I'm desperate!
+$Button=Help is on the way!,DoNothing,0
+$Button=Be strong my ally!,Tell,Ally
+
+[Ally]
+~gI'll try to hold out till you come master, just please, hurry....
+$Button=O.K.,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>~gA message from your ally:</h2>
+<br>Thank Nimbus, you've came, master.... And thank you for saving me!<br>
+$Button=Anything for a friend!,MssionBegin,LCA	
+$ButtoN=Next Mission,MissionBegin,TheGreatBattle
+$Button=Finaly...now I may rest,MisSionAbort,1
+
+[Failed]
+<h2>~rYou've failed to rescue your ally!</h2>
+$Button=Retry Mission,MissonBegin,Resque
+$Button=What ever,MissionAbort,1
+
+[End]

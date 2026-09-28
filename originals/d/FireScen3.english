@@ -1,0 +1,111 @@
+[Header]
+missionType = "Tutorial"
+missionNumber = 3
+moreGeysers = 1
+
+mystartmoney = 1000
+myTech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;windBattery;thunderbattery;rainbattery;windarcher;windaviary;windballoon;windblocker;windWalker"
+
+title = "Scumball!"
+
+ai2Name = "Balsan the Demolisher"
+ai2Tech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;windBattery;thunderbattery;rainbattery;rainaviary;rainwalker;rainballoon;rainblocker;raincannon;rainFence"
+ai2StartMoney = 12000
+ai2GeysersAttachments = 2
+ai2Collectors = 5
+ai2TimeBetweenMoves = 2
+ai2AllyList = "1"
+ai2color = red
+
+ai3Name = "Pirate Master"
+ai3Tech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;windBattery;thunderbattery;rainbattery;windarcher;windaviary;windballoon;windblocker;windWalker;thunderarcher;thunderblocker;thundercannon;thunderfence;rainaviary;rainwalker;rainballoon;rainblocker;raincannon;rainFence"
+ai3StartMoney = 10000
+ai3GeysersAttachments = 2
+ai3Collectors = 20
+ai3TimeBetweenMoves = 1
+ai3AllyList = "4;5"
+ai3color = white
+
+ai4Name = "Pirate Lord"
+ai4Tech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;windBattery;thunderbattery;rainbattery;windarcher;windaviary;windballoon;windblocker;windWalker;thunderarcher;thunderblocker;thundercannon;thunderfence;rainaviary;rainwalker;rainballoon;rainblocker;raincannon;rainFence"
+ai4StartMoney = 10000
+ai4GeysersAttachments = 2
+ai4Collectors = 20
+ai4TimeBetweenMoves = 1
+ai4AllyList = "3;5"
+ai4color = green
+
+ai5Name = "Pirate Captain"
+ai5Tech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;windBattery;thunderbattery;rainbattery;windarcher;windaviary;windballoon;windblocker;windWalker;thunderarcher;thunderblocker;thundercannon;thunderfence;rainaviary;rainwalker;rainballoon;rainblocker;raincannon;rainFence"
+ai5StartMoney = 10000
+ai5GeysersAttachments = 2
+ai5Collectors = 20
+ai5TimeBetweenMoves = 1
+ai5AllyList = "3;4"
+ai5color = magenta
+
+ai6Name = ""
+ai6Tech = ""
+ai6StartMoney = 
+ai6GeysersAttachments = 
+ai6Collectors = 
+ai6TimeBetweenMoves = 
+ai6AllyList = 
+ai6color = 
+
+ai7Name = ""
+ai7Tech = ""
+ai7StartMoney = 
+ai7GeysersAttachments = 
+ai7Collectors = 
+ai7TimeBetweenMoves = 
+ai7AllyList = 
+ai7color = 
+
+ai8Name = ""
+ai8Tech = ""
+ai8StartMoney = 
+ai8GeysersAttachments = 
+ai8Collectors = 
+ai8TimeBetweenMoves = 
+ai8AllyList = 
+ai8color = 
+
+[Options]
+
+[A.]
+<h2>Pirate Attack</h2>
+<i>~[Irainballoon.B5] <br>
+"Pirates - Why must we be troubled by such scum?"<br>
+--High Priest Firestorm, </i>  
+
+<p>After your defeat of the Shadow Reapers, you are exhausted. You have run out of Storm Power, but then new hope springs! You have found your old friend Balsan the Demolisher, a war lord and a good friend. He has much Storm Power, and he reports that a second Rift, named "Eagle Rift" for the birds that circle it, has opened in the area, and he is going to explore it. However, when Balsan returns from a scout mission, he brings bad news... someone is already harvesting from the Rift- some very nasty pirates. The ensuing battle guarantees to be nasty.
+
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[BadTeamDead]
+<h2>You have destroyed the pirates!</h2>
+<p>~[Iwindblocker.B1] <br>
+The evil pirates are beaten, their priests sacrificed. Now you must journey on, and defeat the Shadow Reapers for good.
+
+<$Config,Done{mission.filename}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,FireScen4
+
+[ai2PriestDead]
+<h2>Failure!</h2>
+<p>~[Ibulf.C3] <br>
+Oh no! Your good friend Balsan is slain!
+
+$Button=Continue,Tell,TryAgain
+
+[Failed]
+<h2>Death!</h2>
+<p>~[Ibulf.D5] <br>
+You and Balsan are defeated! The pirates are now free to plunder the rift and perhaps strike a deal with the Reapers.
+
+$Button=Continue,Tell,TryAgain
+
+[END]

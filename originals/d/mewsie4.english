@@ -1,0 +1,50 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 4
+moreGeysers = 1
+
+myName = "Apprentice"
+myStartMoney = 10000
+myTech = "thunderArcher;thunderBattery;thunderCannon;thunderFence;thunderBlocker;bulf;rainBattery;rainCannon;rainFence;rainBlocker;rainWalker;rainAviary;rainBalloon;windBattery;windArcher;windBalloon;windAviary;sunCannon;sunBalloon;sunFence;outpost"
+
+title="Out of Time"
+
+ai2Name = "Surventor"
+ai2Tech = "sunCannon;sunArcher;sunAviary;sunBalloon;sunBlocker;sunFence;outpost;thunderArcher;thunderBattery;thunderCannon;thunderFence;thunderBlocker;bulf;rainBattery;rainCannon;rainFence;rainBlocker;rainWalker;rainAviary;rainBalloon;windWalker;windBattery;windBlocker;windArcher;windBalloon;windAviary"
+ai2StartMoney = 2000
+ai2GeyserAttachments = 2
+ai2Collectors = 3
+ai2TimeBetweenMoves = 1
+ai2AllyList = ""
+ai2color = red
+
+[Ai2PriestDead]
+I... Will... Be... Avenged.... AAAAARRRRRGGGGGGHHHHH!!!!!!!!!!!!
+
+[Options]
+
+[A.]
+<h2>~[IsunFence.2]~rOut of Time~[IsunFence.2]</h2>
+<i>"Time is a strange thing, if it goes to quikly you anger if it goes to slowly you still anger."<br>
+-Mewsie, Great Nimbian Warrior</i>  
+<p>You have found your way home and were told by Mewsie to go to the far North and find a Warrior called Surventor! But watch out!! 
+
+$Button=View the Knowledge of the Old Ones,ShowTechnology,55
+$Button=Fight Surventor,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>As you reach Mewsie's castle you explain to him what has happened. Mewsie then tells you of his plans...
+<$Config,Done{mewsie4.fort}=4>
+$Button=Leave Missions,MissionAbort,0
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+You Have failed! Try again?
+
+$Button=Yes,Tell,TryAgain
+$button=No,tell,MissionAbort,0
+
+[END]

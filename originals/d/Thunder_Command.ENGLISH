@@ -1,0 +1,164 @@
+[Header]
+missionType = "Tutorial"
+missionNumber = 5
+moreGeysers = 1
+
+myStartMoney = 4000
+myTech = "sunCannon;sunArcher;sunBlocker;thunderbattery;thunderarcher;thunderblocker;thundercannon;sunBalloon"
+myAllyList = "3"
+
+title = "Thunder_Command"
+
+ai2Name = "Commander Elrik" 
+ai2Tech = "sunArcher;sunBlocker;sunBalloon;sunAviary;sunCannon;thunderbattery;thunderarcher;thunderblocker;thundercannon;" 
+ai2StartMoney = 4000
+ai2GeysersAttachments = 4
+ai2Collectors = 10 
+ai2TimeBetweenMoves = 1 
+ai2AllyList = " 4;5;6" 
+ai2color = red
+ai2BridgeDrawRate = "1"
+ai2Ability="!USE_PRIEST_TO_COLLECT"
+
+ai3Name = "Lord of sun" 
+ai3Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;sunaviary;sunballoon;sunblocker;suncannon" 
+ai3StartMoney = 3000
+ai3GeysersAttachments = 5
+ai3Collectors = 10 
+ai3TimeBetweenMoves = 1 
+ai3AllyList = " 1;2" 
+ai3color = white
+ai3BridgeDrawRate = "1"
+ai3Ability="!USE_PRIEST_TO_COLLECT"
+
+ai4Name = "Lt. Commander Kukov" 
+ai4Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;sunBalloon" 
+ai4StartMoney = 3000
+ai4GeysersAttachments = 3
+ai4Collectors = 10
+ai4TimeBetweenMoves = 2 
+ai4AllyList = " 2;5;6" 
+ai4color = green
+ai4BridgeDrawRate = "1"
+ai4Ability="!USE_PRIEST_TO_COLLECT"
+
+ai5Name = "Lt. Reindall" 
+ai5Tech = "sunArcher;sunBalloon;sunAviary;thunderBattery;thunderCannon;thunderblocker"
+ai5StartMoney = 3000
+ai5GeysersAttachments = 5
+ai5Collectors = 10
+ai5TimeBetweenMoves = 1 
+ai5AllyList = " 2;4;6" 
+ai5color = purple
+ai5BridgeDrawRate = "1"
+ai5Ability="!USE_PRIEST_TO_COLLECT"
+
+ai6Name = "Lt. Churchill" 
+ai6Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;sunBalloon" 
+ai6StartMoney = 3000
+ai6GeysersAttachments = 3
+ai6Collectors = 10 
+ai6TimeBetweenMoves = 1 
+ai6AllyList = " 2;4;5" 
+ai6color = yellow
+ai6BridgeDrawRate = "1"
+ai6Ability="!USE_PRIEST_TO_COLLECT"
+
+[@1]
+<h2>~rCommander Elrik</h2>
+<p>I am Commander Elrik of Thunder, You killed our Lord, now we shall kill you!
+
+[@2]
+<h2>~wLord of Sun</h2>
+<p>No chance! Once we kill you I shall become the Lord of Thunder!
+
+[@3]
+<h2>~wYOU</h2>
+<p>Lord of thunder..... I think that will suit you just fine!
+
+[@4]
+<h2>~yLt. Reindall</h2>
+<p>Are you as blind as well as stupid? we have you trapped, there is nowhere for you to go, your going to die and there is nothing you can do about it!
+
+[@5]
+<h2>~wLord of Sun</h2>
+<p>We will see about that!
+
+[@6]
+<h2>~rCommander Elrik</h2>
+<p>Enough babbling! Destroy them! They shall regret the day they ever set their eyes upon us!
+
+
+[Options]
+
+[A.]
+<h2>Thunder Command</h2> 
+<i>"If you have no will to survive you shall not survive!"<br> 
+--Unknown</i>
+
+<p>The high command of thunder has arrived!
+Whilst the rest of your clan is hunting down the remains of the thunder clan, You and your Lord
+have been left to battle the High command yourselfs! Destroy the High command, Sacrifice their priests!
+And let you Lord claim the title of "Lord of Thunder"!
+
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[BadTeamDead]
+<h2>Congratulations! </h2> 
+<p>You and Your Lord have defeated the High Command of Thunder! Your clan is now known as the "Thunder Clan"!
+
+<$Config,Done{mission.filename}=1> 
+$Button=Leave Missions,MissionAbort,0
+
+
+
+
+[Failed]
+<h2>Failure!</h2> 
+<p> 
+Your Entire clan were hunted down by the High command of Thunder and Your Lord is Lost!
+$Button=Continue,Tell,TryAgain
+
+
+[ai2TempleHalfDead]
+<h2>~rCommander Elrik</h2>
+<p>I wouldnt mind BUT IM UNDER ATTACK!!!!
+
+[ai3TempleHalfDead]
+<h2>~wLord of Sun</h2>
+<p>I cannot withstand this assault much longer....
+
+[ai2TempleDead]
+<h2>~wLord of Sun</h2>
+<p>Well done! This is the end for the Thunder Clan!
+
+[ai3PreistDead]
+<h2>Your Lord has been Slain!</h2>
+<p>you are forced to retreat without your Lord, the clan is now in disarray, many enemies take advantage and kill you all!
+$Button=Continue,Tell,TryAgain
+
+[ai4TempleHalfDead]
+<h2>~gLt. Commander Kukov</h2>
+<p>I am Under Attack!
+
+[ai5TempleHalfDead]
+<h2>~mLt. Reindall</h2>
+<p>Impossible!
+
+[ai5TempleDead]
+<h2>~mLt. Reindall</h2>
+<p>I bow to your military genius!
+
+[ai2PriestDead]
+<h2>~wLord of Sun</h2>
+<p>The commander is now dead, hopefully the rest of the clan will surrender and join us on pur long journey!
+
+[ai6TempleHalfDead]
+<h2>~yLt Churchill</h2>
+<p>Some assisstance required!
+
+[END] 
+
+

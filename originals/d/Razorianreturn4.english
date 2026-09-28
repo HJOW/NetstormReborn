@@ -1,0 +1,116 @@
+[Header]
+missionType = "Tutorial"
+missionNumber = 4
+moreGeysers = 1
+
+mystartmoney = 12500
+myTech = "thunderBattery;thunderFence;thunderCannon;thunderArcher;thunderBlocker;bulf"
+
+title = "Storm Transport"
+
+ai2Name = "West Storm Transport"
+ai2Tech = "windBattery;windBlocker;windArcher;windBalloon;windWalker;windAviary"
+ai2StartMoney = 2500000
+ai2GeysersAttachments = 15
+ai2Collectors = 15
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3"
+ai2ability = "!Collect_Storm_Power;!Attach_To_Enemy_Island;"
+ai2color =
+ai2BridgeDrawRate = 1
+
+ai3Name = "East Storm Transport"
+ai3Tech = "thunderBattery;thunderFence;thunderCannon;thunderArcher;thunderBlocker"
+ai3StartMoney = 2500000
+ai3GeysersAttachments = 15
+ai3Collectors = 15
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2"
+ai3ability = "!Collect_Storm_Power;!Attach_To_Enemy_Island;"
+ai3color =
+ai3BridgeDrawRate = 1
+
+ai4Name = "Wind Pirate"
+ai4Tech = "windBattery;windBlocker;windArcher;windBalloon;windWalker;windAviary"
+ai4StartMoney = 12500
+ai4eysersAttachments = 15
+ai4ollectors = 15
+ai4TimeBetweenMoves = 1
+ai4AllyList = "5"
+ai4ability = "!Use_Priest_To_Collect;!Attach_To_Enemy_Island;"
+ai4color =
+ai4BridgeDrawRate = 2
+
+ai5Name = "Rain Pirate"
+ai5Tech = "rainBattery;rainWalker;rainBalloon;rainCannon;rainAviary;rainBlocker;rainFence"
+ai5StartMoney = 12500
+ai5GeysersAttachments = 15
+ai5Collectors = 15
+ai5TimeBetweenMoves = 1
+ai5AllyList = "4"
+ai5ability = "!Use_Priest_To_Collect"
+ai5color =
+ai5BridgeDrawRate = 2
+
+ai6Name = "Lord Vlippah"
+ai6Tech = "thunderBattery;thunderFence;thunderCannon;thunderArcher;thunderBlocker;rainBattery;rainWalker"
+ai6StartMoney = 12500
+ai6GeysersAttachments = 15
+ai6Collectors = 15
+ai6TimeBetweenMoves = 1
+ai6AllyList = ""
+ai6ability = "!Use_Priest_To_Collect;"
+ai6color =
+ai6BridgeDrawRate = 2
+
+ai7Name = ""
+ai7Tech = ""
+ai7StartMoney =
+ai7GeysersAttachments =
+ai7Collectors =
+ai7TimeBetweenMoves =
+ai7AllyList = ""
+ai7ability = ""
+ai7color =
+
+ai8Name = ""
+ai8Tech = ""
+ai8StartMoney =
+ai8GeysersAttachments =
+ai8Collectors =
+ai8TimeBetweenMoves =
+ai8AllyList = ""
+ai8ability = ""
+ai8color =
+
+[Options]
+
+[A.]
+<h2>Storm Transport</h2>
+<i>"Time is money!"<br>
+--Unknown</i>  
+
+<p>The last battle took many resources from DDC. Word is, the Razorians are transporting a large shipment of Storm Power to their center. Stealing it would have two advantadges: The Razorians would lose a great amount of Storm Power, and DDC's supply will be full again.
+
+<p>Your mission is to defeat the Razorians and steal the Storm Power.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[BadTeamDead]
+<h2>Well done!</h2>
+<p>
+Great battle! Now we can try some assaults on the Razorians` center!
+
+<$Config,Done{mission.filename}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,Razorianreturn5
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+You are dead! Without the Storm Power, DDC hasn't much chance of surviving!
+
+$Button=Continue,Tell,TryAgain
+
+[END]

@@ -1,0 +1,83 @@
+[header]
+missionType = "Tutorial"
+missionNumber = 3
+moreGeysers = 1
+myStartMoney = 4000
+myTech="rainbattery;rainwalker;rainballoon;rainfence;raincannon;rainaviary;rainblocker"
+myAllyList = "3"
+
+ai2Name = "Kukulkan"
+ai2Tech="windbattery;windwalker;windblocker;windarcher;suncannon;sunballoon;windaviary"
+ai2StartMoney = 3000
+ai2GeyserAttachments = 6
+ai2Collectors = 4
+ai2TimeetweenMoves = 2
+ai2Allylist = ""
+
+ai3Name = "High Priest"
+ai3Tech="rainbattery;raincannon;rainballoon;rainwalker;suncannon;sunarcher;sunballoon;rainblocker"
+ai3StartMoney = 2000
+ai3GeyserAttachments = 8
+ai3Collectors = 10
+ai3TimeBetweenMoves = 2
+ai3Allylist = "1"
+
+title = "Alliance"
+
+[Options]
+[A.]
+<h3>Alliance</h3>
+<br><i>A good enemy is better than a bad ally<br>
+--Book of Nimbus<br></i>
+<p>
+Your ally is under attack by Kukulkan - the high Priest of Wind. Hurry and save him.
+$Button=Rewiev knowledge,Showtechnology,55
+$Button=To the rescue,DoNothing,0
+
+[@2]
+You get a message from your ally:<br>
+~I~l"We are glad that you are here, but we need stormpower to ward off the enemy,
+and we're running dangerously low. Please send us some as soon as you can spare it..."~<br>
+$Button=Sure I will,DoNothing,0
+$Button=Never,Tell,Never
+
+[Never]
+<h2>A letter form your ally</h2>
+So you refuse to send us stormpower, well if you won't send some then we are going to ally with your enemy
+and maybe we'll get some of them! You got 10 minutes to send us some!
+$Button=All right I'll send you some,DoNothing,0
+$Button=Go ahead who needs you,Tell,Who
+
+[Who]
+<h2>Another message</h2>
+The nerve, we'll pretend that we didn't hear that...
+Remember, you've got <h2>TEN MINUTES</h2>!
+$Button=Done,DoNothing,0
+
+[@120]
+Another message:<br>
+~I~l"How's the stormpower gathering coming along? You know if you'd send us some,
+we'll try to help out as we can. Cause we're not used to battle, and we fear that we may be overpowered
+very quickly. Please hurry!~<br>
+$Button=Ok I'm on it,DoNothing,0
+
+[@300]
+Your ally is getting desperate:<br>
+~I~l"They're starting to cut us away at our outer defense. We don't know how much longer we can last..~<br>
+$Button=Help is on the way,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h3>A message from your ally</h3>
+<br>~I~l"Thanks for the help, you are truly a good ally to have!~<br>
+<$Config,Done{mission.fileName}=3>
+$Button=Next Mission,MissionBegin,Thunderb
+$Button=Thank you,MissionAbort,1
+
+[Failed]
+<h3>A message from your ally</h3>
+<br>~I~d"We knew you would betray us. You're a worthless NOTHING!
+Next time, we'll be allies rather with the forces of the Wind!~<br>
+$Button=Try Again,Tell,TryAgain
+
+[End]
+

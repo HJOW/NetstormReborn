@@ -1,0 +1,16 @@
+title = "To_Become_a_God"
+
+[Overview]
+<background="nsstart">
+<h2>To_Become_a_God</h2>
+<p>You are on a mission to crush the Furies that have brought distress to Nimbus.This campaign was made by me and tell me what you think of it at c4fun@angelfire.com thanx.
+<p>
+<i>Please enjoy, the last lvls a doozie so have fun!! (Killdead)
+
+
+$Checked=1 Rally_the_People,MissionBegin,Rally_the_People,{DoneRally_the_People},1
+$Checked=2 The_Test,MissionBegin,The_Test,{DoneThe_Test},{DoneRally_the_People},1
+$Checked=3 The_Great_War,MissionBegin,The_Great_War,{DoneThe_Great_War},{DoneThe_Test},1
+$Checked=4 Fight_the_Furies,MissionBegin,Fight_the_Furies,{DoneFight_the_Furies},{DoneThe_Great_War},1
+
+$Button=Back,Tell,Campaign

@@ -1,0 +1,57 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 6
+moreGeysers = 2
+
+myStartMoney = 6500
+myTech = "rainBattery;thunderBattery;windBattery;rainCannon;rainFence;rainBlocker;rainWalker;rainAviary;rainBalloon"
+
+title="Your Fight"
+
+ai2Name = "David"
+ai2Tech = "rainBattery;rainCannon;rainFence;rainBlocker;rainWalker;rainAviary;rainBalloon"
+ai2StartMoney = 6500
+ai2GeyserAttachments = 2
+ai2Collectors = 3
+ai2TimeBetweenMoves = 3
+ai2AllyList = ""
+ai2color = red
+
+[Options]
+[A.]
+<h2>~o~E~BThe Fight</h2>
+It has been 2 months since you and Lysandre started going out, and last night you had a fight.
+David(the "coolest" kid in Fury College) tried to persuade her to go out with him.
+If you defeat David, Lysandre will take you back.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[ai2PriestCaptured]
+<h2>Message from Lysandre:</h2>
+I new you could do it. Im sorry for getting mad at you. Will you forgive me?
+$Button=Of Course!!!,DoNothing,0
+
+[ai2PriestDead]
+<h2>A message from David:</h2>
+I will ~k~BKILL ~.you, sometime!!!!
+$Button=To ~r~E~BHELL ~.with you!!!!!,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+You have destroyed David!!!! Now Lysandre has forgiven you and you are now back together!
+
+<$Config,Done{mission.fileName}=1>
+$Button=Next Mission,MissionBegin,school7b
+
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+David has killed you and is now going out with Lysandre.
+
+$Button=Continue,Tell,TryAgain
+
+[END]

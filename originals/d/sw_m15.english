@@ -1,0 +1,467 @@
+v*(Saved as mission15.fort & mission15.english)
+
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 15
+moreGeysers = 1
+randomGeysers = 1
+myStartMoney = 3000 
+myTech = {sw_var1}{sw_var2}{sw_var3}{sw_var4}{sw_var5}{sw_var6}{sw_var9} 
+ai1allylist = "2;3"
+ai1MoneyRechargeRate = 0
+aiMoneyRechargeRate = 0
+title = "Destruction of Thunder City"
+
+ai6Name = "Ambassador of Thunder City"
+ai6Tech = {sw_var1}{sw_var2}{sw_var3}{sw_var4}{sw_var7}{sw_var8}
+ai6StartMoney =10000
+ai6GeyserAttachments = 4
+ai6Collectors = 5
+ai6TimeBetweenMoves = 2
+ai6AllyList = "7;4;5"
+ai6Color =cyan 
+ai6BridgeDrawRate = 2
+ai6Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai7Name = "Guardian of Thunder City"
+ai7Tech = {sw_var1}{sw_var2}{sw_var3}{sw_var4}{sw_var7}
+ai7StartMoney =5000 
+ai7GeyserAttachments = 3
+ai7Collectors = 4
+ai7TimeBetweenMoves = 2
+ai7AllyList = "6;4;5"
+ai7Color =purple 
+ai7BridgeDrawRate = 2
+ai7Ability = "!USE_PRIEST_TO_COLLECT;!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+
+ai4Name = "Thunder Warrior 1"
+ai4Tech = {sw_var1}{sw_var2}{sw_var3}{sw_var7}
+ai4StartMoney = 3000
+ai4GeyserAttachments = 3
+ai4Collectors = 4
+ai4TimeBetweenMoves = 3
+ai4AllyList = "6;7;5"
+ai4Color = green
+ai4BridgeDrawRate = 3
+ai4Ability = "!USE_PRIEST_TO_COLLECT;!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+
+ai5Name = "Thunder Warrior 2"
+ai5Tech = {sw_var1}{sw_var3}{sw_var4}{sw_var7}
+ai5StartMoney = 3000
+ai5GeyserAttachments = 3
+ai5Collectors = 4
+ai5TimeBetweenMoves = 3
+ai5AllyList = "6;7;4"
+ai5Color = yellow
+ai5BridgeDrawRate = 3
+ai5Ability = "!USE_PRIEST_TO_COLLECT;!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+
+ai2Name = "Hades Warrior 1"
+ai2Tech = {sw_var1}{sw_var2}
+ai2StartMoney = 3000
+ai2GeyserAttachments = 3
+ai2Collectors = 3
+ai2TimeBetweenMoves = 4
+ai2AllyList = "1;3"
+ai2Color = red
+ai2BridgeDrawRate = 3
+ai2Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS;!SACRIFICE_ENEMY_PRIEST;!BUILD_DAIS;!CAPTURE_ENEMY_PRIEST"
+ai2MoneyRechargeRate = 0
+
+ai3Name = "Hades Warrior 2"
+ai3Tech = {sw_var1}{sw_var2}{sw_var3}
+ai3StartMoney = 3000
+ai3GeyserAttachments = 3
+ai3Collectors = 3
+ai3TimeBetweenMoves = 4
+ai3AllyList = "1;2"
+ai3Color = white
+ai3BridgeDrawRate = 3
+ai3Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS;!SACRIFICE_ENEMY_PRIEST;!BUILD_DAIS;!CAPTURE_ENEMY_PRIEST"
+ai3MoneyRechargeRate = 0
+
+[init]
+<$Config,sw_m15=1>
+<$Config,sw_m1=0>
+<$Config,sw_m2=0>
+<$Config,sw_m3=0>
+<$Config,sw_m4=0>
+<$Config,sw_m5=0>
+<$Config,sw_m6=0>
+<$Config,sw_m7=0>
+<$Config,sw_m8=0>
+<$Config,sw_m9=0>
+<$Config,sw_m10=0>
+<$Config,sw_m11=0>
+<$Config,sw_m12=0>
+<$Config,sw_m13=0>
+<$Config,sw_m14=0>
+<$Config,sw_m16=0>
+<$Config,sw_m17=0>
+<$Config,sw_m18=0>
+<$Config,sw_m19=0>
+<$Config,sw_m20=0>
+<$Config,sw_m21=0>
+<$Config,sw_m22=0>
+<$Config,sw_m23=0>
+<$Config,sw_m24=0>
+<$Config,sw_m25=0>
+<$Config,sw_m30=0>
+
+<$Config,sw_weapon1=0>
+<$Config,sw_weapon2=0>
+<$Config,sw_weapon3=0>
+<$Config,sw_weapon4=0>
+<$Config,sw_weapon5=0>
+<$Config,sw_weapon6=0>
+
+[options]
+[A.]
+<$Playsound,horn.wav>
+                                         <h2>Destruction of Thunder City<a href="#mission15">~[IfortGump.46]</a></h2>
+                                                       ~[IthunderBlocker.1]
+<br>                                                                                  ~1~y<?!{sw_difficulty1}>HARD</?><?{sw_difficulty1}>EASY</?>~.<br>
+
+<br>
+<i>After you rampaged Rain City and sacrificed the Ambassador you were ordered on your final preparation attack of the lands of the Furies.</i>
+<br>
+King {sw_hades} has been preparing you for his demented plot against the ~[Imanabolt.0]~[Imanabolt.1]~[Imanabolt.2]Furies.<br>
+Long ago, after the Furies created King {sw_hades} to control the Nimbian Underworld,
+ his envy of them grew. Sure, he could leave his realm just like the others
+ but only for a short period of time. Since King ~rHades~. can be killed in mortal
+ form, he travels in spiritual form. However, he must cast a spiritual changing
+ spell that will transform him after it puts him to sleep.
+ <p>
+There are 2 problems with casting this spell; his body has no defense while he
+ is sleeping and it only lasts for just under a Nimbian day. King Hades has
+ evaded his enemies by hiding himself really well while the spell is in effect.
+ <p>
+$Button=More,Tell,more
+
+[more]
+                                         <h2>Destruction of Thunder City<a href="#mission15">~[IfortGump.46]</a></h2>
+                                                       ~[IthunderBlocker.1]
+<br>                                                                                  ~1~y<?!{sw_difficulty1}>HARD</?><?{sw_difficulty1}>EASY</?>~.<br>
+<br>
+For over 1000 Nimbian years King Hades has been plotting his revenge on his fellow
+ Furies for putting him in this dark Realm of Hades. Sure, it is named after
+ him, but he can never leave like the other Furies can.
+<br>
+So, King {sw_hades} has waited and waited for that perfect ~[Ipriest.123]priest to come to him,
+one that can carry out his plot and do his evil bidding.<br>
+Then along you come - And his plot <i>awakened</i>!
+<p>
+Every Nimbian decade the Furies all get together in the Serenisphere to keep their abilities and
+ skills keen. They travl there in mortal form, by transforming into regular
+ Nimbian Priests.
+<p>
+During the last battle King Hades captured the Wind Fury and would not release
+ him. He broke the first of only two Fury rules of engagement - He sacrificed
+ him!
+<p>
+$Button=More,Tell,more2
+
+[more2]
+                                         <h2>Destruction of Thunder City<a href="#mission15">~[IfortGump.46]</a></h2>
+                                                       ~[IthunderBlocker.1]
+<br>                                                                                  ~1~y<?!{sw_difficulty1}>HARD</?><?{sw_difficulty1}>EASY</?>~.<br>
+<br>
+Now, when a Fury gets sacrificed outside of their normal form it doesn't kill
+ them, it only traps them into the last form they were in. This is how the
+ Wind Fury stayed for almost 10 whole years.
+<br>
+This is the year that the Furies battle. This is the year King {sw_hades} has
+ waited for. For this year he will have the advantage, for he has you. Now,
+ you are wondering what the second rule is - It is this: The Furies can never
+ ally with each other in their 10 Nimbian year battle.
+<p>
+So, this is the last mission before you get to meet the entire Fury clan.
+ However, before you can meet them for battle you must have all of the knowledge
+ possible to even stand a chance. This is why you must attack Thunder City,
+ to gain the rest of the knowledge. Good luck on your quest!
+<p>
+                        <a href="cmd:ShowTechnology,55"> ~[IfortGump.50] </a>                                        <a href="cmd:DoNothing,0">~[IfortGump.22] </a>                                 <a href="cmd:Tell,guideHades.overview">~[Ipriest.13]</a><br>
+              <a href="cmd:ShowTechnology,55">Review Knowledge</a>                  <a href="cmd:DoNothing,0">    Let's Do It!   </a>                  <a href="cmd:Tell,guideHades.overview">Leave HELL</a>
+$OnExit= ,PlaySound,golemMove2.wav
+$Button= ,Tell,A.
+
+
+[@1]
+<?{sw_difficulty1}>
+<$ViewSpot,(150x140)>
+<$StartSmoke,6044>
+<$StartSmoke,6058>
+<$StartSmoke,6059>
+<$StartSmoke,6119>
+<$StartSmoke,6156>
+<$StartSmoke,6248>
+<$StartSmoke,6338>
+<$StartSmoke,6526>
+<$StartSmoke,6545>
+<$StartSmoke,6558>
+<$StartSmoke,6599>
+<$StartSmoke,6665>
+<$StartSmoke,6713>
+<$StartSmoke,6757>
+<$StartSmoke,6791>
+<$StartSmoke,6814>
+
+<$StartSmoke,6002>
+<$StartSmoke,6005>
+<$StartSmoke,6007>
+<$StartSmoke,6013>
+<$StartSmoke,6025>
+<$StartSmoke,6027>
+<$StartSmoke,6029>
+<$StartSmoke,6034>
+<$StartSmoke,6036>
+<$StartSmoke,6038>
+<$StartSmoke,6041>
+<$StartSmoke,6045>
+<$StartSmoke,6048>
+<$StartSmoke,6050>
+<$StartSmoke,6758>
+<$StartSmoke,6764>
+</?>
+
+[@3]
+<?{sw_difficulty1}>
+<$MoveDialog,tr>
+The enemy has been severly damaged from the last attack!
+$Button=OK,DoNothing,0
+
+<$InflictDamage,6044>
+<$InflictDamage,6058>
+<$InflictDamage,6059>
+<$InflictDamage,6119>
+<$InflictDamage,6156>
+<$InflictDamage,6248>
+<$InflictDamage,6338>
+<$InflictDamage,6526>
+<$InflictDamage,6545>
+<$InflictDamage,6558>
+<$InflictDamage,6599>
+<$InflictDamage,6665>
+<$InflictDamage,6713>
+<$InflictDamage,6757>
+<$InflictDamage,6791>
+<$InflictDamage,6814>
+
+<$InflictDamage,6002>
+<$InflictDamage,6005>
+<$InflictDamage,6007>
+<$InflictDamage,6013>
+<$InflictDamage,6025>
+<$InflictDamage,6027>
+<$InflictDamage,6029>
+<$InflictDamage,6034>
+<$InflictDamage,6036>
+<$InflictDamage,6038>
+<$InflictDamage,6041>
+<$InflictDamage,6045>
+<$InflictDamage,6048>
+<$InflictDamage,6050>
+<$InflictDamage,6758>
+<$InflictDamage,6764>
+</?>
+
+[@5]
+<?{sw_difficulty1}>
+<$StartSmoke,6044>
+<$StartSmoke,6058>
+<$StartSmoke,6059>
+<$StartSmoke,6119>
+<$StartSmoke,6156>
+<$StartSmoke,6248>
+<$StartSmoke,6338>
+<$StartSmoke,6526>
+<$StartSmoke,6545>
+<$StartSmoke,6558>
+<$StartSmoke,6599>
+<$StartSmoke,6665>
+<$StartSmoke,6713>
+<$StartSmoke,6757>
+<$StartSmoke,6791>
+<$StartSmoke,6814>
+
+<$StartSmoke,6002>
+<$StartSmoke,6005>
+<$StartSmoke,6007>
+<$StartSmoke,6013>
+<$StartSmoke,6025>
+<$StartSmoke,6027>
+<$StartSmoke,6029>
+<$StartSmoke,6034>
+<$StartSmoke,6036>
+<$StartSmoke,6038>
+<$StartSmoke,6041>
+<$StartSmoke,6045>
+<$StartSmoke,6048>
+<$StartSmoke,6050>
+<$StartSmoke,6758>
+<$StartSmoke,6764>
+</?>
+
+
+
+[ai5PriestDead][ai4PriestDead]
+<h2>You receive a message from the {sw_god3}.</h2><br>
+<i>You will surely perish for killing one of my warriors.</i>
+$OnExit= ,Tell,showmenu
+$Button=Let's kill another,DoNothing,0
+
+[ai7PriestDead]
+<h2>Good job Ace! The Guardian of Thunder City is dead!</h2>
+<i>You have opened up the main line of attack.<br>
+You will receive a reward for this.<i>
+$OnExit= ,Tell,showmenu
+<$ChangeMoney,2000>
+$Button=OK,DoNothing,0
+
+
+[ai6PriestCaptured]
+<h2>You receive a message from the {sw_god5}</h2><br>
+<i>Sacrifice him now so we can gain the knowledge of the Thunder Fury.<br>
+I will give you some additional storm power for your bravery.</i>
+<$ChangeMoney,2000>
+$Button=OK,tell,askalliance
+
+[askalliance]
+<h2>You receive a message from Theorian!</h2>
+<i>Priest, I want us to have an alliance together!</i>
+<p>
+Will you accept his alliance and betray Hades or will you gain the last bit
+ of knowledge that you need to learn?
+$Button=I'll be your ally,Tell,AllianceBegun
+$Button=Are you crazy?,Tell NoDeal
+$Timeout=25,Tell,AllianceWithdrawn
+
+
+[AllianceBegun]
+<$Config,sw_pickally1=1>
+<$Config,sw_m15=0>
+<$Config,sw_m16=1>
+<$Config,sw_difficulty1=0>
+<$Config,sw_mvar0=4000>
+<$Config,sw_mvar1=6000>
+<$Config,sw_mvar2=5>
+<$Config,sw_mvar3=5000>
+<$Config,sw_mvar4=2>
+<$MissionBegin,sw_m16>
+
+[AllianceWithdrawn]
+<$Config,sw_pickally1=0>
+<p>You took too long to respond.  The {sw_god5}, seeing that you were deciding
+to betray him, is going to kill you now.
+<$Config,sw_m15=0>
+<$Config,sw_m24=1>
+$Button=OH NO! Hades Altar,MissionBegin,sw_m24
+
+[NoDeal]
+<$Config,sw_pickally1=0>
+
+
+[ai6PriestDead]
+The ambassador of Thunder City is dead.
+$OnExit= ,Tell,showmenu
+$Button=OK,DoNothing,0
+
+   
+[ai2PriestDead][ai3PriestDead]
+You are in serious peril for one of your allies just bit the dust.
+$Button=OK,DoNothing,0
+
+
+
+
+[showMenu]
+<$MoveDialog,tr>
+King {sw_hades} is pleased! He grants you a choice:
+<?{sw_weapon1}>$Menu=~kThunder Generator,Tell,showMenu</?>
+<?!{sw_weapon1}>$Menu=~yThunder Generator,Tell,thunderGen</?>
+<?{sw_weapon2}>$Menu=~kMad Cow (Bulf),Tell,showMenu</?>
+<?!{sw_weapon2}>$Menu=~yMad Cow (Bulf),Tell,cow</?>
+<?{sw_weapon3}>$Menu=~kArc Spire,Tell,showMenu</?>
+<?!{sw_weapon3}>$Menu=~yArc Spire,Tell,arkSpire</?>
+<?{sw_weapon4}>$Menu=~kBulwark,Tell,showMenu</?>
+<?!{sw_weapon4}>$Menu=~yBulwark,Tell,bulwark</?>
+<?{sw_weapon5}>$Menu=~kThunder Cannon,Tell,showMenu</?>
+<?!{sw_weapon5}>$Menu=~yThunder Cannon,Tell,thunderCannon</?>
+<?{sw_weapon6}>$Menu=~kVander Tower,Tell,showMenu</?>
+<?!{sw_weapon6}>$Menu=~yVander Tower,Tell,vanderTower</?>
+<$Playsound,bell.wav>
+$Button=No I don't want anything,DoNothing,0
+
+
+[thunderGen]
+<$Config,sw_weapon1=1>
+<$GetTechnology,77>
+$Timeout=0,DoNothing,0
+
+[cow]
+<$Config,sw_weapon2=1>
+<$GetTechnology,135>
+$Timeout=0,DoNothing,0
+
+[arkSpire]
+<$Config,sw_weapon3=1>
+<$GetTechnology,149>
+$Timeout=0,DoNothing,0
+
+[bulwark]
+<$Config,sw_weapon4=1>
+<$GetTechnology,79>
+$Timeout=0,DoNothing,0
+
+[thunderCannon]
+<$Config,sw_weapon5=1>
+<$GetTechnology,131>
+$Timeout=0,DoNothing,0
+
+[vanderTower]
+<$Config,sw_weapon6=1>
+<$GetTechnology,148>
+$Timeout=0,DoNothing,0
+
+
+
+
+[Succeeded][BadTeamDead]
+<h2> You've done it!</h2>
+The {sw_god5} laughs with glee!
+<p>
+<i>"Now, groveler, your true test of worth is at hand. I have coddled you like a
+child and have shown you the way of Power. You have proven.... er... tolerable.
+Indeed, you have surprised even myself that you have lasted this long, for the
+training has been slightly..... difficult for a mere mortal like yourself.
+<p>
+I will not tolerate failure now! I am too close to what I seek most of all... revenge!</i>
+<p>
+  
+<$Config,sw_m15=0>
+<$Config,sw_m17=1>
+$Button=Onto the CHOICE of the Furies!,MissionBegin,sw_m17
+
+
+
+[Failed]
+Your mind screams out in agony as you feel your body being pummeled around like a
+rag doll! The last thing you remeber is intolerable pain as it feels like your
+body is being torn to shreds....
+<p>
+After what seems like an eternity, you lose consciousness....
+<p>
+When you awake, you see an aparition of the {sw_god5} before you.
+<p>
+<i>"You disappoint me, Groveler, for I do not believe your heart is into it. So,
+I gave you a little taste of what it will feel like if you fail me again."
+<p>
+"Remember, groveler, the pain and torture will last for eternity if you fail me again!"
+<p>
+You stagger to your feet, gasping for breath. The aparition disappears, leaving
+you shaking uncontrollably. You dare not fail him again!
+<$Config,sw_difficulty1=1>
+$Button=Try again,MissionBegin,sw_m15
+
+[END]

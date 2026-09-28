@@ -1,0 +1,51 @@
+[Header]
+missionType="Tutorial"
+missionNumber = 1
+moreGeysers = 1
+myStartMoney = 2000
+myTech = "rainblocker;Raincannon;rainbattery;rainAviary"
+
+title= "Rebels!"
+
+ai2Name= "Rebel"
+ai2Tech= "sunCannon;sunArcher;sunAviary;thunderbattery;Thundercannon"
+ai2StartMoney= 2000
+ai2BridgeDrawRate= 1
+ai2GeyserAttachments = 2
+ai2Collectors = 4
+ai2TimeBetweenMoves = 1
+ai2AllyList= "0"
+ai2color= white
+
+
+[Options]
+
+[A.]
+<h2> Rebel!! <h2>
+<i> "Help!" <br>
+--Your island just went against you </i|
+<p>
+Help!! The evil thunder empire attacked us again! The thunder is too weak now
+to attack, you have hurt it good enough. But cowardly thunder people use other
+strategies. Instead of attacking you streight they made your home island
+to go away into the dark side...  Show them who is the boss.
+$Button=Review Knowledge,Show Technology,55
+$Button=PlayMission,DoNothing,0
+
+[Succeeded] [BadTeamDead]
+
+<h2> Yeppie!!!! <h2>
+<p> U  won again!!! Thunder race has just received another blow! 
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,wind
+
+[Failed]
+
+<h2> You suck!!! </h2>
+<p> I knew you could not kept your island to yourself!!!!
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+

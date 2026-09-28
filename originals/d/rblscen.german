@@ -1,0 +1,106 @@
+[Header]
+missionType = "Tutorial"
+missionNumber = 1
+moreGeysers = 1
+
+mystartmoney = 25000
+myTech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon"
+
+title = "A Cry For Hope"
+
+ai2Name = "Fortress of Valdras"
+ai2Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon"
+ai2StartMoney = 15000
+ai2GeysersAttachments = 2
+ai2Collectors = 15
+ai2TimeBetweenMoves = 4
+ai2AllyList = "3;4"
+ai2color = red
+
+ai3Name = "Northwest Attachment"
+ai3Tech = "rainbattery;rainaviary;rainwalker;rainballoon;rainblocker;raincannon;rainFence"
+ai3StartMoney = 10000
+ai3GeysersAttachments = 2
+ai3Collectors = 10
+ai3TimeBetweenMoves = 4
+ai3AllyList = "2;4"
+ai3color = white
+
+ai4Name = "Northeast Attachment"
+ai4Tech = "windBattery;windarcher;windaviary;windballoon;windblocker;windWalker"
+ai4StartMoney = 10000
+ai4GeysersAttachments = 2
+ai4Collections = 10
+ai4TimeBetweenMoves = 4
+ai4AllyList = "2;3"
+ai4color = green
+
+ai5Name = "Southeast Attachment (Rebel)"
+ai5Tech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;thunderbattery;thunderarcher;thunderblocker;thundercannon"
+ai5StartMoney = 20000
+ai5GeysersAttachments = 2
+ai5Collectors = 15
+ai5TimeBetweenMoves = 3
+ai5AllyList = "1"
+ai5color = purple
+
+ai6Name = ""
+ai6Tech = ""
+ai6StartMoney = 
+ai6GeysersAttachments = 
+ai6Collectors = 
+ai6TimeBetweenMoves = 
+ai6AllyList = 
+ai6color = 
+
+ai7Name = ""
+ai7Tech = ""
+ai7StartMoney = 
+ai7GeysersAttachments = 
+ai7Collectors = 
+ai7TimeBetweenMoves = 
+ai7AllyList = 
+ai7color = 
+
+ai8Name = ""
+ai8Tech = ""
+ai8StartMoney = 
+ai8GeysersAttachments = 
+ai8Collectors = 
+ai8TimeBetweenMoves = 
+ai8AllyList = 
+ai8color = 
+
+[Options]
+
+[A.]
+<h2>Rebellion At Valdras</h2>
+<i>"Once worshippers of Thunder start something, they always finish with a flourish."<br>
+-- High Priest of Thunder, Kalchist </i>
+
+<p>Tired of the torturing and slaughtering of innocent people by the Lord of Valdras, you and your followers have board yourselves inside your temple and declare war on the Fortress of Valdras. Friends from the Southeast Attachment of the Fortress support your cause and ally themselves with you. Together, you must conquer Valdras - for glory, for faith, for the people.
+
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[BadTeamDead]
+<h2>You have conquered Valdras!</h2>
+<p>Your people throw a celebration in your honor! With the Fortress of Valdras under your control, it is time to conquer new lands. Spies report that the Kingdom of Inasta to the east as an easy target.
+
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,1
+
+
+[ai5PriestDead]
+<h2>Your ally has fallen!</h2>
+<p>The leader of your allied Southeast Attachment has been killed by Valdras!
+
+[Failed]
+<h2>Failure...</h2>
+<p>
+Your enemies are victorious and the rebellion is crushed. The Lord of Valdras laughs as your body burns as a sacrifice to the Furies.
+
+$Button=Continue,Tell,TryAgain
+
+[END]

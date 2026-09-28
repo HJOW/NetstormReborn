@@ -1,0 +1,179 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 6
+moreGeysers = 1
+
+myStartMoney = 5400
+myTech = "sunWalker;sunArcher;sunCannon;sunBlocker;sunBalloon;sunAviary;sunFence;rainBattery;rainAviary;rainBlocker;rainBalloon;rainCannon;rainWalker;rainFence;windBattery;windBlocker;windWalker;windArcher;thunderBattery;thunderCannon;bulf;thunderArcher;thunderBlocker"
+title="Unite!"
+
+ai2Name = "Death"
+ai2Tech = "windBattery;windWalker;windArcher;windBlocker;windAviary;windBalloon"
+ai2StartMoney = 4000
+ai2GeyserAttachments = 2
+ai2Collectors = 2
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3;4;5"
+ai2color = red
+
+ai3Name = "Despair"
+ai3Tech = "rainBattery;rainAviary;rainBlocker;rainBalloon;rainCannon;rainWalker;rainFence"
+ai3StartMoney = 4000                          
+ai3GeyserAttachments = 2
+ai3Collectors = 2
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2;4;5"
+ai3color = orange
+
+
+ai4Name = "Destruction"
+ai4Tech = "thunderBattery;bulf;thunderCannon;thunderArcher;thunderBlocker"
+ai4StartMoney = 4000
+ai4GeyserAttachments = 2
+ai4Collectors = 3
+ai4TimeBetweenMoves = 1
+ai4AllyList = "2;3;5"
+ai4color = blue
+
+ai5Name = "Desecration"
+ai5Tech = "windBattery;sunBalloon;windArcher;sunArcher;sunBlocker;sunAviary;sunWalker;rainBattery;rainAviary;rainCannon;rainBlocker;rainBalloon;rainWalker;rainFence"
+ai5StartMoney = 4000
+ai5GeyserAttachments = 2
+ai5Collectors = 2
+ai5TimeBetweenMoves = 1
+ai5AllyList = "2;3;4"
+ai5color = green
+
+ai6Name = "Light"
+ai6Tech = "rainBattery;sunBalloon;sunArcher;sunBlocker;sunAviary;sunWalker"
+ai6StartMoney = 7000
+ai6GeyserAttachments = 2
+ai6Collectors = 5
+ai6TimeBetweenMoves = 3
+ai6AllyList = "1"
+ai6color = white
+
+
+
+[Options]
+
+[A.]
+                                               <i>~[IwindArcher.C1]</i> UNITE!<i>~[IWindArcher.C1]</i><br>
+<i>But, fellow Nimbians, follow me, and we can protect Nimbus from the insane desecrations!
+                                                                                  --mosquito
+<br>
+<i>Not desecrate? Not fight? But what fun would we have?<br>
+                                                                                                             --dubious Nimbian</i><br><br>
+<p>
+This is it! The four furies have sent their best disciples to stop you once and for all.
+With your small group of followers, you vow to protect the weak, helpless, and unfortunate
+Nimbians in the Stratosphere. Calling yourselves the THUNDER lords
+(<i>T</i>otally <i>H</i>armonious, <i>U</i>nited <i>N</i>imbians <i>D</i>enouncing <i>E</i>vil<br>
+ <i>R</i>ituals), you must unite together, and put an end to this carnage....<br>
+
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Leave Missions,MissionAbort,0
+$Button=Play Mission,DoNothing,0
+
+
+[ai2PriestCaptured]
+<h2>Message from Light</h2>
+<p>
+I think we have them on the run...<br>
+
+[ai3PriestCaptured]
+<h2>Message from Light</h2>
+<p>
+Keep up the good work...<br>
+
+[ai4PriestCaptured]
+<h2>Message from Light</h2>
+<p>
+Oh, great mosquito....<br>
+Show us the way to salvation....
+
+[ai5PriestCaptured]
+<h2>Message from Light</h2>
+<p>
+Oh, great mosquito....<br>
+Oh, great Messiah....<br>
+Lead us out of harm's way...<br>
+Show us the way to enlightenment....
+
+[ai6PriestCaptured]
+<h2>Message from Light</h2>
+<p>
+Oh, great mosquito....<br>
+Help us, please...<br>
+In our time of need...<br>
+We have been captured!
+
+
+
+[ai2PriestDead]
+<h2>Message from the Wind Fury</h2>
+<p>
+For the wind.....<br>
+Is no more....<br>
+It is done...<br>
+
+[ai3PriestDead]
+<h2>Message from the Rain God</h2>
+<p>
+For the rain...<br>
+Is no more....<br>
+It is done...<br>
+
+[ai4PriestDead]
+<h2>Message from the Thunder Fury</h2>
+<p>
+For the thunder...<br>
+Is no more....<br>
+It is done...<br>
+
+[ai5PriestDead]
+<h2>Message from the Furies</h2>
+<p>
+For the storm...<br>
+Is no more....<br>
+It is done...<br>
+
+[ai6PriestDead]
+<h2>Failure!</h2>
+<p>
+Your followers, the children of Light, have<br>
+been decimated by your opponents!<br>
+$Button=Continue,Tell,TryAgain
+
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+All of Nimbus rejoices in your successful victory!
+Finally, a great leader has risen up from the depths, and
+has the skill necessary to challenge even the most formidable
+of players in Multiplayerland! (well, maybe not Lurker, or Hackett,
+or Shai-Halud, or Delusional, or Havok, or Stiletto, or Spineless,
+or Wufbam!, or Fear, or...)
+<p>
+What lies ahead for the mosquito? Only time will tell...
+In the meantime, happy sacrificing!
+                                                   -swelb
+
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+
+
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+You have failed in guiding the Children of Light to victory.<br>
+Don't give up now... there is too much at stake!
+
+$Button=Continue,Tell,TryAgain
+
+
+[END]

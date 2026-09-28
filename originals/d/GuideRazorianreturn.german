@@ -1,0 +1,19 @@
+title = "Razorian Return"
+
+[Overview]
+<background="nsstart">
+<h2>Razorian Return</h2>
+After the defeat of the Razorians, things were pretty calm at <a href="http://www.crosswinds.net/eindhoven/~ddc">DDC</a>. Suddenly they're back. Bigger. Better. Can you help them out once again?</i>
+<p>
+Sequel to The Razorian War by <a href="mailto:ddc-leader@usa.net">Striker</a><br>
+
+$Checked=1 Scout island under attack!,MissionBegin,Razorianreturn,{DoneRazorianreturn},1
+$Checked=2 War Fortress,MissionBegin,Razorianreturn2,{DoneRazorianreturn2},{DoneRazorianreturn}
+$Checked=3 Surprise Attack,MissionBegin,Razorianreturn3,{DoneRazorianreturn3},{DoneRazorianreturn2}
+$Checked=4 Storm Transport,MissionBegin,Razorianreturn4,{DoneRazorianreturn4},{DoneRazorianreturn3}
+$Checked=5 Center Death,MissionBegin,Razorianreturn5,{DoneRazorianreturn5},{DoneRazorianreturn4}
+$Checked=6 Abduction!,MissionBegin,Razorianreturn6,{DoneRazorianreturn6},{DoneRazorianreturn5}
+
+$Button=Back,Tell,Campaign
+
+

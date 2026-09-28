@@ -1,0 +1,73 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 6
+moreGeysers = 3
+
+myStartMoney = 10000
+myTech ="rainwalker;raincannon;rainBattery;rainballoon;rainblocker;rainAviary;rainFence"
+
+
+title = "Captain"
+ai2Name = "Pirate Captain"
+ai2Tech ="windBattery;windWalker;windBalloon;windAviary;windArcher;windblocker;rainBattery;rainWalker;rainBalloon;rainAviary;rainBlocker;rainCannon;thunderBattery;thunderCannon;bulf;thunderArcher;thunderBlocker;thunderFence;sunCannon,sunFence;sunBalloon,sunAviary;sunBlocker;sunArcher"
+ai2StartMoney = 999999
+ai2GeyserAttachments = 30
+ai2Collectors = 30
+ai2TimeBetweenMoves = 0
+ai2Bridgedrawrate = 0
+ai2color = red
+
+
+
+
+[Options]
+
+[A.]
+<P>"Slay him you might, Slay you he might."
+
+Twinkies
+<p>This is the Final battle!!
+<p>The captain has veiwed your succsess and has prepared. He has made only a head-on attack possible.
+Slay the captain, save Nimbus and behold the Glory!
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Fight,DoNothing,0
+
+
+[ai2PriestDead]
+Nooooooo!NOOOOOOO!I can't lose!!i am the captain!!!
+I will not surrender my soul to you, or the Furys. 
+May i burn in hell before that ever happens.
+
+
+
+
+[ai2PriestCaptured]
+Oh No! I cannot lose to you! i shall fight, reclaim my priest and destroy you!
+
+
+
+
+
+
+[ai2TempleHalfDead]
+You are better then you look. You shall die quickly.
+
+
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>You have saved Nimbus from the evil pirates. You have been given a metal of honor by the Lords of Priests.
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+
+[Failed]
+<h2>Failure!</h2>
+<p>You have fallen. The captain rebuilds his forces and conquers Nimbus.
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+
+
+

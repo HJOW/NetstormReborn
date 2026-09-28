@@ -1,0 +1,17 @@
+title = "The Search For Fast Food"
+
+[Overview]
+<background="nsstart">
+   ~[Ianim.11]<c><h2>The Search For Fast Food~[Ianim.18]</h2></C>
+<p>
+
+~[Ipriest.147] ~tEditor ~mFallen_Lord~[Ipriest.100]</h3>
+<p>
+You and your crew have been assigned a simple little reconosance mission.  <c>Your Orders</c>:To provide food for one thousand hungry troops.  Luckily, there's this great place just around the corner. 
+                      
+$Checked=1 Cornered,MissionBegin,yes,{Doneyes},1
+$Checked=2 Collision,MissionBegin,yes1,{Doneyes1},{Doneyes}
+$Checked=3 Jumble,MissionBegin,yes2,{Doneyes2},{Doneyes1}
+$Checked=4 Shadow Showdown at High Noon (on a sunday),MissionBegin,yes3,{Doneyes3},{Doneyes2}
+$Checked=4 Did you want fries with that?,MissionBegin,yes4,{Doneyes4},{Doneyes3}
+$Button=Back,Tell,Campaign

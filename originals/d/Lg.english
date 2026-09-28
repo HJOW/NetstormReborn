@@ -1,0 +1,947 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 3
+
+myStartMoney = 10000
+myTech = "windarcher;windBattery;windaviary;windblocker;windWalker;sunBlocker;sunArcher;suncannon;sunarcher;sunfence;sunballoon"
+
+title="Isle of Geysers"
+
+ai1Name = "~i~EIsle of Geyser Guardian"
+ai1Tech="windarcher;windBattery;windaviary;windblocker;sunBlocker;sunArcher;suncannon;sunarcher;sunfence;sunballoon"
+ai1StartMoney = 10000
+ai1GeyserAttachments = 0 
+ai1Collectors = 5
+ai1TimeBetweenMoves = 1
+
+ai2Name = "~k~EStorm~N~.Lord"
+ai2Tech = "sunballoon;sunaviary;thunderbattery;thunderarcher;thunderblocker;thundercannon"
+ai2StartMoney = 20000
+ai2GeyserAttachments = 4
+ai2Collectors = 5
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3;4;5;6;7;8"
+ai2color = purple
+ai2Ability="!USE_PRIEST_TO_COLLECT"
+ai2BridgeDrawRate = 4
+
+ai3Name = "~y~ESun~N~. Lord"
+ai3Tech = "sunCannon;sunBalloon;sunAviary;sunBlocker;sunFence;sunArcher;thunderbattery;rainbattery;windbattery"
+ai3StartMoney = 20000
+ai3GeyserAttachments = 4
+ai3Collectors = 5
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2;4;5;6;7;8"
+ai3color = yellow
+ai3Ability="!USE_PRIEST_TO_COLLECT"
+ai3BridgeDrawRate = 4
+
+ai4Name = "~r~EThunder~N~. Lord"
+ai4Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon"
+ai4StartMoney = 20000
+ai4GeyserAttachments = 4
+ai4Collectors = 5
+ai4TimeBetweenMoves = 1
+ai4AllyList = "2;3;5;6;7;8"
+ai4color = red
+ai4Ability="!USE_PRIEST_TO_COLLECT"
+ai4BridgeDrawRate = 4
+
+ai5Name = "~l~ERain~N~. Lord"
+ai5Tech = "rainbattery;rainaviary;rainblocker;raincannon"
+ai5StartMoney = 20000
+ai5GeyserAttachments = 4
+ai5Collectors = 5
+ai5TimeBetweenMoves = 1
+ai5AllyList = "2;3;4;6;7;8"
+ai5color = purple
+ai5Ability="!USE_PRIEST_TO_COLLECT"
+ai5BridgeDrawRate = 4
+
+ai6Name = "~o~EWind~N~. Lord"
+ai6Tech = "windbattery;windarcher;windblocker;windaviary"
+ai6StartMoney = 20000
+ai6GeyserAttachments = 4
+ai6Collectors = 5
+ai6TimeBetweenMoves = 1
+ai6AllyList = "2;3;4;5;7;8"
+ai6color = yellow
+ai6Ability="!USE_PRIEST_TO_COLLECT"
+ai6BridgeDrawRate = 4
+
+ai7Name = "Minister of ~lMan o' Wars~w"
+ai7Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence;rainwalker"
+ai7StartMoney = 20000
+ai7GeyserAttachments = 4
+ai7Collectors = 5
+ai7TimeBetweenMoves = 1
+ai7AllyList = "2;3;4;5;6;8"
+ai7color = 
+ai7Ability="!USE_PRIEST_TO_COLLECT"
+ai7BridgeDrawRate = 4
+
+ai8Name = "~kThief~w"
+ai8Tech = "windaviary;windblocker;windballoon;windbattery;windarcher;suncannon;sunaviary;sunblocker;sunarcher"
+ai8StartMoney = 0
+ai8GeyserAttachments = 4
+ai8Collectors = 5
+ai8TimeBetweenMoves = 1
+ai8AllyList = "2;3;4;5;6;7"
+ai8color = green
+ai8Ability="!USE_PRIEST_TO_COLLECT"
+ai8BridgeDrawRate = 4
+
+demo = 1
+demoRestartTimer = 500
+
+[Options]
+
+[Demo] 
+<h2>~lWelcome</h2>
+<p>
+Beyond this screen is my guide to making levels.  Have fun looking up stuff, or if you like wait for the demo to start in about 10 seconds or just press the button.<br>
+~i(20 seconds on the menu past this screen)~w
+
+$Button=Start Guide,tell,Menu
+$Button=Start Demo,tell,iog
+
+$Timeout=10,tell,iog
+
+[iog]
+<i>"Infinte power is impossible...but this comes close"<br>
+--Guardian of the Isle of Geysers</i>
+<p>
+There have been many who have had the Isle of Geysers in their hands...many of them Guardians.  They were sworn to protect the Isle from anyone who wished to use it's power.  They knew well of how dangerous the Guardianship is...for they are the target for many attacks.  Although no one truly understands the power of the Isle, one thing is certain: it's ability to attract vast amounts of storm power.  
+
+$Timeout=20,DoNothing,0
+
+[Menu]
+$Menu=Basics,Tell,starter
+$Menu=Advanced Stuff,Tell,advance
+$Menu=~b~EBranching~w,Tell,branch
+$Menu=~l~EEvents~w,Tell,event
+$Menu=~i~EFormating Text~w,Tell,text
+$Menu=~m~EIcons/Tech Names~w,Tell,stuff
+$Menu=~g~EMake a Demo~w,Tell,dmake
+$Menu=~E~IImportant Stuff~w,Tell,impor
+$Menu=~rExit~w,Tell,Campaign
+$Timeout=20,tell,iog
+
+[stuff]
+$Menu=Icons~[Iicon.3],Tell,icons
+$Menu=Tech Names,Tell,tech
+
+$Menu=~rBack~w,Tell,Menu
+
+[starter]
+$Menu=Starting the Editor,Tell,one
+$Menu=Using the Editor,Tell,two
+$Menu=Troubleshooting in the Editor,Tell,three
+$Menu=Make the english file,Tell,four
+$Menu=What to do with the english file,Tell,five
+$Menu=Stuff you can use in the english file,tell,six
+$Menu=~lAI control~w,tell,seven
+$Menu=Troubleshooting for the english file,Tell,eight
+$Menu=~rBack to Main Menu~w,Tell,Menu
+
+
+[advance]
+$Menu=Placing levels in the Campain menu,Tell,nine
+$Menu=~m~EExamples~w,Tell,ten
+$Menu=Buttons,Tell,eleven
+$Menu=What the AI does,Tell,twelve
+$Menu=~i~ETips for adding character to campains~w,Tell,thirteen
+$Menu=~rBack to Main Menu~w,Tell,Menu
+
+[event]
+<p>Since I cannot use a greater than sign nor a less than sign, I will use ~mgts~w for greater than and ~mlts~w for the less than sign.  ~l(Netstorm won't let me put them on because it reads them and won't show them on the screen)~w
+$Menu=~lExplanations~w,Tell,exp
+$Menu=Triggers,Tell,star
+$Menu=Actions,Tell,act
+$Menu=Other Stuff,Tell,other
+$Menu=~iTechnology Numbers~w,Tell,technum
+$Menu=~mDisable/Enable stuff,Tell,switch
+$Menu=~rBack to Main Menu~w,Tell,Menu
+
+[dmake]
+<i>"I'd rather be a civilian and watch than a priest risking life and limb.<br>
+--Nimbian ex-priest</i>
+
+<p>Demos can add that extra spice into your campain...or you can just make one for fun.
+<p>A demo is simpler than a full level.  Why?  Because it only needs the ~l[header]~w part of the english file ~i(the ai stuff)~w and the ~l[END]~w, plus one more thing....
+<p>Under the header section add ~ldemo = 1~w and ~ldemoRestartTimer = time limit in seconds~w.  You also have to make the ~lai1~w information, but include the player info too.  The ~lai1~w tells how YOUR player will work.
+<p>To replace the ~l[A.]~w heading you use ~l[Demo]~w.  As with the [A.] you enter the theme of the level and a button to start it or a timeout trigger.
+<p>That's it!  It's done!
+
+
+[switch]
+<i>"It's as simple as a light switch....whatever that is."<br>
+--Wardjan Franer, Inventor</i>
+<p>Hello!  
+<p>You have choosen something very intresting to study my friend.  Things can be enabled or disabled!  
+<p>It's all done with this line:<br>
+~mgts~l$Config,variable=0/1~mlts~w 
+<p>and these two:<br>
+~mgts~i?~l{variable}~mlts~l and whatever here like text and stuff ~mgts~l/?~mlts~w<br>
+~mgts~i?!~l{variable}~mlts~l and whatever here like text and stuff ~mgts~l/?~mlts~w
+<p>The difference is that the ~i?~w is run when the switch is ~l1~w<br>
+While the one with the ~i!~w (~i?!~w) is run when the switch is ~l0~w
+<p>Confused?  Don't worry it's quite simple.  The ~iconfig~w is basicly an ~lon/off~w switch or flag.  Where 0 is ~roff~w and 1 is ~lon~w.  It turns off or on the variable you give the switch, which can be a ~l.fort file~w ~i(toggles access to the level using donelevelname)~w.  It can also be a name that you wish ~i(perhaps like "hidden" to represent something revealed when something special is done.)~w
+<p>Now the relevence of the other two lines is that's it's what you see if the switch is ~lon~w or ~roff~w  It's also kinda like a heading, but it's contained by ~l?'s~w  It begins with a ~mgts~l?~l{variable}~mlts~w.  Then it can be followed by text or other things that will be "~lhidden~w" untill the switch is ~lon~w.  To end the hidden heading use a ~mgts~l/?~mlts~w (Sorry about the ~mgts~l and the ~mlts~l, it's the only way I can do this so it will appear properly..for now) 
+<p>~wOh yeah you need a ~l[init]~w to initialize variables and the ViewSpot.  If you want to use variables place them under the ~l[init]~w heading.  You only need to initialize them ~lonce!~w  The value is carried over to other levels, good for keeping track of what tech or allies you have.  ~i(thanx swelb)~w  
+
+
+$Button=Back,Tell,event
+
+[other]
+<i>"Timing is everything...well it's important to say the least."<br>
+--Grendor Clockworth, Nimbian cordinator</i>
+
+<p>Here is some more intresting stuff:
+
+<p>~l[@number in seconds]~w
+
+<p>This basicly is the same as the timeout trigger, except for one detail...It works during game play.  Another thing about it that it is also a header, meaning that you can place other events under it.
+
+<p>~mgts~l$ViewSpot,(~mxaxis~lx~myaxis~l)~mlts~w
+
+<p>This centers the screen on the x, y cordinates you give it (works like an event)
+
+<p>~lmyProd="......."~w
+
+<p>Sets the production of your factories before the game starts. It uses the same Tech syntax as myTech="......"
+
+<p>~mgts~l$MoveDialog,location~mlts~w
+
+<p>This moves the message box to a certain part of the screen.  Where location is 2 characters a combination of 
+
+<p>t = top<br>
+m = middle<br>
+b = bottom<br>
+l = left<br>
+c = center<br>
+r = right
+
+<p>So, if you wanted the Dialog box in the top right corner, you'd use:<br>
+
+~mgts~l$MoveDialog,tr~mlts
+
+$Button=Back,Tell,event
+
+[impor]
+<i>"Nooo!!! not AGAIN!!!"<br>
+--Rahn, When I discover things wrong with campains.</i>
+
+<p>
+This is more of a convenece matter, but deserves attention anyway...
+<p>There are quite a few campains out there you know.  My ~ld~w directory gets quite cluttered as well as my ~lcampain~w menu if I have too many campains and levels in there.  So I like to move campains in and out of the ~ld~w directory to keeps things under control.  Do you know how inconvent it is to move a campain with level names that are compleatly different out?  For our sake keep your campain names ~B~E~lCONSISTANT!~w~N~.  For example use names like campain1, campain2, campain3 and on.  If you do insist on making your level names different, give them a common first letter or number.  ~mThanx~w
+<p>Another thing is ~lTEST~w your levels and correct any mistakes you find.  I people tend to hate mistakes in the level or campain.  Some don't know anything about making or fixing levels so that thems them in a bind.  The people who do know how to fix the mistakes don't tend to enjoy fixing the errors.  So please test your levels before you release them to the unsuspecting population.
+
+$Button=Back,Tell,Menu
+
+[text]
+<i>"Ahh the rainbow after the storm..."<br>
+--Unknown</i>  
+<p>
+Text formating is quite simple.  You just need to use a ~l~~~w before a certain letter that changes text.  You can also make text ~BBOLD~., ~Iitalic~. or ~Eembrossed~..  They can be ~B~I~ECOMBINED ~. with ~B~I~E~rC~oO~yL~gO~bR~mS  ~.So take your pick, just make sure you have the ~l~~~w after each letter.
+
+<p>
+~E~rr          ~ww<br>
+~oo          ~tt<br>
+~yy          ~jj<br>
+~gg          ~qq<br>
+~bb          ~xx<br>
+~mm         ~kk<br>
+            ~ii<br>
+            ~ll<br>
+~..  (normal color)
+<p>
+~NB = ~BBOLD<br>
+~NI = ~Iitalic<br>
+~NE = ~Eembrossed<br>
+~NN = Normal<br>
+
+$Button=Back,Tell,Menu
+
+
+
+[exp]
+<i>"One action is sure to be followed by another."<br>
+--Book of Nimbus</i>  
+<p>Ok you want to know about events?  To start off I'll use a simple example:
+<p>[ai2PriestDead]<br>
+<h2>The Priest has been sacraficed!</h2>
+<p>
+You watch as the priest goes up in flames, all the while screaming in agony...
+<p>$ Button=Ok,DoNothing,0<br>
+(no space between the $ and the Button)
+<p>
+Ok the important parts of this is the PriestDead and the button.
+<p>
+The ~lPriestDead~w part is the heading of the event.  Basicly it's an identifier. <br>
+The ~lButton part~w is an example of an action.
+<p>
+To elaborate on the actions I have made 2 sections for it...but first more about the example shown.
+<p>
+~l$ Button=Ok~w (the trigger or start button)<br>
+~l DoNothing,0~w (what the action acually does)
+
+$Button=More about Triggers,Tell,star
+$Button=More about Actions,Tell,act
+$Button=Menu,Tell,event
+
+[technum]
+<i>"Getting Knowledge of new technology from the furies through a dying priest is no easy matter..."<br>
+--Ralgh Getion, Nimbian Priest</i>  
+<p>
+Here is the list of technology that can be recieved through the GetTechnology event.
+
+
+<p>~y SUN<br>
+=====~w<br>
+  85 = Sun Workshop<br>
+133 = Golem<br>
+128 = Sun Cannon<br>
+  71 = Sun Disk Thrower<br>
+  78 = Stone Tower<br>
+136 = Sun Barricade<br>
+  72 = Whirlibase<br>
+111 = Sun Balloon</i>
+
+<p>~o WIND<br>
+======~w<br>
+123 = Wind Temple<br>
+  86 = Wind Workshop<br>
+  75 = Wind Generator<br>
+137 = Sail Skater<br>
+140 = Crossbow<br>
+142 = WindTower<br>
+139 = Devil Maker<br>
+141 = Airship</i>
+
+<p> ~lRAIN<br>
+======~w<br>
+124 = Rain Temple<br>
+  87 = Rain Workshop<br>
+  76 = Rain Generator<br>
+156 = Crystal Crab<br>
+129 = Ice Cannon<br>
+147 = Ice Tower<br>
+145 = Acid Barricade<br>
+143 = Man-O-War Pool<br>
+146 = Cloud Floater</i>
+
+<p> ~rTHUNDER<br>
+=========~w<br>
+125 = Thunder Temple<br>
+  88 = Thunder Workshop<br>
+  77 = Thunder Generator<br>
+135 = Bulf<br>
+131 = Thunder Cannon<br>
+148 = Vader Tower<br>
+  79 = Bullwark<br>
+149 = Arc Spire</i>
+
+<p> ~iNON-ALIGNED<br>
+=============~w<br>
+126 = Outpost</i>
+
+$Button=Menu,Tell,event
+
+
+
+[star]
+<i>"The hardest step is usually the first one."<br>
+--Book of Nimbus</i>  
+<p>
+All that I'm going to show you next is a list of "~ltriggers~w" for actions and a brief description.  Triggers start actions.  All of them start with a ~l$~w.
+<p>
+~B~E~mButton=Name
+<p>~wBrings up a clickable button.  The ~lName~w part determines what is going to appear on the face of the button.     
+<p>
+~B~E~mMenu=Description
+<p>~wBrings up a menu bar.  It looks like the menu you are sacraficing a priest in multiplayer.  It best used when faced with many choices and buttons would be to cumbersome.  The ~ldescription~w part is basicly is what is going to appear in the menu block.
+<p>
+~B~E~mChecked=Description
+<p>~wSimilar to the starter ~lMenu~w except that they have a number before the ~ldescription~w.
+<p>
+~B~E~mTimeout=Number
+<p>~wThis is a trigger that starts after a set amount of time, which is determined by the ~lNumber~w in seconds.
+
+$Button=Back,Tell,exp
+$Button=More about Actions,Tell,act
+$Button=Menu,Tell,event
+
+[act]
+<i>"You should finish what you start."<br>
+--Old Saying</i>  
+<p>
+This part after the trigger is what does all the work.  These have to be placed after the trigger.
+<p>
+~B~E~mGetTechnology,technumber
+<p>~wThis gives a certain piece of technology to the player.  (~lA list of the tech numbers in event menu~w)
+<p>
+~B~E~mMissionFork,number of branch
+<p>~wThis is a way of branching level.  The ~lnumber of branch~w is the the number you designated the branch mission to be.  It is done by using fork1="Name of English file" in the ~lHeader~w section.  Fork2 would be a different branch.and Fork3 and so on.
+<p>
+~B~E~mTell,heading
+<p>~wWhat tell does is bring up a heading.  You can make any heading you like...so long it does not start with a number.  All you need is [] around the header name.  I don't think there is any restriction to where you can put in the heading you make.  To be on the safe side place then after the heading ~l[A.]~w.
+
+$Button=Back,Tell,exp
+$Button=More About Triggers,Tell,star
+$Button=Menu,Tell,event
+
+
+
+[one]
+<p>~i~E1 - Starting the Editor
+<p>~i~E=================================================================================================
+<i>"You learn something new 6 days a week.....on the other you forget everything you ever learned. "<br>
+--Nimbian Proverb</i>  
+<p>Create this file in the ~ld~w directory in the Netstorm folder:  ~luser.cfg
+<p>~rMust be user.cfg, NOT user.cfg.TXT
+<p>~wOpen the file using notepad or some other text editor.  Place the following on the first line of the file:  ~lmayEditMissions=1 
+<p>~rMUST BE EXACTLY THE SAME.  CASE SENSITIVE!!
+<p>~wStart up Netstorm and a new button ~lEdit~w should appear.
+<p>
+$Button=Menu,Tell,starter
+$Button=Next,Tell,two
+
+
+[two]
+<p>~i~E2 - Using the Editor
+<p>~i~E=================================================================================================
+<i>"I think you should build the walls before putting on the roof."<br>
+--Joe Link a nimbian carpenter watching someone building a house.</i>  
+<p>Once you start the editor, you will see a window with a bunch islands at the bottom.  Click on one of the islands and place them somewhere on the playing field.  For this example only place a total of 2 islands on the playing field.  Once done click the dismiss button.  
+<p>Basicly the editor is like the actual game.  Right-click on of the two priest and use the CHEAT set-owner option.  Set the owner as computer 1.  
+<p>~m~B~EUNITS     ~[Ipriest.C2]
+<p>~wNow build a temple with each priest.  Once done you will be able use all the units in the left column.  
+<p>~[Imanabolt.0]~[Imanabolt.1]~[Imanabolt.2]~[Imanabolt.3]The units still need power to be built**~[Imanabolt.0]~[Imanabolt.1]~[Imanabolt.2]~[Imanabolt.3]
+<p>~m~B~ESTORM GEYSERS     ~[Igeyser.A0]
+<p>~wNow play around with the storm geysers.  You will notice that if you place the geysers in the sky the geyser will be colored, it will become neutral the next time you use the editor or play the level.  The AI will ALWAYS gather power if it is on their island, if they have a transport.
+<p>~m~B~ESPELLS     ~[Iburied.A0]
+<p>~wStill have no clue how spells work in spell form.  I do know something about it though.  If you leave a spell in 'spell' form and quit editing then return to it later, you will find the spell has disappeared.  This I found intresting, the spot where the spell was, is rendered ~rUNBUILDABLE!!!!  ~wI have found no way of getting rid of the spot.  I suppose this could be used to make the computer AI to build were you want it to.
+<p>~m~B~EBRIDGES     ~[Ibridge.A3]
+<p>~wTo set bridge properties choose the ~ledit~w menu and click on the ~lset all bridge> ~wand choose and option.  Dust Devils or many explosions will eventually destroy a hardened bridge.
+<p>~m~B~EHELPFUL HINTS
+<p>~wUse the ~lCtrl ~wbutton to change properties of the bridges indivdually and to change the owner of units.
+<p>If an island is too small then destroy the settlement inside the island to make room.
+<p>If an island shape is not to your liking click the dissmis button, then use the add island menu again.  Island will change every time you use the add island menu.  ~y(I think the program that makes multiplayer islands lies in the editor)  ~i(Only the borders of the island change, not the island's overall shape)
+<p>~r*****Once an island is placed it CANNOT be removed to my knowledge*****
+<p>
+$Button=Menu,Tell,starter
+$Button=Back,Tell,one
+$Button=Next,Tell,three
+
+[three]
+<p>~i~E3 - Troubleshooting in the Editor
+<p>~i~E=================================================================================================
+<i>"We need more powder!!"<br>
+--Joe Valen a priest and the inventor of the Sun Cannon (after blowing up his 12th cannon)</i>  
+<p>Ok the makers of Netstorm had and editor, but it's not very user friendly in some aspects.  I will tell how to avoid causing the editor crash.  Plus some other stuff.  The editor may still crash regardless of what you do.  So I'd suggest saving often.
+<p>~m~B~ETOO MANY ISLANDS
+<P>~wThe editor has a ~lsurface area~w limit as I call it.  The edtior will crash after you have placed too many islands.  So if you want place many small islands if you want 8 players to have their own island.  You can have four big islands on the play field, the fifth causes the editor to crash.  The ~lsurface area~w is around 35 ~lsquares~w of island.
+<p>~m~B~EUNIT BASE ISLAND STAYS WHEN SALVAGED
+<p>~wThis happens when you change the owner of the island before salvaging it, or with Ice Towers.  If the isle remains, it may cause the editor to crash.  To get rid of the island place a new unit on the island and save it.  Once done reopen the level and salvage the unwanted island.
+<p>~m~B~ETESTING THE GAME	
+<p>~wYou can't test the level without an engish file.  How to make one is in the next section. 
+<p>~m~B~EPRIEST WON'T BUILD
+<p>~wFirst make sure the priest you are using to build something has no ~lclones~i (other priests that are the same color)~w  Unlike other games using ~lbuilders~w the closest priest does NOT always build the building.  So if the priest that is the designated builder is isolated on a different island, the building will not be built.  If this doesn't work, move the priest and try again.
+<p>~m~B~ESTUFF ON ISLAND DISAPPEARS WHEN TESTED
+<p>~wThis problem occurs when the units are on the island and the island has no temple.  The only unit you can have on the island is flyers and a priest.  I think if anything else is on the island they get erased.
+<p>
+$Button=Menu,Tell,starter
+$Button=Back,Tell,two
+$Button=Next,Tell,four
+
+[four]
+<p>~i~E4 - Make the english file
+<p>~i~E=================================================================================================
+<i>"How to enchant wood for bridges step 1 - Find some trees."<br>
+--Nimbian book for making bridges</i>
+<p>~wFor a level to work you need a fort file and an english file.  
+<p>For this example I will use the name ~ltest~w.
+<p>Using a text editor save a file as test.english.  Rename the fort file you have made to ~ltest~w.  All these files should be in the ~ld~w directory.
+<p>
+<p>Total files:
+<p>~l1)test.fort
+<p>2)test.english~w
+<p>~rTHE ENGLISH FILE MUST BE IN A TEXT ONLY FORMAT
+<p>~wWord or some other programs that allows anything other than text may mess up the file.
+<p>
+$Button=Menu,Tell,starter
+$Button=Back,Tell,three
+$Button=Next,Tell,five
+
+[five]
+<p>~i~E5 - What to do with the english file
+<p>~i~E=================================================================================================
+<i>"If a man falls off an island with no one to hear, does he scream?"<br>
+--Unknown</i>
+<p>I have made a template for the english file.  Just open the file ~ltemplate.english ~w and use it's contents in other english files.  In this case copy everything to ~ltest.english~w
+
+$Button=Menu,Tell,starter
+$Button=Back,Tell,four
+$Button=Next,Tell,six
+
+[six]
+<p>~i~E6 - Stuff you can use in the english file
+<p>~i~E=================================================================================================
+<i>"What good does a book do if a person can't read?"<br>
+--Neral Felel a Nimbian Librarian</i>
+<p>This is a basic english format.
+<p>~l[Header]<br>
+~lmissionType = "Tutorial"~i____~wDon't know what this does.<br>
+~lmissionNumber = 1~i____________~wused for numbering campains<br>
+~lmoreGeysers = 1~i______________~w0 means no new geysers will appear ~i(I think other numbers determines where the geysers appear).<br>
+~lmyStartMoney = 5000~i__________~wyour start cash ~i(DUH)~w<br>
+~lmyTech = ""~i__________________~wyour tech ~i(see the tech section)~w<br>
+~lmyAllyList = ""~i______________~wyour allies<br>
+~ltitle="Test"~i_________________~wThe name of this level	<br>
+~lai2Name = "Test Dummy"~i_______~wSets the name for the computer AI<br>
+~lai2Tech = ""~i_________________~wComputer tech<br>
+~lai2StartMoney = 5000~i_________~wComputer cash<br>
+~lai2GeyserAttachments = 4~i_____~wI think it determines how many geysers the AI connects to. <br>
+~lai2Collectors = 1~i____________~wHow many transports the computer will build<br>
+~lai2TimeBetweenMoves = 10~i_____~wHow fast the computer "thinks" ~i(the lower the number the faster it moves and responds)<br>
+~lai2AllyList = ""~i_____________~wThe computer's friends<br>
+~lai2color = red~i_______________~wcolor of the AI player ~i(red blue yellow orange white and green are the known colors, I'm not sure about the others)<br>
+~lai2Ability=""~i________________~wrestricts some computer abilities<br>
+~lai2BridgeDrawRate = 4~i________~wI suppect this sets the speed at which the computer places bridges.  I think as with the ai#TimeBetweenMoves the lower the number the faster bridges are placed.<br>
+~l[Options]~i____________________~wDon't know what this does<br>
+~l[A.]~i_________________________~wPlace for mission story<br>
+~l[Succeeded][BadTeamDead]~i_____~wevent~y(win)~w<br>
+~l[Failed]~i_____________________~wevent~r(lose)~w<br>
+~l[END]~i________________________~wend of english file</i>
+<p>
+$Button=Menu,Tell,starter
+$Button=Back,Tell,five
+$Button=Next,Tell,seven
+
+
+[seven]
+<p>~i~E7 - AI control
+<p>~i~E=================================================================================================
+<i>"Rules were made for a reason....but it will take all they have to enforce it."<br>
+--Jalad Pulf a Nimbian General</i>
+<p>You can stop the computer from doing various things.
+<p>~y**~wyou need a ~l! ~wbefore the using one of these titles~y**
+<p>~m~EFOCUS_ON_THINGS_THAT_ATTACK_BUILDINGS
+<p>~wWhen a Temple or Workshop is attack, the AI creates a ~lhate list ~wand will preferentially attack things on that list. Notting this item will stop that behavior.
+<p>~m~EBUILD_BLOCKERS_WHEN_BUILDINGS_HARMED
+<p>~wWhen a Temple or Workshop is attacked, the AI will look through its tech list and, if it finds a blocker, it will try to build blockers preferentially as the next thing it builds. Notting this ability will stop that behavior.
+<p>~m~EATTACH_TO_ENEMY_ISLAND
+<p>~wOnce the AI has built up sufficient Storm Power, it will always try to attach to its Enemy's island, only giving up after it has been stymied for about twenty seconds. Notting this item stops that, often futile, behavior.
+<p>~m~ESTOP_COLLECTING_FROM_DANGEROUS_GEYSERS
+<p>~wIf a unit is killed while collecting, then its geyser is marked as ~rdangerous ~wand won't be collected from until absolutely necessary.
+<p>~m~ECOLLECT_STORM_POWER
+<p>~wAllows the AI to collect Storm Power. If you want it to have to use only its starting reserves, NOT this item.
+<p>~m~EENCIRCLE_ENEMY_ISLAND
+<p>~wA general tactic of the AI is to attempt to encircle the enemy island with bridges in order to create platforms from which to launch attacks. Notting this will stop that behavior.
+<p>~m~ECONCENTRATE_FIRE
+<p>~wWhile choosing its next target the AI normally gives slightly preferential treatment to attacking the same thing it attacked last time in order to ensure its death. When you NOT this object, that preference is no longer calculated.
+<p>~m~EREPEAT_SUCCESSFUL_DROPS
+<p>~wThe AI drops things by going through its tech list, object by obect, and trying to find a good place to put the object. ~i(This is why bulky tech lists are a bad thing) ~wIf it manages to drop something, this item makes it likely to stick with it and try to drop the same thing again. Notting it stops the behavior, and the AI will just move on to the next item in the list every time.
+<p>~m~ECAPTURE_ENEMY_PRIEST
+<p>~wNOT this if you don't want to allow the AI to capture the priests of its enemies.
+<p>~m~EBUILD_DAIS
+<p>~wIf you don't want the AI to be able to build its own Altar, then NOT this.
+<p>~m~ESACRIFICE_ENEMY_PRIEST
+<p>~wIf you don't want the AI to be able to sacrifice enemies it captures, then NOT this. Very handy for kidnapping scenarios.
+<p>~m~EUSE_PRIEST_TO_COLLECT
+<p>~wNormally the AI will use its Priest to collect Storm Power when money is getting low. NOT this item in order to keep the priest at home.
+<p>~m~EBUILD_BRIDGES
+<p>~wIf you want to stop the AI from building bridges of any kind, NOT this.
+<p>~y***~wthis info is here thanx to ~l~EInvisible Man~y***
+<p>~y***~walso the fact I didn't want to reword all this stuff and I wanted to give the credit to the right person~y***
+<p>
+$Button=Menu,Tell,starter
+$Button=Back,Tell,six
+$Button=Next,Tell,eight
+
+
+[eight]
+<p>~i~E8 - Troubleshooting for the english file
+<p>~i~E=================================================================================================
+<i>"Get some glue!!"<br>
+--Wolk Arit, member of the R.I.T. (Repair Islands Today)</i>
+<p>English file don't work?  Ok here is some stuff I found that prevents a level from working.
+
+
+<p>OK there are two basic errors to contend with:
+<p>~l1) The english file itself.   ~i(Doesn't run the level at all)
+<p>~wThis means there is no english file, engish file name doesn't match the fort file or the english file is not in text only format.
+<p>~l2) Stuff inside the engish file.   ~i(Runs the level but crashes before it starts)
+<p>~wAi names too long, tech is declared wrong ~i(test the level first without any tech.  This tells you if everything else works fine)~w, the other stuff is wrong.
+<p>~m~EAI NAME TOO LONG
+<p>~wThe AI name must be a certain lenth or less.  I think the lenth of name can be up to 27 characters give or take a couple of characters.  ~i(size of character determines how many you can have...maybe)
+<p>~m~ETECH NOT DECLARED RIGHT
+<p>~wIncorrectly declared tech may cause problems.  Make sure that they are not misspelled and grouped together ~i(rain beside rain and wind beside wind etc.)
+<p>~m~E[A.][Succeeded][BadTeamDead] or [Failed] ARE NOT DONE RIGHT
+<p>~wYou have to make sure that these are done right.  In order and not mispelled.
+<p>~m~ETEXT FORMAT ONLY NEEDED (BATTERIES NOT INCLUDED)
+<p>~wThe engish file MUST be in text only format.  Other formats messes the file up.
+<p>
+$Button=Menu,Tell,starter
+$Button=Back,Tell,seven
+
+
+
+[nine]
+<p>~i~E9 - Placing levels in the Campain menu
+<p>~i~E=================================================================================================
+<i>"You forgot WHAT?!?"<br>
+--Palo Uhn a Nimbian General when a crew member forgot the retraints for a captured priest.</i>
+
+<p>So you have the level done.  It works right?  Here's how to get the level to appear in the campain menu:
+
+<p>~l1)~wcreate an english file called ~lguidetest~w.  The ~lguide~w part of the name is needed always to ID the english files as a campain menu, NOT a level.
+<p>~l2)~wopen up the ~lguidelevel.english ~wfile and copy the top part up to the ~lversion number~w and the ~l$=Checked~w section down.  Then place it into the ~lguidetest.english ~wfile.
+<p>
+<p>~wNow to make it so that the level appears on the list change the ~LG# ~i(in the $=Checked section)~wto the appropiate level name, which should be ~lTest~w.  To make it so only one level can be acessed at a time change the ~l{DoneLG#}~w to the level that must be done for it to be acessable.
+<p>~wThe text version of the editor is easier to understand since I can acually place the things needed in the guide.
+<p>
+$Button=Menu,Tell,advance
+$Button=Next,Tell,ten
+
+[ten]
+<p>~i~E10 - Examples of Allies, AI control and a list of events
+<p>~i~E=================================================================================================
+<i>"What do you want?  A diagram??"<br>
+--Kez Randonil a Nimbian General trying to explain their next attack plans.</i>
+<p>This section will give examples of how to use some sections correctly.
+<p>
+<p>~lmyAllyList = "2;5;8"		
+<p>~wYou need make sure that the your allies or the computer's works both ways.  In other words make sure both are allied to each other, otherwise you get a one-way alliance.  Make sure a ~l;~w seperates ally numbers.
+<p>	
+<p>~lai2Ability="!ATTACH_TO_ENEMY_ISLAND;!ENCIRCLE_ENEMY_ISLAND"	
+<p>~wYou need the ~l!~w and the ~l;~w so all the restrictions work.
+<p>
+<p>These are a list of common events I know of....
+<p>[ai#TempleHalfDead]
+<p>[ai#TempleDead] 
+<p>[ai#PriestDead] 
+<p>[ai#PriestCaptured] 
+<p>[ai#PriestSaved] 
+<p>[GoodTeamDead] 
+<p>[BadTeamDead] 
+<p>[Failed]
+<p>
+<p>Remember you can make a message appear after these events.  If you are not sure how these work, look back on the template I supplied.
+
+$Button=Menu,Tell,advance
+$Button=Back,Tell,nine
+$Button=Next,Tell,eleven
+
+
+[eleven]
+<p>~i~E11 - Buttons
+<p>~i~E=================================================================================================
+<i>"DON'T PULL THAT LEVER!!!"<br>
+--Bill Yalom, Nimbian inventor (When an assistant unknowingly pulled the self-destruct lever)</i>
+<p>This section maybe updated later if I find some other commands for buttons.
+<p>Use the ~ltemplate~w to figure out how buttons work.  Again the text version has a more compleate description on certain sections like this.
+<p>
+<p>Buttons used:
+<p>~lReview Knowledge,ShowTechnology,55	~w	- Show tech
+<p>~lPlay Mission,DoNothing,0		~w	- Play mission
+<p>~lLeave Missions,MissionAbort,0	~w		- Leave mission
+<p>~lNext Mission,MissionBegin,name of level	~w	- Next mission
+<p>~lContinue,Tell,TryAgain			~w	- Try again
+<p>
+$Button=Menu,Tell,advance
+$Button=Back,Tell,ten
+$Button=Next,Tell,twelve
+
+
+
+[twelve]
+<p>~i~E12 - What the AI does
+<p>~i~E=================================================================================================
+<i>"I don't care if they don't listen to me.....just as long as they do their job."<br>
+--Nimbian Priest</i>
+<p>~l01)~w The AI does not alway sacrafice a priest even if you didn't set the AI restriction.  It sometimes doesn't sac more than one priest also.
+<p>~l02)~w Usally salvages a workshop for an alter.
+<p>~l03)~w May build an alter if someone else captures a priest.  This may be good or bad. The AI may freeze up and won't do anything, but the captured priest's allies may go ballistic and use all of their reserve power to get the priest back.
+<p>~l04)~w Will build a new workshop if all it's tech is not in production.  
+<p>~l05)~w Might build a new workshop if old one is nuked.
+<p>~l06)~w Not sure about this one....Sometimes if workshop is blown to bits, and the priest priest builds a new one, he may not use the tech.  (The AI never seems to upgrade a replacement workshop)
+<p>~l07)~w Will attack on different fronts. 
+<p>~l08)~w Bad with fences of any kind, but not bad for taking them down.
+<p>~l09)~w Always will connect with at least one geyser.
+<p>~l10)~w Always will try to connect with your island (if allowed and is not your ally).
+<p>~l11)~w Good with air defense.
+<p>~l12)~w Priest likes temples.  This I found intresting, if there is a temple on an island and 3 priests on it too, they will all goto it.  Even if one is an ally and the other an enemy.
+<p>~l13)~w Transports do not always collect from the nearest geyser.
+<p>~l14)~w The AI stops collecting power after it has collect a certain amount.  It will collect only on their own island after the limit is reached.  Once it needs power again, it will collect it.
+<p>~l15)~w If the AI has a premade temple it may not build any transports, but if it has a preset set transport, it may build more.
+<p>~l16)~w Geysers appear in relation to the player island.  (Most of the time)
+
+$Button=Menu,Tell,advance
+$Button=Back,Tell,eleven
+$Button=Next,Tell,thirteen
+
+
+
+[thirteen]
+<p>~i~E13 - Tips for adding character to campains
+<p>~i~E=================================================================================================
+<i>"I like this job....you're immortal...build building with words....The only downfall is that everyone is after you blood!"<br>
+--Nimbian Priest</i>
+
+
+<p>~m~EDIFFICULTY PART I
+<p>~wThis is up to the creator.  Certain players will like the levels depending on how hard these levels are to be.  I have decided on a reasonable diffculty system.
+
+<p>~w1 - ~rHARD~w	(gives players who can finish the built-in game a challange)
+<p>2 - ~yMEDIUM~w	(gives players who can only finish "A Nation Rises a challange)
+<p>3 - ~lEASY~w	(for people who can only finish the first few levels)
+
+<p>~m~EDIFFICULTY PART II
+<p>~wThere are 2 ways to arrange your diffculty in a campain.  (you can try other meathods if you like)
+<p>~l1)~w easy to hard, easy to hard, easy to hard....blah blah blah.....
+<p>~l2)~w random, hard, random, random, hard, hard.
+<p>In #2 the hard levels would be important battles, like leaders of clans and guilds.  In reality battles are easy and hard, but NOT in order!  #1 is predictable but #2 allows some flexablility.  I'd suggest the last level be the hardest, not easy.
+<p>
+<p>~m~EDIFFICULTY PART III
+<p>~wOk setting the difficulty for a level is HARD!!!  So here are some tips for making it easier to make a level easier or harder.  ~i(This only deals with AI behavior and starting units)~w
+
+<p>1)	Adjust the ai#TimeBetweenMoves = 10   1=hardest, >1=easier.
+<p>2)	Adjust the ai#Collectors = 1	      More collecters=harder.
+<p>3)	Adjust the ai#StartMoney = 5000       If you give more cash to the AI the faster it will attack you.
+<p>4)Adjust the ai#Ability = ""	      Stop the AI from doing "smart" stuff.
+<p>
+<p>~m~ETHE STORY OF NIMBUS
+<p>~wI don't care if you have the best scenario in the world, it is not much without a story to it.  The first and the most important thing to do is give the level a theme.  For example my Isle of Geysers level's theme is you taking that island for yourself.   Another is Prison Break, where you save your allies.  Having a major battle really is no fun.  This is because in single player you have no allies to talk to or enemies that curse you for your better battle skills.   So support the level with a story or theme.
+
+<p>~m~EKEEP IT CONSISTANT
+<p>~wIf you already have a story line, fine.  But please keep it so the storyline is well followed.  In some cases your ally may die in one level and be just fine in the next.  Instant resurection?  Use the buttons to make you lose the level if your ally dies.
+
+
+<p>~m~EIN GAME "TALKING"
+<p>~wWhat adds spice to the gameplay is your allies or enemies talking to you after you have achevied or lost something.  Do not over use it though.  Remember messages are after an event.
+
+<p>~m~EOTHER WAYS TO WIN
+<p>~wYou can always finish a level after an event.  For example if you and an ally decide to fight each other to gain experience, you obviously do not want kill each other ~i(some people.......I just don't know......BACKSTABBERS!!!!) ~w Anyway you can set it so that if you destroy your allies temple, you win.
+
+$Button=Menu,Tell,advance
+$Button=Back,Tell,twelve
+
+
+
+
+
+
+[branch]
+
+<p>~m~EBRANCHING
+<p>~wBranching a campain can be very useful, but I have found it difficult to use.  The main reason is that if you take the easy way to finsh the level you gain access to the ALL the other branches.  In this case you are allowed to 'lose' and continue with the story line. So here I given instrutions of what to do.
+<p>~wThere is a command that does do branching, but I'm not very familiar with it.
+
+<p>~l~E1 - How to branch 
+<p>~wOk this is simple just use this button after a certain event to goto the the next level:
+<p>~levent  ~i(an event like ai#priestdead) <br>
+~lNext Mission,MissionBegin,?????~w
+<p>You of course need this after different events to branch. 
+
+<p>~l~E2 - Finish or no Finish?
+<p>~wThis command ~lfinishes~w the level. This allows you to gain access to the next level.
+<p>~l(less than sign)$Config,Done????=~i1~l(greater than sign)~w	
+<p>Where ~l1~w turns the level name white, so the next level can be reached.
+<p>~rDO NOT~w include this if you ~rDO NOT~w want a person to gain access to all the branches by going the ~leasy~w way.
+
+<p>~l~E3 - Keeping only 1 branch open 
+<p>~wThis is a simple but maybe annoying solution.  The begining of a new branch should be an easy level, one so easy so no one loses at it.  This way since they win, the branch stays open while the others stay closed.  At least it works...
+
+<p>~l~E4 - Branch requires ~iguide~l file, or do they? 
+<p>~wEach branch should have it's own ~lguide.english file~w.  It gets very diorganized to keep all the branches confined to only one guide file.  On the other hand lots of guide files clutters the menu screen.  In the end try to keep branching to a minimum.
+
+<p>~l~E5 - Branching without the guide file!
+<p>~wAnother way to branch is to create a branch scenario.  When a person chooses this level and starts it, they will be shown a new set scenarios.  Since the level is within the acual campain file, the campain menu doesn't get cluttered!
+
+$Button=Menu,Tell,Menu
+
+
+
+
+
+
+
+
+[Icons]
+<p>~m~E14 - Icons
+<p>~m~E=================================================================================================
+<i>"Knowledge is a powerful form of magic."<br>
+--Book of Nimbus</i>
+
+
+<p>This is a complete list of all icons in the game.  These things can be used in the acual game. ~i(anywhere text can appear)~w.  The only problem is there are so MANY of them.  The ones I like include nugget, mog, rune, and manabolt.  The letter designations ~i(A1, C5 etc.) ~wdo mean something different for each one - they usually divide into sections of some kind. You can also use a straight number like ~lmana.1~w or you can use ~lmana.*~w to use the ~ldefault~w icon, which is often frame 0.
+
+<p>sunArcher~[IsunArcher.*]<br>
+sunAviary~[IsunAviary.*]<br>
+sunFlyer~[IsunFlyer.*]<br>
+banner~[Ibanner.*]<br>
+windBattery~[IwindBattery.*]
+rainBattery~[IrainBattery.*]
+thunderBattery~[IthunderBattery.*]<br>
+sunBlocker~[IsunBlocker.*]<br>
+thunderBlocker~[IthunderBlocker.*]<br>
+bolt~[Ibolt.*]
+bridge~[Ibridge.*]
+sunDisc~[IsunDisc.*]<br>
+emptyGeyser~[IemptyGeyser.*]<br>
+sunFactory~[IsunFactory.*]<br>
+windFactory~[IwindFactory.*]<br>
+rainFactory~[IrainFactory.*]<br>
+thunderFactory~[IthunderFactory.*]<br>
+residence~[Iresidence.*]<br>
+flag~[Iflag.*]<br>
+fortGump~[IfortGump.*]<br>
+icon<br>
+~[Iicon.24]~[Iicon.2]~[Iicon.3]~[Iicon.4]~[Iicon.5]~[Iicon.6]~[Iicon.7]~[Iicon.8]~[Iicon.9]~[Iicon.10]~[Iicon.11]~[Iicon.12]<br>
+~[Iicon.14]~[Iicon.15]~[Iicon.16]~[Iicon.17]~[Iicon.18]~[Iicon.19]~[Iicon.20]~[Iicon.21]~[Iicon.22]~[Iicon.23] <br>
+island~[Iisland.*]
+islandStalag~[IislandStalag.*]
+playerBanner~[IplayerBanner.*]<br>
+isle~[Iisle.*]
+isleBig~[IisleBig.*]<br>
+treeTwo~[ItreeTwo.*]
+treeThree~[ItreeThree.*]<br>
+fringe~[Ifringe.*]
+mana~[Imana.*]
+range~[Irange.*]
+manabolt~[Imanabolt.*]
+flare~[Iflare.*]
+puzzlePiece~[IpuzzlePiece.*]<br>
+playerIsland~[IplayerIsland.*]<br>
+battleIsland~[IbattleIsland.*]<br>
+particlePlaceHolder~[IparticlePlaceHolder.*]<br>
+sunBalloon~[IsunBalloon.*]<br>
+buried~[Iburied.*]<br>
+bombExplodeSmall~[IbombExplodeSmall.*]<br>
+bombExplodeMedium~[IbombExplodeMedium.*]<br>
+bombExplodeLarge~[IbombExplodeLarge.*]<br>
+bombHeal~[IbombHeal.*]<br>
+bombInvisible~[IbombInvisible.*]<br>
+bombParalyze~[IbombParalyze.*]<br>
+bombHardener~[IbombHardener.*]<br>
+bombTreason~[IbombTreason.*]<br>
+edgeFarm~[IedgeFarm.*]<br>
+geyser~[Igeyser.*]<br>
+windVortex~[IwindVortex.*]<br>
+rainVortex~[IrainVortex.*]<br>
+thunderVortex~[IthunderVortex.*]<br>
+outpost~[Ioutpost.*]<br>
+mcloud~[Imcloud.*]<br>
+sunCannon~[IsunCannon.*]<br>
+rainCannon~[IrainCannon.*]<br>
+rainCannonMissile~[IrainCannonMissile.*]<br>
+thunderCannon~[IthunderCannon.*]<br>
+thunderCannonMissile~[IthunderCannonMissile.*]<br>
+sunWalker~[IsunWalker.*]<br>
+teleportEffect~[IteleportEffect.*]<br>
+bulf~[Ibulf.*]<br>
+sunFence~[IsunFence.*]<br>
+windWalker~[IwindWalker.*]<br>
+windFlyer~[IwindFlyer.*]<br>
+windAviary~[IwindAviary.*]<br>
+windArcher~[IwindArcher.*]<br>
+windBalloon~[IwindBalloon.*]<br>
+windBlocker~[IwindBlocker.*]<br>
+rainAviary~[IrainAviary.*]<br>
+rainFlyer~[IrainFlyer.*]<br>
+rainFence~[IrainFence.*]<br>
+rainBalloon~[IrainBalloon.*]<br>
+rainBlocker~[IrainBlocker.*]<br>
+thunderArcher~[IthunderArcher.*]<br>
+thunderFence~[IthunderFence.*]<br>
+growingRainBlocker~[IgrowingRainBlocker.*]<br>
+platform~[Iplatform.*]
+mog~[Imog.*]
+nugget~[Inugget.*]
+bridgeConnector~[IbridgeConnector.*]
+rainWalker~[IrainWalker.*]
+priest~[Ipriest.*]<br>
+lightning~[Ilightning.*]<br>
+anim~[Ianim.*]<br>
+challengeIsland~[IchallengeIsland.*]<br>
+sunFlyerBomb~[IsunFlyerBomb.*]<br>
+altar~[Ialtar.*]
+dais~[Idais.*]
+rune~[Irune.*]
+forceField~[IforceField.*]
+bombSpecialOne~[IbombSpecialOne.*]
+daisExtraFrames~[IdaisExtraFrames.*]<br>
+fenceShield~[IfenceShield.*]</i>
+
+<p>Info thanx to Invisible Man and Firestorm
+
+$Button=Back,Tell,Stuff
+
+
+[Tech]
+<p>~i~E15 - Unit list
+<p>~i~E=================================================================================================
+
+<p>~wHere are the tech terms....If some don't appear, try them in different orders
+
+
+<p>~y SUN<br>
+=====~w<br>
+sunCannon<br>
+sunArcher<br>
+sunBlocker<br>
+sunFence<br>
+sunAviary<br>
+sunBalloon</i>
+
+<p>~o WIND<br>
+======~w<br>
+windbattery<br>
+windwalker<br>
+windarcher<br>
+windblocker<br>
+windaviary<br>
+windballoon</i>
+
+<p> ~lRAIN<br>
+======~w<br>
+rainbattery<br>
+rainwalker<br>
+raincannon<br>
+rainblocker<br>
+rainfence<br>
+rainaviary<br>
+rainballoon</i>
+
+<p> ~rTHUNDER<br>
+=========~w<br>
+thunderbattery<br>
+bulf<br>
+thundercannon<br>
+thunderarcher<br>
+thunderblocker<br>
+thunderfence</i>
+
+<p> ~iNON-ALIGNED<br>
+=============~w<br>
+outpost</i>
+
+$Button=Back,Tell,Stuff
+
+
+
+<$Config,Done{mission.fileName}=1>
+$Button=Leave this Section,MissionAbort,0
+$Button=Next Section,MissionBegin,LG2
+
+[Succeeded][BadTeamDead]
+
+[Failed]
+
+[END]
+
+

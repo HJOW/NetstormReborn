@@ -1,0 +1,892 @@
+// Ticonderoga Entertainment Official Patch Documentation
+
+
+
+-------------------------------------------------
+10.77/10.78	V1.0
+-------------------------------------------------
+fixed a bug with the $Input command when dealing with numbers
+fixed a mission bug that when clicking on the drop island menu a click in the wrong spot will crash your game
+chaged the manabolt icons to gems
+removed the hidden seagull graphics from the shapes file, was causeing addon grahphics issues.
+fixed a graphics render bug by adding try catch support.
+Resolved a alter money cheat which the user could keep selecting sac for 5000sp and would receive money like the crystal drop.
+Fixed the zone island crash, if someone logs in with a cheat island you will no longer crash. 
+Supports the new zone system that has information about the zones
+Restricted Zones are now indicated and give an error if you try to enter them rather than re logging into the same zone again like before
+The Front and Back format boxes now have horizontal scroll bars so you can scroll to the end of your format to edit it.
+
+
+
+
+-------------------------------------------------
+10.75/10.76	V1.0
+-------------------------------------------------
+You can now exclude spells in the battle master menu
+The exclude menu now removes Sub menus if all items in that category has been excluded.
+The Starting number of geyser has been changed to reflect the number of players in game, the size of the map, and the geyser amount. The geyser placement should be disturbed evenly compared to the older geyser system.
+Watchers no longer affect geyser counts.
+Added code to prevent walking units from getting stuck under buildings.
+Fixed a Path Shunt bug that was causeing lockups
+Watchers no longer get Resource Injections
+Resource Injections are nolonger gotten at game startup.
+Fixed the Campaign Titles. In some cases the title printed was one behind.
+Added New List Menu Command with Prefix % (this is a close family member to the @ command)
+User made Campaigns should now go back to the User campaign menu now rather than back to the Main Campaign Menu.
+The User made Campaign Menu should now support more user made Campaigns and allow you to find them easier.
+Resource injections message should no longer create a super loud sound 
+Geyser Respawn should be more evenly distributed than before yet still contains the component of randomness that makes Netstorm fun
+You will no longer see the titanic server as your login address if you do a Netstorm fresh install. The server address of the main and backup servers will be written to your server list automatically.
+The Battle Menu has been modified to make setting up battle options easier.
+Fixed a issue that was causing the yellow text of resource injection to pop up the exclude Tec menu on the Battle master menu.
+Fixed a issue that was causing the client to crash upon clicking the text on the Battle master menu.
+Added Resource injections. This battle option allows you to periodically get X values of money during a game as a gift from the furies.
+Added the game type battle option should make navigating the battle menu significantly easier.
+Added a new Bm option called island dynamics. This will spawn random trees, ruins, and monuments on the map.
+Added a new Bm option called Geyser placement. This option regulates the mode of geyser operation that Netstorm is in. 
+Added a new Bm option called Geyser Respawn. This option regulates how often the should a geyser be respawn code runs.
+Resolved a Gons mod collector Bug that was causing clients to crash
+Resolved a Gons mod Mano bug that was causing clients to crash
+Fixed an issue that caused clients not to be able to leave honorably   
+Resolved a Gons mod involving bridges that caused a memory assert.
+Resolved a Gons mod issue involving invalid ownership bridges not appearing on the minimap. Bridges with no ownership now appear gray.
+
+
+Unit Changes
+
+Ice towers 
+
+Adjustment	To	From
+Cost		800	600
+Hit Points	1060	800
+
+
+Devil Maker
+
+Adjustment	To	From
+Hit Points	400	600
+
+Acid Barricade
+Will suck any attacking air unit over its base when connected.
+Improvements have been made in balancing areas where flyers and balloons are sucked. this is mostly dealing with N/S and E/W issues.
+
+
+-------------------------------------------------
+10.73/10.74  V1.0
+-------------------------------------------------
+
+Fixes
+
+Resolved a issue that caused a crash when a sun workshop was built off island and all connection to the island was disconnect and a sun barricade was placed in line with another barricade off the island.
+Devastation spell family dose following to ice towers, one blast will destroy the ice tower leaving the growing stalk; the second blast will completely destroy the growing ice tower and the island under it now.
+Fixed a Squid overflow issue that was causing the server to end up in an endless loop.
+The amount of bridge squids was raised. In the event this amount is exceeded new error handling code will now destroy all bridges on the map and informe the user about this action for both server and client.
+The maximum walker path was increased to reduce the risk of extra long path crashes.
+Revised the win conditions code, this should resolve the issues of people remaining in games even though they clearly have won.
+Fixed the dual posting of split islands theme bug that resulted from ambiguous ownership swapping back to prior ownership.
+Arc spires no longer attack flyers and balloons
+Added support for damage differentiation between ground units and air units on some shooters.
+Added code to stop flyers from moving to targets outside of its starting range upon destroying a target that was inside its attack range.
+Added code to make flyers pick another target after current target goes out of the flyers range.
+Made the assert at player 910 robust and self resolving.
+Game version was updated to reflect changes in about and login.
+the esc send all bug has been fixed
+
+
+Other Stuff
+
+Development Multiplayer forts were removed to resolve issues with new fort creation.
+Server list was updated to stop clients from downloading the core update each run
+Included a .dll that Tmaker Requred to work
+
+
+
+Unit Changes
+
+Type Info
+hp = health
+DPS = Damage per sec
+GDPS = Ground Damage per sec
+ADPS = Air Damge per sec
+Cast = Cast Time
+
+
+Name			Type	From	To	Now
+
+Arc Spire		Hp	1200	to	1000
+Arc Spire		DPS	50	to 	45
+Sun Disc Thrower	HP	400	to	300
+Sun Disc Thrower	GDPS	13	to	15
+Sun Disc Thrower	ADPS	****	to	20
+Air Ship		HP	800	to	655
+Man o'War		HP	165	to	150
+Graviton		Cast	5	to	1
+Graviton		Range	26	to	5
+Graviton		Cost	1000	to	500
+
+
+
+-------------------------------------------------
+10.72   V 1.0
+-------------------------------------------------
+The NewRank Tell was modified to reflect current rank policy.
+The alter sacrifice menu was modified to reflect current rank policy.
+Included the R.exe and setup.cfg support
+switched the thunderstrike and thunder storm help
+Man o'War hp changed from 175 to 165
+the zone menu was removed from the meta screen
+
+-------------------------------------------------
+10.71   V 1.5
+-------------------------------------------------
+Code was added to prevent the carrier window from jumping out to the end of the screen on large spells.
+The mouse bug should be fixed… or at least the ctrl alt tab one…
+Changed the cases of 10.70 to 10.72 in perpetration of launch.
+The game menu under option was removed.
+The counterclockwise rotation was added in edit, single player and battle only
+The firewall toggle was added in fort and Meta mode.
+When a caster is destroyed, thunderstorm should now do damage on both the server and client side.
+Thunder strike damage per random hit was increased to make this spell more effected at its current level.
+arc spires hp went down to 1200hp.. from 1300hp
+Graviton, Bombardment, Lighting Storm, Lighting Strike graphics were updated
+
+
+
+-------------------------------------------------
+10.71   V 1.4
+-------------------------------------------------
+Recoded how the money system is set and transmitted on startup. maybe resolve 0 sp issue?
+Thunderstorm no longer crashes the client when the caster is destroyed during cast.
+Thunderstorm now deals damage to targets even if the caster was destroyed.
+The Acid Barricade now connects in the single player mission Final Confrontation
+Fixed the dust devil base issue that was causing gravitation to crash the server.
+Adjusted the probability level of the new spells to correctly reflect how they should appear on the map.
+The cheat messages were removed.
+The In "About", "Version", it ends abruptly with "Patch by" was fixed
+Updated the Unit Information page
+Changed the name of meteor
+Added the 3 spells, to the spell list and did there own sections
+Changed the ring discription
+Fixed some errors in the player setting sections
+Fixed an titanic mistake in the vander section
+Added new menu options for right clicking a bridge piece in the editor you can now
+Set bridge as Cracked
+Set bridge as Normal
+Set bridge as Hard
+Made the mission Enemy Territories harder by making it so people cant bridge to the island on the left and build there temple on it.
+Tutorial2 was updated reflecting the correct mana and production icons.
+Tutorial3 was updated reflecting the correct mana.
+Tutorial6 was updated reflecting the correct mana.
+Send all was fixed in single player
+DENYSALVAGE somehow got deleted during the tell upgrade. Woops! Its now back in the system and should work correctly.
+
+
+-------------------------------------------------
+10.71   V 1.3
+-------------------------------------------------
+Attempted to fix the mouse bug again
+The crazy island theme bug has been fixed.
+Arc spires now attack more than 2 targets and do the same amount of damage per unit per target per strike.
+Gravitation truly lets clients see dust devil deaths  now…. Sorry about that !
+Added a extra transFlushAll() in the money send loop to maybe resolve the start with 0 bucks issue.
+
+
+-------------------------------------------------
+10.71   V 1.2
+-------------------------------------------------
+resolved the Thunderstorm and Thunder Strike Unit is dead and game crashes issue.
+Resolved the issue that was causing the game to crash when you set your system to slow and jumpy mouse and  reentered the game.
+The ctrl alt f12 bug should be fixed involving the mystical mouse that disappears.
+Added new code to shunt the priest if his path stops under a newly constructed building.
+Fixed a theme bug that would cause the residence to take on a players theme after posting because of a ownership issue.
+
+
+Unit Change
+------------------
+Thunder strike now cost 1800 sp
+
+
+
+-------------------------------------------------
+10.71   V 1.1
+-------------------------------------------------
+Fixed The Ice Towers Don’t destroy on clients bug
+Fixed the dust Devils don’t destroy on clients bug
+Added New Spell Thunderstorm
+Added new Spell Thunder Strike
+Updated the Whirlwind, Twister, and vortex icons.
+The New Sounds Have Been Added!
+
+
+
+Unit Changes
+---------------------
+Gravitation range was lowered to 26
+Meteor - 1100sp (renamed to Bombard) level 2
+Whirlwind - 550sp 
+Twister- 1100sp level 2
+Vortex - 1650sp level 3
+Hydra - 500sp 
+Hydra Wave - 1000sp  level 2
+Hydra Flood - 1500sp level 3
+
+
+
+-------------------------------------------------
+10.71   V 1.0
+-------------------------------------------------
+Fixed the Bar bug involving building larger than 3 by 3
+Fixed the bar bug involving collectors
+Parallelize bar post should no longer render a new bar in selected cases.
+Cids now handle both balloons on the ground and in the air.
+New bridge pieces were removed for this edition
+Auto Updaters Forced Validation should be active now.
+
+
+
+-------------------------------------------------
+10.70   V 9.4
+-------------------------------------------------
+Manowar damage was modified to 16
+Minor bar bug was resolved.
+
+
+-------------------------------------------------
+10.70   V 9.3
+-------------------------------------------------
+Issue involving bars directly on the center of the bar was corrected.
+Bars should no longer block cannons that shoot in the middle of the bar post.
+Hydra Spells have a new icon.
+Mouse Update
+
+
+-------------------------------------------------
+10.70   V 9.2
+-------------------------------------------------
+Removed the right click money menu from the editor in the debug edition
+Added SID and general locations for units in the editor. Squids are no longer required.
+Help.english was updated
+BlueCheese’s Priest training missions were added
+The Priest Debug Casting Menu was removed.
+Growing ice towers can now be destroyed by destruction spells.
+The destroying dust devil with gravitation should no longer crash the client.
+Tell was updated on a few points expect around the alter area.
+
+
+
+-------------------------------------------------
+10.70   V 9.1
+-------------------------------------------------
+Auto Updater now no longer crashes Netstorm on startup.
+Chat Helper  now renders correctly in the lowest screen resolution.
+Fixed the above horizontal Crazy Cannon issue
+Fixed the bow bug when the shooter is in the middle of the bar line.
+Fixed the Chat Helper Toggle Emboss Offset Bug
+Show Private channel was renamed to show whisper channel
+The <archipelago> CFG command was removed
+The <noBridges> CFG command was removed
+The <superAlly> CFG command was removed
+The <spamDuringConnect> CFG command was removed
+The <useSystemTimerClock> CFG command was removed
+The <inventoryLimit> CFG command was removed
+
+
+
+-------------------------------------------------
+10.70   V 9.0
+-------------------------------------------------
+
+Updated the bars to support middle line blocking, and resolved the crazy cannon offset issue.
+1152 by 864 and 1280 by 960 resolutions were removed from the game. 
+You can now treason geysers however you can no longer salvage them!
+Made the height of the unit status bars smaller
+Made the width of the unit status bars = to the width of the unit
+Added a timer bars for both immobilized and invisibility effect.
+Changed the color of some of the effect bars.
+Added a surprise (and I’m not telling)
+The R key was changed to the priest selection key
+The C key was changed to the counterclockwise rotation key.
+The shift f3 key now toggles the island themes
+The text about the shift f3 key was edited under view
+The d key allows you to build another of the last built unit.
+Added Spell hydra
+Added Spell hydra wave
+Added Spell hydra flood
+Added new type command to adjust Spell Dot Times
+Added new type command to adjust spell spawn amounts.
+Modified spawn amounts on Whirlwind Twister and Vortex.
+All spawn spells will create a ring of spawns around the caster rather than a big bumbled blob.
+Gravitation now kills dust devils
+New help name was added "chathelper" to the chat helper
+Profiles were removed from the game.
+The Test Fort Menu was removed.
+The Counterclockwise pieces rotation now only displays in mission or battle
+The menu option has information regarding the ‘c’ key
+The teal alliance shield icon was modified
+
+
+--- ANTI CHEAT UPDATES ---
+The following menus were physically removed
+----------------------------------------------
+X Cheat menu was removed
+Debug menu was removed
+
+The following Commands were tightened in security
+----------------------------------------------
+Command <ChangeMoney> has been modified.
+Command <InflictDamage> has been modified.
+Command <DestroyAt> has been modified.
+Command <CreateAt> has been modified.
+Command <SetAllBridge> has been modified.
+Command <GetFullDeck> has been modified.
+Command <SetOwner> has been modified.
+Command <MakeAi> has been modified.
+Command <AddRandom> has been modified.
+Command <CheatAddIsland> has been modified.
+Command <CreateRandomGuns> has been removed.
+Command <AdvanceRank> has been removed.
+Command <Stall> has been removed.
+
+
+
+The following CFG commands were removed
+----------------------------------------------
+The <cheat> CFG command was removed
+The <debugCheat> CFG command was removed
+The <zacketRecordDuringBattleToggle> CFG command was removed
+The <chatLog> CFG command was removed
+The <noBridgeDeath> CFG command was removed
+The <noIslandDeath> CFG command was removed
+The <noBridges> CFG command was removed
+The <allowReconnectToggle> CFG command was removed
+The <kaboom> CFG command was removed
+The <traceToStdErr> CFG command was removed
+The <flushAfterTrace> CFG command was removed
+The <stuffRefreshRate> CFG command was removed
+The <simpleBridgeReplace> CFG command was removed
+The <alwaysUseBridgeCanon> CFG command was removed
+The <bridgeDrawRate> CFG command was removed
+The <dontImportShapes> CFG command was removed
+The <buildOnEnemyBridge> CFG command was removed
+The <quickVortex> CFG command was removed
+The <quickBuild> CFG command was removed
+The <allowEarlyCapture> CFG command was removed
+The <printMoney> CFG command was removed
+The <sendDebugToChat> CFG command was removed
+The <tracefile> CFG command was removed
+The <priestPickupPriest> CFG command was removed
+
+
+-------------------------------------------------
+10.70   V 8.0
+-------------------------------------------------
+Fixed a divide by zero error that occurred in cases on the client because of timer bars.
+Updated Profile defaults and added a new profile to resolve the parallax mode menus turning blue.
+Recoded the bars yet again to support center mask non blocking.
+Added a few guild menu updates as well.
+
+
+-------------------------------------------------
+10.70   V 7.6
+-------------------------------------------------
+Timer Zacket was cast as int from float
+Timer recconection bug was resolved.
+Timer was Added to single player.
+Fixed the vertical Cannon LB Bug
+Fixed the vertical Cannon RB Bug
+Fixed the vertical Archer RB Bug
+Fixed the vertical Archer RA bug
+Fixed the vertical Archer LB bug
+Fixed the Horizontal Cannon RB Bug
+Fixed the Horizontal Archer RB Bug
+Fixed the Horizontal Archer LB Bug
+Fixed the Horizontal Cannon LA Bug
+Fixed the Horizontal Archer RA Bug
+Fixed the Horizontal Archer LA Bug
+Adjusted the Horizontal Bolt Offset for RA up slightly
+Adjusted the Horizontal Bolt Offset for RA over slightly
+Adjusted the vertical Bolt Offset for LB over slightly
+Adjusted the vertical Bolt Offset for LA down slightly
+New Guild system Zacket was added
+Guild system was brought online still in early beta but is working.
+Removed both the server news and updates menu from the Zone menu.
+
+
+
+-------------------------------------------------
+10.70   V 7.5
+-------------------------------------------------
+Changed the zacket from int to double for timer update. woops!!!!!!
+The timer actually transmits it self on connection and reconnection. Woops!!!!!!!!
+
+-------------------------------------------------
+10.70   V 7.4
+-------------------------------------------------
+Resolved the solo auto alliance draw bug
+Resolved the one person and watcher auto alliance draw bug
+Resolved the Watcher Reconnect Residency Moving bug
+Fixed the watcher battle over menu. It should now display Battle Over once you finish a watcher game.
+The server should properly set everyone’s game timer on connection.
+
+
+-------------------------------------------------
+10.70   V 7.3
+-------------------------------------------------
+Fixed the bar blocking issue for Horizontal LA Position
+Fixed the Vertical RA and RB Cannon Bar Bug
+Fixed the Vertical LA and LB Cannon Bar Bug
+Fixed the Horizontal LB and RB Cannon Bar Bug
+Resolved the player ownership issue that kept people from shunting dropped nuggets. 
+The chat helper should correctly identify and block chat now.
+The Chat menu under Options was renamed to Chat Effects 
+The back menu item under options was renamed to Edit Back Format
+The front menu item under options was renamed to Edit Front Format
+Under Chat Helper Chat was renamed to Chat Controls
+The Format and Chat Menu under options were moved to the Chat Helper
+Fixed the Key mapping bug for UK support. the shift+2 and shift+3 keys should be finally in.
+The game now ends if all playing players disconnect.
+The game now ends if all players are allied together.
+
+
+-------------------------------------------------
+10.70   V 7.2
+-------------------------------------------------
+Chat Helper was modified.  Show Battle Channel was removed.
+Channel Control was changed to Channel Controls
+Server watchers now exit the game when everyone draws.
+If you’re sacked and are server you leave the game when everyone draws or wins.
+The Nugget Drop Crash on the Client was Resolved.
+Unknown at this time if The Chat Filter works However you can at lest see your text in battle if it doesn’t.
+Fixed the Clients Shunting bug which allowed them to bully the server’s priest with drops.
+Recoded the bar blocking code again, it should be a drastic improvement in correctly showing blocked bow bolts. (Possible bugs might exist report on finding)
+
+
+-------------------------------------------------
+10.70   V 7.1
+-------------------------------------------------
+Recoded the memory allocation for the chat helper to resolve the client crash. 
+changed the chat helper loading point to improve response time.
+Adjusted the RB bar blocking value
+Adjusted the RB bow bolt blocking offset
+The hide/show island themes menu has a checked dot when toggled off.
+
+
+-------------------------------------------------
+10.70   V 7.0
+-------------------------------------------------
+Fixed The Profile bug that caused the user to go back to the main screen rather than just closing the window
+Resolved The RB bar bug that was causing cannon and bow shots to fire thru.
+Resolved the bug that was causing menu items not to black out when deactivate.
+Moved the Hide/Show Island Theme from Options>Game to View
+Fixed the alliance spam bug.
+Resolved the Siamese island bug and corrected island ownerships.
+Added conditions to the format menus so you can no longer set your format before having a fort loaded.
+The option menu only shows the format menu in the zone and in the battle menu.
+The chat options menu only shows up in the zones and in battle under options.
+Resolved the missing Tips and the Tips not resting issue
+Added the genus sort that sorts by battery,shooter,walker,blocker,fence,emplacement,balloon.
+The technology menu is now sorted by the genus sort
+The workshop menu is now sorted by the genus sort
+The excluded units menu is now sorted by the genus sort
+Chat Helper was Pimped yet again. New icons were added.
+The Chat Icon Limit was increased to include frame sizes up to 16px. 
+The R key now toggles clockwise piece rotation
+Modified the functionally of the Priest selection key P. 
+	pressing P once will select your priest but will not change your viewing location. 
+	Pressing P again with the priest still selected will change your view back to the 
+	location of the priest. Deselecting your priest will reset back to the selection without 
+	going to mode.
+Resolved AddMenu not showing the mana icon for disabled units
+Priest No longer always have outpost in single player, this can be set using the technology list now.
+Nuggets now fall from the sky rather than just hover.
+Added smart shunting, allies and the player can build on top of the players priest and the priest will
+	shunt to the side however if a enemy player builds on top of the players priest the unit will not build
+	for the enemy. Or if the unit is allowed to build this construction no longer stops the priest from walking
+	thru the newly constructed unit. 
+Added Pass Server Diagnostic toggle under game to turn your firewall flag on and off.
+Experimentally added Fort System Test under options to test ideas for the new fort system.
+Added uk keyboard support, UK english language users can now use the shift 2 and shift 3 keys to set quick sets on the map.
+Added new battle chat control options under chat helper
+
+Scripting System Update
+
+The big font ~4 Is allow in English scripts.
+<h1></h1>		Extra Large Header  now dose ~4 size
+<h2></h2>		Large Header	now dose  ~5 size
+<h3></h3>		Medium Header now dose ~3 size
+<h4></h4>		Small Header now dose ~1 size
+Added new comparison operators
+<?? X=Y ></?>	Comparison (show block if equal) 	
+<??! X=Y ></?>	Comparison (show block if not equal) 	
+<?!? X=Y ></?>	Comparison (show block if not equal)
+<?G X=Y ></?>	Comparison (show block if grater than) 	
+<?GE X=Y ></?>	Comparison (show block if grater than or equal) 	
+<?L X=Y ></?>	Comparison (show block if less than)
+<?LE X=Y ></?>	Comparison (show block if less than or equal)
+<?G! X=Y ></?>	Comparison (show block if not grater than) 	
+<?GE! X=Y ></?>	Comparison (show block if not grater than or equal) 	
+<?L! X=Y ></?>	Comparison (show block if not less than)
+<?LE! X=Y ></?>	Comparison (show block if not less than or equal)
+
+-------------------------------------------------
+10.70   V 6.4
+-------------------------------------------------
+Resolved the residence bug that caused the game to crash on reconnection
+Resolved the residence bug that caused the residence to forget what frame it was during reconnection
+Resolved the invisible bar that resulted from the new blocking code
+Resolved the chat helper Esc menu crash
+Barricades now block cannon shots correctly
+The chat system has been updated note the following
+
+Added new system of showing how many people you are talking to in a particular chat excluding general chat. 
+
+For Every 1 person you talk to a extra icon is added behind the chat prefix
+After 5 people a icon representing 5 people is added.
+After 10 people a icon representing 10 people is added.
+
+The process is incremental there forth if you have 17 people your talking to you would have a icon for prefix,
+	a icon for 10, a icon for 5,  and 2 icons for 1 behind your name.
+
+The request alliance menu now shows a color representing the player who is requesting the alliance.
+New code has been added to prevent players from spamming alliance request. You can now only send a player 3 request per every 1 minute.
+
+Screenshots are now written to the ScreenShot Folder. Note this new folder is a primary system folder and is
+	required for operation failing to have it will result in a crash!
+
+
+The profile system has been added under options to allow users to customize the appearance of Netstorm.
+	Note Profiles must be placed in the Profiles folder for things to work correctly
+
+Tell.english was overhauled and merged with the new profile system 
+The “#” prefix was added to the Keyword system
+Human Players can now build workshops in the editor
+Fixed the Editor Island dropper so it doesn’t crash when you click the empty slot at the bottom
+Both sacrificed messages have been turned to warnings and have color on the player names.
+You can now toggle the island themes off and on.
+New Tips were added thanks to DWMI and BIG
+
+
+
+-------------------------------------------------
+10.70   V 6.3
+-------------------------------------------------
+maybe The residency bug crash on reconnection should be fixed again and again!
+
+-------------------------------------------------
+10.70   V 6.2
+-------------------------------------------------
+Manowars pools were changed to 200 hp from 175hp
+Monowars were changed from 200hp to 175 hp
+Zacket Squid was increased in order to handle extra transmission values
+The residency bug crash on reconnection should be fixed again.
+Geysers on reconnection should no longer have 500SP and crash server
+Auto alliances will no longer spam players names if they already have a joined together by the server
+The server will no longer join empty players together in a alliance
+Bow bolts and sun disk for the direction RAB appear to be blocked correctly now.
+
+
+
+
+-------------------------------------------------
+10.70   V 6.1
+-------------------------------------------------
+Fixed the residency bug that cause a crash on reconnection
+Increased the number of supported workshop slot for the AI to resolve the crash occurring in the demo.
+Recoded the fence type bar blocking code in order to reduce lag on the clients, in extreme cases lag doses
+exist however it is not as significant as it was before.
+
+Replaced the infamous chat dots with the new infamous chat faces
+Icons that were Replaced
+~[Iicon.D0]
+~[Iicon.D1]
+~[Iicon.D2]
+~[Iicon.D3]
+~[Iicon.D4]
+
+Newly Added Icons
+~[Iicon.D5]
+~[Iicon.D6]
+~[Iicon.D7]
+~[Iicon.D8]
+~[Iicon.D9]
+
+
+Added a new icons for Multi Whisper
+The bow bolts and sun disk should block correctly in all direction on a sun fence.
+The ~[C.R,B,G] and ~[B.R,B,G] command was removed
+The ~[P.#] command was renamed to ~[C.#]
+The ~[D.#] command was renamed to ~[B.#]
+Chat Helper was modified to reflect the changes
+The allied icons on the battle menu were changed
+All edge farms should upon posting ownership should change to the correct theme now.
+Added the set alliance command to allow the server control over alliances
+Auto Alliances is now handled by the server
+
+
+-------------------------------------------------
+10.70   V 6.0
+-------------------------------------------------
+The bug that caused edge farms to change to the wrong theme has been resolved.
+The bug that caused a island to return to default ownership rather than change back to the appropriate them when a vortex was salvaged was resolved.
+Added send 300
+“Send X Bucks” was renamed to “Send X Storm Power”
+The Send X dialogue has been limited to 10 characters
+You can no longer send 0 sp using send x.
+You can no longer enter letters into the send x dialog box
+The game timer should no longer reset back to 0 on reconnect
+The y key now selects the 4th bridge piece upon cirrostratus request 
+Watchers should no longer have access to the alliance and send option on the right click  menu in games.
+Added code to help reduce duty cycle when Netstorm is not active. Should now allow other applications time in the kernel
+Watchers should no longer affect the number of obelisks on the map.
+Fixed the crash that was caused by crabs incorrectly destroying victim’s paths.
+Crabs can no longer steal in the mission editor
+The graphics algorithm for the new island effects has been modified to give a more consistent effect when changing between themes.
+The number of frames allowed per unit has been increased to support the new island theme.
+The residency no longer moves when you are a watcher
+Watcher has been relabeled as observer
+The residency now changes ownership to reflect the owner of the island
+The residency now changes graphics to reflect the theme of the island
+The battle master watcher option now supports right click toggle
+The battle master alliance option now supports right click to go backwards
+The battle master handicap options have been edited and now include handicap “0,1,2,3,4,5,6,7,8,9,10,15,20,25,30,35,40,45,50,60,70,80,90,100” 
+The battle master handicap option now supports right click to go backwards
+The ~[P.#] format command was added. This command uses the array number that the Netstorm color palate is identified by.
+The color of lagging players in the battle menu has been changed from black to gray
+The battle master handicap numeric text was replaced by the rank icons
+You can now see players handicap in game.
+Chat helper now has the pal command added and shows a index of all the pal colors
+A new debug command was added to dump all the pal colors in the chat for easy testing
+Screenshots now render all colors
+Added the ~[D.#] format command to set background color using pal numbers
+Changed the geyser amount value from High to Extreme
+Added a new geyser amount value Labeled high 
+
+
+
+
+-------------------------------------------------
+10.70   V 5.5 ( Graphics Update)
+-------------------------------------------------
+The theme graphics for rain and wind were changed
+
+-------------------------------------------------
+10.70   V 5.5
+-------------------------------------------------
+Fixed the Mini map update bug that was a result of Mini Map optimization
+Fixed the bug that when two vortexes are built in a multiplayer island cased the game to crash.
+Introducing new graphics for wind rain and thunder. Includes edge farm updates.  
+
+
+-------------------------------------------------
+10.70   V 5.4
+-------------------------------------------------
+Introduces the wind theme island graphics and edge farms for the sake of discussion
+
+-------------------------------------------------
+10.70   V 5.3
+-------------------------------------------------
+All missiles now appear to be blocked correctly by the bars now.
+Walkers shouldn’t jump when repeatedly moved.
+Outpost can now be created in single player.
+The Breaking Alliance message now appears for the two parties involved in the break.
+Added cheat prevention, Netstorm defaults to the tarc files rather than loading the hard drive files first.
+The code governing the mini map refresh was optimized to reduce client lag.
+This Version introduces the concept of different island textures for different themed vortexes.
+
+
+
+
+-------------------------------------------------
+10.70   V 5.2
+-------------------------------------------------
+The issue that was causing Golems to fall after emptying a geyser has been resolved.
+The y key no longer selects a bridge piece
+Your priest can no longer cast a spell while praying
+Your priest can no longer pray while casting a spell
+Your priest can no longer build while casting a spell
+The Ice Cannons ricochet acts normal now.
+Fixed New compiler bug that was causing teleport effects not to show
+Fixed New compiler bug that was causing sun cannon shots not to show.
+The bow bolts are stopped at the sun barricades in all directions correctly
+The Collector movement Bug has been fixed 
+Spells now affect the wind tower no matter what direction it is facing
+Wind towers now take damage from arc spires no matter what direction it is facing
+You can no longer treason geyser and salvage them for money
+
+
+
+-------------------------------------------------
+10.70   V 5.1
+-------------------------------------------------
+Fixed the Priest Bug that in selective cause the priest to collect from a geyser rather than build A item selected
+The storm power crystals now move to the side when you build something on top of them rather than block the building construction
+Whirlwind, Twister, And Vortex no longer cause the Priest ownership error to occur.
+Bow Bolts Now are blocked at the Sun Barricade rather than continuing on there path.
+Added Type command casttime
+Added Type command praytime
+Added Type command manacost
+Spells can now have different pray times
+Spells can now have different cast times
+Future support for the priest mana system was added
+Note Server Side Guild Support Has been removed for the time and is up for debate!
+Added the Meteor Effect
+Added the Meteor Spell
+
+
+-------------------------------------------------
+10.70   V 4.6
+-------------------------------------------------
+Fixed the Guild System bug that Caused : to be displayed before someone’s name who isn’t in a guild
+Fixed the Bug that caused carrier units -mainly the priest- from moving faster when rapidly clicked. 
+
+
+-------------------------------------------------
+10.70   V 4.5
+-------------------------------------------------
+Fixed Priest receiving the Special Devastation that Caused the Pray Menu to Disappear
+New Script Command RefreshPlayers was Added
+Guild System *Should* Display Player Guilds
+Sounds for the Spell Gravitation Was added
+
+
+
+
+-------------------------------------------------
+10.70   V 4.4
+-------------------------------------------------
+Added Spell Gravitation
+Added Gravitation Spell Effect
+Added Heal Spell Effect
+Added Spell Book Under the Pray Menu
+Added Support for Priest Praying 
+Added Pray Timer Bar
+Added Cast Timer Bar
+Modified Pray zacket size was increased
+Added Server Respond $Zsend Command
+Increased Zacket Size of Server Respond 
+Added tell Scripting Support for the Guild System
+Server Should Allow Guild Adding Now (work in progress)
+Health, and time bars have been decreased in height
+Priest Immobilized Warnings Should be fixed
+
+-------------------------------------------------
+
+
+-------------------------------------------------
+10.70   Prior Versions
+-------------------------------------------------
+The chat error caused by “.say ;.d” was resolved
+Resolved the chat error .m .mission .d crash bugs
+Green Geyser Fix: Player Green usually receives 4 geysers, now he/she only receives 3.
+Resolved East West Sun Bar advantage
+Resolved North South Sun Bar advantage 
+Fixed F8 Unit Moving Crash
+Fixed F8 Edge Farm Crash
+Fixed Island Limit Crash
+Fixed the Test battle without English Crash
+Fixed Acids destroying  units in map editor
+Fixed Arc Spire destroying units in map editor
+Fixed the Crystal Drop Cheat
+Added code to prevent hexing money values on the game.
+Added code to prevent hexing kill reward on the game
+Players in the zone window have color based on there game version
+In single and multiplayer bridge now have color representing there respected owner.
+Added Color ~u (light green) 
+Added Color ~p (light pink) 
+Added Color ~a (light orange)
+Added Color ~s (light purple) 
+Added Color ~d (teal)
+Added .back command, this is the same as .format
+Added .front command, this allows you to edit the format in front of your name.
+(Revised sized was rased must check on this!)The .back and .format buffers now hold 32 characters instead of 16 (revised)
+The Incompatible Battle Rings message was changed to say says what version the client has
+F9 now Refreshes the Zones
+Removed “Empty” from zone rings
+In single and multiplayer islands now have color representing there respected owner.
+Added colored warning messages for All warnings
+Added the Script command Warning
+All warning messages  now have emboss style
+Added Zone menu Whisper to
+Scripting command DontChatTo was added
+Added Scrollbars to The battle option menu 
+Added New battle options Starting Money (5000,6500,7000)
+Added New battle options Map Size (small, medium, normal, large, extra large)
+Added New battle options Map Density (Low, Medium, High)
+Added New battle options Geyser Amount (Low, Medium, High)
+Added New battle options Amount Per Geyser
+Added New battle options Map Mode (Small, Medium, Large, Extra large)
+Added New battle options Spells (Yes / No)
+Number of excluded units has been increased
+New exclude units interface
+Added New battle options Watcher mode 
+Added New battle options Auto Alliance
+Added New battle options Player Handicap
+Rank no longer gives a player a advantage
+Added the Fury logo to the Build>Temple menu and the Build>Workshop menu
+Items in the workshop are now sorted in alphabetical order
+Added a New Bridge Shape Small "S"
+Added a New Bridge Shape Larger "S"
+The U Bridge Shape was removed
+Added Game timer
+Sun Bars now have colored bars based on ownership
+Added chat command to play sounds in. ~[S. sound name]
+Chat Formats are saved based on the fort you was using
+Added dynamic color command added ~[C.Red,Green,Blue]
+Added dynamic emboss color command added ~[B.red,green,blue]
+Added dynamic emboss offset command added ~[E.XxY]
+Added chat format ~U for underline
+Added chat format ~S for strikeout
+Added Easy User Interface to set chat formats Under Options
+Added new options for chat toggles allows the user to cutoff sounds and new chat effects
+Added new Geysers Frames now reflect Money in them, (1 to 1/2) (1/2to 1/4) (1/4 to 0)
+Moved  the flair location on both the arc spire and acid barricade to reflect correct targeting range
+Arc spires now damages 3 by 3 area rather than a 1 by 1 area
+Acids now Destroy Ground units a 1 by 1 rather than  a 3 by 3 and south bugs have been corrected
+Acids now Destroy Air units in a 4 by 4 grid to resolve N/S advantages.
+The P Button not only views the priest but selects the priest
+Added Chat Helper to the chat bar
+Added the $Input script command
+Added the Ticonderoga Entertainment Splash Screen on Startup
+Edit button now appears without using cfg commands
+You can battle yourself without using cfg commands
+Added the spell whirlwind
+Added the spell Twister
+Added the spell Vortex
+Fixed the Crystal Crab Stealing bug
+Crystal Crabs can no longer steal from each other
+User Made Campaigns now appear in a separate load menu
+The Login Multiplayer menu now shows the island
+Added Counterclockwise piece rotation
+The E key Pick the next bridge piece automatically 
+The left and right arrow keys rotate the peace left and right
+overbridgeing has been reported to been fixed.
+You can read The Battle Ring messages of non compatible versions
+The click in box now turns black when you can’t connect
+Removed level and rank from the battle menu
+Added Send X Storm power
+Added Send All Storm Power
+Added Send 700 Storm Power
+Added Warning Message someone has sent you X Storm Power
+Added Allied Sun Bars 
+Size of the Supported Squids has been raised Resolving Most Unit Crash's
+Bad English commands no longer cause the game to crash but give a error message in Trace
+The extra large font was removed from the Chat
+Added warning for your priest Immobilized
+Added warning for island is under attack
+Fixed the Edit Menu Cancel Bug
+Removed Tell alliance broken message
+All collectors go to the closest geyser/dropoff point now
+Carriers that get items stolen by crabs now stop on the client side.
+
+
+
+
+
+
+
+
+
+
+
+
+

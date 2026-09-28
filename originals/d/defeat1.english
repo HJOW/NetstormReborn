@@ -1,0 +1,106 @@
+[Header]
+missionType = "Tutorial"
+
+fork1="gather"
+fork2="gather1"
+
+missionNumber = 2
+moreGeysers = 3
+
+
+myStartMoney = 10000
+myTech = "rainBattery;thunderBattery;windBattery;sunfence;suncannon;sunballoon;sunblocker;sunAviary;sunArcher;outpost"
+
+title="The Exchange"
+
+ai2Name = "Tilgon"
+ai2StartMoney = 12000
+ai2Tech = "rainBattery;sunwalker;raincannon;rainballoon;rainblocker;rainAviary"
+ai2GeyserAttachments = 2
+ai2Collectors = 2
+ai2TimeBetweenMoves = 4
+ai2AllyList = "1"
+ai2Bridgedrawrate = 1
+ai2ability="!USE_PRIEST_TO_COLLECT;!CAPTURE_ENEMY_PRIEST"
+ai2color = yellow
+
+
+ai3Name = "The Collector"
+ai3Tech = "bulf;thunderArcher;thunderBattery;thunderfence;sunballoon;thunderCannon;thunderblocker"
+ai3StartMoney = 12000
+ai3GeyserAttachments = 2
+ai3Collectors = 2
+ai3TimeBetweenMoves = 3
+ai3Bridgedrawrate = 1
+ai3AllyList = ""
+ai3ability="!USE_PRIEST_TO_COLLECT"
+ai3color = green
+
+
+[Options]
+[A.]
+<P>~y
+Tilgon and you have joined forces. 
+<P>
+<$Config,Donebeenthere1=1>
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Begin the Fight,DoNothing,0
+
+[ai2PriestCaptured]
+~yMy Lord, One of Tilgon's messengers has just arrived with grave news.~.
+<p>
+<I>TILGON: </I>Lord, My forces have been over run and I have fallen into enemy hands.
+<P>
+~[IwindWalker,9]
+
+[ai2PriestDead]
+~yAs Tilgon's body is consumed upon the alter, a voice rings out.
+<p>
+<I>TILGON: </I>Lord, Avenge my death.
+
+<br>
+<$Config,DoneAllyDead0=1>
+
+
+
+
+[Succeeded][BadTeamDead]
+
+<$Config,Done{mission.fileName}=1>
+<?{DoneAllyDead0}>   $Timeout=0,TELL,NOALLY </?>
+<?!{DoneAllyDead0}>  $Timeout=0,TELL,ALLYLIVED </?>
+
+[NOALLY]
+<h2>~yVictory is Yours</h2><br>
+<I>YOU: </I>Tilgon, your death has been avenged!<br>
+$Menu=Leave Missions,MissionAbort,1
+$Menu=Venture Deeper into Martol's Domain Alone,MissionBegin,gather
+
+[ALLYLIVED]
+<h2>~yVictory is Yours</h2><br>
+<I>TILGON: </I>The Collector was no match for our combined force.<br>
+$Menu=Leave Missions,MissionAbort,1
+$Menu=Venture Deeper into Martol's Domain with Tilgon,MissionBegin,gather1 
+$Menu=Venture Deeper into Martol's Domain alone,Tell,PARTING
+
+[PARTING]
+<I>YOU: </I>Tilgon, I feel that I must continue alone. <br>
+<P>
+<I>TILGON: </I>As you wish my Lord. May the Furies watch over you. <br>
+<BR>
+$Button=Continue,MissionBegin,gather
+
+
+
+[Failed]
+<h2>~yDefeat~.</h2><br>
+<I>ROGZEL: </I>May you find peace amoung the dead. <br>
+
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+
+
+

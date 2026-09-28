@@ -1,0 +1,14 @@
+title = "Quest for Knowledge Part 1"
+
+[Overview]
+<background="nsstart"> 
+<h2>The Quest for Knowledge Part 1</h2>
+<I>The Quest for ultimate knowledge has begun, Your lord needs you! Your training is complete and now your destiny lies before you!</I>
+
+$Checked=1 Beginning,MissionBegin,Beginning,{DoneBeginning},1
+$Checked=2 Retaliation,MissionBegin,retaliation,{Doneretaliation},{DoneBeginning},1
+$Checked=3 Scout,MissionBegin,Scout,{DoneScout},{Doneretaliation},1
+$Checked=4 First_Wave,MissionBegin,First_Wave,{DoneFirst_Wave},{DoneScout},1
+$Checked=5 Thunder_Command,MissionBegin,Thunder_Command,{DoneThunder_Command},{DoneFirst_Wave},1
+
+$Button=Back,Tell,Campaign

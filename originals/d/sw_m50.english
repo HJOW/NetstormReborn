@@ -1,0 +1,83 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 1
+
+myStartMoney = 5000
+myTech = "windBattery;sunCannon;sunFence;sunBalloon;sunAviary;sunBlocker;sunArcher"
+myAllyList = ""
+
+title="Test"
+
+ai2Name = "Test Dummy"
+ai2Tech = "windBattery;sunCannon;sunFence;sunBalloon;sunAviary;sunBlocker;sunArcher"
+ai2StartMoney = 5000
+ai2GeyserAttachments = 4
+ai2Collectors = 1
+ai2TimeBetweenMoves = 5
+ai2AllyList = ""
+ai2color = red
+ai2Ability=""
+ai2BridgeDrawRate = 4
+
+
+[Options]
+
+[A.]
+  Would you like to Reset everything and start<br>
+              THE BOWELS OF ~r~[Ipriest.103]~[IsunFlyerBomb.0]HELL~[IsunFlyerBomb.2]~[Ipriest.133]~.<br><br>
+                              Campaign over?
+<p>
+
+             <a href="cmd:Tell,Reset"> ~[IfortGump.11] </a>                                         <a href="cmd:Tell,guideHades.overview">~[IfortGump.19]</a><br>
+             <a href="cmd:Tell,Reset">  YES  </a>                                       <a href="cmd:Tell,guideHades.overview">NO</a>
+$Button= ,Tell,A.
+
+
+[Reset]
+Variables are being reset!
+$Timeout=1,Tell,doit
+
+[doit]
+<$Config,sw_m2=0>
+<$Config,sw_m3=0>
+<$Config,sw_m4=0>
+<$Config,sw_m5=0>
+<$Config,sw_m6=0>
+<$Config,sw_m7=0>
+<$Config,sw_m8=0>
+<$Config,sw_m9=0>
+<$Config,sw_m10=0>
+<$Config,sw_m11=0>
+<$Config,sw_m12=0>
+<$Config,sw_m13=0>
+<$Config,sw_m14=0>
+<$Config,sw_m15=0>
+<$Config,sw_m16=0>
+<$Config,sw_m17=0>
+<$Config,sw_m18=0>
+<$Config,sw_m19=0>
+<$Config,sw_m20=0>
+<$Config,sw_m21=0>
+<$Config,sw_m22=0>
+<$Config,sw_m23=0>
+<$Config,sw_m24=0>
+<$Config,sw_m25=0>
+<$Config,sw_difficulty1=0>
+<$Config,sw_m30=0>
+
+
+
+
+
+    Variables have been reset! You<br>
+                  may play<br>
+  THE BOWELS OF ~r~[Ipriest.103]~[IsunFlyerBomb.0]HELL~[IsunFlyerBomb.2]~[Ipriest.133]~.
+<p>
+  again, but you have to start again at<br>
+                      mission #1.<br>
+$Button=Leave this reset utility,Tell,guideHades.overview
+
+
+[END]

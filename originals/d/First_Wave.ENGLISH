@@ -1,0 +1,152 @@
+[Header]
+missionType = "Tutorial"
+missionNumber = 4
+moreGeysers = 1
+
+myStartMoney = 4000
+myTech = "sunCannon;sunArcher;sunBlocker;thunderbattery;thunderarcher;thunderblocker;thundercannon;sunBalloon"
+myAllyList = "2;3"
+
+title = "First Wave"
+
+ai2Name = "Minion of Sun" 
+ai2Tech = "sunArcher;sunBlocker;sunBalloon;sunAviary;sunCannon;thunderbattery;thunderarcher;thunderblocker;thundercannon;" 
+ai2StartMoney = 2000
+ai2GeysersAttachments = 4
+ai2Collectors = 10 
+ai2TimeBetweenMoves = 1 
+ai2AllyList = " 1;3" 
+ai2color = red
+ai2BridgeDrawRate = "1"
+ai2Ability="!USE_PRIEST_TO_COLLECT"
+
+ai3Name = "Lord of sun" 
+ai3Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;sunaviary;sunballoon;sunblocker;suncannon;sunFence" 
+ai3StartMoney = 3000
+ai3GeysersAttachments = 5
+ai3Collectors = 10 
+ai3TimeBetweenMoves = 1 
+ai3AllyList = " 1;2" 
+ai3color = white
+ai3BridgeDrawRate = "1"
+ai3Ability="!USE_PRIEST_TO_COLLECT"
+
+ai7Name = "Minion of Thunder" 
+ai7Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;sunBalloon" 
+ai7StartMoney = 2000
+ai7GeysersAttachments = 3
+ai7Collectors = 10
+ai7TimeBetweenMoves = 2 
+ai7AllyList = " 5;6" 
+ai7color = cyan
+ai7BridgeDrawRate = "1"
+ai7Ability="!USE_PRIEST_TO_COLLECT"
+
+ai5Name = "Minion of Thunder" 
+ai5Tech = ";sunBalloon;thunderBattery;thunderCannon;thunderblocker;thunderarcher;sunarcher"
+ai5StartMoney = 2000
+ai5GeysersAttachments = 5
+ai5Collectors = 10
+ai5TimeBetweenMoves = 1 
+ai5AllyList = " 7;6" 
+ai5color = purple
+ai5BridgeDrawRate = "1"
+ai5Ability="!USE_PRIEST_TO_COLLECT"
+
+ai6Name = "Minion of Thunder" 
+ai6Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;sunBalloon" 
+ai6StartMoney = 2000
+ai6GeysersAttachments = 3
+ai6Collectors = 10 
+ai6TimeBetweenMoves = 1 
+ai6AllyList = " 7;5" 
+ai6color = yellow
+ai6BridgeDrawRate = "1"
+ai6Ability="!USE_PRIEST_TO_COLLECT"
+
+[@1]
+<h2>~wYOU</h2>
+<p>This doesnt look good, I hate getting surrounded!
+
+[@2]
+<h2>~wLord of Sun</h2>
+<p>Have faith young one!
+
+[@3]
+<h2>~mMinion of Thunder</h2>
+<p>Our leaders are extremely angry, for this we have been sent to destroy all of you!
+
+[@4]
+<h2>~yMinion of Thunder</h2>
+<p>Im going to have some fun here!
+
+[@5]
+<h2>~rMinion of Sun</h2>
+<p>Sure....
+
+[@6]
+<h2>~wYOU</h2>
+<p>Will you stop saying Sure.... all the time will you?
+
+[@7]
+<h2>~rMinion of Sun</h2>
+<p>Sure....
+
+[@8]
+<h2>~wYOU</h2>
+<p>*Sigh* lets get this over with!
+
+[Options]
+
+[A.]
+<h2>First Wave</h2> 
+<i>"It is easier to defend than to attack!"<br> 
+--Unknown</i>
+
+<p>The attack has begun, the High command of thunder has sent a wave of Thunder Minions to weaken your defence, Dont let it happen!
+Every island in your clan is in battle, make this battle end as quickly as possible as the High commanders themselves are not far behind!
+
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[BadTeamDead]
+<h2>Congratulations! </h2> 
+<p>The Minions are dead, the rest of your clan report victory, now prepare for the final battle, the battle with the Thunder commanders!
+
+<$Config,Done{mission.filename}=1> 
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,Thunder_Command
+
+[Failed]
+<h2>Failure!</h2> 
+<p> You entire clan has fallen under the might of the thunder commanders!
+
+$Button=Continue,Tell,TryAgain
+
+[ai2TempleHalfDead]
+<h2>~rSun Minion</h2>
+<p>I need some help here!
+
+[ai2TempleDead]
+<h2>~rSun Minion</h2>
+<p>I really need help NOW!!
+
+[ai3TempleHalfDead]
+<h2>~wLord of Sun</h2>
+<p>My defences are failing!!
+
+[ai3TempleDead]
+<h2>~wLord of Sun</h2>
+<p>I dont have much time..... HELP!
+
+[ai3PriestDead]
+<h2>Your Lord has been Slain!</h2>
+<p>you are forced to retreat without your Lord, the clan is now in disarray, many enemies take advantage and kill you all!
+$Button=Continue,Tell,TryAgain
+
+
+[END] 
+
+
+

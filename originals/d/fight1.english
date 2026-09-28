@@ -1,0 +1,147 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 3
+moreGeysers = 1
+
+myStartMoney = 10000
+myTech = "windBattery;thunderBattery;rainBattery;windArcher;windBalloon;sunBlocker;sunWalker"
+myAllyList = "2"
+title="~kBack to back"
+
+ai2Name = "~bRain_Prince"
+myTech = "rainBattery;sunWalker;rainCannon;rainBlocker;sunBalloon"
+ai3StartMoney = 12000
+ai2GeyserAttachments = 2
+ai2Collectors = 2
+ai2TimeBetweenMoves = 1
+ai2AllyList = "1"
+ai2ability="!USE_PRIEST_TO_COLLECT"
+ai2color = red
+
+ai3Name = "~E~bRain_High_Priest"
+ai3Tech = "sunwalker;rainBattery;rainCannon"
+ai3StartMoney = 25000
+ai3GeyserAttachments = 4
+ai3Collectors = 2
+ai3TimeBetweenMoves = 1
+ai3AllyList = "4;5;6;7"
+ai3ability="!USE_PRIEST_TO_COLLECT"
+ai3color = white
+
+ai4Name = "~I~yWind_King"
+ai4Tech = "sunwalker;windBattery;windAviary"
+ai4StartMoney = 25000
+ai4GeyserAttachments = 2
+ai4Collectors = 2
+ai4TimeBetweenMoves = 1
+ai4AllyList = "3;5;6;7"
+ai4ability="!USE_PRIEST_TO_COLLECT"
+ai4color = green
+
+ai5Name = "~I~bRain_King"
+ai5Tech = "sunwalker;rainBattery;rainAviary"
+ai5StartMoney = 25000
+ai5GeyserAttachments = 2
+ai5Collectors = 1
+ai5TimeBetweenMoves = 1
+ai5AllyList = "3;4;6;7"
+ai5ability="!USE_PRIEST_TO_COLLECT"
+ai5color = purple
+
+ai6Name = "~E~oSun_God"
+ai6Tech = "sunWalker;sunArcher;sunAviary;sunCannon;windBattery;"
+ai6StartMoney = 25000
+ai6GeyserAttachments = 4
+ai6Collectors = 2
+ai6TimeBetweenMoves = 1
+ai6AllyList = "3;4;5;7"
+ai6Bridgedrawrate = 1
+ai6ability="!USE_PRIEST_TO_COLLECT"
+ai6color = yellow
+
+ai7Name = "~E~pThunder_God"
+ai7Tech = "sunWalker;thunderBattery;thunderCannon"
+ai7StartMoney = 30000
+ai7GeyserAttachments = 2
+ai7Collectors = 2
+ai7TimeBetweenMoves = 1
+ai7AllyList = "3;4;5;6"
+ai7ability="!USE_PRIEST_TO_COLLECT"
+ai7color = cyan
+
+
+[Options]
+
+
+[A.]
+<h2>~kBack to back</h2>
+<i>"A bad ally is better than a good enemy"--unknown</i>
+<p>You and your ally are fighting back to back. 
+<p>You can do it but if not its just a game.
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+
+[ai2PriestDead]
+<h2>A message from the rain prince's assistant.</h2>
+
+<p>Oh no.  The good prince is now dead.  What shall we do?
+
+$Button=Keep Fighting,DoNothing,0
+$Button=Retreat,MissionAbort,1
+$Button=Try Again,Tell,TryAgain
+
+
+[ai3PriestDead]
+<h2>I can't believe you have defeated me!</h2>
+
+<p>I grant you the knowledge of the Ice cannon.
+
+$Button=Do or die or don't and die,GetTechnology,129
+
+
+[ai4PriestDead]
+<h2>How did you beat me?</h2>
+
+<p>You may now use my knowledge.
+
+$Button=OK,GetTechnology,139
+
+
+[ai5PriestDead]
+<h2>The world is getting darker all around me.</h2>
+
+<p>You may now use my knowledge to benifit your tribe.
+
+$Button=Gee Thanks,GetTechnology,143
+
+
+[ai6PriestDead]
+<h2>My flames are extinguished.</h2>
+
+<p>You may choose one of my technologies.
+
+$Button=Cannon,GetTechnology,128
+$Button=Balloon,GetTechnology,111
+$Button=SunBarricade,GetTechnology,136
+
+
+[Succeeded][BadTeamDead]
+<h2>Congratulations</h2>
+<p>Hey I knew you could do it.
+<P>I hope you can stay away from trouble from now on.
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,1
+
+[Failed]
+<h2>Defeat</h2>
+<p>Well it's no big deal just try again.
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+
+
+
+

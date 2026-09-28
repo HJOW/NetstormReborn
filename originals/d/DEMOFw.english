@@ -1,0 +1,88 @@
+[header]
+missionType = "Tutorial"
+missionNumber = 1
+myStartMoney = 50000
+myTech = "sunWalker;sunarcher;sunballoon;sunFence;sunaviary;outpost;thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence"
+
+ai1Tech = "sunWalker;sunarcher;sunballoon;sunFence;sunaviary;outpost;thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence"
+ai1StartMoney = 50000 
+ai1GeyserAttachments = 1
+ai1Collectors = 2 
+ai1TimeBetweenMoves = 2
+
+ai2Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;sunwalker"
+ai2StartMoney = 50000
+ai2GeyserAttachments = 35
+ai2Collectors = 5 
+ai2TimeBetweenMoves = 1
+
+ai3Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainwalker;sunwalker"
+ai3StartMoney = 50000
+ai3GeyserAttachments = 5
+ai3Collectors = 5
+ai3TimeBetweenMoves = 1
+
+
+ai4Name = "DL Specialist"
+ai4Tech = ""
+ai4StartMoney = 0
+ai4GeyserAttachments = 1
+ai4Collectors = 1
+ai4TimeBetweenMoves = 1
+ai4AllyList = "1;5;6;7;8"
+ai4Abiltiy = "!BUILD_DIAS;!BUILD_BRIDGES;!USE_PRIEST_TO_COLLECT;!COLLECT_STORM_POWER;!CAPTURE_ENEMY_PRIEST"
+ai4color = purple
+
+ai5Name = "DL WarLord"
+ai5Tech = ""
+ai5StartMoney = 0
+ai5GeyserAttachments = 1
+ai5Collectors = 1
+ai5TimeBetweenMoves = 1
+ai5AllyList = "1;4;6;7;8"
+ai5Ability = "!BUILD_DIAS;!BUILD_BRIDGES;!USE_PRIEST_TO_COLLECT;!COLLECT_STORM_POWER;!CAPTURE_ENEMY_PRIEST"
+ai5color = white
+
+ai6Name = "FW Knight"
+ai6Tech = ""
+ai6StartMoney = 0
+ai6GeyserAttachments = 1
+ai6Collectors = 1
+ai6TimeBetweenMoves = 1
+ai6AllyList = "1;4;5;7;8"
+ai6Abiltiy = "!BUILD_DIAS;!BUILD_BRIDGES;!USE_PRIEST_TO_COLLECT;!COLLECT_STORM_POWER;!CAPTURE_ENEMY_PRIEST"
+ai6color = lightblue
+
+ai7Name = "^WaR^ Assassin"
+ai7Tech = ""
+ai7StartMoney = 0
+ai7GeyserAttachments = 1
+ai7Collectors = 1
+ai7TimeBetweenMoves = 1
+ai7AllyList = "1;4;5;6;8"
+ai7Abiltiy = "!BUILD_DIAS;!BUILD_BRIDGES;!USE_PRIEST_TO_COLLECT;!COLLECT_STORM_POWER;!CAPTURE_ENEMY_PRIEST"
+ai7color = green
+
+ai8Name = "DL Rogue"
+ai8Tech = ""
+ai8StartMoney = 0
+ai8GeyserAttachments = 1
+ai8Collectors = 1
+ai8TimeBetweenMoves = 1
+ai8AllyList = "1;4;5;6;7"
+ai8Abiltiy = "!BUILD_DIAS;!BUILD_BRIDGES;!USE_PRIEST_TO_COLLECT;!COLLECT_STORM_POWER;!CAPTURE_ENEMY_PRIEST"
+ai8color = purple
+
+
+title = "my DEMO"
+
+demo = 1
+demoRestartTimer = 1250
+
+[Demo] 
+<h2>DEMO of Part II "Prison Break"</h2> 
+<i>This is the first senerio of FW Part II: Offensive Strike.
+<p>~kJust have fun in this senerio.
+
+$Timeout=10,DoNothing,0
+[END]

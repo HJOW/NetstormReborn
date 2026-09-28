@@ -1,0 +1,90 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 5
+moreGeysers = 1
+randGeysers = 1
+
+myStartMoney = 3000
+myTech = "sunWalker;sunarcher;sunballoon;sunFence;sunaviary;outpost;thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence"
+myAllyList = "2"
+
+title="Surrounded By Hell"
+
+ai2Name = "^WaR^ Specialist"
+ai2Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence;rainwalker;sunwalker"
+ai2StartMoney = 2500
+ai2GeyserAttachments = 1
+ai2Collectors = 1
+ai2TimeBetweenMoves=1
+ai2DrawBridgeRate=4
+ai2AllyList = "1"
+ai2color = green
+
+ai3Name = "FW Killer"
+ai3Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;sunwalker"
+ai3StartMoney = 10000
+ai3GeyserAttachments = 7
+ai3Collectors = 4
+ai3TimeBetweenMoves=1
+ai3DrawBridgeRate=1
+ai3AllyList = "4;5;6"
+ai3color = yellow
+
+ai4Name = "SWORD Rogue"
+ai4Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence;rainwalker;sunwalker"
+ai4StartMoney = 10000
+ai4GeyserAttachments = 8
+ai4Collectors = 5
+ai4TimeBetweenMoves=1
+ai4DrawBridgeRate=1
+ai4AllyList = "3;5;6"
+ai4color = orange
+
+ai5Name = SPU Knight"
+aiTech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;Bulf;sunwalker"
+ai5StartMoney = 10000
+ai5GeyserAttachments = 6
+ai5Collectors = 4
+ai5TimeBetweenMoves=1
+ai5DrawBridgeRate=1
+ai5AllyList = "3;4;6"
+ai5color = yellow
+
+ai6Name = "SPU Lord"
+ai6Tech = "sunWalker;sunarcher;sunballoon;suncannon;sunFence;sunaviary;sunBlocker;sunwalker"
+ai6StartMoney = 10000
+ai6GeyserAttachments = 7
+ai6Collectors = 5
+ai6TimeBetweenMoves=1
+ai6DrawBridgeRate=1
+ai6AllyList = "3;4;5"
+ai6color = yellow
+
+[Options]
+
+[A.]
+<h2>Surrounded Be Hell</h2>
+<i>Guldan: ~wCommander, this is your wake up call?<br>
+<i>You: ~wIt's 4 o clock!<br>
+<i>Guldan: ~wExactly, the enemy surrounded us at night.<br>
+<<<BOOM!>>><br>
+<i>Guldan: ~wLooks like you got company.  Tell Agent 06 to build defense number 9 for ya.
+$Button=What ya got,ShowTechnology,55
+$Button=Da Da Da...,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<i>Guldan: ~wI'm locating a bunch of GOF's warring on each other.  Shall we join this?
+$Button=Definetly,MissionBegin,FWSO7
+$Button=No,Tell,HellNo
+
+[HellNo]
+<i>Guldan: ~wI guess we will just have to find a new commander...<br>
+<i>You: ~wYeap.<br>
+
+[Failed]
+<h2>You have failed!</h2>
+<i>Perhaps it was hell, to stay alive that is.  To bad, you were an excellany commander.
+$Button=Bye Bye,MissionAbort,0
+
+[END]
