@@ -26,7 +26,9 @@
 
 ## 기존 분석과의 관계
 
-* 지면 미리보기의 소유자색 변환([terrain-and-bridges.md](../exe/terrain-and-bridges.md) — `isle` 윗면 테두리 색, `IsleColorRemap`)은 이 테두리 색을 그리는 경로로 보인다. 지금은 저장된 영역 소유자로 칠하고 있으나, 원본 규칙대로라면 **신전 유무로 정해진 소유자**를 써야 한다.
+* 지면 미리보기의 소유자색 변환([terrain-and-bridges.md](../exe/terrain-and-bridges.md) — `isle` 윗면 테두리 색, `IsleColorRemap`)은 이 테두리 색을 그리는 경로로 보인다.
+  `FortTerrainPreview` 는 이미 이 규칙대로 **영역 안 신전(vortex)의 소유자·원소**로 테두리 색과 지면 테마를 정하고, 신전이 없으면 소유자 0(중립)·`sun` 테마(초록 풀밭)로 그린다 (2026-09-28 코드 확인).
+  규칙과 어긋날 수 있는 부분은 작은 받침(noIsland)·`createsisland` 건물 발판으로, 지금은 저장된 오브젝트 소유자를 그대로 쓴다.
 * `.fort` 의 `Territory` 섹션·영역 청크 배치([territory-layout.md](../exe/territory-layout.md))가 "섬" 단위를 정한다. 신전이 여러 영역에 걸치는 경우, 받침 섬(noIsland)·가이저 바위의 소유권은 아직 모른다.
 
 ## 확인할 것 (4·8단계)

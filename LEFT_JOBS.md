@@ -17,7 +17,7 @@
 | 2 | 개발 환경 구축 | ✅ 완료 (2026-09-27) — C# + MonoGame(net10.0), 솔루션·테스트·CI |
 | 3 | 원본 분석 — 데이터 포맷 | 🔶 거의 완료 (TAFF·셰이프·팔레트·.type·설정(조회·치환 규칙 포함)·번역 체계·파일 조회 순서·`.fort` 컨테이너/오브젝트 완료 / `.fort` 일부 섹션·HLP 남음) — [docs/formats/](docs/formats/README.md) |
 | 4 | 원본 분석 — 실행 파일(게임 로직) | 🔶 착수 (전체 디컴파일·모듈 맵 완료) |
-| 5 | 원본 분석 — 플레이 영상 | ⬜ 대기 |
+| 5 | 원본 분석 — 플레이 영상 | 🔶 착수 (스크린샷 42장 목록·관찰 정리 완료, 로컬 영상 4개 확보·형식 확인 1개 / 영상 관찰 노트 미착수) |
 | 6 | 자산 로더 / 개발용 뷰어 | 🔶 진행 중 (TAFF·팔레트·셰이프·.type·.cfg·TTC·.fort·가상 파일 시스템·설정 치환·번역표·미션 스크립트 로더·스프라이트 탐색(동작 재생·팔레트·속성) 완료) |
 | 7 | 엔진 코어 (플랫폼 계층) | ⬜ 대기 |
 | 8 | 게임 월드 / 규칙 구현 | ⬜ 대기 |
@@ -513,6 +513,27 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
 4. **멀티플레이 범위**: LAN 만 / 인터넷 로비 포함 / 원본 호환
 5. **와이드 화면(16:9·16:10) 처리**: 원본은 4:3 만 지원하고(최대 1024×768) 카메라 확대가 없으며, 16:9 모니터 풀스크린에서는 좌우 여백으로 표시된다(로컬 영상). 클론에서 맵 시야를 옆으로 넓힐지(원본 해상도 선택 동작과 가까움) / 원본처럼 4:3 + 좌우 여백으로 둘지(선택 옵션으로 제공 가능), 멀티플레이 시야 형평성 포함 (1.7절)
 
+## 5-1. 현재 진행 상황 (2026-09-28 세션 중단 시점 인수인계)
+
+작업 도중 셸 명령(Bash·PowerShell)이 자동 모드 안전 확인 단계의 무응답으로 계속 거부되어 세션을 멈췄다. 파일 읽기·수정만 가능했던 구간의 결과이므로 아래 "미검증" 항목을 다음 세션 처음에 확인한다.
+
+**이 세션에서 완료한 것**
+* 코드 (빌드 오류 0·테스트 138개 통과 확인됨):
+  * `TypeFrameTable` — 원본 `Rifttype.cpp` 프레임 코드 표(측면·변형·번호·플래그), 기본/도움말/gump/base 프레임, 검색 함수 ([type.md](docs/formats/type.md) "원본 프레임 코드 표")
+  * 스프라이트 뷰어 동작 재생·팔레트 순환·속성 목록, `--frame`·`--palette`·`--play`·`--props` ([sprite-browser.md](docs/sprite-browser.md))
+  * `GameResources.FindPaletteNames`·`LoadNamedPalette`·`PaletteName`, `MapSpriteFrames` 기본 프레임을 원본 규칙(마지막 default)으로 정정
+* 문서 (셸 없이 작성, 코드 변경 없음):
+  * [docs/screens/README.md](docs/screens/README.md) — 스크린샷 42장 목록·캡처별 관찰, 원본 해상도 4:3 세 가지뿐·카메라 확대 없음(사용자 확인), 신전 원소 → 지면 테마 추정
+  * [docs/gameplay/island-ownership.md](docs/gameplay/island-ownership.md) — 섬 소유권 규칙(사용자 확인): 테두리 색 = 소유자, 신전이 있어야 소유, 소유 섬에서만 배치·다리 시작, 비소유 섬은 통과만
+  * 본 문서: AGENTS.md 변경(화면비·풀스크린·가장자리 스크롤·스크린샷·로컬 영상) 반영, `originals/` 커밋 방침 변경, 로컬 영상 형식(AV1 1920×1080 60fps, 사용자 확인) 반영
+* 코드 확인: `FortTerrainPreview` 는 이미 영역 신전의 소유자·원소로 테두리 색·지면 테마를 정하고 신전이 없으면 중립·`sun`(초록)으로 그린다 → 소유권 규칙과 일치 (수정 불필요)
+
+**미검증·미확인 (다음 세션 처음에 할 일)**
+1. `git status` 로 커밋되지 않은 변경 확인 — 이 세션 후반의 문서 변경(`docs/screens/README.md`, `docs/gameplay/island-ownership.md`, `LEFT_JOBS.md`)은 커밋 여부를 확인하지 못했다
+2. 나머지 로컬 영상 3개(`The War Begins! ~ Fragile Fortune`, `Thundering Power!`, `Dissolved Alliance`)의 `ffprobe` 형식 확인, 첫 프레임에서 실제 좌우 여백 경계(계산값 240px) 측정
+3. Dissolved Alliance! 섬별 캡처와 맵 뷰어 대조: `dotnet run --project src/Netstorm.Game -- --map dissolvedalliance --screenshot extracted/screens/dissolved-alliance-map.png` 결과를 `Dissolved Alliance! - Playing 1/2.png` 와 비교 (섬 테마·테두리 색·다리·가이저 위치)
+4. 영상 프레임 추출 도구(`tools/`, 가운데 4:3 잘라 1024×768 로 맞춤) 작성 후 `docs/videos/` 관찰 노트 착수
+
 ## 6. 바로 다음 작업
 
 1. 4·6단계: 지면 미리보기를 원본 캡처와 대조하여 정확도를 높이기
@@ -539,7 +560,7 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
 5. 5단계(영상 분석)와 병행: 공식 캠페인 구성([mission-script.md](docs/formats/mission-script.md))과 영상 대응 확인
    - 2026-09-28 로컬 영상 4개(`playingVideos/`, 튜토리얼·캠페인 1-1~6) 확보, 형식 AV1 1920×1080 60fps(1개 확인) — 나머지 3개 `ffprobe` 확인·실제 여백 경계 측정, 가운데 4:3 잘라 프레임 추출하는 도구(`tools/`) 작성 후 미션별 관찰 노트(`docs/videos/`) 시작. 애니메이션·건설·다리 속도처럼 스크린샷으로 잴 수 없는 수치를 우선 측정
    - 2026-09-28 추가 캡처 목록·관찰 정리 완료 ([docs/screens/README.md](docs/screens/README.md)). 다음은 Dissolved Alliance! 섬별 캡처로 지면 테마·소유자 테두리 대조, 메뉴 화면 정밀 좌표 노트
-   - 섬 소유권 규칙([island-ownership.md](docs/gameplay/island-ownership.md))을 지면 미리보기의 소유자색에 반영: 지금은 저장된 영역 소유자로 칠하지만 원본 규칙은 신전 유무로 소유자 결정
+   - 섬 소유권 규칙([island-ownership.md](docs/gameplay/island-ownership.md))과 지면 미리보기 대조 — 2026-09-28 확인: `FortTerrainPreview` 는 이미 영역 신전의 소유자·원소로 테두리 색·테마를 정하고 신전이 없으면 중립·`sun`(초록) 으로 그린다 (규칙과 일치). 남은 것은 작은 받침·`createsisland` 발판의 소유자 결정(현재 저장된 오브젝트 소유자 사용)
 6. (원격 저장소가 생기면) CI 실제 실행 확인 — `originals/` 포함 후 원본 검증 테스트까지 실행되는지
 7. 7단계 착수 시 화면 요구사항(풀스크린·16:9/16:10/4:3·가장자리 스크롤, 1.7절)을 먼저 설계에 반영
 
