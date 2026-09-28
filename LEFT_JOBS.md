@@ -276,6 +276,7 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
   - 섹션 35개(Subscriber … Deck, Reserved2~4, Terr00~19), 타입 번호 변환(TypeNames 해시), 청크 레코드, 타입 플래그(typeflags 단어 → 비트, 파생 규칙) 해독
   - [x] 2026-09-28: 위치 바이트 x/y, `Territory` 모양·생성 플래그·청크 위치 및 `TerrNN` 배치 해석 — [영역 배치 분석](docs/exe/territory-layout.md), C# `FortMap`. 원본 463개 청크 수와 캡처 좌표 대조 완료
   - [x] 2026-09-28: `Deck` 섹션의 개수·4바이트 항목(타입 번호, chance, 부호 있는 power, numRemaining) 및 TypeNames 변환 해석. 공식 맵 둘과 원본 463개 파일 검증, 전체 170개 검사 통과 ([형식](docs/formats/fort.md))
+    - 게임 의미(추정): 워크샵에서 등록하는 사이드바 "덱" — [workshop-deck.md](docs/gameplay/workshop-deck.md) 3절
   - [ ] 남은 일: `State`·`Technology`·`Badges`·`CoreData`·`Mission` 섹션 내부 구조, `Territory` 외관·나머지 플래그, 회전된 영역 동적 검증, 내부 class 값에 따른 파생 플래그
 - [ ] **미션 스크립트** (`.english` 등): 문법 명세 — 섹션 종류와 발생 조건(이벤트), `[Header]` 키 전체 목록(`missionType`, `myTech`, `aiNName/Tech/StartMoney/Collectors/GeyserAttachments/color/BridgeDrawRate/Ability` …), `$` 명령과 인자, 인라인 HTML 태그, `{mission.filename}` 등 치환 변수. 전 파일 대상 키·명령 빈도 통계
   - [x] 문법 개요·빈도 통계·공식 캠페인 구성 — 2026-09-27 완료: [mission-script.md](docs/formats/mission-script.md)
@@ -312,12 +313,23 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
 - [ ] **좌표계·맵**: 아이소메트릭 투영, 타일 크기, 섬 형태, 높이/레이어, 그리기 순서(정렬 규칙)
 - [ ] **경제**: 가이저(geyser) → Storm Power(게임 내 재화) 수집 흐름, 수집 유닛(collector) 이동, 자원 운반, 제단(altar)·희생, 비용
 - [ ] **섬 소유권** — 규칙은 사용자 확인으로 정리됨 (2026-09-28): [docs/gameplay/island-ownership.md](docs/gameplay/island-ownership.md)
-  - 섬 테두리 색 = 소유 플레이어 색. **그 플레이어의 신전이 섬에 있어야 소유권**을 얻는다
-  - 소유한 섬에서만 건물·유닛 배치와 **다리 시작**이 가능. 소유권이 없는 섬은 지나갈 수만 있고 배치·다리 시작 불가
+  - 섬 테두리 색 = 소유 플레이어 색. **템플이 건설된 섬이 그 플레이어 소유**. 템플은 **플레이어당 동시에 1기(파괴되면 사제가 재건 가능), 빈 섬에만**, 원소 무관 **5000** Storm Power
+  - **템플이 있어야 다리 건설** 가능. 섬 상태는 내 섬 / 빈 섬(무소유) / 남의 섬
+  - **남의 섬**: 건물·유닛 일체 건설 불가, 이동형 유닛은 이동 가능
+  - **빈 섬**: 워크샵·알타는 사제가 도달하면 건설 가능(다리 불필요, 내 섬도 가능), 건물형 유닛은 내 섬과 다리로 연결돼야 건설 가능. 연결은 건설 시점에만 필요하고, 다리가 끊겨도 지은 유닛은 계속 동작
+  - 용어: 템플·워크샵·알타는 "유닛"이 아니다 (사제 `Construct` 로 건설). 그 밖의 작은 건물·이동체가 유닛
   - 캡처 근거: The War Begins! 에서 적 신전이 없어지자 적 섬 테두리가 빨강 → 주황(소유자 없음), 지면도 초록으로 바뀜
-  - 남은 일: exe 판정 함수, 소유자 변경 시점, 한 섬에 여러 신전, Outpost(중립 섬 소유), 받침 섬·가이저 바위의 소유권
+  - 남은 일: exe 판정 함수, 소유자 변경 시점, 템플이 파괴된 섬에 남은 건물·유닛·다리의 처리, Outpost(중립 섬 소유), 받침 섬·가이저 바위의 소유권
 - [ ] **다리 건설**: 다리 조각 생성 규칙(모양 풀, 순서, `BridgeDrawRate`), 배치 판정, 연결·붕괴 조건 (다리는 소유한 섬에서만 시작 — 위 소유권 규칙)
 - [ ] **건물/유닛**: 배치 규칙(소유한 섬에만 배치 — 위 소유권 규칙), 건설 시간, 원소(Sun/Rain/Wind/Thunder) 별 기술 트리, 연구(기술 획득) 방식
+  - **생산 규칙 (사용자 확인, 2026-09-28)**: 유닛·건물을 생산·건설하려면 **해당 타입의 워크샵을 우클릭**해 `Put Knowledge into Production >` 로 그 유닛을 **왼쪽 사이드바 "덱"에 등록**해야 한다. 등록된 것만 사이드바에서 골라 배치할 수 있다 — [workshop-deck.md](docs/gameplay/workshop-deck.md)
+  - 캡처 근거: Sun Workshop 목록(Rain Generator·Sun Cannon·Whirlibase) ↔ 이후 캡처 사이드바의 아이콘 3개. `.fort` `Deck` 섹션(타입·chance 가중 추첨)이 이 덱을 저장하는 것으로 추정
+  - **원소·에너지 규칙 (사용자 확인, 2026-09-28)** — [elements-energy.md](docs/gameplay/elements-energy.md): 원소는 Rain·Wind·Thunder 3종 + 공용 Sun. 워크샵은 자기 원소 유닛만 등록(Sun Workshop 은 예외로 다른 원소 Generator 도 등록). 템플·워크샵 외 작은 건물도 "유닛". 건물형 유닛은 소유 섬·소유 섬과 다리로 연결된 무인도·본인 다리 끝에 건설. 건설·생산에는 Storm Power + 필요 원소 에너지(예: Ice Cannon = Rain 1 + Sun 1)가 그 위치에 공급돼야 함. 공급원은 Temple·Generator(넓은 범위에 자기 원소 1개분), Sun 은 어느 원소로든 대체
+    - 데이터 대조: `.type` 의 `level` = 필요 에너지 개수로 보임(Sun Cannon 1, Ice Cannon 2), 발전기 `minUsage = maxUsage = -100`
+    - 신전 공급(B) 해결: Temple 도 Generator 와 같이 자기 원소 1개분·같은 범위. 우클릭 시 노란 별이 돌며 범위 표시 (사용자 확인). **튜토리얼에서는 신전 범위가 대폭 축소된 경우가 있었음** (사용자 확인)
+    - 범위 측정(영상, 문서 6절): 별이 칸 좌표 원 위에 정확히 놓임. 튜토리얼 Wind Temple = **30.0칸**(R²≈900), Dissolved Alliance 의 선택 유닛 둘레 = 17.32칸(R²≈300, 공급 범위가 아닐 수 있음). **다음: 일반 캠페인에서 템플·Generator 우클릭 장면을 찾아 일반 범위 측정**, exe `rangeDisplayProcessType` 의 반지름 출처 추적
+    - 소유권 규칙과의 관계(A)는 해결 (배치 불가 = 남의 섬). **사용자 확인 대기**: level 3 의 에너지 구성(C), 발전기 1개분의 의미·공유 여부(D), 조건 확인 시점(E), 이동 유닛 적용(F) — 문서 5절
+  - 남은 일: exe 의 등록·추첨(`Deck.cpp`)·`Production Slots Available`·워크샵 레벨/업그레이드 효과, 에너지 공급 범위·판정 함수, 등록 목록과 `myTech`·`techBit` 의 관계
 - [ ] **전투**: 사거리·명중·피해 공식, 발사체 궤적, 특수 효과(`bomb*` 계열: 마비, 중력, 치유, 반역 등), 방어(차단벽·실드)
 - [ ] **승패 조건**: 프리스트(priest) 사망/포획, 신전(temple) 파괴, 미션 스크립트 이벤트 발생 지점
 - [ ] 미션 스크립트 인터프리터 동작(3단계 문법 명세와 교차 검증)
@@ -466,7 +478,7 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
   - 메인 메뉴 버튼 8개(Campaign, Multiplayer, Demo, Help, Edit, Credits, Options, Quit), 640×480 타이틀 그림 가운데 + 구름 배경 — `mainMenu.png` 기준
   - 하위 화면 구성은 [docs/screens/README.md](docs/screens/README.md) 1절: Campaign(6묶음·완료 점·잠긴 흐린 글자), Multiplayer(요새 섬 + Multiplayer Options 창), Demo(3개), Help 드롭다운(General Help - F1, Technical Help, Version), Edit(Load Battle Map 2열 목록), Credits(10.72 패치·원본), Options 드롭다운
   - 미션 흐름: 브리핑(`[A.]`, Review Knowledge / Play Mission) → 게임 → Success!(`[Succeeded]`, Leave Missions / Next Mission) 또는 Failure!(`[Failed]`, Continue) → 재도전 확인(Replay Mission / Leave Missions)
-- [ ] 게임 화면 오브젝트 정보 창(컨텍스트 메뉴): `<이름> Level I`, Owner·Alignment·Class, 명령(Construct >, View Netstorm Knowledge, Put Knowledge into Production >, Upgrade costs N, Salvage gains N, About, Player >), 하위 창은 오른쪽에 열림 — `The War Begins! - * Context Menu.png`
+- [ ] 게임 화면 오브젝트 정보 창(컨텍스트 메뉴) — **마우스 오른쪽 버튼 클릭으로 연다** (사용자 확인, [workshop-deck.md](docs/gameplay/workshop-deck.md)). 워크샵 메뉴는 사이드바 덱 등록 경로라 생산에 필수: `<이름> Level I`, Owner·Alignment·Class, 명령(Construct >, View Netstorm Knowledge, Put Knowledge into Production >, Upgrade costs N, Salvage gains N, About, Player >), 하위 창은 오른쪽에 열림 — `The War Begins! - * Context Menu.png`
 - [ ] 게임 메뉴 막대(화면 맨 위): Game · View · Options · Players · About. Game = Review Mission Objectives - F8 / Restart Mission, Leave Mission / Quit Game
 - [ ] 튜토리얼 재현 → 튜토리얼 영상과 대조
 

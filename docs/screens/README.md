@@ -51,7 +51,7 @@
 * **Storm Power 숫자 색**: 여유 있으면 흰색(2650·2950·5650·10650), 부족해지면 노란색(1400·1650), 더 부족하면 빨간색(200·450). 정확한 기준값은 exe 에서 확인 필요 (사용자 설명과 일치).
 * 사이드바 유닛 아이콘이 붉게 칠해진 캡처가 있다 (`Playing 9`, Storm Power 200) → 비용 부족 표시로 추정.
 * 게임 화면 맨 위에 마우스를 대면 메뉴 막대가 나타난다: Game · View · Options · Players · About (`In game menu`).
-* 오브젝트를 누르면 정보 창(컨텍스트 메뉴)이 뜬다: 제목 `<이름> Level I`, `Owner:`·`Alignment:`·`Class:` (값은 노란 글자), 명령 목록, 하위 메뉴(`>`)는 오른쪽에 두 번째 창으로 열린다. 비용·환급액 뒤에는 Storm Power 아이콘이 붙는다.
+* 오브젝트를 **마우스 오른쪽 버튼으로 클릭**하면 정보 창(컨텍스트 메뉴)이 뜬다 (사용자 확인. 워크샵 메뉴로 유닛을 사이드바 덱에 등록해야 생산·건설 가능 — [workshop-deck.md](../gameplay/workshop-deck.md)): 제목 `<이름> Level I`, `Owner:`·`Alignment:`·`Class:` (값은 노란 글자), 명령 목록, 하위 메뉴(`>`)는 오른쪽에 두 번째 창으로 열린다. 비용·환급액 뒤에는 Storm Power 아이콘이 붙는다.
 * 선택한 유닛에는 모서리 괄호 모양 선택 표시와 체력 막대가 보인다 (`Playing 5`). 배치 중인 건물에는 흰 사각 테두리와 비용(예: 400)이 표시된다 (`Playing 2`).
 
 ## 3. The War Begins! (캠페인 1-1)
@@ -69,8 +69,8 @@
 | `The War Begins! - Playing 7.png` | 골렘 정보 창: Golem Level I / Owner: You / Alignment: Sun / Class: Ground Transport / Salvage gains 100 / About / Player > |
 | `The War Begins! - Playing 8.png` | 제단 위에서 희생 진행 중으로 보이는 장면 |
 | `The War Begins! - Victory.png` | 10650. "Success!" 창: `[Succeeded]` 절 문구 + **Leave Missions / Next Mission** |
-| `The War Begins! - Sun Workshop Context Menu.png` | Sun Workshop Level I / Alignment: Sun / Class: Production / View Current Production >, Put Knowledge into Production >, Upgrade costs 800 / Salvage gains 200 / About / Player > → 하위 "Knowledge Available — Production Slots Available:": Rain Generator, Sun Cannon, Whirlibase |
-| `The War Begins! - Rain Temple Context Menu.png` | Rain Temple / Alignment: Rain / Class: Energy / View Netstorm Knowledge / Salvage gains 1250 / About / Player > |
+| `The War Begins! - Sun Workshop Context Menu.png` | **Sun Workshop 우클릭 메뉴**. 사이드바에 아직 유닛 아이콘이 없음(등록 전). Sun Workshop Level I / Alignment: Sun / Class: Production / View Current Production >, Put Knowledge into Production >, Upgrade costs 800 / Salvage gains 200 / About / Player > → 하위 "Knowledge Available — Production Slots Available:": Rain Generator, Sun Cannon, Whirlibase |
+| `The War Begins! - Rain Temple Context Menu.png` | **Rain Temple 우클릭 메뉴**: Rain Temple / Alignment: Rain / Class: Energy / View Netstorm Knowledge / Salvage gains 1250 / About / Player > |
 | `The War Begins! - In game menu.png` | 메뉴 막대 Game 펼침: Review Mission Objectives - F8 / Restart Mission, Leave Mission / Quit Game |
 | `The War Begins! - Playing 9.png` | 다른 판: Storm Power 200(빨강), 사이드바 아이콘 붉은색. 적 섬은 초록 풀밭 + 주황 테두리, 적 제단에 자기 사제가 올라가 있음 |
 | `The War Begins! - Lose 1.png` | "Failure!" 창: `[Failed]` 절 문구 + **Continue** |
