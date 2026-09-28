@@ -86,8 +86,18 @@ public sealed class GameResources
     }
 
     /// <summary>GamePalSpec과 모드별 팔레트 이름으로 팔레트를 읽는다.</summary>
-    public Palette LoadPalette(string paletteKey = "fortPal") =>
-        Palette.Parse(Files.ReadAllBytes(Settings.ExpandSpec("GamePalSpec", Settings.Get(paletteKey) ?? "gifcloud")));
+    public Palette LoadPalette(string paletteKey = "fortPal") => LoadNamedPalette(PaletteName(paletteKey));
+
+    /// <summary>설정 키가 가리키는 팔레트 이름. 설정이 없으면 원본 기본값 gifcloud.</summary>
+    public string PaletteName(string paletteKey = "fortPal") => Settings.Get(paletteKey) ?? "gifcloud";
+
+    /// <summary>GamePalSpec 위치(디스크·아카이브)에 있는 모든 팔레트 이름을 이름순으로 찾는다.</summary>
+    public IReadOnlyList<string> FindPaletteNames() =>
+        [.. Files.Find(Settings.ExpandSpec("GamePalSpec", "*")).Select(Path.GetFileNameWithoutExtension).OfType<string>()];
+
+    /// <summary>GamePalSpec에 이름을 넣어 팔레트 하나를 읽는다.</summary>
+    public Palette LoadNamedPalette(string name) =>
+        Palette.Parse(Files.ReadAllBytes(Settings.ExpandSpec("GamePalSpec", name)));
 
     /// <summary>설정의 DataDir에서 셰이프 데이터베이스를 읽는다.</summary>
     public ShapeDatabase LoadShapes() => new(Files.ReadAllBytes($"{Settings.Get("DataDir")}/{ShapeDatabase.FileName}"));

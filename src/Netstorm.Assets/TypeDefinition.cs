@@ -38,6 +38,12 @@ public sealed partial class TypeDefinition
     /// <summary>클러스터 목록 (파일에 나온 순서 = 셰이프 블록 안 순번)</summary>
     public IReadOnlyList<Cluster> Clusters { get; }
 
+    /// <summary>원본 로더 규칙의 프레임 코드 표 (처음 사용할 때 만든다)</summary>
+    public TypeFrameTable Frames => _frames ??= new TypeFrameTable(this);
+
+    /// <summary>Frames 캐시</summary>
+    private TypeFrameTable? _frames;
+
     /// <summary>클러스터 줄에 나오는 최대 레이어 수</summary>
     public int LayerCount => Clusters.Count == 0 ? 0 : Clusters.Max(c => c.Layers.Count);
 

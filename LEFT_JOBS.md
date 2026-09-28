@@ -17,7 +17,7 @@
 | 3 | 원본 분석 — 데이터 포맷 | 🔶 거의 완료 (TAFF·셰이프·팔레트·.type·설정(조회·치환 규칙 포함)·번역 체계·파일 조회 순서·`.fort` 컨테이너/오브젝트 완료 / `.fort` 일부 섹션·HLP 남음) — [docs/formats/](docs/formats/README.md) |
 | 4 | 원본 분석 — 실행 파일(게임 로직) | 🔶 착수 (전체 디컴파일·모듈 맵 완료) |
 | 5 | 원본 분석 — 플레이 영상 | ⬜ 대기 |
-| 6 | 자산 로더 / 개발용 뷰어 | 🔶 진행 중 (TAFF·팔레트·셰이프·.type·.cfg·TTC·.fort·가상 파일 시스템·설정 치환·번역표·미션 스크립트 로더·정적 스프라이트 탐색 완료) |
+| 6 | 자산 로더 / 개발용 뷰어 | 🔶 진행 중 (TAFF·팔레트·셰이프·.type·.cfg·TTC·.fort·가상 파일 시스템·설정 치환·번역표·미션 스크립트 로더·스프라이트 탐색(동작 재생·팔레트·속성) 완료) |
 | 7 | 엔진 코어 (플랫폼 계층) | ⬜ 대기 |
 | 8 | 게임 월드 / 규칙 구현 | ⬜ 대기 |
 | 9 | UI · 미션 스크립트 · 튜토리얼 | ⬜ 대기 |
@@ -234,7 +234,8 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
 
 - [x] **TAFF 아카이브 (`netstorm.tarc`)** — 2026-09-27 완료: [taff.md](docs/formats/taff.md), `tools/taff.py`. XOR 키 `mydoghasfleas`, 246개 전부 추출
 - [x] **`.type`** 문법·속성·플래그 — 2026-09-27 완료: [type.md](docs/formats/type.md), `tools/typefile.py`, 수치표 [docs/gameplay/types.md](docs/gameplay/types.md) (70종)
-  - [ ] 남은 일: 속성·플래그의 정확한 게임 내 의미 확정 (4단계와 연계)
+  - [x] 2026-09-28: 클러스터 이름 → 원본 4바이트 프레임 코드(측면·변형·번호·플래그 비트), 기본/도움말/gump/base 프레임 규칙, 프레임 검색 함수 5종 확인 ([type.md](docs/formats/type.md) "원본 프레임 코드 표"), C# `TypeFrameTable`
+  - [ ] 남은 일: 속성·플래그의 정확한 게임 내 의미 확정 (4단계와 연계), 측면 글자의 방향 대응(예: sunCannon L~P), 동작별 재생 속도
 - [x] **`_shapes.shp`** — 2026-09-27 완료: [shp.md](docs/formats/shp.md), `tools/shp.py`. 116블록·3,783프레임 전부 디코딩, PNG 추출 검증
   - [ ] 남은 일: 헤더 bounds/origin 의 정확한 의미, 특수 레코드 91개의 용도
 - [x] **팔레트** — 2026-09-27 완료: 게임 팔레트 = `d/GIFCLOUD.COL` ([shp.md](docs/formats/shp.md) "색상")
@@ -321,7 +322,7 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
 
 ### 6단계. 자산 로더 / 개발용 뷰어 (C#, `Netstorm.Assets` + `Netstorm.Game`) — 🔶 진행 중
 
-`src/Netstorm.Assets/` (MonoGame 비의존), 테스트 `tests/Netstorm.Assets.Tests/` (133개, 전부 통과 — 2026-09-28)
+`src/Netstorm.Assets/` (MonoGame 비의존), 테스트 `tests/Netstorm.Assets.Tests/` (138개, 전부 통과 — 2026-09-28)
 
 - [x] `XorCipher` — TAFF·설정 파일 공용 XOR — 2026-09-27 완료
 - [x] `TaffArchive` — 아카이브 읽기, 대소문자·구분자 무시 이름 검색 — 2026-09-27 완료
@@ -355,7 +356,8 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
 - [ ] 셰이프 헤더 bounds/origin 의 의미 확정 후 기준점 처리 정리 (현재는 xmin/ymin 오프셋만 사용)
 - [ ] 개발용 뷰어: 스프라이트·애니메이션·팔레트·`.type` 속성 탐색
   - [x] 정적 스프라이트 탐색 (`--sprites 타입`) — 2026-09-28 완료. 20프레임 격자·선택 프레임 확대·타입/프레임 이동·클러스터 메타데이터 표시, 페이지 이동 시 텍스처 해제. [실행 방법](docs/sprite-browser.md). 게임 프로젝트 빌드 경고 0개, `isle` PNG 캡처 확인
-  - [ ] 애니메이션 재생, 팔레트 교체, `.type` 속성 전체 탐색 (기본 확인 화면은 5개 애니메이션만 표시)
+  - [x] 동작 재생·팔레트 교체·`.type` 속성 전체 탐색 — 2026-09-28 완료. `TypeFrameTable`(원본 프레임 코드 표) 기반으로 측면·변형이 같은 클러스터를 한 동작으로 재생(Space, ±속도), P로 `.COL` 32개 순환, Tab으로 속성 목록. 명령줄 `--frame`·`--palette`·`--play`·`--props`. 오른쪽 패널에 프레임 코드·특수 프레임·레이어 표시. `MapSpriteFrames` 기본 프레임을 원본 규칙(마지막 default)으로 정정(로딩 목록 116개에서는 결과 동일). 신규 검사 5개·전체 138개 통과, 빌드 오류 0, PNG 4장 육안 확인 ([실행 안내](docs/sprite-browser.md))
+  - [ ] 남은 일: 원본 틱 기준 재생 속도·동작 전환 재현(4단계 게임 틱 분석 후), 기본 확인 화면 샘플 애니메이션을 동작 단위로 교체
 
 ### 7단계. 엔진 코어 (플랫폼 계층)
 
@@ -475,7 +477,8 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
    - **실행 연결 완료(2026-09-28)**: `GameResources`로 설정·언어 용어표·번역표·미션 머리 값 조회 구성. 팔레트·셰이프·타입·맵은 공통 VFS 조회, `--language`·OS 언어·영어 파일 대체 적용. 전체 84개 검사 통과·빌드 성공, 독일어 확인 화면/한국어 선택 맵 PNG 생성 — [실행 자산·설정·언어](docs/runtime-resources.md)
    - **조건 평가 완료(2026-09-28)**: 원본 비교·부정·atol·중첩 표시 규칙 확인, `MissionConditions`·`PrepareSection` 구현. 원본 CraftWarning 경계값과 668개 스크립트 전체 섹션 전처리 검사, 전체 133개 통과·빌드 성공 — [조건 명세](docs/formats/mission-script.md)
    - **정적 스프라이트 탐색 완료(2026-09-28)**: `--sprites 타입`, 20프레임 격자·클러스터 정보·PNG 캡처. [실행 안내](docs/sprite-browser.md)
-   - 다음 후보: 인라인/줄 명령의 인자 파싱·실행 및 HTML UI, 스프라이트 애니메이션·팔레트·타입 속성 탐색, 창·오디오 설정 적용과 사용자 설정 저장
+   - **스프라이트 동작·팔레트·속성 탐색 완료(2026-09-28)**: 원본 프레임 코드 표(`Rifttype.cpp`) 해석과 `TypeFrameTable`, 뷰어 재생·팔레트 순환·속성 목록. [type.md](docs/formats/type.md) "원본 프레임 코드 표", [실행 안내](docs/sprite-browser.md)
+   - 다음 후보: 인라인/줄 명령의 인자 파싱·실행 및 HTML UI, 창·오디오 설정 적용과 사용자 설정 저장, 게임 틱 분석 후 동작별 재생 속도
 4. 4단계: 메인 루프/틱, 다리 생성(`Deck.cpp`, `Bridge.cpp`), 경제 분석
 5. 5단계(영상 분석)와 병행: 공식 캠페인 구성([mission-script.md](docs/formats/mission-script.md))과 영상 대응 확인
 6. (원격 저장소가 생기면) CI 실제 실행 확인

@@ -21,17 +21,6 @@ public static class MapSpriteFrames
         return cluster;
     }
 
-    /// <summary>기본 클러스터가 없으면 원본 로더처럼 첫 클러스터를 사용한다.</summary>
-    private static int DefaultCluster(TypeDefinition definition)
-    {
-        // 파일에 등장한 순서로 기본 클러스터를 찾는다.
-        for (int i = 0; i < definition.Clusters.Count; i++)
-        {
-            if (definition.Clusters[i].Flags.Contains("default", StringComparer.OrdinalIgnoreCase))
-            {
-                return i;
-            }
-        }
-        return 0;
-    }
+    /// <summary>원본 로더의 기본 프레임(+0x118): 마지막 default 클러스터, 없으면 첫 클러스터.</summary>
+    private static int DefaultCluster(TypeDefinition definition) => definition.Frames.DefaultFrame;
 }

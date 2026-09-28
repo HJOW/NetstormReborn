@@ -40,6 +40,10 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     private readonly string? _mapName;
     private readonly string? _spriteName;
     private readonly string? _languageName;
+    private readonly string? _spriteFrame;
+    private readonly string? _spritePalette;
+    private readonly bool _spritePlay;
+    private readonly bool _spriteProperties;
     private FortMapViewer? _mapViewer;
     private SpriteBrowser? _spriteBrowser;
     private SpriteBatch? _batch;
@@ -64,6 +68,10 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         _mapName = ParseValueArgument(args, "--map");
         _spriteName = ParseValueArgument(args, "--sprites");
         _languageName = ParseValueArgument(args, "--language");
+        _spriteFrame = ParseValueArgument(args, "--frame");
+        _spritePalette = ParseValueArgument(args, "--palette");
+        _spritePlay = args.Contains("--play");
+        _spriteProperties = args.Contains("--props");
         if (_mapName != null && _spriteName != null)
         {
             throw new ArgumentException("--map과 --sprites는 함께 사용할 수 없습니다.");
@@ -138,10 +146,19 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         {
             try
             {
-                _spriteBrowser = new SpriteBrowser(GraphicsDevice, shapes, palette, resources.LoadTypes(), _spriteName);
+                _spriteBrowser = new SpriteBrowser(GraphicsDevice, shapes, resources.LoadTypes(), resources.FindPaletteNames(),
+                    resources.LoadNamedPalette, _spritePalette ?? resources.PaletteName("battlePal"), _spriteName)
+                {
+                    Playing = _spritePlay,
+                    ShowProperties = _spriteProperties,
+                };
+                if (_spriteFrame != null)
+                {
+                    _spriteBrowser.SelectFrameAt(int.Parse(_spriteFrame, System.Globalization.CultureInfo.InvariantCulture));
+                }
                 Window.Title = "NetStorm 클론 — 스프라이트 뷰어";
             }
-            catch (Exception error) when (error is IOException or ArgumentException)
+            catch (Exception error) when (error is IOException or ArgumentException or FormatException)
             {
                 _statusLines.Add($"스프라이트를 읽지 못했습니다: {error.Message}");
             }
@@ -183,7 +200,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         }
         double dt = gameTime.ElapsedGameTime.TotalSeconds;
         _mapViewer?.Update(dt);
-        _spriteBrowser?.Update();
+        _spriteBrowser?.Update(dt);
         // 모든 애니메이션 진행
         foreach (SpriteAnimation animation in _animations)
         {
