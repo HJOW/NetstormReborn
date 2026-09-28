@@ -11,10 +11,13 @@ AV1 디코딩은 ffmpeg(libdav1d)에 맡긴다.
   python tools/videoframes.py range  "playingVideos/…mp4" 00:15:00 3 --fps 60 -o extracted/videos/da-15m
 """
 import argparse
+import collections
 import json
 import subprocess
 import sys
 from pathlib import Path
+
+import numpy as np
 
 # 원본 게임 화면 크기 (options.cfg 최대 해상도).
 GAME_WIDTH = 1024
@@ -26,6 +29,16 @@ VIDEO_GAME_WIDTH = 1440
 VIDEO_GAME_HEIGHT = 1080
 # 영상 픽셀 → 게임 픽셀 배율 (1080 / 768).
 VIDEO_SCALE = VIDEO_GAME_HEIGHT / GAME_HEIGHT
+# cadence: 게임 화면 왼쪽 사이드바 폭 (스크린샷 측정 약 82px, 여유를 둠).
+SIDEBAR_WIDTH = 90
+# cadence: 압축 잡음보다 큰 밝기 변화로 보는 회색조 차이.
+PIXEL_CHANGE = 12
+# cadence: 맵 영역에서 이 비율 이상 픽셀이 바뀌면 카메라 스크롤로 보고 제외한다.
+SCROLL_RATIO = 0.05
+# cadence: 분석 칸 크기 (게임 좌표 px).
+CELL = 32
+# cadence: 칸 평균 차이가 이 값을 넘으면 그 칸의 애니메이션이 바뀐 것으로 본다.
+CELL_CHANGE = 6
 
 
 def video_to_game(x, y):
@@ -78,6 +91,43 @@ def frame_range(video, start, duration, fps, output_dir, native):
     print(f"{folder}: 프레임 번호 n 의 시각 = {start} + (n-1)/{fps}초")
 
 
+def read_gray_frames(video, start, duration):
+    """구간을 게임 영역 1024×768 회색조 프레임 배열(프레임 수 × 768 × 1024)로 읽는다."""
+    raw = subprocess.run(
+        ["ffmpeg", "-v", "error", "-ss", start, "-t", str(duration), "-i", video,
+         "-vf", crop_filter(False) + ",format=gray", "-f", "rawvideo", "-"],
+        capture_output=True, check=True).stdout
+    size = GAME_WIDTH * GAME_HEIGHT
+    count = len(raw) // size
+    return np.frombuffer(raw[:count * size], np.uint8).reshape(count, GAME_HEIGHT, GAME_WIDTH).astype(np.int16)
+
+
+def cadence(video, start, duration, max_y, top):
+    """
+    카메라가 멈춘 프레임에서 자주 바뀌는 32×32 칸을 찾아, 칸마다 변화 시점 사이의 영상 프레임 간격 분포를 출력한다.
+    간격 2·3 이 번갈아 나오면 약 24Hz(60/2.5), 5 면 12Hz 로 애니메이션이 진행된 것이다.
+    """
+    frames = read_gray_frames(video, start, duration)
+    diff = np.abs(np.diff(frames, axis=0))
+    # 사이드바(x < SIDEBAR_WIDTH)를 뺀 맵 영역에서 크게 바뀐 픽셀 비율이 작으면 카메라가 멈춘 프레임이다
+    moving = (diff[:, :, SIDEBAR_WIDTH:] > PIXEL_CHANGE).mean(axis=(1, 2))
+    still = moving < SCROLL_RATIO
+    rows, cols = GAME_HEIGHT // CELL, GAME_WIDTH // CELL
+    cells = diff.reshape(len(diff), rows, CELL, cols, CELL).mean(axis=(2, 4))
+    cells[~still] = 0
+    score = (cells > CELL_CHANGE).sum(axis=0)
+    score[:, :SIDEBAR_WIDTH // CELL + 1] = 0
+    score[max_y // CELL:, :] = 0
+    order = np.argsort(score.ravel())[::-1][:top]
+    print(f"카메라 정지 프레임 비율 {still.mean():.2f} (영상 {len(frames)}프레임)")
+    # 변화가 많은 칸부터 변화 간격 분포를 출력한다
+    for index in order:
+        cy, cx = divmod(int(index), cols)
+        events = np.where(cells[:, cy, cx] > CELL_CHANGE)[0]
+        gaps = collections.Counter(np.diff(events).tolist()).most_common(6)
+        print(f"칸 ({cx * CELL},{cy * CELL}) 변화 {len(events)}회, 간격(영상 프레임):횟수 {gaps}")
+
+
 def main():
     """명령줄 인자를 해석해 하위 명령을 실행한다."""
     # Windows 콘솔·Git Bash 모두에서 한글 안내가 깨지지 않도록 UTF-8 로 출력한다.
@@ -98,13 +148,21 @@ def main():
     r.add_argument("--fps", type=float, default=60)
     r.add_argument("-o", "--output", required=True, help="저장 폴더")
     r.add_argument("--native", action="store_true")
+    c = sub.add_parser("cadence", help="애니메이션 변화 간격 측정")
+    c.add_argument("video")
+    c.add_argument("start")
+    c.add_argument("duration", type=float, help="초 (10~20초 권장)")
+    c.add_argument("--max-y", type=int, default=GAME_HEIGHT, help="이 y(게임 좌표) 아래 칸은 제외 (전투 영역 배제용)")
+    c.add_argument("--top", type=int, default=8, help="출력할 칸 수")
     args = parser.parse_args()
     if args.command == "probe":
         probe(args.video)
     elif args.command == "frame":
         frame(args.video, args.time, args.output, args.native)
-    else:
+    elif args.command == "range":
         frame_range(args.video, args.start, args.duration, args.fps, args.output, args.native)
+    else:
+        cadence(args.video, args.start, args.duration, args.max_y, args.top)
 
 
 if __name__ == "__main__":
