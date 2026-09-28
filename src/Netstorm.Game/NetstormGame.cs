@@ -7,7 +7,7 @@ using Netstorm.Assets;
 namespace Netstorm.Game;
 
 /// <summary>
-/// 게임 본체. 기본 애니메이션 확인 화면과 --map으로 선택하는 개발용 맵 뷰어를 제공한다.
+/// 게임 본체. 기본 확인 화면, --map 맵 뷰어, --sprites 셰이프 뷰어를 제공한다.
 /// </summary>
 internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
 {
@@ -38,8 +38,10 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     private readonly GraphicsDeviceManager _graphics;
     private readonly string? _screenshotPath;
     private readonly string? _mapName;
+    private readonly string? _spriteName;
     private readonly string? _languageName;
     private FortMapViewer? _mapViewer;
+    private SpriteBrowser? _spriteBrowser;
     private SpriteBatch? _batch;
     private FontSystem? _fonts;
     private readonly List<SpriteAnimation> _animations = [];
@@ -60,7 +62,12 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         string? screenshot = ParseValueArgument(args, "--screenshot");
         _screenshotPath = screenshot == null ? null : Path.GetFullPath(screenshot);
         _mapName = ParseValueArgument(args, "--map");
+        _spriteName = ParseValueArgument(args, "--sprites");
         _languageName = ParseValueArgument(args, "--language");
+        if (_mapName != null && _spriteName != null)
+        {
+            throw new ArgumentException("--map과 --sprites는 함께 사용할 수 없습니다.");
+        }
         IsMouseVisible = true;
         Window.AllowUserResizing = true;
         Window.Title = "NetStorm 클론 — 개발 환경 확인";
@@ -100,7 +107,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         try
         {
             resources = new GameResources(GameFileSystem.Open(dataDir), _languageName);
-            palette = resources.LoadPalette(_mapName == null ? "fortPal" : "battlePal");
+            palette = resources.LoadPalette(_mapName == null && _spriteName == null ? "fortPal" : "battlePal");
             shapes = resources.LoadShapes();
         }
         catch (Exception error) when (error is IOException or ArgumentException)
@@ -123,6 +130,20 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
             catch (Exception error) when (error is IOException or ArgumentException)
             {
                 _statusLines.Add($"맵을 읽지 못했습니다: {error.Message}");
+            }
+            return;
+        }
+
+        if (_spriteName != null)
+        {
+            try
+            {
+                _spriteBrowser = new SpriteBrowser(GraphicsDevice, shapes, palette, resources.LoadTypes(), _spriteName);
+                Window.Title = "NetStorm 클론 — 스프라이트 뷰어";
+            }
+            catch (Exception error) when (error is IOException or ArgumentException)
+            {
+                _statusLines.Add($"스프라이트를 읽지 못했습니다: {error.Message}");
             }
             return;
         }
@@ -162,6 +183,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         }
         double dt = gameTime.ElapsedGameTime.TotalSeconds;
         _mapViewer?.Update(dt);
+        _spriteBrowser?.Update();
         // 모든 애니메이션 진행
         foreach (SpriteAnimation animation in _animations)
         {
@@ -183,6 +205,10 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         if (_mapViewer != null)
         {
             _mapViewer.Draw(batch, body, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+        }
+        else if (_spriteBrowser != null)
+        {
+            _spriteBrowser.Draw(batch, body, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
         }
         else
         {
@@ -261,6 +287,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         if (disposing)
         {
             _mapViewer?.Dispose();
+            _spriteBrowser?.Dispose();
             // 애니메이션 텍스처 해제
             foreach (SpriteAnimation animation in _animations)
             {
