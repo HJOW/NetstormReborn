@@ -325,10 +325,11 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
   - **생산 규칙 (사용자 확인, 2026-09-28)**: 유닛·건물을 생산·건설하려면 **해당 타입의 워크샵을 우클릭**해 `Put Knowledge into Production >` 로 그 유닛을 **왼쪽 사이드바 "덱"에 등록**해야 한다. 등록된 것만 사이드바에서 골라 배치할 수 있다 — [workshop-deck.md](docs/gameplay/workshop-deck.md)
   - 캡처 근거: Sun Workshop 목록(Rain Generator·Sun Cannon·Whirlibase) ↔ 이후 캡처 사이드바의 아이콘 3개. `.fort` `Deck` 섹션(타입·chance 가중 추첨)이 이 덱을 저장하는 것으로 추정
   - **원소·에너지 규칙 (사용자 확인, 2026-09-28)** — [elements-energy.md](docs/gameplay/elements-energy.md): 원소는 Rain·Wind·Thunder 3종 + 공용 Sun. 워크샵은 자기 원소 유닛만 등록(Sun Workshop 은 예외로 다른 원소 Generator 도 등록). 템플·워크샵 외 작은 건물도 "유닛". 건물형 유닛은 소유 섬·소유 섬과 다리로 연결된 무인도·본인 다리 끝에 건설. 건설·생산에는 Storm Power + 필요 원소 에너지(예: Ice Cannon = Rain 1 + Sun 1)가 그 위치에 공급돼야 함. 공급원은 Temple·Generator(넓은 범위에 자기 원소 1개분), Sun 은 어느 원소로든 대체
-    - 데이터 대조: `.type` 의 `level` = 필요 에너지 개수로 보임(Sun Cannon 1, Ice Cannon 2), 발전기 `minUsage = maxUsage = -100`
+    - 데이터 대조: `.type` 의 `level` = 필요 에너지 개수 (사용자 확인), 발전기 `minUsage = maxUsage = -100`
     - 신전 공급(B) 해결: Temple 도 Generator 와 같이 자기 원소 1개분·같은 범위. 우클릭 시 노란 별이 돌며 범위 표시 (사용자 확인). **튜토리얼에서는 신전 범위가 대폭 축소된 경우가 있었음** (사용자 확인)
     - 범위 측정(영상, 문서 6절): 별이 칸 좌표 원 위에 정확히 놓임. 튜토리얼 Wind Temple = **30.0칸**(R²≈900), Dissolved Alliance 의 선택 유닛 둘레 = 17.32칸(R²≈300, 공급 범위가 아닐 수 있음). **다음: 일반 캠페인에서 템플·Generator 우클릭 장면을 찾아 일반 범위 측정**, exe `rangeDisplayProcessType` 의 반지름 출처 추적
-    - 소유권 규칙과의 관계(A)는 해결 (배치 불가 = 남의 섬). **사용자 확인 대기**: level 3 의 에너지 구성(C), 발전기 1개분의 의미·공유 여부(D), 조건 확인 시점(E), 이동 유닛 적용(F) — 문서 5절
+    - **충족 판정 (사용자 확인)**: 필요 에너지 1개 = 서로 다른 공급원(Generator·Temple, 자기 또는 동맹 소유) 1개, 그 범위가 짓는 위치에서 모두 겹쳐야 함. Sun 은 아무 원소 공급원으로. 예: Vander Tower = Thunder 2 + Sun 1 → Thunder 공급원 2 + 아무 공급원 1. 구성 **`자기 원소 × (level − 1) + Sun × 1`** (사용자 확인: Generator = 아무 1, Sun level 2 = 아무 2 포함). 문서 4절에 전 유닛 필요 공급원 표
+    - **소모 개념 아님**(같은 공급원 범위에 여러 유닛 가능), 조건은 **건설·생산 순간에만** 확인(공급원이 파괴돼도 유닛 유지), **이동 유닛도 생산 지점에 에너지 필요** — 질문 A~F 모두 확정 (문서 5절)
   - 남은 일: exe 의 등록·추첨(`Deck.cpp`)·`Production Slots Available`·워크샵 레벨/업그레이드 효과, 에너지 공급 범위·판정 함수, 등록 목록과 `myTech`·`techBit` 의 관계
 - [ ] **전투**: 사거리·명중·피해 공식, 발사체 궤적, 특수 효과(`bomb*` 계열: 마비, 중력, 치유, 반역 등), 방어(차단벽·실드)
 - [ ] **승패 조건**: 프리스트(priest) 사망/포획, 신전(temple) 파괴, 미션 스크립트 이벤트 발생 지점

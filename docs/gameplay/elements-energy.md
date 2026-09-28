@@ -1,7 +1,7 @@
 # 원소·원소 에너지·발전기
 
 > 분석 상태: **사용자 설명(2026-09-28) + `.type` 데이터 대조**. exe 의 에너지 판정 함수는 미확인.
-> "확인 필요" 표시는 사용자 설명만으로 정해지지 않은 부분이다 (5절).
+> 에너지 규칙 질문 A~F 는 모두 사용자 답변으로 확정됨 (5절). 남은 것은 exe 검증과 공급 범위 값 (6절).
 
 ## 1. 원소 (사용자 확인)
 
@@ -27,38 +27,73 @@
 * 유닛을 건설·생산할 때는 **Storm Power(돈)** 와 함께 그 유닛이 요구하는 **원소 에너지**가, 짓는 **위치에 공급되고 있어야** 한다.
   * 예: **Ice Cannon** 은 **Rain 1 + Sun 1 = 에너지 2개**가 필요하다.
   * 예: **Sun Cannon** 은 **Sun 1** 이 필요하다. Sun 은 다른 원소로 대신할 수 있으므로 **Rain Generator 하나만 근처에 있어도** 지을 수 있다 (Wind·Thunder 발전기여도 된다).
+  * 예: **Vander Tower**(Thunder) 는 **Thunder 2 + Sun 1** 이 필요하다 → 짓는 위치를 **Thunder 공급원 2개 + 아무 원소 공급원 1개, 모두 서로 다른 3개**가 함께 덮어야 한다.
+* **충족 판정 (사용자 확인, 2026-09-28)**:
+  * 필요한 에너지 1개마다 **서로 다른 공급원(Generator 또는 Temple) 1개**가 필요하다. 공급원 하나는 에너지 1개로만 센다.
+  * 그 공급원들의 범위가 **짓는 위치에서 모두 겹쳐야** 한다 (교집합 다이어그램처럼).
+  * 원소 에너지는 같은 원소 공급원만 채울 수 있고, **Sun 에너지는 아무 원소 공급원**으로 채운다.
+  * 공급원은 **자기 또는 동맹 소유**면 된다.
+  * **Temple 은 Generator 를 대신할 수 있다** (같은 원소 공급원 1개로 센다).
+  * **소모 개념이 아니다**: 같은 공급원 범위 안에 유닛을 여러 개 지을 수 있다.
+  * 조건은 **건설(생산) 순간에만** 본다. 나중에 공급원이 파괴돼도 지은 유닛은 제 역할을 한다.
+  * 이동 유닛도 **생산하려는 지점**에 에너지가 공급돼야 한다.
+  * 판정 예 (Vander Tower): Thunder Temple + Thunder Generator + Rain Generator 가 모두 덮으면 가능. Thunder Generator 1 + Rain Generator 2 는 Thunder 가 1개뿐이라 불가.
 * 에너지 공급원은 **Temple 과 Generator** 다.
   * Generator 는 **꽤 넓은 범위** 안에 **자기 원소 에너지 1개분**을 공급한다.
   * Temple 은 원소별로 1종씩(Rain·Wind·Thunder Temple) 있고, **Generator 와 똑같이 자기 원소 에너지 1개분을 같은 범위에** 공급한다 (사용자 확인).
   * 템플이나 Generator 를 **우클릭하면 노란 별 표시가 빙글빙글 돌며 공급 범위를 보여 준다** (사용자 확인). 범위 측정은 6절.
 
-## 4. `.type` 데이터 대조
+## 4. 유닛별 필요 에너지
 
-`level` 이 **필요한 에너지 개수**와 맞아 보인다 (Sun Cannon 1, Ice Cannon 2 — 사용자 설명과 일치). 확인 필요 C.
+**규칙 (사용자 확인, 2026-09-28)**: 필요 에너지 개수 = `.type` 의 `level`, 구성 = **`자기 원소 × (level − 1) + Sun × 1`**.
+Sun 은 아무 원소 공급원으로 채우므로, level 1 유닛(Generator 포함)은 원소와 관계없이 **아무 공급원 1개**, Sun 원소 유닛은 **아무 공급원 level 개**가 필요하다.
+사용자가 확인한 예: Sun Cannon(Sun 1), Ice Cannon(Rain 1 + Sun 1), Vander Tower(Thunder 2 + Sun 1), Generator(아무 1), Balloon·Whirlibase(아무 2).
 
-| 원소 | level 1 | level 2 | level 3 |
-|---|---|---|---|
-| sun | Sun Disc Thrower `sunArcher` 300, Stone Tower `sunBlocker` 400, **Sun Cannon** `suncannon` 400, Sun Barricade `sunFence` 300 | Balloon `sunBalloon` 600, Whirlibase `sunaviary` (cost 속성 없음) | |
-| rain | **Rain Generator** `rainBattery` 400, Crystal Crab `rainwalker` 500 | **Ice Cannon** `raincannon` 600, Acid Barricade `rainFence` 400, Ice Tower `rainBlocker` 800 | Man o'War Pool `rainaviary` 600, Cloud Floater `rainBalloon` 1000 |
-| wind | **Wind Generator** `windBattery` 400 | Sail Skater `windwalker` 600, Crossbow `windArcher` 550, Wind Tower `windBlocker` 800 | Devil Maker `windaviary` 800, Air Ship `windBalloon` 1200 |
-| thunder | **Thunder Generator** `thunderBattery` 400, Bulf `bulf` 500, Arc Spire `thunderFence` 400 | Bulwark `thunderBlocker` 800, Thunder Cannon `thundercannon` 1200 | Vander Tower `thunderArcher` 600 |
+아래 표는 이 규칙을 `.type` 데이터에 적용한 것이다. 필요 공급원 = "원소 공급원 개수 + 아무 공급원 개수".
 
-(숫자는 `cost` = Storm Power. 워크샵 800~1000, 신전 5000, 가이저 2000 은 level 없음)
+| 원소 | 유닛 (타입) | level | 비용 | 필요 공급원 |
+|---|---|---|---|---|
+| sun | Sun Disc Thrower `sunArcher` | 1 | 300 | 아무 1 |
+| sun | Stone Tower `sunBlocker` | 1 | 400 | 아무 1 |
+| sun | **Sun Cannon** `suncannon` | 1 | 400 | 아무 1 |
+| sun | Sun Barricade `sunFence` | 1 | 300 | 아무 1 |
+| sun | Balloon `sunBalloon` | 2 | 600 | 아무 2 |
+| sun | Whirlibase `sunaviary` | 2 | (cost 속성 없음) | 아무 2 |
+| rain | **Rain Generator** `rainBattery` | 1 | 400 | 아무 1 |
+| rain | Crystal Crab `rainwalker` | 1 | 500 | 아무 1 |
+| rain | **Ice Cannon** `raincannon` | 2 | 600 | Rain 1 + 아무 1 |
+| rain | Acid Barricade `rainFence` | 2 | 400 | Rain 1 + 아무 1 |
+| rain | Ice Tower `rainBlocker` | 2 | 800 | Rain 1 + 아무 1 |
+| rain | Man o'War Pool `rainaviary` | 3 | 600 | Rain 2 + 아무 1 |
+| rain | Cloud Floater `rainBalloon` | 3 | 1000 | Rain 2 + 아무 1 |
+| wind | **Wind Generator** `windBattery` | 1 | 400 | 아무 1 |
+| wind | Sail Skater `windwalker` | 2 | 600 | Wind 1 + 아무 1 |
+| wind | Crossbow `windArcher` | 2 | 550 | Wind 1 + 아무 1 |
+| wind | Wind Tower `windBlocker` | 2 | 800 | Wind 1 + 아무 1 |
+| wind | Devil Maker `windaviary` | 3 | 800 | Wind 2 + 아무 1 |
+| wind | Air Ship `windBalloon` | 3 | 1200 | Wind 2 + 아무 1 |
+| thunder | **Thunder Generator** `thunderBattery` | 1 | 400 | 아무 1 |
+| thunder | Bulf `bulf` | 1 | 500 | 아무 1 |
+| thunder | Arc Spire `thunderFence` | 1 | 400 | 아무 1 |
+| thunder | Bulwark `thunderBlocker` | 2 | 800 | Thunder 1 + 아무 1 |
+| thunder | Thunder Cannon `thundercannon` | 2 | 1200 | Thunder 1 + 아무 1 |
+| thunder | **Vander Tower** `thunderArcher` | 3 | 600 | Thunder 2 + 아무 1 |
 
+* 템플(5000)·워크샵(800~1000)·알타·가이저(2000)는 유닛이 아니며 level 이 없다.
+* 이동 유닛(Crab·Skater·Bulf·Balloon·Floater·Air Ship 등)도 **생산하려는 지점**에 같은 에너지가 필요하다 (사용자 확인).
+* 사용자가 직접 확인한 5종 외에는 규칙을 적용한 결과이므로, exe 의 판정 함수로 전 유닛을 검증한다.
 * 발전기 3종: `class = Source of Energy`, **`minUsage = maxUsage = -100`** (음수 = 공급으로 보임).
-* 포대·방벽: `minUsage 20` / `maxUsage 200`(포대) 또는 `20`(방벽). 에너지를 **양(量)으로 소비**하는 모델일 가능성이 있다 → 확인 필요 D.
+* 포대·방벽: `minUsage 20` / `maxUsage 200`(포대) 또는 `20`(방벽). 건설 판정은 공급원 개수·범위 겹침(3절)이고 소모 개념이 없으므로, 이 값은 건설 조건이 아닌 다른 용도일 수 있다. exe 확인 필요.
 * `techBit` 은 기술(지식) 번호로 보인다 (미션 헤더 `myTech` 와의 관계는 미확인).
 
-## 5. 확인 필요 (사용자에게 질문, 2026-09-28)
+## 5. 질문과 답 (사용자 확인, 2026-09-28)
 
-* ~~**A. 섬 소유권 규칙과의 관계**~~ → 해결 (사용자 확인, 2026-09-28): 배치 불가는 **남의 섬**(다른 플레이어 템플이 있는 섬). 빈 섬은 내 섬과 다리로 연결되면 건물형 유닛 건설 가능, 워크샵·알타는 사제가 도달하기만 하면 가능 — [island-ownership.md](island-ownership.md).
-  다리가 끊겨도 이미 지은 유닛은 계속 동작한다 (사용자 확인).
-* ~~**B. 신전의 공급량·범위**~~ → 해결 (사용자 확인): Generator 와 같이 자기 원소 1개분, 같은 범위.
-* **C. 필요 에너지 구성**: `level` = 필요 에너지 개수로 보면, level 3 (예: Vander Tower) 은 Thunder 몇 개 + Sun 몇 개인가? "자기 원소 1 + Sun (level−1)" 규칙인가? 발전기(level 1) 자체도 짓는 데 에너지 1개가 필요한가?
-* **D. 공급 1개분의 의미**: 발전기 하나의 범위 안에 유닛 여러 개를 지을 수 있는가(범위 안이면 모두 충족), 아니면 발전기 하나가 유닛 하나분만 채우는가?
-  또 Ice Cannon(Rain+Sun) 은 **Rain Generator 하나로 충족**되는가, **발전기 2개**(예: Rain + 아무 원소)가 필요한가?
-* **E. 조건 확인 시점**: 에너지는 건설 순간에만 필요한가, 이후 발전기가 파괴되면 유닛이 멈추는가?
-* **F. 이동 유닛**: 골렘·게·비행선 등도 같은 규칙으로 "짓는 위치"에 에너지가 필요한가?
+* **A. 섬 소유권 규칙과의 관계** → 배치 불가는 **남의 섬**(다른 플레이어 템플이 있는 섬). 빈 섬은 내 섬과 다리로 연결되면 건물형 유닛 건설 가능, 워크샵·알타는 사제가 도달하기만 하면 가능 — [island-ownership.md](island-ownership.md). 다리가 끊겨도 이미 지은 유닛은 계속 동작한다.
+* **B. 신전의 공급량·범위** → Generator 와 같이 자기 원소 1개분, 같은 범위.
+* **C. 필요 에너지 구성** → `자기 원소 × (level − 1) + Sun × 1` (4절). Generator 도 아무 공급원 1개, Sun level 2 유닛은 아무 공급원 2개가 필요하다.
+* **D. 공급 1개분의 의미** → 필요 에너지 1개 = 서로 다른 공급원 1개, 범위가 모두 겹쳐야 함. **소모 개념이 아니다** — 같은 공급원 범위 안에 유닛을 여러 개 지을 수 있다.
+* **E. 조건 확인 시점** → **건설(생산) 순간에만** 필요하다. 공급원이 나중에 파괴돼도 지은 유닛은 제 역할을 한다.
+* **F. 이동 유닛** → 이동 유닛도 **생산하려는 지점**에 에너지 공급이 필요하다.
 
 ## 6. 공급 범위 측정 (영상, 2026-09-28)
 
