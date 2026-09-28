@@ -20,9 +20,10 @@ internal sealed class FortMapViewer : IDisposable
     private readonly FortMap _map;
     private readonly ShapeDatabase _shapes;
     private readonly Palette _palette;
+    private readonly IsleColorRemap _isleColors;
     private readonly GraphicsDevice _device;
     private readonly Texture2D _pixel;
-    private readonly Dictionary<int, (Texture2D Texture, Point Offset)> _textures = [];
+    private readonly Dictionary<(int Frame, int Color), (Texture2D Texture, Point Offset)> _textures = [];
     private readonly FortMapObject[] _sorted;
     private readonly FortTerrainPreview _terrain;
     private readonly TypeInfo _terrainType;
@@ -49,6 +50,7 @@ internal sealed class FortMapViewer : IDisposable
         _device = device;
         _shapes = shapes;
         _palette = palette;
+        _isleColors = new IsleColorRemap(palette);
         _map = new FortMap(fort);
         _terrainType = catalog.Find("isle") ?? throw new InvalidDataException("isle 타입이 없습니다.");
         _fringeType = catalog.Find("fringe") ?? throw new InvalidDataException("fringe 타입이 없습니다.");
@@ -129,8 +131,9 @@ internal sealed class FortMapViewer : IDisposable
         // 시드로 생성한 지면을 원본 isle 타일로 그린다.
         foreach (FortTerrainTile tile in _terrain.Tiles)
         {
+            int color = PreviewPlayerColors.GetValueOrDefault(tile.Owner);
             DrawSprite(batch, _terrainType.LoadIndex, MapSpriteFrames.BodyFrame(_terrainType.Definition, tile.Cluster),
-                Screen(WorldPixels(tile.X, tile.Y), center));
+                Screen(WorldPixels(tile.X, tile.Y), center), color);
         }
         // 절벽은 별도 기준점을 사용하며 본체 지면 위·건물 아래에 표시한다. 원본의 깊이 정렬은 추가 검증 대상이다.
         foreach (FortTerrainFringeSprite fringe in _fringes)
@@ -181,7 +184,7 @@ internal sealed class FortMapViewer : IDisposable
         batch.Draw(_pixel, new Rectangle(0, 0, width, HeaderHeight), new Color(18, 24, 38));
         batch.DrawString(font, $"맵: {Name} | 오브젝트 {_map.Objects.Count}개 | 확대 {_zoom:0.##}배 | 언어: {Language}", new Vector2(16, 10), Color.Gold);
         batch.DrawString(font, "방향키 / 우클릭: 이동 · 휠: 확대 · Home: 사제 위치 · G: 청크 윤곽 · Esc: 종료", new Vector2(16, 38), Color.White);
-        batch.DrawString(font, "다리: 저장 프레임 · 지면: 생성 미리보기 · 지면 변형/그림자/플레이어색은 검증 전", new Vector2(16, 66), Color.LightGray);
+        batch.DrawString(font, "다리: 저장 프레임 · 지면: 생성 미리보기 · 변형/그림자/일반 플레이어색은 검증 전", new Vector2(16, 66), Color.LightGray);
         if (hovered != null)
         {
             string region = hovered.Territory.HasValue ? $"Terr{hovered.Territory:00}" : "Chaff";
@@ -198,9 +201,9 @@ internal sealed class FortMapViewer : IDisposable
     }
 
     /// <summary>지면 타일을 기준점과 프레임 오프셋에 맞춰 그린다.</summary>
-    private void DrawSprite(SpriteBatch batch, int typeIndex, int frameIndex, Vector2 anchor)
+    private void DrawSprite(SpriteBatch batch, int typeIndex, int frameIndex, Vector2 anchor, int color = 0)
     {
-        var sprite = GetTexture(typeIndex, frameIndex);
+        var sprite = GetTexture(typeIndex, frameIndex, color);
         if (sprite.HasValue)
         {
             var (texture, offset) = sprite.Value;
@@ -210,7 +213,7 @@ internal sealed class FortMapViewer : IDisposable
     }
 
     /// <summary>본체 프레임을 텍스처로 변환하고 캐시한다.</summary>
-    private (Texture2D Texture, Point Offset)? GetTexture(int typeIndex, int index)
+    private (Texture2D Texture, Point Offset)? GetTexture(int typeIndex, int index, int color = 0)
     {
         ShapeBlock block = _shapes.Blocks[typeIndex];
         if (index >= block.Frames.Count || block.Frames[index].IsSpecial)
@@ -218,10 +221,12 @@ internal sealed class FortMapViewer : IDisposable
             return null;
         }
         ShapeFrame frame = block.Frames[index];
-        if (!_textures.TryGetValue(frame.Offset, out var sprite))
+        var key = (frame.Offset, color);
+        if (!_textures.TryGetValue(key, out var sprite))
         {
-            sprite = (SpriteAnimation.ToTexture(_device, _shapes.Decode(frame), _palette), new Point(frame.XMin, frame.YMin));
-            _textures.Add(frame.Offset, sprite);
+            ReadOnlyMemory<byte> table = color == 0 ? default : _isleColors.Table(color);
+            sprite = (SpriteAnimation.ToTexture(_device, _shapes.Decode(frame), _palette, table), new Point(frame.XMin, frame.YMin));
+            _textures.Add(key, sprite);
         }
         return sprite;
     }

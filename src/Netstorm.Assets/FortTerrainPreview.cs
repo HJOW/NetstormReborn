@@ -1,7 +1,11 @@
 namespace Netstorm.Assets;
 
 /// <summary>원본 지면 타일로 구성한 미리보기 셀. 테마와 변형 선택은 시각 검증 전의 근사다.</summary>
-public sealed record FortTerrainTile(int X, int Y, int Region, string Theme, int Cluster);
+public sealed record FortTerrainTile(int X, int Y, int Region, string Theme, int Cluster)
+{
+    /// <summary>해당 지면 영역을 만든 신전 또는 받침의 소유자. 중립 지면은 0이다.</summary>
+    public int Owner { get; init; }
+}
 
 /// <summary>타일 외관과 작은 받침을 붙이기 전의 본섬 지면 칸.</summary>
 public sealed record FortTerrainCell(int X, int Y, int Region);
@@ -27,6 +31,7 @@ public sealed class FortTerrainPreview
     private readonly int[] _land = Enumerable.Repeat(-1, WorldSize * WorldSize).ToArray();
     private readonly Dictionary<(int X, int Y), int> _chunks = [];
     private readonly Dictionary<int, string> _themes = [];
+    private readonly Dictionary<int, int> _owners = [];
     private readonly Dictionary<int, int[]> _targets = [];
 
     /// <summary>생성된 타일 목록. 원본과 같은 전투 지형으로 확정한 데이터는 아니다.</summary>
@@ -47,8 +52,9 @@ public sealed class FortTerrainPreview
         {
             var cells = FortMap.TerritoryChunkShapes(territory);
             chunks.Add((territory, cells));
-            _themes[territory.Index] = map.Objects.FirstOrDefault(o => o.Territory == territory.Index && o.Object.Type.Definition.HasFlag("vortex"))
-                ?.Object.Type.Definition.GetString("theme") ?? "sun";
+            FortMapObject? vortex = map.Objects.FirstOrDefault(o => o.Territory == territory.Index && o.Object.Type.Definition.HasFlag("vortex"));
+            _themes[territory.Index] = vortex?.Object.Type.Definition.GetString("theme") ?? "sun";
+            _owners[territory.Index] = vortex?.Object.Owner ?? 0;
             // 영역의 각 청크를 좌표로 찾을 수 있게 등록한다.
             foreach (FortTerrainChunk cell in cells)
             {
@@ -117,8 +123,10 @@ public sealed class FortTerrainPreview
             }
             if (item.Object.Type.Name == "noIsland")
             {
-                int region = -2;
+                // 불완전한 받침도 소유자별로 나누어 인접한 다른 색상의 칸을 합치지 않는다.
+                int region = -2 - (item.Object.Owner ?? 0);
                 _themes.TryAdd(region, "sun");
+                _owners.TryAdd(region, item.Object.Owner ?? 0);
                 Put(item.X, item.Y, region);
             }
             else if (item.Object.Type.Definition.HasFlag("createsisland"))
@@ -130,6 +138,7 @@ public sealed class FortTerrainPreview
                 // 같은 타입이어도 소유자의 신전 원소가 다를 수 있으므로 소유자별 영역을 구분한다.
                 region = region * 10 - (item.Object.Owner ?? 0);
                 _themes.TryAdd(region, theme);
+                _owners.TryAdd(region, item.Object.Owner ?? 0);
                 Fill(item.X - 2, item.Y - 2, item.X + 1, item.Y + 1, region);
             }
         }
@@ -149,7 +158,7 @@ public sealed class FortTerrainPreview
                 char a = MaskOrientation(NeighborMask(x, y, region, false));
                 char b = MaskOrientation(NeighborMask(x, y, region, true));
                 int cluster = SelectCluster(isle, a, b, theme, x, y);
-                tiles.Add(new FortTerrainTile(x, y, region, theme, cluster));
+                tiles.Add(new FortTerrainTile(x, y, region, theme, cluster) { Owner = _owners.GetValueOrDefault(region) });
             }
         }
         Tiles = tiles;

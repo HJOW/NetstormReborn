@@ -82,15 +82,18 @@ internal sealed class SpriteAnimation : IDisposable
     /// <param name="device">그래픽 장치</param>
     /// <param name="image">디코딩된 이미지</param>
     /// <param name="palette">팔레트</param>
-    internal static Texture2D ToTexture(GraphicsDevice device, IndexedImage image, Palette palette)
+    /// <param name="remap">선택적인 256색 인덱스 변환표. 비어 있으면 원본 팔레트를 사용한다.</param>
+    internal static Texture2D ToTexture(GraphicsDevice device, IndexedImage image, Palette palette, ReadOnlyMemory<byte> remap = default)
     {
         var pixels = new Color[image.Width * image.Height];
+        ReadOnlySpan<byte> table = remap.Span;
         // 픽셀마다 팔레트 색을 적용한다
         for (int i = 0; i < pixels.Length; i++)
         {
             if (image.Opaque[i])
             {
-                Rgb c = palette[image.Indices[i]];
+                byte index = image.Indices[i];
+                Rgb c = palette[table.IsEmpty ? index : table[index]];
                 pixels[i] = new Color(c.R, c.G, c.B);
             }
         }
