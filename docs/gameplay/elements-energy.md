@@ -87,6 +87,13 @@ Sun 은 아무 원소 공급원으로 채우므로, level 1 유닛(Generator 포
 * 포대·방벽: `minUsage 20` / `maxUsage 200`(포대) 또는 `20`(방벽). 건설 판정은 공급원 개수·범위 겹침(3절)이고 소모 개념이 없으므로, 이 값은 건설 조건이 아닌 다른 용도일 수 있다. exe 확인 필요.
 * `techBit` 은 기술(지식) 번호로 보인다 (미션 헤더 `myTech` 와의 관계는 미확인).
 
+### 원판 매뉴얼과의 차이 (2026-09-29, [sources/game-manual.md](../sources/game-manual.md) 7절)
+
+* 원판 매뉴얼(`GAME.HLP`)의 유닛별 "Energy to Build" 는 위 규칙과 대부분 같다 (Sun 유닛 = Sun × level, Generator = Sun 1, level 2 원소 유닛 = 원소 1 + Sun 1, level 3 = 원소 2 + Sun 1).
+* **다른 점: level 1 원소 유닛** — 매뉴얼은 Bulf = **Thunder 1**, Sail Skater = Wind 1, Acid Barricade = Rain 1 로 자기 원소를 요구한다 (매뉴얼 규칙: 원소 = max(1, level − 1), Sun = 나머지, Generator 는 예외로 Sun).
+  현재 규칙대로면 level 1 은 아무 공급원 1개다. 패치판에서 level 1 인 원소 유닛(Bulf·Arc Spire·Crystal Crab)에 무엇이 필요한지 **사용자·exe 확인 필요**.
+* 레벨·비용 자체도 원판과 패치판이 다르다 (예: Sail Skater 원판 level 1 → 패치 level 2, Acid Barricade 1 → 2, Arc Spire 2 → 1, Crystal Crab 2 → 1). 구현은 패치판 `.type` 을 따른다.
+
 ## 5. 질문과 답 (사용자 확인, 2026-09-28)
 
 * **A. 섬 소유권 규칙과의 관계** → 배치 불가는 **남의 섬**(다른 플레이어 템플이 있는 섬). 빈 섬은 내 섬과 다리로 연결되면 건물형 유닛 건설 가능, 워크샵·알타는 사제가 도달하기만 하면 가능 — [island-ownership.md](island-ownership.md). 다리가 끊겨도 이미 지은 유닛은 계속 동작한다.
