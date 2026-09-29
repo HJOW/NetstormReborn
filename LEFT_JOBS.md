@@ -194,7 +194,7 @@
 | 5 | 원본 분석 — 플레이 영상 | 🔶 착수 (스크린샷 42장 목록·관찰 정리, 로컬 영상 4개 형식·화면 영역 확인, 프레임 추출·애니메이션 간격 측정 도구, Dissolved Alliance! 맵 대조·시작 카메라 규칙, 애니메이션 속도 측정 완료 / 미션별 관찰 노트 미착수) — [docs/videos/](docs/videos/README.md) |
 | 6 | 자산 로더 / 개발용 뷰어 | 🔶 진행 중 (TAFF·팔레트·셰이프·.type·.cfg·TTC·.fort·가상 파일 시스템·설정 치환·번역표·미션 스크립트 로더·스프라이트 탐색(동작 재생·팔레트·속성) 완료) |
 | 7 | 엔진 코어 (플랫폼 계층) | 🔶 착수 (2026-09-29: 창·전체화면·16:9/16:10/4:3 화면 계층, 가장자리 스크롤, 표시 설정 저장, 고정 틱 누적기·MSVC 난수 완료 / 팔레트 방식·입력·오디오·로깅 남음) |
-| 8 | 게임 월드 / 규칙 구현 | 🔶 착수 (2026-09-29: 정적 규칙 코어 — 에너지·섬 소유권·생산 창·전투 옵션·배치 판정, 맵 뷰어 배치 시험 모드 / 엔티티·다리·이동·전투·경제 흐름 남음) — [docs/core-rules.md](docs/core-rules.md) |
+| 8 | 게임 월드 / 규칙 구현 | 🔶 착수 (2026-09-29: 정적 규칙 코어 — 에너지·섬 소유권·생산 창·전투 옵션·배치 판정, 맵 뷰어 배치 시험 모드, 다리 조각 모양·추첨·회전·생산 칸 채우기와 뷰어 다리 조각 시험 모드 / 엔티티·다리 배치·연결·붕괴·이동·전투·경제 흐름 남음) — [docs/core-rules.md](docs/core-rules.md) |
 | 9 | UI · 미션 스크립트 · 튜토리얼 | ⬜ 대기 |
 | 10 | AI | ⬜ 대기 |
 | 11 | 캠페인 · 저장(fort) | ⬜ 대기 |
@@ -506,6 +506,8 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
   - 캡처 근거: The War Begins! 에서 적 신전이 없어지자 적 섬 테두리가 빨강 → 주황(소유자 없음), 지면도 초록으로 바뀜
   - 남은 일: exe 판정 함수, 소유자 변경 시점, 템플이 파괴된 섬에 남은 건물·유닛·다리의 처리, Outpost(중립 섬 소유), 받침 섬·가이저 바위의 소유권
 - [ ] **다리 건설**: 다리 조각 생성 규칙(모양 풀, 순서, `BridgeDrawRate`), 배치 판정, 연결·붕괴 조건 (다리는 소유한 섬에서만 시작 — 위 소유권 규칙)
+  - [x] 2026-09-29 조각 생성: 모양 표 26개(VA 0x52f998, 가중치 합 287)·누적 가중치 추첨·회전 표(0x531590)·프레임 선택, 생산 칸 채우기(템플이 있을 때 1초마다, Bridge Slots 칸까지, 5번째 추첨마다 한 칸 조각, 템플을 잃으면 비움), AI 는 4번째마다 한 칸 조각 → [bridge-pieces.md](docs/exe/bridge-pieces.md). `Deck.cpp` 는 다리와 무관(지식·생산 덱, Gem.cpp 가중 추첨)
+  - [ ] 남은 일: 배치 판정·연결·소유권 전파·붕괴(`Bridge.cpp` 00421240~004227e0), 금 간·단단해지는 시점, 조각 원점과 커서, C 키 회전 방향(원본 실행), 미션 `aiNBridgeDrawRate` 의 쓰임
 - [ ] **건물/유닛**: 배치 규칙(소유한 섬에만 배치 — 위 소유권 규칙), 건설 시간, 원소(Sun/Rain/Wind/Thunder) 별 기술 트리, 연구(기술 획득) 방식
   - **생산 규칙 (사용자 확인, 2026-09-28)**: 유닛·건물을 생산·건설하려면 **해당 타입의 워크샵을 우클릭**해 `Put Knowledge into Production >` 로 그 유닛을 **왼쪽 사이드바 "덱"에 등록**해야 한다. 등록된 것만 사이드바에서 골라 배치할 수 있다 — [workshop-deck.md](docs/gameplay/workshop-deck.md)
   - **덱의 출처 (사용자 확인, 2026-09-29)**: 화면 왼쪽 패널 = "덱" = 매뉴얼의 Production window. **워크샵이 파괴되면 그 워크샵으로 등록한 유닛이 덱에서 사라지고**, **템플은 다리 조각과 골렘을 덱에 넣으며 템플이 파괴되면 둘 다 사라진다**. **한 유닛은 한 워크샵에만 등록**(이미 등록된 유닛은 다른 워크샵 목록에 안 나옴), **파괴된 워크샵을 재건하면 우클릭으로 다시 등록해야 복구** — [workshop-deck.md](docs/gameplay/workshop-deck.md) "덱의 출처와 사라지는 조건"
@@ -654,6 +656,8 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
 - [ ] 엔티티 시스템 (`.type` 데이터 구동)
 - [ ] 애니메이션 시스템
 - [ ] 다리 조각 생성·배치·연결·붕괴
+  - [x] 2026-09-29 생성·회전: `Netstorm.Core/Bridges`(BridgeLinks·BridgePatternCatalog·BridgePiece·BridgeFrames·BridgeTray)·`Simulation/NetstormRandom`, 테스트 `BridgePieceTests` 10개(원본 exe 표와 직접 대조 포함), 맵 뷰어 다리 조각 시험 모드 B(`FortMapViewer.Bridges.cs`, `--bridges`) — [core-rules.md](docs/core-rules.md), [map-viewer.md](docs/map-viewer.md#다리-조각-시험-모드)
+  - [ ] 남은 일: 배치 판정·연결·붕괴 (위 4단계 분석 후), `BattleMap` 의 다리 끝·빈 섬 연결 근사 교체
 - [ ] 건물 배치·건설
   - [x] 유닛 배치 판정(위치·빈 자리·Storm Power·에너지)과 배치 실행 — 2026-09-29 `BattleMap` (건설 시간·Power Stream 연출·사제 건설 절차는 남음)
 - [ ] 경제(가이저, 수집, 운반, Storm Power)
@@ -790,6 +794,9 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
 
 **구현 진행 (2026-09-29, 문서화된 자료로 게임 구현 — 원본 실행 없음)**: 8단계 정적 규칙 코어와 맵 뷰어 배치 시험 모드, 7단계 고정 틱·난수를 구현했다 ([게임 규칙 코어](docs/core-rules.md)). 원본 없이 진행할 수 있는 다음 구현 순서는 다음과 같다.
 1. **다리** — `Bridge.cpp`·`Deck.cpp` 정적 분석 → 조각 추첨(`Deck` chance 가중)·회전·연결·금 간 상태·붕괴 → 다리 끝·빈 섬 연결 판정으로 `BattleMap`의 근사를 교체
+   - **2026-09-29 진행**: 조각 생성·추첨·회전·프레임·생산 칸 채우기 완료([bridge-pieces.md](docs/exe/bridge-pieces.md)). 추첨은 `Deck` 이 아니라 `Canondecoder.cpp` 의 고정 모양 표였다.
+   - **다음**: `Bridge.cpp` `FUN_00421770`(칸 방향 연결 검사)·`004217f0`·`004215d0`부터 배치 판정을 옮긴다. 그다음 `004218b0`(재귀 연결·번호)·`00421240`(소유자 전파)·`00421c30`·`00421f90`·`004227e0`(붕괴 추정)을 분석한다.
+   - 이번 변경 파일(커밋 전): `src/Netstorm.Core/Bridges/*`·`Simulation/NetstormRandom.cs`(신규), `tests/Netstorm.Core.Tests/BridgePieceTests.cs`(신규), `src/Netstorm.Game/FortMapViewer.Bridges.cs`(신규)·`FortMapViewer.cs`·`FortMapViewer.Placement.cs`·`NetstormGame.cs`, `docs/exe/bridge-pieces.md`(신규)·`docs/core-rules.md`·`docs/map-viewer.md`, 이 문서. 빌드 오류 0(기존 CA2014 경고 1), 테스트 Core 98·Assets 172 통과.
 2. **엔티티·틱** — `.type` 구동 오브젝트 목록을 `FixedTimestep`으로 갱신하고, 건설 시간(`constructionRate`)·재충전 간격(`ProductionTimers`)을 틱으로 돌린다
 3. **초기 상태** — 미션 머리 값 `myTech`·`myStartMoney`, `.fort` `Technology`·`Deck`에서 지식·덱·Storm Power를 채운다. 튜토리얼 2 는 `BattleOptions.ApplyTutorialTwoOverrides`
 4. **수집·경제** — `Carrier.cpp`·`Nugget.cpp`·`Vortex.cpp` 분석 → 가이저 → 결정 → 템플 운반 흐름

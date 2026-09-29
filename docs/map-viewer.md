@@ -54,6 +54,30 @@ dotnet run --project src/Netstorm.Game -- --map dissolvedalliance --placement wi
 dotnet run --project src/Netstorm.Game -- --map dissolvedalliance --placement bulf --probe 124,126 --screenshot extracted/screens/placement-bulf.png
 ```
 
+## 다리 조각 시험 모드
+
+**B** 로 켜고 끈다(배치 시험 P 와 동시에 켜지지 않는다). Core `BridgeTray`가 원본 규칙대로 플레이어 1 의 다리 칸을 채운다.
+규칙은 템플이 있을 때만 1초마다, 칸 수는 전투 옵션 Bridge Slots, 5번째 추첨마다 한 칸 조각이다([bridge-pieces.md](exe/bridge-pieces.md)).
+왼쪽 패널에 칸이 2열로 표시되고, 조각은 원본 `bridge.type` 프레임으로 그린다.
+
+| 입력 | 동작 |
+|---|---|
+| `1`~`6` | 그 칸의 조각을 집는다 (들고 있던 조각은 칸으로 되돌린다) |
+| `R` / `Shift+R` | 들고 있는 조각을 시계 / 반시계 방향으로 90° 회전 |
+| `Backspace` | 들고 있는 조각을 칸으로 되돌린다 |
+| 좌클릭 | 커서 칸을 조각의 왼쪽 위 칸으로 삼아 놓는다 — **배치 판정 없음**(표시용) |
+
+* 들고 있는 조각은 커서 위치에 반투명하게 보인다. 놓은 칸은 배치 시험의 "다리 끝" 근사에도 쓰인다.
+* 원본의 조각 원점과 커서의 관계, C 키 회전 방향, 배치·연결·붕괴 규칙은 아직 옮기지 않았다.
+
+검증용 명령(6초를 미리 흘려 칸을 채우고, 4번 조각을 회전 1 로 든 채 (118,122)에 둔다):
+
+```powershell
+dotnet run --project src/Netstorm.Game -- --map dissolvedalliance --bridges 6 --bridge-hold 4,1 --probe 118,122 --screenshot extracted/screens/bridge-tray-dissolvedalliance.png
+```
+
+2026-09-29 확인: 칸 6/6, 추첨 6회, 첫 조각은 한 칸, T 자·ㄱ 자 조각이 원본 프레임으로 이어져 보이고, 회전 1 의 4번 조각이 가로 막대 아래 가지 모양으로 그려진다.
+
 ## 화면 설정 (전체화면·화면비·가장자리 스크롤)
 
 맵 뷰어·스프라이트 뷰어·기본 확인 화면이 같은 화면 계층(`DisplayManager`)을 쓴다.

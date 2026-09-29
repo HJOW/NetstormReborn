@@ -20,6 +20,12 @@
 | `Rules/BattleMap.cs` | `.fort` 오브젝트에서 소유권·공급원·점유 칸을 만들고, 유닛 배치를 위치 → 빈 자리 → Storm Power → 에너지 순서로 판정·실행 | 위 규칙 조합, 매뉴얼 "빈 자리 + SP + 에너지" |
 | `Simulation/FixedTimestep.cs` | 고정 틱 누적기(기본 24Hz, 따라잡기 8틱 한도), 초 → 틱 올림 | [animation-timing.md](videos/animation-timing.md) 4절 |
 | `Simulation/MsvcRandom.cs` | MSVC CRT `rand()` 선형 합동 난수 | 지형 분석의 `_rand` 재현과 같은 계수 |
+| `Simulation/NetstormRandom.cs` | 게임 전역 정수 난수 (상태 × 0x10003 + 3, 시드 0 → 0x0BAD0BAD) | `FUN_004558c0`·`FUN_004558f0` ([bridge-pieces.md](exe/bridge-pieces.md) 3절) |
+| `Bridges/BridgeLinks.cs` | 방향 글자 'A'~'P' ↔ 연결 비트, 회전 표, 반대 방향 | VA 0x52f910·0x531590 |
+| `Bridges/BridgePatternCatalog.cs` | 다리 조각 모양 26개(가중치 합 287)와 누적 가중치 추첨 | VA 0x52f998, `Canondecoder.cpp` `004257c0` |
+| `Bridges/BridgePiece.cs` | 모양 + 회전(1 = 시계 방향 90°) → 회전된 칸 목록 | `00425c20`·`00425860` |
+| `Bridges/BridgeFrames.cs` | 칸 → bridge.type 프레임 (보통 / 금 감 +10 / 단단함 20) | `0049a940`, bridge.type 주석 |
+| `Bridges/BridgeTray.cs` | 생산 창 다리 칸: 템플이 있으면 1초마다, Bridge Slots 칸까지, 5번째 추첨마다 한 칸 조각, 템플을 잃으면 비움 | `Combatgump.cpp` 매 프레임 처리 ([bridge-pieces.md](exe/bridge-pieces.md) 6절) |
 
 ## 발자국과 공급 범위 기하
 
@@ -39,7 +45,7 @@
 
 ## 근사·미구현 (다음 분석 대상)
 
-* **다리 연결·다리 끝**: 빈 섬 연결은 뷰어의 `C` 키 가정으로 대신한다. 다리 끝은 "발자국 둘레에 플레이어 다리 칸이 있는 섬 밖 위치"로 근사한다. `Bridge.cpp`·`Deck.cpp` 분석 후 교체한다.
+* **다리 연결·다리 끝**: 빈 섬 연결은 뷰어의 `C` 키 가정으로 대신한다. 다리 끝은 "발자국 둘레에 플레이어 다리 칸이 있는 섬 밖 위치"로 근사한다. 다리 조각 생성·회전은 구현했고(`Bridges/`), 배치 판정·연결·붕괴는 `Bridge.cpp` 분석 후 교체한다([bridge-pieces.md](exe/bridge-pieces.md) 8절). `Deck.cpp`는 다리와 무관한 지식·생산 덱이다.
 * **섬 칸 판정**: 지면 미리보기의 본섬 마스크(영역 번호 ≥ 0)를 쓴다. 작은 받침·유닛 발판(`createsisland`)은 섬 밖으로 본다. 기준점 칸 하나만으로 섬을 판정하며, 발자국 전체가 섬 위여야 하는지는 미확인이다.
 * **지식·등록 상태**: 뷰어는 모든 생산 유닛을 후보로 보여 준다. 미션 `myTech`와 `.fort` `Technology`·`Deck` 섹션으로 초기 지식·덱을 채우는 연결은 아직 없다.
 * **동맹**: 기본은 같은 플레이어만 아군이다. 미션·멀티플레이 동맹 설정 연결은 남았다.

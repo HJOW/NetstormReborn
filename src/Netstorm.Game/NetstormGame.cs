@@ -279,6 +279,35 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
             }
             _mapViewer.StartPlacement(placement, cell);
         }
+        // 검증용: --bridges 초 [--bridge-hold 모양,회전] [--probe x,y] 로 다리 조각 시험 모드를 켠 채 시작한다.
+        string? bridges = ParseValueArgument(args, "--bridges");
+        if (bridges != null)
+        {
+            if (!double.TryParse(bridges, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out double warmup))
+            {
+                throw new ArgumentException("--bridges 값은 미리 흘릴 초여야 합니다.");
+            }
+            (int, int)? hold = ParsePair(ParseValueArgument(args, "--bridge-hold"), "--bridge-hold");
+            (int, int)? probe = ParsePair(ParseValueArgument(args, "--probe"), "--probe");
+            _mapViewer.StartBridges(warmup, hold, probe);
+        }
+    }
+
+    /// <summary>"a,b" 형식의 정수 쌍을 읽는다 (값이 없으면 null)</summary>
+    /// <param name="value">명령줄 값</param>
+    /// <param name="option">오류 문구용 옵션 이름</param>
+    private static (int, int)? ParsePair(string? value, string option)
+    {
+        if (value == null)
+        {
+            return null;
+        }
+        string[] parts = value.Split(',');
+        if (parts.Length != 2 || !int.TryParse(parts[0], out int a) || !int.TryParse(parts[1], out int b))
+        {
+            throw new ArgumentException($"{option} 값은 a,b 정수 쌍이어야 합니다.");
+        }
+        return (a, b);
     }
 
     /// <summary>입력 처리와 애니메이션 진행</summary>

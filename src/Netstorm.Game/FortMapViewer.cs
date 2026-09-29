@@ -82,6 +82,7 @@ internal sealed partial class FortMapViewer : IDisposable
         _pixel = new Texture2D(device, 1, 1);
         _pixel.SetData(new[] { Color.White });
         InitializePlacement(fort, catalog);
+        InitializeBridges(catalog);
         CenterOnPriest();
     }
 
@@ -133,6 +134,7 @@ internal sealed partial class FortMapViewer : IDisposable
             _showChunks = !_showChunks;
         }
         UpdatePlacement(keyboard, mouse);
+        UpdateBridges(seconds, keyboard, mouse);
         _previousKeyboard = keyboard;
         _previousMouse = mouse;
     }
@@ -229,13 +231,15 @@ internal sealed partial class FortMapViewer : IDisposable
             }
         }
         DrawPlacedUnits(batch, center);
+        DrawBridgeWorld(batch, center);
         batch.Draw(_pixel, new Rectangle(0, 0, width, HeaderHeight), new Color(18, 24, 38));
         batch.DrawString(font, $"맵: {Name} | 오브젝트 {_map.Objects.Count}개 | 확대 {_zoom:0.##}배 | 언어: {Language}", new Vector2(16, 10), Color.Gold);
-        batch.DrawString(font, "방향키 / 우클릭 / 화면 끝: 이동 · 휠: 확대 · Home: 사제 위치 · G: 청크 윤곽 · P: 배치 시험 · Esc: 종료", new Vector2(16, 38), Color.White);
+        batch.DrawString(font, "방향키 / 우클릭 / 화면 끝: 이동 · 휠: 확대 · Home: 사제 위치 · G: 청크 윤곽 · P: 배치 시험 · B: 다리 조각 · Esc: 종료", new Vector2(16, 38), Color.White);
         batch.DrawString(font, "F11: 전체화면 · F10: 와이드 처리 · F9: 원본 해상도 높이 · F7: 가장자리 스크롤", new Vector2(16, 66), Color.White);
         batch.DrawString(font, displayInfo, new Vector2(16, 94), Color.LightGray);
         DrawPlacementOverlay(batch, font, center, width, height);
-        if (hovered != null && !_placementMode)
+        DrawBridgeOverlay(batch, font, width, height);
+        if (hovered != null && !_placementMode && !_bridgeMode)
         {
             string region = hovered.Territory.HasValue ? $"Terr{hovered.Territory:00}" : "Chaff";
             string text = $"{hovered.Object.Type.Name} ({hovered.X}, {hovered.Y}) | {region} | 소유자 {hovered.Object.Owner} | 다리 {hovered.Object.BridgeShape}";
@@ -252,14 +256,18 @@ internal sealed partial class FortMapViewer : IDisposable
     }
 
     /// <summary>지면 타일을 기준점과 프레임 오프셋에 맞춰 그린다.</summary>
-    private void DrawSprite(SpriteBatch batch, int typeIndex, int frameIndex, Vector2 anchor, int color = 0)
+    /// <param name="scale">배율 (없으면 현재 확대 배율)</param>
+    /// <param name="alpha">불투명도 (0~1, 들고 있는 다리 조각 미리보기용)</param>
+    private void DrawSprite(SpriteBatch batch, int typeIndex, int frameIndex, Vector2 anchor, int color = 0,
+        float? scale = null, float alpha = 1f)
     {
         var sprite = GetTexture(typeIndex, frameIndex, color);
         if (sprite.HasValue)
         {
             var (texture, offset) = sprite.Value;
-            batch.Draw(texture, anchor + offset.ToVector2() * _zoom, null, Color.White,
-                0f, Vector2.Zero, _zoom, SpriteEffects.None, 0f);
+            float s = scale ?? _zoom;
+            batch.Draw(texture, anchor + offset.ToVector2() * s, null, Color.White * alpha,
+                0f, Vector2.Zero, s, SpriteEffects.None, 0f);
         }
     }
 

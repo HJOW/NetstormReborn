@@ -122,6 +122,11 @@ internal sealed partial class FortMapViewer
         if (Pressed(keyboard, Keys.P))
         {
             _placementMode = !_placementMode;
+            // 배치 시험과 다리 조각 시험은 같은 안내 영역을 쓰므로 하나만 켠다.
+            if (_placementMode)
+            {
+                _bridgeMode = false;
+            }
         }
         if (!_placementMode || _candidates.Length == 0)
         {
