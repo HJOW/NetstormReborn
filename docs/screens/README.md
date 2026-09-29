@@ -7,7 +7,7 @@
 * 좌표를 잴 때는 파일마다 제목 표시줄(약 31~35px)과 왼쪽 테두리(2~4px) 경계를 먼저 측정해 클라이언트 영역 1024×768 을 잘라낸다. 캡처마다 창 위치와 캡처 범위가 조금씩 다르다.
   측정 예: `Bridge the Gap - Started.png` (4, 32), `mainMenu.png` (2, 33), `help - NetStorm Instructions.png` (4, 34), `Dissolved Alliance! - Started.png` (2, 32)
 * 파일 이름 규칙: 메인 메뉴 계열은 `mainMenu - 메뉴 - 하위 메뉴.png`, 미션 화면은 `미션 이름 - 상황.png`
-* 상세 분석 노트가 있는 캡처: [bridge-the-gap-start.md](bridge-the-gap-start.md), [the-war-begins-start.md](the-war-begins-start.md), [save-the-island-start.md](save-the-island-start.md), [dissolved-alliance-start.md](dissolved-alliance-start.md)
+* 상세 분석 노트가 있는 캡처: [main-menu.md](main-menu.md), [bridge-the-gap-start.md](bridge-the-gap-start.md), [the-war-begins-start.md](the-war-begins-start.md), [save-the-island-start.md](save-the-island-start.md), [dissolved-alliance-start.md](dissolved-alliance-start.md)
 * **미션 시작 카메라**: 원본은 플레이어 1 사제 칸 기준점을 클라이언트 약 (525, 393) 에 둔다 (캡처 3장 공통, [dissolved-alliance-start.md](dissolved-alliance-start.md) 2절). 맵 뷰어도 같은 위치로 시작하므로 1024×768 뷰어 캡처와 원본 캡처를 바로 겹쳐 볼 수 있다.
 
 ## 원본 게임 전제 (사용자 확인, 2026-09-28)
@@ -38,7 +38,7 @@
 | `mainMenu - Help.png` | Help 드롭다운 | 버튼 아래 펼침 메뉴: General Help - F1, Technical Help, Version |
 | `help - NetStorm Instructions.png` | 도움말 창 | `help.english` 의 `F1Help` 절. 돌 테두리 창(약 450×350)·세로 스크롤바·Back/OK. 메뉴에서는 `<?{global.inMission}>` 의 F8 안내 줄이 숨겨짐. `~lblue~.` 파란 글자, `<c>` 노란 글자 |
 | `mainMenu - Edit.png` | 요새 편집 | "Load Battle Map" — 2열 목록(battle4, battle5 … BC1Menu … b0~b14, Battle1~3 …, 대소문자 섞인 파일 이름), Create New Map / Cancel. 타이틀 그림보다 큰 세로 창 |
-| `mainMenu - Credits.png` | 제작진 | Netstorm 10.72 Patch Credits, Netstorm Original Credits, Cancel → **보유 exe 는 10.72 패치판** |
+| `mainMenu - Credits.png` | 제작진 | Netstorm 10.72 Patch Credits, Netstorm Original Credits, Cancel. **10.72는 제작진 명단 제목이며 보유 exe의 버전 표시는 아니다** ([근거](../sources/README.md#2-보유-exe-의-버전)) |
 | `mainMenu - Options.png` | Options 드롭다운 | Direct Draw / Full Screen, Resolution > / Sound On●, Play Music●, Wind Noise●, Speaker Swap L/R, Sound Effect Volume >, Music Volume > / Edge Scroll in Fullscreen●, Auto-Demo●, Tell Tips at Startup●, Pause - Shift-F9 (노란 단축키) / Pass Server Diagnostic (● = 켜짐 표시) |
 | `mainMenu - Options - Resolution.png` | 해상도 하위 메뉴 | 640 by 480, 800 by 600, **1024 by 768●** — 4:3 만 존재 |
 | `mainMenu - Options - Sound Effect Volume.png` | 효과음 음량 | Volume 1~5, **3●** |
