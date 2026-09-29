@@ -9,6 +9,43 @@
 
 ---
 
+## 0-A. 최신 인수인계 — AI용 원본 분석 도구 (2026-09-29 중단)
+
+**상시 실행 확인 규칙(사용자 요청):** 이 자동 탐험 프로그램을 이용하면서 실제 게임 구동이 필요하면, 실행 전에 개발자에게 목적과 필요성을 알리고 명시적인 확인을 받아야 한다. CLI/MCP `start_session`, `mcp_smoke.py --live`, 검증용 직접 실행에 모두 적용한다. 일반 작업 지시나 과거 실행 이력을 새로운 실행의 확인으로 간주하지 않으며, 확인받은 범위 안에서만 실행한다. 이 규칙은 현재 중단이 해제된 뒤에도 유지한다. `AGENTS.md`와 도구 사용 문서에도 반영했다.
+
+**사용자 지시: 실제 게임 실행 테스트를 중단한다. 다른 작업 때문에 게임을 구동하면 안 된다. 사용자가 재개를 명시하기 전에는 원본/복사본 실행, `start_session`, `mcp_smoke.py --live`를 수행하지 않는다.** 중단 요청 뒤 프로세스 조회에서 실행 중인 `Netstorm`이 없음을 확인했다. 새 게임 실행이나 실제 입력 테스트는 하지 않았다.
+
+### 구현한 내용
+
+- `TODO.md`의 AI용 원본 게임 탐험 도구를 `analyzeManager/`에 구현했다. 아직 작업 전체 완료로 보지 않는다. 사용자 작성 `TODO.md`는 그대로 유지했다.
+- C#/.NET 10 Windows 독립 프로젝트. CLI와 공식 C# SDK 2.2.0 기반 stdio MCP가 같은 엔진을 호출한다. 게임 솔루션에는 추가하지 않았다.
+- 도구 8개: `list_sessions`, `start_session`, `game_status`, `capture_state`, `game_input`, `wait_for_change`, `record_observation`, `end_session`.
+- 원본 전체를 `extracted/analyzeManager/<sessionId>/game/`에 복사한 뒤 복사본의 options/setup 설정만 수정: 창 모드 1024×768, `InstallDir` 변경. 원본 파일을 수정하는 경로는 만들지 않았다.
+- PID·시작 시각·exe 경로로 관리 대상 확인, 파일 잠금으로 동시 조작 제한, 클라이언트 물리 픽셀 입력, 관심 영역 캡처·변화 대기, 입력 전후 기록, 취소 시 키/버튼 해제 구현.
+- PNG SHA-256 중복 재사용, JSONL/Markdown 약 4 MB 분할, 파일당 50,000,000바이트 미만, 세션당 PNG 500개/200 MB 및 이벤트 10,000개 한도. 원본 게임이 자체 생성하는 파일까지 크기를 강제하지는 않는다.
+- [사용법·구조·제약](docs/analyze-manager.md), [도구 안내](analyzeManager/README.md), [MCP 설정 예시](analyzeManager/examples/mcp-settings.json)를 작성했다. 실제 사용자 MCP 설정은 변경하지 않았다.
+
+### 검증된 것 / 검증하지 못한 것
+
+- `dotnet build analyzeManager/AnalyzeManager.csproj --no-restore`: Debug 빌드 성공, 오류 0·경고 0.
+- `dotnet test analyzeManager/tests/AnalyzeManager.Tests.csproj`: **17개 통과**. 가짜 원본을 사용하는 파일 보존·로그/이미지·입력 경계 검사이며 게임은 실행하지 않는 테스트다.
+- 실제 복사본을 한 번 실행하여 **1024×768 창과 Activision 시작 화면 PNG**를 저장·육안 확인했다. 세션 ID: `20260929T020751113Z-1ca6ff22ee2e`.
+  - 증거: `extracted/analyzeManager/20260929T020751113Z-1ca6ff22ee2e/screens/3eb1594375aa2b0498cb594a3d3fdb4d3e955305bc1d634faa5b2031bf68294b.png`
+  - 보고서: 같은 세션의 `report.md`. 실행 파일 SHA-256과 PID/시작 시각은 `session.json`에 있다. 결과는 Git 제외 경로에 보존했다.
+- 후속 CLI `capture_state`는 “이 세션의 게임이 종료되었거나 프로세스 식별 정보가 다릅니다.” 오류를 반환했고 실제 프로세스도 없었다. **종료 원인은 미확정**이다. 명령 실행기의 자식 프로세스 정리 여부도 재개 후 확인할 후보이며 현재 확정해서 쓰면 안 된다. manifest의 `phase=running`은 마지막 기록 상태이고 실제 상태는 `game_status.running`으로 판단한다.
+- 실제 마우스·키보드 반응, CLI 호출 간 게임 유지, MCP 초기화/도구 검색/이미지 전송/EOF 종료는 **미검증**이다. `analyzeManager/tests/mcp_smoke.py`는 작성만 했고 실행하지 않았다. Release 빌드와 실제 MCP 호스트 등록도 미실시다.
+- 중단 요청 뒤에는 문서·인수인계와 파일 점검만 수행했다. 사용자에게 실제 입력/MCP 검증이 끝났다고 보고하면 안 된다.
+
+### 다음 작업
+
+1. 현재 실행 금지 요청을 유지한다. 게임을 띄우지 않는 코드 검토·문서 작업은 가능하다. 실제 GUI 테스트는 개발자에게 실행 목적과 필요성을 알리고 명시적인 실행 확인을 받은 뒤 수행한다. 이 확인 의무는 중단 해제 이후에도 적용한다.
+2. 빌드/단위 테스트 결과와 별도로 작성한 `mcp_smoke.py`를 검토한다. 기본 모드는 게임 없이 프로토콜만 검사하며, `--live`는 CLI 실행·MCP 캡처·입력·메모·강제 종료까지 수행하므로 현재 금지한다.
+3. 재개 허용 후 지속 실행되는 MCP 서버/상위 프로세스 안에서 CLI 실행 후 게임 생존을 확인하고, 이번 후속 캡처 실패 원인을 해결한다. 단일 `start_session` 성공만으로 장기 사용 가능하다고 결론 내리지 않는다.
+4. 실제 입력 전후 캡처, ROI 변화 대기, MCP PNG 응답, 한국어 보고서 링크, 정상 종료 및 종료 확인 창 처리를 검증한다. 성공하면 [도구 문서](docs/analyze-manager.md)의 검증 범위를 갱신한다.
+5. 원본 메뉴/도움말/캠페인 분석은 그 뒤 도구를 사용해 수행한다. 기존 6절의 게임 규칙 동적 확인 항목들은 이번에 완료하지 않았다.
+
+이번 작업 파일: `analyzeManager/` 신규 소스·테스트·예시·README, `docs/analyze-manager.md` 신규, `LEFT_JOBS.md`·`AGENTS.md` 갱신. 시작 시 이미 사용자 수정이 있던 `TODO.md`는 보존했다. 커밋은 하지 않았다.
+
 ## 0. 진행 현황 요약
 
 | 단계 | 내용 | 상태 |

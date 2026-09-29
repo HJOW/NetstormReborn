@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "netstorm-analysis": {
+      "command": "D:/Workspace/git/NetstormReborn/analyzeManager/bin/Release/net10.0-windows/Netstorm.AnalyzeManager.exe",
+      "args": ["--repo", "D:/Workspace/git/NetstormReborn", "mcp"]
+    }
+  }
+}
