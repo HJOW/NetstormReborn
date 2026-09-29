@@ -26,6 +26,7 @@
 
 * **확정(2026-09-29, 원본 실행): 보유 exe 는 10.78 이다.** 메인 메뉴 Help → Version 창에 "Version v10.78"과 "10.78 Patch by Ticonderoga Entertainment."가 표시된다. 이 창은 `tell.english` `[About]` 절의 `Version {version}`·`{gamemaster}.{gameminor} Patch …`에 **실행 중 exe 가 넘겨 주는 값**을 채운 것이다. 증거: `extracted/analyzeManager/20260929T120526716Z-327849a23cac/screens/37feb1f2….png` ([화면 목록 1.3절](../screens/README.md)).
 * **`originalCD/`는 별도의 이전 CD판**이다. 사용자 제공 정보에 따르면 그 안의 게임은 **10.72**이며 Windows 98/ME에서 호환되고 Windows XP에서는 동작하지 않았다. Windows 10/11에서도 동작하지 않을 것으로 예상되므로, 현재 동적 분석·클론 동작 기준은 계속 `originals/`의 10.78이다. CD판은 인트로 영상과 초기 자료·판본 비교에 참고한다. CD 루트의 `NETSTORM.VER` 파일에는 `10.37`이 적혀 있으나 이 값의 의미는 확인되지 않았으며 게임 버전의 근거로 해석하지 않는다.
+* **CD판 정적 디컴파일(2026-09-30 완료)**: `powershell -ExecutionPolicy Bypass -File tools/ghidra/run_decomp.ps1 -Edition originalCD`로 `originalCD/NETSTORM.EXE`를 분석했다. 함수 **3,711개 성공, 실패 0개**이며, 패치판과 분리된 `extracted/originalCD/ghidra/` 프로젝트와 `extracted/originalCD/decomp/NETSTORM.c`를 만들었다. `extracted/`는 Git에서 제외되므로 다른 PC에서는 [추출 순서](../formats/README.md#추출-순서-처음-받은-사람용)에 따라 다시 디컴파일해야 한다.
 * `PatchFixs.txt` 의 최신 항목은 **10.77/10.78**. exe 에 "10.78" 버전 문자열은 그대로 들어 있지 않다(숫자 값으로 치환됨).
 * 정적 분석 근거: exe 의 전투 옵션 표([battle-options.md](../exe/battle-options.md))에 **10.75/10.76 에서 추가된 옵션**(Island Dynamics, Geysers Placement, Geysers Respawns, Resource Injections, Game Type)이 모두 있다 → 10.75 이상. 위 실행 결과와 모순되지 않는다.
 * 게임 안 Credits 의 "Netstorm 10.72 Patch Credits" 는 제작진 명단 제목이다 (`tell.english`).

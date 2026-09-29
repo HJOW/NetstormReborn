@@ -17,7 +17,7 @@
 
 기타:
 * 실행 파일 리소스 추출: `tools/peres.py` (비트맵·문자열·다이얼로그·커서)
-* 실행 파일 디컴파일: `tools/ghidra/run_decomp.ps1` → `extracted/decomp/Netstorm.c`, 모듈 맵 `tools/ghidra/module_map.py` → [../exe/modules.md](../exe/modules.md)
+* 실행 파일 디컴파일: `tools/ghidra/run_decomp.ps1` → 패치판 `extracted/ghidra/`·`extracted/decomp/Netstorm.c`, CD판 `extracted/originalCD/ghidra/`·`extracted/originalCD/decomp/NETSTORM.c`. 모듈 맵 `tools/ghidra/module_map.py` → [../exe/modules.md](../exe/modules.md)
 * 오디오(`sound/*.wav`, `music/*.mus`): 전부 표준 PCM WAV (별도 문서 없음)
 * WinHelp 게임 규칙 요약: [../gameplay/help-manual.md](../gameplay/help-manual.md)
 
@@ -29,6 +29,9 @@ python tools/shp.py export
 python tools/typefile.py json
 python tools/peres.py originals/Netstorm.exe extracted/res/Netstorm
 powershell -ExecutionPolicy Bypass -File tools/ghidra/run_decomp.ps1   # 약 10~20분
+powershell -ExecutionPolicy Bypass -File tools/ghidra/run_decomp.ps1 -Edition originalCD   # 이전 CD판
 ```
+
+두 디컴파일 결과와 Ghidra 프로젝트는 모두 `extracted/` 아래에 생성되어 Git에 커밋되지 않는다. 다른 PC에서 C 결과나 프로젝트가 필요하면 Ghidra와 JDK를 준비한 뒤 위 명령을 해당 PC에서 다시 실행해야 한다. 두 판본의 출력 경로는 분리되어 서로 덮어쓰지 않는다.
 
 WinHelp의 `helpdeco` 빌드와 추출 명령은 [hlp.md](hlp.md)의 재현 방법을 따른다.

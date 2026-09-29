@@ -5,10 +5,14 @@
 .EXAMPLE
     powershell -ExecutionPolicy Bypass -File tools\ghidra\run_decomp.ps1
     powershell -ExecutionPolicy Bypass -File tools\ghidra\run_decomp.ps1 -Binary originals\NSENGLISHRES.DLL
+    powershell -ExecutionPolicy Bypass -File tools\ghidra\run_decomp.ps1 -Edition originalCD
 #>
 param(
-    # 분석할 바이너리 경로
-    [string]$Binary = 'originals\Netstorm.exe',
+    # 분석할 바이너리 경로 (생략하면 판본별 기본 실행 파일)
+    [string]$Binary = '',
+    # 기존 패치판과 CD판의 프로젝트·결과 디렉터리를 분리하는 판본 선택
+    [ValidateSet('originals', 'originalCD')]
+    [string]$Edition = 'originals',
     # Ghidra 설치 폴더 (PREPARE.ps1 기본 설치 위치에서 검색)
     [string]$GhidraDir = ''
 )
@@ -16,9 +20,16 @@ param(
 # 프로젝트 루트 (이 스크립트 기준 두 단계 위)
 $Root = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
 
-# Ghidra 프로젝트와 디컴파일 결과를 둘 폴더 (extracted/ 는 git 에서 제외됨)
-$ProjectDir = Join-Path $Root 'extracted\ghidra'
-$OutDir     = Join-Path $Root 'extracted\decomp'
+# CD판은 기존 패치판 프로젝트와 C 파일을 덮어쓰지 않도록 별도 폴더를 사용한다.
+if ($Edition -eq 'originalCD') {
+    $ProjectDir = Join-Path $Root 'extracted\originalCD\ghidra'
+    $OutDir = Join-Path $Root 'extracted\originalCD\decomp'
+    if (-not $Binary) { $Binary = 'originalCD\NETSTORM.EXE' }
+} else {
+    $ProjectDir = Join-Path $Root 'extracted\ghidra'
+    $OutDir = Join-Path $Root 'extracted\decomp'
+    if (-not $Binary) { $Binary = 'originals\Netstorm.exe' }
+}
 
 # Ghidra 폴더를 지정하지 않았으면 C:\Tools 에서 가장 최신 버전을 찾는다
 if (-not $GhidraDir) {
@@ -38,8 +49,29 @@ foreach ($dir in @($ProjectDir, $OutDir)) {
     if (-not (Test-Path $dir)) { New-Item -ItemType Directory -Path $dir | Out-Null }
 }
 
-# 자동 분석 + 디컴파일 내보내기 (기존 프로젝트가 있으면 덮어씀)
-& $Headless $ProjectDir $ProjectName -import $BinaryPath -overwrite `
-    -scriptPath (Join-Path $Root 'tools\ghidra') -postScript ExportDecomp.java $OutFile
+# Ghidra 설정과 캐시도 Git 제외 경로에 두어 사용자 프로필의 쓰기 권한에 의존하지 않는다.
+$SettingsDir = Join-Path $Root 'extracted\ghidra-settings'
+$CacheDir = Join-Path $Root 'extracted\ghidra-cache'
+foreach ($dir in @($SettingsDir, $CacheDir)) {
+    if (-not (Test-Path $dir)) { New-Item -ItemType Directory -Path $dir | Out-Null }
+}
+$PreviousConfigHome = $env:XDG_CONFIG_HOME
+$PreviousCacheHome = $env:XDG_CACHE_HOME
+$env:XDG_CONFIG_HOME = $SettingsDir
+$env:XDG_CACHE_HOME = $CacheDir
 
+# 자동 분석 + 디컴파일 내보내기 (기존 프로젝트가 있으면 덮어씀)
+try {
+    & $Headless $ProjectDir $ProjectName -import $BinaryPath -overwrite `
+        -scriptPath (Join-Path $Root 'tools\ghidra') -postScript ExportDecomp.java $OutFile
+    $GhidraExitCode = $LASTEXITCODE
+} finally {
+    $env:XDG_CONFIG_HOME = $PreviousConfigHome
+    $env:XDG_CACHE_HOME = $PreviousCacheHome
+}
+
+if ($GhidraExitCode -ne 0) { throw "Ghidra 디컴파일 실패 (종료 코드 $GhidraExitCode): $BinaryPath" }
+if (-not (Test-Path -LiteralPath $OutFile) -or (Get-Item -LiteralPath $OutFile).Length -eq 0) {
+    throw "디컴파일 결과 파일이 생성되지 않았습니다: $OutFile"
+}
 Write-Host "결과: $OutFile"

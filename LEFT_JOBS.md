@@ -477,6 +477,9 @@ Netstorm/
   - 2026-09-28 `originals/` 가 저장소에 포함되어 CI 에서도 원본 검증 테스트가 실행될 것으로 예상된다 (체크아웃 용량 약 310MB 증가). 실제 실행 시 소요 시간·Linux 대소문자 파일 찾기 결과를 확인할 것
 - [x] Ghidra 프로젝트 생성, `Netstorm.exe` 임포트·자동 분석·전체 디컴파일 — 2026-09-27 완료
   - `tools/ghidra/run_decomp.ps1` (헤드리스, 약 10~20분) → 프로젝트 `extracted/ghidra/`, 결과 `extracted/decomp/Netstorm.c` (2026-09-28 재추출: 함수 4,506개 성공, 실패 0개)
+- [x] 이전 CD판 `originalCD/NETSTORM.EXE` 별도 디컴파일 — 2026-09-30 완료
+  - `tools/ghidra/run_decomp.ps1 -Edition originalCD` → 프로젝트 `extracted/originalCD/ghidra/`, 결과 `extracted/originalCD/decomp/NETSTORM.c` (함수 3,711개 성공, 실패 0개). 기존 `originals/` 디컴파일 결과의 SHA-256은 작업 전후 동일하다.
+  - 두 판본의 Ghidra 프로젝트와 C 결과는 `extracted/` 아래라 Git에 커밋되지 않는다. 다른 PC에서는 [재생성 명령](docs/formats/README.md#추출-순서-처음-받은-사람용)을 실행해야 한다.
 - [ ] (후순위) Linux 에서 빌드·실행 확인
 
 #### 빌드·실행 방법
