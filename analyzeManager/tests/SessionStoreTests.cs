@@ -92,6 +92,23 @@ public sealed class SessionStoreTests : IDisposable
         Assert.Equal(2, store.Load(session.Id).EventCount);
     }
 
+    /// <summary>손상된 해시 이름의 PNG를 정상 증거로 재사용하지 않는지 확인한다.</summary>
+    [Fact]
+    public async Task RejectsCorruptedStoredImage()
+    {
+        var store = new SessionStore(_root);
+        AnalysisSession session = await store.CreateAsync("손상 검출", CancellationToken.None);
+        var window = new GameWindow(1, "fixture", 0, 0, 1, 1, true);
+        var frame = new CapturedFrame([1, 2, 3], [10, 20, 30], new(0, 0, 1, 1), window);
+        ScreenshotEvidence evidence = store.StoreFrame(session, frame);
+        string path = Path.Combine(store.SessionDirectory(session.Id), evidence.Path);
+        File.WriteAllBytes(path, [1, 2, 4]);
+        Assert.Throws<InvalidDataException>(() => store.StoreFrame(session, frame));
+        File.WriteAllBytes(path, [1, 2]);
+        Assert.Throws<InvalidDataException>(() => store.StoreFrame(session, frame));
+        Assert.Equal(new byte[] { 1, 2 }, File.ReadAllBytes(path));
+    }
+
     /// <summary>OS가 재사용한 PID나 다른 프로그램을 게임으로 취급하지 않는다.</summary>
     [Fact]
     public async Task RejectsUnownedProcessEvenWithMatchingPidAndStartTime()

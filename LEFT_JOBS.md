@@ -30,6 +30,7 @@
 - `dotnet build analyzeManager/AnalyzeManager.csproj --no-restore`: Debug 빌드 성공, 오류 0·경고 0.
 - `dotnet test analyzeManager/tests/AnalyzeManager.Tests.csproj`: **17개 통과**. 가짜 원본을 사용하는 파일 보존·로그/이미지·입력 경계 검사이며 게임은 실행하지 않는 테스트다.
 - **2026-09-29 게임 없는 후속 검증:** Release 빌드 오류/경고 0, Release 단위 테스트 17개 통과. `mcp_smoke.py` 기본 모드로 MCP `initialize`(프로토콜 2025-03-26), 도구 8개 스키마, `list_sessions`, 잘못된 세션의 오류 응답, EOF 종료를 확인했다. 서버와 테스트는 게임을 실행하지 않았다. `start_session` 도구 설명과 CLI 도움말에 일반 시스템의 개발자 확인 조건과 지정 시스템 예외를 반영했고, Release 재빌드 및 게임 없는 MCP 기본 검사를 다시 통과했다.
+- **2026-09-29 Linux 정적 후속 작업:** `SessionStore.StoreFrame`이 같은 해시 이름의 손상된 PNG를 재사용하던 문제를 수정했다. 새 PNG는 임시 파일로 완성해 최종 이름으로 옮기며, 재사용 시 크기와 SHA-256을 검사한다. 손상 파일 회귀 테스트 1개를 추가했다. 이 Linux 시스템에서는 NuGet 패키지 다운로드가 완료되지 않아 Windows 대상 프로젝트의 변경 후 빌드·테스트를 실행하지 못했다. 대신 `SessionStore.cs`를 패키지 의존성 없는 .NET 10 임시 검증 프로젝트에 직접 연결해 정상 중복, 동일 길이 손상, 잘린 파일 검출을 통과했다. Windows 대상 전체 테스트와 MCP 검사는 이 변경 이후 재검증 필요하다.
 - 실제 복사본을 한 번 실행하여 **1024×768 창과 Activision 시작 화면 PNG**를 저장·육안 확인했다. 세션 ID: `20260929T020751113Z-1ca6ff22ee2e`.
   - 증거: `extracted/analyzeManager/20260929T020751113Z-1ca6ff22ee2e/screens/3eb1594375aa2b0498cb594a3d3fdb4d3e955305bc1d634faa5b2031bf68294b.png`
   - 보고서: 같은 세션의 `report.md`. 실행 파일 SHA-256과 PID/시작 시각은 `session.json`에 있다. 결과는 Git 제외 경로에 보존했다.

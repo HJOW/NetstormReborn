@@ -202,13 +202,33 @@ public sealed class SessionStore
         RejectReparse(directory);
         Directory.CreateDirectory(directory);
         string path = Path.Combine(directory, hash + ".png");
+        RejectReparse(path);
         bool reused = File.Exists(path);
-        if (!reused)
+        if (reused)
+        {
+            // 같은 이름의 파일이 중간에 잘렸거나 바뀌었다면 증거로 재사용하지 않는다.
+            if (new FileInfo(path).Length != frame.Png.Length)
+                throw new InvalidDataException($"저장된 화면 증거의 크기가 일치하지 않습니다: {path}");
+            byte[] existing = File.ReadAllBytes(path);
+            if (!string.Equals(Convert.ToHexString(SHA256.HashData(existing)), hash, StringComparison.OrdinalIgnoreCase))
+                throw new InvalidDataException($"저장된 화면 증거의 SHA-256이 일치하지 않습니다: {path}");
+        }
+        else
         {
             FileInfo[] images = new DirectoryInfo(directory).GetFiles("*.png");
             if (images.Length >= MaximumImages || images.Sum(f => f.Length) + frame.Png.Length > ImageBudgetBytes)
                 throw new InvalidOperationException("세션 이미지 한도(500장/200 MB)에 도달했습니다. 새 세션을 시작하세요.");
-            WriteSmallFile(path, frame.Png);
+            // 임시 파일을 완성한 뒤 옮겨 캡처 도중 실패한 바이트를 최종 해시 이름으로 남기지 않는다.
+            string temporary = Path.Combine(directory, $".{hash}-{Guid.NewGuid():N}.tmp");
+            try
+            {
+                WriteSmallFile(temporary, frame.Png);
+                File.Move(temporary, path);
+            }
+            finally
+            {
+                if (File.Exists(temporary)) File.Delete(temporary);
+            }
         }
         return new($"screens/{hash}.png", hash, frame.Region.Width, frame.Region.Height, frame.Region, reused, frame.Window);
     }
