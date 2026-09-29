@@ -145,14 +145,17 @@ public static class WindowsGame
     }
 
     /// <summary>가려지지 않은 실제 화면을 캡처한다. DirectDraw의 빈 PrintWindow 결과를 사용하지 않는다.</summary>
-    public static CapturedFrame Capture(GameWindow window, string region)
+    public static CapturedFrame Capture(GameWindow window, string region) => CaptureVisible(window, region, true);
+
+    /// <summary>안내 창을 조작하는 동안에도 가리지 않은 게임 화면을 기록한다.</summary>
+    public static CapturedFrame CaptureVisible(GameWindow window, string region, bool requireForeground = false)
     {
         SetDpiMode();
         CaptureRegion roi = CaptureRegion.Parse(region, window);
         var screenRect = new Rectangle(window.X + roi.X, window.Y + roi.Y, roi.Width, roi.Height);
         if (!SystemInformation.VirtualScreen.Contains(screenRect) || roi.Width > 4096 || roi.Height > 4096)
             throw new InvalidOperationException("캡처 영역이 화면 밖에 있거나 4096픽셀 한도를 넘습니다.");
-        CheckForeground(window);
+        if (requireForeground) CheckForeground(window);
         // 표본 위치가 다른 창에 덮였으면 다른 프로그램의 화면을 증거로 저장하지 않는다.
         foreach (Point point in new[] { screenRect.Location,
             new Point(screenRect.Right - 1, screenRect.Bottom - 1),
@@ -162,7 +165,7 @@ public static class WindowsGame
                 throw new InvalidOperationException("게임 캡처 영역이 다른 창에 가려져 있습니다.");
         }
         CapturedFrame frame = IsWine ? CaptureWine(window, roi) : CaptureScreen(window, roi, screenRect);
-        CheckForeground(window);
+        if (requireForeground) CheckForeground(window);
         return frame;
     }
 

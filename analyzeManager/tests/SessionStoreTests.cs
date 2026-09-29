@@ -1,4 +1,6 @@
 using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.Text.Json;
 using Netstorm.Assets;
 
@@ -93,6 +95,72 @@ public sealed class SessionStoreTests : IDisposable
         Assert.Equal("wine-window-dc", store.StoreFrame(session, frame with { Method = "wine-window-dc" }).Method);
         Assert.Single(Directory.GetFiles(Path.Combine(store.SessionDirectory(session.Id), "screens")));
         Assert.Equal(2, store.Load(session.Id).EventCount);
+    }
+
+    /// <summary>기존 500장 경계 이후에도 같은 세션에 개별 PNG 증거를 저장한다.</summary>
+    [Fact]
+    public async Task KeepsMoreThanFiveHundredDistinctScreenshots()
+    {
+        var store = new SessionStore(_root);
+        AnalysisSession session = await store.CreateAsync("연속 캡처", CancellationToken.None);
+        var window = new GameWindow(1, "fixture", 0, 0, 1, 1, true);
+        // 각 PNG 바이트를 다르게 해 중복 제거에 가려진 개수 제한을 확인한다.
+        for (int i = 0; i < 501; i++)
+        {
+            var frame = new CapturedFrame(BitConverter.GetBytes(i), [0, 0, 0], new(0, 0, 1, 1), window);
+            store.StoreFrame(session, frame);
+        }
+        Assert.Equal(501, Directory.GetFiles(Path.Combine(store.SessionDirectory(session.Id), "screens"), "*.png").Length);
+    }
+
+    /// <summary>AI가 보낸 한글 안내가 세션 파일에 남아 GUI 재실행 때 다시 읽히는지 검사한다.</summary>
+    [Fact]
+    public async Task GuideStepsPersistWithoutStartingGame()
+    {
+        var engine = new AnalysisEngine(_root);
+        AnalysisSession session = await engine.Store.CreateAsync("안내", CancellationToken.None);
+        AnalysisResult result = await engine.ExecuteAsync("set_guide_steps", new AnalysisRequest
+        {
+            SessionId = session.Id,
+            Steps = "메뉴를 여세요.\n다리를 놓으세요.\n",
+        }, TestContext.Current.CancellationToken);
+        Assert.False(result.IsError);
+        Assert.Equal("메뉴를 여세요.\n다리를 놓으세요.\n",
+            File.ReadAllText(Path.Combine(engine.Store.SessionDirectory(session.Id), "guide-steps.txt")));
+        Assert.Equal(1, engine.Store.Load(session.Id).EventCount);
+    }
+
+    /// <summary>영상 조각이 크기를 넘기기 전에 분리되고 재개 시 이전 AVI를 덮지 않는지 검사한다.</summary>
+    [Fact]
+    public void VideoSegmentsRemainPlayableAfterResume()
+    {
+        string directory = Path.Combine(_root, "recording-test");
+        using var bitmap = new Bitmap(10, 10);
+        using var jpegStream = new MemoryStream();
+        bitmap.Save(jpegStream, ImageFormat.Jpeg);
+        byte[] jpeg = jpegStream.ToArray();
+        // 실제 녹화와 같은 RIFF 헤더·분할 경로를 작은 한도로 강제한다.
+        using (var video = new GuidedVideo(directory, 10, 10, 10, 1500))
+        {
+            for (int i = 0; i < 4; i++) video.WriteFrame(jpeg, DateTimeOffset.UtcNow, i * 100);
+        }
+        string[] initial = Directory.GetFiles(directory, "video-*.avi").Order().ToArray();
+        Assert.True(initial.Length > 1);
+        using (var resumed = new GuidedVideo(directory, 10, 10, 10, 1500))
+            resumed.WriteFrame(jpeg, DateTimeOffset.UtcNow, 500);
+        string[] files = Directory.GetFiles(directory, "video-*.avi").Order().ToArray();
+        Assert.Equal(initial.Length + 1, files.Length);
+        // 모든 AVI가 해당 파일의 실제 길이를 헤더에 갖고 1500바이트보다 작아야 한다.
+        foreach (string file in files)
+        {
+            byte[] bytes = File.ReadAllBytes(file);
+            Assert.True(bytes.Length < 1500);
+            Assert.Equal("RIFF", System.Text.Encoding.ASCII.GetString(bytes, 0, 4));
+            Assert.Equal(bytes.Length - 8, BitConverter.ToInt32(bytes, 4));
+            Assert.Contains("movi", System.Text.Encoding.ASCII.GetString(bytes));
+            Assert.True(bytes.AsSpan().IndexOf(jpeg) >= 0);
+            Assert.True(File.Exists(Path.ChangeExtension(file, ".frames.csv")));
+        }
     }
 
     /// <summary>손상된 해시 이름의 PNG를 정상 증거로 재사용하지 않는지 확인한다.</summary>

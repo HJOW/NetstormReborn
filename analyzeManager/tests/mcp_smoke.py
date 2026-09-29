@@ -119,7 +119,7 @@ def main():
         listing = client.request("tools/list", {})["tools"]
         names = {tool["name"] for tool in listing}
         assert names == {"list_sessions", "start_session", "game_status", "capture_state",
-                         "game_input", "wait_for_change", "record_observation", "end_session"}
+                         "game_input", "wait_for_change", "record_observation", "set_guide_steps", "end_session"}
         # 각 도구에 입력 객체 스키마가 있는지 실제 협상 결과로 확인한다.
         for tool in listing:
             assert tool["inputSchema"]["type"] == "object"

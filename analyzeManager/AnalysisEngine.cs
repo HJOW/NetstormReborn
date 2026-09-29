@@ -24,6 +24,7 @@ public sealed class AnalysisRequest
     public int PollMs { get; set; } = 200;
     public double Threshold { get; set; } = 0.01;
     public string Note { get; set; } = "";
+    public string Steps { get; set; } = "";
     public string EvidenceHash { get; set; } = "";
     public bool Force { get; set; }
     public bool IncludeImage { get; set; } = true;
@@ -71,6 +72,7 @@ public sealed class AnalysisEngine
                     "game_input" => await InputAsync(session, request, cancellation),
                     "wait_for_change" => await WaitAsync(session, request, cancellation),
                     "record_observation" => Observe(session, request),
+                    "set_guide_steps" => SetGuideSteps(session, request),
                     "end_session" => await EndAsync(session, request.Force, cancellation),
                     _ => throw new ArgumentException($"알 수 없는 도구: {tool}"),
                 };
@@ -260,6 +262,18 @@ public sealed class AnalysisEngine
         }
         Store.Append(session, "ai_observation", new { note = request.Note, evidence, source = "AI의 해석; 원본 화면과 대조 필요" });
         return new(new { sessionId = session.Id, report = ReportPath(session), eventNumber = session.EventCount });
+    }
+
+    /// <summary>AI가 만든 안내 순서를 세션에 저장해 사용자 직접 조작 창에서 읽게 한다.</summary>
+    private AnalysisResult SetGuideSteps(AnalysisSession session, AnalysisRequest request)
+    {
+        byte[] bytes = System.Text.Encoding.UTF8.GetBytes(request.Steps);
+        if (bytes.Length is < 1 or > 64_000 || !request.Steps.Split('\n').Any(line => !string.IsNullOrWhiteSpace(line)))
+            throw new ArgumentException("steps는 비어 있지 않은 UTF-8 텍스트여야 하며 64 KB 이하여야 합니다.");
+        string path = Path.Combine(Store.SessionDirectory(session.Id), "guide-steps.txt");
+        SessionStore.WriteSmallFile(path, bytes);
+        Store.Append(session, "guided_steps_updated", new { count = request.Steps.Split('\n').Count(line => !string.IsNullOrWhiteSpace(line)) });
+        return new(new { sessionId = session.Id, path, report = ReportPath(session) });
     }
 
     /// <summary>종료 확인 대화상자가 남으면 그 상태를 돌려주고, force일 때만 소유한 프로세스를 끝낸다.</summary>

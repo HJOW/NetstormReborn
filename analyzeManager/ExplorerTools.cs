@@ -75,6 +75,12 @@ public sealed class ExplorerTools
     public Task<CallToolResult> RecordObservation(string sessionId, string note, string evidenceHash = "", CancellationToken cancellation = default)
         => Run("record_observation", new() { SessionId = sessionId, Note = note, EvidenceHash = evidenceHash }, cancellation);
 
+    /// <summary>사용자 직접 조작 창에 표시할 단계들을 줄 단위로 저장한다.</summary>
+    [McpServerTool(Name = "set_guide_steps", OpenWorld = false, Destructive = false)]
+    [Description("사용자 직접 조작용 안내를 세션에 저장합니다. steps의 빈 줄을 제외한 각 줄이 한 단계입니다. 녹화 시작 전에 호출하고 guide --session ID로 안내 창을 여세요. 최대 64 KB입니다.")]
+    public Task<CallToolResult> SetGuideSteps(string sessionId, string steps, CancellationToken cancellation = default)
+        => Run("set_guide_steps", new() { SessionId = sessionId, Steps = steps }, cancellation);
+
     /// <summary>원본 종료를 요청하거나 해당 세션의 프로세스만 강제 종료한다.</summary>
     [McpServerTool(Name = "end_session", OpenWorld = false, Destructive = true)]
     [Description("해당 세션 게임에 종료를 요청합니다. 확인 창이 남으면 closed=false입니다. force=true는 검증된 세션 게임 프로세스만 강제 종료합니다. 증거와 복사본은 보존합니다.")]

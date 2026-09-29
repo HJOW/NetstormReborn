@@ -34,12 +34,8 @@ public sealed class SessionStore
     public const int FileLimitBytes = 50_000_000;
     /// <summary>이벤트/문서 파일은 4 MB가 되기 전에 다음 파일로 분할한다.</summary>
     public const int DefaultPartBytes = 4_000_000;
-    /// <summary>한 세션의 이미지가 저장 공간을 계속 쓰지 않도록 정한 총량.</summary>
-    public const long ImageBudgetBytes = 200_000_000;
     /// <summary>대화나 무한 반복으로 증거가 끝없이 쌓이지 않도록 한 세션 한도를 둔다.</summary>
     public const int MaximumEvents = 10_000;
-    /// <summary>이미지 개수 제한. 한도에 도달하면 중복 이미지만 재사용할 수 있다.</summary>
-    public const int MaximumImages = 500;
     /// <summary>한글을 UTF-8로 저장하며 외부 프로토콜과 맞추는 JSON 설정.</summary>
     public static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web)
     {
@@ -202,6 +198,7 @@ public sealed class SessionStore
     /// <summary>PNG 해시로 중복을 제거하고 총 용량/파일 개수 제한을 적용한다.</summary>
     public ScreenshotEvidence StoreFrame(AnalysisSession session, CapturedFrame frame)
     {
+        if (frame.Png.Length >= FileLimitBytes) throw new InvalidOperationException("단일 PNG는 50 MB 미만이어야 합니다. 더 작은 영역을 지정하세요.");
         string hash = Convert.ToHexString(SHA256.HashData(frame.Png)).ToLowerInvariant();
         string directory = Path.Combine(SessionDirectory(session.Id), "screens");
         RejectReparse(directory);
@@ -220,9 +217,6 @@ public sealed class SessionStore
         }
         else
         {
-            FileInfo[] images = new DirectoryInfo(directory).GetFiles("*.png");
-            if (images.Length >= MaximumImages || images.Sum(f => f.Length) + frame.Png.Length > ImageBudgetBytes)
-                throw new InvalidOperationException("세션 이미지 한도(500장/200 MB)에 도달했습니다. 새 세션을 시작하세요.");
             // 임시 파일을 완성한 뒤 옮겨 캡처 도중 실패한 바이트를 최종 해시 이름으로 남기지 않는다.
             string temporary = Path.Combine(directory, $".{hash}-{Guid.NewGuid():N}.tmp");
             try
