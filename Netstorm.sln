@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0AB3BF05
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Netstorm.Assets.Tests", "tests\Netstorm.Assets.Tests\Netstorm.Assets.Tests.csproj", "{190D5C94-0EB1-4115-AE78-13F5397B121A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Netstorm.Core.Tests", "tests\Netstorm.Core.Tests\Netstorm.Core.Tests.csproj", "{DBCCF068-A167-4579-A1F9-15BEEA09B80D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,18 @@ Global
 		{190D5C94-0EB1-4115-AE78-13F5397B121A}.Release|x64.Build.0 = Release|Any CPU
 		{190D5C94-0EB1-4115-AE78-13F5397B121A}.Release|x86.ActiveCfg = Release|Any CPU
 		{190D5C94-0EB1-4115-AE78-13F5397B121A}.Release|x86.Build.0 = Release|Any CPU
+		{DBCCF068-A167-4579-A1F9-15BEEA09B80D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBCCF068-A167-4579-A1F9-15BEEA09B80D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBCCF068-A167-4579-A1F9-15BEEA09B80D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{DBCCF068-A167-4579-A1F9-15BEEA09B80D}.Debug|x64.Build.0 = Debug|Any CPU
+		{DBCCF068-A167-4579-A1F9-15BEEA09B80D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DBCCF068-A167-4579-A1F9-15BEEA09B80D}.Debug|x86.Build.0 = Debug|Any CPU
+		{DBCCF068-A167-4579-A1F9-15BEEA09B80D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBCCF068-A167-4579-A1F9-15BEEA09B80D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBCCF068-A167-4579-A1F9-15BEEA09B80D}.Release|x64.ActiveCfg = Release|Any CPU
+		{DBCCF068-A167-4579-A1F9-15BEEA09B80D}.Release|x64.Build.0 = Release|Any CPU
+		{DBCCF068-A167-4579-A1F9-15BEEA09B80D}.Release|x86.ActiveCfg = Release|Any CPU
+		{DBCCF068-A167-4579-A1F9-15BEEA09B80D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -97,5 +111,6 @@ Global
 		{5D80759E-F683-4C11-91DD-BDDFC33CCFBC} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{E74F7C7E-DF30-4BB8-B5D8-3DC6CBEF1BE1} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{190D5C94-0EB1-4115-AE78-13F5397B121A} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
+		{DBCCF068-A167-4579-A1F9-15BEEA09B80D} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 	EndGlobalSection
 EndGlobal

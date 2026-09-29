@@ -21,17 +21,52 @@ dotnet run --project src/Netstorm.Game -- --map savetheisland --language korean
 [실행 자산·설정·언어 연결](runtime-resources.md)에 정리했다.
 
 * 방향키 또는 마우스 우클릭 드래그: 카메라 이동
+* **전체화면에서 마우스를 화면 끝(맨 바깥 1픽셀)에 대면 카메라 이동** (원본과 같은 규칙·속도 곡선, 월드 밖으로는 나가지 않음) — [분석](exe/edge-scroll.md)
 * 마우스 휠: 0.25~4배 확대
 * Home: 시작 카메라로 복귀 — 원본 미션 시작 화면처럼 플레이어 1 사제 칸 기준점을 창 중심에서 (+13, +9) 떨어진 곳에 둔다.
-  1024×768 창이면 사제가 원본 캡처와 같은 (525, 393) 에 그려져, 뷰어 캡처를 원본 캡처와 바로 겹쳐 볼 수 있다 ([측정](screens/dissolved-alliance-start.md) 2절)
+  논리 해상도가 1024×768 이면(4:3 창이거나 `--wide letterbox` 일 때) 사제가 원본 캡처와 같은 (525, 393) 에 그려져, 뷰어 캡처를 원본 캡처와 바로 겹쳐 볼 수 있다 ([측정](screens/dissolved-alliance-start.md) 2절).
+  안내 영역이 4줄로 늘어(높이 128) 화면 맨 위 128 논리 픽셀은 안내가 덮는다 (사제 위치 계산은 안내 높이를 보정하므로 그대로).
+  와이드 시야 확장에서는 화면 중심이 넓어진 만큼 사제가 가운데 쪽으로 온다
 * G: 진단용 청크 윤곽 표시 전환
 * 오브젝트 기준점 근처에 마우스: 타입, 좌표, 영역, 소유자, 다리 값 표시
 * Esc: 종료
+
+## 화면 설정 (전체화면·화면비·가장자리 스크롤)
+
+맵 뷰어·스프라이트 뷰어·기본 확인 화면이 같은 화면 계층(`DisplayManager`)을 쓴다.
+게임은 **논리 해상도**(원본 픽셀)로 그린 뒤 창에 늘려 표시하며, 16:9·16:10·4:3 을 지원한다.
+계산 규칙은 `Netstorm.Core.Display.ScreenLayoutCalculator`(테스트 `tests/Netstorm.Core.Tests`)에 있다.
+
+| 키 | 동작 |
+|---|---|
+| F11 · Alt+Enter | 전체화면 ↔ 창 모드. 전체화면은 **디스플레이 모드를 바꾸지 않는 테두리 없는 전체 화면 창**이라 원본의 "전체화면 저장 뒤 재실행 오류"가 생기지 않는다 |
+| F10 | 와이드 처리: **시야 확장**(게임 동작, 기본) ↔ 4:3 레터박스(개발용) |
+| F9 | 원본 해상도 높이 480 → 600 → 768 순환 (원본 640×480·800×600·1024×768 의 높이) |
+| F7 | 가장자리 스크롤 켜기/끄기 (원본 `Edge Scroll in Fullscreen`) |
+
+* **와이드 화면은 시야 확장으로 동작한다 (2026-09-29 사용자 결정). 레터박스 화면은 게임에서 쓰지 않는다.**
+* **시야 확장**: 같은 배율에서 맵을 옆으로 더 보여 준다. 논리 높이는 고른 원본 해상도의 높이(기본 768)이고 논리 폭이 화면비에 맞춰 늘어난다 (16:9 → 1365×768, 16:10 → 1229×768, 4:3 → 1024×768). 4:3~16:9 밖(21:9·5:4)은 가까운 한계 화면비로 제한하고 남는 곳을 검게 둔다.
+* **4:3 레터박스 (개발용, 게임 옵션 아님)**: 원본 해상도 그대로 4:3 영역만 쓴다. 1920×1080 에서 가운데 1440×1080, 좌우 여백 240px, 배율 1.40625 — 원본 로컬 플레이 영상과 같다. 뷰어 캡처를 원본 캡처와 1024×768 로 겹쳐 볼 때만 쓴다.
+* 정수 배율이면 점 샘플링, 아니면 선형 보간으로 늘린다 (글자도 함께 늘어나 흐려질 수 있다 — 게임 UI 를 만들 때 원본 해상도 기준 글꼴로 다시 검토).
+* 창 제목과 화면 맨 위 넷째 줄에 `화면 1920×1080 (16:9) → 논리 1365×768 ×1.406 · 시야 확장 · 전체화면` 처럼 현재 배치가 표시된다.
+* 마우스 좌표는 논리 좌표로 바뀌어 뷰어에 전달되므로 배율·여백과 상관없이 호버·클릭 위치가 맞는다.
+
+설정은 사용자 설정 폴더(Windows `%APPDATA%\NetstormReborn\settings.json`, Linux `$XDG_CONFIG_HOME` 또는 `~/.config` 아래)에 저장된다.
+원본 `options.cfg` 는 건드리지 않는다. 폴더는 환경 변수 `NETSTORM_SETTINGS_DIR` 로 바꿀 수 있다.
+**시작 안전장치**: 시작할 때 `StartupInProgress` 를 켜 두고 첫 프레임을 그린 뒤 끈다. 켜진 채 전체화면 설정이 읽히면(직전 시작이 화면 초기화에서 끝남) 창 모드로 시작하고 안내를 띄운다.
+
+명령줄 옵션 (아래를 쓰면 그 실행은 설정을 저장하지 않는다): `--fullscreen`, `--windowed`, `--window 1920x1080`,
+`--wide extend|letterbox`, `--view-height 480|600|768`, `--no-edge-scroll`.
 
 검증용 PNG를 저장하고 자동 종료:
 
 ```powershell
 dotnet run --project src/Netstorm.Game -- --map savetheisland --screenshot extracted/screens/fort-map-savetheisland.png
+# 화면비·전체화면 확인 (스크린샷 실행은 설정을 저장하지 않음)
+dotnet run --project src/Netstorm.Game -- --map savetheisland --window 1920x1200 --screenshot extracted/screens/wide-16x10.png
+dotnet run --project src/Netstorm.Game -- --map savetheisland --window 1920x1080 --wide letterbox --screenshot extracted/screens/letterbox.png
+# 저장 프레임 수 변경 (기본 30): 가장자리 스크롤처럼 시간이 필요한 동작을 찍을 때
+dotnet run --project src/Netstorm.Game -- --map savetheisland --fullscreen --screenshot-frames 15 --screenshot extracted/screens/edge.png
 ```
 
 원본 팔레트와 본체 레이어를 사용하는 정적 뷰어다. 저장 프레임이 없는 타입은

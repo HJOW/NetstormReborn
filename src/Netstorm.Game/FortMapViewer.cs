@@ -13,8 +13,14 @@ internal sealed class FortMapViewer : IDisposable
     private const float PanSpeed = 600f;
     /// <summary>오브젝트가 표시되는 기본 확대 배율.</summary>
     private const float DefaultZoom = 1f;
-    /// <summary>상단 안내 영역 높이.</summary>
-    private const int HeaderHeight = 100;
+    /// <summary>월드의 한 변 청크 수 (월드 = 16×16 청크, docs/formats/fort.md).</summary>
+    private const int WorldChunks = 16;
+    /// <summary>월드 전체의 원본 픽셀 크기. 화면 끝 스크롤이 카메라 중심을 이 범위 안에 가둔다.</summary>
+    private static readonly Vector2 WorldPixelSize = new(
+        WorldChunks * FortMap.CellsPerChunk * FortMap.CellPixelWidth,
+        WorldChunks * FortMap.CellsPerChunk * FortMap.CellPixelHeight);
+    /// <summary>상단 안내 영역 높이 (안내 4줄).</summary>
+    private const int HeaderHeight = 128;
     /// <summary>
     /// 원본 미션 시작 화면에서 플레이어 1 사제 칸 기준점이 화면 중심(512, 384)보다 오른쪽·아래로 떨어진 거리.
     /// 원본 캡처 3장(The War Begins!·Save the Island!·Dissolved Alliance!)에서 (525, 393) ±4px 로 측정했다.
@@ -91,15 +97,22 @@ internal sealed class FortMapViewer : IDisposable
             : WorldPixels(focus.X, focus.Y) - OriginalStartOffset + new Vector2(0, HeaderHeight / 2f);
     }
 
-    /// <summary>키보드와 마우스로 카메라를 이동하고 확대 배율을 변경한다.</summary>
-    public void Update(double seconds)
+    /// <summary>키보드·마우스·화면 끝 스크롤로 카메라를 이동하고 확대 배율을 변경한다.</summary>
+    /// <param name="seconds">지난 갱신 이후 경과 시간(초)</param>
+    /// <param name="mouse">논리 화면 좌표로 바꾼 마우스 상태</param>
+    /// <param name="edgeScroll">가장자리 스크롤이 이번 갱신에서 옮길 논리 픽셀 (양수 = 오른쪽·아래)</param>
+    public void Update(double seconds, MouseState mouse, Vector2 edgeScroll)
     {
         KeyboardState keyboard = Keyboard.GetState();
-        MouseState mouse = Mouse.GetState();
         var direction = new Vector2(
             (keyboard.IsKeyDown(Keys.Right) ? 1 : 0) - (keyboard.IsKeyDown(Keys.Left) ? 1 : 0),
             (keyboard.IsKeyDown(Keys.Down) ? 1 : 0) - (keyboard.IsKeyDown(Keys.Up) ? 1 : 0));
         _camera += direction * PanSpeed * (float)seconds / _zoom;
+        if (edgeScroll != Vector2.Zero)
+        {
+            // 화면 끝 스크롤은 확대 배율과 상관없이 화면 기준 픽셀로 이동하고, 월드(16×16 청크) 밖으로는 나가지 않는다.
+            _camera = Vector2.Clamp(_camera + edgeScroll / _zoom, Vector2.Zero, WorldPixelSize);
+        }
         if (mouse.RightButton == ButtonState.Pressed && _previousMouse.RightButton == ButtonState.Pressed)
         {
             _camera -= new Vector2(mouse.X - _previousMouse.X, mouse.Y - _previousMouse.Y) / _zoom;
@@ -123,7 +136,12 @@ internal sealed class FortMapViewer : IDisposable
     }
 
     /// <summary>영역 청크 윤곽과 정적 스프라이트를 그리고 마우스 가까운 오브젝트를 설명한다.</summary>
-    public void Draw(SpriteBatch batch, SpriteFontBase font, int width, int height)
+    /// <param name="batch">스프라이트 배치</param>
+    /// <param name="font">안내 글꼴</param>
+    /// <param name="width">논리 화면 폭</param>
+    /// <param name="height">논리 화면 높이</param>
+    /// <param name="displayInfo">화면 배치 설명 문구 (안내 4번째 줄)</param>
+    public void Draw(SpriteBatch batch, SpriteFontBase font, int width, int height, string displayInfo)
     {
         var center = new Vector2(width / 2f, (height + HeaderHeight) / 2f);
         // 진단용 청크 윤곽은 지면 아래에 선택적으로 표시한다.
@@ -210,8 +228,9 @@ internal sealed class FortMapViewer : IDisposable
         }
         batch.Draw(_pixel, new Rectangle(0, 0, width, HeaderHeight), new Color(18, 24, 38));
         batch.DrawString(font, $"맵: {Name} | 오브젝트 {_map.Objects.Count}개 | 확대 {_zoom:0.##}배 | 언어: {Language}", new Vector2(16, 10), Color.Gold);
-        batch.DrawString(font, "방향키 / 우클릭: 이동 · 휠: 확대 · Home: 사제 위치 · G: 청크 윤곽 · Esc: 종료", new Vector2(16, 38), Color.White);
-        batch.DrawString(font, "다리: 저장 프레임 · 지면/edgeFarm: 생성 미리보기 · 변형/그림자/일반 플레이어색은 검증 전", new Vector2(16, 66), Color.LightGray);
+        batch.DrawString(font, "방향키 / 우클릭 / 화면 끝: 이동 · 휠: 확대 · Home: 사제 위치 · G: 청크 윤곽 · Esc: 종료", new Vector2(16, 38), Color.White);
+        batch.DrawString(font, "F11: 전체화면 · F10: 와이드 처리 · F9: 원본 해상도 높이 · F7: 가장자리 스크롤", new Vector2(16, 66), Color.White);
+        batch.DrawString(font, displayInfo, new Vector2(16, 94), Color.LightGray);
         if (hovered != null)
         {
             string region = hovered.Territory.HasValue ? $"Terr{hovered.Territory:00}" : "Chaff";

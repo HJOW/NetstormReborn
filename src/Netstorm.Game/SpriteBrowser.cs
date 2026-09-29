@@ -105,10 +105,12 @@ internal sealed class SpriteBrowser : IDisposable
 
     /// <summary>누름 전환으로 타입·프레임·보기 모드를 바꾸고 재생 중이면 동작을 진행한다.</summary>
     /// <param name="deltaSeconds">지난 갱신 이후 경과 시간(초)</param>
-    public void Update(double deltaSeconds)
+    /// <param name="mouse">논리 화면 좌표로 바꾼 마우스 상태</param>
+    /// <param name="viewWidth">논리 화면 폭</param>
+    /// <param name="viewHeight">논리 화면 높이</param>
+    public void Update(double deltaSeconds, MouseState mouse, int viewWidth, int viewHeight)
     {
         KeyboardState keyboard = Keyboard.GetState();
-        MouseState mouse = Mouse.GetState();
         bool shift = keyboard.IsKeyDown(Keys.LeftShift) || keyboard.IsKeyDown(Keys.RightShift);
         if (Pressed(keyboard, Keys.Up))
         {
@@ -165,8 +167,8 @@ internal sealed class SpriteBrowser : IDisposable
         }
         if (!ShowProperties && mouse.LeftButton == ButtonState.Pressed && _previousMouse.LeftButton == ButtonState.Released)
         {
-            int cellWidth = GridWidth(_device.Viewport.Width) / Columns;
-            int cellHeight = GridHeight(_device.Viewport.Height) / Rows;
+            int cellWidth = GridWidth(viewWidth) / Columns;
+            int cellHeight = GridHeight(viewHeight) / Rows;
             int x = mouse.X / cellWidth;
             int y = (mouse.Y - HeaderHeight) / cellHeight;
             if (mouse.X >= 0 && mouse.X < cellWidth * Columns && mouse.Y >= HeaderHeight &&

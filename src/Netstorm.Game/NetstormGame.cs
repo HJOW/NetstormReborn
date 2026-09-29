@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Netstorm.Assets;
+using Netstorm.Core.Display;
 
 namespace Netstorm.Game;
 
@@ -11,12 +12,6 @@ namespace Netstorm.Game;
 /// </summary>
 internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
 {
-    /// <summary>기본 창 폭 (원본 options.cfg 의 SCREENW 기본값)</summary>
-    private const int DefaultWidth = 1024;
-
-    /// <summary>기본 창 높이 (원본 options.cfg 의 SCREENH 기본값)</summary>
-    private const int DefaultHeight = 768;
-
     /// <summary>한국어 글꼴 파일 (출력 폴더 기준 상대 경로, AGENTS.md 지정 D2Coding)</summary>
     private const string KoreanFontPath = "fonts/D2Coding-Ver1.3.2-20180524-all.ttc";
 
@@ -36,7 +31,11 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     private static readonly Color BackgroundColor = new(28, 36, 60);
 
     private readonly GraphicsDeviceManager _graphics;
+    private readonly DisplayManager _display;
+    private readonly EdgeScrollController _edgeScroll = new();
     private readonly string? _screenshotPath;
+    /// <summary>스크린샷을 저장할 프레임 번호 (--screenshot-frames, 기본 ScreenshotDelayFrames)</summary>
+    private readonly int _screenshotFrames;
     private readonly string? _mapName;
     private readonly string? _spriteName;
     private readonly string? _languageName;
@@ -51,20 +50,23 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     private readonly List<SpriteAnimation> _animations = [];
     private readonly List<string> _statusLines = [];
     private int _frameCount;
+    private KeyboardState _previousKeyboard;
+    /// <summary>모드별 창 제목 (화면 상태 문구를 뒤에 붙인다)</summary>
+    private string _baseTitle = "NetStorm 클론 — 개발 환경 확인";
 
     /// <summary>창과 그래픽 장치 설정</summary>
     public NetstormGame()
     {
         _graphics = new GraphicsDeviceManager(this)
         {
-            PreferredBackBufferWidth = DefaultWidth,
-            PreferredBackBufferHeight = DefaultHeight,
-            IsFullScreen = false,
             SynchronizeWithVerticalRetrace = true,
         };
         string[] args = Environment.GetCommandLineArgs();
         string? screenshot = ParseValueArgument(args, "--screenshot");
         _screenshotPath = screenshot == null ? null : Path.GetFullPath(screenshot);
+        string? screenshotFrames = ParseValueArgument(args, "--screenshot-frames");
+        _screenshotFrames = screenshotFrames == null ? ScreenshotDelayFrames
+            : Math.Max(1, int.Parse(screenshotFrames, System.Globalization.CultureInfo.InvariantCulture));
         _mapName = ParseValueArgument(args, "--map");
         _spriteName = ParseValueArgument(args, "--sprites");
         _languageName = ParseValueArgument(args, "--language");
@@ -76,9 +78,80 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         {
             throw new ArgumentException("--map과 --sprites는 함께 사용할 수 없습니다.");
         }
+        // 표시 설정: 사용자 설정 파일 → 명령줄 덮어쓰기. 덮어쓴 실행과 스크린샷 실행은 설정을 저장하지 않는다.
+        (DisplaySettings settings, bool overridden) = ParseDisplayOptions(args);
+        _display = new DisplayManager(this, _graphics, settings,
+            overridden || _screenshotPath != null ? null : DisplaySettings.DefaultPath());
+        _display.LayoutChanged += UpdateWindowTitle;
         IsMouseVisible = true;
         Window.AllowUserResizing = true;
-        Window.Title = "NetStorm 클론 — 개발 환경 확인";
+        Window.Title = _baseTitle;
+    }
+
+    /// <summary>
+    /// 표시 설정을 읽고 명령줄로 덮어쓴다: <c>--fullscreen</c>, <c>--windowed</c>, <c>--window 폭x높이</c>,
+    /// <c>--wide extend|letterbox</c>, <c>--view-height 480|600|768</c>, <c>--no-edge-scroll</c>.
+    /// </summary>
+    /// <param name="args">명령줄 인자</param>
+    /// <returns>설정, 명령줄로 덮어썼는지 여부</returns>
+    private static (DisplaySettings Settings, bool Overridden) ParseDisplayOptions(string[] args)
+    {
+        // 저장된 설정을 읽고 화면 관련 옵션이 있으면 이번 실행에서만 바꾼다.
+        DisplaySettings settings = DisplaySettings.Load(DisplaySettings.DefaultPath());
+        bool overridden = false;
+        if (args.Contains("--fullscreen"))
+        {
+            settings.Fullscreen = true;
+            overridden = true;
+        }
+        if (args.Contains("--windowed"))
+        {
+            settings.Fullscreen = false;
+            overridden = true;
+        }
+        if (args.Contains("--no-edge-scroll"))
+        {
+            settings.EdgeScroll = false;
+            overridden = true;
+        }
+        string? window = ParseValueArgument(args, "--window");
+        if (window != null)
+        {
+            string[] parts = window.Split('x', 'X');
+            if (parts.Length != 2 || !int.TryParse(parts[0], out int width) || !int.TryParse(parts[1], out int height))
+            {
+                throw new ArgumentException("--window 값은 1920x1080 형식이어야 합니다.");
+            }
+            settings.WindowWidth = width;
+            settings.WindowHeight = height;
+            settings.Fullscreen = false;
+            overridden = true;
+        }
+        string? wide = ParseValueArgument(args, "--wide");
+        if (wide != null)
+        {
+            settings.WideScreen = wide.ToLowerInvariant() switch
+            {
+                "extend" => WideScreenMode.Extend,
+                "letterbox" => WideScreenMode.Letterbox,
+                _ => throw new ArgumentException("--wide 값은 extend 또는 letterbox 여야 합니다."),
+            };
+            overridden = true;
+        }
+        string? viewHeight = ParseValueArgument(args, "--view-height");
+        if (viewHeight != null)
+        {
+            settings.ViewHeight = int.Parse(viewHeight, System.Globalization.CultureInfo.InvariantCulture);
+            overridden = true;
+        }
+        settings.Normalize();
+        return (settings, overridden);
+    }
+
+    /// <summary>화면 배치가 바뀌면 창 제목에 상태를 덧붙인다.</summary>
+    private void UpdateWindowTitle()
+    {
+        Window.Title = $"{_baseTitle} | {_display.Description}";
     }
 
     /// <summary>글꼴과 원본 데이터를 읽는다</summary>
@@ -156,7 +229,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
                 {
                     _spriteBrowser.SelectFrameAt(int.Parse(_spriteFrame, System.Globalization.CultureInfo.InvariantCulture));
                 }
-                Window.Title = "NetStorm 클론 — 스프라이트 뷰어";
+                _baseTitle = "NetStorm 클론 — 스프라이트 뷰어";
             }
             catch (Exception error) when (error is IOException or ArgumentException or FormatException)
             {
@@ -187,20 +260,25 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         TypeCatalog catalog = resources.LoadTypes();
         _mapViewer = new FortMapViewer(GraphicsDevice, shapes, palette, resources.LoadFort(name, catalog), name,
             catalog, resources.Language);
-        Window.Title = $"NetStorm 클론 — 맵 뷰어: {name}";
+        _baseTitle = $"NetStorm 클론 — 맵 뷰어: {name}";
     }
 
     /// <summary>입력 처리와 애니메이션 진행</summary>
     /// <param name="gameTime">경과 시간</param>
     protected override void Update(GameTime gameTime)
     {
-        if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+        KeyboardState keyboard = Keyboard.GetState();
+        if (keyboard.IsKeyDown(Keys.Escape))
         {
             Exit();
         }
         double dt = gameTime.ElapsedGameTime.TotalSeconds;
-        _mapViewer?.Update(dt);
-        _spriteBrowser?.Update(dt);
+        _display.HandleHotkeys(keyboard, _previousKeyboard);
+        _previousKeyboard = keyboard;
+        MouseState rawMouse = Mouse.GetState();
+        MouseState mouse = _display.ToLogical(rawMouse);
+        _mapViewer?.Update(dt, mouse, EdgeScrollDelta(rawMouse, keyboard, dt));
+        _spriteBrowser?.Update(dt, mouse, _display.Layout.LogicalWidth, _display.Layout.LogicalHeight);
         // 모든 애니메이션 진행
         foreach (SpriteAnimation animation in _animations)
         {
@@ -209,11 +287,33 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         base.Update(gameTime);
     }
 
+    /// <summary>
+    /// 창 픽셀 기준 마우스 위치로 가장자리 스크롤이 옮길 논리 픽셀을 구한다.
+    /// 창이 비활성이거나 창 테두리가 있으면 0 이다 (원본: 전체화면에서만 동작).
+    /// </summary>
+    /// <param name="rawMouse">창 좌표의 마우스 상태</param>
+    /// <param name="keyboard">키 상태 (Shift 확인)</param>
+    /// <param name="seconds">지난 갱신 이후 경과 시간(초)</param>
+    private Vector2 EdgeScrollDelta(MouseState rawMouse, KeyboardState keyboard, double seconds)
+    {
+        _edgeScroll.MaxSpeed = _display.Settings.EdgeScrollSpeed;
+        var input = new EdgeScrollInput(rawMouse.X, rawMouse.Y, _display.ScreenWidth, _display.ScreenHeight,
+            _display.Settings.EdgeScroll && IsActive, _display.BorderlessScreen,
+            rawMouse.LeftButton == ButtonState.Pressed,
+            keyboard.IsKeyDown(Keys.LeftShift) || keyboard.IsKeyDown(Keys.RightShift),
+            PopupOpen: false, TopEdgeBlocked: false);
+        (double x, double y) = _edgeScroll.Update(input, seconds);
+        return new Vector2((float)x, (float)y);
+    }
+
     /// <summary>화면 그리기</summary>
     /// <param name="gameTime">경과 시간</param>
     protected override void Draw(GameTime gameTime)
     {
-        GraphicsDevice.Clear(BackgroundColor);
+        // 논리 해상도 렌더 타깃에 그린 뒤 마지막에 뷰포트로 늘려 표시한다.
+        _display.BeginScene(BackgroundColor);
+        int width = _display.Layout.LogicalWidth;
+        int height = _display.Layout.LogicalHeight;
         SpriteBatch batch = _batch!;
         batch.Begin(samplerState: SamplerState.PointClamp);
 
@@ -221,11 +321,11 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         SpriteFontBase body = _fonts.GetFont(BodyFontSize);
         if (_mapViewer != null)
         {
-            _mapViewer.Draw(batch, body, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+            _mapViewer.Draw(batch, body, width, height, _display.Description);
         }
         else if (_spriteBrowser != null)
         {
-            _spriteBrowser.Draw(batch, body, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+            _spriteBrowser.Draw(batch, body, width, height);
         }
         else
         {
@@ -252,13 +352,28 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
                 x += 190;
             }
 
-            batch.DrawString(body, "Esc: 종료", new Vector2(24, GraphicsDevice.Viewport.Height - 40), Color.Gray);
+            batch.DrawString(body, _display.Description, new Vector2(24, height - 70), Color.LightGray);
+            batch.DrawString(body, "Esc: 종료 · F11: 전체화면 · F10: 와이드 처리 · F9: 해상도 높이 · F7: 가장자리 스크롤",
+                new Vector2(24, height - 40), Color.Gray);
+        }
+        // 화면 설정을 바꿨을 때 잠깐 보이는 알림 (오른쪽 아래)
+        string? notice = _display.TickNotice(gameTime.ElapsedGameTime.TotalSeconds);
+        if (notice != null)
+        {
+            Vector2 size = body.MeasureString(notice);
+            batch.DrawString(body, notice, new Vector2(width - size.X - 16, height - 34), Color.Yellow);
         }
         batch.End();
+        _display.EndScene(batch);
         base.Draw(gameTime);
 
         _frameCount++;
-        if (_screenshotPath != null && _frameCount == ScreenshotDelayFrames)
+        // 첫 프레임까지 그렸으면 시작에 성공한 것이므로 다음 실행이 같은 화면 모드로 시작해도 된다.
+        if (_frameCount == 1)
+        {
+            _display.CompleteStartup();
+        }
+        if (_screenshotPath != null && _frameCount == _screenshotFrames)
         {
             SaveScreenshot(_screenshotPath);
             Exit();
@@ -297,6 +412,15 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         return null;
     }
 
+    /// <summary>종료할 때 마지막 창 크기·화면 설정을 저장한다.</summary>
+    /// <param name="sender">이벤트 보낸 객체</param>
+    /// <param name="args">종료 이벤트 인자</param>
+    protected override void OnExiting(object sender, ExitingEventArgs args)
+    {
+        _display.SaveOnExit();
+        base.OnExiting(sender, args);
+    }
+
     /// <summary>자원 해제</summary>
     /// <param name="disposing">관리 자원 해제 여부</param>
     protected override void Dispose(bool disposing)
@@ -312,6 +436,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
             }
             _batch?.Dispose();
             _fonts?.Dispose();
+            _display.Dispose();
         }
         base.Dispose(disposing);
     }
