@@ -21,6 +21,13 @@ public static class TypeFlagBits
     /// <summary>플래그2: 다리 조각</summary>
     public const uint Bridge = 0x4;
 
+    /// <summary>
+    /// 플래그2: 놓기 막음(typeflags "dropBlocking"). 원본은 오브젝트 발자국 칸의 스폿 지도(Spot.cpp, 256×256 바이트)에
+    /// 플래그2 하위 비트를 OR 해 두며(Squid.cpp FUN_004b02d0), 다리 배치(Rifttype.cpp FUN_0049b510)는 이 비트가 있는 칸을
+    /// 이어 붙일 섬 칸으로 보지 않는다. 섬 가장자리 초목 edgeFarm·건물·나무·신전·가이저가 가진다.
+    /// </summary>
+    public const uint DropBlocking = 0x10;
+
     /// <summary>플래그2: 매장물 (파생 규칙으로 SaveQA 가 켜진다)</summary>
     public const uint Buried = 0x2000;
 

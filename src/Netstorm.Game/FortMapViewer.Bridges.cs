@@ -53,6 +53,9 @@ internal sealed partial class FortMapViewer
     /// <summary>다리 칸 격자 (저장 다리 + 시험으로 놓은 다리, 배치 판정·붕괴)</summary>
     private BridgeGrid _bridgeGrid = null!;
 
+    /// <summary>다리를 시작할 수 없는 섬 칸 (가장자리 초목·dropBlocking 오브젝트 발자국)</summary>
+    private HashSet<(int X, int Y)> _dropBlockingCells = [];
+
     /// <summary>저장 다리 오브젝트 → 격자 칸 (무너졌는지 확인해 그리기에서 뺀다)</summary>
     private readonly Dictionary<FortMapObject, BridgeCellState> _storedBridges = [];
 
@@ -86,7 +89,10 @@ internal sealed partial class FortMapViewer
         {
             occupied.UnionWith(Footprint.ForType(item.Object.Type.Definition, item.X, item.Y).Cells());
         }
-        _bridgeGrid = new BridgeGrid((x, y) => island.Contains((x, y)), (x, y) => occupied.Contains((x, y)));
+        // 가장자리 초목(edgeFarm)·dropBlocking 오브젝트 칸에서는 다리를 시작할 수 없다 (사용자 확인 규칙, 원본 스폿 비트 0x10)
+        _dropBlockingCells = BridgeAnchors.DropBlockingCells(_map.Objects, _edgeFarmCells);
+        _bridgeGrid = new BridgeGrid((x, y) => island.Contains((x, y)), (x, y) => occupied.Contains((x, y)),
+            BridgeAnchors.CanAttach(_dropBlockingCells));
         TypeFrameTable frames = _bridgeType.Definition.Frames;
         // 저장된 다리 칸을 격자에 넣는다 (연결·붕괴 계산에 쓴다)
         foreach (FortMapObject item in _map.Objects.Where(o => ObjectKinds.Of(o.Object.Type) == ObjectKind.Bridge && o.Object.BridgeShape is not null))
@@ -211,7 +217,7 @@ internal sealed partial class FortMapViewer
     {
         BridgePlacementProblem.OutOfWorld => "월드 밖",
         BridgePlacementProblem.Blocked => "섬·다리·오브젝트와 겹침",
-        BridgePlacementProblem.NotAttached => "섬 가장자리나 내 다리 끝에 이어지지 않음",
+        BridgePlacementProblem.NotAttached => "섬 가장자리(초목 없는 곳)나 내 다리 끝에 이어지지 않음",
         _ => "위치 없음",
     };
 

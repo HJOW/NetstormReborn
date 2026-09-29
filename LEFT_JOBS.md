@@ -17,8 +17,13 @@
 
 - **다리 배치 판정·붕괴** — `src/Netstorm.Core/Bridges/BridgeGrid.cs`, [bridge-pieces.md](docs/exe/bridge-pieces.md) 8절.
   - exe 확인: 10초 주기 갱신(`Bridge.cpp` `00422bc0`, `0x52f968`), 칸 수명 0~7(`brMAX_TIME_LEFT`)·5 아래 금 감(`0x52f960`)·0 이면 제거(`00421c30`), 단단한 칸 제외, 연결망 "0이 아닌 최소 수명 − 1" 동기화(`004227e0`), 겹치는 칸이 있으면 배치 불가(`Rifttype.cpp` `0049b510`).
-  - 근사: 이어짐 = "조각의 연결 방향이 섬 칸 또는 내 다리의 마주 연결된 끝에 닿음"(원본은 영역 소유 판정 `Player.cpp` `0048fdb0`), 붕괴 대상 = "열린 끝이 있는 연결망". 초목 가장자리 제외는 콜백만 있고 아직 판정이 없다.
-  - **규칙 확정(사용자 확인, 2026-09-30): 섬 가장자리 중 초목이 있는 부분에서는 다리 건설을 시작할 수 없다.** [섬 소유권 규칙](docs/gameplay/island-ownership.md) 3번, [bridge-pieces.md](docs/exe/bridge-pieces.md) 4·8절에 반영. 남은 것은 초목 칸 판별 방법(아래 다음 후보 2).
+  - 근사: 이어짐 = "조각의 연결 방향이 섬 칸 또는 내 다리의 마주 연결된 끝에 닿음"(원본은 영역 소유 판정 `Player.cpp` `0048fdb0`), 붕괴 대상 = "열린 끝이 있는 연결망".
+  - **규칙 확정(사용자 확인, 2026-09-30): 섬 가장자리 중 초목이 있는 부분에서는 다리 건설을 시작할 수 없다.** [섬 소유권 규칙](docs/gameplay/island-ownership.md) 3번, [bridge-pieces.md](docs/exe/bridge-pieces.md) 4·8절에 반영.
+  - **코드 반영 완료(2026-09-30):** exe 확인 결과 초목 = `edgeFarm` 오브젝트(typeflags `dropBlocking`, 플래그2 0x10). 원본은 이 비트를 스폿 지도에 남기고(`Squid.cpp` `004b02d0`) 배치 판정(`0049b510`)이 그 칸을 부착 후보에서 뺀다.
+    - 클론 구현: `TypeFlagBits.DropBlocking`, `Bridges/BridgeAnchors`(edgeFarm 칸 + dropBlocking 오브젝트 발자국 → `BridgeGrid` 부착 판정), 뷰어 다리 모드 연결
+    - 테스트 `BridgeAnchorTests` 3개(원본 Bridge the Gap! 가장자리 전수 검사 포함). Core 114·Assets 172 통과
+    - 스크린샷: `extracted/screens/bridge-place-{ok,vegetation,red}.png`
+    - 한계: 뷰어의 edgeFarm 칸 위치는 좌표 고정 근사라 원본과 다를 수 있다([bridge-pieces.md](docs/exe/bridge-pieces.md) 8.4절)
   - 원본 관찰과의 차이: 금 간 기간 약 40초는 같지만, 모델은 첫 갱신 뒤 약 30초 만에 금이 가고 원본은 약 120초 뒤였다. 붕괴 시작 전 대기 조건(`004218b0`)을 더 풀어야 한다(8.3절).
   - 맵 뷰어 다리 모드(B)에 연결: 놓을 수 없으면 빨간 조각·이유 표시, 판정 통과 시에만 놓기, 10초 주기 붕괴·금 간 프레임·무너진 저장 다리 숨김. 확인 스크린샷 `extracted/screens/bridge-place-{ok,red}.png`([map-viewer.md](docs/map-viewer.md#다리-조각-시험-모드)).
 - **미션 시작 조건** — `src/Netstorm.Core/Rules/MissionStart.cs`.
@@ -29,7 +34,7 @@
 - 테스트: Core **111개** 통과(새 `BridgeGridTests` 8개, `MissionStartTests` 3개), 빌드 오류 0.
 - **다음 후보:**
   1. 붕괴 대기 조건과 영역 소유 이어짐(`004218b0`·`0048fdb0`)
-  2. 초목 가장자리 판별 방법 찾기(규칙은 사용자 확인으로 확정 — 가장자리 타일 프레임·`fringe`·`edgeFarm` 중 무엇으로 판별하는지 exe 확인 뒤 `BridgeGrid` 콜백에 연결)
+  2. ~~초목 가장자리 판별 방법 찾기~~ → 2026-09-30 완료(edgeFarm dropBlocking, 위 항목). 남은 것: edgeFarm 칸 위치를 원본 전역 난수·배치 가능 여부대로 재현
   3. 끝 칸 L·M·N·O(섬 쪽 연장 그림, `004215d0`)
   4. 엔티티·틱 — 건설 시간(튜토리얼 2 관찰: Temple 약 16초, Workshop 약 10초, 이동 포함)과 사제 결정 운반(결정당 200 SP)
   5. 미션 시작 조건을 맵 뷰어·게임 화면에 연결
