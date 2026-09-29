@@ -115,6 +115,10 @@ def main():
         # 각 도구에 입력 객체 스키마가 있는지 실제 협상 결과로 확인한다.
         for tool in listing:
             assert tool["inputSchema"]["type"] == "object"
+        # AI가 보는 실행 도구 설명에도 개발자 확인 조건이 들어 있는지 확인한다.
+        start_tool = next(tool for tool in listing if tool["name"] == "start_session")
+        assert "개발자" in start_tool["description"] and "확인" in start_tool["description"]
+        assert "10.0.0.15" in start_tool["description"] and "vm-debian-codex" in start_tool["description"]
         client.call("list_sessions", {})
         client.call("game_status", {"sessionId": "../invalid"}, expect_error=True)
         print(json.dumps({"protocol": initialized["protocolVersion"], "tools": len(names)}, ensure_ascii=False), flush=True)
