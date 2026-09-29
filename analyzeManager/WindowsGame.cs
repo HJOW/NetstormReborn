@@ -90,15 +90,51 @@ public static class WindowsGame
     public static async Task<GameWindow> FocusAsync(int processId, CancellationToken cancellation)
     {
         GameWindow window = FindWindow(processId);
-        if (!window.Foreground || IsIconic(new nint(window.Handle)))
+        // 백그라운드 프로세스의 전면 전환은 Windows가 거부할 수 있으므로 단계별 방법을 차례로 시도한다.
+        for (int attempt = 0; attempt < 3 && (!window.Foreground || IsIconic(new nint(window.Handle))); attempt++)
         {
-            ShowWindow(new nint(window.Handle), RestoreWindow);
-            SetForegroundWindow(new nint(window.Handle));
+            nint handle = new(window.Handle);
+            ShowWindow(handle, RestoreWindow);
+            if (attempt == 0) SetForegroundWindow(handle);
+            else if (attempt == 1) ForceForegroundByAttach(handle);
+            else ForceForegroundByAltKey(handle);
             await Task.Delay(180, cancellation);
             window = FindWindow(processId);
         }
         if (!window.Foreground) throw new InvalidOperationException("게임 창의 포커스를 얻지 못했습니다. 입력을 보내지 않았습니다.");
         return window;
+    }
+
+    /// <summary>
+    /// 현재 전면 창의 입력 스레드에 잠시 연결해 전면 전환 제한을 우회한다.
+    /// 연결은 반드시 해제하며 대상 창 외의 창에는 입력을 보내지 않는다.
+    /// </summary>
+    private static void ForceForegroundByAttach(nint handle)
+    {
+        uint foregroundThread = GetWindowThreadProcessId(GetForegroundWindow(), out _);
+        uint currentThread = GetCurrentThreadId();
+        bool attached = foregroundThread != 0 && foregroundThread != currentThread
+            && AttachThreadInput(currentThread, foregroundThread, true);
+        try
+        {
+            BringWindowToTop(handle);
+            SetForegroundWindow(handle);
+        }
+        finally
+        {
+            if (attached) AttachThreadInput(currentThread, foregroundThread, false);
+        }
+    }
+
+    /// <summary>
+    /// Alt 키를 눌렀다 떼는 신호를 먼저 보내 "마지막 입력 프로세스" 조건을 만족시킨 뒤 전면 전환한다.
+    /// Alt 단독 입력은 게임에 전달되기 전에 전환이 일어나므로 게임 메뉴 조작으로 이어지지 않는다.
+    /// </summary>
+    private static void ForceForegroundByAltKey(nint handle)
+    {
+        SendUnchecked(new Input { Type = KeyboardInput, Data = new InputData { Keyboard = new Keyboard { VirtualKey = (ushort)Keys.Menu } } });
+        SendUnchecked(new Input { Type = KeyboardInput, Data = new InputData { Keyboard = new Keyboard { VirtualKey = (ushort)Keys.Menu, Flags = KeyUp } } });
+        SetForegroundWindow(handle);
     }
 
     /// <summary>가려지지 않은 실제 화면을 캡처한다. DirectDraw의 빈 PrintWindow 결과를 사용하지 않는다.</summary>
@@ -136,11 +172,29 @@ public static class WindowsGame
         return new(stream.ToArray(), pixels, roi, window);
     }
 
-    /// <summary>입력 직전 대상 창을 다시 검사해 다른 창에 잘못 보내는 일을 줄인다.</summary>
+    /// <summary>전면 창이 잠시 바뀌었을 때 다시 돌아오기를 기다리는 최대 시간(ms).</summary>
+    private const int ForegroundGraceMs = 200;
+
+    /// <summary>
+    /// 입력 직전 대상 창을 다시 검사해 다른 창에 잘못 보내는 일을 줄인다.
+    /// 전환 중 잠시 전면 창이 없거나 바뀌는 경우가 있어 짧게 다시 확인하고, 끝내 다르면 그 창의 정보를 오류에 남긴다.
+    /// </summary>
     private static void CheckForeground(GameWindow window)
     {
-        if (GetForegroundWindow().ToInt64() != window.Handle)
-            throw new InvalidOperationException("게임 창의 포커스가 바뀌었습니다. 작업을 중단합니다.");
+        var timer = Stopwatch.StartNew();
+        nint current = GetForegroundWindow();
+        // 대상 창이 전면으로 돌아올 때까지 10ms 간격으로 짧게 다시 확인한다.
+        while (current.ToInt64() != window.Handle && timer.ElapsedMilliseconds < ForegroundGraceMs)
+        {
+            Thread.Sleep(10);
+            current = GetForegroundWindow();
+        }
+        if (current.ToInt64() == window.Handle) return;
+        GetWindowThreadProcessId(current, out uint pid);
+        var title = new StringBuilder(256);
+        GetWindowText(current, title, title.Capacity);
+        throw new InvalidOperationException(
+            $"게임 창의 포커스가 바뀌었습니다(현재 전면: handle={current.ToInt64()}, pid={pid}, 제목='{title}'). 작업을 중단합니다.");
     }
 
     /// <summary>지원하는 키 이름을 Win32 가상 키로 변환한다.</summary>
@@ -282,6 +336,12 @@ public static class WindowsGame
     [DllImport("user32.dll")] private static extern nint GetForegroundWindow();
     /// <summary>전면 창 전환 요청.</summary>
     [DllImport("user32.dll")] private static extern bool SetForegroundWindow(nint window);
+    /// <summary>창을 Z 순서 맨 위로 올림.</summary>
+    [DllImport("user32.dll")] private static extern bool BringWindowToTop(nint window);
+    /// <summary>두 스레드의 입력 상태 연결/해제 (전면 전환 제한 우회용).</summary>
+    [DllImport("user32.dll")] private static extern bool AttachThreadInput(uint attach, uint attachTo, bool connect);
+    /// <summary>현재 스레드 번호.</summary>
+    [DllImport("kernel32.dll")] private static extern uint GetCurrentThreadId();
     /// <summary>창 표시 상태 변경.</summary>
     [DllImport("user32.dll")] private static extern bool ShowWindow(nint window, int command);
     /// <summary>화면 좌표에 표시된 창 조회.</summary>
