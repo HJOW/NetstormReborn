@@ -1,12 +1,13 @@
-# 원본 동봉 문서 (`originals/help`, `originals/*.txt`)
+# 원본 동봉 문서와 추가 매뉴얼 (`originals/help`, `originals/*.txt`)
 
-> 2026-09-29 전부 읽고 정리함. HLP 추출 방법은 [hlp.md](../formats/hlp.md) (helpdeco 소스 `I:\Workspace\git\helpdeco`, VS 2022 Build Tools Win32 Release 빌드).
+> 기존 동봉 문서는 2026-09-29 읽고 정리함. 같은 날 사용자가 외부 사이트에서 확보한 공식 매뉴얼 PDF를 추가했다. PDF의 내용과 판본은 아래 HLP 기반 정리와 아직 대조하지 않았다. HLP 추출 방법은 [hlp.md](../formats/hlp.md) (helpdeco 소스 `I:\Workspace\git\helpdeco`, VS 2022 Build Tools Win32 Release 빌드).
 > 추출 결과 `extracted/helpdeco/<파일>/<파일>.txt` 는 git 에 포함되지 않으므로 새 환경에서는 `python tools/hlp.py` 로 다시 만든다.
 
 ## 1. 자료 목록과 쓰임새
 
 | 자료 | 내용 | 클론 관련도 | 정리 문서 |
 |---|---|---|---|
+| [`help/manual.pdf`](../../originals/help/manual.pdf) | 사용자가 외부 사이트에서 찾아 추가한 원본 게임 공식 매뉴얼 PDF. 기존 설치 파일에 동봉된 자료와 구분한다 | **높음** (내용 대조 전) | PDF 원문. 기존 [game-manual.md](game-manual.md)는 `GAME.HLP` 기반 |
 | `help/GAME.HLP` | 게임 매뉴얼 "The Book of Nimbus" (원판 1997): 규칙·화면·조작·튜토리얼·멀티플레이·유닛/주문 핸드북 | **높음** | [game-manual.md](game-manual.md), 짧은 요약 [help-manual.md](../gameplay/help-manual.md) |
 | `PatchFixs.txt` | Ticonderoga 비공식 패치 10.70~10.78 변경 이력 | **높음** (보유 exe 의 동작) | [patch-history.md](patch-history.md) |
 | `help/README.DOC` | 1997-10-23 최신 정보: 매뉴얼 이후 유닛 수치 변경, 멀티플레이 연결 | 중간 | [support-docs.md](support-docs.md) 3·4절 |
@@ -15,6 +16,8 @@
 | `help/VENDOR.HLP`, `VOCAB.HLP` | 하드웨어 제조사 목록, 컴퓨터 용어 | 없음 | — |
 | `help/*.CNT`, `*.GID`, `HELP.EXE` | 도움말 목차, WinHelp 캐시, 도움말 실행기 | 없음 | [support-docs.md](support-docs.md) 5절 |
 | `Readme.txt`, `TMaker.txt`, `disclaimer.txt`, `steam_appid.txt` | 패치판 사양·실행 방법, 요새 생성기, 배포 고지, Steam 앱 번호 | 낮음 | [support-docs.md](support-docs.md) |
+
+`manual.pdf`는 PDF 1.5 형식의 7,394,011바이트 파일이다(SHA-256 `B6584D5D105A126B8A0240618F533442D2F434A8C8B4B4EA522E715077ED8C0D`). 제공 사이트 주소와 PDF의 정확한 판본은 현재 기록되지 않았다. `GAME.HLP`와 내용이 같은지, 수치·그림에 추가 정보가 있는지는 확인 전이다.
 
 게임 안 F1 도움말은 별개로 아카이브의 `help.english`(HTML 부분집합 스크립트)에 있고, 튜토리얼 안내는 `tutorial1~6.english` 에 있다.
 
