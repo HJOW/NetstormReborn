@@ -66,10 +66,12 @@ dotnet run --project src/Netstorm.Game -- --map dissolvedalliance --placement bu
 | `R` | 들고 있는 조각을 90° 회전 (원본의 오른쪽 클릭. 기본 시계 방향) |
 | `C` | 반대 회전 켜기/끄기 (원본 C 키와 같다. 켜지면 R 이 반시계 방향) |
 | `Backspace` | 들고 있는 조각을 칸으로 되돌린다 |
-| 좌클릭 | 커서가 가리키는 왼쪽 위 칸(원본 측정 규칙 `BridgeCursor`)에 놓는다 — **배치 판정 없음**(표시용) |
+| 좌클릭 | 커서가 가리키는 왼쪽 위 칸(원본 측정 규칙 `BridgeCursor`)에 놓는다. 놓을 수 없으면 이유만 알린다 |
 
-* 들고 있는 조각은 커서 위치에 반투명하게 보인다. 놓은 칸은 배치 시험의 "다리 끝" 근사에도 쓰인다.
-* 칸 패널의 조각은 원본 사이드바처럼 절반 크기로 그린다. 회전·커서 규칙은 원본 실행으로 확인한 것이다([bridge-pieces.md](exe/bridge-pieces.md) 4절). 배치·연결·붕괴 규칙은 아직 옮기지 않았다.
+* 들고 있는 조각은 커서 위치에 반투명하게 보이고, **놓을 수 없는 위치에서는 빨갛게** 보인다(원본은 순수 빨강 실루엣, 뷰어는 빨강을 곱한 반투명 그림). 아래 안내 줄에 "놓을 수 있음(연결 N)" 또는 불가 이유가 나온다.
+* 배치 판정(2026-09-30, Core `BridgeGrid`): 섬 칸(본섬 미리보기·작은 받침)·다른 다리·다른 오브젝트 발자국과 겹치면 불가. 조각 밖을 향한 연결 방향이 섬 칸이나 내 다리의 마주 연결된 끝에 닿아야 한다. **영역 소유 조건과 초목 가장자리 제외는 아직 없다**([bridge-pieces.md](exe/bridge-pieces.md) 8절). 초목이 있는 섬 가장자리에서 다리를 시작할 수 없다는 규칙은 사용자 확인으로 확정됐지만([섬 소유권 규칙](gameplay/island-ownership.md) 3번), 초목 칸을 판별하는 방법을 찾기 전이라 뷰어에서는 초목 가장자리 옆에도 놓을 수 있다.
+* 붕괴(2026-09-30): 모드가 켜진 동안 게임 시각 10초마다 열린 끝이 있는 연결망의 수명이 줄어든다. 5 아래에서 금 간 프레임, 0 이면 사라진다(저장 다리도 포함. 무너진 저장 다리는 그리지 않는다). 단단한 칸은 줄지 않는다.
+* 놓은 칸은 배치 시험의 "다리 끝" 근사에도 쓰인다. 칸 패널의 조각은 원본 사이드바처럼 절반 크기로 그린다. 회전·커서 규칙은 원본 실행으로 확인한 것이다([bridge-pieces.md](exe/bridge-pieces.md) 4절).
 
 검증용 명령(6초를 미리 흘려 칸을 채우고, 4번 조각을 회전 1 로 든 채 (118,122)에 둔다):
 
@@ -78,6 +80,15 @@ dotnet run --project src/Netstorm.Game -- --map dissolvedalliance --bridges 6 --
 ```
 
 2026-09-29 확인: 칸 6/6, 추첨 6회, 첫 조각은 한 칸, T 자·ㄱ 자 조각이 원본 프레임으로 이어져 보이고, 회전 1 의 4번 조각이 가로 막대 아래 가지 모양으로 그려진다.
+
+배치 판정 확인 (2026-09-30, Bridge the Gap! 섬 오른쪽 가장자리 x = 61):
+
+```powershell
+dotnet run --project src/Netstorm.Game -- --map bridgethegap --bridges 6 --bridge-hold 0,1 --probe 62,47 --screenshot extracted/screens/bridge-place-ok.png
+dotnet run --project src/Netstorm.Game -- --map bridgethegap --bridges 6 --bridge-hold 0,1 --probe 66,47 --screenshot extracted/screens/bridge-place-red.png
+```
+
+가장자리 옆 (62,47)은 "놓을 수 있음(연결 1)"과 원본 프레임, 하늘 (66,47)은 빨간 조각과 "불가: 섬 가장자리나 내 다리 끝에 이어지지 않음"이 표시된다.
 
 ## 화면 설정 (전체화면·화면비·가장자리 스크롤)
 

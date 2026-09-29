@@ -205,7 +205,8 @@ internal sealed partial class FortMapViewer : IDisposable
         foreach (FortMapObject item in _sorted)
         {
             // noIsland는 투명한 논리 지면이다. 미리보기 지면에 반영했으므로 표식을 그리지 않는다.
-            if (item.Object.Type.Name == "noIsland")
+            // 다리 조각 시험 모드에서 무너진 저장 다리는 그리지 않는다.
+            if (item.Object.Type.Name == "noIsland" || IsCrumbledStoredBridge(item))
             {
                 continue;
             }
@@ -258,15 +259,16 @@ internal sealed partial class FortMapViewer : IDisposable
     /// <summary>지면 타일을 기준점과 프레임 오프셋에 맞춰 그린다.</summary>
     /// <param name="scale">배율 (없으면 현재 확대 배율)</param>
     /// <param name="alpha">불투명도 (0~1, 들고 있는 다리 조각 미리보기용)</param>
+    /// <param name="tint">곱할 색 (놓을 수 없는 조각의 빨강 표시용, 없으면 흰색)</param>
     private void DrawSprite(SpriteBatch batch, int typeIndex, int frameIndex, Vector2 anchor, int color = 0,
-        float? scale = null, float alpha = 1f)
+        float? scale = null, float alpha = 1f, Color? tint = null)
     {
         var sprite = GetTexture(typeIndex, frameIndex, color);
         if (sprite.HasValue)
         {
             var (texture, offset) = sprite.Value;
             float s = scale ?? _zoom;
-            batch.Draw(texture, anchor + offset.ToVector2() * s, null, Color.White * alpha,
+            batch.Draw(texture, anchor + offset.ToVector2() * s, null, (tint ?? Color.White) * alpha,
                 0f, Vector2.Zero, s, SpriteEffects.None, 0f);
         }
     }

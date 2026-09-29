@@ -11,6 +11,30 @@
 
 ## 0-A. 최신 인수인계 — AI용 원본 분석 도구 (2026-09-29)
 
+### 게임 구현: 다리 배치 판정·붕괴, 미션 시작 조건 (2026-09-30, `HJOW-Athlon`, 원본 실행 없음)
+
+튜토리얼 1·2 사용자 직접 조작 결과(아래 두 절)를 참고해, 정적 분석으로 확인할 수 있는 부분을 구현했다.
+
+- **다리 배치 판정·붕괴** — `src/Netstorm.Core/Bridges/BridgeGrid.cs`, [bridge-pieces.md](docs/exe/bridge-pieces.md) 8절.
+  - exe 확인: 10초 주기 갱신(`Bridge.cpp` `00422bc0`, `0x52f968`), 칸 수명 0~7(`brMAX_TIME_LEFT`)·5 아래 금 감(`0x52f960`)·0 이면 제거(`00421c30`), 단단한 칸 제외, 연결망 "0이 아닌 최소 수명 − 1" 동기화(`004227e0`), 겹치는 칸이 있으면 배치 불가(`Rifttype.cpp` `0049b510`).
+  - 근사: 이어짐 = "조각의 연결 방향이 섬 칸 또는 내 다리의 마주 연결된 끝에 닿음"(원본은 영역 소유 판정 `Player.cpp` `0048fdb0`), 붕괴 대상 = "열린 끝이 있는 연결망". 초목 가장자리 제외는 콜백만 있고 아직 판정이 없다.
+  - **규칙 확정(사용자 확인, 2026-09-30): 섬 가장자리 중 초목이 있는 부분에서는 다리 건설을 시작할 수 없다.** [섬 소유권 규칙](docs/gameplay/island-ownership.md) 3번, [bridge-pieces.md](docs/exe/bridge-pieces.md) 4·8절에 반영. 남은 것은 초목 칸 판별 방법(아래 다음 후보 2).
+  - 원본 관찰과의 차이: 금 간 기간 약 40초는 같지만, 모델은 첫 갱신 뒤 약 30초 만에 금이 가고 원본은 약 120초 뒤였다. 붕괴 시작 전 대기 조건(`004218b0`)을 더 풀어야 한다(8.3절).
+  - 맵 뷰어 다리 모드(B)에 연결: 놓을 수 없으면 빨간 조각·이유 표시, 판정 통과 시에만 놓기, 10초 주기 붕괴·금 간 프레임·무너진 저장 다리 숨김. 확인 스크린샷 `extracted/screens/bridge-place-{ok,red}.png`([map-viewer.md](docs/map-viewer.md#다리-조각-시험-모드)).
+- **미션 시작 조건** — `src/Netstorm.Core/Rules/MissionStart.cs`.
+  - 머리 값 myStartMoney(없으면 전투 옵션 시작 금액)·myTech(시작 지식 → `ProductionDeck`)·techAllowed·denySalvage·denyAscend·aiOff·tutorialNumber·loadFort·title 을 읽는다.
+  - techAllowed 는 원본 `Mission.cpp` `00482eb0` 순서(deny/allow 모드 전환, all = 전체, 이름 = 개별)로 해석한다(`Totalmade.cpp` `004c23c0`~`004c2400`).
+  - 원본 튜토리얼 1(0 SP, 지식 없음, windVortex 만 허용)·2(10,000 SP, sunArcher)의 값이 사용자 조작 관찰과 같음을 테스트로 확인했다.
+  - `myStartMoney`·`myTech` 문자열은 exe 에 있으나 읽는 코드는 간접 참조라 찾지 못했다(의미는 문서·관찰 기준).
+- 테스트: Core **111개** 통과(새 `BridgeGridTests` 8개, `MissionStartTests` 3개), 빌드 오류 0.
+- **다음 후보:**
+  1. 붕괴 대기 조건과 영역 소유 이어짐(`004218b0`·`0048fdb0`)
+  2. 초목 가장자리 판별 방법 찾기(규칙은 사용자 확인으로 확정 — 가장자리 타일 프레임·`fringe`·`edgeFarm` 중 무엇으로 판별하는지 exe 확인 뒤 `BridgeGrid` 콜백에 연결)
+  3. 끝 칸 L·M·N·O(섬 쪽 연장 그림, `004215d0`)
+  4. 엔티티·틱 — 건설 시간(튜토리얼 2 관찰: Temple 약 16초, Workshop 약 10초, 이동 포함)과 사제 결정 운반(결정당 200 SP)
+  5. 미션 시작 조건을 맵 뷰어·게임 화면에 연결
+- 이번 변경 파일(커밋 전): `src/Netstorm.Core/Bridges/BridgeGrid.cs`(신규), `src/Netstorm.Core/Rules/MissionStart.cs`(신규), `tests/Netstorm.Core.Tests/{BridgeGridTests,MissionStartTests}.cs`(신규), `src/Netstorm.Game/FortMapViewer{,.Bridges}.cs`, `docs/exe/bridge-pieces.md`·`docs/core-rules.md`·`docs/map-viewer.md`, 이 문서.
+
 ### 튜토리얼 2 사용자 직접 조작 분석 완료 (2026-09-30)
 
 - [x] `HJOW-Athlon` 세션 `20260929T160257202Z-2e9f1861506d`에서 `2 Secret Workshop`을 사용자 직접 조작으로 완료했다. `Mission Accomplished! … Tutorial Two` 결과 화면과 3,075 SP를 PNG·세션 메모에 남겼다. 다음 튜토리얼은 열지 않았고 녹화·안내 창·게임을 종료했다. [관찰 결과](docs/screens/README.md#17-사용자-직접-조작-녹화-튜토리얼-2-완료-2026-09-30-windows-hjow-athlon).
@@ -735,6 +759,7 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
 - [ ] 엔티티 시스템 (`.type` 데이터 구동)
 - [ ] 애니메이션 시스템
 - [ ] 다리 조각 생성·배치·연결·붕괴
+  - [x] 2026-09-30 배치 판정(겹침·이어짐 근사)·10초 주기 붕괴(수명 7→0, 금 감, 단단한 칸 제외): `Bridges/BridgeGrid`, 뷰어 다리 모드 연결 — [bridge-pieces.md](docs/exe/bridge-pieces.md) 8절
   - [x] 2026-09-29 생성·회전: `Netstorm.Core/Bridges`(BridgeLinks·BridgePatternCatalog·BridgePiece·BridgeFrames·BridgeTray)·`Simulation/NetstormRandom`, 테스트 `BridgePieceTests` 10개(원본 exe 표와 직접 대조 포함), 맵 뷰어 다리 조각 시험 모드 B(`FortMapViewer.Bridges.cs`, `--bridges`) — [core-rules.md](docs/core-rules.md), [map-viewer.md](docs/map-viewer.md#다리-조각-시험-모드)
   - [ ] 남은 일: 배치 판정·연결·붕괴 (위 4단계 분석 후), `BattleMap` 의 다리 끝·빈 섬 연결 근사 교체
 - [ ] 건물 배치·건설

@@ -12,7 +12,8 @@ namespace Netstorm.Game;
 /// <summary>
 /// 맵 뷰어의 다리 조각 시험 모드 (B): Core 의 BridgeTray 로 생산 창 다리 칸을 원본 규칙(1초마다, Bridge Slots 칸 수,
 /// 5번째마다 한 칸 조각)대로 채우고, 조각을 집어 회전·배치해 본다. 원본 bridge.type 프레임으로 그린다.
-/// 다리 배치 가능 판정(연결·지지)은 Bridge.cpp 분석 전이라 아직 하지 않는다 — 놓기는 표시용이다.
+/// 배치 판정과 붕괴는 Core BridgeGrid(섬·다른 다리와 겹침 불가, 섬 가장자리나 내 다리 열린 끝에 이어짐,
+/// 열린 끝이 있는 연결망은 10초마다 수명이 줄어 금 간 뒤 무너짐)를 쓴다 — docs/exe/bridge-pieces.md 8절.
 /// </summary>
 internal sealed partial class FortMapViewer
 {
@@ -49,8 +50,17 @@ internal sealed partial class FortMapViewer
     /// <summary>커서에 들고 있는 조각</summary>
     private BridgePiece? _heldPiece;
 
-    /// <summary>시험으로 놓은 다리 칸 (그리기용)</summary>
-    private readonly List<(int X, int Y, BridgeCell Cell)> _laidBridges = [];
+    /// <summary>다리 칸 격자 (저장 다리 + 시험으로 놓은 다리, 배치 판정·붕괴)</summary>
+    private BridgeGrid _bridgeGrid = null!;
+
+    /// <summary>저장 다리 오브젝트 → 격자 칸 (무너졌는지 확인해 그리기에서 뺀다)</summary>
+    private readonly Dictionary<FortMapObject, BridgeCellState> _storedBridges = [];
+
+    /// <summary>들고 있는 조각의 현재 위치 판정 (빨강 표시용)</summary>
+    private BridgePlacementCheck? _bridgeCheck;
+
+    /// <summary>들고 있는 조각을 놓을 수 없을 때의 색 (원본은 조각 전체를 빨강으로 칠한다)</summary>
+    private static readonly Color CannotPlaceTint = new(255, 40, 40);
 
     /// <summary>다리 모드 커서 칸 (조각 왼쪽 위 칸)</summary>
     private (int X, int Y)? _bridgeCursor;
@@ -67,7 +77,27 @@ internal sealed partial class FortMapViewer
         _bridgeType = catalog.Find("bridge") ?? throw new InvalidDataException("bridge 타입이 없습니다.");
         _tray = new BridgeTray(_battle.Options.BridgeSlotCount, new NetstormRandom());
         _playerHasTemple = _map.Objects.Any(o => o.Object.Owner == TestPlayer && ObjectKinds.Of(o.Object.Type) == ObjectKind.Temple);
+        // 섬 칸 = 본섬 미리보기 칸 + 작은 받침(noIsland) 칸
+        var island = _terrain.IslandCells.Select(c => (c.X, c.Y)).ToHashSet();
+        island.UnionWith(_map.Objects.Where(o => o.Object.Type.Name == "noIsland").Select(o => (o.X, o.Y)));
+        // 다리·지면 외 오브젝트의 발자국 칸은 다리가 겹칠 수 없다
+        var occupied = new HashSet<(int X, int Y)>();
+        foreach (FortMapObject item in _map.Objects.Where(o => o.Object.Type.Name != "noIsland" && ObjectKinds.Of(o.Object.Type) != ObjectKind.Bridge))
+        {
+            occupied.UnionWith(Footprint.ForType(item.Object.Type.Definition, item.X, item.Y).Cells());
+        }
+        _bridgeGrid = new BridgeGrid((x, y) => island.Contains((x, y)), (x, y) => occupied.Contains((x, y)));
+        TypeFrameTable frames = _bridgeType.Definition.Frames;
+        // 저장된 다리 칸을 격자에 넣는다 (연결·붕괴 계산에 쓴다)
+        foreach (FortMapObject item in _map.Objects.Where(o => ObjectKinds.Of(o.Object.Type) == ObjectKind.Bridge && o.Object.BridgeShape is not null))
+        {
+            _storedBridges[item] = _bridgeGrid.AddStored(frames, item.Object.BridgeShape!.Value, item.X, item.Y, item.Object.Owner ?? 0);
+        }
     }
+
+    /// <summary>저장 다리가 시험 중에 무너져 격자에서 빠졌는지 (그리기에서 뺀다)</summary>
+    private bool IsCrumbledStoredBridge(FortMapObject item) =>
+        _storedBridges.TryGetValue(item, out BridgeCellState? state) && !ReferenceEquals(_bridgeGrid.At(state.X, state.Y), state);
 
     /// <summary>
     /// 다리 조각 시험 모드를 켠 채 시작한다 (명령줄 --bridges). 지정한 초만큼 시간을 미리 흘려 칸을 채우고,
@@ -117,6 +147,16 @@ internal sealed partial class FortMapViewer
         {
             _bridgeNotice = $"새 조각: {added.Pattern.Index}번";
         }
+        BridgeDecayResult decay = _bridgeGrid.Update(_bridgeClock);
+        // 무너진 칸은 다리 끝 근사 표에서도 뺀다
+        foreach (BridgeCellState gone in decay.Removed)
+        {
+            _bridgeOwners.Remove((gone.X, gone.Y));
+        }
+        if (decay.Removed.Count > 0 || decay.Cracked.Count > 0)
+        {
+            _bridgeNotice = $"{_bridgeClock:0}초: 금 감 {decay.Cracked.Count}칸, 무너짐 {decay.Removed.Count}칸";
+        }
         // 숫자 키로 칸의 조각을 집는다 (들고 있던 조각은 칸으로 되돌린다)
         for (int i = 0; i < TrayKeys.Length; i++)
         {
@@ -145,19 +185,35 @@ internal sealed partial class FortMapViewer
             _heldPiece = null;
         }
         _bridgeCursor = _probeCell ?? (mouse.Y < HeaderHeight ? null : BridgeCellAt(new Vector2(mouse.X, mouse.Y)));
+        _bridgeCheck = _heldPiece != null && _bridgeCursor is (int px, int py) ? _bridgeGrid.Check(_heldPiece, px, py, TestPlayer) : null;
         if (_heldPiece != null && _bridgeCursor is (int cx, int cy)
             && mouse.LeftButton == ButtonState.Pressed && _previousMouse.LeftButton == ButtonState.Released)
         {
-            // 판정 없이 칸을 기록한다 (연결·지지 규칙은 Bridge.cpp 분석 후 추가)
-            foreach (PlacedBridgeCell cell in _heldPiece.Cells())
+            if (_bridgeCheck is { Allowed: true })
             {
-                _laidBridges.Add((cx + cell.Dx, cy + cell.Dy, cell.Cell));
-                _bridgeOwners[(cx + cell.Dx, cy + cell.Dy)] = TestPlayer;
+                // 판정을 통과한 조각만 격자에 놓는다
+                foreach (BridgeCellState cell in _bridgeGrid.Place(_heldPiece, cx, cy, TestPlayer))
+                {
+                    _bridgeOwners[(cell.X, cell.Y)] = TestPlayer;
+                }
+                _bridgeNotice = $"{_heldPiece} 을(를) ({cx}, {cy})에 놓음 (연결 {_bridgeCheck.Attachments}곳)";
+                _heldPiece = null;
             }
-            _bridgeNotice = $"{_heldPiece} 을(를) ({cx}, {cy})에 놓음 — 배치 판정 미구현";
-            _heldPiece = null;
+            else
+            {
+                _bridgeNotice = $"놓을 수 없음: {DescribeBridgeProblem(_bridgeCheck?.Problem)}";
+            }
         }
     }
+
+    /// <summary>배치 불가 이유의 한국어 설명</summary>
+    private static string DescribeBridgeProblem(BridgePlacementProblem? problem) => problem switch
+    {
+        BridgePlacementProblem.OutOfWorld => "월드 밖",
+        BridgePlacementProblem.Blocked => "섬·다리·오브젝트와 겹침",
+        BridgePlacementProblem.NotAttached => "섬 가장자리나 내 다리 끝에 이어지지 않음",
+        _ => "위치 없음",
+    };
 
     /// <summary>화면 좌표 → 들고 있는 조각의 왼쪽 위 칸 (원본 측정 규칙 BridgeCursor)</summary>
     private (int X, int Y) BridgeCellAt(Vector2 screen)
@@ -170,10 +226,11 @@ internal sealed partial class FortMapViewer
     private void DrawBridgeWorld(SpriteBatch batch, Vector2 center)
     {
         TypeFrameTable frames = _bridgeType.Definition.Frames;
-        // 시험으로 놓은 칸을 놓은 순서대로 그린다
-        foreach ((int x, int y, BridgeCell cell) in _laidBridges)
+        var stored = _storedBridges.Values.ToHashSet();
+        // 시험으로 놓은 칸을 상태(보통·금 감·단단함)에 맞는 프레임으로 y·x 순서로 그린다 (저장 다리는 본 그리기에서 처리)
+        foreach (BridgeCellState cell in _bridgeGrid.Cells.Where(c => !stored.Contains(c)).OrderBy(c => c.Y).ThenBy(c => c.X))
         {
-            DrawSprite(batch, _bridgeType.LoadIndex, BridgeFrames.Find(frames, cell), Screen(WorldPixels(x, y), center));
+            DrawSprite(batch, _bridgeType.LoadIndex, BridgeFrames.Find(frames, cell.Cell, cell.Condition), Screen(WorldPixels(cell.X, cell.Y), center));
         }
         if (!_bridgeMode || _heldPiece == null || _bridgeCursor is not (int cx, int cy))
         {
@@ -183,7 +240,8 @@ internal sealed partial class FortMapViewer
         foreach (PlacedBridgeCell placed in _heldPiece.Cells())
         {
             DrawSprite(batch, _bridgeType.LoadIndex, BridgeFrames.Find(frames, placed.Cell),
-                Screen(WorldPixels(cx + placed.Dx, cy + placed.Dy), center), alpha: HeldPieceAlpha);
+                Screen(WorldPixels(cx + placed.Dx, cy + placed.Dy), center), alpha: HeldPieceAlpha,
+                tint: _bridgeCheck is { Allowed: false } ? CannotPlaceTint : null);
         }
     }
 
@@ -222,7 +280,11 @@ internal sealed partial class FortMapViewer
         }
         string held = (_heldPiece == null ? "없음" : _heldPiece.ToString()) + (_reverseRotation ? " | 반대 회전 켜짐" : "");
         string head = $"다리 조각 시험 | 칸 {_tray.Pieces.Count}/{_tray.Capacity} | 추첨 {_tray.DrawCount}회 | 템플 {(_playerHasTemple ? "있음" : "없음 — 조각이 생기지 않음")} | 들고 있는 조각: {held}";
-        string keys = "1~6: 조각 집기 · R: 회전(원본 우클릭) · C: 반대 회전 · Backspace: 되돌리기 · 좌클릭: 놓기(판정 없음) · B: 모드 끄기";
+        string keys = "1~6: 조각 집기 · R: 회전(원본 우클릭) · C: 반대 회전 · Backspace: 되돌리기 · 좌클릭: 놓기 · B: 모드 끄기";
+        if (_bridgeCheck != null)
+        {
+            head += _bridgeCheck.Allowed ? $" | 놓을 수 있음(연결 {_bridgeCheck.Attachments})" : $" | 불가: {DescribeBridgeProblem(_bridgeCheck.Problem)}";
+        }
         batch.Draw(_pixel, new Rectangle(0, height - 94, width, 94), new Color(18, 24, 38));
         batch.DrawString(font, head, new Vector2(16, height - 90), Color.Gold);
         batch.DrawString(font, _bridgeNotice, new Vector2(16, height - 62), Color.LightGreen);
