@@ -11,6 +11,40 @@
 
 ## 0-A. 최신 인수인계 — AI용 원본 분석 도구 (2026-09-29)
 
+### Windows 원본 동적 확인 (2026-09-29 저녁~밤, `HJOW-Athlon`) — ✅ 메인 메뉴 흐름 조사 완료
+
+- **실행 상태:**
+  - 지정 예외 시스템 2(Windows 10 Pro)라서 확인 없이 원본 복사본을 실행했다. 세션은 네 개다.
+    - `…113420484Z-3358366e5f90`: 사용자 중단(작업 전 문서 확인 지시)
+    - `…113907044Z-929836edfdde`: 사용자 중단(문서 정리 지시)
+    - `…114913277Z-391e6a079ff0`: 원격 데스크톱 창이 최소화되어 포커스·캡처 실패
+    - `…120526716Z-327849a23cac`: 본 조사
+  - 마지막 세션은 `end_session force=true`로 종료했다. 실행 중인 `Netstorm.exe`는 없고 `originals/` 변경은 없다.
+  - 증거는 `extracted/analyzeManager/<세션>/`에 있다(git 제외).
+  - Technical Help를 누른 결과로 Windows 도움말 앱 `HelpPane.exe`와 Edge 창이 남아 있을 수 있다(사용자에게 알림).
+- **원격 데스크톱 주의:** `HJOW-Athlon`은 RDP 세션으로 쓰고 있다. **RDP 창이 최소화되면 캡처·포커스가 실패한다** → 분석 중에는 RDP 창을 띄워 두어야 한다([docs/analyze-manager.md](docs/analyze-manager.md) "RDP" 절).
+- **확인한 원본 동작** → [docs/screens/README.md](docs/screens/README.md) 1.2·1.3절, [docs/screens/main-menu.md](docs/screens/main-menu.md) "메뉴 흐름도":
+  - **보유 exe = 10.78** (Help → Version 창 "Version v10.78 / 10.78 Patch by Ticonderoga Entertainment") → [docs/sources/README.md](docs/sources/README.md) 2절 갱신
+  - Auto-Demo는 **마지막 입력(마우스 이동 포함)과 대화상자가 닫힌 시점 중 늦은 쪽부터 45초** 뒤에 시작한다. 대화상자가 열린 동안은 시작하지 않는다.
+  - 로딩 창은 "Starting Mission..." 또는 "Connecting to Game Server - Countdown N"(Cancel)이다. Auto-Demo 안내 창은 뜰 때와 안 뜰 때가 있다(조건 미확인). 선택 데모의 안내 창은 `$Timeout=15`대로 15초 뒤 자동으로 닫힌다.
+  - ESC는 데모·미션 중 상단 메뉴 막대를 켜고 끈다(브리핑 창이 열려 있으면 무반응). 메뉴 막대 구성:
+    - 데모 Game: Restart/Exit Demo, Quit Game
+    - 미션 Game: Review Objectives F8, Restart/Leave Mission, Quit Game
+    - 미션 View(F2~F9)·Options·Players·About, 편집기 Game·Edit·View·Options·About
+  - Exit Demo는 확인 없이 메인 메뉴로 간다. Leave Mission은 확인 창(Main Menu / Replay / Continue)을 거쳐 메인 메뉴로 간다. 편집기에서 나갈 때는 저장 확인(Yes / No / Cancel)이 뜬다.
+  - **브리핑 창이 떠 있는 동안에도 게임이 진행된다**(다리 조각이 참).
+  - 도움말 드래그는 1:1이다. 38px는 스크롤 끝이다.
+  - Credits 각 쪽은 20초마다 자동으로 넘어간다. Campaign 버튼은 `[UCampaign]`을 연다. Edit에서 맵을 고르면 편집기 모드로 들어간다.
+  - 메인 메뉴 버튼은 커서를 먼저 올린 뒤 클릭해야 반응한다. `>` 하위 메뉴는 클릭해야 열린다.
+- **남은 원본 확인 (다음 작업 후보, 지정 시스템에서 확인 없이 실행 가능):**
+  1. Auto-Demo 안내 창이 뜨는 조건과 45초 상수의 exe 위치(정적 분석)
+  2. Replay/Restart Mission·Restart Demo 결과, 로딩 창 Cancel, Original Credits, Campaign 나머지 묶음과 `$Timeout=120`
+  3. 편집기 Create New Map·Test Battle·Add Island·Set All Bridge
+  4. 미션 플레이 관찰: 사이드바 배치 조작, Unit Rate 간격 측정([production-refresh.md](docs/exe/production-refresh.md) 남은 일), 결과 화면 흐름
+  5. 메인 메뉴 Options의 Pause 줄 표시 조건(`DAT_00594fa4`·`DAT_005c85a4`)
+- 도구 쪽 미검증: 파이프 EOF(CLI 출력을 파일로 받아 확인하지 못함). `analyzeManager/ExplorerTools.cs`·`Program.cs` 도움말의 시스템 2 미반영은 아래 절 그대로다.
+- 이번 변경 파일(커밋 전): `docs/screens/README.md`, `docs/screens/main-menu.md`, `docs/analyze-manager.md`, `docs/sources/{README,game-manual,patch-history}.md`, `LEFT_JOBS.md`
+
 ### AGENTS.md 규칙 갱신 반영 (2026-09-29)
 
 - **`AGENTS.md`는 절대 수정하지 않는다.** 수정이 필요하면 개발자(사용자)에게 요청한다. (이전 인수인계에 "`AGENTS.md` 갱신"으로 남은 기록은 이 규칙이 생기기 전의 작업이다.)
@@ -433,7 +467,7 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
 - [x] **리소스** — 2026-09-27 완료: `tools/peres.py` (비트맵 3·커서 18·다이얼로그·문자열). DLL 문자열은 설치 프로그램용
 - [x] **도움말** — 2026-09-29: 형제 저장소의 helpdeco 소스를 VS 2022 Build Tools Win32 Release로 빌드하고 `help/*.HLP` 5개에서 실제 본문 150개·BMP 77개를 추출. `tools/hlp.py`로 UTF-8 토픽별 텍스트 생성·목록 대조, [HLP 형식·재현](docs/formats/hlp.md), [게임 규칙 요약](docs/gameplay/help-manual.md). 게임 내 도움말 텍스트는 아카이브의 `help.english` 에도 있음
   - [x] **동봉 문서 전체 정독·정리** — 2026-09-29: `GAME.HLP`(규칙·화면·조작·튜토리얼·멀티·유닛/주문 핸드북), `readme.hlp`·`HELP.HLP`·`VENDOR`·`VOCAB`, `README.DOC`(Word, 1997-10 변경점), `*.CNT`·`HELP.EXE`, `PatchFixs.txt`(10.70~10.78), `Readme.txt`·`TMaker.txt`·`disclaimer.txt`·`steam_appid.txt` → **[docs/sources/](docs/sources/README.md)** (목록·불일치 12건, [게임 매뉴얼](docs/sources/game-manual.md), [패치 이력](docs/sources/patch-history.md), [설치·지원 문서](docs/sources/support-docs.md))
-    - 주요 사실: 보유 exe 는 **10.75 이상**(옵션 표 근거, 10.77/10.78 추정). 섬 테마·거주지 테마는 패치 10.70 V5.3~6.0 기능. 1152×864·1280×960 해상도는 패치에서 제거. 멀티는 BattleMaster 가 서버·서버 인계·포트 6800. `bridgeDrawRate`·`stuffRefreshRate` 설정 키는 패치판 exe 에 없음(확인)
+    - 주요 사실: 보유 exe 는 **10.78**(2026-09-29 게임 내 Version 창으로 확정. 이전 추정: 옵션 표 근거 10.75 이상). 섬 테마·거주지 테마는 패치 10.70 V5.3~6.0 기능. 1152×864·1280×960 해상도는 패치에서 제거. 멀티는 BattleMaster 가 서버·서버 인계·포트 6800. `bridgeDrawRate`·`stuffRefreshRate` 설정 키는 패치판 exe 에 없음(확인)
     - **확인 필요**: ~~level 1 원소 유닛의 에너지~~(→ 2026-09-29 확정: 유닛마다 다르며 Bulf = Thunder 1 — 사용자 확인·PDF 대조), 파일 조회 순서(패치 문서: tarc 우선 ↔ 정적 분석: 디스크 우선), Storm Power 노랑 기준(매뉴얼은 1000 미만 빨강만), 튜토리얼 3 의 범위
   - [ ] 남은 일: 원본 도움말의 링크·토픽 간 탐색 정보 복원과 패치 실행 파일에서 수치·규칙 검증. helpdeco는 모든 파일에서 browse 재구성 경고 출력
 - [x] 오디오 전수 확인 — 2026-09-27 완료: 229개 모두 표준 PCM WAV
@@ -491,7 +525,7 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
 - [ ] AI 의사결정 루틴 (10단계 입력)
 - [ ] 네트워크: 프로토콜 방식(TCP/IP, IPX), 동기화 모델(락스텝 여부), 패킷 형식 (13단계 입력)
 - [ ] `PatchFixs.txt` 와 대조하여 **기준 버전** 결정 (원본 1.x 동작 vs 패치 10.7x 동작)
-  - 2026-09-29 정리: [patch-history.md](docs/sources/patch-history.md) (주제별 변경), 원판 매뉴얼 수치 ↔ 현재 `.type` 대조표 [game-manual.md](docs/sources/game-manual.md) 7절. 보유 exe = 10.75 이상. 사용자 캡처·설명(섬 테마, 거주지 원소 그림, Edit 메뉴 등)이 모두 패치판 기능이므로 **패치판 동작 기준**이 자연스러움 (결정은 5절 2번)
+  - 2026-09-29 정리: [patch-history.md](docs/sources/patch-history.md) (주제별 변경), 원판 매뉴얼 수치 ↔ 현재 `.type` 대조표 [game-manual.md](docs/sources/game-manual.md) 7절. 보유 exe = **10.78**(게임 내 Version 창). 사용자 캡처·설명(섬 테마, 거주지 원소 그림, Edit 메뉴 등)이 모두 패치판 기능이므로 **패치판 동작 기준**이 자연스러움 (결정은 5절 2번)
 
 **완료 기준**: `docs/gameplay/` 만 보고도 게임 규칙을 재구현할 수 있다.
 
@@ -539,6 +573,7 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
     - 남은 일: `Playing 1`·`Playing 2`(시점 이동 캡처)의 카메라 위치를 템플릿 매칭으로 구해 섬별 대조, 소유자 3 이상의 플레이어 색, 원본의 거주지 원소 재선택 경로(exe), 섬 가장자리 풀 장식
   - [ ] The War Begins! 진행 캡처로 **신전 원소 → 지면 테마**(비 → 눈·얼음, 바람 → 갈색 풀밭, 번개 → 어두운 돌, 신전 없음 → 초록 풀밭)와 소유권 변화 확인 (4단계 exe 분석으로 확정)
 - [ ] 메뉴 흐름도(타이틀 → 캠페인/멀티 → 브리핑 → 게임 → 결과)
+  - [x] 2026-09-29 원본 실행으로 메인 메뉴 전 항목(멀티 제외)·데모·미션 진입/이탈·편집기 진입/이탈 흐름 확인 → [main-menu.md](docs/screens/main-menu.md) "메뉴 흐름도". 남은 일: 결과 화면 이후, Replay/Restart, 멀티플레이 화면
 - [ ] 애니메이션 속도·연출(건설, 다리 설치, 폭발, 승리/패배), 사운드·음악 재생 타이밍
   - [x] 반복 애니메이션 속도 — 2026-09-28: 가이저 증기 약 24Hz(41.7ms), 신전 회오리·피해 연기 12Hz(83.3ms). `tools/videoframes.py cadence` 로 영상 4개 중 3개에서 재현 측정 ([animation-timing.md](docs/videos/animation-timing.md))
   - [ ] 남은 일: 건설·다리 설치·폭발·유닛 동작별 속도, 승리/패배 연출

@@ -23,8 +23,9 @@
 
 ## 2. 보유 exe 의 버전
 
-* `PatchFixs.txt` 의 최신 항목은 **10.77/10.78**. exe 에 버전 문자열은 그대로 들어 있지 않다.
-* exe 의 전투 옵션 표([battle-options.md](../exe/battle-options.md))에 **10.75/10.76 에서 추가된 옵션**(Island Dynamics, Geysers Placement, Geysers Respawns, Resource Injections, Game Type)이 모두 있다 → **10.75 이상**. 동봉 문서로 보아 10.77/10.78 일 가능성이 크다.
+* **확정(2026-09-29, 원본 실행): 보유 exe 는 10.78 이다.** 메인 메뉴 Help → Version 창에 "Version v10.78"과 "10.78 Patch by Ticonderoga Entertainment."가 표시된다. 이 창은 `tell.english` `[About]` 절의 `Version {version}`·`{gamemaster}.{gameminor} Patch …`에 **실행 중 exe 가 넘겨 주는 값**을 채운 것이다. 증거: `extracted/analyzeManager/20260929T120526716Z-327849a23cac/screens/37feb1f2….png` ([화면 목록 1.3절](../screens/README.md)).
+* `PatchFixs.txt` 의 최신 항목은 **10.77/10.78**. exe 에 "10.78" 버전 문자열은 그대로 들어 있지 않다(숫자 값으로 치환됨).
+* 정적 분석 근거: exe 의 전투 옵션 표([battle-options.md](../exe/battle-options.md))에 **10.75/10.76 에서 추가된 옵션**(Island Dynamics, Geysers Placement, Geysers Respawns, Resource Injections, Game Type)이 모두 있다 → 10.75 이상. 위 실행 결과와 모순되지 않는다.
 * 게임 안 Credits 의 "Netstorm 10.72 Patch Credits" 는 제작진 명단 제목이다 (`tell.english`).
 * 원판 매뉴얼(PDF·`GAME.HLP`)과 패치판 사이에는 유닛 레벨·비용·체력, 주문, 일부 조작 키, 메뉴 항목·전투 옵션, 섬 테마 그래픽이 다르다. PDF의 기본 조작·생산 절차와 메인/컨텍스트 메뉴의 형태는 분석 자료로 쓴다([선별 대조](pdf-manual.md)). **현재 구현 수치와 메뉴 항목·좌표는 패치판 exe·`.type`·캡처**를 기준으로 한다 (LEFT_JOBS.md 5절 "기준 버전").
 

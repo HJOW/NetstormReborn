@@ -2,7 +2,7 @@
 
 > 원문: `originals/help/GAME.HLP` → helpdeco 추출 `extracted/helpdeco/GAME/GAME.txt` (재현: [hlp.md](../formats/hlp.md)).
 > 별도로 추가된 [공식 매뉴얼 PDF](../../originals/help/manual.pdf)의 조작·화면·일부 비용을 선별 대조했다([결과](pdf-manual.md)). 이 문서의 내용과 행 번호는 계속 `GAME.HLP` 추출본 기준이며, PDF 전체와의 대조는 아직 하지 않았다.
-> **원판(1997) 매뉴얼**이다. 보유 exe 는 후대 패치판(10.75 이상, [README.md](README.md))이므로 수치·규칙은 `.type`·exe·플레이 자료로 다시 확인한다.
+> **원판(1997) 매뉴얼**이다. 보유 exe 는 후대 패치판(**10.78**, 게임 내 Version 창으로 확인 — [README.md](README.md))이므로 수치·규칙은 `.type`·exe·플레이 자료로 다시 확인한다.
 > 행 번호는 `GAME.txt` 기준. 짧은 규칙 요약은 [help-manual.md](../gameplay/help-manual.md), 이 문서는 전체 정리본이다.
 
 ## 1. 용어 (행 36~47)

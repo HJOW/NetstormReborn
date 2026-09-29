@@ -1,7 +1,7 @@
 # `PatchFixs.txt` — Ticonderoga Entertainment 비공식 패치 이력 요약
 
 > 원문: `originals/PatchFixs.txt` (892줄, Windows-1252, "Ticonderoga Entertainment Official Patch Documentation").
-> 순서: 최신(10.77/10.78) → 오래된 것(10.70 이전). 보유 exe 의 버전 판단은 [README.md](README.md) 2절.
+> 순서: 최신(10.77/10.78) → 오래된 것(10.70 이전). 보유 exe 는 **10.78**(게임 내 Version 창, [README.md](README.md) 2절).
 > 클론 구현에 영향을 주는 항목만 주제별로 모았다. 버그 수정·서버·채팅 세부는 원문을 본다.
 
 ## 1. 버전 목록

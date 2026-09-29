@@ -28,19 +28,19 @@
 
 | 시작 화면 | 항목 | 스크립트 대상 또는 화면 자료 | 화면에서 확인한 것 |
 |---|---|---|---|
-| 기본 메뉴 | Campaign | 캡처에 보이는 선택 화면은 `tell.english`의 `[UCampaign]`과 일치 | Campaign 대화상자에 6개 묶음과 Back |
+| 기본 메뉴 | Campaign | `tell.english`의 **`[UCampaign]`** (실행 확인) | Campaign 대화상자에 6개 묶음과 Back. `$Timeout=120` |
 | Campaign | Early Missions, Priest Training, Struggle For Freedom, A Nation Rises, Complete Victory, User Made Campaigns | `[UCampaign]`의 `@{guideSpec}` 메뉴 → 선택 파일의 `[Overview]`; 공식 파일 `offical1~6.english` | 각 선택 화면의 캡처가 있음 |
 | 공식 캠페인 목록 | 미션 항목 | 각 `offical*.english`의 `$Checked=...,MissionBegin,<미션>` | 파란 점·흐린 글자 상태는 캡처 시점의 진행 상태 |
-| 공식 캠페인 목록 | Back | 각 `offical*.english`의 `Tell,UCampaign` | Campaign 선택 화면으로 돌아가도록 기록됨 |
+| 공식 캠페인 목록 | Back | 각 `offical*.english`의 `Tell,UCampaign` | **Campaign 선택 화면으로 돌아감**(Early Missions에서 실행 확인) |
 | 기본 메뉴 | Demo | `tell.english`의 `[DEMOVILLE]` | 데모 3개와 Cancel |
-| Demo | The Storm Rages / Guard My Back / Dissolved Alliance | `StartDemo`에 각각 `DemoStormRages` / `GuardMyBack` / `DissolvedAlliance` | 선택 목록은 캡처로 확인; 개별 실행 전환은 이번에 미검증 |
+| Demo | The Storm Rages / Guard My Back / Dissolved Alliance | `StartDemo`에 각각 `DemoStormRages` / `GuardMyBack` / `DissolvedAlliance` | Guard My Back 실행 확인: 창 제목 `NetStorm Demo "Guard My Back"`, 안내 창이 15초 뒤 자동으로 닫힘. 나머지 둘은 미실행 |
 | Demo | Cancel | `Tell,Blank` | 취소 대상이 스크립트에 기록됨 |
 | 기본 메뉴 | Credits | `tell.english`의 `[Credits]` | 원판·패치판 크레딧 2개와 Cancel |
-| Credits | 10.72 Patch Credits / Original Credits | `Tell,CreditsNew` / `Tell,Creditsold` | 크레딧 **제목**의 10.72는 보유 exe의 버전 증거가 아님 |
+| Credits | 10.72 Patch Credits / Original Credits | `Tell,CreditsNew` / `Tell,Creditsold` | 크레딧 **제목**의 10.72는 보유 exe의 버전 증거가 아님. 각 쪽 More/Back/Cancel, **20초마다 자동으로 다음 쪽**, 마지막 쪽 뒤 메인 메뉴(실행 확인) |
 | Credits | Cancel | `Tell,Blank` | 취소 대상이 스크립트에 기록됨 |
-| 기본 메뉴 | Help | 펼침 메뉴 캡처 | General Help - F1, Technical Help, Version |
-| 기본 메뉴 | Edit | `Load Battle Map` 캡처 | 2열 맵 목록, Create New Map, Cancel. 항목 선택 결과는 미검증 |
-| 기본 메뉴 | Options | 펼침 메뉴 캡처 | 화면·소리·자동 데모·팁·진단 설정. 세부 항목은 [목록](README.md#1-메인-메뉴-계열-창-제목-netstorm-main-menu) 참조 |
+| 기본 메뉴 | Help | 펼침 메뉴(커서를 올린 뒤 클릭) | General Help - F1 → 도움말 창 / **Technical Help → 외부 `help\help.exe readme.hlp` 실행**(Windows 10에서 Edge 창이 열림) / **Version → "Version v10.78" 창** |
+| 기본 메뉴 | Edit | `Load Battle Map` | 2열 맵 목록, Create New Map, Cancel. **맵을 고르면 편집기 모드**(`NetStorm Editor Game "<맵>"`), 편집기 Game → Main Menu → "Leave Edit Mode" 저장 확인(Yes/No/Cancel) |
+| 기본 메뉴 | Options | 펼침 메뉴 | 화면·소리·자동 데모·팁·진단 설정. `>` 하위 메뉴는 클릭해야 열림. Pass Server Diagnostic → Yes/No 확인 창. 세부는 [화면 목록 1.3절](README.md#13-메인-메뉴-전환데모미션편집기-메뉴-조사-2026-09-29-밤-windows-hjow-athlon) |
 
 Campaign의 공식 목록은 `offical1~6`이라는 원본 철자를 그대로 쓴다. `offical1~5`의 `$Checked` 마지막 인자에는 앞 미션의 `{Done...}` 값이 들어 있어 잠금 순서를 정한다. 화면의 파란 점은 이 완료값과 대응하는 것으로 **추정**하며, 실제 저장 상태와 표시 조건을 한 번 더 대조해야 한다. User Made Campaigns는 `offical6.english`의 `%{userSpec}`으로 목록을 구성하므로 고정된 팬 캠페인 목록을 게임 UI에 박아 넣지 않는다.
 
@@ -58,4 +58,37 @@ Campaign의 공식 목록은 `offical1~6`이라는 원본 철자를 그대로 �
 
 클론도 이렇게 구현한다([화면 목록 1.0절](README.md#10-사용자-확인-동작-2026-09-29)).
 
-남은 동적 확인: Demo 안내창 OK 뒤 ESC/상단 Game 메뉴, Auto-Demo의 정확한 시간 기준, Edit의 맵 선택 결과, Options·Help의 각 항목 전환. 게임 실행 없이 위 캡처와 스크립트가 증명하는 범위를 넘겨 단정하지 않는다.
+**Windows 실행 결과(2026-09-29 저녁·밤, `HJOW-Athlon`, [화면 목록 1.2·1.3절](README.md#13-메인-메뉴-전환데모미션편집기-메뉴-조사-2026-09-29-밤-windows-hjow-athlon)):**
+- Auto-Demo는 **마지막 입력(마우스 이동 포함)과 대화상자가 닫힌 시점 중 늦은 쪽부터 45초** 뒤에 시작한다. 대화상자가 열려 있는 동안은 시작하지 않는다.
+- 로딩 창은 "Starting Mission..." 또는 "Connecting to Game Server - Countdown N"이며 Cancel 버튼이 있다. Auto-Demo의 안내 창은 뜰 때와 안 뜰 때가 있다(조건 미확인).
+- 데모·미션 중 ESC는 상단 메뉴 막대를 켜고 끈다. 브리핑 창이 열려 있으면 반응하지 않는다. Exit Demo는 확인 없이 메인 메뉴로, Leave Mission은 확인 창(Main Menu / Replay Mission / Continue Mission)을 거쳐 메인 메뉴로 돌아간다.
+- 보유 exe는 Version 창 기준 **10.78**이다.
+
+### 메뉴 흐름도 (실행 확인 범위)
+
+```text
+시작 화면 → "Did You Know?" 팁(OK) → "Not Validated"(OK) → 메인 메뉴
+메인 메뉴 ─ 45초 무입력 ─→ 로딩 창 → Auto-Demo(The Storm Rages!) ─ ESC → Game → Exit Demo ─→ 메인 메뉴
+  ├ Campaign → [UCampaign] 6묶음 ─ Back → 메인 메뉴
+  │    └ Early Missions → 미션 목록 ─ Back → Campaign
+  │         └ 미션 선택 → 로딩 창 → 미션 화면 + 브리핑(MORE → … → OK) → 플레이
+  │              └ ESC → Game → Leave Mission → "Leave Mission?" ─ Main Menu → 메인 메뉴
+  │                                                              ├ Replay Mission (미실행)
+  │                                                              └ Continue Mission (미실행)
+  ├ Demo → 데모 3종 선택 → 로딩 창 → 데모 + 안내 창(15초 자동 닫힘) ─ ESC → Game → Exit Demo → 메인 메뉴
+  ├ Help → General Help - F1(도움말 창, OK) / Technical Help(외부 프로그램) / Version(OK)
+  ├ Edit → Load Battle Map → 맵 선택 → 편집기 ─ ESC → Game → Main Menu → "Leave Edit Mode" ─ No → 메인 메뉴
+  ├ Credits → 제작진 2종 → 20초마다 다음 쪽 → 마지막 쪽 뒤 메인 메뉴 (Back·Cancel 버튼)
+  ├ Options → 펼침 메뉴(하위 메뉴는 클릭으로 열기) / Pass Server Diagnostic → Yes·No 확인 창
+  ├ Multiplayer (분석 대상에서 제외, 누르지 않음)
+  └ Quit (미실행)
+```
+
+남은 동적 확인:
+- Auto-Demo 안내 창이 뜨는 조건
+- Replay Mission·Restart Mission·Restart Demo의 결과
+- Original Credits 각 쪽
+- Campaign의 나머지 묶음과 `$Timeout=120` 실측
+- 로딩 창 Cancel의 결과
+- Create New Map·편집기 Test Battle
+- 결과(승리·패배) 화면 이후 흐름
