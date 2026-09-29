@@ -110,9 +110,17 @@ public sealed class AnalysisEngine
             using Process process = Process.Start(new ProcessStartInfo(Store.GamePath(session))
             {
                 WorkingDirectory = Path.GetDirectoryName(Store.GamePath(session)),
-                UseShellExecute = true,
+                // Wine의 ShellExecute가 MCP/CLI 표준 핸들을 게임에 넘겨 EOF를 지연시키므로 별도 파이프로 격리한다.
+                UseShellExecute = false,
+                RedirectStandardInput = true,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
                 WindowStyle = ProcessWindowStyle.Normal,
             }) ?? throw new InvalidOperationException("원본 게임 프로세스를 시작하지 못했습니다.");
+            // 게임의 진단 출력이 파이프를 가득 채우지 않도록 버리고, 입력 쪽은 즉시 닫는다.
+            process.StandardInput.Close();
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
             session.ProcessId = process.Id;
             session.ProcessStartedUtcTicks = process.StartTime.ToUniversalTime().Ticks;
             session.Phase = "running";
