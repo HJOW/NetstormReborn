@@ -57,6 +57,28 @@ dotnet test analyzeManager/tests/AnalyzeManager.Tests.csproj
 
 실행 파일은 `analyzeManager/bin/Release/net10.0-windows/Netstorm.AnalyzeManager.exe`다. `Netstorm.sln`에는 Windows 전용 도구를 추가하지 않았다.
 
+## Linux(Wine)에서 사용
+
+도구는 Windows용이지만 Linux에서는 win-x86 자체 포함 배포물을 Wine으로 실행한다. 준비와 게임 없는 검사는 [linux-wine.sh](../analyzeManager/linux-wine.sh)로 한다. 산출물(배포물·Wine 접두 경로)은 모두 git 제외 경로 `extracted/wine/`에 만든다.
+
+```bash
+bash analyzeManager/linux-wine.sh setup   # 도구·테스트 win-x86 배포, 32비트 접두 경로 생성, 렌더러 gdi 설정
+bash analyzeManager/linux-wine.sh test    # 단위 테스트 (가짜 원본, 게임 실행 없음)
+bash analyzeManager/linux-wine.sh smoke   # MCP 기본 검사 (게임 실행 없음)
+bash analyzeManager/linux-wine.sh call list_sessions
+bash analyzeManager/linux-wine.sh call capture_state '{"sessionId":"SESSION_ID"}'
+```
+
+- Wine에서는 저장소 경로를 `Z:\home\...` 형식으로 넘긴다(스크립트가 변환). Wine은 리눅스 루트에 연결된 `Z:\` 루트와 **마운트 지점**(예: tmpfs `/tmp`)을 링크로 보고한다. 링크 검사는 드라이브 루트만 예외로 두므로, 저장소가 별도 마운트 지점 아래에 있으면 거부된다.
+- Wine의 심볼릭 링크 생성은 오류 없이 무시된다. 그래서 링크 거부 단위 테스트는 Wine에서 건너뛴다(Windows에서 확인).
+
+**2026-09-29 확인 결과 (`vm-debian-codex`, Debian 13, Wine 10.0, Xwayland `DISPLAY=:2` 1600×900):**
+- 게임 없는 검사: Linux에서 Release 빌드 오류/경고 0. Wine에서 단위 테스트 20개 중 19개 통과, 1개(링크 생성 불가) 건너뜀. `mcp_smoke.py --wine` 기본 모드 통과(프로토콜 2025-03-26, 도구 8개, EOF 종료).
+- 실제 실행 1회(세션 `20260929T061418633Z-0ab98c5681a7`): 복사본 준비 약 2초, 게임 시작, 창 찾기·포커스·캡처 호출, CLI 재호출로 같은 세션 이어서 캡처, `end_session force=true` 종료까지 동작했다. 창 제목은 시작 화면 `Activision and Titanic Entertainment Present: NetStorm` → `NetStorm Main Menu`로 바뀌었다. 원본 폴더는 바뀌지 않았다.
+- **캡처가 검은 화면이었다.** 시작 직후 1600×828(최대화된 창)과 7분 뒤 1024×768 캡처 모두 검은색이다. Wine의 기본 DirectDraw 구현(wined3d, OpenGL)으로 그린 내용이 GDI 화면 복사(`CopyFromScreen`)에 잡히지 않는 것으로 **추정**한다. `setup`은 접두 경로의 `HKCU\Software\Wine\Direct3D\renderer`를 `gdi`로 바꾸지만, 이 설정으로 캡처되는지는 **아직 실행해 보지 않았다.**
+- **CLI 출력을 파이프로 받으면 게임이 끝날 때까지 셸이 기다린다.** Wine에서 시작한 게임이 도구의 표준 출력을 물려받기 때문이다. `linux-wine.sh call`은 결과를 임시 파일로 받아 이를 피한다(임시 파일 방식으로 `start_session`을 호출하는 것은 미검증). MCP로 쓰면 서버가 끝난 뒤에도 게임이 MCP 파이프를 잡고 있어 호스트가 EOF를 늦게 받을 수 있다.
+- 입력 전달(SendInput)과 입력 뒤 화면 변화는 확인하지 못했다.
+
 ## CLI 사용 계약
 
 형식은 다음과 같다. JSON 인자 파일은 UTF-8이며 최대 64 KB다. 셸의 따옴표 처리 문제를 줄이려면 `--args-file`을 사용한다.

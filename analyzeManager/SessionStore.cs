@@ -133,12 +133,17 @@ public sealed class SessionStore
             await CopyTreeAsync(child, Path.Combine(destination, Path.GetFileName(child)), cancellation);
     }
 
-    /// <summary>기존 경로와 부모 경로에 junction이나 심볼릭 링크가 있으면 거부한다.</summary>
+    /// <summary>
+    /// 기존 경로와 부모 경로에 junction이나 심볼릭 링크가 있으면 거부한다.
+    /// 드라이브 루트는 검사하지 않는다. Wine은 리눅스 루트에 연결된 <c>Z:\</c>를 링크로 보고하지만,
+    /// 루트 자체는 다른 위치로 우회되는 중간 경로가 아니기 때문이다.
+    /// </summary>
     public static void RejectReparse(string path)
     {
         string? current = Path.GetFullPath(path);
-        // 존재하는 모든 부모를 검사하여 작업 폴더가 저장소 밖으로 우회되지 않게 한다.
-        while (current != null)
+        string? root = Path.GetPathRoot(current);
+        // 드라이브 루트를 제외한 존재하는 모든 부모를 검사하여 작업 폴더가 저장소 밖으로 우회되지 않게 한다.
+        while (current != null && !string.Equals(current, root, StringComparison.OrdinalIgnoreCase))
         {
             if ((File.Exists(current) || Directory.Exists(current)) && (File.GetAttributes(current) & FileAttributes.ReparsePoint) != 0)
                 throw new InvalidOperationException($"분석 경로에 링크를 사용할 수 없습니다: {current}");

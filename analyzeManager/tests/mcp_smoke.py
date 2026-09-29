@@ -9,6 +9,9 @@ import subprocess
 import threading
 import time
 
+# Windows에서만 보조 프로세스의 콘솔 창을 숨긴다. Linux(Wine 경유)에는 해당 플래그가 없다.
+NO_WINDOW = getattr(subprocess, "CREATE_NO_WINDOW", 0)
+
 
 class Client:
     """서버 로그를 stdout 프로토콜과 분리해 검사하는 최소 MCP 클라이언트."""
@@ -18,7 +21,7 @@ class Client:
         self.process = subprocess.Popen(
             command + ["mcp"], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
             stderr=subprocess.PIPE, text=True, encoding="utf-8",
-            creationflags=subprocess.CREATE_NO_WINDOW,
+            creationflags=NO_WINDOW,
         )
         self.messages = queue.Queue()
         self.errors = []
@@ -84,7 +87,7 @@ def cli(command, tool, arguments):
     completed = subprocess.run(
         command + ["call", tool, "--json", json.dumps(arguments, ensure_ascii=False)],
         capture_output=True, text=True, encoding="utf-8", timeout=45,
-        creationflags=subprocess.CREATE_NO_WINDOW,
+        creationflags=NO_WINDOW,
     )
     result = json.loads(completed.stdout)
     assert completed.returncode == 0 and not result["isError"], result
@@ -98,8 +101,13 @@ def main():
     parser.add_argument("--repo", type=Path, default=Path(__file__).resolve().parents[2])
     parser.add_argument("--live", action="store_true", help="실제 게임 실행·입력·캡처·종료")
     parser.add_argument("--hold-seconds", type=int, default=0, help="추가 관찰용 실행 유지 시간(최대 300초)")
+    parser.add_argument("--wine", action="store_true",
+                        help="Linux에서 win-x86 배포물을 wine으로 실행 (WINEPREFIX 환경 변수 사용)")
     args = parser.parse_args()
     command = [str(args.exe.resolve()), "--repo", str(args.repo.resolve())]
+    if args.wine:
+        # Wine은 리눅스 루트를 Z: 드라이브로 보이므로 저장소 경로를 Z:\ 형식으로 넘긴다.
+        command = ["wine", str(args.exe.resolve()), "--repo", "Z:" + str(args.repo.resolve()).replace("/", "\\")]
     client = Client(command)
     session_id = None
     try:

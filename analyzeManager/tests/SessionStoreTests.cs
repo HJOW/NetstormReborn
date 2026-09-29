@@ -149,6 +149,39 @@ public sealed class SessionStoreTests : IDisposable
     [InlineData("")]
     public void RejectsUnsupportedKeys(string keys) => Assert.Throws<ArgumentException>(() => WindowsGame.ParseKeys(keys));
 
+    /// <summary>
+    /// 드라이브 루트는 링크 검사에서 제외한다. Wine의 <c>Z:\</c>처럼 루트가 링크로 보고되는 환경에서도
+    /// 저장소 경로를 쓸 수 있어야 하며, 일반 경로의 검사 결과는 바뀌지 않아야 한다.
+    /// </summary>
+    [Fact]
+    public void AcceptsDriveRootAndOrdinaryPaths()
+    {
+        SessionStore.RejectReparse(Path.GetPathRoot(Path.GetFullPath(_root))!);
+        SessionStore.RejectReparse(Path.Combine(_root, "originals", "Netstorm.exe"));
+        // Wine 환경이면 리눅스 루트에 연결되어 링크로 보고되는 Z:\ 루트도 허용되는지 확인한다.
+        if (Directory.Exists("Z:\\")) SessionStore.RejectReparse("Z:\\");
+    }
+
+    /// <summary>루트 예외가 있어도 중간 경로의 심볼릭 링크는 계속 거부한다.</summary>
+    [Fact]
+    public void RejectsLinkedParentDirectory()
+    {
+        string target = Path.Combine(_root, "target");
+        string link = Path.Combine(_root, "link");
+        Directory.CreateDirectory(target);
+        try { Directory.CreateSymbolicLink(link, target); }
+        catch (Exception error) when (error is UnauthorizedAccessException or IOException or PlatformNotSupportedException)
+        {
+            // 개발자 모드가 꺼진 Windows 등 링크를 만들 수 없는 환경에서는 검사할 수 없다.
+            Assert.Skip($"심볼릭 링크를 만들 수 없는 환경: {error.Message}");
+        }
+        // Wine처럼 오류 없이 링크 생성을 건너뛰는 환경도 검사할 수 없다.
+        if (!Path.Exists(link)) Assert.Skip("심볼릭 링크 생성이 오류 없이 무시되었습니다.");
+        if ((File.GetAttributes(link) & FileAttributes.ReparsePoint) == 0)
+            Assert.Skip("이 환경은 심볼릭 링크를 링크 속성으로 보고하지 않습니다.");
+        Assert.Throws<InvalidOperationException>(() => SessionStore.RejectReparse(Path.Combine(link, "file.bin")));
+    }
+
     /// <summary>오류가 발생해도 자신이 만든 임시 테스트 디렉토리만 정리한다.</summary>
     public void Dispose()
     {

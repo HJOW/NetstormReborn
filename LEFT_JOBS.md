@@ -11,6 +11,24 @@
 
 ## 0-A. 최신 인수인계 — AI용 원본 분석 도구 (2026-09-29)
 
+### Linux/Wine 분석 도구 실행 (2026-09-29 저녁, `vm-debian-codex`) — 권한 거부로 중단
+
+- **실행 상태:** 지정 예외 시스템이라 확인 없이 게임을 한 번 실행했다(세션 `20260929T061418633Z-0ab98c5681a7`, `end_session force=true`로 종료, 실행 중인 `Netstorm.exe` 없음, `originals/` 변경 없음). 이후 **두 번째 게임 실행과 X11 창 직접 캡처는 Claude Code 자동 모드 권한 분류기가 거부**했다. 우회하지 않고 멈췄다. 다음 실제 실행에는 사용자가 Claude Code 권한 규칙(예: `bash analyzeManager/linux-wine.sh call …`, `wine …` 허용)을 추가하거나 직접 허용해야 한다.
+- **도구 수정:**
+  - `SessionStore.RejectReparse`: 드라이브 루트는 검사에서 뺐다. Wine이 `Z:\`(리눅스 루트)를 링크로 보고해 실제 저장소 경로가 전부 거부되던 문제다. 중간 경로의 링크는 계속 거부한다. Wine은 마운트 지점(tmpfs `/tmp` 등)도 링크로 보고하므로 그 아래 저장소는 여전히 거부된다.
+  - 단위 테스트 2개 추가(`AcceptsDriveRootAndOrdinaryPaths`, `RejectsLinkedParentDirectory` — 링크를 못 만드는 환경에서는 건너뜀).
+  - `tests/mcp_smoke.py`에 `--wine` 선택 추가(Linux에서 Windows 전용 `CREATE_NO_WINDOW`를 쓰지 않음).
+  - 신규 `analyzeManager/linux-wine.sh`: `setup`(win-x86 배포 → `extracted/wine/`, 32비트 접두 경로, 렌더러 gdi) · `test` · `smoke` · `call`.
+- **게임 없는 검증(확실):** Linux Release 빌드 오류/경고 0. Wine에서 단위 테스트 20개 중 19개 통과·1개 건너뜀(Wine은 심볼릭 링크 생성을 오류 없이 무시). `mcp_smoke.py --wine` 기본 모드 통과. `linux-wine.sh`의 게임 없는 하위 명령 전부 동작. **Windows에서의 빌드·테스트는 이번 변경 후 다시 돌리지 않았다.**
+- **실제 실행 1회에서 확인한 것(확실):** Wine에서 복사본 준비(약 2초), 게임 시작, 창 찾기·포커스·캡처 호출 성공, 다른 CLI 호출로 같은 세션 이어서 캡처, 강제 종료. 창 제목이 `Activision and Titanic Entertainment Present: NetStorm` → `NetStorm Main Menu`로 바뀌었다.
+- **문제 1 — 캡처가 검은 화면:** 시작 직후(1600×828, 최대화 상태) 캡처와 7분 뒤(1024×768) 캡처가 모두 검은색이었다. 원인은 Wine의 기본 DirectDraw(wined3d/OpenGL) 출력이 GDI 화면 복사에 잡히지 않기 때문으로 **추정**한다. 대책으로 전용 접두 경로에 `HKCU\Software\Wine\Direct3D` `renderer=gdi`를 설정했으나 **그 뒤 실행이 거부되어 효과 미확인.**
+- **문제 2 — 파이프 상속:** `start_session` 출력을 파이프로 받으면 셸이 게임 종료 때까지 기다렸다(게임이 도구의 표준 출력을 물려받음). `linux-wine.sh call`은 임시 파일로 받는다(이 방식의 `start_session`은 미검증). MCP 모드에서도 같은 문제로 호스트가 EOF를 늦게 받을 수 있다.
+- **다음 작업 (실제 실행이 허용된 뒤):**
+  1. `bash analyzeManager/linux-wine.sh call start_session '{"label":"…"}'` → 몇 초 뒤 `capture_state`로 gdi 렌더러에서 화면이 보이는지 확인. 여전히 검으면 Wine 가상 데스크톱(`explorer /desktop=…,1024x768`)이나 X11 창 캡처(XGetImage) 백엔드를 검토한다.
+  2. 캡처가 되면 입력(클릭·ESC) 전달과 화면 변화를 확인하고, 아래 Windows 절의 "재확인 대상"을 Linux에서 진행한다.
+  3. 파이프 상속: 게임 시작 시 표준 입출력을 넘기지 않는 방법(예: `UseShellExecute=false` + 표준 핸들 리디렉션 후 닫기)을 Windows·Wine 양쪽에서 확인 후 적용.
+- 이번 변경 파일(커밋 전): `analyzeManager/SessionStore.cs`, `analyzeManager/tests/SessionStoreTests.cs`, `analyzeManager/tests/mcp_smoke.py`, `analyzeManager/linux-wine.sh`(신규), `analyzeManager/README.md`, `docs/analyze-manager.md`, `LEFT_JOBS.md`
+
 ### Windows 실제 실행 검증 (2026-09-29 오후, 사용자 요청으로 중단)
 
 - **실행 상태:** 사용자가 이번 단계의 실제 게임 실행을 허용했다(시스템 `DESKTOP-HJOW`, 지정 예외 시스템 아님). 이후 사용자 요청으로 테스트를 중단했고, 곧바로 `end_session force=true`로 세션 게임을 종료했다. 실행 중인 `Netstorm.exe`가 없고 `originals/`가 변경되지 않았음을 확인했다.
@@ -52,7 +70,7 @@
 - Windows용 .NET 10 런타임과 기존 분석 도구 빌드는 없었다. NuGet 연결을 확인한 뒤 `dotnet restore analyzeManager/AnalyzeManager.csproj -r win-x86 -p:NuGetAudit=false`와 `dotnet publish analyzeManager/AnalyzeManager.csproj -c Release -r win-x86 --self-contained true --no-restore -o /tmp/netstorm-analyze-winx86 -p:NuGetAudit=false`가 성공했다. 배포 출력은 `/tmp/netstorm-analyze-winx86/`(약 114 MB)에 있으며 Git에 포함되지 않는다.
 - 사용자 소유의 임시 Wine 접두 경로 `/tmp/netstorm-wine-check/`(win32)에서 `wine cmd /c ver`와 분석 도구 `--help`가 성공했다. 저장소를 Wine의 `Z:\home\hjow\Workspaces\git\NetstormReborn` 경로로 전달한 `list_sessions`는 `RejectReparse`가 `Z:\` 드라이브 루트를 링크로 판정해 거부했다. 접두 경로의 실제 `C:\netstorm-probe` 디렉토리에 `Netstorm.exe`만 복사한 가짜 저장소에서는 `list_sessions`가 `sessions: []`로 성공했다.
 - **검증 범위:** Linux에서 Wine을 통한 도구 프로세스 시작과 게임 없는 세션 목록 조회까지 가능하다. 원본 게임, `start_session`, 실제 화면 캡처·입력, MCP 통신은 실행/검증하지 않았다. 현재 원본 저장소 경로를 그대로 넘기면 `Z:\` 링크 검사에 막히며, `C:\netstorm-probe`는 설정·자산이 없는 가짜 저장소다. 따라서 Linux에서 원본 게임 분석 도구의 전체 사용 가능 여부는 아직 확정되지 않았다.
-- **다음 작업:** 사용자가 재개를 요청하면 Wine 경로의 링크 검사 정책을 검토하거나 Wine C 드라이브의 독립 원본 복사본을 준비하고, 지속 실행되는 Wine 프로세스에서 세션 수명·창 캡처·입력·MCP 이미지를 순서대로 확인한다. `/tmp`의 접두 경로와 배포물은 임시 산출물이므로 다음 환경에서 다시 만들어야 할 수 있다. 이번 요청에 따라 여기서 멈추며 게임을 실행하지 않는다.
+- **→ 2026-09-29 저녁 이어서 진행함** (위 "Linux/Wine 분석 도구 실행" 절: 링크 검사 수정, 실제 실행 1회, 캡처 검은 화면 문제). 당시 기록: 사용자가 재개를 요청하면 Wine 경로의 링크 검사 정책을 검토하거나 Wine C 드라이브의 독립 원본 복사본을 준비하고, 지속 실행되는 Wine 프로세스에서 세션 수명·창 캡처·입력·MCP 이미지를 순서대로 확인한다. `/tmp`의 접두 경로와 배포물은 임시 산출물이므로 다음 환경에서 다시 만들어야 할 수 있다. 이번 요청에 따라 여기서 멈추며 게임을 실행하지 않는다.
 
 ### 구현한 내용
 
