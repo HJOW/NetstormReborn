@@ -44,7 +44,7 @@
 | F12 | 소프트웨어 마우스(Safe & Jumpy Mouse) 전환 | README.DOC |
 | Shift+2, Shift+3 | 영국 키보드에서 위치 저장 | V7.3 |
 
-원판 조작은 [game-manual.md](game-manual.md) 4절.
+원판 조작은 [game-manual.md](game-manual.md) 4절과 [공식 PDF 선별 대조](pdf-manual.md#조작생산-절차).
 
 ## 4. 스크립트·텍스트 형식
 
@@ -57,7 +57,7 @@
 
 ## 5. 유닛·주문 수치 변화
 
-원판 매뉴얼 → 1997-10 README.DOC → 패치 순서. 최종값은 현재 `.type` ([game-manual.md](game-manual.md) 7절 표).
+원판 매뉴얼 → 1997-10 README.DOC → 패치 순서. PDF에 적힌 선별 비용과 현재 값의 차이는 [PDF 비용 대조](pdf-manual.md#원판-비용과-보유-패치판의-차이)에 정리했다. 최종값은 현재 `.type` ([game-manual.md](game-manual.md) 7절 표).
 
 | 대상 | 변화 |
 |---|---|

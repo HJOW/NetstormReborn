@@ -6,6 +6,7 @@
 > 근거: `originals/help/GAME.HLP`를 Win32 `helpdeco`로 추출한
 > `extracted/helpdeco/GAME/GAME.txt`. 재생성 방법은 [HLP 분석](../formats/hlp.md).
 > 이 문서는 **원본 도움말의 주장**을 기록한다. 실제 패치 실행 파일의 판정은 별도 검증이 필요하다.
+> 추가된 [공식 PDF 매뉴얼의 선별 대조](../sources/pdf-manual.md)에서 기본 조작·생산 절차와 메뉴 UI의 형태는 부합했다. 일부 유닛 비용과 메뉴 항목은 판본에 따라 달랐다. 현재 비용은 `.type` 값을 따른다.
 
 ## 자원과 에너지
 

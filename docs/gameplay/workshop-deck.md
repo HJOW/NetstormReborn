@@ -7,6 +7,7 @@
 * 원본은 **마우스 오른쪽 버튼 클릭**을 지원한다. 게임 화면의 오브젝트(건물·유닛·사제 등)를 우클릭하면 그 오브젝트의 **컨텍스트 메뉴(정보 창)** 가 뜬다.
 * 캡처 `The War Begins! - Rain Temple Context Menu.png` 는 Rain Temple 을, `The War Begins! - Sun Workshop Context Menu.png` 는 Sun Workshop 을 우클릭한 화면이다.
   `The War Begins! - High Priest Context Menu.png`·`Playing 3.png`(사제), `Playing 7.png`(골렘) 도 같은 메뉴다.
+* [공식 PDF 매뉴얼](../sources/pdf-manual.md#화면-그림과-판본별-메뉴-항목)의 45쪽(인쇄 44)에 있는 Thunder Workshop 메뉴도 제목·소유자·원소·분류 정보와 명령 목록, 비용 표시가 같은 형태다. 글꼴만 다르며 실제 컨텍스트 메뉴 UI와 맞는다(사용자 확인). PDF 그림의 Thunder Workshop 수치를 현재 Sun Workshop 수치와 혼동하지 않는다.
 * 메뉴 구성 (캡처 기준):
   * 머리: `<이름> Level I`, `Owner:`, `Alignment:`(원소), `Class:` — 값은 노란 글자
   * 명령 목록: 타입마다 다름. 하위 메뉴(`>`)는 오른쪽에 두 번째 창으로 열린다. 비용·환급액 뒤에는 Storm Power 아이콘
@@ -24,6 +25,7 @@
 
 * 유닛·건물을 생산하거나 건설하려면 **해당 원소(타입)의 워크샵을 우클릭**해서, 그 유닛을 화면 **왼쪽 사이드바의 "덱"에 등록**해야 한다.
   등록된 것만 사이드바에서 골라 배치(생산·건설)할 수 있다.
+  [공식 PDF 매뉴얼](../sources/pdf-manual.md#조작생산-절차)의 튜토리얼(PDF 25쪽, 인쇄 24쪽)도 `Put Knowledge Into Production`으로 등록한 뒤 생산 창에서 유닛을 좌클릭해 놓는 순서를 설명한다. 이는 원판 조작의 근거이며, 보유 패치판의 실제 비용은 `.type`을 따른다.
 * 워크샵 메뉴의 `Put Knowledge into Production >` 하위 창 **"Knowledge Available"** 이 등록할 수 있는 목록이다. 머리에 `Production Slots Available:` (남은 생산 칸 수로 보임) 가 있다.
   The War Begins! 의 Sun Workshop Level I 에서는 **Rain Generator, Sun Cannon, Whirlibase** 가 나왔다.
 * `View Current Production >` 은 현재 덱에 등록된 목록을 보는 메뉴로 보인다 (캡처 없음).
@@ -76,4 +78,4 @@
   워크샵 업그레이드 비용과 목록 변화
 * ~~워크샵 원소와 등록 가능한 유닛의 관계~~ → 사용자 확인(2026-09-28): 워크샵은 **자기 원소 유닛만** 등록, **Sun Workshop 은 예외로 다른 원소의 Generator 도** 등록 가능 (Sun 발전기가 없으므로). Sun Workshop 목록의 Rain Generator 가 그 예 — [elements-energy.md](elements-energy.md)
 * 등록 목록에 나오는 유닛과 기술 획득·`techBit`·미션 `myTech` 의 관계
-* 사이드바에서 유닛을 골라 놓는 조작(좌클릭 선택 → 섬에 배치)과 비용 차감 시점
+* PDF가 설명한 좌클릭 선택 → 섬 배치가 보유 패치판에서도 동일한지, 비용이 언제 차감되는지 확인
