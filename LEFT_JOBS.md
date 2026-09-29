@@ -82,7 +82,7 @@
   - 메인 메뉴에서 F1이 도움말 창을 여는지. 원본 도움말 메뉴 표기 "General Help - F1"과는 맞지만 이번 실행만으로는 단정하지 않는다.
   - 메인 메뉴에서 데모 전투 화면으로 바뀐 것이 Auto-Demo 자동 시작인지 다른 입력 때문인지.
   - 데모 중 ESC 뒤 화면 맨 위 메뉴 막대와 Game 드롭다운(Restart Demo / Exit Demo / Quit Game)이 보인 것이 ESC 때문인지. 드롭다운 항목 자체는 캡처에 보였다.
-  - 팁 창이 본문 클릭·ESC에 반응하지 않는지, 도움말 드래그·스크롤 화살표의 스크롤 양.
+  - ~~팁 창이 본문 클릭·ESC에 반응하지 않는지~~ → **사용자 확인(2026-09-29): 안내 창(Demo 안내 창 포함)에서는 ESC가 동작하지 않는다.** 남은 것: 도움말 드래그·스크롤 화살표의 스크롤 양.
 - **다음 작업 (사용자가 실제 게임 테스트 재개와 실행을 확인한 뒤):**
   1. 위 재확인 대상을 사용자 입력이 없는 상태에서 다시 확인한다.
   2. 메뉴 흐름 조사: Campaign·Demo·Help·Edit·Credits·Options 하위 화면의 좌표와 전환 기록 → `docs/screens/main-menu.md`, 5단계 "메뉴 흐름도", 9단계 UI 기준. Multiplayer(네트워크)·전체화면 항목은 누르지 않는다.
@@ -421,7 +421,7 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
 - [x] **도움말** — 2026-09-29: 형제 저장소의 helpdeco 소스를 VS 2022 Build Tools Win32 Release로 빌드하고 `help/*.HLP` 5개에서 실제 본문 150개·BMP 77개를 추출. `tools/hlp.py`로 UTF-8 토픽별 텍스트 생성·목록 대조, [HLP 형식·재현](docs/formats/hlp.md), [게임 규칙 요약](docs/gameplay/help-manual.md). 게임 내 도움말 텍스트는 아카이브의 `help.english` 에도 있음
   - [x] **동봉 문서 전체 정독·정리** — 2026-09-29: `GAME.HLP`(규칙·화면·조작·튜토리얼·멀티·유닛/주문 핸드북), `readme.hlp`·`HELP.HLP`·`VENDOR`·`VOCAB`, `README.DOC`(Word, 1997-10 변경점), `*.CNT`·`HELP.EXE`, `PatchFixs.txt`(10.70~10.78), `Readme.txt`·`TMaker.txt`·`disclaimer.txt`·`steam_appid.txt` → **[docs/sources/](docs/sources/README.md)** (목록·불일치 12건, [게임 매뉴얼](docs/sources/game-manual.md), [패치 이력](docs/sources/patch-history.md), [설치·지원 문서](docs/sources/support-docs.md))
     - 주요 사실: 보유 exe 는 **10.75 이상**(옵션 표 근거, 10.77/10.78 추정). 섬 테마·거주지 테마는 패치 10.70 V5.3~6.0 기능. 1152×864·1280×960 해상도는 패치에서 제거. 멀티는 BattleMaster 가 서버·서버 인계·포트 6800. `bridgeDrawRate`·`stuffRefreshRate` 설정 키는 패치판 exe 에 없음(확인)
-    - **확인 필요**: level 1 원소 유닛의 에너지(매뉴얼: Bulf = Thunder 1 ↔ 사용자 규칙: 아무 1), 파일 조회 순서(패치 문서: tarc 우선 ↔ 정적 분석: 디스크 우선), Storm Power 노랑 기준(매뉴얼은 1000 미만 빨강만), 튜토리얼 3 의 범위
+    - **확인 필요**: ~~level 1 원소 유닛의 에너지~~(→ 2026-09-29 확정: 유닛마다 다르며 Bulf = Thunder 1 — 사용자 확인·PDF 대조), 파일 조회 순서(패치 문서: tarc 우선 ↔ 정적 분석: 디스크 우선), Storm Power 노랑 기준(매뉴얼은 1000 미만 빨강만), 튜토리얼 3 의 범위
   - [ ] 남은 일: 원본 도움말의 링크·토픽 간 탐색 정보 복원과 패치 실행 파일에서 수치·규칙 검증. helpdeco는 모든 파일에서 browse 재구성 경고 출력
 - [x] 오디오 전수 확인 — 2026-09-27 완료: 229개 모두 표준 PCM WAV
   - [ ] 남은 일: 사운드 파일명 ↔ 게임 이벤트 매핑 표 (`.type` 의 `*Sound` 속성 + exe 문자열)
@@ -469,7 +469,7 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
     - **공급 범위 측정 완료 (2026-09-28, 문서 6절)**: 공급 범위는 선택 시 **원소 모양 아이콘**(물방울·조개껍데기 등)으로 표시되고, 노란 별은 건물형 유닛의 **공격 범위** 표시 (사용자 확인). 아이콘이 칸 좌표 원 위에 놓임 → **일반 미션: 템플·Generator 모두 반지름 30칸(거리² ≤ 900)** (스크린샷 2장), **튜토리얼 2 Secret Workshop: 약 14칸**으로 축소 (튜토리얼 일부만). Dissolved Alliance 영상의 17.32칸 별 원은 공격 범위
     - **exe 확인 완료 (2026-09-29)** — [battle-options.md](docs/exe/battle-options.md): 반지름 = 전투 옵션 **Generator Range**. 표 `{14, 22, 30, 38}`(Short·Normal·Long·Very Long)에서 골라 **14~30칸으로 제한**(`004b4860`), 기본 Very Long → 30칸. **튜토리얼 2 처리 함수(`Totalmade.cpp` `004c3bb0`) 첫 단계만 Short = 14칸**으로 바꿈. 전투 옵션 21종 표(`0x52f5d0`)·저장 위치(`0x52f7e0 + 번호`)도 정리
     - 다음: 공격 범위(별)와 `.type` `range` 의 관계, 옵션 기본값이 적용되는 위치, `rangeDisplayProcessType`
-    - **충족 판정 (사용자 확인)**: 필요 에너지 1개 = 서로 다른 공급원(Generator·Temple, 자기 또는 동맹 소유) 1개, 그 범위가 짓는 위치에서 모두 겹쳐야 함. Sun 은 아무 원소 공급원으로. 예: Vander Tower = Thunder 2 + Sun 1 → Thunder 공급원 2 + 아무 공급원 1. 구성 **`자기 원소 × (level − 1) + Sun × 1`** (사용자 확인: Generator = 아무 1, Sun level 2 = 아무 2 포함). 문서 4절에 전 유닛 필요 공급원 표
+    - **충족 판정 (사용자 확인)**: 필요 에너지 1개 = 서로 다른 공급원(Generator·Temple, 자기 또는 동맹 소유) 1개, 그 범위가 짓는 위치에서 모두 겹쳐야 함. Sun 은 아무 원소 공급원으로. 예: Vander Tower = Thunder 2 + Sun 1 → Thunder 공급원 2 + 아무 공급원 1. 구성은 **유닛마다 다르다**(2026-09-29 사용자 확인으로 정정 — 이전 일반식 `자기 원소 × (level − 1) + Sun × 1`은 폐기): 원소 유닛 L1 = 자기 원소 1(예: **Bulf = Thunder 1**, Thunder Generator 또는 Thunder Temple 필요), L2 = 자기 원소 1 + Sun 1, L3 = 자기 원소 2 + Sun 1, Sun 유닛 = Sun × 레벨, Generator·Outpost = 아무 1. 레벨은 패치판 `.type` 기준. 문서 4절에 전 유닛 필요 공급원 표, [PDF 유닛 핸드북 대조](docs/sources/pdf-manual.md#유닛별-건설-에너지-energy-to-build)
     - **소모 개념 아님**(같은 공급원 범위에 여러 유닛 가능), 조건은 **건설·생산 순간에만** 확인(공급원이 파괴돼도 유닛 유지), **이동 유닛도 생산 지점에 에너지 필요** — 질문 A~F 모두 확정 (문서 5절)
   - 남은 일: exe 의 등록·추첨(`Deck.cpp`)·도움말의 워크샵 생산 칸(Level I 2개·II 3개·III 4개) 검증·업그레이드 비용/효과, 에너지 공급 범위·판정 함수, 등록 목록과 `myTech`·`techBit` 의 관계
 - [ ] **전투**: 사거리·명중·피해 공식, 발사체 궤적, 특수 효과(`bomb*` 계열: 마비, 중력, 치유, 반역 등), 방어(차단벽·실드)
@@ -735,7 +735,7 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
 ## 6. 바로 다음 작업
 
 0. **동봉 문서 참고 (2026-09-29 정리)**: 작업 전에 [docs/sources/README.md](docs/sources/README.md) 를 먼저 본다 — 규칙·조작·유닛 수치와 **현재 분석과의 불일치 12건**(3절)이 정리되어 있다. 사용자가 외부에서 추가한 [`originals/help/manual.pdf`](originals/help/manual.pdf)는 조작·생산 절차와 일부 비용을 `GAME.HLP`·보유 `.type`에 [선별 대조](docs/sources/pdf-manual.md)했다. 메인/컨텍스트 메뉴 그림은 실제 UI 형태와 부합한다(사용자 확인). 옛 메인 메뉴의 기본 항목은 7개, 보유 패치판은 `Edit` 포함 8개다. 비용·일부 메뉴 항목은 판본에 따라 다르며 전체 페이지 대조는 남아 있다. 우선 확인할 것:
-   - ~~level 1 원소 유닛(Bulf·Arc Spire·Crystal Crab)의 필요 에너지 exe 분석~~ → **2026-09-29 완료**: `Rifttype.cpp` `0049b0d0`이 타입 `+0xA0`의 기본 요구값을 만들고, `Mana.cpp` `004734d0`·`00473330`이 배치 위치에서 검사한다. Bulf·Arc Spire는 Thunder 1, Crystal Crab은 Rain 1. Generator는 `.type`의 명시 `mana = "s"`로 아무 공급원 1개. 이전 후보 `0044ac30`·`00473d00`은 다른 구조체 필드로 인한 오인. [분석](docs/exe/energy-requirements.md), [유닛 표](docs/gameplay/elements-energy.md) 4절. **후속**: 패치판 게임에서 교차 원소 공급원 아래 세 유닛의 배치 성공/실패를 동적으로 확인
+   - ~~level 1 원소 유닛(Bulf·Arc Spire·Crystal Crab)의 필요 에너지 exe 분석~~ → **2026-09-29 완료**: `Rifttype.cpp` `0049b0d0`이 타입 `+0xA0`의 기본 요구값을 만들고, `Mana.cpp` `004734d0`·`00473330`이 배치 위치에서 검사한다. Bulf·Arc Spire는 Thunder 1, Crystal Crab은 Rain 1. Generator는 `.type`의 명시 `mana = "s"`로 아무 공급원 1개. 이전 후보 `0044ac30`·`00473d00`은 다른 구조체 필드로 인한 오인. [분석](docs/exe/energy-requirements.md), [유닛 표](docs/gameplay/elements-energy.md) 4절. ~~**후속**: 패치판 게임에서 교차 원소 공급원 아래 세 유닛의 배치 성공/실패를 동적으로 확인~~ → **2026-09-29 사용자 확인으로 확정**(Bulf는 Thunder 공급원 필수, 다른 원소는 소용없음, 같은 레벨이라도 유닛마다 다름). PDF 유닛 핸드북 전체와도 대조함 ([PDF 대조표](docs/sources/pdf-manual.md#유닛별-건설-에너지-energy-to-build)) — 게임 실행 검증 불필요
    - ~~파일 조회 순서~~ → 2026-09-29 재확인: 보유 exe 는 **디스크 우선** (열기 22곳·이름 해석 12곳 모두 디스크 먼저, 아카이브 우선 존재 검사 18곳은 결과를 있음/없음으로만 사용). 패치 문서 문장은 이 exe 의 열기 동작과 맞지 않음 — [vfs.md](docs/formats/vfs.md)
    - ~~Storm Power 숫자 색 기준값~~ → 2026-09-29 확인: ≤1000 빨강, 1001~2000 노랑, 그 이상 흰색 (`0043da10`)
 1. 4·6단계: 지면 미리보기를 원본 캡처와 대조하여 정확도를 높이기

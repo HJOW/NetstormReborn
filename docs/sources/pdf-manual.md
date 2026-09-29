@@ -38,6 +38,52 @@ PDF의 `Cost in Storm Power`는 **매뉴얼 발행 당시의 값**이다. 아래
 
 선별한 비용은 기존 `GAME.HLP` 정리의 원판 비용과도 일치한다. 이 일치는 **확인한 항목에 한정**된다. 비용뿐 아니라 레벨·체력·에너지 요구량도 원판과 달라진 사례가 있으므로, 유닛 구현에서는 PDF 수치를 현재 값으로 복사하지 않는다.
 
+## 유닛별 건설 에너지 (Energy to Build)
+
+2026-09-29 유닛 핸드북(PDF 63~87쪽, 인쇄 62~86쪽)의 각 항목을 모두 읽었다. **스캔본에는 인쇄 71~72쪽이 없다**(PDF 71쪽 = 인쇄 70, PDF 72쪽 = 인쇄 73). 그래서 Wind Tower·Wind Workshop·Wind Temple 항목은 이 PDF로 확인하지 못했다.
+
+PDF의 규칙은 한결같다.
+- 원소 유닛: **L1 = 자기 원소 1**, **L2 = 자기 원소 1 + Sun 1**, **L3 = 자기 원소 2 + Sun 1**.
+- Sun 유닛: **Sun × 레벨**.
+- 예외: **Generator 3종·Outpost = Sun 1**(아무 원소).
+- 건물(템플·워크샵·알타)·사제·기지가 만드는 비행체(Whirligig·Dust Devil·Man o' War): None.
+
+같은 레벨이라도 유닛에 따라 필요 에너지가 다르다. 예를 들어 L1 Bulf는 Thunder 1이고 L1 Thunder Generator는 Sun 1이다. 사용자도 Bulf는 Thunder 공급원(Thunder Generator 또는 Thunder Temple)이 반드시 있어야 한다고 확인했다.
+
+패치판 exe도 같은 규칙으로 요구값을 만든다([exe 분석](../exe/energy-requirements.md)). 다만 **유닛 레벨이 판본마다 바뀌었으므로** 현재 에너지는 오른쪽 열(패치판 `.type` 레벨 + 같은 규칙)을 따른다.
+
+| 유닛 | PDF 쪽(인쇄) | PDF 레벨·에너지 | 패치판 `.type` level | 패치판 요구 에너지 |
+|---|---:|---|---:|---|
+| Golem | 64 (63) | L1, Sun 1 (400sp) | 1 | Sun 1 (아무 1). 패치판은 cost 없음 |
+| Balloon | 64 (63) | L2, Sun 2 | 2 | Sun 2 |
+| Sun Disc Thrower | 65 (64) | L1, Sun 1 | 1 | Sun 1 |
+| Whirlibase | 65 (64) | L2, Sun 2 | 2 | Sun 2 |
+| Stone Tower | 66 (65) | L1, Sun 1 | 1 | Sun 1 |
+| Sun Cannon | 67 (66) | L1, Sun 1 | 1 | Sun 1 |
+| Sun Barricade | 67 (66) | **L3, Sun 3** | **1** | **Sun 1** |
+| Wind Generator | 69 (68) | L1, Sun 1 | 1 | Sun 1 (`mana = "s"`) |
+| Sail Skater | 69 (68) | **L1, Wind 1** | **2** | **Wind 1 + Sun 1** |
+| Air Ship | 70 (69) | L3, Wind 2 + Sun 1 | 3 | Wind 2 + Sun 1 |
+| Devil Maker | 70 (69) | L3, Wind 2 + Sun 1 | 3 | Wind 2 + Sun 1 |
+| Crossbow | 71 (70) | L2, Wind 1 + Sun 1 | 2 | Wind 1 + Sun 1 |
+| Wind Tower | (스캔 누락) | — | 2 | Wind 1 + Sun 1 |
+| Rain Generator | 72 (73) | L1, Sun 1 | 1 | Sun 1 (`mana = "s"`) |
+| Cloud Floater | 72 (73) | L3, Rain 2 + Sun 1 | 3 | Rain 2 + Sun 1 |
+| Ice Cannon | 73 (74) | L2, Rain 1 + Sun 1 | 2 | Rain 1 + Sun 1 |
+| Man o' War Pool | 73 (74) | **L2, Rain 1 + Sun 1** | **3** | **Rain 2 + Sun 1** |
+| Acid Barricade | 74 (75) | **L1, Rain 1** | **2** | **Rain 1 + Sun 1** |
+| Ice Tower | 75 (76) | L2, Rain 1 + Sun 1 | 2 | Rain 1 + Sun 1 |
+| Crystal Crab | 75 (76) | **L2, Rain 1 + Sun 1** | **1** | **Rain 1** |
+| Thunder Generator | 78 (79) | L1, Sun 1 | 1 | Sun 1 (`mana = "s"`) |
+| **Bulf** | 79 (80) | **L1, Thunder 1** | 1 | **Thunder 1** (사용자 확인) |
+| Bulwark | 79 (80) | L2, Thunder 1 + Sun 1 | 2 | Thunder 1 + Sun 1 |
+| Thunder Cannon | 80 (81) | L2, Thunder 1 + Sun 1 | 2 | Thunder 1 + Sun 1 |
+| Vander Tower | 80 (81) | L3, Thunder 2 + Sun 1 | 3 | Thunder 2 + Sun 1 |
+| Arc Spire | 81 (82) | **L2, Thunder 1 + Sun 1** | **1** | **Thunder 1** |
+| Outpost | 85 (86) | L1, Sun 1 | — | Sun 1 (`mana = "s"`) |
+
+굵은 글씨는 원판과 패치판의 레벨이 달라 에너지 구성도 달라진 유닛이다. 필요 에너지 판정(서로 다른 공급원, 범위 교집합, Sun = 아무 원소)은 [원소·에너지 규칙](../gameplay/elements-energy.md)에 있다. PDF 설명 문장에는 이 밖에도 "Workshop이 파괴되면 그 워크샵이 생산하던 것은 다시 지을 때까지 못 만든다", "Power Stream이 적절한 에너지와 합쳐지면 유닛이 즉시 생성된다"(워크샵 항목), "Temple은 자기 원소 에너지 1개를 자신을 중심으로 한 원에 공급한다"(템플 항목)가 있다. 모두 기존 규칙 문서와 일치한다.
+
 ## 화면 그림과 판본별 메뉴 항목
 
 PDF 32쪽(인쇄 31)의 메인 메뉴 그림은 큰 NetStorm 제목과 그 아래 놓인 버튼이라는 기본 화면 구성이 보유 [패치판 메인 메뉴 캡처](../screens/main-menu.md)와 같다. PDF의 색상 손상은 스캔의 영향이며 해상도 차이도 있지만, 화면 자체는 같은 UI다(사용자 확인). PDF 설명의 기본 항목은 `Campaign`·`Multiplayer`·`Demo`·`Help`·`Credits`·`Options`·`Quit`의 **7개**다. `Intro`는 CD-ROM에 게임 CD가 있을 때만 나타난다고 별도로 적혀 있다. 보유 패치판 캡처에는 `Edit`가 추가된 **8개**가 보인다. PDF의 Campaign 네 묶음 설명과 패치판의 여섯 묶음도 판본별 항목 차이다.
