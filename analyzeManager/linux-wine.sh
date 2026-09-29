@@ -35,7 +35,8 @@ setup() {
         --no-restore -o "$TEST_DIR" -p:NuGetAudit=false
     wineboot -i >/dev/null 2>&1
     # 기본 OpenGL(wined3d) 렌더링은 GDI 화면 복사에 잡히지 않아 캡처가 검게 나온다(2026-09-29 확인).
-    # gdi 렌더러로 바꾸면 캡처된다는 것은 아직 실제 실행으로 확인하지 못한 가설이다.
+    # gdi 렌더러로 바꿔도 도구 캡처는 여전히 검었다(2026-09-29 오후 실행 확인). 해가 없어 설정은 유지한다.
+    # 화면 확인은 X11 창 직접 캡처(import -window)로 해야 한다.
     wine reg add 'HKCU\Software\Wine\Direct3D' /v renderer /d gdi /f >/dev/null
     echo "준비 완료: WINEPREFIX=$WINEPREFIX"
 }

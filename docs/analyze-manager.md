@@ -75,9 +75,16 @@ bash analyzeManager/linux-wine.sh call capture_state '{"sessionId":"SESSION_ID"}
 **2026-09-29 확인 결과 (`vm-debian-codex`, Debian 13, Wine 10.0, Xwayland `DISPLAY=:2` 1600×900):**
 - 게임 없는 검사: Linux에서 Release 빌드 오류/경고 0. Wine에서 단위 테스트 20개 중 19개 통과, 1개(링크 생성 불가) 건너뜀. `mcp_smoke.py --wine` 기본 모드 통과(프로토콜 2025-03-26, 도구 8개, EOF 종료).
 - 실제 실행 1회(세션 `20260929T061418633Z-0ab98c5681a7`): 복사본 준비 약 2초, 게임 시작, 창 찾기·포커스·캡처 호출, CLI 재호출로 같은 세션 이어서 캡처, `end_session force=true` 종료까지 동작했다. 창 제목은 시작 화면 `Activision and Titanic Entertainment Present: NetStorm` → `NetStorm Main Menu`로 바뀌었다. 원본 폴더는 바뀌지 않았다.
-- **캡처가 검은 화면이었다.** 시작 직후 1600×828(최대화된 창)과 7분 뒤 1024×768 캡처 모두 검은색이다. Wine의 기본 DirectDraw 구현(wined3d, OpenGL)으로 그린 내용이 GDI 화면 복사(`CopyFromScreen`)에 잡히지 않는 것으로 **추정**한다. `setup`은 접두 경로의 `HKCU\Software\Wine\Direct3D\renderer`를 `gdi`로 바꾸지만, 이 설정으로 캡처되는지는 **아직 실행해 보지 않았다.**
-- **CLI 출력을 파이프로 받으면 게임이 끝날 때까지 셸이 기다린다.** Wine에서 시작한 게임이 도구의 표준 출력을 물려받기 때문이다. `linux-wine.sh call`은 결과를 임시 파일로 받아 이를 피한다(임시 파일 방식으로 `start_session`을 호출하는 것은 미검증). MCP로 쓰면 서버가 끝난 뒤에도 게임이 MCP 파이프를 잡고 있어 호스트가 EOF를 늦게 받을 수 있다.
-- 입력 전달(SendInput)과 입력 뒤 화면 변화는 확인하지 못했다.
+- **캡처가 검은 화면이었다.** 시작 직후 1600×828(최대화된 창)과 7분 뒤 1024×768 캡처 모두 검은색이다. Wine의 기본 DirectDraw 구현(wined3d, OpenGL)으로 그린 내용이 GDI 화면 복사(`CopyFromScreen`)에 잡히지 않는 것으로 **추정**한다.
+- **CLI 출력을 파이프로 받으면 게임이 끝날 때까지 셸이 기다린다.** Wine에서 시작한 게임이 도구의 표준 출력을 물려받기 때문이다. `linux-wine.sh call`은 결과를 임시 파일로 받아 이를 피한다. MCP로 쓰면 서버가 끝난 뒤에도 게임이 MCP 파이프를 잡고 있어 호스트가 EOF를 늦게 받을 수 있다.
+
+**2026-09-29 오후 실제 실행 2회 (같은 시스템, 세션 `20260929T070136750Z-c11bc8b4f280`·`20260929T070536517Z-6fa3657cf3de`):**
+- `renderer=gdi` 설정 뒤에도 **도구 캡처는 모든 픽셀이 (0,0,0)** 이었다(SHA-256 `a26aa2d7…`, 이전 세션과 동일). 따라서 이 설정은 검은 캡처의 해결책이 아니다. 도구의 `changedRatio`·`wait_for_change`도 Wine에서는 항상 변화 0이 되어 쓸 수 없다.
+- 같은 순간 **X11 창 직접 캡처(ImageMagick `import -window <X 창 id>`)는 정상 화면**이었다. 증거는 각 세션 폴더의 `x11/*.png`(git 제외 경로).
+- `linux-wine.sh call start_session`(임시 파일 방식)은 곧바로 반환했고, 이어지는 CLI 호출로 같은 세션을 조작할 수 있었다.
+- 게임 창은 X11에 뜨자마자 활성 창(`_NET_ACTIVE_WINDOW`)이 되었고 도구의 포커스 검사도 통과했다. 창은 1600×828로 최대화된 채 남고 게임은 클라이언트 왼쪽 위 1024×768에만 그린다(오른쪽·아래는 검은색). 입력 좌표는 Windows와 같은 클라이언트 좌표를 쓴다.
+- **입력 전달 확인(X11 캡처 기준):** 팁 창 OK (661,436) 클릭 → 팁 창이 닫히고 "Not Validated" 창 표시 → 그 OK (511,464) 클릭 → 메인 메뉴. 메인 메뉴 버튼 위치는 Windows 측정값과 같았다(윗줄 y≈311~329).
+- 일반 `end_session`(WM_CLOSE)으로 도움말 창이 열린 상태의 게임도 확인 창 없이 종료되었다.
 
 ## CLI 사용 계약
 
