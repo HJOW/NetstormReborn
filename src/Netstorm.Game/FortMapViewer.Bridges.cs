@@ -22,8 +22,8 @@ internal sealed partial class FortMapViewer
     /// <summary>다리 칸 패널의 열 수 (원본 사이드바처럼 2열)</summary>
     private const int TrayColumns = 2;
 
-    /// <summary>다리 칸 패널 안 조각 배율</summary>
-    private const float TrayPieceScale = 1f;
+    /// <summary>다리 칸 패널 안 조각 배율 (원본 사이드바도 조각을 절반 크기로 그린다 — 2026-09-29 원본 캡처)</summary>
+    private const float TrayPieceScale = 0.5f;
 
     /// <summary>들고 있는 조각 미리보기 불투명도</summary>
     private const float HeldPieceAlpha = 0.7f;
@@ -54,6 +54,9 @@ internal sealed partial class FortMapViewer
 
     /// <summary>다리 모드 커서 칸 (조각 왼쪽 위 칸)</summary>
     private (int X, int Y)? _bridgeCursor;
+
+    /// <summary>반대 회전(원본 C 키 / rotmode)이 켜졌는지</summary>
+    private bool _reverseRotation;
 
     /// <summary>다리 모드 최근 알림</summary>
     private string _bridgeNotice = "";
@@ -94,7 +97,7 @@ internal sealed partial class FortMapViewer
         }
     }
 
-    /// <summary>다리 모드 입력 (B 모드, 1~6 조각 집기, R/Shift+R 회전, Backspace 되돌리기, 좌클릭 놓기)과 칸 채우기.</summary>
+    /// <summary>다리 모드 입력 (B 모드, 1~6 조각 집기, R 회전, C 반대 회전 켜기/끄기, Backspace 되돌리기, 좌클릭 놓기)과 칸 채우기.</summary>
     private void UpdateBridges(double seconds, KeyboardState keyboard, MouseState mouse)
     {
         if (Pressed(keyboard, Keys.B))
@@ -127,23 +130,21 @@ internal sealed partial class FortMapViewer
                 _heldPiece = taken;
             }
         }
+        if (Pressed(keyboard, Keys.C))
+        {
+            // 원본처럼 C 키는 회전 방향만 바꾼다 (조각은 돌리지 않는다)
+            _reverseRotation = !_reverseRotation;
+        }
         if (_heldPiece != null && Pressed(keyboard, Keys.R))
         {
-            bool shift = keyboard.IsKeyDown(Keys.LeftShift) || keyboard.IsKeyDown(Keys.RightShift);
-            if (shift)
-            {
-                _heldPiece.RotateCounterclockwise();
-            }
-            else
-            {
-                _heldPiece.RotateClockwise();
-            }
+            // 원본의 오른쪽 클릭 회전 (뷰어는 오른쪽 드래그를 카메라 이동에 쓰므로 R 키로 대신한다)
+            _heldPiece.RotateByPlayer(_reverseRotation);
         }
         if (_heldPiece != null && Pressed(keyboard, Keys.Back) && _tray.Return(_heldPiece))
         {
             _heldPiece = null;
         }
-        _bridgeCursor = _probeCell ?? (mouse.Y < HeaderHeight ? null : CellAt(new Vector2(mouse.X, mouse.Y)));
+        _bridgeCursor = _probeCell ?? (mouse.Y < HeaderHeight ? null : BridgeCellAt(new Vector2(mouse.X, mouse.Y)));
         if (_heldPiece != null && _bridgeCursor is (int cx, int cy)
             && mouse.LeftButton == ButtonState.Pressed && _previousMouse.LeftButton == ButtonState.Released)
         {
@@ -156,6 +157,13 @@ internal sealed partial class FortMapViewer
             _bridgeNotice = $"{_heldPiece} 을(를) ({cx}, {cy})에 놓음 — 배치 판정 미구현";
             _heldPiece = null;
         }
+    }
+
+    /// <summary>화면 좌표 → 들고 있는 조각의 왼쪽 위 칸 (원본 측정 규칙 BridgeCursor)</summary>
+    private (int X, int Y) BridgeCellAt(Vector2 screen)
+    {
+        Vector2 world = (screen - _lastCenter) / _zoom + _camera;
+        return BridgeCursor.TopLeftCell(world.X, world.Y);
     }
 
     /// <summary>놓은 다리 칸과 들고 있는 조각 미리보기를 그린다 (저장 오브젝트 뒤, 안내 영역 앞).</summary>
@@ -212,9 +220,9 @@ internal sealed partial class FortMapViewer
                 DrawSprite(batch, _bridgeType.LoadIndex, BridgeFrames.Find(frames, cell.Cell), anchor, scale: TrayPieceScale);
             }
         }
-        string held = _heldPiece == null ? "없음" : _heldPiece.ToString();
+        string held = (_heldPiece == null ? "없음" : _heldPiece.ToString()) + (_reverseRotation ? " | 반대 회전 켜짐" : "");
         string head = $"다리 조각 시험 | 칸 {_tray.Pieces.Count}/{_tray.Capacity} | 추첨 {_tray.DrawCount}회 | 템플 {(_playerHasTemple ? "있음" : "없음 — 조각이 생기지 않음")} | 들고 있는 조각: {held}";
-        string keys = "1~6: 조각 집기 · R/Shift+R: 시계/반시계 회전 · Backspace: 되돌리기 · 좌클릭: 놓기(판정 없음) · B: 모드 끄기";
+        string keys = "1~6: 조각 집기 · R: 회전(원본 우클릭) · C: 반대 회전 · Backspace: 되돌리기 · 좌클릭: 놓기(판정 없음) · B: 모드 끄기";
         batch.Draw(_pixel, new Rectangle(0, height - 94, width, 94), new Color(18, 24, 38));
         batch.DrawString(font, head, new Vector2(16, height - 90), Color.Gold);
         batch.DrawString(font, _bridgeNotice, new Vector2(16, height - 62), Color.LightGreen);

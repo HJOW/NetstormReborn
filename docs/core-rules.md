@@ -23,7 +23,8 @@
 | `Simulation/NetstormRandom.cs` | 게임 전역 정수 난수 (상태 × 0x10003 + 3, 시드 0 → 0x0BAD0BAD) | `FUN_004558c0`·`FUN_004558f0` ([bridge-pieces.md](exe/bridge-pieces.md) 3절) |
 | `Bridges/BridgeLinks.cs` | 방향 글자 'A'~'P' ↔ 연결 비트, 회전 표, 반대 방향 | VA 0x52f910·0x531590 |
 | `Bridges/BridgePatternCatalog.cs` | 다리 조각 모양 26개(가중치 합 287)와 누적 가중치 추첨 | VA 0x52f998, `Canondecoder.cpp` `004257c0` |
-| `Bridges/BridgePiece.cs` | 모양 + 회전(1 = 시계 방향 90°) → 회전된 칸 목록 | `00425c20`·`00425860` |
+| `Bridges/BridgePiece.cs` | 모양 + 회전(1 = 시계 방향 90°) → 회전된 칸 목록. 원본 조작: 오른쪽 클릭 = 시계, C(반대 회전)면 반시계 | `00425c20`·`00425860`, 원본 실행 |
+| `Bridges/BridgeCursor.cs` | 커서 → 들고 있는 조각의 왼쪽 위 칸: (⌊(x + 7) / 16⌋, ⌊y / 11⌋), 크기·회전 무관 | 원본 실행 측정 ([bridge-pieces.md](exe/bridge-pieces.md) 4절) |
 | `Bridges/BridgeFrames.cs` | 칸 → bridge.type 프레임 (보통 / 금 감 +10 / 단단함 20) | `0049a940`, bridge.type 주석 |
 | `Bridges/BridgeTray.cs` | 생산 창 다리 칸: 템플이 있으면 1초마다, Bridge Slots 칸까지, 5번째 추첨마다 한 칸 조각, 템플을 잃으면 비움 | `Combatgump.cpp` 매 프레임 처리 ([bridge-pieces.md](exe/bridge-pieces.md) 6절) |
 

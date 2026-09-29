@@ -38,8 +38,25 @@ public sealed class BridgePiece
     /// <summary>시계 방향으로 90° 돌린다</summary>
     public void RotateClockwise() => Rotation = BridgeDirections.NormalizeRotation(Rotation + 1);
 
-    /// <summary>반시계 방향으로 90° 돌린다 (원본 메뉴 "Counterclockwise Piece Rotation - C" 대응 후보)</summary>
+    /// <summary>반시계 방향으로 90° 돌린다</summary>
     public void RotateCounterclockwise() => Rotation = BridgeDirections.NormalizeRotation(Rotation - 1);
+
+    /// <summary>
+    /// 원본 조작의 회전 (2026-09-29 원본 실행 확인): 조각을 든 채 오른쪽 클릭하면 기본은 시계 방향으로 90° 돈다.
+    /// C 키(옵션 "Counterclockwise Piece Rotation", 설정 rotmode)로 반대 회전을 켜면 반시계 방향으로 돈다.
+    /// </summary>
+    /// <param name="reverseRotation">반대 회전(rotmode)이 켜졌는지</param>
+    public void RotateByPlayer(bool reverseRotation)
+    {
+        if (reverseRotation)
+        {
+            RotateCounterclockwise();
+        }
+        else
+        {
+            RotateClockwise();
+        }
+    }
 
     /// <summary>회전을 적용한 다리 칸 목록 (행 우선: 회전 뒤 y, x 순서)</summary>
     public IReadOnlyList<PlacedBridgeCell> Cells()

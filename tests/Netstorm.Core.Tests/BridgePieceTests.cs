@@ -204,6 +204,37 @@ public sealed class BridgePieceTests
         throw new InvalidDataException($"VA 0x{virtualAddress:x} 를 포함하는 섹션이 없습니다");
     }
 
+    /// <summary>원본 조작: 기본 회전은 시계 방향, 반대 회전(C)이 켜지면 반시계 방향 (2026-09-29 원본 실행)</summary>
+    [Fact]
+    public void RotateByPlayer_FollowsReverseSetting()
+    {
+        // 원본에서 들었던 5번 조각: 반대 회전 켜짐 → 회전 3 (가로 4칸 위로 가지), 기본 → 회전 0 → 회전 1 (아래로 가지)
+        var piece = new BridgePiece(5);
+        piece.RotateByPlayer(reverseRotation: true);
+        Assert.Equal(3, piece.Rotation);
+        Assert.Equal("1,0:J1 0,1:K1 1,1:E1 2,1:K1 3,1:K1", string.Join(" ", piece.Cells().Select(c => $"{c.Dx},{c.Dy}:{c.Cell}")));
+        piece.RotateByPlayer(reverseRotation: false);
+        Assert.Equal(0, piece.Rotation);
+        piece.RotateByPlayer(reverseRotation: false);
+        Assert.Equal("0,0:K1 1,0:K1 2,0:C1 3,0:K1 2,1:J1", string.Join(" ", piece.Cells().Select(c => $"{c.Dx},{c.Dy}:{c.Cell}")));
+    }
+
+    /// <summary>커서 → 조각 왼쪽 위 칸: x 는 기준점 −7~+8, y 는 기준점~+10 (원본 측정 경계)</summary>
+    [Fact]
+    public void BridgeCursor_MatchesMeasuredBoundaries()
+    {
+        // 칸 50 의 기준점 x = 800: 793~808 이 칸 50, 792 는 49, 809 는 51
+        Assert.Equal(49, BridgeCursor.TopLeftCell(792, 0).X);
+        Assert.Equal(50, BridgeCursor.TopLeftCell(793, 0).X);
+        Assert.Equal(50, BridgeCursor.TopLeftCell(808, 0).X);
+        Assert.Equal(51, BridgeCursor.TopLeftCell(809, 0).X);
+        // 칸 13 의 기준점 y = 143: 143~153 이 칸 13, 154 부터 칸 14
+        Assert.Equal(12, BridgeCursor.TopLeftCell(0, 142).Y);
+        Assert.Equal(13, BridgeCursor.TopLeftCell(0, 143).Y);
+        Assert.Equal(13, BridgeCursor.TopLeftCell(0, 153).Y);
+        Assert.Equal(14, BridgeCursor.TopLeftCell(0, 154).Y);
+    }
+
     /// <summary>생산 칸: 1초 간격, 칸 수 제한, 첫 추첨은 한 칸 조각, 템플을 잃으면 비운다</summary>
     [Fact]
     public void Tray_RefillsLikeOriginal()
