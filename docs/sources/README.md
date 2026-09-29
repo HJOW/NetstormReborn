@@ -1,4 +1,4 @@
-# 원본 동봉 문서와 추가 매뉴얼 (`originals/help`, `originals/*.txt`)
+# 원본 동봉 문서와 CD 자료 (`originals/`, `originalCD/`)
 
 > 기존 동봉 문서는 2026-09-29 읽고 정리함. 같은 날 사용자가 외부 사이트에서 확보한 공식 매뉴얼 PDF를 추가했다. PDF의 조작·비용을 `GAME.HLP`·보유 `.type`에, 메뉴 화면을 보유 캡처에 선별 대조했으며 전수 대조는 남았다([PDF 분석](pdf-manual.md)). HLP 추출 방법은 [hlp.md](../formats/hlp.md) (helpdeco 소스 `I:\Workspace\git\helpdeco`, VS 2022 Build Tools Win32 Release 빌드).
 > 추출 결과 `extracted/helpdeco/<파일>/<파일>.txt` 는 git 에 포함되지 않으므로 새 환경에서는 `python tools/hlp.py` 로 다시 만든다.
@@ -7,6 +7,7 @@
 
 | 자료 | 내용 | 클론 관련도 | 정리 문서 |
 |---|---|---|---|
+| [`originalCD/`](../../originalCD/) | 이전 CD판 게임·설치 파일과 인트로 영상 등. 사용자 제공 판본 정보는 **10.72**이며, 현재 분석 기준인 `originals/`의 **10.78**보다 오래된 판본 | **자료 참고·판본 비교** | [CD 동봉 인트로](../videos/README.md#cd-동봉-인트로-originalcdmovie) |
 | [`help/manual.pdf`](../../originals/help/manual.pdf) | 사용자가 외부 사이트에서 찾아 추가한 구버전 공식 매뉴얼 PDF. 기본 조작·생산 절차와 메뉴 UI의 형태가 보유 화면과 부합하며 일부 비용·메뉴 항목은 패치판과 다름 | **높음** (조작·규칙·화면 형태), **과거값** (비용·일부 항목) | [PDF 조작·화면·비용 대조](pdf-manual.md). 기존 [game-manual.md](game-manual.md)는 `GAME.HLP` 기반 |
 | `help/GAME.HLP` | 게임 매뉴얼 "The Book of Nimbus" (원판 1997): 규칙·화면·조작·튜토리얼·멀티플레이·유닛/주문 핸드북 | **높음** | [game-manual.md](game-manual.md), 짧은 요약 [help-manual.md](../gameplay/help-manual.md) |
 | `PatchFixs.txt` | Ticonderoga 비공식 패치 10.70~10.78 변경 이력 | **높음** (보유 exe 의 동작) | [patch-history.md](patch-history.md) |
@@ -24,6 +25,7 @@
 ## 2. 보유 exe 의 버전
 
 * **확정(2026-09-29, 원본 실행): 보유 exe 는 10.78 이다.** 메인 메뉴 Help → Version 창에 "Version v10.78"과 "10.78 Patch by Ticonderoga Entertainment."가 표시된다. 이 창은 `tell.english` `[About]` 절의 `Version {version}`·`{gamemaster}.{gameminor} Patch …`에 **실행 중 exe 가 넘겨 주는 값**을 채운 것이다. 증거: `extracted/analyzeManager/20260929T120526716Z-327849a23cac/screens/37feb1f2….png` ([화면 목록 1.3절](../screens/README.md)).
+* **`originalCD/`는 별도의 이전 CD판**이다. 사용자 제공 정보에 따르면 그 안의 게임은 **10.72**이며 Windows 98/ME에서 호환되고 Windows XP에서는 동작하지 않았다. Windows 10/11에서도 동작하지 않을 것으로 예상되므로, 현재 동적 분석·클론 동작 기준은 계속 `originals/`의 10.78이다. CD판은 인트로 영상과 초기 자료·판본 비교에 참고한다. CD 루트의 `NETSTORM.VER` 파일에는 `10.37`이 적혀 있으나 이 값의 의미는 확인되지 않았으며 게임 버전의 근거로 해석하지 않는다.
 * `PatchFixs.txt` 의 최신 항목은 **10.77/10.78**. exe 에 "10.78" 버전 문자열은 그대로 들어 있지 않다(숫자 값으로 치환됨).
 * 정적 분석 근거: exe 의 전투 옵션 표([battle-options.md](../exe/battle-options.md))에 **10.75/10.76 에서 추가된 옵션**(Island Dynamics, Geysers Placement, Geysers Respawns, Resource Injections, Game Type)이 모두 있다 → 10.75 이상. 위 실행 결과와 모순되지 않는다.
 * 게임 안 Credits 의 "Netstorm 10.72 Patch Credits" 는 제작진 명단 제목이다 (`tell.english`).
