@@ -1,0 +1,73 @@
+;Angelique Special for Windows 95 
+Title=救俩府农 Special for Windows 95
+Logo=Copyright (C) KOEI Co.,Ltd. 1997
+Caption=救俩府农 Special for Windows 95
+MenuGroup=蚊绱
+UnRegistry=Angelique Special for Windows 95
+UnRegDisplay=救俩府农 Special for Windows 95
+Directory=#:\Program Files\KOEI
+BaseName=Ange95
+SrcDirectory=setup
+AppRegistry=Angelique Special for Windows 95
+AppVersion=1.0
+
+BELL.ang
+DOOR.ang
+FLASH.ang
+FLASH_N.ang
+IE_KIERU.ang
+IE_TATSU.ang
+SPLASH.ang
+STEP.ang
+MIDI00.ang
+MIDI01.ang
+MIDI02.ang
+MIDI03.ang
+MIDI04.ang
+MIDI05.ang
+MIDI06.ang
+MIDI07.ang
+MIDI08.ang
+MIDI09.ang
+MIDI10.ang
+MIDI11.ang
+MIDI12.ang
+MIDI13.ang
+MIDI14.ang
+MIDI15.ang
+MIDI16.ang
+MIDI17.ang
+MIDI18.ang
+MIDI19.ang
+MIDI20.ang
+MIDI21.ang
+MIDI22.ang
+MIDI23.ang
+MIDI24.ang
+MIDI25.ang
+MIDI26.ang
+MIDI27.ang
+MIDI28.ang
+MIDI29.ang
+MIDI30.ang
+MIDI31.ang
+MIDI32.ang
+MAP.ANG
+Mc.ang
+Npc.ang
+chip.ang
+csl.ang
+daishi.ang
+hikou.ang
+kao.ang
+kao2.ang
+logo.ang
+msg.ang
+name.ang
+parts.ang
+savedata.ang
+ANGEW95.95 > ANGEW95.EXE
+Angerun.95 > Angerun.exe, 救俩府农 Special for Windows 95
+
+;AddFile=angew95.gid
+
