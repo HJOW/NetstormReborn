@@ -11,7 +11,7 @@
 
 ## 0-A. 최신 인수인계 — AI용 원본 분석 도구 (2026-09-29)
 
-### Linux/Wine 실제 실행 테스트 (2026-09-29 16시, `vm-debian-codex`) — 입력 전달 확인, 캡처는 X11 필요
+### Linux/Wine 실제 실행 테스트 (2026-09-29 16시, `vm-debian-codex`) — 입력 전달 확인, 캡처는 X11 필요 → 아래 절에서 캡처 해결
 
 - **실행 방식:** 사용자가 Claude Code 권한 방식을 Manual로 바꾸고 실행 테스트를 요청했다. 권한 창 조작 때문에 포커스가 VS Code로 가므로, 한 번 허용한 스크립트 안에서 게임 시작 → X11 활성 창 대기 → 입력 → 종료까지 진행했다. 사용자에게는 포커스용 클릭을 게임 그림 밖(오른쪽 검은 영역)에만 하도록 요청했다. 실행 2회(1회는 스크립트 실수로 X11 캡처 실패 — 제목 검색이 다른 X 창 id를 고름, 활성 창 id를 쓰도록 고쳐 재실행). 두 세션 모두 `end_session`으로 종료, 실행 중인 `Netstorm.exe` 없음, `git status` 깨끗(`originals/` 변경 없음).
   - 세션: `20260929T070136750Z-c11bc8b4f280`(캡처 비교), `20260929T070536517Z-6fa3657cf3de`(입력). X11 캡처 증거는 각 세션 폴더 `x11/*.png`. 사용한 스크립트는 세션 임시 폴더에 있었고 저장소에 넣지 않았다.
@@ -23,10 +23,21 @@
   - **도구 입력이 게임에 전달된다:** 팁 창 OK (661,436) 클릭 → "Not Validated" 창 → OK (511,464) → 메인 메뉴. 메인 메뉴 버튼 위치는 Windows 측정값과 같다.
   - Windows 절의 재확인 대상 중: **메인 메뉴에서 F1 → 도움말 창 "NetStorm Instructions"가 열린다**(입력 1.5초 뒤 캡처). **도움말 창에서 ESC(80ms 누름)는 창을 닫지 않았다**(1초 뒤 화면 동일).
   - 일반 `end_session`(WM_CLOSE)은 도움말 창이 열린 상태에서도 확인 창 없이 종료했다.
+- **다음 작업:** → 1·2는 아래 "Wine 캡처 경로 구현" 절에서 진행함.
+
+### Wine 캡처 경로 구현 + 재확인 대상 조사 (2026-09-29 16시 10분, `vm-debian-codex`) — ✅ 캡처 해결
+
+- **도구 수정(`analyzeManager/WindowsGame.cs`, `SessionStore.cs`, 테스트):** `ntdll!wine_get_version`으로 Wine을 감지해, Wine에서는 게임 **창 자체 DC를 BitBlt로 복사**(`wine-window-dc`)하고, 전부 검으면 `PrintWindow(PW_CLIENTONLY)`(`wine-printwindow`), 둘 다 검으면 `wine-black`으로 표시한다. Windows는 기존 화면 복사(`screen`)를 함수로 분리만 했다. 증거 항목에 `method` 필드를 추가했다(기본값 `screen`, 기존 JSON과 호환). 단위 테스트에 `method` 전달 확인을 추가했다.
+  - Linux에서 Wine 쪽 X11 명령 실행(`cmd /c Z:\usr\bin\import`)은 Wine 10에서 되지 않아(ELF 실행 불가) 이 방식은 버렸다.
+- **검증(확실):** `linux-wine.sh setup` 빌드 오류/경고 0, Wine 단위 테스트 20개 중 19개 통과·1개 건너뜀(기존과 같은 링크 테스트). 실제 실행 1회(세션 `20260929T071149864Z-507f034c3833`): 캡처 33건 전부 `wine-window-dc` 성공, 같은 순간 X11 캡처 9쌍과 **픽셀 단위로 동일**. `changedRatio`·`wait_for_change` 정상. 정상 종료, 실행 중인 `Netstorm.exe` 없음, `originals/` 변경 없음.
+- **미검증:** 이 변경 뒤 **Windows 빌드·테스트·실제 캡처는 다시 하지 않았다**. Wine 기본(OpenGL) 렌더러에서의 창 DC 캡처도 미확인(`renderer=gdi` 유지).
+- **원본 동작 확인(확실, [docs/screens/README.md](docs/screens/README.md) 1.1절):** 팁 창은 본문 클릭·ESC에 반응 없음. F1 → 도움말. 도움말 ESC로 안 닫힘. 도움말 100px 드래그 → 38px 스크롤, 화살표 1회 → 5px. Auto-Demo는 메뉴에서 마지막 입력 후 약 45초에 "The Storm Rages!" 자동 시작, 시작 직후 "NetStorm Demo" 안내 창(OK 약 (554,457))은 ESC로 안 닫힘.
+- **관찰했지만 원인 미확인:** 데모 중 두 번째 ESC 호출 시점에 창이 1600×828(최대화)에서 1024×768로 바뀌었다. 첫 ESC 결과 기록(07:13:18.8)까지는 1600×828, 두 번째 입력 요청(07:13:20.3)에서 1024×768이었고 두 시점 모두 `foreground=true`라 도구 `FocusAsync`의 `ShowWindow(SW_RESTORE)`는 호출되지 않았을 것으로 본다. 게임 자체(데모 진입 후 창 크기 재설정)나 창 관리자가 원인일 수 있다.
 - **다음 작업:**
-  1. 도구에 Wine용 캡처 경로 추가: Wine 여부 감지(`ntdll!wine_get_version`) 시 X11 창 캡처로 대체하는 방안 검토. 예) 도구가 호스트 명령(`import`/`xwd`)을 `winepath`·`start /unix`로 부르거나, `linux-wine.sh`에 X11 캡처 하위 명령을 두고 결과 PNG를 세션에 기록. 창 id는 X11 활성 창 또는 Wine의 `__wine_x11_whole_window` 창 속성으로 찾는다.
-  2. 그 뒤 나머지 재확인 대상(Auto-Demo 자동 시작, 데모 중 ESC 메뉴 막대, 팁 창 본문 클릭·ESC 반응, 도움말 드래그·스크롤 양)과 메뉴 흐름 조사를 Linux에서 진행.
-  3. 파이프 상속(MCP 모드) 문제는 그대로 남아 있다.
+  1. Windows(`DESKTOP-HJOW`, 실행 전 사용자 확인 필요)에서 빌드·단위 테스트·`mcp_smoke.py` 기본 모드로 회귀 확인. 실제 캡처 확인은 사용자 확인 후.
+  2. 남은 재확인 대상: 데모 안내 창 OK 후 ESC 메뉴 막대·Game 드롭다운, Auto-Demo 대기 시간 기준(마지막 입력/메뉴 표시), 도움말 38px가 드래그 비율인지 스크롤 끝인지(작은 드래그로 확인), 창 크기 변경 원인.
+  3. 메뉴 흐름 조사(Campaign·Demo·Help·Edit·Credits·Options 하위 화면; Multiplayer·전체화면 제외)를 Linux에서 도구로 진행.
+  4. 파이프 상속(MCP 모드) 문제는 그대로 남아 있다.
 
 ### Linux/Wine 분석 도구 실행 (2026-09-29 저녁, `vm-debian-codex`) — 권한 거부로 중단 → 위 절에서 이어서 진행함
 

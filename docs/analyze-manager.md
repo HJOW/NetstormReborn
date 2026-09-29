@@ -86,6 +86,11 @@ bash analyzeManager/linux-wine.sh call capture_state '{"sessionId":"SESSION_ID"}
 - **입력 전달 확인(X11 캡처 기준):** 팁 창 OK (661,436) 클릭 → 팁 창이 닫히고 "Not Validated" 창 표시 → 그 OK (511,464) 클릭 → 메인 메뉴. 메인 메뉴 버튼 위치는 Windows 측정값과 같았다(윗줄 y≈311~329).
 - 일반 `end_session`(WM_CLOSE)으로 도움말 창이 열린 상태의 게임도 확인 창 없이 종료되었다.
 
+**Wine 캡처 경로 (2026-09-29 추가, 해결됨):** 도구는 `ntdll`의 `wine_get_version` 내보내기로 Wine 실행을 감지한다. Wine에서는 화면 전체 DC 대신 **게임 창 자체 DC를 BitBlt로 복사**하고(`wine-window-dc`), 결과가 전부 검으면 `PrintWindow(PW_CLIENTONLY)`로 다시 시도한다(`wine-printwindow`). 둘 다 검으면 그대로 기록하되 `wine-black`으로 표시한다. Windows에서는 기존 화면 복사(`screen`)를 그대로 쓴다. 쓴 방식은 증거 항목의 `method`에 남는다.
+- 실제 실행 확인(세션 `20260929T071149864Z-507f034c3833`, `renderer=gdi` 접두 경로): 캡처 33건이 모두 `wine-window-dc`로 성공했다. 같은 순간의 X11 창 직접 캡처 9쌍과 **픽셀 단위로 완전히 같았다**. `changedRatio`와 `wait_for_change`도 정상 동작한다(Auto-Demo 시작을 변화율 0.375로 감지).
+- Wine 기본 렌더러(OpenGL)에서도 창 DC 캡처가 되는지는 확인하지 않았다. `setup`이 설정하는 `renderer=gdi`를 유지한다.
+- 이 변경 뒤 Windows에서의 빌드·테스트·실제 캡처는 아직 다시 확인하지 않았다(Windows 경로의 코드는 함수로 분리만 했다).
+
 ## CLI 사용 계약
 
 형식은 다음과 같다. JSON 인자 파일은 UTF-8이며 최대 64 KB다. 셸의 따옴표 처리 문제를 줄이려면 `--args-file`을 사용한다.

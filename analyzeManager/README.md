@@ -4,7 +4,7 @@ AI가 CLI 또는 로컬 stdio MCP로 원본 NetStorm의 복사본을 실행·조
 
 **현재 상태: 구현 및 단위 테스트 완료, 실제 입력·MCP 통합 검증은 미완료.** 2026-09-29 사용자가 게임 실행 중단을 요청했으나, 이후 `AGENTS.md`에 지정된 시스템에서는 확인 없이 게임을 실행해도 된다고 명시했다. 지정 시스템에서는 게임 실행과 `mcp_smoke.py --live`를 진행할 수 있다. 그 밖의 시스템에는 기존 중단 지시가 유지된다.
 
-**실행 전 개발자 확인:** 일반 시스템에서 실제 게임 구동이 필요하면 개발자에게 목적과 필요성을 설명하고 명시적인 확인을 받아야 한다. CLI/MCP `start_session`, `mcp_smoke.py --live`, 검증용 직접 실행 모두 대상이다. **예외:** IP `10.0.0.15`, 호스트명 `vm-debian-codex`로 지정된 시스템에서는 확인 없이 실행할 수 있다(`AGENTS.md`, 이후 사용자 지시). 그 밖의 시스템에서는 기존 중단 지시의 재개도 필요하다. 게임 없는 빌드·정적 분석·단위 테스트·MCP 프로토콜 검사는 확인 대상이 아니다. 이 도구는 Windows용이다. Linux에서는 [linux-wine.sh](linux-wine.sh)로 Wine 실행 환경을 준비한다(게임 없는 검사·실제 입력 전달 확인, 도구 캡처는 검은 화면이라 X11 창 직접 캡처로 확인해야 함 — [문서](../docs/analyze-manager.md) "Linux(Wine)에서 사용").
+**실행 전 개발자 확인:** 일반 시스템에서 실제 게임 구동이 필요하면 개발자에게 목적과 필요성을 설명하고 명시적인 확인을 받아야 한다. CLI/MCP `start_session`, `mcp_smoke.py --live`, 검증용 직접 실행 모두 대상이다. **예외:** IP `10.0.0.15`, 호스트명 `vm-debian-codex`로 지정된 시스템에서는 확인 없이 실행할 수 있다(`AGENTS.md`, 이후 사용자 지시). 그 밖의 시스템에서는 기존 중단 지시의 재개도 필요하다. 게임 없는 빌드·정적 분석·단위 테스트·MCP 프로토콜 검사는 확인 대상이 아니다. 이 도구는 Windows용이다. Linux에서는 [linux-wine.sh](linux-wine.sh)로 Wine 실행 환경을 준비한다(게임 없는 검사·실제 입력 전달·캡처 확인. Wine에서는 게임 창 DC 복사로 캡처하며 증거의 `method`가 `wine-window-dc`로 남는다 — [문서](../docs/analyze-manager.md) "Linux(Wine)에서 사용").
 
 - [사용법·저장 형식·검증 범위](../docs/analyze-manager.md)
 - [최신 인수인계](../LEFT_JOBS.md)

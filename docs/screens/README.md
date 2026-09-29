@@ -45,6 +45,17 @@
 | `mainMenu - Options - Music Volume.png` | 음악 음량 | Volume 1~5, **2●** |
 | `mainMenu - Options - Toggle Server Diagnostic Status.png` | 확인 대화상자 | "Toggle Server Diagnostic Status" 설명 + Yes / No |
 
+### 1.1 원본 실행으로 확인한 메뉴 동작 (2026-09-29, 분석 도구 + Wine)
+
+`analyzeManager`로 원본 복사본을 1024×768 창 모드로 실행하고 도구 입력만으로 확인했다(테스트 구간에는 사용자에게 조작하지 않도록 요청함). 증거는 git 제외 경로 `extracted/analyzeManager/20260929T071149864Z-507f034c3833/`(`screens/`, `x11/`, `report.md`). 좌표는 클라이언트 기준이다.
+
+- **시작 순서:** Activision 시작 화면 → 메인 메뉴 위에 "Not Validated" 창, 그 위에 "Did You Know?" 팁 창이 겹쳐 뜬다. 팁 창 OK (661,436) → "Not Validated" 창만 남음 → 그 OK (511,464) → 메인 메뉴.
+- **팁 창은 본문 클릭(500,400)과 ESC에 반응하지 않는다**(화면 변화 0). 버튼으로만 닫힌다.
+- **메인 메뉴에서 F1 → 도움말 창 "NetStorm Instructions"** 이 열린다. 창 위치 약 (288,40)~(738,390), OK (530,369).
+- **도움말 스크롤:** 본문 빈 곳을 위로 100px 드래그하면 내용이 38px 올라갔고, 다시 아래로 100px 드래그하면 맨 위(0)로 돌아왔다. 아래 스크롤 화살표 (717,343) 한 번 클릭은 5px 이동. 38px가 드래그 비율 때문인지 스크롤 끝에 닿아서인지는 아직 구분하지 못했다(작은 드래그로 추가 확인 필요).
+- **도움말 창에서 ESC는 창을 닫지 않는다**(1초 뒤 변화 없음).
+- **Auto-Demo:** 메인 메뉴에서 마지막 입력(도움말 OK) 후 **약 45초** 동안 입력이 없으면 데모 "The Storm Rages!"가 자동으로 시작된다(창 제목 `NetStorm Demo "The Storm Rages!"`). 시작 직후 "NetStorm Demo" 안내 창(OK 버튼 약 (554,457))이 뜨고, 이 창은 **ESC 두 번에도 닫히지 않았다**. 대기 시간을 마지막 입력부터 세는지, 메뉴 표시부터 세는지는 아직 구분하지 못했다.
+
 ## 2. 미션 화면 공통 (창 제목 `NetStorm Mission "<미션 제목>"`)
 
 * 왼쪽 사이드바(폭 약 82px): 맨 위 Storm Power 숫자 + 아이콘, 그 아래 다리 조각 6칸(3×2), 사제, 생산 가능 유닛 아이콘 세로 배열, 맨 아래 미니맵.

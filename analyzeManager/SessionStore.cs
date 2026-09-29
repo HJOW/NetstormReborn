@@ -23,9 +23,9 @@ public sealed class AnalysisSession
     public int ReportPart { get; set; } = 1;
 }
 
-/// <summary>동일 PNG는 파일 하나를 재사용하고 각 관찰 시각은 별도 이벤트로 남긴다.</summary>
+/// <summary>동일 PNG는 파일 하나를 재사용하고 각 관찰 시각은 별도 이벤트로 남긴다. Method는 캡처 방식(CapturedFrame 참고).</summary>
 public sealed record ScreenshotEvidence(string Path, string Sha256, int Width, int Height,
-    CaptureRegion Region, bool Reused, GameWindow Window);
+    CaptureRegion Region, bool Reused, GameWindow Window, string Method = "screen");
 
 /// <summary>원본 복사본과 작은 증거 파일을 관리한다. 원본 폴더에 쓰는 경로는 제공하지 않는다.</summary>
 public sealed class SessionStore
@@ -235,7 +235,7 @@ public sealed class SessionStore
                 if (File.Exists(temporary)) File.Delete(temporary);
             }
         }
-        return new($"screens/{hash}.png", hash, frame.Region.Width, frame.Region.Height, frame.Region, reused, frame.Window);
+        return new($"screens/{hash}.png", hash, frame.Region.Width, frame.Region.Height, frame.Region, reused, frame.Window, frame.Method);
     }
 
     /// <summary>기계용 이벤트와 사람이 읽는 한국어 문서에 같은 순서/시각/증거를 남긴다.</summary>

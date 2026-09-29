@@ -23,8 +23,11 @@ public sealed record CaptureRegion(int X, int Y, int Width, int Height)
     }
 }
 
-/// <summary>비교용 RGB 픽셀과 증거용 PNG를 함께 보관하는 한 프레임.</summary>
-public sealed record CapturedFrame(byte[] Png, byte[] Pixels, CaptureRegion Region, GameWindow Window)
+/// <summary>
+/// 비교용 RGB 픽셀과 증거용 PNG를 함께 보관하는 한 프레임.
+/// Method는 캡처 방식이다: screen(화면 복사), wine-window-dc·wine-printwindow(Wine 창 복사), wine-black(Wine 방식 모두 검은색).
+/// </summary>
+public sealed record CapturedFrame(byte[] Png, byte[] Pixels, CaptureRegion Region, GameWindow Window, string Method = "screen")
 {
     /// <summary>RGB 중 하나라도 임계값 이상 달라진 픽셀 비율을 계산한다.</summary>
     public double Difference(CapturedFrame other)
@@ -55,6 +58,10 @@ public static class WindowsGame
     private const uint KeyboardInput = 1;
     /// <summary>키 해제 플래그(KEYEVENTF_KEYUP).</summary>
     private const uint KeyUp = 2;
+    /// <summary>원본 픽셀을 그대로 복사하는 래스터 연산(SRCCOPY).</summary>
+    private const uint SourceCopy = 0x00CC0020;
+    /// <summary>PrintWindow에서 클라이언트 영역만 그리는 플래그(PW_CLIENTONLY).</summary>
+    private const uint PrintClientOnly = 1;
 
     /// <summary>부모 호스트가 dotnet.exe여도 현재 스레드의 좌표를 물리 픽셀로 고정한다.</summary>
     public static void SetDpiMode() => SetThreadDpiAwarenessContext(new nint(-4));
@@ -154,9 +161,61 @@ public static class WindowsGame
             if (GetAncestor(WindowFromPoint(point), RootWindow).ToInt64() != window.Handle)
                 throw new InvalidOperationException("게임 캡처 영역이 다른 창에 가려져 있습니다.");
         }
+        CapturedFrame frame = IsWine ? CaptureWine(window, roi) : CaptureScreen(window, roi, screenRect);
+        CheckForeground(window);
+        return frame;
+    }
+
+    /// <summary>Windows: 화면에 실제 표시된 픽셀을 복사한다.</summary>
+    private static CapturedFrame CaptureScreen(GameWindow window, CaptureRegion roi, Rectangle screenRect)
+    {
         using var bitmap = new Bitmap(roi.Width, roi.Height, PixelFormat.Format24bppRgb);
         using (Graphics graphics = Graphics.FromImage(bitmap))
             graphics.CopyFromScreen(screenRect.Location, Point.Empty, screenRect.Size, CopyPixelOperation.SourceCopy);
+        return ToFrame(bitmap, roi, window, "screen");
+    }
+
+    /// <summary>
+    /// Wine: 화면 전체 DC는 각 창의 그림을 합치지 않아 항상 검게 나온다(2026-09-29 확인).
+    /// 대신 게임 창 자체 DC를 복사하고, 그 결과가 전부 검으면 PrintWindow로 다시 시도한다.
+    /// </summary>
+    private static CapturedFrame CaptureWine(GameWindow window, CaptureRegion roi)
+    {
+        nint handle = new(window.Handle);
+        using var bitmap = new Bitmap(roi.Width, roi.Height, PixelFormat.Format24bppRgb);
+        nint source = GetDC(handle);
+        if (source == 0) throw new InvalidOperationException("게임 창 DC를 얻지 못했습니다.");
+        try
+        {
+            using Graphics graphics = Graphics.FromImage(bitmap);
+            nint target = graphics.GetHdc();
+            try { BitBlt(target, 0, 0, roi.Width, roi.Height, source, roi.X, roi.Y, SourceCopy); }
+            finally { graphics.ReleaseHdc(target); }
+        }
+        finally { ReleaseDC(handle, source); }
+        CapturedFrame frame = ToFrame(bitmap, roi, window, "wine-window-dc");
+        if (!IsBlack(frame.Pixels)) return frame;
+
+        // 창 DC가 비어 있으면 클라이언트 전체를 PrintWindow로 그린 뒤 관심 영역만 잘라낸다.
+        using var full = new Bitmap(window.Width, window.Height, PixelFormat.Format24bppRgb);
+        using (Graphics graphics = Graphics.FromImage(full))
+        {
+            nint target = graphics.GetHdc();
+            try { PrintWindow(handle, target, PrintClientOnly); }
+            finally { graphics.ReleaseHdc(target); }
+        }
+        using Bitmap cropped = full.Clone(new Rectangle(roi.X, roi.Y, roi.Width, roi.Height), PixelFormat.Format24bppRgb);
+        CapturedFrame printed = ToFrame(cropped, roi, window, "wine-printwindow");
+        // 두 방식 모두 검으면 실제 검은 화면일 수도 있으므로 오류 대신 표시만 남긴다.
+        return IsBlack(printed.Pixels) ? frame with { Method = "wine-black" } : printed;
+    }
+
+    /// <summary>모든 RGB 바이트가 0인지 검사한다.</summary>
+    private static bool IsBlack(byte[] pixels) => !pixels.AsSpan().ContainsAnyExcept((byte)0);
+
+    /// <summary>24비트 비트맵에서 비교용 RGB 바이트와 증거용 PNG를 만든다.</summary>
+    private static CapturedFrame ToFrame(Bitmap bitmap, CaptureRegion roi, GameWindow window, string method)
+    {
         byte[] pixels = new byte[roi.Width * roi.Height * 3];
         BitmapData data = bitmap.LockBits(new Rectangle(0, 0, roi.Width, roi.Height), ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
         try
@@ -168,9 +227,11 @@ public static class WindowsGame
         finally { bitmap.UnlockBits(data); }
         using var stream = new MemoryStream();
         bitmap.Save(stream, ImageFormat.Png);
-        CheckForeground(window);
-        return new(stream.ToArray(), pixels, roi, window);
+        return new(stream.ToArray(), pixels, roi, window, method);
     }
+
+    /// <summary>Wine에서 실행 중인지 여부. Wine의 ntdll만 wine_get_version을 내보낸다.</summary>
+    public static bool IsWine { get; } = GetProcAddress(GetModuleHandle("ntdll.dll"), "wine_get_version") != 0;
 
     /// <summary>전면 창이 잠시 바뀌었을 때 다시 돌아오기를 기다리는 최대 시간(ms).</summary>
     private const int ForegroundGraceMs = 200;
@@ -356,6 +417,18 @@ public static class WindowsGame
     [DllImport("user32.dll")] private static extern bool PostMessage(nint window, uint message, nint wparam, nint lparam);
     /// <summary>스레드 DPI 좌표계 설정.</summary>
     [DllImport("user32.dll")] private static extern nint SetThreadDpiAwarenessContext(nint value);
+    /// <summary>창 클라이언트 DC 조회 (Wine 캡처용).</summary>
+    [DllImport("user32.dll")] private static extern nint GetDC(nint window);
+    /// <summary>GetDC로 얻은 DC 반환.</summary>
+    [DllImport("user32.dll")] private static extern int ReleaseDC(nint window, nint dc);
+    /// <summary>창 내용을 지정 DC에 그리게 함 (Wine 캡처 대체 경로).</summary>
+    [DllImport("user32.dll")] private static extern bool PrintWindow(nint window, nint dc, uint flags);
+    /// <summary>DC 간 픽셀 복사.</summary>
+    [DllImport("gdi32.dll")] private static extern bool BitBlt(nint target, int x, int y, int width, int height, nint source, int sourceX, int sourceY, uint operation);
+    /// <summary>로드된 모듈 핸들 조회 (Wine 감지용).</summary>
+    [DllImport("kernel32.dll", CharSet = CharSet.Unicode)] private static extern nint GetModuleHandle(string name);
+    /// <summary>모듈의 내보낸 함수 주소 조회 (Wine 감지용).</summary>
+    [DllImport("kernel32.dll", CharSet = CharSet.Ansi)] private static extern nint GetProcAddress(nint module, string name);
 }
 
 /// <summary>한 번의 제한된 입력 동작. 좌표는 캡처 영역이 아닌 전체 클라이언트 기준이다.</summary>

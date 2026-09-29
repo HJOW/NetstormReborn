@@ -88,6 +88,9 @@ public sealed class SessionStoreTests : IDisposable
         Assert.False(first.Reused);
         Assert.True(second.Reused);
         Assert.Equal(first.Path, second.Path);
+        Assert.Equal("screen", first.Method);
+        // Wine 캡처 방식이 증거 기록까지 그대로 전달되는지 확인한다.
+        Assert.Equal("wine-window-dc", store.StoreFrame(session, frame with { Method = "wine-window-dc" }).Method);
         Assert.Single(Directory.GetFiles(Path.Combine(store.SessionDirectory(session.Id), "screens")));
         Assert.Equal(2, store.Load(session.Id).EventCount);
     }
