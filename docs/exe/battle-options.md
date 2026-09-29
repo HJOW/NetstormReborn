@@ -40,6 +40,7 @@
 * 번호 0 은 `Game Type`(Netstorm Standard/Classic/Flexible/Geyserless/Player Customizable, 레코드 `(4, 0, 0, 1)` — 앞 레코드와 필드 배치가 달라 해석 확인 필요).
 * 선택지 목록은 문자열 포인터 배열이며 끝 표시가 없으므로, 개수는 최대 인덱스+1 로 본다 (위 표는 그 기준. Kill Reward 는 최대 5 → 6개).
 * 도움말(원판)은 Bridge Slots 2/4/6, Unit Rate slow/medium/fast, **Generator Range short/normal/long**, Kill Reward 0/25/50/100%, SP per Geyser 1000/2000/3000 을 설명한다. 패치판 exe 는 선택지가 더 많다 (Very Long, 75%·150%, 5000 등).
+* Unit Rate의 실제 생산 창 재충전 시간과 요새 모드 예외는 [production-refresh.md](production-refresh.md)에 정리했다.
 
 ## 3. 에너지 공급 범위 (`004b4860`)
 

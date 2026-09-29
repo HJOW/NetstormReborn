@@ -626,10 +626,7 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
    - **애니메이션 속도 완료(2026-09-28)**: 가이저 24Hz·신전/연기 12Hz, exe 의 "현재 시각 + 간격" 타이머(`Flyer.cpp` 0.04초, `Lightning.cpp` 0.08초)와 `maxFPS = 75` 루프 양자화로 설명 — [animation-timing.md](docs/videos/animation-timing.md), 측정 명령 `videoframes.py cadence`. 다음은 타입별 간격 상수 위치(exe)와 건설·다리 조각 생성 간격 측정
    - **에너지 공급 범위 완료(2026-09-29)**: 스크린샷 측정(일반 30칸·튜토리얼 2 약 14칸)과 exe 전투 옵션 Generator Range(표 14/22/30/38, 14~30 제한, 튜토리얼 2만 Short) 일치 — [elements-energy.md](docs/gameplay/elements-energy.md) 6절, [battle-options.md](docs/exe/battle-options.md). 도움말 `GAME.HLP`(다른 세션 추출)의 "BattleMasters"·튜토리얼 2 안내가 단서
    - Dissolved Alliance! `Playing 1`·`Playing 2`(시점 이동 캡처)도 템플릿 매칭으로 카메라 위치를 구해 섬별로 뷰어와 대조
-   - **유닛 재충전 간격(Unit Rate) 조사 중 (2026-09-29)**: 용어 — 화면 왼쪽 패널 = 사용자가 말한 **"덱"** = 매뉴얼의 **Production window**. exe 에서 Unit Rate(`options[2]`: 0 Slow·1 Medium·2 Fast)로 고르는 시간 표 두 개 확인:
-     `0043f3xx` `{30, 15, 8}`초(설정 `useProductTimers` ≠ 0 일 때, 칸 개수를 늘리며 상한 `DAT_0054db74` = 1 고정), `00446xxx` `{10, 5, 1}`초(`useProductTimers` = 0 — `options.cfg` 현재값 — 일 때). 후자는 `DAT_00594fb8`(네트워크 역할 플래그로 보임)이 켜지면 0.0001초.
-     The War Begins! 영상 앞 15분에서 덱 유닛 아이콘 영역 변화가 4번뿐 → 싱글플레이는 즉시 재충전일 가능성. 다음: `DAT_00594fb8` 의미 확정(1 로 켜는 곳 `004b6dd0` 두 군데, 0 으로 끄는 곳 `004b2df0`), 멀티 영상 없음 → 사용자 확인
-     - 참고: 원판 매뉴얼 "Unit Rate determines how quickly units refresh in the Production window after being placed: slow, medium, or fast"
+   - **유닛 재충전 간격(Unit Rate) 정적 분석 완료(2026-09-29)**: 화면 왼쪽 "덱" = 매뉴얼의 Production window. 보유 `setup.cfg`의 `useProductTimers = 0`에서는 Unit Rate 순서대로 10/5/1초이지만, **요새 모드에서는 0.0001초**로 대체된다. 이전에 네트워크 역할 플래그로 추정한 `DAT_00594fb8`은 exe 검사 문자열로 `inFortMode`임을 확인했다. `useProductTimers`가 켜진 별도 경로는 30/15/8초·수량 상한 1이며 요새 모드 예외가 없다. [근거와 구현 기준](docs/exe/production-refresh.md). **남은 일**: 원본에서 배치 직후 아이콘 복귀와 일반 전투의 Unit Rate별 간격을 프레임으로 측정한다.
    - 2026-09-28 추가 캡처 목록·관찰 정리 완료 ([docs/screens/README.md](docs/screens/README.md)). 다음은 Dissolved Alliance! 섬별 캡처로 지면 테마·소유자 테두리 대조, 메뉴 화면 정밀 좌표 노트
    - 섬 소유권 규칙([island-ownership.md](docs/gameplay/island-ownership.md))과 지면 미리보기 대조 — 2026-09-28 확인: `FortTerrainPreview` 는 이미 영역 신전의 소유자·원소로 테두리 색·테마를 정하고 신전이 없으면 중립·`sun`(초록) 으로 그린다 (규칙과 일치). 남은 것은 작은 받침·`createsisland` 발판의 소유자 결정(현재 저장된 오브젝트 소유자 사용)
 6. (원격 저장소가 생기면) CI 실제 실행 확인 — `originals/` 포함 후 원본 검증 테스트까지 실행되는지
