@@ -31,6 +31,29 @@ dotnet run --project src/Netstorm.Game -- --map savetheisland --language korean
 * 오브젝트 기준점 근처에 마우스: 타입, 좌표, 영역, 소유자, 다리 값 표시
 * Esc: 종료
 
+## 배치 시험 모드
+
+**P** 로 켜고 끈다. 플레이어 1 로 워크샵 생산 유닛을 놓아 보며 게임 규칙 코어([core-rules.md](core-rules.md))의 판정을 확인한다.
+
+| 입력 | 동작 |
+|---|---|
+| `[` / `]` | 유닛 선택 (원소·레벨 순 27종) |
+| 커서 | 커서 칸을 기준점(발자국 오른쪽 아래 칸)으로 판정 |
+| 좌클릭 | 배치 가능하면 놓는다 — 자리 점유, Storm Power 차감, Generator 는 공급원으로 추가 |
+| `C` | 빈 섬이 내 섬과 다리로 연결되었다고 가정 (다리 규칙 분석 전의 근사) |
+
+* 판정 순서: 섬 위치(내 섬 / 연결된 빈 섬 / 내 다리 끝, 남의 섬 불가) → 빈 자리 → Storm Power → 에너지.
+* 아군 공급원(템플·Generator)의 공급 반지름을 원소 색 점선 원으로, 요구 에너지에 배정된 공급원을 선으로 보여 준다.
+* 오른쪽 위에 Storm Power 를 원본 색 규칙(≤1000 빨강, ≤2000 노랑)으로 표시한다. 시작 값은 맵의 `Money` 섹션이다.
+* 다리 끝은 "발자국 둘레에 플레이어 다리 칸이 있는 섬 밖 위치"로 근사한다.
+
+검증용 명령(커서 대신 칸을 지정하고 카메라를 그 칸으로 옮긴다):
+
+```powershell
+dotnet run --project src/Netstorm.Game -- --map dissolvedalliance --placement windwalker --probe 124,126 --screenshot extracted/screens/placement-windwalker.png
+dotnet run --project src/Netstorm.Game -- --map dissolvedalliance --placement bulf --probe 124,126 --screenshot extracted/screens/placement-bulf.png
+```
+
 ## 화면 설정 (전체화면·화면비·가장자리 스크롤)
 
 맵 뷰어·스프라이트 뷰어·기본 확인 화면이 같은 화면 계층(`DisplayManager`)을 쓴다.

@@ -146,8 +146,8 @@
 | 4 | 원본 분석 — 실행 파일(게임 로직) | 🔶 착수 (전체 디컴파일·모듈 맵 완료) |
 | 5 | 원본 분석 — 플레이 영상 | 🔶 착수 (스크린샷 42장 목록·관찰 정리, 로컬 영상 4개 형식·화면 영역 확인, 프레임 추출·애니메이션 간격 측정 도구, Dissolved Alliance! 맵 대조·시작 카메라 규칙, 애니메이션 속도 측정 완료 / 미션별 관찰 노트 미착수) — [docs/videos/](docs/videos/README.md) |
 | 6 | 자산 로더 / 개발용 뷰어 | 🔶 진행 중 (TAFF·팔레트·셰이프·.type·.cfg·TTC·.fort·가상 파일 시스템·설정 치환·번역표·미션 스크립트 로더·스프라이트 탐색(동작 재생·팔레트·속성) 완료) |
-| 7 | 엔진 코어 (플랫폼 계층) | 🔶 착수 (2026-09-29: 창·전체화면·16:9/16:10/4:3 화면 계층, 가장자리 스크롤, 표시 설정 저장 완료 / 팔레트 방식·입력·오디오·고정 틱·로깅 남음) |
-| 8 | 게임 월드 / 규칙 구현 | ⬜ 대기 |
+| 7 | 엔진 코어 (플랫폼 계층) | 🔶 착수 (2026-09-29: 창·전체화면·16:9/16:10/4:3 화면 계층, 가장자리 스크롤, 표시 설정 저장, 고정 틱 누적기·MSVC 난수 완료 / 팔레트 방식·입력·오디오·로깅 남음) |
+| 8 | 게임 월드 / 규칙 구현 | 🔶 착수 (2026-09-29: 정적 규칙 코어 — 에너지·섬 소유권·생산 창·전투 옵션·배치 판정, 맵 뷰어 배치 시험 모드 / 엔티티·다리·이동·전투·경제 흐름 남음) — [docs/core-rules.md](docs/core-rules.md) |
 | 9 | UI · 미션 스크립트 · 튜토리얼 | ⬜ 대기 |
 | 10 | AI | ⬜ 대기 |
 | 11 | 캠페인 · 저장(fort) | ⬜ 대기 |
@@ -590,6 +590,7 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
 - [ ] 입력(마우스·키보드·단축키), 커서
 - [ ] 오디오: `SoundEffect` 효과음 다중 재생, `DynamicSoundEffectInstance` 음악 스트리밍, 볼륨
 - [ ] 고정 틱 게임 루프(시뮬레이션과 렌더 분리), 결정론적 난수
+  - [x] 2026-09-29 기반 구현: `Netstorm.Core.Simulation.FixedTimestep`(기본 24Hz, 따라잡기 8틱 한도, 초 → 틱 올림)·`MsvcRandom`(MSVC `rand()`, srand(1) 수열 41·18467·6334… 검사). 남은 일: 게임 화면에서 시뮬레이션 갱신을 이 누적기로 돌리기(엔티티 시스템과 함께)
 - [ ] 로깅, 설정 저장(사용자 데이터 경로: Windows `%APPDATA%`, Linux `$XDG_CONFIG_HOME`/`$XDG_DATA_HOME`)
   - [x] 표시 설정 저장 — 2026-09-29: `DisplaySettings`(`%APPDATA%\NetstormReborn\settings.json`, `NETSTORM_SETTINGS_DIR` 로 폴더 변경, 임시 파일 교체 저장, 손상 시 기본값)
   - [ ] 남은 일: 소리·언어·튜토리얼 팁 등 나머지 옵션 저장(원본 `options.cfg` 항목 대응), 로깅
@@ -598,12 +599,17 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
 
 4단계 명세를 기반으로 구현하며, 모든 규칙 코드는 단위 테스트를 둔다.
 
+- [x] **정적 규칙 코어** — 2026-09-29 완료: `src/Netstorm.Core/Rules/` ([게임 규칙 코어](docs/core-rules.md)). 원소·유닛별 필요 에너지(mana 우선, 원소 L1/L2/L3·Sun·Generator 규칙), 공급원 판정(자기·동맹, 중심 거리² ≤ 반지름², 공급원 하나 = 에너지 1개), 발자국(기준점 = 오른쪽 아래 칸, exe `FUN_0049ae80` 확인), 전투 옵션·공급 반지름·튜토리얼 2 덮어쓰기, 오브젝트 분류, Storm Power 색·회수·보상, 재충전 간격, 생산 창(템플 → 다리·골렘, 워크샵 등록 규칙·칸 수·파괴 해제), 섬 소유권·위치 조건, `BattleMap`(맵 → 소유권·공급원·점유, 배치 판정·실행). Core 테스트 88개(원본 `.type` 전체 요구값·The War Begins! 맵·Generator 전력선 포함) 통과
+  - [x] 맵 뷰어 **배치 시험 모드**(P) — 규칙 코어로 판정·배치·범위 표시, `--placement`·`--probe` 검증 옵션 ([실행](docs/map-viewer.md#배치-시험-모드)). Dissolved Alliance! 에서 Sail Skater 가능·Bulf 에너지 부족 확인
+  - [ ] 남은 일: 공급원 판정의 대상 크기 항(exe 가상 함수 +0xA0), 다리 연결·다리 끝 판정(현재 근사), 미션 `myTech`·`.fort` Technology/Deck → 초기 지식·덱, 동맹 설정, 발자국 전체의 섬 판정
 - [ ] 맵·섬·아이소메트릭 렌더링, 카메라 스크롤, 오브젝트 그리기 순서
 - [ ] 엔티티 시스템 (`.type` 데이터 구동)
 - [ ] 애니메이션 시스템
 - [ ] 다리 조각 생성·배치·연결·붕괴
 - [ ] 건물 배치·건설
+  - [x] 유닛 배치 판정(위치·빈 자리·Storm Power·에너지)과 배치 실행 — 2026-09-29 `BattleMap` (건설 시간·Power Stream 연출·사제 건설 절차는 남음)
 - [ ] 경제(가이저, 수집, 운반, Storm Power)
+  - [x] Storm Power 표시 색·회수 25%·파괴 보상·결정 200 규칙 — 2026-09-29 `StormPower` (수집·운반 흐름은 남음)
 - [ ] 이동 유닛(수집 유닛, 프리스트 등) 경로 탐색
 - [ ] 전투·발사체·특수 효과
 - [ ] 기술 획득·원소별 기술 트리
@@ -733,6 +739,15 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
 **재개 후 변경 파일 (커밋 전)**: `tools/videoframes.py`(신규), `src/Netstorm.Assets/MapSpriteFrames.cs`, `src/Netstorm.Assets/FortTerrainPreview.cs`, `src/Netstorm.Game/FortMapViewer.cs`, `tests/Netstorm.Assets.Tests/MapRenderingTests.cs`, `docs/videos/README.md`(신규), `docs/screens/dissolved-alliance-start.md`(신규), `docs/screens/README.md`, `docs/gameplay/island-ownership.md`, `docs/map-viewer.md`, `LEFT_JOBS.md`
 
 ## 6. 바로 다음 작업
+
+**구현 진행 (2026-09-29, 문서화된 자료로 게임 구현 — 원본 실행 없음)**: 8단계 정적 규칙 코어와 맵 뷰어 배치 시험 모드, 7단계 고정 틱·난수를 구현했다 ([게임 규칙 코어](docs/core-rules.md)). 원본 없이 진행할 수 있는 다음 구현 순서는 다음과 같다.
+1. **다리** — `Bridge.cpp`·`Deck.cpp` 정적 분석 → 조각 추첨(`Deck` chance 가중)·회전·연결·금 간 상태·붕괴 → 다리 끝·빈 섬 연결 판정으로 `BattleMap`의 근사를 교체
+2. **엔티티·틱** — `.type` 구동 오브젝트 목록을 `FixedTimestep`으로 갱신하고, 건설 시간(`constructionRate`)·재충전 간격(`ProductionTimers`)을 틱으로 돌린다
+3. **초기 상태** — 미션 머리 값 `myTech`·`myStartMoney`, `.fort` `Technology`·`Deck`에서 지식·덱·Storm Power를 채운다. 튜토리얼 2 는 `BattleOptions.ApplyTutorialTwoOverrides`
+4. **수집·경제** — `Carrier.cpp`·`Nugget.cpp`·`Vortex.cpp` 분석 → 가이저 → 결정 → 템플 운반 흐름
+5. 이후 전투(`Gunprocess`·`Damageable`·`Bomb`), 사제·희생(`Priest`·`Dais`), UI(생산 창·컨텍스트 메뉴)
+
+이번 변경 파일(커밋 전): `src/Netstorm.Core/Rules/*`·`Simulation/*`(신규), `tests/Netstorm.Core.Tests/{EnergyRuleTests,GameRuleTests,OriginalData}.cs`(신규), `src/Netstorm.Game/FortMapViewer.Placement.cs`(신규)·`FortMapViewer.cs`·`NetstormGame.cs`, `docs/core-rules.md`(신규)·`docs/map-viewer.md`·`docs/exe/energy-requirements.md`, 이 문서.
 
 0. **동봉 문서 참고 (2026-09-29 정리)**: 작업 전에 [docs/sources/README.md](docs/sources/README.md) 를 먼저 본다 — 규칙·조작·유닛 수치와 **현재 분석과의 불일치 12건**(3절)이 정리되어 있다. 사용자가 외부에서 추가한 [`originals/help/manual.pdf`](originals/help/manual.pdf)는 조작·생산 절차와 일부 비용을 `GAME.HLP`·보유 `.type`에 [선별 대조](docs/sources/pdf-manual.md)했다. 메인/컨텍스트 메뉴 그림은 실제 UI 형태와 부합한다(사용자 확인). 옛 메인 메뉴의 기본 항목은 7개, 보유 패치판은 `Edit` 포함 8개다. 비용·일부 메뉴 항목은 판본에 따라 다르며 전체 페이지 대조는 남아 있다. 우선 확인할 것:
    - ~~level 1 원소 유닛(Bulf·Arc Spire·Crystal Crab)의 필요 에너지 exe 분석~~ → **2026-09-29 완료**: `Rifttype.cpp` `0049b0d0`이 타입 `+0xA0`의 기본 요구값을 만들고, `Mana.cpp` `004734d0`·`00473330`이 배치 위치에서 검사한다. Bulf·Arc Spire는 Thunder 1, Crystal Crab은 Rain 1. Generator는 `.type`의 명시 `mana = "s"`로 아무 공급원 1개. 이전 후보 `0044ac30`·`00473d00`은 다른 구조체 필드로 인한 오인. [분석](docs/exe/energy-requirements.md), [유닛 표](docs/gameplay/elements-energy.md) 4절. ~~**후속**: 패치판 게임에서 교차 원소 공급원 아래 세 유닛의 배치 성공/실패를 동적으로 확인~~ → **2026-09-29 사용자 확인으로 확정**(Bulf는 Thunder 공급원 필수, 다른 원소는 소용없음, 같은 레벨이라도 유닛마다 다름). PDF 유닛 핸드북 전체와도 대조함 ([PDF 대조표](docs/sources/pdf-manual.md#유닛별-건설-에너지-energy-to-build)) — 게임 실행 검증 불필요

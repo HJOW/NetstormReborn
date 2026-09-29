@@ -7,7 +7,7 @@ using Netstorm.Assets;
 namespace Netstorm.Game;
 
 /// <summary>저장된 맵 오브젝트와 영역 청크를 원본 배율로 살펴보는 개발용 뷰어.</summary>
-internal sealed class FortMapViewer : IDisposable
+internal sealed partial class FortMapViewer : IDisposable
 {
     /// <summary>초당 카메라 이동 픽셀 수.</summary>
     private const float PanSpeed = 600f;
@@ -81,6 +81,7 @@ internal sealed class FortMapViewer : IDisposable
             .ThenBy(o => o.Y).ThenBy(o => o.X).ToArray();
         _pixel = new Texture2D(device, 1, 1);
         _pixel.SetData(new[] { Color.White });
+        InitializePlacement(fort, catalog);
         CenterOnPriest();
     }
 
@@ -131,6 +132,7 @@ internal sealed class FortMapViewer : IDisposable
         {
             _showChunks = !_showChunks;
         }
+        UpdatePlacement(keyboard, mouse);
         _previousKeyboard = keyboard;
         _previousMouse = mouse;
     }
@@ -226,12 +228,14 @@ internal sealed class FortMapViewer : IDisposable
                 hovered = item;
             }
         }
+        DrawPlacedUnits(batch, center);
         batch.Draw(_pixel, new Rectangle(0, 0, width, HeaderHeight), new Color(18, 24, 38));
         batch.DrawString(font, $"맵: {Name} | 오브젝트 {_map.Objects.Count}개 | 확대 {_zoom:0.##}배 | 언어: {Language}", new Vector2(16, 10), Color.Gold);
-        batch.DrawString(font, "방향키 / 우클릭 / 화면 끝: 이동 · 휠: 확대 · Home: 사제 위치 · G: 청크 윤곽 · Esc: 종료", new Vector2(16, 38), Color.White);
+        batch.DrawString(font, "방향키 / 우클릭 / 화면 끝: 이동 · 휠: 확대 · Home: 사제 위치 · G: 청크 윤곽 · P: 배치 시험 · Esc: 종료", new Vector2(16, 38), Color.White);
         batch.DrawString(font, "F11: 전체화면 · F10: 와이드 처리 · F9: 원본 해상도 높이 · F7: 가장자리 스크롤", new Vector2(16, 66), Color.White);
         batch.DrawString(font, displayInfo, new Vector2(16, 94), Color.LightGray);
-        if (hovered != null)
+        DrawPlacementOverlay(batch, font, center, width, height);
+        if (hovered != null && !_placementMode)
         {
             string region = hovered.Territory.HasValue ? $"Terr{hovered.Territory:00}" : "Chaff";
             string text = $"{hovered.Object.Type.Name} ({hovered.X}, {hovered.Y}) | {region} | 소유자 {hovered.Object.Owner} | 다리 {hovered.Object.BridgeShape}";

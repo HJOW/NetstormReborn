@@ -261,6 +261,24 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         _mapViewer = new FortMapViewer(GraphicsDevice, shapes, palette, resources.LoadFort(name, catalog), name,
             catalog, resources.Language);
         _baseTitle = $"NetStorm 클론 — 맵 뷰어: {name}";
+        // 검증용: --placement 타입 [--probe x,y] 로 배치 시험 모드를 켠 채 시작한다.
+        string[] args = Environment.GetCommandLineArgs();
+        string? placement = ParseValueArgument(args, "--placement");
+        if (placement != null)
+        {
+            string? probe = ParseValueArgument(args, "--probe");
+            (int, int)? cell = null;
+            if (probe != null)
+            {
+                string[] parts = probe.Split(',');
+                if (parts.Length != 2 || !int.TryParse(parts[0], out int px) || !int.TryParse(parts[1], out int py))
+                {
+                    throw new ArgumentException("--probe 값은 x,y 칸 좌표여야 합니다.");
+                }
+                cell = (px, py);
+            }
+            _mapViewer.StartPlacement(placement, cell);
+        }
     }
 
     /// <summary>입력 처리와 애니메이션 진행</summary>
