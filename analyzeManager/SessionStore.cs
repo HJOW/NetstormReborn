@@ -69,6 +69,15 @@ public sealed class SessionStore
         return directory;
     }
 
+    /// <summary>자유 플레이 녹화물을 세션별 playingVideos 폴더에 두고 경로 우회를 막는다.</summary>
+    public string FreeplayDirectory(string id)
+    {
+        _ = SessionDirectory(id);
+        string directory = Path.Combine(Repository, "playingVideos", id);
+        RejectReparse(directory);
+        return directory;
+    }
+
     /// <summary>복사본의 실행 파일 경로는 매번 계산하여 manifest의 임의 경로를 신뢰하지 않는다.</summary>
     public string GamePath(AnalysisSession session) => Path.Combine(SessionDirectory(session.Id), "game", "Netstorm.exe");
 

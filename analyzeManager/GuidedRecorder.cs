@@ -20,6 +20,7 @@ public sealed class GuidedRecorder : IDisposable
     private readonly SessionStore _store;
     private readonly AnalysisSession _session;
     private readonly string _directory;
+    private readonly bool _freePlay;
     private readonly int _processId;
     private readonly CancellationTokenSource _stop = new();
     private readonly HookCallback _mouseCallback;
@@ -33,13 +34,15 @@ public sealed class GuidedRecorder : IDisposable
     private volatile Exception? _error;
     private bool _disposed;
     private int _frameCount;
+    private long _startedCounter;
 
     /// <summary>같은 세션의 기존 조각 다음 번호를 사용하도록 녹화기만 준비한다.</summary>
-    public GuidedRecorder(SessionStore store, AnalysisSession session)
+    public GuidedRecorder(SessionStore store, AnalysisSession session, bool freePlay = false)
     {
         _store = store;
         _session = session;
-        _directory = Path.Combine(store.SessionDirectory(session.Id), "recording");
+        _freePlay = freePlay;
+        _directory = freePlay ? store.FreeplayDirectory(session.Id) : Path.Combine(store.SessionDirectory(session.Id), "recording");
         SessionStore.RejectReparse(_directory);
         Directory.CreateDirectory(_directory);
         _processId = session.ProcessId ?? throw new InvalidOperationException("실행 중인 게임 세션이 아닙니다.");
@@ -51,6 +54,8 @@ public sealed class GuidedRecorder : IDisposable
     /// <summary>녹화 도중 오류와 누적 프레임 수를 안내 창에 제공한다.</summary>
     public Exception? Error => _error ?? _audio?.Error;
     public int FrameCount => Volatile.Read(ref _frameCount);
+    /// <summary>현재 녹화 시작 버튼을 누른 뒤 지난 시간을 반환한다.</summary>
+    public TimeSpan Elapsed => _startedCounter == 0 ? TimeSpan.Zero : Stopwatch.GetElapsedTime(_startedCounter);
 
     /// <summary>소리·입력·영상을 시작하고 실패 시 부분적으로 만든 리소스를 닫는다.</summary>
     public void Start()
@@ -64,7 +69,10 @@ public sealed class GuidedRecorder : IDisposable
             _mouseHook = SetWindowsHookEx(MouseHookType, _mouseCallback, GetModuleHandle(null), 0);
             _keyboardHook = SetWindowsHookEx(KeyboardHookType, _keyboardCallback, GetModuleHandle(null), 0);
             if (_mouseHook == 0 || _keyboardHook == 0) throw new InvalidOperationException("물리 입력 기록용 Windows 훅을 설치하지 못했습니다.");
-            _store.Append(_session, "guided_recording_started", new { fps = FramesPerSecond, video = "MJPEG AVI", audio = "기본 출력 장치 루프백", directory = "recording" });
+            _startedCounter = Stopwatch.GetTimestamp();
+            string directory = Path.GetRelativePath(_store.Repository, _directory).Replace('\\', '/');
+            _store.Append(_session, _freePlay ? "freeplay_recording_started" : "guided_recording_started",
+                new { fps = FramesPerSecond, video = "MJPEG AVI", audio = "기본 출력 장치 루프백", directory });
             _videoThread.Start();
         }
         catch
@@ -111,7 +119,8 @@ public sealed class GuidedRecorder : IDisposable
         }
         catch (Exception error)
         {
-            if (!_stop.IsCancellationRequested) _error = error;
+            // 사용자가 중지한 직후의 AVI 닫기 오류도 성공으로 숨기지 않는다.
+            _error = error;
         }
     }
 
@@ -180,11 +189,21 @@ public sealed class GuidedRecorder : IDisposable
         if (_keyboardHook != 0) UnhookWindowsHookEx(_keyboardHook);
         _stop.Cancel();
         if (_videoThread.IsAlive) _videoThread.Join();
-        _audio?.Dispose();
-        _inputs?.Dispose();
+        // 어느 출력 파일 하나를 닫는 데 실패해도 나머지 파일과 취소 신호는 끝까지 정리한다.
+        try { _audio?.Dispose(); }
+        catch (Exception error) { _error ??= error; }
+        try { _inputs?.Dispose(); }
+        catch (Exception error) { _error ??= error; }
         _stop.Dispose();
         if (_session.EventCount < SessionStore.MaximumEvents)
-            _store.Append(_session, "guided_recording_stopped", new { frames = FrameCount, error = Error?.Message });
+        {
+            try
+            {
+                _store.Append(_session, _freePlay ? "freeplay_recording_stopped" : "guided_recording_stopped",
+                    new { frames = FrameCount, error = Error?.Message });
+            }
+            catch (Exception error) { _error ??= error; }
+        }
     }
 
     /// <summary>Windows 훅 콜백의 원형.</summary>

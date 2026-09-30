@@ -1,11 +1,20 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
-> 최종 갱신: 2026-09-30 (`HJOW-X3D`)
+> 최종 갱신: 2026-10-01 (`HJOW-X3D`)
 > 프로젝트 목표(AGENTS.md): 원본 NetStorm: Islands at War 를 디컴파일/분석하여 클론 코딩하고,
 > **Windows 10/11** 과 **GUI 환경의 Linux** 에서 동작하며 **여러 언어를 지원**하는 게임을 만든다.
 > **1차 목표 언어: 영어, 한국어** (그 외 언어는 이후 확장).
 > **우선순위: Windows 10/11 > Linux** (Linux 지원은 우선순위가 낮다 — 설계상 이식성은 유지하되 검증·배포는 Windows 먼저).
 > **화면 요구사항(2026-09-28 AGENTS.md 추가)**: 풀스크린 모드와 화면비 **16:9 · 16:10 · 4:3** 지원, 풀스크린에서 **마우스를 화면 끝에 대면 화면 이동**(원본도 지원) — 1.7절
+
+---
+
+## 2026-10-01 (`HJOW-X3D`, 원본 실행 없음) ✅: 기존 게임 플레이 녹화 분석 모드 구현
+
+- `analyzeManager`에 `record-play --session ID`를 추가했다. 기존 관리 세션에 지침 없는 안내 창을 붙이며 게임을 새로 시작하지 않는다. 사용자가 녹화 시작·중단을 누르고 자유롭게 플레이한다. 창은 대기·녹화 중(경과 시간·프레임 수)·오류 중단·게임 종료를 색과 문장으로 표시한다. 화면 캡처·오디오·입력·창 위치 오류가 나면 녹화를 닫고 시작 버튼을 다시 켠다. 사용자가 다시 누르면 다음 번호의 파일로 이어 기록한다.
+- 기존 10 FPS MJPEG AVI·루프백 WAV·입력 JSONL 기록기를 재사용한다. 새 모드 파일은 `playingVideos/<세션 ID>/`에 두며 AVI/WAV는 각각 48 MB 전에 자동 분할한다. 중단 시 `recording-index.json`에 영상·소리·입력 조각과 시각 보조 파일 이름·크기를 갱신한다. 기존 `guide` 모드의 출력 위치와 단계 안내는 유지한다. [사용법](docs/analyze-manager.md#기존-게임-플레이-녹화-분석-모드), [도구 README](analyzeManager/README.md).
+- **확인:** Release 빌드 오류 0. NuGet 취약성 피드 연결 실패로 NU1900 경고 1개. 자동 승인 검토가 요청되지 않은 테스트 코드 추가를 거부해 테스트는 추가·실행하지 않았다. 원본 게임과 새 안내 GUI도 실행하지 않았다. 실제 녹화 화면·중단 후 재시작은 후속 동적 확인이 필요하다. 이 PC는 AGENTS.md의 무확인 원본 실행 예외 시스템이 아니므로 실제 게임 실행 전 사용자 명시 확인이 필요하다.
+- 변경 파일: `analyzeManager/{Program,GuidedForm,GuidedRecorder,SessionStore,FreeplayRecordingIndex}.cs`, `analyzeManager/README.md`, `docs/analyze-manager.md`, 이 문서.
 
 ---
 

@@ -16,15 +16,18 @@ internal static class Program
         Netstorm.AnalyzeManager [--repo 저장소] mcp
         Netstorm.AnalyzeManager [--repo 저장소] call 도구 [--args-file JSON파일 | --json JSON]
         Netstorm.AnalyzeManager [--repo 저장소] guide --session 세션ID [--steps-file UTF8파일]
+        Netstorm.AnalyzeManager [--repo 저장소] record-play --session 세션ID
 
         도구: list_sessions, start_session, game_status, capture_state,
               game_input, wait_for_change, record_observation, set_guide_steps, end_session
         AGENTS.md에 지정된 시스템, 또는 개발자가 수동 컨트롤 분석을 직접 요청한 작업 단계에서만 별도 확인 없이 게임을 실행할 수 있습니다.
         그 밖의 경우에는 start_session 전에 목적과 필요성을 설명하고 개발자 확인을 받으세요.
         guide는 이미 실행 중인 세션의 게임 옆에 안내 창을 열며 게임을 새로 실행하지 않습니다.
+        record-play는 지침 없는 녹화 창을 열고 playingVideos/세션ID에 분할 저장합니다.
         예: call start_session --json {"label":"메뉴 관찰"}
         입력 스키마와 MCP 설정: docs/analyze-manager.md
-        결과는 UTF-8 JSON, 오류 종료 코드는 2입니다. 게임과 증거는 세션 폴더에 남습니다.
+        결과는 UTF-8 JSON, 오류 종료 코드는 2입니다. 게임과 일반 증거는 세션 폴더에 남습니다.
+        record-play 녹화물은 playingVideos/세션ID에 남습니다.
         """;
 
     /// <summary>CLI와 MCP가 동일한 엔진·경로·예외 정책을 사용하게 한다.</summary>
@@ -44,15 +47,16 @@ internal static class Program
                 return 0;
             }
             var engine = new AnalysisEngine(FindRepository(repository));
-            if (arguments.Count > 0 && arguments[0] == "guide")
+            if (arguments.Count > 0 && (arguments[0] is "guide" or "record-play"))
             {
+                bool freePlay = arguments[0] == "record-play";
                 arguments.RemoveAt(0);
-                string sessionId = TakeOption(arguments, "--session") ?? throw new ArgumentException("guide에는 --session이 필요합니다.");
-                string? stepsPath = TakeOption(arguments, "--steps-file");
+                string sessionId = TakeOption(arguments, "--session") ?? throw new ArgumentException("안내 창에는 --session이 필요합니다.");
+                string? stepsPath = freePlay ? null : TakeOption(arguments, "--steps-file");
                 if (arguments.Count != 0) throw new ArgumentException(Usage);
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new GuidedForm(engine.Store, sessionId, stepsPath));
+                Application.Run(new GuidedForm(engine.Store, sessionId, stepsPath, freePlay));
                 return 0;
             }
             if (arguments.Count == 1 && arguments[0] == "mcp")
