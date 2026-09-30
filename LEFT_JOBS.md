@@ -9,6 +9,18 @@
 
 ---
 
+## 2026-09-30 (`HJOW-Athlon`, Windows, 원본 자동 분석): Replay·Restart Mission 첫 화면 확인 ✅
+
+- `analyzeManager` 세션 `20260930T115011876Z-a2dcd80d0ab9`에서 `Bridge the Gap!`에 들어가 `Leave Mission → Replay Mission`을 선택했다. `Starting Mission...` 로딩 창 뒤 같은 미션의 첫 `NetStorm!` 브리핑과 **0 SP** 화면이 다시 나타났다. 증거 해시: `326a0af414b6885b7832532bcc98fd71380418f116db105354d1dbf7a5982a0e`.
+- 브리핑을 닫고 `Game → Restart Mission`을 선택해도 같은 로딩 창 뒤 첫 브리핑과 **0 SP**가 다시 나타났다. 증거 해시: `fd783fb1cdfaacec8f0a7cd2cbfe919ae7260bd7d4f6a6b29b935167217d63fb`. 배치물 초기화는 이 세션에서 시험하지 않았다. 관찰 메모를 남기고 게임을 `end_session force=true`로 종료했다.
+- [화면 관찰 상세](docs/screens/README.md#19-replay-missionrestart-mission-전환-2026-09-30-windows-hjow-athlon). 아래 인수인계의 미확인 항목 중 두 전환을 완료로 표시했다. 변경 파일: `docs/screens/{README,main-menu}.md`, 이 문서.
+
+## 2026-09-30 (`HJOW-Athlon`, Windows, 원본 자동 분석): Original Credits 마지막 전환 확인 ✅
+
+- `analyzeManager` 세션 `20260930T113718545Z-fda9e5c1745b`에서 원본 복사본을 실행하고 Original Credits를 입력 없이 관찰했다. 선택 입력은 11:39:09.541 UTC, 마지막 쪽 캡처는 11:43:34.299 UTC, 메인 메뉴가 다시 보인 캡처는 11:43:49.931 UTC다. **선택부터 복귀 관찰까지 280.39초**로, 스크립트의 14쪽 × 각 20초와 일치한다. 복귀 증거 SHA-256: `198f9dda482552b67c70baf6430e013f7972f0bb845600df645f037671ea60a9`(중앙 ROI).
+- 이후 입력 없이 `The Storm Rages!` Auto-Demo로 전환한 것도 확인했다. 메인 메뉴 복귀와 데모 화면 사이 캡처 간격 때문에 데모 시작의 정확한 시각은 이번 측정으로 확정하지 않는다. 세션에 관찰 메모를 저장하고 게임을 `end_session force=true`로 종료했다. 앞서 중단된 세션 `20260930T113311036Z-0b577dc139c4`도 실행 중인 프로세스가 없음을 확인해 종료 처리했다.
+- [화면 관찰 상세](docs/screens/README.md#18-original-credits-마지막-전환-2026-09-30-windows-hjow-athlon). 이 항목의 미확인 상태를 아래 인수인계 목록에서 완료로 변경했다. 변경 파일: `docs/screens/{README,main-menu}.md`, 이 문서.
+
 ## 2026-09-30 (`vm-debian-codex`, Linux, 원본 게임 실행 없음): 수동 분석 안내 창의 게임 크기 변경 대응 ✅
 
 - `guide` 안내 창을 처음 열 때뿐 아니라 1초마다 주 게임 창의 크기·위치를 확인해, 바뀌거나 서로 겹치면 게임 바깥의 오른쪽/왼쪽 빈 영역으로 옮긴다. 녹화 시작 전에도 적용된다. 게임 안의 작은 대화상자는 배치 기준에서 제외하고, 제목 표시줄과 테두리도 피한다. 창의 최초 위치가 유지되도록 수동 시작 위치를 지정했다.
@@ -217,7 +229,7 @@
   - Campaign 창 `$Timeout=120`: 실측 120.1초에 닫힘 → 45.2초 뒤 Auto-Demo
   - Auto-Demo 안내 창: 뜬 뒤 14.7초에 저절로 닫힘(`$Timeout=15`). 이전에 "안 뜬다"고 기록한 것은 캡처 간격 때문으로 보인다.
   - Restart Demo: 로딩 창을 거쳐 처음부터 다시 시작, 안내 창 다시 뜸
-  - Original Credits: 20초마다 넘어감(7번 측정, 스크립트상 14쪽). 마지막 쪽 뒤 흐름은 미측정
+  - Original Credits: 이 세션에서는 20초마다 넘어가는 7번의 전환만 측정했다. 마지막 쪽 뒤 흐름은 위 2026-09-30 Windows 세션에서 확인했다.
   - Create New Map: "New Save-Game Name?" 입력 창(Cancel 함)
   - Test Battle:
     - 창 제목 `NetStorm Test Battle "<미션 제목>"`, 브리핑 창
@@ -235,8 +247,8 @@
 - **다음에 이어서 할 일:**
   - [x] 새 세션에서 튜토리얼 1을 처음부터 진행(저장 불가): 가이저 연결 → 사제 결정 왕복·결정당 SP → 600 SP 결과 화면 (2026-09-30 사용자 직접 조작 녹화로 완료, 위 절)
   - [x] 튜토리얼 2 건설 시간·배치 뒤 아이콘 복귀·완료 결과 (2026-09-30 사용자 직접 조작 녹화로 완료, 위 절)
-  - [ ] Leave → Replay Mission 흐름은 이번 튜토리얼 2 범위에 포함하지 않아 미확인
-  - Credits 마지막 쪽 뒤 흐름
+  - [x] Leave → Replay Mission 흐름 — 2026-09-30 Windows 자동 분석에서 같은 미션 첫 브리핑 재진입 확인
+  - [x] Credits 마지막 쪽 뒤 흐름 — 2026-09-30 Windows 자동 분석에서 메인 메뉴 복귀 확인
   - 캡처를 아끼도록 좁은 영역·긴 간격으로 측정한다(이미지 한도 500). 배치 가능 위치 탐색은 한 번에 캡처가 많이 쌓이므로 한 세션에서 오래 하지 않는다.
   - 배치 판정 분석([bridge-pieces.md](docs/exe/bridge-pieces.md) 8절)에 위 붕괴 시간을 기준값으로 쓴다.
 - 이번 변경 파일(커밋 전): `docs/screens/README.md`(1.5절), `docs/exe/bridge-pieces.md`(4절 붕괴 관찰), `LEFT_JOBS.md`
@@ -282,7 +294,7 @@
   - 메인 메뉴 버튼은 커서를 먼저 올린 뒤 클릭해야 반응한다. `>` 하위 메뉴는 클릭해야 열린다.
 - **남은 원본 확인 (다음 작업 후보, 지정 시스템에서 확인 없이 실행 가능):**
   1. Auto-Demo 안내 창이 뜨는 조건과 45초 상수의 exe 위치(정적 분석)
-  2. Replay/Restart Mission·Restart Demo 결과, 로딩 창 Cancel, Original Credits, Campaign 나머지 묶음과 `$Timeout=120`
+  2. Campaign 나머지 묶음 확인, Replay/Restart Mission 뒤 배치물 초기화 확인 (두 명령의 첫 브리핑 재진입·Restart Demo·로딩 창 Cancel·Original Credits 마지막 전환·Campaign `$Timeout=120`은 후속 세션에서 확인 완료)
   3. 편집기 Create New Map·Test Battle·Add Island·Set All Bridge
   4. 미션 플레이 관찰: 사이드바 배치 조작, Unit Rate 간격 측정([production-refresh.md](docs/exe/production-refresh.md) 남은 일), 결과 화면 흐름
   5. 메인 메뉴 Options의 Pause 줄 표시 조건(`DAT_00594fa4`·`DAT_005c85a4`)

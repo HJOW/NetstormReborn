@@ -110,10 +110,10 @@ Windows 10 Pro(지정 예외 시스템 2)에서 원본 복사본을 1024×768 �
 **Credits**
 - Credits 선택 창(`7642b2d5`): 제목 "NetStorm Credits", 목록 "Netstorm 10.72 Patch Credits"(y≈392) / "Netstorm Original Credits"(y≈409), Cancel (511,437).
 - 패치 제작진 첫 쪽(`625d1d11`)에는 More / Back / Cancel 버튼이 있다. **쪽마다 창 크기와 버튼 위치가 다르다.** 둘째 쪽은 버튼 y≈597로 내려간다(`4044b22f`).
-- **각 쪽은 입력이 없으면 20초 뒤 다음 쪽으로 넘어가고, 마지막 쪽은 20초 뒤 닫혀 메인 메뉴로 돌아간다.** 측정: 12:11:15.8 → 12:11:35.9 (20.1초), 12:11:35.9 → 12:11:55.97 (20.0초, 메인 메뉴 `9a5aa24c`). `tell.english` `[CreditsNew…]`의 `$Timeout=20`과 일치한다. Original Credits 쪽은 열지 않았다.
+- **각 쪽은 입력이 없으면 20초 뒤 다음 쪽으로 넘어가고, 마지막 쪽은 20초 뒤 닫혀 메인 메뉴로 돌아간다.** 측정: 12:11:15.8 → 12:11:35.9 (20.1초), 12:11:35.9 → 12:11:55.97 (20.0초, 메인 메뉴 `9a5aa24c`). `tell.english` `[CreditsNew…]`의 `$Timeout=20`과 일치한다. Original Credits의 마지막 전환은 1.8절에서 확인했다.
 
 **Campaign**
-- 기본 메뉴 Campaign 버튼은 `tell.english` **`[UCampaign]`** 화면을 연다("Which section would you like to play?", 6묶음, Back, `1c0a6091`). `[Campaign]` 절은 `<$tell,offical6.Overview>` 한 줄뿐이라 이 화면과 다르다. `[UCampaign]`에는 `$Timeout=120,Tell,Blank`가 있어 120초 동안 입력이 없으면 닫힐 것으로 보인다(미측정).
+- 기본 메뉴 Campaign 버튼은 `tell.english` **`[UCampaign]`** 화면을 연다("Which section would you like to play?", 6묶음, Back, `1c0a6091`). `[Campaign]` 절은 `<$tell,offical6.Overview>` 한 줄뿐이라 이 화면과 다르다. `[UCampaign]`의 `$Timeout=120,Tell,Blank`는 1.5절에서 실측했다.
 - Early Missions(`e472f50b`, 기존 캡처와 같음) → **Back**을 누르면 Campaign 선택 창으로 돌아간다(같은 해시 `1c0a6091`).
 
 **미션 진입 흐름 (Early Missions → 1 Bridge the Gap)**
@@ -180,7 +180,7 @@ Windows 10 Pro(지정 예외 시스템 2)에서 원본 복사본을 1024×768 �
   - 13:45:21에 열었고 입력 없이 20초마다 다음 쪽으로 넘어갔다(13:45:41부터 13:47:41까지 7번 연속 측정).
   - 스크립트상 첫 쪽 `[Creditsold]`와 `[Credits1]`~`[Credits13]`의 14쪽, 마지막은 `Tell,Blank`로 끝난다(예상 약 280초).
   - 뒤쪽은 명단이 길어 창이 화면을 거의 채운다.
-  - 마지막 쪽 뒤 메인 메뉴로 돌아간 시각은 캡처가 끊겨 측정하지 못했다(13:49:45에는 이미 Auto-Demo 로딩 중).
+  - 이 세션에서는 마지막 쪽 뒤 메인 메뉴로 돌아간 시각을 캡처가 끊겨 측정하지 못했다(13:49:45에는 이미 Auto-Demo 로딩 중). 1.8절의 새 세션에서 확인했다.
 
 **편집기(Edit)**
 - **Create New Map → "New Save-Game Name?" 입력 창**(글자 입력 칸, OK / Cancel). 새 파일이 생기므로 Cancel 했다.
@@ -217,7 +217,7 @@ Windows 10 Pro(지정 예외 시스템 2)에서 원본 복사본을 1024×768 �
 - **F2:** 템플 같은 큰 물체를 투명(윤곽)하게 그린다.
 - **ALT 스크롤:** ALT를 누르고 있으면 커서 쪽으로 스크롤되는데 매우 빠르다(0.25~1.5초 누름으로 섬이 화면 밖으로 벗어남).
 
-**당시 미측정, 이후 1.6절에서 확인:** 가이저 연결, 사제 결정 반납·결정당 Storm Power, 600 SP 달성 뒤 결과 화면. **아직 미측정:** 사제의 순수 왕복 시간, 튜토리얼 2(건설 시간, 유닛 배치 뒤 아이콘 복귀 간격), Leave → Replay Mission, Original Credits 마지막 쪽 뒤 흐름.
+**당시 미측정, 이후 1.6절에서 확인:** 가이저 연결, 사제 결정 반납·결정당 Storm Power, 600 SP 달성 뒤 결과 화면. 튜토리얼 2의 건설 시간과 배치 뒤 아이콘 복귀는 1.7절, Original Credits의 마지막 전환은 1.8절에서 확인했다. **아직 미측정:** 사제의 순수 왕복 시간, Leave → Replay Mission.
 
 ### 1.6 사용자 직접 조작 녹화: 튜토리얼 1 완료 (2026-09-30, Windows `HJOW-Athlon`)
 
@@ -235,6 +235,18 @@ Windows 10 Pro(지정 예외 시스템 2)에서 원본 복사본을 1024×768 �
 - 첫 자원은 **10,000 SP**. Temple 완공 뒤 **5,000**, Workshop 완공 뒤 **4,200**이다. Sun Disc Thrower 4개를 각각 300 SP에 짓고 **3,000**, 한 개를 회수하자 **3,075 SP**가 됐다. 즉 회수액 **75 SP = 원가의 25%**. 값은 화면 영상과 `windvortex.type`·`sunfactory.type`·`sunarcher.type`의 `cost`(5,000·800·300)와 일치한다. 숫자는 전환 중 여러 프레임에 걸쳐 바뀌므로 안정된 표시값을 비교했다.
 - 사용자의 배치 클릭부터 화면상 완공·섬 소유 색 변경까지 **Wind Temple 약 16초**(16:04:08→16:04:24 UTC), **Sun Workshop 약 10초**(16:04:46→16:04:56 UTC)였다. 이동·시공과 화면 갱신을 포함한 시간이며, 영상의 1초 간격 표본으로 확인했다.
 - 첫 두 Sun Disc Thrower의 배치 클릭 뒤 생산 창 아이콘이 다시 밝아질 때까지 **약 1.1~1.2초**였다(10 FPS 영상, 약 ±0.1초). 템플에서 먼 배치 위치에는 `Energy not satisfied`가 표시됐다. 유닛 선택 시 공격 범위, Wind Temple 선택 시 원소 공급 범위를 보여 줬다. 네 개를 배치했고 최종 화면에는 다리로 연결된 작은 섬의 유닛도 보인다. 하나를 `Salvage`해 완료했다. 세부 재충전 관찰은 [생산 창 시간](../exe/production-refresh.md)에 반영했다.
+
+### 1.8 Original Credits 마지막 전환 (2026-09-30, Windows `HJOW-Athlon`)
+
+`analyzeManager` 세션 `20260930T113718545Z-fda9e5c1745b`에서 원본 복사본의 Original Credits를 연 뒤 입력 없이 관찰했다. 11:39:09.541 UTC에 목록 항목을 클릭했고, 11:43:34.299 UTC 중앙 캡처에는 마지막 명단이 남아 있었다(`b1049fab…`). 11:43:49.931 UTC 중앙 캡처에는 대화상자 없이 메인 메뉴 버튼이 보였다(`198f9dda…`). **선택부터 메인 메뉴 복귀 관찰까지 280.39초**이며 `tell.english`의 14쪽 × 20초 타이머와 일치한다. 이 값은 입력 전송과 화면 캡처 사이의 시간으로, 내부 게임 타이머를 직접 읽은 값은 아니다.
+
+이후 입력 없이 11:44:40.398 UTC의 변화 감지 캡처에서 창 제목이 `NetStorm Demo "The Storm Rages!"`로 바뀌었고, 11:45:07.336 UTC 전체 캡처에서 자동 데모 장면을 확인했다. 메인 메뉴 복귀와 데모 감지 사이의 캡처 간격이 넓으므로 이번 자료에서 Auto-Demo 시작 지연을 정밀 측정하지 않는다. 증거는 세션의 `events-0001.jsonl`과 `screens/`에 남겼고, 게임은 `end_session force=true`로 종료했다.
+
+### 1.9 Replay Mission·Restart Mission 전환 (2026-09-30, Windows `HJOW-Athlon`)
+
+`analyzeManager` 세션 `20260930T115011876Z-a2dcd80d0ab9`에서 Early Missions의 `1 Bridge the Gap`을 열어 첫 브리핑 두 쪽을 닫았다. ESC → Game → Leave Mission → `Replay Mission`을 누르자 `Starting Mission...` 로딩 창(`0d478a46…`)을 거쳐 같은 미션 제목의 첫 `NetStorm!` 브리핑이 다시 나타났다(`326a0af4…`). 메인 메뉴나 미션 목록을 거치지 않았고, 사이드바의 Storm Power는 다시 **0**으로 보였다.
+
+재진입 브리핑도 닫은 뒤 ESC → Game → `Restart Mission`을 누르자 같은 로딩 창(`0d478a46…` 파일 재사용)을 거쳐 `Bridge the Gap!` 첫 브리핑이 다시 나타났다(`fd783fb1…`). Storm Power 표시는 **0**이었다. 두 명령 모두 첫 브리핑부터 다시 시작하는 것은 확인했지만, 배치한 유닛·다리의 초기화는 이번 세션에서 별도로 시험하지 않았다. 두 결과를 세션 관찰 메모에 남기고 게임은 `end_session force=true`로 종료했다.
 
 ## 2. 미션 화면 공통 (창 제목 `NetStorm Mission "<미션 제목>"`)
 

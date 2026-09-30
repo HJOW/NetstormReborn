@@ -75,7 +75,7 @@ Campaign의 공식 목록은 `offical1~6`이라는 원본 철자를 그대로 �
   │    └ Early Missions → 미션 목록 ─ Back → Campaign
   │         └ 미션 선택 → 로딩 창 → 미션 화면 + 브리핑(MORE → … → OK) → 플레이
   │              └ ESC → Game → Leave Mission → "Leave Mission?" ─ Main Menu → 메인 메뉴
-  │                                                              ├ Replay Mission (미실행)
+  │                                                              ├ Replay Mission → 로딩 창 → 같은 미션의 첫 브리핑
   │                                                              └ Continue Mission (미실행)
   ├ Demo → 데모 3종 선택 → 로딩 창 → 데모 + 안내 창(15초 자동 닫힘) ─ ESC → Game → Exit Demo → 메인 메뉴
   ├ Help → General Help - F1(도움말 창, OK) / Technical Help(외부 프로그램) / Version(OK)
@@ -86,11 +86,11 @@ Campaign의 공식 목록은 `offical1~6`이라는 원본 철자를 그대로 �
   └ Quit (미실행)
 ```
 
-남은 동적 확인:
+동적 확인 현황과 남은 일:
 - Auto-Demo 안내 창이 뜨는 조건
-- Replay Mission·Restart Mission·Restart Demo의 결과
-- Original Credits 각 쪽
-- Campaign의 나머지 묶음과 `$Timeout=120` 실측
-- 로딩 창 Cancel의 결과
-- Create New Map·편집기 Test Battle
+- Restart Demo는 [화면 목록 1.5절](README.md#15-시간-계획-분석-메뉴-타이머편집기튜토리얼-1-2026-09-29-밤-windows-hjow-athlon), Replay Mission·Restart Mission은 [1.9절](README.md#19-replay-missionrestart-mission-전환-2026-09-30-windows-hjow-athlon)에서 첫 브리핑 재진입을 확인했다. 두 미션 명령 뒤 배치물 초기화는 별도 확인 대상이다.
+- Original Credits의 마지막 쪽 뒤 메인 메뉴 복귀는 [화면 목록 1.8절](README.md#18-original-credits-마지막-전환-2026-09-30-windows-hjow-athlon)에서 확인했다. 각 쪽의 화면 내용은 별도 정리 대상이다.
+- Campaign 나머지 묶음의 세부 흐름 (`$Timeout=120`은 1.5절에서 실측)
+- 로딩 창 Cancel은 1.5절에서 두 차례 눌렀지만 반응이 없었다. 다른 로딩 경로에서의 동작은 미확인이다.
+- Create New Map의 저장 과정, 편집기 Add Island·Set All Bridge (`Create New Map` 입력 창과 Test Battle은 1.5절에서 확인)
 - 결과(승리·패배) 화면 이후 흐름
