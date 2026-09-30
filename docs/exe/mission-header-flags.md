@@ -173,3 +173,13 @@ Ghidra 자동 분석이 이 주소를 함수로 인식하지 못했기 때문이
 powershell -ExecutionPolicy Bypass -File tools\ghidra\decompile_at.ps1 -Addresses 484ab0,4c2b20,4c3290
 # 결과: extracted\decomp-at\originals.c (Git 제외, 약 1분)
 ```
+
+Linux 에서는 PowerShell 대신 같은 일을 하는 `tools/ghidra/decompile_at.sh`(2026-09-30 추가, `analyzeHeadless -process … -readOnly` 사용)를 쓴다.
+
+```bash
+bash tools/ghidra/decompile_at.sh 4b1e80 4b23e0     # 결과: extracted/decomp-at/originals.c (약 5초)
+# GHIDRA_DIR=~/Tools/ghidra_12.1.4_PUBLIC OUT_FILE=/tmp/at.c 로 경로를 바꿀 수 있다
+```
+
+* 누락 함수의 실제 사례: 다리 이웃 탐색기의 후보 필터 `FUN_004b1e80`(탐색기 가상 함수 표 `0x513098`의 슬롯 0)은 표로만 호출되어 전체 디컴파일에 없었다. 이 함수가 두 프레임의 **연결 방향 일치**(`FUN_00441e40`)를 검사한다는 것이 다리 붕괴 알고리즘의 열쇠였다([bridge-pieces.md](bridge-pieces.md) 8.1절). **가상 함수 표(`.rdata`)에서 함수 주소가 4바이트 값으로 나열된 곳을 보고, 디컴파일에서 `(**(code **)*param_1)(…)` 같은 간접 호출이 나오면 그 표를 읽어 슬롯 함수를 이 도구로 디컴파일한다.**
+

@@ -1,6 +1,6 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
-> 최종 갱신: 2026-09-30 (저녁, `vm-debian-codex`)
+> 최종 갱신: 2026-09-30 (밤, `vm-debian-codex`)
 > 프로젝트 목표(AGENTS.md): 원본 NetStorm: Islands at War 를 디컴파일/분석하여 클론 코딩하고,
 > **Windows 10/11** 과 **GUI 환경의 Linux** 에서 동작하며 **여러 언어를 지원**하는 게임을 만든다.
 > **1차 목표 언어: 영어, 한국어** (그 외 언어는 이후 확장).
@@ -8,6 +8,21 @@
 > **화면 요구사항(2026-09-28 AGENTS.md 추가)**: 풀스크린 모드와 화면비 **16:9 · 16:10 · 4:3** 지원, 풀스크린에서 **마우스를 화면 끝에 대면 화면 이동**(원본도 지원) — 1.7절
 
 ---
+
+## 2026-09-30 밤 (`vm-debian-codex`, Linux, 원본 게임 실행 없음): 다리 붕괴 알고리즘을 원본 칸 단위 처리로 교체 ✅
+
+- **한 일**: 이전의 근사("열린 끝이 있는 연결망 전체가 함께 줄어듦")를 원본 `FUN_004227e0`·`FUN_004218b0`·`FUN_004217f0`·탐색기 필터·`Graph.cpp` 그래프 검사로 교체했다. 전체 알고리즘과 근거: [다리 분석 8.1절](docs/exe/bridge-pieces.md), 클론 구현 표: 8.2절.
+  - 구동자: 표면 그래프 5칸 미만이면 즉시 제거 → 단단하면 제외 → 열린 쪽 없으면 제외(B~E 2개 이상, F~K 1개 이상, L~O 항상, A·P 안 됨) → 접합 칸(A~I)으로만 재귀한 방문 목록의 0 아닌 최소 수명 − 1(없으면 7)로 맞춤.
+  - 결과: 섬에 붙은 판자 사슬은 **바깥 끝부터** 한 칸씩(관찰 "두 칸짜리는 끝 칸이 먼저", "이어 붙이면 멈췄다가 끝 칸이 사라진 뒤 다시 줄어듦"을 설명), 접합 무리는 끝 판자와 함께(끝이 둘이면 스캔마다 두 번), 섬에서 떨어진 5칸 미만 조각은 즉시 붕괴.
+- **검증**: 원본 맵 336개 저장 다리 90,290칸을 300초 돌리면 이전 구현은 **57%**를 없애고(공식 맵 다리가 거의 사라지는 비현실적 결과) 새 구현은 **3.2%**(주로 섬에서 떨어진 5~6칸 무리와 끝 칸)만 사라진다. 회귀 테스트 `OriginalMaps_StoredBridgesMostlySurviveFiveMinutes`. Release 빌드 오류 0, Core **147**(기존 143 + 신규: 판자 사슬·접합 무리·작은 조각·단단한 끝 칸·저장 다리 생존, 옛 연결망 수명 공유 테스트 교체)·Assets 175 통과.
+- **새로 알게 된 것**
+  - 방문 목록 용량 100(`0x4fc640`의 `push 0x64`), 이웃 목록 10. 금은 "이전 수명 ≥ 5, 새 수명 < 5"일 때만 가서 수명 0 인 새 칸이 4 로 바로 맞춰지면 금이 가지 않는다.
+  - 스캔 주기는 `round(8001 × 프레임 시간 ÷ 10)`개씩이라 프레임률이 아주 높으면 최대 1.5배까지 늘 수 있다(클론은 10초 고정).
+  - **전체 디컴파일에 없던 함수 복구법 확립**: 탐색기 필터 `FUN_004b1e80`은 가상 함수 표로만 호출되어 빠져 있었다. 새 도구 `tools/ghidra/decompile_at.sh`(Linux, 약 5초)로 디컴파일해 연결 방향 검사 `FUN_00441e40`을 찾았다 → [사용법](docs/exe/mission-header-flags.md#7-ghidra-전체-디컴파일에서-빠진-함수-재현-방법-포함). 이전 인수인계의 "Linux 에서 `DecompileAt.java` 직접 실행은 미시도"가 해소됐다.
+- **근사·미확정**: 칸 처리 순서(원본은 오브젝트 번호 순, 클론은 만든 순서), 여러 칸짜리 섬 오브젝트를 칸 단위로 센 것, 접합 칸 고리(원본은 무한 재귀라 실제로 생기는지 모름 — 클론은 재귀 경로로 막음), 새 수명 ≤ 5 인 칸 위 이동체 낙하 미구현.
+- **아직 설명 못 한 것**: 섬에 붙은 **단일 칸이 약 160초** 걸린 관찰(모델은 80초 안팎). 8.3절에 가능성 정리. 원본에서 캡처 간격을 좁힌 재측정(사용자 직접 조작 녹화 권장)이 필요하다.
+- **다음 후보**: (1) 위 재측정, (2) 누락 함수 후보 528개 중 게임 로직 쪽 우선 디컴파일(`decompile_at.sh` 사용), (3) 붕괴 시 칸 위 이동체 낙하(`FUN_004202f0`~`FUN_00426120`)는 이동 구현 때, (4) 다리 연결·소유권 전파(`FUN_00421240`·`FUN_004213b0`)는 영역 소유 구현 때.
+- 변경 파일: `src/Netstorm.Core/Bridges/BridgeGrid.cs`(칸 순번, `IsOpen` 제거, 붕괴 재작성), `tests/Netstorm.Core.Tests/{BridgeGridTests,BattleSessionTests}.cs`, `tools/ghidra/decompile_at.sh`(신규), `docs/exe/{bridge-pieces,mission-header-flags}.md`, `docs/{core-rules,map-viewer}.md`, `docs/formats/README.md`, 이 문서.
 
 ## 2026-09-30 저녁 (`vm-debian-codex`, Linux, 원본 게임 실행 없음): 다리 품질·주변 약화 정적 분석 + 구현
 
@@ -21,7 +36,7 @@
 - **정리**: `analyzeManager/ExplorerTools.cs` `start_session` 설명에 시스템 2(`192.168.0.94`·`HJOW-Athlon`)를 반영했다(아래 2026-09-29 절의 미반영 항목 해소, `Program.cs` 도움말은 이미 일반화되어 있었음).
 - **검증**: Release 솔루션 빌드 오류 0(기존 CA2014 경고 1), analyzeManager 빌드 오류·경고 0, Core **143**(기존 138 + 신규 5: 금 간 품질 배치·주변 약화·트레이 6초·세션 품질 배치·회수 약화)·Assets 175 통과. 원본·뷰어 화면은 실행하지 않았다.
 - **근사·미확정**: 중심 칸은 `Footprint.CenterX/Y` 버림(짝수 크기 발자국은 원본과 한 칸 어긋날 수 있음), 들고 있는 조각의 품질 변화, 회수 시 약화(수신 쪽 경로 미확인), 늦춰진 낙하 예약(이벤트 0x2692) 미구현.
-- **다음 후보**: (1) 원본에서 단일 칸 붕괴 시각·주변 약화(파괴/회수)를 사용자 직접 조작 녹화로 확인, (2) `FUN_004218b0` 조건을 칸 단위로 그대로 옮겨 "열린 끝이 있는 연결망" 근사 교체, (3) 끝 칸 변환(`FUN_004215d0`)·폭발 피해는 전투 구현 때.
+- **다음 후보**: (1) 원본에서 단일 칸 붕괴 시각·주변 약화(파괴/회수)를 사용자 직접 조작 녹화로 확인, (2) ~~`FUN_004218b0` 조건을 칸 단위로 그대로 옮겨 "열린 끝이 있는 연결망" 근사 교체~~ → 위 밤 절에서 완료, (3) 끝 칸 변환(`FUN_004215d0`)·폭발 피해는 전투 구현 때.
 - 변경 파일: `src/Netstorm.Core/Bridges/{BridgeGrid,BridgePiece,BridgeTray}.cs`, `src/Netstorm.Core/Simulation/{BattleSession,BattleSession.Commands}.cs`, `tests/Netstorm.Core.Tests/{BridgeGridTests,BridgePieceTests,BattleSessionTests}.cs`, `analyzeManager/ExplorerTools.cs`, `docs/exe/bridge-pieces.md`, `docs/core-rules.md`, `docs/gameplay/island-ownership.md`, 이 문서.
 
 ## 2026-09-30 후속 분석 후보 — 공식 캠페인 1-1 The War Begins!

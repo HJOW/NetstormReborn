@@ -285,6 +285,28 @@ public sealed class BattleSessionTests
     }
 
     /// <summary>
+    /// 원본 맵에 저장된 다리는 5분(게임 시각)이 지나도 대부분 남는다. 섬과 섬을 잇는 다리는 열린 쪽이 없어 줄지 않기 때문이다.
+    /// 붕괴를 "열린 끝이 하나라도 있는 연결망 전체가 함께 줄어든다"고 근사했던 이전 구현은 이 표본에서 저장 다리의 절반 이상(약 57%)을
+    /// 80초 안에 없앴다. 원본 칸 단위 처리(FUN_004227e0)로 옮긴 뒤 전체 원본 맵 336개 기준 약 97%가 남는다.
+    /// </summary>
+    [Fact]
+    public void OriginalMaps_StoredBridgesMostlySurviveFiveMinutes()
+    {
+        int stored = 0;
+        int surviving = 0;
+        // 다리가 많은 원본 맵 표본을 5분씩 돌린다
+        foreach (string map in new[] { "bridgethegap", "dissolvedalliance", "alerted", "b10", "b11", "dark2", "dark4", "dark6", "enemyterritory" })
+        {
+            BattleSession session = SessionData.FromMap(map);
+            stored += session.Bridges.Cells.Count;
+            session.RunTicks(300 * session.TicksPerSecond);
+            surviving += session.Bridges.Cells.Count;
+        }
+        Assert.True(stored > 3000);
+        Assert.True(surviving >= stored * 0.9, $"저장 다리 {stored}칸 중 {surviving}칸만 남았습니다");
+    }
+
+    /// <summary>
     /// 기술 허용 표는 머리 techAllowed 로 시작해 실행 중에 바뀐다. 튜토리얼 2 는 windVortex·sunArcher 만 허용하고 시작하며
     /// (사용자가 관찰한 Sun Workshop 은 단계 B 가 허용한 뒤에 지었다), 튜토리얼 1 은 windVortex 만 허용한다.
     /// </summary>

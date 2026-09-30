@@ -32,6 +32,8 @@ powershell -ExecutionPolicy Bypass -File tools/ghidra/run_decomp.ps1   # 약 10~
 powershell -ExecutionPolicy Bypass -File tools/ghidra/run_decomp.ps1 -Edition originalCD   # 이전 CD판
 # Ghidra 전체 디컴파일에 없는 함수(자동 분석이 함수로 인식하지 못한 코드)는 주소를 지정해 따로 디컴파일한다 (약 1분, 결과 extracted/decomp-at/)
 powershell -ExecutionPolicy Bypass -File tools/ghidra/decompile_at.ps1 -Addresses 484ab0,4c2b20,4c3290
+# Linux (PowerShell 없음, 약 5초): GHIDRA_DIR 을 생략하면 ~/Tools 의 최신 ghidra_* 를 쓴다
+bash tools/ghidra/decompile_at.sh 484ab0 4c2b20 4c3290
 ```
 
 두 디컴파일 결과와 Ghidra 프로젝트는 모두 `extracted/` 아래에 생성되어 Git에 커밋되지 않는다. 다른 PC에서 C 결과나 프로젝트가 필요하면 Ghidra와 JDK를 준비한 뒤 위 명령을 해당 PC에서 다시 실행해야 한다. 두 판본의 출력 경로는 분리되어 서로 덮어쓰지 않는다.
