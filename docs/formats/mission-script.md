@@ -118,7 +118,7 @@ PreparedMissionSection? section = mission?.Script.PrepareSection("CraftWarning",
 | `myTech` | `"suncannon;sunblocker;..."` | 플레이어가 가진 기술 (`;` 구분, `.type` 이름) |
 | `myAllyList` | | 플레이어 동맹 |
 | `moreGeysers`, `randGeysers` / `randomGeysers` | `1` | 가이저 추가/무작위 배치 |
-| `denySalvage`, `denyAscend`, `techAllowed`, `allowAnyCapture` | | 규칙 제한 |
+| `denySalvage`, `denyAscend`, `techAllowed`, `allowAnyCapture` | | 규칙 제한의 **시작 값**. 튜토리얼 단계 처리가 실행 중에 바꾼다 — 튜토리얼 2 는 `denySalvage = 1` 로 시작해 단계 H 에서 0 으로, `techAllowed` 에 없는 sunFactory 를 단계 B 에서 허용으로 바꾼다 ([mission-header-flags.md](../exe/mission-header-flags.md)) |
 | `loadFort` | | 불러올 요새 |
 | `aiNName` | `"Juggler of Thunder"` | AI 이름 |
 | `aiNTech` | `"thunderVortex;..."` | AI 기술 |

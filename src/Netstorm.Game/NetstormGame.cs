@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Netstorm.Assets;
 using Netstorm.Core.Display;
+using Netstorm.Core.Rules;
 
 namespace Netstorm.Game;
 
@@ -37,6 +38,10 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     /// <summary>스크린샷을 저장할 프레임 번호 (--screenshot-frames, 기본 ScreenshotDelayFrames)</summary>
     private readonly int _screenshotFrames;
     private readonly string? _mapName;
+    /// <summary>--mission 으로 지정한 미션 이름 (맵과 시작 조건을 미션 스크립트에서 읽는다)</summary>
+    private readonly string? _missionName;
+    /// <summary>--script 로 지정한 검증용 명령 스크립트 (맵 뷰어에서 시작할 때 실행)</summary>
+    private readonly string? _scriptText;
     private readonly string? _spriteName;
     private readonly string? _languageName;
     private readonly string? _spriteFrame;
@@ -68,15 +73,21 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         _screenshotFrames = screenshotFrames == null ? ScreenshotDelayFrames
             : Math.Max(1, int.Parse(screenshotFrames, System.Globalization.CultureInfo.InvariantCulture));
         _mapName = ParseValueArgument(args, "--map");
+        _missionName = ParseValueArgument(args, "--mission");
+        _scriptText = ParseValueArgument(args, "--script");
         _spriteName = ParseValueArgument(args, "--sprites");
         _languageName = ParseValueArgument(args, "--language");
         _spriteFrame = ParseValueArgument(args, "--frame");
         _spritePalette = ParseValueArgument(args, "--palette");
         _spritePlay = args.Contains("--play");
         _spriteProperties = args.Contains("--props");
-        if (_mapName != null && _spriteName != null)
+        if ((_mapName != null || _missionName != null) && _spriteName != null)
         {
-            throw new ArgumentException("--map과 --sprites는 함께 사용할 수 없습니다.");
+            throw new ArgumentException("--map/--mission과 --sprites는 함께 사용할 수 없습니다.");
+        }
+        if (_mapName != null && _missionName != null)
+        {
+            throw new ArgumentException("--map과 --mission은 함께 사용할 수 없습니다 (미션이 맵을 정한다).");
         }
         // 표시 설정: 사용자 설정 파일 → 명령줄 덮어쓰기. 덮어쓴 실행과 스크린샷 실행은 설정을 저장하지 않는다.
         (DisplaySettings settings, bool overridden) = ParseDisplayOptions(args);
@@ -188,7 +199,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         try
         {
             resources = new GameResources(GameFileSystem.Open(dataDir), _languageName);
-            palette = resources.LoadPalette(_mapName == null && _spriteName == null ? "fortPal" : "battlePal");
+            palette = resources.LoadPalette(_mapName == null && _missionName == null && _spriteName == null ? "fortPal" : "battlePal");
             shapes = resources.LoadShapes();
         }
         catch (Exception error) when (error is IOException or ArgumentException)
@@ -211,6 +222,19 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
             catch (Exception error) when (error is IOException or ArgumentException)
             {
                 _statusLines.Add($"맵을 읽지 못했습니다: {error.Message}");
+            }
+            return;
+        }
+
+        if (_missionName != null)
+        {
+            try
+            {
+                LoadMission(resources, shapes, palette, _missionName);
+            }
+            catch (Exception error) when (error is IOException or ArgumentException)
+            {
+                _statusLines.Add($"미션을 읽지 못했습니다: {error.Message}");
             }
             return;
         }
@@ -254,12 +278,25 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         }
     }
 
+    /// <summary>
+    /// 미션 스크립트에서 시작 조건(시작 Storm Power·지식·기술 허용·회수 금지·전투 옵션)과 맵 이름(loadFort)을 읽고,
+    /// 그 맵을 게임 세션과 함께 연다. 미션으로 열면 세션 시간이 계속 흐르고 생산 규칙이 켜진다.
+    /// </summary>
+    private void LoadMission(GameResources resources, ShapeDatabase shapes, Palette palette, string missionName)
+    {
+        LoadedMission loaded = resources.TryLoadMission(missionName)
+            ?? throw new ArgumentException($"미션을 찾을 수 없습니다: {missionName}");
+        MissionStart start = MissionStart.FromScript(loaded.Script);
+        LoadMap(resources, shapes, palette, start.LoadFort ?? missionName, start);
+        _baseTitle = $"NetStorm 클론 — 미션: {start.Title ?? missionName}";
+    }
+
     /// <summary>공통 파일 시스템·설정의 fortSpec으로 맵과 타입을 읽어 뷰어를 만든다.</summary>
-    private void LoadMap(GameResources resources, ShapeDatabase shapes, Palette palette, string name)
+    private void LoadMap(GameResources resources, ShapeDatabase shapes, Palette palette, string name, MissionStart? mission = null)
     {
         TypeCatalog catalog = resources.LoadTypes();
         _mapViewer = new FortMapViewer(GraphicsDevice, shapes, palette, resources.LoadFort(name, catalog), name,
-            catalog, resources.Language);
+            catalog, resources.Language, mission);
         _baseTitle = $"NetStorm 클론 — 맵 뷰어: {name}";
         // 검증용: --placement 타입 [--probe x,y] 로 배치 시험 모드를 켠 채 시작한다.
         string[] args = Environment.GetCommandLineArgs();
@@ -290,6 +327,11 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
             (int, int)? hold = ParsePair(ParseValueArgument(args, "--bridge-hold"), "--bridge-hold");
             (int, int)? probe = ParsePair(ParseValueArgument(args, "--probe"), "--probe");
             _mapViewer.StartBridges(warmup, hold, probe);
+        }
+        // 검증용: --script "명령; 명령" 으로 세션 명령을 미리 실행한다 (예: construct windVortex 100,120; wait 17)
+        if (_scriptText != null)
+        {
+            _mapViewer.RunScript(_scriptText);
         }
     }
 

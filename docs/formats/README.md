@@ -30,8 +30,12 @@ python tools/typefile.py json
 python tools/peres.py originals/Netstorm.exe extracted/res/Netstorm
 powershell -ExecutionPolicy Bypass -File tools/ghidra/run_decomp.ps1   # 약 10~20분
 powershell -ExecutionPolicy Bypass -File tools/ghidra/run_decomp.ps1 -Edition originalCD   # 이전 CD판
+# Ghidra 전체 디컴파일에 없는 함수(자동 분석이 함수로 인식하지 못한 코드)는 주소를 지정해 따로 디컴파일한다 (약 1분, 결과 extracted/decomp-at/)
+powershell -ExecutionPolicy Bypass -File tools/ghidra/decompile_at.ps1 -Addresses 484ab0,4c2b20,4c3290
 ```
 
 두 디컴파일 결과와 Ghidra 프로젝트는 모두 `extracted/` 아래에 생성되어 Git에 커밋되지 않는다. 다른 PC에서 C 결과나 프로젝트가 필요하면 Ghidra와 JDK를 준비한 뒤 위 명령을 해당 PC에서 다시 실행해야 한다. 두 판본의 출력 경로는 분리되어 서로 덮어쓰지 않는다.
+
+**전체 디컴파일에는 빠진 함수가 있다.** Ghidra 자동 분석이 함수로 인식하지 못한 코드(직접 호출자가 없거나 가상 함수 표로만 호출되는 함수)는 `Netstorm.c`에 없다. 설정 키 문자열(`denySalvage` 등)이 검색되지 않으면 이 경우를 의심하고, 문자열 주소의 `push 주소` 참조를 바이트에서 찾아 `decompile_at.ps1`로 디컴파일한다 ([근거와 규모](../exe/mission-header-flags.md#7-ghidra-전체-디컴파일에서-빠진-함수-재현-방법-포함)).
 
 WinHelp의 `helpdeco` 빌드와 추출 명령은 [hlp.md](hlp.md)의 재현 방법을 따른다.

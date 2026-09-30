@@ -3,10 +3,13 @@ using Netstorm.Assets;
 namespace Netstorm.Core.Rules;
 
 /// <summary>
-/// 미션의 기술 허용 목록 (머리 값 techAllowed). 원본 Mission.cpp FUN_00482eb0 과 같은 순서로 해석한다:
-/// ';' 로 나눈 토큰을 차례로 읽으며 "deny"·"allow" 는 현재 모드를 바꾸고, "all" 은 모든 타입에,
-/// 타입 이름은 그 타입에만 현재 모드를 적용한다 (Totalmade.cpp FUN_004c23c0·004c23e0·004c2400).
+/// 타입별 "만들 수 있는 기술" 표. 머리 값 techAllowed 는 이 표의 **시작 상태**일 뿐이다: 원본은 미션 시작에 머리 값으로 표를 채우고
+/// (Mission.cpp FUN_00482eb0), 튜토리얼 단계 처리가 실행 중에 표를 바꾼다 — 예: 튜토리얼 2 는 단계 B 에서 sunFactory 를 허용한다
+/// (docs/exe/mission-header-flags.md). 그래서 이 표는 <see cref="SetAll"/>·<see cref="Set"/> 으로 바꿀 수 있다.
+/// 머리 값 해석 순서: ';' 로 나눈 토큰을 차례로 읽으며 "deny"·"allow" 는 현재 모드를 바꾸고, "all" 은 모든 타입에,
+/// 타입 이름은 그 타입에만 현재 모드를 적용한다 (Totalmade.cpp FUN_004c23c0·004c23e0, 조회는 FUN_004c2400).
 /// techAllowed 가 없으면 모든 타입이 허용된다.
+/// 원본이 이 표를 확인하는 곳은 메뉴·덱(사제 Construct 메뉴 항목, 생산 목록 메뉴, 덱 갱신, 템플의 골렘 항목)이다.
 /// </summary>
 public sealed class TechPermissions
 {
@@ -41,16 +44,28 @@ public sealed class TechPermissions
             else if (token.Equals("all", StringComparison.OrdinalIgnoreCase))
             {
                 // "all" 은 앞서 정한 개별 값까지 모두 덮어쓴다 (원본은 표 전체를 다시 채운다)
-                permissions._defaultAllowed = allow;
-                permissions._overrides.Clear();
+                permissions.SetAll(allow);
             }
             else
             {
-                permissions._overrides[token] = allow;
+                permissions.Set(token, allow);
             }
         }
         return permissions;
     }
+
+    /// <summary>모든 타입의 허용 여부를 한 값으로 다시 채운다 (원본 FUN_004c23c0: 개별 값은 모두 사라진다)</summary>
+    /// <param name="allowed">허용 여부</param>
+    public void SetAll(bool allowed)
+    {
+        _defaultAllowed = allowed;
+        _overrides.Clear();
+    }
+
+    /// <summary>타입 하나의 허용 여부를 바꾼다 (원본 FUN_004c23e0: 미션 시작 해석과 튜토리얼 단계 처리가 부른다)</summary>
+    /// <param name="typeName">.type 이름</param>
+    /// <param name="allowed">허용 여부</param>
+    public void Set(string typeName, bool allowed) => _overrides[typeName] = allowed;
 
     /// <summary>타입을 만들거나 등록할 수 있는지</summary>
     /// <param name="typeName">.type 이름</param>
@@ -68,8 +83,8 @@ public sealed class TechPermissions
 /// <param name="StartStormPower">시작 Storm Power (myStartMoney, 없으면 null — 전투 옵션의 시작 금액을 쓴다)</param>
 /// <param name="Knowledge">시작 지식 (myTech 의 ';' 구분 타입 이름)</param>
 /// <param name="Tech">만들 수 있는 기술 (techAllowed)</param>
-/// <param name="DenySalvage">회수 금지 (denySalvage)</param>
-/// <param name="DenyAscend">승천 금지 (denyAscend)</param>
+/// <param name="DenySalvage">회수 금지의 시작 값 (denySalvage). 실행 중 바뀔 수 있다 — 튜토리얼 2 는 1 로 시작해 단계 H 에서 0 이 된다</param>
+/// <param name="DenyAscend">승천 금지의 시작 값 (denyAscend)</param>
 /// <param name="AiOff">AI 끔 (aiOff)</param>
 /// <param name="TutorialNumber">튜토리얼 번호 (tutorialNumber, 없으면 null)</param>
 public sealed record MissionStart(string? Title, string? LoadFort, int? StartStormPower, IReadOnlyList<string> Knowledge,

@@ -21,6 +21,22 @@ public sealed class MissionStartTests
         Assert.True(TechPermissions.Parse("deny;bulf").IsAllowed("sunCannon"));
     }
 
+    /// <summary>기술 허용 표는 실행 중에 바꿀 수 있다: 개별 허용·금지, 전체 다시 채우기 (원본 FUN_004c23e0·004c23c0)</summary>
+    [Fact]
+    public void TechPermissions_CanBeChangedAtRuntime()
+    {
+        TechPermissions tech = TechPermissions.Parse("deny;all;allow;windVortex");
+        Assert.False(tech.IsAllowed("sunFactory"));
+        tech.Set("sunFactory", true);
+        Assert.True(tech.IsAllowed("SUNFACTORY"));
+        tech.Set("windVortex", false);
+        Assert.False(tech.IsAllowed("windVortex"));
+        // SetAll 은 개별 값을 모두 지운다
+        tech.SetAll(true);
+        Assert.True(tech.IsAllowed("windVortex"));
+        Assert.True(tech.IsAllowed("anything"));
+    }
+
     /// <summary>원본 튜토리얼 1·2 의 머리 값: 0 SP / 10,000 SP·Sun Disc Thrower 지식 (원본 실행 관찰과 같음)</summary>
     [Fact]
     public void OriginalTutorials_MatchObservedStart()

@@ -67,6 +67,7 @@ rangeSq = range * range;                 // DAT_0052f48c, 거리² 비교용
 * 미션 제어 객체는 이름으로 등록된 두 종류뿐이다: **`Normal`**(`00484e60`) 과 **`Tutorial`**(`004c4710` → 생성자 `004c2990`). 미션 머리 값 `missionType` 과 대응하는 것으로 보인다.
 * `Tutorial` 객체는 `DAT_005ca8e4`(튜토리얼 번호, 머리 값 `tutorialNumber` 로 추정)로 단계 처리 함수를 고른다: 1 `004c3a20`, **2 `004c3bb0`**, 3 `004c3f00`, 4 `004c40f0`, 5 `004c42b0`, 6 `004c45e0`.
   단계 문자 `DAT_005ca8e8` 는 생성 시 `'A'` 에서 시작해 `004c33f0` 이 1씩 올린다.
+  단계 처리 함수는 전투 옵션뿐 아니라 **기술 허용 표(sunFactory 허용)와 회수 금지(`denySalvage`)도 실행 중에 바꾼다** → [mission-header-flags.md](mission-header-flags.md).
 * **튜토리얼 2 의 단계 'A' 만** `options[4] = 0`(Short = **14칸**) 과 `options[2] = 2`(Unit Rate Fast) 로 바꾸고 `004b4860` 을 다시 부른다.
   다른 튜토리얼 처리 함수에는 Generator Range 를 바꾸는 코드가 없다.
   → 사용자 설명 "튜토리얼 일부에서 범위가 대폭 축소", 캡처 `Tutorial - Temple - Generating Range.png`(튜토리얼 2, 약 14칸) 와 일치한다.

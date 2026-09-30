@@ -11,6 +11,32 @@
 
 ## 0-A. 최신 인수인계 — AI용 원본 분석 도구 (2026-09-29)
 
+### 2026-09-30 (`DESKTOP-HJOW`, 원본 실행 없음): 재디컴파일 · 튜토리얼 2 헤더 플래그 원인 · 게임 세션
+
+- **재디컴파일**(사용자 요청): 두 판본을 이 PC에서 다시 디컴파일했다 — 결과는 아래 3단계 절에 기록. 패치판은 기존 결과와 SHA-256 동일, CD판은 이 PC에 없어서 새로 생성.
+- **튜토리얼 2 `denySalvage = 1`·`techAllowed` 모순 원인 규명·문서화**(사용자 요청) → **[docs/exe/mission-header-flags.md](docs/exe/mission-header-flags.md)**
+  - 결론: 머리 값은 **시작 상태**이고 튜토리얼 단계 처리(`FUN_004c3bb0`)가 실행 중에 바꾼다. 단계 B에서 sunFactory 허용(`FUN_004c23e0(sunFactory, 1)`), 단계 H에서 회수 금지 해제(`DAT_00595078 = 0`). 사용자 관찰(템플 뒤 Sun Workshop 건설, 마지막에 유닛 회수 75 SP)과 일치한다.
+  - 기술 허용 표는 **메뉴·덱에서만** 확인한다(Construct 메뉴 항목 `FUN_00461cf0`, 생산 목록 `FUN_004752b0`, 덱 갱신, 템플의 골렘). 회수 금지는 Salvage 메뉴 명령·실행(`FUN_0044ca00`·`FUN_0044c420`)이 확인하고 스크립트 섹션 `[DenySalvage]`를 Tell하는데, 원본 스크립트에 그 섹션이 하나도 없다.
+  - 이전 세션의 "`techAllowed` = 만들 수 있는 기술" 해석을 "시작 상태 + 실행 중 변경"으로 정정했다(`TechPermissions` 변경 가능화).
+  - **Ghidra 전체 디컴파일에서 빠진 함수를 발견**: 이 값을 읽는 `0x484ab0`·`0x4c2b20`·`0x4c3290`이 `extracted/decomp/Netstorm.c`에 없다. INT3 패딩 뒤 함수 프롤로그 휴리스틱으로 **약 528개 후보**(실제 누락 수는 미검증). 새 도구 `tools/ghidra/decompile_at.ps1`(`DecompileAt.java`, 읽기 전용 프로젝트에서 주소를 함수로 만들어 디컴파일)를 추가했다 → [재현 방법](docs/exe/mission-header-flags.md#7-ghidra-전체-디컴파일에서-빠진-함수-재현-방법-포함), [추출 순서](docs/formats/README.md#추출-순서-처음-받은-사람용). **설정 키 문자열이 디컴파일 검색에서 안 나오면 누락 함수를 의심할 것.**
+  - 튜토리얼 단계 A~I의 조건 표도 문서화했다(단계 C·F는 UI 선택·타이머 상수 의존이라 미확정).
+- **게임 세션 구현**(추천 1번 "규칙 코어를 게임 루프에 연결") — [core-rules.md "게임 세션"](docs/core-rules.md#게임-세션-battlesession), [map-viewer.md](docs/map-viewer.md#게임-세션과-미션-모드)
+  - Core: `Simulation/BattleSession`(24Hz 고정 틱, 명령 큐, 플레이어 상태, 엔티티, 이벤트, `Checksum()`) + 명령 7종(배치·건설·등록·회수·다리 집기/되돌리기/놓기) + `BattleSessionFactory`(맵·미션에서 조립). `BattleMap.CheckBuilding`(사제 건물)·점유 카운트·`InitialObjects`, `Bridges/BridgeReach`(빈 섬 다리 연결 판정, 이전의 `C` 키 가정을 대체), `Footprint.BorderCells`, `BridgeGrid.Version`.
+  - 흐름: 템플 건설 16초 → 완공 시 섬 소유·공급원·다리 조각/골렘 공급, 워크샵 10초 → 지식 등록 → 유닛 배치(재충전 Unit Rate) → 회수 25%. 튜토리얼 2 관찰 SP(10,000 → 5,000 → 4,200 → 300씩 → 회수 +75)가 테스트와 뷰어 실행에서 그대로 나온다.
+  - 뷰어: 규칙 상태를 세션으로 옮기고 `--mission 이름`(시작 SP·지식·옵션·생산 규칙), `--script "…"`(검증용 명령), Space 정지·K 생산 규칙·F 등록·Delete 회수, HUD(SP·게임 시각), 건물 건설 시험(진행 막대) 추가.
+  - **검증**: Core 테스트 **128개**(기존 114 + 신규 14, 6회 반복 안정), Assets 172개 통과, 빌드 오류·경고 0. HEAD의 옛 뷰어를 임시 worktree로 빌드해 같은 명령의 캡처를 **픽셀 비교**: 다리 시험 2장·배치 시험은 지도 영역 동일. 이 비교가 저장 다리가 사라지는 버그를 잡아 고쳤고 회귀 테스트를 추가했다. Dissolved Alliance!의 다리 칸 패널만 다르다(세션은 모든 플레이어의 다리 칸을 전역 난수 하나로 채움 — 원본과 같은 구조).
+  - 테스트 인프라: `OriginalData.RequireResources()`가 호출마다 새 `GameResources`를 만든다(공유 `ConfigStore`의 임시 층 Push/Pop이 병렬 테스트에서 엉뚱한 맵을 읽던 경쟁 조건).
+  - 스크린샷: `extracted/screens/session-*.png`.
+- **근사·미확인** (원본 분석이 필요, 문서에 명시): 건설 시간(관찰값, 사제 이동 포함)·비용 차감 시점, 사제 이동·건설 자리 도달, 다른 빈 섬을 거치는 연쇄 연결, `.fort` `Deck`·`Technology` 초기값 연결, 튜토리얼 단계 처리 코드 자체(지금은 테스트·`--script`가 단계 B·H 효과를 손으로 재현).
+- **다음 후보**:
+  1. 튜토리얼 단계 처리 객체 — 세션 명령·이벤트를 보고 표·`DenySalvage`를 바꾸는 별도 클래스로(단계 A·B·D·E·G·H는 개수 조건, C·F는 UI 선택과 함께)
+  2. 사제 이동·건설 절차 분석(`Priest.cpp` 등) → `ConstructionTimes`·비용 차감 시점 교체
+  3. 수집 경제: 가이저 → 사제 결정 운반(결정당 200 SP) (`Carrier.cpp`·`Nugget.cpp`·`Vortex.cpp`)
+  4. Ghidra 누락 함수 목록 만들기(후보 528개)와 게임 로직 쪽 우선 디컴파일
+  5. 세션을 게임 화면으로: 생산 창(덱) 사이드바·HUD(9단계 UI)
+  6. 다리: 붕괴 대기 조건·영역 소유 이어짐(기존 후보 1)
+- 이번 변경 파일(커밋 전): `src/Netstorm.Core/Simulation/*`(신규 8), `Bridges/BridgeReach.cs`(신규), `Bridges/BridgeGrid.cs`·`Rules/{BattleMap,Footprint,MissionStart}.cs`, `src/Netstorm.Game/{FortMapViewer{,.Session(신규),.Placement,.Bridges},NetstormGame}.cs`, `tests/Netstorm.Core.Tests/{BattleSessionTests,SessionData}.cs`(신규)·`{MissionStartTests,OriginalData}.cs`, `tools/ghidra/{DecompileAt.java,decompile_at.ps1}`(신규), `docs/exe/mission-header-flags.md`(신규)·`docs/{core-rules,map-viewer}.md`·`docs/exe/battle-options.md`·`docs/formats/{README,mission-script}.md`, 이 문서.
+
 ### 게임 구현: 다리 배치 판정·붕괴, 미션 시작 조건 (2026-09-30, `HJOW-Athlon`, 원본 실행 없음)
 
 튜토리얼 1·2 사용자 직접 조작 결과(아래 두 절)를 참고해, 정적 분석으로 확인할 수 있는 부분을 구현했다.
@@ -36,8 +62,8 @@
   1. 붕괴 대기 조건과 영역 소유 이어짐(`004218b0`·`0048fdb0`)
   2. ~~초목 가장자리 판별 방법 찾기~~ → 2026-09-30 완료(edgeFarm dropBlocking, 위 항목). 남은 것: edgeFarm 칸 위치를 원본 전역 난수·배치 가능 여부대로 재현
   3. 끝 칸 L·M·N·O(섬 쪽 연장 그림, `004215d0`)
-  4. 엔티티·틱 — 건설 시간(튜토리얼 2 관찰: Temple 약 16초, Workshop 약 10초, 이동 포함)과 사제 결정 운반(결정당 200 SP)
-  5. 미션 시작 조건을 맵 뷰어·게임 화면에 연결
+  4. ~~엔티티·틱~~ → 2026-09-30 `BattleSession`으로 구현(건설 시간은 관찰값 근사, 위 절). 남은 것: 사제 결정 운반(결정당 200 SP)·이동
+  5. ~~미션 시작 조건을 맵 뷰어·게임 화면에 연결~~ → 2026-09-30 완료(`--mission`, 위 절)
 - 이번 변경 파일(커밋 전): `src/Netstorm.Core/Bridges/BridgeGrid.cs`(신규), `src/Netstorm.Core/Rules/MissionStart.cs`(신규), `tests/Netstorm.Core.Tests/{BridgeGridTests,MissionStartTests}.cs`(신규), `src/Netstorm.Game/FortMapViewer{,.Bridges}.cs`, `docs/exe/bridge-pieces.md`·`docs/core-rules.md`·`docs/map-viewer.md`, 이 문서.
 
 ### 튜토리얼 2 사용자 직접 조작 분석 완료 (2026-09-30)
@@ -290,7 +316,7 @@
 | 5 | 원본 분석 — 플레이 영상 | 🔶 착수 (스크린샷 42장 목록·관찰 정리, 로컬 영상 4개 형식·화면 영역 확인, 프레임 추출·애니메이션 간격 측정 도구, Dissolved Alliance! 맵 대조·시작 카메라 규칙, 애니메이션 속도 측정 완료 / 미션별 관찰 노트 미착수) — [docs/videos/](docs/videos/README.md) |
 | 6 | 자산 로더 / 개발용 뷰어 | 🔶 진행 중 (TAFF·팔레트·셰이프·.type·.cfg·TTC·.fort·가상 파일 시스템·설정 치환·번역표·미션 스크립트 로더·스프라이트 탐색(동작 재생·팔레트·속성) 완료) |
 | 7 | 엔진 코어 (플랫폼 계층) | 🔶 착수 (2026-09-29: 창·전체화면·16:9/16:10/4:3 화면 계층, 가장자리 스크롤, 표시 설정 저장, 고정 틱 누적기·MSVC 난수 완료 / 팔레트 방식·입력·오디오·로깅 남음) |
-| 8 | 게임 월드 / 규칙 구현 | 🔶 착수 (2026-09-29: 정적 규칙 코어 — 에너지·섬 소유권·생산 창·전투 옵션·배치 판정, 맵 뷰어 배치 시험 모드, 다리 조각 모양·추첨·회전·생산 칸 채우기와 뷰어 다리 조각 시험 모드 / 엔티티·다리 배치·연결·붕괴·이동·전투·경제 흐름 남음) — [docs/core-rules.md](docs/core-rules.md) |
+| 8 | 게임 월드 / 규칙 구현 | 🔶 착수 (2026-09-29: 정적 규칙 코어 — 에너지·섬 소유권·생산 창·전투 옵션·배치 판정, 맵 뷰어 배치 시험 모드, 다리 조각 모양·추첨·회전·생산 칸 채우기와 뷰어 다리 조각 시험 모드 ; 2026-09-30: 게임 세션(고정 틱·명령·엔티티·건설·회수·재충전)·다리 배치 판정·붕괴·미션 시작 조건 연결 / 이동·전투·수집 경제·붕괴 대기 조건 남음) — [docs/core-rules.md](docs/core-rules.md) |
 | 9 | UI · 미션 스크립트 · 튜토리얼 | ⬜ 대기 |
 | 10 | AI | ⬜ 대기 |
 | 11 | 캠페인 · 저장(fort) | ⬜ 대기 |
@@ -522,6 +548,10 @@ Netstorm/
 - [x] 이전 CD판 `originalCD/NETSTORM.EXE` 별도 디컴파일 — 2026-09-30 완료
   - `tools/ghidra/run_decomp.ps1 -Edition originalCD` → 프로젝트 `extracted/originalCD/ghidra/`, 결과 `extracted/originalCD/decomp/NETSTORM.c` (함수 3,711개 성공, 실패 0개). 기존 `originals/` 디컴파일 결과의 SHA-256은 작업 전후 동일하다.
   - 두 판본의 Ghidra 프로젝트와 C 결과는 `extracted/` 아래라 Git에 커밋되지 않는다. 다른 PC에서는 [재생성 명령](docs/formats/README.md#추출-순서-처음-받은-사람용)을 실행해야 한다.
+  - **2026-09-30 `DESKTOP-HJOW` 재디컴파일 완료** (Ghidra 12.1.4, JDK 21, 두 판본 순차 실행 — 패치판 약 6분, CD판 약 3분):
+    - 패치판 `extracted/decomp/Netstorm.c`: 함수 4,506개 성공·실패 0개. 이 PC에 있던 2026-09-28 결과와 **SHA-256이 같다**(`67e3e9eb…`, 183,914줄) — 내용은 이미 최신이었고 다시 만들어도 바뀌지 않는다. 그래서 `docs/exe/`의 `Netstorm.c` 줄 번호 인용(예: energy-requirements.md 약 104288행)은 그대로 유효하다.
+    - CD판 `extracted/originalCD/decomp/NETSTORM.c`: 이 PC에는 없던 결과를 새로 만들었다. 함수 3,711개 성공·실패 0개, 155,935줄, SHA-256 `f6fecc58…`. 함수 수가 `HJOW-Athlon` 기록(3,711개)과 같다.
+    - 입력 exe: `originals/Netstorm.exe` `a305414c…`, `originalCD/NETSTORM.EXE` `613500a3…`. Ghidra 로그의 `Invalid GIF data` 오류 4건은 exe 안 리소스 자동 해석 경고이며 디컴파일과 무관하다.
 - [ ] (후순위) Linux 에서 빌드·실행 확인
 
 #### 빌드·실행 방법
@@ -762,12 +792,14 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
   - [ ] 남은 일: 공급원 판정의 대상 크기 항(exe 가상 함수 +0xA0), 다리 연결·다리 끝 판정(현재 근사), 미션 `myTech`·`.fort` Technology/Deck → 초기 지식·덱, 동맹 설정, 발자국 전체의 섬 판정
 - [ ] 맵·섬·아이소메트릭 렌더링, 카메라 스크롤, 오브젝트 그리기 순서
 - [ ] 엔티티 시스템 (`.type` 데이터 구동)
+  - [x] 2026-09-30 골격: `GameEntity`·`BattleSession`(명령·고정 틱·이벤트·검사합). 남은 것: 이동·체력·전투 상태
 - [ ] 애니메이션 시스템
 - [ ] 다리 조각 생성·배치·연결·붕괴
   - [x] 2026-09-30 배치 판정(겹침·이어짐 근사)·10초 주기 붕괴(수명 7→0, 금 감, 단단한 칸 제외): `Bridges/BridgeGrid`, 뷰어 다리 모드 연결 — [bridge-pieces.md](docs/exe/bridge-pieces.md) 8절
   - [x] 2026-09-29 생성·회전: `Netstorm.Core/Bridges`(BridgeLinks·BridgePatternCatalog·BridgePiece·BridgeFrames·BridgeTray)·`Simulation/NetstormRandom`, 테스트 `BridgePieceTests` 10개(원본 exe 표와 직접 대조 포함), 맵 뷰어 다리 조각 시험 모드 B(`FortMapViewer.Bridges.cs`, `--bridges`) — [core-rules.md](docs/core-rules.md), [map-viewer.md](docs/map-viewer.md#다리-조각-시험-모드)
   - [ ] 남은 일: 배치 판정·연결·붕괴 (위 4단계 분석 후), `BattleMap` 의 다리 끝·빈 섬 연결 근사 교체
 - [ ] 건물 배치·건설
+  - [x] 2026-09-30 사제 건물 건설(건설 시간 뒤 완성: 템플 → 섬 소유·공급원·다리/골렘 공급, 워크샵 → 등록 가능)·회수·배치 뒤 재충전 — 건설 시간은 관찰값 근사, 사제 이동·도달은 미구현
   - [x] 유닛 배치 판정(위치·빈 자리·Storm Power·에너지)과 배치 실행 — 2026-09-29 `BattleMap` (건설 시간·Power Stream 연출·사제 건설 절차는 남음)
 - [ ] 경제(가이저, 수집, 운반, Storm Power)
   - [x] Storm Power 표시 색·회수 25%·파괴 보상·결정 200 규칙 — 2026-09-29 `StormPower` (수집·운반 흐름은 남음)
@@ -909,8 +941,8 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
      - 이 작업의 변경 파일(커밋 전): `src/Netstorm.Core/Bridges/{BridgePiece,BridgeCursor(신규)}.cs`, `src/Netstorm.Game/FortMapViewer.Bridges.cs`, `tests/Netstorm.Core.Tests/BridgePieceTests.cs`, `docs/exe/bridge-pieces.md`·`docs/core-rules.md`·`docs/map-viewer.md`·`docs/screens/README.md`, 이 문서.
      - 테스트: Core 100·Assets 172 통과
    - (이전) 이번 변경 파일(커밋 전): `src/Netstorm.Core/Bridges/*`·`Simulation/NetstormRandom.cs`(신규), `tests/Netstorm.Core.Tests/BridgePieceTests.cs`(신규), `src/Netstorm.Game/FortMapViewer.Bridges.cs`(신규)·`FortMapViewer.cs`·`FortMapViewer.Placement.cs`·`NetstormGame.cs`, `docs/exe/bridge-pieces.md`(신규)·`docs/core-rules.md`·`docs/map-viewer.md`, 이 문서. 빌드 오류 0(기존 CA2014 경고 1), 테스트 Core 98·Assets 172 통과.
-2. **엔티티·틱** — `.type` 구동 오브젝트 목록을 `FixedTimestep`으로 갱신하고, 건설 시간(`constructionRate`)·재충전 간격(`ProductionTimers`)을 틱으로 돌린다
-3. **초기 상태** — 미션 머리 값 `myTech`·`myStartMoney`, `.fort` `Technology`·`Deck`에서 지식·덱·Storm Power를 채운다. 튜토리얼 2 는 `BattleOptions.ApplyTutorialTwoOverrides`
+2. **엔티티·틱** — `.type` 구동 오브젝트 목록을 `FixedTimestep`으로 갱신하고, 건설 시간(`constructionRate`)·재충전 간격(`ProductionTimers`)을 틱으로 돌린다 → **2026-09-30 완료**(`BattleSession`, 건설 시간은 관찰값 근사)
+3. **초기 상태** — 미션 머리 값 `myTech`·`myStartMoney`, `.fort` `Technology`·`Deck`에서 지식·덱·Storm Power를 채운다. 튜토리얼 2 는 `BattleOptions.ApplyTutorialTwoOverrides` → **2026-09-30 부분 완료**: 머리 값·전투 옵션 적용. `.fort` `Technology`·`Deck` 연결은 남음
 4. **수집·경제** — `Carrier.cpp`·`Nugget.cpp`·`Vortex.cpp` 분석 → 가이저 → 결정 → 템플 운반 흐름
 5. 이후 전투(`Gunprocess`·`Damageable`·`Bomb`), 사제·희생(`Priest`·`Dais`), UI(생산 창·컨텍스트 메뉴)
 

@@ -48,6 +48,23 @@ public readonly record struct Footprint(int AnchorX, int AnchorY, int Width, int
         }
     }
 
+    /// <summary>발자국 바로 바깥 둘레의 네 방향 이웃 칸 (위·아래 변 바깥, 왼쪽·오른쪽 변 바깥). 다리 끝 판정에 쓴다.</summary>
+    public IEnumerable<(int X, int Y)> BorderCells()
+    {
+        // 위·아래 변 바깥 칸
+        for (int x = Left; x <= AnchorX; x++)
+        {
+            yield return (x, Top - 1);
+            yield return (x, AnchorY + 1);
+        }
+        // 왼쪽·오른쪽 변 바깥 칸
+        for (int y = Top; y <= AnchorY; y++)
+        {
+            yield return (Left - 1, y);
+            yield return (AnchorX + 1, y);
+        }
+    }
+
     /// <summary>.type 의 foot_x·foot_y 로 발자국을 만든다. 값이 없거나 1 미만이면 1칸으로 본다.</summary>
     /// <param name="definition">.type 정의</param>
     /// <param name="anchorX">기준점 칸 x</param>

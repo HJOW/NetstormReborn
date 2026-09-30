@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Netstorm.Assets;
+using Netstorm.Core.Rules;
 
 namespace Netstorm.Game;
 
@@ -57,9 +58,10 @@ internal sealed partial class FortMapViewer : IDisposable
     /// <summary>실행 설정에서 선택한 언어. 개발용 안내 문구의 번역 여부와는 별개다.</summary>
     private string Language { get; }
 
-    /// <summary>오브젝트 위치를 계산하고 카메라를 플레이어 사제에 맞춘다.</summary>
+    /// <summary>오브젝트 위치를 계산하고 게임 세션을 만들며 카메라를 플레이어 사제에 맞춘다.</summary>
+    /// <param name="mission">미션 시작 조건 (없으면 맵만 보는 시험 모드)</param>
     public FortMapViewer(GraphicsDevice device, ShapeDatabase shapes, Palette palette, FortFile fort, string name,
-        TypeCatalog catalog, string language)
+        TypeCatalog catalog, string language, MissionStart? mission = null)
     {
         _device = device;
         _shapes = shapes;
@@ -81,7 +83,8 @@ internal sealed partial class FortMapViewer : IDisposable
             .ThenBy(o => o.Y).ThenBy(o => o.X).ToArray();
         _pixel = new Texture2D(device, 1, 1);
         _pixel.SetData(new[] { Color.White });
-        InitializePlacement(fort, catalog);
+        InitializeSession(fort, catalog, mission);
+        InitializePlacement(catalog);
         InitializeBridges(catalog);
         CenterOnPriest();
     }
@@ -133,8 +136,9 @@ internal sealed partial class FortMapViewer : IDisposable
         {
             _showChunks = !_showChunks;
         }
+        UpdateSession(seconds, keyboard);
         UpdatePlacement(keyboard, mouse);
-        UpdateBridges(seconds, keyboard, mouse);
+        UpdateBridges(keyboard, mouse);
         _previousKeyboard = keyboard;
         _previousMouse = mouse;
     }
@@ -205,8 +209,8 @@ internal sealed partial class FortMapViewer : IDisposable
         foreach (FortMapObject item in _sorted)
         {
             // noIsland는 투명한 논리 지면이다. 미리보기 지면에 반영했으므로 표식을 그리지 않는다.
-            // 다리 조각 시험 모드에서 무너진 저장 다리는 그리지 않는다.
-            if (item.Object.Type.Name == "noIsland" || IsCrumbledStoredBridge(item))
+            // 무너진 저장 다리와 회수되어 사라진 저장 오브젝트는 그리지 않는다.
+            if (item.Object.Type.Name == "noIsland" || IsCrumbledStoredBridge(item) || IsRemovedInitialObject(item))
             {
                 continue;
             }
@@ -238,6 +242,7 @@ internal sealed partial class FortMapViewer : IDisposable
         batch.DrawString(font, "방향키 / 우클릭 / 화면 끝: 이동 · 휠: 확대 · Home: 사제 위치 · G: 청크 윤곽 · P: 배치 시험 · B: 다리 조각 · Esc: 종료", new Vector2(16, 38), Color.White);
         batch.DrawString(font, "F11: 전체화면 · F10: 와이드 처리 · F9: 원본 해상도 높이 · F7: 가장자리 스크롤", new Vector2(16, 66), Color.White);
         batch.DrawString(font, displayInfo, new Vector2(16, 94), Color.LightGray);
+        DrawSessionHud(batch, font, width);
         DrawPlacementOverlay(batch, font, center, width, height);
         DrawBridgeOverlay(batch, font, width, height);
         if (hovered != null && !_placementMode && !_bridgeMode)

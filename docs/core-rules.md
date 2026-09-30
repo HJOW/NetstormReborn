@@ -1,7 +1,8 @@
 # 게임 규칙 코어 (`Netstorm.Core`)
 
-> 2026-09-29 구현. 문서화된 규칙(사용자 확인·원본 매뉴얼·exe 정적 분석)만 옮겼다. MonoGame에 의존하지 않으며 `tests/Netstorm.Core.Tests`에서 헤드리스로 검사한다.
-> 원본 게임은 실행하지 않았다. 다리·이동·전투·AI 규칙은 아직 없다.
+> 2026-09-29 구현, 2026-09-30 게임 세션(고정 틱 루프·명령·플레이어 상태)으로 묶음. 문서화된 규칙(사용자 확인·원본 매뉴얼·exe 정적 분석)만 옮겼다.
+> MonoGame에 의존하지 않으며 `tests/Netstorm.Core.Tests`에서 헤드리스로 검사한다. 원본 게임은 실행하지 않았다.
+> 이동·전투·수집 경제·AI 규칙은 아직 없다.
 
 ## 구성
 
@@ -17,7 +18,7 @@
 | `Rules/ProductionTimers.cs` | 배치 후 재충전 간격 10/5/1초, 요새 모드 0.0001초, useProductTimers 30/15/8초 | [production-refresh.md](exe/production-refresh.md) |
 | `Rules/ProductionDeck.cs` | 생산 창(덱): 템플 → 다리·골렘, 워크샵 등록(자기 원소, Sun Workshop 의 Generator 예외, 한 유닛은 한 워크샵에만, Level I/II/III = 2/3/4칸, 파괴 시 해제, 재건은 빈 상태) | [workshop-deck.md](gameplay/workshop-deck.md) |
 | `Rules/IslandOwnership.cs` | 섬 상태(내 섬·빈 섬·남의 섬), 유닛·건물 위치 조건 | [island-ownership.md](gameplay/island-ownership.md) 규칙 2~6 |
-| `Rules/BattleMap.cs` | `.fort` 오브젝트에서 소유권·공급원·점유 칸을 만들고, 유닛 배치를 위치 → 빈 자리 → Storm Power → 에너지 순서로 판정·실행 | 위 규칙 조합, 매뉴얼 "빈 자리 + SP + 에너지" |
+| `Rules/BattleMap.cs` | `.fort` 오브젝트에서 소유권·공급원·점유 칸(겹침 수를 세어 회수해도 다른 오브젝트 칸은 유지)을 만들고, 유닛 배치(`CheckUnit`)·사제 건물 건설(`CheckBuilding`)을 위치 → 빈 자리 → Storm Power → 에너지 순서로 판정·실행. 저장 오브젝트 번호(`InitialObjects`)를 노출 | 위 규칙 조합, 매뉴얼 "빈 자리 + SP + 에너지" |
 | `Simulation/FixedTimestep.cs` | 고정 틱 누적기(기본 24Hz, 따라잡기 8틱 한도), 초 → 틱 올림 | [animation-timing.md](videos/animation-timing.md) 4절 |
 | `Simulation/MsvcRandom.cs` | MSVC CRT `rand()` 선형 합동 난수 | 지형 분석의 `_rand` 재현과 같은 계수 |
 | `Simulation/NetstormRandom.cs` | 게임 전역 정수 난수 (상태 × 0x10003 + 3, 시드 0 → 0x0BAD0BAD) | `FUN_004558c0`·`FUN_004558f0` ([bridge-pieces.md](exe/bridge-pieces.md) 3절) |
@@ -26,10 +27,16 @@
 | `Bridges/BridgePiece.cs` | 모양 + 회전(1 = 시계 방향 90°) → 회전된 칸 목록. 원본 조작: 오른쪽 클릭 = 시계, C(반대 회전)면 반시계 | `00425c20`·`00425860`, 원본 실행 |
 | `Bridges/BridgeGrid.cs` | 놓인 다리 칸의 연결망·배치 판정(겹침 불가, 섬 가장자리·내 다리 열린 끝에 이어짐)·10초 주기 붕괴(수명 7→0, 5 아래 금 감, 단단한 칸 제외) | `Bridge.cpp` `00422bc0`·`004227e0`·`00421c30`, `Rifttype.cpp` `0049b510` ([bridge-pieces.md](exe/bridge-pieces.md) 8절). 이어짐·붕괴 대상 조건은 근사 |
 | `Bridges/BridgeAnchors.cs` | 다리를 시작할 수 없는 섬 칸: 가장자리 초목(edgeFarm) 칸 + dropBlocking 타입 오브젝트 발자국 (사용자 확인 규칙 "초목이 있는 가장자리에서는 다리를 시작할 수 없다") | edgefarm.type `dropBlocking`, `Squid.cpp` `004b02d0` 스폿 비트 0x10, `Rifttype.cpp` `0049b510` ([bridge-pieces.md](exe/bridge-pieces.md) 8.4절) |
-| `Rules/MissionStart.cs` | 미션 머리 값 → 시작 SP(myStartMoney, 없으면 전투 옵션)·시작 지식(myTech)·기술 허용(techAllowed: deny/allow/all 순서 적용)·denySalvage 등 | `Mission.cpp` `00482eb0`, `Totalmade.cpp` `004c23c0`~`004c2400`, 튜토리얼 1·2 원본 관찰 |
+| `Rules/MissionStart.cs` | 미션 머리 값 → 시작 SP(myStartMoney, 없으면 전투 옵션)·시작 지식(myTech)·기술 허용 표(techAllowed: deny/allow/all 순서 적용, **실행 중 `Set`·`SetAll`로 바뀜**)·denySalvage 시작 값 등. 머리 값은 시작 상태이고 튜토리얼 단계 처리가 실행 중에 바꾼다 | `Mission.cpp` `00482eb0`, `Totalmade.cpp` `004c23c0`~`004c2400`, [mission-header-flags.md](exe/mission-header-flags.md), 튜토리얼 1·2 원본 관찰 |
 | `Bridges/BridgeCursor.cs` | 커서 → 들고 있는 조각의 왼쪽 위 칸: (⌊(x + 7) / 16⌋, ⌊y / 11⌋), 크기·회전 무관 | 원본 실행 측정 ([bridge-pieces.md](exe/bridge-pieces.md) 4절) |
 | `Bridges/BridgeFrames.cs` | 칸 → bridge.type 프레임 (보통 / 금 감 +10 / 단단함 20) | `0049a940`, bridge.type 주석 |
 | `Bridges/BridgeTray.cs` | 생산 창 다리 칸: 템플이 있으면 1초마다, Bridge Slots 칸까지, 5번째 추첨마다 한 칸 조각, 템플을 잃으면 비움 | `Combatgump.cpp` 매 프레임 처리 ([bridge-pieces.md](exe/bridge-pieces.md) 6절) |
+| `Bridges/BridgeReach.cs` | 다리 연결망이 닿는 섬 영역 계산. "내 다리 연결망 하나가 내 섬과 빈 섬에 함께 닿으면 그 빈 섬은 연결됨"(근사) | [island-ownership.md](gameplay/island-ownership.md) 규칙 4. 다른 빈 섬을 거치는 연쇄 연결은 미확인 |
+| `Simulation/BattleSession.cs` (+ `.Commands.cs`) | **게임 세션**: 고정 틱 루프, 플레이어 상태, 엔티티, 명령 실행, 판정, 이벤트, 검사합 ([아래](#게임-세션-battlesession)) | 규칙 코어 전체 |
+| `Simulation/BattleSessionFactory.cs` | 맵(.fort)·지면 미리보기·미션 시작 조건에서 세션 조립 (섬 칸, 다리 시작 불가 칸, 저장 다리) | 뷰어에 있던 초기화를 Core로 옮김 |
+| `Simulation/GameCommands.cs` | 명령: 유닛 배치·건물 건설·지식 등록·회수·다리 조각 집기/되돌리기/놓기 | |
+| `Simulation/GameEntity.cs`·`PlayerState.cs`·`SessionEvents.cs` | 오브젝트(.type 구동), 플레이어 상태(SP·덱·다리 칸·기술 표), 이벤트·실패 이유 | |
+| `Simulation/ConstructionTimes.cs` | 사제 건물 건설 시간: 템플 16초·워크샵 10초(관찰값, 이동 포함), 그 밖 10초(임시) | 튜토리얼 2 사용자 조작 관찰([screens/README.md](screens/README.md) 1.7절) |
 
 ## 발자국과 공급 범위 기하
 
@@ -37,9 +44,45 @@
 * `FUN_004730c0`은 배치 대상 사각형의 중심 `((x0 + x1) × 0.5, (y0 + y1) × 0.5)`과 크기 항 `((x1 − x0) × 0.7071)²`을 공급원 객체의 가상 함수(+0xA0)에 넘긴다. 공급원 쪽 판정 함수는 가상 호출이라 아직 찾지 못했다.
 * 클론은 **공급원 발자국 중심과 배치 발자국 중심의 칸 거리² ≤ 반지름²**으로 판정한다. 크기 항이 판정을 넓히는지(예: 반지름 + 대상 반지름)는 **미확인**이다. 범위 경계 근처의 큰 유닛에서 원본과 1~2칸 차이가 날 수 있다.
 
+## 게임 세션 (`BattleSession`)
+
+지금까지의 정적 규칙(에너지·소유권·생산 창·다리)을 **하나의 고정 틱 루프**로 묶은 것이다. 화면·입력과 무관해서 헤드리스로 테스트하고,
+멀티플레이·리플레이를 염두에 두고 "상태는 명령으로만 바뀐다"는 구조로 만들었다.
+
+* **시간**: 24Hz 고정 틱(`FixedTimestep`). 화면은 `Advance(흐른 초)`를 부르고(밀린 시간은 한 번에 8틱까지만 따라잡는다), 테스트는 `RunTicks(n)`으로 정확히 진행한다.
+  게임 시각 = 틱 ÷ 24. 다리 조각 채우기(1초)·붕괴(10초)·건설·재충전은 모두 틱으로 센다.
+* **틱 순서(고정)**: 명령 실행(넣은 순서) → 건설 완료 처리 → 플레이어 번호 순 다리 칸 채우기 → 다리 붕괴.
+* **명령** (`Submit`): `PlaceUnitCommand`(생산 창 유닛 배치)·`ConstructBuildingCommand`(사제 건물 건설)·`RegisterKnowledgeCommand`(워크샵 등록)·`SalvageCommand`(회수)·
+  `PickBridgePieceCommand`·`ReturnBridgePieceCommand`·`PlaceBridgeCommand`(다리 조각; 회전은 화면이 관리해 놓을 때 값으로 보낸다).
+  거부된 명령은 `CommandRejected` 이벤트(실패 이유 `CommandFailure` 포함)로 알린다. 화면은 `DrainEvents()`로 알림을 받는다.
+* **판정(상태를 바꾸지 않음)**: `CheckUnit`·`CheckBuilding`·`CheckBridge`, 재충전 남은 시간 `SecondsUntilReady`, 건설 진행률 `ConstructionProgress`.
+* **건설**: 비용은 시작할 때 나가고(시점은 미확인 근사), 건설 시간이 지나야 규칙 효과가 생긴다 — **템플**: 섬 소유(빈 섬 → 내 섬)·에너지 공급원 등록·생산 창의 다리 조각/골렘 공급 시작,
+  **워크샵**: 지식 등록 가능. 완공에 섬 소유 색이 바뀌는 것은 튜토리얼 2 관찰과 같다. 건설 중인 템플도 "플레이어당 1기" 판정에 센다.
+* **회수**: 비용의 25%를 돌려받는다(튜토리얼 2: 300 → 75). 템플을 회수하면 섬이 빈 섬이 되고 다리 조각·골렘이 사라지며, 워크샵을 회수하면 그 워크샵의 등록이 사라진다. 사제·가이저·지형은 회수할 수 없다.
+* **배치 뒤 재충전**: Unit Rate 표(10/5/1초, 기본 Fast 1초)만큼 그 유닛을 덱에서 다시 쓸 수 없다 (튜토리얼 2 관찰 1.1~1.2초와 부합).
+* **미션 시작 조건**: 사람 플레이어(기본 1)에게 시작 SP·시작 지식·기술 허용 표를 적용하고, 튜토리얼 2는 전투 옵션(Short 14칸·Fast)을 덮어쓴다. `denySalvage`는 세션의 변하는 상태 `DenySalvage`로 시작한다.
+* **생산 규칙 켜기/끄기** (`EnforceProductionRules`): 켜면 기술 허용 표·덱 등록·재충전·회수 금지를 명령에 적용한다. 끄면 규칙 조건(섬·자리·비용·에너지)만 본다(맵 뷰어 시험 모드).
+* **결정론**: `Checksum()`(FNV-1a)이 틱·전역 난수·플레이어·오브젝트·다리 칸을 요약한다. 같은 시작·같은 명령열은 같은 값이다(테스트로 확인, 락스텝·리플레이 검증용 기반).
+  플레이어 상태·오브젝트·다리 칸은 정렬된 순서로만 순회하고, 난수는 하나(`NetstormRandom`)를 모든 플레이어의 다리 칸이 번호 순으로 공유한다(원본도 전역 난수 하나를 공유).
+
+### 튜토리얼 단계 처리와의 관계
+
+미션 머리의 `techAllowed`(기술 허용 표)와 `denySalvage`는 **시작 값**이다. 원본의 튜토리얼 단계 처리(튜토리얼 2 = `FUN_004c3bb0`)가 실행 중에 바꾼다:
+단계 B에서 sunFactory 허용, 단계 H에서 회수 금지 해제 ([근거](exe/mission-header-flags.md)). 세션에는 아직 단계 처리 코드가 없어서
+테스트와 뷰어 `--script`가 `Tech.Set`·`DenySalvage`로 그 효과를 손으로 재현한다. 원본이 기술 허용 표를 확인하는 곳(메뉴 항목·덱)에 맞춰
+세션도 Construct 판정(`CheckBuilding`)·지식 등록·덱 배치에서 표를 확인한다.
+
+### 근사한 부분 (원본 확인 전)
+
+* 건설 시간 = 관찰한 "클릭부터 완공"(사제 이동 포함) 값. 사제 이동·건설 절차·건설 자리에 사제가 서 있어야 하는지는 판정하지 않는다. 비용 차감 시점(시작/완공)은 확인하지 못했다.
+* 유닛(생산 창 → 배치)은 건설 지연 없이 곧바로 완성으로 본다.
+* 빈 섬 연결 = `BridgeReach`의 근사(위 표). 다리 끝 = 발자국 둘레의 내 다리 칸.
+* 맵에 처음부터 있던 워크샵은 레벨 1, 등록 목록은 비어 있다(`.fort`의 `Deck`·`Technology` 섹션은 아직 연결하지 않았다).
+* 세션 이벤트의 한국어 문구는 개발용이다(12단계 다국어 전).
+
 ## 게임 쪽 연결 — 맵 뷰어 배치 시험 모드
 
-맵 뷰어에서 **P**를 누르면 플레이어 1로 워크샵 생산 유닛 27종을 놓아 볼 수 있다([실행 안내](map-viewer.md#배치-시험-모드)). 판정은 `BattleMap.CheckUnit` 하나로 한다. 결과로 발자국 칸(초록/빨강), 아군 공급원의 범위 원, 요구 에너지에 배정된 공급원까지의 선, 불가 이유, 원본 색 규칙의 Storm Power를 보여 준다.
+맵 뷰어에서 **P**를 누르면 플레이어 1로 워크샵 생산 유닛과 건물을 세션 명령으로 놓아 볼 수 있다([실행 안내](map-viewer.md#배치-시험-모드)). 판정은 세션의 `CheckUnit`·`CheckBuilding`(내부는 `BattleMap`) 하나로 한다. 결과로 발자국 칸(초록/빨강), 아군 공급원의 범위 원, 요구 에너지에 배정된 공급원까지의 선, 불가 이유, 원본 색 규칙의 Storm Power를 보여 준다.
 
 검증(2026-09-29): Dissolved Alliance! 의 플레이어 1 섬 칸 (124,126)을 판정했다.
 - Sail Skater(Wind 1 + 아무 1): 배치 가능. 이웃 Wind Generator 두 곳에 배정되었다.
@@ -49,9 +92,9 @@
 
 ## 근사·미구현 (다음 분석 대상)
 
-* **다리 연결·다리 끝**: 빈 섬 연결은 뷰어의 `C` 키 가정으로 대신한다. 다리 끝은 "발자국 둘레에 플레이어 다리 칸이 있는 섬 밖 위치"로 근사한다. 다리 조각 생성·회전은 구현했고(`Bridges/`), 배치 판정·연결·붕괴는 `Bridge.cpp` 분석 후 교체한다([bridge-pieces.md](exe/bridge-pieces.md) 8절). `Deck.cpp`는 다리와 무관한 지식·생산 덱이다.
+* **다리 연결·다리 끝**: 빈 섬 연결은 세션이 `BridgeReach`로 계산한다(근사). 다리 끝은 "발자국 둘레에 플레이어 다리 칸이 있는 섬 밖 위치"로 근사한다. 다리 조각 생성·회전·배치 판정·붕괴는 구현했고(`Bridges/`), 붕괴 시작 대기 조건과 영역 소유 이어짐은 `Bridge.cpp` 분석 후 교체한다([bridge-pieces.md](exe/bridge-pieces.md) 8절). `Deck.cpp`는 다리와 무관한 지식·생산 덱이다.
 * **섬 칸 판정**: 지면 미리보기의 본섬 마스크(영역 번호 ≥ 0)를 쓴다. 작은 받침·유닛 발판(`createsisland`)은 섬 밖으로 본다. 기준점 칸 하나만으로 섬을 판정하며, 발자국 전체가 섬 위여야 하는지는 미확인이다.
-* **지식·등록 상태**: 뷰어는 모든 생산 유닛을 후보로 보여 준다. 미션 `myTech`와 `.fort` `Technology`·`Deck` 섹션으로 초기 지식·덱을 채우는 연결은 아직 없다.
+* **지식·등록 상태**: 세션은 미션 `myTech`로 시작 지식을 채운다. `.fort`의 `Technology`·`Deck` 섹션으로 초기 지식·덱을 채우는 연결은 아직 없다(맵만 연 뷰어는 생산 규칙을 꺼서 모든 유닛을 놓을 수 있다).
 * **동맹**: 기본은 같은 플레이어만 아군이다. 미션·멀티플레이 동맹 설정 연결은 남았다.
 * **회수 금액**: 손상된 유닛의 감소 공식이 미확인이라 건강한 상태(25%)만 계산한다.
 * **워크샵 생산 칸 수**: `GAME.HLP` 값(2/3/4)이다. 패치판 exe의 판정은 미확인이다.

@@ -87,6 +87,9 @@ public sealed class BridgeGrid
     /// <summary>다음 붕괴 갱신 시각(초)</summary>
     private double _nextDecay = DecaySeconds;
 
+    /// <summary>다리 칸이 추가·제거될 때마다 커지는 번호 (연결 결과 캐시의 유효 여부 확인용)</summary>
+    public int Version { get; private set; }
+
     /// <summary>다리 칸 모음을 만든다</summary>
     /// <param name="isIsland">섬 칸 판정</param>
     /// <param name="isOccupied">다른 오브젝트 점유 판정 (없으면 항상 비어 있음)</param>
@@ -130,6 +133,7 @@ public sealed class BridgeGrid
         if (BridgeDirections.IsLetter(code.Side))
         {
             _cells[(x, y)] = state;
+            Version++;
         }
         return state;
     }
@@ -212,6 +216,7 @@ public sealed class BridgeGrid
             _cells[(state.X, state.Y)] = state;
             placed.Add(state);
         }
+        Version++;
         return placed;
     }
 
@@ -312,6 +317,7 @@ public sealed class BridgeGrid
                 {
                     _cells.Remove((cell.X, cell.Y));
                     removed.Add(cell);
+                    Version++;
                 }
                 else if (next < CrackBelow && before >= CrackBelow && cell.Condition == BridgeCondition.Normal)
                 {
