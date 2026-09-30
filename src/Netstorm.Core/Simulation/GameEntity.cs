@@ -6,7 +6,7 @@ namespace Netstorm.Core.Simulation;
 /// <summary>
 /// 게임 세션 안의 오브젝트 하나 (맵에 저장되어 있던 것 또는 게임 중 놓거나 지은 것).
 /// 모양·비용·발자국 같은 값은 .type 정의(<see cref="Type"/>)에서 읽는 데이터 구동 방식이다.
-/// 이동·체력·전투 상태는 아직 없다 (해당 규칙 분석 후 추가).
+/// 사제의 현재 위치·운반 결정 상태를 저장한다. 다른 유닛의 이동·체력·전투 상태는 추후 추가한다.
 /// </summary>
 public sealed class GameEntity
 {
@@ -23,7 +23,10 @@ public sealed class GameEntity
     public int Owner { get; }
 
     /// <summary>차지하는 칸 (기준점은 오른쪽 아래 칸)</summary>
-    public Footprint Footprint { get; }
+    public Footprint Footprint { get; internal set; }
+
+    /// <summary>사제가 현재 운반 중인 Storm Crystal 수(현재 경로 모델은 0 또는 1).</summary>
+    public int CarriedCrystals { get; internal set; }
 
     /// <summary>기준점 칸이 속한 섬 영역 번호 (섬 밖이면 null)</summary>
     public int? Territory { get; }

@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Netstorm.Assets;
 using Netstorm.Core.Rules;
+using Netstorm.Core.Simulation;
 
 namespace Netstorm.Game;
 
@@ -148,6 +149,11 @@ internal sealed partial class FortMapViewer : IDisposable
             _zoom = DefaultZoom;
             CenterOnPriest();
         }
+        if (Pressed(keyboard, Keys.F4))
+        {
+            CenterOnPriest();
+            _session.Submit(new ReturnHomeCommand(1));
+        }
         if (keyboard.IsKeyDown(Keys.G) && !_previousKeyboard.IsKeyDown(Keys.G))
         {
             _showChunks = !_showChunks;
@@ -233,7 +239,10 @@ internal sealed partial class FortMapViewer : IDisposable
             {
                 continue;
             }
-            Vector2 anchor = Screen(WorldPixels(item.X, item.Y), center);
+            GameEntity? live = _session.EntityForInitial(item);
+            int itemX = live?.Kind == ObjectKind.Priest ? live.Footprint.AnchorX : item.X;
+            int itemY = live?.Kind == ObjectKind.Priest ? live.Footprint.AnchorY : item.Y;
+            Vector2 anchor = Screen(WorldPixels(itemX, itemY), center);
             var sprite = GetSprite(item);
             if (sprite.HasValue)
             {
@@ -259,7 +268,7 @@ internal sealed partial class FortMapViewer : IDisposable
         batch.Draw(_pixel, new Rectangle(0, 0, width, HeaderHeight), new Color(18, 24, 38));
         batch.DrawString(font, $"맵: {Name} | 오브젝트 {_map.Objects.Count}개 | 확대 {_zoom:0.##}배 | 언어: {Language}", new Vector2(16, 10), Color.Gold);
         batch.DrawString(font, "방향키 / 우클릭 / 화면 끝: 이동 · 휠: 확대 · Home: 사제 위치 · G: 청크 윤곽 · P: 배치 시험 · B: 다리 조각 · Esc: 종료", new Vector2(16, 38), Color.White);
-        batch.DrawString(font, "F11: 전체화면 · F10: 와이드 처리 · F9: 원본 해상도 높이 · F7: 가장자리 스크롤", new Vector2(16, 66), Color.White);
+        batch.DrawString(font, "F4: 사제 섬으로 · F11: 전체화면 · F10: 와이드 처리 · F9: 원본 해상도 높이 · F7: 가장자리 스크롤", new Vector2(16, 66), Color.White);
         batch.DrawString(font, displayInfo, new Vector2(16, 94), Color.LightGray);
         DrawSessionHud(batch, font, width);
         DrawPlacementOverlay(batch, font, center, width, height);

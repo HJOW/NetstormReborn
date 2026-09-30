@@ -172,6 +172,8 @@ public sealed partial class BattleSession
         RegisterKnowledgeCommand c => ExecuteRegister(c),
         SalvageCommand c => ExecuteSalvage(c),
         SelectEntityCommand c => ExecuteSelect(c),
+        HarvestGeyserCommand c => ExecuteHarvestGeyser(c),
+        ReturnHomeCommand c => ExecuteReturnHome(c),
         PickBridgePieceCommand c => ExecutePickBridge(c),
         ReturnBridgePieceCommand c => ExecuteReturnBridge(c),
         PlaceBridgeCommand c => ExecutePlaceBridge(c),

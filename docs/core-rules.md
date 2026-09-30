@@ -2,7 +2,7 @@
 
 > 2026-09-29 구현, 2026-09-30 게임 세션(고정 틱 루프·명령·플레이어 상태)으로 묶음. 문서화된 규칙(사용자 확인·원본 매뉴얼·exe 정적 분석)만 옮겼다.
 > MonoGame에 의존하지 않으며 `tests/Netstorm.Core.Tests`에서 헤드리스로 검사한다. 원본 게임은 실행하지 않았다.
-> 이동·전투·수집 경제·AI 규칙은 아직 없다.
+> 사제의 가이저 왕복 수집과 튜토리얼 1 진행 조건을 구현했다. 다른 유닛 이동·전투·AI는 아직 없다.
 
 ## 구성
 
@@ -34,8 +34,9 @@
 | `Bridges/BridgeReach.cs` | 다리 연결망이 닿는 섬 영역 계산. "내 다리 연결망 하나가 내 섬과 빈 섬에 함께 닿으면 그 빈 섬은 연결됨"(근사) | [island-ownership.md](gameplay/island-ownership.md) 규칙 4. 다른 빈 섬을 거치는 연쇄 연결은 미확인 |
 | `Simulation/BattleSession.cs` (+ `.Commands.cs`) | **게임 세션**: 고정 틱 루프, 플레이어 상태, 엔티티, 명령 실행, 판정, 이벤트, 검사합 ([아래](#게임-세션-battlesession)) | 규칙 코어 전체 |
 | `Simulation/BattleSessionFactory.cs` | 맵(.fort)·지면 미리보기·미션 시작 조건에서 세션 조립 (섬 칸, 다리 시작 불가 칸, 저장 다리) | 뷰어에 있던 초기화를 Core로 옮김 |
-| `Simulation/GameCommands.cs` | 명령: 유닛 배치·건물 건설·지식 등록·회수·다리 조각 집기/되돌리기/놓기·**오브젝트 선택** | |
-| `Simulation/TutorialStages.cs` | **튜토리얼 단계 처리**(튜토리얼 2 = 원본 `004c3bb0`): 단계 A~I 조건·표/회수 금지 변경·안내 이벤트 | [mission-header-flags.md](exe/mission-header-flags.md) 3.5절 |
+| `Simulation/GameCommands.cs` | 명령: 유닛 배치·건물 건설·지식 등록·회수·다리 조각 집기/되돌리기/놓기·오브젝트 선택·가이저 수집·화면 복귀 | |
+| `Simulation/TutorialStages.cs` | **튜토리얼 단계 처리**: 튜토리얼 1 A~G, 튜토리얼 2 A~I 조건·안내 이벤트 | [priest-construction.md](exe/priest-construction.md), [mission-header-flags.md](exe/mission-header-flags.md) 3.5절 |
+| `Simulation/BattleSession.Harvest.cs`·`MovementRate.cs`·`TutorialGeysers.cs` | 사제의 섬·다리 경로 탐색과 반복 왕복 수집, 타입별 `speed`, 저장 가이저가 없는 튜토리얼 1의 연습 받침 생성 | [priest-construction.md](exe/priest-construction.md) |
 | `Simulation/GameEntity.cs`·`PlayerState.cs`·`SessionEvents.cs` | 오브젝트(.type 구동), 플레이어 상태(SP·덱·다리 칸·기술 표), 이벤트·실패 이유 | |
 | `Simulation/ConstructionTimes.cs` | 사제 건물 건설 시간: 템플 16초·워크샵 10초(관찰값, 이동 포함), 그 밖 10초(임시) | 튜토리얼 2 사용자 조작 관찰([screens/README.md](screens/README.md) 1.7절) |
 
@@ -52,13 +53,14 @@
 
 * **시간**: 24Hz 고정 틱(`FixedTimestep`). 화면은 `Advance(흐른 초)`를 부르고(밀린 시간은 한 번에 8틱까지만 따라잡는다), 테스트는 `RunTicks(n)`으로 정확히 진행한다.
   게임 시각 = 틱 ÷ 24. 다리 조각 채우기(1초)·붕괴(10초)·건설·재충전은 모두 틱으로 센다.
-* **틱 순서(고정)**: 명령 실행(넣은 순서) → 건설 완료 처리 → 튜토리얼 단계 처리 → 플레이어 번호 순 다리 칸 채우기 → 다리 붕괴.
+* **틱 순서(고정)**: 명령 실행(넣은 순서) → 사제 수집·이동 → 건설 완료 처리 → 튜토리얼 단계 처리 → 플레이어 번호 순 다리 칸 채우기 → 다리 붕괴.
 * **명령** (`Submit`): `PlaceUnitCommand`(생산 창 유닛 배치)·`ConstructBuildingCommand`(사제 건물 건설)·`RegisterKnowledgeCommand`(워크샵 등록)·`SalvageCommand`(회수)·
   `PickBridgePieceCommand`·`ReturnBridgePieceCommand`·`PlaceBridgeCommand`(다리 조각; 회전은 화면이 관리해 놓을 때 값으로 보낸다)·
-  `SelectEntityCommand`(오브젝트 선택/해제 — 화면 조작이지만 튜토리얼 단계 C·F 가 읽는 상태라 명령으로 둔다).
+  `SelectEntityCommand`(오브젝트 선택/해제 — 튜토리얼 2 단계 C·F가 읽음)·`HarvestGeyserCommand`·`ReturnHomeCommand`.
   거부된 명령은 `CommandRejected` 이벤트(실패 이유 `CommandFailure` 포함)로 알린다. 화면은 `DrainEvents()`로 알림을 받는다.
 * **판정(상태를 바꾸지 않음)**: `CheckUnit`·`CheckBuilding`·`CheckBridge`, 재충전 남은 시간 `SecondsUntilReady`, 건설 진행률 `ConstructionProgress`.
-* **건설**: 비용은 시작할 때 나가고(시점은 미확인 근사), 건설 시간이 지나야 규칙 효과가 생긴다 — **템플**: 섬 소유(빈 섬 → 내 섬)·에너지 공급원 등록·생산 창의 다리 조각/골렘 공급 시작,
+* **수집 경제**: 가이저를 지정하면 소유한 사제가 섬과 자기 다리 칸을 따라 가이저·완공 신전을 왕복한다. 신전에 결정 하나를 전달할 때마다 200 SP가 들어온다. 다리 연결이 바뀌면 경로를 다시 찾고 갈 수 없으면 작업을 멈춘다. 이동 속도는 각 유닛 `.type`의 `speed`를 읽는다. 현재 실제 경로 이동은 사제 수집에만 적용한다.
+* **건설**: 비용은 시작할 때 나가고(원본 `00442c80` → `00442b50`의 배치 시 차감과 부합), 건설 시간이 지나야 규칙 효과가 생긴다 — **템플**: 섬 소유(빈 섬 → 내 섬)·에너지 공급원 등록·생산 창의 다리 조각/골렘 공급 시작,
   **워크샵**: 지식 등록 가능. 완공에 섬 소유 색이 바뀌는 것은 튜토리얼 2 관찰과 같다. 건설 중인 템플도 "플레이어당 1기" 판정에 센다.
 * **회수**: 비용의 25%를 돌려받는다(튜토리얼 2: 300 → 75). 템플을 회수하면 섬이 빈 섬이 되고 다리 조각·골렘이 사라지며, 워크샵을 회수하면 그 워크샵의 등록이 사라진다. 사제·가이저·지형은 회수할 수 없다.
 * **배치 뒤 재충전**: Unit Rate 표(10/5/1초, 기본 Fast 1초)만큼 그 유닛을 덱에서 다시 쓸 수 없다 (튜토리얼 2 관찰 1.1~1.2초와 부합).
@@ -70,18 +72,20 @@
 ### 튜토리얼 단계 처리 (`TutorialStages`)
 
 미션 머리의 `techAllowed`(기술 허용 표)와 `denySalvage`는 **시작 값**이다. 원본의 튜토리얼 단계 처리(튜토리얼 2 = `FUN_004c3bb0`)가 실행 중에 바꾼다:
-단계 B에서 sunFactory 허용, 단계 H에서 회수 금지 해제 ([근거](exe/mission-header-flags.md)). 세션이 이를 `TutorialStages`(튜토리얼 2만 구현)로 재현한다:
+단계 B에서 sunFactory 허용, 단계 H에서 회수 금지 해제 ([근거](exe/mission-header-flags.md)). 세션이 이를 `TutorialStages`로 재현한다:
 
 * 세션을 만들면 첫 단계 안내 `TutorialTell "A."` 이벤트가 나온다. 단계마다 그 단계의 스크립트 섹션 이름(`"B."` …)을 `TutorialTell` 이벤트로 알리고, 화면이 본문을 안내 창으로 띄운다(창은 아직 없다).
 * 조건은 세션 상태만 본다: 지은 수(`PlayerState.Made`·`MadeWithFlags`, 누적 — 파괴·회수로 줄지 않는다), 워크샵 등록 여부, 선택한 오브젝트(`SelectedEntityId`), 이번 틱의 회수 이벤트, 타이머(단계 F 4초·H 2초·C의 `NotVortex` 2초 — exe 상수 값).
 * 표·회수 금지·전투 옵션(Short·Fast)을 바꾸는 것도 단계 처리 몫이다: 단계 A 옵션 덮어쓰기, 단계 B `Tech.Set("sunFactory", true)`, 단계 H `DenySalvage = false`. 팩토리는 시작 시점에도 옵션을 덮어쓴다(단계 A 첫 프레임과 같은 결과).
-* `RunsTutorial = false`로 끌 수 있고, 구현되지 않은 튜토리얼(1·3~6)과 튜토리얼이 아닌 미션은 `Tutorial == null`이다. 단계·타이머·지은 수·선택·기술 표·회수 금지는 `Checksum()`에 들어간다.
+* 튜토리얼 1은 F4 또는 첫 다리(A), 다리 8·19칸(B·C), 가이저 연결(D), 200·600 SP(E·F)로 G까지 진행한다. 원본은 다리의 **누적 제작 수**를 보지만 현재 클론은 살아 있는 내 다리 칸 수를 센다. 원본 위치 생성식도 아직 복원하지 못해 연습 가이저 받침을 결정적으로 만든다.
+* `RunsTutorial = false`로 끌 수 있고, 구현되지 않은 튜토리얼(3~6)과 튜토리얼이 아닌 미션은 `Tutorial == null`이다. 단계·타이머·지은 수·선택·기술 표·회수 금지·사제 운반 상태는 `Checksum()`에 들어간다.
 * 원본이 기술 허용 표를 확인하는 곳(메뉴 항목·덱)에 맞춰 세션도 Construct 판정(`CheckBuilding`)·지식 등록·덱 배치에서 표를 확인한다.
 * 근사: 단계를 넘긴 뒤 원본이 열 번 세는 동안 다음 단계 처리를 멈추는 잠금(`+0x84`, 안내 창이 뜨고 닫힐 때까지로 추정)은 "다음 틱부터 검사"로 대신한다. 건물은 완공 시점에, 유닛은 놓는 시점에 지은 수로 센다(원본의 출생 콜백 시점은 스크립트 문구로 추정).
 
 ### 근사한 부분 (원본 확인 전)
 
-* 건설 시간 = 관찰한 "클릭부터 완공"(사제 이동 포함) 값. 사제 이동·건설 절차·건설 자리에 사제가 서 있어야 하는지는 판정하지 않는다. 비용 차감 시점(시작/완공)은 확인하지 못했다.
+* 건설 시간 = 관찰한 "클릭부터 완공"(사제 이동 포함) 값. 사제의 **건설 장소까지 이동**·정확한 `constructionRate` 계산·건설 자리에 서 있어야 하는지는 판정하지 않는다. 비용 차감은 배치 시점의 원본 경로를 정적으로 확인했다([분석](exe/priest-construction.md)).
+* 수집 경로는 칸 단위·네 방향이며 가이저/신전 발자국의 인접 칸을 목표로 한다. 원본의 곡선 이동·다른 유닛과의 충돌·정확한 `speed` 시간 단위, 생성 가이저의 위치는 미확인이다.
 * 유닛(생산 창 → 배치)은 건설 지연 없이 곧바로 완성으로 본다.
 * 빈 섬 연결 = `BridgeReach`의 근사(위 표). 다리 끝 = 발자국 둘레의 내 다리 칸.
 * 맵에 처음부터 있던 워크샵은 레벨 1, 등록 목록은 비어 있다(`.fort`의 `Deck`·`Technology` 섹션은 아직 연결하지 않았다).

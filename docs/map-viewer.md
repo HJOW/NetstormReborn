@@ -27,6 +27,7 @@ dotnet run --project src/Netstorm.Game -- --map savetheisland --language korean
   논리 해상도가 1024×768 이면(4:3 창이거나 `--wide letterbox` 일 때) 사제가 원본 캡처와 같은 (525, 393) 에 그려져, 뷰어 캡처를 원본 캡처와 바로 겹쳐 볼 수 있다 ([측정](screens/dissolved-alliance-start.md) 2절).
   안내 영역이 4줄로 늘어(높이 128) 화면 맨 위 128 논리 픽셀은 안내가 덮는다 (사제 위치 계산은 안내 높이를 보정하므로 그대로).
   와이드 시야 확장에서는 화면 중심이 넓어진 만큼 사제가 가운데 쪽으로 온다
+* F4: 현재 사제 위치로 화면을 옮긴다. 튜토리얼 1의 첫 단계 신호로도 처리한다.
 * G: 진단용 청크 윤곽 표시 전환
 * 오브젝트 기준점 근처에 마우스: 타입, 좌표, 영역, 소유자, 다리 값 표시
 * Esc: 종료
@@ -44,15 +45,17 @@ dotnet run --project src/Netstorm.Game -- --map savetheisland --language korean
 * `--mission`은 미션 스크립트에서 맵(`loadFort`)과 시작 조건을 읽어 연다. `--map`과 함께 쓸 수 없다.
 * `Space`: 세션 일시정지·재개. `K`: 생산 규칙 켜기/끄기. 일시정지 중에도 명령을 내리면 한 틱만 진행해 결과를 보여 준다.
 * 오른쪽 위 상자에 Storm Power(원본 색 규칙 ≤1000 빨강, ≤2000 노랑), 게임 시각(틱), 생산 규칙 상태, 미션 제목이 표시된다.
-* **튜토리얼 2는 세션이 단계 처리를 한다**(`TutorialStages`, [core-rules.md](core-rules.md)). 미션 머리의 `techAllowed`·`denySalvage`는 시작 값이고 원본은 튜토리얼이 진행 중에 바꾼다([mission-header-flags.md](exe/mission-header-flags.md)).
+* **튜토리얼 1·2는 세션이 단계 처리를 한다**(`TutorialStages`, [core-rules.md](core-rules.md)). 튜토리얼 1은 F4/다리 배치 → 다리 8·19칸 → 가이저 연결 → 200·600 SP로 G까지 진행한다. 저장 맵에 없는 연습 가이저와 받침을 시작 시 생성한다(위치는 근사).
+  가이저 위에 마우스를 두고 **H**를 누르면 사제가 반복해서 결정을 수확·전달한다. 전달당 200 SP다. 다리는 B 모드에서 놓는다. 다리 8·19칸 기준은 현재 살아 있는 내 다리 칸 수로 근사한다.
+* 튜토리얼 2에서 미션 머리의 `techAllowed`·`denySalvage`는 시작 값이고 원본은 튜토리얼이 진행 중에 바꾼다([mission-header-flags.md](exe/mission-header-flags.md)).
   템플을 지으면 단계 B에서 Sun Workshop이 허용되고, 유닛 네 개를 놓으면 단계 H에서 회수 금지가 풀린다. 오른쪽 위 상자에 현재 단계와 선택한 오브젝트가 나오고, 단계가 넘어갈 때 해당 미션 스크립트의 안내 창이 열린다.
   단계 C·F는 **선택한 템플**을 본다: `T` 키로 커서 칸의 오브젝트를 선택/해제한다(`--script`는 `select x,y`·`select none`).
-  다른 미션(튜토리얼 1 등)은 단계 처리가 없어서 `allow`·`denysalvage`로 손으로 재현한다.
+  튜토리얼 3~6의 단계 처리는 아직 없다.
 
 ### 튜토리얼 안내 창
 
 `TutorialTell` 이벤트의 섹션을 원본 미션 스크립트에서 읽어 제목·본문·`$Button=` 버튼을 표시한다. 창이 열려 있는 동안 세션 시간과 지도 입력은 멈춘다. MORE/BACK 버튼은 스크립트의 다른 섹션을 열고, OK는 창을 닫는다. 마지막 단계의 Leave Tutorials는 미션 화면을 떠나고 Next Tutorial은 지정된 다음 미션을 연다.
-단계 처리 객체가 아직 없는 튜토리얼 1·3~6도 시작할 때 A. 안내를 연다. 이후 단계가 자동으로 넘어가지는 않는다.
+단계 처리 객체가 아직 없는 튜토리얼 3~6도 시작할 때 A. 안내를 연다. 이후 단계가 자동으로 넘어가지는 않는다.
 
 * F8: 현재 단계의 시작 안내를 다시 연다. MORE/BACK으로 이동하거나 보정 안내(`NotVortex` 등)를 본 뒤에도 단계 시작으로 돌아간다.
 * Enter·Space 또는 좌클릭: 선택한 버튼 실행. Tab·좌우 방향키: 버튼 선택.
@@ -66,6 +69,8 @@ dotnet run --project src/Netstorm.Game -- --map savetheisland --language korean
 | 명령 | 동작 |
 |---|---|
 | `construct 타입 x,y` | 사제가 건물(템플·워크샵·알타·아웃포스트)을 짓기 시작 |
+| `harvest x,y` | 그 칸의 가이저에 사제를 보내 반복 수확 |
+| `home` | F4 화면 복귀와 같은 튜토리얼 1 신호 |
 | `place 타입 x,y` | 생산 창의 유닛을 배치 |
 | `register 타입` | 그 유닛을 받을 수 있는 첫 워크샵에 지식으로 등록 |
 | `salvage x,y` | 그 칸의 내 오브젝트를 회수 |

@@ -55,3 +55,11 @@ public sealed record PlaceBridgeCommand(int Player, int Rotation, int X, int Y) 
 /// <param name="Player">플레이어 번호</param>
 /// <param name="EntityId">선택할 오브젝트 번호 (0 이면 선택 해제)</param>
 public sealed record SelectEntityCommand(int Player, int EntityId) : GameCommand(Player);
+
+/// <summary>플레이어의 사제에게 지정한 가이저에서 결정을 반복 수확해 신전으로 가져오게 한다.</summary>
+/// <param name="Player">플레이어 번호</param>
+/// <param name="GeyserId">수확할 가이저 오브젝트 번호</param>
+public sealed record HarvestGeyserCommand(int Player, int GeyserId) : GameCommand(Player);
+
+/// <summary>튜토리얼 1에서 F4로 자기 섬 화면에 복귀했음을 규칙 세션에 알린다.</summary>
+public sealed record ReturnHomeCommand(int Player) : GameCommand(Player);

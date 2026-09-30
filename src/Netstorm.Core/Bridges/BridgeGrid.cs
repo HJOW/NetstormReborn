@@ -110,6 +110,9 @@ public sealed class BridgeGrid
     /// <param name="y">월드 칸 y</param>
     public BridgeCellState? At(int x, int y) => _cells.GetValueOrDefault((x, y));
 
+    /// <summary>맵에서 만든 본섬·받침·가이저 바위 칸인지. 사제 이동 경로의 지면 판정에 쓴다.</summary>
+    public bool IsIsland(int x, int y) => _isIsland(x, y);
+
     /// <summary>
     /// 저장된 다리 칸(.fort bridge 값 = bridge.type 클러스터 번호)을 추가한다.
     /// 클러스터 이름의 번호로 상태를 정한다: 20 = 단단함, 11~19 = 금 감(변형 = 번호 − 10), 그 밖 = 보통.

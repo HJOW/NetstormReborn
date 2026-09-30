@@ -65,6 +65,15 @@ public enum CommandFailure
 
     /// <summary>다리 조각을 놓을 수 없는 위치 — BridgePlacementProblem 참고</summary>
     BridgeBlocked,
+
+    /// <summary>플레이어가 조종할 수 있는 사제가 없음.</summary>
+    NoPriest,
+
+    /// <summary>결정을 전달할 완성된 신전이 없음.</summary>
+    NoTemple,
+
+    /// <summary>현재 섬·다리 칸에서 가이저까지 걸어갈 경로가 없음.</summary>
+    NoRoute,
 }
 
 /// <summary>명령 실행 결과.</summary>
@@ -110,6 +119,15 @@ public enum SessionEventKind
 
     /// <summary>건물 건설 완료 (템플이면 섬 소유·다리 공급 시작, 워크샵이면 덱에 등록 가능)</summary>
     BuildingCompleted,
+
+    /// <summary>사제가 가이저에서 Storm Crystal 하나를 가져옴.</summary>
+    CrystalCollected,
+
+    /// <summary>사제가 신전에 Storm Crystal 하나를 전달해 Storm Power를 얻음.</summary>
+    CrystalDelivered,
+
+    /// <summary>튜토리얼의 F4 화면 복귀 입력.</summary>
+    ReturnedHome,
 
     /// <summary>워크샵에 지식을 등록함</summary>
     Registered,
@@ -182,6 +200,9 @@ public static class SessionText
         CommandFailure.NotHolding => "집고 있는 다리 조각이 없음",
         CommandFailure.TrayFull => "다리 칸이 가득 참",
         CommandFailure.BridgeBlocked => "다리를 놓을 수 없는 위치",
+        CommandFailure.NoPriest => "움직일 사제가 없음",
+        CommandFailure.NoTemple => "결정을 전달할 신전이 없음",
+        CommandFailure.NoRoute => "가이저까지 이어진 길이 없음",
         _ => failure.ToString(),
     };
 

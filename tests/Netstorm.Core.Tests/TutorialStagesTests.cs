@@ -221,7 +221,7 @@ public sealed class TutorialStagesTests
         Assert.Equal(0, session.Player(1).SelectedEntityId);
     }
 
-    /// <summary>단계 처리를 끄면 조건을 채워도 단계가 그대로다. 튜토리얼이 아닌 미션·구현되지 않은 튜토리얼은 단계 처리가 없다</summary>
+    /// <summary>단계 처리를 끄면 조건을 채워도 그대로다. 튜토리얼 1·2는 지원하고 3은 아직 지원하지 않는다.</summary>
     [Fact]
     public void RunsTutorialFlag_FreezesStageAndOtherMissionsHaveNone()
     {
@@ -231,10 +231,11 @@ public sealed class TutorialStagesTests
         Assert.Equal('A', session.Tutorial!.Stage);
         Assert.False(session.Player(1).Tech.IsAllowed("sunFactory"));
 
-        // 튜토리얼 1 은 수집 경제가 필요해 아직 단계 처리를 만들지 않았다
-        Assert.Null(SessionData.FromMission("tutorial1").Tutorial);
-        Assert.False(TutorialStages.IsSupported(1));
+        // 튜토리얼 1 은 가이저 수집 경로와 함께 단계 처리가 생겼다.
+        Assert.Equal('A', SessionData.FromMission("tutorial1").Tutorial!.Stage);
+        Assert.True(TutorialStages.IsSupported(1));
         Assert.True(TutorialStages.IsSupported(2));
+        Assert.False(TutorialStages.IsSupported(3));
         Assert.Equal("C.", TutorialStages.SectionOf('C'));
     }
 }

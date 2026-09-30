@@ -74,6 +74,12 @@ internal sealed partial class FortMapViewer
             (int selectX, int selectY) = CellAt(new Vector2(mouse.X, mouse.Y));
             SubmitCommand(new SelectEntityCommand(TestPlayer, _session.EntityAt(selectX, selectY)?.Id ?? 0));
         }
+        if (Pressed(keyboard, Keys.H) && mouse.Y >= HeaderHeight)
+        {
+            // 개발용 수확 입력: 커서가 가리키는 가이저로 플레이어 사제를 보낸다.
+            (int harvestX, int harvestY) = CellAt(new Vector2(mouse.X, mouse.Y));
+            SubmitCommand(new HarvestGeyserCommand(TestPlayer, _session.EntityAt(harvestX, harvestY)?.Id ?? 0));
+        }
         if (SimulationRunning)
         {
             _session.Advance(seconds);
@@ -111,6 +117,7 @@ internal sealed partial class FortMapViewer
     /// <item><description><c>construct 타입 x,y</c> — 사제가 건물을 짓기 시작 · <c>place 타입 x,y</c> — 유닛 배치 · <c>register 타입</c> — 워크샵에 지식 등록 · <c>salvage x,y</c> — 그 칸의 내 오브젝트 회수</description></item>
     /// <item><description><c>wait 초</c> — 게임 시간을 진행 · <c>rules 0|1</c> — 생산 규칙 끄기/켜기</description></item>
     /// <item><description><c>select x,y</c> — 그 칸의 오브젝트 선택 (없으면 선택 해제) · <c>select none</c> — 선택 해제 (튜토리얼 단계 C·F 는 선택한 템플을 본다)</description></item>
+    /// <item><description><c>harvest x,y</c> — 그 칸의 가이저로 사제를 보내 결정을 반복 수확한다 · <c>home</c> — F4 화면 복귀</description></item>
     /// <item><description>단계 처리가 없는 미션에서 손으로 재현: <c>allow 타입</c>·<c>deny 타입</c> — 기술 허용 표 변경, <c>denysalvage 0|1</c> — 회수 금지 변경. 튜토리얼 2 는 세션의 단계 처리(<c>TutorialStages</c>)가 자동으로 바꾼다 (docs/exe/mission-header-flags.md)</description></item>
     /// </list>
     /// </summary>
@@ -155,6 +162,13 @@ internal sealed partial class FortMapViewer
                     }
                     SubmitCommand(new SelectEntityCommand(TestPlayer, selectedId));
                     break;
+                case "harvest":
+                    (int hx, int hy) = ParseCell(Word(1));
+                    SubmitCommand(new HarvestGeyserCommand(TestPlayer, _session.EntityAt(hx, hy)?.Id ?? 0));
+                    break;
+                case "home":
+                    SubmitCommand(new ReturnHomeCommand(TestPlayer));
+                    break;
                 case "rules":
                     _session.EnforceProductionRules = Word(1) != "0";
                     break;
@@ -169,7 +183,7 @@ internal sealed partial class FortMapViewer
                     throw new ArgumentException($"알 수 없는 --script 명령입니다: {raw}");
             }
             // 세션에 넣은 명령은 곧바로 한 틱 진행해 결과가 이 명령의 것으로 남게 한다
-            if (verb is "construct" or "place" or "register" or "salvage" or "select")
+            if (verb is "construct" or "place" or "register" or "salvage" or "select" or "harvest" or "home")
             {
                 _session.RunTicks(1);
             }

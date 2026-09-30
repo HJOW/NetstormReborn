@@ -236,9 +236,15 @@ internal sealed partial class FortMapViewer
     private void DrawPlacedUnits(SpriteBatch batch, Vector2 center)
     {
         // 세션 오브젝트 번호 순서로 그린다 (게임 중 새로 만든 것만)
-        foreach (GameEntity entity in _session.Entities.Where(e => e.Source == null))
+        foreach (GameEntity entity in _session.Entities.Where(e => e.Source == null || e.Kind == ObjectKind.Geyser && !_map.Objects.Contains(e.Source)))
         {
             Vector2 anchor = Screen(WorldPixels(entity.Footprint.AnchorX, entity.Footprint.AnchorY), center);
+            if (entity.Kind == ObjectKind.Geyser && entity.Source != null)
+            {
+                // 미션 시작 때 생성된 연습 가이저는 저장 맵 지면에 없으므로 작은 받침도 함께 그린다.
+                DrawSprite(batch, _supportBottomType.LoadIndex, MapSpriteFrames.BodyFrame(_supportBottomType.Definition, 0), anchor);
+                DrawSprite(batch, _supportTopType.LoadIndex, MapSpriteFrames.BodyFrame(_supportTopType.Definition, 0), anchor);
+            }
             DrawSprite(batch, entity.Type.LoadIndex, entity.Type.Definition.Frames.DefaultFrame, anchor,
                 alpha: entity.IsComplete ? 1f : UnderConstructionAlpha);
             if (!entity.IsComplete)

@@ -17,6 +17,9 @@ public static class BattleSessionFactory
     /// <summary>튜토리얼 2(Secret Workshop) 번호 — 원본이 시작할 때 전투 옵션을 덮어쓴다 (BattleOptions.ApplyTutorialTwoOverrides)</summary>
     private const int TutorialTwo = 2;
 
+    /// <summary>원본 실행 시 동적으로 가이저를 만드는 튜토리얼 1 번호.</summary>
+    private const int TutorialOne = 1;
+
     /// <summary>
     /// 세션을 만든다.
     /// </summary>
@@ -44,26 +47,38 @@ public static class BattleSessionFactory
         {
             territories[(cell.X, cell.Y)] = cell.Region;
         }
-        var battle = new BattleMap(map.Objects, (x, y) => territories.TryGetValue((x, y), out int t) ? t : null, options);
+        var edgeSet = edgeFarmCells.ToHashSet();
+        var objects = map.Objects.ToList();
+        IReadOnlyList<(int X, int Y)> geyserPad = [];
+        if (mission?.TutorialNumber == TutorialOne && !objects.Any(item => ObjectKinds.Of(item.Object.Type) == ObjectKind.Geyser))
+        {
+            (FortMapObject? geyser, geyserPad) = TutorialGeysers.Create(objects, cells, edgeSet, types);
+            if (geyser != null)
+            {
+                objects.Add(geyser);
+            }
+        }
+        var battle = new BattleMap(objects, (x, y) => territories.TryGetValue((x, y), out int t) ? t : null, options);
 
         // 다리 격자의 섬 칸 = 본섬 미리보기 칸 + 작은 받침(noIsland) 칸
         var island = cells.Select(c => (c.X, c.Y)).ToHashSet();
-        island.UnionWith(map.Objects.Where(o => o.Object.Type.Name == "noIsland").Select(o => (o.X, o.Y)));
+        island.UnionWith(objects.Where(o => o.Object.Type.Name == "noIsland").Select(o => (o.X, o.Y)));
+        island.UnionWith(geyserPad);
         // 다리·지면 외 오브젝트의 발자국 칸은 다리가 겹칠 수 없다
         var occupied = new HashSet<(int X, int Y)>();
         // 오브젝트마다 발자국 칸을 모은다
-        foreach (FortMapObject item in map.Objects.Where(o => o.Object.Type.Name != "noIsland" && ObjectKinds.Of(o.Object.Type) != ObjectKind.Bridge))
+        foreach (FortMapObject item in objects.Where(o => o.Object.Type.Name != "noIsland" && ObjectKinds.Of(o.Object.Type) != ObjectKind.Bridge))
         {
             occupied.UnionWith(Footprint.ForType(item.Object.Type.Definition, item.X, item.Y).Cells());
         }
         // 가장자리 초목(edgeFarm)·dropBlocking 오브젝트 칸에서는 다리를 시작할 수 없다 (사용자 확인 규칙)
-        HashSet<(int X, int Y)> dropBlocking = BridgeAnchors.DropBlockingCells(map.Objects, edgeFarmCells);
+        HashSet<(int X, int Y)> dropBlocking = BridgeAnchors.DropBlockingCells(objects, edgeSet);
         var grid = new BridgeGrid((x, y) => island.Contains((x, y)), (x, y) => occupied.Contains((x, y)), BridgeAnchors.CanAttach(dropBlocking));
         TypeFrameTable frames = (types.Find(BridgeTypeName) ?? throw new InvalidDataException("bridge 타입이 없습니다.")).Definition.Frames;
         // 저장된 다리 칸을 격자에 넣는다 (연결·붕괴 계산에 쓴다). 화면이 무너진 저장 다리를 숨길 수 있도록 오브젝트와 칸을 짝지어 둔다.
         var stored = new Dictionary<FortMapObject, BridgeCellState>();
         // 저장 다리 오브젝트마다 격자 칸을 만들어 짝지어 둔다
-        foreach (FortMapObject item in map.Objects.Where(o => ObjectKinds.Of(o.Object.Type) == ObjectKind.Bridge && o.Object.BridgeShape is not null))
+        foreach (FortMapObject item in objects.Where(o => ObjectKinds.Of(o.Object.Type) == ObjectKind.Bridge && o.Object.BridgeShape is not null))
         {
             stored[item] = grid.AddStored(frames, item.Object.BridgeShape!.Value, item.X, item.Y, item.Object.Owner ?? 0);
         }

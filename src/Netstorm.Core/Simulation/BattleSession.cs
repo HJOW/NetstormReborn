@@ -12,7 +12,7 @@ namespace Netstorm.Core.Simulation;
 /// <item><description>시간은 정수 틱이다. 게임 시각(초) = 틱 ÷ 초당 틱 수. 다리 조각 채우기(1초)·붕괴(10초)·건설·재충전은 모두 틱으로 센다.</description></item>
 /// <item><description>화면은 <see cref="Advance"/> 에 흐른 실제 시간을 주고, <see cref="DrainEvents"/> 로 일어난 일을 받아 알림을 띄운다.</description></item>
 /// </list>
-/// 이동·전투·수집 경제·AI 는 규칙 분석 후 이 세션에 추가한다.
+/// 사제의 가이저 왕복 수집은 구현했으며, 다른 유닛 이동·전투·AI 는 추후 규칙을 분석한다.
 /// </summary>
 public sealed partial class BattleSession
 {
@@ -205,6 +205,10 @@ public sealed partial class BattleSession
     /// <param name="id">오브젝트 번호</param>
     public GameEntity? Entity(int id) => _entities.GetValueOrDefault(id);
 
+    /// <summary>저장된 맵 오브젝트에 대응하는 현재 엔티티를 찾는다 (사제의 이동 위치 표시용).</summary>
+    public GameEntity? EntityForInitial(FortMapObject item) =>
+        _initialEntityIds.TryGetValue(item, out int id) ? Entity(id) : null;
+
     /// <summary>칸을 차지하는 오브젝트 (번호가 가장 큰 것, 없으면 null). 회수 대상을 커서로 고를 때 쓴다.</summary>
     /// <param name="x">칸 x</param>
     /// <param name="y">칸 y</param>
@@ -269,7 +273,7 @@ public sealed partial class BattleSession
     }
 
     /// <summary>
-    /// 틱 하나를 진행한다. 순서: 명령 실행 → 건설 완료 → 튜토리얼 단계 처리 → 플레이어별 다리 칸 채우기 → 다리 붕괴.
+    /// 틱 하나를 진행한다. 순서: 명령 실행 → 사제 수집·이동 → 건설 완료 → 튜토리얼 단계 처리 → 플레이어별 다리 칸 채우기 → 다리 붕괴.
     /// 이 순서가 바뀌면 같은 명령열의 결과가 달라지므로 락스텝·리플레이를 위해 고정한다.
     /// </summary>
     private void Step()
@@ -277,6 +281,7 @@ public sealed partial class BattleSession
         Tick++;
         double now = Seconds;
         ExecuteQueuedCommands();
+        UpdateHarvests();
         CompleteConstructions();
         if (Tutorial != null && RunsTutorial)
         {
@@ -445,8 +450,26 @@ public sealed partial class BattleSession
             hash.Add(entity.Owner);
             hash.Add(entity.Footprint.AnchorX);
             hash.Add(entity.Footprint.AnchorY);
+            hash.Add(entity.CarriedCrystals);
             hash.Add(entity.IsComplete ? 1 : 0);
             hash.Add(entity.CompleteTick);
+        }
+        // 사제의 왕복 방향·예약 경로·남은 이동량도 다음 결과를 바꾸므로 검사합에 포함한다.
+        foreach (PriestHarvestTask task in _harvestTasks.Values)
+        {
+            hash.Add(task.PriestId);
+            hash.Add(task.GeyserId);
+            hash.Add(task.TempleId);
+            hash.Add((int)task.Phase);
+            hash.Add(task.NextIndex);
+            hash.Add(BitConverter.DoubleToInt64Bits(task.Progress));
+            hash.Add(task.RouteVersion);
+            // 현재 경로의 칸 순서도 검사한다.
+            foreach ((int x, int y) in task.Path)
+            {
+                hash.Add(x);
+                hash.Add(y);
+            }
         }
         // 다리 칸: 좌표 순서로 모양·소유자·상태·수명
         foreach (BridgeCellState cell in Bridges.Cells.OrderBy(c => c.Y).ThenBy(c => c.X))

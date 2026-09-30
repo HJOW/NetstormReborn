@@ -9,18 +9,36 @@ namespace Netstorm.Core.Simulation;
 /// 단계 처리는 미션 머리 값이 정한 <b>시작 상태</b>를 실행 중에 바꾼다: 튜토리얼 2 는 단계 B 에서 sunFactory 를 허용하고
 /// 단계 H 에서 회수 금지를 푼다 (docs/exe/mission-header-flags.md).
 /// 세션의 명령과 이벤트만 보고 상태를 바꾸는 별도 객체이며, 세션이 틱마다 <see cref="Update"/> 를 부른다.
-/// 지금은 튜토리얼 2 만 구현했다 (튜토리얼 1 은 수집 경제, 3~6 은 전투가 필요하다).
+/// 튜토리얼 1·2 를 구현했다. 튜토리얼 3~6 은 전투가 필요하다.
 /// </summary>
 public sealed class TutorialStages
 {
     /// <summary>구현된 튜토리얼 번호 (Secret Workshop)</summary>
     private const int SecretWorkshop = 2;
 
+    /// <summary>Bridge the Gap! 튜토리얼 번호.</summary>
+    private const int BridgeTheGap = 1;
+
     /// <summary>첫 단계 글자 (원본 FUN_004c2990 이 0x41 로 시작한다)</summary>
     private const char FirstStage = 'A';
 
     /// <summary>마지막 단계 글자 — "Mission Accomplished!" (튜토리얼 2 의 [I.])</summary>
-    private const char LastStage = 'I';
+    private const char SecretWorkshopLastStage = 'I';
+
+    /// <summary>튜토리얼 1의 완료 단계.</summary>
+    private const char BridgeTheGapLastStage = 'G';
+
+    /// <summary>튜토리얼 1의 다리 실습 첫 통과 기준(원본은 7보다 큰 칸 수).</summary>
+    private const int FirstBridgeTarget = 8;
+
+    /// <summary>튜토리얼 1의 다리 회전 실습 통과 기준(원본은 18보다 큰 칸 수).</summary>
+    private const int SecondBridgeTarget = 19;
+
+    /// <summary>튜토리얼 1의 최종 Storm Power 목표(미션 스크립트 F.).</summary>
+    private const int BridgeTheGapStormPowerTarget = 600;
+
+    /// <summary>튜토리얼 1에서 결정 하나를 전달한 뒤 넘어가는 Storm Power 기준(원본 0x510298).</summary>
+    private const int FirstCrystalStormPowerTarget = 200;
 
     /// <summary>단계 C: 템플을 선택한 채 이 시간(초)이 지나면 보정 안내를 띄운다 (exe 0x506590 의 double 값 2.0)</summary>
     private const double NotVortexDelaySeconds = 2.0;
@@ -47,14 +65,20 @@ public sealed class TutorialStages
     public string Section => SectionOf(Stage);
 
     /// <summary>마지막 단계에 도달했는지</summary>
-    public bool Finished => Stage == LastStage;
+    public bool Finished => Stage == (Number == BridgeTheGap ? BridgeTheGapLastStage : SecretWorkshopLastStage);
+
+    /// <summary>튜토리얼 1에서 마지막으로 연결을 검사한 다리 격자 버전.</summary>
+    private int _lastReachVersion = -1;
+
+    /// <summary>마지막 연결 검사에서 가이저에 닿을 수 있었는지.</summary>
+    private bool _lastReachable;
 
     /// <summary>단계 안의 타이머가 끝나는 틱 (0 이면 타이머 없음 — 원본은 double 0.0 으로 "없음"을 나타낸다)</summary>
     public long TimerTick { get; private set; }
 
     /// <summary>튜토리얼 번호에 대한 단계 처리를 구현했는지</summary>
     /// <param name="number">튜토리얼 번호</param>
-    public static bool IsSupported(int number) => number == SecretWorkshop;
+    public static bool IsSupported(int number) => number is BridgeTheGap or SecretWorkshop;
 
     /// <summary>단계 글자로 스크립트 섹션 이름을 만든다</summary>
     /// <param name="stage">단계 글자</param>
@@ -73,6 +97,11 @@ public sealed class TutorialStages
     /// <param name="tickEvents">이번 틱에 일어난 이벤트 (단계 H 가 회수 명령을 알아본다)</param>
     internal void Update(BattleSession session, IReadOnlyList<SessionEvent> tickEvents)
     {
+        if (Number == BridgeTheGap)
+        {
+            UpdateBridgeTheGap(session, tickEvents);
+            return;
+        }
         if (Number != SecretWorkshop)
         {
             return;
@@ -130,6 +159,57 @@ public sealed class TutorialStages
                 break;
             case 'H':
                 UpdateSalvage(session, tickEvents);
+                break;
+        }
+    }
+
+    /// <summary>튜토리얼 1의 F4·다리 칸·가이저 연결·결정 전달·600 SP 단계.</summary>
+    private void UpdateBridgeTheGap(BattleSession session, IReadOnlyList<SessionEvent> tickEvents)
+    {
+        PlayerState player = session.Player(session.HumanPlayer);
+        int placedBridges = session.Bridges.Cells.Count(cell => cell.Owner == player.Number);
+        switch (Stage)
+        {
+            case 'A':
+                if (placedBridges > 0 || tickEvents.Any(e => e.Kind == SessionEventKind.ReturnedHome && e.Player == player.Number))
+                {
+                    Advance(session);
+                }
+                break;
+            case 'B':
+                if (placedBridges >= FirstBridgeTarget)
+                {
+                    Advance(session);
+                }
+                break;
+            case 'C':
+                if (placedBridges >= SecondBridgeTarget)
+                {
+                    Advance(session);
+                }
+                break;
+            case 'D':
+                if (_lastReachVersion != session.Bridges.Version)
+                {
+                    _lastReachVersion = session.Bridges.Version;
+                    _lastReachable = session.CanReachAnyGeyser(player.Number);
+                }
+                if (_lastReachable)
+                {
+                    Advance(session);
+                }
+                break;
+            case 'E':
+                if (player.StormPower >= FirstCrystalStormPowerTarget)
+                {
+                    Advance(session);
+                }
+                break;
+            case 'F':
+                if (player.StormPower >= BridgeTheGapStormPowerTarget)
+                {
+                    Advance(session);
+                }
                 break;
         }
     }
