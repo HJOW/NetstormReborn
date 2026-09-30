@@ -19,8 +19,8 @@ internal static class Program
 
         도구: list_sessions, start_session, game_status, capture_state,
               game_input, wait_for_change, record_observation, set_guide_steps, end_session
-        AGENTS.md에 지정된 시스템에서만 별도 확인 없이 게임을 실행할 수 있습니다.
-        그 밖의 시스템에서는 start_session 전에 목적과 필요성을 설명하고 개발자 확인을 받으세요.
+        AGENTS.md에 지정된 시스템, 또는 개발자가 수동 컨트롤 분석을 직접 요청한 작업 단계에서만 별도 확인 없이 게임을 실행할 수 있습니다.
+        그 밖의 경우에는 start_session 전에 목적과 필요성을 설명하고 개발자 확인을 받으세요.
         guide는 이미 실행 중인 세션의 게임 옆에 안내 창을 열며 게임을 새로 실행하지 않습니다.
         예: call start_session --json {"label":"메뉴 관찰"}
         입력 스키마와 MCP 설정: docs/analyze-manager.md

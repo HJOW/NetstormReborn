@@ -308,6 +308,11 @@
 - 도구 쪽 미검증: 파이프 EOF(CLI 출력을 파일로 받아 확인하지 못함). `analyzeManager/ExplorerTools.cs`·`Program.cs` 도움말의 시스템 2 미반영은 아래 절 그대로다.
 - 이번 변경 파일(커밋 전): `docs/screens/README.md`, `docs/screens/main-menu.md`, `docs/analyze-manager.md`, `docs/sources/{README,game-manual,patch-history}.md`, `LEFT_JOBS.md`
 
+### AGENTS.md 게임 구동 허용 조건 추가 반영 (2026-09-30)
+
+- AGENTS.md에 예외가 하나 더 생겼다: **개발자(사용자)가 기존 게임 수동 컨트롤 방식으로 분석 진행을 직접 요청한 경우, 해당 작업 단계에서는 시스템과 무관하게 실제 게임 구동 확인을 받지 않아도 된다.** (기존 예외: 시스템 1·2.) 요청이 없거나 다음 작업 단계로 넘어가면 일반 규칙(목적·필요성 설명 후 명시적 확인)으로 돌아간다.
+- 반영: [docs/analyze-manager.md](docs/analyze-manager.md) "실제 게임 실행 전 개발자 확인", [analyzeManager/README.md](analyzeManager/README.md), `analyzeManager/{ExplorerTools,Program}.cs`의 `start_session` 설명·CLI 도움말 문구. 문자열만 바꿨으므로 재빌드는 하지 않았다(다음 빌드에서 확인 필요).
+
 ### AGENTS.md 규칙 갱신 반영 (2026-09-29)
 
 - **`AGENTS.md`는 절대 수정하지 않는다.** 수정이 필요하면 개발자(사용자)에게 요청한다. (이전 인수인계에 "`AGENTS.md` 갱신"으로 남은 기록은 이 규칙이 생기기 전의 작업이다.)
