@@ -3,9 +3,10 @@
 영상별 관찰 노트(`docs/videos/<이름>.md`)의 공통 전제와 프레임 추출 방법을 정리한다.
 영상 목록과 YouTube 주소는 LEFT_JOBS.md 5단계 표에 있다.
 
-## 로컬 영상 (`playingVideos/`, git 제외)
+## 기존 방송 영상 (`playingVideos/`, git 제외)
 
 원본 게임을 최대 해상도 1024×768 **풀스크린**으로 두고 16:9 모니터에서 플레이하며 방송 중에 녹화했다 (AGENTS.md).
+아래 4개 파일은 2026-09-28 환경에서 확인한 목록이다. 이번 분석 환경의 `playingVideos/`에는 이 파일들이 없고, 새 `record-play` 세션 폴더만 있다.
 
 | 파일 | 미션 | 길이 | 크기 |
 |---|---|---|---|
@@ -48,4 +49,5 @@ python tools/videoframes.py range "playingVideos/Netstorm Islands at war - Disso
 ## 관찰 노트
 
 * [animation-timing.md](animation-timing.md) — 애니메이션 진행 속도: 가이저 증기 약 24Hz, 신전 회오리·피해 연기 12Hz. exe 의 "현재 시각 + 간격" 타이머와 `maxFPS = 75` 루프 양자화로 설명됨
+* [the-war-begins-record-play-20260930.md](the-war-begins-record-play-20260930.md) — 사용자 직접 조작 10 FPS 녹화: 캠페인 1-1 시작, 지식 격자·설명창, 적 신전 파괴 뒤 섬 테마·소유권 전환, 승리와 다음 미션 진입. 원본 녹화는 `playingVideos/20260930T154921831Z-8bdcc06b6539/`에 있으며 Git에서 제외됨
 * AV1 소프트웨어 디코딩은 느리므로 긴 구간을 한 번에 뽑지 않는다.

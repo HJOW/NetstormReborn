@@ -9,6 +9,14 @@
 
 ---
 
+## 2026-10-01 (사용자 플레이 녹화 분석) ✅: 캠페인 1-1 전체 플레이 관찰 노트
+
+- 관리 세션 `20260930T154921831Z-8bdcc06b6539`의 `record-play` 녹화 8,335프레임(13분 53.5초, AVI 27개, WAV 7개, 입력 로그 1개)을 분석했다. 녹화 오류는 없었다. 게임은 `The War Begins!` 브리핑에서 시작해 승리 후 `Master of Whirligigs` 브리핑을 거쳐 메인 메뉴로 돌아왔다. 분석 뒤 안내창과 원본 게임을 종료했고 `end_session` 응답은 `closed=true`다.
+- 원본 지식 창의 **SUN·WIND·RAIN·THUN. 4행 그림 카드 격자**, 개별 항목 상세창을 확인했다. 현재 클론의 이름 목록과 배치가 다르다. 적 회오리 신전 파괴 직후 약 2초 안에 섬이 갈색 지면·빨간 테두리에서 초록 지면·주황 테두리로 바뀌었지만 성공 창은 약 2분 15초 뒤에 떴다. `Success!`의 `Leave Missions`·`Next Mission`과 다음 미션 브리핑도 확인했다.
+- [타임스탬프·증거·미확정 사항](docs/videos/the-war-begins-record-play-20260930.md)을 기록하고 [영상 목록](docs/videos/README.md), [지식 창 정적 분석](docs/exe/show-technology.md)을 갱신했다. 승리 직전 제단 모양 구조물이 사라지는 모습은 보이나 사제 포획·희생·승리 조건의 정확한 연결은 추가 분석이 필요하다.
+
+---
+
 ## 2026-10-01 (지식 창, 원본 실행 없음) ✅: `Review Knowledge`(`ShowTechnology`) 정적 분석 + 클론 구현
 
 - **분석(exe 바이트 역어셈블):** `ShowTechnology`는 디스패처에서 **인자 없이** `0x492b60`을 부르는 F6 "View Netstorm Knowledge" 지식 창이다(스크립트의 `55`는 쓰이지 않음). 내 플레이어가 아는 타입을 원소별로 모은다. 이름 표에서 `GetTechnology`(`0x494ea0`)는 지식 부여 + `[NewTech]` 안내로 별개다. 상세: [show-technology.md](docs/exe/show-technology.md). Ghidra 프로젝트(`extracted/ghidra/Netstorm.gpr`)가 이 PC에서 0바이트라 `decompile_at.ps1`은 쓰지 못했다(그대로 멈춤 — 프로세스 정리함). 필요하면 `run_decomp.ps1`로 프로젝트를 다시 만들 것.
@@ -560,7 +568,7 @@
 | 2 | 개발 환경 구축 | ✅ 완료 (2026-09-27) — C# + MonoGame(net10.0), 솔루션·테스트·CI |
 | 3 | 원본 분석 — 데이터 포맷 | 🔶 거의 완료 (TAFF·셰이프·팔레트·.type·설정(조회·치환 규칙 포함)·번역 체계·파일 조회 순서·HLP 본문·`.fort` 컨테이너/오브젝트 완료 / `.fort` 일부 섹션 남음) — [docs/formats/](docs/formats/README.md) |
 | 4 | 원본 분석 — 실행 파일(게임 로직) | 🔶 착수 (전체 디컴파일·모듈 맵 완료) |
-| 5 | 원본 분석 — 플레이 영상 | 🔶 착수 (스크린샷 42장 목록·관찰 정리, 로컬 영상 4개 형식·화면 영역 확인, 프레임 추출·애니메이션 간격 측정 도구, Dissolved Alliance! 맵 대조·시작 카메라 규칙, 애니메이션 속도 측정 완료 / 미션별 관찰 노트 미착수) — [docs/videos/](docs/videos/README.md) |
+| 5 | 원본 분석 — 플레이 영상 | 🔶 진행 중 (스크린샷 42장 목록·관찰 정리, 로컬 영상 4개 형식·화면 영역 확인, 프레임 추출·애니메이션 간격 측정 도구, Dissolved Alliance! 맵 대조·시작 카메라 규칙, 애니메이션 속도 측정, **The War Begins! 사용자 플레이 녹화 관찰 노트 완료** / 다른 미션별 관찰 노트는 미착수) — [docs/videos/](docs/videos/README.md) |
 | 6 | 자산 로더 / 개발용 뷰어 | 🔶 진행 중 (TAFF·팔레트·셰이프·.type·.cfg·TTC·.fort·가상 파일 시스템·설정 치환·번역표·미션 스크립트 로더·스프라이트 탐색(동작 재생·팔레트·속성) 완료) |
 | 7 | 엔진 코어 (플랫폼 계층) | 🔶 착수 (2026-09-29: 창·전체화면·16:9/16:10/4:3 화면 계층, 가장자리 스크롤, 표시 설정 저장, 고정 틱 누적기·MSVC 난수 완료 / 팔레트 방식·입력·오디오·로깅 남음) |
 | 8 | 게임 월드 / 규칙 구현 | 🔶 착수 (2026-09-29: 정적 규칙 코어 — 에너지·섬 소유권·생산 창·전투 옵션·배치 판정, 맵 뷰어 배치 시험 모드, 다리 조각 모양·추첨·회전·생산 칸 채우기와 뷰어 다리 조각 시험 모드 ; 2026-09-30: 게임 세션(고정 틱·명령·엔티티·건설·회수·재충전)·다리 배치 판정·붕괴·미션 시작 조건 연결 / 이동·전투·수집 경제·붕괴 대기 조건 남음) — [docs/core-rules.md](docs/core-rules.md) |
@@ -1231,7 +1239,7 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
    - 다음 후보: 인라인/줄 명령의 인자 파싱·실행 및 HTML UI, 창·오디오 설정 적용과 사용자 설정 저장, 게임 틱 분석 후 동작별 재생 속도
 4. 4단계: 메인 루프/틱, 다리 생성(`Deck.cpp`, `Bridge.cpp`), 경제 분석
 5. 5단계(영상 분석)와 병행: 공식 캠페인 구성([mission-script.md](docs/formats/mission-script.md))과 영상 대응 확인
-   - 2026-09-28 로컬 영상 4개 형식·화면 영역 확인과 추출 도구 `tools/videoframes.py` 완료 ([docs/videos/README.md](docs/videos/README.md)). **다음: 미션별 관찰 노트(`docs/videos/<이름>.md`) 시작** — 애니메이션·건설·다리 조각 생성 간격·이동 속도처럼 스크린샷으로 잴 수 없는 시간 수치를 우선 측정 (60fps 프레임 번호 기준)
+   - 2026-09-28 로컬 영상 4개 형식·화면 영역 확인과 추출 도구 `tools/videoframes.py` 완료 ([docs/videos/README.md](docs/videos/README.md)). **The War Begins! 사용자 직접 조작 녹화 관찰 노트는 2026-10-01 완료** ([분석](docs/videos/the-war-begins-record-play-20260930.md)). 다른 미션별 관찰 노트와 애니메이션·건설·다리 조각 생성 간격·이동 속도처럼 스크린샷으로 잴 수 없는 시간 수치는 계속 측정한다 (기존 방송 영상은 60fps, 새 `record-play` 녹화는 10fps).
    - **애니메이션 속도 완료(2026-09-28)**: 가이저 24Hz·신전/연기 12Hz, exe 의 "현재 시각 + 간격" 타이머(`Flyer.cpp` 0.04초, `Lightning.cpp` 0.08초)와 `maxFPS = 75` 루프 양자화로 설명 — [animation-timing.md](docs/videos/animation-timing.md), 측정 명령 `videoframes.py cadence`. 다음은 타입별 간격 상수 위치(exe)와 건설·다리 조각 생성 간격 측정
    - **에너지 공급 범위 완료(2026-09-29)**: 스크린샷 측정(일반 30칸·튜토리얼 2 약 14칸)과 exe 전투 옵션 Generator Range(표 14/22/30/38, 14~30 제한, 튜토리얼 2만 Short) 일치 — [elements-energy.md](docs/gameplay/elements-energy.md) 6절, [battle-options.md](docs/exe/battle-options.md). 도움말 `GAME.HLP`(다른 세션 추출)의 "BattleMasters"·튜토리얼 2 안내가 단서
    - Dissolved Alliance! `Playing 1`·`Playing 2`(시점 이동 캡처)도 템플릿 매칭으로 카메라 위치를 구해 섬별로 뷰어와 대조
