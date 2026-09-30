@@ -47,3 +47,11 @@ public sealed record ReturnBridgePieceCommand(int Player) : GameCommand(Player);
 /// <param name="X">조각 왼쪽 위 칸 x</param>
 /// <param name="Y">조각 왼쪽 위 칸 y</param>
 public sealed record PlaceBridgeCommand(int Player, int Rotation, int X, int Y) : GameCommand(Player);
+
+/// <summary>
+/// 오브젝트를 선택하거나(번호) 선택을 푼다(0). 선택은 화면 조작이지만 튜토리얼 단계 처리가 읽는 규칙 상태이므로 명령으로 둔다
+/// (원본은 단계 C·F 에서 선택한 오브젝트가 템플인지 확인한다).
+/// </summary>
+/// <param name="Player">플레이어 번호</param>
+/// <param name="EntityId">선택할 오브젝트 번호 (0 이면 선택 해제)</param>
+public sealed record SelectEntityCommand(int Player, int EntityId) : GameCommand(Player);

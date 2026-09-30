@@ -70,6 +70,31 @@ public sealed class TechPermissions
     /// <summary>타입을 만들거나 등록할 수 있는지</summary>
     /// <param name="typeName">.type 이름</param>
     public bool IsAllowed(string typeName) => _overrides.TryGetValue(typeName, out bool allowed) ? allowed : _defaultAllowed;
+
+    /// <summary>
+    /// 같은 값을 가진 독립된 표를 만든다. 표는 실행 중에 바뀌므로 세션마다 자기 복사본을 써야 한다
+    /// (같은 <see cref="MissionStart"/> 로 세션을 둘 만들었을 때 한쪽의 변경이 다른 쪽에 새지 않게 한다).
+    /// </summary>
+    public TechPermissions Clone()
+    {
+        var copy = new TechPermissions { _defaultAllowed = _defaultAllowed };
+        // 개별 값을 그대로 옮긴다
+        foreach ((string name, bool allowed) in _overrides)
+        {
+            copy._overrides[name] = allowed;
+        }
+        return copy;
+    }
+
+    /// <summary>
+    /// 표의 내용을 이름 순서로 나열한다 (기본값 뒤에 개별 값). 세션 검사합이 Dictionary 순회 순서에 의존하지 않도록
+    /// 이름을 소문자로 바꿔 순서대로 내준다.
+    /// </summary>
+    public IEnumerable<(string Name, bool Allowed)> Snapshot() =>
+        _overrides.Select(pair => (pair.Key.ToLowerInvariant(), pair.Value)).OrderBy(pair => pair.Item1, StringComparer.Ordinal);
+
+    /// <summary>모든 타입의 기본 허용 값 (마지막 "all" 이 정한 값)</summary>
+    public bool DefaultAllowed => _defaultAllowed;
 }
 
 /// <summary>

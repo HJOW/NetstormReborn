@@ -68,10 +68,18 @@ public sealed partial class BattleSession
     /// 생산 규칙(기술 허용 표·덱 등록·배치 뒤 재충전·회수 금지)을 명령에 적용할지. 끄면 어떤 유닛이든 규칙 조건
     /// (섬·자리·비용·에너지)만 맞으면 놓을 수 있다 (맵 뷰어의 배치 시험용). 기본은 켜짐.
     /// 기술 허용 표(<see cref="PlayerState.Tech"/>)와 <see cref="DenySalvage"/> 는 미션 머리 값에서 시작하는 **변하는 상태**다.
-    /// 원본은 튜토리얼 단계 처리가 실행 중에 이 값을 바꾼다 (docs/exe/mission-header-flags.md). 단계 처리 코드가 없는 지금은
-    /// 호출하는 쪽이 필요한 때에 <c>Tech.Set</c>·<see cref="DenySalvage"/> 를 바꿔 준다.
+    /// 원본은 튜토리얼 단계 처리가 실행 중에 이 값을 바꾼다 (docs/exe/mission-header-flags.md). 그 처리는 <see cref="Tutorial"/> 이
+    /// 맡는다 (구현된 튜토리얼만). 단계 처리가 없는 미션에서는 호출하는 쪽이 필요한 때에 <c>Tech.Set</c>·<see cref="DenySalvage"/> 를 바꿔 준다.
     /// </summary>
     public bool EnforceProductionRules { get; set; } = true;
+
+    /// <summary>
+    /// 튜토리얼 단계 처리 (미션이 구현된 튜토리얼이면, 아니면 null). 세션을 만들 때 첫 단계 안내("A.")가 이벤트로 나온다.
+    /// </summary>
+    public TutorialStages? Tutorial { get; }
+
+    /// <summary>튜토리얼 단계 처리를 틱마다 실행할지 (기본 켜짐). 끄면 단계는 그대로 멈춰 있다 (맵 뷰어의 규칙 시험용).</summary>
+    public bool RunsTutorial { get; set; } = true;
 
     /// <summary>
     /// 회수 금지 (원본 전역 DAT_00595078). 미션 머리 denySalvage 로 시작하고, 켜져 있으면 회수 명령은 실행되지 않고
@@ -126,6 +134,10 @@ public sealed partial class BattleSession
         HumanPlayer = humanPlayer;
         DenySalvage = mission?.DenySalvage ?? false;
         _random = new NetstormRandom(seed);
+        if (mission?.TutorialNumber is int tutorialNumber && TutorialStages.IsSupported(tutorialNumber))
+        {
+            Tutorial = new TutorialStages(tutorialNumber);
+        }
 
         // 플레이어는 맵 오브젝트에 나오는 소유자와 사람 플레이어다 (소유자 0 은 중립)
         var numbers = new SortedSet<int> { humanPlayer };
@@ -161,6 +173,11 @@ public sealed partial class BattleSession
                 RegisterCompletedBuilding(player, entity);
             }
         }
+        // 튜토리얼은 첫 단계 안내로 시작한다 (원본은 시작하며 단계 'A' 의 섹션을 알린다)
+        if (Tutorial != null)
+        {
+            EmitTutorialTell(humanPlayer, Tutorial.Section);
+        }
     }
 
     /// <summary>플레이어 시작 상태를 만든다: Storm Power, 다리 칸, 사람 플레이어는 미션의 시작 지식과 기술 허용</summary>
@@ -169,7 +186,8 @@ public sealed partial class BattleSession
         BattleOptions options = Map.Options;
         bool human = number == HumanPlayer;
         int stormPower = human && Mission != null ? Mission.StormPower(options) : startStormPower ?? options.StartingStormPower;
-        TechPermissions tech = human && Mission != null ? Mission.Tech : TechPermissions.Parse(null);
+        // 표는 실행 중에 바뀌므로 세션마다 복사본을 쓴다 (같은 미션으로 만든 다른 세션에 영향을 주지 않는다)
+        TechPermissions tech = human && Mission != null ? Mission.Tech.Clone() : TechPermissions.Parse(null);
         var player = new PlayerState(number, stormPower, new BridgeTray(options.BridgeSlotCount, _random), tech);
         if (human && Mission != null)
         {
@@ -251,7 +269,7 @@ public sealed partial class BattleSession
     }
 
     /// <summary>
-    /// 틱 하나를 진행한다. 순서: 명령 실행 → 건설 완료 → 플레이어별 다리 칸 채우기 → 다리 붕괴.
+    /// 틱 하나를 진행한다. 순서: 명령 실행 → 건설 완료 → 튜토리얼 단계 처리 → 플레이어별 다리 칸 채우기 → 다리 붕괴.
     /// 이 순서가 바뀌면 같은 명령열의 결과가 달라지므로 락스텝·리플레이를 위해 고정한다.
     /// </summary>
     private void Step()
@@ -260,6 +278,11 @@ public sealed partial class BattleSession
         double now = Seconds;
         ExecuteQueuedCommands();
         CompleteConstructions();
+        if (Tutorial != null && RunsTutorial)
+        {
+            // 이번 틱에 일어난 이벤트(명령 결과·완공)를 보고 단계를 처리한다
+            Tutorial.Update(this, [.. _events.Where(e => e.Tick == Tick)]);
+        }
         // 플레이어 번호 순으로 다리 칸을 채운다 (같은 난수를 번호 순서대로 쓰도록)
         foreach (PlayerState player in _players.Values)
         {
@@ -312,6 +335,8 @@ public sealed partial class BattleSession
             if (_players.TryGetValue(entity.Owner, out PlayerState? player))
             {
                 RegisterCompletedBuilding(player, entity);
+                // 건물은 완공할 때 지은 수로 센다 (튜토리얼 단계 처리가 읽는다)
+                player.RecordMade(entity.Type.Name, entity.Type.Flags2);
             }
             Emit(SessionEventKind.BuildingCompleted, entity.Owner, entity.Id, $"{entity.DisplayName} 완공");
         }
@@ -349,7 +374,21 @@ public sealed partial class BattleSession
 
     /// <summary>초 단위 간격을 틱으로 바꾼다 (올림, 최소 1틱).</summary>
     /// <param name="seconds">간격(초)</param>
-    private long TicksFor(double seconds) => _timestep.TicksFor(seconds);
+    internal long TicksFor(double seconds) => _timestep.TicksFor(seconds);
+
+    /// <summary>튜토리얼 안내(스크립트 섹션 이름)를 이벤트로 알린다.</summary>
+    /// <param name="player">플레이어</param>
+    /// <param name="section">섹션 이름 ("B." 또는 "NotVortex")</param>
+    internal void EmitTutorialTell(int player, string section) => Emit(SessionEventKind.TutorialTell, player, 0, section);
+
+    /// <summary>플레이어가 지금 템플을 선택하고 있는지 (원본은 선택한 오브젝트 타입의 플래그2 에 vortex 비트가 있는지 본다)</summary>
+    /// <param name="player">플레이어</param>
+    internal bool IsVortexSelected(PlayerState player) =>
+        Entity(player.SelectedEntityId) is { } selected && (selected.Type.Flags2 & TypeFlagBits.Flag2Words["vortex"]) != 0;
+
+    /// <summary>선택을 푼다 (원본 FUN_004d5c60: 선택 번호를 0 으로)</summary>
+    /// <param name="player">플레이어</param>
+    internal void ClearSelection(PlayerState player) => player.SelectedEntityId = 0;
 
     /// <summary>
     /// 지금까지의 게임 상태를 요약한 32비트 검사합 (FNV-1a). 같은 명령열을 같은 틱에 실행한 두 세션은 같은 값을 가져야 하고,
@@ -360,6 +399,11 @@ public sealed partial class BattleSession
         var hash = new Fnv1a();
         hash.Add(Tick);
         hash.Add(_random.State);
+        // 회수 금지는 명령의 결과를 바꾸는 상태이므로 검사합에 넣는다
+        hash.Add(DenySalvage ? 1 : 0);
+        // 튜토리얼 단계와 타이머도 상태다
+        hash.Add(Tutorial?.Stage ?? '\0');
+        hash.Add(Tutorial?.TimerTick ?? 0);
         // 플레이어 상태: Storm Power, 다리 칸, 집은 조각, 재충전 예약(이름 순)
         foreach (PlayerState player in _players.Values)
         {
@@ -372,6 +416,20 @@ public sealed partial class BattleSession
                 hash.Add(piece.Pattern.Index);
             }
             hash.Add(player.HeldPiece?.Pattern.Index ?? -1);
+            hash.Add(player.SelectedEntityId);
+            // 지은 수(누적)는 튜토리얼 단계를 정하므로 이름 순서로 섞는다
+            foreach ((string name, int count) in player.MadeSnapshot())
+            {
+                hash.Add(name);
+                hash.Add(count);
+            }
+            // 기술 허용 표도 명령의 결과를 바꾸므로 기본값과 개별 값을 이름 순서로 섞는다
+            hash.Add(player.Tech.DefaultAllowed ? 1 : 0);
+            foreach ((string name, bool allowed) in player.Tech.Snapshot())
+            {
+                hash.Add(name);
+                hash.Add(allowed ? 1 : 0);
+            }
             // 재충전 예약을 이름 순서로 섞는다 (Dictionary 순회 순서에 의존하지 않는다)
             foreach ((string name, long ready) in player.UnitReadyTick.OrderBy(pair => pair.Key, StringComparer.OrdinalIgnoreCase))
             {

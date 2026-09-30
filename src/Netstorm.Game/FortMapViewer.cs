@@ -136,7 +136,7 @@ internal sealed partial class FortMapViewer : IDisposable
         {
             _showChunks = !_showChunks;
         }
-        UpdateSession(seconds, keyboard);
+        UpdateSession(seconds, keyboard, mouse);
         UpdatePlacement(keyboard, mouse);
         UpdateBridges(keyboard, mouse);
         _previousKeyboard = keyboard;

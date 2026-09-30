@@ -171,6 +171,7 @@ public sealed partial class BattleSession
         ConstructBuildingCommand c => ExecuteConstruct(c),
         RegisterKnowledgeCommand c => ExecuteRegister(c),
         SalvageCommand c => ExecuteSalvage(c),
+        SelectEntityCommand c => ExecuteSelect(c),
         PickBridgePieceCommand c => ExecutePickBridge(c),
         ReturnBridgePieceCommand c => ExecuteReturnBridge(c),
         PlaceBridgeCommand c => ExecutePlaceBridge(c),
@@ -195,6 +196,8 @@ public sealed partial class BattleSession
         player.StormPower -= site.Cost;
         var entity = new GameEntity(id, type, ObjectKinds.Of(type), command.Player, site.Footprint, Map.TerritoryAt(command.X, command.Y), null);
         _entities.Add(id, entity);
+        // 유닛은 놓을 때 지은 수로 센다 (튜토리얼 단계 처리가 읽는다)
+        player.RecordMade(type.Name, type.Flags2);
         if (EnforceProductionRules)
         {
             // 배치한 유닛은 Unit Rate 에 따른 시간이 지나야 덱에서 다시 쓸 수 있다 (docs/exe/production-refresh.md)
@@ -312,7 +315,27 @@ public sealed partial class BattleSession
             player.Deck.RemoveWorkshop(entity.Id);
         }
         _entities.Remove(entity.Id);
+        // 선택하고 있던 오브젝트가 없어지면 선택도 사라진다
+        foreach (PlayerState viewer in _players.Values.Where(p => p.SelectedEntityId == entity.Id))
+        {
+            ClearSelection(viewer);
+        }
         Emit(SessionEventKind.Salvaged, command.Player, entity.Id, $"{entity.DisplayName} 회수 (+{refund})");
+        return CommandResult.Ok();
+    }
+
+    /// <summary>선택: 있는 오브젝트를 고르거나(번호) 선택을 푼다(0). 다른 플레이어의 오브젝트도 선택해 살펴볼 수 있다.</summary>
+    private CommandResult ExecuteSelect(SelectEntityCommand command)
+    {
+        if (!_players.TryGetValue(command.Player, out PlayerState? player))
+        {
+            return new CommandResult(CommandFailure.UnknownPlayer);
+        }
+        if (command.EntityId != 0 && Entity(command.EntityId) == null)
+        {
+            return new CommandResult(CommandFailure.NoSuchEntity);
+        }
+        player.SelectedEntityId = command.EntityId;
         return CommandResult.Ok();
     }
 

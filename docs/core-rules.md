@@ -34,7 +34,8 @@
 | `Bridges/BridgeReach.cs` | 다리 연결망이 닿는 섬 영역 계산. "내 다리 연결망 하나가 내 섬과 빈 섬에 함께 닿으면 그 빈 섬은 연결됨"(근사) | [island-ownership.md](gameplay/island-ownership.md) 규칙 4. 다른 빈 섬을 거치는 연쇄 연결은 미확인 |
 | `Simulation/BattleSession.cs` (+ `.Commands.cs`) | **게임 세션**: 고정 틱 루프, 플레이어 상태, 엔티티, 명령 실행, 판정, 이벤트, 검사합 ([아래](#게임-세션-battlesession)) | 규칙 코어 전체 |
 | `Simulation/BattleSessionFactory.cs` | 맵(.fort)·지면 미리보기·미션 시작 조건에서 세션 조립 (섬 칸, 다리 시작 불가 칸, 저장 다리) | 뷰어에 있던 초기화를 Core로 옮김 |
-| `Simulation/GameCommands.cs` | 명령: 유닛 배치·건물 건설·지식 등록·회수·다리 조각 집기/되돌리기/놓기 | |
+| `Simulation/GameCommands.cs` | 명령: 유닛 배치·건물 건설·지식 등록·회수·다리 조각 집기/되돌리기/놓기·**오브젝트 선택** | |
+| `Simulation/TutorialStages.cs` | **튜토리얼 단계 처리**(튜토리얼 2 = 원본 `004c3bb0`): 단계 A~I 조건·표/회수 금지 변경·안내 이벤트 | [mission-header-flags.md](exe/mission-header-flags.md) 3.5절 |
 | `Simulation/GameEntity.cs`·`PlayerState.cs`·`SessionEvents.cs` | 오브젝트(.type 구동), 플레이어 상태(SP·덱·다리 칸·기술 표), 이벤트·실패 이유 | |
 | `Simulation/ConstructionTimes.cs` | 사제 건물 건설 시간: 템플 16초·워크샵 10초(관찰값, 이동 포함), 그 밖 10초(임시) | 튜토리얼 2 사용자 조작 관찰([screens/README.md](screens/README.md) 1.7절) |
 
@@ -51,9 +52,10 @@
 
 * **시간**: 24Hz 고정 틱(`FixedTimestep`). 화면은 `Advance(흐른 초)`를 부르고(밀린 시간은 한 번에 8틱까지만 따라잡는다), 테스트는 `RunTicks(n)`으로 정확히 진행한다.
   게임 시각 = 틱 ÷ 24. 다리 조각 채우기(1초)·붕괴(10초)·건설·재충전은 모두 틱으로 센다.
-* **틱 순서(고정)**: 명령 실행(넣은 순서) → 건설 완료 처리 → 플레이어 번호 순 다리 칸 채우기 → 다리 붕괴.
+* **틱 순서(고정)**: 명령 실행(넣은 순서) → 건설 완료 처리 → 튜토리얼 단계 처리 → 플레이어 번호 순 다리 칸 채우기 → 다리 붕괴.
 * **명령** (`Submit`): `PlaceUnitCommand`(생산 창 유닛 배치)·`ConstructBuildingCommand`(사제 건물 건설)·`RegisterKnowledgeCommand`(워크샵 등록)·`SalvageCommand`(회수)·
-  `PickBridgePieceCommand`·`ReturnBridgePieceCommand`·`PlaceBridgeCommand`(다리 조각; 회전은 화면이 관리해 놓을 때 값으로 보낸다).
+  `PickBridgePieceCommand`·`ReturnBridgePieceCommand`·`PlaceBridgeCommand`(다리 조각; 회전은 화면이 관리해 놓을 때 값으로 보낸다)·
+  `SelectEntityCommand`(오브젝트 선택/해제 — 화면 조작이지만 튜토리얼 단계 C·F 가 읽는 상태라 명령으로 둔다).
   거부된 명령은 `CommandRejected` 이벤트(실패 이유 `CommandFailure` 포함)로 알린다. 화면은 `DrainEvents()`로 알림을 받는다.
 * **판정(상태를 바꾸지 않음)**: `CheckUnit`·`CheckBuilding`·`CheckBridge`, 재충전 남은 시간 `SecondsUntilReady`, 건설 진행률 `ConstructionProgress`.
 * **건설**: 비용은 시작할 때 나가고(시점은 미확인 근사), 건설 시간이 지나야 규칙 효과가 생긴다 — **템플**: 섬 소유(빈 섬 → 내 섬)·에너지 공급원 등록·생산 창의 다리 조각/골렘 공급 시작,
@@ -65,12 +67,17 @@
 * **결정론**: `Checksum()`(FNV-1a)이 틱·전역 난수·플레이어·오브젝트·다리 칸을 요약한다. 같은 시작·같은 명령열은 같은 값이다(테스트로 확인, 락스텝·리플레이 검증용 기반).
   플레이어 상태·오브젝트·다리 칸은 정렬된 순서로만 순회하고, 난수는 하나(`NetstormRandom`)를 모든 플레이어의 다리 칸이 번호 순으로 공유한다(원본도 전역 난수 하나를 공유).
 
-### 튜토리얼 단계 처리와의 관계
+### 튜토리얼 단계 처리 (`TutorialStages`)
 
 미션 머리의 `techAllowed`(기술 허용 표)와 `denySalvage`는 **시작 값**이다. 원본의 튜토리얼 단계 처리(튜토리얼 2 = `FUN_004c3bb0`)가 실행 중에 바꾼다:
-단계 B에서 sunFactory 허용, 단계 H에서 회수 금지 해제 ([근거](exe/mission-header-flags.md)). 세션에는 아직 단계 처리 코드가 없어서
-테스트와 뷰어 `--script`가 `Tech.Set`·`DenySalvage`로 그 효과를 손으로 재현한다. 원본이 기술 허용 표를 확인하는 곳(메뉴 항목·덱)에 맞춰
-세션도 Construct 판정(`CheckBuilding`)·지식 등록·덱 배치에서 표를 확인한다.
+단계 B에서 sunFactory 허용, 단계 H에서 회수 금지 해제 ([근거](exe/mission-header-flags.md)). 세션이 이를 `TutorialStages`(튜토리얼 2만 구현)로 재현한다:
+
+* 세션을 만들면 첫 단계 안내 `TutorialTell "A."` 이벤트가 나온다. 단계마다 그 단계의 스크립트 섹션 이름(`"B."` …)을 `TutorialTell` 이벤트로 알리고, 화면이 본문을 안내 창으로 띄운다(창은 아직 없다).
+* 조건은 세션 상태만 본다: 지은 수(`PlayerState.Made`·`MadeWithFlags`, 누적 — 파괴·회수로 줄지 않는다), 워크샵 등록 여부, 선택한 오브젝트(`SelectedEntityId`), 이번 틱의 회수 이벤트, 타이머(단계 F 4초·H 2초·C의 `NotVortex` 2초 — exe 상수 값).
+* 표·회수 금지·전투 옵션(Short·Fast)을 바꾸는 것도 단계 처리 몫이다: 단계 A 옵션 덮어쓰기, 단계 B `Tech.Set("sunFactory", true)`, 단계 H `DenySalvage = false`. 팩토리는 시작 시점에도 옵션을 덮어쓴다(단계 A 첫 프레임과 같은 결과).
+* `RunsTutorial = false`로 끌 수 있고, 구현되지 않은 튜토리얼(1·3~6)과 튜토리얼이 아닌 미션은 `Tutorial == null`이다. 단계·타이머·지은 수·선택·기술 표·회수 금지는 `Checksum()`에 들어간다.
+* 원본이 기술 허용 표를 확인하는 곳(메뉴 항목·덱)에 맞춰 세션도 Construct 판정(`CheckBuilding`)·지식 등록·덱 배치에서 표를 확인한다.
+* 근사: 단계를 넘긴 뒤 원본이 열 번 세는 동안 다음 단계 처리를 멈추는 잠금(`+0x84`, 안내 창이 뜨고 닫힐 때까지로 추정)은 "다음 틱부터 검사"로 대신한다. 건물은 완공 시점에, 유닛은 놓는 시점에 지은 수로 센다(원본의 출생 콜백 시점은 스크립트 문구로 추정).
 
 ### 근사한 부분 (원본 확인 전)
 

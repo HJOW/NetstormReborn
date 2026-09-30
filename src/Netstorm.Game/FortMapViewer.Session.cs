@@ -52,11 +52,13 @@ internal sealed partial class FortMapViewer
     }
 
     /// <summary>
-    /// 세션 입력과 시간 진행: Space 일시정지, K 생산 규칙 켜기/끄기, 흐른 시간만큼 틱 진행, 이벤트 알림 갱신.
+    /// 세션 입력과 시간 진행: Space 일시정지, K 생산 규칙 켜기/끄기, T 커서 칸의 오브젝트 선택/해제,
+    /// 흐른 시간만큼 틱 진행, 이벤트 알림 갱신.
     /// </summary>
     /// <param name="seconds">지난 갱신 이후 경과 시간(초)</param>
     /// <param name="keyboard">현재 키 상태</param>
-    private void UpdateSession(double seconds, KeyboardState keyboard)
+    /// <param name="mouse">현재 마우스 상태 (논리 화면 좌표)</param>
+    private void UpdateSession(double seconds, KeyboardState keyboard, MouseState mouse)
     {
         if (Pressed(keyboard, Keys.Space))
         {
@@ -65,6 +67,12 @@ internal sealed partial class FortMapViewer
         if (Pressed(keyboard, Keys.K))
         {
             _session.EnforceProductionRules = !_session.EnforceProductionRules;
+        }
+        if (Pressed(keyboard, Keys.T) && mouse.Y >= HeaderHeight)
+        {
+            // 커서 칸에 오브젝트가 있으면 선택하고, 없으면 선택을 푼다 (튜토리얼 단계 C·F 가 선택한 템플을 본다)
+            (int selectX, int selectY) = CellAt(new Vector2(mouse.X, mouse.Y));
+            SubmitCommand(new SelectEntityCommand(TestPlayer, _session.EntityAt(selectX, selectY)?.Id ?? 0));
         }
         if (SimulationRunning)
         {
@@ -75,7 +83,7 @@ internal sealed partial class FortMapViewer
         {
             if (sessionEvent.Kind != SessionEventKind.BridgePieceAdded)
             {
-                _notice = sessionEvent.Kind == SessionEventKind.CommandRejected ? $"거부: {sessionEvent.Text}" : sessionEvent.Text;
+                _notice = DescribeEvent(sessionEvent);
             }
         }
     }
@@ -98,7 +106,8 @@ internal sealed partial class FortMapViewer
     /// <list type="bullet">
     /// <item><description><c>construct 타입 x,y</c> — 사제가 건물을 짓기 시작 · <c>place 타입 x,y</c> — 유닛 배치 · <c>register 타입</c> — 워크샵에 지식 등록 · <c>salvage x,y</c> — 그 칸의 내 오브젝트 회수</description></item>
     /// <item><description><c>wait 초</c> — 게임 시간을 진행 · <c>rules 0|1</c> — 생산 규칙 끄기/켜기</description></item>
-    /// <item><description>튜토리얼 단계 처리 재현: <c>allow 타입</c>·<c>deny 타입</c> — 기술 허용 표 변경, <c>denysalvage 0|1</c> — 회수 금지 변경 (docs/exe/mission-header-flags.md)</description></item>
+    /// <item><description><c>select x,y</c> — 그 칸의 오브젝트 선택 (없으면 선택 해제) · <c>select none</c> — 선택 해제 (튜토리얼 단계 C·F 는 선택한 템플을 본다)</description></item>
+    /// <item><description>단계 처리가 없는 미션에서 손으로 재현: <c>allow 타입</c>·<c>deny 타입</c> — 기술 허용 표 변경, <c>denysalvage 0|1</c> — 회수 금지 변경. 튜토리얼 2 는 세션의 단계 처리(<c>TutorialStages</c>)가 자동으로 바꾼다 (docs/exe/mission-header-flags.md)</description></item>
     /// </list>
     /// </summary>
     /// <param name="script">명령 스크립트</param>
@@ -132,6 +141,16 @@ internal sealed partial class FortMapViewer
                     (int sx, int sy) = ParseCell(Word(1));
                     SalvageAt(sx, sy);
                     break;
+                case "select":
+                    // "none" 이거나 오브젝트가 없는 칸이면 선택을 푼다
+                    int selectedId = 0;
+                    if (!Word(1).Equals("none", StringComparison.OrdinalIgnoreCase))
+                    {
+                        (int ex, int ey) = ParseCell(Word(1));
+                        selectedId = _session.EntityAt(ex, ey)?.Id ?? 0;
+                    }
+                    SubmitCommand(new SelectEntityCommand(TestPlayer, selectedId));
+                    break;
                 case "rules":
                     _session.EnforceProductionRules = Word(1) != "0";
                     break;
@@ -146,7 +165,7 @@ internal sealed partial class FortMapViewer
                     throw new ArgumentException($"알 수 없는 --script 명령입니다: {raw}");
             }
             // 세션에 넣은 명령은 곧바로 한 틱 진행해 결과가 이 명령의 것으로 남게 한다
-            if (verb is "construct" or "place" or "register" or "salvage")
+            if (verb is "construct" or "place" or "register" or "salvage" or "select")
             {
                 _session.RunTicks(1);
             }
@@ -156,7 +175,7 @@ internal sealed partial class FortMapViewer
                 if (sessionEvent.Kind != SessionEventKind.BridgePieceAdded)
                 {
                     Console.WriteLine($"[{_session.Seconds,6:0.0}s] {raw} → {sessionEvent.Kind}: {sessionEvent.Text}");
-                    _notice = sessionEvent.Text;
+                    _notice = DescribeEvent(sessionEvent);
                 }
             }
         }
@@ -187,7 +206,8 @@ internal sealed partial class FortMapViewer
             return;
         }
         PlayerState player = _session.Player(TestPlayer);
-        var box = new Rectangle(width - HudWidth - 10, HeaderHeight + 6, HudWidth, 88);
+        // 튜토리얼이면 단계·선택 줄이 하나 더 있다
+        var box = new Rectangle(width - HudWidth - 10, HeaderHeight + 6, HudWidth, _session.Tutorial != null ? 112 : 88);
         batch.Draw(_pixel, box, new Color(18, 24, 38) * 0.85f);
         batch.DrawString(font, $"Storm Power {player.StormPower}", new Vector2(box.X + 10, box.Y + 3),
             StormPowerColors[StormPower.DisplayColor(player.StormPower)]);
@@ -196,7 +216,21 @@ internal sealed partial class FortMapViewer
         batch.DrawString(font, $"게임 {(int)time.TotalMinutes:00}:{time.Seconds:00} (틱 {_session.Tick}){state}", new Vector2(box.X + 10, box.Y + 27), Color.LightGray);
         string rules = _session.EnforceProductionRules ? "생산 규칙 켜짐" : "생산 규칙 꺼짐(시험)";
         batch.DrawString(font, $"{rules} · 미션: {_mission?.Title ?? "없음"}", new Vector2(box.X + 10, box.Y + 51), Color.LightGray);
+        if (_session.Tutorial is { } tutorial)
+        {
+            string selected = _session.Entity(player.SelectedEntityId)?.DisplayName ?? "없음";
+            string stage = tutorial.Finished ? "완료" : tutorial.Stage.ToString();
+            batch.DrawString(font, $"튜토리얼 단계 {stage} · 선택: {selected} (T)", new Vector2(box.X + 10, box.Y + 75), Color.LightGray);
+        }
     }
+
+    /// <summary>세션 이벤트를 화면 알림 문구로 바꾼다 (거부·튜토리얼 안내에는 머리말을 붙인다)</summary>
+    private static string DescribeEvent(SessionEvent sessionEvent) => sessionEvent.Kind switch
+    {
+        SessionEventKind.CommandRejected => $"거부: {sessionEvent.Text}",
+        SessionEventKind.TutorialTell => $"튜토리얼 안내 [{sessionEvent.Text}] (스크립트 섹션)",
+        _ => sessionEvent.Text,
+    };
 
     /// <summary>플레이어 생산 창(덱)을 요약한 문구: 다리 칸, 골렘, 워크샵별 등록 유닛과 재충전</summary>
     private string DescribeDeck()

@@ -44,8 +44,10 @@ dotnet run --project src/Netstorm.Game -- --map savetheisland --language korean
 * `--mission`은 미션 스크립트에서 맵(`loadFort`)과 시작 조건을 읽어 연다. `--map`과 함께 쓸 수 없다.
 * `Space`: 세션 일시정지·재개. `K`: 생산 규칙 켜기/끄기. 일시정지 중에도 명령을 내리면 한 틱만 진행해 결과를 보여 준다.
 * 오른쪽 위 상자에 Storm Power(원본 색 규칙 ≤1000 빨강, ≤2000 노랑), 게임 시각(틱), 생산 규칙 상태, 미션 제목이 표시된다.
-* **튜토리얼 단계 처리는 아직 없다.** 미션 머리의 `techAllowed`·`denySalvage`는 시작 값이고 원본은 튜토리얼이 진행 중에 바꾼다([mission-header-flags.md](exe/mission-header-flags.md)).
-  그래서 `--mission tutorial2`에서 Sun Workshop을 지으려면 단계 B의 효과를 손으로 재현해야 한다(아래 `--script`의 `allow`).
+* **튜토리얼 2는 세션이 단계 처리를 한다**(`TutorialStages`, [core-rules.md](core-rules.md)). 미션 머리의 `techAllowed`·`denySalvage`는 시작 값이고 원본은 튜토리얼이 진행 중에 바꾼다([mission-header-flags.md](exe/mission-header-flags.md)).
+  템플을 지으면 단계 B에서 Sun Workshop이 허용되고, 유닛 네 개를 놓으면 단계 H에서 회수 금지가 풀린다. 오른쪽 위 상자에 현재 단계와 선택한 오브젝트가 나오고, 단계가 넘어갈 때 알림줄에 `튜토리얼 안내 [B.]`가 뜬다(안내 창은 아직 없다).
+  단계 C·F는 **선택한 템플**을 본다: `T` 키로 커서 칸의 오브젝트를 선택/해제한다(`--script`는 `select x,y`·`select none`).
+  다른 미션(튜토리얼 1 등)은 단계 처리가 없어서 `allow`·`denysalvage`로 손으로 재현한다.
 
 검증용 명령 스크립트 `--script "명령; 명령"`: 시작할 때 세션 명령을 차례로 실행하고, 결과를 콘솔에 출력한다.
 
@@ -56,17 +58,22 @@ dotnet run --project src/Netstorm.Game -- --map savetheisland --language korean
 | `register 타입` | 그 유닛을 받을 수 있는 첫 워크샵에 지식으로 등록 |
 | `salvage x,y` | 그 칸의 내 오브젝트를 회수 |
 | `wait 초` | 게임 시간을 진행 |
-| `allow 타입` / `deny 타입` | 기술 허용 표를 바꾼다 (튜토리얼 2 단계 B의 sunFactory 허용 재현) |
-| `denysalvage 0\|1` | 회수 금지를 바꾼다 (단계 H 재현) |
+| `select x,y` / `select none` | 그 칸의 오브젝트를 선택 / 선택 해제 (튜토리얼 2 단계 C·F가 선택한 템플을 본다) |
+| `allow 타입` / `deny 타입` | 기술 허용 표를 바꾼다 (단계 처리가 없는 미션에서 손으로 재현) |
+| `denysalvage 0\|1` | 회수 금지를 바꾼다 (같은 용도) |
 | `rules 0\|1` | 생산 규칙 끄기/켜기 |
 
 튜토리얼 2 흐름 확인 (2026-09-30): 관찰한 Storm Power 10,000 → 5,000(템플) → 4,200(워크샵) → 유닛 300씩 → 회수 75와 같은 값이 나온다.
 
 ```powershell
-dotnet run --project src/Netstorm.Game -- --mission tutorial2 --window 1024x768 --script "construct windVortex 40,32; wait 17; allow sunFactory; construct sunFactory 52,32; wait 11; register sunArcher; place sunArcher 43,32; wait 2; place sunArcher 38,35; wait 1; denysalvage 0; salvage 38,35" --screenshot extracted/screens/session-tutorial2.png --screenshot-frames 45
+dotnet run --project src/Netstorm.Game -- --mission tutorial2 --window 1024x768 --script "construct windVortex 40,32; wait 17; construct sunFactory 52,32; wait 11; register sunArcher; place sunArcher 43,32; wait 2; place sunArcher 38,35; wait 1; denysalvage 0; salvage 38,35" --screenshot extracted/screens/session-tutorial2.png --screenshot-frames 45
 ```
 
 콘솔에는 `Wind Temple 완공`(17초), `Sun Workshop 완공`(28초), 등록, 배치(−300)×2, 회수(+75)가 차례로 나오고 화면의 Storm Power는 3,675다.
+(단계 처리가 생긴 뒤로 `allow sunFactory`는 필요 없다. 단계 H는 유닛 네 개를 놓아야 오므로 이 짧은 스크립트는 `denysalvage 0`으로 회수 금지를 손으로 풀었다.)
+
+단계 처리로 A→G까지 걷는 확인(2026-09-30, Linux): 템플 완공 → `TutorialTell B.` → 워크샵 완공 → `C.` → 템플을 2초 선택 → `NotVortex` → 등록 → `D.` → 첫 배치 `E.` → 둘째 `F.` → 템플 4초 선택 → `G.`.
+단계 H 전에는 회수가 `회수 금지 상태`로 거부된다. 스크립트: `construct windVortex 40,32; wait 17; construct sunFactory 52,32; wait 11; select 40,32; wait 2.5; register sunArcher; place sunArcher 43,32; wait 2; place sunArcher 38,35; wait 2; select 40,32; wait 4.5; place sunArcher 41,36; wait 1; salvage 41,36`.
 좌표는 첫 번째로 유효한 칸이라 섬 가장자리에 붙는다. 건설 시간(템플 16초·워크샵 10초)은 관찰값(사제 이동 포함)을 그대로 쓴 임시 값이다([ConstructionTimes](../src/Netstorm.Core/Simulation/ConstructionTimes.cs)).
 
 ## 배치 시험 모드

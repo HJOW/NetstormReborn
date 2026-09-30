@@ -10,7 +10,8 @@ namespace Netstorm.Core.Tests;
 /// 원본 튜토리얼 1·2 의 시작 상태와 사용자 직접 조작 관찰(2026-09-30)을 기준으로 삼는다:
 /// 튜토리얼 2 는 10,000 SP → 템플 완공 5,000 → 워크샵 완공 4,200 → Sun Disc Thrower 300 SP 씩, 회수하면 원가의 25%.
 /// 미션 머리의 techAllowed·denySalvage 는 시작 값이고 튜토리얼 단계 처리가 실행 중에 바꾼다(docs/exe/mission-header-flags.md).
-/// 세션에는 아직 단계 처리 코드가 없으므로 아래 테스트가 단계 B(sunFactory 허용)·단계 H(denySalvage 해제)를 손으로 재현한다.
+/// 아래 테스트는 규칙만 따로 확인하려고 단계 B(sunFactory 허용)·단계 H(denySalvage 해제)의 효과를 손으로 재현한다.
+/// 단계 처리 자체(A→I 흐름)는 <see cref="TutorialStagesTests"/> 가 확인한다.
 /// </summary>
 public sealed class BattleSessionTests
 {
@@ -256,6 +257,39 @@ public sealed class BattleSessionTests
         BattleSession one = SessionData.FromMission("tutorial1");
         Assert.True(one.Player(1).Tech.IsAllowed("windVortex"));
         Assert.False(one.Player(1).Tech.IsAllowed("sunFactory"));
+    }
+
+    /// <summary>
+    /// 같은 <see cref="MissionStart"/> 로 만든 두 세션은 기술 허용 표를 따로 가진다: 한쪽을 바꿔도 다른 쪽과 미션 원본 표는 그대로다.
+    /// (이전에는 미션의 표 객체를 그대로 플레이어에게 넘겨 한 세션의 튜토리얼 단계 처리가 다른 세션에 새었다.)
+    /// </summary>
+    [Fact]
+    public void TechTable_IsIndependentPerSession()
+    {
+        GameResources resources = OriginalData.RequireResources();
+        MissionStart start = MissionStart.FromScript(resources.TryLoadMission("tutorial2")!.Script);
+        BattleSession a = SessionData.FromMap(start.LoadFort!, start);
+        BattleSession b = SessionData.FromMap(start.LoadFort!, start);
+        a.Player(1).Tech.Set("sunFactory", true);
+        Assert.True(a.Player(1).Tech.IsAllowed("sunFactory"));
+        Assert.False(b.Player(1).Tech.IsAllowed("sunFactory"));
+        Assert.False(start.Tech.IsAllowed("sunFactory"));
+    }
+
+    /// <summary>검사합에는 기술 허용 표와 회수 금지가 들어간다: 이 상태가 다르면 같은 명령이 다른 결과를 내므로 동기화 검사가 잡아야 한다.</summary>
+    [Fact]
+    public void Checksum_CoversTechTableAndSalvageDenial()
+    {
+        BattleSession a = SessionData.FromMission("tutorial2");
+        BattleSession b = SessionData.FromMission("tutorial2");
+        Assert.Equal(a.Checksum(), b.Checksum());
+        a.Player(1).Tech.Set("sunFactory", true);
+        Assert.NotEqual(a.Checksum(), b.Checksum());
+        b.Player(1).Tech.Set("SUNFACTORY", true);
+        // 이름 대소문자가 달라도 같은 표면 같은 검사합이어야 한다
+        Assert.Equal(a.Checksum(), b.Checksum());
+        a.DenySalvage = !a.DenySalvage;
+        Assert.NotEqual(a.Checksum(), b.Checksum());
     }
 
     /// <summary>회수 금지는 머리 denySalvage 로 시작하고, 켜져 있는 동안 회수 명령은 아무것도 바꾸지 않는다 (튜토리얼 1·2 모두 1 로 시작)</summary>

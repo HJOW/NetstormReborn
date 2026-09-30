@@ -137,6 +137,12 @@ public enum SessionEventKind
 
     /// <summary>명령이 거부됨</summary>
     CommandRejected,
+
+    /// <summary>
+    /// 튜토리얼이 미션 스크립트의 섹션을 알림 (Text = 섹션 이름: 단계 "A." "B." … 또는 보정 안내 "NotVortex").
+    /// 화면은 그 섹션 본문을 안내 창으로 띄운다 (원본 FUN_004cf960 = 스크립트 섹션 Tell).
+    /// </summary>
+    TutorialTell,
 }
 
 /// <summary>세션 이벤트 한 건.</summary>

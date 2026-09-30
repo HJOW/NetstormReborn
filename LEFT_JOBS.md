@@ -1,6 +1,6 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
-> 최종 갱신: 2026-09-30
+> 최종 갱신: 2026-09-30 (오후, `vm-debian-codex`)
 > 프로젝트 목표(AGENTS.md): 원본 NetStorm: Islands at War 를 디컴파일/분석하여 클론 코딩하고,
 > **Windows 10/11** 과 **GUI 환경의 Linux** 에서 동작하며 **여러 언어를 지원**하는 게임을 만든다.
 > **1차 목표 언어: 영어, 한국어** (그 외 언어는 이후 확장).
@@ -10,6 +10,26 @@
 ---
 
 ## 0-A. 최신 인수인계 — AI용 원본 분석 도구 (2026-09-29)
+
+### 2026-09-30 오후 (`vm-debian-codex`, Linux, 원본 실행 없음): 튜토리얼 2 단계 처리 구현 ✅ (후보 1번 완료)
+
+- **선행 결함 수정**: `BattleSession.CreatePlayer`가 `MissionStart.Tech` 표를 그대로 플레이어에게 넘겨, 같은 미션으로 만든 두 세션이 표를 공유했다. `TechPermissions.Clone()`을 쓰도록 고쳤다(수정을 되돌리면 새 테스트가 실패함을 확인).
+  또 `Checksum()`에 기술 허용 표·회수 금지가 없었다 → 넣었다(이름 순서로 섞어 Dictionary 순서에 의존하지 않음).
+- **exe 확인(정적, 2026-09-30)** → [mission-header-flags.md](docs/exe/mission-header-flags.md) 3.5절
+  - 개수 표 세 개: `DAT_005c94d0` = 내 현재 개수, **`DAT_005c98d0` = 내가 지은 누적 수**(튜토리얼 단계 조건이 읽는 것, 파괴·회수는 줄이지 않고 전체 삭제 `FUN_004c27c0`만 줄임), `DAT_005c9cd0` = 전체 현재 개수. 이전 문서의 "누적인지 현재인지 미확인"을 해소했다.
+  - 타이머 상수를 exe 바이트에서 읽었다: `0x506588` = **4.0초**(단계 F), `0x506590` = **2.0초**(단계 C의 `NotVortex`·단계 H). 단계 C·F가 읽는 `FUN_004d5430` = 선택한 오브젝트 번호(`DAT_005caea0`), `FUN_004d5c60` = 선택 해제.
+  - 단계 넘김(`FUN_004c33f0`)은 글자 +1·타이머 지움·잠금 카운터 10, 잠금이 풀린 뒤에만 단계 함수가 호출된다(프레임 함수 `FUN_004c34c0`).
+- **구현** (Core): `Simulation/TutorialStages.cs`(튜토리얼 2 단계 A~I), `SelectEntityCommand`, `PlayerState.Made/MadeWithFlags/SelectedEntityId`, `SessionEventKind.TutorialTell`(단계 섹션 이름 알림), `BattleSession.Tutorial/RunsTutorial`. 단계 A 옵션 덮어쓰기·B `sunFactory` 허용·H 회수 금지 해제를 세션이 자동으로 한다.
+  건물은 **완공**, 유닛은 **배치**할 때 지은 수로 센다(출생 콜백 시점은 스크립트 문구로 추정 — 미확정).
+- **뷰어**: `T` 키(커서 칸 오브젝트 선택/해제), `--script select x,y|none`, HUD에 튜토리얼 단계·선택 표시, 안내 이벤트를 알림줄에 표시. Linux에서 `--mission tutorial2`로 A→G 진행과 회수 거부, 단축 스크립트(회수 +75, 3,675 SP)를 실제 실행 확인했다. [사용법](docs/map-viewer.md)
+- **검증(확실)**: Release 솔루션 빌드 오류 0(기존 CA2014 경고 1), Assets 172·Core **135**(기존 128 + 신규 7: 세션 표 독립, 검사합 범위, 단계 A~I 걷기, 결정론, 누적 수, 선택 명령, 단계 끄기/미구현 튜토리얼) 통과, Core 4회 반복 안정. 원본 게임은 실행하지 않았다.
+- **근사·미확정**: 단계 넘김 뒤 잠금(10 카운트, 안내 창 표시·닫힘 조건으로 추정)은 "다음 틱부터 검사"로 대신함. 출생 콜백 시점(건설 시작/완공). `[NotVortex]` 안내는 항상 이벤트로 내보냄(원본은 그 섹션이 있을 때만). 안내 창 UI 없음.
+- **다음 후보 (우선순위 순)**
+  1. **수집 경제**(튜토리얼 1의 D~F가 의존): 가이저 → 사제 결정 운반(결정당 200 SP) (`Carrier.cpp`·`Nugget.cpp`·`Vortex.cpp`) — 이후 `TutorialStages`에 튜토리얼 1(`FUN_004c3a20`) 추가. 디컴파일은 `extracted/decomp/Netstorm.c` 준비됨.
+  2. 튜토리얼 안내 창(9단계 UI): `TutorialTell` 이벤트의 섹션 본문(HTML 부분집합·`$Button=`)을 띄우고 F8로 다시 보기.
+  3. 사제 이동·건설 절차 분석(`Priest.cpp`) → `ConstructionTimes`·비용 차감 시점 교체.
+  4. Ghidra 누락 함수 목록(후보 528개) — `FUN_004c34c0`의 `FUN_004c8e90`·`FUN_00460de0` 의미도 여기서 확인.
+- 이번 변경 파일(커밋 전): `src/Netstorm.Core/Simulation/{TutorialStages(신규),BattleSession,BattleSession.Commands,PlayerState,GameCommands,SessionEvents}.cs`, `src/Netstorm.Core/Rules/MissionStart.cs`, `src/Netstorm.Game/{FortMapViewer,FortMapViewer.Session}.cs`, `tests/Netstorm.Core.Tests/{TutorialStagesTests(신규),BattleSessionTests}.cs`, `docs/{core-rules,map-viewer}.md`, `docs/exe/mission-header-flags.md`, 이 문서. (`analyzeManager` 관련 이전 Linux/Wine 변경은 이미 커밋됨)
 
 ### 2026-09-30 오전 (`vm-debian-codex`, Linux, 원본 실행 없음): 디컴파일 준비만 하고 사용자 요청으로 중단
 
@@ -24,12 +44,12 @@
     ```
   - `python3 tools/taff.py extract originals/netstorm.tarc extracted/tarc`로 아카이브를 풀었다(246개, 튜토리얼 스크립트는 `extracted/tarc/d/tutorial1~6.english`).
   - 기준 상태 확인: Release 빌드 오류 0(기존 CA2014 경고 1), 테스트 Core 128·Assets 172 통과.
-- **아직 하지 않은 것**: 아래 "다음 후보" 1~4번 중 어느 것도 시작하지 않았다. `extracted/decomp/Netstorm.c`는 준비됐으므로 바로 분석에 들어갈 수 있다. 디컴파일에 없는 함수(`0x484ab0`·`0x4c2b20`·`0x4c3290` 등)는 `tools/ghidra/decompile_at.ps1`이 필요한데 이것도 PowerShell 전용이라 이 PC에서는 `DecompileAt.java`를 `analyzeHeadless -process`로 직접 돌려야 한다(미시도).
+- **아직 하지 않은 것 → 후보 1번(튜토리얼 단계 처리)은 오후에 완료함**(위 절). 2~4번은 미착수. `extracted/decomp/Netstorm.c`는 준비됐으므로 바로 분석에 들어갈 수 있다. 디컴파일에 없는 함수(`0x484ab0`·`0x4c2b20`·`0x4c3290` 등)는 `tools/ghidra/decompile_at.ps1`이 필요한데 이것도 PowerShell 전용이라 이 PC에서는 `DecompileAt.java`를 `analyzeHeadless -process`로 직접 돌려야 한다(미시도).
 - **다음 후보 1번(튜토리얼 단계 처리 객체)을 위해 읽어 둔 것**
   - 튜토리얼 1은 단계 D~F(가이저 연결·사제의 결정 운반·600 SP)가 수집 경제에 의존한다. 그래서 **튜토리얼 2만 지금 구현할 수 있다**(단계 A·B·D·E·G·H는 "지은 개수" 조건). 튜토리얼 1은 후보 3번(수집 경제)이 먼저다. 튜토리얼 3~6은 전투가 필요하다.
   - 단계 C(워크샵에서 지식 등록 — 세션의 `RegisterKnowledgeCommand`로 판정 가능)·F(템플을 선택해 범위를 보면 타이머 시작)는 UI 선택 상태가 필요하다. 세션에 "선택" 개념이 없으므로 결정론을 지키려면 선택을 명령(예: `SelectEntityCommand`)으로 만들지 화면 신호로 둘지 정해야 한다.
   - "지은 개수"(`FUN_004c24c0`, `DAT_005c98d0[타입]`)가 누적인지 현재 개수인지가 미확정이다. 파일 이름이 `Totalmade.cpp`라서 **누적(지은 총수)** 일 가능성이 높다. 이 배열을 올리는 곳을 디컴파일에서 찾아 확인할 것(회수해도 줄지 않는지가 단계 G 조건에 영향).
-- **발견한 문제(수정 안 함)**: `BattleSession.CreatePlayer`가 `MissionStart.Tech`를 복사하지 않고 그대로 `PlayerState.Tech`로 쓴다. `TechPermissions`가 변경 가능해졌으므로(`Set`) 같은 `MissionStart`로 세션을 두 개 만들면 한쪽의 단계 처리가 다른 쪽 표까지 바꾼다. 현재 테스트는 세션마다 미션을 새로 읽어서 드러나지 않는다. 튜토리얼 단계 처리를 넣기 전에 `TechPermissions` 복사본(예: `Clone()`)을 쓰도록 고치고 회귀 테스트를 추가할 것.
+- **발견한 문제 → ✅ 2026-09-30 오후 수정함**(위 절): `BattleSession.CreatePlayer`가 `MissionStart.Tech`를 복사하지 않고 그대로 `PlayerState.Tech`로 쓴다. `TechPermissions`가 변경 가능해졌으므로(`Set`) 같은 `MissionStart`로 세션을 두 개 만들면 한쪽의 단계 처리가 다른 쪽 표까지 바꾼다. 현재 테스트는 세션마다 미션을 새로 읽어서 드러나지 않는다. 튜토리얼 단계 처리를 넣기 전에 `TechPermissions` 복사본(예: `Clone()`)을 쓰도록 고치고 회귀 테스트를 추가할 것.
 - **참고**: 이 PC(`vm-debian-codex`)는 AGENTS.md 예외 시스템 1이라 게임 실행 확인은 필요 없지만, 이번에는 실행하지 않았다.
 
 ### 2026-09-30 (`DESKTOP-HJOW`, 원본 실행 없음): 재디컴파일 · 튜토리얼 2 헤더 플래그 원인 · 게임 세션
