@@ -99,15 +99,16 @@ python tools/nscfg.py set <게임 폴더>/d/setup.cfg gameServerPort 6899
 * 이 항목은 **임시 조치**다. 멀티플레이를 구현할 때 다시 정한다(8절).
 * 다른 방법(참고): `Set-NetFirewallProfile -Profile Private,Public -NotifyOnListen False`(알림 자체를 끔, 확실하나 PC 전체 설정), 경고 창의 "취소"(허용 안 함 — 싱글 플레이는 내부 전송 `zlocal` 로 동작하므로 분석에는 영향이 없어야 함, 미검증).
 
-### 7.2 검증 상태 — Windows 에서 테스트 필요
+### 7.2 검증 상태 — Windows 에서 일부 확인됨
 
-* **한 것**: Linux 의 PowerShell 7.6 파서로 `PREPARE.ps1` **문법 검사만** 했다(오류 없음). 파일은 UTF-8 BOM·LF 를 유지한다. 방화벽 cmdlet 을 모의해 비관리자 경로가 "사용 불가" 행을 내는 것까지 한 번 보았지만, 나머지 항목이 Linux 에 없는 명령(`cmd`, `winget`)을 써서 실행이 끝까지 가지 않았으므로 **검증으로 치지 않는다.**
-* **Windows 에서 확인할 것**(Windows PowerShell 5.1 과 PowerShell 7 모두):
-  1. 비관리자 실행: 선택 화면에 방화벽 항목이 "[사용 불가] … 관리자 권한 필요"로 나오고, 번호 입력·`a`(전체)·`r`(필수만)으로 선택되지 않는지. `-All`·`-CheckOnly` 결과 요약에 "사용 불가"가 남는지. 다른 항목은 평소처럼 동작하는지.
-  2. 관리자 실행: 항목이 선택 가능하고 기본 해제인지. `-CheckOnly` 는 규칙이 없을 때 "없음", 등록 뒤에는 "이미 설치됨: TCP 6799 …" 인지. 등록 후 `Get-NetFirewallRule -DisplayName "NetStorm Reborn - Game Server TCP 6799" | Get-NetFirewallPortFilter` 결과가 TCP/6799 인지, 원격 범위·프로필이 의도대로인지.
+* **Windows 에서 사용자 확인(2026-09-30)**: TCP 6799 방화벽 허용 기능이 정상 동작했고, 관리자 권한이 없을 때 해당 항목을 선택할 수 없는 것도 확인했다.
+* **아직 확인할 것**(Windows PowerShell 5.1 과 PowerShell 7 모두):
+  1. 비관리자 실행의 `-All`·`-CheckOnly` 결과 요약에 "사용 불가"가 남는지, 다른 항목은 계속 동작하는지.
+  2. 관리자 실행에서 기본 선택 해제 및 `-CheckOnly`의 규칙 없음/이미 설치됨 표시가 맞는지. 규칙 필터가 TCP·로컬 포트 6799·프로필 Any·원격 범위 `LocalSubnet`인지.
   3. 두 번 실행해도 규칙이 하나만 남는지(낡은 규칙 삭제 후 재생성).
-  4. **등록한 뒤 분석 도구로 게임을 실행해(데모 또는 튜토리얼 시작) 방화벽 경고가 뜨지 않는지.** 원격 범위 `LocalSubnet` 규칙이 경고를 막는지가 핵심이며, 막지 못하면 `$FirewallRemoteScope = 'Any'` 로 다시 확인한다.
+  4. **등록한 뒤 분석 도구로 게임을 실행해(데모 또는 튜토리얼 시작) 방화벽 경고가 뜨지 않는지.** 사용자 확인 내용에는 경고 억제 여부가 포함되지 않아 아직 미검증이다. 원격 범위 `LocalSubnet` 규칙이 경고를 막는지가 핵심이며, 막지 못하면 `$FirewallRemoteScope = 'Any'` 로 다시 확인한다.
   5. 되돌리기 명령으로 규칙이 지워지고, 지운 뒤 `-CheckOnly` 가 "없음"으로 돌아오는지.
+* **사전 검사 기록**: Linux 의 PowerShell 7.6 파서에서 `PREPARE.ps1` 문법 오류가 없음을 확인했고 파일은 UTF-8 BOM·LF 를 유지한다. Linux cmdlet 모의 검사는 다른 필수 항목이 Linux 전용이 아니라 끝까지 실행되지 않아 Windows 동작 검증으로 세지 않는다.
 * `PREPARE.sh`(Linux)에는 이 항목이 없다 — Linux 에서는 경고 창이 없다.
 
 ## 8. 클론 설계 메모

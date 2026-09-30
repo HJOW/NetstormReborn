@@ -9,15 +9,16 @@
 
 ---
 
-## 2026-09-30 심야 (`vm-debian-codex`, Linux, Wine 로 원본 실행 3회 — 실행 예외 시스템): 방화벽 경고 원인·포트 조사 ✅ + `PREPARE.ps1` 방화벽 항목 (⏳ Windows 테스트 대기)
+## 2026-09-30 심야 분석 + Windows 부분 확인: 방화벽 경고 원인·포트와 `PREPARE.ps1` TCP 6799 항목
 
 - **질문**: Windows PC 수동 분석 중 방화벽 경고가 떴다 — 분석 프로그램이 쓰는 포트가 있는지, 고정할 수 있는지.
 - **결론** ([network-ports.md](docs/exe/network-ports.md)): 분석 도구(analyzeManager)는 포트를 쓰지 않는다. 경고의 원인은 **게임 복사본 `Netstorm.exe` 가 전투 시작 때 TCP 6799(`gameServerPort`)를 0.0.0.0 으로 리슨**하는 것이다. 메인 메뉴에서는 열리지 않고 한번 열리면 종료까지 유지된다. 세션마다 게임을 새 경로로 복사하므로 경로 기준인 방화벽 규칙에 세션마다 걸릴 수 있다. 포트는 이미 6799 로 고정이고 `setup.cfg` 의 `gameServerPort` 로 바꿀 수 있지만(실측 6899 로 바뀜) **포트를 고정해도 경고는 없어지지 않는다.**
 - **Wine 실측** (`ss -ltnup` 기준 대조): 시작·메뉴 = 새 리슨 없음, 자동 데모 시작 순간 `0.0.0.0:6799`, 메뉴 복귀 후에도 유지, 종료 시 닫힘, 8998/6800/6802/80 은 어느 시점에도 없음. 복사본 setup.cfg 에서 포트를 6899 로 바꾸면 6899 만 열림(원본·저장소는 그대로, 임시 저장소는 삭제).
 - **정정**: `R.exe` 는 자동 업데이트 도구가 아니라 **NETSTORM Root Server**(LAN 서버, 6800/6802/8998 관련)다. 관련 문서 세 곳 수정.
 - **사용자 결정(2026-09-30)**: (1) 클라이언트 유효성 검사("Not Validated")는 구현하지 않는다. (2) 멀티플레이는 후순위로 나중에 구현한다. (3) 6799 방화벽 경고는 **임시로 6799 방화벽 예외를 미리 등록**해 해결한다. → 문서 반영: [network-ports.md 1-1·7·8절](docs/exe/network-ports.md), [main-menu.md](docs/screens/main-menu.md), 이 문서의 표(13단계)·9단계·5절.
-- **`PREPARE.ps1`(Windows용) 방화벽 항목 추가 — 문법 검사만 함, Windows 테스트 필요**: 항목 "방화벽 예외 (TCP 6799)", 관리자 권한 검사(`Test-IsAdministrator`), 비관리자면 선택 화면에 "[사용 불가]"로 표시하고 `-All`·`-CheckOnly` 에서도 건너뛰어 결과에 "사용 불가"로 남김, 규칙 점검(`Get-FirewallRuleStatus`)·등록·재점검. 규칙은 인바운드 TCP 6799 허용, 프로필 Any, 원격 범위 `LocalSubnet`(`$FirewallRemoteScope` 로 변경). 기본 선택은 해제(보안 설정 변경). `PREPARE.sh` 는 손대지 않았다(Linux 는 경고 창이 없음).
-  - **Windows 에서 테스트할 것**: 비관리자 표시·선택 차단 / 관리자 등록·점검·재실행(규칙 하나만 남는지) / **등록 후 게임 실행 때 경고가 실제로 사라지는지(원격 범위 `LocalSubnet` 이 경고를 막는지가 핵심 — 막지 못하면 `Any` 로)** / 되돌리기 명령 / Windows PowerShell 5.1·PowerShell 7 양쪽. 자세한 목록: [network-ports.md 7.2](docs/exe/network-ports.md).
+- **`PREPARE.ps1`(Windows용) 방화벽 항목 추가**: 항목 "방화벽 예외 (TCP 6799)", 관리자 권한 검사(`Test-IsAdministrator`), 비관리자면 선택 화면에 "[사용 불가]"로 표시하고 `-All`·`-CheckOnly` 에서도 건너뛰어 결과에 "사용 불가"로 남김, 규칙 점검(`Get-FirewallRuleStatus`)·등록·재점검. 규칙은 인바운드 TCP 6799 허용, 프로필 Any, 원격 범위 `LocalSubnet`(`$FirewallRemoteScope` 로 변경). 기본 선택은 해제(보안 설정 변경). `PREPARE.sh` 는 손대지 않았다(Linux 는 경고 창이 없음).
+- **사용자 Windows 확인(2026-09-30)**: TCP 6799 방화벽 허용 기능이 정상 동작했고, 관리자 권한이 없는 경우 해당 항목을 선택할 수 없는 것도 확인했다.
+  - **추가 Windows 확인 필요**: `-All`·`-CheckOnly` 결과 / 규칙의 포트·프로필·원격 범위 / 반복 등록 시 중복 방지 / 되돌리기 명령 / Windows PowerShell 5.1·7 호환 / **게임 실행 시 방화벽 경고가 실제로 사라지는지**. 자세한 목록: [network-ports.md 7.2](docs/exe/network-ports.md).
   - 검증한 것: Linux 의 PowerShell 7.6 파서로 문법 오류 없음, 파일 UTF-8 BOM·LF 유지. 방화벽 cmdlet 을 모의한 비관리자 경로 한 번은 "사용 불가" 행을 냈으나 다른 항목이 Linux 에 없는 명령으로 실패해 검증으로 치지 않는다(PowerShell 도구는 스크래치패드에만 설치, 저장소 변경 없음).
 - **클론 메모**: 클론의 싱글 플레이는 소켓을 열지 않는다(방화벽 경고 없음). 6799 사전 등록은 원본 분석 때만 필요한 임시 조치. 멀티플레이 구현 때만 네트워크(원본 호환 기본값 6799/6800/8998 참고).
 - **부수 발견**: 시작 후 창 크기가 1600×828 → 1024×768 로 바뀌는 시점에 안내 창 클릭 좌표가 달라져 첫 클릭이 빗나갔다(이전 인수인계의 "창 크기 변경 원인 미확인"과 같은 현상). 클릭 전 `capture_state` 로 확인할 것.
@@ -637,7 +638,7 @@ Netstorm/
 - [x] 개발 도구 점검·설치 스크립트 `PREPARE.ps1` — 2026-09-27 완료 (C# 기준으로 갱신)
   - 사용법: `powershell -ExecutionPolicy Bypass -File .\PREPARE.ps1` (항목 선택 후 점검·설치), `-CheckOnly`(점검만), `-All`(선택 화면 생략), `-ToolsDir`(Ghidra·vcpkg 설치 폴더, 기본 `C:\Tools`)
   - 필수: Git, **.NET SDK 10**, Python 3 + 패키지(pillow·pefile·capstone), JDK 21+, Ghidra, x64dbg, Process Monitor, git safe.directory / 권장: MonoGame 템플릿, VS Code 확장(C# Dev Kit·C#·Python) / 선택: VS Build Tools(C++)·CMake·Ninja·vcpkg(C# 확정으로 불필요), yt-dlp, FFmpeg
-  - **2026-09-30 추가: "방화벽 예외 (TCP 6799)" 항목**(권장, 기본 선택 해제) — 원본 게임이 전투 시작 때 여는 6799 인바운드를 허용하는 규칙을 점검·등록한다. **관리자 권한이 필요하며 관리자 권한이 아니면 "사용 불가"로 표시**하고 건너뛴다. 규칙 내용·되돌리기: [network-ports.md 7절](docs/exe/network-ports.md). **Windows 테스트 미실시**(Linux pwsh 문법 검사만) — 테스트 목록도 같은 절 7.2
+  - **2026-09-30 추가: "방화벽 예외 (TCP 6799)" 항목**(권장, 기본 선택 해제) — 원본 게임이 전투 시작 때 여는 6799 인바운드를 허용하는 규칙을 점검·등록한다. **관리자 권한이 필요하며 관리자 권한이 아니면 "사용 불가"로 표시**하고 건너뛴다. 사용자가 Windows에서 포트 허용 기능과 비관리자 선택 차단이 동작함을 확인했다. 규칙 세부값·반복 등록·되돌리기·실제 경고 억제 여부 등 남은 검증은 [network-ports.md 7.2](docs/exe/network-ports.md)에 기록했다.
   - 2026-09-27 점검 결과: 필수 전부 설치됨 (.NET SDK 8.0.425 / 9.0.318 / 10.0.401 확인). MonoGame 템플릿은 미설치(프로젝트는 템플릿 없이 구성했으므로 필수 아님)
 - [x] Linux 용 개발 도구 점검·설치 스크립트 `PREPARE.sh` — 2026-09-28 작성 (PREPARE.ps1 과 같은 항목 선택 → 점검 → 설치 → 재점검 흐름)
   - 사용법: `bash ./PREPARE.sh` (일반 사용자로 실행, 시스템 패키지는 스크립트가 sudo 호출), `--check-only`, `--all`, `--tools-dir DIR`(기본 `~/Tools`)
