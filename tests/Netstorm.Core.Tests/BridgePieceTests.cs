@@ -276,4 +276,19 @@ public sealed class BridgePieceTests
         }
         Assert.Equal(expectedRandom.State, random.State);
     }
+
+    /// <summary>
+    /// 칸에 들어온 조각은 6초(원본 타이머 0x3c × 0.1초) 동안 금 간 품질이고 그 뒤 보통 품질이 된다.
+    /// 타이머는 0.1초 단위 정수로 비교한다. 칸 밖에서 만든 조각(시험·편집기)은 처음부터 보통이다.
+    /// </summary>
+    [Fact]
+    public void Tray_NewPieceIsCrackedForSixSeconds()
+    {
+        var tray = new BridgeTray(capacity: 2, new NetstormRandom());
+        BridgePiece piece = tray.Update(0.5, hasTemple: true)!;
+        Assert.Equal(BridgeCondition.Cracked, BridgeTray.QualityAt(piece, 0.5));
+        Assert.Equal(BridgeCondition.Cracked, BridgeTray.QualityAt(piece, 6.49));
+        Assert.Equal(BridgeCondition.Normal, BridgeTray.QualityAt(piece, 6.5));
+        Assert.Equal(BridgeCondition.Normal, BridgeTray.QualityAt(new BridgePiece(BridgePatternCatalog.SinglePiece), 0.0));
+    }
 }

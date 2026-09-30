@@ -234,6 +234,56 @@ public sealed class BattleSessionTests
         Assert.Equal(1, Count(session.DrainEvents(), SessionEventKind.BridgeCollapsed));
     }
 
+    /// <summary>생산 창에 들어온 지 6초가 안 된 조각은 금 간 상태·수명 4 로 놓이고, 오래된 조각은 보통으로 놓인다</summary>
+    [Fact]
+    public void PlaceBridge_UsesTrayQuality()
+    {
+        BattleSession session = SessionData.FromMission("tutorial1");
+        PlayerState player = session.Player(1);
+        session.RunTicks(session.TicksPerSecond * 8);
+        // 마지막 조각은 약 5초에 들어와 아직 금 간 품질이다
+        int newest = player.Tray.Pieces.Count - 1;
+        Assert.Equal(BridgeCondition.Cracked, BridgeTray.QualityAt(player.Tray.Pieces[newest], session.Seconds));
+        Assert.Equal(BridgeCondition.Normal, BridgeTray.QualityAt(player.Tray.Pieces[0], session.Seconds));
+        session.Submit(new PickBridgePieceCommand(1, newest));
+        session.RunTicks(1);
+        (int rotation, int x, int y) = SessionData.FindBridgeSite(session, player.HeldPiece!.Pattern.Index);
+        session.Submit(new PlaceBridgeCommand(1, rotation, x, y));
+        session.RunTicks(1);
+        IReadOnlyList<BridgeCellState> placed = [.. session.Bridges.Cells.Where(c => c.Owner == 1 && !session.StoredBridgeCells.Contains(c))];
+        Assert.NotEmpty(placed);
+        Assert.All(placed, c => Assert.Equal((BridgeCondition.Cracked, BridgeGrid.WeakenedTimeLeft), (c.Condition, c.TimeLeft)));
+    }
+
+    /// <summary>
+    /// 건물형 유닛(여기서는 템플)이 없어지면 중심 칸 ±2 의 다리가 한 단계 약해진다: 보통 → 금 감, 금 감 → 무너짐, 범위 밖은 그대로.
+    /// 원본 FUN_0044b9e0 은 제거 이유를 보지 않으므로 회수도 해당한다고 본다(원본 화면 확인 전).
+    /// </summary>
+    [Fact]
+    public void Salvage_WeakensAdjacentBridges()
+    {
+        BattleSession session = SessionData.FromMission("tutorial2");
+        session.DenySalvage = false;
+        GameEntity temple = BuildTemple(session);
+        int cx = (int)Math.Truncate(temple.Footprint.CenterX);
+        int cy = (int)Math.Truncate(temple.Footprint.CenterY);
+        var single = new BridgePiece(BridgePatternCatalog.SinglePiece, 1);
+        // 규칙만 보려고 판정 없이 격자에 직접 놓는다
+        BridgeCellState normal = session.Bridges.Place(single, cx + BridgeGrid.WeakenRadius, cy, 1)[0];
+        session.Bridges.Place(single, cx - BridgeGrid.WeakenRadius, cy, 1, BridgeCondition.Cracked);
+        BridgeCellState far = session.Bridges.Place(single, cx + BridgeGrid.WeakenRadius + 1, cy + 3, 1)[0];
+        session.DrainEvents();
+        session.Submit(new SalvageCommand(1, temple.Id));
+        session.RunTicks(1);
+        Assert.Null(session.Entity(temple.Id));
+        Assert.Equal((BridgeCondition.Cracked, BridgeGrid.WeakenedTimeLeft), (normal.Condition, normal.TimeLeft));
+        Assert.Null(session.Bridges.At(cx - BridgeGrid.WeakenRadius, cy));
+        Assert.Equal(BridgeCondition.Normal, far.Condition);
+        IReadOnlyList<SessionEvent> events = session.DrainEvents();
+        Assert.Equal(1, Count(events, SessionEventKind.BridgeCracked));
+        Assert.Equal(1, Count(events, SessionEventKind.BridgeCollapsed));
+    }
+
     /// <summary>
     /// 기술 허용 표는 머리 techAllowed 로 시작해 실행 중에 바뀐다. 튜토리얼 2 는 windVortex·sunArcher 만 허용하고 시작하며
     /// (사용자가 관찰한 Sun Workshop 은 단계 B 가 허용한 뒤에 지었다), 튜토리얼 1 은 windVortex 만 허용한다.

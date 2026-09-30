@@ -25,12 +25,12 @@
 | `Bridges/BridgeLinks.cs` | 방향 글자 'A'~'P' ↔ 연결 비트, 회전 표, 반대 방향 | VA 0x52f910·0x531590 |
 | `Bridges/BridgePatternCatalog.cs` | 다리 조각 모양 26개(가중치 합 287)와 누적 가중치 추첨 | VA 0x52f998, `Canondecoder.cpp` `004257c0` |
 | `Bridges/BridgePiece.cs` | 모양 + 회전(1 = 시계 방향 90°) → 회전된 칸 목록. 원본 조작: 오른쪽 클릭 = 시계, C(반대 회전)면 반시계 | `00425c20`·`00425860`, 원본 실행 |
-| `Bridges/BridgeGrid.cs` | 놓인 다리 칸의 연결망·배치 판정(겹침 불가, 섬 가장자리·내 다리 열린 끝에 이어짐)·10초 주기 붕괴(수명 7→0, 5 아래 금 감, 단단한 칸 제외) | `Bridge.cpp` `00422bc0`·`004227e0`·`00421c30`, `Rifttype.cpp` `0049b510` ([bridge-pieces.md](exe/bridge-pieces.md) 8절). 이어짐·붕괴 대상 조건은 근사 |
+| `Bridges/BridgeGrid.cs` | 놓인 다리 칸의 연결망·배치 판정(겹침 불가, 섬 가장자리·내 다리 열린 끝에 이어짐)·10초 주기 붕괴(수명 7→0, 5 아래 금 감, 단단한 칸 제외)·조각 품질별 시작 상태(금 감 = 수명 4)·건물형 유닛이 없어질 때 주변 ±2칸 한 단계 약화(`WeakenAround`) | `Bridge.cpp` `00422bc0`·`004227e0`·`00421c30`, `Rifttype.cpp` `0049b510`, `Construction.cpp` `00442c80`, 공통 제거 처리 `0044b9e0` ([bridge-pieces.md](exe/bridge-pieces.md) 8절). 이어짐·붕괴 대상 조건은 근사 |
 | `Bridges/BridgeAnchors.cs` | 다리를 시작할 수 없는 섬 칸: 가장자리 초목(edgeFarm) 칸 + dropBlocking 타입 오브젝트 발자국 (사용자 확인 규칙 "초목이 있는 가장자리에서는 다리를 시작할 수 없다") | edgefarm.type `dropBlocking`, `Squid.cpp` `004b02d0` 스폿 비트 0x10, `Rifttype.cpp` `0049b510` ([bridge-pieces.md](exe/bridge-pieces.md) 8.4절) |
 | `Rules/MissionStart.cs` | 미션 머리 값 → 시작 SP(myStartMoney, 없으면 전투 옵션)·시작 지식(myTech)·기술 허용 표(techAllowed: deny/allow/all 순서 적용, **실행 중 `Set`·`SetAll`로 바뀜**)·denySalvage 시작 값 등. 머리 값은 시작 상태이고 튜토리얼 단계 처리가 실행 중에 바꾼다 | `Mission.cpp` `00482eb0`, `Totalmade.cpp` `004c23c0`~`004c2400`, [mission-header-flags.md](exe/mission-header-flags.md), 튜토리얼 1·2 원본 관찰 |
 | `Bridges/BridgeCursor.cs` | 커서 → 들고 있는 조각의 왼쪽 위 칸: (⌊(x + 7) / 16⌋, ⌊y / 11⌋), 크기·회전 무관 | 원본 실행 측정 ([bridge-pieces.md](exe/bridge-pieces.md) 4절) |
 | `Bridges/BridgeFrames.cs` | 칸 → bridge.type 프레임 (보통 / 금 감 +10 / 단단함 20) | `0049a940`, bridge.type 주석 |
-| `Bridges/BridgeTray.cs` | 생산 창 다리 칸: 템플이 있으면 1초마다, Bridge Slots 칸까지, 5번째 추첨마다 한 칸 조각, 템플을 잃으면 비움 | `Combatgump.cpp` 매 프레임 처리 ([bridge-pieces.md](exe/bridge-pieces.md) 6절) |
+| `Bridges/BridgeTray.cs` | 생산 창 다리 칸: 템플이 있으면 1초마다, Bridge Slots 칸까지, 5번째 추첨마다 한 칸 조각, 템플을 잃으면 비움, 새 조각은 6초 동안 금 간 품질(`QualityAt`) | `Combatgump.cpp` 매 프레임 처리 ([bridge-pieces.md](exe/bridge-pieces.md) 6절) |
 | `Bridges/BridgeReach.cs` | 다리 연결망이 닿는 섬 영역 계산. "내 다리 연결망 하나가 내 섬과 빈 섬에 함께 닿으면 그 빈 섬은 연결됨"(근사) | [island-ownership.md](gameplay/island-ownership.md) 규칙 4. 다른 빈 섬을 거치는 연쇄 연결은 미확인 |
 | `Simulation/BattleSession.cs` (+ `.Commands.cs`) | **게임 세션**: 고정 틱 루프, 플레이어 상태, 엔티티, 명령 실행, 판정, 이벤트, 검사합 ([아래](#게임-세션-battlesession)) | 규칙 코어 전체 |
 | `Simulation/BattleSessionFactory.cs` | 맵(.fort)·지면 미리보기·미션 시작 조건에서 세션 조립 (섬 칸, 다리 시작 불가 칸, 저장 다리) | 뷰어에 있던 초기화를 Core로 옮김 |
@@ -63,7 +63,7 @@
 * **비행형 이동·공중 공격(후속)**: 비행형 이동유닛은 출발할 때 떠오르고 이동 후 목적지에서 착륙한다(사용자 확인). 이륙·이동·착륙 상태와 각 구간의 시간·경로는 현재 세션에 없다. 일부 건물형 유닛은 적이 사정거리 안에 들어오면 별도의 비행형 공격 유닛을 생성해 보내므로, 건물의 목표 탐지·공격체 생성·공격체 이동을 함께 분석해야 한다. 튜토리얼 1·2에는 이 흐름이 등장하지 않는다.
 * **건설**: 비용은 시작할 때 나가고(원본 `00442c80` → `00442b50`의 배치 시 차감과 부합), 건설 시간이 지나야 규칙 효과가 생긴다 — **템플**: 섬 소유(빈 섬 → 내 섬)·에너지 공급원 등록·생산 창의 다리 조각/골렘 공급 시작,
   **워크샵**: 지식 등록 가능. 완공에 섬 소유 색이 바뀌는 것은 튜토리얼 2 관찰과 같다. 건설 중인 템플도 "플레이어당 1기" 판정에 센다.
-* **회수**: 비용의 25%를 돌려받는다(튜토리얼 2: 300 → 75). 템플을 회수하면 섬이 빈 섬이 되고 다리 조각·골렘이 사라지며, 워크샵을 회수하면 그 워크샵의 등록이 사라진다. 사제·가이저·지형은 회수할 수 없다.
+* **회수**: 비용의 25%를 돌려받는다(튜토리얼 2: 300 → 75). 템플을 회수하면 섬이 빈 섬이 되고 다리 조각·골렘이 사라지며, 워크샵을 회수하면 그 워크샵의 등록이 사라진다. 사제·가이저·지형은 회수할 수 없다. 건물형 유닛(`maxHitPoints` 가 있고 이동체가 아닌 타입)이 없어지면 중심 ±2칸의 다리가 한 단계 약해진다(보통 → 금 감, 금 감 → 무너짐, 단단함 그대로). 원본 공통 제거 처리가 제거 이유를 보지 않아 회수에도 적용했다(원본 화면 미확인, [bridge-pieces.md](exe/bridge-pieces.md) 8.5절).
 * **배치 뒤 재충전**: Unit Rate 표(10/5/1초, 기본 Fast 1초)만큼 그 유닛을 덱에서 다시 쓸 수 없다 (튜토리얼 2 관찰 1.1~1.2초와 부합).
 * **미션 시작 조건**: 사람 플레이어(기본 1)에게 시작 SP·시작 지식·기술 허용 표를 적용하고, 튜토리얼 2는 전투 옵션(Short 14칸·Fast)을 덮어쓴다. `denySalvage`는 세션의 변하는 상태 `DenySalvage`로 시작한다.
 * **생산 규칙 켜기/끄기** (`EnforceProductionRules`): 켜면 기술 허용 표·덱 등록·재충전·회수 금지를 명령에 적용한다. 끄면 규칙 조건(섬·자리·비용·에너지)만 본다(맵 뷰어 시험 모드).

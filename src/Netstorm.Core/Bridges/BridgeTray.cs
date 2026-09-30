@@ -15,6 +15,14 @@ public sealed class BridgeTray
     /// <summary>한 칸 조각을 강제로 섞는 추첨 주기 (원본 DAT_00557dac % 5)</summary>
     public const int SinglePiecePeriod = 5;
 
+    /// <summary>
+    /// 칸에 들어온 조각이 금 간 품질(원본 품질 1)로 있는 시간(0.1초 단위).
+    /// 원본 Combatgump.cpp(0043f33x 부근)은 품질 0 인 새 조각을 처음 훑을 때 품질 1 로 올리고 FUN_004af0b0(0x3c)로
+    /// 타이머를 건 뒤, 타이머가 지나면(FUN_004af0e0) 품질 2(보통)로 올린다. 타이머는 게임 시각 × 10(0x512a78·0x501450 = ∓10.0)
+    /// 의 정수값으로 비교하므로 0x3c = 60 은 **6초**다. 그 뒤로는 더 바뀌지 않는다(생산 창에서는 단단함이 되지 않는다).
+    /// </summary>
+    public const long CrackedDeciseconds = 60;
+
     /// <summary>칸에 있는 조각 목록 (들어온 순서)</summary>
     private readonly List<BridgePiece> _pieces = [];
 
@@ -84,10 +92,25 @@ public sealed class BridgeTray
         {
             pattern = BridgePatternCatalog.SinglePiece;
         }
-        var piece = new BridgePiece(pattern);
+        var piece = new BridgePiece(pattern) { CuredAtDeciseconds = ToDeciseconds(now) + CrackedDeciseconds };
         _pieces.Add(piece);
         return piece;
     }
+
+    /// <summary>
+    /// 조각의 지금 품질: 칸에 들어온 뒤 6초 동안은 금 감, 그 뒤는 보통.
+    /// 배치할 때 이 품질이 놓인 칸의 상태·수명을 정한다(<see cref="BridgeGrid.Place"/>).
+    /// 원본은 칸에 있는 동안(생산 창 플래그 0x40)만 품질을 올린다. 집어 든 조각의 품질 변화는 확인하지 못해
+    /// 클론은 들고 있는 동안에도 시각으로 계산한다(근사).
+    /// </summary>
+    /// <param name="piece">조각</param>
+    /// <param name="now">게임 시각(초)</param>
+    public static BridgeCondition QualityAt(BridgePiece piece, double now) =>
+        ToDeciseconds(now) >= piece.CuredAtDeciseconds ? BridgeCondition.Normal : BridgeCondition.Cracked;
+
+    /// <summary>게임 시각(초)을 원본 타이머 단위(0.1초, 소수점 버림 FUN_004e49c0)로 바꾼다</summary>
+    /// <param name="seconds">게임 시각(초)</param>
+    private static long ToDeciseconds(double seconds) => (long)Math.Truncate(seconds * 10.0);
 
     /// <summary>칸에서 조각을 집는다 (커서로 옮김)</summary>
     /// <param name="index">Pieces 의 순번</param>

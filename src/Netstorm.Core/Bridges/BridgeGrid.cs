@@ -66,6 +66,12 @@ public sealed class BridgeGrid
     /// <summary>이 값보다 작아지면 금 간 상태가 된다 (원본 DAT_0052f960 = 5)</summary>
     public const int CrackBelow = 5;
 
+    /// <summary>금 간 채로 놓이거나 약화된 칸의 수명 (원본 DAT_0052f960 − 1 = 4, FUN_00442c80·FUN_00421db0)</summary>
+    public const int WeakenedTimeLeft = CrackBelow - 1;
+
+    /// <summary>건물형 유닛이 없어질 때 약화하는 범위: 중심 칸에서 가로·세로 이 칸 수까지 (원본 FUN_00422230(…, 2, 2, 0))</summary>
+    public const int WeakenRadius = 2;
+
     /// <summary>월드 칸 크기 (원본 BOARDDIM_IN_TILES = 256)</summary>
     public const int WorldSize = 256;
 
@@ -204,23 +210,73 @@ public sealed class BridgeGrid
         return new BridgePlacementCheck(attachments > 0 ? BridgePlacementProblem.None : BridgePlacementProblem.NotAttached, blocked, attachments);
     }
 
-    /// <summary>조각을 놓는다 (판정은 호출자가 먼저 한다). 새 칸은 보통 상태·수명 0 으로 시작한다.</summary>
+    /// <summary>
+    /// 조각을 놓는다 (판정은 호출자가 먼저 한다). 칸의 시작 상태는 조각 품질로 정한다
+    /// (원본 Construction.cpp FUN_00442c80, 품질 인자 param_10):
+    /// 금 감(품질 1) = 금 간 프레임·수명 4(<see cref="CrackBelow"/> − 1), 단단함(품질 3) = 단단한 프레임,
+    /// 그 밖(보통) = 보통 프레임·수명 0. 원본은 끝 칸 글자(L~O)면 품질과 관계없이 수명 4 로 두지만 생산 창 조각에는 끝 칸이 없다.
+    /// </summary>
     /// <param name="piece">회전된 조각</param>
     /// <param name="originX">조각 왼쪽 위 칸 x</param>
     /// <param name="originY">조각 왼쪽 위 칸 y</param>
     /// <param name="player">소유 플레이어</param>
-    public IReadOnlyList<BridgeCellState> Place(BridgePiece piece, int originX, int originY, int player)
+    /// <param name="quality">조각 품질 (<see cref="BridgeTray.QualityAt"/>, 기본 보통)</param>
+    public IReadOnlyList<BridgeCellState> Place(BridgePiece piece, int originX, int originY, int player,
+        BridgeCondition quality = BridgeCondition.Normal)
     {
         var placed = new List<BridgeCellState>();
         // 회전된 칸마다 상태를 만들어 격자에 넣는다
         foreach (PlacedBridgeCell cell in piece.Cells())
         {
-            var state = new BridgeCellState(originX + cell.Dx, originY + cell.Dy, cell.Cell, player);
+            var state = new BridgeCellState(originX + cell.Dx, originY + cell.Dy, cell.Cell, player)
+            {
+                Condition = quality,
+                TimeLeft = quality == BridgeCondition.Cracked ? WeakenedTimeLeft : 0,
+            };
             _cells[(state.X, state.Y)] = state;
             placed.Add(state);
         }
         Version++;
         return placed;
+    }
+
+    /// <summary>
+    /// 건물형 유닛이 없어질 때 주변 다리를 한 단계 약화한다 (원본 전투 오브젝트 공통 처리 FUN_0044b9e0, vtable 슬롯 0x18).
+    /// 중심 칸 ±<see cref="WeakenRadius"/> 칸 사각형(FUN_00422230(중심, 2, 2))의 다리 칸마다:
+    /// 금 간 칸은 무너지고, 보통 칸은 금 간 상태·수명 4 가 되며(FUN_00421db0), 단단한 칸은 그대로다(FUN_00422560).
+    /// 원본은 이미 늦춰진 낙하 예약(이벤트 0x2692, FUN_00421fe0)이 있는 금 간 칸은 무너뜨리지 않는데, 클론에는 그 예약이 없다.
+    /// </summary>
+    /// <param name="centerX">없어진 오브젝트의 중심 칸 x (원본은 실수 중심을 소수점 버림)</param>
+    /// <param name="centerY">중심 칸 y</param>
+    public BridgeDecayResult WeakenAround(int centerX, int centerY)
+    {
+        var cracked = new List<BridgeCellState>();
+        var removed = new List<BridgeCellState>();
+        // 사각형 안의 칸을 위쪽 행·왼쪽 칸 순서로 처리해 결과 순서를 일정하게 한다
+        for (int y = centerY - WeakenRadius; y <= centerY + WeakenRadius; y++)
+        {
+            // 한 행의 칸을 왼쪽부터 처리한다
+            for (int x = centerX - WeakenRadius; x <= centerX + WeakenRadius; x++)
+            {
+                if (!_cells.TryGetValue((x, y), out BridgeCellState? cell) || cell.Condition == BridgeCondition.Hard)
+                {
+                    continue;
+                }
+                if (cell.Condition == BridgeCondition.Cracked)
+                {
+                    _cells.Remove((x, y));
+                    removed.Add(cell);
+                    Version++;
+                }
+                else
+                {
+                    cell.Condition = BridgeCondition.Cracked;
+                    cell.TimeLeft = WeakenedTimeLeft;
+                    cracked.Add(cell);
+                }
+            }
+        }
+        return new BridgeDecayResult(cracked, removed);
     }
 
     /// <summary>칸의 한 방향이 열려 있는지: 연결 글자에 그 방향이 있는데 그쪽에 섬도, 마주 연결된 다리도 없다</summary>

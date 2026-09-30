@@ -20,6 +20,13 @@ public sealed class BridgePiece
     /// <summary>회전 번호 0~3 (1 = 시계 방향 90°)</summary>
     public int Rotation { get; private set; }
 
+    /// <summary>
+    /// 금 간 품질에서 보통 품질로 바뀌는 게임 시각(0.1초 단위). 생산 창에 들어올 때 <see cref="BridgeTray"/> 가 정한다.
+    /// 원본은 생산 창 조각 오브젝트 +0x1e(품질)·+0x1f(타이머)에 둔다. 기본값 0 은 처음부터 보통 품질인 조각이다
+    /// (시험·편집기용). 품질 계산은 <see cref="BridgeTray.QualityAt"/>.
+    /// </summary>
+    public long CuredAtDeciseconds { get; set; }
+
     /// <summary>회전 뒤 가로 칸 수</summary>
     public int Width => Rotation % 2 == 0 ? Pattern.Width : Pattern.Height;
 

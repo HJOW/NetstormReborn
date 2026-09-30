@@ -1,6 +1,6 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
-> 최종 갱신: 2026-09-30 (오후, `vm-debian-codex`)
+> 최종 갱신: 2026-09-30 (저녁, `vm-debian-codex`)
 > 프로젝트 목표(AGENTS.md): 원본 NetStorm: Islands at War 를 디컴파일/분석하여 클론 코딩하고,
 > **Windows 10/11** 과 **GUI 환경의 Linux** 에서 동작하며 **여러 언어를 지원**하는 게임을 만든다.
 > **1차 목표 언어: 영어, 한국어** (그 외 언어는 이후 확장).
@@ -8,6 +8,21 @@
 > **화면 요구사항(2026-09-28 AGENTS.md 추가)**: 풀스크린 모드와 화면비 **16:9 · 16:10 · 4:3** 지원, 풀스크린에서 **마우스를 화면 끝에 대면 화면 이동**(원본도 지원) — 1.7절
 
 ---
+
+## 2026-09-30 저녁 (`vm-debian-codex`, Linux, 원본 게임 실행 없음): 다리 품질·주변 약화 정적 분석 + 구현
+
+- **사용자 추가 규칙(2026-09-30)**: 다리 붕괴 조건은 시간만이 아니다. **건물형 유닛이 파괴될 때 바로 옆에 인접한 다리도 1단계 약화되고, 이로 인해 붕괴될 수 있다.** → [섬 소유권 규칙](docs/gameplay/island-ownership.md) 3번, [다리 분석 8.5절](docs/exe/bridge-pieces.md#85-건물형-유닛이-없어질-때-주변-다리-약화-2026-09-30-사용자-확인--exe-확인--구현).
+- **exe 확인**
+  - 주변 약화: 전투 오브젝트 공통 제거 처리 `FUN_0044b9e0`(vtable 슬롯 0x18). `maxHitPoints`가 있고(타입 플래그1 0x10) walker·balloon·flyer가 아닌 오브젝트가 없어지면 중심 칸 ±2 의 다리: 금 감 → 제거, 보통 → 금 감·수명 4(`FUN_00421db0`), 단단함 → 그대로. 제거 이유를 보지 않으므로 회수에도 적용된다고 추정.
+  - 조각 품질: 생산 칸 조각은 **들어온 뒤 6초 동안 금 간 품질**(타이머 0x3c × 0.1초), 그 뒤 보통. 금 간 채로 놓으면 금 간 프레임·수명 4, 보통이면 수명 0(`FUN_00442c80` `param_10`, 로컬 배치 `FUN_004433b0`은 조각 `+0x1e`). 튜토리얼 C1 "Bridge Quality" 설명과 맞다.
+  - 폭발(`Bomb.cpp`) 가장자리의 판자는 끝 칸(L~O)·수명 4 로 바뀐다(`FUN_004215d0`).
+  - 단일 칸 "120초 뒤 금 감" 관찰은 exe 조건으로 설명되지 않았다(모델 30~40초, 같은 측정의 서쪽 칸 51초 관찰은 모델과 일치). 재측정 필요 — [8.3절](docs/exe/bridge-pieces.md#83-원본-관찰과의-차이-남은-확인).
+- **구현(Core)**: `BridgeTray.QualityAt`·`CrackedDeciseconds`, `BridgePiece.CuredAtDeciseconds`, `BridgeGrid.Place(…, quality)`·`WeakenAround`·`WeakenedTimeLeft`·`WeakenRadius`, `BattleSession`의 다리 놓기(품질 적용)·회수 뒤 `WeakenBridgesAround`(이벤트 `BridgeCracked`·`BridgeCollapsed`), 검사합에 조각 품질 타이머 추가. 전투 파괴는 아직 없으므로 구현되면 같은 함수를 부를 것.
+- **정리**: `analyzeManager/ExplorerTools.cs` `start_session` 설명에 시스템 2(`192.168.0.94`·`HJOW-Athlon`)를 반영했다(아래 2026-09-29 절의 미반영 항목 해소, `Program.cs` 도움말은 이미 일반화되어 있었음).
+- **검증**: Release 솔루션 빌드 오류 0(기존 CA2014 경고 1), analyzeManager 빌드 오류·경고 0, Core **143**(기존 138 + 신규 5: 금 간 품질 배치·주변 약화·트레이 6초·세션 품질 배치·회수 약화)·Assets 175 통과. 원본·뷰어 화면은 실행하지 않았다.
+- **근사·미확정**: 중심 칸은 `Footprint.CenterX/Y` 버림(짝수 크기 발자국은 원본과 한 칸 어긋날 수 있음), 들고 있는 조각의 품질 변화, 회수 시 약화(수신 쪽 경로 미확인), 늦춰진 낙하 예약(이벤트 0x2692) 미구현.
+- **다음 후보**: (1) 원본에서 단일 칸 붕괴 시각·주변 약화(파괴/회수)를 사용자 직접 조작 녹화로 확인, (2) `FUN_004218b0` 조건을 칸 단위로 그대로 옮겨 "열린 끝이 있는 연결망" 근사 교체, (3) 끝 칸 변환(`FUN_004215d0`)·폭발 피해는 전투 구현 때.
+- 변경 파일: `src/Netstorm.Core/Bridges/{BridgeGrid,BridgePiece,BridgeTray}.cs`, `src/Netstorm.Core/Simulation/{BattleSession,BattleSession.Commands}.cs`, `tests/Netstorm.Core.Tests/{BridgeGridTests,BridgePieceTests,BattleSessionTests}.cs`, `analyzeManager/ExplorerTools.cs`, `docs/exe/bridge-pieces.md`, `docs/core-rules.md`, `docs/gameplay/island-ownership.md`, 이 문서.
 
 ## 2026-09-30 후속 분석 후보 — 공식 캠페인 1-1 The War Begins!
 
@@ -248,7 +263,7 @@
   | 시스템 2 | `192.168.0.94` | `HJOW-Athlon` | Windows 10 Pro (이 저장소 작업 PC, 2026-09-29 호스트명·IP 확인) |
 
 - 시스템 2가 Windows이므로 아래 "다음 작업"의 **Windows 실제 GUI 재확인**(캡처, 파이프 상속 방지 효과, CLI 실행 뒤 게임 유지 등)을 별도 확인 없이 이 PC에서 진행할 수 있다.
-- 반영 문서: [docs/analyze-manager.md](docs/analyze-manager.md) "실제 게임 실행 전 개발자 확인", [analyzeManager/README.md](analyzeManager/README.md). **미반영:** `analyzeManager/ExplorerTools.cs`의 `start_session` 도구 설명과 `analyzeManager/Program.cs` CLI 도움말은 아직 시스템 1만 적고 있다(코드 수정·재빌드 필요).
+- 반영 문서: [docs/analyze-manager.md](docs/analyze-manager.md) "실제 게임 실행 전 개발자 확인", [analyzeManager/README.md](analyzeManager/README.md). ~~**미반영:** `analyzeManager/ExplorerTools.cs`의 `start_session` 도구 설명과 `analyzeManager/Program.cs` CLI 도움말은 아직 시스템 1만 적고 있다(코드 수정·재빌드 필요).~~ → **2026-09-30 해소**: `start_session` 설명에 시스템 2 반영, `Program.cs` 도움말은 "AGENTS.md에 지정된 시스템"으로 이미 일반화되어 있었다.
 
 ### Linux/Wine 실제 실행 테스트 (2026-09-29 16시, `vm-debian-codex`) — 입력 전달 확인, 캡처는 X11 필요 → 아래 절에서 캡처 해결
 

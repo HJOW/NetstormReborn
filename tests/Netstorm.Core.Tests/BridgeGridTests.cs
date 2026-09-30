@@ -77,6 +77,49 @@ public sealed class BridgeGridTests
         Assert.Null(grid.At(10, 5));
     }
 
+    /// <summary>
+    /// 금 간 품질로 놓인 칸은 처음부터 금 간 상태·수명 4 이고(원본 FUN_00442c80), 한쪽만 붙어 있으면
+    /// 10초마다 3 → 2 → 1 → 0 으로 줄어 40초째에 사라진다.
+    /// </summary>
+    [Fact]
+    public void Place_CrackedQualityStartsWeakAndCrumblesSooner()
+    {
+        var grid = new BridgeGrid(LeftIsland);
+        BridgeCellState cell = grid.Place(HorizontalSingle(), 10, 5, 1, BridgeCondition.Cracked)[0];
+        Assert.Equal((BridgeGrid.WeakenedTimeLeft, BridgeCondition.Cracked), (cell.TimeLeft, cell.Condition));
+        // 이미 금이 가 있으므로 수명이 줄어도 금 감 알림은 다시 나오지 않는다
+        Assert.Empty(grid.Update(10).Cracked);
+        Assert.Equal(3, cell.TimeLeft);
+        Assert.Empty(grid.Update(30).Removed);
+        Assert.Equal([cell], grid.Update(40).Removed);
+    }
+
+    /// <summary>
+    /// 건물형 유닛이 없어지면 중심 칸 ±2 사각형의 다리가 한 단계 약해진다 (원본 FUN_0044b9e0):
+    /// 보통 → 금 감(수명 4), 금 감 → 무너짐, 단단함 → 그대로. 사각형 밖은 영향이 없다.
+    /// </summary>
+    [Fact]
+    public void WeakenAround_DowngradesBridgesByOneStep()
+    {
+        var grid = new BridgeGrid(LeftIsland);
+        BridgeCellState normal = grid.Place(HorizontalSingle(), 10, 5, 1)[0];
+        BridgeCellState outside = grid.Place(HorizontalSingle(), 11, 5, 1)[0];
+        BridgeCellState cracked = grid.Place(HorizontalSingle(), 10, 7, 1, BridgeCondition.Cracked)[0];
+        BridgeCellState hard = grid.Place(HorizontalSingle(), 10, 8, 1, BridgeCondition.Hard)[0];
+        BridgeCellState below = grid.Place(HorizontalSingle(), 10, 9, 1)[0];
+        // 중심 (8, 6) → x 6~10, y 4~8
+        BridgeDecayResult result = grid.WeakenAround(8, 6);
+        Assert.Equal([normal], result.Cracked);
+        Assert.Equal((BridgeGrid.WeakenedTimeLeft, BridgeCondition.Cracked), (normal.TimeLeft, normal.Condition));
+        Assert.Equal([cracked], result.Removed);
+        Assert.Null(grid.At(10, 7));
+        Assert.Equal(BridgeCondition.Hard, hard.Condition);
+        Assert.Equal((0, BridgeCondition.Normal), (outside.TimeLeft, outside.Condition));
+        Assert.Equal(BridgeCondition.Normal, below.Condition);
+        // 한 번 더 약해지면 금 간 칸도 무너진다
+        Assert.Equal([normal], grid.WeakenAround(8, 6).Removed);
+    }
+
     /// <summary>양 끝이 섬에 붙은 다리는 열린 끝이 없어 무너지지 않는다</summary>
     [Fact]
     public void Decay_BridgeBetweenIslandsIsStable()

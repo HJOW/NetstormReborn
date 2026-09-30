@@ -14,6 +14,9 @@ public sealed partial class BattleSession
         ObjectKind.Generator, ObjectKind.Emplacement, ObjectKind.Transport,
     };
 
+    /// <summary>이동체 분류 비트 (타입 플래그2 walker 0x10000 · balloon 0x20000 · flyer 0x100000, 원본 FUN_0044b9e0 의 0x130000)</summary>
+    private const uint MobileGenusFlags = 0x130000;
+
     // ───────────────────────── 판정 (상태를 바꾸지 않는다) ─────────────────────────
 
     /// <summary>
@@ -317,6 +320,7 @@ public sealed partial class BattleSession
             player.Deck.RemoveWorkshop(entity.Id);
         }
         _entities.Remove(entity.Id);
+        WeakenBridgesAround(entity);
         // 선택하고 있던 오브젝트가 없어지면 선택도 사라진다
         foreach (PlayerState viewer in _players.Values.Where(p => p.SelectedEntityId == entity.Id))
         {
@@ -398,9 +402,46 @@ public sealed partial class BattleSession
         {
             return new CommandResult(CommandFailure.BridgeBlocked, SessionText.Describe(check.Problem));
         }
-        Bridges.Place(piece, command.X, command.Y, command.Player);
+        // 생산 창에 들어온 지 6초가 안 된 조각은 금 간 채로 놓인다
+        BridgeCondition quality = BridgeTray.QualityAt(held, Seconds);
+        Bridges.Place(piece, command.X, command.Y, command.Player, quality);
         player.HeldPiece = null;
-        Emit(SessionEventKind.BridgePlaced, command.Player, 0, $"{piece} 을(를) ({command.X}, {command.Y})에 놓음 (연결 {check.Attachments}곳)");
+        string qualityText = quality == BridgeCondition.Cracked ? ", 금 간 품질" : "";
+        Emit(SessionEventKind.BridgePlaced, command.Player, 0,
+            $"{piece} 을(를) ({command.X}, {command.Y})에 놓음 (연결 {check.Attachments}곳{qualityText})");
         return CommandResult.Ok();
+    }
+
+    /// <summary>
+    /// 없어질 때 주변 다리를 약화하는 오브젝트인지: 타입에 maxHitPoints 가 있고(플래그1 0x10) 이동체(walker·balloon·flyer,
+    /// 플래그2 0x130000)가 아니다 — 즉 건물형 유닛·건물. 원본 FUN_0044b9e0 의 조건(FUN_004adc60, 플래그2 & 0x130000 == 0)이다.
+    /// </summary>
+    /// <param name="type">오브젝트 타입</param>
+    private static bool WeakensBridgesOnRemoval(TypeInfo type) =>
+        type.Definition.GetString("maxHitPoints") != null && (type.Flags2 & MobileGenusFlags) == 0;
+
+    /// <summary>
+    /// 건물형 유닛이 없어진 뒤 주변 다리를 한 단계 약화하고 결과를 이벤트로 알린다 (<see cref="BridgeGrid.WeakenAround"/>).
+    /// 원본은 오브젝트가 월드에서 빠지는 공통 처리에서 제거 이유를 보지 않고 약화하므로 파괴·회수 모두 해당한다고 본다.
+    /// </summary>
+    /// <param name="entity">없어진 오브젝트</param>
+    private void WeakenBridgesAround(GameEntity entity)
+    {
+        if (!WeakensBridgesOnRemoval(entity.Type))
+        {
+            return;
+        }
+        // 원본은 발자국 중심(실수)을 소수점 버림한 칸을 중심으로 삼는다
+        BridgeDecayResult result = Bridges.WeakenAround((int)Math.Truncate(entity.Footprint.CenterX), (int)Math.Truncate(entity.Footprint.CenterY));
+        // 금 간 칸을 이벤트로 알린다
+        foreach (BridgeCellState cell in result.Cracked)
+        {
+            Emit(SessionEventKind.BridgeCracked, cell.Owner, entity.Id, $"다리 ({cell.X}, {cell.Y}) 금 감 ({entity.DisplayName} 없어짐)");
+        }
+        // 무너진 칸을 이벤트로 알린다
+        foreach (BridgeCellState cell in result.Removed)
+        {
+            Emit(SessionEventKind.BridgeCollapsed, cell.Owner, entity.Id, $"다리 ({cell.X}, {cell.Y}) 무너짐 ({entity.DisplayName} 없어짐)");
+        }
     }
 }

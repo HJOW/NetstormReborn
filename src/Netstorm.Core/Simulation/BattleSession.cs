@@ -419,8 +419,11 @@ public sealed partial class BattleSession
             foreach (BridgePiece piece in player.Tray.Pieces)
             {
                 hash.Add(piece.Pattern.Index);
+                // 품질 타이머는 놓인 다리의 시작 상태를 정하므로 상태다
+                hash.Add(piece.CuredAtDeciseconds);
             }
             hash.Add(player.HeldPiece?.Pattern.Index ?? -1);
+            hash.Add(player.HeldPiece?.CuredAtDeciseconds ?? -1);
             hash.Add(player.SelectedEntityId);
             // 지은 수(누적)는 튜토리얼 단계를 정하므로 이름 순서로 섞는다
             foreach ((string name, int count) in player.MadeSnapshot())
