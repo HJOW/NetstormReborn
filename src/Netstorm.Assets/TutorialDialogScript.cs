@@ -102,6 +102,25 @@ public sealed class TutorialDialogScript
         return true;
     }
 
+    /// <summary>
+    /// 미션을 열 때의 초기 브리핑(섹션 A.)을 연다. 캠페인·튜토리얼 스크립트의 A. 가 이에 해당한다.
+    /// 설정 명령(&lt;$Config,…&gt;)만 있고 보이는 본문이 없는 섹션(대회용 스크립트 등)은 빈 창이 미션을 멈춰 세우지 않도록 열지 않는다.
+    /// </summary>
+    /// <returns>창이 열렸으면 true</returns>
+    public bool OpenBriefing()
+    {
+        if (!OpenStage(FirstStageSection))
+        {
+            return false;
+        }
+        if (Current!.Runs.Count == 0)
+        {
+            Close();
+            return false;
+        }
+        return true;
+    }
+
     /// <summary>보정 안내 또는 Tell 버튼의 섹션을 연다. 없는 섹션은 현재 창을 유지한다.</summary>
     public bool OpenSection(string section)
     {

@@ -7,7 +7,10 @@ using Netstorm.Assets;
 
 namespace Netstorm.Game;
 
-/// <summary>미션 스크립트의 튜토리얼 섹션을 표시하는 모달 안내 창.</summary>
+/// <summary>
+/// 미션 스크립트의 튜토리얼 안내와 캠페인 초기 브리핑(섹션 A.)을 표시하는 모달 안내 창.
+/// 창이 열려 있는 동안에는 세션 시간이 흐르지 않는다(원본과 같음 — docs/gameplay/dialog-pause.md).
+/// </summary>
 internal sealed partial class FortMapViewer
 {
     /// <summary>본문의 줄 높이.</summary>
@@ -27,13 +30,19 @@ internal sealed partial class FortMapViewer
     /// <summary>튜토리얼 안내 창이 현재 지도의 입력을 가로막는지.</summary>
     public bool TutorialDialogOpen => _tutorialDialog?.Current != null;
 
-    /// <summary>미션 스크립트와 설정 치환표를 안내 창에 연결한다.</summary>
+    /// <summary>
+    /// 미션 스크립트와 설정 치환표를 안내 창에 연결한다. 튜토리얼뿐 아니라 캠페인 미션도 포함한다 —
+    /// 원본은 캠페인 미션도 같은 "Tutorial" 미션 클래스라 시작하면 섹션 A.(초기 브리핑)를 Tell하고 시계를 멈춘다.
+    /// 세션이 튜토리얼 단계를 직접 처리하는 미션(튜토리얼 1·2)은 세션 이벤트가 A.를 열므로 여기서 열지 않는다.
+    /// 브리핑이 열려 있는 동안에는 Update 가 세션 틱을 건너뛰므로 브리핑을 닫기 전까지 게임 시간이 0 이다.
+    /// 원본은 미션 시작 뒤 다이얼로그 없이 10프레임이 지나야 브리핑이 뜨지만(그 사이 시계가 흐름), 클론은 즉시 연다.
+    /// </summary>
     private void InitializeTutorialDialog(MissionScript? script, ConfigStore? settings)
     {
-        if (script != null && settings != null && _mission?.TutorialNumber is > 0)
+        if (script != null && settings != null && _mission != null)
         {
             _tutorialDialog = new TutorialDialogScript(script, settings);
-            if (_session.Tutorial == null && _tutorialDialog.OpenStage("A."))
+            if (_session.Tutorial == null && _tutorialDialog.OpenBriefing())
             {
                 ResetTutorialPage();
             }

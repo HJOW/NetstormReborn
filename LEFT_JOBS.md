@@ -1,6 +1,6 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
-> 최종 갱신: 2026-09-30 (`HJOW-Athlon`)
+> 최종 갱신: 2026-09-30 (`HJOW-X3D`)
 > 프로젝트 목표(AGENTS.md): 원본 NetStorm: Islands at War 를 디컴파일/분석하여 클론 코딩하고,
 > **Windows 10/11** 과 **GUI 환경의 Linux** 에서 동작하며 **여러 언어를 지원**하는 게임을 만든다.
 > **1차 목표 언어: 영어, 한국어** (그 외 언어는 이후 확장).
@@ -8,6 +8,20 @@
 > **화면 요구사항(2026-09-28 AGENTS.md 추가)**: 풀스크린 모드와 화면비 **16:9 · 16:10 · 4:3** 지원, 풀스크린에서 **마우스를 화면 끝에 대면 화면 이동**(원본도 지원) — 1.7절
 
 ---
+
+## 2026-09-30 (`HJOW-X3D`, Windows, 원본 실행 없음) ✅: 클론 캠페인 초기 브리핑 창 구현 — 브리핑을 닫기 전까지 세션 시간 정지
+
+- 위 `HJOW-Athlon` 절의 "남은 것 2번(클론: 캠페인 초기 브리핑 창 구현)"을 진행했다. 이전에는 안내 창이 **튜토리얼(`TutorialNumber > 0`)에서만** 만들어져 캠페인 미션은 브리핑 없이 열자마자 세션 시간이 흘렀다(사용자 규칙 2 위반).
+- **구현:** `FortMapViewer.InitializeTutorialDialog`가 모든 미션(`_mission != null`)에서 안내 창을 만들고, 세션이 단계를 처리하지 않는 미션(튜토리얼 1·2 제외)은 `TutorialDialogScript.OpenBriefing()`으로 `[A.]`를 연다. 창이 열려 있는 동안 기존 `Update`가 세션 틱·지도 입력·가장자리 스크롤을 건너뛰므로 **닫기 전까지 게임 시간이 0**이다. `OpenBriefing()`(신규, Assets)은 보이는 본문이 없는 `A.`(설정 명령 `<$Config,…>`만 있는 대회용 `tnronguide.english`)는 빈 창이 미션을 멈춰 세우지 않도록 열지 않는다. HUD에 창이 열려 있는 동안 `· 안내 창(시간 정지)`을 표시한다. F8·Game 메뉴 "목표 다시 보기"는 캠페인에서도 브리핑을 다시 열고, Restart/Replay Mission은 미션을 다시 로드하므로 브리핑부터 시작한다.
+- **검증:** Release 솔루션 빌드 경고·오류 0. 테스트 Assets **178**(기존 175 + 신규 3: The War Begins 브리핑 버튼·Play Mission 닫기·F8 재열기, `OpenBriefing` 설정 전용 섹션 제외, **원본 영어 스크립트 중 `A.`에 보이는 본문이 있는 전부가 제목·버튼·본문을 가진 창으로 열림**)·Core 147 통과. 클론 `--mission thewarbegins --window 1024x768` 실행 화면(`extracted/screens/campaign-briefing.png`, Git 제외)에서 원본 `[A.]` 본문(제목 "The War Begins!", 인용문, 본문 두 문단)과 버튼 **Review Knowledge / Play Mission**이 뜨는 것을 확인했다(뒤의 HUD는 창에 가려 끝부분 "…정지)"만 보인다).
+- **확인하지 못한 것:** Play Mission으로 닫은 뒤 HUD 시간이 **0부터 시작하는지를 화면으로는 못 봤다.** Enter 입력을 주입하는 자동 확인을 시도했으나 클론 창이 포커스를 받지 못해 브리핑이 그대로 남았다(키 주입은 더 시도하지 않았다). 닫은 뒤 동작은 코드 경로(`TutorialDialogOpen`이 false가 되면 `UpdateSession`으로 진행)로만 확인했다. 수동으로 `Play Mission`을 눌러 HUD 시간이 그때부터 오르는지 보면 끝난다.
+- **남은 것**
+  1. **`Review Knowledge`(`ShowTechnology,55`) 미구현** — 누르면 미지원 알림만 뜨고 브리핑이 남는다. 원본의 지식 창이 무엇을 보여 주는지(미션 `myTech` 목록? 인자 `55`의 뜻)는 분석하지 않았다. [화면 목록](docs/screens/README.md)의 `The War Begins! - Briefing.png`와 `ShowTechnology` 처리 함수(디컴파일에 이름이 없어 문자열 참조 경로를 찾아야 함)를 볼 것.
+  2. 브리핑 안의 `Success`/`Failure`·AI 이벤트 창 등 **스크립트가 여는 미션 중간 창**(시간 정지)은 미션 승패·AI 이벤트 구현 때 같은 안내 창을 재사용한다.
+  3. 게임 코드가 직접 여는 경고 창(`NewTech`, `NoBridgeYet` 등)은 시간을 멈추지 않는 것이 원본 동작이다(구현 시 기본은 흐름).
+  4. 캠페인 미션 성공 버튼(`MissionAbort`, `MissionBegin,다음 미션`, `Tell,TryAgain`)은 승패 구현 전이라 쓰이지 않는다. `MissionAbort`는 `TutorialDialogScript`가 아직 모르는 동작이다.
+- **주의(사용자 확인 요청):** 위 자동 확인 중 `SendKeys`로 Enter를 보냈는데 클론 창이 활성 창이 아니었다. 그 입력이 **VS Code의 열려 있던 편집기(AGENTS.md 탭)에 들어갔을 가능성**이 있다. 저장소 파일은 바뀌지 않았지만(`git diff`로 AGENTS.md·LEFT_JOBS.md 변경 없음 확인) 저장 전 편집기 버퍼에 빈 줄이 들어갔을 수 있으니 탭에 저장 안 된 변경 표시가 있으면 저장하지 말고 되돌려 달라.
+- 변경 파일: `src/Netstorm.Game/{FortMapViewer.TutorialDialog,FortMapViewer.Session}.cs`, `src/Netstorm.Assets/TutorialDialogScript.cs`, `tests/Netstorm.Assets.Tests/TutorialDialogScriptTests.cs`, [뷰어 사용법](docs/map-viewer.md), [dialog-pause.md](docs/gameplay/dialog-pause.md) 클론 지침 표, 이 문서.
 
 ## 2026-09-30 (`HJOW-Athlon`, Windows, 원본 실행 없음) ✅: 안내·브리핑 창 시계 정지 경로 디컴파일 — 정지 경로 4곳 확정, 캠페인 브리핑도 같은 경로
 
@@ -24,7 +38,7 @@
 - **도구 변경:** [tools/exe_callscan.py](tools/exe_callscan.py)에 `--dis START END`(구간 역어셈블, `pip install capstone` 필요)와 `--str ADDR...`(주소의 C 문자열)을 추가했다. 기존 옵션 결과가 그대로 나오는 것을 확인했다(`0x460df0` 호출 4곳, 표 덤프).
 - **남은 것**
   1. (선택) 원본에서 게임 중간 창이 떠 있는 동안 시간이 멈추는지, `NewTech` 같은 경고 창이 떠 있는 동안 시간이 흐르는지 동적 확인. 게임 실행이 필요하다(이 PC `HJOW-Athlon`은 AGENTS.md 실행 확인 예외 시스템). 클론은 확인 없이 진행해도 된다.
-  2. **클론: 캠페인 초기 브리핑 창(`[A.]`) 구현** 시 닫기 전까지 세션 틱을 시작하지 않는다(위 절 그대로).
+  2. ~~**클론: 캠페인 초기 브리핑 창(`[A.]`) 구현** 시 닫기 전까지 세션 틱을 시작하지 않는다~~ → ✅ `HJOW-X3D` 절에서 구현(Review Knowledge 버튼은 미구현).
   3. (필요 시) 메인 프레임 함수 `FUN_004d62b0` 전체 디컴파일 — `tools/ghidra/DecompileAt.java`의 `DECOMPILE_TIMEOUT_SEC`(120초)를 늘려야 한다. 이번에는 필요한 분기만 역어셈블로 읽어 하지 않았다.
 - 변경 파일: `docs/gameplay/dialog-pause.md`(전면 갱신), `docs/exe/mission-header-flags.md`(6절 미확인 3건 해소), `tools/exe_callscan.py`, 이 문서. 게임 코드 변경 없음. 산출물 `extracted/decomp-at/`은 Git 제외 경로.
 

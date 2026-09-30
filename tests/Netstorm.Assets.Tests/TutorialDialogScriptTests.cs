@@ -95,4 +95,80 @@ public sealed class TutorialDialogScriptTests
         Assert.Equal("Mission Accomplished!", dialog.Current!.Title);
         Assert.Equal("Tutorial3", dialog.Choose(1).Argument);
     }
+
+    /// <summary>
+    /// 캠페인 미션의 초기 브리핑은 섹션 A. 이고 버튼은 Review Knowledge(ShowTechnology) / Play Mission(DoNothing)이다.
+    /// Play Mission 으로 창이 닫혀야 세션 시간이 시작되고(docs/gameplay/dialog-pause.md 규칙 2), F8(Review)로 다시 열 수 있다.
+    /// </summary>
+    [Fact]
+    public void OriginalCampaignBriefing_TheWarBeginsClosesWithPlayMission()
+    {
+        var resources = new GameResources(GameFileSystem.Open(OriginalData.RequireDirectory()), "english");
+        LoadedMission mission = Assert.IsType<LoadedMission>(resources.TryLoadMission("thewarbegins"));
+        var dialog = new TutorialDialogScript(mission.Script, resources.Settings);
+
+        Assert.True(dialog.OpenStage("A."));
+        Assert.Equal("The War Begins!", dialog.Current!.Title);
+        Assert.Equal(["Review Knowledge", "Play Mission"], dialog.Current.Buttons.Select(button => button.Label));
+        Assert.Equal("ShowTechnology", dialog.Current.Buttons[0].Action);
+        Assert.Equal("DoNothing", dialog.Current.Buttons[1].Action);
+        Assert.Equal(TutorialDialogActionKind.Close, dialog.Choose(1).Kind);
+        Assert.Null(dialog.Current);
+        // F8 (Review Mission Objectives) 는 브리핑을 다시 연다
+        Assert.True(dialog.Review());
+        Assert.Equal("A.", dialog.Current!.Section);
+    }
+
+    /// <summary>설정 명령만 있는 A. 는 브리핑 창으로 열지 않고, 보이는 본문이 있는 A. 는 연다.</summary>
+    [Fact]
+    public void OpenBriefing_SkipsSectionsWithoutVisibleText()
+    {
+        var silent = new TutorialDialogScript(new MissionScript("[A.]\n<$Config,atstop0=1>\n<$Config,atstop1=0>\n"), new ConfigStore());
+        Assert.False(silent.OpenBriefing());
+        Assert.Null(silent.Current);
+
+        var briefing = new TutorialDialogScript(
+            new MissionScript("[A.]\n<h2>Title</h2>\nText.\n$Button=Play Mission,DoNothing,0\n"), new ConfigStore());
+        Assert.True(briefing.OpenBriefing());
+        Assert.Equal("Title", briefing.Current!.Title);
+
+        // A. 섹션이 아예 없는 스크립트는 열 것이 없다
+        Assert.False(new TutorialDialogScript(new MissionScript("[B.]\nText.\n"), new ConfigStore()).OpenBriefing());
+    }
+
+    /// <summary>
+    /// 원본의 모든 영어 미션 스크립트 중 섹션 A. 에 보이는 본문이 있는 것(튜토리얼·캠페인·훈련)은 제목과 버튼을 가진 안내 창으로 열려야 한다.
+    /// 미션을 열 때 이 창이 열리는 동안 세션 시간이 멈추므로, 열리지 않는 스크립트가 있으면 그 미션은 브리핑 없이 바로 시작한다.
+    /// </summary>
+    [Fact]
+    public void OriginalMissionScripts_EveryBriefingOpensWithTitleAndButtons()
+    {
+        var resources = new GameResources(GameFileSystem.Open(OriginalData.RequireDirectory()), "english");
+        var opened = new List<string>();
+        // d 폴더의 영어 스크립트를 모두 읽어 A. 가 있는 것만 검사한다
+        foreach (string path in resources.Files.Find("d/*.english"))
+        {
+            string name = Path.GetFileNameWithoutExtension(path);
+            LoadedMission? mission = resources.TryLoadMission(name);
+            // 미션 이름으로 다시 찾지 못하는 파일(미션이 아닌 .english)은 건너뛴다
+            if (mission == null)
+            {
+                continue;
+            }
+            var dialog = new TutorialDialogScript(mission.Script, resources.Settings);
+            if (!dialog.OpenBriefing())
+            {
+                continue;
+            }
+            opened.Add(name);
+            Assert.False(string.IsNullOrWhiteSpace(dialog.Current!.Title), name);
+            Assert.True(dialog.Current.Buttons.Count > 0, $"{name}: 버튼 없음");
+            Assert.True(dialog.Current.Runs.Count > 0, $"{name}: 본문 없음");
+        }
+        // 캠페인·튜토리얼·훈련 스크립트가 모두 들어 있다 (A. 가 있는 출하 스크립트는 34개)
+        Assert.Contains("thewarbegins", opened);
+        Assert.Contains("dissolvedalliance", opened);
+        Assert.Contains("tutorial1", opened);
+        Assert.True(opened.Count >= 30, $"A. 가 열리는 미션이 너무 적습니다: {opened.Count}");
+    }
 }

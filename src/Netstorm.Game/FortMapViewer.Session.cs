@@ -234,7 +234,8 @@ internal sealed partial class FortMapViewer
         batch.DrawString(font, $"Storm Power {player.StormPower}", new Vector2(box.X + 10, box.Y + 3),
             StormPowerColors[StormPower.DisplayColor(player.StormPower)]);
         TimeSpan time = TimeSpan.FromSeconds(_session.Seconds);
-        string state = _simulationPaused ? " · 일시정지" : SimulationRunning ? "" : " · 정지";
+        // 안내·브리핑 창이 열려 있으면 Update 가 세션 틱을 건너뛰므로 시간이 멈춘 이유를 함께 보여 준다.
+        string state = TutorialDialogOpen ? " · 안내 창(시간 정지)" : _simulationPaused ? " · 일시정지" : SimulationRunning ? "" : " · 정지";
         batch.DrawString(font, $"게임 {(int)time.TotalMinutes:00}:{time.Seconds:00} (틱 {_session.Tick}){state}", new Vector2(box.X + 10, box.Y + 27), Color.LightGray);
         string rules = _session.EnforceProductionRules ? "생산 규칙 켜짐" : "생산 규칙 꺼짐(시험)";
         batch.DrawString(font, $"{rules} · 미션: {_mission?.Title ?? "없음"}", new Vector2(box.X + 10, box.Y + 51), Color.LightGray);

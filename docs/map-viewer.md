@@ -39,7 +39,7 @@ dotnet run --project src/Netstorm.Game -- --map savetheisland --language korean
 
 | 실행 방법 | 세션 시간 | 생산 규칙 (기술 허용 표·덱 등록·재충전·회수 금지) | 시작 Storm Power·지식 |
 |---|---|---|---|
-| `--mission 이름` (예: `tutorial1`, `tutorial2`) | 계속 흐름 | 켜짐 | 미션 머리의 `myStartMoney`·`myTech`, 전투 옵션 덮어쓰기(튜토리얼 2) |
+| `--mission 이름` (예: `tutorial1`, `tutorial2`, `thewarbegins`) | 계속 흐름. 단 **안내·브리핑 창이 열려 있는 동안은 멈춘다**(미션을 열면 A. 브리핑이 먼저 뜨고 닫은 뒤부터 흐름) | 켜짐 | 미션 머리의 `myStartMoney`·`myTech`, 전투 옵션 덮어쓰기(튜토리얼 2) |
 | `--map 이름` | P·B 모드가 켜진 동안만 흐름 (맵만 볼 때 저장된 다리가 무너지지 않도록) | 꺼짐 = **시험 모드** (규칙 조건만 맞으면 어떤 유닛이든 놓는다) | 맵의 `Money` 섹션 |
 
 * `--mission`은 미션 스크립트에서 맵(`loadFort`)과 시작 조건을 읽어 연다. `--map`과 함께 쓸 수 없다.
@@ -57,6 +57,12 @@ dotnet run --project src/Netstorm.Game -- --map savetheisland --language korean
 
 `TutorialTell` 이벤트의 섹션을 원본 미션 스크립트에서 읽어 제목·본문·`$Button=` 버튼을 표시한다. 창이 열려 있는 동안 세션 시간과 지도 입력은 멈춘다. MORE/BACK 버튼은 스크립트의 다른 섹션을 열고, OK는 창을 닫는다. 마지막 단계의 Leave Tutorials는 미션 화면을 떠나고 Next Tutorial은 지정된 다음 미션을 연다.
 단계 처리 객체가 아직 없는 튜토리얼 3~6도 시작할 때 A. 안내를 연다. 이후 단계가 자동으로 넘어가지는 않는다.
+
+**캠페인 초기 브리핑(2026-09-30):** `--mission thewarbegins` 같은 캠페인 미션도 미션 스크립트의 `[A.]` 섹션을 브리핑 창으로 먼저 연다(제목·인용·본문, 버튼 **Review Knowledge / Play Mission**). **브리핑을 닫기 전에는 세션 시간이 0에서 흐르지 않는다**(사용자 규칙 2, [안내·브리핑 창과 게임 시간](gameplay/dialog-pause.md)). Play Mission(또는 Enter·Space)으로 닫으면 시간이 시작되고, F8·Game 메뉴의 목표 다시 보기로 다시 열 수 있다(다시 열어도 그동안 시간은 멈춘다). Restart/Replay Mission은 미션을 다시 열어 브리핑부터 시작한다. 오른쪽 위 상자에는 창이 열려 있는 동안 `· 안내 창(시간 정지)`이 표시된다.
+
+* `Review Knowledge`(`ShowTechnology`)는 아직 구현하지 않아 누르면 미지원 알림만 뜨고 브리핑이 그대로 남는다.
+* 보이는 본문이 없고 `<$Config,…>` 설정 명령만 있는 `[A.]`(대회용 `tnronguide` 스크립트)는 빈 창이 미션을 멈춰 세우지 않도록 열지 않는다.
+* 원본은 미션 시작 뒤 다이얼로그 없이 10프레임이 지나야 브리핑이 뜨고 닫은 뒤 7프레임 뒤에 시간이 재개되지만, 클론은 0초 지점에서 즉시 열고 닫는 즉시 재개한다(차이는 0.2초 안팎으로 추정).
 
 * F8: 현재 단계의 시작 안내를 다시 연다. MORE/BACK으로 이동하거나 보정 안내(`NotVortex` 등)를 본 뒤에도 단계 시작으로 돌아간다.
 * Enter·Space 또는 좌클릭: 선택한 버튼 실행. Tab·좌우 방향키: 버튼 선택.
