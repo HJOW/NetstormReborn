@@ -29,13 +29,13 @@ public enum ObjectKind
     /// <summary>Generator (class "Source of Energy"). 건물형 유닛이면서 에너지 공급원</summary>
     Generator,
 
-    /// <summary>건물형 유닛 (포대·방벽·탑·기지, emplacement)</summary>
+    /// <summary>건물형 유닛 (포대·방벽·탑·기지, emplacement). 일부 기지는 적이 사정거리 안에 들어오면 공격용 비행체를 생성해 보낸다.</summary>
     Emplacement,
 
-    /// <summary>이동형 수송 유닛 (지상 walker·공중 balloon)</summary>
+    /// <summary>이동형 수송 유닛 (지상 walker·공중 balloon). 공중 이동체의 이륙·이동·착륙 단계는 아직 구현하지 않았다.</summary>
     Transport,
 
-    /// <summary>기지가 만드는 공중 공격체 (flyer: Whirligig·Man o' War·Dust Devil) — 비용·에너지 없음</summary>
+    /// <summary>기지가 사정거리 안의 적을 공격하려고 만드는 공중 공격체 (flyer: Whirligig·Man o' War·Dust Devil) — 비용·에너지 없음</summary>
     Flyer,
 
     /// <summary>다리 조각</summary>

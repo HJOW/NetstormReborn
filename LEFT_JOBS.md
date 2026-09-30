@@ -9,6 +9,18 @@
 
 ---
 
+## 2026-09-30 후속 분석 후보 — 공식 캠페인 1-1 The War Begins!
+
+- **공중 공격 기지 검증**: 미션 시작 지식에 `sunAviary`가 있고 Sun Workshop 등록 목록에 Whirlibase가 나타난다. 기지를 건설해 적이 사정거리 안에 들어왔을 때 공격체(Whirligig)가 생성·발진·이동·공격하는 조건과 종료 과정을 원본 캡처·타입·exe와 대조한다. 비행형 수송 유닛의 이륙·착륙과는 별개 경로인지 확인한다.
+- **적 사제 포획·Altar**: 적 High Priest의 체력 절반 기절·보호막 모습, 수송 유닛으로 **포획해 데려오는 절차**(Storm Power 환급용 `Salvage`와 다름), Altar 건설·사제 희생·지식 획득 및 중단 조건을 재현한다. 기존 `Playing 5`·`Playing 8` 캡처에 제단과 희생 중으로 보이는 장면이 있다. 상세 관찰 항목: [캠페인 1-1 분석 시나리오](docs/screens/the-war-begins-start.md#0-a-후속-분석-시나리오-공중-공격-기지와-사제-포획altar).
+- **실험 조건**: `thewarbegins.english`의 `aiStartMoney = 0`은 적의 **시작 자금**이며 `aiCollectors = 1`, `aiGeyserAttachments = 1`도 설정되어 있다. 따라서 이후에도 적 자금이 0으로 유지된다고 가정하지 않는다. `myStartMoney = 3000`, `myTech = "sunWalker;rainBattery;sunAviary;sunCannon"`과 이미 배치된 적 방어 유닛도 기록한다. 이번 항목은 향후 작업 문서화이며 게임 실행·구현은 하지 않았다.
+
+## 2026-09-30 사용자 추가 규칙 — 비행형 이동·공중 공격 (문서·주석 반영 완료, 기능 구현은 후속)
+
+- 비행형 이동유닛은 **출발 시 이륙 → 이동 → 목적지 착륙** 과정을 거친다. 튜토리얼 1·2에는 아직 등장하지 않는다. 현재 `MovementRate`는 타입별 `speed`만 읽고 세션 이동은 사제 수집에만 적용하므로, 다음 이동 구현 시 비행 상태·시간·높이·착륙 위치/점유·이동 중 명령 변경을 별도로 분석한다.
+- 일부 **건물형 유닛**은 적이 사정거리 안에 들어오면 비행형 공격 유닛을 생성해 보내 공격한다. `Air Attack Base` 타입(Whirlibase·Devil Maker·Man o'War Pool)과 `flyer` 공격체(Whirligig·Dust Devil·Man o'War)를 구분해, 사정거리 감지·생성·목표 선택·공격체 생명주기를 후속 분석한다. 이 공격체에 공중 수송 유닛의 이륙·착륙 규칙이 동일하게 적용되는지는 미확인이다.
+- 반영 위치: `Simulation/MovementRate.cs`, `Rules/ObjectKind.cs` 주석, [규칙 코어](docs/core-rules.md), [이동·건설 분석](docs/exe/priest-construction.md), [섬 소유권 용어](docs/gameplay/island-ownership.md). 이번 변경은 설명만 추가했고 게임 동작은 바꾸지 않았다.
+
 ## 2026-09-30 (`vm-debian-codex`, Linux, 원본 게임 실행 없음): 수집 경제·튜토리얼 1 및 사제 이동·건설 정적 분석
 
 - **후보 1 수집 경제 완료**: `HarvestGeyserCommand`로 소유 사제가 섬·내 다리 연결망을 따라 가이저와 완공 신전을 반복 왕복한다. 결정 하나를 전달할 때 200 SP를 더한다. 다리가 바뀌면 경로를 재탐색하고 길이나 대상이 사라지면 멈춘다. 운반량·경로·진행량을 검사합에 넣었다. 뷰어에서는 가이저 위 **H**, 스크립트에서는 `harvest x,y`로 시작한다.
