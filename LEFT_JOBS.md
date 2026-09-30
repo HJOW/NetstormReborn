@@ -11,6 +11,14 @@
 
 ## 0-A. 최신 인수인계 — AI용 원본 분석 도구 (2026-09-29)
 
+### 2026-09-30 (`vm-debian-codex`, Linux, 게임 실행 없음): 튜토리얼 안내 창 ✅ (후보 2번 완료)
+
+- `TutorialTell` 이벤트를 원본 미션 스크립트 섹션과 연결했다. `TutorialDialogScript`가 제목·본문의 HTML 부분집합·조건 평가 후 `$Button`을 읽고, 뷰어가 모달 창으로 그린다. 창이 열린 동안 세션 틱·지도 입력·가장자리 스크롤이 멈춘다.
+- MORE/BACK(`Tell`), OK(`DoNothing`), Leave Tutorials(`LeaveBattle`), Next Tutorial(`MissionBegin`)을 연결했다. F8은 가장 최근 단계의 시작 안내로 돌아가며 보정 안내는 복귀 지점을 바꾸지 않는다. 버튼이 없는 F1.·보정 안내에는 닫기 버튼을 추가했다.
+- [사용법](docs/map-viewer.md#튜토리얼-안내-창). 원본 그림 명령은 자리표시자이고 원본 창과 동일한 그림·정확한 배치는 아직 구현하지 않았다. 튜토리얼 1·3~6도 A. 안내는 자동으로 열리지만 이후 단계는 자동 처리되지 않는다.
+- 정적 검증: Release 솔루션 빌드 성공(기존 CA2014 경고 1건), Assets 테스트 175개 통과(신규 3개에 원본 튜토리얼 2 스크립트 포함). 게임 화면은 실행하지 않았으므로 실제 화면 배치·클릭 확인은 남는다.
+- 변경 파일: `src/Netstorm.Assets/TutorialDialogScript.cs`, `src/Netstorm.Game/{FortMapViewer.TutorialDialog,FortMapViewer,FortMapViewer.Session,NetstormGame}.cs`, `tests/Netstorm.Assets.Tests/TutorialDialogScriptTests.cs`, `docs/map-viewer.md`, 이 문서.
+
 ### 2026-09-30 오후 (`vm-debian-codex`, Linux, 원본 실행 없음): 튜토리얼 2 단계 처리 구현 ✅ (후보 1번 완료)
 
 - **선행 결함 수정**: `BattleSession.CreatePlayer`가 `MissionStart.Tech` 표를 그대로 플레이어에게 넘겨, 같은 미션으로 만든 두 세션이 표를 공유했다. `TechPermissions.Clone()`을 쓰도록 고쳤다(수정을 되돌리면 새 테스트가 실패함을 확인).
@@ -26,7 +34,7 @@
 - **근사·미확정**: 단계 넘김 뒤 잠금(10 카운트, 안내 창 표시·닫힘 조건으로 추정)은 "다음 틱부터 검사"로 대신함. 출생 콜백 시점(건설 시작/완공). `[NotVortex]` 안내는 항상 이벤트로 내보냄(원본은 그 섹션이 있을 때만). 안내 창 UI 없음.
 - **다음 후보 (우선순위 순)**
   1. **수집 경제**(튜토리얼 1의 D~F가 의존): 가이저 → 사제 결정 운반(결정당 200 SP) (`Carrier.cpp`·`Nugget.cpp`·`Vortex.cpp`) — 이후 `TutorialStages`에 튜토리얼 1(`FUN_004c3a20`) 추가. 디컴파일은 `extracted/decomp/Netstorm.c` 준비됨.
-  2. 튜토리얼 안내 창(9단계 UI): `TutorialTell` 이벤트의 섹션 본문(HTML 부분집합·`$Button=`)을 띄우고 F8로 다시 보기.
+  2. ~~튜토리얼 안내 창(9단계 UI): `TutorialTell` 이벤트의 섹션 본문(HTML 부분집합·`$Button=`)을 띄우고 F8로 다시 보기.~~ → **2026-09-30 완료**(위 절).
   3. 사제 이동·건설 절차 분석(`Priest.cpp`) → `ConstructionTimes`·비용 차감 시점 교체.
   4. Ghidra 누락 함수 목록(후보 528개) — `FUN_004c34c0`의 `FUN_004c8e90`·`FUN_00460de0` 의미도 여기서 확인.
 - 이번 변경 파일(커밋 전): `src/Netstorm.Core/Simulation/{TutorialStages(신규),BattleSession,BattleSession.Commands,PlayerState,GameCommands,SessionEvents}.cs`, `src/Netstorm.Core/Rules/MissionStart.cs`, `src/Netstorm.Game/{FortMapViewer,FortMapViewer.Session}.cs`, `tests/Netstorm.Core.Tests/{TutorialStagesTests(신규),BattleSessionTests}.cs`, `docs/{core-rules,map-viewer}.md`, `docs/exe/mission-header-flags.md`, 이 문서. (`analyzeManager` 관련 이전 Linux/Wine 변경은 이미 커밋됨)

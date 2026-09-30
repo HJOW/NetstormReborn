@@ -61,7 +61,8 @@ internal sealed partial class FortMapViewer : IDisposable
     /// <summary>오브젝트 위치를 계산하고 게임 세션을 만들며 카메라를 플레이어 사제에 맞춘다.</summary>
     /// <param name="mission">미션 시작 조건 (없으면 맵만 보는 시험 모드)</param>
     public FortMapViewer(GraphicsDevice device, ShapeDatabase shapes, Palette palette, FortFile fort, string name,
-        TypeCatalog catalog, string language, MissionStart? mission = null)
+        TypeCatalog catalog, string language, MissionStart? mission = null,
+        MissionScript? tutorialScript = null, ConfigStore? tutorialSettings = null)
     {
         _device = device;
         _shapes = shapes;
@@ -84,6 +85,7 @@ internal sealed partial class FortMapViewer : IDisposable
         _pixel = new Texture2D(device, 1, 1);
         _pixel.SetData(new[] { Color.White });
         InitializeSession(fort, catalog, mission);
+        InitializeTutorialDialog(tutorialScript, tutorialSettings);
         InitializePlacement(catalog);
         InitializeBridges(catalog);
         CenterOnPriest();
@@ -106,9 +108,23 @@ internal sealed partial class FortMapViewer : IDisposable
     /// <param name="seconds">지난 갱신 이후 경과 시간(초)</param>
     /// <param name="mouse">논리 화면 좌표로 바꾼 마우스 상태</param>
     /// <param name="edgeScroll">가장자리 스크롤이 이번 갱신에서 옮길 논리 픽셀 (양수 = 오른쪽·아래)</param>
-    public void Update(double seconds, MouseState mouse, Vector2 edgeScroll)
+    public void Update(double seconds, MouseState mouse, Vector2 edgeScroll, int width, int height)
     {
         KeyboardState keyboard = Keyboard.GetState();
+        if (TutorialDialogOpen)
+        {
+            UpdateTutorialDialog(keyboard, mouse, width, height);
+            _previousKeyboard = keyboard;
+            _previousMouse = mouse;
+            return;
+        }
+        if (_tutorialDialog != null && Pressed(keyboard, Keys.F8) && _tutorialDialog.Review())
+        {
+            ResetTutorialPage();
+            _previousKeyboard = keyboard;
+            _previousMouse = mouse;
+            return;
+        }
         var direction = new Vector2(
             (keyboard.IsKeyDown(Keys.Right) ? 1 : 0) - (keyboard.IsKeyDown(Keys.Left) ? 1 : 0),
             (keyboard.IsKeyDown(Keys.Down) ? 1 : 0) - (keyboard.IsKeyDown(Keys.Up) ? 1 : 0));
@@ -137,8 +153,11 @@ internal sealed partial class FortMapViewer : IDisposable
             _showChunks = !_showChunks;
         }
         UpdateSession(seconds, keyboard, mouse);
-        UpdatePlacement(keyboard, mouse);
-        UpdateBridges(keyboard, mouse);
+        if (!TutorialDialogOpen)
+        {
+            UpdatePlacement(keyboard, mouse);
+            UpdateBridges(keyboard, mouse);
+        }
         _previousKeyboard = keyboard;
         _previousMouse = mouse;
     }
@@ -252,6 +271,7 @@ internal sealed partial class FortMapViewer : IDisposable
             batch.Draw(_pixel, new Rectangle(0, height - 34, width, 34), new Color(18, 24, 38));
             batch.DrawString(font, text, new Vector2(16, height - 30), Color.White);
         }
+        DrawTutorialDialog(batch, font, width, height);
     }
 
     /// <summary>클러스터 번호에서 본체 레이어 프레임을 찾아 필요한 텍스처만 캐시한다. 거주지는 영역 원소 그림을 쓴다.</summary>

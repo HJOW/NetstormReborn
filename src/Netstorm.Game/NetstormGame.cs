@@ -49,6 +49,12 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     private readonly bool _spritePlay;
     private readonly bool _spriteProperties;
     private FortMapViewer? _mapViewer;
+    /// <summary>튜토리얼 버튼으로 다음 미션을 열 때 다시 사용할 원본 자산.</summary>
+    private GameResources? _resources;
+    private ShapeDatabase? _shapes;
+    private Palette? _palette;
+    /// <summary>명령줄 시험 옵션을 처음 열린 맵에만 적용했는지.</summary>
+    private bool _startupOptionsApplied;
     private SpriteBrowser? _spriteBrowser;
     private SpriteBatch? _batch;
     private FontSystem? _fonts;
@@ -212,6 +218,9 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         _statusLines.Add($"용어 확인: {resources.Settings.Expand("{vortex|Temple} / {priest|High Priest}")}");
         int frameTotal = shapes.Blocks.Sum(b => b.Frames.Count);
         _statusLines.Add($"_shapes.shp: 블록 {shapes.Blocks.Count}개, 프레임 {frameTotal}개");
+        _resources = resources;
+        _shapes = shapes;
+        _palette = palette;
 
         if (_mapName != null)
         {
@@ -287,21 +296,27 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         LoadedMission loaded = resources.TryLoadMission(missionName)
             ?? throw new ArgumentException($"미션을 찾을 수 없습니다: {missionName}");
         MissionStart start = MissionStart.FromScript(loaded.Script);
-        LoadMap(resources, shapes, palette, start.LoadFort ?? missionName, start);
+        LoadMap(resources, shapes, palette, start.LoadFort ?? missionName, start, loaded.Script);
         _baseTitle = $"NetStorm 클론 — 미션: {start.Title ?? missionName}";
+        UpdateWindowTitle();
     }
 
     /// <summary>공통 파일 시스템·설정의 fortSpec으로 맵과 타입을 읽어 뷰어를 만든다.</summary>
-    private void LoadMap(GameResources resources, ShapeDatabase shapes, Palette palette, string name, MissionStart? mission = null)
+    private void LoadMap(GameResources resources, ShapeDatabase shapes, Palette palette, string name,
+        MissionStart? mission = null, MissionScript? tutorialScript = null)
     {
         TypeCatalog catalog = resources.LoadTypes();
-        _mapViewer = new FortMapViewer(GraphicsDevice, shapes, palette, resources.LoadFort(name, catalog), name,
-            catalog, resources.Language, mission);
+        FortMapViewer nextViewer = new(GraphicsDevice, shapes, palette, resources.LoadFort(name, catalog), name,
+            catalog, resources.Language, mission, tutorialScript, resources.Settings);
+        _mapViewer?.Dispose();
+        _mapViewer = nextViewer;
         _baseTitle = $"NetStorm 클론 — 맵 뷰어: {name}";
+        bool applyStartupOptions = !_startupOptionsApplied;
+        _startupOptionsApplied = true;
         // 검증용: --placement 타입 [--probe x,y] 로 배치 시험 모드를 켠 채 시작한다.
         string[] args = Environment.GetCommandLineArgs();
         string? placement = ParseValueArgument(args, "--placement");
-        if (placement != null)
+        if (applyStartupOptions && placement != null)
         {
             string? probe = ParseValueArgument(args, "--probe");
             (int, int)? cell = null;
@@ -318,7 +333,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         }
         // 검증용: --bridges 초 [--bridge-hold 모양,회전] [--probe x,y] 로 다리 조각 시험 모드를 켠 채 시작한다.
         string? bridges = ParseValueArgument(args, "--bridges");
-        if (bridges != null)
+        if (applyStartupOptions && bridges != null)
         {
             if (!double.TryParse(bridges, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out double warmup))
             {
@@ -329,7 +344,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
             _mapViewer.StartBridges(warmup, hold, probe);
         }
         // 검증용: --script "명령; 명령" 으로 세션 명령을 미리 실행한다 (예: construct windVortex 100,120; wait 17)
-        if (_scriptText != null)
+        if (applyStartupOptions && _scriptText != null)
         {
             _mapViewer.RunScript(_scriptText);
         }
@@ -357,16 +372,26 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     protected override void Update(GameTime gameTime)
     {
         KeyboardState keyboard = Keyboard.GetState();
-        if (keyboard.IsKeyDown(Keys.Escape))
+        bool tutorialOpen = _mapViewer?.TutorialDialogOpen == true;
+        if (keyboard.IsKeyDown(Keys.Escape) && !_previousKeyboard.IsKeyDown(Keys.Escape) && !tutorialOpen)
         {
             Exit();
         }
         double dt = gameTime.ElapsedGameTime.TotalSeconds;
-        _display.HandleHotkeys(keyboard, _previousKeyboard);
+        if (!tutorialOpen)
+        {
+            _display.HandleHotkeys(keyboard, _previousKeyboard);
+        }
         _previousKeyboard = keyboard;
         MouseState rawMouse = Mouse.GetState();
         MouseState mouse = _display.ToLogical(rawMouse);
-        _mapViewer?.Update(dt, mouse, EdgeScrollDelta(rawMouse, keyboard, dt));
+        _mapViewer?.Update(dt, mouse, EdgeScrollDelta(rawMouse, keyboard, dt),
+            _display.Layout.LogicalWidth, _display.Layout.LogicalHeight);
+        TutorialDialogAction? tutorialAction = _mapViewer?.TakeTutorialAction();
+        if (tutorialAction != null)
+        {
+            HandleTutorialAction(tutorialAction);
+        }
         _spriteBrowser?.Update(dt, mouse, _display.Layout.LogicalWidth, _display.Layout.LogicalHeight);
         // 모든 애니메이션 진행
         foreach (SpriteAnimation animation in _animations)
@@ -374,6 +399,30 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
             animation.Update(dt);
         }
         base.Update(gameTime);
+    }
+
+    /// <summary>안내 버튼이 요청한 미션 종료나 다음 미션 시작을 처리한다.</summary>
+    private void HandleTutorialAction(TutorialDialogAction action)
+    {
+        if (action.Kind == TutorialDialogActionKind.LeaveBattle)
+        {
+            _mapViewer?.Dispose();
+            _mapViewer = null;
+            _baseTitle = "NetStorm 클론 — 개발 환경 확인";
+            _statusLines.Add("튜토리얼을 종료했습니다.");
+            UpdateWindowTitle();
+        }
+        else if (action.Kind == TutorialDialogActionKind.MissionBegin)
+        {
+            try
+            {
+                LoadMission(_resources!, _shapes!, _palette!, action.Argument);
+            }
+            catch (Exception error) when (error is IOException or ArgumentException)
+            {
+                _statusLines.Add($"다음 튜토리얼을 열지 못했습니다: {error.Message}");
+            }
+        }
     }
 
     /// <summary>
@@ -390,7 +439,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
             _display.Settings.EdgeScroll && IsActive, _display.BorderlessScreen,
             rawMouse.LeftButton == ButtonState.Pressed,
             keyboard.IsKeyDown(Keys.LeftShift) || keyboard.IsKeyDown(Keys.RightShift),
-            PopupOpen: false, TopEdgeBlocked: false);
+            PopupOpen: _mapViewer?.TutorialDialogOpen == true, TopEdgeBlocked: false);
         (double x, double y) = _edgeScroll.Update(input, seconds);
         return new Vector2((float)x, (float)y);
     }

@@ -84,6 +84,10 @@ internal sealed partial class FortMapViewer
             if (sessionEvent.Kind != SessionEventKind.BridgePieceAdded)
             {
                 _notice = DescribeEvent(sessionEvent);
+                if (sessionEvent.Kind == SessionEventKind.TutorialTell)
+                {
+                    OpenTutorialTell(sessionEvent.Text);
+                }
             }
         }
     }
@@ -176,6 +180,10 @@ internal sealed partial class FortMapViewer
                 {
                     Console.WriteLine($"[{_session.Seconds,6:0.0}s] {raw} → {sessionEvent.Kind}: {sessionEvent.Text}");
                     _notice = DescribeEvent(sessionEvent);
+                    if (sessionEvent.Kind == SessionEventKind.TutorialTell)
+                    {
+                        OpenTutorialTell(sessionEvent.Text);
+                    }
                 }
             }
         }
