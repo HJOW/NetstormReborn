@@ -1,6 +1,6 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
-> 최종 갱신: 2026-09-30 (밤, `vm-debian-codex`)
+> 최종 갱신: 2026-09-30 (심야 2, `vm-debian-codex`)
 > 프로젝트 목표(AGENTS.md): 원본 NetStorm: Islands at War 를 디컴파일/분석하여 클론 코딩하고,
 > **Windows 10/11** 과 **GUI 환경의 Linux** 에서 동작하며 **여러 언어를 지원**하는 게임을 만든다.
 > **1차 목표 언어: 영어, 한국어** (그 외 언어는 이후 확장).
@@ -8,6 +8,20 @@
 > **화면 요구사항(2026-09-28 AGENTS.md 추가)**: 풀스크린 모드와 화면비 **16:9 · 16:10 · 4:3** 지원, 풀스크린에서 **마우스를 화면 끝에 대면 화면 이동**(원본도 지원) — 1.7절
 
 ---
+
+## 2026-09-30 심야 (`vm-debian-codex`, Linux, Wine 로 원본 실행 3회 — 실행 예외 시스템): 방화벽 경고 원인·포트 조사 ✅ + `PREPARE.ps1` 방화벽 항목 (⏳ Windows 테스트 대기)
+
+- **질문**: Windows PC 수동 분석 중 방화벽 경고가 떴다 — 분석 프로그램이 쓰는 포트가 있는지, 고정할 수 있는지.
+- **결론** ([network-ports.md](docs/exe/network-ports.md)): 분석 도구(analyzeManager)는 포트를 쓰지 않는다. 경고의 원인은 **게임 복사본 `Netstorm.exe` 가 전투 시작 때 TCP 6799(`gameServerPort`)를 0.0.0.0 으로 리슨**하는 것이다. 메인 메뉴에서는 열리지 않고 한번 열리면 종료까지 유지된다. 세션마다 게임을 새 경로로 복사하므로 경로 기준인 방화벽 규칙에 세션마다 걸릴 수 있다. 포트는 이미 6799 로 고정이고 `setup.cfg` 의 `gameServerPort` 로 바꿀 수 있지만(실측 6899 로 바뀜) **포트를 고정해도 경고는 없어지지 않는다.**
+- **Wine 실측** (`ss -ltnup` 기준 대조): 시작·메뉴 = 새 리슨 없음, 자동 데모 시작 순간 `0.0.0.0:6799`, 메뉴 복귀 후에도 유지, 종료 시 닫힘, 8998/6800/6802/80 은 어느 시점에도 없음. 복사본 setup.cfg 에서 포트를 6899 로 바꾸면 6899 만 열림(원본·저장소는 그대로, 임시 저장소는 삭제).
+- **정정**: `R.exe` 는 자동 업데이트 도구가 아니라 **NETSTORM Root Server**(LAN 서버, 6800/6802/8998 관련)다. 관련 문서 세 곳 수정.
+- **사용자 결정(2026-09-30)**: (1) 클라이언트 유효성 검사("Not Validated")는 구현하지 않는다. (2) 멀티플레이는 후순위로 나중에 구현한다. (3) 6799 방화벽 경고는 **임시로 6799 방화벽 예외를 미리 등록**해 해결한다. → 문서 반영: [network-ports.md 1-1·7·8절](docs/exe/network-ports.md), [main-menu.md](docs/screens/main-menu.md), 이 문서의 표(13단계)·9단계·5절.
+- **`PREPARE.ps1`(Windows용) 방화벽 항목 추가 — 문법 검사만 함, Windows 테스트 필요**: 항목 "방화벽 예외 (TCP 6799)", 관리자 권한 검사(`Test-IsAdministrator`), 비관리자면 선택 화면에 "[사용 불가]"로 표시하고 `-All`·`-CheckOnly` 에서도 건너뛰어 결과에 "사용 불가"로 남김, 규칙 점검(`Get-FirewallRuleStatus`)·등록·재점검. 규칙은 인바운드 TCP 6799 허용, 프로필 Any, 원격 범위 `LocalSubnet`(`$FirewallRemoteScope` 로 변경). 기본 선택은 해제(보안 설정 변경). `PREPARE.sh` 는 손대지 않았다(Linux 는 경고 창이 없음).
+  - **Windows 에서 테스트할 것**: 비관리자 표시·선택 차단 / 관리자 등록·점검·재실행(규칙 하나만 남는지) / **등록 후 게임 실행 때 경고가 실제로 사라지는지(원격 범위 `LocalSubnet` 이 경고를 막는지가 핵심 — 막지 못하면 `Any` 로)** / 되돌리기 명령 / Windows PowerShell 5.1·PowerShell 7 양쪽. 자세한 목록: [network-ports.md 7.2](docs/exe/network-ports.md).
+  - 검증한 것: Linux 의 PowerShell 7.6 파서로 문법 오류 없음, 파일 UTF-8 BOM·LF 유지. 방화벽 cmdlet 을 모의한 비관리자 경로 한 번은 "사용 불가" 행을 냈으나 다른 항목이 Linux 에 없는 명령으로 실패해 검증으로 치지 않는다(PowerShell 도구는 스크래치패드에만 설치, 저장소 변경 없음).
+- **클론 메모**: 클론의 싱글 플레이는 소켓을 열지 않는다(방화벽 경고 없음). 6799 사전 등록은 원본 분석 때만 필요한 임시 조치. 멀티플레이 구현 때만 네트워크(원본 호환 기본값 6799/6800/8998 참고).
+- **부수 발견**: 시작 후 창 크기가 1600×828 → 1024×768 로 바뀌는 시점에 안내 창 클릭 좌표가 달라져 첫 클릭이 빗나갔다(이전 인수인계의 "창 크기 변경 원인 미확인"과 같은 현상). 클릭 전 `capture_state` 로 확인할 것.
+- 변경 파일: `PREPARE.ps1`, `docs/exe/network-ports.md`(신규), `docs/analyze-manager.md`, `docs/screens/main-menu.md`, `docs/sources/patch-history.md`, 이 문서.
 
 ## 2026-09-30 밤 (`vm-debian-codex`, Linux, 원본 게임 실행 없음): 다리 붕괴 알고리즘을 원본 칸 단위 처리로 교체 ✅
 
@@ -421,7 +435,7 @@
 | 10 | AI | ⬜ 대기 |
 | 11 | 캠페인 · 저장(fort) | ⬜ 대기 |
 | 12 | 다국어 지원 | ⬜ 대기 (설계는 초기부터 반영) |
-| 13 | 멀티플레이 | ⬜ 대기 |
+| 13 | 멀티플레이 | ⏸ 후순위 (2026-09-30 사용자 결정: 나중에 구현) |
 | 14 | 패키징 · 배포 (Windows 우선, Linux 후순위) | ⬜ 대기 |
 | 15 | 검증 · QA | ⬜ 상시 |
 
@@ -442,7 +456,7 @@
 | `Netstorm.exe` (1.5MB) | x86 32bit PE, MSVC 빌드, **패킹되지 않음**(.text 약 1MB). 빌드 타임스탬프 2006-03 → 원본(1997) 이 아닌 **Ticonderoga Entertainment 비공식 패치 빌드(10.7x)**. 임포트: DDRAW, DSOUND, WINMM, WSOCK32, smackw32, GDI32, COMCTL32, ADVAPI32, SHELL32, VERSION, ole32, mscoree. 문자열에 `TAFF v%d.%d`, `_shapes.shp`, `*.tarc`, `IPX`, `SPX/IPX` 존재 |
 | `NSENGLISHRES.DLL` | **설치·진단 프로그램용** 문자열 24개·다이얼로그 13개 (게임 UI 문자열 아님). 게임 UI 문자열은 exe 에 영어로 하드코딩되어 있고 `xlat.<언어>` 로 번역된다 → [xlat.md](docs/formats/xlat.md) |
 | `Smackw32.dll` | Smacker 동영상 코덱. `originals/movie/`는 비어 있지만 별도 CD판의 `originalCD/MOVIE/`에는 영문·독문 인트로 `.smk` 파일이 있음 |
-| `R.exe`, `unpack.exe`, `bzip2.exe`, `TMaker.exe` | 보조 도구(업데이터/압축 해제/요새 생성기로 추정). 게임 본체 분석 대상은 아님 |
+| `R.exe`, `unpack.exe`, `bzip2.exe`, `TMaker.exe` | `R.exe` = **NETSTORM Root Server**(로컬 LAN 서버, 2026-09-30 exe 문자열로 정정 — [network-ports.md](docs/exe/network-ports.md)), `unpack.exe`·`bzip2.exe` = 업데이트 압축 해제로 추정, `TMaker.exe` = 요새 생성기로 추정. 게임 본체 분석 대상은 아님 |
 | `PatchFixs.txt` | 패치 변경 이력(892줄). 원본 대비 **변경된 규칙·버그 수정 목록** → 어느 버전 동작을 기준으로 할지 결정 시 참고 |
 
 ### 1.2 데이터 파일
@@ -623,6 +637,7 @@ Netstorm/
 - [x] 개발 도구 점검·설치 스크립트 `PREPARE.ps1` — 2026-09-27 완료 (C# 기준으로 갱신)
   - 사용법: `powershell -ExecutionPolicy Bypass -File .\PREPARE.ps1` (항목 선택 후 점검·설치), `-CheckOnly`(점검만), `-All`(선택 화면 생략), `-ToolsDir`(Ghidra·vcpkg 설치 폴더, 기본 `C:\Tools`)
   - 필수: Git, **.NET SDK 10**, Python 3 + 패키지(pillow·pefile·capstone), JDK 21+, Ghidra, x64dbg, Process Monitor, git safe.directory / 권장: MonoGame 템플릿, VS Code 확장(C# Dev Kit·C#·Python) / 선택: VS Build Tools(C++)·CMake·Ninja·vcpkg(C# 확정으로 불필요), yt-dlp, FFmpeg
+  - **2026-09-30 추가: "방화벽 예외 (TCP 6799)" 항목**(권장, 기본 선택 해제) — 원본 게임이 전투 시작 때 여는 6799 인바운드를 허용하는 규칙을 점검·등록한다. **관리자 권한이 필요하며 관리자 권한이 아니면 "사용 불가"로 표시**하고 건너뛴다. 규칙 내용·되돌리기: [network-ports.md 7절](docs/exe/network-ports.md). **Windows 테스트 미실시**(Linux pwsh 문법 검사만) — 테스트 목록도 같은 절 7.2
   - 2026-09-27 점검 결과: 필수 전부 설치됨 (.NET SDK 8.0.425 / 9.0.318 / 10.0.401 확인). MonoGame 템플릿은 미설치(프로젝트는 템플릿 없이 구성했으므로 필수 아님)
 - [x] Linux 용 개발 도구 점검·설치 스크립트 `PREPARE.sh` — 2026-09-28 작성 (PREPARE.ps1 과 같은 항목 선택 → 점검 → 설치 → 재점검 흐름)
   - 사용법: `bash ./PREPARE.sh` (일반 사용자로 실행, 시스템 패키지는 스크립트가 sudo 호출), `--check-only`, `--all`, `--tools-dir DIR`(기본 `~/Tools`)
@@ -922,6 +937,8 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
   - 도움말(`help.english`)에서 쓰는 요소도 포함: `<b>`, `<a name>`·`<a href="#앵커">`·`cmd:`·`http` 링크, `~색이름~.` 색 코드, `<c>` 강조, 조건 태그. 원본 모습은 도움말 캡처(`help - NetStorm Instructions.png`)와 대조
 - [ ] 이벤트 섹션 트리거 연결 (`[Succeeded]`, `[Failed]`, `[aiNPriestDead]` 등)
 - [ ] 메인 메뉴 / 설정 / 브리핑 / 결과 화면
+  - **시작 흐름에서 "Not Validated" 안내 창(클라이언트 유효성 검사)은 구현하지 않는다** (사용자 결정 2026-09-30) → [main-menu.md](docs/screens/main-menu.md)
+  - Multiplayer 버튼은 멀티플레이(13단계)가 후순위라 구현 전까지 생략·비활성 중 어느 쪽으로 보일지 이 단계에서 정한다
   - 메인 메뉴 버튼 8개(Campaign, Multiplayer, Demo, Help, Edit, Credits, Options, Quit), 640×480 타이틀 그림 가운데 + 구름 배경 — `mainMenu.png` 기준
   - 하위 화면 구성은 [docs/screens/README.md](docs/screens/README.md) 1절: Campaign(6묶음·완료 점·잠긴 흐린 글자), Multiplayer(요새 섬 + Multiplayer Options 창), Demo(3개), Help 드롭다운(General Help - F1, Technical Help, Version), Edit(Load Battle Map 2열 목록), Credits(10.72 패치·원본), Options 드롭다운
   - 미션 흐름: 브리핑(`[A.]`, Review Knowledge / Play Mission) → 게임 → Success!(`[Succeeded]`, Leave Missions / Next Mission) 또는 Failure!(`[Failed]`, Continue) → 재도전 확인(Replay Mission / Leave Missions)
@@ -956,6 +973,8 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
 
 ### 13단계. 멀티플레이
 
+> **후순위 (사용자 결정 2026-09-30):** 나중에 구현한다. 그때까지 클론은 네트워크를 쓰지 않는다. 원본의 포트·서버 구조는 [network-ports.md](docs/exe/network-ports.md).
+
 - [ ] 결정론적 락스텝 모델 (명령만 전송, 동기화 검사용 체크섬)
 - [ ] LAN 게임 (직접 IP 접속 / 로컬 브로드캐스트 탐색)
 - [ ] 인터넷 게임: 로비 서버(별도 프로그램) — 후순위
@@ -985,7 +1004,7 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
 1. ~~**기술 스택**~~ → **결정됨** (2026-09-27): C# + MonoGame (DesktopGL)
 2. **기준 버전**: 원본 1997 동작 vs Ticonderoga 패치(10.7x, 보유 exe) 동작 — 보유 exe 는 패치판이므로 기본적으로 패치판 동작을 따르되, 차이점은 `PatchFixs.txt` 로 문서화
 3. ~~**자산 정책**~~ → **결정됨** (AGENTS.md): 원본 파일 재활용 가능. 저장소에는 커밋하지 않고, 배포 시 필요한 자산을 동봉한다
-4. **멀티플레이 범위**: LAN 만 / 인터넷 로비 포함 / 원본 호환
+4. **멀티플레이 범위**: LAN 만 / 인터넷 로비 포함 / 원본 호환 — **멀티플레이 자체가 후순위(2026-09-30 사용자 결정)이므로 구현 시점에 정한다**
 5. ~~**와이드 화면(16:9·16:10) 처리**~~ → **결정됨(2026-09-29, 사용자): 맵 시야 확장.** 4:3 + 좌우 여백(레터박스) 화면은 필요 없다. 근거: 원본은 4:3 만 지원하고(최대 1024×768) 카메라 확대가 없으며 해상도를 높이면 더 넓은 맵이 보였다 — 와이드에서 맵을 옆으로 더 보여 주는 것이 그 동작과 가깝다 (1.7절). 남은 문제: 멀티플레이에서 해상도(화면비)에 따른 시야 차이를 허용할지 (13단계)
 
 ## 5-0. 현재 진행 상황 (2026-09-29 세션 종료 시점)

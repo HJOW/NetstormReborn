@@ -66,6 +66,8 @@ Campaign의 공식 목록은 `offical1~6`이라는 원본 철자를 그대로 �
 
 ### 메뉴 흐름도 (실행 확인 범위)
 
+> **클론 방침(사용자 결정 2026-09-30):** 아래 시작 흐름의 "Not Validated" 안내 창(클라이언트 유효성 검사·자동 업데이트 검증 실패 안내)은 **구현하지 않는다.** 멀티플레이(Multiplayer 메뉴 이하)는 후순위로 나중에 구현한다. [network-ports.md](../exe/network-ports.md) 1-1절.
+
 ```text
 시작 화면 → "Did You Know?" 팁(OK) → "Not Validated"(OK) → 메인 메뉴
 메인 메뉴 ─ 45초 무입력 ─→ 로딩 창 → Auto-Demo(The Storm Rages!) ─ ESC → Game → Exit Demo ─→ 메인 메뉴

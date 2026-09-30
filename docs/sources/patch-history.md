@@ -93,3 +93,4 @@ exe 의 옵션 표와 대조: [battle-options.md](../exe/battle-options.md).
   → `options.cfg` 에 `bridgeDrawRate`·`stuffRefreshRate` 가 남아 있어도 패치판 exe 는 무시할 수 있다 (exe 의 설정 키 등록 목록으로 확인).
 * 치트·디버그 메뉴 제거, 스크립트 명령 `ChangeMoney`·`CreateAt`·`SetOwner`·`GetFullDeck` 등 보안 강화.
 * `R.exe`(자동 업데이트), `TMaker.exe`(모든 레벨을 가진 요새 생성), `nsLaunchC.exe`(온라인 접속 실행기).
+  * **정정(2026-09-30, exe 문자열 확인):** `R.exe` 는 `NETSTORM Root Server`(루트/로컬 LAN 서버)다. `setup.cfg` 의 `rootServerExe = "r.exe"` 로 클라이언트가 LAN 서버가 될 때 실행하며 TCP/UDP 를 리슨한다 → [network-ports.md](../exe/network-ports.md). 자동 업데이트 쪽은 `unpack.exe`·`bzip2.exe` 로 보인다.

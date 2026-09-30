@@ -5,6 +5,8 @@
 .DESCRIPTION
     실행하면 설치 항목 목록을 보여 주고, 사용자가 고른 항목만 점검한다.
     점검 결과 설치되어 있지 않은 항목은 자동으로 설치한 뒤 다시 점검한다.
+    관리자 권한이 필요한 항목(방화벽 예외)은 관리자 권한이 아니면 '사용 불가'로 표시하고 건너뛴다.
+    방화벽 항목을 쓰려면 관리자 권한 PowerShell 에서 실행한다.
 
 .PARAMETER ToolsDir
     Ghidra, vcpkg 처럼 winget 으로 설치할 수 없는 도구를 설치할 폴더 (기본값: C:\Tools)
@@ -62,6 +64,16 @@ $VcToolsComponent = 'Microsoft.VisualStudio.Component.VC.Tools.x86.x64'
 
 # 프로젝트 루트 경로 (git safe.directory 형식에 맞춰 '/' 구분자 사용)
 $ProjectRoot = (Resolve-Path $PSScriptRoot).Path -replace '\\', '/'
+
+# 원본 게임이 전투를 시작할 때 리슨하는 TCP 포트 (원본 d\setup.cfg 의 gameServerPort 기본값, docs/exe/network-ports.md)
+$GameServerPort = 6799
+
+# 방화벽 예외 규칙 이름 (점검·삭제 때 이 이름으로 찾는다)
+$FirewallRuleName = "NetStorm Reborn - Game Server TCP $GameServerPort"
+
+# 방화벽 예외를 허용할 원격 범위. 원본 게임 서버는 인증이 없으므로 같은 서브넷으로 제한한다.
+# 모든 곳에서 오는 접속을 허용하려면 'Any' 로 바꾼다.
+$FirewallRemoteScope = 'LocalSubnet'
 
 
 # ============================================================
@@ -137,12 +149,45 @@ function Get-VcpkgDir {
     return $null
 }
 
+# 현재 PowerShell 이 관리자 권한으로 실행 중인지 확인한다 (방화벽 규칙 조회·등록에 필요)
+function Test-IsAdministrator {
+    $identity  = [Security.Principal.WindowsIdentity]::GetCurrent()
+    $principal = New-Object Security.Principal.WindowsPrincipal($identity)
+    return $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+}
+
+# 시작할 때 한 번만 확인해 두고 모든 항목 판정에 같은 값을 쓴다
+$IsAdministrator = Test-IsAdministrator
+
+# 항목을 지금 이용할 수 없는 이유를 돌려준다 (이용할 수 있으면 $null)
+function Get-UnavailableReason($Item) {
+    # 관리자 권한이 필요한 항목은 관리자 권한이 아니면 이용할 수 없다
+    if ($Item.RequiresAdmin -and -not $IsAdministrator) { return '관리자 권한 필요' }
+    return $null
+}
+
+# 게임 서버 포트의 인바운드 허용 규칙이 올바르게 있는지 확인한다. 올바르면 설명 문자열, 아니면 $null.
+function Get-FirewallRuleStatus {
+    # 같은 이름의 규칙이 여러 개여도 조건을 모두 만족하는 것이 하나라도 있으면 통과
+    foreach ($rule in @(Get-NetFirewallRule -DisplayName $FirewallRuleName -ErrorAction SilentlyContinue)) {
+        # 켜져 있고 인바운드 허용인 규칙만 인정
+        if ("$($rule.Enabled)" -ne 'True' -or "$($rule.Direction)" -ne 'Inbound' -or "$($rule.Action)" -ne 'Allow') { continue }
+        $filter = $rule | Get-NetFirewallPortFilter
+        # TCP 이고 로컬 포트에 게임 서버 포트가 들어 있어야 한다
+        if ("$($filter.Protocol)" -eq 'TCP' -and @($filter.LocalPort) -contains "$GameServerPort") {
+            return "TCP $GameServerPort 인바운드 허용 (규칙 '$FirewallRuleName', 프로필 $($rule.Profile))"
+        }
+    }
+    return $null
+}
+
 
 # ============================================================
 # 설치 항목 정의
 #   Check   : 설치되어 있으면 상태 문자열, 아니면 $null 을 돌려준다
 #   Install : 설치를 수행한다
 #   Default : 선택 화면에서 기본으로 선택할지 여부 (필수 항목은 $true)
+#   RequiresAdmin : $true 이면 관리자 권한이 아닐 때 '사용 불가'로 표시하고 건너뛴다 (생략하면 필요 없음)
 #   목록 순서가 곧 설치 순서이므로 의존 관계(.NET SDK → MonoGame 템플릿, Python → 패키지, JDK → Ghidra, Git → vcpkg)를 지켜 배치한다
 # ============================================================
 $Items = @(
@@ -300,6 +345,22 @@ $Items = @(
         }
     }
     [pscustomobject]@{
+        # 분석 도구가 실행한 원본 게임은 전투가 시작되면 TCP 6799 를 리슨해 Windows 방화벽 경고를 띄운다.
+        # 세션마다 게임 복사본의 경로가 달라 프로그램 규칙으로는 반복되므로 포트 규칙을 미리 등록한다 (임시 조치).
+        # 보안 설정을 바꾸므로 기본 선택은 해제되어 있다. 되돌리기: Remove-NetFirewallRule -DisplayName "규칙 이름"
+        Name = "방화벽 예외 (TCP $GameServerPort)"; Group = '권장'; Default = $false; RequiresAdmin = $true
+        Description = "원본 게임 서버 포트 인바운드 허용, 분석 중 방화벽 경고 방지 (관리자 권한 필요, 원격 범위 $FirewallRemoteScope)"
+        Check   = { Get-FirewallRuleStatus }
+        Install = {
+            # 이름이 같은 낡은 규칙(꺼짐·다른 포트 등)이 있으면 지우고 새로 만든다
+            Get-NetFirewallRule -DisplayName $FirewallRuleName -ErrorAction SilentlyContinue | Remove-NetFirewallRule
+            New-NetFirewallRule -DisplayName $FirewallRuleName `
+                -Description 'NetStorm 원본 게임의 게임 서버 포트 (분석 중 방화벽 경고 방지, PREPARE.ps1 이 등록)' `
+                -Direction Inbound -Protocol TCP -LocalPort $GameServerPort -Action Allow `
+                -Profile Any -RemoteAddress $FirewallRemoteScope | Out-Null
+        }
+    }
+    [pscustomobject]@{
         Name = 'vcpkg'; Group = '선택'; Default = $false
         Description = "C++ 라이브러리 관리자 ($ToolsDir 에 설치, C# 확정으로 현재 불필요)"
         Check   = { $dir = Get-VcpkgDir; if ($dir) { $dir } }
@@ -350,7 +411,8 @@ $Items = @(
 
 # 항목 목록을 보여 주고 사용자가 번호로 선택을 토글하게 한다. 선택된 항목 배열을 돌려준다.
 function Select-Items($List) {
-    $selected = @($List | ForEach-Object { $_.Default })
+    # 이용할 수 없는 항목은 기본 선택에서도 뺀다
+    $selected = @($List | ForEach-Object { [bool]($_.Default -and -not (Get-UnavailableReason $_)) })
 
     # 사용자가 진행(엔터) 또는 종료(q)를 입력할 때까지 반복
     while ($true) {
@@ -358,6 +420,13 @@ function Select-Items($List) {
         Write-Host '=== 설치 항목 선택 ===' -ForegroundColor Cyan
         # 각 항목을 번호·선택 상태와 함께 출력
         for ($i = 0; $i -lt $List.Count; $i++) {
+            $reason = Get-UnavailableReason $List[$i]
+            # 이용할 수 없는 항목은 선택 표시 대신 '사용 불가'와 이유를 보여 준다
+            if ($reason) {
+                Write-Host ('{0,3}. [사용 불가] ({1}) {2}' -f ($i + 1), $List[$i].Group, $List[$i].Name) -NoNewline -ForegroundColor DarkYellow
+                Write-Host "  - 지금 이용할 수 없음: $reason (관리자 권한 PowerShell 로 다시 실행)" -ForegroundColor DarkYellow
+                continue
+            }
             $mark = if ($selected[$i]) { '[x]' } else { '[ ]' }
             Write-Host ('{0,3}. {1} ({2}) {3}' -f ($i + 1), $mark, $List[$i].Group, $List[$i].Name) -NoNewline
             Write-Host "  - $($List[$i].Description)" -ForegroundColor DarkGray
@@ -369,9 +438,9 @@ function Select-Items($List) {
         switch -Regex ($answer.Trim()) {
             '^$'  { return @(for ($i = 0; $i -lt $List.Count; $i++) { if ($selected[$i]) { $List[$i] } }) }
             '^q$' { return $null }
-            '^a$' { for ($i = 0; $i -lt $List.Count; $i++) { $selected[$i] = $true } ; break }
+            '^a$' { for ($i = 0; $i -lt $List.Count; $i++) { $selected[$i] = -not (Get-UnavailableReason $List[$i]) } ; break }
             '^n$' { for ($i = 0; $i -lt $List.Count; $i++) { $selected[$i] = $false } ; break }
-            '^r$' { for ($i = 0; $i -lt $List.Count; $i++) { $selected[$i] = ($List[$i].Group -eq '필수') } ; break }
+            '^r$' { for ($i = 0; $i -lt $List.Count; $i++) { $selected[$i] = ($List[$i].Group -eq '필수' -and -not (Get-UnavailableReason $List[$i])) } ; break }
             default {
                 # 입력을 토큰 단위로 나눠 번호 또는 범위(예: 3-6)로 해석
                 foreach ($token in ($answer -split '[\s,]+' | Where-Object { $_ })) {
@@ -387,8 +456,14 @@ function Select-Items($List) {
                     }
                     # 범위 안의 번호마다 선택 상태를 뒤집는다
                     foreach ($n in $range) {
-                        if ($n -ge 1 -and $n -le $List.Count) { $selected[$n - 1] = -not $selected[$n - 1] }
-                        else { Write-Host "  범위를 벗어난 번호: $n" -ForegroundColor Yellow }
+                        if ($n -lt 1 -or $n -gt $List.Count) {
+                            Write-Host "  범위를 벗어난 번호: $n" -ForegroundColor Yellow
+                            continue
+                        }
+                        $reason = Get-UnavailableReason $List[$n - 1]
+                        # 이용할 수 없는 항목은 선택을 바꾸지 않고 이유를 알려 준다
+                        if ($reason) { Write-Host "  $n 번은 지금 이용할 수 없습니다: $reason" -ForegroundColor Yellow }
+                        else { $selected[$n - 1] = -not $selected[$n - 1] }
                     }
                 }
             }
@@ -410,6 +485,14 @@ if (-not $CheckOnly -and -not (Test-Command winget)) {
     exit 1
 }
 
+# 관리자 권한 여부를 알려 준다 (방화벽 항목은 관리자 권한이 필요하다)
+if ($IsAdministrator) {
+    Write-Host '관리자 권한으로 실행 중입니다: 방화벽 항목을 이용할 수 있습니다.' -ForegroundColor DarkGray
+}
+else {
+    Write-Host '관리자 권한이 아닙니다: 방화벽 항목은 지금 이용할 수 없습니다 (관리자 권한 PowerShell 로 다시 실행하면 이용할 수 있습니다).' -ForegroundColor Yellow
+}
+
 if ($All) { $targets = $Items } else { $targets = Select-Items $Items }
 if (-not $targets) {
     Write-Host '선택된 항목이 없어 종료합니다.'
@@ -417,6 +500,12 @@ if (-not $targets) {
 }
 
 $results = @()
+
+# 이용할 수 없는 항목은 점검·설치하지 않고 결과 요약에 '사용 불가'로 남긴다
+foreach ($item in ($Items | Where-Object { Get-UnavailableReason $_ })) {
+    $results += [pscustomobject]@{ 항목 = $item.Name; 결과 = '사용 불가'; 상세 = (Get-UnavailableReason $item) }
+}
+$targets = @($targets | Where-Object { -not (Get-UnavailableReason $_) })
 
 # 선택된 항목을 순서대로 점검하고, 없으면 설치 후 다시 점검
 foreach ($item in $targets) {
