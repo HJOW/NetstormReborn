@@ -11,6 +11,27 @@
 
 ## 0-A. 최신 인수인계 — AI용 원본 분석 도구 (2026-09-29)
 
+### 2026-09-30 오전 (`vm-debian-codex`, Linux, 원본 실행 없음): 디컴파일 준비만 하고 사용자 요청으로 중단
+
+- **한 일 (코드·문서 변경 없음, 커밋할 것 없음)**
+  - 이 PC에는 디컴파일 결과가 없어 Ghidra 12.1.4(`~/Tools/ghidra_12.1.4_PUBLIC`, JDK 25)로 `originals/Netstorm.exe`를 다시 디컴파일했다. **함수 4,506개**, `extracted/decomp/Netstorm.c` 183,825줄, 소요 약 3분. `extracted/`는 Git 제외라 커밋 대상이 아니다.
+  - `run_decomp.ps1`은 PowerShell 전용이고 이 PC에는 `pwsh`가 없다. 같은 일을 하는 Linux 명령(저장소 루트에서):
+    ```bash
+    mkdir -p extracted/ghidra extracted/decomp extracted/ghidra-settings extracted/ghidra-cache
+    export XDG_CONFIG_HOME=$PWD/extracted/ghidra-settings XDG_CACHE_HOME=$PWD/extracted/ghidra-cache
+    ~/Tools/ghidra_12.1.4_PUBLIC/support/analyzeHeadless extracted/ghidra Netstorm -import originals/Netstorm.exe -overwrite \
+      -scriptPath tools/ghidra -postScript ExportDecomp.java $PWD/extracted/decomp/Netstorm.c
+    ```
+  - `python3 tools/taff.py extract originals/netstorm.tarc extracted/tarc`로 아카이브를 풀었다(246개, 튜토리얼 스크립트는 `extracted/tarc/d/tutorial1~6.english`).
+  - 기준 상태 확인: Release 빌드 오류 0(기존 CA2014 경고 1), 테스트 Core 128·Assets 172 통과.
+- **아직 하지 않은 것**: 아래 "다음 후보" 1~4번 중 어느 것도 시작하지 않았다. `extracted/decomp/Netstorm.c`는 준비됐으므로 바로 분석에 들어갈 수 있다. 디컴파일에 없는 함수(`0x484ab0`·`0x4c2b20`·`0x4c3290` 등)는 `tools/ghidra/decompile_at.ps1`이 필요한데 이것도 PowerShell 전용이라 이 PC에서는 `DecompileAt.java`를 `analyzeHeadless -process`로 직접 돌려야 한다(미시도).
+- **다음 후보 1번(튜토리얼 단계 처리 객체)을 위해 읽어 둔 것**
+  - 튜토리얼 1은 단계 D~F(가이저 연결·사제의 결정 운반·600 SP)가 수집 경제에 의존한다. 그래서 **튜토리얼 2만 지금 구현할 수 있다**(단계 A·B·D·E·G·H는 "지은 개수" 조건). 튜토리얼 1은 후보 3번(수집 경제)이 먼저다. 튜토리얼 3~6은 전투가 필요하다.
+  - 단계 C(워크샵에서 지식 등록 — 세션의 `RegisterKnowledgeCommand`로 판정 가능)·F(템플을 선택해 범위를 보면 타이머 시작)는 UI 선택 상태가 필요하다. 세션에 "선택" 개념이 없으므로 결정론을 지키려면 선택을 명령(예: `SelectEntityCommand`)으로 만들지 화면 신호로 둘지 정해야 한다.
+  - "지은 개수"(`FUN_004c24c0`, `DAT_005c98d0[타입]`)가 누적인지 현재 개수인지가 미확정이다. 파일 이름이 `Totalmade.cpp`라서 **누적(지은 총수)** 일 가능성이 높다. 이 배열을 올리는 곳을 디컴파일에서 찾아 확인할 것(회수해도 줄지 않는지가 단계 G 조건에 영향).
+- **발견한 문제(수정 안 함)**: `BattleSession.CreatePlayer`가 `MissionStart.Tech`를 복사하지 않고 그대로 `PlayerState.Tech`로 쓴다. `TechPermissions`가 변경 가능해졌으므로(`Set`) 같은 `MissionStart`로 세션을 두 개 만들면 한쪽의 단계 처리가 다른 쪽 표까지 바꾼다. 현재 테스트는 세션마다 미션을 새로 읽어서 드러나지 않는다. 튜토리얼 단계 처리를 넣기 전에 `TechPermissions` 복사본(예: `Clone()`)을 쓰도록 고치고 회귀 테스트를 추가할 것.
+- **참고**: 이 PC(`vm-debian-codex`)는 AGENTS.md 예외 시스템 1이라 게임 실행 확인은 필요 없지만, 이번에는 실행하지 않았다.
+
 ### 2026-09-30 (`DESKTOP-HJOW`, 원본 실행 없음): 재디컴파일 · 튜토리얼 2 헤더 플래그 원인 · 게임 세션
 
 - **재디컴파일**(사용자 요청): 두 판본을 이 PC에서 다시 디컴파일했다 — 결과는 아래 3단계 절에 기록. 패치판은 기존 결과와 SHA-256 동일, CD판은 이 PC에 없어서 새로 생성.
