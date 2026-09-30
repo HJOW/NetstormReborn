@@ -128,6 +128,10 @@ internal sealed partial class FortMapViewer
         {
             ResetTutorialPage();
         }
+        else if (action.Kind == TutorialDialogActionKind.ShowKnowledge)
+        {
+            OpenKnowledge();
+        }
         else if (action.Kind == TutorialDialogActionKind.Unsupported)
         {
             _notice = action.Argument;

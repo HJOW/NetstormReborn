@@ -115,6 +115,13 @@ internal sealed partial class FortMapViewer : IDisposable
     public void Update(double seconds, MouseState mouse, Vector2 edgeScroll, int width, int height)
     {
         KeyboardState keyboard = Keyboard.GetState();
+        if (_knowledgeOpen)
+        {
+            UpdateKnowledge(keyboard, mouse, width, height, seconds);
+            _previousKeyboard = keyboard;
+            _previousMouse = mouse;
+            return;
+        }
         if (TutorialDialogOpen)
         {
             UpdateTutorialDialog(keyboard, mouse, width, height);
@@ -133,6 +140,13 @@ internal sealed partial class FortMapViewer : IDisposable
         if (_tutorialDialog != null && Pressed(keyboard, Keys.F8) && _tutorialDialog.Review())
         {
             ResetTutorialPage();
+            _previousKeyboard = keyboard;
+            _previousMouse = mouse;
+            return;
+        }
+        if (IsMissionMode && Pressed(keyboard, Keys.F6))
+        {
+            OpenKnowledge();
             _previousKeyboard = keyboard;
             _previousMouse = mouse;
             return;
@@ -292,6 +306,7 @@ internal sealed partial class FortMapViewer : IDisposable
             batch.DrawString(font, text, new Vector2(16, height - 30), Color.White);
         }
         DrawTutorialDialog(batch, font, width, height);
+        DrawKnowledge(batch, font, width, height);
         DrawMissionMenu(batch, font, width, height);
     }
 

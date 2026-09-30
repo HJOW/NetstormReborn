@@ -60,7 +60,7 @@ dotnet run --project src/Netstorm.Game -- --map savetheisland --language korean
 
 **캠페인 초기 브리핑(2026-09-30):** `--mission thewarbegins` 같은 캠페인 미션도 미션 스크립트의 `[A.]` 섹션을 브리핑 창으로 먼저 연다(제목·인용·본문, 버튼 **Review Knowledge / Play Mission**). **브리핑을 닫기 전에는 세션 시간이 0에서 흐르지 않는다**(사용자 규칙 2, [안내·브리핑 창과 게임 시간](gameplay/dialog-pause.md)). Play Mission(또는 Enter·Space)으로 닫으면 시간이 시작되고, F8·Game 메뉴의 목표 다시 보기로 다시 열 수 있다(다시 열어도 그동안 시간은 멈춘다). Restart/Replay Mission은 미션을 다시 열어 브리핑부터 시작한다. 오른쪽 위 상자에는 창이 열려 있는 동안 `· 안내 창(시간 정지)`이 표시된다.
 
-* `Review Knowledge`(`ShowTechnology`)는 아직 구현하지 않아 누르면 미지원 알림만 뜨고 브리핑이 그대로 남는다.
+* `Review Knowledge`(`ShowTechnology`)는 브리핑 위에 **지식 창**(원소별로 내 플레이어가 아는 유닛 이름 목록)을 겹쳐 연다. 미션 화면에서는 **F6**(View Netstorm Knowledge)도 같은 창을 연다. OK·Esc·Enter·Space·F6으로 닫으면 브리핑(있다면)으로 돌아간다. 원본 창의 그림·배치는 캡처가 없어 확인하지 못했다(원본 함수는 `0x492b60`, 인자 55는 쓰이지 않음 — [ShowTechnology 분석](exe/show-technology.md)). 브리핑 없이 F6로 연 창은 원본처럼 시계를 멈추지 않는다.
 * 보이는 본문이 없고 `<$Config,…>` 설정 명령만 있는 `[A.]`(대회용 `tnronguide` 스크립트)는 빈 창이 미션을 멈춰 세우지 않도록 열지 않는다.
 * 원본은 미션 시작 뒤 다이얼로그 없이 10프레임이 지나야 브리핑이 뜨고 닫은 뒤 7프레임 뒤에 시간이 재개되지만, 클론은 0초 지점에서 즉시 열고 닫는 즉시 재개한다(차이는 0.2초 안팎으로 추정).
 

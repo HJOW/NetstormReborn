@@ -48,6 +48,8 @@ public enum TutorialDialogActionKind
     LeaveBattle,
     /// <summary>다른 미션을 시작함.</summary>
     MissionBegin,
+    /// <summary>안내 창을 그대로 둔 채 지식 창(ShowTechnology)을 겹쳐 엶.</summary>
+    ShowKnowledge,
     /// <summary>아직 지원하지 않는 명령 또는 없는 섹션.</summary>
     Unsupported,
 }
@@ -168,6 +170,11 @@ public sealed class TutorialDialogScript
         {
             Close();
             return new(TutorialDialogActionKind.MissionBegin, button.Argument);
+        }
+        if (button.Action.Equals("ShowTechnology", StringComparison.OrdinalIgnoreCase))
+        {
+            // 원본 디스패처는 인자(55)를 넘기지 않고 F6 지식 창 함수를 부르므로 인자는 무시한다.
+            return new(TutorialDialogActionKind.ShowKnowledge);
         }
         return new(TutorialDialogActionKind.Unsupported, $"아직 지원하지 않는 안내 버튼: {button.Action}");
     }

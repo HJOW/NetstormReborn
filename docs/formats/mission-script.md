@@ -161,7 +161,7 @@ PreparedMissionSection? section = mission?.Script.PrepareSection("CraftWarning",
 
 ### 버튼 동작 (주요)
 
-`Tell`(다른 섹션/대화상자 열기), `DoNothing`, `MissionBegin`(미션 시작, 인자 = 미션 파일 이름), `MissionAbort`, `MissionRestart`, `NextMission`, `ShowTechnology`, `GetTechnology`, `LeaveBattle`, `ScreenModeChange`, `GoMultiplayer`, `SaveGoMain`, `Config`, `QuitApp`, `TellTip`, `Salvage`, `Capture`, `SetAllBridge`, `ViewPriest`, `URL` 등 약 40종 (+ 멀티플레이 서버 관련 `Chal*`, `LaunchRootServer`, `AccountSetup`).
+`Tell`(다른 섹션/대화상자 열기), `DoNothing`, `MissionBegin`(미션 시작, 인자 = 미션 파일 이름), `MissionAbort`, `MissionRestart`, `NextMission`, `ShowTechnology`(F6 지식 창 열기, 인자는 무시 — [분석](../exe/show-technology.md)), `GetTechnology`(지식 획득 + `NewTech` 안내, 인자 = 타입 번호), `LeaveBattle`, `ScreenModeChange`, `GoMultiplayer`, `SaveGoMain`, `Config`, `QuitApp`, `TellTip`, `Salvage`, `Capture`, `SetAllBridge`, `ViewPriest`, `URL` 등 약 40종 (+ 멀티플레이 서버 관련 `Chal*`, `LaunchRootServer`, `AccountSetup`).
 
 ### 인라인 명령 (`<$명령,인자...>`, 텍스트 안에 삽입)
 

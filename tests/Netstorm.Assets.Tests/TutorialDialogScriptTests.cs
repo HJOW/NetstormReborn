@@ -119,6 +119,20 @@ public sealed class TutorialDialogScriptTests
         Assert.Equal("A.", dialog.Current!.Section);
     }
 
+    /// <summary>Review Knowledge(ShowTechnology,55)는 브리핑을 닫지 않고 지식 창 요청으로 분류된다 (인자 55는 원본에서도 쓰이지 않음).</summary>
+    [Fact]
+    public void ShowTechnologyButton_RequestsKnowledgeWindowAndKeepsBriefing()
+    {
+        var dialog = new TutorialDialogScript(
+            new MissionScript("[A.]\n<h2>Title</h2>\nText.\n$Button=Review Knowledge,ShowTechnology,55\n$Button=Play Mission,DoNothing,0\n"),
+            new ConfigStore());
+        Assert.True(dialog.OpenBriefing());
+
+        Assert.Equal(TutorialDialogActionKind.ShowKnowledge, dialog.Choose(0).Kind);
+        Assert.NotNull(dialog.Current);
+        Assert.Equal("A.", dialog.Current!.Section);
+    }
+
     /// <summary>설정 명령만 있는 A. 는 브리핑 창으로 열지 않고, 보이는 본문이 있는 A. 는 연다.</summary>
     [Fact]
     public void OpenBriefing_SkipsSectionsWithoutVisibleText()

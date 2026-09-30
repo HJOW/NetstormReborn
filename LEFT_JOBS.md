@@ -9,6 +9,15 @@
 
 ---
 
+## 2026-10-01 (지식 창, 원본 실행 없음) ✅: `Review Knowledge`(`ShowTechnology`) 정적 분석 + 클론 구현
+
+- **분석(exe 바이트 역어셈블):** `ShowTechnology`는 디스패처에서 **인자 없이** `0x492b60`을 부르는 F6 "View Netstorm Knowledge" 지식 창이다(스크립트의 `55`는 쓰이지 않음). 내 플레이어가 아는 타입을 원소별로 모은다. 이름 표에서 `GetTechnology`(`0x494ea0`)는 지식 부여 + `[NewTech]` 안내로 별개다. 상세: [show-technology.md](docs/exe/show-technology.md). Ghidra 프로젝트(`extracted/ghidra/Netstorm.gpr`)가 이 PC에서 0바이트라 `decompile_at.ps1`은 쓰지 못했다(그대로 멈춤 — 프로세스 정리함). 필요하면 `run_decomp.ps1`로 프로젝트를 다시 만들 것.
+- **구현:** `TutorialDialogActionKind.ShowKnowledge`(브리핑은 유지), `FortMapViewer.Knowledge.cs`(원소별 이름 목록 창, 미션 화면 F6, OK·Esc·Enter·Space·F6으로 닫음). 안내 창 없이 연 창은 시계를 멈추지 않는다.
+- **검증:** Release 빌드 오류 0, Assets 179(신규 1)·Core 147 통과. 화면은 실행하지 않아 창 배치는 눈으로 확인하지 못했다. 원본 지식 창의 실제 모양은 캡처가 없어 미확인(원본 실행 시 F6 캡처 필요).
+- 변경 파일: `src/Netstorm.Assets/TutorialDialogScript.cs`, `src/Netstorm.Game/{FortMapViewer,FortMapViewer.TutorialDialog,FortMapViewer.Knowledge(신규),NetstormGame}.cs`, `tests/Netstorm.Assets.Tests/TutorialDialogScriptTests.cs`, `docs/exe/show-technology.md`(신규), `docs/{map-viewer,formats/mission-script,gameplay/dialog-pause}.md`, 이 문서.
+
+---
+
 ## 2026-10-01 (`HJOW-X3D`, 원본 실행 없음) ✅: 기존 게임 플레이 녹화 분석 모드 구현
 
 - `analyzeManager`에 `record-play --session ID`를 추가했다. 기존 관리 세션에 지침 없는 안내 창을 붙이며 게임을 새로 시작하지 않는다. 사용자가 녹화 시작·중단을 누르고 자유롭게 플레이한다. 창은 대기·녹화 중(경과 시간·프레임 수)·오류 중단·게임 종료를 색과 문장으로 표시한다. 화면 캡처·오디오·입력·창 위치 오류가 나면 녹화를 닫고 시작 버튼을 다시 켠다. 사용자가 다시 누르면 다음 번호의 파일로 이어 기록한다.
@@ -25,7 +34,7 @@
 - **검증:** Release 솔루션 빌드 경고·오류 0. 테스트 Assets **178**(기존 175 + 신규 3: The War Begins 브리핑 버튼·Play Mission 닫기·F8 재열기, `OpenBriefing` 설정 전용 섹션 제외, **원본 영어 스크립트 중 `A.`에 보이는 본문이 있는 전부가 제목·버튼·본문을 가진 창으로 열림**)·Core 147 통과. 클론 `--mission thewarbegins --window 1024x768` 실행 화면(`extracted/screens/campaign-briefing.png`, Git 제외)에서 원본 `[A.]` 본문(제목 "The War Begins!", 인용문, 본문 두 문단)과 버튼 **Review Knowledge / Play Mission**이 뜨는 것을 확인했다(뒤의 HUD는 창에 가려 끝부분 "…정지)"만 보인다).
 - **확인하지 못한 것:** Play Mission으로 닫은 뒤 HUD 시간이 **0부터 시작하는지를 화면으로는 못 봤다.** Enter 입력을 주입하는 자동 확인을 시도했으나 클론 창이 포커스를 받지 못해 브리핑이 그대로 남았다(키 주입은 더 시도하지 않았다). 닫은 뒤 동작은 코드 경로(`TutorialDialogOpen`이 false가 되면 `UpdateSession`으로 진행)로만 확인했다. 수동으로 `Play Mission`을 눌러 HUD 시간이 그때부터 오르는지 보면 끝난다.
 - **남은 것**
-  1. **`Review Knowledge`(`ShowTechnology,55`) 미구현** — 누르면 미지원 알림만 뜨고 브리핑이 남는다. 원본의 지식 창이 무엇을 보여 주는지(미션 `myTech` 목록? 인자 `55`의 뜻)는 분석하지 않았다. [화면 목록](docs/screens/README.md)의 `The War Begins! - Briefing.png`와 `ShowTechnology` 처리 함수(디컴파일에 이름이 없어 문자열 참조 경로를 찾아야 함)를 볼 것.
+  1. ~~`Review Knowledge`(`ShowTechnology,55`) 미구현~~ → ✅ 2026-10-01 구현(위 `## 2026-10-01 (지식 창)` 절).
   2. 브리핑 안의 `Success`/`Failure`·AI 이벤트 창 등 **스크립트가 여는 미션 중간 창**(시간 정지)은 미션 승패·AI 이벤트 구현 때 같은 안내 창을 재사용한다.
   3. 게임 코드가 직접 여는 경고 창(`NewTech`, `NoBridgeYet` 등)은 시간을 멈추지 않는 것이 원본 동작이다(구현 시 기본은 흐름).
   4. 캠페인 미션 성공 버튼(`MissionAbort`, `MissionBegin,다음 미션`, `Tell,TryAgain`)은 승패 구현 전이라 쓰이지 않는다. `MissionAbort`는 `TutorialDialogScript`가 아직 모르는 동작이다.

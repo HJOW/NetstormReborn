@@ -376,7 +376,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     protected override void Update(GameTime gameTime)
     {
         KeyboardState keyboard = Keyboard.GetState();
-        bool tutorialOpen = _mapViewer?.TutorialDialogOpen == true;
+        bool tutorialOpen = _mapViewer?.TutorialDialogOpen == true || _mapViewer?.KnowledgeOpen == true;
         if (keyboard.IsKeyDown(Keys.Escape) && !_previousKeyboard.IsKeyDown(Keys.Escape) && !tutorialOpen
             && _mapViewer?.IsMissionMode != true)
         {
@@ -478,7 +478,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
             _display.Settings.EdgeScroll && IsActive, _display.BorderlessScreen,
             rawMouse.LeftButton == ButtonState.Pressed,
             keyboard.IsKeyDown(Keys.LeftShift) || keyboard.IsKeyDown(Keys.RightShift),
-            PopupOpen: _mapViewer?.TutorialDialogOpen == true || _mapViewer?.MissionMenuOpen == true, TopEdgeBlocked: false);
+            PopupOpen: _mapViewer?.TutorialDialogOpen == true || _mapViewer?.KnowledgeOpen == true || _mapViewer?.MissionMenuOpen == true, TopEdgeBlocked: false);
         (double x, double y) = _edgeScroll.Update(input, seconds);
         return new Vector2((float)x, (float)y);
     }
