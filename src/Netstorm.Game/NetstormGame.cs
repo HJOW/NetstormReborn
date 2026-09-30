@@ -40,6 +40,9 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     private readonly string? _mapName;
     /// <summary>--mission 으로 지정한 미션 이름 (맵과 시작 조건을 미션 스크립트에서 읽는다)</summary>
     private readonly string? _missionName;
+
+    /// <summary>현재 열린 미션 이름. 튜토리얼 버튼으로 다음 미션을 연 경우에도 재시작 대상이 현재 미션이 되게 한다.</summary>
+    private string? _currentMissionName;
     /// <summary>--script 로 지정한 검증용 명령 스크립트 (맵 뷰어에서 시작할 때 실행)</summary>
     private readonly string? _scriptText;
     private readonly string? _spriteName;
@@ -297,6 +300,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
             ?? throw new ArgumentException($"미션을 찾을 수 없습니다: {missionName}");
         MissionStart start = MissionStart.FromScript(loaded.Script);
         LoadMap(resources, shapes, palette, start.LoadFort ?? missionName, start, loaded.Script);
+        _currentMissionName = missionName;
         _baseTitle = $"NetStorm 클론 — 미션: {start.Title ?? missionName}";
         UpdateWindowTitle();
     }
@@ -373,7 +377,8 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     {
         KeyboardState keyboard = Keyboard.GetState();
         bool tutorialOpen = _mapViewer?.TutorialDialogOpen == true;
-        if (keyboard.IsKeyDown(Keys.Escape) && !_previousKeyboard.IsKeyDown(Keys.Escape) && !tutorialOpen)
+        if (keyboard.IsKeyDown(Keys.Escape) && !_previousKeyboard.IsKeyDown(Keys.Escape) && !tutorialOpen
+            && _mapViewer?.IsMissionMode != true)
         {
             Exit();
         }
@@ -391,6 +396,11 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         if (tutorialAction != null)
         {
             HandleTutorialAction(tutorialAction);
+        }
+        MissionMenuAction? menuAction = _mapViewer?.TakeMissionMenuAction();
+        if (menuAction != null)
+        {
+            HandleMissionMenuAction(menuAction.Value);
         }
         _spriteBrowser?.Update(dt, mouse, _display.Layout.LogicalWidth, _display.Layout.LogicalHeight);
         // 모든 애니메이션 진행
@@ -425,6 +435,35 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         }
     }
 
+    /// <summary>미션 메뉴의 재시작·재플레이는 현재 미션을 다시 로드하고, 떠나기는 개발용 기본 화면으로 돌아간다.</summary>
+    private void HandleMissionMenuAction(MissionMenuAction action)
+    {
+        if (action is MissionMenuAction.Restart or MissionMenuAction.Replay)
+        {
+            try
+            {
+                LoadMission(_resources!, _shapes!, _palette!, _currentMissionName!);
+            }
+            catch (Exception error) when (error is IOException or ArgumentException)
+            {
+                _statusLines.Add($"미션을 다시 열지 못했습니다: {error.Message}");
+            }
+        }
+        else if (action == MissionMenuAction.MainMenu)
+        {
+            _mapViewer?.Dispose();
+            _mapViewer = null;
+            _currentMissionName = null;
+            _baseTitle = "NetStorm 클론 — 개발 환경 확인";
+            _statusLines.Add("미션을 종료했습니다.");
+            UpdateWindowTitle();
+        }
+        else if (action == MissionMenuAction.Quit)
+        {
+            Exit();
+        }
+    }
+
     /// <summary>
     /// 창 픽셀 기준 마우스 위치로 가장자리 스크롤이 옮길 논리 픽셀을 구한다.
     /// 창이 비활성이거나 창 테두리가 있으면 0 이다 (원본: 전체화면에서만 동작).
@@ -439,7 +478,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
             _display.Settings.EdgeScroll && IsActive, _display.BorderlessScreen,
             rawMouse.LeftButton == ButtonState.Pressed,
             keyboard.IsKeyDown(Keys.LeftShift) || keyboard.IsKeyDown(Keys.RightShift),
-            PopupOpen: _mapViewer?.TutorialDialogOpen == true, TopEdgeBlocked: false);
+            PopupOpen: _mapViewer?.TutorialDialogOpen == true || _mapViewer?.MissionMenuOpen == true, TopEdgeBlocked: false);
         (double x, double y) = _edgeScroll.Update(input, seconds);
         return new Vector2((float)x, (float)y);
     }

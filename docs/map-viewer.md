@@ -30,7 +30,7 @@ dotnet run --project src/Netstorm.Game -- --map savetheisland --language korean
 * F4: 현재 사제 위치로 화면을 옮긴다. 튜토리얼 1의 첫 단계 신호로도 처리한다.
 * G: 진단용 청크 윤곽 표시 전환
 * 오브젝트 기준점 근처에 마우스: 타입, 좌표, 영역, 소유자, 다리 값 표시
-* Esc: 종료
+* Esc: 맵 시험 화면에서는 종료, 미션에서는 상단 Game 메뉴 표시·숨김
 
 ## 게임 세션과 미션 모드
 
@@ -43,6 +43,7 @@ dotnet run --project src/Netstorm.Game -- --map savetheisland --language korean
 | `--map 이름` | P·B 모드가 켜진 동안만 흐름 (맵만 볼 때 저장된 다리가 무너지지 않도록) | 꺼짐 = **시험 모드** (규칙 조건만 맞으면 어떤 유닛이든 놓는다) | 맵의 `Money` 섹션 |
 
 * `--mission`은 미션 스크립트에서 맵(`loadFort`)과 시작 조건을 읽어 연다. `--map`과 함께 쓸 수 없다.
+* 미션 중 Esc → `Game`을 클릭하면 목표 다시 보기(F8), Restart Mission, Leave Mission, Quit Game을 고를 수 있다. Leave Mission 확인 창의 Main Menu는 현재 개발용 기본 화면으로 돌아가고, Replay Mission은 같은 미션을 처음부터 다시 연다. Continue Mission은 확인 창을 닫는다. Restart Mission도 같은 미션을 다시 로드하며 첫 안내와 시작 Storm Power를 복원한다. [원본 실행 관찰](screens/README.md#19-replay-missionrestart-mission-전환-2026-09-30-windows-hjow-athlon).
 * `Space`: 세션 일시정지·재개. `K`: 생산 규칙 켜기/끄기. 일시정지 중에도 명령을 내리면 한 틱만 진행해 결과를 보여 준다.
 * 오른쪽 위 상자에 Storm Power(원본 색 규칙 ≤1000 빨강, ≤2000 노랑), 게임 시각(틱), 생산 규칙 상태, 미션 제목이 표시된다.
 * **튜토리얼 1·2는 세션이 단계 처리를 한다**(`TutorialStages`, [core-rules.md](core-rules.md)). 튜토리얼 1은 F4/다리 배치 → 다리 8·19칸 → 가이저 연결 → 200·600 SP로 G까지 진행한다. 저장 맵에 없는 연습 가이저와 받침을 시작 시 생성한다(위치는 근사).
@@ -59,7 +60,7 @@ dotnet run --project src/Netstorm.Game -- --map savetheisland --language korean
 
 * F8: 현재 단계의 시작 안내를 다시 연다. MORE/BACK으로 이동하거나 보정 안내(`NotVortex` 등)를 본 뒤에도 단계 시작으로 돌아간다.
 * Enter·Space 또는 좌클릭: 선택한 버튼 실행. Tab·좌우 방향키: 버튼 선택.
-* 마우스 휠·상하 방향키·PageUp·PageDown: 긴 본문 스크롤. Esc: 안내 창 닫기. 창이 닫힌 상태의 Esc는 게임 종료.
+* 마우스 휠·상하 방향키·PageUp·PageDown: 긴 본문 스크롤. 안내 창에서 Esc는 원본처럼 반응하지 않는다. 창을 닫은 뒤 Esc는 미션 메뉴를 연다.
 * `<h1>`~`<h4>`, `<p>`, `<br>`, `<i>`, `<c>` 등의 제목·간격·강조를 표시한다. 원본 그림 명령(`<!...>`)은 현재 `[그림: 이름]` 자리표시자로 보인다. 원본 창의 그림·정확한 배치 재현은 후속 작업이다.
 
 튜토리얼 2의 A~I 단계 안내와 버튼은 원본 스크립트로 정적 검사했다. 그래픽 창의 실제 배치·마우스 입력은 이번 작업에서 실행 검증하지 않았다.

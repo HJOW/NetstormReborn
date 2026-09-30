@@ -56,6 +56,9 @@ internal sealed partial class FortMapViewer : IDisposable
     /// <summary>로드한 맵 파일의 표시 이름.</summary>
     public string Name { get; }
 
+    /// <summary>미션으로 연 뷰어인지. 맵 시험 화면에는 미션 메뉴를 표시하지 않는다.</summary>
+    public bool IsMissionMode => _mission != null;
+
     /// <summary>실행 설정에서 선택한 언어. 개발용 안내 문구의 번역 여부와는 별개다.</summary>
     private string Language { get; }
 
@@ -115,6 +118,14 @@ internal sealed partial class FortMapViewer : IDisposable
         if (TutorialDialogOpen)
         {
             UpdateTutorialDialog(keyboard, mouse, width, height);
+            _previousKeyboard = keyboard;
+            _previousMouse = mouse;
+            return;
+        }
+        if (UpdateMissionMenu(keyboard, mouse, width, height))
+        {
+            // 메뉴가 열린 동안에도 원본처럼 미션 시간은 흐르되 지도 조작은 받지 않는다.
+            UpdateSession(seconds, new KeyboardState(), mouse);
             _previousKeyboard = keyboard;
             _previousMouse = mouse;
             return;
@@ -267,7 +278,7 @@ internal sealed partial class FortMapViewer : IDisposable
         DrawBridgeWorld(batch, center);
         batch.Draw(_pixel, new Rectangle(0, 0, width, HeaderHeight), new Color(18, 24, 38));
         batch.DrawString(font, $"맵: {Name} | 오브젝트 {_map.Objects.Count}개 | 확대 {_zoom:0.##}배 | 언어: {Language}", new Vector2(16, 10), Color.Gold);
-        batch.DrawString(font, "방향키 / 우클릭 / 화면 끝: 이동 · 휠: 확대 · Home: 사제 위치 · G: 청크 윤곽 · P: 배치 시험 · B: 다리 조각 · Esc: 종료", new Vector2(16, 38), Color.White);
+        batch.DrawString(font, $"방향키 / 우클릭 / 화면 끝: 이동 · 휠: 확대 · Home: 사제 위치 · G: 청크 윤곽 · P: 배치 시험 · B: 다리 조각 · Esc: {(IsMissionMode ? "메뉴" : "종료")}", new Vector2(16, 38), Color.White);
         batch.DrawString(font, "F4: 사제 섬으로 · F11: 전체화면 · F10: 와이드 처리 · F9: 원본 해상도 높이 · F7: 가장자리 스크롤", new Vector2(16, 66), Color.White);
         batch.DrawString(font, displayInfo, new Vector2(16, 94), Color.LightGray);
         DrawSessionHud(batch, font, width);
@@ -281,6 +292,7 @@ internal sealed partial class FortMapViewer : IDisposable
             batch.DrawString(font, text, new Vector2(16, height - 30), Color.White);
         }
         DrawTutorialDialog(batch, font, width, height);
+        DrawMissionMenu(batch, font, width, height);
     }
 
     /// <summary>클러스터 번호에서 본체 레이어 프레임을 찾아 필요한 텍스처만 캐시한다. 거주지는 영역 원소 그림을 쓴다.</summary>

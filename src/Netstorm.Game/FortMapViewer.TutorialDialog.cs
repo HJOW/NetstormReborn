@@ -70,7 +70,7 @@ internal sealed partial class FortMapViewer
         TutorialDialogContent content = _tutorialDialog!.Current!;
         if (Pressed(keyboard, Keys.Escape))
         {
-            _tutorialDialog.Close();
+            // 원본 안내 창은 Esc 로 닫히지 않고 화면 버튼으로만 진행한다.
             return;
         }
         if (Pressed(keyboard, Keys.F8))
@@ -207,7 +207,7 @@ internal sealed partial class FortMapViewer
             Vector2 size = font.MeasureString(label);
             batch.DrawString(font, label, new Vector2(button.Center.X - size.X / 2, button.Y + 4), Color.White);
         }
-        batch.DrawString(font, "F8 다시 보기 · Esc 닫기 · ↑↓/휠 스크롤", new Vector2(panel.X + 24, panel.Bottom - 26), Color.LightGray);
+        batch.DrawString(font, "F8 다시 보기 · ↑↓/휠 스크롤", new Vector2(panel.X + 24, panel.Bottom - 26), Color.LightGray);
     }
 
     /// <summary>HTML 강조 종류를 개발용 대화상자의 읽기 쉬운 색으로 바꾼다.</summary>

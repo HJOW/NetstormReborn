@@ -1,6 +1,6 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
-> 최종 갱신: 2026-09-30 (`vm-debian-codex`)
+> 최종 갱신: 2026-09-30 (`HJOW-Athlon`)
 > 프로젝트 목표(AGENTS.md): 원본 NetStorm: Islands at War 를 디컴파일/분석하여 클론 코딩하고,
 > **Windows 10/11** 과 **GUI 환경의 Linux** 에서 동작하며 **여러 언어를 지원**하는 게임을 만든다.
 > **1차 목표 언어: 영어, 한국어** (그 외 언어는 이후 확장).
@@ -8,6 +8,13 @@
 > **화면 요구사항(2026-09-28 AGENTS.md 추가)**: 풀스크린 모드와 화면비 **16:9 · 16:10 · 4:3** 지원, 풀스크린에서 **마우스를 화면 끝에 대면 화면 이동**(원본도 지원) — 1.7절
 
 ---
+
+## 2026-09-30 (`HJOW-Athlon`, Windows): 미션 Game 메뉴·재시작·안내 창 Esc 동작 구현 ✅
+
+- 이전 원본 자동 분석(아래 두 절)에 따라 미션 Esc는 상단 Game 메뉴를 표시·숨기고, Game → Restart Mission은 현재 미션을 다시 로드해 첫 브리핑으로 돌아간다. Game → Leave Mission은 확인 창을 띄우고 Main Menu·Replay Mission·Continue Mission 버튼을 처리한다. Replay는 같은 미션을 다시 로드한다. 현재 클론에는 메인 메뉴 화면이 없으므로 Main Menu 선택은 개발용 기본 화면으로 돌아간다.
+- 안내 창에서는 원본처럼 Esc가 반응하지 않도록 수정했다. 메뉴·확인 창을 여는 동안 지도 입력과 가장자리 스크롤을 막고, 미션 시간은 계속 진행한다. 메뉴를 클릭하면 화면 전환을 게임 본체가 처리한다.
+- **검증**: Windows에서 Release 빌드 경고·오류 0, Assets 175개·Core 147개 테스트 통과. 클론 `--mission tutorial1 --window 1024x768`를 실제 실행해 첫 안내 창에서 Esc가 창을 닫지 않음, 안내 버튼으로 페이지 이동, Esc → Game → Leave Mission 확인 창, Replay Mission과 Restart Mission의 첫 `NetStorm!` 브리핑 복귀, Main Menu 선택 시 개발용 기본 화면 복귀를 확인했다. 실제 원본과 메뉴 그림의 픽셀 단위 일치는 확인 대상에 포함하지 않았다.
+- 변경 파일: `src/Netstorm.Game/{FortMapViewer,FortMapViewer.TutorialDialog,FortMapViewer.MissionMenu(신규),NetstormGame}.cs`, [뷰어 사용법](docs/map-viewer.md), 이 문서.
 
 ## 2026-09-30 (`HJOW-Athlon`, Windows, 원본 자동 분석): Replay·Restart Mission 첫 화면 확인 ✅
 
