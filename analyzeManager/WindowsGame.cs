@@ -66,8 +66,8 @@ public static class WindowsGame
     /// <summary>부모 호스트가 dotnet.exe여도 현재 스레드의 좌표를 물리 픽셀로 고정한다.</summary>
     public static void SetDpiMode() => SetThreadDpiAwarenessContext(new nint(-4));
 
-    /// <summary>게임의 활성 대화상자 또는 가장 큰 표시 창을 찾아 클라이언트 좌표를 읽는다.</summary>
-    public static GameWindow FindWindow(int processId)
+    /// <summary>게임의 활성 대화상자 또는 가장 큰 표시 창을 찾아 클라이언트 좌표를 읽는다. 안내 창 배치는 주 게임 창을 고른다.</summary>
+    public static GameWindow FindWindow(int processId, bool preferForeground = true)
     {
         SetDpiMode();
         nint foreground = GetForegroundWindow();
@@ -80,7 +80,7 @@ public static class WindowsGame
             if (pid != processId || !IsWindowVisible(handle) || !GetClientRect(handle, out Rect rect)) return true;
             long area = (long)rect.Right * rect.Bottom;
             if (area <= 0) return true;
-            if (handle == foreground) { chosen = handle; return false; }
+            if (preferForeground && handle == foreground) { chosen = handle; return false; }
             if (area > largest) { largest = area; chosen = handle; }
             return true;
         }, 0);
@@ -91,6 +91,14 @@ public static class WindowsGame
         var title = new StringBuilder(512);
         GetWindowText(chosen, title, title.Capacity);
         return new(chosen.ToInt64(), title.ToString(), origin.X, origin.Y, client.Right, client.Bottom, chosen == foreground);
+    }
+
+    /// <summary>안내 창 배치를 위해 게임의 제목 표시줄과 테두리까지 포함한 화면 좌표를 읽는다.</summary>
+    public static Rectangle OuterBounds(GameWindow window)
+    {
+        SetDpiMode();
+        if (!GetWindowRect(new nint(window.Handle), out Rect rect)) throw new InvalidOperationException("게임 창 바깥 좌표 조회 실패.");
+        return Rectangle.FromLTRB(rect.Left, rect.Top, rect.Right, rect.Bottom);
     }
 
     /// <summary>대상 창을 전면에 놓고 실제 전면 창이 되었는지 확인한다.</summary>
@@ -388,6 +396,8 @@ public static class WindowsGame
     [DllImport("user32.dll")] private static extern uint GetWindowThreadProcessId(nint window, out uint processId);
     /// <summary>클라이언트 크기 조회.</summary>
     [DllImport("user32.dll")] private static extern bool GetClientRect(nint window, out Rect rect);
+    /// <summary>제목 표시줄과 테두리를 포함한 창 좌표 조회.</summary>
+    [DllImport("user32.dll")] private static extern bool GetWindowRect(nint window, out Rect rect);
     /// <summary>클라이언트 좌표의 화면 좌표 변환.</summary>
     [DllImport("user32.dll")] private static extern bool ClientToScreen(nint window, ref Point point);
     /// <summary>창 제목 조회.</summary>

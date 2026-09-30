@@ -28,6 +28,8 @@ public sealed class GuidedForm : Form
     private GuidedRecorder? _recorder;
     private string[] _steps = [];
     private int _step;
+    /// <summary>마지막으로 안내 창을 배치한 주 게임 창의 바깥 좌표.</summary>
+    private Rectangle? _placedGameBounds;
 
     /// <summary>기존 관리 세션과 UTF-8 안내를 읽고 게임을 가리지 않는 위치에 창을 놓는다.</summary>
     public GuidedForm(SessionStore store, string sessionId, string? suppliedSteps)
@@ -48,6 +50,7 @@ public sealed class GuidedForm : Form
         }
         Text = "NetStorm 원본 분석 안내";
         FormBorderStyle = FormBorderStyle.FixedToolWindow;
+        StartPosition = FormStartPosition.Manual;
         MaximizeBox = false;
         MinimizeBox = false;
         TopMost = true;
@@ -83,10 +86,11 @@ public sealed class GuidedForm : Form
         reload.Click += (_, _) => { LoadSteps(); RestoreGameFocus(); };
         _statusTimer = new System.Windows.Forms.Timer { Interval = 1000 };
         _statusTimer.Tick += (_, _) => UpdateStatus();
-        _statusTimer.Start();
-        PositionBesideGame(WindowsGame.FindWindow(process.Id));
+        if (!PositionBesideGame(WindowsGame.OuterBounds(WindowsGame.FindWindow(process.Id, preferForeground: false))))
+            throw new InvalidOperationException("게임 옆에 안내 창을 놓을 공간이 없습니다. 더 넓은 화면이나 두 번째 모니터를 사용하세요.");
         UpdateStep();
         _desktopLock = store.LockDesktop();
+        _statusTimer.Start();
     }
 
     /// <summary>새 안내 텍스트를 세션 폴더에 복사해 CLI를 다시 열어도 같은 지시를 보여준다.</summary>
@@ -110,26 +114,22 @@ public sealed class GuidedForm : Form
         if (_instruction != null) UpdateStep();
     }
 
-    /// <summary>같은 모니터에서 게임을 덮지 않는 오른쪽 또는 왼쪽 빈 영역을 찾는다.</summary>
-    private void PositionBesideGame(GameWindow game)
+    /// <summary>주 게임 창의 테두리까지 피해 안내 창을 오른쪽이나 왼쪽 작업 영역에 배치한다.</summary>
+    private bool PositionBesideGame(Rectangle gameBounds)
     {
-        int right = game.X + game.Width + 8;
-        int left = game.X - Width - 8;
-        // 두 번째 모니터가 바로 옆에 있어도 안내 창이 한 모니터 안에 완전히 들어가도록 찾는다.
-        foreach (int x in new[] { right, left })
-        {
-            // 후보 위치가 각 모니터의 작업 영역 안에 완전히 들어가는지 확인한다.
-            foreach (Screen screen in Screen.AllScreens)
-            {
-                var area = screen.WorkingArea;
-                int y = Math.Clamp(game.Y, area.Top, Math.Max(area.Top, area.Bottom - Height));
-                if (!area.Contains(new Rectangle(x, y, Width, Height))) continue;
-                Left = x;
-                Top = y;
-                return;
-            }
-        }
-        throw new InvalidOperationException("게임 옆에 안내 창을 놓을 공간이 없습니다. 더 넓은 화면이나 두 번째 모니터를 사용하세요.");
+        Point? position = GuidePlacement.Beside(gameBounds, Size, Screen.AllScreens.Select(screen => screen.WorkingArea));
+        if (position == null) return false;
+        Location = position.Value;
+        _placedGameBounds = gameBounds;
+        return true;
+    }
+
+    /// <summary>게임 창의 크기·위치가 바뀌었거나 안내 창과 겹치면 새 위치를 찾는다.</summary>
+    private bool KeepBesideGame(int processId)
+    {
+        GameWindow game = WindowsGame.FindWindow(processId, preferForeground: false);
+        Rectangle bounds = WindowsGame.OuterBounds(game);
+        return (_placedGameBounds == bounds && !bounds.IntersectsWith(Bounds)) || PositionBesideGame(bounds);
     }
 
     /// <summary>현재 지시와 단계 번호를 갱신한다.</summary>
@@ -162,6 +162,9 @@ public sealed class GuidedForm : Form
         if (_recorder != null) return;
         try
         {
+            using Process? process = _store.OwnedProcess(_session);
+            if (process == null || !KeepBesideGame(process.Id))
+                throw new InvalidOperationException("게임 옆에 안내 창을 놓을 공간이 없어 녹화를 시작할 수 없습니다.");
             _recorder = new GuidedRecorder(_store, _session);
             _recorder.Start();
             _store.Append(_session, "guided_step", new { index = _step + 1, total = _steps.Length, instruction = _steps[_step] });
@@ -191,11 +194,10 @@ public sealed class GuidedForm : Form
         RestoreGameFocus();
     }
 
-    /// <summary>녹화 오류나 게임 종료를 표시하고 프레임 수를 주기적으로 갱신한다.</summary>
+    /// <summary>게임 창 변경에 맞춰 안내를 다시 배치하고 녹화 오류·프레임 수를 갱신한다.</summary>
     private void UpdateStatus()
     {
-        if (_recorder == null) return;
-        if (_recorder.Error != null)
+        if (_recorder?.Error != null)
         {
             StopRecording();
             return;
@@ -203,10 +205,25 @@ public sealed class GuidedForm : Form
         using Process? process = _store.OwnedProcess(_session);
         if (process == null)
         {
-            StopRecording();
+            if (_recorder != null) StopRecording();
             _status.Text = "게임 종료 · 녹화 저장됨";
             return;
         }
+        try
+        {
+            if (!KeepBesideGame(process.Id))
+            {
+                if (_recorder != null) StopRecording();
+                _status.Text = "게임 옆에 안내 창을 놓을 공간이 없습니다.";
+                return;
+            }
+        }
+        catch (Exception error)
+        {
+            _status.Text = "게임 창 위치 확인 실패: " + error.Message;
+            return;
+        }
+        if (_recorder == null) return;
         _status.Text = $"녹화 중 · 영상 {_recorder.FrameCount}프레임";
     }
 
