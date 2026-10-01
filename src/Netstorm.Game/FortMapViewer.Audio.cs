@@ -44,11 +44,6 @@ internal sealed partial class FortMapViewer
         return cues;
     }
 
-    /// <summary>
-    /// 내 제단에서 희생 의식이 진행 중인지 (배경음악이 희생 음악을 유지할지 정한다). 사제 포획·제단 의식은 아직 구현하지 않아 항상 false 다.
-    /// </summary>
-    public bool MySacrificeInProgress => false;
-
     /// <summary>효과음 하나를 요청한다</summary>
     /// <param name="name">원본 sound/ 파일 이름</param>
     private void QueueSound(string name) => _soundCues.Add(name);
@@ -81,6 +76,42 @@ internal sealed partial class FortMapViewer
             case SessionEventKind.BridgeCollapsed:
                 QueueSound(BridgeFallSound);
                 break;
+            case SessionEventKind.PriestCaptured:
+                QueueSound("golemPickUp.wav");
+                break;
+            case SessionEventKind.SacrificeStarted:
+                if (sessionEvent.Player == TestPlayer)
+                {
+                    _mySacrificeMusicRequested = true;
+                }
+                break;
+            case SessionEventKind.SacrificeRune:
+                QueueSacrificeRuneSound(sessionEvent.Text);
+                break;
+            case SessionEventKind.SacrificeRuneBurned:
+                QueueSound("altarBurnCollapse.wav");
+                break;
+            case SessionEventKind.SacrificeCompleted:
+                QueueSound("altarBurnCollapse.wav");
+                QueueSound("itIsDone2.wav");
+                break;
+            case SessionEventKind.PriestSacrificed:
+                QueueSound("priestSacrifice2.wav");
+                break;
+            case SessionEventKind.AltarConsumed:
+                QueueSound("explodeSlot.wav");
+                break;
         }
     }
+
+    /// <summary>의식에서 지키기 시작한 룬 이름을 원본 음성 파일에 연결한다.</summary>
+    private void QueueSacrificeRuneSound(string rune) => QueueSound(rune.ToLowerInvariant() switch
+    {
+        "wind" => "forWind2.wav",
+        "sun" => "forSun2.wav",
+        "rain" => "forRain2.wav",
+        "thunder" => "forThunder2.wav",
+        "storm" => "forStorm2.wav",
+        _ => "",
+    });
 }

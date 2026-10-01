@@ -2,7 +2,7 @@
 
 ## 현재 상태와 용도
 
-`analyzeManager/`는 AI가 원본 게임을 직접 관찰할 때 사용하는 Windows 전용 보조 프로그램이다. CLI와 로컬 stdio MCP가 같은 엔진을 호출한다. 외부 AI가 캡처를 해석하고 다음 입력을 선택하며, 도구는 입력·시각·화면·메모를 문서로 기록한다. 기존 exe/영상/파일 분석과 함께 사용할 수 있다.
+`analyzeManager/`에는 AI가 원본 게임을 관찰·조작하는 Windows 전용 도구와, YouTube 영상을 읽는 교차 플랫폼 portable 도구가 있다. 두 실행 파일 모두 CLI와 로컬 stdio MCP를 제공하지만 portable 빌드는 YouTube 도구만 등록한다. 외부 AI가 화면을 해석하고 다음 입력을 선택하며, 도구는 입력·시각·화면·메모를 문서로 기록한다.
 
 **2026-10-01 추가:** 원본 게임 대신 **YouTube 플레이 영상**을 읽는 `youtube_*` 도구(CLI·MCP 공통)가 있다. 게임을 실행하지 않으므로 아래 개발자 확인 규칙의 대상이 아니다. → [YouTube 영상 분석](#youtube-영상-분석-원본-게임-실행-없음)
 
@@ -21,7 +21,7 @@
   | 시스템 2 | `192.168.0.94` | `HJOW-Athlon` | Windows 10 Pro (2026-09-29 추가, 이 저장소 작업 PC) |
 
 - **수동 조작 분석 예외(2026-09-30 추가):** 개발자(사용자)가 **기존 게임 수동 컨트롤 방식으로 분석을 진행하라고 직접 요청**한 경우, 해당 작업 단계에서는 시스템과 관계없이 실제 게임 구동 확인을 다시 받지 않아도 된다. 요청이 없었거나 다른 작업 단계로 넘어갔다면 일반 규칙으로 돌아간다.
-- 지정 시스템의 실행 허용과 기술적인 실행 가능 여부는 별개다. `analyzeManager`는 Windows 전용이므로 Linux(시스템 1)에서 사용하려면 Wine 실행 환경을 별도로 준비해야 한다. 시스템 2는 Windows이므로 별도 준비 없이 실행할 수 있다.
+- 지정 시스템의 실행 허용과 기술적인 실행 가능 여부는 별개다. 원본 게임 제어 도구는 Windows 전용이므로 Linux(시스템 1)에서는 Wine 실행 환경이 필요하다. YouTube 영상 분석은 Linux portable 빌드를 사용할 수 있다. 시스템 2는 Windows이므로 별도 준비 없이 게임 제어 도구를 실행할 수 있다.
 - 지정 시스템 목록은 `AGENTS.md`가 기준이다. **`AGENTS.md`는 AI가 직접 수정하지 않으며**, 목록 변경이 필요하면 개발자(사용자)에게 수정을 요청한다. 이 문서·`LEFT_JOBS.md`·`analyzeManager/README.md`의 목록은 그 사본이다.
 - 일반적인 작업 진행 지시나 이전 실행 이력만으로 새로운 게임 실행이 허용되었다고 간주하지 않는다. 일반 시스템에서는 개발자가 확인한 실행 범위 안에서 진행한다. 해당 범위의 작업 단계가 완료될 때까지 확인 상태는 유지된다.
 - 확인을 기다리는 동안 실제 게임을 구동하지 않는다. 게임 없는 코드 검토·문서 정리 등 독립 작업은 진행할 수 있다.
@@ -274,8 +274,24 @@ analyzeManager/bin/Release/net10.0-windows/Netstorm.AnalyzeManager.exe record-pl
 YouTube에는 원본 게임 플레이 영상이 많다(AGENTS.md의 튜토리얼·캠페인 영상, 전용 채널 `@netstormcampaigns2591`). 직접 플레이·녹화하는 것보다 빠르게 화면·흐름·시간을 확인할 수 있도록, 영상 주소를 받아 **필요한 시각의 프레임만** 원격 스트림에서 읽는 도구를 두었다(2026-10-01). CLI `call`과 MCP가 같은 엔진(`YouTubeAnalyzer`)을 쓰며, AI는 주로 MCP로 사용한다. MCP 응답은 구조화 데이터와 함께 프레임(여러 장이면 관찰표) PNG 이미지를 돌려준다.
 
 * **게임을 실행하지 않는다.** `start_session`의 개발자 확인 규칙 대상이 아니며 데스크톱 잠금도 쓰지 않는다(게임 분석과 동시에 사용 가능).
-* **인터넷을 쓴다.** 외부 프로그램 `yt-dlp`(메타데이터·스트림 주소)와 `ffmpeg`/`ffprobe`(원격 탐색·디코딩)가 필요하다. `PREPARE.ps1`의 yt-dlp·FFmpeg 항목으로 설치하거나 환경 변수 `NETSTORM_YTDLP`·`NETSTORM_FFMPEG`·`NETSTORM_FFPROBE`로 경로를 지정한다. 받는 대상은 YouTube 도메인 주소뿐이다(다른 사이트 주소는 거부).
+* **인터넷을 쓴다.** 외부 프로그램 `yt-dlp`(메타데이터·스트림 주소)와 `ffmpeg`/`ffprobe`(원격 탐색·디코딩)가 필요하다. Windows는 `PREPARE.ps1`, Linux는 `PREPARE.sh`의 해당 항목으로 설치하거나 환경 변수 `NETSTORM_YTDLP`·`NETSTORM_FFMPEG`·`NETSTORM_FFPROBE`로 경로를 지정한다. 받는 대상은 YouTube 도메인 주소뿐이다(다른 사이트 주소는 거부).
 * 기록은 Git 제외 경로 `extracted/youtube/<영상 ID>/`에 남는다.
+
+### Linux에서 YouTube 도구 사용
+
+Windows 게임 분석기는 `net10.0-windows` GUI와 Win32 창 제어가 필요하므로 Linux에서 게임을 시작·조작하지 않는다. 별도 `analyzeManager/portable/AnalyzeManager.Portable.csproj`는 공용 분석 엔진을 사용해 YouTube 전용 CLI·stdio MCP를 제공한다. 프레임 PNG 합성은 GDI+ 대신 FFmpeg RGB 디코딩과 내장 픽셀 글꼴을 쓴다.
+
+Linux에서는 .NET 10 SDK, `yt-dlp`, Deno, `ffmpeg`, `ffprobe`가 필요하다. 저장소 루트에서 `bash PREPARE.sh`를 실행해 yt-dlp·Deno·FFmpeg·`ytanalyzer` 항목을 선택해 준비한다. 패키지 설치를 할 수 없으면 FFmpeg는 BtbN 정적 빌드를 사용자 `~/.local/bin`에 설치한다. 전체 항목의 설치 상태만 확인할 때는 `bash PREPARE.sh --check-only --all`을 쓴다.
+
+```bash
+dotnet build analyzeManager/portable/AnalyzeManager.Portable.csproj -c Release
+YT=analyzeManager/portable/bin/Release/net10.0/Netstorm.AnalyzeManager
+$YT call youtube_probe --json '{"url":"adR1Kap60hw"}'
+$YT call youtube_frames --json '{"videoId":"adR1Kap60hw","times":"13:31, 15:30.5"}'
+$YT mcp
+```
+
+MCP 설정에서도 실행 파일을 `analyzeManager/portable/bin/Release/net10.0/Netstorm.AnalyzeManager`로, 인자를 `mcp`로 지정한다. 이 서버는 `youtube_*` 도구 6개만 공개하며 `start_session` 등 원본 게임 제어 도구는 등록하지 않는다. `PREPARE.sh`의 `ytanalyzer` 항목은 이 프로젝트를 Release 빌드한다. Linux 기본 실행·이미지 생성은 2026-10-01 Debian GUI 환경에서 오류 없이 빌드했고, YouTube 프레임 추출과 해시 메모 기록을 확인했다.
 
 ### 도구
 
@@ -329,7 +345,7 @@ extracted/youtube/<영상 ID>/
 * 연령 제한·회원 전용·비공개 영상은 로그인 쿠키가 없으면 받지 못한다(현재 쿠키 옵션 없음). 생방송 중인 영상은 길이가 확정되지 않아 주의가 붙는다.
 * 원격 탐색이라 네트워크 상태에 따라 한 장 3~5초가 걸린다. 많은 장면은 낮은 `maxHeight`(예: 360)로 훑은 뒤 필요한 곳만 1080으로 다시 뽑는다.
 * YouTube 재인코딩 영상은 원본 팔레트 색과 다를 수 있고, 업로더의 녹화 해상도·자막·편집이 섞일 수 있다. 색 비교는 스크린샷·원본 자산을, 시간 측정은 `youtube_clip` 프레임을 쓴다. 영상 fps(대개 30·60)보다 짧은 간격은 잴 수 없다.
-* yt-dlp가 YouTube 변경으로 실패하면 `winget upgrade yt-dlp.yt-dlp`로 갱신한다.
+* yt-dlp가 YouTube 변경으로 실패하면 Windows에서는 `winget upgrade yt-dlp.yt-dlp`, Linux에서는 `python3 -m pip install --user --upgrade yt-dlp`로 갱신한다.
 
 ### 검증 (2026-10-01, `DESKTOP-HJOW`)
 

@@ -69,7 +69,8 @@ internal sealed partial class FortMapViewer : IDisposable
     /// <param name="mission">미션 시작 조건 (없으면 맵만 보는 시험 모드)</param>
     public FortMapViewer(GraphicsDevice device, ShapeDatabase shapes, Palette palette, FortFile fort, string name,
         TypeCatalog catalog, string language, MissionStart? mission = null,
-        MissionScript? tutorialScript = null, ConfigStore? tutorialSettings = null, HelpTopics? help = null)
+        MissionScript? tutorialScript = null, ConfigStore? tutorialSettings = null, HelpTopics? help = null,
+        MissionScript? commonScript = null)
     {
         _device = device;
         _shapes = shapes;
@@ -93,7 +94,7 @@ internal sealed partial class FortMapViewer : IDisposable
         _pixel.SetData(new[] { Color.White });
         InitializeSession(fort, catalog, mission);
         InitializeKnowledge(fort, catalog, help);
-        InitializeTutorialDialog(tutorialScript, tutorialSettings);
+        InitializeTutorialDialog(tutorialScript, tutorialSettings, commonScript);
         InitializePlacement(catalog);
         InitializeBridges(catalog);
         CenterOnPriest();
@@ -298,10 +299,11 @@ internal sealed partial class FortMapViewer : IDisposable
         DrawBridgeWorld(batch, center);
         DrawFlyers(batch, center);
         DrawCombat(batch, font, center);
+        DrawSacrificeStatus(batch, font, center);
         batch.Draw(_pixel, new Rectangle(0, 0, width, HeaderHeight), new Color(18, 24, 38));
         batch.DrawString(font, $"맵: {Name} | 오브젝트 {_map.Objects.Count}개 | 확대 {_zoom:0.##}배 | 언어: {Language}", new Vector2(16, 10), Color.Gold);
         batch.DrawString(font, $"방향키 / 우클릭 / 화면 끝: 이동 · 휠: 확대 · Home: 사제 위치 · G: 청크 윤곽 · P: 배치 시험 · B: 다리 조각 · Esc: {(IsMissionMode ? "메뉴" : "종료")}", new Vector2(16, 38), Color.White);
-        batch.DrawString(font, "F4: 사제 섬으로 · F11: 전체화면 · F10: 와이드 처리 · F9: 원본 해상도 높이 · F7: 가장자리 스크롤", new Vector2(16, 66), Color.White);
+        batch.DrawString(font, "F4: 사제 섬으로 · F11: 전체화면 · F10: 와이드 처리 · F9: 원본 해상도 높이 · F7: 가장자리 스크롤 · T: 선택→대상 클릭 · D+클릭: 내려놓기", new Vector2(16, 66), Color.White);
         batch.DrawString(font, displayInfo, new Vector2(16, 94), Color.LightGray);
         DrawSessionHud(batch, font, width);
         DrawPlacementOverlay(batch, font, center, width, height);

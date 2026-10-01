@@ -88,16 +88,30 @@ public sealed class TutorialDialogScript
 
     private readonly MissionScript _script;
     private readonly ConfigStore _settings;
+
+    /// <summary>미션 스크립트에 없는 섹션(실패 창 Continue 의 TryAgain 등)을 찾을 공용 메뉴 스크립트 (tell.english, 없으면 null)</summary>
+    private readonly MissionScript? _commonScript;
+
+    /// <summary>{mission.title}·{mission.fileName} 처럼 현재 미션을 가리키는 치환 값 (없으면 null)</summary>
+    private readonly IReadOnlyDictionary<string, string>? _missionValues;
+
     private string? _reviewSection;
 
     /// <summary>현재 열린 안내. null이면 닫혀 있다.</summary>
     public TutorialDialogContent? Current { get; private set; }
 
     /// <summary>원본 미션과 그 미션의 설정 치환표를 연결한다.</summary>
-    public TutorialDialogScript(MissionScript script, ConfigStore settings)
+    /// <param name="script">미션 스크립트</param>
+    /// <param name="settings">설정 치환표</param>
+    /// <param name="commonScript">미션에 없는 섹션을 찾을 공용 메뉴 스크립트 (tell.english)</param>
+    /// <param name="missionValues">현재 미션의 {mission.키} 값 (title, fileName)</param>
+    public TutorialDialogScript(MissionScript script, ConfigStore settings, MissionScript? commonScript = null,
+        IReadOnlyDictionary<string, string>? missionValues = null)
     {
         _script = script;
         _settings = settings;
+        _commonScript = commonScript;
+        _missionValues = missionValues;
     }
 
     /// <summary>새 튜토리얼 단계의 안내를 열고 F8의 복귀 지점으로 기록한다.</summary>
@@ -133,13 +147,35 @@ public sealed class TutorialDialogScript
     /// <summary>보정 안내 또는 Tell 버튼의 섹션을 연다. 없는 섹션은 현재 창을 유지한다.</summary>
     public bool OpenSection(string section)
     {
-        PreparedMissionSection? prepared = _script.PrepareSection(section, _settings);
+        // 미션 스크립트에 섹션이 없으면 공용 스크립트에서 찾는다 (성공·실패 창의 Tell,TryAgain 은 tell.english 에만 있다)
+        PreparedMissionSection? prepared = Prepare(_script, section) ?? (_commonScript == null ? null : Prepare(_commonScript, section));
         if (prepared == null || string.IsNullOrWhiteSpace(prepared.Body))
         {
             return false;
         }
         Current = PrepareContent(section, prepared);
         return true;
+    }
+
+    /// <summary>
+    /// 섹션을 준비한다. {mission.키} 값이 있으면 그 섹션을 치환하는 동안만 이름 있는 설정 층("mission")으로 쌓았다가 걷어 낸다
+    /// (설정 저장소를 다른 곳과 공유하므로 층이 남지 않게 한다).
+    /// </summary>
+    private PreparedMissionSection? Prepare(MissionScript script, string section)
+    {
+        if (_missionValues == null || _missionValues.Count == 0)
+        {
+            return script.PrepareSection(section, _settings);
+        }
+        _settings.Push(ConfigStore.FromPairs(_missionValues), "mission");
+        try
+        {
+            return script.PrepareSection(section, _settings);
+        }
+        finally
+        {
+            _settings.Pop();
+        }
     }
 
     /// <summary>F8로 최신 단계 안내를 다시 연다. 첫 단계 이전이면 A.을 연다.</summary>

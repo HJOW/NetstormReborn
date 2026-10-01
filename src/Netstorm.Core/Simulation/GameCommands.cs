@@ -90,7 +90,8 @@ public sealed record DeliverPriestCommand(int Player, int TransportId, int Altar
 /// <param name="Y">내려놓을 칸 y</param>
 public sealed record DropPriestCommand(int Player, int TransportId, int X, int Y) : GameCommand(Player);
 
-/// <summary>내 사제를 내 제단으로 보낸다. 적 사제가 묶여 있으면 도착하는 즉시 희생 의식이 시작된다.</summary>
+/// <summary>내 사제를 내 제단으로 보낸다. PriestId 가 0 이면 첫 자유 사제를 고른다.</summary>
 /// <param name="Player">플레이어 번호</param>
 /// <param name="AltarId">내 제단 번호</param>
-public sealed record MovePriestToAltarCommand(int Player, int AltarId) : GameCommand(Player);
+/// <param name="PriestId">이동할 사제 번호 (0 이면 자동 선택)</param>
+public sealed record MovePriestToAltarCommand(int Player, int AltarId, int PriestId = 0) : GameCommand(Player);

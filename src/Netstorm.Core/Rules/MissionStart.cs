@@ -125,6 +125,12 @@ public sealed record MissionStart(string? Title, string? LoadFort, int? StartSto
     public IReadOnlyDictionary<int, IReadOnlyList<int>> AllyLists { get; init; } = new Dictionary<int, IReadOnlyList<int>>();
 
     /// <summary>
+    /// 사람 플레이어의 동맹 목록 (머리 값 myAllyList = "4;6;7;8"). 사람 플레이어 번호는 세션이 정하므로(<see cref="AreAllied"/> 의 human)
+    /// aiNAllyList 와 따로 둔다. 한쪽만 적어도 동맹으로 본다.
+    /// </summary>
+    public IReadOnlyList<int> MyAllyList { get; init; } = [];
+
+    /// <summary>
     /// 기절하지 않은 사제·동맹 사제도 수송 유닛이 집을 수 있는지 (allowAnyCapture). 구출 미션(3-4 Enemy Territory)이 쓴다.
     /// </summary>
     public bool AllowAnyCapture { get; init; }
@@ -132,10 +138,15 @@ public sealed record MissionStart(string? Title, string? LoadFort, int? StartSto
     /// <summary>두 플레이어가 미션 동맹인지 (같은 번호 포함)</summary>
     /// <param name="first">플레이어</param>
     /// <param name="second">플레이어</param>
-    public bool AreAllied(int first, int second) =>
+    /// <param name="human">사람 플레이어 번호 (myAllyList 의 주인)</param>
+    public bool AreAllied(int first, int second, int human = 1) =>
         first == second
-        || AllyLists.TryGetValue(first, out IReadOnlyList<int>? a) && a.Contains(second)
-        || AllyLists.TryGetValue(second, out IReadOnlyList<int>? b) && b.Contains(first);
+        || ListedBy(first, second, human) || ListedBy(second, first, human);
+
+    /// <summary>owner 의 동맹 목록(사람이면 myAllyList, AI 이면 aiNAllyList)에 other 가 있는지</summary>
+    private bool ListedBy(int owner, int other, int human) =>
+        (owner == human && MyAllyList.Contains(other))
+        || AllyLists.TryGetValue(owner, out IReadOnlyList<int>? list) && list.Contains(other);
 
     /// <summary>미션 스크립트의 머리 값으로 만든다</summary>
     /// <param name="script">미션 스크립트</param>
@@ -150,11 +161,13 @@ public sealed record MissionStart(string? Title, string? LoadFort, int? StartSto
         bool Flag(string key) => Number(key) is { } value && value != 0;
         string[] knowledge = (Text("myTech") ?? "").Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
         var allies = new Dictionary<int, IReadOnlyList<int>>();
-        // ai2~ai8 의 동맹 목록을 읽는다 (사람 플레이어는 1 번)
+        // 번호 목록 문자열("2;3,4")을 읽는다 (숫자가 아닌 조각은 버린다)
+        static int[] Numbers(string? text) => [.. (text ?? "").Split(';', ',', ' ')
+            .Select(part => int.TryParse(part, out int number) ? number : 0).Where(number => number > 0)];
+        // ai1~ai8 의 동맹 목록을 읽는다
         for (int player = 1; player <= MaximumPlayer; player++)
         {
-            int[] list = [.. (Text($"ai{player}AllyList") ?? "").Split(';', ',', ' ')
-                .Select(part => int.TryParse(part, out int number) ? number : 0).Where(number => number > 0)];
+            int[] list = Numbers(Text($"ai{player}AllyList"));
             if (list.Length > 0)
             {
                 allies[player] = list;
@@ -164,6 +177,7 @@ public sealed record MissionStart(string? Title, string? LoadFort, int? StartSto
             TechPermissions.Parse(Text("techAllowed")), Flag("denySalvage"), Flag("denyAscend"), Flag("aiOff"), Number("tutorialNumber"))
         {
             AllyLists = allies,
+            MyAllyList = Numbers(Text("myAllyList")),
             AllowAnyCapture = Flag("allowAnyCapture"),
         };
     }

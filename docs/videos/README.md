@@ -7,6 +7,12 @@
 Whirlibase·Whirligig의 출격·공격·귀환을 [클론에 연결](../gameplay/flyers.md)했고,
 영상에서 확인한 것과 도움말 규칙·구현 추정을 나누어 기록했다.
 
+2026-10-01 [캠페인 1-5의 사제 포획·알타 의식](youtube-sacrifice.md) 타임라인을 측정하고,
+관찰 시점 10개의 프레임 SHA-256 근거와 시각 정정 메모를 `youtube_note`로 저장했다. 코어의 포획·의식·승패 규칙은
+[sacrifice.md](../gameplay/sacrifice.md)에 구현 근거와 추정값을 분리해 적었다.
+
+2026-10-01 [캠페인 3-4 구조 미션](youtube-rescue.md)에서 미션 스크립트의 `allowAnyCapture`와 플레이어 섬에 프리스트를 내려놓은 뒤 성공하는 흐름을 영상 프레임으로 대조했다. 이 포획 예외는 해당 미션에만 적용된다.
+
 ## 추가된 YouTube 파일 (2026-10-01)
 
 사용자 추가 파일 `playingVideos/[Youtube] 3-1 to 3-5.mp4`는
@@ -72,15 +78,16 @@ YouTube 영상은 내려받지 않고 `analyzeManager`의 `youtube_*` 도구(MCP
 
 ## 소리 판독 도구 `tools/audiomatch.py` (2026-10-01)
 
-`record-play`·`guide` 녹음(세션 폴더의 `audio-*.wav`·`*.start.txt`)을 이어 붙여 원본 소리와 FFT 정규화 상호상관으로 대조한다. 시각은 `video-0001.frames.csv` 첫 프레임 기준 영상 경과 시각이다. numpy 와 ffmpeg 가 필요하다.
+`record-play`·`guide` 녹음(세션 폴더의 `audio-*.wav`·`*.start.txt`)을 이어 붙여 원본 소리와 FFT 정규화 상호상관으로 대조한다. 세션 폴더를 주면 시각은 `video-0001.frames.csv` 첫 프레임 기준 영상 경과 시각이다. YouTube `youtube_clip`처럼 단일 소리 포함 영상 파일을 주면 `--offset 초`를 더해 원본 영상 시각으로 출력한다. numpy 와 ffmpeg 가 필요하다.
 
 ```powershell
 python tools/audiomatch.py level playingVideos/<세션ID>                       # 5초 구간별 dBFS
 python tools/audiomatch.py music playingVideos/<세션ID> -o extracted/audio/music.csv   # 6초 조각별 곡·곡 안 위치 (+ 곡 구간 요약)
 python tools/audiomatch.py sfx   playingVideos/<세션ID> -o extracted/audio/sfx.csv     # 원본 효과음 전체(상관 ≥ 0.55)
 python tools/audiomatch.py sfx   playingVideos/<세션ID> --threshold 0.3 --sounds originals/sound/forWind2.WAV
+python tools/audiomatch.py sfx   extracted/youtube/<ID>/clips/<구간>-a.mp4 --offset 800 --threshold 0.3 --sounds originals/sound/forWind2.WAV originals/sound/itIsDone2.wav
 ```
 
 * 음악은 효과음·바람 소리와 섞여 상관값이 0.1~0.25로 낮다. 곡 판정은 **곡 안 위치가 조각 간격만큼 정확히 늘어나는 연속 구간**으로 한다(요약 출력).
 * 내용이 같은 원본 파일 쌍(`openGump`/`openGump-1000`, `impact`/`thunderCannonImpact`, `influenceIcon`/`teleportEffect`)은 구분할 수 없다.
-* 기존 방송 영상(AAC, 방송 음성 섞임)에는 `playingVideos/` 녹음 폴더 구조가 없으므로 쓰지 않는다.
+* YouTube 방송 영상에는 진행자 음성이 섞여 상관값이 낮아진다. `--threshold 0.2~0.3`으로 낮추고 `--sounds`로 효과음을 제한한다. 자동 검출은 후보를 고르는 도구이므로 화면·오디오를 함께 확인한다.

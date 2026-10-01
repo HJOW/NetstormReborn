@@ -1,10 +1,10 @@
 # AI용 원본 게임 분석 도구
 
-AI가 CLI 또는 로컬 stdio MCP로 원본 NetStorm의 복사본을 실행·조작하고, 화면 증거와 관찰 메모를 남기는 Windows용 도구다. 외부 AI가 다음 행동을 선택하며 도구 안에 별도 AI 모델은 포함하지 않는다.
+게임 제어 CLI/MCP는 Windows에서 원본 NetStorm의 복사본을 실행·조작하고 화면 증거와 관찰 메모를 남긴다. 별도 YouTube 전용 portable 빌드는 Windows·Linux 등에서 영상을 읽으며 원본 게임을 실행하지 않는다. 외부 AI가 다음 행동을 선택하며 도구 안에 별도 AI 모델은 포함하지 않는다.
 
 사용자 직접 조작용 `guide --session ID --steps-file 안내.txt` 모드도 있다. 게임 옆에 단계 안내를 띄우고 사용자 입력·화면·기본 출력 장치 소리를 분할 저장한다. 기존 CLI/MCP 조작 방식은 그대로 사용할 수 있다. [사용법과 파일 형식](../docs/analyze-manager.md#사용자-직접-조작-녹화-모드).
 
-**YouTube 영상 분석(2026-10-01):** `youtube_probe`·`youtube_list`·`youtube_frames`·`youtube_clip`·`youtube_note`·`youtube_videos` 도구(CLI·MCP 공통)로 게임을 실행하지 않고 YouTube 플레이 영상의 지정 시각 프레임·구간을 읽는다. 재생기 광고는 원본 스트림에 없고, 서버 삽입 광고 의심(스트림이 더 김)은 거부하며, 업로더가 넣은 협찬 구간은 SponsorBlock 으로 표시한다. yt-dlp·ffmpeg 필요. [사용법](../docs/analyze-manager.md#youtube-영상-분석-원본-게임-실행-없음).
+**YouTube 영상 분석(2026-10-01):** `youtube_probe`·`youtube_list`·`youtube_frames`·`youtube_clip`·`youtube_note`·`youtube_videos` 도구(CLI·MCP 공통)로 게임을 실행하지 않고 YouTube 플레이 영상의 지정 시각 프레임·구간을 읽는다. 재생기 광고는 원본 스트림에 없고, 서버 삽입 광고 의심(스트림이 더 김)은 거부하며, 업로더가 넣은 협찬 구간은 SponsorBlock 으로 표시한다. yt-dlp·ffmpeg가 필요하며 Linux portable 빌드는 Deno도 사용한다. Windows는 기존 분석기, Linux는 YouTube 도구만 포함한 `portable/` 빌드를 사용한다. [사용법과 준비](../docs/analyze-manager.md#youtube-영상-분석-원본-게임-실행-없음).
 
 `record-play --session ID`는 지침 없이 자유롭게 플레이하는 동안 같은 방식으로 녹화한다. 안내 창은 녹화 중·중단·오류와 재시작 가능 여부를 표시한다. 분할 영상·음성·입력과 파일 색인은 `playingVideos/<세션 ID>/`에 남는다. [녹화 분석 사용법](../docs/analyze-manager.md#기존-게임-플레이-녹화-분석-모드).
 
@@ -16,10 +16,22 @@ AI가 CLI 또는 로컬 stdio MCP로 원본 NetStorm의 복사본을 실행·조
 - [최신 인수인계](../LEFT_JOBS.md)
 - [MCP 설정 예시](examples/mcp-settings.json)
 
-이 프로젝트는 Windows 전용이므로 게임 솔루션과 별도로 빌드한다.
+원본 게임 제어 도구는 Windows 전용이므로 게임 솔루션과 별도로 빌드한다.
 
 ```powershell
 dotnet build analyzeManager/AnalyzeManager.csproj -c Release
 ```
+
+Linux 등에서 YouTube 영상만 읽을 때는 다음 portable 빌드를 사용한다. `PREPARE.sh`의 yt-dlp·Deno·FFmpeg·`ytanalyzer` 항목으로 외부 도구를 준비할 수 있다. 패키지 설치 권한이 없으면 FFmpeg 정적 빌드를 `~/.local/bin`에 설치한다.
+
+```bash
+dotnet build analyzeManager/portable/AnalyzeManager.Portable.csproj -c Release
+YT=analyzeManager/portable/bin/Release/net10.0/Netstorm.AnalyzeManager
+$YT call youtube_probe --json '{"url":"adR1Kap60hw"}'
+$YT call youtube_frames --json '{"videoId":"adR1Kap60hw","times":"13:31, 15:30.5"}'
+$YT mcp
+```
+
+portable MCP 서버는 YouTube 도구 6개만 등록하고 게임 제어 도구를 제공하지 않는다. 프로젝트 빌드·입력 예시와 분석 결과는 [분석기 문서](../docs/analyze-manager.md)를 참고한다.
 
 `bin/`, `obj/` 및 실행 기록을 담는 `extracted/analyzeManager/`는 기존 `.gitignore`에 따라 Git에서 제외된다.

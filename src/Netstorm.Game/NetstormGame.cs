@@ -340,7 +340,8 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     {
         TypeCatalog catalog = resources.LoadTypes();
         FortMapViewer nextViewer = new(GraphicsDevice, shapes, palette, resources.LoadFort(name, catalog), name,
-            catalog, resources.Language, mission, tutorialScript, resources.Settings, _help);
+            catalog, resources.Language, mission, tutorialScript, resources.Settings, _help,
+            mission != null ? resources.TryLoadMission("tell")?.Script : null);
         _mapViewer?.Dispose();
         _mapViewer = nextViewer;
         _baseTitle = $"NetStorm 클론 — 맵 뷰어: {name}";
@@ -455,6 +456,10 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         if (_audio == null)
         {
             return;
+        }
+        if (_mapViewer?.ConsumeMySacrificeMusicRequest() == true)
+        {
+            _audio.Director.OnMySacrificeStarted(_audio.Now);
         }
         // 이번 프레임에 쌓인 효과음을 차례로 튼다
         foreach (string sound in _mapViewer?.TakeSoundCues() ?? [])

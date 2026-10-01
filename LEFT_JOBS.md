@@ -1,6 +1,6 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
-> 최종 갱신: 2026-10-01 (`vm-debian-codex`, 사용자 요청으로 중단 — 맨 위 절 참고)
+> 최종 갱신: 2026-10-01 (`vm-debian-codex`, 코드 점검·수정 완료 — 맨 위 절 참고)
 > 프로젝트 목표(AGENTS.md): 원본 NetStorm: Islands at War 를 디컴파일/분석하여 클론 코딩하고,
 > **Windows 10/11** 과 **GUI 환경의 Linux** 에서 동작하며 **여러 언어를 지원**하는 게임을 만든다.
 > **1차 목표 언어: 영어, 한국어** (그 외 언어는 이후 확장).
@@ -9,70 +9,57 @@
 
 ---
 
-## 2026-10-01 (`vm-debian-codex`, Linux, 원본 실행 없음) ⏸ 사용자 요청으로 중단: 분석기 리눅스 YouTube 지원 ✅ + YouTube 영상 분석·포획/제단/승패 구현 (진행 중)
+## 2026-10-01 (`vm-debian-codex`, 원본 실행 없음) ✅ 코드 점검·수정: 다른 AI 작업분(Linux 분석기·포획/제단/승패) 검토
 
-### A. 완료 — analyzeManager YouTube 기능을 리눅스에서 쓰도록 수정 (사용자 지시: "불가능하면 먼저 수정, 설치 필요하면 PREPARE.sh 도")
+- **점검 범위:** AGENTS.md·이 문서·커밋 `c3a1a31` 이후 미커밋 변경(희생 의식 Core·뷰어 연결·문서·테스트)과 분석기 Linux 빌드. 빌드·테스트는 통과 상태였으나 코드를 읽고 원본 미션 전체로 검사해 아래 결함을 찾아 고쳤다.
+- **발견·수정(전부 회귀 테스트 추가):**
+  1. **승패·사망 이벤트 오발동** — 원본 미션 전수(5초 진행) 검사에서 동맹이 없는 거의 모든 미션이 `GoodTeamDead`를 첫 틱에 내고, 적 사제·신전이 지도에 없는 미션은 `BadTeamDead`/`Failed`/`…Dead`가 시작 즉시 나왔다(해당 섹션이 있는 `tnron8ex`는 시작하자마자 성공 창). → 대상이 살아 있던 적이 있어야 사망·전멸 이벤트를 내도록 변경(`BattleSession.Sacrifice.cs` `_seenAlive`, 검사합 포함). 테스트 `MissionOutcomeTests.OriginalMissions_DoNotEndImmediately`.
+  2. **사람 플레이어 동맹 미반영** — `myAllyList`(예: `tnron8ex` "4;6;7;8")를 읽지 않았다. → `MissionStart.MyAllyList`, `AreAllied(first, second, human)`; 팩토리가 사람 플레이어 번호를 넘긴다. 테스트 `AllyLists_ReadMyAndAiLists`·`EnemyTerritory_StartsWithoutRescueOutcome`(3-4 구출 미션).
+  3. **실패 창 Continue 막힘** — `[Failed]`의 `Tell,TryAgain`은 공용 `tell.english`에만 있어 "안내 섹션이 없습니다"로 창이 닫히지 않았다(승패 판정이 생긴 뒤 새로 노출된 결함). → `TutorialDialogScript`가 공용 스크립트 대체 조회와 `{mission.title}` 등 미션 치환 값을 받음, 뷰어·`NetstormGame`이 `tell` 스크립트를 넘김. 테스트 `FailureContinue_OpensTryAgainFromCommonScript`.
+  4. 희생 음악 유지 조건이 의식 완료 시점에 끊기던 것을 제단 소멸까지로 보정(`IsSacrificeInProgress`).
+- **검증:** `dotnet build Netstorm.sln -c Release` 경고·오류 0, Assets **187**·Core **195** 통과, Linux portable 빌드·Windows 대상 교차 빌드 경고·오류 0, `mcp_smoke.py --youtube-only` 통과. 원본 게임·클론 GUI는 실행하지 않았다.
+- **남은 의심 사항(미수정, 다음에 확인):** (a) `ai{N}PriestSaved`는 사제가 "내 소유 섬 영역"에 서면 참이며 `bc1menu`·`portal3` 같은 일부 미션은 시작 직후 참이 된다(원본도 같은 위치 판정이라 보이며 해당 섹션이 있는 미션에서만 영향 — 구출 미션 3-4는 정상). (b) `DropPriest` 경로는 다리가 바뀌어도 다시 찾지 않는다. (c) 희생된 사제는 `RemoveEntity`를 거치지 않고 지워져 선택 상태 등이 남을 수 있다(`GameEntity` 소멸 정리 일원화 후보). (d) 뷰어 `D`/`T` 입력·실제 화면은 GUI 확인 전.
 
-- **원인:** 기존 도구는 net10.0-windows + System.Drawing(GDI+) 이고, 이 PC 의 Wine 은 32비트 전용(wine64 미설치·sudo 없음)이라 Wine 에서 리눅스 yt-dlp/ffmpeg 를 띄우지 못했다(`Process.Start` 가 null — Wine 은 유닉스 실행 파일의 프로세스 핸들을 주지 않음).
-- **수정(동작·CLI/MCP 계약은 Windows 판과 같음):**
-  - 신규 `analyzeManager/portable/AnalyzeManager.Portable.csproj`(net10.0, 같은 이름 `Netstorm.AnalyzeManager`) + `PortableProgram.cs`: `call youtube_*`·`mcp`(YouTube 도구 6개만). 엔진 소스는 상위 폴더 파일을 링크한다. Windows 프로젝트는 `portable/**` 를 컴파일에서 뺀다.
-  - 공용 파일로 분리(내용 이동): `AnalysisContracts.cs`(요청·결과), `CommandLine.cs`(옵션·저장소 찾기), `SessionStore.Files.cs`(partial: `Json`·`FileLimitBytes`·`RejectReparse`·`WriteSmallFile`), `YouTubeTools.cs`(MCP YouTube 도구 — `ExplorerTools` 에서 이동, Windows `mcp` 는 두 클래스를 함께 등록해 도구 15개 그대로).
-  - `YouTubeAnalyzer`: `ExecuteSafeAsync`(예외→오류 결과, 엔진·리눅스 공용), 리눅스에서 확장자 없는 실행 파일 탐색, 프레임 크기는 PNG IHDR 로 읽음, 관찰표는 Windows=기존 GDI+(`#if WINDOWS`)·그 밖=`YouTubeAnalyzer.Portable.cs`(ffmpeg 로 칸 크기 RGB → 합성 → 내장 5×7 글꼴 시각 글자 → PNG). 신규 `PortableImage.cs`(PNG 인코딩·CRC·캔버스·글꼴).
-  - `tools/audiomatch.py`: 세션 폴더 대신 **영상·소리 파일 + `--offset`** 입력 지원(YouTube `youtube_clip` 소리 포함 mp4 의 효과음 판독). 방송 음성이 섞이면 `--threshold 0.2~0.3`, `--sounds` 로 좁힐 것.
-  - `PREPARE.sh`: FFmpeg 는 패키지 실패/sudo 없음 시 **BtbN 정적 빌드**를 `~/.local/bin` 에 설치, 점검에서 ffprobe 가 호스트 이름 해석 중 죽는 빌드(종료 코드 ≥128)를 실패로 판정(**johnvansickle 정적 빌드는 DNS 에서 세그폴트 → 원격 스트림 불가, 2026-10-01 확인**). 신규 항목 Deno(yt-dlp 의 YouTube JS 해석용)·`ytanalyzer`(리눅스용 분석 도구 빌드). `--check-only --all` 로 정상/고장 판정 모두 확인.
-  - `analyzeManager/tests/mcp_smoke.py --youtube-only`(리눅스 빌드 검사), 신규 `tests/PortableImageTests.cs`(5개).
-- **이 PC 설치 상태:** `~/.local/bin` 에 yt-dlp 2026.08.19(파이썬 zipapp, `yt-dlp_linux` 도 받아 둠 — 불필요하면 삭제), ffmpeg/ffprobe n8.1.3(BtbN). deno 2.9.6 은 원래 있었음.
-- **검증:** 리눅스 빌드·Windows 빌드 경고·오류 0. Wine 단위 테스트 57개 중 56 통과·1 기존 건너뜀. `mcp_smoke.py --youtube-only --youtube https://youtu.be/CI3dCrUt4tY` 통과(도구 6, 관찰표 PNG), Wine 기본 MCP 검사 통과(도구 15). 사용 예:
-  ```bash
-  dotnet build analyzeManager/portable/AnalyzeManager.Portable.csproj -c Release
-  YT=analyzeManager/portable/bin/Release/net10.0/Netstorm.AnalyzeManager
-  $YT call youtube_probe --json '{"url":"adR1Kap60hw"}'
-  $YT call youtube_frames --json '{"videoId":"adR1Kap60hw","start":927,"step":0.25,"count":20,"region":"900,150,700,450"}'
-  ```
-- **문서 미반영(다음에 할 것):** `docs/analyze-manager.md`·`analyzeManager/README.md`·`docs/videos/README.md` 에 리눅스 빌드·PREPARE.sh 항목·audiomatch 파일 입력 설명 추가. Windows 실기기에서 GDI 관찰표 경로 회귀 확인(코드는 그대로 두었음).
+---
 
-### B. 진행 — AGENTS.md YouTube 영상 13개 분석 (`extracted/youtube/<ID>/`, Git 제외)
+## 2026-10-01 (`vm-debian-codex`, Linux, 원본 실행 없음) ✅ 완료: Linux YouTube 분석기·캠페인 1-5 포획 관찰·Core 희생 의식 구현
 
-- 13개 모두 `youtube_probe` 완료. **SponsorBlock 구간·챕터는 0p7VvzSxTAY(미션 챕터 5개) 외 없음** → 편집 요소는 화면으로 구분해야 한다. 영상마다 시작·끝 12장 + 전체 20장 관찰표를 만들었다(경로: 각 영상 `report.md`).
-- **편집·비게임 요소 구분 결과:**
-  - `Mr. Heo 의 게임 기록소`(튜토리얼 CI3dCrUt4tY, 1-1~4 AMEzorbjQYQ, 1-5 adR1Kap60hw, 1-6 PUeIPg1BEzo, 2-1 zpZsx4dRac8, 2-2 2NxTN314RnE, 2-3 LHkgSp0J73E): 1920×1080 60fps **방송 녹화본**, 인트로 없이 메인 메뉴부터, 16:9 안 4:3(좌우 240px 검은 여백, 게임 영역 `240,0,1440,1080`), **방송 음성 섞임**(소리 판독 시 상관값 낮음). = 로컬 `playingVideos` 방송 영상과 같은 계열.
-  - `t2g9fASt4do`(3-4 Enemy Territory, Denczy Kiss): **0:00~약 0:35 흑백 처리된 다른 사람 플레이(SedDad 2:20) 위 글자 인트로**, 약 0:26~0:42 검은 "PG-18" 카드, 실제 플레이 약 0:42~2:46, **2:50 이후 실사 아웃트로 + 방송 오버레이(StormCat 아바타)**. 게임 배경 구름이 흰색 — 다른 그래픽 설정/판본 가능성, 색 비교 금지.
-  - `6F8En-b6FXU`(3-5, Denczy Kiss): 처음부터 끝까지 **왼쪽 아래(캐릭터 그림)·오른쪽 아래(기사 얼굴) 오버레이**가 화면을 가림, 배경 구름이 회색 계열. 16:56 에 히드라 그림 화면(엔딩/메뉴로 추정, 미확인).
-  - `8tcj3rI_YqE`·`b3VzVERd9CE`·`0p7VvzSxTAY`(NetStorm Campaigns 스피드런), `WDQSrGqZAH0`(Vindis): 관찰표는 만들었으나 **편집 요소 확인 전**(다음 할 일).
-- **1-5 Thundering Power!(adR1Kap60hw) 정밀 측정 — 포획·제단·의식·성공 창 (소리는 audiomatch 파일 입력, 화면은 0.25~0.5초 프레임):**
+### A. 완료 — Linux에서 analyzeManager YouTube 분석 사용
 
-  | 영상 시각 | 사건 | 근거 |
-  |---|---|---|
-  | 13:31.0 | `golemPickUp` (골렘이 기절한 적 사제 집음) | 소리 상관 0.84 |
-  | 13:35.5 | 사제 메뉴 `Construct Building` → `Build Level 1 Altar for 500` | 화면 |
-  | 13:37.5 | 제단 배치(어두운 그림자 + "500" 떠오름) | 화면 |
-  | 13:42.0~13:52.0 | 가장자리부터 형성 → **13:52.0 완성** (클릭~완성 약 14.5초, 그림자만 있던 4초는 사제 이동 추정) | 화면 |
-  | 약 14:05.7 | 의식 시작(골렘 도착·단검 커서, 첫 룬 = 첫 소멸 −12.1−1.2) | 화면+소리 역산 |
-  | 14:19.0 / (14:33.8) / 14:48.8 / 15:03.6 / 15:19.7 | `altarBurnCollapse` 룬 소멸, **14.8초 간격** | 소리 |
-  | 14:51.4 / 15:06.0 | `forThunder2` / `forStorm2` (룬 음성 → 소멸 12.2초) | 소리 |
-  | 15:18.4 | `itIsDone2` 의식 완료 | 소리 0.26 |
-  | 15:22.5 | `priestSacrifice2` (= 완료 +4.1, exe 4.0) | 소리 |
-  | 15:27.6 | 제단 소멸(흰 섬광 → 15:28.0 폭발) = 완료 **+9.2** (1-1 녹음 +9.4) | 화면 0.25초 |
-  | 15:30.6 | `Success! You have crushed the Marquis!`(버튼 Send a Note to the Marquis) → 다음 창 Leave Missions/Next Mission | 화면, 제단 소멸 **+3.0초** |
+- Windows 게임 제어기는 `net10.0-windows`와 Win32 GUI를 유지한다. 별도 `analyzeManager/portable/AnalyzeManager.Portable.csproj`는 공용 분석 코드를 링크해 Linux에서도 실행되는 `net10.0` CLI·stdio MCP를 제공한다. 등록 도구는 `youtube_*` 6개이며 원본 게임 제어 기능은 포함하지 않는다.
+- `YouTubeAnalyzer`는 Linux에서 확장자 없는 `yt-dlp`·`ffmpeg`를 찾고, PNG 크기는 IHDR에서 읽으며, 관찰표는 ffmpeg RGB와 내장 글꼴로 PNG를 그린다. Windows 관찰표는 기존 GDI+ 경로다.
+- `PREPARE.sh`에 Deno·`ytanalyzer`를 추가했다. 패키지 설치가 안 되거나 sudo 권한이 없으면 BtbN 정적 FFmpeg를 `~/.local/bin`에 설치한다. `tools/audiomatch.py`는 세션 폴더 외에 영상 파일과 `--offset`도 받는다.
+- 사용법을 [분석기 문서](docs/analyze-manager.md#youtube-영상-분석-원본-게임-실행-없음), [README](analyzeManager/README.md), [영상 자료 안내](docs/videos/README.md)에 반영했다.
+- 검증: Linux portable 빌드 성공(경고·오류 0), 프레임 추출과 `youtube_note` 기록 확인. 이전 단계의 `mcp_smoke.py --youtube-only`와 Windows/Wine 기본 검사도 통과했다. 전체 솔루션 Release 빌드와 Core 테스트 결과는 이 절 끝의 최신 검증 요약을 따른다.
+- 남은 환경 회귀 확인: Windows 실기기에서 기존 GDI+ 관찰표 경로를 다시 확인한다. Linux 빌드만으로는 Windows 실제 화면 출력 회귀를 검증하지 않았다.
 
-  → 1-1 녹음의 14.8초 룬 간격·+4.0초 희생음·+9.4초 제단 소멸을 **두 번째 미션에서 재확인**했다. 성공 창은 제단 소멸 약 3초 뒤.
-- **아직 `youtube_note`·`docs/videos/` 노트로 정리하지 않았다(다음 할 일).** 위 표를 `docs/videos/youtube-sacrifice.md`(신규)로 옮기고 근거 프레임 해시를 `youtube_note` 로 남길 것.
+### B. 완료 — 캠페인 1-5 YouTube 포획·제단 의식 분석
 
-### C. 진행 — 포획·운반·제단 의식·승패 이벤트 구현 (Core 만, 화면 미연결, 테스트 미작성)
+- AGENTS.md에 적힌 13개 영상의 메타데이터·표본 관찰표를 만들었다. 방송 인트로·오버레이가 있는 영상은 색 비교에 주의한다. `8tcj3rI_YqE`·`b3VzVERd9CE`·`0p7VvzSxTAY`·`WDQSrGqZAH0`의 편집 요소 전수 확인은 후속 분석이다.
+- 캠페인 1-5 `adR1Kap60hw`에서 골렘의 기절 사제 포획, 알타 500 SP 건설, 약 14.5초 클릭-완공, 다섯 룬, 희생, 알타 소멸·성공 창까지 관찰했다. 효과음 상관값과 두 번째 미션에서 재확인한 시각은 [관찰 노트](docs/videos/youtube-sacrifice.md)에 기록했다.
+- Linux `youtube_note`로 관찰 시점 10개의 메모 11개(13:35.5/13:37.5 시각 정정 포함)를 `extracted/youtube/adR1Kap60hw/notes.jsonl`·`report.md`에 저장하고 `youtube_frames` SHA-256과 연결했다. 추출물은 Git 제외 경로다.
+- 시간 보정에 쓴 측정은 룬 사이 14.8초, 음성에서 룬 소멸까지 약 12.1초, 의식 완료에서 알타 제거까지 평균 9.3초, 제거 후 성공 창까지 3초다. 희생 효과음은 완료 약 4초 뒤로 exe 상수와 일치한다.
+- 3-4 `Enemy Territory` 구조 미션 확인 완료: 원본 미션 스크립트의 `allowAnyCapture = 1`, 프리스트 운반 화면, 내 섬에 내려놓은 뒤 뜨는 성공 화면을 대조했다. 관찰 범위와 SHA-256 근거는 [구조 미션 영상 노트](docs/videos/youtube-rescue.md)에 있다. 1-6·2-x에서 의식 시간 재확인, 2-x·3-x Man o'War/Dust Devil 동작은 후속이다.
 
-- **완료(빌드·기존 테스트 통과, 신규 테스트 없음):**
-  - `Simulation/BattleSession.Sacrifice.cs`(신규): 명령 `CapturePriestCommand(수송, 사제, 제단=0)`·`DeliverPriestCommand`·`DropPriestCommand(x,y)`·`MovePriestToAltarCommand`; 수송 이동(지상=섬·내 다리 경로 `FindHarvestPath` 재사용, `balloon`=직선), 집기(기절한 적 사제, `allowAnyCapture` 미션은 아무 사제), 운반 중 사제는 점유 해제·회복 안 함, 제단에 묶기, 풀려나면 완전 회복(내려놓기·운반 유닛/제단 파괴·의식 중단 — `RemoveEntity` 가 `ReleaseCaptivesOf` 호출), 의식(묶인 사제 + 주인 사제가 제단 옆 → 시작, 룬 음성 1.2+14.8k 초, 소멸 +12.0, 다섯 번째 소멸 = 완료, +4.0 희생, +9.4 제단 소멸·희생 사제 제거, 내 사제 기절/이탈·제단 체력 50% 미만이면 깨짐), **미션 이벤트**(exe `FUN_004c36c0` 그대로: AI 마다 `ai{N}TempleHalfDead/TempleDead/PriestDead/PriestCaptured/PriestSaved`, `GoodTeamDead`·`BadTeamDead`·`Failed`, 각 1회, 튜토리얼 번호가 있는 미션은 제외) → `SessionEventKind.MissionTell`(Text = 섹션 이름).
-  - `GameEntity`: `Captivity`(Free/Carried/Bound)·`CaptorId`·`CarriedPriestId`. 이벤트 12종(`PriestCaptured`…`MissionTell`), 실패 이유 4종, 검사합 포함, 틱 순서에 `UpdateUnitMoves`(수확 뒤)·`UpdateSacrifices`(전투 뒤)·`UpdateMissionEvents`(마지막) 추가, 포획된 사제는 신전 회복 제외.
-  - `MissionStart`: `AllyLists`(aiNAllyList, 한쪽만 적어도 동맹)·`AllowAnyCapture`·`AreAllied`; 팩토리가 `BattleMap` 동맹 판정에 연결(이전에는 미션 동맹이 없었음 → 공급·전투 판정도 바뀜에 유의).
-- **다음 할 일(우선순위 순):**
-  1. **시간 상수 보정:** 위 1-5 측정 반영 — 제단 소멸 9.4 → 두 측정 평균 9.3, **희생 사제 제거(= BadTeamDead)를 제단 소멸 +3.0초로**(지금은 제단 소멸과 동시라 성공 창이 3초 빠름; 제거 전까지 사제는 `Bound`·`CaptorId=0` 으로 두어 `ReleaseCaptivesOf` 에 풀리지 않게), 룬 음성→소멸 12.0 → 12.1, `ConstructionTimes` 에 제단 14.5초(관찰 1회, 사제 이동 포함).
-  2. **단위 테스트**(`tests/Netstorm.Core.Tests/SacrificeTests.cs` 신규): 기절 전 포획 거부·포획·운반 중 파괴 시 회복 해제·제단 묶기·의식 시간표(룬 5, 완료, 희생, 소멸)·내 사제 이탈 시 중단·BadTeamDead 1회·동맹/allowAnyCapture·PriestSaved(내 섬 내려놓기)·결정론(검사합).
-  3. **화면 연결(`src/Netstorm.Game`):** `MissionTell` → `OpenTutorialTell`(섹션이 스크립트에 있으면 창, 시간 정지 — 현재 `OpenTutorialTell` 은 "X." 형식만 단계로 보고 나머지는 `OpenSection`), `FortMapViewer.Audio.MySacrificeInProgress` → `_session.IsSacrificeInProgress(TestPlayer)`, `SacrificeStarted` 시 `AudioPlayer.Director.OnMySacrificeStarted`, 효과음(golemPickUp·forWind2~forStorm2·altarBurnCollapse·itIsDone2·priestSacrifice2·explodeSlot), 입력(선택한 수송 + 커서 사제 → 포획, 커서 제단 → 내 사제 이동; 원본은 왼쪽 클릭 두 번)과 `--script capture tx,ty px,py [ax,ay]`·`altar ax,ay`·`drop tx,ty x,y`, 운반·묶임·룬 표시.
-  4. 문서: `docs/gameplay/sacrifice.md`(신규, 확정/추정 표 — 코드 주석이 이미 이 경로를 가리킴), `docs/core-rules.md`·`map-viewer.md`·`combat.md`·`exe/music.md` 6절 갱신.
-  5. 영상 분석 이어서: 3-4 Enemy Territory(t2g9fASt4do 2:00~2:50)의 `Ai2PriestCaptured`("Saved!") 창·내 섬 내려놓기 → 성공 시각, 1-6·2-x 의 의식 재측정, 남은 4개 업로더 영상의 편집 요소 확인, Man o'War/Dust Devil(2-x·3-x) 관찰.
-- **원본 exe 참고 위치:** 승패 `FUN_004c36c0`/`FUN_004c3940`(1회 Tell), 성공·실패 슬롯 `FUN_004c31a0`(Tutorial 클래스 표 0x5149ec 슬롯 6), 수송 명령 `FUN_0042a360`(Carrier.cpp, 0x11 = 제단으로 운반 → `FUN_004498e0`), 의식 `FUN_00449f40`·`FUN_00449900`·`FUN_00449b30`(Dais.cpp), `Capturable!`/`Not Connected!` 표시 `0x42a2xx`.
-- **변경 파일(커밋 전):** `analyzeManager/{AnalysisContracts,CommandLine,SessionStore.Files,PortableImage,YouTubeTools,YouTubeAnalyzer.Portable}.cs`(신규)·`{AnalysisEngine,ExplorerTools,Program,SessionStore,YouTubeAnalyzer}.cs`·`AnalyzeManager.csproj`, `analyzeManager/portable/*`(신규), `analyzeManager/tests/{PortableImageTests.cs(신규),mcp_smoke.py}`, `PREPARE.sh`, `tools/audiomatch.py`, `src/Netstorm.Core/Simulation/{BattleSession.Sacrifice.cs(신규),BattleSession,BattleSession.Combat,BattleSession.Commands,BattleSessionFactory,GameCommands,GameEntity,SessionEvents}.cs`, `src/Netstorm.Core/Rules/MissionStart.cs`, 이 문서.
-- **검증(중단 시점):** `dotnet build Netstorm.sln -c Release` 오류 0(경고 1 = 기존 CA2014), 테스트 Assets 186·Core 184 통과. 원본 게임은 실행하지 않았다.
+### C. 완료 — 사제 포획·운반·알타 의식·승패 이벤트
+
+- `BattleSession.Sacrifice.cs`: 기절 적 사제 포획(미션 `allowAnyCapture` 예외 포함), 타입 `.type speed`에 따른 이동, 제단 운반·내려놓기·내 사제의 알타 이동, 다섯 룬 의식과 중단·구출을 구현했다. 운반체나 알타가 파괴되면 포획 사제를 풀고 회복한다. `balloon` 직선 이동은 임시 경로이며 비행 수송의 이륙·착륙은 아직 없다.
+- 시간 모델: 의식 시작→첫 룬 1.2초, 룬 간격 14.8초, 룬 음성→소멸 12.1초, 완료→희생 효과음 4초, 완료→알타 제거 9.3초, 알타 제거→희생 사제 제거·팀 재판정 3초. 알타 건설 14.5초는 사제 이동이 포함된 관찰 총시간이라 순수 건설 시간과 거리를 분리하지 못했다. 알타 피해 중단 50%는 임시 임계값이다.
+- `MissionTell`을 뷰어 안내 창에 연결했다. 해당 스크립트 섹션이 있으면 표시하고 열린 동안 시간을 멈춘다. 사제 상태·룬 표시, `golemPickUp`, 다섯 룬 음성, 룬 소멸·완료·희생·알타 폭발 효과음과 희생 음악도 연결했다.
+- 검증: `tests/Netstorm.Core.Tests/SacrificeTests.cs` 8개로 기절 전 포획 거부, 포획·운반·의식 타임라인, rescue 이벤트, 수송 파괴·알타 피해 시 해제, 결정론을 검사했다. 전체 솔루션 빌드에서 새 코드 오류는 없었다.
+- 문서: [희생 의식 구현·근거](docs/gameplay/sacrifice.md), [Core 규칙](docs/core-rules.md), [맵 뷰어 입력](docs/map-viewer.md), [전투 범위](docs/gameplay/combat.md), [음악·효과음](docs/exe/music.md), [영상 측정](docs/videos/youtube-sacrifice.md).
+- 후속: 여러 적 사제가 남았을 때 원소 배경음악 복귀, 비행 수송 이륙·착륙, 알타 프레임 애니메이션과 피해 한계의 원본 대조, Windows GDI 경로 회귀 확인. 3-4 구조 미션의 스크립트·운반·구출 판정은 [영상 노트](docs/videos/youtube-rescue.md)와 함께 확인했다.
+- 원본 게임은 실행하지 않았다. 이 단계는 Linux YouTube 영상 분석과 헤드리스 테스트로 진행했다.
+
+### 최신 검증
+
+- `dotnet build Netstorm.sln -c Release --no-restore`: 성공. 기존 `TextResourceTests.cs` CA2014 경고 1개, 오류 0개.
+- `dotnet build analyzeManager/portable/AnalyzeManager.Portable.csproj -c Release --no-restore`: 성공, 경고·오류 0개.
+- `dotnet build analyzeManager/AnalyzeManager.csproj -c Release --no-restore`: Windows 대상도 교차 빌드 성공, 경고·오류 0개.
+- `dotnet test Netstorm.sln -c Release --no-restore`: Assets 186개·Core 192개 통과, 실패·건너뜀 0개.
+- `python3 analyzeManager/tests/mcp_smoke.py --exe analyzeManager/portable/bin/Release/net10.0/Netstorm.AnalyzeManager --repo . --youtube-only --youtube https://youtu.be/CI3dCrUt4tY`: 통과. 프로토콜 도구 6개, PNG 관찰표 응답, EOF 정상 종료.
+- `youtube_frames`로 1-5 영상 프레임 10개 추출, `youtube_note` 메모 11개와 SHA-256 근거 저장 성공.
+- 전체 검증은 원본 게임 실행 없이 수행했다. Windows 실기기에서의 GDI+ 화면 생성만 남았다.
 
 ---
 
@@ -93,7 +80,7 @@
   클론에서 발전기·기지 배치 → 비행체 생성 이벤트와 대기 본체 표시를 캡처했다
   (`extracted/whirligig-clone-base.png`). 공격·귀환은 헤드리스 검증이며 실시간 원본 대조는 남았다.
 - **남은 작업:** Rain/Wind 공격체의 별도 수명·무적·연장·다리 손상 규칙, 기지 개폐/그림자/이륙 높이,
-  원본 생성·보급/피해 타이머 정밀 측정. **수송·포획 → 제단·승리**도 계속 구현해야 한다.
+  원본 생성·보급/피해 타이머 정밀 측정. 수송·포획 → 제단·승리는 이 문서의 최신 절에서 구현했고 원본 정밀 대조가 남았다.
   Sun 공격체의 첫 모델은 완료했으나 원본과 일대일 수치·동작 일치를 검증한 상태는 아니다.
 
 ---
@@ -128,8 +115,8 @@
   원본 게임은 실행하지 않았다. 이전 MSBuild 프로세스의 쓰기 거부는 승인된 단일 프로세스 빌드/검사
   (`-m:1 -nr:false -p:UseSharedCompilation=false`)로 해결했다. 산출물은 Git 제외.
 - **추정/미완료:** 간격 없는 타입 1초, 일반 탄속 24칸/초, 초당 피해×간격 공식, 사제 회복 5HP/초,
-  Vander 번개 0.2초/피해 다음 틱은 임시다. Crossbow 방향각·반사·폭발/연쇄 피해·수송·포획·제단·승리는 아직 없다.
-  **Whirlibase·Whirligig는 위 최신 절에서 1차 완료**. Rain/Wind 공중 공격과 수송·포획 → 제단·승리를 이어 구현한다.
+  Vander 번개 0.2초/피해 다음 틱은 임시다. Crossbow 방향각·반사·폭발/연쇄 피해와 Rain/Wind 공중 공격은 남았다.
+  이 시점 기록에서는 수송·희생이 미구현이었으며, 현재 구현은 이 문서의 최신 절과 [희생 의식 계약](docs/gameplay/sacrifice.md)을 따른다.
 
 ---
 
@@ -150,7 +137,7 @@
   4. **미션 스크립트 버튼** `MissionAbort`(0 → Leave Mission 확인 창, 1 → 떠나기)·`MissionRestart`(재시작).
 - **검증:** Release 빌드 오류 0. 테스트 **Assets 185**(기존 179 + 6)·**Core 156**(기존 147 + 9) 통과. 클론을 실행해 `--mission thewarbegins --knowledge`·`--knowledge rainBattery` 화면(`extracted/screens/knowledge-{grid,detail}.png`)을 원본 녹화와 눈으로 대조했고, 개발용 기본 화면 상태 줄에서 소리 장치 사용 가능·`ser22.mus` 재생 중을 확인했다. 실제로 귀로 듣는 확인과 미션 중 곡 전환(3~4분 단위)은 화면으로 확인하지 않았다.
 - **남은 것 / 다음 후보**
-  1. **사제 포획·제단 의식·승리 판정 구현**: 포대 피해·체력과 사제 기절의 1차 구현은 위 최신 절에서 완료했다. 다음 순서: 공중 공격체 → 수송 유닛 집기·운반 → 제단 묶기 → 내 사제 제단 이동 → 다섯 룬(룬당 약 14.8초) → 완료(적 팀 사제 없음 → `[Succeeded][BadTeamDead]` 창, 게임 정지). 의식 시작/진행 신호를 `AudioPlayer`(`OnMySacrificeStarted`, `MySacrificeInProgress`)에 넘기면 음악이 맞춰진다. 제단 프레임 값의 증가 속도(exe)는 미분석.
+  1. **사제 포획·제단 의식·미션 이벤트 구현 완료**: 구현 상태·테스트·시간 임시값은 위 최신 절과 [희생 의식 계약](docs/gameplay/sacrifice.md)에 정리했다. 후속은 다른 미션에서의 구조·생존 판정, 제단 프레임 값의 증가 속도와 원본 외관 대조다.
   2. 원본 지식 창·상세창의 돌 질감 창 그림 자산 찾기(exe 리소스 또는 gump 타입), Damage 계산, 상세창 OK 가 격자까지 닫는지.
   3. 효과음 위치 반영(좌우·크기), `jimBuild.wav` 건설 진행음 반복 주기, 날씨 팔레트(`ascendancyPalette`), 원본 볼륨 단계 → 음량 변환식, Options 화면에서 소리 설정 바꾸기.
   4. `forWind2`는 상관 0.52로 약하게 잡혔다. 다섯 번째 `altarBurnCollapse`는 `itIsDone2`와 겹쳐 판정이 약하다.
@@ -346,7 +333,7 @@
 
 ## 2026-09-30 사용자 추가 규칙 — 비행형 이동·공중 공격 (문서·주석 반영 완료, 기능 구현은 후속)
 
-- 비행형 이동유닛은 **출발 시 이륙 → 이동 → 목적지 착륙** 과정을 거친다. 튜토리얼 1·2에는 아직 등장하지 않는다. 현재 `MovementRate`는 타입별 `speed`만 읽고 세션 이동은 사제 수집에만 적용하므로, 다음 이동 구현 시 비행 상태·시간·높이·착륙 위치/점유·이동 중 명령 변경을 별도로 분석한다.
+- 비행형 이동유닛은 **출발 시 이륙 → 이동 → 목적지 착륙** 과정을 거친다. 튜토리얼 1·2에는 아직 등장하지 않는다. 이후 사제 수집과 수송·알타 명령에 실제 이동을 연결했고 각 이동 유닛은 `.type speed`를 사용한다. 비행 수송의 이륙·높이·착륙 위치/점유·이동 중 명령 변경은 후속이며, 건물형 공중 공격 기지와 그 공격체의 생명주기는 별도 규칙으로 다룬다.
 - 일부 **건물형 유닛**은 적이 사정거리 안에 들어오면 비행형 공격 유닛을 생성해 보내 공격한다. `Air Attack Base` 타입(Whirlibase·Devil Maker·Man o'War Pool)과 `flyer` 공격체(Whirligig·Dust Devil·Man o'War)를 구분해, 사정거리 감지·생성·목표 선택·공격체 생명주기를 후속 분석한다. 이 공격체에 공중 수송 유닛의 이륙·착륙 규칙이 동일하게 적용되는지는 미확인이다.
 - 반영 위치: `Simulation/MovementRate.cs`, `Rules/ObjectKind.cs` 주석, [규칙 코어](docs/core-rules.md), [이동·건설 분석](docs/exe/priest-construction.md), [섬 소유권 용어](docs/gameplay/island-ownership.md). 이번 변경은 설명만 추가했고 게임 동작은 바꾸지 않았다.
 

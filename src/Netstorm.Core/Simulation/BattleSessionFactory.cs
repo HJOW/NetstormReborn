@@ -60,7 +60,7 @@ public static class BattleSessionFactory
         }
         // 미션 동맹 목록(aiNAllyList)이 있으면 공급·전투·포획 판정에 함께 쓴다
         var battle = new BattleMap(objects, (x, y) => territories.TryGetValue((x, y), out int t) ? t : null, options,
-            mission != null ? mission.AreAllied : null);
+            mission != null ? (first, second) => mission.AreAllied(first, second, humanPlayer) : null);
 
         // 다리 격자의 섬 칸 = 본섬 미리보기 칸 + 작은 받침(noIsland) 칸
         var island = cells.Select(c => (c.X, c.Y)).ToHashSet();

@@ -86,6 +86,7 @@ internal sealed partial class FortMapViewer
             (int harvestX, int harvestY) = CellAt(new Vector2(mouse.X, mouse.Y));
             SubmitCommand(new HarvestGeyserCommand(TestPlayer, _session.EntityAt(harvestX, harvestY)?.Id ?? 0));
         }
+        UpdateSacrificeInput(keyboard, mouse);
         if (SimulationRunning)
         {
             _session.Advance(seconds);
@@ -97,7 +98,7 @@ internal sealed partial class FortMapViewer
             if (sessionEvent.Kind != SessionEventKind.BridgePieceAdded)
             {
                 _notice = DescribeEvent(sessionEvent);
-                if (sessionEvent.Kind == SessionEventKind.TutorialTell)
+                if (sessionEvent.Kind is SessionEventKind.TutorialTell or SessionEventKind.MissionTell)
                 {
                     OpenTutorialTell(sessionEvent.Text);
                 }
@@ -125,6 +126,7 @@ internal sealed partial class FortMapViewer
     /// <item><description><c>wait 초</c> — 게임 시간을 진행 · <c>rules 0|1</c> — 생산 규칙 끄기/켜기</description></item>
     /// <item><description><c>select x,y</c> — 그 칸의 오브젝트 선택 (없으면 선택 해제) · <c>select none</c> — 선택 해제 (튜토리얼 단계 C·F 는 선택한 템플을 본다)</description></item>
     /// <item><description><c>harvest x,y</c> — 그 칸의 가이저로 사제를 보내 결정을 반복 수확한다 · <c>home</c> — F4 화면 복귀</description></item>
+    /// <item><description><c>capture tx,ty px,py [ax,ay]</c> — 수송 유닛을 사제에게 보내고 선택적으로 제단까지 운반 · <c>deliver tx,ty ax,ay</c> — 운반 사제를 제단에 묶기 · <c>altar ax,ay</c> — 내 사제를 제단으로 이동 · <c>drop tx,ty x,y</c> — 지정 칸에 사제 내려놓기</description></item>
     /// <item><description>단계 처리가 없는 미션에서 손으로 재현: <c>allow 타입</c>·<c>deny 타입</c> — 기술 허용 표 변경, <c>denysalvage 0|1</c> — 회수 금지 변경. 튜토리얼 2 는 세션의 단계 처리(<c>TutorialStages</c>)가 자동으로 바꾼다 (docs/exe/mission-header-flags.md)</description></item>
     /// </list>
     /// </summary>
@@ -173,6 +175,37 @@ internal sealed partial class FortMapViewer
                     (int hx, int hy) = ParseCell(Word(1));
                     SubmitCommand(new HarvestGeyserCommand(TestPlayer, _session.EntityAt(hx, hy)?.Id ?? 0));
                     break;
+                case "capture":
+                    (int tx, int ty) = ParseCell(Word(1));
+                    (int captureX, int captureY) = ParseCell(Word(2));
+                    GameEntity transport = _session.EntityAt(tx, ty) ?? throw new ArgumentException("capture 첫 좌표에 수송 유닛이 없습니다.");
+                    GameEntity captive = _session.EntityAt(captureX, captureY) ?? throw new ArgumentException("capture 두 번째 좌표에 사제가 없습니다.");
+                    int altarId = 0;
+                    if (words.Length > 3)
+                    {
+                        (int ax, int ay) = ParseCell(Word(3));
+                        altarId = _session.EntityAt(ax, ay)?.Id ?? throw new ArgumentException("capture 제단 좌표에 제단이 없습니다.");
+                    }
+                    SubmitCommand(new CapturePriestCommand(TestPlayer, transport.Id, captive.Id, altarId));
+                    break;
+                case "deliver":
+                    (int dtx, int dty) = ParseCell(Word(1));
+                    (int dax, int day) = ParseCell(Word(2));
+                    GameEntity delivering = _session.EntityAt(dtx, dty) ?? throw new ArgumentException("deliver 좌표에 수송 유닛이 없습니다.");
+                    GameEntity destinationAltar = _session.EntityAt(dax, day) ?? throw new ArgumentException("deliver 좌표에 제단이 없습니다.");
+                    SubmitCommand(new DeliverPriestCommand(TestPlayer, delivering.Id, destinationAltar.Id));
+                    break;
+                case "altar":
+                    (int max, int may) = ParseCell(Word(1));
+                    GameEntity targetAltar = _session.EntityAt(max, may) ?? throw new ArgumentException("altar 좌표에 제단이 없습니다.");
+                    SubmitCommand(new MovePriestToAltarCommand(TestPlayer, targetAltar.Id));
+                    break;
+                case "drop":
+                    (int dpx, int dpy) = ParseCell(Word(1));
+                    (int dx, int dy) = ParseCell(Word(2));
+                    GameEntity dropping = _session.EntityAt(dpx, dpy) ?? throw new ArgumentException("drop 첫 좌표에 수송 유닛이 없습니다.");
+                    SubmitCommand(new DropPriestCommand(TestPlayer, dropping.Id, dx, dy));
+                    break;
                 case "home":
                     SubmitCommand(new ReturnHomeCommand(TestPlayer));
                     break;
@@ -193,18 +226,19 @@ internal sealed partial class FortMapViewer
                     throw new ArgumentException($"알 수 없는 --script 명령입니다: {raw}");
             }
             // 세션에 넣은 명령은 곧바로 한 틱 진행해 결과가 이 명령의 것으로 남게 한다
-            if (verb is "construct" or "place" or "register" or "salvage" or "select" or "harvest" or "home")
+            if (verb is "construct" or "place" or "register" or "salvage" or "select" or "harvest" or "capture" or "deliver" or "altar" or "drop" or "home")
             {
                 _session.RunTicks(1);
             }
             // 이 명령 뒤에 세션이 알린 일을 콘솔에 남긴다
             foreach (SessionEvent sessionEvent in _session.DrainEvents())
             {
+                QueueEventSound(sessionEvent);
                 if (sessionEvent.Kind != SessionEventKind.BridgePieceAdded)
                 {
                     Console.WriteLine($"[{_session.Seconds,6:0.0}s] {raw} → {sessionEvent.Kind}: {sessionEvent.Text}");
                     _notice = DescribeEvent(sessionEvent);
-                    if (sessionEvent.Kind == SessionEventKind.TutorialTell)
+                    if (sessionEvent.Kind is SessionEventKind.TutorialTell or SessionEventKind.MissionTell)
                     {
                         OpenTutorialTell(sessionEvent.Text);
                     }
@@ -262,6 +296,7 @@ internal sealed partial class FortMapViewer
     {
         SessionEventKind.CommandRejected => $"거부: {sessionEvent.Text}",
         SessionEventKind.TutorialTell => $"튜토리얼 안내 [{sessionEvent.Text}] (스크립트 섹션)",
+        SessionEventKind.MissionTell => $"미션 안내 [{sessionEvent.Text}] (스크립트 섹션)",
         _ => sessionEvent.Text,
     };
 

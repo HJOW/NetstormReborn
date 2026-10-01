@@ -12,7 +12,7 @@ namespace Netstorm.Core.Simulation;
 /// <item><description>시간은 정수 틱이다. 게임 시각(초) = 틱 ÷ 초당 틱 수. 다리 조각 채우기(1초)·붕괴(10초)·건설·재충전은 모두 틱으로 센다.</description></item>
 /// <item><description>화면은 <see cref="Advance"/> 에 흐른 실제 시간을 주고, <see cref="DrainEvents"/> 로 일어난 일을 받아 알림을 띄운다.</description></item>
 /// </list>
-/// 사제 수집과 포대 전투를 처리한다. 비행체 출격·수송·전략 AI는 후속 구현이다.
+/// 사제 수집·수송·희생 의식, 포대 전투와 공중 공격체의 첫 모델을 처리한다. 전략 AI는 후속 구현이다.
 /// </summary>
 public sealed partial class BattleSession
 {

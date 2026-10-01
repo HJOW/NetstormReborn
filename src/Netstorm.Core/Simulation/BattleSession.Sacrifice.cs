@@ -15,8 +15,8 @@ public sealed partial class BattleSession
     /// <summary>룬 사이 간격(초). 캠페인 1-1 녹음의 다섯 룬 음성 간격 평균 14.8초.</summary>
     public const double SacrificeRuneIntervalSeconds = 14.8;
 
-    /// <summary>룬 음성부터 그 룬이 타서 사라질 때(altarBurnCollapse)까지(초). 녹음 12:07.6 → 12:19.6.</summary>
-    public const double SacrificeRuneBurnSeconds = 12.0;
+    /// <summary>룬 음성부터 그 룬이 타서 사라질 때(altarBurnCollapse)까지(초). 영상·녹음 측정 평균은 약 12.1초.</summary>
+    public const double SacrificeRuneBurnSeconds = 12.1;
 
     /// <summary>의식의 룬 수 (도움말 "Your Priest must ward five runes")</summary>
     public const int SacrificeRuneCount = 5;
@@ -24,8 +24,11 @@ public sealed partial class BattleSession
     /// <summary>의식 완료(itIsDone2) 뒤 희생 음성(priestSacrifice2)까지(초). exe 상수 0x532680 = 4.0, 녹음과 일치.</summary>
     public const double SacrificeKillDelaySeconds = 4.0;
 
-    /// <summary>의식 완료 뒤 제단이 소멸하고 희생된 사제가 사라질 때까지(초). 녹음 itIsDone2 13:19.0 → 제단 폭발 13:28.4.</summary>
-    public const double AltarConsumeDelaySeconds = 9.4;
+    /// <summary>의식 완료 뒤 제단 소멸까지(초). 캠페인 1-1·1-5 두 관찰의 평균 약 9.3초.</summary>
+    public const double AltarConsumeDelaySeconds = 9.3;
+
+    /// <summary>제단이 소멸한 뒤 희생된 사제가 승패 판정에서 제거될 때까지(초). 영상에서 성공 창은 제단 폭발 3초 뒤 떴다.</summary>
+    public const double SacrificedPriestRemovalDelaySeconds = 3.0;
 
     /// <summary>의식 중 제단 체력이 이 비율 아래로 떨어지면 묶인 사제가 달아난다 (도움말 "too much damage", 비율은 임시).</summary>
     public const double AltarBreakHealthRatio = 0.5;
@@ -42,6 +45,13 @@ public sealed partial class BattleSession
     /// <summary>이미 알린 미션 스크립트 섹션 이름 (원본은 이벤트마다 미션당 한 번만 Tell 한다)</summary>
     private readonly SortedSet<string> _toldSections = new(StringComparer.OrdinalIgnoreCase);
 
+    /// <summary>
+    /// 살아 있는 것을 한 번이라도 본 대상 (신전·사제·팀 단위, 예: "temple:2", "priest:2", "bad", "good", "me").
+    /// 지도에 처음부터 없는 신전·사제를 "죽었다"고 보고 시작하자마자 승패 창이 뜨지 않도록, 사망·전멸 이벤트는
+    /// 해당 대상이 살아 있던 적이 있어야 낸다. (원본은 AI 의 신전·사제를 미션 시작에 연결해 두므로 정상 미션에서는 같은 결과다.)
+    /// </summary>
+    private readonly SortedSet<string> _seenAlive = new(StringComparer.Ordinal);
+
     /// <summary>이미 알린 미션 이벤트 섹션 이름 (화면·검사용)</summary>
     public IReadOnlyCollection<string> ToldSections => _toldSections;
 
@@ -51,7 +61,7 @@ public sealed partial class BattleSession
     /// <summary>플레이어의 제단에서 희생 의식이 진행 중인지 (원본 FUN_00449220: 단계 1 이상 = 희생 음악 유지)</summary>
     /// <param name="player">플레이어</param>
     public bool IsSacrificeInProgress(int player) =>
-        _rituals.Values.Any(r => !r.Completed && Entity(r.AltarId)?.Owner == player);
+        _rituals.Values.Any(r => !r.AltarConsumed && Entity(r.AltarId)?.Owner == player);
 
     /// <summary>이동 중인 오브젝트의 목적 (화면 표시용, 없으면 null)</summary>
     /// <param name="entityId">수송 유닛 또는 사제 번호</param>
@@ -158,8 +168,13 @@ public sealed partial class BattleSession
         {
             return new CommandResult(CommandFailure.UnknownPlayer);
         }
-        GameEntity? priest = OwnFreePriest(command.Player);
+        GameEntity? priest = command.PriestId == 0 ? OwnFreePriest(command.Player) : Entity(command.PriestId);
         if (priest == null)
+        {
+            return new CommandResult(CommandFailure.NoPriest);
+        }
+        if (priest.Kind != ObjectKind.Priest || priest.Owner != command.Player || priest.IsStunned
+            || priest.Captivity != PriestCaptivity.Free)
         {
             return new CommandResult(CommandFailure.NoPriest);
         }
@@ -500,21 +515,30 @@ public sealed partial class BattleSession
                 ritual.VictimKilled = true;
                 Emit(SessionEventKind.PriestSacrificed, altar?.Owner ?? 0, ritual.VictimId, $"{victim?.DisplayName} 희생");
             }
-            if (ritual.Completed && elapsed >= completed + AltarConsumeDelaySeconds)
+            double altarConsumedAt = completed + AltarConsumeDelaySeconds;
+            if (ritual.Completed && !ritual.AltarConsumed && elapsed >= altarConsumedAt)
             {
-                // 제단이 소멸하며 희생된 사제도 세션에서 사라진다 (원본 FUN_004922e0 이 사제 사망으로 본다)
-                _rituals.Remove(ritual.AltarId);
+                // 제단이 사라져도 승패 이벤트가 날 때까지 묶인 사제를 남겨 둔다.
                 if (victim != null)
                 {
-                    victim.Captivity = PriestCaptivity.Free;
+                    // 제단 제거 정리가 포로를 풀지 않도록 연결만 먼저 끊는다.
                     victim.CaptorId = 0;
-                    _entities.Remove(victim.Id);
-                    _moveTasks.Remove(victim.Id);
                 }
+                ritual.AltarConsumed = true;
                 if (altar != null)
                 {
                     RemoveEntity(altar);
                     Emit(SessionEventKind.AltarConsumed, altar.Owner, altar.Id, $"{altar.DisplayName} 소멸");
+                }
+            }
+            if (ritual.Completed && ritual.AltarConsumed && elapsed >= altarConsumedAt + SacrificedPriestRemovalDelaySeconds)
+            {
+                // 원본은 제단 폭발보다 약 3초 뒤 포로를 제거해 그때 BadTeamDead 조건이 참이 된다.
+                _rituals.Remove(ritual.AltarId);
+                if (victim != null)
+                {
+                    _entities.Remove(victim.Id);
+                    _moveTasks.Remove(victim.Id);
                 }
             }
         }
@@ -580,9 +604,11 @@ public sealed partial class BattleSession
             int n = player.Number;
             GameEntity? temple = _entities.Values.FirstOrDefault(e => e.Kind == ObjectKind.Temple && e.Owner == n);
             GameEntity? priest = _entities.Values.FirstOrDefault(e => e.Kind == ObjectKind.Priest && e.Owner == n);
-            TellOnce($"ai{n}TempleHalfDead", temple == null || temple.MaxHitPoints > 0 && temple.HitPoints < temple.MaxHitPoints / 2, n);
-            TellOnce($"ai{n}TempleDead", temple == null, n);
-            TellOnce($"ai{n}PriestDead", priest == null, n);
+            bool templeSeen = Seen($"temple:{n}", temple != null);
+            bool priestSeen = Seen($"priest:{n}", priest != null);
+            TellOnce($"ai{n}TempleHalfDead", templeSeen && (temple == null || temple.MaxHitPoints > 0 && temple.HitPoints < temple.MaxHitPoints / 2), n);
+            TellOnce($"ai{n}TempleDead", templeSeen && temple == null, n);
+            TellOnce($"ai{n}PriestDead", priestSeen && priest == null, n);
             TellOnce($"ai{n}PriestCaptured", priest != null && priest.Captivity != PriestCaptivity.Free, n);
             bool saved = priest is { Captivity: PriestCaptivity.Free } && Map.TerritoryAt(priest.Footprint.AnchorX, priest.Footprint.AnchorY) is int territory
                 && Map.Ownership.OwnerOf(territory) == HumanPlayer;
@@ -599,9 +625,22 @@ public sealed partial class BattleSession
                 }
             }
         }
-        TellOnce("GoodTeamDead", good == 0, HumanPlayer);
-        TellOnce("BadTeamDead", bad == 0, HumanPlayer);
-        TellOnce("Failed", !_entities.Values.Any(e => e.Kind == ObjectKind.Priest && e.Owner == HumanPlayer), HumanPlayer);
+        TellOnce("GoodTeamDead", Seen("good", good > 0) && good == 0, HumanPlayer);
+        TellOnce("BadTeamDead", Seen("bad", bad > 0) && bad == 0, HumanPlayer);
+        bool myPriest = _entities.Values.Any(e => e.Kind == ObjectKind.Priest && e.Owner == HumanPlayer);
+        TellOnce("Failed", Seen("me", myPriest) && !myPriest, HumanPlayer);
+    }
+
+    /// <summary>대상이 지금 살아 있으면 "본 적 있음"으로 기록하고, 본 적이 있는지 돌려준다.</summary>
+    /// <param name="key">대상 키</param>
+    /// <param name="aliveNow">지금 살아 있는지</param>
+    private bool Seen(string key, bool aliveNow)
+    {
+        if (aliveNow)
+        {
+            _seenAlive.Add(key);
+        }
+        return _seenAlive.Contains(key);
     }
 
     /// <summary>조건이 참이고 아직 알리지 않은 섹션이면 MissionTell 이벤트를 낸다.</summary>
@@ -691,11 +730,16 @@ public sealed partial class BattleSession
             hash.Add(ritual.RunesStarted);
             hash.Add(ritual.RunesBurned);
             hash.Add(ritual.VictimKilled ? 1 : 0);
+            hash.Add(ritual.AltarConsumed ? 1 : 0);
         }
-        // 알린 섹션 이름은 정렬된 순서다
+        // 알린 섹션 이름과 본 적 있는 대상은 정렬된 순서다
         foreach (string section in _toldSections)
         {
             hash.Add(section);
+        }
+        foreach (string key in _seenAlive)
+        {
+            hash.Add(key);
         }
     }
 
@@ -783,4 +827,7 @@ public sealed class AltarRitual(int altarId, int performerId, int victimId, long
 
     /// <summary>희생 음성이 나왔는지</summary>
     public bool VictimKilled { get; internal set; }
+
+    /// <summary>제단은 소멸했지만 승패 판정을 위해 포로를 아직 남겨 두는 상태인지.</summary>
+    public bool AltarConsumed { get; internal set; }
 }

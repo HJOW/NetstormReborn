@@ -1,7 +1,7 @@
 # 개발용 맵 뷰어
 
 2026-10-01 **포대 전투** 추가: 미션에서는 브리핑을 닫은 뒤 자동 공격한다. 맵만 열었을 때는 **F3**으로
-전투와 세션 시간 진행을 켜고 끈다. 손상 체력 막대·선택(T) 체력 수치·탄·Vander Tower 번개·사제 기절 고리를 표시한다.
+전투와 세션 시간 진행을 켜고 끈다. 손상 체력 막대·선택(T) 체력 수치·탄·Vander Tower 번개·사제 기절 고리·포획/구속 상태·알타의 룬 진행을 표시한다.
 신전 완공·파괴 뒤 섬 원소·소유자색도 갱신한다. `--script "combat 1; wait 1"`로 검증할 수 있다.
 전투 공식·탄속 등의 근사와 미구현 범위는 [전투 구현 문서](gameplay/combat.md), 새 영상 근거는
 [YouTube 캠페인 3 관찰](videos/youtube-act3-combat.md)을 참고한다. F3은 현재 개발용이며 원본 단축키와 다르다.
@@ -67,7 +67,7 @@ dotnet run --project src/Netstorm.Game -- --map savetheisland --language korean
 **캠페인 초기 브리핑(2026-09-30):** `--mission thewarbegins` 같은 캠페인 미션도 미션 스크립트의 `[A.]` 섹션을 브리핑 창으로 먼저 연다(제목·인용·본문, 버튼 **Review Knowledge / Play Mission**). **브리핑을 닫기 전에는 세션 시간이 0에서 흐르지 않는다**(사용자 규칙 2, [안내·브리핑 창과 게임 시간](gameplay/dialog-pause.md)). Play Mission(또는 Enter·Space)으로 닫으면 시간이 시작되고, F8·Game 메뉴의 목표 다시 보기로 다시 열 수 있다(다시 열어도 그동안 시간은 멈춘다). Restart/Replay Mission은 미션을 다시 열어 브리핑부터 시작한다. 오른쪽 위 상자에는 창이 열려 있는 동안 `· 안내 창(시간 정지)`이 표시된다.
 
 * `Review Knowledge`(`ShowTechnology`)는 브리핑 위에 **지식 창**을 겹쳐 연다. 미션 화면에서는 **F6**(View Netstorm Knowledge)도 같은 창을 연다(2026-10-01 원본 화면대로 재구현). SUN·WIND·RAIN·THUN. 네 행에 행 머리 칸(원소 이름·원소 기호)과 유닛 카드(유닛 모습·이름)가 놓이고, 마우스가 올라간 카드는 어두워진다. 카드는 맵 `.fort` Technology 의 지식 + 배운 지식이며 행 안 순서는 `.type` group 순서다. 카드를 누르면 **상세창**(도움말 삽화, Alignment·Class·Hits·Range·Damage·Cost in Storm Power·Energy to Build, `help.english` 본문 스크롤, Back·OK)이 열린다. 격자는 F6·Esc·Enter·Space·격자 바깥 클릭으로 닫고, 상세창은 Back·Esc·Backspace로 격자, OK·Enter·Space·F6으로 모두 닫는다. 원본처럼 **시계를 멈추지 않는다**(녹화에서 창이 열린 채 SP 가 늘었다 — [ShowTechnology 분석](exe/show-technology.md)). 원본 돌 질감 창 그림은 아직 쓰지 않는다. Damage 는 원본 계산을 찾지 못해 Shooter 는 `?`로 둔다.
-* 미션 스크립트 버튼 `MissionAbort,1`(성공 창 Leave Missions)은 곧바로 미션을 떠나고, `MissionAbort,0`은 Leave Mission 확인 창(Main Menu·Replay Mission·Continue Mission, 원본 `tell.english` [ABORT]와 같은 구성)을 열며, `MissionRestart`는 미션을 다시 시작한다(exe `FUN_00463e40`). 성공·실패 창을 여는 승패 판정은 아직 없다.
+* 미션 스크립트 버튼 `MissionAbort,1`(성공 창 Leave Missions)은 곧바로 미션을 떠나고, `MissionAbort,0`은 Leave Mission 확인 창(Main Menu·Replay Mission·Continue Mission, 원본 `tell.english` [ABORT]와 같은 구성)을 열며, `MissionRestart`는 미션을 다시 시작한다(exe `FUN_00463e40`). Core의 포획·희생 이벤트가 해당 미션 스크립트 섹션을 알리면 안내 창을 열고, 창이 있는 동안 시간을 멈춘다. 이벤트 조건과 근사는 [희생 의식 구현](gameplay/sacrifice.md)에 기록했다.
 * 보이는 본문이 없고 `<$Config,…>` 설정 명령만 있는 `[A.]`(대회용 `tnronguide` 스크립트)는 빈 창이 미션을 멈춰 세우지 않도록 열지 않는다.
 * 원본은 미션 시작 뒤 다이얼로그 없이 10프레임이 지나야 브리핑이 뜨고 닫은 뒤 7프레임 뒤에 시간이 재개되지만, 클론은 0초 지점에서 즉시 열고 닫는 즉시 재개한다(차이는 0.2초 안팎으로 추정).
 
@@ -77,6 +77,19 @@ dotnet run --project src/Netstorm.Game -- --map savetheisland --language korean
 * `<h1>`~`<h4>`, `<p>`, `<br>`, `<i>`, `<c>` 등의 제목·간격·강조를 표시한다. 원본 그림 명령(`<!...>`)은 현재 `[그림: 이름]` 자리표시자로 보인다. 원본 창의 그림·정확한 배치 재현은 후속 작업이다.
 
 튜토리얼 2의 A~I 단계 안내와 버튼은 원본 스크립트로 정적 검사했다. 그래픽 창의 실제 배치·마우스 입력은 이번 작업에서 실행 검증하지 않았다.
+
+## 수송 사제 포획과 알타 의식
+
+선택한 수송 유닛은 기절한 적 사제를 클릭하면 그쪽으로 이동해 싣는다. 사제를 실은 채 내 완성 알타를 클릭하면 운반하고, 선택한 내 사제로 알타를 클릭하면 의식에 필요한 자리로 이동한다. 운반 중 `D`를 누른 뒤 빈 칸을 클릭하면 사제를 내려놓는다. 지도에는 `운반 중`·`제단에 묶임` 표식과 알타 위 다섯 룬의 진행 상태가 나온다. 상세한 측정·추정 구분은 [sacrifice.md](gameplay/sacrifice.md)를 참고한다.
+
+조작 순서는 다음과 같다.
+
+1. 수송 유닛 위에 커서를 두고 `T`를 눌러 선택한다.
+2. 기절한 사제를 클릭해 포획한 뒤, 목적지 알타를 클릭한다.
+3. 내 사제도 `T`로 선택해 알타를 클릭한다. 실제 이동 경로가 이어지면 둘 다 알타 주변으로 이동하고 의식이 시작된다.
+4. 내려놓으려면 수송 유닛이 선택된 상태에서 `D`를 누르고 비어 있는 칸을 클릭한다.
+
+검증용 `--script`에는 `capture tx,ty px,py [ax,ay]`, `deliver tx,ty ax,ay`, `altar ax,ay`, `drop tx,ty x,y`를 지원한다. 좌표는 맵 칸이며 `capture`는 선택한 수송 유닛 좌표, 사제 좌표, 선택적 알타 좌표 순서다. `--script`의 좌표는 각 명령이 실행되는 시점에 엔티티를 다시 조회한다.
 
 검증용 명령 스크립트 `--script "명령; 명령"`: 시작할 때 세션 명령을 차례로 실행하고, 결과를 콘솔에 출력한다.
 
@@ -94,6 +107,10 @@ dotnet run --project src/Netstorm.Game -- --map savetheisland --language korean
 | `allow 타입` / `deny 타입` | 기술 허용 표를 바꾼다 (단계 처리가 없는 미션에서 손으로 재현) |
 | `denysalvage 0\|1` | 회수 금지를 바꾼다 (같은 용도) |
 | `rules 0\|1` | 생산 규칙 끄기/켜기 |
+| `capture tx,ty px,py [ax,ay]` | 수송 유닛을 사제에게 보내고, 선택적으로 포획 뒤 알타까지 운반 |
+| `deliver tx,ty ax,ay` | 운반 중인 사제를 알타로 옮겨 묶음 |
+| `altar ax,ay` | 내 사제를 알타 옆으로 이동 |
+| `drop tx,ty x,y` | 수송 유닛이 지정한 빈 칸에 운반 사제를 내려놓음 |
 
 튜토리얼 2 흐름 확인 (2026-09-30): 관찰한 Storm Power 10,000 → 5,000(템플) → 4,200(워크샵) → 유닛 300씩 → 회수 75와 같은 값이 나온다.
 
@@ -202,7 +219,7 @@ dotnet run --project src/Netstorm.Game -- --map bridgethegap --bridges 6 --bridg
 명령줄 옵션 (아래를 쓰면 그 실행은 설정을 저장하지 않는다): `--fullscreen`, `--windowed`, `--window 1920x1080`,
 `--wide extend|letterbox`, `--view-height 480|600|768`, `--no-edge-scroll`, `--no-sound`, `--no-music`.
 
-**소리(2026-10-01)**: 원본 `sound/*.wav`·`music/*.mus`를 그대로 재생한다. 미션에서는 원소 곡 4개를 원본 순서(wind → rain → thunder → sun, 첫 곡 난수)로 한 곡씩 돌리고, 그 밖의 화면은 `ser22.mus`다. 효과음은 다리 금·붕괴·놓기·회전, 건설 완료(템플·워크샵 완료음 포함), 지식 창 열기에 연결했다. 설정 파일의 `SoundOn`·`PlayMusic`·`SoundVolume`·`MusicVolume`(1~5, 기본 3·2 = 원본 기본값)로 조절한다. 소리 장치가 없으면 소리 없이 실행된다. 개발용 기본 화면에 소리 상태 줄(장치·지금 곡·재생 여부)이 나온다. 규칙: [music.md](exe/music.md).
+**소리(2026-10-01)**: 원본 `sound/*.wav`·`music/*.mus`를 그대로 재생한다. 미션에서는 원소 곡 4개를 원본 순서(wind → rain → thunder → sun, 첫 곡 난수)로 한 곡씩 돌리고, 내 희생 의식 동안 `sacrifice.mus`를 요청한다. 그 밖의 화면은 `ser22.mus`다. 효과음은 다리 금·붕괴·놓기·회전, 건설 완료(템플·워크샵 완료음 포함), 지식 창, 사제 포획과 다섯 룬·희생·알타 소멸에 연결했다. 설정 파일의 `SoundOn`·`PlayMusic`·`SoundVolume`·`MusicVolume`(1~5, 기본 3·2 = 원본 기본값)로 조절한다. 소리 장치가 없으면 소리 없이 실행된다. 개발용 기본 화면에 소리 상태 줄(장치·지금 곡·재생 여부)이 나온다. 규칙: [music.md](exe/music.md).
 
 검증용 PNG를 저장하고 자동 종료 (`--knowledge [타입]`을 붙이면 지식 창 — 타입을 주면 그 상세창 — 을 연 채 시작한다):
 

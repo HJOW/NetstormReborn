@@ -216,4 +216,30 @@ public sealed class TutorialDialogScriptTests
         Assert.True(dialog.OpenSection("Failed"));
         Assert.Equal(TutorialDialogActionKind.RestartMission, dialog.Choose(1).Kind);
     }
+
+    /// <summary>
+    /// 실패 창의 Continue(Tell,TryAgain)는 미션 스크립트가 아니라 공용 tell.english 의 섹션을 연다.
+    /// 제목에는 현재 미션 이름이 들어가고 버튼은 Replay Mission(MissionRestart)·Leave Missions(MissionAbort,1)다.
+    /// </summary>
+    [Fact]
+    public void FailureContinue_OpensTryAgainFromCommonScript()
+    {
+        var resources = new GameResources(GameFileSystem.Open(OriginalData.RequireDirectory()), "english");
+        LoadedMission mission = Assert.IsType<LoadedMission>(resources.TryLoadMission("thewarbegins"));
+        LoadedMission common = Assert.IsType<LoadedMission>(resources.TryLoadMission("tell"));
+        var values = new Dictionary<string, string> { ["title"] = "The War Begins!", ["fileName"] = "thewarbegins" };
+        var dialog = new TutorialDialogScript(mission.Script, resources.Settings, common.Script, values);
+        int layersBefore = resources.Settings.LayerCount;
+
+        Assert.True(dialog.OpenSection("Failed"));
+        Assert.Equal("Failure!", dialog.Current!.Title);
+        Assert.Equal(TutorialDialogActionKind.Navigate, dialog.Choose(0).Kind);
+        Assert.Equal("TryAgain", dialog.Current!.Section);
+        Assert.Contains("The War Begins!", string.Concat(dialog.Current.Runs.Select(run => run.Text)));
+        Assert.DoesNotContain("Not Found", string.Concat(dialog.Current.Runs.Select(run => run.Text)));
+        Assert.Equal(["Replay Mission", "Leave Missions"], dialog.Current.Buttons.Select(button => button.Label));
+        Assert.Equal(TutorialDialogActionKind.RestartMission, dialog.Choose(0).Kind);
+        // 미션 치환 층은 섹션을 준비한 뒤 남지 않는다
+        Assert.Equal(layersBefore, resources.Settings.LayerCount);
+    }
 }

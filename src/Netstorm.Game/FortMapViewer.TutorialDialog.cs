@@ -37,11 +37,13 @@ internal sealed partial class FortMapViewer
     /// 브리핑이 열려 있는 동안에는 Update 가 세션 틱을 건너뛰므로 브리핑을 닫기 전까지 게임 시간이 0 이다.
     /// 원본은 미션 시작 뒤 다이얼로그 없이 10프레임이 지나야 브리핑이 뜨지만(그 사이 시계가 흐름), 클론은 즉시 연다.
     /// </summary>
-    private void InitializeTutorialDialog(MissionScript? script, ConfigStore? settings)
+    private void InitializeTutorialDialog(MissionScript? script, ConfigStore? settings, MissionScript? commonScript = null)
     {
         if (script != null && settings != null && _mission != null)
         {
-            _tutorialDialog = new TutorialDialogScript(script, settings);
+            // 공용 메뉴 스크립트(tell.english)의 {mission.title}·{mission.fileName} 이 현재 미션을 가리키게 한다
+            var missionValues = new Dictionary<string, string> { ["title"] = _mission.Title ?? Name, ["fileName"] = Name };
+            _tutorialDialog = new TutorialDialogScript(script, settings, commonScript, missionValues);
             if (_session.Tutorial == null && _tutorialDialog.OpenBriefing())
             {
                 ResetTutorialPage();

@@ -3,9 +3,9 @@
 > 2026-09-29 정적 규칙 구현, 2026-09-30 게임 세션(고정 틱 루프·명령·플레이어 상태)으로 묶음.
 > 사용자 확인·원본 매뉴얼·exe 분석을 기준으로 하며, 아직 부족한 전투 자료는 문서에 근사를 명시하고 구현한다.
 > MonoGame에 의존하지 않으며 `tests/Netstorm.Core.Tests`에서 헤드리스로 검사한다. 원본 게임은 실행하지 않았다.
-> 사제의 가이저 왕복 수집과 튜토리얼 1 진행 조건을 구현했다. 2026-10-01 포대 전투·체력·파괴·사제 기절을 추가했다.
+> 사제의 가이저 왕복 수집과 튜토리얼 1 진행 조건을 구현했다. 2026-10-01 포대 전투·체력·파괴·사제 기절, 수송 사제 포획·제단 의식·미션 승패 이벤트를 추가했다.
 > 전투에는 명시적인 근사가 있다([확정 근거·추정값·검증](gameplay/combat.md)).
-> Whirlibase·Whirligig의 출격·이동·공격·귀환을 추가했다([비행체 계약](gameplay/flyers.md)). 다른 수송 유닛 이동·Rain/Wind 공중 공격·전략 AI는 아직 없다.
+> Whirlibase·Whirligig의 출격·이동·공격·귀환을 추가했다([비행체 계약](gameplay/flyers.md)). 다른 공중 공격 유닛의 동작과 전략 AI는 후속이다. 비행 수송의 이륙·착륙 연출도 아직 모델링하지 않았다.
 
 ## 구성
 
@@ -37,13 +37,14 @@
 | `Bridges/BridgeReach.cs` | 다리 연결망이 닿는 섬 영역 계산. "내 다리 연결망 하나가 내 섬과 빈 섬에 함께 닿으면 그 빈 섬은 연결됨"(근사) | [island-ownership.md](gameplay/island-ownership.md) 규칙 4. 다른 빈 섬을 거치는 연쇄 연결은 미확인 |
 | `Simulation/BattleSession.cs` (+ `.Commands.cs`) | **게임 세션**: 고정 틱 루프, 플레이어 상태, 엔티티, 명령 실행, 판정, 이벤트, 검사합 ([아래](#게임-세션-battlesession)) | 규칙 코어 전체 |
 | `Simulation/BattleSessionFactory.cs` | 맵(.fort)·지면 미리보기·미션 시작 조건에서 세션 조립 (섬 칸, 다리 시작 불가 칸, 저장 다리) | 뷰어에 있던 초기화를 Core로 옮김 |
-| `Simulation/GameCommands.cs` | 명령: 유닛 배치·건물 건설·지식 등록·회수·다리 조각 집기/되돌리기/놓기·오브젝트 선택·가이저 수집·화면 복귀 | |
+| `Simulation/GameCommands.cs` | 명령: 유닛 배치·건물 건설·지식 등록·회수·다리 조각 집기/되돌리기/놓기·오브젝트 선택·가이저 수집·화면 복귀·사제 포획/운반/내려놓기·알타 이동 | |
 | `Simulation/TutorialStages.cs` | **튜토리얼 단계 처리**: 튜토리얼 1 A~G, 튜토리얼 2 A~I 조건·안내 이벤트 | [priest-construction.md](exe/priest-construction.md), [mission-header-flags.md](exe/mission-header-flags.md) 3.5절 |
 | `Simulation/BattleSession.Harvest.cs`·`MovementRate.cs`·`TutorialGeysers.cs` | 사제의 섬·다리 경로 탐색과 반복 왕복 수집, 타입별 `speed`, 저장 가이저가 없는 튜토리얼 1의 연습 받침 생성 | [priest-construction.md](exe/priest-construction.md) |
+| `Simulation/BattleSession.Sacrifice.cs` | 타입 속도에 따른 수송·사제 이동, 기절 사제 포획·제단 운반·구출, 다섯 룬 의식, 제단 파괴·승패 이벤트 | [희생 의식 구현·근거](gameplay/sacrifice.md), [music.md](exe/music.md) |
 | `Simulation/GameEntity.cs`·`PlayerState.cs`·`SessionEvents.cs` | 오브젝트(.type 구동), 플레이어 상태(SP·덱·다리 칸·기술 표), 이벤트·실패 이유 | |
 | `Rules/KnowledgeCatalog.cs` | 지식 창 카드 행: SUN·WIND·RAIN·THUN. 행, `.type` group 순서, 골렘 제외, `.fort` Technology 지식(목록 플래그 4) | [show-technology.md](exe/show-technology.md), 2026-09-30 녹화 |
 | `Audio/MusicDirector.cs` | 배경음악 선택: 메뉴 ser22, 전투 원소 곡 순환(wind → rain → thunder → sun, 첫 곡 난수, 천둥 곡 thunderCrack), 내 희생 의식 음악과 곡 끝 복귀, 30초 이하 곡 180초 재확인, 결과 음악 잠금 | exe `FUN_00469fc0`·`00469f00`·`00469f60`·`00469db0`, [music.md](exe/music.md), 녹음 대조 |
-| `Simulation/ConstructionTimes.cs` | 사제 건물 건설 시간: 템플 16초·워크샵 10초(관찰값, 이동 포함), 그 밖 10초(임시) | 튜토리얼 2 사용자 조작 관찰([screens/README.md](screens/README.md) 1.7절) |
+| `Simulation/ConstructionTimes.cs` | 사제 건물 건설 시간: 템플 16초·알타 14.5초·워크샵 10초(각 관찰값, 이동 포함), 그 밖 10초(임시) | 튜토리얼 2와 캠페인 1-5 영상 관찰 ([sacrifice.md](gameplay/sacrifice.md)) |
 
 ## 발자국과 공급 범위 기하
 
@@ -58,15 +59,15 @@
 
 * **시간**: 24Hz 고정 틱(`FixedTimestep`). 화면은 `Advance(흐른 초)`를 부르고(밀린 시간은 한 번에 8틱까지만 따라잡는다), 테스트는 `RunTicks(n)`으로 정확히 진행한다.
   게임 시각 = 틱 ÷ 24. 다리 조각 채우기(1초)·붕괴(10초)·건설·재충전은 모두 틱으로 센다.
-* **틱 순서(고정)**: 명령 실행(넣은 순서) → 사제 수집·이동 → 건설 완료 처리 → 튜토리얼 단계 처리 → 플레이어 번호 순 다리 칸 채우기 → 다리 붕괴.
+* **틱 순서(고정)**: 명령 실행(넣은 순서) → 수집 → 수송·사제 이동 → 건설 완료 → 전투 → 제단 의식 → 튜토리얼 단계 → 플레이어 번호 순 다리 칸 채우기 → 다리 붕괴 → 미션 승패 이벤트.
 * **명령** (`Submit`): `PlaceUnitCommand`(생산 창 유닛 배치)·`ConstructBuildingCommand`(사제 건물 건설)·`RegisterKnowledgeCommand`(워크샵 등록)·`SalvageCommand`(회수)·
   `PickBridgePieceCommand`·`ReturnBridgePieceCommand`·`PlaceBridgeCommand`(다리 조각; 회전은 화면이 관리해 놓을 때 값으로 보낸다)·
-  `SelectEntityCommand`(오브젝트 선택/해제 — 튜토리얼 2 단계 C·F가 읽음)·`HarvestGeyserCommand`·`ReturnHomeCommand`.
+  `SelectEntityCommand`(오브젝트 선택/해제 — 튜토리얼 2 단계 C·F가 읽음)·`HarvestGeyserCommand`·`ReturnHomeCommand`·`CapturePriestCommand`·`DeliverPriestCommand`·`DropPriestCommand`·`MovePriestToAltarCommand`.
   거부된 명령은 `CommandRejected` 이벤트(실패 이유 `CommandFailure` 포함)로 알린다. 화면은 `DrainEvents()`로 알림을 받는다.
 * **판정(상태를 바꾸지 않음)**: `CheckUnit`·`CheckBuilding`·`CheckBridge`, 재충전 남은 시간 `SecondsUntilReady`, 건설 진행률 `ConstructionProgress`.
-* **수집 경제**: 가이저를 지정하면 소유한 사제가 섬과 자기 다리 칸을 따라 가이저·완공 신전을 왕복한다. 신전에 결정 하나를 전달할 때마다 200 SP가 들어온다. 다리 연결이 바뀌면 경로를 다시 찾고 갈 수 없으면 작업을 멈춘다. 이동 속도는 각 유닛 `.type`의 `speed`를 읽는다. 현재 실제 경로 이동은 사제 수집에만 적용한다.
-* **공중 공격**: Whirlibase는 별도 Whirligig를 생성하고 출발점 사거리·목표당 최대 3대·수송 제외 규칙으로 공격시킨다. 1분 출격 후 귀환·보급과 파괴 후 재생성을 구현했다. 정확한 시간·피해·이동 단위는 [추정표](gameplay/flyers.md)를 따른다. Rain/Wind 공격체는 후속이다.
-* **비행형 수송(후속)**: 비행형 이동유닛은 출발할 때 떠오르고 이동 후 목적지에서 착륙한다(사용자 확인). 수송의 이륙·이동·착륙 상태와 시간·경로는 아직 없다. 공중 공격체와는 별도 구현 대상이다.
+* **수집 경제**: 가이저를 지정하면 소유한 사제가 섬과 자기 다리 칸을 따라 가이저·완공 신전을 왕복한다. 신전에 결정 하나를 전달할 때마다 200 SP가 들어온다. 다리 연결이 바뀌면 경로를 다시 찾고 갈 수 없으면 작업을 멈춘다. 이동 속도는 각 유닛 `.type`의 `speed`를 읽는다. 실제 경로 이동은 사제 수집과 포획·알타 명령에서 사용한다.
+* **공중 공격**: Whirlibase는 별도 Whirligig를 생성하고 출발점 사거리·목표당 최대 3대·수송 제외 규칙으로 공격시킨다. 1분 출격 후 귀환·보급과 파괴 후 재생성을 구현했다. 정확한 시간·피해·이동 단위는 [추정표](gameplay/flyers.md)를 따른다. 다른 공중 공격체는 후속이다.
+* **수송·희생 의식**: 수송 유닛별 `.type speed`로 이동하고, 기절한 적 사제를 싣고 알타에 내려놓는다. 내 사제가 알타 옆에 도착하면 다섯 룬 의식이 시작되고, 대상 팀 사제가 제거되면 미션 이벤트를 한 번 알린다. 비행 수송의 이륙·착륙 연출과 일부 시간·체력 임계값은 추정이다 ([계약·근거](gameplay/sacrifice.md)).
 * **건설**: 비용은 시작할 때 나가고(원본 `00442c80` → `00442b50`의 배치 시 차감과 부합), 건설 시간이 지나야 규칙 효과가 생긴다 — **템플**: 섬 소유(빈 섬 → 내 섬)·에너지 공급원 등록·생산 창의 다리 조각/골렘 공급 시작,
   **워크샵**: 지식 등록 가능. 완공에 섬 소유 색이 바뀌는 것은 튜토리얼 2 관찰과 같다. 건설 중인 템플도 "플레이어당 1기" 판정에 센다.
 * **회수**: 비용의 25%를 돌려받는다(튜토리얼 2: 300 → 75). 템플을 회수하면 섬이 빈 섬이 되고 다리 조각·골렘이 사라지며, 워크샵을 회수하면 그 워크샵의 등록이 사라진다. 사제·가이저·지형은 회수할 수 없다. 건물형 유닛(`maxHitPoints` 가 있고 이동체가 아닌 타입)이 없어지면 중심 ±2칸의 다리가 한 단계 약해진다(보통 → 금 감, 금 감 → 무너짐, 단단함 그대로). 원본 공통 제거 처리가 제거 이유를 보지 않아 회수에도 적용했다(원본 화면 미확인, [bridge-pieces.md](exe/bridge-pieces.md) 8.5절).
@@ -81,7 +82,7 @@
 미션 머리의 `techAllowed`(기술 허용 표)와 `denySalvage`는 **시작 값**이다. 원본의 튜토리얼 단계 처리(튜토리얼 2 = `FUN_004c3bb0`)가 실행 중에 바꾼다:
 단계 B에서 sunFactory 허용, 단계 H에서 회수 금지 해제 ([근거](exe/mission-header-flags.md)). 세션이 이를 `TutorialStages`로 재현한다:
 
-* 세션을 만들면 첫 단계 안내 `TutorialTell "A."` 이벤트가 나온다. 단계마다 그 단계의 스크립트 섹션 이름(`"B."` …)을 `TutorialTell` 이벤트로 알리고, 화면이 본문을 안내 창으로 띄운다(창은 아직 없다).
+* 세션을 만들면 첫 단계 안내 `TutorialTell "A."` 이벤트가 나온다. 단계마다 그 단계의 스크립트 섹션 이름(`"B."` …)을 `TutorialTell` 이벤트로 알리고, 화면이 본문을 안내 창으로 띄운다. `MissionTell`도 대응 미션 스크립트 섹션이 있으면 같은 안내 창으로 연결된다.
 * 조건은 세션 상태만 본다: 지은 수(`PlayerState.Made`·`MadeWithFlags`, 누적 — 파괴·회수로 줄지 않는다), 워크샵 등록 여부, 선택한 오브젝트(`SelectedEntityId`), 이번 틱의 회수 이벤트, 타이머(단계 F 4초·H 2초·C의 `NotVortex` 2초 — exe 상수 값).
 * 표·회수 금지·전투 옵션(Short·Fast)을 바꾸는 것도 단계 처리 몫이다: 단계 A 옵션 덮어쓰기, 단계 B `Tech.Set("sunFactory", true)`, 단계 H `DenySalvage = false`. 팩토리는 시작 시점에도 옵션을 덮어쓴다(단계 A 첫 프레임과 같은 결과).
 * 튜토리얼 1은 F4 또는 첫 다리(A), 다리 8·19칸(B·C), 가이저 연결(D), 200·600 SP(E·F)로 G까지 진행한다. 원본은 다리의 **누적 제작 수**를 보지만 현재 클론은 살아 있는 내 다리 칸 수를 센다. 원본 위치 생성식도 아직 복원하지 못해 연습 가이저 받침을 결정적으로 만든다.
@@ -94,6 +95,7 @@
 * 건설 시간 = 관찰한 "클릭부터 완공"(사제 이동 포함) 값. 사제의 **건설 장소까지 이동**·정확한 `constructionRate` 계산·건설 자리에 서 있어야 하는지는 판정하지 않는다. 비용 차감은 배치 시점의 원본 경로를 정적으로 확인했다([분석](exe/priest-construction.md)).
 * 수집 경로는 칸 단위·네 방향이며 가이저/신전 발자국의 인접 칸을 목표로 한다. 원본의 곡선 이동·다른 유닛과의 충돌·정확한 `speed` 시간 단위, 생성 가이저의 위치는 미확인이다.
 * 유닛(생산 창 → 배치)은 건설 지연 없이 곧바로 완성으로 본다.
+* 알타의 14.5초는 캠페인 1-5 영상에서 클릭부터 완공까지 잰 값이며 사제의 이동 시간과 건설 시간을 나누지 못했다. 가까운 위치에서 관찰한 값이 아니므로 배치 거리에 따라 빗나갈 수 있다. 제단 의식의 룬 주기·희생·소멸 지연과 이벤트 보정은 [sacrifice.md](gameplay/sacrifice.md)에 근거와 함께 적었다.
 * 빈 섬 연결 = `BridgeReach`의 근사(위 표). 다리 끝 = 발자국 둘레의 내 다리 칸.
 * 맵에 처음부터 있던 워크샵은 레벨 1, 등록 목록은 비어 있다(`.fort`의 `Deck`·`Technology` 섹션은 아직 연결하지 않았다).
 * 세션 이벤트의 한국어 문구는 개발용이다(12단계 다국어 전).
@@ -113,6 +115,6 @@
 * **다리 연결·다리 끝**: 빈 섬 연결은 세션이 `BridgeReach`로 계산한다(근사). 다리 끝은 "발자국 둘레에 플레이어 다리 칸이 있는 섬 밖 위치"로 근사한다. 다리 조각 생성·회전·배치 판정·붕괴는 구현했고(`Bridges/`), 붕괴 시작 대기 조건과 영역 소유 이어짐은 `Bridge.cpp` 분석 후 교체한다([bridge-pieces.md](exe/bridge-pieces.md) 8절). `Deck.cpp`는 다리와 무관한 지식·생산 덱이다.
 * **섬 칸 판정**: 지면 미리보기의 본섬 마스크(영역 번호 ≥ 0)를 쓴다. 작은 받침·유닛 발판(`createsisland`)은 섬 밖으로 본다. 기준점 칸 하나만으로 섬을 판정하며, 발자국 전체가 섬 위여야 하는지는 미확인이다.
 * **지식·등록 상태**: 세션은 미션 `myTech`로 시작 지식을 채운다. `.fort`의 `Technology`·`Deck` 섹션으로 초기 지식·덱을 채우는 연결은 아직 없다(맵만 연 뷰어는 생산 규칙을 꺼서 모든 유닛을 놓을 수 있다).
-* **동맹**: 기본은 같은 플레이어만 아군이다. 미션·멀티플레이 동맹 설정 연결은 남았다.
+* **동맹**: 미션 동맹 목록은 연결했다. 멀티플레이 동맹 협상은 구현하지 않았다.
 * **회수 금액**: 손상된 유닛의 감소 공식이 미확인이라 건강한 상태(25%)만 계산한다.
 * **워크샵 생산 칸 수**: `GAME.HLP` 값(2/3/4)이다. 패치판 exe의 판정은 미확인이다.

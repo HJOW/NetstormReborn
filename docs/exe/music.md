@@ -106,7 +106,8 @@ exe 에는 의식 완료 때 음악을 바꾸는 호출이 없다. `sacrifice.mu
 * `Netstorm.Assets.WaveFile` — RIFF PCM 8/16bit 해석, 16bit 변환, 선형 보간 재표본화(6,000Hz 원본 3개용: `thunderCrack.wav`·`distantWindQuiet-3000.wav`·`ThunderQuietDistant.wav`).
 * `Netstorm.Game.AudioPlayer` — 효과음은 메모리에 올려 최대 8개(`maxSimulSounds`)까지 겹쳐 틀고, 음악은 0.25초 조각으로 스트리밍한다. 소리 장치가 없으면 소리 없이 계속 실행한다. 설정 `SoundOn`·`PlayMusic`·`SoundVolume`(기본 3)·`MusicVolume`(기본 2)는 원본 `setup.cfg`/`options.cfg` 기본값이며 명령줄 `--no-sound`·`--no-music`으로 끌 수 있다. 볼륨 단계 → 음량은 단계/5 로 두었다(원본 변환식 미확인).
 * 미션에 들어가면 전투 음악, 그 밖(개발용 기본 화면·맵 시험·스프라이트 뷰어)과 미션을 떠난 뒤는 메뉴 음악이다.
-* 희생 의식은 아직 구현하지 않았으므로 `FortMapViewer.MySacrificeInProgress`는 항상 false 다. 의식을 구현하면 시작 시 `OnMySacrificeStarted`, 진행 중 true 를 넘기면 된다.
+* `BattleSession.Sacrifice.cs`가 사제 포획·운반·알타 의식·승패 이벤트를 처리한다. `FortMapViewer`는 `MySacrificeInProgress`를 음악 감독에 넘기고, `SacrificeStarted` 때 `OnMySacrificeStarted`를 호출해 `sacrifice.mus`를 요청한다. 구현 근거와 임시값은 [sacrifice.md](../gameplay/sacrifice.md).
+* 의식 효과음 연결: 포획 `golemPickUp.wav`, 룬 이름 음성 `forWind2`·`forSun2`·`forRain2`·`forThunder2`·`forStorm2`, 룬 소멸 `altarBurnCollapse.wav`, 완료 `itIsDone2.wav`, 희생 `priestSacrifice2.wav`, 알타 소멸 `explodeSlot.wav`. 제단·의식 UI는 [맵 뷰어 안내](../map-viewer.md#수송-사제-포획과-알타-의식).
 * 날씨 팔레트(`ascendancyPalette`), 위치에 따른 효과음 좌우·크기, 결과 화면(fanfare·defeat) 연결은 하지 않았다.
 
 ## 7. 효과음과 사건 (exe 호출 위치)
