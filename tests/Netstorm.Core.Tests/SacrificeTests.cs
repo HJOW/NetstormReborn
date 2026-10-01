@@ -158,6 +158,100 @@ public sealed class SacrificeTests
         Assert.Contains(session.DrainEvents(), item => item.Kind == SessionEventKind.PriestReleased);
     }
 
+    /// <summary>
+    /// 내려놓기 이동도 수확·포획·제단 운반처럼 다리가 바뀌면 같은 목표로 길을 다시 찾는다.
+    /// 건너던 다리 구간이 완전히 끊기면(물길만 남음) 길을 다시 찾지 못해 운반을 멈추고,
+    /// 끊긴 자리 너머로 넘어가거나 포로를 엉뚱한 곳에 내려놓지 않는다.
+    /// </summary>
+    [Fact]
+    public void DropPriest_RecomputesRouteWhenBridgeIsCutMidTransit()
+    {
+        MissionStart mission = MissionStart.FromHeader(key => key == "allowAnyCapture" ? "1" : null);
+        TypeCatalog types = OriginalData.RequireTypes();
+        var objects = new List<FortMapObject>
+        {
+            Object(types, "priest", 2, 9, 50),
+            Object(types, "sunwalker", 1, 10, 50),
+        };
+        // 가운데 물길(칸 11~19)로 나뉜 두 섬: x<=10 또는 x>=20 만 섬이다.
+        bool IsIsland(int x, int _) => x <= 10 || x >= 20;
+        var map = new BattleMap(objects, (x, _) => x < 50 ? 2 : 1, allied: (a, b) => a == b);
+        var bridges = new BridgeGrid(IsIsland);
+        var session = new BattleSession(map, bridges, types, mission);
+
+        GameEntity captive = Assert.Single(session.Entities, e => e.Kind == ObjectKind.Priest);
+        GameEntity carrier = Assert.Single(session.Entities, e => e.Kind == ObjectKind.Transport);
+        session.Submit(new CapturePriestCommand(1, carrier.Id, captive.Id));
+        session.RunTicks(2);
+        Assert.Equal(PriestCaptivity.Carried, captive.Captivity);
+        session.DrainEvents();
+
+        // 물길을 한 칸짜리 수평 조각으로 잇는다 (ConnectPracticeGeyser 와 같은 방식).
+        for (int x = 11; x <= 19; x++)
+        {
+            var piece = new BridgePiece(BridgePatternCatalog.SinglePiece, 1);
+            BridgePlacementCheck check = session.Bridges.Check(piece, x, 50, 1);
+            Assert.True(check.Allowed, $"다리 ({x}, 50): {check.Problem}");
+            session.Bridges.Place(piece, x, 50, 1);
+        }
+
+        session.Submit(new DropPriestCommand(1, carrier.Id, 25, 50));
+        session.RunTicks(1);
+        Assert.DoesNotContain(session.DrainEvents(), e => e.Kind == SessionEventKind.CommandRejected);
+
+        // 다리를 반쯤 건넌(물길 안) 상태까지 진행시킨다.
+        session.RunTicks(session.TicksPerSecond * 2);
+        Assert.InRange(carrier.Footprint.AnchorX, 11, 19);
+        Assert.NotNull(session.MovePurposeOf(carrier.Id));
+
+        // 건너는 중인 구간의 다리를 날려 버린다 (금 감 → 소멸, 두 번 불러 완전히 없앤다).
+        int versionBeforeCut = session.Bridges.Version;
+        session.Bridges.WeakenAround(15, 50);
+        session.Bridges.WeakenAround(15, 50);
+        Assert.True(session.Bridges.Version > versionBeforeCut);
+
+        session.RunTicks(session.TicksPerSecond * 3);
+
+        // 길을 다시 찾아도 없으므로 운반 작업이 취소되고, 포로는 끊긴 자리에서도 계속 운반 상태로 남는다(섬 B 로 건너가지 않음).
+        Assert.Null(session.MovePurposeOf(carrier.Id));
+        Assert.Equal(PriestCaptivity.Carried, captive.Captivity);
+        Assert.True(carrier.Footprint.AnchorX < 20, "끊긴 다리 너머로 건너가면 안 됨");
+    }
+
+    /// <summary>
+    /// 희생된 사제가 제거될 때도 전투 파괴·회수와 같은 RemoveEntity 를 거쳐, 그 사제를 보고 있던 선택이 함께 풀린다
+    /// (전에는 _entities 에서만 지워 선택 상태가 죽은 오브젝트 번호를 계속 가리킬 수 있었다).
+    /// </summary>
+    [Fact]
+    public void Ritual_RemovingVictimClearsSelectionLikeOtherDestruction()
+    {
+        MissionStart mission = CampaignMission();
+        BattleSession session = Create(mission, includeCannon: true);
+        GameEntity captive = Entity(session, ObjectKind.Priest, 2);
+        session.RunTicks(session.TicksPerSecond * 10);
+        Assert.True(captive.IsStunned);
+        session.CombatEnabled = false;
+        GameEntity carrier = Entity(session, ObjectKind.Transport, 1);
+        GameEntity altar = Entity(session, ObjectKind.Altar, 1);
+        session.Submit(new CapturePriestCommand(1, carrier.Id, captive.Id, altar.Id));
+        for (int tick = 0; tick < session.TicksPerSecond * 90 && session.Rituals.Count == 0; tick++)
+        {
+            session.RunTicks(1);
+        }
+        Assert.Single(session.Rituals);
+
+        // 묶인 사제를 선택해 둔 상태를 흉내 낸다 (상태 창으로 포로를 계속 보는 경우).
+        session.Submit(new SelectEntityCommand(1, captive.Id));
+        session.RunTicks(1);
+        Assert.Equal(captive.Id, session.Player(1).SelectedEntityId);
+
+        session.RunTicks(Ticks(session, BattleSession.CompletionSeconds + BattleSession.SacrificeKillDelaySeconds
+            + BattleSession.AltarConsumeDelaySeconds + BattleSession.SacrificedPriestRemovalDelaySeconds));
+
+        Assert.Null(session.Entity(captive.Id));
+        Assert.Equal(0, session.Player(1).SelectedEntityId);
+    }
+
     /// <summary>제단 체력이 절반 아래로 떨어지면 의식이 깨지고 묶인 사제가 회복해 달아난다.</summary>
     [Fact]
     public void DamagedAltar_BreaksRitualAndReleasesCaptive()

@@ -157,7 +157,8 @@ public sealed partial class BattleSession
         {
             return new CommandResult(CommandFailure.NoRoute);
         }
-        _moveTasks[transport.Id] = new UnitMoveTask(transport.Id, UnitMovePurpose.DropPriest, 0, 0, path, Bridges.Version);
+        // 목표 칸이 오브젝트가 아니므로 다리가 바뀌었을 때 다시 찾을 수 있도록 고정 목표를 함께 저장한다.
+        _moveTasks[transport.Id] = new UnitMoveTask(transport.Id, UnitMovePurpose.DropPriest, 0, 0, path, Bridges.Version, spot);
         return CommandResult.Ok();
     }
 
@@ -297,9 +298,9 @@ public sealed partial class BattleSession
                 continue;
             }
             bool airborne = IsAirborneTransport(mover);
-            if (!airborne && task.RouteVersion != Bridges.Version && task.Purpose != UnitMovePurpose.DropPriest)
+            if (!airborne && task.RouteVersion != Bridges.Version)
             {
-                // 다리가 바뀌면 같은 목표로 길을 다시 찾는다 (지상 이동만)
+                // 다리가 바뀌면 같은 목표로 길을 다시 찾는다 (지상 이동만, 내려놓기는 고정 칸 목표를 그대로 쓴다)
                 Footprint? goal = MoveGoal(task);
                 List<(int X, int Y)>? replacement = goal is { } target ? FindMovePath(mover, target) : null;
                 if (replacement == null)
@@ -325,8 +326,8 @@ public sealed partial class BattleSession
         }
     }
 
-    /// <summary>작업의 현재 목표 발자국 (목표가 사라졌으면 null)</summary>
-    private Footprint? MoveGoal(UnitMoveTask task) => Entity(task.TargetId)?.Footprint;
+    /// <summary>작업의 현재 목표 발자국 (내려놓기는 고정 칸, 그 외는 목표 오브젝트의 발자국, 목표가 사라졌으면 null)</summary>
+    private Footprint? MoveGoal(UnitMoveTask task) => task.FixedGoal ?? Entity(task.TargetId)?.Footprint;
 
     /// <summary>오브젝트를 칸으로 옮긴다. 운반 중인 사제도 함께 옮긴다(점유는 등록하지 않음).</summary>
     private void MoveEntityTo(GameEntity entity, int x, int y, bool occupies)
@@ -534,11 +535,11 @@ public sealed partial class BattleSession
             if (ritual.Completed && ritual.AltarConsumed && elapsed >= altarConsumedAt + SacrificedPriestRemovalDelaySeconds)
             {
                 // 원본은 제단 폭발보다 약 3초 뒤 포로를 제거해 그때 BadTeamDead 조건이 참이 된다.
+                // 다른 소멸 경로(전투 파괴·회수)와 같은 RemoveEntity 로 지워 선택·이동 작업 등 뒷정리를 일원화한다.
                 _rituals.Remove(ritual.AltarId);
                 if (victim != null)
                 {
-                    _entities.Remove(victim.Id);
-                    _moveTasks.Remove(victim.Id);
+                    RemoveEntity(victim);
                 }
             }
         }
@@ -744,7 +745,8 @@ public sealed partial class BattleSession
     }
 
     /// <summary>수송 유닛·사제 이동 한 건 (경로와 다음 칸까지의 이동량)</summary>
-    private sealed class UnitMoveTask(int moverId, UnitMovePurpose purpose, int targetId, int altarId, List<(int X, int Y)> path, int routeVersion)
+    private sealed class UnitMoveTask(int moverId, UnitMovePurpose purpose, int targetId, int altarId, List<(int X, int Y)> path, int routeVersion,
+        Footprint? fixedGoal = null)
     {
         /// <summary>움직이는 오브젝트 번호</summary>
         public int MoverId { get; } = moverId;
@@ -757,6 +759,9 @@ public sealed partial class BattleSession
 
         /// <summary>집은 뒤 이어서 갈 제단 번호 (없으면 0)</summary>
         public int AltarId { get; } = altarId;
+
+        /// <summary>오브젝트가 아닌 고정 칸 목표 (내려놓기 전용, 그 외는 null). 다리가 바뀌어도 이 칸으로 길을 다시 찾는다.</summary>
+        public Footprint? FixedGoal { get; } = fixedGoal;
 
         /// <summary>지나갈 칸 목록 (첫 칸은 출발 칸)</summary>
         public List<(int X, int Y)> Path { get; private set; } = path;

@@ -1,11 +1,22 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
-> 최종 갱신: 2026-10-01 (`vm-debian-codex`, 코드 점검·수정 완료 — 맨 위 절 참고)
+> 최종 갱신: 2026-10-01 (코드 점검 인수인계의 남은 의심 사항 2건 수정 — 맨 위 절 참고)
 > 프로젝트 목표(AGENTS.md): 원본 NetStorm: Islands at War 를 디컴파일/분석하여 클론 코딩하고,
 > **Windows 10/11** 과 **GUI 환경의 Linux** 에서 동작하며 **여러 언어를 지원**하는 게임을 만든다.
 > **1차 목표 언어: 영어, 한국어** (그 외 언어는 이후 확장).
 > **우선순위: Windows 10/11 > Linux** (Linux 지원은 우선순위가 낮다 — 설계상 이식성은 유지하되 검증·배포는 Windows 먼저).
 > **화면 요구사항(2026-09-28 AGENTS.md 추가)**: 풀스크린 모드와 화면비 **16:9 · 16:10 · 4:3** 지원, 풀스크린에서 **마우스를 화면 끝에 대면 화면 이동**(원본도 지원) — 1.7절
+
+---
+
+## 2026-10-01 (원본 실행 없음) ✅ 코드 점검 인수인계의 남은 의심 사항 2건 수정 (DropPriest 경로 재탐색·희생 사제 RemoveEntity 일원화)
+
+- **범위:** 바로 아래 절("점검·수정 완료")이 남긴 "남은 의심 사항" 4건 중 (b)·(c)는 추가 원본 분석 없이 기존 코드 구조(수확·포획 이동의 다리 재탐색 패턴, 전투 파괴·회수 공통 `RemoveEntity`)로 바로 고칠 수 있는 코드 결함이라 이어서 수정했다. (a)(`ai{N}PriestSaved`가 일부 비캠페인 미션에서 시작 직후 참이 되는 문제)와 (d)(뷰어 `D`/`T` 입력의 실제 GUI 확인)는 미션별 배치 분석·원본/클론 화면 확인이 더 필요해 이번에는 손대지 않았다(기존 테스트가 (a)를 알고 제외하고 있다는 점도 유지).
+- **(b) 수정 — `DropPriest` 경로 재탐색:** `UnitMoveTask`에 `FixedGoal`(내려놓을 고정 칸)을 추가해 `MoveGoal`이 목표 오브젝트가 없는 내려놓기 작업도 다리 버전이 바뀔 때 길을 다시 찾도록 했다. 이전에는 `DropPriest`만 재탐색에서 제외돼, 운반 중 건너던 다리가 끊겨도 옛 경로(이미 사라진 다리 칸)를 그대로 따라갈 위험이 있었다. **이 "끊긴 다리를 그대로 따라감" 동작은 원본 게임에도 실제로 있던 결함으로 보인다(사용자 확인, 2026-10-01) — 클론은 원본을 그대로 재현하지 않고 의도적으로 고쳐서 구현하기로 했다.** 이제는 다리가 끊기면 같은 목표로 재탐색하고, 길이 없으면 운반 작업을 멈춘다(수송 유닛은 끊긴 자리에 남고 포로는 계속 운반 상태).
+- **(c) 수정 — 희생 사제 제거 일원화:** 의식 완료 뒤 포로를 제거하던 코드가 `_entities.Remove`/`_moveTasks.Remove`만 불러, 전투 파괴·회수가 쓰는 공통 정리(`RemoveEntity`: 선택 해제·점유 해제·수집 작업 해제 등)를 거치지 않았다. 이제 같은 `RemoveEntity`를 불러, 그 사제를 선택해 두고 있던 플레이어의 선택도 함께 풀린다.
+- **검증(회귀 테스트 추가):** `SacrificeTests`에 `DropPriest_RecomputesRouteWhenBridgeIsCutMidTransit`(물길로 나뉜 두 섬 사이 다리를 반쯤 건넌 뒤 다리 구간을 날려 재탐색 실패 시 운반이 멈추고 섬을 넘어가지 않는지 확인), `Ritual_RemovingVictimClearsSelectionLikeOtherDestruction`(묶인 사제를 선택해 둔 상태에서 의식이 끝나 제거되면 선택이 0 으로 풀리는지 확인) 2개를 추가했다. `dotnet build Netstorm.sln -c Release --no-restore` 경고 1개(기존 `TextResourceTests.cs` CA2014)·오류 0, `dotnet test Netstorm.sln -c Release --no-restore` **384개 통과**(Assets 187·Core 197, 기존 382 + 신규 2), 실패·건너뜀 0. 원본 게임·클론 GUI는 실행하지 않았다.
+- **문서:** [희생 의식 구현·근거](docs/gameplay/sacrifice.md)에 두 수정과 테스트 개수(8→10)를 반영했다.
+- **남은 것:** (a)·(d)는 여전히 미해결(아래 절 그대로). 그 외 이 수정 범위에서 새로 발견한 문제는 없다.
 
 ---
 
@@ -18,7 +29,7 @@
   3. **실패 창 Continue 막힘** — `[Failed]`의 `Tell,TryAgain`은 공용 `tell.english`에만 있어 "안내 섹션이 없습니다"로 창이 닫히지 않았다(승패 판정이 생긴 뒤 새로 노출된 결함). → `TutorialDialogScript`가 공용 스크립트 대체 조회와 `{mission.title}` 등 미션 치환 값을 받음, 뷰어·`NetstormGame`이 `tell` 스크립트를 넘김. 테스트 `FailureContinue_OpensTryAgainFromCommonScript`.
   4. 희생 음악 유지 조건이 의식 완료 시점에 끊기던 것을 제단 소멸까지로 보정(`IsSacrificeInProgress`).
 - **검증:** `dotnet build Netstorm.sln -c Release` 경고·오류 0, Assets **187**·Core **195** 통과, Linux portable 빌드·Windows 대상 교차 빌드 경고·오류 0, `mcp_smoke.py --youtube-only` 통과. 원본 게임·클론 GUI는 실행하지 않았다.
-- **남은 의심 사항(미수정, 다음에 확인):** (a) `ai{N}PriestSaved`는 사제가 "내 소유 섬 영역"에 서면 참이며 `bc1menu`·`portal3` 같은 일부 미션은 시작 직후 참이 된다(원본도 같은 위치 판정이라 보이며 해당 섹션이 있는 미션에서만 영향 — 구출 미션 3-4는 정상). (b) `DropPriest` 경로는 다리가 바뀌어도 다시 찾지 않는다. (c) 희생된 사제는 `RemoveEntity`를 거치지 않고 지워져 선택 상태 등이 남을 수 있다(`GameEntity` 소멸 정리 일원화 후보). (d) 뷰어 `D`/`T` 입력·실제 화면은 GUI 확인 전.
+- **남은 의심 사항(다음에 확인):** (a) `ai{N}PriestSaved`는 사제가 "내 소유 섬 영역"에 서면 참이며 `bc1menu`·`portal3` 같은 일부 미션은 시작 직후 참이 된다(원본도 같은 위치 판정이라 보이며 해당 섹션이 있는 미션에서만 영향 — 구출 미션 3-4는 정상). ~~(b) `DropPriest` 경로는 다리가 바뀌어도 다시 찾지 않는다.~~ → ✅ 2026-10-01 수정(맨 위 절, `UnitMoveTask.FixedGoal`). ~~(c) 희생된 사제는 `RemoveEntity`를 거치지 않고 지워져 선택 상태 등이 남을 수 있다.~~ → ✅ 2026-10-01 수정(맨 위 절). (d) 뷰어 `D`/`T` 입력·실제 화면은 GUI 확인 전.
 
 ---
 
