@@ -86,7 +86,7 @@ public sealed class BattleMap
                 Ownership.SetTemple(territory, owner);
             }
             Footprint foot = Footprint.ForType(item.Object.Type.Definition, item.X, item.Y);
-            if (kind != ObjectKind.Flyer) AddOccupant(foot);
+            if (kind != ObjectKind.Flyer && !item.Object.Type.Definition.HasFlag("balloon")) AddOccupant(foot);
             Element? element = Elements.FromTheme(item.Object.Type.Definition.GetString("theme"));
             if (ObjectKinds.IsEnergySource(kind) && element != null && owner != 0)
             {
@@ -152,7 +152,7 @@ public sealed class BattleMap
             throw new InvalidOperationException($"배치할 수 없는 위치입니다: {PlacementRules.Describe(check.Problem)}");
         }
         int id = NextId();
-        AddOccupant(check.Footprint);
+        if (!type.Definition.HasFlag("balloon") && ObjectKinds.Of(type) != ObjectKind.Flyer) AddOccupant(check.Footprint);
         Element? element = Elements.FromTheme(type.Definition.GetString("theme"));
         if (ObjectKinds.IsEnergySource(ObjectKinds.Of(type)) && element != null)
         {

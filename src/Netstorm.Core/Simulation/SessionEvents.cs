@@ -236,6 +236,18 @@ public enum SessionEventKind
     /// 각 이름은 미션당 한 번만 나온다. 화면은 그 섹션이 스크립트에 있으면 창을 띄운다(게임 시간 정지).
     /// </summary>
     MissionTell,
+
+    /// <summary>발판을 잃은 지상 이동체가 낙하해 제거됐다.</summary>
+    UnitFell,
+
+    /// <summary>발판을 잃은 사제가 그 자리의 허공에서 기절했다.</summary>
+    PriestSuspended,
+
+    /// <summary>남은 목표까지 길이 없어 이동/수확이 대기 상태가 됐다.</summary>
+    MoveBlocked,
+
+    /// <summary>지형이 다시 이어져 기존 이동/수확을 재개했다.</summary>
+    MoveResumed,
 }
 
 /// <summary>세션 이벤트 한 건.</summary>

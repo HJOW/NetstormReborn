@@ -94,6 +94,8 @@ public sealed partial class BattleSession
         {
             return new CommandResult(CommandFailure.NotCapturable);
         }
+        // 허공의 사제는 바로 옆에 있어도 지상 수송으로 집을 수 없다.
+        if (priest.IsSuspended && !IsAirborneTransport(transport)) return new CommandResult(CommandFailure.NoRoute);
         if (command.AltarId != 0)
         {
             CommandResult altarCheck = CheckAltar(command.Player, command.AltarId);
@@ -297,27 +299,14 @@ public sealed partial class BattleSession
                 _moveTasks.Remove(task.MoverId);
                 continue;
             }
-            bool airborne = IsAirborneTransport(mover);
-            if (!airborne && task.RouteVersion != Bridges.Version)
+            Footprint? goal = MoveGoal(task);
+            if (goal == null)
             {
-                // 다리가 바뀌면 같은 목표로 길을 다시 찾는다 (지상 이동만, 내려놓기는 고정 칸 목표를 그대로 쓴다)
-                Footprint? goal = MoveGoal(task);
-                List<(int X, int Y)>? replacement = goal is { } target ? FindMovePath(mover, target) : null;
-                if (replacement == null)
-                {
-                    _moveTasks.Remove(task.MoverId);
-                    continue;
-                }
-                task.ChangeRoute(replacement, Bridges.Version);
+                _moveTasks.Remove(task.MoverId);
+                continue;
             }
-            task.Progress += MovementRate.CellsPerSecond(mover.Type) / TicksPerSecond;
-            // 한 틱에 여러 칸을 갈 수 있는 빠른 타입도 남은 이동량만큼 진행한다.
-            while (task.Progress >= 1.0 && task.NextIndex < task.Path.Count)
-            {
-                (int x, int y) = task.Path[task.NextIndex++];
-                MoveEntityTo(mover, x, y, occupies: !airborne);
-                task.Progress -= 1.0;
-            }
+            if (!PrepareMovement(mover, task, goal.Value)) continue;
+            AdvanceMovement(mover, task);
             if (task.NextIndex >= task.Path.Count)
             {
                 _moveTasks.Remove(task.MoverId);
@@ -354,16 +343,20 @@ public sealed partial class BattleSession
         {
             case UnitMovePurpose.PickUpPriest:
                 GameEntity? priest = Entity(task.TargetId);
-                if (priest == null || !CanCapture(mover.Owner, priest) || !IsBeside(mover.Footprint, priest.Footprint))
+                if (priest == null || !CanCapture(mover.Owner, priest) || !IsBeside(mover.Footprint, priest.Footprint)
+                    || priest.IsSuspended && !IsAirborneTransport(mover))
                 {
                     Emit(SessionEventKind.PriestResisted, mover.Owner, task.TargetId, $"{mover.DisplayName} 포획 실패 (사제가 회복했거나 떠남)");
                     return;
                 }
                 PickUpPriest(mover, priest);
-                if (task.AltarId != 0 && CheckAltar(mover.Owner, task.AltarId).Accepted
-                    && FindMovePath(mover, Entity(task.AltarId)!.Footprint) is { } toAltar)
+                if (task.AltarId != 0 && CheckAltar(mover.Owner, task.AltarId).Accepted)
                 {
-                    _moveTasks[mover.Id] = new UnitMoveTask(mover.Id, UnitMovePurpose.DeliverPriest, task.AltarId, task.AltarId, toAltar, Bridges.Version);
+                    List<(int X, int Y)>? toAltar = FindMovePath(mover, Entity(task.AltarId)!.Footprint);
+                    var delivery = new UnitMoveTask(mover.Id, UnitMovePurpose.DeliverPriest, task.AltarId, task.AltarId,
+                        toAltar ?? [(mover.Footprint.AnchorX, mover.Footprint.AnchorY)], Bridges.Version);
+                    _moveTasks[mover.Id] = delivery;
+                    ReplaceMovementRoute(mover, delivery, toAltar);
                 }
                 break;
             case UnitMovePurpose.DeliverPriest:
@@ -391,7 +384,8 @@ public sealed partial class BattleSession
     {
         _harvestTasks.Remove(priest.Id);
         _moveTasks.Remove(priest.Id);
-        Map.RemoveOccupant(priest.Footprint);
+        if (priest.OccupiesGround) Map.RemoveOccupant(priest.Footprint);
+        priest.IsSuspended = false;
         priest.Captivity = PriestCaptivity.Carried;
         priest.CaptorId = transport.Id;
         priest.CarriedCrystals = 0;
@@ -413,44 +407,19 @@ public sealed partial class BattleSession
 
     /// <summary>
     /// 포획된 사제를 풀어 준다. 운반 유닛에게서 생명력을 얻었으므로 완전히 회복하고 보호막이 풀린다(도움말).
-    /// 칸이 지나갈 수 없는 곳(물 위)이면 가장 가까운 섬·다리 칸으로 옮긴다.
+    /// 풀려난 칸이 허공이면 그 자리에서 기절한다. 가까운 지면으로 순간이동시키지 않는다.
     /// </summary>
     private void ReleasePriest(GameEntity priest, int x, int y, string reason)
     {
-        (int fx, int fy) = NearestStandable(x, y, priest.Owner);
         priest.Captivity = PriestCaptivity.Free;
         priest.CaptorId = 0;
         priest.IsStunned = false;
+        priest.IsSuspended = false;
         priest.HitPoints = priest.MaxHitPoints;
-        priest.Footprint = Footprint.ForType(priest.Type.Definition, fx, fy);
-        Map.AddOccupant(priest.Footprint);
+        priest.Footprint = Footprint.ForType(priest.Type.Definition, x, y);
+        if (HasGroundSupport(x, y)) Map.AddOccupant(priest.Footprint);
+        else SuspendPriest(priest, removeOccupancy: false);
         Emit(SessionEventKind.PriestReleased, priest.Owner, priest.Id, $"{priest.DisplayName} 풀려남 ({reason})");
-    }
-
-    /// <summary>섬 칸이거나 다리 칸인 가장 가까운 칸 (거리·y·x 순, 없으면 그 자리)</summary>
-    private (int X, int Y) NearestStandable(int x, int y, int owner)
-    {
-        // 반지름을 넓혀 가며 섬 또는 다리 칸을 찾는다
-        for (int radius = 0; radius <= 8; radius++)
-        {
-            for (int dy = -radius; dy <= radius; dy++)
-            {
-                for (int dx = -radius; dx <= radius; dx++)
-                {
-                    if (Math.Max(Math.Abs(dx), Math.Abs(dy)) != radius)
-                    {
-                        continue;
-                    }
-                    int nx = x + dx;
-                    int ny = y + dy;
-                    if (Bridges.IsIsland(nx, ny) || Bridges.At(nx, ny) != null)
-                    {
-                        return (nx, ny);
-                    }
-                }
-            }
-        }
-        return (x, y);
     }
 
     /// <summary>
@@ -712,13 +681,14 @@ public sealed partial class BattleSession
             hash.Add((int)task.Purpose);
             hash.Add(task.TargetId);
             hash.Add(task.AltarId);
-            hash.Add(task.NextIndex);
-            hash.Add(BitConverter.DoubleToInt64Bits(task.Progress));
-            // 남은 경로의 칸도 상태다
-            foreach ((int x, int y) in task.Path)
+            AddMovementChecksum(hash, task);
+            hash.Add(task.FixedGoal == null ? 0 : 1);
+            if (task.FixedGoal is { } goal)
             {
-                hash.Add(x);
-                hash.Add(y);
+                hash.Add(goal.AnchorX);
+                hash.Add(goal.AnchorY);
+                hash.Add(goal.Width);
+                hash.Add(goal.Height);
             }
         }
         // 의식은 제단 번호순이다
@@ -746,7 +716,7 @@ public sealed partial class BattleSession
 
     /// <summary>수송 유닛·사제 이동 한 건 (경로와 다음 칸까지의 이동량)</summary>
     private sealed class UnitMoveTask(int moverId, UnitMovePurpose purpose, int targetId, int altarId, List<(int X, int Y)> path, int routeVersion,
-        Footprint? fixedGoal = null)
+        Footprint? fixedGoal = null) : MovementRoute(path, routeVersion)
     {
         /// <summary>움직이는 오브젝트 번호</summary>
         public int MoverId { get; } = moverId;
@@ -763,26 +733,6 @@ public sealed partial class BattleSession
         /// <summary>오브젝트가 아닌 고정 칸 목표 (내려놓기 전용, 그 외는 null). 다리가 바뀌어도 이 칸으로 길을 다시 찾는다.</summary>
         public Footprint? FixedGoal { get; } = fixedGoal;
 
-        /// <summary>지나갈 칸 목록 (첫 칸은 출발 칸)</summary>
-        public List<(int X, int Y)> Path { get; private set; } = path;
-
-        /// <summary>다음에 지나갈 칸의 목록 인덱스</summary>
-        public int NextIndex { get; set; } = 1;
-
-        /// <summary>다음 칸까지 누적한 칸 단위 이동량</summary>
-        public double Progress { get; set; }
-
-        /// <summary>경로를 계산한 다리 격자 버전</summary>
-        public int RouteVersion { get; private set; } = routeVersion;
-
-        /// <summary>다리가 바뀌어 길을 다시 찾았을 때 현재 칸에서 새 경로로 시작한다</summary>
-        public void ChangeRoute(List<(int X, int Y)> replacement, int version)
-        {
-            Path = replacement;
-            NextIndex = 1;
-            Progress = 0;
-            RouteVersion = version;
-        }
     }
 }
 

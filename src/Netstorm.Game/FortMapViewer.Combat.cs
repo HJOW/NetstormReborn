@@ -59,7 +59,7 @@ internal sealed partial class FortMapViewer
         // 엔티티 번호순으로 체력 표시를 겹쳐 그린다.
         foreach (GameEntity entity in _session.Entities.Where(e => e.MaxHitPoints > 0 && e.IsComplete))
         {
-            if (entity.HitPoints >= entity.MaxHitPoints && entity.Id != selected) continue;
+            if (entity.HitPoints >= entity.MaxHitPoints && entity.Id != selected && !entity.IsStunned) continue;
             Vector2 anchor = CellCenterScreen(entity.WorldX, entity.WorldY, center);
             double ratio = entity.HitPoints / entity.MaxHitPoints;
             Color color = ratio > 0.5 ? Color.LimeGreen : ratio > 0.25 ? Color.Gold : Color.OrangeRed;
@@ -83,6 +83,14 @@ internal sealed partial class FortMapViewer
             if (entity.Id == selected)
                 batch.DrawString(font, $"{entity.DisplayName} {entity.HitPoints:0}/{entity.MaxHitPoints:0}",
                     anchor + new Vector2(0, 10), Color.White);
+            if (entity.IsSuspended)
+                batch.DrawString(font, "허공에서 기절", anchor + new Vector2(-38, -43), Color.LightSkyBlue);
+        }
+        // 길 복구를 기다리는 작업의 이유를 이동체 위치에 표시한다.
+        foreach (GameEntity entity in _session.Entities.Where(e => _session.IsMoveBlocked(e.Id)))
+        {
+            Vector2 anchor = CellCenterScreen(entity.WorldX, entity.WorldY, center);
+            batch.DrawString(font, "길 막힘·대기", anchor + new Vector2(-36, -43), Color.Gold);
         }
         // 세션 틱 사이의 탄 경로를 선형 보간한다. 정지 중에는 탄도 같은 위치에 남는다.
         foreach (CombatShot shot in _session.Shots)

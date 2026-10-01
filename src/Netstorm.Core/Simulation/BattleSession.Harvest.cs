@@ -33,7 +33,7 @@ public sealed partial class BattleSession
             return new CommandResult(CommandFailure.WrongKind);
         }
         GameEntity? priest = _entities.Values.FirstOrDefault(e => e.Kind == ObjectKind.Priest && e.Owner == command.Player);
-        if (priest == null || priest.IsStunned)
+        if (priest == null || priest.IsStunned || priest.Captivity != PriestCaptivity.Free)
         {
             return new CommandResult(CommandFailure.NoPriest);
         }
@@ -49,6 +49,7 @@ public sealed partial class BattleSession
         {
             return new CommandResult(CommandFailure.NoRoute);
         }
+        _moveTasks.Remove(priest.Id);
         _harvestTasks[priest.Id] = new PriestHarvestTask(priest.Id, geyser.Id, temple.Id, path,
             carrying ? HarvestPhase.ToTemple : HarvestPhase.ToGeyser, Bridges.Version);
         return CommandResult.Ok();
@@ -82,33 +83,14 @@ public sealed partial class BattleSession
             GameEntity? priest = Entity(task.PriestId);
             GameEntity? geyser = Entity(task.GeyserId);
             GameEntity? temple = Entity(task.TempleId);
-            if (priest == null || priest.IsStunned || geyser == null || temple is not { IsComplete: true })
+            if (priest == null || priest.IsStunned || priest.Captivity != PriestCaptivity.Free || geyser == null || temple is not { IsComplete: true })
             {
                 _harvestTasks.Remove(task.PriestId);
                 continue;
             }
             GameEntity target = task.Phase == HarvestPhase.ToGeyser ? geyser : temple;
-            if (task.RouteVersion != Bridges.Version)
-            {
-                List<(int X, int Y)>? replacement = FindHarvestPath(priest.Footprint, target.Footprint, priest.Owner);
-                if (replacement == null)
-                {
-                    _harvestTasks.Remove(task.PriestId);
-                    continue;
-                }
-                task.ChangeRoute(replacement, Bridges.Version);
-            }
-            double speed = MovementRate.CellsPerSecond(priest.Type);
-            task.Progress += speed / TicksPerSecond;
-            // 한 틱에 두 칸 이상 움직일 수 있는 타입도 남은 이동량만큼 진행한다.
-            while (task.Progress >= 1.0 && task.NextIndex < task.Path.Count)
-            {
-                (int x, int y) = task.Path[task.NextIndex++];
-                Map.RemoveOccupant(priest.Footprint);
-                priest.Footprint = Footprint.ForType(priest.Type.Definition, x, y);
-                Map.AddOccupant(priest.Footprint);
-                task.Progress -= 1.0;
-            }
+            if (!PrepareMovement(priest, task, target.Footprint)) continue;
+            AdvanceMovement(priest, task);
             if (task.NextIndex < task.Path.Count)
             {
                 continue;
@@ -118,13 +100,8 @@ public sealed partial class BattleSession
                 priest.CarriedCrystals = 1;
                 Emit(SessionEventKind.CrystalCollected, priest.Owner, priest.Id, $"{priest.DisplayName} 결정 수확");
                 List<(int X, int Y)>? home = FindHarvestPath(priest.Footprint, temple.Footprint, priest.Owner);
-                if (home == null)
-                {
-                    _harvestTasks.Remove(task.PriestId);
-                    continue;
-                }
                 task.Phase = HarvestPhase.ToTemple;
-                task.ChangeRoute(home, Bridges.Version);
+                ReplaceMovementRoute(priest, task, home);
             }
             else
             {
@@ -134,13 +111,8 @@ public sealed partial class BattleSession
                 Emit(SessionEventKind.CrystalDelivered, priest.Owner, priest.Id,
                     $"{priest.DisplayName} 결정 전달 (+{crystals * StormPower.CrystalValue})");
                 List<(int X, int Y)>? outbound = FindHarvestPath(priest.Footprint, geyser.Footprint, priest.Owner);
-                if (outbound == null)
-                {
-                    _harvestTasks.Remove(task.PriestId);
-                    continue;
-                }
                 task.Phase = HarvestPhase.ToGeyser;
-                task.ChangeRoute(outbound, Bridges.Version);
+                ReplaceMovementRoute(priest, task, outbound);
             }
         }
     }
@@ -150,7 +122,8 @@ public sealed partial class BattleSession
     {
         int size = BridgeGrid.WorldSize;
         int first = start.AnchorY * size + start.AnchorX;
-        if (start.AnchorX < 0 || start.AnchorY < 0 || start.AnchorX >= size || start.AnchorY >= size)
+        if (start.AnchorX < 0 || start.AnchorY < 0 || start.AnchorX >= size || start.AnchorY >= size ||
+            !IsHarvestPassable(start.AnchorX, start.AnchorY, owner))
         {
             return null;
         }
@@ -232,7 +205,7 @@ public sealed partial class BattleSession
 
     /// <summary>사제 한 명의 반복 수확 경로와 다음 칸까지의 이동량.</summary>
     private sealed class PriestHarvestTask(int priestId, int geyserId, int templeId,
-        List<(int X, int Y)> path, HarvestPhase phase, int routeVersion)
+        List<(int X, int Y)> path, HarvestPhase phase, int routeVersion) : MovementRoute(path, routeVersion)
     {
         /// <summary>움직이는 사제 번호.</summary>
         public int PriestId { get; } = priestId;
@@ -242,22 +215,5 @@ public sealed partial class BattleSession
         public int TempleId { get; } = templeId;
         /// <summary>현재 왕복 방향.</summary>
         public HarvestPhase Phase { get; set; } = phase;
-        /// <summary>지나갈 칸 목록.</summary>
-        public List<(int X, int Y)> Path { get; private set; } = path;
-        /// <summary>다음에 지나갈 칸의 목록 인덱스.</summary>
-        public int NextIndex { get; set; } = 1;
-        /// <summary>다음 칸까지 누적한 칸 단위 이동량.</summary>
-        public double Progress { get; set; }
-        /// <summary>경로가 계산된 다리 격자 버전.</summary>
-        public int RouteVersion { get; private set; } = routeVersion;
-
-        /// <summary>연결망이 바뀌거나 왕복 방향이 바뀌면 다음 경로를 현재 칸에서 시작한다.</summary>
-        public void ChangeRoute(List<(int X, int Y)> replacement, int version)
-        {
-            Path = replacement;
-            NextIndex = 1;
-            Progress = 0;
-            RouteVersion = version;
-        }
     }
 }

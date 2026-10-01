@@ -160,8 +160,7 @@ public sealed class SacrificeTests
 
     /// <summary>
     /// 내려놓기 이동도 수확·포획·제단 운반처럼 다리가 바뀌면 같은 목표로 길을 다시 찾는다.
-    /// 건너던 다리 구간이 완전히 끊기면(물길만 남음) 길을 다시 찾지 못해 운반을 멈추고,
-    /// 끊긴 자리 너머로 넘어가거나 포로를 엉뚱한 곳에 내려놓지 않는다.
+    /// 앞쪽 구간이 끊기면 현재 발판에서 대기하고, 길을 다시 이으면 같은 목적지로 재개한다.
     /// </summary>
     [Fact]
     public void DropPriest_RecomputesRouteWhenBridgeIsCutMidTransit()
@@ -206,16 +205,28 @@ public sealed class SacrificeTests
 
         // 건너는 중인 구간의 다리를 날려 버린다 (금 감 → 소멸, 두 번 불러 완전히 없앤다).
         int versionBeforeCut = session.Bridges.Version;
-        session.Bridges.WeakenAround(15, 50);
-        session.Bridges.WeakenAround(15, 50);
+        session.Bridges.WeakenAround(18, 50);
+        session.Bridges.WeakenAround(18, 50);
         Assert.True(session.Bridges.Version > versionBeforeCut);
 
         session.RunTicks(session.TicksPerSecond * 3);
 
-        // 길을 다시 찾아도 없으므로 운반 작업이 취소되고, 포로는 끊긴 자리에서도 계속 운반 상태로 남는다(섬 B 로 건너가지 않음).
-        Assert.Null(session.MovePurposeOf(carrier.Id));
+        // 발밑 칸은 남았으므로 낙하하지 않고 작업을 보존한 채 앞쪽 길 복구를 기다린다.
+        Assert.Equal(UnitMovePurpose.DropPriest, session.MovePurposeOf(carrier.Id));
+        Assert.True(session.IsMoveBlocked(carrier.Id));
         Assert.Equal(PriestCaptivity.Carried, captive.Captivity);
         Assert.True(carrier.Footprint.AnchorX < 20, "끊긴 다리 너머로 건너가면 안 됨");
+        Assert.Single(session.DrainEvents(), e => e.Kind == SessionEventKind.MoveBlocked);
+
+        // 원래 목표를 다시 명령하지 않고 끊긴 네 칸만 복구한다.
+        for (int x = 16; x <= 19; x++)
+            session.Bridges.Place(new BridgePiece(BridgePatternCatalog.SinglePiece, 1), x, 50, 1);
+        session.RunTicks(session.TicksPerSecond * 7);
+        Assert.False(session.IsMoveBlocked(carrier.Id));
+        Assert.Null(session.MovePurposeOf(carrier.Id));
+        Assert.Equal(PriestCaptivity.Free, captive.Captivity);
+        Assert.True(carrier.Footprint.AnchorX >= 20);
+        Assert.Single(session.DrainEvents(), e => e.Kind == SessionEventKind.MoveResumed);
     }
 
     /// <summary>

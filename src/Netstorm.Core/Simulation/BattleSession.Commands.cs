@@ -205,6 +205,7 @@ public sealed partial class BattleSession
         player.StormPower -= site.Cost;
         var entity = new GameEntity(id, type, ObjectKinds.Of(type), command.Player, site.Footprint, Map.TerritoryAt(command.X, command.Y), null);
         _entities.Add(id, entity);
+        if (type.Definition.HasFlag("createsisland")) Bridges.InvalidateTerrain();
         // 유닛은 놓을 때 지은 수로 센다 (튜토리얼 단계 처리가 읽는다)
         player.RecordMade(type.Name, type.Flags2);
         if (EnforceProductionRules)

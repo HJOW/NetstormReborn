@@ -170,8 +170,8 @@ public sealed class CombatTests
         Assert.NotEqual(first.Checksum(), second.Checksum());
     }
 
-    /// <summary>전투 테스트에서 지면·다리 붕괴 영향을 없앤 빈 격자를 만든다.</summary>
-    private static BridgeGrid Grid() => new((_, _) => false, (_, _) => false);
+    /// <summary>포대 규칙 테스트는 평지에서 실행해 별도 낙하 규칙의 영향을 제외한다.</summary>
+    private static BridgeGrid Grid() => new((_, _) => true, (_, _) => false);
 
     /// <summary>실제 타입 목록과 소규모 두 영역 지도로 세션을 만든다.</summary>
     private static BattleSession Create(params FortMapObject[] objects) =>

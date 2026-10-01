@@ -230,6 +230,8 @@ internal sealed partial class FortMapViewer : IDisposable
         RefreshTerritoryAppearance();
         foreach (FortTerrainTile tile in _terrain.Tiles)
         {
+            // 건물 소멸로 사라진 개발용 받침 타일은 현재 지지 판정에 맞춰 숨긴다.
+            if (tile.Region < 0 && !_session.Bridges.IsIsland(tile.X, tile.Y)) continue;
             if (_edgeFarmCells.Contains((tile.X, tile.Y)))
             {
                 continue;
@@ -241,6 +243,8 @@ internal sealed partial class FortMapViewer : IDisposable
         // 절벽은 별도 기준점을 사용하며 본체 지면 위·건물 아래에 표시한다. 원본의 깊이 정렬은 추가 검증 대상이다.
         foreach (FortTerrainFringeSprite fringe in _fringes)
         {
+            // 절벽의 원본 지면 기준점은 표시 기준점보다 OffsetY만큼 위에 있다.
+            if (!_session.Bridges.IsIsland(fringe.X, fringe.Y - FortTerrainFringe.OffsetY)) continue;
             DrawSprite(batch, _fringeType.LoadIndex, MapSpriteFrames.BodyFrame(_fringeType.Definition, fringe.Cluster),
                 Screen(WorldPixels(fringe.X, fringe.Y), center));
         }
@@ -254,8 +258,20 @@ internal sealed partial class FortMapViewer : IDisposable
         // 확인된 3×3 받침은 같은 기준점에서 전용 하단 바위와 윗면을 그린다.
         foreach (FortIslandSupport support in _terrain.Supports)
         {
+            // 저장된 받침도 건물 회수·파괴로 지지를 잃으면 화면에서 함께 사라진다.
+            if (!_session.Bridges.IsIsland(support.X, support.Y)) continue;
             int cluster = FortIslandSupports.ColorCluster(support.Owner, PreviewPlayerColors);
             Vector2 anchor = Screen(WorldPixels(support.X, support.Y), center);
+            DrawSprite(batch, _supportBottomType.LoadIndex, MapSpriteFrames.BodyFrame(_supportBottomType.Definition, cluster), anchor);
+            DrawSprite(batch, _supportTopType.LoadIndex, MapSpriteFrames.BodyFrame(_supportTopType.Definition, cluster), anchor);
+        }
+        // 세션에서 새로 배치한 건물형 유닛의 받침도 저장된 받침과 같은 원본 그림으로 표시한다.
+        foreach (GameEntity entity in _session.Entities.Where(e => e.Source == null && e.IsComplete &&
+                     e.Type.Definition.HasFlag("createsisland") && _session.Map.TerritoryAt(e.Footprint.AnchorX, e.Footprint.AnchorY) == null))
+        {
+            if (_terrain.Supports.Any(s => s.X == entity.Footprint.AnchorX && s.Y == entity.Footprint.AnchorY)) continue;
+            int cluster = FortIslandSupports.ColorCluster(entity.Owner, PreviewPlayerColors);
+            Vector2 anchor = Screen(WorldPixels(entity.Footprint.AnchorX, entity.Footprint.AnchorY), center);
             DrawSprite(batch, _supportBottomType.LoadIndex, MapSpriteFrames.BodyFrame(_supportBottomType.Definition, cluster), anchor);
             DrawSprite(batch, _supportTopType.LoadIndex, MapSpriteFrames.BodyFrame(_supportTopType.Definition, cluster), anchor);
         }
@@ -272,8 +288,9 @@ internal sealed partial class FortMapViewer : IDisposable
                 continue;
             }
             GameEntity? live = _session.EntityForInitial(item);
-            int itemX = live?.Kind == ObjectKind.Priest ? live.Footprint.AnchorX : item.X;
-            int itemY = live?.Kind == ObjectKind.Priest ? live.Footprint.AnchorY : item.Y;
+            // 사제뿐 아니라 저장된 수송 유닛도 현재 이동 좌표로 그린다.
+            int itemX = live?.Footprint.AnchorX ?? item.X;
+            int itemY = live?.Footprint.AnchorY ?? item.Y;
             Vector2 anchor = Screen(WorldPixels(itemX, itemY), center);
             var sprite = GetSprite(item);
             if (sprite.HasValue)

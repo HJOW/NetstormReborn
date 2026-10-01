@@ -40,6 +40,7 @@
 | `Simulation/GameCommands.cs` | 명령: 유닛 배치·건물 건설·지식 등록·회수·다리 조각 집기/되돌리기/놓기·오브젝트 선택·가이저 수집·화면 복귀·사제 포획/운반/내려놓기·알타 이동 | |
 | `Simulation/TutorialStages.cs` | **튜토리얼 단계 처리**: 튜토리얼 1 A~G, 튜토리얼 2 A~I 조건·안내 이벤트 | [priest-construction.md](exe/priest-construction.md), [mission-header-flags.md](exe/mission-header-flags.md) 3.5절 |
 | `Simulation/BattleSession.Harvest.cs`·`MovementRate.cs`·`TutorialGeysers.cs` | 사제의 섬·다리 경로 탐색과 반복 왕복 수집, 타입별 `speed`, 저장 가이저가 없는 튜토리얼 1의 연습 받침 생성 | [priest-construction.md](exe/priest-construction.md) |
+| `Simulation/BattleSession.Movement.cs`·`BattleSession.Support.cs` | 수확·수송의 공통 경로 상태·재탐색·대기/재개, 지상 낙하·허공 사제 기절과 발판 복귀 | [이동 경로 구현·추정표](gameplay/movement-pathing.md) |
 | `Simulation/BattleSession.Sacrifice.cs` | 타입 속도에 따른 수송·사제 이동, 기절 사제 포획·제단 운반·구출, 다섯 룬 의식, 제단 파괴·승패 이벤트 | [희생 의식 구현·근거](gameplay/sacrifice.md), [music.md](exe/music.md) |
 | `Simulation/GameEntity.cs`·`PlayerState.cs`·`SessionEvents.cs` | 오브젝트(.type 구동), 플레이어 상태(SP·덱·다리 칸·기술 표), 이벤트·실패 이유 | |
 | `Rules/KnowledgeCatalog.cs` | 지식 창 카드 행: SUN·WIND·RAIN·THUN. 행, `.type` group 순서, 골렘 제외, `.fort` Technology 지식(목록 플래그 4) | [show-technology.md](exe/show-technology.md), 2026-09-30 녹화 |
@@ -59,13 +60,14 @@
 
 * **시간**: 24Hz 고정 틱(`FixedTimestep`). 화면은 `Advance(흐른 초)`를 부르고(밀린 시간은 한 번에 8틱까지만 따라잡는다), 테스트는 `RunTicks(n)`으로 정확히 진행한다.
   게임 시각 = 틱 ÷ 24. 다리 조각 채우기(1초)·붕괴(10초)·건설·재충전은 모두 틱으로 센다.
-* **틱 순서(고정)**: 명령 실행(넣은 순서) → 수집 → 수송·사제 이동 → 건설 완료 → 전투 → 제단 의식 → 튜토리얼 단계 → 플레이어 번호 순 다리 칸 채우기 → 다리 붕괴 → 미션 승패 이벤트.
+* **틱 순서(고정)**: 명령 실행(넣은 순서) → 수집 → 수송·사제 이동 → 건설 완료 → 전투 → 제단 의식 → 튜토리얼 단계 → 플레이어 번호 순 다리 칸 채우기 → 다리 붕괴 → **지상 낙하·허공 사제 복귀** → 미션 승패 이벤트.
 * **명령** (`Submit`): `PlaceUnitCommand`(생산 창 유닛 배치)·`ConstructBuildingCommand`(사제 건물 건설)·`RegisterKnowledgeCommand`(워크샵 등록)·`SalvageCommand`(회수)·
   `PickBridgePieceCommand`·`ReturnBridgePieceCommand`·`PlaceBridgeCommand`(다리 조각; 회전은 화면이 관리해 놓을 때 값으로 보낸다)·
   `SelectEntityCommand`(오브젝트 선택/해제 — 튜토리얼 2 단계 C·F가 읽음)·`HarvestGeyserCommand`·`ReturnHomeCommand`·`CapturePriestCommand`·`DeliverPriestCommand`·`DropPriestCommand`·`MovePriestToAltarCommand`.
   거부된 명령은 `CommandRejected` 이벤트(실패 이유 `CommandFailure` 포함)로 알린다. 화면은 `DrainEvents()`로 알림을 받는다.
 * **판정(상태를 바꾸지 않음)**: `CheckUnit`·`CheckBuilding`·`CheckBridge`, 재충전 남은 시간 `SecondsUntilReady`, 건설 진행률 `ConstructionProgress`.
-* **수집 경제**: 가이저를 지정하면 소유한 사제가 섬과 자기 다리 칸을 따라 가이저·완공 신전을 왕복한다. 신전에 결정 하나를 전달할 때마다 200 SP가 들어온다. 다리 연결이 바뀌면 경로를 다시 찾고 갈 수 없으면 작업을 멈춘다. 이동 속도는 각 유닛 `.type`의 `speed`를 읽는다. 실제 경로 이동은 사제 수집과 포획·알타 명령에서 사용한다.
+* **수집 경제**: 가이저를 지정하면 소유한 사제가 섬과 자기 다리 칸을 따라 가이저·완공 신전을 왕복한다. 신전에 결정 하나를 전달할 때마다 200 SP가 들어온다. 지형이 바뀌면 경로를 다시 찾고, 길이 없으면 목표를 유지해 기다리다가 복구 후 재개한다. 기절·포획·목표 제거 시 취소한다. 이동 속도는 각 유닛 `.type`의 `speed`를 읽으며 수확·수송·사제 이동은 같은 이동 상태 코드를 쓴다.
+* **지지와 낙하**: 발밑 섬·받침·다리가 사라지면 지상 보행 유닛을 그 틱 끝에 제거한다. 사제는 현재 HP·위치·결정을 유지해 허공에서 기절하고 점유를 비운다. 비행 수송으로 포획하거나 다리를 복구할 수 있으며, HP가 절반 이상이면 발판 복구로 회복한다. `createsisland` 받침은 건물 생존·완공 상태를 따라 생성/소멸하고 지형 버전을 갱신한다. 세부 미확인 정책은 [이동 경로 문서](gameplay/movement-pathing.md#34-낙하-규칙-구현과-임시-정책)에 남겼다.
 * **공중 공격**: Whirlibase는 별도 Whirligig를 생성하고 출발점 사거리·목표당 최대 3대·수송 제외 규칙으로 공격시킨다. 1분 출격 후 귀환·보급과 파괴 후 재생성을 구현했다. 정확한 시간·피해·이동 단위는 [추정표](gameplay/flyers.md)를 따른다. 다른 공중 공격체는 후속이다.
 * **수송·희생 의식**: 수송 유닛별 `.type speed`로 이동하고, 기절한 적 사제를 싣고 알타에 내려놓는다. 내 사제가 알타 옆에 도착하면 다섯 룬 의식이 시작되고, 대상 팀 사제가 제거되면 미션 이벤트를 한 번 알린다. 비행 수송의 이륙·착륙 연출과 일부 시간·체력 임계값은 추정이다 ([계약·근거](gameplay/sacrifice.md)).
 * **건설**: 비용은 시작할 때 나가고(원본 `00442c80` → `00442b50`의 배치 시 차감과 부합), 건설 시간이 지나야 규칙 효과가 생긴다 — **템플**: 섬 소유(빈 섬 → 내 섬)·에너지 공급원 등록·생산 창의 다리 조각/골렘 공급 시작,
@@ -118,4 +120,4 @@
 * **동맹**: 미션 동맹 목록은 연결했다. 멀티플레이 동맹 협상은 구현하지 않았다.
 * **회수 금액**: 손상된 유닛의 감소 공식이 미확인이라 건강한 상태(25%)만 계산한다.
 * **워크샵 생산 칸 수**: `GAME.HLP` 값(2/3/4)이다. 패치판 exe의 판정은 미확인이다.
-* **이동 경로 재탐색·생산 에너지 줄기**: 이동 유닛은 다리가 바뀌면 같은 목표로 길을 다시 찾는다(원본의 "끊긴 길로 가다 추락" 결함은 재현하지 않음). 재탐색 실패 시 대기·금 간 칸 회피·이동 작업 통합은 후속이다. **낙하 규칙은 원본대로 구현해야 하나 아직 없다**: 지상 유닛은 허공이 된 칸(이동해 들어갔거나 서 있던 칸)에서 낙하·파괴되고, 사제는 허공에서 기절해 비행 수송으로 포획 가능해지며, 그 자리에 다리를 다시 놓아 서 있게 되면 체력 절반 이상일 때 기절에서 회복한다(사용자 확인). 유닛 생산의 Stream of Power(스톰 에너지 줄기)는 클론에 아직 없고(유닛 즉시 생성), 구현 시 길이 끊겨도 공중 이동으로 반드시 도달해야 한다 — [이동 경로 탐색](gameplay/movement-pathing.md).
+* **이동 경로·생산 에너지 줄기 후속**: 끊긴 길 재탐색·대기·복구 재개와 낙하·허공 사제 복귀는 구현했다. 금 간 칸 가중치·충돌 회피·일반 이동 명령은 후속이다. 유닛 생산의 Stream of Power(스톰 에너지 줄기)는 아직 없고(유닛 즉시 생성), 구현 시 길이 끊겨도 공중 이동으로 반드시 도달해야 한다 — [이동 경로 탐색](gameplay/movement-pathing.md).

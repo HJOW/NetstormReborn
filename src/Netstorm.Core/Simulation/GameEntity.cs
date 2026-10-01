@@ -52,6 +52,13 @@ public sealed class GameEntity
     /// <summary>체력 절반에서 보호막을 두른 사제인지. 수송 유닛이 이 상태의 적 사제를 포획한다.</summary>
     public bool IsStunned { get; internal set; }
 
+    /// <summary>발판을 잃어 허공에서 기절한 자유 사제. 지상 점유·신전 회복에서 제외한다.</summary>
+    public bool IsSuspended { get; internal set; }
+
+    /// <summary>지상 배치를 막는지. 비행 수송·공격체·포로·허공 사제는 지상을 점유하지 않는다.</summary>
+    public bool OccupiesGround => Kind != ObjectKind.Flyer && !Type.Definition.HasFlag("balloon")
+        && Captivity == PriestCaptivity.Free && !IsSuspended;
+
     /// <summary>사제의 포획 상태 (자유 / 수송 유닛이 운반 중 / 제단에 묶임).</summary>
     public PriestCaptivity Captivity { get; internal set; }
 

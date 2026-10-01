@@ -52,12 +52,15 @@ public sealed class FlyerTests
     [InlineData("sunBlocker", 2, 41)]
     public void Flyer_RejectsInvalidTargets(string type, int owner, int x)
     {
-        BattleSession session = Create(Object("sunaviary", 1, 10, 10), Object(type, owner, x, 10));
+        // 제외 대상인 지상 수송이 낙하로 사라져 검사가 무의미해지지 않게 발판을 둔다.
+        var map = new BattleMap([Object("sunaviary", 1, 10, 10), Object(type, owner, x, 10)], (_, _) => null);
+        var session = new BattleSession(map, new BridgeGrid((gx, gy) => gx == x && gy == 10, (_, _) => false), OriginalData.RequireTypes());
         session.RunTicks(400);
         GameEntity flyer = Assert.Single(session.Entities, e => e.Flight != null);
         Assert.Equal(0, flyer.AttackTargetId);
         Assert.Equal(FlyerPhase.Docked, flyer.Flight!.Phase);
         Assert.Empty(session.Shots);
+        if (type == "sunwalker") Assert.NotNull(session.Entity(2));
     }
 
     /// <summary>커스텀 동맹 콜백도 포대와 같은 판정을 사용한다.</summary>

@@ -46,7 +46,8 @@ public sealed partial class BattleSession
         if (!CombatEnabled) return;
         _lightning.RemoveAll(shot => Tick >= shot.FiredTick + TicksFor(LightningDisplaySeconds));
         // 기절한 사제는 자기 신전이 완공되어 있을 때만 회복한다. 포획된 사제(운반·묶임)는 풀려날 때 회복하므로 여기서 제외한다.
-        foreach (GameEntity priest in _entities.Values.Where(e => e.IsStunned && e.Captivity == PriestCaptivity.Free))
+        foreach (GameEntity priest in _entities.Values.Where(e => e.IsStunned && !e.IsSuspended && e.Captivity == PriestCaptivity.Free &&
+            HasGroundSupport(e.Footprint.AnchorX, e.Footprint.AnchorY)))
         {
             if (!_entities.Values.Any(e => e.Owner == priest.Owner && e.Kind == ObjectKind.Temple && e.IsComplete)) continue;
             priest.HitPoints = Math.Min(priest.MaxHitPoints, priest.HitPoints + PriestRecoveryPerSecond / TicksPerSecond);
@@ -168,7 +169,7 @@ public sealed partial class BattleSession
         // 운반 중이거나 제단에 묶인 사제를 먼저 풀어 준다 (도움말: 운반 유닛·제단이 파괴되면 사제가 풀려난다)
         ReleaseCaptivesOf(entity);
         // 공중 공격체는 지상 점유를 등록하지 않으므로 아래 건물의 점유를 해제해서는 안 된다.
-        if (entity.Kind != ObjectKind.Flyer) Map.RemoveOccupant(entity.Footprint);
+        if (entity.OccupiesGround) Map.RemoveOccupant(entity.Footprint);
         Map.RemoveSource(entity.Id);
         _players.TryGetValue(entity.Owner, out PlayerState? player);
         if (entity.Kind == ObjectKind.Temple)
@@ -179,6 +180,7 @@ public sealed partial class BattleSession
         }
         else if (entity.Kind == ObjectKind.Workshop) player?.Deck.RemoveWorkshop(entity.Id);
         _entities.Remove(entity.Id);
+        if (entity.Type.Definition.HasFlag("createsisland")) Bridges.InvalidateTerrain();
         _harvestTasks.Remove(entity.Id);
         if (entity.Kind != ObjectKind.Flyer) WeakenBridgesAround(entity);
         if (entity.Flight is { } flight && Entity(flight.BaseId) is { } home)
