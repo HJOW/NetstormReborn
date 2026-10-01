@@ -11,6 +11,11 @@ import time
 
 # Windows에서만 보조 프로세스의 콘솔 창을 숨긴다. Linux(Wine 경유)에는 해당 플래그가 없다.
 NO_WINDOW = getattr(subprocess, "CREATE_NO_WINDOW", 0)
+# YouTube 영상 분석 도구 이름 (Windows 판·리눅스용 YouTube 전용 빌드 공통)
+YOUTUBE_TOOLS = {"youtube_probe", "youtube_list", "youtube_frames", "youtube_clip", "youtube_note", "youtube_videos"}
+# 원본 게임 조작 도구 이름 (Windows 판 전용)
+GAME_TOOLS = {"list_sessions", "start_session", "game_status", "capture_state",
+              "game_input", "wait_for_change", "record_observation", "set_guide_steps", "end_session"}
 # PNG 파일 머리 8바이트 (이미지 콘텐츠 확인용)
 PNG_SIGNATURE = bytes([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A])
 
@@ -105,9 +110,13 @@ def main():
     parser.add_argument("--youtube", metavar="URL",
                         help="YouTube 영상 조회·프레임 MCP 응답 확인 (게임 실행 없음, 인터넷 사용)")
     parser.add_argument("--hold-seconds", type=int, default=0, help="추가 관찰용 실행 유지 시간(최대 300초)")
+    parser.add_argument("--youtube-only", action="store_true",
+                        help="리눅스용 YouTube 전용 빌드(analyzeManager/portable) 검사: youtube_* 도구만 있어야 한다")
     parser.add_argument("--wine", action="store_true",
                         help="Linux에서 win-x86 배포물을 wine으로 실행 (WINEPREFIX 환경 변수 사용)")
     args = parser.parse_args()
+    if args.youtube_only and args.live:
+        parser.error("--youtube-only 빌드에는 게임 도구가 없어 --live 를 쓸 수 없습니다.")
     command = [str(args.exe.resolve()), "--repo", str(args.repo.resolve())]
     if args.wine:
         # Wine은 리눅스 루트를 Z: 드라이브로 보이므로 저장소 경로를 Z:\ 형식으로 넘긴다.
@@ -122,18 +131,17 @@ def main():
         client.send({"method": "notifications/initialized"})
         listing = client.request("tools/list", {})["tools"]
         names = {tool["name"] for tool in listing}
-        assert names == {"list_sessions", "start_session", "game_status", "capture_state",
-                         "game_input", "wait_for_change", "record_observation", "set_guide_steps", "end_session",
-                         "youtube_probe", "youtube_list", "youtube_frames", "youtube_clip", "youtube_note", "youtube_videos"}
+        assert names == (YOUTUBE_TOOLS if args.youtube_only else GAME_TOOLS | YOUTUBE_TOOLS), names
         # 각 도구에 입력 객체 스키마가 있는지 실제 협상 결과로 확인한다.
         for tool in listing:
             assert tool["inputSchema"]["type"] == "object"
-        # AI가 보는 실행 도구 설명에도 개발자 확인 조건이 들어 있는지 확인한다.
-        start_tool = next(tool for tool in listing if tool["name"] == "start_session")
-        assert "개발자" in start_tool["description"] and "확인" in start_tool["description"]
-        assert "10.0.0.15" in start_tool["description"] and "vm-debian-codex" in start_tool["description"]
-        client.call("list_sessions", {})
-        client.call("game_status", {"sessionId": "../invalid"}, expect_error=True)
+        if not args.youtube_only:
+            # AI가 보는 실행 도구 설명에도 개발자 확인 조건이 들어 있는지 확인한다.
+            start_tool = next(tool for tool in listing if tool["name"] == "start_session")
+            assert "개발자" in start_tool["description"] and "확인" in start_tool["description"]
+            assert "10.0.0.15" in start_tool["description"] and "vm-debian-codex" in start_tool["description"]
+            client.call("list_sessions", {})
+            client.call("game_status", {"sessionId": "../invalid"}, expect_error=True)
         # YouTube 도구: 네트워크 없이 확인할 수 있는 목록 조회와 주소 거부
         client.call("youtube_videos", {})
         client.call("youtube_frames", {"url": "https://example.com/watch?v=0p7VvzSxTAY", "times": "1"}, expect_error=True)

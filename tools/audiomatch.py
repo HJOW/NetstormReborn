@@ -9,10 +9,16 @@ analyzeManager 의 record-play/guide 녹화는 Windows 기본 출력 장치의 �
 시각은 세션 폴더의 `video-0001.frames.csv` 첫 프레임 UTC 를 0 으로 하는
 **영상 경과 시각**으로 출력한다(관찰 노트와 같은 기준).
 
+세션 폴더 대신 **영상·소리 파일 하나**(예: analyzeManager `youtube_clip` 의 소리 포함 mp4)를 줄 수 있다.
+이때 `--offset 초`(구간 시작 시각)를 더해 원본 영상 시각으로 출력한다. 방송 음성이 섞인 영상은
+상관값이 낮아지므로 `--threshold` 를 0.3 안팎으로 낮추고 `--sounds` 로 대상을 좁혀 쓴다.
+
 사용 예:
   python tools/audiomatch.py sfx   playingVideos/<세션ID> -o extracted/audio/<세션ID>-sfx.csv
   python tools/audiomatch.py music playingVideos/<세션ID> -o extracted/audio/<세션ID>-music.csv
   python tools/audiomatch.py level playingVideos/<세션ID>
+  python tools/audiomatch.py sfx extracted/youtube/<ID>/clips/<구간>-a.mp4 --offset 800 --threshold 0.3 \
+      --sounds originals/sound/forWind2.WAV originals/sound/itIsDone2.wav
 """
 import argparse
 import csv
@@ -49,10 +55,13 @@ SEGMENT_TOLERANCE_SEC = 0.6
 SEGMENT_MIN_WINDOWS = 2
 
 
-def decode_mono(path):
-    """ffmpeg 로 파일을 RATE Hz 모노 float32 배열로 디코딩한다(형식은 파일 머리로 판별)."""
-    args = ["ffmpeg", "-v", "error", "-f", "wav", "-i", str(path),
-            "-ac", "1", "-ar", str(RATE), "-f", "f32le", "-"]
+def decode_mono(path, force_wav=True):
+    """ffmpeg 로 파일을 RATE Hz 모노 float32 배열로 디코딩한다.
+
+    원본 소리(.wav·.mus)는 확장자와 무관하게 WAV 로 읽고(force_wav), 영상 파일은 형식을 자동 판별한다.
+    """
+    args = ["ffmpeg", "-v", "error"] + (["-f", "wav"] if force_wav else []) + ["-i", str(path),
+            "-vn", "-ac", "1", "-ar", str(RATE), "-f", "f32le", "-"]
     result = subprocess.run(args, capture_output=True)
     if result.returncode != 0:
         sys.stderr.write(result.stderr.decode(errors="replace"))
@@ -92,6 +101,14 @@ def load_session(session):
         at = int(round((t - origin).total_seconds() * RATE))
         signal[at:at + len(s)] = s
     return signal, (origin - video_zero).total_seconds()
+
+
+def load_input(args):
+    """세션 폴더면 녹음 조각을, 파일이면 그 파일의 소리를 읽어 (신호, 시각 오프셋 초) 를 돌려준다."""
+    source = Path(args.session)
+    if source.is_dir():
+        return load_session(source)
+    return decode_mono(source, force_wav=False), args.offset
 
 
 def trim(template):
@@ -157,7 +174,7 @@ def fmt_time(sec):
 
 def cmd_sfx(args):
     """원본 효과음 전체를 녹음에 대 보고 일치 시점을 출력한다."""
-    signal, offset = load_session(args.session)
+    signal, offset = load_input(args)
     templates = []
     paths = [Path(p) for p in args.sounds] if args.sounds else sorted(
         p for p in SOUND_DIR.glob("*") if p.suffix.lower() == ".wav")
@@ -183,7 +200,7 @@ def cmd_sfx(args):
 
 def cmd_music(args):
     """녹음을 일정 길이 조각으로 나눠 어느 음악의 몇 초 지점인지 찾는다."""
-    signal, offset = load_session(args.session)
+    signal, offset = load_input(args)
     tracks = [(p.name, decode_mono(p)) for p in sorted(MUSIC_DIR.glob("*.mus"))]
     window = int(MUSIC_WINDOW_SEC * RATE)
     step = int(MUSIC_STEP_SEC * RATE)
@@ -241,7 +258,7 @@ def music_segments(rows):
 
 def cmd_level(args):
     """구간별 소리 크기(RMS, dBFS)를 출력한다. 무음·큰 소리 구간을 훑을 때 쓴다."""
-    signal, offset = load_session(args.session)
+    signal, offset = load_input(args)
     step = int(LEVEL_STEP_SEC * RATE)
     rows = []
     # 일정 구간마다 RMS 를 dB 로 바꾼다.
@@ -272,18 +289,21 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
     p = sub.add_parser("sfx", help="원본 효과음 재생 시점 찾기")
-    p.add_argument("session")
+    p.add_argument("session", help="record-play 세션 폴더 또는 영상·소리 파일")
+    p.add_argument("--offset", type=float, default=0.0, help="파일 입력일 때 더할 시각(초, 예: youtube_clip 의 start)")
     p.add_argument("--threshold", type=float, default=SFX_THRESHOLD)
     p.add_argument("--sounds", nargs="*", help="대상 소리 파일 (생략하면 originals/sound/*.wav 전체)")
     p.add_argument("-o", "--output")
     p.set_defaults(func=cmd_sfx)
     p = sub.add_parser("music", help="구간별 배경 음악과 곡 안 위치 찾기")
-    p.add_argument("session")
+    p.add_argument("session", help="record-play 세션 폴더 또는 영상·소리 파일")
+    p.add_argument("--offset", type=float, default=0.0, help="파일 입력일 때 더할 시각(초)")
     p.add_argument("--threshold", type=float, default=MUSIC_THRESHOLD)
     p.add_argument("-o", "--output")
     p.set_defaults(func=cmd_music)
     p = sub.add_parser("level", help="구간별 소리 크기")
-    p.add_argument("session")
+    p.add_argument("session", help="record-play 세션 폴더 또는 영상·소리 파일")
+    p.add_argument("--offset", type=float, default=0.0, help="파일 입력일 때 더할 시각(초)")
     p.add_argument("-o", "--output")
     p.set_defaults(func=cmd_level)
     args = ap.parse_args()

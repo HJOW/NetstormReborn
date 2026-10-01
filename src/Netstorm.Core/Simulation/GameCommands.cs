@@ -63,3 +63,34 @@ public sealed record HarvestGeyserCommand(int Player, int GeyserId) : GameComman
 
 /// <summary>튜토리얼 1에서 F4로 자기 섬 화면에 복귀했음을 규칙 세션에 알린다.</summary>
 public sealed record ReturnHomeCommand(int Player) : GameCommand(Player);
+
+/// <summary>
+/// 수송 유닛을 기절한 적 사제에게 보내 집게 한다 (도움말 "Bring the Enemy Priest to your Altar").
+/// 제단 번호를 주면 집은 뒤 곧바로 그 제단으로 운반해 희생의 원에 묶는다.
+/// </summary>
+/// <param name="Player">플레이어 번호</param>
+/// <param name="TransportId">내 수송 유닛(골렘·게·풍선 등) 번호</param>
+/// <param name="PriestId">집을 사제 번호</param>
+/// <param name="AltarId">이어서 운반할 내 제단 번호 (0 이면 집은 채로 대기)</param>
+public sealed record CapturePriestCommand(int Player, int TransportId, int PriestId, int AltarId = 0) : GameCommand(Player);
+
+/// <summary>사제를 운반 중인 수송 유닛을 내 제단으로 보내 사제를 희생의 원에 묶는다.</summary>
+/// <param name="Player">플레이어 번호</param>
+/// <param name="TransportId">사제를 운반 중인 수송 유닛 번호</param>
+/// <param name="AltarId">내 제단 번호</param>
+public sealed record DeliverPriestCommand(int Player, int TransportId, int AltarId) : GameCommand(Player);
+
+/// <summary>
+/// 사제를 운반 중인 수송 유닛을 칸으로 보내 그곳에 사제를 내려놓는다. 풀려난 사제는 완전히 회복한다
+/// (구출 미션: 동맹 사제를 내 섬에 내려놓으면 aiNPriestSaved).
+/// </summary>
+/// <param name="Player">플레이어 번호</param>
+/// <param name="TransportId">사제를 운반 중인 수송 유닛 번호</param>
+/// <param name="X">내려놓을 칸 x</param>
+/// <param name="Y">내려놓을 칸 y</param>
+public sealed record DropPriestCommand(int Player, int TransportId, int X, int Y) : GameCommand(Player);
+
+/// <summary>내 사제를 내 제단으로 보낸다. 적 사제가 묶여 있으면 도착하는 즉시 희생 의식이 시작된다.</summary>
+/// <param name="Player">플레이어 번호</param>
+/// <param name="AltarId">내 제단 번호</param>
+public sealed record MovePriestToAltarCommand(int Player, int AltarId) : GameCommand(Player);

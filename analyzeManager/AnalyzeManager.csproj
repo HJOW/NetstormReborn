@@ -11,6 +11,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="tests/**" />
+    <!-- 리눅스용 YouTube 전용 빌드는 별도 프로젝트(portable/)이며 이 프로젝트의 공용 소스를 링크한다 -->
+    <Compile Remove="portable/**" />
     <PackageReference Include="ModelContextProtocol" />
     <PackageReference Include="Microsoft.Extensions.Hosting" />
     <ProjectReference Include="../src/Netstorm.Assets/Netstorm.Assets.csproj" />

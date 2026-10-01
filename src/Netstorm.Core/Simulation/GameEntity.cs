@@ -49,8 +49,17 @@ public sealed class GameEntity
     /// <summary>현재 체력. 원본 저장 맵은 최대 체력으로 시작한다.</summary>
     public double HitPoints { get; internal set; }
 
-    /// <summary>체력 절반에서 보호막을 두른 사제인지. 포획은 후속 구현이다.</summary>
+    /// <summary>체력 절반에서 보호막을 두른 사제인지. 수송 유닛이 이 상태의 적 사제를 포획한다.</summary>
     public bool IsStunned { get; internal set; }
+
+    /// <summary>사제의 포획 상태 (자유 / 수송 유닛이 운반 중 / 제단에 묶임).</summary>
+    public PriestCaptivity Captivity { get; internal set; }
+
+    /// <summary>포획된 사제를 잡고 있는 오브젝트 번호 (운반 중이면 수송 유닛, 묶였으면 제단). 자유면 0.</summary>
+    public int CaptorId { get; internal set; }
+
+    /// <summary>수송 유닛이 운반 중인 사제 번호. 없으면 0.</summary>
+    public int CarriedPriestId { get; internal set; }
 
     /// <summary>유지 중인 사격 목표 번호. 0이면 목표가 없다.</summary>
     public int AttackTargetId { get; internal set; }
@@ -93,4 +102,17 @@ public sealed class GameEntity
 
     /// <summary>회수·파괴 때의 비용 기준 값 (.type 의 cost, 없으면 0)</summary>
     public int Cost => Type.Definition.GetInt("cost") ?? 0;
+}
+
+/// <summary>사제의 포획 상태 (도움말 "How To Capture and Sacrifice", docs/gameplay/sacrifice.md).</summary>
+public enum PriestCaptivity
+{
+    /// <summary>자유 (기절 여부와 무관)</summary>
+    Free,
+
+    /// <summary>수송 유닛이 운반 중. 운반 유닛에게서 생명력을 얻어 풀려나면 완전히 회복한다.</summary>
+    Carried,
+
+    /// <summary>제단의 희생의 원(Sacrificial Circle)에 묶임.</summary>
+    Bound,
 }

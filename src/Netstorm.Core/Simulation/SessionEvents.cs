@@ -74,6 +74,18 @@ public enum CommandFailure
 
     /// <summary>현재 섬·다리 칸에서 가이저까지 걸어갈 경로가 없음.</summary>
     NoRoute,
+
+    /// <summary>집을 수 없는 사제 (기절하지 않음·동맹·이미 포획됨, allowAnyCapture 미션 제외).</summary>
+    NotCapturable,
+
+    /// <summary>제단에 이미 다른 사제가 묶여 있음.</summary>
+    AltarOccupied,
+
+    /// <summary>수송 유닛이 사제를 운반하고 있지 않음.</summary>
+    NotCarrying,
+
+    /// <summary>수송 유닛이 이미 사제를 운반하고 있음.</summary>
+    AlreadyCarrying,
 }
 
 /// <summary>명령 실행 결과.</summary>
@@ -185,6 +197,45 @@ public enum SessionEventKind
 
     /// <summary>귀환할 기지가 없는 비행체가 종료됐다.</summary>
     FlyerExpired,
+
+    /// <summary>수송 유닛이 사제를 집음 (Player = 수송 유닛 소유자, EntityId = 사제). 원본 golemPickUp·ourPriestCaptured/enemyPriestCaptured.</summary>
+    PriestCaptured,
+
+    /// <summary>수송 유닛이 도착했지만 사제가 회복해 포획에 저항함 (EntityId = 사제).</summary>
+    PriestResisted,
+
+    /// <summary>운반한 사제를 제단의 희생의 원에 묶음 (EntityId = 사제).</summary>
+    PriestBound,
+
+    /// <summary>포획된 사제가 풀려나 완전히 회복함 (내려놓음·운반 유닛 파괴·제단 파괴·의식 중단, EntityId = 사제).</summary>
+    PriestReleased,
+
+    /// <summary>제단에서 희생 의식이 시작됨 (Player = 제단 소유자, EntityId = 제단). 원본은 이때 희생 음악을 튼다.</summary>
+    SacrificeStarted,
+
+    /// <summary>의식의 룬 하나를 지키기 시작함 (Text = 룬 이름 Wind/Sun/Rain/Thunder/Storm, 원본 forWind2.wav 등).</summary>
+    SacrificeRune,
+
+    /// <summary>룬 하나가 타서 사라짐 (원본 altarBurnCollapse.wav).</summary>
+    SacrificeRuneBurned,
+
+    /// <summary>다섯 룬을 모두 지켜 의식이 완료됨 (원본 itIsDone2.wav).</summary>
+    SacrificeCompleted,
+
+    /// <summary>묶인 사제가 희생됨 (원본 priestSacrifice2.wav, EntityId = 희생된 사제).</summary>
+    PriestSacrificed,
+
+    /// <summary>내 사제가 움직일 수 없게 되거나 제단이 크게 다쳐 의식이 깨짐 (EntityId = 제단).</summary>
+    SacrificeBroken,
+
+    /// <summary>의식이 끝난 제단이 소멸함 (EntityId = 제단).</summary>
+    AltarConsumed,
+
+    /// <summary>
+    /// 미션 스크립트 섹션을 알림 (Text = "BadTeamDead"·"Failed"·"ai2PriestCaptured" 등). 원본 FUN_004c36c0 의 승패·AI 이벤트이며
+    /// 각 이름은 미션당 한 번만 나온다. 화면은 그 섹션이 스크립트에 있으면 창을 띄운다(게임 시간 정지).
+    /// </summary>
+    MissionTell,
 }
 
 /// <summary>세션 이벤트 한 건.</summary>
@@ -226,7 +277,11 @@ public static class SessionText
         CommandFailure.BridgeBlocked => "다리를 놓을 수 없는 위치",
         CommandFailure.NoPriest => "움직일 사제가 없음",
         CommandFailure.NoTemple => "결정을 전달할 신전이 없음",
-        CommandFailure.NoRoute => "가이저까지 이어진 길이 없음",
+        CommandFailure.NoRoute => "목적지까지 이어진 길이 없음",
+        CommandFailure.NotCapturable => "집을 수 없는 사제 (기절하지 않았거나 동맹)",
+        CommandFailure.AltarOccupied => "제단에 이미 사제가 묶여 있음",
+        CommandFailure.NotCarrying => "운반 중인 사제가 없음",
+        CommandFailure.AlreadyCarrying => "이미 사제를 운반 중",
         _ => failure.ToString(),
     };
 

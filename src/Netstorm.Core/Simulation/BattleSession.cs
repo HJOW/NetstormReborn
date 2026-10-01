@@ -273,7 +273,8 @@ public sealed partial class BattleSession
     }
 
     /// <summary>
-    /// 틱 하나를 진행한다. 순서: 명령 실행 → 사제 수집·이동 → 건설 완료 → 전투 → 튜토리얼 단계 처리 → 플레이어별 다리 칸 채우기 → 다리 붕괴.
+    /// 틱 하나를 진행한다. 순서: 명령 실행 → 사제 수집·이동 → 수송·사제 이동(포획·운반) → 건설 완료 → 전투 → 희생 의식 → 튜토리얼 단계 처리
+    /// → 플레이어별 다리 칸 채우기 → 다리 붕괴 → 미션 승패 이벤트.
     /// 이 순서가 바뀌면 같은 명령열의 결과가 달라지므로 락스텝·리플레이를 위해 고정한다.
     /// </summary>
     private void Step()
@@ -282,8 +283,10 @@ public sealed partial class BattleSession
         double now = Seconds;
         ExecuteQueuedCommands();
         UpdateHarvests();
+        UpdateUnitMoves();
         CompleteConstructions();
         UpdateCombat();
+        UpdateSacrifices();
         if (Tutorial != null && RunsTutorial)
         {
             // 이번 틱에 일어난 이벤트(명령 결과·완공)를 보고 단계를 처리한다
@@ -299,6 +302,8 @@ public sealed partial class BattleSession
             }
         }
         BridgeDecayResult decay = Bridges.Update(now);
+        // 다리 붕괴까지 반영한 뒤 승패·AI 이벤트를 판정한다 (원본은 미션 객체 프레임 함수에서 매 프레임 검사)
+        UpdateMissionEvents();
         // 금 간 칸을 이벤트로 알린다
         foreach (BridgeCellState cell in decay.Cracked)
         {
@@ -459,11 +464,15 @@ public sealed partial class BattleSession
             hash.Add(entity.CompleteTick);
             hash.Add(BitConverter.DoubleToInt64Bits(entity.HitPoints));
             hash.Add(entity.IsStunned ? 1 : 0);
+            hash.Add((int)entity.Captivity);
+            hash.Add(entity.CaptorId);
+            hash.Add(entity.CarriedPriestId);
             hash.Add(entity.AttackTargetId);
             hash.Add(entity.NextAttackTick);
             AddFlightChecksum(hash, entity.Flight);
         }
         AddCombatChecksum(hash);
+        AddSacrificeChecksum(hash);
         // 사제의 왕복 방향·예약 경로·남은 이동량도 다음 결과를 바꾸므로 검사합에 포함한다.
         foreach (PriestHarvestTask task in _harvestTasks.Values)
         {

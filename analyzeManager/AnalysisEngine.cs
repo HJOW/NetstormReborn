@@ -4,64 +4,6 @@ using System.Text.RegularExpressions;
 
 namespace Netstorm.AnalyzeManager;
 
-/// <summary>CLI와 MCP가 공유하는 요청. 알 수 없는 JSON 필드는 거부한다.</summary>
-[System.Text.Json.Serialization.JsonUnmappedMemberHandling(System.Text.Json.Serialization.JsonUnmappedMemberHandling.Disallow)]
-public sealed class AnalysisRequest
-{
-    public string SessionId { get; set; } = "";
-    public string Label { get; set; } = "";
-    public string Region { get; set; } = "";
-    public string Kind { get; set; } = "click";
-    public int X { get; set; }
-    public int Y { get; set; }
-    public int ToX { get; set; }
-    public int ToY { get; set; }
-    public string Button { get; set; } = "left";
-    public string Key { get; set; } = "";
-    public int DurationMs { get; set; } = 80;
-    public int SettleMs { get; set; } = 300;
-    public int TimeoutMs { get; set; } = 5000;
-    public int PollMs { get; set; } = 200;
-    public double Threshold { get; set; } = 0.01;
-    public string Note { get; set; } = "";
-    public string Steps { get; set; } = "";
-    public string EvidenceHash { get; set; } = "";
-    public bool Force { get; set; }
-    public bool IncludeImage { get; set; } = true;
-    // 아래는 YouTube 영상 분석(youtube_*) 전용 인자다 (docs/analyze-manager.md "YouTube 영상 분석").
-    /// <summary>영상·채널·재생목록 주소</summary>
-    public string Url { get; set; } = "";
-    /// <summary>영상 ID (url 대신)</summary>
-    public string VideoId { get; set; } = "";
-    /// <summary>프레임 시각 쉼표 목록 (예: "612.5, 10:12.5")</summary>
-    public string Times { get; set; } = "";
-    /// <summary>시작 시각(초): 프레임 간격 지정·구간 저장</summary>
-    public double? Start { get; set; }
-    /// <summary>프레임 간격(초)</summary>
-    public double? Step { get; set; }
-    /// <summary>프레임 수 (start·step 과 함께)</summary>
-    public int Count { get; set; }
-    /// <summary>구간 끝 시각(초)</summary>
-    public double? End { get; set; }
-    /// <summary>메모를 붙일 영상 시각(초)</summary>
-    public double? Time { get; set; }
-    /// <summary>받을 스트림의 최대 세로 해상도 (0 = 기본)</summary>
-    public int MaxHeight { get; set; }
-    /// <summary>관찰표 열 수 (0 = 자동)</summary>
-    public int Columns { get; set; }
-    /// <summary>관찰표 칸 폭 (0 = 기본)</summary>
-    public int CellWidth { get; set; }
-    /// <summary>목록 조회 개수 (0 = 기본)</summary>
-    public int Limit { get; set; }
-    /// <summary>스트림이 메타데이터보다 길어도(서버 삽입 광고 의심) 진행</summary>
-    public bool AllowDurationMismatch { get; set; }
-    /// <summary>구간 저장에 소리 포함</summary>
-    public bool IncludeAudio { get; set; }
-}
-
-/// <summary>프로토콜과 독립적인 도구 결과. 이미지는 CLI에서는 경로, MCP에서는 이미지 콘텐츠로 제공한다.</summary>
-public sealed record AnalysisResult(object Data, string? ImagePath = null, bool IsError = false);
-
 /// <summary>게임 조작·변화 관찰·문서 생성을 같은 경로로 수행하는 분석 엔진.</summary>
 public sealed class AnalysisEngine
 {
@@ -83,14 +25,7 @@ public sealed class AnalysisEngine
         if (tool.StartsWith("youtube_", StringComparison.Ordinal))
         {
             // 영상 분석은 게임을 실행하지 않으므로 데스크톱 잠금 없이 처리한다 (내려받는 동안 게임 도구를 막지 않도록).
-            try
-            {
-                return await YouTube.ExecuteAsync(tool, request, cancellation);
-            }
-            catch (Exception error)
-            {
-                return new(new { error = error.Message, tool, cancelled = error is OperationCanceledException }, IsError: true);
-            }
+            return await YouTube.ExecuteSafeAsync(tool, request, cancellation);
         }
         AnalysisSession? session = null;
         try

@@ -1,6 +1,8 @@
 using System.Diagnostics;
+#if WINDOWS
 using System.Drawing;
 using System.Drawing.Imaging;
+#endif
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
@@ -17,9 +19,10 @@ namespace Netstorm.AnalyzeManager;
 /// 메타데이터 길이와 비교해 막는다. 업로더가 영상 안에 넣은 협찬·홍보 구간은 SponsorBlock 구간으로 표시한다.</item>
 /// <item>결과는 Git 에서 제외되는 <c>extracted/youtube/&lt;영상 ID&gt;/</c> 에 남긴다.</item>
 /// </list>
+/// <item>Windows 빌드는 관찰표를 GDI+ 로 그리고, 리눅스용 YouTube 전용 빌드(<c>portable/</c>)는 ffmpeg 로 줄인 RGB 를 직접 합친다.</item>
 /// 사용법: docs/analyze-manager.md "YouTube 영상 분석".
 /// </summary>
-public sealed class YouTubeAnalyzer
+public sealed partial class YouTubeAnalyzer
 {
     /// <summary>yt-dlp 실행 파일 위치를 바꾸는 환경 변수</summary>
     public const string YtDlpVariable = "NETSTORM_YTDLP";
@@ -98,6 +101,24 @@ public sealed class YouTubeAnalyzer
         "youtube_videos" => Task.FromResult(Videos()),
         _ => throw new ArgumentException($"알 수 없는 도구: {tool}"),
     };
+
+    /// <summary>
+    /// `youtube_*` 도구를 실행하고 예외를 AI 가 재시도에 쓸 수 있는 오류 결과로 바꾼다 (CLI·MCP 공용, 게임 잠금 없음).
+    /// </summary>
+    /// <param name="tool">도구 이름</param>
+    /// <param name="request">요청</param>
+    /// <param name="cancellation">취소</param>
+    public async Task<AnalysisResult> ExecuteSafeAsync(string tool, AnalysisRequest request, CancellationToken cancellation)
+    {
+        try
+        {
+            return await ExecuteAsync(tool, request, cancellation);
+        }
+        catch (Exception error)
+        {
+            return new(new { error = error.Message, tool, cancelled = error is OperationCanceledException }, IsError: true);
+        }
+    }
 
     /// <summary>영상 ID 의 기록 폴더 (링크 우회 금지)</summary>
     /// <param name="id">영상 ID</param>
@@ -256,7 +277,7 @@ public sealed class YouTubeAnalyzer
         {
             int columns = request.Columns is > 0 and <= 12 ? request.Columns : Math.Min(4, frames.Count);
             int cellWidth = request.CellWidth is >= 120 and <= 1920 ? request.CellWidth : DefaultCellWidth;
-            sheet = ContactSheet(directory, frames, columns, cellWidth);
+            sheet = await ContactSheetAsync(directory, frames, columns, cellWidth, cancellation);
             imagePath = Path.GetFullPath(Path.Combine(directory, sheet));
         }
         AppendReport(directory, $"### 프레임 {DateTimeOffset.UtcNow:yyyy-MM-dd HH:mm:ss} UTC ({stream.Width}×{stream.Height}, format {stream.FormatId})\n\n"
@@ -559,9 +580,10 @@ public sealed class YouTubeAnalyzer
         {
             SessionStore.WriteSmallFile(path, png);
         }
-        using var image = new Bitmap(new MemoryStream(png));
-        AppendLine(index, JsonSerializer.Serialize(new FrameIndexEntry(key, time, sha, image.Width, image.Height, stream.FormatId), SessionStore.Json));
-        return new FrameRecord(time, relative, sha, image.Width, image.Height, false, segment);
+        // 크기는 PNG 머리(IHDR)에서 읽는다 (운영체제 그림 API 불필요)
+        (int width, int imageHeight) = PortableImage.PngSize(png);
+        AppendLine(index, JsonSerializer.Serialize(new FrameIndexEntry(key, time, sha, width, imageHeight, stream.FormatId), SessionStore.Json));
+        return new FrameRecord(time, relative, sha, width, imageHeight, false, segment);
     }
 
     /// <summary>
@@ -589,7 +611,37 @@ public sealed class YouTubeAnalyzer
         return double.TryParse(output.StdoutText.Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out double seconds) ? seconds : 0;
     }
 
-    /// <summary>프레임들을 시각·구간 표시와 함께 한 장으로 모은다 (해시 이름으로 sheets/ 에 저장)</summary>
+    /// <summary>
+    /// 프레임들을 시각·구간 표시와 함께 한 장으로 모은다 (해시 이름으로 sheets/ 에 저장).
+    /// Windows 는 기존 GDI+ 경로, 그 밖의 운영체제는 ffmpeg + 내장 비트맵 글꼴 경로를 쓴다.
+    /// </summary>
+    private async Task<string> ContactSheetAsync(string directory, IReadOnlyList<FrameRecord> frames, int columns, int cellWidth,
+        CancellationToken cancellation)
+    {
+#if WINDOWS
+        await Task.CompletedTask;
+        return ContactSheet(directory, frames, columns, cellWidth);
+#else
+        byte[] png = await PortableContactSheetAsync(directory, frames, columns, cellWidth, cancellation);
+        return SaveSheet(directory, png);
+#endif
+    }
+
+    /// <summary>관찰표 PNG 를 해시 이름으로 sheets/ 에 저장하고 상대 경로를 돌려준다</summary>
+    private static string SaveSheet(string directory, byte[] png)
+    {
+        string relative = $"sheets/{Convert.ToHexString(SHA256.HashData(png)).ToLowerInvariant()}.png";
+        Directory.CreateDirectory(Path.Combine(directory, "sheets"));
+        string path = Path.Combine(directory, relative);
+        if (!File.Exists(path))
+        {
+            SessionStore.WriteSmallFile(path, png);
+        }
+        return relative;
+    }
+
+#if WINDOWS
+    /// <summary>GDI+ 로 관찰표를 그린다 (Windows 빌드)</summary>
     private static string ContactSheet(string directory, IReadOnlyList<FrameRecord> frames, int columns, int cellWidth)
     {
         FrameRecord first = frames[0];
@@ -617,16 +669,9 @@ public sealed class YouTubeAnalyzer
         }
         using var buffer = new MemoryStream();
         sheet.Save(buffer, ImageFormat.Png);
-        byte[] png = buffer.ToArray();
-        string relative = $"sheets/{Convert.ToHexString(SHA256.HashData(png)).ToLowerInvariant()}.png";
-        Directory.CreateDirectory(Path.Combine(directory, "sheets"));
-        string path = Path.Combine(directory, relative);
-        if (!File.Exists(path))
-        {
-            SessionStore.WriteSmallFile(path, png);
-        }
-        return relative;
+        return SaveSheet(directory, buffer.ToArray());
     }
+#endif
 
     /// <summary>info.json 을 읽는다 (없으면 조회부터 하라고 알린다)</summary>
     private static VideoInfo LoadInfo(string directory)
@@ -693,6 +738,7 @@ public sealed class YouTubeAnalyzer
 
     /// <summary>
     /// 외부 프로그램 위치: 환경 변수 → PATH 순서. 없으면 준비 방법을 알린다.
+    /// Windows 는 <c>이름.exe</c>, 리눅스 등은 확장자 없는 <c>이름</c>을 찾는다.
     /// </summary>
     private static string Tool(string variable, string name)
     {
@@ -701,16 +747,17 @@ public sealed class YouTubeAnalyzer
         {
             return File.Exists(configured) ? configured : throw new InvalidOperationException($"{variable} 가 가리키는 파일이 없습니다: {configured}");
         }
+        string fileName = OperatingSystem.IsWindows() ? name + ".exe" : name;
         // PATH 의 폴더마다 실행 파일을 찾는다
         foreach (string folder in (Environment.GetEnvironmentVariable("PATH") ?? "").Split(Path.PathSeparator, StringSplitOptions.RemoveEmptyEntries))
         {
-            string candidate = Path.Combine(folder.Trim('"'), name + ".exe");
+            string candidate = Path.Combine(folder.Trim('"'), fileName);
             if (File.Exists(candidate))
             {
                 return candidate;
             }
         }
-        throw new InvalidOperationException($"{name} 를 찾지 못했습니다. PREPARE.ps1 의 yt-dlp·FFmpeg 항목으로 설치하거나 {variable} 로 경로를 지정하세요.");
+        throw new InvalidOperationException($"{name} 를 찾지 못했습니다. PREPARE.ps1(Windows)·PREPARE.sh(리눅스)의 yt-dlp·FFmpeg 항목으로 설치하거나 {variable} 로 경로를 지정하세요.");
     }
 
     /// <summary>

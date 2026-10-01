@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    리눅스(및 Windows 이외 운영체제)에서 analyzeManager 의 YouTube 영상 분석(youtube_*)만 CLI·stdio MCP 로 제공한다.
+    원본 게임 조작 도구는 Win32 전용이라 포함하지 않는다. 엔진 소스는 상위 analyzeManager 의 파일을 그대로 링크한다.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>Netstorm.AnalyzeManager</AssemblyName>
+    <RootNamespace>Netstorm.AnalyzeManager</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../AnalysisContracts.cs" Link="Shared/AnalysisContracts.cs" />
+    <Compile Include="../CommandLine.cs" Link="Shared/CommandLine.cs" />
+    <Compile Include="../PortableImage.cs" Link="Shared/PortableImage.cs" />
+    <Compile Include="../SessionStore.Files.cs" Link="Shared/SessionStore.Files.cs" />
+    <Compile Include="../YouTubeAnalyzer.cs" Link="Shared/YouTubeAnalyzer.cs" />
+    <Compile Include="../YouTubeAnalyzer.Portable.cs" Link="Shared/YouTubeAnalyzer.Portable.cs" />
+    <Compile Include="../YouTubeTools.cs" Link="Shared/YouTubeTools.cs" />
+    <Compile Include="../YouTubeVideo.cs" Link="Shared/YouTubeVideo.cs" />
+    <PackageReference Include="ModelContextProtocol" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" />
+  </ItemGroup>
+</Project>

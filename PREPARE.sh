@@ -58,6 +58,17 @@ VSCODE_EXTENSIONS=(
 # 사용자 실행 파일 폴더 (yt-dlp, pip --user 설치 위치)
 LOCAL_BIN_DIR="$HOME/.local/bin"
 
+# 패키지로 FFmpeg 를 설치할 수 없을 때(sudo 없음 등) 받는 정적 빌드 (BtbN, ffmpeg·ffprobe 포함).
+# 주의: johnvansickle.com 정적 빌드는 호스트 이름 해석(DNS) 때 세그멘테이션 오류로 죽어 원격 YouTube 스트림을 못 읽는다(2026-10-01 확인).
+FFMPEG_STATIC_URL='https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz'
+
+# yt-dlp 가 YouTube 서명·n 값 해석에 쓰는 JavaScript 런타임(Deno) 설치 폴더 (공식 설치 스크립트 기본값)
+DENO_INSTALL_DIR="$HOME/.deno"
+
+# 리눅스용 YouTube 영상 분석 도구(analyzeManager 의 youtube_* 전용 빌드) 프로젝트와 실행 파일
+YOUTUBE_ANALYZER_PROJECT='analyzeManager/portable/AnalyzeManager.Portable.csproj'
+YOUTUBE_ANALYZER_EXE='analyzeManager/portable/bin/Release/net10.0/Netstorm.AnalyzeManager'
+
 # 셸 시작 파일에 추가하는 줄 끝에 붙이는 표식 (중복 추가 방지·식별용)
 PROFILE_TAG='# NetstormReborn PREPARE.sh'
 
@@ -462,8 +473,63 @@ install_ytdlp() {
 }
 
 # --- FFmpeg (Fedora 기본 저장소는 ffmpeg-free 패키지) ---
-check_ffmpeg() { has_cmd ffmpeg && first_line ffmpeg -version; }
-install_ffmpeg() { pkg_install 'ffmpeg' 'ffmpeg-free' 'ffmpeg' 'ffmpeg'; }
+# ffmpeg·ffprobe 가 모두 있고, ffprobe 가 호스트 이름 해석에서 죽지 않아야 한다(원격 YouTube 스트림 읽기).
+# 확인용 주소는 로컬(포트 9, 닫힘)이라 인터넷에 접속하지 않는다. 종료 코드 139 = 세그멘테이션 오류.
+check_ffmpeg() {
+    has_cmd ffmpeg && has_cmd ffprobe || return 1
+    local code=0
+    ffprobe -v quiet -rw_timeout 2000000 -i 'http://localhost:9/check.mp4' >/dev/null 2>&1 || code=$?
+    if [ "$code" -ge 128 ]; then
+        err "ffprobe 가 호스트 이름 해석 중 비정상 종료합니다(코드 $code). DNS 가 동작하는 빌드로 바꿔야 합니다: $(command -v ffprobe)"
+        return 1
+    fi
+    first_line ffmpeg -version
+}
+# 시스템 패키지를 먼저 시도하고, 실패하면(sudo 없음 등) 정적 빌드를 사용자 실행 파일 폴더에 받는다
+install_ffmpeg() {
+    if [ "$(id -u)" -eq 0 ] || has_cmd sudo; then
+        pkg_install 'ffmpeg' 'ffmpeg-free' 'ffmpeg' 'ffmpeg' && check_ffmpeg >/dev/null && return 0
+        say "$C_YELLOW" '    패키지 설치에 실패해 정적 빌드를 사용자 폴더에 받습니다.'
+    fi
+    install_ffmpeg_static
+}
+# BtbN 정적 빌드의 ffmpeg·ffprobe 를 $LOCAL_BIN_DIR 에 설치한다 (sudo 불필요)
+install_ffmpeg_static() {
+    local work
+    work="$(mktemp -d)" || return 1
+    mkdir -p "$LOCAL_BIN_DIR" || return 1
+    if curl -fL --progress-bar -o "$work/ffmpeg.tar.xz" "$FFMPEG_STATIC_URL" \
+        && tar -xJf "$work/ffmpeg.tar.xz" -C "$work" --wildcards '*/bin/ffmpeg' '*/bin/ffprobe'; then
+        install -m 755 "$work"/*/bin/ffmpeg "$work"/*/bin/ffprobe "$LOCAL_BIN_DIR/" || { rm -rf "$work"; return 1; }
+    else
+        rm -rf "$work"; return 1
+    fi
+    rm -rf "$work"
+    ensure_profile_line 'case ":$PATH:" in *":$HOME/.local/bin:"*) ;; *) export PATH="$HOME/.local/bin:$PATH" ;; esac'
+    # PATH 앞쪽에 DNS 가 안 되는 다른 ffmpeg 가 있으면 사용자 폴더 것을 쓰도록 안내한다
+    case ":$PATH:" in *":$LOCAL_BIN_DIR:"*) ;; *) export PATH="$LOCAL_BIN_DIR:$PATH" ;; esac
+}
+
+# --- Deno (yt-dlp 의 YouTube JavaScript 해석용 런타임, sudo 불필요) ---
+check_deno() {
+    if has_cmd deno; then first_line deno --version; return 0; fi
+    [ -x "$DENO_INSTALL_DIR/bin/deno" ] && first_line "$DENO_INSTALL_DIR/bin/deno" --version
+}
+install_deno() {
+    # 공식 설치 스크립트가 $DENO_INSTALL_DIR/bin 에 설치한다 (-y: 셸 설정 질문 생략)
+    curl -fsSL https://deno.land/install.sh | DENO_INSTALL="$DENO_INSTALL_DIR" sh -s -- -y || return 1
+    ensure_profile_line 'case ":$PATH:" in *":$HOME/.deno/bin:"*) ;; *) export PATH="$HOME/.deno/bin:$PATH" ;; esac'
+    case ":$PATH:" in *":$DENO_INSTALL_DIR/bin:"*) ;; *) export PATH="$DENO_INSTALL_DIR/bin:$PATH" ;; esac
+}
+
+# --- 리눅스용 YouTube 영상 분석 도구 (analyzeManager youtube_* 전용 빌드, 원본 게임 실행 없음) ---
+check_ytanalyzer() {
+    [ -x "$PROJECT_ROOT/$YOUTUBE_ANALYZER_EXE" ] && echo "$YOUTUBE_ANALYZER_EXE"
+}
+install_ytanalyzer() {
+    has_cmd dotnet || { err '.NET SDK 가 없습니다. .NET SDK 항목을 먼저 설치하세요.'; return 1; }
+    dotnet build "$PROJECT_ROOT/$YOUTUBE_ANALYZER_PROJECT" -c Release -p:NuGetAudit=false
+}
 
 
 # ============================================================
@@ -488,7 +554,7 @@ done
 #   add_item <ID> <분류> <기본 선택(1/0)> <이름> <설명>
 #   ID 는 check_<ID>, install_<ID> 함수와 짝을 이룬다.
 #   목록 순서가 곧 설치 순서이므로 의존 관계(기본 도구 → 나머지, 라이브러리 → .NET SDK → MonoGame 템플릿,
-#   Python → 패키지·yt-dlp, JDK → Ghidra, Git → safe.directory·vcpkg)를 지켜 배치한다
+#   Python → 패키지·yt-dlp, JDK → Ghidra, Git → safe.directory·vcpkg, .NET SDK → YouTube 분석 도구)를 지켜 배치한다
 # ============================================================
 ITEM_IDS=(); ITEM_GROUPS=(); ITEM_DEFAULTS=(); ITEM_NAMES=(); ITEM_DESCS=()
 
@@ -513,8 +579,10 @@ add_item wine         '권장' 0 'Wine'                       '원본 exe 실행
 add_item safedir      '필수' 1 'git safe.directory 등록'    "'dubious ownership' 오류 해결 (git 전역 설정 변경)"
 add_item vcpkg        '선택' 0 'vcpkg'                      "C++ 라이브러리 관리자 ($TOOLS_DIR 에 설치, C# 확정으로 현재 불필요)"
 add_item vscode       '권장' 0 'VS Code 확장'               "${VSCODE_EXTENSIONS[*]}"
-add_item ytdlp        '선택' 0 'yt-dlp'                     "분석용 플레이 영상 내려받기 ($LOCAL_BIN_DIR 에 설치)"
-add_item ffmpeg       '선택' 0 'FFmpeg'                     '영상 프레임 추출'
+add_item ytdlp        '선택' 0 'yt-dlp'                     "YouTube 플레이 영상 조회·스트림 주소 (analyzeManager youtube_*, $LOCAL_BIN_DIR 에 설치)"
+add_item deno         '선택' 0 'Deno'                       "yt-dlp 의 YouTube 해석용 JavaScript 런타임 ($DENO_INSTALL_DIR 에 설치)"
+add_item ffmpeg       '선택' 0 'FFmpeg'                     "영상 프레임 추출·원격 스트림 읽기 (패키지 실패 시 정적 빌드를 $LOCAL_BIN_DIR 에)"
+add_item ytanalyzer   '선택' 0 'YouTube 분석 도구 (리눅스)' "analyzeManager 의 youtube_* 전용 빌드 ($YOUTUBE_ANALYZER_PROJECT, .NET SDK 필요)"
 
 
 # ============================================================
