@@ -64,7 +64,7 @@ public sealed class FortTerrainPreview
     public IReadOnlyList<FortIslandSupport> Supports { get; }
 
     /// <summary>영역 통로와 시드 성장 결과에 원본 isle 타일을 대응시킨다.</summary>
-    public FortTerrainPreview(FortMap map, TypeDefinition isle)
+    public FortTerrainPreview(FortMap map, TypeDefinition isle, Func<int, (int Owner, string Theme)>? territoryAppearance = null)
     {
         var chunks = new List<(FortTerritory Territory, IReadOnlyList<FortTerrainChunk> Chunks)>();
         // 전체 청크 소속을 먼저 등록하여 영역 바깥으로 지면이 자라는 것을 막는다.
@@ -75,6 +75,13 @@ public sealed class FortTerrainPreview
             FortMapObject? vortex = map.Objects.FirstOrDefault(o => o.Territory == territory.Index && o.Object.Type.Definition.HasFlag("vortex"));
             _themes[territory.Index] = vortex?.Object.Type.Definition.GetString("theme") ?? "sun";
             _owners[territory.Index] = vortex?.Object.Owner ?? 0;
+            if (territoryAppearance != null)
+            {
+                // 세션의 신전 완공·파괴를 반영하되 섬의 모양과 시드는 원본 맵 그대로 유지한다.
+                (int owner, string theme) = territoryAppearance(territory.Index);
+                _themes[territory.Index] = theme;
+                _owners[territory.Index] = owner;
+            }
             // 영역의 각 청크를 좌표로 찾을 수 있게 등록한다.
             foreach (FortTerrainChunk cell in cells)
             {

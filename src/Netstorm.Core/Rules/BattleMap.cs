@@ -50,6 +50,9 @@ public sealed class BattleMap
     /// <summary>에너지 공급원 목록</summary>
     public IReadOnlyList<EnergySource> Sources => _sources;
 
+    /// <summary>전투 목표 선택도 에너지 공급과 같은 동맹 판정을 사용한다.</summary>
+    public bool AreAllied(int first, int second) => first == second || _allied(first, second);
+
     /// <summary>맵을 읽을 때 등록한 오브젝트와 번호 (noIsland 제외). 엔티티 목록을 만들 때 같은 번호를 쓰도록 노출한다.</summary>
     public IReadOnlyList<(int Id, FortMapObject Item)> InitialObjects => _initialObjects;
 

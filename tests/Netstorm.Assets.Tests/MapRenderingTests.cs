@@ -8,6 +8,26 @@ public sealed class MapRenderingTests
     /// <summary>원본 마스크 비교용 월드 한 변의 칸 수.</summary>
     private const int MaskSize = FortFile.WorldChunksX * FortMap.CellsPerChunk;
 
+    /// <summary>신전 파괴로 원소·소유자만 바뀌어도 섬 칸과 장식에 쓰는 지면 위치는 유지된다.</summary>
+    [Fact]
+    public void TerritoryAppearance_NeutralizesWithoutMovingIsland()
+    {
+        var archive = TaffArchive.Open(OriginalData.RequireFile("netstorm.tarc"));
+        var catalog = new TypeCatalog(archive);
+        Assert.True(archive.TryFind("d/thewarbegins.fort", out TaffEntry entry));
+        var map = new FortMap(new FortFile(archive.Read(entry), catalog));
+        TypeDefinition isle = catalog.Find("isle")!.Definition;
+        var original = new FortTerrainPreview(map, isle);
+        var neutral = new FortTerrainPreview(map, isle, _ => (0, "sun"));
+        Assert.Equal(original.IslandCells, neutral.IslandCells);
+        Assert.Contains(original.Tiles, tile => tile.Region >= 0 && tile.Owner != 0 && tile.Theme != "sun");
+        Assert.All(neutral.Tiles.Where(tile => tile.Region >= 0), tile =>
+        {
+            Assert.Equal(0, tile.Owner);
+            Assert.Equal("sun", tile.Theme);
+        });
+    }
+
     /// <summary>직선·모서리 지면은 원본 방향 폴백으로 해당 절벽을 찾고 전투의 unlit 변형을 제외한다.</summary>
     [Theory]
     [InlineData("EI01", "EA")]

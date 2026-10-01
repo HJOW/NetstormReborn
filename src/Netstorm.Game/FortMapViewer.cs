@@ -38,14 +38,14 @@ internal sealed partial class FortMapViewer : IDisposable
     private readonly Texture2D _pixel;
     private readonly Dictionary<(int Frame, int Color), (Texture2D Texture, Point Offset)> _textures = [];
     private readonly FortMapObject[] _sorted;
-    private readonly FortTerrainPreview _terrain;
+    private FortTerrainPreview _terrain;
     private readonly TypeInfo _terrainType;
     private readonly TypeInfo _edgeFarmType;
     private readonly TypeInfo _fringeType;
     private readonly TypeInfo _supportTopType;
     private readonly TypeInfo _supportBottomType;
-    private readonly IReadOnlyList<FortTerrainFringeSprite> _fringes;
-    private readonly IReadOnlyList<FortEdgeFarmTile> _edgeFarms;
+    private IReadOnlyList<FortTerrainFringeSprite> _fringes;
+    private IReadOnlyList<FortEdgeFarmTile> _edgeFarms;
     private readonly HashSet<(int X, int Y)> _edgeFarmCells;
     private bool _showChunks;
     private Vector2 _camera;
@@ -226,6 +226,7 @@ internal sealed partial class FortMapViewer : IDisposable
             }
         }
         // 시드로 생성한 지면을 원본 isle 타일로 그린다.
+        RefreshTerritoryAppearance();
         foreach (FortTerrainTile tile in _terrain.Tiles)
         {
             if (_edgeFarmCells.Contains((tile.X, tile.Y)))
@@ -295,6 +296,7 @@ internal sealed partial class FortMapViewer : IDisposable
         }
         DrawPlacedUnits(batch, center);
         DrawBridgeWorld(batch, center);
+        DrawCombat(batch, font, center);
         batch.Draw(_pixel, new Rectangle(0, 0, width, HeaderHeight), new Color(18, 24, 38));
         batch.DrawString(font, $"맵: {Name} | 오브젝트 {_map.Objects.Count}개 | 확대 {_zoom:0.##}배 | 언어: {Language}", new Vector2(16, 10), Color.Gold);
         batch.DrawString(font, $"방향키 / 우클릭 / 화면 끝: 이동 · 휠: 확대 · Home: 사제 위치 · G: 청크 윤곽 · P: 배치 시험 · B: 다리 조각 · Esc: {(IsMissionMode ? "메뉴" : "종료")}", new Vector2(16, 38), Color.White);

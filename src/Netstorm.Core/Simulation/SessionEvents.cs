@@ -111,6 +111,21 @@ public sealed record SessionPlacementCheck(CommandFailure Failure, PlacementChec
 /// <summary>게임 세션에서 일어난 일의 종류 (화면 알림·소리·기록용).</summary>
 public enum SessionEventKind
 {
+    /// <summary>포대가 탄을 발사함 (EntityId = 발사자).</summary>
+    ShotFired,
+
+    /// <summary>탄이 맞아 체력이 줄어듦 (EntityId = 피해 대상).</summary>
+    EntityDamaged,
+
+    /// <summary>체력을 모두 잃어 오브젝트가 파괴됨.</summary>
+    EntityDestroyed,
+
+    /// <summary>사제가 체력 절반에서 기절해 보호막을 얻음.</summary>
+    PriestStunned,
+
+    /// <summary>신전이 있는 사제가 체력을 회복해 기절에서 깨어남.</summary>
+    PriestRecovered,
+
     /// <summary>유닛을 놓음</summary>
     UnitPlaced,
 

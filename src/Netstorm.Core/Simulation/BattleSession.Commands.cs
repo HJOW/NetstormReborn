@@ -303,29 +303,7 @@ public sealed partial class BattleSession
         }
         int refund = StormPower.SalvageValue(entity.Cost);
         player.StormPower += refund;
-        Map.RemoveOccupant(entity.Footprint);
-        Map.RemoveSource(entity.Id);
-        if (entity.Kind == ObjectKind.Temple)
-        {
-            // 템플이 없어지면 섬은 빈 섬이 되고 다리 조각·골렘이 생산 창에서 사라진다
-            if (entity.Territory is int territory && Map.Ownership.OwnerOf(territory) == entity.Owner)
-            {
-                Map.Ownership.RemoveTemple(territory);
-            }
-            player.Deck.RemoveTemple();
-        }
-        else if (entity.Kind == ObjectKind.Workshop)
-        {
-            // 워크샵이 없어지면 그 워크샵으로 등록한 유닛이 덱에서 사라진다
-            player.Deck.RemoveWorkshop(entity.Id);
-        }
-        _entities.Remove(entity.Id);
-        WeakenBridgesAround(entity);
-        // 선택하고 있던 오브젝트가 없어지면 선택도 사라진다
-        foreach (PlayerState viewer in _players.Values.Where(p => p.SelectedEntityId == entity.Id))
-        {
-            ClearSelection(viewer);
-        }
+        RemoveEntity(entity);
         Emit(SessionEventKind.Salvaged, command.Player, entity.Id, $"{entity.DisplayName} 회수 (+{refund})");
         return CommandResult.Ok();
     }

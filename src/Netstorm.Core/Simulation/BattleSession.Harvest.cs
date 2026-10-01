@@ -33,7 +33,7 @@ public sealed partial class BattleSession
             return new CommandResult(CommandFailure.WrongKind);
         }
         GameEntity? priest = _entities.Values.FirstOrDefault(e => e.Kind == ObjectKind.Priest && e.Owner == command.Player);
-        if (priest == null)
+        if (priest == null || priest.IsStunned)
         {
             return new CommandResult(CommandFailure.NoPriest);
         }
@@ -82,7 +82,7 @@ public sealed partial class BattleSession
             GameEntity? priest = Entity(task.PriestId);
             GameEntity? geyser = Entity(task.GeyserId);
             GameEntity? temple = Entity(task.TempleId);
-            if (priest == null || geyser == null || temple is not { IsComplete: true })
+            if (priest == null || priest.IsStunned || geyser == null || temple is not { IsComplete: true })
             {
                 _harvestTasks.Remove(task.PriestId);
                 continue;

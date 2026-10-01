@@ -12,7 +12,7 @@ namespace Netstorm.Core.Simulation;
 /// <item><description>시간은 정수 틱이다. 게임 시각(초) = 틱 ÷ 초당 틱 수. 다리 조각 채우기(1초)·붕괴(10초)·건설·재충전은 모두 틱으로 센다.</description></item>
 /// <item><description>화면은 <see cref="Advance"/> 에 흐른 실제 시간을 주고, <see cref="DrainEvents"/> 로 일어난 일을 받아 알림을 띄운다.</description></item>
 /// </list>
-/// 사제의 가이저 왕복 수집은 구현했으며, 다른 유닛 이동·전투·AI 는 추후 규칙을 분석한다.
+/// 사제 수집과 포대 전투를 처리한다. 비행체 출격·수송·전략 AI는 후속 구현이다.
 /// </summary>
 public sealed partial class BattleSession
 {
@@ -273,7 +273,7 @@ public sealed partial class BattleSession
     }
 
     /// <summary>
-    /// 틱 하나를 진행한다. 순서: 명령 실행 → 사제 수집·이동 → 건설 완료 → 튜토리얼 단계 처리 → 플레이어별 다리 칸 채우기 → 다리 붕괴.
+    /// 틱 하나를 진행한다. 순서: 명령 실행 → 사제 수집·이동 → 건설 완료 → 전투 → 튜토리얼 단계 처리 → 플레이어별 다리 칸 채우기 → 다리 붕괴.
     /// 이 순서가 바뀌면 같은 명령열의 결과가 달라지므로 락스텝·리플레이를 위해 고정한다.
     /// </summary>
     private void Step()
@@ -283,6 +283,7 @@ public sealed partial class BattleSession
         ExecuteQueuedCommands();
         UpdateHarvests();
         CompleteConstructions();
+        UpdateCombat();
         if (Tutorial != null && RunsTutorial)
         {
             // 이번 틱에 일어난 이벤트(명령 결과·완공)를 보고 단계를 처리한다
@@ -456,7 +457,12 @@ public sealed partial class BattleSession
             hash.Add(entity.CarriedCrystals);
             hash.Add(entity.IsComplete ? 1 : 0);
             hash.Add(entity.CompleteTick);
+            hash.Add(BitConverter.DoubleToInt64Bits(entity.HitPoints));
+            hash.Add(entity.IsStunned ? 1 : 0);
+            hash.Add(entity.AttackTargetId);
+            hash.Add(entity.NextAttackTick);
         }
+        AddCombatChecksum(hash);
         // 사제의 왕복 방향·예약 경로·남은 이동량도 다음 결과를 바꾸므로 검사합에 포함한다.
         foreach (PriestHarvestTask task in _harvestTasks.Values)
         {

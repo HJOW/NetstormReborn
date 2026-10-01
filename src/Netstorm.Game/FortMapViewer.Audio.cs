@@ -59,6 +59,12 @@ internal sealed partial class FortMapViewer
     {
         switch (sessionEvent.Kind)
         {
+            case SessionEventKind.ShotFired:
+                if (_session.Entity(sessionEvent.EntityId)?.Type.Definition.GetString("fireSound") is { Length: > 0 } fire)
+                {
+                    QueueSound(fire);
+                }
+                break;
             case SessionEventKind.BuildingCompleted:
                 QueueSound(BuildDoneSound);
                 if (_session.Entity(sessionEvent.EntityId)?.Type.Definition.GetString(BuildDoneSoundProperty) is { Length: > 0 } special)

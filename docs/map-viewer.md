@@ -1,5 +1,11 @@
 # 개발용 맵 뷰어
 
+2026-10-01 **포대 전투** 추가: 미션에서는 브리핑을 닫은 뒤 자동 공격한다. 맵만 열었을 때는 **F3**으로
+전투와 세션 시간 진행을 켜고 끈다. 손상 체력 막대·선택(T) 체력 수치·탄·Vander Tower 번개·사제 기절 고리를 표시한다.
+신전 완공·파괴 뒤 섬 원소·소유자색도 갱신한다. `--script "combat 1; wait 1"`로 검증할 수 있다.
+전투 공식·탄속 등의 근사와 미구현 범위는 [전투 구현 문서](gameplay/combat.md), 새 영상 근거는
+[YouTube 캠페인 3 관찰](videos/youtube-act3-combat.md)을 참고한다. F3은 현재 개발용이며 원본 단축키와 다르다.
+
 원본 `.fort`의 저장된 오브젝트를 16×11px/칸 좌표계로 표시한다.
 원본 데이터 탐색은 기존 `GameDataLocator`를 사용한다 (`NETSTORM_DATA` 지정 가능).
 
@@ -40,7 +46,7 @@ dotnet run --project src/Netstorm.Game -- --map savetheisland --language korean
 | 실행 방법 | 세션 시간 | 생산 규칙 (기술 허용 표·덱 등록·재충전·회수 금지) | 시작 Storm Power·지식 |
 |---|---|---|---|
 | `--mission 이름` (예: `tutorial1`, `tutorial2`, `thewarbegins`) | 계속 흐름. 단 **안내·브리핑 창이 열려 있는 동안은 멈춘다**(미션을 열면 A. 브리핑이 먼저 뜨고 닫은 뒤부터 흐름) | 켜짐 | 미션 머리의 `myStartMoney`·`myTech`, 전투 옵션 덮어쓰기(튜토리얼 2) |
-| `--map 이름` | P·B 모드가 켜진 동안만 흐름 (맵만 볼 때 저장된 다리가 무너지지 않도록) | 꺼짐 = **시험 모드** (규칙 조건만 맞으면 어떤 유닛이든 놓는다) | 맵의 `Money` 섹션 |
+| `--map 이름` | P·B 또는 F3 전투가 켜진 동안 흐름 (처음에는 정지) | 꺼짐 = **시험 모드** (규칙 조건만 맞으면 어떤 유닛이든 놓는다) | 맵의 `Money` 섹션 |
 
 * `--mission`은 미션 스크립트에서 맵(`loadFort`)과 시작 조건을 읽어 연다. `--map`과 함께 쓸 수 없다.
 * 미션 중 Esc → `Game`을 클릭하면 목표 다시 보기(F8), Restart Mission, Leave Mission, Quit Game을 고를 수 있다. Leave Mission 확인 창의 Main Menu는 현재 개발용 기본 화면으로 돌아가고, Replay Mission은 같은 미션을 처음부터 다시 연다. Continue Mission은 확인 창을 닫는다. Restart Mission도 같은 미션을 다시 로드하며 첫 안내와 시작 Storm Power를 복원한다. [원본 실행 관찰](screens/README.md#19-replay-missionrestart-mission-전환-2026-09-30-windows-hjow-athlon).
@@ -79,6 +85,7 @@ dotnet run --project src/Netstorm.Game -- --map savetheisland --language korean
 | `construct 타입 x,y` | 사제가 건물(템플·워크샵·알타·아웃포스트)을 짓기 시작 |
 | `harvest x,y` | 그 칸의 가이저에 사제를 보내 반복 수확 |
 | `home` | F4 화면 복귀와 같은 튜토리얼 1 신호 |
+| `combat 0 또는 1` | 자동 포대 전투 끄기/켜기. 시간 정지는 Space |
 | `place 타입 x,y` | 생산 창의 유닛을 배치 |
 | `register 타입` | 그 유닛을 받을 수 있는 첫 워크샵에 지식으로 등록 |
 | `salvage x,y` | 그 칸의 내 오브젝트를 회수 |

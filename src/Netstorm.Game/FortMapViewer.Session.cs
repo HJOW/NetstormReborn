@@ -36,8 +36,8 @@ internal sealed partial class FortMapViewer
     /// <summary>최근 세션 이벤트 문구 (배치 성공·거부·건설 완료 등)</summary>
     private string _notice = "";
 
-    /// <summary>세션 시간이 흐르고 있는지: 일시정지가 아니고, 미션이거나 배치·다리 시험 모드가 켜져 있다</summary>
-    private bool SimulationRunning => !_simulationPaused && (_mission != null || _placementMode || _bridgeMode);
+    /// <summary>세션 시간이 흐르고 있는지: 일시정지가 아니고, 미션 또는 배치·다리·전투 시험이 켜져 있다.</summary>
+    private bool SimulationRunning => !_simulationPaused && (_mission != null || _placementMode || _bridgeMode || _session.CombatEnabled);
 
     /// <summary>
     /// 맵에서 게임 세션을 만든다. 미션이 있으면 시작 Storm Power·지식·전투 옵션이 미션 값이고 생산 규칙(기술 허용 표·덱·재충전·회수 금지)을
@@ -49,6 +49,7 @@ internal sealed partial class FortMapViewer
         int? startStormPower = fort.Money is float money && money > 0 ? (int)money : FallbackStormPower;
         _session = BattleSessionFactory.Create(_map, _terrain.IslandCells, _edgeFarmCells, catalog, mission, TestPlayer, startStormPower);
         _session.EnforceProductionRules = mission != null;
+        _session.CombatEnabled = mission != null;
     }
 
     /// <summary>
@@ -67,6 +68,11 @@ internal sealed partial class FortMapViewer
         if (Pressed(keyboard, Keys.K))
         {
             _session.EnforceProductionRules = !_session.EnforceProductionRules;
+        }
+        if (Pressed(keyboard, Keys.F3))
+        {
+            _session.CombatEnabled = !_session.CombatEnabled;
+            _notice = _session.CombatEnabled ? "포대 전투 켜짐" : "포대 전투 꺼짐";
         }
         if (Pressed(keyboard, Keys.T) && mouse.Y >= HeaderHeight)
         {
@@ -172,6 +178,9 @@ internal sealed partial class FortMapViewer
                     break;
                 case "rules":
                     _session.EnforceProductionRules = Word(1) != "0";
+                    break;
+                case "combat":
+                    _session.CombatEnabled = Word(1) != "0";
                     break;
                 case "allow":
                 case "deny":

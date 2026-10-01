@@ -6,7 +6,7 @@ namespace Netstorm.Core.Simulation;
 /// <summary>
 /// 게임 세션 안의 오브젝트 하나 (맵에 저장되어 있던 것 또는 게임 중 놓거나 지은 것).
 /// 모양·비용·발자국 같은 값은 .type 정의(<see cref="Type"/>)에서 읽는 데이터 구동 방식이다.
-/// 사제의 현재 위치·운반 결정 상태를 저장한다. 다른 유닛의 이동·체력·전투 상태는 추후 추가한다.
+/// 사제의 위치·운반 결정, 체력·기절 및 포대의 목표·재장전 상태를 저장한다.
 /// </summary>
 public sealed class GameEntity
 {
@@ -43,6 +43,21 @@ public sealed class GameEntity
     /// <summary>건설이 시작된 틱 (건설 진행률 계산용, 처음부터 완성인 오브젝트는 0)</summary>
     public long StartTick { get; internal set; }
 
+    /// <summary>타입의 최대 체력. 0이면 현재 전투 모델에서 피해 대상이 아니다.</summary>
+    public double MaxHitPoints { get; }
+
+    /// <summary>현재 체력. 원본 저장 맵은 최대 체력으로 시작한다.</summary>
+    public double HitPoints { get; internal set; }
+
+    /// <summary>체력 절반에서 보호막을 두른 사제인지. 포획은 후속 구현이다.</summary>
+    public bool IsStunned { get; internal set; }
+
+    /// <summary>유지 중인 사격 목표 번호. 0이면 목표가 없다.</summary>
+    public int AttackTargetId { get; internal set; }
+
+    /// <summary>다음 발사를 허용할 틱.</summary>
+    public long NextAttackTick { get; internal set; }
+
     /// <summary>오브젝트를 만든다</summary>
     /// <param name="id">오브젝트 번호</param>
     /// <param name="type">타입</param>
@@ -60,6 +75,8 @@ public sealed class GameEntity
         Footprint = footprint;
         Territory = territory;
         Source = source;
+        MaxHitPoints = Math.Max(0, type.Definition.GetDouble("maxHitPoints") ?? 0);
+        HitPoints = MaxHitPoints;
     }
 
     /// <summary>화면에 보이는 설명 이름 (.type 의 description, 없으면 타입 이름)</summary>
