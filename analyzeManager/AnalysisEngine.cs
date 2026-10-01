@@ -28,6 +28,35 @@ public sealed class AnalysisRequest
     public string EvidenceHash { get; set; } = "";
     public bool Force { get; set; }
     public bool IncludeImage { get; set; } = true;
+    // 아래는 YouTube 영상 분석(youtube_*) 전용 인자다 (docs/analyze-manager.md "YouTube 영상 분석").
+    /// <summary>영상·채널·재생목록 주소</summary>
+    public string Url { get; set; } = "";
+    /// <summary>영상 ID (url 대신)</summary>
+    public string VideoId { get; set; } = "";
+    /// <summary>프레임 시각 쉼표 목록 (예: "612.5, 10:12.5")</summary>
+    public string Times { get; set; } = "";
+    /// <summary>시작 시각(초): 프레임 간격 지정·구간 저장</summary>
+    public double? Start { get; set; }
+    /// <summary>프레임 간격(초)</summary>
+    public double? Step { get; set; }
+    /// <summary>프레임 수 (start·step 과 함께)</summary>
+    public int Count { get; set; }
+    /// <summary>구간 끝 시각(초)</summary>
+    public double? End { get; set; }
+    /// <summary>메모를 붙일 영상 시각(초)</summary>
+    public double? Time { get; set; }
+    /// <summary>받을 스트림의 최대 세로 해상도 (0 = 기본)</summary>
+    public int MaxHeight { get; set; }
+    /// <summary>관찰표 열 수 (0 = 자동)</summary>
+    public int Columns { get; set; }
+    /// <summary>관찰표 칸 폭 (0 = 기본)</summary>
+    public int CellWidth { get; set; }
+    /// <summary>목록 조회 개수 (0 = 기본)</summary>
+    public int Limit { get; set; }
+    /// <summary>스트림이 메타데이터보다 길어도(서버 삽입 광고 의심) 진행</summary>
+    public bool AllowDurationMismatch { get; set; }
+    /// <summary>구간 저장에 소리 포함</summary>
+    public bool IncludeAudio { get; set; }
 }
 
 /// <summary>프로토콜과 독립적인 도구 결과. 이미지는 CLI에서는 경로, MCP에서는 이미지 콘텐츠로 제공한다.</summary>
@@ -38,12 +67,31 @@ public sealed class AnalysisEngine
 {
     public SessionStore Store { get; }
 
+    /// <summary>원본 게임 대신 YouTube 영상을 읽는 도구 (게임 실행·데스크톱 잠금과 무관)</summary>
+    public YouTubeAnalyzer YouTube { get; }
+
     /// <summary>저장소를 지정해 기록 관리자와 연결한다.</summary>
-    public AnalysisEngine(string repository) => Store = new SessionStore(repository);
+    public AnalysisEngine(string repository)
+    {
+        Store = new SessionStore(repository);
+        YouTube = new YouTubeAnalyzer(repository);
+    }
 
     /// <summary>제한된 명령만 실행하고 오류도 AI가 재시도에 쓸 수 있는 구조화된 결과로 돌려준다.</summary>
     public async Task<AnalysisResult> ExecuteAsync(string tool, AnalysisRequest request, CancellationToken cancellation = default)
     {
+        if (tool.StartsWith("youtube_", StringComparison.Ordinal))
+        {
+            // 영상 분석은 게임을 실행하지 않으므로 데스크톱 잠금 없이 처리한다 (내려받는 동안 게임 도구를 막지 않도록).
+            try
+            {
+                return await YouTube.ExecuteAsync(tool, request, cancellation);
+            }
+            catch (Exception error)
+            {
+                return new(new { error = error.Message, tool, cancelled = error is OperationCanceledException }, IsError: true);
+            }
+        }
         AnalysisSession? session = null;
         try
         {

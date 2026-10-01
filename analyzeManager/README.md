@@ -4,6 +4,8 @@ AI가 CLI 또는 로컬 stdio MCP로 원본 NetStorm의 복사본을 실행·조
 
 사용자 직접 조작용 `guide --session ID --steps-file 안내.txt` 모드도 있다. 게임 옆에 단계 안내를 띄우고 사용자 입력·화면·기본 출력 장치 소리를 분할 저장한다. 기존 CLI/MCP 조작 방식은 그대로 사용할 수 있다. [사용법과 파일 형식](../docs/analyze-manager.md#사용자-직접-조작-녹화-모드).
 
+**YouTube 영상 분석(2026-10-01):** `youtube_probe`·`youtube_list`·`youtube_frames`·`youtube_clip`·`youtube_note`·`youtube_videos` 도구(CLI·MCP 공통)로 게임을 실행하지 않고 YouTube 플레이 영상의 지정 시각 프레임·구간을 읽는다. 재생기 광고는 원본 스트림에 없고, 서버 삽입 광고 의심(스트림이 더 김)은 거부하며, 업로더가 넣은 협찬 구간은 SponsorBlock 으로 표시한다. yt-dlp·ffmpeg 필요. [사용법](../docs/analyze-manager.md#youtube-영상-분석-원본-게임-실행-없음).
+
 `record-play --session ID`는 지침 없이 자유롭게 플레이하는 동안 같은 방식으로 녹화한다. 안내 창은 녹화 중·중단·오류와 재시작 가능 여부를 표시한다. 분할 영상·음성·입력과 파일 색인은 `playingVideos/<세션 ID>/`에 남는다. [녹화 분석 사용법](../docs/analyze-manager.md#기존-게임-플레이-녹화-분석-모드).
 
 **현재 상태:** Windows에서 실제 게임 실행·MCP PNG 전달과 사용자 직접 조작 녹화(튜토리얼 1·2 완료, 영상·소리·입력 기록)를 확인했다. Wine에서는 입력 전달·창 DC 캡처를 확인했다. 최신 캡처 변경 뒤 Windows의 게임 없는 Release 빌드·단위 테스트·MCP 기본 검사는 통과했다. 실제 녹화 결과와 남은 검증 범위는 [검증 상태](../docs/analyze-manager.md#사용자-직접-조작-녹화-모드)에 기록했다.

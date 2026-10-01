@@ -4,6 +4,8 @@
 
 `analyzeManager/`는 AI가 원본 게임을 직접 관찰할 때 사용하는 Windows 전용 보조 프로그램이다. CLI와 로컬 stdio MCP가 같은 엔진을 호출한다. 외부 AI가 캡처를 해석하고 다음 입력을 선택하며, 도구는 입력·시각·화면·메모를 문서로 기록한다. 기존 exe/영상/파일 분석과 함께 사용할 수 있다.
 
+**2026-10-01 추가:** 원본 게임 대신 **YouTube 플레이 영상**을 읽는 `youtube_*` 도구(CLI·MCP 공통)가 있다. 게임을 실행하지 않으므로 아래 개발자 확인 규칙의 대상이 아니다. → [YouTube 영상 분석](#youtube-영상-분석-원본-게임-실행-없음)
+
 **실행 상태:** 2026-09-29 사용자가 실제 게임 실행 테스트를 중단하도록 요청했으나, 이후 `AGENTS.md`에 지정된 시스템에서는 확인 없이 게임을 실행해도 된다고 명시했다. 따라서 지정 시스템에서는 게임 실행을 진행할 수 있다. 그 밖의 시스템에는 기존 중단 지시가 유지되며 별도 재개 지시가 필요하다. 최신 진행 상태는 [LEFT_JOBS.md](../LEFT_JOBS.md) 첫 인수인계 절을 따른다.
 
 ### 실제 게임 실행 전 개발자 확인
@@ -184,6 +186,7 @@ analyzeManager/bin/Release/net10.0-windows/Netstorm.AnalyzeManager.exe call capt
 | `record_observation` | `sessionId`, `note`, `evidenceHash` | AI 해석 메모와 같은 세션의 증거 연결 |
 | `set_guide_steps` | `sessionId`, `steps` | 줄 단위 안내를 세션에 저장해 사용자 조작 창에서 표시 |
 | `end_session` | `sessionId`, `force` | 종료 요청, 확인 창이 남으면 `closed=false`, 증거 보존 |
+| `youtube_probe` 외 5개 | `url`·`videoId` 등 | 게임 실행 없이 YouTube 영상을 읽는다 — [YouTube 영상 분석](#youtube-영상-분석-원본-게임-실행-없음) |
 
 입력 예시:
 
@@ -265,6 +268,74 @@ analyzeManager/bin/Release/net10.0-windows/Netstorm.AnalyzeManager.exe record-pl
 파일은 저장소의 `playingVideos/<SESSION_ID>/`에 저장된다. `video-0001.avi` 등은 게임 창의 10 FPS MJPEG 영상이며 **커서·소리가 영상 안에 들어 있지 않다**. 같은 번호의 `.frames.csv`에 프레임 시각이 있고, `audio-0001.wav` 등의 Windows 기본 출력 소리와 시작 시각 `.start.txt`, `input-0001.jsonl` 등의 게임 입력·좌표가 함께 남는다. AVI와 WAV는 각각 48,000,000바이트 전에 자동으로 다음 파일을 시작해 **파일 하나가 50 MB에 이르지 않도록** 한다. 총 녹화 용량에는 별도 한도가 없으므로 긴 플레이 전에는 저장 공간을 확인한다. `recording-index.json`은 녹화가 중단될 때 완성된 조각의 이름·바이트 크기·시각 파일을 갱신한다. `playingVideos/`의 내용은 Git에서 제외된다.
 
 사용자가 프롬프트로 녹화 완료를 알리면 AI는 해당 세션의 `recording-index.json`에서 이번 영상 목록을 찾고, `.frames.csv`와 입력 JSONL의 시각을 맞춰 필요한 장면의 JPEG 프레임을 추출·관찰한 뒤 근거 시각을 적어 문서화한다. WAV는 소리가 필요한 관찰에 사용한다. 기존 `tools/videoframes.py`는 FFmpeg가 있는 환경의 영상 추출 도구이며, 이 모드의 MJPEG AVI는 위 수동 녹화 절의 RIFF `00dc` 청크 추출 방법으로 FFmpeg 없이도 읽을 수 있다. 짧은 사건의 정확한 시각이나 화면에 드러나지 않는 규칙은 별도 관찰이 필요하다.
+
+## YouTube 영상 분석 (원본 게임 실행 없음)
+
+YouTube에는 원본 게임 플레이 영상이 많다(AGENTS.md의 튜토리얼·캠페인 영상, 전용 채널 `@netstormcampaigns2591`). 직접 플레이·녹화하는 것보다 빠르게 화면·흐름·시간을 확인할 수 있도록, 영상 주소를 받아 **필요한 시각의 프레임만** 원격 스트림에서 읽는 도구를 두었다(2026-10-01). CLI `call`과 MCP가 같은 엔진(`YouTubeAnalyzer`)을 쓰며, AI는 주로 MCP로 사용한다. MCP 응답은 구조화 데이터와 함께 프레임(여러 장이면 관찰표) PNG 이미지를 돌려준다.
+
+* **게임을 실행하지 않는다.** `start_session`의 개발자 확인 규칙 대상이 아니며 데스크톱 잠금도 쓰지 않는다(게임 분석과 동시에 사용 가능).
+* **인터넷을 쓴다.** 외부 프로그램 `yt-dlp`(메타데이터·스트림 주소)와 `ffmpeg`/`ffprobe`(원격 탐색·디코딩)가 필요하다. `PREPARE.ps1`의 yt-dlp·FFmpeg 항목으로 설치하거나 환경 변수 `NETSTORM_YTDLP`·`NETSTORM_FFMPEG`·`NETSTORM_FFPROBE`로 경로를 지정한다. 받는 대상은 YouTube 도메인 주소뿐이다(다른 사이트 주소는 거부).
+* 기록은 Git 제외 경로 `extracted/youtube/<영상 ID>/`에 남는다.
+
+### 도구
+
+| 도구 | 주요 인자 | 결과·용도 |
+|---|---|---|
+| `youtube_probe` | `url`(영상 주소 또는 11자 ID) | 제목·채널·길이·원본 화질·**업로더 챕터**·**SponsorBlock 구간**·주의 사항. `info.json` 저장. **다른 영상 도구보다 먼저 호출**한다 |
+| `youtube_list` | `url`(채널 `@핸들`·`/channel/ID`·재생목록), `limit`(기본 100, 최대 500) | 영상 ID·제목·길이 목록. 분석할 영상을 고를 때 쓴다 |
+| `youtube_frames` | `url`/`videoId`, `times`(쉼표 목록) 또는 `start`·`step`·`count`(최대 60장), `region`, `maxHeight`(기본 1080), `columns`, `cellWidth`, `allowDurationMismatch`, `includeImage` | 지정 시각 프레임 PNG(`frames/<sha256>.png`)와, 여러 장이면 시각을 적은 관찰표(`sheets/<sha256>.png`). 한 장당 약 3~5초. 같은 시각·화질·잘라내기는 다시 받지 않는다 |
+| `youtube_clip` | `url`/`videoId`, `start`·`end`(초, 최대 300초), `maxHeight`(기본 720), `includeAudio` | 원본 프레임률 그대로의 mp4(`clips/`). 시작 프레임을 다시 인코딩해 **clip 시각 t = 영상 시각 start + t**. 50 MB 미만이어야 하며 넘으면 실패를 알린다. 애니메이션·이동·건설 시간처럼 프레임 단위 측정용 |
+| `youtube_note` | `url`/`videoId`, `note`(최대 8000자), `time`, `evidenceHash` | AI 해석 메모를 `notes.jsonl`·`report.md`에 남긴다. 증거는 이 영상에서 뽑은 프레임 sha256 만 받는다 |
+| `youtube_videos` | 없음 | 조회해 둔 영상 목록(재접속 뒤 이어서 분석) |
+
+시각 표기: `612.5`, `10:12.5`, `1:02:03`, `1h2m3s`, `75s`. 주소의 `t=`·`start=`는 `youtube_probe` 응답의 `urlStartSeconds`로 돌려준다. `region`은 **원본 스트림 해상도** 기준 `x,y,width,height`다(1080p 방송 녹화라면 게임 영역 `240,0,1440,1080`).
+
+```powershell
+$exe = "analyzeManager/bin/Release/net10.0-windows/Netstorm.AnalyzeManager.exe"
+& $exe call youtube_probe  --json '{"url":"https://www.youtube.com/watch?v=0p7VvzSxTAY"}'
+& $exe call youtube_frames --json '{"videoId":"0p7VvzSxTAY","times":"8:00, 8:02.5, 1:20:00"}'
+& $exe call youtube_frames --json '{"videoId":"0p7VvzSxTAY","start":0,"step":120,"count":24,"maxHeight":360,"columns":6,"cellWidth":240}'
+& $exe call youtube_clip   --json '{"videoId":"0p7VvzSxTAY","start":480,"end":490}'
+& $exe call youtube_list   --json '{"url":"https://www.youtube.com/@netstormcampaigns2591","limit":50}'
+```
+
+권장 순서: `youtube_list`로 영상 찾기 → `youtube_probe`(챕터로 미션 경계 파악, 광고 성격 구간 확인) → 넓은 간격의 `youtube_frames` 관찰표로 장면 위치 찾기 → 좁은 간격 프레임 또는 `youtube_clip`으로 정밀 관찰 → `youtube_note`로 근거 해시와 함께 기록 → 확정된 결과는 `docs/videos/`에 정리.
+
+### 광고 처리
+
+YouTube 시청 중 나오는 광고가 분석을 오염시키지 않도록 다음과 같이 다룬다.
+
+1. **재생기 광고(앞·중간·끝 광고)는 들어오지 않는다.** 이 광고는 YouTube 재생기가 본 영상과 별개로 트는 다른 영상이다. 도구는 브라우저로 재생하거나 화면을 녹화하지 않고 yt-dlp가 알려 준 **원본 미디어 스트림**을 ffmpeg로 직접 읽으므로, 프레임에 광고가 섞이지 않고 **영상 시각 = 업로드 원본의 시각**이다. 광고 길이만큼 시각이 밀리는 일도 없다. (같은 이유로 브라우저 재생 화면 캡처로 분석하지 않는다.)
+2. **서버 삽입 광고(SSAI) 대비:** YouTube는 광고를 영상 스트림에 직접 이어 붙이는 방식을 시험한 적이 있다. 그런 스트림은 원래 길이보다 길어지므로, 스트림 주소를 처음 받을 때 `ffprobe`로 실제 길이를 재서 메타데이터 길이와 비교한다. `max(2초, 길이의 0.5%)`보다 길면 시각이 어긋날 수 있으므로 **`youtube_frames`·`youtube_clip`이 거부**한다. 잠시 뒤 다시 시도하거나(`stream-h*.json` 삭제) 위험을 알고 `allowDurationMismatch=true`로 진행한다. 실측: `0p7VvzSxTAY` 스트림 6093.5초 / 메타데이터 6094초(정상).
+3. **업로더가 영상 안에 넣은 광고**(협찬·자기 홍보·구독 요청·인트로·아웃트로 등)는 스트림의 일부라 막을 수 없다. `youtube_probe`가 **SponsorBlock** 공개 구간을 함께 받아 `nonContentSegments`로 알려 주고, 그 안의 프레임은 `nonContentSegment`(관찰표에서는 주황 글씨)로, 겹치는 구간 저장은 `warnings`로 표시한다. SponsorBlock 등록이 없는 영상도 많으므로(지금까지 조회한 영상은 모두 0개) 프레임이 게임 화면인지는 AI가 눈으로도 확인한다. 업로더 챕터(`chapters`)는 광고가 아닌 미션 경계 등으로 쓴다.
+4. 스트림 주소는 몇 시간 뒤 만료된다(주소의 `expire`). 만료 10분 전이면 새로 받고, 추출 중 거부되면 한 번 새로 받아 다시 시도한다.
+
+### 저장 형식
+
+```text
+extracted/youtube/<영상 ID>/
+  info.json            youtube_probe 결과 (제목·길이·챕터·SponsorBlock 구간·주의 사항)
+  stream-h<높이>.json   스트림 주소 캐시 (형식·해상도·fps·스트림 길이·만료 시각)
+  frames/<sha256>.png  추출 프레임 (같은 그림은 파일 하나)
+  frames.jsonl         시각·화질·잘라내기 → 프레임 해시 색인 (재사용)
+  sheets/<sha256>.png  관찰표
+  clips/<시작>-<끝>-h<높이>[-a].mp4   구간 저장
+  notes.jsonl          AI 메모
+  report.md            사람이 읽는 기록 (조회·프레임·구간·메모)
+```
+
+### 제약
+
+* 연령 제한·회원 전용·비공개 영상은 로그인 쿠키가 없으면 받지 못한다(현재 쿠키 옵션 없음). 생방송 중인 영상은 길이가 확정되지 않아 주의가 붙는다.
+* 원격 탐색이라 네트워크 상태에 따라 한 장 3~5초가 걸린다. 많은 장면은 낮은 `maxHeight`(예: 360)로 훑은 뒤 필요한 곳만 1080으로 다시 뽑는다.
+* YouTube 재인코딩 영상은 원본 팔레트 색과 다를 수 있고, 업로더의 녹화 해상도·자막·편집이 섞일 수 있다. 색 비교는 스크린샷·원본 자산을, 시간 측정은 `youtube_clip` 프레임을 쓴다. 영상 fps(대개 30·60)보다 짧은 간격은 잴 수 없다.
+* yt-dlp가 YouTube 변경으로 실패하면 `winget upgrade yt-dlp.yt-dlp`로 갱신한다.
+
+### 검증 (2026-10-01, `DESKTOP-HJOW`)
+
+* Release 빌드 오류·경고 0. 단위 테스트 `YouTubeVideoTests`(주소·목록 주소·시각 해석, 광고 성격 구간, 서버 삽입 광고 판정, 만료 시각, 경로 제한) 포함 전체 52개 중 51개 통과·1개 기존 건너뜀.
+* MCP: `python analyzeManager/tests/mcp_smoke.py --exe … --youtube https://youtu.be/CI3dCrUt4tY` 통과(도구 15개, 관찰표가 PNG 이미지 콘텐츠로 옴). 기본 모드도 YouTube 도구 목록·잘못된 주소 거부를 검사한다.
+* CLI 실측: `0p7VvzSxTAY`(1:41:34, 1280×720 30fps, 챕터 5개) 조회, 4장 관찰표 약 25초, 같은 프레임 재사용 0.5초, 10초 구간 저장 약 16초(773 KB, 10.000초 30fps, 첫 프레임이 8:00 프레임과 일치), 채널 목록 5개, 다른 사이트 주소·영상 길이 초과 시각 거부.
 
 ## Windows 원격 데스크톱(RDP)으로 접속한 PC에서 사용할 때 (2026-09-29 확인)
 

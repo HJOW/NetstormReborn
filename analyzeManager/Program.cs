@@ -20,6 +20,9 @@ internal static class Program
 
         도구: list_sessions, start_session, game_status, capture_state,
               game_input, wait_for_change, record_observation, set_guide_steps, end_session
+        YouTube 영상 분석(게임 실행 없음, 인터넷 사용):
+              youtube_probe, youtube_list, youtube_frames, youtube_clip, youtube_note, youtube_videos
+              예: call youtube_frames --json {"url":"https://youtu.be/CI3dCrUt4tY","times":"600, 30:00"}
         AGENTS.md에 지정된 시스템, 또는 개발자가 수동 컨트롤 분석을 직접 요청한 작업 단계에서만 별도 확인 없이 게임을 실행할 수 있습니다.
         그 밖의 경우에는 start_session 전에 목적과 필요성을 설명하고 개발자 확인을 받으세요.
         guide는 이미 실행 중인 세션의 게임 옆에 안내 창을 열며 게임을 새로 실행하지 않습니다.

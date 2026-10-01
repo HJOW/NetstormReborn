@@ -62,6 +62,10 @@ python tools/videoframes.py range "playingVideos/Netstorm Islands at war - Disso
 * [the-war-begins-record-play-20260930.md](the-war-begins-record-play-20260930.md) — 사용자 직접 조작 10 FPS 녹화: 캠페인 1-1 시작, 지식 격자·설명창(호버·구성·시간 흐름), 적 신전 파괴 뒤 섬 테마·소유권 전환, 사제 기절·골렘 포획·제단 의식(다섯 룬)·희생 음악, 승리와 다음 미션 진입. 소리 판독 결과는 [music.md](../exe/music.md). 원본 녹화는 `playingVideos/20260930T154921831Z-8bdcc06b6539/`에 있으며 Git에서 제외됨
 * AV1 소프트웨어 디코딩은 느리므로 긴 구간을 한 번에 뽑지 않는다.
 
+## YouTube 영상 바로 읽기 (2026-10-01)
+
+YouTube 영상은 내려받지 않고 `analyzeManager`의 `youtube_*` 도구(MCP·CLI)로 지정 시각 프레임·짧은 구간만 읽는다. 재생기 광고가 섞이지 않는 원본 스트림을 쓰므로 영상 시각이 업로드 원본 시각과 같다. 사용법·광고 처리: [analyze-manager.md](../analyze-manager.md#youtube-영상-분석-원본-게임-실행-없음). 영상 목록은 AGENTS.md 와 LEFT_JOBS.md 5단계 표, 전용 채널 `https://www.youtube.com/@netstormcampaigns2591`(미션별 스피드런 다수).
+
 ## 소리 판독 도구 `tools/audiomatch.py` (2026-10-01)
 
 `record-play`·`guide` 녹음(세션 폴더의 `audio-*.wav`·`*.start.txt`)을 이어 붙여 원본 소리와 FFT 정규화 상호상관으로 대조한다. 시각은 `video-0001.frames.csv` 첫 프레임 기준 영상 경과 시각이다. numpy 와 ffmpeg 가 필요하다.

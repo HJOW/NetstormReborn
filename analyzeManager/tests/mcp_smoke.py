@@ -11,6 +11,8 @@ import time
 
 # Windows에서만 보조 프로세스의 콘솔 창을 숨긴다. Linux(Wine 경유)에는 해당 플래그가 없다.
 NO_WINDOW = getattr(subprocess, "CREATE_NO_WINDOW", 0)
+# PNG 파일 머리 8바이트 (이미지 콘텐츠 확인용)
+PNG_SIGNATURE = bytes([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A])
 
 
 class Client:
@@ -100,6 +102,8 @@ def main():
     parser.add_argument("--exe", type=Path, required=True)
     parser.add_argument("--repo", type=Path, default=Path(__file__).resolve().parents[2])
     parser.add_argument("--live", action="store_true", help="실제 게임 실행·입력·캡처·종료")
+    parser.add_argument("--youtube", metavar="URL",
+                        help="YouTube 영상 조회·프레임 MCP 응답 확인 (게임 실행 없음, 인터넷 사용)")
     parser.add_argument("--hold-seconds", type=int, default=0, help="추가 관찰용 실행 유지 시간(최대 300초)")
     parser.add_argument("--wine", action="store_true",
                         help="Linux에서 win-x86 배포물을 wine으로 실행 (WINEPREFIX 환경 변수 사용)")
@@ -119,7 +123,8 @@ def main():
         listing = client.request("tools/list", {})["tools"]
         names = {tool["name"] for tool in listing}
         assert names == {"list_sessions", "start_session", "game_status", "capture_state",
-                         "game_input", "wait_for_change", "record_observation", "set_guide_steps", "end_session"}
+                         "game_input", "wait_for_change", "record_observation", "set_guide_steps", "end_session",
+                         "youtube_probe", "youtube_list", "youtube_frames", "youtube_clip", "youtube_note", "youtube_videos"}
         # 각 도구에 입력 객체 스키마가 있는지 실제 협상 결과로 확인한다.
         for tool in listing:
             assert tool["inputSchema"]["type"] == "object"
@@ -129,7 +134,18 @@ def main():
         assert "10.0.0.15" in start_tool["description"] and "vm-debian-codex" in start_tool["description"]
         client.call("list_sessions", {})
         client.call("game_status", {"sessionId": "../invalid"}, expect_error=True)
+        # YouTube 도구: 네트워크 없이 확인할 수 있는 목록 조회와 주소 거부
+        client.call("youtube_videos", {})
+        client.call("youtube_frames", {"url": "https://example.com/watch?v=0p7VvzSxTAY", "times": "1"}, expect_error=True)
         print(json.dumps({"protocol": initialized["protocolVersion"], "tools": len(names)}, ensure_ascii=False), flush=True)
+        if args.youtube:
+            # 실제 YouTube 조회 → 프레임 2장 관찰표가 PNG 이미지 콘텐츠로 오는지 확인한다.
+            probe = client.call("youtube_probe", {"url": args.youtube})["structuredContent"]
+            frames = client.call("youtube_frames", {"url": args.youtube, "times": "10, 20", "maxHeight": 360})
+            images = [item for item in frames["content"] if item["type"] == "image"]
+            assert len(images) == 1 and base64.b64decode(images[0]["data"], validate=True).startswith(PNG_SIGNATURE)
+            print(json.dumps({"youtube": "passed", "videoId": probe["videoId"], "duration": probe["durationSeconds"],
+                              "sheet": frames["structuredContent"]["sheet"]}, ensure_ascii=False), flush=True)
         if args.live:
             started = cli(command, "start_session", {"label": "CLI/MCP 실제 창 모드 연동 검증"})
             session_id = started["data"]["sessionId"]

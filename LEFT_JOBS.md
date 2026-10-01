@@ -9,6 +9,19 @@
 
 ---
 
+## 2026-10-01 (`DESKTOP-HJOW`, 원본 실행 없음) ✅: analyzeManager YouTube 영상 분석 도구 (CLI + MCP)
+
+- **목적(사용자 요청):** 원본 게임을 직접 플레이·녹화하는 대신, YouTube에 올라간 원본 플레이 영상의 주소를 받아 영상 내용을 읽어 분석한다. AI가 주로 쓰므로 **MCP 도구로도 공개**했다.
+- **구현:** `analyzeManager/YouTubeVideo.cs`(주소·시각 해석, 광고 성격 구간·서버 삽입 광고 판정 — 순수 함수), `analyzeManager/YouTubeAnalyzer.cs`(yt-dlp·ffmpeg 실행, `extracted/youtube/<ID>/` 기록), `AnalysisEngine`(인자 추가, `youtube_*`는 데스크톱 잠금 없이 처리), `ExplorerTools`(MCP 도구 6개), `Program`(CLI 사용법).
+  - `youtube_probe`(메타데이터·업로더 챕터·SponsorBlock 구간) / `youtube_list`(채널·재생목록 영상 목록) / `youtube_frames`(**원격 스트림에서 지정 시각만** 디코딩해 PNG, 여러 장이면 시각을 적은 관찰표 이미지 반환, 재사용 색인) / `youtube_clip`(최대 300초 구간을 원본 fps mp4로, 시작 프레임 정확, 50 MB 미만) / `youtube_note`(AI 메모 + 프레임 해시) / `youtube_videos`(조회해 둔 영상).
+- **광고 처리:** (1) 재생기 광고는 별도 영상이라 원본 스트림에 없음 → 브라우저 재생·화면 녹화를 쓰지 않으므로 영상 시각 = 업로드 원본 시각. (2) 서버 삽입 광고 대비: 스트림 길이(ffprobe)가 메타데이터보다 `max(2초, 0.5%)` 넘게 길면 프레임·구간 도구가 거부(`allowDurationMismatch`로만 진행). (3) 업로더가 영상 안에 넣은 협찬·홍보·인트로 등은 SponsorBlock 구간으로 표시(프레임 `nonContentSegment`, 관찰표 주황 글씨, 구간 저장 경고). (4) 만료된 스트림 주소는 자동 갱신·1회 재시도.
+- **검증:** analyzeManager Release 빌드 오류·경고 0. 단위 테스트 52개 중 51개 통과(1개 기존 건너뜀, 신규 `YouTubeVideoTests`). MCP 검사 `mcp_smoke.py --youtube https://youtu.be/CI3dCrUt4tY` 통과(도구 15개, PNG 이미지 콘텐츠). CLI 실측: `0p7VvzSxTAY` 조회(챕터 5개, 스트림 6093.5초/메타데이터 6094초 정상), 프레임 4장 약 25초, 재사용 0.5초, 10초 구간 약 16초, 채널 `@netstormcampaigns2591` 목록, 잘못된 주소·범위 거부. 원본 게임은 실행하지 않았다.
+- **문서:** [analyze-manager.md "YouTube 영상 분석"](docs/analyze-manager.md#youtube-영상-분석-원본-게임-실행-없음), [analyzeManager/README.md](analyzeManager/README.md), [videos/README.md](docs/videos/README.md).
+- **남은 것 / 다음 후보:** 로그인 쿠키(연령 제한·회원 전용 영상) 미지원, 장면 전환 자동 탐지(예: ffmpeg scene 필터로 메뉴·브리핑 창 찾기) 미구현, 영상 소리 판독(`tools/audiomatch.py`는 record-play 녹음 전용) 연결 미구현. 전용 채널의 미션별 스피드런 영상으로 캠페인 2·3 미션 관찰 노트를 만드는 것이 다음 활용 후보다.
+- 변경 파일: `analyzeManager/{YouTubeVideo,YouTubeAnalyzer}.cs`(신규)·`{AnalysisEngine,ExplorerTools,Program}.cs`·`README.md`, `analyzeManager/tests/{YouTubeVideoTests.cs(신규),mcp_smoke.py}`, `docs/analyze-manager.md`, `docs/videos/README.md`, 이 문서. 산출물 `extracted/youtube/`는 Git 제외.
+
+---
+
 ## 2026-10-01 포대 전투 1차 구현 + 추가 YouTube 영상 반영 ✅
 
 - **완료:** 자동 포대 목표 선택·발사 예약·타입 기반 체력/피해·파괴 보상·사제 기절/신전 회복을 `BattleSession.Combat.cs`로 연결했다.
@@ -989,6 +1002,8 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
 | 캠페인 2-2 (Rain Vs. Rain) | 없음 | https://www.youtube.com/watch?v=2NxTN314RnE | |
 | 캠페인 2-3 (Run For It!) | 없음 | https://www.youtube.com/watch?v=LHkgSp0J73E | |
 | 캠페인 3-2 (To The Rescue!) — 2026-09-29 추가 | 없음 | https://www.youtube.com/watch?v=WDQSrGqZAH0 | Complete Victory 캠페인 유일한 영상 (미션 이름은 캠페인 순서로 추정, 영상 확인 시 검증) |
+| 캠페인 3-1~3-5 연속 (Complete Victory 스피드런) | `[Youtube] 3-1 to 3-5.mp4` (일부 PC) | https://www.youtube.com/watch?v=0p7VvzSxTAY | 업로더 챕터: Breaking Through 0:00 · To The Rescue! 13:30 · Vicious 27:05 · Enemy Territory 30:29 · Final Confrontation 34:12 (2026-10-01 `youtube_probe`) |
+| 전용 채널 (미션별 스피드런 다수) | 없음 | https://www.youtube.com/@netstormcampaigns2591 | `youtube_list`로 목록 조회 (2026-10-01 추가) |
 
 * 로컬 영상은 1024×768 풀스크린을 16:9 모니터에서 녹화해 **좌우 검은 여백**이 있다. 프레임을 뽑을 때(`ffmpeg`, 결과는 `extracted/videos/`) 가운데 4:3 영역을 잘라 1024×768 로 맞춘 뒤 스크린샷 분석과 같은 좌표계로 잰다.
   * 형식: **AV1 1920×1080 60fps** + AAC (4개 모두 확인). 게임 화면 = x 240~1679 의 1440×1080 (프레임 4장에서 측정, 계산값과 같음), 1.40625배 확대. 창 모드 스크린샷보다 밝고 채도가 높아(AGENTS.md: HDR 설정 문제로 밝게 촬영) 색 비교에는 쓰지 않는다

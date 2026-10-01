@@ -27,9 +27,13 @@
 - 캠페인 2-2 : https://www.youtube.com/watch?v=2NxTN314RnE
 - 캠페인 2-3 : https://www.youtube.com/watch?v=LHkgSp0J73E
 * 다음 유튜브 URL로부터도 영상 자료를 얻을 수 있다.
+- 캠페인 2-1 : https://www.youtube.com/watch?v=8tcj3rI_YqE
 - 캠페인 3-2 : https://www.youtube.com/watch?v=WDQSrGqZAH0
-  캠페인 3-1 to 3-5 연속 플레이 : https://www.youtube.com/watch?v=0p7VvzSxTAY
-  기존 게임 영상만을 전문으로 올리는 유튜브 채널 : https://www.youtube.com/@netstormcampaigns2591
+- 캠페인 3-5 : https://www.youtube.com/watch?v=b3VzVERd9CE
+- 캠페인 3-1 to 3-5 연속 플레이 : https://www.youtube.com/watch?v=0p7VvzSxTAY
+( 기존 게임 영상만을 전문으로 올리는 유튜브 채널 주소 : https://www.youtube.com/@netstormcampaigns2591 )
+- 캠페인 3-4 (사운드 있음, 후편집 추가요소 주의) : https://youtu.be/t2g9fASt4do?si=-O2tjL5u-cAan6fG
+- 캠페인 3-5 (사운드 있음, 후편집 추가요소 주의) : https://youtu.be/6F8En-b6FXU?si=kfNuAjtnXIdOYpZq
 * 게임 플레이 방법을 소개한 홈페이지도 참고할 수 있다.
   https://hjow.duckdns.org/netstorm/learnmain.htm
 * 스크린샷 자료는 프로젝트 최상위 경로 내 screenShots 디렉토리에 있다.
