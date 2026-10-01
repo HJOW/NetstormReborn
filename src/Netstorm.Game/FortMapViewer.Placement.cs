@@ -120,7 +120,7 @@ internal sealed partial class FortMapViewer
     /// </summary>
     private void UpdatePlacement(KeyboardState keyboard, MouseState mouse)
     {
-        if (Pressed(keyboard, Keys.P))
+        if (!_playUi && Pressed(keyboard, Keys.P))
         {
             _placementMode = !_placementMode;
             // 배치 시험과 다리 조각 시험은 같은 안내 영역을 쓰므로 하나만 켠다.
@@ -134,15 +134,15 @@ internal sealed partial class FortMapViewer
             _lastCheck = null;
             return;
         }
-        if (Pressed(keyboard, Keys.OemCloseBrackets))
+        if (!_playUi && Pressed(keyboard, Keys.OemCloseBrackets))
         {
             _candidateIndex = (_candidateIndex + 1) % _candidates.Length;
         }
-        if (Pressed(keyboard, Keys.OemOpenBrackets))
+        if (!_playUi && Pressed(keyboard, Keys.OemOpenBrackets))
         {
             _candidateIndex = (_candidateIndex + _candidates.Length - 1) % _candidates.Length;
         }
-        if (Pressed(keyboard, Keys.C))
+        if (!_playUi && Pressed(keyboard, Keys.C))
         {
             _session.AssumeConnected = !_session.AssumeConnected;
         }
@@ -315,6 +315,13 @@ internal sealed partial class FortMapViewer
     private void DrawPlacementText(SpriteBatch batch, SpriteFontBase font, int width, int height)
     {
         TypeInfo type = _candidates[_candidateIndex];
+        if (_playUi)
+        {
+            batch.Draw(_pixel, new Rectangle(0, height - 94, width, 40), new Color(35, 32, 28));
+            batch.DrawString(font, $"{type.Definition.GetString("description")} · {type.Definition.GetInt("cost") ?? 0} SP · {_lastCheck?.Describe()}",
+                new Vector2(12, height - 90), _lastCheck?.Allowed == true ? Color.LightGreen : Color.Salmon);
+            return;
+        }
         EnergyRequirement requirement = EnergyRequirement.ForType(type.Definition);
         string description = type.Definition.GetString("description") ?? type.Name;
         string head;

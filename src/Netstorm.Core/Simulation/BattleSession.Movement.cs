@@ -15,7 +15,7 @@ public sealed partial class BattleSession
         if (IsAirborneTransport(mover)) return !route.IsBlocked;
         if (!HasGroundSupport(mover.Footprint.AnchorX, mover.Footprint.AnchorY)) return false;
         if (route.RouteVersion != Bridges.Version)
-            ReplaceMovementRoute(mover, route, FindMovePath(mover, goal));
+            ReplaceMovementRoute(mover, route, FindMovePath(mover, goal, route is UnitMoveTask { Purpose: UnitMovePurpose.MoveToCell }));
         return !route.IsBlocked;
     }
 

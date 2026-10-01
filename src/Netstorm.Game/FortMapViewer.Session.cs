@@ -65,11 +65,11 @@ internal sealed partial class FortMapViewer
         {
             _simulationPaused = !_simulationPaused;
         }
-        if (Pressed(keyboard, Keys.K))
+        if (!_playUi && Pressed(keyboard, Keys.K))
         {
             _session.EnforceProductionRules = !_session.EnforceProductionRules;
         }
-        if (Pressed(keyboard, Keys.F3))
+        if (!_playUi && Pressed(keyboard, Keys.F3))
         {
             _session.CombatEnabled = !_session.CombatEnabled;
             _notice = _session.CombatEnabled ? "포대 전투 켜짐" : "포대 전투 꺼짐";
@@ -86,7 +86,7 @@ internal sealed partial class FortMapViewer
             (int harvestX, int harvestY) = CellAt(new Vector2(mouse.X, mouse.Y));
             SubmitCommand(new HarvestGeyserCommand(TestPlayer, _session.EntityAt(harvestX, harvestY)?.Id ?? 0));
         }
-        UpdateSacrificeInput(keyboard, mouse);
+        if (!_playUi) UpdateSacrificeInput(keyboard, mouse);
         if (SimulationRunning)
         {
             _session.Advance(seconds);

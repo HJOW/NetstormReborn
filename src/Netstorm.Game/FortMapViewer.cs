@@ -22,7 +22,7 @@ internal sealed partial class FortMapViewer : IDisposable
         WorldChunks * FortMap.CellsPerChunk * FortMap.CellPixelWidth,
         WorldChunks * FortMap.CellsPerChunk * FortMap.CellPixelHeight);
     /// <summary>상단 안내 영역 높이 (안내 4줄).</summary>
-    private const int HeaderHeight = 128;
+    private int HeaderHeight => _playUi ? 96 : 128;
     /// <summary>
     /// 원본 미션 시작 화면에서 플레이어 1 사제 칸 기준점이 화면 중심(512, 384)보다 오른쪽·아래로 떨어진 거리.
     /// 원본 캡처 3장(The War Begins!·Save the Island!·Dissolved Alliance!)에서 (525, 393) ±4px 로 측정했다.
@@ -156,6 +156,7 @@ internal sealed partial class FortMapViewer : IDisposable
             _previousMouse = mouse;
             return;
         }
+        bool uiConsumed = _playUi && UpdatePlayUi(mouse, width, height);
         var direction = new Vector2(
             (keyboard.IsKeyDown(Keys.Right) ? 1 : 0) - (keyboard.IsKeyDown(Keys.Left) ? 1 : 0),
             (keyboard.IsKeyDown(Keys.Down) ? 1 : 0) - (keyboard.IsKeyDown(Keys.Up) ? 1 : 0));
@@ -165,7 +166,7 @@ internal sealed partial class FortMapViewer : IDisposable
             // 화면 끝 스크롤은 확대 배율과 상관없이 화면 기준 픽셀로 이동하고, 월드(16×16 청크) 밖으로는 나가지 않는다.
             _camera = Vector2.Clamp(_camera + edgeScroll / _zoom, Vector2.Zero, WorldPixelSize);
         }
-        if (mouse.RightButton == ButtonState.Pressed && _previousMouse.RightButton == ButtonState.Pressed)
+        if (mouse.RightButton == ButtonState.Pressed && _previousMouse.RightButton == ButtonState.Pressed && !(_playUi && (_placementMode || _bridgeMode)))
         {
             _camera -= new Vector2(mouse.X - _previousMouse.X, mouse.Y - _previousMouse.Y) / _zoom;
         }
@@ -188,11 +189,15 @@ internal sealed partial class FortMapViewer : IDisposable
         {
             _showChunks = !_showChunks;
         }
+        if (_playUi && !uiConsumed) UpdatePlayOrders(mouse);
         UpdateSession(seconds, keyboard, mouse);
         if (!TutorialDialogOpen)
         {
-            UpdatePlacement(keyboard, mouse);
-            UpdateBridges(keyboard, mouse);
+            if (!uiConsumed)
+            {
+                UpdatePlacement(keyboard, mouse);
+                UpdateBridges(keyboard, mouse);
+            }
         }
         _previousKeyboard = keyboard;
         _previousMouse = mouse;
@@ -208,6 +213,16 @@ internal sealed partial class FortMapViewer : IDisposable
     public void Draw(SpriteBatch batch, SpriteFontBase font, int width, int height, string displayInfo, SpriteFontBase small)
     {
         var center = new Vector2(width / 2f, (height + HeaderHeight) / 2f);
+        if (_sky != null)
+        {
+            // 원본의 회보라 구름 배경을 지도 전체에 반복한다.
+            for (int y = 0; y < height; y += _sky.Height)
+            {
+                // 가로 방향도 같은 크기로 반복해 와이드 화면을 채운다.
+                for (int x = 0; x < width; x += _sky.Width)
+                    batch.Draw(_sky, new Vector2(x, y), Color.White);
+            }
+        }
         // 진단용 청크 윤곽은 지면 아래에 선택적으로 표시한다.
         if (_showChunks)
         {
@@ -317,15 +332,19 @@ internal sealed partial class FortMapViewer : IDisposable
         DrawFlyers(batch, center);
         DrawCombat(batch, font, center);
         DrawSacrificeStatus(batch, font, center);
-        batch.Draw(_pixel, new Rectangle(0, 0, width, HeaderHeight), new Color(18, 24, 38));
-        batch.DrawString(font, $"맵: {Name} | 오브젝트 {_map.Objects.Count}개 | 확대 {_zoom:0.##}배 | 언어: {Language}", new Vector2(16, 10), Color.Gold);
-        batch.DrawString(font, $"방향키 / 우클릭 / 화면 끝: 이동 · 휠: 확대 · Home: 사제 위치 · G: 청크 윤곽 · P: 배치 시험 · B: 다리 조각 · Esc: {(IsMissionMode ? "메뉴" : "종료")}", new Vector2(16, 38), Color.White);
-        batch.DrawString(font, "F4: 사제 섬으로 · F11: 전체화면 · F10: 와이드 처리 · F9: 원본 해상도 높이 · F7: 가장자리 스크롤 · T: 선택→대상 클릭 · D+클릭: 내려놓기", new Vector2(16, 66), Color.White);
-        batch.DrawString(font, displayInfo, new Vector2(16, 94), Color.LightGray);
-        DrawSessionHud(batch, font, width);
+        if (!_playUi)
+        {
+            batch.Draw(_pixel, new Rectangle(0, 0, width, HeaderHeight), new Color(18, 24, 38));
+            batch.DrawString(font, $"맵: {Name} | 오브젝트 {_map.Objects.Count}개 | 확대 {_zoom:0.##}배 | 언어: {Language}", new Vector2(16, 10), Color.Gold);
+            batch.DrawString(font, $"방향키 / 우클릭 / 화면 끝: 이동 · 휠: 확대 · Home: 사제 위치 · G: 청크 윤곽 · P: 배치 시험 · B: 다리 조각 · Esc: {(IsMissionMode ? "메뉴" : "종료")}", new Vector2(16, 38), Color.White);
+            batch.DrawString(font, "F4: 사제 섬으로 · F11: 전체화면 · F10: 와이드 처리 · F9: 원본 해상도 높이 · F7: 가장자리 스크롤 · T: 선택→대상 클릭 · D+클릭: 내려놓기", new Vector2(16, 66), Color.White);
+            batch.DrawString(font, displayInfo, new Vector2(16, 94), Color.LightGray);
+            DrawSessionHud(batch, font, width);
+        }
+        else DrawPlayUi(batch, font, small, width, height);
         DrawPlacementOverlay(batch, font, center, width, height);
         DrawBridgeOverlay(batch, font, width, height);
-        if (hovered != null && !_placementMode && !_bridgeMode)
+        if (!_playUi && hovered != null && !_placementMode && !_bridgeMode)
         {
             string region = hovered.Territory.HasValue ? $"Terr{hovered.Territory:00}" : "Chaff";
             string text = $"{hovered.Object.Type.Name} ({hovered.X}, {hovered.Y}) | {region} | 소유자 {hovered.Object.Owner} | 다리 {hovered.Object.BridgeShape}";
@@ -404,5 +423,6 @@ internal sealed partial class FortMapViewer : IDisposable
             sprite.Texture.Dispose();
         }
         _pixel.Dispose();
+        _sky?.Dispose();
     }
 }

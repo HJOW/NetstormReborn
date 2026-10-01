@@ -9,7 +9,7 @@ using Netstorm.Core.Rules;
 namespace Netstorm.Game;
 
 /// <summary>
-/// 게임 본체. 기본 확인 화면, --map 맵 뷰어, --sprites 셰이프 뷰어를 제공한다.
+/// 게임 본체. 기본 메인 메뉴·첫 캠페인과 명령줄 맵·셰이프 뷰어를 제공한다.
 /// </summary>
 internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
 {
@@ -55,6 +55,10 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     private readonly bool _spritePlay;
     private readonly bool _spriteProperties;
     private FortMapViewer? _mapViewer;
+    /// <summary>기본 실행 화면과 미션 종료 후 복귀하는 메뉴.</summary>
+    private MainMenuView? _mainMenu;
+    /// <summary>명시적으로 지정한 클론 전용 UI 검사. 원본이나 OS 창에 입력하지 않는다.</summary>
+    private readonly UiAutomation? _uiAutomation;
 
     /// <summary>원본 효과음·배경음악 재생기 (원본 데이터가 없으면 null)</summary>
     private AudioPlayer? _audio;
@@ -85,6 +89,8 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
             SynchronizeWithVerticalRetrace = true,
         };
         string[] args = Environment.GetCommandLineArgs();
+        string? uiScript = ParseValueArgument(args, "--ui-script-file");
+        if (uiScript != null) _uiAutomation = new UiAutomation(uiScript);
         string? screenshot = ParseValueArgument(args, "--screenshot");
         _screenshotPath = screenshot == null ? null : Path.GetFullPath(screenshot);
         string? screenshotFrames = ParseValueArgument(args, "--screenshot-frames");
@@ -246,6 +252,8 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         _help = resources.TryLoadHelp();
         DisplaySettings settings = _display.Settings;
         _audio = new AudioPlayer(dataDir, settings.SoundOn, settings.PlayMusic, settings.SoundVolume, settings.MusicVolume);
+        _mainMenu = new MainMenuView(GraphicsDevice, resources, shapes, palette, _display, _audio, PlayFirstCampaign, Exit);
+        _mainMenu.Open(ParseValueArgument(Environment.GetCommandLineArgs(), "--menu") ?? "main");
         if (_missionName == null)
         {
             // 미션 밖(개발용 기본 화면·맵 시험·스프라이트 뷰어)은 메뉴 음악이다. 미션은 LoadMission 이 전투 음악을 시작한다.
@@ -301,20 +309,24 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
             return;
         }
 
-        // 표시할 애니메이션: (타입, 첫 프레임, 프레임 수, 초당 프레임)
-        var samples = new (string Type, int First, int Count, double Fps)[]
-        {
-            ("sunCannon", 0, 28, 4),
-            ("priest", 0, 24, 10),
-            ("sunWalker", 0, 32, 10),
-            ("windArcher", 0, 40, 10),
-            ("dude", 0, 32, 10),
-        };
-        // 샘플마다 애니메이션을 만든다
-        foreach ((string type, int first, int count, double fps) in samples)
-        {
-            _animations.Add(new SpriteAnimation(GraphicsDevice, shapes, palette, type, first, count, fps));
-        }
+        _baseTitle = "NetStorm: Islands at War";
+        return;
+    }
+
+    /// <summary>메뉴에서 이번 범위의 첫 캠페인을 로드하고 실패 원인은 메뉴에 표시한다.</summary>
+    private void PlayFirstCampaign()
+    {
+        try { LoadMission(_resources!, _shapes!, _palette!, CampaignAccess.FirstMission); }
+        catch (Exception error) when (error is IOException or ArgumentException)
+        { _mainMenu?.ShowError($"미션 시작 실패: {error.Message}"); }
+    }
+
+    /// <summary>미션을 정리하고 메뉴 음악과 메인 메뉴로 복귀한다.</summary>
+    private void ReturnToMainMenu()
+    {
+        _mapViewer?.Dispose(); _mapViewer = null; _currentMissionName = null;
+        _mainMenu?.Open(); _audio?.StartMenu();
+        _baseTitle = "NetStorm: Islands at War"; UpdateWindowTitle();
     }
 
     /// <summary>
@@ -344,6 +356,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
             mission != null ? resources.TryLoadMission("tell")?.Script : null);
         _mapViewer?.Dispose();
         _mapViewer = nextViewer;
+        if (mission != null && CampaignAccess.IsAvailable(name)) _mapViewer.EnablePlayUi(resources);
         _baseTitle = $"NetStorm 클론 — 맵 뷰어: {name}";
         bool applyStartupOptions = !_startupOptionsApplied;
         _startupOptionsApplied = true;
@@ -416,7 +429,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         KeyboardState keyboard = Keyboard.GetState();
         bool tutorialOpen = _mapViewer?.TutorialDialogOpen == true || _mapViewer?.KnowledgeOpen == true;
         if (keyboard.IsKeyDown(Keys.Escape) && !_previousKeyboard.IsKeyDown(Keys.Escape) && !tutorialOpen
-            && _mapViewer?.IsMissionMode != true)
+            && _mapViewer?.IsMissionMode != true && (_mainMenu == null || _mapViewer != null || _spriteBrowser != null))
         {
             Exit();
         }
@@ -428,6 +441,13 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         _previousKeyboard = keyboard;
         MouseState rawMouse = Mouse.GetState();
         MouseState mouse = _display.ToLogical(rawMouse);
+        if (_uiAutomation != null)
+        {
+            keyboard = new KeyboardState();
+            mouse = _uiAutomation.Update(_mapViewer?.UiState ?? _mainMenu?.Page ?? "unavailable", Exit);
+        }
+        if (_mapViewer == null && _spriteBrowser == null)
+            _mainMenu?.Update(mouse, keyboard, _display.Layout.LogicalWidth, _display.Layout.LogicalHeight);
         _mapViewer?.Update(dt, mouse, EdgeScrollDelta(rawMouse, keyboard, dt),
             _display.Layout.LogicalWidth, _display.Layout.LogicalHeight);
         TutorialDialogAction? tutorialAction = _mapViewer?.TakeTutorialAction();
@@ -474,15 +494,11 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     {
         if (action.Kind == TutorialDialogActionKind.LeaveBattle)
         {
-            _mapViewer?.Dispose();
-            _mapViewer = null;
-            _audio?.StartMenu();
-            _baseTitle = "NetStorm 클론 — 개발 환경 확인";
-            _statusLines.Add("튜토리얼을 종료했습니다.");
-            UpdateWindowTitle();
+            ReturnToMainMenu();
         }
         else if (action.Kind == TutorialDialogActionKind.MissionBegin)
         {
+            if (!CampaignAccess.IsAvailable(action.Argument)) return;
             try
             {
                 LoadMission(_resources!, _shapes!, _palette!, action.Argument);
@@ -494,7 +510,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         }
     }
 
-    /// <summary>미션 메뉴의 재시작·재플레이는 현재 미션을 다시 로드하고, 떠나기는 개발용 기본 화면으로 돌아간다.</summary>
+    /// <summary>재시작·재플레이는 현재 미션을 다시 로드하고, 떠나기는 메인 메뉴로 돌아간다.</summary>
     private void HandleMissionMenuAction(MissionMenuAction action)
     {
         if (action is MissionMenuAction.Restart or MissionMenuAction.Replay)
@@ -510,13 +526,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         }
         else if (action == MissionMenuAction.MainMenu)
         {
-            _mapViewer?.Dispose();
-            _mapViewer = null;
-            _audio?.StartMenu();
-            _currentMissionName = null;
-            _baseTitle = "NetStorm 클론 — 개발 환경 확인";
-            _statusLines.Add("미션을 종료했습니다.");
-            UpdateWindowTitle();
+            ReturnToMainMenu();
         }
         else if (action == MissionMenuAction.Quit)
         {
@@ -564,6 +574,10 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         {
             _spriteBrowser.Draw(batch, body, width, height);
         }
+        else if (_mainMenu != null)
+        {
+            _mainMenu.Draw(batch, body, _fonts.GetFont(SmallFontSize), width, height);
+        }
         else
         {
             batch.DrawString(title, "넷스톰 클론 — MonoGame 개발 환경 확인", new Vector2(24, 20), Color.Gold);
@@ -610,6 +624,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         base.Draw(gameTime);
 
         _frameCount++;
+        if (_uiAutomation?.TakeCapture() is string uiCapture) SaveScreenshot(uiCapture);
         // 첫 프레임까지 그렸으면 시작에 성공한 것이므로 다음 실행이 같은 화면 모드로 시작해도 된다.
         if (_frameCount == 1)
         {
@@ -670,6 +685,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         if (disposing)
         {
             _mapViewer?.Dispose();
+            _mainMenu?.Dispose();
             _spriteBrowser?.Dispose();
             _audio?.Dispose();
             // 애니메이션 텍스처 해제

@@ -1,5 +1,7 @@
 # 개발용 맵 뷰어
 
+2026-10-01: 기본 실행은 **메인 메뉴와 캠페인 1-1 플레이**다. 1-1에는 마우스 생산·등록·워크샵 업그레이드·채집·이동·포획 버튼과 미니맵을 연결했고 개발용 규칙 변경은 차단했다. 아래의 P/[ ]/K 등은 `--map` 또는 다른 개발용 미션 조작 설명이다. [1-1 사용법·범위·추정·검증](gameplay/campaign-one.md).
+
 2026-10-01 **포대 전투** 추가: 미션에서는 브리핑을 닫은 뒤 자동 공격한다. 맵만 열었을 때는 **F3**으로
 전투와 세션 시간 진행을 켜고 끈다. 손상 체력 막대·선택(T) 체력 수치·탄·Vander Tower 번개·사제 기절 고리·포획/구속 상태·알타의 룬 진행을 표시한다.
 신전 완공·파괴 뒤 섬 원소·소유자색도 갱신한다. `--script "combat 1; wait 1"`로 검증할 수 있다.
@@ -49,7 +51,7 @@ dotnet run --project src/Netstorm.Game -- --map savetheisland --language korean
 | `--map 이름` | P·B 또는 F3 전투가 켜진 동안 흐름 (처음에는 정지) | 꺼짐 = **시험 모드** (규칙 조건만 맞으면 어떤 유닛이든 놓는다) | 맵의 `Money` 섹션 |
 
 * `--mission`은 미션 스크립트에서 맵(`loadFort`)과 시작 조건을 읽어 연다. `--map`과 함께 쓸 수 없다.
-* 미션 중 Esc → `Game`을 클릭하면 목표 다시 보기(F8), Restart Mission, Leave Mission, Quit Game을 고를 수 있다. Leave Mission 확인 창의 Main Menu는 현재 개발용 기본 화면으로 돌아가고, Replay Mission은 같은 미션을 처음부터 다시 연다. Continue Mission은 확인 창을 닫는다. Restart Mission도 같은 미션을 다시 로드하며 첫 안내와 시작 Storm Power를 복원한다. [원본 실행 관찰](screens/README.md#19-replay-missionrestart-mission-전환-2026-09-30-windows-hjow-athlon).
+* 미션 중 Esc → `Game`을 클릭하면 목표 다시 보기(F8), Restart Mission, Leave Mission, Quit Game을 고를 수 있다. Leave Mission 확인 창의 Main Menu는 메인 메뉴로 돌아가고, Replay Mission은 같은 미션을 처음부터 다시 연다. Continue Mission은 확인 창을 닫는다. Restart Mission도 같은 미션을 다시 로드하며 첫 안내와 시작 Storm Power를 복원한다. 1-1에는 화면의 메뉴 버튼도 있다. [원본 실행 관찰](screens/README.md#19-replay-missionrestart-mission-전환-2026-09-30-windows-hjow-athlon).
 * `Space`: 세션 일시정지·재개. `K`: 생산 규칙 켜기/끄기. 일시정지 중에도 명령을 내리면 한 틱만 진행해 결과를 보여 준다.
 * 오른쪽 위 상자에 Storm Power(원본 색 규칙 ≤1000 빨강, ≤2000 노랑), 게임 시각(틱), 생산 규칙 상태, 미션 제목이 표시된다.
 * **튜토리얼 1·2는 세션이 단계 처리를 한다**(`TutorialStages`, [core-rules.md](core-rules.md)). 튜토리얼 1은 F4/다리 배치 → 다리 8·19칸 → 가이저 연결 → 200·600 SP로 G까지 진행한다. 저장 맵에 없는 연습 가이저와 받침을 시작 시 생성한다(위치는 근사).
@@ -196,7 +198,7 @@ dotnet run --project src/Netstorm.Game -- --map bridgethegap --bridges 6 --bridg
 
 ## 화면 설정 (전체화면·화면비·가장자리 스크롤)
 
-맵 뷰어·스프라이트 뷰어·기본 확인 화면이 같은 화면 계층(`DisplayManager`)을 쓴다.
+맵 뷰어·스프라이트 뷰어·메인 메뉴가 같은 화면 계층(`DisplayManager`)을 쓴다. 메인 메뉴 옵션에서 해상도·창/전체화면·음량을 조절하며 [현재 공개 범위와 임시 정책](gameplay/campaign-one.md)을 따른다.
 게임은 **논리 해상도**(원본 픽셀)로 그린 뒤 창에 늘려 표시하며, 16:9·16:10·4:3 을 지원한다.
 계산 규칙은 `Netstorm.Core.Display.ScreenLayoutCalculator`(테스트 `tests/Netstorm.Core.Tests`)에 있다.
 
@@ -221,7 +223,7 @@ dotnet run --project src/Netstorm.Game -- --map bridgethegap --bridges 6 --bridg
 명령줄 옵션 (아래를 쓰면 그 실행은 설정을 저장하지 않는다): `--fullscreen`, `--windowed`, `--window 1920x1080`,
 `--wide extend|letterbox`, `--view-height 480|600|768`, `--no-edge-scroll`, `--no-sound`, `--no-music`.
 
-**소리(2026-10-01)**: 원본 `sound/*.wav`·`music/*.mus`를 그대로 재생한다. 미션에서는 원소 곡 4개를 원본 순서(wind → rain → thunder → sun, 첫 곡 난수)로 한 곡씩 돌리고, 내 희생 의식 동안 `sacrifice.mus`를 요청한다. 그 밖의 화면은 `ser22.mus`다. 효과음은 다리 금·붕괴·놓기·회전, 건설 완료(템플·워크샵 완료음 포함), 지식 창, 사제 포획과 다섯 룬·희생·알타 소멸에 연결했다. 설정 파일의 `SoundOn`·`PlayMusic`·`SoundVolume`·`MusicVolume`(1~5, 기본 3·2 = 원본 기본값)로 조절한다. 소리 장치가 없으면 소리 없이 실행된다. 개발용 기본 화면에 소리 상태 줄(장치·지금 곡·재생 여부)이 나온다. 규칙: [music.md](exe/music.md).
+**소리(2026-10-01)**: 원본 `sound/*.wav`·`music/*.mus`를 그대로 재생한다. 미션에서는 원소 곡 4개를 원본 순서(wind → rain → thunder → sun, 첫 곡 난수)로 돌리고 내 희생 의식 동안 `sacrifice.mus`를 요청한다. 메뉴는 `ser22.mus`다. 효과음은 다리 금·붕괴·놓기·회전, 건설 완료, 지식 창, 포획과 의식에 연결했다. 메인 메뉴 옵션의 효과음·음악 켜기/끄기·볼륨(1~5, 기본 3·2)을 현재 재생에도 즉시 적용한다. 소리 장치가 없으면 무음으로 계속 실행한다. 규칙: [music.md](exe/music.md).
 
 검증용 PNG를 저장하고 자동 종료 (`--knowledge [타입]`을 붙이면 지식 창 — 타입을 주면 그 상세창 — 을 연 채 시작한다):
 

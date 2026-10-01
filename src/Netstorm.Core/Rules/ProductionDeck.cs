@@ -134,6 +134,11 @@ public sealed class ProductionDeck
     /// <param name="workshopId">워크샵 번호</param>
     public int WorkshopLevel(int workshopId) => _workshops.TryGetValue(workshopId, out WorkshopState? s) ? s.Level : 0;
 
+    /// <summary>검사합용 워크샵 상태. 번호순이며 등록 순서를 보존한 복사본이다.</summary>
+    public IReadOnlyList<(int Id, Element Element, int Level, IReadOnlyList<string> Registered)> WorkshopSnapshot() =>
+        _workshops.OrderBy(pair => pair.Key).Select(pair => (pair.Key, pair.Value.Element, pair.Value.Level,
+            (IReadOnlyList<string>)pair.Value.Registered.ToArray())).ToArray();
+
     /// <summary>워크샵의 남은 생산 칸 수 ("Production Slots Available"). 없으면 0.</summary>
     /// <param name="workshopId">워크샵 번호</param>
     public int FreeSlots(int workshopId) =>

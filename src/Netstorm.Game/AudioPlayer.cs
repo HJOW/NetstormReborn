@@ -302,6 +302,17 @@ internal sealed class AudioPlayer : IDisposable
         }
     }
 
+    /// <summary>옵션 음량을 현재 재생 중인 효과음·음악에도 즉시 반영한다.</summary>
+    public void ApplyVolumes()
+    {
+        if (_music != null) _music.Volume = MusicVolume / (float)Netstorm.Core.Display.DisplaySettings.MaximumVolume;
+        // 이미 울리고 있는 효과음도 음량 변경·끄기를 반영한다.
+        foreach (SoundEffectInstance instance in _playing)
+        {
+            instance.Volume = SoundOn ? SoundVolume / (float)Netstorm.Core.Display.DisplaySettings.MaximumVolume : 0f;
+        }
+    }
+
     /// <summary>재생 중인 소리와 캐시를 모두 해제한다</summary>
     public void Dispose()
     {

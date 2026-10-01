@@ -146,7 +146,8 @@ public sealed class DisplaySettings
     public void Normalize()
     {
         // 논리 높이는 목록에 없는 값이면 가장 가까운 원본 해상도 높이로 바꾼다.
-        ViewHeight = ScreenLayoutCalculator.ViewHeights.MinBy(h => Math.Abs(h - ViewHeight));
+        if (!ScreenLayoutCalculator.RenderHeights.Contains(ViewHeight))
+            ViewHeight = ScreenLayoutCalculator.ViewHeights.MinBy(h => Math.Abs(h - ViewHeight));
         WindowWidth = Math.Clamp(WindowWidth, MinimumWindowSize, MaximumWindowSize);
         WindowHeight = Math.Clamp(WindowHeight, MinimumWindowSize, MaximumWindowSize);
         EdgeScrollSpeed = Math.Clamp(EdgeScrollSpeed, 0, 200);

@@ -62,8 +62,7 @@ internal sealed partial class FortMapViewer
         bool opened = stage ? _tutorialDialog.OpenStage(section) : _tutorialDialog.OpenSection(section);
         if (opened)
         {
-            _tutorialScroll = 0;
-            _selectedTutorialButton = _tutorialDialog.Current!.Buttons.Count - 1;
+            ResetTutorialPage();
         }
     }
 
@@ -102,6 +101,7 @@ internal sealed partial class FortMapViewer
             _selectedTutorialButton = (_selectedTutorialButton + 1) % content.Buttons.Count;
         if (Pressed(keyboard, Keys.Left))
             _selectedTutorialButton = (_selectedTutorialButton + content.Buttons.Count - 1) % content.Buttons.Count;
+        if (TutorialButtonLocked(content.Buttons[_selectedTutorialButton])) _selectedTutorialButton = 0;
         if (Pressed(keyboard, Keys.Enter) || Pressed(keyboard, Keys.Space))
         {
             ActivateTutorialButton(_selectedTutorialButton);
@@ -125,6 +125,7 @@ internal sealed partial class FortMapViewer
     /// <summary>버튼의 Tell 이동은 창 안에서 끝내고 미션 이동은 게임 본체에 전달한다.</summary>
     private void ActivateTutorialButton(int index)
     {
+        if (TutorialButtonLocked(_tutorialDialog!.Current!.Buttons[index])) return;
         TutorialDialogAction action = _tutorialDialog!.Choose(index);
         if (action.Kind == TutorialDialogActionKind.Navigate)
         {
@@ -158,7 +159,12 @@ internal sealed partial class FortMapViewer
     {
         _tutorialScroll = 0;
         _selectedTutorialButton = _tutorialDialog!.Current!.Buttons.Count - 1;
+        if (TutorialButtonLocked(_tutorialDialog.Current.Buttons[_selectedTutorialButton])) _selectedTutorialButton = 0;
     }
+
+    /// <summary>다음 미션 버튼은 표시·마우스·키보드 모두 동일한 범위 잠금을 사용한다.</summary>
+    private bool TutorialButtonLocked(TutorialDialogButton button) => _playUi && button.Action.Equals("MissionBegin", StringComparison.OrdinalIgnoreCase)
+        && !Netstorm.Core.Rules.CampaignAccess.IsAvailable(button.Argument);
 
     /// <summary>화면 가운데에 들어가는 안내 창의 최대 크기와 작은 창 여백을 정한다.</summary>
     private static Rectangle TutorialPanel(int width, int height)
@@ -181,6 +187,7 @@ internal sealed partial class FortMapViewer
     private void DrawTutorialDialog(SpriteBatch batch, SpriteFontBase font, int width, int height)
     {
         TutorialDialogContent? content = _tutorialDialog?.Current;
+        if (content != null) content = LocalizeFirstCampaign(content);
         if (content == null)
         {
             return;
@@ -225,11 +232,13 @@ internal sealed partial class FortMapViewer
         {
             Rectangle button = TutorialButton(panel, content.Buttons.Count, index);
             bool selected = index == _selectedTutorialButton;
+            bool locked = TutorialButtonLocked(content.Buttons[index]);
             batch.Draw(_pixel, button, selected ? new Color(95, 78, 45) : new Color(54, 67, 87));
             Outline(batch, button, selected ? Color.Gold : Color.Gray);
             string label = content.Buttons[index].Label;
+            if (locked) { batch.Draw(_pixel, button, Color.Black * 0.65f); label += Ui(" [잠금]", " [Locked]"); }
             Vector2 size = font.MeasureString(label);
-            batch.DrawString(font, label, new Vector2(button.Center.X - size.X / 2, button.Y + 4), Color.White);
+            batch.DrawString(font, label, new Vector2(button.Center.X - size.X / 2, button.Y + 4), locked ? Color.Gray : Color.White);
         }
         batch.DrawString(font, "F8 다시 보기 · ↑↓/휠 스크롤", new Vector2(panel.X + 24, panel.Bottom - 26), Color.LightGray);
     }

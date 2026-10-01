@@ -3,10 +3,10 @@ using Netstorm.Core.Rules;
 
 namespace Netstorm.Core.Simulation;
 
-/// <summary>사제가 가이저에서 결정을 가져와 신전에 전달하는 수집 경제.</summary>
+/// <summary>사제·수송 유닛이 가이저에서 결정을 가져와 신전에 전달하는 수집 경제.</summary>
 public sealed partial class BattleSession
 {
-    /// <summary>사제 번호순으로 처리하는 수확 작업.</summary>
+    /// <summary>수집자 번호순으로 처리하는 수확 작업. 내부 작업 타입의 기존 이름은 유지한다.</summary>
     private readonly SortedDictionary<int, PriestHarvestTask> _harvestTasks = [];
 
     /// <summary>네 방향 탐색 순서. 같은 지형에서는 언제나 같은 경로를 고른다.</summary>
@@ -16,7 +16,7 @@ public sealed partial class BattleSession
         (0, 1, BridgeLinks.South), (-1, 0, BridgeLinks.West),
     ];
 
-    /// <summary>명령 대상 가이저와 사제·신전을 검사한 뒤 갈 수 있는 길을 예약한다.</summary>
+    /// <summary>명령 대상 가이저와 수집자·신전을 검사한 뒤 갈 수 있는 길을 예약한다.</summary>
     private CommandResult ExecuteHarvestGeyser(HarvestGeyserCommand command)
     {
         if (!_players.ContainsKey(command.Player))
@@ -32,7 +32,12 @@ public sealed partial class BattleSession
         {
             return new CommandResult(CommandFailure.WrongKind);
         }
-        GameEntity? priest = _entities.Values.FirstOrDefault(e => e.Kind == ObjectKind.Priest && e.Owner == command.Player);
+        GameEntity? priest = command.CollectorId == 0
+            ? _entities.Values.FirstOrDefault(e => e.Kind == ObjectKind.Priest && e.Owner == command.Player)
+            : Entity(command.CollectorId);
+        if (priest != null && priest.Owner != command.Player) return new CommandResult(CommandFailure.NotOwner);
+        if (priest != null && priest.Kind is not (ObjectKind.Priest or ObjectKind.Transport)) return new CommandResult(CommandFailure.WrongKind);
+        if (priest is { CarriedPriestId: not 0 }) return new CommandResult(CommandFailure.AlreadyCarrying);
         if (priest == null || priest.IsStunned || priest.Captivity != PriestCaptivity.Free)
         {
             return new CommandResult(CommandFailure.NoPriest);
@@ -44,7 +49,7 @@ public sealed partial class BattleSession
         }
         bool carrying = priest.CarriedCrystals > 0;
         GameEntity target = carrying ? temple : geyser;
-        List<(int X, int Y)>? path = FindHarvestPath(priest.Footprint, target.Footprint, command.Player);
+        List<(int X, int Y)>? path = FindMovePath(priest, target.Footprint);
         if (path == null)
         {
             return new CommandResult(CommandFailure.NoRoute);
@@ -99,7 +104,7 @@ public sealed partial class BattleSession
             {
                 priest.CarriedCrystals = 1;
                 Emit(SessionEventKind.CrystalCollected, priest.Owner, priest.Id, $"{priest.DisplayName} 결정 수확");
-                List<(int X, int Y)>? home = FindHarvestPath(priest.Footprint, temple.Footprint, priest.Owner);
+                List<(int X, int Y)>? home = FindMovePath(priest, temple.Footprint);
                 task.Phase = HarvestPhase.ToTemple;
                 ReplaceMovementRoute(priest, task, home);
             }
@@ -110,7 +115,7 @@ public sealed partial class BattleSession
                 _players[priest.Owner].StormPower += crystals * StormPower.CrystalValue;
                 Emit(SessionEventKind.CrystalDelivered, priest.Owner, priest.Id,
                     $"{priest.DisplayName} 결정 전달 (+{crystals * StormPower.CrystalValue})");
-                List<(int X, int Y)>? outbound = FindHarvestPath(priest.Footprint, geyser.Footprint, priest.Owner);
+                List<(int X, int Y)>? outbound = FindMovePath(priest, geyser.Footprint);
                 task.Phase = HarvestPhase.ToGeyser;
                 ReplaceMovementRoute(priest, task, outbound);
             }
@@ -118,7 +123,7 @@ public sealed partial class BattleSession
     }
 
     /// <summary>지면과 소유한 다리의 연결 방향을 따라 목표 발자국 둘레까지 최단 칸 경로를 찾는다.</summary>
-    private List<(int X, int Y)>? FindHarvestPath(Footprint start, Footprint target, int owner)
+    private List<(int X, int Y)>? FindHarvestPath(Footprint start, Footprint target, int owner, bool exact = false)
     {
         int size = BridgeGrid.WorldSize;
         int first = start.AnchorY * size + start.AnchorX;
@@ -127,7 +132,7 @@ public sealed partial class BattleSession
         {
             return null;
         }
-        HashSet<int> goals = target.BorderCells()
+        HashSet<int> goals = (exact ? target.Cells() : target.BorderCells())
             .Where(cell => cell.X >= 0 && cell.Y >= 0 && cell.X < size && cell.Y < size)
             .Where(cell => IsHarvestPassable(cell.X, cell.Y, owner))
             .Select(cell => cell.Y * size + cell.X).ToHashSet();

@@ -54,6 +54,9 @@ public static class ScreenLayoutCalculator
     /// <summary>원본 Options → Resolution 메뉴의 세 해상도(640×480, 800×600, 1024×768)의 논리 높이</summary>
     public static IReadOnlyList<int> ViewHeights { get; } = [480, 600, 768];
 
+    /// <summary>옵션의 원본·와이드 렌더링 높이. F9의 원본 세 단계와 분리한다.</summary>
+    public static IReadOnlyList<int> RenderHeights { get; } = [480, 600, 720, 768, 800, 900, 1080, 1200];
+
     /// <summary>화면비를 판정할 때 허용하는 오차 (1600×1200 처럼 딱 떨어지지 않는 해상도 대비)</summary>
     private const double AspectTolerance = 0.02;
 

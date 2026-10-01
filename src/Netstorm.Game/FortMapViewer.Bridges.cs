@@ -232,6 +232,11 @@ internal sealed partial class FortMapViewer
         string held = (HeldPreview == null ? "없음" : HeldPreview.ToString()) + (_reverseRotation ? " | 반대 회전 켜짐" : "");
         string head = $"다리 조각 시험 | 칸 {tray.Pieces.Count}/{tray.Capacity} | 추첨 {tray.DrawCount}회 | 템플 {(player.HasTemple ? "있음" : "없음 — 조각이 생기지 않음")} | 들고 있는 조각: {held}";
         string keys = "1~6: 조각 집기 · R: 회전(원본 우클릭) · C: 반대 회전 · Backspace: 되돌리기 · 좌클릭: 놓기 · Space: 정지 · B: 모드 끄기";
+        if (_playUi)
+        {
+            head = Ui("다리 칸 클릭: 조각 선택 · 지도 클릭: 놓기", "Click tray: choose a bridge | Click map: place");
+            keys = Ui("우클릭/R: 회전 · C: 반대 회전 · Backspace: 조각 반환 · 취소: 종료", "Right click/R: rotate | C: reverse | Backspace: return | Cancel: close");
+        }
         if (_bridgeCheck != null)
         {
             head += _bridgeCheck.Allowed ? $" | 놓을 수 있음(연결 {_bridgeCheck.Attachments})" : $" | 불가: {SessionText.Describe(_bridgeCheck.Problem)}";

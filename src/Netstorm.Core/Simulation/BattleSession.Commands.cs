@@ -176,6 +176,9 @@ public sealed partial class BattleSession
         SalvageCommand c => ExecuteSalvage(c),
         SelectEntityCommand c => ExecuteSelect(c),
         HarvestGeyserCommand c => ExecuteHarvestGeyser(c),
+        MoveEntityCommand c => ExecuteMoveEntity(c),
+        StopEntityCommand c => ExecuteStopEntity(c),
+        UpgradeWorkshopCommand c => ExecuteUpgradeWorkshop(c),
         ReturnHomeCommand c => ExecuteReturnHome(c),
         CapturePriestCommand c => ExecuteCapturePriest(c),
         DeliverPriestCommand c => ExecuteDeliverPriest(c),
@@ -221,6 +224,7 @@ public sealed partial class BattleSession
     /// <summary>건물 건설 시작: 판정 → Storm Power 차감 → 자리 점유 → 건설 시간 뒤 완성 (완성 때 규칙 효과).</summary>
     private CommandResult ExecuteConstruct(ConstructBuildingCommand command)
     {
+        if (EnforceProductionRules && OwnFreePriest(command.Player) == null) return new CommandResult(CommandFailure.NoPriest);
         SessionPlacementCheck check = CheckBuilding(command.Player, command.TypeName, command.X, command.Y);
         if (!check.Allowed)
         {
@@ -272,6 +276,23 @@ public sealed partial class BattleSession
             return new CommandResult(CommandFailure.RegisterFailed, $"등록 실패: {result}");
         }
         Emit(SessionEventKind.Registered, command.Player, command.WorkshopId, $"{type.Definition.GetString("description") ?? type.Name} 등록");
+        return CommandResult.Ok();
+    }
+
+    /// <summary>워크샵 소유권·완공·최대 단계·비용을 확인하고 생산 칸을 늘린다. 시간은 추후 원본 대조 대상이다.</summary>
+    private CommandResult ExecuteUpgradeWorkshop(UpgradeWorkshopCommand command)
+    {
+        GameEntity? workshop = Entity(command.WorkshopId);
+        if (workshop == null) return new CommandResult(CommandFailure.NoSuchEntity);
+        if (workshop.Owner != command.Player) return new CommandResult(CommandFailure.NotOwner);
+        if (workshop.Kind != ObjectKind.Workshop) return new CommandResult(CommandFailure.WrongKind);
+        if (!workshop.IsComplete) return new CommandResult(CommandFailure.NotComplete);
+        PlayerState player = Player(command.Player);
+        if (player.Deck.WorkshopLevel(workshop.Id) >= ProductionDeck.MaxWorkshopLevel) return new CommandResult(CommandFailure.NotReady, "최대 단계 워크샵");
+        if (player.StormPower < WorkshopUpgradeCost) return new CommandResult(CommandFailure.Placement, "워크샵 업그레이드에 1,000 SP 필요");
+        player.StormPower -= WorkshopUpgradeCost;
+        player.Deck.UpgradeWorkshop(workshop.Id);
+        Emit(SessionEventKind.Registered, player.Number, workshop.Id, $"워크샵 단계 {player.Deck.WorkshopLevel(workshop.Id)} (−1000)");
         return CommandResult.Ok();
     }
 

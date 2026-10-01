@@ -56,10 +56,20 @@ public sealed record PlaceBridgeCommand(int Player, int Rotation, int X, int Y) 
 /// <param name="EntityId">선택할 오브젝트 번호 (0 이면 선택 해제)</param>
 public sealed record SelectEntityCommand(int Player, int EntityId) : GameCommand(Player);
 
-/// <summary>플레이어의 사제에게 지정한 가이저에서 결정을 반복 수확해 신전으로 가져오게 한다.</summary>
+/// <summary>내 사제 또는 수송 유닛에게 지정 가이저에서 결정을 반복 수확해 신전으로 가져오게 한다.</summary>
 /// <param name="Player">플레이어 번호</param>
 /// <param name="GeyserId">수확할 가이저 오브젝트 번호</param>
-public sealed record HarvestGeyserCommand(int Player, int GeyserId) : GameCommand(Player);
+/// <param name="CollectorId">수집자 번호. 0이면 기존 사제 자동 선택을 유지한다.</param>
+public sealed record HarvestGeyserCommand(int Player, int GeyserId, int CollectorId = 0) : GameCommand(Player);
+
+/// <summary>내 사제·수송 유닛을 지정한 칸으로 이동한다. 진행 중인 수확을 취소한다.</summary>
+public sealed record MoveEntityCommand(int Player, int EntityId, int X, int Y) : GameCommand(Player);
+
+/// <summary>내 사제·수송 유닛의 이동·수확을 중지한다. 운반 중인 결정·사제는 유지한다.</summary>
+public sealed record StopEntityCommand(int Player, int EntityId) : GameCommand(Player);
+
+/// <summary>완공된 내 워크샵을 1,000 SP로 한 단계 올려 생산 칸을 늘린다.</summary>
+public sealed record UpgradeWorkshopCommand(int Player, int WorkshopId) : GameCommand(Player);
 
 /// <summary>튜토리얼 1에서 F4로 자기 섬 화면에 복귀했음을 규칙 세션에 알린다.</summary>
 public sealed record ReturnHomeCommand(int Player) : GameCommand(Player);

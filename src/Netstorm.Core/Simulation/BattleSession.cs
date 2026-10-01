@@ -12,7 +12,7 @@ namespace Netstorm.Core.Simulation;
 /// <item><description>시간은 정수 틱이다. 게임 시각(초) = 틱 ÷ 초당 틱 수. 다리 조각 채우기(1초)·붕괴(10초)·건설·재충전은 모두 틱으로 센다.</description></item>
 /// <item><description>화면은 <see cref="Advance"/> 에 흐른 실제 시간을 주고, <see cref="DrainEvents"/> 로 일어난 일을 받아 알림을 띄운다.</description></item>
 /// </list>
-/// 사제 수집·수송·희생 의식, 포대 전투와 공중 공격체의 첫 모델을 처리한다. 전략 AI는 후속 구현이다.
+/// 수집·수송·희생 의식·포대·공중 공격체와 캠페인 1-1의 임시 방어 AI를 처리한다. 원본 전략 복원은 후속이다.
 /// </summary>
 public sealed partial class BattleSession
 {
@@ -178,6 +178,7 @@ public sealed partial class BattleSession
         {
             EmitTutorialTell(humanPlayer, Tutorial.Section);
         }
+        InitializeCampaignAi();
     }
 
     /// <summary>플레이어 시작 상태를 만든다: Storm Power, 다리 칸, 사람 플레이어는 미션의 시작 지식과 기술 허용</summary>
@@ -189,6 +190,12 @@ public sealed partial class BattleSession
         // 표는 실행 중에 바뀌므로 세션마다 복사본을 쓴다 (같은 미션으로 만든 다른 세션에 영향을 주지 않는다)
         TechPermissions tech = human && Mission != null ? Mission.Tech.Clone() : TechPermissions.Parse(null);
         var player = new PlayerState(number, stormPower, new BridgeTray(options.BridgeSlotCount, _random), tech);
+        if (!human && Mission is { IsFirstCampaign: true })
+        {
+            player.StormPower = Mission.AiStartMoney ?? stormPower;
+            // 초기 AI 지식은 원본 미션 머리 값만 사용한다.
+            foreach (string name in Mission.AiKnowledge) player.Deck.LearnKnowledge(name);
+        }
         if (human && Mission != null)
         {
             Mission.ApplyKnowledge(player.Deck);
@@ -282,6 +289,7 @@ public sealed partial class BattleSession
         Tick++;
         double now = Seconds;
         ExecuteQueuedCommands();
+        UpdateCampaignAi();
         UpdateHarvests();
         UpdateUnitMoves();
         CompleteConstructions();
@@ -433,6 +441,16 @@ public sealed partial class BattleSession
             hash.Add(player.HeldPiece?.Pattern.Index ?? -1);
             hash.Add(player.HeldPiece?.CuredAtDeciseconds ?? -1);
             hash.Add(player.SelectedEntityId);
+            hash.Add(player.Deck.TempleId ?? 0);
+            // 지식·등록·워크샵 단계도 다음 생산 명령의 결과를 바꾼다.
+            foreach (string knowledge in player.Deck.Knowledge.Order(StringComparer.OrdinalIgnoreCase)) hash.Add(knowledge.ToLowerInvariant());
+            // 워크샵 번호와 등록 순서대로 생산 상태를 검사합에 넣는다.
+            foreach (var workshop in player.Deck.WorkshopSnapshot())
+            {
+                hash.Add(workshop.Id); hash.Add((int)workshop.Element); hash.Add(workshop.Level);
+                // 같은 지식이어도 등록한 공급 건물과 순서가 다르면 생산 상태가 다르다.
+                foreach (string type in workshop.Registered) hash.Add(type.ToLowerInvariant());
+            }
             // 지은 수(누적)는 튜토리얼 단계를 정하므로 이름 순서로 섞는다
             foreach ((string name, int count) in player.MadeSnapshot())
             {

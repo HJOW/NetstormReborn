@@ -118,6 +118,17 @@ public sealed record MissionStart(string? Title, string? LoadFort, int? StartSto
     /// <summary>AI 플레이어 번호의 최대값 (원본 머리 값 ai1~ai8, exe 승패 판정 FUN_004c36c0 도 1~8 을 검사한다)</summary>
     public const int MaximumPlayer = 8;
 
+    /// <summary>현재 전략 AI를 연결한 캠페인 1-1인지. 다른 미션에는 임시 전략을 적용하지 않는다.</summary>
+    public bool IsFirstCampaign => CampaignAccess.IsAvailable(LoadFort ?? "") || Title == "The War Begins!";
+    /// <summary>원본 aiStartMoney. 맵의 개발용 Money와 구분한다.</summary>
+    public int? AiStartMoney { get; init; }
+    /// <summary>원본 aiTech의 시작 지식.</summary>
+    public IReadOnlyList<string> AiKnowledge { get; init; } = [];
+    /// <summary>원본 aiCollectors의 초기 수집 유닛 수.</summary>
+    public int AiCollectors { get; init; }
+    /// <summary>AI 판단 간격(초). 원본 aiTimeBetweenMoves를 우선한다.</summary>
+    public int AiMoveInterval { get; init; } = 6;
+
     /// <summary>
     /// 동맹 목록 (aiNAllyList = "1;4" → N 과 1·4 가 동맹). 한쪽만 적어도 동맹으로 본다.
     /// 3-4 Enemy Territory 의 구출 대상(ai2AllyList = "1")처럼 사람 플레이어와의 동맹도 여기서 온다.
@@ -179,6 +190,10 @@ public sealed record MissionStart(string? Title, string? LoadFort, int? StartSto
             AllyLists = allies,
             MyAllyList = Numbers(Text("myAllyList")),
             AllowAnyCapture = Flag("allowAnyCapture"),
+            AiStartMoney = Number("aiStartMoney"),
+            AiKnowledge = (Text("aiTech") ?? "").Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries),
+            AiCollectors = Math.Clamp(Number("aiCollectors") ?? 0, 0, 8),
+            AiMoveInterval = Math.Max(1, Number("aiTimeBetweenMoves") ?? 6),
         };
     }
 

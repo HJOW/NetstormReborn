@@ -171,6 +171,38 @@ internal sealed class DisplayManager : IDisposable
         Save();
     }
 
+    /// <summary>옵션 창에서 고른 창 크기와 논리 높이를 즉시 적용하고 저장한다. 전체화면은 바탕화면 크기를 유지한다.</summary>
+    public void SetResolution(int width, int height, int viewHeight)
+    {
+        int oldWidth = Settings.WindowWidth;
+        int oldHeight = Settings.WindowHeight;
+        int oldView = Settings.ViewHeight;
+        Settings.WindowWidth = width;
+        Settings.WindowHeight = height;
+        Settings.ViewHeight = viewHeight;
+        Settings.Normalize();
+        try
+        {
+            Configure(Settings.Fullscreen);
+            _graphics.ApplyChanges();
+            Show($"해상도 {width}×{height}");
+        }
+        catch (Exception error) when (error is InvalidOperationException or NotSupportedException or ArgumentException)
+        {
+            Settings.WindowWidth = oldWidth;
+            Settings.WindowHeight = oldHeight;
+            Settings.ViewHeight = oldView;
+            Configure(Settings.Fullscreen);
+            _graphics.ApplyChanges();
+            Show($"해상도 적용 실패: {error.Message}");
+        }
+        _layoutDirty = true;
+        Save();
+    }
+
+    /// <summary>음량·켜기 등 그래픽 장치 교체가 필요 없는 옵션을 저장한다.</summary>
+    public void SaveOptions() => Save();
+
     /// <summary>F11·Alt+Enter 는 전체화면, F10 은 와이드 처리, F9 는 원본 해상도 높이, F7 은 가장자리 스크롤을 바꾼다.</summary>
     /// <param name="keyboard">현재 키 상태</param>
     /// <param name="previous">직전 키 상태</param>
