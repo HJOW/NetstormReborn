@@ -67,7 +67,7 @@ public static class BattleSessionFactory
         // 다리·지면 외 오브젝트의 발자국 칸은 다리가 겹칠 수 없다
         var occupied = new HashSet<(int X, int Y)>();
         // 오브젝트마다 발자국 칸을 모은다
-        foreach (FortMapObject item in objects.Where(o => o.Object.Type.Name != "noIsland" && ObjectKinds.Of(o.Object.Type) != ObjectKind.Bridge))
+        foreach (FortMapObject item in objects.Where(o => o.Object.Type.Name != "noIsland" && ObjectKinds.Of(o.Object.Type) is not (ObjectKind.Bridge or ObjectKind.Flyer)))
         {
             occupied.UnionWith(Footprint.ForType(item.Object.Type.Definition, item.X, item.Y).Cells());
         }
@@ -76,9 +76,9 @@ public static class BattleSessionFactory
         BattleSession? session = null;
         // 초기화 뒤에는 살아 있는 엔티티를 조회해 파괴·회수된 자리와 새로 놓은 유닛의 점유를 반영한다.
         var grid = new BridgeGrid((x, y) => island.Contains((x, y)),
-            (x, y) => session == null ? occupied.Contains((x, y)) : session.Entities.Any(e => e.Footprint.Contains(x, y)),
+            (x, y) => session == null ? occupied.Contains((x, y)) : session.Entities.Any(e => e.Kind != ObjectKind.Flyer && e.Footprint.Contains(x, y)),
             (x, y, _, _) => session == null ? !dropBlocking.Contains((x, y)) :
-                !edgeSet.Contains((x, y)) && !session.Entities.Any(e => BridgeAnchors.IsDropBlocking(e.Type) && e.Footprint.Contains(x, y)));
+                !edgeSet.Contains((x, y)) && !session.Entities.Any(e => e.Kind != ObjectKind.Flyer && BridgeAnchors.IsDropBlocking(e.Type) && e.Footprint.Contains(x, y)));
         TypeFrameTable frames = (types.Find(BridgeTypeName) ?? throw new InvalidDataException("bridge 타입이 없습니다.")).Definition.Frames;
         // 저장된 다리 칸을 격자에 넣는다 (연결·붕괴 계산에 쓴다). 화면이 무너진 저장 다리를 숨길 수 있도록 오브젝트와 칸을 짝지어 둔다.
         var stored = new Dictionary<FortMapObject, BridgeCellState>();

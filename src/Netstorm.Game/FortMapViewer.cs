@@ -266,7 +266,7 @@ internal sealed partial class FortMapViewer : IDisposable
         {
             // noIsland는 투명한 논리 지면이다. 미리보기 지면에 반영했으므로 표식을 그리지 않는다.
             // 무너진 저장 다리와 회수되어 사라진 저장 오브젝트는 그리지 않는다.
-            if (item.Object.Type.Name == "noIsland" || IsCrumbledStoredBridge(item) || IsRemovedInitialObject(item))
+            if (item.Object.Type.Name == "noIsland" || ObjectKinds.Of(item.Object.Type) == ObjectKind.Flyer || IsCrumbledStoredBridge(item) || IsRemovedInitialObject(item))
             {
                 continue;
             }
@@ -296,6 +296,7 @@ internal sealed partial class FortMapViewer : IDisposable
         }
         DrawPlacedUnits(batch, center);
         DrawBridgeWorld(batch, center);
+        DrawFlyers(batch, center);
         DrawCombat(batch, font, center);
         batch.Draw(_pixel, new Rectangle(0, 0, width, HeaderHeight), new Color(18, 24, 38));
         batch.DrawString(font, $"맵: {Name} | 오브젝트 {_map.Objects.Count}개 | 확대 {_zoom:0.##}배 | 언어: {Language}", new Vector2(16, 10), Color.Gold);

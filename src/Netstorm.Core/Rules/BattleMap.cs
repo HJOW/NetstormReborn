@@ -86,7 +86,7 @@ public sealed class BattleMap
                 Ownership.SetTemple(territory, owner);
             }
             Footprint foot = Footprint.ForType(item.Object.Type.Definition, item.X, item.Y);
-            AddOccupant(foot);
+            if (kind != ObjectKind.Flyer) AddOccupant(foot);
             Element? element = Elements.FromTheme(item.Object.Type.Definition.GetString("theme"));
             if (ObjectKinds.IsEnergySource(kind) && element != null && owner != 0)
             {

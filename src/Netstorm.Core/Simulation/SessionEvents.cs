@@ -176,6 +176,15 @@ public enum SessionEventKind
     /// 화면은 그 섹션 본문을 안내 창으로 띄운다 (원본 FUN_004cf960 = 스크립트 섹션 Tell).
     /// </summary>
     TutorialTell,
+
+    /// <summary>공중 기지가 새 비행체를 만들었다.</summary>
+    FlyerLaunched,
+
+    /// <summary>비행체가 기지에 돌아와 연료를 보충한다.</summary>
+    FlyerRefuelling,
+
+    /// <summary>귀환할 기지가 없는 비행체가 종료됐다.</summary>
+    FlyerExpired,
 }
 
 /// <summary>세션 이벤트 한 건.</summary>

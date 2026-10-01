@@ -3,6 +3,10 @@
 영상별 관찰 노트(`docs/videos/<이름>.md`)의 공통 전제와 프레임 추출 방법을 정리한다.
 영상 목록과 YouTube 주소는 LEFT_JOBS.md 5단계 표에 있다.
 
+2026-10-01 새 YouTube 도구로 [캠페인 1-1~4의 공중 공격체 표본](youtube-whirligigs.md)을 확인했다.
+Whirlibase·Whirligig의 출격·공격·귀환을 [클론에 연결](../gameplay/flyers.md)했고,
+영상에서 확인한 것과 도움말 규칙·구현 추정을 나누어 기록했다.
+
 ## 추가된 YouTube 파일 (2026-10-01)
 
 사용자 추가 파일 `playingVideos/[Youtube] 3-1 to 3-5.mp4`는

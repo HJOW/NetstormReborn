@@ -16,6 +16,23 @@ internal sealed partial class FortMapViewer
     /// <summary>직전 지면 갱신에 사용한 완공 신전 번호 목록.</summary>
     private string? _terrainTempleSignature;
 
+    /// <summary>비행체를 지상·다리 위에 원본 A00~A07 회전 그림으로 그린다. 12fps는 임시 재생 속도다.</summary>
+    private void DrawFlyers(SpriteBatch batch, Vector2 center)
+    {
+        // 연속 비행 좌표로 그려 칸 경계에서 튀지 않게 한다. 지상 깊이 정렬과 분리한다.
+        foreach (GameEntity entity in _session.Entities.Where(e => e.Kind == ObjectKind.Flyer))
+        {
+            TypeDefinition type = entity.Type.Definition;
+            int count = type.Clusters.Count(c => c.Name.StartsWith("A", StringComparison.Ordinal));
+            int frame = count == 0 ? type.Frames.DefaultFrame :
+                type.Frames.Find('A', TypeFrameTable.DefaultVariant, (int)(_session.Tick / 2 % count));
+            if (frame < 0) frame = type.Frames.DefaultFrame;
+            Vector2 anchor = Screen(new Vector2((float)(entity.WorldX * FortMap.CellPixelWidth),
+                (float)(entity.WorldY * FortMap.CellPixelHeight)), center);
+            DrawSprite(batch, entity.Type.LoadIndex, frame, anchor);
+        }
+    }
+
     /// <summary>완공 신전 목록이 바뀔 때 지면 테마·소유자색을 다시 만든다. 섬 마스크는 그대로다.</summary>
     private void RefreshTerritoryAppearance()
     {
@@ -43,7 +60,7 @@ internal sealed partial class FortMapViewer
         foreach (GameEntity entity in _session.Entities.Where(e => e.MaxHitPoints > 0 && e.IsComplete))
         {
             if (entity.HitPoints >= entity.MaxHitPoints && entity.Id != selected) continue;
-            Vector2 anchor = CellCenterScreen(entity.Footprint.CenterX, entity.Footprint.CenterY, center);
+            Vector2 anchor = CellCenterScreen(entity.WorldX, entity.WorldY, center);
             double ratio = entity.HitPoints / entity.MaxHitPoints;
             Color color = ratio > 0.5 ? Color.LimeGreen : ratio > 0.25 ? Color.Gold : Color.OrangeRed;
             int width = Math.Max(8, (int)(HealthBarWidth * _zoom));

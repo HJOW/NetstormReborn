@@ -58,6 +58,15 @@ public sealed class GameEntity
     /// <summary>다음 발사를 허용할 틱.</summary>
     public long NextAttackTick { get; internal set; }
 
+    /// <summary>기지가 생성한 공중 공격체의 비행 상태. 지상 오브젝트는 null이다.</summary>
+    public FlyerFlight? Flight { get; internal set; }
+
+    /// <summary>전투·표시에 쓰는 중심 x. 비행체는 칸 사이도 연속 이동한다.</summary>
+    public double WorldX => Flight?.X ?? Footprint.CenterX;
+
+    /// <summary>전투·표시에 쓰는 중심 y.</summary>
+    public double WorldY => Flight?.Y ?? Footprint.CenterY;
+
     /// <summary>오브젝트를 만든다</summary>
     /// <param name="id">오브젝트 번호</param>
     /// <param name="type">타입</param>

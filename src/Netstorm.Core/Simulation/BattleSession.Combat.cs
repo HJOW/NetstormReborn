@@ -65,6 +65,7 @@ public sealed partial class BattleSession
                 ApplyCombatDamage(target, shot);
             }
         }
+        UpdateFlyers();
         // 오브젝트 번호순으로 목표를 선택해 동일한 초기 상태에서 같은 결과를 얻는다.
         foreach (GameEntity attacker in _entities.Values)
         {
@@ -94,7 +95,7 @@ public sealed partial class BattleSession
             // Vander Tower는 영상에서 목표까지 한 번에 이어지는 번개다. 피해의 원본 프레임은 미확정이라 다음 틱에 적용한다.
             long travel = beam ? 1 : TicksFor(Math.Sqrt(DistanceSquared(attacker, target)) / ProjectileSpeed);
             var shot = new CombatShot(attacker.Id, attacker.Owner, target.Id, damageRate * interval,
-                attacker.Footprint.CenterX, attacker.Footprint.CenterY, target.Footprint.CenterX, target.Footprint.CenterY,
+                attacker.WorldX, attacker.WorldY, target.WorldX, target.WorldY,
                 Tick, Tick + travel, beam);
             _shots.Add(shot);
             if (beam) _lightning.Add(shot);
@@ -123,8 +124,8 @@ public sealed partial class BattleSession
             for (double travelled = ShotTraceStep; travelled < distance; travelled += ShotTraceStep)
             {
                 double fraction = travelled / distance;
-                double x = attacker.Footprint.CenterX + (target.Footprint.CenterX - attacker.Footprint.CenterX) * fraction;
-                double y = attacker.Footprint.CenterY + (target.Footprint.CenterY - attacker.Footprint.CenterY) * fraction;
+                double x = attacker.WorldX + (target.WorldX - attacker.WorldX) * fraction;
+                double y = attacker.WorldY + (target.WorldY - attacker.WorldY) * fraction;
                 if (x >= obstacle.Footprint.Left - 0.5 && x <= obstacle.Footprint.AnchorX + 0.5 &&
                     y >= obstacle.Footprint.Top - 0.5 && y <= obstacle.Footprint.AnchorY + 0.5) return false;
             }
@@ -135,8 +136,8 @@ public sealed partial class BattleSession
     /// <summary>논리 칸 좌표의 발자국 중심 거리 제곱. 화면의 세로 압축 비율과 무관하다.</summary>
     private static double DistanceSquared(GameEntity first, GameEntity second)
     {
-        double dx = first.Footprint.CenterX - second.Footprint.CenterX;
-        double dy = first.Footprint.CenterY - second.Footprint.CenterY;
+        double dx = first.WorldX - second.WorldX;
+        double dy = first.WorldY - second.WorldY;
         return dx * dx + dy * dy;
     }
 
@@ -164,7 +165,8 @@ public sealed partial class BattleSession
     /// <summary>회수·파괴 공통 정리: 점유·공급·소유권·생산·수집·선택을 함께 제거한다.</summary>
     private void RemoveEntity(GameEntity entity)
     {
-        Map.RemoveOccupant(entity.Footprint);
+        // 공중 공격체는 지상 점유를 등록하지 않으므로 아래 건물의 점유를 해제해서는 안 된다.
+        if (entity.Kind != ObjectKind.Flyer) Map.RemoveOccupant(entity.Footprint);
         Map.RemoveSource(entity.Id);
         _players.TryGetValue(entity.Owner, out PlayerState? player);
         if (entity.Kind == ObjectKind.Temple)
@@ -176,7 +178,9 @@ public sealed partial class BattleSession
         else if (entity.Kind == ObjectKind.Workshop) player?.Deck.RemoveWorkshop(entity.Id);
         _entities.Remove(entity.Id);
         _harvestTasks.Remove(entity.Id);
-        WeakenBridgesAround(entity);
+        if (entity.Kind != ObjectKind.Flyer) WeakenBridgesAround(entity);
+        if (entity.Flight is { } flight && Entity(flight.BaseId) is { } home)
+            home.NextAttackTick = Tick + TicksFor(WhirligigBuildSeconds);
         // 사라진 오브젝트를 가리키는 선택과 수집 예약을 해제한다.
         foreach (PlayerState viewer in _players.Values.Where(p => p.SelectedEntityId == entity.Id)) ClearSelection(viewer);
         // 신전·가이저가 제거되면 그 대상을 사용하던 작업도 즉시 해제한다.

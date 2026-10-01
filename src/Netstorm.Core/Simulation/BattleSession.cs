@@ -461,6 +461,7 @@ public sealed partial class BattleSession
             hash.Add(entity.IsStunned ? 1 : 0);
             hash.Add(entity.AttackTargetId);
             hash.Add(entity.NextAttackTick);
+            AddFlightChecksum(hash, entity.Flight);
         }
         AddCombatChecksum(hash);
         // 사제의 왕복 방향·예약 경로·남은 이동량도 다음 결과를 바꾸므로 검사합에 포함한다.
