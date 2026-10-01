@@ -53,6 +53,9 @@ internal sealed partial class FortMapViewer : IDisposable
     private KeyboardState _previousKeyboard;
     private MouseState _previousMouse;
 
+    /// <summary>미션으로 연 뷰어의 시작 조건 (맵 시험 모드면 null).</summary>
+    public MissionStart? Mission => _mission;
+
     /// <summary>로드한 맵 파일의 표시 이름.</summary>
     public string Name { get; }
 
@@ -66,7 +69,7 @@ internal sealed partial class FortMapViewer : IDisposable
     /// <param name="mission">미션 시작 조건 (없으면 맵만 보는 시험 모드)</param>
     public FortMapViewer(GraphicsDevice device, ShapeDatabase shapes, Palette palette, FortFile fort, string name,
         TypeCatalog catalog, string language, MissionStart? mission = null,
-        MissionScript? tutorialScript = null, ConfigStore? tutorialSettings = null)
+        MissionScript? tutorialScript = null, ConfigStore? tutorialSettings = null, HelpTopics? help = null)
     {
         _device = device;
         _shapes = shapes;
@@ -89,6 +92,7 @@ internal sealed partial class FortMapViewer : IDisposable
         _pixel = new Texture2D(device, 1, 1);
         _pixel.SetData(new[] { Color.White });
         InitializeSession(fort, catalog, mission);
+        InitializeKnowledge(fort, catalog, help);
         InitializeTutorialDialog(tutorialScript, tutorialSettings);
         InitializePlacement(catalog);
         InitializeBridges(catalog);
@@ -199,7 +203,8 @@ internal sealed partial class FortMapViewer : IDisposable
     /// <param name="width">논리 화면 폭</param>
     /// <param name="height">논리 화면 높이</param>
     /// <param name="displayInfo">화면 배치 설명 문구 (안내 4번째 줄)</param>
-    public void Draw(SpriteBatch batch, SpriteFontBase font, int width, int height, string displayInfo)
+    /// <param name="small">작은 글꼴 (지식 창 카드 이름·수치)</param>
+    public void Draw(SpriteBatch batch, SpriteFontBase font, int width, int height, string displayInfo, SpriteFontBase small)
     {
         var center = new Vector2(width / 2f, (height + HeaderHeight) / 2f);
         // 진단용 청크 윤곽은 지면 아래에 선택적으로 표시한다.
@@ -306,7 +311,7 @@ internal sealed partial class FortMapViewer : IDisposable
             batch.DrawString(font, text, new Vector2(16, height - 30), Color.White);
         }
         DrawTutorialDialog(batch, font, width, height);
-        DrawKnowledge(batch, font, width, height);
+        DrawKnowledge(batch, font, small, width, height);
         DrawMissionMenu(batch, font, width, height);
     }
 

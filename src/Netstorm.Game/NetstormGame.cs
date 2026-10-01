@@ -25,6 +25,9 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     /// <summary>제목 글자 크기(px)</summary>
     private const int TitleFontSize = 32;
 
+    /// <summary>작은 글자 크기 (지식 창 카드 이름·수치 — 원본 카드 이름은 약 11px 글꼴)</summary>
+    private const int SmallFontSize = 13;
+
     /// <summary>스크린샷 모드에서 저장 전에 기다릴 프레임 수 (애니메이션이 진행된 화면을 찍기 위함)</summary>
     private const int ScreenshotDelayFrames = 30;
 
@@ -52,6 +55,12 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     private readonly bool _spritePlay;
     private readonly bool _spriteProperties;
     private FortMapViewer? _mapViewer;
+
+    /// <summary>원본 효과음·배경음악 재생기 (원본 데이터가 없으면 null)</summary>
+    private AudioPlayer? _audio;
+
+    /// <summary>도움말 앵커 절 (지식 상세창 본문)</summary>
+    private HelpTopics? _help;
     /// <summary>튜토리얼 버튼으로 다음 미션을 열 때 다시 사용할 원본 자산.</summary>
     private GameResources? _resources;
     private ShapeDatabase? _shapes;
@@ -110,7 +119,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
 
     /// <summary>
     /// 표시 설정을 읽고 명령줄로 덮어쓴다: <c>--fullscreen</c>, <c>--windowed</c>, <c>--window 폭x높이</c>,
-    /// <c>--wide extend|letterbox</c>, <c>--view-height 480|600|768</c>, <c>--no-edge-scroll</c>.
+    /// <c>--wide extend|letterbox</c>, <c>--view-height 480|600|768</c>, <c>--no-edge-scroll</c>, <c>--no-sound</c>, <c>--no-music</c>.
     /// </summary>
     /// <param name="args">명령줄 인자</param>
     /// <returns>설정, 명령줄로 덮어썼는지 여부</returns>
@@ -127,6 +136,16 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         if (args.Contains("--windowed"))
         {
             settings.Fullscreen = false;
+            overridden = true;
+        }
+        if (args.Contains("--no-sound"))
+        {
+            settings.SoundOn = false;
+            overridden = true;
+        }
+        if (args.Contains("--no-music"))
+        {
+            settings.PlayMusic = false;
             overridden = true;
         }
         if (args.Contains("--no-edge-scroll"))
@@ -224,6 +243,14 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         _resources = resources;
         _shapes = shapes;
         _palette = palette;
+        _help = resources.TryLoadHelp();
+        DisplaySettings settings = _display.Settings;
+        _audio = new AudioPlayer(dataDir, settings.SoundOn, settings.PlayMusic, settings.SoundVolume, settings.MusicVolume);
+        if (_missionName == null)
+        {
+            // 미션 밖(개발용 기본 화면·맵 시험·스프라이트 뷰어)은 메뉴 음악이다. 미션은 LoadMission 이 전투 음악을 시작한다.
+            _audio.StartMenu();
+        }
 
         if (_mapName != null)
         {
@@ -301,6 +328,8 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         MissionStart start = MissionStart.FromScript(loaded.Script);
         LoadMap(resources, shapes, palette, start.LoadFort ?? missionName, start, loaded.Script);
         _currentMissionName = missionName;
+        // 미션(전투)에 들어갈 때마다 원소 곡 순환을 새 난수로 시작한다 (exe FUN_00469fc0)
+        _audio?.StartBattle();
         _baseTitle = $"NetStorm 클론 — 미션: {start.Title ?? missionName}";
         UpdateWindowTitle();
     }
@@ -311,7 +340,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     {
         TypeCatalog catalog = resources.LoadTypes();
         FortMapViewer nextViewer = new(GraphicsDevice, shapes, palette, resources.LoadFort(name, catalog), name,
-            catalog, resources.Language, mission, tutorialScript, resources.Settings);
+            catalog, resources.Language, mission, tutorialScript, resources.Settings, _help);
         _mapViewer?.Dispose();
         _mapViewer = nextViewer;
         _baseTitle = $"NetStorm 클론 — 맵 뷰어: {name}";
@@ -346,6 +375,14 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
             (int, int)? hold = ParsePair(ParseValueArgument(args, "--bridge-hold"), "--bridge-hold");
             (int, int)? probe = ParsePair(ParseValueArgument(args, "--probe"), "--probe");
             _mapViewer.StartBridges(warmup, hold, probe);
+        }
+        // 검증용: --knowledge [타입] 으로 지식 창(타입을 주면 상세창)을 연 채 시작한다.
+        if (applyStartupOptions && args.Contains("--knowledge"))
+        {
+            // 값은 생략할 수 있다 (다음 인자가 없거나 다른 옵션이면 격자만 연다)
+            int at = Array.IndexOf(args, "--knowledge");
+            string? knowledgeType = at + 1 < args.Length && !args[at + 1].StartsWith("--", StringComparison.Ordinal) ? args[at + 1] : null;
+            _mapViewer.StartKnowledge(knowledgeType);
         }
         // 검증용: --script "명령; 명령" 으로 세션 명령을 미리 실행한다 (예: construct windVortex 100,120; wait 17)
         if (applyStartupOptions && _scriptText != null)
@@ -403,12 +440,28 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
             HandleMissionMenuAction(menuAction.Value);
         }
         _spriteBrowser?.Update(dt, mouse, _display.Layout.LogicalWidth, _display.Layout.LogicalHeight);
+        UpdateAudio();
         // 모든 애니메이션 진행
         foreach (SpriteAnimation animation in _animations)
         {
             animation.Update(dt);
         }
         base.Update(gameTime);
+    }
+
+    /// <summary>뷰어가 요청한 효과음을 틀고 배경음악 교체·스트리밍을 진행한다.</summary>
+    private void UpdateAudio()
+    {
+        if (_audio == null)
+        {
+            return;
+        }
+        // 이번 프레임에 쌓인 효과음을 차례로 튼다
+        foreach (string sound in _mapViewer?.TakeSoundCues() ?? [])
+        {
+            _audio.PlaySound(sound);
+        }
+        _audio.Update(_mapViewer?.MySacrificeInProgress ?? false);
     }
 
     /// <summary>안내 버튼이 요청한 미션 종료나 다음 미션 시작을 처리한다.</summary>
@@ -418,6 +471,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         {
             _mapViewer?.Dispose();
             _mapViewer = null;
+            _audio?.StartMenu();
             _baseTitle = "NetStorm 클론 — 개발 환경 확인";
             _statusLines.Add("튜토리얼을 종료했습니다.");
             UpdateWindowTitle();
@@ -453,6 +507,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         {
             _mapViewer?.Dispose();
             _mapViewer = null;
+            _audio?.StartMenu();
             _currentMissionName = null;
             _baseTitle = "NetStorm 클론 — 개발 환경 확인";
             _statusLines.Add("미션을 종료했습니다.");
@@ -498,7 +553,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         SpriteFontBase body = _fonts.GetFont(BodyFontSize);
         if (_mapViewer != null)
         {
-            _mapViewer.Draw(batch, body, width, height, _display.Description);
+            _mapViewer.Draw(batch, body, width, height, _display.Description, _fonts.GetFont(SmallFontSize));
         }
         else if (_spriteBrowser != null)
         {
@@ -515,6 +570,11 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
             {
                 batch.DrawString(body, line, new Vector2(24, y), Color.LightGreen);
                 y += 26;
+            }
+            if (_audio != null)
+            {
+                // 소리 장치·지금 곡은 계속 바뀌므로 매 프레임 새로 쓴다
+                batch.DrawString(body, _audio.Describe(), new Vector2(24, y), Color.LightGreen);
             }
 
             // 확인 화면의 샘플 애니메이션 확대 배율.
@@ -606,6 +666,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         {
             _mapViewer?.Dispose();
             _spriteBrowser?.Dispose();
+            _audio?.Dispose();
             // 애니메이션 텍스처 해제
             foreach (SpriteAnimation animation in _animations)
             {

@@ -25,7 +25,7 @@
 - **영어 튜토리얼과 캠페인 미션은 모두 같은 "Tutorial" 미션 클래스다.** 미션 종류 이름 `Tutorial`이 이 클래스(정지 슬롯 있음), `Normal`은 다른 클래스(정지 슬롯이 빈 함수)에 등록되어 있고, 헤더 `missionType`이 그 이름을 고른다(아래 "미션 클래스"). 그래서 튜토리얼 안내 창(규칙 1)과 캠페인 초기 브리핑 창(규칙 2)은 **같은 코드 경로**로 시계를 멈춘다. 캠페인 브리핑은 섹션 `[A.]`다(예: `thewarbegins.english`, 버튼 `Review Knowledge`·`Play Mission`).
 - **게임 도중에 뜨는 창(규칙 3)은 창을 여는 쪽이 스크립트인지 게임 코드인지로 갈린다.**
   - 스크립트 객체가 여는 창은 **모두 시계를 멈춘다**(아래 표): 단계 섹션, 성공·실패, AI 신전·사제 이벤트, 튜토리얼 소용돌이·공장 이벤트. 사용자 허용("멈추는 것으로 통일")과 **원본 동작이 일치한다.**
-  - 게임 코드가 `Tell`을 **직접** 부르는 경고·안내 창은 **시계를 멈추지 않는다**(`NoBridgeYet`, `NewTech`, `AltarUpgrade`, `SacrificeForStormpower`, `NoTechTheme`, `BuildNoBucks`, `ZoneLocked`, `WarnAscend`, `DrawNotAccepted`, `NotRestart`, `SacrificeMenu(...)` 등 약 40곳). 원본은 이 창이 떠 있어도 미션 시간이 계속 흐른다(정적 분석 결론, 미검증). **클론이 이 창을 만들 때 시간을 멈출지는 별도 결정 사항이다**(아래 지침).
+  - 게임 코드가 `Tell`을 **직접** 부르는 경고·안내 창은 **시계를 멈추지 않는다**(`NoBridgeYet`, `NewTech`, `AltarUpgrade`, `SacrificeForStormpower`, `NoTechTheme`, `BuildNoBucks`, `ZoneLocked`, `WarnAscend`, `DrawNotAccepted`, `NotRestart`, `SacrificeMenu(...)` 등 약 40곳). 원본은 이 창이 떠 있어도 미션 시간이 계속 흐른다(정적 분석 결론). **같은 부류인 F6 지식 창은 2026-10-01 녹화 재판독으로 확인**: 창이 열린 13초 동안 SP 가 3,450 → 3,650 으로 늘고 전투 소리가 이어졌다([녹화 노트](../videos/the-war-begins-record-play-20260930.md) 3절 4번). **클론이 이 창을 만들 때 시간을 멈출지는 별도 결정 사항이다**(아래 지침).
 
 ## 게임 시계와 일시정지 구조 — `extracted/decomp/Netstorm.c`
 

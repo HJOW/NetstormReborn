@@ -136,6 +136,15 @@ internal sealed partial class FortMapViewer
         {
             _notice = action.Argument;
         }
+        else if (action.Kind == TutorialDialogActionKind.ConfirmLeave)
+        {
+            // 원본 [ABORT] 와 같은 버튼(Main Menu·Replay Mission·Continue Mission)을 가진 Leave Mission 확인 창을 연다
+            _leaveMissionPrompt = true;
+        }
+        else if (action.Kind == TutorialDialogActionKind.RestartMission)
+        {
+            _pendingMissionMenuAction = MissionMenuAction.Restart;
+        }
         else if (action.Kind is TutorialDialogActionKind.LeaveBattle or TutorialDialogActionKind.MissionBegin)
         {
             _pendingTutorialAction = action;

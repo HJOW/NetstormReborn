@@ -35,6 +35,12 @@ internal sealed partial class FortMapViewer
     /// <summary>숫자 키 → 다리 칸 번호 (1~6)</summary>
     private static readonly Keys[] TrayKeys = [Keys.D1, Keys.D2, Keys.D3, Keys.D4, Keys.D5, Keys.D6];
 
+    /// <summary>
+    /// 원본 단축키 → 다리 칸 번호. 매뉴얼 "Q W A S (Z X)"(docs/sources/game-manual.md 4절)를 2열 생산 창의 행 우선 순서
+    /// (Q W / A S / Z X)로 옮겼다. 2026-09-30 사용자 플레이 녹화 입력 로그에서도 이 키들을 다리 놓기 중에 썼다.
+    /// </summary>
+    private static readonly Keys[] TrayLetterKeys = [Keys.Q, Keys.W, Keys.A, Keys.S, Keys.Z, Keys.X];
+
     /// <summary>들고 있는 조각을 놓을 수 없을 때의 색 (원본은 조각 전체를 빨강으로 칠한다)</summary>
     private static readonly Color CannotPlaceTint = new(255, 40, 40);
 
@@ -93,7 +99,7 @@ internal sealed partial class FortMapViewer
     }
 
     /// <summary>
-    /// 다리 모드 입력: B 모드, 1~6 조각 집기, R 회전, C 반대 회전 켜기/끄기, Backspace 되돌리기, 좌클릭 놓기.
+    /// 다리 모드 입력: B 모드, 1~6 또는 Q W A S Z X 조각 집기, R 회전, C 반대 회전 켜기/끄기, Backspace 되돌리기, 좌클릭 놓기.
     /// 집기·되돌리기·놓기는 세션 명령이고 결과는 다음 틱에 알림으로 온다.
     /// </summary>
     private void UpdateBridges(KeyboardState keyboard, MouseState mouse)
@@ -114,7 +120,7 @@ internal sealed partial class FortMapViewer
         // 숫자 키로 칸의 조각을 집는다 (들고 있던 조각은 먼저 칸으로 되돌린다)
         for (int i = 0; i < TrayKeys.Length; i++)
         {
-            if (Pressed(keyboard, TrayKeys[i]) && i < player.Tray.Pieces.Count)
+            if ((Pressed(keyboard, TrayKeys[i]) || Pressed(keyboard, TrayLetterKeys[i])) && i < player.Tray.Pieces.Count)
             {
                 if (player.HeldPiece != null)
                 {
@@ -134,6 +140,7 @@ internal sealed partial class FortMapViewer
             // 원본의 오른쪽 클릭 회전 (뷰어는 오른쪽 드래그를 카메라 이동에 쓰므로 R 키로 대신한다)
             preview.RotateByPlayer(_reverseRotation);
             _heldRotation = preview.Rotation;
+            QueueSound(RotatePieceSound);
         }
         if (player.HeldPiece != null && Pressed(keyboard, Keys.Back))
         {

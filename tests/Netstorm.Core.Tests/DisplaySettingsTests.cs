@@ -69,6 +69,22 @@ public sealed class DisplaySettingsTests : IDisposable
         Assert.Equal(WideScreenMode.Letterbox, loaded.WideScreen);
     }
 
+    /// <summary>소리 설정: 기본값은 원본 options.cfg(효과음 3·음악 2, 둘 다 켬)이고 볼륨은 1~5 로 맞춘다</summary>
+    [Fact]
+    public void Audio_DefaultsAndNormalize()
+    {
+        var defaults = new DisplaySettings();
+        Assert.True(defaults.SoundOn);
+        Assert.True(defaults.PlayMusic);
+        Assert.Equal((3, 2), (defaults.SoundVolume, defaults.MusicVolume));
+        string path = Path.Combine(_directory, DisplaySettings.FileName);
+        Directory.CreateDirectory(_directory);
+        File.WriteAllText(path, """{ "soundOn": false, "soundVolume": 0, "musicVolume": 9 }""");
+        DisplaySettings loaded = DisplaySettings.Load(path);
+        Assert.False(loaded.SoundOn);
+        Assert.Equal((1, 5), (loaded.SoundVolume, loaded.MusicVolume));
+    }
+
     /// <summary>시작 처리 표식이 저장된 채 읽히면 직전 시작이 끝나지 못한 것으로 알 수 있다</summary>
     [Fact]
     public void StartupInProgress_SurvivesRoundTrip()

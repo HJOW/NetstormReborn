@@ -1,6 +1,6 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
-> 최종 갱신: 2026-10-01 (`HJOW-X3D`)
+> 최종 갱신: 2026-10-01 (`DESKTOP-HJOW`)
 > 프로젝트 목표(AGENTS.md): 원본 NetStorm: Islands at War 를 디컴파일/분석하여 클론 코딩하고,
 > **Windows 10/11** 과 **GUI 환경의 Linux** 에서 동작하며 **여러 언어를 지원**하는 게임을 만든다.
 > **1차 목표 언어: 영어, 한국어** (그 외 언어는 이후 확장).
@@ -9,11 +9,36 @@
 
 ---
 
+## 2026-10-01 (`DESKTOP-HJOW`, 원본 실행 없음) ✅: 녹화 소리·영상 추가 판독 + 음악·희생 의식 분석 + 오디오·지식 창 구현
+
+- **진행상황 재파악:** AGENTS.md·이 문서·`docs/` 를 읽었다. 이 PC 의 `playingVideos/` 에는 `record-play` 세션 `20260930T154921831Z-8bdcc06b6539` 하나뿐이다(기존 방송 영상 4개는 원드라이브 보관, 이 PC 에 없음). 이 세션의 **녹음(WAV 7개)은 이전에 판독하지 않았다** → 이번에 판독했다.
+- **새 도구 `tools/audiomatch.py`** (`level`·`music`·`sfx`): 녹음을 원본 `music/*.mus`·`sound/*.wav`와 FFT 정규화 상호상관으로 대조. 사용법 [videos/README.md](docs/videos/README.md#소리-판독-도구-toolsaudiomatchpy-2026-10-01).
+- **소리 판독 결과** ([music.md](docs/exe/music.md) 4절, [녹화 노트](docs/videos/the-war-begins-record-play-20260930.md) 5절):
+  - 배경음악: 메뉴 `ser22` → 미션 `rain22`(00:09.1) → `thu22`(03:42.7, `thunderCrack.wav` 동반) → `sun22`(07:27.9) → `wind22`(11:20.8) — 앞 곡이 끝나자마자 0.5초 안에 다음 곡. **12:06.4 `sacrifice.mus`가 wind22 를 끊고 시작**, 성공 창(13:34)이 뜬 뒤에도 이어진다. `fanfare.mus` 없음.
+  - 희생 의식: 신전 파괴(10:58.5) → 적 사제 보호막(`priestForceField` 10:59.8~11:34.4) → 골렘이 사제를 집음(`golemPickUp` 11:35.9, 영상 확인) → 제단 도착(12:05.6) → **다섯 룬** 음성 `forWind2`·`forSun2`·`forRain2`·`forThunder2`·`forStorm2`(약 14.8초 간격, 룬마다 `altarBurnCollapse`) → `itIsDone2`(13:19.0) → 4.0초 뒤 `priestSacrifice2`(exe 상수와 일치) → 제단 소멸 → 성공 창.
+- **사용자 설명(2026-10-01) 기록·대조:** "의식 중 배경음악이 바뀌고(모든 스테이지 공통), 다른 적 사제가 남아 있으면 의식 뒤 본래 루프로 돌아오며, 적 사제가 없으면 승리 창이 떠서 게임이 일시정지된다" → 녹음·exe 와 모두 일치. exe 기준으로 원소 루프 복귀 시점은 **희생 음악 곡이 끝날 때**(실시간, 139.9초)이고 중단된 곡이 아니라 다음 곡부터다 — 이번 녹화도 의식이 끝난 뒤 성공 창까지 희생 음악이 이어졌다. 승리 창이 열린 동안 SP 는 그대로였다(정지). [music.md](docs/exe/music.md) 0·5절.
+- **exe 정적 분석(음악):** `FUN_00469fc0`(시작, 첫 곡 난수)·`FUN_00469f00`(다음 곡 wind→rain→thunder→sun, 희생 중이면 sacrifice)·`FUN_00469f60`(곡 끝 확인, 실시간 `timeGetTime`)·`FUN_00469db0`(요청, 30초 이하 곡은 180초 뒤 재확인, fanfare·defeat 잠금)·`FUN_00469c80`(천둥 곡 thunderCrack, `ascendancyPalette` 날씨 팔레트)·`FUN_00494eb0`(내 제단 의식 시작 → sacrifice). 제단 단계 `FUN_00449f40`·`FUN_00448080`. 효과음 호출 위치(다리 붕괴·금·건설 완료·조각 회전 등)는 [music.md](docs/exe/music.md) 7절.
+- **영상 추가 판독:** (1) **F6 지식 창은 게임 시간을 멈추지 않는다**(열린 채 SP 3,450 → 3,650, 전투 소리 지속) — 이전 노트의 미확정 4번 해소. (2) **지식 격자의 어두운 카드 = 마우스 호버**(입력 로그와 대조). (3) 격자 25장 = `thewarbegins.fort` Technology 목록 플래그 4 타입 26개 − `sunWalker`, 행 안 순서 = `.type` group 순서. (4) 입력 로그: F6 4회 열고 닫음, 다리 칸 단축키 Q·W·A·S·Z·X 다수 사용. (5) `MissionAbort`: 인자 0 → `[ABORT]` 확인 창, 인자 ≠ 0 → 곧바로 LeaveBattle (exe `FUN_00463e40`).
+- **구현 (원본 실행 없이 가능한 부분):**
+  1. **오디오(7단계):** `Netstorm.Assets.WaveFile`(RIFF PCM 해석·16bit 변환·재표본화 — 원본에 6,000Hz 파일 3개), `Netstorm.Core.Audio.MusicDirector`(exe 음악 규칙), `Netstorm.Game.AudioPlayer`(효과음 최대 8개 동시, 음악 스트리밍, 장치 없으면 무음 계속). 미션 = 전투 음악, 그 밖 = 메뉴 음악. 효과음: 다리 금·붕괴·놓기·회전, 건설 완료(+템플·워크샵 완료음), 지식 창 열기. 설정 `SoundOn`·`PlayMusic`·`SoundVolume`(3)·`MusicVolume`(2) + `--no-sound`·`--no-music`.
+  2. **지식 창 재구현:** `Netstorm.Core.Rules.KnowledgeCatalog` + `FortMapViewer.Knowledge.cs` — 원본처럼 원소 4행 카드 격자(호버 어둡게, 유닛 모습·이름), 카드 클릭 → 상세창(도움말 삽화·수치·`help.english` 본문 스크롤·Back·OK). `Netstorm.Assets.HelpTopics`(도움말 앵커 절), `GameResources.TryLoadHelp`. 검증 옵션 `--knowledge [타입]`.
+  3. **다리 칸 단축키** Q W A S Z X (원본 매뉴얼, 2열 행 순서).
+  4. **미션 스크립트 버튼** `MissionAbort`(0 → Leave Mission 확인 창, 1 → 떠나기)·`MissionRestart`(재시작).
+- **검증:** Release 빌드 오류 0. 테스트 **Assets 185**(기존 179 + 6)·**Core 156**(기존 147 + 9) 통과. 클론을 실행해 `--mission thewarbegins --knowledge`·`--knowledge rainBattery` 화면(`extracted/screens/knowledge-{grid,detail}.png`)을 원본 녹화와 눈으로 대조했고, 개발용 기본 화면 상태 줄에서 소리 장치 사용 가능·`ser22.mus` 재생 중을 확인했다. 실제로 귀로 듣는 확인과 미션 중 곡 전환(3~4분 단위)은 화면으로 확인하지 않았다.
+- **남은 것 / 다음 후보**
+  1. **사제 포획·제단 의식·승리 판정 구현**: 전투(피해·체력)가 없어 아직 못 한다. 순서: 전투 → 사제 기절(체력 절반, 보호막, 회복) → 수송 유닛 집기·운반 → 제단 묶기 → 내 사제 제단 이동 → 다섯 룬(룬당 약 14.8초) → 완료(적 팀 사제 없음 → `[Succeeded][BadTeamDead]` 창, 게임 정지). 의식 시작/진행 신호를 `AudioPlayer`(`OnMySacrificeStarted`, `MySacrificeInProgress`)에 넘기면 음악이 맞춰진다. 제단 프레임 값의 증가 속도(exe)는 미분석.
+  2. 원본 지식 창·상세창의 돌 질감 창 그림 자산 찾기(exe 리소스 또는 gump 타입), Damage 계산, 상세창 OK 가 격자까지 닫는지.
+  3. 효과음 위치 반영(좌우·크기), `jimBuild.wav` 건설 진행음 반복 주기, 날씨 팔레트(`ascendancyPalette`), 원본 볼륨 단계 → 음량 변환식, Options 화면에서 소리 설정 바꾸기.
+  4. `forWind2`는 상관 0.52로 약하게 잡혔다. 다섯 번째 `altarBurnCollapse`는 `itIsDone2`와 겹쳐 판정이 약하다.
+- 변경 파일: `tools/audiomatch.py`(신규), `src/Netstorm.Assets/{WaveFile,HelpTopics}.cs`(신규)·`GameResources.cs`·`TutorialDialogScript.cs`, `src/Netstorm.Core/Audio/MusicDirector.cs`(신규)·`Rules/KnowledgeCatalog.cs`(신규)·`Display/DisplaySettings.cs`, `src/Netstorm.Game/{AudioPlayer,FortMapViewer.Audio}.cs`(신규)·`FortMapViewer{,.Knowledge,.Session,.Bridges,.TutorialDialog}.cs`·`NetstormGame.cs`, 테스트 `tests/Netstorm.Assets.Tests/{AudioAndHelpTests(신규),TutorialDialogScriptTests}.cs`·`tests/Netstorm.Core.Tests/{MusicDirectorTests,KnowledgeCatalogTests(신규),DisplaySettingsTests}.cs`, 문서 `docs/exe/music.md`(신규)·`docs/exe/show-technology.md`·`docs/videos/{README,the-war-begins-record-play-20260930}.md`·`docs/gameplay/dialog-pause.md`·`docs/map-viewer.md`·`docs/core-rules.md`, 이 문서. 산출물 `extracted/audio/*.csv`·`extracted/screens/knowledge-*.png`는 Git 제외.
+
+---
+
 ## 2026-10-01 (사용자 플레이 녹화 분석) ✅: 캠페인 1-1 전체 플레이 관찰 노트
 
 - 관리 세션 `20260930T154921831Z-8bdcc06b6539`의 `record-play` 녹화 8,335프레임(13분 53.5초, AVI 27개, WAV 7개, 입력 로그 1개)을 분석했다. 녹화 오류는 없었다. 게임은 `The War Begins!` 브리핑에서 시작해 승리 후 `Master of Whirligigs` 브리핑을 거쳐 메인 메뉴로 돌아왔다. 분석 뒤 안내창과 원본 게임을 종료했고 `end_session` 응답은 `closed=true`다.
 - 원본 지식 창의 **SUN·WIND·RAIN·THUN. 4행 그림 카드 격자**, 개별 항목 상세창을 확인했다. 현재 클론의 이름 목록과 배치가 다르다. 적 회오리 신전 파괴 직후 약 2초 안에 섬이 갈색 지면·빨간 테두리에서 초록 지면·주황 테두리로 바뀌었지만 성공 창은 약 2분 15초 뒤에 떴다. `Success!`의 `Leave Missions`·`Next Mission`과 다음 미션 브리핑도 확인했다.
-- [타임스탬프·증거·미확정 사항](docs/videos/the-war-begins-record-play-20260930.md)을 기록하고 [영상 목록](docs/videos/README.md), [지식 창 정적 분석](docs/exe/show-technology.md)을 갱신했다. 승리 직전 제단 모양 구조물이 사라지는 모습은 보이나 사제 포획·희생·승리 조건의 정확한 연결은 추가 분석이 필요하다.
+- [타임스탬프·증거·미확정 사항](docs/videos/the-war-begins-record-play-20260930.md)을 기록하고 [영상 목록](docs/videos/README.md), [지식 창 정적 분석](docs/exe/show-technology.md)을 갱신했다. 승리 직전 제단 모양 구조물이 사라지는 모습은 보이나 사제 포획·희생·승리 조건의 정확한 연결은 추가 분석이 필요하다. → ✅ 2026-10-01 소리 판독·exe·사용자 설명으로 확정(맨 위 절).
 
 ---
 
@@ -568,11 +593,11 @@
 | 2 | 개발 환경 구축 | ✅ 완료 (2026-09-27) — C# + MonoGame(net10.0), 솔루션·테스트·CI |
 | 3 | 원본 분석 — 데이터 포맷 | 🔶 거의 완료 (TAFF·셰이프·팔레트·.type·설정(조회·치환 규칙 포함)·번역 체계·파일 조회 순서·HLP 본문·`.fort` 컨테이너/오브젝트 완료 / `.fort` 일부 섹션 남음) — [docs/formats/](docs/formats/README.md) |
 | 4 | 원본 분석 — 실행 파일(게임 로직) | 🔶 착수 (전체 디컴파일·모듈 맵 완료) |
-| 5 | 원본 분석 — 플레이 영상 | 🔶 진행 중 (스크린샷 42장 목록·관찰 정리, 로컬 영상 4개 형식·화면 영역 확인, 프레임 추출·애니메이션 간격 측정 도구, Dissolved Alliance! 맵 대조·시작 카메라 규칙, 애니메이션 속도 측정, **The War Begins! 사용자 플레이 녹화 관찰 노트 완료** / 다른 미션별 관찰 노트는 미착수) — [docs/videos/](docs/videos/README.md) |
+| 5 | 원본 분석 — 플레이 영상 | 🔶 진행 중 (스크린샷 42장 목록·관찰 정리, 로컬 영상 4개 형식·화면 영역 확인, 프레임 추출·애니메이션 간격 측정 도구, Dissolved Alliance! 맵 대조·시작 카메라 규칙, 애니메이션 속도 측정, **The War Begins! 사용자 플레이 녹화 관찰 노트·소리 판독 완료**(음악 순환·희생 의식·지식 창) / 다른 미션별 관찰 노트는 미착수) — [docs/videos/](docs/videos/README.md) |
 | 6 | 자산 로더 / 개발용 뷰어 | 🔶 진행 중 (TAFF·팔레트·셰이프·.type·.cfg·TTC·.fort·가상 파일 시스템·설정 치환·번역표·미션 스크립트 로더·스프라이트 탐색(동작 재생·팔레트·속성) 완료) |
-| 7 | 엔진 코어 (플랫폼 계층) | 🔶 착수 (2026-09-29: 창·전체화면·16:9/16:10/4:3 화면 계층, 가장자리 스크롤, 표시 설정 저장, 고정 틱 누적기·MSVC 난수 완료 / 팔레트 방식·입력·오디오·로깅 남음) |
+| 7 | 엔진 코어 (플랫폼 계층) | 🔶 착수 (2026-09-29: 창·전체화면·16:9/16:10/4:3 화면 계층, 가장자리 스크롤, 표시 설정 저장, 고정 틱 누적기·MSVC 난수 완료, 2026-10-01 오디오(효과음·음악 스트리밍·원본 음악 규칙) / 팔레트 방식·입력·로깅 남음) |
 | 8 | 게임 월드 / 규칙 구현 | 🔶 착수 (2026-09-29: 정적 규칙 코어 — 에너지·섬 소유권·생산 창·전투 옵션·배치 판정, 맵 뷰어 배치 시험 모드, 다리 조각 모양·추첨·회전·생산 칸 채우기와 뷰어 다리 조각 시험 모드 ; 2026-09-30: 게임 세션(고정 틱·명령·엔티티·건설·회수·재충전)·다리 배치 판정·붕괴·미션 시작 조건 연결 / 이동·전투·수집 경제·붕괴 대기 조건 남음) — [docs/core-rules.md](docs/core-rules.md) |
-| 9 | UI · 미션 스크립트 · 튜토리얼 | ⬜ 대기 |
+| 9 | UI · 미션 스크립트 · 튜토리얼 | 🔶 일부 (안내·브리핑 창, Game 메뉴, 지식 창(카드 격자·상세창), 스크립트 버튼 Tell·MissionBegin·MissionAbort·MissionRestart / 메인 메뉴·HUD·승패 창 연결 남음) |
 | 10 | AI | ⬜ 대기 |
 | 11 | 캠페인 · 저장(fort) | ⬜ 대기 |
 | 12 | 다국어 지원 | ⬜ 대기 (설계는 초기부터 반영) |
@@ -1032,7 +1057,7 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
   - 원본 설정값: `options.cfg` 의 **`edgeScrollSpeed = 35`** (2026-09-28 확인, 단위·적용 코드는 미확인), 켜기/끄기는 Options 메뉴 `Edge Scroll in Fullscreen`
 - [ ] 8bit 인덱스 → 팔레트 적용 방식 결정 및 구현 (CPU 변환 vs 팔레트 셰이더, 2절) — 그림자·색상 변환 테이블(`!color.dat`) 효과 대응
 - [ ] 입력(마우스·키보드·단축키), 커서
-- [ ] 오디오: `SoundEffect` 효과음 다중 재생, `DynamicSoundEffectInstance` 음악 스트리밍, 볼륨
+- [x] 오디오: `SoundEffect` 효과음 다중 재생, `DynamicSoundEffectInstance` 음악 스트리밍, 볼륨 — 2026-10-01 `AudioPlayer`·`MusicDirector`·`WaveFile` ([music.md](docs/exe/music.md)). 남은 일: 효과음 위치 반영, Options 화면 연결
 - [ ] 고정 틱 게임 루프(시뮬레이션과 렌더 분리), 결정론적 난수
   - [x] 2026-09-29 기반 구현: `Netstorm.Core.Simulation.FixedTimestep`(기본 24Hz, 따라잡기 8틱 한도, 초 → 틱 올림)·`MsvcRandom`(MSVC `rand()`, srand(1) 수열 41·18467·6334… 검사). 남은 일: 게임 화면에서 시뮬레이션 갱신을 이 누적기로 돌리기(엔티티 시스템과 함께)
 - [ ] 로깅, 설정 저장(사용자 데이터 경로: Windows `%APPDATA%`, Linux `$XDG_CONFIG_HOME`/`$XDG_DATA_HOME`)

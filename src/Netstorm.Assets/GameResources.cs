@@ -133,6 +133,20 @@ public sealed class GameResources
         return data == null ? null : new LoadedMission(path, actualLanguage, MissionScript.FromFileBytes(data));
     }
 
+    /// <summary>
+    /// 도움말 원문(`help.&lt;언어&gt;`)을 앵커 절로 읽는다. 미션과 같은 폴더(missionSpec)에 있으며,
+    /// 선택 언어 파일이 없으면 영어 파일을 쓴다. 둘 다 없으면 null.
+    /// </summary>
+    public HelpTopics? TryLoadHelp()
+    {
+        byte[]? data = Files.TryReadAllBytes(LanguageSpec("missionSpec", "help", Language));
+        if (data == null && Language != GameLanguage.English)
+        {
+            data = Files.TryReadAllBytes(LanguageSpec("missionSpec", "help", GameLanguage.English));
+        }
+        return data == null ? null : new HelpTopics(OriginalText.Decode(data));
+    }
+
     /// <summary>임시 언어 층으로 지정식을 치환하고 호출 뒤 원래 선택 언어로 되돌린다.</summary>
     private string LanguageSpec(string key, string local, string language)
     {

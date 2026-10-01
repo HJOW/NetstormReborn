@@ -38,6 +38,8 @@
 | `Simulation/TutorialStages.cs` | **튜토리얼 단계 처리**: 튜토리얼 1 A~G, 튜토리얼 2 A~I 조건·안내 이벤트 | [priest-construction.md](exe/priest-construction.md), [mission-header-flags.md](exe/mission-header-flags.md) 3.5절 |
 | `Simulation/BattleSession.Harvest.cs`·`MovementRate.cs`·`TutorialGeysers.cs` | 사제의 섬·다리 경로 탐색과 반복 왕복 수집, 타입별 `speed`, 저장 가이저가 없는 튜토리얼 1의 연습 받침 생성 | [priest-construction.md](exe/priest-construction.md) |
 | `Simulation/GameEntity.cs`·`PlayerState.cs`·`SessionEvents.cs` | 오브젝트(.type 구동), 플레이어 상태(SP·덱·다리 칸·기술 표), 이벤트·실패 이유 | |
+| `Rules/KnowledgeCatalog.cs` | 지식 창 카드 행: SUN·WIND·RAIN·THUN. 행, `.type` group 순서, 골렘 제외, `.fort` Technology 지식(목록 플래그 4) | [show-technology.md](exe/show-technology.md), 2026-09-30 녹화 |
+| `Audio/MusicDirector.cs` | 배경음악 선택: 메뉴 ser22, 전투 원소 곡 순환(wind → rain → thunder → sun, 첫 곡 난수, 천둥 곡 thunderCrack), 내 희생 의식 음악과 곡 끝 복귀, 30초 이하 곡 180초 재확인, 결과 음악 잠금 | exe `FUN_00469fc0`·`00469f00`·`00469f60`·`00469db0`, [music.md](exe/music.md), 녹음 대조 |
 | `Simulation/ConstructionTimes.cs` | 사제 건물 건설 시간: 템플 16초·워크샵 10초(관찰값, 이동 포함), 그 밖 10초(임시) | 튜토리얼 2 사용자 조작 관찰([screens/README.md](screens/README.md) 1.7절) |
 
 ## 발자국과 공급 범위 기하

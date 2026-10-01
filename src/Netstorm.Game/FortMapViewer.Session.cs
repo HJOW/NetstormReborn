@@ -87,6 +87,7 @@ internal sealed partial class FortMapViewer
         // 세션이 알린 일을 알림 문구로 옮긴다 (1초마다 생기는 다리 조각 알림은 칸 패널에 보이므로 뺀다)
         foreach (SessionEvent sessionEvent in _session.DrainEvents())
         {
+            QueueEventSound(sessionEvent);
             if (sessionEvent.Kind != SessionEventKind.BridgePieceAdded)
             {
                 _notice = DescribeEvent(sessionEvent);

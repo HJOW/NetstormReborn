@@ -50,6 +50,13 @@ public enum TutorialDialogActionKind
     MissionBegin,
     /// <summary>안내 창을 그대로 둔 채 지식 창(ShowTechnology)을 겹쳐 엶.</summary>
     ShowKnowledge,
+    /// <summary>
+    /// 미션을 떠날지 묻는 확인 창을 엶 (MissionAbort,0 — exe FUN_00463e40 이 tell.english 의 [ABORT] 를 Tell 한다.
+    /// [ABORT] 의 버튼은 Main Menu·Replay Mission·Continue Mission 이다).
+    /// </summary>
+    ConfirmLeave,
+    /// <summary>현재 미션을 처음부터 다시 시작함 (MissionRestart).</summary>
+    RestartMission,
     /// <summary>아직 지원하지 않는 명령 또는 없는 섹션.</summary>
     Unsupported,
 }
@@ -166,6 +173,17 @@ public sealed class TutorialDialogScript
             Close();
             return new(TutorialDialogActionKind.LeaveBattle);
         }
+        if (button.Action.Equals("MissionAbort", StringComparison.OrdinalIgnoreCase))
+        {
+            // exe FUN_00463e40: 인자가 0 이면 [ABORT] 확인 창, 아니면 곧바로 LeaveBattle 사건을 보낸다 (성공 창의 Leave Missions,MissionAbort,1)
+            Close();
+            return IsZero(button.Argument) ? new(TutorialDialogActionKind.ConfirmLeave) : new(TutorialDialogActionKind.LeaveBattle);
+        }
+        if (button.Action.Equals("MissionRestart", StringComparison.OrdinalIgnoreCase))
+        {
+            Close();
+            return new(TutorialDialogActionKind.RestartMission);
+        }
         if (button.Action.Equals("MissionBegin", StringComparison.OrdinalIgnoreCase) && button.Argument.Length > 0)
         {
             Close();
@@ -178,6 +196,11 @@ public sealed class TutorialDialogScript
         }
         return new(TutorialDialogActionKind.Unsupported, $"아직 지원하지 않는 안내 버튼: {button.Action}");
     }
+
+    /// <summary>버튼 인자가 0 인지 (비었거나 숫자가 아니면 0 으로 본다 — 원본 인자 해석은 atol)</summary>
+    private static bool IsZero(string argument) =>
+        !int.TryParse(argument.Trim(), System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out int value)
+        || value == 0;
 
     /// <summary>조건·변수 치환을 마친 본문에서 제목·버튼·표시용 HTML 구간을 만든다.</summary>
     private static TutorialDialogContent PrepareContent(string section, PreparedMissionSection prepared)
@@ -206,6 +229,13 @@ public sealed class TutorialDialogScript
         }
         return new TutorialDialogContent(section, title, ParseText(body), buttons);
     }
+
+    /// <summary>
+    /// HTML 부분집합의 문단·줄바꿈·강조를 표시 구간으로 변환한다. 도움말 절(<see cref="HelpTopics"/>)도 같은 규칙을 쓴다.
+    /// 링크(&lt;a href&gt;)는 원본 도움말처럼 글자색만 바꾸고 이동은 하지 않는다.
+    /// </summary>
+    /// <param name="body">조건 치환을 마친 HTML 본문</param>
+    public static IReadOnlyList<TutorialTextRun> ParseHtml(string body) => ParseText(body);
 
     /// <summary>HTML 부분집합의 문단·줄바꿈·강조를 표시 구간으로 변환한다.</summary>
     private static IReadOnlyList<TutorialTextRun> ParseText(string body)
@@ -264,8 +294,15 @@ public sealed class TutorialDialogScript
                 case "c" or "b":
                     highlight = true;
                     break;
-                case "/c" or "/b":
+                case "/c" or "/b" or "/a":
                     highlight = false;
+                    break;
+                default:
+                    // 링크 시작(<a href="…">)은 강조 색으로 표시한다. 앵커(<a name>)는 표시하지 않는다.
+                    if (name.StartsWith("a ", StringComparison.Ordinal) && name.Contains("href", StringComparison.Ordinal))
+                    {
+                        highlight = true;
+                    }
                     break;
             }
         }

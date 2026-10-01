@@ -22,6 +22,12 @@ public sealed class DisplaySettings
     /// <summary>창 모드 기본 높이</summary>
     public const int DefaultWindowHeight = 768;
 
+    /// <summary>원본 Options 의 볼륨 단계 하한 (Sound Effect Volume >·Music Volume > 1~5)</summary>
+    public const int MinimumVolume = 1;
+
+    /// <summary>원본 볼륨 단계 상한</summary>
+    public const int MaximumVolume = 5;
+
     /// <summary>창 크기 하한 (이보다 작으면 UI 가 깨진다)</summary>
     private const int MinimumWindowSize = 320;
 
@@ -56,6 +62,18 @@ public sealed class DisplaySettings
 
     /// <summary>창 모드 높이</summary>
     public int WindowHeight { get; set; } = DefaultWindowHeight;
+
+    /// <summary>효과음을 켤지 (원본 Options "Sound On", setup.cfg sound = 1)</summary>
+    public bool SoundOn { get; set; } = true;
+
+    /// <summary>배경음악을 켤지 (원본 Options "Play Music", setup.cfg music = 1)</summary>
+    public bool PlayMusic { get; set; } = true;
+
+    /// <summary>효과음 볼륨 단계 1~5 (원본 options.cfg soundVolume 기본 "3")</summary>
+    public int SoundVolume { get; set; } = 3;
+
+    /// <summary>음악 볼륨 단계 1~5 (원본 options.cfg musicVolume 기본 "2")</summary>
+    public int MusicVolume { get; set; } = 2;
 
     /// <summary>
     /// 시작 처리 중임을 뜻하는 표식. 시작할 때 true 로 저장하고 첫 프레임을 그린 뒤 false 로 되돌린다.
@@ -132,6 +150,8 @@ public sealed class DisplaySettings
         WindowWidth = Math.Clamp(WindowWidth, MinimumWindowSize, MaximumWindowSize);
         WindowHeight = Math.Clamp(WindowHeight, MinimumWindowSize, MaximumWindowSize);
         EdgeScrollSpeed = Math.Clamp(EdgeScrollSpeed, 0, 200);
+        SoundVolume = Math.Clamp(SoundVolume, MinimumVolume, MaximumVolume);
+        MusicVolume = Math.Clamp(MusicVolume, MinimumVolume, MaximumVolume);
         if (!Enum.IsDefined(WideScreen))
         {
             WideScreen = WideScreenMode.Extend;

@@ -60,7 +60,8 @@ dotnet run --project src/Netstorm.Game -- --map savetheisland --language korean
 
 **캠페인 초기 브리핑(2026-09-30):** `--mission thewarbegins` 같은 캠페인 미션도 미션 스크립트의 `[A.]` 섹션을 브리핑 창으로 먼저 연다(제목·인용·본문, 버튼 **Review Knowledge / Play Mission**). **브리핑을 닫기 전에는 세션 시간이 0에서 흐르지 않는다**(사용자 규칙 2, [안내·브리핑 창과 게임 시간](gameplay/dialog-pause.md)). Play Mission(또는 Enter·Space)으로 닫으면 시간이 시작되고, F8·Game 메뉴의 목표 다시 보기로 다시 열 수 있다(다시 열어도 그동안 시간은 멈춘다). Restart/Replay Mission은 미션을 다시 열어 브리핑부터 시작한다. 오른쪽 위 상자에는 창이 열려 있는 동안 `· 안내 창(시간 정지)`이 표시된다.
 
-* `Review Knowledge`(`ShowTechnology`)는 브리핑 위에 **지식 창**(원소별로 내 플레이어가 아는 유닛 이름 목록)을 겹쳐 연다. 미션 화면에서는 **F6**(View Netstorm Knowledge)도 같은 창을 연다. OK·Esc·Enter·Space·F6으로 닫으면 브리핑(있다면)으로 돌아간다. 원본 창의 그림·배치는 캡처가 없어 확인하지 못했다(원본 함수는 `0x492b60`, 인자 55는 쓰이지 않음 — [ShowTechnology 분석](exe/show-technology.md)). 브리핑 없이 F6로 연 창은 원본처럼 시계를 멈추지 않는다.
+* `Review Knowledge`(`ShowTechnology`)는 브리핑 위에 **지식 창**을 겹쳐 연다. 미션 화면에서는 **F6**(View Netstorm Knowledge)도 같은 창을 연다(2026-10-01 원본 화면대로 재구현). SUN·WIND·RAIN·THUN. 네 행에 행 머리 칸(원소 이름·원소 기호)과 유닛 카드(유닛 모습·이름)가 놓이고, 마우스가 올라간 카드는 어두워진다. 카드는 맵 `.fort` Technology 의 지식 + 배운 지식이며 행 안 순서는 `.type` group 순서다. 카드를 누르면 **상세창**(도움말 삽화, Alignment·Class·Hits·Range·Damage·Cost in Storm Power·Energy to Build, `help.english` 본문 스크롤, Back·OK)이 열린다. 격자는 F6·Esc·Enter·Space·격자 바깥 클릭으로 닫고, 상세창은 Back·Esc·Backspace로 격자, OK·Enter·Space·F6으로 모두 닫는다. 원본처럼 **시계를 멈추지 않는다**(녹화에서 창이 열린 채 SP 가 늘었다 — [ShowTechnology 분석](exe/show-technology.md)). 원본 돌 질감 창 그림은 아직 쓰지 않는다. Damage 는 원본 계산을 찾지 못해 Shooter 는 `?`로 둔다.
+* 미션 스크립트 버튼 `MissionAbort,1`(성공 창 Leave Missions)은 곧바로 미션을 떠나고, `MissionAbort,0`은 Leave Mission 확인 창(Main Menu·Replay Mission·Continue Mission, 원본 `tell.english` [ABORT]와 같은 구성)을 열며, `MissionRestart`는 미션을 다시 시작한다(exe `FUN_00463e40`). 성공·실패 창을 여는 승패 판정은 아직 없다.
 * 보이는 본문이 없고 `<$Config,…>` 설정 명령만 있는 `[A.]`(대회용 `tnronguide` 스크립트)는 빈 창이 미션을 멈춰 세우지 않도록 열지 않는다.
 * 원본은 미션 시작 뒤 다이얼로그 없이 10프레임이 지나야 브리핑이 뜨고 닫은 뒤 7프레임 뒤에 시간이 재개되지만, 클론은 0초 지점에서 즉시 열고 닫는 즉시 재개한다(차이는 0.2초 안팎으로 추정).
 
@@ -136,7 +137,7 @@ dotnet run --project src/Netstorm.Game -- --map dissolvedalliance --placement bu
 
 | 입력 | 동작 |
 |---|---|
-| `1`~`6` | 그 칸의 조각을 집는다 (들고 있던 조각은 칸으로 되돌린다) |
+| `1`~`6` 또는 `Q` `W` `A` `S` `Z` `X` | 그 칸의 조각을 집는다 (들고 있던 조각은 칸으로 되돌린다). 글자 키는 원본 매뉴얼의 단축키로, 2열 칸의 행 순서(Q W / A S / Z X)다 |
 | `R` | 들고 있는 조각을 90° 회전 (원본의 오른쪽 클릭. 기본 시계 방향) |
 | `C` | 반대 회전 켜기/끄기 (원본 C 키와 같다. 켜지면 R 이 반시계 방향) |
 | `Backspace` | 들고 있는 조각을 칸으로 되돌린다 |
@@ -192,9 +193,11 @@ dotnet run --project src/Netstorm.Game -- --map bridgethegap --bridges 6 --bridg
 **시작 안전장치**: 시작할 때 `StartupInProgress` 를 켜 두고 첫 프레임을 그린 뒤 끈다. 켜진 채 전체화면 설정이 읽히면(직전 시작이 화면 초기화에서 끝남) 창 모드로 시작하고 안내를 띄운다.
 
 명령줄 옵션 (아래를 쓰면 그 실행은 설정을 저장하지 않는다): `--fullscreen`, `--windowed`, `--window 1920x1080`,
-`--wide extend|letterbox`, `--view-height 480|600|768`, `--no-edge-scroll`.
+`--wide extend|letterbox`, `--view-height 480|600|768`, `--no-edge-scroll`, `--no-sound`, `--no-music`.
 
-검증용 PNG를 저장하고 자동 종료:
+**소리(2026-10-01)**: 원본 `sound/*.wav`·`music/*.mus`를 그대로 재생한다. 미션에서는 원소 곡 4개를 원본 순서(wind → rain → thunder → sun, 첫 곡 난수)로 한 곡씩 돌리고, 그 밖의 화면은 `ser22.mus`다. 효과음은 다리 금·붕괴·놓기·회전, 건설 완료(템플·워크샵 완료음 포함), 지식 창 열기에 연결했다. 설정 파일의 `SoundOn`·`PlayMusic`·`SoundVolume`·`MusicVolume`(1~5, 기본 3·2 = 원본 기본값)로 조절한다. 소리 장치가 없으면 소리 없이 실행된다. 개발용 기본 화면에 소리 상태 줄(장치·지금 곡·재생 여부)이 나온다. 규칙: [music.md](exe/music.md).
+
+검증용 PNG를 저장하고 자동 종료 (`--knowledge [타입]`을 붙이면 지식 창 — 타입을 주면 그 상세창 — 을 연 채 시작한다):
 
 ```powershell
 dotnet run --project src/Netstorm.Game -- --map savetheisland --screenshot extracted/screens/fort-map-savetheisland.png

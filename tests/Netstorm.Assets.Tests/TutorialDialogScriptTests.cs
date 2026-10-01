@@ -185,4 +185,35 @@ public sealed class TutorialDialogScriptTests
         Assert.Contains("tutorial1", opened);
         Assert.True(opened.Count >= 30, $"A. 가 열리는 미션이 너무 적습니다: {opened.Count}");
     }
+
+    /// <summary>
+    /// 성공 창 버튼: MissionAbort 인자 1 은 곧바로 떠나기, 인자 0 은 확인 창, MissionRestart 는 재시작
+    /// (exe FUN_00463e40, The War Begins! [Succeeded][BadTeamDead]).
+    /// </summary>
+    [Fact]
+    public void MissionAbortAndRestart_ReturnActions()
+    {
+        const string scriptText = """
+            [Succeeded][BadTeamDead]
+            <h2>Success!</h2>
+            Your island is now free!
+            $Button=Leave Missions,MissionAbort,1
+            $Button=Next Mission,MissionBegin,MasterOfWhirligigs
+            [Failed]
+            <h2>Failure!</h2>
+            $Button=Leave Missions,MissionAbort,0
+            $Button=Replay Mission,MissionRestart,0
+            """;
+        var dialog = new TutorialDialogScript(new MissionScript(scriptText), new ConfigStore());
+        Assert.True(dialog.OpenSection("BadTeamDead"));
+        Assert.Equal("Success!", dialog.Current!.Title);
+        Assert.Equal(TutorialDialogActionKind.LeaveBattle, dialog.Choose(0).Kind);
+        Assert.Null(dialog.Current);
+        Assert.True(dialog.OpenSection("Succeeded"));
+        Assert.Equal(new TutorialDialogAction(TutorialDialogActionKind.MissionBegin, "MasterOfWhirligigs"), dialog.Choose(1));
+        Assert.True(dialog.OpenSection("Failed"));
+        Assert.Equal(TutorialDialogActionKind.ConfirmLeave, dialog.Choose(0).Kind);
+        Assert.True(dialog.OpenSection("Failed"));
+        Assert.Equal(TutorialDialogActionKind.RestartMission, dialog.Choose(1).Kind);
+    }
 }

@@ -1,0 +1,80 @@
+using Netstorm.Core.Simulation;
+
+namespace Netstorm.Game;
+
+/// <summary>
+/// 세션 사건과 화면 조작을 원본 효과음 이름으로 바꿔 모아 둔다. 실제 재생은 게임 본체의 <see cref="AudioPlayer"/> 가 한다.
+/// 사건 ↔ 파일 대응은 exe 의 효과음 호출 위치로 정했다 (docs/exe/music.md 7절):
+/// 다리 칸 제거 FUN_00422300 → bridgeFall.wav, 붕괴 구동 FUN_004227e0 → bridgeCrack.wav,
+/// 건설 완료 FUN_00443e20 → buildDone.wav + 타입의 buildDoneSound(템플 templeComplete.wav · 워크샵 workshopComplete.wav),
+/// 조각 회전 FUN_00446a70 → rotatePiece.wav, 조각 놓기(FUN_004473e0 등) → dropPiece.wav, 창 열기 → openGump.wav.
+/// 원본은 위치에 따라 좌우·크기를 바꾸는 효과음이 있으나 클론은 아직 화면 위치를 반영하지 않는다.
+/// </summary>
+internal sealed partial class FortMapViewer
+{
+    /// <summary>건설 완료 공통 효과음</summary>
+    private const string BuildDoneSound = "buildDone.wav";
+
+    /// <summary>타입별 건설 완료 효과음 속성 이름 (.type buildDoneSound, exe Rifttype.cpp 0x870)</summary>
+    private const string BuildDoneSoundProperty = "buildDoneSound";
+
+    /// <summary>다리 칸이 무너질 때</summary>
+    private const string BridgeFallSound = "bridgeFall.wav";
+
+    /// <summary>다리 칸에 금이 갈 때</summary>
+    private const string BridgeCrackSound = "bridgeCrack.wav";
+
+    /// <summary>다리 조각을 놓을 때</summary>
+    private const string DropPieceSound = "dropPiece.wav";
+
+    /// <summary>다리 조각을 돌릴 때</summary>
+    private const string RotatePieceSound = "rotatePiece.wav";
+
+    /// <summary>창(gump)을 열 때</summary>
+    private const string OpenGumpSound = "openGump.wav";
+
+    /// <summary>아직 재생 장치로 넘기지 않은 효과음 이름</summary>
+    private readonly List<string> _soundCues = [];
+
+    /// <summary>쌓인 효과음 이름을 꺼내고 비운다. 한 프레임에 같은 소리가 여러 번(여러 칸이 함께 금 감 등)이면 한 번만 튼다.</summary>
+    public IReadOnlyList<string> TakeSoundCues()
+    {
+        string[] cues = [.. _soundCues.Distinct(StringComparer.OrdinalIgnoreCase)];
+        _soundCues.Clear();
+        return cues;
+    }
+
+    /// <summary>
+    /// 내 제단에서 희생 의식이 진행 중인지 (배경음악이 희생 음악을 유지할지 정한다). 사제 포획·제단 의식은 아직 구현하지 않아 항상 false 다.
+    /// </summary>
+    public bool MySacrificeInProgress => false;
+
+    /// <summary>효과음 하나를 요청한다</summary>
+    /// <param name="name">원본 sound/ 파일 이름</param>
+    private void QueueSound(string name) => _soundCues.Add(name);
+
+    /// <summary>세션 사건에 대응하는 효과음을 요청한다</summary>
+    /// <param name="sessionEvent">세션이 알린 사건</param>
+    private void QueueEventSound(SessionEvent sessionEvent)
+    {
+        switch (sessionEvent.Kind)
+        {
+            case SessionEventKind.BuildingCompleted:
+                QueueSound(BuildDoneSound);
+                if (_session.Entity(sessionEvent.EntityId)?.Type.Definition.GetString(BuildDoneSoundProperty) is { Length: > 0 } special)
+                {
+                    QueueSound(special);
+                }
+                break;
+            case SessionEventKind.BridgePlaced:
+                QueueSound(DropPieceSound);
+                break;
+            case SessionEventKind.BridgeCracked:
+                QueueSound(BridgeCrackSound);
+                break;
+            case SessionEventKind.BridgeCollapsed:
+                QueueSound(BridgeFallSound);
+                break;
+        }
+    }
+}

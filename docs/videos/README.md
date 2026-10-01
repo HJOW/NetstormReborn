@@ -49,5 +49,20 @@ python tools/videoframes.py range "playingVideos/Netstorm Islands at war - Disso
 ## 관찰 노트
 
 * [animation-timing.md](animation-timing.md) — 애니메이션 진행 속도: 가이저 증기 약 24Hz, 신전 회오리·피해 연기 12Hz. exe 의 "현재 시각 + 간격" 타이머와 `maxFPS = 75` 루프 양자화로 설명됨
-* [the-war-begins-record-play-20260930.md](the-war-begins-record-play-20260930.md) — 사용자 직접 조작 10 FPS 녹화: 캠페인 1-1 시작, 지식 격자·설명창, 적 신전 파괴 뒤 섬 테마·소유권 전환, 승리와 다음 미션 진입. 원본 녹화는 `playingVideos/20260930T154921831Z-8bdcc06b6539/`에 있으며 Git에서 제외됨
+* [the-war-begins-record-play-20260930.md](the-war-begins-record-play-20260930.md) — 사용자 직접 조작 10 FPS 녹화: 캠페인 1-1 시작, 지식 격자·설명창(호버·구성·시간 흐름), 적 신전 파괴 뒤 섬 테마·소유권 전환, 사제 기절·골렘 포획·제단 의식(다섯 룬)·희생 음악, 승리와 다음 미션 진입. 소리 판독 결과는 [music.md](../exe/music.md). 원본 녹화는 `playingVideos/20260930T154921831Z-8bdcc06b6539/`에 있으며 Git에서 제외됨
 * AV1 소프트웨어 디코딩은 느리므로 긴 구간을 한 번에 뽑지 않는다.
+
+## 소리 판독 도구 `tools/audiomatch.py` (2026-10-01)
+
+`record-play`·`guide` 녹음(세션 폴더의 `audio-*.wav`·`*.start.txt`)을 이어 붙여 원본 소리와 FFT 정규화 상호상관으로 대조한다. 시각은 `video-0001.frames.csv` 첫 프레임 기준 영상 경과 시각이다. numpy 와 ffmpeg 가 필요하다.
+
+```powershell
+python tools/audiomatch.py level playingVideos/<세션ID>                       # 5초 구간별 dBFS
+python tools/audiomatch.py music playingVideos/<세션ID> -o extracted/audio/music.csv   # 6초 조각별 곡·곡 안 위치 (+ 곡 구간 요약)
+python tools/audiomatch.py sfx   playingVideos/<세션ID> -o extracted/audio/sfx.csv     # 원본 효과음 전체(상관 ≥ 0.55)
+python tools/audiomatch.py sfx   playingVideos/<세션ID> --threshold 0.3 --sounds originals/sound/forWind2.WAV
+```
+
+* 음악은 효과음·바람 소리와 섞여 상관값이 0.1~0.25로 낮다. 곡 판정은 **곡 안 위치가 조각 간격만큼 정확히 늘어나는 연속 구간**으로 한다(요약 출력).
+* 내용이 같은 원본 파일 쌍(`openGump`/`openGump-1000`, `impact`/`thunderCannonImpact`, `influenceIcon`/`teleportEffect`)은 구분할 수 없다.
+* 기존 방송 영상(AAC, 방송 음성 섞임)에는 `playingVideos/` 녹음 폴더 구조가 없으므로 쓰지 않는다.
