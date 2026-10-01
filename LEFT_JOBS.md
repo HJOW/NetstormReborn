@@ -1,11 +1,18 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
-> 최종 갱신: 2026-10-01 (클론 UI 글씨·버튼 축소와 원본 돌 창·펼침 메뉴·왼쪽 사이드바 적용 완료 — 맨 위 절 참고)
+> 최종 갱신: 2026-10-01 (README에 Windows exe·Linux 바이너리 빌드/배포 방법 추가 완료 — 맨 위 절 참고)
 > 프로젝트 목표(AGENTS.md): 원본 NetStorm: Islands at War 를 디컴파일/분석하여 클론 코딩하고,
 > **Windows 10/11** 과 **GUI 환경의 Linux** 에서 동작하며 **여러 언어를 지원**하는 게임을 만든다.
 > **1차 목표 언어: 영어, 한국어** (그 외 언어는 이후 확장).
 > **우선순위: Windows 10/11 > Linux** (Linux 지원은 우선순위가 낮다 — 설계상 이식성은 유지하되 검증·배포는 Windows 먼저).
 > **화면 요구사항(2026-09-28 AGENTS.md 추가)**: 풀스크린 모드와 화면비 **16:9 · 16:10 · 4:3** 지원, 풀스크린에서 **마우스를 화면 끝에 대면 화면 이동**(원본도 지원) — 1.7절
+
+---
+
+## 2026-10-01 (Linux, 원본 실행 없음) ✅ 완료: README에 실행 가능한 바이너리 빌드·배포 방법 추가
+
+- **요청 완료:** 루트 `README.md`에 .NET 10 SDK 준비, Release 솔루션 빌드·실행, 게임 프로젝트의 `dotnet publish`로 **Windows x64 `NetstormClone.exe` / Linux x64 `NetstormClone`** 생성, 런타임 포함/미포함 차이, 출력 폴더 전체 배포, 원본 데이터 복사와 `NETSTORM_DATA` 지정, PowerShell·Linux 실행 예제를 추가했다.
+- **검증:** .NET SDK **10.0.401**에서 `win-x64`·`linux-x64` 자체 포함 Release 배포 모두 성공. `dist/`에 생성된 Windows PE x64 exe·Linux ELF x64 실행 파일, D2Coding TTC·SDL2·OpenAL·.NET 런타임 포함을 확인했다. Linux 배포 폴더를 저장소 밖 임시 폴더로 복사한 뒤 외부 `NETSTORM_DATA`와 설치 경로가 아닌 `DOTNET_ROOT`로 실행해 한국어 메인 메뉴 PNG 생성·종료 코드 **0**을 확인했다. 증거는 Git 제외 `extracted/publish-check-20261001/`에 있다. **Windows 실제 실행은 이번 작업에서 검증하지 않았다.** 문서 변경이며 AGENTS.md·원본 데이터는 수정하지 않았다.
 
 ---
 
