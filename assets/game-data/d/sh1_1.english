@@ -1,0 +1,105 @@
+[Header]
+missionType = "Tutorial"
+missionNumber = 1
+moreGeysers = 1
+
+mystartmoney = 400
+myTech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;rainbattery;rainaviary;rainwalker;rainballoon;rainblocker;raincannon;rainFence;windBattery;windarcher;windaviary;windballoon;windblocker;windWalker;outpost;sunWalker;sunArcher;sunBlocker;sunFence;sunBalloon;sunFence;sunAviary;sunCannon"
+
+title = "The end..."
+
+ai2Name = "God #1"
+ai2Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;rainbattery;rainaviary;rainwalker;rainballoon;rainblocker;raincannon;rainFence;windBattery;windarcher;windaviary;windballoon;windblocker;windWalker;outpost;sunWalker;sunArcher;sunBlocker;sunFence;sunBalloon;sunFence;sunAviary;sunCannon"
+ai2StartMoney = 9999999
+ai2GeysersAttachments = 0
+ai2Collectors = 0
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3;4;5"
+ai2color = red
+ai2BridgeDrawRate = 1
+
+ai3Name = "God #2"
+ai3Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;rainbattery;rainaviary;rainwalker;rainballoon;rainblocker;raincannon;rainFence;windBattery;windarcher;windaviary;windballoon;windblocker;windWalker;outpost;sunWalker;sunArcher;sunBlocker;sunFence;sunBalloon;sunFence;sunAviary;sunCannon"
+ai3StartMoney = 9999999
+ai3GeysersAttachments = 0
+ai3Collectors = 0
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2;4;5"
+ai3color = white
+ai3BridgeDrawRate = 1
+
+ai4Name = "God #3"
+ai4Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;rainbattery;rainaviary;rainwalker;rainballoon;rainblocker;raincannon;rainFence;windBattery;windarcher;windaviary;windballoon;windblocker;windWalker;outpost;sunWalker;sunArcher;sunBlocker;sunFence;sunBalloon;sunFence;sunAviary;sunCannon"
+ai4StartMoney = 9999999
+ai4GeysersAttachments = 0
+ai4Collectors = 0
+ai4TimeBetweenMoves = 1
+ai4AllyList = "2;3;5"
+ai4color = green
+ai4BridgeDrawRate = 1
+
+ai5Name = "God #4"
+ai5Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;rainbattery;rainaviary;rainwalker;rainballoon;rainblocker;raincannon;rainFence;windBattery;windarcher;windaviary;windballoon;windblocker;windWalker;outpost;sunWalker;sunArcher;sunBlocker;sunFence;sunBalloon;sunFence;sunAviary;sunCannon"
+ai5StartMoney = 9999999
+ai5GeysersAttachments = 0
+ai5Collectors = 0
+ai5TimeBetweenMoves = 1
+ai5AllyList = "2;3;4"
+ai5color = orange
+ai5BridgeDrawRate = 1
+
+ai6Name = ""
+ai6Tech = ""
+ai6StartMoney = 
+ai6GeysersAttachments = 
+ai6Collectors = 
+ai6TimeBetweenMoves = 
+ai6AllyList = 
+ai6color = 
+
+ai7Name = ""
+ai7Tech = ""
+ai7StartMoney = 
+ai7GeysersAttachments = 
+ai7Collectors = 
+ai7TimeBetweenMoves = 
+ai7AllyList = 
+ai7color = 
+
+ai8Name = ""
+ai8Tech = ""
+ai8StartMoney = 
+ai8GeysersAttachments = 
+ai8Collectors = 
+ai8TimeBetweenMoves = 
+ai8AllyList = 
+ai8color = 
+
+[Options]
+
+[A.]
+<h2>Welcome to SH*T HARD</h2>
+
+<p>~wYou have ended up in the middle of a fierce war between 4 Gods. They know everything so now your gonna die!
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[BadTeamDead]
+<h2>Congratulations!</h2>
+<p>Now you can finally relax for a bit.<br>
+You have set the evil back far for now.<br>
+<br>
+So now you have completed my SH*T HaRD campain you can rest at ease.
+
+<$Config,Done{mission.filename}=1>
+$Button=Leave Missions,MissionAbort,0
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+You are dead! The Enemy has won and evil has prevailed! OH well, I did say it was SH*T HARD.
+
+$Button=Continue,Tell,TryAgain
+
+[END]

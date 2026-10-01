@@ -1,0 +1,135 @@
+[Header]
+missionType = "Tutorial"
+missionNumber = 3
+moreGeysers = 1
+
+mystartmoney = 1500
+myTech = "sunFence;sunBalloon;rainAviary;rainBalloon;rainBattery;rainBlocker;rainCannon;rainFence;rainWalker"
+
+title = "The Razorians"
+
+ai2Name = "Pirate Kahrooza"
+ai2Tech = "windWalker;windArcher;windBlocker;windBattery;"
+ai2StartMoney = 15000
+ai2GeysersAttachments = 15
+ai2Collectors = 15
+ai2TimeBetweenMoves = 1
+ai2AllyList = ""
+ai2ability = "!Attach_To_Enemy_Island;!Use_Priest_To_Collect"
+ai2color = red
+
+ai3Name = "Pirate Statoompa"
+ai3Tech = "sunArcher;sunAviary;sunBalloon;sunBlocker;sunCannon;sunFence;windBattery"
+ai3StartMoney = 15000 
+ai3GeysersAttachments = 15
+ai3Collectors = 15
+ai3TimeBetweenMoves = 1
+ai3AllyList = ""
+ai3ability = "!Attach_To_Enemy_Island;!Use_Priest_To_Collect"
+ai3color = white
+
+ai4Name = "Luitenant Martin"
+ai4Tech = "windWalker;windArcher;windBlocker;windBalloon;windAviary;windBattery;rainAviary;rainBalloon;rainBattery;rainBlocker;rainCannon;rainFence;rainWalker"
+ai4StartMoney = 15000
+ai4GeysersAttachments = 15
+ai4Collectors = 15
+ai4TimeBetweenMoves = 1
+ai4AllyList = "1"
+ai4ability = "!Attach_To_Enemy_Island;!Use_Priest_To_Collect"
+ai4color = green
+
+ai5Name = "Lord Dodadude"
+ai5Tech = "rainAviary;rainBalloon;rainBattery;rainBlocker;rainCannon;rainFence;rainWalker"
+ai5StartMoney = 15000
+ai5GeysersAttachments = 15
+ai5Collectors = 15
+ai5TimeBetweenMoves = 1
+ai5AllyList = "6"
+ai5ability = "!Attach_To_Enemy_Island;!Use_Priest_To_Collect"
+ai5color = magenta
+
+ai6Name = "Lord Gildo"
+ai6Tech = "thunderArcher;thunderBattery;thunderBlocker;thunderCannon;thunderFence;rainBattery;rainWalker"
+ai6StartMoney = 15000
+ai6GeysersAttachments = 15
+ai6Collectors = 15
+ai6TimeBetweenMoves = 1
+ai6AllyList = "5"
+ai6ability = "!Attach_To_Enemy_Island;!Use_Priest_To_Collect"
+ai6color = yellow
+
+ai7Name = ""
+ai7Tech = ""
+ai7StartMoney = 
+ai7GeysersAttachments = 
+ai7Collectors = 
+ai7TimeBetweenMoves = 
+ai7AllyList = 
+ai7color = 
+
+ai8Name = ""
+ai8Tech = ""
+ai8StartMoney = 
+ai8GeysersAttachments = 
+ai8Collectors = 
+ai8TimeBetweenMoves = 
+ai8AllyList = 
+ai8color =
+
+[Options]
+
+[A.]
+<h2>Win the fight!</h2>
+<i>"Nothing is stronger then friendship"<br>
+--Sayains </i>  
+
+<p>While you were reunited with your newly-promoted friend Luitenant Martin, it seemed that the previous two attacks by the "pirates" weren't "pirate attacks" but it's a guild who wants to get rid of DDC: The Razorians. They are as you've noticed pretty good. You and Martin were send out to destroy more of the Razorians, but you came in a fight with 2 pirate islands and as much Razorian islands.
+
+<p>Your mission is to eliminate all enemy threats, especially the Razorians.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[BadTeamDead]
+<h2>Nice battle!</h2>
+<p>
+We have won a pretty hard fight against all those islands! Well done!
+
+<$Config,Done{mission.filename}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,Razorianwar4
+
+[ai2PriestDead]
+<p>~[IwindBalloon.D1]<br>
+<h2>A message by air ship</h2>
+<p>Good fighting, my friend. Pirate Kahrooza has been slain!
+
+[ai3PriestDead]
+<p>~[IwindBalloon.D1]<br>
+<h2>A message by air ship</h2>
+<p>The white pirate is killed! Excellent!
+
+[ai4PriestDead]
+<h2>Luitenant Martin is slain</h2>
+<p>Luitenant Martin has been defeated! DDC will not be happy about this!
+
+$Button=Continue,Tell,TryAgain
+
+[ai5PriestDead]
+<p>~[IwindBalloon.D1]<br>
+<h2>A message by air ship</h2>
+<p>We have defeated Lord Dodadude! Hurray!
+
+[ai6PriestDead]
+<p>~[IwindBalloon.D1]<br>
+<h2>A message by air ship</h2>
+<p>Nice one! Lord Gildo is history!
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+You are dead! The Razorians have prevailed!
+
+$Button=Continue,Tell,TryAgain
+
+[END]

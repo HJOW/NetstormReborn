@@ -1,0 +1,193 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 11
+moreGeysers = 3
+
+myStartMoney = 30000
+myTech = {TpVmyTech1}{TpVmyTech2}
+ 
+title="Choice"
+
+ai2Name = "Minion Of Sun"
+ai2Tech ="sunBalloon;sunArcher;suncannon;sunAviary;windbattery"
+ai2StartMoney = 12000
+ai2GeyserAttachments = 2
+ai2Collectors = 2
+ai2TimeBetweenMoves = 1
+ai2Bridgedrawrate = 1
+ai2AllyList = "3;4;5"
+ai2Ability ="!USE_PRIEST_TO_COLLECT"
+ai2color = white
+
+ai3Name = "Minion Of Thunder"
+ai3Tech ="bulf;thunderArcher;thunderBattery;thunderfence;thunderCannon;thunderblocker"
+ai3StartMoney = 10000
+ai3GeyserAttachments = 2
+ai3Collectors = 2
+ai3TimeBetweenMoves = 1
+ai3Bridgedrawrate = 1
+ai3AllyList = "2;4;5"
+ai3Ability ="!USE_PRIEST_TO_COLLECT"
+ai3color = red
+
+ai4Name = "Minion Of Wind"
+ai4Tech = "windwalker;windArcher;windBlocker;windballoon;windAviary;windbattery"
+ai4StartMoney = 10000
+ai4GeyserAttachments = 2
+ai4Collectors = 2
+ai4TimeBetweenMoves = 1
+ai4Bridgedrawrate = 1
+ai4AllyList = "2;3;5"
+ai4Ability ="!USE_PRIEST_TO_COLLECT"
+ai4color = green
+
+ai5Name = "Minion Of Rain"
+ai5Tech = "rainwalker;raincannon;rainBattery;rainfence;rainballoon;rainblocker;rainAviary"
+ai5StartMoney = 10000
+ai5GeyserAttachments = 2
+ai5Collectors = 1
+ai5TimeBetweenMoves = 1
+ai5Bridgedrawrate = 1
+ai5AllyList = "2;3;4"
+ai5Ability ="!USE_PRIEST_TO_COLLECT"
+ai5color = purple
+
+[init]
+<$config,TpSun=0>
+<$config,TpWind=0>
+<$config,TpThunder=0>
+<$config,TpRain=0>
+<$config,TpSC=0>
+<$config,TpWC=0>
+<$config,TpTC=0>
+<$config,TpRC=0>
+<$config,TpVPass=0>
+
+[Options]
+
+[A.]
+<I>{TpVguide} </I>The Sun Sets. The clouds roll in. The Thunder and Rain commence. <p> 
+<I>{TpVguide1} </I>Know, that this is the way.<br>
+~[Ithunderblocker.1]
+
+<$config,TpV5=1{TpV5}>
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Begin,tell,test
+
+[@60]
+<I>{TpVguide} </I>Remember<P>
+first Sun <br>
+then Wind <br>
+then Thunder<br>
+then Rain<p> 
+~[Iedgefarm.43]
+
+[@300]
+<I>{TpVguide} </I> Here are some Storm Crystals to help you continue your journey.<br>
+~[Inugget.9]
+<$changeMoney,20000>
+
+[@600]
+<I>{TpVguide} </I> Here are some Storm Crystals to help you continue your journey.<br>
+~[Inugget.9]
+<$changeMoney,20000>
+
+
+[ai1priestdead]
+<$tell,finished>
+
+[ai2priestCaptured]
+
+<I>Sun Fury: </I>The Sun has Set below the clouds.<br>
+~[Imog.16]
+<?!{TpWind}{TpThunder}{TpRain}> <$config,TpSun=1> </?>
+<$config,TpSC=1>
+$Button=Continue,tell,done
+
+
+[ai3priestCaptured]
+<I>Thunder Fury: </I>The Thunder has commenced.<br>
+~[Ithundervortex.15]
+
+<?!{TpRain}> <?{TpSun}> <?{TpWind}> <$config,TpThunder=1> </?> </?> </?>
+<$config,TpTC=1>
+$Button=Continue,tell,done
+
+[ai4priestCaptured]
+<I>Wind Fury: </I>The clouds have roll in, and the sky has darkened.<br>
+~[Iwindvortex.20]
+
+<?!{TpThunder}{TpRain}><?{TpSun}> <$config,TpWind=1> </?> </?>
+<$config,TpWC=1>
+$Button=Continue,tell,done
+
+
+[ai5priestCaptured]
+<I>Rain Fury: </I>The rain has begun to fall upon Nimbus.<br>
+~[Irainvortex.28]
+
+<?{TpThunder}> <?{TpSun}> <?{TpWind}> <$config,TpRain=1> </?> </?> </?>
+<$config,TpRC=1>
+$Button=Continue,tell,done
+
+[Done]
+<?{TpSC}> <?{TpWC}> <?{TpTC}> <?{TpRC}> <$tell,Finished> </?></?></?></?>
+
+[Finished]
+<?{TpSun}> <?{TpThunder}> <?{TpWind}> <?{TpRain}> 
+<$tell,passed>
+</?> </?> </?> </?>
+
+<?!{TpSun}> <$tell,lost> </?>
+<?!{TpThunder}> <$tell,lost> </?>
+<?!{TpWind}> <$tell,lost> </?>
+<?!{TpRain}> <$tell,lost> </?>
+
+[passed]
+<h2>~yVictory!</h2><P>
+<i>{TpVguide} </I><?{Tp_name}>{Tp_yourname}, </?> You have proven yourself worthy to hold the 
+title of Var'ca, and to lead the people of Nimbus.<br>
+~[Ipriest.167]
+
+<$config,TpVChoice=1>
+<$tell,TechUsed>
+
+$Button=The End,MissionAbort,1
+$Button=Stats,tell,stats
+
+
+
+[lost]
+<h2>~yFailure!</h2><P>
+<i>{TpVguide2} </I> You have failed to follow the path that was set before you by your spiritual guide.  
+Therefore, you have not been choosen to lead your people. Your quest has come to an End.<br>
+$Button=Leave in Shame,MissionAbort,1
+$Button=Plead for Mercy,tell,RETRY
+
+[RETRY]
+<i>{TpVguide}</i> You have been granted another chance.<P>
+$OnExit= ,MissionBegin,TpVchoice
+
+
+[TECHUSED]
+<?{TpVc1}>  <$config,TpVc11=0>  </?>
+<?{TpVc2}>  <$config,TpVc21=0>  </?>
+<?{TpVc3}>  <$config,TpVc31=0>  </?>
+<?{TpVc4}>  <$config,TpVc41=0>  </?>
+<?{TpVc5}>  <$config,TpVc51=0>  </?>
+
+[Stats]
+<H2>~yStats:</H2><P>
+Number of Attempts at Trial 5: ~i{TpV5}~. <P>
+<H2>~yNotes:</H2><P>
+Each ~i1~. represents one unit of measurement. <br>
+For example, ~i1 1~. equals two.
+$Button=Return to Quest,tell,Passed
+
+
+[END]
+
+
+

@@ -1,0 +1,64 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 3
+
+
+myStartMoney = 10000
+myTech ="windarcher;windblocker;windaviary;windwalker;sunWalker;sunArcher;sunBlocker;windballoon;sunFence;sunAviary;sunCannon;rainBattery;windBattery;thunderBattery"
+
+title="No Escape"
+
+ai2Name = "Tilgon"
+ai2StartMoney = 12000
+ai2Tech = "rainBattery;sunwalker;raincannon;rainballoon;rainblocker;rainAviary"
+ai2GeyserAttachments = 2
+ai2Collectors = 2
+ai2TimeBetweenMoves = 1
+ai2AllyList = ""
+ai2Bridgedrawrate = 1
+ai2ability="!USE_PRIEST_TO_COLLECT"
+ai2color = yellow
+
+
+[Options]
+
+[A.]
+<h2>No Escape</h2>
+<P>
+<i>"A master bridge builder is hard to find" ---Father Jonas, Thunder Point</i>
+<P>~y
+You have just awoken, your last memory is of battle .  As you look around 
+you notice your island is being towed, your guess is, towards Terra.~.
+<P>
+<I>TILGON (Bounty Hunter): </I>Ah, I see that you have awakened young priest.  Try not 
+to struggle so, your death will come soon enough.  
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Try to Escape,DoNothing,0
+$Button=Rest your Wounds,MissionBegin,Defeat
+
+
+
+[Succeeded][BadTeamDead]
+<h2>Freedom is Yours</h2>
+<P>~y
+
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,1
+$Button=Head for Terra,MissionBegin,gather
+
+
+
+
+[ai1PriestCaptured]
+<H2>Foolish priest</H2>
+<P>
+<I>Tilgon: </I> Did you really think that you could escape. 
+<P>
+$Button=OK,MissionBegin,defeat
+
+
+[END]
+

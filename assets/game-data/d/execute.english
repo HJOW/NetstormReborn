@@ -1,0 +1,79 @@
+[Header]
+missionType = "Tutorial"
+
+randGeysers = 1
+missionNumber = 1
+moreGeysers = 3
+
+
+myStartMoney = 12000
+myTech ="windarcher;windblocker;windaviary;windwalker;windballoon;windBattery"
+
+title="Execution"
+
+ai2Name = "Martol"
+ai2StartMoney = 12000
+ai2Tech = "bulf;thunderArcher;thunderBattery;thunderfence;thunderCannon;thunderblocker;windarcher"
+ai2GeyserAttachments = 2
+ai2Collectors = 2
+ai2TimeBetweenMoves = 1
+ai2AllyList = ""
+ai2Bridgedrawrate = 1
+ai2ability="!USE_PRIEST_TO_COLLECT"
+ai2color = white
+
+
+[Options]
+
+[A.]
+<h2>Execution</h2>
+<P>
+<i>"Sunwalker, Sunwalker, where art thou Sunwalker"--William Nimbus</i>
+<P>
+<I>Martol: </I> My people, We need to gather Geyser Crystals for the sacrifice ceremony. 
+<P>
+<I>Masses: </I>Yes my Lord!
+<P>~y
+You are in the holding area on Terra. Soon you will be placed upon the alter and sacrificed to 
+the furies.
+<$Config,Donebeenthere4=1>
+
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Fight,DoNothing,0
+
+
+[ai1TemplehalfDead]
+~yMy Lord, A messenger has just arrived with urgent news.~.
+<P>
+<I>Messenger: </I>Our Temple has taken substantial damage. We can't hold out much longer, 
+we need reenforcements!
+<P>
+
+~[IwindWalker,9]
+
+
+
+[Succeeded][BadTeamDead]
+
+<h2>~yFreedom</h2>
+<P>
+Martol reign has ended!
+<P>
+It is time to rebuild, but only time will heal the scars caused by Martol.
+
+<$Config,Done{mission.fileName}=1>
+$Button=Campaign Over,MissionAbort,1
+
+
+[Failed]
+<H2>~yFoolish priest~.</H2>
+<P>
+<I>Martol: </I> Did you really think that you could challenge my power. 
+<P>
+~y You are consumed upon the alter, and the Sameron faith dies along with you. 
+$Button=Campaign Over,MissionAbort,1
+
+
+[END]
+

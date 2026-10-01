@@ -1,0 +1,90 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = "6"
+moreGeysers = "1"
+randGeysers = "1"
+
+myStartMoney = "0"
+myTech = "thunderFence;outpost;windBalloon;sunFence;sunCannon;sunArcher;windWalker;thunderCannon;thunderBattery;sunAviary;windbattery"
+myAllyList = ""
+
+title="None Left"
+
+ai2Name = "Corrie"
+ai2Tech = "sunBlocker;sunBalloon;sunFence;sunCannon;sunArcher;thunderCannon;thunderBattery;sunAviary"
+ai2StartMoney = "1000"
+ai2AllyList = ""
+ai2Color = "red"
+ai2Collectors = "2"
+ai2BridgeDrawRate = ""
+ai2GeyserAttachments = "2"
+ai2TimeBetweenMoves = "1"
+ai2Ability = "!COLLECT_STORM_POWER;"
+
+ai3Name = "Mandy"
+ai3Tech = "windArcher;windAviary;windWalker;windBattery"
+ai3StartMoney = "1000"
+ai3AllyList = ""
+ai3Color = "white"
+ai3Collectors = "5"
+ai3BridgeDrawRate = "1"
+ai3GeyserAttachments = "5"
+ai3TimeBetweenMoves = "1"
+ai3Ability = ""
+
+ai4Name = "Michael"
+ai4Tech = "sunBlocker;sunBalloon;sunFence;sunCannon;sunArcher;thunderCannon;thunderBattery;thunderArcher"
+ai4StartMoney = "1000"
+ai4AllyList = "5"
+ai4Color = "green"
+ai4Collectors = "5"
+ai4BridgeDrawRate = "1"
+ai4GeyserAttachments = "5"
+ai4TimeBetweenMoves = "2"
+ai4Ability =""
+
+ai5Name = "Kelley"
+ai5Tech = "rainBalloon;rainCannon;rainBlocker;rainAviary;rainBattery"
+ai5StartMoney = "1000"
+ai5AllyList = "4"
+ai5Color = "purple"
+ai5Collectors = "5"
+ai5BridgeDrawRate = "2"
+ai5GeyserAttachments = "6"
+ai5TimeBetweenMoves = "2"
+ai5Ability = ""
+
+[Options]
+
+[A.]
+<h2>None Left</h2>
+<i>"When chased by a man 'o war, don't try playing dead" <br>
+----General Michael, while trying to discipline his troops</i>
+<p>Good luck...sorry I can't give any cash, it's against the rules in this event.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded]
+<h2>Whoa...Wealth is yours</h2>
+<p>What event now...
+
+$Button=Leave Missions,MissionAbort,0
+$Button=Event I,MissionBegin,Portal1
+$Button=Event II,MissionBegin,Portal2
+$Button=Event III,MissionBegin,Portal3
+$Button=Event IV,MissionBegin,Portal4
+$Button=Event V,MissionBegin,Portal5
+
+[Failed]
+<h2>Dope, not again.</h2>
+<p>Dope, not again.
+$Button=Leave Missions,MissionAbort,0
+$Button=Event I,MissionBegin,Portal1
+$Button=Event II,MissionBegin,Portal2
+$Button=Event III,MissionBegin,Portal3
+$Button=Event IV,MissionBegin,Portal4
+$Button=Event V,MissionBegin,Portal6
+
+[END]

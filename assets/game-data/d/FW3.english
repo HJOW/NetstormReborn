@@ -1,0 +1,102 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 3
+moreGeysers = 2
+
+myStartMoney = 10000
+myTech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;rainFence;rainblocker;sunwalker"
+myAllyList = "2"
+
+title="Clones"
+
+ai2Name = "Clone"
+ai2Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;sunwalker"
+ai2StartMoney = 7500
+ai2GeyserAttachments = 8
+ai2Collectors = 5
+ai2TimeBetweenMoves = "1"
+ai2DrawBrigdeRate = 1
+ai2AllyList = "3;4;5;6"
+ai2color = blue
+
+ai3Name = "Clone"
+ai3Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;bulf;sunwalker"
+ai3StartMoney = 7500
+ai3GeyserAttachments = 6
+ai3Collectors = 5
+ai3TimeBetweenMoves = "1"
+ai3DrawBrigdeRate = 1
+ai3AllyList = "2;4;5;6"
+ai3color = blue
+
+ai4Name = "Clone"
+ai4Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainwalker;sunwalker"
+ai4StartMoney = 7500
+ai4GeyserAttachments = "7"
+ai4Collectors = 4
+ai4TimeBetweenMoves = 1
+ai4AllyList = "2;3;5;6"
+ai4color = blue
+
+ai5Name = "Clone"
+ai5Tech = "sunwalker;thunderbattery;thunderarcher;thunderblocker;thundercannon;Bulf"
+ai5StartMoney = 7500
+ai5GeyserAttachments = 7
+ai5Collectors = 5
+ai5TimeBetweenMoves = "1"
+ai5DrawBrigdeRate = 1
+ai5AllyList = "2;3;4;6"
+ai5color = blue
+
+ai6Name = "Clone"
+ai6Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;sunwalker"
+ai6StartMoney = 7500
+ai6GeyserAttachments = 7
+ai6Collectors = 5
+ai6TimeBetweenMoves = "0"
+ai6DrawBrigdeRate = 1
+ai6AllyList = "2;3;4;5"
+ai6color = blue
+
+ai7Name = "WAR Fighter"
+ai7Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainwalker;sunwalker"
+ai7StartMoney = 7500
+ai7GeyserAttachments = 1
+ai7Collectors = 1
+ai7TimeBetweenMoves = "1"
+ai7AllyList = "1"
+ai7color = lightblue
+
+[Options]
+
+[A.]
+<h2>~[IPriest.1]~[IPriest.1]~[IPriest.1]~[IPriest.1]~[IPriest.1]Clones~[IPriest.1]~[IPriest.1]~[IPriest.1]~[IPriest.1]~[IPriest.1]</h2>
+<i>Guldan: ~.Ummm...They enemy seemed to have cloned you.  It was probably that energy you felt eariler.</i><br>
+<i>You: ~.What the hell I'm I suppose to do about these?  It is 5 on 2, and my ally doesn't have an island for himself!<br>
+<i>Guldan: ~.Relax, you have some advantages in this war.  First you have a great and complexe defense.  Take a look at that baby, ability to take any hit.  Of course, I gave you some of my Technology plans, and some how got a sum of 10000 for you to start with.  You also have us crossing our fingers.<br>
+<i>You: ~.Can't you get some back up?<br>
+<i>Guldan: ~.In time, my friend, in time...Good Luck<br>
+Ok, it is seemly near impossible to win...What are you going to do?
+
+$Button=What you got, what you don't,ShowTechnology,55
+$Button=Let's kick some...,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<p>Great, now all we have to do is go after the leaders.  Maybe after a nap though...*yawn*...so tired...
+<$Config,Done{mission.fileName}=1>
+$Button=Going to sleep,MissionBegin,FW4
+
+[ai2PriestDead]
+<i>Guldan: ~.Good work, the furies gave me this to give to you.
+$Button=Open your present,GetTechnology,126
+
+[ai7PriestDead]
+<i>Guldan: ~wJust for letting die, you are getting a 5% cut in your paycheck.
+$Button=Ok,DoNothing,0
+
+[Failed]
+Ouch...maybe you were right and your leader was wrong...
+$Button=Wait...God gives you a second chance,MissionBegin,FWT1
+
+[END]

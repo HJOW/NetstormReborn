@@ -1,0 +1,134 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 2
+moreGeysers = 3
+
+myStartMoney = 3000
+myTech ="rainwalker;raincannon;rainBattery;rainballoon;rainblocker;rainAviary;outpost;sunFence"
+myAllyList ="2"
+
+title = "Pirate Raid"
+ai2Name = "Whoosh"
+ai2Tech ="windBattery;windWalker;windBalloon;windAviary;windArcher;windblocker"
+ai2StartMoney = 10000
+ai2GeyserAttachments = 15
+ai2Collectors = 10
+ai2TimeBetweenMoves = 0
+ai2Bridgedrawrate = 1
+ai2color = red
+ai2AllyList = "1"
+
+ai3Name = "Wind Hunter"
+ai3Tech ="windBattery;windWalker;windBalloon;windAviary;windArcher;windblocker"
+ai3StartMoney = 10000
+ai3GeyserAttachments = 20
+ai3Collectors = 20
+ai3TimeBetweenMoves = 0
+ai3Bridgedrawrate = 1
+ai3Ability ="!USE_PRIEST_TO_COLLECT"
+ai3color = white
+ai3AllyList = "4;5;6"
+
+ai4Name = "Wind Underling"
+ai4Tech ="windBattery;windWalker;windBalloon;windAviary;windArcher;windblocker"
+ai4StartMoney = 7500
+ai4GeyserAttachments = 15
+ai4Collectors = 15
+ai4TimeBetweenMoves = 0
+ai4Bridgedrawrate = 1
+ai4Ability ="!USE_PRIEST_TO_COLLECT"
+ai4color = green
+ai4AllyList = "3;5;6"
+
+ai5Name = "Wind Stalker"
+ai5Tech ="windBattery;windWalker;windBalloon;windAviary;windArcher;windblocker"
+ai5StartMoney = 10000
+ai5GeyserAttachments = 20
+ai5Collectors = 20
+ai5TimeBetweenMoves = 0
+ai5Bridgedrawrate = 1
+ai5Ability ="!USE_PRIEST_TO_COLLECT"
+ai5color = purple
+ai5AllyList = "3;4;6"
+
+ai6Name = "Wind Follower"
+ai6Tech ="windBattery;windWalker;windBalloon;windAviary;windArcher;windblocker"
+ai6StartMoney = 7500
+ai6GeyserAttachments = 15
+ai6Collectors = 15
+ai6TimeBetweenMoves = 0
+ai6Bridgedrawrate = 1
+ai6Ability ="!USE_PRIEST_TO_COLLECT"
+ai6color = yellow
+ai6AllyList = "3;4;5"
+
+
+[Options]
+
+[A.]
+<P>"Sometimes,You lose."
+<P>Twinkies
+<p>You were patrolling your home base when a 4 pirates attacked!
+Slay the pirates and save your base!
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Fight,DoNothing,0
+
+
+[ai2PriestDead]
+Dang it!! you were supposed to help me!
+
+[ai3PriestDead]
+Aieeeeeeeeeee!!
+
+[ai4PriestDead]
+Ack!
+
+[ai5PriestDead]
+Oh Pooh!
+
+
+[ai2PriestCaptured]
+Oh No! I am  doomed!
+
+
+
+[ai3PriestCaptured]
+Lemme go please?
+
+
+[ai4PriestCaptured]
+Ack!
+
+[ai5PriestCaptured]
+Rats!
+
+[ai2TempleHalfDead]
+Help me!
+
+[ai3TempleHalfDead]
+Oh Fudge!
+
+[ai4TempleHalfDead]
+Grrrrr!
+
+[ai5TempleHalfDead]
+gosh your good!
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>You have slayed the 4 pirates. Good Job!
+<$Config,Done{mission.fileName}=1>
+$Button=Next Mission,MissionBegin,POW3
+$Button=Leave Missions,MissionAbort,0
+
+[Failed]
+<h2>Failure!</h2>
+<p>You have been sacrificed and the pirates assult the home base. Bad!
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+
+
+

@@ -1,0 +1,68 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 4
+moreGeysers = 1
+
+myStartMoney = 15000
+myTech = "rainBattery;rainCannon;rainBlocker;sunBalloon;sunAviary;windBattery;windarcher;windWalker"
+
+title = "No Time to Kill"
+
+ai2Name = "William the Conquerer"
+ai2Tech = "thunderBattery;thunderBlocker;thunderCannon;windBattery;windarcher;windAviary"
+ai2StartMoney = 5000
+ai2GeyserAttachments = 2
+ai2Collectors = 3
+ai2TimeBetweenMoves = 6
+ai2AllyList = 
+ai2Color = red
+
+ai3Name = "Gen.Rainjun"
+ai3Tech = "rainBlocker"
+ai3StartMoney = 0
+ai3GeyserAttachments = 2
+ai3Colectors = 0
+ai3TimeBetweenMoves = 10
+ai3AllyList = "1;4"
+ai3Color = white
+
+ai4Name = "Gen.Johnson"
+ai4Tech = "windBlocker"
+ai4StartMoney = 0
+ai4GeyserAttachments = 10
+ai4Collectors = 0
+ai4TimeBetweenMoves = 10
+ai4AllyList = "1;3"
+ai4Color = green
+
+[Options]
+
+[A.]
+<h2>No Time to Kill</h2>
+<i>"Speed and critical thinking are greatest weapons."
+--Great  Suski Master Chin</i>
+<p>Just as you were about to send your island to the great vortex your generals are attacked by the evil Barbrian William the Conquerer.You must save them for they cannot save themselves.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Whew!!!</h2>
+<p>
+Thanks to critical thinking you have saved your campaign.Journey Onward!!!
+THE END
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,1
+$Button=Next Mission,MissionBegin,WOF5
+
+[Failed]
+<h2>Dum...Dum...da...Dum</h2>
+<p>
+With your generals dead,your quest is a waste of time.
+$Button=Continue,Tell,TryAgian
+
+
+[END]
+
+

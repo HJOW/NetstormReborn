@@ -1,0 +1,192 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = "9"
+moreGeysers = "0"
+randGeysers = "0"
+
+myStartMoney = "100000"
+myTech = "{vn_tech}"
+myAllyList = "8;"
+
+title = "Hectic"
+
+ai2Name = "People's front of Nimbus (1)"
+ai2Tech = "windArcher;sunBlocker;windBattery;sunBalloon;"
+ai2StartMoney = "100000"
+ai2AllyList = "5;"
+ai2Color = "red"
+ai2Collectors = "1"
+ai2BridgeDrawRate = "1"
+ai2GeyserAttachments = "1"
+ai2TimeBetweenMoves = "1"
+ai2Ability = "!SACRIFICE_ENEMY_PRIEST"
+
+ai3Name = "Nimbian people's front (1)"
+ai3Tech = "rainCannon;rainBattery;sunBlocker;sunBalloon;"
+ai3StartMoney = "100000"
+ai3AllyList = "6;"
+ai3Color = "white"
+ai3Collectors = "1"
+ai3BridgeDrawRate = "1"
+ai3GeyserAttachments = "1"
+ai3TimeBetweenMoves = "1"
+ai3Ability = "!SACRIFICE_ENEMY_PRIEST"
+
+ai4Name = "People's friends of Nimbus (1)"
+ai4Tech = "thunderBattery;thunderCannon"
+ai4StartMoney = "100000"
+ai4AllyList = "7;"
+ai4Color = "green"
+ai4Collectors = "1"
+ai4BridgeDrawRate = "1"
+ai4GeyserAttachments = "1"
+ai4TimeBetweenMoves = "1"
+ai4Ability = "!SACRIFICE_ENEMY_PRIEST"
+
+
+ai5Name = "People's front of Nimbus (2)"
+ai5Tech = "windArcher;sunBlocker;windBattery;sunBalloon;"
+ai5StartMoney = "100000"
+ai5AllyList = "2;"
+ai5Color = "purple"
+ai5Collectors = "1"
+ai5BridgeDrawRate = "1"
+ai5GeyserAttachments = "1"
+ai5TimeBetweenMoves = "1"
+ai5Ability = "!SACRIFICE_ENEMY_PRIEST"
+
+ai6Name = "Nimbian people's front (2)"
+ai6Tech = "rainCannon;rainBattery;sunBlocker;sunBalloon;"
+ai6StartMoney = "100000"
+ai6AllyList = "3;"
+ai6Color = "yellow"
+ai6Collectors = "1"
+ai6BridgeDrawRate = "1"
+ai6GeyserAttachments = "1"
+ai6TimeBetweenMoves = "1"
+ai6Ability = "!SACRIFICE_ENEMY_PRIEST"
+
+ai7Name = "People's friends of Nimbus (2)"
+ai7Tech = "thunderBattery;thunderCannon"
+ai7StartMoney = "100000"
+ai7AllyList = "4;"
+ai7Color = "lightblue"
+ai7Collectors = "1"
+ai7BridgeDrawRate = "1"
+ai7GeyserAttachments = "1"
+ai7TimeBetweenMoves = "1"
+ai7Ability = "!SACRIFICE_ENEMY_PRIEST"
+
+
+ai8Name = "Your ally"
+ai8Tech = "sunBlocker;sunCannon;windBattery;"
+ai8StartMoney = "100000"
+ai8AllyList = "1;"
+ai8Color = "orange"
+ai8Collectors = "1"
+ai8BridgeDrawRate = "1"
+ai8GeyserAttachments = "1"
+ai8TimeBetweenMoves = "1"
+ai8Ability = "!SACRIFICE_ENEMY_PRIEST"
+
+[Init]
+
+[Options]
+
+[A.]
+<h2>Hectic</h2>
+The Lord of <?{vn_windall}>Wind</?><?!{vn_windall}>Rain</?>~. has been slain by the People's Front of Nimbus.
+ Or was it the Nimbian People's Front? Or maybe The People's Friends of Nimbus? Anyway, they must all die. Due to your excellent performance in battle you are crowned as the new leader of <?{vn_windall}>Wind</?><?!{vn_windall}>Rain</?>~., 
+and it is up to you to secure this strategically vital area of the Pyroshpere, Storm Pass
+<p>~rWARNING~. This mission has eight people on it, so it's prone to crashing occasionally. Don't press escape or F9 or anything like that either.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[ai1PriestCaptured]
+<h2>Your priest is captured.
+ Fearing your great power your opponents quickly slaughter you rather then sacrifice you for knowledge.</h2>
+<p>
+<$Config,vn_death=1>
+<$Config,vn_alive=0>
+$Button=Leave,tell,guidevn.overview
+
+
+[ai2PriestDead]
+A priest has been slain! You are rewarded with tech. What will you choose
+$Button=Mystery Tech,GetTechnology,84
+<?{vn_windall}><?!{vn_windtower}>$Button=Wind tower,tell,tower</?></?>
+<?!{vn_windall}><?!{vn_icetower}>$Button=Ice tower,GetTechnology,147</?></?>
+[tower]
+<?{vn_windall}><$Config,vn_windtower=1></?>
+<?!{vn_windall}><$Config,vn_icetower=1></?>
+<?{vn_windall}><$GetTechnology,142></?>
+<?!{vn_windall}><$GetTechnology,147></?>
+
+[ai3PriestDead]
+Another priest is slaughtered. Have some tech!
+$Button=Mystery Tech,GetTechnology,109
+<?{vn_windall}><?!{vn_skater}>$Button=Sail Skater,tell,skater</?>
+<?!{vn_windall}><?!{vn_crab}>$Button=Crystal Crab,GetTechnology,156</?></?>
+
+[skater]
+<$GetTechnology,137>
+
+[crab]
+<$GetTechnology,156>
+
+
+
+[ai4PriestDead]
+The air is filled with the death-cry of another unfortunate priest.
+ You smile at you good fortune as another technology is yours.
+$Button=Mystery Tech,GetTechnology,154
+$Button=Balloon,tell,balloon
+[balloon]
+
+<$GetTechnology,111>
+
+[ai5PriestDead]
+The priest harvesting continues. When this is over you will be strong enough to rule Nimbus.
+$Button=Mystery Tech,GetTechnology,122
+<?{vn_donevn4}><?{vn_donevn7}>$Button=Outpost,tell,post</?></?>
+[post]
+<$GetTechnology,126>
+
+[ai6PriestDead]
+Your bloodstained Kris knife almost glows with power as it cuts the very air beneath it. The sacrifice is complete.
+ The furies are pleased. You are not unrewarded
+$Button=Mystery Tech,GetTechnology,100
+<?!{vn_donevn6}>$Button=Stone tower,tell,stone</?>
+[stone]
+<$GetTechnology,78>
+
+[ai7PriestDead]
+Another priest fallen. Victory is that little bit closer. You gain...
+$Button=Mystery Tech,GetTechnology,70
+$Button=Free Ice tower (Growing),GetTechnology,150
+
+
+[ai8PriestDead]
+Your ally died. This was a big battle and he could have been very helpful. With a heavy heart you valiantly battle on.
+
+[Succeeded][BadTeamDead]
+<h2>Incredible!</h2>
+<p>
+You have been victorious in an eight priest bloodbath!
+ Nimbus is falling under your control. All that needs be done now is to kill the leaders of the other two furies.....
+
+<$Config,vn_donevn9=1>
+$Button=Next Mission,MissionBegin,<?{vn_windall}>vn11</?><?!{vn_windall}>vn10</?>
+
+
+[ai1PriestCaptured]
+<h2>Your priest is captured.
+ Fearing your great power your opponents quickly slaughter you rather then sacrifice you for knowledge.</h2>
+<p>
+<$Config,vn_death=1>
+<$Config,vn_alive=0>
+$Button=Leave,tell,guidevn.overview
+
+[END]

@@ -1,0 +1,34 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 5
+moreGeysers = 1
+
+myStartMoney = 6500
+myTech = "suncannon;outpost;sunwalker;sunballoon;sunarcher"
+myallylist = ""
+
+title="Final Conflict"
+
+ai2Name = "Tcannonmakerguy"
+ai2Tech = "thunderbattery;bulf;thundercannon;thunderarcher"
+ai2StartMoney = 5000
+ai2GeyserAttachments = 2
+ai2Collectors = 8
+ai2TimeBetweenMoves = 1
+ai2BridgeDrawRate = 2
+ai2AllyList = ""
+ai2color = red
+
+[Options]
+
+[A.]
+~3~E~iKill or be Killed<br>
+~.~E~wNothing special here, just an interesting tech choice.  Go get those baddies!
+
+$Button=What Tech?,showtechnology,55
+
+[Succeeded][BadTeamDead]
+
+[Failed]
+[END]

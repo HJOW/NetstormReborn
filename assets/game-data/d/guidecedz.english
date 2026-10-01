@@ -1,0 +1,24 @@
+title = "Cedz's Campiagn"
+
+[Overview]
+<background="nsstart">
+<h2>Cedz's Campiagn</h2>
+<p>This is my first campign that I made and it is pretty long I suppose.  It is supposed to take place 20-40 years after the built - in campaign.  Proceed to the Menu stage if you want to hear more breifings.
+
+$Checked=1 Menu,MissionBegin,b0,{Doneb0},1
+$Checked=2 An Unexpected Guest,MissionBegin,b1,{Doneb1},2
+$Checked=3 Breaching the Defence,MissionBegin,b2,{Doneb2},{Doneb1}
+$Checked=4 Final Showdown?,MissionBegin,b3,{Doneb3},{Doneb2}
+$Checked=5 Escape,MissionBegin,b4,{Doneb4},{Doneb3}
+$Checked=6 New Alliances,MissionBegin,b5,{Doneb5},{Doneb4}
+$Checked=7 Offensive,MissionBegin,b6,{Doneb6},{Doneb5}
+$Checked=8 Danger,MissionBegin,b7,{Doneb7},{Doneb6}
+$Checked=9 Into the Storm,MissionBegin,b8,{Doneb8},{Doneb7}
+$Checked=10 Through the Darkening Skies,MissionBegin,b9,{Doneb9},{Doneb8}
+$Checked=11 Preparation,MissionBegin,b10,{Doneb10},{Doneb9}
+$Checked=12 Cornered,MissionBegin,b11,{Doneb11},{Doneb10}
+$Checked=13 Deformation,MissionBegin,b12,{Doneb12},{Doneb11}
+$Checked=14 Salvation,MissionBegin,b13,{Doneb13},{Doneb12}
+$Checked=15 Last Confrontation,MissionBegin,b14,{Doneb14},{Doneb13}
+
+$Button=Back,Tell,Campaign

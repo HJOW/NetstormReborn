@@ -1,0 +1,17 @@
+title = "DerfIsGod"
+
+[Overview]
+<background="nsstart">
+<h2>Derf Is God</h2>
+<i>Let's Play NetStorm !</i>
+<p>
+I am the astrocreep a demolition style Hell-American Freak Yeah!
+Suggestions please e-mail AntKoRn599@aol.com
+
+$Checked=1 Derfisgod,MissionBegin,derfisgod,{Donederfisgod},1
+
+$Button=Back,Tell,Campaign
+
+
+
+

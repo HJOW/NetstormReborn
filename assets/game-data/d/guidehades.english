@@ -1,0 +1,148 @@
+title = "THE BOWELS OF ~r~B~[Ipriest.103]~[IsunFlyerBomb.0]HELL~[IsunFlyerBomb.2]~[Ipriest.133]"
+[Overview]
+<background="nsstart">
+<$Config,sw_var1="sunArcher;sunCannon;windBattery;">
+<$Config,sw_var2="sunFence;sunAviary;sunBlocker;sunBalloon;">
+<$Config,sw_var3="windArcher;windWalker;windBlocker;">
+<$Config,sw_var4="windBalloon;windAviary;">
+<$Config,sw_var5="rainBattery;rainCannon;rainWalker;rainFence;">
+<$Config,sw_var6="rainBlocker;rainAviary;rainBalloon;">
+<$Config,sw_var7="thunderBattery;thunderBlocker;bulf;">
+<$Config,sw_var8="thunderCannon;thunderFence;thunderArcher;">
+<$Config,sw_var9="outpost;">
+<$Config,sw_god1="God of ~lRAIN~.~[Imanabolt.1]">
+<$Config,sw_god2="God of ~oWIND~.~[Imanabolt.0]">
+<$Config,sw_god3="God of ~mTHUNDER~.~[Imanabolt.2]">
+<$Config,sw_god5="King of ~[IsunFlyerBomb.0]~rHADES~[IsunFlyerBomb.2]~.">
+<$Config,sw_hades="~[IsunFlyerBomb.0]~rHADES~[IsunFlyerBomb.2]~.">
+    <h>THE BOWELS OF ~r~[Ipriest.103]~[IsunFlyerBomb.0]HELL~[IsunFlyerBomb.2]~[Ipriest.133]    <a href="#HadesIntro">~[IfortGump.36]</a></h>
+          Click on the image below to start the mission.<br>
+                 Good luck! May the Furies be with you.<br>
+                         (or at least not against you)!<p>
+      A joint venture ~[Ipriest.101]<a href="cmd:MissionBegin,sw_m51">~[Imog.15]</a>~[Ipriest.133] by: ~B~I~ySwelbLander~.<p>
+            <a href="mailto:MVieira220@aol.com">~[Ipriest.76]swelb</a>                            <a href="mailto:kohlmp@transcom.scott.af.mil">Highlander~[Ipriest.150]</a>~.<br>
+    ~[Iicon.6]~mNEC~[Iicon.6]~y~BBULF ~.~kin training~.>                  ~[Iicon.12]~y~BBulf~[Iicon.12]~.~kin training~.~[Iicon.4]
+<p>
+<br>
+<?!{sw_m2}><?!{sw_m3}><?!{sw_m4}>
+<?!{sw_m5}><?!{sw_m6}><?!{sw_m7}><?!{sw_m8}>
+<?!{sw_m9}><?!{sw_m10}><?!{sw_m11}>
+<?!{sw_m12}><?!{sw_m13}><?!{sw_m14}>
+<?!{sw_m15}><?!{sw_m16}><?!{sw_m17}><?!{sw_m18}>
+<?!{sw_m19}><?!{sw_m20}><?!{sw_m21}>
+<?!{sw_m22}><?!{sw_m23}><?!{sw_m24}>
+<?!{sw_m25}><?!{sw_m30}>
+                      ~B~yMission #:    <i>1<br>
+                      ~B~yTitle:             <i>Apprenticeship    <a href="#mission1">~[IfortGump.46]</a>
+<$Config,sw_difficulty1=0>
+<$Config,sw_mvar0=0>
+<$Config,sw_mvar1=15000>
+<$Config,sw_mvar2=1>
+$Menu=~[Iburied.1],MissionBegin,sw_m1
+</?></?></?></?></?>
+</?></?></?></?></?>
+</?></?></?></?></?>
+</?></?></?></?></?>
+</?></?></?></?></?>
+<?{sw_m2}>
+            ~B~yMission #:    <i>2<br>
+            ~B~yTitle:             <i>Apprenticeship (not aligned)<a href="#mission2">~[IfortGump.46]</a>
+$Menu=~[IsunWalker.65],MissionBegin,sw_m2</?>
+<?{sw_m3}>
+                        ~B~yMission #:    <i>3<br>
+                        ~B~yTitle:             <i>Run for Your LiFE!<a href="#mission3">~[IfortGump.46]</a>
+$Menu=   ~[Ipriest.56]             ~[IrainAviary.10],MissionBegin,sw_m3</?>
+<?{sw_m4}>
+           ~B~yMission #:    <i>4<br>
+           ~B~yTitle:             <i>Attack on Sun Village (slave)<a href="#mission4">~[IfortGump.46]</a>
+$Menu=~[Ipriest.107]        ~[Imog.15]~[IsunBlocker.0] ~[IsunCannon.14],MissionBegin,sw_m4</?>
+<?{sw_m5}>
+           ~B~yMission #:    <i>5<br>
+           ~B~yTitle:             <i>Attack on Wind Village (slave)<a href="#mission5">~[IfortGump.46]</a>
+$Menu=~[Ipriest.107]~[IsunCannon.3]          ~[Ianim.81]~[IwindArcher.82],MissionBegin,sw_m5</?>
+<?{sw_m6}>
+                 ~B~yMission #:    <i>6<br>
+                 ~B~yTitle:             <i>Defending Wind Village <a href="#mission6">~[IfortGump.46]</a>
+$Menu=~[IwindFactory.3],MissionBegin,sw_m6</?>
+<?{sw_m7}>
+                ~B~yMission #:    <i>7<br>
+                ~B~yTitle:     <i>Attack on Rain Village (slave)<a href="#mission7">~[IfortGump.46]</a>
+$Menu=~[IrainCannon.12],MissionBegin,sw_m7</?>
+<?{sw_m8}>
+                     ~B~yMission #:    <i>8<br>
+                     ~B~yTitle:     <i>Defending Rain Village<a href="#mission8">~[IfortGump.46]</a>
+$Menu=~[IrainVortex.28],MissionBegin,sw_m8</?>
+<?{sw_m9}>
+         ~B~yMission #:    <i>9<br>
+         ~B~yTitle:     <i>Attack on Thunder Village (slave)<a href="#mission9">~[IfortGump.46]</a>
+$Menu=~[IthunderFactory.3],MissionBegin,sw_m9</?>
+<?{sw_m10}>
+              ~B~yMission #:    <i>10<br>
+              ~B~yTitle:     <i>Bombing of Sun City (slave)<a href="#mission10">~[IfortGump.46]</a>
+$Menu=~[IsunFactory.12],MissionBegin,sw_m10</?>
+<?{sw_m11}>
+              ~B~yMission #:    <i>11<br>
+              ~B~yTitle: <i>Invasion of Windy City (slave)<a href="#mission11">~[IfortGump.46]</a>
+$Menu=~[IwindVortex.20],MissionBegin,sw_m11</?>
+<?{sw_m12}>
+                        ~B~yMission #:    <i>12<br>
+                        ~B~yTitle: <i>Repelling Hades forces<a href="#mission12">~[IfortGump.46]</a>
+$Menu=~[Ipriest.112]   ~[Ianim.10] ~[Ibulf.36],MissionBegin,sw_m12</?>
+<?{sw_m13}>
+                        ~B~yMission #:    <i>13<br>
+                        ~B~yTitle: <i>Rampage of Rain City<a href="#mission13">~[IfortGump.46]</a>
+$Menu=~[Ipriest.96] ~[IrainFactory.6] ~[Ianim.17],MissionBegin,sw_m13</?>
+<?{sw_m14}>
+                     ~B~yMission #:    <i>14<br>
+                     ~B~yTitle: <i>Evacuation of Rain City<a href="#mission14">~[IfortGump.46]</a>
+$Menu=~[Ipriest.56]  ~[IgrowingRainBlocker.9]~[Ianim.41]    ~[IthunderCannon.35],MissionBegin,sw_m14</?>
+<?{sw_m15}>
+       ~B~yMission #:    <i>15<br>
+       ~B~yTitle:     <i>Destruction of Thunder City (slave)<a href="#mission15">~[IfortGump.46]</a>
+$Menu=~[IthunderBlocker.1],MissionBegin,sw_m15</?>
+<?{sw_m16}>
+                 ~B~yMission #:    <i>16<br>
+                 ~B~yTitle:     <i>Repairing of Thunder City<a href="#mission16">~[IfortGump.46]</a>
+$Menu=~[Ibulf.80],MissionBegin,sw_m16</?>
+<?{sw_m17}>
+                      ~B~yMission #:    <i>17<br>
+                      ~B~yTitle:     <i>Choice of the Furies<a href="#mission17">~[IfortGump.46]</a>
+$Menu=~[IrainCannon.6] ~[IthunderCannon.18] ~[IwindArcher.55],MissionBegin,sw_m17</?>
+<?{sw_m18}>
+                   ~B~yMission #:    <i>18<br>
+                   ~B~yTitle:     <i>Choice of the Furies (wind)<a href="#mission18">~[IfortGump.46]</a>
+$Menu=~[IwindVortex.20],MissionBegin,sw_m18</?>
+<?{sw_m19}>
+                 ~B~yMission #:    <i>19<br>
+                 ~B~yTitle:     <i>Choice of the Furies (Thunder)<a href="#mission19">~[IfortGump.46]</a>
+$Menu=~[IthunderCannon.36],MissionBegin,sw_m19</?>
+<?{sw_m20}>
+                    ~B~yMission #:    <i>20<br>
+                    ~B~yTitle:     <i>Choice of the Furies (Rain)<a href="#mission20">~[IfortGump.46]</a>
+$Menu=~[IrainFence.4],MissionBegin,sw_m20</?>
+<?{sw_m21}>
+                      ~B~yMission #:    <i>21<br>
+                      ~B~yTitle:     <i>A Taste of Freedom<a href="#mission21">~[IfortGump.46]</a>
+$Menu=~[Iresidence.6],MissionBegin,sw_m21</?>
+<?{sw_m22}>
+                        ~B~yMission #:    <i>22<br>
+                        ~B~yTitle:     <i>Attack on Nimbus<a href="#mission22">~[IfortGump.46]</a>
+$Menu=~[IedgeFarm.43],MissionBegin,sw_m22</?>
+<?{sw_m23}>
+                ~B~yMission #:    <i>23<br>
+                ~B~yTitle:     <i>Assassination of the Furies<a href="#mission23">~[IfortGump.46]</a>
+$Menu=~[Igeyser.17],MissionBegin,sw_m23</?>
+<?{sw_m24}>
+                        ~B~yMission #:    <i>24<br>
+                        ~B~yTitle:     <i>Hades Altar<a href="#mission24">~[IfortGump.46]</a>
+$Menu=~[Ialtar.89],MissionBegin,sw_m24</?>
+<?{sw_m25}>
+                        ~B~yMission #:    <i>25<br>
+                        ~B~yTitle:     <i>Sacrifice!<a href="#mission25">~[IfortGump.46]</a>
+$Menu=~[IsunAviary.31],MissionBegin,sw_m25</?>
+<?{sw_m30}>
+                        ~B~yMission #:   <i>END<br>
+                        ~B~yTitle:     <i>Congrats!<a href="#mission30">~[IfortGump.46]</a>
+$Menu=~[Ipriest.84]  ~[IBulf.76] ~[IBulf.27],MissionBegin,sw_m30</?>
+$Button=Leave The Bowels of Hell!,Tell,Campaign
+$Button=RESET!,MissionBegin,sw_m50

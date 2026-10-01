@@ -1,0 +1,68 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 5
+moreGeysers = 1
+randGeyserd = 1
+
+myStartMoney = 10000
+myTech = "sunCannon;sunArcher;sunAviary;sunBalloon;sunFence;windWalker;windBattery;windBlocker;windArcher;windBalloon;windAviary;windFlyer"
+
+title="Homeward Bound"
+
+ai2Name = "General 1"
+ai2Tech = ""rainBattery;sunCannon;sunArcher;sunAviary;sunBalloon;rainBlocker;rainWalker;rainFence"
+ai2StartMoney = 5000
+ai2GeyserAttachments = 2
+ai2Collectors = 3
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3"
+ai2color = red
+ai3BridgeDrawRate = 6
+
+ai3Name = "General 2"
+ai3Tech = ""rainBattery;sunCannon;sunArcher;sunAviary;sunBalloon;rainBlocker;rainWalker;rainFence"
+ai3StartMoney = 5000
+ai3GeyserAttachments = 2
+ai3Collectors = 3
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2"
+ai3color = green
+ai3BridgeDrawRate = 5
+
+[Options]
+
+[A.]
+<h2>~[Ioutpost.*]~gHomeward Bound</h2>
+<i>"There's still more!"<br>
+--General 1</i>  
+<p>Escaping the dungeons you come across two of ~kDeath~tStars ~.Generals
+<p>Kill these and you've done it!
+
+$Button=stuff,ShowTechnology,55
+$Button=Kick em',DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+You made it back in one piece. WOW!
+<p>
+Now all of Nimbus is peaceful again. They  hold festival of ~kDeath~tStars~.Death for you!
+
+<$Config,Done{mission.fileName}=1>
+$Button=Congragulations,MissionAbort,0
+
+[ai2PriestDead]
+<h2>Keep Going!</h2>
+<p>
+Now the other
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+Just as you were about to celebrate the Generals kill you.
+Come on Try Again!
+
+$Button=Continue,Tell,TryAgain
+
+[END]

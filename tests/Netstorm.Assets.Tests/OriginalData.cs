@@ -1,28 +1,27 @@
 namespace Netstorm.Assets.Tests;
 
 /// <summary>
-/// 테스트용 원본 데이터 접근. 원본(originals/)은 저장소에 없으므로 CI 등에서는 찾지 못할 수 있고,
-/// 그 경우 원본이 필요한 테스트는 건너뛴다.
+/// 원본 포맷을 보존한 클론 데이터 접근. 저장소의 assets/game-data/를 사용하며 누락은 테스트 실패다.
 /// </summary>
 internal static class OriginalData
 {
-    /// <summary>찾은 원본 데이터 폴더 (없으면 null). 한 번만 탐색한다</summary>
+    /// <summary>찾은 클론 데이터 폴더 (없으면 null). 한 번만 탐색한다.</summary>
     private static readonly Lazy<string?> DirectoryLazy = new(GameDataLocator.FindDataDirectory);
 
-    /// <summary>원본 데이터 폴더 경로. 없으면 현재 테스트를 건너뛴다</summary>
+    /// <summary>필수 클론 데이터 폴더를 반환한다. 누락 시 테스트를 실패시킨다.</summary>
     public static string RequireDirectory()
     {
         string? dir = DirectoryLazy.Value;
-        Assert.SkipWhen(dir == null, $"원본 데이터 폴더가 없어 건너뜀 ({GameDataLocator.EnvironmentVariable} 로 지정 가능)");
+        Assert.True(dir != null, $"클론 데이터 폴더가 없습니다: assets/game-data/ 또는 {GameDataLocator.EnvironmentVariable}");
         return dir!;
     }
 
-    /// <summary>원본 데이터 폴더 안의 파일 경로 (대소문자 무시). 없으면 테스트를 건너뛴다</summary>
+    /// <summary>클론 데이터 안의 필수 파일 경로를 대소문자 무시로 찾는다. 누락은 테스트 실패다.</summary>
     /// <param name="relativePath">상대 경로 (예: "d/_shapes.shp")</param>
     public static string RequireFile(string relativePath)
     {
         string? path = GameDataLocator.FindFile(RequireDirectory(), relativePath);
-        Assert.SkipWhen(path == null, $"원본 파일이 없어 건너뜀: {relativePath}");
+        Assert.True(path != null, $"클론 데이터 파일이 없습니다: {relativePath}");
         return path!;
     }
 

@@ -1,0 +1,102 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 5
+moreGeysers = 3
+
+myStartMoney = 15000
+myTech ="rainBattery;rainAviary;rainCannon;rainBlocker;windBalloon;windBattery"
+
+
+title="Fury Kids"
+ai2Name = "Rain Kid"
+ai2Tech ="thunderBattery;rainBattery;rainCannon;rainBlocker;rainAviary;rainFence;rainBalloon;rainWalker"
+ai2StartMoney = 1500000
+ai2GeyserAttachments = 15
+ai2Collectors = 10
+ai2TimeBetweenMoves = 0
+ai2Bridgedrawrate = 0
+ai2color = red
+ai2ability ="!USE_PRIEST_TO_COLLECT"
+ai2AllyList ="3;4"
+
+ai3Name = "Thunder Kid"
+ai3Tech ="thunderBattery;thunderBlocker;thunderCannon;thunderFence;bulf"
+ai3StartMoney = 2500000
+ai3GeyserAttachments =15
+ai3Collectors = 35
+ai3TimeBetweenMoves = 0
+ai3Bridgedrawrate = 0
+ai3color = white
+ai3ability ="!USE_PRIEST_TO_COLLECT"
+ai3AllyList ="2;4"
+
+ai4Name = "Wind Kid"
+ai4Tech = "windBattery;windArcher;windBlocker;windBalloon;windWalker;windAviary"
+ai4StartMoney = 1550000
+ai4GeyserAttachments =15
+ai4Collectors = 10
+ai4TimeBetweenMoves = 0
+ai4Bridgedrawrate = 0
+ai4color = green
+ai4ability ="!USE_PRIEST_TO_COLLECT"
+ai4AllyList ="2;3"
+
+
+
+[Options]
+
+[A.]
+<P>"Kids, yes. Challenging, Very."
+<P>Apollyon
+<p>You find the Fury Kids, you approach with great confidense and you are about to start attacking, when they start laughing. You feel like your on fire, yet you are not, you feel dizzy, and then you faint. You awaken a few minutes later to discover they have taken some of your tech, leaving ony 6 things, the rain gen., ice cannon,ice tower, and the man-o-war. and they have decided to give you the airship and the wind generator.
+<p>GRRRRR!!! you shout i'll get you yet!!
+
+$Button=Veiw your stuff,ShowTechnology,55
+$Button=Fight,DoNothing,0
+
+
+[ai2PriestDead]
+Noooo!! I am a fury kid, I cant lose
+<p>You look around and fine 4 blue prints. They are all encoded and once one is picked, the rest will be destroyed. 
+$Button=Wind tech,GetTechnology,139
+$Button=Wind Tech,GetTechnology,142
+$Button=Wind Tech,GetTechnology,140
+$Button=Wind Tech,GetTechnology,137
+
+[ai3PriestDead]
+Noooo!! I am a fury kid, I can't Lose
+<p>You look around his island and find Thunder tech.
+$Button=Thunder Tech,GetTechnology,131
+$Button=Thunder Tech,GetTechnology,149
+$Button=Thunder Tech,GetTechnology,148
+$Button=Thunder Tech,GetTechnology,135
+$Button=Thunder Tech,GetTechnology,79
+[ai4PriestDead]
+Noooo!! I am a fury kid, i cant lose
+<p>You look around his island and find rain tech.
+$Button=Rain Tech,GetTechnology,156
+$Button=Rain Tech,GetTechnology,146
+
+
+
+
+
+
+[Succeeded][BadTeamDead]
+<h2>You Have crushed them!</h2>
+<p>You have gotten the tehc you wanted, you start to go home when you see a small island loom closer.
+<$Config,Done{mission.fileName}=1>
+$Button=Onto the next one,MissionBegin,KQ6
+$Button=Chicken!,MissionAbort,0
+
+[Failed]
+<h2>Failure!</h2>
+<p>You Lost, and the Fury Kids make sure you have no chance of survival, so you must start over. 
+$Button=To the start,MissionBegin,KQ1
+
+
+[END]
+
+
+

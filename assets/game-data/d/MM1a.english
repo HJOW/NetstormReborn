@@ -1,0 +1,83 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 1
+
+myStartMoney = 12500
+myTech = "windBattery;rainbattery;thunderbattery;sunwalker;outpost;suncannon;thundercannon;raincannon;rainballoon;windwalker;thunderblocker"
+
+title="Islands at War"
+
+ai2Name = "Matt"
+ai2Tech = "Bulf;sunwalker;ThunderBattery;thundercannon;thunderarcher;thunderblocker"
+ai2StartMoney = 10000
+ai2GeyserAttachments = 2
+ai2Collectors = 4
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3;4;5;6"
+ai2color = red
+
+ai3Name = "Michael"
+ai3Tech = "rainWalker;rainBalloon;rainBlocker;rainFence;rainAviary;rainCannon;rainbattery"
+ai3StartMoney = 10000
+ai3GeyserAttachments = 2
+ai3Collectors = 3
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2;4;5;6"
+ai3color = white
+
+ai34Name = "Nicole"
+ai4Tech = "windWalker;windBalloon;windBlocker;windAviary;windbattery"
+ai4StartMoney = 10000
+ai4GeyserAttachments = 2
+ai4Collectors = 3
+ai4TimeBetweenMoves = 1
+ai4AllyList = "2;3;5;6"
+ai4color = orange
+
+ai54Name = "Michael's Clone"
+ai5Tech = "windWalker;windBalloon;windBlocker;windAviary;windbattery"
+ai5StartMoney = 10000
+ai5GeyserAttachments = 2
+ai5Collectors = 3
+ai5TimeBetweenMoves = 1
+ai5AllyList = "2;3;4;6"
+ai5color = white
+
+ai64Name = "Mandy"
+ai6Tech = "sunwalker;sunarcher;sunballoon;suncannon;sunaviary;sunblocker"
+ai6StartMoney = 10000
+ai6GeyserAttachments = 2
+ai6Collectors = 3
+ai6TimeBetweenMoves = 1
+ai6AllyList = "2;3;4;5"
+ai6color = white
+
+[Options]
+
+[A.]
+<h2>Islands at War</h2>
+<i>"A man with the humbleness of means will cling to a life like a leech on a pig's ass."  (Dark Reign)<br>
+<p>~.Hope you chose well, my friend.
+
+$Button=What you got,ShowTechnology,55
+$Button=Get Kicked,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>If You Doubted God, You Should Well Know If He's Real...</h2>
+<p>
+Cool, I myself had trouble beating this map.
+$Button=Leave Missions,MissionAbort,0
+$Button=Wanna Try MMb?,MissionBegin,MMb
+$Button=Wanna Try MMc?,MissionBegin,MMc
+
+[Failed]
+<h2>Can't you do anything?  Obvisouly not.</h2>
+<p>
+God gave you another chance.
+R U UP 2 IT?
+$Button=Continue,Tell,TryAgain
+
+
+[END]

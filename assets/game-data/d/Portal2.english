@@ -1,0 +1,89 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 1
+
+myStartMoney = 10000
+myTech = "rainCannon;rainBlocker;rainbattery;rainwalker"
+myAllyList = "6"
+
+title="I'm Taking You Down With Me"
+
+ai2Name = "Corrie"
+ai2Tech = "rainCannon;rainBlocker;rainbattery;rainwalker"
+ai2StartMoney = 10000
+ai2GeyserAttachments = 5
+ai2Collectors = 5
+ai2TimeBetweenMoves = 1
+ai2AllyList = ""
+ai2color = red
+ai2BridgeDrawRate = 4
+
+ai3Name = "Kelley"
+ai3Tech = "rainCannon;rainBlocker;rainbattery;rainwalker"
+ai3StartMoney = 10000
+ai3GeyserAttachments = 5
+ai3Collectors = 5
+ai3TimeBetweenMoves = 1
+ai3AllyList = ""
+ai3color = white
+ai3BridgeDrawRate = 2
+
+ai4Name = "Michael"
+ai4Tech = "rainCannon;rainBlocker;rainbattery;rainwalker"
+ai4StartMoney = 10000
+ai4GeyserAttachments = 5
+ai4Collectors = 5
+ai4TimeBetweenMoves = 1
+ai4AllyList = ""
+ai4color = green
+ai4BridgeDrawRate = 1
+
+ai5Name = "Mandy"
+ai5Tech = "rainCannon;rainBlocker;rainbattery;rainwalker"
+ai5StartMoney = 10000
+ai5GeyserAttachments = 5
+ai5Collectors = 5
+ai5TimeBetweenMoves = 1
+ai5AllyList = ""
+ai5color = orange
+
+ai6Name = "Nicole"
+ai6tech = ""
+ai6StartMoney = 0
+ai6TimeBetweenMoves = 1
+ai6AllyList = "1"
+ai6color = white
+
+[Options]
+
+[A.]
+<h2>Event I: I'm Taking You Down With Me</h2>
+<i>"All Islands fall, you just got to know what spot to jump on" (slight viartion from a dark reign saying)</i>  
+<p>Your helper bids you good luck as you enter into Arena 483, holding event II.
+
+$Button=What thou haveth,ShowTechnology,55
+$Button=Let's Win This One,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Agility is yours....</h2>
+<p>
+Congratulations you have defeated the other competing aliens.  Pick your next event...
+
+$Button=Leave Playing Field,MissionAbort,0
+$Button=Event I,MissionBegin,Portal1
+$Button=Event III,MissionBegin,Portal3
+$Button=Event IV,MissionBegin,Portal4
+$Button=Event V,MissionBegin,Portal6
+
+[Failed]
+<h2>You have lost...</h2>
+<p>Pick your next event...
+$Button=Leave Playing Field,MissionAbort,0
+$Button=Event I,MissionBegin,Portal2
+$Button=Event III,MissionBegin,Portal3
+$Button=Event IV,MissionBegin,Portal4
+$Button=Event V,MissionBegin,Portal6
+
+[END]

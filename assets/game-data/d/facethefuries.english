@@ -1,0 +1,66 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 2
+
+myStartMoney = 3000
+myTech = "all"
+
+title="Face the furies "
+
+ai2Name = "The Fury Of Rain"
+ai2Tech = "rainBattery;rainwalker;rainballoon;raincannon;rainblocker;rainfence;rainaviary"
+ai2StartMoney = 3000
+ai2GeyserAttachments = 5
+ai2Collectors = 3
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3;4"
+ai2color = red
+
+ai3Name = "The Fury Of Thunder"
+ai3Tech = "thunderbattery;bulf;thundercannon;thunderarcher;thunderblocker;thunderfence"
+ai3StartMoney = 3000
+ai3GeyserAttachments = 5
+ai3Collectors = 3
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2;4"
+ai3color = green
+
+ai4Name = "The Fury Of Wind"
+ai4Tech = "windaviary;windballoon;windBattery;windblocker;windWalker;windarcher"
+ai4StartMoney = 3000
+ai4GeyserAttachments = 5
+ai4Collectors = 3
+ai4TimeBetweenMoves = 1
+ai4AllyList = "2;3"
+ai4color = white
+
+[Options]
+
+[A.]
+<h2>Face The Furies</h2>
+<i>"this is your chance to prove your self to the Furies of Nimbus"<br>
+--Zippy™</i>  
+<p>Face and Beat each Fury!
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+Good Job, You have beat the Furies now u will have great knowlage!
+
+
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+aw man, You lost to the Furies Try again!
+
+$Button=Continue,Tell,TryAgain
+
+[END]

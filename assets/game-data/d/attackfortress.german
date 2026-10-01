@@ -1,0 +1,75 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 2
+moreGeysers = 0
+
+myStartMoney = 3000
+myTech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence;rainwalker"
+
+title="Attack on Thunder Fortress"
+
+ai2Name = "Lord of Thunder Fortress"
+ai2Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence"
+ai2StartMoney = 200
+ai2GeyserAttachments = 2
+ai2Collectors = 3
+ai2TimeBetweenMoves = 1
+ai2AllyList = ""
+ai2color = red
+ai2Ability="!USE_PRIEST_TO_COLLECT"
+ai2BridgeDrawRate = 1
+
+ai3Name = "Prince of Wind"
+ai3Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker"
+ai3StartMoney = 3000
+ai3GeyserAttachments = 2
+ai3Collectors = 3
+ai3TimeBetweenMoves = 1
+ai3AllyList = "1"
+ai3color = white
+
+[Options]
+
+[A.]
+<h2>Attack on Thunder Fortress</h2>
+<i>"Even the furies are not as mighty as me!"<br>
+--The Lord of Thunder Fortress</i>  
+<p>After escaping the guild's clutches you have managed to rally support from the powerful and wealthy Prince of Wind. He has agreed to join your cause, and you decide to begin the counter-attack immediately. The 'Impenetrable' Fortress of Thunder, governed by a vain lord, stands in your way. Destroy it and strike fear into the guild master's heart!
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+Congratulations! The vain Lord of the Fortress has truly paid for his greediness! Continue your attack and topple the guild to free the oppressed Nimbians...
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,rebelhq
+
+[ai2TempleHalfDead]
+<h2>Message from the Prince of Wind</h2>
+<p>
+He is nearly defeated, keep fighting as well as you have been my friend!
+
+[ai3TempleHalfDead]
+<h2>Message from the Prince of Wind</h2>
+<p>
+Help me! My island is under attack!
+
+[ai3PriestDead]
+<h2>The Prince of Wind is Dead</h2>
+<p>
+You have let a great warrior perish. Your cause is lost and you must spend the rest of your life evading the Prince's angry subjects...
+
+$Button=Continue,Tell,TryAgain
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+Obviously the Lord of the Fortress was right about the fortress being impenetrable! Are you going to let him taunt you!? Try again.
+$Button=Continue,Tell,TryAgain
+
+
+[END]

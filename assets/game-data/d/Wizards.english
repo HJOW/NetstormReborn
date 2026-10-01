@@ -1,0 +1,82 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 4
+moreGeysers = 1
+randomGetsers = 1
+
+myStartMoney = 3000
+myTech = "outpost;sunWalker;sunArcher;sunBlocker;sunFence;sunCannon;sunAviary;sunBalloon;windBattery;windWalker;windArcher;windBlocker;windAviary;windBalloon;rainBattery;rainBalloon;rainWalker;rainAviary;rainCannon;rainFence;rainBlocker"
+
+title="Wizards Beckoning"
+
+ai2Name = "Wizard of Wind"
+ai2Tech = "sunWalker;sunArcher;sunCannon;sunAviary;sunBlocker;sunBalloon;sunFence;windBattery;windArcher;windBlocker;windBalloon;windWalker"
+ai2StartMoney = 3000
+ai2GeyserAttachments = 2
+ai2Collectors = 3
+ai2TimeBetweenMoves = 2
+ai2AllyList = "3;4"
+ai2color = red
+ai2Ability = "!USE_PRIEST_TO_COLLECT"
+ai2BridgeDrawRate = 2
+
+ai3Name = "Wizard of Rain"
+ai3Tech = "sunWalker;sunArcher;sunCannon;sunAviary;sunBlocker;sunFence;sunBalloon;rainBattery;rainFence;rainWalker;rainBlocker;rainCannon"
+ai3StartMoney = 3000
+ai3GeyserAttachments = 2
+ai3Collectors = 3
+ai3TimeBetweenMoves = 2
+ai3AllyList = "2;4"
+ai3color = white
+ai3Ability = "!USE_PRIEST_TO_COLLECT"
+ai3BridegDrawRate = 2
+
+ai4Name = "Wizard of Thunder"
+ai4Tech = "sunWalker;sunArcher;sunCannon;sunAviary;sunBlocker;sunBalloon;sunFence;thunderBattery;bulf;thunderBlocker;thunderCannon;thunderFence"
+ai4StartMoney = 3000
+ai4GeyserAttachments = 2
+ai4Collectors = 3
+ai4TimeBetweenMoves = 2
+ai4AllyList = "2;3"
+ai4color = green
+ai4Ability = "!USE_PRIEST_TO_COLLECT"
+ai4BridgeDrawRate = 2
+
+[Options]
+
+[ai2PriestCaptured]
+You are granted knowledge from the Fury of Thunder.
+$Button =~[Ithunderworkshop.1]Thunder,GetTechnology,88
+
+[ai3PriestDead]
+You are granted knowledge again by the Fury of Thunder.
+$Button =~{Ibulf.1]Thunder,GetTechnology,135
+
+[A.]
+<h2>Wizards Beckoning</h2>
+<i>"There is only one difference between a Wizard and a priest."<br>
+The Wizard's not dead!<br>
+--Wizard of Wind</i>  
+<p>The Furies have become very violent after their first round loss.  For the second round they are sending their Wizards to kill you once and for all.  If you listen closely you can hear the Wizards Beckoning.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+You made it passed the second round.  The Fury of Thunder is very appeased, however, he still grants you the knowledge of the 'Bulf'.
+
+<$Config,Done{mission.fileName}=1>
+$Button=Next Mission,MissionBegin,Wind
+$Button=Leave Missions,MissionAbort,0
+
+[Failed]
+<h2>You failed again!</h2>
+<p>
+The Wizard's are going to use your eyeballs to invent a new spell.
+
+$Button=Next Mission,MissionBegin,Guard
+
+[END]

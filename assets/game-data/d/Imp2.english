@@ -1,0 +1,198 @@
+[Header]
+missionType = "Tutorial"
+missionNumber = 1
+moreGeysers = 1
+myName = "~IPlayer"
+myStartMoney = "10000"
+myTech = "outpost"
+myAllyList = "1"
+
+title="Dark Ritual"
+
+ai2Name = "~yAngelic ~wFighter"
+ai2Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence;rainwalker;sunwalker"
+ai2StartMoney = 10000
+ai2AllyList = "1"
+ai2GeyserAttachments=5
+ai2Collectors=5
+ai2BridgeDrawRate=1
+ai2TimeBetweenMoves=0
+ai2Color = "white"
+
+ai3Name = "~mImpial Warrior"
+ai3Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;Bulf;sunwalker"
+ai3StartMoney = 50000
+ai3AllyList = "4;5;6;7;8"
+ai3GeyserAttachments=5
+ai3Collectors=5
+ai3BridgeDrawRate=0
+ai3TimeBetweenMoves=0
+ai3MoneyRechargeRate=1
+ai3Color = "purple"
+ai3Ability = "!USE_PRIEST_TO_COLLECT;ENCIRLCE_ENEMY_ISLAND;BUILD_DIAS;SACRIFICE_ENEMY_PRIEST;CAPTURE_ENEMY_PRIEST"
+
+ai4Name = "~rImpial Elder"
+ai4Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;sunwalker"
+ai4StartMoney = 25000
+ai4AllyList = "3;5;6;7;8"
+ai4GeyserAttachments=10
+ai4Collectors=10
+ai4BridgeDrawRate=1
+ai4TimeBetweenMoves=0
+ai4MoneyRechargeRate=8
+ai4Color = "red"
+ai4Ability = "!USE_PRIEST_TO_COLLECT;ENCIRLCE_ENEMY_ISLAND;BUILD_DIAS;SACRIFICE_ENEMY_PRIEST;CAPTURE_ENEMY_PRIEST"
+
+ai5Name = "~lImpial DeathStalker"
+ai5Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence;rainwalker;sunwalker"
+ai5StartMoney = 25000
+ai5AllyList = "3;4;6;7;8"
+ai5GeyserAttachments=9
+ai5Collectors=5
+ai5BridgeDrawRate=1
+ai5TimeBetweenMoves=0
+ai5MoneyRechargeRate=8
+ai5Color = "lightblue"
+ai5Ability = "!USE_PRIEST_TO_COLLECT;ENCIRLCE_ENEMY_ISLAND"
+
+ai6Name = "~gImpial Warlord"
+ai6Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;Bulf;sunwalker"
+ai6StartMoney = 50000
+ai6AllyList = "3;4;5;7;8"
+ai6GeyserAttachments=9
+ai6Collectors=10
+ai6BridgeDrawRate=0
+ai6TimeBetweenMoves=0
+ai6MoneyRechargeRate=1
+ai6Color = "green"
+ai6Ability = "!USE_PRIEST_TO_COLLECT;ENCIRLCE_ENEMY_ISLAND;BUILD_DIAS;SACRIFICE_ENEMY_PRIEST;CAPTURE_ENEMY_PRIEST"
+
+ai7Name = "~oImpial Skeleton"
+ai7Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence;rainwalker;sunwalker"
+ai7StartMoney = 25000
+ai7AllyList = "3;4;5;6;8"
+ai7GeyserAttachments=5
+ai7Collectors=5
+ai7BridgeDrawRate=1
+ai7TimeBetweenMoves=1
+ai7Color = "orange"
+ai7Ability = "!USE_PRIEST_TO_COLLECT;ENCIRLCE_ENEMY_ISLAND;BUILD_DIAS;SACRIFICE_ENEMY_PRIEST;CAPTURE_ENEMY_PRIEST"
+
+[Options]
+
+[A.]
+<h2>~kDark ~rRitual</h2>
+~.So you picked the Dark Ritual.  You know what?  That Ritual is being performed on you!
+$Button=I want Info,Tell,Info
+$Button=Don't Want Info,Tell,No
+
+[Info]
+<h2>Info:</h2><br>
+Ok, the ai's are setup in a pentagram.<br>
+~kIMPIAL WARLORD ~wand the ~kWARRIOR~. are the best ones, so I would take ~kthem~. out as soon as possible.  They are 2 of 3 that have money recharge ability.  Have fun with those two.<br>
+$Button=Saying of the map,Tell,Say
+$Button=Thanx,Tell,More
+
+[Say]
+<i>The two ran from the unholy priest, who was still clutch the dagger.  He was running after them, gaining speed every second.  The red in his eye burned like fire...<br>
+--The Book of the Ether
+$Button=Back,Tell,Info
+
+[More]
+You might want to consider these things:<br>
+1) The only way to destory the ai's pentgram is have dust devils run across the brigdes.<br>
+2) You might want a long range cannon for your tech.<br>
+3) You might want a flyer in your tech.<br>
+$Button=Cool,DoNothing,0
+
+[No]
+I think you shall reconsider.
+$Button=Ok,Tell,Info
+$Button=NO!!!,Tell,HellNo
+
+[HellNo]
+Ok, Have it your way.
+$Button=I WILL,DoNothing,0
+
+[@1]
+Pick you weapon.
+$Menu=~bRain,Tell,A
+$Menu=~kThunder~.,Tell,B
+$Menu=~IWind~.,Tell,C
+$Menu=~ySun,Tell,D
+
+[A]
+<$GetTechnology,76>
+<$GetTechnology,87>
+<$GetTechnology,124>
+<$GetTechnology,129>
+<$GetTechnology,143>
+<$GetTechnology,145>
+<$GetTechnology,147>
+<$GetTechnology,146>
+<$GetTechnology,156>
+$Button=HeeHeeHe,Tell,HaHa
+
+[B]
+<$GetTechnology,77>
+<$GetTechnology,79>
+<$GetTechnology,88>
+<$GetTechnology,125>
+<$GetTechnology,131>
+<$GetTechnology,135>
+<$GetTechnology,148>
+<$GetTechnology,149>
+$Button=HeeHeeHe,Tell,HaHa
+
+[C]
+<$GetTechnology,75>
+<$GetTechnology,86>
+<$GetTechnology,123>
+<$GetTechnology,139>
+<$GetTechnology,140>
+<$GetTechnology,142>
+<$GetTechnology,141>
+<$GetTechnology,137>
+$Button=HeeHeeHe,Tell,HaHa
+
+[D]
+<$GetTechnology,71>
+<$GetTechnology,72>
+<$GetTechnology,75>
+<$GetTechnology,85>
+<$GetTechnology,111>
+<$GetTechnology,128>
+<$GetTechnology,136>
+<$GetTechnology,78>
+<$GetTechnology,70>
+$Button=HeeHeeHe,Tell,HaHa
+
+[HaHa]
+= )<br>
+Have Fun +<br>
+Good Luck<br>
+The Virtuous Warrior<br>
+$Button=Cool,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>You Have Won!!!</h2>
+<p>~.How can that be?  Try a new mission.  I ~kdare~. you to.
+$Button=New Mission,Tell,Mission
+
+[Failed][ai1PriestDead]
+<h2>Message from the ~kImps~.:</h2>
+<p>~rHahaha...~B~wI told you... Leave from our Imp-ial realms.  Looser.
+$Menu=Your head will be on my wall!!!,Tell,TryAgain
+$Menu=You're right...(I wanna new mission),Tell,Mission
+
+[Mission]
+What one?
+$Menu=~qPick your death:,Tell,dope
+$Menu=~mHive Cluster,MissionBegin,Imp1
+$Menu=~kDark Rituals,MissionBegin,Imp2
+$Menu=~yX Marks the Spot,MissionBegin,Imp3
+$Menu=~bRun Like Hell 2,MissionBegin,Imp4
+$Menu=~gProject ~oD~got~oT,MissionBegin,Imp5
+$Button=Back,Tell,LaLa
+
+[END]

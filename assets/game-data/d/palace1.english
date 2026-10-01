@@ -1,0 +1,409 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 0
+
+myStartMoney = 2550
+myTech = ""
+myAllyList = "" 
+
+title="Initiation"
+
+ai2Name = "~iLord Kalrek"
+ai2Tech = ""
+ai2StartMoney = 0
+ai2GeyserAttachments = 0
+ai2Collectors = 0
+ai2TimeBetweenMoves = 1
+ai2AllyList = ""
+ai2color = yellow
+ai2Ability="!USE_PRIEST_TO_COLLECT;!CAPTURE_ENEMY_PRIEST"
+ai2BridgeDrawRate = 5
+
+ai3Name = "Prisioner"
+ai3Tech = ""
+ai3StartMoney = 0
+ai3GeyserAttachments = 0
+ai3Collectors = 0
+ai3TimeBetweenMoves = 1
+ai3AllyList = ""
+ai3color = white
+ai3Ability=""
+ai3BridgeDrawRate = 5
+
+[Options]
+
+[A.]
+<h2>Initiation</h2>
+<i>"To start is easy, to finish is another thing entirly."<br>
+-- High Priest Jatol</i>  
+<p>You have been choosen to be the pupil of Kalrek, Nimbian High Priest and Sun Master.  If you succeed you shall become a high priest of Nimbus, the greatest honour a Nimbian can have!
+
+$Button=Play Mission,DoNothing,0
+$Button=Finished,Tell,objective1
+
+[@1]
+<h2>~iKalrek</h2>
+<p>This is your first test.  You journy to become a High Priest of Nimbus shall begin here, or will end before it has even started.
+<$Config,atweapon1=0>
+<$Config,atweapon2=0>
+<$Config,atweapon3=0>
+<$Config,atweapon4=0>
+<$Config,atweapon5=0>
+<$Config,atweapon6=0>
+<$Config,atweapon7=0>
+<$Config,atweapon8=0>
+<$Config,atweapon9=0>
+<$Config,atweapon10=0>
+<$Config,atweapon11=0>
+<$Config,atweapon12=0>
+<$Config,atweapon13=0>
+<$Config,atweapon14=0>
+<$Config,atweapon15=0>
+<$Config,atweapon16=0>
+<$Config,atweapon17=0>
+<$Config,atweapon18=0>
+<$Config,atweapon19=0>
+<$Config,atweapon20=0>
+<$Config,atweapon21=0>
+<$Config,atweapon22=0>
+<$Config,atweapon23=0>
+<$Config,atweapon24=0>
+<$Config,atweapon25=0>
+<$Config,atOld1weapon1=0>
+<$Config,atOld1weapon2=0>
+<$Config,atOld1weapon3=0>
+<$Config,atOld1weapon4=0>
+<$Config,atOld1weapon5=0>
+<$Config,atOld1weapon6=0>
+<$Config,atOld1weapon7=0>
+<$Config,atOld1weapon8=0>
+<$Config,atOld1weapon9=0>
+<$Config,atOld1weapon10=0>
+<$Config,atOld1weapon11=0>
+<$Config,atOld1weapon12=0>
+<$Config,atOld1weapon13=0>
+<$Config,atOld1weapon14=0>
+<$Config,atOld1weapon15=0>
+<$Config,atOld1weapon16=0>
+<$Config,atOld1weapon17=0>
+<$Config,atOld1weapon18=0>
+<$Config,atOld1weapon19=0>
+<$Config,atOld1weapon20=0>
+<$Config,atOld1weapon21=0>
+<$Config,atOld1weapon22=0>
+<$Config,atOld1weapon23=0>
+<$Config,atOld1weapon24=0>
+<$Config,atOld1weapon25=0>
+$Timeout=8,DoNothing,0
+
+[@2]
+<h2>~iKalrek</h2>
+<p>Your task is to sacrafice the priest on the other end of the island.
+$Timeout=5,DoNothing,0
+
+[@3]
+<h2>~iKalrek</h2>
+<p>If you succeed I shall teach you the ways of the Priesthood of Nimbus.
+$Timeout=5,DoNothing,0
+
+[@4]
+<h2>~iKalrek</h2>
+<p>You have 5 minutes to compleate this task.  Once you are done report to me.  Do not waste my time.
+$Timeout=7,DoNothing,0
+
+[@300]
+<h2>~iKalrek</h2>
+<p>ENOUGH!  You have wasted enough of my time!  Begone from my sight!
+$Button=Failed!,Tell,failed
+$Timeout=5,Tell,failed
+
+[SaveTech]
+<?{atweapon1}>
+<$Config,atOld1weapon1=1></?>
+<?!{atweapon1}>
+<$Config,atOld1weapon1=0></?>
+$Timeout=0,Tell,dwindwalker
+
+[dwindwalker]
+<?{atweapon2}>
+<$Config,atOld1weapon2=1></?>
+<?!{atweapon2}>
+<$Config,atOld1weapon2=0></?>
+$Timeout=0,Tell,dwindarcher
+
+[dwindarcher]
+<?{atweapon3}>
+<$Config,atOld1weapon3=1></?>
+<?!{atweapon3}>
+<$Config,atOld1weapon3=0></?>
+$Timeout=0,Tell,dwindblocker
+
+[dwindblocker]
+<?{atweapon4}>
+<$Config,atOld1weapon4=1></?>
+<?!{atweapon4}>
+<$Config,atOld1weapon4=0></?>
+$Timeout=0,Tell,dwindaviary
+
+[dwindaviary]
+<?{atweapon5}>
+<$Config,atOld1weapon5=1></?>
+<?!{atweapon5}>
+<$Config,atOld1weapon5=0></?>
+$Timeout=0,Tell,dwindballoon
+
+[dwindballoon]
+<?{atweapon6}>
+<$Config,atOld1weapon6=1></?>
+<?!{atweapon6}>
+<$Config,atOld1weapon6=0></?>
+$Timeout=0,Tell,drainbattery
+
+[drainbattery]
+<?{atweapon7}>
+<$Config,atOld1weapon7=1></?>
+<?!{atweapon7}>
+<$Config,atOld1weapon7=0></?>
+$Timeout=0,Tell,drainfence
+
+[drainfence]
+<?{atweapon8}>
+<$Config,atOld1weapon8=1></?>
+<?!{atweapon8}>
+<$Config,atOld1weapon8=0></?>
+$Timeout=0,Tell,draincannon
+
+[draincannon]
+<?{atweapon9}>
+<$Config,atOld1weapon9=1></?>
+<?!{atweapon9}>
+<$Config,atOld1weapon9=0></?>
+$Timeout=0,Tell,drainblocker
+
+[drainblocker]
+<?{atweapon10}>
+<$Config,atOld1weapon10=1></?>
+<?!{atweapon10}>
+<$Config,atOld1weapon10=0></?>
+$Timeout=0,Tell,drainwalker
+
+[drainwalker]
+<?{atweapon11}>
+<$Config,atOld1weapon11=1></?>
+<?!{atweapon11}>
+<$Config,atOld1weapon11=0></?>
+$Timeout=0,Tell,drainaviary
+
+[drainaviary]
+<?{atweapon12}>
+<$Config,atOld1weapon12=1></?>
+<?!{atweapon12}>
+<$Config,atOld1weapon12=0></?>
+$Timeout=0,Tell,drainballoon
+
+[drainballoon]
+<?{atweapon13}>
+<$Config,atOld1weapon13=1></?>
+<?!{atweapon13}>
+<$Config,atOld1weapon13=0></?>
+$Timeout=0,Tell,dthunderbattery
+
+[dthunderbattery]
+<?{atweapon14}>
+<$Config,atOld1weapon14=1></?>
+<?!{atweapon14}>
+<$Config,atOld1weapon14=0></?>
+$Timeout=0,Tell,dbulf
+
+[dbulf]
+<?{atweapon15}>
+<$Config,atOld1weapon15=1></?>
+<?!{atweapon15}>
+<$Config,atOld1weapon15=0></?>
+$Timeout=0,Tell,dthundercannon
+
+[dthundercannon]
+<?{atweapon16}>
+<$Config,atOld1weapon16=1></?>
+<?!{atweapon16}>
+<$Config,atOld1weapon16=0></?>
+$Timeout=0,Tell,dthunderblocker
+
+[dthunderblocker]
+<?{atweapon17}>
+<$Config,atOld1weapon17=1></?>
+<?!{atweapon17}>
+<$Config,atOld1weapon17=0></?>
+$Timeout=0,Tell,dthunderfence
+
+[dthunderfence]
+<?{atweapon18}>
+<$Config,atOld1weapon18=1></?>
+<?!{atweapon18}>
+<$Config,atOld1weapon18=0></?>
+$Timeout=0,Tell,dthunderarcher
+
+[dthunderarcher]
+<?{atweapon19}>
+<$Config,atOld1weapon19=1></?>
+<?!{atweapon19}>
+<$Config,atOld1weapon19=0></?>
+$Timeout=0,Tell,dsuncannon
+
+[dsuncannon]
+<?{atweapon20}>
+<$Config,atOld1weapon20=1></?>
+<?!{atweapon20}>
+<$Config,atOld1weapon20=0></?>
+$Timeout=0,Tell,dsunarcher
+
+[dsunarcher]
+<?{atweapon21}>
+<$Config,atOld1weapon21=1></?>
+<?!{atweapon21}>
+<$Config,atOld1weapon21=0></?>
+$Timeout=0,Tell,dsunblocker
+
+[dsunblocker]
+<?{atweapon22}>
+<$Config,atOld1weapon22=1></?>
+<?!{atweapon22}>
+<$Config,atOld1weapon22=0></?>
+$Timeout=0,Tell,dsunfence
+
+[dsunfence]
+<?{atweapon23}>
+<$Config,atOld1weapon23=1></?>
+<?!{atweapon23}>
+<$Config,atOld1weapon23=0></?>
+$Timeout=0,Tell,dsunballoon
+
+[dsunballoon]
+<?{atweapon24}>
+<$Config,atOld1weapon24=1></?>
+<?!{atweapon24}>
+<$Config,atOld1weapon24=0></?>
+$Timeout=0,Tell,dsunaviary
+
+[dsunaviary]
+<?{atweapon25}>
+<$Config,atOld1weapon25=1></?>
+<?!{atweapon25}>
+<$Config,atOld1weapon25=0></?>
+$Timeout=0,Tell,tech6
+
+[Succeeded][BadTeamDead]
+
+
+[ai3PriestCaptured]
+<h2>~iKalrek</h2>
+<p>Very good, but you are only half done your task.
+$Timeout=4,DoNothing,0
+
+[ai3PriestDead]
+<$Config,atobjective1=1>
+
+
+[tech0]
+<h2>~iKalrek</h2>
+<p>Well done, but you shall have to do much more than sacrafice a helpless priest to impress me.
+$Button=Ok,Tell,tech1
+$Timeout=6,Tell,tech1
+
+[tech1]
+<h2>~iKalrek</h2>
+<p>Now that your first step into the world of Priesthood is compleate you have a choice to make.
+$Button=Ok,Tell,tech2
+$Timeout=6,Tell,tech2
+
+[tech2]
+<h2>~iKalrek</h2>
+<p>You must decide which fury you shall worship first.  This choice will effect the course of your destiny as a High Priest of Nimbus.  
+
+$Button=Ok,Tell,tech3
+$Timeout=8,Tell,tech3
+
+[tech3]
+<h2>~iKalrek</h2>
+<p>Choose wisely
+$Menu=~wWind,Tell,windfury
+$Menu=~wRain,Tell,rainfury
+$Menu=~wThunder,Tell,thunderfury
+
+[windfury]
+<$Config,atweapon1=1>
+<$Config,atweapon7=0>
+<$Config,atweapon14=0>
+<$Config,atfurywind=1>
+$Timeout=0,Tell,tech4
+
+[rainfury]
+<$Config,atweapon1=0>
+<$Config,atweapon7=1>
+<$Config,atweapon14=0>
+<$Config,atfuryrain=1>
+$Timeout=0,Tell,tech4
+
+[thunderfury]
+<$Config,atweapon1=0>
+<$Config,atweapon7=0>
+<$Config,atweapon14=1>
+<$Config,atfurythunder=1>
+$Timeout=0,Tell,tech4
+
+[tech4]
+<h2>~iKalrek</h2>
+<p>Very Well.  Now I shall give you knowledge of one of two technolgies.
+$Menu=~wSun Cannon,Tell,cannon
+$Menu=~wSun Archer,Tell,archer
+
+[cannon]
+<$Config,atweapon20=1>
+<$Config,atweapon21=0>
+$Timeout=0,Tell,tech5
+
+[archer]
+<$Config,atweapon21=1>
+<$Config,atweapon20=0>
+$Timeout=0,Tell,tech5
+
+[tech5]
+$Timeout=0,Tell,SaveTech
+
+[tech6]
+<h2>~iKalrek</h2>
+<p>Now your training shall begin.
+<$Config,atobjective1=0>
+<$Config,atobjective2=0>
+<$Config,atobjective3=0>
+<$Config,atobjective4=0>
+<$Config,atobjective5=0>
+<$Config,atobjective6=0>
+<$Config,atobjective7=0>
+<$Config,atobjective8=0>
+<$Config,atweapon0=0>
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,palace2
+
+[Failed]
+<h2>Failure!</h2>
+<p>You have brought shame and dishonour to yourself.  You were not prepared and so you paid for it.  Condemmed to live the rest of your life to serving that whom did what you failed to do.
+
+$Button=Continue,Tell,TryAgain
+$Button=Leave Missions,MissionAbort,0
+
+[objective1]
+<?{atobjective1}>$Timeout=0,Tell,tech0</?>
+<?!{atobjective1}>$Timeout=0,Tell,objectiveno</?>
+
+[objectiveno]
+<h2>~rNot Done!</h2>
+<p>You have not compleated all the objectives yet!!!
+$Timeout=4,DoNothing,0
+
+[END]
+
+

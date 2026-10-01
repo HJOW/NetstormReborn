@@ -1,0 +1,65 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 1
+
+myStartMoney = 400
+myTech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;thunderbattery;bulf;thundercannon;thunderarcher;thunderblocker;thunderfence;windaviary;windballoon;windBattery;windblocker;windWalker;windarcher;rainBattery;rainwalker;rainballoon;raincannon;rainblocker;rainfence;rainaviary"
+title="FuryOlympics"
+
+ai5Name = "Thunder Fury"
+ai5Tech = "thunderbattery;bulf;thundercannon;thunderarcher;thunderblocker;thunderfence"
+ai5StartMoney = 4000
+ai5GeyserAttachments = 1
+ai5Collectors = 10
+ai5TimeBetweenMoves = 1
+ai5AllyList = "3;4"
+ai5color = purple
+
+ai3Name = "WIND Fury"
+ai3Tech = "windaviary;windballoon;windBattery;windblocker;windWalker;windarcher"
+ai3StartMoney = 4000
+ai3GeyserAttachments = 1
+ai3Collectors = 10
+ai3TimeBetweenMoves = 1
+ai3AllyList = "5;4"
+ai3color = white
+
+ai4Name = "RAIN Fury"
+ai4Tech = "rainBattery;rainwalker;rainballoon;raincannon;rainblocker;rainfence;rainaviary"
+ai4StartMoney = 4000
+ai4GeyserAttachments = 1
+ai4Collectors = 15
+ai4TimeBetweenMoves = 1
+ai4AllyList = "5;3"
+ai4color = green
+
+[Options]
+
+[A.]
+<h2>PhYcOsIs</h2>
+<i>"Every Sabath Year The Furies hold the Fury Olympics for the High Priets of Nimbus and the Highest Priets shall battle the Furies for Life or DEATH... "<br>
+--PhYcOsIs, </i>  
+<p>What happens when the Furies run out of Storm Power?....
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+You have just killed off the cheats now go rub it in
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,1
+
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+The FURIES have won, (as if you had a chance)
+$Button=Continue,Tell,TryAgain
+
+
+[END]

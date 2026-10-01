@@ -1,0 +1,106 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 2
+moreGeysers = 1
+
+myStartMoney = 4000
+myTech = "windBattery;sunCannon;sunFence;sunBalloon;sunAviary;sunBlocker;sunArcher"
+myAllyList = "3"
+
+title="Gathering Power"
+
+ai2Name = "Guardian of Isle of Geysers"
+ai2Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;sunBlocker;sunArcher"
+ai2StartMoney = 2000
+ai2GeyserAttachments = 0
+ai2Collectors = 2
+ai2TimeBetweenMoves = 1
+ai2AllyList = "5;6"
+ai2color = red
+ai2BridgeDrawRate = 4
+
+ai5Name = "Prince of Thunder"
+ai5Tech = "thunderbattery;bulf;thunderblocker;thundercannon;sunFence;sunAviary;sunArcher"
+ai5StartMoney = 0
+ai5GeyserAttachments = 0
+ai5Collectors = 2
+ai5TimeBetweenMoves = 1
+ai5AllyList = "2;6"
+ai5color = green
+ai5BridgeDrawRate = 3
+
+ai3Name = "Duke of Thunder"
+ai3Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;sunArcher"
+ai3StartMoney = 9000
+ai3GeyserAttachments = 1
+ai3Collectors = 0
+ai3TimeBetweenMoves = 1
+ai3AllyList = "1"
+ai3color = purple
+ai3BridgeDrawRate = 2
+
+ai6Name = "Minister of Sun"
+ai6Tech = "rainBattery;sunCannon;sunFence;sunBalloon;sunAviary;sunBlocker;sunArcher"
+ai6StartMoney = 1000
+ai6GeyserAttachments = 0
+ai6Collectors = 2
+ai6TimeBetweenMoves = 1
+ai6AllyList = "2;5"
+ai6color = yellow
+
+[@1]
+<h2>~mDuke of Thunder</h2>
+<p>I hope your plan works my young friend...
+
+[@2]
+<p>It has worked so far...
+
+[@3]
+<h2>~mDuke of Thunder</h2>
+<p>True...Just remember that I shall need the power you gather...Let us win this battle...there is much I can teach you yet..
+
+[Options]
+
+[A.]
+<h2>Usurping the control</h2>
+<i>"A select few hold as many geysers as the Isle of Geysers.  They are like big magnets for storm power."<br>
+--The Guardian of the Isle of Geysers</i>  
+<p>After a few months of training from the Duke of Thunder you decide to embark on an ambitous journy.  You decide to overthrow the Dark Lords of Nimbus who have ruled with an iron hand.  Your new allies agreed to join you on this quest: the liberation of Nimbus.  The Knight suggested that you take the Isle of Geysers, it's powers to attract storm power could aid you and your allies greatly.
+<p>Those who hold the Isle of Geysers can out last anyone in a battle.  If you are able to take the island, many will join you and your clan.  Do not let this chance pass by.....  Your ally the Duke of Thunder has distracted the main defences allowing you to sneak near the island.  Know this, the Duke will need the storm power you steal. 
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+The Power of the Isle of Geyser is yours!  Now you will be unstoppable!
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,Dark3
+
+[ai3PriestDead]
+<h2>The Duke of Thunder has perished!</h2>
+<p>
+Without the power of the Duke you fall prey to the Guardian's forces.
+
+$Button=Continue,Tell,TryAgain
+
+[ai2PriestDead]
+<h2>The Guardian is Dead!</h2>
+<p>
+You have killed the Guardian of the Isle of Geysers!  His power will soon be yours!
+
+[ai6PriestCaptured]
+<h2>~mDuke of Thunder</h2>
+<p>
+Kill him quickly!
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+You have been unable to support the Duke of Thunder and have been slain by the Guardians of the Isle of Geysers.
+$Button=Continue,Tell,TryAgain
+
+[END]

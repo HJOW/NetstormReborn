@@ -1,0 +1,53 @@
+[Header]
+
+missionType="Tutorial"
+missionNumber = 8
+moreGeysers = 1
+myStartMoney = 2000
+myTech = "windBattery;sunCannon;sunarcher;sunAviary"
+
+title= "ERMAC"
+
+ai2Name= "ThunderDude"
+ai2Tech= "windBattery;windarcher"
+ai2StartMoney= 4000
+ai2GeyserAttachments = 2
+ai2Collectors = 7
+ai2TimeBetweenMoves = 1
+ai2AllyList= ""
+ai2color= white
+
+
+[Options]
+
+
+[A.]
+<h2> Another enemy island discovered! <h2>
+<i> "ANother secret hideout of a general thunder leader" <br>
+--Scouts </i|
+<p>
+Our scouts discovered a hidden island. It is ruled by a local thunderman.
+He commands this island. He studied well your tactics and now he favors
+the powerfull wind fury. He chose to attack the temple of light hoping to
+meet a weak resistance from weak sun fury...
+$Button=Review Knowledge,Show Technology,55
+$Button=PlayMission,DoNothing,0
+
+[Succeeded] [BadTeamDead]
+
+<h2> Congratualtions!!!! <h2>
+<p> U just won another round!!! You just proven that you are not weak!!
+You only have one question in mind, is thunder dead? Have you destroyed it completelly?
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,rain
+
+[Failed]
+
+<h2> You suck!!! --Temple of light </h2>
+<p> U fool!! U just gave a thunder the power for a major comeback!!!
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+

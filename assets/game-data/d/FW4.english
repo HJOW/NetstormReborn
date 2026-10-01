@@ -1,0 +1,111 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 4
+moreGeysers = 2
+
+myStartMoney = 3500
+myTech = "ThunderArcher;ThunderCannon;Thunderbattery;sunarcher;sunaviary"
+myAllyList = "2"
+
+title="Stolen Plans"
+
+ai2Name = "^WaR^ Rogue"
+ai2Tech = "thunderarcher;thundercannon;thunderbattery;thunderblocker;thundercannon;bulf"
+ai2StartMoney = 7500
+ai2GeyserAttachments = 5
+ai2Collectors = 5
+ai2TimeBetweenMoves = "1"
+ai2AllyList = "1"
+ai2color = green
+
+ai3Name = "GOF spy"
+ai3Tech = ""windarcher;windBattery;windaviary;windballoon;windblocker;windWalker""
+ai3StartMoney = 7500
+ai3GeyserAttachments = 5
+ai3Collectors = 5
+ai3TimeBetweenMoves = "1"
+ai3DrawBrigdeRate = 2
+ai3AllyList = "4;5;6"
+ai3color = orange
+
+ai4Name = "GOF Fighter"
+ai4Tech = "sunWalker;sunarcher;sunballoon;suncannon;sunFence;sunaviary;sunBlocker"
+ai4StartMoney = 7500
+ai4GeyserAttachments = 5
+ai4Collectors = 6
+ai4TimeBetweenMoves = "1"
+ai4DrawBrigdeRate = 2
+ai4AllyList = "3;5;6"
+ai4color = orange
+
+ai5Name = "SPU Fighter"
+ai5Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence"
+ai5StartMoney = 7500
+ai5GeyserAttachments = 7
+ai5Collectors = 5
+ai5TimeBetweenMoves = "1"
+ai5DrawBrigdeRate = 1
+ai5AllyList = "3;4;6"
+ai5color = yellow
+
+ai6Name = "SPU Knight"
+ai6Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence"
+ai6StartMoney = 12500
+ai6GeyserAttachments = 8
+ai6Collectors = 8
+ai6TimeBetweenMoves = "1"
+ai6DrawBrigdeRate = 1
+ai6AllyList = "3;4;5"
+ai6color =yellow
+
+[Options]
+
+[A.]
+<h2>Stolen Plans</h2>
+<i>Guldan: ~wWake up!!!</i><br>
+<i>You: ~wWhat?  I'm so sleepy.<br>
+<i>Guldan: ~wThat was a spell, the stole all your plans of technology while you were sleeping.<br>
+<i>You: ~wWHAT!?!?!?<br>
+<i>Guldan: ~.They only stole a couple of mine, but they had to fight for it.  Looks like I have to give them to you.<br>
+<i>^WaR^ Leader: ~wHere's some of my plans, they didn't get any.<br>
+<i>Guldan: ~wAll you have to do is take there plans.  Engage in these four near by enemies to the north.  When you kill the preist you might get a plan, if not, level their temple and search the ground.<br>
+<p>Well, it looks like this might be a challenge.
+
+$Button=What you got, what you don't,ShowTechnology,55
+$Button=Start Fighting,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<p>Yes, but some of these plans don't have a generator plan with them, looks like we have to fight some more.
+<$Config,Done{mission.fileName}=1>
+$Button=Engage More Enemies,MissionBegin,FW5
+
+[ai3PriestDead]
+You found the technology of the Outpost.
+$Button=Ok,GetTechnology,126
+
+[ai4PriestDead]
+You found the technology of the Arc Spire.
+$Button=Ok,GetTechnology,149
+
+[ai4TempleDead]
+Searching the ruins you find the plans for the Ice cannon.
+$Button=Ok,GetTechnology,129
+
+[ai5PriestDead]
+In his robe you find...
+$Button=What?,GetTechnology,75
+
+[ai6TempleDead]
+You find the plans for the man-o-war pool.
+$Button=Ok,GetTechnology,143
+
+[ai2PriestDead]
+Ouch, that's gotta hurt...
+$Button=Bye Bye,MissionAbort,0
+
+[Failed]
+Ouch, that's gotta hurt..
+$Button=*You're fired from your job*,MissionAbort,0
+
+[END]

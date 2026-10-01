@@ -1,0 +1,24 @@
+title = "FW Part II: Offensive Strike"
+
+[Overview]
+<background="nsstart">
+<h2>The Offensive Strike</h2>
+<p>Now that you have learned the Ways of the Alliance of Light, it is time to stop defending so much and attack!<br>
+~rMade by the Virtuous Warrior<br>
+~kDying_Realms@juno.com<br>
+~wSide Note: DO NOT CHEAT!!!  That messes up some maps.<br>
+Another Note: DO NOT CHEAT IN MULTI-PLAYER...<br>
+Unless of course, you suck to bad to take loosing like a true man (true lady).
+
+$Checked=     Mission:,MissionBegin,FW999,{DoneFW999},{Done998}
+$Checked=I     Prison Break,MissionBegin,FWOS1,{DoneFWOS1},1
+$Checked=II    Storage Factory,MissionBegin,FWOS2,{DoneFWOS2},1
+$Checked=III   Captured,MissionBegin,FWOS3,{DoneFWOS3},1
+$Checked=IV   Thunder Realms,MissionBegin,FWOS4,{DoneFWOS4},1
+$Checked=V    Ambush at Section 2765,MissionBegin,FWOS5,{DoneFWOS5},1
+$Checked=IV   Surrounded By Hell,MissionBegin,FWOS6,{DoneFWOS6},1
+$Checked=IIV  GOF Rampage,MissionBegin,FWOS7,{DoneFWOS7},1
+$Checked=IIIV Ally 4 Life,MissionBegin,FWOS8,{DoneFWOS8},1
+$Checked=IX   Gate Keepers,MissionBegin,FWOS9,{DoneFWOS9},1
+
+$Button=Back,Tell,Campaign

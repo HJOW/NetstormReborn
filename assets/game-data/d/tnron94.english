@@ -1,0 +1,81 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 3
+moreGeysers = 0
+
+myStartMoney = 800
+myTech = "sunaviary;sunBalloon;sunCannon;sunBlocker;sunFence;sunArcher;thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;bulf;rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainwalker;rainFence;rainwalker"     																
+myAllyList = ""
+
+title="One on One"
+
+ai2Name = "~kDark Lord"
+ai2Tech = "sunaviary;sunCannon;sunBlocker;sunArcher;thunderbattery;thunderarcher;bulf"
+ai2StartMoney = 750000
+ai2GeyserAttachments = 3
+ai2Collectors = 0
+ai2TimeBetweenMoves = 0
+ai2AllyList = ""
+ai2color = white
+ai2Ability="!USE_PRIEST_TO_COLLECT;!BUILD_BRIDGES"
+ai2BridgeDrawRate = 1
+
+ai3Name = "~kDark Lord"
+ai3Tech = "sunaviary;sunCannon;sunBlocker;sunArcher;thunderbattery;thunderarcher;bulf"
+ai3StartMoney = 750000
+ai3GeyserAttachments = 3
+ai3Collectors = 0
+ai3TimeBetweenMoves = 0
+ai3AllyList = ""
+ai3color = white
+ai3Ability="!USE_PRIEST_TO_COLLECT"
+ai3BridgeDrawRate = 10
+
+
+
+
+[Options]
+
+[A.]
+<h2>One on One</h2>
+<i>"A personal challange; a duel to the death.  If you fail to accept your men will think you weak."<br>
+--Ironal Blade.</i>  
+<p>You now know of your true nemisis, an old one at that.  The last Dark Lord!  He alone has orcastrated the joining of the Elementals and the Flyers, not to mention many divisions still loyal the Dark Lords.  You know of where he resides and head off to vanquish an old foe.
+<p>Using the cloak of darkness you have found your foe.  He stands out challanging personal combat.  Accepting the challange you draw swords and begin a fight to the death.  Fueled with rage, hatred and comsumed with the lust for revenge you attack with savage force!  Just as you were about to get the upper hand you notice that a Man o' War approaches!  
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[@1]
+<h2>~kDark Lord:~w</h2>
+<p>HA!  You fool!  Did you think I would just let you kill me?!  Hahaha HAAA!!!  Now you shall die and I will be come the ruler of all Nimbus again!! 
+<PlaySound,decimationCast.wav>
+
+
+[@100]
+<h2>~kDark Lord:~w</h2>
+<p>And now you DIE!!  HAHAHAH!
+
+[@101]
+<?{atknight}>
+<h2>~gKnight of Wind</h2>
+<p>I think NOT!!!
+$Button=What the?,MissionBegin,tnron944
+</?>
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>Umm you shouldn't be able to win here......
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+Blinded by your hatred and comsumed by revenge you have been vanquished by yourself and the last Dark Lord....If only things had been different......
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+

@@ -1,0 +1,224 @@
+[Header]
+missionType = "Tutorial"
+missionNumber = 1
+moreGeysers = 1
+myStartMoney = "25000"
+myTech = "outpost"
+myAllyList = "2;7"
+myName = "~IPlayer"
+
+title="Hive Cluster"
+
+ai2Name = "~yAngelic Warrior"
+ai2Tech = "windbattery;windarcher;windblocker;windwalker;windaviary;windballoon"
+ai2StartMoney = 25000
+ai2AllyList = "1;7"
+ai2GeyserAttachments = 5
+ai2Collectors = 5
+ai2BridgeDrawRate=1
+ai2TimeBetweenMoves=1
+ai2MoneyRechargeRate=1200
+ai2Color = "white"
+ai2Ability = "!USE_PRIEST_TO_COLLECT;!ENCIRLCE_ENEMY_ISLAND"
+
+ai3Name = "~mImpial Death"
+ai3Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;sunwalker"
+ai3StartMoney = 25000
+ai3AllyList = "4;5;6;8"
+ai3GeyserAttachments = 5
+ai3Collectors = 5
+ai3BridgeDrawRate=0
+ai3TimeBetweenMoves=0
+ai3MoneyRechargeRate=2400
+ai3Color = "purple"
+ai3Ability = "!USE_PRIEST_TO_COLLECT;!ENCIRLCE_ENEMY_ISLAND"
+
+ai4Name = "~rImpial BW"
+ai4Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;sunwalker"
+ai4StartMoney = 25000
+ai4AllyList = "3;5;6;8"
+ai4GeyserAttachments = 5
+ai4Collectors = 5
+ai4BridgeDrawRate=1
+ai4TimeBetweenMoves=0
+ai4MoneyRechargeRate=300
+ai4Color = "red"
+ai4Ability = "!USE_PRIEST_TO_COLLECT;!ENCIRLCE_ENEMY_ISLAND"
+
+ai5Name = "~yImp Warrior"
+ai5Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainwalker;sunwalker"
+ai5StartMoney = 25000
+ai5AllyList = "3;4;6;8"
+ai5GeyserAttachments = 9
+ai5Collectors = 5
+ai5BridgeDrawRate=0
+ai5TimeBetweenMoves=0
+ai5MoneyRechargeRate=240
+ai5Color = "lightblue"
+ai5Ability = "!USE_PRIEST_TO_COLLECT;!ENCIRLCE_ENEMY_ISLAND"
+
+ai6Name = "~gImp Chief"
+ai6Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainwalker;sunwalker"
+ai6StartMoney = 25000
+ai6AllyList = "3;4;5;8"
+ai6GeyserAttachments = 9
+ai6Collectors = 10
+ai6BridgeDrawRate=0
+ai6TimeBetweenMoves=0
+ai6MoneyRechargeRate=1000
+ai6Color = "green"
+ai6Ability = "!USE_PRIEST_TO_COLLECT;!ENCIRLCE_ENEMY_ISLAND"
+
+ai7Name = "~oImpial Traitor"
+ai7Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;Bulf;sunwalker"
+ai7StartMoney = 25000
+ai7AllyList = "1;2"
+ai7GeyserAttachments = 5
+ai7Collectors = 5
+ai7BridgeDrawRate=0
+ai7TimeBetweenMoves=0
+ai2MoneyRechargeRate=6000
+ai7Color = "orange"
+ai7Ability = "!USE_PRIEST_TO_COLLECT;!ENCIRLCE_ENEMY_ISLAND"
+
+ai8Name = "~yImpial Healer"
+ai8Tech = "sunWalker;sunarcher;sunballoon;suncannon;sunaviary;sunBlocker;sunwalker"
+ai8StartMoney = 25000
+ai8AllyList = "3;4;5;6"
+ai8GeyserAttachments = 9
+ai8Collectors =7
+ai8BridgeDrawRate=0
+ai8TimeBetweenMoves=0
+ai2MoneyRechargeRate=1
+ai8Color = "yellow"
+ai8Ability = "!USE_PRIEST_TO_COLLECT;!ENCIRLCE_ENEMY_ISLAND"
+
+[Options]
+[A.]
+<h2>~kHive Cluster~.</h2>
+So you picked Hive cluster.  Have fun with the MOSQUITOS.  Heeheehe.
+$Button=I Want Info,Tell,Info
+$Button=Don't Want Info,Tell,No
+
+[Info]
+<h2>Info:</h2><br>
+Ok, you each start with 25000.  All the ai's have special "money recharging" abilities in a variety of time periods.<br>
+You have one ally and your against 6.<br>
+$Button=Thanx,Tell,Pick
+
+[No]
+Want to get right to the fight, huh?<br>
+To bad, you got another message.<br>
+$Button=What?!?,Tell,Pick
+$Button=No more messages!,Tell,None
+
+[None]
+I think you shall reconsider.
+$Button=Ok,Tell,Pick
+$Button=NO!!!,Tell,HellNo
+
+[Say]
+<i>When numbers are a disadvantage to you, the enemy will swarm around you like bees.  That's the time you break out the bug spray."<br>
+--The Virtuous Warrior<br>
+$Button=Back,Tell,Info
+
+[HellNo]
+Ok, Have it your way.
+$Button=I WILL,DoNothing,0
+
+[@1]
+Pick you weapon.
+$Menu=~bRain,Tell,A
+$Menu=~kThunder~.,Tell,B
+$Menu=~IWind~.,Tell,C
+$Menu=~ySun,Tell,D
+
+[A]
+<$GetTechnology,76>
+<$GetTechnology,87>
+<$GetTechnology,124>
+<$GetTechnology,129>
+<$GetTechnology,143>
+<$GetTechnology,145>
+<$GetTechnology,156>
+<$GetTechnology,147>
+<$GetTechnology,146>
+$Button=HeeHeeHe,Tell,HaHa
+
+[B]
+<$GetTechnology,77>
+<$GetTechnology,79>
+<$GetTechnology,88>
+<$GetTechnology,125>
+<$GetTechnology,131>
+<$GetTechnology,135>
+<$GetTechnology,148>
+<$GetTechnology,149>
+$Button=HeeHeeHe,Tell,HaHa
+
+[C]
+<$GetTechnology,75>
+<$GetTechnology,86>
+<$GetTechnology,123>
+<$GetTechnology,139>
+<$GetTechnology,140>
+<$GetTechnology,142>
+<$GetTechnology,141>
+<$GetTechnology,137>
+$Button=HeeHeeHe,Tell,HaHa
+
+[D]
+<$GetTechnology,71>
+<$GetTechnology,72>
+<$GetTechnology,75>
+<$GetTechnology,85>
+<$GetTechnology,111>
+<$GetTechnology,128>
+<$GetTechnology,136>
+<$GetTechnology,78>
+<$GetTechnology,70>
+$Button=HeeHeeHe,Tell,HaHa
+
+[HaHa]
+= )<br>
+Have Fun +<br>
+Good Luck<br>
+The Virtuous Warrior<br>
+$Button=Cool,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>You Have Won!!!</h2>
+<p>~.How can that be?  Try a new mission, better yet, try the orginal.  I ~kdare~. you to.
+$Button=New Mission,Tell,Mission
+
+[Failed][ai1PriestDead]
+<h2>Message from the ~kImps~.:</h2>
+<p>~rHahaha...~B~wI told you... Leave from our Imp-ial realms.  Looser.
+$Button=*Sigh*,Tell,LaLa
+
+[LaLa]
+So, you picked a clone.  Sorry, but this was only a simulation.  Not really the imp-ial realms.
+$Menu=I want to be resurrected,MissionRestart,0
+$Menu=I want a new mission,Tell,Mission
+$Menu=I want a clone,Tell,Clone
+$Menu=I wanna leave,AbortMission,0
+$Menu=I want to stay in the game and help my allies,DoNothing,0
+
+[Clone]
+What do you want?
+$Menu=More Money,Missionbegin,Imp1a
+$Menu=Slower ai's,Missionbegin,Imp1
+$Menu=Regular,Missionbegin,Imp1c
+$Button=Back,Tell,LaLa
+
+[Mission]
+What one?
+$Menu=~qPick your death:,Tell,dope
+$Menu=~mHive Cluster,MissionBegin,Imp1
+$Menu=~kDark Rituals,MissionBegin,Imp2
+$Menu=~yX Marks the Spot,MissionBegin,Imp3
+$Menu=~bRun Like Hell 2,MissionBegin,Imp4
+$Menu=~gProject ~oD~got~oT,MissionBegin,Imp5
+$Button=Back,Tell,LaLa
+
+[END]

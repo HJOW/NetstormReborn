@@ -9,14 +9,14 @@
 [YouTube 캠페인 3 관찰](videos/youtube-act3-combat.md)을 참고한다. F3은 현재 개발용이며 원본 단축키와 다르다.
 
 원본 `.fort`의 저장된 오브젝트를 16×11px/칸 좌표계로 표시한다.
-원본 데이터 탐색은 기존 `GameDataLocator`를 사용한다 (`NETSTORM_DATA` 지정 가능).
+실행 데이터는 출력의 `game-data/`에 자동 포함된다. `GameDataLocator`는 `game-data/`·저장소의 `assets/game-data/`를 찾으며 별도 데이터는 `NETSTORM_DATA`로 지정할 수 있다. [데이터 구성](../assets/README.md).
 
 저장소 루트에서 실행:
 
 ```powershell
 dotnet run --project src/Netstorm.Game -- --map savetheisland
 dotnet run --project src/Netstorm.Game -- --map thewarbegins
-dotnet run --project src/Netstorm.Game -- --map originals/d/b0.fort
+dotnet run --project src/Netstorm.Game -- --map assets/game-data/d/b0.fort
 dotnet run --project src/Netstorm.Game -- --map savetheisland --language korean
 ```
 

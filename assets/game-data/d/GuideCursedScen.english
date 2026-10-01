@@ -1,0 +1,11 @@
+title = "The Curse Of The Furies"
+
+[Overview]
+<background="nsstart">
+<h2>The Curse Of The Furies</h2>
+<i>The Furies have always been understanding, but when one of your priests becomes rebellious, the Furies send thier own High Priests to Test Your Faith, in order to gain Respect again you must defeat the furies priests."</i>
+<p>
+
+$Checked=1 The Furies Challenge,MissionBegin,CursedScen,{DoneCursedScen},1
+
+$Button=Back,Tell,Campaign

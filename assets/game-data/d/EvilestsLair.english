@@ -1,0 +1,91 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 5
+moreGeysers = 3
+
+myStartMoney = 1000
+myTech ="rainwalker;raincannon;rainBattery;rainfence;rainballoon;rainblocker;rainAviary;thunderBattery;thunderblocker"
+
+
+title="No Time To Lose"
+
+ai2Name = "Evilest One"
+ai2Tech ="windwalker;windArcher;windBlocker;sunBalloon;windballoon;windAviary;sunfence;windbattery;bulf;thunderArcher;thunderBattery;thunderfence;sunballoon;thunderCannon;thunderblocker;sunBlocker;sunArcher;suncannon;sunAviary;sunfence;rainwalker;raincannon;rainBattery;rainfence;rainballoon;rainblocker;rainAviary"
+ai2StartMoney = 250000
+ai2GeyserAttachments = 20
+ai2Collectors = 20
+ai2TimeBetweenMoves = 0
+ai2Bridgedrawrate = 1
+ai2Ability ="!USE_PRIEST_TO_COLLECT"
+ai2color = red
+
+
+
+ai3Name = "Splish Splash"
+ai3Tech ="rainwalker;raincannon;rainBattery;rainfence;rainballoon;rainblocker;rainAviary"
+ai3StartMoney = 10000
+ai3GeyserAttachments = 15
+ai3Collectors = 10
+ai3TimeBetweenMoves = 0
+ai3Bridgedrawrate = 1
+ai3AllyList = "1"
+ai3color = white
+
+
+
+[Options]
+
+[A.]
+~yEvil is not your enemy, just unwanted"<P>
+Twinkies
+~wThis is the final battle against the evil ones. show them whos boss!
+~ySplish Splash:~wThink we can do it?
+~yYou: sure we can!
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Fight,DoNothing,0
+
+
+[ai2PriestDead]
+You have Defeated me, but you still won't beat me!
+
+[ai3PriestDead]
+Ouch! I was just sneeking around!
+
+[ai4PriestDead]
+Nooo!! You failed me ally!
+
+[ai5PriestDead]
+Nooo!! You failed me ally!
+
+
+[ai2PriestCaptured]
+Oh No! I am  doomed!
+
+
+
+[ai3PriestCaptured]
+Lemme go please?
+
+
+[ai4PriestCaptured]
+Help me dear ally!
+
+
+[ai5PriestCaptured]
+Ack! Help me!
+
+
+
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>Evil is no longer a problem in your kingdom on Nimbus. Your kingdom throws a celebration that lasts for days.
+<$Config,Done{mission.fileName}=1>
+
+
+[END]
+
+
+

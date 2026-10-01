@@ -1,0 +1,139 @@
+[Header]
+missionType = "Tutorial"
+missionNumber = 1
+moreGeysers = 1
+
+mystartmoney = 12000
+myTech = "thunderbattery;thunderarcher;thunderblocker;thundercannon"
+
+title = "The Furies' Rift"
+
+ai2Name = "Alien of Rain"
+ai2Tech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;windBattery;thunderbattery;rainbattery;rainaviary;rainwalker;rainballoon;rainblocker;raincannon;rainFence"
+ai2StartMoney = 40000
+ai2GeysersAttachments = 2
+ai2Collectors = 15
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3;4"
+ai2color = red
+
+ai3Name = "Alien of Thunder"
+ai3Tech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;thunderbattery;rainbattery;windBattery;thunderarcher;thunderblocker;thundercannon;thunderfence"
+ai3StartMoney = 40000
+ai3GeysersAttachments = 2
+ai3Collectors = 18
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2;4"
+ai3color = white
+
+ai4Name = "Alien of Wind"
+ai4Tech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;windBattery;thunderbattery;rainbattery;windarcher;windaviary;windballoon;windblocker;windWalker"
+ai4StartMoney = 40000
+ai4GeysersAttachments = 2
+ai4Collectors = 10
+ai4TimeBetweenMoves = 1
+ai4AllyList = "2;3"
+ai4color = green
+
+ai5Name = "General Kharlic"
+ai5Tech = "windBattery;thunderbattery;rainbattery;rainwalker;rainaviary;rainballoon;rainblocker;raincannon;rainFence"
+ai5StartMoney = 20000
+ai5GeysersAttachments = 1
+ai5Collectors = 20
+ai5TimeBetweenMoves = 2
+ai5AllyList = "1"
+ai5Ability = "!Capture_Enemy_Priest"
+ai5color = magenta
+
+ai6Name = ""
+ai6Tech = ""
+ai6StartMoney = 
+ai6GeysersAttachments = 
+ai6Collectors = 
+ai6TimeBetweenMoves = 
+ai6AllyList = 
+ai6color = 
+
+ai7Name = ""
+ai7Tech = ""
+ai7StartMoney = 
+ai7GeysersAttachments = 
+ai7Collectors = 
+ai7TimeBetweenMoves = 
+ai7AllyList = 
+ai7color = 
+
+ai8Name = ""
+ai8Tech = ""
+ai8StartMoney = 
+ai8GeysersAttachments = 
+ai8Collectors = 
+ai8TimeBetweenMoves = 
+ai8AllyList = 
+ai8color = 
+
+[Options]
+
+[A.]
+<h2>Save the General!</h2>
+<i>~[Isunfence.A2] <br>
+"Nowhere to run, nowhere to hide, the stench of death is everywhere."<br>
+--High Priest Firestorm </i>  
+
+<p>A rift in the fabric of space was detected hovering in the Pyrosphere. The great General Kharlic went to explore, noting that the rift led directly to the Deusphere and therefore spurted Storm Power straight from its primordial source. However, the General's last reported message was a distress call, telling of strange alien Priests from the Deusphere. Now you, a lesser general, must save Kharlic and gain access to the Storm Power source.
+
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[BadTeamDead]
+<h2>Congratulations! We have scored a great victory!</h2>
+<p>
+You have defeated the strange aliens, and saved the General. However, you have a premonition... You know you will see more of the alien Priests. However, you do hope that this initial defeat discourages the aliens from mounting further assaults.
+
+<$Config,Done{mission.filename}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,FireScen2
+
+[ai2PriestDead]
+<h2>A Message by Sun Balloon</h2>
+<p>~[Isunballoon.D1] <br>
+Yes! The evil alien of Rain is dead and defeated! We are winning the battle!
+
+[ai3PriestDead]
+<h2>A Message by Sun Balloon</h2>
+<p>~[Isunballoon.D1] <br>
+The Alien of Thunder is vanquished, now let us focus our forces on the others!
+
+[ai4PriestDead]
+<h2>A Message by Sun Balloon</h2>
+<p>~[Isunballoon.D1] <br>
+Congratulations! You are a great ally and help! Let us now smash through the forces of the evil ones!
+
+[ai5TempleHalfDead]
+<h2>Kharlic needs help!</h2>
+<p>~[Ithundercannon.C6] <br>
+My island is being pounded! We must act as a team to destroy the aliens!
+
+[ai5PriestCaptured]
+<h2>Kharlic is dying!</h2>
+<p>~[Irainaviary.B10] <br>
+Kharlic is captured and chained to the aliens' evil altar! Help him quick!
+
+$Button=Continue,DoNothing
+
+[ai5PriestDead]
+<h2>Failure!</h2>
+<p>~[Isunwalker.A2] <br>
+General Kharlic has been slain on the altar of the evil aliens! You are demoted to Peon for failing to save such a great warrior!
+
+$Button=Continue,Tell,TryAgain
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+You are dead! The Aliens have won and evil has prevailed!
+
+$Button=Continue,Tell,TryAgain
+
+[END]

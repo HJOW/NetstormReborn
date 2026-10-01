@@ -1,0 +1,117 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = "1"
+moreGeysers = "1"
+randGeysers = "1"
+
+myStartMoney = "5000"
+myTech = "all"
+myAllyList = ""
+
+title = "Mike1"
+
+ai2Name = "Wind Guy"
+ai2Tech = "windBalloon;windArcher;windAviary;windWalker;windBattery;windBlocker"
+ai2StartMoney = "5000"
+ai2AllyList = "3;4;5;"
+ai2Color = "red"
+ai2Collectors = "2"
+ai2BridgeDrawRate = "4"
+ai2GeyserAttachments = "4"
+ai2TimeBetweenMoves = "4"
+ai2Ability = ""
+
+ai3Name = "Rain Man"
+ai3Tech = "rainFence;rainBalloon;rainWalker;rainCannon;rainBlocker;rainAviary;rainBattery"
+ai3StartMoney = "5000"
+ai3AllyList = "4;5;2;"
+ai3Color = "white"
+ai3Collectors = "2"
+ai3BridgeDrawRate = "4"
+ai3GeyserAttachments = "4"
+ai3TimeBetweenMoves = "4"
+ai3Ability = ""
+
+ai4Name = "Thunder Power"
+ai4Tech = "thunderFence;bulf;thunderBlocker;thunderCannon;thunderBattery;thunderArcher"
+ai4StartMoney = "5000"
+ai4AllyList = "3;5;2;"
+ai4Color = "green"
+ai4Collectors = "5"
+ai4BridgeDrawRate = "4"
+ai4GeyserAttachments = "3"
+ai4TimeBetweenMoves = "3"
+ai4Ability = ""
+
+ai5Name = "Fun in the Sun"
+ai5Tech = "outpost;sunBlocker;sunBalloon;sunFence;sunCannon;sunArcher;sunAviary;windBattery;"
+ai5StartMoney = "8000"
+ai5AllyList = "2;3;4;"
+ai5Color = "purple"
+ai5Collectors = "2"
+ai5BridgeDrawRate = "3"
+ai5GeyserAttachments = "2"
+ai5TimeBetweenMoves = "2"
+ai5Ability = ""
+
+[Options]
+
+[A.]
+<h2>Supercalifradgjyalisticexpeolodocious</h2>
+<i>"4 on 1's are not fun"<br>
+-Mike</i>
+<p>Keep these points in mind:
+<p>~B~E~r1.~lYou got all 4 workshops under fire from a crossbow and 3 manowars.
+<p>~B~E~r2.~lYour only defense for them is one ice tower and two whiriligig bases each.
+<p>~B~E~r3.~lYou got all the tech, but sun barricades wont be able to save your workshops.
+<p>~B~E~r4.~lYour temple isn't going to be in any real danger at the start.
+
+$Button=More,Tell,More
+
+[More]
+<h2>~B~wBlah blah blah...</h2>
+<p>~B~E~i      Ok, at first glance this map appears to be a very familiar setup, and basically it is, I know almost everyone comes up with this idea for a map at one time or another, but these kinds of maps are fun. You and the ais are as close as possible - the map is basically built for speed.  I generally try to stay away from ais that are way on the other end of the map.  In my opinion that makes the map a lot less fun.  Anyway, I tried my best to make it as original as I could. So hey enjoy it.
+<br>                                                     -Mike Byrne aka Australian_Dingo
+$Button=Thanks,Tell,More2
+
+[More2]
+<p>~B~l*Remember:~IIt's not whether you win or lose, it's how you play the game.
+$Button=You got all the tech,ShowTechnology,55
+$Button=Yadda yadda...,DoNothing,0
+
+
+[ai2priestdead]
+Congrats! You win a post.
+<$GetTechnology,126>
+
+[ai3priestdead]
+Congrats! You get cash!
+<$ChangeMoney,2000>
+
+[ai4priestdead]
+MORE MONEY!!!
+<$Changemoney,5000>
+
+[Succeeded]
+<h2>Hooray! You won!</h2>
+<p>Good job.
+
+
+
+
+$Button=Leave Missions,MissionAbort,0
+$Button=Nothing here yet,MissionBegin,Mike2
+
+[Failed]
+<h2>YOU LOST???</h2>
+<p>That's Pathetic!
+$Button=I'm Sorry!,Tell,Dead
+
+[Dead]
+Better luck next time.
+$Button=Try Again,MissionBegin,Mike1
+$Button=Go Home,MissionAbort,0
+$Button=Skip This Mission,MissionBegin,Mike2
+
+[END]

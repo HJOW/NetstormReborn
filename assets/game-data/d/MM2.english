@@ -1,0 +1,61 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 5
+moreGeysers = 3
+randGeysers = 1
+
+myStartMoney = 25000
+myTech = "windarcher;windBattery;windballoon;windblocker;windWalker"
+
+title = "Impossible"
+
+ai2Name = "Jeffery"
+ai2Tech = "windWalker;windarcher;windBattery;windballoon;windblocker"
+ai2StartMoney = 25000
+ai2GeysersAttachments = 10
+ai2Collectors = 10
+ai2TimeBetweenMoves = 1
+ai2BridgeDrawRate = 3
+ai2AllyList = ""
+ai2color = white
+
+[Options]
+
+[A.]
+<h2>Impossible, I think not</h2>
+<i>"If I said you were good, would you blow my head off for lying?"  --The DeathWalker, laughing at Jeff.</i>
+<br>
+<p>Message From Jeffery:<br>
+~rI know I have been a dork, but can thou spare me?  ~m(By the way, I love red.)
+
+$Button=What you got,ShowTechnology,55
+$Button=Hell No,DoNothing,0
+
+[ai2PriestCaptured]
+<p>Mommy, I need you.  Save me, save me.<p>
+
+$button=Shall We Let The girl go?,DoNothing,0
+
+[ai2TempleHalfDead]
+<p>Can't we talk this over?<br>
+
+$button=Keep your pervert self on your own Island,DoNothing,0
+
+[ai2TempleDead]
+<p>You destroyed my home...Back to my cardboard box...
+
+[Secceeded][ai2PriestDead]
+<h2>Yes, the world is free from Jeffery.
+<p>His mom took his body back home...
+
+$button=Get the hell out of here...don't look back...,MissionAbort,0
+
+[Failed]
+<h2>You have failed!</h2>
+<p>Gay Jeffery got you.  He tied you up on his unholy altar...
+
+$Button=Commit Suicide,MissionAbort,1
+
+
+[END]

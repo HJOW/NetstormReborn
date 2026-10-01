@@ -1,0 +1,123 @@
+[Header]
+missionType = "Tutorial"
+missionNumber = 5
+moreGeysers = 1
+
+mystartmoney = 12500
+myTech = "thunderBattery;thunderFence;thunderCannon;thunderArcher;thunderBlocker;bulf;rainBattery;rainBattery;rainBlocker;rainFence;rainCannon;rainAviary;rainWalker;rainBalloon"
+
+title = "Center-death"
+
+ai2Name = "Razor of Rain"
+ai2Tech = "rainBattery;rainBlocker;rainFence;rainCannon;rainAviary;rainWalker;rainBalloon"
+ai2StartMoney = 25000
+ai2GeysersAttachments = 15
+ai2Collectors = 15
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3;4;5"
+ai2ability = "!Use_Priest_To_Collect"
+ai2color =
+ai2BridgeDrawRate = 1
+
+ai3Name = "Razor of Wind"
+ai3Tech = "windBattery;windArcher;windBlocker;windAviary;windWalker;windBalloon"
+ai3StartMoney = 25000
+ai3GeysersAttachments = 15
+ai3Collectors = 15
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2;4;5"
+ai3ability = "!Use_Priest_To_Collect"
+ai3color =
+ai3BridgeDrawRate = 1
+
+ai4Name = "Razor of Thunder"
+ai4Tech = "thunderBattery;thunderFence;thunderCannon;thunderArcher;thunderBlocker;rainBattery;rainWalker"
+ai4StartMoney = 25000
+ai4eysersAttachments = 15
+ai4ollectors = 15
+ai4TimeBetweenMoves = 1
+ai4AllyList = "2;3;5"
+ai4ability = "!Use_Priest_To_Collect"
+ai4color =
+ai4BridgeDrawRate = 1
+
+ai5Name = "Razor of Sun"
+ai5Tech = "thunderBattery;sunBlocker;sunCannon;sunArcher;sunBalloon;sunAviary;sunFence"
+ai5StartMoney = 25000
+ai5GeysersAttachments = 15
+ai5Collectors = 15
+ai5TimeBetweenMoves = 1
+ai5AllyList = 2;3;4"
+ai5ability = "!Use_Priest_To_Collect"
+ai5color =
+ai5BridgeDrawRate = 1
+
+ai6Name = "DDC-Center South"
+ai6Tech = ""
+ai6StartMoney = 0
+ai6GeysersAttachments = 0
+ai6Collectors = 0
+ai6TimeBetweenMoves = 1
+ai6AllyList = "1;7;8"
+ai6ability = ""
+ai6color =
+
+ai7Name = "DDC-Center North"
+ai7Tech = ""
+ai7StartMoney = 0
+ai7GeysersAttachments = 0
+ai7Collectors = 0
+ai7TimeBetweenMoves = 1
+ai7AllyList = "1;6;8"
+ai7ability = ""
+ai7color =
+
+ai8Name = "=DDC=D-Devil"
+ai8Tech = "thunderBattery;thunderFence;thunderCannon;thunderArcher;thunderBlocker;bulf;rainBattery;rainBattery;rainBlocker;rainFence;rainCannon;rainAviary;rainWalker;rainBalloon"
+ai8StartMoney = 25000
+ai8GeysersAttachments = 15
+ai8Collectors = 15
+ai8TimeBetweenMoves = 1
+ai8AllyList = "1;6;7"
+ai8ability = "!Use_Priest_To_Collect;"
+ai8color =
+ai8BridgeDrawRate = 1
+
+[Options]
+
+[A.]
+<h2>Center Death</h2>
+<i>"Is all lost now?"<br>
+--DDC Civilian</i>  
+
+<p>When you just had taken the Storm Transport, you received a message by balloon. "Damn, I'm in for a little vacation", you think. Opening it, it says: "<I>Message to ALL DDC forces: Send reinforcements IMMEDIATELY! DDC-Center is under attack! Even now, our islands are being pounded by a for us too strong Razorian force! If noone can make it in time, farewell...</I>". While you were away taking the Storm Transport, the Razorians have sent their finest officers to the DDC-Center. Arriving there, you were just in time to join with Lord =DDC=D-Devil. "<I>Nothing we can do for them anymore. But let our revenge be sweet! Help me and crush those Razorian pigs!</I>".
+
+<p>Your mission is to defeat the Razorians and revenge the deceased DDC-Center.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[BadTeamDead]
+<h2>Nice fighting!</h2>
+<p>
+Lord D-Devil says "<I>Well done! Maybe you were wondering if DDC would fall apart now. I and Lord Striker knew this was going to happen, so a few weeks ago we put together an emergency plan. I and Lord Striker take over the control of DDC. We now know the position of the new (and last) Razorian force. If we defeat them the following mission, they're gone for ever.</I>"
+
+<$Config,Done{mission.filename}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,Razorianreturn5
+
+[ai8PriestDead]
+<h2>D-Devil is dead!</h2>
+<p>
+Lord D-Devil is dead. Without him, the secret emergency plan he and Lord Striker had in mind can't go on. DDC is lost.
+
+$Button=Continue,Tell,TryAgain
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+You are dead! D-Devil continued fighting, but at the end, the Razorians grew too strong. DDC is lost.
+
+$Button=Continue,Tell,TryAgain
+
+[END]

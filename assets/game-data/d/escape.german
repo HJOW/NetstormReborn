@@ -1,0 +1,97 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 4
+moreGeysers = 0
+randGeyserd = 0
+
+myStartMoney = 2000
+myTech = "sunWalker"
+
+title="The Escape!"
+
+ai2Name = "Skeleton 1"
+ai2Tech = ""
+ai2StartMoney = 0
+ai2GeyserAttachments = 0
+ai2Collectors = 0
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3;4"
+ai2color = red
+
+ai3Name = "Skeleton 2"
+ai3Tech = ""
+ai3StartMoney = 0
+ai3GeyserAttachments = 0
+ai3Collectors = 0
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2;4"
+ai3color = green
+
+
+ai4Name = "Skeleton 3"
+ai4Tech = ""
+ai4StartMoney = 0
+ai4GeyserAttachments = 0
+ai4Collectors = 0
+ai4TimeBetweenMoves = 1
+ai4AllyList = "2;3"
+ai4color = white
+
+[Options]
+
+[A.]
+<h2>~[IthunderFence.*]~oThe Escape!</h2>
+<i>"hell awaits you"<br>
+--Skeleton 2</i>  
+<p>You have killed ~kDeath~tStar
+<p>~.And now you must escape his dungeons of doom!
+
+$Button=stuff,ShowTechnology,55
+$Button=Escape!,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+You escaped the dungeons now it's the home stretch!
+
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,hbound
+
+[ai2PriestDead]
+<h2>Skeleton 1</h2>
+<p>
+2 more!
+
+[ai3PriestDead]
+<h2>Skeleton 2</h2>
+<p>
+1 more
+
+[@2000]
+<h2>Hurry!</h2>
+<p>You don't have much time left!
+
+[Failed][@3000]
+<h2>Death</h2>
+<p>You have been too long to escape the dungeons, try again!
+$Button=Continue,Tell,TryAgain
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+You escaped the dungeons now it's the home stretch!
+
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,homeb
+
+[Failed][ai1PriestCaptured]
+<h2>Failure!</h2>
+<p>
+The Dungeons have killed another one of its Victims!
+
+$Button=Continue,Tell,TryAgain
+
+[END]

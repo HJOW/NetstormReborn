@@ -1,0 +1,112 @@
+[Header]
+
+missionType = "Tutorial"
+
+missionNumber = "17"
+moreGeysers = "1"
+randGeysers = "0"
+
+myStartMoney = "4000"
+myTech = "all;outpost;"
+myAllyList = "5;"
+
+title = "Residence of the Evil King"
+
+ai2Name = "Guard of the King"
+ai2Tech = "thunderbattery;thunderblocker;thundercannon;"
+ai2StartMoney = "50000"
+ai2AllyList = "3;4;"
+ai2Color = "red"
+ai2Collectors = "0"
+ai2BridgeDrawRate = "0"
+ai2GeyserAttachments = "0"
+ai2TimeBetweenMoves = "0"
+ai2Ability = ""
+
+ai3Name = "Evil King"
+ai3Tech = "rainbattery;rainblocker;raincannon;rainaviary;"
+ai3StartMoney = "50000"
+ai3AllyList = "2;4;"
+ai3Color = "white"
+ai3Collectors = "0"
+ai3BridgeDrawRate = "0"
+ai3GeyserAttachments = "0"
+ai3TimeBetweenMoves = "0"
+ai3Ability = ""
+
+ai4Name = "Closest Advisor"
+ai4Tech = "windbattery;windblocker;windarcher;windaviary"
+ai4StartMoney = "50000"
+ai4AllyList = "2;3;"
+ai4Color = "green"
+ai4Collectors = "0"
+ai4BridgeDrawRate = "0"
+ai4GeyserAttachments = "0"
+ai4TimeBetweenMoves = "0"
+ai4Ability = ""
+
+ai5Name = "General Klod Jandor"
+ai5Tech = "rainbattery;rainblocker;rainaviary;raincannon;rainwalker;"
+ai5StartMoney = "4000"
+ai5AllyList = "1;"
+ai5Color = "purple"
+ai5Collectors = "6"
+ai5BridgeDrawRate = "0"
+ai5GeyserAttachments = "0"
+ai5TimeBetweenMoves = "0"
+ai5Ability = ""
+
+
+[Options]
+
+[A.]
+
+<h2>~lResidence of the Evil King</h2>
+<i>"Final attack were tough"<br>
+--Sunder</i>
+<p>Now you attack the heart of Evil King's Kingdom - residence of the Evil King. Evil King dont afraid you and will fight against you and Klod with his guards. Good luck!
+$Button=Its too hard for me!,Tell,Campaign
+$Button=Procceed,DoNothing,0
+
+[@1]
+
+<h2>~lIncoming Message</h2>
+<i>~jFrom: ~qGeneral Klod Jandor<br>
+~jTo: ~qSunder</i>
+<p>Finally we are here. Now we have all chances to beat him. Let's fight!
+
+$Button=Accept,Tell,Evil
+
+[Evil]
+
+<h2>~lIncoming Message</h2>
+<i>~jFrom: ~qEvil King<br>
+~jTo: ~qSunder</i>
+<p>Haha, little shit, you began to destroy my plans, so now you and your lillte shit helper will be eliminated from Nimbus forever. Prepare for a die!
+
+$Button=Accept,DoNothing,0
+$Button=Check your Knowledge,ShowTechnology,55
+
+[Succeeded] [BadTeamDead]
+
+<h2>~lCongratulations!</h2>
+<i>"No more enemies I thought"<br>
+--Sunder</i>
+<p>Residence of the Evil King destroyed. Nimbians like you as a new King! But...
+
+<$Config,Done{mission.fileName}=1>
+<$Config,Donesh3_y_n_1a=0>
+<$Config,Donesh3_y_n_2a=1>
+$Button=Proceed,MissionBegin,sh3_y_n_3
+
+[Failed]
+
+<h2>~lYou lose...</h2>
+<p>Don't worry if you lose, this is Shit Hard!
+
+$Button=Its too hard for me!,Tell,Campaign
+$Button=Try again!,Tell,TryAgain
+$Button=I am not traitor,Tell,No
+
+
+[END]

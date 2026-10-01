@@ -1,0 +1,247 @@
+*(Saved as mission16.fort & mission16.english)
+
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 16
+moreGeysers = 1
+randomGeysers = 1
+denySalvage = 1
+
+myStartMoney = {sw_mvar0}
+myTech = {sw_var1}{sw_var2}{sw_var3}{sw_var4}{sw_var9} 
+ai1allylist = "6;8"
+
+title = "Repairing of Thunder City"
+
+ai6Name = "Ambassador of Thunder City"
+ai6Tech = "sunWalker;{sw_var1}{sw_var2}{sw_var3}{sw_var4}{sw_var7}{sw_var8}"
+ai6StartMoney ={sw_mvar1}
+ai6GeyserAttachments = 4
+ai6Collectors = 5
+ai6TimeBetweenMoves = {sw_mvar2}
+ai6AllyList = "1;8"
+ai6Color = orange 
+ai6BridgeDrawRate = {sw_mvar2}
+ai6Ability = "!USE_PRIEST_TO_COLLECT;!SACRIFICE_ENEMY_PRIEST;!BUILD_DAIS;!CAPTURE_ENEMY_PRIEST"
+
+ai8Name = "Guardian of Thunder City"
+ai8Tech = "sunWalker;{sw_var1}{sw_var2}{sw_var3}{sw_var4}{sw_var7}"
+ai8StartMoney ={sw_mvar1} 
+ai8GeyserAttachments = 3
+ai8Collectors = 4
+ai8TimeBetweenMoves = {sw_mvar2}
+ai8AllyList = "1;6"
+ai8Color =yellow 
+ai8BridgeDrawRate = {sw_mvar2}
+ai8Ability = "!USE_PRIEST_TO_COLLECT;!SACRIFICE_ENEMY_PRIEST;!BUILD_DAIS;!CAPTURE_ENEMY_PRIEST"
+
+ai2Name = "Hades Evil Spirit 1"
+ai2Tech = "sunWalker;{sw_var1}{sw_var2}{sw_var3}{sw_var7}"
+ai2StartMoney = {sw_mvar3}
+ai2GeyserAttachments = 3
+ai2Collectors = 4
+ai2TimeBetweenMoves = {sw_mvar4}
+ai2AllyList = "7"
+ai2Color = red
+ai2BridgeDrawRate = {sw_mvar4}
+ai2Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai7Name = "Hades Evil Spirit 2"
+ai7Tech = "sunWalker;{sw_var1}{sw_var3}{sw_var4}{sw_var7}"
+ai7StartMoney = {sw_mvar3}
+ai7GeyserAttachments = 3
+ai7Collectors = 4
+ai7TimeBetweenMoves = {sw_mvar4}
+ai7AllyList = "2"
+ai7Color = cyan
+ai7BridgeDrawRate = {sw_mvar4}
+ai7Ability = "!USE_PRIEST_TO_COLLECT"
+
+[init]
+<$Config,sw_m16=1>
+<$Config,sw_m1=0>
+<$Config,sw_m2=0>
+<$Config,sw_m3=0>
+<$Config,sw_m4=0>
+<$Config,sw_m5=0>
+<$Config,sw_m6=0>
+<$Config,sw_m7=0>
+<$Config,sw_m8=0>
+<$Config,sw_m9=0>
+<$Config,sw_m10=0>
+<$Config,sw_m11=0>
+<$Config,sw_m12=0>
+<$Config,sw_m13=0>
+<$Config,sw_m14=0>
+<$Config,sw_m15=0>
+<$Config,sw_m17=0>
+<$Config,sw_m18=0>
+<$Config,sw_m19=0>
+<$Config,sw_m20=0>
+<$Config,sw_m21=0>
+<$Config,sw_m22=0>
+<$Config,sw_m23=0>
+<$Config,sw_m24=0>
+<$Config,sw_m25=0>
+<$Config,sw_m30=0>
+
+
+
+<$Config,sw_weapon1=0>
+<$Config,sw_weapon2=0>
+<$Config,sw_weapon3=0>
+<$Config,sw_weapon4=0>
+<$Config,sw_weapon5=0>
+<$Config,sw_weapon6=0>
+
+[options]
+[A.]
+                               <h2>Repairing of THUNDER city<a href="#mission16">~[IfortGump.46]</a></h2>
+                                     ~[Ibulf.80]
+<br>                                                                                  ~1~y<?!{sw_difficulty1}>HARD</?><?{sw_difficulty1}>EASY</?>~.<br>
+                                     The Thunder Fury appears.<br>
+<i>"Priest, please help my Ambassador and Guardian rebuild this city.
+They need to build a temple on one of the islands so that they can reclaim the city and aid you in the defense.
+Beware, the evil spirits of Hades have created havoc in these parts now. Be careful!" </i>
+<p>
+                  <a href="cmd:ShowTechnology,55"> ~[IfortGump.50] </a>                            <a href="cmd:DoNothing,0">~[IfortGump.22] </a>                     <a href="cmd:Tell,guideHades.overview">~[Ipriest.13]</a><br>
+        <a href="cmd:ShowTechnology,55">Review Knowledge</a>      <a href="cmd:DoNothing,0">    Let's go!    </a>      <a href="cmd:Tell,guideHades.overview">Leave mission</a>
+<$PlaySound,thunderCrack.wav>
+<$PlaySound,bulfhurt.wav>
+<$PlaySound,burning.wav>
+<$Tell,sound1>
+$OnExit= ,PlaySound,priestmove1.wav
+$Button= ,Tell,A.
+
+[sound1]
+<$Config,sw_soundFlag=1>
+$Timeout=0,Tell,sound2
+[sound2]
+<$Config,sw_soundFlag=0>
+$Timeout=0,Tell,sound3
+[sound3]
+<$Config,sw_soundFlag=1>
+$Timeout=0,Tell,sound4
+[sound4]
+<$Config,sw_soundFlag=0>
+<$PlaySound,bulfhurt.wav>
+
+
+[ai2PriestDead][ai7PriestDead]
+<h2>You receive a message from the {sw_god5}.</h2><br>
+<i>You got lucky by killing 1 of my spirits.<br>
+It won't happen again.</i>
+$Button=OK,Tell,showmenu
+
+[ai8PriestDead]
+<h2>The Guardian of Thunder City is dead!</h2>
+<i>You have let one of your allies die!<br>
+It will be harder to rebuild with out his aid.</i>
+<$PlaySound,eagleScream-1500.wav>
+$Button=OK,DoNothing,0
+
+[ai8PriestCaptured]
+<h2>You receive a message from the {sw_god5}</h2><br>
+<i>"My spirits have captured your precious ally.<br>
+He will soon be in my collection of souls."</i>
+$Button=OK,tell,more1
+
+[more1]
+<h2>You receive a message from Theorian!</h2>
+<i>Ally, Don't worry about me.</i><br>
+<p>Save yourself!
+I will grant you knowledge to aid in your quest of safety!
+$Button=OK,Tell,showmenu
+
+
+[showMenu]
+<$MoveDialog,tr>
+King {sw_hades} is pleased! He grants you a choice:
+<?{sw_weapon1}>$Menu=~kThunder Generator,Tell,showMenu</?>
+<?!{sw_weapon1}>$Menu=~yThunder Generator,Tell,thunderGen</?>
+<?{sw_weapon2}>$Menu=~kMad Cow (Bulf),Tell,showMenu</?>
+<?!{sw_weapon2}>$Menu=~yMad Cow (Bulf),Tell,cow</?>
+<?{sw_weapon3}>$Menu=~kArc Spire,Tell,showMenu</?>
+<?!{sw_weapon3}>$Menu=~yArc Spire,Tell,arkSpire</?>
+<?{sw_weapon4}>$Menu=~kBulwark,Tell,showMenu</?>
+<?!{sw_weapon4}>$Menu=~yBulwark,Tell,bulwark</?>
+<?{sw_weapon5}>$Menu=~kThunder Cannon,Tell,showMenu</?>
+<?!{sw_weapon5}>$Menu=~yThunder Cannon,Tell,thunderCannon</?>
+<?{sw_weapon6}>$Menu=~kVander Tower,Tell,showMenu</?>
+<?!{sw_weapon6}>$Menu=~yVander Tower,Tell,vanderTower</?>
+<$Playsound,bell.wav>
+$Button=No I don't want anything,DoNothing,0
+
+
+[thunderGen]
+<$Config,sw_weapon1=1>
+<$GetTechnology,77>
+$Timeout=0,DoNothing,0
+
+[cow]
+<$Config,sw_weapon2=1>
+<$GetTechnology,135>
+$Timeout=0,DoNothing,0
+
+[arkSpire]
+<$Config,sw_weapon3=1>
+<$GetTechnology,149>
+$Timeout=0,DoNothing,0
+
+[bulwark]
+<$Config,sw_weapon4=1>
+<$GetTechnology,79>
+$Timeout=0,DoNothing,0
+
+[thunderCannon]
+<$Config,sw_weapon5=1>
+<$GetTechnology,131>
+$Timeout=0,DoNothing,0
+
+[vanderTower]
+<$Config,sw_weapon6=1>
+<$GetTechnology,148>
+$Timeout=0,DoNothing,0
+
+
+
+[Succeeded][BadTeamDead]
+<h2>SUCCESS!</h2>
+You have helped the Thunder Ambassador rebuild Thunder City! For that, the
+Thunder Fury takes a keen interest in you. You have now been allied with Thunder
+and have become one of the Furies apprentices.
+<$Config,sw_m16=0>
+<$Config,sw_m19=1>
+<$Config,sw_difficulty1=0>
+$Button=ONTO CHOICE OF THE FURIES,MissionBegin,sw_m19
+
+
+
+[Failed][ai6PriestDead]
+The ambassador of Thunder City is dead!
+<$PlaySound,eagleScream-1500.wav>
+You have let down the Thunder Fury! He is furious!
+<?!{sw_difficulty1}>
+<br><i>I cannot protect you again. Don't fail again. {sw_hades}
+is too powerful!</i>
+<$Config,sw_difficulty1=1>
+<$Config,sw_mvar0=7000>
+<$Config,sw_mvar1=8000>
+<$Config,sw_mvar2=2>
+<$Config,sw_mvar3=2000>
+<$Config,sw_mvar4=5>
+$Button=Try again,MissionBegin,sw_m16
+</?>
+
+<?{sw_difficulty1}>
+In a blinding flash of power, a thunder Cannon explosion
+erupts in front of you and strikes you down!
+When you recover, you find that the {sw_god5}
+has brought you to {sw_hades} for torment!
+<$Config,sw_m16=0>
+<$Config,sw_m24=1>
+<$Config,sw_difficulty1=0>
+$Button=ONTO HADES ALTAR,MissionBegin,sw_m24
+</?>
+[END]

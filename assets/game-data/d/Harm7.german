@@ -1,0 +1,150 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 7
+moreGeysers = 1
+
+myStartMoney = 9000
+myTech = "sunWalker;sunArcher;windarcher;sunBlocker;sunBalloon;sunFence;sunCannon;thunderbattery;rainbattery;windBattery;thunderarcher;thundercannon;rainballoon;rainblocker;raincannon;windaviary;windballoon;windblocker;windWalker"
+
+title="Wizards first rule"
+
+ai2Name = "Breena"
+ai2Tech = "sunWalker;sunArcher;windarcher;sunBlocker;sunBalloon;sunFence;sunCannon;thunderbattery;rainbattery;windBattery;thunderarcher;thundercannon;rainballoon;rainblocker;raincannon;windaviary;windballoon;windblocker;windWalker"
+ai2StartMoney = 6000
+ai2GeyserAttachments = 2
+ai2Collectors = 3
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3;4;5;6;7"
+ai2color = red
+
+ai3Name = "Chemuk"
+ai3Tech = "sunWalker;sunArcher;windarcher;sunBlocker;sunBalloon;sunFence;sunCannon;thunderbattery;rainbattery;windBattery;thunderarcher;thundercannon;rainballoon;rainblocker;raincannon;windaviary;windballoon;windblocker;windWalker"
+ai3StartMoney = 6000
+ai3GeyserAttachments = 2
+ai3Collectors = 3
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2;4;5;6;7"
+ai3color = white
+
+ai4Name = "Hazlun"
+ai4Tech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;windBattery;thunderbattery;rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence"
+ai4StartMoney = 6000
+ai4GeyserAttachments = 2
+ai4Collectors = 3
+ai4TimeBetweenMoves = 1
+ai4AllyList = "2;3;5;6;7"
+ai4color = green
+
+ai5Name = "Jazra"
+ai5Tech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;windBattery;thunderbattery;rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence"
+ai5StartMoney = 6000
+ai5GeyserAttachments = 2
+ai5Collectors = 3
+ai5TimeBetweenMoves = 1
+ai5AllyList = "2;3;4;6;7"
+ai5color = magenta
+
+ai6Name = "Lurin"
+ai6Tech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;windBattery;thunderbattery;rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence"
+ai6StartMoney = 6000
+ai6GeyserAttachments = 2
+ai6Collectors = 3
+ai6TimeBetweenMoves = 1
+ai6AllyList = "2;3;4;5;7"
+
+ai7Name = "Jaffar"
+ai7Tech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;windBattery;thunderbattery;rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence"
+ai7StartMoney = 6000
+ai7GeyserAttachments = 2
+ai7Collectors = 3
+ai7TimeBetweenMoves = 1
+ai7AllyList = "2;3;4;5;6"
+
+[Options]
+
+[A.]
+<h2>SpinelesS</h2>
+<i>"Wizards first rule, People will believe anything"<br>
+--The wizards of old, </i>  
+<p>Its 1 onto 6. I know its not a fair fight but well who cares
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[ai2priestcaptured]
+<h2>You got em!>
+<p>
+kill the loser!!!
+
+[ai3priestdead]
+<h2>Thats another one dead<h2>
+<p>
+~3good on ya ya kill happy freak = )~[Ipriest.E3]
+
+[ai2priestcaptured]
+<h2>You got em!>
+<p>
+kill the loser!!!
+
+[ai3priestdead]
+<h2>Thats another one dead<h2>
+<p>
+~3good on ya ya kill happy freak = )~[Ipriest.E3]
+
+[ai4priestcaptured]
+<h2>You got em!>
+<p>
+kill the loser!!!
+
+[ai4priestdead]
+<h2>Thats another one dead<h2>
+<p>
+~3good on ya ya kill happy freak = )~[Ipriest.E3]
+
+[ai5priestcaptured]
+<h2>You got em!>
+<p>
+kill the loser!!!
+
+[ai5priestdead]
+<h2>Thats another one dead<h2>
+<p>
+~3good on ya ya kill happy freak = )~[Ipriest.E3]
+
+[ai6priestcaptured]
+<h2>You got em!>
+<p>
+kill the loser!!!
+
+[ai6priestdead]
+<h2>Thats another one dead<h2>
+<p>
+~3good on ya ya kill happy freak = )~[Ipriest.E3]
+
+[ai2priestcaptured]
+<h2>You got em!>
+<p>
+kill the loser!!!
+
+[ai2priestdead]
+<h2>Thats another one dead<h2>
+<p>
+~3good on ya ya kill happy freak = )~[Ipriest.E3]~[Iicon.01]~[Iicon.02]~[Iicon.03]~[Iicon.04]
+
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+~[Iicon.07]~[Ipriest.E2]~[Iicon.07]
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,1
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+youre dead = ( try again
+$Button=Continue,Tell,TryAgain
+
+
+[END]

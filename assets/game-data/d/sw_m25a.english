@@ -1,0 +1,306 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 25
+moreGeysers = 1
+randomGeysers = 1
+ 
+myStartMoney = 5000 
+myTech = "all;outpost"
+
+title = "Final Battle
+
+ai7name =  "Guardian of Hades"
+ai7Tech = "{sw_var1}{sw_var2}{sw_var3}{sw_var4}"
+ai7StartMoney =3000
+ai7AllyList = "8;4;5;6"
+ai7TimeBetweenMoves={sw_mvar3}
+ai7BridgeDrawRate={sw_mvar3}
+ai7Color = green
+ai7Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai8Name = "Warlord of Hades"
+ai8Tech = "{sw_var1}{sw_var2}{sw_var5}{sw_var6}"
+ai8StartMoney =3000 
+ai8AllyList = "7;4;5;6"
+ai8Color = yellow
+ai8TimeBetweenMoves={sw_mvar3}
+ai8BridgeDrawRate={sw_mvar3}
+ai8Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+
+ai4Name = "Advisor to King Hades"
+ai4Tech = "{sw_var1}{sw_var2}"
+ai4StartMoney = 6000
+ai4AllyList = "7;8;5;6"
+ai4Color = purple
+ai4TimeBetweenMoves={sw_mvar3}
+ai4BridgeDrawRate={sw_mvar3}
+ai4Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+
+ai5Name = "Blocker for King Hades"
+ai5Tech = "{sw_var1}{sw_var2}{sw_var3}{sw_var4}"
+ai5StartMoney = 3000
+ai5AllyList = "7;8;4;6"
+ai5Color = cyan
+ai5TimeBetweenMoves={sw_mvar3}
+ai5BridgeDrawRate={sw_mvar3}
+ai5Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS;"
+
+ai6Name = "King Hades"
+ai6Tech = "{sw_var1}{sw_var2}{sw_var3}{sw_var4}{sw_var7}{sw_var8}"
+ai6StartMoney = 10000
+ai6AllyList = "7;8;4;5"
+ai6Color = orange
+ai6TimeBetweenMoves=1
+ai6BridgeDrawRate=1
+ai6Ability = "!USE_PRIEST_TO_COLLECT;!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+
+[init]
+<$Config,sw_enDead7=0>
+<$Config,sw_enDead8=0>
+<$Config,sw_enDead4=0>
+<$Config,sw_enDead5=0>
+<$Config,sw_enDead6=0>
+
+[options]
+[A.]
+
+                                         <h2>Final Battle<a href="#mission25">~[IfortGump.46]</a></h2>
+                                 ~[IsunAviary.31]
+<p>
+<i>When I finish with you<br>
+They won't be able to recognize your soul.<br>
+                                   ---Hades</i>
+<$PlaySound,PriestFree.wav>
+<$PlaySound,shortThunderCrack.wav>
+<p>
+             <a href="cmd:ShowTechnology,55"> ~[IfortGump.50] </a>                             <a href="cmd:DoNothing,0">~[IfortGump.22] </a>                        <a href="cmd:Tell,guideHades.overview">~[Ipriest.13]</a><br>
+<a href="cmd:ShowTechnology,55">Review Knowledge</a>         <a href="cmd:DoNothing,0">Surprise them!</a>        <a href="cmd:Tell,guideHades.overview">I gotta go now</a>
+$OnExit= ,PlaySound,PriestMove1.wav
+
+$Button= ,Tell,A.
+[@1]
+<?{sw_mvar2}>
+<$ViewSpot,(150x120)>
+<$PlaySound,TreasonCast.wav>
+</?>
+
+<?{sw_mvar9}>
+<$PlaySound,paralysisCast.wav>
+</?>
+
+<?{sw_mvar4}>
+<$ViewSpot,(150x120)>
+<$PlaySound,devastationCast.wav>
+</?>
+
+<?{sw_mvar5}>
+<$ViewSpot,(150x120)>
+<$PlaySound,decimationCast.wav>
+</?>
+
+<?{sw_mvar6}>
+<$PlaySound,bell.wav>
+</?>
+
+<?{sw_mvar8}>
+<$PlaySound,forStorm2.wav>
+</?>
+
+
+
+
+[@2]
+<?{sw_mvar2}>
+<$MakeMine,6000>
+<$MakeMine,6003>
+<$MakeMine,6009>
+<$MakeMine,6021>
+<$MakeMine,6024>
+<$MakeMine,6028>
+<$MakeMine,6035>
+<$MakeMine,6037>
+<$MakeMine,6051>
+<$MakeMine,6054>
+<$MakeMine,6213>
+<$MakeMine,6218>
+<$MakeMine,6264>
+<$MakeMine,6324>
+<$MakeMine,6437>
+<$MakeMine,6857>
+<$MakeMine,6005>
+<$MakeMine,6011>
+<$MakeMine,6023>
+<$MakeMine,6027>
+<$MakeMine,6032>
+<$MakeMine,6049>
+</?>
+
+<?{sw_mvar9}>
+</?>
+
+<?{sw_mvar4}>
+<$DestroyAt,(124x58)>
+<$DestroyAt,(101x70)>
+<$DestroyAt,(117x66)>
+<$DestroyAt,(137x73)>
+<$DestroyAt,(141x75)>
+<$DestroyAt,(99x85)>
+<$DestroyAt,(136x94)>
+<$DestroyAt,(136x86)>
+<$DestroyAt,(169x103)>
+<$DestroyAt,(126x66)>
+<$DestroyAt,(138x76)>
+<$DestroyAt,(103x85)>
+<$DestroyAt,(135x90)>
+<$DestroyAt,(168x110)>
+<$DestroyAt,(148x60)>
+<$DestroyAt,(148x74)>
+<$DestroyAt,(155x123)>
+<$DestroyAt,(105x76)>
+<$DestroyAt,(169x122)>
+<$DestroyAt,(109x56)>
+</?>
+
+<?{sw_mvar5}>
+<$InflictDamage,6000>
+<$InflictDamage,6003>
+<$InflictDamage,6009>
+<$InflictDamage,6021>
+<$InflictDamage,6024>
+<$InflictDamage,6028>
+<$InflictDamage,6035>
+<$InflictDamage,6037>
+<$InflictDamage,6051>
+<$InflictDamage,6054>
+<$InflictDamage,6213>
+<$InflictDamage,6218>
+<$InflictDamage,6264>
+<$InflictDamage,6324>
+<$InflictDamage,6437>
+<$InflictDamage,6857>
+<$InflictDamage,6005>
+<$InflictDamage,6011>
+<$InflictDamage,6023>
+<$InflictDamage,6027>
+<$InflictDamage,6032>
+<$InflictDamage,6049>
+</?>
+
+<?{sw_mvar6}>
+<$ChangeMoney,10000>
+</?>
+
+
+<?{sw_mvar8}>
+<$InflictDamage,6101>
+<$InflictDamage,6099>
+<$InflictDamage,6096>
+<$InflictDamage,7069>
+<$InflictDamage,7125>
+<$InflictDamage,7126>
+<$InflictDamage,7127>
+<$InflictDamage,7128>
+<$InflictDamage,7071>
+</?>
+
+
+[@20]
+<?{sw_mvar7}>
+<$PlaySound,forStorm2.wav>
+<$SetAllBridge,2>
+<$DestroyAt,(143x248)>
+<$DestroyAt,(120x200)>
+<$DestroyAt,(148x214)>
+<$DestroyAt,(145x229)>
+<$DestroyAt,(115x246)>
+</?>
+
+
+[ai4PriestDead]
+<$Config,sw_enDead4=1>
+Ahh... more storm crystals from the Furies!<br>
+{sw_hades} must be pleased!
+<$ChangeMoney,5000>
+$OnExit= ,Tell,checkwin
+$Button=OK,DoNothing,0
+
+[ai5PriestDead]
+<$Config,sw_enDead5=1>
+One of Hades Henchmen just bit the dust.<br>
+You better complete this mission or you'll be next.
+$OnExit= ,Tell,checkwin
+$Button=OK,DoNothing,0
+
+[ai7PriestDead]
+<$Config,sw_enDead7=1>
+Another one of Hades henchman just bit the dust. Don't fret, for his soul you will see again.
+$OnExit= ,Tell,checkwin
+$Button=OK,DoNothing,0
+
+[ai8PriestDead]
+<$Config,sw_enDead8=1>
+Another one of Hades henchman just bit the dust. Don't fret, for his soul you will see again.
+$OnExit= ,Tell,checkwin
+$Button=OK,DoNothing,0
+
+[ai6PriestDead]
+<$Config,sw_enDead6=1>
+King Hades has been sacked! You are now well onto your way of victory!
+$OnExit= ,Tell,checkwin
+$Button=OK,DoNothing,0
+
+[notyet]
+It's a miracle!
+<p>
+As one of {sw_hades} BULFs goes and picks you up to take you to the BOWELS of ~rHELL~.,
+ it trips over its feet, and falls over the island's edge to it's doom!
+<p>
+You escape to your own island, ready to face {sw_hades} again!
+$Button=Let's try this again,MissionBegin,sw_m25
+
+
+[checkwin]
+<?{sw_enDead4}><?{sw_enDead5}><?{sw_enDead6}>
+<?{sw_enDead7}><?{sw_enDead8}>
+                                                     <h2>VICTORY IS YOURS! </h2>
+                        
+                           ~[Ipriest.89]   ~[IsunFlyerBomb.14]<br>
+<p>
+As you make the last sacrifice, you hear a loud tearing, as if
+the very fabric of space is being shredded!
+<p>
+You see before you an opening: first small, then growing very quickly!
+Its a bright blue white opening that first surrounds {sw_Hades} and his island, then
+engulfs it in flames!
+<p>
+You watch as the once mighty {sw_hades} melts into the ground in front of you!
+<p>
+                                                     {sw_hades} yells out to you:
+<br><i>
+        "What have you done? You have trapped me back into the BOWELS of ~[IsunFlyerBomb.2]~r~BHELL~.~[IsunFlyerBomb.2]<i>"
+<br>
+                        <i>"NOOOOO! I must be free to torment other souls at will!"
+<$Config,sw_m30=1>
+<$Config,sw_m11=0>
+$Button=Congrats! ONTO the celebration!,MissionBegin,sw_m30
+</?></?></?></?></?>
+
+[Failed]
+You receive a message from {sw_hades}
+<p>
+<i>"Poor foolish priest." <br>
+"I guess you must be taught a lesson. It's off to HADES altar for you!"
+<?{sw_difficulty1}>
+<$Config,sw_m24=1>
+<$Config,sw_m25=0>
+<$Config,sw_difficulty1=0>
+$Button=Dagnabbit! Not hades altar!,MissionBegin,sw_m24
+</?>
+
+<?!{sw_difficulty1}>
+<$Config,sw_difficulty1=1>
+$Button=Dagnabbit! Not hades altar!,Tell,notyet
+</?>
+
+[END]

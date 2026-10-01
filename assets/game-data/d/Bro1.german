@@ -1,0 +1,49 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 3
+moreGeysers = 1
+
+myStartMoney = 7357
+myTech = "sunWalker;sunCannon;sunArcher;sunBlocker;windBattery"
+
+title="Island Control"
+
+ai2Name = "Little Bro. Bob"
+ai2Tech = "sunWalker;sunCannon;sunFence;sunBlocker;windBattery"
+ai2StartMoney = 600
+ai2GeyserAttachments = 0
+ai2Collectors = 0
+ai2TimeBetweenMoves = 4
+ai2AllyList = ""
+ai2color = red
+[Options]
+
+[A.]
+<h2>Island-Take-Over</h2>
+<i>"What's mine is mine
+Whats yours is now mine"<br>
+--Ancient Text</i>
+<p>
+Defeat your oppenet to capure a good island.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+You've done it! Good work. Now you control a good-large island!"
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,1
+
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+Darn! You failed to gain control of the island."
+$Button=Continue,Tell,TryAgain
+
+
+[END]

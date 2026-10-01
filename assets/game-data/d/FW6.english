@@ -1,0 +1,77 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 8
+moreGeysers = 2
+
+myStartMoney = 3500
+myTech = "sunWalker;sunarcher;sunballoon;sunFence;sunaviary;outpost;thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence"
+myAllyList = ""
+
+title="Mysterious Warrior"
+
+ai2Name = "The Virtuous Warrior"
+ai2Tech = "thunderarcher;thundercannon;thunderbattery;Bulf;thunderblocker;sunarcher;suncannon;sunwalker"
+ai2StartMoney = 60000
+ai2GeyserAttachments = 5
+ai2Collectors = 5
+ai2TimeBetweenMoves = "0"
+ai2DrawBridgeRate = 1
+ai2AllyList = ""
+ai2color = lightblue
+
+ai3Name = "GOF Warrior"
+ai3Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;Bulf;sunwalker"
+ai3StartMoney = 25000
+ai3GeyserAttachments = 5
+ai3Collectors = 3
+ai3TimeBetweenMoves = "1"
+ai3DrawBrigdeRate = 4
+ai3AllyList = "4"
+ai3color = red
+
+ai4Name = "SPU Fighter"
+ai4Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainwalker;sunwalker"
+ai4StartMoney = 25000
+ai4GeyserAttachments = 5
+ai4Collectors = 3
+ai4TimeBetweenMoves = "1"
+ai4DrawBrigdeRate = 3
+ai4AllyList = "3"
+ai4color = yellow
+
+[Options]
+
+[A.]
+<h2>A Mysterious Warrior</h2>
+<i>You: Yo, leader...</i><br>
+<i>Guldan: What? </i><br>
+<i>You: Who is that is the East? </i><br>
+<i>Guldan: Hmmmm...Good question.  I'll try to get him on the Link.</i><br>
+<i>Mysterious Person: Who is this?</i><br>
+<i>Guldan: The alliance of Light...who are you?</i><br>
+<i>Mysterious Person: ...The Virtuous One</i><br>
+<i>Guldan: {Whispers to you} We shall see if he is all that virtuous.</i><br>
+<i>The Virtuous One: I am virtuous...watch me take out these creeps...</i><br>
+<p>It seems that you are invited to watch a war, but should do more?
+
+$Button=What you got, what you don't,ShowTechnology,55
+$Button=Start Fighting,DoNothing,0
+
+[Succeeded][BadTeamDead]
+The Virtuous fades into the air.  I am virtuous, I am virt...
+$Button=No time to wonder, Fortress 0984 is under attack...,MissionBegin,FW7
+
+[ai2TempleHalfDead]
+Help me, alliance of light...help the virtuous one.
+
+[ai2PriestDead]
+I never die...
+
+[Failed]
+The Virtuous One:
+I never die...
+And I will raise you, just this once, Member of the Light.
+$Button=Cool, but Fortress 0984 is under attack...,MissionBegin,FW7
+
+[END]

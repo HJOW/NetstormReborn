@@ -1,0 +1,83 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 3
+moreGeysers = 15
+
+myStartMoney = 250
+myTech = "sunWalker;sunArcher;windarcher;sunBlocker;sunBalloon;sunFence;sunCannon;thunderbattery;rainbattery;windBattery;thunderarcher;thundercannon;rainballoon;rainblocker;raincannon;windaviary;windballoon;windblocker;windWalker"
+
+title="Worn by the emporer"
+
+ai2Name = "OAP"
+ai2Tech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;windBattery;thunderbattery;rainbattery;windarcher;windaviary;windballoon;windblocker;windWalker"
+ai2StartMoney = 100000
+ai2GeyserAttachments = 2
+ai2Collectors = 8
+ai2TimeBetweenMoves = 5
+ai2AllyList = "3"
+ai2color = red
+
+ai3Name = "Shoelace"
+ai3Tech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;thunderbattery;rainbattery;windBattery;thunderarcher;thunderblocker;thundercannon;thunderfence"
+ai3StartMoney = 10000
+ai3GeyserAttachments = 5
+ai3Collectors = 8
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2"
+ai3color = white
+
+ai4Name = "The Lag Monster"
+ai4Tech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;windBattery;thunderbattery;rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence"
+ai4StartMoney = 10000
+ai4GeyserAttachments = 2
+ai4Collectors = 8
+ai4TimeBetweenMoves = 1
+ai4AllyList = "5"
+ai4color = green
+
+ai5Name = "Suppressor"
+ai5Tech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;windBattery;thunderbattery;rainbattery;windarcher;windaviary;windballoon;windblocker;windWalker"
+ai5StartMoney = 10000
+ai5GeyserAttachments = 10
+ai5Collectors = 8
+ai5TimeBetweenMoves = 1
+ai5AllyList = "4"
+ai5color = yellow
+
+
+
+[Options]
+
+[A.]
+<h2>Tristan</h2>
+<i>"The world is what you think it is"<br>
+--Deceased, </i>
+
+<p>
+Watch out for OAP (He's got his savings)
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>The battle is done and you are victorious
+dont make it a regular thing OK?</h2>
+<p>
+All power comes from within you have proved this.
+<$Config,Done{T4.fort}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,T5
+
+[Failed]
+
+<h2>The deepest dungeons in my cupboard hoard
+your twisted remains.</h2>
+<p>
+Guess whats for dinner tonight.
+Incinerated failure bread.
+Whats the point in trying again?
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+

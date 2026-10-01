@@ -1,0 +1,14 @@
+title = "Simplicity"
+
+[Overview]
+<background="nsstart">
+<h2>Simplicity</h2>
+<i>Lets Rock!</i>
+<p>
+This is my first level. Hope you like it. This map was created by HELLRAISER.
+
+$Checked=1 Simplicity,MissionBegin,Simplicity,{DoneSpine},1
+
+$Button=Back,Tell,Campaign
+
+

@@ -1,0 +1,129 @@
+[header]
+missionType = "Tutorial"
+missionNumber = 6
+moreGeysers  = 1
+myStartMoney = 8000
+myTech="thunderbattery;windbattery;windblocker;windwalker;windballoon;windarcher;thundercannon;bulf;suncannon;sunarcher;sunblocker;sunaviary;sunfence;sunballoon;thunderarcher"
+myAllyList = "4"
+
+ai2Name = "Kukulkan"
+ai2Tech="windbattery;windarcher;suncannon;windwalker;sunwalker;windblocker"
+ai2StartMoney = 4000
+ai2GeyserAttachments = 6
+ai2Collectors = 8
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3"
+
+ai3Name = "Frostimore"
+ai3Tech="rainbattery;raincannon;rainfence;sunblocker;sunarcher;sunwalker;rainballoon;rainaviary"
+ai3StartMoney = 4000
+ai3GeyserAttachments = 10
+ai3Collectors = 10
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2"
+
+ai4Name = "Master of the Chidory"
+ai4Tech="thunderbattery;thundercannon;thunderblocker;outpost;bulf;sunwalker;suncannon;windbattery;windballoon"
+ai4StartMoney = 5000
+ai4GeyserAttachments = 10
+ai4Collectors = 14
+ai4TimeBetweenMoves = 1
+ai4AllyList = "1"
+
+title = "Endless Struggle For Survival"
+
+[Options]
+[A.]
+<h2>~mEndless Struggle For Survival</h2>
+<br><i>~INemo patriam, quia magna est, amat, sed quia sua.
+--Seneka<br></i>
+<p>
+Together with your ally  - the Master of the Chidory - you stumble opon a hidden base of the enemy.
+This seems to be their base for reserves, this is where they get their power from.
+$Button=More,Tell,More
+
+[More]
+<h2>~gYour ally sends you a message:</h2>
+<br>Master, I am amazed to find this place so... full with resources... this must be
+the enemies base for storing and distributing storm power. What shall we do?
+$Button=Attack,Tell,Attack
+$Button=Beats me - I don't know,MissionAbort,1
+
+[Attack]
+<h2>~gO.K.</h2>
+<br>But who shall we attack first?
+$Button=Kukulkan,Tell,Kukulkan
+$Button=Frostimore,Tell,Frostimore
+
+[Kukulkan]
+<h2>~gMy thoughts exactly!</h2>
+<br>Let's attack him first, then his puny ally will be a sinch!<br>
+$Button=O.K.- just let me check out my arsenal,ShowTechnology,55
+$Button=O.K.,DoNothing,0
+
+[Frostimore]
+<h2>~gWhy?</h2>
+<br>I don't see, why we should attack this guy, he's too weak! Let's reconsider...
+<br>
+$Button=O.K.- let's attack Kukulkan then.,Tell,Agree
+$Button=Just do as I say!,Tell,OK
+
+[Agree]
+<br>Your ally eagerly agrees!
+$Button=Review Knowledge,ShowTechnology,55
+$Button=O.K.,DoNothing,0
+
+[OK]
+<h2>~gYour ally agrees</h2>
+<br>Ok, master. As you wish, but I still don't see the logic...<br>
+$Button=O.K.,ShowTechnology,55
+$Button=If you're not sure then I'm outta here!,MissionAbort,1
+
+[@180]
+<h2>~gA message from your ally:</h2>
+<br>Master these opponents seemed to have gotten stronger since our last battle,
+it looks like I'll have to send my spies to.... spy around a little.
+$Button=O.K. do it!,DoNothing,0
+
+[@200]
+<h2>~gThe master of the Chidory sends you a message</h2>
+<br>My spies has infiltratred the enemy camp, and have found blueprints on
+a secret technology that the enemy has been developing. I've stolen the knowledge
+for us. And I want to share it with you....
+$Button=O.K.,Tell,Share
+$Button=No thanks,DoNothing,0
+
+[Share]
+Here is the enemies secret technology, master!
+$Button=OK,GetTechnology,139
+
+[@201]
+<h2>~gA message from your ally:</h2>
+<p>
+I think we need a diferent type of energy for this technology,
+don't worry master, my scientists are researching the technology at this very moment.
+$Button=No problem,DoNothing,0
+
+[@220]
+<h2>~gSuccess!</h2>
+<p>
+Master, here is the energy core for that stolen technology!
+$Button=Thanks!,GetTechnology,75
+
+[Succeeded][BadTeamDead]
+<h2>~gA message from your ally:</h2>
+<p>
+Looks like the enemy just doesn't know who he's dealing with, master.
+This was an interesting battle indeed!
+$Button=Next Mission,MissionBegin,Thundere
+$Button=I agree - but I've had enought,MissionAbort,1
+
+[Failed]
+<h2>~rA message from the enemy:</h2>
+<p>
+Look at your pitiful selves, you're no match for us, it seems that
+those victories you've conducted earlyer were nothing but ~mDUMB LUCK~!
+$Button=Retry Mission,MissionBegin,Thunderd
+$Button=Bail,MissionAbort,1
+
+[End]

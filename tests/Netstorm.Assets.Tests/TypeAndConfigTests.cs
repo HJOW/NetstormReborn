@@ -62,13 +62,23 @@ public sealed class TypeAndConfigTests
 
     /// <summary>설정 파일: 복호화 → 재인코딩이 원본과 바이트 단위로 같다</summary>
     [Theory]
-    [InlineData("d/options.cfg")]
     [InlineData("d/setup.cfg")]
     public void Original_ConfigRoundTrip(string relativePath)
     {
         byte[] original = File.ReadAllBytes(OriginalData.RequireFile(relativePath));
         ConfigFile config = ConfigFile.Decode(original);
         Assert.Equal(original, config.Encode());
+    }
+
+    /// <summary>클론 옵션에는 원본 설치 경로·사용자 등록 번호·캠페인 완료 기록이 없어야 한다.</summary>
+    [Fact]
+    public void CloneOptions_ExcludeOriginalUserSettings()
+    {
+        ConfigText options = ConfigText.FromFileBytes(File.ReadAllBytes(OriginalData.RequireFile("d/options.cfg")));
+        Assert.False(options.TryGetRaw("InstallDir", out _));
+        Assert.False(options.TryGetRaw("CDDir", out _));
+        Assert.False(options.TryGetRaw("registerdSubId", out _));
+        Assert.False(options.TryGetRaw("DoneThewarbegins", out _));
     }
 
     /// <summary>설정 파일: setup.cfg 에서 게임 팔레트 지정값을 읽는다 (주석 처리된 이전 값은 무시)</summary>

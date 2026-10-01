@@ -1,0 +1,157 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 5
+moreGeysers = 3
+
+myStartMoney = 15000
+myTech = {TpVmyTech1}{TpVmyTech2}
+
+
+title="Aries Point"
+
+ai2Name = "Minion Of Wind"
+ai2Tech ="windwalker;windArcher;windBlocker;sunBalloon;windballoon;windAviary;sunfence;windbattery"
+ai2StartMoney = 15000
+ai2GeyserAttachments = 2
+ai2Collectors = 2
+ai2Ability ="!USE_PRIEST_TO_COLLECT"
+ai2TimeBetweenMoves = 1
+ai2Bridgedrawrate = 1
+ai2AllyList = "3;4"
+ai2color = white
+
+ai3Name = "Minion Of Rain"
+ai3Tech ="rainwalker;raincannon;rainBattery;rainfence;sunballoon;rainballoon;rainblocker;rainAviary"
+ai3StartMoney = 15000
+ai3GeyserAttachments = 2
+ai3Collectors = 2
+ai3Ability ="!USE_PRIEST_TO_COLLECT"
+ai3TimeBetweenMoves = 1
+ai3Bridgedrawrate = 1
+ai3AllyList = "2;4"
+ai3color = red
+
+ai4Name = "Minion Of Thunder"
+ai4Tech = "bulf;thunderArcher;thunderBattery;thunderfence;thunderCannon;thunderblocker"
+ai4StartMoney = 15000
+ai4GeyserAttachments = 2
+ai4Collectors = 2
+ai4Ability ="!USE_PRIEST_TO_COLLECT"
+ai4TimeBetweenMoves = 1
+ai4Bridgedrawrate = 1
+ai4AllyList = "2;3"
+ai4color = green
+
+
+
+[Options]
+
+
+
+
+[A.]
+<h2>~yTrial by ~rFire</h2><P>
+<i>{TpVguide}</i>  Your Temple must not fall before the sun sets. <P>
+<i>{TpVguide1}</i>  Prepare to defend thyself.<br>
+~[Iwindvortex.20]    
+
+<$config,TpV2=1 {TpV2}>
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Fight,tell,test
+
+
+
+
+[@300]
+<h2>~yStatus Report</h2><P>
+<I>Messenger: </I>My Lord, five minutes until Sundown!<br>
+<?{TpVc1}>  ~[Isunballoon.1]     </?>
+<?{TpVc2}>  ~[Iwindwalker.36]    </?>
+<?{TpVc4}>  ~[Ibulf.80]    	   </?>
+<?{TpVc3}>  ~[Irainwalker.20]    </?>
+<?{TpVc5}>  ~[Isunwalker.65]     </?>
+$Button=OK,doNothing,0
+
+[@420]
+<h2>~yStatus Report</h2><P>
+<I>Messenger: </I>My Lord, three minutes until Sundown!<br>
+<?{TpVc1}>  ~[Isunballoon.1]     </?>
+<?{TpVc2}>  ~[Iwindwalker.36]    </?>
+<?{TpVc4}>  ~[Ibulf.80]    	   </?>
+<?{TpVc3}>  ~[Irainwalker.20]    </?>
+<?{TpVc5}>  ~[Isunwalker.65]     </?>
+$Button=OK,doNothing,0
+
+
+[@540]
+<h2>~yStatus Report</h2><P>
+<I>Messenger: </I>My Lord, one minute until Sundown!<br>
+<?{TpVc1}>  ~[Isunballoon.1]     </?>
+<?{TpVc2}>  ~[Iwindwalker.36]    </?>
+<?{TpVc4}>  ~[Ibulf.80]    	   </?>
+<?{TpVc3}>  ~[Irainwalker.20]    </?>
+<?{TpVc5}>  ~[Isunwalker.65]     </?>
+$Button=OK,doNothing,0
+
+[@600]
+<h2>~yThe Sun Has Set</h2><P>
+<i>{TpVguide1}</i>  You have survived the onslaught of Wind and Rain. Your performance is worthy of a Var'ca.
+<br>
+~[Imog.16]    
+
+<$config,TpVfire=1>
+
+<$tell,TECHUSED>
+$Button=Continue,MissionBegin,TpV_t3
+
+
+
+[ai1TemplehalfDead]
+<h2>~yStatus Report</h2><P>
+<I>Messenger: </I> My Lord, our temple has taken significant damage, 
+reenforcement are required immediately! <br>
+<?{TpVc1}>  ~[Isunballoon.1]     </?>
+<?{TpVc2}>  ~[Iwindwalker.36]    </?>
+<?{TpVc3}>  ~[Irainwalker.20]    </?>
+<?{TpVc4}>  ~[Ibulf.80]    	   </?>
+<?{TpVc5}>  ~[Isunwalker.65]     </?>
+
+
+[ai1priestdead]
+<H2>~yDefeat</h2><P>
+<i>{TpVguide}</i>  The Sun is still on the horizion.<p>
+<i>{TpVguide2}</i> You have failed! <p>
+
+$Button=Quit,MissionAbort,1
+$Button=Plead for Mercy,tell,RETRY
+
+
+[ai1TempleDead]
+<H2>~yYour Temple has Fallen</h2><P>
+<i>{TpVguide}</i>  The Sun is still on the horizion.<p>
+<i>{TpVguide2}</i>  You have failed! <p>
+
+$Button=Quit,MissionAbort,1
+$Button=Plead for Mercy,tell,RETRY
+
+[RETRY]
+<i>{TpVguide}</i> You have been granted another chance.<P>
+$OnExit= ,MissionBegin,TpVfire
+
+
+[TECHUSED]
+<?{TpVc1}>  <$config,TpVc11=0>  </?>
+<?{TpVc2}>  <$config,TpVc21=0>  </?>
+<?{TpVc3}>  <$config,TpVc31=0>  </?>
+<?{TpVc4}>  <$config,TpVc41=0>  </?>
+<?{TpVc5}>  <$config,TpVc51=0>  </?>
+
+
+
+
+
+[END]
+
+
+

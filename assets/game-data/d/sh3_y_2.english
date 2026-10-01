@@ -1,0 +1,126 @@
+[Header]
+
+missionType = "Tutorial"
+
+missionNumber = "17"
+moreGeysers = "0"
+randGeysers = "0"
+
+myStartMoney = "4500"
+myTech = "rainbattery;rainfence;rainblocker;"
+myAllyList = ""
+
+title = "Sneak Attack"
+
+ai2Name = "Killer"
+ai2Tech = "windbattery;windarcher;"
+ai2StartMoney = "50000"
+ai2AllyList = "3;"
+ai2Color = "red"
+ai2Collectors = "0"
+ai2BridgeDrawRate = "3"
+ai2GeyserAttachments = "1"
+ai2TimeBetweenMoves = "4"
+ai2Ability = ""
+
+ai3Name = "Thief"
+ai3Tech = "thunderbattery;thundercannon;"
+ai3StartMoney = "50000"
+ai3AllyList = "2;"
+ai3Color = "white"
+ai3Collectors = "0"
+ai3BridgeDrawRate = "3"
+ai3GeyserAttachments = "1"
+ai3TimeBetweenMoves = "4"
+ai3Ability = ""
+
+[Options]
+
+[A.]
+
+<h2>~lSneak Attack</h2>
+<i>"As I said before, never sleep!"<br>
+--Sunder</i>
+<p>Evil King recruited the thief and the killer, give them thunder cannons and send them to you. During that time you were replacing island for the final attack. Thief steal your tech, and with killer they began to attack you. You know you must survive...
+$Button=Its too hard for me!,Tell,Campaign
+$Button=Play!,DoNothing,0
+
+[@1]
+
+<h2>~lIncoming Message</h2>
+<i>~jFrom: ~qGeneral Klod Jandor<br>
+~jTo: ~qSunder</i>
+<p>I will be here in the 5 minutes, so you must survive before I got here.
+
+$Button=Accept,Tell,MsgKill
+
+[MsgKill]
+
+<h2>~lIncoming Message</h2>
+<i>~jFrom: ~qKiller<br>
+~jTo: ~qSunder</i>
+<p>Evil King will welcome you in your forces, cause he knows you are good fighter. Do you want to join in?
+$Button=Its too hard for me!,Tell,Campaign
+$Button=Yes,Tell,Yes
+$Button=No,Tell,No
+
+[Yes]
+
+<h2>~lIts your choice</h2>
+<p>Now you became the enemy of the Klod Junder, and helper of the Evil King...
+
+<$Config,Done{mission.fileName}=1>
+<$Config,Donesh3_y_1a=0>
+<$Config,Donesh3_y_2b=1>
+$Button=Proceed,MissionBegin,sh3_y_y_1
+
+[No]
+
+<h2>~lProceed</h2>
+
+<p>Go, Sunder! Wait for your friend Klod and together you will be able to kill enemies
+
+$Button=Its too hard for me!,Tell,Campaign
+$Button=Check your Knowledge,ShowTechnology,55
+$Button=Proceed,DoNothing,0
+
+[No2]
+
+<h2>~lYou lose...</h2>
+<p>Don't worry if you lose, this is Shit Hard! But... You completely lose this campaign...You are dead and Evil King easily kill General Klod Jandor and your firend Munder. Sorry!
+<$Config,Done{mission.fileName}=1>
+$Button=Back to campaign,Tell,Campaign
+
+[@300]
+
+<h2>~lIncoming Message</h2>
+<i>~jFrom: ~qGeneral Klod Jandor<br>
+~jTo: ~qSunder</i>
+<p>Finally I am here. Now I can help you to beat those enemies.
+$Button=Proceed,Tell,Congrat
+
+[Congrat]
+
+<h2>~lCongratulations!</h2>
+<i>"Now we can fight!"<br>
+--Sunder</i>
+<p>So with help of your friend you will be able to kill enemies.
+
+<$Config,Done{mission.fileName}=1>
+<$Config,Donesh3_y_1a=0>
+<$Config,Donesh3_y_2a=1>
+$Button=Its too hard for me!,Tell,Campaign
+$Button=Proceed,MissionBegin,sh3_y_n_1
+
+[Failed]
+
+<h2>~lIncoming Message</h2>
+<i>~jFrom: ~qKiller<br>
+~jTo: ~qSunder</i>
+<p>Last ask! Evil King will welcome you in your forces, cause he knows you are good fighter. Do you want to join in?
+$Button=Its too hard for me!,Tell,Campaign
+$Button=Yes,Tell,Yes
+$Button=No,Tell,No2
+$Button=Try again!,Tell,TryAgain
+
+[END]

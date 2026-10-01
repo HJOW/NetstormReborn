@@ -1,0 +1,281 @@
+[Header]
+missionType = "Tutorial"
+missionNumber = 1
+moreGeysers=1
+randGeysers=0
+myStartMoney = "50000"
+myTech = "windwalker;windbattery"
+myProd="sunwalker;windwalker;windbattery;
+myAllyList = "6"
+myName = "You"
+ai1Prod="sunwalker;windwalker;windbattery"
+
+title="DotT"
+
+ai2Name = "~kUnholy ~rImp"
+ai2Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainwalker;sunwalker"
+ai2StartMoney = 50000
+ai2AllyList = "3;4;5;6;7"
+ai2GeyserAttachments=5
+ai2Collectors=5
+ai2BridgeDrawRate=0
+ai2TimeBetweenMoves=0
+ai2Color = "red"
+ai2Ability = "BUILD_BRIDGES;!USE_PRIEST_TO_COLLECT;ENCIRLCE_ENEMY_ISLAND;BUILD_DIAS;SACRIFICE_ENEMY_PRIEST;CAPTURE_ENEMY_PRIEST"
+
+ai3Name = "~wImp Minion"
+ai3Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;Bulf;sunwalker"
+ai3StartMoney = 30000
+ai3AllyList = "2;4;5;6;7"
+ai3GeyserAttachments=10
+ai3Collectors=5
+ai3BridgeDrawRate=0
+ai3TimeBetweenMoves=1
+ai3Color = "white"
+ai3Ability = "BUILD_BRIDGES;!USE_PRIEST_TO_COLLECT;ENCIRLCE_ENEMY_ISLAND;BUILD_DIAS;SACRIFICE_ENEMY_PRIEST;CAPTURE_ENEMY_PRIEST"
+
+ai4Name = "~gImpial Defender"
+ai4Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;sunwalker"
+ai4StartMoney = 40000
+ai4AllyList = "2;3;5;6;7"
+ai4GeyserAttachments=5
+ai4Collectors=5
+ai4BridgeDrawRate=0
+ai4TimeBetweenMoves=1
+ai4Color = "green"
+ai4Ability = "BUILD_BRIDGES;!USE_PRIEST_TO_COLLECT;ENCIRLCE_ENEMY_ISLAND;BUILD_DIAS;SACRIFICE_ENEMY_PRIEST;CAPTURE_ENEMY_PRIEST"
+
+ai5Name = "~oGarrisoned Imps"
+ai5Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;sunwalker"
+ai5StartMoney = 20000
+ai5AllyList = "2;3;4;6;7"
+ai5GeyserAttachments=8
+ai5Collectors=3
+ai5BridgeDrawRate=8
+ai5TimeBetweenMoves=2
+ai5Color = "orange"
+ai5Ability = "!BUILD_BRIDGES;!USE_PRIEST_TO_COLLECT;ENCIRLCE_ENEMY_ISLAND;BUILD_DIAS;SACRIFICE_ENEMY_PRIEST;CAPTURE_ENEMY_PRIEST"
+
+ai6Name = "~lImpial Warrior"
+ai6Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;sunwalker"
+ai6StartMoney = 75000
+ai6AllyList = "2;3;4;5;7"
+ai6GeyserAttachments=15
+ai6Collectors=10
+ai6BridgeDrawRate=0
+ai6TimeBetweenMoves=0
+ai6Color = "lightblue"
+ai6Ability = "BUILD_BRIDGES;!USE_PRIEST_TO_COLLECT;ENCIRLCE_ENEMY_ISLAND;BUILD_DIAS;SACRIFICE_ENEMY_PRIEST;CAPTURE_ENEMY_PRIEST"
+
+ai7Name = "~lImpial Death Warrior"
+ai7Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;Bulf;sunwalker"
+ai7StartMoney = 75000
+ai7AllyList = "2;3;4;5;6"
+ai7GeyserAttachments=15
+ai7Collectors=10
+ai7BridgeDrawRate=0
+ai7TimeBetweenMoves=0
+ai7Color = "lightblue"
+ai7Ability = "BUILD_BRIDGES;!USE_PRIEST_TO_COLLECT;ENCIRLCE_ENEMY_ISLAND;BUILD_DIAS;SACRIFICE_ENEMY_PRIEST;!CAPTURE_ENEMY_PRIEST"
+
+
+[init]
+<$Config,outpost=0>
+
+[Options]
+[A.]
+<h2>~oD~go~gt~oT</h2>
+<?!{outpost}>~.Destruction of the Temple.<br>
+Read the notes.<br>
+$Menu=Ok...What are the notes?,Tell,Info
+$Menu=I don't wanna,Tell,HellNoNo
+</?>
+
+<?{outpost}>$Button=Here's the outpost!,Tell,outpost22
+</?>
+
+[outpost22]
+Hey! How did the hell did this get here?<br>
+<$GetTechnology,126>
+$Button=Behold! the power of NS!,DoNothing,0
+
+[HellNoNo]
+Have it your way.
+$Button=I will be that way,Tell,Notes1
+
+[Info]
+<h2>Notes:</h2><br>
+All you have to do is destroy Unholy Priest's temple.<br>
+Now, you have to figure a way to get past 5 ai's around it.<br>
+You are denied of the outpost and wind power. (I didn't want you to have dust devils.)<br>
+$Button=OK,Tell,HaHa
+
+[HaHa]
+Have Fun +<br>
+Good Luck<br>
+The Virtuous Warrior<br>
+$Button=Cool,DoNothing,0
+
+[@2]
+<$MoveDialog,tl>
+Incoming message ~ISail Skaters~.:<br>
+Hey, reinforcements are here.<br>
+Take us home...<br>
+<$ViewSpot,(250x80)>
+$Button=Ok,Tell,sail
+
+[@3]
+<$MoveDialog,tm>
+<$ViewSpot,(220x75)>
+Incoming Link:<br>
+Reenforcements haltered.<br>
+Please fix the bridge.<br>
+
+[@10]
+Oh, yeah.<br>
+Your tech.<br>
+Sorry about that.<br>
+$Button=You're so stupid,tell,stupid
+
+[@15]
+So, you think you are living in luxury?<br>
+That money will prove to be all but enough to live.<br>
+$Menu=Otherwise: This map,DoNothing,0
+$Menu=wouldn't be a:,DoNothing,0
+$Menu=IMPossible Senerio,DoNothing,0
+
+[@25]
+Incoming link:<br>
+I have located outpost plans.<br>
+Destroy ~lImpial Warrior's ~wTemple.<br>
+-The Spell Master<br>
+$Button=Ok,DoNothing,0
+
+[@45]
+Incoming link:<br>
+These shall prove useful.<br>
+-The Spell Master<br>
+$Button=Cool...what?,Tell,getwind
+
+[stupid]
+Yeah, I know.<br>
+Pick your tech:
+$Menu=~ySun,Tell,A
+$Menu=~kThunder,Tell,B
+$Menu=~bRain,Tell,C
+$Menu=~IWind,Tell,D
+
+[C]
+<$GetTechnology,76>
+<$GetTechnology,87>
+<$GetTechnology,124>
+<$GetTechnology,129>
+<$GetTechnology,143>
+<$GetTechnology,145>
+<$GetTechnology,156>
+<$GetTechnology,147>
+<$GetTechnology,146>
+$Button=HeeHeeHe,Tell,HaHa
+
+[B]
+<$GetTechnology,77>
+<$GetTechnology,79>
+<$GetTechnology,88>
+<$GetTechnology,125>
+<$GetTechnology,131>
+<$GetTechnology,135>
+<$GetTechnology,148>
+<$GetTechnology,149>
+$Button=HeeHeeHe,Tell,HaHa
+
+[A]
+You sure?
+$Button=No,Tell,Pick
+$Button=Yes,Tell,AA
+
+[AA]
+<$GetTechnology,71>
+<$GetTechnology,72>
+<$GetTechnology,75>
+<$GetTechnology,85>
+<$GetTechnology,111>
+<$GetTechnology,128>
+<$GetTechnology,136>
+<$GetTechnology,78>
+<$GetTechnology,70>
+$Button=HeeHeeHe,Tell,HaHa
+
+[HaHa]
+= )<br>
+Have Fun +<br>
+Good Luck<br>
+The Virtuous Warrior<br>
+$Button=Cool,DoNothing,0
+
+[D]
+I ain't that stupid.<br>
+Remember:<br>
+I didn't want you to have dust devils.<br>
+$Button=Dope,Tell,stupid
+
+[getwind]
+<$GetTechnology,142>
+<$GetTechnology,140>
+
+[ai6TempleDead]
+<$Config,outpost=1>
+Here ya go.<br>
+$Button=Outpost! Yaaaaaah!,Tell,SOORRY
+
+[SOORRY]
+Ooooh,  Sorry about that.<br>
+I guess not.<br>
+But the outpost is out there somewhere.<br>
+Not in a priest or temple... Where???<br>
+$Button=I dunno,Tell,dunno
+
+[dunno]
+Well, I know where it is.<br>
+But I can't tell you or otherwise,<br>
+this won't be a:<br>
+IMPossible Senerio.<br>
+$Button=Oooook,DoNothing,0
+
+[Succeeded][ai2TempleDead]
+<h2>You Have Won!!!</h2><br>
+<p>~.Wow...  Wanna try a different mission?
+$Button=Yes,Tell,Mission
+$Button=I want my mommy,Tell,mommy
+
+[mommy]
+Hmmmm.....
+$Button=Bye Bye,MissionAbort,0
+
+[Failed][ai1PriestDead]
+<h2>Message from the ~kImps~.:</h2>
+<p>~rHahaha...~B~wI told you... Leave from our Imp-ial realms.  Looser.
+$Button=*snicker*,Tell,LaLa
+
+[LaLa]
+$Menu=I want to be resurrected,MissionRestart,0
+$Menu=I want a new mission,Tell,Mission
+$Menu=I wanna leave,AbortMission,0
+$Menu=I want to stay in the game and help my ally,Tell,ally
+
+[ally]
+What ally?<br>
+Good question.<br>
+Sorry dude, this doesn't look like a option here.
+$Button=Back,Tell,LaLa
+
+[Mission]
+What one?
+$Menu=~qPick your death:,Tell,Mission
+$Menu=~mHive Cluster,MissionBegin,Imp1
+$Menu=~kDark Rituals,MissionBegin,Imp2
+$Menu=~yX Marks the Spot,MissionBegin,Imp3
+$Menu=~bRun Like Hell 2,MissionBegin,Imp4
+$Menu=~gProject ~oD~got~oT,MissionBegin,Imp5
+$Button=Back,Tell,LaLa
+
+[END]

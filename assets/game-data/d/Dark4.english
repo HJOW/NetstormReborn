@@ -1,0 +1,176 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 4
+moreGeysers = 5
+
+myStartMoney = 1000
+myTech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence;rainwalker;sunCannon;sunBalloon;sunAviary;sunBlocker;sunFence;sunArcher;windarcher;windBattery;windWalker"
+myAllyList = "4;5;6;7"
+
+title="Prison Break"
+
+ai2Name = "The Jailer"
+ai2Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;sunBalloon;sunAviary;sunBlocker;sunArcher"
+ai2StartMoney = 10000
+ai2GeyserAttachments = 4
+ai2Collectors = 10
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3;8"
+ai2color = red
+ai2Ability="!USE_PRIEST_TO_COLLECT;!SACRIFICE_ENEMY_PRIEST"
+ai2BridgeDrawRate = 4
+
+ai3Name = "Prince of Rain"
+ai3Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;sunBlocker;sunArcher"
+ai3StartMoney = 2000
+ai3GeyserAttachments = 3
+ai3Collectors = 10
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2;8"
+ai3color = white
+ai3Ability="!USE_PRIEST_TO_COLLECT;!ENCIRCLE_ENEMY_ISLAND"
+ai3BridgeDrawRate = 4
+
+ai4Name = "Prisoner"
+ai4Tech = "thunderbattery;sunCannon;sunFence;sunBalloon;sunAviary;sunBlocker;sunArcher"
+ai4StartMoney = 10000
+ai4GeyserAttachments = 3
+ai4Collectors = 7
+ai4TimeBetweenMoves = 1
+ai4AllyList = "1;5;6;7"
+ai4color = green
+ai4Ability="!USE_PRIEST_TO_COLLECT"
+ai4BridgeDrawRate = 4
+
+
+ai5Name = "Duke of Thunder"
+ai5Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;sunArcher;sunBalloon;sunAviary;rainbattery"
+ai5StartMoney = 7500
+ai5GeyserAttachments = 3
+ai5Collectors = 7
+ai5TimeBetweenMoves = 1
+ai5AllyList = "1;4;6;7"
+ai5color = purple
+ai5Ability="!USE_PRIEST_TO_COLLECT"
+ai5BridgeDrawRate = 4
+
+ai6Name = "prisoner"
+ai6Tech = "windBattery;sunCannon;sunFence;sunBalloon;sunAviary;sunBlocker;sunArcher"
+ai6StartMoney = 10000
+ai6GeyserAttachments = 3
+ai6Collectors = 7
+ai6TimeBetweenMoves = 1
+ai6AllyList = "1;4;5;7"
+ai6color = yellow
+ai6Ability="!USE_PRIEST_TO_COLLECT"
+ai6BridgeDrawRate = 4
+
+ai7Name = "Knight of Wind"
+ai7Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;rainbattery"
+ai7StartMoney = 10000
+ai7GeyserAttachments = 3
+ai7Collectors = 7
+ai7TimeBetweenMoves = 1
+ai7AllyList = "1;4;5;6"
+ai7color = cyan
+ai7Ability="!USE_PRIEST_TO_COLLECT;!ENCIRCLE_ENEMY_ISLAND"
+ai7BridgeDrawRate = 4
+
+ai8Name = "Earl of Wind"
+ai8Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;sunBlocker;sunArcher"
+ai8StartMoney = 2000
+ai8GeyserAttachments = 3
+ai8Collectors = 7
+ai8TimeBetweenMoves = 1
+ai8AllyList = "2;3"
+ai8color = orange
+ai8Ability="!USE_PRIEST_TO_COLLECT;!ENCIRCLE_ENEMY_ISLAND"
+ai8BridgeDrawRate = 4
+
+[@1]
+<h2>~rJailer</h2>
+<p>
+So you made it after all.  I hope you have more fight than your friends here.
+
+$Button=Begin Fighting,DoNothing,0
+
+[@2]
+<p>Oh I shall give you a fight all right!!  And I shall kill you and save my friends in the process!
+
+[Options]
+
+[A.]
+<h2>Free the prisoners</h2>
+<i>"Some Allies aren't worth saving"<br>
+--General Zal Malkol</i>  
+<p>After a narrow escape from the Dark Lords, you have gathered together your remaining allies.  The situation is bleak.....the Dark Lords continue to grow in power.  Your only hope to withstand their attack is to save your allies from the Jailer's Alter.    
+<i>
+<p>Upon arrival to the Jailer's Island you find that your allies are already in trouble.  Both priests have been captured and their islands under attack.  It is up to you to save all your allies and destroy the Jailer.  Once done your clan will be able to launch a counter offensive.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+You have saved your friends.  Now is the time to regroup around the Isle of Geysers and strike back at your enemies.
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,Dark5
+
+[ai2TempleHalfDead]
+<h2>~rJailer</h2>
+<p>
+Stop your attack or I cannot guarantee your friend's saftey.
+
+[ai2TempleDead]
+<h2>~rJailer</h2>
+<p>
+How can you do THIS?  My defences where Impenetrable!
+
+[ai2PriestDead]
+<h2>~mDuke of Thunder</h2>
+<p>
+Thank you my friend, I am forever in your debt.
+$Button=Ok,Tell,mes
+
+[mes]
+<h2>~gKnight of Wind</h2>
+<p>
+You have saved us!  For awhile I thought we were doomed.
+
+[ai2PriestCaptured]
+<h2>~rJailer</h2>
+<p>
+Get it over with....
+
+[ai3TempleHalfDead]
+<h2>~lPrince of Rain</h2>
+<p>
+You might be able to defeat me but you will never rescue your friends.
+
+[ai5PriestDead]
+<h2>Your ally the Duke of Thunder has died!</h2>
+<p>
+Your attempt at saving your friend has failed....you are sure to fall with him.
+
+$Button=Continue,Tell,TryAgain
+
+[ai7PriestDead]
+<h2>Your ally the Knight of Wind has died!</h2>
+<p>
+Your commrade and friend at arms the Knight of Wind has perished.....
+
+$Button=Continue,Tell,TryAgain
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+It seems your plan to save your allies have failed....for nobody saved you.
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+
+

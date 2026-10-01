@@ -1,0 +1,75 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 5
+moreGeysers = 1
+randGeysers = 2
+
+myStartMoney = 2500
+myTech = "sunWalker;sunarcher;sunballoon;sunFence;sunaviary;outpost;thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence"
+myAllyList = ""
+
+title="Ambush at Section 2765"
+
+ai2Name = "GOF Leader"
+ai2Tech = "windbattery"
+ai2StartMoney = 0
+ai2GeyserAttachments = 1
+ai2Collectors = 1
+ai2TimeBetweenMoves=8
+ai2DrawBridgeRate=8
+ai2AllyList = "3;4;5"
+ai2color = orange
+
+ai3Name = "SWORD Defender"
+ai3Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;Bulf;sunwalker"
+ai3StartMoney = 12500
+ai3GeyserAttachments = 7
+ai3Collectors = 3
+ai3TimeBetweenMoves=1
+ai3DrawBridgeRate=1
+ai3AllyList = "2;4;5"
+ai3color = red
+
+ai4Name = "SWORD DeathRunner"
+ai4Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;Bulf;sunwalker"
+ai4StartMoney = 10000
+ai4GeyserAttachments = 6
+ai4Collectors = 4
+ai4TimeBetweenMoves = 1
+ai4DrawBridgeRate=1
+ai4AllyList = "2;3;5"
+ai4color = red
+
+ai5Name = SWORD Assassin"
+aiTech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;sunwalker"
+ai5StartMoney = 15000
+ai5GeyserAttachments = 6
+ai5Collectors = 4
+ai5TimeBetweenMoves=1
+ai5DrawBridgeRate = 1
+ai5AllyList = "2;3;4"
+ai5color = red
+
+[Options]
+
+[A.]
+<h2>Ambush at Section 2765</h2>
+<i>Guldan: ~wCommander, this is an perfect opportunity to kill a leader.  You see, the SWORD are escorting the GOF leader to their fortress.  Your number one priority is to kill him.<br>
+<i>You: ~wYou know what this means?  Their guild will be in total disarray!<br>
+<i>Guldan: ~wMy objective exactly.
+$Button=What ya got,ShowTechnology,55
+$Button=Ya Gotta Kill the Leader,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<i>Guldan: ~wNow, all we have to do is strike at a few organized groups of the GOF.
+<i>You: ~wWhat do you mean, organized groups?
+<i>Guldan: ~wI am definately sure that people are going to try to take his place.  Of course more then one wants to become the leader.  Something like civil war breaks out and all we have to do is make sure the strong gets weaken and all gets slaughtered.
+$Button=R U ready 4 this?,MissionBegin,FWSO6
+
+[Failed]
+<h2>You have failed!</h2>
+<i>Guldan: You have lost, why?  Haven't you ran against greater odds and your past?
+$Button=Bye Bye,MissionAbort,0
+
+[END]

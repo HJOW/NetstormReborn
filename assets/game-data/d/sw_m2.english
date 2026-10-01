@@ -1,0 +1,149 @@
+[Header]
+missionType = "Tutorial"
+missionNumber = 2
+myStartMoney = {sw_mvar0}
+myTech={sw_var1}{sw_var2}
+title = "Apprenticeship (Non-allied)"
+
+ai2Name = "King of ~rHADES~."
+ai2StartMoney = {sw_mvar1}
+ai2Tech = {sw_var1}{sw_var2}{sw_var3}{sw_var4}{sw_var5}{sw_var6}{sw_var7}{sw_var8}
+ai2GeyserAttachments = 4
+ai2Collectors = 5
+ai2TimeBetweenMoves = {sw_mvar2}
+ai2AllyList = "3"
+ai2Color = red
+ai2BridgeDrawRate = {sw_mvar2}
+ai2Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai3Name = "Poor Lost Nimbian Soul"
+ai3StartMoney = 0
+ai3AllyList = "2"
+ai3Color = white
+ai3Ability = ""
+ 
+
+[init]
+<$Config,sw_m2=1>
+<$Config,sw_m1=0>
+<$Config,sw_m3=0>
+<$Config,sw_m4=0>
+<$Config,sw_m5=0>
+<$Config,sw_m6=0>
+<$Config,sw_m7=0>
+<$Config,sw_m8=0>
+<$Config,sw_m9=0>
+<$Config,sw_m10=0>
+<$Config,sw_m11=0>
+<$Config,sw_m12=0>
+<$Config,sw_m13=0>
+<$Config,sw_m14=0>
+<$Config,sw_m15=0>
+<$Config,sw_m16=0>
+<$Config,sw_m17=0>
+<$Config,sw_m18=0>
+<$Config,sw_m19=0>
+<$Config,sw_m20=0>
+<$Config,sw_m21=0>
+<$Config,sw_m22=0>
+<$Config,sw_m23=0>
+<$Config,sw_m24=0>
+<$Config,sw_m25=0>
+<$Config,sw_m30=0>
+
+
+
+
+[options]
+[A.]
+<$PlaySound,thunderCrack.wav>
+
+                                   <h2>~kApprenticeship~. (not aligned)  <a href="#mission2">~[IfortGump.46]</a></h2>
+            ~[IsunWalker.65]                          
+<br>                                                             ~1~y<?!{sw_difficulty1}>HARD</?><?{sw_difficulty1}>EASY</?>~.<br>
+<br>
+The {sw_god5} is furious with your disobedience.<br>
+He is giving you a last chance to prove yourself.  If you can escape and<br>
+ make it to the safehaven and sacrifice the Nimbian Lost Soul <br>
+--He'll allow you to live, ~[Iicon.6]~rFOR NOW~[Iicon.6]~..
+<p>
+            <a href="cmd:ShowTechnology,55"> ~[IfortGump.50] </a>                                    <a href="cmd:DoNothing,0">~[IfortGump.22] </a>                                  <a href="cmd:Tell,guideHades.overview">~[Ipriest.13]</a><br>
+<a href="cmd:ShowTechnology,55">Review Knowledge</a>           <a href="cmd:DoNothing,0">Get to the ESCAPIN!</a>              <a href="cmd:Tell,guideHades.overview">Leave HELL</a>
+$OnExit= ,PlaySound,priestMove1.wav
+$Button= ,Tell,A.
+
+[@1]
+<?{sw_difficulty1}>
+<$DestroyAt,(123x201)>
+<$DestroyAt,(125x198)>
+<$DestroyAt,(106x199)>
+<$DestroyAt,(109x214)>
+<$DestroyAt,(110x203)>
+<$DestroyAt,(87x177)>
+</?>
+<?!{sw_difficulty1}>
+<$DestroyAt,(140x222)>
+<$DestroyAt,(140x218)>
+<$DestroyAt,(140x226)>
+<$DestroyAt,(140x230)>
+<$DestroyAt,(140x216)>
+<$DestroyAt,(140x219)>
+<$SendBucks,2>
+</?>
+
+
+
+
+[ai3PriestCaptured]
+<p>Good job!  You've made it to the safehaven.<br>
+Now you must sacrifice the Nimbian Lost Soul<br>
+in the name of The {sw_god5} to escape his clutches - ~ytemporarily~..
+
+[ai3PriestDead]
+<h2>You've sacrificed the Nimbian Lost Soul<br>
+~Oh, did you know that he was your brother!</h2>
+<$Config,sw_m3=1>
+<$Config,sw_m2=0>
+<$Config,sw_difficulty1=0>
+<$Config,sw_mvar0=8000>
+<$Config,sw_mvar1=3000>
+<$Config,sw_mvar2=2>
+<$Config,sw_mvar3=1>
+$Button=Get me the heck outta here,MissionBegin,sw_m3
+
+[Failed]
+From the darkness that surrounds you, you hear laughter - cruel and inhuman
+laughter....
+<p>
+<i>"You are no Apprentice!  You aren't even good enough to be Bulf food!"
+<p>
+"Your corpse will rot in Hades forever."
+                                                                  --King {sw_hades}</i><br>
+<$Config,sw_difficulty1=1>
+<$Config,sw_mvar0=3000>
+<$Config,sw_mvar1=1000>
+<$Config,sw_mvar2=6>
+$Button=Try Again,MissionBegin,sw_m2
+$Button=Leave,Tell,guideHades.overview
+
+
+
+[notingame]
+We need a timelimit for the King of Hades not to sacrifice the Player.
+I guess 10 mins would be enough time to try to break free.  We'll test it
+to find out.
+
+Also,maybe it would be better if we used the view spot with this one and have
+the king of Hades pick up the priest and put him on the altar.
+
+
+**++**I have no idea how to make the game end once the player gets to the safehaven.  Maybe sacrifice an extra priest?
+Ya that would work.  I'll add another player on the safe haven island.  The player has to sacrifice
+him to advance.
+
+[END]
+
+
+
+
+

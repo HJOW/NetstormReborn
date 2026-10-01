@@ -1,0 +1,107 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 7
+moreGeysers = 1
+randGeysers = 1
+
+myStartMoney = 7500
+myTech = "sunWalker;sunarcher;sunballoon;sunFence;sunaviary;outpost;thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence"
+myAllyList = "7;8"
+
+title="GOF Rampage"
+
+ai2Name = "GOF Warlord"
+ai2Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;Bulf;sunwalker"
+ai2StartMoney = 10000
+ai2GeyserAttachments = 6
+ai2Collectors = 5
+ai2TimeBetweenMoves=1
+ai2DrawBridgeRate=1
+ai2AllyList = "4;5"
+ai2color = orange
+
+ai3Name = "GOF Knight"
+ai3Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;sunwalker"
+ai3StartMoney = 10000
+ai3GeyserAttachments = 4
+ai3Collectors = 5
+ai3TimeBetweenMoves=1
+ai3DrawBridgeRate=1
+ai3AllyList = ""
+ai3color = orange
+
+ai4Name = "GOF Assassisn"
+ai4Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;Bulf;sunwalker"
+ai4StartMoney = 10000
+ai4GeyserAttachments = 9
+ai4Collectors = 5
+ai4TimeBetweenMoves=1
+ai4drawBridgeRate=1
+ai4AllyList = "2;5"
+ai4color = orange
+
+ai5Name = "GOF Rogue"
+ai5Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence;rainwalker;sunwalker"
+ai5StartMoney = 10000
+ai5GeyserAttachments = 8
+ai5Collectors = 5
+ai5TimeBetweenMoves=1
+ai5DrawBridgeRate=1
+ai5AllyList = "2;4"
+ai5color = orange
+
+ai6Name = "GOF DeathSeeker"
+ai6Tech = "sunWalker;sunarcher;sunballoon;suncannon;sunFence;sunaviary;sunBlocker;sunwalker"
+ai6StartMoney = 10000
+ai6GeyserAttachments = 5
+ai6Collectors = 5
+ai6TimeBetweenMoves=1
+ai6DrawBridgeRate=1
+ai6AllyList = ""
+ai6color = orange
+
+ai7Name = "^WaR^ Knight"
+ai7Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence;rainwalker;sunwalker"
+ai7StartMoney = 10000
+ai7GeyserAttachments = 7
+ai7Collectors = 5
+ai7TimeBetweenMoves=1
+ai7DrawBridgeRate=1
+ai7AllyList = "1;8"
+ai7color = green
+
+ai8Name = "The Virtuous Warrior"
+ai8Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;sunwalker"
+ai8StartMoney = 10000
+ai8GeyserAttachments = 8
+ai8Collectors = 5
+ai8TimeBetweenMoves=1
+ai8DrawBridgeRate=1
+ai8AllyList = "1;7"
+ai8color = white
+
+[Options]
+
+[A.]
+<h2>GOF Rampage</h2>
+<i>Guldan: ~wCommander, now it is time to strike!<br>
+<i>You: ~wOk...there is a lot of them!!!<br>
+<i>Guldan: ~wYou got back up...<br>
+<i>You: ~wThat's a first...<br>
+<i>Guldan: ~wHuh?<br>
+<i>You: ~wI said cool.<br>
+$Button=What ya got,ShowTechnology,55
+$Button=Da Da Da...,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<i>Guldan: ~wA helpless person is under attack...we gotta save him!  Send him your sun plans...I will give him some of mine also!!!
+$Button=Agree to this plan,MissionBegin,FWSO8
+$Button=Disagree to the plan,MissionBegin,FWOS8a
+
+[Failed]
+<h2>You have failed!</h2>
+<i>Oh well...you gave it your best shot...but that doesn't mean you're alive.
+$Button=Bye Bye,MissionAbort,0
+
+[END]

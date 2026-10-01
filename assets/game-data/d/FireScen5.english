@@ -1,0 +1,104 @@
+[Header]
+missionType = "Tutorial"
+missionNumber = 5
+moreGeysers = 1
+
+mystartmoney = 3000
+myTech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;windBattery;thunderbattery;rainbattery;windarcher;windaviary;windballoon;windblocker;windWalker"
+
+title = "Thunderisle Keep"
+
+ai2Name = "Thunderisle Keep"
+ai2Tech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;windBattery;thunderbattery;rainbattery;windarcher;windaviary;windballoon;windblocker;windWalker;thunderarcher;thunderblocker;thundercannon;thunderfence;rainaviary;rainwalker;rainballoon;rainblocker;raincannon;rainFence"
+ai2StartMoney = 20000
+ai2GeysersAttachments = 1
+ai2Collectors = 25
+ai2TimeBetweenMoves = 1
+ai2Ability = "!Use_Priest_To_Collect"
+ai2AllyList = ""
+ai2color = red
+
+ai3Name = ""
+ai3Tech = ""
+ai3StartMoney = 
+ai3GeysersAttachments = 
+ai3Collectors = 
+ai3TimeBetweenMoves = 
+ai3AllyList = 
+ai3color = 
+
+ai4Name = ""
+ai4Tech = ""
+ai4StartMoney = 
+ai4GeysersAttachments = 
+ai4Collectors = 
+ai4TimeBetweenMoves = 
+ai4AllyList = 
+ai4color = 
+
+ai5Name = ""
+ai5Tech = ""
+ai5StartMoney = 
+ai5GeysersAttachments = 
+ai5Collectors = 
+ai5TimeBetweenMoves = 
+ai5AllyList = 
+ai5color = 
+
+ai6Name = ""
+ai6Tech = ""
+ai6StartMoney = 
+ai6GeysersAttachments = 
+ai6Collectors =
+ai6TimeBetweenMoves = 
+ai6AllyList = 
+ai6color = 
+
+ai7Name = ""
+ai7Tech = ""
+ai7StartMoney = 
+ai7GeysersAttachments = 
+ai7Collectors = 
+ai7TimeBetweenMoves = 
+ai7AllyList = 
+ai7color = 
+
+ai8Name = ""
+ai8Tech = ""
+ai8StartMoney = 
+ai8GeysersAttachments = 
+ai8Collectors = 
+ai8TimeBetweenMoves = 
+ai8AllyList = 
+ai8color = 
+
+[Options]
+
+[A.]
+<h2>Thunderisle Attack</h2>
+<i>~[Ithundercannon.B9] <br>
+"With ultimate power comes ultimate defeat."<br>
+--High Priest Firestorm </i>  
+
+<p>You have saved Balsan, and he is grateful. The battle was a hard and honorable one. However, even as your powers as a Gale Acolyte swell, dire news continues to flow in. The pirates and the reapers have created an ultra-powerful island called Thunderisle Keep. Its mission is to destroy you, the only general who has been able to achieve victory over the dark alliance. It is powerful, and you are not sure you can destroy it. You have found a good spot in the Eagles Rift, and you are lying in ambush. If all goes well, you will be able to destroy this powerful weapon and end the unholy pact.
+
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[BadTeamDead]
+<h2>You have destroyed Thunderisle Keep...</h2>
+<p>~[Ithundercannon.A8] <br>
+The Keep is in ruins, and the Reapers put at bay, but how long can victory last? Other generals are now starting to adopt new strategies to hand the Reapers their first significant losses. You alone have done much damage, but can the Reapers be fended off forever? Their islands are always much bigger than most Nimbian islands; how do they get such good islands? You know, deep inside, that the Reapers can only be defeated by a strike force, a dagger right into the heart of the Deusphere. You know that dagger will be yourself, and your island.
+
+<$Config,Done{mission.filename}=1>
+$Button=Leave Missions,MissionAbort,0
+
+[Failed]
+<h2>Death!</h2>
+<p>~[Irainfence.C2] <br>
+You are defeated! The terrible Keep can go on to destroy more islands! All of Nimbus will fall to its power!
+
+$Button=Continue,Tell,TryAgain
+
+[END]

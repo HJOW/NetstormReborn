@@ -1,0 +1,158 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 0
+
+myStartMoney = 1000000
+myTech = "sunCannon;sunBalloon;sunAviary;sunBlocker;sunFence;sunArcher;rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainwalker;rainFence;rainwalker;windBattery;windarcher;windballoon;windWalker"
+myAllyList = "6"
+
+title="Experiment"
+
+ai2Name = "Lord Karkol"
+ai2Tech = "windarcher;windBattery;windaviary;windballoon;thunderbattery;thunderarcher;thunderblocker;thundercannon;sunBalloon;sunAviary;sunBlocker;sunArcher"
+ai2StartMoney = 50000
+ai2GeyserAttachments = 4
+ai2Collectors = 10
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3;4;5;7;8"
+ai2color = red
+ai2Ability="!USE_PRIEST_TO_COLLECT"
+ai2BridgeDrawRate = 4
+
+ai3Name = "Soldier of Rain"
+ai3Tech = "rainbattery;rainaviary;rainballoon;raincannon"
+ai3GeyserAttachments = 3
+ai3Collectors = 10
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2;4;5;7;8"
+ai3color = white
+ai3Ability="!USE_PRIEST_TO_COLLECT"
+ai3BridgeDrawRate = 4
+
+ai4Name = "General Jaloan"
+ai4Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;sunBalloon;sunAviary;sunBlocker;sunArcher"
+ai4StartMoney = 50000
+ai4GeyserAttachments = 3
+ai4Collectors = 7
+ai4TimeBetweenMoves = 1
+ai4AllyList = "2;3;5;7;8"
+ai4color = green
+ai4Ability="!USE_PRIEST_TO_COLLECT"
+ai4BridgeDrawRate = 4
+
+ai5Name = "Soldier of Rain"
+ai5Tech = "rainbattery;rainaviary;rainballoon;raincannon"
+ai5StartMoney = 50000
+ai5GeyserAttachments = 3
+ai5Collectors = 7
+ai5TimeBetweenMoves = 1
+ai5AllyList = "2;3;4;7;8"
+ai5color = purple
+ai5Ability="!USE_PRIEST_TO_COLLECT"
+ai5BridgeDrawRate = 4
+
+ai6Name = "Squire of Rain"
+ai6Tech = "rainBattery;rainblocker;raincannon;sunCannon;sunFence;sunBalloon;sunAviary;sunBlocker;sunArcher"
+ai6StartMoney = 20000
+ai6GeyserAttachments = 3
+ai6Collectors = 7
+ai6TimeBetweenMoves = 1
+ai6AllyList = "1"
+ai6color = yellow
+ai6Ability="!USE_PRIEST_TO_COLLECT"
+ai6BridgeDrawRate = 4
+
+ai7Name = "General Carlton"
+ai7Tech = "windarcher;windBattery;windaviary;windballoon;rainbattery;rainaviary;rainblocker;raincannon"
+ai7StartMoney = 5000
+ai7GeyserAttachments = 3
+ai7Collectors = 7
+ai7TimeBetweenMoves = 1
+ai7AllyList = "2;3;4;5;8"
+ai7color = cyan
+ai7Ability="!USE_PRIEST_TO_COLLECT"
+ai7BridgeDrawRate = 4
+
+ai8Name = "Duke Dralzon"
+ai8Tech = "windarcher;windBattery;windblocker;rainbattery;rainballoon;raincannon;thunderbattery;thunderblocker;thundercannon"
+ai8StartMoney = 10000
+ai8GeyserAttachments = 3
+ai8Collectors = 7
+ai8TimeBetweenMoves = 1
+ai8AllyList = "2;3;4;5;7"
+ai8color = orange
+ai8Ability="!USE_PRIEST_TO_COLLECT"
+ai8BridgeDrawRate = 4
+
+
+
+[Options]
+
+[A.]
+<h2>Experiment</h2>
+<i>"Absolute power?  I can't deal with the power I already have!"<br>
+--Unknown Nimbian Warlord</i>  
+<p>After studying the Tomb on the Isle of Geysers you learn of it's potential power.  Using your Temple as a focal point, you begin the sequence that will increase the amount of power drawn to the Isle.  As you chant the commands of great power your temple begins to glow, unable to take the strain of the spell you black out....
+
+$Button=Ok,Tell,cont
+
+[cont]
+<p>
+When you come to you find that you have been surrounded.  The glow of the temple has attracted a nearby clan and they have decided to take the Isle for themselves.  Fourtunatly the incident as caught the attention of the Squire of Rain on a reconasance mission...  The general area has been drained of any geyser activity...you must outlast your foes untill their reserves run dry, then strike!
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+You have defeated your foes!  You decide to pay the Squire of Rain a visit and reward him for his assistance.
+
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,tnron72b
+
+[ai2TempleHalfDead]
+<h2>Message from the Squire of Rain</h2>
+<p>
+Keep it up!
+
+[ai2TempleDead]
+<h2>Message from the Squire of Rain</h2>
+<p>
+You must stay vigilant....there's yet more to be done...
+
+[ai5PriestCaptured]
+<h2>Message from the Squire of Rain</h2>
+<p>
+Another one is about to bite the dust...
+
+[ai6TempleHalfDead]
+<h2>Message from the Squire of Rain</h2>
+<p>
+Help!  They are attacking me!
+
+[ai6PriestDead]
+<h2>Your ally the Squire of Rain has died!</h2>
+<p>
+After the Squire's death, your defences continued to be pounded untill they finnaly got through.  Your death was swift.
+
+$Button=Continue,Tell,TryAgain
+
+[ai7TempleDead]
+<h2>Message from General Carlton</h2>
+<p>
+That cursed Isle of yours must be destroyed!!
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+You have lost the Isle of Geysers to the enemy....Even worst you lost your life!
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+
+

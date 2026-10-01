@@ -1,0 +1,205 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 7
+moregeysers = 2
+
+myStartMoney = 20000
+myTech = {TpVmyTech1}{TpVmyTech2}
+
+title="Choose Your Ally"
+
+ai2Name = "Minion Of Wind"
+ai2Tech ="windwalker;windArcher;windBlocker;sunBalloon;windballoon;windAviary;sunfence;windbattery"
+ai2StartMoney = 10000
+ai2GeyserAttachments = 10
+ai2Collectors = 2
+ai2Ability ="!BUILD_BLOCKERS_WHEN_BUILDINGS_HARMED"
+ai2TimeBetweenMoves = 1
+ai2Bridgedrawrate = 2
+ai2AllyList = {TpVwindAlly}
+ai2color = red
+
+ai3Name = "Minion Of Thunder"
+ai3Tech = "bulf;thunderArcher;thunderBattery;thunderfence;thunderCannon;thunderblocker"
+ai3StartMoney = 20000
+ai3GeyserAttachments = 2
+ai3Collectors = 4
+ai3Ability ="!USE_PRIEST_TO_COLLECT"
+ai3timeBetweenMoves = 4
+ai3Bridgedrawrate = 3
+ai3AllyList = {TpVthunderAlly}
+ai3color = green
+
+ai4Name = "Minion Of Sun"
+ai4Tech ="sunBalloon;sunArcher;suncannon;sunAviary;windbattery"
+ai4StartMoney = 25000
+ai4GeyserAttachments = 2
+ai4Collectors = 4
+ai4Ability ="!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+ai4TimeBetweenMoves = 3
+ai4Bridgedrawrate = 4
+ai4AllyList = {TpVSunAlly}
+ai4color = white
+
+ai5Name = "Minion Of Rain"
+ai5Tech ="rainwalker;raincannon;rainBattery;rainfence;rainballoon;rainblocker;rainAviary"
+ai5StartMoney = 15000
+ai5GeyserAttachments = 2
+ai5Collectors = 2
+ai5Ability ="!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS;!CONCENTRATE_FIRE"
+ai5TimeBetweenMoves = 2
+ai5Bridgedrawrate = 1
+ai5AllyList = {TpVrainAlly}
+ai5color = purple
+
+[init]
+
+
+[Options]
+
+[A.]
+<?!{TpVstart}>
+<H2>~yChoose Your Ally</H2><P>
+<I>{TpVguide}</I> Scroll through the Minions and choose a worthy ally.<br>
+<$config,TpV3=1 {TpV3}>
+
+$Button=Scroll,DoNothing,0 
+$OnExit= ,tell,a2 
+</?>
+<?{TpVstart}> <$tell,STARTED> </?>
+
+
+[A2]
+<$VIEWPRIEST,2>
+<H2>~yMinion of Wind</h2>
+~iSpeed:~. Quickest<br>
+~iMoney:~. 10000 Storm Crystals<br>
+~iBuild Rate:~. Fast<br>
+~iIntelligence:~. Average<br>
+~iLocation:~. North West<br>
+
+~[Iwindvortex.20]
+<$MoveDialog,br>
+$Button=BACK,tell,A5
+$Button=CHOOSE,tell,WIND
+$Button=NEXT,tell,A3
+
+[A3]
+<$VIEWPRIEST,3>
+<H2>~yMinion of Thunder</h2>
+~iSpeed:~. Slow<br>
+~iMoney:~. 20000 Storm Crystals<br>
+~iBridge Build Rate:~. Average<br>
+~iIntelligence:~. High<br>
+~iLocation:~. South West<br>
+
+~[Ithundervortex.15]
+<$MoveDialog,br>
+
+$Button=BACK,tell,A2
+$Button=CHOOSE,tell,THUNDER
+$Button=NEXT,tell,A4
+
+[A4]
+<$VIEWPRIEST,4>
+<H2>~yMinion of Sun</h2>
+~iSpeed:~. Average<br>
+~iMoney:~. 25000 Storm Crystals<br>
+~iBuild Rate:~. Slow<br>
+~iIntelligence:~. Good<br>
+~iLocation:~. Center<br>
+
+~[Imog.16]
+<$MoveDialog,br>
+
+$Button=BACK,tell,A3
+$Button=CHOOSE,tell,SUN
+$Button=NEXT,tell,A5
+
+[A5]
+<$VIEWPRIEST,5>
+<H2>~yMinion of Rain</h2>
+~iSpeed:~. Fast<br>
+~iMoney:~. 15000 Storm Crystals<br>
+~iBuild Rate:~. Quickest<br>
+~iIntelligence:~. Low<br>
+~iLocation:~. North East<br>
+
+~[Irainvortex.28]
+<$MoveDialog,br>
+
+$Button=BACK,tell,A4
+$Button=CHOOSE,tell,RAIN
+$Button=NEXT,tell,A2
+
+[WIND]
+<$config,TpVwindAlly="1">
+<$config,TpVthunderAlly="4;5">
+<$config,TpVsunAlly="3;5">
+<$config,TpVrainAlly="3;4">
+<$config,TpVstart=1>
+<$missionbegin,TpVlisten>
+
+
+[THUNDER]
+<$config,TpVwindAlly="4;5">
+<$config,TpVthunderAlly="1">
+<$config,TpVsunAlly="2;5">
+<$config,TpVrainAlly="2;4">
+<$config,TpVstart=1>
+<$missionbegin,TpVlisten>
+
+[SUN]
+<$config,TpVwindAlly="3;5">
+<$config,TpVthunderAlly="2;5">
+<$config,TpVsunAlly="1">
+<$config,TpVrainAlly="2;3">
+<$config,TpVstart=1>
+<$missionbegin,TpVlisten>
+
+[RAIN]
+<$config,TpVwindAlly="3;4">
+<$config,TpVthunderAlly="2;4">
+<$config,TpVsunAlly="2;3">
+<$config,TpVrainAlly="1">
+<$config,TpVstart=1>
+<$missionbegin,TpVlisten>
+
+
+[STARTED]
+<$config,TpVstart=0>
+
+
+[Succeeded][BadTeamDead]
+<h2>~yVictory</h2><P>
+<i>{TpVguide}</i> <?{Tp_name}> {Tp_yourname}, </?>You and your Ally have done well.<P>
+<$Config,TpVlisten=1>
+
+<$tell,TECHUSED>
+
+$Button=Thanks,MissionBegin,TpV_t4
+
+[TECHUSED]
+<?{TpVc1}>  <$config,TpVc11=0>  </?>
+<?{TpVc2}>  <$config,TpVc21=0>  </?>
+<?{TpVc3}>  <$config,TpVc31=0>  </?>
+<?{TpVc4}>  <$config,TpVc41=0>  </?>
+<?{TpVc5}>  <$config,TpVc51=0>  </?>
+
+[ai1priestdead]
+<H2>~yDefeat</h2><P>
+<i>{TpVguide}</i> <?{Tp_name}> {Tp_yourname}, </?>You and your ally have failed to destroy the other minions.
+<P>Your time of trial is now over.<p>
+
+$Button=Quit,MissionAbort,1
+$Button=Plead for Mercy,tell,RETRY
+
+[RETRY]
+<i>{TpVguide}</i> You have been granted another chance.<P>
+$OnExit= ,MissionBegin,TpVlisten
+
+[END]
+
+
+

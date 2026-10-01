@@ -1,0 +1,120 @@
+[Header]
+missionType = "Tutorial"
+missionNumber = 6
+moreGeysers = 1
+
+mystartmoney = 1250
+myTech = "thunderBattery;thunderFence;thunderCannon;thunderArcher;thunderBlocker;rainBattery;rainFence;rainCannon;rainAviary;rainBalloon;windBattery;windWalker;windArcher;windBlocker;sunFence"
+
+title = "Abduction!"
+
+ai2Name = "Luitenant Goateknetter"
+ai2Tech = "thunderBattery;sunCannon;sunBalloon;sunAviary"
+ai2StartMoney = 25000
+ai2GeysersAttachments = 15
+ai2Collectors = 15
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3;4;5;6"
+ai2ability = "!Use_Priest_To_Collect;!Sacrifice_Enemy_Priest"
+ai2color =
+ai2BridgeDrawRate = 1
+
+ai3Name = "Lord Masmaster"
+ai3Tech = "windBattery;windArcher;windBlocker;windAviary;windWalker;windBalloon"
+ai3StartMoney = 12500
+ai3GeysersAttachments = 15
+ai3Collectors = 15
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2;4;5;6"
+ai3ability = "!Use_Priest_To_Collect;!Capture_Enemy_Priest"
+ai3color =
+ai3BridgeDrawRate = 1
+
+ai4Name = "Lord Tersamsam"
+ai4Tech = "thunderBattery;thunderFence;thunderCannon;thunderArcher;thunderBlocker;rainBattery;rainWalker"
+ai4StartMoney = 12500
+ai4eysersAttachments = 15
+ai4ollectors = 15
+ai4TimeBetweenMoves = 1
+ai4AllyList = "2;3;5;6"
+ai4ability = "!Use_Priest_To_Collect;!Capture_Enemy_Priest"
+ai4color =
+ai4BridgeDrawRate = 1
+
+ai5Name = "Lord Pheonyte"
+ai5Tech = "rainBattery;rainFence;rainCannon;rainAviary;rainBalloon;rainWalker;rainBlocker"
+ai5StartMoney = 12500
+ai5GeysersAttachments = 15
+ai5Collectors = 15
+ai5TimeBetweenMoves = 1
+ai5AllyList = 2;3;4;6"
+ai5ability = "!Use_Priest_To_Collect;!Capture_Enemy_Priest"
+ai5color =
+ai5BridgeDrawRate = 1
+
+ai6Name = "Lord Weazwaxle"
+ai6Tech = "thunderBattery;thunderFence;thunderCannon;thunderArcher;thunderBlocker;rainBattery;rainWalker"
+ai6StartMoney = 0
+ai6GeysersAttachments = 0
+ai6Collectors = 0
+ai6TimeBetweenMoves = 1
+ai6AllyList = "2;3;4;5"
+ai6ability = "!Use_Priest_To_Collect;!Capture_Enemy_Priest"
+ai6color =
+ai6BridgeDrawRate = 1
+
+ai7Name = "Colonel Boogerman"
+ai7Tech = "thunderBattery;thunderCannon;thunderArcher;thunderBlocker;windBattery;windBalloon;windArcher;windBlocker"
+ai7StartMoney = 25000
+ai7GeysersAttachments = 15
+ai7Collectors = 15
+ai7TimeBetweenMoves = 1
+ai7AllyList = "1"
+ai7ability = "!Use_Priest_To_Collect;"
+ai7color =
+ai7BridgeDrawRate = 1
+
+ai8Name = ""
+ai8Tech = ""
+ai8StartMoney =
+ai8GeysersAttachments =
+ai8Collectors =
+ai8TimeBetweenMoves =
+ai8AllyList = ""
+ai8ability = ""
+ai8color =
+ai8BridgeDrawRate =
+
+[Options]
+
+[A.]
+<h2>Abduction!</h2>
+<i>"Well, let's hope the workshops don't blow"<br>
+--Colonel Boogerman</i>  
+
+<p>When Captain Massakker and Colonel were together fighting a group of Razorians to break through the Razorian barricade to the new Razorian center, Captain Massakker's priest was caught gathering Storm Power. You are send in to put Captain Massakker out of the problems.
+
+<p>Your mission is to defeat the Razorians and free Captain Massakker.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[BadTeamDead]
+<h2>Well done!</h2>
+<p>
+Captain Massakker: "<I>Thanks, man. I wouldn't have made it without you!</I>
+
+<p>You notice that the Razorians are winning more and more battles and DDC is losing more and more. Can you and your most powerful allies ultimately defeat the Razorians? Try it in the next scenario, <i>The Razorian Defeat</i>!
+
+<$Config,Done{mission.filename}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,Razorianreturn5
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+You are dead! Not long after that Massakker and Colonel Boogerman got sacrificed.
+
+$Button=Continue,Tell,TryAgain
+
+[END]

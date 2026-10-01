@@ -1,0 +1,236 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 5
+moreGeysers = 1
+randomGeysers = 1
+denySalvage = 1
+
+myStartMoney = {sw_mvar0}
+myTech = {sw_var1}{sw_var2}{sw_var9}windWalker;windBlocker
+myallylist = ""                                             
+
+title = "Slave to the King (Attack on Wind Village)"
+
+ai2Name = Sakic the Wind King
+ai2Tech = {sw_var1}{sw_var2}{sw_var3}{sw_var4}
+ai2StartMoney ={sw_mvar1}
+ai2AllyList = "2;3;4;5;6;7;8"
+ai2Color = red
+ai2TimeBetweenMoves={sw_mvar2}
+ai2BridgeDrawRate={sw_mvar2}
+ai2Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai3Name = Salik the Wind Warrior
+ai3Tech = "{sw_var3}windBattery"
+ai3StartMoney ={sw_mvar1}
+ai3AllyList = "2;4;5;6;7;8"
+ai3Color = white
+ai3TimeBetweenMoves={sw_mvar2}
+ai3BridgeDrawRate={sw_mvar2}
+ai3Ability = "!STOP_COLEECTING_FROM_DANGEROUS_GEYSERS"
+
+ai4Name = Salif the Wind Warrior
+ai4Tech = "{sw_var3}{sw_var4}windBattery"
+ai4StartMoney = {sw_mvar1}
+ai4AllyList = "2;3;5;6;7;8"
+ai4Color = green
+ai4TimeBetweenMoves={sw_mvar2}
+ai4BridgeDrawRate={sw_mvar2}
+ai4Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+
+ai5Name = Sarif the Wind Warrior
+ai5Tech = "{sw_var3}windBattery"
+ai5StartMoney = {sw_mvar1}
+ai5AllyList = "2;3;4;6;7;8"
+ai5Color = purple
+ai5TimeBetweenMoves={sw_mvar2}
+ai5BridgeDrawRate={sw_mvar2}
+ai5Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+
+ai6Name = Salac the Wind Warrior
+ai6Tech = "{sw_var3}windBattery"
+ai6StartMoney = {sw_mvar1}
+ai6AllyList = "2;3;4;5;7;8"
+ai6Color = yellow
+ai6TimeBetweenMoves={sw_mvar2}
+ai6BridgeDrawRate={sw_mvar2}
+ai6Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+
+ai7Name = Salid the Wind Warrior
+ai7Tech = "{sw_var3}{sw_var4}windBattery"
+ai7StartMoney = {sw_mvar1}
+ai7AllyList = "2;3;4;5;6;8"
+ai7Color = cyan
+ai7TimeBetweenMoves={sw_mvar2}
+ai7BridgeDrawRate={sw_mvar2}
+ai7Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+
+ai8Name = Sarid the Wind Warrior
+ai8Tech = "{sw_var3}windBattery"
+ai8StartMoney = {sw_mvar1}
+ai8AllyList = "2;3;4;5;6;7"
+ai8Color = orange
+ai8TimeBetweenMoves={sw_mvar2}
+ai8BridgeDrawRate={sw_mvar2}
+ai8Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+
+[init]
+<$Config,sw_m5=1>
+<$Config,sw_m1=0>
+<$Config,sw_m2=0>
+<$Config,sw_m3=0>
+<$Config,sw_m4=0>
+<$Config,sw_m6=0>
+<$Config,sw_m7=0>
+<$Config,sw_m8=0>
+<$Config,sw_m9=0>
+<$Config,sw_m10=0>
+<$Config,sw_m11=0>
+<$Config,sw_m12=0>
+<$Config,sw_m13=0>
+<$Config,sw_m14=0>
+<$Config,sw_m15=0>
+<$Config,sw_m16=0>
+<$Config,sw_m17=0>
+<$Config,sw_m18=0>
+<$Config,sw_m19=0>
+<$Config,sw_m20=0>
+<$Config,sw_m21=0>
+<$Config,sw_m22=0>
+<$Config,sw_m23=0>
+<$Config,sw_m24=0>
+<$Config,sw_m25=0>
+<$Config,sw_m30=0>
+
+<$Config,sw_soundFlag=0>
+
+
+[options]
+[A.]
+            <h2>Slave to the King (Attack on Wind Village)<a href="#mission5">~[IfortGump.46]</a></h2>
+<p>
+                                 ~[IrainBattery.*]~[Ianim.74]            ~[IwindArcher.75]<br>
+                                               ~[Ibolt.17] <br>
+                  ~[Ipriest.107]~[IsunCannon.3]          ~[Ianim.81]~[IwindBlocker.3]~[IwindArcher.82]    ~1~y<?!{sw_difficulty1}>HARD</?><?{sw_difficulty1}>EASY</?>~.<br><br>
+    <i>This is your second mission in conquering the Nimbian Planes.</i>
+<p>
+                You must capture and kill the King of Wind Village.<br>
+                           You must travel to the Realm of Wind.<br>
+                             And sac them all - Take no prisoners!<br>
+<br>
+            <a href="cmd:ShowTechnology,55"> ~[IfortGump.50] </a>                                 <a href="cmd:DoNothing,0">~[IfortGump.22] </a>                                    <a href="cmd:Tell,guideHades.overview">~[Ipriest.13]</a><br>
+<a href="cmd:ShowTechnology,55">Review Knowledge</a>             <a href="cmd:DoNothing,0">To Wind Village</a>               <a href="cmd:Tell,guideHades.overview">I wanna Leave!</a>
+$OnExit= ,PlaySound,golemMove2.wav
+<$Tell,sound1>
+$Button= ,Tell,A.
+
+[sound1]
+<$Playsound,sunCannonFire.wav>
+$Timeout=0,Tell,sound2
+
+[sound2]
+<$Playsound,fireCrossBow.wav>
+$Timeout=0,Tell,sound3
+[sound3]
+$Timeout=0,Tell,sound4
+
+[sound4]
+$Timeout=0,Tell,sound5
+
+[sound5]
+$Timeout=0,Tell,sound6
+[sound6]
+<$Playsound,fireCrossBow.wav>
+$Timeout=0,Tell,sound7
+
+[sound7]
+$Timeout=0,Tell,sound8
+
+[sound8]
+$Timeout=0,Tell,sound9
+[sound9]
+<$Playsound,fireCrossBow.wav>
+$Timeout=0,Tell,sound10
+
+[sound10]
+
+
+
+
+
+
+
+
+
+[ai8PriestDead]
+{sw_god5} speaks to you:<br>
+<i>"That's it! Destroy all that opposes my Rule. No on can escape </i>~kDEATH<i>!</i>
+$Menu=~[IwindArcher.75]~yCrossBow,GetTechnology,140
+
+[ai6PriestDead]
+You think to yourself, poor foolish Priests that stand in the way of my Master taking over Nimbus!
+<p>
+With each priest you sacrifice, you become more powerful, and more deserving of your Master's
+praise!
+$Menu=~yAirShip~[IwindBalloon.*],GetTechnology,141
+
+[ai4PriestDead]
+The {sw_god2}'s Priests are no match for you!
+$Menu=~[IwindAviary]~yDevil Maker,GetTechnology,139
+
+[ai7PriestDead]
+<$ChangeMoney,1500>
+The {sw_god5} says:<br>
+<i>"Here is more storm power for you"</i>
+$Button=OK,DoNothing,0
+
+
+[ai5PriestDead]
+The {sw_god5} says:<br>
+<i>"Here is food for your destruction: Storm power Crystals"</i>
+<$ChangeMoney,5000>
+$Button=OK,DoNothing,0
+
+
+
+[ai3PriestDead]
+Here's some storm power crystals to help you in your destruction
+<ChangeMoney,1000>
+$Button=OK,DoNothing,0
+
+
+[ai2PriestDead]
+<h2>You receive a message.<br>
+     ~[Ipriest.167] <p>
+   ~r"Good job Apprentice!<br>
+You really massacred that puny ~[ImanaBolt.0]~oWind~[ImanaBolt.0] ~rKing".<br>
+                --Your ~[IsunFlyerBomb.2]King~[IsunFlyerBomb.4]</h2>
+$Button=Thanks!,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<$Config,sw_m5=0>
+<$Config,sw_m7=1>
+<$Config,sw_mvar0=10000>
+<$Config,sw_mvar3=1>
+<$Config,sw_difficulty1=0>
+
+<h2>You receive a message.</h2><br>
+     ~[Ipriest.167] <p>
+<i>"Good job Apprentice! You are beginning to show me that I was right to allow
+you to serve under me. Keep it up and I may appoint you my ~kDark Priest<i>, forever to
+serve and pray unto ME!"<br>
+                                --Your ~[IsunFlyerBomb.2]King~[IsunFlyerBomb.4]</i>
+$Button=Thank you Master!,MissionBegin,sw_m7
+
+
+[Failed]
+You better retry this mission quickly before the {sw_god5} finds out.
+<$Config,sw_difficulty1=1>
+<$Config,sw_mvar0=10000>
+<$Config,sw_mvar1=2000>
+<$Config,sw_mvar2=9>
+$Button=Try again,MissionBegin,sw_m5
+$Button=Leave,Tell,guideHades.overview
+[END]

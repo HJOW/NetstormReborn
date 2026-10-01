@@ -1,0 +1,121 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 3
+moreGeysers = 3
+
+myStartMoney = 10000
+myTech ="rainBattery;thunderBattery;windBattery;windArcher;windWalker;windBlocker;rainAviary;rainCannon;rainWalker"
+myAllyList = "4"
+
+title="Captured"
+ai2Name = "Thunder Pain"
+ai2Tech ="thunderBattery;thunderCannon;thunderBlocker;thunderArcher;bulf;thunderFence"
+ai2StartMoney = 750000
+ai2GeyserAttachments = 10
+ai2Collectors = 5
+ai2TimeBetweenMoves = 0
+ai2Bridgedrawrate = 0
+ai2color = red
+ai2ability =!USE_PRIEST_TO_COLLECT
+ai2AllyList = "3;5"
+
+
+ai3Name = "Water Fall"
+ai3Tech ="rainwalker;raincannon;rainBattery;rainfence;rainballoon;rainblocker;rainAviary"
+ai3StartMoney = 750000
+ai3GeyserAttachments = 10
+ai3Collectors = 5
+ai3TimeBetweenMoves = 0
+ai3Bridgedrawrate = 0
+ai3color = white
+ai3ability =!USE_PRIEST_TO_COLLECT
+ai3AllyList = "2;5"
+
+ai4Name = "Sun Bandit"
+ai4Tech ="windBattery;sunCannon;sunBalloon;sunArcher;sunAviary;sunBlocker;sunFence"
+ai4StartMoney = 500000
+ai4GeyserAttachments = 10
+ai4Collecters = 5
+ai4TimeBetweenMoves = 0
+ai4BridgeDrawRate = 0
+ai4color = green
+ai4ability =!USE_PRIEST_TO_COLLECT
+ai4AllyList = "1"
+
+ai5Name = "Whoosh"
+ai5Tech ="windBattery;windArcher;windBalloon;windBlocker;windWalker;windAviary"
+ai5StartMoney = 750000
+ai5GeyserAttachments = 10
+ai5Collecters = 5
+ai5TimeBetweenMoves = 0
+ai5BridgeDrawRate = 0
+ai5color = purple
+ai5ability =!USE_PRIEST_TO_COLLECT
+ai5AllyList = "2;3"
+
+
+[Options]
+
+[A.]
+<P>"Never get caught."
+<P>Apollyon
+<p>You were ambushed when you were asleep. You had no workshop made and you desperatly try to make one but are caught.
+When you land on the island, you are able to break your chains and run. You manage to make a rain workshop and a few ice towers, which you had from a left over battle..
+They won't hold for long. You Suddenly get a message from Sun Bandit
+<p>~lSun Bandit:~iI have decided to help you, but if i fail, im going to take you for a trip.
+<p>~wYou:~yWhere?
+<p>~lSun Bandit:~iYou'll find out if we lose.
+$Button=Veiw your stuff,ShowTechnology,55
+$Button=Fight,DoNothing,0
+
+
+
+
+
+[ai2PriestDead]
+NOOOOO!!! I had you, but you had SPELLS!
+<p>You find some tech.
+$Button=Bulwark,GetTechnology,79
+
+[ai3PriestDead]
+NOOOOO!!! I had you, but you had SPELLS!
+<p>You find some tech.
+$Button=Ice Tower,GetTechnology,147
+
+[ai4PriestDead]
+Well, you have failed, and so have I, I have a small gift for you IN HELL!
+~iThe two of you decend into Hell, to which only one will return to the Realm of Life
+$Button=To Hell,MissionBegin,KQ99
+
+[ai5PriestDead]
+NOOOOO!!! I had you, but you had SPELLS!
+<p>You find some tech.
+$Button=Airship,GetTechnology,141
+
+
+
+
+
+
+
+
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>You have saved yourself, and slayed the others.
+<$Config,Done{mission.fileName}=1>
+$Button=Onto the next one,MissionBegin,KQ4
+$Button=Chicken!,MissionAbort,0
+
+
+[Failed]
+<h2>Failure!</h2>
+<p>You are sacrificed, and you are transported to hell.
+$Button=Go To Hell,MissionBegin,KQ97
+
+
+[END]
+
+
+

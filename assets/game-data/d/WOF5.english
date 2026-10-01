@@ -1,0 +1,58 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 5
+moreGeysers = 1
+
+myStartMoney = 2000
+myTech = "thunderBattery;sunBalloon;thunderCannon;thunderarcher"
+
+title = "The Devil's Fury"
+
+ai2Name = "The Devil"
+ai2Tech = "windBattery;windAviary;windBalloon"
+ai2StartMoney = 2000
+ai2GeyserAttachments = 2
+ai2Collectors = 4
+ai2TimeBetweenMoves = 5
+ai2AllyList =
+ai2Color = red
+
+ai3Name = Neutral Village
+ai3Tech = "rainBattery"
+ai3StartMoney = 0
+ai3GeyserAttachments = 2
+ai3Colletors = 3
+ai3TimeBetweenMoves = 0
+ai3AllyList = "1"
+ai3Color = white
+
+[Options]
+
+[A.]
+<h2>The Devil's Fury</h2>
+<i>"When dealing with devil's use the airproof power of bulwarks"
+--Gen.Hackett,Hackett's War Guide</i>
+<p>Your men continue to become more popular and you a celebrity.The God of Wind has sent "The Devil" to destroy a small neutral village.Defend the village.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Hero!</h2>
+<p>
+shouts a small child you and your men are getting closer and closer.Next stop the Fortress of Vergas.
+THE END
+<$Config,Done{mission.fileName}=5>
+$Button=Leave Missions,MissionAbort,1
+$Button=Next Mission,MissionBegin,WOF6
+
+[Failed]
+<h2>HAH!!!</h2>
+<p>
+You failed to save the village and The Devil is making quick work of you.
+
+
+[END]
+
+

@@ -12,7 +12,7 @@ dotnet run --project src/Netstorm.Game -- --sprites island
 ```
 
 `--sprites` 뒤에는 `TypeLoadOrder`에 있는 타입 이름을 넣는다. 이름의 대소문자는 구분하지 않는다.
-원본 자산 경로는 기존 `GameDataLocator`가 찾으며, 필요하면 `NETSTORM_DATA`로 지정한다.
+자산은 출력의 `game-data/`에 포함되며, 별도 데이터는 `NETSTORM_DATA`로 지정한다. 소스는 `assets/game-data/`에서 관리한다.
 처음에는 실행 설정의 `battlePal` 팔레트를 적용한다. `--map`과 `--sprites`는 함께 사용할 수 없다.
 
 | 추가 옵션 | 동작 |

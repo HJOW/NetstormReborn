@@ -1,0 +1,96 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = "1"
+moreGeysers = "0"
+randGeysers = "0"
+
+myStartMoney = "5000"
+myTech = "rainBattery;sunBalloon;sunArcher;sunAviary;"
+myAllyList = ""
+
+title = "Coward Neighbors"
+
+ai2Name = "War minister of Evil King"
+ai2Tech = "thunderCannon;thunderBattery;"
+ai2StartMoney = "5000"
+ai2AllyList = "3;4;"
+ai2Color = "red"
+ai2Collectors = "2"
+ai2BridgeDrawRate = "1"
+ai2GeyserAttachments = "1"
+ai2TimeBetweenMoves = "0"
+ai2Ability = "!USE_PRIEST_TO_COLLECT;"
+
+ai3Name = "Colonel Fleese Toward"
+ai3Tech = "thunderCannon;thunderBattery;"
+ai32StartMoney = "5000"
+ai3AllyList = "2;4;"
+ai3Color = "white"
+ai3Collectors = "2"
+ai3BridgeDrawRate = "1"
+ai3GeyserAttachments = "1"
+ai3TimeBetweenMoves = "0"
+ai3Ability = "!USE_PRIEST_TO_COLLECT;"
+
+ai4Name = "General Tun Majod"
+ai4Tech = "thunderCannon;thunderBattery;"
+ai42StartMoney = "5000"
+ai4AllyList = "2;3;"
+ai4Color = "green"
+ai4Collectors = "2"
+ai4BridgeDrawRate = "1"
+ai4GeyserAttachments = "1"
+ai4TimeBetweenMoves = "0"
+ai4Ability = "!USE_PRIEST_TO_COLLECT;"
+
+[Options]
+
+[A.]
+<h2>~lFirst War of Nimbus</h2>
+<i>~E"What is war? Long time ago we learned that"<br>
+--Sunder</i>
+<p>~EIn the times when Islands only begin 
+floating in the skies on one of those
+islands lived the priest named Sunder
+He was very rich. But after a long
+time he became the poor and his 
+neighbors became worse...
+$Button=Proceed,Tell,SH3_1
+
+[SH3_1]
+<h2>~lCoward neighbors</h2>
+<i>"Never sleep if you dont trust to your 
+neighbors!"<br>
+--Sunder, 1234 F.K.</i>
+<p>In one time Sunder decided to replace his temple 
+and sold it. After this long work he went to sleep. 
+During his sleep, his evil thunder neighbors allied and 
+begin to kill him. Sunder suddenly wake up. Now he 
+must survive! He is poor and don't have too many tech.
+Welcome to the first war of Nimbus!
+
+$Button=Its too hard for me!,Tell,Campaign
+$Button=Check your Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded] [BadTeamDead]
+<h2>~lCongratulations!</h2>
+<i>"I was happy, when I win first time"<br>
+--Sunder</i>
+<p>You win! Now you know - your coward neighbors were masked helpers of Evil King! Now you have much more resources and you declared vendetta on the Evil King!
+<$Config,Done{mission.fileName}=1>
+<$Config,Donesh3_1a=1>
+$Button=Its too hard for me!,Tell,Campaign
+$Button=Proceed,MissionBegin,sh3_2
+
+
+[Failed]
+<h2>~lYou lose...</h2>
+<p>Don't worry if you lose, this is Shit Hard!
+
+$Button=Its too hard for me!,Tell,Campaign
+$Button=Try again!,Tell,TryAgain
+
+
+[END]

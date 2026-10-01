@@ -1,0 +1,305 @@
+Swelb, to bad we couldn't have some units half dead from the previous invasion on Nimbus (WHAT AM I TALKING ABOUT?) It's in the text below.
+
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 22
+moreGeysers = 1
+randomGeysers = 1
+denySalvage = 1
+myAllyList = ""
+myStartMoney = 10000 
+myTech ="all;outpost"
+
+title = "Attack on Nimbus"
+
+ai7Name = "Nimbian Guard 1"
+ai7Tech = "sunWalker;{sw_var1}{sw_var2}{sw_var3}{sw_var5}"
+ai7StartMoney =1000 
+ai7GeyserAttachments = 4
+ai7Collectors = 3
+ai7TimeBetweenMoves = 1
+ai7AllyList = "8;4;5;6"
+ai7Color = orange
+ai7BridgeDrawRate = 1
+ai7Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai8Name = "Nimbian Guard 2"
+ai8Tech = "sunWalker;{sw_var1}{sw_var2}{sw_var3}{sw_var4}"
+ai8StartMoney =1000 
+ai8GeyserAttachments = 4
+ai8Collectors = 3
+ai8TimeBetweenMoves = 1
+ai8AllyList = "7;4;5;6"
+ai8Color = cyan
+ai8BridgeDrawRate = 1
+ai8Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai4Name = "King of Nimbus"
+ai4Tech = "sunWalker;{sw_var1}{sw_var2}{sw_var3}{sw_var4}{sw_var5}{sw_var7}{sw_var8}"
+ai4StartMoney = 5000
+ai4GeyserAttachments = 4
+ai4Collectors = 5
+ai4TimeBetweenMoves = 1
+ai4AllyList = "7;8;5;6"
+ai4Color = yellow
+ai4BridgeDrawRate = 1
+ai4Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai5Name = "Special Protector to the King"
+ai5Tech = "sunWalker;{sw_var1}{sw_var2}{sw_var7}{sw_var8}"
+ai5StartMoney = 3000
+ai5GeyserAttachments = 4
+ai5Collectors = 5
+ai5TimeBetweenMoves = 1
+ai5AllyList = "7;8;4;6"
+ai5Color = purple
+ai5BridgeDrawRate = 1
+ai5Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai6Name = "Advisor to the King"
+ai6Tech = "sunWalker;{sw_var1}{sw_var2}{sw_var3}{sw_var5}{sw_var6}"
+ai6StartMoney = 4000
+ai6GeyserAttachments = 4
+ai6Collectors = 5
+ai6TimeBetweenMoves = 1
+ai6AllyList = "7;8;4;5"
+ai6Color = green
+ai6BridgeDrawRate = 1
+ai6Ability = "!USE_PRIEST_TO_COLLECT"
+
+
+[init]
+<$Config,sw_m22=1>
+<$Config,sw_m1=0>
+<$Config,sw_m2=0>
+<$Config,sw_m3=0>
+<$Config,sw_m4=0>
+<$Config,sw_m5=0>
+<$Config,sw_m6=0>
+<$Config,sw_m7=0>
+<$Config,sw_m8=0>
+<$Config,sw_m9=0>
+<$Config,sw_m10=0>
+<$Config,sw_m11=0>
+<$Config,sw_m12=0>
+<$Config,sw_m13=0>
+<$Config,sw_m14=0>
+<$Config,sw_m15=0>
+<$Config,sw_m16=0>
+<$Config,sw_m17=0>
+<$Config,sw_m18=0>
+<$Config,sw_m19=0>
+<$Config,sw_m20=0>
+<$Config,sw_m21=0>
+<$Config,sw_m23=0>
+<$Config,sw_m24=0>
+<$Config,sw_m25=0>
+<$Config,sw_m30=0>
+
+<$Config,sw_enDead4=0>
+<$Config,sw_enDead5=0>
+<$Config,sw_enDead6=0>
+<$Config,sw_enDead7=0>
+<$Config,sw_enDead8=0>
+
+[options]         
+[A.]
+                                        <h2>Attack on Nimbus~.<a href="#mission22">~[IfortGump.46]</a></h2>
+                                    ~[IedgeFarm.43]
+<br>                                                                                  ~1~y<?!{sw_difficulty1}>HARD</?><?{sw_difficulty1}>EASIER</?>~.<br>
+After you and the {sw_god5} beat the Furies in the 10 year tournament you asked the {sw_god5} if you could return to your homeland of Nimbus.<br>
+The Nimbians were invaded before the tournament started and you want to go provide them with help.<br>
+{swgod5}: <i>"I will allow you to go home!"</i><br>
+you: ~I"Really? Oh, thank you Lord {sw_god5}!"~.<br>
+{sw_god5}: <i>"However, you won't be providing help. Instead, you need to attack
+ them while they are still rebuilding. Your sole purpose for this attack is to kill
+ 2 priests. Sure, you can kill all of them, but I only need the King and his Special
+ Protector dead."<br>
+"So, go! Go now before I boil your blood on my altar."</i> 
+$Button=More,Tell,A1
+
+[A1]
+                                                      <h2>Attack on Nimbus~.<a href="#mission22">~[IfortGump.46]</a></h2>
+                                                  ~[IedgeFarm.43]
+<p>
+While you are floating above Nimbus you spot an easy position to attack. You notice that
+ the 2 guards barely have their temple built. During the night you silently float down
+ into Nimbus. You have just enough time to allow your Golems to bridge to one of the guards
+ island and plant some weapons near him.
+<p>
+                           ~kJust before dawn - You start your Attack on Nimbus.~.
+<p>
+            <a href="cmd:ShowTechnology,55"> ~[IfortGump.50] </a>                                                  <a href="cmd:DoNothing,0">~[IfortGump.22] </a>                                            <a href="cmd:Tell,guideHades.overview">~[Ipriest.13]</a><br>
+<a href="cmd:ShowTechnology,55">Review Knowledge</a>                            <a href="cmd:DoNothing,0">Enter Hades Realm</a>                    <a href="cmd:Tell,guideHades.overview">I'm too Scared!</a>
+$OnExit= ,PlaySound,golemMove1.wav
+$Button= ,Tell,A.
+
+<$PlaySound,somethingCreated.wav>
+
+
+[@1]
+<?!{sw_difficulty1}>
+<$ViewSpot,(20x120)>
+<$StartSmoke,6286>
+<$StartSmoke,6292>
+<$StartSmoke,6393>
+<$StartSmoke,6395>
+<$StartSmoke,6397>
+<$MoveDialog,tl>
+Ahh, you forces are already attacking. However, your first wave
+ is damaged from the previous fight...
+$Button=Ok,DoNothing,0
+</?>
+
+[@3]
+<?!{sw_difficulty1}>
+<$StartSmoke,6286>
+<$StartSmoke,6292>
+<$StartSmoke,6393>
+<$StartSmoke,6395>
+<$StartSmoke,6397>
+</?>
+
+[@4]
+<?!{sw_difficulty1}>
+<$InflictDamage,6286>
+<$InflictDamage,6292>
+<$InflictDamage,6393>
+<$InflictDamage,6395>
+<$InflictDamage,6397>
+</?>
+
+[@63]
+<?!{sw_difficulty1}>
+<$ViewSpot,(20x120)>
+<$MoveDialog,tl>
+Hmm... Its seems that your first strike has been demolished. But they did damage
+the enemy! You just have to finish up what they started!
+$Button=Continue fighting!,DoNothing,0
+</?>
+
+[ai8PriestDead]
+<$Config,sw_enDead8=1>
+<$Tell,checkwin>
+
+[ai7PriestCaptured]
+<$PlaySound,priestPickUp.wav>
+You recieve a message from the King of Nimbus.
+<p>
+~y~B"Please let my guard go! For he is my best one in all of Nimbus."~.
+<p>
+You receive a message from the {sw_god5}
+<p>
+This is your chance to end this quickly. Sacrifice him now!
+$Button=It will be done Master!,DoNothing,0
+
+
+[ai7PriestDead]
+<$Config,sw_enDead7=1>
+You receive a message from the Advisor to the King.<br>
+<i>"Fool! Do you know who that guard was? He was your cousin,
+ the youngest son of your dad's brother."</i>
+$OnExit= ,Tell,checkwin
+$Button=How could you do that?,DoNothing,0
+
+[ai5PriestDead]
+<$Config,sw_enDead5=1>
+You receive a message from the {sw_god5}.
+<p>
+<i>"You have destroyed a potentialy very deadly enemy.
+ For he was indeed a very special protector to the King of Nimbus.
+ He was the King's only son.</i>
+<$PlaySound,bell.wav>
+<$AddRandom,154>
+<$AddRandom,154>
+<$AddRandom,154>
+<$AddRandom,154>
+<$AddRandom,154>
+$OnExit= ,Tell,checkwin
+$Button=Ok,DoNothing,0
+
+[ai6PriestDead]
+<$Config,sw_enDead6=1>
+You receive a message from the {sw_god5}
+<p>
+You have killed that stupid advisor. He would have made a better jester.<br>
+Because you have entertained me with his sacrifice, I will reward you with some
+ storm Crystals...
+<$PlaySound,bell.wav>
+<$AddRandom,154>
+<$AddRandom,154>
+<$AddRandom,154>
+<$AddRandom,154>
+<$AddRandom,154>
+$OnExit= ,Tell,checkwin
+$Button=Thank you MASTER!,DoNothing,0
+
+
+[ai4PriestCaptured]
+<h2>You receive a message from the King of Nimbus</h2>
+Priest, if you let me go I'll let you live in peace by my side here in Nimbus.<br>
+Will you accept my offer?
+$Button=WHAT? AND DISOBEY HADES?,DoNothing,Continue
+$Button=SURE,Tell,Youareintroublenow
+
+[Youareintroublenow]
+<h2>You receive a message from {sw_god5}</h2>
+<p>PRIEST! What are you trying to do?<br>
+You will be punished for this when you arrive back in Hell!
+$Button=UH OH!,DoNothing,Continue
+
+[ai4PriestDead]
+<$Config,sw_enDead4=1>
+<h2>You receive a message from the {sw_god5}.</h2>
+<p>Now, that the King is dead - those pesky Nimbians won't bother me anymore.<br>
+Long live the King! Hahaha!
+$OnExit= ,Tell,checkwin
+$Button=OK,DoNothing,Continue
+
+[ai1TempleHalfDead]
+<p>
+You need to do something because your temple will soon be rubble.
+<$PlaySound,islandUnderAttack.wav>
+$Button=I know!,DoNothing,Continue
+
+[ai1TempleDead]
+You recieve a message from your adversary:
+<i>"What are you going to do now priest? Your time left on Nimbus is coming
+ to an end!"</i>
+<$PlaySound,impact.wav>
+$Button=OH OH,DoNothing,0
+
+[ai1PriestCaptured]
+<h2>You receive a message from the {sw_god5}.</h2><br>
+<i>"Don't worry priest, I will rescue you."</i>
+<p>Haha! You must be an idiot to think I will give you another chance!
+Your blood will help me become stronger with the powers of death.
+<$PlaySound,treasonCast.wav>
+$Button=OH OH,DoNothing,0
+                                                                                                     [Succeeded][BadTeamDead]
+[checkwin]
+<?{sw_enDead4}><?{sw_enDead5}><?{sw_enDead6}>
+<?{sw_enDead7}><?{sw_enDead8}>
+<$PlaySound,collapse.wav>
+<h2>Now, that Nimbus is ruined - you don't have to think about returning - EVER!</h2>
+<$Config,sw_m22=0>
+<$Config,sw_m23=1>
+$Button=Next Mission,MissionBegin,sw_m23
+</?></?></?></?></?>
+
+[Failed]
+The {sw_god5} is very disappointed in you.
+<i>"I don't understand it!" <br>
+"I've given you the best Tech!"<br>
+"I've tried to teach you to be cruel and inhumane!"<br>
+"I've allowed you to pillage and plunder at will!"<br>
+<br>
+"And you pay me back by FAILING such an easy task?"<br>
+"Where did I go wrong?"<br>
+"Is this how you thank me?"<br>
+<$Config,sw_difficulty1=1>
+$Button=I'm sorry MAWSTAH!,MissionBegin,sw_m22
+
+[END]
+

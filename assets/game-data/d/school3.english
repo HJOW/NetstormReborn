@@ -1,0 +1,75 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 3
+moreGeysers = 1
+
+myStartMoney = 6500
+myTech = "windWalker;windBattery;windBlocker;windArcher;windBalloon;windAviary"
+
+title="Day 3"
+
+ai2Name = "Michael"
+ai2Tech = "windWalker;windBattery;windBlocker;windArcher;windBalloon;windAviary"
+ai2StartMoney = 6500
+ai2GeyserAttachments = 5
+ai2Collectors = 5
+ai2TimeBetweenMoves = 1
+ai2AllyList = "1"
+ai2color = red
+
+ai3Name = "Mellisa"
+ai3Tech = "windWalker;windBattery;windBlocker;windArcher;windBalloon;windAviary"
+ai3StartMoney = 6500
+ai3GeyserAttachments = 4
+ai3Collectors = 4
+ai3TimeBetweenMoves = 3
+ai3AllyList = "4"
+ai3color = white
+
+ai4Name = "Louis"
+ai4Tech = "windWalker;windBattery;windBlocker;windArcher;windBalloon;windAviary"
+ai4StartMoney = 6500
+ai4GeyserAttachments = 4
+ai4Collectors = 4
+ai4TimeBetweenMoves = 3
+ai4AllyList = "3"
+ai4color = green
+
+
+[Options]
+[A.]
+<h2>ALLIANCE!</h2>
+Mellisa, one of the bullys fighting you, asks for an alliance. Do you agree?<br>
+
+$Button=YES,MissionBegin,school3b
+$Button=No,Tell,NoAlliance
+$Timeout= 10,Tell,AllianceWithdrawn
+
+[AllianceWithdrawn] 
+<p>You waited too long. Mellisa thinks that you're mocking her! She withdraws his offer of alliance, and warns you to prepare for battle!
+
+$Button=To Battle,DoNothing,0 
+
+[NoAlliance] 
+<p>You reject her offer of alliance. You want to continue to fight Mellisa!
+
+$Button=To Battle,DoNothing,0 
+
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+You have successfully beaten Mellisa and Louis!!!
+
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+Mellisa and Louis have beaten you and Michael to the ground, there is no helping you now. 
+
+$Button=Continue,Tell,TryAgain
+
+[END]

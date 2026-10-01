@@ -1,0 +1,138 @@
+[Header]
+missionType = "Tutorial"
+missionNumber = 1
+moreGeysers = 1
+
+mystartmoney = 6500
+myTech = "windBattery;windarcher;windaviary;windballoon;windblocker;windWalker;thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence"
+
+title = "The Furies Challenge"
+
+ai2Name = "High Priest of Rain"
+ai2Tech = "rainbattery;rainaviary;rainwalker;rainballoon;rainblocker;raincannon;rainFence"
+ai2StartMoney = 40000
+ai2GeysersAttachments = 2
+ai2Collectors = 15
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3;4"
+ai2color = red
+
+ai3Name = "High Priest of Thunder"
+ai3Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence"
+ai3StartMoney = 40000
+ai3GeysersAttachments = 2
+ai3Collectors = 18
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2;4"
+ai3color = white
+
+ai4Name = "High Priest of Wind"
+ai4Tech = "windBattery;windarcher;windaviary;windballoon;windblocker;windWalker"
+ai4StartMoney = 40000
+ai4GeysersAttachments = 2
+ai4Collectors = 10
+ai4TimeBetweenMoves = 1
+ai4AllyList = "2;3"
+ai4color = green
+
+ai5Name = "Rebelious Priest"
+ai5Tech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;windBattery;windarcher;windaviary;windballoon;windblocker;windWalker"
+ai5StartMoney = 10000
+ai5GeysersAttachments = 2
+ai5Collectors = 10
+ai5TimeBetweenMoves = 1
+ai5AllyList = "1"
+ai5color = purple
+
+ai6Name = ""
+ai6Tech = ""
+ai6StartMoney = 
+ai6GeysersAttachments = 
+ai6Collectors = 
+ai6TimeBetweenMoves = 
+ai6AllyList = 
+ai6color = 
+
+ai7Name = ""
+ai7Tech = ""
+ai7StartMoney = 
+ai7GeysersAttachments = 
+ai7Collectors = 
+ai7TimeBetweenMoves = 
+ai7AllyList = 
+ai7color = 
+
+ai8Name = ""
+ai8Tech = ""
+ai8StartMoney = 
+ai8GeysersAttachments = 
+ai8Collectors = 
+ai8TimeBetweenMoves = 
+ai8AllyList = 
+ai8color = 
+
+[Options]
+
+[A.]
+<h2>Furies</h2>
+<i>"Battle is a Test of ones wits and strength...lack in either and you are finished."<br>
+--High Priest Helmaster, </i>  
+
+<p>The Furies are angry...they have sent there 3 high priests to put and end to the rebellious priest...and you must stop them...and send them back to the furies."
+
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[BadTeamDead]
+<h2>Congratulations! We have scored a great victory!</h2>
+<p>
+You have defeated the High Priest's of the Furies...but you fear that they are not yet done with you.....
+
+
+<$Config,Done{mission.filename}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,CursedScen2
+
+[ai2PriestDead]
+<h2>You Recive a Message!</h2>
+<p>
+Good WorK...The High Priest of Rain has been defeated...Let us Battle on!!
+
+[ai3PriestDead]
+<h2>You Recive a Message!</h2>
+<p>
+The High Priest of Thunder Has been sent back to the Furies...Let us finish off the others!!
+
+[ai4PriestDead]
+<h2>You Recive a Message!</h2>
+<p>
+Good Work!! We are doing well in this battle...Let us crush our opposition!!!
+
+[ai5TempleHalfDead]
+<h2>The Rebellious Priest needs your Help!!!!</h2>
+<p>
+My island is being Destroyed!!! I need your Help to crush these High Priests!!!
+
+[ai5PriestCaptured]
+<h2>The Rebellious Priest has been taken!!!</h2>
+<p>
+You Better go and Help The Rebellious Priest before his blood is spilt on thier altar!!
+
+$Button=Continue,DoNothing
+
+[ai5PriestDead]
+<h2>Failure!</h2>
+<p>
+Oh No!!! You let the Furies High Priests take the Rebelious Priest from you...his blood has stained thier altar...and your mission has failed!!
+
+$Button=Continue,Tell,TryAgain
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+You are dead! The Aliens have won and evil has prevailed!
+
+$Button=Continue,Tell,TryAgain
+
+[END]

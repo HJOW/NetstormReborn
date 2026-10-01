@@ -1,0 +1,79 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = "1"
+moreGeysers = "1"
+randGeysers = "1"
+myStartMoney = 60000
+myTech = "sunWalker;sunArcher;windarcher;sunBlocker;sunBalloon;sunFence;sunCannon;thunderbattery;rainFence;rainbattery;windBattery;thunderarcher;thundercannon;rainballoon;rainblocker;raincannon;windaviary;windballoon;windblocker;windWalker"
+
+title="The Four Corners"
+
+ai2Name = "Spellbinder"
+ai2Tech = "sunWalker;sunArcher;windarcher;sunBlocker;sunBalloon;sunFence;sunCannon"
+ai2StartMoney = 2000
+ai2GeyserAttachments = 2
+ai2Collectors = 3
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3;4;5"
+ai2color = red
+
+ai3Name = "Windy the Warrior"
+ai3Tech = "windBattery;thunderbattery;rainbattery;windarcher;windaviary;windballoon;windblocker;windWalker"
+ai3StartMoney = 2000
+ai3GeyserAttachments = 2
+ai3Collectors = 3
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2;4;5"
+ai3color = magenta
+
+ai4Name = "Zeus"
+ai4Tech = "thunderbattery;rainbattery;windBattery;thunderarcher;thunderblocker;thundercannon;thunderfence"
+ai4StartMoney = 5000
+ai4GeyserAttachments = 2
+ai4Collectors = 3
+ai4TimeBetweenMoves = 1
+ai4AllyList = "2;3;5"
+ai4color = white
+
+ai5Name = "Tear"
+ai5Tech = "windBattery;thunderbattery;rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence"
+ai5StartMoney = 5000
+ai5GeyserAttachments = 2
+ai5Collectors = 3
+ai5TimeBetweenMoves = 1
+ai5AllyList = "2;3;4"
+ai5color = blue
+
+[Options]
+
+[A.]
+<h2><i>~[IwindBalloon.*]</i><i>~[IrainCannon.3]</i> Cornered <i>~[Ithunderfence.E3]</i><i>~[IsunCannon.2]</i>
+<br><i>"Ummmm, Sir?.....aahhh, hmmmm, woops                                   <br>
+                                                                          --Captain Dreedle<br><br>
+<i>"Woops!  Woops!  Where the hell are we?  Who are they?"<br>                     
+                                                                                        --General Myra Manes</i><br>
+<p>
+It looks like you've been cornered.  Why did you give the map to Dreedle?  Oh well, this will provide an excuse to supersize dinner.<br><br>
+<p>
+The Furies have sent out their finest armies to stop you.  Why do they want to pick on you?  Why kill the water boy's? Who the hell is wrighting this insane script anyway?  You just wanted a hamburger.<br>
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Leave Mission,MissionAbort,0
+$Button=Play Mission,DoNothing,0
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+your dead! Now there's a big surprise! try again
+$Button=Continue,Tell,TryAgain
+
+[Succeeded][BadTeamDead]
+<h2>All right!  Now it's off to the resturant to get the food! </h2>
+<p>
+mmmmmmmmm. Hamburger 
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,gainpower
+
+[END]

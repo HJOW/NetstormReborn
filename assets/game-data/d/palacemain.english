@@ -1,0 +1,93 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 0
+
+myStartMoney = 6500
+myTech = "windbattery;suncannon;sunarcher"
+myAllyList = ""
+
+title="Decisions"
+
+
+[Options]
+
+[A.]
+<$Config,atpath0=1>
+<$Config,ataltar2=0>
+<$Config,ataltar3=0>
+<$Config,Donewind=0>
+<$Config,Donewindg=0>
+<$Config,Donerain=0>
+<$Config,Doneraing=0>
+<$Config,Donethunder=0>
+<$Config,Donethunderg=0>
+<$Config,Donestorm1=0>
+<$Config,Donestorm2=0>
+<$Config,Donestorm3=0>
+<$Config,Donestorm4=0>
+
+
+<h2>Paths</h2>
+<i>"Along the winding road of life, anything can happen."<br>
+-- Unknown</i>  
+<p>Here you stand upon your island, contemplating what you should do.  Your ambitions lead you on a path of glory and the overthrow of the Regent who rules the area.
+<p>But are you ready for such a task?  Have you gained suffcient power to overwhelm your foes? 
+<p>You realize that the only way you can more power is by defeating the Lords of the sky...after then you shall have the strengh to claim the skies for yourself!
+
+$Menu=North - ~lRain Lord,Tell,Rain
+$Menu=East  - ~rThunder Lord,Tell,Thunder
+$Menu=South - ~oWind Lord,Tell,Wind
+$Menu=West  - ~iStorm Lord,Tell,Storm
+
+[Rain]
+<p>~I~lYou prepare yourself to battle the Rain Lord.  If you defeat him you shall be able to gain a piece of rain technolgy.
+<$Config,atpath0=0>
+<$Config,atpath1=1>
+<$Config,atpath2=0>
+<$Config,atpath3=0>
+<$Config,atpath4=0>
+
+$Button=Battle,MissionBegin,palaceraing
+$Button=Back,Tell,A.
+
+[Thunder]
+<p>~I~lYou decide to face the Thunder Lord and make an attempt to gain some of his power...
+<$Config,atpath0=0>
+<$Config,atpath1=0>
+<$Config,atpath2=1>
+<$Config,atpath3=0>
+<$Config,atpath4=0>
+
+$Button=Battle,MissionBegin,palacethunderg
+$Button=Back,Tell,A.
+
+[Wind]
+<p>~I~lTo increase you arsenal you decide to attack the Wind Lord.
+<$Config,atpath0=0>
+<$Config,atpath1=0>
+<$Config,atpath2=0>
+<$Config,atpath3=1>
+<$Config,atpath4=0>
+
+$Button=Battle,MissionBegin,palacewindg
+$Button=Back,Tell,A.
+
+[Storm]
+<p>~I~lYou have decided that you are ready to overthrow the Regent of the skies....can you do it?
+<$Config,atpath0=0>
+<$Config,atpath1=0>
+<$Config,atpath2=0>
+<$Config,atpath3=0>
+<$Config,atpath4=1>
+
+$Button=Battle,MissionBegin,palacestorm1
+$Button=Back,Tell,A.
+
+
+
+
+[END]
+
+

@@ -1,0 +1,15 @@
+title = "mike's campaign"
+
+[Overview]
+<background="nsstart">
+<h2>Mike's Campaign</h2>
+<p>Enjoy.
+<p>~[Iplayerisland.*]
+
+$Checked=1 Mike1,MissionBegin,Mike1,1,1
+$Checked=2 Mike2,MissionBegin,Mike2,1,1
+$Checked=3 Mike3,MissionBegin,Mike3,1,1
+$Checked=4 Mike4,MissionBegin,Mike4,1,1
+$Checked=5 Mike5,MissionBegin,Mike5,1,1
+$Checked=6 Credits,MissionBegin,Mikecredits,1,1
+$Button=Back to menu,Tell,Campaign

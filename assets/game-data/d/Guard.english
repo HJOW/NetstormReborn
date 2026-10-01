@@ -1,0 +1,82 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 11
+moreGeysers = 1
+
+myStartMoney = 10000
+myTech = "sunWalker;outpost;sunCannon;sunarcher;sunBlocker;sunFence;sunBalloon;sunAviary;windBattery;windWalker;windArcher;windBalloon;windBlocker;windAviary"
+
+title="Gates of Nimbian Hades"
+
+ai2Name = "Lost Priest of Nimbus"
+ai2Tech = "sunWalker;sunArcher;sunFence;sunAviary;sunBlocker;sunCannon;"
+ai2StartMoney = 25000
+ai2GeyserAttachments = 2
+ai2Collectors = 3
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3"
+ai2color = white
+
+ai3Name = "Guardian of Nimbian Hades"
+ai3Tech = ""
+ai3StartMoney = 0
+ai3GeyserAttachments = 0
+ai3Collectors = 0
+ai3TimeBetweenMoves = 1
+ai3AllyList = ""
+ai3color = red
+
+ai4Name = "Enemy #3"
+ai4Tech = ""
+ai4StartMoney = 3000
+ai4GeyserAttachments = 2
+ai4Collectors = 3
+ai4TimeBetweenMoves = 1
+ai4AllyList = ""
+ai4color = green
+
+[init]
+<$Config,DoneBofend=0>
+<$Config,DoneGuard=0>
+<$Config,DoneLow=0>
+<$Config,DoneLow2=0>
+<$Config,DoneTourney=0>
+<$Config,DoneWizards=0>
+<$Config,DoneWind=0>
+<$Config,DoneRain=0>
+<$Config,DoneThunder=0>
+<$Config,DoneHome=0>
+<$Config,DoneRevenge=0>
+<$Config,DoneKidnapped=0>
+<$Config,DoneBounty=0>
+<$Config,DoneHades=0>
+<$Config,pickally1=0>
+<$Config,Donefailedflag=1>
+
+[Options]
+[A.]
+<h2>Gates of Nimbian Hades</h2>
+<i>Kill the Guardian or enter Nimbian Hades"<br>
+--The Lost Priest of Nimbus</i>  
+<p>You have failed at your quest to be the best priest in all of Nimbus.  Now you must fight to stay alive and on Nimbus.  If you lose you will have passed through the Nimbian Gates of Hades.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+You have killed the Guardian and you have found the Lost Priest of Nimbus.  May you have eternal luck throughout the tournament.
+
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button,Next Mission,MissionBegin,Bounty
+
+[Failed]
+<h2>You have failed!</h2>
+<p>You have been captured by the Guardian.  Where do you think he is taking you?
+
+$Button=Next Mission,MissionBegin,Hades
+
+[END]

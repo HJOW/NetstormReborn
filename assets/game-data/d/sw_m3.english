@@ -1,0 +1,201 @@
+*(Saved as mission3.fort & mission3.english)
+
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 3
+moreGeysers = 1
+randomGeysers = 1
+denySalvage = {sw_mvar3}
+
+myStartMoney = {sw_mvar0}
+myTech = {sw_var1}{sw_var2}{sw_var3}{sw_var4}{sw_var9} 
+
+
+
+title = "Run For Your Life"
+
+ai2Name = "Mystery Guest 1"
+ai2Tech = "sunWalker;{sw_var1}{sw_var2}{sw_var3}{sw_var4}"
+ai2StartMoney ={sw_mvar1}
+ai2GeyserAttachments = 4
+ai2Collectors = 5
+ai2TimeBetweenMoves = {sw_mvar2}
+ai2AllyList = "3;4;5;6"
+ai2Color = red
+ai2BridgeDrawRate = {sw_mvar2}
+ai2Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai3Name = "Mystery Guest 2"
+ai3Tech = sunWalker;{sw_var1}{sw_var2}{sw_var5}{sw_var6}
+ai3StartMoney ={sw_mvar1}
+ai3GeyserAttachments = 4
+ai3Collectors = 5
+ai3TimeBetweenMoves = {sw_mvar2}
+ai3AllyList = "2;4;5;6"
+ai3Color = white
+ai3BridgeDrawRate = {sw_mvar2}
+ai3Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai4Name = "Mystery Guest 3"
+ai4Tech = sunWalker;{sw_var1}{sw_var2}
+ai4StartMoney = {sw_mvar1}
+ai4GeyserAttachments = 4
+ai4Collectors = 5
+ai4TimeBetweenMoves = {sw_mvar2}
+ai4AllyList = "2;3;5;6"
+ai4Color = green
+ai4BridgeDrawRate = {sw_mvar2}
+ai4Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai5Name = "Mystery Guest 4"
+ai5Tech = sunWalker;{sw_var1}{sw_var2}{sw_var5}{sw_var6}
+ai5StartMoney = {sw_mvar1}
+ai5GeyserAttachments = 4
+ai5Collectors = 5
+ai5TimeBetweenMoves = {sw_mvar2}
+ai5AllyList = "2;3;4;6"
+ai5Color = purple
+ai5BridgeDrawRate = {sw_mvar2}
+ai5Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai6Name = "Mystery Guest 5"
+ai6Tech = sunWalker;{sw_var1}{sw_var2}{sw_var3}{sw_var4}{sw_var5}{sw_var6}{sw_var7}{sw_var8}
+ai6StartMoney = {sw_mvar1}
+ai6GeyserAttachments = 4
+ai6Collectors = 5
+ai6TimeBetweenMoves = {sw_mvar2}
+ai6AllyList = "2;3;4;5"
+ai6Color = green
+ai6BridgeDrawRate = {sw_mvar2}
+ai6Ability = "!USE_PRIEST_TO_COLLECT"
+
+[init]
+<$Config,sw_m3=1>
+<$Config,sw_m1=0>
+<$Config,sw_m2=0>
+<$Config,sw_m4=0>
+<$Config,sw_m5=0>
+<$Config,sw_m6=0>
+<$Config,sw_m7=0>
+<$Config,sw_m8=0>
+<$Config,sw_m9=0>
+<$Config,sw_m10=0>
+<$Config,sw_m11=0>
+<$Config,sw_m12=0>
+<$Config,sw_m13=0>
+<$Config,sw_m14=0>
+<$Config,sw_m15=0>
+<$Config,sw_m16=0>
+<$Config,sw_m17=0>
+<$Config,sw_m18=0>
+<$Config,sw_m19=0>
+<$Config,sw_m20=0>
+<$Config,sw_m21=0>
+<$Config,sw_m22=0>
+<$Config,sw_m23=0>
+<$Config,sw_m24=0>
+<$Config,sw_m25=0>
+<$Config,sw_m30=0>
+
+
+[options]
+[A.]
+                         <h2>RUN FOR YOUR LIFE!  <a href="#mission3">~[IfortGump.46]</a></h2>
+                ~[Ipriest.56]             ~[IrainAviary.10]
+<br>                                                             ~1~y<?!{sw_difficulty1}>HARD</?><?{sw_difficulty1}>EASY</?>~.
+<br>
+<i>After you escaped the clutches of Hades you made a wild dash onto a mysterious island.</i>
+<p>
+You ended up in behind the lines of the enemy.<br>
+Which ones are the true enemies?<br>
+Only time will tell.<i>
+<p>In order to survive this mess you must find and capture the one priest that holds the key to your safe passage.<br>
+
+<p>
+          <a href="cmd:ShowTechnology,55"> ~[IfortGump.50] </a>                            <a href="cmd:DoNothing,0">~[IfortGump.22] </a>                     <a href="cmd:Tell,guideHades.overview">~[Ipriest.13]</a><br>
+<a href="cmd:ShowTechnology,55">Review Knowledge</a>      <a href="cmd:DoNothing,0">    Let's Do It!   </a>      <a href="cmd:Tell,guideHades.overview">Leave HELL</a>
+<$PlaySound,priestFree.wav>
+$OnExit= ,PlaySound,priestMove1.wav
+$Button= ,Tell,A.
+
+
+[ai6PriestCaptured][ai4PriestCaptured][ai3PriestCaptured][ai2PriestCaptured]
+<h2>You receive a message from the {sw_god5}.</h2><br>
+<i>You think you're pretty smart.<br>
+Well, he is not the prisoner.  Ha-Ha!</i>
+$Button=Let's capture another,DoNothing,0
+
+
+[ai5PriestCaptured]
+<$Config,sw_m3=0>
+<$Config,sw_m6=1>
+
+    <h2>The {sw_god2} speaks:</h2><br>
+
+<i>"Thank you for saving me."
+<p>
+"I was entrapped by the {sw_god5}<i>."
+<p>
+Now I can transform back to myself.</i><br><br>
+                            ~[Ianim.10]<br>
+In a puff of smoke The Wind Fury appears!
+<p>
+~I"Oh my God"~., you think to yourself, ~I"I've just rescued the Wind Fury.~.
+<p>
+<i>"Now"</i>, says the Wind Fury, <i>"we must go....."</i>
+$Button=Let's go!,MissionBegin,sw_m6
+$Timeout=5,Tell,next1
+
+[next1]
+    <h2>The {sw_god2} speaks:</h2><br>
+
+<i>"Thank you for saving me."
+<p>
+"I was entrapped by the {sw_god5}<i>."
+<p>
+Now I can transform back to myself.</i><br>
+                    ~[Imog.16]<br>
+
+In a puff of smoke The Wind Fury appears!
+<p>
+~I"Oh my God"~., you think to yourself, ~I"I've just rescued the Wind Fury.~.
+<p>
+<i>"Now"</i>, says the Wind Fury, <i>"we must go....."</i>
+<$Config,sw_difficulty1=0>
+<$Config,sw_mvar0=9000>
+<$Config,sw_mvar1=2000>
+<$Config,sw_mvar2=1>
+<$Config,sw_mvar3=3000>
+$Button=Let's go!,MissionBegin,sw_m6
+
+
+
+[Failed]
+<?{sw_difficulty1}>
+You have just been thrown back down into {sw_hades}.
+You will surely perish now.
+<$Config,sw_m3=0>
+<$Config,sw_m1=1>
+<$Config,sw_difficulty1=0>
+<$Config,sw_mvar0=0>
+<$Config,sw_mvar1=15000>
+<$Config,sw_mvar2=1>
+$Button=MissionBegin,sw_m1
+</?>
+<?!{sw_difficulty1}>
+Hurry! Before {sw_hades} gets his wits together, and decides to torment you
+ in hell! You have one more chance, then you'll be thrown back in hades to fight
+  for your freedom, again!
+<$Config,sw_difficulty1=1>
+<$Config,sw_mvar0=12000>
+<$Config,sw_mvar1=1000>
+<$Config,sw_mvar2=6>
+<$Config,sw_mvar3=0>
+
+$Button=Fight harder!,MissionBegin,sw_m3
+</?>
+
+
+
+[END]

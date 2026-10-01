@@ -1,0 +1,172 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 5
+
+myStartMoney = 11000
+myTech = "sunCannon;sunBalloon;sunAviary;sunBlocker;sunFence;sunArcher;rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainwalker;rainFence;rainwalker;windBattery;windarcher;windballoon;windWalker"
+myAllyList = "5"
+
+title="The Flyers"
+
+ai2Name = "Master of the Man o'Wars"
+ai2Tech = "sunBalloon;sunBlocker;rainbattery;rainaviary;rainballoon"
+ai2StartMoney = 10000
+ai2GeyserAttachments = 4
+ai2Collectors = 10
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3;4;6;7;8"
+ai2color = red
+ai2Ability="!USE_PRIEST_TO_COLLECT!ATTACH_TO_ENEMY_ISLAND"
+ai2BridgeDrawRate = 4
+
+ai3Name = "King of the Flyers"
+ai3Tech = "sunBlocker;rainbattery;rainaviary;rainballoon;windBattery;windaviary;windballoon"
+ai3StartMoney = 10000
+ai3GeyserAttachments = 3
+ai3Collectors = 10
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2;4;6;7;8"
+ai3color = white
+ai3Ability="!USE_PRIEST_TO_COLLECT;!ATTACH_TO_ENEMY_ISLAND"
+ai3BridgeDrawRate = 4
+
+ai4Name = "Lord of the Flyers"
+ai4Tech = "sunBlocker;rainbattery;rainaviary;rainballoon;windBattery;windaviary;windballoon"
+ai4StartMoney = 10000
+ai4GeyserAttachments = 3
+ai4Collectors = 7
+ai4TimeBetweenMoves = 1
+ai4AllyList = "2;3;6;7;8"
+ai4color = green
+ai4Ability="!USE_PRIEST_TO_COLLECT;!ATTACH_TO_ENEMY_ISLAND"
+ai4BridgeDrawRate = 4
+
+ai5Name = "Duke of Thunder"
+ai5Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;sunArcher;sunBalloon;sunAviary;rainbattery"
+ai5StartMoney = 20000
+ai5GeyserAttachments = 3
+ai5Collectors = 7
+ai5TimeBetweenMoves = 1
+ai5AllyList = "1"
+ai5color = purple
+ai5Ability="!USE_PRIEST_TO_COLLECT!ATTACH_TO_ENEMY_ISLAND"
+ai5BridgeDrawRate = 4
+
+ai6Name = "Leader of the Whirligigs"
+ai6Tech = "sunBalloon;sunAviary;sunBlocker"
+ai6StartMoney = 7500
+ai6GeyserAttachments = 3
+ai6Collectors = 7
+ai6TimeBetweenMoves = 1
+ai6AllyList = "2;3;4;7;8"
+ai6color = yellow
+ai6Ability="!USE_PRIEST_TO_COLLECT!ATTACH_TO_ENEMY_ISLAND"
+ai6BridgeDrawRate = 4
+
+ai7Name = "Wind Maker"
+ai7Tech = "windBattery;windaviary;windballoon"
+ai7StartMoney = 5000
+ai7GeyserAttachments = 3
+ai7Collectors = 7
+ai7TimeBetweenMoves = 1
+ai7AllyList = "2;3;4;6;8"
+ai7color = cyan
+ai7Ability="!USE_PRIEST_TO_COLLECT!ATTACH_TO_ENEMY_ISLAND"
+ai7BridgeDrawRate = 4
+
+ai8Name = "Duke of the Flyers"
+ai8Tech = "sunBlocker;sunCannon;rainbattery;rainaviary;rainballoon;windBattery;windaviary;windballoon"
+ai8StartMoney = 10000
+ai8GeyserAttachments = 3
+ai8Collectors = 7
+ai8TimeBetweenMoves = 1
+ai8AllyList = "2;3;4;6;7"
+ai8color = orange
+ai8Ability="!USE_PRIEST_TO_COLLECT;!ATTACH_TO_ENEMY_ISLAND"
+ai8BridgeDrawRate = 4
+
+
+
+[Options]
+
+[A.]
+<h2>Destory the Clan of Flyers</h2>
+<i>"There is a LOT of sky..."<br>
+--Teran Muff clinging to the edge of an edge farm after slipping.</i>  
+<p>The Flyers have been one of the more powerful clans...Known for overwhelming there oppennet's skys with all sorts of weapons.  Destroying them will be no easy task, your ally the Knight of Wind has launched a seperate attack on some smaller clans.  It is only you and the Duke against the Flyer Clan.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+A formidable foe has been destroyed.  Now to gather some allies to help you destroy all that oppose you.
+
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,tnron42
+
+[ai2TempleHalfDead]
+<h2>Message from the Master of the Man o'Wars</h2>
+<p>
+You won't win this battle!!
+
+[ai2TempleDead]
+<h2>Message from the Master of the Man o'Wars</h2>
+<p>
+Go Ahead make my day!!
+
+[ai2PriestDead]
+<h2>Message from the Duke of Thunder</h2>
+<p>I hope we can hold out...
+
+[ai3PriestCaptured]
+<h2>Message from the King of the Flyers</h2>
+<p>
+Fool!  My allies will stop you!
+
+[ai4TempleDead]
+<h2>Message from the Duke of Thunder</h2>
+<p>
+The Flyers have met their match.
+
+[ai5TempleHalfDead]
+<h2>Message from the Duke of Thunder</h2>
+<p>
+I see how the Flyers got their reputation...
+
+[ai5PriestCaptured]
+<h2>Message from the Duke of Thunder</h2>
+<p>They were too much for me...
+
+[ai5PriestDead]
+<h2>Your ally the Duke of Thunder has died!</h2>
+<p>
+After his death you were soon overwhelmed by your enemies.
+
+$Button=Continue,Tell,TryAgain
+
+[ai7PriestDead]
+<h2>Message from the Duke of Thunder</h2>
+<p>
+Keep it up...we got them on the run.
+
+
+[ai8PriestDead]
+<h2>A message from the Duke of Thunder</h2>
+<p>
+We shall share yet another victory my friend!
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+The Flyers were too much for you....
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+
+

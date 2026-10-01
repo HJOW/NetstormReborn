@@ -1,0 +1,111 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 4
+moreGeysers = 3
+
+myStartMoney = 2500
+myTech ="rainwalker;raincannon;rainBattery;rainballoon;rainblocker;rainAviary;outpost;rainFence"
+
+
+title = "Cornered"
+ai2Name = "Skipper Wind"
+ai2Tech ="windBattery;windWalker;windBalloon;windAviary;windArcher;windblocker"
+ai2StartMoney = 100000
+ai2GeyserAttachments = 20
+ai2Collectors = 15
+ai2TimeBetweenMoves = 0
+ai2Bridgedrawrate = 0
+ai2color = red
+ai2AllyList = "3;4"
+
+ai3Name = "Skipper Rain"
+ai3Tech ="rainwalker;raincannon;rainBattery;rainballoon;rainblocker;rainAviary;rainFence"
+ai3StartMoney = 100000
+ai3GeyserAttachments = 20
+ai3Collectors = 15
+ai3TimeBetweenMoves = 0
+ai3Bridgedrawrate = 0
+ai3Ability ="!USE_PRIEST_TO_COLLECT"
+ai3color = white
+ai3AllyList = "2;4"
+
+ai4Name = "Skipper Thunder"
+ai4Tech ="thunderBattery;thunderCannon;thunderArcher;bulf;thunderFence;thunderBlocker"
+ai4StartMoney = 100000
+ai4GeyserAttachments = 20
+ai4Collectors = 15
+ai4TimeBetweenMoves = 0
+ai4Bridgedrawrate = 0
+ai4Ability ="!USE_PRIEST_TO_COLLECT"
+ai4color = green
+ai4AllyList = "2;3"
+
+
+
+[Options]
+
+[A.]
+<P>"Like a cornered animal, a priest can be vicious."
+
+Twinkies
+<p>You were sleeping when 3 pirates nab your priest. You managed to wake up in time and surrond your self in defenses.
+Slay the pirates and save your priest!
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Fight,DoNothing,0
+
+
+[ai2PriestDead]
+Arrrggggggg!!
+
+[ai3PriestDead]
+Aieeeeeeeeeee!!
+
+[ai4PriestDead]
+Ack!
+
+
+
+
+
+[ai2PriestCaptured]
+Oh No! I am  doomed!
+
+
+
+[ai3PriestCaptured]
+Lemme go please?
+
+
+[ai4PriestCaptured]
+Ack!
+
+
+[ai2TempleHalfDead]
+Help me!
+
+[ai3TempleHalfDead]
+Oh Fudge!
+
+[ai4TempleHalfDead]
+Grrrrr!
+
+
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>You have saved your priest and killed the pirates. Good Boy/Girl!!
+<$Config,Done{mission.fileName}=1>
+$Button=Next Mission,MissionBegin,POW5
+$Button=Leave Missions,MissionAbort,0
+
+[Failed]
+<h2>Failure!</h2>
+<p>You have been sacrificed and the pirates run rampent throughout Nimbus. Bad!
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+
+
+

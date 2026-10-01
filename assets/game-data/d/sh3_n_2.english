@@ -1,0 +1,90 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = "17"
+moreGeysers = "1"
+randGeysers = "1"
+
+myStartMoney = "8000"
+myTech = "all;outpost;"
+myAllyList = ""
+
+title = "Blocade"
+
+ai2Name = "Thunder Cannoneer"
+ai2Tech = "thunderbattery;bulf;thundercannon;thunderarcher;thunderblocker;thunderfence;"
+ai2StartMoney = "4000"
+ai2AllyList = "3;4;5;"
+ai2Color = "red"
+ai2Collectors = "5"
+ai2BridgeDrawRate = "0"
+ai2GeyserAttachments = "0"
+ai2TimeBetweenMoves = "0"
+ai2Ability = ""
+
+ai3Name = "Wind Archer"
+ai3Tech = "windbattery;windwalker;windballoon;windarcher;windaviary;windblocker;"
+ai3StartMoney = "30000"
+ai3AllyList = "2;4;5;"
+ai3Color = "white"
+ai3Collectors = "5"
+ai3BridgeDrawRate = "0"
+ai3GeyserAttachments = "0"
+ai3TimeBetweenMoves = "0"
+ai3Ability = ""
+
+ai4Name = "Rain Advisor"
+ai4Tech = "rainbattery;rainwalker;rainballoon;rainblocker;raincannon;rainFence;rainaviary;"
+ai4StartMoney = "40000"
+ai4AllyList = "2;3;5;"
+ai4Color = "green"
+ai4Collectors = "5"
+ai4BridgeDrawRate = "0"
+ai4GeyserAttachments = "1"
+ai4TimeBetweenMoves = "0"
+ai4Ability = ""
+
+ai5Name = "Sun Commander"
+ai5Tech = "sunWalker;sunBalloon;sunFence;sunAviary;sunCannon;sunBlocker"
+ai5StartMoney = "30000"
+ai5AllyList = "2;3;4;"
+ai5Color = "purple"
+ai5Collectors = "5"
+ai5BridgeDrawRate = "0"
+ai5GeyserAttachments = "0"
+ai5TimeBetweenMoves = "0"
+ai5Ability = ""
+
+[Options]
+
+[A.]
+<h2>~lBlocade</h2>
+<i>~E"Hard to fight against swarms of enemies"<br>
+--Sunder</i>
+<p>~EYou was going in the heart of Evil King's Kingdom and see the priest blocking your way, you must free this waycause its only way to Evil King Residence. They ae strong and have very many resources, so don't close your eyes. Good Luck.
+
+$Button=Its too hard for me!,Tell,Campaign
+$Button=Check your Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded] [BadTeamDead]
+
+<h2>~lCongratulations!</h2>
+<i>~E"That's it!"<br>
+--Sunder</i>
+<p>~EGood, very good for you, you broke the way to the Evil King. You think he really scared of you now. Only time will say...
+
+<$Config,Done{mission.fileName}=1>
+<$Config,Donesh3_n_1a=0>
+$Button=Its too hard for me!,Tell,Campaign
+$Button=Proceed,MissionBegin,sh3_n_3
+
+
+[Failed]
+<h2>~lYou lose...</h2>
+<p>~EDon't worry if you lose, this is Shit Hard!
+
+$Button=Its too hard for me!,Tell,Campaign
+$Button=Try again!,Tell,TryAgain
+
+[END]

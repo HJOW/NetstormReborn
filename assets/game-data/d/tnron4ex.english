@@ -1,0 +1,152 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 5
+moreGeysers = 5
+
+myStartMoney = 0
+myTech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence;rainwalker;sunCannon;sunBalloon;sunAviary;sunBlocker;sunFence;sunArcher;windarcher;windBattery;windWalker;windballoon;windblocker"
+myAllyList = "5;6;7"
+
+title="Counter Attack"
+
+ai2Name = "Leader of the 5th Division"
+ai2Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence;rainwalker"
+ai2StartMoney = 20000
+ai2GeyserAttachments = 4
+ai2Collectors = 7
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3;4;8"
+ai2color = red
+ai2Ability="!USE_PRIEST_TO_COLLECT;!SACRIFICE_ENEMY_PRIEST"
+ai2BridgeDrawRate = 4
+
+ai3Name = "Minister of Rain"
+ai3Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;sunBlocker;sunArcher"
+ai3StartMoney = 10000
+ai3GeyserAttachments = 3
+ai3Collectors = 5
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2;4;8"
+ai3color = white
+ai3Ability="!USE_PRIEST_TO_COLLECT;!ENCIRCLE_ENEMY_ISLAND"
+ai3BridgeDrawRate = 4
+
+ai4Name = "Master of Thunder"
+ai4Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;sunCannon;sunFence;sunBalloon;sunAviary;sunBlocker;sunArcher"
+ai4StartMoney = 10000
+ai4GeyserAttachments = 3
+ai4Collectors = 5
+ai4TimeBetweenMoves = 1
+ai4AllyList = "2;3;8"
+ai4color = green
+ai4Ability="!USE_PRIEST_TO_COLLECT"
+ai4BridgeDrawRate = 4
+
+
+ai5Name = "Duke of Thunder"
+ai5Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;sunArcher;sunBalloon;sunAviary;rainbattery"
+ai5StartMoney = 5000
+ai5GeyserAttachments = 3
+ai5Collectors = 7
+ai5TimeBetweenMoves = 1
+ai5AllyList = "1;6;7"
+ai5color = purple
+ai5Ability="!USE_PRIEST_TO_COLLECT"
+ai5BridgeDrawRate = 4
+
+ai6Name = "Govener of Sun"
+ai6Tech = "windBattery;sunCannon;sunFence;sunBalloon;sunAviary;sunBlocker;sunArcher"
+ai6StartMoney = 7500
+ai6GeyserAttachments = 3
+ai6Collectors = 7
+ai6TimeBetweenMoves = 1
+ai6AllyList = "1;5;7"
+ai6color = yellow
+ai6Ability="!USE_PRIEST_TO_COLLECT"
+ai6BridgeDrawRate = 4
+
+ai7Name = "Knight of Wind"
+ai7Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;rainbattery"
+ai7StartMoney = 5000
+ai7GeyserAttachments = 3
+ai7Collectors = 7
+ai7TimeBetweenMoves = 1
+ai7AllyList = "1;5;6"
+ai7color = cyan
+ai7Ability="!USE_PRIEST_TO_COLLECT;!ENCIRCLE_ENEMY_ISLAND"
+ai7BridgeDrawRate = 4
+
+ai8Name = "King of Wind"
+ai8Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;sunBlocker;sunArcher"
+ai8StartMoney = 10000
+ai8GeyserAttachments = 3
+ai8Collectors = 5
+ai8TimeBetweenMoves = 1
+ai8AllyList = "2;3;4"
+ai8color = orange
+ai8Ability="!USE_PRIEST_TO_COLLECT;!ENCIRCLE_ENEMY_ISLAND"
+ai8BridgeDrawRate = 4
+
+
+
+[Options]
+
+[A.]
+<h2>Decide</h2>
+<p>Do you wish to let the Lord Chamberland of Thunder use your Isle?  Or do you use it for your own intents and purposes.
+
+$Button=Yes,MissionBegin,tnronc1
+$Button=No,MissionBegin,tnronc2
+
+[Succeeded][BadTeamDead]
+
+[ai2TempleHalfDead]
+<h2>Meeting of the Minds</h2>
+<i>"Half the battle is strategy..."<br>
+--Nimbian General Holon Gilnol</i>  
+<p>You and your allies have gathered together for a meeting to decide on various issues.  Your decisions will affect the course of this war.
+
+$Button=Enter the meeting,DoNothing,0
+
+[ai2TempleDead]
+<h2>Duke of Thunder :</h2>
+<p>
+Ah, you have arrived.  We have already settled on most of our issues, but glad you could make it.
+
+[ai3TempleHalfDead]
+<h2>Chamberland of Thunder :</h2>
+<p>
+Now that you are here, I'd like to ask you if I could use the Isle of Geysers for a massive assult on our enemies.
+
+[ai3TempleDead]
+<h2>Duke of Thunder :</h2>
+<p>Now now, our friend here may have his own plans for the Isle.  You are a capable man, but if we lose the Isle of Geysers we might lose this war.
+
+[ai4TempleHalfDead]
+<h2>Knight of Wind :</h2>
+<p>
+It's a dangerous risk to use the Isle for an attack, most of our allies use some of it's power.  If we lose it we won't have enough storm power to sustain our allies.  
+
+
+[ai4TempleDead]
+<h2>Chamberland of Thunder :</h2>
+<p>
+I will safe guard that Isle with my life.  I know what could be lost, but I also know what we can gain.  If the Isle is used for battle we can win numerous battles.
+
+[ai8TempleHalfDead]
+<h2>Knight of Wind :</h2>
+<p>
+True but the risk is still great.  The Guards we placed around the Isle are under constant attack, many will try to take the Isle for themselves once it's out of our territory.
+
+[ai8TempleDead]
+<h2>Duke of Thunder :</h2>
+<p>
+It was your plans and genuis that got us the Isle of Geysers in the first place.  It is rightfully yours, but it is also your decision.
+
+[Failed]
+
+
+[END]
+
+

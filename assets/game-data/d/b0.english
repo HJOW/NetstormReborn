@@ -1,0 +1,91 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 15
+moreGeysers = 1
+
+myStartMoney = 7000
+myTech = "suncannon;sunblocker;sunarcher;sunaviary;sunfence;windarcher;windaviary;windblocker;raincannon;rainfence;rainaviary;rainblocker;thundercannon;thunderblocker;thunderarcher;thunderfence"
+
+title = "Menu"
+
+ai2Name = "Juggler of Thunder"
+ai2Tech = "thunderVortex;thunderFactory;thunderbattery;sunwalker;thundercannon;thunderarcher;thunderblocker"
+ai2StartMoney = 2600
+ai2Collectors = 4
+ai2GeyserAttachments = 5
+ai2color = red
+ai2BridgeDrawRate = 1
+ai2Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai3Name = "Beast of Sun"
+ai3Tech = ";rainVortex;sunFactory;rainbattery;sunwalker;suncannon;sunarcher;sunaviary"
+ai3StartMoney = 2600
+ai3Collectors = 4
+ai3GeyserAttachments = 5
+ai3color = white
+ai3BridgeDrawRate = 1
+ai3Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai4Name = "Warrior of Wind"
+ai4Tech = "windVortex;windFactory;windbattery;sunwalker;windarcher;windaviary;windblocker"
+ai4StartMoney = 2600
+ai4Collectors = 4
+ai4GeyserAttachments = 5
+ai4color = green
+ai4BridgeDrawRate = 1
+ai4Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai5Name = "Sniper of Rain"
+ai5Tech = "rainVortex;rainFactory;rainbattery;sunwalker;raincannon;rainaviary;rainblocker"
+ai5StartMoney = 2600
+ai5Collectors = 4
+ai5GeyserAttachments = 5
+ai5color = purple
+ai5BridgeDrawRate = 1
+ai5Ability = "!USE_PRIEST_TO_COLLECT"
+
+[@1]
+<h2>~kCedz</h2>
+<p>
+If you want to start the real campaign, just press F8 again.
+<p>
+Choose your Fury!
+
+$Button=WIND,GetTechnology,75
+$Button=RAIN,GetTechnology,76
+$Button=THUNDER,GetTechnology,77
+
+[Options]
+
+[A.]
+<h2>Overview</h2> 
+<i>"Everything must start somewhere."<br>
+--Very know fact</i>
+<p>It has been years since the days of the Dark Lord's demise.  Ever since then, the government was shattered and areas of Nimbus are now controlled by various lords.  You do not have that lust for power and control as almost everybody else does, but you will kill whoever disturbs you.
+For you it may be a peaceful time at the moment, but for others it is a time for plundering, defending, and preparing.  You do not know it yet, but you and along with duo of pirates shall embark on a revenge quest and to stop history from repeating itself.  Will you succeed in the future, that is entirely up to you.
+
+$Button=Start the Campaign!,MissionBegin,b1
+$Button=Quit the Campaign,MissionAbort,0
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play on THIS map,DoNothing,0
+
+[Succeed]
+[BadTeamDead]
+
+<h2>Congratulations! Victory!</h2> 
+<p>Yay you killed them!  now start the real campaign already!!!!.
+<$Config,Done{mission.filename}=1> 
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,b1
+
+[Failed]
+<h2>Failure!</h2> 
+<p> 
+That is just...pitiful.
+
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,b1
+$Button=RETRY!!!,Tell,TryAgain
+
+[END]

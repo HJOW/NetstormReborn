@@ -1,0 +1,187 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 2
+randGeysers = 1
+moreGeysers = 3
+
+myStartMoney = 10000
+myTech ="rainBattery;thunderBattery;windBattery;sunfence;suncannon;sunballoon;sunblocker;sunAviary;sunArcher;outpost"
+
+title="The Exchange"
+
+ai2Name = "Tilgon"
+ai2StartMoney = 12000
+ai2Tech = "rainBattery;sunwalker;raincannon;rainballoon;rainblocker;rainAviary"
+ai2GeyserAttachments = 2
+ai2Collectors = 2
+ai2TimeBetweenMoves = 1
+ai2AllyList = ""
+ai2Bridgedrawrate = 1
+ai2ability="!USE_PRIEST_TO_COLLECT;!CAPTURE_ENEMY_PRIEST"
+ai2color = yellow
+
+ai3Name = "The Collector"
+ai3Tech = "bulf;thunderArcher;thunderBattery;thunderfence;sunballoon;thunderCannon;thunderblocker"
+ai3StartMoney = 12000
+ai3GeyserAttachments = 2
+ai3Collectors = 2
+ai3TimeBetweenMoves = 4
+ai3Bridgedrawrate = 1
+ai3AllyList = ""
+ai3color = green
+
+
+[Options]
+
+[A.]
+<h2>The Exchange</h2>
+~y
+Tilgon has brought you to one of the outposts of Terra to collect his bounty and deliver you into 
+Martol's control.
+<P>
+As you stand there, you notice that Tilgon and Rogzel (the Collector) are arguing over something. It
+seems that there is a discrepancy over your worth.
+<$Config,Donebeenthere0=1>
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Make a Suggestion,Tell,SUGGESTION
+$Button=Instigate a Fight,Tell,FIGHT
+
+
+
+
+
+
+
+[WIND]
+<h2>~yCHOOSE QUICKLY~.</h2><br>
+$Menu=AIR SHIP,GetTechnology,141
+$Menu=CROSSBOW,GetTechnology,140
+$Menu=DEVIL MAKER,GetTechnology,139
+$Menu=SAIL SKATER,GetTechnology,137
+$Menu=WIND TOWER,GetTechnology,142
+$Timeout= 3,Tell,TOOSLOW
+
+
+[RAIN]
+<h2>~yCHOOSE QUICKLY~.</h2><br>
+$Menu=ACID BARRICADE,GetTechnology,145
+$Menu=CLOUD FLOATER,GetTechnology,146
+$Menu=CRYSTAL CRAB,GetTechnology,156
+$Menu=ICE CANNON,GetTechnology,129
+$Menu=ICE TOWER,GetTechnology,147
+$Menu=MAN-O-WAR POOL,GetTechnology,143
+$Timeout= 4,Tell,TOOSLOW
+
+
+[THUNDER]
+<h2>~yCHOOSE QUICKLY~.</h2><br>
+$Menu=ARC SPIRE,GetTechnology,149
+$Menu=BULF,GetTechnology,135
+$Menu=BULWARK,GetTechnology,79
+$Menu=THUNDER CANNON,GetTechnology,131
+$Menu=VADER TOWER,GetTechnology,148
+$Timeout= 2,Tell,TOOSLOW
+
+
+[TOOSLOW]
+The Furies are disappointed with your indecisiveness, they redraw their offer.
+$Button=Curse the Furies,DoNothing,0
+$Button=Pray For Forgiveness,Tell,REPENT
+
+[REPENT]
+~[Iisland.*]
+The Furies take pity upon you and ~[Iisland.*]offer you the knowledge of the <I>Arc Spire</I>.<P>
+~[IthunderFence.2]
+
+$Button=Refuse the Furies' Gift,DoNothing,0
+$Button=Accept the furies' Gift,GetTechnology,149
+
+
+[FIGHT]
+<I>YOU: </I>Hey, Rogzel, Tilgon said that your mom drives a three legged Bulf to church.
+<P>
+<I>ROGZEL: </I>Noone talks about my mother like that! Tilgon, prepare to die!
+<P>~y
+Looks like this would be your best chance to escape without being noticed.~.
+$Button=OK,DoNothing,0
+
+[SUGGESTION]
+<I>YOU: </I>Excuse me, Gentlemen, may I suggest something.
+<P>~y
+Both Tilgon and Rogzel look at you as though you have no right to speak, but yet they are 
+listening.~
+.<P>
+<I>YOU: </I>I would say that I'm worth at least
+$Button= 100000 Geyser Crystals,Tell,BIGBUCKS
+$Button= 1000 Geyser Crystals,Tell,SMALLBUCKS
+
+[BIGBUCKS]
+<I>TILGON: </I>You know, I'm beginning to like you.  How about we join forces and put an end
+to Martol's mayhem? 
+<P>
+<I>TILGON: </I>I never did like his kind.
+
+$Button=Ally with Tilgon [easier],MissionBegin,defeat1
+$Button=Decline Offer,DoNothing,0
+
+[SMALLBUCKS]
+<I>ROGZEL: </I>Ha, you see Tilgon, even the Sameron thinks he's worthless.
+<P>
+<I>TILGON: </I>Prepare to Die, both of you.
+<P>
+~y
+This may be the end my friend, May the furies have mercy on you and give you strength.
+$Button= Begin the fight,DoNothing,0
+
+[JOIN]
+~y
+<$Config,Done{mission.fileName}=1>
+You and Tilgon have joined forces and are now heading towards Terra to face Martol.
+$Button= OK,MissionBegin,gather1
+
+
+[ai2PriestCaptured]
+<$Config,Done{mission.fileName}=1>
+<I>TILGON: </I>Your skills are superior to mine, but you will need help to defeat Martol.
+<p>
+<I>TILGON: </I>Spare my life, and together we will destroy him.
+
+$Button= Spare His Life,Tell,JOIN
+$Button= Sacrifice Him to The Furies,doNothing,0
+
+
+
+
+[ai3PriestDead]
+The furies show mercy towards you. They decide to grant you knowledge.
+Choose which Fury you want knowledge from:
+
+
+$Button=WIND,Tell,WIND
+$Button=RAIN,Tell,RAIN
+$Button=THUNDER,Tell,THUNDER
+$Button=I DON'T NEED MERCY [harder],DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>~yVictory is Yours</h2>
+<$Config,Done{mission.fileName}=1>
+$Menu=Leave Missions,MissionAbort,1
+$Menu=Venture deep into Martol's realm,MissionBegin,gather
+
+[Failed]
+<h2>~yDefeat</h2><br>
+<I>Tilgon: </I>how do you expect to destroy Martol and his priests when you can't even beat a
+single bounty hunter?
+<P>
+<I>TILGON: </I>Listen, how about we work together?
+<P>
+$Button= Accept Offer,MissionBegin,gather1
+$Button= Decline Offer,Tell,TryAgain
+
+[END]
+
+
+

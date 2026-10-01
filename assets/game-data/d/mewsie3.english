@@ -1,0 +1,68 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 3
+moreGeysers = 1
+
+myName = "Apprentice"
+myStartMoney = 10000
+myTech ="sunCannon;sunArcher;sunBalloon;outpost;sunFence;rainBattery;rainCannon;rainFence;rainBlocker;rainWalker;rainAviary;rainBalloon;sunAviary;outpost"
+title="The Slaves"
+
+ai2Name = "Charker"
+ai2Tech ="rainFence;windBattery;windBlocker;windArcher;windBalloon;windAviary;windFlyer"
+ai2StartMoney = 1000
+ai2GeyserAttachments = 10
+ai2Collectors = 10
+ai2TimeBetweenMoves = 5
+ai2Bridgedrawrate = 5
+ai2AllyList = 
+ai2color = red
+
+
+ai3Name = "Slave"
+ai3Tech ="outpost"
+ai3StartMoney = 800
+ai3GeyserAttachments = 10
+ai3Collectors = 10
+ai3TimeBetweenMoves = 5
+ai3Bridgedrawrate = 5
+ai3AllyList ="1" 
+ai3color = white
+
+[ai2PriestDead]
+NOOOOOOOOOOOOO!!!!!! I WILL.... RETURN.... AAAHHHHH!!!!
+
+[Options]
+[A.]
+<h>The Slaves</h><br>
+<i>"When Slaves are taken, lives are lost, but now, those lives may be returned"<br>
+-Mewsie, Great Nimbian Warrior</i>
+<p>You Have Returned To find that There indeed WAS someone waiting for you, Charker the Slave Owner... Behind His Island you see an island where he keeps the slaves
+$Button=View the Knowledge of the Old Ones,ShowTechnology,55 
+$Button=Fight Charker and Try to Save the Slaves,DoNothing,0
+
+[ai2PriestCaptured]
+"Watch your Back... What happens next is out of your control, I will make sure Rammash knows of your presence!"Charker Says
+<P>"who is Rammash?"you demand
+<P>"He is the one that will kill you... Leader of our Clan... the Remordite..."Charker replied 
+
+[ai2PriestDead]
+NOOOOO!!!! AAARRRGHHHHHH!!!!!! RAMMASH WILL KILL YOU FOR ME!!!!!!!!!!!!!!!
+
+[Succeeded][BadTeamDead]
+<h2>You realise then that you are in deeper than you thought... you rush to tell Mewsie of your Encounter with Charker</h2>
+<$Config,Done{mewsie3.fort}=3>
+$Button=Leave Missions,MissionAbort,0
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+You Lost. Try Again?
+$Button=Yes,Tell,TryAgain
+$button=No,tell,MissionAbort,0
+
+[END]
+
+
+

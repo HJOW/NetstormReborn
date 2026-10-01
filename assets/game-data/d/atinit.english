@@ -1,0 +1,54 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 1
+
+myStartMoney = 1000
+myTech = ""
+myAllyList = ""
+
+title=""
+
+[Init]
+<$Config,tnron01=0>
+<$Config,tnron02=0>
+<$Config,tnron032=0>
+<$Config,tnron042=0>
+<$Config,tnron04ex=0>
+<$Config,tnron04exx=0>
+<$Config,tnron052b=0>
+<$Config,tnron052a=0>
+<$Config,tnron062b=0>
+<$Config,tnron062a=0>
+<$Config,tnron08ex=0>
+<$Config,tnron082=0>
+<$Config,tnron022=0>
+<$Config,tnron03ex=0>
+<$Config,tnron031=0>
+<$Config,tnron041=0>
+<$Config,tnron051=0>
+<$Config,tnron061=0>
+<$Config,tnron071=0>
+<$Config,tnron0311=0>
+<$Config,tnron043=0> 
+<$Config,tnron053=0> 
+<$Config,tnron063=0> 
+<$Config,tnron073=0> 
+<$Config,tnron083=0> 
+<$Config,tnron0433=0> 
+<$Config,tnron054=0> 
+<$Config,tnron064=0> 
+<$Config,tnron074=0> 
+<$Config,tnron084=0> 
+
+[Options]
+
+[A.]
+<$Config,atnocampaign2=1>
+<p>This is needed for the campaign to work so ignore it.  You probably won't see this again.
+$Button=Leave,Tell,Campaign
+
+[END]
+
+

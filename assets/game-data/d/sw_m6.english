@@ -1,0 +1,241 @@
+*(Saved as mission6.fort & mission6.english)
+
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 6
+moreGeysers = 1
+randomGeysers = {sw_mvar2}
+denySalvage = {sw_mvar2}
+
+myStartMoney = {sw_mvar0}
+myTech = {sw_var1}{sw_var2}{sw_var9}windWalker;windBlocker
+ai1AllyList = "2"  ****++++****This I guess will be pickally2
+
+title = "Defending Wind Village"
+
+ai2Name = Sakic the Wind King
+ai2Tech = "{sw_var1}{sw_var2}{sw_var3}{sw_var4}"
+ai2StartMoney ={sw_mvar1}
+ai2AllyList = "1"
+ai2Color = red
+ai2Collectors = 2
+ai2GeyserAttachments = 1
+ai2TimeBetweenMoves=2
+ai2BridgeDrawRate=3
+ai2Ability = "!USE_PRIEST_TO_COLLECT;!SACRIFICE_ENEMY_PRIEST;!BUILD_DAIS;!CAPTURE_ENEMY_PRIEST"
+
+ai3Name = Hamoc the henchman
+ai3Tech = "{sw_var1}{sw_var2}{sw_var3}"
+ai3StartMoney ={sw_mvar3}
+ai3AllyList = "4;5;6;7;8"
+ai3Color = green
+ai3Collectors = 2
+ai3GeyserAttachments = 1
+ai3TimeBetweenMoves=3
+ai3BridgeDrawRate=4
+ai3Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai4Name = Hamac the henchman
+ai4Tech = "{sw_var3}{sw_var4}windBattery"
+ai4StartMoney = {sw_mvar3}
+ai4AllyList = "3;5;6;7;8"
+ai4Color = orange
+ai4Collectors = 2
+ai4GeyserAttachments = 1
+ai4TimeBetweenMoves=3
+ai4BridgeDrawRate=4
+ai4Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai5Name = Halif the Warrior of Hades
+ai5Tech = "{sw_var3}windBattery"
+ai5StartMoney = {sw_mvar3}
+ai5AllyList = "3;4;6;7;8"
+ai5Color = cyan
+ai5Collectors = 2
+ai5GeyserAttachments = 1
+ai5TimeBetweenMoves=2
+ai5BridgeDrawRate=3
+ai5Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS;"
+
+ai6Name = Hasif the Hades Warrior
+ai6Tech = "{sw_var3}windBattery"
+ai6StartMoney = {sw_mvar3}
+ai6AllyList = "3;4;5;7;8"
+ai6Color = yellow
+ai6Collectors = 2
+ai6GeyserAttachments = 1
+ai6TimeBetweenMoves=2
+ai6BridgeDrawRate=3
+ai6Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+
+ai7Name = Harif the Hades Warrior
+ai7Tech = "{sw_var3}windBattery"
+ai7StartMoney = {sw_mvar3}
+ai7AllyList = "3;4;5;6;8"
+ai7Color = purple
+ai7Collectors = 2
+ai7GeyserAttachments = 1
+ai7TimeBetweenMoves=2
+ai7BridgeDrawRate=3
+ai7Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+
+ai8Name = Hadif the Warrior of Hades
+ai8Tech = "{sw_var3}windBattery"
+ai8StartMoney = {sw_mvar3}
+ai8AllyList = "3;4;5;6;7"
+ai8Color = white
+ai8Collectors = 2
+ai8GeyserAttachments = 1
+ai8TimeBetweenMoves=3
+ai8BridgeDrawRate=4
+ai8Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+
+
+[init]
+<$Config,sw_m6=1>
+<$Config,sw_m1=0>
+<$Config,sw_m2=0>
+<$Config,sw_m3=0>
+<$Config,sw_m4=0>
+<$Config,sw_m5=0>
+<$Config,sw_m7=0>
+<$Config,sw_m8=0>
+<$Config,sw_m9=0>
+<$Config,sw_m10=0>
+<$Config,sw_m11=0>
+<$Config,sw_m12=0>
+<$Config,sw_m13=0>
+<$Config,sw_m14=0>
+<$Config,sw_m15=0>
+<$Config,sw_m16=0>
+<$Config,sw_m17=0>
+<$Config,sw_m18=0>
+<$Config,sw_m19=0>
+<$Config,sw_m20=0>
+<$Config,sw_m21=0>
+<$Config,sw_m22=0>
+<$Config,sw_m23=0>
+<$Config,sw_m24=0>
+<$Config,sw_m25=0>
+<$Config,sw_m30=0>
+
+
+[options]
+[A.]
+<$Playsound,forWind2.wav>
+
+                                               <h2>Defending Wind Village<a href="#mission6">~[IfortGump.46]</a></h2>
+
+                                                        ~[IwindFactory.3]
+<br>                                                                                                           ~1~y<?!{sw_difficulty1}>HARD</?><?{sw_difficulty1}>EASY</?>~.<br>
+<i>You hear a loud boom and see smoke.  When the smoke clears you are standing on a strange island.</i>
+<p>A deep voice cries out! <i>"Is this the help you brought me Almighty Wind Fury?
+I hope he fights better than he looks."</i>
+<p>
+You think to yourself:  ~I"I would love to show this coward a thing or two.  Better than I look - Huh!"~.<br>
+You respond with: ~I"wind Fury, why have you brought me to this forsaken land?"~.<br>
+King of ~[ImanaBolt.0]~oWind~[ImanaBolt.0]~. yells <i>"Forsaken land, How dare you!"</i>
+<p>
+Enough!  You two don't have much time to waste arguing.  Hades henchman are mounting an attack as we speak.  Good luck to you both.<br>
+<p>
+            <a href="cmd:ShowTechnology,55"> ~[IfortGump.50] </a>                                                   <a href="cmd:DoNothing,0">~[IfortGump.22] </a>                                             <a href="cmd:Tell,guideHades.overview">~[Ipriest.13]</a><br>
+<a href="cmd:ShowTechnology,55">Review Knowledge</a>               <a href="cmd:DoNothing,0">Help Save this Wretched Place</a>               <a href="cmd:Tell,guideHades.overview">I wanna Leave!</a>
+$OnExit= ,PlaySound,priestMove3.wav
+$Button= ,Tell,A.
+
+
+[ai8PriestDead]
+{sw_god2} speaks to you:<br>
+<i>"Here is a gift of Knowledge I grant to you, for your demonstration of your skill"
+$Menu=~[IwindArcher.75]~yCrossBow,GetTechnology,140
+
+[ai6PriestDead]
+{sw_god2} speaks to you:<br>
+"The power of wind will even rattle the Bones of the ~kDEATH<i> Fury."
+<p>
+With each priest you sacrifice, you become more powerful.
+$Menu=~yAirShip~[IwindBalloon.*],GetTechnology,141
+
+[ai4PriestDead]
+The {sw_god5}'s Warriors are no match for you!<br>
+$Menu=~[IwindAviary]~yDevil Maker,GetTechnology,139
+
+[ai7PriestDead]
+<$ChangeMoney,1500>
+The {sw_god2} says:<br>
+<i>"Stormpower, to aid our cause"</i>
+$Button=OK,DoNothing,0
+
+
+[ai5PriestDead]
+The {sw_god2} says:<br>
+<i>"Here is food for our Battle. May the power of wind blind our enemie's eyes, and
+make them stumble and fall</i>
+<$ChangeMoney,5000>
+$Button=OK,DoNothing,0
+
+
+
+[ai3PriestDead]
+Here's some storm power crystals to help you
+<ChangeMoney,1000>
+$Button=OK,tell,henchmanDead
+
+
+[henchmanDead]
+<h2>You receive a message.</h2><br>
+     ~[Ipriest.167]
+<p>
+<i>You will pay for killing my henchman!<br>
+                --The ~{sw_god5}</i></h2>
+$Button=OK,DoNothing,0
+
+
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+There is joy in the streets of wind Village as the Nimbians thank you
+for saving them from ~kDeath~.!
+<p>
+However, the King of ~[ImanaBolt.0]~oWind~[ImanaBolt.0]~. is absent from the celebration!
+<p>
+~I"What an ingrate!"~., you say to yourself. ~I"The King of ~[ImanaBolt.0]~oWind~[ImanaBolt.0]~I didn't
+even thank me for my help!"~.
+<$Config,sw_m6=0>
+<$Config,sw_m12=1>
+<$Config,sw_difficulty1=0>
+<$Config,sw_mvar0=2000>
+<$Config,sw_mvar1=2000>
+<$Config,sw_mvar2=1>
+<$Config,sw_mvar3=6>
+$Button=On to Repelling Hades forces!,MissionBegin,sw_m12
+
+
+[Failed]
+<?{sw_difficulty1}>
+<h2>You receive a message from the Wind Fury.</h2>
+<i>"I can help you no longer."</i>
+<p>
+Then you see another puff of smoke.<br>
+You traitor!  Now you will die on my altar for this traitorous deed.
+<$Config,sw_m6=0>
+<$Config,sw_m24=1>
+$Button=On to Hades Haltar,MissionBegin,sw_m24
+$Button=Leave,Tell,guideHades.overview
+</?>
+<?!{sw_difficulty}>
+<h2>You receive a message from the Wind Fury.</h2>
+<i>"I can help you only once. The power of {sw_hades}<i> is
+ very strong! Please don't fail again!"</i>
+<$Config,sw_difficulty1=1>
+<$Config,sw_mvar0=15000>
+<$Config,sw_mvar1=5000>
+<$Config,sw_mvar2=0>
+<$Config,sw_mvar3=2000>
+$Button=I won't fail again!,MissionBegin,sw_m6
+</?>
+
+
+
+[END]

@@ -1,0 +1,168 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 6
+moreGeysers = 0
+
+myStartMoney = 10000
+myTech = "sunaviary;sunBalloon;sunCannon;sunBlocker;sunFence;sunArcher;thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;bulf;rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainwalker;rainFence;rainwalker"
+myAllyList = "7"
+
+title="Contest"
+
+ai2Name = "Nilan the Storm Lord"
+ai2Tech = "windarcher;windBattery;windaviary;windblocker;rainbattery;rainaviary;rainballoon;raincannon;thunderbattery;thunderarcher;thunderblocker;thundercannon;sunBalloon;sunAviary;sunBlocker;sunArcher"
+ai2StartMoney = 30000
+ai2GeyserAttachments = 4
+ai2Collectors = 10
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3"
+ai2color = red
+ai2Ability="!USE_PRIEST_TO_COLLECT"
+ai2BridgeDrawRate = 4
+
+ai3Name = "Daggon the Priest Slayer"
+ai3Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;thunderbattery;thunderarcher;thunderblocker;thundercannon"
+ai3StartMoney = 30000
+ai3GeyserAttachments = 3
+ai3Collectors = 10
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2"
+ai3color = red
+ai3Ability="!USE_PRIEST_TO_COLLECT"
+ai3BridgeDrawRate = 4
+
+ai4Name = "Lanhal of Wind & Rain"
+ai4Tech = "windarcher;windBattery;windaviary;windblocker;rainbattery;rainballoon;rainblocker;raincannon"
+ai4StartMoney = 30000
+ai4GeyserAttachments = 3
+ai4Collectors = 7
+ai4TimeBetweenMoves = 1
+ai4AllyList = "8"
+ai4color = white
+ai4Ability="!USE_PRIEST_TO_COLLECT"
+ai4BridgeDrawRate = 4
+
+
+ai5Name = "Galenhol the Great"
+ai5Tech = "windarcher;windBattery;windaviary;windballoon;thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;bulf"
+ai5StartMoney = 30000
+ai5GeyserAttachments = 3
+ai5Collectors = 7
+ai5TimeBetweenMoves = 1
+ai5AllyList = "6"
+ai5color = yellow
+ai5Ability="!USE_PRIEST_TO_COLLECT"
+ai5BridgeDrawRate = 4
+
+ai6Name = "Jarkal the Clever"
+ai6Tech = "rainbattery;rainaviary;rainballoon;raincannon;thunderbattery;thunderarcher;thunderblocker;thundercannon"
+ai6StartMoney = 30000
+ai6GeyserAttachments = 3
+ai6Collectors = 7
+ai6TimeBetweenMoves = 1
+ai6AllyList = "5"
+ai6color = yellow
+ai6Ability="!USE_PRIEST_TO_COLLECT"
+ai6BridgeDrawRate = 4
+
+
+ai7Name = "Knight of Wind"
+ai7Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker"
+ai7StartMoney = 20000
+ai7GeyserAttachments = 3
+ai7Collectors = 7
+ai7TimeBetweenMoves = 1
+ai7AllyList = "1"
+ai7color = blue
+ai7Ability="!USE_PRIEST_TO_COLLECT"
+ai7BridgeDrawRate = 4
+
+ai8Name = "Zarkhan the Great"
+ai8Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;thunderbattery;thunderarcher;thunderblocker;thundercannon"
+ai8StartMoney = 35000
+ai8GeyserAttachments = 3
+ai8Collectors = 7
+ai8TimeBetweenMoves = 1
+ai8AllyList = "4"
+ai8color = white
+ai8Ability="!USE_PRIEST_TO_COLLECT"
+ai8BridgeDrawRate = 4
+
+
+
+[Options]
+
+[A.]
+<h2>Contest</h2>
+<i>"Fortune favors the bold."<br>
+--An old saying</i>  
+<p>The final battle is coming to an end.  For the victor of this battle will reign supreme.  You have defeated the Darklords of Nimbus!  Show these fools how you did it.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+Cheers of victory erupts in the air as you sacrafice the last priest!  You have destroyed the Darklords, captured the isle of geysers and won numerous battles!  And most of all, fought off everyone who tried to take the seat of power which was rightfully yours!  How you rule these skies is up to you....but be warned, should you rule unwisely, someone may destroy you as you have done to the Darklords.... 
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+
+[ai2TempleDead]
+<h2>Message from Nilan the Storm Lord</h2>
+<p>
+All my dreams dashed onto the rocks!
+
+[ai2PriestCaptured]
+<h2>Message from Nilan the Storm Lord</h2>
+<p>
+I was SO close!!  You fiend!!!
+
+[ai3TempleHalfDead]
+<h2>Message from Daggon the Priest Slayer</h2>
+<p>
+How can this be possible??  
+
+[ai3TempleDead]
+<h2>Message from Daggon the Priest Slayer</h2>
+<p>
+Arrgh!!!  No!!! 
+
+[ai4PriestCaptured]
+<h2>Message from Lanhal of Wind & Rain</h2>
+<p>
+Nooo!!! Blast you!!
+
+[ai5TempleDead]
+<h2>Message from Galenhol the Great</h2>
+<p>
+You will not stop me!!!  I will destroy you!!
+
+
+[ai7TempleHalfDead]
+<h2>Message from the Knight of Wind</h2>
+<p>
+Im under attack and my defences have failed!!
+
+[ai7PriestCaptured]
+<h2>Message from the Knight of Wind</h2>
+<p>
+My friend I may not live to see the your glorious victory...Do not let my death slow you down, destroy these fools!
+
+[ai8TempleHalfDead]
+<h2>Message from Zarkhan the Great</h2>
+<p>
+I will not let you destroy my temple...defend yourself!
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+Your skills and strategies were not enough to win this battle.  Your allies defect to victor of this battle and your clan destroyed.  Truly a devastating loss.
+
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+
+

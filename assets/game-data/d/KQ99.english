@@ -1,0 +1,71 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 0
+
+myStartMoney = 55000
+myTech ="rainBattery;thunderBattery;windBattery;windArcher;windWalker;windBlocker;rainAviary;rainWalker;rainCannon"
+
+
+title="Sun Bandit's Revenge"
+ai2Name = "Sun Bandit"
+ai2Tech ="thunderBattery;sunArcher;sunBlocker;sunAviary;sunCannon;sunBalloon"
+ai2StartMoney = 750000
+ai2GeyserAttachments = 1
+ai2Collectors = 2
+ai2TimeBetweenMoves = 0
+ai2Bridgedrawrate = 1
+ai2color = red
+ai2ability =!USE_PRIEST_TO_COLLECT
+
+
+
+
+[Options]
+
+[A.]
+<P>"Death Can be a blesing, or a curse."
+<P>Apollyon
+<p>You have been sacrificed, and you have been sent to the Realm of Death. Here, if you can defeat the Greapers, you have a chance to go back in time to when the battle first began, in other words, a fresh start, something that is very, very rare in Nimbus, and only high priest, such as yourself, are allowed to do this, meaning the citizens of your island will all be gone, and you will be alone. Your population will grow eventionly, and your island will be strong once more. Geysers cannot exist in the Death Realm, meaning you must survive off Kill Reward and your starting money alone.
+<p>Each mission has a harder Death Realm. And, if you are lucky, a Greaper might feel pity for one with such high odds against you, and become a traitor and ally with you.
+<p>It's up to you to save yourself and be sent back to the Realm of Life.
+<p>This time your x-ally is the one you must kill to be sent back.
+$Button=Veiw your stuff,ShowTechnology,55
+$Button=Get Outta hell!,DoNothing,0
+
+
+
+
+
+[ai2PriestDead]
+NOOOO!! I don't wanna stay here.
+
+
+
+
+
+
+
+
+
+
+
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>You get back to the Realm of Life
+<$Config,Done{mission.fileName}=1>
+$Button=Back in Time,MissionBegin,KQ1
+
+
+[Failed]
+<h2>Failure!</h2>
+<p>You are trapped for eterity. You must restart your mission
+$Button=Restart,MissionBegin,KQ1
+
+
+[END]
+
+
+

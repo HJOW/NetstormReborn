@@ -1,0 +1,65 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 1
+
+myStartMoney = 1000
+myTech = "rainBattery;sunCannon;sunAviary;sunFence;sunBalloon"
+
+title = "A Powerful Ally"
+
+ai2Name = "Thunder Gen.1"
+ai2Tech = "thunderBattery;thunderarcher;thunderCannon;bulf"
+ai2StartMoney = 2000
+ai2GeyserAttachments = 2
+ai2Collectors = 5
+ai2TimeBetweenMoves = 7
+ai2AllyList = "3"
+ai2Color = red
+
+ai3Name = "Thunder Gen.2"
+ai3Tech = "thunderBattery;thunderarcher;thunderCannon;bulf"
+ai3StartMoney = 2000
+ai3GeyserAttachments = 2
+ai3Collectors = 5
+ai3TimeBetweenMoves = 7
+ai3AllyList = "2"
+ai3Color = white
+
+[Options]
+
+[A.]
+<h2>A Powerful Ally</h2>
+<i>"When offered something sometimes it's better to recieve than give"
+--Basjin the Great,during his world domination </i>
+<p>Gen.johnson,a former general for the Wind God,has decided to defect to our side....but just as begins his island connection,two Thunder Generals showup.Gen.Johnson will provide us with wind power.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Glorious Victory!</h2>
+<p>
+Gen.Johnson has provided us plans for a wind workshop....we now have the upper hand.
+THE END
+<$Config,Done{mission.fileName}=3>
+$Button=Next Mission,MissionBegin,WOF4
+
+[Failed]
+<h2>No...No..</h2>
+<p>
+Without wind we will go into battle in serious condition....we will fail.
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+
+ai4Name = "Gen.Johnson"
+ai4Tech = "windBattery;windArcher;windWalker;windBlocker"
+ai4StartMoney = 1000
+ai4GeysersAttachments = 2
+ai4Collectors = 5
+ai4TimeBetweenMoves = 5
+ai4AllyList = "1"
+ai4Color = green

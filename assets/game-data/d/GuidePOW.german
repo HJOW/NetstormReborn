@@ -1,0 +1,17 @@
+title = "The Year of Creation"
+
+[Overview]
+<background="nsstart">
+<h2>The Year of Creation</h2>
+<p>It is your job as the true Nimbian warrior to destroy the beaurocratic guilds and free the Nimbian people. The path to righteousness will be long but very rewarding. Enjoy playing this campaign! Please send your comments to me and watch out for future campaigns! 
+<p>~[Inugget.4]<i>Chamber</i> - <a href="mailto:gorselands@btinternet.com">gorselands@btinternet.com</a>
+
+$Checked=1 Assassination,MissionBegin,assassination,{Doneassassination},1
+$Checked=2 Attack on Thunder Fortress,MissionBegin,attackfortress,{Doneattackfortress},{Doneassassination}
+$Checked=3 Rebel HQ Under Siege,MissionBegin,rebelhq,{Donerebelhq},{Doneattackfortress}
+$Checked=4 Alerted!,MissionBegin,alerted,{Donealerted},{Donerebelhq}
+$Checked=5 Cataclysmic Battle,MissionBegin,cataclysm,{Donecataclysm},{Donealerted}
+$Checked=6 The Final Confrontation,MissionBegin,guildmaster,{Doneguildmaster},{Donecataclysm}
+
+$Button=Back,Tell,Campaign
+

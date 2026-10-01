@@ -1,0 +1,17 @@
+title = "The SpinelesS Collection"
+
+[Overview]
+<background="nsstart">
+<h2>The SpinelesS collection</h2>
+<i>From SpinelesS</i>
+<p>
+Tell me what you think of these scenerio's
+email me at spineless@hotmail.com
+
+$Checked=1 trapped!,MissionBegin,trapped,{Donetrapped},1
+$Checked=2 Quick attack,MissionBegin,quick_attack,{Donequick_attack},2
+$Checked=3 Final Confrontation,MissionBegin,Final_confrontation,{DoneFinal_confrontation},3
+
+$Button=Back,Tell,Campaign
+
+

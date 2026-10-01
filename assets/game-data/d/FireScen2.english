@@ -1,0 +1,109 @@
+[Header]
+missionType = "Tutorial"
+missionNumber = 2
+moreGeysers = 1
+
+mystartmoney = 15000
+myTech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;windBattery;thunderbattery;rainbattery;rainaviary;rainwalker;rainballoon;rainblocker;raincannon;rainFence"
+
+title = "The Siege"
+
+ai2Name = "Guardian"
+ai2Tech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;windBattery;thunderbattery;rainbattery;windarcher;windaviary;windballoon;windblocker;windWalker"
+ai2StartMoney = 15000
+ai2GeysersAttachments = 1
+ai2Collectors = 15
+ai2TimeBetweenMoves = 1
+ai2AllyList = "1"
+ai2color = red
+
+ai3Name = "Shadow Reaper"
+ai3Tech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;windBattery;thunderbattery;rainbattery;windarcher;windaviary;windballoon;windblocker;windWalker;thunderarcher;thunderblocker;thundercannon;thunderfence;rainaviary;rainwalker;rainballoon;rainblocker;raincannon;rainFence"
+ai3StartMoney = 40000
+ai3GeysersAttachments = 2
+ai3Collectors = 10
+ai3TimeBetweenMoves = 1
+ai3AllyList = "4;5"
+ai3color = white
+
+ai4Name = "Shadow Reaper"
+ai4Tech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;windBattery;thunderbattery;rainbattery;windarcher;windaviary;windballoon;windblocker;windWalker;thunderarcher;thunderblocker;thundercannon;thunderfence;rainaviary;rainwalker;rainballoon;rainblocker;raincannon;rainFence"
+ai4StartMoney = 40000
+ai4GeysersAttachments = 2
+ai4Collectors = 10
+ai4TimeBetweenMoves = 1
+ai4AllyList = "3;5"
+ai4color = green
+
+ai5Name = "Shadow Reaper"
+ai5Tech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;windBattery;thunderbattery;rainbattery;windarcher;windaviary;windballoon;windblocker;windWalker;thunderarcher;thunderblocker;thundercannon;thunderfence;rainaviary;rainwalker;rainballoon;rainblocker;raincannon;rainFence"
+ai5StartMoney = 40000
+ai5GeysersAttachments = 2
+ai5Collectors =10
+ai5TimeBetweenMoves = 1
+ai5AllyList = "3;4"
+ai5color = magenta
+
+ai6Name = ""
+ai6Tech = ""
+ai6StartMoney = 
+ai6GeysersAttachments = 
+ai6Collectors = 
+ai6TimeBetweenMoves = 
+ai6AllyList = 
+ai6color = 
+
+ai7Name = ""
+ai7Tech = ""
+ai7StartMoney = 
+ai7GeysersAttachments = 
+ai7Collectors = 
+ai7TimeBetweenMoves = 
+ai7AllyList = 
+ai7color = 
+
+ai8Name = ""
+ai8Tech = ""
+ai8StartMoney = 
+ai8GeysersAttachments = 
+ai8Collectors = 
+ai8TimeBetweenMoves = 
+ai8AllyList = 
+ai8color = 
+
+[Options]
+
+[A.]
+<h2>The Siege</h2>
+<i>~[Ithunderblocker.D3] <br>
+"Power: The greatest of all virtue, and the deadliest of all sins."<br>
+--High Priest Firestorm </i>  
+
+<p>The aliens seem to be much like Nimbians, but they come from the Duesphere and therefore have more powerful technology. Their army is called the Legion of the Shadow Reapers, and they plan on conquering the whole of Nimbus!! You have been assigned to the post of Guardian, and you must guard the rift to make sure no aliens come out. However, the aliens did come out, and they have laid siege to you! Beat them back to the Deusphere!
+
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[BadTeamDead]
+<h2>You have beaten back the aliens!</h2>
+<p>~[Irainblocker.A5] <br>
+The Shadow Reapers are beaten again. They will not be so overconfident next time. Now it is all out war, and you know there are tough battles to face ahead.
+
+<$Config,Done{mission.filename}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,FireScen3
+
+[ai2PriestDead]
+<h2>Your ally has been slain!</h2>
+<p>~[Isunballoon.D1] <br>
+You ally the Guardian has been captured and slain by the Shadow Reapers. Avenge his death and smash their evil forces!
+
+[Failed]
+<h2>Death!</h2>
+<p>
+You have been defeated! The aliens are now free to attack the rest of the Deusphere!
+
+$Button=Continue,Tell,TryAgain
+
+[END]

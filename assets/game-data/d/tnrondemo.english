@@ -1,0 +1,146 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 1
+
+title="Sun Battle"
+
+myTech = "windBattery;sunCannon;sunFence;sunBalloon;sunAviary;sunBlocker;sunArcher"
+StartMoney = 5000
+
+
+ai1Tech = "windBattery;sunCannon;sunFence;sunBalloon;sunAviary;sunBlocker;sunArcher"
+ai1StartMoney = 10000
+ai1GeyserAttachments = 0
+ai1Collectors = 5
+ai1TimeBetweenMoves = 1
+
+
+ai2Tech = "thunderBattery;sunCannon;sunFence;sunBalloon;sunAviary;sunBlocker;sunArcher"
+ai2StartMoney = 10000
+ai2GeyserAttachments = 4
+ai2Collectors = 1
+ai2TimeBetweenMoves = 1
+
+demo = 1
+demoRestartTimer = 400
+
+[Demo] 
+<h2>Sun Battle</h2> 
+<p>
+It is a sun battle between the two dukes<br>
+Who will best the other?
+
+$Button=Start,DoNothing,0
+$Button=Credits,Tell,c1
+$Timeout=7,DoNothing,0
+
+[c1]
+<h2>Level Maker</h2>
+<p>Adley Tang  a.k.a. Rahn<br>
+<p>
+<h2>Story Line</h2>
+<p>Adley Tang<br>
+<p>
+<h2>Level Testers</h2>
+<p>Adley Tang<br>
+Kevin Hall  a.k.a. Silence
+<p>
+~[inugget.9]
+
+$Button=ok,tell,Demo
+$Timeout=7,tell,c2
+
+[c2]
+<h2>Thanks to<br>
+~iIsland Sancuary </h2>
+<p>~wwhere I discovered the built-in editor.
+<p>
+~[isunBlocker.1]
+
+$Button=ok,tell,Demo
+$Timeout=7,tell,c3
+
+[c3]
+<h2>Thanks to ~bChamber</h2>
+<p>~wIt was his campain that I used to help create mine.
+<p>
+~[isunarcher.10]
+
+$Button=ok,tell,Demo
+$Timeout=7,tell,c4
+
+[c4]
+
+<h2>Thanks to ~lSwelb</h2>
+<p>~wWithout him and his efforts this credit stuff wouldn't be here along with some other great stuff.
+<p>
+~[irainVortex.2]
+
+$Button=ok,tell,Demo
+$Timeout=7,tell,c5
+
+[c5]
+
+<h2>Also thanks to...</h2>
+<p>Activison and Titanic for making a unique and great game.<br>
+And the players who make a Netstorm a nice place to play
+<p>
+~[isunFence.1]
+
+$Button=ok,tell,Demo
+$Timeout=7,tell,c6
+
+[c6]
+<h2>Also thanks to...</h2>
+<p>sleep<br>
+caffine<br>
+Kevin the insane<br>
+T.V.<br>
+junk food<br>
+fish<br>
+Apollo the sun god<br>
+Cam the freak<br>
+the guy who found the editor<br>
+The copy & paste function<br>
+trees<br>
+utinsils<br>
+erasers<br>
+
+$Button=ok,tell,Demo
+$Timeout=7,tell,c7
+
+[c7]
+<h2>The Priests</h2>
+<p>These people are fictional and anyone with the names I used was purly by concidence.
+<p>Please a moment of silence for the priests who sacraficed their lives in the making of this campain...
+
+$Button=ok,tell,Demo
+$Timeout=7,tell,c8
+
+[c8]
+<p>OK done.
+
+$Button=ok,tell,Demo
+$Timeout=2,tell,c9
+
+[c9]
+<h2>~rERRORS!!</h2>
+<p>~wI do not claim any responsiblity for anything that happens to your computer by you not knowing how to work it.
+<p>Please forgive any spelling errors I've made...AND if you can't e-mail me and I'll fix it.
+<p>Don't hesistate to report to me any bugs in this campain.  Give me your opinion about it too.  I NEED FEEDBACK!!
+
+$Button=ok,tell,Demo
+$Timeout=15,tell,c10
+
+[c10]
+<p>Ok I'm done, now on with the show!!
+
+
+$Button=ok,tell,Demo
+$Timeout=4,tell,Demo
+
+
+[END]
+

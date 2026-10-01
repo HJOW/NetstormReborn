@@ -1,0 +1,19 @@
+title = "HurtMeNot's Campains"
+
+[Overview]
+<background="nsstart">
+<h2>HurtMeNot's Campains</h2>
+<i>Welcome!</i>
+<p>
+These are campains made be me (HurtMeNot), have fun.
+
+hurtmenot@mail.com
+
+5839445
+
+
+$Checked=1 Little_Bros,MissionBegin,Little_Bros,{DoneLittle_Bros},1
+$Checked=2 Big_Brothers,MissionBegin,Big_Brothers,{DoneBig_Brothers},2 
+
+$Button=Back,Tell,Campaign
+

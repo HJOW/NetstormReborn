@@ -1,0 +1,132 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 3
+moreGeysers = 0
+
+myStartMoney = 10000
+myTech = "sunWalker;sunArcher;rainBattery;sunCannon;sunBlocker;sunBalloon;sunAviary;sunFence"
+
+title="Gain Power"
+
+ai2Name = "Drizzle"
+ai2Tech = "rainBattery;rainCannon;rainBlocker;rainBalloon;rainWalker;rainFence"
+ai2StartMoney = 3000                          
+ai2GeyserAttachments = 2
+ai2Collectors = 3
+ai2TimeBetweenMoves = 10
+ai2AllyList = "3"
+ai2color = red
+
+ai3Name = "Ice Man"
+ai3Tech = "rainBattery;rainAviary;rainCannon;rainBlocker;rainBalloon;rainWalker;sunAviary;rainFence"
+ai3StartMoney = 3000
+ai3GeyserAttachments = 2
+ai3Collectors = 3
+ai3TimeBetweenMoves = 10
+ai3AllyList = "2"
+ai3color = white
+
+[Options]
+
+[A.]
+                                             <i>~[IsunCannon.3]</i> GAIN POWER <i>~[IrainCannon.C3]</i><br>
+<i>But, master Sun Lord, it's not fair... 2 against 1... I need help!<br>
+                                                                                  --mosquito
+<br>
+<i>Enough, you Cowardly Clump of drivel. I grow tired of your incessant whining..<br>
+                                                                                  --Sun God</i><br><br>
+<p>
+Wow!, there seems to be no stopping you... The sun God, although against
+his better judgement, bestows upon you the rank of WART<br>
+(<i><h2>W</i/h2>arriors <i><h2>A</i/h2>gainst <i><h2>R</i/h2>ebellious <i><h2>T</i/h2>rainees).
+
+<p>
+The Rain Fury has asked for your help in squashing some rebellious rain trainees.<br>
+Succeed, and he promises to grant you the power of rain<br>
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Leave Missions,MissionAbort,0
+$Button=Play Mission,DoNothing,0
+
+
+[ai2TempleHalfDead]
+<h2>Message from the Rain Fury</h2>
+<p>
+Wear down the enemy.....<br> 
+that's what the power of rain does..
+
+[ai2TempleDead]
+<h2>Message from the Rain Fury</h2>
+<p>
+Wear down the enemy.....<br>
+you're almost there...<br>
+that's what the power of rain does...
+
+[ai3TempleHalfDead]
+<h2>Message from the Rain Fury</h2>
+<p>
+Wear down the enemy.....<br>
+you're almost there...<br>
+continue to whittle away at their forces...<br>
+that's what the power of rain does..
+
+[ai3TempleDead]
+<h2>Message from the Rain Fury</h2>
+<p>
+Wear down the enemy.....<br>
+you're almost there...<br>
+continue to whittle away at their forces...<br>
+now sacrifice the priests...
+
+[ai2PriestCaptured]
+<h2>Message from the Rain Fury</h2>
+<p>
+Capture the priest...<br>
+That is good...<br>
+Continue on toward your goal...
+
+[ai2PriestDead]
+<h2>Message from the Rain Fury</h2>
+<p>
+Sacrifice our enemies...<br>
+That is good...<br>
+Continue on toward your goal...
+
+[ai3PriestCaptured]
+<h2>Message from the Rain Fury</h2>
+<p>
+Capture the priest...<br>
+That is good...<br>
+Continue on toward your goal...
+
+[ai3PriestDead]
+<h2>Message from the Rain Fury</h2>
+<p>
+Sacrifice our enemies...<br>
+That is good...<br>
+Continue on toward your goal...
+
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+You've defeated the enemy! The Rain Fury grants you power
+in the arcane knowledge of rain. Congrats!<br>
+<i>                        ~[IrainCannon.3]</i>
+
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,help
+
+
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+Oh no! Mr. Drizzle, and Ice Man were too much for you!  This cannot be! You must continue
+to fight!
+$Button=Continue,Tell,TryAgain
+
+
+[END]

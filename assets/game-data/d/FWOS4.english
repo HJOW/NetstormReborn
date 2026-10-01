@@ -1,0 +1,65 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 4
+moreGeysers = 1
+randGeysers = 2
+
+myStartMoney = 5000
+myTech = "sunWalker;sunarcher;sunballoon;sunFence;sunaviary;outpost;thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence"
+myAllyList = ""
+
+title="Thunder World"
+
+ai2Name = "SPU DeathBringer"
+ai2Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;Bulf;sunwalker"
+ai2StartMoney = 10000
+ai2GeyserAttachments = 7
+ai2Collectors = 5
+ai2TimeBetweenMoves = 1
+ai2DrawBridgeRate = 1
+ai2AllyList = "3;4"
+ai2color = yellow
+
+ai3Name = "SWORD Attacker"
+ai3Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;Bulf;sunwalker"
+ai3StartMoney = 10000
+ai3GeyserAttachments = 8
+ai3Collectors = 5
+ai3TimeBetweenMoves = 1
+ai3DrawBridgeRate = 1
+ai3AllyList = "2;4"
+ai3color = red
+
+ai4Name = "GOF Knight"
+ai4Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;Bulf;sunwalker"
+ai4StartMoney = 10000
+ai4GeyserAttachments = 6
+ai4Collectors = 4
+ai4TimeBetweenMoves = 1
+ai4DrawBridgeRate = 1
+ai4AllyList = "2;3"
+ai4color = orange
+
+[Options]
+
+[A.]
+<h2>Thunder World</h2>
+<i>Guldan: ~wCommander, this section is so bazaar...<br>
+<i>You: ~wWhy's that?<br>
+<i>Guldan: ~wThunder Cannons popped up as we were flying here.  They busted our island accorators.  Even as we speak your temple is being hit by thunder bolts.<br>
+<i>You: ~wLater...
+As you run down the hall, Guldan chuckles to himself.
+$Button=What ya got,ShowTechnology,55
+$Button=Let's get the on with the killing,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<i>Guldan: ~wSorry for laughing, but we got another thing coming up for us to worry about.
+$Button=What now?,MissionBegin,FWSO5
+
+[Failed]
+<h2>You have failed!</h2>
+<i>Ouch... {Read X-Hints OnTheRun if you need help}
+$Button=Bye Bye,MissionAbort,0
+
+[END]

@@ -1,0 +1,58 @@
+[Header]
+
+missionType="Tutorial"
+missionNumber = 1
+moreGeysers = 1
+myStartMoney = 1000
+myTech = "windBattery;windAviary;windBlocker;windArcher"
+
+title= "Unsuspectiong attack"
+
+ai2Name= "ThunderDaemon"
+ai2Tech= "thunderbattery;Thundercannon;thunderblocker"
+ai2StartMoney= 700
+ai2GeyserAttachments = 2
+ai2Collectors = 4
+ai2TimeBetweenMoves = 1
+ai2AllyList= ""
+ai2color= white
+             
+ai3Name="Brother"
+ai3tech= "thunderbattery;sunCannon;sunfence;sunAviary
+ai3StartMoney= 10000
+ai3GeyseerAttachments = 2
+ai3Collectors= 5
+ai3TimeBetweenMoves = 1
+ai3Allylist= "1"
+ai3color= cyan
+
+[Options]
+
+
+[A.]
+<h2> The Thunder empire strikes back! <h2>
+<i> "Give me back my islands or I would sac your high priest! " <br>
+--Mr Angry Thunder daemon </i|
+<p>
+Be quick!!! Your priest is already on the altar!! Time is money! Every second
+counts!!! Beware of thunder cannons for they will wreck havoc in your unprepared island
+$Button=Review Knowledge,Show Technology,55
+$Button=PlayMission,DoNothing,0
+
+[Succeeded] [BadTeamDead]
+
+<h2> Haha!!! <h2>
+<p> Haha it is your turn to be sacrificed!!--- You
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,rebel
+
+[Failed]
+
+<h2> Thunder empire just made a crashing blow!!! </h2>
+<p> Now the thunder will rule!!! Forever!!! -Victorius thunde daemon
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+

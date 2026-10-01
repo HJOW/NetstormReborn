@@ -1,0 +1,83 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 3
+moreGeysers = 1
+
+myStartMoney = 999999
+myTech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence;rainwalker;sunBlocker;sunFence;outpost"
+myAllyList = "2"
+
+title="3 on 3"
+
+ai2Name = "Gordan_Gano"
+ai2Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker"
+ai2StartMoney = 999999
+ai2GeyserAttachments = 0
+ai2Collectors = 0
+ai2TimeBetweenMoves = 0
+ai2AllyList = "1"
+ai2color = red
+ai2Ability=""
+ai2BridgeDrawRate = 1
+
+ai3Name = "Cloud"
+ai3Tech = "rainfence;rainbattery;rainaviary;rainballoon;rainblocker;raincannon"
+ai3StartMoney = 999999
+ai3GeyserAttachments = 0
+ai3Collectors = 0
+ai3TimeBetweenMoves = 0
+ai3AllyList = "4;5"
+ai3color = white
+ai3Ability=""
+ai3BridgeDrawRate = 1
+
+ai4Name = "Cogz"
+ai4Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker"
+ai4StartMoney = 999999
+ai4GeyserAttachments = 0
+ai4Collectors = 0
+ai4TimeBetweenMoves = 0
+ai4AllyList = "3;5"
+ai4color = green
+ai4Ability=""
+ai4BridgeDrawRate = 1
+
+
+ai5Name = "Hermes"
+ai5Tech = "rainfence;rainbattery;rainaviary;rainballoon;rainblocker;raincannon"
+ai5StartMoney = 999999
+ai5GeyserAttachments = 0
+ai5Collectors = 0
+ai5TimeBetweenMoves = 0
+ai5AllyList = "3;4"
+ai5color = purple
+ai5Ability=""
+ai5BridgeDrawRate = 1
+
+[Options]
+
+[A.]
+<h2>Hardness</h2>
+<i>"When a hard battle arises, pull out ur boot and kick the enemy in the balls"<br>
+--Ass</i>  
+<p>Hard ass mission.. kinda.. well ok not that fucking hard but its fun =)
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+Congratulations! You and your friends have escaped with your lives.....but for how long?
+$Button=Leave Missions,MissionAbort,0
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+You lose, until you can win this.. dont talk to me in the skies :)
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+

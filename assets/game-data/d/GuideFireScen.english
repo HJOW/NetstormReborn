@@ -1,0 +1,21 @@
+title = "The Wrath of the Shadow Reapers"
+
+[Overview]
+<background="nsstart">
+<h2>The Wrath of the Shadow Reapers</h2>
+<i>~[Iraincannon.C6] <br>
+The Dark Lords are defeated, but peace cannot exist for long on Nimbus...</i>
+<p>
+A continuation of the single player campaigns <br>
+Firestorm <br>
+<a href="mailto:dschang1@gte.net">dschang1@gte.net</a>
+
+$Checked=1 The Furies' Rift,MissionBegin,FireScen,{DoneFireScen},1
+$Checked=2 The Siege,MissionBegin,FireScen2,{DoneFireScen2},2
+$Checked=3 Scumball!,MissionBegin,FireScen3,{DoneFireScen3},3
+$Checked=4 Get out of Jail Free,MissionBegin,FireScen4,{DoneFireScen4},4
+$Checked=5 Thunderisle Keep,MissionBegin,FireScen5,{DoneFireScen5},5
+
+$Button=Back,Tell,Campaign
+
+

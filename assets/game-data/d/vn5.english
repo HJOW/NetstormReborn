@@ -1,0 +1,151 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = "5"
+moreGeysers = "0"
+randGeysers = "1"
+
+myStartMoney = "10000"
+myTech = "{vn_tech}"
+myAllyList = "3;"
+
+title = "Rescue (easy)"
+
+ai3Name = "Your friend"
+ai3Tech = ""
+ai3StartMoney = "5000"
+ai3AllyList = "1;"
+ai3Color = "red"
+ai3Collectors = ""
+ai3BridgeDrawRate = ""
+ai3GeyserAttachments = ""
+ai3TimeBetweenMoves = ""
+ai3Ability = "!BUILD_BRIDGES"
+
+
+ai2Name = "Evil Thunderlord"
+ai2Tech = "bulf;windArcher;thunderCannon;thunderBattery;thunderFence;windBalloon;"
+ai2StartMoney = "10000"
+ai2AllyList = ""
+ai2Color = "white"
+ai2Collectors = ""
+ai2BridgeDrawRate = ""
+ai2GeyserAttachments = ""
+ai2TimeBetweenMoves = ""
+ai2Ability = "!SACRIFICE_ENEMY_PRIEST"
+
+[Init]
+
+[Options]
+
+[A.]
+<h2>Rescue (easy)</h2>
+<i>"In our last hour we shall not remember the actions of our enemies, but the inaction of our friends"<br>
+--Unknown</i>
+<p>A great friend of the Lord of <?{vn_windall}>Wind</?><?!{vn_windall}>Rain</?>~. has been captured. You have been entrusted with the important mission of rescuing him. 
+
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+
+[@40]
+"You have three miniutes to save your friend!" shouts the Evil Thunderlord
+[@160]
+"One miniute until I begin the sacrifice" laughs the Evil Thunderlord
+[@220]
+<$PlaySound,forWind2.wav>
+[@223]
+<$PlaySound,beamOver03.wav>
+[@224]
+<$PlaySound,beamOver03.wav>
+[@225]
+<$PlaySound,beamOver03.wav>
+[@226]
+<$PlaySound,beamOver03.wav>
+[@231]
+<$PlaySound,altarBurnCollapse.wav>
+[@235]
+<$PlaySound,forSun2.wav>
+[@238]
+<$PlaySound,beamOver03.wav>
+[@239]
+<$PlaySound,beamOver03.wav>
+[@240]
+<$PlaySound,beamOver03.wav>
+[@241]
+<$PlaySound,beamOver03.wav>
+[@245]
+<$PlaySound,altarBurnCollapse.wav>
+[@250]
+<$PlaySound,forRain2.wav>
+[@253]
+<$PlaySound,beamOver03.wav>
+[@254]
+<$PlaySound,beamOver03.wav>
+[@255]
+<$PlaySound,beamOver03.wav>
+[@256]
+<$PlaySound,beamOver03.wav>
+[@260]
+<$PlaySound,altarBurnCollapse.wav>
+[@265]
+<$PlaySound,forThunder2.wav>
+[@268]
+<$PlaySound,beamOver03.wav>
+[@269]
+<$PlaySound,beamOver03.wav>
+[@270]
+<$PlaySound,beamOver03.wav>
+[@271]
+<$PlaySound,beamOver03.wav>
+[@275]
+<$PlaySound,altarBurnCollapse.wav>
+[@278]
+<$PlaySound,forStorm2.wav>
+[@282]
+<$PlaySound,itIsDone.wav>
+[@285]
+<$PlaySound,priestSacrifice2.wav>
+[@288]
+<$PlaySound,AltarBurnCollapse.wav>
+[@295]
+Your ally has been slain. Your rescue has failed. Back at camp you try to explain to the lord of <?{vn_windall}>Wind</?><?!{vn_windall}>Rain</?>~., but he suddenly reaches for his sword and screams at you "~I~BFailure will not be tolerated" "You must suffer for your incompetence"~. With this he thrusts his sword towards you, but you are too quick for him and jump back. Crazed with fear you look for a way out, but the last thing you ever see are his guards closing in on you.
+<$Config,vn_death=1>
+<$Config,vn_alive=0>
+$Button=Leave,tell,guidevn.overview
+
+[ai3PriestSaved]
+You have saved a friend of the lord of <?{vn_windall}>Wind</?><?!{vn_windall}>Rain</?> ~.You have done well. The campaign moves ever onwards and you feel the next mission you face will be an important one....
+<?{vn_windall}>$Menu= ~[IwindBlocker.1],tell,windtech</?>
+<?!{vn_windall}>$Menu= ~[IrainBlocker.*],tell,raintech</?>
+<$Config,vn_donev5=1>
+
+[ai2PriestDead]
+<h2>Victory!</h2>
+<p>Again you have proved your formidable abilities in battle. Tonight there will be much rejoicing.You have done well. The campaign moves ever onwards and you feel the next mission you face will be an important one....
+
+
+<?{vn_windall}>$Menu= ~[IwindBlocker.1],tell,windtech</?>
+<?!{vn_windall}>$Menu= ~[IrainBlocker.*],tell,raintech</?>
+<$Config,vn_donev5=1>
+
+[windtech]
+<$GetTechnology,142>
+<$Config,vn_tech="windBattery;windArcher;outpost;sunFence;windAviary;windTower;">
+$Button=Next Mission,MissionBegin,vn7
+
+[raintech]
+<$GetTechnology,147>
+<$Config,vn_tech="rainBattery;rainCannon;outpost;sunFence;rainAviary;rainTower;">
+$Button=Next Mission,MissionBegin,vn7
+
+[Failed]
+<h2>You Died</h2>
+<p>HOW???????? All you gotta do is rescue yer ally!!! You mustve run your priest right into them to get killed this quick!</p>
+<$Config,vn_death=1>
+<$Config,vn_alive=0>
+$Button=Leave,tell,guidevn.overview
+
+
+[END]

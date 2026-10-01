@@ -1,0 +1,17 @@
+title = "Revenge on DeathStar"
+
+[Overview]
+<background="nsstart">
+<h2>Revenge on ~kDeath~tStar</h2>
+<p>~kDeath~tStar ~.one of your most powerfulest enemies is taking over Nimbus and you must stop him! 
+
+$Checked=1 
+Bridge of Eternity,MissionBegin,bridging,{Donebridging},1
+$Checked=2 
+Guards of DeathStar,MissionBegin,deathguard,{Donedeathguard},{Donebridging}
+$Checked=3 Attack on Death Star ,MissionBegin,attackds,{Doneattackds},{Donedeathguard}
+$Checked=4 The Escape,MissionBegin,escape,{Doneescape},{Doneattackds}
+$Checked=5 Homeward Bound ,MissionBegin,hbound,{Donehbound},{Doneescape}
+
+$Button=Back,Tell,Campaign
+

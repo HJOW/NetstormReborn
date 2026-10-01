@@ -207,7 +207,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         _batch = new SpriteBatch(GraphicsDevice);
         _fonts = new FontSystem();
         _fonts.AddFont(LoadKoreanFont());
-        LoadOriginalData();
+        LoadGameData();
     }
 
     /// <summary>D2Coding TTC 에서 face 하나를 TTF 로 분리해 돌려준다</summary>
@@ -219,16 +219,16 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
             : data;
     }
 
-    /// <summary>원본 데이터 폴더를 찾아 팔레트·셰이프를 읽고 표시할 애니메이션을 만든다</summary>
-    private void LoadOriginalData()
+    /// <summary>출력에 포함된 클론 데이터를 찾아 팔레트·셰이프·메뉴·미션을 준비한다.</summary>
+    private void LoadGameData()
     {
         string? dataDir = GameDataLocator.FindDataDirectory();
         if (dataDir == null)
         {
-            _statusLines.Add($"원본 데이터 폴더를 찾지 못했습니다. 환경 변수 {GameDataLocator.EnvironmentVariable} 로 지정하세요.");
+            _statusLines.Add($"게임 데이터를 찾지 못했습니다. 출력의 game-data/ 또는 환경 변수 {GameDataLocator.EnvironmentVariable}를 확인하세요.");
             return;
         }
-        _statusLines.Add($"원본 데이터: {dataDir}");
+        _statusLines.Add($"게임 데이터: {dataDir}");
         GameResources resources;
         Palette palette;
         ShapeDatabase shapes;
@@ -240,7 +240,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         }
         catch (Exception error) when (error is IOException or ArgumentException)
         {
-            _statusLines.Add($"원본 자산을 읽지 못했습니다: {error.Message}");
+            _statusLines.Add($"게임 자산을 읽지 못했습니다: {error.Message}");
             return;
         }
         _statusLines.Add($"선택 언어: {resources.Language} | 용어표: {resources.LanguageConfigPath ?? "없음"}");

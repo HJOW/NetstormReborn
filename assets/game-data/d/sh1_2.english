@@ -1,0 +1,79 @@
+[Header]
+missionType = "Tutorial"
+missionNumber = 1
+moreGeysers = 1
+
+mystartmoney = 2000
+myTech = "all;outpost;"
+
+title = "Wrath of the Furies"
+
+ai2Name = "Fury of Sun"
+ai2Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;rainbattery;rainaviary;rainwalker;rainballoon;rainblocker;raincannon;rainFence;windBattery;windarcher;windaviary;windballoon;windblocker;windWalker;outpost;sunWalker;sunArcher;sunBlocker;sunFence;sunBalloon;sunFence;sunAviary;sunCannon"
+ai2StartMoney = 9999999
+ai2GeysersAttachments = 0
+ai2Collectors = 0
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3;4;5"
+ai2color = red
+ai2BridgeDrawRate = 1
+
+ai3Name = "Fury of Rain"
+ai3Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;rainbattery;rainaviary;rainwalker;rainballoon;rainblocker;raincannon;rainFence;windBattery;windarcher;windaviary;windballoon;windblocker;windWalker;outpost;sunWalker;sunArcher;sunBlocker;sunFence;sunBalloon;sunFence;sunAviary;sunCannon"
+ai3StartMoney = 9999999
+ai3GeysersAttachments = 0
+ai3Collectors = 0
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2;4;5"
+ai3color = white
+ai3BridgeDrawRate = 1
+
+ai4Name = "Fury of Thunder"
+ai4Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;rainbattery;rainaviary;rainwalker;rainballoon;rainblocker;raincannon;rainFence;windBattery;windarcher;windaviary;windballoon;windblocker;windWalker;outpost;sunWalker;sunArcher;sunBlocker;sunFence;sunBalloon;sunFence;sunAviary;sunCannon"
+ai4StartMoney = 9999999
+ai4GeysersAttachments = 0
+ai4Collectors = 0
+ai4TimeBetweenMoves = 1
+ai4AllyList = "2;3;5"
+ai4color = green
+ai4BridgeDrawRate = 1
+
+ai5Name = "Fury of Wind"
+ai5Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;rainbattery;rainaviary;rainwalker;rainballoon;rainblocker;raincannon;rainFence;windBattery;windarcher;windaviary;windballoon;windblocker;windWalker;outpost;sunWalker;sunArcher;sunBlocker;sunFence;sunBalloon;sunFence;sunAviary;sunCannon"
+ai5StartMoney = 9999999
+ai5GeysersAttachments = 0
+ai5Collectors = 0
+ai5TimeBetweenMoves = 1
+ai5AllyList = "2;3;4"
+ai5color = orange
+ai5BridgeDrawRate = 1
+
+[Options]
+
+[A.]
+<h2>~lWrath of the Furies</h2>
+<i>Never take wrath of the furies!<br>
+--Priest's handbook</i>
+<p>Week ago you tried to kill Wind fury by black magic. Today you wake up and recieve a wrath of all 4 furies. They landed around your island and they going to kill you. Oh my god said you, I must kill them all, cause its my last chance!
+
+$Button=Its too hard for me!,Tell,Campaign
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Suceeded][BadTeamDead]
+<h2>~lCongratulations!</h2>
+<i>You...never will...will..will beat...us...<br>
+--Last words of Thunder Fury</i>
+<p>So you beat all Nimbians Furies! Now you own all Nimbus Technic!
+
+<$Config,Done{mission.fileName}=1>
+$Button=Back to menu,Tell,Campaign
+
+[Failed]
+<h2>~lYou lose...</h2>
+<p>Don't worry if you lose, this is Shit Hard!
+
+$Button=Its too hard for me!,Tell,Campaign
+$Button=Try again!,Tell,TryAgain
+
+[END]

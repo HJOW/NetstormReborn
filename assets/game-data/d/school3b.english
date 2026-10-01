@@ -1,0 +1,72 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 3
+moreGeysers = 1
+
+myStartMoney = 6500
+myTech = "windWalker;windBattery;windBlocker;windArcher;windBalloon;windAviary"
+
+title="Day 3"
+
+ai2Name = "Michael"
+ai2Tech = "windWalker;windBattery;windBlocker;windArcher;windBalloon;windAviary"
+ai2StartMoney = 6500
+ai2GeyserAttachments = 5
+ai2Collectors = 5
+ai2TimeBetweenMoves = 1
+ai2AllyList = "4"
+ai2color = red
+
+ai3Name = "Mellisa"
+ai3Tech = "windWalker;windBattery;windBlocker;windArcher;windBalloon;windAviary"
+ai3StartMoney = 6500
+ai3GeyserAttachments = 4
+ai3Collectors = 4
+ai3TimeBetweenMoves = 3
+ai3AllyList = "1"
+ai3color = white
+
+ai4Name = "Louis"
+ai4Tech = "windWalker;windBattery;windBlocker;windArcher;windBalloon;windAviary"
+ai4StartMoney = 6500
+ai4GeyserAttachments = 4
+ai4Collectors = 4
+ai4TimeBetweenMoves = 3
+ai4AllyList = "2"
+ai4color = green
+
+
+[Options]
+[A.]
+<h2>TSK... TSK... TSK...</h2>
+Michael, your best friend, is mad at you for allying
+with Mellisa and has now allied with Louis to defeat you!!!
+Good Job... Mellisa will help you like Mike did... but not
+as good.
+
+$Button=Continue,MissionBegin,school3b
+
+[ai2PriestDead]
+<h2>Message from Michael:</h2>
+WHY!!!! Why did you ally with her? She has turned you ~k~BEVIL ~w!!
+I allied with Louis to stop you from ruining your life!! But you have killed me!
+So Long, my friend.
+$Button=NO!!!!,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+You have successfully beaten Michael and Louis!!!
+
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+Michael and Louis have beaten you and Mellisa to the ground, there is no helping you now. 
+
+$Button=Continue,Tell,TryAgain
+
+[END]

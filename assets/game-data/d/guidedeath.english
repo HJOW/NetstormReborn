@@ -1,0 +1,16 @@
+title = "Death"
+
+[Overview]
+<background="nsstart">
+<h2>Death</h2>
+<p>Ready to die well go forth and DIE!
+<p>
+<i>Hahaha!  (Killdead)
+
+
+$Checked=1 Death,MissionBegin,death,{Donedeath},1
+$Checked=2 Nothing Here,MissionBegin,???,{Done???},{Donedeath}
+
+
+$Button=Back,Tell,Campaign
+

@@ -8,6 +8,8 @@
     <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
     <!-- MonoGame 의 네이티브 라이브러리(SDL2, OpenAL)는 NuGet 패키지가 출력 폴더에 복사한다 -->
     <TieredPGO>true</TieredPGO>
+    <!-- 클론에서 직접 관리하는 데이터 소스. 빌드에는 분석용 originals/ 를 사용하지 않는다. -->
+    <GameDataSourceDirectory>$(MSBuildProjectDirectory)/../../assets/game-data</GameDataSourceDirectory>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.DesktopGL" />
@@ -21,6 +23,22 @@
     <!-- 한국어 글꼴 D2Coding (SIL OFL 1.1) 을 출력 폴더의 fonts/ 로 복사 -->
     <None Include="..\..\fonts\D2Coding-Ver1.3.2-20180524-all.ttc" Link="fonts\D2Coding-Ver1.3.2-20180524-all.ttc">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </None>
+    <!-- 그래픽·지도·미션·소리를 개발용 빌드와 배포 폴더에 함께 복사한다. -->
+    <Content Include="$(GameDataSourceDirectory)/**/*" Link="game-data/%(RecursiveDir)%(Filename)%(Extension)">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
+  <!-- 데이터 누락이나 원본 실행 파일의 혼입은 실행 전 빌드 단계에서 알려 준다. -->
+  <Target Name="ValidateGameData" BeforeTargets="PrepareForBuild">
+    <Error Condition="!Exists('$(GameDataSourceDirectory)/netstorm.tarc') Or !Exists('$(GameDataSourceDirectory)/d/_shapes.shp') Or !Exists('$(GameDataSourceDirectory)/d/GIFCLOUD.COL')"
+           Text="클론 게임 데이터가 없습니다. assets/game-data/의 netstorm.tarc, d/_shapes.shp, d/GIFCLOUD.COL을 준비하세요." />
+    <ItemGroup>
+      <UnexpectedGameExecutable Include="@(Content)" Condition="'%(Content.Extension)' == '.exe' Or '%(Content.Extension)' == '.dll' Or '%(Content.Extension)' == '.php'" />
+    </ItemGroup>
+    <Error Condition="'@(UnexpectedGameExecutable)' != ''"
+           Text="클론 게임 데이터에 실행 파일·라이브러리·서버 스크립트가 포함되어 있습니다: @(UnexpectedGameExecutable)" />
+  </Target>
 </Project>

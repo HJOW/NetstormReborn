@@ -1,0 +1,120 @@
+[Header]
+missionType="Tutorial"
+
+missionNumber=5
+moreGeysers=10
+
+myStartMoney=5000
+myTech="rainbattery;raincannon;rainblocker;rainaviary;rainballoon;suncannon;sunarcher;sunblocker;sunfence;sunaviary"
+myAllyList="2"
+
+title= "Help Sarge"
+
+ai2Name="Sarge"
+ai2Tech="rainbattery;raincannon;rainblocker;rainaviary;rainballoon;suncannon;sunarcher;sunblocker;sunfence;sunaviary;windbattery;windwalker;windarcher;windblocker;windaviary;windballoon;thunderbattery;bulf;thundercannon;thunderblocker;thunderfence"
+ai2StartMoney=15000
+ai2GeyserAttachments=3
+ai2Collectors=10
+ai2TimeBetweenMoves=3
+ai2AllyList="1"
+ai2color=orange
+ai2Ability="!USE_PRIEST_TO_COLLECT;!BUILD_DAIS;!CAPTURE_ENEMY_PRIEST"
+ai2BridgeDrawRate=4
+
+ai3Name="Wind Heretic"
+ai3Tech="windbattery;windwalker;windarcher;windblocker;windaviary;windballoon"
+ai3StartMoney=5000
+ai3GeyserAttachments=3
+ai3Collectors=10
+ai3TimeBetweenMoves=6
+ai3AllyList="4;5"
+ai3color=red
+ai3Ability="!USE_PRIEST_TO_COLLECT"
+ai3BridgeDrawRate=4
+
+ai4Name="Wind Heretic"
+ai4Tech="windbattery;windwalker;windarcher;windblocker;windaviary;windballoon"
+ai4StartMoney=5000
+ai4GeyserAttachments=4
+ai4Collectors=10
+ai4TimeBetweenMoves=6
+ai4AllyList="3;5"
+ai4color=green
+ai4Ability="!USE_PRIEST_TO_COLLECT"
+ai4BridgeDrawRate=4
+
+ai5Name="Demon Lord Breeze"
+ai5Tech="windbattery;windwalker;windarcher;windblocker;windaviary;windballoon"
+ai5StartMoney=5000
+ai5GeyserAttachments=4
+ai5Collectors=10
+ai5TimeBetweenMoves=4
+ai5AllyList="3;4"
+ai5color=blue
+ai5Ability="!USE_PRIEST_TO_COLLECT;!BUILD_DAIS"
+ai5BridgeDrawRate=4
+
+[Options]
+
+[A.]
+
+~[IrainCannonMissile.7]~[IrainCannonMissile.7]~[IrainCannonMissile.7]~[IrainCannonMissile.7]~[IrainCannonMissile.7]~[IrainCannonMissile.7]~[IrainCannonMissile.7]~[IrainCannonMissile.7]~[IrainCannonMissile.7]~[IrainCannonMissile.7]~[IrainCannonMissile.7]~[IrainCannonMissile.7]~[IrainCannonMissile.7]~[IrainCannonMissile.7]~[IrainCannonMissile.7]
+<p><h2>**Help Sarge!!!**</h2>
+<p>
+<i>I'm running out of cool catch phrases...</i>
+<p>
+--Me
+
+<p>The title pretty much says it all.  Save Sarge!  Only this time its a little different:  Sarge hooked his rain temple up to the main core of nimbus, to give him more power so he can use all of the elements.  He forgot to take on thing into consideration:  The core is very,very explosive.  So basically what i'm saying is, if Sarges temple gets destroyed, bye bye you guys!  Uh, good luck, this time i'm serious, YOU'LL NEED IT!
+
+<$Config,Done{mission.fileName}=5>
+$Button=EQUIPEMENT,ShowTechnology,55
+$Button=Blow these wind guys(away),DoNothing,0
+
+[Ai3TempleDead]
+<h2>Incoming Message:</h2>
+Nooooooooooooooooooo...you will pay for this!
+
+[Ai3PriestDead]
+<h2>Incoming Message:</h2>
+Darn!  I wanted to be able to live in Nimbus once my master takes it over!
+
+[Ai4TempleDead]
+<h2>Incoming Message:</h2>
+--sadlfjasdbkjhdsf--asdireasfdjl
+
+[Ai4PriestDead]
+<h2>Incoming Message:</h2>
+iouwesjblasdrioaj--asldkfja!!!!!
+
+[Ai5TempleDead]
+<h2>Incoming Message:</h2>
+NO!!  Our master will not be pleased!
+
+[Succeeded][Ai5PriestDead]
+<h2>Incoming Message:</h2>
+Thats it!!!  I'm calling RAINDOR!  (Hee hee hee)<p>
+End message...**
+Now you must go and fight RAINDOR the rain leader, General Thunder will back you up.
+
+$Button=RAINDOR can wait,MissionAbort,0
+$Button=Once again kick butt!,MissionBegin,Battle6
+
+[Ai2PriestCaptured]
+<h2>Incoming Message:</h2>
+PRIEST APPREHENDED...RE-QUESTING ASSIS-TANCE...
+
+[Ai2PriestDead]
+<h2>Incoming Message:</h2>
+SA*E NI*BU* --- communication uplink destroyed
+
+[Failed][Ai2TempleDead]
+<h2><i>BOOOOOOOOOOOOM!!!!!!!!!</h2></i>
+Sarges Temple being destroyed just blew up the main power core, you, sarge, all the wind demons, also, without you the Nimbians don't stand a chance...
+$Button=Go again,tell,tryagain
+$Button=Thank you! Come again!,misionabort,1
+
+[END]
+
+
+

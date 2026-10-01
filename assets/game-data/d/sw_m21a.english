@@ -1,0 +1,250 @@
+SWELB, we need a little time delay to have the player break free of the bridges. Whatdaya tink???
+
+
+
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 21
+moreGeysers = 1
+randomGeysers = 1
+denySalvage = 0
+
+myAllyList = ""
+myStartMoney = {sw_mvar0}
+myTech = all
+
+title = "A Taste of Freedom"
+
+ai2Name = "Hades Bounty Hunter 1"
+ai2Tech = "{sw_var1}{sw_var2}{sw_var3}{sw_var5}sunWalker"
+ai2StartMoney ={sw_mvar3}
+ai2GeyserAttachments = 3
+ai2Collectors = {sw_mvar4}
+ai2TimeBetweenMoves = {sw_mvar6}
+ai2AllyList = "3;4;5;6;8"
+ai2Color = orange
+ai2BridgeDrawRate = {sw_mvar5}
+ai2Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai3Name = "Hades High Wind Priest"
+ai3Tech = "{sw_var1}{sw_var2}{sw_var3}{sw_var4}sunWalker"
+ai3StartMoney ={sw_mvar3}
+ai3GeyserAttachments = 3      
+ai3Collectors = {sw_mvar4}
+ai3TimeBetweenMoves = {sw_mvar6}
+ai3AllyList = "2;4;5;6;8"
+ai3Color = yellow
+ai3BridgeDrawRate = {sw_mvar5}
+ai3Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai4Name = "Rain Fury: High Priest"
+ai4Tech = "{sw_var1}{sw_var2}{sw_var5}{sw_var6}sunWalker"
+ai4StartMoney = {sw_mvar3}
+ai4GeyserAttachments = 3
+ai4Collectors = {sw_mvar4}
+ai4TimeBetweenMoves = {sw_mvar6}
+ai4AllyList = "2;3;5;6;8"
+ai4Color = purple
+ai4BridgeDrawRate = {sw_mvar5}
+ai4Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai5Name = "Thunder Fury: High Priest"
+ai5Tech = "{sw_var1}{sw_var2}{sw_var7}{sw_var8}sunWalker"
+ai5StartMoney = {sw_mvar3}
+ai5GeyserAttachments = 3
+ai5Collectors = {sw_mvar4}
+ai5TimeBetweenMoves = {sw_mvar6}
+ai5AllyList = "2;3;4;6;8"
+ai5Color = green
+ai5BridgeDrawRate = {sw_mvar5}
+ai5Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai6Name = "Hades Bounty Hunter 2"
+ai6Tech = "{sw_var1}{sw_var2}{sw_var3}{sw_var6}{sw_var8}sunWalker"
+ai6StartMoney = {sw_mvar3}
+ai6GeyserAttachments = 3
+ai6Collectors = {sw_mvar4}
+ai6TimeBetweenMoves = {sw_mvar6}
+ai6AllyList = "2;3;4;5;8"
+ai6Color = white
+ai6BridgeDrawRate = {sw_mvar5}
+ai6Ability = "!USE_PRIEST_TO_COLLECT"
+  
+ai8Name = "Hades Bounty Hunter 3"
+ai8Tech = "{sw_var1}{sw_var2}{sw_var3}{sw_var6}{sw_var8}sunWalker"
+ai8StartMoney = {sw_mvar3}
+ai8GeyserAttachments = 3
+ai8Collectors = {sw_mvar4}
+ai8TimeBetweenMoves = {sw_mvar6}
+ai8AllyList = "2;3;4;5;6"
+ai8BridgeDrawRate = {sw_mvar5}
+ai8Ability = "!USE_PRIEST_TO_COLLECT"
+
+[init]
+<$Config,sw_enDead2=0>
+<$Config,sw_enDead3=0>
+<$Config,sw_enDead4=0>
+<$Config,sw_enDead5=0>
+<$Config,sw_enDead6=0>
+<$Config,sw_enDead8=0>
+
+[options]
+[A.]
+                                                     <h2>A taste of Freedom~.<a href="#mission21">~[IfortGump.46]</a></h2>
+                                                      ~[Iresidence.6]
+<br>
+After you beat the Furies in the 10 year tournament they allowed you to return to your home to Nimbus.
+ Although the {sw_god5} is temporarily trapped as a nimbian priest he still has the power of darkness.
+ He has sent his followers to kill you once and for all. He wants you dead so bad that he has offered
+  freedom to the one who sacrifices you.
+<p>
+You have been travelling throughout most of the evening. You finally stop to rest.
+ You are about another days journey before you reach your homeland.
+  When you awake in the morning you realize that you have been surrounded by islands
+ and they have managed to bridge around your entire island!
+<p>
+You think to yourself ~ICan I beat all of these enemies all by myself?~. 
+<p>
+<i>You were almost free. Hope you enjoyed your Taste of Freedom.</i>
+<p>
+            <a href="cmd:ShowTechnology,55"> ~[IfortGump.50] </a>                                                  <a href="cmd:DoNothing,0">~[IfortGump.22] </a>                                            <a href="cmd:Tell,guideHades.overview">~[Ipriest.13]</a><br>
+<a href="cmd:ShowTechnology,55">Review Knowledge</a>                            <a href="cmd:DoNothing,0">Enter Hades Realm</a>                    <a href="cmd:Tell,guideHades.overview">I'm too Scared!</a>
+$OnExit= ,PlaySound,priestmove3.wav
+$Button= ,Tell,A.
+
+<$PlaySound,somethingCreated.wav>
+
+[@1]
+<?!{sw_mvar2}>
+<$MoveDialog,tm>
+You didn't pick spells. So they were removed from
+the map....
+<$DigUp,6000>
+<$DigUp,6001>
+<$DigUp,6002>
+<$DigUp,6003>
+<$DigUp,6004>
+<$DigUp,6005>
+$Button=Please don't,DoNothing,0
+</?>
+[@4]
+<?{sw_mvar1}>
+You want cracked bridges, you got cracked bridges
+<$PlaySound,bridgeCrack.wav>
+<$SetAllBridge,0>
+$Button=kewl,DoNothing,0
+</?>
+
+[ai2PriestDead]
+<$Config,sw_enDead2=1>
+<$Tell,checkwin>
+
+
+[ai2PriestCaptured]
+<$PlaySound,priestPickUp.wav>
+<h2>You recieve a message from the {sw_god5}</h2>
+<p>~y~BLet him go you idiot!<br>
+Can't you see you will never be free!~.<br>
+$Button=I don't think so!,DoNothing,0
+
+[ai3PriestDead]
+<$Config,sw_enDead3=1>
+<$PlaySound,eagleScream-1500.wav>
+<h2>You receive a message from the {sw-god2}.<br>
+I will grant you storm power since you killed one of my worst enemies.</h2>
+<$PlaySound,bell.wav>
+<$AddRandom,154>
+<$AddRandom,154>
+<$AddRandom,154>
+<$AddRandom,154>
+<$AddRandom,154>
+<$AddRandom,154>
+<$ChangeMoney,4000>
+$OnExit= ,Tell,checkwin
+$Button=Thanks,DoNothing,0
+
+[ai4PriestDead]
+<$Config,sw_enDead4=1>
+<$PlaySound,eagleScream-1500.wav>
+<h2>You receive a message from the {sw_god1}.</h2>
+<p>I will grant you storm power for killing that traitorous fiend.<br>
+He was one of my best warriors.
+<$PlaySound,bell.wav>
+<$AddRandom,154>
+<$AddRandom,154>
+<$AddRandom,154>
+<$ChangeMoney,2000>
+$OnExit= ,Tell,checkwin
+$Button=Thanks,DoNothing,0
+
+[ai5PriestDead]
+<$Config,sw_enDead5=1>
+<$PlaySound,eagleScream-1500.wav>
+<h2>You receive a message from the {sw-god3}</h2>
+<p>Thank you for killing that one.<br>
+Here is a small token of my esteem.
+<$PlaySound,bell.wav>
+<$AddRandom,154>
+<$AddRandom,154>
+<$AddRandom,154>
+<$ChangeMoney,1000>
+$OnExit= ,Tell,checkwin
+$Button=Thanks,DoNothing,0
+
+[ai6PriestDead]
+<$Config,sw_enDead6=1>
+<$Tell,checkwin>
+
+[ai8PriestDead]
+<$Config,sw_enDead8=1>
+<$Tell,checkwin>
+
+[ai1TempleHalfDead]
+<p>
+You need to do something because your temple will soon be rubble.
+<$PlaySound,islandUnderAttack.wav>
+$Button=Where are all my allies when I need them?,DoNothing,0
+
+
+[ai1TempleDead]
+The {sw_god5} mock you:
+<i>"What are you going to do now priest?"</i>
+<$PlaySound,impact.wav>
+$Button=HIDE!,DoNothing,0
+
+[ai1PriestCaptured]
+<h2>You receive a message from the cruel {sw_god5}.</h2><br>
+<i>"Don't worry priest, I will rescue you."</i>
+<p>Haha! You must be an idiot to think I will give you another chance!
+Your blood will help me become stronger with the powers of death.
+<$PlaySound,treasonCast.wav>
+$Button=OK,DoNothing,0
+                                                                                                     [Succeeded][BadTeamDead]
+[checkwin]
+<?{sw_enDead2}><?{sw_enDead3}><?{sw_enDead4}>
+<?{sw_enDead5}><?{sw_enDead6}><?{sw_enDead8}>
+<$PlaySound,collapse.wav>
+<h2>You are getting better priest!</h2>
+However, prepare to meet your doom in my domain, where you will face me and
+ my minions of evil!
+<$Config,sw_dificulty1=0>
+<$Config,sw_m21=0>
+<$Config,sw_m25=1>
+$Button=Onto the Final Mission!,MissionBegin,sw_m25
+</?></?></?></?></?></?>
+
+[Failed]
+You have failed in your attempt to make it home!
+<br>
+However, you have become quite powerful and {sw_hades} cannot drag you
+down into his abyss of hell with his magic anymore. <br>
+But he is still able to make it difficult for you. What he has done is
+ throw you back in time.
+<$Config,sw_dificulty1=0>
+<$Config,sw_m21=0>
+<$Config,sw_m17=1>
+$Button=Where will I land?,MissionBegin,sw_m17
+
+[END]
+

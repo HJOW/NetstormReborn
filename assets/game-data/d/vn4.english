@@ -1,0 +1,129 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = "4"
+moreGeysers = "1"
+randGeysers = "0"
+
+myStartMoney = "20000"
+myTech = "{vn_tech}"
+myAllyList = "5;"
+
+title = "Defence"
+
+ai2Name = "Thunderguy 1"
+ai2Tech = "thunderBlocker;thunderCannon;thunderBattery;sunBalloon;"
+ai2StartMoney = "400"
+ai2AllyList = "3;4;"
+ai2Color = "red"
+ai2Collectors = "5"
+ai2BridgeDrawRate = "1"
+ai2GeyserAttachments = "0"
+ai2TimeBetweenMoves = "1"
+ai2Ability = ""
+
+ai3Name = "Thunderguy 2"
+ai3Tech = "thunderBlocker;thunderCannon;thunderBattery;bulf;"
+ai3StartMoney = "400"
+ai3AllyList = "2;4;"
+ai3Color = "white"
+ai3Collectors = "5"
+ai3BridgeDrawRate = "1"
+ai3GeyserAttachments = "0"
+ai3TimeBetweenMoves = "1"
+ai3Ability = ""
+
+ai4Name = "Thunderguy 3"
+ai4Tech = "thunderCannon;thunderBattery;thunderFence;"
+ai4StartMoney = "400"
+ai4AllyList = "2;3;"
+ai4Color = "green"
+ai4Collectors = "5"
+ai4BridgeDrawRate = "1"
+ai4GeyserAttachments = "0"
+ai4TimeBetweenMoves = "1"
+ai4Ability = ""
+
+ai5Name = "Sunguy"
+ai5Tech = "sunFence;rainBattery;sunCannon;windBattery;"
+ai5StartMoney = "5000"
+ai5AllyList = "1;"
+ai5Color = "purple"
+ai5Collectors = "0"
+ai5BridgeDrawRate = "1"
+ai5GeyserAttachments = "1"
+ai5TimeBetweenMoves = "1"
+ai5Ability = "!BUILD_DAIS;"
+
+[Options]
+
+[Init]
+
+<$Config,vn_donevn4withally=0>
+<$Config,vn_donevn4withoutally=0>
+<$Config,vn_friend=1>
+
+[A.]
+<h2>Defence</h2>
+<p><i><br>~I~l"But if Nimbus were round everything would fall off"~.</i> 
+</br><i>~I"Everthing ~Bdoes~N~I fall off."~.</i>
+<br><i>~I~l"Oh"~.</i></br>
+<br><i>~x---physicist arguing with the high council of nimbus.~.
+</i></br>
+<br>The Lord of <?{vn_windall}>Wind~.</?><?!{vn_windall}>Rain~.</?> has  noticed that speedy attacking is quite clearly not your forte, and so tasks you with a more defensive role.
+<?!{vn_windall}><$ChangeMoney,5000></?></p></br> 
+
+
+$Button=Play Mission,DoNothing,0
+
+
+[ai2PriestDead]
+ You are rewarded with the.........~y~B<?{vn_windall}>Dust Devil</?><?!{vn_windall}>Man 'o' war</?>~.
+<?{vn_windall}>$Menu= ~[IwindAviary.1],tell,devil</?>
+<?!{vn_windall}>$Menu= ~[IrainAviary.1],tell,mano</?>
+[devil]
+<?{vnwindall}><$GetTechnology,139></?>
+[mano]
+<?!{vnwindall}><$GetTechnology,143></?>
+
+[ai3PriestDead]
+You shudder at the look of pure horror on your opponents face as the ritual is complete. Soon all will come to fear you and the fury of <?{vn_windall}>Wind</?><?!{vn_windall}>Rain</?>~..
+You are rewrded with the most useful defensive unit yet devised, the ~y~BSun Barricade
+$Menu=~[IsunFence.1],tell,fence
+[fence]
+<$GetTechnology,136>
+
+[ai4PriestDead]
+Another priest falls before your might. You are rewarded with new tech! (what a surprise!)
+<?{vn_windall}>$Menu= ~[IwindWalker.4],tell,skater</?>
+<?!{vn_windall}>$Menu= ~[IrainWalker.1],tell,crab</?>
+[skater]
+<?{vn_windall}><$GetTechnology,137></?>
+[crab]
+<?!{vn_windall}><$GetTechnology,156></?>
+
+[ai5PriestDead]
+Hmmmm.... your ally died. Okay so he wasn't much use, but it's the principle of the thing.....</p>
+<$Config,vn_friend=0>
+
+
+[Succeeded][BadTeamDead]
+<h2>You won!</h2>
+<p>Another victory is yours.<?{vn_friend}> Your feeble ally was also saved. He may not help much but it's better than nothing.</?><?!{vn_friend}> You let your ally die. Disgraceful. You can never prove the superiority of your fury like this!</?></p>
+
+<$Config,vn_donevn4=1></?>
+<?{vn_windall}><$Config,vn_tech="windBattery;windArcher;windAviary;sunFence;windWalker;"></?>
+<?!{vn_windall}><$Config,vn_tech="rainBattery;rainCannon;sunFance;rainAviary;rainWalker;"></?>
+<?{vn_friend}><$Config,vn_donevn4withally=1></?>
+<?!{vn_friend}><$Config,vn_donevn4withoutally=1></?>
+$Button=Next Mission,MissionBegin,<?{vn_friend}>vn7</?><?!{vn_friend>vn8</?>
+
+
+[Failed]
+<h2>Failure!</h2>
+<p>Yeah this mission can be quite tricky. Try taking out the thunder gens early on next time.</?>
+<$Config,vn_death=1>
+<$Config,vn_alive=0>
+$Button=Leave,tell,guidevn.overview
+
+[END]

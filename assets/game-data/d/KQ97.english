@@ -1,0 +1,105 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 0
+
+myStartMoney = 85000
+myTech ="rainBattery;thunderBattery;windBattery;windArcher;windWalker;windBlocker;rainAviary;rainCannon;rainWalker;outpost"
+
+
+title="Death Realm III"
+ai2Name = "Rain Greaper"
+ai2Tech ="rainBattery;rainCannon;rainAviary;rainBlocker;rainWalker;rainBalloon"
+ai2StartMoney = 1000000
+ai2GeyserAttachments = 1
+ai2Collectors = 2
+ai2TimeBetweenMoves = 0
+ai2Bridgedrawrate = 0
+ai2color = red
+ai2ability =!USE_PRIEST_TO_COLLECT
+ai2AllyList = "3;4"
+
+ai3Name = "Wind Greaper II"
+ai3Tech ="windBattery;windArcher;windAviary;windBalloon;windWalker;windBlocker"
+ai3StartMoney = 1000000
+ai3GeyserAttachments = 1
+ai3Collectors = 2
+ai3TimeBetweenMoves = 0
+ai3Bridgedrawrate = 0
+ai3color = white
+ai3ability =!USE_PRIEST_TO_COLLECT
+ai3AllyList = "2;4"
+
+ai4Name = "Thunder Greaper III"
+ai4Tech ="thunderBattery;thunderCannon;thunderBlocker;thunderArcher;bulf"
+ai4StartMoney = 1000000
+ai4GeyserAttachments = 1
+ai4Collectors = 2
+ai4TimeBetweenMoves = 0
+ai4Bridgedrawrate = 0
+ai4color = green
+ai4ability =!USE_PRIEST_TO_COLLECT
+ai4AllyList = "2;3"
+
+
+
+
+
+[Options]
+
+[A.]
+<P>"Death Can be a blessing, or a curse."
+<P>Apollyon
+<p>You have been sacrificed, and you have been sent to the Realm of Death. Here, if you can defeat the Greapers, you have a chance to go back in time to when the battle first began, in other words, a fresh start, something that is very, very rare in Nimbus, and only high priest, such as yourself, are allowed to do this, meaning the citizens of your island will all be gone, and you will be alone. Your population will grow eventionly, and your island will be strong once more. Geysers cannot exist in the Death Realm, meaning you must survive off Kill Reward and your starting money alone.
+<p>Each mission has a harder Death Realm. And, if you are lucky, a Greaper might feel pity for one with such high odds against you, and become a traitor and ally with you.
+<p>It's up to you to save yourself and be sent back to the Realm of Life.
+<p>You hear a booming voice........
+<p>Voice:~w I am the master Greaper.....I see that the odds of you winning are impossible. In order you for to have a chance at life, i shall give you the OutPost."
+~nYou:~w Ummm...thanks!
+<p>~nMaster Greaper:~wS'all right
+$Button=Veiw your stuff,ShowTechnology,55
+$Button=Get Outta hell!,DoNothing,0
+
+
+
+
+
+[ai2PriestDead]
+Very well. You will be sent back to the Realm of Life.
+
+[ai3PriestDead]
+Very well. You will be sent back to the Realm of Life.
+
+[ai4PriestDead]
+Very well. You will be sent back to the Realm of Life.
+
+
+
+
+
+
+
+
+
+
+
+
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>You get back to the Realm of Life
+<$Config,Done{mission.fileName}=1>
+$Button=Back in Time,MissionBegin,KQ3
+
+
+[Failed]
+<h2>Failure!</h2>
+<p>You are trapped for eterity. You must restart your quest
+$Button=Restart,MissionBegin,KQ1
+
+
+[END]
+
+
+

@@ -1,0 +1,13 @@
+title = "The Fuji Files""
+
+[Overview]
+<background="nsstart">
+<h2>CHEAT</h2>
+<i>Let's Play NetStorm !</i>
+<p>
+My first ever netstorm game :-) watcha think? 
+FujiCass97@btinternet.com
+
+$Checked=1 CHEAT,MissionBegin,CHEAT,{DoneCHEAT},1
+
+$Button=Back,Tell,Campaign

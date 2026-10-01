@@ -1,0 +1,173 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 7
+
+myStartMoney = 2000
+myTech = "sunFactory;windFactory;suncannon;windarcher;sunblocker;windaviary;windbattery"
+myAllyList = "3;4"
+
+title = "Danger"
+
+ai2Name = "Dark Prince of Thunder"
+ai2Tech = "sunFactory;thunderFactory;thunderbattery;sunaviary;thundercannon;sunwalker;thunderblocker;thunderarcher"
+ai2StartMoney = 200
+ai2Collectors = 4
+ai2GeyserAttachments = 7
+ai2TimeBetweenMoves = 1
+ai2AllyList = "8"
+ai2color = red
+ai2BridgeDrawRate = 1
+ai2Ability = "!BUILD_BLOCKERS_WHEN_BUILDINGS_HARMED;!USE_PRIEST_TO_COLLECT;!ATTACH_TO_ENEMY_ISLAND"
+
+ai3Name = "Rain Wizard"
+ai3Tech = "sunFactory;rainFactory;sunwalker;rainbattery;rainaviary;sunaviary;sunblocker"
+ai3StartMoney = 2000
+ai3Collectors = 6
+ai3GeyserAttachments = 3
+ai3TimeBetweenMoves = 1
+ai3AllyList = "1;4"
+ai3color = white
+ai3BridgeDrawRate = 2
+ai3Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai4Name = "Wind Knight"
+ai4Tech = "sunFactory;windFactory;sunwalker;windbattery;windarcher;suncannon;windblocker"
+ai4StartMoney = 2000
+ai4Collectors = 6
+ai4GeyserAttachments = 5
+ai4TimeBetweenMoves = 1
+ai4AllyList = "1;3"
+ai4color = green
+ai4BridgeDrawRate = 3
+ai4Ability = ""
+
+ai8Name = "General of Rain"
+ai8Tech = "rainFactory;sunFactory;rainwalker;rainbattery;raincannon;sunarcher"
+ai8StartMoney = 800
+ai8Collectors = 4
+ai8GeyserAttachments = 5
+ai8TimeBetweenMoves = 1
+ai8AllyList = "2"
+ai8color = orange
+ai8BridgeDrawRate = 3
+ai8Ability = "!BUILD_BLOCKERS_WHEN_BUILDINGS_HARMED;!USE_PRIEST_TO_COLLECT"
+
+[@3]
+<h2>~wRain Wizard</h2>
+<p>
+Woah! Where did these guys come from?
+
+[@7]
+<h2>~lYou</h2>
+<p>
+Who are you!
+
+[@10]
+<h2>~oGenaral of Rain</h2>
+<p>
+Look who we got here.
+
+[@11]
+<h2>~rDark Prince of Thunder</h2>
+<p>
+Looks like Lord Gunton was right...kill them.
+
+[Options]
+
+[A.]
+<h2>Danger</h2> 
+<i>"Speed and Precision are the governing forces of all battles."<br>
+--Unknown</i>
+<p>As you continue ahead with Rain Wizard leading, you are jumped by two enemy islands.  They have separated you from your ally and are beggining an assult on Rain Wizard.  You must stop this and save him.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeed]
+[BadTeamDead]
+
+<h2>Congratulations! Victory!</h2> 
+<p>You have saved our allies yet again. Now you can advance onward!
+<$Config,Done{mission.filename}=1> 
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,b8
+
+[ai2PriestCaptured]
+<h2>~gWind Knight</h2>
+<p>
+Thats what you get for messing with my friend!
+
+[ai2PriestDead]
+<h2>~sThunder Fury</h2>
+<p>
+~mVery well done...I shall give you some of my knowledge in the near future.
+
+[ai3TempleHalfDead]
+<h2>~gWind Knight</h2>
+<p>
+Hang in there, we are coming.
+
+[ai3TempleDead]
+<h2>~wRain Wizard</h2>
+<p>
+Save yourselves! Leave now!
+$Button=Reply,Tell,Reply
+
+[Reply]
+<h2>~lYou</h2>
+<p>
+We won't leave you behind.
+
+[ai3PriestCaptured]
+<h2>~rDark Lord of Thunder</h2>
+<p>
+HaHa! That was all to easy!
+$Button=Continue,Tell,ant
+
+[ant]
+<h2>~lYou</h2>
+<p>
+We can't stay much longer, we will get killed!
+$Button=Continue,Tell,eat
+
+[eat]
+<h2>~gWind Knight</h2>
+<p>
+We must free him! There is still a chance!
+
+[ai3PriestDead]
+<h2>~lYou</h2>
+<p>
+Its over, we must leave now are we shall die too.
+$Button=Outcome,Tell,out
+
+[out]
+<h2>Outcome</h2>
+<p>
+You leave as fast as you can, leaving the ruins of your ally.  Becoming mentaly powerless, you and Wind Knight do not retaliate against Lord Gunton.  In a couple of years, he controls the world and you are sent to jail for the rest of your life.
+$Button=Continue,Tell,TryAgain
+
+[ai4TempleHalfDead]
+<h2>~gWind Knight</h2>
+<p>
+Gah!  I hate you!
+
+[ai4PriestDead]
+<h2>Outcome</h2>
+<p>
+With the death of your ally, both you and Rain Wizard were soon exterminated.
+$Button=Continue,Tell,TryAgain
+
+[ai8PriestCaptured]
+<h2>~oGeneral of Rain</h2>
+<p>
+I never got paid enough.
+
+[Failed]
+<h2>Failure!</h2> 
+<p> 
+You have died, and with your death came the death of your allies shortly after.
+$Button=Continue,Tell,TryAgain
+
+[END]

@@ -1,0 +1,144 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+title="The Beginning"
+
+
+myStartMoney = 10000
+myTech = ""
+
+
+[Options]
+
+[A.]  
+<?!{TpVsetup}><$tell,StepOne></?>
+<?{TpVsetup}><$tell,Warning></?>
+
+[Warning]
+<H2>~yWarning</h2><P>
+All varibles will be reset and you will have to start from the beginning of the campaign.
+<P>
+$Button=Dont Reset,MissionAbort,1
+$Button=Reset,tell,Stepone
+
+[STEPONE]
+<h2>~yWelcome to TSV setup</h2><P>
+Edit the <i>TpV_t1.english</i> file and in the [~iinit~.] section change the varibles<P>
+Tp_yourname=" " <br>
+Tp_name=0<br>
+to<br>
+Tp_yourname=" ~ydesiredname~. "<br>
+Tp_name=1<P>
+
+Where ~ydesiredname~. is the name you want to be called throuhout 
+the campaign.<P>  
+$Button=Leave Setup,MissionAbort,0
+$Button=Back,tell,A.
+$Button=Next,tell,STEPTWO
+
+[STEPTWO]
+
+<h2>~yStep Two</h2><P>
+Choose your Spiritual Guide
+$Menu=Sun Fury,tell,SUN
+$Menu=Wind Fury,tell,WIND
+$Menu=Rain Fury,tell,RAIN
+$Menu=Thunder Fury,tell,THUNDER 
+<P>
+  
+$Button=Leave Setup,MissionAbort,0
+$Button=Back,tell,A.
+
+
+[WIND]
+<$config,TpVguide1="Rain Fury: ">
+<$config,TpVguide2="Thunder Fury:">
+<$config,TpVguide="Wind Fury: ">
+<$config,TpVguide3="Sun Fury:">
+
+<$tell,done>
+
+[RAIN]
+<$config,TpVguide="Rain Fury: ">
+<$config,TpVguide1="Thunder Fury:">
+<$config,TpVguide3="Wind Fury: ">
+<$config,TpVguide2="Sun Fury:">
+
+<$tell,done>
+
+[THUNDER]
+<$config,TpVguide3="Rain Fury: ">
+<$config,TpVguide="Thunder Fury:">
+<$config,TpVguide2="Wind Fury: ">
+<$config,TpVguide1="Sun Fury:">
+
+<$tell,done>
+
+[SUN]
+<$config,TpVguide2="Rain Fury: ">
+<$config,TpVguide3="Thunder Fury:">
+<$config,TpVguide1="Wind Fury: ">
+<$config,TpVguide="Sun Fury:">
+
+<$tell,done>
+
+[DONE]
+<I>{tpVguide} </I>  Your varibles have been initalized.
+Enjoy the Campaign.
+
+
+<$tell,REFRESH>
+$Button=Main Menu,MissionAbort,1
+$Button=Start Campaign,MissionBegin,TpV_t1
+
+[REFRESH]
+
+<$config,TpVsetup=1>
+<$config,TpVpath=0>
+<$config,TpVfire=0>
+<$config,TpVchoice=0>
+<$config,TpVmoney=0>
+<$config,TpVlisten=0>
+
+<$config,TpV1="">
+<$config,TpV2="">
+<$config,TpV3="">
+<$config,TpV4="">
+<$config,TpV5="">
+
+<$config,TpVpriestTaken="">
+
+<$config,TpVmyTech1="">
+<$config,TpVmyTech2="">
+
+<$config,TpvtechSun1="suncannon;sunarcher">
+<$config,TpvtechWind1="WindArcher;windbattery">
+<$config,TpvtechRain1="RainCannon;rainbattery">
+<$config,TpvtechThunder1="thundercannon;thunderbattery">
+
+
+<$config,TpVtechSun=   		"sunwalker;sunBlocker;sunfence;sunBalloon;">
+<$config,TpVtechSun2=    	"sunArcher;suncannon;sunAviary;windbattery;outpost">
+<$config,TpVtechWind=		"windwalker;windArcher;windBlocker;windballoon;">
+<$config,TpVtechWind2=		"windAviary;windbattery;outpost">
+<$config,TpVtechThunder=	"bulf;thunderArcher;thunderBattery;thunderfence;">
+<$config,TpVtechThunder2=	"thunderCannon;thunderblocker;outpost">
+<$config,TpVtechRain=		"rainwalker;raincannon;rainBattery;rainfence;">
+<$config,TpVtechRain2=		"rainballoon;rainblocker;rainAviary;outpost">
+<$config,TpVtechAll=		"all;outpost">
+<$config,TpVtechAll2=		"">
+
+<$config,TpVc1=0>
+<$config,TpVc2=0>
+<$config,TpVc3=0>
+<$config,TpVc4=0>
+<$config,TpVc5=0>
+
+<$config,TpVc11=1>
+<$config,TpVc21=1>
+<$config,TpVc31=1>
+<$config,TpVc41=1>
+<$config,TpVc51=1>
+
+[END]

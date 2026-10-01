@@ -1,0 +1,45 @@
+title = "If you are wise..." 
+
+[Overview]
+<background="nsstart">
+<h2>The first choice may decide your fate.</h2>
+<p>
+Let me tell you something {kinda like the directions}.  <br>
+Needless to say, these are all seperate, stand alone, senerios.  They MAY lead up to huge campains though.
+<br>
+~mIslands at War 1-3 are the same thing except one thing:  The Great Teacher will only teach you one of three catorgories.  You get to pick.<br>
+~w~Ia. The Three Cannons<br>
+~[IsunCannon.*]~[IrainCannon.*]~[IthunderCannon.*]<br>
+b. The three archers<br>
+~[IsunArcher.*]~[IwindArcher.*]~[IthunderArcher.*]<br>
+c. The three aviaries.<br> 
+~.~[IwindAviary.*]~[IrainAviary.*]~[IsunAviary.*]<br> 
+<br>
+~yImpossible is a simple, one on one game with great defenses.  It may take awhile.<br>
+~[Iwindblocker.*]~[Iwindblocker.*]~[Iwindblocker.*]~[Iwindblocker.*]~[Iwindblocker.*]<br>
+<br>
+~oTo The Death is an all attack map with no defenses.<br>
+~[IthunderCannon.*]~[IrainCannon.*]~[Iwindarcher.*]~[Isunarcher.*]<br>
+<br>
+~bCrossroads is a regular two on two game.<br>
+<br>
+~rIf You are Brave is a run for your life map.<br>
+~wFirst...~[Ipriest.*]Second...~[Ioutpost.*]Last...~[Iwindvortex.*]<br>
+<br>
+~gTell me what you think...    It helps us make maps.<br>
+<br>
+~kThe DeathWalker ~[Irune.1]<br>
+~mVirtues8@juno.com......ICQ: 10359215......FletJef@naspa.com<br>
+Read: Readme TooCool for more info.
+
+
+$Checked=1a Islands at War,MissionBegin,MM1a,{DoneMM1a},1
+$Checked=1b Islands at War,MissionBegin,MM1b,{DoneMM1b},1
+$Checked=1c Islands at War,MissionBegin,MM1c,{DoneMM1c},1
+$Checked=2 Impossible,MissionBegin,MM2,{DoneMM2},2
+$Checked=3 To the Death,MissionBegin,MM3,{DoneMM3},3
+$Checked=4 Crossroads,MissionBegin,MM4,{DoneMM4},4
+$Checked=5 If you are brave,MissionBegin,MM5,{DoneMM5},5
+
+
+$Button=Back,Tell,Campaign

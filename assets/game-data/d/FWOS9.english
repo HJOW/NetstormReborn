@@ -1,0 +1,62 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 9
+moreGeysers = 1
+randGeysers = 1
+
+myStartMoney = 7500
+myTech = "outpost;thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence"
+myAllyList = ""
+
+title="Gate Keepers"
+
+ai2Name = "SPU Gate Keeper"
+ai2Tech = "sunWalker;sunarcher;sunballoon;suncannon;sunFence;sunaviary;sunBlocker;sunwalker"
+ai2StartMoney = 15000
+ai2GeyserAttachments = 7
+ai2Collectors = 5
+ai2TimeBetweenMoves=2
+ai2DrawBridgeRate=1
+ai2AllyList = "3;4"
+ai2color = yellow
+
+ai3Name = "SWORD Gate Keeper"
+ai3Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence;rainwalker;sunwalker"
+ai3StartMoney = 15000
+ai3GeyserAttachments = 8
+ai3Collectors = 5
+ai3TimeBetweenMoves=1
+ai3DrawBridgeRate=1
+ai3AllyList = "2;4"
+ai3color = red
+
+ai4Name = "Key Holder"
+ai4Tech = "thunderbattery;windbattery"
+ai4StartMoney = 2500
+ai4GeyserAttachments = 9
+ai4Collectors = 5
+ai4TimeBetweenMoves=1
+ai4drawBridgeRate=1
+ai4AllyList = "2;3"
+ai4color = white
+
+[Options]
+
+[A.]
+<h2>Gate Keepers</h2>
+<i>Guldan: ~wThis is it!  Kill those Gate Keepers and get the key to the Portal.<br>
+<i>You: ~wOk...
+$Button=What ya got,ShowTechnology,55
+$Button=1.2.3.4.Let's kick down that door,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<><><>Read X END of FW PART II.txt
+$Button=Ok...,MissionAbort,0
+
+[Failed]
+<h2>You have failed!</h2>
+<i>This is plain and simple:
+$Button=Bye Bye,MissionAbort,0
+
+[END]

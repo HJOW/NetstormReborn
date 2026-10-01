@@ -1,0 +1,50 @@
+[Header]
+
+missionType="Tutorial"
+missionNumber = 3
+moreGeysers = 1
+myStartMoney = 1000
+myTech = "thunderbattery;sunAviary"
+
+title= "Duel"
+
+ai2Name= "Mr_Cannon"
+ai2Tech= "windBattery;sunCannon"
+ai2StartMoney= 1000
+ai2GeyserAttachments = 2
+ai2Collectors = 6
+ai2TimeBetweenMoves = 1
+ai2AllyList= ""
+ai2color= white
+
+
+[Options]
+
+
+[A.]
+<h2> Duel! <h2>
+<i> " Meet my cannons loser!" <br>
+--Mr. Cannon </i|
+<p>
+It is a duel between you and and Mr Cannon. If you do a flawless victory then
+I will double hire you! If you dont... well , suffer my wrath! --- Mr Ermac
+
+$Button=Review Knowledge,Show Technology,55
+$Button=PlayMission,DoNothing,0
+
+[Succeeded] [BadTeamDead]
+
+<h2> Yeppie!!!! <h2>
+<p> Not a flawless victory! --- Ermac
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,girl
+[Failed]
+
+<h2> You suck!!! </h2>
+<p> How dare you to come back! After what you did!
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+

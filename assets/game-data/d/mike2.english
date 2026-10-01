@@ -1,0 +1,171 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 1
+
+myStartMoney = 800
+myTech = "windbattery;outpost"
+
+title="Storm Crystals"
+
+ai2Name = "Bad Guy"
+ai2Tech = "rainbattery;rainflyer;rainaviary;raincannon"
+ai2StartMoney = 5500
+ai2GeyserAttachments = 2
+ai2Collectors = 3
+ai2TimeBetweenMoves = 5
+ai2AllyList = "3"
+ai2color = red
+
+ai3Name = "Badder Guy"
+ai3Tech = "windbattery;windarcher;windflyer;windaviary;"
+ai3StartMoney = 5500
+ai3GeyserAttachments = 2
+ai3Collectors = 3
+ai3TimeBetweenMoves = 5
+ai3AllyList = "2"
+ai3color = green
+
+[Options]
+
+[A.]
+<h2>Numero Dos</h2>
+<i>"Wanna play 52 card pickup?"<br>
+--My older sister tormenting me when I was younger</i>  
+<p>~B~E~iHere we have a nice little map set up. You've got a workshop, a generator, and a golem.
+<p>Think you're so smart huh?  See if you can figure this one out.  (This is not terribly difficult.)
+
+$Button=More,Tell,More
+
+[More]
+<h2>~wBlah blah blah...</h2>
+<p>~B~E~q   Ok basically with this map I just wanted to do something different.  The heart of this level is a simple puzzle set up at the start.  The map also highlights a kind of nice group of pop up windows from which you can pick your weapons.  Your island will supply you with plenty of storm power, and theres only two computers, neither of which are very difficult.
+                                                         -Mike Byrne aka Australian_Dingo
+$Button=I cant wait to get started!,Tell,More2
+
+[More2]
+<p>
+~i"Don't put all your eggs in one basket."
+~l---Old saying
+
+$Button=Your stuff,ShowTechnology,55
+$Button=Bring it on!,DoNothing,0
+$Button=I'm going home!,MissionAbort,0
+
+[@25]
+Have you figured out how to get your temple up yet?
+$Button=Yep I got it,Tell,Yes
+$Button=Not yet...,Tell,No
+
+[Yes]
+Good for you.  Now beat the ais.
+$Button=Tech Please?,Tell,Tech
+
+[No]
+<h2>Here's a tip.</h2>
+~B~E~gAlright look, if you did some salvaging you could have the 600 storm power needed for your outpost.
+$Button=Yep ok I'll try that,MissionBegin,Mike2
+
+[Tech]
+Oh right how could I forget.  Here's some stuff.
+$Button=Oh goody,Tell,Power
+
+[Power]
+<$GetTechnology,75>
+<$GetTechnology,76>
+<$GetTechnology,77>
+$Button=Yeah... that helps.,Tell,MoreTech
+
+[MoreTech]
+~B~E~oWhatta ya want?
+$Menu=~[IrainCannon.*],Tell,RCannon
+$Menu=~[IthunderCannon.*],Tell,TCannon
+$Menu=~[IsunCannon.*],Tell,SCannon
+$Menu=~[Iwindarcher.*],Tell,XBow
+
+[RCannon]
+<$GetTechnology,129>
+$Timeout=0,Tell,MoreTech2
+
+[TCannon]
+<$GetTechnology,131>
+$Timeout=0,Tell,MoreTech2
+
+[SCannon]
+<$GetTechnology,128>
+$Timeout=0,Tell,MoreTech2
+
+[XBow]
+<$GetTechnology,140>
+$Timeout=0,Tell,MoreTech2
+
+[MoreTech2]
+~B~E~mWhat else?
+$Menu=~[Irainaviary.*],Tell,RAviary
+$Menu=~[Iwindaviary.*],Tell,WAviary
+$Menu=~[Isunaviary.*],Tell,SAviary
+$Menu=~[Ithunderarcher.*],Tell,TArcher
+
+[RAviary]
+<$GetTechnology,143>
+$Timeout=0,Tell,MoreTech3
+
+[WAviary]
+<$GetTechnology,139>
+$Timeout=0,Tell,MoreTech3
+
+[SAviary]
+<$GetTechnology,72>
+$Timeout=0,Tell,MoreTech3
+
+[TArcher]
+<$GetTechnology,148>
+$Timeout=0,Tell,MoreTech3
+
+[MoreTech3]
+Keep Going...
+$Menu=~[Ibulf.*]+~[IthunderFence.*],Tell,BulfandTFence
+$Menu=~[Iwindwalker.*],Tell,WWalker
+$Menu=~[Irainwalker.*],Tell,RWalker
+$Menu=~[ISunballoon.*],Tell,SFlyer
+
+[BulfandTFence]
+<$GetTechnology,135>
+<$GetTechnology,149>
+$Timeout=0,Tell,MoreTech4
+
+[WWalker]
+<$GetTechnology,137>
+$Timeout=0,Tell,MoreTech4
+
+[RWalker]
+<$GetTechnology,156>
+$Timeout=0,Tell,MoreTech4
+
+[SFlyer]
+<$GetTechnology,111>
+$Timeout=0,Tell,MoreTech4
+
+[MoreTech4]
+And...?
+$Menu=~[Irainblocker.*],GetTechnology,147
+$Menu=~[Iwindblocker.*],GetTechnology,142
+$Menu=~[Isunblocker.*],GetTechnology,78
+$Menu=~[Ithunderblocker.*],GetTechnology,79
+
+[Succeeded][BadTeamDead]
+<h2>~E~B~wSuccess!</h2>
+<p>
+Smart fella aren't ya.
+
+
+$Button=Leave Missions,MissionAbort,0
+$Button=NEXT PLEASE!,MissionBegin,Mike3
+
+[Failed]
+<h2>Failure!</h2>
+<p>You Lose!
+$Button=Try for double jeopardy,MissionBegin,Mike2
+
+[END]

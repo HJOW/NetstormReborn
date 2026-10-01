@@ -1,0 +1,12 @@
+title = "Smart Bulfs"
+
+[Overview]
+<background="nsstart">
+<h2>~[Iraincannon.4]~kBulfs Under ~rFire ~[Ibulf.68]</h2>
+<p>
+Gotta love this one.  
+Takes skill and luck.  
+
+$Checked=1 Bulflevel,MissionBegin,bulflevel,{Donebulflevel},1
+
+$Button=Back,Tell,Campaign

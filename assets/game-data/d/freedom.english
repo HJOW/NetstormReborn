@@ -1,0 +1,108 @@
+[Header]
+missionType="Tutorial"
+missionNumber=1
+moreGeysers=1
+randGeysers=1
+myStartMoney=2500
+myTech="thunderBattery;windBattery;rainBattery;rainCannon;rainAviary;rainBlocker;rainFence;rainWalker;rainBalloon"
+aiAllyList="4"
+
+title="Infiltration"
+
+ai2Name="Destroyer"
+ai2Tech="thunderBattery;thunderCannon;thunderArcher;bulf;thunderFence;thunderBlocker"
+ai2StartMoney=12000
+ai2AllyList="3"
+ai2GeyserAttachments=100
+ai2Collectors=10
+ai2TimeBetweenMoves=1
+ai2Color=red
+ai2Ability="BUILD_DIAS;SACRIFICE_ENEMY_PRIEST"
+ai2BridgeDrawRate=1
+
+ai3Name="Hellraiser"
+ai3Tech="thunderBattery;thunderCannon;thunderArcher;bulf;thunderFence;thunderBlocker"
+ai3StartMoney=12000
+ai3AllyList="2"
+ai3GeyserAttachments=100
+ai3Collectors=10
+ai3TimeBetweenMoves=1
+ai3Color=white
+ai3Ability="BUILD_DIAS;SACRIFICE_ENEMY_PRIEST"
+ai3BridgeDrawRate=1
+
+ai4Name="Galar"
+ai4Tech="rainBattery;rainCannon;rainAviary;rainBlocker;rainFence;rainWalker;rainBalloon"
+ai4StartMoney=2500
+ai4AllyList="1"
+ai4GeyserAttachments=100
+ai4Collectors=10
+ai4TimeBetweenMoves=1
+ai4Color=Green
+ai4Ability="!BUILD_DIAS;!SACRIFICE_ENEMY_PRIEST"
+ai4BridgeDrawRate=1
+
+[Options]
+[A.]
+<$Config,wind=0>
+<$Config,thunder=0>
+
+<p>~I"Some things... are not what they seem... Fire may not be fire... Wind may not be wind... Water may not be water... BUT! The ground you step on, is as solid as it will ever be."~nLord of the Elements~.
+<p> You! (Eagle Eye) are the last hope for the nimbian people. Along with your ally (Galar), you will have to find a way to put a stop to the dark forces. The spirit of nimbus is with you... Good Luck!
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Kill Them!!!,DoNothing,0
+$Button=Leave Missions,MissionAbort,0
+
+[ai2PriestDead]
+$Timeout=0,Tell,choose
+
+[ai3PriestDead]
+$Timeout=0,Tell,choose
+
+[ai4PriestDead]
+OH NO! Your ally! Your only ally! Looks like you'll have to do this on your own now.
+
+$Button=KICK SOME ASS!,DoNothing,0
+
+[choose]
+Choose wisely... For you only get these!
+<?!{wind}>$Menu=~[IwindArcher.*],Tell,crossbow</?>
+<?!{thunder}>$Menu=~[IthunderCannon.*],Tell,thundercannon</?>
+
+[crossbow]
+You want the Crossbow???
+
+$Button=Yes,Tell,positive
+$Button=No... Not Yet,Tell,choose
+
+[thundercannon]
+You want the Thunder Cannon???
+
+$Button=Yes,Tell,sure
+$Button=No... Not yet,Tell,choose
+
+[positive]
+You are absolutely positive! Here.
+<$Config,wind=1>
+$Button=CROSSBOW,GetTechnology,140
+
+[sure]
+You are absolutely sure! Here.
+<$Config,thunder=1>
+$Button=THUNDER CANNON,GetTechnology,131
+
+[Succeeded][BadTeamDead]
+VICTORY!!! Now that you and your ally have returned... you go back home... You venture to your home island and are welcomed with wide arms. You two are rested and recovered. That night your ally, Galar, is murdered... you find out who has killed him. But it will take some time for you to prepare for the battle. In the mean time... you get ready for the funeral.
+<$Config,Donefreedom=1>
+
+$Button=Start the Funeral... I'm Ready,MissionBegin,freedom2
+$Button=I'm not ready yet,MissionAbort,0
+
+[Failed][GoodTeamDead]
+FAILURE! You a good for nothing. even though you put up a good fight. But... this has proved your ability to be poor, lower than average, and WEAK!
+
+$Button=Retry,MissionBegin,freedom
+$Button=Leave Mission,MissionAbort,0
+
+[END]

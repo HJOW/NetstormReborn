@@ -1,0 +1,80 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 4
+moreGeysers = 25
+
+myStartMoney = 750
+myTech = "sunWalker;sunArcher;windarcher;sunBlocker;sunBalloon;sunFence;sunCannon;thunderbattery;rainbattery;windBattery;thunderarcher;thundercannon;rainballoon;rainblocker;raincannon;windaviary;windballoon;windblocker;windWalker"
+myAllyList = "2"
+title="The final challenge"
+
+ai2Name = "The Emporer"
+ai2Tech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;windBattery;thunderbattery;rainbattery;windarcher;windaviary;windballoon;windblocker;windWalker"
+ai2StartMoney = 100000
+ai2GeyserAttachments = 3
+ai2Collectors = 10
+ai2TimeBetweenMoves = 2
+ai2AllyList = "1"
+ai2color = red
+
+ai3Name = "Pinto"
+ai3Tech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;thunderbattery;rainbattery;windBattery;thunderarcher;thunderblocker;thundercannon;thunderfence"
+ai3StartMoney = 10000
+ai3GeyserAttachments = 2
+ai3Collectors = 12
+ai3TimeBetweenMoves = 2
+ai3AllyList = "4;5"
+ai3color = white
+
+ai4Name = "Extractor"
+ai4Tech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;windBattery;thunderbattery;rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence"
+ai4StartMoney = 10000
+ai4GeyserAttachments = 2
+ai4Collectors = 12
+ai4TimeBetweenMoves = 4
+ai4AllyList = "3;5"
+ai4color = green
+
+ai5Name = "Flaunter"
+ai5Tech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;windBattery;thunderbattery;rainbattery;windarcher;windaviary;windballoon;windblocker;windWalker"
+ai5StartMoney = 10000
+ai5GeyserAttachments = 10
+ai5Collectors = 8
+ai5TimeBetweenMoves = 2
+ai5AllyList = "3;4"
+ai5color = yellow
+
+
+
+[Options]
+
+[A.]
+<h2>Tristan</h2>
+<i>"Effectiveness is the measure of truth"<br>
+--Deborah Oakley, </i>
+
+<p>
+Use the Emporer wisely he is a powerful ally(He's a little slow)
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>The war is won. Consider yourself a winner.</h2>
+<p>
+Never forget it. Courage and honesty are triumphant
+<$Config,Done{T5.fort}=1>
+$Button=Leave Missions,MissionAbort,0
+
+
+[Failed]
+
+<h2>The war is ended. The battlefield is a mess</h2>
+<p>
+The Emporer is displeased. Loser.
+The war continues?
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+

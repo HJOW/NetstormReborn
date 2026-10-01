@@ -1,0 +1,8 @@
+title = "The Great Battle"
+
+[Overview]
+<background="nsstart">
+<h2>The Great Battle</h2>
+<br>If you have trouble with the last of my campaigns, here play this, and let the AI show you how it's done.<br>
+
+$Button=Start Demo,StartDemo,TheGreatBattleDemo

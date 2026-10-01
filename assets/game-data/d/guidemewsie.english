@@ -1,0 +1,17 @@
+title =  ~[IthunderFence.1]~[Iicon.L3]~[Iicon.L2]"~E~B~yMewsie's ~E~B~iAlliance"~[Iicon.L2]~[Iicon.L3]~[IthunderFence.1]
+
+[Overview]
+<background="nsstart">
+<h2>~[IthunderFence.1]~[Iicon.L3]~[Iicon.L2]Mewsie's Alliance~[Iicon.L2]~[Iicon.L3]~[IthunderFence.1]</h2>
+<p>Visit my NetStorm website at: ~lwww.mewsie.iwarp.com/nsarena/~w
+<p>Wanna join a NetStorm Clan??? join ~rClan≈rk ~wat: ~lwww.mewsie.iwarp.com/clanark/
+                !!~[Imanabolt.0]~[Imanabolt.1]~[Imanabolt.2]~[Imanabolt.3]~[Imanabolt.3]~[Imanabolt.2]~[Imanabolt.1]~[Imanabolt.0]!!
+<p>~jYou are my Apprentice and you were born to fight for me, go then and destroy those who would thwart my will        - Mewsie, Great Nimbian Warrior
+
+$Checked=1 ~[Iicon.01]Memphis Ark~[Iicon.01],MissionBegin,mewsie,{Donemewsie},1
+$Checked=2 ~[Ibulf.3]The Attack on Galaff~[Ibulf.9],MissionBegin,mewsie2,{Donemewsie2},{donemewsie1}
+$Checked=3 ~[Ithundercannonmissile.3]The Slaves~[Ithundercannonmissile.9],MissionBegin,mewsie3,{Donemewsie3},{Donemewsie2}
+$Checked=4 ~[Iicon.09]Out of Time~[Iicon.09],MissionBegin,mewsie4,{Donemewsie4},{Donemewsie3}
+$Checked=5 ~[Ifortgump.L5]Allied with Mewsie~[Ifortgump.L5],MissionBegin,mewsie5,{Donemewsie5},{Donemewsie4}
+
+$Button=Back,Tell,Campaign

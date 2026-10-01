@@ -1,0 +1,200 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 1
+
+myStartMoney = 20000
+myTech = "sunCannon;sunBalloon;sunAviary;sunBlocker;sunFence;sunArcher;rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainwalker;rainFence;rainwalker;windBattery;windarcher;windballoon;windWalker"
+myAllyList = "5;6;7"
+
+title="Unstable!"
+
+ai2Name = "Ryal the Charmer"
+ai2Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;bulf;rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence;rainwalker;sunBalloon;sunAviary;sunBlocker;sunArcher;suncannon"
+ai2StartMoney = 50000
+ai2GeyserAttachments = 4
+ai2Collectors = 5
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3;4;8"
+ai2color = red
+ai2Ability="!USE_PRIEST_TO_COLLECT"
+ai2BridgeDrawRate = 4
+
+ai3Name = "Lord Ipon"
+ai3Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainwalker;rainFence;rainwalker"
+ai3StartMoney = 10000
+ai3GeyserAttachments = 3
+ai3Collectors = 5
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2;4;8"
+ai3color = white
+ai3Ability="!USE_PRIEST_TO_COLLECT"
+ai3BridgeDrawRate = 4
+
+ai4Name = "Lord Narvan"
+ai4Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;sunBalloon;sunAviary;sunBlocker;sunArcher"
+ai4StartMoney = 50000
+ai4GeyserAttachments = 3
+ai4Collectors = 7
+ai4TimeBetweenMoves = 1
+ai4AllyList = "2;3;8"
+ai4color = green
+ai4Ability="!USE_PRIEST_TO_COLLECT"
+ai4BridgeDrawRate = 4
+
+ai5Name = "Duke of Thunder"
+ai5Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;sunArcher;sunBalloon;sunAviary;rainbattery"
+ai5StartMoney = 100000
+ai5GeyserAttachments = 3
+ai5Collectors = 7
+ai5TimeBetweenMoves = 1
+ai5AllyList = "1;6;7"
+ai5color = purple
+ai5Ability="!USE_PRIEST_TO_COLLECT"
+ai5BridgeDrawRate = 4
+
+ai6Name = "Squire of Rain"
+ai6Tech = "rainBattery;rainblocker;raincannon;rainballoon;sunCannon;sunAviary;sunBlocker;sunArcher"
+ai6StartMoney = 0
+ai6GeyserAttachments = 3
+ai6Collectors = 7
+ai6TimeBetweenMoves = 1
+ai6AllyList = "1;5;7"
+ai6color = yellow
+ai6Ability="!USE_PRIEST_TO_COLLECT"
+ai6BridgeDrawRate = 4
+
+ai7Name = "Knight of Wind"
+ai7Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;rainbattery"
+ai7StartMoney = 10000
+ai7GeyserAttachments = 3
+ai7Collectors = 7
+ai7TimeBetweenMoves = 1
+ai7AllyList = "1;5;6"
+ai7color = turquoise
+ai7Ability="!USE_PRIEST_TO_COLLECT;!ENCIRCLE_ENEMY_ISLAND"
+ai7BridgeDrawRate = 4
+
+ai8Name = "General Yelog"
+ai8Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker"
+ai8StartMoney = 10000
+ai8GeyserAttachments = 3
+ai8Collectors = 7
+ai8TimeBetweenMoves = 1
+ai8AllyList = "2;3;4;"
+ai8color = orange
+ai8Ability="!USE_PRIEST_TO_COLLECT"
+ai8BridgeDrawRate = 4
+
+
+
+[Options]
+
+[A.]
+<h2>Unstable!</h2>
+<i>"Some things aren't meant to be...<br>
+--Warhold Nintop, Nimbian Lord</i>  
+<p>As you congratulate the Squire of Rain for his help in defending the Isle of Geysers, a blinding flash of light emenates from your temple!  You watch as the temple sends out a wave of pure storm power.  All the storm crystals on the island are destroyed.  To make things worse it has severed your bridges between the Isle of Geysers and the Squire of Rain's own island.  
+
+$Button=Ok,Tell,m1
+
+[m1]
+Yet another surge of power occurs, devastating the defences set up on the Isle of Geysers and knocking you and the Squire out cold.  When you come to you find that you have been attack again by more of your enemies.  More of your allies have reached your position and are now helping.  Things get worse as you discover the power surges have drained most of the acummulated storm power you had.  To add one final blow to your island some of your units defected to the enemies side...persuaded by an enemy priest.  You must destroy these new attacks and secure the Isle of Geysers.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+You have re-claimed the Isle of Geysers, but it has been greatly weaken by your efforts to gain more power.  You head for home and let the Isle regain it's lost power.  You have much planning to do as well...
+
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,tnron8ex
+
+[ai2PriestDead]
+<h2>Message from Ryal the Charmer</h2>
+<p>
+No!!  I had the Isle in my hands!!  How can this happen?!?!
+
+[ai3PriestCaptured]
+<h2>Message from the Duke of Thunder</h2>
+<p>
+Quickly kill him!
+
+[ai4TempleDead]
+<h2>Message from the Duke of Thunder</h2>
+<p>
+Good job people.
+
+[ai5TempleHalfDead]
+<h2>Message from the Duke of Thunder</h2>
+<p>
+Blast!  My foe has almost bested me!
+
+[ai5PriestCaptured]
+<h2>Message from the Squire of Rain</h2>
+<p>
+We must help him quickly!
+
+[ai5PriestDead]
+<h2>Your ally the Duke of Thunder has died!</h2>
+<p>
+Without his power to help you Ryal the Charmer made quick work out of you and your allies.
+
+$Button=Continue,Tell,TryAgain
+
+[ai6TempleHalfDead]
+<h2>Message from the Squire of Rain</h2>
+<p>
+My Temple can't take much more punishment......
+
+[ai5PriestCaptured]
+<h2>Message from the Squire of Rain</h2>
+<p>
+Help me!
+
+[ai5PriestDead]
+<h2>Your ally the Squire of Rain has died!</h2>
+<p>
+You soon died as well....
+
+$Button=Continue,Tell,TryAgain
+
+
+[ai7TempleHalfDead]
+<h2>Message from the Knight of Wind</h2>
+<p>
+This is not good...I need help here!
+
+[ai7PriestCaptured]
+<h2>Message from the Duke of Thunder</h2>
+<p>
+Quickly! Help our commrade!
+
+[ai7PriestDead]
+<h2>Your ally the Knight of Wind has died!</h2>
+<p>
+Without his power to help you Ryal the Charmer made quick work out of you and your allies.
+
+$Button=Continue,Tell,TryAgain
+
+
+[ai8PriestCaptured]
+<h2>A message from the Duke of Thunder</h2>
+<p>
+Another Glorious victory is in sight!
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+Seems you were wrong to tamper with the Isle of Geysers, as it has brought your destruction.
+
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+
+

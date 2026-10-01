@@ -1,0 +1,194 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 5
+moreGeysers = 5
+
+myStartMoney = 0
+myTech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence;rainwalker;sunCannon;sunBalloon;sunAviary;sunBlocker;sunFence;sunArcher;windarcher;windBattery;windWalker;windballoon;windblocker"
+myAllyList = "5;6;7"
+
+title="Counter Attack"
+
+ai2Name = "Leader of the 5th Division"
+ai2Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence;rainwalker"
+ai2StartMoney = 20000
+ai2GeyserAttachments = 4
+ai2Collectors = 7
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3;4;8"
+ai2color = red
+ai2Ability="!USE_PRIEST_TO_COLLECT;!SACRIFICE_ENEMY_PRIEST"
+ai2BridgeDrawRate = 4
+
+ai3Name = "Minister of Rain"
+ai3Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;sunBlocker;sunArcher"
+ai3StartMoney = 10000
+ai3GeyserAttachments = 3
+ai3Collectors = 5
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2;4;8"
+ai3color = white
+ai3Ability="!USE_PRIEST_TO_COLLECT;!ENCIRCLE_ENEMY_ISLAND"
+ai3BridgeDrawRate = 4
+
+ai4Name = "Master of Thunder"
+ai4Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;sunCannon;sunFence;sunBalloon;sunAviary;sunBlocker;sunArcher"
+ai4StartMoney = 10000
+ai4GeyserAttachments = 3
+ai4Collectors = 5
+ai4TimeBetweenMoves = 1
+ai4AllyList = "2;3;8"
+ai4color = green
+ai4Ability="!USE_PRIEST_TO_COLLECT"
+ai4BridgeDrawRate = 4
+
+
+ai5Name = "Duke of Thunder"
+ai5Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;sunArcher;sunBalloon;sunAviary;rainbattery"
+ai5StartMoney = 5000
+ai5GeyserAttachments = 3
+ai5Collectors = 7
+ai5TimeBetweenMoves = 1
+ai5AllyList = "1;6;7"
+ai5color = purple
+ai5Ability="!USE_PRIEST_TO_COLLECT"
+ai5BridgeDrawRate = 4
+
+ai6Name = "Govener of Sun"
+ai6Tech = "windBattery;sunCannon;sunFence;sunBalloon;sunAviary;sunBlocker;sunArcher"
+ai6StartMoney = 7500
+ai6GeyserAttachments = 3
+ai6Collectors = 7
+ai6TimeBetweenMoves = 1
+ai6AllyList = "1;5;7"
+ai6color = yellow
+ai6Ability="!USE_PRIEST_TO_COLLECT"
+ai6BridgeDrawRate = 4
+
+ai7Name = "Knight of Wind"
+ai7Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;rainbattery"
+ai7StartMoney = 5000
+ai7GeyserAttachments = 3
+ai7Collectors = 7
+ai7TimeBetweenMoves = 1
+ai7AllyList = "1;5;6"
+ai7color = cyan
+ai7Ability="!USE_PRIEST_TO_COLLECT;!ENCIRCLE_ENEMY_ISLAND"
+ai7BridgeDrawRate = 4
+
+ai8Name = "King of Wind"
+ai8Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;sunBlocker;sunArcher"
+ai8StartMoney = 10000
+ai8GeyserAttachments = 3
+ai8Collectors = 5
+ai8TimeBetweenMoves = 1
+ai8AllyList = "2;3;4"
+ai8color = orange
+ai8Ability="!USE_PRIEST_TO_COLLECT;!ENCIRCLE_ENEMY_ISLAND"
+ai8BridgeDrawRate = 4
+
+[@1]
+<h2>~gKnight of Wind</h2>
+<p>Remember that without a temple we cannot gather storm crystals...you will have to send what you get so we may do battle.
+
+[@2]
+<h2>~mDuke of Thunder</h2>
+<p>This shall be your greatest test!  I think you are ready for this battle.  Your training will be compleate once this battle is over...how well you learned shall determine our fate!
+
+[@3]
+<h2>~yGovenor of Sun</h2>
+<p>Why did I agree to go on this suicide mission again?
+
+[@4]
+<p>Because I saved you from the Jailer's alter.
+
+[@5]
+<h2>~yGovenor of Sun</h2>
+<p>Oh yah...well that's of little comfort...well try to keep us alive..afterall we are entrusting you with our survival.
+
+[Options]
+
+[A.]
+<h2>Destory the 5th Division</h2>
+<i>"Cooperation sometimes is a hard thing to do."<br>
+--Jules Kol (A nimbian political leader atempting to acheive some peace.)</i>  
+<p>To sneak in undetected close enough to launch any kind of attack, most of your allies and yourself has gathered on the Isle of Geysers.  After entering into enemy territory you encounter the Dark Lord's 5th division.  Crush them so your allies can follow and strike at the heart of the Lords domian.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+You have crushed the 5th division!  Now you must head of to Destroy the Dark Lords....
+
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,Dark6
+
+[ai2TempleHalfDead]
+<h2>~rLeader of the 5th divison</h2>
+<p>
+You are becoming an annoyance...
+
+[ai2TempleDead]
+<h2>~rLeader of the 5th division</h2>
+<p>
+Curse you!  
+
+[ai2PriestDead]
+<h2>~yGoverner of Sun</h2>
+<p>Well Done!  You are truly a genius!
+
+[ai2PriestCaptured]
+<h2>~rLeader of the 5th division</h2>
+<p>
+My Lords will not be happy.....
+
+[ai3TempleHalfDead]
+<h2>~lMinister of Rain</h2>
+<p>
+I can't belive it...the 5th division is being defeated!
+
+[ai4TempleDead]
+<h2>~gKnight of Wind</h2>
+<p>
+I can almost taste victory....
+
+[ai5PriestDead]
+<h2>Your ally the Duke of Thunder has died!</h2>
+<p>
+After losing the Duke of Thunder your team has been able hold the 5th division off for a few hours.  The 2nd division soon reinforced the 5th and you were surrounded and captured.
+
+$Button=Continue,Tell,TryAgain
+
+[ai6PriestDead]
+<h2>Your ally the Govener of Sun has died!</h2>
+<p>
+Although you still managed to win the battle you were not able to destroy them fast enough...upon your battle with the Dark Lords, there allies soon converged on your postion.  You were defeated in less than an hour.
+
+$Button=Continue,Tell,TryAgain
+
+[ai7PriestDead]
+<h2>Your ally the Knight of Wind has died!</h2>
+<p>
+Forced to retreat, the 5th division chased you out of the Dark Lord's territory.  Alerted, the Dark Lord's decided to end your little rebellion.  
+
+$Button=Continue,Tell,TryAgain
+
+[ai8PriestDead]
+<h2>~gKnight of Wind</h2>
+<p>
+Quick we have to finish the others off....we don't have time to waste.
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+Your sneek attack failed......your allies were not able to escape and all were captured.
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+
+

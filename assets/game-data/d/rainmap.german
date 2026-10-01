@@ -1,0 +1,61 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 2
+moreGeysers = 1
+
+myStartMoney = 5000
+myTech ="windBattery;windArcher;windBlocker;sunWalker;windWalker;windAviary;windBalloon;thunderCannon;thunderArcher;thunderBlocker;thunderBattery;bulf;thunderFence" 
+title="Rain Fury"
+
+ai2Name = "Prince_of_Rain"
+ai2Tech = "sunWalker;rainBattery;rainBlocker;rainWalker;rainCannon;rainBalloon;rainAviary"
+ai3StartMoney = 5000
+ai2GeyserAttachments = 5
+ai2Collectors = 5
+ai2TimeBetweenMoves = 1
+ai2ability="!USE_PRIEST_TO_COLLECT"
+ai2color = red
+
+ai3Name = "Rain_Fury"
+ai3Tech = "sunwalker;rainBattery;rainBlocker;rainWalker;rainCannon;rainBalloon;rainAviary"
+ai3StartMoney = 100000
+ai3GeyserAttachments = 5
+ai3Collectors = 1
+ai3TimeBetweenMoves = 1
+ai3ability="!USE_PRIEST_TO_COLLECT"
+ai3color = white
+
+
+[Options]
+
+
+[A.]
+<h2>Rain Fury</h2>
+<i>"The rain is relentless"--General of rain</i>
+<p>You have been attacked by the rain fury and worst of all your ally the prince of rain has turned against you.  He feels he deserves the power of rain. 
+<p>Defeat the traitor and then the rain fury and you will be all powerful!
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>yeah</h2>
+<p>You are now the ultimate power in the universe.
+<P>But what is that coming closer.
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,1
+$Button=Next Mission,MissionBegin,odd
+
+[Failed]
+<h2>Defeat</h2>
+<p>You lost and now the rain fury defeated the prince of rain and he is the supreme power in Nimbus.
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+
+
+
+
+

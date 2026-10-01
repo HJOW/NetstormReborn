@@ -1,0 +1,124 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 3
+moreGeysers = 3
+
+myStartMoney = 5750
+myTech ="rainwalker;raincannon;rainBattery;rainballoon;rainblocker;rainAviary;outpost;sunFence"
+
+
+title = "Wall"
+ai2Name = "Pirate Lord Thunder"
+ai2Tech ="thunderBattery;thunderCannon;thunderArcher;bulf;thunderFence;thunderBlocker"
+ai2StartMoney = 50000
+ai2GeyserAttachments = 20
+ai2Collectors = 15
+ai2TimeBetweenMoves = 0
+ai2Bridgedrawrate = 0
+ai2color = red
+ai2AllyList = "3;4;5"
+
+ai3Name = "Master Lord of Thunder"
+ai3Tech ="thunderBattery;thunderCannon;thunderArcher;bulf;thunderFence;thunderBlocker"
+ai3StartMoney = 100000
+ai3GeyserAttachments = 25
+ai3Collectors = 25
+ai3TimeBetweenMoves = 0
+ai3Bridgedrawrate = 0
+ai3Ability ="!USE_PRIEST_TO_COLLECT"
+ai3color = white
+ai3AllyList = "2;4;5"
+
+ai4Name = "Pirate Lord Wind"
+ai4Tech ="windBattery;windWalker;windBalloon;windAviary;windArcher;windblocker"
+ai4StartMoney = 50000
+ai4GeyserAttachments = 20
+ai4Collectors = 15
+ai4TimeBetweenMoves = 0
+ai4Bridgedrawrate = 0
+ai4Ability ="!USE_PRIEST_TO_COLLECT"
+ai4color = green
+ai4AllyList = "2;3;5"
+
+ai5Name = "Master Lord of Wind"
+ai5Tech ="windBattery;windWalker;windBalloon;windAviary;windArcher;windblocker"
+ai5StartMoney = 100000
+ai5GeyserAttachments = 25
+ai5Collectors = 25
+ai5TimeBetweenMoves = 0
+ai5Bridgedrawrate = 0
+ai5Ability ="!USE_PRIEST_TO_COLLECT"
+ai5color = purple
+ai5AllyList = "2;3;4"
+
+
+[Options]
+
+[A.]
+<P>"A wall is all but inperatable."
+
+Twinkies
+<p>You make your way to the Pirate Captain's Island when you are ambushed by 4 enemys!
+Slay the pirates and save your isle!
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Fight,DoNothing,0
+
+
+[ai2PriestDead]
+Arrrggggggg!!
+
+[ai3PriestDead]
+Aieeeeeeeeeee!!
+
+[ai4PriestDead]
+Ack!
+
+[ai5PriestDead]
+Crap!
+
+
+[ai2PriestCaptured]
+Oh No! I am  doomed!
+
+
+
+[ai3PriestCaptured]
+Lemme go please?
+
+
+[ai4PriestCaptured]
+Ack!
+
+[ai5PriestCaptured]
+No!!
+
+[ai2TempleHalfDead]
+Help me!
+
+[ai3TempleHalfDead]
+Oh Fudge!
+
+[ai4TempleHalfDead]
+Grrrrr!
+
+[ai5TempleHalfDead]
+Im going to hurt you!
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>You have slayed the 4 pirates. Good Job!
+<$Config,Done{mission.fileName}=1>
+$Button=Next Mission,MissionBegin,POW4
+$Button=Leave Missions,MissionAbort,0
+
+[Failed]
+<h2>Failure!</h2>
+<p>You have been sacrificed and the pirates run rampent throughout Nimbus. Bad!
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+
+
+

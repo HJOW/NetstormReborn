@@ -6,7 +6,7 @@ AGENTS.md의 클론 목표와 사용자가 지정한 **메인 메뉴 → 캠페�
 
 ## 실행과 공개 범위
 
-`dotnet run --project src/Netstorm.Game -c Release -- --language korean` 또는 빌드한 `NetstormClone.exe --language korean`으로 메인 메뉴를 연다. 영어는 `--language english`다. 원본 데이터 탐색과 D2Coding 사용은 기존 규칙을 따른다.
+`dotnet run --project src/Netstorm.Game -c Release -- --language korean` 또는 빌드한 `NetstormClone.exe --language korean`으로 메인 메뉴를 연다. 영어는 `--language english`다. `assets/game-data/`의 게임 데이터와 D2Coding 글꼴을 출력에 자동 포함하므로 `originals/` 없이 실행할 수 있다. [데이터 구성](../../assets/README.md).
 
 캠페인 → **자유를 위한 투쟁(Struggle For Freedom)** → **1-1 전쟁의 시작!** → 브리핑의 **미션 시작** 순서다. 원본의 여섯 그룹과 1장 여섯 미션을 표시한다. 메인 메뉴의 Multiplayer·Demo·Help·Edit·Credits, 다른 그룹, 1-2~1-6은 흐린 글자 항목이며 클릭·키보드 실행을 받지 않는다. 성공 창의 Next Mission도 잠겨 있다. Quit는 종료한다. 일반 메뉴는 Tab/↑/↓/Enter와 Back/Esc를 지원하며 미션 브리핑은 화면 버튼으로 진행한다.
 

@@ -1,0 +1,383 @@
+{
+  "description": "Netstorm 10.78의 VA 0x52f998 모양 표·VA 0x531590 회전 표를 정적으로 추출한 회귀 자료.",
+  "sourceSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "patterns": [
+    {
+      "weight": 0,
+      "width": 1,
+      "height": 1,
+      "cells": [
+        "J1"
+      ]
+    },
+    {
+      "weight": 30,
+      "width": 1,
+      "height": 2,
+      "cells": [
+        "J1",
+        "J2"
+      ]
+    },
+    {
+      "weight": 10,
+      "width": 1,
+      "height": 3,
+      "cells": [
+        "J1",
+        "J1",
+        "J1"
+      ]
+    },
+    {
+      "weight": 4,
+      "width": 1,
+      "height": 4,
+      "cells": [
+        "J1",
+        "J1",
+        "J1",
+        "J1"
+      ]
+    },
+    {
+      "weight": 50,
+      "width": 2,
+      "height": 3,
+      "cells": [
+        "J1",
+        null,
+        "B1",
+        "K1",
+        "J1",
+        null
+      ]
+    },
+    {
+      "weight": 10,
+      "width": 2,
+      "height": 4,
+      "cells": [
+        "J1",
+        null,
+        "B1",
+        "K1",
+        "J1",
+        null,
+        "J1",
+        null
+      ]
+    },
+    {
+      "weight": 10,
+      "width": 2,
+      "height": 4,
+      "cells": [
+        "J1",
+        null,
+        "J1",
+        null,
+        "B1",
+        "K1",
+        "J1",
+        null
+      ]
+    },
+    {
+      "weight": 20,
+      "width": 3,
+      "height": 3,
+      "cells": [
+        "J1",
+        null,
+        null,
+        "B1",
+        "K1",
+        "K1",
+        "J1",
+        null,
+        null
+      ]
+    },
+    {
+      "weight": 40,
+      "width": 2,
+      "height": 3,
+      "cells": [
+        "J1",
+        null,
+        "B2",
+        "K1",
+        "J1",
+        null
+      ]
+    },
+    {
+      "weight": 4,
+      "width": 2,
+      "height": 3,
+      "cells": [
+        "J1",
+        null,
+        "J1",
+        null,
+        "I1",
+        "K2"
+      ]
+    },
+    {
+      "weight": 4,
+      "width": 2,
+      "height": 3,
+      "cells": [
+        null,
+        "J1",
+        null,
+        "J1",
+        "K2",
+        "H1"
+      ]
+    },
+    {
+      "weight": 0,
+      "width": 3,
+      "height": 2,
+      "cells": [
+        "K1",
+        "G1",
+        null,
+        null,
+        "I1",
+        "K2"
+      ]
+    },
+    {
+      "weight": 0,
+      "width": 4,
+      "height": 2,
+      "cells": [
+        "K1",
+        "G1",
+        null,
+        null,
+        null,
+        "I1",
+        "K2",
+        "K1"
+      ]
+    },
+    {
+      "weight": 2,
+      "width": 2,
+      "height": 4,
+      "cells": [
+        "J1",
+        null,
+        "J1",
+        null,
+        "J2",
+        null,
+        "I1",
+        "K1"
+      ]
+    },
+    {
+      "weight": 2,
+      "width": 2,
+      "height": 4,
+      "cells": [
+        null,
+        "J1",
+        null,
+        "J2",
+        null,
+        "J1",
+        "K1",
+        "H1"
+      ]
+    },
+    {
+      "weight": 8,
+      "width": 2,
+      "height": 2,
+      "cells": [
+        "K2",
+        "G1",
+        null,
+        "J1"
+      ]
+    },
+    {
+      "weight": 2,
+      "width": 3,
+      "height": 3,
+      "cells": [
+        null,
+        "F1",
+        "K1",
+        null,
+        "J1",
+        null,
+        "K1",
+        "H1",
+        null
+      ]
+    },
+    {
+      "weight": 2,
+      "width": 3,
+      "height": 3,
+      "cells": [
+        "K1",
+        "G1",
+        null,
+        null,
+        "J1",
+        null,
+        null,
+        "I1",
+        "K1"
+      ]
+    },
+    {
+      "weight": 2,
+      "width": 3,
+      "height": 4,
+      "cells": [
+        null,
+        "F1",
+        "K1",
+        null,
+        "J1",
+        null,
+        null,
+        "J1",
+        null,
+        "K1",
+        "H1",
+        null
+      ]
+    },
+    {
+      "weight": 20,
+      "width": 3,
+      "height": 3,
+      "cells": [
+        "J1",
+        null,
+        null,
+        "I1",
+        "C1",
+        "K1",
+        null,
+        "J1",
+        null
+      ]
+    },
+    {
+      "weight": 20,
+      "width": 3,
+      "height": 3,
+      "cells": [
+        "J1",
+        null,
+        null,
+        "I1",
+        "C2",
+        "K1",
+        null,
+        "J1",
+        null
+      ]
+    },
+    {
+      "weight": 40,
+      "width": 3,
+      "height": 3,
+      "cells": [
+        null,
+        null,
+        "J1",
+        "K1",
+        "C1",
+        "H1",
+        null,
+        "J1",
+        null
+      ]
+    },
+    {
+      "weight": 1,
+      "width": 3,
+      "height": 4,
+      "cells": [
+        null,
+        null,
+        "J1",
+        "K1",
+        "C2",
+        "H1",
+        null,
+        "J2",
+        null,
+        null,
+        "J1",
+        null
+      ]
+    },
+    {
+      "weight": 1,
+      "width": 3,
+      "height": 4,
+      "cells": [
+        "J1",
+        null,
+        null,
+        "J1",
+        null,
+        null,
+        "I1",
+        "C1",
+        "K1",
+        null,
+        "J1",
+        null
+      ]
+    },
+    {
+      "weight": 0,
+      "width": 2,
+      "height": 3,
+      "cells": [
+        "F1",
+        "K1",
+        "J1",
+        null,
+        "I1",
+        "K1"
+      ]
+    },
+    {
+      "weight": 5,
+      "width": 3,
+      "height": 3,
+      "cells": [
+        null,
+        "F1",
+        "K1",
+        "K1",
+        "D1",
+        null,
+        null,
+        "I1",
+        "K1"
+      ]
+    }
+  ],
+  "rotations": [
+    "ABCDEFGHIJKLMNOP",
+    "ACDEBGHIFKJMNOLP",
+    "ADEBCHIFGJKNOLMP",
+    "AEBCDIFGHKJOLMNP"
+  ]
+}

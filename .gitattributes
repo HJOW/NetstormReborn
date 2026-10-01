@@ -1,2 +1,4 @@
 # 셸 스크립트는 Windows 체크아웃(core.autocrlf=true)에서도 LF 를 유지해야 리눅스·WSL 에서 실행된다
 *.sh text eol=lf
+# 기존 게임 포맷의 인코딩·CRLF·공백을 보존해 Windows 체크아웃에서도 이관 해시와 데이터가 유지되게 한다.
+assets/game-data/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab

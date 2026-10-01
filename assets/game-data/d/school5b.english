@@ -1,0 +1,58 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 5
+moreGeysers = 2
+
+myStartMoney = 6500
+myTech = "windWalker;windBattery;windBlocker;windArcher;windBalloon;windAviary"
+
+title="Realtionship"
+
+ai2Name = "Lysandre"
+ai2Tech = "windWalker;windBattery;windBlocker;windArcher;windBalloon;windAviary"
+ai2StartMoney = 6500
+ai2GeyserAttachments = 5
+ai2Collectors = 5
+ai2TimeBetweenMoves = 1
+ai2AllyList = "1"
+ai2color = red
+
+ai3Name = "Olivia"
+ai3Tech = "windWalker;windBattery;windBlocker;windArcher;windBalloon;windAviary"
+ai3StartMoney = 6500
+ai3GeyserAttachments = 2
+ai3Collectors = 3
+ai3TimeBetweenMoves = 3
+ai3AllyList = ""
+ai3color = purple
+
+[Options]
+[A.]
+<h2>You've been asked out!!</h2>
+Since the day you became the "strongest" kid in school, all the girls have liked you!!! You take 
+interest in one girl by the name of Lysandre. She has long brown hair and blue-green eyes. You ask her out
+and she says "yes". But a girl named Olivia also wants to go out with you. You choose Lysandre and
+now you must protect Lysandre from Olivia!!!
+Good Luck!!!!!(Enjoy these xtra missions I added to give this campaign a little
+~g~E~BKICK~.!!!<br>
+
+$Button=Let's do this!!!!,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+You have beaten Olivia and protected Lysandre, good job!
+
+
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+Olivia has beaten you!!!!!!!!!!!!!! Tsk... Tsk...
+
+$Button=Continue,Tell,TryAgain
+
+[END]

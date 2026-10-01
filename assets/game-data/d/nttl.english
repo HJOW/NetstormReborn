@@ -1,0 +1,69 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 3
+
+myStartMoney = 7500
+myTech ="rainwalker;raincannon;rainBattery;rainfence;rainballoon;rainblocker;rainAviary;windwalker;windArcher;windBlocker;windballoon;windAviary;windbattery"
+
+
+title="No Time To Lose"
+
+ai2Name = "Pawn Wind"
+ai2Tech ="windwalker;windArcher;windBlocker;sunBalloon;windballoon;windAviary;sunfence;windbattery"
+ai2StartMoney = 25000
+ai2GeyserAttachments = 5
+ai2Collectors = 5
+ai2TimeBetweenMoves = 1
+ai2Bridgedrawrate = 1
+ai2color = red
+
+ai3Name = "Pawn Thunder"
+ai3Tech ="bulf;thunderArcher;thunderBattery;thunderfence;sunballoon;thunderCannon;thunderblocker;sunBlocker;sunArcher;suncannon;sunAviary;sunfence"
+ai3StartMoney = 50000
+ai3GeyserAttachments = 5
+ai3Collectors = 5
+ai3TimeBetweenMoves = 1
+ai3Bridgedrawrate = 1
+ai3Ability ="!USE_PRIEST_TO_COLLECT;SACRIFICE_ENEMY_PRIEST"
+ai3color = white
+
+ai4Name = "Lil' Thunder"
+ai4Tech ="bulf;thunderArcher;thunderBattery;thunderfence;thunderCannon;thunderblocker"
+ai4StartMoney = 7500
+ai4GeyserAttachments = 5
+ai4Collectors = 5
+ai4TimeBetweenMoves = 1
+ai4Bridgedrawrate = 1
+ai4AllyList = "1"
+ai4color = green
+
+[Options]
+
+[A.]
+~yYou were collecting storm cyrstals one day when your nephew, Lil' Thunder got in a situation.<P>
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Fight,DoNothing,0
+
+
+[ai2PriestDead]
+Your quite worthy to face the evil ones!
+
+[ai3PriestDead]
+Dang.....There are more like me ya know!
+
+[ai4PriestDead]
+curse you!
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>You have saved your nephew and learned of the "Evil Ones"
+Find them and destroy them!
+<$Config,Done{mission.fileName}=1>
+
+
+[END]
+
+
+

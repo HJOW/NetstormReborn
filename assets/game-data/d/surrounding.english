@@ -1,0 +1,58 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = "2"
+moreGeysers = "1"
+
+myStartMoney = "5000"
+myTech = "windbattery;windarcher;windblocker;windwalker;windballoon"
+myAllyList = "3"
+
+title = "Surrounding"
+
+ai2Name = "The bloke in the middle"
+ai2Tech = "windbattery;windarcher;windblocker;rainbattery;rainaviary;thunderbattery;thundercannon"
+ai2StartMoney = "100000"
+ai2Collectors = "0"
+ai2BridgeDrawRate = "0"
+ai2GeyserAttachments = "10"
+ai2TimeBetweenMoves = "0"
+ai2AllyList=""
+
+ai3Name = "Your ally"
+ai3Tech = "rainbattery;raincannon;rainaviary;rainblocker;rainballoon"
+ai3StartMoney = "15000"
+ai3Collectors = "5"
+ai3BridgeDrawRate = "2"
+ai3GeyserAttachments = "2"
+ai3TimeBetweenMoves = "2"
+ai3AllyList="1"
+ai3ability="!USE_PRIEST_TO_COLLECT"
+
+
+[Options]
+
+[A.]
+<h2>Surronding</h2>
+<i>"Meow"<br>
+--a cat</i>
+<p>You and your ally have managed to surround some person, now kill him. Though look out, because he won't give up without a fight.
+
+
+$Button=View Technology,ShowTechnology,55
+$Button=Okay,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Woo!</h2>
+<p>You won. Aren't you great?
+
+<$Config,Done{mission.fileName}=1>
+$Button=Bye bye,MissionAbort,0
+$Button=Another,MissionBegin,thunder
+
+[Failed]
+<h2>FAILURE</h2>
+<p>Have you tried the 'Early Missions' yet?
+$Button=Continue,Tell,TryAgain
+
+[END]

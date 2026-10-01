@@ -1,0 +1,48 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 9
+moreGeysers= 0
+
+myStartMoney = 10000
+myTech = "rainBattery;rainCannon;rainAviary;rainBalloon;windBattery;windarcher;windBalloon;windBlocker;windAviary"
+
+title = "The Undertaker"
+
+ai4Name = "Undertaker"
+ai4Tech = "windBattery;windBalloon;rainBalloon;rainAviary;rainBattery;thunderBattery;thunderCannon;thunderarcher;bulf"
+ai4StartMoney = 20000
+ai4GeyserAttachments = 100
+ai4Collectors = 6
+ai4TimeBetweenMoves = 2
+ai4AllyList = ""
+ai4Color = green
+
+[Options]
+
+[A.]
+<h2>The Undertaker</h2>
+<i>"Beware of this man for he is evil and cunning beyond words"
+--Arius,before your departure</i>
+<p>Guess what this is the worst mission yet.Your geyser supply is heavly guarded,your island is being bombed,and worst yet you are all alone....
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Well...well</h2>
+<p>
+I hate you! You've beaten every mission I've thrown at you.Trust me the next mission you will FAIL!
+GAME MASTER
+<Config,Done{mission.fileName}=9>
+$Button=Leave Missions,MissionAbort,1
+$Button=Next Mission,MissionBegin,WOF10
+
+[Failed]
+<h2>Hmmmm...</h2>
+<p>
+Well I told you it wasn't going to be easy!
+$Button=Continue,Tell,TryAgain
+
+
+[END]

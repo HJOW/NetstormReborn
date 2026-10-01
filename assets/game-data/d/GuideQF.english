@@ -1,0 +1,26 @@
+title = "The Quarrelling Furies"
+
+[Overview]
+<background=nsstart">
+<h2> The Quarreling Furies</h2>
+<p>
+The Furies have been quarreling over who has the best priest.  They have devised a tournament to find out.  They decided to practice on you mortals.  This is the Beginning of the End.</p>
+
+$Checked=~k~BMissions:,MissionBegin,LALA3,{DoneLALA3},{DoneLALA7}
+$Checked=1  Beginning of the End,MissionBegin,Bofend,{DoneBofend},1
+<?!{pickally1}>$Checked=2  Low Priests Rise to the Call,MissionBegin,Low,{DoneLow},{DoneBofend}</?>
+<?{pickally1}>$Checked=2  Low Priests Rise to the Call (allies),MissionBegin,Low2,{DoneLow2}{DoneBofend}</?>
+$Checked=3  Tournament Begins,MissionBegin,Tourney,{DoneTourney}
+$Checked=4  Wizards Beckoning,MissionBegin,Wizards,{DoneWizards},{DoneTourney}
+$Checked=5  Kingdom of Wind,MissionBegin,Wind,{DoneWind},{DoneWizards}
+$Checked=6  Kingdom of Rain,MissionBegin,Rain,{DoneRain},{DoneWind}
+$Checked=7  Kingdom of Thunder,MissionBegin,Thunder,{DoneThunder},{DoneRain}
+$Checked=8  Nimbus Homecoming,MissionBegin,Home,{DoneHome},{DoneThunder}
+$Checked=9  Revenge of the Bounties,MissionBegin,Revenge,{DoneRevenge},{DoneThunder}
+$Checked=10 Kidnapped,MissionBegin,Kidnapped,{DoneKidanapped},{DoneRevenge}
+$Checked=~y~BSpecial Missions:,MissionBegin,LALA3,{DoneLALA3},{DoneLALA3}
+$Checked=11 Gates of Nimbian Hades,MissionBegin,Guard,{DoneGuard},{Donefailedflag}
+$Checked=12 Evading Hades,MissionBegin, Bounty,{DoneBounty},{DoneGuard}
+$Checked=13 Enter Hades Domain,MissionBegin,Hades,{DoneHades},{DoneBounty}
+
+$Button=Back,Tell,Campaign

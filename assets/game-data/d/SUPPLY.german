@@ -1,0 +1,52 @@
+[Header]
+
+missionType="Tutorial"
+missionNumber = 1
+moreGeysers = 1
+myStartMoney = 2000
+myTech = "windBattery;sunCannon;sunarcher;sunAviary"
+
+title= "ERMAC"
+
+ai2Name= "EvilDude"
+ai2Tech= "thunderbattery;Thundercannon"
+ai2StartMoney= 4000
+ai2GeyserAttachments = 2
+ai2Collectors = 7
+ai2TimeBetweenMoves = 1
+ai2AllyList= ""
+ai2color= white
+
+
+[Options]
+
+
+[A.]
+<h2> First chance to put down Thunder fury! <h2>
+<i> "BE ready" <br>
+--Thou master </i|
+<p>
+Our war general, ERMAC sold us his island. Only to destroy his wealthy
+competitor. Destroy the evil Capitalist and ERMAC would reward you with
+a free island on which you can continue your deads against the evil thunder
+abusors. 
+
+$Button=Review Knowledge,Show Technology,55
+$Button=PlayMission,DoNothing,0
+
+[Succeeded] [BadTeamDead]
+
+<h2> Yeppie!!!! <h2>
+<p> U  won!!! You just established a military outpost on which you can wage war!
+<$Config,Done{mission.fileName}=1>
+$Button=Nextmission,MissionAbort,0
+
+[Failed]
+
+<h2> You suck!!! --Ermac </h2>
+<p> Fuck oFF!! U fool!! Oh, by the way, U OWN me BUCKS!!
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+

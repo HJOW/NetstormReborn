@@ -1,0 +1,24 @@
+title = "The New Ruler of Nimbus"
+
+[Overview]
+<background="nsstart">
+<h2>The New Ruler of Nimbus</h2>
+<p>Soon after the Dark Lords fell before your Military Genuis, all the major Nimbian leaders soon fought to become the new ruler of the skies.  Battles of epic proportions erupt everywhere as the oppressed Nimbians learn of the Darklord's defeat.  Very few clans acually join you and are grateful for ridding them of the Tyrants.  It is not long before you again taste battle...          
+<p>
+<i>You must rise over them to become the new ruler of Nimbus.
+<p> ~[IplayerBanner.0]<i>~lMade by Rahn~[IplayerBanner.0]       Email : rahn45@hotmail.com</i>
+<p> 
+<p> ~mVersion 1.2~w
+
+$Checked=1 Seperated,MissionBegin,tnron1,{Donetnron1},1
+$Checked=2 The Duke's Fate,MissionBegin,tnron2,{Donetnron2},{Donetnron1},2
+$Checked=3 ~w~EPart II ~r~E(Avenge the Duke),MissionBegin,tnronb1,{DoneDark6},3
+$Checked=4 ~w~EPart II ~g~E(New Allies),MissionBegin,tnronb2,{DoneDark6},4
+
+$Button=Back,Tell,Campaign
+$Button=Demo/Credits,StartDemo,tnrondemo
+
+
+
+
+

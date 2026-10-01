@@ -1,0 +1,21 @@
+title = " ~l~B~[Ipriest.103]~[Imana.1]~[IsunFlyerBomb.5]Knights Quest~[IsunFlyerBomb.2]~[Imana.1]~[Ipriest.133]"
+
+[Overview]
+<background="nsstart">
+<h2>~w~B~[Ipriest.103]~[IsunFlyerBomb.5]~[Idais.3]~[IsunFlyerBomb.2]~[Ipriest.133]"</h2>
+<p>You are Knight from knight School. You are on a quest to get all the technology of Nimbus
+<p>~[IIcon.37]<i>Made by Apollyon</i>~[IIcon.37]
+<p>~[IRainAviary.1]This is my attempt at using a few Advanced Editing Features.~[IRainCannon.1]
+
+
+$Checked=1 ~[Ibombexplodelarge.1]First Day,MissionBegin,KQ1,{DoneKQ1},1
+$Checked=2 ~[Ithundercannonmissile.6]Assult on the Brothers,MissionBegin,KQ2,{DoneKQ2},{DoneKQ1}
+$Checked=3 ~[INugget.6]Captured!,MissionBegin,KQ3,{DoneKQ3},{DoneKQ2}
+$Checked=4 ~[Iflare.C22]Wind,MissionBegin,KQ4,{DoneKQ4},{DoneKQ3}
+$Checked=5 ~[Ipriest.47]Fury Kids,MissionBegin,KQ5,{DoneKQ5},{DoneKQ4}
+$Checked=6 ~[Irune.2]Unknown,MissionBegin,KQ6,{DoneKQ6},{DoneKQ5}
+
+$Button=Back,Tell,Campaign
+
+
+

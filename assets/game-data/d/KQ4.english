@@ -1,0 +1,89 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 4
+moreGeysers = 3
+
+myStartMoney = 5000
+myTech ="rainBattery;rainAviary;rainCannon;rainBlocker;windBalloon;windBattery;windArcher;windBlocker;windWalker;thunderBlocker;thunderBattery"
+
+
+title="Wind"
+ai2Name = "Wind Brut"
+ai2Tech ="windBattery;windArcher;windBlocker;windAviary;windBalloon;windWalker"
+ai2StartMoney = 1000000
+ai2GeyserAttachments = 15
+ai2Collectors = 10
+ai2TimeBetweenMoves = 0
+ai2Bridgedrawrate = 0
+ai2color = red
+ai2ability ="!USE_PRIEST_TO_COLLECT"
+ai2AllyList ="3;4"
+
+ai3Name = "Wind Flyer"
+ai3Tech ="windBattery;windArcher;windBlocker;windAviary;windBalloon;windWalker"
+ai3StartMoney = 1000000
+ai3GeyserAttachments = 15
+ai3Collectors = 10
+ai3TimeBetweenMoves = 0
+ai3Bridgedrawrate = 0
+ai3color = white
+ai3ability ="!USE_PRIEST_TO_COLLECT"
+ai3AllyList ="2;4"
+
+ai4Name = "Wind Master"
+ai4Tech ="windBattery;windArcher;windBlocker;windAviary;windBalloon;windWalker"
+ai4StartMoney = 1000000
+ai4GeyserAttachments = 15
+ai4Collectors = 10
+ai4TimeBetweenMoves = 0
+ai4Bridgedrawrate = 0
+ai4color = green
+ai4ability ="!USE_PRIEST_TO_COLLECT"
+ai4AllyList ="2;3"
+
+
+
+[Options]
+
+[A.]
+<P>"Wind Can be Quick, Wind can be Leathal, It can Also be a pain to the user."
+<P>Apollyon
+<p>You are trying to find the Dust Devil, and you see the 3 Wind Brothers. You hope that one of them will have the Dust Devil. So you attack.
+
+
+$Button=Veiw your stuff,ShowTechnology,55
+$Button=Fight,DoNothing,0
+
+
+[ai2PriestDead]
+NOOOO!!
+
+
+[ai3PriestDead]
+Noooo!! 
+
+[ai4PriestDead]
+Noooo!! 
+$Button=Dust Devil,GetTechnology,139
+
+
+
+
+[Succeeded][BadTeamDead]
+<h2>You Have crushed them!</h2>
+<p>You have Gotton the Dust Devil!! Yay!
+<$Config,Done{mission.fileName}=1>
+$Button=Onto the next one,MissionBegin,KQ6
+$Button=Chicken!,MissionAbort,0
+
+[Failed]
+<h2>Failure!</h2>
+<p>You Lost.
+$Button=To the start,MissionBegin,KQ98
+
+
+[END]
+
+
+

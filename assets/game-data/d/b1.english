@@ -1,0 +1,54 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 1
+
+myStartMoney = 5000
+myTech = "sunFactory;suncannon;sunarcher;sunfence;windbattery"
+
+title = "An Unexpected Guest"
+
+ai2Name = "Spy"
+ai2Tech = "sunFactory;suncannon;sunaviary;sunblocker;thunderbattery"
+ai2StartMoney = 5000
+ai2Collectors = 10
+ai2GeyserAttachments = 2
+ai2color = red
+ai2BridgeDrawRate = 3
+ai2Ability = "!BUILD_BLOCKERS_WHEN_BUILDINGS_HARMED;!FOCUS_ON_THINGS_THAT_ATTACK_BUILDINGS"
+
+[@8]
+<h2>~rSpy</h2>
+<p>
+Uh oh...
+
+[Options]
+
+[A.]
+<h2>An Unexpected Guest</h2> 
+<i>"Spies are cunning, but only tools."<br>
+--Peter Wartensburg, Professional Spy</i>
+<p>You are disturbed in the night by an Enemy Island.
+Destroy this fool!
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeed]
+[BadTeamDead]
+
+<h2>Congratulations! Victory!</h2> 
+<p>Just before the Spy had perished, he told you of Lord Gunton's growing power in the south.
+It is time to head there and see what is about.
+<$Config,Done{mission.filename}=1> 
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,b2
+
+[Failed]
+<h2>Failure!</h2> 
+<p> 
+Looks like your adventure has ended even before it has started!
+$Button=Continue,Tell,TryAgain
+
+[END]

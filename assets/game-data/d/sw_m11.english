@@ -1,0 +1,238 @@
+*(Saved as mission11.fort & mission11.english)
+
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 11
+moreGeysers = 1
+randomGeysers = 1
+denySalvage = 0
+
+myStartMoney = {sw_mvar0} 
+myTech = {sw_var1}{sw_var2}{sw_var3}{sw_var4}{sw_var9} 
+ai1allylist = "2;4"
+
+title = "Slave to the King (Invasion of Windy City)"
+
+ai3Name =  "Helix the Wind Ambassador"
+ai3Tech = "{sw_var1}{sw_var2}{sw_var3}{sw_var4}"
+ai3StartMoney =4000
+ai3AllyList = "5;6;7;8"
+ai3Color = white
+ai3Ability = "!USE_PRIEST_TO_COLLECT"
+ai3BridgeDrawRate={sw_mvar2}
+ai3TimeBetweenMoves={sw_mvar2}
+ai3GeyserAttachments = {sw_mvar3}
+ai3Collectors = {sw_mvar3}
+
+
+ai2Name = "Elios the Warrior of Hades"
+ai2Tech = "{sw_var1}{sw_var2}{sw_var3}"
+ai2StartMoney =1000 
+ai2AllyList = "1;4"
+ai2Color = orange
+ai2Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS;!SACRIFICE_ENEMY_PRIEST;!BUILD_DAIS;!CAPTURE_ENEMY_PRIEST"
+ai2BridgeDrawRate={sw_mvar3}
+ai2TimeBetweenMoves={sw_mvar3}
+ai2GeyserAttachments = {sw_mvar2}
+ai2Collectors = {sw_mvar2}
+
+ai5Name = "Wind Warrior 1"
+ai5Tech = "{sw_var1}{sw_var2}"
+ai5StartMoney = 1000
+ai5AllyList = "3;6;7;8"
+ai5Color = red
+ai5Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+ai5BridgeDrawRate={sw_mvar2}
+ai5TimeBetweenMoves={sw_mvar2}
+ai5GeyserAttachments = {sw_mvar3}
+ai5Collectors = {sw_mvar3}
+
+ai4Name = "Hades Henchman 1"
+ai4Tech = "{sw_var1}{sw_var2}{sw_var3}"
+ai4StartMoney = 2000
+ai4AllyList = "1;2"
+ai4Color = green
+ai4Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS;!SACRIFICE_ENEMY_PRIEST;!BUILD_DAIS;!CAPTURE_ENEMY_PRIEST"
+ai4BridgeDrawRate={sw_mvar3}
+ai4TimeBetweenMoves={sw_mvar3}
+ai4GeyserAttachments = {sw_mvar2}
+ai4Collectors = {sw_mvar2}
+
+
+ai6Name = "Wind Warrior 2"
+ai6Tech = "{sw_var1}{sw_var2}{sw_var4}"
+ai6StartMoney = 1000
+ai6AllyList = "3;5;7;8"
+ai6Color = purple
+ai6Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+ai6BridgeDrawRate={sw_mvar2}
+ai6TimeBetweenMoves={sw_mvar2}
+ai6GeyserAttachments = {sw_mvar3}
+ai6Collectors = {sw_mvar3}
+
+
+ai7Name = "Senior Wind Warrior"
+ai7Tech = "{sw_var1}{sw_var2}{sw_var3}{sw_var4}"
+ai7StartMoney = 3000
+ai7AllyList = "3;5;6;8"
+ai7Color = yellow
+ai7Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+ai7BridgeDrawRate={sw_mvar2}
+ai7TimeBetweenMoves={sw_mvar2}
+ai7GeyserAttachments = {sw_mvar3}
+ai7Collectors = {sw_mvar3}
+
+
+ai8Name = "Wind Warrior 3"
+ai8Tech = "{sw_var1}{sw_var2}{sw_var3}{sw_var4}"
+ai8StartMoney = 3000
+ai8AllyList = "3;5;6;7"
+ai8Color = cyan
+ai8Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+ai8BridgeDrawRate={sw_mvar2}
+ai8TimeBetweenMoves={sw_mvar2}
+ai8GeyserAttachments = {sw_mvar3}
+ai8Collectors = {sw_mvar3}
+
+
+[init]
+<$Config,sw_m11=1>
+<$Config,sw_m1=0>
+<$Config,sw_m2=0>
+<$Config,sw_m3=0>
+<$Config,sw_m4=0>
+<$Config,sw_m5=0>
+<$Config,sw_m6=0>
+<$Config,sw_m7=0>
+<$Config,sw_m8=0>
+<$Config,sw_m9=0>
+<$Config,sw_m10=0>
+<$Config,sw_m12=0>
+<$Config,sw_m13=0>
+<$Config,sw_m14=0>
+<$Config,sw_m15=0>
+<$Config,sw_m16=0>
+<$Config,sw_m17=0>
+<$Config,sw_m18=0>
+<$Config,sw_m19=0>
+<$Config,sw_m20=0>
+<$Config,sw_m21=0>
+<$Config,sw_m22=0>
+<$Config,sw_m23=0>
+<$Config,sw_m24=0>
+<$Config,sw_m25=0>
+<$Config,sw_m30=0>
+
+
+[options]
+[A.]
+<$Playsound,distantWindQuiet-3000.wav>
+<$Playsound,distantWindQuiet-3000.wav>
+<$Playsound,forWind2.wav>
+
+    <h2>Slave to the King (Invasion of Windy City)<a href="#mission11">~[IfortGump.46]</a></h2>
+                                 ~[IwindVortex.20]
+<br>                                                                                  ~1~y<?!{sw_difficulty1}>HARD</?><?{sw_difficulty1}>EASY</?>~.<br>
+<br>
+<i>I want this Ambassador's head!<br>
+                                   ---Hades</i>
+<p>
+You must now travel to Windy City.<br>
+Your mission is to invade them during the midnight hour.<br>
+For you will have the element of suprise on your side.
+<p>
+             <a href="cmd:ShowTechnology,55"> ~[IfortGump.50] </a>                             <a href="cmd:DoNothing,0">~[IfortGump.22] </a>                        <a href="cmd:Tell,guideHades.overview">~[Ipriest.13]</a><br>
+<a href="cmd:ShowTechnology,55">Review Knowledge</a>         <a href="cmd:DoNothing,0">Surprise them!</a>        <a href="cmd:Tell,guideHades.overview">I gotta go now</a>
+$OnExit= ,Tell,sound1
+
+$Button= ,Tell,A.
+
+[sound1]
+<$PlaySound,distantWindQuiet-3000.wav>
+<$PlaySound,golemMove2.wav>
+
+
+[@2]
+<$MoveDialog,tr>
+OH NO! The enemy has awakened! He sounds the alarm!
+<$Playsound,bell.wav>
+$Button=OK,DoNothing,0
+
+
+[@7]
+<$PlaySound,bell.wav>
+
+
+[@12]
+<$PlaySound,bell.wav>
+
+[@17]
+<$MoveDialog,tr>
+<$PlaySound,bell.wav>
+Well, so much for surprising them!<br>
+To BATTLE, you scream to your allies!
+$Button=OK,DoNothing,0
+
+[ai3PriestDead]
+Ahh... more storm crystals from the Furies!<br>
+{sw_hades} must be pleased!
+<$ChangeMoney,5000>
+$Button=OK,DoNothing,0
+
+[ai2PriestDead]
+One of Hades Henchmen just bit the dust.<br>
+You better complete this mission or you'll be next.
+$Button=OK,DoNothing,0
+
+[ai4PriestDead]
+Another one of Hades henchman just bit the dust. Don't fret, for his soul you will see again.
+$Button=OK,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>VICTORY IS YOURS (and {sw_hades}<h2>)! </h2>
+                        
+~[Ipriest.89]<br>
+                      ~[IsunFlyerBomb.14]
+<p>
+As you make the last sacrifice, you hear a loud tearing, as if
+the very fabric of space is being shredded!
+<p>
+You see before you an opening: first small, then growing very quickly!
+Its a bright blue white opening that first surrounds Windy city, then
+engulfs it in flames!
+<p>
+You watch as the once mighty Windy City melts into the ground in front of you!
+<p>
+An evil laughter can be heard all around you.
+Your Master is at play again!<br>
+He has taken Windy city to the BOWELS of ~[IsunFlyerBomb.2]~r~BHELL~.~[IsunFlyerBomb.2]
+to torment some more helpess souls!
+<$Config,sw_difficulty1=0>
+<$Config,sw_m13=1>
+<$Config,sw_m11=0>
+$Button=On to: Rampage of Rain City!,MissionBegin,sw_m13
+
+
+[Failed]
+You receive a message from the Ambassador of Windy City.<br>
+                                 ~[IwindFlyer.22]
+<p>
+<i>"I feel sorry for you priest. <br>
+For I know you are under {sw_hades}<i> evil spell."
+<p>
+"May the Furies have mercy on your soul."</i>
+<p>
+Forget the mercy. For you belong solely to {sw_hades}.
+<p>
+You must attack them again even if it is by yourself! For you would
+dread going to Hades with news of Failure. Your Master can be very
+cruel!
+<$Config,sw_mvar0=5000>
+<$Config,sw_mvar2=4>
+<$Config,sw_mvar3=2>
+<$Config,sw_difficulty1=1>
+$Button=Try again,MissionBegin,sw_m11
+
+[END]

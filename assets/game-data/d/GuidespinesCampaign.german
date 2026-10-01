@@ -1,0 +1,15 @@
+title = "Spine"
+
+[Overview]
+<background="nsstart">
+<h2>Spine</h2>
+<i>Let's NetStorm a bit!</i>
+<p>
+My first ever netstorm game :) watcha think? 
+spineless@hotmail.com
+
+$Checked=1 spines,MissionBegin,spine,{DoneSpine},1
+
+$Button=Back,Tell,Campaign
+
+

@@ -1,0 +1,62 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 4
+moreGeysers = 1
+
+myStartMoney = 5000
+myTech = "rainbattery;raincannon;rainballoon;rainwalker;rainaviary;rainblocker;rainfence"
+myallylist = ""
+
+title="Final Conflict"
+
+ai2Name = "Duke of Wicker"
+ai2Tech = "thunderbattery;bulf;thundercannon;thunderblocker;thunderarcher"
+ai2StartMoney = 5000
+ai2GeyserAttachments = 2
+ai2Collectors = 5
+ai2TimeBetweenMoves = 1
+ai2BridgeDrawRate = 2
+ai2AllyList = ""
+ai2color = red
+
+[Options]
+
+[A.]
+<h2>Final Conflict!</h2>
+<i>"Blahblahblah"<br>
+--Some Guy</i>  
+<p>Finally!  A chance to attack the leader of the thunder empire!  The Duke of Wicker must be defeated!
+<p>As your islands get close, the duke engages your island in battle.  A group of thunder cannons has already destroyed your ice tower defense!
+
+$Button=More,Tell,More
+
+[More]
+<p>~B~E~i      No, I really wasn't much for making good storyline with my maps.  This was the final map of mine and it starts you under attack, with regenerating ice towers as your only defense.  Of the five maps, the first one and this one are probably the most difficult.  Not much else to say really.
+<br>                             --Mike Byrne aka Australian_Dingo
+
+$Button=You talk too much...,Tell,More2
+
+[More2]
+<p>~B~E~l"Liquor Rear Entrance"
+<p>~B~l                     --A message on a sign I found rather humorous.
+
+$Button=What do I have again?,ShowTechnology,55
+$Button=Right...Let me play now,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Complete Victory!</h2>
+<p>You've showed the Evil Duke who the true ruler really is!  You've saved all of humanity and nimbus!
+
+$Button=Oh well screw it im leaving,MissionAbort,0
+$Button=Restart the mission,MissionBegin,Mike4
+
+[Failed]
+<h2>You got sacked!</h2>
+<p>
+(failure message)
+
+$Button=Continue,Tell,TryAgain
+$Button=Gimme Another Shot,MissionBegin,mike4
+
+[END]

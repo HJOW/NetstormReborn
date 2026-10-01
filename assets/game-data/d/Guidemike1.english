@@ -1,0 +1,19 @@
+title = "~rBloody Battles"
+
+[Overview]
+<background="nsstart">
+<h2>~rBloody Battles</h2>
+<i>~[Iflag.*] <br>
+Perhaps the bloodiest battles in history</i>
+<p>
+My second campaign" <br>
+¤Mike_G¤ <br>
+<a href="mailto:Mike74637@aol.com">Mike74637@aol.com</a>
+
+$Checked=1 ~oAmbush,MissionBegin,mike1,{Donemike1},1
+$Checked=2 ~E~rCircle of Death,MissionBegin,mike2,{Donemike2},{Donemike1},1
+$Checked=3 ~oBack to back,MissionBegin,fight1,{Donefight1},{Donemike2},1
+
+$Button=Back,Tell,Campaign
+
+

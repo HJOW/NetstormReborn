@@ -1,0 +1,57 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+
+myStartMoney = 2000
+myTech = "sunFactory;suncannon;sunarcher;sunfence;windbattery"
+
+title = "Breaching the Defence"
+
+ai2Name = "Sun Guard"
+ai2Tech = "sunFactory;suncannon;sunwalker;sunblocker;windbattery"
+ai2StartMoney = 1000
+ai2Collectors = 4
+ai2GeyserAttachments = 1
+ai2AllyList = "3"
+ai2color = red
+ai2BridgeDrawRate = 2
+ai2Ability = "!BUILD_BLOCKERS_WHEN_BUILDINGS_HARMED"
+
+ai3Name = "Rain Guard"
+ai3Tech = "rainFactory;raincannon;sunwalker;;rainbattery"
+ai3StartMoney = 1000
+ai3Collectors = 4
+ai3GeyserAttachments = 1
+ai3AllyList = "2"
+ai3color = white
+ai3BridgeDrawRate = 2
+
+[Options]
+
+[A.]
+<h2>Breaching the Defense</h2> 
+<i>"The great thing about these cannons is after it hits the target."<br>
+--Lord of Rain</i>
+<p>As you head toward Lord Gunton, you are stopped by two guards.
+Prepare for a battle.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeed]
+[BadTeamDead]
+
+<h2>Congratulations! Victory!</h2> 
+<p>You have broken their defenses! Now go forth and challange the lord ahead!
+<$Config,Done{mission.filename}=1> 
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,b3
+
+[Failed]
+<h2>Failure!</h2> 
+<p> 
+Looks like your adventure has ended even before it has started!
+$Button=Continue,Tell,TryAgain
+
+[END]

@@ -1,0 +1,87 @@
+[header]
+missionType = "Tutorial"
+missionNumber = 10
+moreGeysers = 1
+myStartMoney = 12500
+myTech="thunderbattery;thundercannon;thunderfence;thunderblocker;bulf;thunderarcher;suncannon;sunarcher;sunballoon;sunfence;sunaviary"
+myAllyList = "4"
+
+ai2Name = "Cyclone Priest"
+ai2Tech="windbattery;windarcher;sunaviary;windblocker;sunwalker;suncannon;sunballoon;windwalker"
+ai2StartMoney = 25000
+ai2GeyserAttachments = 10
+ai2Collectors = 20
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3"
+
+ai3Name = "Tempest Priest"
+ai3Tech="rainbattery;raincannon;rainblocker;rainwalker;rainballoon;rainaviary;rainfence;sunwalker;suncannon;sunarcher"
+ai3StartMoney = 25000
+ai3GeyserAttachments = 15
+ai3Collectors = 30
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2"
+
+ai4Name = "The master of the Chidory"
+ai4Tech="thunderbattery;thundercannon;thunderfence;bulf;thunderarcher;thunderblocker;windbattery;windarcher;windaviary;windwalker;windballoon;windblocker"
+ai4StartMoney = 30000
+ai4GeyserAttachments = 20
+ai4Collectors = 40
+ai4TimeBetweenMoves = 1
+ai4AllyList = "1"
+
+ai5Name = "Storm Priest"
+ai5Tech="sunwalker;suncannon;sunarcher;sunblocker;sunballoon;sunaviary;sunfence;windbattery;windarcher;windwalker;windballoon;windblocker;windaviary;rainbattery;rainaviary"
+ai5StartMoney = 100000
+ai5GeyserAttachments = 40
+ai5Collectors = 80
+ai5TimeBetweenMoves = 1
+
+title = "Last Chance - Allies"
+
+[Options]
+[A.]
+<h2>~mLast Chance - Allies</h2>
+<br><i>~yCapienda rebus in malis praeceps via est. 
+---Seneka,Agamemnon<br></i>
+<p>You've chased away the enemy, far away from your Island. The enemy - fleeing from your pursuit - calls for reinforcements.
+Suddenly you are the one who's being pursuaded along with your ally. Then you decide it's time to end this, your ally thinks the same too.
+The skies thundered, a sudden flash.... Another island appears. What could this be?
+$Button=More,Tell,More
+
+[More]
+<h2>~gThe master of the <i>~rChidory</i>:</h2>
+"Master, it seems that we've angered the furies - with our wars - for too long now....
+Maybe they've sent the <i>~yStorm Priest</i> to end theese conflicts once and for all."
+$Button=Storm Priest,Tell,Priest
+$Button=I don't care,DoNothing,0
+
+[Priest]
+"The <i>~yStorm Priest</i> is a force to be reckoned with master, there hasn't been any "mortal" priest who could defeat him.
+So the furies chose him to be the <i>~lULTIMATE DISCIPLE</i>!"
+$Button=I don't care - let's start the fight,ShowTechnology,55
+$Button=O.K. now I'm scared,MissionAbort,1
+
+[@180]
+<h2>~y A message from the STORM PRIEST:</h2>
+"You foolish mortals! The furies grow tired of your insolence - and so do I!
+It's time for you all to visit the <i>~rNETHER REALM</i>!
+$Button=Uh!!! - I'm so scared!,Tell,Scared
+$Button=What ever..,DoNothing,0
+
+[Scared]
+<h2>~lYou write a message right back:</h2>
+<br><i>~I"We shall see who will survive. And I can asure you, it WON'T BE YOU!"
+$Button=Send,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Victory!</h2>
+$Button=End,MissionAbort,1
+$Button=Next Mission,MissionBegin,TheGreatBattle
+
+[Failed]
+<h2>~rYou've failed to achieve victory!</h2>
+$Button=Try Again,MissionBegin,LCA
+$Button=Abort,MissionAbort,1
+
+[End]

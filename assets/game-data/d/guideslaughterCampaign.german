@@ -1,0 +1,15 @@
+title = "Slaughter"
+
+[Overview]
+<background="nsstart">
+<h2>Slaughter</h2>
+<i>Let's NetStorm a bit!</i>
+<p>
+My first ever netstorm game :) watcha think? 
+frieza@hotmail.com
+
+$Checked=1 slaughter,MissionBegin,slaughter,{DoneSlaughter},1
+
+$Button=Back,Tell,Campaign
+
+

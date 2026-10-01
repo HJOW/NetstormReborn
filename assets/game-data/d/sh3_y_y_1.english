@@ -1,0 +1,91 @@
+[Header]
+
+missionType = "Tutorial"
+
+missionNumber = "17"
+moreGeysers = "0"
+randGeysers = "0"
+
+myStartMoney = "4500"
+myTech = "rainbattery;sunarcher;"
+myAllyList = ""
+
+title = "Klod Jandor's Death"
+
+ai2Name = "Killer"
+ai2Tech = "thunderbattery;sunarcher;"
+ai2StartMoney = "50000"
+ai2AllyList = "3;1;"
+ai2Color = "red"
+ai2Collectors = "0"
+ai2BridgeDrawRate = "10"
+ai2GeyserAttachments = "1"
+ai2TimeBetweenMoves = "10"
+ai2Ability = ""
+
+ai3Name = "Thief"
+ai3Tech = "thunderbattery;sunarcher;"
+ai3StartMoney = "50000"
+ai3AllyList = "2;1;"
+ai3Color = "white"
+ai3Collectors = "0"
+ai3BridgeDrawRate = "7"
+ai3GeyserAttachments = "1"
+ai3TimeBetweenMoves = "7"
+ai3Ability = ""
+
+ai4Name = "General Klod Jandor"
+ai4Tech = "windbattery;windarcher;windblocker;windaviary;"
+ai4StartMoney = "50000"
+ai4AllyList = ""
+ai4Color = "green"
+ai4Collectors = "6"
+ai4BridgeDrawRate = "0"
+ai4GeyserAttachments = "6"
+ai4TimeBetweenMoves = "0"
+ai4Ability = ""
+
+
+[Options]
+
+[A.]
+
+<h2>~lKlod Jandor's Death</h2>
+<i>"Friend is a friend..."<br>
+--Sunder</i>
+<p>Now you became a traitor and soldier of Evil King. You must kill your eks-friend Klod Jandor. Thats not easy to kill your friend, isn't is? Anyway good luck!
+$Button=Its too hard for me!,Tell,Campaign
+$Button=Play!,DoNothing,0
+
+[@1]
+
+<h2>~lIncoming Message</h2>
+<i>~jFrom: ~qGeneral Klod Jandor<br>
+~jTo: ~qSunder</i>
+<p>What the hell?! You allied with Evil King?! Stop or I will kill you...
+
+$Button=Accept,DoNothing,0
+$Button=Check your Knowledge,ShowTechnology,55
+
+[Succeeded] [BadTeamDead]
+
+<h2>~lCongratulations!</h2>
+<i>"Its were very sad win"<br>
+--Sunder</i>
+<p>So you killed your eks-friend general Kold Jandor. This is not good, but you have nothing to do except of your own death. You choose another death. In other words you are traitor. You going to kill Klod's forces, placed nearly
+<$Config,Done{mission.fileName}=1>
+<$Config,Donesh3_y_2b=0>
+<$Config,Donesh3_y_y_1a=1>
+$Button=Its too hard for me!,Tell,Campaign
+$Button=Proceed,MissionBegin,sh3_y_y_2
+
+[Failed]
+
+<h2>~lYou lose...</h2>
+<p>Don't worry if you lose, this is Shit Hard!
+
+$Button=Its too hard for me!,Tell,Campaign
+$Button=Try again!,Tell,TryAgain
+
+
+[END]

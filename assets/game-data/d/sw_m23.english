@@ -1,0 +1,462 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber =23 
+
+myStartMoney = 1300
+title = "Assassination of the Furies"
+myTech="sunWalker;rainBattery;thunderBattery;windBattery"
+
+ai2Name = "~oWind~.Fury"
+ai2Tech = "{sw_var1}{sw_var2}{sw_var3}{sw_var4}sunWalker;{sw_var5}{sw_var6}{sw_var7}{sw_var8}"
+ai2StartMoney =800 
+ai2Color = red
+ai2AllyList="3;4;5"
+ai2GeyserAttachments = 4
+ai2Collectors = 3
+ai2TimeBetweenMoves=1
+ai2BridgeDrawRate=1
+ai2Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai3Name = "~mThunder~.Fury"
+ai3Tech = "{sw_var1}{sw_var2}{sw_var7}{sw_var8}sunWalker;{sw_var3}{sw_var4}{sw_var5}{sw_var6}"
+ai3StartMoney =800 
+ai3Color = red
+ai3AllyList="2;4;5"
+ai3GeyserAttachments = 4
+ai3Collectors = 3
+ai3TimeBetweenMoves=4
+ai3BridgeDrawRate=4
+ai3Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai4Name = "~lRain~.Fury"
+ai4Tech = "{sw_var1}{sw_var2}{sw_var5}{sw_var6}sunWalker;{sw_var3}{sw_var4}{sw_var7}{sw_var8}"
+ai4StartMoney =800 
+ai4Color = red
+ai4AllyList="2;3;5"
+ai4GeyserAttachments = 4
+ai4Collectors = 3
+ai4TimeBetweenMoves=3
+ai4BridgeDrawRate=3
+ai4Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai5Name = "~rHades"
+ai5Tech = "{sw_var1}{sw_var2}{sw_var5}{sw_var6}sunWalker;{sw_var3}{sw_var4}{sw_var7}{sw_var8}"
+ai5StartMoney =800 
+ai5Color = red
+ai5AllyList="2;3;4"
+ai5GeyserAttachments = 4
+ai5Collectors = 3
+ai5TimeBetweenMoves=1
+ai5BridgeDrawRate=1
+ai5Ability = "!USE_PRIEST_TO_COLLECT"
+
+[init]
+<$Config,sw_m23=1>
+<$Config,sw_m1=0>
+<$Config,sw_m2=0>
+<$Config,sw_m3=0>
+<$Config,sw_m4=0>
+<$Config,sw_m5=0>
+<$Config,sw_m6=0>
+<$Config,sw_m7=0>
+<$Config,sw_m8=0>
+<$Config,sw_m9=0>
+<$Config,sw_m10=0>
+<$Config,sw_m11=0>
+<$Config,sw_m12=0>
+<$Config,sw_m13=0>
+<$Config,sw_m14=0>
+<$Config,sw_m15=0>
+<$Config,sw_m16=0>
+<$Config,sw_m17=0>
+<$Config,sw_m18=0>
+<$Config,sw_m19=0>
+<$Config,sw_m20=0>
+<$Config,sw_m21=0>
+<$Config,sw_m22=0>
+<$Config,sw_m24=0>
+<$Config,sw_m25=0>
+<$Config,sw_m30=0>
+
+<$Config,sw_enDead2=0>
+<$Config,sw_enDead3=0>
+<$Config,sw_enDead4=0>
+<$Config,sw_enDead5=0>
+<$Config,sw_weapon2=0>
+<$Config,sw_weapon3=0>
+<$Config,sw_weapon4=0>
+<$Config,sw_weapon5=0>
+
+[options]
+[A.]
+                       <h2>Assassination of the Furies <a href="#mission23">~[IfortGump.46]</a></h2>
+                               ~[Igeyser.17]
+<br>
+After you killed the King of Nimbus, the {sw_god5} appears to have become very confident in your faith.
+ He has decided to grant you the ability of Transformation.<br>
+This ability will let you serve by ~rHades~. side up in the Duesphere. His plans are
+for you and him to battle the Furies, and forever put an end to them!
+<p>
+                              Will you accept this ability?
+$Button=YES,Tell,Deal
+$Button=NO,Tell,NoDeal
+
+[Deal]
+You have been granted the special ability of Transformation!<br>
+Congratulations! May you use it well.
+$Button=kewl,Tell,A1
+
+[NoDeal]
+<h2>You have chosen not to accept this ability. Are you nuts?</h2>
+<p>
+Do you know what missions lie ahead of you?
+ Without this ability, you will surely perish, for no known mortal priest has ever passed into the Duesphere without this ability.
+ How do you think the Furies survive here?
+<p>
+So, you have no other choice but to accept it.</h2>
+<p>
+The {sw_god5} has given you the ability of Transformation.
+$Button=OK,Tell,A1
+
+
+
+[A1]
+                     <h2>Assassination of the Furies <a href="#mission23">~[IfortGump.46]</a></h2>
+                             ~[Igeyser.17]
+<br>
+You have been teleported to the DuesPhere...
+<p>
+The Furies have agreed to battle you and your master in a final battle, but under certain conditions.
+<p>
+For this final Confrontation, each Fury and yourself have agreed upon only allowing
+ a single major weapon and a single minor weapon of choice from your arsenal.
+<p>
+First, chooses the {sw_god1}. The rain Fury ponders long and hard. Then he decides:
+<br>
+<i>I will command the sunArcher and the BULF.</i><br>
+                                  ~[IsunArcher.33]                   ~[Ibulf.74]
+<br>
+<$PlaySound,forRain2.wav>
+$Button=Wow! What a break!,Tell,A2
+
+[A2]
+              <h2>Assassination of the Furies <a href="#mission23">~[IfortGump.46]</a></h2>
+                      ~[Igeyser.17]
+<br>
+Next, chooses the {sw_god2}. The wind Fury wastes no time. He declares for all to
+ hear:<br>
+<i>I will command the sunArcher and the BULF.</i><br>
+                                  ~[IsunArcher.33]                   ~[Ibulf.74]
+<br>
+Hmmm... what strange choices. They're not even picking their alignments!
+<$PlaySound,forWind2.wav>
+$Button=More,Tell,A3
+
+[A3]
+                   <h2>Assassination of the Furies <a href="#mission23">~[IfortGump.46]</a></h2>
+                           ~[Igeyser.17]
+<br>
+Now comes the {sw_god3}. He lumbers by you like you weren't even there. He bellows
+ into the night:<br>
+<i>I will command the sunArcher and the BULF.</i><br>
+                                  ~[IsunArcher.33]                   ~[Ibulf.74]
+<br>
+Can it be? Why are they selecting so? Do they not fear me?, you think to yourself
+<$PlaySound,forThunder2.wav>
+$Button=More,Tell,A4
+
+[A4]
+                                         <h2>Assassination of the Furies <a href="#mission23">~[IfortGump.46]</a></h2>
+                                                 ~[Igeyser.17]
+<br>
+Finally, the {sw_god5} makes his choice. When he speaks, you muscles clench and your
+ teeth clamp together. A shiver runs up your spine, as his words echo into the still
+ air....<br>
+<i>I will command the sunArcher and the BULF.</i><br>
+                                  ~[IsunArcher.33]                   ~[Ibulf.74]
+<br>
+What is going on here, you think to yourself. Is my master out of his mind?
+ Why didn't he pick good weapons to battle the other Furies with?
+<$PlaySound,forStorm.wav>
+$Button=More,Tell,A5     
+
+[A5]
+                     <h2>Assassination of the Furies <a href="#mission23">~[IfortGump.46]</a></h2>
+                             ~[Igeyser.17]
+<br>
+At last, it's your turn. Click one item from below. This is your MAJOR Weapon. You
+ will have one more choice of a DEFENSIVE WEAPON after you choose here:
+<p>
+~3              ~[Iflag.3]ATTACK WEAPON~[Iflag.3]~.<br>
+     <a href="cmd:GetTechNology,71">~[IsunArcher.33]</a>
+     <a href="cmd:GetTechnology,128>~[IsunCannon.2]</a>
+     <a href="cmd:GetTechnology,72">~[IsunAviary.0]</a>
+     <a href="cmd:GetTechnology,129">~[IrainCannon.3]</a>
+     <a href="cmd:GetTechnology,140">~[IwindArcher.60]</a>
+<br>
+           <a href="cmd:GetTechnology,139">~[IwindAviary.1]</a>
+     <a href="cmd:GetTechnology,148">~[IthunderArcher.1]</a>
+     <a href="cmd:GetTechnology,131">~[IthunderCannon.35]</a>
+     <a href="cmd:GetTechnology,143">~[IrainAviary.7]</a>
+<br>
+$OnExit= ,PlaySound,priestMove3.wav
+$Button= ,Tell,A5
+
+[@1]
+<$Tell,A6>
+
+[A6]
+                     <h2>Assassination of the Furies <a href="#mission23">~[IfortGump.46]</a></h2>
+<br>
+Now. You're last choice. Pick wisely from the list below!
+<br>
+     ~3            ~[Iflag.3]DEFENSIVE WEAPON~[Iflag.3]~.<br>
+   <a href="cmd:GetTechnology,135">~[IBulf.76]</a>
+   <a href="cmd:GetTechnology,136">~[IsunFence.4]</a>
+   <a href="cmd:GetTechnology,78">~[IsunBlocker.*]</a>
+   <a href="cmd:GetTechnology,137">~[IwindWalker.4]</a>
+   <a href="cmd:GetTechnology,146">~[IrainBalloon.*]</a>
+   <a href="cmd:GetTechnology,156">~[IrainWalker.19]</a>
+   <a href="cmd:GetTechnology,145">~[IrainFence.3]</a>
+   <a href="cmd:GetTechnology,141">~[IwindBalloon.0]</a>
+   <a href="cmd:GetTechnology,111">~[Isunballoon.0]</a>
+   <a href="cmd:GetTechnology,147">~[IrainBlocker.0]</a>
+   <a href="cmd:GetTechnology,142">~[IwindBlocker.2]</a>
+   <a href="cmd:GetTechnology,149">~[IthunderFence.3]</a>
+   <a href="cmd:GetTechnology,126">~[Ioutpost.0]</a>
+   <a href="cmd:GetTechnology,79">~[IthunderBlocker.0]</a>
+$OnExit= ,PlaySound,priestMove1.wav
+$Button= ,Tell,A6
+
+[@10]
+You call to your Master:<br>
+~IMaster, let us attack the rain Fury together, and start to take care of our
+ enemies together!
+$Button=OK,DoNothing,0
+[@15]
+There is no response from ~rHADES
+$Button=?,DoNothing,0
+
+[@20]
+<$MoveDialog,tl>
+What is going on here? Why is your Master not allied with you?
+$Button=?,DoNothing,0
+
+[@25]
+You call to {sw_hades}:
+<br>
+~iMaster, what's is going on? Why are you not allied to me?
+$Button=??,DoNothing,0
+
+[@30]
+<$MoveDialog,tr>
+                              <h2>{sw_hades}<h2> speaks to you:</h2><br>
+<i>"Groveler, you have ventured far to experience your own death! The Furies
+ have agreed to make me the Master of all if I help to destroy you. So I don't
+ need you anymore. With four Furies against one wimpy warrior, I'm sure to prevail!"
+<p>
+"Don't take it personally, you poor wretched fool! It's just that I was given
+ an offer that I couldn't refuse! So, with that, your Apprenticeship has officially
+ ended"
+<p>
+"Oh, don't worry.... when I sacrifice you, your soul will go down to<br>
+ {sw_hades}<i> for me to forever torture and torment!"
+$Button=This is BAD!,DoNothing,0
+
+[@35]
+<$MoveDialog,tl>
+                  <h2>You call out to {sw_hades}:</h2><br>
+~I"But, Master. What about all I've done for you. How about all the Nimbian souls
+ I have brought you? I've done everything you've asked."
+ <p>
+ "I thought we had a deal? If I did your bidding and helped you become supreme Ruler
+ of Nimbus, you said you'd set me free!"
+$OnExit= ,PlaySound,treasonCast.wav
+$Button=Say it isn't so?,DoNothing,0
+
+[@40]
+<$MoveDialog,tr>
+        <h2>{sw_hades} bellows to you:</h2><br>
+          ~4<i>~rSILENCE~.<br>
+ <i>, you pathethic excuse for a Nimbian!
+<p>
+                 Groveler, prepare to <br>
+                           ~4DIE!~.
+$Button=bad news!,DoNothing,0
+
+[@120]
+<$MoveDialog,tl>
+To your horror, you also notice that the 4 Furies did not keep their word. They
+ are using any and every weapon available to them!
+<p>
+~I"So much for honor, I guess"~., you think to yourself. Oh well, you're a warrior
+ of your word. You will not break your vow to only use 1 attack weapon and 1 defensive
+ weapon....
+$Button=What else can go against me?,DoNothing,0
+
+
+[ai2PriestCaptured][ai3PriestCaptured][ai4PriestCaptured][ai5PriestCaptured]
+<$PlaySound,forStorm2.wav>
+You have captured one of the Furies! Excellent job!
+$Button=OK,DoNothing,0
+
+
+[ai2PriestDead]
+<$Config,sw_enDead2=1>
+The {sw_god2} has been sacrificed. Way to go! You are almost Free from this
+ tyrrany!
+$Button=Fight on!,Tell,weapselect2
+
+[weapselect2]
+<$Config,sw_weapon2=1>
+You've defeated the {sw_god2}!<br>
+You may select 1 of the items below by clicking on the picture... However, that would break your word,
+since prior to this battle, you vowed to use only the weapons you initially chose.
+<br>
+   <a href="cmd:GetTechnology,140">~[IwindArcher.60]</a>
+   <a href="cmd:GetTechnology,139">~[IwindAviary.1]</a>
+   <a href="cmd:GetTechnology,141">~[IwindBalloon.0]</a>
+   <a href="cmd:GetTechnology,142">~[IwindBlocker.2]</a>
+<p>
+Are you a Nimbian of your word, and dare to face the rest of the Furies with your limited
+abilities, or do you recant your word, and show your followers that your words are like the
+empty promises that have been spoken by so many others before you?
+$OnExit= ,Tell,checkwin
+$Button=I wil not cower before the might of the FURIES!,tell,nocower2
+
+[nocower2]
+<$Config,sw_weapon2=0>
+<$Tell,checkwin>
+
+
+[ai3PriestDead]
+<$Config,sw_enDead3=1>
+The {sw_god3} has been sacrificed. Way to go! You are almost Free from this
+ tyrrany!
+$Button=Fight on!,Tell,weapselect3
+
+[weapselect3]
+<$Config,sw_weapon3=1>
+You've defeated the {sw_god3}!<br>
+You may select 1 of the items below by clicking on the picture... However, that would break your word,
+since prior to this battle, you vowed to use only the weapons you initially chose.
+<br>
+  <a href="cmd:GetTechnology,148">~[IthunderArcher.1]</a>
+    <a href="cmd:GetTechnology,131">~[IthunderCannon.35]</a>
+    <a href="cmd:GetTechnology,135">~[IBulf.76]</a>
+    <a href="cmd:GetTechnology,149">~[IthunderFence.3]</a>
+    <a href="cmd:GetTechnology,79">~[IthunderBlocker.0]</a>
+<p>
+Are you a Nimbian of your word, and dare to face the rest of the Furies with your limited
+abilities, or do you recant your word, and show your followers that your words are like the
+empty promises that have been spoken by so many others before you?
+$OnExit= ,Tell,checkwin
+$Button=I wil not cower before the might of the FURIES!,tell,nocower3
+
+[nocower3]
+<$Config,sw_weapon3=0>
+<$Tell,checkwin>
+
+
+[ai4PriestDead]
+<$Config,sw_enDead4=1>
+The {sw_god1} has been sacrificed. Way to go! You are almost Free from this
+ tyrrany!
+$Button=Fight on!,Tell,weapselect4
+
+[weapselect4]
+<$Config,sw_weapon4=1>
+You've defeated the {sw_god1}!<br>
+You may select 1 of the items below by clicking on the picture... However, that would break your word,
+since prior to this battle, you vowed to use only the weapons you initially chose.
+<br>
+   <a href="cmd:GetTechnology,129">~[IrainCannon.3]</a>
+   <a href="cmd:GetTechnology,143">~[IrainAviary.7]</a>
+   <a href="cmd:GetTechnology,146">~[IrainBalloon.*]</a>
+   <a href="cmd:GetTechnology,156">~[IrainWalker.19]</a>
+   <a href="cmd:GetTechnology,145">~[IrainFence.3]</a>
+   <a href="cmd:GetTechnology,147">~[IrainBlocker.0]</a>
+<p>
+Are you a Nimbian of your word, and dare to face the rest of the Furies with your limited
+abilities, or do you recant your word, and show your followers that your words are like the
+empty promises that have been spoken by so many others before you?
+$OnExit= ,Tell,checkwin
+$Button=I wil not cower before the might of the FURIES!,tell,nocower4
+
+[nocower4]
+<$Config,sw_weapon4=0>
+<$Tell,checkwin>
+
+[ai5PriestDead]
+<$Config,sw_enDead5=1>
+The {sw_god5} has been sacrificed. Way to go! You will show the traitorous HADES
+ that you will not be made a fool!
+$Button=Fight on!,Tell,weapselect5
+
+[weapselect5]
+<$Config,sw_weapon5=1>
+You've defeated the {sw_god5}!<br>
+You may select 1 of the items below by clicking on the picture... However, that would break your word,
+since prior to this battle, you vowed to use only the weapons you initially chose.
+<br>
+ <a href="cmd:GetTechNology,71">~[IsunArcher.33]</a>
+ <a href="cmd:GetTechnology,128>~[IsunCannon.2]</a>
+ <a href="cmd:GetTechnology,72">~[IsunAviary.0]</a>
+ <a href="cmd:GetTechnology,136">~[IsunFence.4]</a>
+ <a href="cmd:GetTechnology,78">~[IsunBlocker.*]</a>
+ <a href="cmd:GetTechnology,111">~[Isunballoon.0]</a>
+ <a href="cmd:GetTechnology,126">~[Ioutpost.0]</a>
+<p>
+Are you a Nimbian of your word, and dare to face the rest of the Furies with your limited
+abilities, or do you recant your word, and show your followers that your words are like the
+empty promises that have been spoken by so many others before you?
+$OnExit= ,Tell,checkwin
+$Button=I wil not cower before the might of the FURIES!,tell,nocower5
+
+
+[nocower5]
+<$Config,sw_weapon5=0>
+<$Tell,checkwin>
+
+
+
+
+
+[checkwin]
+<?{sw_enDead2}><?{sw_enDead3}>
+<?{sw_enDead4}><?{sw_enDead5}>
+                                                     <h2>VICTORY IS YOURS! </h2>
+                        
+                           ~[Ipriest.89]   ~[IsunFlyerBomb.14]<br>
+As you make the last sacrifice, you hear a loud tearing, as if
+the very fabric of space is being shredded!
+<p>
+You see before you an opening: first small, then growing very quickly!
+ Its a bright blue white opening that first surrounds the four Furies souls,
+ and their islands, then engulfs them in flames!
+<p>
+You watch as the once almighty Furies of ~[ImanaBolt.0]~oWIND~[ImanaBolt.0]~.,
+ ~[ImanaBolt.1]~lRAIN~[ImanaBolt.1]~., ~[ImanaBolt.2]~mTHUNDER~[ImanaBolt.2]~.,
+  and ~[IbombExplodeLarge.1]~kDEATH~[IbombExplodeLarge.1]~. melt into the ground one by one in front of you!
+<p>
+                                                     {sw_hades} yells out to you:
+<br><i>
+          "What have you done? You have trapped us all into the BOWELS of ~[IsunFlyerBomb.2]~r~BHELL~.~[IsunFlyerBomb.2]<i>"
+<br>
+                         <i>"NOOOOO! We must be free to torment other souls at will!"
+<$Config,sw_m30=1>
+<$Config,sw_m11=0>
+$Button=Congrats! ONTO the celebration!,MissionBegin,sw_m30
+</?></?></?></?>
+
+
+[Failed]
+The Furies are amused at your futile attempts. They would like you to try again,
+ so they can amuse themselves with your sacrifice again.
+<p>
+So, {sw_hades}, with his mighty magic, resurrects you from the grave, and you are
+ allowed to battle yet once again!
+$Button=To battle,MissionBegin,sw_m23
+
+[END]

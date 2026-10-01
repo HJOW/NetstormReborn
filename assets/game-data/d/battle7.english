@@ -1,0 +1,67 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 1
+
+myStartMoney = 5000
+myTech = "rainbattery;raincannon;rainballoon;rainfence;rainblocker"
+myAllyList = ""
+
+title="Final Battle"
+
+ai2Name = "Lord of the Sky"
+ai2Tech = "suncannon;sunarcher;sunblocker;sunfence;sunaviary"
+ai2StartMoney = 18000
+ai2GeyserAttachments = 4
+ai2Collectors = 8
+ai2TimeBetweenMoves = 3
+ai2AllyList = ""
+ai2color = red
+ai2Ability="!USE_PRIEST_TO_COLLECT"
+ai2BridgeDrawRate = 4
+
+
+[Options]
+
+[A.]
+~[Isunfactory.a1]
+<p>
+<h2>**FINAL BATTLE**</h2>
+<i>"All is fair in love and war, in this case WAR!"</i><br>
+--My motto for Netstorm on the net
+<p>This is pretty much self explanitory:  <h1>WIN.</h1>
+
+$Button=EQUIPEMENT,ShowTechnology,55
+$Button=Save Nimbus!!,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+Yes!!!!!  You've won the battle of the millenium!  Now you can go home and relax a bit...until next time!
+<p>
+Tell me what you thought, please e-mail me at <a href="mailto:Ty_Guy01@hotmail.com">Ty_Guy01@hotmail.com</a> and tell me if it was too easy, too hard, just right, any spelling errors (I checked like 30 times) or other errors, I would like to thank Rahn, for that cool guide (I could never have made this with out it) and to the Island Sanctuary and all the other netstorm pages for all the other cool stuff visit it today at.
+
+<$Config,Done{mission.fileName}=7>
+$Button=END,MissionAbort,0
+
+
+[ai2PriestDead]
+<h1>Message from Lord of Sky:</h1>
+<p>
+NOOOOOOOOOOOOOOOO!!!  You've defeated my Wind Heretics!, my Rain Beasts!, my Thunder Demons! and now me!  You truly are a warrior.  Until next time.
+<p>
+~[Imana.1]~[Imana.2]~[Imana.3]~[Imana.4]~[Imana.5]~[Imana.6]
+
+
+[Failed][GoodTeamdead]
+<h1>Message from Lord of Sky:</h1>
+<p>
+Nimbus is MINE!!!!  Mwu ha ha ha ha ha ha ha ha ha ha ha...
+
+
+$Button=Give it another shot,Tell,TryAgain
+$Button=Leave,missionabort,1
+
+
+[END]

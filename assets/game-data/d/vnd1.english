@@ -1,0 +1,74 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = "15"
+moreGeysers = "0"
+randGeysers = "0"
+
+myStartMoney = "2000"
+myTech = ""
+myAllyList = ""
+
+title = "Death 1"
+
+ai2Off=1
+ai2Name = "Evil Bloke"
+ai2Tech = ""
+ai2StartMoney = "0"
+ai2AllyList = ""
+ai2Color = "red"
+ai2Collectors = ""
+ai2BridgeDrawRate = ""
+ai2GeyserAttachments = ""
+ai2TimeBetweenMoves = "1"
+ai2Ability = ""
+
+[Options]
+
+[Init]
+
+[A.]
+<h2>Escape form hell</h2>
+<i>~I"Death is not the end, merely a transformation of state."<br>
+--Unknown</i>
+<p>You awaken. You struggle to remember how you got here but your mind is blank.
+ Looking around you seem to be in the company of a single golem. 
+Without warning, a voice speaks inside your head ~I"Your quest is not over"
+ "This is not your destiny." "Prove your right to live now and you may be granted passage to the world of the living."
+ ~.You are not in hell, yet you are not in Nimbus, you have just a few short miniutes to complete a sacrifice, or be doomed to spend eternity here in the ether. 
+
+
+
+$Button=Play Mission,DoNothing,0
+
+[@115]
+Don't worry about the crossbows, help is on the way
+[@120]
+<$CreateRandomGuns>
+[@500]
+Too slow. You should've done this by now. Wanna know how to do this mission a bit faster and more easily? 
+Okay, you see the blue bridge at the top of the level, well when you start it has a little bit of red on it, wait for this to crumble,
+then bridge it back to your isle for a complete walkthrough!
+
+$Button=Leave,tell,guidevn.overview
+$Button=Retry,MissionBegin,vnd1
+
+[Succeeded][BadTeamDead]
+<h2>It is done</h2>
+<p>You have earnt your right to live again. Do not waste this chance. Go forth in the name of <?{vn_windall}>Wind</?><?!{vn_windall}>Rain</?>
+
+<$Config,vn_donevnd1=1>
+<$Config,vn_notdonevnd1=0>
+<$Config,vn_death=0>
+<$Config,vn_alive=1>
+$Button=Leave Hell,tell,guidevn.overview
+
+
+[Failed]
+<h2>You shouldnt see this</h2>
+<p>
+
+
+
+
+[END]

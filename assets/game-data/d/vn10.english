@@ -1,0 +1,72 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = "10"
+moreGeysers = "0"
+randGeysers = "1"
+
+myStartMoney = "5000"
+myTech = "outpost;"
+myAllyList = ""
+
+title = "Rain Final"
+
+ai2Name = "Lord of Wind"
+ai2Tech = "windArcher;windBattery;sunBlocker;windBalloon;"
+ai2StartMoney = "10000"
+ai2AllyList = "3;"
+ai2Color = "red"
+ai2Collectors = ""
+ai2BridgeDrawRate = ""
+ai2GeyserAttachments = ""
+ai2TimeBetweenMoves = ""
+ai2Ability = ""
+
+ai3Name = "Lord of Thunder"
+ai3Tech = "bulf;thunderCannon;thunderBattery;thunderArcher;sunBlocker;sunBalloon"
+ai3StartMoney = "5000"
+ai3AllyList = "2;"
+ai3Color = "white"
+ai3Collectors = ""
+ai3BridgeDrawRate = ""
+ai3GeyserAttachments = ""
+ai3TimeBetweenMoves = ""
+ai3Ability = ""
+
+[Init]
+<$CheatAllTechnology,1>
+
+[Options]
+
+[A.]
+<h2>Rain Final</h2>
+<i>~I"Curiosity killed the crystal crab"<br>
+~.--Nimbian Proverb</i>
+<p>The time has come. The hour is here. Now it shall be decided once and for all that ~bRAIN~. is the dominant fury of Nimbus. Should you succeed now, you will be famous forevermore as the one who ended the fighting...If the fighting can ever end.....
+
+
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[ai2PriestDead]
+The Lord of Wind has been destroyed at you hand, you have spilled his blood and may the furies recognise your true power.
+[ai3PriestDead]
+As the life blood drips out of your enemy, the Lord of Thunder, you look into his eyes. There is something there, something truly evil, and somehow you sense that you are not killing him, but merely returning him to his home in the depths of hell.
+
+[Succeeded][BadTeamDead]
+<h2>DOMINATION</h2>
+<p>
+~jDomination has been achieved. Rain is now recognised as the superior fury. Skirmishes still rage here in the Pyroshpere but they will be short-lived. This is the dawn of a new era, the Domination of Rain. Now starts a time of peace, but also a time of oppression. For now you rule the land, but one day, a brave priest will lead the way of liberation for others, conquering all before him just as you have done, a priest who will fight for the freedom of Nimbus, a priest superior to you who will one day arise and destroy you. But that is another time, and another campaign, and you'll just have to wait until I've created it....... 
+<$Config,vn_donevn10=1>
+$Button=Leave Missions,tell,guidevn.overview
+
+
+[Failed]
+<h2>~.~r~I"Rain can never rule"</h2>
+<p>These are the last words you hear as your foe condems you to the netherworld</p>
+<$Config,vn_death=1>
+<$Config,vn_alive=0>
+$Button=I lose,tell,guidevn.overview
+
+[END]

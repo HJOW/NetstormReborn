@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Netstorm.Assets;
 using Netstorm.Core.Bridges;
 using Netstorm.Core.Simulation;
@@ -138,70 +139,42 @@ public sealed class BridgePieceTests
         Assert.Equal(41, BridgeFrames.Find(frames, new BridgeCell('K', 1)));
     }
 
-    /// <summary>C# 로 옮긴 모양 표·회전 표가 원본 Netstorm.exe 의 VA 0x52f998·0x531590 값과 같다</summary>
+    /// <summary>모양·회전 표를 원본 VA 0x52f998·0x531590에서 독립적으로 추출한 고정 자료와 비교한다.</summary>
     [Fact]
-    public void Catalog_MatchesOriginalExecutable()
+    public void Catalog_MatchesCapturedOriginalTables()
     {
-        OriginalData.RequireResources();
-        string exe = Path.Combine(GameDataLocator.FindDataDirectory()!, "Netstorm.exe");
-        Assert.SkipWhen(!File.Exists(exe), "Netstorm.exe 가 없어 건너뜀");
-        byte[] image = File.ReadAllBytes(exe);
-        // 모양 26개: 72바이트 항목 (가중치, 폭, 높이, 칸 15개 — 칸 = 글자<<24 | 방향<<8 | 변형 문자)
+        using JsonDocument tables = JsonDocument.Parse(File.ReadAllText(
+            Path.Combine(AppContext.BaseDirectory, "Fixtures", "bridge-tables.json")));
+        JsonElement patterns = tables.RootElement.GetProperty("patterns");
+        Assert.Equal(BridgePatternCatalog.Patterns.Count, patterns.GetArrayLength());
+        // 원본에서 추출한 모양마다 가중치·크기·모든 칸을 비교한다.
         foreach (BridgePattern pattern in BridgePatternCatalog.Patterns)
         {
-            int offset = FileOffset(image, 0x52f998u + (uint)pattern.Index * 72);
-            Assert.Equal(pattern.Weight, BitConverter.ToInt32(image, offset));
-            Assert.Equal(pattern.Width, BitConverter.ToInt32(image, offset + 4));
-            Assert.Equal(pattern.Height, BitConverter.ToInt32(image, offset + 8));
-            // 칸마다 방향 글자와 변형 번호를 비교한다 ('.' 은 빈 칸)
+            JsonElement expected = patterns[pattern.Index];
+            Assert.Equal(expected.GetProperty("weight").GetInt32(), pattern.Weight);
+            Assert.Equal(expected.GetProperty("width").GetInt32(), pattern.Width);
+            Assert.Equal(expected.GetProperty("height").GetInt32(), pattern.Height);
+            JsonElement cells = expected.GetProperty("cells");
+            Assert.Equal(pattern.Width * pattern.Height, cells.GetArrayLength());
+            // 빈 칸은 null이며 나머지 칸은 방향 글자·변형 번호의 문자열이다.
             for (int i = 0; i < pattern.Width * pattern.Height; i++)
             {
-                uint raw = BitConverter.ToUInt32(image, offset + 12 + i * 4);
-                char letter = (char)((raw >> 8) & 0xff);
-                BridgeCell? cell = pattern.Cells[i];
-                if (letter == BridgeDirections.EmptyLetter)
-                {
-                    Assert.Null(cell);
-                }
-                else
-                {
-                    Assert.Equal(new BridgeCell(letter, (int)(raw & 0xff) - '0'), cell);
-                }
+                Assert.Equal(cells[i].GetString(), pattern.Cells[i]?.ToString());
             }
         }
-        // 회전 표: 회전 번호 × 16 + 글자 순서의 32비트 글자 코드
-        int rotation = FileOffset(image, 0x531590u);
+        JsonElement rotations = tables.RootElement.GetProperty("rotations");
+        Assert.Equal(BridgeDirections.RotationCount, rotations.GetArrayLength());
+        // 회전 4종마다 A~P 글자의 원본 변환 값을 비교한다.
         for (int r = 0; r < BridgeDirections.RotationCount; r++)
         {
+            string expected = rotations[r].GetString()!;
+            Assert.Equal(16, expected.Length);
+            // 각 방향 글자의 회전 결과를 검사한다.
             for (int i = 0; i < 16; i++)
             {
-                char expected = (char)BitConverter.ToInt32(image, rotation + (r * 16 + i) * 4);
-                Assert.Equal(expected, BridgeDirections.Rotate((char)('A' + i), r));
+                Assert.Equal(expected[i], BridgeDirections.Rotate((char)('A' + i), r));
             }
         }
-    }
-
-    /// <summary>PE32 이미지의 가상 주소를 파일 위치로 바꾼다 (섹션 표 사용)</summary>
-    private static int FileOffset(byte[] image, uint virtualAddress)
-    {
-        int pe = BitConverter.ToInt32(image, 0x3c);
-        int sectionCount = BitConverter.ToUInt16(image, pe + 6);
-        int optionalSize = BitConverter.ToUInt16(image, pe + 20);
-        uint imageBase = BitConverter.ToUInt32(image, pe + 24 + 28);
-        uint rva = virtualAddress - imageBase;
-        int table = pe + 24 + optionalSize;
-        // 주소를 포함하는 섹션을 찾아 원시 데이터 위치로 옮긴다
-        for (int i = 0; i < sectionCount; i++)
-        {
-            int section = table + i * 40;
-            uint start = BitConverter.ToUInt32(image, section + 12);
-            uint size = Math.Max(BitConverter.ToUInt32(image, section + 8), BitConverter.ToUInt32(image, section + 16));
-            if (rva >= start && rva < start + size)
-            {
-                return (int)(rva - start + BitConverter.ToUInt32(image, section + 20));
-            }
-        }
-        throw new InvalidDataException($"VA 0x{virtualAddress:x} 를 포함하는 섹션이 없습니다");
     }
 
     /// <summary>원본 조작: 기본 회전은 시계 방향, 반대 회전(C)이 켜지면 반시계 방향 (2026-09-29 원본 실행)</summary>

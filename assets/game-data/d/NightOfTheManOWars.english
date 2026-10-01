@@ -1,0 +1,77 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 2
+moreGeysers = 3
+
+myStartMoney = 10000
+myTech ="rainwalker;rainBattery;rainballoon;rainblocker;rainAviary;sunCannon"
+
+
+title="No Time To Lose"
+
+ai2Name = "Unkind Wind"
+ai2Tech ="windwalker;windArcher;windBlocker;sunBalloon;windballoon;windAviary;sunfence;windbattery"
+ai2StartMoney = 75000
+ai2GeyserAttachments = 2
+ai2Collectors = 2
+ai2TimeBetweenMoves = 0
+ai2Bridgedrawrate = 1
+ai2Ability ="!USE_PRIEST_TO_COLLECT"
+ai2AllyList = "3"
+ai2color = red
+
+ai3Name = "Unkind Thunder"
+ai3Tech ="bulf;thunderArcher;thunderBattery;thunderfence;sunballoon;thunderCannon;thunderblocker;sunBlocker;sunArcher;suncannon;sunAviary;sunfence"
+ai3StartMoney = 100000
+ai3GeyserAttachments = 2
+ai3Collectors = 2
+ai3TimeBetweenMoves = 1
+ai3Bridgedrawrate = 1
+ai3Ability ="!USE_PRIEST_TO_COLLECT"
+ai3AllyList = "2"
+ai3color = white
+
+ai4Name = "Lil' Thunder"
+ai4Tech ="bulf;thunderArcher;thunderBattery;thunderfence;thunderCannon;thunderblocker"
+ai4StartMoney = 50000
+ai4GeyserAttachments = 2
+ai4Collectors = 2
+ai4TimeBetweenMoves = 1
+ai4Bridgedrawrate = 1
+ai4AllyList = "1"
+ai4color = green
+
+[Options]
+
+[A.]
+~y"Allys can be helpful, or a ball&chain
+Twinkies"<P>
+~wAnother Battle with the evil ones. destroy them and move on to destroy the evilest one!
+~wSave your ally, and kill the evil ones.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Fight,DoNothing,0
+
+
+[ai2PriestDead]
+You have destroyed yet more in the Evil lines
+
+[ai3PriestDead]
+You are skilled, but you cant defeat the Evilest One!
+
+[ai4PriestDead]
+My only ally, why didn't you save me?
+
+
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>Good job! you approach the Evil HQ and more Evil Priests. 
+<$Config,Done{mission.fileName}=1>
+
+
+[END]
+
+
+

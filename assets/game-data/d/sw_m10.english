@@ -1,0 +1,435 @@
+*(Saved as mission10.fort & mission10.english)
+
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 10
+moreGeysers = 1
+randomGeysers = 1
+denySalvage = 0
+
+myStartMoney = 1000 
+myTech = {sw_var1}{sw_var2}{sw_var3}{sw_var9} 
+ai1allylist = "3"
+
+title = "Slave to the King (Bombing of Sun City)"
+
+ai2Name = "Sting the Sun Ambassador"
+ai2Tech = "sunWalker;{sw_var1}{sw_var2}{sw_var3}{sw_var4}"
+ai2StartMoney =4000
+ai2AllyList = "4;5;8;7"
+ai2GeyserAttachments = 3
+ai2Collectors = 2
+ai2Color = red
+ai2Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai3Name = "Haggert the Warrior of Hades"
+ai3Tech = "sunWalker;{sw_var1}{sw_var2}{sw_var3}"
+ai3StartMoney =1000 
+ai3GeyserAttachments = 3
+ai3Collectors = 2
+ai3AllyList = "1"
+ai3Color = white
+ai3Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS;!SACRIFICE_ENEMY_PRIEST;!BUILD_DAIS;!CAPTURE_ENEMY_PRIEST"
+
+ai4Name = "Shang the Sun Warrior"
+ai4Tech = "sunWalker;{sw_var1}{sw_var2}"
+ai4StartMoney = 1000
+ai4GeyserAttachments = 3
+ai4Collectors = 2
+ai4AllyList = "2;5;8;7"
+ai4Color = orange
+ai4Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+
+ai5Name = "Tarmon the Traitor of Hades"
+ai5Tech = "sunWalker;{sw_var1}{sw_var2}{sw_var3}"
+ai5StartMoney = 2000
+ai5GeyserAttachments = 3
+ai5Collectors = 2
+ai5AllyList = "2;4;8;7"
+ai5Color = cyan
+ai5Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS;"
+
+ai8Name = "Shung the Sun Warrior"
+ai8Tech = "sunWalker;{sw_var1}{sw_var2}{sw_var4}"
+ai8StartMoney = 1000
+ai8GeyserAttachments = 3
+ai8Collectors = 2
+ai8AllyList = "2;4;5;7"
+ai8Color = green
+aiAbility = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+
+ai7Name = "Tsing the Sr Sun Warrior"
+ai7Tech = "sunWalker;{sw_var1}{sw_var2}{sw_var3}{sw_var4}"
+ai7StartMoney = 3000
+ai7GeyserAttachments = 3
+ai7Collectors = 2
+ai7AllyList = "2;4;5;8"
+ai7Color = purple
+ai7Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+
+[init]
+<$Config,sw_m10=1>
+<$Config,sw_m1=0>
+<$Config,sw_m2=0>
+<$Config,sw_m3=0>
+<$Config,sw_m4=0>
+<$Config,sw_m5=0>
+<$Config,sw_m6=0>
+<$Config,sw_m7=0>
+<$Config,sw_m8=0>
+<$Config,sw_m9=0>
+<$Config,sw_m11=0>
+<$Config,sw_m12=0>
+<$Config,sw_m13=0>
+<$Config,sw_m14=0>
+<$Config,sw_m15=0>
+<$Config,sw_m16=0>
+<$Config,sw_m17=0>
+<$Config,sw_m18=0>
+<$Config,sw_m19=0>
+<$Config,sw_m20=0>
+<$Config,sw_m21=0>
+<$Config,sw_m22=0>
+<$Config,sw_m23=0>
+<$Config,sw_m24=0>
+<$Config,sw_m25=0>
+<$Config,sw_m30=0>
+
+[options]
+[A.]
+<$Playsound,whirligigFire-1000.wav>
+
+     <h2>Slave to the King (Bombing of Sun City)<a href="#mission10">~[IfortGump.46]</a></h2>
+                               ~[IsunFactory.12]
+<br>                                                                                  ~1~y<?!{sw_difficulty1}>HARD</?><?{sw_difficulty1}>EASY</?>~.<br>
+
+<i>Kill them all and let Hades sort them out.<br>
+                                  ---Haggert the Warrior of Hades</i>
+<p>
+You must now travel to Sun City. Your mission is to bomb them from the sky first and then take no prisoners.
+<p>
+             <a href="cmd:ShowTechnology,55"> ~[IfortGump.50] </a>                          <a href="cmd:DoNothing,0">~[IfortGump.22] </a>                             <a href="cmd:Tell,guideHades.overview">~[Ipriest.13]</a><br>
+<a href="cmd:ShowTechnology,55">Review Knowledge</a>             <a href="cmd:DoNothing,0">Onward</a>                <a href="cmd:Tell,guideHades.overview">I gotta go now</a>
+$OnExit= ,Playsound,golemMove1.wav
+<$Tell,sound1>
+$Button= ,Tell,A.
+
+[sound1]
+$Timeout=0,Tell,sound2
+
+[sound2]
+$Timeout=0,Tell,sound3
+
+[sound3]
+$Timeout=0,Tell,sound4
+
+[sound4]
+<$Playsound,whirligigFire-1000.wav>
+$Timeout=0,Tell,sound5
+
+[sound5]
+
+
+
+
+
+[@1]
+<?!{sw_difficulty1}>
+<$ViewSpot,(117x130)>
+<$MoveDialog,tr>
+The Ambassador of Sun is ready for your surprise attack!
+Your surprise forces don't stand a chance as they are decimated immediately!
+<$InflictDamage,6005>
+<$InflictDamage,6007>
+<$InflictDamage,6009>
+<$InflictDamage,6011>
+<$InflictDamage,6013>
+<$InflictDamage,6015>
+<$InflictDamage,6017>
+<$InflictDamage,6019>
+<$InflictDamage,6021>
+</?>
+
+[@2]
+<?!{sw_difficulty1}>
+<$Salvage,6005>
+</?>
+
+
+
+[@3]
+<?{sw_difficulty1}>
+<$ViewSpot,(117x130)>
+<$MoveDialog,tr>
+Ahh, your forces have already begun the assault on sunCity with a massive air attack!
+This should be easy, you think to yourself....
+$Button=Attack!,DoNothing,0
+</?>
+<?!{sw_difficulty1}>
+<$Salvage,6007>
+</?>
+
+
+
+[@4]
+<?!{sw_difficulty1}>
+<$Salvage,6009>
+</?>
+
+[@5]
+<?!{sw_difficulty1}>
+<$Salvage,6011>
+</?>
+
+[@6]
+<?!{sw_difficulty1}>
+<$Salvage,6013>
+</?>
+
+[@7]
+<?!{sw_difficulty1}>
+<$Salvage,6015>
+</?>
+<?{sw_difficulty1}>
+<$InflictDamage,6013>
+</?>
+
+
+
+[@8]
+<?!{sw_difficulty1}>
+<$Salvage,6017>
+</?>
+
+[@9]
+<?!{sw_difficulty1}>
+<$Salvage,6019>
+</?>
+<?{sw_difficulty1}>
+<$InflictDamage,6015>
+</?>
+
+
+
+[@10]
+<?{sw_difficulty1}>
+<$Salvage,6013>
+</?>
+<?!{sw_difficulty1}>
+<$Salvage,6019>
+</?>
+
+
+[@11]
+<?{sw_difficulty1}>
+<$ViewSpot,(117x130)>
+<$MoveDialog,tr>
+What's going on? One of your Whirlibase's just disappeared!
+</?>
+<?!{sw_difficulty1}>
+<$Salvage,6021>
+</?>
+
+
+
+[@12]
+<?{sw_difficulty1}>
+<$InflictDamage,6001>
+<$InflictDamage,6003>
+<$InflictDamage,6025>
+<$InflictDamage,6027>
+<$InflictDamage,6157>
+<$InflictDamage,6193>
+<$InflictDamage,6269>
+<$InflictDamage,6318>
+
+<$Salvage,6015>
+</?>
+
+[@13]
+<?!{sw_difficulty1}>
+</?>
+
+
+[@15]
+<?{sw_difficulty1}>
+<$ViewSpot,(117x130)>
+<$MoveDialog,tr>
+And another!
+</?>
+
+
+[@20]
+<?{sw_difficulty1}>
+What's happening to your units attacking Sun City? Must be some secret
+weapon that the Ambassador of Sun City is using on your attacking forces!
+<p>
+~I"This isn't fair!"~., you scream, ~I"I'm supposed to take you by surprise
+and pulverize you. Why can't you react according to my plans of conquest?"~.
+<$MoveDialog,tr>
+</?>
+
+[@22]
+<?{sw_difficulty1}>
+<$InflictDamage,6011>
+</?>
+
+
+
+[@25]
+<?{sw_difficulty1}>
+<$MoveDialog,tr>
+No time to ponder, you must finish the battle yourself!<br>
+Like they say, if you want something done right, you gotta do it yourself!<br>
+<$Salvage,6011>
+</?>
+
+[@29]
+<?{sw_difficulty1}>
+<$InflictDamage,6009>
+</?>
+
+
+[@32]
+<$Salvage,6009>
+
+[@38]
+<?{sw_difficulty1}>
+<$InflictDamage,6007>
+</?>
+
+
+[@41]
+<$Salvage,6007>
+
+[@60]
+<?{sw_difficulty1}>
+<$InflictDamage,6005>
+<$InflictDamage,6017>
+<$InflictDamage,6019>
+<$InflictDamage,6021>
+</?>
+
+
+
+[@82]
+<$Salvage,6005>
+
+[@100]
+<$Salvage,6017>
+
+[@120]
+<$Salvage,6021>
+
+[@130]
+<$Salvage,6019>
+
+
+[notinmission]
+******(Swelb, this would be better if we could somehow have some buildings and units half dead. You know, from the bombs.)
+
+*******(Highlander, that's kinda what I did. Lemme know what u think...
+
+
+
+[ai4PriestDead]
+Hehe. You bow down and thank<br>
+{sw_hades} for his generous gift...
+<p>
+~I"This isn't so bad"~., you think to yourself.
+<$ChangeMoney,5000>
+
+[ai5PriestCaptured]
+<i>"Kill that traitorous feind!"</i>
+<p>
+~I"Is that you Lord Hades?"~., you ask.
+<p>
+<i>"Kill him now!"</i>
+ <p>
+~I"Yes my Lord. Immediately my Lord."~.
+$Button=OK,DoNothing,0
+
+
+[ai5PriestDead]
+You recieve a gift from your Master:<br>
+             Storm Crystals
+<$ChangeMoney,1500>
+$Button=OK,DoNothing,0
+
+
+[ai3TempleHalfDead]
+Haggert, the Warrior of<br>
+{sw_hades} send you an urgent message:
+<br>
+<i>"Ally, I'm losing your war."<br>
+                      --Haggert</i>
+$Button=OK,DoNothing,0
+
+
+[ai3TempleDead]
+Haggert, the Warrior of {sw_hades} calls out to you.
+ With panic in his voice, he yells:<br>
+<p>
+<h2><i>"I beg you! Save me now. For I do not want to go down to Hades again!"</i></h2>
+$Button=I'll try,DoNothing,0
+
+
+[ai3PriestCaptured]
+Haggert, the Warrior of {sw_hades}, and your ally, yells to you.
+His voice trembles with hysteria as he screams:
+<h2><i>"Hurry!"</i></h2>
+<i>"For Hades promised to set my soul free if I return victorious."</i>
+$Button=I'll try,DoNothing,0
+
+
+[ai3PriestDead]
+Another one of {sw_hades} Henchman just bit the dust. Don't fret,
+for his soul you will see again.
+<p>
+For that is one of the tortures that King {sw_hades} has put unto this
+poor wretched creature: He will constantly go through the torture of
+sacrifice, throughout eternity (or until his soul is put to rest by someone
+defeating {sw_hades})
+<p>
+But you have no time for contemplation. You must fight on!
+$Button=Poor wretched soul,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>WHOHOO!</h2>
+You've won another battle for your almighty Fury!
+<p>
+The {sw_god5} speaks to you:<br>
+<i>"Groveler, I grow tired of you incompetence. I don't know why I let you
+ live. You're taking far too long to bring me souls. If you don't bring me souls
+ quicker next time, I will wish you had been sacrificed!"
+<p>
+"Now get out of my sight, you putrid pack of pus, and get me what I want!"</i>
+<p>
+~IWhat gratitude~., you think to yourself. ~IWell, at least he
+ didn't torture me... He must be starting to take a liking to me!~.
+<$Config,sw_mvar0=2000>
+<$Config,sw_mvar2=1>
+<$Config,sw_mvar3=4>
+<$Config,sw_difficulty1=0>
+<$Config,sw_m11=1>
+<$Config,sw_m10=0>
+$Button=To the Windy City,MissionBegin,sw_m11
+
+
+[Failed]
+        You receive a message from the<br>
+               Ambassador of Sun City:
+<br>
+ ~[IsunFlyer.7]                 ~[IsunFlyer.3]
+<br>
+ ~[IsunAviary.*] ~[IsunFactory.8]       ~[IsunAviary.*]
+<br>
+<i>I told you I would send you back to Hades!</i>
+<p>
+                      You must try again.
+<$Config,sw_difficulty1=1>
+$Button=OK. Let's try this again,MissionBegin,sw_m10
+
+[END]

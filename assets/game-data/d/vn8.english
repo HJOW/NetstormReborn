@@ -1,0 +1,138 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = "8"
+moreGeysers = "0"
+randGeysers = "0"
+
+myStartMoney = "7000"
+myTech = "{vn_tech}"
+myAllyList = "2;"
+
+title = "Rescue"
+
+ai2Name = "Researcher"
+ai2Tech =
+ai2StartMoney = "0"
+ai2AllyList = "1;"
+ai2Color = "green"
+ai2Collectors = ""
+ai2BridgeDrawRate = ""
+ai2GeyserAttachments = ""
+ai2TimeBetweenMoves = ""
+ai2Ability = "!BUILD_BRIDGES"
+
+ai3Name = "Thunder fanatic"
+ai3Tech ="thunderBattery;thunderFence;sunCannon;sunBalloon;"
+ai3StartMoney = "10000"
+ai3AllyList = ""
+ai3Color = "red"
+ai3Collectors = "0"
+ai3BridgeDrawRate = ""
+ai3GeyserAttachments = "0"
+ai3TimeBetweenMoves = ""
+ai3Ability = "!SACRIFICE_ENEMY_PRIEST;!USE_PRIEST_TO_COLLECT"
+
+[Init]
+
+[Options]
+
+[A.]
+<h2>The Rescue</h2>
+<i>~I"We don't build bridges to make peace."<br>
+~.--General Jan Masaryk</i>
+<p>Your night sentries have been bribed. You wake the next morning with a call of distress from the Researcher, who you were giving safe passage to the skies of saalrum 'ta. ~I"I am in dire need of your assistance, please save me,!" ~.You look around. You are under attack and almost completely surrounded. This is gonna be a tough fight</p>
+$Button=Make it easier,SetAllBridge,0
+$Button=Normal setting,SetAllBridge,1
+$Button=I am a Netstorm God,SetAllBridge,2
+
+
+
+[ai2PriestSaved]
+You have saved a friend of the lord of <?{vn_windall}>Wind</?><?!{vn_windall}>Rain</?> ~.You have done well. You are rewarded with the tech of the outpost.
+$Menu=~[Ioutpost.*],tell,win
+
+[win]
+<$GetTechnology,126>
+<$Config,vn_donevn8=1>
+<?{vn_windall}><$Config,vn_tech="windBattery;windArcher;windAviary;sunFence;windWalker;outpost;"></?>
+<?!{vn_windall}><$Config,vn_tech="rainBattery;rainCannon;rainAviary;sunFence;rainWalker;outpost;"></?>
+$Button=NextMission,MissionBegin,vn6
+
+[ai3PriestDead]
+<h2>Victory!</h2>
+<p>Again you have proved your formidable abilities in battle. Tonight there will be much rejoicing.
+You are rewarded with the tech of the outpost.
+$Menu=~[Ioutpost.*],tell,win
+
+[@120]
+"You have 6 miniutes to save your friend!" shouts the Thunder fanatic
+[@360]
+"Two miniutes until I begin the sacrifice" laughs the Thunder fanatic
+[@480]
+<$PlaySound,forWind2.wav>
+[@483]
+<$PlaySound,beamOver03.wav>
+[@484]
+<$PlaySound,beamOver03.wav>
+[@485]
+<$PlaySound,beamOver03.wav>
+[@486]
+<$PlaySound,beamOver03.wav>
+[@491]
+<$PlaySound,altarBurnCollapse.wav>
+[@495]
+<$PlaySound,forSun2.wav>
+[@498]
+<$PlaySound,beamOver03.wav>
+[@499]
+<$PlaySound,beamOver03.wav>
+[@500]
+<$PlaySound,beamOver03.wav>
+[@501]
+<$PlaySound,beamOver03.wav>
+[@505]
+<$PlaySound,altarBurnCollapse.wav>
+[@510]
+<$PlaySound,forRain2.wav>
+[@513]
+<$PlaySound,beamOver03.wav>
+[@514]
+<$PlaySound,beamOver03.wav>
+[@515]
+<$PlaySound,beamOver03.wav>
+[@516]
+<$PlaySound,beamOver03.wav>
+[@520]
+<$PlaySound,altarBurnCollapse.wav>
+[@525]
+<$PlaySound,forThunder2.wav>
+[@528]
+<$PlaySound,beamOver03.wav>
+[@529]
+<$PlaySound,beamOver03.wav>
+[@530]
+<$PlaySound,beamOver03.wav>
+[@531]
+<$PlaySound,beamOver03.wav>
+[@535]
+<$PlaySound,altarBurnCollapse.wav>
+[@538]
+<$PlaySound,itIsDone.wav>
+[@540]
+<$PlaySound,priestSacrifice2.wav>
+[@544]
+<$PlaySound,AltarBurnCollapse.wav>
+[@548]
+Your ally has been slain. Your rescue has failed. As you try to explain lo the lord of <?{vn_windall}>Wind</?><?!{vn_windall}>Rain</?>~., he suddenly reaches for his sword. "~I~BFailure will not be tolerated" "You must suffer for your incompetence"~. he screams at you. With this he thrusts his sword towards you, but you are too quick for him and jump back. Looking around frantically you see no feasable way out. The last thing you ever see will be his guards swords.....$Config,vn_death=1>
+$Button=Leave,tell,guidevn.overview
+
+[Failed]
+<h2>You got sacrificed</h2>
+<p>Not easy to do on this mission</p>
+<$Config,vn_death=1>
+<$Config,vn_alive=0>
+$Button=Leave,tell,guidevn.overview
+
+
+[END]

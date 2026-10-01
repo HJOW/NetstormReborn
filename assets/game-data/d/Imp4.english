@@ -1,0 +1,152 @@
+[Header]
+missionType = "Tutorial"
+missionNumber = 1
+moreGeysers=1
+randGeysers=0
+myStartMoney = "10000"
+myTech = "outpost;windbattery"
+myAllyList = "1"
+myProd = "outpost;windbattery"
+myName = "~bYou"
+denySalvage=1
+ai3off=1
+ai4off=1
+ai5off=1
+ai6off=1
+ai7off=1
+
+title="Run Like Hell II"
+
+ai2Name = "~kBlack ~iLight"
+ai2Tech = "thundercannon"
+ai2Color = "purple"
+ai2allyList = "3;4;5;6"
+ai2StartMoney = "900"
+ai2ability = "CAPTURE_ENEMY_PRIEST;SACRIFICE_ENEMY_PRIEST;BUILD_DAIS;!COLLECT_STORM_POWER;!USE_PRIEST_TO_COLLECT;!BUILD_BRIDGES"
+
+ai3Name = "~gImpial Warrior"
+ai3Color = "green"
+ai3allyList= "2;4;5;6"
+
+ai4Name = "~~lAcid ~bRain"
+ai4Color = "yellow"
+ai4allyList= "2;3;5;6"
+
+ai5Name = "~rF~oi~yr~ie~ry ~kThunder"
+ai5Color = "orange"
+ai5allyList= "2;3;4;6"
+
+ai6Name = "~rWizard~w of the ~bTomb"
+ai6Color = "red"
+ai6allyList= "2;3;4;5"
+
+ai7Name = "~lSpell Master"
+ai7Color = "lightblue"
+ai7allyList= "1"
+
+[Options]
+[A.]
+<h2>~lRun Like ~4Hell~. 2</h2>
+R U Up 2 This?<br>
+Read the notes.<br>
+$Menu=I want the notes,Tell,Info
+$Menu=I don't wanna,Tell,HellNoNo
+
+[HellNoNo]
+Have it your way.
+$Button=I will be that way,Tell,Info1
+
+[Info]
+<h2>Notes:</h2><br>
+You don't have any powers for 15 minutes.  I suppose you could build a temple and wait it out, but please don't.  It takes the elements of this cool map.<br>
+Have fun getting past those barricades.  Unless you are really good, you won't win.<br>
+If you need help/hints, e-mail me.  But it isn't all that hard.
+$Button=OK,Tell,HaHa
+
+[Info1]
+<h2>Notes:</h2><br>
+Too bad, here they are.<br>
+You don't have any powers for 20 some minutes.  I suppose you could build a temple and wait it out, but please don't.  It takes the elements of this cool map.<br>
+Have fun getting past those barricades.  You don't have to be good at NS to win, just know the properties of the game.<br>
+If you need help/hints, e-mail me.  But it isn't all that hard.
+$Button=OK,Tell,HaHa1
+
+[HaHa1]
+Wait, there's more (goody).<br>
+There are some stuff that needs attention.<br>
+Some are immediate, others can be put off for a FEW SECONDS.  Heeheehe.<br>
+<i>"No one ever said it would be easy..." -Unknown<i>
+$Menu=Hey...it's only your priest's life,Tell,Haha
+
+[HaHa]
+Have Fun +<br>
+Good Luck<br>
+The Virtuous Warrior<br>
+$Button=Cool,DoNothing,0
+
+[@3]
+<$MoveDialog,tm>
+Incoming message from ~lSpell Master~w:<br>
+I used a spell to capture enemy bridges... But it produced side effects.<br>
+The bridges are falling down!<br>
+It is one of the ways out.  We need to find a hardening spell, quick!<br>
+Also, while I was in my spell trance, I decided to test out my new spell, permenant paralysis.  I didn't work, but it did somehow freeze the priests!<br>
+Ain't I a good ally?<br>
+<$ViewSpot,(144x60)>
+$Button=Ok...I'll hurry,Tell,Runlikehell
+
+[@1500]
+Finally...  Your Technology.
+$Button=Finally!!!,DoNothing,0
+
+[@1530]
+Oops, I forgot again.<br>
+Here we go:<br>
+$Button=?,Tell,Que
+
+[Que]
+All you have to do is take out ~kBlack ~iLight's~w Temple.<br>
+This map isn't really a conquest map, just a strategic map.<br>
+And you never know,  you might be put in this stituation in Multiplayer.<br>
+<$GetTechnology,75>
+<$GetTechnology,86>
+<$GetTechnology,123>
+<$GetTechnology,139>
+<$GetTechnology,140>
+<$GetTechnology,142>
+<$GetTechnology,141>
+<$GetTechnology,137>
+
+[Runlikehell]
+<$ViewSpot,(40x200)>
+
+[Succeeded][ai2TempleDead]
+<h2>You Have Won!!!</h2><br>
+<p>~.Do you argee that was cool?  Try a new mission.
+$Button=New Mission,Tell,Mission
+
+[Failed][ai1PriestCaptured]
+<h2>Message from the ~kImps~.:</h2>
+<p>~rHahaha...~B~wI told you... Leave from our Imp-ial realms.  Looser.
+$Button=Your head will be on my wall,Tell,LaLa
+
+[LaLa]
+$Menu=I want to be resurrected,MissionRestart,0
+$Menu=I want a new mission,Tell,Mission
+$Menu=I wanna leave,AbortMission,0
+$Menu=I want to stay in the game and help my ally,Tell,ally
+
+[ally]
+Sorry dude, that is not a option here.
+$Button=Back,Tell,LaLa
+
+[Mission]
+What one?
+$Menu=~qPick your death:,Tell,dope
+$Menu=~mHive Cluster,MissionBegin,Imp1
+$Menu=~kDark Rituals,MissionBegin,Imp2
+$Menu=~yX Marks the Spot,MissionBegin,Imp3
+$Menu=~bRun Like Hell 2,MissionBegin,Imp4
+$Menu=~gProject ~oD~got~oT,MissionBegin,Imp5
+
+[END]

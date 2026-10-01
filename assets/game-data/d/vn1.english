@@ -1,0 +1,114 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = "1"
+moreGeysers = "1"
+randGeysers = "1"
+
+myStartMoney = "6500"
+myTech = "sunCannon;windBattery;"
+myAllyList = ""
+
+title = "~IThe Trial"
+
+ai2Name = "Lord Feeble"
+ai2Tech = "windBattery;sunCannon;sunBalloon;"
+ai2StartMoney = "6500"
+ai2AllyList = ""
+ai2Color = "red"
+ai2Collectors = "5"
+ai2BridgeDrawRate = "0"
+ai2GeyserAttachments = "1"
+ai2TimeBetweenMoves = "0"
+ai2Ability = ""
+
+[Init]
+
+
+<$Config,vn_alive=1>
+<$Config,vn_notdonevnd1=1>
+<$Config,vn_notdonevnd2=1>
+<$Config,vn_notdonevnt1=1>
+<$Config,vn_notdonevnt2=1>
+<$Config,vn_failthunder=0>
+<$Config,vn_windall=1>
+<$Config,vn_speed=1>
+<$Config,vn_donevn1=0>
+<$Config,vn_donevn2=0>
+<$Config,vn_donevn3=0>
+<$Config,vn_donevn4=0>
+<$Config,vn_donevn5=0>
+<$Config,vn_donevn6=0>
+<$Config,vn_donevn7=0>
+<$Config,vn_donevn8=0>
+<$Config,vn_donevn9=0>
+<$Config,vn_donevn10=0>
+<$Config,vn_donevn11=0>
+[@1]
+<$Config,vn_death=0>
+<$Config,vn_donevnt1=0>
+<$Config,vn_donevnt2=0>
+<$Config,vn_donevnt3=0>
+<$Config,vn_donevnd1=0>
+<$Config,vn_donevnd2=0>
+<$Config,vn_donevnd3=0>
+<$Config,vn_donetrialfast=0>
+<$Config,vn_donetrialslow=0>
+<$Config,vn_donevn3withally=0>
+<$Config,vn_donevn3withoutally=0>
+<$Config,vn_donevn4withally=0>
+<$Config,vn_donevn4withoutally=0>
+
+
+[Options]
+
+[A.]
+<h2>Wind</h2>
+<i>~I"He who can prove himself in the face of battle shall never die a coward"<br>
+--Karamas, Priest of wind.</i>
+<p>You wake up slowly. It is the day of the trial. You try to think what has happened but your mind is clouded over. 
+Memories slowly begin to seep through the mist, - the sudden arrival of an emissary of the Lord of Wind - no, wait - there were others too. 
+What was it they said? Something about a fight to end all fights....if you seek peace, prepare for war...yes....something like that - but hadn't they then attacked? 
+You struggle to remember the screams of your fellow nimbians....slaughtered without quarter.....the words of your high priest "War stops only peace" he had said "Do you not see? One fury cannot reign supreme!"
+ he had screamed at them. Your shudder as you remember the reply "All must die who do not fight for the wind alliance"
+the emissary had sneered, the siege already well under way. The next thing you recall is your pleading for your life. As one of the trainee priests you plead your worth, if only your life be spared. Much to your relief, 
+they had spared you, and today is the day of your trial. You remember not why, but the Lord of Wind himself is watching your trial, perhaps the omnipotent fury of wind has spared
+your life for a reason..........
+
+
+$Button=Play Mission,DoNothing,0
+
+[@25]
+<$PlaySound,islandUnderAttack.wav>
+[@28]
+Hehe, only joking. Your island isn't really under attack.
+
+[@380]
+<$Config,vn_speed=0>
+
+[Succeeded][BadTeamDead]
+<p>Victory!
+You have survived. The Lord of Wind is pleased with your performance, you are formally accepted into the Wind alliance, and as a reward
+for surviving your initiation, your sun cannon is replaced with a ~yCROSSBOW
+$Menu= ~[IwindArcher.1],Tell,finish
+
+[finish]
+~I"Well done" ~.says the Lord of Wind ~I"You have great potential <?{vn_speed}>, you work fast and efficiently."  "I am sure I can find you a very rewarding role in the quest for Domination of Wind" </?><?!{vn_speed}>, however you were a little slower than I had hoped....nevertheless, I have an important job for you. Come .........."</?></p>
+<p>
+<$GetTechnology,140>
+<$Config,vn_donevn1=1></?>
+<?{vn_speed}><$Config,vn_donetrialfast=1><$Config,vn_tech="windBattery;windArcher;outpost;"></?>
+<?!{vn_speed}><$Config,vn_donetrialslow=1><$Config,vn_tech="windBattery;windArcher;"></?>
+<?{vn_speed}>$Button=Next Mission,MissionBegin,vn3</?>
+<?!{vn_speed}>$Button=Next Mission,MissionBegin,vn4</?>
+
+
+[Failed]
+<h2>You Suck!</h2>
+<p>Not impressive. I know the enemy bridge speed is a little high, but still, this wasn't a hard mission....
+<$Config,vn_death=1>
+<$Config,vn_alive=0>
+$Button=I am feeble,tell,guidevn.overview
+
+[END]
+

@@ -1,0 +1,140 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 3
+moreGeysers = 0
+
+myStartMoney = 1000
+myTech = "sunaviary;sunBalloon;sunCannon;sunBlocker;sunFence;sunArcher;thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;bulf;rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainwalker;rainFence;rainwalker"     																
+myAllyList = "3"
+
+title="Supply Lines"
+
+ai3Name = "Scout"
+ai3Tech = "sunaviary;sunCannon;sunBlocker;sunArcher;thunderbattery;thunderarcher;bulf"
+ai3StartMoney = 7500
+ai3GeyserAttachments = 3
+ai3Collectors = 20
+ai3TimeBetweenMoves = 1
+ai3AllyList = "1"
+ai3color = white
+ai3Ability="!USE_PRIEST_TO_COLLECT"
+ai3BridgeDrawRate = 5
+
+ai6Name = "Wind Warrior"
+ai6Tech = "windBattery;sunCannon;sunAviary;sunBlocker;sunArcher;sunballoon;windarcher;windBalloon;windaviary"
+ai6StartMoney = 10000
+ai6GeyserAttachments = 15
+ai6Collectors = 15
+ai6TimeBetweenMoves = 0
+ai6AllyList = "8"
+ai6color = yellow
+ai6Ability="!USE_PRIEST_TO_COLLECT"
+ai6BridgeDrawRate = 0
+
+ai8Name = "Wind Warrior"
+ai8Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;sunArcher;suncannon"
+ai8StartMoney = 10000
+ai8GeyserAttachments = 15
+ai8Collectors = 15
+ai8TimeBetweenMoves = 0
+ai8AllyList = "6"
+ai8color = orange
+ai8Ability="!USE_PRIEST_TO_COLLECT"
+ai8BridgeDrawRate = 0
+
+[Options]
+
+[@1]
+<h2>~lScout</h2>
+<p>Thank the Furies you are here!  These two are the most ruthless warriors I have ever encountered!
+$Timeout=10,DoNothing,0
+
+[@2]
+<p>~l~II see you have cut them off from the geysers.  Good job!  I'll give you a medal if we win this one.
+$Timeout=10,DoNothing,0
+
+[@3]
+<h2>~lScout</h2>
+<p>I don't think I will be able to hold them off long...I'm going to need your help fast!
+$Timeout=10,DoNothing,0
+
+[@4]
+~l~II shall be with you as soon as I can.
+$Timeout=5,DoNothing,0
+
+[@5]
+<h2>~lScout</h2>
+<p>Look out they are surrounding you!
+$Timeout=5,DoNothing,0
+
+[@6]
+~l~IBlast!!  It may take me awhile to help you....Till then hold them off!
+$Timeout=7,DoNothing,0
+
+[@180]
+<h2>~oWind Warrior</h2>
+<p>Heh heh.   Having fun fighting this battle?  You will surly lose in the end!
+$Timeout=7,DoNothing,0
+
+[@3000]
+<h2>~oWind Warrior</h2>
+<p>STILL here?  Ha we thought you must of left long ago!
+$Timeout=7,DoNothing,0
+
+[A.]
+<h2>Supply Lines</h2>
+<i>"Supplies....provisions...What's the dif?  Oh well I'll just get a bunch of provisions....sounds nicer."<br>
+--Nolard Jangrek and the reason why he lost his battles</i>  
+<p>While on patrol one of your scouts discovered a patch of newly formed storm geysers.  He was not the only one who found the patch.  A pair of Wind Warriors have already begun gathering up the storm crystals.  You scout quickly send a messanger to gain some aid; you are the first to receive it.  Upon reaching the area you find that the scout has rammed the Wind Warriors bridges with his island, severing their link with the geysers.  
+<p>You mush secure this new patch of geysers.  With it you will be able to launch a counter attack upon the Elementals.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>You have defeated two of the fastest warriors in all of Nimbus and secured a new patch of storm power!  Not bad for a day's work.  As promised you award the scout for his bravery and courage.
+<p>With this additional power you will be able to launch a sizeable attack on the Elementals and their allies.
+
+<$Config,Done{mission.fileName}=1>
+<$Config,tnron063=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,tnron73
+
+
+[ai3TempleHalfDead]
+<h2>~lScout</h2>
+<p>
+I need some help here!
+
+[ai3TempleDead]
+<h2>~lScout</h2>
+<p>I have failed....forgive me.
+
+[ai3PriestDead]
+<h2>The Scout has died</h2>
+<p>
+With the Scout dead the Wind Warriors quickly move in to gather the untapped source of storm power!  With this new surge of power they quickly defeat you.
+
+$Button=Continue,Tell,TryAgain
+
+[ai6TempleHalfDead]
+<h2>~yWind Warrior</h2>
+<p>How can this be happening?!?!  I'm one of the mightiest warriors in all of Nimbus!
+
+[ai8TempleHalfDead]
+<h2>~oWind Warrior</h2>
+<p>No it can't END like THIS!!
+
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+The Wind Warriors were too fast and powerful...It's only a matter of time before your kindom submits to the growning forces of the Elementals.
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+

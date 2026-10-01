@@ -1,0 +1,56 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 2
+moreGeysers = 3
+
+myStartMoney = 10000
+myTech = "sunWalker;sunArcher;windarcher;sunBlocker;sunBalloon;sunFence;sunCannon;thunderbattery;rainFence;rainbattery;windBattery;thunderarcher;thundercannon;rainballoon;rainblocker;raincannon;windaviary;windballoon;windblocker;windWalker"
+
+title="Collision"
+
+ai2Name = "Mr. Bignose"
+ai2Tech = "sunWalker;sunArcher;windarcher;sunBlocker;sunBalloon;sunFence;sunCannon;thunderbattery;rainFence;rainbattery;windBattery;thunderarcher;thundercannon;rainballoon;rainblocker;raincannon;windaviary;windballoon;windblocker;windWalker"
+ai2StartMoney = 10000
+ai2GeyserAttachments = 2
+ai2Collectors = 2
+ai2TimeBetweenMoves = 1
+ai2AllyList = ""
+ai2Bridgedrawrate = 1
+ai2ability="!USE_PRIEST_TO_COLLECT;!CONCENTRATE_FIRE;!ENCIRCLE_ENEMY_ISLAND"
+ai2color = yellow
+
+
+[Options]
+
+[A.]
+<i>~[IrainCannon.3]</i>Collision<i>~[IsunCannon.2]</i><br>
+<i>"Ahhhhh, General....I kinda..hmmm...wellll....crashed our island.."<br>
+                                              --Captain Dreedle</i><br>
+<i>"Captain Murdock, take this man and put him infront of an enemy thunder cannon!  I want to eat!"<br>
+                                              --General Myra Manes</i>
+<p>Your crew did it again.  you seem to have crashed into an enemy island.<br>
+Oh well.  
+<p>You better get this over quick, your are getting very hungry.
+
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Leave Mission,MissionAbort,0
+$Button=Play Mission,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>Victory is Yours</h2>
+<p>One step closer to the food!
+$Button=Leave Missions,MissionAbort,1
+$Button=Next Mission,MissionBegin,obelisk
+
+[Failed]
+<h2>Defeat</h2>
+<p>
+Now i guess it's off through the golden arches and to the great big hamburger in the sky. 
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+

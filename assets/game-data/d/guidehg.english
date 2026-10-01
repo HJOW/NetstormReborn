@@ -1,0 +1,20 @@
+title = "MOSQUITO's Apprentice Test Campaign 2.0"
+[Overview]
+<background="nsstart">
+So, young apprentice, you think you're good enough to be a <i>MOT</i><br> (<i>M</i>aster <i>O</i>f <i>T</i>echnology)? Not so fast...
+you must first train before protecting the skies of Nimbus from the evil that lurks out there in multiplayer land.
+<p>You are very fortunate. The Furies themselves are interested in teaching you the skills of the StormLords. Each 
+battle has been carefully selected by the Gods to train you for the long and arduous battles that lie ahead. Succeed,
+and the Gods will be extremely generous to you. Fail, and.... well, let's not talk about failure...<br><br>
+                              Comments, suggestions? LET ME KNOW! <br>
+                                     Email:  MVieira220@aol.com<br> 
+                                         player name: ~B~kswelb
+$Checked=1 <i>~[IsunWalker.C6]</i> In The Beginning <i>~[IsunWalker.C3]~[Inugget.3]</i>,MissionBegin,begin,{Donebegin},1
+$Checked=2 <i>~[Ipriest.C6]</i> Look Out <i>~[Ipriest.C3]</i>,MissionBegin,lookout,{Donelookout},{Donebegin}
+$Checked=3 <i>~[IsunCannon.3]</i> Gain Power~[IrainCannon.C3]</i>,MissionBegin,gainpwr,{Donegainpwr},{Donelookout}
+$Checked=4 <i>~[Ipriest.c2]</i> Help!,MissionBegin,help,{Donehelp},{Donegainpwr}
+$Checked=5 <i>~[IrainWalker.C4]</i> Rescue the Allies<i>~[IsunWalker.C1]</i>,MissionBegin,Rescue,{DoneRescue},{Donehelp}
+$Checked=6 <i>~[IwindArcher.C1]</i> Unite!<i>~[IWindArcher.C1]</i>,MissionBegin,unite,{Doneunite},{DoneRescue}
+$Button=Back,Tell,Campaign
+
+

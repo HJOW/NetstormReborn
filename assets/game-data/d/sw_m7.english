@@ -1,0 +1,300 @@
+*(Saved as mission7.fort & mission7.english)
+
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 7
+moreGeysers = 1
+randomGeysers = 1
+denySalvage = {sw_mvar3}
+
+myStartMoney = {sw_mvar0} 
+myTech = {sw_var1}{sw_var2}{sw_var3}{sw_var4}{sw_var9} 
+ai1allylist = ""
+
+title = "Slave to the King (Attack on Rain Village)"
+
+ai2Name =  Walir the Rain King
+ai2Tech = {sw_var1}{sw_var2}{sw_var5}{sw_var6}
+ai2StartMoney =4000
+ai2AllyList = "3;4;5;6;7"
+ai2Color = cyan
+ai2Ability = "!USE_PRIEST_TO_COLLECT"
+
+ai3Name = Watir the Rain Warrior
+ai3Tech = {sw_var1}{sw_var2}{sw_var5}
+ai3StartMoney =1000 
+ai3AllyList = "2;4;5;6;7"
+ai3Color = Red
+ai3Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+
+ai4Name = Water the Warrior of Rain
+ai4Tech = {sw_var1}{sw_var5}
+ai4StartMoney = 1000
+ai4AllyList = "2;3;5;6;7"
+ai4Color = white
+ai4Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+
+ai5Name = Watar the Rain Warrior
+ai5Tech = {sw_var1}{sw_var2}{sw_var5}
+ai5StartMoney = 1000
+ai5AllyList = "2;3;4;6;7"
+ai5Color = purple
+ai5Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS;"
+
+ai6Name = Watur the Rain Warrior
+ai6Tech = {sw_var1}{sw_var5}
+ai6StartMoney = 1000
+ai6AllyList = "2;3;4;5;7"
+ai6Color = yellow
+ai6Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+
+ai7Name = Icean the Rain Warrior
+ai7Tech = {sw_var2}{sw_var6}
+ai7StartMoney = 1000
+ai7AllyList = "2;3;4;5;6"
+ai7Color = green
+ai7Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+
+[init]
+<$Config,sw_m7=1>
+<$Config,sw_m1=0>
+<$Config,sw_m2=0>
+<$Config,sw_m3=0>
+<$Config,sw_m4=0>
+<$Config,sw_m5=0>
+<$Config,sw_m6=0>
+<$Config,sw_m8=0>
+<$Config,sw_m9=0>
+<$Config,sw_m10=0>
+<$Config,sw_m11=0>
+<$Config,sw_m12=0>
+<$Config,sw_m13=0>
+<$Config,sw_m14=0>
+<$Config,sw_m15=0>
+<$Config,sw_m16=0>
+<$Config,sw_m17=0>
+<$Config,sw_m18=0>
+<$Config,sw_m19=0>
+<$Config,sw_m20=0>
+<$Config,sw_m21=0>
+<$Config,sw_m22=0>
+<$Config,sw_m23=0>
+<$Config,sw_m24=0>
+<$Config,sw_m25=0>
+<$Config,sw_m30=0>
+
+<$Config,sw_enemyDead2=0>
+<$Config,sw_enemyDead3=0>
+<$Config,sw_enemyDead4=0>
+<$Config,sw_enemyDead5=0>
+<$Config,sw_enemyDead6=0>
+<$Config,sw_enemyDead7=0>
+
+
+
+[options]
+[A.]
+                        <h2>Slave to the King (Attack on Rain Village)<a href="#mission7">~[IfortGump.46]</a></h2>
+                                                     ~[IrainCannon.12]
+<br>                                                                                                  ~1~y<?!{sw_difficulty1}>HARD</?><?{sw_difficulty1}>EASY</?>~.<br>
+<br>
+<i>To kill the Rain King - Splatter him with ice !<br>
+                                                  ---A wiseman of Hades</i>
+<p>The King of {sw_hades}, your boss (or slave driver as you might call him) needs the Rain King sacrificed
+so he can learn of the rain knowledge.<br>
+Capture and kill him in the name of <h2>{sw_hades}.</h2>
+<br>
+            <a href="cmd:ShowTechnology,55"> ~[IfortGump.50] </a>                                                   <a href="cmd:DoNothing,0">~[IfortGump.22] </a>                                             <a href="cmd:Tell,guideHades.overview">~[Ipriest.13]</a><br>
+<a href="cmd:ShowTechnology,55">Review Knowledge</a>                               <a href="cmd:DoNothing,0">Let's get to it!</a>                               <a href="cmd:Tell,guideHades.overview">Exit, stage left!</a>
+$OnExit= ,PlaySound,golemMove1.wav
+$Button= ,Tell,A.
+
+
+[@200]
+The battle rages on!
+$Button=OK,DoNothing,0
+
+[@400]
+You should have done something by now....<br>
+Would you like to restart<?!{sw_difficulty1}>, slightly easier</?>?
+$Button=YES,Tell,tryeasier
+$Button=NO,DoNothing,0
+
+[@600]
+Hmm... not much happening here. Would you like to restart<?!{sw_difficulty1}>, slightly easier</?>?
+$Button=YES,Tell,tryeasier
+$Button=NO,DoNothing,0
+
+[@900]
+Hmm... you want to restart, or continue?
+$Button=Restart,Tell,tryeasier
+$Button=Continue,DoNothing,0
+
+[@1200]
+Sorry, Dude. Gots to restart you.
+$Button=OK. Restart me,Tell,tryeasier
+$Button=You better not!,DoNothing,0
+
+[@1800]
+Last chance to restart...
+$Button=OK. Restart me,Tell,tryeasier
+$Button=No way!,DoNothing,0
+
+
+[ai8PriestDead]
+The {sw_god5} speaks to you:<br>
+<i>"Show those wimpy warriors of rain what it's like to experience ~kDEATH<i>!"
+$Menu=~[IrainBattery.*]~yRain Battery,GetTechnology,76
+<$Config,sw_enemyDead8=1>
+$OnExit= ,Tell,checkEnemiesDead
+
+[ai6PriestDead]
+The {sw_god5} rages:<br>
+<i>"The Power of ~kDEATH<i> is the Power over all!"
+<$Config,sw_enemyDead6=1>
+$Menu=~yRain Cannon~[IrainCannon.3],GetTechnology,129
+$OnExit= ,Tell,checkEnemiesDead
+
+[ai7PriestDead]
+~I"Hmm"~., you think to yourself. ~I"These rain Warriors aren't so tough!"~.
+<$Config,sw_enemyDead7=1>
+$Button=OK,Tell,checkEnemiesDead
+<$ChangeMoney,1500>
+
+[ai5PriestDead]
+Storm power rains down from the Heavens as you sacrifice this Priest of Rain.
+<$Config,sw_enemyDead5=1>
+<$ChangeMoney,10000>
+$Button=KEWL,Tell,checkEnemiesDead
+
+[ai4PriestDead]
+<$Config,sw_enemyDead4=1>
+<$Tell,checkEnemiesDead>
+
+[ai3PriestDead]
+<$Config,sw_enemyDead3=1>
+<$Tell,checkEnemiesDead>
+
+[ai2PriestDead]
+<$Config,sw_enemyDead2=1>
+<$Tell,checkEnemiesDead>
+
+
+
+[checkEnemiesDead]
+<?{sw_enemyDead2}><?{sw_enemyDead3}><?{sw_enemyDead4}><?{sw_enemyDead5}>
+<$Config,sw_enemyDead2=0>
+<$Config,sw_enemyDead3=0>
+<$Config,sw_enemyDead4=0>
+<$Config,sw_enemyDead5=0>
+<$Config,sw_enemyName="Watur the Rain Warrior">
+<$Tell,askAlliance>
+</?></?></?></?>
+
+<?{sw_enemyDead2}><?{sw_enemyDead3}><?{sw_enemyDead4}><?{sw_enemyDead6}>
+<$Config,sw_enemyDead2=0>
+<$Config,sw_enemyDead3=0>
+<$Config,sw_enemyDead4=0>
+<$Config,sw_enemyDead6=0>
+<$Config,sw_enemyName="Icean the Rain Warrior">
+<$Tell,askAlliance>
+</?></?></?></?>
+
+<?{sw_enemyDead2}><?{sw_enemyDead3}><?{sw_enemyDead4}><?{sw_enemyDead7}>
+<$Config,sw_enemyDead2=0>
+<$Config,sw_enemyDead3=0>
+<$Config,sw_enemyDead4=0>
+<$Config,sw_enemyName="Watar the Rain Warrior">
+<$Config,sw_enemyDead7=0>
+<$Tell,askAlliance>
+</?></?></?></?>
+
+<?{sw_enemyDead3}><?{sw_enemyDead4}><?{sw_enemyDead5}><?{sw_enemyDead6}>
+<$Config,sw_enemyName="Walir the Rain King">
+<$Config,sw_enemyDead3=0>
+<$Config,sw_enemyDead4=0>
+<$Config,sw_enemyDead5=0>
+<$Config,sw_enemyDead6=0>
+<$Tell,askAlliance>
+</?></?></?></?>
+
+<?{sw_enemyDead3}><?{sw_enemyDead4}><?{sw_enemyDead5}><?{sw_enemyDead7}>
+<$Config,sw_enemyName="Walir the Rain King">
+<$Config,sw_enemyDead3=0>
+<$Config,sw_enemyDead4=0>
+<$Config,sw_enemyDead5=0>
+<$Config,sw_enemyDead7=0>
+<$Tell,askAlliance>
+</?></?></?></?>
+
+<?{sw_enemyDead4}><?{sw_enemyDead5}><?{sw_enemyDead6}><?{sw_enemyDead7}>
+<$Config,sw_enemyName="Walir the Rain King">
+<$Config,sw_enemyDead4=0>
+<$Config,sw_enemyDead5=0>
+<$Config,sw_enemyDead6=0>
+<$Config,sw_enemyDead7=0>
+<$Tell,askAlliance>
+</?></?></?></?>
+<$Timeout=0,DoNothing,0>
+
+
+
+[askAlliance]
+<h2>You recieve a message from {sw_enemyName}.<br>
+Nimbian brother!  Please join me so we can rule the Realm of Rain forever.</h2>
+$Button=I'LL JOIN YOU,Tell,AllianceBegun
+$Button=I'D RATHER DIE BY ICE FIRE, Tell NoDeal
+$Timeout=20,Tell,AllianceWithdrawn
+
+[AllianceBegun]
+<$Config,sw_pickally3=1>
+<$Config,sw_m8=1>
+<$Config,sw_m7=0>
+<$MissionBegin,sw_m8>
+
+[AllianceWithdrawn]
+<$Config,sw_pickally3=0>
+<p>You took too long to respond.  The King of Hades found out you were contemplating
+a deal with the Rain King and he is going to kill you now.
+<$Config,sw_m24=1>
+<$Config,sw_m7=0>
+$Button=What have I done?,MissionBegin,sw_m24
+
+[NoDeal]
+<$Config,pickally3=0>
+<p>~g"You will die then!"<br>
+~w"I will pelt you with ice fire myself."
+$Button=LET'S FINISH THIS,DoNothing,0
+
+[Succeeded][BadTeamDead]
+The {sw_god5} is jubilant!
+<p>
+<i>Excellent, job, groveler! There's only the
+thunder fury left!</i>
+<$Config,sw_difficulty1=0>
+<$Config,sw_mvar0=1000>
+<$Config,sw_mvar2=1>
+<$Config,sw_mvar1=1>
+<$Config,sw_m9=1>
+<$Config,sw_m7=0>
+$Button=Let's Get the Thunder Wimps!,MissionBegin,sw_m9
+
+
+[Failed]
+<h2>You receive a message from the Death Fury.</h2>
+<i>I wish you could fry on my altar but Hades has plans for you.</i>
+<p>You see a puff of smoke.<br>
+I will give you another chance to kill my brother of Rain.<br>
+Don't fail me again.
+$Button=Yes Master! I try harder!,tell,tryeasier
+
+
+[tryeasier]
+<$Config,sw_difficulty1=1>
+<$Config,sw_mvar3=0>
+<$Config,sw_mvar0=12000>
+<$MissionBegin,sw_m7>
+
+
+[END]

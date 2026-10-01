@@ -1,0 +1,17 @@
+title = "The meaning of death II"
+
+[Overview]
+<background="nsstart">
+<h4>The meaning of death: Mission 2</h4>
+<i>© 12/97 by RasRic</i>
+<p>
+This is the second mission of a future campain.<br>
+Done by  <i>RasRic</i><br><br>
+~[Ibulf.C3]<br>
+If you like it send some words to <c><a href="http://pweb.uunet.de/lotek.h/">Rasrics homepage!</a></c>
+
+
+$Checked=1 No time to play,MissionBegin,notime,{Donenotime},1
+
+$Button=Back,Tell,Campaign
+

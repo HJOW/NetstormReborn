@@ -1,0 +1,101 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 10
+moreGeysers = 1
+denySalvage = 1
+
+myName = Master High Priest of Nimbus
+myStartMoney = 3000
+myTech = "windBattery;rainBattery;thunderBattery;sunArcher"
+
+title="Kidnapped"
+
+ai2Name = "Bounty 1"
+ai2Tech = "all"
+ai2StartMoney = 5000
+ai2GeyserAttachments = 2
+ai2Collectors = 3
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3;4"
+ai2color = red
+ai2Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS;!USE_PRIEST_TO_COLLECT;!ENCIRCLE_ENEMY_ISLAND"
+ai2DrawBridgeRate = 1
+
+ai3Name = "Bounty 2"
+ai3Tech = "all"
+ai3StartMoney = 5000
+ai3GeyserAttachments = 2
+ai3Collectors = 3
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2;4"
+ai3color = green
+ai3Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS;!USE_PRIEST_TO_COLLECT;!ENCIRCLE_ENEMY_ISLAND"
+
+ai4Name = "Bounty 3"
+ai4Tech = "all"
+ai4StartMoney = 3000
+ai4GeyserAttachments = 2
+ai4Collectors = 3
+ai4TimeBetweenMoves = 1
+ai4AllyList = "2;3"
+ai4color = white
+
+[Options]
+
+[A.]
+<h2>Kidnapped</h2>
+<i>Your friend will soon die.  As so will you.<br>
+--Anonymous</i>  
+<p>The Bounties fled to a magical place where your knowledge disappeared and the Furies can't interfere.  The Furies used all of their power to muster up some simple knowledge for you.  So, since they can't give you knowledge yet, they send you some help.  A spirit form of themselves.<br>
+You must save the Lost Priest of Nimbus who was kidnapped.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[ai2TempleHalfDead]
+Alas!  The Furies have found a way to grant you knowledge.
+$Menu=~[IsunCannon.1]sun,GetTechnology,128
+
+[ai2TempleDead]
+$Menu=~[IsunFence.1]sun,GetTechnology,136
+
+[ai2PriestCaptured]
+$Menu=~[Ioutpost.1]sun,GetTechnology,126
+
+[ai2PriestDead]
+The Furies grant you all sun knowledge.
+$Menu=~[IsunBalloon.1]sun,GetTechnology,111
+$Menu=~[IsunBlocker.1]sun,GetTechnology,78
+$Menu=~[IsunAviary.1]sun,GetTechnology,72
+
+[ai3TempleHalfDead]
+$Menu=~[IwindBlocker.1]wind,GetTechnology,142
+
+[ai3TempleDead]
+$Menu=~[IwindArcher.1]wind,GetTechnology,140
+
+[ai3PriestCaptured]
+$Menu=~[IwindBalloon.1]wind,GetTechnology,141
+
+[ai3PriestDead]
+The Furies grant you all wind knowledge.
+$Menu=~[IwindAviary.1]wind,GetTechnology,139
+$Menu=~[IwindWalker.1]wind,GetTechnology,137
+
+[Succeeded][BadTeamDead]
+<h2>You've rescued him!</h2>
+<p>The Nimbian King gives you his daughter's hand in marriage.  It would be rude to turn him down, even if she is the ugliest woman on Nimbus.<br>
+Will you accept or face certain prosecution?  Continued............
+
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+
+[Failed]
+<h2>You are dead!</h2>
+<p>
+Since this is your last mission - Try Again!
+
+$Button=Continue,Tell,TryAgain
+
+[END]

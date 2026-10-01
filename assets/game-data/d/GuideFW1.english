@@ -1,0 +1,30 @@
+title = "FW Part I: Shattered Guilds"
+
+[Overview]
+<background="nsstart">
+<h2>Shttered Guilds</h2>
+<i>Read FW INTRO.txt for this part (I had to earse a couple lines cause of all the maps).</i><br>
+~yThe Virtuous Warrior<br>
+~kDying_~rRealms@juno.com
+~mPlease tell me what you think.<br>
+~.~w(You can't send attached files or pictures, juno is free, so it is cheap...)<br>
+
+$Checked= Mission:,MissionBegin,FW999,{DoneFW999},{Done998}
+$Checked=I      Shattered Guilds,MissionBegin,FW1,{DoneFW1},1
+$Checked=II     Barriers Of Hope,MissionBegin,FW2,{DoneFW2},1
+$Checked=III    Clones,MissionBegin,FW3,{DoneFW3},1
+$Checked=IV    Stolen Plans,MissionBegin,FW4,{DoneFW4},1
+$Checked=V     More To Take,MissionBegin,FW5,{DoneFW5},1
+$Checked=VI    A Mysterious Warrior...,MissionBegin,FW6,{DoneFW6},1
+$Checked=VII   Incident at Fortress 0984,MissionBegin,FW7,{DoneFW7},1
+$Checked=VIII  WHO ARE THEY?,MissionBegin,FW8,{DoneFW8},1
+$Checked=IX    Falling Apart,MissionBegin,FW9,{DoneFW9},1
+$Checked= Special:,MissionBegin,FW999,{DoneFW999},{Done998}
+$Checked=???  The Alliance,MissionBegin,FW1b,{DoneFW1b},1
+$Checked=???  Are You Ready For This?,MissionBegin,FWT1,{DoneFWT1},1
+$Checked=???  R U UP 2 IT?,MissionBegin,FWT2,{DoneFWT2},1
+$Checked=???  I Want My Mommy...,MissionBegin,FWT3,{DoneFWT3},1
+$Checked=???  Shall We Swing My Way?,MissionBegin,FWT4,{DoneFWT4},1
+$Checked=     DEMO of Part II: Offensive Strike,StartDemo,DEMOFw,{DoneDEMOFw},1
+
+$Button= Back To Campain Menu,Tell,Campaign

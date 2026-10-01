@@ -1,0 +1,42 @@
+title = "Domination"
+
+[Overview]
+<background="nsstart">
+<h2>~[Iflag.*]~E~kDomination 2.0~[Iflag.*]</h2>
+<?!{vn_donevn11}><?!{vn_donevn10}><?!{vn_donevnt3}><?!{vn_death}><p>~IThe time has come, the end is nigh. It is to be decided once and for all which is the superior fury. You, an innocent nimbian caught in the midst of this struggle, must rise to fulfill your destiny. Now, choose that destiny............ </p></?></?></?></?>
+<?{vn_death}><?{vn_notdonevnd2}{vn_failthunder}><p>~r~EHuh? "where did all the missions go?"~. I hear you ask.Well, you died, so you gotta earn the right to live again before you can continue.Don't die too many times, you only get so many chances....</p></?></?>
+
+<?{vn_donevnt3}>
+Thunder now rules Nimbus. Was there ever any other way things could be? Choose again and find out.......
+</?>
+<?{vn_donevn10}>You have completed the quest for the domination of Rain, but can you find the thunder campaign? It's not that well hidden. Anyway, I hope you enjoyed playing, and if you have any comments or suchlike, email me at <a href="mailto:venom@freeola.net">venom@freeola.net</a> 
+</?>
+<?{vn_donevn11}>You have completed the quest for the domination of Wind, but can you find the thunder campaign? It's not that well hidden. Anyway, I hope you enjoyed playing, and if you have any comment or suchlike, email me at <a href="mailto:venom@freeola.net">venom@freeola.net</a>
+</?>
+<?{vn_death}><?{vn_failthunder}>You failed. You died too many times. You've got to restart the campaign to get the missions back. Ahahahahhahaha.......</?></?>
+<?{vn_death}><?{vn_donevnd2}><?!{vn_failthunder}><?!{vn_donevnt3}>~k You are dead, yet it is not over, enter the ~rThunder ~kmission......  </?></?></?></?>
+
+$Button=Back,Tell,Campaign
+
+$Checked=~y~EDemo,DoNothing,0
+$Checked=0 Domination Demo,MissionBegin,vndemo,Donevndemo,1
+$Checked=~l~B~ENormal Missions,DoNothing,0
+$Checked=1 Wind Trial,MissionBegin,vn1,{vn_donevn1},1
+$Checked=2 Rain Trial,MissionBegin,vn2,{vn_donevn2},1
+<?!{vn_death}><?{vn_donetrialfast}> $Checked=3 Outpost,MissionBegin,vn3,{vn_donevn3},1 </?></?>
+<?!{vn_death}><?{vn_donetrialslow}> $Checked=4 Defence,MissionBegin,vn4,{vn_donevn4},1 </?></?>
+<?!{vn_death}><?{vn_donevn3withoutally}> $Checked=5 Rescue (easy),MissionBegin,vn5,{vn_donevn5},1</?></?>
+<?!{vn_death}><?{vn_donevn3withally}{vn_donevn8}> $Checked=6 The Unity,MissionBegin,vn6,{vn_donevn6},1</?></?>
+<?!{vn_death}><?{vn_donevn4withally}{vn_donevn5}> $Checked=7 Commando Raid,MissionBegin,vn7,{vn_donevn7},1</?></?></?>
+<?!{vn_death}><?{vn_donevn4withoutally}> $Checked=8 Rescue (Hard),MissionBegin,vn8,{vn_donevn8},1</?></?>
+<?!{vn_death}><?{vn_donevn6}{vn_donevn7}> $Checked=9 Hectic,MissionBegin,vn9,{vn_donevn9},1</?></?>
+<?!{vn_death}><?{vn_donevn9}><?{vn_windall}> $Checked=11 Domination of Wind,MissionBegin,vn11,{vn_donevn11},1</?></?></?>
+<?!{vn_death}><?{vn_donevn9}><?!{vn_windall}> $Checked=10 Domination of Rain,MissionBegin,vn10,{vn_donevn10},1</?></?></?>
+$Checked=~r~B~EThunder Missions,DoNothing,0
+$Checked=12 Destruction,MissionBegin,vnt1,{vn_donevnt1},<?!{vn_alive}><?!{vn_notdonevnd2}><?!{vn_donevnt1}><?!{vn_failthunder}>1</?></?></?></?><?{vn_alive}{vn_notdonevnd2}{vn_failthunder}{vn_donevnt1}>0</?>
+$Checked=13 Surrounded,MissionBegin,vnt2,{vn_donevnt2},<?!{vn_notdonevnt1}><?!{vn_failthunder}><?!{vn_donevnt2}>1</?></?></?><?{vn_notdonevnt1}{vn_failthunder}{vn_donevnt2}>0</?>
+$Checked=14 Domination of Thunder,MissionBegin,vnt3,{vn_donevnt3},<?!{vn_notdonevnt2}><?!{vn_failthunder}><?!{vn_donevnt3}>1</?></?></?><?{vn_notdonevnt2}{vn_failthunder}{vn_donevnt3}>0</?>
+$Checked=~k~B~EDeath Missions,DoNothing,0
+$Checked=15 The Netherworld,MissionBegin,vnd1,{vn_donevnd1},<?{vn_death}><?!{vn_donevnd1}>1</?></?><?!{vn_death}><?!{vn_donevnd1}>0</?></?><?{vn_death}><?{vn_donevnd1}>0</?></?><?!{vn_death}><?{vn_donevnd1}>0</?></?>
+$Checked=16 Two souls for one,MissionBegin,vnd2,{vn_donevnd2},<?!{vn_alive}><?!{vn_donevnd2}><?!{vn_notdonevnd1}>1</?></?></?><?{vn_alive}{vn_donevnd2}{vn_notdonevnd1}>0</?>
+$Checked=17 Hell,MissionBegin,vnd3,{vn_donevnd3},<?{vn_death}><?{vn_failthunder}>1</?></?><?!{vn_death}><?{vn_failthunder}>0</?></?><?{vn_death}><?!{vn_failthunder}>0</?></?><?!{vn_death}><?!{vn_failthunder}>0</?></?>

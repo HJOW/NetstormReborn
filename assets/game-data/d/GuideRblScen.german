@@ -1,0 +1,18 @@
+title = "The Rebellions"
+
+[Overview]
+<background="nsstart">
+<h2>The Rebellions (version 1.1)</h2>
+<i>Your followers are tired of the ruthless rule of the Fortress of Valdras. Together with your rebel allies you must conquer Valdras, and all that lies beyond it.</i>
+<p>
+This is my first attempt at a Netstorm Scenario. Have fun with it! I'm working on a sequel for it called The Return of Aridan.
+<br>
+Send all feedback to: jcipparone@hotmail.com, or visit my web site at http://www.mnsi.net/~jcippa/
+
+$Checked=1 A Cry For Hope,MissionBegin,RblScen,{DoneRblScen},1
+$Checked=2 Onward Into The Storm,MissionBegin,RblScen2,{DoneRblScen2},2
+$Checked=3 The Isles of the Golden Sun,RblScen3,{DoneRblScen3},3
+$Checked=4 Betrayal at the Throne,RblScen4,{DoneRblScen4},4
+$Checked=5 The Few - The Fallen,RblScen5,{DoneRblScen5},5
+
+$Button=Back,Tell,Campaign

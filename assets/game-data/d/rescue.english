@@ -1,0 +1,165 @@
+[Header]
+missionType = "Tutorial"
+                
+missionNumber = 5
+moreGeysers = 0
+
+myStartMoney = 1000
+myTech = "sunWalker;sunArcher;sunCannon;sunBlocker;sunBalloon;sunAviary;sunFence;rainBattery;rainAviary;rainBlocker;rainBalloon;rainCannon;rainWalker;rainFence;windBattery;windBlocker;windWalker;windArcher;"
+
+title="Rescue the Allies"
+
+ai2Name = "Boom! Boom!"
+ai2Tech = "thunderBattery;thunderArcher;bulf;thunderCannon"
+ai2StartMoney = 1000                          
+ai2GeyserAttachments = 2
+ai2Collectors = 1
+ai2TimeBetweenMoves = 3
+ai2AllyList = "3;4"
+ai2color = red
+ai2Ability = "!CAPTURE_ENEMY_PRIEST;!SACRIFICE_ENEMY_PRIEST"
+
+ai3Name = "Wind Warrior"
+ai3Tech = "windBattery;windWalker;windArcher;windBlocker;windAviary;windBalloon"
+ai3StartMoney = 1000                          
+ai3GeyserAttachments = 2
+ai3Collectors = 2
+ai3TimeBetweenMoves = 3
+ai3AllyList = "2;4"
+ai3color = brown
+ai3Ability = "!CAPTURE_ENEMY_PRIEST;!SACRIFICE_ENEMY_PRIEST"
+
+
+ai4Name = "Wet my whistle!"
+ai4Tech = "rainBattery;rainAviary;rainCannon;rainBlocker;rainBalloon;rainWalker;rainFence"
+ai4StartMoney = 1000
+ai4GeyserAttachments = 2
+ai4Collectors = 2
+ai4TimeBetweenMoves = 3
+ai4AllyList = "2;3"
+ai4color = white
+ai4Ability = "!CAPTURE_ENEMY_PRIEST;!SACRIFICE_ENEMY_PRIEST"
+
+ai5Name = "SNOB #1"
+ai5Tech = ""
+ai5StartMoney =0 
+ai5GeyserAttachments = 
+ai5Collectors = 
+ai5TimeBetweenMoves = 
+ai5AllyList = "1"
+ai5Color = yellow
+
+
+
+
+
+[Options]
+
+[A.]
+                                   <i>~[IrainWalker.C4]</i> RESCUE THE ALLIES<i>~[IsunWalker.C1]</i><br>
+<i>But, fellow Nimbians, we don't have to fight!<br>
+                                                                                  --mosquito
+<br>
+<i>Not fight? But what would we do to pass the day?<br>
+                                                                                  --fellow Nimbian</i>
+<p>
+Oh no! A major setback. The Furies have promised revenge, and they are about to get it
+All four Furies have combined together and united to destroy your band of rebels...
+<p>
+Unfortunately for you, they have captured a band of your followers known as SNOB
+(<i>S</i>killed <i>N</i>imbians <i>O</i>f the <i>B</i>rotherhood), and are holding them
+captive, waiting for you to try and rescue them. There, they will squash you like the
+pest that you have been to them.
+<p>
+When you are crushed and defeated, they feel Nimbus will go back to its old ways of chaos
+and war.
+<p>
+Stand up to the Furies! Prove them wrong! Save your SNOB followers!
+
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Leave Missions,MissionAbort,0
+$Button=Play Mission,DoNothing,0
+
+
+
+
+
+[ai4PriestCaptured]
+<h2>Message from Wet my Whistle!</h2>
+<p>
+Ebb and flow...<br>
+Ebb and flow...<br>
+I have tasted many victories...<br>
+Now I am to taste defeat....
+
+[ai4PriestDead]
+<h2>Message from the Splash</h2>
+<p>
+Rain pours from the skies, as one<br>
+of the students of RAIN perishes
+
+
+[ai3PriestCaptured]
+<h2>Message from the Wind Warrior</h2>
+<p>
+You may take my body, but my soul<br>
+will still be free as the wind...<br>
+And my Brothers of the wind will<br>
+fight on....
+
+[ai3PriestDead]
+<h2>YMessage from the Wind Fury</h2>
+<p>
+Somewhere in the distance, you hear a long<br>
+and lonesome wail...<br>
+
+[ai2PriestCaptured]
+<h2>Message from Boom! Boom!</h2>
+<p>
+Impossible, just like my brother Boom!, I may be<br>
+defeated... How can this be?
+
+[ai2PriestDead]
+<h2>Message from the Thunder Lord!</h2>
+<p>
+A huge sound of thunder explodes from the sky<br>
+above you, and in a voice that sends shivers<br>
+down your spine, you hear...<br><br>
+My wrath will be heard throughout Nimbus...<br>
+As your howls will echo throughout the land....<br>
+You will be sacrificed upon an altar of stone!<br>
+and your blood will trickle down the altar....<br>
+and your flesh will rot from your bones....<br>
+Then, and only then, will I have VENGENCE upon those<br>
+who dare oppose my rule<br>
+
+
+[ai5PriestSaved]
+<h2>Success!</h2>
+<p>
+You've done it! You saved your allies, the SNOBs. You defeated the combined forces of thunder,
+rain, and wind! Word is spreading quickly of your defiance to the
+Furies. Many call you a fool, but there is a growing minority
+of Nimbians that are asking you to teach them the ways of peace
+and enlightenment<br>
+That night, in your sleep, you review the battle you just fought
+and suddenly, more technology is understood by you.....
+<i>    ~[IwindBlocker] ~[IwindWalker]</i><br>
+When you wake, you find that you have mastered all of the wind technology
+
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,unite
+
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+Oh no! The combined powers of wind, rain and thunder were too great for you..<br>
+You cannot stop now. You must unite against anarchy and destruction
+
+$Button=Continue,Tell,TryAgain
+
+
+[END]

@@ -1,0 +1,23 @@
+title = "Thunder Utopia"
+
+[Overview]
+<background="nsstart">
+<h2>The Struggle For Freedom</h2>
+<i><br>
+Nullus efectus sine causa</i>
+<p>
+Chaos is not an option, so you begin creating a society that is worthy of worshipping your Fury.
+
+$Checked=1 The Struggle for freedom,MissionBegin,Thunder,{DoneThunder},1
+$Checked=2 Survival,MissionBegin,Thudera,{DoneThundera},{DoneThunder},1
+$Checked=3 Alliance,MissionBegin,Alliance,{DoneAlliance},{DoneThundera},1
+$Checked=4 Financial Problems,MissionBegin,Thunderb,{DoneThunderb},{DoneThundera},{DoneAlliance},1
+$Checked=5 The Storm Rages,MissionBegin,ThunderC,{DoneThunderC},{DoneThunderb},1
+$Checked=6 Endless Struggle For Survival-Allied,MissionBegin,Thunderd,{DoneThunderd},{DoenThunderC},1
+$Checked=7 Endless Struggle For Survival,MissionBegin,Thunderd1,{DoneThunderd1},{DoneThunderC},1
+$Checked=8 Unwanted Guests,MissionBegin,Thundere,{DoneThundere},{DoneThundereC},1
+$Checked=9 The Rescue,MissionBegin,Resque,{DoneResque},{DoneThundere},1
+$Checked=10 Last Chance - Allies,MissionBegin,LCA,{DoneLCA},{DoneResque},1
+$Checked=11 The Supreme Ruler,MissionBegin,TheGreatBattle,{DoneTheGreatBattle},{DoneLCA},1
+
+$Button=Back,Tell,Campaign

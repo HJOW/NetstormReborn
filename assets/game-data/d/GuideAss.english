@@ -1,0 +1,16 @@
+title = "Legendary Missions Of Ass"
+
+[Overview]
+<background="nsstart">
+<h2>~yAsses Brilliant Missions v1.0</h2>
+<i>"The object of war is not to die for your country, but to make the other fucker die for his"<br> --Ass</i>
+<p>
+~E~B~wAhh the vets are here! Your mission if you wish to accept: ~yKill all the stupid bitch ass homo vets in these missions =) ~wGood luck omego!
+
+$Checked=1 One on One,MissionBegin,OneonOne,{DoneOneonOne},1
+$Checked=2 Two on Two,MissionBegin,TwoonTwo,{DoneTwoonTwo},2
+$Checked=3 Three on Three,MissionBegin,ThreeonThree,{DoneThreeonThree},3
+$Checked=3 Only for champions :),MissionBegin,hardness,{Donehardness},3
+
+$Button=Back,Tell,Campaign
+

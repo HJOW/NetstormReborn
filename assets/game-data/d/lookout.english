@@ -1,0 +1,72 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 2
+moreGeysers = 0
+
+myStartMoney = 5400
+myTech = "sunWalker;sunArcher;rainBattery;sunCannon"
+
+title="Lookout"
+
+ai2Name = "Rainman"
+ai2Tech = "rainBattery;rainBlocker;rainBlocker;rainBalloon;rainAviary;rainCannon"
+ai2StartMoney = 8000
+ai2GeyserAttachments = 2
+ai2Collectors = 3
+ai2TimeBetweenMoves = 3
+ai2AllyList = ""
+ai2color = white
+
+[Options]
+
+[A.]
+<h2><i>                              ~[Ipriest.C6]</i> LOOK OUT! <i>~[Ipriest.C3]</i></h2><br>
+
+<i>"But, master Sun Lord, even with your generous bestowal of knowledge, I
+am no match against the powers of Rain!"                                            --mosquito<br><br>
+<i>"Be quiet, you groveling fool. Fight like the true Nimbian you pretend to be!"<br>                     
+                                                                                        --Sun God</i><br>
+<p>
+Congrats! The Sun God has taken a liking to you, Although still in
+training, you are now considered as one of the WITLESS<br>
+(<i><h2>W</i/h2>arriors <i><h2>I</i/h2>n <i><h2>T</i/h2>raining <i><h2>L</i/h2>earning <i><h2>E</i/h2>ver <i><h2>S</i/h2>o <i><h2>S</i/h2>lowly)<br>
+<p>
+The Rain Fury has become interested in your development.. He sends out
+one of his best warriors to test you...<br>
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Leave Mission,MissionAbort,0
+$Button=Play Mission,DoNothing,0
+
+
+[ai2TempleHalfDead]
+<h2>Message from the Sun Fury</h2>
+<p>
+The sun god is very happy, he sends you knowledge
+<i>~[IsunBlocker.3]</i>
+keep on fighting!
+
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+You've defeated the enemy! The Sun Fury is esctatic!
+He has given you all of his knowledge..
+<i>~[IsunBlocker.3]  ~[IsunBalloon]</i>
+
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,gainpwr
+
+
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+Oh no! Mr. Rainman was too much for you!  This cannot be! You must continue
+to fight!
+$Button=Continue,Tell,TryAgain
+
+
+[END]

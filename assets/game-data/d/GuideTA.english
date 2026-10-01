@@ -1,0 +1,17 @@
+title = "TotalAnnihilation"
+
+
+[Overview]
+<background="nsstart">
+<h2>Ready???</h2>
+<i>Let's Storm some ass!!!</i>
+<P>
+<h3>My third try at creation.</h3>~[IPriest.99]~[IMog.15]~[ILightning.*]~[IAnim.15]
+
+~[ISunflyerbomb.15]
+<a href="mailto:Frieza@hotmail.com">email Frieza</a><br>
+~[IThunderfence.*]~[ILightning.*]~[IThunderfence.*]
+
+$Checked=1 TotalAnnihilation,MissionBegin,TotalAnnihilation,{DoneTotalAnnihilation},1
+
+$Button=Back,Tell,Campaign

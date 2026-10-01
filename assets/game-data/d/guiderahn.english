@@ -1,0 +1,116 @@
+title = "~E~iRahn's Campaigns"
+
+[Overview]
+<background="nsstart">
+
+<?!{atnocampaign2}>
+<h2>Starting...</h2>
+$Menu=~y~EGetting Ready...,MissionBegin,atinit
+</?>
+
+<?!{atnocampaign1}>
+<h2>Choose A Campaign</h2>
+$Checked=1 ~y~EChoose Your Destiny,MissionBegin,selectmenu,{Doneselectmenu},1
+
+</?>
+
+<?{atcampaign1}>
+<h2>The war against the Dark Lords</h2>
+<p> ~mVersion 5.0~w
+$Checked=1 Beginnings,MissionBegin,Dark1,{DoneDark1},1</?>
+<?{atcampaign1}><?{DoneDark1}>$Checked=2 The Isle of Geysers,MissionBegin,Dark2,{DoneDark2},{DoneDark1} </?></?>
+<?{atcampaign1}><?{DoneDark2}>$Checked=3 Escape!,MissionBegin,Dark3,{DoneDark3},{DoneDark2} </?></?>
+<?{atcampaign1}><?{DoneDark3}>$Checked=4 Prison Break,MissionBegin,Dark4,{DoneDark4},{DoneDark3} </?></?>
+<?{atcampaign1}><?{DoneDark4}>$Checked=5 Counter Attack,MissionBegin,Dark5,{DoneDark5},{DoneDark4} </?></?>
+<?{atcampaign1}><?{DoneDark5}>$Checked=6 The Dark Lords,MissionBegin,Dark6,{DoneDark6},{DoneDark5} </?></?>
+
+
+<?{atcampaign2}>
+<h2>The New Ruler of Nimbus</h2>
+<p> ~mVersion 4.0~w
+$Checked=1 Seperated,MissionBegin,tnron1,{Donetnron1},1</?>
+<?{atcampaign2}><?{Donetnron1}>$Checked=2 The Duke's Fate,MissionBegin,tnron2,{Donetnron2},{Donetnron1},2 </?></?>
+<?{atcampaign2}><?{Donetnron2}>$Checked=3 The Flyers,MissionBegin,tnron32,{Donetnron32},{Donetnron2} </?></?>
+<?{atcampaign2}><?{Donetnron22}>$Checked=3 ~lRitual~w,MissionBegin,tnron3ex,{Donetnron3ex},{Donetnron22} </?></?>
+<?{atcampaign2}><?{Donetnron3ex}>$Checked=4 ~lFollowed~w,MissionBegin,tnron31,{Donetnron31},{Donetnron3ex}  </?></?>
+<?{atcampaign2}><?{Donetnron32}>$Checked=4 Negotiation,MissionBegin,tnron42,{Donetnron42},{Donetnron32}  </?></?>
+<?{atcampaign2}><?{Donetnron31}>$Checked=5 ~lRevenge~w,MissionBegin,tnron41,{Donetnron41},{Donetnron31} </?></?>
+<?{atcampaign2}><?{Donetnron42}>$Checked=5 Meeting,MissionBegin,tnron4ex,{Donetnron4ex},{Donetnron42} </?></?>
+<?{atcampaign2}><?{Donetnron311}>$Checked=5 ~yRetreat~w,MissionBegin,tnron43,{Donetnron43},{Donetnron311} </?></?>
+<?{atcampaign2}><?{Donetnron41}>$Checked=6 ~lSilence~w,MissionBegin,tnron51,{Donetnron51},{Donetnron41} </?></?>
+<?{atcampaign2}><?{Donetnron4ex}>$Checked=6 The Book,MissionBegin,tnron52b,{Donetnron52b},{Donetnron4ex} </?></?>
+<?{atcampaign2}><?{Donetnron4exx}>$Checked=6 Ambition,MissionBegin,tnron52a,{Donetnron52a},{Donetnron4exx} </?></?>
+<?{atcampaign2}><?{Donetnron43}>$Checked=6 ~yDefence~w,MissionBegin,tnron53,(Donetrnon53},{Donetnron43} </?></?>
+<?{atcampaign2}><?{Donetnron433}>$Checked=6 ~oDefence~w,MissionBegin,tnron53,(Donetrnon53},{Donetnron433} </?></?>
+<?{atcampaign2}><?{Donetnron51}>$Checked=7 ~lDefend~w,MissionBegin,tnron61,{Donetnron61},{Donetnron51} </?></?>
+<?{atcampaign2}><?{Donetnron52b}>$Checked=7 Experiment,MissionBegin,tnron62b,{Donetnron62b},{Donetnron52b} </?></?>
+<?{atcampaign2}><?{Donetnron52a}>$Checked=7 The Twins,MissionBegin,tnron62a,{Donetnron62a},{Donetnron52a} </?></?>
+<?{atcampaign2}><?{Donetnron53}>$Checked=7 ~ySupply Lines~w,MissionBegin,tnron63,{Donetnron63},{Donetnron53} </?></?>
+<?{atcampaign2}><?{Donetnron54}>$Checked=7 ~oOld Friend~w,MissionBegin,tnron64,{Donetnron64},{Donetnron54} </?></?>
+<?{atcampaign2}><?{Donetnron61}>$Checked=8 ~lAttacked~w,MissionBegin,tnron71,{Donetnron71},{Donetnron61} </?></?>
+<?{atcampaign2}><?{Donetnron62b}>$Checked=8 Unstable!,MissionBegin,tnron72b,{Donetnron72b},{Donetnron62b} </?></?>
+<?{atcampaign2}><?{Donetnron62a}>$Checked=8 Reclaim,MissionBegin,tnron72a,{Donetnron72a},{Donetnron62a} </?></?>
+<?{atcampaign2}><?{Donetnron63}>$Checked=8 ~yAmbush~w,MissionBegin,tnron73,{Donetnron73},{Donetnron63} </?></?>
+<?{atcampaign2}><?{Donetnron64}>$Checked=8 ~oGauntlet~w,MissionBegin,tnron74,{Donetnron74},{Donetnron64} </?></?>
+<?{atcampaign2}><?{Donetnron644}>$Checked=8 ~rGauntlet~w,MissionBegin,tnron74,{Donetnron74},{Donetnron644} </?></?>
+
+<?{atcampaign2}><?{Donetnron71}>$Checked=9 ~lFinal~w,MissionBegin,tnron81,{Donetnron81},{Donetnron71} </?></?>
+<?{atcampaign2}><?{Donetnron8ex}>$Checked=9 Invasion,MissinBegin,tnron82,{tnron82},{Donetnron8ex} </?></?>
+<?{atcampaign2}><?{Donetnron73}>$Checked=9 ~yFrontal Assault~w,MissionBegin,tnron83,{Donetnron83},{Donetnron73} </?></?>
+<?{atcampaign2}><?{Donetnron74}>$Checked=9 ~oCaptured!~w,MissionBegin,tnron84,{Donetnron84},{Donetnron74} </?></?>
+<?{atcampaign2}><?{Donetnron744}>$Checked=9 ~rCaptured!~w,MissionBegin,tnron84,{Donetnron84},{Donetnron744} </?></?>
+
+<?{atcampaign2}><?{Donetnron82}>$Checked=10 So it Ends...,MissionBegin,tnron92,{Donetnron92},{Donetnron82} </?></?>
+<?{atcampaign2}><?{Donetnron83}>$Checked=10 ~yThe Final Strike~w,MissionBegin,tnron93,{Donetnron93},{Donetnron83} </?></?>
+<?{atcampaign2}><?{Donetnron84}>$Checked=10 ~oOne on One~w,MissionBegin,tnron94,{Donetnron94},{Donetnron84} </?></?>
+<?{atcampaign2}><?{Donetnron844}>$Checked=10 ~rOne on One~w,MissionBegin,tnron94,{Donetnron94},{Donetnron844} </?></?>
+
+<?{atcampaign3}>
+<h2>The Trials of Priesthood</h2>
+<p> ~mVersion 1.0~w
+<$Config,atobjective1=0>
+<$Config,atobjective2=0>
+<$Config,atobjective3=0>
+<$Config,atobjective4=0>
+<$Config,atobjective5=0>
+<$Config,atobjective6=0>
+<$Config,atobjective7=0>
+<$Config,atobjective8=0>
+<$Config,atweapon0=0> 
+$Menu=~l--Restart--,MissionBegin,palacereset</?> 
+
+<?{atcampaign3}><?!{Donepalace0}>$Checked=1 Intiation,MissionBegin,palace1,{Donepalace1},1 </?></?>
+<?{atcampaign3}><?{Donepalace1}>$Checked=2 First Test,MissionBegin,palace2,{Donepalace2},{Donepalace1}</?></?>
+<?{atcampaign3}><?{Donepalace2}>$Checked=3 Old Ties,MissionBegin,palace3,{Donepalace3},{Donepalace2}</?></?>
+<?{atcampaign3}><?{Donepalace3}>$Checked=4 Final Test,MissionBegin,palace4,{Donepalace4},{Donepalace3}</?></?>
+<?{atcampaign3}><?{Donepalace4}>$Checked=5 Usurp,MissionBegin,palace5,{Donepalace5},{Donepalace4}</?></?>
+
+<?{atcampaign3}><?{atpath0=1}>$Checked=1 Paths,MissionBegin,palacemain,{Donepalacemain},1}</?></?>
+
+<?{atcampaign3}><?{atpath1=1}>
+$Checked=1 North,MissionBegin,palaceraing,{Donepalaceraing},1
+$Checked=2 Rain Lord,MissionBegin,palacerain,{Donepalacerain},{Donepalaceraing}</?></?>
+
+<?{atcampaign3}><?{atpath2=1}>
+$Checked=1 East,MissionBegin,palacethunderg,{Donethunderg},1
+$Checked=2 Thunder Lord,MissionBegin,palacethunder,{Donethunder},{Donethunderg}</?></?>
+
+<?{atcampaign3}><?{atpath3=1}>
+$Checked=1 South,MissionBegin,palacewindg,{Donewindg},1
+$Checked=2 Wind Lord,MissionBegin,palacewind,{Donewind},{Donewindg}</?></?>
+
+<?{atcampaign3}><?{atpath4=1}>
+$Checked=1 Guardian,MissionBegin,palacestorm1,{Donestorm1},1
+$Checked=2 Sun Burn,MissionBegin,palacestorm2,{Donestorm2},{Donestorm1}
+$Checked=3 Elemental,MissionBegin,palacestorm3,{Donestorm3},{Donestorm2}
+$Checked=4 Confrontation,MissionBegin,palacestorm4,{Donestorm4},{Donestorm3}</?></?>
+
+
+$Button=Back,Tell,Campaign
+$Button=Campaigns,MissionBegin,SelectMenu
+$Button=Mapmaking,MissionBegin,LG
+<?{atcampaign2}> $Button=Credits,MissionBegin,tnroncredit </?>
+<?{atcampaign2}> $Button=Levels,MissionBegin,tnronguide </?>
+<?{atcampaign3}><?!{atpath0=1}> $Button=Retreat,MissionBegin,palacemain </?></?>
+<?{atcampaign3}> $Button=About,MissionBegin,palacecredit </?>
+$Button=Cheat,MissionBegin,atcheat

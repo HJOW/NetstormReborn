@@ -1,0 +1,267 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 3
+moreGeysers = 1
+
+myStartMoney = 0
+myTech = "sunaviary;sunBalloon;sunCannon;sunBlocker;sunFence;sunArcher;thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence;bulf;rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainwalker;rainFence;rainwalker"     																
+myAllyList = "7;8"
+
+title="One on One"
+
+ai2Name = "~kDark Lord"
+ai2Tech = "thunderbattery;thundercannon;thunderblocker;thunderarcher;rainbattery;raincannon;rainaviary;rainballoon;windbattery;windarcher;windblocker;windaviary"
+ai2StartMoney = 99000
+ai2GeyserAttachments = 6
+ai2Collectors = 8
+ai2TimeBetweenMoves = 0
+ai2AllyList = "4;5"
+ai2color = red
+ai2Ability="!USE_PRIEST_TO_COLLECT"
+ai2BridgeDrawRate = 0
+
+ai4Name = "~rThunder~w Guard"
+ai4Tech = "thunderbattery;thundercannon;thunderblocker;bulf"
+ai4StartMoney = 10000
+ai4GeyserAttachments = 1
+ai4Collectors = 8
+ai4TimeBetweenMoves = 1
+ai4AllyList = "2;5"
+ai4color = green
+ai4Ability=""
+ai4BridgeDrawRate = 5
+
+ai5Name = "~yWind ~wGuard"
+ai5Tech = "thunderbattery;thundercannon;thunderarcher;windbattery;windarcher;windblocker;windballoon"
+ai5StartMoney = 15000
+ai5GeyserAttachments = 3
+ai5Collectors = 5
+ai5TimeBetweenMoves = 1
+ai5AllyList = "2;4"
+ai5color = orange
+ai5Ability="!USE_PRIEST_TO_COLLECT"
+ai5BridgeDrawRate = 2
+
+
+ai8Name = "Prince Valen"
+ai8Tech = "thunderbattery;thundercannon;thunderblocker;rainbattery;rainaviary;rainballoon"
+ai8StartMoney = 10000
+ai8GeyserAttachments = 4
+ai8Collectors = 6
+ai8TimeBetweenMoves = 0
+ai8AllyList = "1;7;"
+ai8color = purple
+ai8Ability="!USE_PRIEST_TO_COLLECT"
+ai8BridgeDrawRate = 4
+
+
+ai7Name = "Knight of Wind"
+ai7Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker"
+ai7StartMoney = 10000
+ai7GeyserAttachments = 2
+ai7Collectors = 5
+ai7TimeBetweenMoves = 1
+ai7AllyList = "1;8"
+ai7color = lightblue
+ai7Ability="!USE_PRIEST_TO_COLLECT"
+ai7BridgeDrawRate = 1
+
+
+
+
+
+[Options]
+
+[A.]
+<h2>Rescued!!!</h2>
+<i>"Expect the unexpected"<br>
+--Book of Nimbus.</i>  
+<p>Just when it looked like you had it, the Knight of Wind comes to your rescue!!!  
+<p>Why now?  When last you met you were enemies....what has changed now for this to happen....
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[@1]
+<h2>~gKnight of Wind</h2> 
+<p>Get out of there now!!
+
+[@4]
+<h2>~kDark Lord</h2>
+<p>Did you think I was alone when you fought me?  Ha!  I just told them to back off so I alone would have the pleasure of killing you myself!  Now that the cat is out of the bag...GET OUT HERE!
+
+[@5]
+<h2>~rGuards</h2>
+<p>Yes milord!
+
+[@60]
+<$ChangeMoney,8000>
+<h2>~mPrince Valen</h2>
+<p>I am truly sorry we could not meet under better circumstances.
+<p>Here take this storm power you will need it.
+
+[@61]
+<p>What is going on?
+<p>~l~IThe Knight has a sudden change of alliance AGAIN!! and the fact you have never met this Prince or why he has allied with you, has caught you even more off guard than your brush with death!
+
+[@62]
+<h2>~gKnight of Wind</h2> 
+<p>I'll explain later right now get to that island in tow and help us here!
+
+[@120]
+<h2>~kDark Lord</h2>
+<p>Such waste!!  A pity you three will not be joining me on my path to victory.  
+
+[@121]
+<h2>~mPrince Valen</h2>
+<p>We would never join with the likes of you!!
+
+[@122]
+<h2>~kDark Lord</h2>
+<p>Ah the young prince!!  You father can't possibly last much longer against my force's constant attacks.
+
+[@123]
+<h2>~mPrince Valen</h2>
+<p>We will never rest untill we have destroyed you!  Since my father can't deal with you in person, allow me to show what I have learned from him!!
+
+[@124]
+<h2>~kDark Lord</h2>
+<p>Talk is cheap!  Especially from a brat like you!
+
+[@600]
+<h2>~gKnight of Wind</h2> 
+<p>Give it up Dark One!!  You cannot win!!
+
+[@601]
+<h2>~kDark Lord</h2>
+<p>It is you who should give up!!  A shame you decided not to stay with the winning side!  Mwhaha!
+
+[@900]
+<h2>~kDark Lord</h2>
+<p>Hahaha!!  Had enough yet?
+
+[@901]
+Ha!  You shall fall!!  And I shall rise out of the ashes to become the ruler of Nimbus!!
+
+[@902]
+<h2>~mPrince Valen</h2>
+<p>Indeed!  My father and I wish for peace!  And you Dark Lord will no longer be a curse upon us!!
+
+[@903]
+<h2>~gKnight of Wind</h2> 
+<p>For my friend the Duke of Thunder I shall see it that you perish this day!!
+
+[Succeeded][BadTeamDead]
+
+[win]
+<h2>Success!</h2>
+You have won this battle....but the war has yet to end.  With your new alliance with Valen you will have a fighting chance against the Elementals.....
+<$Config,Done{mission.fileName}=1>
+$Button=Victory?,MissionAbort,0
+
+[ai2TempleHalfDead]
+<h2>~kDark Lord</h2>
+<p>
+No!  You will not win again!!! IT ENDS HERE!
+
+[ai2TempleDead]
+<h2>~kDark Lord</h2>
+<p>NOOO!!!   I can't lose after rebuilding this powerful empire again!!
+
+[ai2PriestDead]
+<h2>THE ~kDARKLORD~w IS DEAD!</h2>
+$Button=At Last!,Tell,thend
+
+[thend]
+<h2>~mPrince Valen</h2>
+<p>We've done it!
+$Button=next,Tell,thend1
+
+[thend1]
+<p>~l~IYou breath a sigh of relef.  You watch as the remaining forces scatter to escape your wraith.  You smile, but for a moment as it quickly turns to anger!
+<p>~.~NKnight would you do the favor of helping me keep my sanity and tell me what is going on?!
+$Button=next,Tell,thend2
+
+[thend2]
+<h2>~gKnight of Wind</h2> 
+<p>Heh heh calm yourself.  I told you I would tell after this fight was over.
+<p>Well this may take awhile....Let's talk on our way out of here.
+$Button=next,Tell,thend3
+
+[thend3]
+<h2>~mPrince Valen</h2>
+<p>Indeed.  We should get out of here while the news spread of our victory.
+$Button=next,Tell,thend4
+
+[thend4]
+<h2>~gKnight of Wind</h2> 
+<p>As you know it started when I got captured by the Flyers.  Well after being caught they tried to convince me to join them, but after my refusals they took my family and friends.  Everytime I would refuse anything from them they would kill one of them, slowly and as painful as possible.  I...I couldn't refuse them anymore...I lost many friends that day.....
+$Button=next,Tell,thend5
+
+[thend5]
+<p>~l~IYou stay silent as long as your friend does....You know all too well what it's like to lose a friend...
+<p>~N~.I'm sorry....I'm sorry I couldn't help you when you needed it most....I failed you....just like I did the Duke....
+$Button=next,Tell,thend6
+
+[thend6]
+<h2>~gKnight of Wind</h2> 
+<p>No no...don't....You tried your best....that's all that matters....
+<p>To continue on....I was forced to launch some sneak attacks on your allies.  They didn't suspect a thing.  After a while they did catch on and I was sent to do scouting.  That's when you ran into me...you know what happened there.  After giving you directions into Elemental terretory I drifted back into Elemental territory and waited till someone found me....I couldn't leave the people I loved stranded....After a few days during the night someone in a cloak met with me.  He explained that my family was safe and free!!  Quickly following him I found indeed that they were free.  Among them was Prince Valen. 
+$Button=next,Tell,thend7
+
+[thend7]
+<h2>~mPrince Valen</h2>
+<p>They were holding me to keep my armies from attacking.  My father is the largest opposing force to the Elementals.
+$Button=next,Tell,thend8
+
+[thend8]
+<h2>~gKnight of Wind</h2> 
+<p>Well I still had to get rid of my guard that kept an eye on my every move.  So I told him I thought I saw a new patch of geysers back a ways from where we had scouted.  Waiting at the "geyser point" was my friends and family with the Prince's forces waiting to launch an ambush.
+$Button=next,Tell,thend9
+
+[thend9]
+<h2>~mPrince Valen</h2>
+<p>Worked well.  That buffon didn't know what hit him.  I have to say that your family is quite adept to fighting.
+$Button=next,Tell,thend10
+
+[thend10]
+<p>Runs in the family eh Knight?  Ha ha.
+$Button=next,Tell,thend11
+
+[thend11]
+<h2>~gKnight of Wind</h2> 
+<p>Ha ha maybe.  Well after that I deduced that you would be fighting a hopeless battle right now and so rushed to save you.  My family said that someone broke out of the prision and thrashed the entire encampment!  Was you wasn't it?
+$Button=next,Tell,thend12
+
+[thend12]
+<p>Well....yeah.
+$Button=next,Tell,thend13
+
+[thend13]
+<h2>~mPrince Valen</h2>
+<p>Rumor has it you have a large supply of storm power....is it true?
+$Button=next,Tell,thend14
+
+[thend14]
+<p>Yes it is.  I have the Isle of Geysers in my possesion.
+$Button=next,Tell,thend15
+
+[thend15]
+<h2>~mPrince Valen</h2>
+<p>Grand!  My father has a large army.  With your power and my men we will have a chance to win this war!  What do you say?
+$Button=next,Tell,thend16
+
+[thend16]
+<p>Ha ha!  Let it be known that today is the turning point of the war!  And the begining of the end for the Elementals!
+$Button=next,Tell,win
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+The Dark Lord was too powerful for you....The Prince was taken hostage again and forced his kindom to surrender.  Your Nation soon submited afterwards....
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+

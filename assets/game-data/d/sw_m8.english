@@ -1,0 +1,218 @@
+*(Saved as mission8.fort & mission8.english)
+
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 8
+moreGeysers = 1
+randomGeysers = 1
+denySalvage = 1
+
+myStartMoney = 1000 
+myTech = {sw_var1}{sw_var2}{sw_var3}{sw_var4}{sw_var9} 
+ai1Allylist = "2"
+
+title = "Defending Rain Village"
+
+ai2Name =  Walir the Rain King
+ai2Tech = "{sw_var1}{sw_var2}{sw_var5}{sw_var6}"
+ai2StartMoney =4000
+ai2AllyList = "1"
+ai2Color = red
+ai2Collectors = 3
+ai2GeyserAttachments = 2
+ai2TimeBetweenMoves=4
+ai2BridgeDrawRate=4
+ai2Ability = "!USE_PRIEST_TO_COLLECT;!SACRIFICE_ENEMY_PRIEST;!BUILD_DAIS;!CAPTURE_ENEMY_PRIEST"
+
+ai3Name = Hedit the Warrior of Hades
+ai3Tech = "{sw_var1}{sw_var2}{sw_var3}"
+ai3StartMoney =1000 
+ai3AllyList = "4;5;7;8"
+ai3Color = white
+ai3Collectors = 3
+ai3GeyserAttachments = 2
+ai3TimeBetweenMoves=5
+ai3BridgeDrawRate=5
+ai3Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+
+ai4Name = Hedot the henchan
+ai4Tech = "{sw_var1}{sw_var2}"
+ai4StartMoney = 1000
+ai4AllyList = "3;5;7;8"
+ai4Color = green
+ai4Collectors = 3
+ai4GeyserAttachments = 2
+ai4TimeBetweenMoves=5
+ai4BridgeDrawRate=5
+ai4Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+
+ai5Name = Hedut the henchan
+ai5Tech = "{sw_var1}{sw_var2}"
+ai5StartMoney = 1000
+ai5AllyList = "3;4;7;8"
+ai5Color = orange
+ai5Collectors = 3
+ai5GeyserAttachments = 2
+ai5TimeBetweenMoves=5
+ai5BridgeDrawRate=5
+ai5Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS;"
+
+ai7Name = Herit the Hades Warrior
+ai7Tech = "{sw_var1}{sw_var2}{sw_var4}"
+ai7StartMoney = 1000
+ai7AllyList = "3;4;5;8"
+ai7Color = cyan
+ai7Collectors = 3
+ai7GeyserAttachments = 2
+ai7TimeBetweenMoves=5
+ai7BridgeDrawRate=5
+ai7Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+
+ai8Name = Heceant the Senior henchan
+ai8Tech = "{sw_var1}{sw_var2}{sw_var3}{sw_var4}"
+ai8StartMoney = 2000
+ai8AllyList = "3;4;5;7"
+ai8Color = purple
+ai8Collectors = 3
+ai8GeyserAttachments = 2
+ai8TimeBetweenMoves=5
+ai8BridgeDrawRate=5
+ai8Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+
+[init]
+<$Config,sw_m8=1>
+<$Config,sw_m1=0>
+<$Config,sw_m2=0>
+<$Config,sw_m3=0>
+<$Config,sw_m4=0>
+<$Config,sw_m5=0>
+<$Config,sw_m6=0>
+<$Config,sw_m7=0>
+<$Config,sw_m9=0>
+<$Config,sw_m10=0>
+<$Config,sw_m11=0>
+<$Config,sw_m12=0>
+<$Config,sw_m13=0>
+<$Config,sw_m14=0>
+<$Config,sw_m15=0>
+<$Config,sw_m16=0>
+<$Config,sw_m17=0>
+<$Config,sw_m18=0>
+<$Config,sw_m19=0>
+<$Config,sw_m20=0>
+<$Config,sw_m21=0>
+<$Config,sw_m22=0>
+<$Config,sw_m23=0>
+<$Config,sw_m24=0>
+<$Config,sw_m25=0>
+<$Config,sw_m30=0>
+
+[options]
+[A.]
+<$Playsound,forRain2.wav>
+
+                                      <h2>Defending Rain Village<a href="#mission8">~[IfortGump.46]</a></h2>
+
+                                        ~[IrainVortex.28]
+<p>
+<i>If the ice cannon gets warm it only shoots water<br>
+                     ---Professor Sclittera at the Nimbian Science Center</i>
+<p>
+When the King of Hades found out of your alliance with Walir the Rain King he became enraged,
+sending his henchman along with his Senior henchman to kill you.  You must now defend Rain
+ Village at all costs<br>
+or suffer the ~rALTAR~.!
+<p>
+            <a href="cmd:ShowTechnology,55"> ~[IfortGump.50] </a>                                     <a href="cmd:DoNothing,0">~[IfortGump.22] </a>                                   <a href="cmd:Tell,guideHades.overview">~[Ipriest.13]</a><br>
+<a href="cmd:ShowTechnology,55">Review Knowledge</a>             <a href="cmd:DoNothing,0">Start the defendin...</a>             <a href="cmd:Tell,guideHades.overview">I wanna Leave!</a>
+$OnExit= ,PlaySound,priestMove3.wav
+$Button= ,Tell,A.
+
+
+
+[ai7PriestDead]
+The {sw_god1} speaks to you:<br>
+<i>"You have help aid my warriors in battle and have defended the Rain village.
+For that, I grant you knowledge:</i>
+$Menu=~[IrainBattery.*]~yRain Battery,GetTechnology,76
+
+[ai6PriestDead]
+You hear a voice in your head. It's quiet, but it gets your attention, immediately.
+It's the {sw_god1}, and he says to you:<br>
+<i>"You need to learn the power of rain. I give you knowledge:</i>
+$Menu=~yRain Cannon~[IrainCannon.3],GetTechnology,76
+
+[ai3PriestDead]
+The Furies must be battling amongst themselves! You find that you have gained some
+energy from the Furies!
+<$ChangeMoney,1500>
+$Button=OK,DoNothing,0
+
+[ai5PriestDead]
+The sky grows dark, and in an instant, there is a thunderous roar as Storm Crystals
+rain down upon you! You quickly gather them up, and continue on your mission of defending
+the Rain village...
+<$ChangeMoney,5000>
+$Button=OK,DoNothing,0
+
+[ai2TempleHalfDead]
+<h2>When I'm finished with the King of Water I'll get you.</h2>
+                                    <i>--Herceant</i>
+$Button=OK,DoNothing,0
+
+[ai2TempleDead]
+The Rain King says to you:
+<h2><i>"Ally, I can no longer build bridges.  Please aid me before I lose my knowledge to Hades."</i></h2>
+$Button=OK,DoNothing,0
+
+[ai2PriestCaptured]
+Walir the Rain King sends you an urgent message:
+<h2><i>"If you do not save me - all is lost"</i></h2>
+$Button=OK,DoNothing,0
+
+[ai2PriestDead]
+As Walir the Rain King is sacrificed, his last words are:
+<i>"You are next.  Run!  Run for your life.</i>
+$Button=OK,DoNothing,0
+
+[Succeeded][BadTeamDead]
+                                       <h2>Success!</h2>
+You have repelled {sw_hades} forces for now, but there's no time to waste!
+<p>
+You hear that the {sw_god5} has scaled a massive attack on Rain City. The Rain Fury
+requests your assistance, and not being too bright, or thinking about the consequences,
+you immediately agree!
+<$Config,sw_m8=0>
+<$Config,sw_m14=1>
+<$Config,sw_difficulty1=0>
+<$Config,sw_mvar0=6000>
+<$Config,sw_mvar2=3>
+<$Config,sw_mvar3=1>
+<$Config,sw_mvar4=3>
+<$Config,sw_difficulty1=0>
+$Button=Begin the Evacuation of Rain City,MissionBegin,sw_m14
+
+[Failed]
+<h2>You get a message from the Rain Fury.</h2>
+<br>
+<i>"You let me down Priest."</i>
+<p>
+You see a puff of smoke.<br>
+Before you, stands the {sw_god5}, in all his evil glory!
+<p>
+You stagger and fall to your knees before him. You cry out:
+~I"King Hades I am sorry I failed you!  Please give me a chance to join you now
+so I can get the Rain Fury."<br>
+King {sw_hades}, looks at you in disgust.<br>
+<i>"Get off your knees, groveler. It's too late to switch sides now.
+Don't worry. I know that you won't fail me again."</i>
+<p>
+With that, the god of ~[IbombExplodeLarge.1]~kDeath~.~[IbombExplodeLarge.1] leaves you, whining and wimpering on the ground.
+You feel a chill run up your spine as you await your soul to be sacrificed.
+
+<$Config,sw_m8=0>
+<$Config,sw_m24=1>
+$Button=OH NO! Not Hades Altar!,MissionBegin,sw_m24
+
+[END]

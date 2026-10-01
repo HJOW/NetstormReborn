@@ -1,0 +1,75 @@
+[Header]
+missionType = "Tutorial"
+missionNumber = 3
+moreGeysers = 1
+
+myStartMoney = 4000
+myTech = "sunCannon;sunArcher;sunBlocker;thunderbattery;thunderarcher;thunderblocker;thundercannon;sunBalloon;sunAviary"
+myAllyList = ""
+
+title = "Scout"
+
+ai2Name = "Thunder Scout" 
+ai2Tech = "sunArcher;sunBlocker;sunBalloon;sunAviary;sunCannon;thunderbattery;thunderarcher;thunderblocker;thundercannon;" 
+ai2StartMoney = 2000
+ai2GeysersAttachments = 4
+ai2Collectors = 10 
+ai2TimeBetweenMoves = 1 
+ai2AllyList = "" 
+ai2color = red
+ai2BridgeDrawRate = "1"
+ai2Ability="!USE_PRIEST_TO_COLLECT"
+
+[@1]
+<h2>~rThunder Scout</h2>
+<p>Time for you to die!
+
+[@2]
+<h2>~wYOU</h2>
+<p>Not today!
+
+[Options]
+
+[A.]
+<h2>Scout</h2> 
+<i>"Sometimes stealth can be the most powerful strategy"<br> 
+--Unknown</i>
+
+<p>A thunder Scout has been seen scouting the area for our location, if we are seen the scout will report how many of us there are, for this reason only you will be sent to eliminate this scout.
+After the battle we should expect an attack from the High Command Of Thunder!
+
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[BadTeamDead]
+<h2>Congratulations! </h2> 
+<p>You now must return to base and prepare for the attack!
+
+<$Config,Done{mission.filename}=1> 
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,First_Wave
+
+[Failed]
+<h2>Failure!</h2> 
+<p> 
+You have let your clan become the laughing stock of the entire world of nimbus, Your Lord sends your soul to hell!
+$Button=Continue,Tell,TryAgain
+
+[ai2TempleHalfDead]
+<h2>~rThunder Scout</h2>
+<p>Hmm your quite a challenge, but it ends now!
+
+[ai2TempleDead]
+<h2>~wYOU</h2>
+<p>Yes you are quite right! It ends NOW!!
+
+[ai2Priestcaptured]
+<h2>~rThunder Scout</h2>
+<p>Hah what do i care? you will soon be crushed!!!
+
+[ai2PriestDead]
+<h2>~wYOU</h2>
+<p>I hate people with ego`s as huge as their isle`s!
+
+[END] 

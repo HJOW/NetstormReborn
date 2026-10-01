@@ -1,0 +1,67 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 1
+
+myStartMoney = 9000
+myTech = "windbattery;sunFence;sunCannon;"
+myAllyList = ""
+
+title="Out Numbered"
+
+ai2Name = "Thunder Demon"
+ai2Tech = "thunderBattery;thunderCannon;thunderblocker;bulf"
+ai2StartMoney = 5000
+ai2GeyserAttachments = 4
+ai2Collectors = 1
+ai2TimeBetweenMoves = 10
+ai2AllyList = ""
+ai2color = red
+ai2Ability=""
+ai2BridgeDrawRate = 4
+
+
+[Options]
+
+[A.]
+~[Iicon.6]<h2>Out Numbered</h2>
+<i>"Dont rely on facing this thunder demon head on"<br></i>
+--A little birdy  
+<p>Here one of the thunder demons has got you out numbered.  You must use your head to defeat this one.
+<p>
+~[Ipriest.1]~[Ipriest.2]~[Ipriest.3]~[Ipriest.4]~[Ipriest.5]~[Ipriest.6]~[Ipriest.7]
+
+$Button=Check out whatcha got,ShowTechnology,55
+$Button=GO FOR IT!!!,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+Argh!! Lord Thundus will not be pleased.
+<$Config,Done{mission.fileName}=1>
+$Button=Go away,MissionAbort,0
+$Button=Ready for more???,MissionBegin,Battle2
+
+[ai2PriestDead]
+<h1>Message from Thunder demon:</h1>
+<p>
+You are only delaying the inedible...
+<p>
+~[Imana.1]~[Imana.2]~[Imana.3]~[Imana.4]~[Imana.5]~[Imana.6]
+
+[ai2TempleDead]
+<h1>Message from Thunder demon</h1>
+<p>
+RRRRR....We will still prevail!
+
+[Failed][GoodTeamdead]
+<h1>Message from Thunder demon:</h1>
+<p>
+Lord Thundus will be pleased.  We will soon have Nimbus!!!
+
+$Button=Give it another shot,Tell,TryAgain
+$Button=Leave cause you suck,missionabort,1
+
+
+[END]

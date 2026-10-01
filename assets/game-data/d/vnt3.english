@@ -1,0 +1,66 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = "14"
+moreGeysers = "0"
+randGeysers = "0"
+
+myStartMoney = "40000"
+myTech = "thunderBattery;thunderCannon;"
+myAllyList = ""
+
+title = "Thunder 3"
+
+ai2Name = "Lord of Wind"
+ai2Tech = "windArcher;windBattery;sunBlocker;"
+ai2StartMoney = "100000"
+ai2AllyList =3
+ai2Color = "red"
+ai2Collectors = "1"
+ai2BridgeDrawRate = "0"
+ai2GeyserAttachments = "0"
+ai2TimeBetweenMoves = "0"
+ai2Ability = ""
+
+ai3Name = "Lord of Rain"
+ai3Tech = "rainCannon;rainBattery;sunBlocker;"
+ai3StartMoney = "100000"
+ai3AllyList = 2
+ai3Color = "white"
+ai3Collectors = "1"
+ai3BridgeDrawRate = "0"
+ai3GeyserAttachments = "0"
+ai3TimeBetweenMoves = "0"
+ai3Ability = ""
+
+
+
+[Options]
+
+[A.]
+<h2>Thunder 3</h2>
+<i>~I"The shot of a thousand cannons is but a whisper in the furies' ear."<br>
+--~.Jon Helkinsen, High Priest</i>
+<p>You are poised for the kill, when suddenly pain bursts into your head, the Thunder Demon speaks to you once more ~I"You have done well, but it's no fun if your opponent doesn't have a chance.", "I have removed some of your knowledge, 
+ so  you must attack fast." "This is the true nature of Thunder, ahahahahahahahahahahahahahaha"~. You recover slowly, to see your opponents attack mounting. This is it.
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Domination!</h2>
+<p>~IYou have achieved the impossible. You have defeated the followers of Wind and Rain. You alone have proven your right to rule Nimbus in the name of Thunder. For now there will be rejoicing, the celebrations of what should theoretically be peacetime are long and merry. 
+In weeks to come you shall long for excitement, feel the thirst that only destruction and chaos can quench. You will grow more and more frustrated, the pressure building like a blocked volcano, with much the same consequences. The concept of 'mercy' and 'charity' will no longer exist.
+ You, possesed by the thunder demon that once spared you life but not your soul, will torture innocent Nimbians, wage wars against your own followers simply for the satisfaction of destruction. None will dare oppose you, lest their already doomed lifespans shorten further.
+ Until one day. A brave hero will rally the people of Nimbus against you. Many will follow him, and for a time you will enjoy true and bitter warfare, but evil can never triumph, and this hero will destroy you, reuiniting Nimbus and banishing your soul for an eternity of damnation. This day will come.  
+
+<$Config,vn_donevnt3=1>
+$Button=Leave Mission,tell,guidevn.overview
+
+
+[Failed]
+<h2>You died. No chances left.</h2>
+<p><$Config,vn_failthunder=1>
+<$Config,vn_death=1>
+$Button=Death,MissionBegin,vnd3
+
+[END]

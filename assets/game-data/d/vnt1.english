@@ -1,0 +1,60 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = "12"
+moreGeysers = "0"
+randGeysers = "0"
+
+myStartMoney = "25000"
+myTech ="thunderBattery;thunderCannon;thunderBlocker;"
+myAllyList = ""
+
+title = "Thunder 1"
+
+ai2Name = "Soon-to-be-dead-bloke."
+ai2Tech = "windArcher;sunBlocker;sunFence;windBattery;windBlocker;sunBalloon;"
+ai2StartMoney = "100000"
+ai2AllyList = ""
+ai2Color = "red"
+ai2Collectors = ""
+ai2BridgeDrawRate = "0"
+ai2GeyserAttachments = ""
+ai2TimeBetweenMoves = "0"
+ai2Ability = ""
+
+[Options]
+
+
+[@600]
+hmmmm..... okay then, you can have some cash...
+<$ChangeMoney,20000>
+[A.]
+<h2>Destruction on a Budget</h2>
+<i>~I"What sins have we committed to deserve such power?"<br>
+--~.Captain Villus Spakesmere</i></br>
+~I~k You slowly regain consciousness in the dark gloom that is the void between the living and the dead. You have lost your life twice before and now must save your soul. You feel a prescence all of a sudden, though you cannot sense anything in the conventional way. The Thunder demon speaks to you telepathically. "Your soul is mine, and now I-" The Demon starts to speak,
+ but with a surprising awareness for one of your disposition, you fight back. A terrible psychic combat ensues, after a time, you do not know how long as time is meaningless here, you sense your adversary weakening. With a tremendous force of will and through blinding pain you make a desparate effort to force him from you. Everything seems to fade, though it was black anyway, and as you lose consciousness,
+ you hear the Demon's fading laughter. ~.~x You awaken on your familiar island, back in the realm of the living, but you are not as before, you can no longer resist crushing your foes mercilessly, no longer can you make alliances, you are now controlled by the dark urges that lead the chosen ones of the thunder fury. Half possessed, half mad, you now battle dementedly onwards towards the goal of Domination.......
+<p> Now you must prove you can spend wisely, then the true power of thunder will become yours.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][ai2PriestDead]
+<h2>Victory</h2>
+<p>~I"When your Thunder cannons score victories for you people, you will feel the glory of that victory surging toward your heart like a heat."
+---~.The Book of Nimbus.
+
+<$Config,vn_donevnt1=1>
+<$Config,vn_notdonevnt1=0>
+$Button=Next Mission,MissionBegin,vnt2
+
+
+[Failed]
+<h2>You have been killed.</h2>
+<p>Abandoned by all the furies as a useless pawn, what now awaits your eternal soul?
+
+$Button=Save you skin,MissionBegin,vnd3
+<$Config,vn_failthunder=1>
+
+[END]

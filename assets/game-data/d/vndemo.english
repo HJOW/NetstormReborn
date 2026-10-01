@@ -1,0 +1,126 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = "0"
+moreGeysers = "0"
+randGeysers = "0"
+stuffRefreshRate= "0"
+
+myStartMoney = "10000"
+myTech = 
+myAllyList = ""
+
+title = "Domination Demo"
+
+ai1Name = "High priest of Wind"
+
+ai1StartMoney = "100000"
+ai1Tech = 
+ai1AllyList = ""
+ai1Color = "blue"
+ai1Collectors = ""
+ai1BridgeDrawRate = "1"
+ai1GeyserAttachments = ""
+ai1TimeBetweenMoves = "0"
+ai1Ability = ""
+
+
+ai2Name = "High priest ofThunder"
+ai2Tech = "thunderCannon;thunderBattery;thunderBlocker;"
+ai2StartMoney = "100000"
+ai2AllyList = ""
+ai2Color = "white"
+ai2Collectors = ""
+ai2BridgeDrawRate = "1"
+ai2GeyserAttachments = ""
+ai2TimeBetweenMoves = "0"
+ai2Ability = ""
+
+ai3Name = "High priest of Rain"
+ai3Tech = "rainBattery;rainCannon;rainAviary;sunBlocker;"
+ai3StartMoney = "100000"
+ai3AllyList = ""
+ai3Color = "yellow"
+ai3Collectors = ""
+ai3BridgeDrawRate = "1"
+ai3GeyserAttachments = ""
+ai3TimeBetweenMoves = "0"
+ai3Ability = ""
+
+Demo=1
+DemoRestartTimer=500
+
+[Options]
+
+
+[Demo]
+<h2>Domination Demo</h2>
+<i>~I"Know that the furiest have divided us. The wise ancients say that the Furies will unite us again in the end times."<br>
+--Wise Nimbian</i>
+<p>Oh no they won't. The end times are here. Now is the time to choose your alignment, be it Rain, Wind, or Thunder. Now are the times when the Furies wage war with no mercy, and it cannot end until one Fury has achieved total DOMINATION.
+
+
+$Button=About this Campaign,Tell,campaign
+$Button=Play Mission,DoNothing,0
+
+[campaign]
+<h1>~kDomination v2.0~.</h1>
+<br>To reset the campaign at any time, simply select the ~lRain Trial~. or the ~yWind Trial~.. The demo will run in 20 seconds if you do not make a selection from the list below.</br>
+$Menu= ~[Irune.A0] Special Missions (Thunder+Death),tell,special
+$Menu= ~[Irune.A0] Campaign facts,Tell,facts
+$Menu= ~[Irune.A0] Future improvements,Tell,improvements
+$Menu= ~[Irune.A0] Contact me,Tell,contactme
+$Menu= ~[Irune.A0] Other stuff,Tell,stuff
+$Menu=~rPlay Demo~.,DoNothing,0
+$Timeout=20,DoNothing,0
+[special]
+<h1>~kDeath Missions</h1>~.
+<br>These are an idea to punish failure. True, you can avoid it by quitting the campaign before you get sacrificed, or choosing restart, but I could have prevented this by using variables which assume you die when you start a mission and turn off if you succeed, but I didn't do this as it would get very frustrating if you clicked on the mission by accident. I ask you to enter the true spirit of the campaign and let death take you when it should.</br>
+<br></br>
+<br>~rThunder Missions</br>~.
+<br>These are hidden in the campaign. This is done by a varaible (several actually) which allows you to access the missions. I think it adds a little challenge, trying to find it. If you want to know how, click below</br>
+$Button=The Secret,Tell,secret
+$Menu=Back,Tell,campaign 
+
+[secret]
+<h1>~rSecret Missions~.</h1>
+Die three times to access Thunder Missions.
+~[Ithundercannon.A18]
+$Menu=Back,tell,special
+
+[facts]
+<h1>~rThe Facts~.</h1>
+<br>This campaign has 8 routes to the end, not counting if you die or find special missions.</br>
+<br>The only difference between choosing Rain and Wind is the tech, and a slightly different final mission.</br>
+<br>It took me about two months to code this campaign, not bad considering I didn't know a thing about coding at the time.</br> 
+<br>This campaign is rather tricky in places. I tried to make it challenging for experienced players, but every mission can be done.</br>
+<br>This campaign ~Idoes~. use the variable naming conventions, in everywhere I can think of (Including mission names). I use the prefix vn. I ought to tell NEC this sometime.</br>
+$Menu=Back,Tell,campaign
+
+[improvements]
+<h1>~rThings to improve~.</h1>
+<br>This campign has several flaws I intend to improve on. I'm still learning the limits of variables and suchlike, so better things are to come.</br>
+<br>1 I want to find a way to get the enemy priest to begin a sacrifice after a certain time limit. It is a little frustrating when you run out of time but the priest you are saving isn't even on the altar anymore</br>
+<br>2 I will make more use of the 'interesting' tech that can be built-eg growing Ice Tower ( like normal but free and you wait for it to recover), Trees, Dust Devils,etc</br>
+<br>3 I will hide the special missions a little better</br>
+<br>4 I will spend more time thinking up the storyline</br>
+$Menu=Back,Tell,campaign
+
+[contactme]
+<h1>~rContact Me~.</h1>
+Wow, I didn't think anyone would look in here. If you want to contact me for any reason, email me at ~l~E<A HREF="mailto:venom@freeola.net">venom@freeola.net</A>~.. I've got a website at ~o~E<a href="http://www.venom.freeola.net">www.venom.freeola.net</a>~. It's about Netstorm, and it should be fully working by now.
+My Netstorm name is ~l~EVenom~r~B~E††~k>~N~E~l
+
+$Menu=Back,Tell,campaign
+ 
+[stuff]
+<h1>Miscellaneous</h1>
+<br>Well, firstly I must give credit to those whose work on editing inspired and helped me to learn the process of coding a Netstorm campaign. I thank Chamber for the time saving .english creator, rahns guide to level editing was also helpful, and my understanding was also much improved by looking at the choice .english files, so thanks to swelb for that. The main help though was of course, NEC. I thank Higlander and the others for setting up a great website whick expains things brilliantly.</br>
+<br>What was the hardest thing about making this campaign? Making the guide file! I lost count of the amount of times Netstorm crashed because my guide file was too big. This was because I didn't understand the OR command as applied to variables. As far as I can tell it only registers variables that are on, you can't tell it do do something if ~IX~. is off OR ~IY~. is off.</br>
+<br>Next, be ready for my next Netstorm campaign, it's even more ambitious than this one was but thats all I'm saying at the moment. Keep an eye on my website too. I'm still learning HTML but theres some great stuff lined up for that site. You won't see me on Nestorm much, maybe weekday evenings or saturday afternoon, UK time, but I'm only on about once/twice a week after my parents read the last phone bill!! :(
+$Menu=Back,Tell,campaign
+[Succeed][BadTeamDead]
+
+[Failed]
+
+[END]

@@ -1,0 +1,91 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = "17"
+moreGeysers = "1"
+randGeysers = "1"
+
+myStartMoney = "5000"
+myTech = "all;outpost;"
+myAllyList = ""
+
+title = "Invasion"
+
+ai2Name = "Thunder Marshall"
+ai2Tech = "thunderbattery;bulf;thundercannon;thunderarcher;thunderblocker;thunderfence;"
+ai2StartMoney = "30000"
+ai2AllyList = "3;4;5;"
+ai2Color = "red"
+ai2Collectors = "5"
+ai2BridgeDrawRate = "0"
+ai2GeyserAttachments = "0"
+ai2TimeBetweenMoves = "0"
+ai2Ability = ""
+
+ai3Name = "Wind Major"
+ai3Tech = "windbattery;windwalker;windballoon;windarcher;windaviary;windblocker;"
+ai3StartMoney = "30000"
+ai3AllyList = "2;4;5;"
+ai3Color = "white"
+ai3Collectors = "5"
+ai3BridgeDrawRate = "0"
+ai3GeyserAttachments = "0"
+ai3TimeBetweenMoves = "0"
+ai3Ability = ""
+
+ai4Name = "Rain Soldier"
+ai4Tech = "rainbattery;rainwalker;rainballoon;rainblocker;raincannon;rainFence;rainaviary;"
+ai4StartMoney = "30000"
+ai4AllyList = "2;3;5;"
+ai4Color = "green"
+ai4Collectors = "5"
+ai4BridgeDrawRate = "0"
+ai4GeyserAttachments = "1"
+ai4TimeBetweenMoves = "0"
+ai4Ability = ""
+
+ai5Name = "Sun Defender"
+ai5Tech = "sunWalker;sunBalloon;sunFence;sunAviary;sunCannon;sunBlocker"
+ai5StartMoney = "30000"
+ai5AllyList = "2;3;4;"
+ai5Color = "purple"
+ai5Collectors = "5"
+ai5BridgeDrawRate = "0"
+ai5GeyserAttachments = "0"
+ai5TimeBetweenMoves = "0"
+ai5Ability = ""
+
+[Options]
+
+[A.]
+<h2>~lInvasion</h2>
+<i>"They attacking and attacking..."<br>
+--Munder, about aviary tech</i>
+<p>Cause you dont help to your friend Munder, Evil King send his Invaders on you. So now know you must defend your own lands. Why you dont help to yuor olf friend Munder? Those Invaders are strong and they have a good amount of money (Evil King recruit them for big money), so its going to be hard battle (shit hard...). Team of Invaders want to kill you. Good luck!
+
+$Button=Its too hard for me!,Tell,Campaign
+$Button=Check your Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded] [BadTeamDead]
+
+<h2>~lCongratulations!</h2>
+<i>"I became to always win hard battles"<br>
+--Sunder</i>
+<p>Yes! You killed those Invaders and now want to kill Evil King very much! You going to the frontier of Evil King's kingdom.
+
+<$Config,Done{mission.fileName}=1>
+<$Config,Donesh3_2a=0>
+<$Config,Donesh3_n_1a=1>
+$Button=Its too hard for me!,Tell,Campaign
+$Button=Proceed,MissionBegin,sh3_n_2
+
+
+[Failed]
+<h2>~lYou lose...</h2>
+<p>Don't worry if you lose, this is Shit Hard!
+
+$Button=Its too hard for me!,Tell,Campaign
+$Button=Try again!,Tell,TryAgain
+
+[END]

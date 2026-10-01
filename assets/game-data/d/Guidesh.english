@@ -1,0 +1,15 @@
+title = "~[Iplayerbanner.9]~j~E~Shit Hard Antology~[Iplayerbanner.9]"
+
+[Overview]
+
+<background="nsstart">
+
+<h2>~[Itreethree.4]~lShit Hard Antology~[Itreethree.5]</h2>
+<i>~E"Hahaha try to beat me!"<br>
+--God of Thunder</i>
+<p>~EThis is the antology of Shit Hard maps.They are hardest maps ever, so try to win and you will see who rocks. Don't worry if you lose, this is Shit Hard! By the way all maps playtested and finishable (except Shit Hard I). You even can find some tips. More information (lot more) in the Information section, so check it! I hope Shit Hard is hard enough for you. Warning! Those maps not for newbies (shit hard!), only for veterans! First of all check the new campaign Shit Hard III (First war of Nimbus). Its great standalone project. After you will finish with maps I would like ask you: ~q"How many time you spent playing with maps and how many attempt you did?"~w Good luck!<br><br> ~E~[Iflare.C20]~wM~qa~jf~I~i¡~.~E~[Iicon.12]~B~wZ~[Iicon.12]~l—›~j¿?~[Iraincannonmissile.08]
+
+$Button=Its too hard for me!,Tell,Campaign
+$Button=Go Directly to Shit Hard III,MissionBegin,sh3
+$Button=Proceed,MissionBegin,sh_over
+

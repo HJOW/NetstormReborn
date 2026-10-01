@@ -1,0 +1,115 @@
+[Header]
+missionType = "Tutorial"
+missionNumber = 5
+moreGeysers = 1
+
+mystartmoney = 1500000
+myTech = "windAviary;windArcher;windBlocker;windBalloon;windBattery;sunAviary;sunFence;sunCannon"
+
+title = "Ambush!"
+
+ai2Name = "Dark Brother of Sun"
+ai2Tech = "sunArcher;sunBlocker;sunBalloon;sunFence;sunCannon;windBattery"
+ai2StartMoney = 30000
+ai2GeysersAttachments = 15
+ai2Collectors = 15
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3;4;5"
+ai2ability = "!Attach_To_Enemy_Island;!Use_Priest_To_Collect"
+ai2color =
+
+ai3Name = "Dark Brother of Rain"
+ai3Tech = "rainBalloon;rainBattery;rainBlocker;rainCannon;rainFence;rainWalker"
+ai3StartMoney = 30000 
+ai3GeysersAttachments = 15
+ai3Collectors = 15
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2;4;5"
+ai3ability = "!Attach_To_Enemy_Island;!Use_Priest_To_Collect"
+ai3color =
+
+ai4Name = "Dark Brother of Wind"
+ai4Tech = "windWalker;windArcher;windBlocker;windBalloon;windBattery"
+ai4StartMoney = 30000
+ai4GeysersAttachments = 15
+ai4Collectors = 15
+ai4TimeBetweenMoves = 1
+ai4AllyList = "2;3;5"
+ai4ability = "!Attach_To_Enemy_Island;!Use_Priest_To_Collect;!Collect_Storm_Power"
+ai4color =
+
+ai5Name = "Dark Brother of Thunder"
+ai5Tech = "thunderArcher;thunderBattery;thunderBlocker;thunderCannon;thunderFence;bulf"
+ai5StartMoney = 30000
+ai5GeysersAttachments = 15
+ai5Collectors = 15
+ai5TimeBetweenMoves = 1
+ai5AllyList = "2;3;4"
+ai5ability = "!Attach_To_Enemy_Island;!Use_Priest_To_Collect"
+ai5color =
+
+ai6Name = "Colonel Boogerman"
+ai6Tech = "windWalker;windArcher;windBlocker;windBalloon;windAviary;windBattery"
+ai6StartMoney = 50000
+ai6GeysersAttachments = 15
+ai6Collectors = 15
+ai6TimeBetweenMoves = 1
+ai6AllyList = "1"
+ai6ability = "!Use_Priest_To_Collect"
+ai6color =
+ai6BridgeDrawRate = 1
+
+ai7Name = ""
+ai7Tech = ""
+ai7StartMoney =
+ai7GeysersAttachments = 0
+ai7Collectors = 0
+ai7TimeBetweenMoves = 0
+ai7AllyList = ""
+ai7color =
+
+ai8Name = ""
+ai8Tech = ""
+ai8StartMoney = 
+ai8GeysersAttachments = 0
+ai8Collectors = 0
+ai8TimeBetweenMoves = 0
+ai8AllyList = ""
+ai8color =
+
+[Options]
+
+[A.]
+<h2>Ambush!</h2>
+<i>"What the heck?"<br>
+--Unknown </i>  
+
+<p>When you finished your previous battle, you salvaged an enormous amount of Storm Power from the deceased Commander Noizer. While going back to the DDC-Center to deposit that storm power, you were ambushed by the Dark Brothers of Sun, Wind, Rain and Thunder. Colonol Boogerman was just in time to reinforce you, but the battle is about to begin.
+
+<p>Your mission is to destroy the Evil Brothers.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[BadTeamDead]
+<h2>Well done!</h2>
+<p>
+Well done! We've fought our way through the Evil Brothers!
+
+<$Config,Done{mission.filename}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,Razorianwar6
+
+[ai6PriestDead]
+<p>Luitenant Martin has been defeated! How could you let it happen?!
+
+$Button=Continue,Tell,TryAgain
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+The evil brothers have defeated you and took the enormous amount of Storm Power!
+
+$Button=Continue,Tell,TryAgain
+
+[END]

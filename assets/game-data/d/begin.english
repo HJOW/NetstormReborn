@@ -1,0 +1,65 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 1
+
+myName="mosquito"
+myStartMoney = 5400
+myTech = "sunWalker;sunArcher;rainBattery"
+
+title="Begin"
+
+ai2Name = "Son of Sun"
+ai2Tech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunAviary;sunCannon;sunFence"
+ai2StartMoney = 3000
+ai2GeyserAttachments = 2
+ai2Collectors = 3
+ai2TimeBetweenMoves = 7
+ai2AllyList = ""
+ai2color = red
+
+[Options]
+
+[A.]
+<h2><i>                         ~[IsunWalker.C6]</i> The war begins! <i>~[IsunWalker.C3]~[Inugget.3]</i></h2><br>
+
+<i>"But master Fury, I am just a <i><h2>TWIT </ih2><i> (</i><i><h2>T</ih2>ransient <i><h2>W</ih2>arrior <i><h2>I</ih2>n <i><h2>T</ih2>raining<i>)!"<br>
+                                                                                         --mosquito<br><br>
+"Shut up, you moron, and fight like you've never fought before. If you
+please me, I might bestow upon you knowledge and power!"<br>
+                                                                                         --Sun God</i><br>
+<p>
+Well, this is it! You have been granted an audience with the Sun Fury, if you
+can prove your worth. Destroy the enemy, and the furies may bestow upon you
+unimaginable knowledge and power!
+<p>
+Hint.... as always, the key to victory is unit placement, stormpower, and stealth...
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Leave Mission,MissionAbort,0
+$Button=Play Mission,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+You've defeated the enemy! The Sun Fury is well pleased!
+He has granted you the power of the Suncannon!
+<i>~[IsunCannon.3]</i>
+
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,lookout
+
+
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+Oh no! The son of SUN was too much for you!  Get back in there and
+try again!
+$Button=Continue,Tell,TryAgain
+
+
+[END]

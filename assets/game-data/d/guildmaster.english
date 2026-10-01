@@ -1,0 +1,55 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 6
+moreGeysers = 0
+
+myStartMoney = 30000
+myTech = "sunCannon;sunArcher;sunAviary;sunBalloon;sunBlocker;sunFence;rainBattery;rainCannon;rainFence;rainBlocker;rainWalker;rainAviary;rainBalloon;windWalker;windBattery;windBlocker;windArcher;windBalloon;windAviary"
+
+title="The Final Confrontation"
+
+ai2Name = "Guildmaster Kaloth"
+ai2Tech = "rainAviary;rainBlocker;rainBattery;thunderCannon;thunderBattery;rainBalloon;thunderBlocker"
+ai2StartMoney = 30000
+ai2GeyserAttachments = 4
+ai2Collectors = 10
+ai2TimeBetweenMoves = 1
+ai2AllyList = ""
+ai2color = red
+ai2BridgeDrawRate = 1
+ai2Ability="!USE_PRIEST_TO_COLLECT"
+
+[Options]
+
+[A.]
+<h2>The Final Confrontation</h2>
+<i>"Revenge is the sweetest nectar a Nimbian can taste."<br>
+--Njaal Stormcaller, Nimbian Sage</i>  
+<p>Now it is time for revenge or death. Nothing less than your entire effort will win the battle this day. Good luck, you'll most definitely need it.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>CONGRATULATIONS!</h2>
+<p>
+The Guildmaster has been defeated and the beaurocratic guild has been destroyed! You decide to throw a huge banquet for all Nimbians, and it is certainly a banquet to be remembered! However, in the middle of the banquet you have to leave because you are feeling very ill.
+
+<p>The best doctors in the whole land are called in to save you, each with his own remedies, but none of them seem to work. For days and days your condition gets gradually worse and worse. On the seventh day, early in the morning, the Grim Reaper appears in your bedroom to claim his prize. But as you brace yourself for death, his touch does the opposite - it heals you! The Reaper speaks:
+
+<p><i>"You are to be the greatest of my warriors, mortal. I have healed you and there is one reason for this - you must go out and form the greatest guild of all time. And this guild shall be called the Reapers."
+
+<p>Soon afterwards you recovered, and remembering the Grim Reaper's words you formed the greatest of guilds! And so this is how the Reaper guild was created, it survives today led by its 56th leader, Chamber.
+
+<p><A HREF="http://www.geocities.com/TimesSquare/Realm/7645/">The Reaper Guild Page</A>
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+The Guildmaster is truly too mighty for you to defeat. Will you stop now after all this time or are you ready to prove yourself as the greatest Nimbain warrior ever?
+$Button=Continue,Tell,TryAgain
+
+[END]

@@ -1,0 +1,89 @@
+[Header]
+missionType="Tutorial"
+missionNumber=2
+moreGeysers=0
+randGeysers=0
+denySalvage=1
+myStartMoney=0
+myAllyList="3;4;5;6;7;8"
+
+ai2Name="Galar"
+ai2StartMoney=0
+ai2AllyList=""
+ai2Off=1
+
+ai3Name="Galar's Mother"
+ai3StartMoney=0
+ai3AllyList="1;4;5;6;7;8"
+ai3Off=1
+
+ai4Name="Galar's Father"
+ai4StartMoney=0
+ai4AllyList="1;3;5;6;7;8"
+ai4Off=1
+
+ai5Name="High Priest"
+ai5StartMoney=0
+ai5AllyList="1;3;4;6;7;8"
+ai5Off=1
+
+ai6Name="Galar's Closest Friend"
+ai6StartMoney=0
+ai6AllyList="1;3;4;5;7;8"
+ai6Off=1
+
+ai7Name="~bTHE FURIES~."
+ai7StartMoney=0
+ai7AllyList="1;3;4;5;6;8"
+ai7Off=1
+
+ai8Name="Spectators"
+ai8StartMoney=0
+ai8AllyList="1;3;4;5;6;7"
+ai8Off=1
+
+title="Funeral For A Friend"
+
+[Options]
+[A.]
+<h2>Funeral For A Friend</h2>
+It has been weeks since that fatal night for Galar. You, unfortunately, have been affected the most. Besides loss of appetite and sleeplessness, you have tried to kill yourself many times. Too many to count. A psychiatric analysis proved that you are clinically dcepressed. Even though you are... you still try to keep a positive attitude in front of others. But it won't help much for long! The funeral is about to start...
+
+$Button=Let's Begin the Ceremony,DoNothing,0
+
+[@1]
+<p>The High Priest starts the ceremony... Ashes to Ashes... Dust to Dust... Dearly beloved, we are gathered here today to witness the last stage of life... Death. Death is a time of rejoice and happiness for those who have passed on to the other life... If you would be so kind as to place him on the alter and begin the sacrifice.
+
+$Button=SURE,DoNothing,0
+
+[@25]
+<p>Every one starts pouting and crying...
+High Priest: Death is a time of rejoice in which we say good-bye to our loved ones and allow them to pass into the other world.
+
+$Button=I'll try not to cry,Tell,cry
+$Button=Let's Finish it,DoNothing,0
+
+[cry]
+<p>You start to cry half way through the service... You shout:" IT'S NOT FAIR!!!!!!!"
+
+$Button=Continue on in your condition,DoNothing,0
+
+[@50]
+<p>"I can't do this," you say... But your heart is leading you in the right way...
+
+$Button=Continue on,DoNothing,0
+
+[@78]
+NO!!! I CAN'T!!! NOT NOW!!! NOT NOW!!!
+
+$Button=Leave The Ceremony,MissionAbort,0
+$Button=I Must Finish This!,DoNothing,0
+
+[@90]
+IT IS DONE!!! Unfortunately for you, you have broken down and started to break into tears... But you hear a voice, It says, "Do not fear, for I am in a far far better place now. 'Tis a far far better thing I do, that I have ever done... 'Tis a far far better place I goto, than I hve ever know... 
+<Config,Donefreedom2=1>
+
+$Button=You Did It!!!,MissionBegin,freedom3
+$Button=Leave Missions,MissionAbort,0
+
+[END]

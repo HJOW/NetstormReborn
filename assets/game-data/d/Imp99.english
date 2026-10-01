@@ -1,0 +1,162 @@
+[Header]
+missionType = "Tutorial"
+missionNumber = 1
+moreGeysers=1
+randGeysers=0
+myStartMoney = "20000"
+myTech = "outpost"
+myAllyList = "6"
+myProd="outpost"
+ai1Name = "~bYou"
+
+title="Your Death"
+
+ai2Name = "~rImpial Warrior"
+ai2Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;Bulf;sunwalker"
+ai2StartMoney = 30000
+ai2AllyList = "3;4;5"
+ai2GeyserAttachments=10
+ai2Collectors=5
+ai2BridgeDrawRate=0
+ai2TimeBetweenMoves=0
+ai2MoneyRechargeRate=5
+ai2Color = "red"
+ai2Ability = "BUILD_BRIDGES;!USE_PRIEST_TO_COLLECT;ENCIRLCE_ENEMY_ISLAND;BUILD_DIAS;SACRIFICE_ENEMY_PRIEST;CAPTURE_ENEMY_PRIEST"
+
+ai3Name = "~gImp Death Dealer"
+ai3Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainwalker;sunwalker"
+ai3StartMoney = 50000
+ai3AllyList = "2;4;5"
+ai3GeyserAttachments=10
+ai3Collectors=5
+ai3BridgeDrawRate=1
+ai3TimeBetweenMoves=1
+ai3MoneyRechargeRate=8
+ai3Color = "green"
+ai3Ability = "BUILD_BRIDGES;!USE_PRIEST_TO_COLLECT;ENCIRLCE_ENEMY_ISLAND;BUILD_DIAS;SACRIFICE_ENEMY_PRIEST;CAPTURE_ENEMY_PRIEST"
+
+ai4Name = "~oImp Trainee"
+ai4Tech = "sunWalker;sunarcher;sunballoon;suncannon;sunaviary;sunBlocker;sunwalker"
+ai4StartMoney = 10000
+ai4AllyList = "2;3;5"
+ai4GeyserAttachments=5
+ai4Collectors=3
+ai4BridgeDrawRate=2
+ai4TimeBetweenMoves=3
+ai4Color = "orange"
+ai4Ability = "!CONNECT_TO_ENEMY_ISLAND;BUILD_BRIDGES;!USE_PRIEST_TO_COLLECT;!ENCIRLCE_ENEMY_ISLAND;BUILD_DIAS;SACRIFICE_ENEMY_PRIEST;CAPTURE_ENEMY_PRIEST"
+
+ai5Name = "~yImp"
+ai5Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;sunwalker"
+ai5StartMoney = 30000
+ai5AllyList = "2;3;4"
+ai5GeyserAttachments=15
+ai5Collectors=10
+ai5BridgeDrawRate=0
+ai5TimeBetweenMoves=2
+ai5MoneyRechargeRate=5
+ai5Color = "yellow"
+ai5Ability = "BUILD_BRIDGES;!USE_PRIEST_TO_COLLECT;ENCIRLCE_ENEMY_ISLAND;BUILD_DIAS;SACRIFICE_ENEMY_PRIEST;CAPTURE_ENEMY_PRIEST"
+
+[Options]
+[A.]
+<h2>~mY~yo~ku~gr ~wD~oe~ra~bt~qh</h2>
+~.Message from the Imps:<br>
+That's it you *** ****.  You will die!  Welcome, to hell.
+Read the notes.<br>
+$Menu=Ok...I'll read them,Tell,Info
+
+[Info]
+<h2>Notes:</h2><br>
+Ha Ha Ha.  Your angelic fighter has been captured.<br>
+No help here.<br>
+$Button=Jerk!,Tell,HaHa
+
+[HaHa]
+Telepathic Message from the ~yAngelic ~wWarrior:
+You have cannons aimed at you plus you are in a prison.<br>
+You gotta keep moving or the cannons will get you.<br>
+I have set up 3 sun disc throwers to help you.<br>
+Also, I will build a ~rworkshop~w and set up ~ocrossbows ~wfor there ~kspawned temple~w.<br>
+Talk to you later...<br>
+$Button=Ok,DoNothing,0
+
+[Pick2]
+Have Fun +<br>
+Good Luck<br>
+The Virtuous Warrior<br>
+$Button=Cool,DoNothing,0
+
+[@300]
+Here's your tech.<br>
+$Button=Cool,tell,finally
+
+[finally]
+Pick your tech:
+$Menu=~bRain,Tell,A
+$Menu=~kThunder~.,Tell,B
+$Menu=~IWind~.,Tell,C
+$Menu=~ySun,Tell,D
+
+[A]
+<$GetTechnology,76>
+<$GetTechnology,87>
+<$GetTechnology,124>
+<$GetTechnology,129>
+<$GetTechnology,143>
+<$GetTechnology,145>
+<$GetTechnology,156>
+<$GetTechnology,147>
+<$GetTechnology,146>
+$Button=HeeHeeHe,Tell,Pick2
+
+[B]
+<$GetTechnology,77>
+<$GetTechnology,79>
+<$GetTechnology,88>
+<$GetTechnology,125>
+<$GetTechnology,131>
+<$GetTechnology,135>
+<$GetTechnology,148>
+<$GetTechnology,149>
+$Button=HeeHeeHe,Tell,Pick2
+
+[C]
+<$GetTechnology,75>
+<$GetTechnology,86>
+<$GetTechnology,123>
+<$GetTechnology,139>
+<$GetTechnology,140>
+<$GetTechnology,142>
+<$GetTechnology,141>
+<$GetTechnology,137>
+$Button=HeeHeeHe,Tell,Pick2
+
+[D]
+You sure?
+$Button=No,Tell,finally
+$Button=Yes,Tell,DD
+
+[DD]
+<$GetTechnology,71>
+<$GetTechnology,72>
+<$GetTechnology,75>
+<$GetTechnology,85>
+<$GetTechnology,111>
+<$GetTechnology,128>
+<$GetTechnology,136>
+<$GetTechnology,78>
+<$GetTechnology,70>
+$Button=HeeHeeHe,Tell,Pick2
+
+[Succeeded][BadTeamDead]
+<h2>You Have Won!!!</h2><br>
+<p>~.Wow...  That's it...
+$Button=What?,MissionBegin,Imp100
+
+[Failed][ai1PriestDead]
+<h2>Message from the ~kImps~.:</h2>
+<p>~rHa Ha Ha~.  I ~Iknew~. that this ~Bfinal~. ~kchallenge~. was ~ywaaaaaaay~. too hard for ~byou~..
+$Button=Oh yeah?,MissionRestart,0
+
+[END]

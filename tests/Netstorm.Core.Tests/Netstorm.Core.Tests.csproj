@@ -16,4 +16,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Netstorm.Core\Netstorm.Core.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <!-- 원본 exe 없이 다리 표를 검증하는 정적 추출 자료를 테스트 출력에 복사한다. -->
+    <None Update="Fixtures/bridge-tables.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

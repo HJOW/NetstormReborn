@@ -1,0 +1,52 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 5
+moreGeysers = 1
+
+myStartMoney = 5000
+myTech = "all"
+myallylist = ""
+
+title="Credits"
+
+ai2Name = "Dummy"
+ai2Tech = "thunderbattery"
+ai2StartMoney = 5000
+ai2GeyserAttachments = 8
+ai2Collectors = 5
+ai2TimeBetweenMoves = 8
+ai2BridgeDrawRate = 8
+ai2AllyList = ""
+ai2color = red
+
+[Options]
+
+[A.]
+<h2>Credits!</h2>
+~B~E~lHey guys, Mike here.  Most of you netstorm players might know me as AustralianDingo.
+<br>
+<br>~B~E~iAt any rate, this was my first attempt at mapmaking.  I tried to make them all unique and keep the interest of the players.
+<br>
+<br>~B~E~qI made all five of these maps some long time ago, and just recently made a few minor changes (like this credits thing).
+<br>
+<br>~B~E~lFeel free to send any feedback to my primary email address at mikebyrne5@home.com.  You might also use my other email address (rarely ever checked) at mbyrne@tp.devry.edu.
+<br>
+<br>~B~E~iThanks again and see you guys in the netstorm zones.  
+
+$Button=Alright Bye,Tell,Campaign
+
+[Succeeded][BadTeamDead]
+<h2>You were not supposed to be able to win this...</h2>
+
+
+$Button=Oh well screw it im leaving,MissionAbort,0
+$Button=Restart the mission,MissionBegin,Mikecredits
+
+[Failed]
+<h2>You were not supposed to lose this...</h2>
+
+$Button=Oh well screw it im leaving,MissionAbort,0
+$Button=Restart mission,MissionBegin,Mikecredits
+
+[END]

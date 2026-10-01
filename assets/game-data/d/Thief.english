@@ -1,0 +1,53 @@
+[Header]
+
+missionType="Tutorial"
+missionNumber = 1
+moreGeysers = 1
+myStartMoney = 2000
+myTech = "windBattery;Raincannon;rainAviary"
+
+title= "ERMAC"
+
+ai2Name= "Thief"
+ai2Tech= "thunderbattery;Thundercannon"
+ai2StartMoney= 3000
+ai2GeyserAttachments = 2
+ai2Collectors = 8
+ai2TimeBetweenMoves = 1
+ai2AllyList= ""
+ai2color= white
+
+
+[Options]
+
+
+[A.]
+<h2> Thiefing activity discovered! <h2>
+<i> "BE ready" <br>
+--Thou master </i|
+<p>
+The nimbian police reported a thief stealing our resources for funding
+the thunder guy. For all costs keep your resources safe. Dont let thunder
+come out of its situation
+
+$Button=Review Knowledge,Show Technology,55
+$Button=PlayMission,DoNothing,0
+
+[Succeeded] [BadTeamDead]
+
+<h2> Yeppie!!!! <h2>
+<p> U  won!!! Alex Tatarov Jr. salutes you! I hope you enjoyed my little
+campaign. Please send you comments to me. I would like to hear your oppinion
+about this my very first campaign! My email is tatarovo@cadvision.com 
+<$Config,Done{mission.fileName}=1>
+$Button=Nextmission,MissionAbort,0
+
+[Failed]
+
+<h2> Try again!!! --Alex Tatarov </h2>
+<p> Be better next time.
+$Button=Continue,Tell,TryAgain
+
+
+[END]
+

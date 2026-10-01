@@ -1,0 +1,119 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 5
+moreGeysers = 2
+
+myStartMoney = 1000
+myTech = "ThunderArcher;ThunderCannon;Thunderbattery;sunarcher;sunaviary;rainaviary;thunderfence;outpost"
+myAllyList = "2;3"
+
+title="More to Take"
+
+ai2Name = "SPU Keeper of the Plans"
+ai2Tech = "thunderbattery;thunderarcher;thunderblocker;thundercannon;Bulf;sunwalker"
+ai2StartMoney = 10000
+ai2GeyserAttachments = 9
+ai2Collectors = 6
+ai2TimeBetweenMoves = "1"
+ai2DrawBridgeRate = 1
+ai2AllyList = "3;4;5"
+ai2color = red
+
+ai3Name = "GOF Elder"
+ai3Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;sunwalker"
+ai3StartMoney = 7500
+ai3GeyserAttachments = 7
+ai3Collectors = 4
+ai3TimeBetweenMoves = "1"
+ai3AllyList = "2;4;5"
+ai3color = white
+
+ai4Name = "SPU Martyr"
+ai4Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;sunwalker;rainwalker"
+ai4StartMoney = 10000
+ai4GeyserAttachments = 7
+ai4Collectors = 6
+ai4TimeBetweenMoves = "1"
+ai4AllyList = "2;3;5"
+ai4color = green
+
+ai5Name = "GOF's Plan Keeper"
+ai5Tech = "windarcher;windBattery;sunaviary;sunballoon;windblocker;windWalker;suncannon"
+ai5StartMoney = 7500
+ai5GeyserAttachments = 5
+ai5Collectors = 5
+ai5TimeBetweenMoves = "0"
+ai5DrawBrigdeRate = 1
+ai5AllyList = "2;3;4"
+ai5color = red
+
+[Options]
+
+[A.]
+<h2>More to Take</h2>
+<i>^WaR^ Leader: ~wWe need more plans.</i><br>
+<i>You: ~wRoger that...I picked up 4 enemies in a custer.</i><br>
+<i>^WaR^: ~wNice choice...See those priests in red?  They have more plans then the others to take.</i><br>
+Ok...Go in there and kill.
+
+$Button=What you got,ShowTechnology,55
+$Button=Start the Fighting,DoNothing,0
+
+[ai2TempleHalfDead]
+Here, have this Technology plan, just spare me my temple.
+$Button=Sure...why not?,Tell,Help
+
+[Help]
+You take the plan and yell sike and continue to bombard the Temple.
+$Button=Ha Ha,GetTechnology,79
+
+[ai2TempleDead]
+Nimbains, evacuate, she's going to blow...  You run out of the Temple carrying a plan...
+$Button=But of what?,GetTechnolgy,136
+
+[ai2PriestDead]
+In his robes you find a scroll...
+$Button=Read It,Tell,Scroll
+
+[Scroll]
+Here's how to make a sun balloon...<br>
+1) Get a huge peice of light leather<br>
+2) Get a light-weight box<br>
+3) Get some string<br>
+4) Put them all together<br>
+5) Put a fool in the box and promise him glory...<br>
+$Button=Cool,GetTechnology,111
+
+[ai5PriestDead]
+You find the wind generator.
+$Button=Cool,GetTechnology,75
+
+[ai5TempleDead]
+Nice work, after leveling the temple you find a plan for Technology.
+$Button=Now we are getting somewhere,GetTechnology,129
+
+[ai3PriestDead]
+Commander, we have found a Nimbain servant running with this...
+$Button=Open it,GetTechnology,87
+
+[ai4PriestDead]
+The much needed crossbow was found.
+$Button=YES!,GetTechnology,140
+
+[Succeeded][BadTeamDead]
+You, Guldan and the ^WaR^ leader come together.
+<i>^WaR^ Leader: ~wNow we got plans, we have to make them useful.  Guldan, you take Wind, I will take Rain, and you, chief commander, will take Thunder and Sun.
+<i>You: ~wOk
+<i>Guldan: ~wSounds good.
+<i>^WaR^ Leader: ~wFW...I'm homing in on a target flying to our islands.  Wait...it stopped.  Let's go see what it is doing...
+$Button=What's in store for you next?,MissionBegin,FW6
+
+[Failed]
+<i>SPU: ~wHa Ha Ha<br>
+<i>Mystical Voice: ~wWant a second chance to get back in the war?
+
+$Button=Yes,MissionBegin,FWT2
+$Button=No,MissionAbort,0
+
+[END]

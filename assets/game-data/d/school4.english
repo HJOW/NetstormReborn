@@ -1,0 +1,63 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 4
+moreGeysers = 1
+
+myStartMoney = 6500
+myTech = "rainBattery,thunderBattery;windWalker;windBattery;windBlocker;windArcher;windBalloon;windAviary"
+
+title="Your last day until your RULE THE SCHOOL!!"
+
+ai2Name = "Derrick"
+ai2Tech = "thunderArcher;thunderBattery;thunderCannon;thunderFence;thunderBlocker;bulf;rainBattery;rainCannon;rainFence;rainBlocker;rainWalker;rainAviary;rainBalloon"
+ai2StartMoney = 6500
+ai2GeyserAttachments = 4
+ai2Collectors = 4
+ai2TimeBetweenMoves = 3
+ai2AllyList = ""
+ai2color = red
+
+ai3Name = "Michael"
+ai3Tech = "windWalker;windBattery;windBlocker;windArcher;windBalloon;windAviary"
+ai3StartMoney = 6500
+ai3GeyserAttachments = 4
+ai3Collectors = 4
+ai3TimeBetweenMoves = 3
+ai3AllyList = "1"
+ai3color = white
+
+
+
+[Options]
+[A.]
+<h2>~oDECISIONS! DECISIONS!~.</h2><br>                  
+This is your last chance to become the strongest person in Fury College. Beat
+Derrick, and become the strongest. Michael is helping you, GOOD LUCK!!
+Derrick is sleeping, and you steal some of his plans, you only have enouge time to snatch the plans of one set of ~yTechnology~w<br>pick ~y~E~Bwisely~., or ~r~E~Bperish~.!!
+$Menu=~[IrainCannon.0]rain,GetTechnology,129
+$Menu=~[IthunderCannon.0]thunder,GetTechnology,131
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+You have beaten Derrick!!!!! You are now the toughest kid in school!!!!!!!!!!!!!!!!!!
+
+<$Config,Done{mission.fileName}=3>
+$Button=Leave Missions,MissionAbort,0
+
+[Failed]
+<h2>Failure!</h2>
+Derrick as beaten you and has nearly killed Michael... whats this? Mr. Handrake(your real English teacher) wants to help
+you! Now you and your teacher must defeat Derrick once and for all!!!
+$Button=Next Mission,MissionBegin,school4b
+
+
+$Button=Continue,Tell,TryAgain
+
+[END]

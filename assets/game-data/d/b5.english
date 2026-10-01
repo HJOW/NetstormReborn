@@ -1,0 +1,130 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 5
+
+myStartMoney = 1600
+myTech = "sunFactory;windFactory;suncannon;windarcher;sunblocker;windbattery"
+myAllyList = "3;4"
+
+title = "New Alliances"
+
+ai2Name = "Minion of Storm"
+ai2Tech = "sunFactory;thunderbattery;suncannon;sunaviary;sunarcher;sunwalker;sunblocker"
+ai2StartMoney = 800
+ai2Collectors = 6
+ai2GeyserAttachments = 5
+ai2AllyList = "5"
+ai2color = red
+ai2BridgeDrawRate = 3
+ai2Ability = "!BUILD_BLOCKERS_WHEN_BUILDINGS_HARMED;!USE_PRIEST_TO_COLLECT"
+
+ai3Name = "Rain Wizard"
+ai3Tech = "sunFactory;rainFactory;sunwalker;rainbattery;rainaviary;sunaviary;sunblocker"
+ai3StartMoney = 1000
+ai3Collectors = 6
+ai3GeyserAttachments = 5
+ai3AllyList = "1;4"
+ai3color = white
+ai3BridgeDrawRate = 4
+ai3Ability = "!BUILD_BLOCKERS_WHEN_BUILDINGS_HARMED"
+
+ai4Name = "Wind Knight"
+ai4Tech = "sunFactory;windFactory;sunwalker;windbattery;windarcher;suncannon;windblocker"
+ai4StartMoney = 1000
+ai4Collectors = 6
+ai4GeyserAttachments = 5
+ai4AllyList = "1;3"
+ai4color = green
+ai4BridgeDrawRate = 4
+ai4Ability = "!BUILD_BLOCKERS_WHEN_BUILDINGS_HARMED"
+
+ai5Name = "Beast of Thunder"
+ai5Tech = "thunderFactory;sunFactory;sunwalker;thunderbattery;thundercannon;thunderblocker;suncannon"
+ai5StartMoney = 3000
+ai5Collectors = 6
+ai5GeyserAttachments = 5
+ai5AllyList = "2"
+ai5color = purple
+ai5BridgeDrawRate = 1
+ai5Ability = "!BUILD_BLOCKERS_WHEN_BUILDINGS_HARMED;!USE_PRIEST_TO_COLLECT"
+
+[@10]
+<h2>~sBeast of Thunder</h2>
+<p>
+HaHa!  An alliance from YOU!  Bah! I don't need any help
+from a weakling, go back to where you came from.
+$Button=Ignore,DoNothing,0
+
+[@20]
+<h2>~gWind Knight</h2>
+<p>
+I accept your alliance.  Let us go forth and crush these opponents.
+$Button=Accept Alliance,DoNothing,0
+
+[Options]
+
+[A.]
+<h2>A New Hope</h2> 
+<i>"Power alone cannot rule the world."<br>
+--The First Ruler of Nimbus</i>
+<p>You wander aimlessly since you have no clue where the hell you are.
+Then you spot a battle between two parties.  You decide to try to make alliances with either side.
+So you send messages to them waiting for a response.
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeed]
+[BadTeamDead]
+
+<h2>Congratulations! Victory!</h2> 
+<p>You have made new allies and earned respect from them.  You also learned where you are now!  Now you can go and find Lord Gunton again.
+<$Config,Done{mission.filename}=1> 
+$Button=Leave Missions,MissionAbort,0
+$Button=Next Mission,MissionBegin,b6
+
+[ai2TempleHalfDead]
+<h2>~rMinion of Storm</h2>
+<p>
+Master!  Master, Help me!
+
+[ai3TempleHalfDead]
+<h2>~wRain Wizard</h2>
+<p>
+This doesn't look good...
+
+[ai3PriestDead]
+<h2>Outcome</h2>
+<p>
+The Wind Knight kills you becuase you let his comrade die.
+$Button=Continue,Tell,TryAgain
+
+[ai4TempleDead]
+<h2>~gWind Knight</h2>
+<p>
+Help me!
+
+[ai4PriestDead]
+<h2>Outcome</h2>
+<p>
+The Rain Wizard sends you away at the death of his comrade.  You have failed to save your new allies, therefore you aimlessly wander the Nimbian skies, deprived of all former glory and corage.
+$Button=Continue,Tell,TryAgain
+
+[ai5TempleHalfDead]
+<h2>~sBeast of Thunder</h2>
+<p>
+Now you've done it!
+
+[ai5PriestCaptured]
+<h2>~sBeast of Thunder</h2>
+<p>
+You Crazy Fools!!
+
+[Failed]
+<h2>Failure!</h2> 
+<p> 
+You have died, and what has happened to your allies is irrelevant.
+$Button=Continue,Tell,TryAgain
+
+[END]

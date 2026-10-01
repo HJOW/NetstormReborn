@@ -1,0 +1,143 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 2
+
+myStartMoney = 5000
+myTech = "sunWalker;sunarcher;sunballoon;sunFence;sunaviary;outpost;thunderbattery;thunderarcher;thunderblocker;thundercannon;thunderfence"
+myAllyList = "4;5;6;7;8"
+
+title="Prison Break"
+
+ai2Name = "SWORD Knight"
+ai2Tech = "windarcher;windBattery;windaviary;windballoon;windblocker;windWalker;sunwalker"
+ai2StartMoney = 10000
+ai2GeyserAttachments = 8
+ai2Collectors = 5
+ai2TimeBetweenMoves = 1
+ai2DrawBridgeRate = 1
+ai2AllyList = "3"
+ai2color = red
+
+ai3Name = "SPU Warrior"
+ai3Tech = "rainbattery;rainaviary;rainballoon;rainblocker;raincannon;rainFence"
+ai3StartMoney = 10000
+ai3GeyserAttachments = 8
+ai3Collectors = 5
+ai3TimeBetweenMoves = 1
+ai3DrawBridgeRate = 1
+ai3AllyList = "2"
+ai3Abiltiy = "!BUILD_DIAS;!BUILD_BRIDGES;!USE_PRIEST_TO_COLLECT;!COLLECT_STORM_POWER;!CAPTURE_ENEMY_PRIEST"
+ai3color = yellow
+
+ai4Name = "DL Specialist"
+ai4Tech = ""
+ai4StartMoney = 0
+ai4GeyserAttachments = 1
+ai4Collectors = 1
+ai4TimeBetweenMoves = 1
+ai4AllyList = "1;5;6;7;8"
+ai4Abiltiy = "!BUILD_DIAS;!BUILD_BRIDGES;!USE_PRIEST_TO_COLLECT;!COLLECT_STORM_POWER;!CAPTURE_ENEMY_PRIEST"
+ai4color = purple
+
+ai5Name = "DL WarLord"
+ai5Tech = ""
+ai5StartMoney = 0
+ai5GeyserAttachments = 1
+ai5Collectors = 1
+ai5TimeBetweenMoves = 1
+ai5AllyList = "1;4;6;7;8"
+ai5Ability = "!BUILD_DIAS;!BUILD_BRIDGES;!USE_PRIEST_TO_COLLECT;!COLLECT_STORM_POWER;!CAPTURE_ENEMY_PRIEST"
+ai5color = white
+
+ai6Name = "FW Knight"
+ai6Tech = ""
+ai6StartMoney = 0
+ai6GeyserAttachments = 1
+ai6Collectors = 1
+ai6TimeBetweenMoves = 1
+ai6AllyList = "1;4;5;7;8"
+ai6Abiltiy = "!BUILD_DIAS;!BUILD_BRIDGES;!USE_PRIEST_TO_COLLECT;!COLLECT_STORM_POWER;!CAPTURE_ENEMY_PRIEST"
+ai6color = lightblue
+
+ai7Name = "^WaR^ Assassin"
+ai7Tech = ""
+ai7StartMoney = 0
+ai7GeyserAttachments = 1
+ai7Collectors = 1
+ai7TimeBetweenMoves = 1
+ai7AllyList = "1;4;5;6;8"
+ai7Abiltiy = "!BUILD_DIAS;!BUILD_BRIDGES;!USE_PRIEST_TO_COLLECT;!COLLECT_STORM_POWER;!CAPTURE_ENEMY_PRIEST"
+ai7color = green
+
+ai8Name = "DL Rogue"
+ai8Tech = ""
+ai8StartMoney = 0
+ai8GeyserAttachments = 1
+ai8Collectors = 1
+ai8TimeBetweenMoves = 1
+ai8AllyList = "1;4;5;6;7"
+ai8Abiltiy = "!BUILD_DIAS;!BUILD_BRIDGES;!USE_PRIEST_TO_COLLECT;!COLLECT_STORM_POWER;!CAPTURE_ENEMY_PRIEST"
+ai8color = purple
+
+[Options]
+
+[A.]
+<h2>Prison Break</h2>
+<i>Voice In You Head: ~wYo, what's up?<br>
+<i>You: ~wUmmm...You the hell are you?<br>
+<i>Voice In You Head: ~wA DL specialist.  I use telepathy to speak.<br>
+<i>You: ~wObvisouly... what do you want?<br>
+<i>DL Specialist: ~wLately, I have been guilding you here, to the DL.  I want you to rescue us.  There is also some of your friends here.<br>
+<i>You: ~wOk...where are you?<br>
+<i>DL Specialist: ~wIn section 8796, we are ina  prison cell.<br>
+<i>You: ~wCan't you break out?<br>
+<i>DL Specialist: ~wMost definitely, put we would be hunted down.  I'll give you a mental map...<br>
+<<<Strange vibrations enter your head...You get a mental picture of the section.>>>
+<i>You: ~wI see, here's the plan, you break to the neutral island, and I will keep them busy until I completely free you.
+
+$Button=What ya got,ShowTechnology,55
+$Button=Travel to the Section,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<i>You: ~wSpecialist?  Are you there?
+<i>DL Specialist: ~wYeah...Thanks...Are we allies then?
+$Button=Yes,MissionBegin,FWSO2
+$Button=No,Tell,No
+
+[No]
+<i>DL Specalist: ~wToo bad then, I guess that means we are enemies.
+<<<Your life force is quickly taken from you.>>>
+$Buttom=Bye Bye,MissionAbort,0
+
+[ai4PriestDead]
+You recieve a telepathetic message from the DL specialist.
+DL Specialist: You will pay for this...a curse be on you.
+$Button=Yeah yeah whatever you say,Tell,YoYo
+
+[ai5PriestDead]
+<i>Guldan: ~wDon't worry...Just keep on fighting.
+$Button=Cool,DoNothing,0
+
+[ai6PriestDead]
+<i>Guldan: ~wDon't worry about his life and your life, just get that DL Specialist out alive.
+$Button=Cool,DoNothing,0
+
+[ai7PriestDead]
+<i>^WaR^ Leader: ~wI don't care about him, just get that DL Specialist.
+$Button=Cool,DoNothing,0
+
+[ai8PriestDead]
+<i>Guldan: ~wThe DL probably won't care, as long as you get their specialist out.
+
+[YoYo]
+You walk along the coast of your island with Guldan talking about what had happen.  You here a dude running shouting "Fire!".  He ran right through you two, pushing you over.  You let everyone know you were mad...
+$Button=Bye-Bye,MissionAbort
+
+[Failed]
+<h2>You have failed!</h2>
+<i>DL Specialist: Thanks for nothing...See you in heaven, sucka.
+$Button=Bye Bye,MissionAbort,0
+
+[END]

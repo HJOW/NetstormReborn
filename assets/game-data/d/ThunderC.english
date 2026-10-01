@@ -1,0 +1,149 @@
+[header]
+missionType = "Tutorial"
+missionNumber = 7
+moreGeysers  = 1
+myStartMoney = 2500
+myTech="thunderbattery;bulf;suncannon;sunarcher;sunblocker;sunaviary;sunfence;sunballoon;thunderarcher"
+myAllyList = "4"
+
+ai2Name = "Kukulkan"
+ai2Tech="windbattery;windarcher;suncannon;windwalker;sunwalker;windblocker"
+ai2StartMoney = 4000
+ai2GeyserAttachments = 6
+ai2Collectors = 8
+ai2TimeBetweenMoves = 1
+ai2AllyList = "3"
+
+ai3Name = "Frostimore"
+ai3Tech="rainbattery;raincannon;rainfence;sunblocker;sunarcher;sunwalker;rainballoon;rainaviary"
+ai3StartMoney = 4000
+ai3GeyserAttachments = 10
+ai3Collectors = 10
+ai3TimeBetweenMoves = 1
+ai3AllyList = "2"
+
+ai4Name = "Master of the Chidory"
+ai4Tech="thunderbattery;thundercannon;thunderblocker;outpost;bulf;sunwalker;suncannon;windbattery;windballoon"
+ai4StartMoney = 5000
+ai4GeyserAttachments = 10
+ai4Collectors = 14
+ai4TimeBetweenMoves = 1
+ai4AllyList = "1"
+
+title = "The Storm Rages"
+
+[Init]
+<,sw_allyDead=0>
+
+[Options]
+[A.]
+<h2>~mThe Storm Rages</h2>
+<br><i>~IIn aere aedificare<br>
+--Unknown author<br></i>
+<p>
+Your island has been besieged by Kukulkan and his minion Frostimore, you thought you
+were overwhelmed. But in the last moment your guards inform you of another Island that 
+has come near yours.
+$Button=More,Tell,More
+
+[More]
+Your guards come carrying a message from the unidentified island...
+$Button=Read,Tell,Read
+
+[Read]
+<h2>~gMaster, it is good to be back!</h2>
+<br>I'm back from my long journey, and I've heard of the war that
+has struck our nation. I came as quickly as I could. Did I miss much?<br>
+<p>
+Your trusted servant ~rThe master of Chidory
+$Button=More,Tell,More2
+
+[More2]
+Master I have a plan, we should first attack the red priest, I know not who he is,
+but I sence that if we destroy the strongest lick in the chain, then the chain will shatter!
+What do you say?
+$Button=O.K.,Tell,More1
+$Button=No thanks - I've got a beter plan,ShowTechnology,55
+
+[More1]
+Oh, what a relief!
+Now the odds are on your side!
+$Button=Review Knowledge,ShowTechnology,55
+$Button=O.K. Let's Start this!,DoNothing,0
+$Button=The odds aren't looking so good,MissionAbort,1
+
+[ai2PriestCaptured]
+<h2>~gA message from your ally~</h2><br>
+Master, we've captured one of the enemy priests, now let's show them what we're
+made of! Let's sacrifice this infidell!<br>
+$Button=I totally agree!,DoNothing,0
+
+[ai2PriestDead]
+<h2>Your ally sends you a gift</h2>
+Nice work! Here I've benn wanting to give you this technology fromthe begining, but we wereall to buisy.
+$Button=Gift,GetTechnology,131
+
+[ai3PrisetCaptured]
+<h2>Your ally is very pleased</h2>
+Man, how I've forgot how fun wars are! From now on I shall fight always by your side!
+$Button=O.K.,DoNothing,0
+
+[ai4PriestCaptured]
+<h2>A message from you ally:</h2>
+~IMaster help me! Don't let them sacrifice me!
+$Button=Help is on the way,Tell,Help
+$Button=Why should I?,Tell,Threachery
+$Button=I can't I'm in a pickle myself.,Tell,Avenge
+
+[Help]
+Thank you master!
+$Button=Don't worry,DoNothing
+
+[Threachery]
+I didn't think you'd say that. Are you trying to tell me, that this is the end of our friendship?!
+$Button=Yes,Tell,Yes
+$Button=No,Tell,No
+
+[Avenge]
+Then don't bother master, just promise me that you'll avenge my death!
+$Button=I promise,Tell,Promise
+
+[Yes]
+Then fare well, and i hope I'll see you in hell for this!
+$Button=What ever,DoNothing,0
+
+[No]
+I am just a little tied up in the moment, but I'll try to help you as soon as I can!
+I promise!
+$Buton=O.K.?,Tell,Avenge
+
+[Promise]
+Your death shall be avenged!
+$Button=Fight on,DoNothing,0
+
+[ai4PriestDead]
+<,sw_allyDead=1>
+
+<?{flag1}{flag2}>
+[Succeeded][BadTeamDead]
+<<h2>Victory</h2>
+<?!{sw_allyDead=0}>~gWe've won mylord!</?>
+<?!{sw_allyDead=0}>$Button=Next mission,MissionBegin,Thunderd</?>
+<?!{sw_allyDead=0}>$Button=I've had enough of this for one day,MissionAbort,1</?>
+<?!{sw_allyDead=1}>You've one, but you couldn't save your friend in time. Thus the Furies are pleased and they grant you one wish:</?>
+<?!{sw_allyDead=1}$Button=Revive my friend!,Tell,Friendrevived></?>
+<?!{sw_allyDead=1}$Button=I wish for his soul to rest in piece,MissionBegin,Thunderd1></?>
+
+[Friendrevived]
+<h2>!yThe Furies revieve your trusted ally</h2>
+<br><i>~gThank you master, thanks for saving my life, and to have avenged my death!</i>
+$Button=Let's get on to the next mission,MissionBegin,Thunderd
+
+[Failed]
+You've failed to achieve victory!
+Now your blood has been spilled on the enemy altar!
+$Button=Try Agian,MissionBegin,ThunderC
+$Button=Leave Mission,MissionAbort,1
+
+[End]
+

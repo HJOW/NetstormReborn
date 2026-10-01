@@ -1,0 +1,57 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 1
+
+myStartMoney = 6500
+myTech = "windBattery;thunderBattery;rainBattery;rainCannon;rainFence;rainBlocker;rainWalker;rainAviary;rainBalloon"
+
+title="Your 1st day of school"
+
+ai2Name = "Mr. Frink"
+ai2Tech = "rainBattery;rainCannon;rainFence;rainBlocker;rainWalker;rainAviary;rainBalloon"
+ai2StartMoney = 6500
+ai2GeyserAttachments = 4
+ai2Collectors = 4
+ai2TimeBetweenMoves = 3
+ai2AllyList = ""
+ai2color = red
+
+[Options]
+[A.]
+<h2>Your first day</h2>
+Fury College is a good school except the fact that it is full
+of bullies!!!!!! When you get there, a teacher, Mr. Frink, says
+he is your English teacer, but you find out he is your english
+teacher's evil twin, kill him and then things will be back
+to normal.
+
+<h2>~oDECISIONS! DECISIONS!~.</h2><br>                  
+This is your first day of school at Fury Colleg.
+Your 1 friend at school, ~r~E~BMichael~., grants you a ~ygift~w<br>
+Pick <i>wisely</i>.
+$Menu=~[IrainWalker.0]rain,GetTechnology,156
+$Menu=~[IwindWalker.0]wind,GetTechnology,137
+$Menu=~[Ibulf.0]thunder,GetTechnology,135
+
+$Button=Review Knowledge,ShowTechnology,55
+$Button=Play Mission,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>Success!</h2>
+<p>
+You have beaten Mr. Frink, your English Teacher's evil twin. It is now night, and you must sleep to get
+ready for yet your second day of school.
+
+<$Config,Done{mission.fileName}=1>
+$Button=Leave Missions,MissionAbort,0
+
+[Failed]
+<h2>Failure!</h2>
+<p>
+Mr. Frink have beaten you!!! Now everyone will know you as... weakling.
+
+$Button=Continue,Tell,TryAgain
+
+[END]
