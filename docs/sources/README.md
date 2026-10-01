@@ -22,6 +22,8 @@
 
 게임 안 F1 도움말은 별개로 아카이브의 `help.english`(HTML 부분집합 스크립트)에 있고, 튜토리얼 안내는 `tutorial1~6.english` 에 있다.
 
+**내장 도움말 전체 보존(2026-10-02):** [전체 본문](in-game-help.md)에 2,727행·138앵커 정의·113본문 묶음을 원본 순서로 실었다. [UTF-8 원문 JSON](in-game-help-source.json)은 줄끝·태그·제어 코드·공백까지 보존하며 CP1252로 원본을 복원할 수 있다. 원본과 네 번째 녹화 세션의 아카이브 본문이 바이트 일치한다. [녹화에서 방문한 11주제 한국어 정리](../gameplay/help-text-record-play-20261001.md)는 실제 화면·원문 보완·동적 High Priest 머리를 구분한다. `unitHelp`의 중복된 두 목록을 임의로 합치지 않았다.
+
 ## 2. 보유 exe 의 버전
 
 * **확정(2026-09-29, 원본 실행): 보유 exe 는 10.78 이다.** 메인 메뉴 Help → Version 창에 "Version v10.78"과 "10.78 Patch by Ticonderoga Entertainment."가 표시된다. 이 창은 `tell.english` `[About]` 절의 `Version {version}`·`{gamemaster}.{gameminor} Patch …`에 **실행 중 exe 가 넘겨 주는 값**을 채운 것이다. 증거: `extracted/analyzeManager/20260929T120526716Z-327849a23cac/screens/37feb1f2….png` ([화면 목록 1.3절](../screens/README.md)).

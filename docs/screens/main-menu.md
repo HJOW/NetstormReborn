@@ -52,6 +52,8 @@ Campaign의 공식 목록은 `offical1~6`이라는 원본 철자를 그대로 �
 
 ## 게임 실행 자료로 이미 확인된 동작
 
+**옵션 상태 표시 보완(2026-10-02):** 파란 원형 마크는 켜진 항목 또는 하위 목록의 현재 값에만 표시한다. 끄면 없어지고 다시 켜면 나타난다. 마우스 행 강조와는 별개이며, 마크가 없어도 흰 글자 항목은 클릭해 켤 수 있다. [Sound On·Play Music·Auto-Demo·음량의 전후 프레임과 메뉴 동작](options-menu.md). 도움말 본문은 [11주제 한국어 정리](../gameplay/help-text-record-play-20261001.md)와 [원본 전체 본문](../sources/in-game-help.md)에 보존했다.
+
 **2026-10-02 사용자 UI 녹화 분석:** Options의 Resolution 세 값·음악/효과음 Volume 1~5와 선택 표시 변경, Help → General Help → 주제 링크·스크롤·Back·OK를 [네 번째 녹화 노트](../videos/ui-controls-record-play-20261001.md)에 기록했다. 실제 단축키 입력과 내장 도움말 기재를 구분한 [원본 조작키 표](../gameplay/input-controls.md)도 참고한다.
 
 이전 세션의 Wine 캡처·보고서([원본 실행 관찰](README.md))에서 팁 OK → 검증 안내 OK → 기본 메뉴, 기본 메뉴의 F1 → 도움말 창, 약 45초 무입력 후 Auto-Demo 진입을 확인했다. 도움말 ESC는 창을 닫지 않았다. 이는 **이전 세션의 결과**이며 이번 정적 정리에서 게임을 재실행하지 않았다.

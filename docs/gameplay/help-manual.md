@@ -3,6 +3,9 @@
 > 전체 정리본(화면·조작·튜토리얼·멀티플레이·유닛/주문 수치 대조)과 다른 동봉 문서(패치 이력·README.DOC 등)는
 > [docs/sources/](../sources/README.md) 에 있다. 동봉 문서와 현재 분석의 불일치 목록: [sources/README.md](../sources/README.md) 3절.
 
+패치판 게임 안 F1 도움말은 이 문서의 WinHelp와 별개다. [전체 영문 본문](../sources/in-game-help.md),
+[네 번째 녹화에서 방문한 11주제 한국어 정리](help-text-record-play-20261001.md)에 본문을 모두 보존했다(2026-10-02).
+
 > 근거: `originals/help/GAME.HLP`를 Win32 `helpdeco`로 추출한
 > `extracted/helpdeco/GAME/GAME.txt`. 재생성 방법은 [HLP 분석](../formats/hlp.md).
 > 이 문서는 **원본 도움말의 주장**을 기록한다. 실제 패치 실행 파일의 판정은 별도 검증이 필요하다.

@@ -4,12 +4,13 @@
 > 이 문서는 영문 원문을 보존한 자료이며 게임 규칙을 새로 확정하거나 전체 본문을 번역한 문서는 아니다.
 
 [녹화에서 방문한 페이지의 한국어 정리](../gameplay/help-text-record-play-20261001.md),
-[옵션 동작 관찰](../screens/options-menu.md), [태그·제어 코드 포함 UTF-8 원문](in-game-help-source.txt).
+[옵션 동작 관찰](../screens/options-menu.md), [태그·제어 코드 포함 UTF-8 원문](in-game-help-source.json).
 
 - 원본 도움말: 120,888바이트, 2,727행, SHA-256 `faf16cdb210def79619ab5245688463c6fbd700b746069a59a44d7c7c9a31746`.
 - 전체 138앵커 정의를 113본문 묶음으로 보존했다. 빈 연속 앵커는 별칭으로 묶었다.
 - 중복 앵커의 첫/뒤 본문을 모두 싣고, 오탈자·수치·문장을 임의 수정하지 않았다.
 - 표시 서식만 걷어낸 읽기용 본문이다. 그림은 `〔그림: 자산〕`, 조건부 문장은 조건 표시로 남겼다.
+- 원문 JSON의 `lines`에는 줄끝·공백까지 포함했다. 이어 붙여 CP1252로 인코딩하면 원본 바이트가 완전히 복원된다.
 - `<info>`는 게임이 그림과 타입별 능력치 머리를 덧붙인다. 이 문서의 정적 본문에 그 실행 시점 값은 포함되지 않는다.
   녹화에 나온 High Priest의 전체 머리 글자는 한국어 정리 문서에 따로 기록했다.
 - 파란 링크의 주소는 절 아래에 별도로 보존했다. 외부 주소·명령·오탈자를 가진 주소는 그대로 기록하며 실행하지 않았다.
@@ -20,22 +21,22 @@
 
 | 번호 | 제목 / 앵커 | 녹화에서 방문한 주제 |
 |---|---|---|
-| 1 | [How To Capture and Sacrifice](#topic-sacrificeoutline) · `sacrificeOutline` | 예 |
+| 1 | [How To Capture and Sacrifice](#topic-sacrificeoutline) · `sacrificeOutline` | 주제 방문 |
 | 2 | [How To Immobilize the Priest](#topic-immobilehelp) · `immobileHelp` | 원본 자료 보완 |
 | 3 | [How To Bring the Enemy Priest to your Altar](#topic-pickuphelp) · `pickupHelp` | 원본 자료 보완 |
 | 4 | [How To Send Your Own Priest to the Altar](#topic-moveyourpriesthelp) · `moveyourpriestHelp` | 원본 자료 보완 |
 | 5 | [How to Perform the Sacrifice](#topic-performsacrificehelp) · `performsacrificeHelp` | 원본 자료 보완 |
-| 6 | [Nimbus](#topic-spherehelp) · `sphereHelp` | 예 |
+| 6 | [Nimbus](#topic-spherehelp) · `sphereHelp` | 주제 방문 |
 | 7 | [map](#topic-map) · `map` | 원본 자료 보완 |
 | 8 | [Deusphere](#topic-deuspherehelp) · `deusphereHelp` | 원본 자료 보완 |
-| 9 | [Serenisphere](#topic-serenispherehelp) · `serenisphereHelp` | 예 |
+| 9 | [Serenisphere](#topic-serenispherehelp) · `serenisphereHelp` | 주제 방문 |
 | 10 | [Pyrosphere](#topic-pyrospherehelp) · `pyrosphereHelp` | 원본 자료 보완 |
 | 11 | [Neutral Islands](#topic-bountyislandhelp) · `bountyislandHelp` | 원본 자료 보완 |
-| 12 | [NetStorm Instructions](#topic-f1help) · `F1Help` | 예 |
-| 13 | [NetStorm User Interface](#topic-interfacehelp) · `interfaceHelp` | 예 |
+| 12 | [NetStorm Instructions](#topic-f1help) · `F1Help` | 주제 방문 |
+| 13 | [NetStorm User Interface](#topic-interfacehelp) · `interfaceHelp` | 주제 방문 |
 | 14 | [Chat Window](#topic-chatviewhelp) · `chatViewHelp` | 원본 자료 보완 |
 | 15 | [Storm Power Available Window](#topic-moneygumphelp) · `moneyGumpHelp` | 원본 자료 보완 |
-| 16 | [Bridge](#topic-bridgetype) · `bridgeType` | 예 |
+| 16 | [Bridge](#topic-bridgetype) · `bridgeType` | 주제 방문 |
 | 17 | [Production Window](#topic-teleportviewhelp) · `teleportViewHelp` | 원본 자료 보완 |
 | 18 | [Sky Overview](#topic-minimapgumphelp) · `minimapGumpHelp` | 원본 자료 보완 |
 | 19 | [.Format Command](#topic-formatcommandhelp) · `formatCommandHelp` | 원본 자료 보완 |
@@ -44,17 +45,14 @@
 | 22 | [Salvaging](#topic-salvagehelp) · `salvageHelp` | 원본 자료 보완 |
 | 23 | [Unit Information](#topic-statshelp) · `statsHelp` | 원본 자료 보완 |
 | 24 | [altarType](#topic-altartype) · `daisType / runeType / altarType` | 원본 자료 보완 |
-| 25 | [priestType](#topic-priesttype) · `priestType` | 예 |
-| 26 | [The Priest's Powers of Construction](#topic-vesselpriesthelp) · `vesselPriestHelp` | 예 |
-| 27 | [The Three Furies of Nimbus](#topic-themehelp) · `themeHelp` | 예 |
-| 28 | [Battle Units](#topic-unithelp) · `unitHelp` | 예 |
+| 25 | [priestType](#topic-priesttype) · `priestType` | 주제 방문 |
+| 26 | [The Priest's Powers of Construction](#topic-vesselpriesthelp) · `vesselPriestHelp` | 주제 방문 |
+| 27 | [The Three Furies of Nimbus](#topic-themehelp) · `themeHelp` | 주제 방문 · 중복 정의 별도 대조 |
+| 28 | [Battle Units](#topic-unithelp) · `unitHelp` | 주제 방문 · 중복 정의 별도 대조 |
 | 29 | [vortexHelp](#topic-vortexhelp) · `rainVortexType / windVortexType / thunderVortexType / vortexHelp` | 원본 자료 보완 |
-| 30 | [The Temple:
-Acquiring Storm Power](#topic-spvortexhelp) · `spVortexHelp` | 원본 자료 보완 |
-| 31 | [The Temple:
-Making Golems](#topic-golemvortexhelp) · `golemVortexHelp` | 원본 자료 보완 |
-| 32 | [The Temple:
-Generating Energy](#topic-influencevortexhelp) · `influenceVortexHelp` | 원본 자료 보완 |
+| 30 | [The Temple: Acquiring Storm Power](#topic-spvortexhelp) · `spVortexHelp` | 원본 자료 보완 |
+| 31 | [The Temple: Making Golems](#topic-golemvortexhelp) · `golemVortexHelp` | 원본 자료 보완 |
+| 32 | [The Temple: Generating Energy](#topic-influencevortexhelp) · `influenceVortexHelp` | 원본 자료 보완 |
 | 33 | [NetStorm Servers](#topic-serverhelp) · `serverHelp` | 원본 자료 보완 |
 | 34 | [edgeFarmType](#topic-edgefarmtype) · `edgeFarmType` | 원본 자료 보완 |
 | 35 | [Spells](#topic-bombhelp) · `obeliskType / buriedType / bombHelp` | 원본 자료 보완 |
@@ -115,19 +113,16 @@ Generating Energy](#topic-influencevortexhelp) · `influenceVortexHelp` | 원본
 | 90 | [rainWalkerType](#topic-rainwalkertype) · `rainWalkerType` | 원본 자료 보완 |
 | 91 | [Transports](#topic-transporthelp) · `transportHelp` | 원본 자료 보완 |
 | 92 | [Shooters](#topic-shooterhelp) · `shooterHelp` | 원본 자료 보완 |
-| 93 | [The Three Furies of Nimbus](#topic-themehelp-2) · `themeHelp` | 예 |
-| 94 | [Battle Units](#topic-unithelp-2) · `unitHelp` | 예 |
+| 93 | [The Three Furies of Nimbus](#topic-themehelp-2) · `themeHelp` | 주제 방문 · 중복 정의 별도 대조 |
+| 94 | [Battle Units](#topic-unithelp-2) · `unitHelp` | 주제 방문 · 중복 정의 별도 대조 |
 | 95 | [vortexHelp](#topic-vortexhelp-2) · `rainVortexType / windVortexType / thunderVortexType / vortexHelp` | 원본 자료 보완 |
-| 96 | [The Temple:
-Acquiring Storm Power](#topic-spvortexhelp-2) · `spVortexHelp` | 원본 자료 보완 |
-| 97 | [The Temple:
-Making Golems](#topic-golemvortexhelp-2) · `golemVortexHelp` | 원본 자료 보완 |
-| 98 | [The Temple:
-Generating Energy](#topic-influencevortexhelp-2) · `influenceVortexHelp` | 원본 자료 보완 |
+| 96 | [The Temple: Acquiring Storm Power](#topic-spvortexhelp-2) · `spVortexHelp` | 원본 자료 보완 |
+| 97 | [The Temple: Making Golems](#topic-golemvortexhelp-2) · `golemVortexHelp` | 원본 자료 보완 |
+| 98 | [The Temple: Generating Energy](#topic-influencevortexhelp-2) · `influenceVortexHelp` | 원본 자료 보완 |
 | 99 | [edgeFarmType](#topic-edgefarmtype-2) · `edgeFarmType` | 원본 자료 보완 |
 | 100 | [Storm Power](#topic-stormpowerhelp) · `moneyHelp / stormPowerHelp` | 원본 자료 보완 |
 | 101 | [outpostHelp](#topic-outposthelp) · `outpostType / outpostHelp` | 원본 자료 보완 |
-| 102 | [Campaign vs. Multiplayer Mode](#topic-multiplayerhelp) · `campaignHelp / multiplayerHelp` | 예 |
+| 102 | [Campaign vs. Multiplayer Mode](#topic-multiplayerhelp) · `campaignHelp / multiplayerHelp` | 주제 방문 |
 | 103 | [Multiplayer Quick Start](#topic-multiquickhelp) · `multiQuickHelp` | 원본 자료 보완 |
 | 104 | [Rank](#topic-rankhelp) · `rankHelp` | 원본 자료 보완 |
 | 105 | [Multiplayer Survival Guide](#topic-multisafehelp) · `multiSafeHelp` | 원본 자료 보완 |
@@ -1407,8 +1402,7 @@ Generating Energy
 
 <a id="topic-spvortexhelp"></a>
 
-## 30. The Temple:
-Acquiring Storm Power
+## 30. The Temple: Acquiring Storm Power
 
 원본 앵커: `spVortexHelp` · 본문 시작: 원문 1038행.
 
@@ -1434,8 +1428,7 @@ Learn more about making Golems...
 
 <a id="topic-golemvortexhelp"></a>
 
-## 31. The Temple:
-Making Golems
+## 31. The Temple: Making Golems
 
 원본 앵커: `golemVortexHelp` · 본문 시작: 원문 1051행.
 
@@ -1463,8 +1456,7 @@ Learn more about how the Vortex generates Energy...
 
 <a id="topic-influencevortexhelp"></a>
 
-## 32. The Temple:
-Generating Energy
+## 32. The Temple: Generating Energy
 
 원본 앵커: `influenceVortexHelp` · 본문 시작: 원문 1066행.
 
@@ -3149,8 +3141,7 @@ Generating Energy
 
 <a id="topic-spvortexhelp-2"></a>
 
-## 96. The Temple:
-Acquiring Storm Power
+## 96. The Temple: Acquiring Storm Power
 
 원본 앵커: `spVortexHelp` · 본문 시작: 원문 2152행.
 
@@ -3176,8 +3167,7 @@ Learn more about making Golems...
 
 <a id="topic-golemvortexhelp-2"></a>
 
-## 97. The Temple:
-Making Golems
+## 97. The Temple: Making Golems
 
 원본 앵커: `golemVortexHelp` · 본문 시작: 원문 2165행.
 
@@ -3205,8 +3195,7 @@ Learn more about how the Vortex generates Energy...
 
 <a id="topic-influencevortexhelp-2"></a>
 
-## 98. The Temple:
-Generating Energy
+## 98. The Temple: Generating Energy
 
 원본 앵커: `influenceVortexHelp` · 본문 시작: 원문 2180행.
 

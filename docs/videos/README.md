@@ -68,6 +68,7 @@ python tools/videoframes.py range "playingVideos/Netstorm Islands at war - Disso
 
 ## 관찰 노트
 
+* 네 번째 녹화 추가 판독(2026-10-02): [옵션 메뉴 동작·파란 마크의 소멸/복귀](../screens/options-menu.md), [도움말 11주제 한국어 정리](../gameplay/help-text-record-play-20261001.md), [내장 도움말 전체 영문 본문](../sources/in-game-help.md). 도움말의 중복 정의와 실제 녹화 목록을 구분하며, 원본의 2,727행 전체도 UTF-8로 보존했다.
 * [ui-controls-record-play-20261001.md](ui-controls-record-play-20261001.md) — 네 번째 녹화, 2,563프레임·약 4분 16초. 미션 완주 대신 옵션·우클릭·생산 등록·미션 이탈·내장 도움말을 시연했다. [원본 조작키 표](../gameplay/input-controls.md)는 도움말 기재와 실제 Escape 입력을 구분한다. 지연 대응 빌드의 상대 훅 도착 대기는 최대 17.3ms였으며 포획·의식은 재현하지 않았다. 원자료는 `playingVideos/20261001T145330210Z-425636a2e82c/`에 보존한다.
 * [master-of-whirligigs-record-play-20261001-2311.md](master-of-whirligigs-record-play-20261001-2311.md) — 캠페인 1-2 재플레이 6,318프레임·약 10분 36초. 포획 이전 작업장 생산·다리·전투·신전 파괴·사제 기절을 판독했다. 포획 뒤 클릭·커서 지연 보고와 후반 훅 도착 지연(상대 최대 약 1.05초), 녹화기의 입력 저장 분리 수정·미검증 범위를 기록했다. 의식 구간은 정상 타이밍 근거로 쓰지 않는다. **세 번째 녹화 원자료(영상·사운드·입력)는 2026-10-01 사용자가 삭제했다. 분석 문서와 추출 이미지·통계 등 산출물은 보존됐다.**
 * [animation-timing.md](animation-timing.md) — 애니메이션 진행 속도: 가이저 증기 약 24Hz, 신전 회오리·피해 연기 12Hz. exe 의 "현재 시각 + 간격" 타이머와 `maxFPS = 75` 루프 양자화로 설명됨

@@ -9,6 +9,13 @@
 다른 단축키는 화면에 표시된 도움말 설명이며 실행 결과와 구분한다. 조작키 전체 표는
 [원본 조작키와 입력 UI](../gameplay/input-controls.md)에 정리했다.
 
+추가 분석(2026-10-02): [옵션 메뉴의 상태 표시와 동작](../screens/options-menu.md)에
+**파란 마크는 켜진 항목·현재 선택한 값에만 표시되고, 꺼지면 사라진다**는 사용자 지적을 입력·프레임으로 확인했다.
+마우스가 가리키는 행의 어두운 강조와 구분한다.
+[방문한 도움말 11주제의 한국어 정리](../gameplay/help-text-record-play-20261001.md),
+[내장 도움말 전체 본문](../sources/in-game-help.md), [UTF-8 원문 보존본](../sources/in-game-help-source.json)에
+스크롤로 가려진 부분과 연결된 본문까지 보완했다.
+
 ## 원자료와 검증
 
 - 원자료: `playingVideos/20261001T145330210Z-425636a2e82c/`에 보존한다. Git에는 넣지 않는다.
@@ -50,7 +57,7 @@ AVI의 고정 재생 속도나 프레임 번호 ÷ 10으로 시각을 대체하�
 | 영상 경과 | 화면·입력 | 확인한 동작·표시 |
 |---|---|---|
 | 00:00~00:05 | 시작 팁과 버튼, 메인 메뉴 | 팁 창을 닫고 기본 메뉴로 진입한다. |
-| 00:05~00:38 | Options 반복 개폐·설정 선택 | Sound On, Play Music, Wind Noise, Speaker Swap L/R, 음량, Edge Scroll in Fullscreen, Auto-Demo, Tell Tips at Startup, Pass Server Diagnostic가 보인다. 선택 표시는 파란 점이며 일부 선택 뒤 메뉴가 닫혀 다시 연다. |
+| 00:05~00:38 | Options 반복 개폐·설정 선택 | Sound On, Play Music, Wind Noise, Speaker Swap L/R, 음량, Edge Scroll in Fullscreen, Auto-Demo, Tell Tips at Startup, Pass Server Diagnostic가 보인다. 파란 마크는 켜진 항목·현재 값에만 나타나며 꺼지면 사라진다. Sound On·Play Music의 소멸/복귀, Auto-Demo 소멸을 확인했다. 항목 선택 뒤 메뉴가 닫혀 다시 연다. |
 | 00:20.9 (`g209`) | Resolution 하위 메뉴 | 640 by 480 / 800 by 600 / 1024 by 768. 현재 1024 by 768이 선택되어 있다. 해상도·전체화면 전환 실행 근거로 쓰지 않는다. |
 | 00:23~00:34 (`g230`, `g252`, `g305`, `g339`) | Music Volume / Sound Effect Volume | 각각 Volume 1~5. 음악 선택 점 2→3, 효과음 선택 점 3→4를 확인한다. 실제 음량의 선형 배율은 측정하지 않았다. |
 | 00:40~00:45 | Campaign → Struggle For Freedom → The War Begins! | 00:42에 여섯 미션 목록, 이후 캠페인 1-1 화면. 짧은 브리핑의 생략 여부는 이 표본만으로 판단하지 않는다. |
@@ -71,10 +78,15 @@ AVI의 고정 재생 속도나 프레임 번호 ÷ 10으로 시각을 대체하�
 | 02:24~03:07 | World of Nimbus → Serenisphere, Three Furies | 링크 탐색·본문 스크롤. 원소 신전/작업장/발전기 그림을 포함한 긴 문서가 같은 창에서 표시된다. |
 | 03:11~03:27 (`g1940`, `g1990`) | High Priests | 고정 그림·능력치와 별도 본문 스크롤. F5 이동 / P 또는 R 선택 설명도 확인된다. |
 | 03:30~03:52 (`g2120`, `g2210`, `g2280`) | Unit Overview | Sun/Wind/Rain/Thunder 분류, 레벨·역할·파란 유닛 링크. 목록 읽기이며 실제 미션의 생산 허용 목록이 아니다. |
-| 03:55~04:11 (`g2405`, `g2450`) | How to Capture and Sacrifice | 포획·제단 운반·자기 사제 이동·희생 순서를 읽는다. 실제 포획·의식 장면으로 간주하지 않는다. |
+| 03:55~03:58 (`g2360`) | The Priest's Powers of Construction | 사제 건설·이동 가능 위치·무력화 제한·수송·다리 위험 회피 설명. |
+| 04:00~04:11 (`g2405`, `g2450`) | How to Capture and Sacrifice | 포획·제단 운반·자기 사제 이동·희생 순서를 읽는다. 실제 포획·의식 장면으로 간주하지 않는다. |
 | 04:10.759~04:13.180 | Back → Instructions → OK | Back은 목차로 돌아가고 OK는 도움말을 닫아 메인 메뉴로 복귀한다. |
 
 ## 도움말 UI의 형태
+
+본문 전체·인용문·목차·유닛 목록은 [도움말 텍스트 문서](../gameplay/help-text-record-play-20261001.md)에 옮겼다.
+`help.english`의 원본과 녹화 세션 아카이브가 바이트 일치하며, 전체 2,727행·138앵커 정의를
+[113본문 묶음](../sources/in-game-help.md)으로 보존했다. `unitHelp` 첫/뒤 정의의 레벨·목록 차이도 기록했다.
 
 목차와 일반 도움말은 클라이언트 대략 `(287,40)~(738,390)`의 돌 프레임이다.
 본문은 어두운 배경, 흰 글자와 청록색 링크이며 우측 세로 스크롤을 쓴다.

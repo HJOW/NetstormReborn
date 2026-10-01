@@ -8,6 +8,7 @@
   측정 예: `Bridge the Gap - Started.png` (4, 32), `mainMenu.png` (2, 33), `help - NetStorm Instructions.png` (4, 34), `Dissolved Alliance! - Started.png` (2, 32)
 * 파일 이름 규칙: 메인 메뉴 계열은 `mainMenu - 메뉴 - 하위 메뉴.png`, 미션 화면은 `미션 이름 - 상황.png`
 * 상세 분석 노트가 있는 캡처: [main-menu.md](main-menu.md), [bridge-the-gap-start.md](bridge-the-gap-start.md), [the-war-begins-start.md](the-war-begins-start.md), [save-the-island-start.md](save-the-island-start.md), [dissolved-alliance-start.md](dissolved-alliance-start.md)
+* 사용자 녹화의 [Options 메뉴 동작·파란 마크](options-menu.md), [내장 도움말 11주제 텍스트](../gameplay/help-text-record-play-20261001.md), [내장 도움말 전체 원문](../sources/in-game-help.md)도 별도로 정리했다(2026-10-02). 옵션 마크는 켜진 항목·현재 선택 값에만 나타나며 고정 장식이 아니다.
 * **미션 시작 카메라**: 원본은 플레이어 1 사제 칸 기준점을 클라이언트 약 (525, 393) 에 둔다 (캡처 3장 공통, [dissolved-alliance-start.md](dissolved-alliance-start.md) 2절). 맵 뷰어도 같은 위치로 시작하므로 1024×768 뷰어 캡처와 원본 캡처를 바로 겹쳐 볼 수 있다.
 
 ## 원본 게임 전제 (사용자 확인, 2026-09-28)
