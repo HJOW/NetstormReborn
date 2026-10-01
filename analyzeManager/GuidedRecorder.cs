@@ -1,8 +1,6 @@
 using System.Diagnostics;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Text.Json;
 
 namespace Netstorm.AnalyzeManager;
 
@@ -27,7 +25,7 @@ public sealed class GuidedRecorder : IDisposable
     private readonly HookCallback _keyboardCallback;
     private readonly Thread _videoThread;
     private GuidedAudio? _audio;
-    private InputJournal? _inputs;
+    private GuidedInputJournal? _inputs;
     private nint _mouseHook;
     private nint _keyboardHook;
     private long _lastMouseMove;
@@ -65,14 +63,16 @@ public sealed class GuidedRecorder : IDisposable
         try
         {
             _audio = new GuidedAudio(_directory);
-            _inputs = new InputJournal(_directory, _session.StartedCounter);
+            // 안내 창 경과 시간과 입력 로그가 같은 녹화 시작 기준을 사용한다.
+            _startedCounter = Stopwatch.GetTimestamp();
+            _inputs = new GuidedInputJournal(_directory, _session.StartedCounter, _startedCounter);
             _mouseHook = SetWindowsHookEx(MouseHookType, _mouseCallback, GetModuleHandle(null), 0);
             _keyboardHook = SetWindowsHookEx(KeyboardHookType, _keyboardCallback, GetModuleHandle(null), 0);
             if (_mouseHook == 0 || _keyboardHook == 0) throw new InvalidOperationException("물리 입력 기록용 Windows 훅을 설치하지 못했습니다.");
-            _startedCounter = Stopwatch.GetTimestamp();
             string directory = Path.GetRelativePath(_store.Repository, _directory).Replace('\\', '/');
             _store.Append(_session, _freePlay ? "freeplay_recording_started" : "guided_recording_started",
-                new { fps = FramesPerSecond, video = "MJPEG AVI", audio = "기본 출력 장치 루프백", directory });
+                new { fps = FramesPerSecond, video = "MJPEG AVI", audio = "기본 출력 장치 루프백", directory,
+                    inputFile = _inputs.FileName, recordingId = _inputs.RecordingId, inputSchemaVersion = GuidedInputJournal.SchemaVersion });
             _videoThread.Start();
         }
         catch
@@ -129,22 +129,24 @@ public sealed class GuidedRecorder : IDisposable
     {
         try
         {
+            // 좌표 조회 전에 시각을 읽어 후속 처리 지연과 조작 타이밍을 구분한다.
+            long counter = Stopwatch.GetTimestamp();
+            DateTimeOffset utc = DateTimeOffset.UtcNow;
             if (code >= 0 && IsGameForeground())
             {
                 int kind = unchecked((int)message);
-                if (kind is 0x0200 or 0x0201 or 0x0202 or 0x0204 or 0x0205 or 0x0207 or 0x0208 or 0x020A)
+                var inputMessage = (GuidedInputMessage)kind;
+                if (inputMessage is GuidedInputMessage.MouseMove or GuidedInputMessage.LeftDown or GuidedInputMessage.LeftUp
+                    or GuidedInputMessage.RightDown or GuidedInputMessage.RightUp or GuidedInputMessage.MiddleDown or GuidedInputMessage.MiddleUp
+                    or GuidedInputMessage.Wheel or GuidedInputMessage.ExtraDown or GuidedInputMessage.ExtraUp or GuidedInputMessage.HorizontalWheel)
                 {
-                    long now = Stopwatch.GetTimestamp();
-                    if (kind != 0x0200 || now - _lastMouseMove >= MouseMoveIntervalTicks)
+                    if (inputMessage != GuidedInputMessage.MouseMove || counter - _lastMouseMove >= MouseMoveIntervalTicks)
                     {
-                        if (kind == 0x0200) _lastMouseMove = now;
+                        if (inputMessage == GuidedInputMessage.MouseMove) _lastMouseMove = counter;
                         MouseHookData mouse = Marshal.PtrToStructure<MouseHookData>(data);
-                        Point point = mouse.Position;
                         GameWindow window = WindowsGame.FindWindow(_processId);
-                        ScreenToClient(new nint(window.Handle), ref point);
-                        _inputs?.Write(new { type = "mouse", message = kind, x = point.X, y = point.Y,
-                            inside = point.X >= 0 && point.Y >= 0 && point.X < window.Width && point.Y < window.Height,
-                            wheel = kind == 0x020A ? (short)(mouse.MouseData >> 16) : (short)0 });
+                        GuidedInput? input = GuidedInput.Mouse(kind, mouse.Position, window, mouse.MouseData, mouse.Flags, mouse.Time);
+                        if (input != null) _inputs?.Write(input, utc, counter);
                     }
                 }
             }
@@ -158,14 +160,15 @@ public sealed class GuidedRecorder : IDisposable
     {
         try
         {
+            // 키 누름·해제 시각은 파일 쓰기보다 앞서 고정한다.
+            long counter = Stopwatch.GetTimestamp();
+            DateTimeOffset utc = DateTimeOffset.UtcNow;
             if (code >= 0 && IsGameForeground())
             {
                 int kind = unchecked((int)message);
-                if (kind is 0x0100 or 0x0101 or 0x0104 or 0x0105)
-                {
-                    KeyboardHookData key = Marshal.PtrToStructure<KeyboardHookData>(data);
-                    _inputs?.Write(new { type = "keyboard", message = kind, virtualKey = key.VirtualKey, scanCode = key.ScanCode });
-                }
+                KeyboardHookData key = Marshal.PtrToStructure<KeyboardHookData>(data);
+                GuidedInput? input = GuidedInput.Keyboard(kind, key.VirtualKey, key.ScanCode, key.Flags, key.Time);
+                if (input != null) _inputs?.Write(input, utc, counter);
             }
         }
         catch (Exception error) { _error = error; }
@@ -200,7 +203,7 @@ public sealed class GuidedRecorder : IDisposable
             try
             {
                 _store.Append(_session, _freePlay ? "freeplay_recording_stopped" : "guided_recording_stopped",
-                    new { frames = FrameCount, error = Error?.Message });
+                    new { frames = FrameCount, error = Error?.Message, recordingId = _inputs?.RecordingId });
             }
             catch (Exception error) { _error ??= error; }
         }
@@ -241,51 +244,7 @@ public sealed class GuidedRecorder : IDisposable
     [DllImport("user32.dll")] private static extern nint GetForegroundWindow();
     /// <summary>전면 창을 소유한 프로세스 ID를 읽는다.</summary>
     [DllImport("user32.dll")] private static extern uint GetWindowThreadProcessId(nint window, out uint processId);
-    /// <summary>물리 화면 좌표를 게임 클라이언트 좌표로 바꾼다.</summary>
-    [DllImport("user32.dll")] [return: MarshalAs(UnmanagedType.Bool)] private static extern bool ScreenToClient(nint window, ref Point point);
     /// <summary>현재 모듈에서 Windows 훅 콜백 주소를 제공한다.</summary>
     [DllImport("kernel32.dll", CharSet = CharSet.Unicode)] private static extern nint GetModuleHandle(string? name);
 
-    /// <summary>많은 입력 이벤트를 4 MB 이하 JSONL 파일로 순서대로 분할한다.</summary>
-    private sealed class InputJournal : IDisposable
-    {
-        private readonly string _directory;
-        private readonly long _sessionCounter;
-        private StreamWriter? _writer;
-        private long _bytes;
-        private int _part;
-
-        /// <summary>앞선 기록의 다음 번호를 찾는다.</summary>
-        public InputJournal(string directory, long sessionCounter)
-        {
-            _directory = directory;
-            _sessionCounter = sessionCounter;
-            _part = Directory.EnumerateFiles(directory, "input-*.jsonl")
-                .Select(path => int.TryParse(Path.GetFileNameWithoutExtension(path).AsSpan(6), out int number) ? number : 0)
-                .DefaultIfEmpty(0).Max();
-        }
-
-        /// <summary>물리 입력과 세션 경과 시간을 같은 JSON 줄에 기록한다.</summary>
-        public void Write(object input)
-        {
-            string line = JsonSerializer.Serialize(new { utc = DateTimeOffset.UtcNow,
-                sessionElapsedMs = Stopwatch.GetElapsedTime(_sessionCounter).TotalMilliseconds, input }, SessionStore.Json) + "\n";
-            int size = Encoding.UTF8.GetByteCount(line);
-            if (_writer == null || _bytes + size > SessionStore.DefaultPartBytes)
-            {
-                _writer?.Dispose();
-                _part++;
-                string path = Path.Combine(_directory, $"input-{_part:0000}.jsonl");
-                SessionStore.RejectReparse(path);
-                _writer = new StreamWriter(new FileStream(path, FileMode.CreateNew, FileAccess.Write, FileShare.Read), new UTF8Encoding(false));
-                _bytes = 0;
-            }
-            _writer.Write(line);
-            _writer.Flush();
-            _bytes += size;
-        }
-
-        /// <summary>마지막 입력 조각을 닫는다.</summary>
-        public void Dispose() => _writer?.Dispose();
-    }
 }

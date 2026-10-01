@@ -34,6 +34,7 @@
 ( 기존 게임 영상만을 전문으로 올리는 유튜브 채널 주소 : https://www.youtube.com/@netstormcampaigns2591 )
 - 캠페인 3-4 (사운드 있음, 후편집 추가요소 주의) : https://youtu.be/t2g9fASt4do?si=-O2tjL5u-cAan6fG
 - 캠페인 3-5 (사운드 있음, 후편집 추가요소 주의) : https://youtu.be/6F8En-b6FXU?si=kfNuAjtnXIdOYpZq
+* 게임 종합 소개 영상 : https://www.youtube.com/watch?v=q4eSz1TjqYQ
 * 게임 플레이 방법을 소개한 홈페이지도 참고할 수 있다.
   https://hjow.duckdns.org/netstorm/learnmain.htm
 * 웹 자바스크립트로 만든 것으로 추정되는 팬게임이 존재한다.

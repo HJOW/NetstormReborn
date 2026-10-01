@@ -90,7 +90,7 @@ public sealed class GuidedForm : Form
             Text = freePlay ? "기존 게임 플레이 녹화 분석" : "", Margin = Padding.Empty };
         _instruction = new TextBox { Dock = DockStyle.Fill, BorderStyle = BorderStyle.FixedSingle, Font = Font,
             Multiline = true, ReadOnly = true, WordWrap = true, ScrollBars = ScrollBars.Vertical, TabStop = false, Margin = new Padding(0, 4, 0, 6),
-            Text = freePlay ? "녹화 시작을 누른 뒤 원본 게임을 자유롭게 플레이하세요. 영상·소리·입력은 playingVideos의 세션 폴더에 저장됩니다. 녹화가 오류로 중단되면 아래 상태가 바뀌며 녹화 시작을 다시 누를 수 있습니다." : "" };
+            Text = freePlay ? "녹화 시작을 누른 뒤 원본 게임을 자유롭게 플레이하세요. 영상·소리는 playingVideos의 세션 폴더에 저장됩니다. 키·마우스 조작 시각과 좌표도 input-번호.jsonl 파일에 따로 기록됩니다. 녹화가 오류로 중단되면 아래 상태가 바뀌며 녹화 시작을 다시 누를 수 있습니다." : "" };
         _previous = new Button { Text = "이전", Dock = DockStyle.Fill, Margin = new Padding(0, 2, 4, 2) };
         _next = new Button { Text = "다음 단계", Dock = DockStyle.Fill, Margin = new Padding(4, 2, 0, 2) };
         _start = new Button { Text = freePlay ? "녹화 시작 / 다시 시작" : "녹화 시작 / 이어서", Dock = DockStyle.Fill, Margin = new Padding(0, 2, 4, 2) };

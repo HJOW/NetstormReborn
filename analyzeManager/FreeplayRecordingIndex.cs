@@ -20,6 +20,7 @@ public static class FreeplayRecordingIndex
             updatedUtc = DateTimeOffset.UtcNow,
             videoFormat = "MJPEG AVI, 10 FPS, 소리·커서 없음",
             audioFormat = "별도 WAV, Windows 기본 출력 장치",
+            inputFormat = "별도 UTF-8 JSONL, 키·마우스 조작, 게임/화면 좌표, UTC·sessionElapsedMs·recordingElapsedMs",
             videos = Parts(directory, "video-*.avi", ".frames.csv"),
             audios = Parts(directory, "audio-*.wav", ".start.txt"),
             inputs = Parts(directory, "input-*.jsonl", null),

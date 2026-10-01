@@ -4,6 +4,8 @@
 
 사용자 직접 조작용 `guide --session ID --steps-file 안내.txt` 모드도 있다. 게임 옆에 단계 안내를 띄우고 사용자 입력·화면·기본 출력 장치 소리를 분할 저장한다. 기존 CLI/MCP 조작 방식은 그대로 사용할 수 있다. [사용법과 파일 형식](../docs/analyze-manager.md#사용자-직접-조작-녹화-모드).
 
+두 사용자 녹화 모드 모두 **별도 `input-번호.jsonl` 조작 로그**를 자동으로 저장한다. 키 이름·누름/해제, 마우스 버튼·휠·게임/화면 좌표와 UTC·세션/녹화 시작 후 경과 밀리초가 들어간다. 녹화 구간 ID와 시작·중단 기록으로 다시 녹화한 구간도 구분한다. `guide`는 세션의 `recording/`, `record-play`는 `playingVideos/<세션 ID>/`에 두며 4 MB 이하로 분할하고 기존 파일을 보존한다. 영상과 입력은 같은 `sessionElapsedMs`로 맞춘다. [로그 필드와 예시](../docs/analyze-manager.md#사용자-조작-로그-두-녹화-모드-공통-2026-10-01-확장).
+
 **YouTube 영상 분석(2026-10-01):** `youtube_probe`·`youtube_list`·`youtube_frames`·`youtube_clip`·`youtube_note`·`youtube_videos` 도구(CLI·MCP 공통)로 게임을 실행하지 않고 YouTube 플레이 영상의 지정 시각 프레임·구간을 읽는다. 재생기 광고는 원본 스트림에 없고, 서버 삽입 광고 의심(스트림이 더 김)은 거부하며, 업로더가 넣은 협찬 구간은 SponsorBlock 으로 표시한다. yt-dlp·ffmpeg가 필요하며 Linux portable 빌드는 Deno도 사용한다. Windows는 기존 분석기, Linux는 YouTube 도구만 포함한 `portable/` 빌드를 사용한다. [사용법과 준비](../docs/analyze-manager.md#youtube-영상-분석-원본-게임-실행-없음).
 
 `record-play --session ID`는 지침 없이 자유롭게 플레이하는 동안 같은 방식으로 녹화한다. 안내 창은 녹화 중·중단·오류와 재시작 가능 여부를 표시한다. 분할 영상·음성·입력과 파일 색인은 `playingVideos/<세션 ID>/`에 남는다. [녹화 분석 사용법](../docs/analyze-manager.md#기존-게임-플레이-녹화-분석-모드).

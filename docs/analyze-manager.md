@@ -241,9 +241,40 @@ analyzeManager/bin/Release/net10.0-windows/Netstorm.AnalyzeManager.exe guide --s
 | `video-0001.frames.csv` 등 | 각 영상 프레임의 UTC 시각과 세션 경과 밀리초 |
 | `audio-0001.wav` 등 | Windows 기본 재생 장치의 출력 소리를 WAV로 기록. 다른 앱 소리도 포함될 수 있음 |
 | `audio-0001.start.txt` 등 | 해당 WAV의 시작 UTC 시각 |
-| `input-0001.jsonl` 등 | 게임이 전면일 때의 마우스 이동·버튼·휠과 키 누름·해제, 게임 클라이언트 좌표와 시각 |
+| `input-0001.jsonl` 등 | 별도 사용자 조작 로그: 키 이름·누름/해제, 마우스 버튼·휠·게임/화면 좌표, UTC·세션/녹화 경과 시간 |
 
 AVI와 WAV는 각각 **48,000,000바이트 전에** 새 조각으로 분할한다. 입력 로그는 약 4 MB마다 나눈다. 화면 프레임·소리·입력의 시각을 함께 써서 후속 분석에서 대응시킨다. 안내 창이나 다른 앱의 입력은 게임 입력으로 기록하지 않는다. 안내 창이 열린 동안에는 같은 데스크톱 잠금을 사용하므로 기존 AI 조작 명령을 동시에 보낼 수 없다. 게임 창이 가려지거나 최소화되면 녹화를 중단하고 오류를 표시한다. 녹화 파일은 `extracted/`에 남아 Git에는 포함되지 않는다.
+
+### 사용자 조작 로그 (두 녹화 모드 공통, 2026-10-01 확장)
+
+녹화 시작 버튼을 누르면 **영상·음성과 별도의 `input-0001.jsonl` 파일**을 자동으로 만든다. `guide`(기존 게임 수동 컨트롤 방식)는 `extracted/analyzeManager/<SESSION_ID>/recording/`, `record-play`(기존 게임 플레이 녹화 분석 방식)는 `playingVideos/<SESSION_ID>/`에 저장한다. UTF-8 JSONL 형식이며 각 줄이 하나의 JSON 이벤트다.
+
+| 필드 | 의미 |
+|---|---|
+| `schemaVersion` | 새 로그는 `2`. 기존 `utc`·`sessionElapsedMs`·`input.message`·`virtualKey`·`scanCode`·`x`·`y`·`inside`·`wheel`도 보존한다 |
+| `recordingId`·`sequence` | 녹화 시작마다 새 ID. 같은 구간의 파일을 분할해도 ID와 이벤트 순서는 이어진다 |
+| `utc` | 입력 훅에 들어온 시각(UTC). 좌표 조회·파일 쓰기 전에 읽는다 |
+| `sessionElapsedMs` | 세션 시작 후 경과 밀리초. **영상 `.frames.csv`의 동명 필드와 직접 대조**한다 |
+| `recordingElapsedMs` | 이번 녹화 시작 후 경과 밀리초. 중단 후 다시 시작하면 0부터 시작한다 |
+| `input.type`·`action` | 키보드: `keyboard` + `down/up`. 마우스: `mouse` + `move/down/up/wheel`. 녹화 경계: `recording` + `started/stopped` |
+| `input.key`·`virtualKey`·`scanCode` | `F6`, `A`, `LeftCtrl` 같은 키 이름과 원시 키 코드. 키 자동 반복도 누름 이벤트로 남는다 |
+| `input.button` | `left/right/middle/x1/x2`. 버튼 누름과 해제를 각각 남겨 드래그·누르고 있던 시간을 알 수 있다 |
+| `input.x/y`·`screenX/screenY` | 대상 게임 창의 클라이언트 좌표와 전체 데스크톱 좌표(물리 픽셀). 화면 왼쪽/위 보조 모니터에서는 음수 좌표도 가능하다 |
+| `input.window`·`inside` | 당시 대상 창의 핸들·제목·위치·크기와 클라이언트 영역 안인지 여부. 게임 대화상자는 해당 창 좌표다 |
+| `input.wheel`·`wheelAxis` | 부호 있는 휠 변화량과 `vertical/horizontal` 축 |
+| `input.flags`·`hookTimeMs`·`injected` | Windows 훅의 원시 플래그·시스템 입력 시각과 프로그램이 생성한 입력인지 여부. `hookTimeMs`는 시스템 기준 값이며 UTC나 영상 경과 시간이 아니다 |
+| `input.extended`·`altDown` | 키보드 확장 키·Alt 조합 여부 |
+
+주요 필드만 추린 두 조작의 예시:
+
+```jsonl
+{"schemaVersion":2,"recordingId":"abc123","sequence":2,"utc":"2026-10-01T12:00:01.200Z","sessionElapsedMs":3200,"recordingElapsedMs":1200,"input":{"type":"keyboard","action":"down","message":256,"key":"F6","virtualKey":117,"scanCode":64}}
+{"schemaVersion":2,"recordingId":"abc123","sequence":3,"utc":"2026-10-01T12:00:01.600Z","sessionElapsedMs":3600,"recordingElapsedMs":1600,"input":{"type":"mouse","action":"down","message":513,"button":"left","x":320,"y":240,"screenX":420,"screenY":340,"inside":true}}
+```
+
+마우스 이동은 최대 50회/초로 기록하고 버튼·휠·키 이벤트에는 이 제한을 적용하지 않는다. 게임이 전면일 때만 조작을 기록하므로 안내 창·다른 앱에서 한 조작은 포함되지 않는다. 입력이 없는 녹화도 `started/stopped` 경계를 남긴다. 입력 파일은 **4,000,000바이트 이하**로 나누고 다시 녹화할 때 기존 파일을 덮지 않는다. `record-play`의 `recording-index.json.inputs`와 세션의 녹화 시작 이벤트에서 로그 파일을 찾을 수 있다. 기존 형식의 로그는 새 필드가 없으므로 후속 분석 시 `schemaVersion`을 확인한다. AVI의 첫 프레임은 녹화 시작보다 늦을 수 있으므로 프레임 번호나 AVI 재생 시간 대신 `sessionElapsedMs`로 입력을 맞춘다.
+
+게임 없는 검증: 키·버튼·휠 해석, 보조 모니터·창 이동·영역 밖 좌표, 밀리초 계산, UTF-8 분할·재녹화 보존·입력 없는 구간, 입력 한 건의 크기 제한, 자유 플레이 색인을 단위 테스트로 검사한다. 확장 형식으로 실제 원본 게임을 녹화한 검증은 아직 하지 않았다.
 
 **실제 게임 검증(2026-09-30):** `HJOW-Athlon`의 RDP 화면이 보이는 상태에서 사용자가 튜토리얼 1을 직접 조작했다. 세션 `20260929T154230683Z-bdf8f92d93a1`에 10 FPS 영상 2,438프레임(AVI 4개), 기본 출력 소리(WAV 2개), 마우스·키 입력(JSONL 1개)을 기록하고 오류 없이 중단했다. 각 AVI/WAV는 48 MB 미만이며 `ffprobe`로 모두 읽히고, AVI 4개는 FFmpeg 오류 없이 끝까지 디코딩됐다. 영상 약 243.8초와 오디오 약 243.9초가 맞으며 두 WAV에서 실제 소리도 검출됐다. 안내 단계 8개와 최종 600 SP 결과 화면을 기록했다. [게임 관찰 결과](screens/README.md#16-사용자-직접-조작-녹화-튜토리얼-1-완료-2026-09-30-windows-hjow-athlon)를 참고한다. 이전의 0프레임 세션은 RDP 화면 가림 조건에서 발생한 사례다. 녹화 중단 후 다시 시작하는 흐름은 게임 없는 검사로만 확인했다.
 
@@ -265,7 +296,7 @@ analyzeManager/bin/Release/net10.0-windows/Netstorm.AnalyzeManager.exe record-pl
 
 안내 창 아래 상태 영역은 **녹화 대기**, 초록색 **녹화 중**(경과 시간·영상 프레임 수), **녹화 중단됨 · 다시 시작 가능**, **게임 종료**를 구분한다. 화면 캡처·음성·입력 기록 오류, 게임 창 가림·크기 변경, 창을 게임 옆에 둘 공간 부족으로 녹화가 멈추면 빨간 상태 영역에 이유가 표시되고 녹화 시작 버튼이 다시 켜진다. 0프레임으로 끝난 녹화도 오류로 표시한다. 문제를 해결한 뒤 버튼을 누르면 앞선 파일을 덮지 않고 다음 번호의 조각에 기록한다. 게임 자체가 종료된 경우에는 새 게임 세션이 필요하다. 안내 창을 닫아도 녹화 파일은 안전하게 닫고 게임은 종료하지 않는다.
 
-파일은 저장소의 `playingVideos/<SESSION_ID>/`에 저장된다. `video-0001.avi` 등은 게임 창의 10 FPS MJPEG 영상이며 **커서·소리가 영상 안에 들어 있지 않다**. 같은 번호의 `.frames.csv`에 프레임 시각이 있고, `audio-0001.wav` 등의 Windows 기본 출력 소리와 시작 시각 `.start.txt`, `input-0001.jsonl` 등의 게임 입력·좌표가 함께 남는다. AVI와 WAV는 각각 48,000,000바이트 전에 자동으로 다음 파일을 시작해 **파일 하나가 50 MB에 이르지 않도록** 한다. 총 녹화 용량에는 별도 한도가 없으므로 긴 플레이 전에는 저장 공간을 확인한다. `recording-index.json`은 녹화가 중단될 때 완성된 조각의 이름·바이트 크기·시각 파일을 갱신한다. `playingVideos/`의 내용은 Git에서 제외된다.
+파일은 저장소의 `playingVideos/<SESSION_ID>/`에 저장된다. `video-0001.avi` 등은 게임 창의 10 FPS MJPEG 영상이며 **커서·소리가 영상 안에 들어 있지 않다**. 같은 번호의 `.frames.csv`에 프레임 시각이 있고, `audio-0001.wav` 등의 Windows 기본 출력 소리와 시작 시각 `.start.txt`, `input-0001.jsonl` 등의 별도 사용자 조작 로그가 함께 남는다. 키·버튼·좌표와 동기화 시각의 형식은 앞의 **사용자 조작 로그** 절을 따른다. AVI와 WAV는 각각 48,000,000바이트 전에 자동으로 다음 파일을 시작해 **파일 하나가 50 MB에 이르지 않도록** 한다. 총 녹화 용량에는 별도 한도가 없으므로 긴 플레이 전에는 저장 공간을 확인한다. `recording-index.json`은 녹화가 중단될 때 완성된 조각의 이름·바이트 크기·시각 파일을 갱신한다. `playingVideos/`의 내용은 Git에서 제외된다.
 
 사용자가 프롬프트로 녹화 완료를 알리면 AI는 해당 세션의 `recording-index.json`에서 이번 영상 목록을 찾고, `.frames.csv`와 입력 JSONL의 시각을 맞춰 필요한 장면의 JPEG 프레임을 추출·관찰한 뒤 근거 시각을 적어 문서화한다. WAV는 소리가 필요한 관찰에 사용한다. 기존 `tools/videoframes.py`는 FFmpeg가 있는 환경의 영상 추출 도구이며, 이 모드의 MJPEG AVI는 위 수동 녹화 절의 RIFF `00dc` 청크 추출 방법으로 FFmpeg 없이도 읽을 수 있다. 짧은 사건의 정확한 시각이나 화면에 드러나지 않는 규칙은 별도 관찰이 필요하다.
 
