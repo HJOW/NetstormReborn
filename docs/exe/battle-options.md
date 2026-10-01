@@ -42,6 +42,12 @@
 * 도움말(원판)은 Bridge Slots 2/4/6, Unit Rate slow/medium/fast, **Generator Range short/normal/long**, Kill Reward 0/25/50/100%, SP per Geyser 1000/2000/3000 을 설명한다. 패치판 exe 는 선택지가 더 많다 (Very Long, 75%·150%, 5000 등).
 * Unit Rate의 실제 생산 창 재충전 시간과 요새 모드 예외는 [production-refresh.md](production-refresh.md)에 정리했다.
 
+## 2-1. 처치 보상 비율 (2026-10-01 확인)
+
+* 보상 계산 `FUN_0044c2f0`은 `DAT_005424bc × 비용 / 100`을 처치한 플레이어에게 준다.
+* `DAT_005424bc`는 전투 초기화 `FUN_004b2df0`에서 **0x19(25%)**로 정해진다. 옵션 15 표(`FUN_0041ca70`: 0·25·50·75·100·150%)로 바꾸는 곳은 네트워크·저장 옵션 복사 `FUN_004b4900`뿐이다.
+* 따라서 **캠페인·튜토리얼은 25%**, 멀티플레이는 옵션 값(기본 인덱스 2 = 50%)이다. 사용자 설명(적 템플 파괴 보상 = 비용의 25%)과 일치한다. 클론: `BattleOptions.ApplySinglePlayerKillReward()`.
+
 ## 3. 에너지 공급 범위 (`004b4860`)
 
 ```c

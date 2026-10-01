@@ -269,6 +269,14 @@ analyzeManager/bin/Release/net10.0-windows/Netstorm.AnalyzeManager.exe record-pl
 
 사용자가 프롬프트로 녹화 완료를 알리면 AI는 해당 세션의 `recording-index.json`에서 이번 영상 목록을 찾고, `.frames.csv`와 입력 JSONL의 시각을 맞춰 필요한 장면의 JPEG 프레임을 추출·관찰한 뒤 근거 시각을 적어 문서화한다. WAV는 소리가 필요한 관찰에 사용한다. 기존 `tools/videoframes.py`는 FFmpeg가 있는 환경의 영상 추출 도구이며, 이 모드의 MJPEG AVI는 위 수동 녹화 절의 RIFF `00dc` 청크 추출 방법으로 FFmpeg 없이도 읽을 수 있다. 짧은 사건의 정확한 시각이나 화면에 드러나지 않는 규칙은 별도 관찰이 필요하다.
 
+**실제 게임 검증(2026-10-01, `HJOW-Athlon`):** 세션 `20261001T114152818Z-778e248ca3aa`에서 사용자가 캠페인 1-2를 약 20분 자유롭게 플레이했다. 결과는 다음과 같다.
+- 녹화: 11,842프레임(AVI 29개, 각 48 MB 미만), WAV 9개, 입력 JSONL 1개, `recording-index.json` 갱신. 중단 이벤트의 `error`는 `null`이다.
+- 프레임 번호는 AVI 조각마다 1부터 다시 시작한다. 캡처가 2.3~2.7초 멈춘 구간이 두 번 있었다(10:29.5, 11:05.9 — 게임 내 메뉴 클릭 직후).
+- 따라서 시각 계산에는 반드시 `.frames.csv`의 `sessionElapsedMs`를 쓴다. 판독은 [`tools/recordplay_frames.py`](../tools/recordplay_frames.py)로 했다.
+- 관찰 결과: [녹화 노트](videos/master-of-whirligigs-record-play-20261001.md).
+- 이전 빌드(2026-09-30)에는 `record-play`가 없어 Release를 다시 빌드한 뒤 사용했다.
+- `start_session`은 `cmd.exe /c` 리다이렉트로 백그라운드 실행했다. CLI가 바로 끝나도 게임이 유지됐다.
+
 ## YouTube 영상 분석 (원본 게임 실행 없음)
 
 YouTube에는 원본 게임 플레이 영상이 많다(AGENTS.md의 튜토리얼·캠페인 영상, 전용 채널 `@netstormcampaigns2591`). 직접 플레이·녹화하는 것보다 빠르게 화면·흐름·시간을 확인할 수 있도록, 영상 주소를 받아 **필요한 시각의 프레임만** 원격 스트림에서 읽는 도구를 두었다(2026-10-01). CLI `call`과 MCP가 같은 엔진(`YouTubeAnalyzer`)을 쓰며, AI는 주로 MCP로 사용한다. MCP 응답은 구조화 데이터와 함께 프레임(여러 장이면 관찰표) PNG 이미지를 돌려준다.

@@ -70,11 +70,28 @@ python tools/videoframes.py range "playingVideos/Netstorm Islands at war - Disso
 
 * [animation-timing.md](animation-timing.md) — 애니메이션 진행 속도: 가이저 증기 약 24Hz, 신전 회오리·피해 연기 12Hz. exe 의 "현재 시각 + 간격" 타이머와 `maxFPS = 75` 루프 양자화로 설명됨
 * [the-war-begins-record-play-20260930.md](the-war-begins-record-play-20260930.md) — 사용자 직접 조작 10 FPS 녹화: 캠페인 1-1 시작, 지식 격자·설명창(호버·구성·시간 흐름), 적 신전 파괴 뒤 섬 테마·소유권 전환, 사제 기절·골렘 포획·제단 의식(다섯 룬)·희생 음악, 승리와 다음 미션 진입. 소리 판독 결과는 [music.md](../exe/music.md). 원본 녹화는 `playingVideos/20260930T154921831Z-8bdcc06b6539/`에 있으며 Git에서 제외됨
+* [master-of-whirligigs-record-play-20261001.md](master-of-whirligigs-record-play-20261001.md) — `record-play` 10 FPS 녹화(캠페인 1-2). 다음 장면을 사용자가 일부러 재현했다.
+  * 실제 전투
+  * 운반 골렘의 다리 붕괴 낙하 → 사제 허공 기절 → 다리 재건 시 복귀
+  * 내 사제의 허공 기절·복귀
+  * 운반 골렘 판매·`Drop`
+  * 의식 중 사제 이탈(룬 마크 전/후)
+  * 의식 중 제단 판매
+  * 완료 보상 +5,000 SP
+
+  원본 녹화는 `playingVideos/20261001T114152818Z-778e248ca3aa/`에 있으며 Git에서 제외됨
 * AV1 소프트웨어 디코딩은 느리므로 긴 구간을 한 번에 뽑지 않는다.
 
 ## YouTube 영상 바로 읽기 (2026-10-01)
 
 YouTube 영상은 내려받지 않고 `analyzeManager`의 `youtube_*` 도구(MCP·CLI)로 지정 시각 프레임·짧은 구간만 읽는다. 재생기 광고가 섞이지 않는 원본 스트림을 쓰므로 영상 시각이 업로드 원본 시각과 같다. 사용법·광고 처리: [analyze-manager.md](../analyze-manager.md#youtube-영상-분석-원본-게임-실행-없음). 영상 목록은 AGENTS.md 와 LEFT_JOBS.md 5단계 표, 전용 채널 `https://www.youtube.com/@netstormcampaigns2591`(미션별 스피드런 다수).
+
+## record-play 프레임·관찰표 도구 `tools/recordplay_frames.py` (2026-10-01)
+
+`record-play`·`guide` 세션 폴더의 MJPEG AVI 조각을 FFmpeg 없이 읽는다. 조각마다 프레임 번호가 다시 시작하고 캡처가 멈춘 구간도 있으므로, 시각은 각 `.frames.csv`의 `sessionElapsedMs`로 계산한다(0 = 첫 프레임, `audiomatch.py`와 같은 기준).
+
+- `frames <세션> -o <폴더> 660.5 g6596 …`: 경과 초 또는 `g`전역 프레임 번호의 원본 크기 PNG를 저장한다.
+- `sheet <세션> -o <폴더> --step 50 [--start 초 --end 초] [--crop x,y,w,h]`: 시각을 적은 관찰표를 만든다. `--crop`이면 원본 픽셀 그대로 잘라 붙인다.
 
 ## 소리 판독 도구 `tools/audiomatch.py` (2026-10-01)
 

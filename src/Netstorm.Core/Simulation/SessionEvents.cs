@@ -132,6 +132,9 @@ public enum SessionEventKind
     /// <summary>체력을 모두 잃어 오브젝트가 파괴됨.</summary>
     EntityDestroyed,
 
+    /// <summary>전투로 파괴된 템플·포대가 주위 1칸에 폭발 피해를 줌 (Player = 처치한 플레이어, EntityId = 파괴된 오브젝트).</summary>
+    EntityExploded,
+
     /// <summary>사제가 체력 절반에서 기절해 보호막을 얻음.</summary>
     PriestStunned,
 
@@ -207,7 +210,7 @@ public enum SessionEventKind
     /// <summary>운반한 사제를 제단의 희생의 원에 묶음 (EntityId = 사제).</summary>
     PriestBound,
 
-    /// <summary>포획된 사제가 풀려나 완전히 회복함 (내려놓음·운반 유닛 파괴·제단 파괴·의식 중단, EntityId = 사제).</summary>
+    /// <summary>포획된 사제가 풀려나 완전히 회복함 (내려놓음·운반 유닛 파괴·판매, 제단 파괴·판매, EntityId = 사제).</summary>
     PriestReleased,
 
     /// <summary>제단에서 희생 의식이 시작됨 (Player = 제단 소유자, EntityId = 제단). 원본은 이때 희생 음악을 튼다.</summary>
@@ -225,8 +228,20 @@ public enum SessionEventKind
     /// <summary>묶인 사제가 희생됨 (원본 priestSacrifice2.wav, EntityId = 희생된 사제).</summary>
     PriestSacrificed,
 
-    /// <summary>내 사제가 움직일 수 없게 되거나 제단이 크게 다쳐 의식이 깨짐 (EntityId = 제단).</summary>
+    /// <summary>제단이 파괴·판매돼 의식이 깨지고 포로가 풀림 (EntityId = 제단). 의식 사제의 이탈·기절·포획은 깨지지 않고 멈춘다.</summary>
     SacrificeBroken,
+
+    /// <summary>의식 사제가 제단 옆을 떠나거나 기절·포획돼 의식이 멈춤 (EntityId = 제단). 포로는 묶인 채 남는다(2026-10-01 녹화·사용자 확인).</summary>
+    SacrificePaused,
+
+    /// <summary>마크가 나타나기 전에 사제가 떠나 그 룬이 취소됨 (Text = 룬 이름, EntityId = 제단). 복귀하면 음성부터 다시 한다.</summary>
+    SacrificeRuneCancelled,
+
+    /// <summary>의식 사제가 움직일 수 있는 상태로 제단 옆에 돌아와 의식이 이어짐 (EntityId = 제단).</summary>
+    SacrificeResumed,
+
+    /// <summary>적 사제를 의식으로 완전히 처리해 제단 주인이 스톰 파워 5,000을 받음 (EntityId = 희생된 사제).</summary>
+    SacrificeRewarded,
 
     /// <summary>의식이 끝난 제단이 소멸함 (EntityId = 제단).</summary>
     AltarConsumed,

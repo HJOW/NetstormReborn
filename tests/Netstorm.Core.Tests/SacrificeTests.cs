@@ -80,9 +80,14 @@ public sealed class SacrificeTests
         Assert.Equal(0, captive.CaptorId);
         Assert.DoesNotContain(session.DrainEvents(), item => item.Text == "BadTeamDead");
 
+        int stormPowerBefore = session.Player(1).StormPower;
         session.RunTicks(Ticks(session, BattleSession.SacrificedPriestRemovalDelaySeconds));
         Assert.Null(session.Entity(captive.Id));
-        Assert.Single(session.DrainEvents(), item => item.Text == "BadTeamDead");
+        // 적 사제를 완전히 처리하면 제단 주인이 스톰 파워 5,000을 받는다 (사용자 확인, 녹화 8,450 → 13,450).
+        Assert.Equal(stormPowerBefore + BattleSession.SacrificeRewardStormPower, session.Player(1).StormPower);
+        SessionEvent[] removed = [.. session.DrainEvents()];
+        Assert.Single(removed, item => item.Kind == SessionEventKind.SacrificeRewarded);
+        Assert.Single(removed, item => item.Text == "BadTeamDead");
         session.RunTicks(session.TicksPerSecond * 2);
         Assert.DoesNotContain(session.DrainEvents(), item => item.Text == "BadTeamDead");
     }
@@ -263,9 +268,75 @@ public sealed class SacrificeTests
         Assert.Equal(0, session.Player(1).SelectedEntityId);
     }
 
-    /// <summary>제단 체력이 절반 아래로 떨어지면 의식이 깨지고 묶인 사제가 회복해 달아난다.</summary>
+    /// <summary>
+    /// 룬 마크가 나타난 뒤 의식 사제가 떠나면 의식은 깨지지 않고 멈춘다: 그 룬은 제시간에 타고, 포로는 묶인 채 남으며,
+    /// 다음 룬은 사제가 돌아와 첫 룬 지연이 지난 뒤 시작한다(2026-10-01 캠페인 1-2 녹화 Rain 룬).
+    /// </summary>
     [Fact]
-    public void DamagedAltar_BreaksRitualAndReleasesCaptive()
+    public void Ritual_PerformerLeavingAfterMarkFinishesRuneThenWaitsForReturn()
+    {
+        BattleSession session = Create(CampaignMission(), includeCannon: true);
+        (GameEntity captive, GameEntity altar, GameEntity performer) = StartRitual(session);
+        long voice = RunUntil(session, SessionEventKind.SacrificeRune).Tick;
+        session.RunTicks(Ticks(session, BattleSession.SacrificeRuneMarkSeconds + 0.5));
+        session.Submit(new MoveEntityCommand(1, performer.Id, 80, 30));
+        session.RunTicks(session.TicksPerSecond * 25);
+
+        SessionEvent[] away = [.. session.DrainEvents()];
+        Assert.Contains(away, item => item.Kind == SessionEventKind.SacrificePaused);
+        Assert.DoesNotContain(away, item => item.Kind is SessionEventKind.SacrificeBroken or SessionEventKind.SacrificeRuneCancelled);
+        // 확정된 Wind 룬은 사제가 없어도 음성 12.1초 뒤에 탄다.
+        long burned = Assert.Single(away, item => item.Kind == SessionEventKind.SacrificeRuneBurned).Tick;
+        Assert.InRange(burned - voice, Ticks(session, BattleSession.SacrificeRuneBurnSeconds) - 1, Ticks(session, BattleSession.SacrificeRuneBurnSeconds) + 1);
+        Assert.DoesNotContain(away, item => item.Kind == SessionEventKind.SacrificeRune);
+        AltarRitual ritual = Assert.Single(session.Rituals);
+        Assert.True(ritual.PerformerAway);
+        Assert.Equal(PriestCaptivity.Bound, captive.Captivity);
+        Assert.Equal(altar.Id, captive.CaptorId);
+
+        session.Submit(new MovePriestToAltarCommand(1, altar.Id, performer.Id));
+        long resumed = RunUntil(session, SessionEventKind.SacrificeResumed).Tick;
+        SessionEvent next = RunUntil(session, SessionEventKind.SacrificeRune);
+        Assert.Equal("Sun", next.Text);
+        Assert.InRange(next.Tick - resumed, Ticks(session, BattleSession.SacrificeRuneLeadSeconds) - 1, Ticks(session, BattleSession.SacrificeRuneLeadSeconds) + 1);
+        RunUntil(session, SessionEventKind.SacrificeCompleted);
+        Assert.Equal(BattleSession.SacrificeRuneCount, ritual.RunesBurned);
+    }
+
+    /// <summary>
+    /// 음성만 나오고 마크가 나타나기 전에 사제가 떠나면 그 룬은 취소되고, 돌아오면 같은 룬을 음성부터 다시 한다
+    /// (2026-10-01 캠페인 1-2 녹화 Thunder 룬: 18:34.6 음성 → 이탈 → 18:42.2 같은 음성 재생).
+    /// </summary>
+    [Fact]
+    public void Ritual_PerformerLeavingBeforeMarkCancelsAndRepeatsRune()
+    {
+        BattleSession session = Create(CampaignMission(), includeCannon: true);
+        (GameEntity captive, GameEntity altar, GameEntity performer) = StartRitual(session);
+        RunUntil(session, SessionEventKind.SacrificeRune);
+        session.RunTicks(Ticks(session, 0.5));
+        session.Submit(new MoveEntityCommand(1, performer.Id, 80, 30));
+        session.RunTicks(session.TicksPerSecond * 20);
+
+        SessionEvent[] away = [.. session.DrainEvents()];
+        Assert.Equal("Wind", Assert.Single(away, item => item.Kind == SessionEventKind.SacrificeRuneCancelled).Text);
+        Assert.DoesNotContain(away, item => item.Kind is SessionEventKind.SacrificeRuneBurned or SessionEventKind.SacrificeRune);
+        AltarRitual ritual = Assert.Single(session.Rituals);
+        Assert.Equal(0, ritual.RunesStarted);
+        Assert.Equal(PriestCaptivity.Bound, captive.Captivity);
+
+        session.Submit(new MovePriestToAltarCommand(1, altar.Id, performer.Id));
+        SessionEvent again = RunUntil(session, SessionEventKind.SacrificeRune);
+        Assert.Equal("Wind", again.Text);
+        SessionEvent burned = RunUntil(session, SessionEventKind.SacrificeRuneBurned);
+        Assert.InRange(burned.Tick - again.Tick, Ticks(session, BattleSession.SacrificeRuneBurnSeconds) - 1, Ticks(session, BattleSession.SacrificeRuneBurnSeconds) + 1);
+    }
+
+    /// <summary>
+    /// 제단이 크게 다쳐도 포로는 풀리지 않고, 제단이 파괴돼 사라질 때 비로소 의식이 깨지고 포로가 회복해 풀려난다
+    /// (사용자 확인 2026-10-01: 포로는 제단 파괴·판매로만 풀린다).
+    /// </summary>
+    [Fact]
+    public void DamagedAltar_KeepsCaptiveBoundUntilAltarIsDestroyed()
     {
         MissionStart mission = MissionStart.FromHeader(key => key == "allowAnyCapture" ? "1" : null);
         BattleSession session = Create(mission, lowHpAltar: true, includeAltarCannon: true);
@@ -274,21 +345,62 @@ public sealed class SacrificeTests
         GameEntity carrier = Entity(session, ObjectKind.Transport, 1);
         session.CombatEnabled = false;
         session.Submit(new CapturePriestCommand(1, carrier.Id, captive.Id, altar.Id));
-        // 포획·운반을 마친 뒤 제단 옆에 사제가 있어 의식이 시작되기를 기다린다.
-        for (int tick = 0; tick < session.TicksPerSecond * 90 && session.Rituals.Count == 0; tick++)
+        RunUntil(session, SessionEventKind.SacrificeStarted);
+        session.CombatEnabled = true;
+
+        bool sawHeavyDamage = false;
+        // 제단이 사라질 때까지 한 틱씩 진행하며, 크게 다친 동안에도 포로가 묶여 있는지 본다
+        for (int tick = 0; tick < session.TicksPerSecond * 60 && session.Entity(altar.Id) != null; tick++)
         {
             session.RunTicks(1);
+            if (session.Entity(altar.Id) != null && altar.HitPoints < altar.MaxHitPoints / 2)
+            {
+                sawHeavyDamage = true;
+                Assert.Equal(PriestCaptivity.Bound, captive.Captivity);
+                Assert.Single(session.Rituals);
+            }
         }
-        Assert.Single(session.Rituals);
-        session.DrainEvents();
-        session.CombatEnabled = true;
-        session.RunTicks(session.TicksPerSecond * 2);
-
+        Assert.True(sawHeavyDamage);
+        Assert.Null(session.Entity(altar.Id));
         Assert.Empty(session.Rituals);
         Assert.Equal(PriestCaptivity.Free, captive.Captivity);
         Assert.False(captive.IsStunned);
         Assert.Contains(session.DrainEvents(), item => item.Kind == SessionEventKind.SacrificeBroken);
-        Assert.True(altar.HitPoints < altar.MaxHitPoints * BattleSession.AltarBreakHealthRatio);
+    }
+
+    /// <summary>
+    /// 의식 사제가 적 공격으로 기절해도 포로는 풀리지 않고 의식만 멈춘다 (사용자 확인 2026-10-01).
+    /// </summary>
+    [Fact]
+    public void StunnedPerformer_PausesRitualWithoutReleasingCaptive()
+    {
+        MissionStart mission = MissionStart.FromHeader(key => key == "allowAnyCapture" ? "1" : null);
+        BattleSession session = Create(mission, includePerformerArcher: true);
+        GameEntity captive = Entity(session, ObjectKind.Priest, 2);
+        GameEntity altar = Entity(session, ObjectKind.Altar, 1);
+        GameEntity carrier = Entity(session, ObjectKind.Transport, 1);
+        session.CombatEnabled = false;
+        session.Submit(new CapturePriestCommand(1, carrier.Id, captive.Id, altar.Id));
+        RunUntil(session, SessionEventKind.SacrificeStarted);
+        GameEntity performer = Entity(session, ObjectKind.Priest, 1);
+        session.CombatEnabled = true;
+        // 적 포대가 의식 사제를 기절시킬 때까지 진행한다
+        for (int tick = 0; tick < session.TicksPerSecond * 60 && !performer.IsStunned; tick++)
+        {
+            session.RunTicks(1);
+        }
+        Assert.True(performer.IsStunned);
+        session.CombatEnabled = false;
+        session.RunTicks(session.TicksPerSecond * 30);
+
+        Assert.NotNull(session.Entity(altar.Id));
+        AltarRitual ritual = Assert.Single(session.Rituals);
+        Assert.True(ritual.PerformerAway);
+        Assert.False(ritual.Completed);
+        Assert.Equal(PriestCaptivity.Bound, captive.Captivity);
+        SessionEvent[] events = [.. session.DrainEvents()];
+        Assert.Contains(events, item => item.Kind == SessionEventKind.SacrificePaused);
+        Assert.DoesNotContain(events, item => item.Kind is SessionEventKind.SacrificeBroken or SessionEventKind.PriestReleased);
     }
 
     /// <summary>같은 시드와 명령·틱열은 수송 경로·의식 상태·알림 집합까지 같은 검사합을 만든다.</summary>
@@ -326,13 +438,43 @@ public sealed class SacrificeTests
     private static GameEntity Entity(BattleSession session, ObjectKind kind, int owner) =>
         Assert.Single(session.Entities, entity => entity.Kind == kind && entity.Owner == owner);
 
+    /// <summary>적 사제를 기절시켜 제단으로 운반하고, 내 사제가 옆에 있어 의식이 시작될 때까지 진행한다.</summary>
+    private static (GameEntity Captive, GameEntity Altar, GameEntity Performer) StartRitual(BattleSession session)
+    {
+        GameEntity captive = Entity(session, ObjectKind.Priest, 2);
+        session.RunTicks(session.TicksPerSecond * 10);
+        Assert.True(captive.IsStunned);
+        session.CombatEnabled = false;
+        GameEntity carrier = Entity(session, ObjectKind.Transport, 1);
+        GameEntity altar = Entity(session, ObjectKind.Altar, 1);
+        session.Submit(new CapturePriestCommand(1, carrier.Id, captive.Id, altar.Id));
+        RunUntil(session, SessionEventKind.SacrificeStarted);
+        return (captive, altar, Entity(session, ObjectKind.Priest, 1));
+    }
+
+    /// <summary>해당 종류의 이벤트가 날 때까지 한 틱씩 진행하고 그 이벤트를 돌려준다 (다른 이벤트는 버린다, 최대 3분).</summary>
+    private static SessionEvent RunUntil(BattleSession session, SessionEventKind kind)
+    {
+        // 이벤트가 날 때까지 한 틱씩 진행한다
+        for (int tick = 0; tick < session.TicksPerSecond * 180; tick++)
+        {
+            session.RunTicks(1);
+            SessionEvent? found = session.DrainEvents().FirstOrDefault(item => item.Kind == kind);
+            if (found != null)
+            {
+                return found;
+            }
+        }
+        throw new Xunit.Sdk.XunitException($"{kind} 이벤트가 나지 않았습니다.");
+    }
+
     /// <summary>측정 초를 틱으로 바꿀 때 분수 틱이 생기면 다음 틱 경계로 올림한다.</summary>
     private static int Ticks(BattleSession session, double seconds) =>
         (int)Math.Ceiling(seconds * session.TicksPerSecond);
 
     /// <summary>원본 타입과 간단한 양측 지도로 포획·제단 규칙을 실행한다.</summary>
     private static BattleSession Create(MissionStart? mission = null, bool includeCannon = false, bool includeTemples = false,
-        bool includeEnemyCannon = false, bool includeAltarCannon = false, bool lowHpAltar = false)
+        bool includeEnemyCannon = false, bool includeAltarCannon = false, bool lowHpAltar = false, bool includePerformerArcher = false)
     {
         TypeCatalog types = OriginalData.RequireTypes();
         var objects = new List<FortMapObject>
@@ -358,6 +500,11 @@ public sealed class SacrificeTests
         if (includeAltarCannon)
         {
             objects.Add(Object(types, "suncannon", 2, 55, 31));
+        }
+        if (includePerformerArcher)
+        {
+            // 축 제한 없는 적 궁수를 의식 사제(66,30) 바로 동쪽에 둔다 (의식 사제 기절 검사용)
+            objects.Add(Object(types, "sunarcher", 2, 70, 30));
         }
         int? TerritoryAt(int x, int _) => x < 50 ? 2 : 1;
         bool Allied(int first, int second) => mission?.AreAllied(first, second) ?? first == second;

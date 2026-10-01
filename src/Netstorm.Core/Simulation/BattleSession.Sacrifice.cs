@@ -30,8 +30,15 @@ public sealed partial class BattleSession
     /// <summary>제단이 소멸한 뒤 희생된 사제가 승패 판정에서 제거될 때까지(초). 영상에서 성공 창은 제단 폭발 3초 뒤 떴다.</summary>
     public const double SacrificedPriestRemovalDelaySeconds = 3.0;
 
-    /// <summary>의식 중 제단 체력이 이 비율 아래로 떨어지면 묶인 사제가 달아난다 (도움말 "too much damage", 비율은 임시).</summary>
-    public const double AltarBreakHealthRatio = 0.5;
+    /// <summary>
+    /// 룬 음성 뒤 제단에 그 룬의 마크가 나타나 룬이 확정될 때까지(초). 2026-10-01 캠페인 1-2 녹화: Thunder 재음성 18:42.2 → 마크 18:43.8~18:44.4,
+    /// Rain 음성 16:01.0 → 마크 16:02.8~16:03.6 사이(1.6~2.6초). 마크 전에 사제가 떠나면 그 룬은 취소되고 복귀 뒤 음성부터 다시 하며,
+    /// 마크 뒤에 떠나면 그 룬은 끝까지 타고 다음 룬만 복귀를 기다린다(사용자 확인). 경계값 2.0초는 관찰 범위 안의 임시값이다.
+    /// </summary>
+    public const double SacrificeRuneMarkSeconds = 2.0;
+
+    /// <summary>적 사제를 제단 의식으로 완전히 처리했을 때 제단 주인이 받는 스톰 파워 (사용자 확인, 녹화에서 8,450 → 13,450).</summary>
+    public const int SacrificeRewardStormPower = 5000;
 
     /// <summary>룬 이름 (원본 음성 forWind2·forSun2·forRain2·forThunder2·forStorm2 순서, 녹음 확인)</summary>
     public static readonly IReadOnlyList<string> SacrificeRuneNames = ["Wind", "Sun", "Rain", "Thunder", "Storm"];
@@ -424,7 +431,10 @@ public sealed partial class BattleSession
 
     /// <summary>
     /// 희생 의식: 묶인 사제가 있는 제단 옆에 주인의 사제가 서 있으면 시작하고, 시간표대로 룬·완료·희생·제단 소멸을 알린다.
-    /// 내 사제가 기절·이동하거나 제단이 크게 다치면 깨지고 묶인 사제가 달아난다.
+    /// 내 사제가 제단 옆을 떠나거나 기절·포획되면 의식은 깨지지 않고 멈춘다(포로는 묶인 채). 마크가 나타난 룬은 끝까지 타고,
+    /// 마크 전 룬은 취소된다. 사제가 움직일 수 있는 상태로 돌아오면 다음 룬(또는 취소된 룬)을 음성부터 다시 시작한다.
+    /// 포로는 제단이 파괴·판매될 때만 풀려난다(RemoveEntity → ReleaseCaptivesOf). 2026-10-01 녹화·사용자 확인 —
+    /// 도움말의 "사제가 움직일 수 없게 되거나 제단이 크게 다치면 포로가 풀린다"는 원본 동작과 달라 따르지 않는다.
     /// </summary>
     private void UpdateSacrifices()
     {
@@ -439,7 +449,7 @@ public sealed partial class BattleSession
             }
             _moveTasks.Remove(performer.Id);
             _harvestTasks.Remove(performer.Id);
-            _rituals[altar.Id] = new AltarRitual(altar.Id, performer.Id, victim.Id, Tick);
+            _rituals[altar.Id] = new AltarRitual(altar.Id, performer.Id, victim.Id, Tick, altar.Owner);
             Emit(SessionEventKind.SacrificeStarted, altar.Owner, altar.Id, $"{altar.DisplayName} 희생 의식 시작");
         }
         // 진행 중인 의식의 시간표를 처리한다
@@ -448,38 +458,21 @@ public sealed partial class BattleSession
             GameEntity? altar = Entity(ritual.AltarId);
             GameEntity? performer = Entity(ritual.PerformerId);
             GameEntity? victim = Entity(ritual.VictimId);
+            double elapsed = (Tick - ritual.StartTick) / (double)TicksPerSecond;
             if (!ritual.Completed)
             {
-                bool broken = altar == null || victim == null || performer == null || performer.IsStunned
-                    || performer.Captivity != PriestCaptivity.Free || !IsBeside(performer.Footprint, altar.Footprint)
-                    || altar.MaxHitPoints > 0 && altar.HitPoints < altar.MaxHitPoints * AltarBreakHealthRatio;
-                if (broken)
+                // 제단·포로가 사라진 경우만 의식을 끝낸다 (제단 파괴·판매는 RemoveEntity 가 이미 정리하므로 방어용)
+                if (altar == null || victim == null)
                 {
                     BreakRitual(ritual, altar, victim);
                     continue;
                 }
+                // 의식 사제가 기절·포획·소멸했거나 제단 옆이 아니면 의식은 멈춘다 (포로는 풀리지 않는다)
+                bool performing = performer is { IsStunned: false, Captivity: PriestCaptivity.Free }
+                    && IsBeside(performer.Footprint, altar.Footprint);
+                AdvanceRitualRunes(ritual, altar, performing, elapsed);
             }
-            double elapsed = (Tick - ritual.StartTick) / (double)TicksPerSecond;
-            // 지난 룬 음성·소멸을 순서대로 알린다
-            while (ritual.RunesStarted < SacrificeRuneCount && elapsed >= RuneStartSeconds(ritual.RunesStarted))
-            {
-                Emit(SessionEventKind.SacrificeRune, altar!.Owner, altar.Id, SacrificeRuneNames[ritual.RunesStarted]);
-                ritual.RunesStarted++;
-            }
-            while (ritual.RunesBurned < SacrificeRuneCount && elapsed >= RuneStartSeconds(ritual.RunesBurned) + SacrificeRuneBurnSeconds)
-            {
-                ritual.RunesBurned++;
-                if (ritual.RunesBurned == SacrificeRuneCount)
-                {
-                    ritual.Completed = true;
-                    Emit(SessionEventKind.SacrificeCompleted, altar!.Owner, altar.Id, "의식 완료 (It is done)");
-                }
-                else
-                {
-                    Emit(SessionEventKind.SacrificeRuneBurned, altar!.Owner, altar.Id, $"룬 {ritual.RunesBurned} 소멸");
-                }
-            }
-            double completed = CompletionSeconds;
+            double completed = ritual.CompletedAtSeconds;
             if (ritual.Completed && !ritual.VictimKilled && elapsed >= completed + SacrificeKillDelaySeconds)
             {
                 ritual.VictimKilled = true;
@@ -510,17 +503,86 @@ public sealed partial class BattleSession
                 {
                     RemoveEntity(victim);
                 }
+                // 적 사제를 완전히 처리한 보상. 녹화에서는 성공 창이 뜬 프레임(= 포로 제거 시점)에 SP 가 한 번에 올랐다.
+                int owner = altar?.Owner ?? ritual.Owner;
+                if (_players.TryGetValue(owner, out PlayerState? rewarded))
+                {
+                    rewarded.StormPower += SacrificeRewardStormPower;
+                    Emit(SessionEventKind.SacrificeRewarded, owner, ritual.VictimId, $"희생 보상 +{SacrificeRewardStormPower}");
+                }
             }
         }
     }
 
-    /// <summary>룬 index 의 음성 시각(의식 시작 기준 초)</summary>
+    /// <summary>
+    /// 완료 전 의식의 룬 하나하나를 진행한다. 시간표는 "보정값 + 첫 룬 지연 + 룬 번호 × 간격"이며, 사제가 떠나 늦어진 만큼만 보정값을 늘린다.
+    /// 중단이 없으면 보정값이 0 이라 기존 고정 시간표와 같은 틱에 음성·소멸이 난다.
+    /// </summary>
+    /// <param name="ritual">진행 중인 의식</param>
+    /// <param name="altar">제단</param>
+    /// <param name="performerBeside">의식을 행하는 사제가 움직일 수 있는 상태로 지금 제단 옆인지</param>
+    /// <param name="elapsed">의식 시작부터 지난 초</param>
+    private void AdvanceRitualRunes(AltarRitual ritual, GameEntity altar, bool performerBeside, double elapsed)
+    {
+        bool runeInProgress = ritual.RunesStarted > ritual.RunesBurned;
+        if (!performerBeside)
+        {
+            if (!ritual.PerformerAway)
+            {
+                ritual.PerformerAway = true;
+                Emit(SessionEventKind.SacrificePaused, altar.Owner, altar.Id, "의식 사제가 제단을 떠나거나 움직일 수 없음 — 의식 멈춤");
+            }
+            // 마크가 나타나기 전의 룬은 취소한다 (음성만 나온 상태)
+            if (runeInProgress && elapsed < RuneStartSeconds(ritual, ritual.RunesStarted - 1) + SacrificeRuneMarkSeconds)
+            {
+                ritual.RunesStarted--;
+                runeInProgress = false;
+                Emit(SessionEventKind.SacrificeRuneCancelled, altar.Owner, altar.Id, SacrificeRuneNames[ritual.RunesStarted]);
+            }
+        }
+        else if (ritual.PerformerAway)
+        {
+            // 복귀: 다음 룬이 아직 예정 전이면 시간표를 그대로 두고, 이미 지났다면 지금부터 첫 룬 지연 뒤로 미룬다.
+            ritual.PerformerAway = false;
+            if (!runeInProgress)
+            {
+                ritual.ScheduleOffsetSeconds = Math.Max(ritual.ScheduleOffsetSeconds, elapsed - ritual.RunesStarted * SacrificeRuneIntervalSeconds);
+            }
+            Emit(SessionEventKind.SacrificeResumed, altar.Owner, altar.Id, "의식 사제 복귀 — 의식 재개");
+        }
+        // 확정된 룬은 사제가 없어도 정해진 시각에 탄다
+        if (runeInProgress && elapsed >= RuneStartSeconds(ritual, ritual.RunesBurned) + SacrificeRuneBurnSeconds)
+        {
+            ritual.RunesBurned++;
+            if (ritual.RunesBurned == SacrificeRuneCount)
+            {
+                ritual.Completed = true;
+                ritual.CompletedAtSeconds = RuneStartSeconds(ritual, SacrificeRuneCount - 1) + SacrificeRuneBurnSeconds;
+                Emit(SessionEventKind.SacrificeCompleted, altar.Owner, altar.Id, "의식 완료 (It is done)");
+                return;
+            }
+            Emit(SessionEventKind.SacrificeRuneBurned, altar.Owner, altar.Id, $"룬 {ritual.RunesBurned} 소멸");
+            runeInProgress = false;
+        }
+        // 다음 룬은 사제가 제단 옆에 있을 때만 음성부터 시작한다
+        if (!runeInProgress && performerBeside && ritual.RunesStarted < SacrificeRuneCount
+            && elapsed >= RuneStartSeconds(ritual, ritual.RunesStarted))
+        {
+            Emit(SessionEventKind.SacrificeRune, altar.Owner, altar.Id, SacrificeRuneNames[ritual.RunesStarted]);
+            ritual.RunesStarted++;
+        }
+    }
+
+    /// <summary>중단이 없을 때 룬 index 의 음성 시각(의식 시작 기준 초)</summary>
     private static double RuneStartSeconds(int index) => SacrificeRuneLeadSeconds + index * SacrificeRuneIntervalSeconds;
+
+    /// <summary>사제 이탈로 늦어진 보정값을 더한 룬 index 의 음성 예정 시각(의식 시작 기준 초)</summary>
+    private static double RuneStartSeconds(AltarRitual ritual, int index) => ritual.ScheduleOffsetSeconds + RuneStartSeconds(index);
 
     /// <summary>의식 시작부터 완료(다섯 번째 룬 소멸)까지(초)</summary>
     public static double CompletionSeconds => RuneStartSeconds(SacrificeRuneCount - 1) + SacrificeRuneBurnSeconds;
 
-    /// <summary>의식이 깨져 묶인 사제가 달아난다.</summary>
+    /// <summary>제단이나 포로가 사라져 의식이 끝난다 (남은 포로가 있으면 풀어 준다).</summary>
     private void BreakRitual(AltarRitual ritual, GameEntity? altar, GameEntity? victim)
     {
         _rituals.Remove(ritual.AltarId);
@@ -544,8 +606,12 @@ public sealed partial class BattleSession
         }
         if (entity.Kind == ObjectKind.Altar && BoundPriestOf(entity.Id) is { } bound)
         {
-            _rituals.Remove(entity.Id);
-            ReleasePriest(bound, entity.Footprint.AnchorX + 1, entity.Footprint.AnchorY + 1, "제단 파괴");
+            // 포로가 풀리는 유일한 경로: 제단 파괴·판매. 진행 중이던 의식은 깨지고 진행도는 사라진다.
+            if (_rituals.Remove(entity.Id))
+            {
+                Emit(SessionEventKind.SacrificeBroken, entity.Owner, entity.Id, "제단이 사라져 희생 의식이 깨짐");
+            }
+            ReleasePriest(bound, entity.Footprint.AnchorX + 1, entity.Footprint.AnchorY + 1, "제단 파괴·판매");
         }
         _moveTasks.Remove(entity.Id);
         // 이 오브젝트를 집으러·묶으러 가던 작업을 취소한다
@@ -700,6 +766,8 @@ public sealed partial class BattleSession
             hash.Add(ritual.StartTick);
             hash.Add(ritual.RunesStarted);
             hash.Add(ritual.RunesBurned);
+            hash.Add(ritual.PerformerAway ? 1 : 0);
+            hash.Add(BitConverter.DoubleToInt64Bits(ritual.ScheduleOffsetSeconds));
             hash.Add(ritual.VictimKilled ? 1 : 0);
             hash.Add(ritual.AltarConsumed ? 1 : 0);
         }
@@ -759,8 +827,12 @@ public enum UnitMovePurpose
 /// <param name="performerId">의식을 행하는 내 사제 번호</param>
 /// <param name="victimId">묶인 사제 번호</param>
 /// <param name="startTick">의식 시작 틱</param>
-public sealed class AltarRitual(int altarId, int performerId, int victimId, long startTick)
+/// <param name="owner">제단 주인 (제단이 사라진 뒤 보상 지급용)</param>
+public sealed class AltarRitual(int altarId, int performerId, int victimId, long startTick, int owner)
 {
+    /// <summary>제단 주인 플레이어 번호</summary>
+    public int Owner { get; } = owner;
+
     /// <summary>제단 번호</summary>
     public int AltarId { get; } = altarId;
 
@@ -781,6 +853,15 @@ public sealed class AltarRitual(int altarId, int performerId, int victimId, long
 
     /// <summary>다섯 룬을 모두 지켰는지</summary>
     public bool Completed { get; internal set; }
+
+    /// <summary>의식 사제가 제단 옆을 떠나 의식이 멈춰 있는지 (포로는 묶인 채 남는다)</summary>
+    public bool PerformerAway { get; internal set; }
+
+    /// <summary>사제 이탈로 늦어진 시간표 보정값(초). 중단이 없으면 0.</summary>
+    public double ScheduleOffsetSeconds { get; internal set; }
+
+    /// <summary>의식 완료 시각(의식 시작 기준 초). 희생 음성·제단 소멸·포로 제거는 이 시각을 기준으로 한다.</summary>
+    public double CompletedAtSeconds { get; internal set; }
 
     /// <summary>희생 음성이 나왔는지</summary>
     public bool VictimKilled { get; internal set; }

@@ -35,6 +35,15 @@ public sealed class GameRuleTests
         Assert.Equal(3000, options.GeyserStormPower);
     }
 
+    /// <summary>싱글 플레이 전투는 exe 전투 초기화(FUN_004b2df0)대로 처치 보상 25%를 쓴다.</summary>
+    [Fact]
+    public void BattleOptions_SinglePlayerKillRewardIsQuarter()
+    {
+        var options = new BattleOptions();
+        options.ApplySinglePlayerKillReward();
+        Assert.Equal(25, options.KillRewardPercent);
+    }
+
     /// <summary>발자국: 기준점은 오른쪽 아래 칸, 중심은 사각형 가운데</summary>
     [Fact]
     public void Footprint_AnchorIsBottomRight()

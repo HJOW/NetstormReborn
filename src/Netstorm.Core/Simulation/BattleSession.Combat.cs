@@ -22,6 +22,15 @@ public sealed partial class BattleSession
     /// <summary>충돌 경로를 검사할 칸 단위 간격. 반 칸 간격으로 발자국을 검사한다.</summary>
     private const double ShotTraceStep = 0.5;
 
+    /// <summary>
+    /// 템플(타입 플래그 vortex)이 파괴될 때 주위 칸에 주는 고정 피해. exe FUN_0044b9e0: 타입 플래그2 0x200(vortex, Rifttype.cpp)이면 400.
+    /// 골렘(50 HP)은 한 번에 파괴되고 사제(100 HP)는 바로 기절한다(사용자 설명 2026-10-01과 일치).
+    /// </summary>
+    public const double TempleExplosionDamage = 400;
+
+    /// <summary>파괴 폭발이 미치는 범위: 발자국 바깥 칸 수. exe 는 발자국 크기/2+1 을 중심에서 잰다(= 발자국 + 1칸).</summary>
+    public const int ExplosionRadiusCells = 1;
+
     /// <summary>Vander Tower 번개 표시 시간. 새 영상 01:20:00 부근의 약 0.2초 표시를 임시로 사용한다.</summary>
     public const double LightningDisplaySeconds = 0.2;
 
@@ -157,9 +166,53 @@ public sealed partial class BattleSession
         else if (target.HitPoints <= 0)
         {
             RemoveEntity(target);
-            int reward = StormPower.KillReward(target.Cost, Map.Options.KillRewardPercent);
+            // 자기·동맹 오브젝트가 폭발에 휘말려 파괴된 경우에는 보상을 주지 않는다 (원본 보상 분기의 소유자 조건은 미확인, 임시).
+            bool enemy = shot.Owner > 0 && !Map.AreAllied(shot.Owner, target.Owner);
+            int reward = enemy ? StormPower.KillReward(target.Cost, Map.Options.KillRewardPercent) : 0;
             if (_players.TryGetValue(shot.Owner, out PlayerState? player)) player.StormPower += reward;
             Emit(SessionEventKind.EntityDestroyed, shot.Owner, target.Id, $"{target.DisplayName} 파괴 (+{reward})");
+            ExplodeDestroyed(target, shot.Owner);
+        }
+    }
+
+    /// <summary>
+    /// 파괴 시 폭발 피해량 (없으면 null). exe FUN_0044b9e0: group 이 archer(0)·cannon(1)이면 최대 체력/2+1, 템플(vortex)이면 400.
+    /// group 번호는 exe 이름 표 VA 0x542468(archer, cannon, blocker, aviary, flyer, battery, fence, walker, balloon) 순서다.
+    /// </summary>
+    private static double? ExplosionDamageOf(GameEntity destroyed)
+    {
+        TypeDefinition type = destroyed.Type.Definition;
+        if (type.HasFlag("vortex")) return TempleExplosionDamage;
+        string? group = type.GetString("group");
+        bool gun = string.Equals(group, "archer", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(group, "cannon", StringComparison.OrdinalIgnoreCase);
+        return gun ? Math.Floor(destroyed.MaxHitPoints / 2) + 1 : null;
+    }
+
+    /// <summary>
+    /// 전투로 파괴된 템플·포대가 발자국 주위 1칸의 지상 오브젝트에 피해를 준다(사용자 설명 2026-10-01, exe FUN_0044b9e0).
+    /// 피해는 처치한 플레이어 이름으로 들어가 연쇄 파괴의 보상도 그 플레이어가 받는다. 소유자 구분 없이 범위 안 모두에 적용하며,
+    /// 연쇄 폭발은 오브젝트 번호순으로 같은 틱에 처리한다. 판매·낙하는 이 경로를 거치지 않아 폭발하지 않는다.
+    /// </summary>
+    /// <param name="destroyed">방금 파괴된 오브젝트 (이미 제거됨)</param>
+    /// <param name="killer">처치한 플레이어 (보상 수령자)</param>
+    private void ExplodeDestroyed(GameEntity destroyed, int killer)
+    {
+        if (ExplosionDamageOf(destroyed) is not double damage) return;
+        Footprint f = destroyed.Footprint;
+        var area = new Footprint(f.AnchorX + ExplosionRadiusCells, f.AnchorY + ExplosionRadiusCells,
+            f.Width + 2 * ExplosionRadiusCells, f.Height + 2 * ExplosionRadiusCells);
+        Emit(SessionEventKind.EntityExploded, killer, destroyed.Id, $"{destroyed.DisplayName} 폭발 (주위 피해 {damage:0})");
+        // 범위 안의 피해 가능한 지상 오브젝트를 번호순으로 고정해 둔 뒤 차례로 피해를 준다 (연쇄 폭발로 사라진 것은 건너뛴다)
+        int[] victims = [.. _entities.Values
+            .Where(e => e.MaxHitPoints > 0 && e.HitPoints > 0 && e.OccupiesGround && e.Captivity == PriestCaptivity.Free
+                && e.Footprint.Overlaps(area))
+            .Select(e => e.Id)];
+        foreach (int id in victims)
+        {
+            if (Entity(id) is not { IsStunned: false } victim) continue;
+            ApplyCombatDamage(victim, new CombatShot(destroyed.Id, killer, id, damage,
+                destroyed.WorldX, destroyed.WorldY, victim.WorldX, victim.WorldY, Tick, Tick));
         }
     }
 

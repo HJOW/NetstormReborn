@@ -105,8 +105,10 @@ internal sealed partial class FortMapViewer
                     : index < ritual.RunesStarted ? Color.Gold : new Color(85, 90, 104);
                 batch.Draw(_pixel, new Rectangle((int)anchor.X - 31 + index * 13, (int)anchor.Y - 34, 9, 9), color);
             }
-            batch.DrawString(font, $"의식 · 룬 {ritual.RunesBurned}/{BattleSession.SacrificeRuneCount}",
-                new Vector2(anchor.X - 42, anchor.Y - 22), Color.Wheat);
+            // 의식 사제가 떠나 멈춘 의식은 복귀가 필요하다는 것을 함께 보여 준다.
+            string state = ritual.PerformerAway && !ritual.Completed ? " · 멈춤(사제 복귀 필요)" : "";
+            batch.DrawString(font, $"의식 · 룬 {ritual.RunesBurned}/{BattleSession.SacrificeRuneCount}{state}",
+                new Vector2(anchor.X - 42, anchor.Y - 22), ritual.PerformerAway ? Color.Orange : Color.Wheat);
         }
     }
 }

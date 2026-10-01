@@ -36,6 +36,8 @@ public static class BattleSessionFactory
     {
         FortTerrainCell[] cells = [.. islandCells];
         var options = new BattleOptions();
+        // 현재 클론의 전투는 모두 싱글 플레이라 원본 전투 초기화의 처치 보상 25%를 쓴다 (멀티플레이 구현 때 분리)
+        options.ApplySinglePlayerKillReward();
         if (mission?.TutorialNumber == TutorialTwo)
         {
             options.ApplyTutorialTwoOverrides();

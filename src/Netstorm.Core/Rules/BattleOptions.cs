@@ -125,4 +125,11 @@ public sealed class BattleOptions
         Set(GeneratorRange, 0);
         Set(UnitRate, 2);
     }
+
+    /// <summary>
+    /// 캠페인·튜토리얼(싱글 플레이) 전투의 처치 보상 25%. exe 전투 초기화 FUN_004b2df0 이 보상 비율 DAT_005424bc 를 0x19(25)로 두고,
+    /// 옵션 표 값(FUN_0041ca70, 기본 인덱스 2 = 50%)으로 바꾸는 곳은 네트워크 옵션 동기화 FUN_004b4900 뿐이다.
+    /// 캠페인 1-2 녹화의 적 템플 파괴 보상(사용자 설명: 비용의 25%)과 같다. 멀티플레이는 옵션 표 값을 쓴다.
+    /// </summary>
+    public void ApplySinglePlayerKillReward() => Set(KillReward, 1);
 }

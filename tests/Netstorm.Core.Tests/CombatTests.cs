@@ -126,6 +126,69 @@ public sealed class CombatTests
         Assert.DoesNotContain(session.DrainEvents(), e => e.Kind == SessionEventKind.TutorialTell);
     }
 
+    /// <summary>
+    /// 템플이 파괴되면 주위 1칸에 400 피해가 들어가 옆의 골렘은 한 번에 파괴되고 사제는 기절한다. 휘말린 포대(Sun Disc Thrower)도
+    /// 파괴되며, 연쇄 파괴의 보상은 템플을 부순 플레이어가 받는다 (사용자 설명 2026-10-01, exe FUN_0044b9e0).
+    /// </summary>
+    [Fact]
+    public void TempleDestruction_ExplodesOntoAdjacentUnitsAndChainsRewards()
+    {
+        BattleSession session = Create(Object("sunCannon", 1, 10, 10),
+            Object("windVortex", 2, 24, 12, "maxHitPoints = 50;"), Object("sunwalker", 2, 25, 12), Object("priest", 2, 25, 11),
+            Object("sunArcher", 2, 26, 14), Object("priest", 2, 30, 20));
+        GameEntity temple = session.Entity(2)!;
+        GameEntity golem = session.Entity(3)!;
+        GameEntity nearPriest = session.Entity(4)!;
+        GameEntity archer = session.Entity(5)!;
+        GameEntity farPriest = session.Entity(6)!;
+        int money = session.Player(1).StormPower;
+        int percent = session.Map.Options.KillRewardPercent;
+        // 템플이 파괴될 때까지 진행한다
+        for (int tick = 0; tick < 600 && session.Entity(temple.Id) != null; tick++)
+        {
+            session.RunTicks(1);
+        }
+        Assert.Null(session.Entity(temple.Id));
+        Assert.Null(session.Entity(golem.Id));
+        Assert.Null(session.Entity(archer.Id));
+        Assert.True(nearPriest.IsStunned);
+        Assert.Equal(nearPriest.MaxHitPoints / 2, nearPriest.HitPoints);
+        Assert.False(farPriest.IsStunned);
+        Assert.Equal(farPriest.MaxHitPoints, farPriest.HitPoints);
+        int expected = StormPower.KillReward(temple.Cost, percent) + StormPower.KillReward(golem.Cost, percent)
+            + StormPower.KillReward(archer.Cost, percent);
+        Assert.Equal(money + expected, session.Player(1).StormPower);
+        SessionEvent[] events = [.. session.DrainEvents()];
+        // 템플과 휘말린 포대(archer 그룹) 두 번 폭발한다. 골렘은 폭발하지 않는다.
+        Assert.Equal(2, events.Count(e => e.Kind == SessionEventKind.EntityExploded));
+        Assert.Equal(3, events.Count(e => e.Kind == SessionEventKind.EntityDestroyed && e.Player == 1));
+    }
+
+    /// <summary>포대의 폭발 피해는 최대 체력/2+1 이고, 판매(회수)는 폭발하지 않는다.</summary>
+    [Fact]
+    public void CannonExplosion_UsesHalfHitPointsAndSalvageDoesNotExplode()
+    {
+        BattleSession destroyed = Create(Object("sunCannon", 1, 10, 10),
+            Object("sunArcher", 2, 24, 10, "maxHitPoints = 40;"), Object("sunBlocker", 2, 25, 10));
+        GameEntity blocker = destroyed.Entity(3)!;
+        double before = blocker.HitPoints;
+        // 궁수가 파괴될 때까지 진행한다 (Sun Cannon 한 발 80 피해)
+        for (int tick = 0; tick < 600 && destroyed.Entity(2) != null; tick++)
+        {
+            destroyed.RunTicks(1);
+        }
+        Assert.Null(destroyed.Entity(2));
+        Assert.Equal(before - (40 / 2 + 1), blocker.HitPoints);
+
+        BattleSession salvaged = Create(Object("sunArcher", 1, 24, 10), Object("sunwalker", 1, 25, 10));
+        salvaged.CombatEnabled = false;
+        salvaged.Submit(new SalvageCommand(1, 1));
+        salvaged.RunTicks(1);
+        Assert.Null(salvaged.Entity(1));
+        Assert.NotNull(salvaged.Entity(2));
+        Assert.DoesNotContain(salvaged.DrainEvents(), e => e.Kind == SessionEventKind.EntityExploded);
+    }
+
     /// <summary>사제는 큰 피해에도 절반 체력에서 기절하고 후속 탄으로 죽지 않는다.</summary>
     [Fact]
     public void Priest_StunsAndSurvivesFurtherFireWithoutTemple()
