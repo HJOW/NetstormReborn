@@ -190,7 +190,7 @@ public sealed partial class BattleSession
         // 표는 실행 중에 바뀌므로 세션마다 복사본을 쓴다 (같은 미션으로 만든 다른 세션에 영향을 주지 않는다)
         TechPermissions tech = human && Mission != null ? Mission.Tech.Clone() : TechPermissions.Parse(null);
         var player = new PlayerState(number, stormPower, new BridgeTray(options.BridgeSlotCount, _random), tech);
-        if (!human && Mission is { IsFirstCampaign: true })
+        if (!human && Mission is { UsesCampaignAi: true })
         {
             player.StormPower = Mission.AiStartMoney ?? stormPower;
             // 초기 AI 지식은 원본 미션 머리 값만 사용한다.
@@ -480,6 +480,7 @@ public sealed partial class BattleSession
             hash.Add(entity.Footprint.AnchorX);
             hash.Add(entity.Footprint.AnchorY);
             hash.Add(entity.CarriedCrystals);
+            hash.Add(entity.StoredStormPower);
             hash.Add(entity.IsComplete ? 1 : 0);
             hash.Add(entity.CompleteTick);
             hash.Add(BitConverter.DoubleToInt64Bits(entity.HitPoints));
@@ -501,6 +502,7 @@ public sealed partial class BattleSession
             hash.Add(task.GeyserId);
             hash.Add(task.TempleId);
             hash.Add((int)task.Phase);
+            hash.Add(task.MiningUntilTick);
             AddMovementChecksum(hash, task);
         }
         // 다리 칸: 좌표 순서로 모양·소유자·상태·수명

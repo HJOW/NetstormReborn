@@ -140,14 +140,15 @@ public sealed class CampaignOneTests
         Assert.Equal((width, height), (layout.LogicalWidth, layout.LogicalHeight));
     }
 
-    /// <summary>원본 성공 스크립트의 다음 미션도 현재 구현 범위 밖으로 판정한다.</summary>
+    /// <summary>원본 성공 스크립트의 다음 미션(1-2)은 공개됐고, 그다음 1-3 은 구현 범위 밖이다.</summary>
     [Fact]
-    public void SuccessScript_DoesNotUnlockNextMission()
+    public void SuccessScript_UnlocksOnlyImplementedNextMission()
     {
         MissionScript script = OriginalData.RequireResources().TryLoadMission(CampaignAccess.FirstMission)!.Script;
         Assert.True(CampaignAccess.IsAvailable(CampaignAccess.FirstMission));
         Assert.Contains("MasterOfWhirligigs", script.Text, StringComparison.OrdinalIgnoreCase);
-        Assert.False(CampaignAccess.IsAvailable("MasterOfWhirligigs"));
+        Assert.True(CampaignAccess.IsAvailable("MasterOfWhirligigs"));
+        Assert.False(CampaignAccess.IsAvailable("SaveTheIsland"));
     }
 
     /// <summary>원본 1-1을 미션 머리 값과 실제 지면으로 시작한다.</summary>

@@ -169,7 +169,7 @@ internal sealed partial class FortMapViewer
     /// <summary>본문 길이·버튼 폭으로 원본처럼 작은 안내 창을 만들고 화면 안에 둔다.</summary>
     private Rectangle TutorialPanel(int width, int height)
     {
-        TutorialDialogContent content = LocalizeFirstCampaign(_tutorialDialog!.Current!);
+        TutorialDialogContent content = LocalizeCampaign(_tutorialDialog!.Current!);
         int desiredWidth = content.Section is "Succeeded" or "BadTeamDead" ? 374 : content.Title.Length == 0 ? 300 : 350;
         int buttonsWidth = content.Buttons.Sum(b => TutorialButtonWidth(b)) + (content.Buttons.Count - 1) * 16;
         int panelWidth = Math.Min(width - 32, Math.Max(desiredWidth, Math.Max(buttonsWidth + 48,
@@ -187,7 +187,7 @@ internal sealed partial class FortMapViewer
     /// <summary>같은 번역·글꼴·간격으로 하단 버튼의 표시와 클릭 영역을 계산한다.</summary>
     private Rectangle TutorialButton(Rectangle panel, int count, int index)
     {
-        var buttons = LocalizeFirstCampaign(_tutorialDialog!.Current!).Buttons;
+        var buttons = LocalizeCampaign(_tutorialDialog!.Current!).Buttons;
         int totalWidth = buttons.Sum(TutorialButtonWidth) + (count - 1) * 16;
         int x = panel.Center.X - totalWidth / 2;
         // 앞 버튼의 실제 폭을 더해 짧은 문구의 버튼도 가운데에 모인다.
@@ -199,7 +199,7 @@ internal sealed partial class FortMapViewer
     private void DrawTutorialDialog(SpriteBatch batch, SpriteFontBase font, int width, int height)
     {
         TutorialDialogContent? content = _tutorialDialog?.Current;
-        if (content != null) content = LocalizeFirstCampaign(content);
+        if (content != null) content = LocalizeCampaign(content);
         if (content == null)
         {
             return;

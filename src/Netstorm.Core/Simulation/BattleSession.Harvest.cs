@@ -9,6 +9,12 @@ public sealed partial class BattleSession
     /// <summary>수집자 번호순으로 처리하는 수확 작업. 내부 작업 타입의 기존 이름은 유지한다.</summary>
     private readonly SortedDictionary<int, PriestHarvestTask> _harvestTasks = [];
 
+    /// <summary>
+    /// 가이저에 도착한 수집자가 결정 하나를 얻을 때까지 머무는 시간(초). 원본 값은 미측정인 임시값이다.
+    /// 가이저 둘레와 신전 둘레가 맞닿아 이동 거리가 0인 경우에도 틱마다 결정을 얻지 않게 한다.
+    /// </summary>
+    public const double HarvestMineSeconds = 1.0;
+
     /// <summary>네 방향 탐색 순서. 같은 지형에서는 언제나 같은 경로를 고른다.</summary>
     private static readonly (int Dx, int Dy, BridgeLinks Link)[] HarvestDirections =
     [
@@ -31,6 +37,10 @@ public sealed partial class BattleSession
         if (geyser.Kind != ObjectKind.Geyser)
         {
             return new CommandResult(CommandFailure.WrongKind);
+        }
+        if (geyser.IsDepletedGeyser)
+        {
+            return new CommandResult(CommandFailure.GeyserEmpty);
         }
         GameEntity? priest = command.CollectorId == 0
             ? _entities.Values.FirstOrDefault(e => e.Kind == ObjectKind.Priest && e.Owner == command.Player)
@@ -102,8 +112,20 @@ public sealed partial class BattleSession
             }
             if (task.Phase == HarvestPhase.ToGeyser)
             {
+                // 이미 다른 수집자가 비워 버렸으면 반복을 끝낸다
+                if (geyser.IsDepletedGeyser)
+                {
+                    _harvestTasks.Remove(task.PriestId);
+                    continue;
+                }
+                // 가이저 옆에서 정해진 시간 동안 머문 뒤 결정을 얻는다
+                if (task.MiningUntilTick == 0) task.MiningUntilTick = Tick + TicksFor(HarvestMineSeconds);
+                if (Tick < task.MiningUntilTick) continue;
+                task.MiningUntilTick = 0;
+                geyser.StoredStormPower = Math.Max(0, geyser.StoredStormPower - StormPower.CrystalValue);
                 priest.CarriedCrystals = 1;
                 Emit(SessionEventKind.CrystalCollected, priest.Owner, priest.Id, $"{priest.DisplayName} 결정 수확");
+                if (geyser.IsDepletedGeyser) Emit(SessionEventKind.GeyserDepleted, 0, geyser.Id, "가이저 고갈");
                 List<(int X, int Y)>? home = FindMovePath(priest, temple.Footprint);
                 task.Phase = HarvestPhase.ToTemple;
                 ReplaceMovementRoute(priest, task, home);
@@ -115,6 +137,12 @@ public sealed partial class BattleSession
                 _players[priest.Owner].StormPower += crystals * StormPower.CrystalValue;
                 Emit(SessionEventKind.CrystalDelivered, priest.Owner, priest.Id,
                     $"{priest.DisplayName} 결정 전달 (+{crystals * StormPower.CrystalValue})");
+                // 가이저가 비었으면 원본처럼 반복을 멈춘다
+                if (geyser.IsDepletedGeyser)
+                {
+                    _harvestTasks.Remove(task.PriestId);
+                    continue;
+                }
                 List<(int X, int Y)>? outbound = FindMovePath(priest, geyser.Footprint);
                 task.Phase = HarvestPhase.ToGeyser;
                 ReplaceMovementRoute(priest, task, outbound);
@@ -220,5 +248,7 @@ public sealed partial class BattleSession
         public int TempleId { get; } = templeId;
         /// <summary>현재 왕복 방향.</summary>
         public HarvestPhase Phase { get; set; } = phase;
+        /// <summary>가이저 옆에서 결정을 얻는 틱 (머무는 중이 아니면 0).</summary>
+        public long MiningUntilTick { get; set; }
     }
 }

@@ -221,7 +221,7 @@ public sealed class BattleMap
     private PlacementCheck Finish(TypeInfo type, Footprint foot, IslandState island, PlacementProblem problem, int player, int stormPower)
     {
         EnergyRequirement requirement = EnergyRequirement.ForType(type.Definition);
-        int cost = type.Definition.GetInt("cost") ?? 0;
+        int cost = StormPower.TypeCost(type.Definition);
         EnergyCheck energy = EnergySupply.Check(requirement, _sources, foot, Options.GeneratorRadiusSquared,
             owner => IsFriendly(player, owner));
         if (problem == PlacementProblem.None && IsOccupied(foot))

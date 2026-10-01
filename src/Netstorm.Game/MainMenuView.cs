@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Netstorm.Assets;
 using Netstorm.Core.Display;
+using Netstorm.Core.Rules;
 
 namespace Netstorm.Game;
 
@@ -26,7 +27,7 @@ internal sealed class MainMenuView : IDisposable
     private readonly DisplayManager _display;
     private readonly AudioPlayer? _audio;
     private readonly bool _korean;
-    private readonly Action _play;
+    private readonly Action<string> _play;
     private readonly Action _quit;
     private readonly List<MenuButton> _buttons = [];
     private readonly List<Rectangle> _lists = [];
@@ -43,7 +44,7 @@ internal sealed class MainMenuView : IDisposable
 
     /// <summary>원본 GIF를 읽고 메뉴와 미션이 공유하는 UI 장식을 연결한다.</summary>
     public MainMenuView(GraphicsDevice device, GameResources resources, OriginalUiSkin skin,
-        DisplayManager display, AudioPlayer? audio, Action play, Action quit)
+        DisplayManager display, AudioPlayer? audio, Action<string> play, Action quit)
     {
         _display = display; _audio = audio; _play = play; _quit = quit; _skin = skin;
         _korean = resources.Language == GameLanguage.Korean;
@@ -138,11 +139,15 @@ internal sealed class MainMenuView : IDisposable
         }
         else
         {
-            string[] names = [Text("1 전쟁의 시작!", "1 The War Begins!"), "2 Master of Whirligigs", "3 Save the Island!", "4 Fragile Fortune", "5 Thundering Power!", "6 Dissolved Alliance"];
+            string[] names = [Text("1 전쟁의 시작!", "1 The War Begins!"), Text("2 휘리기그의 지배자", "2 Master of Whirligigs"), "3 Save the Island!", "4 Fragile Fortune", "5 Thundering Power!", "6 Dissolved Alliance"];
             int listWidth = Math.Max(152, (int)names.Max(n => _skin.Body.MeasureString(n).X) + 18);
             var list = new Rectangle(cx - listWidth / 2, panel.Bottom - 146, listWidth, 108); _lists.Add(list);
-            // 파란 선택 표시와 비활성 글자로 아직 구현하지 않은 미션을 구분한다.
-            for (int i = 0; i < names.Length; i++) Add(new Rectangle(list.X + 2, list.Y + 1 + i * 18, list.Width - 4, 18), names[i], i == 0, _play, listRow: true, check: false);
+            // 파란 선택 표시와 비활성 글자로 아직 구현하지 않은 미션을 구분한다. 공개 여부는 CampaignAccess 하나로 정한다.
+            for (int i = 0; i < names.Length; i++)
+            {
+                string file = CampaignAccess.FirstChapter[i];
+                Add(new Rectangle(list.X + 2, list.Y + 1 + i * 18, list.Width - 4, 18), names[i], CampaignAccess.IsAvailable(file), () => _play(file), listRow: true, check: false);
+            }
         }
         Add(new Rectangle(cx - 22, panel.Bottom - 31, 44, OriginalUiSkin.ButtonHeight), Text("뒤로", "Back"), true,
             () => Open(_page == "missions" ? "campaigns" : "main"));

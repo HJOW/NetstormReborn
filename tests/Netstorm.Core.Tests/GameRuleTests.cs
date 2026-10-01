@@ -35,6 +35,23 @@ public sealed class GameRuleTests
         Assert.Equal(3000, options.GeyserStormPower);
     }
 
+    /// <summary>
+    /// cost 가 없는 타입은 원본 타입 로더처럼 level × 200(수송체 × 400)을 비용으로 쓴다: 골렘 400(원본 판매 환급 100과 일치),
+    /// Whirlibase 400(매뉴얼). group 이 없는 Whirligig·level 이 없는 사제는 0, cost 가 있으면 그대로다.
+    /// </summary>
+    [Theory]
+    [InlineData("sunWalker", 400)]
+    [InlineData("sunAviary", 400)]
+    [InlineData("sunFlyer", 0)]
+    [InlineData("priest", 0)]
+    [InlineData("sunCannon", 400)]
+    [InlineData("geyser", 2000)]
+    public void TypeCost_UsesOriginalDefaultForMissingCost(string typeName, int expected)
+    {
+        TypeInfo type = OriginalData.RequireTypes().Find(typeName)!;
+        Assert.Equal(expected, StormPower.TypeCost(type.Definition));
+    }
+
     /// <summary>싱글 플레이 전투는 exe 전투 초기화(FUN_004b2df0)대로 처치 보상 25%를 쓴다.</summary>
     [Fact]
     public void BattleOptions_SinglePlayerKillRewardIsQuarter()

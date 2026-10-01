@@ -9,11 +9,20 @@ using Netstorm.Core.Simulation;
 
 namespace Netstorm.Game;
 
-/// <summary>캠페인 1-1의 마우스 생산·건설·이동·수확 조작과 미니맵.</summary>
+/// <summary>공개 캠페인(1-1·1-2)의 마우스 생산·건설·이동·수확 조작과 미니맵.</summary>
 internal sealed partial class FortMapViewer
 {
     /// <summary>원본 생산창·미니맵을 포함한 왼쪽 사이드바의 폭.</summary>
     private const int PlaySidebarWidth = 84;
+
+    /// <summary>
+    /// 생산 버튼 3~5번에 놓을 지식의 group 순서. 원본 지식 창의 행 안 순서(battery → cannon → archer → walker → blocker → fence → aviary → balloon)를 따른다.
+    /// 골렘(walker)은 2번 버튼에 따로 두므로 뺀다.
+    /// </summary>
+    private static readonly string[] ProductionGroupOrder = ["battery", "cannon", "archer", "blocker", "fence", "aviary", "balloon"];
+
+    /// <summary>생산 버튼 3~5번에 놓을 유닛 타입 (미션 시작 지식에서 고른다, 1-1: Rain Generator·Sun Cannon·Whirlibase).</summary>
+    private string[] _productionTypes = [];
     private bool _playUi;
     private readonly List<PlayButton> _playButtons = [];
     private int _playWidth;
@@ -29,7 +38,36 @@ internal sealed partial class FortMapViewer
         _playUi = true; _simulationPaused = false;
         _previousMouse = Mouse.GetState(); _previousKeyboard = Keyboard.GetState();
         _sky = MainMenuView.LoadImage(_device, resources, "d/Gifcloud.gif");
+        _productionTypes = StartingProductionTypes();
         CenterOnPriest();
+    }
+
+    /// <summary>내 시작 지식에서 생산 버튼에 올릴 타입을 group 순서로 최대 세 개 고른다.</summary>
+    private string[] StartingProductionTypes()
+    {
+        IReadOnlyCollection<string> known = _session.Player(TestPlayer).Deck.Knowledge;
+        // group 순서대로, 같은 group 안에서는 지식 순서대로 모은다
+        return [.. ProductionGroupOrder
+            .SelectMany(group => known.Select(name => _candidates.FirstOrDefault(t => t.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
+                .Where(type => type != null && string.Equals(type.Definition.GetString("group"), group, StringComparison.OrdinalIgnoreCase))
+                .Select(type => type!.Name))
+            .Distinct(StringComparer.OrdinalIgnoreCase).Take(3)];
+    }
+
+    /// <summary>생산 버튼 index(3~5)에 놓인 유닛 타입 (없으면 null).</summary>
+    private string? ProductionType(int index) => index - 3 is int slot && slot >= 0 && slot < _productionTypes.Length ? _productionTypes[slot] : null;
+
+    /// <summary>생산 버튼에 표시할 유닛 이름. 한국어는 group 별 짧은 이름, 영어는 원본 description.</summary>
+    private string ProductionLabel(string typeName)
+    {
+        TypeInfo? type = _candidates.FirstOrDefault(t => t.Name.Equals(typeName, StringComparison.OrdinalIgnoreCase));
+        string english = type?.Definition.GetString("description") ?? typeName;
+        string korean = type?.Definition.GetString("group")?.ToLowerInvariant() switch
+        {
+            "battery" => "발전기", "cannon" => "대포", "archer" => "원반 투척기", "aviary" => "비행 기지",
+            "blocker" => "방벽", "fence" => "울타리", "balloon" => "비행 수송", _ => english,
+        };
+        return Ui(korean, english);
     }
 
     /// <summary>현재 UI 언어의 문구.</summary>
@@ -72,9 +110,12 @@ internal sealed partial class FortMapViewer
         Add(0, Ui("워크샵 800", "Workshop 800"), () => ChooseProduction("sunFactory"));
         Add(1, Ui("제단", "Altar"), () => ChooseProduction("altar"));
         Add(2, Ui("골렘", "Golem"), () => ChooseProduction("sunWalker"), _session.Player(TestPlayer).HasTemple);
-        Add(3, Ui("발전기", "Rain Generator"), () => ChooseProduction("rainBattery"));
-        Add(4, Ui("대포", "Sun Cannon"), () => ChooseProduction("sunCannon"));
-        Add(5, Ui("비행 기지", "Whirlibase"), () => ChooseProduction("sunAviary"));
+        // 3~5번: 미션 시작 지식의 생산 유닛 (없는 칸은 비활성)
+        for (int slot = 3; slot <= 5; slot++)
+        {
+            string? produce = ProductionType(slot);
+            Add(slot, produce == null ? "" : ProductionLabel(produce), () => { if (produce != null) ChooseProduction(produce); }, produce != null);
+        }
         Add(6, Ui("다리", "Bridges"), () => { CancelCursor(); _bridgeMode = true; });
         Add(7, Ui("업그레이드", "Upgrade 1000"), UpgradeWorkshop);
         Add(8, Ui("내 사제", "My Priest"), () =>
@@ -142,7 +183,13 @@ internal sealed partial class FortMapViewer
         GameEntity? selected = _session.Entity(_session.Player(TestPlayer).SelectedEntityId);
         if (left && target?.Owner == TestPlayer && !(target.Kind == ObjectKind.Altar && selected?.Kind is ObjectKind.Priest or ObjectKind.Transport))
         { SubmitCommand(new SelectEntityCommand(TestPlayer, target.Id)); return; }
-        if (target?.Kind == ObjectKind.Geyser)
+        // 원본 도움말: 가이저를 우클릭하면 남은 Storm Power 를 보여 준다 (왼쪽 클릭은 수확 명령)
+        if (right && target?.Kind == ObjectKind.Geyser)
+        {
+            _notice = target.IsDepletedGeyser ? Ui("빈 Storm 가이저", "Empty Storm Geyser")
+                : Ui($"Storm 가이저 · 남은 Storm Power {target.StoredStormPower}", $"Storm Geyser · Storm Power {target.StoredStormPower}");
+        }
+        else if (target?.Kind == ObjectKind.Geyser)
         {
             SubmitCommand(new HarvestGeyserCommand(TestPlayer, target.Id, selected?.Kind is ObjectKind.Priest or ObjectKind.Transport ? selected.Id : 0));
         }
@@ -162,9 +209,9 @@ internal sealed partial class FortMapViewer
     private static Rectangle MiniMap(int width, int height) => new(4, height - 74, 76, 70);
 
     /// <summary>사이드바 아이콘이 사용할 원본 유닛 타입 이름.</summary>
-    private static string? ProductionIcon(int index) => index switch
+    private string? ProductionIcon(int index) => index switch
     {
-        0 => "sunFactory", 1 => "altar", 2 => "sunWalker", 3 => "rainBattery", 4 => "sunCannon", 5 => "sunAviary", _ => null,
+        0 => "sunFactory", 1 => "altar", 2 => "sunWalker", 3 or 4 or 5 => ProductionType(index), _ => null,
     };
 
     /// <summary>그림 없는 명령 버튼에 사용할 짧은 표시 이름.</summary>
@@ -189,7 +236,7 @@ internal sealed partial class FortMapViewer
         _uiSkin.Menu(batch, new Rectangle(PlaySidebarWidth, 0, width - PlaySidebarWidth, 18));
         OriginalUiSkin.Text(batch, small, Ui("메뉴", "Game"), new Vector2(PlaySidebarWidth + 5, 1));
         TimeSpan time = TimeSpan.FromSeconds(_session.Seconds);
-        OriginalUiSkin.Text(batch, small, $"1-1  {(int)time.TotalMinutes:00}:{time.Seconds:00}", new Vector2(width - 94, 1));
+        OriginalUiSkin.Text(batch, small, $"{_mission?.Campaign?.Code ?? ""}  {(int)time.TotalMinutes:00}:{time.Seconds:00}", new Vector2(width - 94, 1));
         // 실제 유닛 그림을 작은 생산 버튼 안에 넣고 자세한 이름·비용은 상태줄에 표시한다.
         for (int i = 0; i < _playButtons.Count; i++)
         {
@@ -223,19 +270,30 @@ internal sealed partial class FortMapViewer
     /// <summary>플레이 버튼의 영역·문구·동작.</summary>
     private sealed record PlayButton(Rectangle Bounds, string Label, bool Enabled, Action Action);
 
-    /// <summary>원본 1-1 본문과 버튼의 한국어 표시. 스크립트 동작·섹션·조건은 바꾸지 않는다.</summary>
-    private TutorialDialogContent LocalizeFirstCampaign(TutorialDialogContent content)
+    /// <summary>원본 캠페인 본문과 버튼의 한국어 표시(1-1·1-2). 스크립트 동작·섹션·조건은 바꾸지 않는다.</summary>
+    private TutorialDialogContent LocalizeCampaign(TutorialDialogContent content)
     {
         if (!_playUi || Language != GameLanguage.Korean) return content;
-        string[]? paragraphs = content.Section switch
+        string code = _mission?.Campaign?.Code ?? "";
+        string[]? paragraphs = (code, content.Section) switch
         {
-            "A." => ["“어둠과 폭정은 우리 족쇄의 자물쇠다. 열쇠가 될 용기는 누구에게 있는가?” — 빛의 탄식",
+            ("1-1", "A.") => ["“어둠과 폭정은 우리 족쇄의 자물쇠다. 열쇠가 될 용기는 누구에게 있는가?” — 빛의 탄식",
                 "님버스의 주민들을 정복하고 노예로 삼은 어둠의 군주들은 하늘을 지배하고 있습니다.",
                 "그들은 당신의 섬에 경비대를 주둔시키고 사제를 가두었지만, 대담한 기습으로 당신의 사제가 풀려났습니다. 이제 자유를 되찾고 모든 님버스를 위해 싸울 때입니다!"],
-            "Succeeded" or "BadTeamDead" => ["당신의 섬이 자유를 되찾았습니다!", "더 많은 자유로운 섬들과 힘을 합쳐 어둠의 세력을 물리쳐야 합니다."],
-            "Failed" => ["기습 공격이 실패했습니다.", "어둠의 세력은 주민들에게 보복하며 더 강한 경계를 명령했습니다. 이번 자유의 기회를 잃었습니다."],
+            ("1-1", "Succeeded" or "BadTeamDead") => ["당신의 섬이 자유를 되찾았습니다!", "더 많은 자유로운 섬들과 힘을 합쳐 어둠의 세력을 물리쳐야 합니다."],
+            ("1-1", "Failed") => ["기습 공격이 실패했습니다.", "어둠의 세력은 주민들에게 보복하며 더 강한 경계를 명령했습니다. 이번 자유의 기회를 잃었습니다."],
+            // 1-2 masterofwhirligigs.english 의 [A.]·[Succeeded][BadTeamDead]·[Failed] 번역
+            ("1-2", "A.") => ["“님버스 전쟁의 내력과 기원은 바로 님버스의 전쟁이다.” — 역사가 갈트루프 엔딕스",
+                "어둠의 군주들은 당신의 섬이 약하다고 믿습니다. 그들은 휘리기그의 지배자를 보내 당신의 땅을 빼앗고 백성을 노예로 삼으려 합니다.",
+                "적들은 당신이 무능하다고 생각합니다. 그들의 사악한 대사제를 사로잡아 분노의 신들에게 제물로 바쳐 그들이 틀렸음을 증명하십시오."],
+            ("1-2", "Succeeded" or "BadTeamDead") => ["당신은 이 잔혹하고 무자비한 공격으로부터 백성을 훌륭히 지켜냈습니다!",
+                "이른바 휘리기그의 “지배자”의 대사제를 사로잡아 처단했습니다. 이제 누가 진정한 지배자인지 분명하지 않습니까?"],
+            ("1-2", "Failed") => ["이번 전투에서 적 사제를 사로잡지 못했습니다.",
+                "휘리기그의 지배자가 당신의 군대를 쓸어버렸습니다. 결국 어둠의 군주들의 판단이 옳았던 것 같습니다.",
+                "이제 당신은 어둠의 군주들의 제국에서 하찮은 하수인이 되고, 당신의 백성은 사슬에 묶인 채 숨 쉴 때마다 당신의 이름을 저주하며 살아갈 것입니다."],
             _ => null,
         };
+        string? briefingTitle = code switch { "1-1" => "전쟁의 시작!", "1-2" => "휘리기그의 지배자", _ => null };
         // 원본 명령 인자를 유지하고 표시 문자열만 번역한다.
         string Label(string value) => value switch
         {
@@ -244,7 +302,7 @@ internal sealed partial class FortMapViewer
         };
         return content with
         {
-            Title = content.Section switch { "A." => "전쟁의 시작!", "Succeeded" or "BadTeamDead" => "승리!", "Failed" => "실패!", _ => content.Title },
+            Title = content.Section switch { "A." => briefingTitle ?? content.Title, "Succeeded" or "BadTeamDead" => "승리!", "Failed" => "실패!", _ => content.Title },
             Runs = paragraphs == null ? content.Runs : paragraphs.Select(p => new TutorialTextRun(p, TutorialTextStyle.Body, TutorialTextBreak.Paragraph)).ToArray(),
             Buttons = content.Buttons.Select(b => b with { Label = Label(b.Label) }).ToArray(),
         };

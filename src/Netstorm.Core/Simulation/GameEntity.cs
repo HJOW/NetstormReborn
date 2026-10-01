@@ -102,13 +102,21 @@ public sealed class GameEntity
         Source = source;
         MaxHitPoints = Math.Max(0, type.Definition.GetDouble("maxHitPoints") ?? 0);
         HitPoints = MaxHitPoints;
+        // 가이저는 타입 cost 만큼의 Storm Power 를 품는다. 싱글 플레이 원본 값(exe 타입 로더 → FUN_004b2df0, geyser.type cost = 2000).
+        if (kind == ObjectKind.Geyser) StoredStormPower = type.Definition.GetInt("cost") is int stored and > 0 ? stored : int.MaxValue;
     }
+
+    /// <summary>가이저에 남은 Storm Power. 가이저가 아니면 0. 0 이 되면 빈 가이저(emptyGeyser)가 된다.</summary>
+    public int StoredStormPower { get; internal set; }
+
+    /// <summary>다 써서 비어 버린 가이저인지 (원본 "Empty Storm Geyser").</summary>
+    public bool IsDepletedGeyser => Kind == ObjectKind.Geyser && StoredStormPower <= 0;
 
     /// <summary>화면에 보이는 설명 이름 (.type 의 description, 없으면 타입 이름)</summary>
     public string DisplayName => Type.Definition.GetString("description") ?? Type.Name;
 
     /// <summary>회수·파괴 때의 비용 기준 값 (.type 의 cost, 없으면 0)</summary>
-    public int Cost => Type.Definition.GetInt("cost") ?? 0;
+    public int Cost => StormPower.TypeCost(Type.Definition);
 }
 
 /// <summary>사제의 포획 상태 (도움말 "How To Capture and Sacrifice", docs/gameplay/sacrifice.md).</summary>

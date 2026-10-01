@@ -8,10 +8,10 @@ AI 를 이용해 되살리는 프로젝트입니다.
 
 # 현재 개발 진행상황 관련
 
-현재 실행하면 **메인 메뉴 → 캠페인 → 자유를 위한 투쟁 → 1-1 전쟁의 시작!**을 플레이할 수 있습니다.
+현재 실행하면 **메인 메뉴 → 캠페인 → 자유를 위한 투쟁 → 1-1 전쟁의 시작!**과 **1-2 휘리기그의 지배자(Master of Whirligigs)**를 플레이할 수 있습니다.
 옵션에서 해상도·창/전체화면·효과음/음악 볼륨을 바꿀 수 있으며 다른 메뉴·미션은 잠금 표시합니다.
 `dotnet run --project src/Netstorm.Game -c Release -- --language korean`으로 시작합니다(영어: `--language english`).
-게임 데이터는 `assets/game-data/`에서 관리하며 빌드·배포 출력에 자동으로 포함됩니다. 임시 AI·건설 규칙과 검증 한계는 [캠페인 1-1 구현](docs/gameplay/campaign-one.md)에 정리했습니다.
+게임 데이터는 `assets/game-data/`에서 관리하며 빌드·배포 출력에 자동으로 포함됩니다. 임시 AI·건설 규칙과 검증 한계는 [캠페인 1-1 구현](docs/gameplay/campaign-one.md)과 [캠페인 1-2 구현](docs/gameplay/campaign-two.md)에 정리했습니다.
 
 # 빌드 및 실행 파일 만들기
 

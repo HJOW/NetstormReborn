@@ -45,6 +45,9 @@ internal sealed partial class FortMapViewer : IDisposable
     private readonly TypeInfo _edgeFarmType;
     private readonly TypeInfo _fringeType;
     private readonly TypeInfo _supportTopType;
+
+    /// <summary>다 쓴 가이저를 그릴 원본 emptyGeyser 타입 (없으면 원래 가이저 그림을 유지).</summary>
+    private readonly TypeInfo? _emptyGeyserType;
     private readonly TypeInfo _supportBottomType;
     private IReadOnlyList<FortTerrainFringeSprite> _fringes;
     private IReadOnlyList<FortEdgeFarmTile> _edgeFarms;
@@ -84,6 +87,7 @@ internal sealed partial class FortMapViewer : IDisposable
         _edgeFarmType = catalog.Find("edgeFarm") ?? throw new InvalidDataException("edgeFarm 타입이 없습니다.");
         _fringeType = catalog.Find("fringe") ?? throw new InvalidDataException("fringe 타입이 없습니다.");
         _supportTopType = catalog.Find("island") ?? throw new InvalidDataException("island 타입이 없습니다.");
+        _emptyGeyserType = catalog.Find("emptyGeyser");
         _supportBottomType = catalog.Find("islandStalag") ?? throw new InvalidDataException("islandStalag 타입이 없습니다.");
         _terrain = new FortTerrainPreview(_map, _terrainType.Definition);
         _fringes = FortTerrainFringe.Create(_terrain, _terrainType.Definition, _fringeType.Definition);
@@ -311,6 +315,12 @@ internal sealed partial class FortMapViewer : IDisposable
             int itemX = live?.Footprint.AnchorX ?? item.X;
             int itemY = live?.Footprint.AnchorY ?? item.Y;
             Vector2 anchor = Screen(WorldPixels(itemX, itemY), center);
+            // 다 쓴 가이저는 원본 emptyGeyser 그림으로 바꿔 그린다 (도움말 "Empty Storm Geyser")
+            if (live is { IsDepletedGeyser: true } && _emptyGeyserType != null)
+            {
+                DrawSprite(batch, _emptyGeyserType.LoadIndex, _emptyGeyserType.Definition.Frames.DefaultFrame, anchor);
+                continue;
+            }
             var sprite = GetSprite(item);
             if (sprite.HasValue)
             {

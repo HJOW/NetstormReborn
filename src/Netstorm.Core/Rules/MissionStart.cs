@@ -118,8 +118,11 @@ public sealed record MissionStart(string? Title, string? LoadFort, int? StartSto
     /// <summary>AI 플레이어 번호의 최대값 (원본 머리 값 ai1~ai8, exe 승패 판정 FUN_004c36c0 도 1~8 을 검사한다)</summary>
     public const int MaximumPlayer = 8;
 
-    /// <summary>현재 전략 AI를 연결한 캠페인 1-1인지. 다른 미션에는 임시 전략을 적용하지 않는다.</summary>
-    public bool IsFirstCampaign => CampaignAccess.IsAvailable(LoadFort ?? "") || Title == "The War Begins!";
+    /// <summary>임시 전략 AI를 연결한 공개 캠페인 미션 (1-1·1-2, 없으면 null). 다른 미션에는 임시 전략을 적용하지 않는다.</summary>
+    public CampaignMission? Campaign => CampaignAccess.Find(LoadFort) ?? CampaignAccess.Find(Title);
+
+    /// <summary>임시 전략 AI를 쓰는 공개 캠페인 미션인지.</summary>
+    public bool UsesCampaignAi => Campaign != null;
     /// <summary>원본 aiStartMoney. 맵의 개발용 Money와 구분한다.</summary>
     public int? AiStartMoney { get; init; }
     /// <summary>원본 aiTech의 시작 지식.</summary>

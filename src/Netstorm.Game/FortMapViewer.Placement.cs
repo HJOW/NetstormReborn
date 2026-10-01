@@ -100,7 +100,7 @@ internal sealed partial class FortMapViewer
     private static bool IsBuildable(TypeInfo type)
     {
         ObjectKind kind = ObjectKinds.Of(type);
-        if (!ObjectKinds.IsBuilding(kind) || (type.Definition.GetInt("cost") ?? 0) <= 0)
+        if (!ObjectKinds.IsBuilding(kind) || StormPower.TypeCost(type.Definition) <= 0)
         {
             return false;
         }
@@ -245,7 +245,8 @@ internal sealed partial class FortMapViewer
                 DrawSprite(batch, _supportBottomType.LoadIndex, MapSpriteFrames.BodyFrame(_supportBottomType.Definition, 0), anchor);
                 DrawSprite(batch, _supportTopType.LoadIndex, MapSpriteFrames.BodyFrame(_supportTopType.Definition, 0), anchor);
             }
-            DrawSprite(batch, entity.Type.LoadIndex, entity.Type.Definition.Frames.DefaultFrame, anchor,
+            TypeInfo drawn = entity.IsDepletedGeyser && _emptyGeyserType != null ? _emptyGeyserType : entity.Type;
+            DrawSprite(batch, drawn.LoadIndex, drawn.Definition.Frames.DefaultFrame, anchor,
                 alpha: entity.IsComplete ? 1f : UnderConstructionAlpha);
             if (!entity.IsComplete)
             {
@@ -318,7 +319,7 @@ internal sealed partial class FortMapViewer
         if (_playUi)
         {
             batch.Draw(_pixel, new Rectangle(0, height - 94, width, 40), new Color(35, 32, 28));
-            batch.DrawString(font, $"{type.Definition.GetString("description")} · {type.Definition.GetInt("cost") ?? 0} SP · {_lastCheck?.Describe()}",
+            batch.DrawString(font, $"{type.Definition.GetString("description")} · {StormPower.TypeCost(type.Definition)} SP · {_lastCheck?.Describe()}",
                 new Vector2(12, height - 90), _lastCheck?.Allowed == true ? Color.LightGreen : Color.Salmon);
             return;
         }
@@ -327,13 +328,13 @@ internal sealed partial class FortMapViewer
         string head;
         if (IsBuilding(type))
         {
-            head = $"건설 시험 [{_candidateIndex + 1}/{_candidates.Length}] {description} ({type.Name}) | 비용 {type.Definition.GetInt("cost") ?? 0} " +
+            head = $"건설 시험 [{_candidateIndex + 1}/{_candidates.Length}] {description} ({type.Name}) | 비용 {StormPower.TypeCost(type.Definition)} " +
                 $"| 건설 {ConstructionTimes.Seconds(ObjectKinds.Of(type)):0}초 | 필요 에너지: {requirement.Describe()}";
         }
         else
         {
             head = $"배치 시험 [{_candidateIndex + 1}/{_candidates.Length}] {description} ({type.Name}, L{type.Definition.GetInt("level")}) " +
-                $"| 비용 {type.Definition.GetInt("cost") ?? 0} | 필요 에너지: {requirement.Describe()} | 공급 반지름 {_session.Map.Options.GeneratorRadius}칸";
+                $"| 비용 {StormPower.TypeCost(type.Definition)} | 필요 에너지: {requirement.Describe()} | 공급 반지름 {_session.Map.Options.GeneratorRadius}칸";
         }
         string result = _lastCheck == null ? "커서를 맵 위에 두세요"
             : _lastCheck.Site is { } site

@@ -72,6 +72,9 @@ public enum CommandFailure
     /// <summary>결정을 전달할 완성된 신전이 없음.</summary>
     NoTemple,
 
+    /// <summary>가이저가 비어 더 채집할 수 없음</summary>
+    GeyserEmpty,
+
     /// <summary>현재 섬·다리 칸에서 가이저까지 걸어갈 경로가 없음.</summary>
     NoRoute,
 
@@ -155,6 +158,9 @@ public enum SessionEventKind
 
     /// <summary>사제가 신전에 Storm Crystal 하나를 전달해 Storm Power를 얻음.</summary>
     CrystalDelivered,
+
+    /// <summary>가이저의 Storm Power 가 바닥나 빈 가이저가 됨 (EntityId = 가이저). 원본 도움말: 수송 유닛은 가이저가 고갈될 때까지 채집을 반복한다.</summary>
+    GeyserDepleted,
 
     /// <summary>튜토리얼의 F4 화면 복귀 입력.</summary>
     ReturnedHome,
@@ -304,6 +310,7 @@ public static class SessionText
         CommandFailure.BridgeBlocked => "다리를 놓을 수 없는 위치",
         CommandFailure.NoPriest => "움직일 사제가 없음",
         CommandFailure.NoTemple => "결정을 전달할 신전이 없음",
+        CommandFailure.GeyserEmpty => "가이저가 비어 있음",
         CommandFailure.NoRoute => "목적지까지 이어진 길이 없음",
         CommandFailure.NotCapturable => "집을 수 없는 사제 (기절하지 않았거나 동맹)",
         CommandFailure.AltarOccupied => "제단에 이미 사제가 묶여 있음",

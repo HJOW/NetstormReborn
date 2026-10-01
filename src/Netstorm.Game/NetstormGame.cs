@@ -256,7 +256,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         _audio = new AudioPlayer(dataDir, settings.SoundOn, settings.PlayMusic, settings.SoundVolume, settings.MusicVolume);
         _uiSkin = new OriginalUiSkin(GraphicsDevice, shapes, palette, resources.LoadTypes().Find("fortGump")!.Definition,
             _fonts!.GetFont(BodyFontSize), _fonts.GetFont(TitleFontSize), _fonts.GetFont(SmallFontSize));
-        _mainMenu = new MainMenuView(GraphicsDevice, resources, _uiSkin, _display, _audio, PlayFirstCampaign, Exit);
+        _mainMenu = new MainMenuView(GraphicsDevice, resources, _uiSkin, _display, _audio, PlayCampaign, Exit);
         _mainMenu.Open(ParseValueArgument(Environment.GetCommandLineArgs(), "--menu") ?? "main");
         if (_missionName == null)
         {
@@ -317,10 +317,12 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         return;
     }
 
-    /// <summary>메뉴에서 이번 범위의 첫 캠페인을 로드하고 실패 원인은 메뉴에 표시한다.</summary>
-    private void PlayFirstCampaign()
+    /// <summary>메뉴에서 고른 공개 캠페인 미션을 로드하고 실패 원인은 메뉴에 표시한다.</summary>
+    /// <param name="mission">미션 파일 이름 (CampaignAccess 가 공개한 것만 메뉴에서 눌린다)</param>
+    private void PlayCampaign(string mission)
     {
-        try { LoadMission(_resources!, _shapes!, _palette!, CampaignAccess.FirstMission); }
+        if (!CampaignAccess.IsAvailable(mission)) return;
+        try { LoadMission(_resources!, _shapes!, _palette!, mission); }
         catch (Exception error) when (error is IOException or ArgumentException)
         { _mainMenu?.ShowError($"미션 시작 실패: {error.Message}"); }
     }

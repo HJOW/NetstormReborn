@@ -380,7 +380,7 @@ internal sealed partial class FortMapViewer
             $"Hits: {definition.GetInt("maxHitPoints")?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "n/a"}",
             $"Range: {range}",
             $"Damage: {damage}",
-            $"Cost in Storm Power: {definition.GetInt("cost") ?? 0}",
+            $"Cost in Storm Power: {StormPower.TypeCost(definition)}",
         ];
         // 수치 줄을 차례로 쓴다
         foreach (string stat in stats)
