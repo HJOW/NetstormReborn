@@ -18,7 +18,7 @@ namespace Netstorm.Game;
 internal sealed partial class FortMapViewer
 {
     /// <summary>다리 칸 패널의 한 칸 크기(논리 픽셀)</summary>
-    private static readonly Point TraySlotSize = new(112, 84);
+    private Point TraySlotSize => _playUi ? new(36, 36) : new(112, 84);
 
     /// <summary>다리 칸 패널의 열 수 (원본 사이드바처럼 2열)</summary>
     private const int TrayColumns = 2;
@@ -197,7 +197,7 @@ internal sealed partial class FortMapViewer
     /// <summary>다리 칸 패널(왼쪽)과 다리 모드 안내 문구를 그린다.</summary>
     private void DrawBridgeOverlay(SpriteBatch batch, SpriteFontBase font, int width, int height)
     {
-        if (!_bridgeMode)
+        if (!_bridgeMode && !_playUi)
         {
             return;
         }
@@ -206,14 +206,17 @@ internal sealed partial class FortMapViewer
         TypeFrameTable frames = _bridgeType.Definition.Frames;
         int rows = (tray.Capacity + TrayColumns - 1) / TrayColumns;
         var panel = new Rectangle(0, HeaderHeight, TraySlotSize.X * TrayColumns + 12, rows * TraySlotSize.Y + 12);
-        batch.Draw(_pixel, panel, new Color(40, 34, 28) * 0.9f);
+        if (!_playUi) _uiSkin.Menu(batch, panel);
         // 칸마다 테두리와 조각을 그린다 (조각 없는 칸은 빈 테두리)
         for (int slot = 0; slot < tray.Capacity; slot++)
         {
             var box = new Rectangle(6 + slot % TrayColumns * TraySlotSize.X, HeaderHeight + 6 + slot / TrayColumns * TraySlotSize.Y,
                 TraySlotSize.X - 4, TraySlotSize.Y - 4);
-            batch.Draw(_pixel, box, new Color(70, 60, 48));
-            batch.DrawString(font, $"{slot + 1}", new Vector2(box.X + 3, box.Y), Color.Wheat * 0.7f);
+            if (!_playUi)
+            {
+                _uiSkin.Menu(batch, box);
+                batch.DrawString(font, $"{slot + 1}", new Vector2(box.X + 3, box.Y), Color.Wheat * 0.7f);
+            }
             if (slot >= tray.Pieces.Count)
             {
                 continue;
@@ -229,6 +232,7 @@ internal sealed partial class FortMapViewer
                 DrawSprite(batch, _bridgeType.LoadIndex, BridgeFrames.Find(frames, cell.Cell), anchor, scale: TrayPieceScale);
             }
         }
+        if (_playUi) return;
         string held = (HeldPreview == null ? "없음" : HeldPreview.ToString()) + (_reverseRotation ? " | 반대 회전 켜짐" : "");
         string head = $"다리 조각 시험 | 칸 {tray.Pieces.Count}/{tray.Capacity} | 추첨 {tray.DrawCount}회 | 템플 {(player.HasTemple ? "있음" : "없음 — 조각이 생기지 않음")} | 들고 있는 조각: {held}";
         string keys = "1~6: 조각 집기 · R: 회전(원본 우클릭) · C: 반대 회전 · Backspace: 되돌리기 · 좌클릭: 놓기 · Space: 정지 · B: 모드 끄기";

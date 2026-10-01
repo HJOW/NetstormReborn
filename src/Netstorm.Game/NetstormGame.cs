@@ -16,17 +16,17 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     /// <summary>한국어 글꼴 파일 (출력 폴더 기준 상대 경로, AGENTS.md 지정 D2Coding)</summary>
     private const string KoreanFontPath = "fonts/D2Coding-Ver1.3.2-20180524-all.ttc";
 
-    /// <summary>D2Coding TTC 에서 사용할 face 번호 (0 = 일반)</summary>
-    private const int KoreanFontFace = 0;
+    /// <summary>D2Coding TTC 에서 사용할 face 번호 (1 = 굵게, 원본 UI의 작은 굵은 글씨 재현)</summary>
+    private const int KoreanFontFace = 1;
 
     /// <summary>본문 글자 크기(px)</summary>
-    private const int BodyFontSize = 20;
+    private const int BodyFontSize = 13;
 
     /// <summary>제목 글자 크기(px)</summary>
-    private const int TitleFontSize = 32;
+    private const int TitleFontSize = 16;
 
     /// <summary>작은 글자 크기 (지식 창 카드 이름·수치 — 원본 카드 이름은 약 11px 글꼴)</summary>
-    private const int SmallFontSize = 13;
+    private const int SmallFontSize = 12;
 
     /// <summary>스크린샷 모드에서 저장 전에 기다릴 프레임 수 (애니메이션이 진행된 화면을 찍기 위함)</summary>
     private const int ScreenshotDelayFrames = 30;
@@ -74,6 +74,8 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     private SpriteBrowser? _spriteBrowser;
     private SpriteBatch? _batch;
     private FontSystem? _fonts;
+    /// <summary>메뉴와 미션 창에서 공유하는 원본 돌 질감·장식·글꼴.</summary>
+    private OriginalUiSkin? _uiSkin;
     private readonly List<SpriteAnimation> _animations = [];
     private readonly List<string> _statusLines = [];
     private int _frameCount;
@@ -252,7 +254,9 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         _help = resources.TryLoadHelp();
         DisplaySettings settings = _display.Settings;
         _audio = new AudioPlayer(dataDir, settings.SoundOn, settings.PlayMusic, settings.SoundVolume, settings.MusicVolume);
-        _mainMenu = new MainMenuView(GraphicsDevice, resources, shapes, palette, _display, _audio, PlayFirstCampaign, Exit);
+        _uiSkin = new OriginalUiSkin(GraphicsDevice, shapes, palette, resources.LoadTypes().Find("fortGump")!.Definition,
+            _fonts!.GetFont(BodyFontSize), _fonts.GetFont(TitleFontSize), _fonts.GetFont(SmallFontSize));
+        _mainMenu = new MainMenuView(GraphicsDevice, resources, _uiSkin, _display, _audio, PlayFirstCampaign, Exit);
         _mainMenu.Open(ParseValueArgument(Environment.GetCommandLineArgs(), "--menu") ?? "main");
         if (_missionName == null)
         {
@@ -352,7 +356,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     {
         TypeCatalog catalog = resources.LoadTypes();
         FortMapViewer nextViewer = new(GraphicsDevice, shapes, palette, resources.LoadFort(name, catalog), name,
-            catalog, resources.Language, mission, tutorialScript, resources.Settings, _help,
+            catalog, resources.Language, _uiSkin!, mission, tutorialScript, resources.Settings, _help,
             mission != null ? resources.TryLoadMission("tell")?.Script : null);
         _mapViewer?.Dispose();
         _mapViewer = nextViewer;
@@ -444,7 +448,8 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         if (_uiAutomation != null)
         {
             keyboard = new KeyboardState();
-            mouse = _uiAutomation.Update(_mapViewer?.UiState ?? _mainMenu?.Page ?? "unavailable", Exit);
+            mouse = _uiAutomation.Update(_mapViewer?.UiState ?? _mainMenu?.Page ?? "unavailable", Exit,
+                _display.Layout.LogicalWidth, _display.Layout.LogicalHeight);
         }
         if (_mapViewer == null && _spriteBrowser == null)
             _mainMenu?.Update(mouse, keyboard, _display.Layout.LogicalWidth, _display.Layout.LogicalHeight);
@@ -695,6 +700,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
             }
             _batch?.Dispose();
             _fonts?.Dispose();
+            _uiSkin?.Dispose();
             _display.Dispose();
         }
         base.Dispose(disposing);

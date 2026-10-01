@@ -1,6 +1,6 @@
 # 메인 메뉴 화면과 정적 이동 경로
 
-2026-10-01 클론 구현: 원본 `titleMenu.gif`·구름·돌 질감으로 기본 메뉴를 표시한다. Campaign → Struggle For Freedom → 1-1과 Options(해상도·창/전체화면·음량)을 연결했으며 다른 항목·미션은 잠금이다. 원본 펼침 메뉴와의 레이아웃 차이 및 검증은 [현재 구현](../gameplay/campaign-one.md)에 정리했다. 아래 좌표·동작은 원본 관찰 기록이다.
+2026-10-01 클론 구현: 원본 타이틀·구름 위에 74×19px 버튼을 두 줄로 배치하고 작은 돌 캠페인 창과 옵션 펼침 메뉴를 구현했다. Campaign → Struggle For Freedom → 1-1과 Options(해상도·창/전체화면·음량)을 연결했으며 다른 항목·미션은 비활성이다. [UI 외관·검증](clone-ui.md), [플레이 범위](../gameplay/campaign-one.md)를 참고한다. 아래 좌표·동작은 원본 관찰 기록이다.
 
 > 2026-09-29 정리. 기존 `screenShots/mainMenu*.png`와 추출된 `tell.english`, `offical1~6.english`를 읽었다. 이 작업에서는 원본 게임을 실행하지 않았다.
 

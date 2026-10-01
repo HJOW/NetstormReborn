@@ -15,8 +15,8 @@ internal sealed class UiAutomation
     /// <summary>UTF-8 명령 파일의 세미콜론 구분 명령을 읽는다.</summary>
     public UiAutomation(string path) => _commands = new Queue<string>(File.ReadAllText(path).Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries));
 
-    /// <summary>공통 메뉴·지도 입력이 읽을 마우스 상태를 한 프레임씩 만든다.</summary>
-    public MouseState Update(string state, Action quit)
+    /// <summary>공통 입력이 읽을 절대 좌표 또는 화면 중심 기준 마우스 상태를 한 프레임씩 만든다.</summary>
+    public MouseState Update(string state, Action quit, int width, int height)
     {
         if (_release)
         {
@@ -30,8 +30,11 @@ internal sealed class UiAutomation
         switch (parts[0])
         {
             case "click":
+            case "click-center":
                 string[] point = value.Split(',');
-                _mouse = MakeMouse(int.Parse(point[0]), int.Parse(point[1]), ButtonState.Pressed); _release = true; break;
+                int x = int.Parse(point[0]) + (parts[0] == "click-center" ? width / 2 : 0);
+                int y = int.Parse(point[1]) + (parts[0] == "click-center" ? height / 2 : 0);
+                _mouse = MakeMouse(x, y, ButtonState.Pressed); _release = true; break;
             case "wait": _waitFrames = int.Parse(value); break;
             case "capture": CapturePath = value; break;
             case "assert":

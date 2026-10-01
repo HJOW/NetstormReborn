@@ -16,7 +16,7 @@ namespace Netstorm.Game;
 /// <item>마우스가 올라간 카드는 어둡게 그린다. 카드를 누르면 상세창(그림·수치·help 본문·Back·OK)이 열린다.</item>
 /// <item>원본처럼 게임 코드가 직접 여는 창이라 게임 시간을 멈추지 않는다 (녹화에서 창이 열린 채 SP 가 늘었다).</item>
 /// </list>
-/// 원본 창 그림(돌 질감 gump)은 아직 찾지 못해 단색 상자로 대신한다.
+/// 공유 UI 스킨으로 원본 돌 질감과 대화상자 모서리를 사용한다.
 /// </summary>
 internal sealed partial class FortMapViewer
 {
@@ -32,8 +32,8 @@ internal sealed partial class FortMapViewer
     /// <summary>카드 그림이 들어가는 위쪽 영역 높이</summary>
     private const int KnowledgePictureHeight = 66;
 
-    /// <summary>상세창 크기</summary>
-    private static readonly Point KnowledgeDetailSize = new(560, 520);
+    /// <summary>작은 본문·버튼에 맞춘 지식 상세창 크기. 긴 도움말은 내부에서 스크롤한다.</summary>
+    private static readonly Point KnowledgeDetailSize = new(440, 400);
 
     /// <summary>상세창 그림 상자 크기</summary>
     private static readonly Point KnowledgeDetailPicture = new(120, 110);
@@ -58,9 +58,6 @@ internal sealed partial class FortMapViewer
         [Element.Rain] = "RAIN",
         [Element.Thunder] = "THUN.",
     };
-
-    /// <summary>카드 바탕색 (원본 돌 질감의 평균 색에 가깝게)</summary>
-    private static readonly Color KnowledgeCardColor = new(139, 130, 110);
 
     /// <summary>카드 테두리 색</summary>
     private static readonly Color KnowledgeCardBorder = new(78, 70, 58);
@@ -172,7 +169,7 @@ internal sealed partial class FortMapViewer
 
     /// <summary>상세창 Back·OK 버튼 (index 0 = Back, 1 = OK)</summary>
     private static Rectangle KnowledgeDetailButton(Rectangle panel, int index) =>
-        new(panel.Center.X - 130 + index * 140, panel.Bottom - 46, 120, 34);
+        new(panel.Center.X - 68 + index * 80, panel.Bottom - 35, 56, OriginalUiSkin.ButtonHeight);
 
     /// <summary>상세창 본문 영역</summary>
     private static Rectangle KnowledgeDetailBody(Rectangle panel) =>
@@ -285,9 +282,8 @@ internal sealed partial class FortMapViewer
     /// <summary>카드·머리 칸 상자 (마우스가 올라가면 어둡게)</summary>
     private void DrawKnowledgeBox(SpriteBatch batch, Rectangle rect, bool hovered)
     {
-        batch.Draw(_pixel, rect, hovered ? Color.Lerp(KnowledgeCardColor, Color.Black, 0.35f) : KnowledgeCardColor);
-        Outline(batch, rect, KnowledgeCardBorder);
-        batch.Draw(_pixel, new Rectangle(rect.X + 1, rect.Y + 1, rect.Width - 2, 1), Color.White * 0.25f);
+        _uiSkin.Menu(batch, rect);
+        if (hovered) batch.Draw(_pixel, rect, Color.Black * 0.35f);
     }
 
     /// <summary>카드 아래쪽에 이름을 두 줄까지 왼쪽 정렬로 쓴다 (원본처럼 단어 단위 줄바꿈)</summary>
@@ -363,8 +359,7 @@ internal sealed partial class FortMapViewer
         int width, int height)
     {
         Rectangle panel = KnowledgeDetailPanel(width, height);
-        batch.Draw(_pixel, panel, new Color(96, 92, 84));
-        Outline(batch, panel, new Color(190, 170, 120));
+        _uiSkin.Panel(batch, panel);
         var picture = new Rectangle(panel.X + 20, panel.Y + 20, KnowledgeDetailPicture.X, KnowledgeDetailPicture.Y);
         batch.Draw(_pixel, picture, new Color(40, 52, 40));
         Outline(batch, picture, Color.Black);
@@ -373,7 +368,7 @@ internal sealed partial class FortMapViewer
         TypeDefinition definition = card.Type.Definition;
         float x = picture.Right + 16;
         float y = panel.Y + 18;
-        DrawShadowed(batch, font, card.Title, new Vector2(x, y), Color.White);
+        DrawShadowed(batch, _uiSkin.Title, card.Title, new Vector2(x, y), Color.White);
         y += font.MeasureString("Ag").Y + 2;
         float line = small.MeasureString("Ag").Y + 1;
         string range = definition.GetInt("range") is int r and > 0 ? r.ToString(System.Globalization.CultureInfo.InvariantCulture) : "n/a";
@@ -406,7 +401,7 @@ internal sealed partial class FortMapViewer
         }
 
         Rectangle body = KnowledgeDetailBody(panel);
-        batch.Draw(_pixel, body, new Color(24, 22, 20));
+        _uiSkin.Tile(batch, body);
         string? html = _help?.ForType(card.Type.Name);
         IReadOnlyList<TutorialTextRun> runs = html == null ? [new TutorialTextRun("(도움말 본문 없음)", TutorialTextStyle.Body, TutorialTextBreak.None)]
             : HelpTopics.ToRuns(html);
@@ -424,7 +419,7 @@ internal sealed partial class FortMapViewer
                 // 한 줄의 강조 구간을 이어 그린다
                 foreach (TutorialVisualSpan span in visual.Spans)
                 {
-                    batch.DrawString(font, span.Text, new Vector2(spanX, lineY), TutorialColor(span.Style));
+                    OriginalUiSkin.Text(batch, font, span.Text, new Vector2(spanX, lineY), TutorialColor(span.Style));
                     spanX += font.MeasureString(span.Text).X;
                 }
             }
@@ -436,15 +431,13 @@ internal sealed partial class FortMapViewer
             int barY = inner.Y + _knowledgeScroll * (inner.Height - barHeight) / (contentHeight - inner.Height);
             batch.Draw(_pixel, new Rectangle(body.Right - 6, barY, 3, barHeight), Color.Gold);
         }
-        string[] labels = ["Back", "OK"];
+        string[] labels = [Ui("뒤로", "Back"), Ui("확인", "OK")];
         // Back·OK 버튼을 그린다
         for (int index = 0; index < labels.Length; index++)
         {
             Rectangle button = KnowledgeDetailButton(panel, index);
-            batch.Draw(_pixel, button, new Color(70, 64, 54));
-            Outline(batch, button, new Color(190, 170, 120));
-            Vector2 size = font.MeasureString(labels[index]);
-            batch.DrawString(font, labels[index], new Vector2(button.Center.X - size.X / 2, button.Y + 5), Color.White);
+            bool hover = button.Contains(_previousMouse.Position);
+            _uiSkin.Button(batch, button, labels[index], hover: hover, pressed: hover && _previousMouse.LeftButton == ButtonState.Pressed);
         }
     }
 }

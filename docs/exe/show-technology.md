@@ -39,5 +39,5 @@
 * `TutorialDialogScript.Choose` 는 `ShowTechnology` 를 `ShowKnowledge` 로 돌려주고 브리핑은 닫지 않는다.
 * `Netstorm.Core.Rules.KnowledgeCatalog` — 카드 행 규칙(행 순서·group 순서·골렘 제외)과 `.fort` Technology 지식 추출. 테스트 `KnowledgeCatalogTests`가 녹화의 25장을 행·순서·이름까지 대조한다.
 * `FortMapViewer.Knowledge.cs` — 2026-10-01 원본 화면대로 카드 격자(호버 어둡게)와 상세창(도움말 삽화·수치·`help.english` 본문 스크롤·Back·OK)으로 다시 만들었다. 원본처럼 스크립트가 아닌 직접 연 창이라 시계를 멈추지 않는다. 검증: `--mission thewarbegins --knowledge [타입]`.
-* 원본과 다른 점: 원본 돌 질감 창 그림 대신 단색 상자, Damage 값(원본 계산 미확인 — Shooter 는 `?`), 격자 위치(클론은 화면 가운데), 상세창 OK 가 격자까지 닫는지(클론은 모두 닫음)는 미확인.
+* 원본과 다른 점: 원본 돌 질감·장식은 [UI 외관 적용](../screens/clone-ui.md)에서 반영했다. 남은 차이는 Damage 값(원본 계산 미확인 — Shooter 는 `?`), 격자 위치(클론은 화면 가운데), 상세창 OK 가 격자까지 닫는지(클론은 모두 닫음)는 미확인.
 * 미확인: `0x594fc8` 플래그의 뜻, `+0xec & 0x200000`·`+0x9c == 10` 의 게임상 의미(클론은 `ProducibleUnit` + 골렘 제외로 대신함), 카드가 없는 원소 행을 그리는지(클론은 네 행을 항상 그림).

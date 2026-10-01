@@ -341,6 +341,12 @@ internal sealed partial class FortMapViewer
                 : _lastCheck.Describe();
         string keys = $"[ ]: 선택 · 좌클릭: 배치/건설 · F: 워크샵에 등록 · Del: 회수 · C: 빈 섬 연결 강제 {(_session.AssumeConnected ? "켜짐" : "꺼짐")} · " +
             "K: 생산 규칙 · Space: 정지 · P: 끄기";
+        if (_playUi)
+        {
+            OriginalUiSkin.Text(batch, _uiSkin.Small, result, new Vector2(96, height - 18),
+                _lastCheck?.Allowed == true ? Color.LightGreen : new Color(255, 120, 110));
+            return;
+        }
         batch.Draw(_pixel, new Rectangle(0, height - PlacementPanelHeight, width, PlacementPanelHeight), new Color(18, 24, 38));
         batch.DrawString(font, head, new Vector2(16, height - PlacementPanelHeight + 4), Color.Gold);
         batch.DrawString(font, result, new Vector2(16, height - PlacementPanelHeight + 30), _lastCheck?.Allowed == true ? Color.LightGreen : new Color(255, 120, 110));

@@ -9,22 +9,23 @@ New-Item -ItemType Directory -Force -Path $taskSettings | Out-Null
 Set-Content -LiteralPath (Join-Path $taskSettings 'settings.json') -Encoding UTF8 -Value '{"WindowWidth":1024,"WindowHeight":768,"ViewHeight":768,"SoundVolume":3,"MusicVolume":2}'
 $taskScript = @"
 assert main; capture $OutputDirectory/01-main.png;
-click 300,371; assert campaigns; capture $OutputDirectory/02-campaigns.png;
-click 512,240; assert campaigns; capture $OutputDirectory/03-locked-group.png;
-click 512,325; assert missions; capture $OutputDirectory/04-missions.png;
-click 512,343; assert missions; capture $OutputDirectory/05-locked-mission.png;
-click 512,305; assert briefing; capture $OutputDirectory/06-briefing.png;
-click 607,656; assert battle; capture $OutputDirectory/07-battle.png;
-click 70,44; assert placement; capture $OutputDirectory/08-build-cursor.png;
-click 803,75; click 950,44; assert bridges; capture $OutputDirectory/09-bridges.png;
-click 35,110; assert holding; capture $OutputDirectory/10-bridge-picked.png;
-click 40,12; assert mission-menu; click 200,110; assert leave; capture $OutputDirectory/11-leave-confirm.png;
-click 315,438; assert main; capture $OutputDirectory/12-main-return.png;
-click 580,411; assert options; capture $OutputDirectory/13-options.png;
-click 512,387; click 512,461;
-click 512,276; assert options; capture $OutputDirectory/14-wide-options.png;
-click 640,215; assert options; capture $OutputDirectory/15-fullscreen.png;
-click 640,215; assert options; capture $OutputDirectory/16-windowed.png;
+click-center -120,-64; assert campaigns; capture $OutputDirectory/02-campaigns.png;
+click-center 0,-19; assert campaigns;
+click-center 0,28; assert missions; capture $OutputDirectory/03-missions.png;
+click-center 0,46; assert missions;
+click-center 0,27; assert briefing; capture $OutputDirectory/04-briefing.png;
+click-center 82,114; assert battle; wait 90; capture $OutputDirectory/05-battle.png;
+click 20,176; assert placement; capture $OutputDirectory/06-placement.png;
+click 20,344; assert battle;
+click 20,260; assert bridges; capture $OutputDirectory/07-bridges.png;
+click 22,47; assert holding; capture $OutputDirectory/08-held.png;
+click 105,8; assert mission-menu; click 150,78; assert leave; capture $OutputDirectory/09-leave.png;
+click-center -82,48; assert main; capture $OutputDirectory/10-return.png;
+click-center 38,-42; assert options; capture $OutputDirectory/11-options.png;
+click-center 148,44; capture $OutputDirectory/12-volume.png; click-center 238,107; assert options;
+click-center 148,63; click-center 238,99;
+click-center 108,-58; capture $OutputDirectory/13-resolutions.png; click-center 278,-4; assert options; wait 45; capture $OutputDirectory/14-wide.png;
+click-center 110,-79; assert options; wait 45; capture $OutputDirectory/15-fullscreen.png; click-center 110,-79; assert options; wait 45; capture $OutputDirectory/16-windowed.png;
 quit;
 "@
 $taskFile = Join-Path $taskOutput 'commands.txt'

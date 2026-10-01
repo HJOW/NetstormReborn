@@ -22,7 +22,7 @@ internal sealed partial class FortMapViewer : IDisposable
         WorldChunks * FortMap.CellsPerChunk * FortMap.CellPixelWidth,
         WorldChunks * FortMap.CellsPerChunk * FortMap.CellPixelHeight);
     /// <summary>상단 안내 영역 높이 (안내 4줄).</summary>
-    private int HeaderHeight => _playUi ? 96 : 128;
+    private int HeaderHeight => _playUi ? 22 : 128;
     /// <summary>
     /// 원본 미션 시작 화면에서 플레이어 1 사제 칸 기준점이 화면 중심(512, 384)보다 오른쪽·아래로 떨어진 거리.
     /// 원본 캡처 3장(The War Begins!·Save the Island!·Dissolved Alliance!)에서 (525, 393) ±4px 로 측정했다.
@@ -36,6 +36,8 @@ internal sealed partial class FortMapViewer : IDisposable
     private readonly IsleColorRemap _isleColors;
     private readonly GraphicsDevice _device;
     private readonly Texture2D _pixel;
+    /// <summary>메인 메뉴와 같은 원본 UI 질감·장식을 쓰는 공유 그리기 도구.</summary>
+    private readonly OriginalUiSkin _uiSkin;
     private readonly Dictionary<(int Frame, int Color), (Texture2D Texture, Point Offset)> _textures = [];
     private readonly FortMapObject[] _sorted;
     private FortTerrainPreview _terrain;
@@ -68,11 +70,12 @@ internal sealed partial class FortMapViewer : IDisposable
     /// <summary>오브젝트 위치를 계산하고 게임 세션을 만들며 카메라를 플레이어 사제에 맞춘다.</summary>
     /// <param name="mission">미션 시작 조건 (없으면 맵만 보는 시험 모드)</param>
     public FortMapViewer(GraphicsDevice device, ShapeDatabase shapes, Palette palette, FortFile fort, string name,
-        TypeCatalog catalog, string language, MissionStart? mission = null,
+        TypeCatalog catalog, string language, OriginalUiSkin uiSkin, MissionStart? mission = null,
         MissionScript? tutorialScript = null, ConfigStore? tutorialSettings = null, HelpTopics? help = null,
         MissionScript? commonScript = null)
     {
         _device = device;
+        _uiSkin = uiSkin;
         _shapes = shapes;
         _palette = palette;
         _isleColors = new IsleColorRemap(palette);
@@ -119,6 +122,7 @@ internal sealed partial class FortMapViewer : IDisposable
     /// <param name="edgeScroll">가장자리 스크롤이 이번 갱신에서 옮길 논리 픽셀 (양수 = 오른쪽·아래)</param>
     public void Update(double seconds, MouseState mouse, Vector2 edgeScroll, int width, int height)
     {
+        if (width < 320 || height < 320) return;
         KeyboardState keyboard = Keyboard.GetState();
         if (_knowledgeOpen)
         {

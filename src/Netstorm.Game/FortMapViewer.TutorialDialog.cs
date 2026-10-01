@@ -14,9 +14,9 @@ namespace Netstorm.Game;
 internal sealed partial class FortMapViewer
 {
     /// <summary>본문의 줄 높이.</summary>
-    private const int TutorialLineHeight = 28;
+    private const int TutorialLineHeight = 16;
     /// <summary>문단 사이에 더하는 간격.</summary>
-    private const int TutorialParagraphGap = 13;
+    private const int TutorialParagraphGap = 12;
     /// <summary>스크롤 키가 한 번에 이동하는 본문 높이.</summary>
     private const int TutorialPageScroll = 180;
     /// <summary>단어와 공백을 분리해 인라인 강조를 유지하며 줄을 감는다.</summary>
@@ -166,21 +166,33 @@ internal sealed partial class FortMapViewer
     private bool TutorialButtonLocked(TutorialDialogButton button) => _playUi && button.Action.Equals("MissionBegin", StringComparison.OrdinalIgnoreCase)
         && !Netstorm.Core.Rules.CampaignAccess.IsAvailable(button.Argument);
 
-    /// <summary>화면 가운데에 들어가는 안내 창의 최대 크기와 작은 창 여백을 정한다.</summary>
-    private static Rectangle TutorialPanel(int width, int height)
+    /// <summary>본문 길이·버튼 폭으로 원본처럼 작은 안내 창을 만들고 화면 안에 둔다.</summary>
+    private Rectangle TutorialPanel(int width, int height)
     {
-        int panelWidth = Math.Min(800, width - 32);
-        int panelHeight = Math.Min(640, height - 32);
-        return new Rectangle((width - panelWidth) / 2, (height - panelHeight) / 2, panelWidth, panelHeight);
+        TutorialDialogContent content = LocalizeFirstCampaign(_tutorialDialog!.Current!);
+        int desiredWidth = content.Section is "Succeeded" or "BadTeamDead" ? 374 : content.Title.Length == 0 ? 300 : 350;
+        int buttonsWidth = content.Buttons.Sum(b => TutorialButtonWidth(b)) + (content.Buttons.Count - 1) * 16;
+        int panelWidth = Math.Min(width - 32, Math.Max(desiredWidth, Math.Max(buttonsWidth + 48,
+            (int)_uiSkin.Title.MeasureString(content.Title).X + 60)));
+        int padding = content.Section == "A." ? 48 : 30;
+        int bodyHeight = LayoutTutorialText(content.Runs, _uiSkin.Body, panelWidth - padding * 2).Sum(l => l.Height);
+        int panelHeight = Math.Min(height - 32, Math.Max(136, bodyHeight + (content.Title.Length == 0 ? 78 : 110)));
+        int centerX = width / 2 + (_playUi ? 42 : 0);
+        return new Rectangle(Math.Clamp(centerX - panelWidth / 2, 16, width - panelWidth - 16), (height - panelHeight) / 2, panelWidth, panelHeight);
     }
 
-    /// <summary>버튼 개수와 번호로 하단의 클릭 영역을 계산한다.</summary>
-    private static Rectangle TutorialButton(Rectangle panel, int count, int index)
+    /// <summary>버튼의 번역된 문구 폭에 맞춰 원본의 낮은 버튼 너비를 계산한다.</summary>
+    private int TutorialButtonWidth(TutorialDialogButton button) => Math.Max(36, (int)Math.Ceiling(_uiSkin.Body.MeasureString(button.Label).X) + 12);
+
+    /// <summary>같은 번역·글꼴·간격으로 하단 버튼의 표시와 클릭 영역을 계산한다.</summary>
+    private Rectangle TutorialButton(Rectangle panel, int count, int index)
     {
-        int buttonWidth = Math.Min(180, Math.Max(60, (panel.Width - 48 - (count - 1) * 10) / count));
-        int totalWidth = count * buttonWidth + (count - 1) * 10;
-        return new Rectangle(panel.Center.X - totalWidth / 2 + index * (buttonWidth + 10), panel.Bottom - 65,
-            buttonWidth, 34);
+        var buttons = LocalizeFirstCampaign(_tutorialDialog!.Current!).Buttons;
+        int totalWidth = buttons.Sum(TutorialButtonWidth) + (count - 1) * 16;
+        int x = panel.Center.X - totalWidth / 2;
+        // 앞 버튼의 실제 폭을 더해 짧은 문구의 버튼도 가운데에 모인다.
+        for (int i = 0; i < index; i++) x += TutorialButtonWidth(buttons[i]) + 16;
+        return new Rectangle(x, panel.Bottom - 35, TutorialButtonWidth(buttons[index]), OriginalUiSkin.ButtonHeight);
     }
 
     /// <summary>지도 위에 제목·스크롤 가능한 본문·스크립트 버튼을 그린다.</summary>
@@ -193,17 +205,15 @@ internal sealed partial class FortMapViewer
             return;
         }
         Rectangle panel = TutorialPanel(width, height);
-        var body = new Rectangle(panel.X + 24, panel.Y + 62, panel.Width - 48, panel.Height - 143);
+        int padding = content.Section == "A." ? 48 : 30;
+        int top = content.Title.Length == 0 ? 22 : 54;
+        var body = new Rectangle(panel.X + padding, panel.Y + top, panel.Width - padding * 2, panel.Height - top - 51);
         IReadOnlyList<TutorialVisualLine> lines = LayoutTutorialText(content.Runs, font, body.Width);
         int contentHeight = lines.Sum(line => line.Height);
         _tutorialScroll = Math.Clamp(_tutorialScroll, 0, Math.Max(0, contentHeight - body.Height));
 
-        batch.Draw(_pixel, new Rectangle(0, 0, width, height), Color.Black * 0.72f);
-        batch.Draw(_pixel, panel, new Color(23, 33, 53));
-        Outline(batch, panel, Color.Wheat);
-        batch.Draw(_pixel, new Rectangle(panel.X + 1, panel.Y + 1, panel.Width - 2, 48), new Color(40, 54, 77));
-        batch.DrawString(font, content.Title, new Vector2(panel.X + 24, panel.Y + 12), Color.Gold);
-        batch.Draw(_pixel, new Rectangle(body.X - 5, body.Y - 4, body.Width + 10, body.Height + 8), new Color(18, 26, 42));
+        _uiSkin.Panel(batch, panel);
+        OriginalUiSkin.Text(batch, _uiSkin.Title, content.Title, new Vector2(panel.X + padding, panel.Y + 20));
 
         int y = body.Y - _tutorialScroll;
         // 완전히 들어오는 줄만 그려 별도의 GPU 가위 영역 없이 본문 경계를 지킨다.
@@ -215,7 +225,7 @@ internal sealed partial class FortMapViewer
                 // 한 줄의 강조 구간을 이어 그린다.
                 foreach (TutorialVisualSpan span in line.Spans)
                 {
-                    batch.DrawString(font, span.Text, new Vector2(x, y), TutorialColor(span.Style));
+                    OriginalUiSkin.Text(batch, font, span.Text, new Vector2(x, y), TutorialColor(span.Style));
                     x += font.MeasureString(span.Text).X;
                 }
             }
@@ -233,22 +243,18 @@ internal sealed partial class FortMapViewer
             Rectangle button = TutorialButton(panel, content.Buttons.Count, index);
             bool selected = index == _selectedTutorialButton;
             bool locked = TutorialButtonLocked(content.Buttons[index]);
-            batch.Draw(_pixel, button, selected ? new Color(95, 78, 45) : new Color(54, 67, 87));
-            Outline(batch, button, selected ? Color.Gold : Color.Gray);
-            string label = content.Buttons[index].Label;
-            if (locked) { batch.Draw(_pixel, button, Color.Black * 0.65f); label += Ui(" [잠금]", " [Locked]"); }
-            Vector2 size = font.MeasureString(label);
-            batch.DrawString(font, label, new Vector2(button.Center.X - size.X / 2, button.Y + 4), locked ? Color.Gray : Color.White);
+            bool hover = button.Contains(_previousMouse.Position);
+            _uiSkin.Button(batch, button, content.Buttons[index].Label, !locked, hover,
+                hover && _previousMouse.LeftButton == ButtonState.Pressed, selected);
         }
-        batch.DrawString(font, "F8 다시 보기 · ↑↓/휠 스크롤", new Vector2(panel.X + 24, panel.Bottom - 26), Color.LightGray);
     }
 
-    /// <summary>HTML 강조 종류를 개발용 대화상자의 읽기 쉬운 색으로 바꾼다.</summary>
+    /// <summary>HTML 강조 종류를 원본의 흰색·노란색 본문 계열로 바꾼다.</summary>
     private static Color TutorialColor(TutorialTextStyle style) => style switch
     {
-        TutorialTextStyle.Heading => Color.Gold,
+        TutorialTextStyle.Heading => Color.White,
         TutorialTextStyle.Emphasis => Color.Wheat,
-        TutorialTextStyle.Highlight => Color.LightSkyBlue,
+        TutorialTextStyle.Highlight => Color.Yellow,
         _ => Color.White,
     };
 

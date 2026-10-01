@@ -22,16 +22,16 @@ internal enum MissionMenuAction
 internal sealed partial class FortMapViewer
 {
     /// <summary>원본 상단 메뉴 막대 높이에 맞춘 메뉴 높이.</summary>
-    private const int MissionMenuBarHeight = 30;
+    private const int MissionMenuBarHeight = 18;
 
     /// <summary>Game 메뉴의 항목 한 줄 높이.</summary>
-    private const int MissionMenuRowHeight = 32;
+    private const int MissionMenuRowHeight = 24;
 
     /// <summary>원본 게임 왼쪽 패널 다음에서 시작하는 Game 메뉴 x 좌표.</summary>
     private const int MissionMenuLeft = 84;
 
     /// <summary>Game 펼침 메뉴의 폭.</summary>
-    private const int MissionMenuWidth = 350;
+    private const int MissionMenuWidth = 220;
 
     /// <summary>Esc로 표시한 상단 막대 상태.</summary>
     private bool _missionMenuVisible;
@@ -98,7 +98,7 @@ internal sealed partial class FortMapViewer
         }
         if (clicked)
         {
-            var gameTab = new Rectangle(MissionMenuLeft, 0, 82, MissionMenuBarHeight);
+            var gameTab = new Rectangle(MissionMenuLeft, 0, 50, MissionMenuBarHeight);
             if (gameTab.Contains(mouse.X, mouse.Y))
             {
                 _missionGameDropdown = !_missionGameDropdown;
@@ -137,56 +137,68 @@ internal sealed partial class FortMapViewer
         return true;
     }
 
-    /// <summary>화면 중심에 놓는 Leave Mission 확인 창의 위치.</summary>
+    /// <summary>떠나기 확인 창을 작은 원본 돌 창으로 화면 중심에 둔다.</summary>
     private static Rectangle LeaveMissionPanel(int width, int height) =>
-        new((width - 600) / 2, (height - 178) / 2, 600, 178);
+        new((width - 390) / 2, (height - 148) / 2, 390, 148);
 
-    /// <summary>확인 창의 Main Menu·Replay Mission·Continue Mission 버튼 위치.</summary>
-    private static Rectangle LeaveMissionButton(Rectangle panel, int index) =>
-        new(panel.X + 16 + index * 192, panel.Bottom - 52, 180, 34);
+    /// <summary>번역된 버튼 문구에 맞춰 확인 창의 세 클릭 영역을 배치한다.</summary>
+    private Rectangle LeaveMissionButton(Rectangle panel, int index)
+    {
+        string[] labels = LeaveMissionLabels();
+        int[] widths = labels.Select(label => Math.Max(60, (int)_uiSkin.Body.MeasureString(label).X + 12)).ToArray();
+        int x = panel.Center.X - (widths.Sum() + 24) / 2;
+        // 앞 버튼들의 문구 폭과 간격을 더한다.
+        for (int i = 0; i < index; i++) x += widths[i] + 12;
+        return new Rectangle(x, panel.Bottom - 35, widths[index], OriginalUiSkin.ButtonHeight);
+    }
 
-    /// <summary>상단 메뉴 막대·Game 목록·떠나기 확인 창을 지도 위에 그린다.</summary>
+    /// <summary>원본 확인 창의 세 선택지를 표시 언어로 제공한다.</summary>
+    private string[] LeaveMissionLabels() =>
+        [Ui("메인 메뉴", "Main Menu"), Ui("다시 시작", "Replay Mission"), Ui("미션 계속", "Continue Mission")];
+
+    /// <summary>상단 돌 메뉴 막대·Game 목록·떠나기 확인 창을 지도 위에 그린다.</summary>
     private void DrawMissionMenu(SpriteBatch batch, SpriteFontBase font, int width, int height)
     {
-        if (!IsMissionMode || (!_missionMenuVisible && !_leaveMissionPrompt) || TutorialDialogOpen)
-        {
-            return;
-        }
+        if (!IsMissionMode || (!_missionMenuVisible && !_leaveMissionPrompt) || TutorialDialogOpen && !_leaveMissionPrompt) return;
         if (_missionMenuVisible)
         {
-            batch.Draw(_pixel, new Rectangle(0, 0, width, MissionMenuBarHeight), new Color(73, 68, 60));
-            batch.DrawString(font, "Game", new Vector2(MissionMenuLeft + 4, 2), Color.White);
+            _uiSkin.Menu(batch, new Rectangle(MissionMenuLeft, 0, width - MissionMenuLeft, MissionMenuBarHeight));
+            string[] tabs = [Ui("게임", "Game"), Ui("보기", "View"), Ui("옵션", "Options"), Ui("플레이어", "Players"), Ui("정보", "About")];
+            int tabX = MissionMenuLeft + 5;
+            // 원본 메뉴 막대의 다섯 항목을 작은 글씨로 나란히 표시한다.
+            for (int i = 0; i < tabs.Length; i++)
+            {
+                OriginalUiSkin.Text(batch, font, tabs[i], new Vector2(tabX, 1), i == 0 ? Color.White : Color.Gray);
+                tabX += Math.Max(50, (int)font.MeasureString(tabs[i]).X + 16);
+            }
             if (_missionGameDropdown)
             {
                 var list = new Rectangle(MissionMenuLeft, MissionMenuBarHeight, MissionMenuWidth, MissionMenuRowHeight * 4);
-                batch.Draw(_pixel, list, new Color(67, 63, 59));
-                Outline(batch, list, Color.Wheat);
-                // 원본의 Game 목록에 있는 네 동작만 표시한다.
-                string[] labels = ["Review Mission Objectives - F8", "Restart Mission", "Leave Mission", "Quit Game"];
-                // 원본에서 확인한 Game 메뉴 순서로 각 행을 표시한다.
-                for (int index = 0; index < labels.Length; index++)
+                _uiSkin.Menu(batch, list);
+                string[] labels = [Ui("미션 목표 다시 보기 - F8", "Review Mission Objectives - F8"), Ui("미션 재시작", "Restart Mission"), Ui("미션 떠나기", "Leave Mission"), Ui("게임 종료", "Quit Game")];
+                // 원본에서 확인한 Game 메뉴 순서로 클릭 영역과 같은 행에 표시한다.
+                for (int i = 0; i < labels.Length; i++)
                 {
-                    batch.DrawString(font, labels[index], new Vector2(list.X + 8, list.Y + index * MissionMenuRowHeight + 2), Color.White);
+                    var row = new Rectangle(list.X + 1, list.Y + i * MissionMenuRowHeight + 1, list.Width - 2, MissionMenuRowHeight - 2);
+                    if (row.Contains(_previousMouse.Position)) batch.Draw(_pixel, row, Color.Black * 0.25f);
+                    OriginalUiSkin.Text(batch, font, labels[i], new Vector2(row.X + 10, row.Center.Y - font.MeasureString(labels[i]).Y / 2));
+                    if (i is 0 or 2) _uiSkin.Separator(batch, list.X + 1, row.Bottom, list.Width - 2);
                 }
             }
         }
         if (_leaveMissionPrompt)
         {
             Rectangle panel = LeaveMissionPanel(width, height);
-            batch.Draw(_pixel, panel, new Color(69, 64, 58));
-            Outline(batch, panel, Color.Wheat);
-            batch.DrawString(font, "Leave Mission?", new Vector2(panel.X + 20, panel.Y + 16), Color.White);
-            batch.DrawString(font, "Do you wish to quit this mission", new Vector2(panel.X + 20, panel.Y + 54), Color.White);
-            batch.DrawString(font, "and return to the Main Menu now?", new Vector2(panel.X + 20, panel.Y + 80), Color.White);
-            // 원본 확인 창의 세 버튼을 왼쪽부터 같은 순서로 둔다.
-            string[] labels = ["Main Menu", "Replay Mission", "Continue Mission"];
-            // 원본 확인 창의 세 선택지를 왼쪽부터 같은 순서로 표시한다.
-            for (int index = 0; index < labels.Length; index++)
+            _uiSkin.Panel(batch, panel);
+            OriginalUiSkin.Text(batch, _uiSkin.Title, Ui("미션을 떠나시겠습니까?", "Leave Mission?"), new Vector2(panel.X + 30, panel.Y + 20));
+            OriginalUiSkin.Text(batch, font, Ui("이 미션을 종료하고\n지금 메인 메뉴로 돌아가시겠습니까?", "Do you wish to quit this mission\nand return to the Main Menu now?"), new Vector2(panel.X + 30, panel.Y + 54));
+            string[] labels = LeaveMissionLabels();
+            // 원본 확인 창의 세 선택지를 작은 돌 버튼으로 그린다.
+            for (int i = 0; i < labels.Length; i++)
             {
-                Rectangle button = LeaveMissionButton(panel, index);
-                batch.Draw(_pixel, button, new Color(49, 45, 43));
-                Outline(batch, button, Color.Wheat);
-                batch.DrawString(font, labels[index], new Vector2(button.X + 5, button.Y + 3), Color.White);
+                Rectangle button = LeaveMissionButton(panel, i);
+                bool hover = button.Contains(_previousMouse.Position);
+                _uiSkin.Button(batch, button, labels[i], hover: hover, pressed: hover && _previousMouse.LeftButton == ButtonState.Pressed);
             }
         }
     }
