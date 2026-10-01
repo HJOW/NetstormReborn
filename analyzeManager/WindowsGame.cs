@@ -93,6 +93,16 @@ public static class WindowsGame
         return new(chosen.ToInt64(), title.ToString(), origin.X, origin.Y, client.Right, client.Bottom, chosen == foreground);
     }
 
+    /// <summary>입력 훅에서는 창 열거·제목 조회를 생략하고 현재 클라이언트 원점과 크기만 갱신한다.</summary>
+    public static GameWindow ReadInputWindow(GameWindow known)
+    {
+        nint handle = new(known.Handle);
+        var origin = new Point();
+        if (!GetClientRect(handle, out Rect client) || !ClientToScreen(handle, ref origin))
+            throw new InvalidOperationException("입력 기록 중 게임 창 좌표 조회 실패.");
+        return known with { X = origin.X, Y = origin.Y, Width = client.Right, Height = client.Bottom, Foreground = true };
+    }
+
     /// <summary>안내 창 배치를 위해 게임의 제목 표시줄과 테두리까지 포함한 화면 좌표를 읽는다.</summary>
     public static Rectangle OuterBounds(GameWindow window)
     {

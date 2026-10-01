@@ -57,6 +57,7 @@
 
 ## 근거
 
+- [1-2 재플레이·입력 지연 점검](../videos/master-of-whirligigs-record-play-20261001-2311.md): 포획 이전 작업장 생산 슬롯(Sun Cannon·Sun Disc Thrower)·회수액 200, 신전 파괴·지면 전환·사제 기절을 재확인했다. 포획 이후 지연 보고가 있어 해당 의식 타이밍은 새 근거로 사용하지 않는다.
 - [1-2 원본 녹화 판독](../videos/master-of-whirligigs-record-play-20261001.md):
   - 07:30 무렵 적 섬 신전 둘레에 Whirlibase가 빽빽하게 놓인 모습. 방어 상한 14의 근거이며, 화면으로 센 추정값이다.
   - 골렘 판매 환급 100(+100 SP)

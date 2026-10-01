@@ -24,6 +24,11 @@ public sealed class GuidedRecorder : IDisposable
     private readonly HookCallback _mouseCallback;
     private readonly HookCallback _keyboardCallback;
     private readonly Thread _videoThread;
+    private readonly Thread _hookThread;
+    private readonly ManualResetEventSlim _hookReady = new(false);
+    private uint _hookThreadId;
+    private GameWindow? _inputWindow;
+    private GuidedInputBuffer? _inputBuffer;
     private GuidedAudio? _audio;
     private GuidedInputJournal? _inputs;
     private nint _mouseHook;
@@ -47,10 +52,11 @@ public sealed class GuidedRecorder : IDisposable
         _mouseCallback = OnMouse;
         _keyboardCallback = OnKeyboard;
         _videoThread = new Thread(CaptureVideo) { IsBackground = true, Name = "NetStorm 분석 영상 캡처" };
+        _hookThread = new Thread(CaptureInput) { IsBackground = true, Name = "NetStorm 분석 입력 훅" };
     }
 
     /// <summary>녹화 도중 오류와 누적 프레임 수를 안내 창에 제공한다.</summary>
-    public Exception? Error => _error ?? _audio?.Error;
+    public Exception? Error => _error ?? _audio?.Error ?? _inputBuffer?.Error;
     public int FrameCount => Volatile.Read(ref _frameCount);
     /// <summary>현재 녹화 시작 버튼을 누른 뒤 지난 시간을 반환한다.</summary>
     public TimeSpan Elapsed => _startedCounter == 0 ? TimeSpan.Zero : Stopwatch.GetElapsedTime(_startedCounter);
@@ -66,9 +72,11 @@ public sealed class GuidedRecorder : IDisposable
             // 안내 창 경과 시간과 입력 로그가 같은 녹화 시작 기준을 사용한다.
             _startedCounter = Stopwatch.GetTimestamp();
             _inputs = new GuidedInputJournal(_directory, _session.StartedCounter, _startedCounter);
-            _mouseHook = SetWindowsHookEx(MouseHookType, _mouseCallback, GetModuleHandle(null), 0);
-            _keyboardHook = SetWindowsHookEx(KeyboardHookType, _keyboardCallback, GetModuleHandle(null), 0);
-            if (_mouseHook == 0 || _keyboardHook == 0) throw new InvalidOperationException("물리 입력 기록용 Windows 훅을 설치하지 못했습니다.");
+            _inputWindow = WindowsGame.FindWindow(_processId, preferForeground: false);
+            _inputBuffer = new GuidedInputBuffer((input, utc, counter) => _inputs.Write(input, utc, counter));
+            _hookThread.Start();
+            if (!_hookReady.Wait(TimeSpan.FromSeconds(5))) throw new TimeoutException("입력 훅 스레드가 시작되지 않았습니다.");
+            if (_error != null) throw new InvalidOperationException("물리 입력 기록용 Windows 훅을 설치하지 못했습니다.", _error);
             string directory = Path.GetRelativePath(_store.Repository, _directory).Replace('\\', '/');
             _store.Append(_session, _freePlay ? "freeplay_recording_started" : "guided_recording_started",
                 new { fps = FramesPerSecond, video = "MJPEG AVI", audio = "기본 출력 장치 루프백", directory,
@@ -101,6 +109,7 @@ public sealed class GuidedRecorder : IDisposable
             {
                 if (process.HasExited) throw new InvalidOperationException("녹화 중 게임이 종료되었습니다.");
                 GameWindow window = WindowsGame.FindWindow(_processId);
+                Volatile.Write(ref _inputWindow, window);
                 if (window.Width != first.Width || window.Height != first.Height)
                     throw new InvalidOperationException("녹화 중 게임 창 크기가 바뀌었습니다. 녹화를 다시 시작하세요.");
                 CapturedFrame frame = WindowsGame.CaptureVisible(window, "");
@@ -144,9 +153,10 @@ public sealed class GuidedRecorder : IDisposable
                     {
                         if (inputMessage == GuidedInputMessage.MouseMove) _lastMouseMove = counter;
                         MouseHookData mouse = Marshal.PtrToStructure<MouseHookData>(data);
-                        GameWindow window = WindowsGame.FindWindow(_processId);
+                        // 창 탐색·제목 조회 없이 이미 찾은 창의 현재 물리 좌표만 읽는다.
+                        GameWindow window = WindowsGame.ReadInputWindow(Volatile.Read(ref _inputWindow)!);
                         GuidedInput? input = GuidedInput.Mouse(kind, mouse.Position, window, mouse.MouseData, mouse.Flags, mouse.Time);
-                        if (input != null) _inputs?.Write(input, utc, counter);
+                        if (input != null) _inputBuffer?.TryWrite(input, utc, counter);
                     }
                 }
             }
@@ -168,7 +178,7 @@ public sealed class GuidedRecorder : IDisposable
                 int kind = unchecked((int)message);
                 KeyboardHookData key = Marshal.PtrToStructure<KeyboardHookData>(data);
                 GuidedInput? input = GuidedInput.Keyboard(kind, key.VirtualKey, key.ScanCode, key.Flags, key.Time);
-                if (input != null) _inputs?.Write(input, utc, counter);
+                if (input != null) _inputBuffer?.TryWrite(input, utc, counter);
             }
         }
         catch (Exception error) { _error = error; }
@@ -183,21 +193,60 @@ public sealed class GuidedRecorder : IDisposable
         return processId == _processId;
     }
 
+    /// <summary>UI 타이머·창 재배치가 저수준 입력을 막지 않게 전용 메시지 루프에서 훅을 실행한다.</summary>
+    private void CaptureInput()
+    {
+        try
+        {
+            WindowsGame.SetDpiMode();
+            _hookThreadId = GetCurrentThreadId();
+            // 종료 메시지를 보낼 수 있도록 훅 설치 전에 스레드 메시지 큐를 만든다.
+            PeekMessage(out _, 0, 0, 0, 0);
+            _mouseHook = SetWindowsHookEx(MouseHookType, _mouseCallback, GetModuleHandle(null), 0);
+            _keyboardHook = SetWindowsHookEx(KeyboardHookType, _keyboardCallback, GetModuleHandle(null), 0);
+            if (_mouseHook == 0 || _keyboardHook == 0) throw new InvalidOperationException("물리 입력 기록용 Windows 훅을 설치하지 못했습니다.");
+            _hookReady.Set();
+            // WM_QUIT 또는 녹화 종료 전까지 입력 콜백을 즉시 처리한다.
+            while (!_stop.IsCancellationRequested)
+            {
+                int result = GetMessage(out NativeMessage message, 0, 0, 0);
+                if (result == 0) break;
+                if (result < 0) throw new InvalidOperationException("입력 훅 메시지 조회 실패.");
+                TranslateMessage(ref message);
+                DispatchMessage(ref message);
+            }
+        }
+        catch (Exception error) { _error = error; }
+        finally
+        {
+            if (_mouseHook != 0) UnhookWindowsHookEx(_mouseHook);
+            if (_keyboardHook != 0) UnhookWindowsHookEx(_keyboardHook);
+            _hookReady.Set();
+        }
+    }
+
     /// <summary>캡처 스레드와 오디오·입력 기록을 닫고 중단 시점을 세션 로그에 남긴다.</summary>
     public void Dispose()
     {
         if (_disposed) return;
         _disposed = true;
-        if (_mouseHook != 0) UnhookWindowsHookEx(_mouseHook);
-        if (_keyboardHook != 0) UnhookWindowsHookEx(_keyboardHook);
         _stop.Cancel();
+        if (_hookThread.IsAlive)
+        {
+            // WM_QUIT로 대기 중인 메시지 루프를 깨우고 훅 해제까지 기다린다.
+            PostThreadMessage(_hookThreadId, 0x0012, 0, 0);
+            _hookThread.Join();
+        }
         if (_videoThread.IsAlive) _videoThread.Join();
         // 어느 출력 파일 하나를 닫는 데 실패해도 나머지 파일과 취소 신호는 끝까지 정리한다.
         try { _audio?.Dispose(); }
         catch (Exception error) { _error ??= error; }
+        // 수락한 입력을 먼저 모두 저장하고 마지막 중단 경계는 그 뒤에 쓴다.
+        _inputBuffer?.Dispose();
         try { _inputs?.Dispose(); }
         catch (Exception error) { _error ??= error; }
         _stop.Dispose();
+        _hookReady.Dispose();
         if (_session.EventCount < SessionStore.MaximumEvents)
         {
             try
@@ -233,6 +282,32 @@ public sealed class GuidedRecorder : IDisposable
         public uint Time;
         public nuint Extra;
     }
+
+    /// <summary>32·64비트 Windows MSG 구조체의 포인터 정렬을 보존한다.</summary>
+    [StructLayout(LayoutKind.Sequential)]
+    private struct NativeMessage
+    {
+        public nint Window;
+        public uint Message;
+        public nuint WParam;
+        public nint LParam;
+        public uint Time;
+        public Point Position;
+        public uint Private;
+    }
+
+    /// <summary>훅을 설치한 스레드의 종료 메시지 대상을 읽는다.</summary>
+    [DllImport("kernel32.dll")] private static extern uint GetCurrentThreadId();
+    /// <summary>전용 스레드에 메시지 큐를 만들고 초기 메시지를 조회한다.</summary>
+    [DllImport("user32.dll", EntryPoint = "PeekMessageW")] private static extern bool PeekMessage(out NativeMessage message, nint window, uint minimum, uint maximum, uint remove);
+    /// <summary>입력 또는 종료 메시지를 전용 스레드에서 기다린다.</summary>
+    [DllImport("user32.dll", EntryPoint = "GetMessageW")] private static extern int GetMessage(out NativeMessage message, nint window, uint minimum, uint maximum);
+    /// <summary>네이티브 메시지 루프의 키 메시지를 변환한다.</summary>
+    [DllImport("user32.dll")] private static extern bool TranslateMessage(ref NativeMessage message);
+    /// <summary>네이티브 메시지를 대상 창에 전달한다.</summary>
+    [DllImport("user32.dll", EntryPoint = "DispatchMessageW")] private static extern nint DispatchMessage(ref NativeMessage message);
+    /// <summary>중단 시 훅 스레드의 메시지 대기를 깨운다.</summary>
+    [DllImport("user32.dll", EntryPoint = "PostThreadMessageW")] private static extern bool PostThreadMessage(uint thread, uint message, nuint wParam, nint lParam);
 
     /// <summary>Windows 훅을 설치한다.</summary>
     [DllImport("user32.dll", SetLastError = true)] private static extern nint SetWindowsHookEx(int kind, HookCallback callback, nint module, uint threadId);
