@@ -30,7 +30,7 @@
   [공식 PDF 매뉴얼](../sources/pdf-manual.md#조작생산-절차)의 튜토리얼(PDF 25쪽, 인쇄 24쪽)도 `Put Knowledge Into Production`으로 등록한 뒤 생산 창에서 유닛을 좌클릭해 놓는 순서를 설명한다. 이는 원판 조작의 근거이며, 보유 패치판의 실제 비용은 `.type`을 따른다.
 * 워크샵 메뉴의 `Put Knowledge into Production >` 하위 창 **"Knowledge Available"** 이 등록할 수 있는 목록이다. 머리에 `Production Slots Available:` (남은 생산 칸 수로 보임) 가 있다.
   The War Begins! 의 Sun Workshop Level I 에서는 **Rain Generator, Sun Cannon, Whirlibase** 가 나왔다.
-* `View Current Production >` 은 현재 덱에 등록된 목록을 보는 메뉴로 보인다 (캡처 없음).
+* `View Current Production >` 은 현재 덱에 등록된 목록을 보는 메뉴다. [네 번째 사용자 녹화](../videos/ui-controls-record-play-20261001.md)의 01:26.5에서 Current Production → Rain Generator / About를 확인했다. 01:22~01:25에는 Rain Generator 등록 뒤 생산 창 아이콘이 생기고 등록 후보에서 해당 항목이 빠진다.
 * `Upgrade costs 800` 은 캡처에 나타난 워크샵 업그레이드 비용이다. `GAME.HLP`는 생산 칸을
   Level I 2개·II 3개·III 4개로 설명한다 ([도움말의 게임 규칙](help-manual.md)).
   패치 실행 파일의 실제 판정과 등록 가능한 유닛 목록 변화는 아직 확인하지 않았다.
