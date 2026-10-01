@@ -38,6 +38,10 @@ internal sealed class AudioPlayer : IDisposable
 
     /// <summary>음악 스트리밍 출력 (곡마다 새로 만든다)</summary>
     private DynamicSoundEffectInstance? _music;
+    private SoundEffectInstance? _wind;
+    private bool _speakerSwap;
+    /// <summary>원본 바람 배경음을 독립적으로 끌 수 있다.</summary>
+    public bool WindNoise { get; set; } = true;
 
     /// <summary>스트리밍 중인 음악 파일</summary>
     private FileStream? _musicStream;
@@ -109,6 +113,7 @@ internal sealed class AudioPlayer : IDisposable
             }
         }
         FeedMusic();
+        UpdateWind();
         _playing.RemoveAll(instance =>
         {
             if (instance.State != SoundState.Stopped)
@@ -171,6 +176,7 @@ internal sealed class AudioPlayer : IDisposable
                 {
                     pcm = WaveFile.ResamplePcm16(pcm, wave.Channels, wave.SampleRate, rate);
                 }
+                if (_speakerSwap && wave.Channels == 2) PcmChannels.SwapStereo16(pcm);
                 effect = new SoundEffect(pcm, rate, wave.Channels == 2 ? AudioChannels.Stereo : AudioChannels.Mono);
             }
             catch (Exception error) when (error is IOException or InvalidDataException or ArgumentException)
@@ -259,6 +265,7 @@ internal sealed class AudioPlayer : IDisposable
             }
             _musicRemaining -= read;
             byte[] pcm = _musicFormat.ToPcm16(data.AsSpan(0, read - read % _musicFormat.BlockAlign));
+            if (_speakerSwap && _musicFormat.Channels == 2) PcmChannels.SwapStereo16(pcm);
             if (pcm.Length > 0)
             {
                 _music.SubmitBuffer(pcm);
@@ -311,11 +318,50 @@ internal sealed class AudioPlayer : IDisposable
         {
             instance.Volume = SoundOn ? SoundVolume / (float)Netstorm.Core.Display.DisplaySettings.MaximumVolume : 0f;
         }
+        UpdateWind();
+    }
+
+    /// <summary>켜짐·소리 켜짐·음량 설정에 따라 원본 바람 효과음을 반복하거나 멈춘다.</summary>
+    private void UpdateWind()
+    {
+        if (!Available || !SoundOn || !WindNoise)
+        {
+            _wind?.Stop(); _wind?.Dispose(); _wind = null; return;
+        }
+        try
+        {
+            if (_wind == null && LoadSound("distantWindQuiet-3000.wav") is { } sound)
+            {
+                _wind = sound.CreateInstance(); _wind.IsLooped = true;
+                _wind.Volume = SoundVolume / (float)Netstorm.Core.Display.DisplaySettings.MaximumVolume;
+                _wind.Play();
+            }
+            if (_wind != null) _wind.Volume = SoundVolume / (float)Netstorm.Core.Display.DisplaySettings.MaximumVolume;
+        }
+        catch (Exception error) when (error is NoAudioHardwareException or InstancePlayLimitException or InvalidOperationException)
+        { Available = false; }
+    }
+
+    /// <summary>좌우 교환 상태를 즉시 반영하고 이전 채널 순서로 만든 소리 캐시를 비운다.</summary>
+    public void SetSpeakerSwap(bool swap)
+    {
+        if (_speakerSwap == swap) return;
+        _speakerSwap = swap;
+        _wind?.Stop(); _wind?.Dispose(); _wind = null;
+        // 이전 PCM으로 만든 재생 인스턴스를 먼저 종료한 뒤 원본 캐시를 해제한다.
+        foreach (SoundEffectInstance instance in _playing) { instance.Stop(); instance.Dispose(); }
+        _playing.Clear();
+        // 다음 재생에서 교환된 채널로 효과음을 다시 읽는다.
+        foreach (SoundEffect? effect in _sounds.Values) effect?.Dispose();
+        _sounds.Clear();
+        // 음악은 곡을 재시작하지 않고 다음 스트리밍 조각부터 채널 순서를 바꾼다.
+        UpdateWind();
     }
 
     /// <summary>재생 중인 소리와 캐시를 모두 해제한다</summary>
     public void Dispose()
     {
+        _wind?.Stop(); _wind?.Dispose(); _wind = null;
         StopMusic();
         // 재생 중인 효과음을 멈추고 해제한다
         foreach (SoundEffectInstance instance in _playing)

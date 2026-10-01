@@ -121,12 +121,12 @@ public sealed class CampaignOneTests
         int money = session.Player(1).StormPower;
         session.Submit(new UpgradeWorkshopCommand(1, workshop.Id));
         session.Submit(new RegisterKnowledgeCommand(1, workshop.Id, "sunAviary")); session.RunTicks(1);
-        Assert.Equal(money - BattleSession.WorkshopUpgradeCost, session.Player(1).StormPower);
+        Assert.Equal(money - BattleSession.SunWorkshopUpgradeCost, session.Player(1).StormPower);
         Assert.Equal(2, session.Player(1).Deck.WorkshopLevel(workshop.Id));
         Assert.Contains(session.Player(1).Deck.Entries(), e => e.TypeName == "sunaviary" || e.TypeName == "sunAviary");
         session.Submit(new UpgradeWorkshopCommand(2, workshop.Id)); session.RunTicks(1);
         Assert.Contains(session.DrainEvents(), e => e.Failure == CommandFailure.NotOwner);
-        Assert.Equal(money - BattleSession.WorkshopUpgradeCost, session.Player(1).StormPower);
+        Assert.Equal(money - BattleSession.SunWorkshopUpgradeCost, session.Player(1).StormPower);
     }
 
     /// <summary>와이드 해상도의 렌더링 높이가 정규화 과정에서 원본 높이로 되돌아가지 않는다.</summary>

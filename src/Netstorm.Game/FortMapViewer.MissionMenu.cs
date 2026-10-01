@@ -16,6 +16,10 @@ internal enum MissionMenuAction
     MainMenu,
     /// <summary>프로그램을 종료한다.</summary>
     Quit,
+    /// <summary>지도 위에서 공유 옵션 메뉴를 연다.</summary>
+    Options,
+    /// <summary>일반 도움말의 목차를 연다.</summary>
+    Help,
 }
 
 /// <summary>원본에서 확인한 Esc → Game 메뉴와 Leave Mission 확인 창의 입력·표시.</summary>
@@ -38,6 +42,7 @@ internal sealed partial class FortMapViewer
 
     /// <summary>Game 항목을 클릭해 연 목록 상태.</summary>
     private bool _missionGameDropdown;
+    private bool _missionViewDropdown;
 
     /// <summary>Leave Mission을 누른 뒤의 확인 창 상태.</summary>
     private bool _leaveMissionPrompt;
@@ -90,6 +95,7 @@ internal sealed partial class FortMapViewer
         {
             _missionMenuVisible = !_missionMenuVisible;
             _missionGameDropdown = false;
+            _missionViewDropdown = false;
             return true;
         }
         if (!_missionMenuVisible)
@@ -98,7 +104,22 @@ internal sealed partial class FortMapViewer
         }
         if (clicked)
         {
-            var gameTab = new Rectangle(MissionMenuLeft, 0, 50, MissionMenuBarHeight);
+            if (MissionTab(2).Contains(mouse.Position))
+            { _pendingMissionMenuAction = MissionMenuAction.Options; _missionMenuVisible = false; _missionGameDropdown = _missionViewDropdown = false; return true; }
+            if (MissionTab(1).Contains(mouse.Position))
+            { _missionViewDropdown = !_missionViewDropdown; _missionGameDropdown = false; return true; }
+            if (_missionViewDropdown)
+            {
+                Rectangle view = ViewMenuPanel();
+                if (view.Contains(mouse.Position))
+                {
+                    if ((mouse.Y - view.Y) / MissionMenuRowHeight == 0) _pendingMissionMenuAction = MissionMenuAction.Help;
+                    else OpenKnowledge();
+                    _missionMenuVisible = false;
+                }
+                _missionViewDropdown = false; return true;
+            }
+            Rectangle gameTab = MissionTab(0);
             if (gameTab.Contains(mouse.X, mouse.Y))
             {
                 _missionGameDropdown = !_missionGameDropdown;
@@ -156,6 +177,19 @@ internal sealed partial class FortMapViewer
     private string[] LeaveMissionLabels() =>
         [Ui("메인 메뉴", "Main Menu"), Ui("다시 시작", "Replay Mission"), Ui("미션 계속", "Continue Mission")];
 
+    /// <summary>원본 상단 항목의 표시 문구와 폭 계산을 입력·그리기에서 공유한다.</summary>
+    private string[] MissionTabs() => [Ui("게임", "Game"), Ui("보기", "View"), Ui("옵션", "Options"), Ui("플레이어", "Players"), Ui("정보", "About")];
+    /// <summary>언어별 실제 글자 폭에 맞춘 상단 항목의 클릭 영역.</summary>
+    private Rectangle MissionTab(int index)
+    {
+        string[] tabs = MissionTabs(); int x = MissionMenuLeft + 5;
+        // 앞 항목의 글자 폭과 여백을 더해 표시 위치와 클릭 영역을 일치시킨다.
+        for (int i = 0; i < index; i++) x += Math.Max(50, (int)_uiSkin.Body.MeasureString(tabs[i]).X + 16);
+        return new(x - 5, 0, Math.Max(50, (int)_uiSkin.Body.MeasureString(tabs[index]).X + 16), MissionMenuBarHeight);
+    }
+    /// <summary>지원한 두 보기 명령의 펼침 영역.</summary>
+    private Rectangle ViewMenuPanel() => new(MissionTab(1).X, MissionMenuBarHeight, MissionMenuWidth, MissionMenuRowHeight * 2);
+
     /// <summary>상단 돌 메뉴 막대·Game 목록·떠나기 확인 창을 지도 위에 그린다.</summary>
     private void DrawMissionMenu(SpriteBatch batch, SpriteFontBase font, int width, int height)
     {
@@ -163,13 +197,25 @@ internal sealed partial class FortMapViewer
         if (_missionMenuVisible)
         {
             _uiSkin.Menu(batch, new Rectangle(MissionMenuLeft, 0, width - MissionMenuLeft, MissionMenuBarHeight));
-            string[] tabs = [Ui("게임", "Game"), Ui("보기", "View"), Ui("옵션", "Options"), Ui("플레이어", "Players"), Ui("정보", "About")];
+            string[] tabs = MissionTabs();
             int tabX = MissionMenuLeft + 5;
             // 원본 메뉴 막대의 다섯 항목을 작은 글씨로 나란히 표시한다.
             for (int i = 0; i < tabs.Length; i++)
             {
-                OriginalUiSkin.Text(batch, font, tabs[i], new Vector2(tabX, 1), i == 0 ? Color.White : Color.Gray);
+                OriginalUiSkin.Text(batch, font, tabs[i], new Vector2(tabX, 1), i <= 2 ? Color.White : Color.Gray);
                 tabX += Math.Max(50, (int)font.MeasureString(tabs[i]).X + 16);
+            }
+            if (_missionViewDropdown)
+            {
+                Rectangle list = ViewMenuPanel(); _uiSkin.Menu(batch, list);
+                string[] labels = [Ui("도움말 - F1", "General Help - F1"), Ui("지식 보기 - F6", "View Netstorm Knowledge - F6")];
+                // 보기 명령은 같은 행 높이로 표시하고 커서 강조를 따로 그린다.
+                for (int i = 0; i < labels.Length; i++)
+                {
+                    var row = new Rectangle(list.X + 1, list.Y + i * MissionMenuRowHeight + 1, list.Width - 2, MissionMenuRowHeight - 2);
+                    if (row.Contains(_previousMouse.Position)) batch.Draw(_pixel, row, Color.Black * 0.25f);
+                    OriginalUiSkin.Text(batch, font, labels[i], new(row.X + 10, row.Y + 4));
+                }
             }
             if (_missionGameDropdown)
             {

@@ -29,6 +29,7 @@ internal sealed class MainMenuView : IDisposable
     private readonly bool _korean;
     private readonly Action<string> _play;
     private readonly Action _quit;
+    private readonly Action<string> _help;
     private readonly List<MenuButton> _buttons = [];
     private readonly List<Rectangle> _lists = [];
     private readonly List<int> _separators = [];
@@ -41,12 +42,15 @@ internal sealed class MainMenuView : IDisposable
     private bool _keyboardFocus;
     /// <summary>자동 UI 검사가 확인할 현재 페이지.</summary>
     public string Page => _page;
+    /// <summary>미션 지도 위에 옵션 목록만 표시하는 상태.</summary>
+    public bool OptionsOnly { get; private set; }
 
     /// <summary>원본 GIF를 읽고 메뉴와 미션이 공유하는 UI 장식을 연결한다.</summary>
     public MainMenuView(GraphicsDevice device, GameResources resources, OriginalUiSkin skin,
-        DisplayManager display, AudioPlayer? audio, Action<string> play, Action quit)
+        DisplayManager display, AudioPlayer? audio, Action<string> play, Action quit, Action<string> help)
     {
         _display = display; _audio = audio; _play = play; _quit = quit; _skin = skin;
+        _help = help;
         _korean = resources.Language == GameLanguage.Korean;
         _pixel = new Texture2D(device, 1, 1); _pixel.SetData(new[] { Color.White });
         _background = LoadImage(device, resources, "d/titleMenu.gif");
@@ -66,8 +70,9 @@ internal sealed class MainMenuView : IDisposable
     private string Text(string korean, string english) => _korean ? korean : english;
 
     /// <summary>페이지를 열고 같은 클릭이 새 창으로 전달되지 않게 입력을 기억한다.</summary>
-    public void Open(string page = "main")
+    public void Open(string page = "main", bool optionsOnly = false)
     {
+        OptionsOnly = optionsOnly;
         _page = page is "campaigns" or "missions" or "options" ? page : "main";
         _submenu = null; _selected = 0; _keyboardFocus = false;
         _previousMouse = Mouse.GetState(); _previousKeyboard = Keyboard.GetState();
@@ -114,6 +119,7 @@ internal sealed class MainMenuView : IDisposable
         int cx = width / 2; int cy = height / 2;
         if (_page is "main" or "options")
         {
+            if (OptionsOnly) { BuildOptions(width, height); return; }
             string[] labels = [Text("캠페인", "Campaign"), Text("멀티플레이", "Multiplayer"), Text("데모", "Demo"), Text("도움말", "Help"),
                 Text("편집", "Edit"), Text("제작진", "Credits"), Text("옵션", "Options"), Text("종료", "Quit")];
             // 원본 1024×768의 (356,311)에서 시작하는 두 줄·네 열 버튼을 화면 중심에 맞춘다.
@@ -121,7 +127,7 @@ internal sealed class MainMenuView : IDisposable
             {
                 int item = i;
                 Add(new Rectangle(cx - 156 + i % 4 * MainButtonPitch, cy - 73 + i / 4 * 23, MainButtonWidth, OriginalUiSkin.ButtonHeight),
-                    labels[i], i is 0 or 6 or 7, () => { if (item == 7) _quit(); else Open(item == 0 ? "campaigns" : _page == "options" ? "main" : "options"); });
+                    labels[i], i is 0 or 3 or 6 or 7, () => { if (item == 7) _quit(); else if (item == 3) { Open(); _help("F1Help"); } else Open(item == 0 ? "campaigns" : _page == "options" ? "main" : "options"); });
             }
             if (_page == "options") BuildOptions(width, height);
             return;
@@ -158,56 +164,55 @@ internal sealed class MainMenuView : IDisposable
     {
         DisplaySettings s = _display.Settings;
         int menuWidth = 180;
-        int x = Math.Clamp(width / 2 + 41, 2, width - menuWidth - 2);
-        int y = Math.Clamp(height / 2 - 88, 2, height - 276);
-        var menu = new Rectangle(x, y, menuWidth, 274); _lists.Add(menu);
+        int x = Math.Clamp(OptionsOnly ? 184 : width / 2 + 41, 2, width - menuWidth - 2);
+        int y = OptionsOnly ? 18 : Math.Clamp(height / 2 - 88, 2, height - 258);
+        var menu = new Rectangle(x, y, menuWidth, 256); _lists.Add(menu);
         int rowY = y + 2;
         // 입력과 표시를 같은 행에 두고 선택형 항목에는 파란 표시를 붙인다.
         void Row(string label, Action action, bool enabled = true, bool? check = null)
         { Add(new Rectangle(x + 2, rowY, menuWidth - 4, OriginalUiSkin.RowHeight), label, enabled, action, listRow: true, check: check); rowY += OriginalUiSkin.RowHeight; }
         // 원본의 메뉴 그룹 사이에 구분선을 넣는다.
         void Gap() { _separators.Add(rowY + 3); rowY += 12; }
-        Row(Text("전체화면", "Direct Draw / Full Screen"), () => _display.SetFullscreen(!s.Fullscreen), check: s.Fullscreen);
+        Row(Text("전체화면", "Direct Draw / Full Screen"), () => { _display.SetFullscreen(!s.Fullscreen); Open(); });
         int resolutionY = rowY;
         Row(Text("해상도", "Resolution") + " >", () => ToggleSubmenu("resolution"));
         Gap();
-        Row(Text("효과음", "Sound On"), () => { s.SoundOn = !s.SoundOn; ApplySound(); }, check: s.SoundOn);
-        Row(Text("음악 재생", "Play Music"), () => { s.PlayMusic = !s.PlayMusic; ApplySound(); }, check: s.PlayMusic);
-        Row(Text("바람 소리", "Wind Noise"), () => { }, false, false);
-        Row(Text("스피커 좌우 교환", "Speaker Swap L/R"), () => { }, false);
+        Row(Text("효과음", "Sound On"), () => { s.SoundOn = !s.SoundOn; ApplySound(); Open(); }, check: s.SoundOn);
+        Row(Text("음악 재생", "Play Music"), () => { s.PlayMusic = !s.PlayMusic; ApplySound(); Open(); }, check: s.PlayMusic);
+        Row(Text("바람 소리", "Wind Noise"), () => { s.WindNoise = !s.WindNoise; ApplySound(); Open(); }, check: s.WindNoise);
+        Row(Text("스피커 좌우 교환", "Speaker Swap L/R"), () => { s.SpeakerSwap = !s.SpeakerSwap; ApplySound(); Open(); }, check: s.SpeakerSwap);
         int soundY = rowY;
         Row(Text("효과음 볼륨", "Sound Effect Volume") + " >", () => ToggleSubmenu("sound"));
         int musicY = rowY;
         Row(Text("음악 볼륨", "Music Volume") + " >", () => ToggleSubmenu("music"));
         Gap();
-        Row(Text("전체화면 가장자리 이동", "Edge Scroll in Fullscreen"), () => { s.EdgeScroll = !s.EdgeScroll; _display.SaveOptions(); }, check: s.EdgeScroll);
+        Row(Text("전체화면 가장자리 이동", "Edge Scroll in Fullscreen"), () => { s.EdgeScroll = !s.EdgeScroll; _display.SaveOptions(); Open(); }, check: s.EdgeScroll);
         Row(Text("자동 데모", "Auto-Demo"), () => { }, false, false);
         Row(Text("시작할 때 팁 표시", "Tell Tips at Startup"), () => { }, false, false);
-        Row(Text("일시 정지 - Shift-F9", "Pause - Shift-F9"), () => { }, false);
         Gap();
         Row(Text("서버 진단", "Pass Server Diagnostic"), () => { }, false);
         if (_submenu == null) return;
-        int subWidth = _submenu == "resolution" ? 130 : 40;
+        int subWidth = _submenu == "resolution" ? 130 : 90;
         int count = _submenu == "resolution" ? Resolutions.Length : 5;
         int subX = menu.Right - 1;
         if (subX + subWidth > width - 2) subX = menu.X - subWidth + 1;
         int subY = _submenu == "resolution" ? resolutionY : _submenu == "sound" ? soundY : musicY;
         subY = Math.Clamp(subY, 2, height - count * OriginalUiSkin.RowHeight - 4);
         var sub = new Rectangle(subX, subY, subWidth, count * OriginalUiSkin.RowHeight + 4); _lists.Add(sub);
-        // 클릭한 값을 적용하고 하위 목록만 닫아 상위 옵션 목록을 유지한다.
+        // 클릭한 값을 적용한 뒤 원본처럼 상위 옵션 메뉴까지 닫는다.
         for (int i = 0; i < count; i++)
         {
             int index = i;
             bool resolution = _submenu == "resolution";
             bool sound = _submenu == "sound";
             var r = Resolutions[i];
-            string label = resolution ? $"{r.Width} × {r.Height}" : (i + 1).ToString();
+            string label = resolution ? $"{r.Width} × {r.Height}" : Text($"음량 {i + 1}", $"Volume {i + 1}");
             bool selected = resolution ? s.WindowWidth == r.Width && s.WindowHeight == r.Height : (sound ? s.SoundVolume : s.MusicVolume) == i + 1;
             Add(new Rectangle(sub.X + 2, sub.Y + 2 + i * OriginalUiSkin.RowHeight, sub.Width - 4, OriginalUiSkin.RowHeight), label, true, () =>
             {
                 if (resolution) _display.SetResolution(Resolutions[index].Width, Resolutions[index].Height, Resolutions[index].Height);
                 else { if (sound) s.SoundVolume = index + 1; else s.MusicVolume = index + 1; ApplySound(); if (sound) _audio?.PlaySound("bell.wav"); }
-                _submenu = null;
+                Open();
             }, listRow: true, check: selected);
         }
     }
@@ -226,6 +231,8 @@ internal sealed class MainMenuView : IDisposable
         if (_audio != null)
         {
             _audio.SoundOn = s.SoundOn;
+            _audio.WindNoise = s.WindNoise;
+            _audio.SetSpeakerSwap(s.SpeakerSwap);
             if (_audio.MusicOn != s.PlayMusic) _audio.SetMusicOn(s.PlayMusic);
             _audio.SoundVolume = s.SoundVolume; _audio.MusicVolume = s.MusicVolume; _audio.ApplyVolumes();
         }
@@ -257,14 +264,14 @@ internal sealed class MainMenuView : IDisposable
     public void Draw(SpriteBatch batch, SpriteFontBase font, SpriteFontBase small, int width, int height)
     {
         BuildButtons(width, height);
-        if (_clouds != null)
+        if (!OptionsOnly && _clouds != null)
         {
             // 구름 그림을 세로로 반복한다.
             for (int y = 0; y < height; y += _clouds.Height)
                 // 구름 그림을 가로로 반복한다.
                 for (int x = 0; x < width; x += _clouds.Width) batch.Draw(_clouds, new Vector2(x, y), Color.White);
         }
-        if (_background != null) batch.Draw(_background, new Rectangle((width - 640) / 2, (height - 480) / 2, 640, 480), Color.White);
+        if (!OptionsOnly && _background != null) batch.Draw(_background, new Rectangle((width - 640) / 2, (height - 480) / 2, 640, 480), Color.White);
         if (_page is "campaigns" or "missions")
         {
             Rectangle panel = Panel(width, height); _skin.Panel(batch, panel);
@@ -300,9 +307,10 @@ internal sealed class MainMenuView : IDisposable
             else
             {
                 if (button.Enabled && (hover || focus)) batch.Draw(_pixel, button.Bounds, Color.Black * 0.25f);
-                int inset = button.Check.HasValue ? 13 : 10;
+                int inset = _page == "options" || button.Check.HasValue ? 13 : 10;
                 if (button.Check.HasValue) _skin.Pip(batch, new Point(button.Bounds.X + 5, button.Bounds.Center.Y), button.Check.Value, button.Enabled);
-                OriginalUiSkin.Text(batch, font, button.Label, new Vector2(button.Bounds.X + inset, button.Bounds.Center.Y - font.MeasureString(button.Label).Y / 2), button.Enabled ? Color.White : new Color(185, 180, 166));
+                SpriteFontBase rowFont = font.MeasureString(button.Label).X > button.Bounds.Width - inset - 3 ? small : font;
+                OriginalUiSkin.Text(batch, rowFont, button.Label, new Vector2(button.Bounds.X + inset, button.Bounds.Center.Y - rowFont.MeasureString(button.Label).Y / 2), button.Enabled ? Color.White : new Color(185, 180, 166));
             }
         }
         if (_error.Length > 0) OriginalUiSkin.Text(batch, small, _error, new Vector2(16, height - 24), Color.OrangeRed);

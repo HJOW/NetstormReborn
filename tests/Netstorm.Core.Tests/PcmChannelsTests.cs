@@ -1,0 +1,43 @@
+using Netstorm.Core.Audio;
+using Netstorm.Core.Display;
+
+namespace Netstorm.Core.Tests;
+
+/// <summary>실제 스테레오 교환과 옵션 저장 호환성을 검증한다.</summary>
+public sealed class PcmChannelsTests
+{
+    /// <summary>서로 다른 좌·우 표본이 교환되고 다시 교환하면 원래 음성으로 돌아온다.</summary>
+    [Fact]
+    public void StereoSwap_IsReversibleAndKeepsSampleBytes()
+    {
+        byte[] original = [1, 2, 3, 4, 0xFE, 0xFF, 10, 0];
+        byte[] pcm = original.ToArray();
+        PcmChannels.SwapStereo16(pcm);
+        Assert.Equal([3, 4, 1, 2, 10, 0, 0xFE, 0xFF], pcm);
+        PcmChannels.SwapStereo16(pcm);
+        Assert.Equal(original, pcm);
+        Assert.Throws<ArgumentException>(() => PcmChannels.SwapStereo16(new byte[3]));
+    }
+
+    /// <summary>새 설정은 저장·복구되고 기존 설정 파일은 바람 켜짐·채널 교환 꺼짐을 사용한다.</summary>
+    [Fact]
+    public void AudioOptions_RoundTripAndOldSettingsRemainCompatible()
+    {
+        string directory = Path.Combine(Path.GetTempPath(), "netstorm-options-" + Guid.NewGuid().ToString("N"));
+        string path = Path.Combine(directory, DisplaySettings.FileName);
+        try
+        {
+            var settings = new DisplaySettings { WindNoise = false, SpeakerSwap = true };
+            Assert.True(settings.Save(path));
+            DisplaySettings restored = DisplaySettings.Load(path);
+            Assert.False(restored.WindNoise); Assert.True(restored.SpeakerSwap);
+            File.WriteAllText(path, "{\"soundOn\":false}");
+            restored = DisplaySettings.Load(path);
+            Assert.True(restored.WindNoise); Assert.False(restored.SpeakerSwap);
+        }
+        finally
+        {
+            if (Directory.Exists(directory)) Directory.Delete(directory, true);
+        }
+    }
+}

@@ -289,10 +289,11 @@ public sealed partial class BattleSession
         if (!workshop.IsComplete) return new CommandResult(CommandFailure.NotComplete);
         PlayerState player = Player(command.Player);
         if (player.Deck.WorkshopLevel(workshop.Id) >= ProductionDeck.MaxWorkshopLevel) return new CommandResult(CommandFailure.NotReady, "최대 단계 워크샵");
-        if (player.StormPower < WorkshopUpgradeCost) return new CommandResult(CommandFailure.Placement, "워크샵 업그레이드에 1,000 SP 필요");
-        player.StormPower -= WorkshopUpgradeCost;
+        int cost = WorkshopUpgradeCostFor(workshop.Type.Definition);
+        if (player.StormPower < cost) return new CommandResult(CommandFailure.Placement, $"워크샵 업그레이드에 {cost:N0} SP 필요");
+        player.StormPower -= cost;
         player.Deck.UpgradeWorkshop(workshop.Id);
-        Emit(SessionEventKind.Registered, player.Number, workshop.Id, $"워크샵 단계 {player.Deck.WorkshopLevel(workshop.Id)} (−1000)");
+        Emit(SessionEventKind.Registered, player.Number, workshop.Id, $"워크샵 단계 {player.Deck.WorkshopLevel(workshop.Id)} (−{cost})");
         return CommandResult.Ok();
     }
 

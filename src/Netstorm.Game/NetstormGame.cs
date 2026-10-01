@@ -65,6 +65,9 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
 
     /// <summary>도움말 앵커 절 (지식 상세창 본문)</summary>
     private HelpTopics? _help;
+    private HelpWindow? _helpWindow;
+    /// <summary>메인 메뉴와 미션 메뉴가 공유하는 옵션 목록이 지도 위에 열려 있는지.</summary>
+    private bool MissionOptionsOpen => _mapViewer != null && _mainMenu?.OptionsOnly == true && _mainMenu.Page == "options";
     /// <summary>튜토리얼 버튼으로 다음 미션을 열 때 다시 사용할 원본 자산.</summary>
     private GameResources? _resources;
     private ShapeDatabase? _shapes;
@@ -254,9 +257,12 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         _help = resources.TryLoadHelp();
         DisplaySettings settings = _display.Settings;
         _audio = new AudioPlayer(dataDir, settings.SoundOn, settings.PlayMusic, settings.SoundVolume, settings.MusicVolume);
+        _audio.WindNoise = settings.WindNoise;
+        _audio.SetSpeakerSwap(settings.SpeakerSwap);
         _uiSkin = new OriginalUiSkin(GraphicsDevice, shapes, palette, resources.LoadTypes().Find("fortGump")!.Definition,
             _fonts!.GetFont(BodyFontSize), _fonts.GetFont(TitleFontSize), _fonts.GetFont(SmallFontSize));
-        _mainMenu = new MainMenuView(GraphicsDevice, resources, _uiSkin, _display, _audio, PlayCampaign, Exit);
+        if (_help != null) _helpWindow = new HelpWindow(GraphicsDevice, _uiSkin, resources, _help, shapes, palette);
+        _mainMenu = new MainMenuView(GraphicsDevice, resources, _uiSkin, _display, _audio, PlayCampaign, Exit, OpenHelp);
         _mainMenu.Open(ParseValueArgument(Environment.GetCommandLineArgs(), "--menu") ?? "main");
         if (_missionName == null)
         {
@@ -362,6 +368,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
             mission != null ? resources.TryLoadMission("tell")?.Script : null);
         _mapViewer?.Dispose();
         _mapViewer = nextViewer;
+        _mapViewer.HelpRequested = OpenHelp;
         if (mission != null && CampaignAccess.IsAvailable(name)) _mapViewer.EnablePlayUi(resources);
         _baseTitle = $"NetStorm 클론 — 맵 뷰어: {name}";
         bool applyStartupOptions = !_startupOptionsApplied;
@@ -428,12 +435,22 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         return (a, b);
     }
 
+    /// <summary>일반 도움말·About 링크를 같은 원본 도움말 창으로 연다.</summary>
+    private void OpenHelp(string anchor)
+    {
+        if (_helpWindow?.Open(anchor, _mapViewer?.IsMissionMode == true, _display.ToLogical(Mouse.GetState())) != true) return;
+        bool knowledge = _mapViewer?.KnowledgeOpen == true;
+        _helpWindow.BackToParent = knowledge ? () => { } : null;
+        _helpWindow.Closed = knowledge ? () => _mapViewer?.CloseKnowledge() : null;
+    }
+
     /// <summary>입력 처리와 애니메이션 진행</summary>
     /// <param name="gameTime">경과 시간</param>
     protected override void Update(GameTime gameTime)
     {
         KeyboardState keyboard = Keyboard.GetState();
-        bool tutorialOpen = _mapViewer?.TutorialDialogOpen == true || _mapViewer?.KnowledgeOpen == true;
+        bool popupOpen = _helpWindow?.IsOpen == true || MissionOptionsOpen;
+        bool tutorialOpen = popupOpen || _mapViewer?.TutorialDialogOpen == true || _mapViewer?.KnowledgeOpen == true;
         if (keyboard.IsKeyDown(Keys.Escape) && !_previousKeyboard.IsKeyDown(Keys.Escape) && !tutorialOpen
             && _mapViewer?.IsMissionMode != true && (_mainMenu == null || _mapViewer != null || _spriteBrowser != null))
         {
@@ -442,21 +459,28 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         double dt = gameTime.ElapsedGameTime.TotalSeconds;
         if (!tutorialOpen)
         {
-            _display.HandleHotkeys(keyboard, _previousKeyboard);
+            _display.HandleHotkeys(keyboard, _previousKeyboard, _mapViewer?.IsMissionMode == true);
         }
-        _previousKeyboard = keyboard;
         MouseState rawMouse = Mouse.GetState();
         MouseState mouse = _display.ToLogical(rawMouse);
         if (_uiAutomation != null)
         {
             keyboard = new KeyboardState();
-            mouse = _uiAutomation.Update(_mapViewer?.UiState ?? _mainMenu?.Page ?? "unavailable", Exit,
+            mouse = _uiAutomation.Update(_helpWindow?.IsOpen == true ? _helpWindow.State : MissionOptionsOpen ? "options" : _mapViewer?.UiState ?? _mainMenu?.Page ?? "unavailable", Exit,
                 _display.Layout.LogicalWidth, _display.Layout.LogicalHeight);
+            keyboard = _uiAutomation.Keyboard;
         }
-        if (_mapViewer == null && _spriteBrowser == null)
+        if (!tutorialOpen && keyboard.IsKeyDown(Keys.F1) && !_previousKeyboard.IsKeyDown(Keys.F1))
+        { OpenHelp("F1Help"); popupOpen = true; }
+        if (_helpWindow?.IsOpen == true)
+            _helpWindow.Update(mouse, keyboard, _display.Layout.LogicalWidth, _display.Layout.LogicalHeight);
+        else if (MissionOptionsOpen || !popupOpen && _mapViewer == null && _spriteBrowser == null)
             _mainMenu?.Update(mouse, keyboard, _display.Layout.LogicalWidth, _display.Layout.LogicalHeight);
+        // 같은 클릭이 도움말·옵션을 닫고 곧바로 뒤쪽 지도에도 적용되는 것을 막는다.
+        popupOpen |= _helpWindow?.IsOpen == true || MissionOptionsOpen;
         _mapViewer?.Update(dt, mouse, EdgeScrollDelta(rawMouse, keyboard, dt),
-            _display.Layout.LogicalWidth, _display.Layout.LogicalHeight);
+            _display.Layout.LogicalWidth, _display.Layout.LogicalHeight, keyboard, popupOpen);
+        _previousKeyboard = keyboard;
         TutorialDialogAction? tutorialAction = _mapViewer?.TakeTutorialAction();
         if (tutorialAction != null)
         {
@@ -520,6 +544,8 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     /// <summary>재시작·재플레이는 현재 미션을 다시 로드하고, 떠나기는 메인 메뉴로 돌아간다.</summary>
     private void HandleMissionMenuAction(MissionMenuAction action)
     {
+        if (action == MissionMenuAction.Options) { _mainMenu?.Open("options", optionsOnly: true); return; }
+        if (action == MissionMenuAction.Help) { OpenHelp("F1Help"); return; }
         if (action is MissionMenuAction.Restart or MissionMenuAction.Replay)
         {
             try
@@ -555,7 +581,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
             _display.Settings.EdgeScroll && IsActive, _display.BorderlessScreen,
             rawMouse.LeftButton == ButtonState.Pressed,
             keyboard.IsKeyDown(Keys.LeftShift) || keyboard.IsKeyDown(Keys.RightShift),
-            PopupOpen: _mapViewer?.TutorialDialogOpen == true || _mapViewer?.KnowledgeOpen == true || _mapViewer?.MissionMenuOpen == true, TopEdgeBlocked: false);
+            PopupOpen: _helpWindow?.IsOpen == true || MissionOptionsOpen || _mapViewer?.ContextMenuOpen == true || _mapViewer?.TutorialDialogOpen == true || _mapViewer?.KnowledgeOpen == true || _mapViewer?.MissionMenuOpen == true, TopEdgeBlocked: false);
         (double x, double y) = _edgeScroll.Update(input, seconds);
         return new Vector2((float)x, (float)y);
     }
@@ -619,6 +645,8 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
             batch.DrawString(body, "Esc: 종료 · F11: 전체화면 · F10: 와이드 처리 · F9: 해상도 높이 · F7: 가장자리 스크롤",
                 new Vector2(24, height - 40), Color.Gray);
         }
+        if (MissionOptionsOpen) _mainMenu?.Draw(batch, body, _fonts.GetFont(SmallFontSize), width, height);
+        _helpWindow?.Draw(batch, width, height);
         // 화면 설정을 바꿨을 때 잠깐 보이는 알림 (오른쪽 아래)
         string? notice = _display.TickNotice(gameTime.ElapsedGameTime.TotalSeconds);
         if (notice != null)
@@ -693,6 +721,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         {
             _mapViewer?.Dispose();
             _mainMenu?.Dispose();
+            _helpWindow?.Dispose();
             _spriteBrowser?.Dispose();
             _audio?.Dispose();
             // 애니메이션 텍스처 해제

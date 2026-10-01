@@ -113,6 +113,12 @@ internal sealed partial class FortMapViewer : IDisposable
     /// </summary>
     private void CenterOnPriest()
     {
+        GameEntity? priest = _session.Entities.FirstOrDefault(e => e.Owner == TestPlayer && e.Kind == ObjectKind.Priest);
+        if (priest != null)
+        {
+            _camera = WorldPixels(priest.Footprint.AnchorX, priest.Footprint.AnchorY) - OriginalStartOffset + new Vector2(0, HeaderHeight / 2f);
+            return;
+        }
         FortMapObject? focus = _map.Objects.FirstOrDefault(o => o.Object.Type.Name == "priest" && o.Object.Owner == 1)
             ?? _map.Objects.FirstOrDefault();
         // Draw 의 중심점은 안내 영역 때문에 창 중심보다 HeaderHeight/2 아래에 있으므로 그만큼 보정한다.
@@ -124,10 +130,16 @@ internal sealed partial class FortMapViewer : IDisposable
     /// <param name="seconds">지난 갱신 이후 경과 시간(초)</param>
     /// <param name="mouse">논리 화면 좌표로 바꾼 마우스 상태</param>
     /// <param name="edgeScroll">가장자리 스크롤이 이번 갱신에서 옮길 논리 픽셀 (양수 = 오른쪽·아래)</param>
-    public void Update(double seconds, MouseState mouse, Vector2 edgeScroll, int width, int height)
+    public void Update(double seconds, MouseState mouse, Vector2 edgeScroll, int width, int height,
+        KeyboardState? input = null, bool inputBlocked = false)
     {
         if (width < 320 || height < 320) return;
-        KeyboardState keyboard = Keyboard.GetState();
+        KeyboardState keyboard = input ?? Keyboard.GetState();
+        if (inputBlocked)
+        {
+            if (!TutorialDialogOpen) UpdateSession(seconds, new KeyboardState(), mouse);
+            _previousKeyboard = keyboard; _previousMouse = mouse; return;
+        }
         if (_knowledgeOpen)
         {
             UpdateKnowledge(keyboard, mouse, width, height, seconds);
@@ -141,6 +153,12 @@ internal sealed partial class FortMapViewer : IDisposable
             _previousKeyboard = keyboard;
             _previousMouse = mouse;
             return;
+        }
+        if (ContextMenuOpen)
+        {
+            UpdateContextMenu(mouse, width, height);
+            UpdateSession(seconds, new KeyboardState(), mouse);
+            _previousKeyboard = keyboard; _previousMouse = mouse; return;
         }
         if (UpdateMissionMenu(keyboard, mouse, width, height))
         {
@@ -174,12 +192,12 @@ internal sealed partial class FortMapViewer : IDisposable
             // 화면 끝 스크롤은 확대 배율과 상관없이 화면 기준 픽셀로 이동하고, 월드(16×16 청크) 밖으로는 나가지 않는다.
             _camera = Vector2.Clamp(_camera + edgeScroll / _zoom, Vector2.Zero, WorldPixelSize);
         }
-        if (mouse.RightButton == ButtonState.Pressed && _previousMouse.RightButton == ButtonState.Pressed && !(_playUi && (_placementMode || _bridgeMode)))
+        if (!_playUi && mouse.RightButton == ButtonState.Pressed && _previousMouse.RightButton == ButtonState.Pressed && !(_placementMode || _bridgeMode))
         {
             _camera -= new Vector2(mouse.X - _previousMouse.X, mouse.Y - _previousMouse.Y) / _zoom;
         }
         int wheel = mouse.ScrollWheelValue - _previousMouse.ScrollWheelValue;
-        if (wheel != 0)
+        if (!_playUi && wheel != 0)
         {
             _zoom = Math.Clamp(_zoom * (wheel > 0 ? 1.25f : 0.8f), 0.25f, 4f);
         }
@@ -188,11 +206,13 @@ internal sealed partial class FortMapViewer : IDisposable
             _zoom = DefaultZoom;
             CenterOnPriest();
         }
-        if (Pressed(keyboard, Keys.F4))
+        bool control = keyboard.IsKeyDown(Keys.LeftControl) || keyboard.IsKeyDown(Keys.RightControl);
+        if (Pressed(keyboard, _playUi ? Keys.F5 : Keys.F4) && (!_playUi || !control))
         {
             CenterOnPriest();
-            _session.Submit(new ReturnHomeCommand(1));
+            if (!_playUi) _session.Submit(new ReturnHomeCommand(1));
         }
+        if (_playUi) UpdateOriginalControls(seconds, keyboard, mouse);
         if (keyboard.IsKeyDown(Keys.G) && !_previousKeyboard.IsKeyDown(Keys.G))
         {
             _showChunks = !_showChunks;
@@ -259,7 +279,7 @@ internal sealed partial class FortMapViewer : IDisposable
             {
                 continue;
             }
-            int color = PreviewPlayerColors.GetValueOrDefault(tile.Owner);
+            int color = _islandColors ? PreviewPlayerColors.GetValueOrDefault(tile.Owner) : 0;
             DrawSprite(batch, _terrainType.LoadIndex, MapSpriteFrames.BodyFrame(_terrainType.Definition, tile.Cluster),
                 Screen(WorldPixels(tile.X, tile.Y), center), color);
         }
@@ -274,7 +294,7 @@ internal sealed partial class FortMapViewer : IDisposable
         // edgeFarm은 원본의 matchframe으로 해당 isle을 대체한다. 원본과 같은 소유자 색상표를 적용한다.
         foreach (FortEdgeFarmTile tile in _edgeFarms)
         {
-            int color = PreviewPlayerColors.GetValueOrDefault(tile.Owner);
+            int color = _islandColors ? PreviewPlayerColors.GetValueOrDefault(tile.Owner) : 0;
             DrawSprite(batch, _edgeFarmType.LoadIndex, MapSpriteFrames.BodyFrame(_edgeFarmType.Definition, tile.Cluster),
                 Screen(WorldPixels(tile.X, tile.Y), center), color);
         }
@@ -311,6 +331,7 @@ internal sealed partial class FortMapViewer : IDisposable
                 continue;
             }
             GameEntity? live = _session.EntityForInitial(item);
+            if (HiddenByBuildingToggle(item.Object.Type)) continue;
             // 사제뿐 아니라 저장된 수송 유닛도 현재 이동 좌표로 그린다.
             int itemX = live?.Footprint.AnchorX ?? item.X;
             int itemY = live?.Footprint.AnchorY ?? item.Y;
@@ -367,6 +388,7 @@ internal sealed partial class FortMapViewer : IDisposable
         }
         DrawTutorialDialog(batch, font, width, height);
         DrawKnowledge(batch, font, small, width, height);
+        DrawContextMenu(batch, width, height);
         DrawMissionMenu(batch, font, width, height);
     }
 

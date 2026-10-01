@@ -1,4 +1,4 @@
-# 원본 실행과 OS 입력 없이 클론의 공통 마우스 입력·화면 전환·설정 저장을 검사한다.
+﻿# 원본 실행과 OS 입력 없이 클론의 공통 마우스 입력·화면 전환·설정 저장을 검사한다.
 param([string]$OutputDirectory = 'extracted/screens/ui-smoke-20261001')
 $ErrorActionPreference = 'Stop'
 $taskRoot = Split-Path -Parent $PSScriptRoot
@@ -26,10 +26,11 @@ click-center 0,46; assert briefing; capture $OutputDirectory/10a-briefing-1-2.pn
 click-center 83,121; assert battle; wait 90; capture $OutputDirectory/10b-battle-1-2.png;
 click 105,8; assert mission-menu; click 150,78; assert leave; click-center -82,48; assert main;
 click-center 38,-42; assert options; capture $OutputDirectory/11-options.png;
-click-center 148,44; capture $OutputDirectory/12-volume.png; click-center 238,107; assert options;
-click-center 148,63; click-center 238,99;
-click-center 108,-58; capture $OutputDirectory/13-resolutions.png; click-center 278,-4; assert options; wait 45; capture $OutputDirectory/14-wide.png;
-click-center 110,-79; assert options; wait 45; capture $OutputDirectory/15-fullscreen.png; click-center 110,-79; assert options; wait 45; capture $OutputDirectory/16-windowed.png;
+click-center 148,44; capture $OutputDirectory/12-volume.png; click-center 238,107; assert main;
+click-center 38,-42; click-center 148,63; click-center 238,99; assert main;
+click-center 38,-42; click-center 108,-58; capture $OutputDirectory/13-resolutions.png; click-center 278,-4; assert main; wait 45; capture $OutputDirectory/14-wide.png;
+click-center 38,-42; click-center 110,-79; assert main; wait 45; capture $OutputDirectory/15-fullscreen.png;
+click-center 38,-42; click-center 110,-79; assert main; wait 45; capture $OutputDirectory/16-windowed.png;
 quit;
 "@
 $taskFile = Join-Path $taskOutput 'commands.txt'

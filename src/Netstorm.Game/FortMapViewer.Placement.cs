@@ -238,6 +238,7 @@ internal sealed partial class FortMapViewer
         // 세션 오브젝트 번호 순서로 그린다 (게임 중 새로 만든 것만)
         foreach (GameEntity entity in _session.Entities.Where(e => e.Kind != ObjectKind.Flyer && (e.Source == null || e.Kind == ObjectKind.Geyser && !_map.Objects.Contains(e.Source))))
         {
+            if (HiddenByBuildingToggle(entity.Type)) continue;
             Vector2 anchor = Screen(WorldPixels(entity.Footprint.AnchorX, entity.Footprint.AnchorY), center);
             if (entity.Kind == ObjectKind.Geyser && entity.Source != null)
             {

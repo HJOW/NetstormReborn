@@ -59,6 +59,9 @@ public enum RegisterResult
 
     /// <summary>획득하지 않은 지식</summary>
     UnknownKnowledge,
+
+    /// <summary>골렘은 템플 공급 항목이므로 워크샵 생산 칸에 등록하지 않는다.</summary>
+    TempleSupplied,
 }
 
 /// <summary>
@@ -169,6 +172,7 @@ public sealed class ProductionDeck
     public RegisterResult Register(int workshopId, ProducibleUnit unit)
     {
         if (!_workshops.TryGetValue(workshopId, out WorkshopState? state)) return RegisterResult.NoWorkshop;
+        if (unit.Name.Equals(GolemType, StringComparison.OrdinalIgnoreCase)) return RegisterResult.TempleSupplied;
         if (!_knowledge.Contains(unit.Name)) return RegisterResult.UnknownKnowledge;
         if (!Accepts(state.Element, unit)) return RegisterResult.WrongElement;
         if (IsRegistered(unit.Name)) return RegisterResult.AlreadyRegistered;
@@ -202,7 +206,8 @@ public sealed class ProductionDeck
 
     /// <summary>워크샵 원소가 유닛을 받을 수 있는지: 같은 원소, 또는 Sun Workshop 의 Generator 예외</summary>
     private static bool Accepts(Element workshop, ProducibleUnit unit) =>
-        unit.Element == workshop || (workshop == Element.Sun && unit.IsGenerator);
+        !unit.Name.Equals(GolemType, StringComparison.OrdinalIgnoreCase)
+        && (unit.Element == workshop || (workshop == Element.Sun && unit.IsGenerator));
 
     /// <summary>어느 워크샵에든 이미 등록되었는지</summary>
     private bool IsRegistered(string name) =>

@@ -104,13 +104,19 @@ internal sealed partial class FortMapViewer
     /// </summary>
     private void UpdateBridges(KeyboardState keyboard, MouseState mouse)
     {
-        if (Pressed(keyboard, Keys.B))
+        if (!_playUi && Pressed(keyboard, Keys.B))
         {
             _bridgeMode = !_bridgeMode;
             if (_bridgeMode)
             {
                 _placementMode = false;
             }
+        }
+        if (_playUi && TrayLetterKeys.Any(key => Pressed(keyboard, key))) { CancelCursor(); _bridgeMode = true; }
+        if (_playUi && Pressed(keyboard, Keys.E) && _session.Player(TestPlayer).Tray.Pieces.Count > 0)
+        {
+            CancelCursor(); _bridgeMode = true;
+            SubmitCommand(new PickBridgePieceCommand(TestPlayer, _session.Player(TestPlayer).Tray.Pieces.Count - 1)); _heldRotation = 0;
         }
         if (!_bridgeMode)
         {
@@ -120,7 +126,7 @@ internal sealed partial class FortMapViewer
         // 숫자 키로 칸의 조각을 집는다 (들고 있던 조각은 먼저 칸으로 되돌린다)
         for (int i = 0; i < TrayKeys.Length; i++)
         {
-            if ((Pressed(keyboard, TrayKeys[i]) || Pressed(keyboard, TrayLetterKeys[i])) && i < player.Tray.Pieces.Count)
+            if ((!_playUi && Pressed(keyboard, TrayKeys[i]) || Pressed(keyboard, TrayLetterKeys[i])) && i < player.Tray.Pieces.Count)
             {
                 if (player.HeldPiece != null)
                 {
@@ -135,7 +141,7 @@ internal sealed partial class FortMapViewer
             // 원본처럼 C 키는 회전 방향만 바꾼다 (조각은 돌리지 않는다)
             _reverseRotation = !_reverseRotation;
         }
-        if (HeldPreview is { } preview && Pressed(keyboard, Keys.R))
+        if (!_playUi && HeldPreview is { } preview && Pressed(keyboard, Keys.R))
         {
             // 원본의 오른쪽 클릭 회전 (뷰어는 오른쪽 드래그를 카메라 이동에 쓰므로 R 키로 대신한다)
             preview.RotateByPlayer(_reverseRotation);

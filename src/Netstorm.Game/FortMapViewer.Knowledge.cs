@@ -105,6 +105,9 @@ internal sealed partial class FortMapViewer
         QueueSound(OpenGumpSound);
     }
 
+    /// <summary>공유 도움말 상세창의 OK를 눌렀을 때 지식 격자도 닫는다.</summary>
+    public void CloseKnowledge() { _knowledgeOpen = false; _knowledgeDetail = null; }
+
     /// <summary>
     /// 검증용(--knowledge [타입]): 지식 창을 연 채 시작한다. 타입을 주면 그 카드의 상세창을 연다.
     /// </summary>
@@ -218,7 +221,8 @@ internal sealed partial class FortMapViewer
                 KnowledgeCard? card = KnowledgeCardAt(rows, grid, point);
                 if (card != null)
                 {
-                    _knowledgeDetail = card;
+                    if (HelpRequested != null) HelpRequested(card.Type.Name + "Type");
+                    else _knowledgeDetail = card;
                     _knowledgeScroll = 0;
                     QueueSound(OpenGumpSound);
                 }

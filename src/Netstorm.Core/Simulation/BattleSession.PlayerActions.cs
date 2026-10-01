@@ -1,13 +1,19 @@
 using Netstorm.Core.Rules;
 using Netstorm.Core.Bridges;
+using Netstorm.Assets;
 
 namespace Netstorm.Core.Simulation;
 
 /// <summary>플레이 화면의 일반 이동·정지 명령.</summary>
 public sealed partial class BattleSession
 {
-    /// <summary>워크샵 단계마다 필요한 업그레이드 비용. 원본 도움말의 1,000 SP를 사용한다.</summary>
+    /// <summary>바람·비·번개 워크샵의 업그레이드 비용.</summary>
     public const int WorkshopUpgradeCost = 1000;
+    /// <summary>녹화의 Sun Workshop 메뉴에 표시된 업그레이드 비용.</summary>
+    public const int SunWorkshopUpgradeCost = 800;
+    /// <summary>태양 워크샵의 800 SP 예외를 메뉴와 실제 명령 처리에 함께 적용한다.</summary>
+    public static int WorkshopUpgradeCostFor(TypeDefinition type) =>
+        Elements.FromTheme(type.GetString("theme")) == Element.Sun ? SunWorkshopUpgradeCost : WorkshopUpgradeCost;
 
     /// <summary>일반 이동·정지를 명령할 수 있는 내 자유 이동체인지 검사한다.</summary>
     private CommandResult CheckMobile(int owner, int id, out GameEntity? entity)

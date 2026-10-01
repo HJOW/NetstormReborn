@@ -30,7 +30,7 @@ internal sealed partial class FortMapViewer
     /// <summary>미션 시작 조건으로 연 경우의 미션 (맵만 연 경우 null)</summary>
     private MissionStart? _mission;
 
-    /// <summary>일시정지 (Space)</summary>
+    /// <summary>일시정지 (플레이는 Shift+F9·Pause, 개발 뷰어는 Space).</summary>
     private bool _simulationPaused;
 
     /// <summary>최근 세션 이벤트 문구 (배치 성공·거부·건설 완료 등)</summary>
@@ -61,7 +61,8 @@ internal sealed partial class FortMapViewer
     /// <param name="mouse">현재 마우스 상태 (논리 화면 좌표)</param>
     private void UpdateSession(double seconds, KeyboardState keyboard, MouseState mouse)
     {
-        if (Pressed(keyboard, Keys.Space))
+        bool shift = keyboard.IsKeyDown(Keys.LeftShift) || keyboard.IsKeyDown(Keys.RightShift);
+        if (_playUi ? Pressed(keyboard, Keys.Pause) || shift && Pressed(keyboard, Keys.F9) : Pressed(keyboard, Keys.Space))
         {
             _simulationPaused = !_simulationPaused;
         }
@@ -74,13 +75,13 @@ internal sealed partial class FortMapViewer
             _session.CombatEnabled = !_session.CombatEnabled;
             _notice = _session.CombatEnabled ? "포대 전투 켜짐" : "포대 전투 꺼짐";
         }
-        if (Pressed(keyboard, Keys.T) && mouse.Y >= HeaderHeight)
+        if (!_playUi && Pressed(keyboard, Keys.T) && mouse.Y >= HeaderHeight)
         {
             // 커서 칸에 오브젝트가 있으면 선택하고, 없으면 선택을 푼다 (튜토리얼 단계 C·F 가 선택한 템플을 본다)
             (int selectX, int selectY) = CellAt(new Vector2(mouse.X, mouse.Y));
             SubmitCommand(new SelectEntityCommand(TestPlayer, _session.EntityAt(selectX, selectY)?.Id ?? 0));
         }
-        if (Pressed(keyboard, Keys.H) && mouse.Y >= HeaderHeight)
+        if (!_playUi && Pressed(keyboard, Keys.H) && mouse.Y >= HeaderHeight)
         {
             // 개발용 수확 입력: 커서가 가리키는 가이저로 플레이어 사제를 보낸다.
             (int harvestX, int harvestY) = CellAt(new Vector2(mouse.X, mouse.Y));
@@ -94,6 +95,11 @@ internal sealed partial class FortMapViewer
         // 세션이 알린 일을 알림 문구로 옮긴다 (1초마다 생기는 다리 조각 알림은 칸 패널에 보이므로 뺀다)
         foreach (SessionEvent sessionEvent in _session.DrainEvents())
         {
+            if (_playUi && sessionEvent.Player == TestPlayer && sessionEvent.Kind == SessionEventKind.UnitPlaced)
+            {
+                _recentPlaced.Remove(sessionEvent.EntityId); _recentPlaced.Insert(0, sessionEvent.EntityId);
+                if (_recentPlaced.Count > 5) _recentPlaced.RemoveAt(5);
+            }
             QueueEventSound(sessionEvent);
             if (sessionEvent.Kind != SessionEventKind.BridgePieceAdded)
             {

@@ -69,6 +69,12 @@ public sealed class DisplaySettings
     /// <summary>배경음악을 켤지 (원본 Options "Play Music", setup.cfg music = 1)</summary>
     public bool PlayMusic { get; set; } = true;
 
+    /// <summary>원본 Options의 독립적인 바람 소리 켜짐 상태.</summary>
+    public bool WindNoise { get; set; } = true;
+
+    /// <summary>스테레오 PCM의 좌·우 채널을 교환할지.</summary>
+    public bool SpeakerSwap { get; set; }
+
     /// <summary>효과음 볼륨 단계 1~5 (원본 options.cfg soundVolume 기본 "3")</summary>
     public int SoundVolume { get; set; } = 3;
 

@@ -11,6 +11,8 @@ public sealed partial class HelpTopics
 {
     /// <summary>앵커 이름 → 본문 (대소문자 무시)</summary>
     private readonly Dictionary<string, string> _topics = new(StringComparer.OrdinalIgnoreCase);
+    /// <summary>별도 유닛 그림·능력치 머리가 필요한 첫 정의의 앵커.</summary>
+    private readonly HashSet<string> _informationTopics = new(StringComparer.OrdinalIgnoreCase);
 
     /// <summary>앵커 시작 태그 (&lt;a name="…"&gt;)</summary>
     [GeneratedRegex("""<a\s+name\s*=\s*"([^"]+)"\s*>""", RegexOptions.IgnoreCase)]
@@ -61,11 +63,12 @@ public sealed partial class HelpTopics
         /// <summary>모은 앵커 이름마다 본문을 기록하고 상태를 비운다.</summary>
         void Store()
         {
-            string joined = InfoTag().Replace(string.Join('\n', body), "").Trim();
+            string source = string.Join('\n', body);
+            string joined = InfoTag().Replace(source, "").Trim();
             // 같은 본문을 공유하는 앵커 이름을 모두 등록한다 (먼저 나온 절을 우선한다)
             foreach (string name in pending)
             {
-                _topics.TryAdd(name, joined);
+                if (_topics.TryAdd(name, joined) && InfoTag().IsMatch(source)) _informationTopics.Add(name);
             }
             pending.Clear();
             body.Clear();
@@ -79,6 +82,9 @@ public sealed partial class HelpTopics
     /// <summary>앵커 절의 원문 HTML (없으면 null)</summary>
     /// <param name="anchor">앵커 이름 (예: "rainBatteryType")</param>
     public string? Find(string anchor) => _topics.GetValueOrDefault(anchor);
+
+    /// <summary>원본의 info 태그가 요구하는 고정 정보 머리 유무.</summary>
+    public bool HasInformation(string anchor) => _informationTopics.Contains(anchor);
 
     /// <summary>유닛 타입의 설명 절 (앵커 "&lt;타입 이름&gt;Type", 없으면 null)</summary>
     /// <param name="typeName">.type 이름 (예: "rainBattery")</param>

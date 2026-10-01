@@ -120,9 +120,10 @@ internal sealed class OriginalUiSkin : IDisposable
     /// <summary>원본의 작은 파란 원으로 선택·켜짐 상태를 표시한다.</summary>
     public void Pip(SpriteBatch batch, Point center, bool selected, bool enabled = true)
     {
+        if (!selected) return;
         if (_frames.TryGetValue("J02", out Texture2D? texture))
             batch.Draw(texture, new Vector2(center.X - texture.Width / 2, center.Y - texture.Height / 2), enabled ? Color.White : Color.Gray);
-        if (selected) batch.Draw(_pixel, new Rectangle(center.X - 1, center.Y - 1, 2, 2), enabled ? Color.LightSkyBlue : Color.Gray);
+        else batch.Draw(_pixel, new Rectangle(center.X - 1, center.Y - 1, 3, 3), enabled ? Color.LightSkyBlue : Color.Gray);
     }
 
     /// <summary>찾아 둔 프레임을 원본 픽셀 크기로 표시한다.</summary>

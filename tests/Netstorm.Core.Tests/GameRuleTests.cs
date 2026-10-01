@@ -139,6 +139,11 @@ public sealed class GameRuleTests
         }
         deck.AddWorkshop(1, Element.Sun);
         deck.AddWorkshop(2, Element.Rain);
+        var golem = new ProducibleUnit("SunWalker", Element.Sun, false);
+        deck.LearnKnowledge(golem.Name);
+        Assert.DoesNotContain(deck.AvailableKnowledge(1, [golem]), u => u.Name == golem.Name);
+        Assert.Equal(RegisterResult.TempleSupplied, deck.Register(1, golem));
+        Assert.Equal(2, deck.FreeSlots(1));
         // The War Begins! 의 Sun Workshop 목록처럼 Rain Generator·Sun Cannon·Whirlibase 가 보이고 Ice Cannon 은 없다.
         Assert.Equal(["suncannon", "rainBattery", "sunaviary"],
             deck.AvailableKnowledge(1, [sunCannon, rainGenerator, iceCannon, whirlibase]).Select(u => u.Name));

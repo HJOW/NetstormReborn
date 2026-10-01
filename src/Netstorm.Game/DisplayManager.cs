@@ -203,10 +203,10 @@ internal sealed class DisplayManager : IDisposable
     /// <summary>음량·켜기 등 그래픽 장치 교체가 필요 없는 옵션을 저장한다.</summary>
     public void SaveOptions() => Save();
 
-    /// <summary>F11·Alt+Enter 는 전체화면, F10 은 와이드 처리, F9 는 원본 해상도 높이, F7 은 가장자리 스크롤을 바꾼다.</summary>
+    /// <summary>전체화면·와이드를 전환한다. 미션에서는 F7·F9를 원본 조작키로 예약한다.</summary>
     /// <param name="keyboard">현재 키 상태</param>
     /// <param name="previous">직전 키 상태</param>
-    public void HandleHotkeys(KeyboardState keyboard, KeyboardState previous)
+    public void HandleHotkeys(KeyboardState keyboard, KeyboardState previous, bool mission = false)
     {
         bool alt = keyboard.IsKeyDown(Keys.LeftAlt) || keyboard.IsKeyDown(Keys.RightAlt);
         if (Pressed(keyboard, previous, Keys.F11) || (alt && Pressed(keyboard, previous, Keys.Enter)))
@@ -220,7 +220,7 @@ internal sealed class DisplayManager : IDisposable
             Show(Settings.WideScreen == WideScreenMode.Extend ? "와이드: 시야 확장" : "와이드: 4:3 레터박스");
             Save();
         }
-        if (Pressed(keyboard, previous, Keys.F9))
+        if (!mission && Pressed(keyboard, previous, Keys.F9))
         {
             IReadOnlyList<int> heights = ScreenLayoutCalculator.ViewHeights;
             // 원본 해상도 높이 목록(480·600·768)을 순환한다.
@@ -230,7 +230,7 @@ internal sealed class DisplayManager : IDisposable
             Show($"원본 해상도 기준 높이: {Settings.ViewHeight}");
             Save();
         }
-        if (Pressed(keyboard, previous, Keys.F7))
+        if (!mission && Pressed(keyboard, previous, Keys.F7))
         {
             Settings.EdgeScroll = !Settings.EdgeScroll;
             Show(Settings.EdgeScroll ? "가장자리 스크롤 켜짐" : "가장자리 스크롤 꺼짐");
