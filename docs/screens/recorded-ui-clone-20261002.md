@@ -4,6 +4,9 @@
 [옵션 분석](options-menu.md), [원본 조작키](../gameplay/input-controls.md),
 [전체 도움말 원문](../sources/in-game-help.md)을 클론에 반영했다.
 
+구현과 테스트 코드 작성은 완료했다. 사용자의 테스트 생략 지시 이후 추가 빌드·테스트는 실행하지 않았다.
+최종 검증 보류 항목·재개 명령·기대 결과는 [인수인계 문서](../handoffs/clone-recorded-ui-20261002.md)에 정리했다.
+
 ## 옵션
 
 파란 원은 켜진 항목이나 현재 선택 값에만 그린다. 꺼진 항목은 원 없이 흰 글씨로 유지하며 다시 클릭할 수 있다.
@@ -46,6 +49,7 @@ UI는 한국어·영어를 지원하고 D2Coding을 사용한다. 도움말 한�
 
 ## 검증과 남은 범위
 
+아래는 사용자의 테스트 생략 지시 이전에 실행한 결과이며, 마지막 파일 전체를 재검증한 결과는 아니다.
 Release 빌드 성공, 경고·오류 0. Assets 197개·Core 246개 **총 443개 통과**, 실패·건너뜀 0.
 원문 별칭·첫 정의·목차 목적지, 링크·그림·미션 조건문, Back의 스크롤 복원, 채널 교환과 이전 설정 호환성,
 Sun Workshop 비용·등록·소유권을 검증했다. 테스트 빌드에는 기존 `TextResourceTests`의 CA2014 경고 1개가 있다.
@@ -59,9 +63,11 @@ F2/F7 표시 변화와 Shift+F9 정지 중 시계 고정·재개 뒤 시계 증�
 스크립트는 `tools/clone_help_options_smoke.ps1`·`tools/clone_ui_smoke.ps1`, PNG·로그·미션 입력은
 Git 제외 `extracted/screens/ui-analysis-20261002/`에 있다. 원본 게임은 실행하지 않았다.
 
-재실행은 `powershell -File tools/clone_help_options_smoke.ps1`이며 `-Mode Mission` 또는 `-Mode Workshop`으로
+추후 재실행은 `powershell -File tools/clone_help_options_smoke.ps1`이며 `-Mode Mission` 또는 `-Mode Workshop`으로
 미션 팝업·정지 검사와 작업장 등록 검사를 선택한다. Workshop 모드는 클론의 검사 명령으로 `(98,98)`에
 Sun Workshop을 짓고 게임 시간 25초를 진행한 뒤 UI를 조작한다. 원본에 입력하지 않는다.
+새 Mission/Workshop 모드와 정지/재개 타이머 자동 비교 코드는 작성했으며 아직 실행하지 않았다.
+기존 별도 입력 파일의 UI 검증과 통합 스크립트의 최종 실행을 구분한다.
 
 Auto-Demo·Tell Tips at Startup·Pass Server Diagnostic은 기존 미구현 상태로 비활성이다.
 채팅·온라인 목록·테마 표시·파일 캡처·마지막 손실 위치의 단축키도 아직 연결하지 않았다.

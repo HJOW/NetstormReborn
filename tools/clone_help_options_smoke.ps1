@@ -4,6 +4,24 @@ param(
     [ValidateSet('Menu', 'Mission', 'Workshop')][string]$Mode = 'Menu'
 )
 $ErrorActionPreference = 'Stop'
+
+# 고정 1024×768 검사 화면의 오른쪽 위 100×18 영역에서 타이머 픽셀을 읽는다.
+function Get-CloneTimerSignature([string]$Path) {
+    $taskBitmap = [System.Drawing.Bitmap]::new($Path)
+    try {
+        if ($taskBitmap.Width -lt 1024 -or $taskBitmap.Height -lt 18) { throw '타이머 검사 화면 크기 부족' }
+        $taskSignature = [System.Text.StringBuilder]::new()
+        # 상단 18개 행만 비교하여 정지 중에도 변할 수 있는 전투 화면은 제외한다.
+        for ($taskRow = 0; $taskRow -lt 18; $taskRow++) {
+            # 오른쪽 100개 열의 ARGB 값을 같은 순서로 연결한다.
+            for ($taskColumn = 924; $taskColumn -lt 1024; $taskColumn++) {
+                $null = $taskSignature.Append($taskBitmap.GetPixel($taskColumn, $taskRow).ToArgb().ToString('X8'))
+            }
+        }
+        return $taskSignature.ToString()
+    } finally { $taskBitmap.Dispose() }
+}
+
 $taskRoot = Split-Path -Parent $PSScriptRoot
 $taskOutput = Join-Path $taskRoot $OutputDirectory
 New-Item -ItemType Directory -Force -Path $taskOutput | Out-Null
@@ -73,5 +91,13 @@ try {
         $taskSaved = Get-Content -Raw -Encoding UTF8 (Join-Path $taskSettings 'settings.json') | ConvertFrom-Json
         if ($taskSaved.SoundOn -or $taskSaved.MusicVolume -ne 3 -or !$taskSaved.SpeakerSwap) { throw '소리 상태·음량·스피커 교환 저장 실패' }
         Write-Output 'UI PASS: saved sound off / music 3 / speaker swap on'
+    } elseif ($Mode -eq 'Mission') {
+        Add-Type -AssemblyName System.Drawing
+        $taskPaused = Get-CloneTimerSignature (Join-Path $taskOutput '19-paused.png')
+        $taskStill = Get-CloneTimerSignature (Join-Path $taskOutput '20-paused-still.png')
+        $taskResumed = Get-CloneTimerSignature (Join-Path $taskOutput '21-resumed.png')
+        if ($taskPaused -ne $taskStill) { throw '일시정지 중 타이머 픽셀이 변경됨' }
+        if ($taskStill -eq $taskResumed) { throw '재개 후 타이머 픽셀이 변경되지 않음' }
+        Write-Output 'UI PASS: 일시정지 중 타이머 고정 / 재개 후 타이머 변화'
     }
 } finally { $env:NETSTORM_SETTINGS_DIR = $taskOldSettings }
