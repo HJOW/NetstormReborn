@@ -140,6 +140,12 @@ def main():
             start_tool = next(tool for tool in listing if tool["name"] == "start_session")
             assert "개발자" in start_tool["description"] and "확인" in start_tool["description"]
             assert "10.0.0.15" in start_tool["description"] and "vm-debian-codex" in start_tool["description"]
+            assert "fps" in start_tool["inputSchema"]["properties"]
+            wait_tool = next(tool for tool in listing if tool["name"] == "wait_for_change")
+            assert "fps" in wait_tool["inputSchema"]["properties"]
+            assert wait_tool["inputSchema"]["properties"]["pollMs"]["default"] == 0
+            # 지원하지 않는 FPS는 실행 도구라도 원본 복사·게임 실행 전에 거부해야 한다.
+            client.call("start_session", {"fps": 45}, expect_error=True)
             client.call("list_sessions", {})
             client.call("game_status", {"sessionId": "../invalid"}, expect_error=True)
         # YouTube 도구: 네트워크 없이 확인할 수 있는 목록 조회와 주소 거부

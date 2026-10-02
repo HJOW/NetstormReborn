@@ -4,11 +4,9 @@ using System.Runtime.InteropServices;
 
 namespace Netstorm.AnalyzeManager;
 
-/// <summary>사람이 조작하는 게임의 영상·출력 소리·물리 입력을 함께 기록한다.</summary>
+/// <summary>자동 또는 사람이 조작하는 게임의 영상·출력 소리·입력을 함께 기록한다.</summary>
 public sealed class GuidedRecorder : IDisposable
 {
-    /// <summary>화면 샘플링 속도. 원본 게임 조작 중 CPU 점유를 줄이기 위해 10 FPS를 쓴다.</summary>
-    private const int FramesPerSecond = 10;
     /// <summary>드래그 경로는 최대 50회/초만 기록한다.</summary>
     private static readonly long MouseMoveIntervalTicks = 20 * Stopwatch.Frequency / 1000;
     /// <summary>전역 마우스 입력을 읽는 Windows 저수준 훅 종류.</summary>
@@ -19,6 +17,9 @@ public sealed class GuidedRecorder : IDisposable
     private readonly AnalysisSession _session;
     private readonly string _directory;
     private readonly bool _freePlay;
+    private readonly int _fps;
+    private readonly bool _writeSessionEvents;
+    private readonly bool _stopOnGameExit;
     private readonly int _processId;
     private readonly CancellationTokenSource _stop = new();
     private readonly HookCallback _mouseCallback;
@@ -40,11 +41,15 @@ public sealed class GuidedRecorder : IDisposable
     private long _startedCounter;
 
     /// <summary>같은 세션의 기존 조각 다음 번호를 사용하도록 녹화기만 준비한다.</summary>
-    public GuidedRecorder(SessionStore store, AnalysisSession session, bool freePlay = false)
+    public GuidedRecorder(SessionStore store, AnalysisSession session, bool freePlay = false,
+        int fps = AnalysisFrameRate.Default, bool writeSessionEvents = true, bool stopOnGameExit = false)
     {
         _store = store;
         _session = session;
         _freePlay = freePlay;
+        _fps = AnalysisFrameRate.Validate(fps);
+        _writeSessionEvents = writeSessionEvents;
+        _stopOnGameExit = stopOnGameExit;
         _directory = freePlay ? store.FreeplayDirectory(session.Id) : Path.Combine(store.SessionDirectory(session.Id), "recording");
         SessionStore.RejectReparse(_directory);
         Directory.CreateDirectory(_directory);
@@ -78,9 +83,11 @@ public sealed class GuidedRecorder : IDisposable
             if (!_hookReady.Wait(TimeSpan.FromSeconds(5))) throw new TimeoutException("입력 훅 스레드가 시작되지 않았습니다.");
             if (_error != null) throw new InvalidOperationException("물리 입력 기록용 Windows 훅을 설치하지 못했습니다.", _error);
             string directory = Path.GetRelativePath(_store.Repository, _directory).Replace('\\', '/');
-            _store.Append(_session, _freePlay ? "freeplay_recording_started" : "guided_recording_started",
-                new { fps = FramesPerSecond, video = "MJPEG AVI", audio = "기본 출력 장치 루프백", directory,
-                    inputFile = _inputs.FileName, recordingId = _inputs.RecordingId, inputSchemaVersion = GuidedInputJournal.SchemaVersion });
+            // 자동 녹화 프로세스는 별도 상태 파일을 사용해 CLI의 세션 이벤트 저장과 충돌하지 않는다.
+            if (_writeSessionEvents)
+                _store.Append(_session, _freePlay ? "freeplay_recording_started" : "guided_recording_started",
+                    new { fps = _fps, video = "MJPEG AVI", audio = "기본 출력 장치 루프백", directory,
+                        inputFile = _inputs.FileName, recordingId = _inputs.RecordingId, inputSchemaVersion = GuidedInputJournal.SchemaVersion });
             _videoThread.Start();
         }
         catch
@@ -93,38 +100,44 @@ public sealed class GuidedRecorder : IDisposable
     /// <summary>게임이 보이는 영역만 JPEG로 압축하며 종료 신호 때 AVI 조각을 닫는다.</summary>
     private void CaptureVideo()
     {
+        using Process? process = _store.OwnedProcess(_session);
         try
         {
-            using Process? process = _store.OwnedProcess(_session);
+            using var timing = new FrameTimerResolution();
             if (process == null) throw new InvalidOperationException("녹화 중 게임이 종료되었습니다.");
-            GameWindow first = WindowsGame.FindWindow(_processId);
-            using var video = new GuidedVideo(_directory, first.Width, first.Height, FramesPerSecond);
+            GameWindow first = WindowsGame.FindWindow(_processId, preferForeground: false);
+            using var video = new GuidedVideo(_directory, first.Width, first.Height, _fps);
             ImageCodecInfo codec = ImageCodecInfo.GetImageEncoders().First(c => c.MimeType == "image/jpeg");
             using var encoder = new EncoderParameters(1);
             encoder.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, 75L);
             var timer = Stopwatch.StartNew();
-            long frameNumber = 0;
+            var schedule = new FrameSchedule(_fps);
             // 매 프레임 목표 시각을 기준으로 기다려 캡처·압축에 쓴 시간이 게임 시간에 누적되지 않게 한다.
             while (!_stop.IsCancellationRequested)
             {
-                if (process.HasExited) throw new InvalidOperationException("녹화 중 게임이 종료되었습니다.");
-                GameWindow window = WindowsGame.FindWindow(_processId);
-                Volatile.Write(ref _inputWindow, window);
+                if (process.HasExited)
+                {
+                    if (_stopOnGameExit) break;
+                    throw new InvalidOperationException("녹화 중 게임이 종료되었습니다.");
+                }
+                // 게임 대화상자가 열려도 주 게임 창 전체를 녹화해 AVI 해상도가 바뀌지 않게 한다.
+                GameWindow window = WindowsGame.FindWindow(_processId, preferForeground: false);
+                // 입력 좌표는 전면 대화상자의 클라이언트를 따르고 영상 크기는 주 게임 창에 고정한다.
+                Volatile.Write(ref _inputWindow, window.Foreground ? window : WindowsGame.FindWindow(_processId));
                 if (window.Width != first.Width || window.Height != first.Height)
                     throw new InvalidOperationException("녹화 중 게임 창 크기가 바뀌었습니다. 녹화를 다시 시작하세요.");
-                CapturedFrame frame = WindowsGame.CaptureVisible(window, "");
-                using var png = new MemoryStream(frame.Png, false);
-                using Image image = Image.FromStream(png);
-                using var jpeg = new MemoryStream();
-                image.Save(jpeg, codec, encoder);
                 DateTimeOffset captured = DateTimeOffset.UtcNow;
                 double elapsedMs = Stopwatch.GetElapsedTime(_session.StartedCounter).TotalMilliseconds;
-                video.WriteFrame(jpeg.ToArray(), captured, elapsedMs);
+                byte[] jpeg = WindowsGame.CaptureJpegVisible(window, codec, encoder);
+                video.WriteFrame(jpeg, captured, elapsedMs);
                 Interlocked.Increment(ref _frameCount);
-                frameNumber++;
-                long remaining = frameNumber * 1000 / FramesPerSecond - timer.ElapsedMilliseconds;
-                if (remaining > 0) _stop.Token.WaitHandle.WaitOne((int)Math.Min(remaining, 1000));
+                TimeSpan remaining = schedule.DelayAfter(timer.Elapsed);
+                if (remaining > TimeSpan.Zero) _stop.Token.WaitHandle.WaitOne((int)Math.Ceiling(remaining.TotalMilliseconds));
             }
+        }
+        catch (InvalidOperationException) when (_stopOnGameExit && process?.HasExited == true)
+        {
+            // 창 조회와 게임 종료가 겹친 자동 녹화는 이미 저장한 프레임을 정상 마감한다.
         }
         catch (Exception error)
         {
@@ -247,7 +260,7 @@ public sealed class GuidedRecorder : IDisposable
         catch (Exception error) { _error ??= error; }
         _stop.Dispose();
         _hookReady.Dispose();
-        if (_session.EventCount < SessionStore.MaximumEvents)
+        if (_writeSessionEvents && _session.EventCount < SessionStore.MaximumEvents)
         {
             try
             {

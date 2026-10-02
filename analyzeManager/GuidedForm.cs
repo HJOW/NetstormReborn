@@ -14,6 +14,7 @@ public sealed class GuidedForm : Form
     private readonly SessionStore _store;
     private readonly AnalysisSession _session;
     private readonly bool _freePlay;
+    private readonly int _fps;
     // DPI 배율을 적용한 뒤에도 같은 게임 창을 기준으로 안내 창을 배치하도록 프로세스 ID를 보관한다.
     private readonly int _gameProcessId;
     private readonly string _stepsPath;
@@ -28,6 +29,7 @@ public sealed class GuidedForm : Form
     private readonly System.Windows.Forms.Timer _statusTimer;
     private readonly PrivateFontCollection? _privateFonts;
     private FileStream? _desktopLock;
+    private FileStream? _recordingLock;
     private GuidedRecorder? _recorder;
     private bool _recordingStopped;
     private bool _closing;
@@ -37,11 +39,12 @@ public sealed class GuidedForm : Form
     private Rectangle? _placedGameBounds;
 
     /// <summary>기존 관리 세션의 단계 안내 또는 자유 플레이 녹화 창을 게임 옆에 연다.</summary>
-    public GuidedForm(SessionStore store, string sessionId, string? suppliedSteps, bool freePlay = false)
+    public GuidedForm(SessionStore store, string sessionId, string? suppliedSteps, bool freePlay = false, int? fps = null)
     {
         _store = store;
         _session = store.Load(sessionId);
         _freePlay = freePlay;
+        _fps = AnalysisFrameRate.Validate(fps ?? _session.Fps);
         using Process? process = store.OwnedProcess(_session);
         if (process == null) throw new InvalidOperationException("기존 세션의 게임이 실행 중이어야 안내 모드를 열 수 있습니다.");
         _gameProcessId = process.Id;
@@ -155,6 +158,8 @@ public sealed class GuidedForm : Form
             throw new InvalidOperationException("게임 옆에 안내 창을 놓을 공간이 없습니다. 더 넓은 화면이나 두 번째 모니터를 사용하세요.");
         if (!freePlay) UpdateStep();
         _desktopLock = store.LockDesktop();
+        try { _recordingLock = store.LockRecording(sessionId); }
+        catch { _desktopLock.Dispose(); _desktopLock = null; throw; }
         _statusTimer.Start();
     }
 
@@ -251,7 +256,7 @@ public sealed class GuidedForm : Form
             if (process == null) throw new InvalidOperationException("게임이 종료되었습니다. 새 게임 세션이 필요합니다.");
             if (!KeepBesideGame(process.Id))
                 throw new InvalidOperationException("게임 옆에 안내 창을 놓을 공간이 없어 녹화를 시작할 수 없습니다.");
-            _recorder = new GuidedRecorder(_store, _session, _freePlay);
+            _recorder = new GuidedRecorder(_store, _session, _freePlay, _fps);
             _recorder.Start();
             if (!_freePlay)
                 _store.Append(_session, "guided_step", new { index = _step + 1, total = _steps.Length, instruction = _steps[_step] });
@@ -291,10 +296,10 @@ public sealed class GuidedForm : Form
         _recordingStopped = true;
         _start.Enabled = true;
         _stop.Enabled = false;
+        try { FreeplayRecordingIndex.Write(_store, _session.Id, _freePlay); }
+        catch (Exception error) { recordingError ??= error; }
         if (_freePlay)
         {
-            try { FreeplayRecordingIndex.Write(_store, _session.Id); }
-            catch (Exception error) { recordingError ??= error; }
             string detail = recordingError == null ? reason ?? "사용자가 녹화를 중지했습니다." : "오류: " + recordingError.Message;
             SetFreeplayStatus("■ 녹화 중단됨 · 다시 시작 가능", detail + " 녹화 시작을 누르면 새 파일에 이어 기록합니다.",
                 recordingError == null && reason == null ? Color.LightYellow : Color.LightSalmon);
@@ -351,9 +356,9 @@ public sealed class GuidedForm : Form
         if (_freePlay)
         {
             string elapsed = _recorder.Elapsed.ToString(@"hh\:mm\:ss");
-            SetFreeplayStatus("● 녹화 중", $"{elapsed} · 영상 {_recorder.FrameCount}프레임 · 녹화 중단을 누르면 저장됩니다.", Color.LightGreen);
+            SetFreeplayStatus("● 녹화 중", $"{elapsed} · {_fps}FPS · 영상 {_recorder.FrameCount}프레임 · 녹화 중단을 누르면 저장됩니다.", Color.LightGreen);
         }
-        else _status.Text = $"녹화 중 · 영상 {_recorder.FrameCount}프레임";
+        else _status.Text = $"녹화 중 · {_fps}FPS · 영상 {_recorder.FrameCount}프레임";
     }
 
     /// <summary>버튼으로 안내를 조작한 직후 입력 초점을 게임으로 되돌린다.</summary>
@@ -385,6 +390,8 @@ public sealed class GuidedForm : Form
         }
         finally
         {
+            _recordingLock?.Dispose();
+            _recordingLock = null;
             _desktopLock?.Dispose();
             _desktopLock = null;
         }
@@ -394,7 +401,12 @@ public sealed class GuidedForm : Form
     /// <summary>안내 창에서 사용한 D2Coding 개인 글꼴을 해제한다.</summary>
     protected override void Dispose(bool disposing)
     {
-        if (disposing) _privateFonts?.Dispose();
+        if (disposing)
+        {
+            _recordingLock?.Dispose();
+            _desktopLock?.Dispose();
+            _privateFonts?.Dispose();
+        }
         base.Dispose(disposing);
     }
 

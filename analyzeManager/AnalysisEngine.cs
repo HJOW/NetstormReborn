@@ -11,12 +11,15 @@ public sealed class AnalysisEngine
 
     /// <summary>원본 게임 대신 YouTube 영상을 읽는 도구 (게임 실행·데스크톱 잠금과 무관)</summary>
     public YouTubeAnalyzer YouTube { get; }
+    /// <summary>MCP 서버나 새 CLI 세션에서 FPS를 생략했을 때 사용할 값.</summary>
+    public int DefaultFps { get; }
 
     /// <summary>저장소를 지정해 기록 관리자와 연결한다.</summary>
-    public AnalysisEngine(string repository)
+    public AnalysisEngine(string repository, int defaultFps = AnalysisFrameRate.Default)
     {
         Store = new SessionStore(repository);
         YouTube = new YouTubeAnalyzer(repository);
+        DefaultFps = AnalysisFrameRate.Validate(defaultFps);
     }
 
     /// <summary>제한된 명령만 실행하고 오류도 AI가 재시도에 쓸 수 있는 구조화된 결과로 돌려준다.</summary>
@@ -30,6 +33,7 @@ public sealed class AnalysisEngine
         AnalysisSession? session = null;
         try
         {
+            if (request.Fps.HasValue) AnalysisFrameRate.Validate(request.Fps.Value);
             using FileStream desktopLock = Store.LockDesktop();
             if (tool == "list_sessions") return ListSessions();
             if (tool == "start_session")
@@ -40,7 +44,7 @@ public sealed class AnalysisEngine
                     using Process? running = Store.OwnedProcess(previous);
                     if (running != null) throw new InvalidOperationException($"실행 중인 sessionId={previous.Id}를 계속 사용하거나 종료하세요.");
                 }
-                session = await Store.CreateAsync(request.Label, cancellation);
+                session = await Store.CreateAsync(request.Label, cancellation, request.Fps ?? DefaultFps);
                 return await StartAsync(session, cancellation);
             }
             session = Store.Load(request.SessionId);
@@ -109,7 +113,7 @@ public sealed class AnalysisEngine
             session.ProcessId = process.Id;
             session.ProcessStartedUtcTicks = process.StartTime.ToUniversalTime().Ticks;
             session.Phase = "running";
-            Store.Append(session, "started", new { session.ProcessId, session.ExeSha256, resolution = "1024x768", windowed = true });
+            Store.Append(session, "started", new { session.ProcessId, session.ExeSha256, resolution = "1024x768", windowed = true, session.Fps });
             var timer = Stopwatch.StartNew();
             string lastError = "표시 창을 기다리는 중";
             // 시작 화면이 준비될 때까지 짧게 기다리며 취소와 프로세스 종료를 감시한다.
@@ -120,11 +124,18 @@ public sealed class AnalysisEngine
                 try
                 {
                     await WindowsGame.FocusAsync(process.Id, cancellation);
-                    await Task.Delay(500, cancellation);
-                    return await CaptureAsync(session, new AnalysisRequest(), cancellation);
                 }
-                catch (InvalidOperationException error) { lastError = error.Message; }
-                await Task.Delay(200, cancellation);
+                catch (InvalidOperationException error)
+                {
+                    lastError = error.Message;
+                    await Task.Delay(200, cancellation);
+                    continue;
+                }
+                await Task.Delay(500, cancellation);
+                AutomaticRecordingState recording = await AutomaticRecording.StartAsync(Store, session, cancellation);
+                Store.Append(session, "automatic_recording_started", new { recording.Fps, recording.RunId,
+                    directory = "recording/", status = "automatic-recording.json" });
+                return await CaptureAsync(session, new AnalysisRequest(), cancellation);
             }
             throw new TimeoutException($"시작 화면을 확인하지 못했습니다: {lastError}. game_status/end_session으로 이어갈 수 있습니다.");
         }
@@ -151,7 +162,7 @@ public sealed class AnalysisEngine
             catch (InvalidOperationException error) { windowError = error.Message; }
         }
         return new(new { sessionId = session.Id, session.Phase, running = process != null, window, windowError,
-            session.EventCount, report = ReportPath(session) });
+            session.EventCount, session.Fps, automaticRecording = AutomaticRecording.Status(Store, session.Id), report = ReportPath(session) });
     }
 
     /// <summary>게임 창을 전면에 두고 필요한 영역의 화면과 증거 경로를 반환한다.</summary>
@@ -162,7 +173,8 @@ public sealed class AnalysisEngine
         CapturedFrame frame = WindowsGame.Capture(window, request.Region);
         ScreenshotEvidence evidence = Store.StoreFrame(session, frame);
         Store.Append(session, "capture", new { region = request.Region }, evidence);
-        return FrameResult(session, evidence, request.IncludeImage, new { sessionId = session.Id, evidence, report = ReportPath(session) });
+        return FrameResult(session, evidence, request.IncludeImage, new { sessionId = session.Id, evidence, session.Fps,
+            automaticRecording = AutomaticRecording.Status(Store, session.Id), report = ReportPath(session) });
     }
 
     /// <summary>원본 입력을 보내기 전에 인자를 검사하고 전후 화면을 모두 기록한다.</summary>
@@ -203,14 +215,17 @@ public sealed class AnalysisEngine
     /// <summary>기준 화면 대비 지정 비율 이상 바뀔 때까지 관찰하되, 중간 프레임을 모두 저장하지 않는다.</summary>
     private async Task<AnalysisResult> WaitAsync(AnalysisSession session, AnalysisRequest request, CancellationToken cancellation)
     {
-        if (request.TimeoutMs is < 1 or > 30_000 || request.PollMs is < 50 or > 5000
+        if (request.TimeoutMs is < 1 or > 30_000 || request.PollMs is < 0 or > 5000
             || !double.IsFinite(request.Threshold) || request.Threshold is <= 0 or > 1)
-            throw new ArgumentException("timeoutMs=1~30000, pollMs=50~5000, threshold=0 초과~1 이하여야 합니다.");
+            throw new ArgumentException("timeoutMs=1~30000, pollMs=0~5000, threshold=0 초과~1 이하여야 합니다. pollMs=0은 fps를 따릅니다.");
+        int fps = AnalysisFrameRate.Validate(request.Fps ?? session.Fps);
+        var schedule = new FrameSchedule(fps, request.PollMs);
+        using var timing = new FrameTimerResolution();
         using Process process = RequireProcess(session);
         GameWindow window = await WindowsGame.FocusAsync(process.Id, cancellation);
         CapturedFrame baseline = WindowsGame.Capture(window, request.Region);
         ScreenshotEvidence before = Store.StoreFrame(session, baseline);
-        Store.Append(session, "wait_started", new { request.TimeoutMs, request.PollMs, request.Threshold, request.Region }, before);
+        Store.Append(session, "wait_started", new { request.TimeoutMs, request.PollMs, request.Threshold, request.Region, fps }, before);
         var timer = Stopwatch.StartNew();
         CapturedFrame current = baseline;
         double changedRatio = 0;
@@ -218,16 +233,21 @@ public sealed class AnalysisEngine
         // 30초 이내의 제한된 관찰만 허용하며 실제 게임의 프레임 간격으로 해석하지 않는다.
         while (timer.ElapsedMilliseconds < request.TimeoutMs)
         {
-            await Task.Delay((int)Math.Max(0, Math.Min(request.PollMs, request.TimeoutMs - timer.ElapsedMilliseconds)), cancellation);
-            current = WindowsGame.Capture(WindowsGame.FindWindow(process.Id), request.Region);
+            TimeSpan remaining = TimeSpan.FromMilliseconds(request.TimeoutMs) - timer.Elapsed;
+            if (remaining <= TimeSpan.Zero) break;
+            TimeSpan delay = schedule.DelayAfter(timer.Elapsed);
+            double delayMs = Math.Ceiling((delay < remaining ? delay : remaining).TotalMilliseconds);
+            await Task.Delay(TimeSpan.FromMilliseconds(delayMs), cancellation);
+            if (timer.ElapsedMilliseconds >= request.TimeoutMs) break;
+            current = WindowsGame.Capture(WindowsGame.FindWindow(process.Id), request.Region, includePng: false);
             samples++;
             changedRatio = current.Difference(baseline);
             if (changedRatio >= request.Threshold) break;
         }
-        ScreenshotEvidence after = Store.StoreFrame(session, current);
+        ScreenshotEvidence after = Store.StoreFrame(session, WindowsGame.EncodePng(current));
         bool matched = changedRatio >= request.Threshold;
         var result = new { sessionId = session.Id, matched, timedOut = !matched, changedRatio, samples,
-            elapsedMs = timer.ElapsedMilliseconds, before, after, report = ReportPath(session) };
+            elapsedMs = timer.ElapsedMilliseconds, fps, pollMs = request.PollMs, before, after, report = ReportPath(session) };
         Store.Append(session, "wait_finished", result, after);
         return FrameResult(session, after, request.IncludeImage, result);
     }
@@ -276,10 +296,11 @@ public sealed class AnalysisEngine
                 return new(new { sessionId = session.Id, closed = false, reason = "종료 확인 창이 남아 있습니다. capture_state로 확인하거나 force=true로 종료하세요.", report = ReportPath(session) });
             }
         }
+        AutomaticRecordingState? recording = await AutomaticRecording.StopAsync(Store, session.Id, cancellation);
         session.Phase = "ended";
         Store.Save(session);
         if (session.EventCount < SessionStore.MaximumEvents) Store.Append(session, "ended", new { force });
-        return new(new { sessionId = session.Id, closed = true, report = ReportPath(session) });
+        return new(new { sessionId = session.Id, closed = true, automaticRecording = recording, report = ReportPath(session) });
     }
 
     /// <summary>이미지 반환 여부는 AI가 고를 수 있고 증거 기록에는 영향을 주지 않는다.</summary>

@@ -178,11 +178,11 @@ analyzeManager/bin/Release/net10.0-windows/Netstorm.AnalyzeManager.exe call capt
 | 도구 | 주요 인자 | 결과·용도 |
 |---|---|---|
 | `list_sessions` | 없음 | 최근 20개 세션 ID, 실행 여부, 보고서 경로 |
-| `start_session` | `label`(최대 200자) | 독립 복사본 실행, 세션 ID, 첫 캡처 |
-| `game_status` | `sessionId` | 프로세스·창 크기·포커스·보고서 경로, 포커스 변경 없음 |
+| `start_session` | `label`(최대 200자), `fps`(30/60) | 독립 복사본 실행·세션 전체 연속 녹화, 세션 ID, 첫 캡처 |
+| `game_status` | `sessionId` | 프로세스·창 크기·포커스·보고서 경로, `fps`·`automaticRecording` 상태, 포커스 변경 없음 |
 | `capture_state` | `sessionId`, `region`, `includeImage` | 전체 또는 관심 영역 PNG와 SHA-256 |
 | `game_input` | `sessionId`, `kind`, 좌표 또는 키 | 입력 전후 화면, 입력 요청/전송/결과, 변화 비율 |
-| `wait_for_change` | `sessionId`, `region`, `timeoutMs`, `pollMs`, `threshold` | 기준 화면 대비 변화 감지, 시간 초과 시 `matched=false` |
+| `wait_for_change` | `sessionId`, `region`, `timeoutMs`, `fps`, `pollMs`, `threshold` | 기본 30/60FPS 변화 감지, 시간 초과 시 `matched=false` |
 | `record_observation` | `sessionId`, `note`, `evidenceHash` | AI 해석 메모와 같은 세션의 증거 연결 |
 | `set_guide_steps` | `sessionId`, `steps` | 줄 단위 안내를 세션에 저장해 사용자 조작 창에서 표시 |
 | `end_session` | `sessionId`, `force` | 종료 요청, 확인 창이 남으면 `closed=false`, 증거 보존 |
@@ -207,11 +207,38 @@ analyzeManager/bin/Release/net10.0-windows/Netstorm.AnalyzeManager.exe call capt
 - `region`은 `x,y,width,height`; 생략/빈 문자열은 전체 클라이언트다. 창 밖 영역은 거부한다.
 - 키는 영문자/숫자, 방향키, `ESCAPE`, `ENTER`, `SPACE`, `TAB`, `BACKSPACE`, `HOME`, `END`, `PAGEUP`, `PAGEDOWN`, 기능키, `CTRL+A` 같은 최대 4개 조합을 지원한다. `F11`, `ALT+ENTER`는 금지한다. 메뉴에서 직접 전체화면을 선택하는 동작도 분석 과정에서 피해야 한다.
 - `durationMs`는 1~2000, `settleMs`는 0~5000이다. 취소/실패 시 눌렀던 키와 버튼 해제를 시도한다.
-- `wait_for_change`의 `timeoutMs`는 1~30000, `pollMs`는 50~5000, `threshold`는 0 초과~1 이하다. RGB 중 하나의 차이가 24 이상인 픽셀의 비율을 기준 화면과 비교한다. 애니메이션만으로도 조건이 성립할 수 있으므로 적절한 ROI를 고른다.
+- `wait_for_change`의 `timeoutMs`는 1~30000, `threshold`는 0 초과~1 이하다. `pollMs=0`(기본)이면 세션의 FPS를 따르고, `fps=60`처럼 이번 관찰만 바꿀 수 있다. `pollMs=1~5000`을 명시하면 그 간격(ms)을 우선 사용한다. RGB 중 하나의 차이가 24 이상인 픽셀의 비율을 기준 화면과 비교한다. 애니메이션만으로도 조건이 성립할 수 있으므로 적절한 ROI를 고른다.
 - `record_observation` 메모는 최대 8000자이며 AI의 해석이라고 표시한다. 화면 변화나 OS 입력 성공만으로 게임 규칙을 확정하지 않는다.
 - `force=true` 종료는 PID·시작 시각·실행 파일 경로가 모두 일치하는 해당 세션 게임만 대상으로 한다.
 
 권장 분석 순서는 세션 확인 → 실행 → 화면 확인 → 한 번 입력 → 필요한 ROI 변화 관찰 → 근거 해시를 붙인 메모 → 종료 확인이다. 본 도구의 관찰 시간은 OS 캡처 시각이며 게임 내부 틱이나 영상의 프레임 번호와 같지 않다.
+
+## 세 방식의 30/60FPS 설정 (2026-10-03)
+
+자동 분석(CLI/MCP), 기존 게임 수동 컨트롤 방식(`guide`), 기존 게임 플레이 녹화 분석 방식(`record-play`)은 **새 세션 기본 30FPS**이며 **60FPS를 선택**할 수 있다. 세션의 `fps`는 `session.json`에 저장되므로 CLI 재호출·MCP 재접속·사용자 녹화 창에서도 이어진다. 기존 세션처럼 해당 필드가 없으면 30FPS를 사용한다. `guide`·`record-play`의 `--fps`는 그 창의 녹화 속도를 선택한다.
+
+| 방식 | 기본 30FPS | 60FPS 선택 |
+|---|---|---|
+| 자동 분석 CLI | `call start_session --json '{"label":"자동 분석"}'` | `call start_session --fps 60 --json '{"label":"자동 분석"}'` 또는 JSON에 `"fps":60` |
+| 자동 분석 MCP | `start_session`의 `fps` 생략 | `start_session`에 `fps: 60`. 서버 자체 기본값은 `mcp --fps 60`으로도 설정 가능 |
+| 수동 컨트롤 | `guide --session ID --steps-file 안내.txt` | 뒤에 `--fps 60` 추가 |
+| 플레이 녹화 분석 | `record-play --session ID` | 뒤에 `--fps 60` 추가 |
+
+`--fps`와 동일 요청의 JSON `fps`를 함께 지정하면 중복 인자로 거부한다. `wait_for_change`의 `fps`는 이번 변화 감지 주기만 선택하며, 연속 녹화 속도는 `start_session`에서 선택한 세션 FPS를 따른다.
+
+### 자동 분석의 세션 전체 연속 녹화
+
+`start_session`은 첫 표시 화면을 확인한 뒤 별도 숨김 프로세스로 영상·Windows 기본 출력 소리·게임 입력 녹화를 시작하고 첫 프레임 저장까지 확인한다. CLI 명령이 끝나거나 MCP 연결이 닫혀도 게임이 계속 실행 중이면 녹화가 이어진다. 파일은 `extracted/analyzeManager/<ID>/recording/`에 저장한다. 시작 시 오디오·입력 훅·캡처가 실패하면 오류와 세션 ID를 반환하므로 `game_status`로 상태를 확인한다.
+
+`automatic-recording.json`과 `game_status` 응답의 `automaticRecording`에는 선택한 FPS·녹화 프로세스·상태·프레임 수·오류가 남는다. 별도 녹화 프로세스는 세션의 이벤트 파일을 직접 수정하지 않아 CLI/MCP 기록 번호와 충돌하지 않는다. `end_session`이 게임 종료를 확인하면 녹화 파일 마감도 기다린다. 종료 확인 창이 남은 `closed=false` 상태에서는 녹화가 계속된다.
+
+`guide`·`record-play`를 열면 자동 녹화를 마감한 뒤 사용자 녹화 모드로 전환한다. 사용자 녹화는 창의 시작 버튼을 따른다. 사용자 녹화 창을 닫은 뒤 자동 녹화가 다시 시작되지는 않는다. 두 녹화기가 같은 세션에서 동시에 켜지지 않도록 별도 잠금을 사용한다. 자동 녹화 중 다른 프로그램이 게임 화면을 가리거나 캡처 오류가 발생하면 오류 상태로 중단하고 이미 저장한 파일을 마감한다.
+
+프레임 간격은 누적 시각에서 계산해 30FPS의 33.333ms·60FPS의 16.667ms를 유지한다. 캡처·압축·저장이 늦어지면 지난 목표 시각을 건너뛰며, 실제 캡처 속도와 입력 대응 시각은 `.frames.csv`로 확인한다. 영상은 화면에서 JPEG로 바로 압축하고, 변화 비교용 프레임은 중간 PNG 압축을 생략한다. 변화 감지의 마지막 PNG는 판정에 쓴 픽셀로 복원한다.
+
+모든 모드의 AVI 스트림 헤더에는 선택한 FPS가 들어간다. 녹화 마감 때 생성되는 `recording-index.json`은 `frameRates`와 각 `videos[].fps`에 실제 파일 헤더에서 읽은 값을 저장한다. 같은 세션에 과거 10FPS·새 30FPS·60FPS 조각이 섞여도 구분할 수 있다. 영상·음성의 48 MB 분할, 입력 JSONL·시각 CSV는 같은 형식을 사용한다.
+
+**검증 범위:** 2026-10-03 변경은 실제 원본 게임 없이 설정·스케줄·AVI 헤더·혼합 FPS 색인·PNG 픽셀 보존·녹화 초기화 실패를 검사했다. 분석기 테스트 102개 통과·기존 1개 건너뜀, Release와 portable 빌드·MCP 기본 검사·CLI 옵션 검사도 통과했다. 실제 녹화기로 만든 1초 합성 영상은 FFprobe에서 30/60FPS·각각 30/60프레임이었고 FFmpeg 전체 디코딩도 통과했다. 실제 게임에서의 30/60FPS 달성률·음성 동기·모드 전환은 이후 실행 관찰이 필요하다.
 
 ## 사용자 직접 조작 녹화 모드
 
@@ -237,7 +264,7 @@ analyzeManager/bin/Release/net10.0-windows/Netstorm.AnalyzeManager.exe guide --s
 
 | 파일 | 내용 |
 |---|---|
-| `video-0001.avi` 등 | 게임 창만 10 FPS, JPEG 품질 75의 MJPEG 영상으로 기록. 화면 커서는 영상에 합성하지 않으며 좌표는 입력 기록에 남김 |
+| `video-0001.avi` 등 | 게임 창을 기본 30FPS(선택 60FPS), JPEG 품질 75의 MJPEG 영상으로 기록. 화면 커서는 영상에 합성하지 않으며 좌표는 입력 기록에 남김 |
 | `video-0001.frames.csv` 등 | 각 영상 프레임의 UTC 시각과 세션 경과 밀리초 |
 | `audio-0001.wav` 등 | Windows 기본 재생 장치의 출력 소리를 WAV로 기록. 다른 앱 소리도 포함될 수 있음 |
 | `audio-0001.start.txt` 등 | 해당 WAV의 시작 UTC 시각 |
@@ -304,7 +331,7 @@ analyzeManager/bin/Release/net10.0-windows/Netstorm.AnalyzeManager.exe record-pl
 
 안내 창 아래 상태 영역은 **녹화 대기**, 초록색 **녹화 중**(경과 시간·영상 프레임 수), **녹화 중단됨 · 다시 시작 가능**, **게임 종료**를 구분한다. 화면 캡처·음성·입력 기록 오류, 게임 창 가림·크기 변경, 창을 게임 옆에 둘 공간 부족으로 녹화가 멈추면 빨간 상태 영역에 이유가 표시되고 녹화 시작 버튼이 다시 켜진다. 0프레임으로 끝난 녹화도 오류로 표시한다. 문제를 해결한 뒤 버튼을 누르면 앞선 파일을 덮지 않고 다음 번호의 조각에 기록한다. 게임 자체가 종료된 경우에는 새 게임 세션이 필요하다. 안내 창을 닫아도 녹화 파일은 안전하게 닫고 게임은 종료하지 않는다.
 
-파일은 저장소의 `playingVideos/<SESSION_ID>/`에 저장된다. `video-0001.avi` 등은 게임 창의 10 FPS MJPEG 영상이며 **커서·소리가 영상 안에 들어 있지 않다**. 같은 번호의 `.frames.csv`에 프레임 시각이 있고, `audio-0001.wav` 등의 Windows 기본 출력 소리와 시작 시각 `.start.txt`, `input-0001.jsonl` 등의 별도 사용자 조작 로그가 함께 남는다. 키·버튼·좌표와 동기화 시각의 형식은 앞의 **사용자 조작 로그** 절을 따른다. AVI와 WAV는 각각 48,000,000바이트 전에 자동으로 다음 파일을 시작해 **파일 하나가 50 MB에 이르지 않도록** 한다. 총 녹화 용량에는 별도 한도가 없으므로 긴 플레이 전에는 저장 공간을 확인한다. `recording-index.json`은 녹화가 중단될 때 완성된 조각의 이름·바이트 크기·시각 파일을 갱신한다. `playingVideos/`의 내용은 Git에서 제외된다.
+파일은 저장소의 `playingVideos/<SESSION_ID>/`에 저장된다. `video-0001.avi` 등은 게임 창의 기본 30FPS(선택 60FPS) MJPEG 영상이며 **커서·소리가 영상 안에 들어 있지 않다**. 같은 번호의 `.frames.csv`에 프레임 시각이 있고, `audio-0001.wav` 등의 Windows 기본 출력 소리와 시작 시각 `.start.txt`, `input-0001.jsonl` 등의 별도 사용자 조작 로그가 함께 남는다. 키·버튼·좌표와 동기화 시각의 형식은 앞의 **사용자 조작 로그** 절을 따른다. AVI와 WAV는 각각 48,000,000바이트 전에 자동으로 다음 파일을 시작해 **파일 하나가 50 MB에 이르지 않도록** 한다. 총 녹화 용량에는 별도 한도가 없으므로 긴 플레이 전에는 저장 공간을 확인한다. `recording-index.json`은 녹화가 중단될 때 완성된 조각의 이름·바이트 크기·시각 파일을 갱신한다. `playingVideos/`의 내용은 Git에서 제외된다.
 
 사용자가 프롬프트로 녹화 완료를 알리면 AI는 해당 세션의 `recording-index.json`에서 이번 영상 목록을 찾고, `.frames.csv`와 입력 JSONL의 시각을 맞춰 필요한 장면의 JPEG 프레임을 추출·관찰한 뒤 근거 시각을 적어 문서화한다. WAV는 소리가 필요한 관찰에 사용한다. 기존 `tools/videoframes.py`는 FFmpeg가 있는 환경의 영상 추출 도구이며, 이 모드의 MJPEG AVI는 위 수동 녹화 절의 RIFF `00dc` 청크 추출 방법으로 FFmpeg 없이도 읽을 수 있다. 짧은 사건의 정확한 시각이나 화면에 드러나지 않는 규칙은 별도 관찰이 필요하다.
 

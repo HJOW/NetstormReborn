@@ -22,9 +22,9 @@ public sealed class GuidedVideo : IDisposable
     private long _moviSizePosition;
 
     /// <summary>기존 녹화 번호 다음부터 시작해 재실행 시 앞선 파일을 보존한다.</summary>
-    public GuidedVideo(string directory, int width, int height, int fps = 10, long segmentLimitBytes = SegmentLimitBytes)
+    public GuidedVideo(string directory, int width, int height, int fps = AnalysisFrameRate.Default, long segmentLimitBytes = SegmentLimitBytes)
     {
-        if (width <= 0 || height <= 0 || fps is < 1 or > 30) throw new ArgumentOutOfRangeException(nameof(fps));
+        if (width <= 0 || height <= 0 || fps is < 1 or > AnalysisFrameRate.High) throw new ArgumentOutOfRangeException(nameof(fps));
         if (segmentLimitBytes is < 512 or > SegmentLimitBytes) throw new ArgumentOutOfRangeException(nameof(segmentLimitBytes));
         SessionStore.RejectReparse(directory);
         Directory.CreateDirectory(directory);
@@ -169,6 +169,25 @@ public sealed class GuidedVideo : IDisposable
 
     /// <summary>RIFF의 네 글자 식별자를 ASCII 바이트로 기록한다.</summary>
     private static void WriteFourCc(BinaryWriter writer, string value) => writer.Write(Encoding.ASCII.GetBytes(value));
+
+    /// <summary>이 녹화기가 만든 AVI 스트림 헤더에서 FPS를 읽어 과거 10FPS·새 30/60FPS를 구분한다.</summary>
+    public static int ReadFramesPerSecond(string path)
+    {
+        SessionStore.RejectReparse(path);
+        using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+        using var reader = new BinaryReader(stream, Encoding.ASCII);
+        if (stream.Length < 140 || Encoding.ASCII.GetString(reader.ReadBytes(4)) != "RIFF")
+            throw new InvalidDataException($"녹화 AVI 헤더가 손상되었습니다: {path}");
+        stream.Position = 100;
+        if (Encoding.ASCII.GetString(reader.ReadBytes(4)) != "strh")
+            throw new InvalidDataException($"녹화 AVI 스트림 헤더가 없습니다: {path}");
+        stream.Position = 128;
+        int scale = reader.ReadInt32();
+        int rate = reader.ReadInt32();
+        if (scale <= 0 || rate <= 0 || rate % scale != 0 || rate / scale > AnalysisFrameRate.High)
+            throw new InvalidDataException($"녹화 AVI의 FPS 값이 잘못되었습니다: {path}");
+        return rate / scale;
+    }
 
     /// <summary>현재 세그먼트 파일을 닫고 다음 시작 시 새 번호를 쓰도록 한다.</summary>
     private void CloseSegment()

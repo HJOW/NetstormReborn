@@ -2,26 +2,28 @@ using System.Text.Json;
 
 namespace Netstorm.AnalyzeManager;
 
-/// <summary>자유 플레이 녹화의 분할 파일과 시각 보조 파일을 AI가 찾을 수 있게 기록한다.</summary>
+/// <summary>세 녹화 방식의 분할 파일과 시각 보조 파일을 AI가 찾을 수 있게 기록한다.</summary>
 public static class FreeplayRecordingIndex
 {
     /// <summary>녹화 중단 때 닫힌 파일만 수집해 세션 색인을 원자적으로 갱신한다.</summary>
-    public static string Write(SessionStore store, string sessionId)
+    public static string Write(SessionStore store, string sessionId, bool freePlay = true)
     {
-        string directory = store.FreeplayDirectory(sessionId);
+        string directory = freePlay ? store.FreeplayDirectory(sessionId) : Path.Combine(store.SessionDirectory(sessionId), "recording");
         if (!Directory.Exists(directory)) throw new DirectoryNotFoundException(directory);
         string path = Path.Combine(directory, "recording-index.json");
         string temporary = path + ".tmp";
         SessionStore.RejectReparse(path);
         SessionStore.RejectReparse(temporary);
+        RecordingPart[] videos = Parts(directory, "video-*.avi", ".frames.csv");
         var index = new
         {
             sessionId,
             updatedUtc = DateTimeOffset.UtcNow,
-            videoFormat = "MJPEG AVI, 10 FPS, 소리·커서 없음",
+            videoFormat = "MJPEG AVI, 각 videos[].fps에 녹화 속도 저장, 소리·커서 없음",
+            frameRates = videos.Select(video => video.Fps!.Value).Distinct().Order().ToArray(),
             audioFormat = "별도 WAV, Windows 기본 출력 장치",
             inputFormat = "별도 UTF-8 JSONL, 키·마우스 조작, 게임/화면 좌표, UTC·sessionElapsedMs·recordingElapsedMs",
-            videos = Parts(directory, "video-*.avi", ".frames.csv"),
+            videos,
             audios = Parts(directory, "audio-*.wav", ".start.txt"),
             inputs = Parts(directory, "input-*.jsonl", null),
         };
@@ -54,9 +56,10 @@ public static class FreeplayRecordingIndex
             if (new FileInfo(timingPath).Length >= SessionStore.FileLimitBytes)
                 throw new InvalidDataException($"50 MB 이상 녹화 시각 파일: {timingPath}");
         }
-        return new RecordingPart(Path.GetFileName(file), bytes, timingFile);
+        int? fps = Path.GetExtension(file).Equals(".avi", StringComparison.OrdinalIgnoreCase) ? GuidedVideo.ReadFramesPerSecond(file) : null;
+        return new RecordingPart(Path.GetFileName(file), bytes, timingFile, fps);
     }
 
     /// <summary>각 녹화 파일의 상대 이름·크기와 대응하는 시각 파일 이름.</summary>
-    private sealed record RecordingPart(string File, long Bytes, string? TimingFile);
+    private sealed record RecordingPart(string File, long Bytes, string? TimingFile, int? Fps);
 }

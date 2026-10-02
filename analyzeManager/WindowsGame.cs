@@ -163,13 +163,32 @@ public static class WindowsGame
     }
 
     /// <summary>가려지지 않은 실제 화면을 캡처한다. DirectDraw의 빈 PrintWindow 결과를 사용하지 않는다.</summary>
-    public static CapturedFrame Capture(GameWindow window, string region) => CaptureVisible(window, region, true);
+    public static CapturedFrame Capture(GameWindow window, string region, bool includePng = true) => CaptureVisible(window, region, true, includePng);
 
     /// <summary>안내 창을 조작하는 동안에도 가리지 않은 게임 화면을 기록한다.</summary>
-    public static CapturedFrame CaptureVisible(GameWindow window, string region, bool requireForeground = false)
+    public static CapturedFrame CaptureVisible(GameWindow window, string region, bool requireForeground = false, bool includePng = true)
+    {
+        using Bitmap bitmap = CaptureBitmapVisible(window, region, requireForeground, false, out CaptureRegion roi, out string method);
+        CapturedFrame frame = ToFrame(bitmap, roi, window, method, includePng);
+        if (requireForeground) CheckForeground(window);
+        return frame;
+    }
+
+    /// <summary>녹화 프레임을 곧바로 JPEG로 압축해 PNG 인코딩·디코딩과 비교용 픽셀 복사를 생략한다.</summary>
+    public static byte[] CaptureJpegVisible(GameWindow window, ImageCodecInfo codec, EncoderParameters encoder)
+    {
+        using Bitmap bitmap = CaptureBitmapVisible(window, "", false, true, out _, out _);
+        using var stream = new MemoryStream();
+        bitmap.Save(stream, codec, encoder);
+        return stream.ToArray();
+    }
+
+    /// <summary>같은 게임의 대화상자는 영상에 포함하고 다른 프로그램에 가려진 화면은 거부한다.</summary>
+    private static Bitmap CaptureBitmapVisible(GameWindow window, string region, bool requireForeground, bool allowGameDialogs,
+        out CaptureRegion roi, out string method)
     {
         SetDpiMode();
-        CaptureRegion roi = CaptureRegion.Parse(region, window);
+        roi = CaptureRegion.Parse(region, window);
         var screenRect = new Rectangle(window.X + roi.X, window.Y + roi.Y, roi.Width, roi.Height);
         if (!SystemInformation.VirtualScreen.Contains(screenRect) || roi.Width > 4096 || roi.Height > 4096)
             throw new InvalidOperationException("캡처 영역이 화면 밖에 있거나 4096픽셀 한도를 넘습니다.");
@@ -179,76 +198,121 @@ public static class WindowsGame
             new Point(screenRect.Right - 1, screenRect.Bottom - 1),
             new Point(screenRect.Left + roi.Width / 2, screenRect.Top + roi.Height / 2) })
         {
-            if (GetAncestor(WindowFromPoint(point), RootWindow).ToInt64() != window.Handle)
+            nint covering = GetAncestor(WindowFromPoint(point), RootWindow);
+            GetWindowThreadProcessId(covering, out uint coveringProcess);
+            GetWindowThreadProcessId(new nint(window.Handle), out uint gameProcess);
+            if (covering.ToInt64() != window.Handle && (!allowGameDialogs || coveringProcess != gameProcess))
                 throw new InvalidOperationException("게임 캡처 영역이 다른 창에 가려져 있습니다.");
         }
-        CapturedFrame frame = IsWine ? CaptureWine(window, roi) : CaptureScreen(window, roi, screenRect);
-        if (requireForeground) CheckForeground(window);
-        return frame;
+        if (IsWine) return CaptureWineBitmap(window, roi, out method);
+        method = "screen";
+        return CaptureScreenBitmap(roi, screenRect);
     }
 
     /// <summary>Windows: 화면에 실제 표시된 픽셀을 복사한다.</summary>
-    private static CapturedFrame CaptureScreen(GameWindow window, CaptureRegion roi, Rectangle screenRect)
+    private static Bitmap CaptureScreenBitmap(CaptureRegion roi, Rectangle screenRect)
     {
-        using var bitmap = new Bitmap(roi.Width, roi.Height, PixelFormat.Format24bppRgb);
-        using (Graphics graphics = Graphics.FromImage(bitmap))
+        var bitmap = new Bitmap(roi.Width, roi.Height, PixelFormat.Format24bppRgb);
+        try
+        {
+            using Graphics graphics = Graphics.FromImage(bitmap);
             graphics.CopyFromScreen(screenRect.Location, Point.Empty, screenRect.Size, CopyPixelOperation.SourceCopy);
-        return ToFrame(bitmap, roi, window, "screen");
+            return bitmap;
+        }
+        catch { bitmap.Dispose(); throw; }
     }
 
     /// <summary>
     /// Wine: 화면 전체 DC는 각 창의 그림을 합치지 않아 항상 검게 나온다(2026-09-29 확인).
     /// 대신 게임 창 자체 DC를 복사하고, 그 결과가 전부 검으면 PrintWindow로 다시 시도한다.
     /// </summary>
-    private static CapturedFrame CaptureWine(GameWindow window, CaptureRegion roi)
+    private static Bitmap CaptureWineBitmap(GameWindow window, CaptureRegion roi, out string method)
     {
         nint handle = new(window.Handle);
-        using var bitmap = new Bitmap(roi.Width, roi.Height, PixelFormat.Format24bppRgb);
-        nint source = GetDC(handle);
-        if (source == 0) throw new InvalidOperationException("게임 창 DC를 얻지 못했습니다.");
+        var bitmap = new Bitmap(roi.Width, roi.Height, PixelFormat.Format24bppRgb);
+        Bitmap? cropped = null;
         try
         {
-            using Graphics graphics = Graphics.FromImage(bitmap);
-            nint target = graphics.GetHdc();
-            try { BitBlt(target, 0, 0, roi.Width, roi.Height, source, roi.X, roi.Y, SourceCopy); }
-            finally { graphics.ReleaseHdc(target); }
-        }
-        finally { ReleaseDC(handle, source); }
-        CapturedFrame frame = ToFrame(bitmap, roi, window, "wine-window-dc");
-        if (!IsBlack(frame.Pixels)) return frame;
+            nint source = GetDC(handle);
+            if (source == 0) throw new InvalidOperationException("게임 창 DC를 얻지 못했습니다.");
+            try
+            {
+                using Graphics graphics = Graphics.FromImage(bitmap);
+                nint target = graphics.GetHdc();
+                try { BitBlt(target, 0, 0, roi.Width, roi.Height, source, roi.X, roi.Y, SourceCopy); }
+                finally { graphics.ReleaseHdc(target); }
+            }
+            finally { ReleaseDC(handle, source); }
+            method = "wine-window-dc";
+            if (!IsBlack(ReadPixels(bitmap))) return bitmap;
 
-        // 창 DC가 비어 있으면 클라이언트 전체를 PrintWindow로 그린 뒤 관심 영역만 잘라낸다.
-        using var full = new Bitmap(window.Width, window.Height, PixelFormat.Format24bppRgb);
-        using (Graphics graphics = Graphics.FromImage(full))
-        {
-            nint target = graphics.GetHdc();
-            try { PrintWindow(handle, target, PrintClientOnly); }
-            finally { graphics.ReleaseHdc(target); }
+            // 창 DC가 비어 있으면 클라이언트 전체를 PrintWindow로 그린 뒤 관심 영역만 잘라낸다.
+            using var full = new Bitmap(window.Width, window.Height, PixelFormat.Format24bppRgb);
+            using (Graphics graphics = Graphics.FromImage(full))
+            {
+                nint target = graphics.GetHdc();
+                try { PrintWindow(handle, target, PrintClientOnly); }
+                finally { graphics.ReleaseHdc(target); }
+            }
+            cropped = full.Clone(new Rectangle(roi.X, roi.Y, roi.Width, roi.Height), PixelFormat.Format24bppRgb);
+            // 두 방식 모두 검으면 실제 검은 화면일 수도 있으므로 오류 대신 표시만 남긴다.
+            if (IsBlack(ReadPixels(cropped)))
+            {
+                cropped.Dispose();
+                method = "wine-black";
+                return bitmap;
+            }
+            bitmap.Dispose();
+            method = "wine-printwindow";
+            return cropped;
         }
-        using Bitmap cropped = full.Clone(new Rectangle(roi.X, roi.Y, roi.Width, roi.Height), PixelFormat.Format24bppRgb);
-        CapturedFrame printed = ToFrame(cropped, roi, window, "wine-printwindow");
-        // 두 방식 모두 검으면 실제 검은 화면일 수도 있으므로 오류 대신 표시만 남긴다.
-        return IsBlack(printed.Pixels) ? frame with { Method = "wine-black" } : printed;
+        catch { cropped?.Dispose(); bitmap.Dispose(); throw; }
     }
 
     /// <summary>모든 RGB 바이트가 0인지 검사한다.</summary>
     private static bool IsBlack(byte[] pixels) => !pixels.AsSpan().ContainsAnyExcept((byte)0);
 
     /// <summary>24비트 비트맵에서 비교용 RGB 바이트와 증거용 PNG를 만든다.</summary>
-    private static CapturedFrame ToFrame(Bitmap bitmap, CaptureRegion roi, GameWindow window, string method)
+    private static CapturedFrame ToFrame(Bitmap bitmap, CaptureRegion roi, GameWindow window, string method, bool includePng)
     {
-        byte[] pixels = new byte[roi.Width * roi.Height * 3];
-        BitmapData data = bitmap.LockBits(new Rectangle(0, 0, roi.Width, roi.Height), ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
+        byte[] pixels = ReadPixels(bitmap);
+        if (!includePng) return new([], pixels, roi, window, method);
+        using var stream = new MemoryStream();
+        bitmap.Save(stream, ImageFormat.Png);
+        return new(stream.ToArray(), pixels, roi, window, method);
+    }
+
+    /// <summary>프레임 비교 중에는 압축을 생략하고 24비트 BGR 픽셀만 읽는다.</summary>
+    private static byte[] ReadPixels(Bitmap bitmap)
+    {
+        byte[] pixels = new byte[bitmap.Width * bitmap.Height * 3];
+        BitmapData data = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
         try
         {
             // 행 패딩을 빼서 영역 비교에 쓸 RGB 바이트만 보관한다.
-            for (int y = 0; y < roi.Height; y++)
-                Marshal.Copy(data.Scan0 + y * data.Stride, pixels, y * roi.Width * 3, roi.Width * 3);
+            for (int y = 0; y < bitmap.Height; y++)
+                Marshal.Copy(data.Scan0 + y * data.Stride, pixels, y * bitmap.Width * 3, bitmap.Width * 3);
+        }
+        finally { bitmap.UnlockBits(data); }
+        return pixels;
+    }
+
+    /// <summary>판정에 사용한 정확한 픽셀을 PNG로 만들어 마지막 증거가 다음 화면으로 바뀌지 않게 한다.</summary>
+    public static CapturedFrame EncodePng(CapturedFrame frame)
+    {
+        if (frame.Png.Length > 0) return frame;
+        using var bitmap = new Bitmap(frame.Region.Width, frame.Region.Height, PixelFormat.Format24bppRgb);
+        BitmapData data = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.WriteOnly, PixelFormat.Format24bppRgb);
+        try
+        {
+            // 저장된 각 행의 BGR 바이트를 비트맵의 행 패딩을 건너뛰며 복원한다.
+            for (int y = 0; y < bitmap.Height; y++)
+                Marshal.Copy(frame.Pixels, y * bitmap.Width * 3, data.Scan0 + y * data.Stride, bitmap.Width * 3);
         }
         finally { bitmap.UnlockBits(data); }
         using var stream = new MemoryStream();
         bitmap.Save(stream, ImageFormat.Png);
-        return new(stream.ToArray(), pixels, roi, window, method);
+        return frame with { Png = stream.ToArray() };
     }
 
     /// <summary>Wine에서 실행 중인지 여부. Wine의 ntdll만 wine_get_version을 내보낸다.</summary>

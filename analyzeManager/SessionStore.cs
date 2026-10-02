@@ -21,6 +21,8 @@ public sealed class AnalysisSession
     public int EventCount { get; set; }
     public int LogPart { get; set; } = 1;
     public int ReportPart { get; set; } = 1;
+    /// <summary>재접속 뒤 자동 분석·녹화가 사용할 세션의 초당 프레임 수.</summary>
+    public int Fps { get; set; } = AnalysisFrameRate.Default;
 }
 
 /// <summary>동일 PNG는 파일 하나를 재사용하고 각 관찰 시각은 별도 이벤트로 남긴다. Method는 캡처 방식(CapturedFrame 참고).</summary>
@@ -52,6 +54,10 @@ public sealed partial class SessionStore
     /// <summary>CLI와 여러 MCP 요청이 데스크톱 입력과 파일을 동시에 변경하지 못하게 잠근다.</summary>
     public FileStream LockDesktop() => new(Path.Combine(Root, "desktop.lock"), FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
 
+    /// <summary>자동 녹화와 사용자 녹화가 같은 게임을 중복 녹화하지 못하게 세션별로 잠근다.</summary>
+    public FileStream LockRecording(string sessionId) => new(Path.Combine(SessionDirectory(sessionId), "recording.lock"),
+        FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
+
     /// <summary>사용자가 지정한 세션 ID로 다른 경로를 읽지 못하게 제한한다.</summary>
     public string SessionDirectory(string id)
     {
@@ -75,10 +81,11 @@ public sealed partial class SessionStore
     public string GamePath(AnalysisSession session) => Path.Combine(SessionDirectory(session.Id), "game", "Netstorm.exe");
 
     /// <summary>작업 폴더를 만들고 원본 구성 전체를 복사한 뒤, 복사본의 창 모드/저장 경로만 바꾼다.</summary>
-    public async Task<AnalysisSession> CreateAsync(string label, CancellationToken cancellation)
+    public async Task<AnalysisSession> CreateAsync(string label, CancellationToken cancellation, int fps = AnalysisFrameRate.Default)
     {
         if (label.Length > 200) throw new ArgumentException("label은 200자 이하여야 합니다.");
-        var session = new AnalysisSession { Id = $"{DateTime.UtcNow:yyyyMMddTHHmmssfffZ}-{Guid.NewGuid():N}"[..32], Label = label };
+        var session = new AnalysisSession { Id = $"{DateTime.UtcNow:yyyyMMddTHHmmssfffZ}-{Guid.NewGuid():N}"[..32], Label = label,
+            Fps = AnalysisFrameRate.Validate(fps) };
         string directory = SessionDirectory(session.Id);
         Directory.CreateDirectory(directory);
         Save(session);
@@ -148,6 +155,7 @@ public sealed partial class SessionStore
         AnalysisSession session = JsonSerializer.Deserialize<AnalysisSession>(File.ReadAllText(path, Encoding.UTF8), Json)
             ?? throw new InvalidDataException("빈 세션 정보입니다.");
         if (session.Id != id) throw new InvalidDataException("세션 폴더와 ID가 다릅니다.");
+        AnalysisFrameRate.Validate(session.Fps);
         return session;
     }
 

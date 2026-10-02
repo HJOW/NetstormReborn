@@ -25,8 +25,10 @@ public sealed class ExplorerTools
     /// <summary>격리된 원본 게임을 창 모드로 실행한다.</summary>
     [McpServerTool(Name = "start_session", OpenWorld = false, Destructive = false)]
     [Description("실제 게임을 실행합니다. AGENTS.md에 지정된 시스템(IP 10.0.0.15·호스트명 vm-debian-codex, IP 192.168.0.94·호스트명 HJOW-Athlon)에서, 또는 개발자가 기존 게임 수동 컨트롤 방식의 분석을 직접 요청한 작업 단계에서는 개발자 확인 없이 호출할 수 있습니다. 그 밖의 시스템에서는 기존 실행 중단 지시의 재개가 필요하며, 호출 전에 개발자에게 목적과 필요성을 알리고 명시적인 확인을 받으세요. originals를 복사해 창 모드 1024x768로 실행하고 새 sessionId와 첫 화면을 반환합니다.")]
-    public Task<CallToolResult> StartSession([Description("분석 목적, 200자 이하")] string label = "", CancellationToken cancellation = default)
-        => Run("start_session", new() { Label = label }, cancellation);
+    public Task<CallToolResult> StartSession([Description("분석 목적, 200자 이하")] string label = "",
+        [Description("분석·연속 녹화 FPS: 30 또는 60. 생략하면 서버 설정을 사용하며 기본은 30입니다.")] int? fps = null,
+        CancellationToken cancellation = default)
+        => Run("start_session", new() { Label = label, Fps = fps }, cancellation);
 
     /// <summary>게임 상태를 입력이나 포커스 변경 없이 조회한다.</summary>
     [McpServerTool(Name = "game_status", ReadOnly = true, OpenWorld = false)]
@@ -51,11 +53,11 @@ public sealed class ExplorerTools
 
     /// <summary>애니메이션이 적은 관심 영역에서 조건이 변할 때까지 제한된 시간 동안 관찰한다.</summary>
     [McpServerTool(Name = "wait_for_change", OpenWorld = false, Destructive = false)]
-    [Description("기준 화면 대비 threshold 비율 이상 픽셀이 바뀌면 반환합니다. timeoutMs는 최대 30000, pollMs는 50~5000입니다. 구름/애니메이션을 피하도록 region을 지정하세요. 시작/마지막 화면만 저장합니다. 시간 초과는 matched=false입니다.")]
-    public Task<CallToolResult> WaitForChange(string sessionId, string region = "", int timeoutMs = 5000, int pollMs = 200,
-        double threshold = 0.01, bool includeImage = true, CancellationToken cancellation = default)
+    [Description("기준 화면 대비 threshold 비율 이상 픽셀이 바뀌면 반환합니다. 기본은 세션의 30/60FPS로 비교하며 fps로 변경할 수 있습니다. timeoutMs는 최대 30000, pollMs=0은 fps를 사용하고 1~5000은 간격을 직접 지정합니다. 구름/애니메이션을 피하도록 region을 지정하세요. 시작/마지막 PNG와 별도 연속 녹화가 남습니다. 시간 초과는 matched=false입니다.")]
+    public Task<CallToolResult> WaitForChange(string sessionId, string region = "", int timeoutMs = 5000, int pollMs = 0,
+        double threshold = 0.01, bool includeImage = true, int? fps = null, CancellationToken cancellation = default)
         => Run("wait_for_change", new() { SessionId = sessionId, Region = region, TimeoutMs = timeoutMs,
-            PollMs = pollMs, Threshold = threshold, IncludeImage = includeImage }, cancellation);
+            PollMs = pollMs, Threshold = threshold, IncludeImage = includeImage, Fps = fps }, cancellation);
 
     /// <summary>관찰자의 메모에 같은 세션의 증거 해시를 연결한다.</summary>
     [McpServerTool(Name = "record_observation", OpenWorld = false, Destructive = false)]

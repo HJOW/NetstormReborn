@@ -153,7 +153,7 @@ def main():
     p = sub.add_parser("sheet", help="시각이 적힌 관찰표 생성")
     p.add_argument("session")
     p.add_argument("-o", "--output", required=True)
-    p.add_argument("--step", type=int, default=50, help="몇 프레임마다 뽑을지 (10 FPS 기준 50 = 5초)")
+    p.add_argument("--step", type=int, default=50, help="몇 기록 프레임마다 뽑을지 (30FPS: 150=5초, 60FPS: 300=5초, 구형 10FPS: 50=5초)")
     p.add_argument("--start", type=float, default=0.0, help="시작 경과 초")
     p.add_argument("--end", type=float, default=1e9, help="끝 경과 초")
     p.add_argument("--width", type=int, default=320, help="crop 없을 때 축소 폭")

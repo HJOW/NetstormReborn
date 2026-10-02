@@ -19,7 +19,10 @@ public sealed class AnalysisRequest
     public int DurationMs { get; set; } = 80;
     public int SettleMs { get; set; } = 300;
     public int TimeoutMs { get; set; } = 5000;
-    public int PollMs { get; set; } = 200;
+    /// <summary>분석·녹화 FPS. 생략하면 세션 값(새 세션 기본 30)을 사용한다.</summary>
+    public int? Fps { get; set; }
+    /// <summary>변화 감지 간격(ms). 0이면 FPS를 사용하고 양수이면 이전 방식의 간격을 명시한다.</summary>
+    public int PollMs { get; set; }
     public double Threshold { get; set; } = 0.01;
     public string Note { get; set; } = "";
     public string Steps { get; set; } = "";

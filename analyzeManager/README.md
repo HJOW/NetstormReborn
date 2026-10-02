@@ -2,6 +2,10 @@
 
 게임 제어 CLI/MCP는 Windows에서 원본 NetStorm의 복사본을 실행·조작하고 화면 증거와 관찰 메모를 남긴다. 별도 YouTube 전용 portable 빌드는 Windows·Linux 등에서 영상을 읽으며 원본 게임을 실행하지 않는다. 외부 AI가 다음 행동을 선택하며 도구 안에 별도 AI 모델은 포함하지 않는다.
 
+**분석·녹화 FPS(2026-10-03):** 자동 분석·`guide`·`record-play`는 새 세션 기본 **30FPS**, 선택 **60FPS**다. `call start_session --fps 60`, `guide --session ID --fps 60`, `record-play --session ID --fps 60`으로 선택한다. 자동 분석 CLI JSON/MCP에도 `fps: 60`을 전달할 수 있다. 세션에 저장된 FPS는 변화 감지와 사용자 녹화 창이 이어받는다. [세 방식의 설정](../docs/analyze-manager.md#세-방식의-3060fps-설정-2026-10-03).
+
+자동 분석의 `start_session`은 세션 전체의 영상·소리·입력을 독립 숨김 프로세스로 녹화한다. CLI/MCP 연결 종료 뒤에도 게임이 살아 있으면 이어지고 `end_session`에서 파일 마감을 확인한다. `game_status.automaticRecording`에 프레임 수·오류가 있으며 파일은 세션의 `recording/`에 남는다. `guide`·`record-play`를 열면 자동 녹화를 마감하고 버튼으로 시작하는 사용자 녹화로 전환한다. 사용자 창을 닫으면 자동 녹화는 재시작하지 않는다.
+
 사용자 직접 조작용 `guide --session ID --steps-file 안내.txt` 모드도 있다. 게임 옆에 단계 안내를 띄우고 사용자 입력·화면·기본 출력 장치 소리를 분할 저장한다. 기존 CLI/MCP 조작 방식은 그대로 사용할 수 있다. [사용법과 파일 형식](../docs/analyze-manager.md#사용자-직접-조작-녹화-모드).
 
 두 사용자 녹화 모드 모두 **별도 `input-번호.jsonl` 조작 로그**를 자동으로 저장한다. 키 이름·누름/해제, 마우스 버튼·휠·게임/화면 좌표와 UTC·세션/녹화 시작 후 경과 밀리초가 들어간다. 녹화 구간 ID와 시작·중단 기록으로 다시 녹화한 구간도 구분한다. `guide`는 세션의 `recording/`, `record-play`는 `playingVideos/<세션 ID>/`에 두며 4 MB 이하로 분할하고 기존 파일을 보존한다. 영상과 입력은 같은 `sessionElapsedMs`로 맞춘다. [로그 필드와 예시](../docs/analyze-manager.md#사용자-조작-로그-두-녹화-모드-공통-2026-10-01-확장).
@@ -13,6 +17,8 @@
 **입력 지연 대응(2026-10-01):** `guide`·`record-play`는 입력 훅·안내 창·파일 저장을 별도 스레드로 나눈다. 입력을 게임에 넘기는 경로에서 디스크 저장을 기다리지 않으며 대기열 포화·저장 실패는 녹화 오류로 표시한다. [실제 녹화의 지연 기록과 수정 검증 범위](../docs/videos/master-of-whirligigs-record-play-20261001-2311.md#입력-지연과-커서-증상).
 
 **현재 상태:** Windows에서 실제 게임 실행·MCP PNG 전달과 사용자 직접 조작 녹화(튜토리얼 1·2 완료, 영상·소리·입력 기록)를 확인했다. Wine에서는 입력 전달·창 DC 캡처를 확인했다. 최신 캡처 변경 뒤 Windows의 게임 없는 Release 빌드·단위 테스트·MCP 기본 검사는 통과했다. 실제 녹화 결과와 남은 검증 범위는 [검증 상태](../docs/analyze-manager.md#사용자-직접-조작-녹화-모드)에 기록했다.
+
+30/60FPS 변경과 자동 연속 녹화는 게임 없는 검사로 확인하며, 실제 게임의 FPS 달성률·음성 동기·모드 전환은 아직 실행 검증하지 않았다. AVI·CSV·색인은 선택한 FPS와 실제 캡처 시각을 보존한다.
 
 **실행 전 개발자 확인:** 일반 시스템에서 실제 게임 구동이 필요하면 개발자에게 목적과 필요성을 설명하고 명시적인 확인을 받아야 한다. CLI/MCP `start_session`, `mcp_smoke.py --live`, 검증용 직접 실행 모두 대상이다. **예외:** `AGENTS.md`에 지정된 시스템 — 시스템 1(IP `10.0.0.15`, 호스트명 `vm-debian-codex`, Linux/Wine), 시스템 2(IP `192.168.0.94`, 호스트명 `HJOW-Athlon`, Windows) — 에서는 확인 없이 실행할 수 있다. 또한 개발자가 **기존 게임 수동 컨트롤 방식으로 분석 진행을 직접 요청**한 경우 해당 작업 단계에서는 시스템과 무관하게 확인이 필요 없다. 목록 변경은 개발자에게 `AGENTS.md` 수정을 요청한다(AI는 `AGENTS.md`를 수정하지 않는다). 그 밖의 시스템에서는 기존 중단 지시의 재개도 필요하다. 게임 없는 빌드·정적 분석·단위 테스트·MCP 프로토콜 검사는 확인 대상이 아니다. 이 도구는 Windows용이다. Linux에서는 [linux-wine.sh](linux-wine.sh)로 Wine 실행 환경을 준비한다(게임 없는 검사·실제 입력 전달·캡처 확인. Wine에서는 게임 창 DC 복사로 캡처하며 증거의 `method`가 `wine-window-dc`로 남는다 — [문서](../docs/analyze-manager.md) "Linux(Wine)에서 사용").
 
