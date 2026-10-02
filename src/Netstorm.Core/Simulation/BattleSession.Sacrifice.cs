@@ -12,30 +12,40 @@ public sealed partial class BattleSession
     /// <summary>의식 시작부터 첫 룬 음성(forWind2)까지(초). 캠페인 1-1 녹음: 희생 음악 12:06.4 → 첫 룬 12:07.6.</summary>
     public const double SacrificeRuneLeadSeconds = 1.2;
 
-    /// <summary>룬 사이 간격(초). 캠페인 1-1 녹음의 다섯 룬 음성 간격 평균 14.8초.</summary>
-    public const double SacrificeRuneIntervalSeconds = 14.8;
+    /// <summary>
+    /// 룬 마크가 나타난 뒤 그 룬이 타서 사라질 때(altarBurnCollapse)까지(초). 2026-10-02 녹음 판독:
+    /// 마크와 함께 시작하는 jimbuild.wav 반복(1.14초 주기)의 첫 소리부터 룬 소멸까지 캠페인 1-1 다섯 룬·1-2 아홉 룬 모두 10.02~10.06초.
+    /// </summary>
+    public const double SacrificeRuneWardSeconds = 10.04;
 
-    /// <summary>룬 음성부터 그 룬이 타서 사라질 때(altarBurnCollapse)까지(초). 영상·녹음 측정 평균은 약 12.1초.</summary>
-    public const double SacrificeRuneBurnSeconds = 12.1;
+    /// <summary>
+    /// 룬이 탄 뒤 다음 룬 음성까지(초). 사제가 제단 옆에 계속 있던 캠페인 1-1 네 번·1-2 두 번 측정(2.39~3.15초)의 평균.
+    /// 이전 고정 간격 14.8초(음성 → 음성)는 이 값과 룬별 마크 지연·지키기 시간의 합으로 바뀌었다.
+    /// </summary>
+    public const double SacrificeRuneGapSeconds = 2.77;
 
     /// <summary>의식의 룬 수 (도움말 "Your Priest must ward five runes")</summary>
     public const int SacrificeRuneCount = 5;
 
-    /// <summary>의식 완료(itIsDone2) 뒤 희생 음성(priestSacrifice2)까지(초). exe 상수 0x532680 = 4.0, 녹음과 일치.</summary>
+    /// <summary>의식 완료(itIsDone2) 뒤 희생 음성(priestSacrifice2)까지(초). exe 상수 0x532680 = 4.0, 녹음과 일치(1-1 4.02·1-2 4.01초).</summary>
     public const double SacrificeKillDelaySeconds = 4.0;
 
-    /// <summary>의식 완료 뒤 제단 소멸까지(초). 캠페인 1-1·1-5 두 관찰의 평균 약 9.3초.</summary>
-    public const double AltarConsumeDelaySeconds = 9.3;
+    /// <summary>
+    /// 의식 완료 뒤 제단 소멸(explodeSlot.wav)까지(초). 2026-10-02 녹음 판독: 캠페인 1-1 9.47초·1-2 9.44초.
+    /// (이전 9.3초는 1-1 녹화와 1-5 YouTube 영상의 화면 판독 평균이었다.)
+    /// </summary>
+    public const double AltarConsumeDelaySeconds = 9.45;
 
     /// <summary>제단이 소멸한 뒤 희생된 사제가 승패 판정에서 제거될 때까지(초). 영상에서 성공 창은 제단 폭발 3초 뒤 떴다.</summary>
     public const double SacrificedPriestRemovalDelaySeconds = 3.0;
 
     /// <summary>
-    /// 룬 음성 뒤 제단에 그 룬의 마크가 나타나 룬이 확정될 때까지(초). 2026-10-01 캠페인 1-2 녹화: Thunder 재음성 18:42.2 → 마크 18:43.8~18:44.4,
-    /// Rain 음성 16:01.0 → 마크 16:02.8~16:03.6 사이(1.6~2.6초). 마크 전에 사제가 떠나면 그 룬은 취소되고 복귀 뒤 음성부터 다시 하며,
-    /// 마크 뒤에 떠나면 그 룬은 끝까지 타고 다음 룬만 복귀를 기다린다(사용자 확인). 경계값 2.0초는 관찰 범위 안의 임시값이다.
+    /// 룬 음성 뒤 제단에 그 룬의 마크가 나타나 룬이 확정될 때까지(초, Wind·Sun·Rain·Thunder·Storm 순서).
+    /// 2026-10-02 녹음 판독: 마크와 함께 시작하는 jimbuild.wav 의 첫 소리가 음성 뒤 Wind 1.97~1.98 · Sun 2.05~2.07 · Rain 1.87 ·
+    /// Thunder 2.16~2.19 · Storm 2.41~2.43초(캠페인 1-1·1-2 세 제단, 룬마다 2~3회)로, 각 음성 파일 길이 + 0.04~0.17초 — 음성이 끝나면 마크가 생긴다.
+    /// 마크 전에 사제가 떠나면 그 룬은 취소되고 복귀 뒤 음성부터 다시 하며, 마크 뒤에 떠나면 그 룬은 끝까지 타고 다음 룬만 복귀를 기다린다(사용자 확인).
     /// </summary>
-    public const double SacrificeRuneMarkSeconds = 2.0;
+    public static readonly IReadOnlyList<double> SacrificeRuneMarkSeconds = [1.98, 2.06, 1.87, 2.18, 2.42];
 
     /// <summary>적 사제를 제단 의식으로 완전히 처리했을 때 제단 주인이 받는 스톰 파워 (사용자 확인, 녹화에서 8,450 → 13,450).</summary>
     public const int SacrificeRewardStormPower = 5000;
@@ -65,10 +75,14 @@ public sealed partial class BattleSession
     /// <summary>진행 중인 희생 의식 목록 (화면 표시·음악 판정용)</summary>
     public IReadOnlyCollection<AltarRitual> Rituals => _rituals.Values;
 
-    /// <summary>플레이어의 제단에서 희생 의식이 진행 중인지 (원본 FUN_00449220: 단계 1 이상 = 희생 음악 유지)</summary>
+    /// <summary>
+    /// 플레이어의 제단에서 희생 의식이 진행 중인지 (원본 FUN_00449220: 단계 1 이상 = 곡이 끝날 때 희생 음악을 다시 고름).
+    /// 단계는 룬이 탈 때마다 오르므로 룬이 하나 이상 탔거나 완료된 뒤 제단이 남아 있는 동안이다.
+    /// 2026-10-01 캠페인 1-2 녹화: 새 제단 의식 직후(룬 0개) 희생 음악이 끝난 17:37.1 에는 thu22 로 넘어갔다.
+    /// </summary>
     /// <param name="player">플레이어</param>
     public bool IsSacrificeInProgress(int player) =>
-        _rituals.Values.Any(r => !r.AltarConsumed && Entity(r.AltarId)?.Owner == player);
+        _rituals.Values.Any(r => !r.AltarConsumed && (r.RunesBurned > 0 || r.Completed) && Entity(r.AltarId)?.Owner == player);
 
     /// <summary>이동 중인 오브젝트의 목적 (화면 표시용, 없으면 null)</summary>
     /// <param name="entityId">수송 유닛 또는 사제 번호</param>
@@ -525,6 +539,12 @@ public sealed partial class BattleSession
     private void AdvanceRitualRunes(AltarRitual ritual, GameEntity altar, bool performerBeside, double elapsed)
     {
         bool runeInProgress = ritual.RunesStarted > ritual.RunesBurned;
+        // 음성이 끝나면 지금 룬의 마크가 나타난다 (이때부터 사제가 떠나도 그 룬은 탄다, 원본 jimbuild.wav 반복 시작)
+        if (runeInProgress && !ritual.RuneMarked && elapsed >= RuneMarkAt(ritual, ritual.RunesBurned))
+        {
+            ritual.RuneMarked = true;
+            Emit(SessionEventKind.SacrificeRuneMarked, altar.Owner, altar.Id, SacrificeRuneNames[ritual.RunesBurned]);
+        }
         if (!performerBeside)
         {
             if (!ritual.PerformerAway)
@@ -533,7 +553,7 @@ public sealed partial class BattleSession
                 Emit(SessionEventKind.SacrificePaused, altar.Owner, altar.Id, "의식 사제가 제단을 떠나거나 움직일 수 없음 — 의식 멈춤");
             }
             // 마크가 나타나기 전의 룬은 취소한다 (음성만 나온 상태)
-            if (runeInProgress && elapsed < RuneStartSeconds(ritual, ritual.RunesStarted - 1) + SacrificeRuneMarkSeconds)
+            if (runeInProgress && !ritual.RuneMarked)
             {
                 ritual.RunesStarted--;
                 runeInProgress = false;
@@ -546,18 +566,21 @@ public sealed partial class BattleSession
             ritual.PerformerAway = false;
             if (!runeInProgress)
             {
-                ritual.ScheduleOffsetSeconds = Math.Max(ritual.ScheduleOffsetSeconds, elapsed - ritual.RunesStarted * SacrificeRuneIntervalSeconds);
+                ritual.ScheduleOffsetSeconds = Math.Max(ritual.ScheduleOffsetSeconds,
+                    elapsed + SacrificeRuneLeadSeconds - RuneStartSeconds(ritual.RunesStarted));
             }
             Emit(SessionEventKind.SacrificeResumed, altar.Owner, altar.Id, "의식 사제 복귀 — 의식 재개");
         }
         // 확정된 룬은 사제가 없어도 정해진 시각에 탄다
-        if (runeInProgress && elapsed >= RuneStartSeconds(ritual, ritual.RunesBurned) + SacrificeRuneBurnSeconds)
+        if (runeInProgress && ritual.RuneMarked && elapsed >= RuneMarkAt(ritual, ritual.RunesBurned) + SacrificeRuneWardSeconds)
         {
+            double burnedAt = RuneMarkAt(ritual, ritual.RunesBurned) + SacrificeRuneWardSeconds;
             ritual.RunesBurned++;
+            ritual.RuneMarked = false;
             if (ritual.RunesBurned == SacrificeRuneCount)
             {
                 ritual.Completed = true;
-                ritual.CompletedAtSeconds = RuneStartSeconds(ritual, SacrificeRuneCount - 1) + SacrificeRuneBurnSeconds;
+                ritual.CompletedAtSeconds = burnedAt;
                 Emit(SessionEventKind.SacrificeCompleted, altar.Owner, altar.Id, "의식 완료 (It is done)");
                 return;
             }
@@ -573,14 +596,33 @@ public sealed partial class BattleSession
         }
     }
 
-    /// <summary>중단이 없을 때 룬 index 의 음성 시각(의식 시작 기준 초)</summary>
-    private static double RuneStartSeconds(int index) => SacrificeRuneLeadSeconds + index * SacrificeRuneIntervalSeconds;
+    /// <summary>
+    /// 중단이 없을 때 룬 index 의 음성 시각(의식 시작 기준 초). 첫 룬 지연 뒤, 앞 룬마다 "마크 지연 + 지키기 + 다음 음성까지"를 더한다.
+    /// </summary>
+    /// <param name="index">룬 번호 (0 = Wind)</param>
+    private static double RuneStartSeconds(int index)
+    {
+        double seconds = SacrificeRuneLeadSeconds;
+        // 앞선 룬들의 한 주기를 차례로 더한다
+        for (int rune = 0; rune < index; rune++)
+        {
+            seconds += SacrificeRuneMarkSeconds[rune] + SacrificeRuneWardSeconds + SacrificeRuneGapSeconds;
+        }
+        return seconds;
+    }
 
     /// <summary>사제 이탈로 늦어진 보정값을 더한 룬 index 의 음성 예정 시각(의식 시작 기준 초)</summary>
     private static double RuneStartSeconds(AltarRitual ritual, int index) => ritual.ScheduleOffsetSeconds + RuneStartSeconds(index);
 
+    /// <summary>보정값을 더한 룬 index 의 마크 시각(의식 시작 기준 초)</summary>
+    private static double RuneMarkAt(AltarRitual ritual, int index) => RuneStartSeconds(ritual, index) + SacrificeRuneMarkSeconds[index];
+
+    /// <summary>룬 index 의 음성부터 소멸까지(초) = 마크 지연 + 지키기 시간</summary>
+    /// <param name="index">룬 번호 (0 = Wind)</param>
+    public static double RuneBurnSeconds(int index) => SacrificeRuneMarkSeconds[index] + SacrificeRuneWardSeconds;
+
     /// <summary>의식 시작부터 완료(다섯 번째 룬 소멸)까지(초)</summary>
-    public static double CompletionSeconds => RuneStartSeconds(SacrificeRuneCount - 1) + SacrificeRuneBurnSeconds;
+    public static double CompletionSeconds => RuneStartSeconds(SacrificeRuneCount - 1) + RuneBurnSeconds(SacrificeRuneCount - 1);
 
     /// <summary>제단이나 포로가 사라져 의식이 끝난다 (남은 포로가 있으면 풀어 준다).</summary>
     private void BreakRitual(AltarRitual ritual, GameEntity? altar, GameEntity? victim)
@@ -767,6 +809,7 @@ public sealed partial class BattleSession
             hash.Add(ritual.RunesStarted);
             hash.Add(ritual.RunesBurned);
             hash.Add(ritual.PerformerAway ? 1 : 0);
+            hash.Add(ritual.RuneMarked ? 1 : 0);
             hash.Add(BitConverter.DoubleToInt64Bits(ritual.ScheduleOffsetSeconds));
             hash.Add(ritual.VictimKilled ? 1 : 0);
             hash.Add(ritual.AltarConsumed ? 1 : 0);
@@ -850,6 +893,9 @@ public sealed class AltarRitual(int altarId, int performerId, int victimId, long
 
     /// <summary>타서 사라진 룬 수 (화면에 남은 룬 = 5 − 이 값)</summary>
     public int RunesBurned { get; internal set; }
+
+    /// <summary>지금 지키는 룬의 마크가 제단에 나타났는지 (음성만 나온 동안은 false, 원본 jimbuild.wav 반복 구간)</summary>
+    public bool RuneMarked { get; internal set; }
 
     /// <summary>다섯 룬을 모두 지켰는지</summary>
     public bool Completed { get; internal set; }

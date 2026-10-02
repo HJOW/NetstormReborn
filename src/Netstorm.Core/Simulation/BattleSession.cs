@@ -330,6 +330,7 @@ public sealed partial class BattleSession
         // 무너진 칸을 이벤트로 알린다
         foreach (BridgeCellState cell in decay.Removed)
         {
+            RecordFallen(new FallenObject(Tick, null, cell));
             Emit(SessionEventKind.BridgeCollapsed, cell.Owner, 0, $"다리 ({cell.X}, {cell.Y}) 무너짐");
         }
     }

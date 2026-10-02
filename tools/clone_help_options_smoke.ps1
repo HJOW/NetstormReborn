@@ -29,7 +29,9 @@ $taskSettings = Join-Path $taskOutput 'settings'
 New-Item -ItemType Directory -Force -Path $taskSettings | Out-Null
 Set-Content -LiteralPath (Join-Path $taskSettings 'settings.json') -Encoding UTF8 -Value '{"WindowWidth":1024,"WindowHeight":768,"ViewHeight":768,"SoundOn":true,"PlayMusic":false,"WindNoise":false}'
 $taskScript = @"
-assert main; key F1; assert help:F1Help; capture $OutputDirectory/01-help-main.png;
+assert tips; capture $OutputDirectory/00-tip.png; click 462,441; assert tips; click 662,441; assert main;
+click 630,320; assert help; click 699,358; assert version; capture $OutputDirectory/00-version.png; click 512,447; assert main;
+key F1; assert help:F1Help; capture $OutputDirectory/01-help-main.png;
 key Escape; assert help:F1Help;
 click 380,215; assert help:priestType; capture $OutputDirectory/02-priest-help.png;
 drag 460,330,460,210,20; capture $OutputDirectory/03-priest-scrolled.png;
@@ -43,15 +45,15 @@ click 550,343; click 610,409; assert main; click 550,343; capture $OutputDirecto
 click 850,560; assert main;
 quit;
 "@
-$taskArguments = "--language english --ui-script-file $OutputDirectory/commands.txt"
+$taskArguments = "--language english --tips --ui-script-file $OutputDirectory/commands.txt"
 if ($Mode -eq 'Mission') {
     $taskScript = @"
-click-center 82,114; assert battle; wait 90;
+click-center 82,114; assert battle; key T; wait 90;
 key F2; capture $OutputDirectory/10-hide-buildings.png; key F2;
 key F7; capture $OutputDirectory/11-island-colors.png; key F7;
 right-click 526,393; assert context:main; capture $OutputDirectory/12-priest-context.png;
-click 600,476; assert context:construct; click 390,423; assert context:workshops;
-capture $OutputDirectory/14-workshops.png; click 390,403; assert placement; right-click 500,400; assert battle;
+click 600,493; assert context:construct; click 745,473; assert context:workshops;
+capture $OutputDirectory/14-workshops.png; click 745,458; assert placement; right-click 500,400; assert battle;
 key F1; assert help:F1Help; capture $OutputDirectory/15-battle-help.png; click 550,370; assert battle;
 key Escape; assert mission-menu; click 210,8; assert options; capture $OutputDirectory/16-battle-options.png;
 click 230,77; assert battle; key F6; assert knowledge; capture $OutputDirectory/17-knowledge.png;
@@ -63,11 +65,11 @@ key LeftShift+F9; wait 120; capture $OutputDirectory/21-resumed.png; quit;
 } elseif ($Mode -eq 'Workshop') {
     $taskScript = @"
 click-center 82,114; assert battle; right-click 590,284; assert context:main; capture $OutputDirectory/22-workshop.png;
-click 690,385; assert context:knowledge; capture $OutputDirectory/23-available-before.png;
-click 400,295; assert battle; right-click 590,284; click 690,367; assert context:production;
+click 690,401; assert context:knowledge; capture $OutputDirectory/23-available-before.png;
+click 808,361; assert battle; right-click 590,284; click 690,384; assert context:production;
 capture $OutputDirectory/24-production-one.png; click 950,500; assert battle;
-right-click 590,284; click 690,385; assert context:knowledge; capture $OutputDirectory/25-available-after.png;
-click 400,313; assert battle; right-click 590,284; click 690,367; assert context:production;
+right-click 590,284; click 690,401; assert context:knowledge; capture $OutputDirectory/25-available-after.png;
+click 808,378; assert battle; right-click 590,284; click 690,384; assert context:production;
 capture $OutputDirectory/26-production-two.png; click 950,500; assert battle;
 capture $OutputDirectory/27-production-sidebar.png; right-click 40,275; assert context:main;
 capture $OutputDirectory/28-production-cost.png; quit;
@@ -90,7 +92,9 @@ try {
     if ($Mode -eq 'Menu') {
         $taskSaved = Get-Content -Raw -Encoding UTF8 (Join-Path $taskSettings 'settings.json') | ConvertFrom-Json
         if ($taskSaved.SoundOn -or $taskSaved.MusicVolume -ne 3 -or !$taskSaved.SpeakerSwap) { throw '소리 상태·음량·스피커 교환 저장 실패' }
-        Write-Output 'UI PASS: saved sound off / music 3 / speaker swap on'
+        # 시작 팁 0번에서 Next Tip → OK 를 눌렀으므로 다음 시작 팁은 2번이고 팁 표시는 켜진 채다.
+        if ($taskSaved.TipNumber -ne 2 -or !$taskSaved.TellTips) { throw '시작 팁 번호·표시 설정 저장 실패' }
+        Write-Output 'UI PASS: saved sound off / music 3 / speaker swap on / next tip 2'
     } elseif ($Mode -eq 'Mission') {
         Add-Type -AssemblyName System.Drawing
         $taskPaused = Get-CloneTimerSignature (Join-Path $taskOutput '19-paused.png')

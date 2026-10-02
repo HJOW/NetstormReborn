@@ -186,14 +186,4 @@ internal sealed partial class FortMapViewer
         batch.Draw(texture, new Vector2(box.Center.X - size.X / 2, box.Center.Y - size.Y / 2), null, Color.White, 0f, Vector2.Zero,
             scale, SpriteEffects.None, 0f);
     }
-
-    /// <summary>덱 유닛에 커서를 올렸을 때 하단 상태줄에 보일 이름·비용</summary>
-    private string? DeckHoverLabel()
-    {
-        if (DeckUnitAt(_previousMouse.Position, _playHeight) is { } unit)
-        {
-            return $"{ProductionLabel(unit.Type.Name)} ({StormPower.TypeCost(unit.Type.Definition)})";
-        }
-        return DeckTraySlotAt(_previousMouse.Position) != null ? Ui("다리 조각", "Bridge piece") : null;
-    }
 }

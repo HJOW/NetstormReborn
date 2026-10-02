@@ -293,7 +293,7 @@ public sealed partial class BattleSession
         if (player.StormPower < cost) return new CommandResult(CommandFailure.Placement, $"워크샵 업그레이드에 {cost:N0} SP 필요");
         player.StormPower -= cost;
         player.Deck.UpgradeWorkshop(workshop.Id);
-        Emit(SessionEventKind.Registered, player.Number, workshop.Id, $"워크샵 단계 {player.Deck.WorkshopLevel(workshop.Id)} (−{cost})");
+        Emit(SessionEventKind.WorkshopUpgraded, player.Number, workshop.Id, $"워크샵 단계 {player.Deck.WorkshopLevel(workshop.Id)} (−{cost})");
         return CommandResult.Ok();
     }
 
@@ -448,6 +448,7 @@ public sealed partial class BattleSession
         // 무너진 칸을 이벤트로 알린다
         foreach (BridgeCellState cell in result.Removed)
         {
+            RecordFallen(new FallenObject(Tick, null, cell));
             Emit(SessionEventKind.BridgeCollapsed, cell.Owner, entity.Id, $"다리 ({cell.X}, {cell.Y}) 무너짐 ({entity.DisplayName} 없어짐)");
         }
     }

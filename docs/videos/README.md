@@ -68,11 +68,13 @@ python tools/videoframes.py range "playingVideos/Netstorm Islands at war - Disso
 
 ## 관찰 노트
 
+* **[녹화 원자료 최종 판독과 클론 반영 (2026-10-02)](record-play-final-20261002.md)** — 세 `record-play` 세션(1-1 전체·1-2 재현·UI 시연)을 지우기 전에 룬 마크(룬별 1.87~2.42초)·지키기 10.04초·제단 폭발 9.45초, 희생 음악 재시작(사제를 제단으로 보내는 명령), SP 숫자 따라가기, 낙하 궤적, 반복 효과음·명령 응답음, 시작 팁·View/Help 메뉴·우클릭 창·도움말 색을 판독해 클론에 반영했다. **세 세션의 원자료(영상·소리·입력)는 2026-10-02에 삭제했다.** 1초 간격 축소 프레임·시각표·버튼/키 사건 요약은 `extracted/record-play-archive-20261002/`에 남긴다. `playingVideos/`의 참고용 mp4는 그대로다.
+
 * 네 번째 녹화 추가 판독(2026-10-02): [옵션 메뉴 동작·파란 마크의 소멸/복귀](../screens/options-menu.md), [도움말 11주제 한국어 정리](../gameplay/help-text-record-play-20261001.md), [내장 도움말 전체 영문 본문](../sources/in-game-help.md). 도움말의 중복 정의와 실제 녹화 목록을 구분하며, 원본의 2,727행 전체도 UTF-8로 보존했다.
-* [ui-controls-record-play-20261001.md](ui-controls-record-play-20261001.md) — 네 번째 녹화, 2,563프레임·약 4분 16초. 미션 완주 대신 옵션·우클릭·생산 등록·미션 이탈·내장 도움말을 시연했다. [원본 조작키 표](../gameplay/input-controls.md)는 도움말 기재와 실제 Escape 입력을 구분한다. 지연 대응 빌드의 상대 훅 도착 대기는 최대 17.3ms였으며 포획·의식은 재현하지 않았다. 원자료는 `playingVideos/20261001T145330210Z-425636a2e82c/`에 보존한다.
+* [ui-controls-record-play-20261001.md](ui-controls-record-play-20261001.md) — 네 번째 녹화, 2,563프레임·약 4분 16초. 미션 완주 대신 옵션·우클릭·생산 등록·미션 이탈·내장 도움말을 시연했다. [원본 조작키 표](../gameplay/input-controls.md)는 도움말 기재와 실제 Escape 입력을 구분한다. 지연 대응 빌드의 상대 훅 도착 대기는 최대 17.3ms였으며 포획·의식은 재현하지 않았다. 원자료는 2026-10-02에 삭제했다(축소 보관본: `extracted/record-play-archive-20261002/`).
 * [master-of-whirligigs-record-play-20261001-2311.md](master-of-whirligigs-record-play-20261001-2311.md) — 캠페인 1-2 재플레이 6,318프레임·약 10분 36초. 포획 이전 작업장 생산·다리·전투·신전 파괴·사제 기절을 판독했다. 포획 뒤 클릭·커서 지연 보고와 후반 훅 도착 지연(상대 최대 약 1.05초), 녹화기의 입력 저장 분리 수정·미검증 범위를 기록했다. 의식 구간은 정상 타이밍 근거로 쓰지 않는다. **세 번째 녹화 원자료(영상·사운드·입력)는 2026-10-01 사용자가 삭제했다. 분석 문서와 추출 이미지·통계 등 산출물은 보존됐다.**
 * [animation-timing.md](animation-timing.md) — 애니메이션 진행 속도: 가이저 증기 약 24Hz, 신전 회오리·피해 연기 12Hz. exe 의 "현재 시각 + 간격" 타이머와 `maxFPS = 75` 루프 양자화로 설명됨
-* [the-war-begins-record-play-20260930.md](the-war-begins-record-play-20260930.md) — 사용자 직접 조작 10 FPS 녹화: 캠페인 1-1 시작, 지식 격자·설명창(호버·구성·시간 흐름), 적 신전 파괴 뒤 섬 테마·소유권 전환, 사제 기절·골렘 포획·제단 의식(다섯 룬)·희생 음악, 승리와 다음 미션 진입. 소리 판독 결과는 [music.md](../exe/music.md). 원본 녹화는 `playingVideos/20260930T154921831Z-8bdcc06b6539/`에 있으며 Git에서 제외됨
+* [the-war-begins-record-play-20260930.md](the-war-begins-record-play-20260930.md) — 사용자 직접 조작 10 FPS 녹화: 캠페인 1-1 시작, 지식 격자·설명창(호버·구성·시간 흐름), 적 신전 파괴 뒤 섬 테마·소유권 전환, 사제 기절·골렘 포획·제단 의식(다섯 룬)·희생 음악, 승리와 다음 미션 진입. 소리 판독 결과는 [music.md](../exe/music.md). 원본 녹화(`playingVideos/20260930T154921831Z-8bdcc06b6539/`)는 2026-10-02에 삭제했다(축소 보관본: `extracted/record-play-archive-20261002/`)
 * [master-of-whirligigs-record-play-20261001.md](master-of-whirligigs-record-play-20261001.md) — `record-play` 10 FPS 녹화(캠페인 1-2). 다음 장면을 사용자가 일부러 재현했다.
   * 실제 전투
   * 운반 골렘의 다리 붕괴 낙하 → 사제 허공 기절 → 다리 재건 시 복귀
@@ -82,7 +84,7 @@ python tools/videoframes.py range "playingVideos/Netstorm Islands at war - Disso
   * 의식 중 제단 판매
   * 완료 보상 +5,000 SP
 
-  원본 녹화는 `playingVideos/20261001T114152818Z-778e248ca3aa/`에 있으며 Git에서 제외됨
+  원본 녹화(`playingVideos/20261001T114152818Z-778e248ca3aa/`)는 2026-10-02에 삭제했다(축소 보관본: `extracted/record-play-archive-20261002/`)
 * AV1 소프트웨어 디코딩은 느리므로 긴 구간을 한 번에 뽑지 않는다.
 
 ## YouTube 영상 바로 읽기 (2026-10-01)

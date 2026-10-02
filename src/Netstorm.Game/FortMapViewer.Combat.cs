@@ -33,17 +33,18 @@ internal sealed partial class FortMapViewer
         }
     }
 
-    /// <summary>완공 신전 목록이 바뀔 때 지면 테마·소유자색을 다시 만든다. 섬 마스크는 그대로다.</summary>
+    /// <summary>완공 신전 목록이나 섬 테마 숨기기(Shift+F3)가 바뀔 때 지면 테마·소유자색을 다시 만든다. 섬 마스크는 그대로다.</summary>
     private void RefreshTerritoryAppearance()
     {
         GameEntity[] temples = _session.Entities.Where(e => e.Kind == ObjectKind.Temple && e.IsComplete).ToArray();
-        string signature = string.Join(',', temples.Select(e => e.Id));
+        string signature = string.Join(',', temples.Select(e => e.Id)) + (_hideIslandThemes ? "|plain" : "");
         if (signature == _terrainTempleSignature) return;
         _terrainTempleSignature = signature;
+        // 섬 테마를 숨기면(Shift+F3) 소유자 색은 그대로 두고 지면만 신전이 없는 섬과 같은 기본(초록) 테마로 그린다
         _terrain = new FortTerrainPreview(_map, _terrainType.Definition, territory =>
         {
             GameEntity? temple = temples.FirstOrDefault(e => e.Territory == territory);
-            return (temple?.Owner ?? 0, temple?.Type.Definition.GetString("theme") ?? "sun");
+            return (temple?.Owner ?? 0, _hideIslandThemes ? "sun" : temple?.Type.Definition.GetString("theme") ?? "sun");
         });
         _fringes = FortTerrainFringe.Create(_terrain, _terrainType.Definition, _fringeType.Definition);
         var tiles = _terrain.Tiles.ToDictionary(tile => (tile.X, tile.Y));

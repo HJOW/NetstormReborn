@@ -278,16 +278,16 @@ public sealed class SacrificeTests
         BattleSession session = Create(CampaignMission(), includeCannon: true);
         (GameEntity captive, GameEntity altar, GameEntity performer) = StartRitual(session);
         long voice = RunUntil(session, SessionEventKind.SacrificeRune).Tick;
-        session.RunTicks(Ticks(session, BattleSession.SacrificeRuneMarkSeconds + 0.5));
+        session.RunTicks(Ticks(session, BattleSession.SacrificeRuneMarkSeconds[0] + 0.5));
         session.Submit(new MoveEntityCommand(1, performer.Id, 80, 30));
         session.RunTicks(session.TicksPerSecond * 25);
 
         SessionEvent[] away = [.. session.DrainEvents()];
         Assert.Contains(away, item => item.Kind == SessionEventKind.SacrificePaused);
         Assert.DoesNotContain(away, item => item.Kind is SessionEventKind.SacrificeBroken or SessionEventKind.SacrificeRuneCancelled);
-        // 확정된 Wind 룬은 사제가 없어도 음성 12.1초 뒤에 탄다.
+        // 확정된 Wind 룬은 사제가 없어도 음성 뒤 마크 지연(1.98초) + 지키기(10.04초)에 탄다.
         long burned = Assert.Single(away, item => item.Kind == SessionEventKind.SacrificeRuneBurned).Tick;
-        Assert.InRange(burned - voice, Ticks(session, BattleSession.SacrificeRuneBurnSeconds) - 1, Ticks(session, BattleSession.SacrificeRuneBurnSeconds) + 1);
+        Assert.InRange(burned - voice, Ticks(session, BattleSession.RuneBurnSeconds(0)) - 1, Ticks(session, BattleSession.RuneBurnSeconds(0)) + 1);
         Assert.DoesNotContain(away, item => item.Kind == SessionEventKind.SacrificeRune);
         AltarRitual ritual = Assert.Single(session.Rituals);
         Assert.True(ritual.PerformerAway);
@@ -301,6 +301,56 @@ public sealed class SacrificeTests
         Assert.InRange(next.Tick - resumed, Ticks(session, BattleSession.SacrificeRuneLeadSeconds) - 1, Ticks(session, BattleSession.SacrificeRuneLeadSeconds) + 1);
         RunUntil(session, SessionEventKind.SacrificeCompleted);
         Assert.Equal(BattleSession.SacrificeRuneCount, ritual.RunesBurned);
+    }
+
+    /// <summary>
+    /// 사제가 계속 제단 옆에 있으면 룬마다 "음성 → 룬별 마크 지연 → 10.04초 뒤 소멸 → 2.77초 뒤 다음 음성" 순서다
+    /// (2026-10-02 캠페인 1-1·1-2 녹음 판독: 마크 = jimbuild.wav 반복 시작).
+    /// </summary>
+    [Fact]
+    public void Ritual_RuneScheduleMatchesRecordedMarkWardAndGap()
+    {
+        BattleSession session = Create(CampaignMission(), includeCannon: true);
+        StartRitual(session);
+        var timeline = new List<SessionEvent>();
+        // 의식 완료까지 룬 사건을 모은다
+        while (!timeline.Any(item => item.Kind == SessionEventKind.SacrificeCompleted) && timeline.Count < 100)
+        {
+            timeline.Add(RunUntilAny(session, SessionEventKind.SacrificeRune, SessionEventKind.SacrificeRuneMarked,
+                SessionEventKind.SacrificeRuneBurned, SessionEventKind.SacrificeCompleted));
+        }
+        long[] voices = [.. timeline.Where(item => item.Kind == SessionEventKind.SacrificeRune).Select(item => item.Tick)];
+        long[] marks = [.. timeline.Where(item => item.Kind == SessionEventKind.SacrificeRuneMarked).Select(item => item.Tick)];
+        long[] burns = [.. timeline.Where(item => item.Kind is SessionEventKind.SacrificeRuneBurned or SessionEventKind.SacrificeCompleted).Select(item => item.Tick)];
+        Assert.Equal(BattleSession.SacrificeRuneCount, voices.Length);
+        Assert.Equal(BattleSession.SacrificeRuneNames, timeline.Where(item => item.Kind == SessionEventKind.SacrificeRuneMarked).Select(item => item.Text));
+        // 룬마다 마크 지연·지키기·다음 음성까지의 간격이 측정값과 한 틱 안에서 같다
+        for (int rune = 0; rune < BattleSession.SacrificeRuneCount; rune++)
+        {
+            Assert.InRange(marks[rune] - voices[rune], Ticks(session, BattleSession.SacrificeRuneMarkSeconds[rune]) - 1, Ticks(session, BattleSession.SacrificeRuneMarkSeconds[rune]) + 1);
+            Assert.InRange(burns[rune] - marks[rune], Ticks(session, BattleSession.SacrificeRuneWardSeconds) - 1, Ticks(session, BattleSession.SacrificeRuneWardSeconds) + 1);
+            if (rune + 1 < BattleSession.SacrificeRuneCount)
+                Assert.InRange(voices[rune + 1] - burns[rune], Ticks(session, BattleSession.SacrificeRuneGapSeconds) - 1, Ticks(session, BattleSession.SacrificeRuneGapSeconds) + 1);
+        }
+    }
+
+    /// <summary>
+    /// 곡이 끝날 때 희생 음악을 다시 고르는 "진행 중" 판정(exe 단계 1 이상)은 첫 룬이 탄 뒤부터 제단이 사라질 때까지다.
+    /// 2026-10-01 캠페인 1-2 녹화 17:37.1: 룬이 하나도 타지 않은 새 의식에서는 희생 음악이 끝나자 thu22 로 넘어갔다.
+    /// </summary>
+    [Fact]
+    public void SacrificeMusicStage_StartsAfterFirstBurnAndEndsWithAltar()
+    {
+        BattleSession session = Create(CampaignMission(), includeCannon: true);
+        StartRitual(session);
+        Assert.False(session.IsSacrificeInProgress(1));
+        RunUntil(session, SessionEventKind.SacrificeRuneBurned);
+        Assert.True(session.IsSacrificeInProgress(1));
+        Assert.False(session.IsSacrificeInProgress(2));
+        RunUntil(session, SessionEventKind.SacrificeCompleted);
+        Assert.True(session.IsSacrificeInProgress(1));
+        RunUntil(session, SessionEventKind.AltarConsumed);
+        Assert.False(session.IsSacrificeInProgress(1));
     }
 
     /// <summary>
@@ -328,7 +378,7 @@ public sealed class SacrificeTests
         SessionEvent again = RunUntil(session, SessionEventKind.SacrificeRune);
         Assert.Equal("Wind", again.Text);
         SessionEvent burned = RunUntil(session, SessionEventKind.SacrificeRuneBurned);
-        Assert.InRange(burned.Tick - again.Tick, Ticks(session, BattleSession.SacrificeRuneBurnSeconds) - 1, Ticks(session, BattleSession.SacrificeRuneBurnSeconds) + 1);
+        Assert.InRange(burned.Tick - again.Tick, Ticks(session, BattleSession.RuneBurnSeconds(0)) - 1, Ticks(session, BattleSession.RuneBurnSeconds(0)) + 1);
     }
 
     /// <summary>
@@ -466,6 +516,22 @@ public sealed class SacrificeTests
             }
         }
         throw new Xunit.Sdk.XunitException($"{kind} 이벤트가 나지 않았습니다.");
+    }
+
+    /// <summary>주어진 종류 중 하나가 날 때까지 한 틱씩 진행하고 처음 것을 돌려준다 (다른 이벤트는 버린다, 최대 3분).</summary>
+    private static SessionEvent RunUntilAny(BattleSession session, params SessionEventKind[] kinds)
+    {
+        // 이벤트가 날 때까지 한 틱씩 진행한다
+        for (int tick = 0; tick < session.TicksPerSecond * 180; tick++)
+        {
+            session.RunTicks(1);
+            SessionEvent? found = session.DrainEvents().FirstOrDefault(item => kinds.Contains(item.Kind));
+            if (found != null)
+            {
+                return found;
+            }
+        }
+        throw new Xunit.Sdk.XunitException($"{string.Join(", ", kinds)} 이벤트가 나지 않았습니다.");
     }
 
     /// <summary>측정 초를 틱으로 바꿀 때 분수 틱이 생기면 다음 틱 경계로 올림한다.</summary>

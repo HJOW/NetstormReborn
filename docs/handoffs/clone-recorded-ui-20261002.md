@@ -105,4 +105,4 @@ powershell -File tools/clone_ui_smoke.ps1 -OutputDirectory extracted/screens/ui-
 - 원본 포획·의식 구간의 입력 지연과 커서 반영 지연 확인은 이번 클론 UI 작업과 별개로 남는다.
 - 원본 게임·녹화를 새로 실행하지 않았고 `AGENTS.md`, 원본 자산, 네 번째 녹화, analyzeManager를 변경하지 않았다.
 - 기존 검증 PNG·입력 파일·로그는 Git 제외 `extracted/screens/ui-analysis-20261002/`에 있다. `mission.*`, `workshop.*`, `regression/` 및 01~28번 PNG를 보존한다. 이 파일들은 문서 커밋만으로 다른 환경에 전달되지 않는다.
-- 기준 녹화 세션은 `playingVideos/20261001T145330210Z-425636a2e82c/`다. 사용자가 삭제한 세 번째 세션과 혼동하지 않는다.
+- 기준 녹화 세션은 `playingVideos/20261001T145330210Z-425636a2e82c/`였다(2026-10-02 원자료 삭제, 축소 보관본 `extracted/record-play-archive-20261002/`). 사용자가 삭제한 세 번째 세션과 혼동하지 않는다. 이후 반영은 [녹화 최종 판독](../videos/record-play-final-20261002.md)을 따른다.

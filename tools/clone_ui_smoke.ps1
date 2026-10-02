@@ -18,12 +18,12 @@ click-center 82,114; assert battle; wait 90; capture $OutputDirectory/05-battle.
 click 40,181; assert placement; capture $OutputDirectory/06-placement.png;
 right-click 500,400; assert battle; capture $OutputDirectory/07-bridges.png;
 click 22,47; assert holding; capture $OutputDirectory/08-held.png;
-click 105,8; assert mission-menu; click 150,78; assert leave; capture $OutputDirectory/09-leave.png;
+key Escape; assert mission-menu; click 109,8; click 150,77; assert leave; capture $OutputDirectory/09-leave.png;
 click-center -82,48; assert main; capture $OutputDirectory/10-return.png;
 click-center -120,-64; assert campaigns; click-center 0,28; assert missions;
 click-center 0,46; assert briefing; capture $OutputDirectory/10a-briefing-1-2.png;
 click-center 83,121; assert battle; wait 90; capture $OutputDirectory/10b-battle-1-2.png;
-click 105,8; assert mission-menu; click 150,78; assert leave; click-center -82,48; assert main;
+key Escape; assert mission-menu; click 109,8; click 150,77; assert leave; click-center -82,48; assert main;
 click-center 38,-42; assert options; capture $OutputDirectory/11-options.png;
 click-center 148,44; capture $OutputDirectory/12-volume.png; click-center 238,107; assert main;
 click-center 38,-42; click-center 148,63; click-center 238,99; assert main;

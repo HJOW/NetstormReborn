@@ -9,7 +9,7 @@
   - 1-1 성공 창의 `Next Mission`(`MissionBegin,MasterOfWhirligigs`)도 같은 판정으로 열린다.
 - 1-3 Save the Island! 이후와 1-2 성공 창의 `Next Mission`(`SaveTheIsland`)은 잠겨 있다. 진행도 저장이 없어 1-1을 깨지 않아도 메뉴에서 바로 1-2를 고를 수 있다.
 - 1-2는 `loadFort`가 없으므로 같은 이름의 맵 `masterofwhirligigs.fort`를 연다.
-- 상단 줄에 미션 번호 `1-2`와 경과 시간을 표시한다.
+- T 키로 켜는 타이머에 미션 번호 `1-2`와 경과 시간을 표시한다(2026-10-02부터 원본처럼 상단 줄이 없고 타이머는 꺼진 채 시작한다).
 
 ## 미션 데이터 (`masterofwhirligigs.english`·`.fort`)
 
@@ -28,9 +28,9 @@
 조작은 1-1과 같다. 2026-10-02부터 생산 창(덱)은 원본처럼 골렘과 워크샵에 등록한 유닛만 보여 준다([생산 창 문서](../screens/clone-deck.md)).
 - 이전의 생산 버튼 세 칸(3~5번)과 시작 지식 자동 선택·자동 등록은 없앴다. 1-2의 Wind Generator·Sun Cannon·Sun Disc Thrower도 워크샵 우클릭 `Put Knowledge into Production`으로 등록한다.
 - 워크샵 지식 목록은 원본 지식 창의 행 안 group 순서(battery → cannon → archer → blocker → fence → aviary → balloon)다.
-- 생산 창 항목에 마우스를 올리면 하단 상태줄에 한국어 짧은 이름(발전기·대포·원반 투척기 등)과 비용이 보인다.
+- 생산 창 항목을 우클릭하면 원본 정보 창(이름·원소·분류·Cost)이 열린다. 한국어 짧은 이름(발전기·대포·원반 투척기 등)은 워크샵 메뉴에 쓴다(2026-10-02부터 하단 상태줄은 없다).
 
-가이저를 **우클릭**하면 남은 Storm Power가 상태줄에 나온다(원본 도움말 "Right-clicking on a Storm Geyser will show the available Storm Power"). 다 쓴 가이저는 원본 `emptyGeyser` 그림으로 바뀐다.
+가이저를 **우클릭**하면 남은 Storm Power가 지도 아래쪽 알림으로 잠깐 나온다(원본 도움말 "Right-clicking on a Storm Geyser will show the available Storm Power"). 다 쓴 가이저는 원본 `emptyGeyser` 그림으로 바뀐다.
 
 ## 이번 작업에서 함께 바꾼 공통 규칙
 

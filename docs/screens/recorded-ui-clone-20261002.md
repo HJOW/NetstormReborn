@@ -88,7 +88,7 @@ Auto-Demo·Tell Tips at Startup·Pass Server Diagnostic은 기존 미구현 상�
 
 도움말 창 높이와 우클릭 행이 바뀌어 `tools/clone_help_options_smoke.ps1`의 클릭 좌표(Back 버튼, 드래그 시작점, 사제 `Construct`·워크샵 `Put Knowledge`·`View Current Production` 행)를 새 위치로 고쳤다. 고친 뒤 Menu·Mission·Workshop 입력 단언이 모두 통과했고, Assets 197·Core 246 테스트도 통과했다.
 
-**남은 외관 차이 (미반영, 구현 범위 밖)**
+**남은 외관 차이 → 2026-10-02 대부분 반영** ([최종 판독](../videos/record-play-final-20261002.md#화면)): 우클릭 창의 돌 프레임·큰 제목·노란 값·구분선·`Current Production` 제목과 `About`·`Player >`, 도움말 본문 색·스크롤 화살표·능력치 값 색, 옵션 비활성 항목, 상단 줄·하단 상태줄 제거를 반영했다. 글꼴은 AGENTS.md에 따라 D2Coding을 유지한다. 아래는 반영 전 기록이다.
 
 * 우클릭 메뉴: 원본은 모서리 장식이 있는 돌 프레임·굵고 큰 제목·구분선으로 묶은 행이다. 클론은 단순한 돌 질감 상자다. 하위 `Current Production`은 별도 큰 제목과 항목 + `About`을 가지나 클론 하위 메뉴는 `About` 행이 없다(원본 `About`이 가리키는 대상이 불명확해 구현 보류). `Player >` 행도 없다.
 * 도움말 본문: 원본은 반투명 어두운 회색 바탕, 링크는 연한 청회색, 목록 기호는 `*`이고 방향 화살표가 있는 스크롤바다. 클론은 거의 검은 바탕, 선명한 파란 링크, `•` 기호다. 글꼴도 원본은 비례폭 산세리프, 클론은 모노스페이스다.

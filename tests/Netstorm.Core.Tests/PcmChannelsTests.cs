@@ -40,4 +40,31 @@ public sealed class PcmChannelsTests
             if (Directory.Exists(directory)) Directory.Delete(directory, true);
         }
     }
+
+    /// <summary>
+    /// 원본 Options 의 Auto-Demo·Tell Tips at Startup·Pass Server Diagnostic 과 팁 번호가 저장·복구되고,
+    /// 이전 설정 파일은 원본 녹화의 시작 상태(Auto-Demo·팁 켜짐, 진단 꺼짐, 팁 0번)를 쓴다. 음수 팁 번호는 0 으로 맞춘다.
+    /// </summary>
+    [Fact]
+    public void StartupOptions_RoundTripWithRecordedDefaults()
+    {
+        string directory = Path.Combine(Path.GetTempPath(), "netstorm-options-" + Guid.NewGuid().ToString("N"));
+        string path = Path.Combine(directory, DisplaySettings.FileName);
+        try
+        {
+            var settings = new DisplaySettings { AutoDemo = false, TellTips = false, TipNumber = 15, PassServerDiagnostic = true };
+            Assert.True(settings.Save(path));
+            DisplaySettings restored = DisplaySettings.Load(path);
+            Assert.False(restored.AutoDemo); Assert.False(restored.TellTips);
+            Assert.Equal(15, restored.TipNumber); Assert.True(restored.PassServerDiagnostic);
+            File.WriteAllText(path, "{\"soundOn\":false,\"tipNumber\":-3}");
+            restored = DisplaySettings.Load(path);
+            Assert.True(restored.AutoDemo); Assert.True(restored.TellTips);
+            Assert.Equal(0, restored.TipNumber); Assert.False(restored.PassServerDiagnostic);
+        }
+        finally
+        {
+            if (Directory.Exists(directory)) Directory.Delete(directory, true);
+        }
+    }
 }

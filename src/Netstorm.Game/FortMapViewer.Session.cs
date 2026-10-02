@@ -103,7 +103,9 @@ internal sealed partial class FortMapViewer
             QueueEventSound(sessionEvent);
             if (sessionEvent.Kind != SessionEventKind.BridgePieceAdded)
             {
-                _notice = DescribeEvent(sessionEvent);
+                // 공개 캠페인은 원본처럼 개발용 사건 문구를 띄우지 않고, 내 명령이 거부된 이유만 짧게 알린다
+                if (!_playUi) _notice = DescribeEvent(sessionEvent);
+                else if (sessionEvent is { Kind: SessionEventKind.CommandRejected, Player: TestPlayer }) _notice = PlayFailureText(sessionEvent.Failure);
                 if (sessionEvent.Kind is SessionEventKind.TutorialTell or SessionEventKind.MissionTell)
                 {
                     OpenTutorialTell(sessionEvent.Text);

@@ -11,9 +11,14 @@ internal sealed partial class FortMapViewer
 {
     /// <summary>미션마다 기억하는 숫자 키 카메라 위치.</summary>
     private readonly Dictionary<Keys, Vector2> _cameraLocations = [];
-    private bool _showTimer = true;
+    /// <summary>T 키로 켜는 게임 타이머 표시 (원본 녹화 세 개 모두 타이머가 보이지 않아 꺼진 상태로 시작한다)</summary>
+    private bool _showTimer;
+    /// <summary>F2 건물 그림 숨기기 (View 메뉴 "Hide buildings - F2")</summary>
     private bool _hideBuildings;
+    /// <summary>F7 섬 소유 색 표시 (View 메뉴 "Hide Island Ownership - F7" 이 켜지면 false)</summary>
     private bool _islandColors = true;
+    /// <summary>Shift+F3 섬 테마 숨기기 (View 메뉴 "Hide/Show Island Themes - Shift F3"). 켜면 모든 섬을 기본 초록 지면으로 그린다.</summary>
+    private bool _hideIslandThemes;
     private readonly List<int> _recentPlaced = [];
     /// <summary>일반 도움말·About 창을 게임 본체에 요청한다.</summary>
     public Action<string>? HelpRequested { get; set; }
@@ -24,6 +29,8 @@ internal sealed partial class FortMapViewer
         bool shift = keyboard.IsKeyDown(Keys.LeftShift) || keyboard.IsKeyDown(Keys.RightShift);
         if (Pressed(keyboard, Keys.F2)) _hideBuildings = !_hideBuildings;
         if (!shift && Pressed(keyboard, Keys.F7)) _islandColors = !_islandColors;
+        // 2026-09-30 녹화 05:02: View 메뉴의 Hide/Show Island Themes 를 켜자 눈·갈색 섬이 모두 초록 지면으로 바뀌었다
+        if (shift && Pressed(keyboard, Keys.F3)) _hideIslandThemes = !_hideIslandThemes;
         if (Pressed(keyboard, Keys.F4) || Pressed(keyboard, Keys.H))
         {
             GameEntity? temple = _session.Entities.FirstOrDefault(e => e.Owner == TestPlayer && e.Kind == ObjectKind.Temple);
@@ -62,6 +69,8 @@ internal sealed partial class FortMapViewer
             }
         }
         if (Pressed(keyboard, Keys.T)) _showTimer = !_showTimer;
+        // 원본 팁 9: "U 키를 누르면 마지막으로 잃은 유닛 위치로 간다" (exe 는 내 오브젝트 파괴 때 위치를 저장한다)
+        if (Pressed(keyboard, Keys.U) && _lastLostCell is (int lostX, int lostY)) _camera = WorldPixels(lostX, lostY);
         // Shift+숫자는 현재 카메라를 저장하고 같은 숫자는 저장한 위치로 복귀한다.
         for (Keys key = Keys.D0; key <= Keys.D9; key++)
         {

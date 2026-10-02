@@ -2,7 +2,8 @@
 
 2026-10-01, 원본 게임 실행 없음. 근거는 전체 디컴파일(`extracted/decomp/Netstorm.c`)과
 `originals/Netstorm.exe`(10.78)의 데이터 표, 그리고 사용자 플레이 녹음
-(`playingVideos/20260930T154921831Z-8bdcc06b6539/audio-*.wav`)이다. 녹음 판독 방법은 [녹화 관찰 노트](../videos/the-war-begins-record-play-20260930.md) 5절.
+(`playingVideos/20260930T154921831Z-8bdcc06b6539/audio-*.wav`, 2026-10-02 삭제)이다. 녹음 판독 방법은 [녹화 관찰 노트](../videos/the-war-begins-record-play-20260930.md) 5절.
+원자료를 지우기 전 마지막 판독(룬 마크·`jimbuild` 반복·희생 음악 재시작·효과음 연결)은 [녹화 최종 판독](../videos/record-play-final-20261002.md)에 있다.
 
 ## 0. 사용자 설명 (2026-10-01)
 
@@ -103,10 +104,12 @@ exe 에는 의식 완료 때 음악을 바꾸는 호출이 없다. `sacrifice.mu
 **2026-10-01 캠페인 1-2 녹화 보강**([녹화 노트](../videos/master-of-whirligigs-record-play-20261001.md)):
 - 의식 시작(15:16.3) 직후 15:17.2에 `sacrifice.mus`가 시작했다.
 - 16:49 의식 도중 제단을 판매해 의식이 깨진 뒤에도 희생 음악은 **곡 끝(17:37.1)까지 이어졌다.** 곧바로 원소 곡 `thu22`로 넘어갔다. 의식 완료 때와 같이 곡 끝에서만 바뀐다는 위 규칙과 맞다.
-- 17:36.5에 다음 의식이 시작됐는데도 17:37.0 곡 전환에서는 `thu22`가 골라졌다. `sacrifice.mus`는 18:28.8에 다시 시작했다. 이 재시작 조건(의식 사제 이탈·복귀와의 관계)은 미확정이다.
+- 17:36.5에 다음 의식이 시작됐는데도 17:37.0 곡 전환에서는 `thu22`가 골라졌다. `sacrifice.mus`는 18:28.8에 다시 시작했다.
+- **2026-10-02 확정(원자료 재판독):** 18:28.8 재시작은 `thu22`(225초)의 곡 끝이 아니다. 18:28.2의 왼쪽 클릭(사제를 제단으로 보내는 명령, `priestMove3` 응답음) 0.6초 뒤이며, 사제는 18:32 무렵 도착했다. 1-1의 12:05.5 명령 → 12:06.4 음악, 1-2의 15:16.5 명령 → 15:17.2 음악도 같은 형태다. 따라서 **포로가 묶인 제단으로 사제를 보내는 명령**이 희생 음악 요청(같은 곡이면 무시)이다. 17:37.1에 `thu22`가 골라진 것은 새 의식의 룬이 하나도 타지 않아 `FUN_00449220`의 "단계 1 이상"이 거짓이었기 때문으로 본다(단계는 룬이 탈 때마다 오른다).
 
 ## 6. 클론 구현 (2026-10-01)
 
+* 2026-10-02: 희생 음악 요청을 의식 시작·재개와 **포로가 묶인 제단으로 사제를 보내는 명령**에 연결했다. 곡 끝에서 다시 희생 음악을 고르는 `IsSacrificeInProgress`는 룬이 하나 이상 탔거나 완료 뒤 제단이 남아 있을 때만 참이다(테스트 `SacrificeMusicStage_StartsAfterFirstBurnAndEndsWithAltar`).
 * `Netstorm.Core.Audio.MusicDirector` — 2절 규칙을 실시간 초 단위로 옮겼다(첫 곡 난수는 주입). 곡이 끝나는 순간 다시 같은 곡(희생 음악)을 고르면 원본은 요청을 무시하지만(재생이 멈출 수 있음) 클론은 처음부터 다시 튼다. 테스트 `MusicDirectorTests`가 녹화의 곡 순서·희생 음악 복귀·결과 음악 잠금을 재현한다.
 * `Netstorm.Assets.WaveFile` — RIFF PCM 8/16bit 해석, 16bit 변환, 선형 보간 재표본화(6,000Hz 원본 3개용: `thunderCrack.wav`·`distantWindQuiet-3000.wav`·`ThunderQuietDistant.wav`).
 * `Netstorm.Game.AudioPlayer` — 효과음은 메모리에 올려 최대 8개(`maxSimulSounds`)까지 겹쳐 틀고, 음악은 0.25초 조각으로 스트리밍한다. 소리 장치가 없으면 소리 없이 계속 실행한다. 설정 `SoundOn`·`PlayMusic`·`SoundVolume`(기본 3)·`MusicVolume`(기본 2)는 원본 `setup.cfg`/`options.cfg` 기본값이며 명령줄 `--no-sound`·`--no-music`으로 끌 수 있다. 볼륨 단계 → 음량은 단계/5 로 두었다(원본 변환식 미확인).
@@ -122,12 +125,17 @@ exe 에는 의식 완료 때 음악을 바꾸는 호출이 없다. `sacrifice.mu
 | `bridgeFall.wav` | 다리 칸 제거 `FUN_00422300` | `BridgeCollapsed` |
 | `bridgeCrack.wav` | 붕괴 구동 `FUN_004227e0` | `BridgeCracked` |
 | `buildDone.wav` + 타입 `buildDoneSound` | 건설 완료 `FUN_00443e20` (`buildDoneSound`는 `Rifttype.cpp`가 타입 +0x90 에 읽음: 템플 `templeComplete.wav`, 워크샵 `workshopComplete.wav`) | `BuildingCompleted` |
-| `jimBuild.wav` | 건설 진행 `FUN_00443c40` | 미연결 (반복 주기 미확인) |
+| `jimBuild.wav` | 건설 진행 `FUN_00443c40` | 화면 안에 건설 중인 오브젝트가 있거나 화면 안 제단의 룬 마크가 타는 동안 1.14초(파일 길이)마다 반복 (2026-10-02 녹음: 룬마다 9번, 정확히 1.14초 간격) |
 | `dropPiece.wav` | `FUN_004108f0`·`FUN_0042c2e0`·`FUN_004473e0` | `BridgePlaced` (호출 맥락은 이름과 위치로 추정) |
 | `rotatePiece.wav` | `FUN_00446a70` | 다리 조각 회전(R) |
 | `openGump.wav` / `openSubGump.wav` | 창·하위 창 열기 (`FUN_00476820` 등) | 지식 창·상세창 열기 |
-| `upgradeComplete.wav` | `FUN_004545e0` | 미연결 (업그레이드 미구현) |
+| `upgradeComplete.wav` | `FUN_004545e0` | `WorkshopUpgraded` (워크샵 업그레이드) |
 | `geyserMined%d.wav` | `FUN_004266c0` (값/1000 번호) | 미연결 |
-| `collapse.wav` | `FUN_0044b4b0` | 미연결 |
+| `collapse.wav` | `FUN_0044b4b0` | `Salvaged` (판매·해체, 녹음 11:34.2·14:41.2·16:49.3) |
+| `priestFall.wav` / `priestFree.wav` | 허공 기절 / 포로 해방 | `PriestSuspended` / `PriestReleased` (녹음 13:21.9·14:02.0 / 11:06.7 등) |
+| `priestStruggleFade02-800.wav` | 포로 묶기·의식 중 몸부림 | `PriestBound` |
+| `priestForceField.wav` | 기절 사제 보호막 | 화면 안에 기절 사제가 있는 동안 1.238초(파일 길이)마다 반복 |
+| `unitLost.wav` | 내 오브젝트 제거 `0x4b0b89` (위치를 U 키용으로 저장) | 전투로 파괴된 내 오브젝트(비행 공격체 제외) — 위치는 U 키로 이동 |
+| 타입 `moveSound` 계열 | 이동 명령 응답 | 사제·골렘 명령 클릭 때 녹음에서 들린 변형(골렘 1·2·4·5, 사제 1·3) 중 하나 |
 
 녹음에서도 `workshopComplete`(00:37.0)·`upgradeComplete`(01:38.1)·`bridgeFall`(3회)·`openGump`가 확인됐다. 한 프레임에 같은 효과음이 여러 번 생기면(여러 칸이 함께 금 감 등) 클론은 한 번만 튼다.

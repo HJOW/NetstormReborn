@@ -269,6 +269,15 @@ public enum SessionEventKind
 
     /// <summary>지형이 다시 이어져 기존 이동/수확을 재개했다.</summary>
     MoveResumed,
+
+    /// <summary>
+    /// 룬 음성이 끝나 제단에 그 룬의 마크가 나타났다 (Text = 룬 이름). 이 뒤에는 사제가 떠나도 룬이 탄다.
+    /// 원본은 이때부터 룬이 탈 때까지 jimbuild.wav 를 1.14초마다 반복한다(2026-10-02 녹음 판독).
+    /// </summary>
+    SacrificeRuneMarked,
+
+    /// <summary>워크샵을 한 단계 업그레이드했다 (원본 완료음 upgradeComplete.wav, exe FUN_004545e0).</summary>
+    WorkshopUpgraded,
 }
 
 /// <summary>세션 이벤트 한 건.</summary>

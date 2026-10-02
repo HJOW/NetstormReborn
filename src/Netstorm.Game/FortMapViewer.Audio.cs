@@ -60,6 +60,9 @@ internal sealed partial class FortMapViewer
                     QueueSound(fire);
                 }
                 break;
+            case SessionEventKind.EntityDestroyed:
+                OnEntityDestroyed(sessionEvent.EntityId);
+                break;
             case SessionEventKind.BuildingCompleted:
                 QueueSound(BuildDoneSound);
                 if (_session.Entity(sessionEvent.EntityId)?.Type.Definition.GetString(BuildDoneSoundProperty) is { Length: > 0 } special)
@@ -80,6 +83,9 @@ internal sealed partial class FortMapViewer
                 QueueSound("golemPickUp.wav");
                 break;
             case SessionEventKind.SacrificeStarted:
+            case SessionEventKind.SacrificeResumed:
+                // 내 제단 의식이 시작되거나 사제가 돌아와 재개되면 희생 음악을 요청한다 (같은 곡이 재생 중이면 무시된다).
+                // 2026-10-01 캠페인 1-2 녹화: 사제 복귀(18:28.2 priestMove3) 직후 18:28.8 에 thu22 를 끊고 sacrifice.mus 가 시작됐다.
                 if (sessionEvent.Player == TestPlayer)
                 {
                     _mySacrificeMusicRequested = true;
@@ -100,6 +106,27 @@ internal sealed partial class FortMapViewer
                 break;
             case SessionEventKind.AltarConsumed:
                 QueueSound("explodeSlot.wav");
+                break;
+            // 2026-10-02 녹음 판독(캠페인 1-1·1-2)으로 사건 시각과 맞춘 효과음
+            case SessionEventKind.PriestSuspended:
+                // 발판이 무너져 사제가 허공에서 기절할 때 (1-2 13:21.9·14:02.0)
+                QueueSound("priestFall.wav");
+                break;
+            case SessionEventKind.PriestReleased:
+                // 운반체 내려놓기·판매, 제단 판매로 포로가 풀릴 때 (1-2 11:06.7·11:34.2·14:41.2·16:49.3)
+                QueueSound("priestFree.wav");
+                break;
+            case SessionEventKind.PriestBound:
+                // 포로를 제단에 묶을 때 (1-2 15:16.3·17:36.5, 1-1 12:11.7)
+                QueueSound("priestStruggleFade02-800.wav");
+                break;
+            case SessionEventKind.Salvaged:
+                // 오브젝트를 판매(회수)할 때 해체 소리 (1-2 11:34.2 골렘·14:41.2·16:49.3 제단, exe FUN_0044b4b0)
+                QueueSound("collapse.wav");
+                break;
+            case SessionEventKind.WorkshopUpgraded:
+                // 워크샵 업그레이드 완료 (1-1 01:38.1, 1-2 01:44.4·08:39.2, exe FUN_004545e0)
+                QueueSound("upgradeComplete.wav");
                 break;
         }
     }

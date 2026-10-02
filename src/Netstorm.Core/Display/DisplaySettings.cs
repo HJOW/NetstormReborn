@@ -75,6 +75,20 @@ public sealed class DisplaySettings
     /// <summary>스테레오 PCM의 좌·우 채널을 교환할지.</summary>
     public bool SpeakerSwap { get; set; }
 
+    /// <summary>
+    /// 원본 Options "Auto-Demo" 켜짐 상태 (2026-10-01 녹화 시작 시 켜짐). 클론은 값만 저장하며 자동 데모 재생은 아직 없다.
+    /// </summary>
+    public bool AutoDemo { get; set; } = true;
+
+    /// <summary>원본 Options "Tell Tips at Startup" (설정 tellTips, 기본 켜짐). 켜져 있으면 시작할 때 "Did You Know?" 팁 창을 연다.</summary>
+    public bool TellTips { get; set; } = true;
+
+    /// <summary>다음에 보여 줄 팁 번호 (원본 설정 tipNumber, tell.english [TipList] 의 tipN)</summary>
+    public int TipNumber { get; set; }
+
+    /// <summary>원본 Options "Pass Server Diagnostic" 켜짐 상태 (온라인 서버 진단 통과용). 클론은 값만 저장한다.</summary>
+    public bool PassServerDiagnostic { get; set; }
+
     /// <summary>효과음 볼륨 단계 1~5 (원본 options.cfg soundVolume 기본 "3")</summary>
     public int SoundVolume { get; set; } = 3;
 
@@ -159,6 +173,7 @@ public sealed class DisplaySettings
         EdgeScrollSpeed = Math.Clamp(EdgeScrollSpeed, 0, 200);
         SoundVolume = Math.Clamp(SoundVolume, MinimumVolume, MaximumVolume);
         MusicVolume = Math.Clamp(MusicVolume, MinimumVolume, MaximumVolume);
+        TipNumber = Math.Max(0, TipNumber);
         if (!Enum.IsDefined(WideScreen))
         {
             WideScreen = WideScreenMode.Extend;

@@ -25,6 +25,26 @@ public sealed class GroundSupportTests
         Assert.Equal(240, Assert.Single(session.DrainEvents(), e => e.Kind == SessionEventKind.UnitFell).Tick);
     }
 
+    /// <summary>
+    /// 화면 낙하 연출 기록: 같은 틱에 무너진 다리 칸과 떨어진 지상 유닛(마지막 위치·타입 유지)이 한 번씩 남고, 꺼내면 비워진다.
+    /// 원본은 둘 다 아래로 떨어지다 사라진다(2026-10-01 캠페인 1-2 녹화 13:21~13:23·14:02~14:03).
+    /// </summary>
+    [Fact]
+    public void NaturalCollapse_RecordsFallingBridgeAndWalkerForScreen()
+    {
+        BattleSession session = Create((_, _) => false, Object("sunwalker", 1, 10, 10));
+        AddBridge(session, 10, 10);
+        session.RunTicks(240);
+        IReadOnlyList<FallenObject> fallen = session.DrainFallen();
+        FallenObject cell = Assert.Single(fallen, item => item.Cell != null);
+        Assert.Equal((10, 10), (cell.Cell!.X, cell.Cell.Y));
+        FallenObject walker = Assert.Single(fallen, item => item.Entity != null);
+        Assert.Equal((10, 10), (walker.Entity!.Footprint.AnchorX, walker.Entity.Footprint.AnchorY));
+        Assert.Equal("sunwalker", walker.Entity.Type.Name, ignoreCase: true);
+        Assert.All(fallen, item => Assert.Equal(240, item.Tick));
+        Assert.Empty(session.DrainFallen());
+    }
+
     /// <summary>사제는 체력에 관계없이 그 자리에서 기절하고, 점유를 비워 다리 복구를 허용한다.</summary>
     [Fact]
     public void PriestSuspension_AllowsBridgeRepairAndRecoversWithoutNewOrders()

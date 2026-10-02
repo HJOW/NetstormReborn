@@ -21,8 +21,8 @@ internal sealed partial class FortMapViewer : IDisposable
     private static readonly Vector2 WorldPixelSize = new(
         WorldChunks * FortMap.CellsPerChunk * FortMap.CellPixelWidth,
         WorldChunks * FortMap.CellsPerChunk * FortMap.CellPixelHeight);
-    /// <summary>상단 안내 영역 높이 (안내 4줄).</summary>
-    private int HeaderHeight => _playUi ? 22 : 128;
+    /// <summary>상단 안내 영역 높이 (개발용 안내 4줄). 공개 캠페인은 원본처럼 상단 막대 없이 지도를 화면 전체에 그린다.</summary>
+    private int HeaderHeight => _playUi ? 0 : 128;
     /// <summary>
     /// 원본 미션 시작 화면에서 플레이어 1 사제 칸 기준점이 화면 중심(512, 384)보다 오른쪽·아래로 떨어진 거리.
     /// 원본 캡처 3장(The War Begins!·Save the Island!·Dissolved Alliance!)에서 (525, 393) ±4px 로 측정했다.
@@ -134,6 +134,7 @@ internal sealed partial class FortMapViewer : IDisposable
         KeyboardState? input = null, bool inputBlocked = false)
     {
         if (width < 320 || height < 320) return;
+        UpdateEffects(seconds);
         KeyboardState keyboard = input ?? Keyboard.GetState();
         if (inputBlocked)
         {
@@ -242,6 +243,7 @@ internal sealed partial class FortMapViewer : IDisposable
     public void Draw(SpriteBatch batch, SpriteFontBase font, int width, int height, string displayInfo, SpriteFontBase small)
     {
         var center = new Vector2(width / 2f, (height + HeaderHeight) / 2f);
+        _viewSize = new Point(width, height);
         if (_sky != null)
         {
             // 원본의 회보라 구름 배경을 지도 전체에 반복한다.
@@ -365,6 +367,7 @@ internal sealed partial class FortMapViewer : IDisposable
         }
         DrawPlacedUnits(batch, center);
         DrawBridgeWorld(batch, center);
+        DrawFalling(batch, center);
         DrawFlyers(batch, center);
         DrawCombat(batch, font, center);
         DrawSacrificeStatus(batch, font, center);

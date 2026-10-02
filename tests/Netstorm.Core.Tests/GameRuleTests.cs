@@ -87,6 +87,34 @@ public sealed class GameRuleTests
         Assert.Equal(expected, StormPower.DisplayColor(value));
     }
 
+    /// <summary>
+    /// Storm Power 숫자 따라가기: 2026-10-01 녹화 프레임 2200 → 2100 → 2030 → 1970 → 1900 → 1830 → 1824 … → 1800 은
+    /// 원본 규칙(차이 300 초과 100·30 초과 10·그 밖 1)으로 정확히 재현되고, 실제 값에 닿으면 멈춘다.
+    /// </summary>
+    [Fact]
+    public void StormPowerDisplay_FollowsRecordedSteps()
+    {
+        int shown = 2200;
+        var visited = new List<int> { shown };
+        // 실제 값 1800 에 닿을 때까지 한 단계씩 따라간다
+        while (shown != 1800)
+        {
+            shown = StormPower.StepDisplay(shown, 1800);
+            visited.Add(shown);
+        }
+        Assert.Equal(2100, visited[1]);
+        Assert.Contains(2030, visited);
+        Assert.Contains(1830, visited);
+        Assert.Contains(1824, visited);
+        Assert.Equal(1 + 1 + 27 + 30, visited.Count);
+        Assert.Equal(1800, StormPower.StepDisplay(1800, 1800));
+        // 늘어날 때도 같은 단계: 1113 → 4600 (녹화 08:25.2~08:26.7) 은 100 씩 32번, 10 씩 26번, 1 씩 27번이다
+        int up = 1113, steps = 0;
+        // 늘어나는 쪽도 실제 값에 닿을 때까지 센다
+        while (up != 4600) { up = StormPower.StepDisplay(up, 4600); steps++; }
+        Assert.Equal(32 + 26 + 27, steps);
+    }
+
     /// <summary>회수 금액 25%: 템플 5000 → 1250, Sun Workshop 800 → 200 (컨텍스트 메뉴 캡처), 파괴 보상 비율 적용</summary>
     [Fact]
     public void Salvage_AndKillReward()

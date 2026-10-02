@@ -224,6 +224,7 @@ dotnet run --project src/Netstorm.Game -- --map bridgethegap --bridges 6 --bridg
 
 명령줄 옵션 (아래를 쓰면 그 실행은 설정을 저장하지 않는다): `--fullscreen`, `--windowed`, `--window 1920x1080`,
 `--wide extend|letterbox`, `--view-height 480|600|768`, `--no-edge-scroll`, `--no-sound`, `--no-music`.
+시작 팁(2026-10-02): 메인 메뉴로 시작하면 Options "Tell Tips at Startup"이 켜져 있을 때 원본 "Did You Know?" 창을 연다. `--no-tips`는 이번 실행에서만 끄고, `--ui-script-file` 자동 검사는 `--tips`를 줄 때만 연다.
 
 **소리(2026-10-01)**: 원본 `sound/*.wav`·`music/*.mus`를 그대로 재생한다. 미션에서는 원소 곡 4개를 원본 순서(wind → rain → thunder → sun, 첫 곡 난수)로 돌리고 내 희생 의식 동안 `sacrifice.mus`를 요청한다. 메뉴는 `ser22.mus`다. 효과음은 다리 금·붕괴·놓기·회전, 건설 완료, 지식 창, 포획과 의식에 연결했다. 메인 메뉴 옵션의 효과음·음악 켜기/끄기·볼륨(1~5, 기본 3·2)을 현재 재생에도 즉시 적용한다. 소리 장치가 없으면 무음으로 계속 실행한다. 규칙: [music.md](exe/music.md).
 

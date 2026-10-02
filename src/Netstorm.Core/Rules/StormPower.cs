@@ -71,4 +71,38 @@ public static class StormPower
     /// <param name="cost">파괴한 대상의 .type cost</param>
     /// <param name="rewardPercent">BattleOptions.KillRewardPercent</param>
     public static int KillReward(int cost, int rewardPercent) => cost * rewardPercent / 100;
+
+    /// <summary>표시 숫자가 실제 값과 이만큼 넘게 차이 나면 한 번에 <see cref="DisplayLargeStep"/> 씩 따라간다 (exe 0x43e5c1 의 +0x12c).</summary>
+    public const int DisplayLargeGap = 300;
+
+    /// <summary>큰 차이일 때 한 번에 바꾸는 양 (exe 0x43e5cb 의 0x64)</summary>
+    public const int DisplayLargeStep = 100;
+
+    /// <summary>표시 숫자가 실제 값과 이만큼 넘게 차이 나면 한 번에 <see cref="DisplayMediumStep"/> 씩 따라간다 (exe 0x43e5d0 의 +0x1e)</summary>
+    public const int DisplayMediumGap = 30;
+
+    /// <summary>중간 차이일 때 한 번에 바꾸는 양 (exe 0x43e5d7 의 0xa). 차이가 30 이하면 1 씩 따라간다.</summary>
+    public const int DisplayMediumStep = 10;
+
+    /// <summary>
+    /// 생산 창 Storm Power 숫자의 원본 따라가기 한 단계 (exe "Storm Power Available" 창 FUN_0043e530):
+    /// 차이가 300 넘으면 100, 30 넘으면 10, 그 밖은 1 씩 실제 값으로 다가간다. 원본은 이 단계를 화면 프레임마다 하며,
+    /// 2026-10-01 녹화에서 초당 약 60번(2100→1830 을 0.4초에, 1830→1806 을 0.4초에) 바뀌었다.
+    /// </summary>
+    /// <param name="shown">지금 표시 중인 숫자</param>
+    /// <param name="actual">실제 Storm Power</param>
+    public static int StepDisplay(int shown, int actual)
+    {
+        if (shown > actual)
+        {
+            return shown > actual + DisplayLargeGap ? shown - DisplayLargeStep
+                : shown > actual + DisplayMediumGap ? shown - DisplayMediumStep : shown - 1;
+        }
+        if (shown < actual)
+        {
+            return shown < actual - DisplayLargeGap ? shown + DisplayLargeStep
+                : shown < actual - DisplayMediumGap ? shown + DisplayMediumStep : shown + 1;
+        }
+        return shown;
+    }
 }

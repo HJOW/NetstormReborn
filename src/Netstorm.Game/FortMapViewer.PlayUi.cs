@@ -21,6 +21,15 @@ internal sealed partial class FortMapViewer
     /// </summary>
     private static readonly string[] ProductionGroupOrder = ["battery", "cannon", "archer", "blocker", "fence", "aviary", "balloon"];
 
+    /// <summary>녹음에서 들린 골렘 명령 응답음 변형</summary>
+    private static readonly string[] GolemMoveSounds = ["golemMove1.wav", "golemMove2.WAV", "golemMove4.wav", "golemMove5.wav"];
+
+    /// <summary>녹음에서 들린 사제 명령 응답음 변형</summary>
+    private static readonly string[] PriestMoveSounds = ["priestmove1.wav", "priestMove3.WAV"];
+
+    /// <summary>명령 응답음 변형을 고르는 난수 (화면 연출 전용, 세션 결정론과 무관)</summary>
+    private readonly Random _orderSoundRandom = new();
+
     /// <summary>생산 창에서 마지막으로 집은 유닛 (D 키로 다시 집는다, 원본 DAT_00557d6c)</summary>
     private string? _lastProductionType;
     private bool _playUi;
@@ -91,11 +100,12 @@ internal sealed partial class FortMapViewer
         bool clicked = mouse.LeftButton == ButtonState.Pressed && _previousMouse.LeftButton == ButtonState.Released;
         if (clicked)
         {
-            if (mouse.Y < 18 && mouse.X >= PlaySidebarWidth && mouse.X < PlaySidebarWidth + 50)
-            { CancelCursor(); _missionMenuVisible = true; _missionGameDropdown = true; return true; }
-            // 생산 창 유닛 칸: 좌클릭으로 배치 커서에 집는다 (원본 FUN_0043d4c0 의 0x10000 처리)
+            // 생산 창 유닛 칸: 좌클릭으로 배치 커서에 집는다 (원본 FUN_0043d4c0 의 0x10000 처리).
+            // 원본(0x43ec9e~0x43eccd)은 재충전 중이면 아무것도 하지 않고, Storm Power 가 모자라면 집지 않고 숫자를 깜빡인다.
             if (DeckUnitAt(mouse.Position, height) is { } unit)
             {
+                if (_session.IsUnitRecharging(TestPlayer, unit.Type.Name)) return true;
+                if (StormPower.TypeCost(unit.Type.Definition) > _session.Player(TestPlayer).StormPower) { BlinkStormPower(); return true; }
                 CancelCursor(); ChooseProduction(unit.Type.Name);
                 return true;
             }
@@ -123,8 +133,8 @@ internal sealed partial class FortMapViewer
         return IsPlayUiPoint(mouse.X, mouse.Y);
     }
 
-    /// <summary>사이드바·메뉴·하단 상태줄을 지도 배치·명령에서 제외한다.</summary>
-    private bool IsPlayUiPoint(int x, int y) => x < PlaySidebarWidth || y < HeaderHeight || y >= _playHeight - 36;
+    /// <summary>생산 창(사이드바)을 지도 배치·명령에서 제외한다. 원본은 상단 메뉴 막대·하단 상태줄이 없어 나머지는 모두 지도다.</summary>
+    private bool IsPlayUiPoint(int x, int y) => x < PlaySidebarWidth;
 
     /// <summary>내 오브젝트 클릭은 선택, 가이저·적 사제·제단·빈 칸 클릭은 선택한 이동체의 명령으로 해석한다.</summary>
     private void UpdatePlayOrders(MouseState mouse)
@@ -146,40 +156,68 @@ internal sealed partial class FortMapViewer
         }
         else if (target?.Kind == ObjectKind.Geyser)
         {
-            SubmitCommand(new HarvestGeyserCommand(TestPlayer, target.Id, selected?.Kind is ObjectKind.Priest or ObjectKind.Transport ? selected.Id : 0));
+            GameEntity? collector = selected is { Owner: TestPlayer, Kind: ObjectKind.Priest or ObjectKind.Transport } ? selected : null;
+            SubmitCommand(new HarvestGeyserCommand(TestPlayer, target.Id, collector?.Id ?? 0));
+            if (collector != null) AcknowledgeOrder(collector);
         }
         else if (selected is { Owner: TestPlayer, Kind: ObjectKind.Transport } && target?.Kind == ObjectKind.Priest)
-            SubmitCommand(new CapturePriestCommand(TestPlayer, selected.Id, target.Id));
+        { SubmitCommand(new CapturePriestCommand(TestPlayer, selected.Id, target.Id)); AcknowledgeOrder(selected); }
         else if (target is { Kind: ObjectKind.Altar, Owner: TestPlayer } && selected?.Owner == TestPlayer)
         {
-            if (selected.Kind == ObjectKind.Transport) SubmitCommand(new DeliverPriestCommand(TestPlayer, selected.Id, target.Id));
-            else if (selected.Kind == ObjectKind.Priest) SubmitCommand(new MovePriestToAltarCommand(TestPlayer, target.Id, selected.Id));
+            if (selected.Kind == ObjectKind.Transport) { SubmitCommand(new DeliverPriestCommand(TestPlayer, selected.Id, target.Id)); AcknowledgeOrder(selected); }
+            else if (selected.Kind == ObjectKind.Priest)
+            {
+                SubmitCommand(new MovePriestToAltarCommand(TestPlayer, target.Id, selected.Id));
+                AcknowledgeOrder(selected);
+                // 원본은 포로가 묶인 제단으로 사제를 보내는 명령 때 희생 음악을 요청한다 (2026-10-01 캠페인 1-2 녹화: 명령 18:28.2 → 음악 18:28.8, 도착은 18:32 무렵)
+                if (_session.Entities.Any(e => e.Kind == ObjectKind.Priest && e.CaptorId == target.Id)) _mySacrificeMusicRequested = true;
+            }
         }
         else if (selected?.Owner == TestPlayer && selected.Kind is ObjectKind.Priest or ObjectKind.Transport && target == null)
-            SubmitCommand(new MoveEntityCommand(TestPlayer, selected.Id, x, y));
+        { SubmitCommand(new MoveEntityCommand(TestPlayer, selected.Id, x, y)); AcknowledgeOrder(selected); }
         else if (left) SubmitCommand(new SelectEntityCommand(TestPlayer, target?.Id ?? 0));
+    }
+
+    /// <summary>
+    /// 사제·골렘에게 명령을 내렸을 때의 응답음. 원본은 타입의 moveSound(골렘 golemMove1·사제 priestMove1) 계열을 쓰며,
+    /// 2026-10-01 캠페인 1-2 녹음에서는 명령 클릭 0.06~0.10초 뒤에 골렘 golemMove1·2·4·5, 사제 priestmove1·priestMove3 이 섞여 들렸다.
+    /// 들리지 않은 번호(GOLEMMOVE3·PRIESTMOVE2·4)는 쓰지 않는다. 다른 수송 유닛은 타입의 moveSound 를 그대로 쓴다.
+    /// </summary>
+    /// <param name="mover">명령을 받은 내 사제·수송 유닛</param>
+    private void AcknowledgeOrder(GameEntity mover)
+    {
+        string? moveSound = mover.Type.Definition.GetString("moveSound");
+        string[] variants = moveSound?.ToLowerInvariant() switch
+        {
+            "golemmove1.wav" => GolemMoveSounds,
+            "priestmove1.wav" => PriestMoveSounds,
+            _ => moveSound is { Length: > 0 } ? [moveSound] : [],
+        };
+        if (variants.Length > 0) QueueSound(variants[_orderSoundRandom.Next(variants.Length)]);
     }
 
     /// <summary>원본처럼 미니맵을 사이드바 맨 아래에 배치한다.</summary>
     private static Rectangle MiniMap(int width, int height) => new(4, height - 74, 76, 70);
 
-    /// <summary>원본 생산창 돌 바탕·아이콘·Storm Power·왼쪽 미니맵을 그린다.</summary>
+    /// <summary>
+    /// 원본 생산창 돌 바탕·Storm Power·다리/유닛 칸·미니맵을 그린다. 원본 미션 화면은 상단 메뉴 막대(Esc 로 열림)와
+    /// 하단 상태줄이 없으므로 지도 위에는 타이머(T)와 짧은 알림만 그림자 글자로 띄운다(2026-10-01 녹화 대조).
+    /// </summary>
     private void DrawPlayUi(SpriteBatch batch, SpriteFontBase font, SpriteFontBase small, int width, int height)
     {
-        PlayerState player = _session.Player(TestPlayer);
         _uiSkin.Menu(batch, new Rectangle(0, 0, PlaySidebarWidth, height));
         // A02 는 위쪽 26px 이 검은 Storm Power 칸인 80×774 생산 창 바탕이므로 (0,0)에 그린다 (다리 칸은 y 26부터)
         _uiSkin.DrawFrame(batch, "A02", Point.Zero);
         _uiSkin.DrawFrame(batch, "A04", Point.Zero);
-        Color moneyColor = StormPower.DisplayColor(player.StormPower) switch
+        // 원본은 표시 중인 숫자(실제 값을 천천히 따라감)로 색을 고르고, 깜빡임 중에는 숫자를 숨긴다 (FUN_0043da10)
+        int shown = _shownStormPower ?? _session.Player(TestPlayer).StormPower;
+        Color moneyColor = StormPower.DisplayColor(shown) switch
         { StormPowerColor.Red => Color.Red, StormPowerColor.Yellow => Color.Yellow, _ => Color.White };
-        OriginalUiSkin.Text(batch, _uiSkin.Title, player.StormPower.ToString(), new Vector2(8, 1), moneyColor);
+        if (!StormPowerHidden) OriginalUiSkin.Text(batch, _uiSkin.Title, shown.ToString(), new Vector2(8, 1), moneyColor);
         _uiSkin.DrawFrame(batch, "A03", new Point(60, 4));
-        _uiSkin.Menu(batch, new Rectangle(PlaySidebarWidth, 0, width - PlaySidebarWidth, 18));
-        OriginalUiSkin.Text(batch, small, Ui("메뉴", "Game"), new Vector2(PlaySidebarWidth + 5, 1));
         TimeSpan time = TimeSpan.FromSeconds(_session.Seconds);
         if (_showTimer) OriginalUiSkin.Text(batch, small, $"{_mission?.Campaign?.Code ?? ""}  {(int)time.TotalMinutes:00}:{time.Seconds:00}", new Vector2(width - 94, 1));
-        // 원본 생산 창: 다리 칸 2열과 유닛 칸 1열 (자세한 이름·비용은 상태줄에 표시한다)
+        // 원본 생산 창: 다리 칸 2열과 유닛 칸 1열
         DrawDeck(batch, height);
         Rectangle mini = MiniMap(width, height);
         batch.Draw(_pixel, mini, Color.Black); _uiSkin.Bevel(batch, mini);
@@ -189,15 +227,33 @@ internal sealed partial class FortMapViewer
         // 살아 있는 오브젝트를 내 색·적 색으로 구분한다.
         foreach (GameEntity entity in _session.Entities.Where(e => e.Owner > 0))
             batch.Draw(_pixel, new Rectangle(mini.X + entity.Footprint.AnchorX * mini.Width / BridgeGrid.WorldSize, mini.Y + entity.Footprint.AnchorY * mini.Height / BridgeGrid.WorldSize, entity.Kind == ObjectKind.Priest ? 3 : 2, entity.Kind == ObjectKind.Priest ? 3 : 2), entity.Owner == TestPlayer ? Color.Turquoise : Color.OrangeRed);
-        _uiSkin.Menu(batch, new Rectangle(PlaySidebarWidth, height - 36, width - PlaySidebarWidth, 36));
-        GameEntity? selected = _session.Entity(player.SelectedEntityId);
-        string state = DeckHoverLabel() ?? (selected == null ? Ui("오브젝트를 선택하십시오.", "Select an object.")
-            : $"{selected.DisplayName}  HP {selected.HitPoints:0}/{selected.MaxHitPoints:0}");
-        if (selected is { Kind: ObjectKind.Workshop, Owner: TestPlayer }) state += $"  Level {player.Deck.WorkshopLevel(selected.Id)}";
-        OriginalUiSkin.Text(batch, small, state, new Vector2(96, height - 34));
-        string notice = _bridgeMode ? Ui("다리 칸 클릭: 선택 · 지도 클릭: 배치 · 우클릭: 회전", "Click tray: choose | Click map: place | Right click: rotate") : _notice;
-        OriginalUiSkin.Text(batch, small, notice, new Vector2(96, height - 18), Color.Wheat);
+        DrawNotice(batch, small, width, height);
     }
+
+    /// <summary>공개 캠페인에서 내 명령이 거부된 이유를 화면 언어로 짧게 알린다.</summary>
+    /// <param name="failure">거부 이유</param>
+    private string PlayFailureText(CommandFailure failure) => Language == GameLanguage.Korean ? SessionText.Describe(failure) : failure switch
+    {
+        CommandFailure.TechDenied => "That knowledge is not allowed in this mission.",
+        CommandFailure.NotInDeck => "Put this knowledge into production at a workshop first.",
+        CommandFailure.NotReady => "Still recharging.",
+        CommandFailure.Placement => "You cannot build there.",
+        CommandFailure.RegisterFailed => "This workshop cannot produce that.",
+        CommandFailure.NotOwner => "That is not yours.",
+        CommandFailure.NotComplete => "Still under construction.",
+        CommandFailure.SalvageDenied or CommandFailure.CannotSalvage => "That cannot be salvaged.",
+        CommandFailure.TrayFull => "The bridge slots are full.",
+        CommandFailure.BridgeBlocked => "The bridge cannot be placed there.",
+        CommandFailure.NoPriest => "No High Priest to move.",
+        CommandFailure.NoTemple => "No Temple to deliver to.",
+        CommandFailure.GeyserEmpty => "The Storm Geyser is empty.",
+        CommandFailure.NoRoute => "There is no path to the destination.",
+        CommandFailure.NotCapturable => "That High Priest cannot be captured.",
+        CommandFailure.AltarOccupied => "A High Priest is already bound to that Altar.",
+        CommandFailure.NotCarrying => "Not carrying a High Priest.",
+        CommandFailure.AlreadyCarrying => "Already carrying a High Priest.",
+        _ => "Cannot do that.",
+    };
 
     /// <summary>원본 캠페인 본문과 버튼의 한국어 표시(1-1·1-2). 스크립트 동작·섹션·조건은 바꾸지 않는다.</summary>
     private TutorialDialogContent LocalizeCampaign(TutorialDialogContent content)

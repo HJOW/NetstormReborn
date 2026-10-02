@@ -12,6 +12,16 @@ internal sealed class HelpWindow : IDisposable
 {
     /// <summary>원본 도움말의 본문 줄 높이.</summary>
     private const int LineHeight = 17;
+    /// <summary>스크롤바 폭과 위·아래 화살표 단추 한 변 (녹화 g1940 의 오른쪽 화살표 스크롤바)</summary>
+    private const int ScrollBarSize = 11;
+    /// <summary>본문 바탕색 (녹화 g1940 본문 표본 약 52,49,51)</summary>
+    private static readonly Color BodyColor = new(52, 49, 51);
+    /// <summary>내부 링크 글자색 (녹화의 연한 청록, 약 176,214,214)</summary>
+    private static readonly Color LinkColor = new(176, 214, 214);
+    /// <summary>능력치 머리 값의 노란 글자색 (녹화 "Alignment: None" 의 None)</summary>
+    private static readonly Color StatValueColor = new(240, 214, 90);
+    /// <summary>스크롤바 홈 색 (녹화 표본 약 48,48,48)</summary>
+    private static readonly Color TrackColor = new(48, 48, 48);
     private readonly GraphicsDevice _device;
     private readonly OriginalUiSkin _skin;
     private readonly GameResources _resources;
@@ -79,13 +89,19 @@ internal sealed class HelpWindow : IDisposable
     /// <summary>Back·OK의 버튼 영역.</summary>
     private static Rectangle Button(Rectangle panel, int index) => new(panel.Center.X - 68 + index * 80,
         panel.Bottom - 29, 56, OriginalUiSkin.ButtonHeight);
-    /// <summary>본문 옆 세로 스크롤바 영역.</summary>
-    private static Rectangle Track(Rectangle body) => new(body.Right + 3, body.Y, 11, body.Height);
+    /// <summary>본문 옆 세로 스크롤바 전체 영역 (화살표 단추 포함).</summary>
+    private static Rectangle Bar(Rectangle body) => new(body.Right + 3, body.Y, ScrollBarSize, body.Height);
+    /// <summary>위로 한 줄 올리는 화살표 단추.</summary>
+    private static Rectangle UpArrow(Rectangle body) => new(body.Right + 3, body.Y, ScrollBarSize, ScrollBarSize);
+    /// <summary>아래로 한 줄 내리는 화살표 단추.</summary>
+    private static Rectangle DownArrow(Rectangle body) => new(body.Right + 3, body.Bottom - ScrollBarSize, ScrollBarSize, ScrollBarSize);
+    /// <summary>두 화살표 사이의 손잡이 홈.</summary>
+    private static Rectangle Track(Rectangle body) => new(body.Right + 3, body.Y + ScrollBarSize, ScrollBarSize, Math.Max(1, body.Height - ScrollBarSize * 2));
     /// <summary>현재 본문 길이와 스크롤에 비례하는 손잡이.</summary>
     private Rectangle Thumb(Rectangle body)
     {
         Rectangle track = Track(body);
-        int h = Math.Clamp(body.Height * body.Height / Math.Max(body.Height, _contentHeight), 18, body.Height);
+        int h = Math.Clamp(track.Height * body.Height / Math.Max(body.Height, _contentHeight), Math.Min(18, track.Height), track.Height);
         int max = Math.Max(1, _contentHeight - body.Height);
         return new(track.X, track.Y + _navigation.Scroll * (track.Height - h) / max, track.Width, h);
     }
@@ -163,8 +179,14 @@ internal sealed class HelpWindow : IDisposable
         {
             int cluster = parts.Length < 2 || parts[1] == "*" ? type.Definition.Frames.HelpFrame
                 : type.Definition.Clusters.ToList().FindIndex(c => c.Name.Equals(parts[1], StringComparison.OrdinalIgnoreCase));
-            if (parts.Length == 2 && int.TryParse(parts[1], out int numericCluster)) cluster = numericCluster;
-            if (cluster < 0) cluster = type.Definition.Frames.DefaultFrame;
+            // 숫자는 원본 그림 파일의 프레임 번호다 (예: mana.8 = mana.gif 8번 = 클러스터 A01, help.english 의 "mana.8 - Wind").
+            // 그런 클러스터가 없을 때만 클러스터 순번으로 보고, 범위를 벗어나면 기본 프레임을 쓴다 (2026-10-02 미션 도움말 종료 결함 수정).
+            if (parts.Length == 2 && int.TryParse(parts[1], out int number))
+            {
+                int byImage = type.Definition.Clusters.ToList().FindIndex(c => c.Layers.Count > 0 && c.Layers[0].Frame == number);
+                cluster = byImage >= 0 ? byImage : number;
+            }
+            if (cluster < 0 || cluster >= type.Definition.Clusters.Count) cluster = type.Definition.Frames.DefaultFrame;
             int frame = MapSpriteFrames.BodyFrame(type.Definition, cluster);
             if (frame >= 0 && frame < block.Frames.Count && !block.Frames[frame].IsSpecial)
                 picture = SpriteAnimation.ToTexture(_device, _shapes.Decode(block.Frames[frame]), _palette);
@@ -188,6 +210,8 @@ internal sealed class HelpWindow : IDisposable
                 if (!_navigation.Back() && BackToParent != null) { _navigation.Close(); BackToParent(); }
             }
             else if (Button(panel, 1).Contains(mouse.Position)) { _navigation.Close(); Closed?.Invoke(); }
+            else if (UpArrow(body).Contains(mouse.Position)) _navigation.Scroll = Math.Clamp(_navigation.Scroll - LineHeight, 0, max);
+            else if (DownArrow(body).Contains(mouse.Position)) _navigation.Scroll = Math.Clamp(_navigation.Scroll + LineHeight, 0, max);
             else if (Track(body).Contains(mouse.Position))
             {
                 _dragBar = true;
@@ -232,9 +256,12 @@ internal sealed class HelpWindow : IDisposable
         _navigation.Scroll = Math.Clamp(_navigation.Scroll, 0, Math.Max(0, _contentHeight - body.Height));
         _skin.Panel(batch, panel);
         if (InformationType() is { } type) DrawInformation(batch, panel, type);
-        batch.Draw(_pixel, body, new Color(30, 31, 32));
+        batch.Draw(_pixel, body, BodyColor);
         _skin.Bevel(batch, body, pressed: true);
-        _skin.Menu(batch, Track(body)); _skin.Button(batch, Thumb(body), "");
+        // 원본처럼 어두운 홈 양 끝에 화살표 단추를 두고 사이에 손잡이를 그린다
+        batch.Draw(_pixel, Bar(body), TrackColor);
+        DrawArrow(batch, UpArrow(body), up: true); DrawArrow(batch, DownArrow(body), up: false);
+        _skin.Button(batch, Thumb(body), "");
         _skin.Button(batch, Button(panel, 0), "Back", _navigation.CanGoBack || BackToParent != null, Button(panel, 0).Contains(_previousMouse.Position));
         _skin.Button(batch, Button(panel, 1), "OK", hover: Button(panel, 1).Contains(_previousMouse.Position));
         batch.End();
@@ -249,7 +276,7 @@ internal sealed class HelpWindow : IDisposable
             else
             {
                 bool unsupported = fragment.Link?.StartsWith("cmd:", StringComparison.OrdinalIgnoreCase) == true;
-                Color color = unsupported ? Color.Gray : fragment.Link != null ? new Color(100, 160, 255) : fragment.Style == TutorialTextStyle.Emphasis ? Color.Wheat : Color.White;
+                Color color = unsupported ? Color.Gray : fragment.Link != null ? LinkColor : fragment.Style == TutorialTextStyle.Emphasis ? Color.Wheat : Color.White;
                 OriginalUiSkin.Text(batch, fragment.Style == TutorialTextStyle.Heading ? _skin.Title : _skin.Body,
                     fragment.Text, rect.Location.ToVector2(), color);
             }
@@ -276,12 +303,30 @@ internal sealed class HelpWindow : IDisposable
         pos.Y += 23;
         Element? theme = Elements.FromTheme(d.GetString("theme"));
         string cost = StormPower.TypeCost(d) > 0 ? StormPower.TypeCost(d).ToString() : "n/a";
-        string[] stats = [$"Alignment: {theme?.ToString() ?? "None"}", $"Class: {d.GetString("class") ?? "n/a"}",
-            $"Hits: {d.GetInt("maxHitPoints")?.ToString() ?? "n/a"}", $"Range: {d.GetInt("range")?.ToString() ?? "n/a"}",
-            $"Damage: {(d.GetString("class") == "Shooter" ? "?" : "n/a")}", $"Cost in Storm Power: {cost}",
-            $"Energy to Build: {(EnergyRequirement.ForType(d).Letters is { Length: > 0 } energy ? energy : "None")}"];
-        // 능력치 머리는 본문 스크롤과 독립적으로 유지한다.
-        foreach (string stat in stats) { OriginalUiSkin.Text(batch, _skin.Small, stat, pos, Color.Wheat); pos.Y += 14; }
+        (string Label, string Value)[] stats = [("Alignment: ", theme?.ToString() ?? "None"), ("Class: ", d.GetString("class") ?? "n/a"),
+            ("Hits: ", d.GetInt("maxHitPoints")?.ToString() ?? "n/a"), ("Range: ", d.GetInt("range")?.ToString() ?? "n/a"),
+            ("Damage: ", d.GetString("class") == "Shooter" ? "?" : "n/a"), ("Cost in Storm Power: ", cost),
+            ("Energy to Build: ", EnergyRequirement.ForType(d).Letters is { Length: > 0 } energy ? energy : "None")];
+        // 능력치 머리는 본문 스크롤과 독립적으로 유지한다. 녹화처럼 이름은 흰색, 값은 노란색이다.
+        foreach ((string label, string value) in stats)
+        {
+            OriginalUiSkin.Text(batch, _skin.Small, label, pos);
+            OriginalUiSkin.Text(batch, _skin.Small, value, pos + new Vector2(_skin.Small.MeasureString(label).X, 0), StatValueColor);
+            pos.Y += 14;
+        }
+    }
+
+    /// <summary>스크롤바 끝의 돌 화살표 단추를 그린다 (삼각형은 한 줄씩 폭을 줄여 찍는다).</summary>
+    private void DrawArrow(SpriteBatch batch, Rectangle area, bool up)
+    {
+        _skin.Button(batch, area, "");
+        int rows = area.Width / 2 - 1;
+        // 위에서부터 한 줄씩 그린다: 위 화살표는 꼭짓점이 위(좁게 시작), 아래 화살표는 꼭짓점이 아래(넓게 시작)다
+        for (int row = 0; row < rows; row++)
+        {
+            int half = up ? row : rows - 1 - row;
+            batch.Draw(_pixel, new Rectangle(area.Center.X - half - 1, area.Y + 3 + row, half * 2 + 1, 1), Color.Black * 0.8f);
+        }
     }
 
     /// <summary>그리기와 링크 클릭 판정이 공유하는 본문 조각.</summary>
