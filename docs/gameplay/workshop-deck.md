@@ -1,6 +1,6 @@
 # 우클릭 컨텍스트 메뉴와 워크샵 "덱" 등록
 
-2026-10-01 구현: [캠페인 1-1](campaign-one.md)의 상단 생산 버튼은 실제 원소·슬롯 규칙으로 지식을 자동 등록한다. `UpgradeWorkshopCommand`는 소유권·완공·최대 단계·1,000 SP를 검사하고 2/3/4칸을 확장한다. 원본 컨텍스트 메뉴 레이아웃·업그레이드 시간 복원은 후속이다.
+2026-10-01 구현: [캠페인 1-1](campaign-one.md)의 상단 생산 버튼은 실제 원소·슬롯 규칙으로 지식을 자동 등록한다. `UpgradeWorkshopCommand`는 소유권·완공·최대 단계·업그레이드 비용(건설 비용과 같음: Sun 800 SP, Wind·Rain·Thunder 각 1,000 SP)을 검사하고 2/3/4칸을 확장한다. 원본 컨텍스트 메뉴 레이아웃·업그레이드 시간 복원은 후속이다.
 
 > 분석 상태: **사용자 확인 규칙 + 원본 캡처 관찰**. 실행 파일 속 메뉴·덱 처리 함수는 일부만 확인 (아래 4절).
 
@@ -19,7 +19,10 @@
   | High Priest | Construct > (Temple >, Workshop >, Build Level 1 Altar for 500), View Netstorm Knowledge, About, Player > |
   | Rain Temple | View Netstorm Knowledge, Salvage gains 1250, About, Player > |
   | Sun Workshop | View Current Production >, **Put Knowledge into Production >**, Upgrade costs 800, Salvage gains 200, About, Player > |
+  | Wind·Rain·Thunder Workshop | 위와 같은 구성. Upgrade costs **1000**(건설 비용과 같음), Salvage는 건설 비용의 25%인 250 |
   | Golem | Salvage gains 100, About, Player > |
+
+**워크샵 비용 정리:** 워크샵 업그레이드 비용은 해당 워크샵의 건설 비용과 같다: **Sun Workshop만 800 SP**, Wind·Rain·Thunder Workshop은 각각 **1,000 SP**다(사용자 확인 2026-10-02, `.type`의 `cost`와 일치). 건설 비용과 업그레이드 비용이 다른 워크샵은 없다. 회수액은 건설 비용의 25%(Sun 200, 그 외 250 — 마지막 값은 구버전 PDF 그림의 Thunder 값과 일치하나 현재 패치판 메뉴 캡처는 Sun만 확인)다.
 
 템플·워크샵·알타는 "유닛"이 아니며 사제의 `Construct` 메뉴로 짓는다. 덱 등록 대상은 그 밖의 유닛이다 ([island-ownership.md](island-ownership.md) 용어).
 

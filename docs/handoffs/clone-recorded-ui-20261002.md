@@ -21,7 +21,7 @@
 | 도움말 | 원본 전체 영문 본문, 앵커 별칭·첫 중복 정의·미션 조건문·내부 링크·인라인 그림 처리 | `Assets/HelpTopics.cs`, `Assets/HelpDocument.cs` |
 | 도움말 화면 | 공용 창, 고정 능력치 머리, 본문·스크롤바 드래그와 휠, Back의 위치 복원, OK, 지식 격자로 복귀 | `HelpWindow.cs`, `FortMapViewer.Knowledge.cs` |
 | 우클릭·생산 | 사제 건설·지식·About, 워크샵 Available/Current Production·등록·업그레이드·회수, 등록한 유닛만 생산 사이드바에 표시 | `FortMapViewer.ContextMenu.cs`, `FortMapViewer.PlayUi.cs` |
-| 규칙 | Sun Workshop 업그레이드 표시·차감 800 SP, 템플 공급 Golem의 워크샵 등록 제외 | `Core/Simulation/BattleSession.PlayerActions.cs`, `Core/Simulation/BattleSession.Commands.cs`, `Core/Rules/ProductionDeck.cs` |
+| 규칙 | 워크샵 업그레이드 비용(Sun 800 SP, Wind·Rain·Thunder 각 1,000 SP) 표시·차감, 템플 공급 Golem의 워크샵 등록 제외 | `Core/Simulation/BattleSession.PlayerActions.cs`, `Core/Simulation/BattleSession.Commands.cs`, `Core/Rules/ProductionDeck.cs` |
 | 조작 | 주요 원본 키·카메라 저장/복원·Alt/중간 버튼 스크롤, 플레이 입력과 개발 입력 분리, 팝업의 지도 클릭·가장자리 스크롤 차단 | `FortMapViewer.InputControls.cs`, `FortMapViewer.Bridges.cs`, `FortMapViewer.Session.cs`, `DisplayManager.cs` |
 | 검사 도구 | 클론 내부 키·우클릭·드래그 입력, 상태 확인·PNG 저장, 메뉴/미션/워크샵 검사 모드 | `UiAutomation.cs`, `tools/clone_help_options_smoke.ps1`, `tools/clone_ui_smoke.ps1` |
 
@@ -91,7 +91,7 @@ powershell -File tools/clone_ui_smoke.ps1 -OutputDirectory extracted/screens/ui-
 | 도움말 링크·드래그 | 태그 경계의 단어가 붙지 않고 인라인 그림과 글자가 겹치지 않는다. 본문만 스크롤 영역에서 잘리고 능력치 머리는 고정된다. 드래그가 링크 클릭으로 오인되지 않고 Back은 스크롤을 복원한다. |
 | 지식 격자 | 카드 상세창의 Back은 격자로, OK는 지도까지 돌아온다. 같은 클릭이 뒤쪽 지도에 적용되지 않는다. |
 | 워크샵 | Golem은 Available에 없다. Rain Generator 등록 뒤 목록이 3→2개가 되고 Whirlibase까지 등록하면 현재 생산·사이드바에 두 항목이 보인다. 등록 자체는 SP를 차감하지 않는다. |
-| Sun Workshop 업그레이드 | 메뉴 표시와 실제 잔액 감소가 800 SP다. 다른 원소의 기존 1,000 SP 규칙과 소유권 거부도 유지된다. |
+| 워크샵 업그레이드 | 업그레이드 비용은 건설 비용과 같다. Sun Workshop은 메뉴 표시와 실제 잔액 감소가 800 SP이고, Wind·Rain·Thunder Workshop은 각각 1,000 SP다. 소유권 거부도 유지된다. |
 | 주요 단축키 | F2/F7 표시, P/R 사제 선택, F4/H 본거지, F5 사제 중심, Ctrl+F5/N 수송체 순환, D/E 직전 생산/다리, Tab 최근 배치, 숫자·Shift+숫자 카메라, Alt/중간 버튼 스크롤을 수동 확인한다. |
 | 팝업과 시간 | 도움말·옵션·우클릭 중 세션은 진행한다. 브리핑·승패 창의 기존 정지는 유지된다. 팝업 중 지도 클릭·가장자리 이동이 차단된다. Shift+F9/Pause의 정지·재개가 정상이다. |
 | 화면·언어 | 한국어/영어, 4:3·16:9·16:10, 창/전체화면에서 메뉴와 도움말이 잘리지 않는다. GUI 스크립트의 고정 좌표는 수동 해상도 검사에 그대로 재사용하지 않는다. |
