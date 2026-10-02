@@ -350,7 +350,7 @@ public sealed partial class BattleSession
         return CommandResult.Ok();
     }
 
-    /// <summary>다리 조각 집기: 칸에서 빼 커서 조각으로 둔다.</summary>
+    /// <summary>다리 조각 집기: 칸의 조각을 커서 조각으로 둔다 (칸에는 놓을 때까지 어둡게 남는다).</summary>
     private CommandResult ExecutePickBridge(PickBridgePieceCommand command)
     {
         if (!_players.TryGetValue(command.Player, out PlayerState? player))
@@ -361,7 +361,7 @@ public sealed partial class BattleSession
         {
             return new CommandResult(CommandFailure.AlreadyHolding);
         }
-        if (command.TrayIndex < 0 || command.TrayIndex >= player.Tray.Pieces.Count)
+        if (!player.Tray.CanTake(command.TrayIndex))
         {
             return new CommandResult(CommandFailure.NoBridgePiece);
         }
@@ -370,7 +370,7 @@ public sealed partial class BattleSession
         return CommandResult.Ok();
     }
 
-    /// <summary>다리 조각 되돌리기: 집은 조각을 칸에 다시 넣는다 (칸이 가득 차면 계속 들고 있는다).</summary>
+    /// <summary>다리 조각 되돌리기: 집은 조각을 칸에 다시 둔다 (칸이 비워졌는데 빈 칸이 없으면 계속 들고 있는다).</summary>
     private CommandResult ExecuteReturnBridge(ReturnBridgePieceCommand command)
     {
         if (!_players.TryGetValue(command.Player, out PlayerState? player))
@@ -410,6 +410,8 @@ public sealed partial class BattleSession
         // 생산 창에 들어온 지 6초가 안 된 조각은 금 간 채로 놓인다
         BridgeCondition quality = BridgeTray.QualityAt(held, Seconds);
         Bridges.Place(piece, command.X, command.Y, command.Player, quality);
+        // 놓은 조각의 칸을 비운다 (원본도 다음 채우기에서 그 자리를 채운다)
+        player.Tray.ConsumeHeld();
         player.HeldPiece = null;
         string qualityText = quality == BridgeCondition.Cracked ? ", 금 간 품질" : "";
         Emit(SessionEventKind.BridgePlaced, command.Player, 0,

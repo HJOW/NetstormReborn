@@ -33,7 +33,7 @@
 | `Rules/MissionStart.cs` | 미션 머리 값 → 시작 SP(myStartMoney, 없으면 전투 옵션)·시작 지식(myTech)·기술 허용 표(techAllowed: deny/allow/all 순서 적용, **실행 중 `Set`·`SetAll`로 바뀜**)·denySalvage 시작 값 등. 머리 값은 시작 상태이고 튜토리얼 단계 처리가 실행 중에 바꾼다 | `Mission.cpp` `00482eb0`, `Totalmade.cpp` `004c23c0`~`004c2400`, [mission-header-flags.md](exe/mission-header-flags.md), 튜토리얼 1·2 원본 관찰 |
 | `Bridges/BridgeCursor.cs` | 커서 → 들고 있는 조각의 왼쪽 위 칸: (⌊(x + 7) / 16⌋, ⌊y / 11⌋), 크기·회전 무관 | 원본 실행 측정 ([bridge-pieces.md](exe/bridge-pieces.md) 4절) |
 | `Bridges/BridgeFrames.cs` | 칸 → bridge.type 프레임 (보통 / 금 감 +10 / 단단함 20) | `0049a940`, bridge.type 주석 |
-| `Bridges/BridgeTray.cs` | 생산 창 다리 칸: 템플이 있으면 1초마다, Bridge Slots 칸까지, 5번째 추첨마다 한 칸 조각, 템플을 잃으면 비움, 새 조각은 6초 동안 금 간 품질(`QualityAt`) | `Combatgump.cpp` 매 프레임 처리 ([bridge-pieces.md](exe/bridge-pieces.md) 6절) |
+| `Bridges/BridgeTray.cs` | 생산 창 다리 칸(자리 고정: 집은 조각은 놓을 때까지 칸에 남고 새 조각은 빈 칸에 — [clone-deck.md](screens/clone-deck.md)): 템플이 있으면 1초마다, Bridge Slots 칸까지, 5번째 추첨마다 한 칸 조각, 템플을 잃으면 비움, 새 조각은 6초 동안 금 간 품질(`QualityAt`) | `Combatgump.cpp` 매 프레임 처리 ([bridge-pieces.md](exe/bridge-pieces.md) 6절) |
 | `Bridges/BridgeReach.cs` | 다리 연결망이 닿는 섬 영역 계산. "내 다리 연결망 하나가 내 섬과 빈 섬에 함께 닿으면 그 빈 섬은 연결됨"(근사) | [island-ownership.md](gameplay/island-ownership.md) 규칙 4. 다른 빈 섬을 거치는 연쇄 연결은 미확인 |
 | `Simulation/BattleSession.cs` (+ `.Commands.cs`) | **게임 세션**: 고정 틱 루프, 플레이어 상태, 엔티티, 명령 실행, 판정, 이벤트, 검사합 ([아래](#게임-세션-battlesession)) | 규칙 코어 전체 |
 | `Simulation/BattleSessionFactory.cs` | 맵(.fort)·지면 미리보기·미션 시작 조건에서 세션 조립 (섬 칸, 다리 시작 불가 칸, 저장 다리) | 뷰어에 있던 초기화를 Core로 옮김 |

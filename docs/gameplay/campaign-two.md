@@ -25,11 +25,10 @@
 
 ## 플레이 조작
 
-조작은 1-1과 같다. 생산 버튼 세 칸(3~5번)은 미션 시작 지식에서 자동으로 고른다.
-- 순서: 원본 지식 창의 행 안 group 순서(battery → cannon → archer → blocker → fence → aviary → balloon)
-- 1-1: Rain Generator·Sun Cannon·Whirlibase
-- 1-2: **Wind Generator·Sun Cannon·Sun Disc Thrower**
-- 버튼에 마우스를 올리면 한국어 짧은 이름(발전기·대포·원반 투척기 등)이 보인다.
+조작은 1-1과 같다. 2026-10-02부터 생산 창(덱)은 원본처럼 골렘과 워크샵에 등록한 유닛만 보여 준다([생산 창 문서](../screens/clone-deck.md)).
+- 이전의 생산 버튼 세 칸(3~5번)과 시작 지식 자동 선택·자동 등록은 없앴다. 1-2의 Wind Generator·Sun Cannon·Sun Disc Thrower도 워크샵 우클릭 `Put Knowledge into Production`으로 등록한다.
+- 워크샵 지식 목록은 원본 지식 창의 행 안 group 순서(battery → cannon → archer → blocker → fence → aviary → balloon)다.
+- 생산 창 항목에 마우스를 올리면 하단 상태줄에 한국어 짧은 이름(발전기·대포·원반 투척기 등)과 비용이 보인다.
 
 가이저를 **우클릭**하면 남은 Storm Power가 상태줄에 나온다(원본 도움말 "Right-clicking on a Storm Geyser will show the available Storm Power"). 다 쓴 가이저는 원본 `emptyGeyser` 그림으로 바뀐다.
 

@@ -16,16 +16,14 @@ internal sealed partial class FortMapViewer
     private const int PlaySidebarWidth = 84;
 
     /// <summary>
-    /// 생산 버튼 3~5번에 놓을 지식의 group 순서. 원본 지식 창의 행 안 순서(battery → cannon → archer → walker → blocker → fence → aviary → balloon)를 따른다.
-    /// 골렘(walker)은 2번 버튼에 따로 두므로 뺀다.
+    /// 워크샵 지식 목록의 group 순서. 원본 지식 창의 행 안 순서(battery → cannon → archer → walker → blocker → fence → aviary → balloon)를 따른다.
+    /// 골렘(walker)은 템플이 공급하므로 뺀다.
     /// </summary>
     private static readonly string[] ProductionGroupOrder = ["battery", "cannon", "archer", "blocker", "fence", "aviary", "balloon"];
 
-    /// <summary>생산 버튼 3~5번에 놓을 유닛 타입 (미션 시작 지식에서 고른다, 1-1: Rain Generator·Sun Cannon·Whirlibase).</summary>
-    private string[] _productionTypes = [];
+    /// <summary>생산 창에서 마지막으로 집은 유닛 (D 키로 다시 집는다, 원본 DAT_00557d6c)</summary>
     private string? _lastProductionType;
     private bool _playUi;
-    private readonly List<PlayButton> _playButtons = [];
     private int _playWidth;
     private int _playHeight;
     private Texture2D? _sky;
@@ -39,26 +37,10 @@ internal sealed partial class FortMapViewer
         _playUi = true; _simulationPaused = false;
         _previousMouse = Mouse.GetState(); _previousKeyboard = Keyboard.GetState();
         _sky = MainMenuView.LoadImage(_device, resources, "d/Gifcloud.gif");
-        _productionTypes = StartingProductionTypes();
         CenterOnPriest();
     }
 
-    /// <summary>워크샵에 실제 등록된 생산 항목을 group 순서로 최대 세 개 고른다.</summary>
-    private string[] StartingProductionTypes()
-    {
-        string[] known = [.. _session.Player(TestPlayer).Deck.Entries().Where(e => e.Kind == DeckEntryKind.Unit).Select(e => e.TypeName)];
-        // group 순서대로, 같은 group 안에서는 지식 순서대로 모은다
-        return [.. ProductionGroupOrder
-            .SelectMany(group => known.Select(name => _candidates.FirstOrDefault(t => t.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
-                .Where(type => type != null && string.Equals(type.Definition.GetString("group"), group, StringComparison.OrdinalIgnoreCase))
-                .Select(type => type!.Name))
-            .Distinct(StringComparer.OrdinalIgnoreCase).Take(3)];
-    }
-
-    /// <summary>생산 버튼 index(3~5)에 놓인 유닛 타입 (없으면 null).</summary>
-    private string? ProductionType(int index) => index - 3 is int slot && slot >= 0 && slot < _productionTypes.Length ? _productionTypes[slot] : null;
-
-    /// <summary>생산 버튼에 표시할 유닛 이름. 한국어는 group 별 짧은 이름, 영어는 원본 description.</summary>
+    /// <summary>생산 항목에 표시할 유닛 이름. 한국어는 group 별 짧은 이름, 영어는 원본 description.</summary>
     private string ProductionLabel(string typeName)
     {
         TypeInfo? type = _candidates.FirstOrDefault(t => t.Name.Equals(typeName, StringComparison.OrdinalIgnoreCase));
@@ -74,25 +56,24 @@ internal sealed partial class FortMapViewer
     /// <summary>현재 UI 언어의 문구.</summary>
     private string Ui(string korean, string english) => Language == GameLanguage.Korean ? korean : english;
 
-    /// <summary>생산 버튼을 선택하면 필요한 지식을 워크샵에 등록하고 배치 커서를 켠다.</summary>
+    /// <summary>
+    /// 생산 창 유닛이나 사제 Construct 의 건물을 배치 커서로 집는다. 원본처럼 유닛은 워크샵에 등록되어 덱에 있어야 하며
+    /// 덱에 없으면 등록하지 않고 알린다(이전 클론의 자동 등록은 원본과 달라 없앴다).
+    /// </summary>
     private void ChooseProduction(string name)
     {
-        _lastProductionType = name;
         TypeInfo type = _candidates.First(t => t.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
-        if (!IsBuilding(type) && !_session.Player(TestPlayer).Deck.Entries().Any(e => e.TypeName.Equals(name, StringComparison.OrdinalIgnoreCase)))
-            RegisterSelectedUnit(type);
+        if (!IsBuilding(type))
+        {
+            if (!_session.Player(TestPlayer).Deck.Entries().Any(e => e.Kind != DeckEntryKind.Bridge && e.TypeName.Equals(name, StringComparison.OrdinalIgnoreCase)))
+            {
+                _notice = Ui("워크샵에서 생산에 등록해야 합니다.", "Put this knowledge into production at a workshop first.");
+                return;
+            }
+            _lastProductionType = name;
+        }
         _bridgeMode = false;
         StartPlacement(name, null);
-    }
-
-    /// <summary>선택한 워크샵 또는 첫 완공 워크샵을 업그레이드한다.</summary>
-    private void UpgradeWorkshop()
-    {
-        GameEntity? selected = _session.Entity(_session.Player(TestPlayer).SelectedEntityId);
-        GameEntity? workshop = selected is { Kind: ObjectKind.Workshop, Owner: TestPlayer } ? selected
-            : _session.Entities.FirstOrDefault(e => e.Owner == TestPlayer && e.Kind == ObjectKind.Workshop && e.IsComplete);
-        if (workshop == null) { _notice = Ui("먼저 Sun Workshop을 건설하십시오.", "Build a Sun Workshop first."); return; }
-        SubmitCommand(new UpgradeWorkshopCommand(TestPlayer, workshop.Id));
     }
 
     /// <summary>배치·다리 커서를 취소하고 들고 있던 다리를 되돌린다.</summary>
@@ -102,47 +83,22 @@ internal sealed partial class FortMapViewer
         if (_session.Player(TestPlayer).HeldPiece != null) SubmitCommand(new ReturnBridgePieceCommand(TestPlayer));
     }
 
-    /// <summary>플레이 버튼을 같은 입력·표시 목록에 배치한다.</summary>
-    private void BuildPlayButtons(int width)
-    {
-        _productionTypes = StartingProductionTypes();
-        _playButtons.Clear();
-        // 기존 생산·명령 버튼을 원본처럼 왼쪽 작은 두 열에 모은다.
-        void Add(int index, string label, Action action, bool enabled = true) => _playButtons.Add(new PlayButton(
-            new Rectangle(4 + index % 2 * 39, 164 + index / 2 * 28, 37, 26), label, enabled, action));
-        Add(0, Ui("워크샵 800", "Workshop 800"), () => ChooseProduction("sunFactory"));
-        Add(1, Ui("제단", "Altar"), () => ChooseProduction("altar"));
-        Add(2, Ui("골렘", "Golem"), () => ChooseProduction("sunWalker"), _session.Player(TestPlayer).HasTemple);
-        // 3~5번: 미션 시작 지식의 생산 유닛 (없는 칸은 비활성)
-        for (int slot = 3; slot <= 5; slot++)
-        {
-            string? produce = ProductionType(slot);
-            Add(slot, produce == null ? "" : ProductionLabel(produce), () => { if (produce != null) ChooseProduction(produce); }, produce != null);
-        }
-        Add(6, Ui("다리", "Bridges"), () => { CancelCursor(); _bridgeMode = true; });
-        Add(7, Ui("업그레이드", "Upgrade"), UpgradeWorkshop);
-        Add(8, Ui("내 사제", "My Priest"), () =>
-        { CancelCursor(); CenterOnPriest(); GameEntity? priest = _session.Entities.FirstOrDefault(e => e.Owner == TestPlayer && e.Kind == ObjectKind.Priest); SubmitCommand(new SelectEntityCommand(TestPlayer, priest?.Id ?? 0)); });
-        Add(9, Ui("정지", "Stop"), () => SubmitCommand(new StopEntityCommand(TestPlayer, _session.Player(TestPlayer).SelectedEntityId)));
-        Add(10, Ui("회수", "Salvage"), () => SubmitCommand(new SalvageCommand(TestPlayer, _session.Player(TestPlayer).SelectedEntityId)));
-        Add(11, Ui("지식", "Knowledge"), () => { CancelCursor(); OpenKnowledge(); });
-        Add(12, Ui("취소", "Cancel"), CancelCursor);
-        Add(13, Ui("기타", "Other"), () => { }, false);
-    }
-
-    /// <summary>지도 명령으로 전달하지 않을 버튼·미니맵·다리 칸의 클릭을 소비한다.</summary>
+    /// <summary>지도 명령으로 전달하지 않을 생산 창(덱)·미니맵·메뉴 막대의 클릭을 소비한다.</summary>
     private bool UpdatePlayUi(MouseState mouse, int width, int height)
     {
         _playWidth = width; _playHeight = height;
-        BuildPlayButtons(width);
         if (TryOpenContextMenu(mouse)) return true;
         bool clicked = mouse.LeftButton == ButtonState.Pressed && _previousMouse.LeftButton == ButtonState.Released;
         if (clicked)
         {
             if (mouse.Y < 18 && mouse.X >= PlaySidebarWidth && mouse.X < PlaySidebarWidth + 50)
             { CancelCursor(); _missionMenuVisible = true; _missionGameDropdown = true; return true; }
-            PlayButton? button = _playButtons.FirstOrDefault(b => b.Bounds.Contains(mouse.X, mouse.Y));
-            if (button != null) { if (button.Enabled) button.Action(); return true; }
+            // 생산 창 유닛 칸: 좌클릭으로 배치 커서에 집는다 (원본 FUN_0043d4c0 의 0x10000 처리)
+            if (DeckUnitAt(mouse.Position, height) is { } unit)
+            {
+                CancelCursor(); ChooseProduction(unit.Type.Name);
+                return true;
+            }
             Rectangle mini = MiniMap(width, height);
             if (mini.Contains(mouse.X, mouse.Y))
             {
@@ -150,19 +106,14 @@ internal sealed partial class FortMapViewer
                     (mouse.Y - mini.Y) * BridgeGrid.WorldSize / mini.Height);
                 return true;
             }
-            if (mouse.X >= 6 && mouse.X < TraySlotSize.X * TrayColumns + 6 && mouse.Y >= HeaderHeight + 6)
+            // 다리 칸: 조각을 집는다. 들고 있던 조각은 먼저 제자리로 돌린다
+            if (DeckTraySlotAt(mouse.Position) is int slot)
             {
-                int column = (mouse.X - 6) / TraySlotSize.X;
-                int row = (mouse.Y - HeaderHeight - 6) / TraySlotSize.Y;
-                int index = row * TrayColumns + column;
                 PlayerState player = _session.Player(TestPlayer);
-                if (column >= 0 && column < TrayColumns && row >= 0 && index < player.Tray.Pieces.Count)
-                {
-                    _placementMode = false; _bridgeMode = true;
-                    if (player.HeldPiece != null) SubmitCommand(new ReturnBridgePieceCommand(TestPlayer));
-                    SubmitCommand(new PickBridgePieceCommand(TestPlayer, index)); _heldRotation = 0;
-                    return true;
-                }
+                _placementMode = false; _bridgeMode = true;
+                if (player.HeldPiece != null) SubmitCommand(new ReturnBridgePieceCommand(TestPlayer));
+                SubmitCommand(new PickBridgePieceCommand(TestPlayer, slot)); _heldRotation = 0;
+                return true;
             }
         }
         if (_placementMode && mouse.RightButton == ButtonState.Pressed && _previousMouse.RightButton == ButtonState.Released)
@@ -212,26 +163,13 @@ internal sealed partial class FortMapViewer
     /// <summary>원본처럼 미니맵을 사이드바 맨 아래에 배치한다.</summary>
     private static Rectangle MiniMap(int width, int height) => new(4, height - 74, 76, 70);
 
-    /// <summary>사이드바 아이콘이 사용할 원본 유닛 타입 이름.</summary>
-    private string? ProductionIcon(int index) => index switch
-    {
-        0 => "sunFactory", 1 => "altar", 2 => "sunWalker", 3 or 4 or 5 => ProductionType(index), _ => null,
-    };
-
-    /// <summary>그림 없는 명령 버튼에 사용할 짧은 표시 이름.</summary>
-    private string CompactPlayLabel(int index) => index switch
-    {
-        6 => Ui("다리", "Bridge"), 7 => Ui("강화", "Up"), 8 => Ui("사제", "Home"), 9 => Ui("정지", "Stop"),
-        10 => Ui("회수", "Sell"), 11 => Ui("지식", "Info"), 12 => Ui("취소", "X"), _ => Ui("기타", "Other"),
-    };
-
     /// <summary>원본 생산창 돌 바탕·아이콘·Storm Power·왼쪽 미니맵을 그린다.</summary>
     private void DrawPlayUi(SpriteBatch batch, SpriteFontBase font, SpriteFontBase small, int width, int height)
     {
-        BuildPlayButtons(width);
         PlayerState player = _session.Player(TestPlayer);
         _uiSkin.Menu(batch, new Rectangle(0, 0, PlaySidebarWidth, height));
-        _uiSkin.DrawFrame(batch, "A02", new Point(2, 22));
+        // A02 는 위쪽 26px 이 검은 Storm Power 칸인 80×774 생산 창 바탕이므로 (0,0)에 그린다 (다리 칸은 y 26부터)
+        _uiSkin.DrawFrame(batch, "A02", Point.Zero);
         _uiSkin.DrawFrame(batch, "A04", Point.Zero);
         Color moneyColor = StormPower.DisplayColor(player.StormPower) switch
         { StormPowerColor.Red => Color.Red, StormPowerColor.Yellow => Color.Yellow, _ => Color.White };
@@ -241,17 +179,8 @@ internal sealed partial class FortMapViewer
         OriginalUiSkin.Text(batch, small, Ui("메뉴", "Game"), new Vector2(PlaySidebarWidth + 5, 1));
         TimeSpan time = TimeSpan.FromSeconds(_session.Seconds);
         if (_showTimer) OriginalUiSkin.Text(batch, small, $"{_mission?.Campaign?.Code ?? ""}  {(int)time.TotalMinutes:00}:{time.Seconds:00}", new Vector2(width - 94, 1));
-        // 실제 유닛 그림을 작은 생산 버튼 안에 넣고 자세한 이름·비용은 상태줄에 표시한다.
-        for (int i = 0; i < _playButtons.Count; i++)
-        {
-            PlayButton button = _playButtons[i];
-            bool hover = button.Bounds.Contains(_previousMouse.Position);
-            string? icon = ProductionIcon(i);
-            _uiSkin.Button(batch, button.Bounds, icon == null && button.Label.Length > 0 ? CompactPlayLabel(i) : "", button.Enabled, hover,
-                hover && _previousMouse.LeftButton == ButtonState.Pressed);
-            if (icon != null && _candidates.FirstOrDefault(t => t.Name.Equals(icon, StringComparison.OrdinalIgnoreCase)) is { } type)
-                DrawTypePicture(batch, type, new Rectangle(button.Bounds.X + 2, button.Bounds.Y + 2, button.Bounds.Width - 4, button.Bounds.Height - 4));
-        }
+        // 원본 생산 창: 다리 칸 2열과 유닛 칸 1열 (자세한 이름·비용은 상태줄에 표시한다)
+        DrawDeck(batch, height);
         Rectangle mini = MiniMap(width, height);
         batch.Draw(_pixel, mini, Color.Black); _uiSkin.Bevel(batch, mini);
         // 원본 지면 칸을 월드 전체 범위에 축소해 표시한다.
@@ -262,17 +191,13 @@ internal sealed partial class FortMapViewer
             batch.Draw(_pixel, new Rectangle(mini.X + entity.Footprint.AnchorX * mini.Width / BridgeGrid.WorldSize, mini.Y + entity.Footprint.AnchorY * mini.Height / BridgeGrid.WorldSize, entity.Kind == ObjectKind.Priest ? 3 : 2, entity.Kind == ObjectKind.Priest ? 3 : 2), entity.Owner == TestPlayer ? Color.Turquoise : Color.OrangeRed);
         _uiSkin.Menu(batch, new Rectangle(PlaySidebarWidth, height - 36, width - PlaySidebarWidth, 36));
         GameEntity? selected = _session.Entity(player.SelectedEntityId);
-        PlayButton? hovered = _playButtons.FirstOrDefault(b => b.Bounds.Contains(_previousMouse.Position));
-        string state = hovered?.Label ?? (selected == null ? Ui("오브젝트를 선택하십시오.", "Select an object.")
+        string state = DeckHoverLabel() ?? (selected == null ? Ui("오브젝트를 선택하십시오.", "Select an object.")
             : $"{selected.DisplayName}  HP {selected.HitPoints:0}/{selected.MaxHitPoints:0}");
         if (selected is { Kind: ObjectKind.Workshop, Owner: TestPlayer }) state += $"  Level {player.Deck.WorkshopLevel(selected.Id)}";
         OriginalUiSkin.Text(batch, small, state, new Vector2(96, height - 34));
         string notice = _bridgeMode ? Ui("다리 칸 클릭: 선택 · 지도 클릭: 배치 · 우클릭: 회전", "Click tray: choose | Click map: place | Right click: rotate") : _notice;
         OriginalUiSkin.Text(batch, small, notice, new Vector2(96, height - 18), Color.Wheat);
     }
-
-    /// <summary>플레이 버튼의 영역·문구·동작.</summary>
-    private sealed record PlayButton(Rectangle Bounds, string Label, bool Enabled, Action Action);
 
     /// <summary>원본 캠페인 본문과 버튼의 한국어 표시(1-1·1-2). 스크립트 동작·섹션·조건은 바꾸지 않는다.</summary>
     private TutorialDialogContent LocalizeCampaign(TutorialDialogContent content)

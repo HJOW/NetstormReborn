@@ -17,8 +17,8 @@ namespace Netstorm.Game;
 /// </summary>
 internal sealed partial class FortMapViewer
 {
-    /// <summary>다리 칸 패널의 한 칸 크기(논리 픽셀)</summary>
-    private Point TraySlotSize => _playUi ? new(36, 36) : new(112, 84);
+    /// <summary>개발용 다리 칸 패널의 한 칸 크기(논리 픽셀). 공개 캠페인은 FortMapViewer.Deck 의 원본 배치를 쓴다</summary>
+    private static readonly Point TraySlotSize = new(112, 84);
 
     /// <summary>다리 칸 패널의 열 수 (원본 사이드바처럼 2열)</summary>
     private const int TrayColumns = 2;
@@ -102,7 +102,8 @@ internal sealed partial class FortMapViewer
     /// 다리 모드 입력: B 모드, 1~6 또는 Q W A S Z X 조각 집기, R 회전, C 반대 회전 켜기/끄기, Backspace 되돌리기, 좌클릭 놓기.
     /// 집기·되돌리기·놓기는 세션 명령이고 결과는 다음 틱에 알림으로 온다.
     /// </summary>
-    private void UpdateBridges(KeyboardState keyboard, MouseState mouse)
+    /// <param name="mapInput">지도 클릭·커서 칸을 처리할지 (생산 창·메뉴가 입력을 쓴 프레임은 거짓)</param>
+    private void UpdateBridges(KeyboardState keyboard, MouseState mouse, bool mapInput = true)
     {
         if (!_playUi && Pressed(keyboard, Keys.B))
         {
@@ -113,10 +114,12 @@ internal sealed partial class FortMapViewer
             }
         }
         if (_playUi && TrayLetterKeys.Any(key => Pressed(keyboard, key))) { CancelCursor(); _bridgeMode = true; }
-        if (_playUi && Pressed(keyboard, Keys.E) && _session.Player(TestPlayer).Tray.Pieces.Count > 0)
+        // E: 마지막(가장 뒤 칸)으로 집을 수 있는 다리 조각을 집는다 (원본 도움말 "last available bridge slot")
+        if (_playUi && Pressed(keyboard, Keys.E)
+            && Enumerable.Range(0, _session.Player(TestPlayer).Tray.Capacity).LastOrDefault(_session.Player(TestPlayer).Tray.CanTake, -1) is int last and >= 0)
         {
             CancelCursor(); _bridgeMode = true;
-            SubmitCommand(new PickBridgePieceCommand(TestPlayer, _session.Player(TestPlayer).Tray.Pieces.Count - 1)); _heldRotation = 0;
+            SubmitCommand(new PickBridgePieceCommand(TestPlayer, last)); _heldRotation = 0;
         }
         if (!_bridgeMode)
         {
@@ -126,7 +129,7 @@ internal sealed partial class FortMapViewer
         // 숫자 키로 칸의 조각을 집는다 (들고 있던 조각은 먼저 칸으로 되돌린다)
         for (int i = 0; i < TrayKeys.Length; i++)
         {
-            if ((!_playUi && Pressed(keyboard, TrayKeys[i]) || Pressed(keyboard, TrayLetterKeys[i])) && i < player.Tray.Pieces.Count)
+            if ((!_playUi && Pressed(keyboard, TrayKeys[i]) || Pressed(keyboard, TrayLetterKeys[i])) && player.Tray.CanTake(i))
             {
                 if (player.HeldPiece != null)
                 {
@@ -152,7 +155,7 @@ internal sealed partial class FortMapViewer
         {
             SubmitCommand(new ReturnBridgePieceCommand(TestPlayer));
         }
-        _bridgeCursor = _probeCell ?? (mouse.Y < HeaderHeight ? null : BridgeCellAt(new Vector2(mouse.X, mouse.Y)));
+        _bridgeCursor = _probeCell ?? (mouse.Y < HeaderHeight || !mapInput ? null : BridgeCellAt(new Vector2(mouse.X, mouse.Y)));
         _bridgeCheck = HeldPreview is { } held && _bridgeCursor is (int px, int py)
             ? _session.CheckBridge(TestPlayer, held.Pattern.Index, held.Rotation, px, py) : null;
         if (player.HeldPiece != null && _bridgeCursor is (int cx, int cy)
@@ -203,7 +206,8 @@ internal sealed partial class FortMapViewer
     /// <summary>다리 칸 패널(왼쪽)과 다리 모드 안내 문구를 그린다.</summary>
     private void DrawBridgeOverlay(SpriteBatch batch, SpriteFontBase font, int width, int height)
     {
-        if (!_bridgeMode && !_playUi)
+        // 공개 캠페인은 생산 창(DrawDeck)이 다리 칸을 그린다
+        if (!_bridgeMode || _playUi)
         {
             return;
         }
@@ -212,22 +216,19 @@ internal sealed partial class FortMapViewer
         TypeFrameTable frames = _bridgeType.Definition.Frames;
         int rows = (tray.Capacity + TrayColumns - 1) / TrayColumns;
         var panel = new Rectangle(0, HeaderHeight, TraySlotSize.X * TrayColumns + 12, rows * TraySlotSize.Y + 12);
-        if (!_playUi) _uiSkin.Menu(batch, panel);
-        // 칸마다 테두리와 조각을 그린다 (조각 없는 칸은 빈 테두리)
+        _uiSkin.Menu(batch, panel);
+        // 칸마다 테두리와 조각을 그린다 (조각 없는 칸은 빈 테두리, 집은 조각은 제자리에 어둡게)
         for (int slot = 0; slot < tray.Capacity; slot++)
         {
             var box = new Rectangle(6 + slot % TrayColumns * TraySlotSize.X, HeaderHeight + 6 + slot / TrayColumns * TraySlotSize.Y,
                 TraySlotSize.X - 4, TraySlotSize.Y - 4);
-            if (!_playUi)
-            {
-                _uiSkin.Menu(batch, box);
-                batch.DrawString(font, $"{slot + 1}", new Vector2(box.X + 3, box.Y), Color.Wheat * 0.7f);
-            }
-            if (slot >= tray.Pieces.Count)
+            _uiSkin.Menu(batch, box);
+            batch.DrawString(font, $"{slot + 1}", new Vector2(box.X + 3, box.Y), Color.Wheat * 0.7f);
+            if (tray.Slots[slot] is not { } piece)
             {
                 continue;
             }
-            BridgePiece piece = tray.Pieces[slot];
+            int color = tray.HeldSlot == slot ? DeckDarkColor : 0;
             // 조각 크기(칸 16×11px)를 칸 가운데에 맞춘다
             var size = new Vector2(piece.Width * FortMap.CellPixelWidth, piece.Height * FortMap.CellPixelHeight) * TrayPieceScale;
             Vector2 origin = new Vector2(box.Center.X, box.Center.Y + 6) - size / 2;
@@ -235,18 +236,12 @@ internal sealed partial class FortMapViewer
             foreach (PlacedBridgeCell cell in piece.Cells())
             {
                 var anchor = origin + new Vector2((cell.Dx + 1) * FortMap.CellPixelWidth, (cell.Dy + 1) * FortMap.CellPixelHeight) * TrayPieceScale;
-                DrawSprite(batch, _bridgeType.LoadIndex, BridgeFrames.Find(frames, cell.Cell), anchor, scale: TrayPieceScale);
+                DrawSprite(batch, _bridgeType.LoadIndex, BridgeFrames.Find(frames, cell.Cell), anchor, color, scale: TrayPieceScale);
             }
         }
-        if (_playUi) return;
         string held = (HeldPreview == null ? "없음" : HeldPreview.ToString()) + (_reverseRotation ? " | 반대 회전 켜짐" : "");
         string head = $"다리 조각 시험 | 칸 {tray.Pieces.Count}/{tray.Capacity} | 추첨 {tray.DrawCount}회 | 템플 {(player.HasTemple ? "있음" : "없음 — 조각이 생기지 않음")} | 들고 있는 조각: {held}";
         string keys = "1~6: 조각 집기 · R: 회전(원본 우클릭) · C: 반대 회전 · Backspace: 되돌리기 · 좌클릭: 놓기 · Space: 정지 · B: 모드 끄기";
-        if (_playUi)
-        {
-            head = Ui("다리 칸 클릭: 조각 선택 · 지도 클릭: 놓기", "Click tray: choose a bridge | Click map: place");
-            keys = Ui("우클릭/R: 회전 · C: 반대 회전 · Backspace: 조각 반환 · 취소: 종료", "Right click/R: rotate | C: reverse | Backspace: return | Cancel: close");
-        }
         if (_bridgeCheck != null)
         {
             head += _bridgeCheck.Allowed ? $" | 놓을 수 있음(연결 {_bridgeCheck.Attachments})" : $" | 불가: {SessionText.Describe(_bridgeCheck.Problem)}";

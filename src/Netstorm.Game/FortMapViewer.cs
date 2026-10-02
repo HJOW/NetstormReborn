@@ -224,8 +224,9 @@ internal sealed partial class FortMapViewer : IDisposable
             if (!uiConsumed)
             {
                 UpdatePlacement(keyboard, mouse);
-                UpdateBridges(keyboard, mouse);
             }
+            // 다리 키(Q W A S Z X·E·C·Backspace)는 커서가 생산 창 위에 있어도 받고, 지도 클릭·커서 칸만 막는다
+            UpdateBridges(keyboard, mouse, mapInput: !uiConsumed);
         }
         _previousKeyboard = keyboard;
         _previousMouse = mouse;
@@ -428,7 +429,8 @@ internal sealed partial class FortMapViewer : IDisposable
         var key = (frame.Offset, color);
         if (!_textures.TryGetValue(key, out var sprite))
         {
-            ReadOnlyMemory<byte> table = color == 0 ? default : _isleColors.Table(color);
+            // 0 = 원래 색, 음수 = 생산 창 어둡게·빨갛게 표, 양수 = 섬 소유자 색
+            ReadOnlyMemory<byte> table = color == 0 ? default : DeckRemap(color) ?? _isleColors.Table(color);
             sprite = (SpriteAnimation.ToTexture(_device, _shapes.Decode(frame), _palette, table), new Point(frame.XMin, frame.YMin));
             _textures.Add(key, sprite);
         }

@@ -34,7 +34,7 @@ public sealed record SalvageCommand(int Player, int EntityId) : GameCommand(Play
 
 /// <summary>생산 창 다리 칸의 조각을 커서로 집는다 (칸에서 빠지므로 빈 칸에 새 조각이 채워질 수 있다).</summary>
 /// <param name="Player">플레이어 번호</param>
-/// <param name="TrayIndex">칸의 조각 순번 (BridgeTray.Pieces 기준)</param>
+/// <param name="TrayIndex">칸 자리 번호 (BridgeTray.Slots 기준, 2열 행 우선)</param>
 public sealed record PickBridgePieceCommand(int Player, int TrayIndex) : GameCommand(Player);
 
 /// <summary>집고 있던 다리 조각을 칸으로 되돌린다.</summary>

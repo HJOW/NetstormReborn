@@ -247,6 +247,15 @@ public sealed partial class BattleSession
     /// <param name="pattern">조각 모양 번호</param>
     public void DebugHoldBridgePiece(int player, int pattern) => Player(player).HeldPiece = new BridgePiece(pattern);
 
+    /// <summary>
+    /// 배치한 유닛이 아직 재충전 중이라 생산 창에서 다시 쓸 수 없는지. 원본 생산 창은 이 동안 항목을 어두운 색 변환표로 그린다
+    /// (Cursor.cpp 004468b0 의 플래그 0x100 → Combatgump 그리기 모드 1, docs/exe/production-refresh.md).
+    /// </summary>
+    /// <param name="player">플레이어</param>
+    /// <param name="typeName">유닛 타입 이름</param>
+    public bool IsUnitRecharging(int player, string typeName) =>
+        _players.TryGetValue(player, out PlayerState? state) && state.UnitReadyTick.TryGetValue(typeName, out long ready) && Tick < ready;
+
     /// <summary>화면이 아직 받지 않은 이벤트를 모두 돌려주고 비운다.</summary>
     public IReadOnlyList<SessionEvent> DrainEvents()
     {
@@ -431,13 +440,14 @@ public sealed partial class BattleSession
             hash.Add(player.Number);
             hash.Add(player.StormPower);
             hash.Add(player.Tray.DrawCount);
-            // 칸에 있는 조각의 모양을 순서대로 섞는다
-            foreach (BridgePiece piece in player.Tray.Pieces)
+            // 칸 자리별 조각의 모양을 순서대로 섞는다 (빈 칸도 자리이므로 표시한다)
+            foreach (BridgePiece? piece in player.Tray.Slots)
             {
-                hash.Add(piece.Pattern.Index);
+                hash.Add(piece?.Pattern.Index ?? -1);
                 // 품질 타이머는 놓인 다리의 시작 상태를 정하므로 상태다
-                hash.Add(piece.CuredAtDeciseconds);
+                hash.Add(piece?.CuredAtDeciseconds ?? -1);
             }
+            hash.Add(player.Tray.HeldSlot ?? -1);
             hash.Add(player.HeldPiece?.Pattern.Index ?? -1);
             hash.Add(player.HeldPiece?.CuredAtDeciseconds ?? -1);
             hash.Add(player.SelectedEntityId);

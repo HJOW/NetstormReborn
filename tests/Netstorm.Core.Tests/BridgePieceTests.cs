@@ -223,9 +223,19 @@ public sealed class BridgePieceTests
         // 칸이 가득 차면 추첨하지 않지만 시각은 다시 예약한다.
         Assert.Null(tray.Update(2.0, hasTemple: true));
         Assert.Equal(2, tray.DrawCount);
-        tray.Take(0);
-        Assert.Null(tray.Update(2.5, hasTemple: true));
-        Assert.NotNull(tray.Update(3.0, hasTemple: true));
+        // 집기만 한 조각은 칸을 차지해 새 조각이 들어오지 않으며, 같은 칸을 또 집을 수는 없다
+        BridgePiece held = tray.Take(0);
+        Assert.False(tray.CanTake(0));
+        Assert.True(tray.CanTake(1));
+        Assert.Null(tray.Update(3.0, hasTemple: true));
+        Assert.Same(held, tray.Slots[0]);
+        // 놓아서 칸이 비면 그 자리에 새 조각이 들어온다
+        tray.ConsumeHeld();
+        Assert.Null(tray.Slots[0]);
+        Assert.False(tray.CanTake(0));
+        Assert.Null(tray.Update(3.5, hasTemple: true));
+        Assert.NotNull(tray.Update(4.0, hasTemple: true));
+        Assert.NotNull(tray.Slots[0]);
         // 템플을 잃는 순간 칸이 비고, 템플이 없으면 채우지 않는다.
         Assert.Null(tray.Update(10.0, hasTemple: false));
         Assert.Empty(tray.Pieces);

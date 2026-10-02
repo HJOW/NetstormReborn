@@ -51,7 +51,7 @@ key F2; capture $OutputDirectory/10-hide-buildings.png; key F2;
 key F7; capture $OutputDirectory/11-island-colors.png; key F7;
 right-click 526,393; assert context:main; capture $OutputDirectory/12-priest-context.png;
 click 600,476; assert context:construct; click 390,423; assert context:workshops;
-capture $OutputDirectory/14-workshops.png; click 390,403; assert placement; click 20,344; assert battle;
+capture $OutputDirectory/14-workshops.png; click 390,403; assert placement; right-click 500,400; assert battle;
 key F1; assert help:F1Help; capture $OutputDirectory/15-battle-help.png; click 550,370; assert battle;
 key Escape; assert mission-menu; click 210,8; assert options; capture $OutputDirectory/16-battle-options.png;
 click 230,77; assert battle; key F6; assert knowledge; capture $OutputDirectory/17-knowledge.png;
@@ -69,7 +69,7 @@ capture $OutputDirectory/24-production-one.png; click 950,500; assert battle;
 right-click 590,284; click 690,385; assert context:knowledge; capture $OutputDirectory/25-available-after.png;
 click 400,313; assert battle; right-click 590,284; click 690,367; assert context:production;
 capture $OutputDirectory/26-production-two.png; click 950,500; assert battle;
-capture $OutputDirectory/27-production-sidebar.png; right-click 21,232; assert context:main;
+capture $OutputDirectory/27-production-sidebar.png; right-click 40,275; assert context:main;
 capture $OutputDirectory/28-production-cost.png; quit;
 "@
     $taskArguments = "--mission thewarbegins --language korean --no-sound --no-music --script `"construct sunFactory 98,98; wait 25`" --ui-script-file $OutputDirectory/commands.txt"

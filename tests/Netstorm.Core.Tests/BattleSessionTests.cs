@@ -188,13 +188,14 @@ public sealed class BattleSessionTests
         Assert.True(player.HasTemple);
         session.RunTicks(session.TicksPerSecond * 8);
         Assert.Equal(6, player.Tray.Pieces.Count);
-        // 조각을 집으면 칸에서 빠진다. 이미 집고 있으면 또 집을 수 없다
+        // 조각을 집어도 놓기 전까지 칸에 남아 자리를 차지한다(원본 녹화: 어둡게 표시). 이미 집고 있으면 또 집을 수 없다
         session.Submit(new PickBridgePieceCommand(1, 0));
         session.Submit(new PickBridgePieceCommand(1, 0));
         session.DrainEvents();
         session.RunTicks(1);
         Assert.NotNull(player.HeldPiece);
-        Assert.Equal(5, player.Tray.Pieces.Count);
+        Assert.Equal(6, player.Tray.Pieces.Count);
+        Assert.Equal(0, player.Tray.HeldSlot);
         // 섬에 이어지지 않는 위치(월드 왼쪽 위 구석)는 거부되고 조각은 그대로 있다
         session.Submit(new PlaceBridgeCommand(1, 0, 0, 0));
         session.RunTicks(1);
@@ -202,15 +203,26 @@ public sealed class BattleSessionTests
         Assert.Contains(session.DrainEvents(), e => e.Failure == CommandFailure.BridgeBlocked);
         (int rotation, int x, int y) = SessionData.FindBridgeSite(session, player.HeldPiece!.Pattern.Index);
         int cellsBefore = session.Bridges.Cells.Count;
+        BridgePiece placedPiece = player.Tray.Slots[0]!;
+        BridgePiece?[] others = [.. player.Tray.Slots.Skip(1)];
         session.Submit(new PlaceBridgeCommand(1, rotation, x, y));
         session.RunTicks(1);
         Assert.Null(player.HeldPiece);
         Assert.True(session.Bridges.Cells.Count > cellsBefore);
-        // 집은 조각을 되돌리면 칸으로 돌아간다
-        session.Submit(new PickBridgePieceCommand(1, 0));
+        // 놓은 조각의 칸만 비고(1초 안에 같은 자리가 새 조각으로 채워진다) 다른 조각은 자리를 옮기지 않는다
+        Assert.Null(player.Tray.HeldSlot);
+        Assert.Equal(others, player.Tray.Slots.Skip(1));
+        session.RunTicks(session.TicksPerSecond);
+        Assert.NotNull(player.Tray.Slots[0]);
+        Assert.NotSame(placedPiece, player.Tray.Slots[0]);
+        // 집은 조각을 되돌리면 같은 칸이 다시 밝아진다
+        BridgePiece second = player.Tray.Slots[1]!;
+        session.Submit(new PickBridgePieceCommand(1, 1));
         session.Submit(new ReturnBridgePieceCommand(1));
         session.RunTicks(1);
         Assert.Null(player.HeldPiece);
+        Assert.Null(player.Tray.HeldSlot);
+        Assert.Same(second, player.Tray.Slots[1]);
     }
 
     /// <summary>한쪽만 섬에 붙은 다리 한 칸은 40초에 금이 가고 80초에 무너진다 (10초 주기·수명 7→0, 5 아래 금 감)</summary>

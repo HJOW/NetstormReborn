@@ -6,6 +6,9 @@ namespace Netstorm.Core.Bridges;
 /// 플레이어 생산 창의 다리 조각 칸 (원본 Combatgump.cpp 매 프레임 처리 0043f2xx 부근).
 /// 템플이 있는 동안 1초마다 조각 칸이 빌 때 하나씩 새 조각을 추첨해 채운다.
 /// 템플이 없어지면 칸의 조각이 모두 사라진다 (사용자 확인 규칙 workshop-deck.md 와 exe 가 일치).
+/// 칸은 자리가 고정된다: 조각을 집어도 그 칸에 어둡게 남아 칸 수를 차지하고, 놓은 뒤에야 칸이 비며
+/// 새 조각은 빈 칸에 들어온다. 다른 조각은 자리를 옮기지 않는다
+/// (2026-10-01 네 번째 녹화 01:11~01:20, 생산 창 조각 오브젝트가 집힌 동안 컨테이너에 남는 exe 처리와 일치).
 /// </summary>
 public sealed class BridgeTray
 {
@@ -23,8 +26,8 @@ public sealed class BridgeTray
     /// </summary>
     public const long CrackedDeciseconds = 60;
 
-    /// <summary>칸에 있는 조각 목록 (들어온 순서)</summary>
-    private readonly List<BridgePiece> _pieces = [];
+    /// <summary>칸 자리별 조각 (빈 칸은 null)</summary>
+    private readonly BridgePiece?[] _slots;
 
     /// <summary>추첨 난수 (원본은 게임 전역 난수 하나를 여러 곳이 함께 쓴다)</summary>
     private readonly NetstormRandom _random;
@@ -47,8 +50,14 @@ public sealed class BridgeTray
     /// <summary>간격 제한 사용 여부 (원본 콘솔 명령 generatortimer/gt, 기본 켜짐)</summary>
     public bool TimerEnabled { get; set; } = true;
 
-    /// <summary>칸에 있는 조각들</summary>
-    public IReadOnlyList<BridgePiece> Pieces => _pieces;
+    /// <summary>칸 자리별 조각 (빈 칸은 null, 순번 = 생산 창의 칸 위치: 2열 행 우선)</summary>
+    public IReadOnlyList<BridgePiece?> Slots => _slots;
+
+    /// <summary>칸에 있는 조각들 (빈 칸을 건너뛴 자리 순서, 집고 있는 조각 포함)</summary>
+    public IReadOnlyList<BridgePiece> Pieces => [.. _slots.OfType<BridgePiece>()];
+
+    /// <summary>커서로 집어 어둡게 표시 중인 조각의 칸 번호 (없으면 null)</summary>
+    public int? HeldSlot { get; private set; }
 
     /// <summary>조각 칸을 만든다</summary>
     /// <param name="capacity">칸 수 (BattleOptions.BridgeSlotCount)</param>
@@ -57,6 +66,7 @@ public sealed class BridgeTray
     {
         ArgumentOutOfRangeException.ThrowIfNegative(capacity);
         Capacity = capacity;
+        _slots = new BridgePiece?[capacity];
         _random = random;
     }
 
@@ -72,7 +82,8 @@ public sealed class BridgeTray
         if (_hadTemple && !hasTemple)
         {
             // 템플을 잃는 순간 칸에 있던 조각이 모두 사라진다.
-            _pieces.Clear();
+            Array.Clear(_slots);
+            HeldSlot = null;
         }
         _hadTemple = hasTemple;
         if (!hasTemple || (TimerEnabled && now < _nextRefillTime))
@@ -81,19 +92,22 @@ public sealed class BridgeTray
         }
         // 원본은 칸이 가득 차 있어도 시각을 다시 예약한다 → 칸이 비면 최대 1초 뒤에 채워진다.
         _nextRefillTime = now + RefillIntervalSeconds;
-        if (_pieces.Count >= Capacity)
+        // 집은 조각도 칸을 차지하므로 빈 자리가 없으면 채우지 않는다
+        int empty = Array.IndexOf(_slots, null);
+        if (empty < 0)
         {
             return null;
         }
         int pattern = BridgePatternCatalog.Draw(_random.Next(BridgePatternCatalog.DrawRange));
         bool forceSingle = DrawCount % SinglePiecePeriod == 0;
         DrawCount++;
-        if (forceSingle && !_pieces.Any(p => p.Pattern.Index == BridgePatternCatalog.SinglePiece))
+        if (forceSingle && !_slots.Any(p => p?.Pattern.Index == BridgePatternCatalog.SinglePiece))
         {
             pattern = BridgePatternCatalog.SinglePiece;
         }
         var piece = new BridgePiece(pattern) { CuredAtDeciseconds = ToDeciseconds(now) + CrackedDeciseconds };
-        _pieces.Add(piece);
+        // 새 조각은 첫 빈 칸에 들어온다 (녹화: 놓아서 빈 칸이 같은 자리에서 다시 채워짐)
+        _slots[empty] = piece;
         return piece;
     }
 
@@ -112,27 +126,50 @@ public sealed class BridgeTray
     /// <param name="seconds">게임 시각(초)</param>
     private static long ToDeciseconds(double seconds) => (long)Math.Truncate(seconds * 10.0);
 
-    /// <summary>칸에서 조각을 집는다 (커서로 옮김)</summary>
-    /// <param name="index">Pieces 의 순번</param>
-    public BridgePiece Take(int index)
+    /// <summary>칸 자리에 집을 수 있는 조각이 있는지 (비었거나 이미 집은 칸은 아니다)</summary>
+    /// <param name="slot">칸 번호</param>
+    public bool CanTake(int slot) => slot >= 0 && slot < Capacity && _slots[slot] != null && HeldSlot != slot;
+
+    /// <summary>칸에서 조각을 집는다 (커서로 옮김). 조각은 놓을 때까지 그 칸에 어둡게 남는다</summary>
+    /// <param name="slot">칸 번호 (<see cref="CanTake"/> 가 참이어야 한다)</param>
+    public BridgePiece Take(int slot)
     {
-        BridgePiece piece = _pieces[index];
-        _pieces.RemoveAt(index);
-        return piece;
+        if (!CanTake(slot))
+        {
+            throw new ArgumentOutOfRangeException(nameof(slot), slot, "집을 수 있는 조각이 없는 칸");
+        }
+        HeldSlot = slot;
+        return _slots[slot]!;
     }
 
     /// <summary>
-    /// 집었던 조각을 칸에 되돌린다. 매뉴얼의 "ESC 로 들고 있는 다리 반환"에 대응하는 클론 동작이며
-    /// 원본의 반환 위치(칸 순서)는 아직 확인하지 않았다. 칸이 가득 차면 거부
+    /// 집었던 조각을 칸에 되돌린다. 매뉴얼의 "ESC 로 들고 있는 다리 반환"에 대응한다.
+    /// 집은 칸이 남아 있으면 그 칸을 다시 밝게 하고, 템플을 잃어 칸이 비워진 뒤라면 첫 빈 칸에 넣는다. 빈 칸이 없으면 거부
     /// </summary>
     /// <param name="piece">되돌릴 조각</param>
     public bool Return(BridgePiece piece)
     {
-        if (_pieces.Count >= Capacity)
+        if (HeldSlot is int held && ReferenceEquals(_slots[held], piece))
+        {
+            HeldSlot = null;
+            return true;
+        }
+        int empty = Array.IndexOf(_slots, null);
+        if (empty < 0)
         {
             return false;
         }
-        _pieces.Add(piece);
+        _slots[empty] = piece;
         return true;
+    }
+
+    /// <summary>집은 조각을 놓았을 때 그 칸을 비운다 (다음 채우기 때 같은 자리에 새 조각이 들어온다)</summary>
+    public void ConsumeHeld()
+    {
+        if (HeldSlot is int held)
+        {
+            _slots[held] = null;
+        }
+        HeldSlot = null;
     }
 }

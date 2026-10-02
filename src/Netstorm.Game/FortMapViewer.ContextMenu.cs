@@ -27,16 +27,9 @@ internal sealed partial class FortMapViewer
         if (!_playUi || mouse.RightButton != ButtonState.Pressed || _previousMouse.RightButton == ButtonState.Pressed
             || _placementMode || _session.Player(TestPlayer).HeldPiece != null) return false;
         TypeInfo? type = null; GameEntity? entity = null; bool bridge = false;
-        PlayButton? button = _playButtons.FirstOrDefault(b => b.Bounds.Contains(mouse.Position));
-        if (button != null)
-        {
-            int index = _playButtons.IndexOf(button);
-            string? name = ProductionIcon(index);
-            if (name != null) type = _candidates.FirstOrDefault(t => t.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
-            bridge = index == 6;
-        }
-        else if (mouse.X >= 6 && mouse.X < 6 + TraySlotSize.X * TrayColumns && mouse.Y >= HeaderHeight + 6
-            && mouse.Y < HeaderHeight + 6 + TraySlotSize.Y * ((_session.Player(TestPlayer).Tray.Pieces.Count + TrayColumns - 1) / TrayColumns)) bridge = true;
+        // 생산 창 유닛·다리 칸은 정보 메뉴를 연다 (원본 FUN_0043d4c0 의 0x20000 → FUN_0043d330, opengump.wav)
+        if (DeckUnitAt(mouse.Position, _playHeight) is { } unit) { type = unit.Type; QueueSound(OpenGumpSound); }
+        else if (DeckTraySlotAt(mouse.Position) != null) { bridge = true; QueueSound(OpenGumpSound); }
         else if (!IsPlayUiPoint(mouse.X, mouse.Y))
         {
             (int x, int y) = CellAt(new(mouse.X, mouse.Y));
@@ -78,7 +71,17 @@ internal sealed partial class FortMapViewer
             parent.Add(($"Alignment: {Elements.FromTheme(_contextType!.Definition.GetString("theme"))?.ToString() ?? "None"}", null));
             parent.Add(($"Class: {_contextType!.Definition.GetString("class")}", null));
         }
-        else if (_contextType != null) parent.Add(($"Cost: {StormPower.TypeCost(_contextType.Definition)}", null));
+        else if (_contextType != null)
+        {
+            // 생산 창 항목: 녹화(01:05.5)의 Golem 메뉴처럼 소유자·원소·분류 뒤에 비용, SP 가 모자라면 원본 경고 문구
+            int cost = StormPower.TypeCost(_contextType.Definition);
+            parent.Add(("Owner: You", null));
+            parent.Add(($"Alignment: {Elements.FromTheme(_contextType.Definition.GetString("theme"))?.ToString() ?? "None"}", null));
+            parent.Add(($"Class: {_contextType.Definition.GetString("class")}", null));
+            parent.Add(($"Cost: {cost}", null));
+            if (cost > _session.Player(TestPlayer).StormPower)
+                parent.Add((Ui("Storm Power가 더 필요합니다!", "Need more Storm Power to Build!"), null));
+        }
         if (own && _contextEntity!.Kind == ObjectKind.Priest)
         {
             parent.Add((Ui("건설", "Construct") + " >", () => _contextSubmenu = "construct"));
