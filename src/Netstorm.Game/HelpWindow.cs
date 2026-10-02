@@ -67,13 +67,13 @@ internal sealed class HelpWindow : IDisposable
     /// <summary>원본 도움말 크기를 쓰되 작은 창에서는 전체 영역을 화면 안에 둔다.</summary>
     private Rectangle Panel(int width, int height)
     {
-        int w = Math.Min(450, width - 24); int h = Math.Min(InformationType() == null ? 350 : 470, height - 24);
+        int w = Math.Min(450, width - 24); int h = Math.Min(350, height - 24); // 녹화 대조: 능력치 머리가 있는 주제도 목차와 같은 높이 350이다
         return new((width - w) / 2, Math.Min(40, (height - h) / 2), w, h);
     }
     /// <summary>고정 머리를 제외한 독립적인 본문 영역.</summary>
     private Rectangle Body(Rectangle panel)
     {
-        int top = InformationType() == null ? 18 : 156;
+        int top = InformationType() == null ? 18 : 152; // 녹화 대조: 머리 아래 본문 시작 높이 152
         return new(panel.X + 16, panel.Y + top, panel.Width - 46, panel.Height - top - 44);
     }
     /// <summary>Back·OK의 버튼 영역.</summary>
@@ -260,17 +260,18 @@ internal sealed class HelpWindow : IDisposable
     /// <summary>원본 info 태그의 그림과 실제 타입 수치를 본문 위에 고정한다.</summary>
     private void DrawInformation(SpriteBatch batch, Rectangle panel, TypeInfo type)
     {
-        var pictureBox = new Rectangle(panel.X + 16, panel.Y + 18, 116, 120);
+        var pictureBox = new Rectangle(panel.X + 16, panel.Y + 18, 156, 120); // 녹화 대조: 초상화 칸은 가로 약 156
         batch.Draw(_pixel, pictureBox, new Color(40, 52, 40));
         if (Picture(type.Name + ".*") is { } picture)
         {
-            float scale = Math.Min(1, Math.Min(pictureBox.Width / (float)picture.Width, pictureBox.Height / (float)picture.Height));
+            // 원본은 초상화를 칸에 가득 채워 그린다(위아래 빈 띠 없음).
+            float scale = Math.Min(pictureBox.Width / (float)picture.Width, pictureBox.Height / (float)picture.Height);
             var size = new Vector2(picture.Width, picture.Height) * scale;
             batch.Draw(picture, new Vector2(pictureBox.Center.X, pictureBox.Center.Y) - size / 2,
                 null, Color.White, 0, Vector2.Zero, scale, SpriteEffects.None, 0);
         }
         TypeDefinition d = type.Definition;
-        Vector2 pos = new(pictureBox.Right + 12, panel.Y + 16);
+        Vector2 pos = new(pictureBox.Right + 8, panel.Y + 16);
         OriginalUiSkin.Text(batch, _skin.Title, _resources.Settings.Expand(d.GetString("description") ?? type.Name), pos);
         pos.Y += 23;
         Element? theme = Elements.FromTheme(d.GetString("theme"));

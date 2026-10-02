@@ -50,6 +50,17 @@ internal sealed partial class FortMapViewer
     /// <summary>정보 행은 그대로 두고 선택한 명령에서만 상위·하위 메뉴를 함께 닫는다.</summary>
     private void CloseContextMenu() { _contextType = null; _contextEntity = null; _contextBridge = false; _contextSubmenu = null; }
 
+    /// <summary>우클릭 대상의 표시 레벨. 워크샵은 생산 덱의 단계, 사제는 1, 그 밖은 타입의 level이며 없으면 0이다.</summary>
+    private int ContextLevel()
+    {
+        if (_contextEntity is not { } entity || _contextType == null) return _contextType?.Definition.GetInt("level") ?? 0;
+        if (entity.Kind == ObjectKind.Workshop) return _session.Player(entity.Owner).Deck.WorkshopLevel(entity.Id);
+        if (entity.Kind == ObjectKind.Priest) return 1;
+        return _contextType.Definition.GetInt("level") ?? 0;
+    }
+    /// <summary>1~3 단계를 원본 제목처럼 로마 숫자로 바꾼다.</summary>
+    private static string RomanLevel(int level) => level switch { 1 => "I", 2 => "II", 3 => "III", _ => level.ToString() };
+
     /// <summary>현재 대상의 능력치·명령과 실제 생산 덱의 등록 상태로 목록을 만든다.</summary>
     private void BuildContextRows(int width, int height)
     {
@@ -57,10 +68,14 @@ internal sealed partial class FortMapViewer
         var parent = new List<(string Label, Action? Action)>();
         string title = _contextBridge ? Ui("다리", "Bridge") : _contextType!.Definition.GetString("description") ?? _contextType.Name;
         bool own = _contextEntity?.Owner == TestPlayer;
+        // 녹화 대조: 사제·워크샵·골렘 등은 제목 뒤에 "Level I"이 붙고 템플은 붙지 않는다.
+        if (!_contextBridge && ContextLevel() is int level and > 0) title += $" Level {RomanLevel(level)}";
         parent.Add((title, null));
         if (_contextEntity != null)
         {
             parent.Add(($"Owner: {(own ? "You" : _contextEntity.Owner)}", null));
+            // 녹화 대조: 원소가 없는 사제는 Alignment: None으로 표시한다.
+            parent.Add(($"Alignment: {Elements.FromTheme(_contextType!.Definition.GetString("theme"))?.ToString() ?? "None"}", null));
             parent.Add(($"Class: {_contextType!.Definition.GetString("class")}", null));
         }
         else if (_contextType != null) parent.Add(($"Cost: {StormPower.TypeCost(_contextType.Definition)}", null));

@@ -9,6 +9,15 @@
 
 ---
 
+## 2026-10-02 (`vm-debian-codex`, Linux, 원본 실행 없음) ✅ 완료: 네 번째 녹화 프레임과 클론 화면 직접 대조·소규모 수정
+
+- **요청·범위:** 다른 PC의 녹화가 `playingVideos/`에 들어와(새 폴더 `20261001T145330210Z-425636a2e82c`, 문서상 네 번째 UI·조작키 녹화) 이전에 보류됐던 "현재 구현과 비교" 작업을 이어갔다. 사용자는 "3번째 파일"이라 했으나 이 PC에 새로 들어온 세션은 이 폴더 하나뿐이다. 삭제됐던 세 번째(`20261001T141005334Z-dfc9992ac304`, 포획·의식 구간)는 여전히 없다. 원본 게임을 실행하지 않았다.
+- **방법:** `tools/recordplay_frames.py`로 프레임을 꺼내 클론 검사 PNG와 나란히 비교했다([결과와 남은 차이](docs/screens/recorded-ui-clone-20261002.md#녹화-프레임과-클론-화면-직접-대조-2026-10-02-후속-linux-클론)). 산출물은 Git 제외 `extracted/record-play-20261002-compare/`.
+- **수정:** 도움말 창 높이 350 통일·초상화 156×120 채움(`HelpWindow.cs`), 우클릭 메뉴 제목 `Level`·`Alignment` 행(`FortMapViewer.ContextMenu.cs`). 행이 바뀐 만큼 `tools/clone_help_options_smoke.ps1` 클릭 좌표를 갱신했다. Release 빌드 오류 0, Assets 197·Core 246 통과, Menu·Mission·Workshop 단언 통과(Linux 직접 실행).
+- **남은 차이(구현 보류):** 우클릭 메뉴 돌 프레임·큰 제목·`Current Production` 하위 제목과 `About` 행·`Player >`, 도움말 본문 색·글꼴·`*` 기호·스크롤 화살표, 옵션 메뉴 글꼴 폭·비활성 항목 표시, 미션 화면의 개발용 버튼 격자 — 자세한 내용은 위 문서. 이번 비교에서는 Windows PowerShell 스크립트 자체와 실제 소리는 확인하지 못했다.
+
+---
+
 ## 2026-10-02 (`vm-debian-codex`, Linux, 원본 실행 없음) ✅ 완료: 보류됐던 클론 최종 테스트 실행
 
 - **범위:** 사용자 지시로 분석(원본 게임·녹화 판독)은 진행하지 않았다. 아래 보류 절의 자동 검증만 실행했다. 원본 게임은 실행하지 않았고 AGENTS.md·분석기·원자료는 변경하지 않았다.
