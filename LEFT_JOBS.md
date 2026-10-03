@@ -1,11 +1,21 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
-> 최종 갱신: 2026-10-03 (클론 이동·선택·프레임 개선 — 맨 위 절. 그 아래 절들: 캠페인 1-1 원본 자동 분석 녹화, 분석기 30/60FPS·자동 연속 녹화)
+> 최종 갱신: 2026-10-03 (원본 AI 난이도·Edit 맵 저장/시험 플레이 경로 정적 조사, 클론 이동·선택·프레임 개선 — 맨 위 절. 그 아래 절들: 캠페인 1-1 원본 자동 분석 녹화, 분석기 30/60FPS·자동 연속 녹화)
 > 프로젝트 목표(AGENTS.md): 원본 NetStorm: Islands at War 를 디컴파일/분석하여 클론 코딩하고,
 > **Windows 10/11** 과 **GUI 환경의 Linux** 에서 동작하며 **여러 언어를 지원**하는 게임을 만든다.
 > **1차 목표 언어: 영어, 한국어** (그 외 언어는 이후 확장).
 > **우선순위: Windows 10/11 > Linux** (Linux 지원은 우선순위가 낮다 — 설계상 이식성은 유지하되 검증·배포는 Windows 먼저).
 > **화면 요구사항(2026-09-28 AGENTS.md 추가)**: 풀스크린 모드와 화면비 **16:9 · 16:10 · 4:3** 지원, 풀스크린에서 **마우스를 화면 끝에 대면 화면 이동**(원본도 지원) — 1.7절
+
+---
+
+## 2026-10-03 (Windows, 원본 실행 없음) ✅ 완료: 원본 AI 난이도·Edit 맵 저장/시험 플레이 경로 정적 조사
+
+- **난이도:** 전체 미션에 적용하는 AI Easy/Normal/Hard 선택지는 찾지 못했다. 캠페인별 `.english` 머리 값에서 `aiStartMoney`, `aiTech`, `aiGeyserAttachments`, `aiCollectors`, `aiTimeBetweenMoves`, `aiAbility` 등을 따로 지정한다. `.fort`는 배치된 요새 상태를 저장하고 같은 이름의 미션 스크립트가 AI 설정을 제공한다. 온라인 BattleMaster의 `Player Handicap`은 선택 플레이어의 유닛을 강하게 하는 기능으로, 싱글플레이 AI 전략 난이도와는 다르다.
+- **Edit 흐름:** 메인 메뉴 Edit → Load Battle Map → Create New Map(“New Save-Game Name?”) 또는 맵 선택 → 편집기 Edit → Save as... / Game → Main Menu → 저장 확인 Yes. Game → Test Battle은 현재 맵을 시험 전투로 열고, 전투 Game → Return to Editing으로 편집기로 돌아간다. 이 메뉴 경로는 기존 관찰 기록과 `extracted/decomp/Netstorm.c` 문자열·메뉴 구성으로 확인했다.
+- **현재 작업 트리(읽기만):** `originals/d/options.cfg`의 변경된 설정 중 `lastEditFort = "TEST01"`이 있고, `originals/d/TEST01.fort`는 2,118바이트·35개 섹션으로 파싱된다. 같은 이름의 `TEST01.english`는 없다. 두 파일은 작업 시작 전부터 있던 사용자 변경이며 수정하지 않았다. 따라서 TEST01 요새 파일이 존재한다는 점은 확인했지만, 그 맵의 편집기 목록 표시·Test Battle 실행이나 AI 동작까지 검증한 것은 아니다.
+- **난이도 수정 가능성:** 표준 게임 UI에 AI 난이도 설정은 없다. 미션별 `.english` AI 수치/기술/능력 또는 `.fort`의 시작 배치를 조절하는 방식은 데이터 구조상 가능하다. 파일 조회의 loose-file 우선순위는 디컴파일과 일치하지만, 패치 이력의 tarc 우선 문구와 충돌하므로 원본에서 override가 실제 적용되는지는 동적 확인 전까지 미확정이다.
+- **남은 동적 확인:** Create New Map → 저장 → 메뉴 복귀 → 목록에서 재선택 → Test Battle의 전체 왕복, Add Island·Set All Bridge, TEST01의 실제 테스트 플레이와 AI 스크립트 연결. 이 확인은 원본 게임 실행이 필요하므로 별도 실행 허용 조건을 따른다.
 
 ---
 
