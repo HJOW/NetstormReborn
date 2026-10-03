@@ -1,0 +1,65 @@
+[Header]
+missionType="Tutorial"
+
+missionNumber=1
+moreGeysers=0
+
+myStartMoney=500000
+myTech="all"
+myAllyList="1"
+
+title="TEST02"
+
+ai2Name="Luitenent of Wind"
+ai2Tech="all"
+ai2StartMoney=0
+ai2GeyserAttachments=1
+ai2Collectors=1
+ai2TimeBetweenMoves=1
+ai2AllyList="2"
+ai2color=orange
+ai2Ability="!USE_PRIEST_TO_COLLECT;!BUILD_DAIS"
+ai2BridgeDrawRate=1
+
+ai3Name="Thunder Demon"
+ai3Tech="all"
+ai3StartMoney=0
+ai3GeyserAttachments=1
+ai3Collectors=1
+ai3TimeBetweenMoves=1
+ai3AllyList="3"
+ai3color=red
+ai3Ability="!USE_PRIEST_TO_COLLECT"
+ai3BridgeDrawRate=1
+
+
+[Options]
+
+[A.]
+
+~[IsunBalloon.a1]<h2>TEST02</h2>
+<i>TEST02</i>
+
+$Button=EQUIPMENT,ShowTechnology,55
+$Button=Go!,DoNothing,0
+
+[Succeeded][Ai4PriestDead]
+<h2>END</h2>
+
+<$Config,Done{mission.fileName}=4>
+$Button=Let Sarge wait,MissionAbort,0
+$Button=HELP SARGE!!!,MissionBegin,Battle5
+
+[Failed][GoodTeamDead]
+END
+$Button=Try Again?,Tell,TryAgain
+$Button=END,missionabort,1
+
+[END]
+
+
+
+
+
+
+
