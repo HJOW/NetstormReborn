@@ -54,14 +54,25 @@ internal sealed partial class FortMapViewer
     {
         switch (sessionEvent.Kind)
         {
+            case SessionEventKind.CombatSound:
+                QueueSound(sessionEvent.Text);
+                break;
             case SessionEventKind.ShotFired:
-                if (_session.Entity(sessionEvent.EntityId)?.Type.Definition.GetString("fireSound") is { Length: > 0 } fire)
+                GameEntity? gun = _session.Entity(sessionEvent.EntityId);
+                string? fire = gun?.Type.Definition.GetString("fireSound") ?? (gun?.Type.Name.ToLowerInvariant() switch
+                {
+                    "windarcher" => "fireCrossbow.wav", "sunarcher" => "sunDiscThrowerWhoosh.wav", _ => null,
+                });
+                if (fire is { Length: > 0 })
                 {
                     QueueSound(fire);
                 }
                 break;
             case SessionEventKind.EntityDestroyed:
                 OnEntityDestroyed(sessionEvent.EntityId);
+                break;
+            case SessionEventKind.EntityExploded:
+                QueueSound("explosion.wav");
                 break;
             case SessionEventKind.ShotBlocked:
                 QueueSound("sunFenceImpact.wav");

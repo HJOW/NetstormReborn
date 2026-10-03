@@ -76,7 +76,7 @@ public sealed class GroundSupportTests
     [Fact]
     public void SuspendedPriest_RecoversAtExactlyHalfHealth()
     {
-        BattleSession session = Create(LeftIsland, Object("priest", 1, 10, 10), Object("sunCannon", 2, 18, 11));
+        BattleSession session = Create(LeftIsland, Object("priest", 1, 10, 10), Object("sunCannon", 2, 18, 11, 2));
         AddBridge(session, 10, 10);
         session.RunTicks(30);
         GameEntity priest = session.Entity(1)!;
@@ -300,9 +300,9 @@ public sealed class GroundSupportTests
         return session;
     }
     /// <summary>실제 설치본 타입으로 저장 오브젝트를 만든다.</summary>
-    private static FortMapObject Object(string name, int owner, int x, int y)
+    private static FortMapObject Object(string name, int owner, int x, int y, byte? frame = null)
     {
         TypeInfo type = OriginalData.RequireTypes().Find(name)!;
-        return new FortMapObject(x, y, 0, new FortObject(0, 0, type, null, null, null, null, null, owner, []));
+        return new FortMapObject(x, y, 0, new FortObject(0, 0, type, frame, null, null, null, null, owner, []));
     }
 }

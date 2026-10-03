@@ -40,11 +40,7 @@ public static class CannonAnimation
         int frame;
         if (entity.Type.Name.Equals("sunCannon", StringComparison.OrdinalIgnoreCase))
         {
-            if (entity.LastShotTick >= 0 && (tick - entity.LastShotTick) / (double)ticksPerSecond < SunFireSeconds)
-                return 24 + (entity.CannonDirection switch { 0 => 1, 1 => 3, 2 => 0, _ => 2 });
-            if (entity.AttackTargetId == 0 && entity.LastShotTick < 0) return entity.Source?.Object.Frame ?? type.Frames.DefaultFrame;
-            // 태양 캐논의 펼쳐진 자세는 L01/M03/N00/O02로 저장되어 있다.
-            frame = entity.CannonDirection switch { 0 => 1, 1 => 3, 2 => 0, _ => 2 };
+            return entity.SunCannonFrame;
         }
         else if (entity.Type.Name.Equals("thunderCannon", StringComparison.OrdinalIgnoreCase))
         {

@@ -47,20 +47,53 @@ internal sealed partial class FortMapViewer
         }
     }
 
-    /// <summary>아이스·썬더 캐논의 원본 방향별 탄을 표시한다. 다른 탄은 기존 표시를 사용한다.</summary>
-    private bool DrawCannonProjectile(SpriteBatch batch, CombatShot shot, Vector2 position)
+    /// <summary>원반·석궁·고정 캐논의 원본 탄 그림과 태양 캐논의 긴 금색 꼬리를 표시한다.</summary>
+    private bool DrawProjectile(SpriteBatch batch, CombatShot shot, Vector2 position, Vector2 from, Vector2 to)
     {
+        if (shot.AttackerType?.Equals("sunCannon", StringComparison.OrdinalIgnoreCase) == true)
+        {
+            Vector2 heading = to - from;
+            float distance = heading.Length();
+            if (distance <= 0) return true;
+            heading /= distance;
+            // TEST01 265초의 긴 금색 탄. 원본의 입자 난수 대신 일정한 꼬리를 그리며 아직 화소 단위 복원은 아니다.
+            float length = Math.Min(52 * _zoom, Vector2.Distance(from, position));
+            Vector2 point = position - new Vector2(0, 20 * _zoom);
+            Vector2 normal = new(-heading.Y, heading.X);
+            Line(batch, point - heading * length, point, Color.Gold);
+            Line(batch, point - heading * length * 0.8f + normal * _zoom, point, Color.Orange);
+            Line(batch, point - heading * length * 0.6f - normal * _zoom, point, Color.LightYellow);
+            return true;
+        }
         string? name = shot.AttackerType?.ToLowerInvariant() switch
         {
-            "raincannon" => "rainCannonMissile", "thundercannon" => "thunderCannonMissile", _ => null,
+            "raincannon" => "rainCannonMissile", "thundercannon" => "thunderCannonMissile",
+            "sunarcher" => "sunDisc", "windarcher" => "bolt", _ => null,
         };
         if (name == null || _knowledgeTypes.Find(name) is not { } type) return false;
         int direction = shot.EndY < shot.StartY ? 0 : shot.EndX > shot.StartX ? 1 : shot.EndY > shot.StartY ? 2 : 3;
-        int frame = name == "thunderCannonMissile"
+        int frame = name is "sunDisc" or "bolt" ? ProjectileAnimation.Frame(type.Definition, shot, CombatRenderTick, _session.TicksPerSecond)
+            : name == "thunderCannonMissile"
             ? direction * 3 + (int)((_session.Tick - shot.FiredTick) / 2 % 3)
             // 얼음 탄의 28방향 그림은 북→서→남→동 순서이고, 썬더 탄의 네 방향은 북→동→남→서다.
             : ((4 - direction) % 4) * 7;
         DrawSprite(batch, type.LoadIndex, frame, position - new Vector2(0, 20 * _zoom));
         return true;
+    }
+
+    /// <summary>세션 틱 사이의 그림 보간 시각. 일시정지·안내 창에서는 마지막 논리 틱에 고정한다.</summary>
+    private double CombatRenderTick => _session.Tick + (SimulationRunning && !TutorialDialogOpen ? _session.InterpolationAlpha : 0);
+
+    /// <summary>착탄·방어선 먼지·파괴 폭발을 원본 anim 그림으로 표시한다. 제거된 엔티티를 다시 조회하지 않는다.</summary>
+    private void DrawCombatImpacts(SpriteBatch batch, Vector2 center)
+    {
+        if (_knowledgeTypes.Find("anim") is not { } type) return;
+        // 발생 순서대로 그려 같은 틱의 연쇄 폭발도 모두 표시한다.
+        foreach (CombatImpact impact in _session.Impacts)
+        {
+            int frame = ProjectileAnimation.ImpactFrame(type.Definition, impact, CombatRenderTick, _session.TicksPerSecond);
+            if (frame >= 0)
+                DrawSprite(batch, type.LoadIndex, frame, CellCenterScreen(impact.X, impact.Y, center) - new Vector2(0, 20 * _zoom));
+        }
     }
 }

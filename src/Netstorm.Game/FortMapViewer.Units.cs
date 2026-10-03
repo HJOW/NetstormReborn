@@ -34,6 +34,7 @@ internal sealed partial class FortMapViewer
     /// <summary>
     /// 자동 입력 검사가 확인할 선택·이동형 유닛 상태. 예: <c>selected=priest;units=priest:C:moving,sunwalker:-:idle</c>
     /// (유닛마다 타입 이름:바라보는 방향 글자(움직인 적이 없으면 -):moving/idle, 내 유닛만). rotation은 들고 있는 캐논 방위다.
+    /// sunposes는 태양 캐논의 실제 그림 번호이며 shots·impacts는 탄·효과의 진단 개수다.
     /// </summary>
     public string UiDetail => $"selected={_session.Entity(_session.Player(TestPlayer).SelectedEntityId)?.Type.Name.ToLowerInvariant() ?? "none"};units="
         + string.Join(',', _session.Entities.Where(e => IsMobile(e) && e.Owner == TestPlayer).Select(e =>
@@ -42,7 +43,9 @@ internal sealed partial class FortMapViewer
         + ";workshops=" + string.Join(',', _session.Entities.Where(e => e.Owner == TestPlayer && e.Kind == ObjectKind.Workshop)
             .Select(e => $"{e.Type.Name.ToLowerInvariant()}:{WorkshopLevel(e, e.Source)}"))
         + $";placement={(_lastCheck?.Allowed == true ? "allowed" : _lastCheck?.Failure.ToString() ?? "none")}"
-        + $";cursor={(_placementMode ? _candidates[_candidateIndex].Name.ToLowerInvariant() : "none")};range={RangeDetail}";
+        + $";cursor={(_placementMode ? _candidates[_candidateIndex].Name.ToLowerInvariant() : "none")};range={RangeDetail}"
+        + ";sunposes=" + string.Join(',', _session.Entities.Where(e => e.Type.Name.Equals("sunCannon", StringComparison.OrdinalIgnoreCase)).Select(e => e.SunCannonFrame))
+        + $";shots={_session.Shots.Count};impacts={_session.Impacts.Count}";
 
     /// <summary>걷기 그림 시계(초). 게임 시간이 흐르는 동안에만 진행해 일시정지 중에는 걷는 자세가 멈춘다.</summary>
     private double _walkClock;

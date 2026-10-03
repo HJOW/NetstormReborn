@@ -287,6 +287,9 @@ public enum SessionEventKind
 
     /// <summary>적의 탄을 흡수한 썬 바리케이트 방어선. EntityId는 선의 시작 기둥 번호다.</summary>
     ShotBlocked,
+
+    /// <summary>조준·착탄 동작의 원본 효과음 요청. Text는 sound/ 파일 이름이다.</summary>
+    CombatSound,
 }
 
 /// <summary>세션 이벤트 한 건.</summary>

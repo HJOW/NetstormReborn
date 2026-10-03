@@ -156,15 +156,16 @@ internal sealed partial class FortMapViewer
         foreach (CombatShot shot in _session.Shots)
         {
             if (shot.IsBeam) continue;
-            float progress = (float)Math.Clamp((_session.Tick - shot.FiredTick) / (double)(shot.ImpactTick - shot.FiredTick), 0, 1);
+            float progress = (float)Math.Clamp((CombatRenderTick - shot.FiredTick) / (shot.ImpactTick - shot.FiredTick), 0, 1);
             Vector2 from = CellCenterScreen(shot.StartX, shot.StartY, center);
             Vector2 to = CellCenterScreen(shot.EndX, shot.EndY, center);
             Vector2 point = Vector2.Lerp(from, to, progress);
-            if (DrawCannonProjectile(batch, shot, point)) continue;
+            if (DrawProjectile(batch, shot, point, from, to)) continue;
             Vector2 tail = Vector2.Lerp(from, to, Math.Max(0, progress - 0.08f));
             Line(batch, tail, point, shot.Owner == TestPlayer ? Color.Gold : Color.OrangeRed);
             batch.Draw(_pixel, new Rectangle((int)point.X - 2, (int)point.Y - 2, 4, 4), Color.White);
         }
+        DrawCombatImpacts(batch, center);
         // 영상에서 확인한 흰색·청록색 번개를 짧은 꺾은 선으로 표현한다. 화면 난수는 세션 난수를 소비하지 않는다.
         foreach (CombatShot beam in _session.Lightning)
         {

@@ -83,6 +83,12 @@ public sealed class GameEntity
     /// <summary>마지막 발사 틱. -1이면 아직 발사하지 않았다. 발사 그림을 피해 예약과 맞춘다.</summary>
     public long LastShotTick { get; internal set; } = -1;
 
+    /// <summary>태양 캐논의 실제 접기·회전·발사 그림 번호. 조준 방위와 별도로 저장해 중간 자세를 유지한다.</summary>
+    public int SunCannonFrame { get; internal set; }
+
+    /// <summary>태양 캐논이 다음 회전·발사 그림으로 진행할 틱.</summary>
+    public long NextSunAnimationTick { get; internal set; }
+
     /// <summary>파괴된 아이스 타워가 같은 받침에서 다시 자라는지.</summary>
     public bool IsRegenerating { get; internal set; }
 
@@ -125,6 +131,8 @@ public sealed class GameEntity
         HitPoints = MaxHitPoints;
         // 저장된 캐논의 L/M/N/O 측면 글자를 북/동/남/서로 읽는다. 기본 그림도 같은 규칙이다.
         int frame = source?.Object.Frame ?? type.Definition.Frames.DefaultFrame;
+        if (type.Name.Equals("sunCannon", StringComparison.OrdinalIgnoreCase))
+            SunCannonFrame = frame is >= 0 and < 28 ? frame : 0;
         if (frame >= 0 && frame < type.Definition.Frames.Codes.Count &&
             type.Definition.Frames.Codes[frame].Side is >= 'L' and <= 'O' and var side)
             CannonDirection = side - 'L';

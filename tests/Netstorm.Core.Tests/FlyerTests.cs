@@ -128,7 +128,7 @@ public sealed class FlyerTests
     public void FlyerDeath_DoesNotClearGroundOccupancyOrAwardMoney()
     {
         BattleSession session = Create(Object("sunFlyer", 1, 10, 10), Object("sunBlocker", 1, 10, 10),
-            Object("sunCannon", 2, 18, 11));
+            Object("sunCannon", 2, 18, 11, 2));
         int money = session.Player(2).StormPower;
         session.RunTicks(30);
         Assert.Null(session.Entity(1));
@@ -177,9 +177,9 @@ public sealed class FlyerTests
         new(new BattleMap(objects, (_, _) => null), Grid(), OriginalData.RequireTypes());
 
     /// <summary>실제 타입으로 저장 오브젝트를 만든다.</summary>
-    private static FortMapObject Object(string name, int owner, int x, int y)
+    private static FortMapObject Object(string name, int owner, int x, int y, byte? frame = null)
     {
         TypeInfo type = OriginalData.RequireTypes().Find(name) ?? throw new InvalidDataException(name);
-        return new FortMapObject(x, y, null, new FortObject(0, 0, type, null, null, null, null, null, owner, []));
+        return new FortMapObject(x, y, null, new FortObject(0, 0, type, frame, null, null, null, null, owner, []));
     }
 }

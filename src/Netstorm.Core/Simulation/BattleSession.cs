@@ -103,6 +103,9 @@ public sealed partial class BattleSession
     /// <summary>게임 시각(초). 틱 ÷ 초당 틱 수로 정수에서 곧바로 계산해 오차가 쌓이지 않는다.</summary>
     public double Seconds => Tick / (double)TicksPerSecond;
 
+    /// <summary>다음 논리 틱까지 흐른 비율. 화면 보간에만 사용하며 전투 판정·검사합에는 넣지 않는다.</summary>
+    public double InterpolationAlpha => _timestep.Alpha;
+
     /// <summary>세션의 모든 플레이어 (번호 순)</summary>
     public IReadOnlyCollection<PlayerState> Players => _players.Values;
 
@@ -507,6 +510,8 @@ public sealed partial class BattleSession
             hash.Add(entity.CannonDirection);
             hash.Add(entity.AttackStartedTick);
             hash.Add(entity.LastShotTick);
+            hash.Add(entity.SunCannonFrame);
+            hash.Add(entity.NextSunAnimationTick);
             hash.Add(entity.IsRegenerating ? 1 : 0);
             hash.Add(entity.RegenerationStartTick);
             AddFlightChecksum(hash, entity.Flight);

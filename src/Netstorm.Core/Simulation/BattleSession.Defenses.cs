@@ -106,6 +106,13 @@ public sealed partial class BattleSession
             shot.StartY + (shot.EndY - shot.StartY) * previous, shot.StartX + (shot.EndX - shot.StartX) * current,
             shot.StartY + (shot.EndY - shot.StartY) * current, fields) is not { } hit) return false;
         _shots.Remove(shot);
+        double fraction = previous + (current - previous) * hit.Fraction;
+        RecordShotImpact(shot with
+        {
+            EndX = shot.StartX + (shot.EndX - shot.StartX) * fraction,
+            EndY = shot.StartY + (shot.EndY - shot.StartY) * fraction,
+            BlockedByFenceId = hit.Field.FirstId,
+        });
         Emit(SessionEventKind.ShotBlocked, hit.Field.Owner, hit.Field.FirstId, "썬 바리케이트 탄 흡수");
         return true;
     }

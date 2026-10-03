@@ -58,6 +58,7 @@ public sealed partial class BattleSession
     {
         UpdateRegrowingTowers();
         if (!CombatEnabled) return;
+        _impacts.RemoveAll(impact => Tick >= impact.Tick + TicksFor(ImpactLifetimeSeconds));
         IReadOnlyList<SunForceField> fields = SunForceFields;
         _lightning.RemoveAll(shot => Tick >= shot.FiredTick + TicksFor(LightningDisplaySeconds));
         // 기절한 사제는 자기 신전이 완공되어 있을 때만 회복한다. 포획된 사제(운반·묶임)는 풀려날 때 회복하므로 여기서 제외한다.
@@ -79,12 +80,14 @@ public sealed partial class BattleSession
             _shots.Remove(shot);
             if (shot.BlockedByFenceId != 0)
             {
+                RecordShotImpact(shot);
                 Emit(SessionEventKind.ShotBlocked, Entity(shot.BlockedByFenceId)?.Owner ?? 0, shot.BlockedByFenceId, "썬 바리케이트 탄 흡수");
                 continue;
             }
             if (Entity(shot.TargetId) is { IsStunned: false, IsRegenerating: false } target &&
-                (!IsCannonShot(shot) || ShotHitsFootprint(shot, target)))
+                (shot.IsBeam || ShotHitsFootprint(shot, target)))
             {
+                RecordShotImpact(shot);
                 ApplyCombatDamage(target, shot);
             }
         }
@@ -107,14 +110,23 @@ public sealed partial class BattleSession
                     .OrderBy(e => DistanceSquared(attacker, e)).ThenBy(e => e.Id).FirstOrDefault();
                 attacker.AttackTargetId = target?.Id ?? 0;
             }
+            if (attacker.Type.Name.Equals("sunCannon", StringComparison.OrdinalIgnoreCase))
+            {
+                int? direction = target == null ? null : AimDirection(attacker, target);
+                if (direction.HasValue) attacker.CannonDirection = direction.Value;
+                int previousFrame = attacker.SunCannonFrame;
+                bool ready = SunCannonAnimation.Advance(attacker, direction, Tick, TicksPerSecond);
+                // 효과음 선택은 그림 번호에 고정해 다리 추첨 등에 쓰는 세션 난수를 소비하지 않는다.
+                if (attacker.SunCannonFrame != previousFrame && previousFrame < 24 && direction.HasValue)
+                    Emit(SessionEventKind.CombatSound, attacker.Owner, attacker.Id,
+                        $"sunCannonRaiseLower{attacker.SunCannonFrame % 9 + 1}.wav");
+                if (!ready) continue;
+            }
             if (target == null)
             {
                 attacker.AttackStartedTick = -1;
                 continue;
             }
-            // 썬 캐논만 목표 변경 시 스스로 회전한다. 아이스·썬더 캐논은 설치 방위 밖의 목표를 고르지 않는다.
-            if (CannonAnimation.IsCannon(attacker.Type) && !CannonAnimation.IsFixed(attacker.Type))
-                attacker.CannonDirection = AimDirection(attacker, target);
             if (Tick < attacker.NextAttackTick) continue;
             double interval = type.GetDouble("delayBetweenShots") ?? FallbackShotSeconds;
             if (!double.IsFinite(interval) || interval <= 0) interval = FallbackShotSeconds;
@@ -156,6 +168,8 @@ public sealed partial class BattleSession
             _shots.Add(shot);
             if (beam) _lightning.Add(shot);
             attacker.LastShotTick = Tick;
+            if (attacker.Type.Name.Equals("sunCannon", StringComparison.OrdinalIgnoreCase))
+                SunCannonAnimation.Fire(attacker, Tick, TicksPerSecond);
             attacker.NextAttackTick = Tick + TicksFor(attacker.Type.Name.Equals("thunderCannon", StringComparison.OrdinalIgnoreCase)
                 ? CannonAnimation.ThunderRecoverySeconds : interval);
             if (attacker.Type.Name.Equals("thunderCannon", StringComparison.OrdinalIgnoreCase)) attacker.AttackStartedTick = -1;
@@ -207,12 +221,7 @@ public sealed partial class BattleSession
         !CannonAnimation.IsCannon(attacker.Type) ? (target.WorldX, target.WorldY)
         : AimDirection(attacker, target) is 0 or 2 ? (attacker.WorldX, target.WorldY) : (target.WorldX, attacker.WorldY);
 
-    /// <summary>발사자가 제거된 뒤에도 탄 종류로 캐논 착탄 판정을 유지한다.</summary>
-    private static bool IsCannonShot(CombatShot shot) => shot.AttackerType is string type &&
-        (type.Equals("sunCannon", StringComparison.OrdinalIgnoreCase) || type.Equals("rainCannon", StringComparison.OrdinalIgnoreCase)
-            || type.Equals("thunderCannon", StringComparison.OrdinalIgnoreCase));
-
-    /// <summary>현재 위치의 목표가 고정 착탄점에 남아 있는지 검사해 이동으로 피한 캐논 탄이 강제로 명중하지 않게 한다.</summary>
+    /// <summary>현재 위치의 목표가 고정 착탄점에 남아 있는지 검사해 이동으로 피한 탄이 강제로 명중하지 않게 한다.</summary>
     private bool ShotHitsFootprint(CombatShot shot, GameEntity target)
     {
         (double x, double y) = MovementCell(target, 0);
@@ -244,6 +253,7 @@ public sealed partial class BattleSession
         }
         else if (target.HitPoints <= 0)
         {
+            _impacts.Add(new CombatImpact(target.WorldX, target.WorldY, Tick, target.Kind == ObjectKind.Temple ? 'A' : 'B'));
             if (target.Type.Name.Equals("rainBlocker", StringComparison.OrdinalIgnoreCase))
             {
                 ShatterIceTower(target);

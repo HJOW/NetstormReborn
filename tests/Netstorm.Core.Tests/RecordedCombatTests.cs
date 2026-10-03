@@ -12,14 +12,15 @@ public sealed class RecordedCombatTests
     [Fact]
     public void IceTower_RegrowsRepeatedlyWithoutRewardOrSupportLoss()
     {
-        BattleSession session = Create(Object("sunCannon", 1, 10, 10, overrides: "hpPerSec = 400;"), Object("rainBlocker", 2, 18, 10));
+        BattleSession session = Create(Object("sunCannon", 1, 10, 10, 3, overrides: "hpPerSec = 400;"), Object("rainBlocker", 2, 18, 10));
         GameEntity tower = session.Entity(2)!;
         int money = session.Player(1).StormPower;
         session.Submit(new SelectEntityCommand(2, tower.Id));
         // 두 번의 파괴와 재성장을 모두 검증해 후속 탄의 중복 보상·재파괴를 막는다.
         for (int cycle = 0; cycle < 2; cycle++)
         {
-            session.RunTicks(11);
+            // 재성장 동안 접기 시작한 캐논은 재조준을 마쳐야 하므로 정확한 피해 발생 틱까지 기다린다.
+            for (int waited = 0; waited < 160 && !tower.IsRegenerating; waited++) session.RunTicks(1);
             Assert.True(tower.IsRegenerating);
             Assert.Equal(0, tower.HitPoints);
             Assert.Same(tower, session.Entity(tower.Id));
@@ -47,7 +48,7 @@ public sealed class RecordedCombatTests
     [Fact]
     public void IceTower_GrowthUsesClusterOrderAndSalvageCancelsWithoutRefund()
     {
-        BattleSession session = Create(Object("sunCannon", 1, 10, 10, overrides: "hpPerSec = 400;"), Object("rainBlocker", 2, 18, 10));
+        BattleSession session = Create(Object("sunCannon", 1, 10, 10, 3, overrides: "hpPerSec = 400;"), Object("rainBlocker", 2, 18, 10));
         session.RunTicks(12);
         GameEntity tower = session.Entity(2)!;
         session.CombatEnabled = false;
@@ -68,7 +69,7 @@ public sealed class RecordedCombatTests
     [Fact]
     public void IceTower_AbsorbsOnlyUntilShattered()
     {
-        BattleSession session = Create(Object("sunCannon", 1, 10, 10, overrides: "hpPerSec = 400;"),
+        BattleSession session = Create(Object("sunCannon", 1, 10, 10, 3, overrides: "hpPerSec = 400;"),
             Object("sunCannon", 1, 26, 10, overrides: "hpPerSec = 400;"), Object("rainBlocker", 2, 18, 10));
         session.RunTicks(160);
         Assert.True(session.Entity(3)!.IsRegenerating);
@@ -81,7 +82,7 @@ public sealed class RecordedCombatTests
     [Fact]
     public void IceTower_InterceptsFireAimedBehindIt()
     {
-        BattleSession session = Create(Object("sunCannon", 1, 10, 10), Object("rainBlocker", 2, 18, 10), Object("sunwalker", 2, 26, 9));
+        BattleSession session = Create(Object("sunCannon", 1, 10, 10, 3), Object("rainBlocker", 2, 18, 10), Object("sunwalker", 2, 26, 9));
         session.RunTicks(15);
         Assert.Equal(2, session.Entity(1)!.AttackTargetId);
         Assert.Equal(1060 - 80, session.Entity(2)!.HitPoints);
@@ -134,8 +135,8 @@ public sealed class RecordedCombatTests
     public void Fence_AbsorbsEnemyFireButPassesFriendlyFire(bool horizontal, int owner, bool blocked)
     {
         FortMapObject[] objects = horizontal
-            ? [Object("sunCannon", 1, 20, 10), Object("sunBlocker", 2, 20, 28), Object("sunFence", owner, 10, 20), Object("sunFence", owner, 30, 20)]
-            : [Object("sunCannon", 1, 10, 20), Object("sunBlocker", 2, 28, 20), Object("sunFence", owner, 20, 10), Object("sunFence", owner, 20, 30)];
+            ? [Object("sunCannon", 1, 20, 10, 0), Object("sunBlocker", 2, 20, 28), Object("sunFence", owner, 10, 20), Object("sunFence", owner, 30, 20)]
+            : [Object("sunCannon", 1, 10, 20, 3), Object("sunBlocker", 2, 28, 20), Object("sunFence", owner, 20, 10), Object("sunFence", owner, 20, 30)];
         BattleSession session = Create(objects);
         double before = session.Entity(2)!.HitPoints;
         session.RunTicks(1);
@@ -150,7 +151,7 @@ public sealed class RecordedCombatTests
     [Fact]
     public void Fence_CanInterceptAShotAlreadyInFlight()
     {
-        BattleSession session = Create(Object("sunCannon", 1, 10, 20), Object("sunBlocker", 2, 28, 20),
+        BattleSession session = Create(Object("sunCannon", 1, 10, 20, 3), Object("sunBlocker", 2, 28, 20),
             Object("sunFence", 2, 20, 10), Object("sunFence", 2, 20, 30, overrides: "maxHitPoints = 0; cost = 0;"), Object("windVortex", 2, 30, 30));
         session.EnforceProductionRules = false;
         session.RunTicks(1);
@@ -169,7 +170,7 @@ public sealed class RecordedCombatTests
     [Fact]
     public void Fence_RemovingAPostAllowsLaterShotsThrough()
     {
-        BattleSession session = Create(Object("sunCannon", 1, 10, 20), Object("sunBlocker", 2, 28, 20),
+        BattleSession session = Create(Object("sunCannon", 1, 10, 20, 3), Object("sunBlocker", 2, 28, 20),
             Object("sunFence", 2, 20, 10), Object("sunFence", 2, 20, 30));
         session.RunTicks(30);
         double health = session.Entity(2)!.HitPoints;
@@ -267,7 +268,7 @@ public sealed class RecordedCombatTests
     [Fact]
     public void SunCannon_TurnsWhenItsTargetChangesDirection()
     {
-        BattleSession session = Create(Object("sunCannon", 1, 10, 10), Object("priest", 2, 9, 2), Object("priest", 2, 18, 9));
+        BattleSession session = Create(Object("sunCannon", 1, 10, 10, 1), Object("priest", 2, 9, 2), Object("priest", 2, 18, 9));
         session.RunTicks(1);
         GameEntity cannon = session.Entity(1)!;
         Assert.Equal(2, cannon.AttackTargetId);
@@ -382,7 +383,7 @@ public sealed class RecordedCombatTests
     [Fact]
     public void Cannon_UsesStraightAimAndAllowsMovementToAvoidImpact()
     {
-        BattleSession session = Create(Object("sunCannon", 1, 10, 10), Object("priest", 2, 28, 9));
+        BattleSession session = Create(Object("sunCannon", 1, 10, 10, 3), Object("priest", 2, 28, 9));
         session.RunTicks(1);
         CombatShot shot = Assert.Single(session.Shots);
         Assert.Equal(shot.StartY, shot.EndY);
@@ -396,7 +397,7 @@ public sealed class RecordedCombatTests
     [Fact]
     public void Cannon_ImpactDoesNotDependOnRenderInterpolation()
     {
-        FortMapObject[] objects = [Object("sunCannon", 1, 10, 10), Object("priest", 2, 16, 9)];
+        FortMapObject[] objects = [Object("sunCannon", 1, 10, 10, 3), Object("priest", 2, 16, 9)];
         BattleSession first = Create(objects), second = Create(objects);
         first.Advance(1.0 / first.TicksPerSecond);
         second.Advance(1.99 / second.TicksPerSecond);
@@ -414,7 +415,7 @@ public sealed class RecordedCombatTests
     [Fact]
     public void RecordedCombat_IsDeterministic()
     {
-        FortMapObject[] objects = [Object("sunCannon", 1, 10, 10, overrides: "hpPerSec = 400;"), Object("rainBlocker", 2, 18, 10),
+        FortMapObject[] objects = [Object("sunCannon", 1, 10, 10, 3, overrides: "hpPerSec = 400;"), Object("rainBlocker", 2, 18, 10),
             Object("thunderCannon", 1, 40, 40, 0), Object("sunBlocker", 2, 40, 20), Object("sunFence", 2, 30, 30), Object("sunFence", 2, 50, 30)];
         BattleSession first = Create(objects), second = Create(objects);
         first.RunTicks(1100); second.RunTicks(1100);

@@ -31,7 +31,7 @@ public sealed class CombatTests
     [Fact]
     public void Cannon_UsesOriginalDamageAndCooldown()
     {
-        BattleSession session = Create(Object("sunCannon", 1, 10, 10), Object("sunBlocker", 2, 18, 10));
+        BattleSession session = Create(Object("sunCannon", 1, 10, 10, frame: 3), Object("sunBlocker", 2, 18, 10));
         GameEntity target = session.Entities.Last();
         double initial = target.HitPoints;
         session.RunTicks(1);
@@ -67,7 +67,7 @@ public sealed class CombatTests
     [InlineData(2, 18, 18)]
     public void Cannon_RejectsInvalidTargets(int owner, int x, int y)
     {
-        BattleSession session = Create(Object("sunCannon", 1, 10, 10), Object("sunBlocker", owner, x, y));
+        BattleSession session = Create(Object("sunCannon", 1, 10, 10, frame: 3), Object("sunBlocker", owner, x, y));
         session.RunTicks(1);
         Assert.Empty(session.Shots);
     }
@@ -77,7 +77,7 @@ public sealed class CombatTests
     public void AlliedPlayers_AreNotTargets()
     {
         TypeCatalog types = OriginalData.RequireTypes();
-        var map = new BattleMap([Object("sunCannon", 1, 10, 10), Object("sunBlocker", 2, 18, 10)],
+        var map = new BattleMap([Object("sunCannon", 1, 10, 10, frame: 3), Object("sunBlocker", 2, 18, 10)],
             (_, _) => 0, allied: (_, _) => true);
         var session = new BattleSession(map, Grid(), types);
         session.RunTicks(1);
@@ -88,7 +88,7 @@ public sealed class CombatTests
     [Fact]
     public void ShotBlockingBuilding_BlocksFire()
     {
-        BattleSession session = Create(Object("sunCannon", 1, 10, 10),
+        BattleSession session = Create(Object("sunCannon", 1, 10, 10, frame: 3),
             Object("windVortex", 1, 21, 12), Object("sunBlocker", 2, 27, 10));
         session.RunTicks(1);
         Assert.Empty(session.Shots);
@@ -98,7 +98,7 @@ public sealed class CombatTests
     [Fact]
     public void Destruction_RemovesGeneratorAndRewardsOnce()
     {
-        BattleSession session = Create(Object("sunCannon", 1, 10, 10), Object("sunCannon", 1, 26, 10),
+        BattleSession session = Create(Object("sunCannon", 1, 10, 10, frame: 3), Object("sunCannon", 1, 26, 10, frame: 2),
             Object("rainBattery", 2, 18, 10, "maxHitPoints = 50;"));
         GameEntity target = session.Entity(3)!;
         int money = session.Player(1).StormPower;
@@ -116,7 +116,7 @@ public sealed class CombatTests
     [Fact]
     public void TempleDestruction_ClearsOwnershipWithoutEndingMission()
     {
-        BattleSession session = Create(Object("sunCannon", 1, 10, 10),
+        BattleSession session = Create(Object("sunCannon", 1, 10, 10, frame: 3),
             Object("windVortex", 2, 24, 12, "maxHitPoints = 50;"), Object("priest", 2, 30, 20));
         session.RunTicks(30);
         Assert.Null(session.Entity(2));
@@ -133,7 +133,7 @@ public sealed class CombatTests
     [Fact]
     public void TempleDestruction_ExplodesOntoAdjacentUnitsAndChainsRewards()
     {
-        BattleSession session = Create(Object("sunCannon", 1, 10, 10),
+        BattleSession session = Create(Object("sunCannon", 1, 10, 10, frame: 3),
             Object("windVortex", 2, 24, 12, "maxHitPoints = 50;"), Object("sunwalker", 2, 25, 12), Object("priest", 2, 25, 11),
             Object("sunArcher", 2, 26, 14), Object("priest", 2, 30, 20));
         GameEntity temple = session.Entity(2)!;
@@ -168,7 +168,7 @@ public sealed class CombatTests
     [Fact]
     public void CannonExplosion_UsesHalfHitPointsAndSalvageDoesNotExplode()
     {
-        BattleSession destroyed = Create(Object("sunCannon", 1, 10, 10),
+        BattleSession destroyed = Create(Object("sunCannon", 1, 10, 10, frame: 3),
             Object("sunArcher", 2, 24, 10, "maxHitPoints = 40;"), Object("sunBlocker", 2, 27, 10));
         GameEntity blocker = destroyed.Entity(3)!;
         double before = blocker.HitPoints;
@@ -193,7 +193,7 @@ public sealed class CombatTests
     [Fact]
     public void Priest_StunsAndSurvivesFurtherFireWithoutTemple()
     {
-        BattleSession session = Create(Object("sunCannon", 1, 10, 10), Object("priest", 2, 18, 9));
+        BattleSession session = Create(Object("sunCannon", 1, 10, 10, frame: 3), Object("priest", 2, 18, 9));
         session.RunTicks(300);
         GameEntity priest = session.Entity(2)!;
         Assert.True(priest.IsStunned);
@@ -205,7 +205,7 @@ public sealed class CombatTests
     [Fact]
     public void Priest_RecoversWithTemple()
     {
-        BattleSession session = Create(Object("sunCannon", 1, 10, 10), Object("priest", 2, 18, 9),
+        BattleSession session = Create(Object("sunCannon", 1, 10, 10, frame: 3), Object("priest", 2, 18, 9),
             Object("windVortex", 2, 50, 50));
         session.RunTicks(12);
         Assert.True(session.Entity(2)!.IsStunned);
@@ -220,7 +220,7 @@ public sealed class CombatTests
     [Fact]
     public void Combat_IsDeterministicAndCanBeDisabled()
     {
-        FortMapObject[] objects = [Object("sunCannon", 1, 10, 10), Object("sunBlocker", 2, 18, 10)];
+        FortMapObject[] objects = [Object("sunCannon", 1, 10, 10, frame: 3), Object("sunBlocker", 2, 18, 10)];
         BattleSession first = Create(objects);
         BattleSession second = Create(objects);
         first.RunTicks(200);
@@ -241,16 +241,19 @@ public sealed class CombatTests
         new(new BattleMap(objects, (x, _) => x < 16 ? 0 : 1), Grid(), OriginalData.RequireTypes());
 
     /// <summary>원본 타입을 사용하는 저장 오브젝트를 만든다. 짧은 피해 경계 테스트만 체력을 덮어쓴다.</summary>
-    private static FortMapObject Object(string name, int owner, int x, int y, string? overrides = null)
+    private static FortMapObject Object(string name, int owner, int x, int y, string? overrides = null, byte? frame = null)
     {
         TypeInfo type = OriginalData.RequireTypes().Find(name)!;
         if (overrides != null)
         {
             string properties = string.Join('\n', type.Definition.Properties.Select(p => $"{p.Key} = \"{p.Value}\";"));
-            TypeDefinition definition = TypeDefinition.Parse($"typename {type.Name}\ntypeflags {string.Join(' ', type.Definition.Flags)};\n{{\n{properties}\n{overrides}\n}}");
+            // 수치만 덮어쓰고 실제 조준·발사 클러스터는 보존한다.
+            string clusters = string.Join('\n', type.Definition.Clusters.Select(c =>
+                $"{c.Name} : {string.Join(' ', c.Flags)} : {string.Join(" : ", c.Layers.Select(l => $"\"{l.Image}\" #{l.Frame}"))};"));
+            TypeDefinition definition = TypeDefinition.Parse($"typename {type.Name}\ntypeflags {string.Join(' ', type.Definition.Flags)};\n{{\n{properties}\n{overrides}\n}}\n{clusters}");
             type = type with { Definition = definition };
         }
-        var item = new FortObject(0, 0, type, null, null, null, null, null, owner, []);
+        var item = new FortObject(0, 0, type, frame, null, null, null, null, owner, []);
         return new FortMapObject(x, y, x < 16 ? 0 : 1, item);
     }
 }
