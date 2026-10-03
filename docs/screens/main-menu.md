@@ -41,7 +41,7 @@
 | Credits | 10.72 Patch Credits / Original Credits | `Tell,CreditsNew` / `Tell,Creditsold` | 크레딧 **제목**의 10.72는 보유 exe의 버전 증거가 아님. 각 쪽 More/Back/Cancel, **20초마다 자동으로 다음 쪽**, 마지막 쪽 뒤 메인 메뉴(실행 확인) |
 | Credits | Cancel | `Tell,Blank` | 취소 대상이 스크립트에 기록됨 |
 | 기본 메뉴 | Help | 펼침 메뉴(커서를 올린 뒤 클릭) | General Help - F1 → 도움말 창 / **Technical Help → 외부 `help\help.exe readme.hlp` 실행**(Windows 10에서 Edge 창이 열림) / **Version → "Version v10.78" 창** |
-| 기본 메뉴 | Edit | `Load Battle Map` | 2열 맵 목록, Create New Map, Cancel. **맵을 고르면 편집기 모드**(`NetStorm Editor Game "<맵>"`), 편집기 Game → Main Menu → "Leave Edit Mode" 저장 확인(Yes/No/Cancel) |
+| 기본 메뉴 | Edit | `Load Battle Map` | 2열 맵 목록, Create New Map, Cancel. **맵을 고르면 편집기 모드**(`NetStorm Editor Game "<맵>"`), 편집기 Game → Main Menu → "Leave Edit Mode" 저장 확인(Yes/No/Cancel). **목록은 이름순 앞 50개(25행×2열)만 보이며** 나머지(예: `TEST01`)는 **Create New Map에 기존 이름을 넣어** 연다([2026-10-03 녹화](../videos/record-play-edit-test01-20261003.md#52-load-battle-map-창)). 편집기 Game → Test Battle → 연결 창 → 브리핑 → 시험 전투 |
 | 기본 메뉴 | Options | 펼침 메뉴 | 화면·소리·자동 데모·팁·진단 설정. `>` 하위 메뉴는 클릭해야 열림. Pass Server Diagnostic → Yes/No 확인 창. 세부는 [화면 목록 1.3절](README.md#13-메인-메뉴-전환데모미션편집기-메뉴-조사-2026-09-29-밤-windows-hjow-athlon) |
 
 Campaign의 공식 목록은 `offical1~6`이라는 원본 철자를 그대로 쓴다. `offical1~5`의 `$Checked` 마지막 인자에는 앞 미션의 `{Done...}` 값이 들어 있어 잠금 순서를 정한다. 화면의 파란 점은 이 완료값과 대응하는 것으로 **추정**하며, 실제 저장 상태와 표시 조건을 한 번 더 대조해야 한다. User Made Campaigns는 `offical6.english`의 `%{userSpec}`으로 목록을 구성하므로 고정된 팬 캠페인 목록을 게임 UI에 박아 넣지 않는다.

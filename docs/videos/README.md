@@ -13,6 +13,8 @@ Whirlibase·Whirligig의 출격·공격·귀환을 [클론에 연결](../gamepla
 
 2026-10-01 [캠페인 3-4 구조 미션](youtube-rescue.md)에서 미션 스크립트의 `allowAnyCapture`와 플레이어 섬에 프리스트를 내려놓은 뒤 성공하는 흐름을 영상 프레임으로 대조했다. 이 포획 예외는 해당 미션에만 적용된다.
 
+2026-10-03 [30FPS 사용자 녹화(`record-play`)](record-play-edit-test01-20261003.md)로 **화면 이동 방법**(Alt·가운데 버튼의 거리 비례 속도, 미니맵 끌기), 커스텀 맵 **TEST01 편집기 진입**(Create New Map에 기존 이름 입력), **시험 전투 진입·나오기**를 판독했다. 사용자 녹화가 처음으로 30FPS(평균 29.96)를 달성했다.
+
 ## 추가된 YouTube 파일 (2026-10-01)
 
 사용자 추가 파일 `playingVideos/[Youtube] 3-1 to 3-5.mp4`는

@@ -191,6 +191,11 @@ Windows 10 Pro(지정 예외 시스템 2)에서 원본 복사본을 1024×768 �
   - Storm Power: 9000
 - Test Battle 의 Game 메뉴 맨 위에 **Return to Editing**이 추가된다(그 아래 Review Mission Objectives - F8 / Restart Mission / Leave Mission / Quit Game). Return to Editing → 편집기(`NetStorm Editor Game "Battle1"`)로 돌아간다.
 - 편집기 → Main Menu → "Leave Edit Mode"에서 No → 저장하지 않고 메인 메뉴.
+- **2026-10-03 보완(커스텀 맵 TEST01, 30FPS 녹화 [노트](../videos/record-play-edit-test01-20261003.md)):**
+  - Load Battle Map 목록은 `.fort` 432개 중 이름순(대소문자 무시) **앞 50개(25행×2열)만** 보이고 스크롤바가 없다. 그 밖의 맵은 **Create New Map → 기존 이름 입력 → OK**로 열린다(기존 맵이 불러와짐).
+  - Test Battle: "Connecting to Game Server - Countdown 29." 연결 창(Cancel, 0.47초) → `.english`의 브리핑(TEST01: 낙하산 그림, 버튼 EQUIPMENT / Go!) → Go!로 전투 시작(0.1초). `TEST01.english`의 `myStartMoney=50000`·`myTech="all"`이 Storm Power 50000과 워크샵 Knowledge 전체 목록으로 나타났다.
+  - 시험 전투 Game 메뉴: Return to Editing / Review Mission Objectives - F8 / Restart Mission / Leave Mission / Quit Game. **Leave Mission → "Do you wish to quit this mission and return to the Main Menu now?"**(Main Menu / Replay Mission / Continue Mission) → Main Menu로 바로 메인 메뉴(저장 확인 창 없음).
+  - 화면 이동: Alt·가운데 버튼·미니맵 실측은 [입력 조작 표](../gameplay/input-controls.md#화면-이동-실측-2026-10-03-30fps-사용자-녹화).
 
 **튜토리얼 1 (Bridge the Gap!)**
 - **다리 칸은 약 1초마다 한 개씩 찬다:** 미션 시작 뒤 13:56:07.5에 2개, 08.6에 3개, 09.7에 4개, 10.9에 6개(캡처 간격 약 1.1초). exe 분석의 1초 간격([bridge-pieces.md](../exe/bridge-pieces.md) 6절)과 맞는다.
