@@ -502,6 +502,11 @@ public sealed partial class BattleSession
             hash.Add(entity.CarriedPriestId);
             hash.Add(entity.AttackTargetId);
             hash.Add(entity.NextAttackTick);
+            hash.Add(entity.CannonDirection);
+            hash.Add(entity.AttackStartedTick);
+            hash.Add(entity.LastShotTick);
+            hash.Add(entity.IsRegenerating ? 1 : 0);
+            hash.Add(entity.RegenerationStartTick);
             AddFlightChecksum(hash, entity.Flight);
         }
         AddCombatChecksum(hash);

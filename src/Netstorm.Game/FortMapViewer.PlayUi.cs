@@ -127,7 +127,15 @@ internal sealed partial class FortMapViewer
             }
         }
         if (_placementMode && mouse.RightButton == ButtonState.Pressed && _previousMouse.RightButton == ButtonState.Released)
-        { CancelCursor(); return true; }
+        {
+            if (CannonAnimation.IsFixed(_candidates[_candidateIndex]))
+            {
+                _cannonRotation = (_cannonRotation + (_reverseRotation ? 3 : 1)) % 4;
+                QueueSound(RotatePieceSound);
+            }
+            else CancelCursor();
+            return true;
+        }
         if (_bridgeMode && mouse.RightButton == ButtonState.Pressed && _previousMouse.RightButton == ButtonState.Released && HeldPreview is { } held)
         { held.RotateByPlayer(_reverseRotation); _heldRotation = held.Rotation; QueueSound(RotatePieceSound); return true; }
         return IsPlayUiPoint(mouse.X, mouse.Y);

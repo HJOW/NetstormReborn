@@ -12,7 +12,8 @@ public abstract record GameCommand(int Player);
 /// <param name="TypeName">유닛 타입 이름</param>
 /// <param name="X">기준점 칸 x</param>
 /// <param name="Y">기준점 칸 y</param>
-public sealed record PlaceUnitCommand(int Player, string TypeName, int X, int Y) : GameCommand(Player);
+/// <param name="Rotation">고정 캐논 방위: 0=북, 1=동, 2=남, 3=서. 그 밖의 유닛은 무시한다.</param>
+public sealed record PlaceUnitCommand(int Player, string TypeName, int X, int Y, int Rotation = 0) : GameCommand(Player);
 
 /// <summary>사제의 Construct 로 건물(템플·워크샵·알타·아웃포스트)을 짓기 시작한다. 건설이 끝나야 규칙 효과가 생긴다.</summary>
 /// <param name="Player">플레이어 번호</param>

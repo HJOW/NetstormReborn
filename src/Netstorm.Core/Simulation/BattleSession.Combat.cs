@@ -3,9 +3,10 @@ using Netstorm.Core.Rules;
 
 namespace Netstorm.Core.Simulation;
 
-/// <summary>발사 시 확정한 탄의 경로와 명중 예약. 이동하는 목표에도 예약된 피해를 적용하는 임시 모델이다.</summary>
+/// <summary>발사 시 정한 탄 경로와 피해. 캐논은 착탄점에서 충돌을 검사하며 방어선에 흡수된 탄은 목표 번호가 0이다.</summary>
 public sealed record CombatShot(int AttackerId, int Owner, int TargetId, double Damage,
-    double StartX, double StartY, double EndX, double EndY, long FiredTick, long ImpactTick, bool IsBeam = false);
+    double StartX, double StartY, double EndX, double EndY, long FiredTick, long ImpactTick, bool IsBeam = false,
+    string? AttackerType = null, int BlockedByFenceId = 0);
 
 /// <summary>포대의 자동 목표 선택·발사·피해·파괴를 고정 틱으로 처리한다. 근사값은 docs/gameplay/combat.md 참고.</summary>
 public sealed partial class BattleSession
@@ -15,6 +16,9 @@ public sealed partial class BattleSession
 
     /// <summary>원본 탄속 분석 전 공통으로 사용하는 임시 탄속(칸/초).</summary>
     private const double ProjectileSpeed = 24;
+
+    /// <summary>세 캐논의 원본 탄속(FUN_00468640, 0x501a54)은 초당 20칸이다.</summary>
+    private const double CannonProjectileSpeed = 20;
 
     /// <summary>신전이 있는 기절 사제의 임시 초당 회복량. 원본 회복식은 미확정이다.</summary>
     private const double PriestRecoveryPerSecond = 5;
@@ -52,7 +56,9 @@ public sealed partial class BattleSession
     /// <summary>회복 → 도착한 탄 → 목표 탐색·발사 순서로 갱신한다.</summary>
     private void UpdateCombat()
     {
+        UpdateRegrowingTowers();
         if (!CombatEnabled) return;
+        IReadOnlyList<SunForceField> fields = SunForceFields;
         _lightning.RemoveAll(shot => Tick >= shot.FiredTick + TicksFor(LightningDisplaySeconds));
         // 기절한 사제는 자기 신전이 완공되어 있을 때만 회복한다. 포획된 사제(운반·묶임)는 풀려날 때 회복하므로 여기서 제외한다.
         foreach (GameEntity priest in _entities.Values.Where(e => e.IsStunned && !e.IsSuspended && e.Captivity == PriestCaptivity.Free &&
@@ -67,10 +73,17 @@ public sealed partial class BattleSession
             }
         }
         // 같은 틱에 맞는 탄도 발사 순서로 적용한다. 먼저 파괴된 목표에 보상을 중복 지급하지 않는다.
-        foreach (CombatShot shot in _shots.Where(s => s.ImpactTick <= Tick).ToArray())
+        foreach (CombatShot shot in _shots.ToArray())
         {
+            if (AbsorbMovingShot(shot, fields) || shot.ImpactTick > Tick) continue;
             _shots.Remove(shot);
-            if (Entity(shot.TargetId) is { IsStunned: false } target)
+            if (shot.BlockedByFenceId != 0)
+            {
+                Emit(SessionEventKind.ShotBlocked, Entity(shot.BlockedByFenceId)?.Owner ?? 0, shot.BlockedByFenceId, "썬 바리케이트 탄 흡수");
+                continue;
+            }
+            if (Entity(shot.TargetId) is { IsStunned: false, IsRegenerating: false } target &&
+                (!IsCannonShot(shot) || ShotHitsFootprint(shot, target)))
             {
                 ApplyCombatDamage(target, shot);
             }
@@ -94,22 +107,57 @@ public sealed partial class BattleSession
                     .OrderBy(e => DistanceSquared(attacker, e)).ThenBy(e => e.Id).FirstOrDefault();
                 attacker.AttackTargetId = target?.Id ?? 0;
             }
-            if (target == null || Tick < attacker.NextAttackTick) continue;
+            if (target == null)
+            {
+                attacker.AttackStartedTick = -1;
+                continue;
+            }
+            if (CannonAnimation.IsCannon(attacker.Type) && !CannonAnimation.IsFixed(attacker.Type))
+                attacker.CannonDirection = AimDirection(attacker, target);
+            if (Tick < attacker.NextAttackTick) continue;
             double interval = type.GetDouble("delayBetweenShots") ?? FallbackShotSeconds;
             if (!double.IsFinite(interval) || interval <= 0) interval = FallbackShotSeconds;
+            if (attacker.Type.Name.Equals("thunderCannon", StringComparison.OrdinalIgnoreCase))
+            {
+                if (attacker.AttackStartedTick < 0) attacker.AttackStartedTick = Tick;
+                if (Tick < attacker.AttackStartedTick + TicksFor(CannonAnimation.ThunderChargeSeconds)) continue;
+                interval = CannonAnimation.ThunderChargeSeconds + CannonAnimation.ThunderRecoverySeconds;
+            }
+            else if (attacker.Type.Name.Equals("rainCannon", StringComparison.OrdinalIgnoreCase))
+            {
+                if (attacker.AttackStartedTick < 0) attacker.AttackStartedTick = Tick;
+                double elapsed = (Tick - attacker.AttackStartedTick) / (double)TicksPerSecond;
+                if (elapsed < CannonAnimation.IceFrameSeconds || elapsed % (CannonAnimation.IceBurstSeconds + CannonAnimation.IceRestSeconds)
+                    >= CannonAnimation.IceBurstSeconds) continue;
+                interval = CannonAnimation.IceShotSeconds;
+            }
             bool airborne = target.Type.Definition.HasFlag("balloon") || target.Kind == ObjectKind.Flyer;
             double damageRate = airborne && type.GetInt("useairdamage") == 1
                 ? type.GetDouble("airdamage") ?? rate : rate;
             if (damageRate <= 0) continue;
             bool beam = attacker.Type.Name.Equals("thunderArcher", StringComparison.OrdinalIgnoreCase);
             // Vander Tower는 영상에서 목표까지 한 번에 이어지는 번개다. 피해의 원본 프레임은 미확정이라 다음 틱에 적용한다.
-            long travel = beam ? 1 : TicksFor(Math.Sqrt(DistanceSquared(attacker, target)) / ProjectileSpeed);
+            (double endX, double endY) = ShotAim(attacker, target);
+            int fenceId = 0;
+            if (FirstForceFieldHit(attacker.Owner, attacker.WorldX, attacker.WorldY, endX, endY, fields) is { } intercepted)
+            {
+                endX = attacker.WorldX + (endX - attacker.WorldX) * intercepted.Fraction;
+                endY = attacker.WorldY + (endY - attacker.WorldY) * intercepted.Fraction;
+                fenceId = intercepted.Field.FirstId;
+            }
+            double dx = endX - attacker.WorldX, dy = endY - attacker.WorldY;
+            double speed = CannonAnimation.IsCannon(attacker.Type) ? CannonProjectileSpeed : ProjectileSpeed;
+            long travel = beam ? 1 : TicksFor(Math.Sqrt(dx * dx + dy * dy) / speed);
             var shot = new CombatShot(attacker.Id, attacker.Owner, target.Id, damageRate * interval,
-                attacker.WorldX, attacker.WorldY, target.WorldX, target.WorldY,
-                Tick, Tick + travel, beam);
+                attacker.WorldX, attacker.WorldY, endX, endY,
+                Tick, Tick + travel, beam, attacker.Type.Name, fenceId);
+            if (fenceId != 0) shot = shot with { TargetId = 0 };
             _shots.Add(shot);
             if (beam) _lightning.Add(shot);
-            attacker.NextAttackTick = Tick + TicksFor(interval);
+            attacker.LastShotTick = Tick;
+            attacker.NextAttackTick = Tick + TicksFor(attacker.Type.Name.Equals("thunderCannon", StringComparison.OrdinalIgnoreCase)
+                ? CannonAnimation.ThunderRecoverySeconds : interval);
+            if (attacker.Type.Name.Equals("thunderCannon", StringComparison.OrdinalIgnoreCase)) attacker.AttackStartedTick = -1;
             Emit(SessionEventKind.ShotFired, attacker.Owner, attacker.Id, $"{attacker.DisplayName} → {target.DisplayName} 발사");
         }
     }
@@ -119,28 +167,55 @@ public sealed partial class BattleSession
     {
         if (target.Owner <= 0 || Map.AreAllied(attacker.Owner, target.Owner) || target.HitPoints <= 0 || target.IsStunned ||
             DistanceSquared(attacker, target) > range * range) return false;
-        bool axisOnly = attacker.Type.Name.Equals("sunCannon", StringComparison.OrdinalIgnoreCase) ||
-            attacker.Type.Name.Equals("thunderCannon", StringComparison.OrdinalIgnoreCase);
+        bool axisOnly = CannonAnimation.IsCannon(attacker.Type);
         if (axisOnly && !(attacker.Footprint.CenterX >= target.Footprint.Left && attacker.Footprint.CenterX <= target.Footprint.AnchorX) &&
             !(attacker.Footprint.CenterY >= target.Footprint.Top && attacker.Footprint.CenterY <= target.Footprint.AnchorY)) return false;
+        if (CannonAnimation.IsFixed(attacker.Type) && AimDirection(attacker, target) != attacker.CannonDirection) return false;
         bool airborne = target.Type.Definition.HasFlag("balloon") || target.Kind == ObjectKind.Flyer;
         if (airborne && attacker.Type.Definition.GetInt("useairdamage") == 1 &&
             attacker.Type.Definition.GetDouble("airdamage") == 0) return false;
         double distance = Math.Sqrt(DistanceSquared(attacker, target));
         // shotblocking 플래그를 가진 건물은 아군·적군 모두 사선을 막는다. 발사자와 목표는 제외한다.
-        foreach (GameEntity obstacle in _entities.Values.Where(e => e.Id != attacker.Id && e.Id != target.Id && e.Type.Definition.HasFlag("shotblocking")))
+        (double endX, double endY) = ShotAim(attacker, target);
+        foreach (GameEntity obstacle in _entities.Values.Where(e => e.Id != attacker.Id && e.Id != target.Id && !e.IsRegenerating &&
+            (e.Type.Definition.HasFlag("shotblocking") || !airborne && e.Type.Definition.GetString("group")?.Equals("blocker", StringComparison.OrdinalIgnoreCase) == true)))
         {
             // 발사점에서 목표까지 반 칸 간격으로 검사한다. 원본 픽셀 단위 충돌은 후속 구현이다.
             for (double travelled = ShotTraceStep; travelled < distance; travelled += ShotTraceStep)
             {
                 double fraction = travelled / distance;
-                double x = attacker.WorldX + (target.WorldX - attacker.WorldX) * fraction;
-                double y = attacker.WorldY + (target.WorldY - attacker.WorldY) * fraction;
+                double x = attacker.WorldX + (endX - attacker.WorldX) * fraction;
+                double y = attacker.WorldY + (endY - attacker.WorldY) * fraction;
                 if (x >= obstacle.Footprint.Left - 0.5 && x <= obstacle.Footprint.AnchorX + 0.5 &&
                     y >= obstacle.Footprint.Top - 0.5 && y <= obstacle.Footprint.AnchorY + 0.5) return false;
             }
         }
         return true;
+    }
+
+    /// <summary>발자국에 닿는 직선 캐논의 방위를 고른다. 넓은 목표의 중심을 향해 비스듬히 쏘지 않는다.</summary>
+    private static int AimDirection(GameEntity attacker, GameEntity target) =>
+        attacker.WorldX >= target.Footprint.Left && attacker.WorldX <= target.Footprint.AnchorX
+            ? target.WorldY < attacker.WorldY ? 0 : 2 : target.WorldX < attacker.WorldX ? 3 : 1;
+
+    /// <summary>캐논은 정해진 행·열로 조준하고 다른 포대는 목표 중심으로 조준한다.</summary>
+    private static (double X, double Y) ShotAim(GameEntity attacker, GameEntity target) =>
+        !CannonAnimation.IsCannon(attacker.Type) ? (target.WorldX, target.WorldY)
+        : AimDirection(attacker, target) is 0 or 2 ? (attacker.WorldX, target.WorldY) : (target.WorldX, attacker.WorldY);
+
+    /// <summary>발사자가 제거된 뒤에도 탄 종류로 캐논 착탄 판정을 유지한다.</summary>
+    private static bool IsCannonShot(CombatShot shot) => shot.AttackerType is string type &&
+        (type.Equals("sunCannon", StringComparison.OrdinalIgnoreCase) || type.Equals("rainCannon", StringComparison.OrdinalIgnoreCase)
+            || type.Equals("thunderCannon", StringComparison.OrdinalIgnoreCase));
+
+    /// <summary>현재 위치의 목표가 고정 착탄점에 남아 있는지 검사해 이동으로 피한 캐논 탄이 강제로 명중하지 않게 한다.</summary>
+    private bool ShotHitsFootprint(CombatShot shot, GameEntity target)
+    {
+        (double x, double y) = MovementCell(target, 0);
+        double offsetX = target.Flight?.X - target.Footprint.CenterX ?? x - target.Footprint.AnchorX;
+        double offsetY = target.Flight?.Y - target.Footprint.CenterY ?? y - target.Footprint.AnchorY;
+        return shot.EndX >= target.Footprint.Left + offsetX - 0.5 && shot.EndX <= target.Footprint.AnchorX + offsetX + 0.5 &&
+            shot.EndY >= target.Footprint.Top + offsetY - 0.5 && shot.EndY <= target.Footprint.AnchorY + offsetY + 0.5;
     }
 
     /// <summary>논리 칸 좌표의 발자국 중심 거리 제곱. 화면의 세로 압축 비율과 무관하다.</summary>
@@ -165,6 +240,11 @@ public sealed partial class BattleSession
         }
         else if (target.HitPoints <= 0)
         {
+            if (target.Type.Name.Equals("rainBlocker", StringComparison.OrdinalIgnoreCase))
+            {
+                ShatterIceTower(target);
+                return;
+            }
             RemoveEntity(target);
             // 자기·동맹 오브젝트가 폭발에 휘말려 파괴된 경우에는 보상을 주지 않는다 (원본 보상 분기의 소유자 조건은 미확인, 임시).
             bool enemy = shot.Owner > 0 && !Map.AreAllied(shot.Owner, target.Owner);
@@ -259,6 +339,12 @@ public sealed partial class BattleSession
             hash.Add(shot.FiredTick);
             hash.Add(shot.ImpactTick);
             hash.Add(shot.IsBeam ? 1 : 0);
+            hash.Add(shot.AttackerType ?? "");
+            hash.Add(shot.BlockedByFenceId);
+            hash.Add(BitConverter.DoubleToInt64Bits(shot.StartX));
+            hash.Add(BitConverter.DoubleToInt64Bits(shot.StartY));
+            hash.Add(BitConverter.DoubleToInt64Bits(shot.EndX));
+            hash.Add(BitConverter.DoubleToInt64Bits(shot.EndY));
         }
     }
 }

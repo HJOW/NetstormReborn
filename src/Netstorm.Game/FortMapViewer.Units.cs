@@ -33,11 +33,12 @@ internal sealed partial class FortMapViewer
 
     /// <summary>
     /// 자동 입력 검사가 확인할 선택·이동형 유닛 상태. 예: <c>selected=priest;units=priest:C:moving,sunwalker:-:idle</c>
-    /// (유닛마다 타입 이름:바라보는 방향 글자(움직인 적이 없으면 -):moving/idle, 내 유닛만).
+    /// (유닛마다 타입 이름:바라보는 방향 글자(움직인 적이 없으면 -):moving/idle, 내 유닛만). rotation은 들고 있는 캐논 방위다.
     /// </summary>
     public string UiDetail => $"selected={_session.Entity(_session.Player(TestPlayer).SelectedEntityId)?.Type.Name.ToLowerInvariant() ?? "none"};units="
         + string.Join(',', _session.Entities.Where(e => IsMobile(e) && e.Owner == TestPlayer).Select(e =>
-            $"{e.Type.Name.ToLowerInvariant()}:{UnitHeading.Side(e.Heading)?.ToString() ?? "-"}:{(_session.IsMoving(e.Id) ? "moving" : "idle")}"));
+            $"{e.Type.Name.ToLowerInvariant()}:{UnitHeading.Side(e.Heading)?.ToString() ?? "-"}:{(_session.IsMoving(e.Id) ? "moving" : "idle")}"))
+        + $";rotation={_cannonRotation}";
 
     /// <summary>걷기 그림 시계(초). 게임 시간이 흐르는 동안에만 진행해 일시정지 중에는 걷는 자세가 멈춘다.</summary>
     private double _walkClock;
@@ -78,7 +79,7 @@ internal sealed partial class FortMapViewer
         if (entity.Heading == UnitHeading.None || entity.Captivity != PriestCaptivity.Free || entity.IsSuspended || entity.IsStunned) return null;
         if (!HasWalkSet(entity.Type)) return null;
         // 걷는 중에는 시계로 8프레임을 돌리고(유닛마다 시작을 어긋나게 해 로봇처럼 보이지 않게 한다) 서 있으면 정지 프레임이다.
-        int number = SimulationRunning && _session.IsMoving(entity.Id)
+        int number = _session.IsMoving(entity.Id)
             ? (int)(_walkClock * WalkFramesPerSecond + entity.Id * 3) % WalkFrameCount
             : IdleFrameNumber;
         int frame = WalkFrame(entity.Type, UnitHeading.Side(entity.Heading)!.Value, number);
@@ -202,6 +203,16 @@ internal sealed partial class FortMapViewer
                     if (frame >= 0) GetTexture(type.LoadIndex, frame);
                 }
             }
+        }
+        // 사격·성장 중 처음 등장하는 그림도 예열해 첫 교전의 디코딩 지연을 줄인다.
+        IEnumerable<TypeInfo> combatTypes = _candidates.Where(CannonAnimation.IsCannon)
+            .Concat(_session.Entities.Select(e => e.Type).Where(CannonAnimation.IsCannon))
+            .Concat(new[] { "growingRainBlocker", "fenceShield", "rainCannonMissile", "thunderCannonMissile" }
+                .Select(_knowledgeTypes.Find).OfType<TypeInfo>()).DistinctBy(t => t.LoadIndex);
+        foreach (TypeInfo type in combatTypes)
+        {
+            // 클러스터 저장 순서가 셰이프 본체 프레임 순서이므로 중복 이름도 그대로 예열한다.
+            for (int frame = 0; frame < type.Definition.Clusters.Count; frame++) GetTexture(type.LoadIndex, frame);
         }
         if (PerfMeter.Current != null)
             Console.WriteLine($"[perf] 텍스처 예열 {_textures.Count}개 {Stopwatch.GetElapsedTime(warmStart).TotalMilliseconds:0}ms");

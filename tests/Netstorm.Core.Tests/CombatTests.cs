@@ -169,7 +169,7 @@ public sealed class CombatTests
     public void CannonExplosion_UsesHalfHitPointsAndSalvageDoesNotExplode()
     {
         BattleSession destroyed = Create(Object("sunCannon", 1, 10, 10),
-            Object("sunArcher", 2, 24, 10, "maxHitPoints = 40;"), Object("sunBlocker", 2, 25, 10));
+            Object("sunArcher", 2, 24, 10, "maxHitPoints = 40;"), Object("sunBlocker", 2, 27, 10));
         GameEntity blocker = destroyed.Entity(3)!;
         double before = blocker.HitPoints;
         // 궁수가 파괴될 때까지 진행한다 (Sun Cannon 한 발 80 피해)

@@ -53,6 +53,9 @@ internal sealed partial class FortMapViewer
     /// <summary>선택한 후보 번호</summary>
     private int _candidateIndex;
 
+    /// <summary>들고 있는 아이스·썬더 캐논의 방위. 우클릭마다 시계 방향으로 한 번 돌린다.</summary>
+    private int _cannonRotation;
+
     /// <summary>커서 아래 칸의 최근 판정 결과</summary>
     private SessionPlacementCheck? _lastCheck;
 
@@ -77,6 +80,7 @@ internal sealed partial class FortMapViewer
         }
         _placementMode = true;
         _candidateIndex = index;
+        _cannonRotation = 0;
         _probeCell = probe;
         if (probe is (int x, int y))
         {
@@ -154,6 +158,11 @@ internal sealed partial class FortMapViewer
         }
         (int cellX, int cellY) = _probeCell ?? CellAt(new Vector2(mouse.X, mouse.Y));
         TypeInfo type = _candidates[_candidateIndex];
+        if (CannonAnimation.IsFixed(type) && mouse.RightButton == ButtonState.Pressed && _previousMouse.RightButton == ButtonState.Released)
+        {
+            _cannonRotation = (_cannonRotation + (_reverseRotation ? 3 : 1)) % 4;
+            QueueSound(RotatePieceSound);
+        }
         _lastCheck = Check(type, cellX, cellY);
         if (Pressed(keyboard, Keys.F))
         {
@@ -169,7 +178,7 @@ internal sealed partial class FortMapViewer
             {
                 SubmitCommand(IsBuilding(type)
                     ? new ConstructBuildingCommand(TestPlayer, type.Name, cellX, cellY)
-                    : new PlaceUnitCommand(TestPlayer, type.Name, cellX, cellY));
+                    : new PlaceUnitCommand(TestPlayer, type.Name, cellX, cellY, _cannonRotation));
                 // 원본은 유닛을 놓거나 건물 설치를 확정하면 들고 있던 커서가 풀려 다음 클릭은 선택이다
                 // (2026-10-03 자동 분석 녹화: 골렘을 놓은 6초 뒤의 좌클릭이 골렘 선택이었다). 다시 놓으려면 생산 창이나 D 키로 다시 집는다.
                 if (_playUi) { _placementMode = false; _lastCheck = null; }
@@ -267,6 +276,7 @@ internal sealed partial class FortMapViewer
             TypeInfo drawn = entity.IsDepletedGeyser && _emptyGeyserType != null ? _emptyGeyserType : entity.Type;
             // 걷는 그림이 있는 이동형 유닛(내가 놓은 골렘 등)은 방향·걷기 프레임을 쓴다.
             int frame = mobile && MobileFrame(entity) is int walkFrame ? walkFrame : drawn.Definition.Frames.DefaultFrame;
+            if (CombatSprite(entity) is { } combatSprite) (drawn, frame) = combatSprite;
             DrawSprite(batch, drawn.LoadIndex, frame, anchor,
                 alpha: entity.IsComplete ? 1f : UnderConstructionAlpha);
             if (!entity.IsComplete)
@@ -321,6 +331,13 @@ internal sealed partial class FortMapViewer
                     (int)Math.Ceiling(FortMap.CellPixelWidth * _zoom), (int)Math.Ceiling(FortMap.CellPixelHeight * _zoom)), fill);
             }
             Vector2 target = CellCenterScreen(site.Footprint.CenterX, site.Footprint.CenterY, center);
+            TypeInfo type = _candidates[_candidateIndex];
+            if (CannonAnimation.IsFixed(type))
+            {
+                int frame = type.Definition.Frames.Find(CannonAnimation.Side(_cannonRotation), TypeFrameTable.DefaultVariant, 0);
+                DrawSprite(batch, type.LoadIndex, frame, Screen(WorldPixels(site.Footprint.AnchorX, site.Footprint.AnchorY), center),
+                    alpha: 0.7f, tint: check.Allowed ? Color.White : Color.Salmon);
+            }
             // 요구 글자에 배정된 공급원까지 선을 긋는다 (한 공급원 = 에너지 1개).
             foreach (EnergySource? source in site.Energy.Assigned)
             {
@@ -340,7 +357,8 @@ internal sealed partial class FortMapViewer
         if (_playUi)
         {
             batch.Draw(_pixel, new Rectangle(0, height - 94, width, 40), new Color(35, 32, 28));
-            batch.DrawString(font, $"{type.Definition.GetString("description")} · {StormPower.TypeCost(type.Definition)} SP · {_lastCheck?.Describe()}",
+            string rotate = CannonAnimation.IsFixed(type) ? Ui(" · 우클릭: 회전", " · Right click: rotate") : "";
+            batch.DrawString(font, $"{type.Definition.GetString("description")} · {StormPower.TypeCost(type.Definition)} SP · {_lastCheck?.Describe()}{rotate}",
                 new Vector2(12, height - 90), _lastCheck?.Allowed == true ? Color.LightGreen : Color.Salmon);
             return;
         }
@@ -361,7 +379,7 @@ internal sealed partial class FortMapViewer
             : _lastCheck.Site is { } site
                 ? $"{_lastCheck.Describe()} | 섬: {IslandName(site.Island)} | 덮는 공급원 {site.Energy.Covering.Count}개"
                 : _lastCheck.Describe();
-        string keys = $"[ ]: 선택 · 좌클릭: 배치/건설 · F: 워크샵에 등록 · Del: 회수 · C: 빈 섬 연결 강제 {(_session.AssumeConnected ? "켜짐" : "꺼짐")} · " +
+        string keys = $"[ ]: 선택 · 좌클릭: 배치/건설 · 우클릭: 캐논 회전 · F: 등록 · Del: 회수 · C: 빈 섬 연결 강제 {(_session.AssumeConnected ? "켜짐" : "꺼짐")} · " +
             "K: 생산 규칙 · Space: 정지 · P: 끄기";
         if (_playUi)
         {

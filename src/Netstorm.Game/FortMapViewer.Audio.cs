@@ -63,6 +63,9 @@ internal sealed partial class FortMapViewer
             case SessionEventKind.EntityDestroyed:
                 OnEntityDestroyed(sessionEvent.EntityId);
                 break;
+            case SessionEventKind.ShotBlocked:
+                QueueSound("sunFenceImpact.wav");
+                break;
             case SessionEventKind.BuildingCompleted:
                 QueueSound(BuildDoneSound);
                 if (_session.Entity(sessionEvent.EntityId)?.Type.Definition.GetString(BuildDoneSoundProperty) is { Length: > 0 } special)

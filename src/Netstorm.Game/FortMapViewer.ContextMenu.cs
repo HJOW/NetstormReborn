@@ -190,7 +190,7 @@ internal sealed partial class FortMapViewer
         if (own && _contextEntity!.Kind is not (ObjectKind.Priest or ObjectKind.Geyser))
         {
             int id = _contextEntity.Id;
-            int refund = StormPower.SalvageValue(StormPower.TypeCost(_contextType!.Definition));
+            int refund = _contextEntity.SalvageRefund;
             tail.Add(new(Ui($"회수하면 {refund}", $"Salvage gains {refund}"), () => { SubmitCommand(new SalvageCommand(TestPlayer, id)); CloseContextMenu(); }, StormIcon: true));
         }
         string topic = _contextBridge ? "bridge" : _contextType!.Name + "Type";

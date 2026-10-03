@@ -207,6 +207,7 @@ public sealed partial class BattleSession
         int id = Map.PlaceUnit(type, site, command.Player);
         player.StormPower -= site.Cost;
         var entity = new GameEntity(id, type, ObjectKinds.Of(type), command.Player, site.Footprint, Map.TerritoryAt(command.X, command.Y), null);
+        if (CannonAnimation.IsFixed(type)) entity.CannonDirection = ((command.Rotation % 4) + 4) % 4;
         _entities.Add(id, entity);
         if (type.Definition.HasFlag("createsisland")) Bridges.InvalidateTerrain();
         // 유닛은 놓을 때 지은 수로 센다 (튜토리얼 단계 처리가 읽는다)
@@ -328,7 +329,7 @@ public sealed partial class BattleSession
         {
             return new CommandResult(CommandFailure.NotComplete);
         }
-        int refund = StormPower.SalvageValue(entity.Cost);
+        int refund = entity.SalvageRefund;
         player.StormPower += refund;
         RemoveEntity(entity);
         Emit(SessionEventKind.Salvaged, command.Player, entity.Id, $"{entity.DisplayName} 회수 (+{refund})");

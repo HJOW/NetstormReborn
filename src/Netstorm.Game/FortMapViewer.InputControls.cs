@@ -9,6 +9,10 @@ namespace Netstorm.Game;
 /// <summary>원본 도움말에서 확인한 조작키를 공개 캠페인의 입력에 연결한다.</summary>
 internal sealed partial class FortMapViewer
 {
+    /// <summary>TEST01 녹화의 Alt·가운데 버튼 화면 이동 속도: 가로 커서 편차에 곱할 초당 계수.</summary>
+    private const float CursorPanGainX = 9.2f;
+    /// <summary>같은 녹화에서 측정한 세로 편차의 초당 이동 계수.</summary>
+    private const float CursorPanGainY = 8.3f;
     /// <summary>미션마다 기억하는 숫자 키 카메라 위치.</summary>
     private readonly Dictionary<Keys, Vector2> _cameraLocations = [];
     /// <summary>T 키로 켜는 게임 타이머 표시 (원본 녹화 세 개 모두 타이머가 보이지 않아 꺼진 상태로 시작한다)</summary>
@@ -81,9 +85,9 @@ internal sealed partial class FortMapViewer
         bool alt = keyboard.IsKeyDown(Keys.LeftAlt) || keyboard.IsKeyDown(Keys.RightAlt);
         if ((alt || mouse.MiddleButton == ButtonState.Pressed) && !IsPlayUiPoint(mouse.X, mouse.Y))
         {
-            Vector2 offset = new(mouse.X - _playWidth / 2f, mouse.Y - (_playHeight + HeaderHeight) / 2f);
-            if (offset.LengthSquared() > 16) _camera = Vector2.Clamp(_camera + Vector2.Normalize(offset) * PanSpeed * (float)seconds,
-                Vector2.Zero, WorldPixelSize);
+            Vector2 offset = new(mouse.X - (PlaySidebarWidth + _playWidth) / 2f, mouse.Y - (_playHeight + HeaderHeight) / 2f);
+            if (offset.LengthSquared() > 16) _camera = Vector2.Clamp(_camera +
+                offset * new Vector2(CursorPanGainX, CursorPanGainY) * (float)seconds / _zoom, Vector2.Zero, WorldPixelSize);
         }
     }
 

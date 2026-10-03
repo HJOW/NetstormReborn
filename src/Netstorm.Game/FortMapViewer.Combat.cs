@@ -58,7 +58,7 @@ internal sealed partial class FortMapViewer
     {
         int selected = _session.Player(TestPlayer).SelectedEntityId;
         // 엔티티 번호순으로 체력 표시를 겹쳐 그린다.
-        foreach (GameEntity entity in _session.Entities.Where(e => e.MaxHitPoints > 0 && e.IsComplete))
+        foreach (GameEntity entity in _session.Entities.Where(e => e.MaxHitPoints > 0 && e.IsComplete && !e.IsRegenerating))
         {
             if (entity.HitPoints >= entity.MaxHitPoints && entity.Id != selected && !entity.IsStunned) continue;
             Vector2 anchor = EntityCenterScreen(entity, center);
@@ -101,6 +101,7 @@ internal sealed partial class FortMapViewer
             Vector2 from = CellCenterScreen(shot.StartX, shot.StartY, center);
             Vector2 to = CellCenterScreen(shot.EndX, shot.EndY, center);
             Vector2 point = Vector2.Lerp(from, to, progress);
+            if (DrawCannonProjectile(batch, shot, point)) continue;
             Vector2 tail = Vector2.Lerp(from, to, Math.Max(0, progress - 0.08f));
             Line(batch, tail, point, shot.Owner == TestPlayer ? Color.Gold : Color.OrangeRed);
             batch.Draw(_pixel, new Rectangle((int)point.X - 2, (int)point.Y - 2, 4, 4), Color.White);

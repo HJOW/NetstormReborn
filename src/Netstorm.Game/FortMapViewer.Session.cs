@@ -159,7 +159,7 @@ internal sealed partial class FortMapViewer
                     break;
                 case "place":
                     (int px, int py) = ParseCell(Word(2));
-                    SubmitCommand(new PlaceUnitCommand(TestPlayer, Word(1), px, py));
+                    SubmitCommand(new PlaceUnitCommand(TestPlayer, Word(1), px, py, words.Length > 3 ? int.Parse(Word(3)) : 0));
                     break;
                 case "register":
                     RegisterSelectedUnit(_candidates.FirstOrDefault(t => t.Name.Equals(Word(1), StringComparison.OrdinalIgnoreCase))

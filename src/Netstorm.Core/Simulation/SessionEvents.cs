@@ -278,6 +278,15 @@ public enum SessionEventKind
 
     /// <summary>워크샵을 한 단계 업그레이드했다 (원본 완료음 upgradeComplete.wav, exe FUN_004545e0).</summary>
     WorkshopUpgraded,
+
+    /// <summary>아이스 타워가 깨져 같은 소유자·장소에서 재성장을 시작했다. 처치 보상은 없다.</summary>
+    IceTowerShattered,
+
+    /// <summary>아이스 타워가 재성장을 끝내 최대 체력으로 돌아왔다.</summary>
+    IceTowerRegrown,
+
+    /// <summary>적의 탄을 흡수한 썬 바리케이트 방어선. EntityId는 선의 시작 기둥 번호다.</summary>
+    ShotBlocked,
 }
 
 /// <summary>세션 이벤트 한 건.</summary>

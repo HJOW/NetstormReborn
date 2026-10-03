@@ -74,6 +74,21 @@ public sealed class GameEntity
     /// <summary>다음 발사를 허용할 틱.</summary>
     public long NextAttackTick { get; internal set; }
 
+    /// <summary>캐논의 방위: 0=북, 1=동, 2=남, 3=서. 아이스·썬더 캐논은 배치한 방위를 유지한다.</summary>
+    public int CannonDirection { get; internal set; }
+
+    /// <summary>현재 캐논 사격 동작의 시작 틱. -1이면 동작하지 않는다.</summary>
+    public long AttackStartedTick { get; internal set; } = -1;
+
+    /// <summary>마지막 발사 틱. -1이면 아직 발사하지 않았다. 발사 그림을 피해 예약과 맞춘다.</summary>
+    public long LastShotTick { get; internal set; } = -1;
+
+    /// <summary>파괴된 아이스 타워가 같은 받침에서 다시 자라는지.</summary>
+    public bool IsRegenerating { get; internal set; }
+
+    /// <summary>아이스 타워 재성장의 시작 틱.</summary>
+    public long RegenerationStartTick { get; internal set; }
+
     /// <summary>기지가 생성한 공중 공격체의 비행 상태. 지상 오브젝트는 null이다.</summary>
     public FlyerFlight? Flight { get; internal set; }
 
@@ -108,6 +123,11 @@ public sealed class GameEntity
         Source = source;
         MaxHitPoints = Math.Max(0, type.Definition.GetDouble("maxHitPoints") ?? 0);
         HitPoints = MaxHitPoints;
+        // 저장된 캐논의 L/M/N/O 측면 글자를 북/동/남/서로 읽는다. 기본 그림도 같은 규칙이다.
+        int frame = source?.Object.Frame ?? type.Definition.Frames.DefaultFrame;
+        if (frame >= 0 && frame < type.Definition.Frames.Codes.Count &&
+            type.Definition.Frames.Codes[frame].Side is >= 'L' and <= 'O' and var side)
+            CannonDirection = side - 'L';
         // 가이저는 타입 cost 만큼의 Storm Power 를 품는다. 싱글 플레이 원본 값(exe 타입 로더 → FUN_004b2df0, geyser.type cost = 2000).
         if (kind == ObjectKind.Geyser) StoredStormPower = type.Definition.GetInt("cost") is int stored and > 0 ? stored : int.MaxValue;
     }
@@ -123,6 +143,9 @@ public sealed class GameEntity
 
     /// <summary>회수·파괴 때의 비용 기준 값 (.type 의 cost, 없으면 0)</summary>
     public int Cost => StormPower.TypeCost(Type.Definition);
+
+    /// <summary>재성장 중인 아이스 타워는 원본 growingRainBlocker처럼 회수 대금이 없다.</summary>
+    public int SalvageRefund => IsRegenerating ? 0 : StormPower.SalvageValue(Cost);
 }
 
 /// <summary>사제의 포획 상태 (도움말 "How To Capture and Sacrifice", docs/gameplay/sacrifice.md).</summary>

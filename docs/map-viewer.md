@@ -157,6 +157,8 @@ dotnet run --project src/Netstorm.Game -- --map dissolvedalliance --placement wi
 dotnet run --project src/Netstorm.Game -- --map dissolvedalliance --placement bulf --probe 124,126 --screenshot extracted/screens/placement-bulf.png
 ```
 
+2026-10-03: 아이스·썬더 캐논을 들고 있을 때 **우클릭은 북→동→남→서 회전**이다(역회전 설정이면 반대 순서). 방향별 원본 그림을 미리 보여 주며 놓은 방위는 고정된다. 개발용 `--script`는 `place rainCannon 100,120 1`처럼 마지막 방위 값(0=북, 1=동, 2=남, 3=서)을 받을 수 있다. 세 캐논의 충전·발사 그림, 아이스 타워 재성장, 썬 바리케이트 방어선의 근거·한계는 [TEST01 추가 판독](videos/test01-combat-20261003.md)에 있다.
+
 ## 다리 조각 시험 모드
 
 **B** 로 켜고 끈다(배치 시험 P 와 동시에 켜지지 않는다). 게임 세션이 원본 규칙대로 플레이어 1 의 다리 칸(`BridgeTray`)을 채운다.

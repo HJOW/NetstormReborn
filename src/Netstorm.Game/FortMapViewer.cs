@@ -345,6 +345,7 @@ internal sealed partial class FortMapViewer : IDisposable
         }
         PerfMeter.Current?.Section("terrain", perfTerrain);
         long perfObjects = Stopwatch.GetTimestamp();
+        DrawSunForceFields(batch, center);
         FortMapObject? hovered = null;
         float nearest = 20f * 20f;
         var mousePosition = new Vector2(_previousMouse.X, _previousMouse.Y);
@@ -371,8 +372,10 @@ internal sealed partial class FortMapViewer : IDisposable
                 DrawSprite(batch, _emptyGeyserType.LoadIndex, _emptyGeyserType.Definition.Frames.DefaultFrame, anchor);
                 continue;
             }
-            var sprite = mobile && MobileFrame(live!) is int walkFrame
-                ? GetTexture(item.Object.Type.LoadIndex, walkFrame) : GetSprite(item);
+            var sprite = live != null && CombatSprite(live) is { } combatSprite
+                ? GetTexture(combatSprite.Type.LoadIndex, combatSprite.Frame)
+                : mobile && MobileFrame(live!) is int walkFrame
+                    ? GetTexture(item.Object.Type.LoadIndex, walkFrame) : GetSprite(item);
             if (sprite.HasValue)
             {
                 var (texture, offset) = sprite.Value;

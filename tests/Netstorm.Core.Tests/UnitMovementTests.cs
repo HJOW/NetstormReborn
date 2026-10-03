@@ -14,6 +14,24 @@ public sealed class UnitMovementTests
     /// <summary>섬 한 변의 칸 수 (x·y 0~39가 모두 지면).</summary>
     private const int IslandSize = 40;
 
+    /// <summary>걷는 도중 무관한 지면 버전이 바뀌어도 진행량을 잃거나 같은 걸음을 다시 시작하지 않는다.</summary>
+    [Theory]
+    [InlineData(9, 2)]
+    [InlineData(9, 9)]
+    public void TerrainChange_PreservesASafeStepInProgress(int x, int y)
+    {
+        BattleSession changed = Create(2, 2), reference = Create(2, 2);
+        changed.Submit(new MoveEntityCommand(1, 1, x, y));
+        reference.Submit(new MoveEntityCommand(1, 1, x, y));
+        changed.RunTicks(7); reference.RunTicks(7);
+        changed.Bridges.InvalidateTerrain();
+        changed.RunTicks(1); reference.RunTicks(1);
+        Assert.Equal(reference.VisualCell(reference.Entity(1)!), changed.VisualCell(changed.Entity(1)!));
+        changed.RunTicks(180); reference.RunTicks(180);
+        Assert.Equal(reference.Entity(1)!.Footprint, changed.Entity(1)!.Footprint);
+        Assert.False(changed.IsMoveBlocked(1));
+    }
+
     /// <summary>가로 7칸·세로 3칸 목표로 보내면 대각선 3걸음 뒤 직선 4걸음이 이어진다.</summary>
     [Fact]
     public void MoveToCell_WalksDiagonalsFirstThenStraight()

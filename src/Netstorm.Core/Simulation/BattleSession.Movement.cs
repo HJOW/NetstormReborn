@@ -15,7 +15,25 @@ public sealed partial class BattleSession
         if (IsAirborneTransport(mover)) return !route.IsBlocked;
         if (!HasGroundSupport(mover.Footprint.AnchorX, mover.Footprint.AnchorY)) return false;
         if (route.RouteVersion != Bridges.Version)
-            ReplaceMovementRoute(mover, route, FindMovePath(mover, goal, route is UnitMoveTask { Purpose: UnitMovePurpose.MoveToCell }));
+        {
+            bool exact = route is UnitMoveTask { Purpose: UnitMovePurpose.MoveToCell };
+            double progress = route.Progress;
+            // 안전한 다음 걸음은 끝까지 이어 간다. 무관한 다리 배치가 진행량을 초기화하면 화면에서 뒤로 튄다.
+            if (!route.IsBlocked && progress > 0 && route.NextIndex < route.Path.Count &&
+                route.Path[route.NextIndex - 1] == (mover.Footprint.AnchorX, mover.Footprint.AnchorY))
+            {
+                (int x, int y) = route.Path[route.NextIndex];
+                if (CanWalkStep(mover.Footprint.AnchorX, mover.Footprint.AnchorY, x, y, mover.Owner) &&
+                    FindMovePath(mover, goal, exact, new Footprint(x, y, 1, 1)) is { } remaining)
+                {
+                    remaining.Insert(0, (mover.Footprint.AnchorX, mover.Footprint.AnchorY));
+                    ReplaceMovementRoute(mover, route, remaining);
+                    route.Progress = progress;
+                    return true;
+                }
+            }
+            ReplaceMovementRoute(mover, route, FindMovePath(mover, goal, exact));
+        }
         return !route.IsBlocked;
     }
 
@@ -81,7 +99,10 @@ public sealed partial class BattleSession
     /// 규칙·검사합·충돌 판정에는 쓰이지 않는다. 걷지 않으면 기준 칸 그대로다.
     /// </summary>
     /// <param name="entity">그릴 오브젝트</param>
-    public (double X, double Y) VisualCell(GameEntity entity)
+    public (double X, double Y) VisualCell(GameEntity entity) => MovementCell(entity, _timestep.Alpha);
+
+    /// <summary>틱 진행량과 선택한 보간 계수로 이동 위치를 구한다. 전투 판정은 계수 0을 써 그리기 시간과 독립시킨다.</summary>
+    private (double X, double Y) MovementCell(GameEntity entity, double alpha)
     {
         (double x, double y) = (entity.Footprint.AnchorX, entity.Footprint.AnchorY);
         if (RouteOf(entity.Id) is not { IsBlocked: false } route || route.NextIndex >= route.Path.Count
@@ -92,7 +113,7 @@ public sealed partial class BattleSession
         (int fromX, int fromY) = route.Path[route.NextIndex - 1];
         (int toX, int toY) = route.Path[route.NextIndex];
         double perTick = MovementRate.CellsPerSecond(entity.Type) / TicksPerSecond;
-        double fraction = Math.Clamp((route.Progress + _timestep.Alpha * perTick) / StepLength((fromX, fromY), (toX, toY)), 0, 1);
+        double fraction = Math.Clamp((route.Progress + alpha * perTick) / StepLength((fromX, fromY), (toX, toY)), 0, 1);
         return (fromX + (toX - fromX) * fraction, fromY + (toY - fromY) * fraction);
     }
 
