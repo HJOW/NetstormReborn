@@ -64,8 +64,11 @@ internal sealed class UiAutomation
                     ButtonState.Released, ButtonState.Released, ButtonState.Pressed, ButtonState.Released, ButtonState.Released);
                 _release = true; break;
             case "move":
+            case "move-center":
+                // 화면비별 같은 지도 위치를 검사할 수 있도록 중심 기준 이동도 지원한다.
                 string[] movePoint = value.Split(',');
-                _mouse = MakeMouse(int.Parse(movePoint[0]), int.Parse(movePoint[1]), ButtonState.Released); break;
+                _mouse = MakeMouse(int.Parse(movePoint[0]) + (parts[0] == "move-center" ? width / 2 : 0),
+                    int.Parse(movePoint[1]) + (parts[0] == "move-center" ? height / 2 : 0), ButtonState.Released); break;
             case "drag":
                 string[] drag = value.Split(',');
                 _dragFromX = int.Parse(drag[0]); _dragFromY = int.Parse(drag[1]);
@@ -77,9 +80,12 @@ internal sealed class UiAutomation
                 if (state != value) throw new InvalidOperationException($"UI 검사 실패: 예상={value}, 실제={state}");
                 Console.WriteLine($"UI PASS: {state}"); break;
             case "assert-detail":
+            case "assert-detail-not":
                 // 부가 상태(선택·유닛 방향)에 값이 포함돼 있는지 검사한다.
-                if (!detail.Contains(value, StringComparison.OrdinalIgnoreCase)) throw new InvalidOperationException($"UI 세부 검사 실패: 예상={value}, 실제={detail}");
-                Console.WriteLine($"UI PASS: {value}"); break;
+                bool excluded = parts[0] == "assert-detail-not";
+                if (detail.Contains(value, StringComparison.OrdinalIgnoreCase) == excluded)
+                    throw new InvalidOperationException($"UI 세부 검사 실패: {(excluded ? "제외" : "예상")}={value}, 실제={detail}");
+                Console.WriteLine($"UI PASS: {(excluded ? "excluded " : "")}{value}"); break;
             case "quit": quit(); break;
             default: throw new ArgumentException($"알 수 없는 UI 검사 명령: {raw}");
         }

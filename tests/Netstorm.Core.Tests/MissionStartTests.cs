@@ -1,11 +1,48 @@
 using Netstorm.Assets;
 using Netstorm.Core.Rules;
+using Netstorm.Core.Simulation;
 
 namespace Netstorm.Core.Tests;
 
 /// <summary>미션 머리 값 → 시작 조건 (시작 Storm Power·지식·기술 허용) 테스트</summary>
 public sealed class MissionStartTests
 {
+    /// <summary>all은 대소문자를 구분하지 않고 그룹 타입으로 확장하며 금지 기술·효과 그림·중복 이름을 걸러낸다.</summary>
+    [Fact]
+    public void AllKnowledge_ExpandsGroupsAndRespectsPermissions()
+    {
+        MissionStart start = MissionStart.FromHeader(key => key switch
+        {
+            "myTech" => "ALL;sunArcher",
+            "techAllowed" => "deny;rainCannon",
+            _ => null,
+        });
+        var deck = new ProductionDeck();
+        TypeCatalog types = OriginalData.RequireTypes();
+        start.ApplyKnowledge(deck, types);
+        Assert.Contains("thunderCannon", deck.Knowledge);
+        Assert.Contains("priest", deck.Knowledge);
+        Assert.DoesNotContain("rainCannon", deck.Knowledge);
+        Assert.DoesNotContain("lightning", deck.Knowledge);
+        Assert.DoesNotContain("ALL", deck.Knowledge);
+        Assert.Single(deck.Knowledge, name => name.Equals("sunArcher", StringComparison.OrdinalIgnoreCase));
+        Assert.Equal(types.Types.Count(t => t.Definition.GetString("group") != null) - 1, deck.Knowledge.Count);
+    }
+
+    /// <summary>AI의 aiTech=all도 확장하되 개별 지식만 있는 기존 캠페인 시작 목록은 그대로 유지한다.</summary>
+    [Fact]
+    public void AiAllKnowledge_UsesTheSameExpansion()
+    {
+        MissionStart start = MissionStart.FromHeader(_ => null) with
+        {
+            LoadFort = "thewarbegins", AiKnowledge = ["all"],
+        };
+        BattleSession session = SessionData.FromMap("thewarbegins", start);
+        Assert.Contains("rainCannon", session.Player(2).Deck.Knowledge);
+        Assert.DoesNotContain("all", session.Player(2).Deck.Knowledge);
+        Assert.Empty(session.Player(1).Deck.Knowledge);
+    }
+
     /// <summary>techAllowed: deny → all 로 전부 막고, allow 뒤의 이름만 허용 (원본 FUN_00482eb0 순서)</summary>
     [Fact]
     public void TechPermissions_AppliesTokensInOrder()

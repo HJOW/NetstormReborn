@@ -115,6 +115,10 @@ public sealed class TechPermissions
 public sealed record MissionStart(string? Title, string? LoadFort, int? StartStormPower, IReadOnlyList<string> Knowledge,
     TechPermissions Tech, bool DenySalvage, bool DenyAscend, bool AiOff, int? TutorialNumber)
 {
+    /// <summary>원본 그룹 조회 표의 유효 생산 그룹. 지식 창의 표시 순서·표시 제외 조건과 독립적이다.</summary>
+    private static readonly string[] TechnologyGroups =
+        ["archer", "cannon", "blocker", "aviary", "flyer", "battery", "fence", "walker", "balloon"];
+
     /// <summary>AI 플레이어 번호의 최대값 (원본 머리 값 ai1~ai8, exe 승패 판정 FUN_004c36c0 도 1~8 을 검사한다)</summary>
     public const int MaximumPlayer = 8;
 
@@ -215,15 +219,36 @@ public sealed record MissionStart(string? Title, string? LoadFort, int? StartSto
     }
 
     /// <summary>
-    /// 생산 창 상태에 시작 지식을 넣는다. techAllowed 로 막힌 타입은 넣지 않는다.
+    /// 생산 창 상태에 시작 지식을 넣는다. all은 원본처럼 group이 있는 타입들로 확장하고 techAllowed로 막힌 타입은 제외한다.
     /// </summary>
     /// <param name="deck">플레이어 생산 창</param>
-    public void ApplyKnowledge(ProductionDeck deck)
+    /// <param name="types">all 확장에 쓸 타입 목록. 개별 이름만 있는 경우에는 생략할 수 있다.</param>
+    public void ApplyKnowledge(ProductionDeck deck, TypeCatalog? types = null)
     {
         // 시작 지식 중 허용된 타입만 배운다
-        foreach (string name in Knowledge.Where(Tech.IsAllowed))
+        foreach (string name in ExpandKnowledge(Knowledge, types).Where(Tech.IsAllowed))
         {
             deck.LearnKnowledge(name);
+        }
+    }
+
+    /// <summary>
+    /// 시작 지식의 all을 원본 Player.cpp 004914e0의 group != NO_GROUP(10) 목록으로 확장한다.
+    /// 그룹 순서는 타입 로딩 순서이며, 생산 창의 집합이 중복 이름을 제거한다.
+    /// </summary>
+    public static IEnumerable<string> ExpandKnowledge(IEnumerable<string> names, TypeCatalog? types = null)
+    {
+        // 명시 이름과 all을 원본 입력 순서대로 처리한다.
+        foreach (string name in names)
+        {
+            if (!name.Equals("all", StringComparison.OrdinalIgnoreCase)) { yield return name; continue; }
+            if (types == null) throw new ArgumentException("시작 지식 all을 확장하려면 타입 목록이 필요합니다.", nameof(types));
+            // 원본 group 조회 표의 생산 그룹에 속하는 타입만 넣는다. 효과·장식은 그룹이 없다.
+            foreach (TypeInfo type in types.Types)
+            {
+                if (type.Definition.GetString("group") is { } group
+                    && TechnologyGroups.Contains(group, StringComparer.OrdinalIgnoreCase)) yield return type.Name;
+            }
         }
     }
 

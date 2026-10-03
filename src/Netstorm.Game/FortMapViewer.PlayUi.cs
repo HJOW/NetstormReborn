@@ -123,6 +123,7 @@ internal sealed partial class FortMapViewer
         }
         if (_placementMode && mouse.RightButton == ButtonState.Pressed && _previousMouse.RightButton == ButtonState.Released)
         {
+            // 고정 캐논의 방향은 배치 전에만 고른다. 설치 후 우클릭은 오브젝트 메뉴에서 처리한다.
             if (CannonAnimation.IsFixed(_candidates[_candidateIndex]))
             {
                 _cannonRotation = (_cannonRotation + (_reverseRotation ? 3 : 1)) % 4;

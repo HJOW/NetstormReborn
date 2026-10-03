@@ -197,10 +197,13 @@ public sealed class RecordedCombatTests
 
     /// <summary>새 배치 명령의 방위도 저장 프레임과 같은 네 방향 규칙으로 정규화한다.</summary>
     [Theory]
-    [InlineData(-1, 3)]
-    [InlineData(1, 1)]
-    [InlineData(5, 1)]
-    public void FixedCannon_PlacementUsesTheRequestedRotation(int rotation, int expected)
+    [InlineData("rainCannon", -1, 3)]
+    [InlineData("rainCannon", 1, 1)]
+    [InlineData("rainCannon", 5, 1)]
+    [InlineData("thunderCannon", -1, 3)]
+    [InlineData("thunderCannon", 1, 1)]
+    [InlineData("thunderCannon", 5, 1)]
+    public void FixedCannon_PlacementUsesTheRequestedRotation(string name, int rotation, int expected)
     {
         BattleSession session = Create(Object("windVortex", 1, 30, 30));
         session.EnforceProductionRules = false;
@@ -210,11 +213,71 @@ public sealed class RecordedCombatTests
             for (int number = 0; number < 4; number++)
                 session.Map.AddSource(new EnergySource(100 + element * 4 + number, (Element)element, 43, 29, 1));
         }
-        session.Submit(new PlaceUnitCommand(1, "rainCannon", 44, 30, rotation));
+        session.Submit(new PlaceUnitCommand(1, name, 44, 30, rotation));
         session.RunTicks(1);
-        GameEntity cannon = Assert.Single(session.Entities, e => e.Type.Name.Equals("rainCannon", StringComparison.OrdinalIgnoreCase));
+        GameEntity cannon = Assert.Single(session.Entities, e => e.Type.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
         Assert.Equal(expected, cannon.CannonDirection);
         Assert.Equal(CannonAnimation.Side(expected), cannon.Type.Definition.Frames.Codes[CannonAnimation.Frame(cannon, session.Tick, session.TicksPerSecond)].Side);
+    }
+
+    /// <summary>썬 캐논은 고정 캐논용 배치 방위 값이 있어도 설치 방향에 구속되지 않는다(사용자 확인 2026-10-03).</summary>
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(2)]
+    [InlineData(3)]
+    public void SunCannon_PlacementDoesNotApplyFixedRotation(int rotation)
+    {
+        BattleSession session = Create(Object("windVortex", 1, 30, 30));
+        session.EnforceProductionRules = false;
+        // 실제 배치 조건을 만족시키되 목표가 없는 상태에서 전달 방위의 영향을 비교한다.
+        for (int number = 0; number < 4; number++)
+            session.Map.AddSource(new EnergySource(100 + number, Element.Sun, 43, 29, 1));
+        session.Submit(new PlaceUnitCommand(1, "sunCannon", 44, 30, rotation));
+        session.RunTicks(1);
+        GameEntity cannon = Assert.Single(session.Entities, e => e.Type.Name.Equals("sunCannon", StringComparison.OrdinalIgnoreCase));
+        Assert.False(CannonAnimation.IsFixed(cannon.Type));
+        Assert.Equal(0, cannon.CannonDirection);
+    }
+
+    /// <summary>썬 캐논은 첫 목표가 기절해 다른 방향의 목표로 바뀌면 재발사 대기 중에도 스스로 방향을 바꾼다.</summary>
+    [Fact]
+    public void SunCannon_TurnsWhenItsTargetChangesDirection()
+    {
+        BattleSession session = Create(Object("sunCannon", 1, 10, 10), Object("priest", 2, 9, 2), Object("priest", 2, 18, 9));
+        session.RunTicks(1);
+        GameEntity cannon = session.Entity(1)!;
+        Assert.Equal(2, cannon.AttackTargetId);
+        Assert.Equal(0, cannon.CannonDirection);
+        CombatShot north = Assert.Single(session.Shots);
+        Assert.Equal(north.StartX, north.EndX);
+        session.RunTicks(11);
+        Assert.True(session.Entity(2)!.IsStunned);
+        Assert.Equal(3, cannon.AttackTargetId);
+        Assert.Equal(1, cannon.CannonDirection);
+        Assert.Empty(session.Shots);
+        session.RunTicks(109);
+        CombatShot east = Assert.Single(session.Shots);
+        Assert.Equal(3, east.TargetId);
+        Assert.Equal(east.StartY, east.EndY);
+    }
+
+    /// <summary>고정 캐논은 앞의 목표를 잃어도 옆의 목표로 회전하지 않고 설치 방향을 유지한다.</summary>
+    [Theory]
+    [InlineData("rainCannon")]
+    [InlineData("thunderCannon")]
+    public void FixedCannon_KeepsDirectionAfterLosingItsTarget(string name)
+    {
+        BattleSession session = Create(Object(name, 1, 10, 10, 0), Object("priest", 2, 9, 2), Object("priest", 2, 18, 9));
+        session.RunTicks(1);
+        GameEntity cannon = session.Entity(1)!;
+        Assert.Equal(2, cannon.AttackTargetId);
+        session.RunTicks(240);
+        Assert.True(session.Entity(2)!.IsStunned);
+        Assert.Equal(0, cannon.AttackTargetId);
+        Assert.Equal(0, cannon.CannonDirection);
+        Assert.Equal(100, session.Entity(3)!.HitPoints);
+        Assert.DoesNotContain(session.Shots, shot => shot.TargetId == 3);
     }
 
     /// <summary>받침의 각도 저장 프레임은 실제 북·동·남·서 사격 방향으로 복원한다.</summary>

@@ -112,6 +112,7 @@ public sealed partial class BattleSession
                 attacker.AttackStartedTick = -1;
                 continue;
             }
+            // 썬 캐논만 목표 변경 시 스스로 회전한다. 아이스·썬더 캐논은 설치 방위 밖의 목표를 고르지 않는다.
             if (CannonAnimation.IsCannon(attacker.Type) && !CannonAnimation.IsFixed(attacker.Type))
                 attacker.CannonDirection = AimDirection(attacker, target);
             if (Tick < attacker.NextAttackTick) continue;

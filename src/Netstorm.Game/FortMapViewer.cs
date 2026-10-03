@@ -43,12 +43,14 @@ internal sealed partial class FortMapViewer : IDisposable
     private readonly FortMap _map;
     private readonly ShapeDatabase _shapes;
     private readonly Palette _palette;
-    private readonly IsleColorRemap _isleColors;
+    /// <summary>타입별 지면·유닛·건물의 소유자 색 변환표.</summary>
+    private readonly ObjectColorRemap _objectColors;
     private readonly GraphicsDevice _device;
     private readonly Texture2D _pixel;
     /// <summary>메인 메뉴와 같은 원본 UI 질감·장식을 쓰는 공유 그리기 도구.</summary>
     private readonly OriginalUiSkin _uiSkin;
-    private readonly Dictionary<(int Frame, int Color), (Texture2D Texture, Point Offset)> _textures = [];
+    /// <summary>타입마다 색 변환 대상이 다르므로 타입·프레임 위치·소유자색을 함께 캐시한다.</summary>
+    private readonly Dictionary<(int Type, int Frame, int Color), (Texture2D Texture, Point Offset)> _textures = [];
     private readonly FortMapObject[] _sorted;
     private FortTerrainPreview _terrain;
     private readonly TypeInfo _terrainType;
@@ -91,7 +93,7 @@ internal sealed partial class FortMapViewer : IDisposable
         _uiSkin = uiSkin;
         _shapes = shapes;
         _palette = palette;
-        _isleColors = new IsleColorRemap(palette);
+        _objectColors = new ObjectColorRemap(palette);
         _playerColors = PlayerColors.Table(mission?.AiColors);
         _map = new FortMap(fort);
         _terrainType = catalog.Find("isle") ?? throw new InvalidDataException("isle 타입이 없습니다.");
@@ -377,7 +379,8 @@ internal sealed partial class FortMapViewer : IDisposable
             if (!Visible(anchor, objectMargin)) continue;
             // 가이저 증기·워크샵 레벨·신전 회오리·풍선·걷기 그림을 고르고 그림자 → 본체 → 겹침 순서로 그린다.
             (TypeInfo drawn, StructureFrames frames, Vector2 shift) = ObjectSprite(item.Object.Type, live, item);
-            if (!DrawObjectSprite(batch, drawn, frames, anchor + shift * _zoom))
+            if (!DrawObjectSprite(batch, drawn, frames, anchor + shift * _zoom,
+                color: _playerColors.GetValueOrDefault(live?.Owner ?? item.Object.Owner ?? 0)))
             {
                 // 이미지가 없는 특수 프레임은 소유자색 표식으로 위치만 표시한다.
                 batch.Draw(_pixel, new Rectangle((int)anchor.X - 3, (int)anchor.Y - 3, 6, 6),
@@ -452,11 +455,11 @@ internal sealed partial class FortMapViewer : IDisposable
             return null;
         }
         ShapeFrame frame = block.Frames[index];
-        var key = (frame.Offset, color);
+        var key = (typeIndex, frame.Offset, color);
         if (!_textures.TryGetValue(key, out var sprite))
         {
-            // 0 = 원래 색, 음수 = 생산 창 어둡게·빨갛게 표, 양수 = 섬 소유자 색
-            ReadOnlyMemory<byte> table = color == 0 ? default : DeckRemap(color) is { } deck ? deck : _isleColors.Table(color);
+            // 0 = 원래 색, 음수 = 생산 창 어둡게·빨갛게 표, 양수 = 타입별 소유자 색.
+            ReadOnlyMemory<byte> table = color == 0 ? default : DeckRemap(color) is { } deck ? deck : _objectColors.Table(typeIndex, color);
             sprite = (SpriteAnimation.ToTexture(_device, _shapes.Decode(frame), _palette, table), new Point(frame.XMin, frame.YMin));
             _textures.Add(key, sprite);
         }

@@ -83,7 +83,8 @@ internal sealed partial class FortMapViewer
         (TypeInfo drawn, StructureFrames frames, Vector2 shift) = ObjectSprite(type, null, null);
         int body = CannonAnimation.IsFixed(type)
             ? type.Definition.Frames.Find(CannonAnimation.Side(_cannonRotation), TypeFrameTable.DefaultVariant, 0) : frames.Body;
-        DrawSprite(batch, drawn.LoadIndex, body, bottomRight + shift * _zoom, tint: blocked ? Color.Salmon : Color.White);
+        DrawSprite(batch, drawn.LoadIndex, body, bottomRight + shift * _zoom,
+            _playerColors.GetValueOrDefault(TestPlayer), tint: blocked ? Color.Salmon : Color.White);
         if (blocked) batch.Draw(_pixel, rect, PreviewBlockedColor * 0.35f);
         Outline(batch, rect, blocked ? PreviewBlockedColor : Color.White);
         DrawElementIcons(batch, check, type, rect);

@@ -115,7 +115,7 @@ PreparedMissionSection? section = mission?.Script.PrepareSection("CraftWarning",
 | `missionNumber` | `15` | 번호 |
 | `title` | `"Menu"` | 제목 |
 | `myStartMoney` | `7000` | 플레이어 시작 Storm Power (게임 내 재화) |
-| `myTech` | `"suncannon;sunblocker;..."` | 플레이어가 가진 기술 (`;` 구분, `.type` 이름) |
+| `myTech` | `"suncannon;sunblocker;..."` 또는 `"all"` | 플레이어가 가진 기술 (`;` 구분, `.type` 이름). `all`은 대소문자와 관계없이 생산 그룹이 있는 타입 전체로 확장한다 |
 | `myAllyList` | | 플레이어 동맹 |
 | `moreGeysers`, `randGeysers` / `randomGeysers` | `1` | 가이저 추가/무작위 배치 |
 | `denySalvage`, `denyAscend`, `techAllowed`, `allowAnyCapture` | | 규칙 제한의 **시작 값**. 튜토리얼 단계 처리가 실행 중에 바꾼다 — 튜토리얼 2 는 `denySalvage = 1` 로 시작해 단계 H 에서 0 으로, `techAllowed` 에 없는 sunFactory 를 단계 B 에서 허용으로 바꾼다 ([mission-header-flags.md](../exe/mission-header-flags.md)) |
@@ -198,7 +198,7 @@ AGENTS.md가 정리한 커스텀 맵의 구성이다. 예는 사용자가 만든
 |---|---|---|
 | `title="TEST01"` | 미션 제목 | 브리핑 제목으로 표시 — 확인 |
 | `myStartMoney=50000` | 사용자 시작 SP | 시험 전투 시작 Storm Power 50000 — 확인 |
-| `myTech="all"` | 사용자 기술 전부 허용 | 워크샵의 Knowledge Available에 전체 목록 — 확인 |
+| `myTech="all"` | 사용자 시작 기술 전부 습득 | 워크샵의 Knowledge Available에 전체 목록 — 확인. `techAllowed`의 생산 허용 여부와 구분 |
 | `myAllyList="2"` | 사용자 동맹 목록 | 미확인 |
 | `ai2Name="Luitenent of Wind"`, `ai2color=orange`, `ai3Name="Thunder Demon"`, `ai3color=red` | 인공지능 2·3의 이름과 색 | **시험 전투에서는 색이 적용되지 않았다**: 소유자 2 는 빨강, 소유자 3 은 흰색(기본색 = 플레이어 번호)이었다. 편집기 Test Battle 이 AI 플레이어를 만들지 않기 때문으로 추정 — [화면 요소 대조](../videos/test01-visuals-20261003.md) 3절. 이름 표시는 미확인 |
 | `aiNTech="all"`, `aiNStartMoney=0`, `aiNGeyserAttachments=1`, `aiNCollectors=1`, `aiNTimeBetweenMoves=1`, `aiNBridgeDrawRate=1`, `aiNAllyList` | 인공지능의 기술·자금·수집·행동 간격·다리 뽑기 속도·동맹 | 미확인(AI 행동은 분석하지 않음) |

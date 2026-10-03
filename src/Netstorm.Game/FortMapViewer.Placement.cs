@@ -280,7 +280,8 @@ internal sealed partial class FortMapViewer
             }
             // 저장된 오브젝트와 같은 규칙으로 그림을 고른다 (걷는 유닛의 방향·걷기 프레임, 워크샵 레벨, 신전 회오리, 그림자).
             (TypeInfo drawn, StructureFrames frames, Vector2 shift) = ObjectSprite(entity.Type, entity, null);
-            DrawObjectSprite(batch, drawn, frames, anchor + shift * _zoom, entity.IsComplete ? 1f : UnderConstructionAlpha);
+            DrawObjectSprite(batch, drawn, frames, anchor + shift * _zoom, entity.IsComplete ? 1f : UnderConstructionAlpha,
+                _playerColors.GetValueOrDefault(entity.Owner));
             if (!entity.IsComplete)
             {
                 DrawProgressBar(batch, anchor, _session.ConstructionProgress(entity));

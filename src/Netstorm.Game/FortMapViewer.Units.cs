@@ -38,7 +38,11 @@ internal sealed partial class FortMapViewer
     public string UiDetail => $"selected={_session.Entity(_session.Player(TestPlayer).SelectedEntityId)?.Type.Name.ToLowerInvariant() ?? "none"};units="
         + string.Join(',', _session.Entities.Where(e => IsMobile(e) && e.Owner == TestPlayer).Select(e =>
             $"{e.Type.Name.ToLowerInvariant()}:{UnitHeading.Side(e.Heading)?.ToString() ?? "-"}:{(_session.IsMoving(e.Id) ? "moving" : "idle")}"))
-        + $";rotation={_cannonRotation}";
+        + $";rotation={_cannonRotation};camera=" + FormattableString.Invariant($"{_camera.X:0.##},{_camera.Y:0.##}")
+        + ";workshops=" + string.Join(',', _session.Entities.Where(e => e.Owner == TestPlayer && e.Kind == ObjectKind.Workshop)
+            .Select(e => $"{e.Type.Name.ToLowerInvariant()}:{WorkshopLevel(e, e.Source)}"))
+        + $";placement={(_lastCheck?.Allowed == true ? "allowed" : _lastCheck?.Failure.ToString() ?? "none")}"
+        + $";cursor={(_placementMode ? _candidates[_candidateIndex].Name.ToLowerInvariant() : "none")}";
 
     /// <summary>걷기 그림 시계(초). 게임 시간이 흐르는 동안에만 진행해 일시정지 중에는 걷는 자세가 멈춘다.</summary>
     private double _walkClock;
@@ -137,7 +141,7 @@ internal sealed partial class FortMapViewer
     {
         // 화면에 그리는 것과 같은 그림·위치로 판정한다 (풍선의 기준점 이동, Sail Skater 의 방향 그림 포함).
         (TypeInfo type, StructureFrames frames, Vector2 shift) = ObjectSprite(entity.Type, entity, entity.Source);
-        var sprite = GetTexture(type.LoadIndex, frames.Body);
+        var sprite = GetTexture(type.LoadIndex, frames.Body, _playerColors.GetValueOrDefault(entity.Owner));
         return sprite is { } s ? (s.Texture, s.Offset, Screen(MobileWorldPixels(entity), center) + shift * _zoom) : null;
     }
 
@@ -249,6 +253,15 @@ internal sealed partial class FortMapViewer
         {
             // 클러스터 저장 순서가 셰이프 본체 프레임 순서이므로 중복 이름도 그대로 예열한다.
             for (int frame = 0; frame < type.Definition.Clusters.Count; frame++) GetTexture(type.LoadIndex, frame);
+        }
+        // 소유자 색이 바뀌는 타입은 현재 소유자별 모든 본체 그림도 예열해 걷기·흔들림 중 디코딩을 피한다.
+        foreach (var group in _session.Entities.Where(e => _objectColors.AppliesTo(e.Type.LoadIndex))
+                     .GroupBy(e => (e.Type.LoadIndex, Color: _playerColors.GetValueOrDefault(e.Owner))))
+        {
+            TypeInfo type = group.First().Type;
+            // 클러스터 순서대로 같은 소유자 색의 프레임을 만든다.
+            for (int frame = 0; frame < type.Definition.Clusters.Count; frame++)
+                GetTexture(type.LoadIndex, frame, group.Key.Color);
         }
         if (PerfMeter.Current != null)
             Console.WriteLine($"[perf] 텍스처 예열 {_textures.Count}개 {Stopwatch.GetElapsedTime(warmStart).TotalMilliseconds:0}ms");

@@ -30,7 +30,7 @@ internal sealed partial class FortMapViewer
             Vector2 anchor = Screen(new Vector2((float)(entity.WorldX * FortMap.CellPixelWidth),
                 (float)(entity.WorldY * FortMap.CellPixelHeight)), center);
             DrawShadow(batch, entity.Type, frame, anchor);
-            DrawSprite(batch, entity.Type.LoadIndex, frame, anchor);
+            DrawSprite(batch, entity.Type.LoadIndex, frame, anchor, _playerColors.GetValueOrDefault(entity.Owner));
         }
     }
 

@@ -158,15 +158,16 @@ internal sealed partial class FortMapViewer
 
     /// <summary>오브젝트 하나를 그림자 → 본체 → 겹침 그림 순서로 그린다. 본체 그림이 없으면 false.</summary>
     /// <param name="alpha">본체·겹침 그림의 불투명도 (건설 중 표시용)</param>
-    private bool DrawObjectSprite(SpriteBatch batch, TypeInfo type, StructureFrames frames, Vector2 anchor, float alpha = 1f)
+    /// <param name="color">소유자 색 번호. 그림자는 원본처럼 색 변환을 적용하지 않는다.</param>
+    private bool DrawObjectSprite(SpriteBatch batch, TypeInfo type, StructureFrames frames, Vector2 anchor, float alpha = 1f, int color = 0)
     {
-        var sprite = GetTexture(type.LoadIndex, frames.Body);
+        var sprite = GetTexture(type.LoadIndex, frames.Body, color);
         if (!sprite.HasValue) return false;
         DrawShadow(batch, type, frames.Body, anchor);
         var (texture, offset) = sprite.Value;
         batch.Draw(texture, anchor + offset.ToVector2() * _zoom, null, Color.White * alpha,
             0f, Vector2.Zero, _zoom, SpriteEffects.None, 0f);
-        if (frames.Overlay is int overlay) DrawSprite(batch, type.LoadIndex, overlay, anchor, alpha: alpha);
+        if (frames.Overlay is int overlay) DrawSprite(batch, type.LoadIndex, overlay, anchor, color, alpha: alpha);
         return true;
     }
 }

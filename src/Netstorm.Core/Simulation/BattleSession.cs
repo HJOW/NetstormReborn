@@ -194,11 +194,11 @@ public sealed partial class BattleSession
         {
             player.StormPower = Mission.AiStartMoney ?? stormPower;
             // 초기 AI 지식은 원본 미션 머리 값만 사용한다.
-            foreach (string name in Mission.AiKnowledge) player.Deck.LearnKnowledge(name);
+            foreach (string name in MissionStart.ExpandKnowledge(Mission.AiKnowledge, _types)) player.Deck.LearnKnowledge(name);
         }
         if (human && Mission != null)
         {
-            Mission.ApplyKnowledge(player.Deck);
+            Mission.ApplyKnowledge(player.Deck, _types);
         }
         return player;
     }

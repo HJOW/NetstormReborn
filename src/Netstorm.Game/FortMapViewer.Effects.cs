@@ -181,8 +181,8 @@ internal sealed partial class FortMapViewer
         if (fallen.Entity is { } entity)
         {
             int frame = entity.Type.Definition.Frames.DefaultFrame;
-            _falling.Add(new FallingSprite(entity.Type.LoadIndex, frame, 0,
-                WorldPixels(entity.Footprint.AnchorX, entity.Footprint.AnchorY), UnitFallSeconds));
+            _falling.Add(new FallingSprite(entity.Type.LoadIndex, frame, _playerColors.GetValueOrDefault(entity.Owner),
+                WorldPixels(entity.Footprint.AnchorX, entity.Footprint.AnchorY) + HotFootShift(entity.Type), UnitFallSeconds));
         }
         else if (fallen.Cell is { } cell)
         {
