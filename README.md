@@ -1,6 +1,8 @@
 Netstorm - Reborn
 -------------------------------------------------------------------------
 
+**한국어** | [English](README.en.md)
+
 # 개요 
 Activision 사에서 1997년도에 개발 후 한참 전에 손 놓은
 Netstorm - Islands at war 게임을
