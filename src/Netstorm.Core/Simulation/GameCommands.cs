@@ -15,12 +15,16 @@ public abstract record GameCommand(int Player);
 /// <param name="Rotation">고정 캐논 방위: 0=북, 1=동, 2=남, 3=서. 그 밖의 유닛은 무시한다.</param>
 public sealed record PlaceUnitCommand(int Player, string TypeName, int X, int Y, int Rotation = 0) : GameCommand(Player);
 
-/// <summary>사제의 Construct 로 건물(템플·워크샵·알타·아웃포스트)을 짓기 시작한다. 건설이 끝나야 규칙 효과가 생긴다.</summary>
+/// <summary>
+/// 사제의 Construct 로 건물(템플·워크샵·알타·아웃포스트)을 짓는다. 비용은 이 명령을 받을 때 차감되고 그 자리에 공사장이 생기며,
+/// 맡은 사제가 현장까지 걸어가 도착해야 건설 시간이 시작된다. 건설이 끝나야 규칙 효과가 생긴다.
+/// </summary>
 /// <param name="Player">플레이어 번호</param>
 /// <param name="TypeName">건물 타입 이름</param>
 /// <param name="X">기준점 칸 x</param>
 /// <param name="Y">기준점 칸 y</param>
-public sealed record ConstructBuildingCommand(int Player, string TypeName, int X, int Y) : GameCommand(Player);
+/// <param name="BuilderId">건설을 맡을 내 사제 번호 (0 이면 첫 자유 사제)</param>
+public sealed record ConstructBuildingCommand(int Player, string TypeName, int X, int Y, int BuilderId = 0) : GameCommand(Player);
 
 /// <summary>지식(유닛)을 워크샵에 등록해 생산 창에 올린다 ("Put Knowledge into Production").</summary>
 /// <param name="Player">플레이어 번호</param>

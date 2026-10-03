@@ -397,6 +397,13 @@ public sealed partial class BattleSession
             case UnitMovePurpose.PriestToAltar:
                 // 의식 시작은 UpdateSacrifices 가 조건(묶인 사제·내 사제 옆)을 보고 정한다.
                 break;
+            case UnitMovePurpose.ConstructBuilding:
+                // 사제가 공사장 옆에 도착했다: 이때부터 건설 시간이 흐른다.
+                if (Entity(task.TargetId) is { AwaitingBuilder: true } site && site.BuilderId == mover.Id)
+                {
+                    BeginConstruction(site);
+                }
+                break;
         }
     }
 
@@ -863,6 +870,9 @@ public enum UnitMovePurpose
 
     /// <summary>내 사제가 제단으로 감</summary>
     PriestToAltar,
+
+    /// <summary>내 사제가 건물 공사장으로 감 (도착하면 건설 시작)</summary>
+    ConstructBuilding,
 }
 
 /// <summary>제단 하나의 희생 의식 진행 상태</summary>

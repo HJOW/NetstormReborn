@@ -292,7 +292,7 @@ public sealed partial class BattleSession
     }
 
     /// <summary>
-    /// 틱 하나를 진행한다. 순서: 명령 실행 → 사제 수집·이동 → 수송·사제 이동(포획·운반) → 건설 완료 → 전투 → 희생 의식 → 튜토리얼 단계 처리
+    /// 틱 하나를 진행한다. 순서: 명령 실행 → 사제 수집·이동 → 수송·사제 이동(포획·운반·건설 현장 도착) → 도착 전 공사장 점검 → 건설 완료 → 전투 → 희생 의식 → 튜토리얼 단계 처리
     /// → 플레이어별 다리 칸 채우기 → 다리 붕괴 → 지상 낙하·허공 사제 복귀 → 미션 승패 이벤트.
     /// 이 순서가 바뀌면 같은 명령열의 결과가 달라지므로 락스텝·리플레이를 위해 고정한다.
     /// </summary>
@@ -304,6 +304,7 @@ public sealed partial class BattleSession
         UpdateCampaignAi();
         UpdateHarvests();
         UpdateUnitMoves();
+        UpdatePendingConstructions();
         CompleteConstructions();
         UpdateCombat();
         UpdateSacrifices();
@@ -358,11 +359,11 @@ public sealed partial class BattleSession
         }
     }
 
-    /// <summary>건설 시간이 지난 건물을 완성한다 (오브젝트 번호 순).</summary>
+    /// <summary>건설 시간이 지난 건물을 완성한다 (오브젝트 번호 순). 사제가 아직 도착하지 않은 공사장은 건설이 시작되지 않았으므로 제외한다.</summary>
     private void CompleteConstructions()
     {
         // 건설 중이고 완공 틱이 된 오브젝트만 완성 처리한다
-        foreach (GameEntity entity in _entities.Values.Where(e => !e.IsComplete && e.CompleteTick <= Tick).ToArray())
+        foreach (GameEntity entity in _entities.Values.Where(e => !e.IsComplete && !e.AwaitingBuilder && e.CompleteTick <= Tick).ToArray())
         {
             entity.IsComplete = true;
             if (entity.Type.Definition.HasFlag("createsisland")) Bridges.InvalidateTerrain();
@@ -499,6 +500,9 @@ public sealed partial class BattleSession
             hash.Add(entity.StoredStormPower);
             hash.Add(entity.IsComplete ? 1 : 0);
             hash.Add(entity.CompleteTick);
+            // 사제를 기다리는 공사장과 건설을 맡은 사제도 이후 결과(시작 시각·취소·환불)를 바꾸는 상태다
+            hash.Add(entity.AwaitingBuilder ? 1 : 0);
+            hash.Add(entity.BuilderId);
             hash.Add(BitConverter.DoubleToInt64Bits(entity.HitPoints));
             hash.Add(entity.IsStunned ? 1 : 0);
             hash.Add(entity.IsSuspended ? 1 : 0);

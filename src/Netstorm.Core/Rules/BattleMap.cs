@@ -200,8 +200,8 @@ public sealed class BattleMap
 
     /// <summary>
     /// 사제가 짓는 건물(템플·워크샵·알타·아웃포스트)을 기준점에 지을 수 있는지 판정한다.
-    /// 위치는 섬 소유 규칙(템플은 빈 섬에 플레이어당 1기, 남의 섬 불가, 섬 밖 불가), 이어서 빈 자리·Storm Power·에너지 순서다.
-    /// 사제의 이동·도달 거리는 아직 확인하지 않아 판정하지 않는다.
+    /// 위치는 섬 소유 규칙(템플은 빈 섬에 플레이어당 1기, 알타도 1기, 남의 섬 불가, 섬 밖 불가), 이어서 빈 자리·Storm Power·에너지 순서다.
+    /// 사제가 그 자리까지 걸어갈 수 있는지는 맵이 아니라 세션(<c>BattleSession.CheckBuilding</c>)이 판정한다.
     /// </summary>
     /// <param name="type">건물 타입</param>
     /// <param name="anchorX">기준점(오른쪽 아래 칸) x</param>
@@ -209,11 +209,13 @@ public sealed class BattleMap
     /// <param name="player">플레이어</param>
     /// <param name="stormPower">플레이어의 현재 Storm Power</param>
     /// <param name="playerHasTemple">플레이어에게 이미 템플이 있는지 (건설 중인 템플 포함)</param>
-    public PlacementCheck CheckBuilding(TypeInfo type, int anchorX, int anchorY, int player, int stormPower, bool playerHasTemple)
+    /// <param name="playerHasAltar">플레이어에게 이미 알타가 있는지 (건설 중인 알타 포함)</param>
+    public PlacementCheck CheckBuilding(TypeInfo type, int anchorX, int anchorY, int player, int stormPower, bool playerHasTemple,
+        bool playerHasAltar = false)
     {
         Footprint foot = Footprint.ForType(type.Definition, anchorX, anchorY);
         IslandState island = Ownership.StateFor(TerritoryAt(anchorX, anchorY), player);
-        PlacementProblem problem = PlacementRules.CheckBuildingSite(ObjectKinds.Of(type), island, playerHasTemple);
+        PlacementProblem problem = PlacementRules.CheckBuildingSite(ObjectKinds.Of(type), island, playerHasTemple, playerHasAltar);
         return Finish(type, foot, island, problem, player, stormPower);
     }
 

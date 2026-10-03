@@ -18,14 +18,14 @@ public sealed class BattleSessionTests
     /// <summary>이벤트 목록에서 종류별 개수를 센다</summary>
     private static int Count(IEnumerable<SessionEvent> events, SessionEventKind kind) => events.Count(e => e.Kind == kind);
 
-    /// <summary>템플을 짓고 완공될 때까지 진행한다. 지은 템플을 돌려준다.</summary>
+    /// <summary>템플을 짓고 완공될 때까지 진행한다 (사제가 걸어가 도착한 뒤 건설). 지은 템플을 돌려준다.</summary>
     private static GameEntity BuildTemple(BattleSession session)
     {
         (int x, int y) = SessionData.FindCell((cx, cy) => session.CheckBuilding(1, "windVortex", cx, cy).Allowed);
         session.Submit(new ConstructBuildingCommand(1, "windVortex", x, y));
         session.RunTicks(1);
         GameEntity temple = session.Entities.Single(e => e.Kind == ObjectKind.Temple);
-        session.RunTicks((int)(temple.CompleteTick - session.Tick));
+        SessionData.RunUntilComplete(session, temple);
         return temple;
     }
 
@@ -46,7 +46,9 @@ public sealed class BattleSessionTests
         Assert.Empty(player.Tray.Pieces);
     }
 
-    /// <summary>템플 건설: 비용은 시작할 때 나가고, 건설 시간(16초) 동안은 효과가 없다가 완공되면 섬 소유·다리 공급이 시작된다</summary>
+    /// <summary>
+    /// 템플 건설: 비용은 설치할 때 나가고, 사제가 도착한 뒤 건설 시간(10초) 동안은 효과가 없다가 완공되면 섬 소유·다리 공급이 시작된다
+    /// </summary>
     [Fact]
     public void Temple_TakesConstructionTimeThenOwnsIslandAndSuppliesBridges()
     {
@@ -57,7 +59,9 @@ public sealed class BattleSessionTests
         GameEntity temple = session.Entities.Single(e => e.Kind == ObjectKind.Temple);
         Assert.Equal(5000, session.Player(1).StormPower);
         Assert.False(temple.IsComplete);
-        Assert.Equal(16 * session.TicksPerSecond, temple.CompleteTick - temple.StartTick);
+        // 건설 시간은 사제가 현장에 도착한 뒤부터 흐른다
+        SessionData.RunUntilStarted(session, temple);
+        Assert.Equal(10 * session.TicksPerSecond, temple.CompleteTick - temple.StartTick);
         // 건설 중에는 섬이 빈 섬이고, 건설 중인 템플도 "이미 템플이 있음"으로 세어 두 번째 템플은 지을 수 없다
         Assert.Null(session.Map.Ownership.OwnerOf(temple.Territory!.Value));
         (int x2, int y2) = SessionData.FindCell((cx, cy) => session.CheckBuilding(1, "windVortex", cx, cy).Site is
@@ -92,11 +96,12 @@ public sealed class BattleSessionTests
         Assert.Equal(CommandFailure.TechDenied, session.CheckBuilding(1, "sunFactory", sx, sy).Failure);
         player.Tech.Set("sunFactory", true);
 
-        // 워크샵 건설(약 10초)
+        // 워크샵 건설: 사제가 도착한 뒤 약 10초
         (int wx, int wy) = SessionData.FindCell((cx, cy) => session.CheckBuilding(1, "sunFactory", cx, cy).Allowed);
         session.Submit(new ConstructBuildingCommand(1, "sunFactory", wx, wy));
         session.RunTicks(1);
         GameEntity workshop = session.Entities.Single(e => e.Kind == ObjectKind.Workshop);
+        SessionData.RunUntilStarted(session, workshop);
         Assert.Equal(10 * session.TicksPerSecond, workshop.CompleteTick - workshop.StartTick);
         session.RunTicks((int)(workshop.CompleteTick - session.Tick));
         Assert.Equal(4200, player.StormPower);
@@ -421,11 +426,13 @@ public sealed class BattleSessionTests
         uint start = a.Checksum();
         Assert.Equal(start, b.Checksum());
         (int x, int y) = SessionData.FindCell((cx, cy) => a.CheckBuilding(1, "windVortex", cx, cy).Allowed);
-        // 두 세션에 같은 명령을 넣고 같은 틱만큼 진행한다
+        // 두 세션에 같은 명령을 넣고 같은 틱만큼 진행한다 (사제가 걸어가 템플을 짓고, 다리 조각이 채워질 때까지)
         foreach (BattleSession session in new[] { a, b })
         {
             session.Submit(new ConstructBuildingCommand(1, "windVortex", x, y));
-            session.RunTicks(500);
+            session.RunTicks(1);
+            SessionData.RunUntilComplete(session, session.Entities.Single(e => e.Kind == ObjectKind.Temple));
+            session.RunTicks(3 * session.TicksPerSecond);
         }
         Assert.Equal(a.Checksum(), b.Checksum());
         Assert.NotEqual(start, a.Checksum());

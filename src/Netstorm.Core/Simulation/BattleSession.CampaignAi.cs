@@ -104,13 +104,15 @@ public sealed partial class BattleSession
         return null;
     }
 
-    /// <summary>돈·자리 등 일반 건설 규칙을 통과한 곳에서만 적 건물을 짓는다.</summary>
+    /// <summary>돈·자리 등 일반 건설 규칙을 통과한 곳에서만 적 건물을 짓는다. 플레이어와 같이 AI 사제가 현장까지 걸어가야 건설이 시작된다.</summary>
     private bool TryAiConstruct(PlayerState player, GameEntity temple, string type)
     {
         TypeInfo? info = _types.Find(type);
         if (info == null || player.StormPower < StormPower.TypeCost(info.Definition)) return false;
-        (int X, int Y)? site = FindAiSite(temple, (x, y) => CheckBuilding(player.Number, type, x, y).Allowed);
-        return site != null && ExecuteConstruct(new ConstructBuildingCommand(player.Number, type, site.Value.X, site.Value.Y)).Accepted;
+        GameEntity? builder = OwnFreePriest(player.Number);
+        if (builder == null) return false;
+        (int X, int Y)? site = FindAiSite(temple, (x, y) => CheckBuilding(player.Number, type, x, y, builder.Id).Allowed);
+        return site != null && ExecuteConstruct(new ConstructBuildingCommand(player.Number, type, site.Value.X, site.Value.Y, builder.Id)).Accepted;
     }
 
     /// <summary>신전 주변의 가까운 칸부터 정해진 순서로 합법 위치를 찾는다.</summary>

@@ -63,18 +63,20 @@ key LeftShift+F9; wait 120; capture $OutputDirectory/21-resumed.png; quit;
 "@
     $taskArguments = "--mission thewarbegins --language korean --no-sound --no-music --ui-script-file $OutputDirectory/commands.txt"
 } elseif ($Mode -eq 'Workshop') {
+    # 사제가 걸어가 워크샵을 지은 뒤 그 옆에 서 있으므로(원본과 같다) 사제를 피해 워크샵 바닥 중앙(530,250)을 우클릭한다.
+    # 메뉴·하위 창의 행 좌표는 우클릭 위치에서 상대 거리가 같다: 현재 생산 (+100,+100), 지식 등록 (+100,+117), 지식 목록 첫·둘째 (+218,+77)·(+218,+94).
     $taskScript = @"
-click-center 82,114; assert battle; right-click 590,284; assert context:main; capture $OutputDirectory/22-workshop.png;
-click 690,401; assert context:knowledge; capture $OutputDirectory/23-available-before.png;
-click 808,361; assert battle; right-click 590,284; click 690,384; assert context:production;
+click-center 82,114; assert battle; right-click 530,250; assert context:main; capture $OutputDirectory/22-workshop.png;
+click 630,367; assert context:knowledge; capture $OutputDirectory/23-available-before.png;
+click 748,327; assert battle; right-click 530,250; click 630,350; assert context:production;
 capture $OutputDirectory/24-production-one.png; click 950,500; assert battle;
-right-click 590,284; click 690,401; assert context:knowledge; capture $OutputDirectory/25-available-after.png;
-click 808,378; assert battle; right-click 590,284; click 690,384; assert context:production;
+right-click 530,250; click 630,367; assert context:knowledge; capture $OutputDirectory/25-available-after.png;
+click 748,344; assert battle; right-click 530,250; click 630,350; assert context:production;
 capture $OutputDirectory/26-production-two.png; click 950,500; assert battle;
 capture $OutputDirectory/27-production-sidebar.png; right-click 40,275; assert context:main;
 capture $OutputDirectory/28-production-cost.png; quit;
 "@
-    $taskArguments = "--mission thewarbegins --language korean --no-sound --no-music --script `"construct sunFactory 98,98; wait 25`" --ui-script-file $OutputDirectory/commands.txt"
+    $taskArguments = "--mission thewarbegins --language korean --no-sound --no-music --script `"construct sunFactory 98,98; wait 60`" --ui-script-file $OutputDirectory/commands.txt"
 }
 $taskFile = Join-Path $taskOutput 'commands.txt'
 Set-Content -LiteralPath $taskFile -Encoding UTF8 -Value $taskScript

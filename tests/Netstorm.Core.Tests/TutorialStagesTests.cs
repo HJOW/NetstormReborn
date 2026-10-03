@@ -35,14 +35,14 @@ public sealed class TutorialStagesTests
         session.RunTicks(1);
     }
 
-    /// <summary>템플을 짓고 완공 틱까지 진행한다 (완공 틱에 단계가 넘어가므로 그 틱에서 멈춘다)</summary>
+    /// <summary>템플을 짓고 완공 틱까지 진행한다 (사제가 걸어가 도착한 뒤 건설하며, 완공 틱에 단계가 넘어가므로 그 틱에서 멈춘다)</summary>
     private static GameEntity BuildTemple(BattleSession session)
     {
         (int x, int y) = SessionData.FindCell((cx, cy) => session.CheckBuilding(1, "windVortex", cx, cy).Allowed);
         session.Submit(new ConstructBuildingCommand(1, "windVortex", x, y));
         session.RunTicks(1);
         GameEntity temple = session.Entities.Single(e => e.Kind == ObjectKind.Temple);
-        session.RunTicks((int)(temple.CompleteTick - session.Tick));
+        SessionData.RunUntilComplete(session, temple);
         return temple;
     }
 
@@ -53,7 +53,7 @@ public sealed class TutorialStagesTests
         session.Submit(new ConstructBuildingCommand(1, "sunFactory", x, y));
         session.RunTicks(1);
         GameEntity workshop = session.Entities.Single(e => e.Kind == ObjectKind.Workshop);
-        session.RunTicks((int)(workshop.CompleteTick - session.Tick));
+        SessionData.RunUntilComplete(session, workshop);
         return workshop;
     }
 

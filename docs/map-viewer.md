@@ -142,7 +142,7 @@ dotnet run --project src/Netstorm.Game -- --mission tutorial2 --window 1024x768 
 
 단계 처리로 A→G까지 걷는 확인(2026-09-30, Linux): 템플 완공 → `TutorialTell B.` → 워크샵 완공 → `C.` → 템플을 2초 선택 → `NotVortex` → 등록 → `D.` → 첫 배치 `E.` → 둘째 `F.` → 템플 4초 선택 → `G.`.
 단계 H 전에는 회수가 `회수 금지 상태`로 거부된다. 스크립트: `construct windVortex 40,32; wait 17; construct sunFactory 52,32; wait 11; select 40,32; wait 2.5; register sunArcher; place sunArcher 43,32; wait 2; place sunArcher 38,35; wait 2; select 40,32; wait 4.5; place sunArcher 41,36; wait 1; salvage 41,36`.
-좌표는 첫 번째로 유효한 칸이라 섬 가장자리에 붙는다. 건설 시간(템플 16초·워크샵 10초)은 관찰값(사제 이동 포함)을 그대로 쓴 임시 값이다([ConstructionTimes](../src/Netstorm.Core/Simulation/ConstructionTimes.cs)).
+좌표는 첫 번째로 유효한 칸이라 섬 가장자리에 붙는다. 건설 시간은 사제가 도착한 뒤 10초(워크샵 관찰값)다([ConstructionTimes](../src/Netstorm.Core/Simulation/ConstructionTimes.cs)). 생산 규칙을 끈 배치 시험 모드는 사제 없이 곧바로 짓고, 규칙이 켜진 미션은 사제가 걸어가 도착해야 건설이 시작된다([건설 흐름](gameplay/priest-construction-flow.md)).
 
 ## 배치 시험 모드
 
@@ -152,7 +152,7 @@ dotnet run --project src/Netstorm.Game -- --mission tutorial2 --window 1024x768 
 |---|---|
 | `[` / `]` | 타입 선택 (유닛 27종 → 건물: 템플·워크샵·알타·아웃포스트, 원소·레벨 순) |
 | 커서 | 커서 칸을 기준점(발자국 오른쪽 아래 칸)으로 판정 |
-| 좌클릭 | 판정이 통과하면 명령을 넣는다 — 유닛은 배치(자리 점유, Storm Power 차감, Generator 는 공급원), 건물은 건설 시작(건설 시간 뒤 완성: 템플이면 섬 소유·다리 공급, 워크샵이면 등록 가능) |
+| 좌클릭 | 판정이 통과하면 명령을 넣는다 — 유닛은 배치(자리 점유, Storm Power 차감, Generator 는 공급원), 건물은 건설 명령(비용 차감·공사장, 사제 도착 후 건설 시간 뒤 완성: 템플이면 섬 소유·다리 공급, 워크샵이면 등록 가능) |
 | `F` | 고른 유닛을 받을 수 있는 첫 워크샵에 지식으로 등록 ("Put Knowledge into Production") |
 | `Delete` | 커서 칸의 내 오브젝트 회수 (비용의 25%) |
 | `C` | 빈 섬이 내 섬과 다리로 연결되었다고 강제로 가정 (다리 연결 판정을 건너뛰고 싶을 때) |

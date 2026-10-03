@@ -1,6 +1,6 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
-> 최종 갱신: 2026-10-04 (공통 메뉴 버튼 동작을 원본 자동 분석으로 측정해 클론에 반영: 누르는 순간 소리·눌린 모양, 안쪽에서 뗄 때 실행, 호버·키보드 없음. 이전 작업 이력 보존)
+> 최종 갱신: 2026-10-04 (사제 건물 건설 흐름 수정: 이미 템플이 있으면 Temple 줄 어둡게, 설치 때 비용 차감·사제가 걸어가 도착해야 건설 시작·도착 전 중단은 환불. 이전 작업 이력 보존)
 > 프로젝트 목표(AGENTS.md): 원본 NetStorm: Islands at War 를 디컴파일/분석하여 클론 코딩하고,
 > **Windows 10/11** 과 **GUI 환경의 Linux** 에서 동작하며 **여러 언어를 지원**하는 게임을 만든다.
 > **모방 범위(2026-10-03 AGENTS.md 변경)**: 기존 게임의 **사운드·그래픽·애니메이션 등 거의 모든 요소를 가능한 한 동일하게** 최대한 모방한다.
@@ -9,6 +9,16 @@
 > **화면 요구사항(2026-09-28 AGENTS.md 추가, 2026-10-03 변경)**: 풀스크린 모드와 화면비 **16:9 · 16:10 · 4:3** 지원, **30·60·120프레임 지원**(30프레임 먼저, 60·120은 후순위), 풀스크린에서 **마우스를 화면 끝에 대면 화면 이동**(원본도 옵션에서 켰을 때 지원), 원본의 **전체화면 전환 뒤 재실행 오류는 클론에서 발생하지 않아야 한다** — 1.4·1.7절
 
 ---
+
+## 2026-10-04 (Windows 10, 원본 실행 없음 — 기존 분석 문서·웹 팬게임 대조) ✅ 완료: 사제 건물 건설 흐름(Construct 메뉴·걸어가서 건설)
+
+- [x] **문제:** ① 이미 템플이 있어도 사제 우클릭 → Construct 메뉴의 Temple 줄이 활성이었다. ② 먼 자리에 워크샵을 설치해도 사제가 걷지 않았는데 명령 즉시 건설이 시작됐다.
+- [x] **근거:** 원본 자동 분석 [auto-war-begins-20261003.md 4.5절](docs/videos/auto-war-begins-20261003.md)(Temple 어둡게 · Sun 외 워크샵 어둡게 · 설치 클릭에서 800 차감과 공사장 그림자 · 사제가 걸어가 도착 후 약 10~11초 건설)와 웹 팬게임 `battle-*.js`(`kS` placeBuilding → `Fo` 경로 → `Ro` 공사장 → 도착 시 `Lo` 시작, 사제의 모든 새 명령 `Io` = 도착 전 공사장 환불 취소, 템플 `ql`·알타 `wr`·워크샵 지식 `fo`). 상세 표: [건설 흐름](docs/gameplay/priest-construction-flow.md).
+- [x] **구현(코어):** 새 `BattleSession.Construction.cs`. 설치 때 비용 차감·공사장(`GameEntity.AwaitingBuilder`/`BuilderId`) → 사제가 `UnitMovePurpose.ConstructBuilding`으로 걸어가 도착하면 `BuildingStarted`·10초 건설. 도착 전 사제가 다른 명령을 받거나 기절·포획·사망하면 `ConstructionCancelled`와 함께 전액 환불. 길 없는 섬은 `NoRoute`. 템플·알타 플레이어당 1기(건설 중 포함), `GetBuildingRestriction`(템플·알타·기술·워크샵 지식). `ConstructionTimes`는 도착 뒤 10초 단일 값으로 바꿨고(템플 16초·알타 14.5초는 걷기가 섞인 값이었다), AI도 같은 경로를 쓴다. 검사합에 `AwaitingBuilder`·`BuilderId` 추가. 걷는 도중 지시하면 걸음을 이어 받도록 `PlanPath`를 이동 명령과 공용화했다.
+- [x] **구현(화면):** Construct 하위 창의 Temple 줄·기술/지식/SP가 안 되는 건물 줄을 어둡게 하고 누르지 못하게 함, 메뉴를 연 사제가 짓도록 전달, 사제가 못 가는 자리는 붉은 미리보기, 사제를 기다리는 공사장은 어두운 반투명 실루엣(도착 뒤 반투명+진행 막대), 건설 소리는 도착 뒤에만. UI 검사 상세에 `sites=`·`sp=` 추가.
+- [x] **검증:** Release 빌드 오류 0·경고 1(기존 CA2014). 단위 테스트 Assets **255** + Core **493**(기존 479 + 새 `ConstructionTests` 14, 기존 즉시 건설 가정 테스트 보정) 통과. 기존 스모크 `clone_ui`·`clone_move`·`clone_test01`(4개 화면 구성)·`clone_combat`·`clone_recordplay_details`도 통과. 새 `tools/clone_construct_smoke.ps1`(menu 10 + build 17 단언) 통과: 1-1에서 Temple 줄·Rain/Wind/Thunder 워크샵 줄이 눌리지 않고, 사제에서 약 23칸 떨어진 자리의 워크샵이 SP −800 → `waiting` → 사제 이동 → 건설 → 완공. 기존 `clone_help_options_smoke`(Mission·Workshop)는 사제가 완공된 워크샵 옆에 서 있게 되어 우클릭 좌표(530,250)와 대기(60초)를 고쳐 통과했다. 화면 PNG는 Git 제외 `extracted/screens/construct-smoke-20261004/`.
+- **확인하지 못한 것/가정(후속):** ① 공사장 그림자의 실제 그림(어두운 실루엣+나무 윤곽)과 건물이 바닥부터 차오르는 건설 연출, 도착 때 소리·사제 동작 ② 건설이 시작된 뒤 사제를 보내면 건설이 계속되는지, 도착 전 새 명령이 환불 취소하는지(둘 다 팬게임 기준, 원본 미확인) ③ 알타 플레이어당 1기와 SP 부족 시 줄 어둡게(팬게임 규칙) ④ `constructionRate`의 실제 시간 계산식(exe 미분석, 모든 건물 10초로 단순화) ⑤ 템플·알타를 가까운 자리에서 직접 잰 건설 시간 ⑥ 사제의 선택·건설 중 명령 가능 여부 ⑦ 사제가 건물·다른 유닛을 가로지르는 문제(기존 이동 구현 한계).
+- **재현:** `powershell -File tools/clone_construct_smoke.ps1`, `dotnet test tests/Netstorm.Core.Tests --filter ConstructionTests` (원본·AGENTS.md는 수정하지 않았고 커밋은 하지 않았다).
 
 ## 2026-10-04 (`HJOW-Athlon`, Windows 10, 원본 자동 분석 실행 있음) ✅ 완료: 공통 메뉴 버튼 동작
 
@@ -874,7 +884,7 @@
 - **튜토리얼 1 A~G 단계 추가**: F4 또는 첫 다리 → 다리 8·19칸 → 가이저 연결 → 200·600 SP. 원본 `FUN_004c3a20`의 경계값과 exe 상수 `0x510298 = 200.0f`, `0x514c34 = 600.0f`를 확인했다. `bridgethegap.fort`에는 가이저가 없고 원본은 `FUN_00486440`/`00486360`으로 동적 생성하므로, 현재는 동쪽에 연결 가능한 5×5 연습 받침·3×3 가이저를 결정적 위치에 만든다. 뷰어 F4와 `home` 스크립트도 연결했다.
 - **후보 3 사제 이동·건설 분석 완료 범위**: `priest.type`의 `speed = 1.8`은 타입 구조체 `+0xe0`에 파싱된다. 사용자 지적대로 Golem 2.0, Balloon 1.9, Sail Skater 3.4, Crystal Crab 2.4 등 **유닛마다 속도가 다르다**. 공통 `MovementRate`가 각 타입의 값을 읽고 사제 수집 이동에 사용한다. `Construction.cpp` `00442c80` → `00442b50`에서 타입 비용을 배치 처리 중 차감함을 확인했다. `constructionRate`는 구조체 `+0x50`에 파싱되고 생략 시 기본값 **10.0**이 채워진다. 실제 소비·시간 계산식은 미확인이라 기존 관찰 기반 건설 시간(템플 16초, 워크샵 10초)을 유지했다. [상세 분석](docs/exe/priest-construction.md).
 - **검증**: `dotnet test Netstorm.sln -c Release --no-restore` 성공 — Assets **175**, Core **138**, 실패 0. 연습 가이저 연결 전 수확 거부, 다리 연결 후 3회 운반 = 600 SP, 튜토리얼 1 완료, 유닛별 속도 테스트를 포함한다. 원본 게임과 뷰어 화면은 실행하지 않아 시각 배치·입력을 화면에서 확인하지 않았다.
-- **남은 일**: (1) 원본 `speed` 값의 실제 칸/초 변환, 곡선 경로·충돌·다른 이동형 유닛 명령 구현; (2) `constructionRate` 소비 경로·사제의 건설 현장 이동·중단/환불 규칙을 찾아 현재 고정 시간을 교체; (3) 튜토리얼 1 가이저의 실제 생성 위치와 다리 **누적 제작 수** 판정 복원(클론은 현재 살아 있는 다리 칸 수); (4) 생성 가이저 받침과 안내 창 흐름의 실제 GUI 확인. 실행 확인 규칙은 AGENTS.md의 해당 시스템 예외를 따른다.
+- **남은 일**: (1) 원본 `speed` 값의 실제 칸/초 변환, 곡선 경로·충돌·다른 이동형 유닛 명령 구현; (2) `constructionRate` 소비 경로·사제의 건설 현장 이동·중단/환불 규칙을 찾아 현재 고정 시간을 교체 **(→ 2026-10-04: 건설 현장 이동·도착 후 건설·환불은 원본 관찰·팬게임 기준으로 구현, `constructionRate` 식·exe 정적 확인은 남음)**; (3) 튜토리얼 1 가이저의 실제 생성 위치와 다리 **누적 제작 수** 판정 복원(클론은 현재 살아 있는 다리 칸 수); (4) 생성 가이저 받침과 안내 창 흐름의 실제 GUI 확인. 실행 확인 규칙은 AGENTS.md의 해당 시스템 예외를 따른다.
 - 변경 파일: `src/Netstorm.Core/Simulation/{BattleSession.Harvest,MovementRate,TutorialGeysers}` 및 세션·명령·이벤트·단계·팩토리, `Bridges/BridgeGrid.cs`, `src/Netstorm.Game/FortMapViewer*`, `tests/Netstorm.Core.Tests/{HarvestEconomyTests,TutorialStagesTests}.cs`, `docs/{core-rules,map-viewer}.md`, [분석 문서](docs/exe/priest-construction.md), 이 문서.
 
 ## 0-A. 최신 인수인계 — AI용 원본 분석 도구 (2026-09-29)

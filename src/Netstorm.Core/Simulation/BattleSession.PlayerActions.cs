@@ -27,6 +27,39 @@ public sealed partial class BattleSession
         return CommandResult.Ok();
     }
 
+    /// <summary>
+    /// 목표 발자국까지의 길을 정한다. 걷는 도중이면 진행 중인 걸음을 마저 걷고(칸 사이에서 뒤로 튀지 않게) 그 다음 칸에서 새 경로를 잇는다.
+    /// 다음 칸에서 길이 없으면 현재 칸에서 다시 찾는다. 길이 없으면 null.
+    /// </summary>
+    /// <param name="entity">움직일 오브젝트</param>
+    /// <param name="goal">목표 발자국</param>
+    /// <param name="exact">목표 칸 자체까지(true) 또는 목표 둘레까지(false)</param>
+    /// <param name="carried">새 작업이 이어받을 걸음 진행량 (이어 걷지 않으면 0)</param>
+    private List<(int X, int Y)>? PlanPath(GameEntity entity, Footprint goal, bool exact, out double carried)
+    {
+        MovementRoute? current = RouteOf(entity.Id);
+        (int X, int Y)? stepEnd = null;
+        carried = 0;
+        if (current is { IsBlocked: false, Progress: > 0 } && current.NextIndex < current.Path.Count
+            && current.Path[current.NextIndex - 1] == (entity.Footprint.AnchorX, entity.Footprint.AnchorY))
+        {
+            stepEnd = current.Path[current.NextIndex];
+            carried = current.Progress;
+        }
+        List<(int X, int Y)>? path = stepEnd is { } next
+            ? FindMovePath(entity, goal, exact, new Footprint(next.X, next.Y, 1, 1))
+            : FindMovePath(entity, goal, exact);
+        // 다음 칸에서 길이 없으면 현재 칸에서 다시 찾아 본다.
+        if (path == null && stepEnd != null)
+        {
+            stepEnd = null;
+            carried = 0;
+            path = FindMovePath(entity, goal, exact);
+        }
+        if (path != null && stepEnd != null) path.Insert(0, (entity.Footprint.AnchorX, entity.Footprint.AnchorY));
+        return path;
+    }
+
     /// <summary>선택한 이동체를 목표 칸으로 보낸다. 실패하면 기존 작업을 유지한다.</summary>
     private CommandResult ExecuteMoveEntity(MoveEntityCommand command)
     {
@@ -35,29 +68,9 @@ public sealed partial class BattleSession
         var goal = new Footprint(command.X, command.Y, 1, 1);
         if (command.X < 0 || command.Y < 0 || command.X >= BridgeGrid.WorldSize || command.Y >= BridgeGrid.WorldSize)
             return new CommandResult(CommandFailure.NoRoute);
-        // 걷는 도중이면 진행 중인 걸음을 마저 걷고(칸 사이에서 뒤로 튀지 않게) 그 다음 칸에서 새 경로를 잇는다.
-        MovementRoute? current = RouteOf(entity!.Id);
-        (int X, int Y)? stepEnd = null;
-        double carried = 0;
-        if (current is { IsBlocked: false, Progress: > 0 } && current.NextIndex < current.Path.Count
-            && current.Path[current.NextIndex - 1] == (entity.Footprint.AnchorX, entity.Footprint.AnchorY))
-        {
-            stepEnd = current.Path[current.NextIndex];
-            carried = current.Progress;
-        }
-        List<(int X, int Y)>? path = stepEnd is { } next
-            ? FindMovePath(entity, goal, exact: true, from: new Footprint(next.X, next.Y, 1, 1))
-            : FindMovePath(entity, goal, exact: true);
-        // 다음 칸에서 길이 없으면 현재 칸에서 다시 찾아 본다.
-        if (path == null && stepEnd != null)
-        {
-            stepEnd = null;
-            carried = 0;
-            path = FindMovePath(entity, goal, exact: true);
-        }
+        List<(int X, int Y)>? path = PlanPath(entity!, goal, exact: true, out double carried);
         if (path == null) return new CommandResult(CommandFailure.NoRoute);
-        if (stepEnd != null) path.Insert(0, (entity.Footprint.AnchorX, entity.Footprint.AnchorY));
-        _harvestTasks.Remove(entity.Id);
+        _harvestTasks.Remove(entity!.Id);
         _moveTasks[entity.Id] = new UnitMoveTask(entity.Id, UnitMovePurpose.MoveToCell, 0, 0, path, Bridges.Version, goal) { Progress = carried };
         return CommandResult.Ok();
     }

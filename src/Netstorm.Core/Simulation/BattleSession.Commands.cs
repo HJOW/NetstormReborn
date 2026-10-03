@@ -100,15 +100,17 @@ public sealed partial class BattleSession
     }
 
     /// <summary>
-    /// 건물(템플·워크샵·알타·아웃포스트)을 지을 수 있는지 판정한다: 기술 허용 표 → 위치 → 자리 → Storm Power → 에너지 순서다.
+    /// 건물(템플·워크샵·알타·아웃포스트)을 지을 수 있는지 판정한다: 기술 허용 표 → 위치(템플·알타 플레이어당 1기 포함) → 자리 →
+    /// Storm Power → 에너지 → (사제를 지정했으면) 사제가 그 자리까지 걸어갈 수 있는지 순서다.
     /// 원본은 허용되지 않은 타입을 사제의 Construct 메뉴에서 아예 빼 버린다 (FUN_00461cf0).
-    /// 사제의 이동·도달 거리와 건설 자리에 사제가 서 있어야 하는지는 확인하지 못해 판정하지 않는다.
+    /// 사제는 설치 뒤 현장까지 걸어가야 건설을 시작하므로 길이 없는 섬의 자리는 지을 수 없다 (웹 팬게임의 builderCannotReach).
     /// </summary>
     /// <param name="player">플레이어</param>
     /// <param name="typeName">건물 타입 이름</param>
     /// <param name="x">기준점 칸 x</param>
     /// <param name="y">기준점 칸 y</param>
-    public SessionPlacementCheck CheckBuilding(int player, string typeName, int x, int y)
+    /// <param name="builderId">건설을 맡을 사제 번호. 0 이면 사제의 도달을 따지지 않는다 (규칙이 꺼진 개발용 세션은 번호와 상관없이 따지지 않는다)</param>
+    public SessionPlacementCheck CheckBuilding(int player, string typeName, int x, int y, int builderId = 0)
     {
         if (!_players.TryGetValue(player, out PlayerState? state))
         {
@@ -123,14 +125,24 @@ public sealed partial class BattleSession
         {
             return new SessionPlacementCheck(CommandFailure.WrongKind, null);
         }
-        // 건설 중인 템플도 "이미 템플이 있음"으로 센다 (플레이어당 동시에 1기)
-        bool hasTemple = _entities.Values.Any(e => e.Owner == player && e.Kind == ObjectKind.Temple);
-        PlacementCheck site = Map.CheckBuilding(type, x, y, player, state.StormPower, hasTemple);
+        // 건설 중이거나 사제를 기다리는 템플·알타도 "이미 있음"으로 센다 (플레이어당 동시에 1기)
+        PlacementCheck site = Map.CheckBuilding(type, x, y, player, state.StormPower,
+            HasBuilding(player, ObjectKind.Temple), HasBuilding(player, ObjectKind.Altar));
         if (EnforceProductionRules && !state.Tech.IsAllowed(type.Name))
         {
             return new SessionPlacementCheck(CommandFailure.TechDenied, site);
         }
-        return new SessionPlacementCheck(site.Allowed ? CommandFailure.None : CommandFailure.Placement, site);
+        if (!site.Allowed)
+        {
+            return new SessionPlacementCheck(CommandFailure.Placement, site);
+        }
+        // 맡을 사제가 있어야 하고 그 자리 둘레까지 걸어갈 수 있어야 한다
+        if (EnforceProductionRules && builderId != 0)
+        {
+            if (ResolveBuilder(player, builderId) is not { } builder) return new SessionPlacementCheck(CommandFailure.NoPriest, site);
+            if (!CanBuilderReach(builder, site.Footprint)) return new SessionPlacementCheck(CommandFailure.NoRoute, site);
+        }
+        return new SessionPlacementCheck(CommandFailure.None, site);
     }
 
     /// <summary>다리 조각을 (originX, originY) 왼쪽 위 칸에 놓을 수 있는지 판정한다.</summary>
@@ -154,11 +166,19 @@ public sealed partial class BattleSession
         return (ready - Tick) / (double)TicksPerSecond;
     }
 
-    /// <summary>건설 진행률 (0~1). 완성된 오브젝트는 1.</summary>
+    /// <summary>건설 진행률 (0~1). 완성된 오브젝트는 1, 사제가 아직 도착하지 않은 공사장은 0.</summary>
     /// <param name="entity">오브젝트</param>
     public double ConstructionProgress(GameEntity entity)
     {
-        if (entity.IsComplete || entity.CompleteTick <= entity.StartTick)
+        if (entity.IsComplete)
+        {
+            return 1;
+        }
+        if (entity.AwaitingBuilder)
+        {
+            return 0;
+        }
+        if (entity.CompleteTick <= entity.StartTick)
         {
             return 1;
         }
@@ -222,33 +242,6 @@ public sealed partial class BattleSession
             player.UnitReadyTick[type.Name] = Tick + TicksFor(interval);
         }
         Emit(SessionEventKind.UnitPlaced, command.Player, id, $"{entity.DisplayName} 배치 (−{site.Cost})");
-        return CommandResult.Ok();
-    }
-
-    /// <summary>건물 건설 시작: 판정 → Storm Power 차감 → 자리 점유 → 건설 시간 뒤 완성 (완성 때 규칙 효과).</summary>
-    private CommandResult ExecuteConstruct(ConstructBuildingCommand command)
-    {
-        if (EnforceProductionRules && OwnFreePriest(command.Player) == null) return new CommandResult(CommandFailure.NoPriest);
-        SessionPlacementCheck check = CheckBuilding(command.Player, command.TypeName, command.X, command.Y);
-        if (!check.Allowed)
-        {
-            return Reject(check);
-        }
-        PlayerState player = _players[command.Player];
-        TypeInfo type = _types.Find(command.TypeName)!;
-        PlacementCheck site = check.Site!;
-        ObjectKind kind = ObjectKinds.Of(type);
-        int id = Map.NextId();
-        Map.AddOccupant(site.Footprint);
-        player.StormPower -= site.Cost;
-        var entity = new GameEntity(id, type, kind, command.Player, site.Footprint, Map.TerritoryAt(command.X, command.Y), null)
-        {
-            IsComplete = false,
-            StartTick = Tick,
-            CompleteTick = Tick + TicksFor(ConstructionTimes.Seconds(kind)),
-        };
-        _entities.Add(id, entity);
-        Emit(SessionEventKind.BuildingStarted, command.Player, id, $"{entity.DisplayName} 건설 시작 (−{site.Cost})");
         return CommandResult.Ok();
     }
 

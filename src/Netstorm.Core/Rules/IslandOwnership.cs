@@ -34,6 +34,9 @@ public enum PlacementProblem
     /// <summary>템플은 플레이어당 동시에 1기</summary>
     TempleAlreadyExists,
 
+    /// <summary>알타는 플레이어당 동시에 1기 (웹 팬게임 규칙. 의식으로 소멸하면 다시 지을 수 있다)</summary>
+    AltarAlreadyExists,
+
     /// <summary>섬 위가 아니고 내 다리 끝도 아니다</summary>
     NotOnIslandOrBridgeEnd,
 
@@ -118,7 +121,8 @@ public static class PlacementRules
     /// <param name="kind">건물 종류</param>
     /// <param name="island">배치 위치의 섬 상태</param>
     /// <param name="playerHasTemple">플레이어에게 이미 템플이 있는지</param>
-    public static PlacementProblem CheckBuildingSite(ObjectKind kind, IslandState island, bool playerHasTemple)
+    /// <param name="playerHasAltar">플레이어에게 이미 알타가 있는지 (건설 중 포함)</param>
+    public static PlacementProblem CheckBuildingSite(ObjectKind kind, IslandState island, bool playerHasTemple, bool playerHasAltar = false)
     {
         if (island == IslandState.NoIsland) return PlacementProblem.BuildingNeedsIsland;
         if (island == IslandState.Others) return PlacementProblem.OthersIsland;
@@ -127,6 +131,7 @@ public static class PlacementRules
             if (playerHasTemple) return PlacementProblem.TempleAlreadyExists;
             if (island != IslandState.Empty) return PlacementProblem.TempleNeedsEmptyIsland;
         }
+        if (kind == ObjectKind.Altar && playerHasAltar) return PlacementProblem.AltarAlreadyExists;
         return PlacementProblem.None;
     }
 
@@ -139,6 +144,7 @@ public static class PlacementRules
         PlacementProblem.NotConnected => "빈 섬이 내 섬과 다리로 연결되지 않음",
         PlacementProblem.TempleNeedsEmptyIsland => "템플은 빈 섬에만 지을 수 있음",
         PlacementProblem.TempleAlreadyExists => "템플은 플레이어당 1기",
+        PlacementProblem.AltarAlreadyExists => "알타는 플레이어당 1기",
         PlacementProblem.NotOnIslandOrBridgeEnd => "섬 위나 내 다리 끝이 아님",
         PlacementProblem.BuildingNeedsIsland => "건물은 섬 위에만 지을 수 있음",
         PlacementProblem.Occupied => "자리가 비어 있지 않음",

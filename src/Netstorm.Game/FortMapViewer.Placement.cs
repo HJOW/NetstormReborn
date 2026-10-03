@@ -21,6 +21,15 @@ internal sealed partial class FortMapViewer
     /// <summary>건설 중인 건물을 반투명하게 그리는 불투명도</summary>
     private const float UnderConstructionAlpha = 0.5f;
 
+    /// <summary>
+    /// 사제가 아직 도착하지 않은 공사장의 불투명도. 원본은 설치 직후 어두운 실루엣의 "공사장 그림자"만 놓고
+    /// 사제가 도착하면 건물이 바닥부터 차오른다 (2026-10-03 원본 자동 분석, docs/videos/auto-war-begins-20261003.md 4.5절).
+    /// </summary>
+    private const float SiteShadowAlpha = 0.4f;
+
+    /// <summary>사제를 기다리는 공사장 실루엣의 어두운 색조</summary>
+    private static readonly Color SiteShadowTint = new(30, 30, 40);
+
     /// <summary>건설 진행 막대의 화면 폭(논리 픽셀, 확대 배율 1 기준)</summary>
     private const int ProgressBarWidth = 48;
 
@@ -52,6 +61,12 @@ internal sealed partial class FortMapViewer
 
     /// <summary>선택한 후보 번호</summary>
     private int _candidateIndex;
+
+    /// <summary>
+    /// 건물 설치를 맡길 사제 번호: 사제 우클릭 Construct 메뉴에서 고른 사제다. 0 이면 세션이 첫 자유 사제를 고른다.
+    /// 설치 위치가 이 사제가 걸어갈 수 있는 곳인지도 이 사제 기준으로 판정한다.
+    /// </summary>
+    private int _buildingPriestId;
 
     /// <summary>들고 있는 아이스·썬더 캐논의 방위. 우클릭마다 시계 방향으로 한 번 돌린다.</summary>
     private int _cannonRotation;
@@ -116,7 +131,7 @@ internal sealed partial class FortMapViewer
 
     /// <summary>타입에 맞는 세션 판정을 한다 (건물 = 사제 Construct, 유닛 = 생산 창 배치).</summary>
     private SessionPlacementCheck Check(TypeInfo type, int x, int y) => IsBuilding(type)
-        ? _session.CheckBuilding(TestPlayer, type.Name, x, y)
+        ? _session.CheckBuilding(TestPlayer, type.Name, x, y, _buildingPriestId)
         : _session.CheckUnit(TestPlayer, type.Name, x, y);
 
     /// <summary>
@@ -180,7 +195,7 @@ internal sealed partial class FortMapViewer
             if (_lastCheck.Allowed)
             {
                 SubmitCommand(IsBuilding(type)
-                    ? new ConstructBuildingCommand(TestPlayer, type.Name, cellX, cellY)
+                    ? new ConstructBuildingCommand(TestPlayer, type.Name, cellX, cellY, _buildingPriestId)
                     : new PlaceUnitCommand(TestPlayer, type.Name, cellX, cellY, _cannonRotation));
                 // 원본은 유닛을 놓거나 건물 설치를 확정하면 들고 있던 커서가 풀려 다음 클릭은 선택이다
                 // (2026-10-03 자동 분석 녹화: 골렘을 놓은 6초 뒤의 좌클릭이 골렘 선택이었다). 다시 놓으려면 생산 창이나 D 키로 다시 집는다.
@@ -280,9 +295,11 @@ internal sealed partial class FortMapViewer
             }
             // 저장된 오브젝트와 같은 규칙으로 그림을 고른다 (걷는 유닛의 방향·걷기 프레임, 워크샵 레벨, 신전 회오리, 그림자).
             (TypeInfo drawn, StructureFrames frames, Vector2 shift) = ObjectSprite(entity.Type, entity, null);
-            DrawObjectSprite(batch, drawn, frames, anchor + shift * _zoom, entity.IsComplete ? 1f : UnderConstructionAlpha,
-                _playerColors.GetValueOrDefault(entity.Owner));
-            if (!entity.IsComplete)
+            // 사제가 오는 중인 공사장은 어두운 그림자로, 건설이 시작된 건물은 반투명 + 진행 막대로 그린다.
+            DrawObjectSprite(batch, drawn, frames, anchor + shift * _zoom,
+                entity.IsComplete ? 1f : entity.AwaitingBuilder ? SiteShadowAlpha : UnderConstructionAlpha,
+                _playerColors.GetValueOrDefault(entity.Owner), entity.AwaitingBuilder ? SiteShadowTint : null);
+            if (!entity.IsComplete && !entity.AwaitingBuilder)
             {
                 DrawProgressBar(batch, anchor, _session.ConstructionProgress(entity));
             }
@@ -370,7 +387,7 @@ internal sealed partial class FortMapViewer
         if (IsBuilding(type))
         {
             head = $"건설 시험 [{_candidateIndex + 1}/{_candidates.Length}] {description} ({type.Name}) | 비용 {StormPower.TypeCost(type.Definition)} " +
-                $"| 건설 {ConstructionTimes.Seconds(ObjectKinds.Of(type)):0}초 | 필요 에너지: {requirement.Describe()}";
+                $"| 건설 {ConstructionTimes.BuildingSeconds:0}초(사제 도착 뒤) | 필요 에너지: {requirement.Describe()}";
         }
         else
         {

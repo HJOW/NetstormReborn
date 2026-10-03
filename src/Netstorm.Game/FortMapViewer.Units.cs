@@ -35,6 +35,7 @@ internal sealed partial class FortMapViewer
     /// 자동 입력 검사가 확인할 선택·이동형 유닛 상태. 예: <c>selected=priest;units=priest:C:moving,sunwalker:-:idle</c>
     /// (유닛마다 타입 이름:바라보는 방향 글자(움직인 적이 없으면 -):moving/idle, 내 유닛만). rotation은 들고 있는 캐논 방위다.
     /// sunposes·crossbowposes는 포대의 실제 그림 번호이며 shots·impacts는 탄·효과의 진단 개수다.
+    /// sites는 아직 완공되지 않은 내 건물(타입 이름:waiting=사제가 오는 중/building=건설 중)이고 sp는 내 Storm Power다.
     /// </summary>
     public string UiDetail => $"selected={_session.Entity(_session.Player(TestPlayer).SelectedEntityId)?.Type.Name.ToLowerInvariant() ?? "none"};units="
         + string.Join(',', _session.Entities.Where(e => IsMobile(e) && e.Owner == TestPlayer).Select(e =>
@@ -46,7 +47,10 @@ internal sealed partial class FortMapViewer
         + $";cursor={(_placementMode ? _candidates[_candidateIndex].Name.ToLowerInvariant() : "none")};range={RangeDetail}"
         + ";sunposes=" + string.Join(',', _session.Entities.Where(e => e.Type.Name.Equals("sunCannon", StringComparison.OrdinalIgnoreCase)).Select(e => e.SunCannonFrame))
         + ";crossbowposes=" + string.Join(',', _session.Entities.Where(e => e.Type.Name.Equals("windArcher", StringComparison.OrdinalIgnoreCase)).Select(e => e.CrossbowFrame))
-        + $";shots={_session.Shots.Count};impacts={_session.Impacts.Count}";
+        + $";shots={_session.Shots.Count};impacts={_session.Impacts.Count}"
+        + ";sites=" + string.Join(',', _session.Entities.Where(e => e.Owner == TestPlayer && !e.IsComplete)
+            .Select(e => $"{e.Type.Name.ToLowerInvariant()}:{(e.AwaitingBuilder ? "waiting" : "building")}"))
+        + $";sp={_session.Player(TestPlayer).StormPower}";
 
     /// <summary>걷기 그림 시계(초). 게임 시간이 흐르는 동안에만 진행해 일시정지 중에는 걷는 자세가 멈춘다.</summary>
     private double _walkClock;

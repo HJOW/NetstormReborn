@@ -69,7 +69,9 @@ internal sealed partial class FortMapViewer
     /// 생산 창 유닛이나 사제 Construct 의 건물을 배치 커서로 집는다. 원본처럼 유닛은 워크샵에 등록되어 덱에 있어야 하며
     /// 덱에 없으면 등록하지 않고 알린다(이전 클론의 자동 등록은 원본과 달라 없앴다).
     /// </summary>
-    private void ChooseProduction(string name)
+    /// <param name="name">타입 이름</param>
+    /// <param name="builderId">건물을 맡을 사제 번호 (Construct 메뉴를 연 사제, 유닛이나 개발용 선택이면 0)</param>
+    private void ChooseProduction(string name, int builderId = 0)
     {
         TypeInfo type = _candidates.First(t => t.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
         if (!IsBuilding(type))
@@ -82,6 +84,7 @@ internal sealed partial class FortMapViewer
             _lastProductionType = name;
         }
         _bridgeMode = false;
+        _buildingPriestId = builderId;
         StartPlacement(name, null);
     }
 

@@ -37,11 +37,23 @@ public sealed class GameEntity
     /// <summary>건설이 끝났는지 (게임 중 놓은 유닛은 곧바로 완성, 사제가 짓는 건물은 건설 시간이 지나야 완성)</summary>
     public bool IsComplete { get; internal set; } = true;
 
-    /// <summary>건설이 끝나는 틱 (완성된 오브젝트는 0)</summary>
+    /// <summary>건설이 끝나는 틱 (완성된 오브젝트와 사제가 아직 도착하지 않은 공사장은 0)</summary>
     public long CompleteTick { get; internal set; }
 
-    /// <summary>건설이 시작된 틱 (건설 진행률 계산용, 처음부터 완성인 오브젝트는 0)</summary>
+    /// <summary>건설이 시작된 틱, 곧 사제가 현장에 도착한 틱 (건설 진행률 계산용, 처음부터 완성이거나 아직 시작 전이면 0)</summary>
     public long StartTick { get; internal set; }
+
+    /// <summary>
+    /// 건설을 맡은 사제 번호. 개발용으로 사제 없이 지은 건물과 처음부터 완성인 오브젝트는 0이다.
+    /// 건설이 시작된 뒤에는 사제가 떠나도 건설은 이어진다(웹 팬게임과 같은 가정, 원본 미확인).
+    /// </summary>
+    public int BuilderId { get; internal set; }
+
+    /// <summary>
+    /// 비용을 낸 공사장에 맡은 사제가 아직 도착하지 않아 건설 시간이 시작되지 않은 상태 (원본의 "공사장 그림자").
+    /// 사제가 도착하면 false 가 되며 그때부터 <see cref="CompleteTick"/> 이 정해진다. 도착 전에 사제가 중단되면 비용을 돌려받고 사라진다.
+    /// </summary>
+    public bool AwaitingBuilder { get; internal set; }
 
     /// <summary>타입의 최대 체력. 0이면 현재 전투 모델에서 피해 대상이 아니다.</summary>
     public double MaxHitPoints { get; }

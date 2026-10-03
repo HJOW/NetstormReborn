@@ -206,7 +206,13 @@ internal sealed partial class FortMapViewer
         if (_contextSubmenu == "construct")
         {
             childTitle = Ui("건물 건설", "Construct Building");
-            var rows = new List<ContextCommand> { new(Ui("템플", "Temple") + " >", () => OpenContextSubmenu("temples")), new(Ui("워크샵", "Workshop") + " >", () => OpenContextSubmenu("workshops")) };
+            // 템플은 플레이어당 1기라 이미 있거나 짓는 중이면 Temple 줄이 어둡다 (원본 1-1 관찰: Temple > 어둡게, Workshop > 활성)
+            bool templeAllowed = !_session.HasBuilding(TestPlayer, ObjectKind.Temple);
+            var rows = new List<ContextCommand>
+            {
+                new(Ui("템플", "Temple") + " >", () => OpenContextSubmenu("temples"), Enabled: templeAllowed),
+                new(Ui("워크샵", "Workshop") + " >", () => OpenContextSubmenu("workshops")),
+            };
             TypeInfo? altar = _candidates.FirstOrDefault(t => t.Name.Equals("altar", StringComparison.OrdinalIgnoreCase));
             string altarLevel = RomanLevel(altar?.Definition.GetInt("level") ?? 1);
             if (altar != null) rows.Add(Construct(altar, Ui($"제단 Level {altarLevel} 건설: ", $"Build Level {altarLevel} Altar for ")));
@@ -250,11 +256,17 @@ internal sealed partial class FortMapViewer
         // 원본처럼 하위 창은 부모 오른쪽에 겹쳐 열고, 화면 끝이면 왼쪽에 연다
         Point anchor = new(parent.Bounds.Right - 20, parent.Bounds.Y + 10);
         LayoutContextPanel(childTitle, childInfos, childGroups, anchor, width, height, parent.Bounds);
-        // 선택한 건물을 배치 커서로 전환하는 명령 줄 (이름 뒤에 비용과 Storm Power 아이콘)
+        // 선택한 건물을 배치 커서로 전환하는 명령 줄 (이름 뒤에 비용과 Storm Power 아이콘).
+        // 기술이 막혔거나 템플·알타가 이미 있거나 Storm Power 가 모자라면 줄을 어둡게 하고 고를 수 없게 한다 (원본: 지식 없는 워크샵 줄이 어둡다).
+        // 고른 건물은 이 메뉴를 연 사제가 짓는다.
         ContextCommand Construct(TypeInfo type, string prefix)
         {
             string name = type.Name;
-            return new ContextCommand(prefix + StormPower.TypeCost(type.Definition), () => { CloseContextMenu(); ChooseProduction(name); }, StormIcon: true);
+            int builderId = _contextEntity?.Id ?? 0;
+            int cost = StormPower.TypeCost(type.Definition);
+            bool available = _session.GetBuildingRestriction(TestPlayer, name) == BuildingRestriction.None
+                && cost <= _session.Player(TestPlayer).StormPower;
+            return new ContextCommand(prefix + cost, () => { CloseContextMenu(); ChooseProduction(name, builderId); }, StormIcon: true, Enabled: available);
         }
     }
 

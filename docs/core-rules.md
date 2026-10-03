@@ -45,7 +45,8 @@
 | `Simulation/GameEntity.cs`·`PlayerState.cs`·`SessionEvents.cs` | 오브젝트(.type 구동), 플레이어 상태(SP·덱·다리 칸·기술 표), 이벤트·실패 이유 | |
 | `Rules/KnowledgeCatalog.cs` | 지식 창 카드 행: SUN·WIND·RAIN·THUN. 행, `.type` group 순서, 골렘 제외, `.fort` Technology 지식(목록 플래그 4) | [show-technology.md](exe/show-technology.md), 2026-09-30 녹화 |
 | `Audio/MusicDirector.cs` | 배경음악 선택: 메뉴 ser22, 전투 원소 곡 순환(wind → rain → thunder → sun, 첫 곡 난수, 천둥 곡 thunderCrack), 내 희생 의식 음악과 곡 끝 복귀, 30초 이하 곡 180초 재확인, 결과 음악 잠금 | exe `FUN_00469fc0`·`00469f00`·`00469f60`·`00469db0`, [music.md](exe/music.md), 녹음 대조 |
-| `Simulation/ConstructionTimes.cs` | 사제 건물 건설 시간: 템플 16초·알타 14.5초·워크샵 10초(각 관찰값, 이동 포함), 그 밖 10초(임시) | 튜토리얼 2와 캠페인 1-5 영상 관찰 ([sacrifice.md](gameplay/sacrifice.md)) |
+| `Simulation/ConstructionTimes.cs` | 사제가 현장에 **도착한 뒤** 건물이 완성되기까지 10초(모든 건물 공통, `constructionRate` 10) | 2026-10-03 원본 자동 분석(워크샵 걷기 제외 10~11초), `.type constructionRate`, 웹 팬게임 ([건설 흐름](gameplay/priest-construction-flow.md)) |
+| `Simulation/BattleSession.Construction.cs` | 사제 건설 흐름: 설치 때 비용 차감·공사장 → 사제 이동 → 도착 때 건설 시작, 도착 전 중단 시 환불 취소, Construct 메뉴 제한(`GetBuildingRestriction`: 템플·알타 1기·기술·워크샵 지식) | [건설 흐름](gameplay/priest-construction-flow.md) |
 
 ## 발자국과 공급 범위 기하
 
@@ -60,18 +61,19 @@
 
 * **시간**: 24Hz 고정 틱(`FixedTimestep`). 화면은 `Advance(흐른 초)`를 부르고(밀린 시간은 한 번에 8틱까지만 따라잡는다), 테스트는 `RunTicks(n)`으로 정확히 진행한다.
   게임 시각 = 틱 ÷ 24. 다리 조각 채우기(1초)·붕괴(10초)·건설·재충전은 모두 틱으로 센다.
-* **틱 순서(고정)**: 명령 실행(넣은 순서) → 수집 → 수송·사제 이동 → 건설 완료 → 전투 → 제단 의식 → 튜토리얼 단계 → 플레이어 번호 순 다리 칸 채우기 → 다리 붕괴 → **지상 낙하·허공 사제 복귀** → 미션 승패 이벤트.
-* **명령** (`Submit`): `PlaceUnitCommand`(생산 창 유닛 배치)·`ConstructBuildingCommand`(사제 건물 건설)·`RegisterKnowledgeCommand`(워크샵 등록)·`SalvageCommand`(회수)·
+* **틱 순서(고정)**: 명령 실행(넣은 순서) → 수집 → 수송·사제 이동(건설 현장 도착 포함) → 도착 전 공사장 점검 → 건설 완료 → 전투 → 제단 의식 → 튜토리얼 단계 → 플레이어 번호 순 다리 칸 채우기 → 다리 붕괴 → **지상 낙하·허공 사제 복귀** → 미션 승패 이벤트.
+* **명령** (`Submit`): `PlaceUnitCommand`(생산 창 유닛 배치)·`ConstructBuildingCommand`(사제 건물 건설 — 맡을 사제 번호 선택, 0 이면 첫 자유 사제)·`RegisterKnowledgeCommand`(워크샵 등록)·`SalvageCommand`(회수)·
   `PickBridgePieceCommand`·`ReturnBridgePieceCommand`·`PlaceBridgeCommand`(다리 조각; 회전은 화면이 관리해 놓을 때 값으로 보낸다)·
   `SelectEntityCommand`(오브젝트 선택/해제 — 튜토리얼 2 단계 C·F가 읽음)·`HarvestGeyserCommand`·`ReturnHomeCommand`·`CapturePriestCommand`·`DeliverPriestCommand`·`DropPriestCommand`·`MovePriestToAltarCommand`.
   거부된 명령은 `CommandRejected` 이벤트(실패 이유 `CommandFailure` 포함)로 알린다. 화면은 `DrainEvents()`로 알림을 받는다.
-* **판정(상태를 바꾸지 않음)**: `CheckUnit`·`CheckBuilding`·`CheckBridge`, 재충전 남은 시간 `SecondsUntilReady`, 건설 진행률 `ConstructionProgress`.
+* **판정(상태를 바꾸지 않음)**: `CheckUnit`·`CheckBuilding`(사제를 지정하면 사제가 그 자리 둘레까지 걸어갈 수 있는지도 본다)·`CheckBridge`, Construct 메뉴 줄의 제한 `GetBuildingRestriction`, 재충전 남은 시간 `SecondsUntilReady`, 건설 진행률 `ConstructionProgress`(사제 도착 전 0).
 * **수집 경제**: 가이저를 지정하면 소유한 사제가 섬과 자기 다리 칸을 따라 가이저·완공 신전을 왕복한다. 신전에 결정 하나를 전달할 때마다 200 SP가 들어온다. 지형이 바뀌면 경로를 다시 찾고, 길이 없으면 목표를 유지해 기다리다가 복구 후 재개한다. 기절·포획·목표 제거 시 취소한다. 이동 속도는 각 유닛 `.type`의 `speed`를 읽으며 수확·수송·사제 이동은 같은 이동 상태 코드를 쓴다.
 * **지지와 낙하**: 발밑 섬·받침·다리가 사라지면 지상 보행 유닛을 그 틱 끝에 제거한다. 사제는 현재 HP·위치·결정을 유지해 허공에서 기절하고 점유를 비운다. 비행 수송으로 포획하거나 다리를 복구할 수 있으며, HP가 절반 이상이면 발판 복구로 회복한다. `createsisland` 받침은 건물 생존·완공 상태를 따라 생성/소멸하고 지형 버전을 갱신한다. 세부 미확인 정책은 [이동 경로 문서](gameplay/movement-pathing.md#34-낙하-규칙-구현과-임시-정책)에 남겼다.
 * **공중 공격**: Whirlibase는 별도 Whirligig를 생성하고 출발점 사거리·목표당 최대 3대·수송 제외 규칙으로 공격시킨다. 1분 출격 후 귀환·보급과 파괴 후 재생성을 구현했다. 정확한 시간·피해·이동 단위는 [추정표](gameplay/flyers.md)를 따른다. 다른 공중 공격체는 후속이다.
 * **수송·희생 의식**: 수송 유닛별 `.type speed`로 이동하고, 기절한 적 사제를 싣고 알타에 내려놓는다. 내 사제가 알타 옆에 도착하면 다섯 룬 의식이 시작되고, 대상 팀 사제가 제거되면 미션 이벤트를 한 번 알린다. 비행 수송의 이륙·착륙 연출과 일부 시간·체력 임계값은 추정이다 ([계약·근거](gameplay/sacrifice.md)).
-* **건설**: 비용은 시작할 때 나가고(원본 `00442c80` → `00442b50`의 배치 시 차감과 부합), 건설 시간이 지나야 규칙 효과가 생긴다 — **템플**: 섬 소유(빈 섬 → 내 섬)·에너지 공급원 등록·생산 창의 다리 조각/골렘 공급 시작,
-  **워크샵**: 지식 등록 가능. 완공에 섬 소유 색이 바뀌는 것은 튜토리얼 2 관찰과 같다. 건설 중인 템플도 "플레이어당 1기" 판정에 센다.
+* **건설**([건설 흐름·근거](gameplay/priest-construction-flow.md)): 설치 명령에서 **비용을 바로 차감**하고(원본 `00442c80` → `00442b50`의 배치 시 차감과 부합) 그 자리에 공사장(`AwaitingBuilder`)을 놓는다. 맡은 사제가 현장 둘레까지 **걸어가 도착해야 건설 시간(10초)이 시작**되고, 끝나야 규칙 효과가 생긴다 — **템플**: 섬 소유(빈 섬 → 내 섬)·에너지 공급원 등록·생산 창의 다리 조각/골렘 공급 시작,
+  **워크샵**: 지식 등록 가능. 완공에 섬 소유 색이 바뀌는 것은 튜토리얼 2 관찰과 같다. 도착 전에 사제가 다른 명령(이동·정지·수확·희생)을 받거나 기절·포획·사망하면 공사장은 **비용 전액 환불**과 함께 사라진다(건설이 시작된 뒤에는 사제가 떠나도 이어진다). 사제가 걸어갈 길이 없는 자리는 지을 수 없다.
+  건설 중이거나 사제를 기다리는 템플·알타도 "플레이어당 1기" 판정에 센다. 우클릭 Construct 메뉴는 이미 템플이 있으면 Temple 줄을, 기술이 막히거나 그 원소의 지식(발전기 제외)이 없으면 워크샵 줄을 어둡게 한다.
 * **회수**: 비용의 25%를 돌려받는다(튜토리얼 2: 300 → 75). 템플을 회수하면 섬이 빈 섬이 되고 다리 조각·골렘이 사라지며, 워크샵을 회수하면 그 워크샵의 등록이 사라진다. 사제·가이저·지형은 회수할 수 없다. 건물형 유닛(`maxHitPoints` 가 있고 이동체가 아닌 타입)이 없어지면 중심 ±2칸의 다리가 한 단계 약해진다(보통 → 금 감, 금 감 → 무너짐, 단단함 그대로). 원본 공통 제거 처리가 제거 이유를 보지 않아 회수에도 적용했다(원본 화면 미확인, [bridge-pieces.md](exe/bridge-pieces.md) 8.5절).
 * **배치 뒤 재충전**: Unit Rate 표(10/5/1초, 기본 Fast 1초)만큼 그 유닛을 덱에서 다시 쓸 수 없다 (튜토리얼 2 관찰 1.1~1.2초와 부합).
 * **미션 시작 조건**: 사람 플레이어(기본 1)에게 시작 SP·시작 지식·기술 허용 표를 적용하고, 튜토리얼 2는 전투 옵션(Short 14칸·Fast)을 덮어쓴다. `denySalvage`는 세션의 변하는 상태 `DenySalvage`로 시작한다.
@@ -94,10 +96,10 @@
 
 ### 근사한 부분 (원본 확인 전)
 
-* 건설 시간 = 관찰한 "클릭부터 완공"(사제 이동 포함) 값. 사제의 **건설 장소까지 이동**·정확한 `constructionRate` 계산·건설 자리에 서 있어야 하는지는 판정하지 않는다. 비용 차감은 배치 시점의 원본 경로를 정적으로 확인했다([분석](exe/priest-construction.md)).
+* 건설 시간 = 사제 도착 뒤 10초(워크샵 관찰 10~11초, `constructionRate` 10, 웹 팬게임 10초). 정확한 `constructionRate` 계산식은 미분석이라 모든 건물에 같은 값을 쓴다. 건설이 시작된 뒤 사제가 떠나도 건설이 이어지는지, 건설 중 사제를 새로 부릴 수 있는지는 미확인이다(팬게임 가정). 비용 차감은 배치 시점의 원본 경로를 정적으로 확인했다([분석](exe/priest-construction.md)).
 * 이동 경로는 섬 위 8방향(대각선 우선)·다리 위 4방향이며 가이저/신전 발자국의 인접 칸을 목표로 한다. 대각선 걸음은 √2칸 길이다. 세션 위치는 칸 단위이고 화면이 칸 사이를 보간해 그린다([이동 3.6절](gameplay/movement-pathing.md#36-클론-반영-부드러운-8방향-이동방향-그림그림-모양-클릭-2026-10-03)). 다른 유닛과의 충돌·생성 가이저의 위치는 미확인이다.
 * 유닛(생산 창 → 배치)은 건설 지연 없이 곧바로 완성으로 본다.
-* 알타의 14.5초는 캠페인 1-5 영상에서 클릭부터 완공까지 잰 값이며 사제의 이동 시간과 건설 시간을 나누지 못했다. 가까운 위치에서 관찰한 값이 아니므로 배치 거리에 따라 빗나갈 수 있다. 제단 의식의 룬 주기·희생·소멸 지연과 이벤트 보정은 [sacrifice.md](gameplay/sacrifice.md)에 근거와 함께 적었다.
+* 알타의 "14.5초"는 캠페인 1-5 영상에서 클릭부터 완공까지 잰 값(사제 이동 포함)이다. 이제 이동을 따로 모델링하므로 도착 뒤 10초로 바꿨다. 알타 1기 제한은 웹 팬게임 규칙이며 원본에서 직접 확인하지 못했다. 제단 의식의 룬 주기·희생·소멸 지연과 이벤트 보정은 [sacrifice.md](gameplay/sacrifice.md)에 근거와 함께 적었다.
 * 빈 섬 연결 = `BridgeReach`의 근사(위 표). 다리 끝 = 발자국 둘레의 내 다리 칸.
 * 맵에 처음부터 있던 워크샵은 레벨 1, 등록 목록은 비어 있다(`.fort`의 `Deck`·`Technology` 섹션은 아직 연결하지 않았다).
 * 세션 이벤트의 한국어 문구는 개발용이다(12단계 다국어 전).

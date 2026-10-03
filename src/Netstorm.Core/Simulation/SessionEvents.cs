@@ -147,7 +147,10 @@ public enum SessionEventKind
     /// <summary>유닛을 놓음</summary>
     UnitPlaced,
 
-    /// <summary>건물 건설 시작</summary>
+    /// <summary>
+    /// 건물 건설 시작. 사제가 현장에 도착한 순간(이미 현장 옆이면 명령 처리 때)이며, 이때부터 건설 시간이 흐른다.
+    /// 비용 차감과 공사장 생성은 <see cref="ConstructionOrdered"/> 다.
+    /// </summary>
     BuildingStarted,
 
     /// <summary>건물 건설 완료 (템플이면 섬 소유·다리 공급 시작, 워크샵이면 덱에 등록 가능)</summary>
@@ -290,6 +293,12 @@ public enum SessionEventKind
 
     /// <summary>조준·착탄 동작의 원본 효과음 요청. Text는 sound/ 파일 이름이다.</summary>
     CombatSound,
+
+    /// <summary>건설 명령이 받아들여져 비용을 차감하고 공사장을 놓았다. 사제가 걸어가는 중이며 아직 건설은 시작되지 않았다 (EntityId = 공사장).</summary>
+    ConstructionOrdered,
+
+    /// <summary>사제가 현장에 도착하기 전에 중단돼(다른 명령·기절·포획·새 건설 지시) 공사장이 비용 전액 환불과 함께 사라졌다 (EntityId = 공사장).</summary>
+    ConstructionCancelled,
 }
 
 /// <summary>세션 이벤트 한 건.</summary>
