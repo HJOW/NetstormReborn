@@ -179,6 +179,33 @@ PreparedMissionSection? section = mission?.Script.PrepareSection("CraftWarning",
 * 전역 설정: `{global.ddFlipping}` 등 (DirectDraw 옵션)
 * 팬 미션은 `{sw_var1}`, `{atweapon1}` 같은 사용자 변수를 대량으로 사용한다
 
+## 커스텀 맵 만들기 (AGENTS.md 2026-10-03, TEST01 예)
+
+AGENTS.md가 정리한 커스텀 맵의 구성이다. 예는 사용자가 만든 `originals/d/TEST01.fort` + `originals/d/TEST01.english`다.
+
+| 파일 | 만드는 방법 | 내용 |
+|---|---|---|
+| `<이름>.fort` | 게임 안 **Edit 메뉴**로 생성·수정한다 | 섬·다리·건물·유닛 배치([fort.md](fort.md)) |
+| `<이름>.english` | 사용자(개발자)가 **텍스트 편집기로 직접 작성**한다 | 사용자·인공지능 구성, 시작 SP, 브리핑 창 내용 |
+| `<이름>.<언어 이름>` | `.english`와 같은 방식으로 작성한다 | 다른 언어 지원. 확장자가 언어 이름이다(예: 원본의 `.german`) |
+
+* 제작 방법 참고 자료(AGENTS.md): [방법 1](https://blog.naver.com/hujinone22/221213700658), [방법 2 — Starting Editing](https://netstorm.fandom.com/wiki/Starting_Editing). 두 페이지는 아직 읽어 정리하지 않았다.
+* 원본에서 여는 방법: 메인 메뉴 Edit의 목록은 이름순 앞 50개만 보이므로 **Create New Map에 기존 이름을 입력**해 연다. 편집기 Esc → Game → Test Battle로 시험 전투를 한다([녹화 노트](../videos/record-play-edit-test01-20261003.md)).
+
+`TEST01.english`의 주요 내용과 원본 화면에서 확인한 대응이다. "확인"은 2026-10-03 녹화에서 화면으로 본 것이고, 나머지는 키 이름에 따른 해석이다.
+
+| 스크립트 | 의미 | 확인 |
+|---|---|---|
+| `title="TEST01"` | 미션 제목 | 브리핑 제목으로 표시 — 확인 |
+| `myStartMoney=50000` | 사용자 시작 SP | 시험 전투 시작 Storm Power 50000 — 확인 |
+| `myTech="all"` | 사용자 기술 전부 허용 | 워크샵의 Knowledge Available에 전체 목록 — 확인 |
+| `myAllyList="2"` | 사용자 동맹 목록 | 미확인 |
+| `ai2Name="Luitenent of Wind"`, `ai2color=orange`, `ai3Name="Thunder Demon"`, `ai3color=red` | 인공지능 2·3의 이름과 색 | 미니맵에 빨간 섬이 보임. 이름 표시는 미확인 |
+| `aiNTech="all"`, `aiNStartMoney=0`, `aiNGeyserAttachments=1`, `aiNCollectors=1`, `aiNTimeBetweenMoves=1`, `aiNBridgeDrawRate=1`, `aiNAllyList` | 인공지능의 기술·자금·수집·행동 간격·다리 뽑기 속도·동맹 | 미확인(AI 행동은 분석하지 않음) |
+| `ai2Ability="!USE_PRIEST_TO_COLLECT;!BUILD_DAIS"`, `ai3Ability="!USE_PRIEST_TO_COLLECT"` | 인공지능 능력 끄기(`!`) | 미확인 |
+| `[A.]`의 `~[IsunBalloon.a1]<h2>TEST01</h2>` + `$Button=EQUIPMENT,ShowTechnology,55` · `$Button=Go!,DoNothing,0` | 시작 브리핑 창의 그림·제목·버튼 | 낙하산 그림, 제목, EQUIPMENT / Go! 버튼 — 확인 |
+| `[Succeeded][Ai4PriestDead]`, `[Failed][GoodTeamDead]` | 승리·패배 조건과 그때의 창 | 미확인(녹화에서 끝까지 가지 않음) |
+
 ## 공식 튜토리얼·캠페인 구성
 
 메뉴 스크립트 `offical1~6.english` (철자 원문 그대로) 기준. 괄호 안은 미션 파일 이름.

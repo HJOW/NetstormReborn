@@ -38,6 +38,8 @@
 **복구 방법(추정)**: `options.cfg` 를 복호화해 `startInFullScreen = "0"` 으로 고친 뒤 다시 인코딩한다.
 원본 로그 메시지에도 "init screen mode; if this fails, set the "screenModeFlags" in options.cfg to 0" 라는 안내가 있다.
 
+**클론 요구사항(AGENTS.md 2026-10-03 명시): 이 문제는 새 클론 게임에서는 발생하지 않아야 한다.** 클론은 디스플레이 모드를 바꾸지 않는 테두리 없는 전체 화면 창을 쓰고, 직전 시작이 화면 초기화에서 끝났으면 창 모드로 시작하는 안전장치를 둔다([map-viewer.md](../map-viewer.md) 화면 설정).
+
 ### `setup.cfg` (패치판 서버·클라이언트 설정)
 
 `키=값` 형식, `//` 주석 허용. 패치판 버전(`gamemaster="10"`, `gameminor="78"`), 채팅·메뉴 색상(팔레트 인덱스), 요새 자원 이름, UI 서식 코드(`~w`, `~r`, `~B~E` 등) 등을 담는다.

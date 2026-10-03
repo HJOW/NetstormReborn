@@ -8,6 +8,7 @@
 
 * 느슨한 파일 `originals/d/*.fort` (대부분 팬 제작 미션용), TAFF 아카이브 `\d\*.fort` (공식 미션, XOR 복호화 후 같은 형식)
 * 미션 스크립트와 같은 이름으로 짝을 이룬다 (`tutorial1.english` ↔ `tutorial1.fort`)
+* **커스텀 맵**(AGENTS.md 2026-10-03): `.fort`는 게임 안 Edit 메뉴로 생성·수정하고, 짝이 되는 `.english`는 사용자가 텍스트 편집기로 직접 작성한다. 사용자가 만든 예는 `originals/d/TEST01.fort` + `TEST01.english`다 → [커스텀 맵 만들기](mission-script.md#커스텀-맵-만들기-agentsmd-2026-10-03-test01-예)
 * 파일 경로는 설정으로 정해진다 (`setup.cfg`): `fortSpec`/`SOLOSpec = "{DataDir}\{local.1}.fort"`,
   `battleFortSpec = "{InstallDir}{DataDir}\{local.1}.player{local.2}"`, `archiveFortSpec = "...archive{local.2}"`
 * 로드 함수 `FUN_004bf550(경로)`, 저장 함수 `FUN_004bfba0`
