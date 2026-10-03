@@ -8,6 +8,9 @@ namespace Netstorm.Game;
 /// <summary>원본 fortGump의 돌 질감·모서리·선택 표시를 공유하는 UI 그리기 도구.</summary>
 internal sealed class OriginalUiSkin : IDisposable
 {
+    /// <summary>원본 Buttongump.cpp 004249a0에서 활성 버튼을 누를 때 재생하는 효과음.</summary>
+    public const string ButtonSound = "button.wav";
+
     /// <summary>원본 메뉴의 한 행 높이. 버튼과 펼침 목록의 입력 영역에도 사용한다.</summary>
     public const int RowHeight = 18;
     /// <summary>원본의 낮은 텍스트 버튼 높이.</summary>

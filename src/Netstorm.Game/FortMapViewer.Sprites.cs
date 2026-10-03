@@ -119,6 +119,10 @@ internal sealed partial class FortMapViewer
     {
         Vector2 shift = HotFootShift(type);
         if (live != null && CombatSprite(live) is { } combat) return (combat.Type, new StructureFrames(combat.Frame), shift);
+        // 새로 설치한 Crossbow는 고른 방위의 기본 그림을 쓴다. 저장된 조준 그림은 아래 기존 경로로 보존한다.
+        if (live is { Source: null } && type.Name.Equals("windArcher", StringComparison.OrdinalIgnoreCase))
+            return (type, new StructureFrames(type.Definition.Frames.Find(CannonAnimation.Side(live.CannonDirection),
+                TypeFrameTable.DefaultVariant, 0)), shift);
         TypeDefinition definition = type.Definition;
         ObjectKind kind = live?.Kind ?? ObjectKinds.Of(type);
         if (kind == ObjectKind.Geyser)

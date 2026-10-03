@@ -201,11 +201,13 @@ internal sealed partial class FortMapViewer
             if (Pressed(keyboard, Keys.Escape) || Pressed(keyboard, Keys.Back)
                 || (click && KnowledgeDetailButton(panel, 0).Contains(point)))
             {
+                if (click && KnowledgeDetailButton(panel, 0).Contains(point)) QueueSound(OriginalUiSkin.ButtonSound);
                 _knowledgeDetail = null;
             }
             else if (Pressed(keyboard, Keys.Enter) || Pressed(keyboard, Keys.Space) || Pressed(keyboard, Keys.F6)
                 || (click && KnowledgeDetailButton(panel, 1).Contains(point)))
             {
+                if (click && KnowledgeDetailButton(panel, 1).Contains(point)) QueueSound(OriginalUiSkin.ButtonSound);
                 _knowledgeDetail = null;
                 _knowledgeOpen = false;
             }

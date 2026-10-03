@@ -137,16 +137,18 @@ internal sealed class MainMenuView : IDisposable
         if (_modal == "version")
         {
             Rectangle panel = VersionPanel(width, height);
-            if (enter || click && new Rectangle(panel.Center.X - 30, panel.Bottom - 31, 60, OriginalUiSkin.ButtonHeight).Contains(mouse.Position)) _modal = null;
+            if (enter || click && new Rectangle(panel.Center.X - 30, panel.Bottom - 31, 60, OriginalUiSkin.ButtonHeight).Contains(mouse.Position))
+            { _audio?.PlaySound(OriginalUiSkin.ButtonSound); _modal = null; }
             return;
         }
         Rectangle tip = TipPanel(width, height);
-        if (enter) { TipButton(3); return; }
+        if (enter) { _audio?.PlaySound(OriginalUiSkin.ButtonSound); TipButton(3); return; }
         if (!click) return;
         // 이전 팁은 번호가 0 이 아닐 때만 있다 (원본 <?{tipNumber}>)
         for (int index = _tipShown > 0 ? 0 : 1; index < 4; index++)
         {
-            if (TipButtonBounds(tip, index).Contains(mouse.Position)) { TipButton(index); return; }
+            if (TipButtonBounds(tip, index).Contains(mouse.Position))
+            { _audio?.PlaySound(OriginalUiSkin.ButtonSound); TipButton(index); return; }
         }
     }
 
@@ -210,14 +212,14 @@ internal sealed class MainMenuView : IDisposable
         {
             if (Pressed(Keys.Tab) || Pressed(Keys.Down)) { _selected = (_selected + 1) % enabled.Length; _keyboardFocus = true; }
             if (Pressed(Keys.Up)) { _selected = (_selected + enabled.Length - 1) % enabled.Length; _keyboardFocus = true; }
-            if (Pressed(Keys.Enter)) enabled[_selected].Action();
+            if (Pressed(Keys.Enter)) ActivateButton(enabled[_selected]);
             if (mouse.LeftButton == ButtonState.Pressed && _previousMouse.LeftButton == ButtonState.Released)
             {
                 MenuButton? hit = _buttons.LastOrDefault(b => b.Bounds.Contains(mouse.Position));
                 if (hit != null)
                 {
                     bool covered = _page is "options" or "help" && !hit.ListRow && _lists.Any(r => r.Contains(mouse.Position));
-                    if (hit.Enabled && !covered) hit.Action();
+                    if (hit.Enabled && !covered) ActivateButton(hit);
                 }
                 else if (_page is "options" or "help" && !_lists.Any(r => r.Contains(mouse.Position))) Open();
             }
@@ -228,6 +230,13 @@ internal sealed class MainMenuView : IDisposable
             else Open(_page == "missions" ? "campaigns" : "main");
         }
         _previousKeyboard = keyboard; _previousMouse = mouse;
+    }
+
+    /// <summary>활성 버튼의 효과음을 먼저 요청한다. 펼침 목록의 행은 일반 돌 버튼과 구분한다.</summary>
+    private void ActivateButton(MenuButton button)
+    {
+        if (!button.ListRow) _audio?.PlaySound(OriginalUiSkin.ButtonSound);
+        button.Action();
     }
 
     /// <summary>모든 클릭 영역을 그리기와 같은 원본 기준 좌표로 만든다.</summary>

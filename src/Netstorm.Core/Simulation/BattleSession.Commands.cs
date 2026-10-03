@@ -207,8 +207,8 @@ public sealed partial class BattleSession
         int id = Map.PlaceUnit(type, site, command.Player);
         player.StormPower -= site.Cost;
         var entity = new GameEntity(id, type, ObjectKinds.Of(type), command.Player, site.Footprint, Map.TerritoryAt(command.X, command.Y), null);
-        // 우클릭으로 고른 설치 방위는 아이스·썬더 캐논에만 적용한다. 썬 캐논은 이후 목표를 따라 회전한다.
-        if (CannonAnimation.IsFixed(type)) entity.CannonDirection = ((command.Rotation % 4) + 4) % 4;
+        // 아이스·썬더 캐논과 Crossbow는 우클릭 설치 방위를 유지한다. 썬 캐논은 이후 목표를 따라 회전한다.
+        if (EmplacementDirection.RequiresChoice(type)) entity.CannonDirection = ((command.Rotation % 4) + 4) % 4;
         _entities.Add(id, entity);
         if (type.Definition.HasFlag("createsisland")) Bridges.InvalidateTerrain();
         // 유닛은 놓을 때 지은 수로 센다 (튜토리얼 단계 처리가 읽는다)

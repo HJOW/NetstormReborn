@@ -42,7 +42,7 @@ internal sealed partial class FortMapViewer
         + ";workshops=" + string.Join(',', _session.Entities.Where(e => e.Owner == TestPlayer && e.Kind == ObjectKind.Workshop)
             .Select(e => $"{e.Type.Name.ToLowerInvariant()}:{WorkshopLevel(e, e.Source)}"))
         + $";placement={(_lastCheck?.Allowed == true ? "allowed" : _lastCheck?.Failure.ToString() ?? "none")}"
-        + $";cursor={(_placementMode ? _candidates[_candidateIndex].Name.ToLowerInvariant() : "none")}";
+        + $";cursor={(_placementMode ? _candidates[_candidateIndex].Name.ToLowerInvariant() : "none")};range={RangeDetail}";
 
     /// <summary>걷기 그림 시계(초). 게임 시간이 흐르는 동안에만 진행해 일시정지 중에는 걷는 자세가 멈춘다.</summary>
     private double _walkClock;

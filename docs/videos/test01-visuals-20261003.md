@@ -109,6 +109,7 @@
 - **구성.** 들고 있는 유닛 그림, 발자국을 두른 **흰 1픽셀 사각형**, 사각형 왼쪽에 위에서부터 쌓인 **필요 원소 아이콘**(`mana` 타입: 어두운 4장 + 밝은 4장, 순서 Wind·Rain·Thunder·Sun), 사각형 아래 **노란 비용 숫자 + Storm Power 보석**. 에너지가 모자라면 흰 글 "Energy not satisfied" 가 비용 위에, 다른 건물과 겹치면 **붉은 사각형과 붉은 채움**이 나온다. 1-1 자동 분석에서는 섬 밖에서 "Only on Controlled Island" 를 봤다.
 - **커서 규칙.** 입력 기록의 커서와 사각형을 맞춰 보면 발자국의 오른쪽 아래 칸은 **열 = 커서 칸의 열, 행 = 커서 칸의 행 + 1 + height** 다. Crossbow·Ice Cannon(height 없음)은 커서가 3×3 의 오른쪽 열·가운데 행, Thunder Cannon(`height = 2`)은 커서가 발자국 위쪽 한 칸 밖이었다. 캐논을 우클릭으로 돌려도 사각형은 움직이지 않았다. `height` 가 있는 타입: priest·sunWalker·fireWalker 1, sunBlocker·thunderCannon·windVortex 2, rain/thunder/windBlocker 3.
 - **사거리 반짝임.** 고정 캐논은 발사 방향으로 `range` 타입의 반짝임(노랑 `A00`~`A12`)이 **5칸 간격, 약 15칸/초**로 흘러나간다(Ice Cannon 사거리 30). Crossbow 는 두 갈래(V 자)로 나갔다 — 부채꼴 사격 범위의 양 끝으로 보이나 각도 규칙을 확정하지 못했다. `range` 타입의 `B`(분홍)·`C` 묶음의 쓰임도 미확인이다.
+- **후속 확인·구현:** 원본 Range.cpp에서 Crossbow 중심 ±30도·여덟 점의 경계 접기, 직선 `floor(range / 5)` 개수(썬더는 5.25칸 간격), bomb의 B 묶음을 확인했다. 선택·배치 원형/직선/V 표시와 Crossbow 우클릭 회전에 연결했다. C 묶음·그림의 정확한 타이머는 남았다([녹화·정적 근거·검증](record-play-details-20261003.md)).
 - 클론: `PlacementCursor`(Core) + `FortMapViewer.PlacementPreview.cs`. 건물(사제 Construct)에도 같은 커서 규칙을 쓰는 것은 **추정**이다. 안내 글은 확인한 두 문구만 넣었다.
 
 ## 10. 선택 괄호와 체력 막대
@@ -130,7 +131,7 @@ exe 렌더러 0x498841 부근과 `FUN_004972f0` 에서 좌표식을 옮겼다(�
 
 1. **유닛의 플레이어 색 — 후속 작업에서 구현 완료.** 타입 번호 전역 변수의 초기값이 `70 + TypeLoadOrder 순서`임을 확인해 기본 열두 타입·명도 변환 세 타입을 `ObjectColorRemap`에 연결했다. 풍선 고리·사제·골렘·Sail Skater 등 본체와 겹침 그림에 소유자 색을 적용한다. 세부 표·검증은 [후속 기록](test01-verification-20261003.md)에 있다.
 2. 시험 전투 시작의 "Connecting to Game Server - Countdown" → "Starting Mission..." 창.
-3. Crossbow 의 두 갈래 사거리 반짝임, 반짝임 그림의 정확한 간격, `range` 의 B·C 묶음.
+3. **후속 완료:** 선택·배치 사거리, Crossbow 두 갈래와 60도 규칙, 직선 간격, bomb의 B 묶음. **남음:** 반짝임 그림의 실제 주기·초기 위상, C 묶음의 사용 조건([후속 기록](record-play-details-20261003.md)).
 4. Wind·Rain 신전 겹침 그림의 간격과 위치를 이 녹화로 확인(해당 섬이 보이는 275·345초 구간은 카메라 위치를 먼저 맞춰야 한다).
 5. Sun 워크샵 창 조각이 켜지는 조건, 가이저 `A17`~`A48` 의 쓰임.
 6. 그림자의 정확한 음영표(팔레트 기준 어둡게)와 그리기 순서(다른 오브젝트 위에 지는 그림자).

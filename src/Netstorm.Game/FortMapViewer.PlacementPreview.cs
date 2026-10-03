@@ -8,7 +8,7 @@ namespace Netstorm.Game;
 
 /// <summary>
 /// 원본 방식의 배치 미리보기(플레이 화면): 들고 있는 유닛 그림, 발자국을 두른 흰 사각형, 왼쪽의 필요 원소 아이콘,
-/// 아래쪽의 안내 글·노란 비용 숫자와 Storm Power 보석, 고정 캐논의 발사 방향으로 흘러가는 사거리 반짝임.
+/// 아래쪽의 안내 글·노란 비용 숫자와 Storm Power 보석. 사거리 반짝임은 선택 표시와 공통 경로에서 그린다.
 /// 근거: 2026-10-03 TEST01 녹화 103~162초 (docs/videos/test01-visuals-20261003.md 6절).
 /// </summary>
 internal sealed partial class FortMapViewer
@@ -18,15 +18,6 @@ internal sealed partial class FortMapViewer
 
     /// <summary>발자국 사각형 아래 끝에서 첫 글줄까지의 간격(논리 픽셀).</summary>
     private const int PreviewTextGap = 2;
-
-    /// <summary>사거리 반짝임 사이의 간격(칸). 녹화에서 세로 68·가로 100 캡처 픽셀 = 5칸이었다.</summary>
-    private const double RangeSparkleSpacing = 5;
-
-    /// <summary>사거리 반짝임이 바깥으로 흘러가는 속도(칸/초). 녹화에서 프레임당 세로 7·가로 10 캡처 픽셀 → 약 15칸/초.</summary>
-    private const double RangeSparkleSpeed = 15;
-
-    /// <summary>사거리 반짝임 그림(range 타입 A00~A12)이 바뀌는 초당 횟수. 측정하지 못해 증기와 같은 24Hz 로 둔 추정값이다.</summary>
-    private const double RangeSparkleFramesPerSecond = 24;
 
     /// <summary>놓을 수 없는 자리(겹침·섬 밖)의 사각형과 채움 색. 녹화의 붉은 사각형.</summary>
     private static readonly Color PreviewBlockedColor = new(230, 40, 30);
@@ -78,10 +69,9 @@ internal sealed partial class FortMapViewer
         Vector2 bottomRight = Screen(WorldPixels(footprint.AnchorX, footprint.AnchorY), center);
         var rect = new Rectangle((int)MathF.Round(topLeft.X), (int)MathF.Round(topLeft.Y),
             (int)MathF.Round(bottomRight.X - topLeft.X), (int)MathF.Round(bottomRight.Y - topLeft.Y));
-        DrawRangeSparkles(batch, type, footprint, center);
-        // 유닛 그림: 고정 캐논은 고른 방위, 나머지는 놓였을 때와 같은 그림
+        // 고정 캐논과 Crossbow는 고른 설치 방위의 그림을 미리 보여 준다.
         (TypeInfo drawn, StructureFrames frames, Vector2 shift) = ObjectSprite(type, null, null);
-        int body = CannonAnimation.IsFixed(type)
+        int body = EmplacementDirection.RequiresChoice(type)
             ? type.Definition.Frames.Find(CannonAnimation.Side(_cannonRotation), TypeFrameTable.DefaultVariant, 0) : frames.Body;
         DrawSprite(batch, drawn.LoadIndex, body, bottomRight + shift * _zoom,
             _playerColors.GetValueOrDefault(TestPlayer), tint: blocked ? Color.Salmon : Color.White);
@@ -123,28 +113,4 @@ internal sealed partial class FortMapViewer
         }
     }
 
-    /// <summary>
-    /// 고정 캐논(아이스·썬더)을 들고 있을 때 발사 방향으로 사거리만큼 반짝임을 5칸 간격으로 흘려보낸다.
-    /// Crossbow 처럼 부채꼴로 쏘는 유닛의 두 갈래 반짝임은 각도 규칙을 확인하지 못해 그리지 않는다.
-    /// </summary>
-    private void DrawRangeSparkles(SpriteBatch batch, TypeInfo type, Footprint footprint, Vector2 center)
-    {
-        if (!CannonAnimation.IsFixed(type) || _knowledgeTypes.Find("range") is not { } sparkle) return;
-        double range = type.Definition.GetDouble("range") ?? 0;
-        IReadOnlyList<int> frames = sparkle.Definition.Frames.Sequence('A', TypeFrameTable.DefaultVariant);
-        if (range <= 0 || frames.Count == 0) return;
-        // 방위 0~3 = 북·동·남·서의 칸 방향
-        (int dx, int dy) = (_cannonRotation % 4) switch { 0 => (0, -1), 1 => (1, 0), 2 => (0, 1), _ => (-1, 0) };
-        // 발자국이 보이는 영역의 중심 (칸 c 는 픽셀 (16(c−1), 16c] 이므로 반 칸 앞당긴다)
-        var origin = new Vector2((float)((footprint.CenterX - 0.5) * FortMap.CellPixelWidth), (float)((footprint.CenterY - 0.5) * FortMap.CellPixelHeight));
-        double phase = _walkClock * RangeSparkleSpeed % RangeSparkleSpacing;
-        // 발사 방향으로 사거리 끝까지 반짝임을 놓는다
-        for (int index = 0; phase + index * RangeSparkleSpacing <= range; index++)
-        {
-            double distance = phase + index * RangeSparkleSpacing;
-            var world = origin + new Vector2((float)(dx * distance * FortMap.CellPixelWidth), (float)(dy * distance * FortMap.CellPixelHeight));
-            int frame = frames[(int)(_walkClock * RangeSparkleFramesPerSecond + index * 3) % frames.Count];
-            DrawSprite(batch, sparkle.LoadIndex, frame, Screen(world, center));
-        }
-    }
 }

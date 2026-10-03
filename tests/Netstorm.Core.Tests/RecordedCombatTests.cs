@@ -203,6 +203,9 @@ public sealed class RecordedCombatTests
     [InlineData("thunderCannon", -1, 3)]
     [InlineData("thunderCannon", 1, 1)]
     [InlineData("thunderCannon", 5, 1)]
+    [InlineData("windArcher", -1, 3)]
+    [InlineData("windArcher", 1, 1)]
+    [InlineData("windArcher", 5, 1)]
     public void FixedCannon_PlacementUsesTheRequestedRotation(string name, int rotation, int expected)
     {
         BattleSession session = Create(Object("windVortex", 1, 30, 30));
@@ -217,7 +220,27 @@ public sealed class RecordedCombatTests
         session.RunTicks(1);
         GameEntity cannon = Assert.Single(session.Entities, e => e.Type.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
         Assert.Equal(expected, cannon.CannonDirection);
-        Assert.Equal(CannonAnimation.Side(expected), cannon.Type.Definition.Frames.Codes[CannonAnimation.Frame(cannon, session.Tick, session.TicksPerSecond)].Side);
+        if (CannonAnimation.IsCannon(cannon.Type))
+            Assert.Equal(CannonAnimation.Side(expected), cannon.Type.Definition.Frames.Codes[CannonAnimation.Frame(cannon, session.Tick, session.TicksPerSecond)].Side);
+    }
+
+    /// <summary>저장된 네 방위의 Crossbow는 뒤쪽의 더 가까운 적 대신 앞쪽 적만 쏜다.</summary>
+    [Theory]
+    [InlineData(0, 30, 18, 30, 37)]
+    [InlineData(25, 42, 30, 23, 30)]
+    [InlineData(50, 30, 42, 30, 23)]
+    [InlineData(75, 18, 30, 37, 30)]
+    [InlineData(43, 42, 30, 23, 30)]
+    public void Crossbow_UsesStoredSectorInsteadOfNearestTarget(byte frame, int frontX, int frontY, int backX, int backY)
+    {
+        BattleSession session = Create(Object("windArcher", 1, 30, 30, frame),
+            Object("sunBlocker", 2, frontX, frontY), Object("sunBlocker", 2, backX, backY));
+        session.RunTicks(1);
+        Assert.Equal(2, session.Entity(1)!.AttackTargetId);
+        Assert.Contains(session.DrainEvents(), e => e.Kind == SessionEventKind.ShotFired && e.EntityId == 1);
+        session.Submit(new SalvageCommand(2, 2));
+        session.RunTicks(1);
+        Assert.Equal(0, session.Entity(1)!.AttackTargetId);
     }
 
     /// <summary>썬 캐논은 고정 캐논용 배치 방위 값이 있어도 설치 방향에 구속되지 않는다(사용자 확인 2026-10-03).</summary>

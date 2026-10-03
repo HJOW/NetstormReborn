@@ -160,7 +160,7 @@ internal sealed partial class FortMapViewer
         }
         TypeInfo type = _candidates[_candidateIndex];
         (int cellX, int cellY) = _probeCell ?? PlacementCellAt(new Vector2(mouse.X, mouse.Y), type);
-        if (CannonAnimation.IsFixed(type) && mouse.RightButton == ButtonState.Pressed && _previousMouse.RightButton == ButtonState.Released)
+        if (EmplacementDirection.RequiresChoice(type) && mouse.RightButton == ButtonState.Pressed && _previousMouse.RightButton == ButtonState.Released)
         {
             _cannonRotation = (_cannonRotation + (_reverseRotation ? 3 : 1)) % 4;
             QueueSound(RotatePieceSound);
@@ -342,7 +342,7 @@ internal sealed partial class FortMapViewer
             }
             Vector2 target = CellCenterScreen(site.Footprint.CenterX, site.Footprint.CenterY, center);
             TypeInfo type = _candidates[_candidateIndex];
-            if (CannonAnimation.IsFixed(type))
+            if (EmplacementDirection.RequiresChoice(type))
             {
                 int frame = type.Definition.Frames.Find(CannonAnimation.Side(_cannonRotation), TypeFrameTable.DefaultVariant, 0);
                 DrawSprite(batch, type.LoadIndex, frame, Screen(WorldPixels(site.Footprint.AnchorX, site.Footprint.AnchorY), center),

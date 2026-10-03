@@ -274,7 +274,8 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         _audio.SetSpeakerSwap(settings.SpeakerSwap);
         _uiSkin = new OriginalUiSkin(GraphicsDevice, shapes, palette, resources.LoadTypes().Find("fortGump")!.Definition,
             _fonts!.GetFont(BodyFontSize), _fonts.GetFont(TitleFontSize), _fonts.GetFont(SmallFontSize));
-        if (_help != null) _helpWindow = new HelpWindow(GraphicsDevice, _uiSkin, resources, _help, shapes, palette);
+        if (_help != null) _helpWindow = new HelpWindow(GraphicsDevice, _uiSkin, resources, _help, shapes, palette)
+        { SoundRequested = sound => _audio.PlaySound(sound) };
         _mainMenu = new MainMenuView(GraphicsDevice, resources, _uiSkin, _display, _audio, PlayCampaign, Exit, OpenHelp);
         _mainMenu.Open(ParseValueArgument(Environment.GetCommandLineArgs(), "--menu") ?? "main");
         // 원본처럼 메인 메뉴로 시작하면 "Did You Know?" 팁 창을 연다 (Options "Tell Tips at Startup").
@@ -495,8 +496,11 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         MouseState mouse = _display.ToLogical(rawMouse);
         if (_uiAutomation != null)
         {
+            // 메인 메뉴에도 소리 요청·실제 재생/음소거 결과를 전달한다. 일반 화면에는 표시하지 않는다.
+            string detail = (_mapViewer?.UiDetail ?? "") + $";audio-buttons={_audio?.ButtonSoundRequests ?? 0}"
+                + $";audio-last={_audio?.LastSoundCue ?? "none"};audio-result={_audio?.LastSoundResult ?? "none"}";
             keyboard = new KeyboardState();
-            mouse = _uiAutomation.Update(_helpWindow?.IsOpen == true ? _helpWindow.State : MissionOptionsOpen ? "options" : _mapViewer?.UiState ?? _mainMenu?.Page ?? "unavailable", _mapViewer?.UiDetail ?? "", Exit,
+            mouse = _uiAutomation.Update(_helpWindow?.IsOpen == true ? _helpWindow.State : MissionOptionsOpen ? "options" : _mapViewer?.UiState ?? _mainMenu?.Page ?? "unavailable", detail, Exit,
                 _display.Layout.LogicalWidth, _display.Layout.LogicalHeight);
             keyboard = _uiAutomation.Keyboard;
         }
@@ -510,6 +514,8 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         popupOpen |= _helpWindow?.IsOpen == true || MissionOptionsOpen;
         _mapViewer?.Update(dt, mouse, EdgeScrollDelta(rawMouse, keyboard, dt),
             _display.Layout.LogicalWidth, _display.Layout.LogicalHeight, keyboard, popupOpen);
+        // 미션 종료·다음 미션 전환으로 기존 뷰어가 사라지기 전에 마지막 버튼 클릭음을 재생한다.
+        UpdateAudio();
         _previousKeyboard = keyboard;
         TutorialDialogAction? tutorialAction = _mapViewer?.TakeTutorialAction();
         if (tutorialAction != null)
@@ -522,7 +528,6 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
             HandleMissionMenuAction(menuAction.Value);
         }
         _spriteBrowser?.Update(dt, mouse, _display.Layout.LogicalWidth, _display.Layout.LogicalHeight);
-        UpdateAudio();
         // 모든 애니메이션 진행
         foreach (SpriteAnimation animation in _animations)
         {

@@ -70,6 +70,15 @@ internal sealed class AudioPlayer : IDisposable
     /// <summary>음악 볼륨 단계 1~5</summary>
     public int MusicVolume { get; set; }
 
+    /// <summary>UI 자동 검사에서 버튼 요청 중복·누락을 확인하는 누적 횟수. 음소거 중 요청도 포함한다.</summary>
+    public long ButtonSoundRequests { get; private set; }
+
+    /// <summary>마지막 효과음 요청 파일. 실제 재생 여부는 LastSoundResult로 구분한다.</summary>
+    public string LastSoundCue { get; private set; } = "none";
+
+    /// <summary>마지막 효과음 결과: none·played·disabled·unavailable·limited·missing.</summary>
+    public string LastSoundResult { get; private set; } = "none";
+
     /// <summary>지금 실시간(초)</summary>
     public double Now => _clock.Elapsed.TotalSeconds;
 
@@ -129,6 +138,10 @@ internal sealed class AudioPlayer : IDisposable
     /// <param name="name">원본 sound/ 안의 파일 이름 (예: "bridgeFall.WAV")</param>
     public void PlaySound(string name)
     {
+        // 소리 장치와 설정 상태도 기록해 요청만 있었던 경우를 실제 재생과 구분한다.
+        LastSoundCue = name;
+        if (name.Equals(OriginalUiSkin.ButtonSound, StringComparison.OrdinalIgnoreCase)) ButtonSoundRequests++;
+        LastSoundResult = !SoundOn ? "disabled" : !Available ? "unavailable" : "limited";
         if (!Available || !SoundOn || _playing.Count >= MaxSimultaneousSounds)
         {
             return;
@@ -136,6 +149,7 @@ internal sealed class AudioPlayer : IDisposable
         SoundEffect? effect = LoadSound(name);
         if (effect == null)
         {
+            LastSoundResult = Available ? "missing" : "unavailable";
             return;
         }
         try
@@ -144,10 +158,12 @@ internal sealed class AudioPlayer : IDisposable
             instance.Volume = SoundVolume / (float)Netstorm.Core.Display.DisplaySettings.MaximumVolume;
             instance.Play();
             _playing.Add(instance);
+            LastSoundResult = "played";
         }
         catch (Exception error) when (error is NoAudioHardwareException or InstancePlayLimitException or InvalidOperationException)
         {
             Available = false;
+            LastSoundResult = "unavailable";
         }
     }
 

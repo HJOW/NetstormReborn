@@ -128,6 +128,8 @@ internal sealed partial class FortMapViewer
     private void ActivateTutorialButton(int index)
     {
         if (TutorialButtonLocked(_tutorialDialog!.Current!.Buttons[index])) return;
+        // 브리핑·장비·안내·승패 창의 활성 버튼은 같은 원본 클릭음을 사용한다.
+        QueueSound(OriginalUiSkin.ButtonSound);
         TutorialDialogAction action = _tutorialDialog!.Choose(index);
         if (action.Kind == TutorialDialogActionKind.Navigate)
         {

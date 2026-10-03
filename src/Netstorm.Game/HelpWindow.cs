@@ -52,6 +52,8 @@ internal sealed class HelpWindow : IDisposable
     public Action? Closed { get; set; }
     /// <summary>지식 격자에서 열린 상세창의 Back 버튼 복귀 동작.</summary>
     public Action? BackToParent { get; set; }
+    /// <summary>실제 도움말 버튼의 효과음 요청을 게임 공통 재생기로 넘긴다.</summary>
+    public Action<string>? SoundRequested { get; set; }
 
     /// <summary>게임 자산과 같은 도움말 원문·돌 스킨·글꼴을 연결한다.</summary>
     public HelpWindow(GraphicsDevice device, OriginalUiSkin skin, GameResources resources, HelpTopics topics,
@@ -207,9 +209,14 @@ internal sealed class HelpWindow : IDisposable
         {
             if (Button(panel, 0).Contains(mouse.Position))
             {
-                if (!_navigation.Back() && BackToParent != null) { _navigation.Close(); BackToParent(); }
+                if (_navigation.CanGoBack || BackToParent != null)
+                {
+                    SoundRequested?.Invoke(OriginalUiSkin.ButtonSound);
+                    if (!_navigation.Back() && BackToParent != null) { _navigation.Close(); BackToParent(); }
+                }
             }
-            else if (Button(panel, 1).Contains(mouse.Position)) { _navigation.Close(); Closed?.Invoke(); }
+            else if (Button(panel, 1).Contains(mouse.Position))
+            { SoundRequested?.Invoke(OriginalUiSkin.ButtonSound); _navigation.Close(); Closed?.Invoke(); }
             else if (UpArrow(body).Contains(mouse.Position)) _navigation.Scroll = Math.Clamp(_navigation.Scroll - LineHeight, 0, max);
             else if (DownArrow(body).Contains(mouse.Position)) _navigation.Scroll = Math.Clamp(_navigation.Scroll + LineHeight, 0, max);
             else if (Track(body).Contains(mouse.Position))

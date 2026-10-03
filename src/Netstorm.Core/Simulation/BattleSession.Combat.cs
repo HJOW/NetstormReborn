@@ -163,7 +163,7 @@ public sealed partial class BattleSession
         }
     }
 
-    /// <summary>적·사거리·기절·직선 포대와 차폐를 검사한다. 다른 포대의 방향각은 후속 분석 대상이다.</summary>
+    /// <summary>적·사거리·기절·캐논 직선·Crossbow 60도 사격각과 차폐를 검사한다.</summary>
     private bool CanShoot(GameEntity attacker, GameEntity target, double range)
     {
         if (target.Owner <= 0 || Map.AreAllied(attacker.Owner, target.Owner) || target.HitPoints <= 0 || target.IsStunned ||
@@ -172,6 +172,9 @@ public sealed partial class BattleSession
         if (axisOnly && !(attacker.Footprint.CenterX >= target.Footprint.Left && attacker.Footprint.CenterX <= target.Footprint.AnchorX) &&
             !(attacker.Footprint.CenterY >= target.Footprint.Top && attacker.Footprint.CenterY <= target.Footprint.AnchorY)) return false;
         if (CannonAnimation.IsFixed(attacker.Type) && AimDirection(attacker, target) != attacker.CannonDirection) return false;
+        if (attacker.Type.Name.Equals("windArcher", StringComparison.OrdinalIgnoreCase)
+            && !EmplacementDirection.InsideCrossbowSector(attacker.CannonDirection,
+                target.WorldX - attacker.WorldX, target.WorldY - attacker.WorldY)) return false;
         bool airborne = target.Type.Definition.HasFlag("balloon") || target.Kind == ObjectKind.Flyer;
         if (airborne && attacker.Type.Definition.GetInt("useairdamage") == 1 &&
             attacker.Type.Definition.GetDouble("airdamage") == 0) return false;

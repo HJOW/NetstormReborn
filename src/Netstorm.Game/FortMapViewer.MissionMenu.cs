@@ -172,14 +172,17 @@ internal sealed partial class FortMapViewer
                 Rectangle panel = LeaveMissionPanel(width, height);
                 if (LeaveMissionButton(panel, 0).Contains(mouse.X, mouse.Y))
                 {
+                    QueueSound(OriginalUiSkin.ButtonSound);
                     _pendingMissionMenuAction = MissionMenuAction.MainMenu;
                 }
                 else if (LeaveMissionButton(panel, 1).Contains(mouse.X, mouse.Y))
                 {
+                    QueueSound(OriginalUiSkin.ButtonSound);
                     _pendingMissionMenuAction = MissionMenuAction.Replay;
                 }
                 else if (LeaveMissionButton(panel, 2).Contains(mouse.X, mouse.Y))
                 {
+                    QueueSound(OriginalUiSkin.ButtonSound);
                     _leaveMissionPrompt = false;
                     CloseMissionMenu();
                 }

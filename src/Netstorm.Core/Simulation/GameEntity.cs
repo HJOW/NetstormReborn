@@ -74,7 +74,7 @@ public sealed class GameEntity
     /// <summary>다음 발사를 허용할 틱.</summary>
     public long NextAttackTick { get; internal set; }
 
-    /// <summary>캐논의 방위: 0=북, 1=동, 2=남, 3=서. 아이스·썬더 캐논은 배치한 방위를 유지한다.</summary>
+    /// <summary>캐논·Crossbow 방위: 0=북, 1=동, 2=남, 3=서. 아이스·썬더 캐논과 Crossbow는 배치 방위를 유지한다.</summary>
     public int CannonDirection { get; internal set; }
 
     /// <summary>현재 캐논 사격 동작의 시작 틱. -1이면 동작하지 않는다.</summary>
@@ -128,6 +128,9 @@ public sealed class GameEntity
         if (frame >= 0 && frame < type.Definition.Frames.Codes.Count &&
             type.Definition.Frames.Codes[frame].Side is >= 'L' and <= 'O' and var side)
             CannonDirection = side - 'L';
+        // Crossbow의 P 조준 그림도 앞선 L/M/N/O 묶음과 같은 저장 방위다.
+        if (type.Name.Equals("windArcher", StringComparison.OrdinalIgnoreCase))
+            CannonDirection = EmplacementDirection.SavedDirection(type, frame);
         // 가이저는 타입 cost 만큼의 Storm Power 를 품는다. 싱글 플레이 원본 값(exe 타입 로더 → FUN_004b2df0, geyser.type cost = 2000).
         if (kind == ObjectKind.Geyser) StoredStormPower = type.Definition.GetInt("cost") is int stored and > 0 ? stored : int.MaxValue;
     }

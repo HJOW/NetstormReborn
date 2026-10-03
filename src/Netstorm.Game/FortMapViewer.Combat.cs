@@ -103,6 +103,7 @@ internal sealed partial class FortMapViewer
     /// <summary>손상·선택 체력, 기절 보호막 및 비행 중 탄을 그린다. 탄 그림은 임시 표현이다.</summary>
     private void DrawCombat(SpriteBatch batch, SpriteFontBase font, Vector2 center)
     {
+        DrawRangeIndicators(batch, center);
         int selected = _session.Player(TestPlayer).SelectedEntityId;
         // 엔티티 번호순으로 체력 표시를 겹쳐 그린다.
         foreach (GameEntity entity in _session.Entities.Where(e => e.MaxHitPoints > 0 && e.IsComplete && !e.IsRegenerating))
