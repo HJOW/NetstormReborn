@@ -128,16 +128,17 @@ public sealed class RangeIndicatorTests
         Assert.Contains(points, point => Math.Sqrt(point.X * point.X + point.Y * point.Y) > 15.9);
     }
 
-    /// <summary>P 조준 그림도 앞선 기본 방향과 같은 저장 방위로 읽는다.</summary>
+    /// <summary>저장 방위는 묶음 이름이 아니라 원본 20각도표의 실제 각도로 읽는다.</summary>
     [Theory]
     [InlineData(0, 0)]
-    [InlineData(20, 0)]
+    [InlineData(20, 1)]
     [InlineData(25, 1)]
     [InlineData(43, 1)]
     [InlineData(50, 2)]
-    [InlineData(69, 2)]
+    [InlineData(69, 3)]
+    [InlineData(70, 3)]
     [InlineData(75, 3)]
-    [InlineData(98, 3)]
+    [InlineData(98, 0)]
     [InlineData(100, 0)]
     public void Crossbow_SavedFrameKeepsDirection(int frame, int expected) =>
         Assert.Equal(expected, EmplacementDirection.SavedDirection(OriginalData.RequireTypes().Find("windArcher")!, frame));

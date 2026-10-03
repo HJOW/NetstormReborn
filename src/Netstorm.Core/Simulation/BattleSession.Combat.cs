@@ -14,8 +14,8 @@ public sealed partial class BattleSession
     /// <summary>명시적 발사 간격이 없는 포대의 임시 간격(초). 원본 애니메이션 구동 간격은 후속 분석한다.</summary>
     private const double FallbackShotSeconds = 1;
 
-    /// <summary>원본 탄속 분석 전 공통으로 사용하는 임시 탄속(칸/초).</summary>
-    private const double ProjectileSpeed = 24;
+    /// <summary>원반·석궁의 원본 탄속(FUN_004680e0, VA 0x50b168)은 초당 35칸이다.</summary>
+    private const double ArcherProjectileSpeed = 35;
 
     /// <summary>세 캐논의 원본 탄속(FUN_00468640, 0x501a54)은 초당 20칸이다.</summary>
     private const double CannonProjectileSpeed = 20;
@@ -122,6 +122,17 @@ public sealed partial class BattleSession
                         $"sunCannonRaiseLower{attacker.SunCannonFrame % 9 + 1}.wav");
                 if (!ready) continue;
             }
+            if (attacker.Type.Name.Equals("windArcher", StringComparison.OrdinalIgnoreCase))
+            {
+                int previousOrientation = attacker.CrossbowFrame / 5;
+                int? orientation = target == null ? null : CrossbowAnimation.Orientation(
+                    target.WorldX - attacker.WorldX, target.WorldY - attacker.WorldY);
+                bool release = CrossbowAnimation.Advance(attacker, orientation, Tick >= attacker.NextAttackTick, Tick, TicksPerSecond);
+                if (attacker.CrossbowFrame / 5 != previousOrientation)
+                    Emit(SessionEventKind.CombatSound, attacker.Owner, attacker.Id,
+                        $"sunDiscThrowerRatchet{attacker.CrossbowFrame / 5 % 9 + 1:00}.wav");
+                if (!release) continue;
+            }
             if (target == null)
             {
                 attacker.AttackStartedTick = -1;
@@ -159,7 +170,7 @@ public sealed partial class BattleSession
                 fenceId = intercepted.Field.FirstId;
             }
             double dx = endX - attacker.WorldX, dy = endY - attacker.WorldY;
-            double speed = CannonAnimation.IsCannon(attacker.Type) ? CannonProjectileSpeed : ProjectileSpeed;
+            double speed = CannonAnimation.IsCannon(attacker.Type) ? CannonProjectileSpeed : ArcherProjectileSpeed;
             long travel = beam ? 1 : TicksFor(Math.Sqrt(dx * dx + dy * dy) / speed);
             var shot = new CombatShot(attacker.Id, attacker.Owner, target.Id, damageRate * interval,
                 attacker.WorldX, attacker.WorldY, endX, endY,
@@ -172,6 +183,8 @@ public sealed partial class BattleSession
                 SunCannonAnimation.Fire(attacker, Tick, TicksPerSecond);
             attacker.NextAttackTick = Tick + TicksFor(attacker.Type.Name.Equals("thunderCannon", StringComparison.OrdinalIgnoreCase)
                 ? CannonAnimation.ThunderRecoverySeconds : interval);
+            // 석궁은 타입 주석처럼 장전 그림 자체가 발사 간격을 정한다. 별도의 1초 대기를 더하지 않는다.
+            if (attacker.Type.Name.Equals("windArcher", StringComparison.OrdinalIgnoreCase)) attacker.NextAttackTick = Tick + 1;
             if (attacker.Type.Name.Equals("thunderCannon", StringComparison.OrdinalIgnoreCase)) attacker.AttackStartedTick = -1;
             Emit(SessionEventKind.ShotFired, attacker.Owner, attacker.Id, $"{attacker.DisplayName} → {target.DisplayName} 발사");
         }
@@ -182,6 +195,7 @@ public sealed partial class BattleSession
     {
         if (target.Owner <= 0 || Map.AreAllied(attacker.Owner, target.Owner) || target.HitPoints <= 0 || target.IsStunned ||
             DistanceSquared(attacker, target) > range * range) return false;
+        if (CombatImmunity.Blocks(target, attacker.Type, attacker.WorldX, attacker.WorldY)) return false;
         bool axisOnly = CannonAnimation.IsCannon(attacker.Type);
         if (axisOnly && !(attacker.Footprint.CenterX >= target.Footprint.Left && attacker.Footprint.CenterX <= target.Footprint.AnchorX) &&
             !(attacker.Footprint.CenterY >= target.Footprint.Top && attacker.Footprint.CenterY <= target.Footprint.AnchorY)) return false;
@@ -242,6 +256,10 @@ public sealed partial class BattleSession
     /// <summary>피해를 적용하며 사제는 죽이는 대신 절반 체력에서 기절시킨다.</summary>
     private void ApplyCombatDamage(GameEntity target, CombatShot shot)
     {
+        // 발사자가 사라져도 탄의 타입·출발점으로 면역을 유지한다. 타입 없는 폭발은 방위 면역을 우회한다.
+        TypeInfo? attackerType = shot.AttackerType == null ? null : _types.Find(shot.AttackerType);
+        GameEntity? attacker = Entity(shot.AttackerId);
+        if (CombatImmunity.Blocks(target, attackerType, attacker?.WorldX ?? shot.StartX, attacker?.WorldY ?? shot.StartY)) return;
         target.HitPoints = Math.Max(0, target.HitPoints - shot.Damage);
         Emit(SessionEventKind.EntityDamaged, target.Owner, target.Id, $"{target.DisplayName} 피해 {shot.Damage:0.#}");
         if (target.Kind == ObjectKind.Priest && target.HitPoints <= target.MaxHitPoints / 2)

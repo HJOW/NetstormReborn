@@ -74,7 +74,7 @@ public sealed class GameEntity
     /// <summary>다음 발사를 허용할 틱.</summary>
     public long NextAttackTick { get; internal set; }
 
-    /// <summary>캐논·Crossbow 방위: 0=북, 1=동, 2=남, 3=서. 아이스·썬더 캐논과 Crossbow는 배치 방위를 유지한다.</summary>
+    /// <summary>0=북, 1=동, 2=남, 3=서. 고정 캐논·Crossbow의 사격 방위와 Wind Tower의 면역 면은 설치 후 유지한다.</summary>
     public int CannonDirection { get; internal set; }
 
     /// <summary>현재 캐논 사격 동작의 시작 틱. -1이면 동작하지 않는다.</summary>
@@ -88,6 +88,15 @@ public sealed class GameEntity
 
     /// <summary>태양 캐논이 다음 회전·발사 그림으로 진행할 틱.</summary>
     public long NextSunAnimationTick { get; internal set; }
+
+    /// <summary>석궁의 현재 조준·장전 그림 번호. 설치 사격 방위와 별개로 목표를 따라 움직인다.</summary>
+    public int CrossbowFrame { get; internal set; }
+
+    /// <summary>석궁이 장전 그림을 진행하며 발사를 준비 중인지.</summary>
+    public bool CrossbowFiring { get; internal set; }
+
+    /// <summary>석궁이 다음 조준·장전 그림으로 진행할 틱.</summary>
+    public long NextCrossbowAnimationTick { get; internal set; }
 
     /// <summary>파괴된 아이스 타워가 같은 받침에서 다시 자라는지.</summary>
     public bool IsRegenerating { get; internal set; }
@@ -136,9 +145,12 @@ public sealed class GameEntity
         if (frame >= 0 && frame < type.Definition.Frames.Codes.Count &&
             type.Definition.Frames.Codes[frame].Side is >= 'L' and <= 'O' and var side)
             CannonDirection = side - 'L';
-        // Crossbow의 P 조준 그림도 앞선 L/M/N/O 묶음과 같은 저장 방위다.
+        // Crossbow의 설치 방위는 묶음 글자가 아니라 원본의 실제 20각도표로 복원한다.
         if (type.Name.Equals("windArcher", StringComparison.OrdinalIgnoreCase))
+        {
             CannonDirection = EmplacementDirection.SavedDirection(type, frame);
+            CrossbowFrame = frame is >= 0 and < 100 ? frame : 0;
+        }
         // 가이저는 타입 cost 만큼의 Storm Power 를 품는다. 싱글 플레이 원본 값(exe 타입 로더 → FUN_004b2df0, geyser.type cost = 2000).
         if (kind == ObjectKind.Geyser) StoredStormPower = type.Definition.GetInt("cost") is int stored and > 0 ? stored : int.MaxValue;
     }

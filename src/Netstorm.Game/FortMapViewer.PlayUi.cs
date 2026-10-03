@@ -123,7 +123,7 @@ internal sealed partial class FortMapViewer
         }
         if (_placementMode && mouse.RightButton == ButtonState.Pressed && _previousMouse.RightButton == ButtonState.Released)
         {
-            // 고정 캐논·Crossbow 방향은 배치 전에 고른다. 설치 후 우클릭은 오브젝트 메뉴에서 처리한다.
+            // 고정 캐논·Crossbow의 사격 방향과 Wind Tower의 면역 면을 배치 전에 고른다.
             if (EmplacementDirection.RequiresChoice(_candidates[_candidateIndex]))
             {
                 _cannonRotation = (_cannonRotation + (_reverseRotation ? 3 : 1)) % 4;

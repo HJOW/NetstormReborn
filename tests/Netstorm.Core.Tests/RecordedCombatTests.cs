@@ -207,6 +207,9 @@ public sealed class RecordedCombatTests
     [InlineData("windArcher", -1, 3)]
     [InlineData("windArcher", 1, 1)]
     [InlineData("windArcher", 5, 1)]
+    [InlineData("windBlocker", -1, 3)]
+    [InlineData("windBlocker", 1, 1)]
+    [InlineData("windBlocker", 5, 1)]
     public void FixedCannon_PlacementUsesTheRequestedRotation(string name, int rotation, int expected)
     {
         BattleSession session = Create(Object("windVortex", 1, 30, 30));
@@ -221,6 +224,8 @@ public sealed class RecordedCombatTests
         session.RunTicks(1);
         GameEntity cannon = Assert.Single(session.Entities, e => e.Type.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
         Assert.Equal(expected, cannon.CannonDirection);
+        if (name.Equals("windArcher", StringComparison.OrdinalIgnoreCase))
+            Assert.Equal(CrossbowAnimation.PlacementFrame(expected), cannon.CrossbowFrame);
         if (CannonAnimation.IsCannon(cannon.Type))
             Assert.Equal(CannonAnimation.Side(expected), cannon.Type.Definition.Frames.Codes[CannonAnimation.Frame(cannon, session.Tick, session.TicksPerSecond)].Side);
     }
@@ -238,6 +243,8 @@ public sealed class RecordedCombatTests
             Object("sunBlocker", 2, frontX, frontY), Object("sunBlocker", 2, backX, backY));
         session.RunTicks(1);
         Assert.Equal(2, session.Entity(1)!.AttackTargetId);
+        // 저장된 중간 조준 자세는 실제 회전이 끝나야 탄을 놓는다. 앞쪽 목표 유지·발사 단언은 그대로 검사한다.
+        session.RunTicks(19);
         Assert.Contains(session.DrainEvents(), e => e.Kind == SessionEventKind.ShotFired && e.EntityId == 1);
         session.Submit(new SalvageCommand(2, 2));
         session.RunTicks(1);

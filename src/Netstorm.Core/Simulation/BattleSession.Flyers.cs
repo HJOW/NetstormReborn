@@ -87,7 +87,7 @@ public sealed partial class BattleSession
             if (!MoveFlyer(flyer, target.WorldX, target.WorldY, FlyerAttackReach) || Tick < flyer.NextAttackTick) continue;
             // 비행체는 지상 차폐 위에서 공격한다. 정확한 타격 프레임 대신 1초마다 다음 틱 피해를 예약한다.
             _shots.Add(new CombatShot(flyer.Id, flyer.Owner, target.Id, flyer.Type.Definition.GetDouble("hpPerSec") ?? 0,
-                flyer.WorldX, flyer.WorldY, target.WorldX, target.WorldY, Tick, Tick + 1));
+                flyer.WorldX, flyer.WorldY, target.WorldX, target.WorldY, Tick, Tick + 1, AttackerType: flyer.Type.Name));
             flyer.NextAttackTick = Tick + TicksFor(FallbackShotSeconds);
             Emit(SessionEventKind.ShotFired, flyer.Owner, flyer.Id, $"Whirligig → {target.DisplayName} 공격");
         }
@@ -98,6 +98,7 @@ public sealed partial class BattleSession
     {
         if (target.Owner <= 0 || target.HitPoints <= 0 || target.IsStunned || target.Kind == ObjectKind.Transport ||
             Map.AreAllied(flyer.Owner, target.Owner)) return false;
+        if (CombatImmunity.Blocks(target, flyer.Type, flyer.WorldX, flyer.WorldY)) return false;
         FlyerFlight flight = flyer.Flight!;
         double dx = target.WorldX - flight.OriginX;
         double dy = target.WorldY - flight.OriginY;

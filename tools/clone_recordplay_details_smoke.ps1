@@ -77,6 +77,18 @@ wait 60; capture $OutputDirectory/placement/04-crossbow-east.png; key Escape; ke
 click 40,554; move-center 188,66; assert-detail cursor=sunarcher; assert-detail range=sunarcher:circle:-1;
 wait 30; capture $OutputDirectory/placement/05-disc-thrower.png; quit;
 "@ }
+# Wind Tower의 배치 전 우클릭은 취소 대신 네 면을 순환하고 사거리 표시는 만들지 않는다.
+$taskCases += @{ Name = 'windtower'; Sound = $false;
+    Arguments = '--test-battle TEST01 --placement windBlocker --script "combat 0"';
+    Commands = @"
+wait 15; assert briefing; click-center 82,79; assert placement;
+move-center 188,66; assert-detail cursor=windblocker; assert-detail rotation=0; assert-detail range=none;
+capture $OutputDirectory/windtower/00-north.png;
+right-click 700,450; assert placement; assert-detail rotation=1; capture $OutputDirectory/windtower/01-east.png;
+right-click 700,450; assert placement; assert-detail rotation=2; capture $OutputDirectory/windtower/02-south.png;
+right-click 700,450; assert placement; assert-detail rotation=3; capture $OutputDirectory/windtower/03-west.png;
+right-click 700,450; assert placement; assert-detail rotation=0; quit;
+"@ }
 try {
     # 각 검사를 독립 설정 폴더와 새 클론 프로세스로 실행해 이전 상태를 넘기지 않는다.
     foreach ($taskCase in $taskCases) {

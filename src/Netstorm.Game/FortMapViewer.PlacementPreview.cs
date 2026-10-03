@@ -69,10 +69,10 @@ internal sealed partial class FortMapViewer
         Vector2 bottomRight = Screen(WorldPixels(footprint.AnchorX, footprint.AnchorY), center);
         var rect = new Rectangle((int)MathF.Round(topLeft.X), (int)MathF.Round(topLeft.Y),
             (int)MathF.Round(bottomRight.X - topLeft.X), (int)MathF.Round(bottomRight.Y - topLeft.Y));
-        // 고정 캐논과 Crossbow는 고른 설치 방위의 그림을 미리 보여 준다.
+        // 고정 캐논·Crossbow의 사격 방위와 Wind Tower의 면역 면을 미리 보여 준다.
         (TypeInfo drawn, StructureFrames frames, Vector2 shift) = ObjectSprite(type, null, null);
         int body = EmplacementDirection.RequiresChoice(type)
-            ? type.Definition.Frames.Find(CannonAnimation.Side(_cannonRotation), TypeFrameTable.DefaultVariant, 0) : frames.Body;
+            ? EmplacementDirection.PlacementFrame(type, _cannonRotation) : frames.Body;
         DrawSprite(batch, drawn.LoadIndex, body, bottomRight + shift * _zoom,
             _playerColors.GetValueOrDefault(TestPlayer), tint: blocked ? Color.Salmon : Color.White);
         if (blocked) batch.Draw(_pixel, rect, PreviewBlockedColor * 0.35f);

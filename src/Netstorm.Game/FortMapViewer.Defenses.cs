@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Netstorm.Assets;
+using Netstorm.Core.Rules;
 using Netstorm.Core.Simulation;
 
 namespace Netstorm.Game;
@@ -18,6 +19,10 @@ internal sealed partial class FortMapViewer
             return (growing, _session.IceGrowthFrame(entity));
         if (CannonAnimation.IsCannon(entity.Type))
             return (entity.Type, CannonAnimation.Frame(entity, _session.Tick, _session.TicksPerSecond));
+        if (entity.Type.Name.Equals("windArcher", StringComparison.OrdinalIgnoreCase))
+            return (entity.Type, entity.CrossbowFrame);
+        if (entity.Type.Name.Equals("windBlocker", StringComparison.OrdinalIgnoreCase))
+            return (entity.Type, EmplacementDirection.PlacementFrame(entity.Type, entity.CannonDirection));
         return null;
     }
 

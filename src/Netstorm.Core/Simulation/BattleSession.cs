@@ -512,6 +512,9 @@ public sealed partial class BattleSession
             hash.Add(entity.LastShotTick);
             hash.Add(entity.SunCannonFrame);
             hash.Add(entity.NextSunAnimationTick);
+            hash.Add(entity.CrossbowFrame);
+            hash.Add(entity.CrossbowFiring ? 1 : 0);
+            hash.Add(entity.NextCrossbowAnimationTick);
             hash.Add(entity.IsRegenerating ? 1 : 0);
             hash.Add(entity.RegenerationStartTick);
             AddFlightChecksum(hash, entity.Flight);
