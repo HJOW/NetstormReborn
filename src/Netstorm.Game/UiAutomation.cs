@@ -25,7 +25,7 @@ internal sealed class UiAutomation
     public UiAutomation(string path) => _commands = new Queue<string>(File.ReadAllText(path).Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries));
 
     /// <summary>공통 입력이 읽을 절대 좌표 또는 화면 중심 기준 마우스 상태를 한 프레임씩 만든다.</summary>
-    public MouseState Update(string state, Action quit, int width, int height)
+    public MouseState Update(string state, string detail, Action quit, int width, int height)
     {
         if (_releaseKey) { Keyboard = new KeyboardState(); _releaseKey = false; _waitFrames = 5; return _mouse; }
         if (_dragFrames > 0)
@@ -76,6 +76,10 @@ internal sealed class UiAutomation
             case "assert":
                 if (state != value) throw new InvalidOperationException($"UI 검사 실패: 예상={value}, 실제={state}");
                 Console.WriteLine($"UI PASS: {state}"); break;
+            case "assert-detail":
+                // 부가 상태(선택·유닛 방향)에 값이 포함돼 있는지 검사한다.
+                if (!detail.Contains(value, StringComparison.OrdinalIgnoreCase)) throw new InvalidOperationException($"UI 세부 검사 실패: 예상={value}, 실제={detail}");
+                Console.WriteLine($"UI PASS: {value}"); break;
             case "quit": quit(); break;
             default: throw new ArgumentException($"알 수 없는 UI 검사 명령: {raw}");
         }

@@ -144,7 +144,8 @@ internal sealed partial class FortMapViewer
         bool right = mouse.RightButton == ButtonState.Pressed && _previousMouse.RightButton == ButtonState.Released;
         if (!left && !right) return;
         (int x, int y) = CellAt(new Vector2(mouse.X, mouse.Y));
-        GameEntity? target = _session.EntityAt(x, y);
+        // 사제·골렘은 칸이 아니라 그려진 그림(몸통·머리)으로 누른다. 건물·가이저는 차지한 칸으로 찾는다.
+        GameEntity? target = PickEntityAt(mouse.Position);
         GameEntity? selected = _session.Entity(_session.Player(TestPlayer).SelectedEntityId);
         if (left && target?.Owner == TestPlayer && !(target.Kind == ObjectKind.Altar && selected?.Kind is ObjectKind.Priest or ObjectKind.Transport))
         { SubmitCommand(new SelectEntityCommand(TestPlayer, target.Id)); return; }
@@ -174,7 +175,13 @@ internal sealed partial class FortMapViewer
             }
         }
         else if (selected?.Owner == TestPlayer && selected.Kind is ObjectKind.Priest or ObjectKind.Transport && target == null)
-        { SubmitCommand(new MoveEntityCommand(TestPlayer, selected.Id, x, y)); AcknowledgeOrder(selected); }
+        {
+            // 목적지는 클릭 지점에 가장 가까운 칸이다 (칸 내림이면 유닛이 평균 8px 왼쪽·위에 선다).
+            (int goalX, int goalY) = CellNearest(new Vector2(mouse.X, mouse.Y));
+            SubmitCommand(new MoveEntityCommand(TestPlayer, selected.Id, goalX, goalY)); AcknowledgeOrder(selected);
+            // 원본은 이동 명령을 내리면(이동할 수 없는 곳이어도) 곧바로 선택이 풀린다 (2026-10-03 자동 분석 녹화).
+            SubmitCommand(new SelectEntityCommand(TestPlayer, 0));
+        }
         else if (left) SubmitCommand(new SelectEntityCommand(TestPlayer, target?.Id ?? 0));
     }
 

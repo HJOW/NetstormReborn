@@ -224,6 +224,7 @@ dotnet run --project src/Netstorm.Game -- --map bridgethegap --bridges 6 --bridg
 
 명령줄 옵션 (아래를 쓰면 그 실행은 설정을 저장하지 않는다): `--fullscreen`, `--windowed`, `--window 1920x1080`,
 `--wide extend|letterbox`, `--view-height 480|600|768`, `--no-edge-scroll`, `--no-sound`, `--no-music`.
+성능 진단(2026-10-03): `--perf`는 1초마다 프레임 수·갱신/그리기 평균 시간과 구간별 시간(지면 `terrain`·오브젝트 `objects`·세계 `world`·UI `ui`·그리기 호출 제출 `batchEnd`)을 콘솔에 쓰고 화면 오른쪽 아래에 FPS를 띄운다. 환경 변수 `NETSTORM_NOVSYNC=1`은 수직 동기를 끈다 — 원격 데스크톱처럼 표시 주사율이 낮은 환경에서 프레임이 그 주사율(예: 32Hz)에 묶이는지 확인하는 진단용이다. UI 자동 검사(`--ui-script-file`)에는 `assert-detail 값`(선택 유닛·내 이동형 유닛의 방향/이동 상태, 예: `assert-detail selected=priest`, `assert-detail priest:C:moving`)이 있다.
 시작 팁(2026-10-02): 메인 메뉴로 시작하면 Options "Tell Tips at Startup"이 켜져 있을 때 원본 "Did You Know?" 창을 연다. `--no-tips`는 이번 실행에서만 끄고, `--ui-script-file` 자동 검사는 `--tips`를 줄 때만 연다.
 
 **소리(2026-10-01)**: 원본 `sound/*.wav`·`music/*.mus`를 그대로 재생한다. 미션에서는 원소 곡 4개를 원본 순서(wind → rain → thunder → sun, 첫 곡 난수)로 돌리고 내 희생 의식 동안 `sacrifice.mus`를 요청한다. 메뉴는 `ser22.mus`다. 효과음은 다리 금·붕괴·놓기·회전, 건설 완료, 지식 창, 포획과 의식에 연결했다. 메인 메뉴 옵션의 효과음·음악 켜기/끄기·볼륨(1~5, 기본 3·2)을 현재 재생에도 즉시 적용한다. 소리 장치가 없으면 무음으로 계속 실행한다. 규칙: [music.md](exe/music.md).

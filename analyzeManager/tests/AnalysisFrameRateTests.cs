@@ -189,6 +189,29 @@ public sealed class AnalysisFrameRateTests : IDisposable
         Assert.Equal(0, store.Load(session.Id).EventCount);
     }
 
+    /// <summary>다른 프로세스가 상태 파일을 잠시 독점해 교체가 거부돼도 저장을 재시도해 결국 최신 내용으로 바꾼다.</summary>
+    [Fact]
+    public async Task StateSaveRetriesWhileAnotherHandleBlocksReplacement()
+    {
+        var store = new SessionStore(_root);
+        AnalysisSession session = await store.CreateAsync("상태 파일 충돌 검사", CancellationToken.None);
+        string path = Path.Combine(store.SessionDirectory(session.Id), "automatic-recording.json");
+        var first = new AutomaticRecordingState { SessionId = session.Id, RunId = Guid.NewGuid().ToString("N"), Fps = 30 };
+        AutomaticRecording.SaveState(store, first);
+        // 삭제 공유 없이 열어 두어 File.Move 교체를 거부시키고 약 150ms 뒤에 놓는다.
+        var blocker = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+        Task release = Task.Run(async () =>
+        {
+            await Task.Delay(150, TestContext.Current.CancellationToken);
+            blocker.Dispose();
+        }, TestContext.Current.CancellationToken);
+        AutomaticRecording.SaveState(store, first with { State = "recording", Frames = 7 });
+        await release;
+        AutomaticRecordingState saved = JsonSerializer.Deserialize<AutomaticRecordingState>(File.ReadAllBytes(path), SessionStore.Json)!;
+        Assert.Equal("recording", saved.State);
+        Assert.Equal(7, saved.Frames);
+    }
+
     /// <summary>자신이 만든 임시 폴더의 절대 경로를 확인한 뒤 테스트 파일을 정리한다.</summary>
     public void Dispose()
     {

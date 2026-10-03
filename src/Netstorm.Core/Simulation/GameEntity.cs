@@ -77,6 +77,12 @@ public sealed class GameEntity
     /// <summary>기지가 생성한 공중 공격체의 비행 상태. 지상 오브젝트는 null이다.</summary>
     public FlyerFlight? Flight { get; internal set; }
 
+    /// <summary>
+    /// 마지막으로 걸어간 방향 (<see cref="UnitHeading"/>, 움직인 적이 없으면 <see cref="UnitHeading.None"/>).
+    /// 화면이 걷는 그림의 방향을 고르는 데만 쓰며 규칙·검사합과 무관하다.
+    /// </summary>
+    public int Heading { get; internal set; } = UnitHeading.None;
+
     /// <summary>전투·표시에 쓰는 중심 x. 비행체는 칸 사이도 연속 이동한다.</summary>
     public double WorldX => Flight?.X ?? Footprint.CenterX;
 

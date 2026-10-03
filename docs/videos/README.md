@@ -68,6 +68,7 @@ python tools/videoframes.py range "playingVideos/Netstorm Islands at war - Disso
 
 ## 관찰 노트
 
+* **[원본 자동 분석 녹화: 캠페인 1-1 The War Begins! (2026-10-03)](auto-war-begins-20261003.md)** — `analyzeManager` 30FPS 자동 녹화(4,318프레임·236.9초, 실제 평균 18.2FPS). 사제·골렘 이동(선택 → 땅 좌클릭 → 선택 해제, 출발 지연 0.4~0.8초, 사제 약 1.8·골렘 약 2.0칸/초, 허공 클릭은 거부), 골렘 배치 연출(약 1.4초), 사제의 Sun Workshop 건설(약 10~11초, 창문 불), 워크샵 덱 등록(Rain Generator·Sun Cannon), ESC → Leave Mission → Main Menu를 시각표와 함께 정리했다. 1차 실행 녹화가 승인 프롬프트로 VS Code가 앞으로 나오며 중단된 사례와 파일 교체 거부 수정도 기록했다. 원자료는 Git 제외 `extracted/analyzeManager/20261003T052032571Z-e652ee405b0d/recording/`에 보존한다.
 * **[녹화 원자료 최종 판독과 클론 반영 (2026-10-02)](record-play-final-20261002.md)** — 세 `record-play` 세션(1-1 전체·1-2 재현·UI 시연)을 지우기 전에 룬 마크(룬별 1.87~2.42초)·지키기 10.04초·제단 폭발 9.45초, 희생 음악 재시작(사제를 제단으로 보내는 명령), SP 숫자 따라가기, 낙하 궤적, 반복 효과음·명령 응답음, 시작 팁·View/Help 메뉴·우클릭 창·도움말 색을 판독해 클론에 반영했다. **세 세션의 원자료(영상·소리·입력)는 2026-10-02에 삭제했다.** 1초 간격 축소 프레임·시각표·버튼/키 사건 요약은 `extracted/record-play-archive-20261002/`에 남긴다. `playingVideos/`의 참고용 mp4는 그대로다.
 
 * 네 번째 녹화 추가 판독(2026-10-02): [옵션 메뉴 동작·파란 마크의 소멸/복귀](../screens/options-menu.md), [도움말 11주제 한국어 정리](../gameplay/help-text-record-play-20261001.md), [내장 도움말 전체 영문 본문](../sources/in-game-help.md). 도움말의 중복 정의와 실제 녹화 목록을 구분하며, 원본의 2,727행 전체도 UTF-8로 보존했다.

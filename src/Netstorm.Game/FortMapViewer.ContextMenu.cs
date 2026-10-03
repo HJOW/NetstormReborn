@@ -102,8 +102,7 @@ internal sealed partial class FortMapViewer
         else if (DeckTraySlotAt(mouse.Position) != null) bridge = true;
         else if (!IsPlayUiPoint(mouse.X, mouse.Y))
         {
-            (int x, int y) = CellAt(new(mouse.X, mouse.Y));
-            entity = _session.EntityAt(x, y); type = entity?.Type;
+            entity = PickEntityAt(mouse.Position); type = entity?.Type;
         }
         if (type == null && !bridge) return false;
         QueueSound(OpenGumpSound);

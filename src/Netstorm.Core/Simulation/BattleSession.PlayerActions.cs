@@ -35,10 +35,30 @@ public sealed partial class BattleSession
         var goal = new Footprint(command.X, command.Y, 1, 1);
         if (command.X < 0 || command.Y < 0 || command.X >= BridgeGrid.WorldSize || command.Y >= BridgeGrid.WorldSize)
             return new CommandResult(CommandFailure.NoRoute);
-        List<(int X, int Y)>? path = FindMovePath(entity!, goal, exact: true);
+        // 걷는 도중이면 진행 중인 걸음을 마저 걷고(칸 사이에서 뒤로 튀지 않게) 그 다음 칸에서 새 경로를 잇는다.
+        MovementRoute? current = RouteOf(entity!.Id);
+        (int X, int Y)? stepEnd = null;
+        double carried = 0;
+        if (current is { IsBlocked: false, Progress: > 0 } && current.NextIndex < current.Path.Count
+            && current.Path[current.NextIndex - 1] == (entity.Footprint.AnchorX, entity.Footprint.AnchorY))
+        {
+            stepEnd = current.Path[current.NextIndex];
+            carried = current.Progress;
+        }
+        List<(int X, int Y)>? path = stepEnd is { } next
+            ? FindMovePath(entity, goal, exact: true, from: new Footprint(next.X, next.Y, 1, 1))
+            : FindMovePath(entity, goal, exact: true);
+        // 다음 칸에서 길이 없으면 현재 칸에서 다시 찾아 본다.
+        if (path == null && stepEnd != null)
+        {
+            stepEnd = null;
+            carried = 0;
+            path = FindMovePath(entity, goal, exact: true);
+        }
         if (path == null) return new CommandResult(CommandFailure.NoRoute);
-        _harvestTasks.Remove(entity!.Id);
-        _moveTasks[entity.Id] = new UnitMoveTask(entity.Id, UnitMovePurpose.MoveToCell, 0, 0, path, Bridges.Version, goal);
+        if (stepEnd != null) path.Insert(0, (entity.Footprint.AnchorX, entity.Footprint.AnchorY));
+        _harvestTasks.Remove(entity.Id);
+        _moveTasks[entity.Id] = new UnitMoveTask(entity.Id, UnitMovePurpose.MoveToCell, 0, 0, path, Bridges.Version, goal) { Progress = carried };
         return CommandResult.Ok();
     }
 

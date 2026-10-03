@@ -34,11 +34,38 @@ public sealed partial class SessionStore
         }
     }
 
+    /// <summary>백신·탐색기·다른 분석기 프로세스가 파일을 잠시 열어 쓰기·교체가 거부될 때 다시 시도하는 최대 횟수.</summary>
+    private const int TransientFileAttempts = 20;
+    /// <summary>일시적 파일 접근 충돌 뒤 다시 시도하기 전의 대기 시간.</summary>
+    private static readonly TimeSpan TransientFileDelay = TimeSpan.FromMilliseconds(25);
+
+    /// <summary>
+    /// 파일 쓰기·교체 작업을 일시적인 공유 충돌에 대비해 다시 시도한다.
+    /// Windows는 다른 프로세스가 대상 파일을 열고 있으면 삭제 공유를 허용했더라도
+    /// <c>File.Move</c> 덮어쓰기를 오류 5(접근 거부)로 거부한다. 충돌은 곧 풀리므로 잠시 기다렸다가 같은 작업을 반복한다.
+    /// </summary>
+    public static void RetryTransient(Action action)
+    {
+        // 시도 횟수 한도까지 반복하고 마지막 시도의 오류만 호출자에게 전달한다.
+        for (int attempt = 1; ; attempt++)
+        {
+            try
+            {
+                action();
+                return;
+            }
+            catch (Exception error) when (error is IOException or UnauthorizedAccessException && attempt < TransientFileAttempts)
+            {
+                Thread.Sleep(TransientFileDelay);
+            }
+        }
+    }
+
     /// <summary>바이너리·설정·JSON 모두 쓰기 전에 파일별 용량과 링크를 확인한다.</summary>
     public static void WriteSmallFile(string path, byte[] bytes)
     {
         if (bytes.Length >= FileLimitBytes) throw new InvalidOperationException("파일은 50 MB 미만이어야 합니다.");
         RejectReparse(path);
-        File.WriteAllBytes(path, bytes);
+        RetryTransient(() => File.WriteAllBytes(path, bytes));
     }
 }

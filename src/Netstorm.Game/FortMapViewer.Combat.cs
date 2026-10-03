@@ -61,7 +61,7 @@ internal sealed partial class FortMapViewer
         foreach (GameEntity entity in _session.Entities.Where(e => e.MaxHitPoints > 0 && e.IsComplete))
         {
             if (entity.HitPoints >= entity.MaxHitPoints && entity.Id != selected && !entity.IsStunned) continue;
-            Vector2 anchor = CellCenterScreen(entity.WorldX, entity.WorldY, center);
+            Vector2 anchor = EntityCenterScreen(entity, center);
             double ratio = entity.HitPoints / entity.MaxHitPoints;
             Color color = ratio > 0.5 ? Color.LimeGreen : ratio > 0.25 ? Color.Gold : Color.OrangeRed;
             int width = Math.Max(8, (int)(HealthBarWidth * _zoom));
@@ -90,7 +90,7 @@ internal sealed partial class FortMapViewer
         // 길 복구를 기다리는 작업의 이유를 이동체 위치에 표시한다.
         foreach (GameEntity entity in _session.Entities.Where(e => _session.IsMoveBlocked(e.Id)))
         {
-            Vector2 anchor = CellCenterScreen(entity.WorldX, entity.WorldY, center);
+            Vector2 anchor = EntityCenterScreen(entity, center);
             batch.DrawString(font, "길 막힘·대기", anchor + new Vector2(-36, -43), Color.Gold);
         }
         // 세션 틱 사이의 탄 경로를 선형 보간한다. 정지 중에는 탄도 같은 위치에 남는다.

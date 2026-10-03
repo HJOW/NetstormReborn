@@ -170,6 +170,9 @@ internal sealed partial class FortMapViewer
                 SubmitCommand(IsBuilding(type)
                     ? new ConstructBuildingCommand(TestPlayer, type.Name, cellX, cellY)
                     : new PlaceUnitCommand(TestPlayer, type.Name, cellX, cellY));
+                // 원본은 유닛을 놓거나 건물 설치를 확정하면 들고 있던 커서가 풀려 다음 클릭은 선택이다
+                // (2026-10-03 자동 분석 녹화: 골렘을 놓은 6초 뒤의 좌클릭이 골렘 선택이었다). 다시 놓으려면 생산 창이나 D 키로 다시 집는다.
+                if (_playUi) { _placementMode = false; _lastCheck = null; }
             }
             else
             {
@@ -226,6 +229,17 @@ internal sealed partial class FortMapViewer
         return ((int)Math.Floor(world.X / FortMap.CellPixelWidth), (int)Math.Floor(world.Y / FortMap.CellPixelHeight));
     }
 
+    /// <summary>
+    /// 화면 좌표에서 칸 기준점(칸의 왼쪽 위 모서리, 이동형 유닛의 발밑)이 가장 가까운 칸. 내림(<see cref="CellAt"/>)과 달리
+    /// 유닛이 클릭 지점의 가로 ±8px·세로 ±5px 안에 서므로 클릭한 곳에 가서 선다.
+    /// 2026-10-03 원본 녹화에서 이동 목적지 대비 사제·골렘의 도착 위치는 −5~+10px로 클릭 지점 주변이었다.
+    /// </summary>
+    private (int X, int Y) CellNearest(Vector2 screen)
+    {
+        Vector2 world = (screen - _lastCenter) / _zoom + _camera;
+        return ((int)Math.Round(world.X / FortMap.CellPixelWidth), (int)Math.Round(world.Y / FortMap.CellPixelHeight));
+    }
+
     /// <summary>키를 이번 갱신에 새로 눌렀는지</summary>
     private bool Pressed(KeyboardState keyboard, Keys key) => keyboard.IsKeyDown(key) && !_previousKeyboard.IsKeyDown(key);
 
@@ -239,7 +253,11 @@ internal sealed partial class FortMapViewer
         foreach (GameEntity entity in _session.Entities.Where(e => e.Kind != ObjectKind.Flyer && (e.Source == null || e.Kind == ObjectKind.Geyser && !_map.Objects.Contains(e.Source))))
         {
             if (HiddenByBuildingToggle(entity.Type)) continue;
-            Vector2 anchor = Screen(WorldPixels(entity.Footprint.AnchorX, entity.Footprint.AnchorY), center);
+            bool mobile = IsMobile(entity);
+            Vector2 anchor = Screen(mobile ? MobileWorldPixels(entity) : WorldPixels(entity.Footprint.AnchorX, entity.Footprint.AnchorY), center);
+            // 화면 밖에 있는 오브젝트는 그리지 않는다.
+            if (anchor.X < -ObjectCullMargin * _zoom || anchor.X > _viewSize.X + ObjectCullMargin * _zoom
+                || anchor.Y < -ObjectCullMargin * _zoom || anchor.Y > _viewSize.Y + ObjectCullMargin * _zoom) continue;
             if (entity.Kind == ObjectKind.Geyser && entity.Source != null)
             {
                 // 미션 시작 때 생성된 연습 가이저는 저장 맵 지면에 없으므로 작은 받침도 함께 그린다.
@@ -247,7 +265,9 @@ internal sealed partial class FortMapViewer
                 DrawSprite(batch, _supportTopType.LoadIndex, MapSpriteFrames.BodyFrame(_supportTopType.Definition, 0), anchor);
             }
             TypeInfo drawn = entity.IsDepletedGeyser && _emptyGeyserType != null ? _emptyGeyserType : entity.Type;
-            DrawSprite(batch, drawn.LoadIndex, drawn.Definition.Frames.DefaultFrame, anchor,
+            // 걷는 그림이 있는 이동형 유닛(내가 놓은 골렘 등)은 방향·걷기 프레임을 쓴다.
+            int frame = mobile && MobileFrame(entity) is int walkFrame ? walkFrame : drawn.Definition.Frames.DefaultFrame;
+            DrawSprite(batch, drawn.LoadIndex, frame, anchor,
                 alpha: entity.IsComplete ? 1f : UnderConstructionAlpha);
             if (!entity.IsComplete)
             {

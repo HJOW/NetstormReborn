@@ -35,17 +35,65 @@ public sealed partial class BattleSession
         }
     }
 
-    /// <summary>타입 속도만큼 공통 경로를 진행하고 운반 중인 사제도 함께 옮긴다.</summary>
+    /// <summary>
+    /// 타입 속도만큼 공통 경로를 진행하고 운반 중인 사제도 함께 옮긴다. 속도는 칸 길이 기준이라
+    /// 대각선 한 걸음(√2칸)은 직선 한 걸음보다 오래 걸린다 — 원본 녹화에서 사제의 8칸 직선 이동 4.3초와
+    /// 대각선 3.75칸 + 직선 7칸(약 12.3칸 길이) 이동 약 7초가 같은 속도 1.8칸/초로 맞는다.
+    /// </summary>
     private void AdvanceMovement(GameEntity mover, MovementRoute route)
     {
+        FaceNextStep(mover, route);
         route.Progress += MovementRate.CellsPerSecond(mover.Type) / TicksPerSecond;
         // 빠른 타입도 누적 이동량을 모두 소모하며 결정적인 칸 순서로 진행한다.
-        while (route.Progress >= 1.0 && route.NextIndex < route.Path.Count)
+        while (route.NextIndex < route.Path.Count)
         {
+            double length = StepLength(route.Path[route.NextIndex - 1], route.Path[route.NextIndex]);
+            if (route.Progress < length) break;
             (int x, int y) = route.Path[route.NextIndex++];
             MoveEntityTo(mover, x, y, occupies: mover.OccupiesGround);
-            route.Progress -= 1.0;
+            route.Progress -= length;
+            FaceNextStep(mover, route);
         }
+    }
+
+    /// <summary>다음 걸음의 방향을 오브젝트가 바라보는 방향으로 기록한다 (화면 연출 전용).</summary>
+    private static void FaceNextStep(GameEntity mover, MovementRoute route)
+    {
+        if (route.NextIndex >= route.Path.Count) return;
+        (int fromX, int fromY) = route.Path[route.NextIndex - 1];
+        (int toX, int toY) = route.Path[route.NextIndex];
+        int heading = UnitHeading.FromStep(toX - fromX, toY - fromY);
+        if (heading != UnitHeading.None) mover.Heading = heading;
+    }
+
+    /// <summary>오브젝트가 지금 쓰는 이동 작업 (이동 명령·수송·수확 중 하나, 없으면 null).</summary>
+    private MovementRoute? RouteOf(int entityId) =>
+        _moveTasks.TryGetValue(entityId, out UnitMoveTask? move) ? move
+        : _harvestTasks.TryGetValue(entityId, out PriestHarvestTask? harvest) ? harvest : null;
+
+    /// <summary>걸어서 이동 중인지 (길 막힘 대기나 도착한 뒤·가이저에서 머무는 동안은 false). 걷는 그림을 고르는 데 쓴다.</summary>
+    /// <param name="entityId">오브젝트 번호</param>
+    public bool IsMoving(int entityId) => RouteOf(entityId) is { IsBlocked: false } route && route.NextIndex < route.Path.Count;
+
+    /// <summary>
+    /// 화면에 그릴 칸 좌표(소수). 규칙상 위치는 칸 단위지만 걷는 유닛은 현재 칸에서 다음 칸 쪽으로
+    /// 이동량(<c>Progress</c>)과 다음 틱까지 흐른 시간(<c>Alpha</c>)만큼 앞서 그려 부드럽게 걷는 것처럼 보인다.
+    /// 규칙·검사합·충돌 판정에는 쓰이지 않는다. 걷지 않으면 기준 칸 그대로다.
+    /// </summary>
+    /// <param name="entity">그릴 오브젝트</param>
+    public (double X, double Y) VisualCell(GameEntity entity)
+    {
+        (double x, double y) = (entity.Footprint.AnchorX, entity.Footprint.AnchorY);
+        if (RouteOf(entity.Id) is not { IsBlocked: false } route || route.NextIndex >= route.Path.Count
+            || route.Path[route.NextIndex - 1] != (entity.Footprint.AnchorX, entity.Footprint.AnchorY))
+        {
+            return (x, y);
+        }
+        (int fromX, int fromY) = route.Path[route.NextIndex - 1];
+        (int toX, int toY) = route.Path[route.NextIndex];
+        double perTick = MovementRate.CellsPerSecond(entity.Type) / TicksPerSecond;
+        double fraction = Math.Clamp((route.Progress + _timestep.Alpha * perTick) / StepLength((fromX, fromY), (toX, toY)), 0, 1);
+        return (fromX + (toX - fromX) * fraction, fromY + (toY - fromY) * fraction);
     }
 
     /// <summary>대기·재개와 다음 경로 계산을 바꾸는 상태까지 검사합에 넣는다.</summary>

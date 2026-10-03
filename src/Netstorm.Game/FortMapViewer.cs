@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using FontStashSharp;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -15,6 +16,10 @@ internal sealed partial class FortMapViewer : IDisposable
     private const float PanSpeed = 600f;
     /// <summary>오브젝트가 표시되는 기본 확대 배율.</summary>
     private const float DefaultZoom = 1f;
+    /// <summary>화면 밖 컬링에서 작은 지면 조각(타일·절벽)에 주는 여유(논리 픽셀, 확대 배율 전). 가장 큰 조각의 기준점 오프셋보다 크게 잡는다.</summary>
+    private const float TileCullMargin = 96f;
+    /// <summary>화면 밖 컬링에서 건물·증기 등 큰 오브젝트에 주는 여유(논리 픽셀, 확대 배율 전).</summary>
+    private const float ObjectCullMargin = 400f;
     /// <summary>월드의 한 변 청크 수 (월드 = 16×16 청크, docs/formats/fort.md).</summary>
     private const int WorldChunks = 16;
     /// <summary>월드 전체의 원본 픽셀 크기. 화면 끝 스크롤이 카메라 중심을 이 범위 안에 가둔다.</summary>
@@ -105,6 +110,9 @@ internal sealed partial class FortMapViewer : IDisposable
         InitializePlacement(catalog);
         InitializeBridges(catalog);
         CenterOnPriest();
+        // 첫 그리기에서 신전 테마로 지면을 다시 만드는 일(약 80ms)과 그 그림의 텍스처 만들기를 미션 로딩 중에 끝낸다.
+        RefreshTerritoryAppearance();
+        WarmTextures();
     }
 
     /// <summary>
@@ -135,6 +143,7 @@ internal sealed partial class FortMapViewer : IDisposable
     {
         if (width < 320 || height < 320) return;
         UpdateEffects(seconds);
+        UpdateWalkClock(seconds);
         KeyboardState keyboard = input ?? Keyboard.GetState();
         if (inputBlocked)
         {
@@ -272,10 +281,19 @@ internal sealed partial class FortMapViewer : IDisposable
                 }
             }
         }
+        // 화면 밖 그림은 건너뛴다. 월드 전체의 지면·오브젝트를 매 프레임 그리면 보이지 않는 수천 개의 그리기 호출이 프레임을 깎는다.
+        // 여유는 그림이 기준점에서 뻗는 최대 크기(작은 지면 조각 96px, 건물·증기 등 큰 오브젝트 400px)를 확대 배율에 맞춰 잡는다.
+        float tileMargin = TileCullMargin * _zoom;
+        float objectMargin = ObjectCullMargin * _zoom;
+        bool Visible(Vector2 point, float margin) =>
+            point.X > -margin && point.X < width + margin && point.Y > -margin && point.Y < height + margin;
+        long perfTerrain = Stopwatch.GetTimestamp();
         // 시드로 생성한 지면을 원본 isle 타일로 그린다.
         RefreshTerritoryAppearance();
         foreach (FortTerrainTile tile in _terrain.Tiles)
         {
+            Vector2 tilePosition = Screen(WorldPixels(tile.X, tile.Y), center);
+            if (!Visible(tilePosition, tileMargin)) continue;
             // 건물 소멸로 사라진 개발용 받침 타일은 현재 지지 판정에 맞춰 숨긴다.
             if (tile.Region < 0 && !_session.Bridges.IsIsland(tile.X, tile.Y)) continue;
             if (_edgeFarmCells.Contains((tile.X, tile.Y)))
@@ -284,30 +302,34 @@ internal sealed partial class FortMapViewer : IDisposable
             }
             int color = _islandColors ? PreviewPlayerColors.GetValueOrDefault(tile.Owner) : 0;
             DrawSprite(batch, _terrainType.LoadIndex, MapSpriteFrames.BodyFrame(_terrainType.Definition, tile.Cluster),
-                Screen(WorldPixels(tile.X, tile.Y), center), color);
+                tilePosition, color);
         }
         // 절벽은 별도 기준점을 사용하며 본체 지면 위·건물 아래에 표시한다. 원본의 깊이 정렬은 추가 검증 대상이다.
         foreach (FortTerrainFringeSprite fringe in _fringes)
         {
+            Vector2 fringePosition = Screen(WorldPixels(fringe.X, fringe.Y), center);
+            if (!Visible(fringePosition, tileMargin)) continue;
             // 절벽의 원본 지면 기준점은 표시 기준점보다 OffsetY만큼 위에 있다.
             if (!_session.Bridges.IsIsland(fringe.X, fringe.Y - FortTerrainFringe.OffsetY)) continue;
-            DrawSprite(batch, _fringeType.LoadIndex, MapSpriteFrames.BodyFrame(_fringeType.Definition, fringe.Cluster),
-                Screen(WorldPixels(fringe.X, fringe.Y), center));
+            DrawSprite(batch, _fringeType.LoadIndex, MapSpriteFrames.BodyFrame(_fringeType.Definition, fringe.Cluster), fringePosition);
         }
         // edgeFarm은 원본의 matchframe으로 해당 isle을 대체한다. 원본과 같은 소유자 색상표를 적용한다.
         foreach (FortEdgeFarmTile tile in _edgeFarms)
         {
+            Vector2 farmPosition = Screen(WorldPixels(tile.X, tile.Y), center);
+            if (!Visible(farmPosition, tileMargin)) continue;
             int color = _islandColors ? PreviewPlayerColors.GetValueOrDefault(tile.Owner) : 0;
             DrawSprite(batch, _edgeFarmType.LoadIndex, MapSpriteFrames.BodyFrame(_edgeFarmType.Definition, tile.Cluster),
-                Screen(WorldPixels(tile.X, tile.Y), center), color);
+                farmPosition, color);
         }
         // 확인된 3×3 받침은 같은 기준점에서 전용 하단 바위와 윗면을 그린다.
         foreach (FortIslandSupport support in _terrain.Supports)
         {
+            Vector2 anchor = Screen(WorldPixels(support.X, support.Y), center);
+            if (!Visible(anchor, objectMargin)) continue;
             // 저장된 받침도 건물 회수·파괴로 지지를 잃으면 화면에서 함께 사라진다.
             if (!_session.Bridges.IsIsland(support.X, support.Y)) continue;
             int cluster = FortIslandSupports.ColorCluster(support.Owner, PreviewPlayerColors);
-            Vector2 anchor = Screen(WorldPixels(support.X, support.Y), center);
             DrawSprite(batch, _supportBottomType.LoadIndex, MapSpriteFrames.BodyFrame(_supportBottomType.Definition, cluster), anchor);
             DrawSprite(batch, _supportTopType.LoadIndex, MapSpriteFrames.BodyFrame(_supportTopType.Definition, cluster), anchor);
         }
@@ -321,6 +343,8 @@ internal sealed partial class FortMapViewer : IDisposable
             DrawSprite(batch, _supportBottomType.LoadIndex, MapSpriteFrames.BodyFrame(_supportBottomType.Definition, cluster), anchor);
             DrawSprite(batch, _supportTopType.LoadIndex, MapSpriteFrames.BodyFrame(_supportTopType.Definition, cluster), anchor);
         }
+        PerfMeter.Current?.Section("terrain", perfTerrain);
+        long perfObjects = Stopwatch.GetTimestamp();
         FortMapObject? hovered = null;
         float nearest = 20f * 20f;
         var mousePosition = new Vector2(_previousMouse.X, _previousMouse.Y);
@@ -335,17 +359,20 @@ internal sealed partial class FortMapViewer : IDisposable
             }
             GameEntity? live = _session.EntityForInitial(item);
             if (HiddenByBuildingToggle(item.Object.Type)) continue;
-            // 사제뿐 아니라 저장된 수송 유닛도 현재 이동 좌표로 그린다.
+            // 사제뿐 아니라 저장된 수송 유닛도 현재 이동 좌표로 그린다. 걷는 유닛은 칸 사이 보간 위치와 걷는 방향 그림을 쓴다.
+            bool mobile = live != null && IsMobile(live);
             int itemX = live?.Footprint.AnchorX ?? item.X;
             int itemY = live?.Footprint.AnchorY ?? item.Y;
-            Vector2 anchor = Screen(WorldPixels(itemX, itemY), center);
+            Vector2 anchor = Screen(mobile ? MobileWorldPixels(live!) : WorldPixels(itemX, itemY), center);
+            if (!Visible(anchor, objectMargin)) continue;
             // 다 쓴 가이저는 원본 emptyGeyser 그림으로 바꿔 그린다 (도움말 "Empty Storm Geyser")
             if (live is { IsDepletedGeyser: true } && _emptyGeyserType != null)
             {
                 DrawSprite(batch, _emptyGeyserType.LoadIndex, _emptyGeyserType.Definition.Frames.DefaultFrame, anchor);
                 continue;
             }
-            var sprite = GetSprite(item);
+            var sprite = mobile && MobileFrame(live!) is int walkFrame
+                ? GetTexture(item.Object.Type.LoadIndex, walkFrame) : GetSprite(item);
             if (sprite.HasValue)
             {
                 var (texture, offset) = sprite.Value;
@@ -365,12 +392,16 @@ internal sealed partial class FortMapViewer : IDisposable
                 hovered = item;
             }
         }
+        PerfMeter.Current?.Section("objects", perfObjects);
+        long perfWorld = Stopwatch.GetTimestamp();
         DrawPlacedUnits(batch, center);
         DrawBridgeWorld(batch, center);
         DrawFalling(batch, center);
         DrawFlyers(batch, center);
         DrawCombat(batch, font, center);
         DrawSacrificeStatus(batch, font, center);
+        PerfMeter.Current?.Section("world", perfWorld);
+        long perfUi = Stopwatch.GetTimestamp();
         if (!_playUi)
         {
             batch.Draw(_pixel, new Rectangle(0, 0, width, HeaderHeight), new Color(18, 24, 38));
@@ -390,6 +421,7 @@ internal sealed partial class FortMapViewer : IDisposable
             batch.Draw(_pixel, new Rectangle(0, height - 34, width, 34), new Color(18, 24, 38));
             batch.DrawString(font, text, new Vector2(16, height - 30), Color.White);
         }
+        PerfMeter.Current?.Section("ui", perfUi);
         DrawTutorialDialog(batch, font, width, height);
         DrawKnowledge(batch, font, small, width, height);
         DrawContextMenu(batch, width, height);

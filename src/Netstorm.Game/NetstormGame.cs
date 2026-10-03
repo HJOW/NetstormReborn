@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using FontStashSharp;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -59,6 +60,8 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     private MainMenuView? _mainMenu;
     /// <summary>명시적으로 지정한 클론 전용 UI 검사. 원본이나 OS 창에 입력하지 않는다.</summary>
     private readonly UiAutomation? _uiAutomation;
+    /// <summary><c>--perf</c> 로 켠 성능 진단 (끄면 null)</summary>
+    private readonly PerfMeter? _perf;
 
     /// <summary>원본 효과음·배경음악 재생기 (원본 데이터가 없으면 null)</summary>
     private AudioPlayer? _audio;
@@ -91,11 +94,13 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     {
         _graphics = new GraphicsDeviceManager(this)
         {
-            SynchronizeWithVerticalRetrace = true,
+            // 환경 변수 NETSTORM_NOVSYNC=1 이면 수직 동기를 끈다 (원격 데스크톱처럼 화면 주사율이 낮을 때 프레임 한계를 진단하는 용도)
+            SynchronizeWithVerticalRetrace = Environment.GetEnvironmentVariable("NETSTORM_NOVSYNC") != "1",
         };
         string[] args = Environment.GetCommandLineArgs();
         string? uiScript = ParseValueArgument(args, "--ui-script-file");
         if (uiScript != null) _uiAutomation = new UiAutomation(uiScript);
+        if (args.Contains("--perf")) _perf = new PerfMeter();
         string? screenshot = ParseValueArgument(args, "--screenshot");
         _screenshotPath = screenshot == null ? null : Path.GetFullPath(screenshot);
         string? screenshotFrames = ParseValueArgument(args, "--screenshot-frames");
@@ -453,6 +458,14 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     /// <param name="gameTime">경과 시간</param>
     protected override void Update(GameTime gameTime)
     {
+        long perfStart = Stopwatch.GetTimestamp();
+        UpdateGame(gameTime);
+        _perf?.EndUpdate(perfStart);
+    }
+
+    /// <summary>입력 처리와 애니메이션 진행의 본체 (성능 측정을 위해 <see cref="Update"/> 가 감싼다)</summary>
+    private void UpdateGame(GameTime gameTime)
+    {
         KeyboardState keyboard = Keyboard.GetState();
         bool popupOpen = _helpWindow?.IsOpen == true || MissionOptionsOpen;
         bool tutorialOpen = popupOpen || _mapViewer?.TutorialDialogOpen == true || _mapViewer?.KnowledgeOpen == true;
@@ -471,7 +484,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         if (_uiAutomation != null)
         {
             keyboard = new KeyboardState();
-            mouse = _uiAutomation.Update(_helpWindow?.IsOpen == true ? _helpWindow.State : MissionOptionsOpen ? "options" : _mapViewer?.UiState ?? _mainMenu?.Page ?? "unavailable", Exit,
+            mouse = _uiAutomation.Update(_helpWindow?.IsOpen == true ? _helpWindow.State : MissionOptionsOpen ? "options" : _mapViewer?.UiState ?? _mainMenu?.Page ?? "unavailable", _mapViewer?.UiDetail ?? "", Exit,
                 _display.Layout.LogicalWidth, _display.Layout.LogicalHeight);
             keyboard = _uiAutomation.Keyboard;
         }
@@ -595,6 +608,14 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     /// <param name="gameTime">경과 시간</param>
     protected override void Draw(GameTime gameTime)
     {
+        long perfStart = Stopwatch.GetTimestamp();
+        DrawGame(gameTime);
+        _perf?.EndDraw(perfStart);
+    }
+
+    /// <summary>화면 그리기의 본체 (성능 측정을 위해 <see cref="Draw"/> 가 감싼다)</summary>
+    private void DrawGame(GameTime gameTime)
+    {
         // 논리 해상도 렌더 타깃에 그린 뒤 마지막에 뷰포트로 늘려 표시한다.
         _display.BeginScene(BackgroundColor);
         int width = _display.Layout.LogicalWidth;
@@ -652,6 +673,13 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         }
         if (MissionOptionsOpen) _mainMenu?.Draw(batch, body, _fonts.GetFont(SmallFontSize), width, height);
         _helpWindow?.Draw(batch, width, height);
+        if (_perf != null)
+        {
+            // --perf 오버레이: 1초마다 갱신되는 초당 프레임 수와 평균 그리기 시간 (오른쪽 아래)
+            string overlay = $"FPS {_perf.Fps:0} · draw {_perf.DrawMilliseconds:0.0}ms";
+            Vector2 overlaySize = body.MeasureString(overlay);
+            batch.DrawString(body, overlay, new Vector2(width - overlaySize.X - 16, height - 56), Color.LimeGreen);
+        }
         // 화면 설정을 바꿨을 때 잠깐 보이는 알림 (오른쪽 아래)
         string? notice = _display.TickNotice(gameTime.ElapsedGameTime.TotalSeconds);
         if (notice != null)
@@ -659,8 +687,12 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
             Vector2 size = body.MeasureString(notice);
             batch.DrawString(body, notice, new Vector2(width - size.X - 16, height - 34), Color.Yellow);
         }
+        long perfEnd = Stopwatch.GetTimestamp();
         batch.End();
+        PerfMeter.Current?.Section("batchEnd", perfEnd);
+        long perfScene = Stopwatch.GetTimestamp();
         _display.EndScene(batch);
+        PerfMeter.Current?.Section("endScene", perfScene);
         base.Draw(gameTime);
 
         _frameCount++;

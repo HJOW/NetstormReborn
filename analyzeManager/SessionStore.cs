@@ -143,7 +143,8 @@ public sealed partial class SessionStore
     {
         string path = Path.Combine(SessionDirectory(session.Id), "session.json");
         WriteSmallFile(path + ".tmp", JsonSerializer.SerializeToUtf8Bytes(session, Json));
-        File.Move(path + ".tmp", path, true);
+        // 녹화 프로세스·백신 등이 session.json을 잠시 열고 있어도 교체가 거부된 채 끝나지 않게 재시도한다.
+        RetryTransient(() => File.Move(path + ".tmp", path, true));
     }
 
     /// <summary>세션을 읽고 폴더 이름과 manifest의 ID가 같은지 확인한다.</summary>
@@ -255,8 +256,12 @@ public sealed partial class SessionStore
         if (File.Exists(path) && new FileInfo(path).Length + bytes.Length > _partBytes)
             path = Path.Combine(directory, $"{prefix}-{++part:0000}.{extension}");
         RejectReparse(path);
-        using var stream = new FileStream(path, FileMode.Append, FileAccess.Write);
-        stream.Write(bytes);
+        // 다른 프로세스가 기록 파일을 잠시 열고 있어도 이벤트가 사라지지 않도록 재시도한다.
+        RetryTransient(() =>
+        {
+            using var stream = new FileStream(path, FileMode.Append, FileAccess.Write);
+            stream.Write(bytes);
+        });
         return part;
     }
 }

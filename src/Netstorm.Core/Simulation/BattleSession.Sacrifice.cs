@@ -736,8 +736,8 @@ public sealed partial class BattleSession
     private static bool IsAirborneTransport(GameEntity entity) => entity.Type.Definition.HasFlag("balloon");
 
     /// <summary>오브젝트가 목표 발자국 옆까지 가는 칸 경로 (지상은 섬·내 다리, 공중은 직선)</summary>
-    private List<(int X, int Y)>? FindMovePath(GameEntity mover, Footprint target, bool exact = false) =>
-        IsAirborneTransport(mover) ? StraightPath(mover.Footprint, target, exact) : FindHarvestPath(mover.Footprint, target, mover.Owner, exact);
+    private List<(int X, int Y)>? FindMovePath(GameEntity mover, Footprint target, bool exact = false, Footprint? from = null) =>
+        IsAirborneTransport(mover) ? StraightPath(from ?? mover.Footprint, target, exact) : FindHarvestPath(from ?? mover.Footprint, target, mover.Owner, exact);
 
     /// <summary>목표 둘레 중 가장 가까운 칸까지 곧은 칸 경로 (브레젠험 선, 공중 이동용)</summary>
     private static List<(int X, int Y)> StraightPath(Footprint start, Footprint target, bool exact = false)

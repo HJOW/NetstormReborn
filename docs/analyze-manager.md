@@ -238,7 +238,17 @@ analyzeManager/bin/Release/net10.0-windows/Netstorm.AnalyzeManager.exe call capt
 
 모든 모드의 AVI 스트림 헤더에는 선택한 FPS가 들어간다. 녹화 마감 때 생성되는 `recording-index.json`은 `frameRates`와 각 `videos[].fps`에 실제 파일 헤더에서 읽은 값을 저장한다. 같은 세션에 과거 10FPS·새 30FPS·60FPS 조각이 섞여도 구분할 수 있다. 영상·음성의 48 MB 분할, 입력 JSONL·시각 CSV는 같은 형식을 사용한다.
 
-**검증 범위:** 2026-10-03 변경은 실제 원본 게임 없이 설정·스케줄·AVI 헤더·혼합 FPS 색인·PNG 픽셀 보존·녹화 초기화 실패를 검사했다. 분석기 테스트 102개 통과·기존 1개 건너뜀, Release와 portable 빌드·MCP 기본 검사·CLI 옵션 검사도 통과했다. 실제 녹화기로 만든 1초 합성 영상은 FFprobe에서 30/60FPS·각각 30/60프레임이었고 FFmpeg 전체 디코딩도 통과했다. 실제 게임에서의 30/60FPS 달성률·음성 동기·모드 전환은 이후 실행 관찰이 필요하다.
+**검증 범위:** 2026-10-03 변경은 실제 원본 게임 없이 설정·스케줄·AVI 헤더·혼합 FPS 색인·PNG 픽셀 보존·녹화 초기화 실패를 검사했다. 분석기 테스트 102개 통과·기존 1개 건너뜀, Release와 portable 빌드·MCP 기본 검사·CLI 옵션 검사도 통과했다. 실제 녹화기로 만든 1초 합성 영상은 FFprobe에서 30/60FPS·각각 30/60프레임이었고 FFmpeg 전체 디코딩도 통과했다. 실제 게임에서의 30/60FPS 달성률·음성 동기·모드 전환은 이후 실행 관찰이 필요하다. → 같은 날 첫 실제 실행 결과는 아래 절에 있다.
+
+### 2026-10-03 자동 녹화 일시 파일 충돌 재시도와 가림 중단 사례
+
+`HJOW-Athlon`(Windows)에서 캠페인 1-1을 30FPS 자동 분석으로 실행해([관찰 노트](videos/auto-war-begins-20261003.md)) 자동 녹화의 첫 실제 검증을 했다.
+
+- **파일 교체 거부(수정):** 자동 녹화 상태 파일(`automatic-recording.json`)과 `session.json`을 `File.Move` 덮어쓰기로 저장하는 곳이 `Access to the path is denied.`(Win32 오류 5)로 두 번 실패했다. Windows는 상대가 `FileShare.Delete`를 허용해도 열려 있는 대상 파일의 교체를 거부한다(`MoveFileEx` 직접 호출로 확인). `SessionStore.RetryTransient`(최대 20번·25ms)를 `WriteSmallFile`·`Save`·`AppendPart`·`AutomaticRecording.SaveState`에 적용하고, 녹화 루프의 진행 상태 저장 실패는 녹화를 끊지 않게 했다. 테스트 1개 추가, 분석기 테스트 103개 통과·기존 1개 건너뜀, Release·portable 빌드 경고 0. 수정 후 4분 연속 녹화(4,318프레임)가 오류 없이 끝났고 `end_session`이 파일 마감까지 확인했다.
+- **가림으로 영구 중단(미수정, 제안):** 1차 실행의 녹화가 6분 48초에서 `게임 캡처 영역이 다른 창에 가려져 있습니다`로 멈췄다. 직전 입력 로그에 사람의 물리 마우스(`injected=false`) 클릭이 게임 창 밖에 있었다. AI 도구 승인 프롬프트를 VS Code에서 누르며 VS Code가 앞으로 나온 것으로 **추정**한다. **자동 녹화 중에는 승인 프롬프트가 필요한 도구 호출을 하지 않는다.** 좌표가 확정된 절차는 승인이 필요 없는 스크립트 한 개로 실행하고, 실행 중 사용자는 마우스·키보드와 VS Code 창을 건드리지 않는다. 가림을 영구 중단 대신 "해당 프레임만 건너뛰고 이어서 녹화"로 바꾸는 방안은 정책 변경이라 사용자 결정을 기다린다.
+- **실제 FPS:** 요청 30FPS에 평균 **18.2FPS**(간격 중앙값 66ms, 1초당 11~22프레임). AVI 헤더는 30FPS라 그대로 재생하면 약 1.65배 빠르다 → 시각은 `.frames.csv`·입력 JSONL의 `sessionElapsedMs`로만 계산한다. 소리 WAV는 영상과 0.2초 안에서 맞고 끊김이 없었다.
+- **자동 분석 자체의 확인:** 입력 38+5회가 모두 `injected=true`로 기록되어 사용자 입력과 구분됐다. CLI가 매번 종료되는데도 숨김 녹화 프로세스가 계속 기록했고(CLI 호출 100회 안팎), 게임 종료 시 `end_session`이 `stopped`로 마감했다. `guide`·`record-play` 전환은 이번에 시험하지 않았다.
+- **스크립트 작성 주의:** PowerShell 함수 이름을 `mv`·`cp` 등 기본 별칭과 같게 지으면 별칭이 이긴다. 한글이 든 `.ps1`은 UTF-8 BOM으로 저장해야 Windows PowerShell 5.1이 바로 읽는다.
 
 ## 사용자 직접 조작 녹화 모드
 

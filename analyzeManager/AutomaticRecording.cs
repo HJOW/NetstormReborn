@@ -46,7 +46,8 @@ public static class AutomaticRecording
         return Path.Combine(store.SessionDirectory(sessionId), $"automatic-recording-stop-{runId}");
     }
 
-    /// <summary>동시에 교체되는 상태 파일을 읽어도 파일 교체를 막지 않으며 크기·세션 ID를 확인한다.</summary>
+    /// <summary>동시에 교체되는 상태 파일을 읽고 크기·세션 ID를 확인한다.
+    /// Windows는 삭제 공유를 허용해도 열려 있는 파일의 교체를 거부(오류 5)하므로 쓰는 쪽(SaveState)이 재시도한다.</summary>
     public static AutomaticRecordingState? ReadState(SessionStore store, string sessionId)
     {
         string path = StatePath(store, sessionId);
@@ -62,14 +63,15 @@ public static class AutomaticRecording
         return state;
     }
 
-    /// <summary>독립 녹화 상태는 세션 이벤트 파일을 건드리지 않고 완성된 JSON으로 교체한다.</summary>
-    private static void SaveState(SessionStore store, AutomaticRecordingState state)
+    /// <summary>독립 녹화 상태는 세션 이벤트 파일을 건드리지 않고 완성된 JSON으로 교체한다.
+    /// 백신·탐색기·CLI 읽기 등 다른 프로세스의 일시적 접근으로 교체가 거부되면 짧게 기다렸다가 다시 시도한다.</summary>
+    public static void SaveState(SessionStore store, AutomaticRecordingState state)
     {
         string path = StatePath(store, state.SessionId);
         string temporary = path + ".tmp";
         SessionStore.RejectReparse(path);
         SessionStore.WriteSmallFile(temporary, JsonSerializer.SerializeToUtf8Bytes(state with { UpdatedUtc = DateTimeOffset.UtcNow }, SessionStore.Json));
-        File.Move(temporary, path, true);
+        SessionStore.RetryTransient(() => File.Move(temporary, path, true));
     }
 
     /// <summary>별도 콘솔 창이나 MCP 표준 핸들 상속 없이 같은 분석기에서 녹화 전용 명령을 실행한다.</summary>
@@ -199,7 +201,9 @@ public static class AutomaticRecording
                 while (!game.HasExited && !File.Exists(stopPath))
                 {
                     state = state with { Frames = recorder.FrameCount, ElapsedMs = recorder.Elapsed.TotalMilliseconds };
-                    SaveState(store, state);
+                    // 진행 상태 표시 파일을 잠시 못 쓰더라도 영상·소리·입력 기록은 계속하고 다음 주기에 다시 저장한다.
+                    try { SaveState(store, state); }
+                    catch (Exception error) when (error is IOException or UnauthorizedAccessException) { }
                     if (recorder.Error != null) throw new InvalidOperationException("자동 녹화 오류: " + recorder.Error.Message, recorder.Error);
                     await Task.Delay(StatusInterval);
                 }

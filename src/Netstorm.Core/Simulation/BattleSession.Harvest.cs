@@ -15,12 +15,28 @@ public sealed partial class BattleSession
     /// </summary>
     public const double HarvestMineSeconds = 1.0;
 
-    /// <summary>네 방향 탐색 순서. 같은 지형에서는 언제나 같은 경로를 고른다.</summary>
-    private static readonly (int Dx, int Dy, BridgeLinks Link)[] HarvestDirections =
+    /// <summary>
+    /// 걸음 후보 8방향. 대각선(북동·남동·남서·북서)을 앞에 두어 같은 걸음 수의 경로에서 대각선 걸음이 먼저 선택된다.
+    /// 그 뒤에 북·동·남·서 순서의 직선 걸음이 온다.
+    /// </summary>
+    private static readonly (int Dx, int Dy)[] WalkDirections =
     [
-        (0, -1, BridgeLinks.North), (1, 0, BridgeLinks.East),
-        (0, 1, BridgeLinks.South), (-1, 0, BridgeLinks.West),
+        (1, -1), (1, 1), (-1, 1), (-1, -1),
+        (0, -1), (1, 0), (0, 1), (-1, 0),
     ];
+
+    /// <summary>경로 탐색에서 직선 한 걸음의 정수 길이.</summary>
+    private const int StraightStepCost = 10;
+
+    /// <summary>경로 탐색에서 대각선 한 걸음의 정수 길이 (10 × √2 = 14.14 를 정수로 근사).</summary>
+    private const int DiagonalStepCost = 14;
+
+    /// <summary>한 걸음의 칸 길이. 대각선은 정사각 칸의 대각선 길이(√2)이고 직선은 1이다.</summary>
+    internal const double DiagonalStepLength = 1.4142135623730951;
+
+    /// <summary>두 이웃 칸 사이 한 걸음의 길이(칸). 가로·세로가 모두 바뀌면 대각선이다.</summary>
+    internal static double StepLength((int X, int Y) from, (int X, int Y) to) =>
+        from.X != to.X && from.Y != to.Y ? DiagonalStepLength : 1.0;
 
     /// <summary>명령 대상 가이저와 수집자·신전을 검사한 뒤 갈 수 있는 길을 예약한다.</summary>
     private CommandResult ExecuteHarvestGeyser(HarvestGeyserCommand command)
@@ -150,7 +166,12 @@ public sealed partial class BattleSession
         }
     }
 
-    /// <summary>지면과 소유한 다리의 연결 방향을 따라 목표 발자국 둘레까지 최단 칸 경로를 찾는다.</summary>
+    /// <summary>
+    /// 지면과 소유한 다리의 연결 방향을 따라 목표 발자국 둘레까지 최단 걸음 경로를 찾는다.
+    /// 섬 위에서는 대각선 걸음도 허용하며(8방향) 같은 걸음 수의 경로 가운데 **대각선을 먼저** 걷는 경로를 고른다.
+    /// 2026-10-03 원본 자동 분석에서 사제가 대각선으로 먼저 간 뒤 직선으로 이어 걷는 것을 확인했다.
+    /// 다리 칸은 상하좌우 연결 방향으로만 지나므로 다리에 걸친 걸음은 대각선이 될 수 없다.
+    /// </summary>
     private List<(int X, int Y)>? FindHarvestPath(Footprint start, Footprint target, int owner, bool exact = false)
     {
         int size = BridgeGrid.WorldSize;
@@ -168,45 +189,65 @@ public sealed partial class BattleSession
         {
             return null;
         }
-        int[] previous = new int[size * size];
-        Array.Fill(previous, -1);
-        previous[first] = first;
-        var queue = new Queue<int>();
-        queue.Enqueue(first);
-        // 폭 우선 탐색으로 짧은 경로를 찾는다. 방향 순서가 고정이라 결과도 결정적이다.
-        while (queue.Count > 0)
+        // 목표 칸들에서 한꺼번에 퍼지는 다익스트라 탐색으로 각 칸의 "목표까지 걸음 길이"를 구한다.
+        // 길이는 정수(직선 10·대각선 14 ≈ √2배)로 세어 결과가 결정적이다. 걸음 수만 세면 세로 이동에서도 지그재그가 최단이 된다.
+        int[] distance = new int[size * size];
+        Array.Fill(distance, int.MaxValue);
+        var queue = new PriorityQueue<int, int>();
+        // 목표는 칸 번호순으로 넣어 같은 길이의 동률도 언제나 같은 순서로 처리한다.
+        foreach (int goal in goals.Order())
         {
-            int at = queue.Dequeue();
-            if (goals.Contains(at))
-            {
-                var path = new List<(int X, int Y)>();
-                // 부모 칸을 거슬러 올라가 시작점부터의 순서로 뒤집는다.
-                for (int point = at; point != first; point = previous[point])
-                {
-                    path.Add((point % size, point / size));
-                }
-                path.Add((first % size, first / size));
-                path.Reverse();
-                return path;
-            }
+            distance[goal] = 0;
+            queue.Enqueue(goal, 0);
+        }
+        // 시작 칸이 확정될 때까지 가까운 칸부터 확정한다.
+        while (queue.TryDequeue(out int at, out int atDistance))
+        {
+            if (atDistance > distance[at]) continue;
+            if (at == first) break;
             int x = at % size;
             int y = at / size;
-            // 북·동·남·서 이웃 중 지나갈 수 있는 칸을 큐에 넣는다.
-            foreach ((int dx, int dy, BridgeLinks link) in HarvestDirections)
+            // 걸음 가능 여부는 양방향이 같으므로 이 칸에서 이웃으로 가는 방향으로 검사한다.
+            foreach ((int dx, int dy) in WalkDirections)
             {
                 int nx = x + dx;
                 int ny = y + dy;
-                if (nx < 0 || ny < 0 || nx >= size || ny >= size || previous[ny * size + nx] >= 0
-                    || !CanHarvestStep(x, y, nx, ny, link, owner))
-                {
-                    continue;
-                }
-                int next = ny * size + nx;
-                previous[next] = at;
-                queue.Enqueue(next);
+                if (nx < 0 || ny < 0 || nx >= size || ny >= size || !CanWalkStep(x, y, nx, ny, owner)) continue;
+                int through = atDistance + (dx != 0 && dy != 0 ? DiagonalStepCost : StraightStepCost);
+                if (through >= distance[ny * size + nx]) continue;
+                distance[ny * size + nx] = through;
+                queue.Enqueue(ny * size + nx, through);
             }
         }
-        return null;
+        if (distance[first] == int.MaxValue)
+        {
+            return null;
+        }
+        // 시작 칸에서 "남은 길이 = 이웃의 남은 길이 + 걸음 길이"가 되는 이웃을 따라 걷는다.
+        // WalkDirections 는 대각선이 앞서므로 같은 길이의 경로 가운데 대각선 걸음이 먼저 나온다.
+        var path = new List<(int X, int Y)> { (first % size, first / size) };
+        int current = first;
+        // 목표 칸(길이 0)에 닿을 때까지 한 걸음씩 고른다.
+        while (distance[current] > 0)
+        {
+            int x = current % size;
+            int y = current / size;
+            int chosen = -1;
+            // 최단 길이를 이루는 첫 이웃이 이번 걸음이다.
+            foreach ((int dx, int dy) in WalkDirections)
+            {
+                int nx = x + dx;
+                int ny = y + dy;
+                if (nx < 0 || ny < 0 || nx >= size || ny >= size || !CanWalkStep(x, y, nx, ny, owner)) continue;
+                int step = dx != 0 && dy != 0 ? DiagonalStepCost : StraightStepCost;
+                if (distance[ny * size + nx] == int.MaxValue || distance[ny * size + nx] + step != distance[current]) continue;
+                chosen = ny * size + nx;
+                break;
+            }
+            current = chosen;
+            path.Add((current % size, current / size));
+        }
+        return path;
     }
 
     /// <summary>섬 칸 또는 플레이어 소유의 다리 칸인지 확인한다.</summary>
@@ -232,6 +273,29 @@ public sealed partial class BattleSession
         }
         return true;
     }
+
+    /// <summary>
+    /// 이웃 칸으로 한 걸음 걸을 수 있는지. 직선은 섬끼리 인접 이동하거나 다리 연결 방향을 확인하고(<see cref="CanHarvestStep"/>),
+    /// 대각선은 걸음이 닿는 네 칸이 모두 다리 없는 섬 칸일 때만 허용해 허공이나 다리 모서리를 가로지르지 않는다.
+    /// 걸음 가능 여부는 어느 쪽에서 보아도 같다.
+    /// </summary>
+    private bool CanWalkStep(int x, int y, int nx, int ny, int owner)
+    {
+        int dx = nx - x;
+        int dy = ny - y;
+        if (dx == 0 || dy == 0)
+        {
+            BridgeLinks link = (dx, dy) switch
+            {
+                (0, -1) => BridgeLinks.North, (1, 0) => BridgeLinks.East, (0, 1) => BridgeLinks.South, _ => BridgeLinks.West,
+            };
+            return CanHarvestStep(x, y, nx, ny, link, owner);
+        }
+        return IsPlainIsland(x, y) && IsPlainIsland(nx, ny) && IsPlainIsland(nx, y) && IsPlainIsland(x, ny);
+    }
+
+    /// <summary>다리가 놓이지 않은 섬 칸인지 (대각선 걸음이 지날 수 있는 칸).</summary>
+    private bool IsPlainIsland(int x, int y) => Bridges.IsIsland(x, y) && Bridges.At(x, y) == null;
 
     /// <summary>사제가 가이저로 가는지 신전으로 결정을 되돌리는지.</summary>
     private enum HarvestPhase { ToGeyser, ToTemple }
