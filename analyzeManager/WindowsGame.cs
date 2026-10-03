@@ -411,11 +411,11 @@ public static class WindowsGame
         {
             if (action.Kind == "drag")
             {
-                // 원본이 이동 중 상태를 갱신할 수 있도록 드래그를 여러 단계로 나눈다.
-                for (int step = 1; step <= 10; step++)
+                // 원본이 이동 중 상태를 갱신할 수 있도록 드래그를 여러 단계로 나눈다 (경유점·대기는 DragPlan 이 계산한다).
+                foreach (DragStep step in DragPlan.Create(action))
                 {
-                    await Task.Delay(Math.Max(1, action.DurationMs / 10), cancellation);
-                    Move(window, action.X + (action.ToX - action.X) * step / 10, action.Y + (action.ToY - action.Y) * step / 10);
+                    await Task.Delay(step.DelayMs, cancellation);
+                    Move(window, step.X, step.Y);
                 }
             }
             else await Task.Delay(action.DurationMs, cancellation);
@@ -520,4 +520,5 @@ public static class WindowsGame
 
 /// <summary>한 번의 제한된 입력 동작. 좌표는 캡처 영역이 아닌 전체 클라이언트 기준이다.</summary>
 public sealed record InputRequest(string Kind, int X = 0, int Y = 0, int ToX = 0, int ToY = 0,
-    string Button = "left", string Key = "", int DurationMs = 80, int SettleMs = 300);
+    string Button = "left", string Key = "", int DurationMs = 80, int SettleMs = 300,
+    int? ViaX = null, int? ViaY = null, int HoldViaMs = 0, int HoldMs = 0);

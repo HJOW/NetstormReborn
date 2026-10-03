@@ -44,12 +44,14 @@ public sealed class ExplorerTools
 
     /// <summary>한 번의 입력과 전후 화면을 저장한다.</summary>
     [McpServerTool(Name = "game_input", OpenWorld = false, Destructive = true)]
-    [Description("소유한 게임에 move/click/drag/key 입력을 보내고 전후 화면을 기록합니다. 좌표는 전체 클라이언트 물리 픽셀입니다. 키 예: ESCAPE, ENTER, CTRL+A. 전체화면 단축키는 금지합니다. 게임 진행 상태를 변경합니다.")]
+    [Description("소유한 게임에 move/click/drag/key 입력을 보내고 전후 화면을 기록합니다. 좌표는 전체 클라이언트 물리 픽셀입니다. click의 durationMs는 버튼을 누르고 있는 시간, drag의 durationMs는 한 구간을 끄는 시간입니다. drag는 viaX/viaY(경유점)·holdViaMs(경유점에서 누른 채 기다림)·holdMs(도착점에서 떼기 전 기다림)로 '누른 채 바깥으로 나갔다 돌아오기' 같은 동작을 만들 수 있습니다. 키 예: ESCAPE, ENTER, CTRL+A. 전체화면 단축키는 금지합니다. 게임 진행 상태를 변경합니다.")]
     public Task<CallToolResult> GameInput(string sessionId, string kind, int x = 0, int y = 0, int toX = 0, int toY = 0,
         string button = "left", string key = "", int durationMs = 80, int settleMs = 300, bool includeImage = true,
+        int? viaX = null, int? viaY = null, int holdViaMs = 0, int holdMs = 0,
         CancellationToken cancellation = default)
         => Run("game_input", new() { SessionId = sessionId, Kind = kind, X = x, Y = y, ToX = toX, ToY = toY,
-            Button = button, Key = key, DurationMs = durationMs, SettleMs = settleMs, IncludeImage = includeImage }, cancellation);
+            Button = button, Key = key, DurationMs = durationMs, SettleMs = settleMs, IncludeImage = includeImage,
+            ViaX = viaX, ViaY = viaY, HoldViaMs = holdViaMs, HoldMs = holdMs }, cancellation);
 
     /// <summary>애니메이션이 적은 관심 영역에서 조건이 변할 때까지 제한된 시간 동안 관찰한다.</summary>
     [McpServerTool(Name = "wait_for_change", OpenWorld = false, Destructive = false)]

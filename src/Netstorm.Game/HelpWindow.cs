@@ -35,6 +35,11 @@ internal sealed class HelpWindow : IDisposable
     private readonly Dictionary<string, Texture2D?> _pictures = new(StringComparer.OrdinalIgnoreCase);
     private readonly List<Fragment> _fragments = [];
     private MouseState _previousMouse;
+    /// <summary>Back(0)·OK(1) 버튼의 누름·떼기 처리기 (원본 돌 버튼 규칙).</summary>
+    private readonly ButtonGump _gump = new();
+
+    /// <summary>지금 눌린 모양인 버튼의 글자 (없으면 null). 자동 UI 검사가 읽는다.</summary>
+    public string? PressedLabel => _gump.Held is int held && _gump.IsPressed(held) ? (held == 0 ? "Back" : "OK") : null;
     private bool _inMission;
     private bool _dragBody;
     private bool _dragBar;
@@ -205,18 +210,26 @@ internal sealed class HelpWindow : IDisposable
         _navigation.Scroll = Math.Clamp(_navigation.Scroll, 0, max);
         bool down = mouse.LeftButton == ButtonState.Pressed && _previousMouse.LeftButton == ButtonState.Released;
         bool up = mouse.LeftButton == ButtonState.Released && _previousMouse.LeftButton == ButtonState.Pressed;
+        // Back·OK 는 원본 돌 버튼 규칙: 누르는 순간 소리, 눌린 채 안쪽에서 뗄 때 실행 (Back 은 되돌아갈 곳이 없으면 비활성)
+        GumpResult result = _gump.Update(
+            [OriginalUiSkin.Hit(0, Button(panel, 0), _navigation.CanGoBack || BackToParent != null), OriginalUiSkin.Hit(1, Button(panel, 1))],
+            mouse.X, mouse.Y, mouse.LeftButton == ButtonState.Pressed);
+        if (result.Pressed != null) SoundRequested?.Invoke(OriginalUiSkin.ButtonSound);
+        if (result.Activated == 0)
+        {
+            if (!_navigation.Back() && BackToParent != null) { _navigation.Close(); BackToParent(); }
+            _previousMouse = mouse;
+            return;
+        }
+        if (result.Activated == 1)
+        {
+            _navigation.Close(); Closed?.Invoke();
+            _previousMouse = mouse;
+            return;
+        }
         if (down)
         {
-            if (Button(panel, 0).Contains(mouse.Position))
-            {
-                if (_navigation.CanGoBack || BackToParent != null)
-                {
-                    SoundRequested?.Invoke(OriginalUiSkin.ButtonSound);
-                    if (!_navigation.Back() && BackToParent != null) { _navigation.Close(); BackToParent(); }
-                }
-            }
-            else if (Button(panel, 1).Contains(mouse.Position))
-            { SoundRequested?.Invoke(OriginalUiSkin.ButtonSound); _navigation.Close(); Closed?.Invoke(); }
+            if (Button(panel, 0).Contains(mouse.Position) || Button(panel, 1).Contains(mouse.Position)) { }
             else if (UpArrow(body).Contains(mouse.Position)) _navigation.Scroll = Math.Clamp(_navigation.Scroll - LineHeight, 0, max);
             else if (DownArrow(body).Contains(mouse.Position)) _navigation.Scroll = Math.Clamp(_navigation.Scroll + LineHeight, 0, max);
             else if (Track(body).Contains(mouse.Position))
@@ -269,8 +282,8 @@ internal sealed class HelpWindow : IDisposable
         batch.Draw(_pixel, Bar(body), TrackColor);
         DrawArrow(batch, UpArrow(body), up: true); DrawArrow(batch, DownArrow(body), up: false);
         _skin.Button(batch, Thumb(body), "");
-        _skin.Button(batch, Button(panel, 0), "Back", _navigation.CanGoBack || BackToParent != null, Button(panel, 0).Contains(_previousMouse.Position));
-        _skin.Button(batch, Button(panel, 1), "OK", hover: Button(panel, 1).Contains(_previousMouse.Position));
+        _skin.Button(batch, Button(panel, 0), "Back", _navigation.CanGoBack || BackToParent != null, pressed: _gump.IsPressed(0));
+        _skin.Button(batch, Button(panel, 1), "OK", pressed: _gump.IsPressed(1));
         batch.End();
         Rectangle old = _device.ScissorRectangle; _device.ScissorRectangle = body;
         batch.Begin(samplerState: SamplerState.PointClamp, rasterizerState: _clip);

@@ -8,13 +8,27 @@ namespace Netstorm.Game;
 /// <summary>원본 fortGump의 돌 질감·모서리·선택 표시를 공유하는 UI 그리기 도구.</summary>
 internal sealed class OriginalUiSkin : IDisposable
 {
-    /// <summary>원본 Buttongump.cpp 004249a0에서 활성 버튼을 누를 때 재생하는 효과음.</summary>
+    /// <summary>원본 Buttongump.cpp 004249a0에서 활성 버튼을 **누르는 순간** 재생하는 효과음 (뗄 때는 소리가 없다).</summary>
     public const string ButtonSound = "button.wav";
+
+    /// <summary>
+    /// 메뉴 항목(펼침 메뉴·대화상자 목록 행)을 누를 때 재생하는 효과음. 원본 Menugump 의 <c>FUN_00476820</c> 이 활성 항목을 누르는 순간 재생하며
+    /// (2026-10-03 Options 펼침 메뉴 행 시험: 누른 뒤 +65ms), 항목은 뗄 때가 아니라 누르는 순간 실행된다.
+    /// </summary>
+    public const string MenuItemSound = "openSubGump.wav";
+
+    /// <summary>하위 메뉴(">" 항목)를 펼칠 때 <see cref="MenuItemSound"/> 에 더해 재생하는 효과음 (<c>FUN_00476820</c> 정적 분석, 직접 청취로 확인하지는 않았다).</summary>
+    public const string MenuOpenSound = "openGump.wav";
 
     /// <summary>원본 메뉴의 한 행 높이. 버튼과 펼침 목록의 입력 영역에도 사용한다.</summary>
     public const int RowHeight = 18;
-    /// <summary>원본의 낮은 텍스트 버튼 높이.</summary>
+    /// <summary>원본의 낮은 텍스트 버튼이 그려지는 높이.</summary>
     public const int ButtonHeight = 19;
+    /// <summary>
+    /// 버튼 판정이 그려진 높이보다 더 내려가는 픽셀 수. 원본 메인 메뉴 Credits 버튼은 세로 334~352(19px)로 그려지지만
+    /// 334~353(20px)까지 눌린다 (2026-10-03 경계 스캔). 가로는 그려진 폭(75px)과 같다.
+    /// </summary>
+    public const int ButtonHitExtraHeight = 1;
     /// <summary>돌 테두리의 밝은 가장자리 색.</summary>
     private static readonly Color LightEdge = new(191, 178, 139);
     /// <summary>돌 테두리의 어두운 가장자리 색.</summary>
@@ -106,14 +120,25 @@ internal sealed class OriginalUiSkin : IDisposable
         batch.DrawString(font, text, position, color ?? Color.White);
     }
 
-    /// <summary>낮은 돌 버튼을 호버·누름·비활성 상태와 함께 그린다.</summary>
-    public void Button(SpriteBatch batch, Rectangle area, string label, bool enabled = true, bool hover = false,
-        bool pressed = false, bool focused = false)
+    /// <summary>
+    /// 그려진 버튼 영역을 원본의 판정 영역으로 바꾼다 (<see cref="ButtonHitExtraHeight"/> 만큼 아래로 길다).
+    /// </summary>
+    /// <param name="id">버튼 번호</param>
+    /// <param name="drawn">버튼이 그려지는 영역</param>
+    /// <param name="enabled">눌릴 수 있는지</param>
+    public static Netstorm.Core.Rules.GumpButton Hit(int id, Rectangle drawn, bool enabled = true) =>
+        new(id, drawn.X, drawn.Y, drawn.Width, drawn.Height + ButtonHitExtraHeight, enabled);
+
+    /// <summary>
+    /// 낮은 돌 버튼을 누름·비활성 상태와 함께 그린다. 원본에는 호버 표시와 키보드 포커스 표시가 없다.
+    /// 눌린 모양은 돌 무늬를 어둡게 하지 않고 테두리 명암을 뒤집으며 글자를 오른쪽·아래로 1픽셀 옮긴다
+    /// (2026-10-03 녹화: 눌린 프레임과 평소 프레임의 차이는 테두리와 글자뿐이었다).
+    /// </summary>
+    public void Button(SpriteBatch batch, Rectangle area, string label, bool enabled = true, bool pressed = false)
     {
         Tile(batch, area, menu: true);
-        batch.Draw(_pixel, area, Color.Black * (!enabled ? 0.45f : pressed ? 0.32f : hover ? 0.04f : 0.16f));
+        batch.Draw(_pixel, area, Color.Black * (enabled ? 0.16f : 0.45f));
         Bevel(batch, area, pressed);
-        if (focused) Bevel(batch, new Rectangle(area.X + 2, area.Y + 2, area.Width - 4, area.Height - 4));
         SpriteFontBase font = Body.MeasureString(label).X > area.Width - 6 ? Small : Body;
         Vector2 size = font.MeasureString(label);
         Text(batch, font, label, new Vector2(area.Center.X - size.X / 2 + (pressed ? 1 : 0),

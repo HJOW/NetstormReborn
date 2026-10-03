@@ -23,6 +23,8 @@ Whirlibase·Whirligig의 출격·공격·귀환을 [클론에 연결](../gamepla
 
 [석궁·방어 건물 후속](crossbow-defense-20261003.md)은 원본 각도표·타이머·탄속과 Wind Tower·Bulwark의 피해 처리 분기를 팬게임과 대조했다. 석궁의 조준·장전·발사, 방향 면역·배치 회전, 공중 공격 면역을 구현했다.
 
+2026-10-03 [원본 공통 메뉴 버튼 동작](menu-buttons-20261003.md)을 원본 자동 분석(analyzeManager)으로 측정했다. 호버 없음, 누를 때 소리·눌린 모양, 안쪽에서 뗄 때만 실행, 바깥으로 끌어 떼기·재진입·판정 영역(아래 +1px)과 펼침 메뉴 행의 누르는 순간 실행을 확인했고, 클론의 모든 돌 버튼을 `ButtonGump`로 통일했다. 새 도구: `tools/audio_events.py`(입력 사건 앞뒤 소리만 원본 효과음과 대조)·`tools/button_state.py`(버튼 영역의 평소/눌림 판정).
+
 ## 추가된 YouTube 파일 (2026-10-01)
 
 사용자 추가 파일 `playingVideos/[Youtube] 3-1 to 3-5.mp4`는

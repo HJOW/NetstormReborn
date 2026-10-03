@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Netstorm.Assets;
+using Netstorm.Core.Rules;
 
 namespace Netstorm.Game;
 
@@ -27,7 +28,18 @@ internal sealed partial class FortMapViewer
     private TutorialDialogScript? _tutorialDialog;
     private TutorialDialogAction? _pendingTutorialAction;
     private int _tutorialScroll;
-    private int _selectedTutorialButton;
+    /// <summary>안내 창 버튼의 누름·떼기 처리기. 번호는 버튼 순번이다 (원본 돌 버튼 규칙 — <see cref="ButtonGump"/>).</summary>
+    private readonly ButtonGump _tutorialGump = new();
+
+    /// <summary>
+    /// 지금 눌린 모양인 안내·확인·지식 창 버튼의 글자 (없으면 null). 자동 UI 검사가 읽는다.
+    /// </summary>
+    public string? PressedLabel =>
+        TutorialDialogOpen && _tutorialGump.Held is int tutorial && _tutorialGump.IsPressed(tutorial)
+            ? LocalizeCampaign(_tutorialDialog!.Current!).Buttons[tutorial].Label
+        : _leaveMissionPrompt && _leaveGump.Held is int leave && _leaveGump.IsPressed(leave) ? LeaveMissionLabels()[leave]
+        : _knowledgeDetail != null && _knowledgeGump.Held is int detail && _knowledgeGump.IsPressed(detail) ? (detail == 0 ? "Back" : "OK")
+        : null;
 
     /// <summary>튜토리얼 안내 창이 현재 지도의 입력을 가로막는지.</summary>
     public bool TutorialDialogOpen => _tutorialDialog?.Current != null;
@@ -99,37 +111,23 @@ internal sealed partial class FortMapViewer
         if (Pressed(keyboard, Keys.PageUp)) _tutorialScroll = Math.Max(0, _tutorialScroll - TutorialPageScroll);
         if (Pressed(keyboard, Keys.Down)) _tutorialScroll += TutorialLineHeight;
         if (Pressed(keyboard, Keys.Up)) _tutorialScroll = Math.Max(0, _tutorialScroll - TutorialLineHeight);
-        if (Pressed(keyboard, Keys.Tab) || Pressed(keyboard, Keys.Right))
-            _selectedTutorialButton = (_selectedTutorialButton + 1) % content.Buttons.Count;
-        if (Pressed(keyboard, Keys.Left))
-            _selectedTutorialButton = (_selectedTutorialButton + content.Buttons.Count - 1) % content.Buttons.Count;
-        if (TutorialButtonLocked(content.Buttons[_selectedTutorialButton])) _selectedTutorialButton = 0;
-        if (Pressed(keyboard, Keys.Enter) || Pressed(keyboard, Keys.Space))
-        {
-            ActivateTutorialButton(_selectedTutorialButton);
-            return;
-        }
-        if (mouse.LeftButton == ButtonState.Pressed && _previousMouse.LeftButton != ButtonState.Pressed)
-        {
-            Rectangle panel = TutorialPanel(width, height);
-            // 화면 버튼 중 커서가 닿은 하나만 실행한다.
-            for (int index = 0; index < content.Buttons.Count; index++)
-            {
-                if (TutorialButton(panel, content.Buttons.Count, index).Contains(mouse.X, mouse.Y))
-                {
-                    ActivateTutorialButton(index);
-                    return;
-                }
-            }
-        }
+        // 키보드(Tab·Enter·Space 등)는 버튼에 영향을 주지 않는다 (원본에는 버튼 키보드 조작이 없었다 — 사용자 확인 2026-10-04).
+        Rectangle panel = TutorialPanel(width, height);
+        var buttons = new List<GumpButton>();
+        // 화면 버튼마다 판정 영역을 만든다 (잠긴 버튼은 눌리지 않는다)
+        for (int index = 0; index < content.Buttons.Count; index++)
+            buttons.Add(OriginalUiSkin.Hit(index, TutorialButton(panel, content.Buttons.Count, index), !TutorialButtonLocked(content.Buttons[index])));
+        // 누르는 순간 소리, 눌린 채 안쪽에서 뗄 때 실행
+        GumpResult result = _tutorialGump.Update(buttons, mouse.X, mouse.Y, mouse.LeftButton == ButtonState.Pressed);
+        if (result.Pressed != null) QueueSound(OriginalUiSkin.ButtonSound);
+        if (result.Activated is int activated) ActivateTutorialButton(activated);
     }
 
     /// <summary>버튼의 Tell 이동은 창 안에서 끝내고 미션 이동은 게임 본체에 전달한다.</summary>
     private void ActivateTutorialButton(int index)
     {
         if (TutorialButtonLocked(_tutorialDialog!.Current!.Buttons[index])) return;
-        // 브리핑·장비·안내·승패 창의 활성 버튼은 같은 원본 클릭음을 사용한다.
-        QueueSound(OriginalUiSkin.ButtonSound);
+        // 클릭음은 버튼을 누르는 순간 이미 났으므로 실행(뗄 때)에서는 내지 않는다.
         TutorialDialogAction action = _tutorialDialog!.Choose(index);
         if (action.Kind == TutorialDialogActionKind.Navigate)
         {
@@ -158,12 +156,11 @@ internal sealed partial class FortMapViewer
         }
     }
 
-    /// <summary>새 섹션을 맨 위에서 보여 주고 기본 선택을 마지막 버튼에 둔다.</summary>
+    /// <summary>새 섹션을 맨 위에서 보여 주고 붙잡고 있던 버튼은 놓는다 (키보드 선택 표시는 원본에 없다).</summary>
     private void ResetTutorialPage()
     {
         _tutorialScroll = 0;
-        _selectedTutorialButton = _tutorialDialog!.Current!.Buttons.Count - 1;
-        if (TutorialButtonLocked(_tutorialDialog.Current.Buttons[_selectedTutorialButton])) _selectedTutorialButton = 0;
+        _tutorialGump.Cancel();
     }
 
     /// <summary>다음 미션 버튼은 표시·마우스·키보드 모두 동일한 범위 잠금을 사용한다.</summary>
@@ -257,11 +254,8 @@ internal sealed partial class FortMapViewer
         for (int index = 0; index < content.Buttons.Count; index++)
         {
             Rectangle button = TutorialButton(panel, content.Buttons.Count, index);
-            bool selected = index == _selectedTutorialButton;
             bool locked = TutorialButtonLocked(content.Buttons[index]);
-            bool hover = button.Contains(_previousMouse.Position);
-            _uiSkin.Button(batch, button, content.Buttons[index].Label, !locked, hover,
-                hover && _previousMouse.LeftButton == ButtonState.Pressed, selected);
+            _uiSkin.Button(batch, button, content.Buttons[index].Label, !locked, pressed: _tutorialGump.IsPressed(index));
         }
     }
 

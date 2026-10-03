@@ -14,8 +14,8 @@ internal sealed class MainMenuView : IDisposable
     /// <summary>원본 세 해상도와 클론의 와이드 해상도 목록.</summary>
     private static readonly (int Width, int Height)[] Resolutions =
         [(640, 480), (800, 600), (1024, 768), (1280, 720), (1280, 800), (1600, 900), (1920, 1080), (1920, 1200)];
-    /// <summary>원본 메인 메뉴의 버튼 폭.</summary>
-    private const int MainButtonWidth = 74;
+    /// <summary>원본 메인 메뉴의 버튼 폭 (2026-10-03 측정: Credits 버튼 가로 435~509 = 75px, 이웃과의 간격 4px).</summary>
+    private const int MainButtonWidth = 75;
     /// <summary>원본 메인 메뉴의 버튼 가로 간격.</summary>
     private const int MainButtonPitch = 79;
     /// <summary>캠페인 설명의 작은 본문 줄 높이.</summary>
@@ -56,8 +56,12 @@ internal sealed class MainMenuView : IDisposable
     private string _page = "main";
     private string? _submenu;
     private string _error = "";
-    private int _selected;
-    private bool _keyboardFocus;
+    /// <summary>돌 버튼(메인 메뉴 버튼·Back)의 누름·떼기 처리기. 번호는 <see cref="_buttons"/> 안의 순번이다.</summary>
+    private readonly ButtonGump _gump = new();
+    /// <summary>팁 창·버전 창 버튼의 누름·떼기 처리기. 번호는 팁 창 버튼 순번(버전 창은 0)이다.</summary>
+    private readonly ButtonGump _modalGump = new();
+    /// <summary>지금 눌린 모양인 버튼의 글자 (없으면 null). 자동 UI 검사가 읽는다.</summary>
+    public string? PressedLabel { get; private set; }
     /// <summary>자동 UI 검사가 확인할 현재 페이지 (작은 창이 떠 있으면 그 이름).</summary>
     public string Page => _modal ?? _page;
     /// <summary>미션 지도 위에 옵션 목록만 표시하는 상태.</summary>
@@ -129,28 +133,43 @@ internal sealed class MainMenuView : IDisposable
     /// <summary>버전 창의 영역</summary>
     private static Rectangle VersionPanel(int width, int height) => new((width - 380) / 2, (height - 170) / 2, 380, 170);
 
-    /// <summary>작은 창(팁·버전)의 버튼 입력을 처리한다. 창이 떠 있는 동안 뒤쪽 메뉴는 누를 수 없다.</summary>
-    private void UpdateModal(MouseState mouse, KeyboardState keyboard, int width, int height)
+    /// <summary>작은 창(팁·버전)의 버튼 판정 영역. 팁 창의 "이전 팁"은 팁 번호가 0 이 아닐 때만 있다 (원본 &lt;?{tipNumber}&gt;).</summary>
+    private List<GumpButton> ModalButtons(int width, int height)
     {
-        bool click = mouse.LeftButton == ButtonState.Pressed && _previousMouse.LeftButton == ButtonState.Released;
-        bool enter = keyboard.IsKeyDown(Keys.Enter) && !_previousKeyboard.IsKeyDown(Keys.Enter);
+        var buttons = new List<GumpButton>();
         if (_modal == "version")
         {
-            Rectangle panel = VersionPanel(width, height);
-            if (enter || click && new Rectangle(panel.Center.X - 30, panel.Bottom - 31, 60, OriginalUiSkin.ButtonHeight).Contains(mouse.Position))
-            { _audio?.PlaySound(OriginalUiSkin.ButtonSound); _modal = null; }
-            return;
+            buttons.Add(OriginalUiSkin.Hit(0, VersionOkBounds(VersionPanel(width, height))));
+            return buttons;
         }
         Rectangle tip = TipPanel(width, height);
-        if (enter) { _audio?.PlaySound(OriginalUiSkin.ButtonSound); TipButton(3); return; }
-        if (!click) return;
-        // 이전 팁은 번호가 0 이 아닐 때만 있다 (원본 <?{tipNumber}>)
-        for (int index = _tipShown > 0 ? 0 : 1; index < 4; index++)
-        {
-            if (TipButtonBounds(tip, index).Contains(mouse.Position))
-            { _audio?.PlaySound(OriginalUiSkin.ButtonSound); TipButton(index); return; }
-        }
+        // 보이는 팁 창 버튼마다 판정 영역을 만든다
+        for (int index = _tipShown > 0 ? 0 : 1; index < 4; index++) buttons.Add(OriginalUiSkin.Hit(index, TipButtonBounds(tip, index)));
+        return buttons;
     }
+
+    /// <summary>버전 창 OK 버튼의 그려지는 영역.</summary>
+    private static Rectangle VersionOkBounds(Rectangle panel) => new(panel.Center.X - 30, panel.Bottom - 31, 60, OriginalUiSkin.ButtonHeight);
+
+    /// <summary>
+    /// 작은 창(팁·버전)의 버튼 입력을 처리한다. 창이 떠 있는 동안 뒤쪽 메뉴는 누를 수 없다.
+    /// 원본 돌 버튼처럼 누르는 순간 소리가 나고 눌린 채 안쪽에서 뗄 때 실행한다 (<see cref="ButtonGump"/>). 키보드는 버튼에 영향을 주지 않는다.
+    /// </summary>
+    private void UpdateModal(MouseState mouse, int width, int height)
+    {
+        GumpResult result = _modalGump.Update(ModalButtons(width, height), mouse.X, mouse.Y, mouse.LeftButton == ButtonState.Pressed);
+        if (result.Pressed != null) _audio?.PlaySound(OriginalUiSkin.ButtonSound);
+        if (result.Activated is int id)
+        {
+            if (_modal == "version") _modal = null;
+            else TipButton(id);
+        }
+        PressedLabel = _modalGump.Held is int held && _modalGump.IsPressed(held) ? ModalLabel(held) : null;
+    }
+
+    /// <summary>팁 창 버튼 번호의 글자 (버전 창은 OK).</summary>
+    private string ModalLabel(int index) => _modal == "version" ? Text("확인", "OK")
+        : new[] { Text("이전 팁", "Prior Tip"), Text("다음 팁", "Next Tip"), Text("그만 보기", "No More Tips"), Text("확인", "OK") }[index];
 
     /// <summary>시작 팁 창 또는 버전 창을 그린다.</summary>
     private void DrawModal(SpriteBatch batch, SpriteFontBase font, int width, int height)
@@ -163,8 +182,7 @@ internal sealed class MainMenuView : IDisposable
             string[] lines = [Text("원본 버전 10.78 기준 클론", "Clone of version 10.78"), "(c) 1997 Titanic Entertainment, Inc. and Activision Inc.",
                 "10.78 Patch by Ticonderoga Entertainment.", "NetStorm Reborn"];
             for (int i = 0; i < lines.Length; i++) OriginalUiSkin.Text(batch, font, lines[i], new Vector2(panel.X + 24, panel.Y + 50 + i * 18));
-            var ok = new Rectangle(panel.Center.X - 30, panel.Bottom - 31, 60, OriginalUiSkin.ButtonHeight);
-            _skin.Button(batch, ok, Text("확인", "OK"), hover: ok.Contains(_previousMouse.Position));
+            _skin.Button(batch, VersionOkBounds(panel), Text("확인", "OK"), pressed: _modalGump.IsPressed(0));
             return;
         }
         Rectangle tip = TipPanel(width, height); _skin.Panel(batch, tip);
@@ -177,66 +195,86 @@ internal sealed class MainMenuView : IDisposable
         // 이전 팁 단추는 팁 번호가 0 이 아닐 때만 그린다
         for (int index = _tipShown > 0 ? 0 : 1; index < 4; index++)
         {
-            Rectangle button = TipButtonBounds(tip, index);
-            bool hover = button.Contains(_previousMouse.Position);
-            _skin.Button(batch, button, labels[index], hover: hover, pressed: hover && _previousMouse.LeftButton == ButtonState.Pressed);
+            _skin.Button(batch, TipButtonBounds(tip, index), labels[index], pressed: _modalGump.IsPressed(index));
         }
     }
 
-    /// <summary>페이지를 열고 같은 클릭이 새 창으로 전달되지 않게 입력을 기억한다.</summary>
+    /// <summary>페이지를 열고 같은 클릭이 새 창으로 전달되지 않게 입력을 기억한다. 눌러 붙잡고 있던 버튼은 놓는다.</summary>
     public void Open(string page = "main", bool optionsOnly = false)
     {
         OptionsOnly = optionsOnly;
         _page = page is "campaigns" or "missions" or "options" or "help" ? page : "main";
-        _submenu = null; _selected = 0; _keyboardFocus = false;
+        _submenu = null;
+        _gump.Cancel(); _modalGump.Cancel(); PressedLabel = null;
         _previousMouse = Mouse.GetState(); _previousKeyboard = Keyboard.GetState();
     }
 
-    /// <summary>활성 항목의 클릭·키보드 선택과 펼침 메뉴의 바깥 클릭을 처리한다.</summary>
+    /// <summary>
+    /// 마우스 입력을 처리한다. 돌 버튼은 누르는 순간 소리가 나고 뗄 때 실행하며(<see cref="ButtonGump"/>),
+    /// 펼침 메뉴·대화상자 목록 행은 누르는 순간 실행한다 (원본 Menugump <c>FUN_00476820</c>). 호버 표시와 키보드 조작은 없다.
+    /// 펼침 메뉴가 열려 있으면 메뉴가 누름을 독점하고, 메뉴 바깥을 누르면 그 자리에서 닫는다 (소리 없음, 뒤쪽 버튼은 눌리지 않는다).
+    /// </summary>
     public void Update(MouseState mouse, KeyboardState keyboard, int width, int height)
     {
         if (width < 320 || height < 320) return;
         if (_modal != null)
         {
-            UpdateModal(mouse, keyboard, width, height);
+            UpdateModal(mouse, width, height);
             _previousKeyboard = keyboard; _previousMouse = mouse;
             return;
         }
         BuildButtons(width, height);
-        MenuButton[] enabled = FocusButtons();
-        _selected = Math.Clamp(_selected, 0, Math.Max(0, enabled.Length - 1));
-        // 새로 누른 키만 페이지 이동으로 취급한다.
-        bool Pressed(Keys key) => keyboard.IsKeyDown(key) && !_previousKeyboard.IsKeyDown(key);
-        if (mouse.Position != _previousMouse.Position) _keyboardFocus = false;
-        if (enabled.Length > 0)
+        bool leftDown = mouse.LeftButton == ButtonState.Pressed;
+        bool pressEdge = leftDown && _previousMouse.LeftButton != ButtonState.Pressed;
+        bool consumed = false;
+        if (pressEdge)
         {
-            if (Pressed(Keys.Tab) || Pressed(Keys.Down)) { _selected = (_selected + 1) % enabled.Length; _keyboardFocus = true; }
-            if (Pressed(Keys.Up)) { _selected = (_selected + enabled.Length - 1) % enabled.Length; _keyboardFocus = true; }
-            if (Pressed(Keys.Enter)) ActivateButton(enabled[_selected]);
-            if (mouse.LeftButton == ButtonState.Pressed && _previousMouse.LeftButton == ButtonState.Released)
+            MenuButton? row = _buttons.LastOrDefault(b => b.ListRow && b.Bounds.Contains(mouse.Position));
+            if (row != null)
             {
-                MenuButton? hit = _buttons.LastOrDefault(b => b.Bounds.Contains(mouse.Position));
-                if (hit != null)
-                {
-                    bool covered = _page is "options" or "help" && !hit.ListRow && _lists.Any(r => r.Contains(mouse.Position));
-                    if (hit.Enabled && !covered) ActivateButton(hit);
-                }
-                else if (_page is "options" or "help" && !_lists.Any(r => r.Contains(mouse.Position))) Open();
+                // 목록 행: 활성이면 소리를 내고 누르는 순간 실행한다 (비활성 행은 아무 반응이 없다)
+                consumed = true;
+                if (row.Enabled) ActivateRow(row);
+            }
+            else if (_page is "options" or "help")
+            {
+                // 펼침 메뉴 안의 빈 곳(구분선 등)은 무시하고, 메뉴 바깥은 그 자리에서 닫는다
+                consumed = true;
+                if (!_lists.Any(r => r.Contains(mouse.Position))) Open(OptionsOnly ? "options" : "main", OptionsOnly);
             }
         }
+        var stone = new List<GumpButton>();
+        // 돌 버튼(목록 행이 아닌 것)만 누름·떼기 처리기에 넘긴다. 펼침 메뉴 아래에 깔린 메인 버튼은 누를 수 없다
+        for (int i = 0; i < _buttons.Count; i++)
+        {
+            if (_buttons[i].ListRow) continue;
+            bool covered = _page is "options" or "help" && _lists.Any(r => r.Contains(_buttons[i].Bounds.Center));
+            stone.Add(OriginalUiSkin.Hit(i, _buttons[i].Bounds, _buttons[i].Enabled && !covered));
+        }
+        GumpResult result = _gump.Update(stone, mouse.X, mouse.Y, leftDown, canPress: !consumed);
+        if (result.Pressed != null) _audio?.PlaySound(OriginalUiSkin.ButtonSound);
+        if (result.Activated is int id && id < _buttons.Count) _buttons[id].Action();
+        PressedLabel = _gump.Held is int held && _gump.IsPressed(held) && held < _buttons.Count ? _buttons[held].Label : null;
         if (Pressed(Keys.Escape) && _page != "main")
         {
             if (_submenu != null) _submenu = null;
             else Open(_page == "missions" ? "campaigns" : "main");
         }
         _previousKeyboard = keyboard; _previousMouse = mouse;
+
+        // 새로 누른 키만 페이지 이동으로 취급한다.
+        bool Pressed(Keys key) => keyboard.IsKeyDown(key) && !_previousKeyboard.IsKeyDown(key);
     }
 
-    /// <summary>활성 버튼의 효과음을 먼저 요청한다. 펼침 목록의 행은 일반 돌 버튼과 구분한다.</summary>
-    private void ActivateButton(MenuButton button)
+    /// <summary>
+    /// 활성 목록 행을 실행한다. 원본처럼 누르는 순간 <c>openSubGump.wav</c> 를 내고, 하위 메뉴(">")를 펼치는 행은
+    /// <c>openGump.wav</c> 도 낸다 (<c>FUN_00476820</c> 정적 분석).
+    /// </summary>
+    private void ActivateRow(MenuButton row)
     {
-        if (!button.ListRow) _audio?.PlaySound(OriginalUiSkin.ButtonSound);
-        button.Action();
+        _audio?.PlaySound(OriginalUiSkin.MenuItemSound);
+        if (row.Label.EndsWith(">", StringComparison.Ordinal)) _audio?.PlaySound(OriginalUiSkin.MenuOpenSound);
+        row.Action();
     }
 
     /// <summary>모든 클릭 영역을 그리기와 같은 원본 기준 좌표로 만든다.</summary>
@@ -366,11 +404,7 @@ internal sealed class MainMenuView : IDisposable
     }
 
     /// <summary>같은 항목을 다시 누르면 하위 목록을 닫고 다른 항목이면 전환한다.</summary>
-    private void ToggleSubmenu(string name) { _submenu = _submenu == name ? null : name; _selected = 0; }
-
-    /// <summary>키보드 포커스는 현재 펼침 목록 안에서만 이동하고 뒤쪽 타이틀 버튼은 제외한다.</summary>
-    private MenuButton[] FocusButtons() => _buttons.Where(b => b.Enabled && (_page is not ("options" or "help")
-        || b.ListRow && (_submenu == null || _lists[^1].Contains(b.Bounds.Center)))).ToArray();
+    private void ToggleSubmenu(string name) { _submenu = _submenu == name ? null : name; }
 
     /// <summary>음량을 저장하고 현재 음악·효과음에 즉시 반영한다.</summary>
     private void ApplySound()
@@ -444,17 +478,16 @@ internal sealed class MainMenuView : IDisposable
         foreach (Rectangle list in _lists) _skin.Menu(batch, list);
         // 캠페인·옵션 목록의 그룹 구분선을 덧붙인다.
         foreach (int y in _separators) _skin.Separator(batch, _lists[0].X + 1, y, _lists[0].Width - 2);
-        MenuButton[] enabled = FocusButtons();
-        // 목록 행은 왼쪽 정렬하고 일반 버튼만 작은 입체 테두리를 그린다.
-        foreach (MenuButton button in _buttons)
+        // 목록 행은 왼쪽 정렬하고 일반 버튼만 작은 입체 테두리를 그린다. 돌 버튼에는 호버 표시가 없고 목록 행에는 있다.
+        for (int index = 0; index < _buttons.Count; index++)
         {
+            MenuButton button = _buttons[index];
             if (_page is "options" or "help" && !button.ListRow) continue;
             bool hover = button.Bounds.Contains(_previousMouse.Position);
-            bool focus = _keyboardFocus && enabled.Length > _selected && enabled[_selected] == button;
-            if (!button.ListRow) _skin.Button(batch, button.Bounds, button.Label, button.Enabled, hover, hover && _previousMouse.LeftButton == ButtonState.Pressed, focus);
+            if (!button.ListRow) _skin.Button(batch, button.Bounds, button.Label, button.Enabled, pressed: _gump.IsPressed(index));
             else
             {
-                if (button.Enabled && (hover || focus)) batch.Draw(_pixel, button.Bounds, Color.Black * 0.25f);
+                if (button.Enabled && hover) batch.Draw(_pixel, button.Bounds, Color.Black * 0.25f);
                 int inset = _page == "options" || button.Check.HasValue ? 13 : 10;
                 if (button.Check.HasValue) _skin.Pip(batch, new Point(button.Bounds.X + 5, button.Bounds.Center.Y), button.Check.Value, button.Enabled);
                 SpriteFontBase rowFont = font.MeasureString(button.Label).X > button.Bounds.Width - inset - 3 ? small : font;

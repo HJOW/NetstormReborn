@@ -498,6 +498,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         {
             // 메인 메뉴에도 소리 요청·실제 재생/음소거 결과를 전달한다. 일반 화면에는 표시하지 않는다.
             string detail = (_mapViewer?.UiDetail ?? "") + $";audio-buttons={_audio?.ButtonSoundRequests ?? 0}"
+                + $";pressed={_helpWindow?.PressedLabel ?? _mapViewer?.PressedLabel ?? _mainMenu?.PressedLabel ?? "none"}"
                 + $";audio-last={_audio?.LastSoundCue ?? "none"};audio-result={_audio?.LastSoundResult ?? "none"}";
             keyboard = new KeyboardState();
             mouse = _uiAutomation.Update(_helpWindow?.IsOpen == true ? _helpWindow.State : MissionOptionsOpen ? "options" : _mapViewer?.UiState ?? _mainMenu?.Page ?? "unavailable", detail, Exit,

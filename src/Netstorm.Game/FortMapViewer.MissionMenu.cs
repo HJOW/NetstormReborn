@@ -63,6 +63,8 @@ internal sealed partial class FortMapViewer
 
     /// <summary>Leave Mission을 누른 뒤의 확인 창 상태.</summary>
     private bool _leaveMissionPrompt;
+    /// <summary>Leave Mission 확인 창 세 버튼의 누름·떼기 처리기 (번호 0 Main Menu · 1 Replay Mission · 2 Continue Mission).</summary>
+    private readonly ButtonGump _leaveGump = new();
 
     /// <summary>게임 본체가 다음 갱신에서 처리할 메뉴 동작.</summary>
     private MissionMenuAction? _pendingMissionMenuAction;
@@ -166,26 +168,19 @@ internal sealed partial class FortMapViewer
         bool clicked = mouse.LeftButton == ButtonState.Pressed && _previousMouse.LeftButton != ButtonState.Pressed;
         if (_leaveMissionPrompt)
         {
-            // 원본의 확인 창에서는 Esc가 동작하지 않고 버튼으로만 결정한다.
-            if (clicked)
+            // 원본의 확인 창에서는 Esc가 동작하지 않고 버튼으로만 결정한다. 버튼은 누르는 순간 소리가 나고 안쪽에서 뗄 때 실행한다.
+            Rectangle panel = LeaveMissionPanel(width, height);
+            var buttons = new List<GumpButton>();
+            // 세 선택지의 판정 영역
+            for (int i = 0; i < 3; i++) buttons.Add(OriginalUiSkin.Hit(i, LeaveMissionButton(panel, i)));
+            GumpResult result = _leaveGump.Update(buttons, mouse.X, mouse.Y, mouse.LeftButton == ButtonState.Pressed);
+            if (result.Pressed != null) QueueSound(OriginalUiSkin.ButtonSound);
+            if (result.Activated == 0) _pendingMissionMenuAction = MissionMenuAction.MainMenu;
+            else if (result.Activated == 1) _pendingMissionMenuAction = MissionMenuAction.Replay;
+            else if (result.Activated == 2)
             {
-                Rectangle panel = LeaveMissionPanel(width, height);
-                if (LeaveMissionButton(panel, 0).Contains(mouse.X, mouse.Y))
-                {
-                    QueueSound(OriginalUiSkin.ButtonSound);
-                    _pendingMissionMenuAction = MissionMenuAction.MainMenu;
-                }
-                else if (LeaveMissionButton(panel, 1).Contains(mouse.X, mouse.Y))
-                {
-                    QueueSound(OriginalUiSkin.ButtonSound);
-                    _pendingMissionMenuAction = MissionMenuAction.Replay;
-                }
-                else if (LeaveMissionButton(panel, 2).Contains(mouse.X, mouse.Y))
-                {
-                    QueueSound(OriginalUiSkin.ButtonSound);
-                    _leaveMissionPrompt = false;
-                    CloseMissionMenu();
-                }
+                _leaveMissionPrompt = false;
+                CloseMissionMenu();
             }
             return true;
         }
@@ -304,9 +299,7 @@ internal sealed partial class FortMapViewer
             // 원본 확인 창의 세 선택지를 작은 돌 버튼으로 그린다.
             for (int i = 0; i < labels.Length; i++)
             {
-                Rectangle button = LeaveMissionButton(panel, i);
-                bool hover = button.Contains(_previousMouse.Position);
-                _uiSkin.Button(batch, button, labels[i], hover: hover, pressed: hover && _previousMouse.LeftButton == ButtonState.Pressed);
+                _uiSkin.Button(batch, LeaveMissionButton(panel, i), labels[i], pressed: _leaveGump.IsPressed(i));
             }
         }
     }

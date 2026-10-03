@@ -58,6 +58,22 @@ internal sealed class UiAutomation
             case "key":
                 Keyboard = new KeyboardState(value.Split('+').Select(k => Enum.Parse<Keys>(k, true)).ToArray());
                 _releaseKey = true; break;
+            case "down":
+                // 왼쪽 버튼을 누른 채로 둔다 (떼려면 up). 버튼을 오래 누르는 시험에 쓴다.
+                string[] downPoint = value.Split(',');
+                _mouse = MakeMouse(int.Parse(downPoint[0]), int.Parse(downPoint[1]), ButtonState.Pressed); break;
+            case "held-move":
+                // 왼쪽 버튼을 누른 채 커서만 옮긴다 (버튼 밖으로 나갔다 돌아오는 시험).
+                string[] heldPoint = value.Split(',');
+                _mouse = MakeMouse(int.Parse(heldPoint[0]), int.Parse(heldPoint[1]), ButtonState.Pressed); break;
+            case "up":
+                // 누르고 있던 왼쪽 버튼을 지금 커서 위치에서 뗀다.
+                _mouse = MakeMouse(_mouse.X, _mouse.Y, ButtonState.Released); break;
+            case "middle-click":
+                string[] middlePoint = value.Split(',');
+                _mouse = new MouseState(int.Parse(middlePoint[0]), int.Parse(middlePoint[1]), _mouse.ScrollWheelValue,
+                    ButtonState.Released, ButtonState.Pressed, ButtonState.Released, ButtonState.Released, ButtonState.Released);
+                _release = true; break;
             case "right-click":
                 string[] rightPoint = value.Split(',');
                 _mouse = new MouseState(int.Parse(rightPoint[0]), int.Parse(rightPoint[1]), _mouse.ScrollWheelValue,

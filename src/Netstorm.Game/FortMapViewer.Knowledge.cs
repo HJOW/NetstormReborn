@@ -66,6 +66,8 @@ internal sealed partial class FortMapViewer
 
     /// <summary>상세창으로 연 카드 (없으면 격자)</summary>
     private KnowledgeCard? _knowledgeDetail;
+    /// <summary>지식 상세 창 Back(0)·OK(1) 버튼의 누름·떼기 처리기.</summary>
+    private readonly ButtonGump _knowledgeGump = new();
 
     /// <summary>상세창 본문 스크롤 (픽셀)</summary>
     private int _knowledgeScroll;
@@ -198,18 +200,24 @@ internal sealed partial class FortMapViewer
             }
             if (Pressed(keyboard, Keys.Down)) _knowledgeScroll += TutorialLineHeight;
             if (Pressed(keyboard, Keys.Up)) _knowledgeScroll = Math.Max(0, _knowledgeScroll - TutorialLineHeight);
-            if (Pressed(keyboard, Keys.Escape) || Pressed(keyboard, Keys.Back)
-                || (click && KnowledgeDetailButton(panel, 0).Contains(point)))
+            // Back·OK 는 원본 돌 버튼 규칙(누르는 순간 소리, 안쪽에서 뗄 때 실행)을 따른다. Enter·Space 는 버튼을 누르지 않는다.
+            var buttons = new List<GumpButton>
             {
-                if (click && KnowledgeDetailButton(panel, 0).Contains(point)) QueueSound(OriginalUiSkin.ButtonSound);
+                OriginalUiSkin.Hit(0, KnowledgeDetailButton(panel, 0)),
+                OriginalUiSkin.Hit(1, KnowledgeDetailButton(panel, 1)),
+            };
+            GumpResult result = _knowledgeGump.Update(buttons, mouse.X, mouse.Y, mouse.LeftButton == ButtonState.Pressed);
+            if (result.Pressed != null) QueueSound(OriginalUiSkin.ButtonSound);
+            if (Pressed(keyboard, Keys.Escape) || Pressed(keyboard, Keys.Back) || result.Activated == 0)
+            {
                 _knowledgeDetail = null;
+                _knowledgeGump.Cancel();
             }
-            else if (Pressed(keyboard, Keys.Enter) || Pressed(keyboard, Keys.Space) || Pressed(keyboard, Keys.F6)
-                || (click && KnowledgeDetailButton(panel, 1).Contains(point)))
+            else if (Pressed(keyboard, Keys.F6) || result.Activated == 1)
             {
-                if (click && KnowledgeDetailButton(panel, 1).Contains(point)) QueueSound(OriginalUiSkin.ButtonSound);
                 _knowledgeDetail = null;
                 _knowledgeOpen = false;
+                _knowledgeGump.Cancel();
             }
         }
         else
@@ -448,9 +456,7 @@ internal sealed partial class FortMapViewer
         // Back·OK 버튼을 그린다
         for (int index = 0; index < labels.Length; index++)
         {
-            Rectangle button = KnowledgeDetailButton(panel, index);
-            bool hover = button.Contains(_previousMouse.Position);
-            _uiSkin.Button(batch, button, labels[index], hover: hover, pressed: hover && _previousMouse.LeftButton == ButtonState.Pressed);
+            _uiSkin.Button(batch, KnowledgeDetailButton(panel, index), labels[index], pressed: _knowledgeGump.IsPressed(index));
         }
     }
 }

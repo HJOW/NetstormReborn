@@ -183,16 +183,26 @@ public sealed class AnalysisEngine
         if (request.Kind is not ("move" or "click" or "drag" or "key")) throw new ArgumentException("kind는 move/click/drag/key 중 하나입니다.");
         if (request.DurationMs is < 1 or > 2000 || request.SettleMs is < 0 or > 5000)
             throw new ArgumentException("durationMs는 1~2000, settleMs는 0~5000입니다.");
+        if (request.HoldViaMs is < 0 or > 2000 || request.HoldMs is < 0 or > 2000)
+            throw new ArgumentException("holdViaMs와 holdMs는 0~2000입니다.");
+        if (request.ViaX.HasValue != request.ViaY.HasValue)
+            throw new ArgumentException("viaX와 viaY는 함께 지정해야 합니다.");
+        if (request.Kind != "drag" && (request.ViaX.HasValue || request.HoldViaMs != 0 || request.HoldMs != 0))
+            throw new ArgumentException("viaX/viaY/holdViaMs/holdMs는 drag에서만 쓸 수 있습니다.");
+        if (request.HoldViaMs != 0 && !request.ViaX.HasValue)
+            throw new ArgumentException("holdViaMs는 경유점(viaX, viaY)이 있을 때만 쓸 수 있습니다.");
         if (request.Button is not ("left" or "right" or "middle")) throw new ArgumentException("지원하지 않는 마우스 버튼입니다.");
         if (request.Kind == "key") WindowsGame.ParseKeys(request.Key);
         if (session.EventCount > SessionStore.MaximumEvents - 5) throw new InvalidOperationException("새 세션으로 입력 기록을 이어가세요.");
         using Process process = RequireProcess(session);
         GameWindow window = await WindowsGame.FocusAsync(process.Id, cancellation);
         if (request.Kind != "key" && (!Inside(window, request.X, request.Y)
-            || (request.Kind == "drag" && !Inside(window, request.ToX, request.ToY))))
+            || (request.Kind == "drag" && !Inside(window, request.ToX, request.ToY))
+            || (request.ViaX.HasValue && !Inside(window, request.ViaX.Value, request.ViaY!.Value))))
             throw new ArgumentException("입력 좌표가 클라이언트 영역 밖입니다.");
         var action = new InputRequest(request.Kind, request.X, request.Y, request.ToX, request.ToY,
-            request.Button, request.Key, request.DurationMs, request.SettleMs);
+            request.Button, request.Key, request.DurationMs, request.SettleMs,
+            request.ViaX, request.ViaY, request.HoldViaMs, request.HoldMs);
         CapturedFrame before = WindowsGame.Capture(window, "");
         ScreenshotEvidence beforeEvidence = Store.StoreFrame(session, before);
         Store.Append(session, "input_requested", action, beforeEvidence);

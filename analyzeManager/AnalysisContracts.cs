@@ -14,6 +14,14 @@ public sealed class AnalysisRequest
     public int Y { get; set; }
     public int ToX { get; set; }
     public int ToY { get; set; }
+    /// <summary>drag 의 경유점 x. 지정하면 시작점 → 경유점 → 도착점 순서로 누른 채 이동한다 (ViaY 와 함께).</summary>
+    public int? ViaX { get; set; }
+    /// <summary>drag 의 경유점 y.</summary>
+    public int? ViaY { get; set; }
+    /// <summary>drag 의 경유점에서 버튼을 누른 채 더 기다릴 시간(ms, 0~2000).</summary>
+    public int HoldViaMs { get; set; }
+    /// <summary>drag 의 도착점에서 버튼을 떼기 전에 더 기다릴 시간(ms, 0~2000).</summary>
+    public int HoldMs { get; set; }
     public string Button { get; set; } = "left";
     public string Key { get; set; } = "";
     public int DurationMs { get; set; } = 80;

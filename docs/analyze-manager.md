@@ -206,10 +206,26 @@ analyzeManager/bin/Release/net10.0-windows/Netstorm.AnalyzeManager.exe call capt
 - 입력 좌표는 **현재 게임 창 전체 클라이언트 영역의 물리 픽셀**이다. ROI 이미지 안 좌표를 쓸 때는 ROI의 x/y를 더한다. 테두리와 제목 표시줄은 제외한다.
 - `region`은 `x,y,width,height`; 생략/빈 문자열은 전체 클라이언트다. 창 밖 영역은 거부한다.
 - 키는 영문자/숫자, 방향키, `ESCAPE`, `ENTER`, `SPACE`, `TAB`, `BACKSPACE`, `HOME`, `END`, `PAGEUP`, `PAGEDOWN`, 기능키, `CTRL+A` 같은 최대 4개 조합을 지원한다. `F11`, `ALT+ENTER`는 금지한다. 메뉴에서 직접 전체화면을 선택하는 동작도 분석 과정에서 피해야 한다.
-- `durationMs`는 1~2000, `settleMs`는 0~5000이다. 취소/실패 시 눌렀던 키와 버튼 해제를 시도한다.
+- `durationMs`는 1~2000, `settleMs`는 0~5000이다. 취소/실패 시 눌렀던 키와 버튼 해제를 시도한다. `drag`의 경유점·대기 옵션은 아래 [원본 버튼 누름 시험용 `drag` 옵션](#원본-버튼-누름-시험용-drag-옵션-2026-10-03)을 본다.
 - `wait_for_change`의 `timeoutMs`는 1~30000, `threshold`는 0 초과~1 이하다. `pollMs=0`(기본)이면 세션의 FPS를 따르고, `fps=60`처럼 이번 관찰만 바꿀 수 있다. `pollMs=1~5000`을 명시하면 그 간격(ms)을 우선 사용한다. RGB 중 하나의 차이가 24 이상인 픽셀의 비율을 기준 화면과 비교한다. 애니메이션만으로도 조건이 성립할 수 있으므로 적절한 ROI를 고른다.
 - `record_observation` 메모는 최대 8000자이며 AI의 해석이라고 표시한다. 화면 변화나 OS 입력 성공만으로 게임 규칙을 확정하지 않는다.
 - `force=true` 종료는 PID·시작 시각·실행 파일 경로가 모두 일치하는 해당 세션 게임만 대상으로 한다.
+
+### 원본 버튼 누름 시험용 `drag` 옵션 (2026-10-03)
+
+버튼을 누른 채 바깥으로 나갔다 돌아오는 시험을 위해 `game_input`의 `drag`에 다음 옵션을 추가했다. 모두 선택 사항이며 `drag`에서만 쓸 수 있다.
+
+```json
+{"sessionId":"SESSION_ID","kind":"drag","x":472,"y":343,"toX":472,"toY":343,"viaX":472,"viaY":430,"durationMs":600,"holdViaMs":1000,"holdMs":300}
+```
+
+- 경로는 시작점 → (선택) 경유점 `viaX/viaY` → 도착점이다. 각 구간은 `durationMs`를 10등분해 단계로 옮긴다(`DragPlan`, 원본이 이동 중 눌린 버튼 위/밖을 갱신할 수 있게 한다).
+- `holdViaMs`(0~2000): 경유점에서 **버튼을 누른 채** 더 기다린다(경유점이 있을 때만). `holdMs`(0~2000): 도착점에서 버튼을 떼기 전에 더 기다린다.
+- `viaX`와 `viaY`는 함께 지정해야 하고 클라이언트 영역 안이어야 한다.
+- `click`의 `durationMs`는 버튼을 누르고 있는 시간이므로 **제자리 오래 누르기**(예: 2000ms)에 쓴다. `drag`는 누름·이동은 입력 로그에 남지만 `SetCursorPos` 이동 자체는 남지 않는다(`SendInput` 누름/뗌만 기록).
+- 입력 사건 앞뒤의 소리를 원본 효과음과 맞추는 [`tools/audio_events.py`](../tools/audio_events.py), 버튼 영역이 평소/눌림 중 어느 모양인지 프레임마다 판정하는 [`tools/button_state.py`](../tools/button_state.py)와 함께 쓴다. 결과는 [원본 공통 메뉴 버튼 동작 분석](videos/menu-buttons-20261003.md).
+- 단위 테스트: `analyzeManager/tests/DragPlanTests.cs`(경로 단계·대기·총 시간).
+- **RDP 멈춤 주의:** 2026-10-03 시험 중 RDP 클라이언트 창이 가려지거나 최소화되자 분석기 호출이 57~305초 멈췄다(`game_input` 한 번이 166.7초). 멈춤이 45초를 넘으면 원본이 Auto-Demo를 시작해 시험이 어긋난다. 시험 첫머리에 Options의 Auto-Demo 행을 눌러 끄고, 승인 프롬프트가 필요 없는 스크립트 한 개로 돌린다.
 
 권장 분석 순서는 세션 확인 → 실행 → 화면 확인 → 한 번 입력 → 필요한 ROI 변화 관찰 → 근거 해시를 붙인 메모 → 종료 확인이다. 본 도구의 관찰 시간은 OS 캡처 시각이며 게임 내부 틱이나 영상의 프레임 번호와 같지 않다.
 
