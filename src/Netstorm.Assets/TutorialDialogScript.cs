@@ -14,6 +14,11 @@ public enum TutorialTextStyle
     Emphasis,
     /// <summary>조작법이나 중요한 단어.</summary>
     Highlight,
+    /// <summary>
+    /// 글 사이에 넣는 원본 그림 (<c>~[I타입.프레임]</c>). 구간의 Text 는 "타입.프레임" 이며
+    /// <see cref="InlinePicture"/> 로 타입과 클러스터를 찾는다.
+    /// </summary>
+    Picture,
 }
 
 /// <summary>본문 앞의 줄 간격.</summary>
@@ -35,7 +40,14 @@ public sealed record TutorialDialogButton(string Label, string Action, string Ar
 
 /// <summary>한 안내 섹션의 표시 내용과 버튼.</summary>
 public sealed record TutorialDialogContent(string Section, string Title, IReadOnlyList<TutorialTextRun> Runs,
-    IReadOnlyList<TutorialDialogButton> Buttons);
+    IReadOnlyList<TutorialDialogButton> Buttons)
+{
+    /// <summary>
+    /// 제목이 본문 흐름 안에 그대로 들어 있는지. 제목 앞에 글 사이 그림이 있는 본문(TEST01 의
+    /// <c>~[IsunBalloon.a1]&lt;h2&gt;TEST01&lt;/h2&gt;</c>)은 원본이 제목을 그림 옆에 이어 쓰므로, 화면은 창 위쪽에 제목을 따로 그리지 않는다.
+    /// </summary>
+    public bool TitleInBody { get; init; }
+}
 
 /// <summary>버튼을 눌렀을 때 화면 바깥에서 처리할 동작.</summary>
 public enum TutorialDialogActionKind
@@ -82,6 +94,12 @@ public sealed class TutorialDialogScript
 
     /// <summary>본문의 HTML 태그와 일반 글자를 나누는 정규식.</summary>
     private static readonly Regex Tag = new(@"(<[^>]*>)", RegexOptions.Compiled);
+
+    /// <summary>
+    /// 글 사이 그림 표시 <c>~[I타입.프레임]</c> 을 찾는 정규식. 구분 문자는 '.' 이고 일부 스크립트는 ',' 를 쓴다
+    /// (예: <c>~[IwindWalker,9]</c>). 프레임은 숫자, 글자+숫자(D1), '*' 가 온다.
+    /// </summary>
+    private static readonly Regex PictureMark = new(@"(~\[I[A-Za-z0-9_]+[.,][A-Za-z0-9*]+\])", RegexOptions.Compiled);
 
     /// <summary>원본 줄바꿈·연속 공백을 한 칸으로 바꾸는 정규식.</summary>
     private static readonly Regex Whitespace = new(@"\s+", RegexOptions.Compiled);
@@ -242,10 +260,13 @@ public sealed class TutorialDialogScript
     private static TutorialDialogContent PrepareContent(string section, PreparedMissionSection prepared)
     {
         Match heading = FirstHeading.Match(prepared.Body);
+        // 제목 앞에 그림이 있으면(TEST01 의 "~[IsunBalloon.a1]<h2>TEST01</h2>") 원본은 제목을 그림 옆에 이어 쓴다.
+        // 그런 본문은 제목을 따로 떼지 않고 본문 흐름에 그대로 둔다.
+        bool inlineHeading = heading.Success && PictureMark.IsMatch(prepared.Body[..heading.Index]);
         string title = heading.Success
             ? WebUtility.HtmlDecode(Tag.Replace(heading.Groups[1].Value, "")).Trim()
             : $"튜토리얼 {section}";
-        string body = heading.Success ? prepared.Body.Remove(heading.Index, heading.Length) : prepared.Body;
+        string body = heading.Success && !inlineHeading ? prepared.Body.Remove(heading.Index, heading.Length) : prepared.Body;
         body = LineCommand.Replace(body, "");
         var buttons = new List<TutorialDialogButton>();
         // 조건 평가를 통과한 Button 명령만 화면 순서대로 만든다.
@@ -263,7 +284,7 @@ public sealed class TutorialDialogScript
             // 원본 스크립트의 [F1.]처럼 버튼 없는 안내도 닫을 수 있게 한다.
             buttons.Add(new TutorialDialogButton("닫기", "DoNothing", "0"));
         }
-        return new TutorialDialogContent(section, title, ParseText(body), buttons);
+        return new TutorialDialogContent(section, title, ParseText(body), buttons) { TitleInBody = inlineHeading };
     }
 
     /// <summary>
@@ -290,7 +311,12 @@ public sealed class TutorialDialogScript
             }
             if (part[0] != '<')
             {
-                AppendText(part);
+                // 글 사이 그림 표시는 그림 구간으로, 나머지는 글자로 붙인다.
+                foreach (string piece in PictureMark.Split(part))
+                {
+                    if (piece.StartsWith("~[I", StringComparison.Ordinal)) AppendPicture(piece[3..^1].Replace(',', '.'));
+                    else AppendText(piece);
+                }
                 continue;
             }
             string name = part[1..^1].Trim().TrimEnd('/').ToLowerInvariant();
@@ -314,7 +340,9 @@ public sealed class TutorialDialogScript
                     if (pendingBreak < TutorialTextBreak.Line) pendingBreak = TutorialTextBreak.Line;
                     break;
                 case "h1" or "h2" or "h3" or "h4":
-                    pendingBreak = TutorialTextBreak.Paragraph;
+                    // 그림 바로 뒤의 제목은 원본처럼 그림 옆(같은 줄)에 이어 쓴다.
+                    if (runs.Count == 0 || runs[^1].Style != TutorialTextStyle.Picture || pendingBreak != TutorialTextBreak.None)
+                        pendingBreak = TutorialTextBreak.Paragraph;
                     heading = true;
                     break;
                 case "/h1" or "/h2" or "/h3" or "/h4":
@@ -343,6 +371,13 @@ public sealed class TutorialDialogScript
             }
         }
         return runs;
+
+        /// <summary>그림 구간 하나를 현재 줄 간격으로 붙인다 (Text = "타입.프레임").</summary>
+        void AppendPicture(string spec)
+        {
+            runs.Add(new TutorialTextRun(spec, TutorialTextStyle.Picture, pendingBreak));
+            pendingBreak = TutorialTextBreak.None;
+        }
 
         /// <summary>텍스트 조각 하나를 현재 스타일과 줄 간격으로 붙인다.</summary>
         void AppendText(string source)

@@ -46,6 +46,29 @@ internal sealed partial class FortMapViewer
     /// <summary>(타입 번호, 방향 글자, 프레임 번호) → 클러스터 번호. 매 프레임 .type 코드 표를 훑지 않도록 기억한다.</summary>
     private readonly Dictionary<(int Type, char Side, int Number), int> _walkFrameCache = [];
 
+    /// <summary>
+    /// 진단용(<c>--dump-objects</c>): 맵에 저장된 오브젝트를 타입·월드 칸·영역·소유자·저장 프레임·상태 바이트와 함께 콘솔에 쓴다.
+    /// 원본 화면과 클론 화면의 그림이 다를 때 어떤 타입·프레임인지 확인하는 데 쓴다. 다리와 투명 지면(noIsland)은 뺀다.
+    /// </summary>
+    public void DumpObjects()
+    {
+        // 화면 위에서 아래·왼쪽에서 오른쪽 순서로 쓴다.
+        foreach (FortMapObject item in _map.Objects.OrderBy(o => o.Y).ThenBy(o => o.X))
+        {
+            FortObject o = item.Object;
+            if (o.Type.Name is "noIsland" or "bridge") continue;
+            Console.WriteLine($"[obj] {o.Type.Name} cell=({item.X},{item.Y}) terr={item.Territory?.ToString() ?? "-"} owner={o.Owner?.ToString() ?? "-"} "
+                + $"frame={o.Frame?.ToString() ?? "-"} qa={o.QA?.ToString() ?? "-"} qb={o.QB?.ToString() ?? "-"} factory={o.FactoryState?.ToString() ?? "-"} contents={o.Contents.Count}");
+        }
+        // 맵에 없는데 세션이 만든 오브젝트(내용물에서 꺼낸 유닛 등)도 써서 화면에 더 그려지는 그림의 출처를 찾는다.
+        foreach (GameEntity entity in _session.Entities.Where(e => e.Source == null))
+            Console.WriteLine($"[session] {entity.Type.Name} id={entity.Id} cell=({entity.Footprint.AnchorX},{entity.Footprint.AnchorY}) owner={entity.Owner} kind={entity.Kind}");
+        // 지면 영역마다 테마·소유자·타일 수를 써서 섬 테두리 색이 어떤 소유자로 계산됐는지 확인한다.
+        foreach (var group in _terrain.Tiles.GroupBy(t => (t.Region, t.Theme, t.Owner)).OrderBy(g => g.Key.Region))
+            Console.WriteLine($"[terrain] region={group.Key.Region} theme={group.Key.Theme} owner={group.Key.Owner} tiles={group.Count()} "
+                + $"x={group.Min(t => t.X)}..{group.Max(t => t.X)} y={group.Min(t => t.Y)}..{group.Max(t => t.Y)}");
+    }
+
     /// <summary>걷기 그림 시계를 진행한다 (게임 시간이 흐를 때만).</summary>
     /// <param name="seconds">지난 갱신 이후 경과 시간(초)</param>
     private void UpdateWalkClock(double seconds)
@@ -112,8 +135,10 @@ internal sealed partial class FortMapViewer
     /// <summary>이동형 유닛의 지금 그림(텍스처·기준점 오프셋)과 화면 기준점. 그릴 그림이 없으면 null.</summary>
     private (Texture2D Texture, Point Offset, Vector2 Anchor)? MobileSprite(GameEntity entity, Vector2 center)
     {
-        var sprite = GetTexture(entity.Type.LoadIndex, MobileFrame(entity) ?? RestFrame(entity));
-        return sprite is { } s ? (s.Texture, s.Offset, Screen(MobileWorldPixels(entity), center)) : null;
+        // 화면에 그리는 것과 같은 그림·위치로 판정한다 (풍선의 기준점 이동, Sail Skater 의 방향 그림 포함).
+        (TypeInfo type, StructureFrames frames, Vector2 shift) = ObjectSprite(entity.Type, entity, entity.Source);
+        var sprite = GetTexture(type.LoadIndex, frames.Body);
+        return sprite is { } s ? (s.Texture, s.Offset, Screen(MobileWorldPixels(entity), center) + shift * _zoom) : null;
     }
 
     /// <summary>
@@ -169,7 +194,7 @@ internal sealed partial class FortMapViewer
         {
             int frame = MapSpriteFrames.BodyFrame(_terrainType.Definition, tile.Cluster);
             GetTexture(_terrainType.LoadIndex, frame);
-            GetTexture(_terrainType.LoadIndex, frame, PreviewPlayerColors.GetValueOrDefault(tile.Owner));
+            GetTexture(_terrainType.LoadIndex, frame, _playerColors.GetValueOrDefault(tile.Owner));
         }
         foreach (FortTerrainFringeSprite fringe in _fringes)
             GetTexture(_fringeType.LoadIndex, MapSpriteFrames.BodyFrame(_fringeType.Definition, fringe.Cluster));
@@ -177,7 +202,7 @@ internal sealed partial class FortMapViewer
         {
             int frame = MapSpriteFrames.BodyFrame(_edgeFarmType.Definition, tile.Cluster);
             GetTexture(_edgeFarmType.LoadIndex, frame);
-            GetTexture(_edgeFarmType.LoadIndex, frame, PreviewPlayerColors.GetValueOrDefault(tile.Owner));
+            GetTexture(_edgeFarmType.LoadIndex, frame, _playerColors.GetValueOrDefault(tile.Owner));
         }
         foreach (int cluster in Enumerable.Range(0, 8))
         {
@@ -189,6 +214,17 @@ internal sealed partial class FortMapViewer
         {
             if (item.Object.Type.Name == "noIsland") continue;
             GetTexture(item.Object.Type.LoadIndex, MapSpriteFrames.BodyFrame(item, _terrain.TerritoryTheme(item.Territory)));
+        }
+        // 제자리 애니메이션이 있는 타입(가이저 증기·워크샵 레벨·신전 회오리·풍선)은 모든 클러스터와 그 그림자를 만들어 둔다.
+        foreach (TypeInfo type in _sorted.Select(o => o.Object.Type).DistinctBy(t => t.LoadIndex)
+                     .Where(t => ObjectKinds.Of(t) is ObjectKind.Geyser or ObjectKind.Workshop or ObjectKind.Temple || t.Definition.HasFlag("balloon")))
+        {
+            // 클러스터 번호가 곧 본체 프레임 번호다.
+            for (int frame = 0; frame < type.Definition.Clusters.Count; frame++)
+            {
+                GetTexture(type.LoadIndex, frame);
+                if (ShadowStyleOf(type) != ShadowStyle.None) GetShadowTexture(type, frame, ShadowStyleOf(type) == ShadowStyle.Dithered);
+            }
         }
         // 이동형 유닛 타입의 8방향 × 8프레임: 지도에 있는 것과 생산 후보 가운데 걷는 그림이 있는 것
         IEnumerable<TypeInfo> mobileTypes = _session.Entities.Where(IsMobile).Select(e => e.Type)

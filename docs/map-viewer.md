@@ -22,6 +22,17 @@ dotnet run --project src/Netstorm.Game -- --map assets/game-data/d/b0.fort
 dotnet run --project src/Netstorm.Game -- --map savetheisland --language korean
 ```
 
+2026-10-03 **커스텀 맵 시험 전투와 화면 요소**([TEST01 화면 요소 대조](videos/test01-visuals-20261003.md)):
+
+```powershell
+dotnet run --project src/Netstorm.Game -c Release -- --test-battle TEST01                 # 원본 Edit → Game → Test Battle 처럼 플레이 화면으로 연다
+dotnet run --project src/Netstorm.Game -c Release -- --test-battle TEST01 --dump-objects  # 맵 오브젝트·세션 오브젝트·지면 영역(테마·소유자)을 콘솔에 쓴다
+```
+
+* `--test-battle <맵>` 은 캠페인에 공개되지 않은 맵(`d/<맵>.fort` + `.english`)도 생산 창·미니맵이 있는 플레이 화면으로 연다. 원본처럼 AI 색 덮어쓰기(`aiNColor`)는 적용하지 않는다.
+* 플레이 화면에 반영한 원본 요소: 소유자 색 테두리(받침 포함), 화면을 따라 스크롤하는 미니맵(1px = 2칸, 누르기·끌기), 그림자, 가이저 증기·워크샵 레벨 그림·신전 회오리·풍선 흔들림, `hotFootRatio` 기준점, 원본 방식 배치 미리보기(흰 발자국 사각형·원소 아이콘·노란 비용·안내 글·고정 캐논 사거리 반짝임), 선택 괄호와 체력 막대, 브리핑의 글 사이 그림.
+* **커서와 칸**: 커서가 가리키는 칸은 화면에 보이는 그 칸이다(이전에는 한 칸 왼쪽·위였다). 들고 있는 유닛의 발자국은 원본처럼 오른쪽 아래 칸이 (커서 열, 커서 행 + 1 + 타입의 `height`) 에 온다 — 골렘은 커서 두 행 아래가 발밑이다.
+
 `--map`이 없으면 기존 애니메이션 확인 화면이다. 파일을 명시하면 해당 파일을 읽고,
 맵 이름을 지정하면 설정의 `fortSpec`으로 경로를 만들고 공통 `GameFileSystem`에서 찾는다.
 조회 순서는 원본 정적 분석과 같은 데이터 폴더 디스크 → 이름순 `*.tarc` → 보조 폴더다.
@@ -33,8 +44,8 @@ dotnet run --project src/Netstorm.Game -- --map savetheisland --language korean
 * 방향키 또는 마우스 우클릭 드래그: 카메라 이동
 * **전체화면에서 마우스를 화면 끝(맨 바깥 1픽셀)에 대면 카메라 이동** (원본과 같은 규칙·속도 곡선, 월드 밖으로는 나가지 않음) — [분석](exe/edge-scroll.md)
 * 마우스 휠: 0.25~4배 확대
-* Home: 시작 카메라로 복귀 — 원본 미션 시작 화면처럼 플레이어 1 사제 칸 기준점을 창 중심에서 (+13, +9) 떨어진 곳에 둔다.
-  논리 해상도가 1024×768 이면(4:3 창이거나 `--wide letterbox` 일 때) 사제가 원본 캡처와 같은 (525, 393) 에 그려져, 뷰어 캡처를 원본 캡처와 바로 겹쳐 볼 수 있다 ([측정](screens/dissolved-alliance-start.md) 2절).
+* Home: 시작 카메라로 복귀 — 원본 미션 시작 화면처럼 플레이어 1 사제 칸 기준점을 창 중심에서 (+16, +12) 떨어진 곳에 둔다.
+  논리 해상도가 1024×768 이면(4:3 창이거나 `--wide letterbox` 일 때) 사제 칸 기준점이 원본과 같은 (528, 396) 에 놓여, 뷰어 캡처를 원본 캡처와 바로 겹쳐 볼 수 있다. 사제 그림은 `hotFootRatio` 때문에 (8, 2) 왼쪽·위인 (520, 394) 에 그려진다 (2026-10-03 TEST01 녹화의 건물 위치로 다시 맞춤 — [근거](videos/test01-visuals-20261003.md), 이전 값 (525, 393) 은 [캡처 측정](screens/dissolved-alliance-start.md) 2절).
   안내 영역이 4줄로 늘어(높이 128) 화면 맨 위 128 논리 픽셀은 안내가 덮는다 (사제 위치 계산은 안내 높이를 보정하므로 그대로).
   와이드 시야 확장에서는 화면 중심이 넓어진 만큼 사제가 가운데 쪽으로 온다
 * F4: 현재 사제 위치로 화면을 옮긴다. 튜토리얼 1의 첫 단계 신호로도 처리한다.

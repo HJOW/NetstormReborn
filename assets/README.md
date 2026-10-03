@@ -5,7 +5,7 @@
 | 경로 | 내용 |
 | --- | --- |
 | `game-data/netstorm.tarc` | 타입 정의·기본 지도·미션·언어표 246개를 담은 TAFF 데이터 아카이브 |
-| `game-data/d/` | 1,100개 파일: 셰이프, 팔레트, 메뉴 GIF, 지도 431개, 영어·독일어 미션/도움말, 글리프 자료, 기본 설정 |
+| `game-data/d/` | 1,102개 파일: 셰이프, 팔레트, 메뉴 GIF, 지도 432개, 영어·독일어 미션/도움말, 글리프 자료, 기본 설정. 2026-10-03에 원본 분석용 커스텀 맵 `TEST01.fort`·`TEST01.english`(`originals/d/`의 복사본)를 더했다 — `--test-battle TEST01`과 통합 테스트가 쓴다 |
 | `game-data/sound/` | 효과음 WAV 218개 |
 | `game-data/music/` | RIFF WAV 형식의 음악 MUS 9개 |
 | `migration-manifest.json` | 최초 이관한 1,327개 파일의 상대 경로·크기·SHA-256 |

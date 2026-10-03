@@ -399,7 +399,9 @@ public sealed partial class BattleSession
         }
         else if (entity.Kind == ObjectKind.Workshop)
         {
-            player.Deck.AddWorkshop(entity.Id, element ?? Element.Sun);
+            // 맵에 저장된 워크샵은 저장 상태(0·1·2)가 곧 레벨 I·II·III 이다
+            // (TEST01 녹화: factory=2 인 Sun 워크샵의 풍선 도움말이 "Sun Workshop Level III").
+            player.Deck.AddWorkshop(entity.Id, element ?? Element.Sun, (entity.Source?.Object.FactoryState ?? 0) + 1);
         }
     }
 

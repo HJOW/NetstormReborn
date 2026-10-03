@@ -50,6 +50,57 @@ public sealed class TutorialDialogScriptTests
         Assert.Equal("B.", dialog.Current.Section);
     }
 
+    /// <summary>
+    /// 글 사이 그림 표시(~[I타입.프레임])는 그림 구간이 되고, 그림 바로 뒤의 제목은 떼어 내지 않고 본문 흐름에 남는다
+    /// (TEST01 브리핑: 풍선 그림 옆에 큰 제목, 아래 줄에 기울임 글).
+    /// </summary>
+    [Fact]
+    public void PictureMark_BecomesPictureRunAndKeepsHeadingInline()
+    {
+        const string scriptText = """
+            [A.]
+            ~[IsunBalloon.a1]<h2>TEST01</h2>
+            <i>caption</i> then ~[IwindWalker,9] icon
+            $Button=Go!,DoNothing,0
+            """;
+        var dialog = new TutorialDialogScript(new MissionScript(scriptText), new ConfigStore());
+
+        Assert.True(dialog.OpenStage("A."));
+        TutorialDialogContent content = dialog.Current!;
+        Assert.Equal("TEST01", content.Title);
+        Assert.True(content.TitleInBody);
+        Assert.Equal(TutorialTextStyle.Picture, content.Runs[0].Style);
+        Assert.Equal("sunBalloon.a1", content.Runs[0].Text);
+        // 그림 바로 뒤 제목은 같은 줄에 이어진다
+        Assert.Equal(TutorialTextStyle.Heading, content.Runs[1].Style);
+        Assert.Equal(TutorialTextBreak.None, content.Runs[1].BreakBefore);
+        // 제목 뒤 글은 새 문단에서 시작한다
+        Assert.Equal(TutorialTextStyle.Emphasis, content.Runs[2].Style);
+        Assert.Equal(TutorialTextBreak.Paragraph, content.Runs[2].BreakBefore);
+        // 쉼표 구분 표기도 "타입.프레임" 으로 맞춘다
+        Assert.Contains(content.Runs, run => run.Style == TutorialTextStyle.Picture && run.Text == "windWalker.9");
+        Assert.DoesNotContain(content.Runs, run => run.Text.Contains("~["));
+    }
+
+    /// <summary>제목이 맨 앞에 오는 보통 안내는 예전처럼 제목을 본문에서 떼어 낸다.</summary>
+    [Fact]
+    public void LeadingHeading_IsStillExtractedAsTitle()
+    {
+        const string scriptText = """
+            [A.]
+            <h2>Briefing</h2>
+            Body with ~[Iicon.12] picture.
+            $Button=OK,DoNothing,0
+            """;
+        var dialog = new TutorialDialogScript(new MissionScript(scriptText), new ConfigStore());
+
+        Assert.True(dialog.OpenStage("A."));
+        Assert.Equal("Briefing", dialog.Current!.Title);
+        Assert.False(dialog.Current.TitleInBody);
+        Assert.DoesNotContain(dialog.Current.Runs, run => run.Style == TutorialTextStyle.Heading);
+        Assert.Contains(dialog.Current.Runs, run => run.Style == TutorialTextStyle.Picture && run.Text == "icon.12");
+    }
+
     /// <summary>버튼 없는 보정 안내의 닫기와 미션 종료·이동 명령을 구별한다.</summary>
     [Fact]
     public void FinalButtons_ReturnActionsAndButtonlessPageCanClose()

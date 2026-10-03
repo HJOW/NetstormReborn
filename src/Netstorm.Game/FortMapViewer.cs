@@ -29,12 +29,17 @@ internal sealed partial class FortMapViewer : IDisposable
     /// <summary>상단 안내 영역 높이 (개발용 안내 4줄). 공개 캠페인은 원본처럼 상단 막대 없이 지도를 화면 전체에 그린다.</summary>
     private int HeaderHeight => _playUi ? 0 : 128;
     /// <summary>
-    /// 원본 미션 시작 화면에서 플레이어 1 사제 칸 기준점이 화면 중심(512, 384)보다 오른쪽·아래로 떨어진 거리.
-    /// 원본 캡처 3장(The War Begins!·Save the Island!·Dissolved Alliance!)에서 (525, 393) ±4px 로 측정했다.
+    /// 원본 미션 시작 화면에서 플레이어 1 사제의 칸 기준점이 화면 중심(512, 384)보다 오른쪽·아래로 떨어진 거리.
+    /// 원본은 화면 왼쪽 위를 칸 경계에 맞춰 사제 칸에서 33칸 왼쪽·36칸 위에 두므로 칸 기준점이 (528, 396)에 온다.
+    /// 2026-10-03 TEST01 녹화에서 건물 6종의 위치로 맞춘 값이다. 사제 그림은 hotFootRatio (0.5, 0.2) 때문에
+    /// 여기서 (8, 2) 왼쪽·위인 (520, 394)에 그려지며, 이전 캡처 3장의 측정값 (525, 393) ±4px 와도 맞는다.
     /// </summary>
-    private static readonly Vector2 OriginalStartOffset = new(13, 9);
-    /// <summary>제공된 공식 미션 캡처의 플레이어 1 청록·플레이어 2 빨강을 사용하는 개발용 색상표.</summary>
-    private static readonly IReadOnlyDictionary<int, int> PreviewPlayerColors = new Dictionary<int, int> { [1] = 7, [2] = 2 };
+    private static readonly Vector2 OriginalStartOffset = new(16, 12);
+    /// <summary>
+    /// 소유자 번호 → 색 번호(1 파랑, 2 빨강, 3 흰색, 4 초록, 5 보라, 6 노랑, 7 연파랑, 8 주황). 원본처럼 기본은 자기 번호이고
+    /// 미션 머리 값 aiNColor 가 덮어쓴다 (<see cref="PlayerColors"/>). 섬 테두리·받침·미니맵·선택 괄호 색을 고른다.
+    /// </summary>
+    private readonly IReadOnlyDictionary<int, int> _playerColors;
     private readonly FortMap _map;
     private readonly ShapeDatabase _shapes;
     private readonly Palette _palette;
@@ -87,6 +92,7 @@ internal sealed partial class FortMapViewer : IDisposable
         _shapes = shapes;
         _palette = palette;
         _isleColors = new IsleColorRemap(palette);
+        _playerColors = PlayerColors.Table(mission?.AiColors);
         _map = new FortMap(fort);
         _terrainType = catalog.Find("isle") ?? throw new InvalidDataException("isle 타입이 없습니다.");
         _edgeFarmType = catalog.Find("edgeFarm") ?? throw new InvalidDataException("edgeFarm 타입이 없습니다.");
@@ -117,7 +123,7 @@ internal sealed partial class FortMapViewer : IDisposable
 
     /// <summary>
     /// 원본 미션 시작 화면처럼 플레이어 1 사제를 창 중심에서 OriginalStartOffset 만큼 떨어진 곳에 둔다.
-    /// 1024×768 창이면 사제가 원본 캡처와 같은 (525, 393)에 그려져 캡처와 바로 겹쳐 볼 수 있다. 사제가 없으면 첫 오브젝트를 사용한다.
+    /// 1024×768 창이면 사제 칸 기준점이 원본과 같은 (528, 396)에 놓여 캡처와 바로 겹쳐 볼 수 있다. 사제가 없으면 첫 오브젝트를 사용한다.
     /// </summary>
     private void CenterOnPriest()
     {
@@ -300,7 +306,7 @@ internal sealed partial class FortMapViewer : IDisposable
             {
                 continue;
             }
-            int color = _islandColors ? PreviewPlayerColors.GetValueOrDefault(tile.Owner) : 0;
+            int color = _islandColors ? _playerColors.GetValueOrDefault(tile.Owner) : 0;
             DrawSprite(batch, _terrainType.LoadIndex, MapSpriteFrames.BodyFrame(_terrainType.Definition, tile.Cluster),
                 tilePosition, color);
         }
@@ -318,7 +324,7 @@ internal sealed partial class FortMapViewer : IDisposable
         {
             Vector2 farmPosition = Screen(WorldPixels(tile.X, tile.Y), center);
             if (!Visible(farmPosition, tileMargin)) continue;
-            int color = _islandColors ? PreviewPlayerColors.GetValueOrDefault(tile.Owner) : 0;
+            int color = _islandColors ? _playerColors.GetValueOrDefault(tile.Owner) : 0;
             DrawSprite(batch, _edgeFarmType.LoadIndex, MapSpriteFrames.BodyFrame(_edgeFarmType.Definition, tile.Cluster),
                 farmPosition, color);
         }
@@ -329,19 +335,22 @@ internal sealed partial class FortMapViewer : IDisposable
             if (!Visible(anchor, objectMargin)) continue;
             // 저장된 받침도 건물 회수·파괴로 지지를 잃으면 화면에서 함께 사라진다.
             if (!_session.Bridges.IsIsland(support.X, support.Y)) continue;
-            int cluster = FortIslandSupports.ColorCluster(support.Owner, PreviewPlayerColors);
-            DrawSprite(batch, _supportBottomType.LoadIndex, MapSpriteFrames.BodyFrame(_supportBottomType.Definition, cluster), anchor);
-            DrawSprite(batch, _supportTopType.LoadIndex, MapSpriteFrames.BodyFrame(_supportTopType.Definition, cluster), anchor);
+            int cluster = FortIslandSupports.ColorCluster(support.Owner, _playerColors);
+            // 받침의 주황 테두리도 본섬처럼 소유자 색으로 바뀐다 (TEST01 녹화: 내 탑의 받침 테두리가 파랑).
+            int color = _islandColors ? _playerColors.GetValueOrDefault(support.Owner) : 0;
+            DrawSprite(batch, _supportBottomType.LoadIndex, MapSpriteFrames.BodyFrame(_supportBottomType.Definition, cluster), anchor, color);
+            DrawSprite(batch, _supportTopType.LoadIndex, MapSpriteFrames.BodyFrame(_supportTopType.Definition, cluster), anchor, color);
         }
         // 세션에서 새로 배치한 건물형 유닛의 받침도 저장된 받침과 같은 원본 그림으로 표시한다.
         foreach (GameEntity entity in _session.Entities.Where(e => e.Source == null && e.IsComplete &&
                      e.Type.Definition.HasFlag("createsisland") && _session.Map.TerritoryAt(e.Footprint.AnchorX, e.Footprint.AnchorY) == null))
         {
             if (_terrain.Supports.Any(s => s.X == entity.Footprint.AnchorX && s.Y == entity.Footprint.AnchorY)) continue;
-            int cluster = FortIslandSupports.ColorCluster(entity.Owner, PreviewPlayerColors);
+            int cluster = FortIslandSupports.ColorCluster(entity.Owner, _playerColors);
+            int color = _islandColors ? _playerColors.GetValueOrDefault(entity.Owner) : 0;
             Vector2 anchor = Screen(WorldPixels(entity.Footprint.AnchorX, entity.Footprint.AnchorY), center);
-            DrawSprite(batch, _supportBottomType.LoadIndex, MapSpriteFrames.BodyFrame(_supportBottomType.Definition, cluster), anchor);
-            DrawSprite(batch, _supportTopType.LoadIndex, MapSpriteFrames.BodyFrame(_supportTopType.Definition, cluster), anchor);
+            DrawSprite(batch, _supportBottomType.LoadIndex, MapSpriteFrames.BodyFrame(_supportBottomType.Definition, cluster), anchor, color);
+            DrawSprite(batch, _supportTopType.LoadIndex, MapSpriteFrames.BodyFrame(_supportTopType.Definition, cluster), anchor, color);
         }
         PerfMeter.Current?.Section("terrain", perfTerrain);
         long perfObjects = Stopwatch.GetTimestamp();
@@ -366,23 +375,9 @@ internal sealed partial class FortMapViewer : IDisposable
             int itemY = live?.Footprint.AnchorY ?? item.Y;
             Vector2 anchor = Screen(mobile ? MobileWorldPixels(live!) : WorldPixels(itemX, itemY), center);
             if (!Visible(anchor, objectMargin)) continue;
-            // 다 쓴 가이저는 원본 emptyGeyser 그림으로 바꿔 그린다 (도움말 "Empty Storm Geyser")
-            if (live is { IsDepletedGeyser: true } && _emptyGeyserType != null)
-            {
-                DrawSprite(batch, _emptyGeyserType.LoadIndex, _emptyGeyserType.Definition.Frames.DefaultFrame, anchor);
-                continue;
-            }
-            var sprite = live != null && CombatSprite(live) is { } combatSprite
-                ? GetTexture(combatSprite.Type.LoadIndex, combatSprite.Frame)
-                : mobile && MobileFrame(live!) is int walkFrame
-                    ? GetTexture(item.Object.Type.LoadIndex, walkFrame) : GetSprite(item);
-            if (sprite.HasValue)
-            {
-                var (texture, offset) = sprite.Value;
-                batch.Draw(texture, anchor + offset.ToVector2() * _zoom, null, Color.White,
-                    0f, Vector2.Zero, _zoom, SpriteEffects.None, 0f);
-            }
-            else
+            // 가이저 증기·워크샵 레벨·신전 회오리·풍선·걷기 그림을 고르고 그림자 → 본체 → 겹침 순서로 그린다.
+            (TypeInfo drawn, StructureFrames frames, Vector2 shift) = ObjectSprite(item.Object.Type, live, item);
+            if (!DrawObjectSprite(batch, drawn, frames, anchor + shift * _zoom))
             {
                 // 이미지가 없는 특수 프레임은 소유자색 표식으로 위치만 표시한다.
                 batch.Draw(_pixel, new Rectangle((int)anchor.X - 3, (int)anchor.Y - 3, 6, 6),
@@ -431,13 +426,6 @@ internal sealed partial class FortMapViewer : IDisposable
         DrawMissionMenu(batch, font, width, height);
     }
 
-    /// <summary>클러스터 번호에서 본체 레이어 프레임을 찾아 필요한 텍스처만 캐시한다. 거주지는 영역 원소 그림을 쓴다.</summary>
-    private (Texture2D Texture, Point Offset)? GetSprite(FortMapObject item)
-    {
-        return GetTexture(item.Object.Type.LoadIndex,
-            MapSpriteFrames.BodyFrame(item, _terrain.TerritoryTheme(item.Territory)));
-    }
-
     /// <summary>지면 타일을 기준점과 프레임 오프셋에 맞춰 그린다.</summary>
     /// <param name="scale">배율 (없으면 현재 확대 배율)</param>
     /// <param name="alpha">불투명도 (0~1, 들고 있는 다리 조각 미리보기용)</param>
@@ -468,7 +456,7 @@ internal sealed partial class FortMapViewer : IDisposable
         if (!_textures.TryGetValue(key, out var sprite))
         {
             // 0 = 원래 색, 음수 = 생산 창 어둡게·빨갛게 표, 양수 = 섬 소유자 색
-            ReadOnlyMemory<byte> table = color == 0 ? default : DeckRemap(color) ?? _isleColors.Table(color);
+            ReadOnlyMemory<byte> table = color == 0 ? default : DeckRemap(color) is { } deck ? deck : _isleColors.Table(color);
             sprite = (SpriteAnimation.ToTexture(_device, _shapes.Decode(frame), _palette, table), new Point(frame.XMin, frame.YMin));
             _textures.Add(key, sprite);
         }
@@ -498,7 +486,13 @@ internal sealed partial class FortMapViewer : IDisposable
         {
             sprite.Texture.Dispose();
         }
+        // 그림자 텍스처도 함께 해제한다.
+        foreach (var shadow in _shadowTextures.Values)
+        {
+            shadow?.Texture.Dispose();
+        }
         _pixel.Dispose();
+        _miniMapTexture?.Dispose();
         _sky?.Dispose();
     }
 }

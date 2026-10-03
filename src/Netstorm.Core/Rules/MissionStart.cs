@@ -145,6 +145,13 @@ public sealed record MissionStart(string? Title, string? LoadFort, int? StartSto
     public IReadOnlyList<int> MyAllyList { get; init; } = [];
 
     /// <summary>
+    /// AI 플레이어의 색 번호 덮어쓰기 (aiNColor = red → N 의 색 2). 색 이름 목록에 없는 값은 넣지 않는다.
+    /// 원본은 AI 플레이어를 만들 때만 적용하므로, 편집기 Test Battle 처럼 AI 를 만들지 않는 전투에서는 비워 둔다
+    /// (2026-10-03 TEST01 녹화: ai2color=orange·ai3color=red 인데 화면은 기본색인 빨강·흰색이었다).
+    /// </summary>
+    public IReadOnlyDictionary<int, int> AiColors { get; init; } = new Dictionary<int, int>();
+
+    /// <summary>
     /// 기절하지 않은 사제·동맹 사제도 수송 유닛이 집을 수 있는지 (allowAnyCapture). 구출 미션(3-4 Enemy Territory)이 쓴다.
     /// </summary>
     public bool AllowAnyCapture { get; init; }
@@ -178,7 +185,8 @@ public sealed record MissionStart(string? Title, string? LoadFort, int? StartSto
         // 번호 목록 문자열("2;3,4")을 읽는다 (숫자가 아닌 조각은 버린다)
         static int[] Numbers(string? text) => [.. (text ?? "").Split(';', ',', ' ')
             .Select(part => int.TryParse(part, out int number) ? number : 0).Where(number => number > 0)];
-        // ai1~ai8 의 동맹 목록을 읽는다
+        var colors = new Dictionary<int, int>();
+        // ai1~ai8 의 동맹 목록과 색을 읽는다
         for (int player = 1; player <= MaximumPlayer; player++)
         {
             int[] list = Numbers(Text($"ai{player}AllyList"));
@@ -186,11 +194,17 @@ public sealed record MissionStart(string? Title, string? LoadFort, int? StartSto
             {
                 allies[player] = list;
             }
+            int color = PlayerColors.Parse(Text($"ai{player}Color"));
+            if (color > PlayerColors.None)
+            {
+                colors[player] = color;
+            }
         }
         return new MissionStart(Text("title"), Text("loadFort"), Number("myStartMoney"), knowledge,
             TechPermissions.Parse(Text("techAllowed")), Flag("denySalvage"), Flag("denyAscend"), Flag("aiOff"), Number("tutorialNumber"))
         {
             AllyLists = allies,
+            AiColors = colors,
             MyAllyList = Numbers(Text("myAllyList")),
             AllowAnyCapture = Flag("allowAnyCapture"),
             AiStartMoney = Number("aiStartMoney"),

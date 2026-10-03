@@ -423,7 +423,14 @@ internal sealed partial class FortMapViewer
                 // 한 줄의 강조 구간을 이어 그린다
                 foreach (TutorialVisualSpan span in visual.Spans)
                 {
-                    OriginalUiSkin.Text(batch, font, span.Text, new Vector2(spanX, lineY), TutorialColor(span.Style));
+                    // 도움말 본문의 글 사이 그림(~[I타입.프레임])도 줄 아래쪽에 맞춰 그린다.
+                    if (span.Picture != null)
+                    {
+                        batch.Draw(span.Picture, new Vector2(spanX, lineY + visual.Height - span.Picture.Height), Color.White);
+                        spanX += span.Picture.Width + TutorialPictureGap;
+                        continue;
+                    }
+                    OriginalUiSkin.Text(batch, font, span.Text, new Vector2(spanX, lineY + visual.Height - TutorialLineHeight), TutorialColor(span.Style));
                     spanX += font.MeasureString(span.Text).X;
                 }
             }

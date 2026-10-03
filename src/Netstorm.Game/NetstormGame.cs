@@ -45,6 +45,12 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     /// <summary>--mission 으로 지정한 미션 이름 (맵과 시작 조건을 미션 스크립트에서 읽는다)</summary>
     private readonly string? _missionName;
 
+    /// <summary>
+    /// <c>--test-battle 맵</c>으로 연 시험 전투인지. 원본의 Edit → Game → Test Battle 처럼 캠페인에 공개되지 않은
+    /// 커스텀 맵(<c>d/&lt;맵&gt;.fort</c> + <c>.english</c>)도 개발용 뷰어가 아니라 플레이 화면으로 연다.
+    /// </summary>
+    private readonly bool _testBattle;
+
     /// <summary>현재 열린 미션 이름. 튜토리얼 버튼으로 다음 미션을 연 경우에도 재시작 대상이 현재 미션이 되게 한다.</summary>
     private string? _currentMissionName;
     /// <summary>--script 로 지정한 검증용 명령 스크립트 (맵 뷰어에서 시작할 때 실행)</summary>
@@ -107,7 +113,9 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         _screenshotFrames = screenshotFrames == null ? ScreenshotDelayFrames
             : Math.Max(1, int.Parse(screenshotFrames, System.Globalization.CultureInfo.InvariantCulture));
         _mapName = ParseValueArgument(args, "--map");
-        _missionName = ParseValueArgument(args, "--mission");
+        string? testBattle = ParseValueArgument(args, "--test-battle");
+        _testBattle = testBattle != null;
+        _missionName = testBattle ?? ParseValueArgument(args, "--mission");
         _scriptText = ParseValueArgument(args, "--script");
         _spriteName = ParseValueArgument(args, "--sprites");
         _languageName = ParseValueArgument(args, "--language");
@@ -360,6 +368,8 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         LoadedMission loaded = resources.TryLoadMission(missionName)
             ?? throw new ArgumentException($"미션을 찾을 수 없습니다: {missionName}");
         MissionStart start = MissionStart.FromScript(loaded.Script);
+        // 원본 편집기의 Test Battle 은 AI 플레이어를 만들지 않아 aiNColor 가 적용되지 않는다 (TEST01 녹화의 소유자 2 빨강·3 흰색).
+        if (_testBattle) start = start with { AiColors = new Dictionary<int, int>() };
         LoadMap(resources, shapes, palette, start.LoadFort ?? missionName, start, loaded.Script);
         _currentMissionName = missionName;
         // 미션(전투)에 들어갈 때마다 원소 곡 순환을 새 난수로 시작한다 (exe FUN_00469fc0)
@@ -379,8 +389,10 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         _mapViewer?.Dispose();
         _mapViewer = nextViewer;
         _mapViewer.HelpRequested = OpenHelp;
-        if (mission != null && CampaignAccess.IsAvailable(name)) _mapViewer.EnablePlayUi(resources);
+        if (mission != null && (CampaignAccess.IsAvailable(name) || _testBattle)) _mapViewer.EnablePlayUi(resources);
         _baseTitle = $"NetStorm 클론 — 맵 뷰어: {name}";
+        // 진단용: --dump-objects 는 맵에 저장된 오브젝트(타입·칸·소유자·저장 프레임)를 콘솔에 쓴다.
+        if (Environment.GetCommandLineArgs().Contains("--dump-objects")) _mapViewer.DumpObjects();
         bool applyStartupOptions = !_startupOptionsApplied;
         _startupOptionsApplied = true;
         // 검증용: --placement 타입 [--probe x,y] 로 배치 시험 모드를 켠 채 시작한다.

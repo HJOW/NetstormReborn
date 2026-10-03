@@ -11,6 +11,7 @@ $taskSettings = Join-Path $taskOutput 'settings'
 New-Item -ItemType Directory -Force -Path $taskSettings | Out-Null
 Set-Content -LiteralPath (Join-Path $taskSettings 'settings.json') -Encoding UTF8 -Value '{"WindowWidth":1024,"WindowHeight":768,"ViewHeight":768,"SoundVolume":3,"MusicVolume":2}'
 # 시나리오 이름 → 명령. 사제: 몸통 선택 → 동쪽·남동쪽 이동 → 허공 거부. 골렘: 놓기 → 커서 해제 → 몸통 선택 → 이동.
+# 골렘은 원본 규칙대로 커서 칸보다 두 행 아래(1 + height 1)가 발밑이 되므로, 놓은 자리(500,390) 근처가 곧 몸통이다.
 $taskScenarios = [ordered]@{
     'priest' = @"
 wait 40; assert briefing; click-center 83,113; wait 20; assert battle; wait 60;
@@ -25,7 +26,7 @@ click 300,200; wait 6; assert-detail selected=none; assert-detail :idle; quit;
     'golem' = @"
 wait 40; assert briefing; click-center 83,113; wait 20; assert battle; wait 60;
 click 40,181; wait 6; assert placement; click 500,390; wait 90; assert battle; assert-detail sunwalker:-:idle;
-click 497,378; wait 6; assert-detail selected=sunwalker;
+click 499,392; wait 6; assert-detail selected=sunwalker;
 click 700,392; wait 6; assert-detail selected=none; assert-detail :moving; wait 600; assert-detail :idle; capture $OutputDirectory/golem-arrived.png; quit;
 "@
 }

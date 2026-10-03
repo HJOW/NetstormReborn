@@ -190,6 +190,12 @@ Save the Island!의 sunBlocker `(175,94,1)`과 중립 가이저 `(165,137,0)`도
 맵 뷰어는 공식 미션 캡처를 기준으로 한 개발용 플레이어 색상 번호 1→7, 2→2를 적용하고,
 중립 타일은 색을 바꾸지 않는다. 텍스처 캐시도 프레임과 색상 번호를 함께 사용한다.
 
+> **2026-10-03 정정.** 색 번호의 기본값은 **소유자 번호 그대로**다(`FUN_0043b540`: `DAT_00531b08[n] = n`).
+> 색 번호 1~8은 파랑·빨강·흰색·초록·보라·노랑·연파랑·주황이며 미션 머리 값 `aiNColor`가 AI 생성 때 덮어쓴다.
+> TEST01·1-1 녹화의 내 섬 테두리는 청록(7)이 아니라 파랑(1)이었다. 개발용 표 1→7은 없앴다(`PlayerColors`).
+> 또한 생산 창용 변환표를 고르는 `DeckRemap`의 반환형 때문에 이 소유자 색 변환이 한동안 **전혀 적용되지 않던 버그**를 고쳤고,
+> 3×3 받침(`island`·`islandStalag`)의 주황 테두리에도 같은 변환을 적용한다. 근거: [TEST01 화면 요소 대조](../videos/test01-visuals-20261003.md) 3절.
+
 Save the Island! 뷰어 캡처 `extracted/terrain/player-color-map.png`를 수정 전
 `current-map.png` 및 `screenShots/Save the Islands! - Started.png`와 육안 대조했다.
 The War Begins!도 `extracted/terrain/player-color-thewarbegins.png`로 저장해 지면 표시를 확인했다.

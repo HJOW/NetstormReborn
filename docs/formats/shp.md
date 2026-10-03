@@ -89,6 +89,8 @@ bounds/origin 의 정확한 의미(가로·세로 순서)는 렌더링 구현 �
 * exe 에는 테마별 팔레트 이름(`sunny.col`, `rainy.col`, `windy.col`, `thundery.col`)도 있으나 해당 파일은 없고,
   `ascendancyPalette` 설정이 켜졌을 때만 쓰인다.
 * 그림자 레이어는 단일 인덱스(예: sunCannon 217, dude 150)로 모양만 표시한다. 실제 그리기는 색상 변환 테이블(`!color.dat`, [config.md](config.md))로 배경을 어둡게 하는 방식으로 추정한다.
+  2026-10-03 녹화 측정: 그림자가 덮은 지면은 주변의 약 0.64배 밝기였다. typeflags `shadow` 는 고른 그림자, `flyershadow` 는 체크무늬다. 클론은 검정 36% 덮기로 근사한다([근거](../videos/test01-visuals-20261003.md) 6절).
+* 프레임 헤더의 앞 네 값(u16 × 4)은 **(그림 상자 높이, 폭, 기준점 y, 기준점 x)** 다. 원본은 이 상자로 선택 괄호와 체력 막대의 위치를 정한다(렌더러 0x498841, [근거](../videos/test01-visuals-20261003.md) 10절). 예: rainBalloon A00 = (52, 63, 47, 35) → 상자 x −35~28, y −47~5.
 
 ## 클론 구현 메모
 

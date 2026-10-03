@@ -30,7 +30,7 @@ internal sealed partial class FortMapViewer
         {
             bool horizontal = field.StartY == field.EndY;
             int frame = type.Definition.Frames.Find(horizontal ? 'K' : 'J', TypeFrameTable.DefaultVariant, 0);
-            var sprite = GetTexture(type.LoadIndex, frame, PreviewPlayerColors.GetValueOrDefault(field.Owner));
+            var sprite = GetTexture(type.LoadIndex, frame, _playerColors.GetValueOrDefault(field.Owner));
             if (sprite is not { } image) continue;
             Vector2 start = CellCenterScreen(field.StartX, field.StartY, center) + FenceHeadOffset * _zoom;
             Vector2 end = CellCenterScreen(field.EndX, field.EndY, center) + FenceHeadOffset * _zoom;

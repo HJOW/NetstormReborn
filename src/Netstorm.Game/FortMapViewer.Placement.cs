@@ -136,6 +136,7 @@ internal sealed partial class FortMapViewer
         if (!_placementMode || _candidates.Length == 0)
         {
             _lastCheck = null;
+            _placementCell = null;
             return;
         }
         if (!_playUi && Pressed(keyboard, Keys.OemCloseBrackets))
@@ -154,16 +155,18 @@ internal sealed partial class FortMapViewer
         if (_probeCell == null && mouse.Y < HeaderHeight)
         {
             _lastCheck = null;
+            _placementCell = null;
             return;
         }
-        (int cellX, int cellY) = _probeCell ?? CellAt(new Vector2(mouse.X, mouse.Y));
         TypeInfo type = _candidates[_candidateIndex];
+        (int cellX, int cellY) = _probeCell ?? PlacementCellAt(new Vector2(mouse.X, mouse.Y), type);
         if (CannonAnimation.IsFixed(type) && mouse.RightButton == ButtonState.Pressed && _previousMouse.RightButton == ButtonState.Released)
         {
             _cannonRotation = (_cannonRotation + (_reverseRotation ? 3 : 1)) % 4;
             QueueSound(RotatePieceSound);
         }
         _lastCheck = Check(type, cellX, cellY);
+        _placementCell = (cellX, cellY);
         if (Pressed(keyboard, Keys.F))
         {
             RegisterSelectedUnit(type);
@@ -181,7 +184,7 @@ internal sealed partial class FortMapViewer
                     : new PlaceUnitCommand(TestPlayer, type.Name, cellX, cellY, _cannonRotation));
                 // 원본은 유닛을 놓거나 건물 설치를 확정하면 들고 있던 커서가 풀려 다음 클릭은 선택이다
                 // (2026-10-03 자동 분석 녹화: 골렘을 놓은 6초 뒤의 좌클릭이 골렘 선택이었다). 다시 놓으려면 생산 창이나 D 키로 다시 집는다.
-                if (_playUi) { _placementMode = false; _lastCheck = null; }
+                if (_playUi) { _placementMode = false; _lastCheck = null; _placementCell = null; }
             }
             else
             {
@@ -231,22 +234,24 @@ internal sealed partial class FortMapViewer
         SubmitCommand(new SalvageCommand(TestPlayer, entity.Id));
     }
 
-    /// <summary>화면 좌표를 칸 좌표로 바꾼다 (Screen 의 역변환)</summary>
+    /// <summary>
+    /// 화면 좌표에 보이는 칸 (Screen 의 역변환). 칸 (cx, cy) 의 지면·스프라이트는 기준점 (16·cx, 11·cy) 의 왼쪽 위에 그려지므로
+    /// 올림으로 구한다 (<see cref="PlacementCursor.CellUnder"/>). 내림으로 구하면 보이는 칸보다 한 칸 왼쪽·위를 가리킨다.
+    /// </summary>
     private (int X, int Y) CellAt(Vector2 screen)
     {
         Vector2 world = (screen - _lastCenter) / _zoom + _camera;
-        return ((int)Math.Floor(world.X / FortMap.CellPixelWidth), (int)Math.Floor(world.Y / FortMap.CellPixelHeight));
+        return PlacementCursor.CellUnder(world.X, world.Y);
     }
 
     /// <summary>
-    /// 화면 좌표에서 칸 기준점(칸의 왼쪽 위 모서리, 이동형 유닛의 발밑)이 가장 가까운 칸. 내림(<see cref="CellAt"/>)과 달리
-    /// 유닛이 클릭 지점의 가로 ±8px·세로 ±5px 안에 서므로 클릭한 곳에 가서 선다.
-    /// 2026-10-03 원본 녹화에서 이동 목적지 대비 사제·골렘의 도착 위치는 −5~+10px로 클릭 지점 주변이었다.
+    /// 들고 있는 타입을 화면 좌표에 놓을 때의 발자국 기준 칸(오른쪽 아래 칸). 원본처럼 커서 칸의 열, 커서 칸 + 1 + height 행이다
+    /// (<see cref="PlacementCursor.AnchorCell"/>).
     /// </summary>
-    private (int X, int Y) CellNearest(Vector2 screen)
+    private (int X, int Y) PlacementCellAt(Vector2 screen, TypeInfo type)
     {
         Vector2 world = (screen - _lastCenter) / _zoom + _camera;
-        return ((int)Math.Round(world.X / FortMap.CellPixelWidth), (int)Math.Round(world.Y / FortMap.CellPixelHeight));
+        return PlacementCursor.AnchorCell(world.X, world.Y, type.Definition);
     }
 
     /// <summary>키를 이번 갱신에 새로 눌렀는지</summary>
@@ -273,12 +278,9 @@ internal sealed partial class FortMapViewer
                 DrawSprite(batch, _supportBottomType.LoadIndex, MapSpriteFrames.BodyFrame(_supportBottomType.Definition, 0), anchor);
                 DrawSprite(batch, _supportTopType.LoadIndex, MapSpriteFrames.BodyFrame(_supportTopType.Definition, 0), anchor);
             }
-            TypeInfo drawn = entity.IsDepletedGeyser && _emptyGeyserType != null ? _emptyGeyserType : entity.Type;
-            // 걷는 그림이 있는 이동형 유닛(내가 놓은 골렘 등)은 방향·걷기 프레임을 쓴다.
-            int frame = mobile && MobileFrame(entity) is int walkFrame ? walkFrame : drawn.Definition.Frames.DefaultFrame;
-            if (CombatSprite(entity) is { } combatSprite) (drawn, frame) = combatSprite;
-            DrawSprite(batch, drawn.LoadIndex, frame, anchor,
-                alpha: entity.IsComplete ? 1f : UnderConstructionAlpha);
+            // 저장된 오브젝트와 같은 규칙으로 그림을 고른다 (걷는 유닛의 방향·걷기 프레임, 워크샵 레벨, 신전 회오리, 그림자).
+            (TypeInfo drawn, StructureFrames frames, Vector2 shift) = ObjectSprite(entity.Type, entity, null);
+            DrawObjectSprite(batch, drawn, frames, anchor + shift * _zoom, entity.IsComplete ? 1f : UnderConstructionAlpha);
             if (!entity.IsComplete)
             {
                 DrawProgressBar(batch, anchor, _session.ConstructionProgress(entity));
@@ -301,6 +303,12 @@ internal sealed partial class FortMapViewer
         _lastCenter = center;
         if (!_placementMode)
         {
+            return;
+        }
+        if (_playUi)
+        {
+            // 플레이 화면은 원본 방식의 미리보기만 그린다 (개발용 공급 범위·판정 문구는 맵 시험 화면 전용).
+            DrawPlayPlacement(batch, center);
             return;
         }
         BattleMap map = _session.Map;
@@ -326,7 +334,8 @@ internal sealed partial class FortMapViewer
             // 발자국의 각 칸을 반투명하게 칠한다.
             foreach ((int x, int y) in site.Footprint.Cells())
             {
-                Vector2 topLeft = Screen(WorldPixels(x, y), center);
+                // 칸 (x, y) 는 기준점의 왼쪽 위에 보이므로 한 칸 앞의 기준점이 그 칸의 왼쪽 위 모서리다.
+                Vector2 topLeft = Screen(WorldPixels(x - 1, y - 1), center);
                 batch.Draw(_pixel, new Rectangle((int)topLeft.X, (int)topLeft.Y,
                     (int)Math.Ceiling(FortMap.CellPixelWidth * _zoom), (int)Math.Ceiling(FortMap.CellPixelHeight * _zoom)), fill);
             }
@@ -354,14 +363,6 @@ internal sealed partial class FortMapViewer
     private void DrawPlacementText(SpriteBatch batch, SpriteFontBase font, int width, int height)
     {
         TypeInfo type = _candidates[_candidateIndex];
-        if (_playUi)
-        {
-            batch.Draw(_pixel, new Rectangle(0, height - 94, width, 40), new Color(35, 32, 28));
-            string rotate = CannonAnimation.IsFixed(type) ? Ui(" · 우클릭: 회전", " · Right click: rotate") : "";
-            batch.DrawString(font, $"{type.Definition.GetString("description")} · {StormPower.TypeCost(type.Definition)} SP · {_lastCheck?.Describe()}{rotate}",
-                new Vector2(12, height - 90), _lastCheck?.Allowed == true ? Color.LightGreen : Color.Salmon);
-            return;
-        }
         EnergyRequirement requirement = EnergyRequirement.ForType(type.Definition);
         string description = type.Definition.GetString("description") ?? type.Name;
         string head;
@@ -381,12 +382,6 @@ internal sealed partial class FortMapViewer
                 : _lastCheck.Describe();
         string keys = $"[ ]: 선택 · 좌클릭: 배치/건설 · 우클릭: 캐논 회전 · F: 등록 · Del: 회수 · C: 빈 섬 연결 강제 {(_session.AssumeConnected ? "켜짐" : "꺼짐")} · " +
             "K: 생산 규칙 · Space: 정지 · P: 끄기";
-        if (_playUi)
-        {
-            OriginalUiSkin.Text(batch, _uiSkin.Small, result, new Vector2(96, height - 18),
-                _lastCheck?.Allowed == true ? Color.LightGreen : new Color(255, 120, 110));
-            return;
-        }
         batch.Draw(_pixel, new Rectangle(0, height - PlacementPanelHeight, width, PlacementPanelHeight), new Color(18, 24, 38));
         batch.DrawString(font, head, new Vector2(16, height - PlacementPanelHeight + 4), Color.Gold);
         batch.DrawString(font, result, new Vector2(16, height - PlacementPanelHeight + 30), _lastCheck?.Allowed == true ? Color.LightGreen : new Color(255, 120, 110));

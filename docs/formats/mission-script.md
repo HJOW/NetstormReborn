@@ -127,7 +127,7 @@ PreparedMissionSection? section = mission?.Script.PrepareSection("CraftWarning",
 | `aiNTimeBetweenMoves` | | AI 행동 간격 |
 | `aiNCollectors` | `4` | AI 수집 유닛 수 |
 | `aiNGeyserAttachments` | `5` | AI 가이저 연결 수 |
-| `aiNcolor` | `red` | AI 색상 |
+| `aiNcolor` | `red` | AI 색상. exe 의 이름 목록 `/none/blue/red/white/green/purple/yellow/lightblue/orange/` 에서 찾은 순번(1~8)이 색 번호가 된다(대소문자 무시, 목록에 없는 `cyan`·`magenta` 는 무시). 기본 색 번호는 플레이어 번호와 같다. AI 플레이어를 만들 때 적용된다 — [근거](../videos/test01-visuals-20261003.md) 3절 |
 | `aiNBridgeDrawRate` | `1` | AI 다리 조각 뽑기 속도 |
 | `aiNAbility` | `"!USE_PRIEST_TO_COLLECT"` | AI 능력 플래그 (`!` = 끔) |
 | `aiNMoneyRechargeRate`, `aiNstuffRefreshRate`, `aiNOff`, `aiNoTemple`, `aiNEnemy` | | 기타 AI 설정 |
@@ -200,10 +200,10 @@ AGENTS.md가 정리한 커스텀 맵의 구성이다. 예는 사용자가 만든
 | `myStartMoney=50000` | 사용자 시작 SP | 시험 전투 시작 Storm Power 50000 — 확인 |
 | `myTech="all"` | 사용자 기술 전부 허용 | 워크샵의 Knowledge Available에 전체 목록 — 확인 |
 | `myAllyList="2"` | 사용자 동맹 목록 | 미확인 |
-| `ai2Name="Luitenent of Wind"`, `ai2color=orange`, `ai3Name="Thunder Demon"`, `ai3color=red` | 인공지능 2·3의 이름과 색 | 미니맵에 빨간 섬이 보임. 이름 표시는 미확인 |
+| `ai2Name="Luitenent of Wind"`, `ai2color=orange`, `ai3Name="Thunder Demon"`, `ai3color=red` | 인공지능 2·3의 이름과 색 | **시험 전투에서는 색이 적용되지 않았다**: 소유자 2 는 빨강, 소유자 3 은 흰색(기본색 = 플레이어 번호)이었다. 편집기 Test Battle 이 AI 플레이어를 만들지 않기 때문으로 추정 — [화면 요소 대조](../videos/test01-visuals-20261003.md) 3절. 이름 표시는 미확인 |
 | `aiNTech="all"`, `aiNStartMoney=0`, `aiNGeyserAttachments=1`, `aiNCollectors=1`, `aiNTimeBetweenMoves=1`, `aiNBridgeDrawRate=1`, `aiNAllyList` | 인공지능의 기술·자금·수집·행동 간격·다리 뽑기 속도·동맹 | 미확인(AI 행동은 분석하지 않음) |
 | `ai2Ability="!USE_PRIEST_TO_COLLECT;!BUILD_DAIS"`, `ai3Ability="!USE_PRIEST_TO_COLLECT"` | 인공지능 능력 끄기(`!`) | 미확인 |
-| `[A.]`의 `~[IsunBalloon.a1]<h2>TEST01</h2>` + `$Button=EQUIPMENT,ShowTechnology,55` · `$Button=Go!,DoNothing,0` | 시작 브리핑 창의 그림·제목·버튼 | 낙하산 그림, 제목, EQUIPMENT / Go! 버튼 — 확인 |
+| `[A.]`의 `~[IsunBalloon.a1]<h2>TEST01</h2>` + `$Button=EQUIPMENT,ShowTechnology,55` · `$Button=Go!,DoNothing,0` | 시작 브리핑 창의 그림·제목·버튼 | 풍선 그림(sunBalloon 의 기본 프레임 A00 — `a1` 은 없는 프레임이라 기본으로 대체), 그림 옆 제목, 아래 줄의 기울임 글, EQUIPMENT / Go! 버튼 — 확인. `~[I타입.프레임]` 은 글 사이에 스프라이트를 넣는 표기다([설명](../videos/test01-visuals-20261003.md) 8절) |
 | `[Succeeded][Ai4PriestDead]`, `[Failed][GoodTeamDead]` | 승리·패배 조건과 그때의 창 | 미확인(녹화에서 끝까지 가지 않음) |
 
 ## 공식 튜토리얼·캠페인 구성

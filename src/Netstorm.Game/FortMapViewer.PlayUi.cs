@@ -98,6 +98,8 @@ internal sealed partial class FortMapViewer
         _playWidth = width; _playHeight = height;
         if (TryOpenContextMenu(mouse)) return true;
         bool clicked = mouse.LeftButton == ButtonState.Pressed && _previousMouse.LeftButton == ButtonState.Released;
+        // 미니맵 누르기·끌기는 버튼을 떼기 전까지 화면을 계속 옮긴다 (커서가 상자 밖으로 나가도 유지)
+        if (UpdateMiniMap(mouse, width, height, clicked)) return true;
         if (clicked)
         {
             // 생산 창 유닛 칸: 좌클릭으로 배치 커서에 집는다 (원본 FUN_0043d4c0 의 0x10000 처리).
@@ -107,13 +109,6 @@ internal sealed partial class FortMapViewer
                 if (_session.IsUnitRecharging(TestPlayer, unit.Type.Name)) return true;
                 if (StormPower.TypeCost(unit.Type.Definition) > _session.Player(TestPlayer).StormPower) { BlinkStormPower(); return true; }
                 CancelCursor(); ChooseProduction(unit.Type.Name);
-                return true;
-            }
-            Rectangle mini = MiniMap(width, height);
-            if (mini.Contains(mouse.X, mouse.Y))
-            {
-                _camera = WorldPixels((mouse.X - mini.X) * BridgeGrid.WorldSize / mini.Width,
-                    (mouse.Y - mini.Y) * BridgeGrid.WorldSize / mini.Height);
                 return true;
             }
             // 다리 칸: 조각을 집는다. 들고 있던 조각은 먼저 제자리로 돌린다
@@ -184,8 +179,8 @@ internal sealed partial class FortMapViewer
         }
         else if (selected?.Owner == TestPlayer && selected.Kind is ObjectKind.Priest or ObjectKind.Transport && target == null)
         {
-            // 목적지는 클릭 지점에 가장 가까운 칸이다 (칸 내림이면 유닛이 평균 8px 왼쪽·위에 선다).
-            (int goalX, int goalY) = CellNearest(new Vector2(mouse.X, mouse.Y));
+            // 목적지는 클릭한 곳에 보이는 칸이다. 유닛 그림은 hotFootRatio 때문에 그 칸 안쪽(사제·골렘은 가로 가운데)에 선다.
+            (int goalX, int goalY) = CellAt(new Vector2(mouse.X, mouse.Y));
             SubmitCommand(new MoveEntityCommand(TestPlayer, selected.Id, goalX, goalY)); AcknowledgeOrder(selected);
             // 원본은 이동 명령을 내리면(이동할 수 없는 곳이어도) 곧바로 선택이 풀린다 (2026-10-03 자동 분석 녹화).
             SubmitCommand(new SelectEntityCommand(TestPlayer, 0));
@@ -211,9 +206,6 @@ internal sealed partial class FortMapViewer
         if (variants.Length > 0) QueueSound(variants[_orderSoundRandom.Next(variants.Length)]);
     }
 
-    /// <summary>원본처럼 미니맵을 사이드바 맨 아래에 배치한다.</summary>
-    private static Rectangle MiniMap(int width, int height) => new(4, height - 74, 76, 70);
-
     /// <summary>
     /// 원본 생산창 돌 바탕·Storm Power·다리/유닛 칸·미니맵을 그린다. 원본 미션 화면은 상단 메뉴 막대(Esc 로 열림)와
     /// 하단 상태줄이 없으므로 지도 위에는 타이머(T)와 짧은 알림만 그림자 글자로 띄운다(2026-10-01 녹화 대조).
@@ -234,14 +226,7 @@ internal sealed partial class FortMapViewer
         if (_showTimer) OriginalUiSkin.Text(batch, small, $"{_mission?.Campaign?.Code ?? ""}  {(int)time.TotalMinutes:00}:{time.Seconds:00}", new Vector2(width - 94, 1));
         // 원본 생산 창: 다리 칸 2열과 유닛 칸 1열
         DrawDeck(batch, height);
-        Rectangle mini = MiniMap(width, height);
-        batch.Draw(_pixel, mini, Color.Black); _uiSkin.Bevel(batch, mini);
-        // 원본 지면 칸을 월드 전체 범위에 축소해 표시한다.
-        foreach (FortTerrainTile tile in _terrain.Tiles.Where(t => _session.Bridges.IsIsland(t.X, t.Y)))
-            batch.Draw(_pixel, new Rectangle(mini.X + tile.X * mini.Width / BridgeGrid.WorldSize, mini.Y + tile.Y * mini.Height / BridgeGrid.WorldSize, 1, 1), new Color(93, 112, 64));
-        // 살아 있는 오브젝트를 내 색·적 색으로 구분한다.
-        foreach (GameEntity entity in _session.Entities.Where(e => e.Owner > 0))
-            batch.Draw(_pixel, new Rectangle(mini.X + entity.Footprint.AnchorX * mini.Width / BridgeGrid.WorldSize, mini.Y + entity.Footprint.AnchorY * mini.Height / BridgeGrid.WorldSize, entity.Kind == ObjectKind.Priest ? 3 : 2, entity.Kind == ObjectKind.Priest ? 3 : 2), entity.Owner == TestPlayer ? Color.Turquoise : Color.OrangeRed);
+        DrawMiniMap(batch, width, height);
         DrawNotice(batch, small, width, height);
     }
 

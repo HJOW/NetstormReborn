@@ -19,6 +19,8 @@ internal sealed partial class FortMapViewer
     private const int TutorialParagraphGap = 12;
     /// <summary>스크롤 키가 한 번에 이동하는 본문 높이.</summary>
     private const int TutorialPageScroll = 180;
+    /// <summary>글 사이 그림과 그 뒤 글자 사이의 간격(논리 픽셀).</summary>
+    private const int TutorialPictureGap = 6;
     /// <summary>단어와 공백을 분리해 인라인 강조를 유지하며 줄을 감는다.</summary>
     private static readonly Regex TutorialWords = new(@"\S+|\s+", RegexOptions.Compiled);
 
@@ -170,16 +172,19 @@ internal sealed partial class FortMapViewer
     private Rectangle TutorialPanel(int width, int height)
     {
         TutorialDialogContent content = LocalizeCampaign(_tutorialDialog!.Current!);
-        int desiredWidth = content.Section is "Succeeded" or "BadTeamDead" ? 374 : content.Title.Length == 0 ? 300 : 350;
+        int desiredWidth = content.Section is "Succeeded" or "BadTeamDead" ? 374 : TutorialTitle(content).Length == 0 ? 300 : 350;
         int buttonsWidth = content.Buttons.Sum(b => TutorialButtonWidth(b)) + (content.Buttons.Count - 1) * 16;
         int panelWidth = Math.Min(width - 32, Math.Max(desiredWidth, Math.Max(buttonsWidth + 48,
-            (int)_uiSkin.Title.MeasureString(content.Title).X + 60)));
+            (int)_uiSkin.Title.MeasureString(TutorialTitle(content)).X + 60)));
         int padding = content.Section == "A." ? 48 : 30;
-        int bodyHeight = LayoutTutorialText(content.Runs, _uiSkin.Body, panelWidth - padding * 2).Sum(l => l.Height);
-        int panelHeight = Math.Min(height - 32, Math.Max(136, bodyHeight + (content.Title.Length == 0 ? 78 : 110)));
+        int bodyHeight = LayoutTutorialText(content.Runs, _uiSkin.Body, panelWidth - padding * 2, _uiSkin.Title).Sum(l => l.Height);
+        int panelHeight = Math.Min(height - 32, Math.Max(136, bodyHeight + (TutorialTitle(content).Length == 0 ? 78 : 110)));
         int centerX = width / 2 + (_playUi ? 42 : 0);
         return new Rectangle(Math.Clamp(centerX - panelWidth / 2, 16, width - panelWidth - 16), (height - panelHeight) / 2, panelWidth, panelHeight);
     }
+
+    /// <summary>창 위쪽에 따로 그릴 제목. 제목이 본문 흐름 안에 있는 안내(그림 옆 제목)는 빈 문자열이다.</summary>
+    private static string TutorialTitle(TutorialDialogContent content) => content.TitleInBody ? "" : content.Title;
 
     /// <summary>버튼의 번역된 문구 폭에 맞춰 원본의 낮은 버튼 너비를 계산한다.</summary>
     private int TutorialButtonWidth(TutorialDialogButton button) => Math.Max(36, (int)Math.Ceiling(_uiSkin.Body.MeasureString(button.Label).X) + 12);
@@ -206,14 +211,14 @@ internal sealed partial class FortMapViewer
         }
         Rectangle panel = TutorialPanel(width, height);
         int padding = content.Section == "A." ? 48 : 30;
-        int top = content.Title.Length == 0 ? 22 : 54;
+        int top = TutorialTitle(content).Length == 0 ? 22 : 54;
         var body = new Rectangle(panel.X + padding, panel.Y + top, panel.Width - padding * 2, panel.Height - top - 51);
-        IReadOnlyList<TutorialVisualLine> lines = LayoutTutorialText(content.Runs, font, body.Width);
+        IReadOnlyList<TutorialVisualLine> lines = LayoutTutorialText(content.Runs, font, body.Width, _uiSkin.Title);
         int contentHeight = lines.Sum(line => line.Height);
         _tutorialScroll = Math.Clamp(_tutorialScroll, 0, Math.Max(0, contentHeight - body.Height));
 
         _uiSkin.Panel(batch, panel);
-        OriginalUiSkin.Text(batch, _uiSkin.Title, content.Title, new Vector2(panel.X + padding, panel.Y + 20));
+        OriginalUiSkin.Text(batch, _uiSkin.Title, TutorialTitle(content), new Vector2(panel.X + padding, panel.Y + 20));
 
         int y = body.Y - _tutorialScroll;
         // 완전히 들어오는 줄만 그려 별도의 GPU 가위 영역 없이 본문 경계를 지킨다.
@@ -225,8 +230,17 @@ internal sealed partial class FortMapViewer
                 // 한 줄의 강조 구간을 이어 그린다.
                 foreach (TutorialVisualSpan span in line.Spans)
                 {
-                    OriginalUiSkin.Text(batch, font, span.Text, new Vector2(x, y), TutorialColor(span.Style));
-                    x += font.MeasureString(span.Text).X;
+                    // 그림·큰 제목·본문 글자를 줄의 아래쪽에 맞춰 그린다 (원본은 그림 옆 제목이 그림 아래 끝에 놓인다).
+                    if (span.Picture != null)
+                    {
+                        batch.Draw(span.Picture, new Vector2(x, y + line.Height - span.Picture.Height), Color.White);
+                        x += span.Picture.Width + TutorialPictureGap;
+                        continue;
+                    }
+                    SpriteFontBase spanFont = span.Style == TutorialTextStyle.Heading ? _uiSkin.Title : font;
+                    int spanHeight = span.Style == TutorialTextStyle.Heading ? TutorialHeadingHeight(_uiSkin.Title) : TutorialLineHeight;
+                    OriginalUiSkin.Text(batch, spanFont, span.Text, new Vector2(x, y + line.Height - spanHeight), TutorialColor(span.Style));
+                    x += spanFont.MeasureString(span.Text).X;
                 }
             }
             y += line.Height;
@@ -258,9 +272,17 @@ internal sealed partial class FortMapViewer
         _ => Color.White,
     };
 
-    /// <summary>실제 글꼴 폭으로 구간을 이어 감아 긴 튜토리얼 본문을 화면 폭 안에 둔다.</summary>
-    private static IReadOnlyList<TutorialVisualLine> LayoutTutorialText(IReadOnlyList<TutorialTextRun> runs,
-        SpriteFontBase font, int maxWidth)
+    /// <summary>본문 흐름 안의 제목 한 줄이 차지하는 높이 (제목 글꼴의 글자 높이 + 여백 2).</summary>
+    private static int TutorialHeadingHeight(SpriteFontBase headingFont) =>
+        Math.Max(TutorialLineHeight, (int)Math.Ceiling(headingFont.MeasureString("Ag").Y) + 2);
+
+    /// <summary>
+    /// 실제 글꼴 폭으로 구간을 이어 감아 긴 튜토리얼 본문을 화면 폭 안에 둔다.
+    /// 글 사이 그림(<c>~[I타입.프레임]</c>)은 그 자리에 원본 스프라이트를 놓고 줄 높이를 그림 높이로 키운다.
+    /// </summary>
+    /// <param name="headingFont">본문 흐름 안의 제목에 쓸 큰 글꼴 (null 이면 제목도 본문 글꼴)</param>
+    private IReadOnlyList<TutorialVisualLine> LayoutTutorialText(IReadOnlyList<TutorialTextRun> runs,
+        SpriteFontBase font, int maxWidth, SpriteFontBase? headingFont = null)
     {
         var lines = new List<TutorialVisualLine>();
         var current = new TutorialVisualLine(TutorialLineHeight);
@@ -275,6 +297,21 @@ internal sealed partial class FortMapViewer
                 if (run.BreakBefore == TutorialTextBreak.Paragraph && lines.Count > 0)
                     lines.Add(new TutorialVisualLine(TutorialParagraphGap));
             }
+            if (run.Style == TutorialTextStyle.Picture)
+            {
+                // 모르는 타입·그림 없는 프레임은 원본 표기를 화면에 드러내지 않고 건너뛴다.
+                if (InlinePicture.Resolve(_knowledgeTypes, run.Text) is { } picture
+                    && GetTexture(picture.Type.LoadIndex, picture.Frame) is { } sprite)
+                {
+                    if (currentWidth > 0 && currentWidth + sprite.Texture.Width > maxWidth) FlushLine();
+                    current.Spans.Add(new TutorialVisualSpan("", run.Style, sprite.Texture));
+                    current.Height = Math.Max(current.Height, sprite.Texture.Height + 2);
+                    currentWidth += sprite.Texture.Width + TutorialPictureGap;
+                }
+                spacePending = false;
+                continue;
+            }
+            SpriteFontBase runFont = run.Style == TutorialTextStyle.Heading && headingFont != null ? headingFont : font;
             // 스타일이 달라도 같은 줄에서 읽히도록 단어마다 폭을 측정한다.
             foreach (Match token in TutorialWords.Matches(run.Text))
             {
@@ -285,24 +322,24 @@ internal sealed partial class FortMapViewer
                 }
                 string word = token.Value;
                 string piece = currentWidth > 0 && spacePending ? " " + word : word;
-                if (currentWidth > 0 && currentWidth + font.MeasureString(piece).X > maxWidth)
+                if (currentWidth > 0 && currentWidth + runFont.MeasureString(piece).X > maxWidth)
                 {
                     FlushLine();
                     piece = word;
                 }
-                if (font.MeasureString(piece).X > maxWidth)
+                if (runFont.MeasureString(piece).X > maxWidth)
                 {
                     // 한 단어가 폭보다 길면 글자 단위로 나눠 항상 본문 안에 남긴다.
                     foreach (char character in word)
                     {
-                        if (currentWidth > 0 && currentWidth + font.MeasureString(character.ToString()).X > maxWidth)
+                        if (currentWidth > 0 && currentWidth + runFont.MeasureString(character.ToString()).X > maxWidth)
                             FlushLine();
-                        AddText(character.ToString(), run.Style);
+                        AddText(character.ToString(), run.Style, runFont);
                     }
                 }
                 else
                 {
-                    AddText(piece, run.Style);
+                    AddText(piece, run.Style, runFont);
                 }
                 spacePending = false;
             }
@@ -310,14 +347,15 @@ internal sealed partial class FortMapViewer
         FlushLine();
         return lines;
 
-        /// <summary>현재 줄에 같은 스타일을 합쳐 글자를 붙인다.</summary>
-        void AddText(string text, TutorialTextStyle style)
+        /// <summary>현재 줄에 같은 스타일을 합쳐 글자를 붙인다. 큰 제목 글꼴이 들어오면 줄 높이를 그만큼 키운다.</summary>
+        void AddText(string text, TutorialTextStyle style, SpriteFontBase textFont)
         {
-            if (current.Spans.Count > 0 && current.Spans[^1].Style == style)
+            if (current.Spans.Count > 0 && current.Spans[^1].Style == style && current.Spans[^1].Picture == null)
                 current.Spans[^1] = current.Spans[^1] with { Text = current.Spans[^1].Text + text };
             else
                 current.Spans.Add(new TutorialVisualSpan(text, style));
-            currentWidth += font.MeasureString(text).X;
+            if (textFont != font) current.Height = Math.Max(current.Height, TutorialHeadingHeight(textFont));
+            currentWidth += textFont.MeasureString(text).X;
         }
 
         /// <summary>완성한 줄을 보관하고 다음 줄에서 이어 쓴다.</summary>
@@ -330,15 +368,15 @@ internal sealed partial class FortMapViewer
         }
     }
 
-    /// <summary>한 화면 줄의 스타일 구간.</summary>
-    private sealed record TutorialVisualSpan(string Text, TutorialTextStyle Style);
+    /// <summary>한 화면 줄의 스타일 구간. 글 사이 그림이면 Picture 에 그릴 텍스처가 들어 있고 Text 는 비어 있다.</summary>
+    private sealed record TutorialVisualSpan(string Text, TutorialTextStyle Style, Texture2D? Picture = null);
 
     /// <summary>한 화면 줄과 그 줄이 차지하는 높이.</summary>
     private sealed class TutorialVisualLine(int height)
     {
         /// <summary>줄에서 그릴 구간.</summary>
         public List<TutorialVisualSpan> Spans { get; } = [];
-        /// <summary>본문 스크롤에서 차지하는 높이.</summary>
-        public int Height { get; } = height;
+        /// <summary>본문 스크롤에서 차지하는 높이. 그림이나 큰 제목이 들어오면 커진다.</summary>
+        public int Height { get; set; } = height;
     }
 }

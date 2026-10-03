@@ -56,8 +56,12 @@ internal sealed partial class FortMapViewer
     /// <param name="Type">유닛 타입</param>
     private sealed record DeckUnit(int Slot, TypeInfo Type);
 
-    /// <summary>GetTexture 의 음수 색 번호에 맞는 덱 변환표 (해당 없으면 null)</summary>
-    private ReadOnlyMemory<byte>? DeckRemap(int color) => color switch
+    /// <summary>
+    /// GetTexture 의 음수 색 번호에 맞는 덱 변환표 (해당 없으면 null).
+    /// 반환형을 <c>ReadOnlyMemory&lt;byte&gt;?</c> 로 두면 null 배열이 "값이 있는 빈 표"로 바뀌어
+    /// 섬 소유자 색 변환(양수 색 번호)이 통째로 건너뛰어지므로 배열 그대로 돌려준다.
+    /// </summary>
+    private byte[]? DeckRemap(int color) => color switch
     {
         DeckDarkColor => _deckDarkTable ??= ProductionTintRemap.Darkened(_palette),
         DeckRedColor => _deckRedTable ??= ProductionTintRemap.Reddened(_palette),

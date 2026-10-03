@@ -70,6 +70,7 @@ python tools/videoframes.py range "playingVideos/Netstorm Islands at war - Disso
 
 ## 관찰 노트
 
+* **[TEST01 녹화 화면 요소 대조·클론 반영 (2026-10-03)](test01-visuals-20261003.md)** — 같은 30FPS 녹화의 시작 화면·선택·배치 장면을 원본 스프라이트(1.25배 템플릿 매칭)와 exe 로 대조했다. 섬 테두리 색이 적용되지 않던 버그와 플레이어 색 규칙(색 번호 = 소유자 번호, `aiNColor` 덮어쓰기), 원본 방식 미니맵(1px = 2칸, 화면 중심을 따라 스크롤), 그림자(`shadow`·`flyershadow`), 가이저·워크샵·신전·풍선 애니메이션, `hotFootRatio` 기준점 이동과 시작 카메라, 브리핑의 글 사이 그림, 배치 미리보기와 커서 규칙(행 + 1 + `height`), 선택 괄호·체력 막대를 클론에 반영했다. 유닛의 플레이어 색, 연결 창, Crossbow 반짝임 등은 남겼다. 입력 기록 시각이 영상과 28.07초 어긋나는 점도 적었다.
 * **[TEST01 추가 전투 판독·클론 수정 (2026-10-03)](test01-combat-20261003.md)** — 옮겨 온 30FPS 녹화에서 아이스 타워의 약 34.7초 재성장, 썬 바리케이트 선, 캐논 자세를 연속 판독하고 원본 타이머·방위·충전·탄속과 대조했다. 이동 진행량 보존·정지 자세, 고정 캐논 회전·사격, 재성장·무보상, 방어선 연결·흡수, 거리 비례 화면 이동을 반영했다. Assets 202·Core 310 검사와 클론 화면·우클릭 회전을 확인했다. 얼음 파편·정확한 피해·세부 회전·높이 예외는 남겼으며 원자료는 보존했다.
 
 * **[원본 자동 분석 녹화: 캠페인 1-1 The War Begins! (2026-10-03)](auto-war-begins-20261003.md)** — `analyzeManager` 30FPS 자동 녹화(4,318프레임·236.9초, 실제 평균 18.2FPS). 사제·골렘 이동(선택 → 땅 좌클릭 → 선택 해제, 출발 지연 0.4~0.8초, 사제 약 1.8·골렘 약 2.0칸/초, 허공 클릭은 거부), 골렘 배치 연출(약 1.4초), 사제의 Sun Workshop 건설(약 10~11초, 창문 불), 워크샵 덱 등록(Rain Generator·Sun Cannon), ESC → Leave Mission → Main Menu를 시각표와 함께 정리했다. 1차 실행 녹화가 승인 프롬프트로 VS Code가 앞으로 나오며 중단된 사례와 파일 교체 거부 수정도 기록했다. 원자료는 Git 제외 `extracted/analyzeManager/20261003T052032571Z-e652ee405b0d/recording/`에 보존한다.
@@ -102,6 +103,20 @@ YouTube 영상은 내려받지 않고 `analyzeManager`의 `youtube_*` 도구(MCP
 
 - `frames <세션> -o <폴더> 660.5 g6596 …`: 경과 초 또는 `g`전역 프레임 번호의 원본 크기 PNG를 저장한다.
 - `sheet <세션> -o <폴더> --step 50 [--start 초 --end 초] [--crop x,y,w,h]`: 시각을 적은 관찰표를 만든다. `--crop`이면 원본 픽셀 그대로 잘라 붙인다.
+
+## 스프라이트 맞추기 도구 `tools/sprite_match.py` (2026-10-03)
+
+녹화 프레임에서 오브젝트가 그리는 클러스터를 찾는다. `tools/shp.py export` 로 내보낸 `extracted/shapes/<번호>_<타입>/` 을 캡처 배율(기본 1.25)로 키워 불투명 픽셀의 평균 RGB 절대차를 구한다(작을수록 맞음).
+
+```powershell
+python tools/sprite_match.py playingVideos/<세션ID> --type geyser --anchor 940,521 --start 38 --end 39        # 프레임마다 가장 잘 맞는 클러스터
+python tools/sprite_match.py playingVideos/<세션ID> --type rainBalloon --anchor 716,367 --times 37.5 --radius 20  # 기준점을 모를 때 주변을 넓게 찾는다
+python tools/sprite_match.py playingVideos/<세션ID> --type thunderFactory --clusters B --locate --times 37.5      # 프레임 전체에서 찾는다
+```
+
+- 결과의 `(+dx,+dy)` 는 준 기준점에서 어긋난 캡처 픽셀이다. 타입별 `hotFootRatio` 이동([test01-visuals-20261003.md](test01-visuals-20261003.md) 4절)을 이 값으로 쟀다.
+- 같은 이름 클러스터가 여러 개인 타입(windWalker)은 `이름#순번` 으로 구분한다. `--layer 1` 은 그림자 레이어다.
+- `--locate` 는 생산 창 아이콘에 걸릴 수 있다. 큰 건물로 카메라 위치를 잡는 데만 쓴다.
 
 ## 소리 판독 도구 `tools/audiomatch.py` (2026-10-01)
 

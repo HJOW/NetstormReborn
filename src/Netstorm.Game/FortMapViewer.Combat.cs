@@ -29,6 +29,7 @@ internal sealed partial class FortMapViewer
             if (frame < 0) frame = type.Frames.DefaultFrame;
             Vector2 anchor = Screen(new Vector2((float)(entity.WorldX * FortMap.CellPixelWidth),
                 (float)(entity.WorldY * FortMap.CellPixelHeight)), center);
+            DrawShadow(batch, entity.Type, frame, anchor);
             DrawSprite(batch, entity.Type.LoadIndex, frame, anchor);
         }
     }
@@ -53,7 +54,53 @@ internal sealed partial class FortMapViewer
             ? old with { Cluster = tile.Cluster, Owner = tile.Owner } : old).ToArray();
     }
 
-    /// <summary>손상·선택 체력, 기절 보호막 및 비행 중 탄을 그린다. 탄 그림과 막대 크기는 임시 표현이다.</summary>
+    /// <summary>
+    /// 오브젝트가 지금 그리는 프레임의 그림 상자(셰이프 헤더의 폭·높이·기준점)를 화면 좌표로 구한다.
+    /// 원본은 이 상자를 기준으로 선택 괄호와 체력 막대를 그린다. 비행 중이거나 그림이 없으면 null.
+    /// </summary>
+    private Rectangle? EntityFrameBox(GameEntity entity, Vector2 center)
+    {
+        if (entity.Flight != null || entity.Kind == ObjectKind.Flyer) return null;
+        (TypeInfo type, StructureFrames frames, Vector2 shift) = ObjectSprite(entity.Type, entity, entity.Source);
+        ShapeBlock block = _shapes.Blocks[type.LoadIndex];
+        if ((uint)frames.Body >= (uint)block.Frames.Count || block.Frames[frames.Body].IsSpecial) return null;
+        ShapeFrame frame = block.Frames[frames.Body];
+        Vector2 anchor = Screen(IsMobile(entity) ? MobileWorldPixels(entity)
+            : WorldPixels(entity.Footprint.AnchorX, entity.Footprint.AnchorY), center) + shift * _zoom;
+        // 헤더 값은 (높이, 폭)·(기준점 y, 기준점 x) 순서다.
+        return new Rectangle((int)MathF.Round(anchor.X - frame.Origin1 * _zoom), (int)MathF.Round(anchor.Y - frame.Origin0 * _zoom),
+            (int)MathF.Round(frame.Bounds1 * _zoom), (int)MathF.Round(frame.Bounds0 * _zoom));
+    }
+
+    /// <summary>그림 상자 위에 원본 모양의 체력 막대(검은 바탕 + 초록·노랑·빨강)를 그린다.</summary>
+    private void DrawHealthBar(SpriteBatch batch, Rectangle box, GameEntity entity)
+    {
+        int hitPoints = (int)entity.HitPoints, maximum = (int)entity.MaxHitPoints;
+        PixelRect back = SelectionMarks.BarBackground(box.X, box.Y, box.Width);
+        PixelRect fill = SelectionMarks.BarFill(box.X, box.Y, box.Width, hitPoints, maximum);
+        (byte r, byte g, byte b) = SelectionMarks.HealthColor(hitPoints, maximum);
+        batch.Draw(_pixel, new Rectangle(back.X, back.Y, back.Width, back.Height), Color.Black);
+        batch.Draw(_pixel, new Rectangle(fill.X, fill.Y, fill.Width, fill.Height), new Color(r, g, b));
+    }
+
+    /// <summary>그림 상자의 아래 두 모서리에 소유자 색의 2픽셀 괄호를 그린다 (원본 0x498841 의 선 여덟 개).</summary>
+    private void DrawSelectionBrackets(SpriteBatch batch, Rectangle box, int owner)
+    {
+        Rgb rgb = _palette[SelectionMarks.BracketPaletteIndex(_playerColors.GetValueOrDefault(owner))];
+        var color = new Color(rgb.R, rgb.G, rgb.B);
+        (int horizontal, int vertical) = SelectionMarks.BracketArms(box.Width, box.Height);
+        // 바깥 선과 한 픽셀 안쪽 선을 차례로 그린다
+        for (int inset = 0; inset < 2; inset++)
+        {
+            int left = box.X + inset, right = box.Right - inset, bottom = box.Bottom - inset;
+            batch.Draw(_pixel, new Rectangle(left, bottom - vertical, 1, vertical + 1), color);
+            batch.Draw(_pixel, new Rectangle(left, bottom, horizontal + 1, 1), color);
+            batch.Draw(_pixel, new Rectangle(right, bottom - vertical, 1, vertical + 1), color);
+            batch.Draw(_pixel, new Rectangle(right - horizontal, bottom, horizontal + 1, 1), color);
+        }
+    }
+
+    /// <summary>손상·선택 체력, 기절 보호막 및 비행 중 탄을 그린다. 탄 그림은 임시 표현이다.</summary>
     private void DrawCombat(SpriteBatch batch, SpriteFontBase font, Vector2 center)
     {
         int selected = _session.Player(TestPlayer).SelectedEntityId;
@@ -62,12 +109,22 @@ internal sealed partial class FortMapViewer
         {
             if (entity.HitPoints >= entity.MaxHitPoints && entity.Id != selected && !entity.IsStunned) continue;
             Vector2 anchor = EntityCenterScreen(entity, center);
-            double ratio = entity.HitPoints / entity.MaxHitPoints;
-            Color color = ratio > 0.5 ? Color.LimeGreen : ratio > 0.25 ? Color.Gold : Color.OrangeRed;
-            int width = Math.Max(8, (int)(HealthBarWidth * _zoom));
-            var bar = new Rectangle((int)anchor.X - width / 2, (int)(anchor.Y - 28 * _zoom), width, 4);
-            batch.Draw(_pixel, bar, Color.Black);
-            batch.Draw(_pixel, new Rectangle(bar.X, bar.Y, (int)(width * ratio), bar.Height), color);
+            if (EntityFrameBox(entity, center) is { } box)
+            {
+                // 원본 방식: 그림 상자 위의 체력 막대와, 선택한 오브젝트의 아래 두 모서리 괄호
+                DrawHealthBar(batch, box, entity);
+                if (entity.Id == selected) DrawSelectionBrackets(batch, box, entity.Owner);
+            }
+            else
+            {
+                // 그림 상자를 구할 수 없는 오브젝트(비행 중인 공격체 등)는 중심 위의 임시 막대로 표시한다.
+                double ratio = entity.HitPoints / entity.MaxHitPoints;
+                Color color = ratio > 0.5 ? Color.LimeGreen : ratio > 0.25 ? Color.Gold : Color.OrangeRed;
+                int width = Math.Max(8, (int)(HealthBarWidth * _zoom));
+                var bar = new Rectangle((int)anchor.X - width / 2, (int)(anchor.Y - 28 * _zoom), width, 4);
+                batch.Draw(_pixel, bar, Color.Black);
+                batch.Draw(_pixel, new Rectangle(bar.X, bar.Y, (int)(width * ratio), bar.Height), color);
+            }
             if (entity.IsStunned)
             {
                 // 원본 보호막 애니메이션 연결 전의 황금색 고리 표시다.
@@ -81,7 +138,8 @@ internal sealed partial class FortMapViewer
                     Line(batch, a, b, Color.Gold);
                 }
             }
-            if (entity.Id == selected)
+            // 원본 플레이 화면은 선택한 오브젝트 옆에 이름·체력 글자를 쓰지 않는다 (맵 시험 화면에서만 표시).
+            if (entity.Id == selected && !_playUi)
                 batch.DrawString(font, $"{entity.DisplayName} {entity.HitPoints:0}/{entity.MaxHitPoints:0}",
                     anchor + new Vector2(0, 10), Color.White);
             if (entity.IsSuspended)

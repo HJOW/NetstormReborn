@@ -3,8 +3,8 @@ namespace Netstorm.Assets.Tests;
 /// <summary>.fort 해석 테스트 (docs/formats/fort.md 의 확인 결과와 일치해야 한다)</summary>
 public sealed class FortFileTests
 {
-    /// <summary>원본 전체 .fort 수 (느슨한 파일 431 + 아카이브 32)</summary>
-    private const int ExpectedFortCount = 463;
+    /// <summary>클론 데이터의 전체 .fort 수 (원본 느슨한 파일 431 + 커스텀 맵 TEST01 1 + 아카이브 32)</summary>
+    private const int ExpectedFortCount = 464;
 
     /// <summary>원본 월드 청크 수 (16 × 16)</summary>
     private const int ExpectedWorldChunks = 256;

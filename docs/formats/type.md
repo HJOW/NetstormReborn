@@ -77,7 +77,7 @@ C# 구현: `TypeFrameTable` (`TypeDefinition.Frames`), 테스트 `TypeFrameTable
 
 | 플래그 | 개수 | 추정 의미 |
 |---|---|---|
-| `shadow` | 37 | 그림자 레이어 있음 |
+| `shadow` | 37 | 둘째 레이어를 고르게 어두운 그림자로 그린다 |
 | `dontSave` | 31 | 저장하지 않는 임시 오브젝트 |
 | `default_hotspot` | 29 | 기본 기준점 사용 |
 | `mayDropOnRim` / `mayDropOnIsle` | 26 / 5 | 섬 가장자리 / 작은 섬에 배치 가능 |
@@ -88,7 +88,7 @@ C# 구현: `TypeFrameTable` (`TypeDefinition.Frames`), 테스트 `TypeFrameTable
 | `dropBlocking`, `walkBlocking`, `shotblocking`, `yuckWalk` | 17 / 1 / 13 / 14 | 배치·이동·사격 차단 |
 | `not_selectable` | 11 | 선택 불가 |
 | `walker`, `flyer`, `balloon`, `ship`, `guy`, `priest` | | 이동 유닛 종류 |
-| `flyershadow` | 6 | 비행 유닛 그림자 |
+| `flyershadow` | 6 | 둘째 레이어를 체크무늬(한 픽셀 건너) 그림자로 그린다 (풍선·비행체) |
 | `factory`, `vortex`, `altar`, `dais`, `residence`, `geyser`, `edgefarm`, `fence`, `fencePost`, `bridge`, `nugget`, `mog`, `tree`, `buried`, `container` | | 오브젝트 종류 |
 | `surface`, `island`, `islandThreeByThree`, `rim`, `fringe` | | 지형 |
 | `saveFrame`, `randframe`, `matchframe`, `predictable`, `opaquecollide`, `saveQa` | | 프레임·동기화 관련 |
@@ -110,7 +110,7 @@ C# 구현: `TypeFrameTable` (`TypeDefinition.Frames`), 테스트 `TypeFrameTable
 | `damageEffect` | 34 | 피해 연출 |
 | `activeSound`, `fireSound`, `pickupSound`, `moveSound`, `dropSound`, `buildDoneSound`, `impactSound` | | 효과음 파일 이름 |
 | `group` | 28 | 그룹 (`"cannon"` 등) |
-| `hotFootRatioX`, `hotFootRatioY` | 28 | 기준점 위치 비율 |
+| `hotFootRatioX`, `hotFootRatioY` | 28 | 그림 기준점 이동 비율. 원본은 칸 기준점에서 **비율 × 한 칸 크기(16 × 11)** 만큼 왼쪽·위에 그린다(소수점 버림). 주석의 `hotFootX = 1`·`hotFootY = 8` ↔ 비율 0.0625·0.5 처럼 16분의 n 단위다. 2026-10-03 녹화에서 네 타입으로 확인 — [근거](../videos/test01-visuals-20261003.md) 4절 |
 | `constructionRate` | 26 | 건설 속도 |
 | `techBit` | 23 | 기술 비트 번호 |
 | `casttime`, `praytime`, `manacost` | 19 | 주문 시전 시간 / 기도 시간 / 마나 비용 |
@@ -118,7 +118,7 @@ C# 구현: `TypeFrameTable` (`TypeDefinition.Frames`), 테스트 `TypeFrameTable
 | `minUsage`, `maxUsage` | 12 | 에너지 사용량 범위 |
 | `orientations` | 10 | 방향 수 |
 | `hpPerSec` | 10 | 초당 피해량 |
-| `height` | 9 | 높이(비행 고도 등) |
+| `height` | 9 | 그림의 키(칸). 들고 있는 유닛의 발자국이 커서 칸보다 `1 + height` 행 아래에 놓인다(Thunder Cannon 2 → 3행 아래). 사제·골렘 1, 방벽 2~3 — [근거](../videos/test01-visuals-20261003.md) 9절. 다른 쓰임(비행 고도 등)은 미확인 |
 | `spawns`, `crew`, `mana`, `effecttime`, `delayBetweenShots`, `airdamage`, `useairdamage`, `artifactFrame`, `helpText` | 소수 | `mana`는 타입의 건설 에너지 요구 문자열을 직접 지정한다 ([exe 분석](../exe/energy-requirements.md)) |
 
 설계자 주석에 밸런스 조정 이력이 남아 있다 (예: sunCannon `cost` 200→400, `range` 축소, `hpPerSec` 조정).

@@ -1,6 +1,6 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
-> 최종 갱신: 2026-10-03 (TEST01 녹화 추가 분석·이동·캐논·아이스 타워·썬 바리케이트 클론 수정 완료. 아래에 AGENTS.md 목표 반영·편집기·화면 이동·AI·이동 분석·녹화기 작업 이력 보존)
+> 최종 갱신: 2026-10-03 (TEST01 녹화 화면 요소 대조·클론 반영 — 구현·빌드·단위 테스트 완료, **게임 구현 상태 테스트는 다음 작업자에게 인계**. 아래에 전투·AGENTS.md 목표 반영·편집기·화면 이동·AI·이동 분석·녹화기 작업 이력 보존)
 > 프로젝트 목표(AGENTS.md): 원본 NetStorm: Islands at War 를 디컴파일/분석하여 클론 코딩하고,
 > **Windows 10/11** 과 **GUI 환경의 Linux** 에서 동작하며 **여러 언어를 지원**하는 게임을 만든다.
 > **모방 범위(2026-10-03 AGENTS.md 변경)**: 기존 게임의 **사운드·그래픽·애니메이션 등 거의 모든 요소를 가능한 한 동일하게** 최대한 모방한다.
@@ -9,6 +9,62 @@
 > **화면 요구사항(2026-09-28 AGENTS.md 추가, 2026-10-03 변경)**: 풀스크린 모드와 화면비 **16:9 · 16:10 · 4:3** 지원, **30·60·120프레임 지원**(30프레임 먼저, 60·120은 후순위), 풀스크린에서 **마우스를 화면 끝에 대면 화면 이동**(원본도 옵션에서 켰을 때 지원), 원본의 **전체화면 전환 뒤 재실행 오류는 클론에서 발생하지 않아야 한다** — 1.4·1.7절
 
 ---
+
+## 2026-10-03 (`HJOW-Athlon`, Windows 10, 원본 실행 없음) ⏸ 구현 완료 / 게임 구현 상태 테스트 인계: TEST01 녹화 화면 요소 대조·클론 반영
+
+- **요청:** `playingVideos/`의 TEST01 녹화(다른 PC·다른 AI가 이미 분석·문서화)에서 현 클론과 다르거나 미구현인 부분을 더 찾아 구현. 도중에 사용자가 "지금까지를 문서화하고 남은 작업을 인계한 뒤, **빌드 테스트까지만** 하고 **게임 구현 상태 테스트는 다른 AI가 하도록 인계**"로 범위를 줄였다.
+- **원본 게임은 실행하지 않았다**(녹화·exe·셰이프 정적 대조만). AGENTS.md·`originals/`·녹화 파일은 수정하지 않았다. **커밋은 만들지 않았다**(변경은 모두 작업 트리에 있다).
+- **결과 문서:** [TEST01 화면 요소 대조·클론 반영](docs/videos/test01-visuals-20261003.md) — 방법, 원본/클론 차이 표(18항목), 항목별 근거·규칙, 남은 차이, 검증 상태. 관련 문서도 고쳤다: [map-viewer.md](docs/map-viewer.md)(`--test-battle`·`--dump-objects`·시작 카메라), [videos/README.md](docs/videos/README.md)(색인·`sprite_match.py`), [type.md](docs/formats/type.md)(`hotFootRatio`·`height`·`shadow`), [shp.md](docs/formats/shp.md)(그림자·프레임 헤더), [mission-script.md](docs/formats/mission-script.md)(`aiNColor`·`~[I…]`), [terrain-and-bridges.md](docs/exe/terrain-and-bridges.md)·[island-ownership.md](docs/gameplay/island-ownership.md)(플레이어 색 정정), [input-controls.md](docs/gameplay/input-controls.md)(미니맵·배치 커서), [animation-timing.md](docs/videos/animation-timing.md) 4.1절, [clone-deck.md](docs/screens/clone-deck.md), [assets/README.md](assets/README.md).
+
+### 이번에 구현한 것 (모두 작업 트리, 미커밋)
+
+| 항목 | 내용 | 주요 코드 |
+|---|---|---|
+| 섬 테두리 색 버그 | `DeckRemap` 반환형 때문에 소유자 색 변환이 전혀 적용되지 않던 것 수정. 받침(3×3 섬)에도 적용 | `FortMapViewer.Deck.cs`, `FortMapViewer.cs` |
+| 플레이어 색 규칙 | 색 번호 = 소유자 번호(1 파랑·2 빨강·3 흰색…), `aiNColor` 덮어쓰기(시험 전투 제외) | `Core/Rules/PlayerColors.cs`, `MissionStart.AiColors` |
+| 미니맵 | 1px = 2칸, 화면 중심을 따라 스크롤, 섬·다리 소유자 색, 흰 시야 사각형, 누르기·끌기 | `Core/Rules/MiniMapLayout.cs`, `FortMapViewer.MiniMap.cs` |
+| 그림자 | typeflags `shadow`(고른 그림자)·`flyershadow`(체크무늬), 검정 36% 근사 | `FortMapViewer.Sprites.cs` |
+| 제자리 애니메이션 | 가이저 증기, 워크샵 레벨 그림·Rain 물 반짝임, 신전 번개·회오리, 풍선, Sail Skater | `Assets/StructureAnimation.cs` |
+| 저장 워크샵 레벨 | 맵의 저장 상태 0·1·2 → 세션 레벨 I·II·III (이전에는 전부 I) | `BattleSession.RegisterCompletedBuilding` |
+| 그림 기준점 | `hotFootRatio × (16, 11)` 만큼 왼쪽·위로 이동 | `StructureAnimation.HotFootShift`, `ObjectSprite` |
+| 시작 카메라 | 사제 칸 기준점 (525, 393) → (528, 396) | `OriginalStartOffset` |
+| 커서 칸 | `CellAt` 내림 → 올림(보이는 칸). 이동 목적지·건물 클릭·개발용 발자국 표시 정정 | `Core/Rules/PlacementCursor.cs` |
+| 배치 커서·미리보기 | 기준 칸 = (커서 열, 커서 행 + 1 + `height`). 흰 사각형·원소 아이콘·노란 비용·안내 글·고정 캐논 사거리 반짝임 | `FortMapViewer.PlacementPreview.cs` |
+| 선택 표시 | 그림 상자 아래 두 모서리 괄호(플레이어 색) + 상자 위 체력 막대(초록·노랑·빨강), 플레이 화면의 이름·체력 글자 제거 | `Core/Rules/SelectionMarks.cs`, `FortMapViewer.Combat.cs` |
+| 브리핑 그림 | `~[I타입.프레임]` 을 스프라이트로, 그림 옆 제목 | `Assets/InlinePicture.cs`, `TutorialDialogScript`, `FortMapViewer.TutorialDialog.cs` |
+| 시험 전투·진단 | `--test-battle <맵>`, `--dump-objects`. `TEST01.fort`·`.english` 를 `assets/game-data/d/` 에 복사 | `NetstormGame.cs`, `FortMapViewer.Units.cs` |
+| 도구 | `tools/sprite_match.py`(녹화 프레임 ↔ 스프라이트 맞추기, `--radius`·`--locate`·중복 이름 구분) | |
+
+### 검증 상태 — ⚠ 게임 구현 상태 테스트는 하지 않았다 (다음 작업자가 할 일)
+
+- **한 것(최종 상태):** `dotnet build -c Release` 경고 0·오류 0. 단위 테스트 **Assets 235 + Core 358 = 593** 통과, 건너뜀 0.
+- **하지 않은 것(사용자 지시로 인계):** 최종 빌드로 게임을 실행하는 모든 검증. 스모크 스크립트 세 개는 **선택 괄호·체력 막대를 넣기 전**에 마지막으로 통과했고, 그 뒤 실행은 TEST01 선택 장면 캡처 한 번뿐이다. `docs/videos/test01-visuals-20261003.md` 의 비교 이미지도 구현 도중의 캡처다.
+- **다음 작업자의 점검 목록:**
+  1. 스모크: `tools/clone_ui_smoke.ps1`, `tools/clone_help_options_smoke.ps1`, `tools/clone_move_smoke.ps1` (셋 다 Release 실행 파일 사용. `clone_move_smoke.ps1` 의 골렘 선택 좌표를 `499,392` 로 고쳤다).
+  2. TEST01 시험 전투를 원본 프레임과 겹쳐 보기 — 설정 폴더에 `{"WindowWidth":1280,"WindowHeight":960,"ViewHeight":768}` 을 두고(`NETSTORM_SETTINGS_DIR`), `NetstormClone.exe --language english --test-battle TEST01 --ui-script-file <파일>`, 스크립트 예 `wait 60; click 594,463; wait 40; assert battle; capture <png>; quit;`(브리핑 Go! 가 논리 (594, 463)). 원본 프레임은 `python tools/recordplay_frames.py frames playingVideos/20261003T074745758Z-adc787856962 -o <폴더> 37.5`.
+  3. 눈으로 확인할 것: 테두리·받침 색(파랑/빨강/흰색, F7 토글), 미니맵(사각형이 상자 중심, 월드 끝에서 멈춤, 누르기·끌기), 그림자, 가이저·신전·풍선·Rain 워크샵 애니메이션, 워크샵 레벨 그림, 선택 괄호·체력 막대(사제·골렘·건물·풍선), 배치 미리보기(덱의 골렘, 워크샵에 등록한 Ice/Thunder Cannon 의 회전·사거리 반짝임, 섬 밖 붉은 사각형과 안내 글), 브리핑의 풍선 그림.
+  4. **회귀 위험이 큰 곳:** ① 캠페인 1-1·1-2 의 배치·건설 흐름(기준 칸이 커서보다 1 + `height` 행 아래로 바뀜 — 골렘은 2행 아래) ② 건물 클릭 선택·우클릭 메뉴(칸 판정이 한 칸 이동) ③ 사제 Construct 의 건물 미리보기(같은 커서 규칙을 쓰는 것은 추정) ④ 맵 시험 화면(`--map`)의 T/H 키·희생 입력·P 배치 시험(같은 `CellAt` 사용) ⑤ `hotFootRatio` 이동으로 캐논·바리케이트 그림이 옮겨졌는데 탄·번개·방어선은 `CellCenterScreen` 기준 그대로라 서로 어긋나 보일 수 있음(앞 작업자가 녹화에 맞춘 `FenceHeadOffset` 등) ⑥ 저장 워크샵 레벨이 실제 레벨로 바뀌어 등록 칸 수가 달라짐(캠페인 맵의 AI·플레이어 워크샵) ⑦ 16:9·16:10 에서 미니맵·배치 미리보기 ⑧ 성능(`--perf`): 그림자만큼 그리기 호출이 늘었고 미니맵 그림은 다리·오브젝트 수가 바뀔 때 65,536칸을 다시 훑는다.
+  5. 문제가 나오면 고치고, 통과하면 이 절의 제목을 ✅ 완료로 바꾼다.
+
+### 남은 작업 (원본과 아직 다른 것, [문서 12절](docs/videos/test01-visuals-20261003.md))
+
+1. **유닛·건물의 플레이어 색.** 원본은 타입별 변환표로 일부 색을 소유자 색으로 바꾼다(풍선의 고리가 파랑). exe `FUN_0043be30` → `FUN_0043bbe0`(원본 색 목록 지정, 세 타입)·`FUN_0043ba00`(기본 규칙, 열두 타입). 타입 번호 전역 변수(`DAT_00541214`·`DAT_0054128c`·`DAT_0054127c`·`DAT_005412d0` 등)가 어느 타입인지 찾는 중에 멈췄다 — 0x540DD0 의 포인터 배열은 타입 이름 문자열만 가리킨다. 타입 등록 코드에서 전역 변수에 번호를 넣는 곳을 찾을 것. 렌더러는 `색 번호 × 0x100 + DAT_00557940[타입]` 행을 쓴다(0x498220 부근).
+2. 시험 전투 시작의 "Connecting to Game Server - Countdown 29." → "Starting Mission..." 창.
+3. Crossbow 의 두 갈래(V) 사거리 반짝임과 `range` 타입 B·C 묶음, 반짝임 그림 간격.
+4. Wind·Rain 신전 겹침 그림의 간격·위치를 녹화 275·345초 구간에서 확인(카메라 위치부터 맞춰야 한다. `sprite_match.py --locate` 는 생산 창 아이콘에 걸리므로 지도 영역만 보도록 고치면 좋다).
+5. Sun 워크샵의 불 켜진 창 조각(`02`~`04`)이 켜지는 조건, 가이저 `A17`~`A48` 의 쓰임.
+6. 그림자의 정확한 음영표와 그리기 순서, 배치 연출(에너지 방울 → 반투명 → 불투명)·건설 연출(실루엣 → 아래에서 위로).
+7. 브리핑 창 크기·버튼 배치, 나머지 배치 안내 문구, 초록·보라·노랑·연파랑·주황 플레이어의 미니맵 색(지금은 추정 순색).
+8. `CellCenterScreen` 의 칸 중심 가정 정리(칸은 기준점의 왼쪽 위에 보인다 — 탄·번개·방어선·임시 체력 막대가 반 칸~한 칸 오른쪽·아래 기준이다).
+9. 섬 가장자리 장식(덩굴·초목) 변형 선택이 원본과 다름, 섬 지면 무늬 대조.
+10. 이 녹화의 나머지 구간 판독: 워크샵 메뉴·Knowledge Available 창(38~69초), 다리·전투(165~445초)의 탄·폭발 그림.
+11. 이전 항목에서 넘어온 것: 프레임 속도 선택(30/60/120), 아이스 캐논 파편·태양 캐논 세부 등([전투 문서](docs/videos/test01-combat-20261003.md)), Shift+숫자 화면 저장 확인.
+
+### 참고
+
+- 작업 자료(비교 캡처·원본 프레임·설정 폴더)는 Git 제외 `extracted/test01-clone/` 에 있다. 클론 실행 보조 스크립트는 세션 임시 폴더에만 있어 남지 않는다(위 2번의 명령으로 대체).
+- 입력 기록(`input-0001.jsonl`)의 `sessionElapsedMs` 는 영상 시각보다 28.07초 크다. 영상과 맞출 때는 `recordingElapsedMs` 를 쓴다.
+- 새로 생긴 파일: `src/Netstorm.Assets/{StructureAnimation,InlinePicture}.cs`, `src/Netstorm.Core/Rules/{PlayerColors,MiniMapLayout,PlacementCursor,SelectionMarks}.cs`, `src/Netstorm.Game/FortMapViewer.{Sprites,MiniMap,PlacementPreview}.cs`, 테스트 4개 파일, `tools/sprite_match.py`, `assets/game-data/d/TEST01.{fort,english}`, `docs/videos/test01-visuals-20261003.md`.
 
 ## 2026-10-03 (Windows, 원본 실행 없음) ✅ 완료: 옮겨 온 TEST01 녹화 추가 판독·클론 전투와 이동 수정
 
