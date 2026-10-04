@@ -18,9 +18,6 @@ internal sealed partial class FortMapViewer
     /// <summary>공급 범위 원을 그릴 점 개수</summary>
     private const int RangeDotCount = 120;
 
-    /// <summary>건설 중인 건물을 반투명하게 그리는 불투명도</summary>
-    private const float UnderConstructionAlpha = 0.5f;
-
     /// <summary>
     /// 사제가 아직 도착하지 않은 공사장의 불투명도. 원본은 설치 직후 어두운 실루엣의 "공사장 그림자"만 놓고
     /// 사제가 도착하면 건물이 바닥부터 차오른다 (2026-10-03 원본 자동 분석, docs/videos/auto-war-begins-20261003.md 4.5절).
@@ -260,12 +257,20 @@ internal sealed partial class FortMapViewer
     }
 
     /// <summary>
-    /// 들고 있는 타입을 화면 좌표에 놓을 때의 발자국 기준 칸(오른쪽 아래 칸). 원본처럼 커서 칸의 열, 커서 칸 + 1 + height 행이다
-    /// (<see cref="PlacementCursor.AnchorCell"/>).
+    /// 들고 있는 타입의 발자국 기준 칸(오른쪽 아래 칸). 사제 건물은 원본 그림 중앙을 잡고,
+    /// 생산 유닛은 커서 칸의 열과 커서 칸 + 1 + height 행을 쓴다(<see cref="PlacementCursor.AnchorCell"/>).
     /// </summary>
     private (int X, int Y) PlacementCellAt(Vector2 screen, TypeInfo type)
     {
         Vector2 world = (screen - _lastCenter) / _zoom + _camera;
+        // 사제 건물은 그림 중앙을 잡고 칸에 붙인다. 생산 유닛의 오른쪽 열 기준 배치와 구분한다.
+        if (IsBuilding(type))
+        {
+            // 원본은 실제 디코딩 영역(xmin..xmax)이 아닌 셰이프 머리의 그림 크기·원점으로 중앙을 잡는다.
+            ShapeFrame frame = _shapes.Blocks[type.LoadIndex].Frames[type.Definition.Frames.DefaultFrame];
+            return PlacementCursor.BuildingAnchorCell(world.X, world.Y, -frame.Origin1, -frame.Origin0,
+                frame.Bounds1, frame.Bounds0);
+        }
         return PlacementCursor.AnchorCell(world.X, world.Y, type.Definition);
     }
 
@@ -274,10 +279,11 @@ internal sealed partial class FortMapViewer
 
     /// <summary>
     /// 게임 중 놓거나 지은 오브젝트를 그린다 (저장 오브젝트 뒤, 안내 영역 앞). 맵에 저장된 오브젝트는 본 그리기가 그린다.
-    /// 건설 중인 건물은 반투명하게 그리고 진행 막대를 붙인다.
+    /// 건설 중인 건물은 바닥부터 드러내며, 진행 막대는 개발용 배치 시험 모드에만 붙인다.
     /// </summary>
     private void DrawPlacedUnits(SpriteBatch batch, Vector2 center)
     {
+        DrawCancelledSites(batch, center);
         // 세션 오브젝트 번호 순서로 그린다 (게임 중 새로 만든 것만)
         foreach (GameEntity entity in _session.Entities.Where(e => e.Kind != ObjectKind.Flyer && (e.Source == null || e.Kind == ObjectKind.Geyser && !_map.Objects.Contains(e.Source))))
         {
@@ -289,6 +295,11 @@ internal sealed partial class FortMapViewer
             // 화면 밖에 있는 오브젝트는 그리지 않는다.
             if (anchor.X < -ObjectCullMargin * _zoom || anchor.X > _viewSize.X + ObjectCullMargin * _zoom
                 || anchor.Y < -ObjectCullMargin * _zoom || anchor.Y > _viewSize.Y + ObjectCullMargin * _zoom) continue;
+            if (!entity.IsComplete && entity.Production == null && ObjectKinds.IsBuilding(entity.Kind))
+            {
+                DrawConstruction(batch, entity, center, entity.AwaitingBuilder);
+                continue;
+            }
             if (entity.Kind == ObjectKind.Geyser && entity.Source != null)
             {
                 // 미션 시작 때 생성된 연습 가이저는 저장 맵 지면에 없으므로 작은 받침도 함께 그린다.
@@ -297,14 +308,9 @@ internal sealed partial class FortMapViewer
             }
             // 저장된 오브젝트와 같은 규칙으로 그림을 고른다 (걷는 유닛의 방향·걷기 프레임, 워크샵 레벨, 신전 회오리, 그림자).
             (TypeInfo drawn, StructureFrames frames, Vector2 shift) = ObjectSprite(entity.Type, entity, null);
-            // 사제가 오는 중인 공사장은 어두운 그림자로, 건설이 시작된 건물은 반투명 + 진행 막대로 그린다.
+            // 생산 유닛은 자원이 도착한 뒤 실체화하고 완성된 오브젝트는 원본 그림으로 그린다.
             DrawObjectSprite(batch, drawn, frames, anchor + shift * _zoom,
-                entity.Production != null ? ProductionOpacity(entity) : entity.IsComplete ? 1f : entity.AwaitingBuilder ? SiteShadowAlpha : UnderConstructionAlpha,
-                _playerColors.GetValueOrDefault(entity.Owner), entity.AwaitingBuilder ? SiteShadowTint : null);
-            if (!entity.IsComplete && entity.Production == null && !entity.AwaitingBuilder)
-            {
-                DrawProgressBar(batch, anchor, _session.ConstructionProgress(entity));
-            }
+                entity.Production != null ? ProductionOpacity(entity) : 1f, _playerColors.GetValueOrDefault(entity.Owner));
         }
     }
 

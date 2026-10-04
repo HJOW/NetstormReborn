@@ -128,8 +128,10 @@ public sealed partial class BattleSession
             return new SessionPlacementCheck(CommandFailure.WrongKind, null);
         }
         // 건설 중이거나 사제를 기다리는 템플·알타도 "이미 있음"으로 센다 (플레이어당 동시에 1기)
+        // TEST02 원본은 사제가 서 있는 칸에는 건물을 놓을 수 있다. 다른 건물·집의 점유는 그대로 검사한다.
+        Footprint[] priests = [.. _entities.Values.Where(e => e.Kind == ObjectKind.Priest && e.OccupiesGround).Select(e => e.Footprint)];
         PlacementCheck site = Map.CheckBuilding(type, x, y, player, state.StormPower,
-            HasBuilding(player, ObjectKind.Temple), HasBuilding(player, ObjectKind.Altar));
+            HasBuilding(player, ObjectKind.Temple), HasBuilding(player, ObjectKind.Altar), priests);
         if (EnforceProductionRules && !state.Tech.IsAllowed(type.Name))
         {
             return new SessionPlacementCheck(CommandFailure.TechDenied, site);

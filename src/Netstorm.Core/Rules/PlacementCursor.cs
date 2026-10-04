@@ -38,4 +38,14 @@ public static class PlacementCursor
         (int x, int y) = CellUnder(worldX, worldY);
         return (x, y + 1 + Math.Max(0, type.GetInt("height") ?? 0));
     }
+
+    /// <summary>
+    /// 건물은 그림의 중앙을 커서에 붙이고 가장 가까운 칸에 맞춘다 (Cursor.cpp FUN_00446b50·004473e0).
+    /// 오프셋은 셰이프 헤더 원점의 음수이며, 원본처럼 한 칸(16×11)을 빼고 오른쪽 아래 기준점을 정한다.
+    /// 커서 월드 픽셀은 원본의 정수 변환을 먼저 적용하고 홀수 그림 크기의 절반도 정수로 나눈다.
+    /// </summary>
+    public static (int X, int Y) BuildingAnchorCell(double worldX, double worldY,
+        int offsetX, int offsetY, int width, int height) =>
+        ((int)Math.Floor(((int)worldX - offsetX - width / 2 - CellWidth) / (double)CellWidth + 0.5),
+         (int)Math.Floor(((int)worldY - offsetY - height / 2 - CellHeight) / (double)CellHeight + 0.5));
 }

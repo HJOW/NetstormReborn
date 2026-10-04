@@ -19,17 +19,17 @@ public sealed class ConstructionTests
     /// <summary>사제가 서 있는 칸 (x, y 모두)</summary>
     private const int PriestStart = 2;
 
-    /// <summary>사제에게서 멀리 떨어진 템플 기준점 x (발자국 8×6 이라 x 43~50, y 35~40을 차지한다)</summary>
+    /// <summary>사제에게서 멀리 떨어진 템플 기준점 x (발자국 8×8 이라 x 43~50, y 33~40을 차지한다)</summary>
     private const int FarX = 50;
 
     /// <summary>사제에게서 멀리 떨어진 템플 기준점 y</summary>
     private const int FarY = 40;
 
-    /// <summary>사제가 서 있는 칸 바로 옆에 놓이는 템플 기준점 x (발자국 x 3~10, y 0~5 — 사제 (2,2)가 왼쪽 변 바로 바깥이다)</summary>
+    /// <summary>사제가 서 있는 칸 바로 옆에 놓이는 템플 기준점 x (발자국 x 3~10, y 0~7 — 사제 (2,2)가 왼쪽 변 바로 바깥이다)</summary>
     private const int NearX = 10;
 
     /// <summary>사제 바로 옆 템플 기준점 y</summary>
-    private const int NearY = 5;
+    private const int NearY = 7;
 
     /// <summary>건설 시간(10초)의 틱 수 (초당 24틱)</summary>
     private static int BuildTicks(BattleSession session) => (int)(ConstructionTimes.BuildingSeconds * session.TicksPerSecond);
@@ -45,7 +45,7 @@ public sealed class ConstructionTests
         var grid = new BridgeGrid(island, (x, y) => session?.Entities.Any(e => e.OccupiesGround && e.Footprint.Contains(x, y)) ?? false);
         TypeCatalog types = OriginalData.RequireTypes();
         var priest = new FortMapObject(PriestStart, PriestStart, 0, new FortObject(0, 0, types.Find("priest")!, null, null, null, null, null, 1, []));
-        session = new BattleSession(new BattleMap([priest], (_, _) => 0), grid, types, startStormPower: 20000);
+        session = new BattleSession(new BattleMap([priest], (x, y) => island(x, y) ? 0 : null), grid, types, startStormPower: 20000);
         session.CombatEnabled = false;
         session.Player(1).Tech.SetAll(true);
         return session;
@@ -73,6 +73,41 @@ public sealed class ConstructionTests
             throw new InvalidOperationException($"{type} 건설 명령 뒤 새 오브젝트가 {created.Length}개입니다 (거부: {reasons})");
         }
         return created[0];
+    }
+
+    /// <summary>기준점이 지면이어도 7×8 발자국 위쪽이 섬 밖이면 건설을 거부한다. 두 건물은 정확히 맞닿아도 허용한다.</summary>
+    [Fact]
+    public void Workshop_RequiresAllEightRowsAndAllowsTouchingNeighbors()
+    {
+        BattleSession session = Create();
+        Assert.Equal(PlacementProblem.BuildingNeedsIsland, session.CheckBuilding(1, "sunFactory", 20, 6).Site!.Problem);
+        // 원본처럼 사제 (2,2)가 발자국 안에 있어도 설치를 막지 않는다.
+        Assert.True(session.CheckBuilding(1, "sunFactory", 7, 7).Allowed);
+        GameEntity workshop = Order(session, "sunFactory", 20, 7);
+        Assert.Equal((7, 8), (workshop.Footprint.Width, workshop.Footprint.Height));
+        Assert.False(session.CheckBuilding(1, "sunFactory", 26, 7).Allowed);
+        Assert.True(session.CheckBuilding(1, "sunFactory", 27, 7).Allowed);
+        Assert.False(session.CheckBuilding(1, "sunFactory", 20, 14).Allowed);
+        Assert.True(session.CheckBuilding(1, "sunFactory", 20, 15).Allowed);
+    }
+
+    /// <summary>워크샵은 템플과 달리 건물 수로 제한하지 않는다. 원본 TEST02의 14채 설치를 합성 섬에서도 확인한다.</summary>
+    [Fact]
+    public void Workshop_FourteenSitesHaveNoCountRestriction()
+    {
+        BattleSession session = Create();
+        // 각 공사장에 사제를 도착시켜 이전 건설을 취소하지 않고 차례로 건설을 시작한다.
+        for (int index = 0; index < 14; index++)
+        {
+            int x = 13 + index % 6 * 7;
+            int y = 15 + index / 6 * 8;
+            GameEntity site = Order(session, "sunFactory", x, y);
+            // 이동 거리에 충분한 시간을 주어 사제 도착·건설 완료를 모두 진행한다.
+            session.RunTicks(60 * session.TicksPerSecond);
+            Assert.True(site.IsComplete);
+        }
+        Assert.Equal(14, session.Entities.Count(e => e.Kind == ObjectKind.Workshop));
+        Assert.Equal(20000 - 14 * 800, session.Player(1).StormPower);
     }
 
     /// <summary>
@@ -215,7 +250,7 @@ public sealed class ConstructionTests
         GameEntity first = Order(session, "sunFactory", 20, 12);
         Assert.True(first.AwaitingBuilder);
         Assert.Equal(money - 800, session.Player(1).StormPower);
-        GameEntity second = Order(session, "sunFactory", 12, 14);
+        GameEntity second = Order(session, "sunFactory", 12, 16);
         // 첫 공사장은 사라지고 환불된 뒤 두 번째 비용만 나가 있다
         Assert.Null(session.Entity(first.Id));
         Assert.True(second.AwaitingBuilder);

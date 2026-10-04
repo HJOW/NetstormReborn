@@ -98,7 +98,7 @@ C# 구현: `TypeFrameTable` (`TypeDefinition.Frames`), 테스트 `TypeFrameTable
 | 키 | 개수 | 의미 (추정 포함) |
 |---|---|---|
 | `zorder` | 116 | 그리기 레이어 (`"zoEMPLACEMENTS"`, `"zoISLAND"`, `"zoFLARES"` …) |
-| `foot_x`, `foot_y` | 103 | 차지하는 칸 수 (가로×세로) |
+| `foot_x`, `foot_y` | 103 | 차지하는 칸 수 (가로×세로). 원본 `Rifttype.cpp FUN_0049b0d0`은 로딩 때 `foot_y=6`을 **8로 보정**한다. Sun Workshop 원문 7×6 → 실제 7×8. 클론 `Footprint.TypeHeight`에 반영([근거](../gameplay/test02-clone-parity-20261004.md)) |
 | `description` | 92 | 표시 이름 (영어, 번역 대상) |
 | `class` | 70 | 분류 (`Shooter`, `Defense`, `Production`, `Energy`, `Ground Transport`, `Aerial Attack`, `Offensive Spell` …) |
 | `cost` | 62 | 비용 (Storm Power) |

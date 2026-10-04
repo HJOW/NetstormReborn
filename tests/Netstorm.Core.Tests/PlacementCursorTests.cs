@@ -9,6 +9,31 @@ namespace Netstorm.Core.Tests;
 /// </summary>
 public sealed class PlacementCursorTests
 {
+    /// <summary>워크샵은 원본 그림 중앙을 잡아 가까운 칸에 붙는다. 기존 유닛처럼 커서의 오른쪽 열에 붙으면 안 된다.</summary>
+    [Theory]
+    [InlineData(432, 143, 30, 17)]
+    [InlineData(438, 146.9, 30, 17)]
+    [InlineData(441, 146, 30, 17)]
+    public void BuildingCursor_CentersOriginalSprite(double x, double y, int anchorX, int anchorY)
+    {
+        Assert.Equal((anchorX, anchorY), PlacementCursor.BuildingAnchorCell(x, y, -111, -114, 111, 114));
+    }
+
+    /// <summary>워크샵의 세로 6→8칸 보정은 저장된 템플·다른 원소 워크샵에도 원본 타입 로더처럼 적용된다.</summary>
+    [Theory]
+    [InlineData("sunFactory", 7, 8)]
+    [InlineData("rainFactory", 8, 8)]
+    [InlineData("windFactory", 8, 8)]
+    [InlineData("thunderFactory", 8, 8)]
+    [InlineData("rainVortex", 8, 8)]
+    [InlineData("outpost", 5, 4)]
+    public void OriginalFootprint_AppliesPatchHeight(string name, int width, int height)
+    {
+        TypeDefinition type = OriginalData.RequireTypes().Find(name)!.Definition;
+        Footprint footprint = Footprint.ForType(type, 50, 50);
+        Assert.Equal((width, height), (footprint.Width, footprint.Height));
+        Assert.Equal(height == 8 ? 6 : height, type.GetInt("foot_y"));
+    }
     /// <summary>height 속성이 없는 3×3 유닛 (Crossbow·Ice Cannon 과 같은 조건).</summary>
     private static readonly TypeDefinition Flat = TypeDefinition.Parse("typename flat\n{\n\tfoot_x = 3;\n\tfoot_y = 3;\n}\nA00 : default : \"a\" #0 ;\n");
 

@@ -50,7 +50,8 @@ internal sealed partial class FortMapViewer
         + $";shots={_session.Shots.Count};impacts={_session.Impacts.Count}"
         + ";sites=" + string.Join(',', _session.Entities.Where(e => e.Owner == TestPlayer && !e.IsComplete && e.Production == null)
             .Select(e => $"{e.Type.Name.ToLowerInvariant()}:{(e.AwaitingBuilder ? "waiting" : "building")}"))
-        + $";sp={_session.Player(TestPlayer).StormPower};productions={ProductionDetail}";
+        + $";sp={_session.Player(TestPlayer).StormPower};shown-sp={_shownStormPower};refunds={_cancelledSites.Count};context-panels={_contextPanels.Count};productions={ProductionDetail}"
+        + $";preview-size={(_lastCheck?.Site is { } preview ? $"{preview.Footprint.Width}x{preview.Footprint.Height}" : "none")}";
 
     /// <summary>걷기 그림 시계(초). 게임 시간이 흐르는 동안에만 진행해 일시정지 중에는 걷는 자세가 멈춘다.</summary>
     private double _walkClock;

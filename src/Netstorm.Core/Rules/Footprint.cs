@@ -65,10 +65,17 @@ public readonly record struct Footprint(int AnchorX, int AnchorY, int Width, int
         }
     }
 
-    /// <summary>.type 의 foot_x·foot_y 로 발자국을 만든다. 값이 없거나 1 미만이면 1칸으로 본다.</summary>
+    /// <summary>10.78 타입 초기화의 세로 6→8칸 보정 (Rifttype.cpp FUN_0049b0d0). 원본 파일의 값은 보존한다.</summary>
+    public static int TypeHeight(TypeDefinition definition)
+    {
+        int height = Math.Max(1, definition.GetInt("foot_y") ?? 1);
+        return height == 6 ? 8 : height;
+    }
+
+    /// <summary>.type 의 foot_x·foot_y 로 실제 발자국을 만든다. 세로 6칸은 원본 실행 파일처럼 8칸으로 보정한다.</summary>
     /// <param name="definition">.type 정의</param>
     /// <param name="anchorX">기준점 칸 x</param>
     /// <param name="anchorY">기준점 칸 y</param>
     public static Footprint ForType(TypeDefinition definition, int anchorX, int anchorY) =>
-        new(anchorX, anchorY, Math.Max(1, definition.GetInt("foot_x") ?? 1), Math.Max(1, definition.GetInt("foot_y") ?? 1));
+        new(anchorX, anchorY, Math.Max(1, definition.GetInt("foot_x") ?? 1), TypeHeight(definition));
 }

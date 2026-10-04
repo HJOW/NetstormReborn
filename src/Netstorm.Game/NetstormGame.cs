@@ -72,6 +72,9 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     /// <summary>원본 효과음·배경음악 재생기 (원본 데이터가 없으면 null)</summary>
     private AudioPlayer? _audio;
 
+    /// <summary>원본에서 추출한 다섯 가지 네이티브 커서.</summary>
+    private OriginalCursor? _cursor;
+
     /// <summary>도움말 앵커 절 (지식 상세창 본문)</summary>
     private HelpTopics? _help;
     private HelpWindow? _helpWindow;
@@ -265,6 +268,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         int frameTotal = shapes.Blocks.Sum(b => b.Frames.Count);
         _statusLines.Add($"_shapes.shp: 블록 {shapes.Blocks.Count}개, 프레임 {frameTotal}개");
         _resources = resources;
+        _cursor = new OriginalCursor(resources);
         _shapes = shapes;
         _palette = palette;
         _help = resources.TryLoadHelp();
@@ -498,6 +502,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         {
             // 메인 메뉴에도 소리 요청·실제 재생/음소거 결과를 전달한다. 일반 화면에는 표시하지 않는다.
             string detail = (_mapViewer?.UiDetail ?? "") + $";audio-buttons={_audio?.ButtonSoundRequests ?? 0}"
+                + $";pointer={_cursor?.Kind.ToString().ToLowerInvariant() ?? "arrow"};pointer-active={_cursor?.Active == true}"
                 + $";pressed={_helpWindow?.PressedLabel ?? _mapViewer?.PressedLabel ?? _mainMenu?.PressedLabel ?? "none"}"
                 + $";audio-last={_audio?.LastSoundCue ?? "none"};audio-result={_audio?.LastSoundResult ?? "none"}";
             keyboard = new KeyboardState();
@@ -515,6 +520,9 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         popupOpen |= _helpWindow?.IsOpen == true || MissionOptionsOpen;
         _mapViewer?.Update(dt, mouse, EdgeScrollDelta(rawMouse, keyboard, dt),
             _display.Layout.LogicalWidth, _display.Layout.LogicalHeight, keyboard, popupOpen);
+        // 대화상자·지도 밖은 화살표로 복구한다. 원본 커서는 논리 화면 확대 배율과 무관한 OS 커서다.
+        bool inView = mouse.X >= 0 && mouse.Y >= 0 && mouse.X < _display.Layout.LogicalWidth && mouse.Y < _display.Layout.LogicalHeight;
+        _cursor?.Set(!popupOpen && inView ? _mapViewer?.CursorAt(mouse.Position) ?? GameCursor.Arrow : GameCursor.Arrow);
         // 미션 종료·다음 미션 전환으로 기존 뷰어가 사라지기 전에 마지막 버튼 클릭음을 재생한다.
         UpdateAudio();
         _previousKeyboard = keyboard;
@@ -779,6 +787,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
             _helpWindow?.Dispose();
             _spriteBrowser?.Dispose();
             _audio?.Dispose();
+            _cursor?.Dispose();
             // 애니메이션 텍스처 해제
             foreach (SpriteAnimation animation in _animations)
             {

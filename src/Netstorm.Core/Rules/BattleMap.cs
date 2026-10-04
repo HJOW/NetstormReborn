@@ -136,7 +136,9 @@ public sealed class BattleMap
 
     /// <summary>발자국이 기존 오브젝트와 한 칸이라도 겹치는지</summary>
     /// <param name="footprint">검사할 발자국</param>
-    public bool IsOccupied(Footprint footprint) => footprint.Cells().Any(_occupied.ContainsKey);
+    /// <param name="ignored">설치가 허용되는 점유자(사제)의 발자국. 겹친 다른 점유자의 수는 그대로 남긴다.</param>
+    public bool IsOccupied(Footprint footprint, IReadOnlyList<Footprint>? ignored = null) =>
+        footprint.Cells().Any(cell => _occupied.GetValueOrDefault(cell) > (ignored?.Count(foot => foot.Contains(cell.X, cell.Y)) ?? 0));
 
     /// <summary>
     /// 유닛 자리를 점유하고 활성 상태이면 공급원도 등록한다. 생산 예약은 도착 후 별도로 공급원을 등록한다.
@@ -211,23 +213,28 @@ public sealed class BattleMap
     /// <param name="stormPower">플레이어의 현재 Storm Power</param>
     /// <param name="playerHasTemple">플레이어에게 이미 템플이 있는지 (건설 중인 템플 포함)</param>
     /// <param name="playerHasAltar">플레이어에게 이미 알타가 있는지 (건설 중인 알타 포함)</param>
+    /// <param name="ignored">건물 설치를 막지 않는 사제 발자국.</param>
     public PlacementCheck CheckBuilding(TypeInfo type, int anchorX, int anchorY, int player, int stormPower, bool playerHasTemple,
-        bool playerHasAltar = false)
+        bool playerHasAltar = false, IReadOnlyList<Footprint>? ignored = null)
     {
         Footprint foot = Footprint.ForType(type.Definition, anchorX, anchorY);
         IslandState island = Ownership.StateFor(TerritoryAt(anchorX, anchorY), player);
         PlacementProblem problem = PlacementRules.CheckBuildingSite(ObjectKinds.Of(type), island, playerHasTemple, playerHasAltar);
-        return Finish(type, foot, island, problem, player, stormPower);
+        // 건물은 기준점뿐 아니라 발자국 전체가 같은 섬의 지면 위에 있어야 한다 (TEST02 가장자리 설치 시험).
+        if (problem == PlacementProblem.None && foot.Cells().Any(cell => TerritoryAt(cell.X, cell.Y) != TerritoryAt(anchorX, anchorY)))
+            problem = PlacementProblem.BuildingNeedsIsland;
+        return Finish(type, foot, island, problem, player, stormPower, ignored);
     }
 
     /// <summary>위치 판정 뒤의 공통 검사(빈 자리 → Storm Power → 에너지)를 하고 결과를 만든다.</summary>
-    private PlacementCheck Finish(TypeInfo type, Footprint foot, IslandState island, PlacementProblem problem, int player, int stormPower)
+    private PlacementCheck Finish(TypeInfo type, Footprint foot, IslandState island, PlacementProblem problem, int player, int stormPower,
+        IReadOnlyList<Footprint>? ignored = null)
     {
         EnergyRequirement requirement = EnergyRequirement.ForType(type.Definition);
         int cost = StormPower.TypeCost(type.Definition);
         EnergyCheck energy = EnergySupply.Check(requirement, _sources, foot, Options.GeneratorRadiusSquared,
             owner => IsFriendly(player, owner));
-        if (problem == PlacementProblem.None && IsOccupied(foot))
+        if (problem == PlacementProblem.None && IsOccupied(foot, ignored))
         {
             problem = PlacementProblem.Occupied;
         }

@@ -24,10 +24,11 @@ capture $OutputDirectory/golem-complete.png; quit;
 "@
     }
     'workshop' = @{
-        Setup = 'construct sunFactory 98,98; wait 60; register sunCannon'
+        # 7×8칸 전체가 섬 안에 들어가는 자리. 이전 (98,98)은 위쪽 발자국이 허공이라 원본 규칙상 불가다.
+        Setup = 'construct sunFactory 109,106; wait 60; register sunCannon'
         Commands = @"
 wait 40; assert briefing; click-center 83,113; wait 20; assert battle; wait 30;
-click 40,275; wait 6; assert placement; assert-detail cursor=suncannon; click 700,340; wait 2;
+click 40,275; wait 6; assert placement; assert-detail cursor=suncannon; click 588,352; wait 2;
 assert-detail suncannon:delivery; assert-detail origin=sunfactory; assert-detail productioncount=1;
 capture $OutputDirectory/cannon-delivery.png;
 wait-detail suncannon:materializing; capture $OutputDirectory/cannon-materializing.png;

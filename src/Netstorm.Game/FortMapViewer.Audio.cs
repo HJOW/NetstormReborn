@@ -6,7 +6,7 @@ namespace Netstorm.Game;
 /// 세션 사건과 화면 조작을 원본 효과음 이름으로 바꿔 모아 둔다. 실제 재생은 게임 본체의 <see cref="AudioPlayer"/> 가 한다.
 /// 사건 ↔ 파일 대응은 exe 의 효과음 호출 위치로 정했다 (docs/exe/music.md 7절):
 /// 다리 칸 제거 FUN_00422300 → bridgeFall.wav, 붕괴 구동 FUN_004227e0 → bridgeCrack.wav,
-/// 건설 완료 FUN_00443e20 → buildDone.wav + 타입의 buildDoneSound(템플 templeComplete.wav · 워크샵 workshopComplete.wav),
+/// TEST02 원본 녹음: 건물 완공은 타입의 buildDoneSound만 (템플 templeComplete.wav · 워크샵 workshopComplete.wav),
 /// 조각 회전 FUN_00446a70 → rotatePiece.wav, 조각 놓기(FUN_004473e0 등) → dropPiece.wav, 창 열기 → openGump.wav.
 /// 원본은 위치에 따라 좌우·크기를 바꾸는 효과음이 있으나 클론은 아직 화면 위치를 반영하지 않는다.
 /// </summary>
@@ -78,12 +78,20 @@ internal sealed partial class FortMapViewer
                 QueueSound("sunFenceImpact.wav");
                 break;
             case SessionEventKind.BuildingCompleted:
-            case SessionEventKind.UnitCompleted:
-                QueueSound(BuildDoneSound);
                 if (_session.Entity(sessionEvent.EntityId)?.Type.Definition.GetString(BuildDoneSoundProperty) is { Length: > 0 } special)
                 {
                     QueueSound(special);
                 }
+                break;
+            case SessionEventKind.UnitCompleted:
+                QueueSound(BuildDoneSound);
+                break;
+            case SessionEventKind.ConstructionOrdered:
+                OnConstructionOrdered(sessionEvent.EntityId);
+                QueueSound(DropPieceSound);
+                break;
+            case SessionEventKind.ConstructionCancelled:
+                OnConstructionCancelled(sessionEvent.EntityId);
                 break;
             case SessionEventKind.BridgePlaced:
                 QueueSound(DropPieceSound);

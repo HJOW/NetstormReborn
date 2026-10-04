@@ -185,6 +185,13 @@ internal sealed partial class FortMapViewer
         {
             // 목적지는 클릭한 곳에 보이는 칸이다. 유닛 그림은 hotFootRatio 때문에 그 칸 안쪽(사제·골렘은 가로 가운데)에 선다.
             (int goalX, int goalY) = CellAt(new Vector2(mouse.X, mouse.Y));
+            // 원본 TEST02: 사제의 허공 클릭은 이동·응답음 없이 선택만 풀고 하던 작업을 유지한다.
+            if (selected.Kind == ObjectKind.Priest && !_session.Bridges.IsIsland(goalX, goalY)
+                && _session.Bridges.At(goalX, goalY) is not { Owner: TestPlayer })
+            {
+                SubmitCommand(new SelectEntityCommand(TestPlayer, 0));
+                return;
+            }
             SubmitCommand(new MoveEntityCommand(TestPlayer, selected.Id, goalX, goalY)); AcknowledgeOrder(selected);
             // 원본은 이동 명령을 내리면(이동할 수 없는 곳이어도) 곧바로 선택이 풀린다 (2026-10-03 자동 분석 녹화).
             SubmitCommand(new SelectEntityCommand(TestPlayer, 0));

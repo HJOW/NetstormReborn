@@ -12,24 +12,24 @@ New-Item -ItemType Directory -Force -Path $taskOutput | Out-Null
 $taskSettings = Join-Path $taskOutput 'settings'
 New-Item -ItemType Directory -Force -Path $taskSettings | Out-Null
 Set-Content -LiteralPath (Join-Path $taskSettings 'settings.json') -Encoding UTF8 -Value '{"WindowWidth":1024,"WindowHeight":768,"ViewHeight":768,"SoundVolume":3,"MusicVolume":2}'
-# 시나리오 이름 → 명령. 사제 우클릭(526,393) → Construct(600,493) → Workshop(745,473) → Sun Workshop(745,458).
-# 건설 하위 창의 줄: Temple(745,456)·Workshop(745,473), 워크샵 하위 창의 줄: Sun(458)·Rain(475)·Wind(492)·Thunder(509).
-# build 는 사제(525,380)에서 약 23칸 떨어진 오른쪽 섬 (900,350)에 짓는다. 사제는 약 13초를 걸은 뒤 약 10초 건설한다.
+# 시나리오 이름 → 명령. 사제 우클릭(526,393) → Construct(577,414) → Workshop(745,431) → Sun Workshop(745,434).
+# 건설 하위 창의 줄: Temple(745,414)·Workshop(745,431), 워크샵 하위 창의 줄: Sun(434)·Wind(455)·Rain(476)·Thunder(497).
+# build 는 사제(525,380)에서 약 23칸 떨어진 섬 오른쪽 (920,470)에 짓는다. 사제는 약 13초를 걸은 뒤 약 10초 건설한다.
 $taskScenarios = [ordered]@{
     'menu' = @"
 wait 40; assert briefing; click-center 83,113; wait 20; assert battle; wait 60;
-right-click 526,393; assert context:main; click 600,493; assert context:construct; capture $OutputDirectory/menu-construct.png;
-click 745,456; assert context:construct;
-click 745,473; assert context:workshops; capture $OutputDirectory/menu-workshops.png;
-click 745,475; assert context:workshops; click 745,492; assert context:workshops; click 745,509; assert context:workshops;
-click 745,458; assert placement; quit;
+right-click 526,393; assert context:main; click 577,414; assert context:construct; capture $OutputDirectory/menu-construct.png;
+click 745,414; assert context:construct;
+click 745,431; assert context:workshops; capture $OutputDirectory/menu-workshops.png;
+click 745,455; assert context:workshops; click 745,476; assert context:workshops; click 745,497; assert context:workshops;
+click 745,434; assert placement; quit;
 "@
     'build' = @"
 wait 40; assert briefing; click-center 83,113; wait 20; assert battle; wait 60;
 assert-detail-not waiting; assert-detail-not building;
-right-click 526,393; assert context:main; click 600,493; assert context:construct; click 745,473; assert context:workshops; click 745,458; assert placement;
-move 900,350; wait 8; assert-detail placement=allowed; capture $OutputDirectory/build-00-preview.png;
-click 900,350; wait 6; assert battle; assert-detail sites=sunfactory:waiting; assert-detail sp=2200; capture $OutputDirectory/build-01-waiting.png;
+right-click 526,393; assert context:main; click 577,414; assert context:construct; click 745,431; assert context:workshops; click 745,434; assert placement;
+move 920,470; wait 8; assert-detail placement=allowed; capture $OutputDirectory/build-00-preview.png;
+click 920,470; wait 6; assert battle; assert-detail sites=sunfactory:waiting; assert-detail sp=2200; capture $OutputDirectory/build-01-waiting.png;
 wait 120; assert-detail sites=sunfactory:waiting; assert-detail :moving; capture $OutputDirectory/build-02-walking.png;
 wait 900; capture $OutputDirectory/build-03-arrived.png;
 wait 4000; assert-detail-not waiting; assert-detail-not building; assert-detail workshops=sunfactory:1; capture $OutputDirectory/build-04-done.png; quit;

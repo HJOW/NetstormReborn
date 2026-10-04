@@ -89,6 +89,25 @@ internal sealed partial class FortMapViewer
     /// <summary>다음 priestForceField.wav 까지 남은 시간(초)</summary>
     private double _forceFieldClock;
 
+    /// <summary>취소된 공사장 그림자를 잠깐 남기는 시간. TEST02 측정 범위 0.2~0.9초 안의 연출 근사다.</summary>
+    private const double CancelledSiteSeconds = 0.35;
+
+    /// <summary>이동으로 건설을 취소했을 때 환불 숫자가 움직이기까지의 관찰값. 실제 자원은 코어에서 즉시 환불한다.</summary>
+    private const double RefundDisplayDelay = 0.85;
+
+    /// <summary>취소 사건이 이미 제거한 공사장을 화면 연출에 쓸 수 있도록 직전 갱신에서 기억한다.</summary>
+    private readonly Dictionary<int, GameEntity> _waitingSites = [];
+
+    /// <summary>이동 취소 뒤 잠깐 남을 그림자와 숫자 환불 지연.</summary>
+    private readonly List<CancelledSiteVisual> _cancelledSites = [];
+
+    /// <summary>이미 환불된 공사장의 화면용 기록. 경제·점유·검사합에는 넣지 않는다.</summary>
+    private sealed record CancelledSiteVisual(GameEntity Site)
+    {
+        /// <summary>취소 뒤 지난 게임 시간(초).</summary>
+        public double Age { get; set; }
+    }
+
     /// <summary>마지막으로 그린 논리 화면 크기 (화면 안 판정용)</summary>
     private Point _viewSize;
 
@@ -122,11 +141,17 @@ internal sealed partial class FortMapViewer
         foreach (FallenObject fallen in _session.DrainFallen()) AddFalling(fallen);
         if (running)
         {
+            // 논리상 취소된 건물은 계속 짓지 않고 그림자·숫자만 관찰된 시간까지 남긴다.
+            foreach (CancelledSiteVisual cancelled in _cancelledSites) cancelled.Age += seconds;
+            _cancelledSites.RemoveAll(cancelled => cancelled.Age >= RefundDisplayDelay);
             // 떨어지는 그림의 나이를 늘리고 다 떨어진 것은 지운다
             foreach (FallingSprite sprite in _falling) sprite.Age += seconds;
             _falling.RemoveAll(sprite => sprite.Age >= sprite.Duration);
         }
         UpdateStormPowerDisplay(seconds, running);
+        _waitingSites.Clear();
+        // 다음 틱의 취소 사건에서 이미 없어진 공사장을 찾을 수 있도록 기억한다.
+        foreach (GameEntity site in _session.Entities.Where(e => e.AwaitingBuilder)) _waitingSites[site.Id] = site;
         // 다음 갱신의 파괴 사건에서 찾을 수 있도록 지금 내 오브젝트를 기억한다
         _myEntities.Clear();
         foreach (GameEntity entity in _session.Entities.Where(e => e.Owner == TestPlayer))
@@ -213,6 +238,9 @@ internal sealed partial class FortMapViewer
     private void UpdateStormPowerDisplay(double seconds, bool running)
     {
         int actual = _session.Player(TestPlayer).StormPower;
+        // 다른 플레이어의 취소는 내 숫자를 늦추지 않는다. 환불 직후 다시 써도 화면 목표를 음수로 내리지 않는다.
+        if (running) actual = Math.Max(0, actual - _cancelledSites.Where(cancelled => cancelled.Site.Owner == TestPlayer).Sum(cancelled => cancelled.Site.Cost));
+        else _cancelledSites.Clear();
         if (_shownStormPower is not int shown || !running)
         {
             _shownStormPower = actual;
@@ -238,6 +266,19 @@ internal sealed partial class FortMapViewer
             _stormPowerBlinks--;
             _stormPowerBlinkClock += StormPowerBlinkSeconds;
         }
+    }
+
+    /// <summary>사제 이동으로 취소된 공사장의 그림자·숫자 지연을 예약한다. 효과음은 추가하지 않는다.</summary>
+    private void OnConstructionCancelled(int id)
+    {
+        if (_waitingSites.TryGetValue(id, out GameEntity? site)) _cancelledSites.Add(new CancelledSiteVisual(site));
+    }
+
+    /// <summary>같은 사제의 새 건설은 사용자 확인 규칙대로 이전 현장과 환불을 즉시 교체한다.</summary>
+    private void OnConstructionOrdered(int id)
+    {
+        if (_session.Entity(id) is { } site)
+            _cancelledSites.RemoveAll(cancelled => cancelled.Site.BuilderId == site.BuilderId);
     }
 
     /// <summary>Storm Power 가 모자라 생산 창 유닛을 집지 못했을 때 숫자를 깜빡인다 (exe 0x43ecc4 → FUN_0043db10).</summary>

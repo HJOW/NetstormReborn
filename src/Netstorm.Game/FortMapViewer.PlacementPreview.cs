@@ -20,7 +20,7 @@ internal sealed partial class FortMapViewer
     private const int PreviewTextGap = 2;
 
     /// <summary>놓을 수 없는 자리(겹침·섬 밖)의 사각형과 채움 색. 녹화의 붉은 사각형.</summary>
-    private static readonly Color PreviewBlockedColor = new(230, 40, 30);
+    private static readonly Color PreviewBlockedColor = Color.Red;
 
     /// <summary>비용 숫자의 색 (녹화의 노란 글자).</summary>
     private static readonly Color PreviewCostColor = new(255, 216, 40);
@@ -75,7 +75,18 @@ internal sealed partial class FortMapViewer
             ? EmplacementDirection.PlacementFrame(type, _cannonRotation) : frames.Body;
         DrawSprite(batch, drawn.LoadIndex, body, bottomRight + shift * _zoom,
             _playerColors.GetValueOrDefault(TestPlayer), tint: blocked ? Color.Salmon : Color.White);
-        if (blocked) batch.Draw(_pixel, rect, PreviewBlockedColor * 0.35f);
+        if (blocked)
+        {
+            // 겹친 칸·지면 밖 칸만 분홍으로 채운다. 부족한 에너지나 도달 불가만으로 발자국 전체를 덮지 않는다.
+            foreach ((int x, int y) in footprint.Cells())
+            {
+                var cell = new Footprint(x, y, 1, 1);
+                if (!_session.Map.IsOccupied(cell) && (!IsBuilding(type) || _session.Bridges.IsIsland(x, y))) continue;
+                Vector2 cellTop = Screen(WorldPixels(x - 1, y - 1), center);
+                batch.Draw(_pixel, new Rectangle((int)MathF.Round(cellTop.X), (int)MathF.Round(cellTop.Y),
+                    (int)(FortMap.CellPixelWidth * _zoom), (int)(FortMap.CellPixelHeight * _zoom)), Color.LightPink * 0.5f);
+            }
+        }
         Outline(batch, rect, blocked ? PreviewBlockedColor : Color.White);
         DrawElementIcons(batch, check, type, rect);
         // 사각형 아래: 안내 글(있으면) 다음 줄에 비용
