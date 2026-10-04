@@ -1,6 +1,6 @@
 # C++ 빌드 (`cpppj/`)
 
-> 2026-10-05 추가 (사용자 결정). **지금은 기초 프로젝트 구조만 있다.** 창을 띄우지 않으며 게임이 실행되지 않는다.
+> 2026-10-05 추가·갱신. **공용 계층 1차 복원 소스가 빌드되고 원본/CD 자산을 읽는다.** 화면·전투·게임 전체 루프·MCP는 아직 구현하지 않았다. [복원 근거·검증](exe/cpp-reconstruction.md).
 
 ## 1. 두 빌드를 함께 개발한다
 
@@ -12,7 +12,7 @@
 | 만드는 방법 | 원본을 분석해 규칙·화면을 새로 구현한다 (클론 코딩) | **기존 게임을 디컴파일한 소스를 토대로 C++ 소스를 다시 만든다** |
 | 빌드 도구 | .NET 10 SDK (`dotnetpj/Netstorm.sln`) | CMake 3.21 이상 + C++20 컴파일러 |
 | 실행 파일 | `NetstormClone` | `NetstormCpp` |
-| 상태 | 캠페인 1-1·1-2 플레이 가능 | 기초 구조 (빌드·테스트만 된다) |
+| 상태 | 캠페인 1-1·1-2 플레이 가능 | 공용 계층 일부 복원, 자산 검사 실행 가능 |
 
 두 빌드가 함께 쓰는 것은 저장소 루트에 그대로 있다.
 
@@ -22,7 +22,7 @@
 * `tools/` — Python 추출·검증 도구, Ghidra 스크립트
 * `analyzeManager/` — 원본 게임 자동 탐험 프로그램. C# 으로 쓴 **분석 도구**라서 `dotnetpj/` 로 옮기지 않았다. `dotnetpj/src/Netstorm.Assets` 를 참조하고, 공통 빌드 설정은 `analyzeManager/Directory.Build.props` 가 `dotnetpj/` 의 것을 가져온다.
 
-목표(AGENTS.md)는 두 빌드가 같다: Windows 10/11 과 GUI 환경의 Linux, 영어·한국어, 풀스크린과 16:9·16:10·4:3, 원본 수준의 프레임을 먼저 맞추고 이후 60·120프레임.
+공통 목표(AGENTS.md)는 영어·한국어, 풀스크린과 16:9·16:10·4:3, 원본 수준의 프레임을 먼저 맞추고 이후 60·120프레임이다. **cpppj는 Windows용으로 개발**하며 Linux 지원은 C# 빌드의 후순위 목표다. C++ 공용 코드의 Linux 빌드는 이식성 검사에 활용할 수 있다.
 
 ## 2. 폴더 구조
 
@@ -74,15 +74,23 @@ ctest --test-dir cpppj/build --build-config Release --output-on-failure
 * 필요한 도구는 `PREPARE.ps1`·`PREPARE.sh` 의 "VS Build Tools 2022 (C++)"(Linux 는 "C++ 빌드 도구")와 "CMake" 항목으로 설치한다.
 * CI(`.github/workflows/ci.yml`)의 `cpp-build-test` 작업이 Windows 와 Ubuntu 에서 위 세 명령을 실행한다.
 
-지금 실행 파일은 빌드 정보만 출력하고 끝난다.
+인자 없이 실행하면 빌드 정보·검사 명령을 표시한다. 원본 게임을 실행하지 않고 복원한 모듈을 사용한다.
 
 ```text
-NetstormCpp (C++ build, skeleton)
+NetstormCpp (reconstructed core; game UI pending)
   reconstructed from: NetStorm 10.78 (decompiled)
-  default maxFPS: 75 (frame interval 0.013333 s)
+  default maxFPS: 75 (frame interval 0.013333 s, 1ms clock: 14 ms)
 ```
 
 단위 테스트는 외부 프레임워크 없이 `cpppj/tests/TestSupport.h` 의 `TEST_CASE`·`CHECK`·`CHECK_NEAR` 만 쓴다. 테스트 파일을 만들어 `cpppj/tests/CMakeLists.txt` 의 목록에 더하면 된다.
+
+```powershell
+cpppj/build/bin/Release/NetstormCpp.exe --inspect-data originals
+cpppj/build/bin/Release/NetstormCpp.exe --inspect-data originalCD
+python tools/cpp_recovery_smoke.py
+```
+
+현재 소스: `BaseFile`·`Config`·`Xlat`·`RiftType`·`BaseProcess`·`Kernel`·`GameClock`, 신규 인코딩·콘솔 계층. 각 모듈의 복원 범위와 미구현 부분은 [C++ 복원 문서](exe/cpp-reconstruction.md)에 있다. CTest는 두 판본의 x86 기계어 기대값 1,806개를 포함한 10개 테스트를 실행한다.
 
 ## 4. 디컴파일한 소스에서 C++ 소스를 만드는 절차
 
@@ -133,4 +141,5 @@ AGENTS.md 의 규칙(한국어 주석, UTF-8, 상수·함수·반복문마다 �
 * **한국어 글꼴.** D2Coding(TTC)을 그리는 방법이 필요하다(C# 빌드는 FontStashSharp 를 쓴다).
 * **원본에 없는 기능을 넣는 방식.** 와이드 화면, 60·120프레임, 전체화면 재실행 오류 수정은 원본 코드에 없다. 다시 만든 코드를 어디서 어떻게 바꿀지는 해당 모듈을 옮길 때 정한다. C# 빌드의 결정(와이드 화면 = 시야 확장, [LEFT_JOBS.md](../LEFT_JOBS.md) 1.7절)을 따르는 것이 기본이다.
 * **옮기는 순서.** 제안: ① `o/` 의 파일·설정 계층(BaseFile·Config·Xlat·StaticString) → ② 데이터 형식(Template·RiftType·DataManager) → ③ 프로세스 커널과 시계(Kernel·BaseProcess) → ④ 플랫폼 계층과 화면(Screen·Renderer) → ⑤ 메인 루프와 입력(ClientMain·UserInput).
+  - 2026-10-05: ① 읽기·원시 설정·번역, ② 프레임 검색, ③ 커널 실행 인터페이스·시계의 일부를 복원했다. 다음은 **Config 치환·`.type`·`.shp`·`.fort` 로더**, SID와 실제 프로세스 클래스, 화면·입력 순이다. 전체 모듈 이식 완료로 보지 않는다.
 * **두 빌드의 결과를 비교하는 방법.** 같은 미션에서 C# 빌드와 C++ 빌드의 동작을 대조하는 도구는 없다.

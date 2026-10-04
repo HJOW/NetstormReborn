@@ -1,5 +1,5 @@
 # NetStorm C++ 빌드 (cpppj/)
-# 기존 게임을 디컴파일한 소스를 토대로 C++ 소스를 다시 만드는 프로젝트다. 지금은 기초 구조만 있다.
+# 기존 게임을 디컴파일한 소스를 토대로 공용 데이터·시간·프로세스 계층을 복원하는 프로젝트다.
 # 설명: README.md, ../docs/cpp-build.md
 cmake_minimum_required(VERSION 3.21)
 

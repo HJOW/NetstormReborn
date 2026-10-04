@@ -6,7 +6,7 @@
 > **함수 수**는 패치판에서 그 파일 이름을 참조하는 함수의 수다([모듈 맵](../docs/exe/modules.md)). 그 파일의 전체 함수 수가 아니다.
 > **상태**는 cpppj 에 그 경로의 파일이 있는지만 본다. 파일이 있어도 일부 함수만 옮긴 것일 수 있다.
 
-## `\Ns\O\` → `src/o/` (75개, 파일 있음 0개)
+## `\Ns\O\` → `src/o/` (75개, 파일 있음 7개)
 
 | cpppj 경로 | 패치판 표기 | CD판 표기 | 함수 수 | 상태 |
 |---|---|---|---|---|
@@ -23,8 +23,8 @@
 | `src/o/AddRandom.cpp` | Addrandom.cpp | addRandom.cpp | 2 |  |
 | `src/o/Ai.cpp` | Ai.cpp | ai.cpp | 15 |  |
 | `src/o/Angle.h` | angle.h | angle.h | 1 |  |
-| `src/o/BaseFile.cpp` | Basefile.cpp | BaseFile.cpp | 6 |  |
-| `src/o/BaseProcess.cpp` | Baseprocess.cpp | BaseProcess.cpp | 5 |  |
+| `src/o/BaseFile.cpp` | Basefile.cpp | BaseFile.cpp | 6 | 있음 |
+| `src/o/BaseProcess.cpp` | Baseprocess.cpp | BaseProcess.cpp | 5 | 있음 |
 | `src/o/BoardCoord.cpp` | Boardcoord.cpp | BoardCoord.cpp | 5 |  |
 | `src/o/Bomb.cpp` | Bomb.cpp | bomb.cpp | 5 |  |
 | `src/o/Bridge.cpp` | Bridge.cpp | bridge.cpp | 6 |  |
@@ -33,7 +33,7 @@
 | `src/o/Carrier.cpp` | Carrier.cpp | carrier.cpp | 13 |  |
 | `src/o/Ch.cpp` | Ch.cpp | ch.cpp | 10 |  |
 | `src/o/ChunkMap.cpp` | Chunkmap.cpp | ChunkMap.cpp | 4 |  |
-| `src/o/Config.cpp` | Config.cpp | config.cpp | 6 |  |
+| `src/o/Config.cpp` | Config.cpp | config.cpp | 6 | 있음 |
 | `src/o/ConfigInterface.cpp` | Configinterface.cpp | ConfigInterface.cpp | 12 |  |
 | `src/o/Connection.cpp` | — | connection.cpp |  |  |
 | `src/o/Construction.cpp` | Construction.cpp | construction.cpp | 3 |  |
@@ -53,7 +53,7 @@
 | `src/o/IslandDropper.cpp` | Islanddropper.cpp | IslandDropper.cpp | 1 |  |
 | `src/o/IslandList.cpp` | Islandlist.cpp | islandList.cpp | 8 |  |
 | `src/o/IsleInfo.cpp` | Isleinfo.cpp | IsleInfo.cpp | 2 |  |
-| `src/o/Kernel.cpp` | Kernel.cpp | Kernel.cpp | 2 |  |
+| `src/o/Kernel.cpp` | Kernel.cpp | Kernel.cpp | 2 | 있음 |
 | `src/o/Mana.cpp` | Mana.cpp | Mana.cpp | 4 |  |
 | `src/o/Markstream.h` | markstream.h | markstream.h | 2 |  |
 | `src/o/Memstream.h` | memstream.h | memstream.h | 22 |  |
@@ -65,8 +65,8 @@
 | `src/o/Player.cpp` | Player.cpp | Player.cpp | 18 |  |
 | `src/o/Regexp.cpp` | Regexp.cpp | regexp.cpp | 8 |  |
 | `src/o/Regular.cpp` | Regular.cpp | regular.cpp | 1 |  |
-| `src/o/RiftType.cpp` | Rifttype.cpp | RiftType.cpp | 14 |  |
-| `src/o/RiftType.h` | rifttype.h | — | 6 |  |
+| `src/o/RiftType.cpp` | Rifttype.cpp | RiftType.cpp | 14 | 있음 |
+| `src/o/RiftType.h` | rifttype.h | — | 6 | 있음 |
 | `src/o/Serverboard.cpp` | Serverboard.cpp | serverboard.cpp | 3 |  |
 | `src/o/Snart.cpp` | Snart.cpp | snart.cpp | 1 |  |
 | `src/o/Spot.cpp` | Spot.cpp | spot.cpp | 2 |  |
@@ -83,7 +83,7 @@
 | `src/o/Unit.h` | unit.h | unit.h |  |  |
 | `src/o/Vortex.cpp` | Vortex.cpp | vortex.cpp | 4 |  |
 | `src/o/WinUtil.cpp` | Winutil.cpp | winUtil.cpp | 5 |  |
-| `src/o/Xlat.cpp` | Xlat.cpp | xlat.cpp | 3 |  |
+| `src/o/Xlat.cpp` | Xlat.cpp | xlat.cpp | 3 | 있음 |
 | `src/o/Ztrans.cpp` | Ztrans.cpp | ztrans.cpp | 12 |  |
 
 ## `.\` (클라이언트) → `src/client/` (60개, 파일 있음 1개)

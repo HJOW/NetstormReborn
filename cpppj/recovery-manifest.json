@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "target": "10.78",
+  "reference": "10.72",
+  "scope": "공용 계층 일부 복원. 게임 전체·화면·전투·MCP는 아직 미구현.",
+  "reviewed_pairs": [
+    {"originals": "0049a9a0", "originalCD": "00444350", "name": "FrameFindNumber", "purge": 12, "evidence": "두 판본의 3바이트 순차 비교, ret 12, x86 차등 검증"},
+    {"originals": "0049a9e0", "originalCD": "00444410", "name": "FrameFindMasked", "purge": 16, "evidence": "movsx 플래그와 test mask, ret 16, 실패 시 assert 없음, x86 차등 검증"},
+    {"originals": "0049aa30", "originalCD": "00444460", "name": "FrameFindFlags", "purge": 12, "evidence": "번호 제외, signed 플래그 정확 비교, ret 12, x86 차등 검증"},
+    {"originals": "0043fd70", "originalCD": "0042a270", "name": "ConfigFindKey", "purge": 0, "evidence": "첫 키 일치 및 LF 줄 이동, x86 차등 검증"},
+    {"originals": "00440150", "originalCD": "0042ab70", "name": "ConfigGetRaw", "purge": 8, "evidence": "따옴표·이스케이프·주석 상태, x86 차등 검증"}
+  ],
+  "rejected_pairs": [
+    {"originals": "0049a9e0", "originalCD": "00444350", "reason": "4인자 마스크 오버로드와 3인자 번호 오버로드가 잘못 대응했다. ret 16/12, 플래그 검사 유무가 다르다."}
+  ],
+  "version_differences": [
+    {"name": "process_capacity", "originals": 39999, "originalCD": 3999, "evidence": "00471950 / 004ed500 및 실행 루프 끝 주소"},
+    {"name": "config_raw_assert_limit", "originals": 8191, "originalCD": 4095, "evidence": "00440150의 0x1ffe 비교 / 0042ab70의 0xffe 비교. 동적 문자열로 대체."}
+  ]
+}

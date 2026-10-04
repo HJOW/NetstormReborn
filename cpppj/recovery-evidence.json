@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "method": "Unicorn x86 32-bit; OS/API execution forbidden",
+  "manifest_sha256": "03196df6ce6be97f4ecf8a43e35a063a77d9ed83f888ff8540b6940273e57ad2",
+  "unicorn_version": "2.1.4",
+  "binary_sha256": {
+    "originals": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+  },
+  "seed": 276303986,
+  "cases": {
+    "FrameFindNumber": 512,
+    "FrameFindMasked": 512,
+    "FrameFindFlags": 512,
+    "Config": 270
+  },
+  "total_cases": 1806,
+  "stubbed": [
+    "ASCII toupper",
+    "ASCII strnicmp",
+    "assert reporting"
+  ],
+  "assert_report_calls": {
+    "originals": 181,
+    "originalCD": 181
+  },
+  "fixture_sha256": "38b6a33f8b25d12b94cf2c0d08d6e4d6b702c74ec6407266db939e1dbe5ec0d7",
+  "limitations": [
+    "게임 전체 실행 검증 아님",
+    "Config CRT는 ASCII 로케일만 검증",
+    "원본 assert UI 미검증",
+    "C++ 검증은 ctest에서 별도로 실행"
+  ]
+}

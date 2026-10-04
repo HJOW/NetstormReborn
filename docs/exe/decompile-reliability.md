@@ -3,6 +3,7 @@
 > 작업일: 2026-10-04~05 (`HJOW-Athlon`, Windows 10, Ghidra 12.1.4, JDK 25). **원본 게임은 실행하지 않았고 원본 파일은 읽기만 했다.**
 > 대상: 패치판 `originals/Netstorm.exe`(10.78)와 CD판 `originalCD/NETSTORM.EXE`(10.72).
 > 결과는 `extracted/refined/` 아래에 생기며 Git 에 커밋되지 않는다. 다른 PC 에서는 아래 명령으로 다시 만든다.
+> 2026-10-05 후속: [CD판 대조·기계어 검증과 C++ 1차 복원](cpp-reconstruction.md). 검토 대응 5쌍, 선택 함수 자료형 복원, x86 기대값 1,806개와 cpppj 소스를 추가했다. 아래 표는 앞선 정밀 분석의 기록이며 현재 대응은 2,495쌍이다.
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools\ghidra\refine_all.ps1   # 두 판본 전부, 약 20분
@@ -237,3 +238,9 @@ decomp_refine.py           : 판본 간 대응 → 대응표·함수 포인터 �
 | `tools/decomp_refine.py` | 판본 간 대응, 힌트, 함수 포인터 표, 등급, 최종 C 파일, `--show`, `--probe` |
 
 이전의 `recover_missing.ps1`·`merge_decomp.py`(읽기 전용 복구와 `Netstorm.all.c` 병합)는 이 파이프라인으로 대체되어 삭제했다.
+
+## 9. 자료형과 동작 의미 검증 (2026-10-05 후속)
+
+`cpppj/recovery-manifest.json`의 검토 대응은 x86 에뮬레이션을 통과한 뒤 자동 매칭에 우선 적용한다. `0049a9e0`↔CD `00444350` 오대응을 금지하고, 실제 같은 마스크 검색인 CD `00444410`을 연결했다. 인자 개수·`ret N`·부호 확장까지 확인해야 C++로 옮길 수 있다는 실제 사례다.
+
+`tools/ghidra/recover_types.ps1`은 두 판본 각 5개 함수에 확인한 구조체·ECX/ESP 인자·반환형을 적용해 `typed-core.c`를 만든다. 정밀 프로젝트를 읽기 전용으로 열어 기존 분석은 저장하지 않는다. `tools/decomp_oracle.py`는 원본 게임 없이 선택 함수의 기계어 결과를 만들고 C++ 단위 검사가 이를 대조한다. 재현 명령·범위·원본 자산 검증은 [후속 문서](cpp-reconstruction.md)에 있다.

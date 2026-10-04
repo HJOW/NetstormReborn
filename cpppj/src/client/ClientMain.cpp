@@ -23,4 +23,9 @@ double FrameIntervalSeconds(int maxFps) {
     return 0.0;
 }
 
+// 새 계산 API: 원본 00436450의 대기를 1ms 눈금 기준으로 표시한다. 양수 나눗셈 올림을 사용한다.
+std::uint32_t QuantizedFrameMilliseconds(int maxFps) {
+    return maxFps > 0 ? (1000u + static_cast<std::uint32_t>(maxFps) - 1u) / static_cast<std::uint32_t>(maxFps) : 0u;
+}
+
 }  // namespace netstorm::client

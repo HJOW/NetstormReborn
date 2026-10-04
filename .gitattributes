@@ -2,3 +2,7 @@
 *.sh text eol=lf
 # 기존 게임 포맷의 인코딩·CRLF·공백을 보존해 Windows 체크아웃에서도 이관 해시와 데이터가 유지되게 한다.
 assets/game-data/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab
+# 기계어 검증 목록·기대값의 SHA-256을 Windows 체크아웃에서도 동일하게 유지한다.
+cpppj/recovery-manifest.json text eol=lf
+cpppj/recovery-evidence.json text eol=lf
+cpppj/tests/fixtures/*.tsv text eol=lf

@@ -1,12 +1,25 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
-> 최종 갱신: 2026-10-05 (**C# 빌드를 `dotnetpj/` 로 옮기고 C++ 빌드 `cpppj/` 기초 구조 추가 — 두 빌드 병행 개발**, [cpp-build.md](docs/cpp-build.md). 클론 화면 루프를 원본 수준의 프레임으로 — AGENTS.md 프레임 목표 변경 반영. 메인 루프 분석 [main-loop.md](docs/exe/main-loop.md), 정밀 디컴파일 [decompile-reliability.md](docs/exe/decompile-reliability.md). 이전 분석·작업 이력 보존)
+> 최종 갱신: 2026-10-05 (**CD판 대조·선택 함수 자료형 복원·x86 차등 검사와 cpppj 공용 계층 1차 복원**, [cpp-reconstruction.md](docs/exe/cpp-reconstruction.md). C#·C++ 병행 개발과 이전 분석·작업 이력 보존)
 > 프로젝트 목표(AGENTS.md): 원본 NetStorm: Islands at War 를 디컴파일/분석하여 클론 코딩하고,
 > **Windows 10/11** 과 **GUI 환경의 Linux** 에서 동작하며 **여러 언어를 지원**하는 게임을 만든다.
 > **모방 범위(2026-10-03 AGENTS.md 변경)**: 기존 게임의 **사운드·그래픽·애니메이션 등 거의 모든 요소를 가능한 한 동일하게** 최대한 모방한다.
 > **1차 목표 언어: 영어, 한국어** (그 외 언어는 이후 확장).
 > **우선순위: Windows 10/11 > Linux** (Linux 지원과 멀티플레이 요소 구현은 우선순위가 낮다 — 설계상 이식성은 유지하되 검증·배포는 Windows 먼저. 그 외 사항은 궁극적인 목표다).
 > **화면 요구사항(2026-09-28 AGENTS.md 추가, 2026-10-03·10-05 변경)**: 풀스크린 모드와 화면비 **16:9 · 16:10 · 4:3** 지원, **기존 게임 수준의 프레임으로 먼저 만들고 이후 60·120프레임 지원**(2026-10-05 변경. 원본 수준 = `maxFPS` 75·14ms 루프, 클론 적용 완료), 풀스크린에서 **마우스를 화면 끝에 대면 화면 이동**(원본도 옵션에서 켰을 때 지원), 원본의 **전체화면 전환 뒤 재실행 오류는 클론에서 발생하지 않아야 한다** — 1.4·1.7절
+
+---
+
+## 2026-10-05 ✅ 완료: CD판 대조·기계어 검증과 cpppj 공용 계층 1차 복원
+
+- [x] **요청:** AGENTS.md·LEFT_JOBS.md를 읽고 디컴파일 신뢰도를 더 높이는 방법을 찾은 뒤 CD판을 참고하여 cpppj C++ 소스 생성. 원본 게임 프로세스는 실행하지 않았으며 AGENTS.md·원본 파일은 수정하지 않았다. 전체 게임 복원 완료를 뜻하지 않는다. [상세 근거·재현·범위](docs/exe/cpp-reconstruction.md).
+- [x] **오대응 수정:** 패치 `0049a9e0` ↔ CD `00444350`은 마스크 검색과 번호 검색의 다른 오버로드였다. 실제 대응은 각각 `00444410`, `0049a9a0`이다. 인자·`ret N`·본문 및 x86 결과로 확인한 5쌍을 `cpppj/recovery-manifest.json`에 기록하고 자동 매칭에 우선 적용한다. 실행 파일·검토 목록 SHA-256이 다르면 재검증하도록 한다.
+- [x] **기계어 차등 검사:** `tools/decomp_oracle.py`, 선택적 의존성 `tools/requirements-decomp-oracle.txt`, Git 포함 기대값 `cpppj/tests/fixtures/original-x86.tsv`, 검증 기록 `cpppj/recovery-evidence.json`. 격리된 Unicorn x86 메모리에서 선택 함수만 에뮬레이션한다. 프레임 검색 3종 각 512개·설정 270개, 총 **1,806개**가 두 판본 및 C++에서 일치. CRT는 ASCII 비교·toupper, assert는 오류 보고만 대체하므로 원본 UI·전체 실행 검증은 아니다.
+- [x] **선택 자료형 복원:** `tools/ghidra/ApplyRecoveredTypes.java`, `recover_types.ps1`. 확인된 필드·ECX/ESP 인자·반환형만 적용해 각 판본 `typed-core.c` 5개 함수를 생성한다. 정밀 프로젝트는 읽기 전용이고 수정 내용을 저장하지 않는다. `object->frameCodes`, `object->frameCount`로 읽힌다.
+- [x] **컴파일되는 C++ 소스:** `cpppj/src/o/`의 `BaseFile`(TAFF/XOR/읽기 VFS)·`Config`(원시 파서)·`Xlat`·`RiftType`(검색)·`BaseProcess`(실행 인터페이스)·`Kernel`·`GameClock`·신규 `OriginalText`, `platform/Console`, `app/main.cpp` 검사 명령. 소스마다 출처·복원 범위를 적었다. UTF-8·한국어 주석을 사용하고 C# 빌드는 수정하지 않았다.
+- [x] **판본 차이 반영:** 커널은 패치 **39,999칸**, CD **3,999칸**이다. 기존 메인 루프 문서의 동일 용량 가정을 정정하고 C++에 패치 값을 적용했다. 설정 원시 값 assert 경계도 8,191/4,095로 다르다. CD `NETSTORM.VER`의 `10.37` 표기만으로 실행 파일 판본을 재판정하지 않았다.
+- [x] **검증:** Windows Release 빌드 오류·경고 0, CTest 내부 **10개 테스트** 통과. `tools/cpp_recovery_smoke.py`로 패치 **246개**·CD **258개**, 합계 **504개 엔트리** 전체 바이트 대조, 실제 번역 각 20개·고유 키 774/759개·임시 디스크 우선 조회 확인. 아카이브 SHA-256 유지. 자동 대응 **2,495쌍**; 수동 정답을 제외한 기존 홀드아웃 **195/198(98.5%)** 유지.
+- **남은 일:** 현재는 화면·게임 전체 루프·전투·오디오·MCP가 없는 **공용 계층 일부 복원 단계**다. Config 객체 스택·치환·저장, `.type`·`.shp`·`.fort` 로더, BaseProcess SID 연결·파생 프로세스, Screen/Renderer/UserInput를 계속 복원한다. 한국어 글꼴·와이드 화면·전체화면과 정확한 60/120프레임은 해당 계층 복원 후 적용한다. 커널·시계는 정적 대조와 단위 검사이며 x86 기대값 대상 확장은 후속이다. Linux 제품 지원은 C++ 목표가 아니다.
 
 ---
 

@@ -19,3 +19,11 @@ TEST_CASE(FrameInterval_ZeroOrNegative_IsUnlimited) {
     CHECK(FrameIntervalSeconds(0) == 0.0);
     CHECK(FrameIntervalSeconds(-1) == 0.0);
 }
+
+// 원본 1ms 눈금의 75·60·120 제한은 14·17·9ms다. 정확한 60·120Hz 지원은 후속이다.
+TEST_CASE(FrameInterval_OriginalClockQuantization_IsPreserved) {
+    CHECK(netstorm::client::QuantizedFrameMilliseconds(75) == 14);
+    CHECK(netstorm::client::QuantizedFrameMilliseconds(60) == 17);
+    CHECK(netstorm::client::QuantizedFrameMilliseconds(120) == 9);
+    CHECK(netstorm::client::QuantizedFrameMilliseconds(0) == 0);
+}

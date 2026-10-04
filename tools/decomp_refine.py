@@ -32,6 +32,8 @@ import bisect
 import collections
 import csv
 import difflib
+import hashlib
+import json
 import math
 import re
 import sys
@@ -299,8 +301,9 @@ def between(sorted_entries, lo, hi):
 class Matcher:
     """두 판본의 함수를 짝짓는다. a 쪽이 패치판, b 쪽이 CD판이다."""
 
-    def __init__(self, a, b):
+    def __init__(self, a, b, use_reviewed=True):
         self.a, self.b = a, b
+        self.use_reviewed = use_reviewed
         # 확정한 대응: a 주소 → (b 주소, 방법, 점수), 역방향 색인
         self.ab = {}
         self.ba = {}
@@ -309,6 +312,35 @@ class Matcher:
         # 판본별 호출 관계: 함수 → 피호출 함수 집합, 함수 → 호출자 집합
         self.callees_a, self.callers_a = call_maps(a)
         self.callees_b, self.callers_b = call_maps(b)
+
+    def apply_reviewed(self):
+        """기계어 차등 검증을 통과한 수동 대응을 우선하고, 확인된 다른 오버로드 대응은 금지한다."""
+        manifest_path = ROOT / 'cpppj/recovery-manifest.json'
+        evidence_path = ROOT / 'cpppj/recovery-evidence.json'
+        if not self.use_reviewed or not manifest_path.exists() or not evidence_path.exists():
+            return 0
+        manifest = json.loads(manifest_path.read_text(encoding='utf-8'))
+        evidence = json.loads(evidence_path.read_text(encoding='utf-8'))
+        if hashlib.sha256(manifest_path.read_bytes()).hexdigest() != evidence.get('manifest_sha256'):
+            raise ValueError('검토 대응 목록이 검증 뒤 변경되었습니다. decomp_oracle.py를 다시 실행하세요.')
+        # 다른 바이너리에 이전 주소의 수동 원형을 적용하지 않는다.
+        for key, expected in evidence['binary_sha256'].items():
+            actual = hashlib.sha256(EDITIONS[key]['exe'].read_bytes()).hexdigest()
+            if actual != expected:
+                raise ValueError('검토 대응의 원본 SHA-256이 다릅니다. decomp_oracle.py로 다시 검증하세요.')
+        # 직접 확인한 오대응은 자동 전파에서도 다시 선택하지 않게 한다.
+        for pair in manifest['rejected_pairs']:
+            self.banned.add((int(pair['originals'], 16), int(pair['originalCD'], 16)))
+        added = 0
+        # 함수 존재와 양쪽 ret N까지 확인한 대응만 강한 앵커로 사용한다.
+        for pair in manifest['reviewed_pairs']:
+            x, y = int(pair['originals'], 16), int(pair['originalCD'], 16)
+            if x not in self.a.funcs or y not in self.b.funcs:
+                raise ValueError(f'검토된 함수가 정밀 결과에 없습니다: {pair["name"]}')
+            if any(int(ed.conv[address]['purge']) != pair['purge'] for ed, address in ((self.a, x), (self.b, y))):
+                raise ValueError(f'검토된 ret N과 덤프가 다릅니다: {pair["name"]}')
+            added += self.accept(x, y, 'reviewed', 1.0)
+        return added
 
     def accept(self, x, y, method, score):
         """한 쌍을 확정한다. 이미 다른 상대와 짝지어졌거나 금지된 쌍이면 무시하고 False."""
@@ -497,7 +529,7 @@ class Matcher:
         doomed = []
         # 전파·이웃으로 확정한 쌍마다 문맥 일치도를 다시 계산한다
         for x, (y, method, _) in self.ab.items():
-            if method in ('name', 'string'):
+            if method in ('name', 'string', 'reviewed'):
                 continue
             shared, total = self.context(x, y)
             if total >= PRUNE_MIN_CONTEXT and shared / total < PRUNE_MAX_RATIO:
@@ -509,6 +541,9 @@ class Matcher:
 
     def run(self, log=print, hide=None):
         """대응 단계를 근거가 강한 순서로 실행한다. hide 는 문자열 앵커에서 숨길 패치판 함수 집합이다."""
+        reviewed = self.apply_reviewed()
+        if reviewed:
+            log(f'  기계어 검토 대응: {reviewed}쌍')
         self.match_names()
         log(f'  이름 일치: {len(self.ab)}쌍')
         before = len(self.ab)
@@ -533,7 +568,7 @@ class Matcher:
     def confidence(self, x):
         """확정한 쌍의 신뢰 수준을 정한다: strong / medium / weak."""
         y, method, _ = self.ab[x]
-        if method in ('name', 'string'):
+        if method in ('name', 'string', 'reviewed'):
             return 'strong'
         shared, total = self.context(x, y)
         if shared >= 3 and shared / total >= 0.6:
@@ -553,13 +588,14 @@ class Matcher:
 
 def holdout_check(a, b, log=print):
     """전파의 정밀도를 잰다: 문자열 앵커의 절반을 숨기고 대응을 돌려, 숨긴 함수가 정답과 같은 상대를 찾는지 본다."""
-    truth = Matcher(a, b)
+    # 수동 정답을 평가에 섞지 않아 기존 자동 매칭 정밀도와 직접 비교할 수 있게 한다.
+    truth = Matcher(a, b, use_reviewed=False)
     truth.match_names()
     truth.match_unique_strings()
     answers = sorted((x, y) for x, (y, method, _) in truth.ab.items() if method == 'string')
     # 주소 순으로 하나 걸러 하나씩 숨긴다 (난수를 쓰지 않아 결과가 재현된다)
     hidden = {x: y for index, (x, y) in enumerate(answers) if index % 2 == 0}
-    trial = Matcher(a, b)
+    trial = Matcher(a, b, use_reviewed=False)
     trial.run(log=lambda *_: None, hide=set(hidden))
     found = right = 0
     by_level = collections.Counter()

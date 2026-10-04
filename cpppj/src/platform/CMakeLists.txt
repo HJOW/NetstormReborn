@@ -4,4 +4,5 @@
 # o/ 와 client/ 의 다시 만든 코드는 OS API 를 직접 부르지 않고 이 계층만 쓴다.
 # 사용할 라이브러리는 아직 정하지 않았다 (../../docs/cpp-build.md 의 "정하지 않은 것").
 target_sources(netstorm PRIVATE
+    Console.cpp Console.h
 )
