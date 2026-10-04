@@ -1,0 +1,7 @@
+<Project>
+  <!--
+    분석 도구는 저장소 루트에 남고 C# 게임 프로젝트는 dotnetpj/ 로 옮겨졌다.
+    MSBuild 는 상위 폴더에서만 Directory.Build.props 를 찾으므로, 게임 프로젝트의 공통 설정(언어 버전·Nullable 등)을 여기서 가져온다.
+  -->
+  <Import Project="../dotnetpj/Directory.Build.props" />
+</Project>

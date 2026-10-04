@@ -31,7 +31,7 @@ def main():
         if any(cell != '.' and not 'A' <= cell <= 'P' for cell in cells):
             raise ValueError(f'잘못된 패턴 셀: {index}')
         patterns.append({'Width': width, 'Height': height, 'Cells': cells})
-    target = root / 'src/Netstorm.Assets/TerritoryPatterns.json'
+    target = root / 'dotnetpj/src/Netstorm.Assets/TerritoryPatterns.json'
     target.write_text(json.dumps(patterns, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     print(f'{len(patterns)}개 패턴 저장: {target}')
 

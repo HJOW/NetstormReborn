@@ -25,8 +25,8 @@
 | 조작 | 주요 원본 키·카메라 저장/복원·Alt/중간 버튼 스크롤, 플레이 입력과 개발 입력 분리, 팝업의 지도 클릭·가장자리 스크롤 차단 | `FortMapViewer.InputControls.cs`, `FortMapViewer.Bridges.cs`, `FortMapViewer.Session.cs`, `DisplayManager.cs` |
 | 검사 도구 | 클론 내부 키·우클릭·드래그 입력, 상태 확인·PNG 저장, 메뉴/미션/워크샵 검사 모드 | `UiAutomation.cs`, `tools/clone_help_options_smoke.ps1`, `tools/clone_ui_smoke.ps1` |
 
-표의 `Assets/`·`Core/` 접두사는 각각 `src/Netstorm.Assets/`·`src/Netstorm.Core/`를 가리킨다.
-접두사가 없는 C# 파일은 `src/Netstorm.Game/` 아래에 있다.
+표의 `Assets/`·`Core/` 접두사는 각각 `dotnetpj/src/Netstorm.Assets/`·`dotnetpj/src/Netstorm.Core/`를 가리킨다.
+접두사가 없는 C# 파일은 `dotnetpj/src/Netstorm.Game/` 아래에 있다.
 README와 [조작키 안내](../gameplay/input-controls.md), [캠페인 1-1 안내](../gameplay/campaign-one.md),
 [클론 UI 문서](../screens/clone-ui.md)도 갱신했다.
 
@@ -34,10 +34,10 @@ README와 [조작키 안내](../gameplay/input-controls.md), [캠페인 1-1 안�
 
 | 파일 | 검사 대상 |
 | --- | --- |
-| `tests/Netstorm.Assets.Tests/HelpDocumentTests.cs` | 앵커 별칭·중복의 첫 정의, info 메타데이터, 링크·그림·미션 조건문·인라인 공백, Back/스크롤, 실제 원본 127개 목적지와 녹화의 목차 링크 |
-| `tests/Netstorm.Core.Tests/PcmChannelsTests.cs` | 좌·우 PCM 표본 교환·재교환·잘못된 버퍼 거부, 새 음향 설정 저장과 이전 파일 기본값 |
-| `tests/Netstorm.Core.Tests/CampaignOneTests.cs` | Sun Workshop의 800 SP 차감, 업그레이드 뒤 등록, 다른 소유자의 명령 거부와 잔액 유지 |
-| `tests/Netstorm.Core.Tests/GameRuleTests.cs` | Golem의 Available 제외·등록 거부·칸 유지, 기존 원소·중복·슬롯·파괴 후 재등록 규칙 |
+| `dotnetpj/tests/Netstorm.Assets.Tests/HelpDocumentTests.cs` | 앵커 별칭·중복의 첫 정의, info 메타데이터, 링크·그림·미션 조건문·인라인 공백, Back/스크롤, 실제 원본 127개 목적지와 녹화의 목차 링크 |
+| `dotnetpj/tests/Netstorm.Core.Tests/PcmChannelsTests.cs` | 좌·우 PCM 표본 교환·재교환·잘못된 버퍼 거부, 새 음향 설정 저장과 이전 파일 기본값 |
+| `dotnetpj/tests/Netstorm.Core.Tests/CampaignOneTests.cs` | Sun Workshop의 800 SP 차감, 업그레이드 뒤 등록, 다른 소유자의 명령 거부와 잔액 유지 |
+| `dotnetpj/tests/Netstorm.Core.Tests/GameRuleTests.cs` | Golem의 Available 제외·등록 거부·칸 유지, 기존 원소·중복·슬롯·파괴 후 재등록 규칙 |
 | `tools/clone_help_options_smoke.ps1 -Mode Menu` | F1·링크·Esc·드래그·Back/OK, 옵션 마크 확인용 캡처, 음량·Speaker Swap·Sound On 저장 값 확인 |
 | `tools/clone_help_options_smoke.ps1 -Mode Mission` | F2/F7, 사제 건설 팝업, 미션 도움말/옵션, F6 지식 상세창 복귀, Shift+F9 정지/재개 |
 | `tools/clone_help_options_smoke.ps1 -Mode Workshop` | 워크샵 완공, Rain Generator·Whirlibase 등록, Available/Current Production·생산 사이드바·Cost 메뉴의 상태 확인과 캡처 |
@@ -71,9 +71,9 @@ GUI 검사는 클론 실행 창을 만들지만 OS의 다른 창에 클릭·키 
 아래 명령은 보류된 검증의 재개용이며 **현재 실행하지 않았다**.
 
 ```powershell
-dotnet build Netstorm.sln -c Release
-dotnet test tests/Netstorm.Assets.Tests/Netstorm.Assets.Tests.csproj -c Release
-dotnet test tests/Netstorm.Core.Tests/Netstorm.Core.Tests.csproj -c Release
+dotnet build dotnetpj/Netstorm.sln -c Release
+dotnet test dotnetpj/tests/Netstorm.Assets.Tests/Netstorm.Assets.Tests.csproj -c Release
+dotnet test dotnetpj/tests/Netstorm.Core.Tests/Netstorm.Core.Tests.csproj -c Release
 
 powershell -File tools/clone_help_options_smoke.ps1 -Mode Menu -OutputDirectory extracted/screens/ui-handoff-20261002/menu
 powershell -File tools/clone_help_options_smoke.ps1 -Mode Mission -OutputDirectory extracted/screens/ui-handoff-20261002/mission

@@ -34,7 +34,7 @@
 
 ### 원본 해석 규칙 (Xlat.cpp 정적 분석, 2026-09-28)
 
-클론 구현: `src/Netstorm.Assets/XlatTable.cs`
+클론 구현: `dotnetpj/src/Netstorm.Assets/XlatTable.cs`
 
 * 파일 경로: `d` + `xlat.<언어>` (파일 조회 순서는 [vfs.md](vfs.md)). 읽은 뒤 파일 전체에서 **CR 을 지운다**.
 * 줄의 **첫 글자**만 본다 (FUN_004de260):
@@ -47,7 +47,7 @@
 * 언어 표 (VA 0x5435b8): 0 `english`, 1 `english`(영국 영어), 2 `french`, 3 `german`, 4 `spanish`, 5 `japanese`, 6 `portuguese`.
   `currentLanguage` 값을 이 표에서 찾고 없으면 0번을 쓴다 (FUN_004de420). 첫 실행 시에는 `GetUserDefaultLangID` 로 고른다 (FUN_004de390).
 * FUN_004dea00 은 `xlat.german`(3), `xlat.english`(1), `xlat.portuguese`(6) 세 개만 명시적으로 불러온다. french·spanish 를 불러오는 경로는 확인하지 못함.
-* 클론 언어 목록은 `src/Netstorm.Assets/GameLanguage.cs` — 원본 언어에 `korean` 을 더하고, 언어별 파일이 없으면 영어 파일로 대체한다(원본은 대체하지 않음).
+* 클론 언어 목록은 `dotnetpj/src/Netstorm.Assets/GameLanguage.cs` — 원본 언어에 `korean` 을 더하고, 언어별 파일이 없으면 영어 파일로 대체한다(원본은 대체하지 않음).
 
 ## 2. `config.<언어>` — 용어 치환표 및 UI 설정
 

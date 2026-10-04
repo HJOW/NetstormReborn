@@ -89,7 +89,7 @@ dotnet build analyzeManager/AnalyzeManager.csproj -c Release
 dotnet test analyzeManager/tests/AnalyzeManager.Tests.csproj
 ```
 
-실행 파일은 `analyzeManager/bin/Release/net10.0-windows/Netstorm.AnalyzeManager.exe`다. `Netstorm.sln`에는 Windows 전용 도구를 추가하지 않았다.
+실행 파일은 `analyzeManager/bin/Release/net10.0-windows/Netstorm.AnalyzeManager.exe`다. `dotnetpj/Netstorm.sln`에는 Windows 전용 도구를 추가하지 않았다.
 
 ## Linux(Wine)에서 사용
 

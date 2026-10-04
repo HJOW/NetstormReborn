@@ -64,7 +64,7 @@ Options의 Auto-Demo 행은 시험 앞부분에서 한 번 눌러 끄고 시작�
 
 | 원본 규칙 | 클론 구현 |
 |---|---|
-| 누름·뗌·끌기·바깥 뗌·재진입 | [`ButtonGump`](../../src/Netstorm.Core/Rules/ButtonGump.cs) (순수 규칙, 단위 테스트 19건 [`ButtonGumpTests`](../../tests/Netstorm.Core.Tests/ButtonGumpTests.cs): 판정 경계 x 434/435/509/510·y 333/334/353/354 포함) |
+| 누름·뗌·끌기·바깥 뗌·재진입 | [`ButtonGump`](../../dotnetpj/src/Netstorm.Core/Rules/ButtonGump.cs) (순수 규칙, 단위 테스트 19건 [`ButtonGumpTests`](../../dotnetpj/tests/Netstorm.Core.Tests/ButtonGumpTests.cs): 판정 경계 x 434/435/509/510·y 333/334/353/354 포함) |
 | 눌린 모양·글자 1px | `OriginalUiSkin.Button(…, pressed)` — 호버/키보드 표시 삭제 |
 | 판정 영역 +1px(아래) | `OriginalUiSkin.Hit`, `ButtonHitExtraHeight = 1` |
 | 소리 | 돌 버튼은 누를 때 `button.wav`, 목록 행은 누를 때 `openSubGump.wav`(+`>`는 `openGump.wav`) |

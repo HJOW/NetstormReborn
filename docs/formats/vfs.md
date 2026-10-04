@@ -3,7 +3,7 @@
 > 분석 상태: **정적 분석 완료** (2026-09-28). 동적 검증은 아직 하지 않음
 > 근거: `Basefile.cpp`(FUN_0041b4c0 파일 열기, FUN_0041ab10 존재 검사, FUN_0041a240 아카이브 내 이름 검색),
 > `Configinterface.cpp`(디컴파일 46,760~46,900행: 데이터 폴더 결정·아카이브 등록)
-> 클론 구현: `src/Netstorm.Assets/GameFileSystem.cs`
+> 클론 구현: `dotnetpj/src/Netstorm.Assets/GameFileSystem.cs`
 
 ## 1. 시작 시 준비
 
@@ -49,7 +49,7 @@
 * `Find("d/offical*.english")`: 파일 이름 부분의 `*`·`?` 와일드카드로 디스크와 아카이브를 함께 검색 (원본 `guideSpec = "{DataDir}\offical*.{currentLanguage}"` 용).
 * 텍스트는 `OriginalText.Decode` 로 읽는다: UTF-8(BOM 또는 올바른 UTF-8) → 그대로, 그 밖에는 Windows-1252.
   원본 파일은 Windows-1252, 클론에서 새로 만드는 한국어 파일은 UTF-8 이다.
-* 검사: `tests/Netstorm.Assets.Tests/TextResourceTests.cs` — 합성 아카이브로 우선순위 확인, 원본에서 공식 미션(아카이브)·팔레트(디스크) 조회 확인.
+* 검사: `dotnetpj/tests/Netstorm.Assets.Tests/TextResourceTests.cs` — 합성 아카이브로 우선순위 확인, 원본에서 공식 미션(아카이브)·팔레트(디스크) 조회 확인.
 * 2026-09-28 후속: `GameResources`를 통해 게임 실행 프로젝트의 설정·팔레트·셰이프·타입·맵 조회에 연결했다.
   타입의 느슨한 파일 우선순위와 UTF-8 속성도 검사했다. [실행 자산·설정·언어 연결](../runtime-resources.md)
 

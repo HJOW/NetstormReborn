@@ -79,5 +79,5 @@
 - 2026-10-02: `SacrificeTests`에 룬별 마크·지키기·간격 시간표(`Ritual_RuneScheduleMatchesRecordedMarkWardAndGap`)와 희생 음악 단계 판정(`SacrificeMusicStage_StartsAfterFirstBurnAndEndsWithAltar`)을 추가했다. 전체 Core 테스트 결과는 LEFT_JOBS 최신 절을 따른다.
 - `SacrificeTests` 13개(2026-10-01 기준): 기절 전 포획 거부, 포획·운반·의식 시작, 룬 타임라인과 승리 판정 지연·완료 보상 5,000 SP, 구조 미션의 포획·구출 안내, 수송 파괴 구출, 다리가 끊겼을 때 내려놓기 대기·복구 재개, 희생된 사제 제거 시 선택 해제, **사제 이탈 시 마크 뒤 룬 완료·복귀 대기**, **마크 전 이탈 시 룬 취소·재음성**, **알타가 크게 다쳐도 포로 유지·파괴될 때만 해방**, **의식 사제 기절 시 멈춤·포로 유지**, 결정론.
 - 후속 이동·낙하 회귀 검사 **19개**(`MovementPathingTests` 4·`GroundSupportTests` 15) 포함, 전체 테스트 **403개 통과**(Assets 187·Core 216). 원본 실행 없이 검사했다.
-- `dotnet build Netstorm.sln -c Release --no-restore` 성공. 현재 클린 빌드에서 기존 `TextResourceTests.cs`의 CA2014 경고 1개가 발생했다.
+- `dotnet build dotnetpj/Netstorm.sln -c Release --no-restore` 성공. 현재 클린 빌드에서 기존 `TextResourceTests.cs`의 CA2014 경고 1개가 발생했다.
 - 이 의식 구현의 전체 GUI 동작은 검증하지 않았다. 후속 Windows 클론 GUI 검사에서 받침 회수 전후 화면만 확인했다. 적 수가 여럿인 미션에서 다른 적 사제가 남았을 때의 음악 복귀, 비행 수송의 이륙·착륙, 시각 효과와 전체 캠페인 결과 창은 후속 검증 대상이다.

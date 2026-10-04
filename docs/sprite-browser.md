@@ -6,9 +6,9 @@
 저장소 루트에서 실행한다.
 
 ```powershell
-dotnet run --project src/Netstorm.Game -- --sprites isle
-dotnet run --project src/Netstorm.Game -- --sprites fringe
-dotnet run --project src/Netstorm.Game -- --sprites island
+dotnet run --project dotnetpj/src/Netstorm.Game -- --sprites isle
+dotnet run --project dotnetpj/src/Netstorm.Game -- --sprites fringe
+dotnet run --project dotnetpj/src/Netstorm.Game -- --sprites island
 ```
 
 `--sprites` 뒤에는 `TypeLoadOrder`에 있는 타입 이름을 넣는다. 이름의 대소문자는 구분하지 않는다.
@@ -53,10 +53,10 @@ dotnet run --project src/Netstorm.Game -- --sprites island
 자동 캡처 예시:
 
 ```powershell
-dotnet run --project src/Netstorm.Game -- --sprites isle --screenshot extracted/terrain/sprite-browser-isle.png
-dotnet run --project src/Netstorm.Game -- --sprites dude --frame 8 --play --screenshot extracted/screens/sprite-play-dude.png
-dotnet run --project src/Netstorm.Game -- --sprites priest --props --screenshot extracted/screens/sprite-props-priest.png
-dotnet run --project src/Netstorm.Game -- --sprites sunCannon --frame 16 --palette suncannon --screenshot extracted/screens/sprite-palette-suncannon.png
+dotnet run --project dotnetpj/src/Netstorm.Game -- --sprites isle --screenshot extracted/terrain/sprite-browser-isle.png
+dotnet run --project dotnetpj/src/Netstorm.Game -- --sprites dude --frame 8 --play --screenshot extracted/screens/sprite-play-dude.png
+dotnet run --project dotnetpj/src/Netstorm.Game -- --sprites priest --props --screenshot extracted/screens/sprite-props-priest.png
+dotnet run --project dotnetpj/src/Netstorm.Game -- --sprites sunCannon --frame 16 --palette suncannon --screenshot extracted/screens/sprite-palette-suncannon.png
 ```
 
 `--screenshot`의 상위 폴더는 미리 있어야 한다. 캡처는 0.5초(30 × 1/60초) 뒤에 찍으므로 `--play` 캡처는 동작이 몇 프레임 진행된 화면이다.

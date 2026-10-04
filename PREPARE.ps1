@@ -250,8 +250,8 @@ $Items = @(
         }
     }
     [pscustomobject]@{
-        Name = 'VS Build Tools 2022 (C++)'; Group = '선택'; Default = $false
-        Description = 'MSVC 컴파일러, Windows SDK (C# 확정으로 현재 불필요)'
+        Name = 'VS Build Tools 2022 (C++)'; Group = '권장'; Default = $false
+        Description = 'MSVC 컴파일러, Windows SDK (C++ 빌드 cpppj/ 용)'
         Check   = { $path = Get-VcToolsInstance; if ($path) { $path } }
         Install = {
             $workload = '--add Microsoft.VisualStudio.Workload.VCTools --includeRecommended'
@@ -270,14 +270,14 @@ $Items = @(
         }
     }
     [pscustomobject]@{
-        Name = 'CMake'; Group = '선택'; Default = $false
-        Description = '빌드 시스템 생성기 (C# 확정으로 현재 불필요)'
+        Name = 'CMake'; Group = '권장'; Default = $false
+        Description = '빌드 시스템 생성기 (C++ 빌드 cpppj/ 용, 3.21 이상)'
         Check   = { if (Test-Command cmake) { Get-FirstLine 'cmake --version' } }
         Install = { Install-WingetPackage 'Kitware.CMake' }
     }
     [pscustomobject]@{
         Name = 'Ninja'; Group = '선택'; Default = $false
-        Description = '빌드 실행기 (C# 확정으로 현재 불필요)'
+        Description = '빌드 실행기 (C++ 빌드 cpppj/ 의 ninja 프리셋용)'
         Check   = { if (Test-Command ninja) { 'ninja ' + (Get-FirstLine 'ninja --version') } }
         Install = { Install-WingetPackage 'Ninja-build.Ninja' }
     }
@@ -362,7 +362,7 @@ $Items = @(
     }
     [pscustomobject]@{
         Name = 'vcpkg'; Group = '선택'; Default = $false
-        Description = "C++ 라이브러리 관리자 ($ToolsDir 에 설치, C# 확정으로 현재 불필요)"
+        Description = "C++ 라이브러리 관리자 ($ToolsDir 에 설치, C++ 빌드에서 아직 쓰지 않음)"
         Check   = { $dir = Get-VcpkgDir; if ($dir) { $dir } }
         Install = {
             if (-not (Test-Command git)) { throw 'Git 이 없습니다. Git 항목을 먼저 설치하세요.' }

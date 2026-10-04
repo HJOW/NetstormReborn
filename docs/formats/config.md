@@ -46,7 +46,7 @@
 
 ## 설정 조회 규칙 (Config.cpp 정적 분석, 2026-09-28)
 
-클론 구현: `src/Netstorm.Assets/ConfigText.cs` (조회), `ConfigStore.cs` (층·치환)
+클론 구현: `dotnetpj/src/Netstorm.Assets/ConfigText.cs` (조회), `ConfigStore.cs` (층·치환)
 실행 프로젝트 연결: [`GameResources`의 설정 구성](../runtime-resources.md) — options → setup을 한 텍스트에
 이어 붙여 첫 일치 우선 규칙을 유지하고, 언어 용어표·선택 언어·미션 머리 값 공급자를 연결한다.
 

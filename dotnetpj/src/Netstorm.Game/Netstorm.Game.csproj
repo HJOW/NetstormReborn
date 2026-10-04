@@ -9,7 +9,7 @@
     <!-- MonoGame 의 네이티브 라이브러리(SDL2, OpenAL)는 NuGet 패키지가 출력 폴더에 복사한다 -->
     <TieredPGO>true</TieredPGO>
     <!-- 클론에서 직접 관리하는 데이터 소스. 빌드에는 분석용 originals/ 를 사용하지 않는다. -->
-    <GameDataSourceDirectory>$(MSBuildProjectDirectory)/../../assets/game-data</GameDataSourceDirectory>
+    <GameDataSourceDirectory>$(MSBuildProjectDirectory)/../../../assets/game-data</GameDataSourceDirectory>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.DesktopGL" />
@@ -21,7 +21,7 @@
   </ItemGroup>
   <ItemGroup>
     <!-- 한국어 글꼴 D2Coding (SIL OFL 1.1) 을 출력 폴더의 fonts/ 로 복사 -->
-    <None Include="..\..\fonts\D2Coding-Ver1.3.2-20180524-all.ttc" Link="fonts\D2Coding-Ver1.3.2-20180524-all.ttc">
+    <None Include="..\..\..\fonts\D2Coding-Ver1.3.2-20180524-all.ttc" Link="fonts\D2Coding-Ver1.3.2-20180524-all.ttc">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </None>

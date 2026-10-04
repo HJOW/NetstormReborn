@@ -1,12 +1,32 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
-> 최종 갱신: 2026-10-05 (클론 화면 루프를 원본 수준의 프레임으로 — AGENTS.md 프레임 목표 변경 반영. 메인 루프 분석 [main-loop.md](docs/exe/main-loop.md), 정밀 디컴파일 [decompile-reliability.md](docs/exe/decompile-reliability.md). 이전 분석·작업 이력 보존)
+> 최종 갱신: 2026-10-05 (**C# 빌드를 `dotnetpj/` 로 옮기고 C++ 빌드 `cpppj/` 기초 구조 추가 — 두 빌드 병행 개발**, [cpp-build.md](docs/cpp-build.md). 클론 화면 루프를 원본 수준의 프레임으로 — AGENTS.md 프레임 목표 변경 반영. 메인 루프 분석 [main-loop.md](docs/exe/main-loop.md), 정밀 디컴파일 [decompile-reliability.md](docs/exe/decompile-reliability.md). 이전 분석·작업 이력 보존)
 > 프로젝트 목표(AGENTS.md): 원본 NetStorm: Islands at War 를 디컴파일/분석하여 클론 코딩하고,
 > **Windows 10/11** 과 **GUI 환경의 Linux** 에서 동작하며 **여러 언어를 지원**하는 게임을 만든다.
 > **모방 범위(2026-10-03 AGENTS.md 변경)**: 기존 게임의 **사운드·그래픽·애니메이션 등 거의 모든 요소를 가능한 한 동일하게** 최대한 모방한다.
 > **1차 목표 언어: 영어, 한국어** (그 외 언어는 이후 확장).
 > **우선순위: Windows 10/11 > Linux** (Linux 지원과 멀티플레이 요소 구현은 우선순위가 낮다 — 설계상 이식성은 유지하되 검증·배포는 Windows 먼저. 그 외 사항은 궁극적인 목표다).
 > **화면 요구사항(2026-09-28 AGENTS.md 추가, 2026-10-03·10-05 변경)**: 풀스크린 모드와 화면비 **16:9 · 16:10 · 4:3** 지원, **기존 게임 수준의 프레임으로 먼저 만들고 이후 60·120프레임 지원**(2026-10-05 변경. 원본 수준 = `maxFPS` 75·14ms 루프, 클론 적용 완료), 풀스크린에서 **마우스를 화면 끝에 대면 화면 이동**(원본도 옵션에서 켰을 때 지원), 원본의 **전체화면 전환 뒤 재실행 오류는 클론에서 발생하지 않아야 한다** — 1.4·1.7절
+
+---
+
+## 2026-10-05 (`HJOW-Athlon`, Windows 10, 원본 실행 없음) ✅ 완료: C# 프로젝트를 `dotnetpj/` 로 이동 · C++ 빌드 `cpppj/` 기초 구조
+
+- [x] **요청:** "C#+Mono 빌드와 C++ 빌드를 병행 개발한다. 루트의 C#+Mono 프로젝트를 `dotnetpj` 안으로 옮긴다(닷넷 프로젝트 관련 파일만). `cpppj` 에는 기존 게임을 디컴파일한 소스를 토대로 만드는 C++ 빌드가 들어간다 — 문서에 반영하고 기초 프로젝트 구조만 만든다." 원본 게임은 실행하지 않았다. **커밋하지 않았다.**
+- [x] **닷넷 프로젝트 이동(`git mv`, 이력 보존):** `src/` → `dotnetpj/src/`, `tests/` → `dotnetpj/tests/`, `Netstorm.sln`·`Directory.Build.props`·`Directory.Packages.props`·`global.json` → `dotnetpj/`. 옮기기 전에 `src`·`tests` 아래의 `bin`·`obj` 를 지웠다.
+  - 경로 수정: `Netstorm.Game.csproj` 의 `assets/game-data`·`fonts` 상대 경로(한 단계 깊어짐), 스모크 스크립트 10종(`tools/clone_*_smoke.ps1`)의 exe 경로, `tools/terrain_mask.py`·`tools/territory_patterns.py`, 문서 28개의 `src/Netstorm.*`·`tests/Netstorm.*`·`Netstorm.sln` 표기, CI.
+  - **옮기지 않은 것:** `analyzeManager/`(원본 게임 자동 탐험 프로그램 — C# 이지만 게임 프로젝트가 아니라 분석 도구이고 AGENTS.md 가 이름으로 가리킨다), `assets/`·`fonts/`·`docs/`·`tools/`(두 빌드가 함께 쓴다). analyzeManager 는 `dotnetpj/src/Netstorm.Assets` 를 참조하도록 고쳤고, 새 `analyzeManager/Directory.Build.props` 가 `dotnetpj/Directory.Build.props` 를 가져온다(MSBuild 는 상위 폴더만 찾기 때문).
+  - **주의:** `global.json` 이 `dotnetpj/` 로 갔으므로 저장소 루트에서 실행한 `dotnet` 명령(`dotnet build dotnetpj/Netstorm.sln`, analyzeManager 빌드)은 SDK 버전 고정을 받지 않고 설치된 최신 SDK 를 쓴다. 고정이 필요하면 `dotnetpj/` 에서 실행한다(CI 는 그렇게 한다).
+- [x] **C++ 빌드 기초 구조(`cpppj/`):** CMake 3.21 이상·C++20, 외부 라이브러리 없음. 폴더는 원본 exe 의 assert 문자열에 남은 원본 소스 트리를 따른다 — `src/o/`(원본 `\Ns\O\`), `src/client/`(원본 클라이언트 폴더), `src/zacket/`(원본 `\Ns\Zacket\`), 새로 쓰는 `src/platform/`·`src/app/`, `tests/`. 정적 라이브러리 `netstorm` + 실행 파일 `NetstormCpp` + 테스트 `netstorm_tests`(ctest). 프리셋 `vs2022`·`ninja`.
+  - 들어 있는 코드는 주석 규칙의 견본 하나뿐이다: `src/client/ClientMain.cpp` 의 `FrameIntervalSeconds`(원본 `FUN_00435220` 의 `maxFPS` 기본 75 → 간격 `1.0 / maxFPS`). 실행 파일은 빌드 정보만 출력한다. **창·게임 로직은 없다.**
+  - `tools/cpp_source_map.py` → [cpppj/SOURCE_MAP.md](cpppj/SOURCE_MAP.md): 두 판본 exe 의 assert 문자열에서 원본 소스 파일 **136개**(공용 75·클라이언트 60·Zacket 1)를 모아 cpppj 경로와 짝지은 표. CD판에 원래 대소문자(`ClientMain.cpp`·`RiftType.cpp`)가 남아 있어 그 표기를 파일 이름으로 쓴다.
+- [x] **문서:** 새 [docs/cpp-build.md](docs/cpp-build.md)(두 빌드의 관계, 폴더 구조, 빌드 방법, 디컴파일 결과에서 C++ 소스를 만드는 절차, 출처 주석·32비트→64비트 규칙, 정하지 않은 것), `cpppj/README.md`, `README.md`·`README.en.md`("프로젝트 구성" 절과 C++ 빌드 명령), 이 문서의 2·3절, `PREPARE.ps1`·`PREPARE.sh`(C++ 도구 설명을 "C# 확정으로 현재 불필요"에서 "C++ 빌드 cpppj/ 용"으로, 컴파일러·CMake 는 권장 항목으로 — 기본 선택 여부는 그대로), `.gitignore`(`/cpppj/build/`), CI(`dotnet-build-test`·`cpp-build-test` 두 작업).
+- **검증(이 PC):** `dotnetpj/` 에서 `dotnet build` 오류 0, 단위 테스트 **803개 통과**(Assets 262 + Core 541), 루트에서 analyzeManager 와 그 테스트 프로젝트 빌드 오류 0, 클론 스모크 검사 10종(`tools/clone_*_smoke.ps1`) **전부 통과**. `cpppj` 는 Visual Studio 18(기본 생성기)과 `vs2022` 프리셋으로 구성·빌드·`ctest` 통과(경고 0). WSL(Ubuntu 26.04, GCC 15.2)에서 `g++ -std=c++20 -Wall -Wextra -Wpedantic` 로 직접 컴파일해 실행 파일과 테스트가 경고 없이 돌았다.
+  - **확인하지 못한 것:** Linux 에서 **CMake 로** 구성·빌드하는 것(이 PC 의 WSL 에 cmake·ninja 가 없다)과 고친 CI(`dotnet-build-test`·`cpp-build-test`)는 실행해 보지 못했다 — 첫 푸시 때 CI 결과를 확인한다.
+- **남은 것 (C++ 빌드)** — [cpp-build.md](docs/cpp-build.md) 6절
+  1. 플랫폼 계층의 라이브러리(창·화면·입력·소리)와 외부 라이브러리를 가져오는 방법을 정한다.
+  2. 옮기는 순서를 정한다. 제안: `o/` 의 파일·설정 계층(BaseFile·Config·Xlat) → 데이터 형식(Template·RiftType) → 프로세스 커널과 시계(Kernel·BaseProcess) → 화면(Screen·Renderer) → 메인 루프와 입력(ClientMain·UserInput).
+  3. 한국어 글꼴 그리기, 원본에 없는 기능(와이드 화면·60/120프레임·전체화면 재실행 오류 수정)을 다시 만든 코드에 넣는 방식.
 
 ---
 
@@ -110,7 +130,7 @@
 - [x] **검증:** Release 빌드 성공. 전체 단위 테스트 **Core 521 + Assets 262 = 783개**, 실패·건너뜀 0. 사제 위 설치·소수 픽셀 정수 변환 단언을 보강한 뒤 ConstructionTests/PlacementCursorTests 38개도 통과. TEST02 한국어·영어 각각 **54개**, 합계 **108개**(언어별 커서 27·취소 12·건설 15) 단언과 실제 SDL 현재 커서 핸들 확인, 기존 건설 27·이동 22·전투 56·생산 19개, TEST01 영어/한국어·4:3/16:9/16:10 네 구성 96개, 일반 UI·전체화면 왕복/설정 저장·도움말/옵션 검사 통과. 전체 재빌드 시 기존 Assets 테스트의 CA2014 경고는 남아 있다.
 - [x] **자산·도구·문서:** TEST02 맵 2개와 커서 5개를 클론 자산에 복사하고 SHA-256 원본 일치를 확인. 새 `tools/clone_test02_smoke.ps1`은 언어 선택을 지원하며 검사 좌표도 실제 7×8 지면 규칙으로 보정했다. 입력·건설·타입·영상 색인·자산 출처 문서를 갱신했다. PNG/로그는 Git 제외 `extracted/screens/test02-implementation/`에 있다. 사용자 설정은 분리했고 AGENTS.md·originals·originalCD는 변경하지 않았으며 커밋은 만들지 않았다.
 - **정밀 복원에 남음:** 그림자 유지 0.35초는 측정 범위 0.2~0.9초의 근사, 환불 표시 0.85초는 관찰값이다. 공사장 초목 마스크·그림자 음영·높이 증가 곡선·창문 점등 시각(현재 선형/90%)·메뉴 글꼴/가장자리 위치는 추가 대조가 필요하다. 들고 있는 건물 취소·정지/다른 유닛 선택 취소·알타 제한·일반 이동 충돌, Linux GUI·안정적 30/60/120FPS·실제 청취·캠페인 완주는 기존 후속이다.
-- **재현:** `powershell -NoProfile -File tools/clone_test02_smoke.ps1`, `dotnet test tests/Netstorm.Core.Tests -c Release --filter ConstructionTests`. 아래 이전 기록의 커서 미구현·7×8 대조 미비·건설 반투명/진행 막대·취소 표시 지연 미구현은 이번 기록으로 대체한다.
+- **재현:** `powershell -NoProfile -File tools/clone_test02_smoke.ps1`, `dotnet test dotnetpj/tests/Netstorm.Core.Tests -c Release --filter ConstructionTests`. 아래 이전 기록의 커서 미구현·7×8 대조 미비·건설 반투명/진행 막대·취소 표시 지연 미구현은 이번 기록으로 대체한다.
 
 ## 2026-10-04 (`HJOW-Athlon`, Windows 10, 원본 자동 분석 실행 있음 — 중간에 사용자 요청으로 추가 시험 중단) ✅ 완료: TEST02 사제 건설 분석
 
@@ -133,7 +153,7 @@
 - [x] **검증:** Release 빌드 오류·경고 0. Core **510**(기존 493 + 새 생산 검사 17) + Assets **255** = **765** 단위 테스트 통과, 실패·건너뜀 0. 기존 캠페인·튜토리얼의 즉시 생성 가정은 생산 완료 대기로 바꿨다. 새 `tools/clone_production_smoke.ps1` 골렘 10 + 워크샵 9개 검사 통과. 운송·실체화·완료 PNG 6장으로 실제 화면을 확인했다. 기존 `clone_move`(22개)·`clone_construct`(27개)·`clone_ui`(화면 전환 26개·설정 저장 1개)도 통과했다.
 - **디스크:** 기존 Release 출력·동봉 자산을 재사용하고 격리 설정·PNG·로그만 생성한다. 대용량 복사·다운로드·영상 녹화 없음. 검사 뒤 I: 여유 약 **1.56GiB**. 검사 자료는 Git 제외 `extracted/screens/production-smoke-20261004/`와 `production-regression-20261004/`.
 - **남은 정밀 복원:** 입자의 정확한 수·꼬리 지속 시간·소리 반복 주기/실제 청취, 체력 증가와 취소 동작의 원본 대조. 이번 꼬리·반복 이동음(0.25초)은 화면/소리 근사다. 건물의 바닥부터 차오르는 연출·일반 유닛 충돌 회피·금 간 칸 회피·다른 공중 공격체·전략 AI·Linux GUI 등 기존 후속은 남아 있다.
-- **재현:** `powershell -File tools/clone_production_smoke.ps1`, `dotnet test tests/Netstorm.Core.Tests -c Release --filter UnitProductionTests`. AGENTS.md·originals·originalCD는 수정하지 않았고 커밋은 하지 않았다.
+- **재현:** `powershell -File tools/clone_production_smoke.ps1`, `dotnet test dotnetpj/tests/Netstorm.Core.Tests -c Release --filter UnitProductionTests`. AGENTS.md·originals·originalCD는 수정하지 않았고 커밋은 하지 않았다.
 
 ## 2026-10-04 (Windows 10, 원본 실행 없음 — 기존 분석 문서·웹 팬게임 대조) ✅ 완료: 사제 건물 건설 흐름(Construct 메뉴·걸어가서 건설)
 
@@ -143,7 +163,7 @@
 - [x] **구현(화면):** Construct 하위 창의 Temple 줄·기술/지식/SP가 안 되는 건물 줄을 어둡게 하고 누르지 못하게 함, 메뉴를 연 사제가 짓도록 전달, 사제가 못 가는 자리는 붉은 미리보기, 사제를 기다리는 공사장은 어두운 반투명 실루엣(도착 뒤 반투명+진행 막대), 건설 소리는 도착 뒤에만. UI 검사 상세에 `sites=`·`sp=` 추가.
 - [x] **검증:** Release 빌드 오류 0·경고 1(기존 CA2014). 단위 테스트 Assets **255** + Core **493**(기존 479 + 새 `ConstructionTests` 14, 기존 즉시 건설 가정 테스트 보정) 통과. 기존 스모크 `clone_ui`·`clone_move`·`clone_test01`(4개 화면 구성)·`clone_combat`·`clone_recordplay_details`도 통과. 새 `tools/clone_construct_smoke.ps1`(menu 10 + build 17 단언) 통과: 1-1에서 Temple 줄·Rain/Wind/Thunder 워크샵 줄이 눌리지 않고, 사제에서 약 23칸 떨어진 자리의 워크샵이 SP −800 → `waiting` → 사제 이동 → 건설 → 완공. 기존 `clone_help_options_smoke`(Mission·Workshop)는 사제가 완공된 워크샵 옆에 서 있게 되어 우클릭 좌표(530,250)와 대기(60초)를 고쳐 통과했다. 화면 PNG는 Git 제외 `extracted/screens/construct-smoke-20261004/`.
 - **확인하지 못한 것/가정(후속):** ① 공사장 그림자의 실제 그림(어두운 실루엣+나무 윤곽)과 건물이 바닥부터 차오르는 건설 연출, 도착 때 소리·사제 동작 ② 건설이 시작된 뒤 사제를 보내면 건설이 계속되는지, 도착 전 새 명령이 환불 취소하는지(둘 다 팬게임 기준, 원본 미확인) ③ 알타 플레이어당 1기와 SP 부족 시 줄 어둡게(팬게임 규칙) ④ `constructionRate`의 실제 시간 계산식(exe 미분석, 모든 건물 10초로 단순화) ⑤ 템플·알타를 가까운 자리에서 직접 잰 건설 시간 ⑥ 사제의 선택·건설 중 명령 가능 여부 ⑦ 사제가 건물·다른 유닛을 가로지르는 문제(기존 이동 구현 한계).
-- **재현:** `powershell -File tools/clone_construct_smoke.ps1`, `dotnet test tests/Netstorm.Core.Tests --filter ConstructionTests` (원본·AGENTS.md는 수정하지 않았고 커밋은 하지 않았다).
+- **재현:** `powershell -File tools/clone_construct_smoke.ps1`, `dotnet test dotnetpj/tests/Netstorm.Core.Tests --filter ConstructionTests` (원본·AGENTS.md는 수정하지 않았고 커밋은 하지 않았다).
 
 ## 2026-10-04 (`HJOW-Athlon`, Windows 10, 원본 자동 분석 실행 있음) ✅ 완료: 공통 메뉴 버튼 동작
 
@@ -257,7 +277,7 @@
 
 - 작업 자료(비교 캡처·원본 프레임·설정 폴더)는 Git 제외 `extracted/test01-clone/` 에 있다. 클론 실행 보조 스크립트는 세션 임시 폴더에만 있어 남지 않는다(위 2번의 명령으로 대체).
 - 입력 기록(`input-0001.jsonl`)의 `sessionElapsedMs` 는 영상 시각보다 28.07초 크다. 영상과 맞출 때는 `recordingElapsedMs` 를 쓴다.
-- 새로 생긴 파일: `src/Netstorm.Assets/{StructureAnimation,InlinePicture}.cs`, `src/Netstorm.Core/Rules/{PlayerColors,MiniMapLayout,PlacementCursor,SelectionMarks}.cs`, `src/Netstorm.Game/FortMapViewer.{Sprites,MiniMap,PlacementPreview}.cs`, 테스트 4개 파일, `tools/sprite_match.py`, `assets/game-data/d/TEST01.{fort,english}`, `docs/videos/test01-visuals-20261003.md`.
+- 새로 생긴 파일: `dotnetpj/src/Netstorm.Assets/{StructureAnimation,InlinePicture}.cs`, `dotnetpj/src/Netstorm.Core/Rules/{PlayerColors,MiniMapLayout,PlacementCursor,SelectionMarks}.cs`, `dotnetpj/src/Netstorm.Game/FortMapViewer.{Sprites,MiniMap,PlacementPreview}.cs`, 테스트 4개 파일, `tools/sprite_match.py`, `assets/game-data/d/TEST01.{fort,english}`, `docs/videos/test01-visuals-20261003.md`.
 
 ## 2026-10-03 (Windows, 원본 실행 없음) ✅ 완료: 옮겨 온 TEST01 녹화 추가 판독·클론 전투와 이동 수정
 
@@ -446,7 +466,7 @@
 ## 2026-10-02 (`vm-debian-codex`, Linux, 원본 실행 없음) ✅ 완료: 보류됐던 클론 최종 테스트 실행
 
 - **범위:** 사용자 지시로 분석(원본 게임·녹화 판독)은 진행하지 않았다. 아래 보류 절의 자동 검증만 실행했다. 원본 게임은 실행하지 않았고 AGENTS.md·분석기·원자료는 변경하지 않았다.
-- **빌드·단위 테스트(최종 파일 상태):** `dotnet build Netstorm.sln -c Release` 오류 0, 경고 1(기존 `TextResourceTests.cs` CA2014). Assets **197개**·Core **246개** 통과, 실패·건너뜀 0.
+- **빌드·단위 테스트(최종 파일 상태):** `dotnet build dotnetpj/Netstorm.sln -c Release` 오류 0, 경고 1(기존 `TextResourceTests.cs` CA2014). Assets **197개**·Core **246개** 통과, 실패·건너뜀 0.
 - **GUI 검사:** 이 PC에는 PowerShell이 없어 `tools/*.ps1`을 실행하지 못했다. 스크립트의 here-string 명령과 인수를 그대로 추출해 Linux 클론(`NetstormClone`, X 디스플레이)을 직접 실행했다. 출력은 Git 제외 `extracted/screens/ui-handoff-20261002/{menu,mission,workshop,regression}/`다.
   - Menu: 도움말·옵션 단언 전부 통과, 저장 값 `SoundOn=false`·`MusicVolume=3`·`SpeakerSwap=true` 확인.
   - Mission: 단언 전부 통과. 타이머 영역 (924,0) 100×18을 Python으로 비교해 Shift+F9 정지 중 동일·재개 후 변경 확인(PowerShell의 판정 코드 자체는 미실행).
@@ -583,7 +603,7 @@
   - 테스트 3개를 추가했다: 템플 폭발·연쇄 보상, 포대 폭발량·판매 무폭발, 25% 보상. 문서: [전투](docs/gameplay/combat.md), [전투 옵션 2-1](docs/exe/battle-options.md).
   - 남은 것: 폭발 대상 제외 비트의 의미, 자기 오브젝트 처치 시 보상 여부, 폭발 그림·효과음.
 - **도구:** [`tools/recordplay_frames.py`](tools/recordplay_frames.py)를 추가했다. record-play AVI 조각을 FFmpeg 없이 읽어 `frames`·`sheet`(잘라내기)를 만들고, 시각은 `.frames.csv` 기준이다. 임시 스크립트와 같은 프레임 해시를 만드는 것을 확인했다.
-- **검증(최종):** `dotnet build Netstorm.sln -c Release` 경고·오류 0(증분 빌드, 클린 빌드에서는 기존 CA2014 경고 1개). 전체 테스트 **426개 통과**(Assets 193·Core 233), 실패·건너뜀 0.
+- **검증(최종):** `dotnet build dotnetpj/Netstorm.sln -c Release` 경고·오류 0(증분 빌드, 클린 빌드에서는 기존 CA2014 경고 1개). 전체 테스트 **426개 통과**(Assets 193·Core 233), 실패·건너뜀 0.
   - `SacrificeTests`는 10 → 13개다(CombatTests +2, GameRuleTests +1 별도). 신규: 마크 후 이탈 완료·복귀 대기, 마크 전 이탈 취소·재음성, 의식 사제 기절 시 멈춤·포로 유지. 기존 "제단 피해로 의식 중단"은 "크게 다쳐도 포로 유지·파괴될 때만 해방"으로 바꿨다. 기존 타임라인 테스트에 +5,000 보상 검사를 추가했다.
   - 클론 GUI 실행은 하지 않았다.
 - **문서:** [희생 의식 계약](docs/gameplay/sacrifice.md), [이동 경로 3.4 임시 정책 표](docs/gameplay/movement-pathing.md#34-낙하-규칙-구현과-임시-정책), [음악 5절](docs/exe/music.md), [분석기 record-play 실측](docs/analyze-manager.md#기존-게임-플레이-녹화-분석-모드), [맵 뷰어](docs/map-viewer.md), [영상 목록](docs/videos/README.md). **AGENTS.md는 수정하지 않았다.**
@@ -645,7 +665,7 @@
 - **완료 — 운반체 해방:** `NearestStandable` 순간이동을 제거했다. 운반체 소멸로 풀린 사제는 그 위치에서 기존 해방 HP 회복을 받고, 허공이면 즉시 기절한다. 지상 수송 낙하에도 적용한다. 비행 수송은 생성·이동·제거 때 지상 점유에 참여하지 않아 아래의 다른 유닛 점유를 훼손하거나 옛 위치에 점유를 남기지 않는다.
 - **완료 — 공통 이동·대기/재개:** `BattleSession.Movement.cs`의 `MovementRoute`를 수확·포획·운반·내려놓기·사제 이동이 공유한다. 길이 없으면 목표·포로·결정을 유지하고 기다리며, 지형 버전 변화 후 같은 목표로 다시 찾는다. 우회로가 생기거나 다리가 복구되면 새 명령 없이 재개한다. `MoveBlocked`/`MoveResumed`는 상태 전환 때 한 번씩 내고 화면에서 이유를 표시한다. 목표 제거·기절·포획·이동체 제거 시 취소하며, 새 명령의 최초 경로 실패는 기존 `NoRoute`다. 경로·대기·마지막 탐색 버전·고정 목표와 허공 상태를 검사합에 포함했다.
 - **완료 — 동적 받침과 표시:** `createsisland` 유닛의 발자국은 생존·완공 동안만 지지한다. 초기 `noIsland` 중 건물 발자국 아래의 칸을 그 받침에 연결하고 생성/완공/제거 시 지형 버전을 갱신한다. 받침·개발용 지면·절벽은 지지가 사라지면 숨기며, 새 건물형 유닛은 원본 받침 그림을 표시한다. 저장 수송 유닛도 현재 좌표로 그린다. 허공 기절 사제는 최대 HP여도 보호막 고리·체력 막대·`허공에서 기절` 문구를 표시하고, 경로 대기는 `길 막힘·대기`로 표시한다.
-- **검증:** `dotnet build Netstorm.sln -c Release --no-restore -m:1 -nr:false -p:UseSharedCompilation=false` 성공(최종 증분 빌드 경고·오류 0; 직전 컴파일에서 기존 `TextResourceTests.cs:353` CA2014 경고 1개). 같은 옵션의 `dotnet test Netstorm.sln` **403개 통과**(Assets **187**·Core **216**), 실패·건너뜀 0. 신규 **19개**(지지/낙하 15·수확 경로 4)와 기존 내려놓기 재탐색 검사를 갱신했다. 실제 미션 시작 회귀도 포함한다.
+- **검증:** `dotnet build dotnetpj/Netstorm.sln -c Release --no-restore -m:1 -nr:false -p:UseSharedCompilation=false` 성공(최종 증분 빌드 경고·오류 0; 직전 컴파일에서 기존 `TextResourceTests.cs:353` CA2014 경고 1개). 같은 옵션의 `dotnet test dotnetpj/Netstorm.sln` **403개 통과**(Assets **187**·Core **216**), 실패·건너뜀 0. 신규 **19개**(지지/낙하 15·수확 경로 4)와 기존 내려놓기 재탐색 검사를 갱신했다. 실제 미션 시작 회귀도 포함한다.
 - **클론 GUI:** `--map savetheisland --window 1024x768 --language korean --script "combat 0; salvage 175,129" --screenshot ... --screenshot-frames 3`로 현재 화면의 돌탑과 받침이 함께 사라지는 것을 전후 PNG로 확인했다. 캡처는 Git 제외 경로 `extracted/screens/support-before-20261001.png`·`support-after-20261001.png`. 원본은 실행하지 않았다. 허공/대기 표식은 컴파일·Core 상태 검사까지만 확인했으며 실제 표식 배치, `D`/`T` 마우스 입력, 의식 전체 GUI, Linux GUI는 미검증이다.
 - **추정 정책:** 낙하 즉시 제거·보상 없음, 모든 소유 다리의 기준점 지지, 허공 사제 HP/결정 유지·계속 부유·신전 회복 금지, 정확히 절반 HP 복귀, 건물 재배치도 발판 복구로 취급, 해방 시 최대 HP 회복, 허공 사제 생존으로 승패 보류, 시간 한도 없는 대기는 추가 원본 분석 후 수정한다. 받침 연결은 발자국 겹침에 따른 근사이며 원본의 받침 관계를 복원한 것이 아니다. [구현·근거·전체 추정표](docs/gameplay/movement-pathing.md#34-낙하-규칙-구현과-임시-정책).
 - **문서 갱신:** [이동 경로](docs/gameplay/movement-pathing.md), [희생 의식](docs/gameplay/sacrifice.md), [Core 규칙](docs/core-rules.md), [전투](docs/gameplay/combat.md), [뷰어](docs/map-viewer.md). 이전의 낙하 미구현·경로 실패 시 취소 설명을 현재 구현에 맞췄다.
@@ -669,7 +689,7 @@
 - **범위:** 바로 아래 절("점검·수정 완료")이 남긴 "남은 의심 사항" 4건 중 (b)·(c)는 추가 원본 분석 없이 기존 코드 구조(수확·포획 이동의 다리 재탐색 패턴, 전투 파괴·회수 공통 `RemoveEntity`)로 바로 고칠 수 있는 코드 결함이라 이어서 수정했다. (a)(`ai{N}PriestSaved`가 일부 비캠페인 미션에서 시작 직후 참이 되는 문제)와 (d)(뷰어 `D`/`T` 입력의 실제 GUI 확인)는 미션별 배치 분석·원본/클론 화면 확인이 더 필요해 이번에는 손대지 않았다(기존 테스트가 (a)를 알고 제외하고 있다는 점도 유지).
 - **(b) 수정 — `DropPriest` 경로 재탐색:** `UnitMoveTask`에 `FixedGoal`(내려놓을 고정 칸)을 추가해 `MoveGoal`이 목표 오브젝트가 없는 내려놓기 작업도 다리 버전이 바뀔 때 길을 다시 찾도록 했다. 이전에는 `DropPriest`만 재탐색에서 제외돼, 운반 중 건너던 다리가 끊겨도 옛 경로(이미 사라진 다리 칸)를 그대로 따라갈 위험이 있었다. **이 "끊긴 다리를 그대로 따라감" 동작은 원본 게임에도 실제로 있던 결함으로 보인다(사용자 확인, 2026-10-01) — 클론은 원본을 그대로 재현하지 않고 의도적으로 고쳐서 구현하기로 했다.** 이제는 다리가 끊기면 같은 목표로 재탐색하고, 길이 없으면 운반 작업을 멈춘다(수송 유닛은 끊긴 자리에 남고 포로는 계속 운반 상태).
 - **(c) 수정 — 희생 사제 제거 일원화:** 의식 완료 뒤 포로를 제거하던 코드가 `_entities.Remove`/`_moveTasks.Remove`만 불러, 전투 파괴·회수가 쓰는 공통 정리(`RemoveEntity`: 선택 해제·점유 해제·수집 작업 해제 등)를 거치지 않았다. 이제 같은 `RemoveEntity`를 불러, 그 사제를 선택해 두고 있던 플레이어의 선택도 함께 풀린다.
-- **검증(회귀 테스트 추가):** `SacrificeTests`에 `DropPriest_RecomputesRouteWhenBridgeIsCutMidTransit`(물길로 나뉜 두 섬 사이 다리를 반쯤 건넌 뒤 다리 구간을 날려 재탐색 실패 시 운반이 멈추고 섬을 넘어가지 않는지 확인), `Ritual_RemovingVictimClearsSelectionLikeOtherDestruction`(묶인 사제를 선택해 둔 상태에서 의식이 끝나 제거되면 선택이 0 으로 풀리는지 확인) 2개를 추가했다. `dotnet build Netstorm.sln -c Release --no-restore` 경고 1개(기존 `TextResourceTests.cs` CA2014)·오류 0, `dotnet test Netstorm.sln -c Release --no-restore` **384개 통과**(Assets 187·Core 197, 기존 382 + 신규 2), 실패·건너뜀 0. 원본 게임·클론 GUI는 실행하지 않았다.
+- **검증(회귀 테스트 추가):** `SacrificeTests`에 `DropPriest_RecomputesRouteWhenBridgeIsCutMidTransit`(물길로 나뉜 두 섬 사이 다리를 반쯤 건넌 뒤 다리 구간을 날려 재탐색 실패 시 운반이 멈추고 섬을 넘어가지 않는지 확인), `Ritual_RemovingVictimClearsSelectionLikeOtherDestruction`(묶인 사제를 선택해 둔 상태에서 의식이 끝나 제거되면 선택이 0 으로 풀리는지 확인) 2개를 추가했다. `dotnet build dotnetpj/Netstorm.sln -c Release --no-restore` 경고 1개(기존 `TextResourceTests.cs` CA2014)·오류 0, `dotnet test dotnetpj/Netstorm.sln -c Release --no-restore` **384개 통과**(Assets 187·Core 197, 기존 382 + 신규 2), 실패·건너뜀 0. 원본 게임·클론 GUI는 실행하지 않았다.
 - **문서:** [희생 의식 구현·근거](docs/gameplay/sacrifice.md)에 두 수정과 테스트 개수(8→10)를 반영했다.
 - **남은 것:** (a)·(d)는 여전히 미해결(아래 절 그대로). 그 외 이 수정 범위에서 새로 발견한 문제는 없다.
 
@@ -683,7 +703,7 @@
   2. **사람 플레이어 동맹 미반영** — `myAllyList`(예: `tnron8ex` "4;6;7;8")를 읽지 않았다. → `MissionStart.MyAllyList`, `AreAllied(first, second, human)`; 팩토리가 사람 플레이어 번호를 넘긴다. 테스트 `AllyLists_ReadMyAndAiLists`·`EnemyTerritory_StartsWithoutRescueOutcome`(3-4 구출 미션).
   3. **실패 창 Continue 막힘** — `[Failed]`의 `Tell,TryAgain`은 공용 `tell.english`에만 있어 "안내 섹션이 없습니다"로 창이 닫히지 않았다(승패 판정이 생긴 뒤 새로 노출된 결함). → `TutorialDialogScript`가 공용 스크립트 대체 조회와 `{mission.title}` 등 미션 치환 값을 받음, 뷰어·`NetstormGame`이 `tell` 스크립트를 넘김. 테스트 `FailureContinue_OpensTryAgainFromCommonScript`.
   4. 희생 음악 유지 조건이 의식 완료 시점에 끊기던 것을 제단 소멸까지로 보정(`IsSacrificeInProgress`).
-- **검증:** `dotnet build Netstorm.sln -c Release` 경고·오류 0, Assets **187**·Core **195** 통과, Linux portable 빌드·Windows 대상 교차 빌드 경고·오류 0, `mcp_smoke.py --youtube-only` 통과. 원본 게임·클론 GUI는 실행하지 않았다.
+- **검증:** `dotnet build dotnetpj/Netstorm.sln -c Release` 경고·오류 0, Assets **187**·Core **195** 통과, Linux portable 빌드·Windows 대상 교차 빌드 경고·오류 0, `mcp_smoke.py --youtube-only` 통과. 원본 게임·클론 GUI는 실행하지 않았다.
 - **남은 의심 사항(다음에 확인):** (a) `ai{N}PriestSaved`는 사제가 "내 소유 섬 영역"에 서면 참이며 `bc1menu`·`portal3` 같은 일부 미션은 시작 직후 참이 된다(원본도 같은 위치 판정이라 보이며 해당 섹션이 있는 미션에서만 영향 — 구출 미션 3-4는 정상). ~~(b) `DropPriest` 경로는 다리가 바뀌어도 다시 찾지 않는다.~~ → ✅ 2026-10-01 수정(맨 위 절, `UnitMoveTask.FixedGoal`). ~~(c) 희생된 사제는 `RemoveEntity`를 거치지 않고 지워져 선택 상태 등이 남을 수 있다.~~ → ✅ 2026-10-01 수정(맨 위 절). (d) 뷰어 `D`/`T` 입력·실제 화면은 GUI 확인 전.
 
 ---
@@ -712,17 +732,17 @@
 - `BattleSession.Sacrifice.cs`: 기절 적 사제 포획(미션 `allowAnyCapture` 예외 포함), 타입 `.type speed`에 따른 이동, 제단 운반·내려놓기·내 사제의 알타 이동, 다섯 룬 의식과 중단·구출을 구현했다. 운반체나 알타가 파괴되면 포획 사제를 풀고 회복한다. `balloon` 직선 이동은 임시 경로이며 비행 수송의 이륙·착륙은 아직 없다.
 - 시간 모델: 의식 시작→첫 룬 1.2초, 룬 간격 14.8초, 룬 음성→소멸 12.1초, 완료→희생 효과음 4초, 완료→알타 제거 9.3초, 알타 제거→희생 사제 제거·팀 재판정 3초. 알타 건설 14.5초는 사제 이동이 포함된 관찰 총시간이라 순수 건설 시간과 거리를 분리하지 못했다. 알타 피해 중단 50%는 임시 임계값이다.
 - `MissionTell`을 뷰어 안내 창에 연결했다. 해당 스크립트 섹션이 있으면 표시하고 열린 동안 시간을 멈춘다. 사제 상태·룬 표시, `golemPickUp`, 다섯 룬 음성, 룬 소멸·완료·희생·알타 폭발 효과음과 희생 음악도 연결했다.
-- 검증: `tests/Netstorm.Core.Tests/SacrificeTests.cs` 8개로 기절 전 포획 거부, 포획·운반·의식 타임라인, rescue 이벤트, 수송 파괴·알타 피해 시 해제, 결정론을 검사했다. 전체 솔루션 빌드에서 새 코드 오류는 없었다.
+- 검증: `dotnetpj/tests/Netstorm.Core.Tests/SacrificeTests.cs` 8개로 기절 전 포획 거부, 포획·운반·의식 타임라인, rescue 이벤트, 수송 파괴·알타 피해 시 해제, 결정론을 검사했다. 전체 솔루션 빌드에서 새 코드 오류는 없었다.
 - 문서: [희생 의식 구현·근거](docs/gameplay/sacrifice.md), [Core 규칙](docs/core-rules.md), [맵 뷰어 입력](docs/map-viewer.md), [전투 범위](docs/gameplay/combat.md), [음악·효과음](docs/exe/music.md), [영상 측정](docs/videos/youtube-sacrifice.md).
 - 후속: 여러 적 사제가 남았을 때 원소 배경음악 복귀, 비행 수송 이륙·착륙, 알타 프레임 애니메이션과 피해 한계의 원본 대조, Windows GDI 경로 회귀 확인. 3-4 구조 미션의 스크립트·운반·구출 판정은 [영상 노트](docs/videos/youtube-rescue.md)와 함께 확인했다.
 - 원본 게임은 실행하지 않았다. 이 단계는 Linux YouTube 영상 분석과 헤드리스 테스트로 진행했다.
 
 ### 최신 검증
 
-- `dotnet build Netstorm.sln -c Release --no-restore`: 성공. 기존 `TextResourceTests.cs` CA2014 경고 1개, 오류 0개.
+- `dotnet build dotnetpj/Netstorm.sln -c Release --no-restore`: 성공. 기존 `TextResourceTests.cs` CA2014 경고 1개, 오류 0개.
 - `dotnet build analyzeManager/portable/AnalyzeManager.Portable.csproj -c Release --no-restore`: 성공, 경고·오류 0개.
 - `dotnet build analyzeManager/AnalyzeManager.csproj -c Release --no-restore`: Windows 대상도 교차 빌드 성공, 경고·오류 0개.
-- `dotnet test Netstorm.sln -c Release --no-restore`: Assets 186개·Core 192개 통과, 실패·건너뜀 0개.
+- `dotnet test dotnetpj/Netstorm.sln -c Release --no-restore`: Assets 186개·Core 192개 통과, 실패·건너뜀 0개.
 - `python3 analyzeManager/tests/mcp_smoke.py --exe analyzeManager/portable/bin/Release/net10.0/Netstorm.AnalyzeManager --repo . --youtube-only --youtube https://youtu.be/CI3dCrUt4tY`: 통과. 프로토콜 도구 6개, PNG 관찰표 응답, EOF 정상 종료.
 - `youtube_frames`로 1-5 영상 프레임 10개 추출, `youtube_note` 메모 11개와 SHA-256 근거 저장 성공.
 - 전체 검증은 원본 게임 실행 없이 수행했다. Windows 실기기에서의 GDI+ 화면 생성만 남았다.
@@ -807,7 +827,7 @@
   2. 원본 지식 창·상세창의 돌 질감 창 그림 자산 찾기(exe 리소스 또는 gump 타입), Damage 계산, 상세창 OK 가 격자까지 닫는지.
   3. 효과음 위치 반영(좌우·크기), `jimBuild.wav` 건설 진행음 반복 주기, 날씨 팔레트(`ascendancyPalette`), 원본 볼륨 단계 → 음량 변환식, Options 화면에서 소리 설정 바꾸기.
   4. `forWind2`는 상관 0.52로 약하게 잡혔다. 다섯 번째 `altarBurnCollapse`는 `itIsDone2`와 겹쳐 판정이 약하다.
-- 변경 파일: `tools/audiomatch.py`(신규), `src/Netstorm.Assets/{WaveFile,HelpTopics}.cs`(신규)·`GameResources.cs`·`TutorialDialogScript.cs`, `src/Netstorm.Core/Audio/MusicDirector.cs`(신규)·`Rules/KnowledgeCatalog.cs`(신규)·`Display/DisplaySettings.cs`, `src/Netstorm.Game/{AudioPlayer,FortMapViewer.Audio}.cs`(신규)·`FortMapViewer{,.Knowledge,.Session,.Bridges,.TutorialDialog}.cs`·`NetstormGame.cs`, 테스트 `tests/Netstorm.Assets.Tests/{AudioAndHelpTests(신규),TutorialDialogScriptTests}.cs`·`tests/Netstorm.Core.Tests/{MusicDirectorTests,KnowledgeCatalogTests(신규),DisplaySettingsTests}.cs`, 문서 `docs/exe/music.md`(신규)·`docs/exe/show-technology.md`·`docs/videos/{README,the-war-begins-record-play-20260930}.md`·`docs/gameplay/dialog-pause.md`·`docs/map-viewer.md`·`docs/core-rules.md`, 이 문서. 산출물 `extracted/audio/*.csv`·`extracted/screens/knowledge-*.png`는 Git 제외.
+- 변경 파일: `tools/audiomatch.py`(신규), `dotnetpj/src/Netstorm.Assets/{WaveFile,HelpTopics}.cs`(신규)·`GameResources.cs`·`TutorialDialogScript.cs`, `dotnetpj/src/Netstorm.Core/Audio/MusicDirector.cs`(신규)·`Rules/KnowledgeCatalog.cs`(신규)·`Display/DisplaySettings.cs`, `dotnetpj/src/Netstorm.Game/{AudioPlayer,FortMapViewer.Audio}.cs`(신규)·`FortMapViewer{,.Knowledge,.Session,.Bridges,.TutorialDialog}.cs`·`NetstormGame.cs`, 테스트 `dotnetpj/tests/Netstorm.Assets.Tests/{AudioAndHelpTests(신규),TutorialDialogScriptTests}.cs`·`dotnetpj/tests/Netstorm.Core.Tests/{MusicDirectorTests,KnowledgeCatalogTests(신규),DisplaySettingsTests}.cs`, 문서 `docs/exe/music.md`(신규)·`docs/exe/show-technology.md`·`docs/videos/{README,the-war-begins-record-play-20260930}.md`·`docs/gameplay/dialog-pause.md`·`docs/map-viewer.md`·`docs/core-rules.md`, 이 문서. 산출물 `extracted/audio/*.csv`·`extracted/screens/knowledge-*.png`는 Git 제외.
 
 ---
 
@@ -824,7 +844,7 @@
 - **분석(exe 바이트 역어셈블):** `ShowTechnology`는 디스패처에서 **인자 없이** `0x492b60`을 부르는 F6 "View Netstorm Knowledge" 지식 창이다(스크립트의 `55`는 쓰이지 않음). 내 플레이어가 아는 타입을 원소별로 모은다. 이름 표에서 `GetTechnology`(`0x494ea0`)는 지식 부여 + `[NewTech]` 안내로 별개다. 상세: [show-technology.md](docs/exe/show-technology.md). Ghidra 프로젝트(`extracted/ghidra/Netstorm.gpr`)가 이 PC에서 0바이트라 `decompile_at.ps1`은 쓰지 못했다(그대로 멈춤 — 프로세스 정리함). 필요하면 `run_decomp.ps1`로 프로젝트를 다시 만들 것.
 - **구현:** `TutorialDialogActionKind.ShowKnowledge`(브리핑은 유지), `FortMapViewer.Knowledge.cs`(원소별 이름 목록 창, 미션 화면 F6, OK·Esc·Enter·Space·F6으로 닫음). 안내 창 없이 연 창은 시계를 멈추지 않는다.
 - **검증:** Release 빌드 오류 0, Assets 179(신규 1)·Core 147 통과. 화면은 실행하지 않아 창 배치는 눈으로 확인하지 못했다. 원본 지식 창의 실제 모양은 캡처가 없어 미확인(원본 실행 시 F6 캡처 필요).
-- 변경 파일: `src/Netstorm.Assets/TutorialDialogScript.cs`, `src/Netstorm.Game/{FortMapViewer,FortMapViewer.TutorialDialog,FortMapViewer.Knowledge(신규),NetstormGame}.cs`, `tests/Netstorm.Assets.Tests/TutorialDialogScriptTests.cs`, `docs/exe/show-technology.md`(신규), `docs/{map-viewer,formats/mission-script,gameplay/dialog-pause}.md`, 이 문서.
+- 변경 파일: `dotnetpj/src/Netstorm.Assets/TutorialDialogScript.cs`, `dotnetpj/src/Netstorm.Game/{FortMapViewer,FortMapViewer.TutorialDialog,FortMapViewer.Knowledge(신규),NetstormGame}.cs`, `dotnetpj/tests/Netstorm.Assets.Tests/TutorialDialogScriptTests.cs`, `docs/exe/show-technology.md`(신규), `docs/{map-viewer,formats/mission-script,gameplay/dialog-pause}.md`, 이 문서.
 
 ---
 
@@ -849,7 +869,7 @@
   3. 게임 코드가 직접 여는 경고 창(`NewTech`, `NoBridgeYet` 등)은 시간을 멈추지 않는 것이 원본 동작이다(구현 시 기본은 흐름).
   4. 캠페인 미션 성공 버튼(`MissionAbort`, `MissionBegin,다음 미션`, `Tell,TryAgain`)은 승패 구현 전이라 쓰이지 않는다. `MissionAbort`는 `TutorialDialogScript`가 아직 모르는 동작이다.
 - **주의(사용자 확인 요청):** 위 자동 확인 중 `SendKeys`로 Enter를 보냈는데 클론 창이 활성 창이 아니었다. 그 입력이 **VS Code의 열려 있던 편집기(AGENTS.md 탭)에 들어갔을 가능성**이 있다. 저장소 파일은 바뀌지 않았지만(`git diff`로 AGENTS.md·LEFT_JOBS.md 변경 없음 확인) 저장 전 편집기 버퍼에 빈 줄이 들어갔을 수 있으니 탭에 저장 안 된 변경 표시가 있으면 저장하지 말고 되돌려 달라.
-- 변경 파일: `src/Netstorm.Game/{FortMapViewer.TutorialDialog,FortMapViewer.Session}.cs`, `src/Netstorm.Assets/TutorialDialogScript.cs`, `tests/Netstorm.Assets.Tests/TutorialDialogScriptTests.cs`, [뷰어 사용법](docs/map-viewer.md), [dialog-pause.md](docs/gameplay/dialog-pause.md) 클론 지침 표, 이 문서.
+- 변경 파일: `dotnetpj/src/Netstorm.Game/{FortMapViewer.TutorialDialog,FortMapViewer.Session}.cs`, `dotnetpj/src/Netstorm.Assets/TutorialDialogScript.cs`, `dotnetpj/tests/Netstorm.Assets.Tests/TutorialDialogScriptTests.cs`, [뷰어 사용법](docs/map-viewer.md), [dialog-pause.md](docs/gameplay/dialog-pause.md) 클론 지침 표, 이 문서.
 
 ## 2026-09-30 (`HJOW-Athlon`, Windows, 원본 실행 없음) ✅: 안내·브리핑 창 시계 정지 경로 디컴파일 — 정지 경로 4곳 확정, 캠페인 브리핑도 같은 경로
 
@@ -925,7 +945,7 @@
 - 이전 원본 자동 분석(아래 두 절)에 따라 미션 Esc는 상단 Game 메뉴를 표시·숨기고, Game → Restart Mission은 현재 미션을 다시 로드해 첫 브리핑으로 돌아간다. Game → Leave Mission은 확인 창을 띄우고 Main Menu·Replay Mission·Continue Mission 버튼을 처리한다. Replay는 같은 미션을 다시 로드한다. 현재 클론에는 메인 메뉴 화면이 없으므로 Main Menu 선택은 개발용 기본 화면으로 돌아간다.
 - 안내 창에서는 원본처럼 Esc가 반응하지 않도록 수정했다. 메뉴·확인 창을 여는 동안 지도 입력과 가장자리 스크롤을 막고, 미션 시간은 계속 진행한다. 메뉴를 클릭하면 화면 전환을 게임 본체가 처리한다.
 - **검증**: Windows에서 Release 빌드 경고·오류 0, Assets 175개·Core 147개 테스트 통과. 클론 `--mission tutorial1 --window 1024x768`를 실제 실행해 첫 안내 창에서 Esc가 창을 닫지 않음, 안내 버튼으로 페이지 이동, Esc → Game → Leave Mission 확인 창, Replay Mission과 Restart Mission의 첫 `NetStorm!` 브리핑 복귀, Main Menu 선택 시 개발용 기본 화면 복귀를 확인했다. 실제 원본과 메뉴 그림의 픽셀 단위 일치는 확인 대상에 포함하지 않았다.
-- 변경 파일: `src/Netstorm.Game/{FortMapViewer,FortMapViewer.TutorialDialog,FortMapViewer.MissionMenu(신규),NetstormGame}.cs`, [뷰어 사용법](docs/map-viewer.md), 이 문서.
+- 변경 파일: `dotnetpj/src/Netstorm.Game/{FortMapViewer,FortMapViewer.TutorialDialog,FortMapViewer.MissionMenu(신규),NetstormGame}.cs`, [뷰어 사용법](docs/map-viewer.md), 이 문서.
 
 ## 2026-09-30 (`HJOW-Athlon`, Windows, 원본 자동 분석): Replay·Restart Mission 첫 화면 확인 ✅
 
@@ -974,7 +994,7 @@
 - **근사·미확정**: 칸 처리 순서(원본은 오브젝트 번호 순, 클론은 만든 순서), 여러 칸짜리 섬 오브젝트를 칸 단위로 센 것, 접합 칸 고리(원본은 무한 재귀라 실제로 생기는지 모름 — 클론은 재귀 경로로 막음), 새 수명 ≤ 5 인 칸 위 이동체 낙하 미구현.
 - **아직 설명 못 한 것**: 섬에 붙은 **단일 칸이 약 160초** 걸린 관찰(모델은 80초 안팎). 8.3절에 가능성 정리. 원본에서 캡처 간격을 좁힌 재측정(사용자 직접 조작 녹화 권장)이 필요하다. → ✅ **2026-09-30 해소**: 그 관찰은 두 칸 막대였고 한 칸은 금 +32초·낙하 +72초(맨 위 절).
 - **다음 후보**: (1) 위 재측정, (2) 누락 함수 후보 528개 중 게임 로직 쪽 우선 디컴파일(`decompile_at.sh` 사용), (3) 붕괴 시 칸 위 이동체 낙하(`FUN_004202f0`~`FUN_00426120`)는 이동 구현 때, (4) 다리 연결·소유권 전파(`FUN_00421240`·`FUN_004213b0`)는 영역 소유 구현 때.
-- 변경 파일: `src/Netstorm.Core/Bridges/BridgeGrid.cs`(칸 순번, `IsOpen` 제거, 붕괴 재작성), `tests/Netstorm.Core.Tests/{BridgeGridTests,BattleSessionTests}.cs`, `tools/ghidra/decompile_at.sh`(신규), `docs/exe/{bridge-pieces,mission-header-flags}.md`, `docs/{core-rules,map-viewer}.md`, `docs/formats/README.md`, 이 문서.
+- 변경 파일: `dotnetpj/src/Netstorm.Core/Bridges/BridgeGrid.cs`(칸 순번, `IsOpen` 제거, 붕괴 재작성), `dotnetpj/tests/Netstorm.Core.Tests/{BridgeGridTests,BattleSessionTests}.cs`, `tools/ghidra/decompile_at.sh`(신규), `docs/exe/{bridge-pieces,mission-header-flags}.md`, `docs/{core-rules,map-viewer}.md`, `docs/formats/README.md`, 이 문서.
 
 ## 2026-09-30 저녁 (`vm-debian-codex`, Linux, 원본 게임 실행 없음): 다리 품질·주변 약화 정적 분석 + 구현
 
@@ -989,7 +1009,7 @@
 - **검증**: Release 솔루션 빌드 오류 0(기존 CA2014 경고 1), analyzeManager 빌드 오류·경고 0, Core **143**(기존 138 + 신규 5: 금 간 품질 배치·주변 약화·트레이 6초·세션 품질 배치·회수 약화)·Assets 175 통과. 원본·뷰어 화면은 실행하지 않았다.
 - **근사·미확정**: 중심 칸은 `Footprint.CenterX/Y` 버림(짝수 크기 발자국은 원본과 한 칸 어긋날 수 있음), 들고 있는 조각의 품질 변화, 회수 시 약화(수신 쪽 경로 미확인), 늦춰진 낙하 예약(이벤트 0x2692) 미구현.
 - **다음 후보**: (1) 원본에서 단일 칸 붕괴 시각·주변 약화(파괴/회수)를 사용자 직접 조작 녹화로 확인, (2) ~~`FUN_004218b0` 조건을 칸 단위로 그대로 옮겨 "열린 끝이 있는 연결망" 근사 교체~~ → 위 밤 절에서 완료, (3) 끝 칸 변환(`FUN_004215d0`)·폭발 피해는 전투 구현 때.
-- 변경 파일: `src/Netstorm.Core/Bridges/{BridgeGrid,BridgePiece,BridgeTray}.cs`, `src/Netstorm.Core/Simulation/{BattleSession,BattleSession.Commands}.cs`, `tests/Netstorm.Core.Tests/{BridgeGridTests,BridgePieceTests,BattleSessionTests}.cs`, `analyzeManager/ExplorerTools.cs`, `docs/exe/bridge-pieces.md`, `docs/core-rules.md`, `docs/gameplay/island-ownership.md`, 이 문서.
+- 변경 파일: `dotnetpj/src/Netstorm.Core/Bridges/{BridgeGrid,BridgePiece,BridgeTray}.cs`, `dotnetpj/src/Netstorm.Core/Simulation/{BattleSession,BattleSession.Commands}.cs`, `dotnetpj/tests/Netstorm.Core.Tests/{BridgeGridTests,BridgePieceTests,BattleSessionTests}.cs`, `analyzeManager/ExplorerTools.cs`, `docs/exe/bridge-pieces.md`, `docs/core-rules.md`, `docs/gameplay/island-ownership.md`, 이 문서.
 
 ## 2026-09-30 후속 분석 후보 — 공식 캠페인 1-1 The War Begins!
 
@@ -1008,9 +1028,9 @@
 - **후보 1 수집 경제 완료**: `HarvestGeyserCommand`로 소유 사제가 섬·내 다리 연결망을 따라 가이저와 완공 신전을 반복 왕복한다. 결정 하나를 전달할 때 200 SP를 더한다. 다리가 바뀌면 경로를 재탐색하고 길이나 대상이 사라지면 멈춘다. 운반량·경로·진행량을 검사합에 넣었다. 뷰어에서는 가이저 위 **H**, 스크립트에서는 `harvest x,y`로 시작한다.
 - **튜토리얼 1 A~G 단계 추가**: F4 또는 첫 다리 → 다리 8·19칸 → 가이저 연결 → 200·600 SP. 원본 `FUN_004c3a20`의 경계값과 exe 상수 `0x510298 = 200.0f`, `0x514c34 = 600.0f`를 확인했다. `bridgethegap.fort`에는 가이저가 없고 원본은 `FUN_00486440`/`00486360`으로 동적 생성하므로, 현재는 동쪽에 연결 가능한 5×5 연습 받침·3×3 가이저를 결정적 위치에 만든다. 뷰어 F4와 `home` 스크립트도 연결했다.
 - **후보 3 사제 이동·건설 분석 완료 범위**: `priest.type`의 `speed = 1.8`은 타입 구조체 `+0xe0`에 파싱된다. 사용자 지적대로 Golem 2.0, Balloon 1.9, Sail Skater 3.4, Crystal Crab 2.4 등 **유닛마다 속도가 다르다**. 공통 `MovementRate`가 각 타입의 값을 읽고 사제 수집 이동에 사용한다. `Construction.cpp` `00442c80` → `00442b50`에서 타입 비용을 배치 처리 중 차감함을 확인했다. `constructionRate`는 구조체 `+0x50`에 파싱되고 생략 시 기본값 **10.0**이 채워진다. 실제 소비·시간 계산식은 미확인이라 기존 관찰 기반 건설 시간(템플 16초, 워크샵 10초)을 유지했다. [상세 분석](docs/exe/priest-construction.md).
-- **검증**: `dotnet test Netstorm.sln -c Release --no-restore` 성공 — Assets **175**, Core **138**, 실패 0. 연습 가이저 연결 전 수확 거부, 다리 연결 후 3회 운반 = 600 SP, 튜토리얼 1 완료, 유닛별 속도 테스트를 포함한다. 원본 게임과 뷰어 화면은 실행하지 않아 시각 배치·입력을 화면에서 확인하지 않았다.
+- **검증**: `dotnet test dotnetpj/Netstorm.sln -c Release --no-restore` 성공 — Assets **175**, Core **138**, 실패 0. 연습 가이저 연결 전 수확 거부, 다리 연결 후 3회 운반 = 600 SP, 튜토리얼 1 완료, 유닛별 속도 테스트를 포함한다. 원본 게임과 뷰어 화면은 실행하지 않아 시각 배치·입력을 화면에서 확인하지 않았다.
 - **남은 일**: (1) 원본 `speed` 값의 실제 칸/초 변환, 곡선 경로·충돌·다른 이동형 유닛 명령 구현; (2) `constructionRate` 소비 경로·사제의 건설 현장 이동·중단/환불 규칙을 찾아 현재 고정 시간을 교체 **(→ 2026-10-04: 건설 현장 이동·도착 후 건설·환불은 원본 관찰·팬게임 기준으로 구현, `constructionRate` 식·exe 정적 확인은 남음)**; (3) 튜토리얼 1 가이저의 실제 생성 위치와 다리 **누적 제작 수** 판정 복원(클론은 현재 살아 있는 다리 칸 수); (4) 생성 가이저 받침과 안내 창 흐름의 실제 GUI 확인. 실행 확인 규칙은 AGENTS.md의 해당 시스템 예외를 따른다.
-- 변경 파일: `src/Netstorm.Core/Simulation/{BattleSession.Harvest,MovementRate,TutorialGeysers}` 및 세션·명령·이벤트·단계·팩토리, `Bridges/BridgeGrid.cs`, `src/Netstorm.Game/FortMapViewer*`, `tests/Netstorm.Core.Tests/{HarvestEconomyTests,TutorialStagesTests}.cs`, `docs/{core-rules,map-viewer}.md`, [분석 문서](docs/exe/priest-construction.md), 이 문서.
+- 변경 파일: `dotnetpj/src/Netstorm.Core/Simulation/{BattleSession.Harvest,MovementRate,TutorialGeysers}` 및 세션·명령·이벤트·단계·팩토리, `Bridges/BridgeGrid.cs`, `dotnetpj/src/Netstorm.Game/FortMapViewer*`, `dotnetpj/tests/Netstorm.Core.Tests/{HarvestEconomyTests,TutorialStagesTests}.cs`, `docs/{core-rules,map-viewer}.md`, [분석 문서](docs/exe/priest-construction.md), 이 문서.
 
 ## 0-A. 최신 인수인계 — AI용 원본 분석 도구 (2026-09-29)
 
@@ -1020,7 +1040,7 @@
 - MORE/BACK(`Tell`), OK(`DoNothing`), Leave Tutorials(`LeaveBattle`), Next Tutorial(`MissionBegin`)을 연결했다. F8은 가장 최근 단계의 시작 안내로 돌아가며 보정 안내는 복귀 지점을 바꾸지 않는다. 버튼이 없는 F1.·보정 안내에는 닫기 버튼을 추가했다.
 - [사용법](docs/map-viewer.md#튜토리얼-안내-창). 원본 그림 명령은 자리표시자이고 원본 창과 동일한 그림·정확한 배치는 아직 구현하지 않았다. 튜토리얼 1·3~6도 A. 안내는 자동으로 열리지만 이후 단계는 자동 처리되지 않는다.
 - 정적 검증: Release 솔루션 빌드 성공(기존 CA2014 경고 1건), Assets 테스트 175개 통과(신규 3개에 원본 튜토리얼 2 스크립트 포함). 게임 화면은 실행하지 않았으므로 실제 화면 배치·클릭 확인은 남는다.
-- 변경 파일: `src/Netstorm.Assets/TutorialDialogScript.cs`, `src/Netstorm.Game/{FortMapViewer.TutorialDialog,FortMapViewer,FortMapViewer.Session,NetstormGame}.cs`, `tests/Netstorm.Assets.Tests/TutorialDialogScriptTests.cs`, `docs/map-viewer.md`, 이 문서.
+- 변경 파일: `dotnetpj/src/Netstorm.Assets/TutorialDialogScript.cs`, `dotnetpj/src/Netstorm.Game/{FortMapViewer.TutorialDialog,FortMapViewer,FortMapViewer.Session,NetstormGame}.cs`, `dotnetpj/tests/Netstorm.Assets.Tests/TutorialDialogScriptTests.cs`, `docs/map-viewer.md`, 이 문서.
 
 ### 2026-09-30 오후 (`vm-debian-codex`, Linux, 원본 실행 없음): 튜토리얼 2 단계 처리 구현 ✅ (후보 1번 완료)
 
@@ -1040,7 +1060,7 @@
   2. ~~튜토리얼 안내 창(9단계 UI): `TutorialTell` 이벤트의 섹션 본문(HTML 부분집합·`$Button=`)을 띄우고 F8로 다시 보기.~~ → **2026-09-30 완료**(위 절).
   3. **사제 이동·건설 절차 분석** → 타입별 이동 속도·배치 시 비용 차감은 **2026-09-30 확인**. `constructionRate` 계산과 건설 현장 이동은 남음(위 절).
   4. Ghidra 누락 함수 목록(후보 528개) — `FUN_004c34c0`의 `FUN_004c8e90`·`FUN_00460de0` 의미도 여기서 확인.
-- 이번 변경 파일(커밋 전): `src/Netstorm.Core/Simulation/{TutorialStages(신규),BattleSession,BattleSession.Commands,PlayerState,GameCommands,SessionEvents}.cs`, `src/Netstorm.Core/Rules/MissionStart.cs`, `src/Netstorm.Game/{FortMapViewer,FortMapViewer.Session}.cs`, `tests/Netstorm.Core.Tests/{TutorialStagesTests(신규),BattleSessionTests}.cs`, `docs/{core-rules,map-viewer}.md`, `docs/exe/mission-header-flags.md`, 이 문서. (`analyzeManager` 관련 이전 Linux/Wine 변경은 이미 커밋됨)
+- 이번 변경 파일(커밋 전): `dotnetpj/src/Netstorm.Core/Simulation/{TutorialStages(신규),BattleSession,BattleSession.Commands,PlayerState,GameCommands,SessionEvents}.cs`, `dotnetpj/src/Netstorm.Core/Rules/MissionStart.cs`, `dotnetpj/src/Netstorm.Game/{FortMapViewer,FortMapViewer.Session}.cs`, `dotnetpj/tests/Netstorm.Core.Tests/{TutorialStagesTests(신규),BattleSessionTests}.cs`, `docs/{core-rules,map-viewer}.md`, `docs/exe/mission-header-flags.md`, 이 문서. (`analyzeManager` 관련 이전 Linux/Wine 변경은 이미 커밋됨)
 
 ### 2026-09-30 오전 (`vm-debian-codex`, Linux, 원본 실행 없음): 디컴파일 준비만 하고 사용자 요청으로 중단
 
@@ -1087,13 +1107,13 @@
   4. Ghidra 누락 함수 목록 만들기(후보 528개)와 게임 로직 쪽 우선 디컴파일
   5. 세션을 게임 화면으로: 생산 창(덱) 사이드바·HUD(9단계 UI)
   6. 다리: 붕괴 대기 조건·영역 소유 이어짐(기존 후보 1)
-- 이번 변경 파일(커밋 전): `src/Netstorm.Core/Simulation/*`(신규 8), `Bridges/BridgeReach.cs`(신규), `Bridges/BridgeGrid.cs`·`Rules/{BattleMap,Footprint,MissionStart}.cs`, `src/Netstorm.Game/{FortMapViewer{,.Session(신규),.Placement,.Bridges},NetstormGame}.cs`, `tests/Netstorm.Core.Tests/{BattleSessionTests,SessionData}.cs`(신규)·`{MissionStartTests,OriginalData}.cs`, `tools/ghidra/{DecompileAt.java,decompile_at.ps1}`(신규), `docs/exe/mission-header-flags.md`(신규)·`docs/{core-rules,map-viewer}.md`·`docs/exe/battle-options.md`·`docs/formats/{README,mission-script}.md`, 이 문서.
+- 이번 변경 파일(커밋 전): `dotnetpj/src/Netstorm.Core/Simulation/*`(신규 8), `Bridges/BridgeReach.cs`(신규), `Bridges/BridgeGrid.cs`·`Rules/{BattleMap,Footprint,MissionStart}.cs`, `dotnetpj/src/Netstorm.Game/{FortMapViewer{,.Session(신규),.Placement,.Bridges},NetstormGame}.cs`, `dotnetpj/tests/Netstorm.Core.Tests/{BattleSessionTests,SessionData}.cs`(신규)·`{MissionStartTests,OriginalData}.cs`, `tools/ghidra/{DecompileAt.java,decompile_at.ps1}`(신규), `docs/exe/mission-header-flags.md`(신규)·`docs/{core-rules,map-viewer}.md`·`docs/exe/battle-options.md`·`docs/formats/{README,mission-script}.md`, 이 문서.
 
 ### 게임 구현: 다리 배치 판정·붕괴, 미션 시작 조건 (2026-09-30, `HJOW-Athlon`, 원본 실행 없음)
 
 튜토리얼 1·2 사용자 직접 조작 결과(아래 두 절)를 참고해, 정적 분석으로 확인할 수 있는 부분을 구현했다.
 
-- **다리 배치 판정·붕괴** — `src/Netstorm.Core/Bridges/BridgeGrid.cs`, [bridge-pieces.md](docs/exe/bridge-pieces.md) 8절.
+- **다리 배치 판정·붕괴** — `dotnetpj/src/Netstorm.Core/Bridges/BridgeGrid.cs`, [bridge-pieces.md](docs/exe/bridge-pieces.md) 8절.
   - exe 확인: 10초 주기 갱신(`Bridge.cpp` `00422bc0`, `0x52f968`), 칸 수명 0~7(`brMAX_TIME_LEFT`)·5 아래 금 감(`0x52f960`)·0 이면 제거(`00421c30`), 단단한 칸 제외, 연결망 "0이 아닌 최소 수명 − 1" 동기화(`004227e0`), 겹치는 칸이 있으면 배치 불가(`Rifttype.cpp` `0049b510`).
   - 근사: 이어짐 = "조각의 연결 방향이 섬 칸 또는 내 다리의 마주 연결된 끝에 닿음"(원본은 영역 소유 판정 `Player.cpp` `0048fdb0`), 붕괴 대상 = "열린 끝이 있는 연결망".
   - **규칙 확정(사용자 확인, 2026-09-30): 섬 가장자리 중 초목이 있는 부분에서는 다리 건설을 시작할 수 없다.** [섬 소유권 규칙](docs/gameplay/island-ownership.md) 3번, [bridge-pieces.md](docs/exe/bridge-pieces.md) 4·8절에 반영.
@@ -1104,7 +1124,7 @@
     - 한계: 뷰어의 edgeFarm 칸 위치는 좌표 고정 근사라 원본과 다를 수 있다([bridge-pieces.md](docs/exe/bridge-pieces.md) 8.4절)
   - 원본 관찰과의 차이: 금 간 기간 약 40초는 같지만, 모델은 첫 갱신 뒤 약 30초 만에 금이 가고 원본은 약 120초 뒤였다. 붕괴 시작 전 대기 조건(`004218b0`)을 더 풀어야 한다(8.3절).
   - 맵 뷰어 다리 모드(B)에 연결: 놓을 수 없으면 빨간 조각·이유 표시, 판정 통과 시에만 놓기, 10초 주기 붕괴·금 간 프레임·무너진 저장 다리 숨김. 확인 스크린샷 `extracted/screens/bridge-place-{ok,red}.png`([map-viewer.md](docs/map-viewer.md#다리-조각-시험-모드)).
-- **미션 시작 조건** — `src/Netstorm.Core/Rules/MissionStart.cs`.
+- **미션 시작 조건** — `dotnetpj/src/Netstorm.Core/Rules/MissionStart.cs`.
   - 머리 값 myStartMoney(없으면 전투 옵션 시작 금액)·myTech(시작 지식 → `ProductionDeck`)·techAllowed·denySalvage·denyAscend·aiOff·tutorialNumber·loadFort·title 을 읽는다.
   - techAllowed 는 원본 `Mission.cpp` `00482eb0` 순서(deny/allow 모드 전환, all = 전체, 이름 = 개별)로 해석한다(`Totalmade.cpp` `004c23c0`~`004c2400`).
   - 원본 튜토리얼 1(0 SP, 지식 없음, windVortex 만 허용)·2(10,000 SP, sunArcher)의 값이 사용자 조작 관찰과 같음을 테스트로 확인했다.
@@ -1116,7 +1136,7 @@
   3. 끝 칸 L·M·N·O(섬 쪽 연장 그림, `004215d0`)
   4. ~~엔티티·틱~~ → 2026-09-30 `BattleSession`으로 구현(건설 시간은 관찰값 근사, 위 절). 남은 것: 사제 결정 운반(결정당 200 SP)·이동
   5. ~~미션 시작 조건을 맵 뷰어·게임 화면에 연결~~ → 2026-09-30 완료(`--mission`, 위 절)
-- 이번 변경 파일(커밋 전): `src/Netstorm.Core/Bridges/BridgeGrid.cs`(신규), `src/Netstorm.Core/Rules/MissionStart.cs`(신규), `tests/Netstorm.Core.Tests/{BridgeGridTests,MissionStartTests}.cs`(신규), `src/Netstorm.Game/FortMapViewer{,.Bridges}.cs`, `docs/exe/bridge-pieces.md`·`docs/core-rules.md`·`docs/map-viewer.md`, 이 문서.
+- 이번 변경 파일(커밋 전): `dotnetpj/src/Netstorm.Core/Bridges/BridgeGrid.cs`(신규), `dotnetpj/src/Netstorm.Core/Rules/MissionStart.cs`(신규), `dotnetpj/tests/Netstorm.Core.Tests/{BridgeGridTests,MissionStartTests}.cs`(신규), `dotnetpj/src/Netstorm.Game/FortMapViewer{,.Bridges}.cs`, `docs/exe/bridge-pieces.md`·`docs/core-rules.md`·`docs/map-viewer.md`, 이 문서.
 
 ### 튜토리얼 2 사용자 직접 조작 분석 완료 (2026-09-30)
 
@@ -1518,6 +1538,8 @@
 
 ## 2. 기술 스택 (**확정: C# + MonoGame**, 2026-09-27 사용자 결정)
 
+> **2026-10-05 변경(사용자 결정):** C# + MonoGame 빌드(`dotnetpj/`)와 **C++ 빌드(`cpppj/`)를 병행 개발**한다. C++ 빌드는 기존 게임을 디컴파일한 소스를 토대로 C++ 소스를 다시 만드는 것이다 — [cpp-build.md](docs/cpp-build.md). 아래 표는 C# 빌드의 기술 스택이다.
+
 | 영역 | 선택 | 비고 |
 |---|---|---|
 | 언어 / 런타임 | **C#** / .NET (MonoGame 공식 템플릿의 대상 프레임워크를 따름, 현재 net8.0 LTS) | 이 PC 에는 .NET SDK 9.0.318 설치됨 (net8.0 대상 빌드 가능) |
@@ -1539,14 +1561,14 @@
 * `System.Random` 대신 원본 난수 생성기를 그대로 옮긴 자체 구현을 쓴다.
 * `Dictionary`/`HashSet` 순회 순서에 의존하는 로직을 만들지 않는다.
 
-### C++ 전제로 이미 준비된 항목의 처리
+### C++ 전제로 이미 준비된 항목의 처리 (2026-09-27 기준 — 2026-10-05 부터 C++ 빌드를 병행하므로 C++ 도구는 `cpppj/` 용 권장 항목이다)
 
 * `PREPARE.ps1` 의 VS Build Tools(C++)·CMake·Ninja·vcpkg 항목은 게임 빌드에 더 이상 필수가 아니다 → 2단계에서 **.NET SDK·MonoGame 템플릿 항목을 추가**하고 C++ 항목은 선택으로 내린다.
 * `src/` 아래 C++ 기준으로 만든 빈 폴더(`platform/`, `engine/` 등)는 3절의 C# 프로젝트 구조로 재구성한다.
 
 ---
 
-## 3. 디렉터리 구조 (C# + MonoGame 기준)
+## 3. 디렉터리 구조 (2026-10-05: C# 프로젝트를 `dotnetpj/` 로 옮기고 C++ 빌드 `cpppj/` 추가)
 
 ```
 Netstorm/
@@ -1563,15 +1585,26 @@ Netstorm/
 ├─ fonts/                     # 한국어 글꼴 D2Coding (TTC, SIL OFL)
 ├─ locale/                    # 번역 파일 (en, ko 1차 / de 등 이후)
 ├─ screenShots/               # 사용자가 찍은 원본 게임 캡처 (외부 캡처 도구 — 작업표시줄·창 테두리 일부 포함, 1.6절 표)
-├─ Netstorm.sln
-├─ src/
-│  ├─ Netstorm.Assets/        # 원본 포맷 로더 (TAFF, .type, _shapes.shp, 팔레트, .fort, 설정, 번역) — MonoGame 비의존
-│  ├─ Netstorm.Core/          # 게임 규칙·엔티티·전투·경제·다리·AI·미션 스크립트 — MonoGame 비의존 (결정론·테스트 용이)
-│  ├─ Netstorm.Net/           # 멀티플레이 (락스텝)
-│  └─ Netstorm.Game/          # MonoGame DesktopGL 실행 프로젝트: 렌더링·입력·오디오·UI·화면 전환
-└─ tests/
-   ├─ Netstorm.Assets.Tests/  # xUnit: 원본 전체 파일 파싱, Python 도구 결과와 비교
-   └─ Netstorm.Core.Tests/    # xUnit: 규칙·결정론 테스트
+├─ assets/game-data/          # 두 빌드가 함께 쓰는 클론 게임 데이터
+├─ analyzeManager/            # 원본 게임 자동 탐험 프로그램 (C#, 분석 도구 — dotnetpj/ 의 Netstorm.Assets 를 참조)
+├─ dotnetpj/                  # C# + MonoGame 빌드
+│  ├─ Netstorm.sln, global.json, Directory.Build.props, Directory.Packages.props
+│  ├─ src/
+│  │  ├─ Netstorm.Assets/     # 원본 포맷 로더 (TAFF, .type, _shapes.shp, 팔레트, .fort, 설정, 번역) — MonoGame 비의존
+│  │  ├─ Netstorm.Core/       # 게임 규칙·엔티티·전투·경제·다리·AI·미션 스크립트 — MonoGame 비의존 (결정론·테스트 용이)
+│  │  ├─ Netstorm.Net/        # 멀티플레이 (락스텝)
+│  │  └─ Netstorm.Game/       # MonoGame DesktopGL 실행 프로젝트: 렌더링·입력·오디오·UI·화면 전환
+│  └─ tests/
+│     ├─ Netstorm.Assets.Tests/  # xUnit: 원본 전체 파일 파싱, Python 도구 결과와 비교
+│     └─ Netstorm.Core.Tests/    # xUnit: 규칙·결정론 테스트
+└─ cpppj/                     # C++ 빌드 (디컴파일한 소스를 토대로 다시 만든다, CMake) — docs/cpp-build.md
+   ├─ CMakeLists.txt, CMakePresets.json, SOURCE_MAP.md(원본 소스 파일 → cpppj 경로)
+   ├─ src/o/                  # 원본 \Ns\O\ 공용 모듈
+   ├─ src/client/             # 원본 클라이언트 모듈
+   ├─ src/zacket/             # 원본 \Ns\Zacket\ 네트워크 패킷
+   ├─ src/platform/           # 새로 쓰는 플랫폼 계층 (원본의 Win32·DirectX 대체)
+   ├─ src/app/                # 실행 파일 진입점
+   └─ tests/                  # 단위 테스트 (ctest)
 ```
 
 * 게임 로직(`Core`)과 자산 로더(`Assets`)는 MonoGame 에 의존하지 않게 분리한다 → 헤드리스 테스트·리플레이 검증·서버 재사용이 쉽다.
@@ -1600,7 +1633,7 @@ Netstorm/
   - Ghidra 헤드리스 디컴파일 스크립트 `tools/ghidra/run_decomp.ps1` 은 아직 Windows 전용 (Linux 용 필요 시 `analyzeHeadless` 로 옮길 것)
 - [x] `.editorconfig` — 2026-09-27 완료. UTF-8·LF 기본, `.ps1` 은 UTF-8 BOM·CRLF, `.sln` CRLF, C# 스타일 규칙(파일 범위 네임스페이스, Allman 중괄호, `_camelCase` private 필드)
 - [x] 솔루션 골격 — 2026-09-27 완료. `src/` 의 C++ 기준 빈 폴더 삭제 후 3절 구조로 생성
-  - `Netstorm.sln`, `global.json`(SDK 10.0.x), `Directory.Build.props`(공통: **net10.0**, Nullable, ImplicitUsings), `Directory.Packages.props`(패키지 버전 중앙 관리)
+  - `dotnetpj/Netstorm.sln`, `dotnetpj/global.json`(SDK 10.0.x), `Directory.Build.props`(공통: **net10.0**, Nullable, ImplicitUsings), `Directory.Packages.props`(패키지 버전 중앙 관리)
   - 대상 프레임워크는 **net10.0 (LTS, 2028-11 지원 종료)**. .NET 8 은 2026-11 지원 종료라 제외. MonoGame 3.8.5.1 패키지는 net8.0 대상이지만 net10.0 에서 그대로 동작함을 확인
   - 패키지: MonoGame.Framework.DesktopGL 3.8.5.1, FontStashSharp.MonoGame 1.6.1, xunit.v3 3.2.2 (+ xunit.runner.visualstudio 3.1.5, Microsoft.NET.Test.Sdk 17.14.1)
   - xUnit v3 를 쓴 이유: 원본 데이터가 없는 환경(CI)에서 원본이 필요한 테스트를 `Assert.SkipWhen` 으로 건너뛰기 위함. xunit.v3 4.x 는 새 테스트 플랫폼(MTP v2) 설정이 필요해 3.2.2 사용
@@ -1624,10 +1657,10 @@ Netstorm/
 #### 빌드·실행 방법
 
 ```powershell
-dotnet build Netstorm.sln                     # 전체 빌드
-dotnet test Netstorm.sln                      # 테스트 (원본 데이터가 있으면 원본 검증 테스트도 실행)
-dotnet run --project src/Netstorm.Game        # 게임 실행 (Esc 종료)
-dotnet run --project src/Netstorm.Game -- --screenshot extracted/screens/shot.png
+dotnet build dotnetpj/Netstorm.sln                     # 전체 빌드
+dotnet test dotnetpj/Netstorm.sln                      # 테스트 (원본 데이터가 있으면 원본 검증 테스트도 실행)
+dotnet run --project dotnetpj/src/Netstorm.Game        # 게임 실행 (Esc 종료)
+dotnet run --project dotnetpj/src/Netstorm.Game -- --screenshot extracted/screens/shot.png
 ```
 
 원본 데이터 폴더는 `NETSTORM_DATA` 환경 변수 → 실행 파일/현재 폴더에서 상위로 올라가며 `originals/` 탐색 순으로 찾는다 (`GameDataLocator`).
@@ -1793,7 +1826,7 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
 
 ### 6단계. 자산 로더 / 개발용 뷰어 (C#, `Netstorm.Assets` + `Netstorm.Game`) — 🔶 진행 중
 
-`src/Netstorm.Assets/` (MonoGame 비의존), 테스트 `tests/Netstorm.Assets.Tests/` (147개, 전부 통과 — 2026-09-28)
+`dotnetpj/src/Netstorm.Assets/` (MonoGame 비의존), 테스트 `dotnetpj/tests/Netstorm.Assets.Tests/` (147개, 전부 통과 — 2026-09-28)
 
 - [x] `XorCipher` — TAFF·설정 파일 공용 XOR — 2026-09-27 완료
 - [x] `TaffArchive` — 아카이브 읽기, 대소문자·구분자 무시 이름 검색 — 2026-09-27 완료
@@ -1856,7 +1889,7 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
 
 4단계 명세를 기반으로 구현하며, 모든 규칙 코드는 단위 테스트를 둔다.
 
-- [x] **정적 규칙 코어** — 2026-09-29 완료: `src/Netstorm.Core/Rules/` ([게임 규칙 코어](docs/core-rules.md)). 원소·유닛별 필요 에너지(mana 우선, 원소 L1/L2/L3·Sun·Generator 규칙), 공급원 판정(자기·동맹, 중심 거리² ≤ 반지름², 공급원 하나 = 에너지 1개), 발자국(기준점 = 오른쪽 아래 칸, exe `FUN_0049ae80` 확인), 전투 옵션·공급 반지름·튜토리얼 2 덮어쓰기, 오브젝트 분류, Storm Power 색·회수·보상, 재충전 간격, 생산 창(템플 → 다리·골렘, 워크샵 등록 규칙·칸 수·파괴 해제), 섬 소유권·위치 조건, `BattleMap`(맵 → 소유권·공급원·점유, 배치 판정·실행). Core 테스트 88개(원본 `.type` 전체 요구값·The War Begins! 맵·Generator 전력선 포함) 통과
+- [x] **정적 규칙 코어** — 2026-09-29 완료: `dotnetpj/src/Netstorm.Core/Rules/` ([게임 규칙 코어](docs/core-rules.md)). 원소·유닛별 필요 에너지(mana 우선, 원소 L1/L2/L3·Sun·Generator 규칙), 공급원 판정(자기·동맹, 중심 거리² ≤ 반지름², 공급원 하나 = 에너지 1개), 발자국(기준점 = 오른쪽 아래 칸, exe `FUN_0049ae80` 확인), 전투 옵션·공급 반지름·튜토리얼 2 덮어쓰기, 오브젝트 분류, Storm Power 색·회수·보상, 재충전 간격, 생산 창(템플 → 다리·골렘, 워크샵 등록 규칙·칸 수·파괴 해제), 섬 소유권·위치 조건, `BattleMap`(맵 → 소유권·공급원·점유, 배치 판정·실행). Core 테스트 88개(원본 `.type` 전체 요구값·The War Begins! 맵·Generator 전력선 포함) 통과
   - [x] 맵 뷰어 **배치 시험 모드**(P) — 규칙 코어로 판정·배치·범위 표시, `--placement`·`--probe` 검증 옵션 ([실행](docs/map-viewer.md#배치-시험-모드)). Dissolved Alliance! 에서 Sail Skater 가능·Bulf 에너지 부족 확인
   - [ ] 남은 일: 공급원 판정의 대상 크기 항(exe 가상 함수 +0xA0), 다리 연결·다리 끝 판정(현재 근사), 미션 `myTech`·`.fort` Technology/Deck → 초기 지식·덱, 동맹 설정, 발자국 전체의 섬 판정
 - [ ] 맵·섬·아이소메트릭 렌더링, 카메라 스크롤, 오브젝트 그리기 순서
@@ -1973,9 +2006,9 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
 
 **이후 이어서 진행 (2026-09-29 후속 세션) — 코드 변경 포함, 커밋 전**
 * 가장자리 스크롤 exe 분석 → [docs/exe/edge-scroll.md](docs/exe/edge-scroll.md) (1픽셀 가장자리, 속도 2 → +30/초 → 상한 `edgeScrollSpeed` 35 프레임당 픽셀, 창 테두리 없을 때만, 위쪽은 메뉴 막대 예외, 왼쪽 버튼·Shift 조건)
-* 7단계 착수: `src/Netstorm.Core/Display/`(`ScreenLayoutCalculator`, `WideScreenMode`, `EdgeScrollController`, `DisplaySettings`) + `src/Netstorm.Game/DisplayManager.cs` + 뷰어 연결(`FortMapViewer`·`SpriteBrowser`·`NetstormGame`), 새 테스트 프로젝트 `tests/Netstorm.Core.Tests`(50개, 솔루션 추가). 빌드 오류 0, 전체 테스트 222개(Assets 172 + Core 50) 통과
+* 7단계 착수: `dotnetpj/src/Netstorm.Core/Display/`(`ScreenLayoutCalculator`, `WideScreenMode`, `EdgeScrollController`, `DisplaySettings`) + `dotnetpj/src/Netstorm.Game/DisplayManager.cs` + 뷰어 연결(`FortMapViewer`·`SpriteBrowser`·`NetstormGame`), 새 테스트 프로젝트 `dotnetpj/tests/Netstorm.Core.Tests`(50개, 솔루션 추가). 빌드 오류 0, 전체 테스트 222개(Assets 172 + Core 50) 통과
 * 실제 실행 확인: 창 1024×768·1920×1080·1920×1200(시야 확장), 1920×1080 4:3 레터박스(영상과 같은 좌우 240px), 1920×1080 전체화면, 전체화면 저장 뒤 연속 재실행 2회, 시작 실패 표식 안전장치, 가장자리 스크롤 이동량(스크린샷 측정 ≈ 곡선 계산값)
-* 이 세션의 변경 파일(커밋 전): `LEFT_JOBS.md`, `Netstorm.sln`, `docs/map-viewer.md`, `docs/exe/edge-scroll.md`(신규), `docs/sources/README.md`, `src/Netstorm.Core/Display/*`(신규), `src/Netstorm.Game/{DisplayManager(신규),NetstormGame,FortMapViewer,SpriteBrowser}.cs`, `tests/Netstorm.Core.Tests/*`(신규)
+* 이 세션의 변경 파일(커밋 전): `LEFT_JOBS.md`, `dotnetpj/Netstorm.sln`, `docs/map-viewer.md`, `docs/exe/edge-scroll.md`(신규), `docs/sources/README.md`, `dotnetpj/src/Netstorm.Core/Display/*`(신규), `dotnetpj/src/Netstorm.Game/{DisplayManager(신규),NetstormGame,FortMapViewer,SpriteBrowser}.cs`, `dotnetpj/tests/Netstorm.Core.Tests/*`(신규)
 * 와이드 화면 방식은 사용자가 **시야 확장으로 확정**했다 (레터박스는 게임에서 쓰지 않음, 5절 5번). 사용자 확인 필요: 뷰어 안내 영역을 4줄(128px)로 늘리고 "다리·지면 미리보기 검증 전" 안내 줄을 화면에서 제거한 것(내용은 map-viewer.md 에 그대로 있음)
 
 **당시 중단된 작업 → 2026-09-29 후속 분석으로 처리**
@@ -2004,7 +2037,7 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
 3. ~~Dissolved Alliance! 맵 뷰어 대조~~ → 완료 ([dissolved-alliance-start.md](docs/screens/dissolved-alliance-start.md)). 원본 시작 카메라 규칙 발견·뷰어 반영, 거주지 원소별 그림 반영 (검사 147개 통과, 빌드 오류 0, 경고는 기존 CA2014 뿐)
 4. 영상 프레임 추출 도구 `tools/videoframes.py` 작성 완료. `docs/videos/` 미션별 관찰 노트는 **미착수** → 6절 5번
 
-**재개 후 변경 파일 (커밋 전)**: `tools/videoframes.py`(신규), `src/Netstorm.Assets/MapSpriteFrames.cs`, `src/Netstorm.Assets/FortTerrainPreview.cs`, `src/Netstorm.Game/FortMapViewer.cs`, `tests/Netstorm.Assets.Tests/MapRenderingTests.cs`, `docs/videos/README.md`(신규), `docs/screens/dissolved-alliance-start.md`(신규), `docs/screens/README.md`, `docs/gameplay/island-ownership.md`, `docs/map-viewer.md`, `LEFT_JOBS.md`
+**재개 후 변경 파일 (커밋 전)**: `tools/videoframes.py`(신규), `dotnetpj/src/Netstorm.Assets/MapSpriteFrames.cs`, `dotnetpj/src/Netstorm.Assets/FortTerrainPreview.cs`, `dotnetpj/src/Netstorm.Game/FortMapViewer.cs`, `dotnetpj/tests/Netstorm.Assets.Tests/MapRenderingTests.cs`, `docs/videos/README.md`(신규), `docs/screens/dissolved-alliance-start.md`(신규), `docs/screens/README.md`, `docs/gameplay/island-ownership.md`, `docs/map-viewer.md`, `LEFT_JOBS.md`
 
 ## 6. 바로 다음 작업
 
@@ -2013,15 +2046,15 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
    - **2026-09-29 진행**: 조각 생성·추첨·회전·프레임·생산 칸 채우기 완료([bridge-pieces.md](docs/exe/bridge-pieces.md)). 추첨은 `Deck` 이 아니라 `Canondecoder.cpp` 의 고정 모양 표였다.
    - **다음**: `Bridge.cpp` `FUN_00421770`(칸 방향 연결 검사)·`004217f0`·`004215d0`부터 배치 판정을 옮긴다. 그다음 `004218b0`(재귀 연결·번호)·`00421240`(소유자 전파)·`00421c30`·`00421f90`·`004227e0`(붕괴 추정)을 분석한다.
    - **2026-09-29 원본 확인 완료**: 회전 조작(오른쪽 클릭 시계·C 반대 회전)과 커서 → 왼쪽 위 칸 규칙을 확인하고 반영했다(`BridgePiece.RotateByPlayer`, `BridgeCursor`, 뷰어 R·C 키·절반 크기 칸). 세션 `20260929T130339905Z-b92c507f492a`, 게임 종료·`originals/` 변경 없음 확인.
-     - 이 작업의 변경 파일(커밋 전): `src/Netstorm.Core/Bridges/{BridgePiece,BridgeCursor(신규)}.cs`, `src/Netstorm.Game/FortMapViewer.Bridges.cs`, `tests/Netstorm.Core.Tests/BridgePieceTests.cs`, `docs/exe/bridge-pieces.md`·`docs/core-rules.md`·`docs/map-viewer.md`·`docs/screens/README.md`, 이 문서.
+     - 이 작업의 변경 파일(커밋 전): `dotnetpj/src/Netstorm.Core/Bridges/{BridgePiece,BridgeCursor(신규)}.cs`, `dotnetpj/src/Netstorm.Game/FortMapViewer.Bridges.cs`, `dotnetpj/tests/Netstorm.Core.Tests/BridgePieceTests.cs`, `docs/exe/bridge-pieces.md`·`docs/core-rules.md`·`docs/map-viewer.md`·`docs/screens/README.md`, 이 문서.
      - 테스트: Core 100·Assets 172 통과
-   - (이전) 이번 변경 파일(커밋 전): `src/Netstorm.Core/Bridges/*`·`Simulation/NetstormRandom.cs`(신규), `tests/Netstorm.Core.Tests/BridgePieceTests.cs`(신규), `src/Netstorm.Game/FortMapViewer.Bridges.cs`(신규)·`FortMapViewer.cs`·`FortMapViewer.Placement.cs`·`NetstormGame.cs`, `docs/exe/bridge-pieces.md`(신규)·`docs/core-rules.md`·`docs/map-viewer.md`, 이 문서. 빌드 오류 0(기존 CA2014 경고 1), 테스트 Core 98·Assets 172 통과.
+   - (이전) 이번 변경 파일(커밋 전): `dotnetpj/src/Netstorm.Core/Bridges/*`·`Simulation/NetstormRandom.cs`(신규), `dotnetpj/tests/Netstorm.Core.Tests/BridgePieceTests.cs`(신규), `dotnetpj/src/Netstorm.Game/FortMapViewer.Bridges.cs`(신규)·`FortMapViewer.cs`·`FortMapViewer.Placement.cs`·`NetstormGame.cs`, `docs/exe/bridge-pieces.md`(신규)·`docs/core-rules.md`·`docs/map-viewer.md`, 이 문서. 빌드 오류 0(기존 CA2014 경고 1), 테스트 Core 98·Assets 172 통과.
 2. **엔티티·틱** — `.type` 구동 오브젝트 목록을 `FixedTimestep`으로 갱신하고, 건설 시간(`constructionRate`)·재충전 간격(`ProductionTimers`)을 틱으로 돌린다 → **2026-09-30 완료**(`BattleSession`, 건설 시간은 관찰값 근사)
 3. **초기 상태** — 미션 머리 값 `myTech`·`myStartMoney`, `.fort` `Technology`·`Deck`에서 지식·덱·Storm Power를 채운다. 튜토리얼 2 는 `BattleOptions.ApplyTutorialTwoOverrides` → **2026-09-30 부분 완료**: 머리 값·전투 옵션 적용. `.fort` `Technology`·`Deck` 연결은 남음
 4. **수집·경제** — `Carrier.cpp`·`Nugget.cpp`·`Vortex.cpp` 분석 → 가이저 → 결정 → 템플 운반 흐름
 5. 이후 전투(`Gunprocess`·`Damageable`·`Bomb`), 사제·희생(`Priest`·`Dais`), UI(생산 창·컨텍스트 메뉴)
 
-이번 변경 파일(커밋 전): `src/Netstorm.Core/Rules/*`·`Simulation/*`(신규), `tests/Netstorm.Core.Tests/{EnergyRuleTests,GameRuleTests,OriginalData}.cs`(신규), `src/Netstorm.Game/FortMapViewer.Placement.cs`(신규)·`FortMapViewer.cs`·`NetstormGame.cs`, `docs/core-rules.md`(신규)·`docs/map-viewer.md`·`docs/exe/energy-requirements.md`, 이 문서.
+이번 변경 파일(커밋 전): `dotnetpj/src/Netstorm.Core/Rules/*`·`Simulation/*`(신규), `dotnetpj/tests/Netstorm.Core.Tests/{EnergyRuleTests,GameRuleTests,OriginalData}.cs`(신규), `dotnetpj/src/Netstorm.Game/FortMapViewer.Placement.cs`(신규)·`FortMapViewer.cs`·`NetstormGame.cs`, `docs/core-rules.md`(신규)·`docs/map-viewer.md`·`docs/exe/energy-requirements.md`, 이 문서.
 
 0. **동봉 문서 참고 (2026-09-29 정리)**: 작업 전에 [docs/sources/README.md](docs/sources/README.md) 를 먼저 본다 — 규칙·조작·유닛 수치와 **현재 분석과의 불일치 12건**(3절)이 정리되어 있다. 사용자가 외부에서 추가한 [`originals/help/manual.pdf`](originals/help/manual.pdf)는 조작·생산 절차와 일부 비용을 `GAME.HLP`·보유 `.type`에 [선별 대조](docs/sources/pdf-manual.md)했다. 메인/컨텍스트 메뉴 그림은 실제 UI 형태와 부합한다(사용자 확인). 옛 메인 메뉴의 기본 항목은 7개, 보유 패치판은 `Edit` 포함 8개다. 비용·일부 메뉴 항목은 판본에 따라 다르며 전체 페이지 대조는 남아 있다. 우선 확인할 것:
    - ~~level 1 원소 유닛(Bulf·Arc Spire·Crystal Crab)의 필요 에너지 exe 분석~~ → **2026-09-29 완료**: `Rifttype.cpp` `0049b0d0`이 타입 `+0xA0`의 기본 요구값을 만들고, `Mana.cpp` `004734d0`·`00473330`이 배치 위치에서 검사한다. Bulf·Arc Spire는 Thunder 1, Crystal Crab은 Rain 1. Generator는 `.type`의 명시 `mana = "s"`로 아무 공급원 1개. 이전 후보 `0044ac30`·`00473d00`은 다른 구조체 필드로 인한 오인. [분석](docs/exe/energy-requirements.md), [유닛 표](docs/gameplay/elements-energy.md) 4절. ~~**후속**: 패치판 게임에서 교차 원소 공급원 아래 세 유닛의 배치 성공/실패를 동적으로 확인~~ → **2026-09-29 사용자 확인으로 확정**(Bulf는 Thunder 공급원 필수, 다른 원소는 소용없음, 같은 레벨이라도 유닛마다 다름). PDF 유닛 핸드북 전체와도 대조함 ([PDF 대조표](docs/sources/pdf-manual.md#유닛별-건설-에너지-energy-to-build)) — 게임 실행 검증 불필요

@@ -3,7 +3,7 @@ param([string]$OutputDirectory = 'extracted/record-play-details-20261003/clone',
 $ErrorActionPreference = 'Stop'
 # 검사별 설정·입력·로그·PNG는 Git 제외 폴더에 저장하고 평소 사용자 설정은 복원한다.
 $taskRoot = Split-Path -Parent $PSScriptRoot
-$taskExe = Join-Path $taskRoot 'src/Netstorm.Game/bin/Release/net10.0/NetstormClone.exe'
+$taskExe = Join-Path $taskRoot 'dotnetpj/src/Netstorm.Game/bin/Release/net10.0/NetstormClone.exe'
 $taskOldSettings = $env:NETSTORM_SETTINGS_DIR
 $taskCases = @()
 # 같은 메뉴·브리핑·미션 종료 입력을 실제 소리 켜짐·꺼짐 두 상태에서 확인한다.

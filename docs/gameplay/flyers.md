@@ -56,7 +56,7 @@
 
 ## 검증
 
-`dotnet test Netstorm.sln -c Release --no-restore -m:1 -nr:false -p:UseSharedCompilation=false`:
+`dotnet test dotnetpj/Netstorm.sln -c Release --no-restore -m:1 -nr:false -p:UseSharedCompilation=false`:
 Assets **186**, Core **184** 통과. 새 비행체 테스트 **14건**은 무료 생성·이동 후 공격·최대 3대·수송 제외·동맹·
 출발점 사거리·귀환/재출격·기지 제거·피격/재생성·지상 점유 보존·결정론·전투 끄기를 확인했다.
 Release 빌드 성공. 첫 전체 빌드에는 기존 `TextResourceTests.cs:353`의 CA2014 경고 1개가 있었고,
@@ -66,7 +66,7 @@ Release 빌드 성공. 첫 전체 빌드에는 기존 `TextResourceTests.cs:353`
 공격·귀환의 실시간 화면 대조는 하지 않았다. 해당 동작은 위 헤드리스 테스트로 검증했다.
 
 ```powershell
-dotnet src/Netstorm.Game/bin/Release/net10.0/NetstormClone.dll --map masterofwhirligigs --placement sunaviary --probe 39,53 --script "place windBattery 36,50; place sunaviary 39,53; combat 1; wait 8" --screenshot extracted/whirligig-clone-base.png
+dotnet dotnetpj/src/Netstorm.Game/bin/Release/net10.0/NetstormClone.dll --map masterofwhirligigs --placement sunaviary --probe 39,53 --script "place windBattery 36,50; place sunaviary 39,53; combat 1; wait 8" --screenshot extracted/whirligig-clone-base.png
 ```
 
 원본과 일대일 속도/피해 대조, 소리 청취, Linux 실행과 캠페인 완주는 검증하지 않았다.

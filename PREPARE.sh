@@ -570,14 +570,14 @@ add_item dotnet       '필수' 1 ".NET SDK $REQUIRED_DOTNET_MAJOR" "게임 빌�
 add_item monogame     '권장' 1 'MonoGame 템플릿'            "dotnet new 용 MonoGame 프로젝트 템플릿 ($MONOGAME_TEMPLATE_PACKAGE)"
 add_item python       '필수' 1 'Python 3'                   "포맷 분석·추출 도구 ($MIN_PYTHON_VERSION 이상)"
 add_item pypkgs       '필수' 1 'Python 패키지'              "${PYTHON_PACKAGES[*]}"
-add_item cxx          '선택' 0 'C++ 빌드 도구'              'gcc, g++, make (C# 확정으로 현재 불필요)'
-add_item cmake        '선택' 0 'CMake'                      '빌드 시스템 생성기 (C# 확정으로 현재 불필요)'
-add_item ninja        '선택' 0 'Ninja'                      '빌드 실행기 (C# 확정으로 현재 불필요)'
+add_item cxx          '권장' 0 'C++ 빌드 도구'              'gcc, g++, make (C++ 빌드 cpppj/ 용)'
+add_item cmake        '권장' 0 'CMake'                      '빌드 시스템 생성기 (C++ 빌드 cpppj/ 용, 3.21 이상)'
+add_item ninja        '선택' 0 'Ninja'                      '빌드 실행기 (C++ 빌드 cpppj/ 의 ninja 프리셋용)'
 add_item jdk          '필수' 1 "JDK $MIN_JDK_MAJOR+"        'Ghidra 실행용 Java'
 add_item ghidra       '필수' 1 'Ghidra'                     "Netstorm.exe 정적 분석 ($TOOLS_DIR 에 설치)"
 add_item wine         '권장' 0 'Wine'                       '원본 exe 실행·winedbg 동적 분석·WINEDEBUG=+file 파일 접근 관찰 (x64dbg·Process Monitor 대체)'
 add_item safedir      '필수' 1 'git safe.directory 등록'    "'dubious ownership' 오류 해결 (git 전역 설정 변경)"
-add_item vcpkg        '선택' 0 'vcpkg'                      "C++ 라이브러리 관리자 ($TOOLS_DIR 에 설치, C# 확정으로 현재 불필요)"
+add_item vcpkg        '선택' 0 'vcpkg'                      "C++ 라이브러리 관리자 ($TOOLS_DIR 에 설치, C++ 빌드에서 아직 쓰지 않음)"
 add_item vscode       '권장' 0 'VS Code 확장'               "${VSCODE_EXTENSIONS[*]}"
 add_item ytdlp        '선택' 0 'yt-dlp'                     "YouTube 플레이 영상 조회·스트림 주소 (analyzeManager youtube_*, $LOCAL_BIN_DIR 에 설치)"
 add_item deno         '선택' 0 'Deno'                       "yt-dlp 의 YouTube 해석용 JavaScript 런타임 ($DENO_INSTALL_DIR 에 설치)"

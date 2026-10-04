@@ -16,17 +16,17 @@
 저장소 루트에서 실행:
 
 ```powershell
-dotnet run --project src/Netstorm.Game -- --map savetheisland
-dotnet run --project src/Netstorm.Game -- --map thewarbegins
-dotnet run --project src/Netstorm.Game -- --map assets/game-data/d/b0.fort
-dotnet run --project src/Netstorm.Game -- --map savetheisland --language korean
+dotnet run --project dotnetpj/src/Netstorm.Game -- --map savetheisland
+dotnet run --project dotnetpj/src/Netstorm.Game -- --map thewarbegins
+dotnet run --project dotnetpj/src/Netstorm.Game -- --map assets/game-data/d/b0.fort
+dotnet run --project dotnetpj/src/Netstorm.Game -- --map savetheisland --language korean
 ```
 
 2026-10-03 **커스텀 맵 시험 전투와 화면 요소**([TEST01 화면 요소 대조](videos/test01-visuals-20261003.md)):
 
 ```powershell
-dotnet run --project src/Netstorm.Game -c Release -- --test-battle TEST01                 # 원본 Edit → Game → Test Battle 처럼 플레이 화면으로 연다
-dotnet run --project src/Netstorm.Game -c Release -- --test-battle TEST01 --dump-objects  # 맵 오브젝트·세션 오브젝트·지면 영역(테마·소유자)을 콘솔에 쓴다
+dotnet run --project dotnetpj/src/Netstorm.Game -c Release -- --test-battle TEST01                 # 원본 Edit → Game → Test Battle 처럼 플레이 화면으로 연다
+dotnet run --project dotnetpj/src/Netstorm.Game -c Release -- --test-battle TEST01 --dump-objects  # 맵 오브젝트·세션 오브젝트·지면 영역(테마·소유자)을 콘솔에 쓴다
 ```
 
 * `--test-battle <맵>` 은 캠페인에 공개되지 않은 맵(`d/<맵>.fort` + `.english`)도 생산 창·미니맵이 있는 플레이 화면으로 연다. 원본처럼 AI 색 덮어쓰기(`aiNColor`)는 적용하지 않는다.
@@ -134,7 +134,7 @@ dotnet run --project src/Netstorm.Game -c Release -- --test-battle TEST01 --dump
 튜토리얼 2 흐름 확인 (2026-09-30): 관찰한 Storm Power 10,000 → 5,000(템플) → 4,200(워크샵) → 유닛 300씩 → 회수 75와 같은 값이 나온다.
 
 ```powershell
-dotnet run --project src/Netstorm.Game -- --mission tutorial2 --window 1024x768 --script "construct windVortex 40,32; wait 17; construct sunFactory 52,32; wait 11; register sunArcher; place sunArcher 43,32; wait 2; place sunArcher 38,35; wait 1; denysalvage 0; salvage 38,35" --screenshot extracted/screens/session-tutorial2.png --screenshot-frames 45
+dotnet run --project dotnetpj/src/Netstorm.Game -- --mission tutorial2 --window 1024x768 --script "construct windVortex 40,32; wait 17; construct sunFactory 52,32; wait 11; register sunArcher; place sunArcher 43,32; wait 2; place sunArcher 38,35; wait 1; denysalvage 0; salvage 38,35" --screenshot extracted/screens/session-tutorial2.png --screenshot-frames 45
 ```
 
 콘솔에는 `Wind Temple 완공`(17초), `Sun Workshop 완공`(28초), 등록, 배치(−300)×2, 회수(+75)가 차례로 나오고 화면의 Storm Power는 3,675다.
@@ -142,7 +142,7 @@ dotnet run --project src/Netstorm.Game -- --mission tutorial2 --window 1024x768 
 
 단계 처리로 A→G까지 걷는 확인(2026-09-30, Linux): 템플 완공 → `TutorialTell B.` → 워크샵 완공 → `C.` → 템플을 2초 선택 → `NotVortex` → 등록 → `D.` → 첫 배치 `E.` → 둘째 `F.` → 템플 4초 선택 → `G.`.
 단계 H 전에는 회수가 `회수 금지 상태`로 거부된다. 스크립트: `construct windVortex 40,32; wait 17; construct sunFactory 52,32; wait 11; select 40,32; wait 2.5; register sunArcher; place sunArcher 43,32; wait 2; place sunArcher 38,35; wait 2; select 40,32; wait 4.5; place sunArcher 41,36; wait 1; salvage 41,36`.
-좌표는 첫 번째로 유효한 칸이라 섬 가장자리에 붙는다. 건설 시간은 사제가 도착한 뒤 10초(워크샵 관찰값)다([ConstructionTimes](../src/Netstorm.Core/Simulation/ConstructionTimes.cs)). 생산 규칙을 끈 배치 시험 모드는 사제 없이 곧바로 짓고, 규칙이 켜진 미션은 사제가 걸어가 도착해야 건설이 시작된다([건설 흐름](gameplay/priest-construction-flow.md)).
+좌표는 첫 번째로 유효한 칸이라 섬 가장자리에 붙는다. 건설 시간은 사제가 도착한 뒤 10초(워크샵 관찰값)다([ConstructionTimes](../dotnetpj/src/Netstorm.Core/Simulation/ConstructionTimes.cs)). 생산 규칙을 끈 배치 시험 모드는 사제 없이 곧바로 짓고, 규칙이 켜진 미션은 사제가 걸어가 도착해야 건설이 시작된다([건설 흐름](gameplay/priest-construction-flow.md)).
 
 ## 배치 시험 모드
 
@@ -160,14 +160,14 @@ dotnet run --project src/Netstorm.Game -- --mission tutorial2 --window 1024x768 
 * 판정 순서: (미션이면 기술 허용 표·덱 등록·재충전) → 섬 위치(내 섬 / 다리로 연결된 빈 섬 / 내 다리 끝, 남의 섬 불가) → 빈 자리 → Storm Power → 에너지.
 * 아군 공급원(템플·Generator)의 공급 반지름을 원소 색 점선 원으로, 요구 에너지에 배정된 공급원을 선으로 보여 준다.
 * 아래에 선택한 타입·판정 결과·**덱 상태**(다리 칸, 골렘, 등록한 유닛과 재충전 남은 시간)·알림·조작 키가 5줄로 나온다. 건설 중인 건물은 반투명 그림과 진행 막대로 보인다.
-* **빈 섬 연결 판정(2026-09-30)**: 세션이 다리 격자에서 계산한다. 내 다리 연결망 하나가 내 섬과 그 빈 섬에 함께 닿으면 연결된 것으로 본다(근사, [BridgeReach](../src/Netstorm.Core/Bridges/BridgeReach.cs)).
+* **빈 섬 연결 판정(2026-09-30)**: 세션이 다리 격자에서 계산한다. 내 다리 연결망 하나가 내 섬과 그 빈 섬에 함께 닿으면 연결된 것으로 본다(근사, [BridgeReach](../dotnetpj/src/Netstorm.Core/Bridges/BridgeReach.cs)).
   다리 끝은 "발자국 둘레에 플레이어 다리 칸이 있는 섬 밖 위치"로 근사한다.
 
 검증용 명령(커서 대신 칸을 지정하고 카메라를 그 칸으로 옮긴다):
 
 ```powershell
-dotnet run --project src/Netstorm.Game -- --map dissolvedalliance --placement windwalker --probe 124,126 --screenshot extracted/screens/placement-windwalker.png
-dotnet run --project src/Netstorm.Game -- --map dissolvedalliance --placement bulf --probe 124,126 --screenshot extracted/screens/placement-bulf.png
+dotnet run --project dotnetpj/src/Netstorm.Game -- --map dissolvedalliance --placement windwalker --probe 124,126 --screenshot extracted/screens/placement-windwalker.png
+dotnet run --project dotnetpj/src/Netstorm.Game -- --map dissolvedalliance --placement bulf --probe 124,126 --screenshot extracted/screens/placement-bulf.png
 ```
 
 2026-10-03: 아이스·썬더 캐논을 들고 있을 때 **우클릭은 북→동→남→서 회전**이다(역회전 설정이면 반대 순서). 방향별 원본 그림을 미리 보여 주며 놓은 방위는 고정된다. 개발용 `--script`는 `place rainCannon 100,120 1`처럼 마지막 방위 값(0=북, 1=동, 2=남, 3=서)을 받을 수 있다. 세 캐논의 충전·발사 그림, 아이스 타워 재성장, 썬 바리케이트 방어선의 근거·한계는 [TEST01 추가 판독](videos/test01-combat-20261003.md)에 있다.
@@ -196,7 +196,7 @@ dotnet run --project src/Netstorm.Game -- --map dissolvedalliance --placement bu
 검증용 명령(6초를 미리 흘려 칸을 채우고, 4번 조각을 회전 1 로 든 채 (118,122)에 둔다):
 
 ```powershell
-dotnet run --project src/Netstorm.Game -- --map dissolvedalliance --bridges 6 --bridge-hold 4,1 --probe 118,122 --screenshot extracted/screens/bridge-tray-dissolvedalliance.png
+dotnet run --project dotnetpj/src/Netstorm.Game -- --map dissolvedalliance --bridges 6 --bridge-hold 4,1 --probe 118,122 --screenshot extracted/screens/bridge-tray-dissolvedalliance.png
 ```
 
 2026-09-29 확인: 칸 6/6, 추첨 6회, 첫 조각은 한 칸, T 자·ㄱ 자 조각이 원본 프레임으로 이어져 보이고, 회전 1 의 4번 조각이 가로 막대 아래 가지 모양으로 그려진다.
@@ -204,9 +204,9 @@ dotnet run --project src/Netstorm.Game -- --map dissolvedalliance --bridges 6 --
 배치 판정 확인 (2026-09-30, Bridge the Gap! 섬 오른쪽 가장자리 x = 61, 초목 규칙 반영 뒤 다시 확인):
 
 ```powershell
-dotnet run --project src/Netstorm.Game -- --map bridgethegap --bridges 6 --bridge-hold 0,1 --probe 62,42 --screenshot extracted/screens/bridge-place-ok.png
-dotnet run --project src/Netstorm.Game -- --map bridgethegap --bridges 6 --bridge-hold 0,1 --probe 62,47 --screenshot extracted/screens/bridge-place-vegetation.png
-dotnet run --project src/Netstorm.Game -- --map bridgethegap --bridges 6 --bridge-hold 0,1 --probe 66,47 --screenshot extracted/screens/bridge-place-red.png
+dotnet run --project dotnetpj/src/Netstorm.Game -- --map bridgethegap --bridges 6 --bridge-hold 0,1 --probe 62,42 --screenshot extracted/screens/bridge-place-ok.png
+dotnet run --project dotnetpj/src/Netstorm.Game -- --map bridgethegap --bridges 6 --bridge-hold 0,1 --probe 62,47 --screenshot extracted/screens/bridge-place-vegetation.png
+dotnet run --project dotnetpj/src/Netstorm.Game -- --map bridgethegap --bridges 6 --bridge-hold 0,1 --probe 66,47 --screenshot extracted/screens/bridge-place-red.png
 ```
 
 - 초목 없는 가장자리 (61,42) 옆 (62,42): "놓을 수 있음(연결 1)"과 원본 프레임.
@@ -217,7 +217,7 @@ dotnet run --project src/Netstorm.Game -- --map bridgethegap --bridges 6 --bridg
 
 맵 뷰어·스프라이트 뷰어·메인 메뉴가 같은 화면 계층(`DisplayManager`)을 쓴다. 메인 메뉴 옵션에서 해상도·창/전체화면·음량을 조절하며 [현재 공개 범위와 임시 정책](gameplay/campaign-one.md)을 따른다.
 게임은 **논리 해상도**(원본 픽셀)로 그린 뒤 창에 늘려 표시하며, 16:9·16:10·4:3 을 지원한다.
-계산 규칙은 `Netstorm.Core.Display.ScreenLayoutCalculator`(테스트 `tests/Netstorm.Core.Tests`)에 있다.
+계산 규칙은 `Netstorm.Core.Display.ScreenLayoutCalculator`(테스트 `dotnetpj/tests/Netstorm.Core.Tests`)에 있다.
 
 | 키 | 동작 |
 |---|---|
@@ -263,12 +263,12 @@ TEST01 후속 검증: `powershell -NoProfile -ExecutionPolicy Bypass -File tools
 검증용 PNG를 저장하고 자동 종료 (`--knowledge [타입]`을 붙이면 지식 창 — 타입을 주면 그 상세창 — 을 연 채 시작한다):
 
 ```powershell
-dotnet run --project src/Netstorm.Game -- --map savetheisland --screenshot extracted/screens/fort-map-savetheisland.png
+dotnet run --project dotnetpj/src/Netstorm.Game -- --map savetheisland --screenshot extracted/screens/fort-map-savetheisland.png
 # 화면비·전체화면 확인 (스크린샷 실행은 설정을 저장하지 않음)
-dotnet run --project src/Netstorm.Game -- --map savetheisland --window 1920x1200 --screenshot extracted/screens/wide-16x10.png
-dotnet run --project src/Netstorm.Game -- --map savetheisland --window 1920x1080 --wide letterbox --screenshot extracted/screens/letterbox.png
+dotnet run --project dotnetpj/src/Netstorm.Game -- --map savetheisland --window 1920x1200 --screenshot extracted/screens/wide-16x10.png
+dotnet run --project dotnetpj/src/Netstorm.Game -- --map savetheisland --window 1920x1080 --wide letterbox --screenshot extracted/screens/letterbox.png
 # 저장 프레임 수 변경 (기본 30): 가장자리 스크롤처럼 시간이 필요한 동작을 찍을 때
-dotnet run --project src/Netstorm.Game -- --map savetheisland --fullscreen --screenshot-frames 15 --screenshot extracted/screens/edge.png
+dotnet run --project dotnetpj/src/Netstorm.Game -- --map savetheisland --fullscreen --screenshot-frames 15 --screenshot extracted/screens/edge.png
 ```
 
 원본 팔레트와 본체 레이어를 사용하는 정적 뷰어다. 저장 프레임이 없는 타입은

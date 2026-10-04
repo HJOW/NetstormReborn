@@ -40,8 +40,8 @@ UTF-8로 작성한 타입 속성과 한국어 텍스트도 읽을 수 있다.
 대소문자를 무시한다. 알 수 없는 값은 영어로 정규화한다.
 
 ```powershell
-dotnet run --project src/Netstorm.Game -- --language german
-dotnet run --project src/Netstorm.Game -- --map savetheisland --language korean
+dotnet run --project dotnetpj/src/Netstorm.Game -- --language german
+dotnet run --project dotnetpj/src/Netstorm.Game -- --map savetheisland --language korean
 ```
 
 용어표는 `languageSpec`, UI 번역표는 `d/xlat.<언어>`에서 찾는다.

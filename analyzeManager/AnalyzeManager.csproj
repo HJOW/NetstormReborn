@@ -15,6 +15,6 @@
     <Compile Remove="portable/**" />
     <PackageReference Include="ModelContextProtocol" />
     <PackageReference Include="Microsoft.Extensions.Hosting" />
-    <ProjectReference Include="../src/Netstorm.Assets/Netstorm.Assets.csproj" />
+    <ProjectReference Include="../dotnetpj/src/Netstorm.Assets/Netstorm.Assets.csproj" />
   </ItemGroup>
 </Project>

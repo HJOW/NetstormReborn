@@ -75,7 +75,7 @@
 - `MovementPathingTests` **4개**: 수확 대기→복구→200 SP 전달, 우회로 탐색, 재실패 이벤트 중복 방지·신전 제거 시 취소, 대기·재개 검사합 결정성.
 - `GroundSupportTests` **15개**: 자연 붕괴 같은 틱의 골렘 낙하·선택/점유 정리, 사제 허공 기절·다리 복구(HP 100·정확히 50%), 허공 신전 회복 금지, 지상 포획 거부·비행 포획, 비행/지상 운반체 소멸 후 해방 위치, 비행체 제외, 적 다리 지지, 허공 출발 이동 거부, 실제 `savetheisland` 건물 회수 후 받침 소멸·버전 갱신, 허공 사제 사망 오판정 방지, 비행 수송 점유 보존, 결정성.
 - 기존 `SacrificeTests` **10개**에 내려놓기 대기·복구 재개 검사를 포함한다. 새 이동·낙하 상태와 마지막 탐색 버전·고정 목표가 `Checksum()`에 들어간다.
-- `dotnet test Netstorm.sln -c Release --no-restore -m:1 -nr:false -p:UseSharedCompilation=false`: **403개 통과**(Assets 187·Core 216), 실패·건너뜀 0. 전체 Release 빌드 성공.
+- `dotnet test dotnetpj/Netstorm.sln -c Release --no-restore -m:1 -nr:false -p:UseSharedCompilation=false`: **403개 통과**(Assets 187·Core 216), 실패·건너뜀 0. 전체 Release 빌드 성공.
 - 원본 낙하 애니메이션·시간·소리와 새 상태 표식의 실제 원본 일치는 검증하지 않았다. Windows 클론 받침 회수 화면 검사와 세부 범위는 [LEFT_JOBS](../../LEFT_JOBS.md) 최신 절에 기록한다.
 
 ### 3.4 낙하 규칙 구현과 임시 정책

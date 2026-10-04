@@ -40,7 +40,7 @@
 재현 명령:
 
 ```powershell
-dotnet test tests/Netstorm.Core.Tests -c Release --filter UnitProductionTests
+dotnet test dotnetpj/tests/Netstorm.Core.Tests -c Release --filter UnitProductionTests
 powershell -File tools/clone_production_smoke.ps1
 ```
 

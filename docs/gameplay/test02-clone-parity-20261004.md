@@ -41,8 +41,8 @@
 # 이미 빌드된 Release 클론으로만 실행한다.
 powershell -NoProfile -File tools/clone_test02_smoke.ps1
 powershell -NoProfile -File tools/clone_test02_smoke.ps1 -Language english -OutputDirectory extracted/screens/test02-implementation/test02-english
-dotnet test tests/Netstorm.Core.Tests -c Release --filter "ConstructionTests|PlacementCursorTests"
-dotnet test tests/Netstorm.Assets.Tests -c Release --filter CursorBitmapTests
+dotnet test dotnetpj/tests/Netstorm.Core.Tests -c Release --filter "ConstructionTests|PlacementCursorTests"
+dotnet test dotnetpj/tests/Netstorm.Assets.Tests -c Release --filter CursorBitmapTests
 ```
 
 ## 정밀 복원에 남은 부분

@@ -68,4 +68,4 @@ powershell -NoProfile -ExecutionPolicy Bypass -File tools/clone_test01_smoke.ps1
 
 실행 검증 통과는 원본과 모든 픽셀이 일치한다는 의미가 아니다. 지면 타일과 가장자리 변형·그림자의 음영/그리기 순서·비례 글꼴·브리핑 크기, 에너지 방울과 반투명 배치 연출이 남아 있다. Crossbow의 V형 사거리, Wind/Rain 신전 애니메이션 간격, Sun 워크샵 창 점등, `CellCenterScreen` 위에 맞춘 방어선·탄 위치도 후속 과제다. 원본 시작 연결 창과 30/60/120FPS 설정, Linux GUI 검증은 이번 범위에서 구현하지 않았다.
 
-관련 구현: [색 변환](../../src/Netstorm.Assets/ObjectColorRemap.cs), [시작 지식](../../src/Netstorm.Core/Rules/MissionStart.cs), [캐논 회귀 검사](../../tests/Netstorm.Core.Tests/RecordedCombatTests.cs), [TEST01 실행 검사](../../tools/clone_test01_smoke.ps1).
+관련 구현: [색 변환](../../dotnetpj/src/Netstorm.Assets/ObjectColorRemap.cs), [시작 지식](../../dotnetpj/src/Netstorm.Core/Rules/MissionStart.cs), [캐논 회귀 검사](../../dotnetpj/tests/Netstorm.Core.Tests/RecordedCombatTests.cs), [TEST01 실행 검사](../../tools/clone_test01_smoke.ps1).

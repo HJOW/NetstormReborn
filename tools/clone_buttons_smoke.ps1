@@ -61,7 +61,7 @@ quit;
 }
 $taskOldSettings = $env:NETSTORM_SETTINGS_DIR
 try {
-    $taskExe = Join-Path $taskRoot 'src/Netstorm.Game/bin/Release/net10.0/NetstormClone.exe'
+    $taskExe = Join-Path $taskRoot 'dotnetpj/src/Netstorm.Game/bin/Release/net10.0/NetstormClone.exe'
     # 시나리오마다 클론을 따로 실행하고 종료 코드·통과 줄 수를 확인한다.
     foreach ($taskName in $taskScenarios.Keys) {
         $taskSettings = Join-Path $taskOutput "$taskName-settings"

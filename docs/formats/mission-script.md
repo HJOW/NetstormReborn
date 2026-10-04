@@ -29,7 +29,7 @@ $명령=인자,...
 
 ### 원본 해석 규칙 (Config.cpp 정적 분석, 2026-09-28)
 
-클론 구현: `src/Netstorm.Assets/MissionScript.cs`
+클론 구현: `dotnetpj/src/Netstorm.Assets/MissionScript.cs`
 
 * **머리 값**: 원본은 미션 파일을 설정 파일로 읽는다 (`missionSpec` → FUN_00440380). 따라서 `[Header]` 섹션에 한정되지 않고
   **파일 전체에서 처음 나온 `키 = 값`** 을 쓴다 (규칙은 [config.md](config.md) "설정 조회 규칙"). 다른 미션의 머리 값은 `{@미션.키}` 로 읽는다.

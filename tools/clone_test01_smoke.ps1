@@ -3,7 +3,7 @@ param([string]$OutputDirectory = 'extracted/screens/test01-verify-20261003/test0
 $ErrorActionPreference = 'Stop'
 # 저장소와 Release 실행 파일. 설정과 PNG는 Git 제외 검사 폴더에만 쓴다.
 $taskRoot = Split-Path -Parent $PSScriptRoot
-$taskExe = Join-Path $taskRoot 'src/Netstorm.Game/bin/Release/net10.0/NetstormClone.exe'
+$taskExe = Join-Path $taskRoot 'dotnetpj/src/Netstorm.Game/bin/Release/net10.0/NetstormClone.exe'
 $taskOldSettings = $env:NETSTORM_SETTINGS_DIR
 # 125% 원본 녹화 크기·두 와이드 화면비와 영어/한국어를 번갈아 확인한다.
 $taskCases = @(

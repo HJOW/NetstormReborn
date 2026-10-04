@@ -19,6 +19,7 @@
 * 실행 파일 리소스 추출: `tools/peres.py` (비트맵·문자열·다이얼로그·커서)
 * 실행 파일 디컴파일: `tools/ghidra/run_decomp.ps1` → 패치판 `extracted/ghidra/`·`extracted/decomp/Netstorm.c`, CD판 `extracted/originalCD/ghidra/`·`extracted/originalCD/decomp/NETSTORM.c`. 모듈 맵 `tools/ghidra/module_map.py` → [../exe/modules.md](../exe/modules.md)
 * 정밀 디컴파일(신뢰도 등급·패치판↔CD판 함수 대응): `tools/ghidra/refine_all.ps1` → `extracted/refined/` — [../exe/decompile-reliability.md](../exe/decompile-reliability.md)
+* 원본 소스 파일 → C++ 빌드 경로 표: `tools/cpp_source_map.py` → [../../cpppj/SOURCE_MAP.md](../../cpppj/SOURCE_MAP.md). 디컴파일 결과에서 C++ 소스를 만드는 절차는 [../cpp-build.md](../cpp-build.md)
 * 오디오(`sound/*.wav`, `music/*.mus`): 전부 표준 PCM WAV (별도 문서 없음)
 * WinHelp 게임 규칙 요약: [../gameplay/help-manual.md](../gameplay/help-manual.md)
 

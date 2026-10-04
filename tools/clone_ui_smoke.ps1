@@ -37,7 +37,7 @@ Set-Content -LiteralPath $taskFile -Encoding UTF8 -Value $taskScript
 $taskOldSettings = $env:NETSTORM_SETTINGS_DIR
 try {
     $env:NETSTORM_SETTINGS_DIR = $taskSettings
-    $taskExe = Join-Path $taskRoot 'src/Netstorm.Game/bin/Release/net10.0/NetstormClone.exe'
+    $taskExe = Join-Path $taskRoot 'dotnetpj/src/Netstorm.Game/bin/Release/net10.0/NetstormClone.exe'
     $taskProcess = Start-Process -FilePath $taskExe -WorkingDirectory $taskRoot -ArgumentList "--language korean --ui-script-file $OutputDirectory/commands.txt" -WindowStyle Hidden -PassThru -Wait -RedirectStandardOutput (Join-Path $taskOutput 'stdout.log') -RedirectStandardError (Join-Path $taskOutput 'stderr.log')
     if ($taskProcess.ExitCode -ne 0) { throw (Get-Content -Raw (Join-Path $taskOutput 'stderr.log')) }
     Get-Content (Join-Path $taskOutput 'stdout.log')

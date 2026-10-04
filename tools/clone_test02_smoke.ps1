@@ -56,7 +56,7 @@ key P; move 780,240; assert-detail pointer=temple; assert-detail pointer-active=
 $taskOldSettings = $env:NETSTORM_SETTINGS_DIR
 try {
     $env:NETSTORM_SETTINGS_DIR = $taskSettings
-    $taskExe = Join-Path $taskRoot 'src/Netstorm.Game/bin/Release/net10.0/NetstormClone.exe'
+    $taskExe = Join-Path $taskRoot 'dotnetpj/src/Netstorm.Game/bin/Release/net10.0/NetstormClone.exe'
     # 클론을 하나씩 실행해 설정·그래픽 장치가 서로 충돌하지 않게 한다.
     foreach ($taskName in $taskScenarios.Keys) {
         $taskScript = Join-Path $taskOutput "$taskName.txt"

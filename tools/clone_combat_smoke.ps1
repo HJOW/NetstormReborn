@@ -3,7 +3,7 @@ param([string]$OutputDirectory = 'extracted/fangame-combat-20261003/smoke')
 $ErrorActionPreference = 'Stop'
 # 검사 데이터·사용자 설정은 출력 폴더에만 두고 환경 변수를 종료 시 복구한다.
 $taskRoot = Split-Path -Parent $PSScriptRoot
-$taskExe = Join-Path $taskRoot 'src/Netstorm.Game/bin/Release/net10.0/NetstormClone.exe'
+$taskExe = Join-Path $taskRoot 'dotnetpj/src/Netstorm.Game/bin/Release/net10.0/NetstormClone.exe'
 $taskOutput = Join-Path $taskRoot $OutputDirectory
 $taskData = Join-Path $taskOutput 'data'
 $taskOldData = $env:NETSTORM_DATA

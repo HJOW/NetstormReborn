@@ -4,7 +4,7 @@ param([string]$OutputDirectory = 'extracted/screens/production-smoke-20261004')
 $ErrorActionPreference = 'Stop'
 # 저장소 루트·기존 클론 실행 파일·격리된 결과 및 설정 경로.
 $taskRoot = Split-Path -Parent $PSScriptRoot
-$taskExe = Join-Path $taskRoot 'src/Netstorm.Game/bin/Release/net10.0/NetstormClone.exe'
+$taskExe = Join-Path $taskRoot 'dotnetpj/src/Netstorm.Game/bin/Release/net10.0/NetstormClone.exe'
 $taskOutput = Join-Path $taskRoot $OutputDirectory
 $taskSettings = Join-Path $taskOutput 'settings'
 New-Item -ItemType Directory -Force -Path $taskSettings | Out-Null

@@ -6,7 +6,7 @@ AGENTS.md의 클론 목표와 사용자가 지정한 **메인 메뉴 → 캠페�
 
 ## 실행과 공개 범위
 
-`dotnet run --project src/Netstorm.Game -c Release -- --language korean` 또는 빌드한 `NetstormClone.exe --language korean`으로 메인 메뉴를 연다. 영어는 `--language english`다. `assets/game-data/`의 게임 데이터와 D2Coding 글꼴을 출력에 자동 포함하므로 `originals/` 없이 실행할 수 있다. [데이터 구성](../../assets/README.md).
+`dotnet run --project dotnetpj/src/Netstorm.Game -c Release -- --language korean` 또는 빌드한 `NetstormClone.exe --language korean`으로 메인 메뉴를 연다. 영어는 `--language english`다. `assets/game-data/`의 게임 데이터와 D2Coding 글꼴을 출력에 자동 포함하므로 `originals/` 없이 실행할 수 있다. [데이터 구성](../../assets/README.md).
 
 > 2026-10-01 후속: **1-2 Master of Whirligigs를 공개**했다(메뉴·성공 창 Next Mission). 아래 "1-2~1-6 잠금" 서술 중 1-2는 [캠페인 1-2 문서](campaign-two.md)로 대체되었다. 타입 기본 비용·가이저 고갈·채집 시간·임시 AI 일반화도 그 문서에 있으며 1-1에도 적용된다.
 
@@ -70,7 +70,7 @@ UI 검사는 `--ui-script-file`로 실제 메뉴·지도 갱신이 읽는 동일
 원본 1-1과의 가격·AI·타이밍 일대일 일치, 사람이 GUI에서 긴 전투를 끝내는 완주, 실제로 소리를 듣는 음량 평가, Linux GUI는 이번 검증에 포함되지 않았다. 상태·의식 규칙의 검사 통과를 이런 검증으로 확대해 해석하지 않는다.
 
 ```powershell
-dotnet build Netstorm.sln -c Release --no-restore -m:1 -nr:false -p:UseSharedCompilation=false
-dotnet test Netstorm.sln -c Release --no-restore -m:1 -nr:false -p:UseSharedCompilation=false
+dotnet build dotnetpj/Netstorm.sln -c Release --no-restore -m:1 -nr:false -p:UseSharedCompilation=false
+dotnet test dotnetpj/Netstorm.sln -c Release --no-restore -m:1 -nr:false -p:UseSharedCompilation=false
 powershell -NoProfile -ExecutionPolicy Bypass -File tools/clone_ui_smoke.ps1
 ```

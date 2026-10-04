@@ -12,18 +12,29 @@ a game developed by Activision in 1997 and abandoned long ago.
 
 Right now you can play **Main Menu → Campaign → Struggle For Freedom → 1-1 The War Begins!** and **1-2 Master of Whirligigs**.
 In Options you can change the resolution, windowed/fullscreen mode, sound, volume, wind noise, and left/right speaker swap. The full original help is available from Help in the main menu and with F1, and the right-click menus for the priest, workshops, and production items also work. See [how far the recording analysis has been applied to the clone](docs/screens/recorded-ui-clone-20261002.md). Other missions and menus that are not implemented yet are shown as locked.
-Start the game with `dotnet run --project src/Netstorm.Game -c Release -- --language english` (Korean: `--language korean`).
+Start the game with `dotnet run --project dotnetpj/src/Netstorm.Game -c Release -- --language english` (Korean: `--language korean`).
 Game data is kept in `assets/game-data/` and is included in build and publish output automatically. The provisional AI and construction rules, and the limits of what has been verified, are described in [Campaign 1-1 implementation](docs/gameplay/campaign-one.md) and [Campaign 1-2 implementation](docs/gameplay/campaign-two.md).
 
 The linked documents are written in Korean.
 
-# Building and creating executables
+# Project layout
+
+There are two game builds, developed side by side.
+
+| Folder | Contents | Status |
+| --- | --- | --- |
+| `dotnetpj/` | **C# + MonoGame build.** A clone implemented from scratch by analyzing the original. | Campaign 1-1 and 1-2 above are playable. |
+| `cpppj/` | **C++ build.** C++ source reconstructed from the decompiled original game. | Only the basic project structure exists. The game does not run yet. |
+
+Game data (`assets/game-data/`), the font (`fonts/`), the analysis documents (`docs/`), and the analysis tools (`tools/`, `analyzeManager/`) are shared by both builds and stay in the repository root. For the structure of the C++ build, how to build it, and how source is reconstructed from the decompiler output, see [C++ build](docs/cpp-build.md).
+
+# Building and creating executables (C# + MonoGame build)
 
 Run the commands below from the project root (`NetstormReborn`). The game is written in C# with MonoGame DesktopGL, and the target framework is `net10.0`.
 
 ## Prerequisites
 
-- Install the **.NET 10 SDK** and check it with `dotnet --version`. `global.json` accepts the latest feature band of the .NET 10 SDK, 10.0.100 or later.
+- Install the **.NET 10 SDK** and check it with `dotnet --version`. `dotnetpj/global.json` accepts the latest feature band of the .NET 10 SDK, 10.0.100 or later.
 - The first build or publish needs an internet connection to download NuGet packages and the runtime for the target OS.
 - Check out `assets/game-data/` and the Korean font `fonts/D2Coding-Ver1.3.2-20180524-all.ttc` together with the repository. The data and font are copied to build and publish output automatically.
 - The game runs on **Windows 10/11 x64** or **x64 Linux with a GUI (glibc-based)**. A graphics driver with OpenGL support is required.
@@ -33,20 +44,20 @@ Run the commands below from the project root (`NetstormReborn`). The game is wri
 ## Development build and run
 
 ```sh
-dotnet restore Netstorm.sln
-dotnet build Netstorm.sln -c Release --no-restore
-dotnet run --project src/Netstorm.Game -c Release --no-build -- --language english
+dotnet restore dotnetpj/Netstorm.sln
+dotnet build dotnetpj/Netstorm.sln -c Release --no-restore
+dotnet run --project dotnetpj/src/Netstorm.Game -c Release --no-build -- --language english
 ```
 
-Use `--language korean` to run in Korean. Build output goes to `src/Netstorm.Game/bin/Release/net10.0/`. A normal build produces an executable for the OS it was built on; to build binaries for another OS, use the `-r` option shown below.
+Use `--language korean` to run in Korean. Build output goes to `dotnetpj/src/Netstorm.Game/bin/Release/net10.0/`. A normal build produces an executable for the OS it was built on; to build binaries for another OS, use the `-r` option shown below.
 
 ## Distributable binaries with the runtime included
 
 Run `dotnet publish` on the game project. The following commands work in both Windows PowerShell and a Linux shell, and you can build the Windows exe on Linux as well.
 
 ```sh
-dotnet publish src/Netstorm.Game/Netstorm.Game.csproj -c Release -r win-x64 --self-contained true -o dist/win-x64
-dotnet publish src/Netstorm.Game/Netstorm.Game.csproj -c Release -r linux-x64 --self-contained true -o dist/linux-x64
+dotnet publish dotnetpj/src/Netstorm.Game/Netstorm.Game.csproj -c Release -r win-x64 --self-contained true -o dist/win-x64
+dotnet publish dotnetpj/src/Netstorm.Game/Netstorm.Game.csproj -c Release -r linux-x64 --self-contained true -o dist/linux-x64
 ```
 
 | Target | Output folder | Executable |
@@ -99,6 +110,18 @@ $env:NETSTORM_DATA = "D:\Games\NetstormReborn\game-data"
 ```sh
 NETSTORM_DATA="/absolute/path/game-data" ./dist/linux-x64/NetstormClone --language english
 ```
+
+# C++ build (basic structure)
+
+You need CMake 3.21 or later and a C++20 compiler (Visual Studio 2022 or later, or GCC/Clang). Run these from the project root.
+
+```sh
+cmake -S cpppj -B cpppj/build -DCMAKE_BUILD_TYPE=Release
+cmake --build cpppj/build --config Release
+ctest --test-dir cpppj/build --build-config Release --output-on-failure
+```
+
+For now the executable (`NetstormCpp`) only prints its build information and exits. Details are in [C++ build](docs/cpp-build.md).
 
 # License
 

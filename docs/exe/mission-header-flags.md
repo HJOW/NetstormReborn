@@ -122,7 +122,7 @@ techAllowed = "deny;all;allow;windVortex;sunArcher"
 * **타이머 상수(2026-09-30, exe 바이트)**: `0x506588` = **4.0**초(단계 F), `0x506590` = **2.0**초(단계 C의 `NotVortex`·단계 H), `0x500460` = 0.0("타이머 없음" 표시), `0x506580` = 60.0. 현재 시각 `DAT_0055b4d0`은 게임 시각(초, double)이다.
 * **단계 넘김과 잠금(`FUN_004c33f0`·프레임 함수 `FUN_004c34c0`)**: 단계를 넘기면 글자를 올리고 타이머(`+0x98`)를 0으로 지우며 카운터 `+0x84`를 10으로 둔다. 카운터가 0이 되기 전에는 단계 처리 함수를 부르지 않고(`+0x84 == 0`일 때만 호출),
   카운터가 다 세어지면 `FUN_004c2a90`이 그 단계의 스크립트 섹션을 알린다. 모달 창이 떠 있으면(`FUN_00460de0`) 단계를 넘기지 않는다. 클론은 창이 없어 "다음 틱부터 검사"로 근사한다.
-* 단계 처리는 세션 명령(선택·등록·배치·회수)과 이벤트만 보고 상태를 바꾼다: 클론의 [`TutorialStages`](../../src/Netstorm.Core/Simulation/TutorialStages.cs) — [core-rules.md](../core-rules.md).
+* 단계 처리는 세션 명령(선택·등록·배치·회수)과 이벤트만 보고 상태를 바꾼다: 클론의 [`TutorialStages`](../../dotnetpj/src/Netstorm.Core/Simulation/TutorialStages.cs) — [core-rules.md](../core-rules.md).
 
 튜토리얼 1의 처리 함수(`FUN_004c3a20`)는 기술 허용 표나 `DAT_00595078`을 바꾸지 않는다. 튜토리얼 1은 머리 값(`windVortex`만 허용, 회수 금지)이 미션 내내 유지된다.
 
@@ -140,13 +140,13 @@ techAllowed = "deny;all;allow;windVortex;sunArcher"
 
 ## 5. 클론 구현 반영
 
-* [`TechPermissions`](../../src/Netstorm.Core/Rules/MissionStart.cs)를 **변경 가능한 표**로 바꿨다(`Set`·`SetAll` = `FUN_004c23e0`·`FUN_004c23c0`). 머리 값은 시작 상태다.
-* [`BattleSession`](../../src/Netstorm.Core/Simulation/BattleSession.cs)의 `DenySalvage`는 머리 `denySalvage`로 시작하는 **변하는 상태**다.
+* [`TechPermissions`](../../dotnetpj/src/Netstorm.Core/Rules/MissionStart.cs)를 **변경 가능한 표**로 바꿨다(`Set`·`SetAll` = `FUN_004c23e0`·`FUN_004c23c0`). 머리 값은 시작 상태다.
+* [`BattleSession`](../../dotnetpj/src/Netstorm.Core/Simulation/BattleSession.cs)의 `DenySalvage`는 머리 `denySalvage`로 시작하는 **변하는 상태**다.
   켜져 있으면 회수 명령은 `SalvageDenied`로 거부된다(원본의 "DenySalvage 섹션 Tell"에 대응, 화면 안내는 없음).
 * 기술 허용 표는 사제 Construct 판정(`CheckBuilding`), 지식 등록(`RegisterKnowledgeCommand`), 덱 배치(`CheckUnit`)에서 확인한다 — 원본이 확인하는 곳(3.2)과 같은 수준이다.
-* **튜토리얼 2 단계 처리 구현(2026-09-30)**: [`TutorialStages`](../../src/Netstorm.Core/Simulation/TutorialStages.cs)가 단계 A~I를 재현한다. 세션 명령·이벤트만 보고 표·회수 금지·전투 옵션을 바꾸고
+* **튜토리얼 2 단계 처리 구현(2026-09-30)**: [`TutorialStages`](../../dotnetpj/src/Netstorm.Core/Simulation/TutorialStages.cs)가 단계 A~I를 재현한다. 세션 명령·이벤트만 보고 표·회수 금지·전투 옵션을 바꾸고
   단계마다 스크립트 섹션 이름을 `TutorialTell` 이벤트로 알린다(안내 창은 아직 없다). 단계 C·F가 읽는 "선택한 오브젝트"는 `SelectEntityCommand`로 세션 상태가 되었다.
-  [TutorialStagesTests](../../tests/Netstorm.Core.Tests/TutorialStagesTests.cs)가 명령만으로 A→I를 끝까지 걷는다. 이전 테스트([BattleSessionTests](../../tests/Netstorm.Core.Tests/BattleSessionTests.cs))의 손 재현은 규칙만 따로 확인하려고 남겼다.
+  [TutorialStagesTests](../../dotnetpj/tests/Netstorm.Core.Tests/TutorialStagesTests.cs)가 명령만으로 A→I를 끝까지 걷는다. 이전 테스트([BattleSessionTests](../../dotnetpj/tests/Netstorm.Core.Tests/BattleSessionTests.cs))의 손 재현은 규칙만 따로 확인하려고 남겼다.
   튜토리얼 1은 수집 경제(가이저·사제 결정 운반)가 필요해 아직 구현하지 않았고, 3~6은 전투가 필요하다.
 * 맵 뷰어의 배치 시험 모드는 `EnforceProductionRules = false`라 표·회수 금지·덱을 모두 무시한다.
 

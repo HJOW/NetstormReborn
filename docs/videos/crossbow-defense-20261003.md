@@ -64,8 +64,8 @@ Bulwark는 비행 공격체에 면역이므로 Whirligig가 다른 유효 목표
   미리보기 검사는 덱 미등록 상태에서 그림과 입력만 검사한다. 실제 설치 규칙은 코어 테스트에서 공급·비용·소유 섬을 거친다.
 
 ```powershell
-dotnet build Netstorm.sln -c Release --no-restore -m:1 -nr:false -p:UseSharedCompilation=false
-dotnet test Netstorm.sln -c Release --no-build --no-restore -m:1 -nr:false
+dotnet build dotnetpj/Netstorm.sln -c Release --no-restore -m:1 -nr:false -p:UseSharedCompilation=false
+dotnet test dotnetpj/Netstorm.sln -c Release --no-build --no-restore -m:1 -nr:false
 powershell -NoProfile -ExecutionPolicy Bypass -File tools/clone_combat_smoke.ps1 -OutputDirectory extracted/crossbow-defense-20261003/smoke
 powershell -NoProfile -ExecutionPolicy Bypass -File tools/clone_recordplay_details_smoke.ps1 -OutputDirectory extracted/crossbow-defense-20261003/details
 ```

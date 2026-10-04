@@ -83,7 +83,7 @@ Set-Content -LiteralPath $taskFile -Encoding UTF8 -Value $taskScript
 $taskOldSettings = $env:NETSTORM_SETTINGS_DIR
 try {
     $env:NETSTORM_SETTINGS_DIR = $taskSettings
-    $taskExe = Join-Path $taskRoot 'src/Netstorm.Game/bin/Release/net10.0/NetstormClone.exe'
+    $taskExe = Join-Path $taskRoot 'dotnetpj/src/Netstorm.Game/bin/Release/net10.0/NetstormClone.exe'
     $taskProcess = Start-Process -FilePath $taskExe -WorkingDirectory $taskRoot -ArgumentList $taskArguments -WindowStyle Hidden -PassThru -RedirectStandardOutput (Join-Path $taskOutput 'stdout.log') -RedirectStandardError (Join-Path $taskOutput 'stderr.log')
     # 종료 전에 프로세스 핸들을 확보해야 PowerShell 5.1에서도 종료 코드를 읽을 수 있다.
     $null = $taskProcess.Handle

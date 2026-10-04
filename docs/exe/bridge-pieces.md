@@ -1,6 +1,6 @@
 # 다리 조각: 모양 표·추첨·회전·생산 칸 채우기
 
-> 2026-09-29 · Netstorm.exe(10.78) 정적 분석 + C# 구현(`src/Netstorm.Core/Bridges/`). 원본 게임은 실행하지 않았다.
+> 2026-09-29 · Netstorm.exe(10.78) 정적 분석 + C# 구현(`dotnetpj/src/Netstorm.Core/Bridges/`). 원본 게임은 실행하지 않았다.
 > 원본 실행 관찰(브리핑 중에도 다리 칸이 참)은 [화면 목록 1.3절](../screens/README.md)과 맞는다.
 > 2026-09-29 밤 원본 실행(Windows `HJOW-Athlon`, 세션 `20260929T130339905Z-b92c507f492a`)으로 회전 조작과 커서 규칙을 확인했다 — 4절·[화면 목록 1.4절](../screens/README.md).
 
@@ -159,7 +159,7 @@ AI(`FUN_0040fb30`)는 자체 간격(`+0x10` + `_DAT_0055b4d0`)으로 추첨하�
 | `Bridges/BridgeTray.cs` | 플레이어 생산 창 다리 칸 (6절 규칙) |
 | `Bridges/BridgeGrid.cs` | 놓인 다리 칸의 연결망·배치 판정·10초 주기 붕괴 (8절, 2026-09-30) |
 
-테스트 `tests/Netstorm.Core.Tests/BridgePieceTests.cs`는 다음을 검사한다.
+테스트 `dotnetpj/tests/Netstorm.Core.Tests/BridgePieceTests.cs`는 다음을 검사한다.
 - **C# 표가 원본 exe(VA 0x52f998·0x531590)의 값과 같은지** (PE 섹션 표로 파일 위치를 계산해 직접 비교)
 - 추첨 경계, 회전 표와 비트 회전의 일치
 - 모든 조각·회전의 내부 연결

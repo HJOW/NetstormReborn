@@ -63,12 +63,12 @@ SP 숫자는 바뀔 때 천천히 따라가므로(네 번째 녹화 01:03: 2200 
 
 | 파일 | 내용 |
 | --- | --- |
-| `src/Netstorm.Core/Bridges/BridgeTray.cs` | 칸을 자리 배열(`Slots`)로 바꿈. `Take`는 `HeldSlot`만 표시하고 조각은 남김, `ConsumeHeld`는 놓은 칸을 비움, 새 조각은 첫 빈 칸 |
-| `src/Netstorm.Core/Simulation/BattleSession*.cs` | 다리 놓기에서 칸 비우기, 검사합에 빈 칸·집은 칸 반영, `IsUnitRecharging` |
-| `src/Netstorm.Assets/ProductionTintRemap.cs` | 원본 어둡게·빨갛게 변환표 계산 |
-| `src/Netstorm.Game/FortMapViewer.Deck.cs` | 다리 칸·유닛 칸 배치, 상태별 변환표, 클릭·우클릭 판정 |
-| `src/Netstorm.Game/FortMapViewer.PlayUi.cs` | 기존 14개 버튼 격자(워크샵·제단·골렘·생산 3칸·다리·강화·사제·정지·회수·지식·취소·기타) 삭제, `A02` 위치 (0,0) |
-| `src/Netstorm.Game/FortMapViewer.ContextMenu.cs` | 생산 창 항목 정보 행, SP 부족 문구, `opengump.wav` |
+| `dotnetpj/src/Netstorm.Core/Bridges/BridgeTray.cs` | 칸을 자리 배열(`Slots`)로 바꿈. `Take`는 `HeldSlot`만 표시하고 조각은 남김, `ConsumeHeld`는 놓은 칸을 비움, 새 조각은 첫 빈 칸 |
+| `dotnetpj/src/Netstorm.Core/Simulation/BattleSession*.cs` | 다리 놓기에서 칸 비우기, 검사합에 빈 칸·집은 칸 반영, `IsUnitRecharging` |
+| `dotnetpj/src/Netstorm.Assets/ProductionTintRemap.cs` | 원본 어둡게·빨갛게 변환표 계산 |
+| `dotnetpj/src/Netstorm.Game/FortMapViewer.Deck.cs` | 다리 칸·유닛 칸 배치, 상태별 변환표, 클릭·우클릭 판정 |
+| `dotnetpj/src/Netstorm.Game/FortMapViewer.PlayUi.cs` | 기존 14개 버튼 격자(워크샵·제단·골렘·생산 3칸·다리·강화·사제·정지·회수·지식·취소·기타) 삭제, `A02` 위치 (0,0) |
+| `dotnetpj/src/Netstorm.Game/FortMapViewer.ContextMenu.cs` | 생산 창 항목 정보 행, SP 부족 문구, `opengump.wav` |
 
 버튼으로 하던 기능은 원본 조작으로 대신한다.
 

@@ -17,7 +17,7 @@ public readonly record struct EdgeScrollInput(
 
 /// <summary>
 /// 풀스크린에서 커서를 화면 끝에 대면 카메라를 이동시키는 규칙 (원본 <c>Netstorm.exe</c> <c>004d65de</c>~<c>004d67ad</c> 분석,
-/// <see href="../../../docs/exe/edge-scroll.md">docs/exe/edge-scroll.md</see>).
+/// <see href="../../../../docs/exe/edge-scroll.md">docs/exe/edge-scroll.md</see>).
 /// 속도는 프레임당 픽셀로 정의돼 있어 클론은 원본 루프의 실제 속도(<see cref="FramePacing.OriginalFramesPerSecond"/>, 약 71.4)로
 /// 초당 픽셀로 환산한다. 화면 루프를 원본과 같은 간격(14ms)으로 돌리면 한 프레임에 정확히 "프레임당 픽셀"만큼 움직인다.
 /// </summary>
