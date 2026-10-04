@@ -1,6 +1,6 @@
 # C++ 빌드 (`cpppj/`)
 
-> 2026-10-05 추가·갱신. **공용 계층 1차 복원 소스가 빌드되고 원본/CD 자산을 읽는다.** 화면·전투·게임 전체 루프·MCP는 아직 구현하지 않았다. [복원 근거·검증](exe/cpp-reconstruction.md).
+> 2026-10-05 추가·갱신. **공용 계층과 타입·SHP·팔레트 로더가 빌드되며 원본/CD 프레임을 내보낸다.** 게임 창·전투·전체 루프·MCP는 후속 작업이다. [공용 계층 근거](exe/cpp-reconstruction.md), [타입·그래픽 복원](exe/cpp-assets-reconstruction.md).
 
 ## 1. 두 빌드를 함께 개발한다
 
@@ -12,7 +12,7 @@
 | 만드는 방법 | 원본을 분석해 규칙·화면을 새로 구현한다 (클론 코딩) | **기존 게임을 디컴파일한 소스를 토대로 C++ 소스를 다시 만든다** |
 | 빌드 도구 | .NET 10 SDK (`dotnetpj/Netstorm.sln`) | CMake 3.21 이상 + C++20 컴파일러 |
 | 실행 파일 | `NetstormClone` | `NetstormCpp` |
-| 상태 | 캠페인 1-1·1-2 플레이 가능 | 공용 계층 일부 복원, 자산 검사 실행 가능 |
+| 상태 | 캠페인 1-1·1-2 플레이 가능 | 공용 계층·타입·기본 그래픽 일부 복원, 자산 검사·BMP 내보내기 가능 |
 
 두 빌드가 함께 쓰는 것은 저장소 루트에 그대로 있다.
 
@@ -88,9 +88,12 @@ NetstormCpp (reconstructed core; game UI pending)
 cpppj/build/bin/Release/NetstormCpp.exe --inspect-data originals
 cpppj/build/bin/Release/NetstormCpp.exe --inspect-data originalCD
 python tools/cpp_recovery_smoke.py
+cpppj/build/bin/Release/NetstormCpp.exe --inspect-assets originals
+cpppj/build/bin/Release/NetstormCpp.exe --inspect-assets originalCD --cd
+python tools/cpp_assets_smoke.py
 ```
 
-현재 소스: `BaseFile`·`Config`·`Xlat`·`RiftType`·`BaseProcess`·`Kernel`·`GameClock`, 신규 인코딩·콘솔 계층. 각 모듈의 복원 범위와 미구현 부분은 [C++ 복원 문서](exe/cpp-reconstruction.md)에 있다. CTest는 두 판본의 x86 기계어 기대값 1,806개를 포함한 10개 테스트를 실행한다.
+현재 소스: `BaseFile`·`Config`·`Xlat`·`RiftType`·`BaseProcess`·`Kernel`·`GameClock`·`VFXDraw`·`Screen` 일부, 신규 인코딩·자산 연결·콘솔·BMP 계층. CTest는 두 판본의 x86 기계어 기대값 2,515개를 포함한 17개 테스트를 실행한다. [타입·그래픽 복원 문서](exe/cpp-assets-reconstruction.md)에 실제 자산 전체 대조와 남은 범위를 적었다.
 
 ## 4. 디컴파일한 소스에서 C++ 소스를 만드는 절차
 
@@ -141,5 +144,5 @@ AGENTS.md 의 규칙(한국어 주석, UTF-8, 상수·함수·반복문마다 �
 * **한국어 글꼴.** D2Coding(TTC)을 그리는 방법이 필요하다(C# 빌드는 FontStashSharp 를 쓴다).
 * **원본에 없는 기능을 넣는 방식.** 와이드 화면, 60·120프레임, 전체화면 재실행 오류 수정은 원본 코드에 없다. 다시 만든 코드를 어디서 어떻게 바꿀지는 해당 모듈을 옮길 때 정한다. C# 빌드의 결정(와이드 화면 = 시야 확장, [LEFT_JOBS.md](../LEFT_JOBS.md) 1.7절)을 따르는 것이 기본이다.
 * **옮기는 순서.** 제안: ① `o/` 의 파일·설정 계층(BaseFile·Config·Xlat·StaticString) → ② 데이터 형식(Template·RiftType·DataManager) → ③ 프로세스 커널과 시계(Kernel·BaseProcess) → ④ 플랫폼 계층과 화면(Screen·Renderer) → ⑤ 메인 루프와 입력(ClientMain·UserInput).
-  - 2026-10-05: ① 읽기·원시 설정·번역, ② 프레임 검색, ③ 커널 실행 인터페이스·시계의 일부를 복원했다. 다음은 **Config 치환·`.type`·`.shp`·`.fort` 로더**, SID와 실제 프로세스 클래스, 화면·입력 순이다. 전체 모듈 이식 완료로 보지 않는다.
+  - 2026-10-05: ① 읽기·원시 설정·번역, ② 타입 자산·SHP·프레임 코드/검색, ③ 커널 실행 인터페이스·시계, ④ 팔레트·기본 8비트 합성 일부를 복원했다. 다음은 **Config 치환·`.fort` 로더**, 게임 타입 플래그·생성자·SID·파생 프로세스, 화면 장치·Renderer·입력 순이다. 전체 모듈 이식 완료로 보지 않는다.
 * **두 빌드의 결과를 비교하는 방법.** 같은 미션에서 C# 빌드와 C++ 빌드의 동작을 대조하는 도구는 없다.

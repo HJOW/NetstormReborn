@@ -5,4 +5,5 @@
 # 사용할 라이브러리는 아직 정하지 않았다 (../../docs/cpp-build.md 의 "정하지 않은 것").
 target_sources(netstorm PRIVATE
     Console.cpp Console.h
+    Bitmap.cpp Bitmap.h
 )

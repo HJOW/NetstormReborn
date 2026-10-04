@@ -7,6 +7,7 @@ target_sources(netstorm PRIVATE
     Xlat.cpp Xlat.h
     OriginalText.cpp OriginalText.h
     RiftType.cpp RiftType.h
+    TypeParser.cpp TypeLoadOrder.cpp
     BaseProcess.cpp BaseProcess.h
     Kernel.cpp Kernel.h
     GameClock.cpp GameClock.h

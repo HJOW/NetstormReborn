@@ -2,7 +2,7 @@
   "schema": 1,
   "target": "10.78",
   "reference": "10.72",
-  "scope": "공용 계층 일부 복원. 게임 전체·화면·전투·MCP는 아직 미구현.",
+  "scope": "공용 계층·타입 자산·기본 그래픽 읽기 일부 복원. 게임 전체·창·전투·MCP는 아직 미구현.",
   "reviewed_pairs": [
     {"originals": "0049a9a0", "originalCD": "00444350", "name": "FrameFindNumber", "purge": 12, "evidence": "두 판본의 3바이트 순차 비교, ret 12, x86 차등 검증"},
     {"originals": "0049a9e0", "originalCD": "00444410", "name": "FrameFindMasked", "purge": 16, "evidence": "movsx 플래그와 test mask, ret 16, 실패 시 assert 없음, x86 차등 검증"},
@@ -15,6 +15,8 @@
   ],
   "version_differences": [
     {"name": "process_capacity", "originals": 39999, "originalCD": 3999, "evidence": "00471950 / 004ed500 및 실행 루프 끝 주소"},
-    {"name": "config_raw_assert_limit", "originals": 8191, "originalCD": 4095, "evidence": "00440150의 0x1ffe 비교 / 0042ab70의 0xffe 비교. 동적 문자열로 대체."}
+    {"name": "config_raw_assert_limit", "originals": 8191, "originalCD": 4095, "evidence": "00440150의 0x1ffe 비교 / 0042ab70의 0xffe 비교. 동적 문자열로 대체."},
+    {"name": "rift_type_bytes", "originals": 500, "originalCD": 468, "evidence": "0049b0d0의 인덱스 /500, CD 00444e10의 /0x1d4. frameCount +0x114, frameCodes +0x124는 공통."},
+    {"name": "asset_type_count", "originals": 116, "originalCD": 101, "evidence": "00540dd0 / CD 0051c6f8의 이름 포인터 배열과 실제 SHP 블록 개수 대조."}
   ]
 }

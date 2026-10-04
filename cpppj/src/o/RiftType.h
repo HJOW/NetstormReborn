@@ -1,8 +1,12 @@
 // 원본 RiftType.cpp의 4바이트 프레임 코드와 검색 함수 복원.
 #pragma once
+#include <array>
 #include <cstdint>
+#include <optional>
 #include <span>
+#include <string>
 #include <string_view>
+#include <variant>
 #include <vector>
 
 namespace netstorm::o {
@@ -29,5 +33,51 @@ public:
     std::span<const FrameCode> Codes() const;
 private:
     std::vector<FrameCode> frames_;
+};
+
+// 실제 자산을 연결할 때 CD판과 패치판의 로딩 목록을 구분한다.
+enum class OriginalEdition { Patch1078, Cd1072 };
+// 패치판 00540dd0의 116개, CD판 0051c6f8의 101개 자산 이름을 반환한다.
+std::span<const std::string_view> TypeLoadOrder(OriginalEdition edition);
+
+struct TypeProperty {
+    std::string name;
+    std::variant<double, std::string> value; // 숫자와 따옴표 문자열을 구분하여 보존한다.
+};
+struct TypeImageReference {
+    std::string file;
+    double number{}; // GIF 번호는 빌드용 참조이며 런타임 SHP 선택에는 쓰지 않는다.
+};
+struct TypeCluster {
+    std::string name;
+    FrameCode code{};
+    std::vector<TypeImageReference> images;
+};
+struct TypeSpecialFrames {
+    int defaultFrame{}, gumpFrame{}; // 원본의 0 초기값.
+    int helpFrame{-1}, baseFrame{-1}; // 원본의 -1 초기값.
+};
+
+// RiftType의 자산 정의 부분. 모든 게임 플래그·생성자 함수 포인터를 복원한 구조체는 아니다.
+class RiftTypeDefinition {
+public:
+    // .type 문법을 읽고 0049c3b0 ↔ CD 004460f0의 프레임 코드·특수 인덱스를 만든다.
+    static RiftTypeDefinition Parse(std::string_view text);
+    // 원본 속성 이름은 ASCII 대소문자를 구분하지 않는다. 마지막 지정값이 우선한다.
+    const TypeProperty* Property(std::string_view name) const;
+    // 숫자형 속성을 조회한다. 누락 또는 문자열형이면 빈 값을 반환한다.
+    std::optional<double> Number(std::string_view name) const;
+    // 문자열형 속성을 조회한다. 누락 또는 숫자형이면 빈 값을 반환한다.
+    std::optional<std::string_view> String(std::string_view name) const;
+    // 클러스터 순서를 이전 단계에서 복원한 프레임 검색 API에 연결한다.
+    RiftTypeFrames FrameTable() const;
+    // 원본 후처리 0049b0d0의 foot_y=6 → 8을 반영한 배치 폭·높이.
+    std::array<int, 2> Footprint() const;
+
+    std::string name, constructor;
+    std::vector<std::string> flags;
+    std::vector<TypeProperty> properties;
+    std::vector<TypeCluster> clusters;
+    TypeSpecialFrames specialFrames;
 };
 }

@@ -7,12 +7,14 @@ add_executable(netstorm_tests
     ClientMainTests.cpp
     RecoveryTests.cpp
     OracleTests.cpp
+    AssetTests.cpp
 )
 netstorm_apply_compiler_options(netstorm_tests)
 target_link_libraries(netstorm_tests PRIVATE netstorm)
 # 원본 파일·Python·Ghidra 없이도 기계어 기대값 회귀 검사를 실행한다.
 target_compile_definitions(netstorm_tests PRIVATE
-    NETSTORM_ORACLE_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/original-x86.tsv")
+    NETSTORM_ORACLE_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/original-x86.tsv"
+    NETSTORM_GRAPHICS_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/graphics-x86.tsv")
 
 # ctest 에 실행 파일 하나를 테스트 하나로 등록한다. 실패한 검사가 있으면 종료 코드가 1 이다.
 add_test(NAME netstorm_tests COMMAND netstorm_tests)

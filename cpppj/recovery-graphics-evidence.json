@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "method": "Unicorn x86 32-bit flat segments; exactly two VFX functions; no stubs",
+  "binary_sha256": {
+    "originals": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+  },
+  "functions": [
+    {
+      "name": "ShapeDraw",
+      "originals": "00401d92",
+      "originalCD": "00465772"
+    },
+    {
+      "name": "ShapeDrawUnclipped",
+      "originals": "004021b5",
+      "originalCD": "00465b95"
+    }
+  ],
+  "seed": 1447450640,
+  "total_cases": 709,
+  "fixture_sha256": "bdf284fe5e73d0258d0a84ed35956e499063ae65a01a7bf22d31cfd35d8cf75c",
+  "limitations": [
+    "기본 8비트 그리기·클리핑만 검증",
+    "색 변환·확대·반전·그림자 효과는 후속 복원",
+    "타입 파서 전체를 x86으로 실행한 검증은 아님",
+    "게임 프로세스·OS API는 실행하지 않음"
+  ]
+}

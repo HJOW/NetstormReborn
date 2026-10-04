@@ -3,9 +3,11 @@
 기존 게임(NetStorm: Islands at War)을 디컴파일한 소스를 토대로 C++ 소스를 다시 만드는 프로젝트다.
 C# + MonoGame 빌드(`../dotnetpj/`)와 함께 개발한다.
 
-**공용 계층 1차 복원 소스가 있다.** TAFF·설정·번역·프레임 검색·프로세스 커널·게임 시계가 빌드되며, 실행 파일에서 원본/CD 자산을 읽고 검사할 수 있다. 화면·전투·전체 게임 루프·MCP는 아직 구현하지 않았다.
+**공용 계층과 타입·그래픽 자산 로더가 빌드된다.** TAFF·설정·번역·타입·프레임 검색·프로세스 커널·게임 시계, SHP 압축 해제·기본 8비트 합성·팔레트를 복원했다. 원본/CD 자산 전체를 검사하고 프레임을 투명 BMP로 내보낼 수 있다. 게임 창·전투·전체 루프·MCP는 후속 작업이다.
 
 [복원 근거·함수 대응·검증 범위](../docs/exe/cpp-reconstruction.md), [검토 목록](recovery-manifest.json), [기계어 검증 기록](recovery-evidence.json).
+
+[타입·그래픽 복원과 판본 차이](../docs/exe/cpp-assets-reconstruction.md), [VFX 기계어 검증 기록](recovery-graphics-evidence.json).
 
 ## 빌드와 테스트
 
@@ -23,9 +25,13 @@ ctest --test-dir cpppj/build --build-config Release --output-on-failure
 cpppj/build/bin/Release/NetstormCpp.exe --inspect-data originals
 cpppj/build/bin/Release/NetstormCpp.exe --inspect-data originalCD
 python tools/cpp_recovery_smoke.py
+cpppj/build/bin/Release/NetstormCpp.exe --inspect-assets originals
+cpppj/build/bin/Release/NetstormCpp.exe --inspect-assets originalCD --cd
+python tools/cpp_assets_smoke.py
+cpppj/build/bin/Release/NetstormCpp.exe --export-frame originals sunCannon N00 0 extracted/sunCannon.bmp
 ```
 
-CTest에는 두 판본 기계어의 1,806개 기대값 검사가 포함되어 있다. 빌드에는 원본 실행 파일·Ghidra·Python·외부 라이브러리가 필요 없다. 기대값 재생성 방법은 위 복원 문서에 있다. 실제 자산 검사는 원본 게임을 실행하지 않는다. C++ 제품 지원 대상은 Windows이며 Linux 빌드는 공용 코드의 이식성 검사로 사용한다.
+CTest의 17개 테스트에는 두 판본 기계어의 2,515개 기대값 검사가 포함되어 있다(기존 1,806개＋VFX 709개). 빌드에는 원본 실행 파일·Ghidra·Python·외부 라이브러리가 필요 없다. 기대값 재생성 방법은 위 복원 문서에 있다. 실제 자산 검사는 원본 게임을 실행하지 않는다. C++ 제품 지원 대상은 Windows이며 Linux 빌드는 공용 코드의 이식성 검사로 사용한다.
 
 ## 폴더
 

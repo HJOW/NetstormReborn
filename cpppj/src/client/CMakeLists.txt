@@ -4,4 +4,7 @@
 target_sources(netstorm PRIVATE
     ClientMain.cpp
     ClientMain.h
+    VFXDraw.cpp VFXDraw.h
+    Screen.cpp Screen.h
+    GameAssets.cpp GameAssets.h
 )

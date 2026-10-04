@@ -24,7 +24,7 @@ There are two game builds, developed side by side.
 | Folder | Contents | Status |
 | --- | --- | --- |
 | `dotnetpj/` | **C# + MonoGame build.** A clone implemented from scratch by analyzing the original. | Campaign 1-1 and 1-2 above are playable. |
-| `cpppj/` | **C++ build.** C++ source reconstructed from the decompiled original game. | Only the basic project structure exists. The game does not run yet. |
+| `cpppj/` | **C++ build.** C++ source reconstructed from the decompiled original game. | Partial core, type and basic graphics recovery; asset inspection and BMP export work. Game UI and combat are pending. |
 
 Game data (`assets/game-data/`), the font (`fonts/`), the analysis documents (`docs/`), and the analysis tools (`tools/`, `analyzeManager/`) are shared by both builds and stay in the repository root. For the structure of the C++ build, how to build it, and how source is reconstructed from the decompiler output, see [C++ build](docs/cpp-build.md).
 

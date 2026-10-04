@@ -5,6 +5,8 @@
 > 결과는 `extracted/refined/` 아래에 생기며 Git 에 커밋되지 않는다. 다른 PC 에서는 아래 명령으로 다시 만든다.
 > 2026-10-05 후속: [CD판 대조·기계어 검증과 C++ 1차 복원](cpp-reconstruction.md). 검토 대응 5쌍, 선택 함수 자료형 복원, x86 기대값 1,806개와 cpppj 소스를 추가했다. 아래 표는 앞선 정밀 분석의 기록이며 현재 대응은 2,495쌍이다.
 
+> 추가 후속: [타입·그래픽 C++ 복원](cpp-assets-reconstruction.md). VFX 기계어 709개 기대값·두 판본 자산 전체 픽셀 대조를 추가하고, CD판 RiftType 자료형 크기를 500에서 468바이트로 정정했다.
+
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools\ghidra\refine_all.ps1   # 두 판본 전부, 약 20분
 ```

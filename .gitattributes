@@ -5,4 +5,5 @@ assets/game-data/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-t
 # 기계어 검증 목록·기대값의 SHA-256을 Windows 체크아웃에서도 동일하게 유지한다.
 cpppj/recovery-manifest.json text eol=lf
 cpppj/recovery-evidence.json text eol=lf
+cpppj/recovery-graphics-evidence.json text eol=lf
 cpppj/tests/fixtures/*.tsv text eol=lf

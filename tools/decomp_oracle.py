@@ -48,7 +48,7 @@ MAX_INSTRUCTIONS = 200000
 
 class Oracle:
     """PE를 가상 메모리로 읽고 검토된 함수 몸체·CRT 대체만 실행한다."""
-    def __init__(self, edition, pairs):
+    def __init__(self, edition, pairs, helpers=None):
         """판본별 허용 함수·실제 함수 몸체 범위·호스트 없는 가상 메모리를 준비한다."""
         self.edition = edition
         binary = ROOT / ('originals/Netstorm.exe' if edition == 'originals' else 'originalCD/NETSTORM.EXE')
@@ -67,7 +67,9 @@ class Oracle:
         self.entries = {p['name']: int(p[edition], 16) for p in pairs}
         self.allowed = []
         # 큐레이션된 함수 몸체만 허용한다. CD판의 ConfigFindKey 줄 이동 보조 함수도 읽기 함수다.
-        for address in list(self.entries.values()) + ([0x42a240] if edition == 'originalCD' else []):
+        if helpers is None:
+            helpers = [0x42a240] if edition == 'originalCD' else []
+        for address in list(self.entries.values()) + helpers:
             for part in facts[address]['ranges'].split(';'):
                 lo, hi = (int(x, 16) for x in part.split('-'))
                 self.allowed.append((lo, hi + 1))
@@ -129,7 +131,8 @@ class Oracle:
 
     def frame(self, name, codes, args, purge):
         """32비트 type 배치 +0x114/+0x124에 입력 배열을 주고 반환 인덱스를 읽는다."""
-        self.mu.mem_write(SCRATCH, bytes(500))
+        # 원본 type의 판본별 크기는 패치 500, CD 468이며 검색 필드 오프셋은 공통이다.
+        self.mu.mem_write(SCRATCH, bytes(500 if self.edition == 'originals' else 468))
         self.mu.mem_write(SCRATCH + 0x114, struct.pack('<I', len(codes) // 4))
         self.mu.mem_write(SCRATCH + 0x124, struct.pack('<I', FRAME_ARRAY))
         if codes:

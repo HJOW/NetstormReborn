@@ -68,7 +68,9 @@ public class ApplyRecoveredTypes extends GhidraScript {
         code.replaceAtOffset(2, ByteDataType.dataType, 1, "number", "번호");
         code.replaceAtOffset(3, SignedByteDataType.dataType, 1, "flags", "원본 movsx의 부호 확장");
         DataType codeType = manager.addDataType(code, DataTypeConflictHandler.REPLACE_HANDLER);
-        StructureDataType type = new StructureDataType(category, "RiftTypeFrameView32", 500, manager);
+        // 후처리 0049b0d0 / CD 00444e10의 인덱스 계산에서 판본별 stride 500/468을 확인했다.
+        int typeSize = patch ? 500 : 468;
+        StructureDataType type = new StructureDataType(category, "RiftTypeFrameView32", typeSize, manager);
         type.replaceAtOffset(0x114, IntegerDataType.dataType, 4, "frameCount", "코드 배열의 개수");
         type.replaceAtOffset(0x124, pointer(codeType), 4, "frameCodes", "4바이트 원소 배열");
         DataType typeView = manager.addDataType(type, DataTypeConflictHandler.REPLACE_HANDLER);

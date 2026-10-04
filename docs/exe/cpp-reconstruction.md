@@ -3,6 +3,8 @@
 > 2026-10-05. 기준은 패치판 `originals/Netstorm.exe`(10.78), 참고는 사용자 제공 CD판 `originalCD/NETSTORM.EXE`(10.72).
 > 원본 파일은 읽기만 했고 원본 게임 프로세스를 실행하지 않았다. `cpppj`는 공용 계층 일부가 실행되는 단계이며 게임 전체 복원은 진행 중이다.
 
+> 후속: [타입·그래픽 자산 복원](cpp-assets-reconstruction.md). `.type`·SHP·팔레트와 기본 VFX 그리기를 추가했다. 현재 CTest는 **17개 테스트·2,515개 x86 기대값**을 검사한다. 아래 1차 검증 결과는 당시 작업 기록이다.
+
 ## 디컴파일을 더 확실하게 만드는 방법
 
 기존 A~D 등급은 함수가 존재하고 경계가 맞는지에 관한 근거다. C++ 복원에는 반환값·부호·자료형·인자 순서까지 확인해야 한다. 이번에는 다음 세 가지를 실제로 적용했다.
@@ -37,10 +39,11 @@ CD판의 `NETSTORM.VER` 파일에는 `10.37`이 남아 있고 `D/setup.cfg`에�
 | `o/BaseFile.cpp` | TAFF 헤더·이름 인덱스·플래그별 XOR, 기본 디스크 → 아카이브 → 보조 디스크 읽기 | 파일 쓰기, 존재 검사 결과 코드, CD 경로 자동 탐색, 실패한 절대 경로 재조회 |
 | `o/Config.cpp` | XOR 파일 감지·서명, 첫 일치 키, 공백·따옴표·백틱·주석, 끝에 이어 붙이기 | 객체 스택·치환·설정 저장 |
 | `o/Xlat.cpp` | 줄 첫 글자 구분, 중복 원문은 마지막 번역, 영어·미등록 원문 폴백 | 언어 변경 UI·한국어 파일 자동 연결 |
-| `o/RiftType.cpp` | 프레임 코드 검색 3개, 원본 signed 플래그 | `.type` 전체 로더, 난수 선택·방향 폴백 |
+| `o/RiftType.cpp`, `TypeParser.cpp`, `TypeLoadOrder.cpp` | 프레임 코드 검색 3개, `.type` 자산 정의·코드 생성·판본별 로딩 목록 | 게임 플래그·생성자·ID 연결, 난수 선택·방향 폴백 |
 | `o/Kernel.cpp`, `o/BaseProcess.cpp` | 슬롯 등록·삭제, 매 프레임 실제 슬롯 순서 실행 | 원본 SID 연결·프로세스 파생 클래스·디버그 출력 |
 | `o/GameClock.cpp` | 밀리초 래핑, 중첩 정지·재개, 프레임 시각 고정 | 원본 초기 시간 보정·FPS 통계·OS 시계 공급 |
 | `client/ClientMain.cpp` | `1/maxFPS`, 1ms 눈금에서 14ms 기본 간격 계산 | WinMain·입력·화면 루프 |
+| `client/VFXDraw.cpp`, `Screen.cpp`, `GameAssets.cpp` | SHP·RLE·투명 마스크·기본 클리핑·팔레트·타입 연결 | 창 장치·색 변환·그림자 효과·확대·반전 |
 | `o/OriginalText.cpp`, `platform/Console.cpp`, `app/main.cpp` | 신규 UTF-8 경계·바이너리 콘솔·자산 검사 명령 | 그래픽·오디오·플레이 화면·MCP |
 
 자료형과 변수 이름은 복원 목적에 맞춰 다시 지었다. 디컴파일 의사 코드를 확장자만 `.cpp`로 바꾼 결과가 아니다. 전체 함수 5,549개를 C++로 복원했다고 볼 수 없으며 원본의 파일 오프셋·함수 주소를 호스트 포인터로 사용하는 코드도 없다. `BaseProcess`는 실행 인터페이스만 옮겼다. `Kernel::Add`의 소유권 API와 빈 키 거부 등 신규 API 차이는 소스 주석에 명시했다.
@@ -80,4 +83,4 @@ cpppj/build/bin/Release/NetstormCpp.exe --inspect-data originals
 
 에뮬레이션에서 CRT `toupper`·`strnicmp`는 **ASCII 로케일만** 대체했고 assert 오류 보고 UI도 대체했다. 원본 CRT의 다른 로케일, 전역 초기화 순서, 예외 UI, 그래픽·소리·실제 게임 전체 실행은 검증 범위에 없다. 커널·시계는 정적 코드 대조와 단위 검증 수준이며 기계어 기대값 1,806개에 포함하지 않았다.
 
-다음 복원 대상은 `.type`·`.shp`·`.fort` 로더와 Config 치환, 이후 실제 프로세스 클래스·Screen·Renderer·UserInput이다. 게임 전체 복원을 위해서는 각 클래스의 생성자·소멸자·가상 함수 표와 읽기/쓰기 오프셋을 함께 추적하고, 추가 순수 함수부터 이 검증 방식에 넣는다.
+`.type` 자산 정의·SHP 읽기·팔레트·기본 그리기는 [후속 작업](cpp-assets-reconstruction.md)에서 복원했다. 다음 대상은 `.fort` 로더와 Config 치환, 게임 타입의 비트·생성자·ID·파생 프로세스, 화면 장치·Renderer·UserInput이다. 게임 전체 복원을 위해서는 각 클래스의 생성자·소멸자·가상 함수 표와 읽기/쓰기 오프셋을 함께 추적하고, 추가 순수 함수부터 이 검증 방식에 넣는다.

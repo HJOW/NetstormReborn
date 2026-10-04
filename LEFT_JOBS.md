@@ -1,12 +1,25 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
-> 최종 갱신: 2026-10-05 (**CD판 대조·선택 함수 자료형 복원·x86 차등 검사와 cpppj 공용 계층 1차 복원**, [cpp-reconstruction.md](docs/exe/cpp-reconstruction.md). C#·C++ 병행 개발과 이전 분석·작업 이력 보존)
+> 최종 갱신: 2026-10-05 (**cpppj 타입·SHP·팔레트·기본 VFX 그리기 복원**, [cpp-assets-reconstruction.md](docs/exe/cpp-assets-reconstruction.md). C#·C++ 병행 개발과 이전 분석·작업 이력 보존)
 > 프로젝트 목표(AGENTS.md): 원본 NetStorm: Islands at War 를 디컴파일/분석하여 클론 코딩하고,
 > **Windows 10/11** 과 **GUI 환경의 Linux** 에서 동작하며 **여러 언어를 지원**하는 게임을 만든다.
 > **모방 범위(2026-10-03 AGENTS.md 변경)**: 기존 게임의 **사운드·그래픽·애니메이션 등 거의 모든 요소를 가능한 한 동일하게** 최대한 모방한다.
 > **1차 목표 언어: 영어, 한국어** (그 외 언어는 이후 확장).
 > **우선순위: Windows 10/11 > Linux** (Linux 지원과 멀티플레이 요소 구현은 우선순위가 낮다 — 설계상 이식성은 유지하되 검증·배포는 Windows 먼저. 그 외 사항은 궁극적인 목표다).
 > **화면 요구사항(2026-09-28 AGENTS.md 추가, 2026-10-03·10-05 변경)**: 풀스크린 모드와 화면비 **16:9 · 16:10 · 4:3** 지원, **기존 게임 수준의 프레임으로 먼저 만들고 이후 60·120프레임 지원**(2026-10-05 변경. 원본 수준 = `maxFPS` 75·14ms 루프, 클론 적용 완료), 풀스크린에서 **마우스를 화면 끝에 대면 화면 이동**(원본도 옵션에서 켰을 때 지원), 원본의 **전체화면 전환 뒤 재실행 오류는 클론에서 발생하지 않아야 한다** — 1.4·1.7절
+
+---
+
+## 2026-10-05 ✅ 완료: cpppj 타입·그래픽 자산 복원 후속
+
+- [x] **요청:** "cpppj (기존 게임 디컴파일 및 복원) 더 진행". AGENTS.md·LEFT_JOBS.md를 확인하고 `.type`·SHP·팔레트·기본 8비트 합성을 복원했다. 원본 게임 프로세스는 실행하지 않았다. AGENTS.md·원본 파일·C# 소스는 수정하지 않았다. [근거·재현·남은 범위](docs/exe/cpp-assets-reconstruction.md).
+- [x] **타입 자산:** `o/TypeParser.cpp`·`TypeLoadOrder.cpp`·`RiftType.h`. 숫자/문자열 속성, 생성자 수식어·플래그 이름, 클러스터·GIF 참조, 원본 프레임 코드와 default/help/gump/base 인덱스, footprint 보정. 전체 게임 생성자·플래그 비트·ID 연결 완료를 뜻하지 않는다.
+- [x] **그래픽 소스:** `client/VFXDraw`의 블록 상대·공유 오프셋, 프레임 헤더·RLE·투명 마스크·pane 원점·클리핑. `client/Screen`의 COL/RGBQUAD 팔레트, 신규 `GameAssets`·`platform/Bitmap` 연결과 BMP V4 출력. 번호 0·255도 불투명 색이므로 색과 투명을 분리한다. 특수 레코드는 이미지로 처리하지 않는다.
+- [x] **CLI:** `--inspect-assets <dir> [--cd]`, 검사 전용 `--dump-assets`, `--export-frame <dir> <type> <cluster> <layer> <out.bmp> [--cd]`. 잘못된 판본의 블록 개수는 실패로 보고한다. `dude`의 typename `Man` 별명과 본체/그림자 레이어도 검사한다.
+- [x] **판본 차이:** 자산 타입 패치 **116개**·CD **101개**. 패치 `manabolt` 정의 4개·SHP 8개, CD 4개·4개를 각각 보존한다. Sun Cannon `hpPerSec`는 패치 **16**·CD **14**다. 원본 RiftType은 **500/468바이트**, foot_x/y 오프셋도 다르며 `+0x114/+0x124` 프레임 필드는 공통이다. `ApplyRecoveredTypes.java`의 CD 자료형을 468로 정정하고 두 판본 읽기 전용 디컴파일 각 5개를 재생성했다.
+- [x] **VFX 기계어:** `tools/decomp_graphics_oracle.py`, `cpppj/recovery-graphics-evidence.json`, Git 포함 `graphics-x86.tsv`. 원본 `00401d92/004021b5` ↔ CD `00465772/00465b95`, ret 20인 두 함수만 flat x86 세그먼트로 실행한다. CRT·assert 대체 없이 **709개** 입력의 반환값·화면 전체 바이트가 두 판본과 C++에서 일치. 기본 8비트 합성만 검증했다.
+- [x] **검증:** Release 경고·오류 0, CTest **17개 테스트**(기존 x86 1,806개＋VFX 709개 = **2,515개** 기대값). `tools/cpp_assets_smoke.py`로 타입 **217개**, 일반 이미지 **6,777개**의 **15,940,472픽셀**과 특수 레코드 173개 헤더·전체 타입 속성/프레임 코드를 기존 Python 판독기와 대조했다. 검토용 BMP **8개**를 Pillow로 재판독하여 RGBA·알파·방향까지 확인한다. 원본 해시 유지. 결과는 `extracted/cpp-assets-smoke/report.json`·이미지에 있다.
+- **남은 일:** Config 객체 스택·치환·저장과 동적 팔레트 선택, `.fort` 로더, 게임 타입 비트·생성자·전역 ID·float 변환·난수 프레임 선택·방향 폴백, BaseProcess SID·실제 파생 클래스, Screen 장치·Renderer·UserInput·전체 루프. 색 변환표·실제 그림자 합성·확대·반전·폰트·오디오·전투·MCP도 미구현이다. 한국어 글꼴·와이드 화면·전체화면·60/120프레임은 해당 계층 복원 후 적용한다. `.type` 자산 읽기와 SHP 기본 압축 해제는 완료했으며 전체 게임 복원은 진행 중이다.
 
 ---
 
@@ -19,7 +32,7 @@
 - [x] **컴파일되는 C++ 소스:** `cpppj/src/o/`의 `BaseFile`(TAFF/XOR/읽기 VFS)·`Config`(원시 파서)·`Xlat`·`RiftType`(검색)·`BaseProcess`(실행 인터페이스)·`Kernel`·`GameClock`·신규 `OriginalText`, `platform/Console`, `app/main.cpp` 검사 명령. 소스마다 출처·복원 범위를 적었다. UTF-8·한국어 주석을 사용하고 C# 빌드는 수정하지 않았다.
 - [x] **판본 차이 반영:** 커널은 패치 **39,999칸**, CD **3,999칸**이다. 기존 메인 루프 문서의 동일 용량 가정을 정정하고 C++에 패치 값을 적용했다. 설정 원시 값 assert 경계도 8,191/4,095로 다르다. CD `NETSTORM.VER`의 `10.37` 표기만으로 실행 파일 판본을 재판정하지 않았다.
 - [x] **검증:** Windows Release 빌드 오류·경고 0, CTest 내부 **10개 테스트** 통과. `tools/cpp_recovery_smoke.py`로 패치 **246개**·CD **258개**, 합계 **504개 엔트리** 전체 바이트 대조, 실제 번역 각 20개·고유 키 774/759개·임시 디스크 우선 조회 확인. 아카이브 SHA-256 유지. 자동 대응 **2,495쌍**; 수동 정답을 제외한 기존 홀드아웃 **195/198(98.5%)** 유지.
-- **남은 일:** 현재는 화면·게임 전체 루프·전투·오디오·MCP가 없는 **공용 계층 일부 복원 단계**다. Config 객체 스택·치환·저장, `.type`·`.shp`·`.fort` 로더, BaseProcess SID 연결·파생 프로세스, Screen/Renderer/UserInput를 계속 복원한다. 한국어 글꼴·와이드 화면·전체화면과 정확한 60/120프레임은 해당 계층 복원 후 적용한다. 커널·시계는 정적 대조와 단위 검사이며 x86 기대값 대상 확장은 후속이다. Linux 제품 지원은 C++ 목표가 아니다.
+- **남은 일(후속 갱신):** `.type` 자산 읽기·SHP·팔레트·기본 합성은 위 후속 작업에서 완료했다. Config 객체 스택·치환·저장, `.fort` 로더, 게임 타입·BaseProcess SID 연결·파생 프로세스, Screen 장치/Renderer/UserInput·전체 루프·전투·오디오·MCP는 남아 있다. 한국어 글꼴·와이드 화면·전체화면과 정확한 60/120프레임은 해당 계층 복원 후 적용한다. 커널·시계는 정적 대조와 단위 검사이며 x86 기대값 대상 확장은 후속이다. Linux 제품 지원은 C++ 목표가 아니다.
 
 ---
 
