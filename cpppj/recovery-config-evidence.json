@@ -1,0 +1,102 @@
+{
+  "schema": 1,
+  "method": "Unicorn x86 32-bit; OS/API execution forbidden",
+  "unicorn_version": "2.1.4",
+  "binary_sha256": {
+    "originals": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+  },
+  "functions": [
+    {
+      "name": "Substitute",
+      "originals": "00440b60",
+      "originalCD": "0042a960",
+      "purge": 8
+    },
+    {
+      "name": "Get",
+      "originals": "004409d0",
+      "originalCD": "0042a930",
+      "purge": 8
+    },
+    {
+      "name": "RemoveKey",
+      "originals": "00440240",
+      "originalCD": "0042ac50",
+      "purge": 4
+    },
+    {
+      "name": "Set",
+      "originals": "004404e0",
+      "originalCD": "0042af30",
+      "purge": 8
+    },
+    {
+      "name": "FindSection",
+      "originals": "0043fe60",
+      "originalCD": "0042a320",
+      "purge": 0
+    },
+    {
+      "name": "Section",
+      "originals": "00440570",
+      "originalCD": "0042afd0",
+      "purge": 8
+    }
+  ],
+  "helpers": {
+    "originals": [
+      "00440a00",
+      "00440760",
+      "00440110",
+      "0043fd70",
+      "00440150",
+      "004e4a40"
+    ],
+    "originalCD": [
+      "0042a540",
+      "0042a6b0",
+      "0042ab10",
+      "0042a270",
+      "0042ab70",
+      "0042a240",
+      "0042a400",
+      "004f1bd0"
+    ]
+  },
+  "seed": 1131376230,
+  "cases": {
+    "Subst": 495,
+    "Get": 77,
+    "Remove": 272,
+    "Set": 143,
+    "FindSection": 1045,
+    "Section": 408
+  },
+  "total_cases": 2440,
+  "skipped_nonterminating": 0,
+  "skipped_external_access": 2,
+  "skipped_reads_past_buffer": 43,
+  "stubbed": [
+    "ASCII toupper",
+    "ASCII strnicmp",
+    "strchr",
+    "getenv (fixed table)",
+    "sprintf (%c%s%c, %c%s)",
+    "assert reporting",
+    "formatted append 004402f0/0042acd0 (arguments recorded)"
+  ],
+  "assert_report_calls": {
+    "originals": 31,
+    "originalCD": 31
+  },
+  "fixture_sha256": "7306cb4205d76da56616c67fd0e8fdc168e6c756c9c10ef80e437cf638ab003e",
+  "limitations": [
+    "게임 전체 실행 검증 아님",
+    "CRT는 ASCII 로케일만 검증",
+    "{@미션.키}·{&레지스트리}는 파일·OS 접근이라 x86으로 실행하지 않음",
+    "값 쓰기의 서식·이어 붙이기는 인자만 기록(원본 256바이트 서식 버퍼 미검증)",
+    "원본이 끝나지 않는 자기 참조 입력은 기대값에서 제외",
+    "C++ 검증은 ctest에서 별도로 실행"
+  ]
+}

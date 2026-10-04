@@ -6,7 +6,7 @@
 > **함수 수**는 패치판에서 그 파일 이름을 참조하는 함수의 수다([모듈 맵](../docs/exe/modules.md)). 그 파일의 전체 함수 수가 아니다.
 > **상태**는 cpppj 에 그 경로의 파일이 있는지만 본다. 파일이 있어도 일부 함수만 옮긴 것일 수 있다.
 
-## `\Ns\O\` → `src/o/` (75개, 파일 있음 7개)
+## `\Ns\O\` → `src/o/` (75개, 파일 있음 9개)
 
 | cpppj 경로 | 패치판 표기 | CD판 표기 | 함수 수 | 상태 |
 |---|---|---|---|---|
@@ -34,7 +34,7 @@
 | `src/o/Ch.cpp` | Ch.cpp | ch.cpp | 10 |  |
 | `src/o/ChunkMap.cpp` | Chunkmap.cpp | ChunkMap.cpp | 4 |  |
 | `src/o/Config.cpp` | Config.cpp | config.cpp | 6 | 있음 |
-| `src/o/ConfigInterface.cpp` | Configinterface.cpp | ConfigInterface.cpp | 12 |  |
+| `src/o/ConfigInterface.cpp` | Configinterface.cpp | ConfigInterface.cpp | 12 | 있음 |
 | `src/o/Connection.cpp` | — | connection.cpp |  |  |
 | `src/o/Construction.cpp` | Construction.cpp | construction.cpp | 3 |  |
 | `src/o/Damageable.cpp` | Damageable.cpp | Damageable.cpp | 7 |  |
@@ -75,7 +75,7 @@
 | `src/o/SquidFinder.cpp` | Squidfinder.cpp | SquidFinder.cpp | 7 |  |
 | `src/o/SquidHash.cpp` | Squidhash.cpp | SquidHash.cpp | 2 |  |
 | `src/o/StaticString.cpp` | Staticstring.cpp | staticString.cpp | 1 |  |
-| `src/o/Template.cpp` | Template.cpp | template.cpp | 37 |  |
+| `src/o/Template.cpp` | Template.cpp | template.cpp | 37 | 있음 |
 | `src/o/Terr.cpp` | — | Terr.cpp |  |  |
 | `src/o/TerrainBuilder.cpp` | Terrainbuilder.cpp | terrainBuilder.cpp | 4 |  |
 | `src/o/Totalmade.cpp` | Totalmade.cpp | — | 5 |  |
@@ -86,7 +86,7 @@
 | `src/o/Xlat.cpp` | Xlat.cpp | xlat.cpp | 3 | 있음 |
 | `src/o/Ztrans.cpp` | Ztrans.cpp | ztrans.cpp | 12 |  |
 
-## `.\` (클라이언트) → `src/client/` (60개, 파일 있음 3개)
+## `.\` (클라이언트) → `src/client/` (60개, 파일 있음 4개)
 
 | cpppj 경로 | 패치판 표기 | CD판 표기 | 함수 수 | 상태 |
 |---|---|---|---|---|
@@ -129,7 +129,7 @@
 | `src/client/MetaDisplay.cpp` | Metadisplay.cpp | metaDisplay.cpp | 14 |  |
 | `src/client/Minimap.cpp` | Minimap.cpp | minimap.cpp | 1 |  |
 | `src/client/Missile.cpp` | Missile.cpp | Missile.cpp | 2 |  |
-| `src/client/Mission.cpp` | Mission.cpp | mission.cpp | 3 |  |
+| `src/client/Mission.cpp` | Mission.cpp | mission.cpp | 3 | 있음 |
 | `src/client/MovieGump.cpp` | Moviegump.cpp | MovieGump.cpp | 5 |  |
 | `src/client/Normal.cpp` | Normal.cpp | normal.cpp | 2 |  |
 | `src/client/Particle.cpp` | Particle.cpp | Particle.cpp | 3 |  |

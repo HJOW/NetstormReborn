@@ -1,6 +1,6 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
-> 최종 갱신: 2026-10-05 (**cpppj 후속 복원 계획 문서화**, [cpp-roadmap.md](docs/cpp-roadmap.md). 타입·SHP·팔레트·기본 VFX 복원과 C#·C++ 병행 개발의 이전 이력 보존)
+> 최종 갱신: 2026-10-05 (**cpppj 설정 계층·타입 표·요새 파일 읽기 복원** — 계획 1단계 완료, 2단계 파일 읽기까지. [cpp-config-reconstruction.md](docs/exe/cpp-config-reconstruction.md), [cpp-fort-reconstruction.md](docs/exe/cpp-fort-reconstruction.md). 후속 계획 [cpp-roadmap.md](docs/cpp-roadmap.md). 타입·SHP·팔레트·기본 VFX 복원과 C#·C++ 병행 개발의 이전 이력 보존)
 > 프로젝트 목표(AGENTS.md): 원본 NetStorm: Islands at War 를 디컴파일/분석하여 클론 코딩하고,
 > **Windows 10/11** 과 **GUI 환경의 Linux** 에서 동작하며 **여러 언어를 지원**하는 게임을 만든다.
 > **모방 범위(2026-10-03 AGENTS.md 변경)**: 기존 게임의 **사운드·그래픽·애니메이션 등 거의 모든 요소를 가능한 한 동일하게** 최대한 모방한다.
@@ -10,12 +10,37 @@
 
 ---
 
+## 2026-10-05 (`HJOW-Athlon`, Windows 10, 원본 실행 없음) ✅ 완료: cpppj 설정 계층·타입 표·요새 파일 읽기 복원
+
+- [x] **요청:** "AGENTS.md, LEFT_JOBS.md 를 읽고, cpppj (기존 게임 디컴파일, C++ 복원) 더 진행." [후속 계획](docs/cpp-roadmap.md)의 1단계(설정·경로)와 2단계(맵 데이터·타입 연결)를 진행했다. 원본 게임 프로세스는 실행하지 않았다. AGENTS.md·원본 파일·C# 소스는 수정하지 않았다. **커밋하지 않았다.**
+- [x] **설정 계층(1단계 완료)** — [근거·검증](docs/exe/cpp-config-reconstruction.md)
+  - `o/Config.cpp`: 설정 객체 목록(`ConfigRegistry`), 이름 접두어, 조회(`00440760`), `{키|기본값}` 해석(`00440a00`), 치환(`00440b60`), 줄 삭제·값 쓰기(`00440240`·`004404e0`), 섹션(`0043fe60`·`00440570`·`00440640`), XOR 파일·명령줄 형식 읽기.
+  - 새 `o/ConfigInterface.cpp`: 시작 순서(`[ARGS]` → 버전 → user·options·dev·guild·setup → `[END]`, InstallDir·CDDir), 경로 지정값(`local.1`~`3`), 정수·문자열 읽기, 언어 용어표, 저장 내용. 새 `client/Mission.cpp`: 미션 스크립트(`mission` 설정 객체)와 `loadFort`·`missionType`·`fortSpec` 경로(`00482fb0`).
+  - **x86 대조:** 새 `tools/decomp_config_oracle.py` → `cpppj/tests/fixtures/config-x86.tsv`, `cpppj/recovery-config-evidence.json`. 치환 495·조회 77·줄 삭제 272·값 쓰기 143·섹션 검색 1,045·섹션 범위 408, 합계 **2,440개** 입력이 두 판본 기계어와 C++에서 일치. 실제 `options.cfg`·`setup.cfg` 버퍼의 모든 경로 지정값 포함. CRT(ASCII)·getenv·sprintf·assert·서식 이어 붙이기만 대체.
+  - **원본 동작 정정:** 찾지 못한 키는 `{Not Found:키}`가 아니라 **`{키}`**로 남는다(원본이 `Not Found:` 위에 키를 덮어쓴다 — 두 판본 x86 실행). 인코딩된 설정 파일의 **첫 줄은 서명 `mQdsT`가 붙어 조회되지 않는다**(`options.cfg`의 `InstallDir`). 등록 순서는 용어표 → 전역 설정. CD판은 설정 객체 40개·버퍼 4KB(패치 1000개·8KB). [config.md](docs/formats/config.md)에 반영.
+  - 실제 파일 검사: 새 `tools/cpp_config_smoke.py` — 두 판본의 설정 버퍼 전체를 Python이 원본 파일에서 직접 구성한 버퍼와 바이트 대조, 경로 지정값과 그 파일 읽기, 값 쓰기 → 저장 → `nscfg.py` 복호화 왕복, 원본 폴더 안 쓰기 거부, 원본 해시 유지.
+- [x] **타입 표와 `.fort` 읽기(2단계의 파일 읽기 부분)** — [근거·검증](docs/exe/cpp-fort-reconstruction.md)
+  - 새 `o/RiftTypeTable.cpp`: 전체 타입 번호 체계(패치 188개·CD 171개 — 내장 이름 5개, 프로세스 타입 53/52개, `.type` = 70 + 로딩 순서), 플래그 단어 48개 → 플래그 1·2, `group`·`level`·발자국·사용량 속성, 후처리(파생 플래그·목록 플래그·`foot_y` 6→8), 이름 해시.
+  - 새 `o/Template.cpp`: 섹션 35개, `TypeNames` 변환표, `Chaff`·`TerrNN` 오브젝트 레코드(버전 0/1/2), 내용물, `Technology`, `Deck`, `Money`, `Subscriber`, `Territory` 원시 값. 형식 오류는 예외.
+  - **새로 확인:** 기존 문서의 "내부 class 값"은 `.type`의 **`group` 속성**이고 battery·archer/cannon·blocker가 소유자 저장 비트를 켠다. 이름이 20글자 이상인 타입(`fakeThreeByThreeSurface`)은 이름이 설명 필드와 이어져 읽힌다(해시 `0534a54b`로 확인). 내장 타입 1·2·3·4·6의 이름. 버전 0은 모든 타입 뒤에 상태 1바이트(원본의 `|`/`&` 실수로 항상 참). 내용물의 목록 플래그 규칙. [fort.md](docs/formats/fort.md)에 반영.
+  - 실제 파일 검사: 새 `tools/cpp_fort_smoke.py` — 패치판 폴더 **465개**(오브젝트 313,712개)·CD판 **23개**(6,922개)의 구조 전체가 기존 `tools/fort.py`의 결과와 줄 단위로 일치(326,169줄). C++ 타입 표의 해시가 실제 `TypeNames`와 완전히 같은 파일: 패치 표 29개, CD 표 424개. TEST01·캠페인 1-1(`thewarbegins`)·`savetheisland`의 미션 머리 값 일치.
+- [x] **검사 명령:** `--config-dump`·`--config-get`·`--config-spec`·`--config-save`, `--dump-types`, `--inspect-fort`·`--dump-forts`, `--inspect-mission`. 자산 명령은 팔레트 경로를 설정(`GamePalSpec` + `battlePal`)에서 계산한다.
+- **검증(이 PC):** Windows Release 빌드 경고·오류 0, CTest **30개 테스트**(x86 기대값 1,806 + 709 + 2,440 = **4,955개**). 실제 자료 검사 4종(`cpp_recovery_smoke`·`cpp_assets_smoke`·`cpp_config_smoke`·`cpp_fort_smoke`) 통과. WSL(GCC 15.2)에서 `-Wall -Wextra -Wpedantic` 경고 없이 직접 컴파일해 30개 테스트 통과. `cpppj/SOURCE_MAP.md` 재생성(파일 있음 13개).
+  - **확인하지 못한 것:** 타입 플래그와 `.fort` 읽기는 x86 실행으로 대조하지 않았다(정적 대조 + 독립 판독기 전수 비교 + 실제 해시). 그룹·후처리가 켜는 플래그 비트는 독립 비교 대상이 없다. Linux의 CMake 빌드와 CI는 돌려 보지 못했다.
+- **남은 일 (다음 세션, [cpp-roadmap.md](docs/cpp-roadmap.md) "다음 작업 세션의 범위")**
+  1. **영역 배치:** `Territory` 120바이트와 `TerrNN` 청크의 월드 위치(`004be2c0`·`0046f200`, [territory-layout.md](docs/exe/territory-layout.md))를 옮겨 TEST01의 모든 오브젝트에 월드 칸 좌표를 붙인다.
+  2. **플랫폼 결정:** 창·그리기·입력·소리·글꼴 API와 의존성, 클론 설정의 저장 위치를 정해 문서로 남긴다(3단계 선행 조건).
+  3. 타입별 생성자 표·수치 필드, Squid(오브젝트) 구조, 프레임 선택 → 1024×768 TEST01 정적 창.
+- **dotnetpj 쪽에 남기는 메모(이번에 고치지 않음):** `ConfigStore`는 찾지 못한 키를 `{Not Found:키}`로 남기고 `{@absent.name}`도 `{Not Found:@ABSENT.NAME}`으로 만든다. 원본은 각각 `{키}`, `{@ABSENT}`('.'에서 잘린 키)다. 이 표시가 화면에 보이는 경로가 있는지 확인한 뒤 맞출지 정한다(관련 테스트 `TextResourceTests`·`GameResourcesTests`).
+
+---
+
 ## 2026-10-05 ✅ 완료: cpppj 후속 복원 계획 문서화
 
 - [x] **요청:** "cpppj 뒤의 계획은 문서로 남겨줘". [cpppj 후속 복원 계획](docs/cpp-roadmap.md)에 현재 구현 범위, 단계별 우선순위·의존 관계·완료 기준, CD판 대조·기계어 검증 방법과 다음 작업을 정리했다. 이번 작업은 문서만 변경했으며 향후 구현을 완료 처리하지 않았다.
 - [x] **문서 연결:** cpppj README·C++ 빌드 규칙·타입/그래픽 복원 문서에서 후속 계획으로 연결했다. 기존 복원·검증 기록은 보존했다.
-- [ ] **다음 구현 1:** Config 객체 층·치환·자산 경로. 함수의 패치/CD 대응·호출 규약과 실제 설정 검사 사례부터 정리한다.
-- [ ] **다음 구현 2:** `.fort`·타입 해시/번호·게임 플래그 연결. TEST01·캠페인 1-1의 배치·소유자·자원·덱을 검사 보고서로 남긴다.
+- [x] **다음 구현 1:** Config 객체 층·치환·자산 경로. 함수의 패치/CD 대응·호출 규약과 실제 설정 검사 사례부터 정리한다. — 2026-10-05 완료(위 절).
+- [x] **다음 구현 2:** `.fort`·타입 해시/번호·게임 플래그 연결. TEST01·캠페인 1-1의 배치·소유자·자원·덱을 검사 보고서로 남긴다. — 2026-10-05 파일 읽기·타입 번호·플래그·검사 보고서 완료(위 절). 영역 배치에 따른 월드 좌표와 소유자 결정은 남았다.
 - [ ] **다음 구현 3:** 플랫폼 API·의존성을 결정하고 1024×768 TEST01 정적 창을 만든다. 이후 SID·파생 프로세스·입력·메인 루프를 연결하여 캠페인 1-1 플레이로 이어 간다.
 - **그 이후:** 원본 기능·튜토리얼·나머지 캠페인·메뉴·오디오·저장, 영어/한국어·전체화면·화면비·원본 속도 이후 60/120프레임, MCP·Windows 실행 패키지. 상세 작업과 완료 기준은 위 계획 문서를 따른다.
 

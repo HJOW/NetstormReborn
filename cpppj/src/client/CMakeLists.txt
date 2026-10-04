@@ -7,4 +7,5 @@ target_sources(netstorm PRIVATE
     VFXDraw.cpp VFXDraw.h
     Screen.cpp Screen.h
     GameAssets.cpp GameAssets.h
+    Mission.cpp Mission.h
 )

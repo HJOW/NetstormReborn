@@ -1,6 +1,6 @@
 # C++ 빌드 (`cpppj/`)
 
-> 2026-10-05 추가·갱신. **공용 계층과 타입·SHP·팔레트 로더가 빌드되며 원본/CD 프레임을 내보낸다.** 게임 창·전투·전체 루프·MCP는 후속 작업이다. [공용 계층 근거](exe/cpp-reconstruction.md), [타입·그래픽 복원](exe/cpp-assets-reconstruction.md).
+> 2026-10-05 추가·갱신. **공용 계층, 타입·SHP·팔레트 로더, 설정 계층, 요새 파일 로더가 빌드되며 원본/CD 프레임을 내보낸다.** 게임 창·전투·전체 루프·MCP는 후속 작업이다. [공용 계층 근거](exe/cpp-reconstruction.md), [타입·그래픽 복원](exe/cpp-assets-reconstruction.md), [설정 계층 복원](exe/cpp-config-reconstruction.md), [타입 표·요새 파일 복원](exe/cpp-fort-reconstruction.md).
 
 후속 작업의 우선순위·의존 관계·완료 기준은 [cpppj 후속 복원 계획](cpp-roadmap.md)에 정리했다. 이 문서는 빌드와 소스 복원 규칙을 다룬다.
 
@@ -14,7 +14,7 @@
 | 만드는 방법 | 원본을 분석해 규칙·화면을 새로 구현한다 (클론 코딩) | **기존 게임을 디컴파일한 소스를 토대로 C++ 소스를 다시 만든다** |
 | 빌드 도구 | .NET 10 SDK (`dotnetpj/Netstorm.sln`) | CMake 3.21 이상 + C++20 컴파일러 |
 | 실행 파일 | `NetstormClone` | `NetstormCpp` |
-| 상태 | 캠페인 1-1·1-2 플레이 가능 | 공용 계층·타입·기본 그래픽 일부 복원, 자산 검사·BMP 내보내기 가능 |
+| 상태 | 캠페인 1-1·1-2 플레이 가능 | 공용 계층·설정·타입·요새 파일 읽기·기본 그래픽 일부 복원, 자산·설정·미션 검사와 BMP 내보내기 가능 |
 
 두 빌드가 함께 쓰는 것은 저장소 루트에 그대로 있다.
 
@@ -93,9 +93,13 @@ python tools/cpp_recovery_smoke.py
 cpppj/build/bin/Release/NetstormCpp.exe --inspect-assets originals
 cpppj/build/bin/Release/NetstormCpp.exe --inspect-assets originalCD --cd
 python tools/cpp_assets_smoke.py
+cpppj/build/bin/Release/NetstormCpp.exe --config-spec originals missionSpec TEST01
+python tools/cpp_config_smoke.py
+cpppj/build/bin/Release/NetstormCpp.exe --inspect-mission originals TEST01
+python tools/cpp_fort_smoke.py
 ```
 
-현재 소스: `BaseFile`·`Config`·`Xlat`·`RiftType`·`BaseProcess`·`Kernel`·`GameClock`·`VFXDraw`·`Screen` 일부, 신규 인코딩·자산 연결·콘솔·BMP 계층. CTest는 두 판본의 x86 기계어 기대값 2,515개를 포함한 17개 테스트를 실행한다. [타입·그래픽 복원 문서](exe/cpp-assets-reconstruction.md)에 실제 자산 전체 대조와 남은 범위를 적었다.
+현재 소스: `BaseFile`·`Config`·`ConfigInterface`·`Xlat`·`RiftType`(타입 표 포함)·`Template`·`BaseProcess`·`Kernel`·`GameClock`·`VFXDraw`·`Screen`·`Mission` 일부, 신규 인코딩·자산 연결·콘솔·BMP·파일 출력 계층. CTest는 두 판본의 x86 기계어 기대값 4,955개를 포함한 30개 테스트를 실행한다. [타입·그래픽 복원 문서](exe/cpp-assets-reconstruction.md)에 실제 자산 전체 대조와 남은 범위를 적었다.
 
 ## 4. 디컴파일한 소스에서 C++ 소스를 만드는 절차
 

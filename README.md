@@ -22,7 +22,7 @@ AI 를 이용해 되살리는 프로젝트입니다.
 | 폴더 | 내용 | 상태 |
 | --- | --- | --- |
 | `dotnetpj/` | **C# + MonoGame 빌드.** 원본을 분석해 새로 구현한 클론입니다. | 위의 캠페인 1-1·1-2를 플레이할 수 있습니다. |
-| `cpppj/` | **C++ 빌드.** 기존 게임을 디컴파일한 소스를 토대로 C++ 소스를 다시 만듭니다. | 공용 계층·타입·기본 그래픽 일부 복원. 자산 검사·BMP 내보내기 가능. 게임 창·전투는 후속 작업입니다. |
+| `cpppj/` | **C++ 빌드.** 기존 게임을 디컴파일한 소스를 토대로 C++ 소스를 다시 만듭니다. | 공용 계층·설정·타입·요새 파일 읽기·기본 그래픽 일부 복원. 자산·설정·미션 검사와 BMP 내보내기 가능. 게임 창·전투는 후속 작업입니다. |
 
 게임 데이터(`assets/game-data/`), 글꼴(`fonts/`), 분석 문서(`docs/`), 분석 도구(`tools/`, `analyzeManager/`)는 두 빌드가 함께 쓰며 저장소 루트에 있습니다. C++ 빌드의 구조와 빌드 방법, 디컴파일 결과에서 소스를 만드는 절차는 [C++ 빌드](docs/cpp-build.md)를 참고하세요.
 
@@ -109,7 +109,7 @@ $env:NETSTORM_DATA = "D:\Games\NetstormReborn\game-data"
 NETSTORM_DATA="/절대/경로/game-data" ./dist/linux-x64/NetstormClone --language korean
 ```
 
-# C++ 빌드 (기초 구조)
+# C++ 빌드 (복원 진행 중)
 
 CMake 3.21 이상과 C++20 컴파일러(Visual Studio 2022 이상 또는 GCC·Clang)가 필요합니다. 프로젝트 루트에서 실행합니다.
 
@@ -119,7 +119,7 @@ cmake --build cpppj/build --config Release
 ctest --test-dir cpppj/build --build-config Release --output-on-failure
 ```
 
-지금은 실행 파일(`NetstormCpp`)이 빌드 정보만 출력하고 끝납니다. 자세한 내용은 [C++ 빌드](docs/cpp-build.md)에 있습니다.
+지금 실행 파일(`NetstormCpp`)은 게임 창 없이 검사 명령만 제공합니다(자산·설정·요새·미션 검사, 프레임 내보내기). 예: `cpppj/build/bin/Release/NetstormCpp.exe --inspect-mission originals TEST01`. 자세한 내용은 [C++ 빌드](docs/cpp-build.md)와 [후속 복원 계획](docs/cpp-roadmap.md)에 있습니다.
 
 # License
 

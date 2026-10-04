@@ -11,9 +11,9 @@ bool Equal(std::string_view left, std::string_view right) {
     return o::AsciiLower(left) == o::AsciiLower(right);
 }
 }
-// 초기 원본 setup.cfg의 공통 팔레트 gifcloud를 읽는다. Config 경로 치환 연결은 후속 작업이다.
-GameAssets::GameAssets(const o::BaseFileSystem& files, o::OriginalEdition edition)
-    : shapes_(files.Read("d/_shapes.shp")), palette_(files.Read("d/gifcloud.col")) {
+// 팔레트 경로는 호출자가 설정에서 계산해 준다. 주지 않으면 원본 setup.cfg의 공통 팔레트 gifcloud다.
+GameAssets::GameAssets(const o::BaseFileSystem& files, o::OriginalEdition edition, std::string_view palettePath)
+    : shapes_(files.Read("d/_shapes.shp")), palette_(files.Read(palettePath)) {
     const auto order = o::TypeLoadOrder(edition);
     if (shapes_.Blocks().size() != order.size()) throw std::runtime_error("Shape block count does not match selected edition (use --cd for CD data)");
     types_.reserve(order.size());
@@ -23,6 +23,11 @@ GameAssets::GameAssets(const o::BaseFileSystem& files, o::OriginalEdition editio
         auto type = o::RiftTypeDefinition::Parse(o::DecodeOriginalText(files.Read("d/"+name+".type")));
         types_.push_back({name, std::move(type), i});
     }
+    std::vector<o::RiftTypeSource> sources;
+    sources.reserve(types_.size());
+    // 타입 표는 로딩 순서의 정의를 받아 번호 70부터 채운다.
+    for (const auto& type : types_) sources.push_back({type.assetName, &type.definition});
+    typeTable_.emplace(edition, sources);
 }
 // 목록에서 빠진 세 가지 미사용 .type 파일은 원본과 같이 SHP 블록에 배정하지 않는다.
 std::span<const TypeAsset> GameAssets::Types() const { return types_; }
@@ -51,6 +56,8 @@ std::size_t GameAssets::FrameIndex(const TypeAsset& type, std::string_view clust
 }
 // SHP 레코드의 원래 경계·메타데이터를 제공한다.
 const ShapeDatabase& GameAssets::Shapes() const { return shapes_; }
+// 생성자에서 항상 만들어지므로 비어 있지 않다.
+const o::RiftTypeTable& GameAssets::TypeTable() const { return *typeTable_; }
 // 팔레트는 투명 마스크와 별도로 적용한다.
 const GamePalette& GameAssets::Palette() const { return palette_; }
 }

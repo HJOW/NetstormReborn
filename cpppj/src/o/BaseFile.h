@@ -51,6 +51,8 @@ public:
     void RegisterArchive(const std::filesystem::path& path);
     // 상대 이름의 읽기: 기본 디스크 → 아카이브 → 보조 디스크. 절대 이름은 직접 읽는다.
     std::vector<std::uint8_t> Read(std::string_view name) const;
+    // Read와 같은 순서로 찾되, 없으면 예외 대신 빈 값을 돌려준다(없어도 되는 설정 파일용).
+    std::optional<std::vector<std::uint8_t>> TryRead(std::string_view name) const;
 private:
     std::filesystem::path base_;
     std::filesystem::path secondary_;

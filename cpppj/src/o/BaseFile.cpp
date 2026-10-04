@@ -113,15 +113,20 @@ void BaseFileSystem::RegisterArchive(const std::filesystem::path& path) {
     archiveNames_.push_back(key);
 }
 // 원본 FUN_0041b4c0의 상대 경로 읽기 순서를 복원한다.
-std::vector<std::uint8_t> BaseFileSystem::Read(std::string_view name) const {
+std::optional<std::vector<std::uint8_t>> BaseFileSystem::TryRead(std::string_view name) const {
     const std::filesystem::path direct{std::string(name)};
-    if (direct.is_absolute()) return ReadFileBytes(direct); // 절대 경로 실패 시 원본의 재조회는 미구현.
+    if (direct.is_absolute()) return netstorm::o::TryRead(direct); // 절대 경로 실패 시 원본의 재조회는 미구현.
     const std::filesystem::path relative{NormalizeGamePath(name)};
     // 원본 데이터 파일은 Windows에서도 대소문자를 구분하지 않는다. Linux 경로 보정은 후속 작업이다.
-    if (auto bytes = TryRead(base_ / relative)) return std::move(*bytes);
+    if (auto bytes = netstorm::o::TryRead(base_ / relative)) return bytes;
     // 기본 디스크 다음에 등록된 아카이브를 순서대로 찾는다.
     for (const auto& archive : archives_) if (archive.Find(name)) return archive.Read(name);
-    if (auto bytes = TryRead(secondary_ / relative)) return std::move(*bytes);
-    throw std::runtime_error("Game file not found: " + std::string(name));
+    return netstorm::o::TryRead(secondary_ / relative);
+}
+// 찾지 못하면 호출자에게 예외로 알린다.
+std::vector<std::uint8_t> BaseFileSystem::Read(std::string_view name) const {
+    auto bytes = TryRead(name);
+    if (!bytes) throw std::runtime_error("Game file not found: " + std::string(name));
+    return std::move(*bytes);
 }
 }

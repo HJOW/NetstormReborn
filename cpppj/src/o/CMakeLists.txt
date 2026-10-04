@@ -4,10 +4,12 @@
 target_sources(netstorm PRIVATE
     BaseFile.cpp BaseFile.h
     Config.cpp Config.h
+    ConfigInterface.cpp ConfigInterface.h
     Xlat.cpp Xlat.h
     OriginalText.cpp OriginalText.h
     RiftType.cpp RiftType.h
-    TypeParser.cpp TypeLoadOrder.cpp
+    TypeParser.cpp TypeLoadOrder.cpp RiftTypeTable.cpp
+    Template.cpp Template.h
     BaseProcess.cpp BaseProcess.h
     Kernel.cpp Kernel.h
     GameClock.cpp GameClock.h

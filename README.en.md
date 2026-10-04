@@ -24,7 +24,7 @@ There are two game builds, developed side by side.
 | Folder | Contents | Status |
 | --- | --- | --- |
 | `dotnetpj/` | **C# + MonoGame build.** A clone implemented from scratch by analyzing the original. | Campaign 1-1 and 1-2 above are playable. |
-| `cpppj/` | **C++ build.** C++ source reconstructed from the decompiled original game. | Partial core, type and basic graphics recovery; asset inspection and BMP export work. Game UI and combat are pending. |
+| `cpppj/` | **C++ build.** C++ source reconstructed from the decompiled original game. | Partial recovery of the core, configuration, types, fort file reading and basic graphics; asset, configuration and mission inspection and BMP export work. Game UI and combat are pending. |
 
 Game data (`assets/game-data/`), the font (`fonts/`), the analysis documents (`docs/`), and the analysis tools (`tools/`, `analyzeManager/`) are shared by both builds and stay in the repository root. For the structure of the C++ build, how to build it, and how source is reconstructed from the decompiler output, see [C++ build](docs/cpp-build.md).
 
@@ -111,7 +111,7 @@ $env:NETSTORM_DATA = "D:\Games\NetstormReborn\game-data"
 NETSTORM_DATA="/absolute/path/game-data" ./dist/linux-x64/NetstormClone --language english
 ```
 
-# C++ build (basic structure)
+# C++ build (reconstruction in progress)
 
 You need CMake 3.21 or later and a C++20 compiler (Visual Studio 2022 or later, or GCC/Clang). Run these from the project root.
 
@@ -121,7 +121,7 @@ cmake --build cpppj/build --config Release
 ctest --test-dir cpppj/build --build-config Release --output-on-failure
 ```
 
-For now the executable (`NetstormCpp`) only prints its build information and exits. Details are in [C++ build](docs/cpp-build.md).
+For now the executable (`NetstormCpp`) has no game window and only offers inspection commands (assets, configuration, forts, missions, frame export). Example: `cpppj/build/bin/Release/NetstormCpp.exe --inspect-mission originals TEST01`. Details are in [C++ build](docs/cpp-build.md) and the [reconstruction roadmap](docs/cpp-roadmap.md).
 
 # License
 

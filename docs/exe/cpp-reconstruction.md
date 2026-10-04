@@ -3,7 +3,7 @@
 > 2026-10-05. 기준은 패치판 `originals/Netstorm.exe`(10.78), 참고는 사용자 제공 CD판 `originalCD/NETSTORM.EXE`(10.72).
 > 원본 파일은 읽기만 했고 원본 게임 프로세스를 실행하지 않았다. `cpppj`는 공용 계층 일부가 실행되는 단계이며 게임 전체 복원은 진행 중이다.
 
-> 후속: [타입·그래픽 자산 복원](cpp-assets-reconstruction.md). `.type`·SHP·팔레트와 기본 VFX 그리기를 추가했다. 현재 CTest는 **17개 테스트·2,515개 x86 기대값**을 검사한다. 아래 1차 검증 결과는 당시 작업 기록이다.
+> 후속: [타입·그래픽 자산 복원](cpp-assets-reconstruction.md). `.type`·SHP·팔레트와 기본 VFX 그리기를 추가했다. 그 뒤 [설정 계층](cpp-config-reconstruction.md)과 [타입 표·요새 파일](cpp-fort-reconstruction.md)을 추가했다. 현재 CTest는 **30개 테스트·4,955개 x86 기대값**을 검사한다. 아래 1차 검증 결과는 당시 작업 기록이다.
 
 ## 디컴파일을 더 확실하게 만드는 방법
 

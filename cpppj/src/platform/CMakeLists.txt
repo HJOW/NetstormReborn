@@ -6,4 +6,5 @@
 target_sources(netstorm PRIVATE
     Console.cpp Console.h
     Bitmap.cpp Bitmap.h
+    FileOutput.cpp FileOutput.h
 )
