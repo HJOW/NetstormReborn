@@ -9,6 +9,8 @@ C# + MonoGame 빌드(`../dotnetpj/`)와 함께 개발한다.
 
 [타입·그래픽 복원과 판본 차이](../docs/exe/cpp-assets-reconstruction.md), [VFX 기계어 검증 기록](recovery-graphics-evidence.json).
 
+[후속 복원 계획](../docs/cpp-roadmap.md)에 설정·맵 로딩부터 첫 게임 창·캠페인 플레이·한국어·전체화면·MCP까지의 순서, 단계별 완료 기준과 다음 작업을 정리했다.
+
 ## 빌드와 테스트
 
 CMake 3.21 이상과 C++20 컴파일러(Visual Studio 2022 이상, GCC 11 이상, Clang 14 이상)가 필요하다. 저장소 루트에서 실행한다.
