@@ -1,12 +1,72 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
-> 최종 갱신: 2026-10-05 (**cpppj 플랫폼 결정(Win32 직접 호출, Windows 전용)·원본 방식의 창과 화면 장치(창 모드)·입력 큐·영역 배치 복원** — [cpp-screen-reconstruction.md](docs/exe/cpp-screen-reconstruction.md). 그 앞: **cpppj 설정 계층·타입 표·요새 파일 읽기 복원** — 계획 1단계 완료, 2단계 파일 읽기까지. [cpp-config-reconstruction.md](docs/exe/cpp-config-reconstruction.md), [cpp-fort-reconstruction.md](docs/exe/cpp-fort-reconstruction.md). 후속 계획 [cpp-roadmap.md](docs/cpp-roadmap.md). 타입·SHP·팔레트·기본 VFX 복원과 C#·C++ 병행 개발의 이전 이력 보존)
+> 최종 갱신: 2026-10-05 (**cpppj 인수인계: AGENTS.md의 cpppj 목표 변경(1차 목표 = 디컴파일 코드를 C++로 최대한 복원)과 `options.cfg`를 원본과 동일하게 처리한다는 결정 — 바로 아래 절.** 그 앞: **cpppj 플랫폼 결정(Win32 직접 호출, Windows 전용)·원본 방식의 창과 화면 장치(창 모드)·입력 큐·영역 배치 복원** — [cpp-screen-reconstruction.md](docs/exe/cpp-screen-reconstruction.md). 그 앞: **cpppj 설정 계층·타입 표·요새 파일 읽기 복원** — 계획 1단계 완료, 2단계 파일 읽기까지. [cpp-config-reconstruction.md](docs/exe/cpp-config-reconstruction.md), [cpp-fort-reconstruction.md](docs/exe/cpp-fort-reconstruction.md). 후속 계획 [cpp-roadmap.md](docs/cpp-roadmap.md). 타입·SHP·팔레트·기본 VFX 복원과 C#·C++ 병행 개발의 이전 이력 보존)
 > 프로젝트 목표(AGENTS.md): 원본 NetStorm: Islands at War 를 디컴파일/분석하여 클론 코딩하고,
 > **Windows 10/11** 과 **GUI 환경의 Linux** 에서 동작하며 **여러 언어를 지원**하는 게임을 만든다.
 > **모방 범위(2026-10-03 AGENTS.md 변경)**: 기존 게임의 **사운드·그래픽·애니메이션 등 거의 모든 요소를 가능한 한 동일하게** 최대한 모방한다.
 > **1차 목표 언어: 영어, 한국어** (그 외 언어는 이후 확장).
 > **우선순위: Windows 10/11 > Linux** (Linux 지원과 멀티플레이 요소 구현은 우선순위가 낮다 — 설계상 이식성은 유지하되 검증·배포는 Windows 먼저. 그 외 사항은 궁극적인 목표다).
 > **화면 요구사항(2026-09-28 AGENTS.md 추가, 2026-10-03·10-05 변경)**: 풀스크린 모드와 화면비 **16:9 · 16:10 · 4:3** 지원, **기존 게임 수준의 프레임으로 먼저 만들고 이후 60·120프레임 지원**(2026-10-05 변경. 원본 수준 = `maxFPS` 75·14ms 루프, 클론 적용 완료), 풀스크린에서 **마우스를 화면 끝에 대면 화면 이동**(원본도 옵션에서 켰을 때 지원), 원본의 **전체화면 전환 뒤 재실행 오류는 클론에서 발생하지 않아야 한다** — 1.4·1.7절
+
+---
+
+## 2026-10-05 📌 인수인계: cpppj 목표 변경과 `options.cfg` 결정, 앞으로 할 일
+
+> 이 절은 **문서만** 고친 작업이다. 코드는 바꾸지 않았다. 아래 할 일은 모두 **아직 하지 않은 것**이다. 지금의 코드 상태는 바로 다음 절(Win32 창·화면 장치·입력 큐·영역 배치 복원, 커밋 `bfb780c`)에 있다.
+
+### 바뀐 것 (사용자 결정)
+
+1. **AGENTS.md의 cpppj 목표가 바뀌었다**(사용자가 직접 수정, 커밋 `bfb780c`에 포함).
+   - 지금 문구: "cpppj - C++ , 기존 게임을 디컴파일하여 C++ 코드로 최대한 복원하는 것이 1차 목표이다. 이후 윈도우10, 11에서 실행 가능한 수준으로 만들고, 요구사항 반영 및 MCP 추가한다. 윈도우용만 개발한다."
+   - "dotnetpj - C# + MonoGame 기반으로 개발. cpppj 완성 후 이를 분석하여 개발."
+   - 이전 문구는 "…최대한 복원하여, 실행 가능한 수준으로 만들고, 요구사항 반영 및 MCP 추가 (윈도우용만 개발)"였다. 달라진 점은 **복원이 1차 목표로 앞에 놓이고, 실행 가능 수준·요구사항·MCP가 "이후"로 순서가 정해진 것**, 그리고 **dotnetpj는 cpppj 완성 뒤에 그것을 분석해 개발한다**는 것이다.
+2. **`options.cfg`는 원본 게임과 동일하게 처리한다.** AGENTS.md가 `options.cfg`와 `fullScreenStateFile.dat`의 수정·삭제를 예외로 허용하고 있다. cpppj는 따로 둔 저장 위치를 만들지 않고, 원본이 읽고 쓰는 `<게임 폴더>/d/options.cfg`를 원본과 같은 시점·같은 형식으로 읽고 쓴다. 직전 절의 "사용자 결정이 필요한 것: 설정 저장 위치"는 이것으로 정해졌다.
+
+### 이 결정을 반영한 문서
+
+[cpp-screen-reconstruction.md](docs/exe/cpp-screen-reconstruction.md) 1·3·5·7·8·12절, [cpp-build.md](docs/cpp-build.md) 1·6절, [cpp-roadmap.md](docs/cpp-roadmap.md) "목표와 기준"·1단계·"다음 작업 세션의 범위", [cpp-config-reconstruction.md](docs/exe/cpp-config-reconstruction.md) 검증 절, [cpppj/README.md](cpppj/README.md).
+
+### 목표 순서를 작업에 적용하는 방법 (에이전트의 해석 — 틀리면 고쳐 주세요)
+
+- **① 1차 목표(복원)** 동안에는 원본의 동작을 고치지 않고 그대로 옮긴다. 원본에 없는 기능(와이드 화면, 60·120프레임, 한국어, 가장자리 스크롤의 확장)과 원본 문제의 수정(전체화면 재실행 오류)을 앞당겨 넣지 않는다. 직전 절의 남은 일 4번에 적었던 "전체화면 초기화가 실패하면 창 모드로 되돌아가는 흐름을 유지"는 원본과 달라지는 부분이므로 ② 단계로 미룬다.
+- **② Windows 10/11에서 실행 가능한 수준**: 복원한 코드가 지금의 Windows에서 돌지 않는 부분(DirectDraw 8비트 전체화면, 전체화면 재실행 오류 등)을 이 단계에서 다룬다.
+- **③ 요구사항 반영과 MCP**: AGENTS.md의 화면비·프레임·언어 요구와 MCP.
+- **dotnetpj**: 새 기능 개발은 cpppj 완성 뒤로 미루는 것으로 읽었다. AGENTS.md에는 "두 가지 버전으로 동시 진행한다"는 문장도 그대로 있어서, dotnetpj의 기존 남은 일(이 문서의 아래쪽 절들)을 지금 멈출지는 **사용자 확인이 필요하다.** 확인 전에는 dotnetpj 쪽 작업을 새로 시작하지 않는다.
+
+### 앞으로 할 일
+
+**A. `options.cfg`를 원본과 동일하게 (결정됨, 구현 전 — 지금 cpppj는 읽기만 한다)**
+
+- [ ] **A1. 원본의 저장 시점을 모두 찾는다(정적 분석).** 지금까지 확인한 것: `00441d10`이 `options.cfg` 경로를 만들어 저장 함수 `00440f30`을 부르고, WinMain이 설정을 읽은 직후("init parse options") 한 번 부른다. `00440f30`을 부르는 곳은 패치판에 세 군데다(둘은 `00441d10` 안, 하나는 다른 함수 — 어떤 함수인지 확인하지 않았다). 옵션 화면에서 값을 바꿀 때·종료할 때 저장하는지, `00441d10`에 인자(0이 아닌 값)를 넘기는 호출자가 있는지 확인한다. CD판의 짝은 `004a9090`(호출자 2곳).
+- [ ] **A2. 경로 조립을 확인한다.** `00441d10`은 `00459c60`에 `PTR_DAT_00540cec`·`PTR_DAT_00540cf8`·`"options.cfg"`를 넘겨 경로를 만든다. 두 포인터가 가리키는 문자열(설치 폴더·데이터 폴더로 추정)을 확인하지 않았다. 실제 파일은 `originals/d/options.cfg`다.
+- [ ] **A3. `Client::Run`의 원본 자리에서 저장한다.** `cpppj/src/client/ClientMain.cpp`의 `// [원본] FUN_00441d10(0): 여기서 options.cfg를 곧바로 다시 저장한다` 주석 자리. 저장 내용을 만드는 `ConfigInterface::SaveText`와 `EncodeConfigFile`은 이미 있다. A1에서 찾은 다른 저장 시점은 해당 모듈(옵션 화면 등)을 옮길 때 같은 자리에 넣는다.
+- [ ] **A4. 원본과 같은 바이트로 저장되는지 확인한다.** 원본 게임이 저장한 `options.cfg`와, 같은 설정 버퍼에서 cpppj가 저장한 파일을 바이트로 대조한다(첫 줄 `mQdsTInstallDir = "…"` 포함). cpppj가 더한 "ASCII 밖의 글자가 있으면 서명 뒤에 UTF-8 BOM"([cpp-config-reconstruction.md](docs/exe/cpp-config-reconstruction.md))은 원본에 없는 처리다 — 원본 방식(Windows-1252)으로 되돌릴지 정한다. **원본이 저장한 파일을 얻으려면 원본 게임을 실행해야 한다**(이 PC `HJOW-Athlon`은 AGENTS.md의 예외 시스템이다. 다른 PC에서는 사용자 확인이 필요하다). `InstallDir`에 저장소 경로가 들어가므로 PC마다 내용이 다르다.
+- [ ] **A5. 검사 도구의 "원본 파일 보호"에서 이 파일을 예외로 한다.** `--config-save`의 "원본 폴더 안 쓰기 거부", `tools/cpp_config_smoke.py`·`cpp_window_smoke.py`·`cpp_fort_smoke.py`의 "원본 파일 해시 유지" 검사. `cpp_window_smoke.py`는 게임 폴더와 `d/`의 모든 파일을 감시하므로, `--run`이 `options.cfg`를 쓰기 시작하면 그대로는 실패한다. 스모크가 사용자의 설정을 바꿔 놓지 않도록, 실행 전에 `options.cfg`를 보관했다가 되돌리는 방식을 권한다.
+- [ ] **A6. `fullscreenStateFile.dat`를 분석한다.** 실행 파일에 이 이름이 있다(패치판 파일 오프셋 `0x105c54`, CD판에도 있음. AGENTS.md의 표기는 `fullScreenStateFile.dat`). 읽고 쓰는 함수와 용도를 분석하지 않았다. 전체화면 전환·재실행 오류와 관련될 가능성이 있다(추정). 분석한 뒤 원본과 같게 처리한다.
+- **주의:** 지금 `originals/d/options.cfg`는 `startInFullScreen = 1`, `SCREENW = 1024`, `SCREENH = 768`이다(2026-10-05 읽기 전용 확인). cpppj는 DirectDraw가 없어 창 모드로 뜨고 `global.ddFullScreen = 0` 등을 설정 버퍼에 쓴다. 저장을 켜면 이 값들이 `options.cfg`에 들어가 원본 게임의 다음 실행에 영향을 줄 수 있다 — 원본도 같은 키를 저장하는지 A4에서 함께 본다.
+
+**B. 1차 목표: 디컴파일 코드 복원을 이어 간다** ([cpp-roadmap.md](docs/cpp-roadmap.md) "다음 작업 세션의 범위")
+
+- [ ] **B1. Renderer**(`004994b0` 그리기, `00499fe0` 내보내기): 그리기 순서, 바뀐 사각형만 내보내기, 색 변환표, 그림자. 끝나면 임시 연결점 `Client::draw`와 원본에 없는 `app/InspectView`를 없앤다.
+- [ ] **B2. 오브젝트(Squid)**: 타입별 생성자 표, `.fort`를 읽으며 오브젝트를 만드는 경로, 소유자 결정, 프레임 선택(기본·난수·방향).
+- [ ] **B3. 섬 지형**: `Islandbuilder`의 나머지(`0046da70` 이후)와 Terrainbuilder — [terrain-and-bridges.md](docs/exe/terrain-and-bridges.md). `CanonDecoder`의 다리·섬·그 밖의 패턴 표(`0052f998`, `00531410`, `005314a0`, `005314e8`).
+- [ ] **B4. UserInput**(`004d62b0`): 화면 이동부터. 끝나면 임시 연결점 `Client::input`을 없앤다.
+- [ ] **B5. 화면 장치의 나머지**: DirectDraw 표면(종류 3·4·5)과 전체화면·플리핑을 원본대로, 글꼴("init fonts" `004a3ce0`), 커서 모양(`WM_SETCURSOR`), 소프트웨어 커서, 구름·시차.
+- [ ] **B6. 메인 루프의 나머지**: 상태 전환(`004b88c0`), 갱신 목록, 튜토리얼 안내, 플레이어 알림, 소리("init sound" `004aa600`), 네트워크(후순위).
+- [ ] **B7. 원본과 다르게 둔 것을 원본대로 되돌릴지 정한다**([cpp-screen-reconstruction.md](docs/exe/cpp-screen-reconstruction.md) 7절): 뮤텍스 `TitanicNetStormMutex`(지금은 만들지 않는다 — 원본과 함께 띄우기 위해서였다), 아이콘·로딩 그림을 원본 실행 파일에서 읽는 것, 레지스트리 읽기·CD 찾기, `WM_PAINT` 처리. 1차 목표의 원칙대로면 원본대로 옮기는 것이 기본이다.
+- [ ] **B8. x86 기대값**: 입력 큐·사각형 자르기·패턴 반복자(지금은 실제 자료 대조만 있다). 회전된 영역은 실제 파일에 없으므로 x86 실행으로만 확인할 수 있다.
+
+**C. 그 이후 (② 실행 가능 수준, ③ 요구사항·MCP)** — 순서만 적는다. 상세는 [cpp-roadmap.md](docs/cpp-roadmap.md) 5~8단계.
+
+- [ ] Windows 10/11에서의 전체화면과 **전체화면 전환 뒤 재실행 오류 수정**, 16:9·16:10·4:3, 가장자리 스크롤, 60·120프레임, 한국어(D2Coding).
+- [ ] MCP: 미션 로드·화면 캡처·상태 조회·입력 명령.
+- [ ] dotnetpj: cpppj 완성 뒤 분석해 개발(위 "사용자 확인이 필요하다" 참고).
+
+### 다음 세션의 시작 방법
+
+1. AGENTS.md와 이 절을 읽는다. 빌드·검사 명령은 [cpp-build.md](docs/cpp-build.md) 3절(`cmake` → `ctest` 43개 → 스모크 5종)이다.
+2. A1·A2·A6은 원본을 실행하지 않는 정적 분석이라 바로 시작할 수 있다(`python tools/decomp_refine.py --show 00441d10`, `--show 00440f30`). A3~A5는 그 결과에 따른다.
+3. B는 B1(Renderer)부터다. 작업 방식은 [cpp-roadmap.md](docs/cpp-roadmap.md) "디컴파일 신뢰도를 높이는 작업 방식"을 따른다.
 
 ---
 
@@ -24,13 +84,13 @@
 - **알아둘 점**
   - `originalCD/`는 설치본이 아니라 CD 내용이라 `options.cfg`가 없다. `SCREENW`·`SCREENH`가 없으면 화면이 0 × 0이 되어 원본 assert `dibBuffer`와 같은 자리에서 멈춘다. `--set "SCREENW=800;SCREENH=600"`으로 준다. `--cd`는 인자 맨 끝에 둔다.
   - 아이콘과 로딩 그림은 게임 폴더의 원본 실행 파일을 **자료로 열어**(실행하지 않는다) 읽는다. 뮤텍스 `TitanicNetStormMutex`는 만들지 않는다. `options.cfg`는 **저장하지 않는다**(원본은 시작할 때 곧바로 다시 저장한다).
-  - 작업 도중 사용자가 AGENTS.md를 직접 고쳤다(에이전트가 고친 것이 아니다): "cpppj … 일단 기존 게임을 최대한 그대로 복원하는 게 목적", "dotnetpj … cpppj 완성 후 이를 분석하여 개발". 이번 작업의 방향과 같다. dotnetpj 쪽 작업 순서에 영향을 주므로 다음 세션에서 참고한다.
-- **사용자 결정이 필요한 것:** **설정 저장 위치.** 원본처럼 게임 폴더의 `options.cfg`에 쓸지(AGENTS.md가 그 파일의 수정을 허용한다. 다만 원본 게임과 설정을 함께 쓰게 된다), 따로 둘지. 그때까지 cpppj는 설정을 읽기만 한다.
+  - 작업 도중 사용자가 AGENTS.md를 직접 고쳤다(에이전트가 고친 것이 아니다). 그 뒤 문구가 한 번 더 다듬어졌다 — **지금의 정확한 문구와 그에 따른 작업 순서는 맨 위 인수인계 절에 있다.** dotnetpj 쪽 작업 순서에 영향을 주므로 다음 세션에서 참고한다.
+- **(해결됨 — 2026-10-05 결정: `options.cfg`는 원본 게임과 동일하게 처리한다. 맨 위 인수인계 절 A.)** ~~사용자 결정이 필요한 것:~~ **설정 저장 위치.** 원본처럼 게임 폴더의 `options.cfg`에 쓸지(AGENTS.md가 그 파일의 수정을 허용한다. 다만 원본 게임과 설정을 함께 쓰게 된다), 따로 둘지. 그때까지 cpppj는 설정을 읽기만 한다.
 - **남은 일 (다음 세션, [cpp-roadmap.md](docs/cpp-roadmap.md) "다음 작업 세션의 범위")**
   1. **Renderer**(`004994b0` 그리기, `00499fe0` 내보내기): 그리기 순서·바뀐 사각형·색 변환표·그림자 → 임시 연결점과 `InspectView`를 없앤다.
   2. 타입별 생성자 표와 Squid(오브젝트) 구조, 소유자 결정, 프레임 선택(기본·난수·방향). 섬 지형 만들기(`0046da70` 이후, Terrainbuilder).
   3. UserInput(`004d62b0`)의 화면 이동부터. 글꼴("init fonts" `004a3ce0`), 커서 모양, 소리.
-  4. DirectDraw 전체화면(전체화면 초기화가 실패하면 창 모드로 되돌아가는 흐름을 유지해 원본의 재실행 오류를 옮기지 않는다)과 설정 저장.
+  4. DirectDraw 전체화면과 설정 저장. (2026-10-05 정정: AGENTS.md의 목표 순서에 따라 1차 목표 단계에서는 원본대로 옮기고, 재실행 오류의 수정은 그 뒤 단계에서 한다. 설정 저장은 원본과 동일하게 — 맨 위 인수인계 절.)
   5. 입력 큐·사각형 자르기·패턴 반복자의 x86 기대값.
 
 ---

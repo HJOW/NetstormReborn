@@ -91,6 +91,7 @@ python tools/cpp_config_smoke.py
 * `missionSpec`·`fortSpec`·`languageSpec`·`GamePalSpec` 경로가 기대값과 같고 그 경로의 파일이 VFS에서 읽힌다(TEST01, 캠페인 1-1 `thewarbegins`).
 * `--config-save`로 값을 쓰고 저장한 파일을 기존 `tools/nscfg.py`로 복호화하면 새 값이 한 번씩만 나온다.
 * 원본 폴더 안에 쓰려는 저장은 거부되고 원본 파일의 SHA-256이 그대로다.
+  * (2026-10-05 추가) 이것은 검사 명령 `--config-save`의 동작이다. 그 뒤 **`options.cfg`는 원본 게임과 동일하게 처리한다**고 정했다(AGENTS.md가 이 파일의 수정·삭제를 허용한다). 게임 실행(`--run`)이 원본처럼 `d/options.cfg`를 쓰게 되면 이 거부 규칙과 스모크의 해시 검사에서 그 파일을 예외로 해야 한다. 또 위 "문자 인코딩"의 UTF-8 BOM 처리는 cpppj가 더한 것이어서, 원본과 같은 바이트로 저장되는지 다시 확인해야 한다. 구현은 아직이다 — [창·화면 장치 복원](cpp-screen-reconstruction.md) 8절.
 
 검사 명령:
 
