@@ -1,6 +1,6 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
-> 최종 갱신: 2026-10-04 (TEST02 분석 클론 반영: 원본 커서 5종·실제 7×8 발자국·건물 중앙 잡기·사제 선택 해제·건설 메뉴 세 창/원소 순서·도착 전 취소 지연·바닥부터 건설·완공음 수정. 기존 전역 SP 롤링 확인. 이전 분석·작업 이력 보존)
+> 최종 갱신: 2026-10-05 (정밀 디컴파일: 누락 함수 복구·근거 기반 호출 규약·패치판↔CD판 함수 대응·신뢰도 등급 — [decompile-reliability.md](docs/exe/decompile-reliability.md). 이전 분석·작업 이력 보존)
 > 프로젝트 목표(AGENTS.md): 원본 NetStorm: Islands at War 를 디컴파일/분석하여 클론 코딩하고,
 > **Windows 10/11** 과 **GUI 환경의 Linux** 에서 동작하며 **여러 언어를 지원**하는 게임을 만든다.
 > **모방 범위(2026-10-03 AGENTS.md 변경)**: 기존 게임의 **사운드·그래픽·애니메이션 등 거의 모든 요소를 가능한 한 동일하게** 최대한 모방한다.
@@ -10,14 +10,38 @@
 
 ---
 
+## 2026-10-05 (`HJOW-Athlon`, Windows 10, 원본 실행 없음) ✅ 완료: 정밀 디컴파일 — 신뢰도 높이기, CD판 대조
+
+- [x] **요청:** "기존 게임 디컴파일 더 신뢰도 높이는 방법을 찾아 진행. CD쪽 디컴파일 소스를 같이 참고해 모호성을 해결할 수 있을 수도." 원본 게임은 실행하지 않았고 원본 파일은 읽기만 했다.
+- [x] **결과물:** `extracted/refined/originals/Netstorm.c`(패치판 5,549개 함수), `extracted/refined/originalCD/NETSTORM.c`(CD판 5,823개 함수), `extracted/refined/match.tsv`(패치판↔CD판 2,493쌍). 함수마다 머리말에 신뢰도 등급(A~D)·호출자·포인터·상대 판본의 짝·호출 규약 근거·함수 포인터 표 위치가 붙는다. **방법·검증·읽는 법: [docs/exe/decompile-reliability.md](docs/exe/decompile-reliability.md).**
+- **재현(다른 PC, 약 20분):** `powershell -ExecutionPolicy Bypass -File tools\ghidra\refine_all.ps1`. 결과는 `extracted/refined/`(Git 제외). 기본 디컴파일(`extracted/decomp/Netstorm.c`)은 기존 문서의 줄 번호 인용 때문에 그대로 둔다 — 함수 주소는 두 결과에서 같다.
+- **두 판본 나란히 보기:** `python tools/decomp_refine.py --show 4d62b0` (패치판 주소), `--show 41ae80 --edition originalCD` (CD판 주소). 한쪽이 모호하면 다른 쪽을 대조한다. 메인 프레임 함수는 패치판 `FUN_004d62b0` ↔ CD판 `FUN_0041ae80`.
+- **한 일**
+  1. `switch` 분기 블록을 함수 몸체에 포함(`FixSwitches.java`) — 메인 프레임 함수 안의 가짜 함수 26개가 사라졌다.
+  2. 누락 함수 복구를 프로젝트에 확정(`RecoverMissing.java`): 패치판 +1,031개, CD판 +2,065개. `mov edi, edi`(`8B FF`)를 프롤로그가 아니라 정렬 패딩으로 처리해, CD판 함수 451개가 진입점보다 앞에서 만들어지던 오류를 없앴다.
+  3. 근거 기반 호출 규약(`ApplyConventions.java`): 패치판 `unknown` 4,211개 → 46개. 인자 없이 적히던 호출 지점이 34.7% → 18.3%(`this` 가 보인다).
+  4. 패치판↔CD판 함수 대응(`tools/decomp_refine.py`): 이름 → 유일 문자열 → 호출 순서·호출자 전파 → 모듈 내 국소 구간, 문맥 불일치 취소.
+  5. 상대 판본 근거로 호출 규약 보완(패치판 8개, CD판 9개), 함수 포인터 표 색인(`vtables.tsv`), 등급.
+- **검증:** 대응 홀드아웃 정밀도 **98.5%**(숨긴 앵커 298개 중 198개 재발견, 195개 정답), 짝지어진 함수의 호출 규약 일치 **97.2%**, `ret N` 일치 **97.9%**. 등급은 패치판 A 2,322·B 3,156·C 40·D 31, CD판 A 2,311·B 2,943·C 484·D 85.
+- **버린 방법(다시 시도하지 말 것):** (1) Ghidra "Decompiler Parameter ID" 로 원형 일괄 확정 — `__fastcall` 901개 오탐, 가변 인자 잘림, `extraout_` 있는 함수 38→311. (2) 점프 테이블 재정의(`JumpTable.writeOverride`) — `case` 값이 0부터 매겨진다. (3) 전체 주소 순서로 짝짓기 — 두 판본은 모듈 링크 순서가 다르다(모듈 안의 순서만 유지). 근거는 위 문서 6절.
+- **정정:** 2026-10-04 절은 `FUN_004d62b0` 안의 가짜 함수를 "오탐"으로만 적었다. 원인은 Ghidra 리스팅의 함수 몸체에서 `switch` 분기 블록이 빠진 것이고, **디컴파일 결과에는 처음부터 `switch` 3개·`case` 48개가 다 들어 있었다**(디컴파일러가 점프 테이블을 스스로 복구한다).
+- **삭제:** `tools/ghidra/recover_missing.ps1`, `tools/ghidra/merge_decomp.py` 와 그 산출물(`Netstorm.all.c`, `decomp-at/*-missing.*`, `*-gaps.tsv`). 정밀 파이프라인이 대체한다. 아래 2026-10-04 절의 사용법은 더 이상 유효하지 않다.
+- **남은 것**
+  1. 정밀 디컴파일을 써서 실제 분석을 이어 간다. 후보: (a) 메인 프레임 함수 `FUN_004d62b0`↔`FUN_0041ae80` 대조로 입력·갱신·그리기 순서 정리(30/60/120프레임 구현의 근거), (b) `vtables.tsv` 로 클래스별 가상 함수 표를 정리해 간접 호출 해석, (c) 기존 문서에서 "디컴파일에 없음"으로 남긴 지점 재확인.
+  2. 대응률이 45% 안팎이다. 짝이 없는 함수가 필요하면 `--show` 로 주변 함수의 짝을 보고 CD판에서 같은 모듈 구간을 직접 찾는다.
+  3. 자료형·구조체·함수 이름은 복구하지 않았다(RTTI·심볼 없음).
+  4. Linux 용 실행 스크립트 없음(`refine_all.ps1`·`refine_decomp.ps1`·`run_script.ps1` 은 PowerShell 전용). Ghidra 스크립트와 `decomp_refine.py` 는 운영체제와 무관하다.
+
+---
+
 ## 2026-10-04 (`HJOW-Athlon`, Windows 10, 원본 실행 없음) ✅ 완료: 타임아웃 확대 재디컴파일 · 누락 함수 일괄 복구
 
 - [x] **요청:** "디컴파일 더 가능한 부분 진행, 일단 타임아웃을 대폭 늘려 전체 디컴파일 다시". 원본 파일은 읽기만 했다.
 - [x] **타임아웃 3600초:** `ExportDecomp.java`(60→3600초)·`DecompileAt.java`(120→3600초). 패치판 전체 디컴파일을 다시 돌려 **성공 4,506·실패 0**(5분 14초). `FUN_004d62b0`(메인 프레임 함수)이 `Netstorm.c` 141,241~143,296행(약 2,056줄)에 복구되었다. 앞부분 1~141,241행은 이전과 동일, 이후 행은 2,053줄 밀렸다(문서 인용 줄 번호는 모두 그 앞이라 영향 없음). 이전 `Netstorm.c`는 같은 주소·내용이며 해당 함수 한 개만 추가된 셈이다. CD판은 기존에도 실패 0이라 재실행하지 않았다.
 - [x] **누락 함수 일괄 복구 도구:** 새 `tools/ghidra/RecoverMissing.java` + `recover_missing.ps1` + `merge_decomp.py`. 후보(패딩 뒤 프롤로그·함수 끝 직후·`ret` 직후·데이터 구간 코드 포인터)를 모아 함수로 만들고 디컴파일, 후보가 안 나올 때까지 반복한다. 결과: 패치판 **+1,093개**(합친 파일 5,573개), CD판 **+2,410개**(합친 파일 6,121개). 함수 밖 코드 구간은 패치판 46,319→24,219바이트, CD판 219,956→42,450바이트. 상세·출처별 신뢰도·알려진 오탐: [mission-header-flags.md §7.1](docs/exe/mission-header-flags.md).
-- **사용법(다른 PC):** `run_decomp.ps1`(두 판본) → `recover_missing.ps1`(두 판본) → `python tools/ghidra/merge_decomp.py [--edition originalCD]`. 결과는 `extracted/decomp-at/*-missing.{c,tsv}`, `*-gaps.tsv`, `extracted/decomp/Netstorm.all.c`, `extracted/originalCD/decomp/NETSTORM.all.c`(모두 Git 제외).
+- ~~**사용법(다른 PC):**~~ (2026-10-05: 아래 도구는 정밀 디컴파일로 대체되어 삭제됨 — 위 절 참고) `run_decomp.ps1`(두 판본) → `recover_missing.ps1`(두 판본) → `python tools/ghidra/merge_decomp.py [--edition originalCD]`. 결과는 `extracted/decomp-at/*-missing.{c,tsv}`, `*-gaps.tsv`, `extracted/decomp/Netstorm.all.c`, `extracted/originalCD/decomp/NETSTORM.all.c`(모두 Git 제외).
 - **주의:** (1) `afterret` 출처 복구 함수는 다른 함수의 꼬리 조각이 섞여 신뢰도가 낮다. (2) 메인 프레임 함수 안 switch 블록 26개(`0x4d6cfe`~`0x4da53c`)가 가짜 함수로 복구되어 `merge_decomp.py`가 패치판에서 제외한다. (3) CD판 복구 함수 2,410개는 개별 검증 전이다. (4) 이전 인수인계의 "누락 함수 후보 528개"는 이 도구로 대체됐다.
-- **다음 후보:** (1) `pointer` 출처 복구 함수(가상 함수 표 슬롯)를 `Netstorm.all.c`에서 읽어 미해결 클래스 동작 확인(예: 슬롯 이름이 필요한 `Tutorial`/`Normal` 외 클래스), (2) 이전 분석 문서에서 "디컴파일에 없음"으로 남긴 지점 재확인, (3) `FUN_004d62b0` 전체(2,056줄)를 읽어 개발자 Pause 외 메인 루프 처리(입력·갱신 순서) 정리 — 30/60/120프레임 구현의 갱신 구조 근거가 된다, (4) CD판 `FUN_004735a0`(1,180줄) 등 큰 복구 함수와 패치판 비교.
+- **다음 후보(2026-10-05: 위 절의 "남은 것"으로 이어짐, `Netstorm.all.c` 대신 `extracted/refined/originals/Netstorm.c` 를 쓴다):** (1) `pointer` 출처 복구 함수(가상 함수 표 슬롯)를 `Netstorm.all.c`에서 읽어 미해결 클래스 동작 확인(예: 슬롯 이름이 필요한 `Tutorial`/`Normal` 외 클래스), (2) 이전 분석 문서에서 "디컴파일에 없음"으로 남긴 지점 재확인, (3) `FUN_004d62b0` 전체(2,056줄)를 읽어 개발자 Pause 외 메인 루프 처리(입력·갱신 순서) 정리 — 30/60/120프레임 구현의 갱신 구조 근거가 된다, (4) CD판 `FUN_004735a0`(1,180줄) 등 큰 복구 함수와 패치판 비교.
 
 ---
 

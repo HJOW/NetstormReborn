@@ -1,16 +1,24 @@
 ﻿<#
 .SYNOPSIS
-    이미 만든 Ghidra 프로젝트에서 자동 분석이 함수로 인식하지 못한 코드를 모두 찾아 함수로 만들고 디컴파일한다.
-    프로젝트는 읽기 전용으로 열어 변경하지 않는다. 결과: extracted\decomp-at\<판본>-missing.c, 후보 목록 <판본>-missing.tsv, 함수 밖 코드 구간 <판본>-gaps.tsv
+    이미 만든 Ghidra 프로젝트에 대해 tools\ghidra 의 스크립트 하나를 헤드리스로 실행한다.
+    기본은 읽기 전용(-readOnly)이라 프로젝트를 바꾸지 않는다. -Refined 를 주면 정밀 분석 프로젝트(extracted\refined)를 연다.
 
 .EXAMPLE
-    powershell -ExecutionPolicy Bypass -File tools\ghidra\recover_missing.ps1
-    powershell -ExecutionPolicy Bypass -File tools\ghidra\recover_missing.ps1 -Edition originalCD
+    powershell -ExecutionPolicy Bypass -File tools\ghidra\run_script.ps1 -Script DumpFunctions.java -ScriptArgs extracted\refined\originals\functions-base.tsv
+    powershell -ExecutionPolicy Bypass -File tools\ghidra\run_script.ps1 -Edition originalCD -Refined -Script DumpFunctions.java -ScriptArgs out.tsv
 #>
 param(
+    # 실행할 스크립트 파일 이름 (tools\ghidra 안)
+    [Parameter(Mandatory = $true)][string]$Script,
+    # 스크립트에 넘길 인자 목록
+    [string[]]$ScriptArgs = @(),
     # 분석할 판본 (run_decomp.ps1 의 -Edition 과 같다)
     [ValidateSet('originals', 'originalCD')]
     [string]$Edition = 'originals',
+    # 정밀 분석 프로젝트(extracted\refined\<판본>\ghidra)를 열지 여부
+    [switch]$Refined,
+    # 프로젝트에 변경을 저장할지 여부 (생략하면 읽기 전용)
+    [switch]$Save,
     # Ghidra 설치 폴더 (생략하면 C:\Tools 의 최신 버전)
     [string]$GhidraDir = ''
 )
@@ -18,18 +26,24 @@ param(
 # 프로젝트 루트 (이 스크립트 기준 두 단계 위)
 $Root = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
 
-# 판본별 프로젝트 폴더와 프로젝트 이름
+# 판본별 프로젝트 이름과 프로그램 이름
 if ($Edition -eq 'originalCD') {
-    $ProjectDir = Join-Path $Root 'extracted\originalCD\ghidra'
     $ProjectName = 'NETSTORM'
     $Program = 'NETSTORM.EXE'
+    $BaseProjectDir = Join-Path $Root 'extracted\originalCD\ghidra'
 } else {
-    $ProjectDir = Join-Path $Root 'extracted\ghidra'
     $ProjectName = 'Netstorm'
     $Program = 'Netstorm.exe'
+    $BaseProjectDir = Join-Path $Root 'extracted\ghidra'
+}
+# 정밀 분석 프로젝트는 기존 프로젝트와 폴더를 분리한다
+if ($Refined) {
+    $ProjectDir = Join-Path $Root "extracted\refined\$Edition\ghidra"
+} else {
+    $ProjectDir = $BaseProjectDir
 }
 if (-not (Test-Path (Join-Path $ProjectDir "$ProjectName.gpr"))) {
-    throw "Ghidra 프로젝트가 없습니다. 먼저 run_decomp.ps1 을 실행하세요: $ProjectDir"
+    throw "Ghidra 프로젝트가 없습니다: $ProjectDir"
 }
 
 # Ghidra 폴더를 지정하지 않았으면 C:\Tools 에서 가장 최신 버전을 찾는다
@@ -40,13 +54,6 @@ if (-not $GhidraDir) {
     $GhidraDir = $found.FullName
 }
 $Headless = Join-Path $GhidraDir 'support\analyzeHeadless.bat'
-
-# 결과 파일과 후보 목록 파일 위치
-$OutDir = Join-Path $Root 'extracted\decomp-at'
-if (-not (Test-Path $OutDir)) { New-Item -ItemType Directory -Path $OutDir | Out-Null }
-$OutFile = Join-Path $OutDir "$Edition-missing.c"
-$TsvFile = Join-Path $OutDir "$Edition-missing.tsv"
-$GapFile = Join-Path $OutDir "$Edition-gaps.tsv"
 
 # Ghidra 설정과 캐시는 Git 제외 경로에 둔다 (run_decomp.ps1 과 같음)
 $SettingsDir = Join-Path $Root 'extracted\ghidra-settings'
@@ -59,16 +66,15 @@ $PreviousCacheHome = $env:XDG_CACHE_HOME
 $env:XDG_CONFIG_HOME = $SettingsDir
 $env:XDG_CACHE_HOME = $CacheDir
 
-# 자동 분석 없이 읽기 전용으로 열어 누락 함수를 복구한다
+# 자동 분석 없이 열어 스크립트만 실행한다 (-Save 가 없으면 읽기 전용)
+$Mode = @('-noanalysis')
+if (-not $Save) { $Mode += '-readOnly' }
 try {
-    & $Headless $ProjectDir $ProjectName -process $Program -noanalysis -readOnly `
-        -scriptPath (Join-Path $Root 'tools\ghidra') -postScript RecoverMissing.java $OutFile $TsvFile $GapFile
+    & $Headless $ProjectDir $ProjectName -process $Program @Mode `
+        -scriptPath (Join-Path $Root 'tools\ghidra') -postScript $Script @ScriptArgs
     $ExitCode = $LASTEXITCODE
 } finally {
     $env:XDG_CONFIG_HOME = $PreviousConfigHome
     $env:XDG_CACHE_HOME = $PreviousCacheHome
 }
 if ($ExitCode -ne 0) { throw "Ghidra 실행 실패 (종료 코드 $ExitCode)" }
-Write-Host "결과: $OutFile"
-Write-Host "후보 목록: $TsvFile"
-Write-Host "함수 밖 코드 구간: $GapFile"
