@@ -378,6 +378,25 @@ analyzeManager/bin/Release/net10.0-windows/Netstorm.AnalyzeManager.exe record-pl
 - 이전 빌드(2026-09-30)에는 `record-play`가 없어 Release를 다시 빌드한 뒤 사용했다.
 - `start_session`은 `cmd.exe /c` 리다이렉트로 백그라운드 실행했다. CLI가 바로 끝나도 게임이 유지됐다.
 
+## 파이썬 MCP 드라이버·커서 기록기·영상 판독 도구 (2026-10-04)
+
+짧은 간격의 연속 조작(예: 건설 명령 직후 사제 이동)과 마우스 커서 모양을 보려고 `tools/`에 파이썬 도구를 추가했다. **분석기(C#) 코드는 바꾸지 않았고**, 분석기의 `mcp` 서버를 자식 프로세스로 띄워 도구를 호출한다. 원본 게임을 실제로 구동하므로 위 "실제 게임 실행 전 개발자 확인" 규칙이 그대로 적용된다.
+
+| 도구 | 역할 |
+|---|---|
+| [tools/ns_driver.py](../tools/ns_driver.py) | 분석기 MCP 서버를 한 번만 띄워 두고 `game_input`·`capture_state` 등을 반복 호출한다(CLI는 호출마다 시작 비용 2~4초, 이 경로는 입력 1건 약 0.2~0.9초). 명령 파일(`cmd/*.json`)을 받아 `out/*.json`에 결과를 쓰는 `serve` 모드와 다른 파이썬 스크립트가 불러 쓰는 `Driver` 클래스가 있다. **커서 기록기**가 별도 스레드에서 약 100Hz로 `GetCursorInfo`를 읽어 커서 핸들·표시 상태가 바뀔 때마다 `cursor_timeline.jsonl`에 한 줄(UTC 시각·화면 좌표)을 남기고, 처음 보는 핸들은 `cursors/<핸들>.png`(검은·흰 배경 두 장 나란히)와 핫스팟으로 저장한다. 입력 단계마다 `shots/<이름>.cur.png`에 시스템 커서를 합성한 화면도 만든다(화면 캡처에는 커서가 찍히지 않는다) |
+| [tools/cursor_catalog.py](../tools/cursor_catalog.py) | exe의 `RT_CURSOR` 리소스를 그림으로 풀고(`catalog`), 기록기가 찍은 커서 그림과 **픽셀 단위로 같은 리소스**를 찾아 그룹 번호를 붙인다(`match`). 이번 실행의 모든 게임 커서가 차이 0으로 맞았다 |
+| [tools/analyze_test02_construct.py](../tools/analyze_test02_construct.py) | TEST02 맵의 템플·워크샵 건설 분석 전체를 한 번에 실행하는 스크립트(좌표·메뉴 오프셋·판정 방식은 정찰에서 확정). 결과 해석은 [TEST02 건설 분석 노트](videos/auto-test02-construct-20261004.md) |
+| [tools/preview_scan_from_video.py](../tools/preview_scan_from_video.py) | 녹화 영상의 건물 설치 미리보기 테두리(흰색=가능·붉은색=불가)를 읽어 "어느 칸에 놓을 수 있었는지"를 복원한다. 실행 중 메모리에만 있던 훑기 결과를 영상에서 되살리는 데도 쓴다 |
+
+**쓰는 방법과 함정(이번 실행에서 확인):**
+
+- `ns_driver.py serve --work <폴더> [--session ID]`를 백그라운드로 띄운 뒤 `cmd/NNN.json`(`{"steps":[{"op":"click","x":..,"y":..,"settle":..,"name":".."}, ...]}`)을 쓰면 단계를 순서대로 실행하고 `out/NNN.json`을 쓴다. `op`는 `start`·`click`·`move`·`key`·`drag`·`shot`·`cursor`·`wait`·`status`·`sleep`·`mark`·`note`·`disk`·`end`다. 명령 파일은 AI 편집 도구로 쓰면 승인 프롬프트 없이 연속 조작할 수 있어 "자동 녹화 중 승인 프롬프트 때문에 VS Code가 게임을 가려 녹화가 끊기는" 문제를 피한다. `cmd/QUIT`를 만들면 드라이버만 끝나고 게임·녹화는 그대로 남는다.
+- **분석기 호출이 부하 때문에 길게 멈출 수 있다.** 게임·녹화(JPEG 압축)·화면 복사·파이썬 판독이 겹치면 `game_input` 한 번이 44~180초 걸린 적이 있다(같은 증상이 RDP 창 가림에서도 보고됐다). 드라이버의 호출 제한 시간을 900초로 두었고, 훑기처럼 CPU를 많이 쓰는 판독은 연속 입력 단계와 겹치지 않게 한다.
+- **디스크:** 30FPS 자동 녹화는 분당 약 130MB다(48분 6.2GB, 40분 5.5GB, 28분 3.1GB). 매 세션이 원본 복사본(약 320MB)도 만든다. 필요한 구간을 판독한 뒤 `recording/video-*.avi`·`audio-*.wav`만 지워도 입력·시각 로그는 남는다.
+- 화면 좌표는 게임 클라이언트(1024×768) 기준이며 이 PC(`HJOW-Athlon`)는 화면 배율 100%라 캡처·입력 좌표가 같다. 클라이언트 원점은 `status`의 `window.x/y`다(이번에는 화면 (8,31)).
+- 키 입력은 `SHIFT+T`처럼 최대 4개 조합을 쓸 수 있다(맵 이름 `TEST02` 입력에 썼다).
+
 ## YouTube 영상 분석 (원본 게임 실행 없음)
 
 YouTube에는 원본 게임 플레이 영상이 많다(AGENTS.md의 튜토리얼·캠페인 영상, 전용 채널 `@netstormcampaigns2591`). 직접 플레이·녹화하는 것보다 빠르게 화면·흐름·시간을 확인할 수 있도록, 영상 주소를 받아 **필요한 시각의 프레임만** 원격 스트림에서 읽는 도구를 두었다(2026-10-01). CLI `call`과 MCP가 같은 엔진(`YouTubeAnalyzer`)을 쓰며, AI는 주로 MCP로 사용한다. MCP 응답은 구조화 데이터와 함께 프레임(여러 장이면 관찰표) PNG 이미지를 돌려준다.
