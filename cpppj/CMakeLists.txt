@@ -8,6 +8,11 @@ project(NetstormCpp
     DESCRIPTION "NetStorm: Islands at War - C++ build reconstructed from the decompiled original"
     LANGUAGES CXX)
 
+# cpppj는 Windows 전용이다(AGENTS.md). 원본과 같은 Win32 API를 직접 쓴다.
+if(NOT WIN32)
+    message(FATAL_ERROR "cpppj builds on Windows only")
+endif()
+
 # C++ 표준: C++20 (MSVC 2022, GCC 11+, Clang 14+)
 set(CMAKE_CXX_STANDARD 20)
 # 표준을 지원하지 않는 컴파일러에서는 조용히 낮추지 않고 구성 단계에서 멈춘다

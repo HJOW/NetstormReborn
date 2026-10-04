@@ -11,12 +11,14 @@
 #include <string>
 #include <string_view>
 #include <vector>
+#include "app/InspectView.h"
 #include "client/ClientMain.h"
 #include "client/GameAssets.h"
 #include "client/Mission.h"
 #include "o/BaseFile.h"
 #include "o/Config.h"
 #include "o/ConfigInterface.h"
+#include "o/Islandbuilder.h"
 #include "o/OriginalText.h"
 #include "o/Template.h"
 #include "o/Xlat.h"
@@ -43,7 +45,8 @@ void PrintBuildInfo() {
     std::printf("  --config-spec <game-dir> <key> [arg1 [arg2 [arg3]]] [--cd]\n");
     std::printf("  --config-save <game-dir> <output-file> [key=value ...] [--cd]\n");
     std::printf("  --dump-types <game-dir> [--cd]\n  --inspect-fort <game-dir> <mission-or-path> [--cd]\n  --dump-forts <game-dir> [--cd]\n");
-    std::printf("  --inspect-mission <game-dir> <mission> [--cd]\n");
+    std::printf("  --inspect-mission <game-dir> <mission> [--cd]\n  --dump-territories <game-dir> [--cd]\n");
+    std::printf("  --run <game-dir> [--view types|<mission>] [--window] [--frames N] [--screenshot out.bmp] [--set \"k=v;k=v\"] [--cd]\n");
 }
 
 // 실제 자산을 읽는 VFS를 만든다. 아카이브 등록 순서는 명시적으로 지정한다.
@@ -365,6 +368,30 @@ void InspectFort(std::string_view name, const netstorm::o::FortTemplate& fort, c
     for (std::size_t i = 0; i < fort.territories.size(); ++i) { std::snprintf(label, sizeof label, "Terr%02zu", i); report(label, fort.territories[i]); }
 }
 
+// 요새 하나의 영역 배치를 적는다: 영역마다 레코드 값, 놓인 청크(y·x 순서), `TerrNN`의 청크 레코드 수.
+std::string DescribeTerritories(std::string_view name, const netstorm::o::FortTemplate& fort, const netstorm::o::RiftTypeFrames& pieceFrames) {
+    std::string text = "FORT " + std::string(name) + "\n";
+    if (fort.territory.empty()) return text;
+    netstorm::o::ChunkMap map;
+    netstorm::o::IslandList islands;
+    netstorm::o::IslandBuilder builder(map, islands, pieceFrames, 1);
+    builder.PlaceAll(fort.territory);
+    // 영역 번호순으로 적는다.
+    for (int territory = 0; territory < netstorm::o::kTerritoryCount; ++territory) {
+        const auto* record = &fort.territory[static_cast<std::size_t>(territory) * netstorm::o::kTerritoryRecordBytes];
+        const auto chunks = netstorm::o::TerritoryChunks(map, islands, 1, territory);
+        const auto& section = fort.territories[static_cast<std::size_t>(territory)];
+        if (chunks.empty() && !section.present) continue;
+        text += "T " + std::to_string(territory) + " shape=" + std::to_string(record[0] & 0x3f) + " dir=" + std::to_string(record[0] >> 6)
+            + " flags=" + std::to_string(record[1]) + " pos=" + std::to_string(record[2] & 0xf) + "," + std::to_string(record[2] >> 4)
+            + " stored=" + std::to_string(section.chunks.size()) + " chunks=";
+        // 청크 좌표를 순회 순서대로 적는다.
+        for (const auto& chunk : chunks) text += std::to_string(chunk.x) + "," + std::to_string(chunk.y) + map.At(chunk.x, chunk.y).side + ";";
+        text += "\n";
+    }
+    return text;
+}
+
 // `.fort` 검사 명령.
 int RunFortCommand(const std::string& command, std::vector<std::string> arguments) {
     const auto edition = TakeEdition(arguments);
@@ -405,7 +432,13 @@ int RunFortCommand(const std::string& command, std::vector<std::string> argument
         else std::printf("Fort: %s (missing)\n", fortPath.c_str());
         return 0;
     }
-    if (command == "--dump-forts" && arguments.size() == 1) {
+    if ((command == "--dump-forts" || command == "--dump-territories") && arguments.size() == 1) {
+        const bool territories = command == "--dump-territories";
+        const auto pieceFrames = assets.Find("puzzlePiece").definition.FrameTable();
+        // 파일 하나를 고른 형식으로 적는다.
+        const auto describe = [&](std::string_view name, const netstorm::o::FortTemplate& fort) {
+            return territories ? DescribeTerritories(name, fort, pieceFrames) : DescribeFort(name, fort, types);
+        };
         std::string text;
         std::size_t count = 0;
         // 데이터 폴더의 낱개 파일을 이름순으로 읽는다(폴더 이름의 대소문자는 판본마다 다르다).
@@ -419,7 +452,7 @@ int RunFortCommand(const std::string& command, std::vector<std::string> argument
                     found[entry.path().filename().string()] = entry.path();
             // 파일마다 구조를 적는다. 형식 오류는 그 파일의 줄에 남기고 계속한다.
             for (const auto& [name, path] : found) {
-                try { text += DescribeFort(name, netstorm::o::FortTemplate::Parse(netstorm::o::ReadFileBytes(path), types), types); }
+                try { text += describe(name, netstorm::o::FortTemplate::Parse(netstorm::o::ReadFileBytes(path), types)); }
                 catch (const std::exception& error) { text += "FORT " + name + " ERROR " + error.what() + "\n"; }
                 ++count;
             }
@@ -432,7 +465,7 @@ int RunFortCommand(const std::string& command, std::vector<std::string> argument
             for (const auto& entry : archive.Entries()) {
                 if (!netstorm::o::AsciiLower(entry.name).ends_with(".fort")) continue;
                 const auto name = "tarc:" + entry.name;
-                try { text += DescribeFort(name, netstorm::o::FortTemplate::Parse(archive.Read(entry.name), types), types); }
+                try { text += describe(name, netstorm::o::FortTemplate::Parse(archive.Read(entry.name), types)); }
                 catch (const std::exception& error) { text += "FORT " + name + " ERROR " + error.what() + "\n"; }
                 ++count;
             }
@@ -442,6 +475,33 @@ int RunFortCommand(const std::string& command, std::vector<std::string> argument
         return 0;
     }
     throw std::invalid_argument("Invalid fort command arguments");
+}
+
+// 원본 방식의 창을 띄운다. Renderer를 옮기기 전까지는 검사용 화면(InspectView)이 내용을 그린다.
+int RunClient(std::vector<std::string> arguments) {
+    netstorm::client::ClientOptions options;
+    options.edition = TakeEdition(arguments);
+    if (arguments.empty()) throw std::invalid_argument("Missing game directory");
+    options.gameDirectory = arguments[0];
+    std::string view;
+    // 나머지 인자: 원본 명령줄의 "window"에 해당하는 것과 검사용 옵션.
+    for (std::size_t i = 1; i < arguments.size(); ++i) {
+        const auto& argument = arguments[i];
+        const auto value = [&]() -> const std::string& {
+            if (i + 1 >= arguments.size()) throw std::invalid_argument("Missing value for " + argument);
+            return arguments[++i];
+        };
+        if (argument == "--window") options.forceWindow = true;
+        else if (argument == "--frames") options.frameLimit = std::stoull(value());
+        else if (argument == "--screenshot") options.screenshot = value();
+        else if (argument == "--set") options.settings = value();
+        else if (argument == "--view") view = value();
+        else throw std::invalid_argument("Unknown --run option: " + argument);
+    }
+    netstorm::client::Client client(std::move(options));
+    std::optional<netstorm::app::InspectView> inspect;
+    if (!view.empty()) inspect.emplace(client, view);
+    return client.Run();
 }
 
 // 설정 검사 명령: 버퍼 전체, 키 조회, 경로 지정값, 값 쓰기 뒤 저장 내용.
@@ -491,7 +551,9 @@ int main(int argc, char** argv) {
         if (argc == 1 || (argc == 2 && std::string(argv[1]) == "--help")) { PrintBuildInfo(); return 0; }
         const std::string command = argv[1];
         if (command.starts_with("--config-")) return RunConfigCommand(command, std::vector<std::string>(argv + 2, argv + argc));
-        if (command == "--dump-types" || command == "--inspect-fort" || command == "--dump-forts" || command == "--inspect-mission")
+        if (command == "--run") return RunClient(std::vector<std::string>(argv + 2, argv + argc));
+        if (command == "--dump-types" || command == "--inspect-fort" || command == "--dump-forts" || command == "--inspect-mission"
+            || command == "--dump-territories")
             return RunFortCommand(command, std::vector<std::string>(argv + 2, argv + argc));
         if (argc == 3 && command == "--inspect-data") { InspectData(argv[2]); return 0; }
         if (argc == 3 && command == "--dump-archive") { DumpArchive(argv[2]); return 0; }

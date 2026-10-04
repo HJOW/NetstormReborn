@@ -1,16 +1,36 @@
-// 원본 소스: ClientMain.cpp (클라이언트 폴더) — 프로그램 진입점과 메인 루프
+// 원본 소스: ClientMain.cpp (클라이언트 폴더) — 프로그램 진입점(WinMain), 창 프로시저, 메인 루프.
 //
-// 메인 루프(원본 WinMain = FUN_00438dc0)는 아직 옮기지 않았다.
-// 설정의 프레임 제한 간격과 1ms 시계 기준 양자화 계산을 제공한다.
-// 분석 문서: docs/exe/main-loop.md
+// 원본 WinMain(FUN_00438dc0)의 순서를 따라 창·설정·화면 장치를 만들고 루프를 돈다.
+// 아직 옮기지 않은 초기화 단계와 루프 단계는 ClientMain.cpp에 원본 순서대로 적어 두었다.
+// 분석 문서: docs/exe/main-loop.md, docs/exe/cpp-screen-reconstruction.md
 #pragma once
+#include "client/GameAssets.h"
+#include "client/InputEvent.h"
+#include "client/Screen.h"
+#include "o/BaseFile.h"
+#include "o/ConfigInterface.h"
+#include "o/GameClock.h"
+#include "o/Kernel.h"
+#include "o/RiftType.h"
+#include "o/Xlat.h"
 #include <cstdint>
+#include <filesystem>
+#include <functional>
+#include <memory>
+#include <optional>
+#include <string>
 
 namespace netstorm::client {
 
 // 설정 키 "maxFPS" 의 코드 기본값. 화면 루프를 초당 몇 번까지 돌릴지 정한다.
 // 원본: FUN_00435220 @ 00435220 의 `DAT_005318d8 = 0x4b`
 inline constexpr int kDefaultMaxFps = 75;
+// 화면 크기의 코드 기본값(원본 DAT_00531860·DAT_00531864의 초기값). 설정 SCREENW·SCREENH가 덮어쓴다.
+inline constexpr int kDefaultScreenWidth = 640;
+inline constexpr int kDefaultScreenHeight = 480;
+// 원본 창 클래스 이름(PTR_s_NetstormClient_0053192c)과 창 제목(번역 전 원문).
+inline constexpr const char* kWindowClassName = "NetstormClient";
+inline constexpr const char* kWindowTitle = "Activision and Titanic Entertainment Present: NetStorm";
 
 // 프레임 제한 간격(초)을 구한다. maxFps 가 0 이하면 0(제한 없음)이다.
 double FrameIntervalSeconds(int maxFps);
@@ -18,5 +38,102 @@ double FrameIntervalSeconds(int maxFps);
 // 1ms 눈금에서 원본 대기가 끝나는 최소 간격. 75fps이면 ceil(1000/75) = 14ms다.
 // 원본 자체는 실수 간격의 바쁜 대기다. 여기서는 그 눈금의 결과만 계산한다.
 std::uint32_t QuantizedFrameMilliseconds(int maxFps);
+
+// 원본 WinMain의 인자와, 원본에 없는 검사용 옵션.
+struct ClientOptions {
+    std::filesystem::path gameDirectory;   // 원본은 명령줄 또는 실행 파일 위치에서 정한다(FUN_00435cd0).
+    o::OriginalEdition edition{o::OriginalEdition::Patch1078};
+    bool forceWindow{};                    // 원본 명령줄 "window": 전체화면 설정을 무시한다.
+    std::string settings;                  // 원본 명령줄의 설정 글(`키=값;키=값`).
+    std::uint64_t frameLimit{};            // 새 옵션(검사용): 0이 아니면 그만큼 그린 뒤 창을 닫는다.
+    std::filesystem::path screenshot;      // 새 옵션(검사용): 닫기 직전의 화면을 BMP로 저장한다.
+};
+
+// 원본 전역 변수로 흩어져 있던 클라이언트 상태를 객체 하나로 묶는다. 한 프로세스에 하나만 만든다.
+class Client {
+public:
+    explicit Client(ClientOptions options);
+    ~Client();
+    Client(const Client&) = delete;
+    Client& operator=(const Client&) = delete;
+
+    // 원본 WinMain(FUN_00438dc0): 초기화하고 WM_QUIT까지 루프를 돈다. 반환값은 종료 코드다.
+    int Run();
+
+    // Renderer(FUN_004994b0)를 옮기기 전까지 쓰는 임시 연결점: 프레임마다 잠근 화면에 그린다.
+    // 비어 있으면 원본의 "Loading / Please Wait" 화면만 보인다.
+    std::function<void(Client&, std::uint8_t* buffer)> draw;
+    // UserInput(FUN_004d62b0)을 옮기기 전까지 쓰는 임시 연결점: 프레임마다 입력 큐를 처리한다. 참을 돌려주면 종료한다.
+    std::function<bool(Client&)> input;
+    // 초기화가 끝나고 루프에 들어가기 직전에 한 번 부른다(새 연결점).
+    std::function<void(Client&)> ready;
+
+    // 원본 FUN_00452e00: 키·버튼의 현재 상태와 커서 위치를 읽는다. code는 가상 키를 16비트 민 값이다.
+    InputEvent Poll(std::uint32_t code) const;
+
+    Screen& GetScreen();
+    InputQueue& Input();
+    o::ConfigInterface& Configuration();
+    const o::BaseFileSystem& Files() const;
+    const GameAssets& Assets() const;
+    o::Kernel& GetKernel();
+    // 이번 프레임에 고정된 시각(원본 FUN_00460e90).
+    const o::FrameTime& Time() const;
+    // 창이 활성인가(원본 DAT_0054dc50).
+    bool Active() const;
+    // 번역표로 글을 바꾼다(원본 FUN_004de9a0).
+    std::string Translate(std::string_view text) const;
+    // 창 프로시저의 본체(원본 FUN_00436550). 정적 창 프로시저가 부른다.
+    std::intptr_t HandleMessage(NativeHandle window, unsigned message, std::uintptr_t wParam, std::intptr_t lParam);
+private:
+    // 원본 FUN_00435220("Interpret Options")의 일부: 화면 크기·창 위치·프레임 제한 등 설정을 읽는다.
+    void InterpretOptions();
+    // 원본 FUN_00436260: 로딩 화면(검은 바탕, 가운데 그림, 오른쪽 아래의 두 줄 글).
+    void PaintLoading(NativeHandle dc);
+    // 원본 FUN_00436450: 프레임 제한 뒤 그리고 창으로 내보낸다.
+    void Frame();
+    // 원본 FUN_00436020 / FUN_00436190: 키·글자 사건을 큐에 넣는다.
+    void KeyEvent(NativeHandle window, unsigned message, std::uintptr_t wParam, std::intptr_t lParam);
+    void CharacterEvent(NativeHandle window, std::uintptr_t wParam);
+    // 원본 FUN_00435b30: 초기화 도중 쌓인 창 메시지를 처리한다. WM_QUIT이면 거짓.
+    bool PumpMessages();
+    // 화면을 BMP로 저장한다(새 검사 기능).
+    void SaveScreenshot();
+
+    ClientOptions options_;
+    o::BaseFileSystem files_;
+    o::ConfigInterface configuration_;
+    std::optional<o::XlatTable> translations_;
+    int languageNumber_{1};
+    NativeHandle instance_{};          // DAT_0054dbf8
+    NativeHandle resources_{};         // 원본 실행 파일을 자료로 연 모듈(아이콘·커서·로딩 그림). 없으면 널.
+    NativeHandle window_{};            // DAT_0054dbf4
+    NativeHandle windowDc_{};          // DAT_0054d960
+    NativeHandle loadingBitmap_{};     // DAT_0054de70
+    NativeHandle loadingFont_{};       // DAT_0054de74
+    std::unique_ptr<Screen> screen_;
+    std::unique_ptr<GameAssets> assets_;
+    InputQueue input_;
+    o::GameClock clock_;
+    o::FrameTime time_{};
+    o::Kernel kernel_;
+    int screenWidth_{kDefaultScreenWidth};   // DAT_00531860
+    int screenHeight_{kDefaultScreenHeight}; // DAT_00531864
+    int windowWidth_{-1};              // DAT_00542390
+    int windowHeight_{-1};             // DAT_00542394
+    int clientWidth_{};                // DAT_005c78fc
+    int clientHeight_{};               // DAT_005c7900
+    std::int32_t initWindowPos_{};     // DAT_0054db40
+    std::int32_t maxFps_{kDefaultMaxFps}; // DAT_005318d8
+    double frameInterval_{};           // DAT_005318e0
+    std::int32_t sleepPerLoop_{};      // DAT_0054db0c
+    std::int32_t highPriority_{};      // DAT_0054db2c
+    double lastDraw_{};                // DAT_0054de80
+    bool active_{};                    // DAT_0054dc50
+    bool activatedByClick_{};          // DAT_0054dee4
+    bool nonClientClick_{};            // DAT_0054dee0
+    bool closing_{};                   // DAT_0054dee8
+    std::uint64_t frames_{};
+};
 
 }  // namespace netstorm::client

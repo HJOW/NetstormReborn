@@ -8,4 +8,7 @@ target_sources(netstorm PRIVATE
     Screen.cpp Screen.h
     GameAssets.cpp GameAssets.h
     Mission.cpp Mission.h
+    InputEvent.cpp InputEvent.h
 )
+# 원본처럼 Win32 GDI·멀티미디어 타이머를 직접 쓴다(Screen·ClientMain).
+target_link_libraries(netstorm PUBLIC user32 gdi32 winmm)

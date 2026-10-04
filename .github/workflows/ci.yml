@@ -37,13 +37,9 @@ jobs:
       - name: 테스트
         run: dotnet test Netstorm.sln --configuration Release --no-build --verbosity normal
 
-  # C++ 빌드 (cpppj/) — 지금은 기초 구조만 있다
+  # C++ 빌드 (cpppj/) — Windows 전용이다 (원본처럼 Win32 API 를 직접 부른다)
   cpp-build-test:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [windows-latest, ubuntu-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
 

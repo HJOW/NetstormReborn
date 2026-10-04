@@ -10,6 +10,9 @@ target_sources(netstorm PRIVATE
     RiftType.cpp RiftType.h
     TypeParser.cpp TypeLoadOrder.cpp RiftTypeTable.cpp
     Template.cpp Template.h
+    CanonDecoder.cpp CanonDecoder.h CanonDecoderTables.inc
+    ChunkMap.cpp ChunkMap.h
+    Islandbuilder.cpp Islandbuilder.h
     BaseProcess.cpp BaseProcess.h
     Kernel.cpp Kernel.h
     GameClock.cpp GameClock.h

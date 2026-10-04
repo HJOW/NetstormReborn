@@ -6,7 +6,7 @@
 > **함수 수**는 패치판에서 그 파일 이름을 참조하는 함수의 수다([모듈 맵](../docs/exe/modules.md)). 그 파일의 전체 함수 수가 아니다.
 > **상태**는 cpppj 에 그 경로의 파일이 있는지만 본다. 파일이 있어도 일부 함수만 옮긴 것일 수 있다.
 
-## `\Ns\O\` → `src/o/` (75개, 파일 있음 9개)
+## `\Ns\O\` → `src/o/` (75개, 파일 있음 12개)
 
 | cpppj 경로 | 패치판 표기 | CD판 표기 | 함수 수 | 상태 |
 |---|---|---|---|---|
@@ -29,10 +29,10 @@
 | `src/o/Bomb.cpp` | Bomb.cpp | bomb.cpp | 5 |  |
 | `src/o/Bridge.cpp` | Bridge.cpp | bridge.cpp | 6 |  |
 | `src/o/Bud.h` | bud.h | bud.h | 2 |  |
-| `src/o/CanonDecoder.cpp` | Canondecoder.cpp | CanonDecoder.cpp | 2 |  |
+| `src/o/CanonDecoder.cpp` | Canondecoder.cpp | CanonDecoder.cpp | 2 | 있음 |
 | `src/o/Carrier.cpp` | Carrier.cpp | carrier.cpp | 13 |  |
 | `src/o/Ch.cpp` | Ch.cpp | ch.cpp | 10 |  |
-| `src/o/ChunkMap.cpp` | Chunkmap.cpp | ChunkMap.cpp | 4 |  |
+| `src/o/ChunkMap.cpp` | Chunkmap.cpp | ChunkMap.cpp | 4 | 있음 |
 | `src/o/Config.cpp` | Config.cpp | config.cpp | 6 | 있음 |
 | `src/o/ConfigInterface.cpp` | Configinterface.cpp | ConfigInterface.cpp | 12 | 있음 |
 | `src/o/Connection.cpp` | — | connection.cpp |  |  |
@@ -49,7 +49,7 @@
 | `src/o/Graph.cpp` | Graph.cpp | graph.cpp | 8 |  |
 | `src/o/GunAnim.cpp` | Gunanim.cpp | GunAnim.cpp | 10 |  |
 | `src/o/GunProcess.cpp` | Gunprocess.cpp | GunProcess.cpp | 10 |  |
-| `src/o/Islandbuilder.cpp` | Islandbuilder.cpp | islandbuilder.cpp | 13 |  |
+| `src/o/Islandbuilder.cpp` | Islandbuilder.cpp | islandbuilder.cpp | 13 | 있음 |
 | `src/o/IslandDropper.cpp` | Islanddropper.cpp | IslandDropper.cpp | 1 |  |
 | `src/o/IslandList.cpp` | Islandlist.cpp | islandList.cpp | 8 |  |
 | `src/o/IsleInfo.cpp` | Isleinfo.cpp | IsleInfo.cpp | 2 |  |

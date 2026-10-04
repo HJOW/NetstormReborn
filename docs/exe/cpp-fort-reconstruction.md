@@ -22,7 +22,7 @@
 | `client/Mission.cpp` `MissionScript` | `00482fb0` ↔ `00481020` | 미션 스크립트 읽기, `loadFort`·`missionType`, `fortSpec` 경로 |
 | `client/GameAssets.cpp` | (새 연결 계층) | 읽은 `.type` 정의로 타입 표를 만든다 |
 
-원본은 파일을 읽으면서 곧바로 오브젝트(Squid)를 만들어 월드에 놓는다. cpppj의 `FortTemplate`은 **파일 내용을 구조로 읽는 데까지**다. 오브젝트 생성, 영역 배치에 따른 청크 위치, 소유자 결정은 옮기지 않았다.
+원본은 파일을 읽으면서 곧바로 오브젝트(Squid)를 만들어 월드에 놓는다. cpppj의 `FortTemplate`은 **파일 내용을 구조로 읽는 데까지**다. (영역 배치에 따른 청크 위치는 같은 날 뒤이어 옮겼다 — [창·화면 장치·입력 큐·영역 배치 복원](cpp-screen-reconstruction.md) 9절.) 오브젝트 생성, 영역 배치에 따른 청크 위치, 소유자 결정은 옮기지 않았다.
 
 ## 타입 번호 체계
 
@@ -110,5 +110,5 @@ cpppj/build/bin/Release/NetstormCpp.exe --dump-forts originalCD --cd
 * 타입 플래그와 `.fort` 읽기는 x86 실행으로 대조하지 않았다. 근거는 정적 대조, 독립 판독기와의 전수 비교, 실제 파일의 `TypeNames` 해시다. `0049c3b0`은 문법 분석기의 노드 구조를 인자로 받아 격리 실행이 어렵다.
 * 그룹·후처리가 켜는 플래그 비트는 독립 비교 대상이 없다. `.fort` 전수 비교가 통과한 것은 소유자 바이트 유무가 맞다는 간접 근거다.
 * `State`·`Mission`·`CoreData`·`Badges`·`CompressedData` 섹션은 원시 바이트로만 보존한다. `Territory`는 120바이트 원시 값이다.
-* `TerrNN`의 청크가 월드의 어느 청크인지는 영역 배치([territory-layout.md](territory-layout.md))가 정한다. 아직 연결하지 않았다. `Chaff`는 청크 번호 i → x = i % 16, y = i / 16이다.
+* `TerrNN`의 청크가 월드의 어느 청크인지는 영역 배치([territory-layout.md](territory-layout.md))가 정한다. 이 문서를 쓸 때는 연결하지 않았고, 이어서 `o/CanonDecoder`·`o/ChunkMap`·`o/Islandbuilder`로 옮겼다([근거·검증](cpp-screen-reconstruction.md)). `Chaff`는 청크 번호 i → x = i % 16, y = i / 16이다.
 * 미션 종류 표 검색과 미션 객체 생성, 스크립트 명령 실행, AI·동맹·시작 자원의 적용은 옮기지 않았다.

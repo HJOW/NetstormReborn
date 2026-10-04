@@ -1,6 +1,6 @@
 # C++ 빌드 (`cpppj/`)
 
-> 2026-10-05 추가·갱신. **공용 계층, 타입·SHP·팔레트 로더, 설정 계층, 요새 파일 로더가 빌드되며 원본/CD 프레임을 내보낸다.** 게임 창·전투·전체 루프·MCP는 후속 작업이다. [공용 계층 근거](exe/cpp-reconstruction.md), [타입·그래픽 복원](exe/cpp-assets-reconstruction.md), [설정 계층 복원](exe/cpp-config-reconstruction.md), [타입 표·요새 파일 복원](exe/cpp-fort-reconstruction.md).
+> 2026-10-05 추가·갱신. **공용 계층, 타입·SHP·팔레트 로더, 설정 계층, 요새 파일 로더, 영역 배치, 원본 방식의 Win32 창·화면 장치(창 모드)·입력 큐가 빌드되며 원본/CD 프레임을 내보내고 검사용 화면을 띄운다.** Renderer·게임 화면·전투·MCP는 후속 작업이다. **cpppj는 Windows 전용이다.** [공용 계층 근거](exe/cpp-reconstruction.md), [타입·그래픽 복원](exe/cpp-assets-reconstruction.md), [설정 계층 복원](exe/cpp-config-reconstruction.md), [타입 표·요새 파일 복원](exe/cpp-fort-reconstruction.md), [창·화면 장치·입력 큐·영역 배치 복원](exe/cpp-screen-reconstruction.md).
 
 후속 작업의 우선순위·의존 관계·완료 기준은 [cpppj 후속 복원 계획](cpp-roadmap.md)에 정리했다. 이 문서는 빌드와 소스 복원 규칙을 다룬다.
 
@@ -12,9 +12,10 @@
 |---|---|---|
 | 폴더 | [`dotnetpj/`](../dotnetpj/) | [`cpppj/`](../cpppj/) |
 | 만드는 방법 | 원본을 분석해 규칙·화면을 새로 구현한다 (클론 코딩) | **기존 게임을 디컴파일한 소스를 토대로 C++ 소스를 다시 만든다** |
-| 빌드 도구 | .NET 10 SDK (`dotnetpj/Netstorm.sln`) | CMake 3.21 이상 + C++20 컴파일러 |
+| 빌드 도구 | .NET 10 SDK (`dotnetpj/Netstorm.sln`) | CMake 3.21 이상 + C++20 컴파일러(MSVC), **Windows 전용** |
+| 플랫폼 | MonoGame (Windows·Linux) | **Win32 API 를 원본처럼 직접 호출** (외부 라이브러리 없음) |
 | 실행 파일 | `NetstormClone` | `NetstormCpp` |
-| 상태 | 캠페인 1-1·1-2 플레이 가능 | 공용 계층·설정·타입·요새 파일 읽기·기본 그래픽 일부 복원, 자산·설정·미션 검사와 BMP 내보내기 가능 |
+| 상태 | 캠페인 1-1·1-2 플레이 가능 | 공용 계층·설정·타입·요새 파일 읽기·영역 배치·기본 그래픽·창과 화면 장치(창 모드)·입력 큐 복원. 자산·설정·미션 검사, BMP 내보내기, 검사용 화면 가능 |
 
 두 빌드가 함께 쓰는 것은 저장소 루트에 그대로 있다.
 
@@ -24,7 +25,9 @@
 * `tools/` — Python 추출·검증 도구, Ghidra 스크립트
 * `analyzeManager/` — 원본 게임 자동 탐험 프로그램. C# 으로 쓴 **분석 도구**라서 `dotnetpj/` 로 옮기지 않았다. `dotnetpj/src/Netstorm.Assets` 를 참조하고, 공통 빌드 설정은 `analyzeManager/Directory.Build.props` 가 `dotnetpj/` 의 것을 가져온다.
 
-공통 목표(AGENTS.md)는 영어·한국어, 풀스크린과 16:9·16:10·4:3, 원본 수준의 프레임을 먼저 맞추고 이후 60·120프레임이다. **cpppj는 Windows용으로 개발**하며 Linux 지원은 C# 빌드의 후순위 목표다. C++ 공용 코드의 Linux 빌드는 이식성 검사에 활용할 수 있다.
+공통 목표(AGENTS.md)는 영어·한국어, 풀스크린과 16:9·16:10·4:3, 원본 수준의 프레임을 먼저 맞추고 이후 60·120프레임이다.
+
+**cpppj의 방향(2026-10-05 사용자 결정, AGENTS.md에도 반영됨).** AGENTS.md: "cpppj — 일단 기존 게임을 최대한 그대로 복원하는 게 목적", "dotnetpj — cpppj 완성 후 이를 분석하여 개발". cpppj는 기존 게임 원본을 되살리는 것이 목적이다. 기능 변경을 최소로 하고 **원본과 같은 방식**으로 만들며, 이후 MCP를 붙여 원본 게임 분석에 쓴다. 그래서 창·화면·입력은 원본처럼 Win32 API를 직접 부른다. **cpppj는 Windows 전용**이고(다른 OS에서는 CMake 구성이 멈춘다) Linux 지원은 C# 빌드의 후순위 목표다. 한국어 지원은 cpppj에서는 후순위다.
 
 ## 2. 폴더 구조
 
@@ -33,7 +36,7 @@
 ```text
 cpppj/
   CMakeLists.txt          최상위 빌드 정의 (C++20, 테스트 옵션)
-  CMakePresets.json       구성 프리셋: vs2022(Windows), ninja(Linux 등)
+  CMakePresets.json       구성 프리셋: vs2022, ninja(컴파일러가 PATH 에 있는 Windows 환경)
   cmake/
     CompilerOptions.cmake 공통 컴파일 옵션 (UTF-8, 경고 수준)
   SOURCE_MAP.md           원본 소스 파일 → cpppj 경로 표 (자동 생성)
@@ -41,8 +44,8 @@ cpppj/
     o/                    원본 \Ns\O\      공용 모듈 (게임 규칙·데이터·프로세스 커널)
     client/               원본 .\          클라이언트 모듈 (화면·입력·소리·메인 루프)
     zacket/               원본 \Ns\Zacket\ 네트워크 패킷
-    platform/             새로 쓰는 코드   원본의 Win32·DirectX 호출을 대신하는 계층
-    app/                  새로 쓰는 코드   실행 파일 진입점 (main.cpp)
+    platform/             새로 쓰는 코드   원본에 없는 보조 기능 (콘솔 출력·BMP 저장·파일 쓰기)
+    app/                  새로 쓰는 코드   실행 파일 진입점 (main.cpp), 임시 검사용 화면 (InspectView)
   tests/                  단위 테스트 (ctest)
 ```
 
@@ -58,11 +61,11 @@ cpppj/
 * **한 판본에만 있는 파일**: CD판에만 `Cloud.cpp`·`CloudSystem.cpp`·`Fountain.cpp`·`Look.cpp`·`Markup.cpp`·`Piecegump.cpp`·`Splash.cpp`·`TextGump.cpp`·`Connection.cpp`·`Terr.cpp`, 패치판에만 `Dissolve.cpp`·`Factory.cpp`·`Fierytail.cpp`·`Priest.cpp`·`Fence.cpp`·`Periodicharmer.cpp`·`Totalmade.cpp`·`rifttype.h` 가 나온다. assert 문자열이 있고 없고의 차이일 수 있어서, 그 판본에 그 소스가 없었다는 뜻은 아니다.
 * **`_p_*.cpp`**: `_p_gunprocessdata.cpp`·`_p_packets.cpp` 등 10개. 이름으로 보아 자동 생성된 직렬화 코드로 추정한다(확인하지 않았다).
 * **포함 경로**의 기준은 `cpppj/src/` 다. 예: `#include "client/ClientMain.h"`, `#include "o/Squid.h"`.
-* 지금은 정적 라이브러리 하나(`netstorm`)로 묶는다. `o/` 는 `client/`·`platform/` 을 포함하지 않는 것이 규칙이지만 빌드가 강제하지는 않는다.
+* 지금은 정적 라이브러리 하나(`netstorm`)로 묶는다. `o/` 는 `client/`·`platform/` 을 포함하지 않는 것이 규칙이지만 빌드가 강제하지는 않는다. 라이브러리는 `user32`·`gdi32`·`winmm` 에 연결된다(`client/` 가 원본처럼 Win32 를 직접 부른다).
 
 ## 3. 빌드와 테스트
 
-저장소 루트에서 실행한다. 외부 라이브러리가 없어 인터넷 연결이 필요 없다.
+저장소 루트에서 실행한다. Windows 10/11 과 Visual Studio 2022(또는 Build Tools)의 C++ 도구가 필요하다. 외부 라이브러리가 없어 인터넷 연결이 필요 없다.
 
 ```sh
 cmake -S cpppj -B cpppj/build -DCMAKE_BUILD_TYPE=Release
@@ -71,10 +74,10 @@ ctest --test-dir cpppj/build --build-config Release --output-on-failure
 ```
 
 * Windows 에서는 CMake 가 설치된 Visual Studio 를 찾아 쓴다(개발자 명령 프롬프트가 아니어도 된다). 실행 파일은 `cpppj/build/bin/Release/NetstormCpp.exe` 에 생긴다.
-* Linux 에서는 `g++`(또는 `clang++`)과 `make`(또는 `ninja`)가 필요하다. 실행 파일은 `cpppj/build/bin/NetstormCpp` 에 생긴다.
-* 프리셋을 쓰려면 `cpppj/` 에서 실행한다: `cmake --preset vs2022 && cmake --build --preset vs2022 && ctest --preset vs2022` (Linux 는 `ninja`).
-* 필요한 도구는 `PREPARE.ps1`·`PREPARE.sh` 의 "VS Build Tools 2022 (C++)"(Linux 는 "C++ 빌드 도구")와 "CMake" 항목으로 설치한다.
-* CI(`.github/workflows/ci.yml`)의 `cpp-build-test` 작업이 Windows 와 Ubuntu 에서 위 세 명령을 실행한다.
+* **Windows 가 아니면 구성 단계에서 멈춘다**(`cpppj builds on Windows only`). 2026-10-05 이전에는 공용 코드를 Linux 에서도 컴파일해 보았지만, 클라이언트 코드가 Win32 를 직접 부르게 되면서 그만두었다.
+* 프리셋을 쓰려면 `cpppj/` 에서 실행한다: `cmake --preset vs2022 && cmake --build --preset vs2022 && ctest --preset vs2022`.
+* 필요한 도구는 `PREPARE.ps1` 의 "VS Build Tools 2022 (C++)"와 "CMake" 항목으로 설치한다.
+* CI(`.github/workflows/ci.yml`)의 `cpp-build-test` 작업이 Windows 에서 위 세 명령을 실행한다.
 
 인자 없이 실행하면 빌드 정보·검사 명령을 표시한다. 원본 게임을 실행하지 않고 복원한 모듈을 사용한다.
 
@@ -97,9 +100,14 @@ cpppj/build/bin/Release/NetstormCpp.exe --config-spec originals missionSpec TEST
 python tools/cpp_config_smoke.py
 cpppj/build/bin/Release/NetstormCpp.exe --inspect-mission originals TEST01
 python tools/cpp_fort_smoke.py
+cpppj/build/bin/Release/NetstormCpp.exe --dump-territories originals
+cpppj/build/bin/Release/NetstormCpp.exe --run originals --view TEST01
+python tools/cpp_window_smoke.py
 ```
 
-현재 소스: `BaseFile`·`Config`·`ConfigInterface`·`Xlat`·`RiftType`(타입 표 포함)·`Template`·`BaseProcess`·`Kernel`·`GameClock`·`VFXDraw`·`Screen`·`Mission` 일부, 신규 인코딩·자산 연결·콘솔·BMP·파일 출력 계층. CTest는 두 판본의 x86 기계어 기대값 4,955개를 포함한 30개 테스트를 실행한다. [타입·그래픽 복원 문서](exe/cpp-assets-reconstruction.md)에 실제 자산 전체 대조와 남은 범위를 적었다.
+`--run <게임 폴더>` 는 원본 방식의 창을 띄운다(원본 게임을 실행하는 것이 아니다). `--view types|<미션>` 으로 검사용 화면을 고르고, 없으면 원본의 로딩 화면만 보인다. 옵션과 범위는 [창·화면 장치 복원](exe/cpp-screen-reconstruction.md) 10절에 있다.
+
+현재 소스: `BaseFile`·`Config`·`ConfigInterface`·`Xlat`·`RiftType`(타입 표 포함)·`Template`·`CanonDecoder`·`ChunkMap`·`Islandbuilder`·`BaseProcess`·`Kernel`·`GameClock`·`VFXDraw`·`Screen`·`ClientMain`·`Mission` 일부와 입력 사건 큐, 신규 인코딩·자산 연결·콘솔·BMP·파일 출력 계층·검사용 화면. CTest는 두 판본의 x86 기계어 기대값 4,955개를 포함한 43개 테스트를 실행한다. [타입·그래픽 복원 문서](exe/cpp-assets-reconstruction.md)에 실제 자산 전체 대조와 남은 범위를 적었다.
 
 ## 4. 디컴파일한 소스에서 C++ 소스를 만드는 절차
 
@@ -140,15 +148,17 @@ AGENTS.md 의 규칙(한국어 주석, UTF-8, 상수·함수·반복문마다 �
 * 정수 오버플로·부호·자리 옮김은 원본과 같은 폭과 부호로 계산한다(`int` 32비트, `short` 16비트, `char` 의 부호는 MSVC 처럼 `signed`).
 * 원본은 시각을 `double`(초)로 다룬다. 원본과 같은 순서로 계산한다.
 
-**OS 호출.** `o/`·`client/`·`zacket/` 의 코드는 Win32·DirectDraw·DirectSound·소켓을 직접 부르지 않고 `platform/` 의 함수를 부른다. 원본의 해당 호출 지점에는 원본이 무엇을 불렀는지 주석으로 남긴다.
+**OS 호출(2026-10-05 변경).** 원본과 같은 방식으로 만든다는 원칙에 따라, **원본 모듈을 옮긴 `client/` 의 코드는 원본이 부른 Win32 함수를 그 자리에서 직접 부른다**(`ClientMain.cpp`·`Screen.cpp` 가 견본이다). 헤더에는 `<windows.h>` 를 넣지 않고 핸들을 `NativeHandle`(`void*`)로 넘긴다. `o/`(공용 모듈)는 OS 호출 없이 둔다. `platform/` 은 원본에 없는 보조 기능(콘솔 출력·BMP 저장·파일 쓰기)만 담는다. 원본의 호출 가운데 아직 옮기지 않은 것은 그 자리에 `[원본]` 주석으로 남긴다.
 
 **이름.** 원본 exe 에는 기호가 없다. 형식·함수 이름은 문자열(설정 키, assert 조건식, `.type` 파일의 키)과 분석 문서에서 가져오고, 근거가 없으면 뜻을 설명하는 영어 이름을 새로 짓는다. 네임스페이스는 `netstorm::o`, `netstorm::client`, `netstorm::zacket`, `netstorm::platform` 을 쓴다.
 
 ## 6. 정하지 않은 것
 
-* **플랫폼 계층의 라이브러리.** 창·화면·입력·소리를 무엇으로 만들지(SDL 등) 정하지 않았다. 정하면 외부 라이브러리를 가져오는 방법(vcpkg, CMake `FetchContent`, 시스템 패키지)도 함께 정한다.
-* **한국어 글꼴.** D2Coding(TTC)을 그리는 방법이 필요하다(C# 빌드는 FontStashSharp 를 쓴다).
+* ~~플랫폼 계층의 라이브러리~~ → **정함(2026-10-05): Win32 직접 호출, 외부 라이브러리 없음.** 소리·글꼴·영상·전체화면(DirectDraw)의 방식은 해당 모듈을 옮길 때 원본 방식을 기본으로 정한다 — [창·화면 장치 복원](exe/cpp-screen-reconstruction.md) 1·8절.
+* **설정 저장 위치.** 원본은 게임 폴더의 `options.cfg` 에 쓴다. cpppj 가 같은 파일에 쓸지는 사용자 결정이 필요하다. 그때까지 설정은 읽기만 한다.
+* **한국어 글꼴.** D2Coding(TTC)을 그리는 방법이 필요하다(C# 빌드는 FontStashSharp 를 쓴다). cpppj 에서는 후순위다.
 * **원본에 없는 기능을 넣는 방식.** 와이드 화면, 60·120프레임, 전체화면 재실행 오류 수정은 원본 코드에 없다. 다시 만든 코드를 어디서 어떻게 바꿀지는 해당 모듈을 옮길 때 정한다. C# 빌드의 결정(와이드 화면 = 시야 확장, [LEFT_JOBS.md](../LEFT_JOBS.md) 1.7절)을 따르는 것이 기본이다.
 * **옮기는 순서.** [후속 복원 계획](cpp-roadmap.md)의 단계별 완료 기준을 따른다.
   - 2026-10-05: 파일 읽기·원시 설정·번역, 타입 자산·SHP·프레임 코드/검색, 커널 실행 인터페이스·시계, 팔레트·기본 8비트 합성 일부를 복원했다. 다음은 **Config 치환→`.fort`·타입 연결→TEST01 정적 창→실제 프로세스·입력→캠페인 1-1 플레이**다. 전체 모듈 이식 완료로 보지 않는다.
+  - 2026-10-05(이어서): 설정 계층, 타입 표·`.fort` 읽기, 영역 배치, Win32 창·화면 장치(창 모드)·입력 큐·메인 루프의 뼈대를 옮겼다. 다음은 **Renderer→오브젝트 생성·섬 지형→UserInput** 이다.
 * **두 빌드의 결과를 비교하는 방법.** 같은 미션에서 C# 빌드와 C++ 빌드의 동작을 대조하는 도구는 없다.

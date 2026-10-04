@@ -11,6 +11,8 @@ add_executable(netstorm_tests
     ConfigOracleTests.cpp
     ConfigInterfaceTests.cpp
     FortTests.cpp
+    ScreenTests.cpp
+    TerritoryTests.cpp
 )
 netstorm_apply_compiler_options(netstorm_tests)
 target_link_libraries(netstorm_tests PRIVATE netstorm)

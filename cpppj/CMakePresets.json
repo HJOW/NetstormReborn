@@ -14,7 +14,7 @@
     {
       "name": "ninja",
       "displayName": "Ninja (Release)",
-      "description": "Linux 또는 컴파일러가 PATH 에 있는 환경용. 빌드 폴더: build/ninja",
+      "description": "컴파일러가 PATH 에 있는 Windows 환경(개발자 명령 프롬프트)용. 빌드 폴더: build/ninja",
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/build/ninja",
       "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" }
