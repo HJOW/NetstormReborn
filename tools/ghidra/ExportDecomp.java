@@ -17,8 +17,8 @@ import java.nio.charset.StandardCharsets;
 
 public class ExportDecomp extends GhidraScript {
 
-    // 함수 하나당 디컴파일 제한 시간 (초)
-    private static final int DECOMPILE_TIMEOUT_SEC = 60;
+    // 함수 하나당 디컴파일 제한 시간 (초). 메인 프레임 함수 FUN_004d62b0 처럼 거대한 함수가 60~120초로는 끝나지 않아 1시간으로 늘렸다
+    private static final int DECOMPILE_TIMEOUT_SEC = 3600;
 
     // 스크립트 진입점: 첫 번째 인자로 받은 경로에 디컴파일 결과를 UTF-8 로 기록한다
     @Override

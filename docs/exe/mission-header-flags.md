@@ -164,6 +164,7 @@ techAllowed = "deny;all;allow;windVortex;sunArcher"
 Ghidra 자동 분석이 이 주소를 함수로 인식하지 못했기 때문이다(직접 호출자가 없거나 가상 함수 표로만 호출되는 코드로 보인다).
 `grep`으로 `denySalvage` 문자열이 안 나온 것도 이 때문이다.
 
+* **(2026-10-04 갱신) 빠진 함수를 한꺼번에 복구하는 도구가 생겼다 — 아래 7.1절.** 아래 "약 528개"는 그 이전의 휴리스틱 추정이며, 실제로는 패치판 1,067개·CD판 2,410개가 복구됐다.
 * 빠진 함수는 더 있을 수 있다. INT3(0xCC) 패딩 직후에서 흔한 함수 프롤로그로 시작하지만 디컴파일 목록에 없는 주소가 **약 528개**(그중 진입점 간격이 16바이트 이상인 것 525개)이며 위 세 함수도 여기에 들어간다.
   이 수는 휴리스틱 후보이고 실제 누락 수는 검증하지 않았다. **디컴파일 결과에서 `push 주소`로만 쓰이는 문자열(설정 키 등)이 검색되지 않으면 이런 누락 함수를 의심한다.**
 * 누락 함수 찾기: 문자열의 주소를 exe 바이트에서 `push 주소`(`68 xx xx xx xx`)로 검색해 참조 위치를 얻고, 그 앞의 INT3 패딩 다음을 함수 시작으로 잡는다.
@@ -183,3 +184,38 @@ bash tools/ghidra/decompile_at.sh 4b1e80 4b23e0     # 결과: extracted/decomp-a
 
 * 누락 함수의 실제 사례: 다리 이웃 탐색기의 후보 필터 `FUN_004b1e80`(탐색기 가상 함수 표 `0x513098`의 슬롯 0)은 표로만 호출되어 전체 디컴파일에 없었다. 이 함수가 두 프레임의 **연결 방향 일치**(`FUN_00441e40`)를 검사한다는 것이 다리 붕괴 알고리즘의 열쇠였다([bridge-pieces.md](bridge-pieces.md) 8.1절). **가상 함수 표(`.rdata`)에서 함수 주소가 4바이트 값으로 나열된 곳을 보고, 디컴파일에서 `(**(code **)*param_1)(…)` 같은 간접 호출이 나오면 그 표를 읽어 슬롯 함수를 이 도구로 디컴파일한다.**
 
+### 7.1 누락 함수 일괄 복구 (`recover_missing.ps1`, 2026-10-04)
+
+`tools/ghidra/recover_missing.ps1`(`RecoverMissing.java`)이 기존 Ghidra 프로젝트를 **읽기 전용**으로 열어 함수 밖 코드에서 후보를 모으고, 함수로 만들어 디컴파일한다. 새 함수를 만들면 그 뒤에 이어진 코드가 새 후보가 되므로 후보가 더 안 나올 때까지(2~3라운드) 반복한다. 소요는 판본마다 약 10분이다.
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools\ghidra\recover_missing.ps1                      # 패치판
+powershell -ExecutionPolicy Bypass -File tools\ghidra\recover_missing.ps1 -Edition originalCD  # CD판
+python tools/ghidra/merge_decomp.py                       # Netstorm.all.c : 전체 디컴파일 + 복구 함수를 주소 순으로 합침
+python tools/ghidra/merge_decomp.py --edition originalCD  # NETSTORM.all.c
+```
+
+결과는 모두 `extracted/` 아래(Git 제외)에 생긴다.
+
+| 파일 | 내용 |
+|---|---|
+| `extracted/decomp-at/<판본>-missing.c` | 복구한 함수의 디컴파일 (머리줄에 `[출처: …, 포인터 N회]`) |
+| `extracted/decomp-at/<판본>-missing.tsv` | 후보 주소·출처·데이터 포인터 수 |
+| `extracted/decomp-at/<판본>-gaps.tsv` | 복구 뒤에도 함수에 속하지 않은 코드 구간(16바이트 이상) |
+| `extracted/decomp/Netstorm.all.c`, `extracted/originalCD/decomp/NETSTORM.all.c` | 합친 파일 (기존 `Netstorm.c`·`NETSTORM.c`는 줄 번호 인용 때문에 그대로 둔다) |
+
+**후보 출처와 신뢰도.** 출처는 머리줄과 TSV에 남는다.
+
+| 출처 | 규칙 | 신뢰도 |
+|---|---|---|
+| `pointer` (+`prologue`/`adjacent`) | `.rdata`·`.data`에 4바이트 값으로 저장된 코드 주소(가상 함수 표·콜백 표) | 높음 — 실제 호출되는 함수 |
+| `prologue` | 앞이 패딩(INT3, NOP, `lea reg,[reg+0]` 다바이트 NOP)이고 흔한 프롤로그로 시작 | 높음 |
+| `adjacent` | 기존 함수의 끝 바로 다음에 패딩 없이 이어진 프롤로그(예: `FUN_004b1e80`) | 보통 |
+| `afterret` | 함수 밖에서 `ret`/`ret N`/`jmp` 바로 뒤에 패딩 없이 이어진 프롤로그 | **낮음** — 다른 함수의 꼬리 조각이 섞인다(`in_stack_…` 인자가 나오면 조각 의심, 예: `FUN_004a59da`) |
+
+**패치판(`originals/Netstorm.exe`)**: 전체 디컴파일 4,506개 + 복구 1,093개(2라운드, 실패 0). 함수 밖 코드 구간은 복구 전 46,319바이트(235곳)에서 24,219바이트(206곳)로 줄었다. 남은 큰 구간은 코드가 아닌 데이터다(`0x40572a` 3,604바이트 `00 00 01 00…` 표, `0x4ff372` 3,214바이트 0, `0x409820` 포인터 표) 또는 x87 오류 처리 꼬리(`0x4ee444`).
+**CD판(`originalCD/NETSTORM.EXE`)**: 전체 디컴파일 3,711개 + 복구 2,410개(2라운드, 실패 1: `FUN_0049f99f` "Cannot properly adjust input varnodes"). 이 판은 컴파일러가 INT3 대신 `8D 9B 00000000`·`8D 49 00` 같은 다바이트 NOP으로 함수 사이를 채워서 Ghidra가 코드 220KB(1,122곳)를 함수로 인식하지 못했다. 복구 뒤 남은 구간은 42,450바이트(605곳)다. 복구 함수 수가 패치판보다 많아 보이지만 이 판의 정적 라이브러리 코드가 함께 잡힌 것으로 보이며 개별 함수 신뢰도는 미검증이다.
+
+**알려진 오탐 — 메인 프레임 함수 `FUN_004d62b0`.** 이 함수의 `switch` 분기 블록(`0x4d6cfe`~`0x4da53c`) 26개가 별개 함수로 복구되었고 각각 약 1,650줄의 거의 같은 내용(다음 분기로 이어지는 코드까지 포함)이라 가짜 함수다. `merge_decomp.py`는 패치판에서 `0x4d62b0~0x4da64f` 범위의 복구 함수를 합치지 않는다(`--skip-range 시작-끝`으로 범위를 더할 수 있다). `*-missing.c`에는 그대로 남아 있다.
+
+**`FUN_004d62b0` 전체 디컴파일 성공(2026-10-04).** `DECOMPILE_TIMEOUT_SEC`를 60초에서 3600초로 올려 전체 디컴파일을 다시 돌리자 이 함수가 `Netstorm.c` 141,241~143,296행(약 2,056줄)에 복구되었고 전체가 **성공 4,506·실패 0**이 되었다(이전 결과는 이 함수만 타임아웃). 그 앞부분(1~141,241행)은 이전 결과와 같고, 143,297행 이후는 2,053줄 뒤로 밀렸다. 문서가 인용한 줄 번호는 모두 141,241행보다 앞이라 영향이 없다. `DecompileAt.java`도 같은 제한 시간(3600초)으로 바꿨다.

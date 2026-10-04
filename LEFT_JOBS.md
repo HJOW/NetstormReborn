@@ -10,12 +10,23 @@
 
 ---
 
+## 2026-10-04 (`HJOW-Athlon`, Windows 10, 원본 실행 없음) ✅ 완료: 타임아웃 확대 재디컴파일 · 누락 함수 일괄 복구
+
+- [x] **요청:** "디컴파일 더 가능한 부분 진행, 일단 타임아웃을 대폭 늘려 전체 디컴파일 다시". 원본 파일은 읽기만 했다.
+- [x] **타임아웃 3600초:** `ExportDecomp.java`(60→3600초)·`DecompileAt.java`(120→3600초). 패치판 전체 디컴파일을 다시 돌려 **성공 4,506·실패 0**(5분 14초). `FUN_004d62b0`(메인 프레임 함수)이 `Netstorm.c` 141,241~143,296행(약 2,056줄)에 복구되었다. 앞부분 1~141,241행은 이전과 동일, 이후 행은 2,053줄 밀렸다(문서 인용 줄 번호는 모두 그 앞이라 영향 없음). 이전 `Netstorm.c`는 같은 주소·내용이며 해당 함수 한 개만 추가된 셈이다. CD판은 기존에도 실패 0이라 재실행하지 않았다.
+- [x] **누락 함수 일괄 복구 도구:** 새 `tools/ghidra/RecoverMissing.java` + `recover_missing.ps1` + `merge_decomp.py`. 후보(패딩 뒤 프롤로그·함수 끝 직후·`ret` 직후·데이터 구간 코드 포인터)를 모아 함수로 만들고 디컴파일, 후보가 안 나올 때까지 반복한다. 결과: 패치판 **+1,093개**(합친 파일 5,573개), CD판 **+2,410개**(합친 파일 6,121개). 함수 밖 코드 구간은 패치판 46,319→24,219바이트, CD판 219,956→42,450바이트. 상세·출처별 신뢰도·알려진 오탐: [mission-header-flags.md §7.1](docs/exe/mission-header-flags.md).
+- **사용법(다른 PC):** `run_decomp.ps1`(두 판본) → `recover_missing.ps1`(두 판본) → `python tools/ghidra/merge_decomp.py [--edition originalCD]`. 결과는 `extracted/decomp-at/*-missing.{c,tsv}`, `*-gaps.tsv`, `extracted/decomp/Netstorm.all.c`, `extracted/originalCD/decomp/NETSTORM.all.c`(모두 Git 제외).
+- **주의:** (1) `afterret` 출처 복구 함수는 다른 함수의 꼬리 조각이 섞여 신뢰도가 낮다. (2) 메인 프레임 함수 안 switch 블록 26개(`0x4d6cfe`~`0x4da53c`)가 가짜 함수로 복구되어 `merge_decomp.py`가 패치판에서 제외한다. (3) CD판 복구 함수 2,410개는 개별 검증 전이다. (4) 이전 인수인계의 "누락 함수 후보 528개"는 이 도구로 대체됐다.
+- **다음 후보:** (1) `pointer` 출처 복구 함수(가상 함수 표 슬롯)를 `Netstorm.all.c`에서 읽어 미해결 클래스 동작 확인(예: 슬롯 이름이 필요한 `Tutorial`/`Normal` 외 클래스), (2) 이전 분석 문서에서 "디컴파일에 없음"으로 남긴 지점 재확인, (3) `FUN_004d62b0` 전체(2,056줄)를 읽어 개발자 Pause 외 메인 루프 처리(입력·갱신 순서) 정리 — 30/60/120프레임 구현의 갱신 구조 근거가 된다, (4) CD판 `FUN_004735a0`(1,180줄) 등 큰 복구 함수와 패치판 비교.
+
+---
+
 ## 2026-10-04 (`HJOW-Athlon`, Windows 10, 원본 실행 없음) ✅ 완료: 두 판본 전체 재디컴파일
 
 - [x] **요청:** "기존 게임 디컴파일 다시 진행". `tools/ghidra/run_decomp.ps1`(Ghidra 12.1.4, JDK 25)로 패치판·CD판을 순차 재실행했다. 원본 파일은 읽기만 했다.
-- **패치판** `originals/Netstorm.exe`(SHA-256 `a305414c…`): 소요 5분 15초, 성공 4,505·실패 1(`0x40c6c0`, `0x40ce8c` pcode 오류 "Unable to resolve constructor"). 결과 `extracted/decomp/Netstorm.c`(4,883,052바이트)의 SHA-256 `991E4184…`는 **재실행 전과 동일**하다.
+- **패치판** `originals/Netstorm.exe`(SHA-256 `a305414c…`): 소요 5분 15초, 성공 4,505·실패 1. 결과 `extracted/decomp/Netstorm.c`(4,883,052바이트)의 SHA-256 `991E4184…`는 **재실행 전과 동일**하다. (실패 1건은 처음에 `0x40c6c0`으로 적었으나 **틀렸고**, 메인 프레임 함수 `FUN_004d62b0`의 60초 타임아웃이었다. `0x40c6c0`의 pcode 경고는 디컴파일이 끝난 함수의 경고다. 아래 절에서 해결.)
 - **CD판** `originalCD/NETSTORM.EXE`: 소요 4분 36초, 성공 3,711·실패 0. 결과 `extracted/originalCD/decomp/NETSTORM.c`(4,164,124바이트)의 SHA-256 `F6FECC58…`도 **재실행 전과 동일**하다.
-- 기존 Ghidra 프로젝트 파일(`*.gpr`)이 0바이트였던 문제는 `-overwrite` 재생성으로 해소됐다(`.rep` 쪽에 DB가 있어 `decompile_at.ps1` 사용 가능 여부는 다음에 쓸 때 확인).
+- 기존 Ghidra 프로젝트 파일(`*.gpr`)이 0바이트였던 문제는 `-overwrite` 재생성으로 해소됐다. `decompile_at.ps1`이 재생성한 프로젝트에서 정상 동작함을 확인했다(`4c2b20`·`4b1e80`).
 - 로그의 `Invalid GIF data`·`WEVTResource`·`ExportDataDirectory` 경고는 리소스·DLL 자동 해석 경고로 디컴파일과 무관하다.
 - 결과가 같으므로 기존 분석 문서의 줄 번호·주소는 그대로 유효하다. 남은 디컴파일 과제(누락 함수 후보 528개, `FUN_004d62b0` 전체 디컴파일 타임아웃)는 변하지 않았다.
 

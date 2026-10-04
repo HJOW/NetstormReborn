@@ -30,7 +30,13 @@ python tools/typefile.py json
 python tools/peres.py originals/Netstorm.exe extracted/res/Netstorm
 powershell -ExecutionPolicy Bypass -File tools/ghidra/run_decomp.ps1   # 약 10~20분
 powershell -ExecutionPolicy Bypass -File tools/ghidra/run_decomp.ps1 -Edition originalCD   # 이전 CD판
-# Ghidra 전체 디컴파일에 없는 함수(자동 분석이 함수로 인식하지 못한 코드)는 주소를 지정해 따로 디컴파일한다 (약 1분, 결과 extracted/decomp-at/)
+# 전체 디컴파일에 빠진 함수(자동 분석이 함수로 인식하지 못한 코드)를 한꺼번에 찾아 복구·디컴파일한다 (판본마다 약 10분, 결과 extracted/decomp-at/<판본>-missing.c)
+powershell -ExecutionPolicy Bypass -File tools/ghidra/recover_missing.ps1
+powershell -ExecutionPolicy Bypass -File tools/ghidra/recover_missing.ps1 -Edition originalCD
+# 전체 디컴파일과 복구 결과를 주소 순으로 합친 파일 만들기 (Netstorm.all.c, NETSTORM.all.c — 기존 .c 는 줄 번호 인용 때문에 그대로 둔다)
+python tools/ghidra/merge_decomp.py
+python tools/ghidra/merge_decomp.py --edition originalCD
+# 특정 주소만 따로 디컴파일할 때 (약 1분, 결과 extracted/decomp-at/)
 powershell -ExecutionPolicy Bypass -File tools/ghidra/decompile_at.ps1 -Addresses 484ab0,4c2b20,4c3290
 # Linux (PowerShell 없음, 약 5초): GHIDRA_DIR 을 생략하면 ~/Tools 의 최신 ghidra_* 를 쓴다
 bash tools/ghidra/decompile_at.sh 484ab0 4c2b20 4c3290
