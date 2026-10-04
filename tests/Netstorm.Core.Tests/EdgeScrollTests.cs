@@ -74,17 +74,17 @@ public sealed class EdgeScrollTests
         Assert.Equal(expected, EdgeScrollController.SpeedPerFrame(seconds, maxSpeed));
     }
 
-    /// <summary>처음 닿은 프레임은 시작 속도(2 px/프레임)를 초당 픽셀로 환산한다 (2 × 75 × dt)</summary>
+    /// <summary>처음 닿은 프레임은 시작 속도(2 px/프레임)를 초당 픽셀로 환산한다 (2 × 원본 루프 속도 × dt)</summary>
     [Fact]
     public void Update_FirstFrame_UsesStartSpeed()
     {
         var controller = new EdgeScrollController();
         (double x, double y) = controller.Update(Input(0, 540), 1.0 / 60);
-        Assert.Equal(-2 * 75.0 / 60, x, 9);
+        Assert.Equal(-2 * EdgeScrollController.ReferenceFramesPerSecond / 60, x, 9);
         Assert.Equal(0.0, y);
     }
 
-    /// <summary>머무는 시간이 길어지면 상한 35 px/프레임(= 초당 2625px)에 닿고, 벗어났다 돌아오면 다시 시작 속도</summary>
+    /// <summary>머무는 시간이 길어지면 상한 35 px/프레임(= 초당 2500px)에 닿고, 벗어났다 돌아오면 다시 시작 속도</summary>
     [Fact]
     public void Update_AcceleratesThenResets()
     {
@@ -95,11 +95,11 @@ public sealed class EdgeScrollTests
         {
             (x, _) = controller.Update(Input(0, 540), 1.0 / 60);
         }
-        Assert.Equal(-35 * 75.0 / 60, x, 9);
+        Assert.Equal(-35 * EdgeScrollController.ReferenceFramesPerSecond / 60, x, 9);
         // 한 프레임 벗어나면 이동이 없고 가속이 초기화된다
         Assert.Equal((0.0, 0.0), controller.Update(Input(500, 540), 1.0 / 60));
         (x, _) = controller.Update(Input(0, 540), 1.0 / 60);
-        Assert.Equal(-2 * 75.0 / 60, x, 9);
+        Assert.Equal(-2 * EdgeScrollController.ReferenceFramesPerSecond / 60, x, 9);
     }
 
     /// <summary>속도 상한을 설정으로 바꿀 수 있다 (원본 edgeScrollSpeed)</summary>
@@ -113,7 +113,24 @@ public sealed class EdgeScrollTests
         {
             (x, y) = controller.Update(Input(1919, 1079), 1.0 / 60);
         }
-        Assert.Equal(10 * 75.0 / 60, x, 9);
-        Assert.Equal(10 * 75.0 / 60, y, 9);
+        Assert.Equal(10 * EdgeScrollController.ReferenceFramesPerSecond / 60, x, 9);
+        Assert.Equal(10 * EdgeScrollController.ReferenceFramesPerSecond / 60, y, 9);
+    }
+
+    /// <summary>화면 루프를 원본 간격(14ms)으로 돌리면 한 프레임에 정확히 원본의 "프레임당 픽셀"만큼 움직인다</summary>
+    [Fact]
+    public void Update_AtOriginalFrameInterval_MovesExactlyPerFramePixels()
+    {
+        var controller = new EdgeScrollController();
+        double frameSeconds = FramePacing.FrameMilliseconds(FramePacing.OriginalMaxFps) / 1000.0;
+        // 처음 닿은 프레임: 시작 속도 2픽셀
+        (double x, _) = controller.Update(Input(0, 540), frameSeconds);
+        Assert.Equal(-2.0, x, 9);
+        // 2초 넘게 머물면 상한 35픽셀
+        for (int frame = 0; frame < 200; frame++)
+        {
+            (x, _) = controller.Update(Input(0, 540), frameSeconds);
+        }
+        Assert.Equal(-35.0, x, 9);
     }
 }

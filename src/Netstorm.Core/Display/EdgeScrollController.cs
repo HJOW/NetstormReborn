@@ -18,7 +18,8 @@ public readonly record struct EdgeScrollInput(
 /// <summary>
 /// 풀스크린에서 커서를 화면 끝에 대면 카메라를 이동시키는 규칙 (원본 <c>Netstorm.exe</c> <c>004d65de</c>~<c>004d67ad</c> 분석,
 /// <see href="../../../docs/exe/edge-scroll.md">docs/exe/edge-scroll.md</see>).
-/// 속도는 프레임당 픽셀로 정의돼 있어 클론은 기준 프레임 수(75)로 초당 픽셀로 환산한다.
+/// 속도는 프레임당 픽셀로 정의돼 있어 클론은 원본 루프의 실제 속도(<see cref="FramePacing.OriginalFramesPerSecond"/>, 약 71.4)로
+/// 초당 픽셀로 환산한다. 화면 루프를 원본과 같은 간격(14ms)으로 돌리면 한 프레임에 정확히 "프레임당 픽셀"만큼 움직인다.
 /// </summary>
 public sealed class EdgeScrollController
 {
@@ -34,8 +35,11 @@ public sealed class EdgeScrollController
     /// <summary>속도 상한의 기본값 = 보유 <c>setup.cfg</c> 의 <c>edgeScrollSpeed = 35</c></summary>
     public const int DefaultMaxSpeed = 35;
 
-    /// <summary>프레임당 픽셀을 초당 픽셀로 바꾸는 기준 프레임 수 = 원본 화면 루프 상한 <c>maxFPS = 75</c></summary>
-    public const int ReferenceFramesPerSecond = 75;
+    /// <summary>
+    /// 프레임당 픽셀을 초당 픽셀로 바꾸는 기준 프레임 수 = 원본 화면 루프의 실제 속도.
+    /// 상한 <c>maxFPS = 75</c> 를 밀리초 눈금 시계로 재므로 한 바퀴가 14ms, 초당 약 71.43바퀴다 (docs/exe/main-loop.md 4절).
+    /// </summary>
+    public static readonly double ReferenceFramesPerSecond = FramePacing.OriginalFramesPerSecond;
 
     /// <summary>가장자리에 머문 시간(초). 가장자리를 벗어나면 0 으로 되돌린다.</summary>
     private double _edgeSeconds;

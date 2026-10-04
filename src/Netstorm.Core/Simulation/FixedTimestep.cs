@@ -2,12 +2,17 @@ namespace Netstorm.Core.Simulation;
 
 /// <summary>
 /// 화면 갱신(가변 간격)과 게임 시뮬레이션(고정 간격)을 분리하는 누적기.
-/// 원본은 오브젝트별 "다음 시각 = 현재 시각 + 간격" 타이머를 화면 루프(최대 75fps)로 돌렸다 (docs/videos/animation-timing.md).
-/// 클론은 멀티플레이·리플레이 결정론을 위해 고정 틱으로 진행한다.
+/// 원본은 고정 틱 없이 오브젝트별 "다음 시각 = 현재 시각 + 간격" 타이머를 화면 루프(<c>maxFPS</c> 75, 실제 14ms 간격)마다
+/// 확인하고, 이동은 출발·도착 시각 사이를 보간했다 (docs/exe/main-loop.md, docs/videos/animation-timing.md).
+/// 클론은 멀티플레이·리플레이 결정론을 위해 고정 틱으로 진행하고, 화면은 <see cref="Alpha"/> 로 틱 사이를 보간해 그린다.
+/// 화면 루프 속도(<see cref="Netstorm.Core.Display.FramePacing"/>)가 달라져도 게임 속도는 같다.
 /// </summary>
 public sealed class FixedTimestep
 {
-    /// <summary>기본 틱 빈도 = 원본 0.04초 계열 애니메이션의 실제 체감 속도 24Hz (영상 측정)</summary>
+    /// <summary>
+    /// 기본 틱 빈도 = 원본 0.04초 계열 타이머의 실제 속도. 14ms 루프에서 0.04초 타이머는 3바퀴 = 42ms(약 23.8Hz)마다 돌며
+    /// 영상 측정값은 41.9ms 였다. 정수 틱으로는 24Hz(41.7ms)가 가장 가깝다.
+    /// </summary>
     public const int DefaultTicksPerSecond = 24;
 
     /// <summary>한 번의 화면 갱신에서 따라잡을 최대 틱 수 (창 이동·중단 뒤 폭주 방지)</summary>

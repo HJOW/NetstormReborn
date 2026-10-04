@@ -57,6 +57,18 @@ public sealed class DisplaySettings
     /// <summary>가장자리 스크롤 속도 상한, 프레임당 픽셀 (원본 edgeScrollSpeed)</summary>
     public int EdgeScrollSpeed { get; set; } = EdgeScrollController.DefaultMaxSpeed;
 
+    /// <summary>
+    /// 화면 루프의 초당 바퀴 수 상한 (원본 설정 <c>maxFPS</c>, 기본 75 = 기존 게임 수준의 프레임). 0 이면 제한하지 않는다.
+    /// 실제 간격은 원본의 제한 방식대로 밀리초로 올림한다 (<see cref="FramePacing.FrameMilliseconds"/>: 75 → 14ms).
+    /// </summary>
+    public int MaxFps { get; set; } = FramePacing.OriginalMaxFps;
+
+    /// <summary>
+    /// 수직 동기를 쓸지. 원본은 쓰지 않고 <c>maxFPS</c> 로만 속도를 맞췄으므로 기본은 꺼짐이다.
+    /// 켜면 화면 주사율이 상한보다 낮을 때(예: 60Hz) 그리기가 주사율에 묶인다.
+    /// </summary>
+    public bool VerticalSync { get; set; }
+
     /// <summary>창 모드 폭 (창 크기를 바꾸면 기억한다)</summary>
     public int WindowWidth { get; set; } = DefaultWindowWidth;
 
@@ -162,7 +174,7 @@ public sealed class DisplaySettings
         }
     }
 
-    /// <summary>값을 허용 범위로 맞춘다: 논리 높이는 원본 해상도 목록에서 가장 가까운 값, 창 크기와 속도는 범위 제한.</summary>
+    /// <summary>값을 허용 범위로 맞춘다: 논리 높이는 원본 해상도 목록에서 가장 가까운 값, 창 크기·스크롤 속도·프레임 상한은 범위 제한.</summary>
     public void Normalize()
     {
         // 논리 높이는 목록에 없는 값이면 가장 가까운 원본 해상도 높이로 바꾼다.
@@ -171,6 +183,7 @@ public sealed class DisplaySettings
         WindowWidth = Math.Clamp(WindowWidth, MinimumWindowSize, MaximumWindowSize);
         WindowHeight = Math.Clamp(WindowHeight, MinimumWindowSize, MaximumWindowSize);
         EdgeScrollSpeed = Math.Clamp(EdgeScrollSpeed, 0, 200);
+        MaxFps = FramePacing.Normalize(MaxFps);
         SoundVolume = Math.Clamp(SoundVolume, MinimumVolume, MaximumVolume);
         MusicVolume = Math.Clamp(MusicVolume, MinimumVolume, MaximumVolume);
         TipNumber = Math.Max(0, TipNumber);

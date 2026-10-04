@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Netstorm.Assets;
 using Netstorm.Core.Bridges;
+using Netstorm.Core.Display;
 using Netstorm.Core.Rules;
 using Netstorm.Core.Simulation;
 
@@ -15,8 +16,15 @@ namespace Netstorm.Game;
 /// </summary>
 internal sealed partial class FortMapViewer
 {
-    /// <summary>Storm Power 숫자를 한 단계 따라가는 초당 횟수 (녹화 측정 약 60~67회/초, 원본은 화면 프레임마다)</summary>
-    private const double StormPowerStepsPerSecond = 60;
+    /// <summary>
+    /// Storm Power 숫자를 한 단계 따라가는 초당 횟수. 원본은 화면 프레임마다 한 단계씩 따라가므로 원본 루프의 실제 속도
+    /// (약 71.4바퀴/초, <see cref="FramePacing.OriginalFramesPerSecond"/>)와 같다. 녹화 측정값은 약 60~67회/초였는데,
+    /// 그 녹화는 캡처 부하로 게임 루프가 느려진 환경이었다 (docs/videos/animation-timing.md 4.1절).
+    /// </summary>
+    private static readonly double StormPowerStepsPerSecond = FramePacing.OriginalFramesPerSecond;
+
+    /// <summary>따라가기 시계를 한 단계 길이와 비교할 때의 허용 오차(초)</summary>
+    private const double StepClockTolerance = 1e-9;
 
     /// <summary>Storm Power 숫자 깜빡임 한 번의 길이(초) (exe FUN_0043db10·0x506858 = 0.15)</summary>
     private const double StormPowerBlinkSeconds = 0.15;
@@ -249,10 +257,12 @@ internal sealed partial class FortMapViewer
         else
         {
             _stormPowerStepClock += seconds;
-            // 쌓인 시간만큼 한 단계씩 따라간다
-            while (_stormPowerStepClock >= 1 / StormPowerStepsPerSecond && shown != actual)
+            double stepSeconds = 1 / StormPowerStepsPerSecond;
+            // 쌓인 시간만큼 한 단계씩 따라간다. 화면 루프가 원본 간격이면 한 프레임에 정확히 한 단계다
+            // (부동소수 오차로 한 프레임을 건너뛰지 않도록 허용 오차를 둔다).
+            while (_stormPowerStepClock >= stepSeconds - StepClockTolerance && shown != actual)
             {
-                _stormPowerStepClock -= 1 / StormPowerStepsPerSecond;
+                _stormPowerStepClock = Math.Max(0, _stormPowerStepClock - stepSeconds);
                 shown = StormPower.StepDisplay(shown, actual);
             }
             if (shown == actual) _stormPowerStepClock = 0;

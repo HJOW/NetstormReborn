@@ -59,4 +59,4 @@ dotnet run --project src/Netstorm.Game -- --sprites priest --props --screenshot 
 dotnet run --project src/Netstorm.Game -- --sprites sunCannon --frame 16 --palette suncannon --screenshot extracted/screens/sprite-palette-suncannon.png
 ```
 
-`--screenshot`의 상위 폴더는 미리 있어야 한다. 캡처는 30프레임 뒤에 찍으므로 `--play` 캡처는 동작이 몇 프레임 진행된 화면이다.
+`--screenshot`의 상위 폴더는 미리 있어야 한다. 캡처는 0.5초(30 × 1/60초) 뒤에 찍으므로 `--play` 캡처는 동작이 몇 프레임 진행된 화면이다.

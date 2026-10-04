@@ -29,8 +29,14 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     /// <summary>작은 글자 크기 (지식 창 카드 이름·수치 — 원본 카드 이름은 약 11px 글꼴)</summary>
     private const int SmallFontSize = 12;
 
-    /// <summary>스크린샷 모드에서 저장 전에 기다릴 프레임 수 (애니메이션이 진행된 화면을 찍기 위함)</summary>
+    /// <summary>
+    /// 스크린샷 모드에서 저장 전에 기다릴 시간, 1/60초 단위 (애니메이션이 진행된 화면을 찍기 위함).
+    /// 화면 루프 속도와 무관하게 같은 게임 시각의 화면이 찍히도록 프레임 수가 아니라 시간으로 센다.
+    /// </summary>
     private const int ScreenshotDelayFrames = 30;
+
+    /// <summary>스크린샷 대기 시간을 비교할 때의 허용 오차 (1/60초 단위, 부동소수 누적 오차로 한 프레임 늦어지지 않게)</summary>
+    private const double ScreenshotTimeTolerance = 1e-6;
 
     /// <summary>배경색 (원본 하늘색 계열)</summary>
     private static readonly Color BackgroundColor = new(28, 36, 60);
@@ -39,8 +45,12 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     private readonly DisplayManager _display;
     private readonly EdgeScrollController _edgeScroll = new();
     private readonly string? _screenshotPath;
-    /// <summary>스크린샷을 저장할 프레임 번호 (--screenshot-frames, 기본 ScreenshotDelayFrames)</summary>
+    /// <summary>스크린샷을 저장하기 전에 기다릴 시간, 1/60초 단위 (--screenshot-frames, 기본 ScreenshotDelayFrames)</summary>
     private readonly int _screenshotFrames;
+    /// <summary>시작한 뒤 갱신에 들어간 시간의 합(초). 스크린샷 시점을 화면 루프 속도와 무관하게 정한다.</summary>
+    private double _elapsedSeconds;
+    /// <summary>스크린샷을 이미 저장했는지 (종료 요청 뒤에 한 번 더 그려져도 다시 저장하지 않는다)</summary>
+    private bool _screenshotSaved;
     private readonly string? _mapName;
     /// <summary>--mission 으로 지정한 미션 이름 (맵과 시작 조건을 미션 스크립트에서 읽는다)</summary>
     private readonly string? _missionName;
@@ -101,11 +111,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     /// <summary>창과 그래픽 장치 설정</summary>
     public NetstormGame()
     {
-        _graphics = new GraphicsDeviceManager(this)
-        {
-            // 환경 변수 NETSTORM_NOVSYNC=1 이면 수직 동기를 끈다 (원격 데스크톱처럼 화면 주사율이 낮을 때 프레임 한계를 진단하는 용도)
-            SynchronizeWithVerticalRetrace = Environment.GetEnvironmentVariable("NETSTORM_NOVSYNC") != "1",
-        };
+        _graphics = new GraphicsDeviceManager(this);
         string[] args = Environment.GetCommandLineArgs();
         string? uiScript = ParseValueArgument(args, "--ui-script-file");
         if (uiScript != null) _uiAutomation = new UiAutomation(uiScript);
@@ -136,6 +142,11 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         }
         // 표시 설정: 사용자 설정 파일 → 명령줄 덮어쓰기. 덮어쓴 실행과 스크린샷 실행은 설정을 저장하지 않는다.
         (DisplaySettings settings, bool overridden) = ParseDisplayOptions(args);
+        // 화면 루프: 원본처럼 수직 동기 없이 maxFPS 로만 속도를 맞춘다 (docs/exe/main-loop.md 4절).
+        // 환경 변수 NETSTORM_NOVSYNC=1 은 설정에서 수직 동기를 켰더라도 끈다 (예전 진단용 변수와의 호환).
+        _graphics.SynchronizeWithVerticalRetrace = settings.VerticalSync
+            && Environment.GetEnvironmentVariable("NETSTORM_NOVSYNC") != "1";
+        ApplyFramePacing(settings.MaxFps);
         _display = new DisplayManager(this, _graphics, settings,
             overridden || _screenshotPath != null ? null : DisplaySettings.DefaultPath());
         _display.LayoutChanged += UpdateWindowTitle;
@@ -145,8 +156,25 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     }
 
     /// <summary>
+    /// 화면 루프의 속도를 정한다. 원본은 한 바퀴마다 입력 → 갱신 → 그리기를 한 번씩 돌고 <c>maxFPS</c>(기본 75)로 상한을 둔다.
+    /// 클론은 MonoGame 의 고정 간격 루프를 그 간격(75 → 14ms)에 맞춰, 갱신 한 번에 그리기 한 번이 따라오게 한다.
+    /// 상한이 없으면(0) 가변 간격으로 낼 수 있는 만큼 돈다. 규칙(24Hz 틱)과 애니메이션은 흐른 시간으로 진행하므로 속도가 달라지지 않는다.
+    /// </summary>
+    /// <param name="maxFps">초당 바퀴 수 상한 (0 = 제한 없음)</param>
+    private void ApplyFramePacing(int maxFps)
+    {
+        TimeSpan? interval = FramePacing.FrameInterval(maxFps);
+        IsFixedTimeStep = interval != null;
+        if (interval != null)
+        {
+            TargetElapsedTime = interval.Value;
+        }
+    }
+
+    /// <summary>
     /// 표시 설정을 읽고 명령줄로 덮어쓴다: <c>--fullscreen</c>, <c>--windowed</c>, <c>--window 폭x높이</c>,
-    /// <c>--wide extend|letterbox</c>, <c>--view-height 480|600|768</c>, <c>--no-edge-scroll</c>, <c>--no-sound</c>, <c>--no-music</c>.
+    /// <c>--wide extend|letterbox</c>, <c>--view-height 480|600|768</c>, <c>--no-edge-scroll</c>, <c>--no-sound</c>, <c>--no-music</c>,
+    /// <c>--max-fps 수</c>(화면 루프 상한, 0 = 제한 없음), <c>--vsync</c>(수직 동기 켜기).
     /// </summary>
     /// <param name="args">명령줄 인자</param>
     /// <returns>설정, 명령줄로 덮어썼는지 여부</returns>
@@ -208,6 +236,21 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         if (viewHeight != null)
         {
             settings.ViewHeight = int.Parse(viewHeight, System.Globalization.CultureInfo.InvariantCulture);
+            overridden = true;
+        }
+        string? maxFps = ParseValueArgument(args, "--max-fps");
+        if (maxFps != null)
+        {
+            if (!int.TryParse(maxFps, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out int fps))
+            {
+                throw new ArgumentException("--max-fps 값은 정수여야 합니다 (0 = 제한 없음).");
+            }
+            settings.MaxFps = fps;
+            overridden = true;
+        }
+        if (args.Contains("--vsync"))
+        {
+            settings.VerticalSync = true;
             overridden = true;
         }
         settings.Normalize();
@@ -480,7 +523,11 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         _perf?.EndUpdate(perfStart);
     }
 
-    /// <summary>입력 처리와 애니메이션 진행의 본체 (성능 측정을 위해 <see cref="Update"/> 가 감싼다)</summary>
+    /// <summary>
+    /// 입력 처리와 애니메이션 진행의 본체 (성능 측정을 위해 <see cref="Update"/> 가 감싼다).
+    /// 원본의 한 바퀴와 같은 순서다: 입력·명령 처리 → 갱신(세션 틱·연출) → 그리기 (docs/exe/main-loop.md 2절).
+    /// 입력은 화면 루프마다 읽고, 규칙에 영향을 주는 명령만 세션의 다음 틱 처음에 실행된다.
+    /// </summary>
     private void UpdateGame(GameTime gameTime)
     {
         KeyboardState keyboard = Keyboard.GetState();
@@ -492,6 +539,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
             Exit();
         }
         double dt = gameTime.ElapsedGameTime.TotalSeconds;
+        _elapsedSeconds += dt;
         if (!tutorialOpen)
         {
             _display.HandleHotkeys(keyboard, _previousKeyboard, _mapViewer?.IsMissionMode == true);
@@ -507,7 +555,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
                 + $";audio-last={_audio?.LastSoundCue ?? "none"};audio-result={_audio?.LastSoundResult ?? "none"}";
             keyboard = new KeyboardState();
             mouse = _uiAutomation.Update(_helpWindow?.IsOpen == true ? _helpWindow.State : MissionOptionsOpen ? "options" : _mapViewer?.UiState ?? _mainMenu?.Page ?? "unavailable", detail, Exit,
-                _display.Layout.LogicalWidth, _display.Layout.LogicalHeight);
+                _display.Layout.LogicalWidth, _display.Layout.LogicalHeight, dt);
             keyboard = _uiAutomation.Keyboard;
         }
         if (!tutorialOpen && keyboard.IsKeyDown(Keys.F1) && !_previousKeyboard.IsKeyDown(Keys.F1))
@@ -728,8 +776,11 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         {
             _display.CompleteStartup();
         }
-        if (_screenshotPath != null && _frameCount == _screenshotFrames)
+        // 스크린샷은 정해진 시간(1/60초 단위)이 지난 첫 그리기에서 찍는다. 화면 루프 속도가 달라도 같은 게임 시각의 화면이 된다.
+        if (_screenshotPath != null && !_screenshotSaved
+            && _elapsedSeconds * FramePacing.ScriptFramesPerSecond >= _screenshotFrames - ScreenshotTimeTolerance)
         {
+            _screenshotSaved = true;
             SaveScreenshot(_screenshotPath);
             Exit();
         }

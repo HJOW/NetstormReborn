@@ -233,27 +233,29 @@ dotnet run --project src/Netstorm.Game -- --map bridgethegap --bridges 6 --bridg
 * 창 제목과 화면 맨 위 넷째 줄에 `화면 1920×1080 (16:9) → 논리 1365×768 ×1.406 · 시야 확장 · 전체화면` 처럼 현재 배치가 표시된다.
 * 마우스 좌표는 논리 좌표로 바뀌어 뷰어에 전달되므로 배율·여백과 상관없이 호버·클릭 위치가 맞는다.
 
-### 프레임 속도 요구사항 (AGENTS.md 2026-10-03)
+### 프레임 속도 (AGENTS.md 2026-10-05: 기존 게임 수준의 프레임 먼저)
 
-AGENTS.md는 **"새 클론 게임에서는 30, 60, 120프레임을 지원해야 한다. 30프레임 지원을 먼저 구현하고, 60 및 120프레임 지원은 후순위로 둔다"**고 정했다. 기존 게임은 요소마다 애니메이션 프레임이 달랐던 것으로 추정된다고 함께 적혀 있다.
+AGENTS.md는 **"새 클론 게임도 기존 게임 수준의 프레임으로 먼저 만든다. 이후 60, 120프레임을 지원하도록 수정한다"**(화면 갱신 속도 및 애니메이션의 품질)고 정했다. 2026-10-03 의 "30프레임 먼저" 문구를 대체한다.
 
-* **현재 상태(미구현):** 화면은 수직 동기(모니터 주사율)에 맞춰 그리고, 프레임 속도를 고르는 옵션·설정·명령줄 인자는 없다. 진단용 `NETSTORM_NOVSYNC=1`(수직 동기 끄기)만 있다.
-* **구현 기준(제안):** 여기서 "프레임"은 화면 갱신 속도로 해석한다. 규칙은 24Hz 고정 틱(`FixedTimestep`)으로 돌고 화면은 `VisualCell` 보간으로 그리므로, 그리기 속도를 30·60·120으로 바꿔도 게임 속도·검사합은 달라지지 않아야 한다. 30프레임 상한을 먼저 넣고 설정 파일에 저장한다.
-* **애니메이션:** 원본은 요소마다 간격이 다르다(가이저 증기 약 24Hz, 신전 회오리·피해 연기 12Hz 등 — [animation-timing.md](videos/animation-timing.md)). 30프레임에서는 24Hz 애니메이션이 화면 프레임과 맞지 않아 간격이 고르지 않게 보일 수 있으므로, 구현 때 원본 영상과 나란히 비교한다.
-* **원본의 루프 구조(2026-10-05 분석):** 원본은 고정 틱이 아니라 프레임마다 한 번 "시각 고정 → 입력·명령 → 갱신 → 그리기"를 돌고, 이동은 절대 시각 보간, 애니메이션은 "지금 + 간격" 타이머다. 30·60·120프레임 구현 때 지킬 점(입력은 화면 프레임마다, UI 타이머는 벽시계, 애니메이션은 원본 기본 속도 기준의 고정 간격)은 [exe/main-loop.md](exe/main-loop.md) 7절에 정리했다.
-* 이 절은 요구사항 기록이며 코드는 아직 고치지 않았다.
+* **구현(2026-10-05):** 화면 루프가 원본과 같은 속도로 돈다. 원본은 한 바퀴마다 "입력 → 갱신 → 그리기"를 한 번씩 돌고 `maxFPS`(기본 75)로 상한을 두는데, 밀리초 눈금 시계로 재기 때문에 실제 간격은 **14ms, 초당 약 71.4바퀴**다([exe/main-loop.md](exe/main-loop.md) 4절). 클론은 수직 동기 없이 같은 간격으로 갱신 한 번 + 그리기 한 번을 돈다(`--perf` 실측 71.5fps).
+* **설정:** `settings.json` 의 `MaxFps`(기본 75 = 원본 `maxFPS`, 0 = 제한 없음)와 `VerticalSync`(기본 꺼짐 — 원본도 쓰지 않았다). 간격은 원본의 방식대로 `1000 / MaxFps` 를 밀리초로 올림한다(코드 `Netstorm.Core.Display.FramePacing`). 명령줄은 `--max-fps 수`, `--vsync`. 환경 변수 `NETSTORM_NOVSYNC=1`은 설정에서 수직 동기를 켰더라도 끈다.
+* **게임 속도는 화면 루프 속도와 무관하다.** 규칙은 24Hz 고정 틱(`FixedTimestep`)으로 돌고 화면은 `VisualCell` 보간으로 그리며, 애니메이션은 원본 기본 속도 기준의 고정 간격(24Hz·12Hz 계열 — [animation-timing.md](videos/animation-timing.md))으로 진행한다. 입력은 화면 루프마다 읽고, 규칙에 영향을 주는 명령만 다음 틱 처음에 실행한다.
+* **원본에서 프레임마다 하던 것**은 원본 루프 속도(초당 약 71.43)로 환산해 고정했다: 가장자리 스크롤 속도(프레임당 픽셀), 생산 창 Storm Power 숫자 따라가기(프레임마다 한 단계). 화면 루프가 원본 간격이면 한 프레임에 정확히 원본과 같은 양만큼 움직인다.
+* **자동 검사·스크린샷의 시간 단위:** `--ui-script-file` 의 `wait N` 과 `--screenshot-frames N` 은 프레임 수가 아니라 **1/60초 단위의 시간**이다(`wait 60` = 1초). 화면 루프 속도가 달라도 같은 게임 시각에 검사·촬영한다.
+* **남은 것(이후):** 60·120프레임 지원. 지금도 `--max-fps 60`·`--max-fps 120` 으로 돌릴 수 있지만 원본의 밀리초 올림 때문에 실제로는 58.8·111.1fps 가 된다. 정확한 60·120 과 옵션 화면 항목은 다음 단계다.
 
 설정은 사용자 설정 폴더(Windows `%APPDATA%\NetstormReborn\settings.json`, Linux `$XDG_CONFIG_HOME` 또는 `~/.config` 아래)에 저장된다.
 원본 `options.cfg` 는 건드리지 않는다. 폴더는 환경 변수 `NETSTORM_SETTINGS_DIR` 로 바꿀 수 있다.
 **시작 안전장치**: 시작할 때 `StartupInProgress` 를 켜 두고 첫 프레임을 그린 뒤 끈다. 켜진 채 전체화면 설정이 읽히면(직전 시작이 화면 초기화에서 끝남) 창 모드로 시작하고 안내를 띄운다.
 
 명령줄 옵션 (아래를 쓰면 그 실행은 설정을 저장하지 않는다): `--fullscreen`, `--windowed`, `--window 1920x1080`,
-`--wide extend|letterbox`, `--view-height 480|600|768`, `--no-edge-scroll`, `--no-sound`, `--no-music`.
-성능 진단(2026-10-03): `--perf`는 1초마다 프레임 수·갱신/그리기 평균 시간과 구간별 시간(지면 `terrain`·오브젝트 `objects`·세계 `world`·UI `ui`·그리기 호출 제출 `batchEnd`)을 콘솔에 쓰고 화면 오른쪽 아래에 FPS를 띄운다. 환경 변수 `NETSTORM_NOVSYNC=1`은 수직 동기를 끈다 — 원격 데스크톱처럼 표시 주사율이 낮은 환경에서 프레임이 그 주사율(예: 32Hz)에 묶이는지 확인하는 진단용이다. UI 자동 검사(`--ui-script-file`)에는 `assert-detail 값`(선택 유닛·내 이동형 유닛의 방향/이동 상태, 예: `assert-detail selected=priest`, `assert-detail priest:C:moving`)이 있다.
+`--wide extend|letterbox`, `--view-height 480|600|768`, `--no-edge-scroll`, `--no-sound`, `--no-music`,
+`--max-fps 75`(화면 루프 상한, 0 = 제한 없음), `--vsync`(수직 동기 켜기).
+성능 진단(2026-10-03): `--perf`는 1초마다 프레임 수·갱신/그리기 평균 시간과 구간별 시간(지면 `terrain`·오브젝트 `objects`·세계 `world`·UI `ui`·그리기 호출 제출 `batchEnd`)을 콘솔에 쓰고 화면 오른쪽 아래에 FPS를 띄운다. 수직 동기는 2026-10-05 부터 기본으로 꺼져 있다(원본 방식). `--vsync` 로 켜면 원격 데스크톱처럼 표시 주사율이 낮은 환경에서는 그리기가 그 주사율(예: 32Hz)에 묶이고 갱신만 초당 약 71회 돈다. 환경 변수 `NETSTORM_NOVSYNC=1`은 수직 동기를 켠 설정에서도 끈다. UI 자동 검사(`--ui-script-file`)에는 `assert-detail 값`(선택 유닛·내 이동형 유닛의 방향/이동 상태, 예: `assert-detail selected=priest`, `assert-detail priest:C:moving`)이 있다.
 
 TEST01 후속 검증: `powershell -NoProfile -ExecutionPolicy Bypass -File tools/clone_test01_smoke.ps1`은 4:3 두 크기·16:9·16:10에서 영어/한국어를 번갈아 검사한다. 선택·워크샵 레벨·미니맵 클릭/끌기·Shift+숫자 저장/숫자 복귀·배치·아이스/썬더 캐논의 배치 전 우클릭 회전을 확인하며 설정은 별도 폴더에 둔다. UI 명령 `move-center dx,dy`는 논리 화면 중심 기준으로 커서를 옮기고 `assert-detail-not 값`은 상태에 해당 문자열이 없음을 검사한다. 추가 상태는 `camera=x,y`, `workshops=타입:레벨,...`, `placement=allowed|실패명|none`, `cursor=타입|none`이다. [결과와 시각 차이](videos/test01-verification-20261003.md).
 
-생산 흐름 검사(2026-10-04): `tools/clone_production_smoke.ps1`은 골렘의 템플 기점과 캐논의 등록 워크샵 기점을 확인하고 운송·실체화·완료 PNG를 남긴다. 새 UI 명령 `wait-detail 값`은 상세 상태에 해당 문자열이 나타날 때까지 최대 1800화면 프레임 기다린다(시간 초과는 검사 실패). 예: `wait-detail sunwalker:materializing`, `wait-detail productioncount=0`. 고정 프레임 수에 기대지 않고 실제 생산 단계를 검사하며 기존 Release 출력·격리 설정만 사용해 자산을 복사하지 않는다. [생산 계약·정책](gameplay/unit-production-flow.md).
+생산 흐름 검사(2026-10-04): `tools/clone_production_smoke.ps1`은 골렘의 템플 기점과 캐논의 등록 워크샵 기점을 확인하고 운송·실체화·완료 PNG를 남긴다. 새 UI 명령 `wait-detail 값`은 상세 상태에 해당 문자열이 나타날 때까지 최대 30초(1800 × 1/60초) 기다린다(시간 초과는 검사 실패). 예: `wait-detail sunwalker:materializing`, `wait-detail productioncount=0`. 고정 프레임 수에 기대지 않고 실제 생산 단계를 검사하며 기존 Release 출력·격리 설정만 사용해 자산을 복사하지 않는다. [생산 계약·정책](gameplay/unit-production-flow.md).
 시작 팁(2026-10-02): 메인 메뉴로 시작하면 Options "Tell Tips at Startup"이 켜져 있을 때 원본 "Did You Know?" 창을 연다. `--no-tips`는 이번 실행에서만 끄고, `--ui-script-file` 자동 검사는 `--tips`를 줄 때만 연다.
 
 **소리(2026-10-01)**: 원본 `sound/*.wav`·`music/*.mus`를 그대로 재생한다. 미션에서는 원소 곡 4개를 원본 순서(wind → rain → thunder → sun, 첫 곡 난수)로 돌리고 내 희생 의식 동안 `sacrifice.mus`를 요청한다. 메뉴는 `ser22.mus`다. 효과음은 다리 금·붕괴·놓기·회전, 건설 완료, 지식 창, 포획과 의식에 연결했다. 메인 메뉴 옵션의 효과음·음악 켜기/끄기·볼륨(1~5, 기본 3·2)을 현재 재생에도 즉시 적용한다. 소리 장치가 없으면 무음으로 계속 실행한다. 규칙: [music.md](exe/music.md).

@@ -111,4 +111,38 @@ public sealed class DisplaySettingsTests : IDisposable
             Environment.SetEnvironmentVariable("NETSTORM_SETTINGS_DIR", previous);
         }
     }
+
+    /// <summary>프레임 상한의 기본값은 원본 maxFPS(75)이고 수직 동기는 꺼져 있다 (기존 게임 수준의 프레임)</summary>
+    [Fact]
+    public void Defaults_UseOriginalFramePacing()
+    {
+        var settings = new DisplaySettings();
+        Assert.Equal(75, settings.MaxFps);
+        Assert.False(settings.VerticalSync);
+    }
+
+    /// <summary>프레임 상한과 수직 동기 설정이 저장되고, 범위를 벗어난 상한은 고쳐 읽는다</summary>
+    [Fact]
+    public void MaxFps_RoundTripsAndNormalizes()
+    {
+        string path = Path.Combine(_directory, DisplaySettings.FileName);
+        var settings = new DisplaySettings { MaxFps = 120, VerticalSync = true };
+        Assert.True(settings.Save(path));
+        DisplaySettings loaded = DisplaySettings.Load(path);
+        Assert.Equal(120, loaded.MaxFps);
+        Assert.True(loaded.VerticalSync);
+        // 0 이하는 제한 없음(0), 너무 낮거나 높은 값은 허용 범위로
+        Assert.Equal(0, Normalized(-5));
+        Assert.Equal(FramePacing.MinimumMaxFps, Normalized(3));
+        Assert.Equal(FramePacing.MaximumMaxFps, Normalized(100000));
+    }
+
+    /// <summary>프레임 상한만 바꾼 설정을 정규화한 결과를 돌려준다</summary>
+    /// <param name="maxFps">정규화 전 값</param>
+    private static int Normalized(int maxFps)
+    {
+        var settings = new DisplaySettings { MaxFps = maxFps };
+        settings.Normalize();
+        return settings.MaxFps;
+    }
 }

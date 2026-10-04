@@ -1,19 +1,31 @@
 using Microsoft.Xna.Framework.Input;
+using Netstorm.Core.Display;
 
 namespace Netstorm.Game;
 
-/// <summary>클론 자체 입력에 좌표 클릭을 보내고 상태·PNG를 검사한다. OS의 다른 창에 입력하지 않는다.</summary>
+/// <summary>
+/// 클론 자체 입력에 좌표 클릭을 보내고 상태·PNG를 검사한다. OS의 다른 창에 입력하지 않는다.
+/// 대기(<c>wait N</c>, 조건 대기 한도, 입력 사이의 짧은 쉼)는 프레임 수가 아니라 <b>1/60초 단위의 시간</b>으로 센다.
+/// 화면 루프 속도(원본 수준 약 71.4바퀴/초, 이후 60·120)가 달라도 같은 스크립트가 같은 게임 시간만큼 기다린다.
+/// </summary>
 internal sealed class UiAutomation
 {
-    /// <summary>조건 대기의 최대 프레임 수. 게임이 정지하거나 조건이 틀려도 스모크가 무한히 기다리지 않게 한다.</summary>
+    /// <summary>조건 대기의 최대 시간, 1/60초 단위 (30초). 게임이 정지하거나 조건이 틀려도 스모크가 무한히 기다리지 않게 한다.</summary>
     private const int DetailWaitFrameLimit = 1800;
+    /// <summary>시작 직후 첫 명령 전에 쉬는 시간, 1/60초 단위</summary>
+    private const int StartWaitFrames = 6;
+    /// <summary>버튼·키를 뗀 뒤 다음 명령 전에 쉬는 시간, 1/60초 단위</summary>
+    private const int ReleaseWaitFrames = 5;
+    /// <summary>남은 대기 시간을 0 과 비교할 때의 허용 오차(초). 부동소수 누적 오차로 한 프레임 더 기다리지 않게 한다.</summary>
+    private const double WaitTolerance = 1e-9;
     /// <summary>조건에 해당하는 세부 상태가 나타날 때까지 기다리는 문자열.</summary>
     private string? _waitDetail;
-    /// <summary>조건 대기에 남은 화면 프레임 수.</summary>
-    private int _waitDetailFrames;
+    /// <summary>조건 대기에 남은 시간(초).</summary>
+    private double _waitDetailSeconds;
     private readonly Queue<string> _commands;
     private MouseState _mouse;
-    private int _waitFrames = 6;
+    /// <summary>다음 명령을 실행하기 전에 남은 대기 시간(초).</summary>
+    private double _waitSeconds = Seconds(StartWaitFrames);
     private bool _release;
     private bool _releaseKey;
     private int _dragFrames;
@@ -30,10 +42,15 @@ internal sealed class UiAutomation
     /// <summary>UTF-8 명령 파일의 세미콜론 구분 명령을 읽는다.</summary>
     public UiAutomation(string path) => _commands = new Queue<string>(File.ReadAllText(path).Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries));
 
+    /// <summary>스크립트의 프레임 단위(1/60초)를 초로 바꾼다.</summary>
+    /// <param name="frames">1/60초 단위의 길이</param>
+    private static double Seconds(int frames) => (double)frames / FramePacing.ScriptFramesPerSecond;
+
     /// <summary>공통 입력이 읽을 절대 좌표 또는 화면 중심 기준 마우스 상태를 한 프레임씩 만든다.</summary>
-    public MouseState Update(string state, string detail, Action quit, int width, int height)
+    /// <param name="seconds">지난 갱신 이후 경과 시간(초). 대기를 이 시간만큼 줄인다</param>
+    public MouseState Update(string state, string detail, Action quit, int width, int height, double seconds)
     {
-        if (_releaseKey) { Keyboard = new KeyboardState(); _releaseKey = false; _waitFrames = 5; return _mouse; }
+        if (_releaseKey) { Keyboard = new KeyboardState(); _releaseKey = false; _waitSeconds = Seconds(ReleaseWaitFrames); return _mouse; }
         if (_dragFrames > 0)
         {
             _dragStep++;
@@ -46,7 +63,7 @@ internal sealed class UiAutomation
         if (_release)
         {
             _mouse = MakeMouse(_mouse.X, _mouse.Y, ButtonState.Released);
-            _release = false; _waitFrames = 5; return _mouse;
+            _release = false; _waitSeconds = Seconds(ReleaseWaitFrames); return _mouse;
         }
         if (_waitDetail != null)
         {
@@ -55,11 +72,17 @@ internal sealed class UiAutomation
                 Console.WriteLine($"UI PASS: waited {_waitDetail}");
                 _waitDetail = null;
             }
-            else if (--_waitDetailFrames <= 0)
+            else if ((_waitDetailSeconds -= seconds) <= 0)
                 throw new InvalidOperationException($"UI 조건 대기 시간 초과: 예상={_waitDetail}, 실제={detail}");
             return _mouse;
         }
-        if (_waitFrames-- > 0 || _commands.Count == 0 || CapturePath != null) return _mouse;
+        // 남은 대기 시간을 이번 갱신 시간만큼 줄이고, 아직 남았으면 입력을 그대로 둔다.
+        if (_waitSeconds > WaitTolerance)
+        {
+            _waitSeconds -= seconds;
+            return _mouse;
+        }
+        if (_commands.Count == 0 || CapturePath != null) return _mouse;
         string raw = _commands.Dequeue();
         string[] parts = raw.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
         string value = parts.Length == 2 ? parts[1].Trim() : "";
@@ -71,10 +94,12 @@ internal sealed class UiAutomation
                 int x = int.Parse(point[0]) + (parts[0] == "click-center" ? width / 2 : 0);
                 int y = int.Parse(point[1]) + (parts[0] == "click-center" ? height / 2 : 0);
                 _mouse = MakeMouse(x, y, ButtonState.Pressed); _release = true; break;
-            case "wait": _waitFrames = int.Parse(value); break;
+            case "wait":
+                // 값은 1/60초 단위다 (wait 60 = 1초). 화면 루프 속도와 무관하게 같은 시간만큼 기다린다.
+                _waitSeconds = Seconds(int.Parse(value)); break;
             case "wait-detail":
                 // 생산·이동의 실제 완료를 기다려 화면 FPS에 따라 검사 시각이 달라지는 문제를 피한다.
-                _waitDetail = value; _waitDetailFrames = DetailWaitFrameLimit; break;
+                _waitDetail = value; _waitDetailSeconds = Seconds(DetailWaitFrameLimit); break;
             case "key":
                 Keyboard = new KeyboardState(value.Split('+').Select(k => Enum.Parse<Keys>(k, true)).ToArray());
                 _releaseKey = true; break;
