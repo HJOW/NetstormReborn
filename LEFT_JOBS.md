@@ -10,6 +10,17 @@
 
 ---
 
+## 2026-10-04 (`HJOW-Athlon`, Windows 10, 원본 실행 없음) ✅ 완료: 두 판본 전체 재디컴파일
+
+- [x] **요청:** "기존 게임 디컴파일 다시 진행". `tools/ghidra/run_decomp.ps1`(Ghidra 12.1.4, JDK 25)로 패치판·CD판을 순차 재실행했다. 원본 파일은 읽기만 했다.
+- **패치판** `originals/Netstorm.exe`(SHA-256 `a305414c…`): 소요 5분 15초, 성공 4,505·실패 1(`0x40c6c0`, `0x40ce8c` pcode 오류 "Unable to resolve constructor"). 결과 `extracted/decomp/Netstorm.c`(4,883,052바이트)의 SHA-256 `991E4184…`는 **재실행 전과 동일**하다.
+- **CD판** `originalCD/NETSTORM.EXE`: 소요 4분 36초, 성공 3,711·실패 0. 결과 `extracted/originalCD/decomp/NETSTORM.c`(4,164,124바이트)의 SHA-256 `F6FECC58…`도 **재실행 전과 동일**하다.
+- 기존 Ghidra 프로젝트 파일(`*.gpr`)이 0바이트였던 문제는 `-overwrite` 재생성으로 해소됐다(`.rep` 쪽에 DB가 있어 `decompile_at.ps1` 사용 가능 여부는 다음에 쓸 때 확인).
+- 로그의 `Invalid GIF data`·`WEVTResource`·`ExportDataDirectory` 경고는 리소스·DLL 자동 해석 경고로 디컴파일과 무관하다.
+- 결과가 같으므로 기존 분석 문서의 줄 번호·주소는 그대로 유효하다. 남은 디컴파일 과제(누락 함수 후보 528개, `FUN_004d62b0` 전체 디컴파일 타임아웃)는 변하지 않았다.
+
+---
+
 ## 2026-10-04 (`HJOW-Athlon`, Windows 10, 원본 실행 없음) ✅ 완료: `extracted/` 중복 미디어 정리
 
 - [x] **요청:** AGENTS.md·LEFT_JOBS.md를 읽고 `extracted/` 안에서 더 이상 불필요한 이미지·사운드·동영상 정리. `extracted/`는 Git 제외이므로 저장소에는 영향이 없다.
