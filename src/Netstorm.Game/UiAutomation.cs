@@ -5,6 +5,12 @@ namespace Netstorm.Game;
 /// <summary>클론 자체 입력에 좌표 클릭을 보내고 상태·PNG를 검사한다. OS의 다른 창에 입력하지 않는다.</summary>
 internal sealed class UiAutomation
 {
+    /// <summary>조건 대기의 최대 프레임 수. 게임이 정지하거나 조건이 틀려도 스모크가 무한히 기다리지 않게 한다.</summary>
+    private const int DetailWaitFrameLimit = 1800;
+    /// <summary>조건에 해당하는 세부 상태가 나타날 때까지 기다리는 문자열.</summary>
+    private string? _waitDetail;
+    /// <summary>조건 대기에 남은 화면 프레임 수.</summary>
+    private int _waitDetailFrames;
     private readonly Queue<string> _commands;
     private MouseState _mouse;
     private int _waitFrames = 6;
@@ -42,6 +48,17 @@ internal sealed class UiAutomation
             _mouse = MakeMouse(_mouse.X, _mouse.Y, ButtonState.Released);
             _release = false; _waitFrames = 5; return _mouse;
         }
+        if (_waitDetail != null)
+        {
+            if (detail.Contains(_waitDetail, StringComparison.OrdinalIgnoreCase))
+            {
+                Console.WriteLine($"UI PASS: waited {_waitDetail}");
+                _waitDetail = null;
+            }
+            else if (--_waitDetailFrames <= 0)
+                throw new InvalidOperationException($"UI 조건 대기 시간 초과: 예상={_waitDetail}, 실제={detail}");
+            return _mouse;
+        }
         if (_waitFrames-- > 0 || _commands.Count == 0 || CapturePath != null) return _mouse;
         string raw = _commands.Dequeue();
         string[] parts = raw.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
@@ -55,6 +72,9 @@ internal sealed class UiAutomation
                 int y = int.Parse(point[1]) + (parts[0] == "click-center" ? height / 2 : 0);
                 _mouse = MakeMouse(x, y, ButtonState.Pressed); _release = true; break;
             case "wait": _waitFrames = int.Parse(value); break;
+            case "wait-detail":
+                // 생산·이동의 실제 완료를 기다려 화면 FPS에 따라 검사 시각이 달라지는 문제를 피한다.
+                _waitDetail = value; _waitDetailFrames = DetailWaitFrameLimit; break;
             case "key":
                 Keyboard = new KeyboardState(value.Split('+').Select(k => Enum.Parse<Keys>(k, true)).ToArray());
                 _releaseKey = true; break;

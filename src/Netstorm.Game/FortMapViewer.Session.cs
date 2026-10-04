@@ -95,7 +95,9 @@ internal sealed partial class FortMapViewer
         // 세션이 알린 일을 알림 문구로 옮긴다 (1초마다 생기는 다리 조각 알림은 칸 패널에 보이므로 뺀다)
         foreach (SessionEvent sessionEvent in _session.DrainEvents())
         {
-            if (_playUi && sessionEvent.Player == TestPlayer && sessionEvent.Kind == SessionEventKind.UnitPlaced)
+            if (_playUi && sessionEvent.Player == TestPlayer &&
+                (sessionEvent.Kind == SessionEventKind.UnitCompleted || sessionEvent.Kind == SessionEventKind.UnitPlaced &&
+                    _session.Entity(sessionEvent.EntityId)?.IsComplete == true))
             {
                 _recentPlaced.Remove(sessionEvent.EntityId); _recentPlaced.Insert(0, sessionEvent.EntityId);
                 if (_recentPlaced.Count > 5) _recentPlaced.RemoveAt(5);

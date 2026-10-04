@@ -134,7 +134,9 @@ public sealed class BattleSessionTests
         Assert.Equal(3600, player.StormPower);
 
         // 머리의 denySalvage = 1 이 남아 있는 동안은 회수되지 않는다. 원본은 튜토리얼 단계 H 에서 0 으로 바꾼다 (FUN_004c3bb0)
-        GameEntity archer = session.EntityAt(bx, by)!;
+        GameEntity archer = session.Entities.Single(e => e.Type.Name.Equals("sunArcher", StringComparison.OrdinalIgnoreCase)
+            && e.Footprint.AnchorX == bx && e.Footprint.AnchorY == by);
+        SessionData.RunUntilComplete(session, archer);
         Assert.Equal(ObjectKind.Emplacement, archer.Kind);
         Assert.True(session.DenySalvage);
         session.DrainEvents();

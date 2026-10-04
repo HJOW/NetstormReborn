@@ -36,7 +36,7 @@ public sealed class PlayerState
     /// <summary>
     /// 타입 이름(소문자) → 게임 중 지은 누적 수와 그 타입의 플래그2. 원본 Totalmade.cpp 의 DAT_005c98d0 표에 해당한다:
     /// 오브젝트가 생길 때 올리고, 파괴·회수로는 줄이지 않는다 (줄이는 곳은 전체 삭제 함수 004c27c0 뿐).
-    /// 건물은 완공할 때, 유닛은 놓을 때 센다. 맵에 처음부터 있던 오브젝트는 세지 않는다.
+    /// 건물은 완공할 때, 유닛은 자원 도착 후 실체화를 마칠 때 센다. 맵에 처음부터 있던 오브젝트는 세지 않는다.
     /// </summary>
     private readonly SortedDictionary<string, MadeEntry> _made = new(StringComparer.Ordinal);
 

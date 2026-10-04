@@ -124,7 +124,7 @@ internal sealed partial class FortMapViewer
         var owners = new Dictionary<(int X, int Y), int>();
         foreach (FortTerrainTile tile in _terrain.Tiles) owners[(tile.X, tile.Y)] = tile.Owner;
         foreach (FortIslandSupport support in _terrain.Supports) FillSupport(owners, support.X, support.Y, support.Owner);
-        foreach (GameEntity entity in _session.Entities.Where(e => e.Source == null && e.Type.Definition.HasFlag("createsisland")))
+        foreach (GameEntity entity in _session.Entities.Where(e => e.Source == null && e.IsComplete && e.Type.Definition.HasFlag("createsisland")))
             FillSupport(owners, entity.Footprint.AnchorX, entity.Footprint.AnchorY, entity.Owner);
         // 월드의 모든 칸을 훑어 땅을 칠한다
         for (int y = 0; y < BridgeGrid.WorldSize; y++)

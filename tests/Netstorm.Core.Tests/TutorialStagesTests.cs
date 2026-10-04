@@ -25,7 +25,7 @@ public sealed class TutorialStagesTests
         return log;
     }
 
-    /// <summary>조건에 맞는 첫 칸에 유닛을 놓고 한 틱 진행한다 (재충전 중이면 1초 이상 기다린 뒤 놓는다)</summary>
+    /// <summary>조건에 맞는 첫 칸에 유닛을 놓고 자원 도착·실체화 완료까지 진행한다 (재충전도 기다린다).</summary>
     private static void PlaceArcher(BattleSession session)
     {
         // 직전 배치의 재충전(Unit Rate Fast = 1초)이 끝날 때까지 기다린다
@@ -33,6 +33,8 @@ public sealed class TutorialStagesTests
         (int x, int y) = SessionData.FindCell((cx, cy) => session.CheckUnit(1, "sunArcher", cx, cy).Allowed);
         session.Submit(new PlaceUnitCommand(1, "sunArcher", x, y));
         session.RunTicks(1);
+        SessionData.RunUntilComplete(session, session.Entities.Single(e => e.Type.Name.Equals("sunArcher", StringComparison.OrdinalIgnoreCase)
+            && e.Footprint.AnchorX == x && e.Footprint.AnchorY == y));
     }
 
     /// <summary>템플을 짓고 완공 틱까지 진행한다 (사제가 걸어가 도착한 뒤 건설하며, 완공 틱에 단계가 넘어가므로 그 틱에서 멈춘다)</summary>

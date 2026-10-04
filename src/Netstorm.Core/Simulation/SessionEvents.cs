@@ -147,6 +147,15 @@ public enum SessionEventKind
     /// <summary>유닛을 놓음</summary>
     UnitPlaced,
 
+    /// <summary>스톰 파워와 원소 에너지가 모두 도착해 유닛 실체화가 시작됨.</summary>
+    UnitMaterializing,
+
+    /// <summary>실체화가 끝나 유닛의 이동·전투·공급 효과가 활성화됨.</summary>
+    UnitCompleted,
+
+    /// <summary>예약 위치의 발판이 사라져 생산 비용을 전액 돌려받음.</summary>
+    UnitProductionCancelled,
+
     /// <summary>
     /// 건물 건설 시작. 사제가 현장에 도착한 순간(이미 현장 옆이면 명령 처리 때)이며, 이때부터 건설 시간이 흐른다.
     /// 비용 차감과 공사장 생성은 <see cref="ConstructionOrdered"/> 다.

@@ -396,6 +396,7 @@ internal sealed partial class FortMapViewer : IDisposable
         PerfMeter.Current?.Section("objects", perfObjects);
         long perfWorld = Stopwatch.GetTimestamp();
         DrawPlacedUnits(batch, center);
+        DrawProductionDeliveries(batch, center);
         DrawBridgeWorld(batch, center);
         DrawFalling(batch, center);
         DrawFlyers(batch, center);

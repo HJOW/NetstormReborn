@@ -34,10 +34,13 @@ public sealed class GameEntity
     /// <summary>맵 파일에 저장되어 있던 오브젝트면 그 원본, 게임 중 새로 만든 것이면 null</summary>
     public FortMapObject? Source { get; }
 
-    /// <summary>건설이 끝났는지 (게임 중 놓은 유닛은 곧바로 완성, 사제가 짓는 건물은 건설 시간이 지나야 완성)</summary>
+    /// <summary>건설 또는 자원 운송 후 실체화가 끝나 활성화된 오브젝트인지.</summary>
     public bool IsComplete { get; internal set; } = true;
 
-    /// <summary>건설이 끝나는 틱 (완성된 오브젝트와 사제가 아직 도착하지 않은 공사장은 0)</summary>
+    /// <summary>생산 자원 운송·실체화 상태. 맵의 기존 오브젝트·사제 건물·완성된 유닛은 null이다.</summary>
+    public UnitProduction? Production { get; internal set; }
+
+    /// <summary>건설·실체화가 끝나는 틱 (처음부터 완성 또는 아직 사제·생산 자원을 기다리면 0).</summary>
     public long CompleteTick { get; internal set; }
 
     /// <summary>건설이 시작된 틱, 곧 사제가 현장에 도착한 틱 (건설 진행률 계산용, 처음부터 완성이거나 아직 시작 전이면 0)</summary>

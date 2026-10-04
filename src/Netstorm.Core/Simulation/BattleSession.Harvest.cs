@@ -63,6 +63,7 @@ public sealed partial class BattleSession
             : Entity(command.CollectorId);
         if (priest != null && priest.Owner != command.Player) return new CommandResult(CommandFailure.NotOwner);
         if (priest != null && priest.Kind is not (ObjectKind.Priest or ObjectKind.Transport)) return new CommandResult(CommandFailure.WrongKind);
+        if (priest is { IsComplete: false }) return new CommandResult(CommandFailure.NotComplete);
         if (priest is { CarriedPriestId: not 0 }) return new CommandResult(CommandFailure.AlreadyCarrying);
         if (priest == null || priest.IsStunned || priest.Captivity != PriestCaptivity.Free)
         {

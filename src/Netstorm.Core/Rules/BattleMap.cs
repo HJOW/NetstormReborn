@@ -139,13 +139,14 @@ public sealed class BattleMap
     public bool IsOccupied(Footprint footprint) => footprint.Cells().Any(_occupied.ContainsKey);
 
     /// <summary>
-    /// 유닛을 실제로 놓는다: 점유 칸을 등록하고, 공급원(Generator)이면 공급원 목록에 더한다. 판정은 먼저 CheckUnit 으로 한다.
+    /// 유닛 자리를 점유하고 활성 상태이면 공급원도 등록한다. 생산 예약은 도착 후 별도로 공급원을 등록한다.
     /// </summary>
     /// <param name="type">유닛 타입</param>
     /// <param name="check">CheckUnit 결과 (Allowed 여야 한다)</param>
     /// <param name="player">소유 플레이어</param>
     /// <returns>새 오브젝트 번호</returns>
-    public int PlaceUnit(TypeInfo type, PlacementCheck check, int player)
+    /// <param name="activate">즉시 공급 효과를 적용할지. 생산 자원 운송 중이면 false.</param>
+    public int PlaceUnit(TypeInfo type, PlacementCheck check, int player, bool activate = true)
     {
         if (!check.Allowed)
         {
@@ -154,7 +155,7 @@ public sealed class BattleMap
         int id = NextId();
         if (!type.Definition.HasFlag("balloon") && ObjectKinds.Of(type) != ObjectKind.Flyer) AddOccupant(check.Footprint);
         Element? element = Elements.FromTheme(type.Definition.GetString("theme"));
-        if (ObjectKinds.IsEnergySource(ObjectKinds.Of(type)) && element != null)
+        if (activate && ObjectKinds.IsEnergySource(ObjectKinds.Of(type)) && element != null)
         {
             _sources.Add(new EnergySource(id, element.Value, check.Footprint.CenterX, check.Footprint.CenterY, player));
         }

@@ -38,7 +38,7 @@ internal sealed partial class FortMapViewer
     /// sites는 아직 완공되지 않은 내 건물(타입 이름:waiting=사제가 오는 중/building=건설 중)이고 sp는 내 Storm Power다.
     /// </summary>
     public string UiDetail => $"selected={_session.Entity(_session.Player(TestPlayer).SelectedEntityId)?.Type.Name.ToLowerInvariant() ?? "none"};units="
-        + string.Join(',', _session.Entities.Where(e => IsMobile(e) && e.Owner == TestPlayer).Select(e =>
+        + string.Join(',', _session.Entities.Where(e => e.IsComplete && IsMobile(e) && e.Owner == TestPlayer).Select(e =>
             $"{e.Type.Name.ToLowerInvariant()}:{UnitHeading.Side(e.Heading)?.ToString() ?? "-"}:{(_session.IsMoving(e.Id) ? "moving" : "idle")}"))
         + $";rotation={_cannonRotation};camera=" + FormattableString.Invariant($"{_camera.X:0.##},{_camera.Y:0.##}")
         + ";workshops=" + string.Join(',', _session.Entities.Where(e => e.Owner == TestPlayer && e.Kind == ObjectKind.Workshop)
@@ -48,9 +48,9 @@ internal sealed partial class FortMapViewer
         + ";sunposes=" + string.Join(',', _session.Entities.Where(e => e.Type.Name.Equals("sunCannon", StringComparison.OrdinalIgnoreCase)).Select(e => e.SunCannonFrame))
         + ";crossbowposes=" + string.Join(',', _session.Entities.Where(e => e.Type.Name.Equals("windArcher", StringComparison.OrdinalIgnoreCase)).Select(e => e.CrossbowFrame))
         + $";shots={_session.Shots.Count};impacts={_session.Impacts.Count}"
-        + ";sites=" + string.Join(',', _session.Entities.Where(e => e.Owner == TestPlayer && !e.IsComplete)
+        + ";sites=" + string.Join(',', _session.Entities.Where(e => e.Owner == TestPlayer && !e.IsComplete && e.Production == null)
             .Select(e => $"{e.Type.Name.ToLowerInvariant()}:{(e.AwaitingBuilder ? "waiting" : "building")}"))
-        + $";sp={_session.Player(TestPlayer).StormPower}";
+        + $";sp={_session.Player(TestPlayer).StormPower};productions={ProductionDetail}";
 
     /// <summary>걷기 그림 시계(초). 게임 시간이 흐르는 동안에만 진행해 일시정지 중에는 걷는 자세가 멈춘다.</summary>
     private double _walkClock;

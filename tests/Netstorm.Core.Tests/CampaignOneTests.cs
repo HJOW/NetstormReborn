@@ -165,6 +165,8 @@ public sealed class CampaignOneTests
     {
         (int x, int y) = SessionData.FindCell((x, y) => session.CheckUnit(1, "sunWalker", x, y).Allowed);
         session.Submit(new PlaceUnitCommand(1, "sunWalker", x, y)); session.RunTicks(1);
-        return Assert.Single(session.Entities, e => e.Owner == 1 && e.Kind == ObjectKind.Transport);
+        GameEntity golem = Assert.Single(session.Entities, e => e.Owner == 1 && e.Kind == ObjectKind.Transport);
+        SessionData.RunUntilComplete(session, golem);
+        return golem;
     }
 }

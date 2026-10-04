@@ -85,12 +85,12 @@ internal sealed partial class FortMapViewer
     /// <param name="type">그릴 타입</param>
     /// <param name="bodyFrame">본체 클러스터 번호</param>
     /// <param name="anchor">화면 기준점</param>
-    private void DrawShadow(SpriteBatch batch, TypeInfo type, int bodyFrame, Vector2 anchor)
+    private void DrawShadow(SpriteBatch batch, TypeInfo type, int bodyFrame, Vector2 anchor, float alpha = 1f)
     {
         ShadowStyle style = ShadowStyleOf(type);
         if (style == ShadowStyle.None) return;
         if (GetShadowTexture(type, bodyFrame, style == ShadowStyle.Dithered) is not { } shadow) return;
-        batch.Draw(shadow.Texture, anchor + shadow.Offset.ToVector2() * _zoom, null, Color.White,
+        batch.Draw(shadow.Texture, anchor + shadow.Offset.ToVector2() * _zoom, null, Color.White * alpha,
             0f, Vector2.Zero, _zoom, SpriteEffects.None, 0f);
     }
 
@@ -164,7 +164,7 @@ internal sealed partial class FortMapViewer
     {
         var sprite = GetTexture(type.LoadIndex, frames.Body, color);
         if (!sprite.HasValue) return false;
-        DrawShadow(batch, type, frames.Body, anchor);
+        DrawShadow(batch, type, frames.Body, anchor, alpha);
         var (texture, offset) = sprite.Value;
         batch.Draw(texture, anchor + offset.ToVector2() * _zoom, null, (tint ?? Color.White) * alpha,
             0f, Vector2.Zero, _zoom, SpriteEffects.None, 0f);

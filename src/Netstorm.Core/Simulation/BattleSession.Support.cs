@@ -13,7 +13,7 @@ public sealed partial class BattleSession
     private void UpdateGroundSupport()
     {
         // 포획 사제는 운반체/제단이 지지하므로 자유 상태인 지상 이동체만 검사한다.
-        foreach (GameEntity entity in _entities.Values.Where(e => e.Captivity == PriestCaptivity.Free &&
+        foreach (GameEntity entity in _entities.Values.Where(e => e.IsComplete && e.Captivity == PriestCaptivity.Free &&
             (e.Kind == ObjectKind.Priest || e.Type.Definition.HasFlag("walker")) &&
             e.Kind != ObjectKind.Flyer && !IsAirborneTransport(e)).ToArray())
         {

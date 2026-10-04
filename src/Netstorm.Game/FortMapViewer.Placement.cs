@@ -281,6 +281,8 @@ internal sealed partial class FortMapViewer
         // 세션 오브젝트 번호 순서로 그린다 (게임 중 새로 만든 것만)
         foreach (GameEntity entity in _session.Entities.Where(e => e.Kind != ObjectKind.Flyer && (e.Source == null || e.Kind == ObjectKind.Geyser && !_map.Objects.Contains(e.Source))))
         {
+            // 예약 위치에는 모든 생산 자원이 도착한 뒤에만 유닛 그림이 나타난다.
+            if (entity.Production is { AwaitingDeliveries: true }) continue;
             if (HiddenByBuildingToggle(entity.Type)) continue;
             bool mobile = IsMobile(entity);
             Vector2 anchor = Screen(mobile ? MobileWorldPixels(entity) : WorldPixels(entity.Footprint.AnchorX, entity.Footprint.AnchorY), center);
@@ -297,9 +299,9 @@ internal sealed partial class FortMapViewer
             (TypeInfo drawn, StructureFrames frames, Vector2 shift) = ObjectSprite(entity.Type, entity, null);
             // 사제가 오는 중인 공사장은 어두운 그림자로, 건설이 시작된 건물은 반투명 + 진행 막대로 그린다.
             DrawObjectSprite(batch, drawn, frames, anchor + shift * _zoom,
-                entity.IsComplete ? 1f : entity.AwaitingBuilder ? SiteShadowAlpha : UnderConstructionAlpha,
+                entity.Production != null ? ProductionOpacity(entity) : entity.IsComplete ? 1f : entity.AwaitingBuilder ? SiteShadowAlpha : UnderConstructionAlpha,
                 _playerColors.GetValueOrDefault(entity.Owner), entity.AwaitingBuilder ? SiteShadowTint : null);
-            if (!entity.IsComplete && !entity.AwaitingBuilder)
+            if (!entity.IsComplete && entity.Production == null && !entity.AwaitingBuilder)
             {
                 DrawProgressBar(batch, anchor, _session.ConstructionProgress(entity));
             }

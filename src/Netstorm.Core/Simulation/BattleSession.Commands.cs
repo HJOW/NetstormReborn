@@ -96,6 +96,8 @@ public sealed partial class BattleSession
         {
             return CommandFailure.NotInDeck;
         }
+        if (ProductionSource(state, type.Name) is not { IsComplete: true, Owner: var owner } || owner != state.Number)
+            return CommandFailure.NotInDeck;
         return state.UnitReadyTick.TryGetValue(type.Name, out long ready) && Tick < ready ? CommandFailure.NotReady : CommandFailure.None;
     }
 
@@ -174,7 +176,7 @@ public sealed partial class BattleSession
         {
             return 1;
         }
-        if (entity.AwaitingBuilder)
+        if (entity.AwaitingBuilder || entity.Production is { AwaitingDeliveries: true })
         {
             return 0;
         }
@@ -213,7 +215,7 @@ public sealed partial class BattleSession
     /// <summary>판정 실패를 명령 결과로 바꾼다.</summary>
     private static CommandResult Reject(SessionPlacementCheck check) => new(check.Failure, check.Describe());
 
-    /// <summary>유닛 배치: 판정 → Storm Power 차감 → 점유·공급원 등록 → 재충전 예약.</summary>
+    /// <summary>유닛 배치: 판정 → 비용 차감·자리 예약 → 생산 기점과 원소 공급원의 운송 → 재충전 예약.</summary>
     private CommandResult ExecutePlaceUnit(PlaceUnitCommand command)
     {
         SessionPlacementCheck check = CheckUnit(command.Player, command.TypeName, command.X, command.Y);
@@ -224,7 +226,7 @@ public sealed partial class BattleSession
         PlayerState player = _players[command.Player];
         TypeInfo type = _types.Find(command.TypeName)!;
         PlacementCheck site = check.Site!;
-        int id = Map.PlaceUnit(type, site, command.Player);
+        int id = Map.PlaceUnit(type, site, command.Player, activate: !EnforceProductionRules);
         player.StormPower -= site.Cost;
         var entity = new GameEntity(id, type, ObjectKinds.Of(type), command.Player, site.Footprint, Map.TerritoryAt(command.X, command.Y), null);
         // 고정 캐논·Crossbow의 사격 방위와 Wind Tower의 면역 방위를 설치 때 정한다.
@@ -232,14 +234,18 @@ public sealed partial class BattleSession
         if (type.Name.Equals("windArcher", StringComparison.OrdinalIgnoreCase))
             entity.CrossbowFrame = EmplacementDirection.PlacementFrame(type, entity.CannonDirection);
         _entities.Add(id, entity);
-        if (type.Definition.HasFlag("createsisland")) Bridges.InvalidateTerrain();
-        // 유닛은 놓을 때 지은 수로 센다 (튜토리얼 단계 처리가 읽는다)
-        player.RecordMade(type.Name, type.Flags2);
         if (EnforceProductionRules)
         {
+            StartUnitProduction(entity, ProductionSource(player, type.Name)!, site);
             // 배치한 유닛은 Unit Rate 에 따른 시간이 지나야 덱에서 다시 쓸 수 있다 (docs/exe/production-refresh.md)
             double interval = ProductionTimers.RefreshInterval(Map.Options.Get(BattleOptions.UnitRate), inFortMode: false);
             player.UnitReadyTick[type.Name] = Tick + TicksFor(interval);
+        }
+        else
+        {
+            // 개발용 배치 시험은 자원 운송 없이 즉시 완성한다.
+            if (type.Definition.HasFlag("createsisland")) Bridges.InvalidateTerrain();
+            player.RecordMade(type.Name, type.Flags2);
         }
         Emit(SessionEventKind.UnitPlaced, command.Player, id, $"{entity.DisplayName} 배치 (−{site.Cost})");
         return CommandResult.Ok();

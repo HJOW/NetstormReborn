@@ -209,7 +209,7 @@ public sealed partial class BattleSession
         double distance = Math.Sqrt(DistanceSquared(attacker, target));
         // shotblocking 플래그를 가진 건물은 아군·적군 모두 사선을 막는다. 발사자와 목표는 제외한다.
         (double endX, double endY) = ShotAim(attacker, target);
-        foreach (GameEntity obstacle in _entities.Values.Where(e => e.Id != attacker.Id && e.Id != target.Id && !e.IsRegenerating &&
+        foreach (GameEntity obstacle in _entities.Values.Where(e => e.Id != attacker.Id && e.Id != target.Id && !e.IsRegenerating && e.Production == null &&
             (e.Type.Definition.HasFlag("shotblocking") || !airborne && e.Type.Definition.GetString("group")?.Equals("blocker", StringComparison.OrdinalIgnoreCase) == true)))
         {
             // 발사점에서 목표까지 반 칸 간격으로 검사한다. 원본 픽셀 단위 충돌은 후속 구현이다.
@@ -256,6 +256,8 @@ public sealed partial class BattleSession
     /// <summary>피해를 적용하며 사제는 죽이는 대신 절반 체력에서 기절시킨다.</summary>
     private void ApplyCombatDamage(GameEntity target, CombatShot shot)
     {
+        // 아직 실체가 없는 생산 예약은 폭발·이미 날아오는 탄에도 피해를 받지 않는다.
+        if (target.Production != null) return;
         // 발사자가 사라져도 탄의 타입·출발점으로 면역을 유지한다. 타입 없는 폭발은 방위 면역을 우회한다.
         TypeInfo? attackerType = shot.AttackerType == null ? null : _types.Find(shot.AttackerType);
         GameEntity? attacker = Entity(shot.AttackerId);
@@ -347,7 +349,7 @@ public sealed partial class BattleSession
         _entities.Remove(entity.Id);
         if (entity.Type.Definition.HasFlag("createsisland")) Bridges.InvalidateTerrain();
         _harvestTasks.Remove(entity.Id);
-        if (entity.Kind != ObjectKind.Flyer) WeakenBridgesAround(entity);
+        if (entity.Kind != ObjectKind.Flyer && entity.Production == null) WeakenBridgesAround(entity);
         if (entity.Flight is { } flight && Entity(flight.BaseId) is { } home)
             home.NextAttackTick = Tick + TicksFor(WhirligigBuildSeconds);
         // 사라진 오브젝트를 가리키는 선택과 수집 예약을 해제한다.
