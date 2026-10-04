@@ -10,6 +10,13 @@
 
 ---
 
+## 2026-10-04 (`HJOW-Athlon`, Windows 10, 원본 실행 없음) ✅ 완료: `extracted/` 중복 미디어 정리
+
+- [x] **요청:** AGENTS.md·LEFT_JOBS.md를 읽고 `extracted/` 안에서 더 이상 불필요한 이미지·사운드·동영상 정리. `extracted/`는 Git 제외이므로 저장소에는 영향이 없다.
+- [x] **삭제(8,352개, 약 4.2GB, I: 여유 9.8GB → 15.2GB):** ① `extracted/analyzeManager/<세션>/game/` 안 미디어(`.mus`·`.wav`·`.gif`) 29개 세션분 — 세션마다 `originals/`를 복사한 것이며 파일 이름·크기가 모두 같고(다른 것은 `setup.cfg`·`options.cfg`·`battle1.fort`뿐) 표본 33개는 SHA-1도 일치했다. ② 클론 검사 스크립트가 `assets/game-data`에서 매번 다시 만드는 `data/` 복사본 안 미디어 — `extracted/fangame-combat-20261003/smoke/data`, `extracted/crossbow-defense-20261003/smoke/data`, `extracted/screens/test02-implementation/combat-regression/data`. 삭제 목록은 이 세션 스크래치패드에만 있다.
+- **지우지 않은 것(사용자 결정):** 세션별 원본 녹화 `recording/video-*.avi`·`audio-*.wav` 약 12.9GB(TEST02 S1 5.8GB·S4 2.8GB, 메뉴 버튼 5개 세션 2.2GB, 캠페인 1-1·실패 세션 등). 사용자가 "녹화는 하나도 안 지움"을 골랐다. 지우면 원본을 다시 실행해 녹화해야 하므로 나중에 지울 때도 사용자 확인을 받는다. 클론 검사 PNG(약 1GB)는 원본에서 뽑은 프레임(`orig\`·`frames\`·`cmp-*`)과 섞여 있고 문서가 인용하므로 남겼다.
+- **영향:** 위 세션 폴더의 `game/`은 더 이상 실행 가능한 복사본이 아니다(이미 종료된 세션이며 새 세션은 매번 새로 복사한다). 도구는 `originals/sound`를 쓰고 세션 복사본을 쓰지 않아 영향이 없다. 검사 스크립트는 실행할 때 `data/`를 다시 만든다. AGENTS.md·originals·originalCD는 수정하지 않았고 커밋은 하지 않았다.
+
 ## 2026-10-04 (Windows, 원본 실행 없음 — 기존 분석·exe 정적 대조) ✅ 완료: TEST02 분석 클론 반영
 
 - [x] **요청:** AGENTS.md·LEFT_JOBS.md를 먼저 읽고 다른 AI가 남긴 원본 분석을 클론에 반영. 원본 관찰·사용자 확인을 팬게임보다 우선했다. [구현 근거·검증·남은 차이](docs/gameplay/test02-clone-parity-20261004.md).
