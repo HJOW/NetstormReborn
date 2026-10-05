@@ -1,12 +1,26 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
-> 최종 갱신: 2026-10-06 (**4단계 공간 해시·발자국/지붕 점유 비트 C++ 복원/기계어 검증 완료.** [실제 플레이 복원 계획](docs/cpp-playable-plan.md), [해시/점유의 근거·제한](docs/exe/cpp-hash-reconstruction.md). 현재 내부 검사 87개·제한 x86 기대값 31,500개 입력 사례(수명 480개는 접두 구간, 해시 초기화 4개는 할당 없는 경로). **SID/공간 체인·spot 등록/해제와 GameWorld 연결, 배치 UI·전체 붕괴·건설·경제·전투·AI·승패는 남아 미션 완주는 아직 불가능하다.** 앞선 복원 이력은 보존한다.)
+> 최종 갱신: 2026-10-06 (**공간 등록/해제의 next 체인·spot·좌표 캐시·비전투 상태와 CD판 충돌 차이 복원 완료.** [실제 플레이 복원 계획](docs/cpp-playable-plan.md), [등록 검증의 범위·제한](docs/exe/cpp-spatial-reconstruction.md). 현재 내부 검사 93개·제한 x86 기대값 32,378개 입력 사례. 새 878개는 가상/영역 효과를 계약 대체한 조건부 검증, 수명 480개는 접두 구간, 해시 초기화 4개는 할당 없는 경로다. **SID 할당/세대·파생 가상/영역 효과·GameWorld 연결, 배치 UI·전체 붕괴·건설·경제·전투·AI·승패는 남아 미션 완주는 아직 불가능하다.** 앞선 복원 이력은 보존한다.)
 > 프로젝트 목표(AGENTS.md): 원본 NetStorm: Islands at War 를 디컴파일/분석하여 클론 코딩하고,
 > **Windows 10/11** 과 **GUI 환경의 Linux** 에서 동작하며 **여러 언어를 지원**하는 게임을 만든다.
 > **모방 범위(2026-10-03 AGENTS.md 변경)**: 기존 게임의 **사운드·그래픽·애니메이션 등 거의 모든 요소를 가능한 한 동일하게** 최대한 모방한다.
 > **1차 목표 언어: 영어, 한국어** (그 외 언어는 이후 확장).
 > **우선순위: Windows 10/11 > Linux** (Linux 지원과 멀티플레이 요소 구현은 우선순위가 낮다 — 설계상 이식성은 유지하되 검증·배포는 Windows 먼저. 그 외 사항은 궁극적인 목표다).
 > **화면 요구사항(2026-09-28 AGENTS.md 추가, 2026-10-03·10-05 변경)**: 풀스크린 모드와 화면비 **16:9 · 16:10 · 4:3** 지원, **기존 게임 수준의 프레임으로 먼저 만들고 이후 60·120프레임 지원**(2026-10-05 변경. 원본 수준 = `maxFPS` 75·14ms 루프, 클론 적용 완료), 풀스크린에서 **마우스를 화면 끝에 대면 화면 이동**(원본도 옵션에서 켰을 때 지원), 원본의 **전체화면 전환 뒤 재실행 오류는 클론에서 발생하지 않아야 한다** — 1.4·1.7절
+
+---
+
+## 2026-10-06 ✅ 완료: cpppj 객체 공간 등록/해제·CD판 충돌 차이 복원 (게임 실행 없음)
+
+- [x] **요청:** "cpppj 다음 작업도 진행". 최신 AGENTS.md/인수인계를 확인하고 Pop/Unpop의 공간 갱신을 이어서 복원했다. C++ 최대 복원·Windows/Win32 우선순위를 유지했다.
+- [x] **C++:** 새 `o/SquidSpatial`은 이미 할당된 void 객체 번호 입력→좌표/화면 캐시→spot OR→기준점 버킷의 next 삽입→firstPop 한 번/비전투 활성화, void 설정→spot AND→4단계 체인 검색/제거를 구현한다. 제거한 next·캐시/단계는 보존한다. 실제 등록한 0단계/spot을 정수 SurfaceFinder에 전달한다. SID 할당기나 raw 50/36바이트 풀 자체를 복원한 것은 아니다.
+- [x] **분석 정밀화:** 등록 발자국의 float→int→편향 덧셈과 EffectiveGenus의 float+편향을 구별했다. 화면 캐시는 x×16/y×11+0.5의 short이며, 섬 번호 무효 표식은 127이다. 건물 양옆 표면 word의 bit 2/4 갱신·조회/알림 순서도 보존했다.
+- [x] **판본 차이:** 패치판은 spot bit 충돌에서 이전 칸의 부분 변경을 남긴 채 반환하고, CD판은 OR/등록을 계속한다. 격리 시퀀스 중 **32개 전이**의 차이를 각각의 결과 열과 C++ 판본 모드로 보존했다. 전체 배치 판정으로 사용하지 않는다.
+- [x] **기계어:** 두 판본 **238개 시퀀스·878회 전이(Pop 463/Unpop 415)**. 실제 타입/좌표/SHP/genus/hash/체인/SetIsland/Activate를 정상 반환까지 실행했다. 전체 86,272머리·65,536 spot·공간 필드·사건 순서를 대조했다. x87 53/64비트 전체 시퀀스 재실행 결과 일치, assert 0/0, 코드/공간 필드 쓰기·명령 수·EIP/ESP/ret N·x87 상태를 제한했다.
+- **검증 제한:** 가상 갱신·firstPop·postPop, 영역 조회·표면 알림은 **입력 반환/사건 기록 계약으로 대체**했다. dirty 큐·Battle 복제는 비활성이고 별도 grid 조회 입력은 비어 있다. 실제 파생/화면/소유자/부착 프레임 효과는 미실행이다. Pop/Unpop을 전체 함수 검토 앵커에 추가하지 않아 대응 **2,496쌍·검토 24쌍**은 그대로다. [상세 근거·후속 순서](docs/exe/cpp-spatial-reconstruction.md).
+- [x] **검증/보호:** Windows Release 빌드 경고·오류 0, CTest 내부 **93개 검사** 통과. 누적 **32,378개 제한 x86 입력 사례**에 새 조건부 878개를 구분해 기록했다. 기록/fixture/원본/도구 SHA-256·행 수 검사 `decomp_spatial_oracle.py --verify`를 추가했다. SOURCE_MAP 파일 존재는 29/136으로 동일하며 완료율이 아니다. 원본/복사본/클론 GUI 실행·AGENTS.md/원본/C# 수정·커밋은 없었다.
+- **변경 범위:** 새 SquidSpatial·SpatialTests·spatial-x86.tsv·recovery-spatial-evidence.json·decomp_spatial_oracle.py, CMake·.gitattributes, 복원 문서·README·신뢰도/빌드/로드맵/플레이 계획·LEFT_JOBS.
+- [ ] **다음:** SID 할당/반납·세대/free list·파생 생성자→firstPop/postPop·영역/소유자・dirty/grid·표면 변경/부착 프레임 실제 효과→섬/지면/noIsland/받침 생성과 GameWorld 연결·소수 좌표/일반 공간 탐색→`0049b510` 배치/소유자 전파·Construction→전체 수명/붕괴/삭제→다리 칸/커서/배치 UI→Construct·건설/경제/전투/AI/승패.
 
 ---
 
@@ -20,7 +34,7 @@
 - [x] **대응/재현:** 원본/기대값/생성·공통 도구 SHA-256·x87·assert 0·함수 존재/ret N을 확인하는 5개 검토 앵커를 추가했다. malloc을 제외한 Init은 앵커에 넣지 않았다. 현재 대응 **2,496쌍·검토 24쌍**, strong 1,738/medium 707/weak 51이다.
 - [x] **검증/보호:** Windows Release 빌드 경고·오류 0, CTest 내부 **87개 검사** 통과. 누적 **31,500개 제한 x86 입력 사례**다. SOURCE_MAP 파일 존재 29/136이며 전체 모듈 완료 수가 아니다. 원본 EXE SHA-256은 동일하다. 원본/복사본/클론 GUI 실행·AGENTS.md/원본/C# 수정·커밋은 없었다. 새 코드/주석/문서는 UTF-8·한국어다.
 - **변경 범위:** SquidHash·Squid genus/배열 설명, HashTests·hash-x86.tsv·검증 기록·CMake·.gitattributes, decomp_hash_oracle.py·decomp_refine 앵커, SOURCE_MAP·복원/신뢰도 문서·README·계획·인수인계.
-- [ ] **다음:** SID 할당/반납·free/void/dead/contained·next 체인→`004b02d0` 등록/`004afe50` 해제의 hash·spot OR/AND·겹침·부착 다리 상태/프레임·갱신 순서→섬/지면/noIsland 실제 생성과 GameWorld/SurfaceFinder 연결→실제 배치 `0049b510`·소유자 전파·Construction 생성→전체 수명/붕괴/삭제→다리 생산 칸/커서·배치 UI→건설/경제/전투/AI/승패.
+- [x] **후속 일부 완료:** 위 최신 절에서 next 체인·등록/해제 hash·spot OR/AND·충돌 차이·표면 word·비전투 상태·정수 SurfaceFinder 전달을 복원했다. SID 할당/세대·실제 가상/영역/부착 프레임 효과·GameWorld 연결과 나머지 플레이 항목은 최신 다음 순서에 남긴다.
 
 ---
 

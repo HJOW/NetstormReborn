@@ -69,7 +69,9 @@ ctest --test-dir cpppj/build -C Release --output-on-failure
 
 ## 5. 다음 연결 순서
 
-1. 실제 SID 번호 할당/반납·free/void/dead/contained 상태·next 체인과 hash 등록/해제를 복원한다. 표면 번호와 새 GameWorld 런타임 번호를 암묵적으로 섞지 않는다.
-2. `004b02d0` 등록/`004afe50` 해제의 spot OR/AND·겹침 오류·부착 다리 상태·프레임/갱신 순서를 복원한다. 현재의 `EffectiveGenus`만으로 pop/unpop 전체를 대체하지 않는다.
-3. 섬·지면·`noIsland`·받침의 실제 생성/등록을 GameWorld에 연결하고 SurfaceFinder에 0단계 배열·spot을 제공한다. 기존 GroundGrid의 bridge bool을 원본 표면 그래프로 간주하지 않는다.
+2026-10-06 후속에서 next 체인·Pop/Unpop의 spot/상태·CD 충돌 차이·표면 word·정수 SurfaceFinder 전달을 추가했다. [공간 등록 문서](cpp-spatial-reconstruction.md)의 조건부 검증 범위를 참고한다. 위 87개/31,500개는 해시 계산 단계 당시 기록이며 최신 검사 수는 93개/32,378개다.
+
+1. 실제 SID 번호 할당/반납·세대/free list·파생 생성자를 복원한다. 표면 번호와 새 GameWorld 런타임 번호를 암묵적으로 섞지 않는다.
+2. Pop/Unpop의 실제 firstPop/postPop·영역/소유자·dirty/grid·표면 변경 알림·부착 프레임 효과를 복원한다. 사건 계약만으로 원본 가상 효과 전체를 대체하지 않는다.
+3. 섬·지면·`noIsland`·받침의 실제 생성/등록을 GameWorld에 연결하고 소수 좌표/일반 공간 조회를 복원한다. 기존 GroundGrid의 bridge bool을 원본 표면 그래프로 간주하지 않는다.
 4. 실제 배치 `0049b510`·소유자 전파·Construction 생성→전체 수명·붕괴/삭제→다리 생산 칸/커서·배치 UI→건설/경제/전투/AI/승패를 연결한다. [실제 플레이 계획](../cpp-playable-plan.md)과 [LEFT_JOBS.md](../../LEFT_JOBS.md)를 따른다.

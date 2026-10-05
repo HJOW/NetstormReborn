@@ -15,4 +15,7 @@ tools/decomp_oracle.py text eol=lf
 # 공간 해시 검증의 기록과 생성 도구도 SHA-256 재현을 위해 LF로 고정한다.
 cpppj/recovery-hash-evidence.json text eol=lf
 tools/decomp_hash_oracle.py text eol=lf
+# 공간 등록 검증의 조건부 실행 기록과 도구를 동일한 SHA-256으로 보존한다.
+cpppj/recovery-spatial-evidence.json text eol=lf
+tools/decomp_spatial_oracle.py text eol=lf
 cpppj/tests/fixtures/*.tsv text eol=lf

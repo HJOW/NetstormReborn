@@ -1,0 +1,98 @@
+{
+  "schema": 1,
+  "classification": "scoped-integration",
+  "functions": [
+    {
+      "name": "Pop",
+      "originals": "004b02d0",
+      "originalCD": "004ad490",
+      "purge": 12
+    },
+    {
+      "name": "Unpop",
+      "originals": "004afe50",
+      "originalCD": "004ad0b0",
+      "purge": 4
+    }
+  ],
+  "reviewed_pairs": [],
+  "helpers": {
+    "originals": [
+      4329632,
+      4827200,
+      4723984,
+      4253696,
+      4914480,
+      5130688,
+      4250112,
+      4349424,
+      4899296,
+      4254448,
+      4902464,
+      4827392,
+      4298832,
+      4926096,
+      4897392,
+      4902176,
+      4900192
+    ],
+    "originalCD": [
+      4898640,
+      4897504,
+      4468528,
+      4897472,
+      4902848,
+      5183004,
+      4901632,
+      4908160,
+      4473520,
+      4693280,
+      4901504,
+      4898736
+    ]
+  },
+  "cases": {
+    "pop": 463,
+    "unpop": 415,
+    "scenarios": 238
+  },
+  "total_cases": 878,
+  "edition_differences": 32,
+  "x87_checked_control_words": [
+    "0x27f",
+    "0x37f"
+  ],
+  "binary_sha256": {
+    "originals": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+  },
+  "fixture_sha256": "51ad79dddbf198b2fb9e130240d2fd39abf5814b723610bb166b48309b6d910e",
+  "source_sha256": {
+    "tools/decomp_spatial_oracle.py": "b8d346b030aa006c8535bb94701d7ae44522033e63e15e8b8a55197eaf3b8d5b",
+    "tools/decomp_bridge_oracle.py": "c212538f7059cd0c9efac87cb205c71561fcc1f8d97df7830bc57d89a03f01fe",
+    "tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d"
+  },
+  "assert_reports": {
+    "originals": 0,
+    "originalCD": 0
+  },
+  "replaced_dependencies": {
+    "virtual_offsets": [
+      "0x88",
+      "0x8c",
+      "0x30",
+      "0x20"
+    ],
+    "firstPop": "입력 반환 비트만; 실제 파생 객체 미실행",
+    "postPop": "호출 비트 기록·curPostPop 감소 계약만",
+    "region": "입력 bool만; 소유자/영역 계산 미실행",
+    "notify": "SID 기록만; 화면/부착 효과 미실행"
+  },
+  "limits": [
+    "SID/pool/타입/SHP/지도는 격리 입력; 할당/세대/삭제 미실행",
+    "dirty 큐·Battle 복제 비활성, 별도 grid 조회 지도는 비어 있음",
+    "Pop/Unpop 정상 반환 확인은 위 의존성 대체 조건부이며 전체 함수 검토 앵커로 추가하지 않음",
+    "유효 발자국·비 contained 객체만; overlap 조기 반환의 부분 spot 변경도 보존",
+    "실제 게임/원본 복사본/GUI 실행 없음"
+  ]
+}
