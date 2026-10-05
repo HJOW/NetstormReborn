@@ -12,4 +12,7 @@ cpppj/recovery-surface-evidence.json text eol=lf
 tools/decomp_surface_oracle.py text eol=lf
 # 새 표면 검증이 참조하는 공통 실행 도구도 체크아웃마다 같은 해시를 유지한다.
 tools/decomp_oracle.py text eol=lf
+# 공간 해시 검증의 기록과 생성 도구도 SHA-256 재현을 위해 LF로 고정한다.
+cpppj/recovery-hash-evidence.json text eol=lf
+tools/decomp_hash_oracle.py text eol=lf
 cpppj/tests/fixtures/*.tsv text eol=lf

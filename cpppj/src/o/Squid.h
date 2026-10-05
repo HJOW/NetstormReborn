@@ -1,4 +1,4 @@
-// Squid의 저장 필드와 이동 상태 일부. 원본 200바이트 배열/생성자 표/SID 세대 해시는 아직 복원하지 않았다.
+// Squid의 저장 필드와 이동 상태 일부. 원본 패치 50/CD 36바이트 배열·생성자 표·SID 수명 관리는 아직 복원하지 않았다.
 #pragma once
 #include "o/TerrainBuilder.h"
 #include "o/Template.h"
@@ -19,6 +19,9 @@ struct Squid {
     CellPoint cell{},goal{};
     std::vector<CellPoint> route;
     double progress{},animation{};
+    // 원본 004afd30 ↔ CD 004acfc0: 타입 genus에 발자국 안쪽 비트 8을 보정한다.
+    // 기준점은 +0.9999 후 0 방향으로 절삭한다. 발자국/지붕 경계만 계산하며 spot 지도에 쓰지 않는다.
+    static std::uint32_t EffectiveGenus(std::uint32_t flags2,float x,float y,int width,int height,int cellX,int cellY);
     // 프레임 시간차만큼 움직인다. 한 걸음의 대각선 길이는 sqrt(2)다.
     bool Advance(double seconds,GroundGrid& grid,std::uint16_t allies);
     // 다음 칸으로 향하는 방향 번호(A=북)를 갱신한다.

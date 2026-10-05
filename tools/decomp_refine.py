@@ -388,6 +388,30 @@ class Matcher:
                     int(ed.conv[address]['purge']) != pair['purge'] for ed,address in ((self.a,x),(self.b,y))):
                     raise ValueError(f'표면 검토 함수의 존재/ret N 불일치: {pair["name"]}')
                 added += self.accept(x,y,'reviewed',1.0)
+        # 공간 해시 앵커는 x87 상태까지 명시한 정상 반환 검증 결과만 사용한다.
+        hash_path = ROOT / 'cpppj/recovery-hash-evidence.json'
+        if hash_path.exists():
+            evidence = json.loads(hash_path.read_text(encoding='utf-8'))
+            if evidence['x87_checked_control_words'] != ['0x27f','0x37f'] or any(evidence['assert_reports'].values()):
+                raise ValueError('공간 해시의 x87 상태/assert 검증이 다릅니다.')
+            fixture = ROOT / 'cpppj/tests/fixtures/hash-x86.tsv'
+            if hashlib.sha256(fixture.read_bytes()).hexdigest() != evidence['fixture_sha256']:
+                raise ValueError('공간 해시 기대값이 변경되었습니다. decomp_hash_oracle.py로 다시 검증하세요.')
+            # 기대값을 실행한 생성/공통 도구가 바뀌면 검토 대응을 적용하지 않는다.
+            for name, expected in evidence['source_sha256'].items():
+                if hashlib.sha256((ROOT / name).read_bytes()).hexdigest() != expected:
+                    raise ValueError('공간 해시 검증 도구가 변경되었습니다. 다시 검증하세요.')
+            # 다른 내용의 EXE에는 같은 주소를 근거로 적용하지 않는다.
+            for key, expected in evidence['binary_sha256'].items():
+                if hashlib.sha256(EDITIONS[key]['exe'].read_bytes()).hexdigest() != expected:
+                    raise ValueError('공간 해시 검토 대응의 원본 SHA-256이 다릅니다.')
+            # Init은 malloc 경로를 제외했으므로 목록에 넣지 않는다. 정상 함수 5개만 확인한다.
+            for pair in evidence['reviewed_pairs']:
+                x, y = int(pair['originals'],16), int(pair['originalCD'],16)
+                if x not in self.a.funcs or y not in self.b.funcs or any(
+                    int(ed.conv[address]['purge']) != pair['purge'] for ed,address in ((self.a,x),(self.b,y))):
+                    raise ValueError(f'공간 해시 함수의 존재/ret N 불일치: {pair["name"]}')
+                added += self.accept(x,y,'reviewed',1.0)
         return added
 
     def accept(self, x, y, method, score):

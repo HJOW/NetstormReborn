@@ -6,7 +6,7 @@
 > **함수 수**는 패치판에서 그 파일 이름을 참조하는 함수의 수다([모듈 맵](../docs/exe/modules.md)). 그 파일의 전체 함수 수가 아니다.
 > **상태**는 cpppj 에 그 경로의 파일이 있는지만 본다. 파일이 있어도 일부 함수만 옮긴 것일 수 있다.
 
-## `\Ns\O\` → `src/o/` (75개, 파일 있음 18개)
+## `\Ns\O\` → `src/o/` (75개, 파일 있음 19개)
 
 | cpppj 경로 | 패치판 표기 | CD판 표기 | 함수 수 | 상태 |
 |---|---|---|---|---|
@@ -73,7 +73,7 @@
 | `src/o/Squid.cpp` | Squid.cpp | Squid.cpp | 42 | 있음 |
 | `src/o/Squid.h` | squid.h | squid.h | 10 | 있음 |
 | `src/o/SquidFinder.cpp` | Squidfinder.cpp | SquidFinder.cpp | 7 | 있음 |
-| `src/o/SquidHash.cpp` | Squidhash.cpp | SquidHash.cpp | 2 |  |
+| `src/o/SquidHash.cpp` | Squidhash.cpp | SquidHash.cpp | 2 | 있음 |
 | `src/o/StaticString.cpp` | Staticstring.cpp | staticString.cpp | 1 |  |
 | `src/o/Template.cpp` | Template.cpp | template.cpp | 37 | 있음 |
 | `src/o/Terr.cpp` | — | Terr.cpp |  |  |

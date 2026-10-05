@@ -1,0 +1,121 @@
+{
+  "schema": 1,
+  "functions": [
+    {
+      "name": "Init",
+      "originals": "004b28f0",
+      "originalCD": "00479ad0",
+      "purge": 0
+    },
+    {
+      "name": "At",
+      "originals": "004b29a0",
+      "originalCD": "00479be0",
+      "purge": 8
+    },
+    {
+      "name": "FloatBucket",
+      "originals": "004b2a90",
+      "originalCD": "00479d20",
+      "purge": 12
+    },
+    {
+      "name": "IntBucket",
+      "originals": "004b2b00",
+      "originalCD": "00479d90",
+      "purge": 12
+    },
+    {
+      "name": "Level",
+      "originals": "004ace40",
+      "originalCD": "004acb00",
+      "purge": 0
+    },
+    {
+      "name": "Genus",
+      "originals": "004afd30",
+      "originalCD": "004acfc0",
+      "purge": 8
+    }
+  ],
+  "reviewed_pairs": [
+    {
+      "name": "At",
+      "originals": "004b29a0",
+      "originalCD": "00479be0",
+      "purge": 8
+    },
+    {
+      "name": "FloatBucket",
+      "originals": "004b2a90",
+      "originalCD": "00479d20",
+      "purge": 12
+    },
+    {
+      "name": "IntBucket",
+      "originals": "004b2b00",
+      "originalCD": "00479d90",
+      "purge": 12
+    },
+    {
+      "name": "Level",
+      "originals": "004ace40",
+      "originalCD": "004acb00",
+      "purge": 0
+    },
+    {
+      "name": "Genus",
+      "originals": "004afd30",
+      "originalCD": "004acfc0",
+      "purge": 8
+    }
+  ],
+  "helpers": {
+    "originals": [
+      4827200,
+      4827392,
+      4298832,
+      5130688
+    ],
+    "originalCD": [
+      4897504,
+      4898640,
+      4908160,
+      4473520,
+      5183004
+    ]
+  },
+  "cases": {
+    "init": 4,
+    "at": 100,
+    "intbucket": 100,
+    "floatbucket": 607,
+    "level": 605,
+    "genus": 3216
+  },
+  "total_cases": 4632,
+  "x87_control_word": "0x27f",
+  "x87_checked_control_words": [
+    "0x27f",
+    "0x37f"
+  ],
+  "binary_sha256": {
+    "originals": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+  },
+  "fixture_sha256": "2447ed16982a91260cab70914f44b839ae6aa21083700cc5928fd33152b987a3",
+  "source_sha256": {
+    "tools/decomp_hash_oracle.py": "e17f3324b2066cf69e307f049488f74dd5312e720f2e58de3579d71893664262",
+    "tools/decomp_bridge_oracle.py": "c212538f7059cd0c9efac87cb205c71561fcc1f8d97df7830bc57d89a03f01fe",
+    "tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d"
+  },
+  "assert_reports": {
+    "originals": 0,
+    "originalCD": 0
+  },
+  "limits": [
+    "Init은 기존 배열 초기화만; malloc/실제 게임 미실행",
+    "정상 비음수 좌표/크기; 공간 체인 삽입·제거와 일반 탐색은 후속",
+    "Level/Genus는 판본별 기대값을 별도 저장한다"
+  ]
+}

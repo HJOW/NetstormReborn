@@ -1,8 +1,31 @@
 #include "o/Squid.h"
 #include <algorithm>
 #include <cmath>
+#include <stdexcept>
 
 namespace netstorm::o {
+namespace {
+// 원본 DAT_005424b8 / CD DAT_005395cc: 내부 spot 보정을 받는 건물군 genus 마스크다.
+constexpr std::uint32_t kInteriorGenusMask=0x50444200;
+// 원본 roof genus 비트. 중심 열의 윗부분은 안쪽 비트 8을 붙이지 않는다.
+constexpr std::uint32_t kRoofGenus=0x400000;
+// 원본 float 비트 3f7ff972. hash 버킷의 plain _ftol과 다른 좌표 변환이다.
+constexpr float kSpotCoordinateBias=0.9999f;
+}
+// x87 53/64비트 중간 덧셈을 보존하며 float로 다시 좁혀 경계 칸을 바꾸지 않는다.
+std::uint32_t Squid::EffectiveGenus(std::uint32_t flags2,float x,float y,int width,int height,int cellX,int cellY) {
+    if (!std::isfinite(x) || !std::isfinite(y) || x<0 || y<0 || x>=kWorldCells || y>=kWorldCells ||
+        width<1 || height<1 || width>kWorldCells || height>kWorldCells ||
+        cellX<0 || cellY<0 || cellX>=kWorldCells || cellY>=kWorldCells)
+        throw std::out_of_range("Squid effective genus footprint");
+    const int right=static_cast<int>(static_cast<double>(x)+kSpotCoordinateBias);
+    const int bottom=static_cast<int>(static_cast<double>(y)+kSpotCoordinateBias);
+    const int left=right-width+1,top=bottom-height+1;
+    const bool interior=cellX!=left && cellX!=right && cellY!=top && cellY!=bottom;
+    const bool roofOpening=(flags2 & kRoofGenus)!=0 &&
+        static_cast<std::int64_t>(cellX-left)*2==right-left && static_cast<std::int64_t>(cellY-top)*2<=bottom-top;
+    return (flags2 & kInteriorGenusMask)!=0 && interior && !roofOpening ? flags2|8 : flags2;
+}
 // 현재 기준 칸에서 다음 칸의 방향을 원본 A~H 순서로 찾는다.
 void Squid::Face(CellPoint nextCell) {
     const int dx=nextCell.x-cell.x,dy=nextCell.y-cell.y;
