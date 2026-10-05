@@ -7,6 +7,8 @@
 #include "client/GameAssets.h"
 #include "client/InputEvent.h"
 #include "client/Screen.h"
+#include "client/Renderer.h"
+#include "client/Cursor.h"
 #include "o/BaseFile.h"
 #include "o/ConfigInterface.h"
 #include "o/GameClock.h"
@@ -19,6 +21,7 @@
 #include <memory>
 #include <optional>
 #include <string>
+#include <utility>
 
 namespace netstorm::client {
 
@@ -64,9 +67,6 @@ public:
     // UberGump를 옮긴 뒤 같은 사건 위치에 연결한다. 일반 종료에서는 부르지 않는다.
     void ClearFullScreenState();
 
-    // Renderer(FUN_004994b0)를 옮기기 전까지 쓰는 임시 연결점: 프레임마다 잠근 화면에 그린다.
-    // 비어 있으면 원본의 "Loading / Please Wait" 화면만 보인다.
-    std::function<void(Client&, std::uint8_t* buffer)> draw;
     // UserInput(FUN_004d62b0)을 옮기기 전까지 쓰는 임시 연결점: 프레임마다 입력 큐를 처리한다. 참을 돌려주면 종료한다.
     std::function<bool(Client&)> input;
     // 초기화가 끝나고 루프에 들어가기 직전에 한 번 부른다(새 연결점).
@@ -81,6 +81,14 @@ public:
     const o::BaseFileSystem& Files() const;
     const GameAssets& Assets() const;
     o::Kernel& GetKernel();
+    // 복원한 그리기·글꼴·커서 기반. 초기화 뒤에만 쓴다.
+    Renderer& GetRenderer();
+    FontStore& Fonts();
+    Cursor& GetCursor();
+    // 그린 프레임·출력 사각형 횟수. 초기화 도중 창을 닫았으면 두 값 모두 0이다.
+    std::pair<std::uint64_t, std::uint64_t> RenderCounts() const;
+    // 로딩 화면에서 실제 Renderer 장면으로 전환한다. 후속 메인 메뉴도 이 경로를 사용한다.
+    void ShowScene();
     // 이번 프레임에 고정된 시각(원본 FUN_00460e90).
     const o::FrameTime& Time() const;
     // 창이 활성인가(원본 DAT_0054dc50).
@@ -119,6 +127,10 @@ private:
     NativeHandle loadingFont_{};       // DAT_0054de74
     std::unique_ptr<Screen> screen_;
     std::unique_ptr<GameAssets> assets_;
+    std::unique_ptr<Renderer> renderer_;
+    std::unique_ptr<FontStore> fonts_;
+    std::unique_ptr<Cursor> cursor_;
+    bool sceneVisible_{};
     InputQueue input_;
     o::GameClock clock_;
     o::FrameTime time_{};

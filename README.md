@@ -22,7 +22,7 @@ AI 를 이용해 되살리는 프로젝트입니다.
 | 폴더 | 내용 | 상태 |
 | --- | --- | --- |
 | `dotnetpj/` | **C# + MonoGame 빌드.** 원본을 분석해 새로 구현한 클론입니다. | 위의 캠페인 1-1·1-2를 플레이할 수 있습니다. |
-| `cpppj/` | **C++ 빌드.** 기존 게임을 디컴파일한 소스를 토대로 C++ 소스를 다시 만듭니다. | 공용 계층·설정·타입·요새 파일 읽기·영역 배치·기본 그래픽·원본 방식의 창과 화면 장치(창 모드) 복원. 자산·설정·미션 검사, BMP 내보내기, 검사용 화면 가능. Windows 전용. 게임 화면·전투는 후속 작업입니다. |
+| `cpppj/` | **C++ 빌드.** 기존 게임을 디컴파일한 소스를 토대로 C++ 소스를 다시 만듭니다. | 데이터·영역 배치·Win32 창·입력 큐·Renderer·원본 글꼴/커서 표시 기반 복원. 검사 장면 가능. Windows 전용. 메인 메뉴·실제 월드·게임 플레이는 후속 작업입니다. |
 
 게임 데이터(`assets/game-data/`), 글꼴(`fonts/`), 분석 문서(`docs/`), 분석 도구(`tools/`, `analyzeManager/`)는 두 빌드가 함께 쓰며 저장소 루트에 있습니다. C++ 빌드의 구조와 빌드 방법, 디컴파일 결과에서 소스를 만드는 절차는 [C++ 빌드](docs/cpp-build.md)를 참고하세요.
 
@@ -119,7 +119,7 @@ cmake --build cpppj/build --config Release
 ctest --test-dir cpppj/build --build-config Release --output-on-failure
 ```
 
-지금 실행 파일(`NetstormCpp`)은 검사 명령(자산·설정·요새·미션 검사, 프레임 내보내기)과, 원본 방식의 창에 타입 표나 미션의 오브젝트를 보여 주는 검사용 화면을 제공합니다. 게임 화면은 아직 없습니다. 예: `cpppj/build/bin/Release/NetstormCpp.exe --inspect-mission originals TEST01`, `cpppj/build/bin/Release/NetstormCpp.exe --run originals --view TEST01`. 자세한 내용은 [C++ 빌드](docs/cpp-build.md)와 [후속 복원 계획](docs/cpp-roadmap.md)에 있습니다.
+cpppj는 **기존 게임 전체를 실제 플레이 가능하게 복원하는 것이 우선**이며 화면비·한국어·Linux·추가 기능은 후순위입니다. 현재 실행 파일(`NetstormCpp`)은 자산·설정·요새·미션 검사와 Renderer에 타입 표·기본 프레임·원본 글꼴을 제출하는 검사 장면을 제공합니다. 실제 메뉴·월드·게임 플레이는 아직 없습니다. 예: `cpppj/build/bin/Release/NetstormCpp.exe --run originals --view fonts --window`. 자세한 내용은 [C++ 빌드](docs/cpp-build.md), [실제 플레이 복원 계획](docs/cpp-playable-plan.md), [표시 기반 근거](docs/exe/cpp-renderer-reconstruction.md)에 있습니다.
 
 # License
 

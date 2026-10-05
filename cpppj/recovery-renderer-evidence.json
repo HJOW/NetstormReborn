@@ -1,0 +1,34 @@
+{
+  "functions": [
+    {
+      "name": "Order",
+      "originals": "00497900",
+      "originalCD": "00458240"
+    },
+    {
+      "name": "Dirty",
+      "originals": "00497580",
+      "originalCD": "00457320"
+    }
+  ],
+  "helpers": {
+    "originals": [
+      "004834c0",
+      "004970a0"
+    ],
+    "originalCD": []
+  },
+  "binary_sha256": {
+    "originals": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+  },
+  "order_cases": 261,
+  "dirty_sequences": 133,
+  "total_cases": 394,
+  "fixture_sha256": "3ba3dbb353f8d978533d9a843b73a8e9b6f78dd06dd6cfdbbf20ba589a3f6eff",
+  "stubbed": [],
+  "limitations": [
+    "Squid 목록 수집·구름·Win32 출력·게임 플레이 대조가 아니다",
+    "유한 float와 정상 사각형 입력"
+  ]
+}

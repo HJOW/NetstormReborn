@@ -3,7 +3,7 @@
 //       FUN_00436260(로딩 화면), FUN_00436020·FUN_00436190(키·글자 사건), FUN_00435220(설정 해석) ↔ CD FUN_00484ac0,
 //       FUN_00435b30(메시지 처리), FUN_00452e00(입력 폴링).
 // 범위: 창 만들기, 설정 읽기, 화면 장치, 메시지·입력 큐, 프레임 제한과 내보내기까지.
-//       그리기(Renderer)와 입력 처리(UserInput)는 아직 옮기지 않아 임시 연결점으로 받는다.
+//       Renderer의 창 모드 기반·원본 글꼴·커서를 연결했다. Squid/지형 수집과 UserInput은 후속이다.
 #include "client/ClientMain.h"
 #include "o/OriginalText.h"
 #include "platform/Bitmap.h"
@@ -113,6 +113,7 @@ Client::Client(ClientOptions options)
 }
 // 화면 장치를 먼저 없앤 뒤 GDI 객체와 창을 정리한다.
 Client::~Client() {
+    renderer_.reset(); fonts_.reset(); cursor_.reset();
     screen_.reset();
     if (loadingFont_) DeleteObject(static_cast<HFONT>(loadingFont_));
     if (loadingBitmap_) DeleteObject(static_cast<HBITMAP>(loadingBitmap_));
@@ -198,7 +199,11 @@ int Client::Run() {
     // "init dib section"
     screen_->InitDibSection();
     if (!PumpMessages()) return 0;
-    // [원본] "init fonts"(FUN_004a3ce0) — 옮기지 않았다.
+    // "init fonts"(004a3ce0): 슬롯 표를 만들고 원본의 0번 글꼴을 캐시/GDI로 준비한다.
+    std::string fontFace;
+    configuration_.ReadString("fontFaceName", fontFace);
+    fonts_ = std::make_unique<FontStore>(files_, fontFace);
+    fonts_->Get();
     // "init screen mode": startInFullScreen이면 workingFullScreenFlags, 아니면 windowScreenFlags.
     std::uint32_t flags = static_cast<std::uint32_t>(configuration_.GetInt("workingFullScreenFlags"));
     if (configuration_.GetInt("startInFullScreen") == 0 || options_.forceWindow) flags = 0;
@@ -227,7 +232,11 @@ int Client::Run() {
     configuration_.SetInt("global.ddFourPage", 0);
     // [원본] "init sound"(FUN_004aa600) — 옮기지 않았다.
     // "init kernel"(FUN_00471930): Kernel은 멤버로 이미 만들어져 있다.
-    // [원본] "init renderer"(FUN_0049a1d0) — 옮기지 않았다.
+    // "init renderer": 화면 장치와 같은 크기의 변경 표·프레임 캐시를 만든다.
+    renderer_ = std::make_unique<Renderer>(screenWidth_, screenHeight_);
+    cursor_ = std::make_unique<Cursor>(resources_, window_);
+    if ((mode & ScreenMode::kSoftwareMouse) != 0) cursor_->BuildSoftware(screen_->Palette());
+    screen_->ShowCursor(true);
     if (!PumpMessages()) return 0;
     // "init types"(FUN_0049ebb0): 타입·그림·타입 표.
     assets_ = std::make_unique<GameAssets>(files_, options_.edition, palettePath);
@@ -359,7 +368,7 @@ void Client::PaintLoading(NativeHandle dcHandle) {
     SelectObject(dc, previousFont);
 }
 
-// 원본 00436450. 그리기 연결점이 없으면 원본의 로딩 화면 상태(창 프로시저의 WM_PAINT가 그린다)로 둔다.
+// 원본 00436450. 메뉴/검사 장면이 준비된 뒤 Renderer의 변경 영역만 그려 내보낸다.
 void Client::Frame() {
     // [원본] 창이 비활성이고 전체화면이면 그리지 않는다(FUN_004977e0) — 전체화면을 옮기면 더한다.
     if (!clock_.IsPaused()) {
@@ -367,14 +376,19 @@ void Client::Frame() {
         while (clock_.WallSeconds(timeGetTime()) - lastDraw_ < frameInterval_) {}
     }
     lastDraw_ = clock_.WallSeconds(timeGetTime());
-    if (draw) {
-        // Renderer::Draw(FUN_004994b0) 자리: 화면을 잠그고 임시 연결점이 그린다.
+    if (sceneVisible_) {
+        if ((screen_->Flags() & ScreenMode::kSoftwareMouse) != 0) {
+            const auto position = Poll(0); const auto hotspot = cursor_->Hotspot();
+            renderer_->SetSoftwareCursor(active_ && (position.code & InputCode::kOutside) == 0 ? cursor_->SoftwareImage() : nullptr,
+                {position.x - hotspot.x, position.y - hotspot.y});
+        }
         screen_->SetClip(0, 0, screenWidth_, screenHeight_);
         std::uint8_t* buffer = screen_->Lock();
-        draw(*this, buffer);
+        try {
+            renderer_->Draw(std::span<std::uint8_t>(buffer, static_cast<std::size_t>(screen_->Pitch()) * static_cast<std::size_t>(screenHeight_)), screen_->Pitch());
+        } catch (...) { screen_->Unlock(); throw; }
         screen_->Unlock();
-        // Renderer::Present(FUN_00499fe0) 자리: 원본은 바뀐 사각형마다 FUN_004a1800을 부른다. 지금은 화면 전체를 낸다.
-        screen_->Update({0, 0, screenWidth_, screenHeight_});
+        renderer_->Present([this](ScreenRect rect) { screen_->Update(rect); });
     }
     ++frames_;
     if (options_.frameLimit != 0 && frames_ == options_.frameLimit) {
@@ -489,11 +503,11 @@ std::intptr_t Client::HandleMessage(NativeHandle windowHandle, unsigned message,
         nonClientClick_ = false;
         break;
     case WM_PAINT:
-        if (draw) break; // 원본: Renderer가 있으면 "전체 다시 그리기"만 표시한다. 지금은 프레임마다 전체를 낸다.
         {
             PAINTSTRUCT paint;
             const HDC dc = BeginPaint(window, &paint);
-            PaintLoading(dc);
+            if (sceneVisible_ && renderer_) renderer_->InvalidateAll();
+            else PaintLoading(dc);
             EndPaint(window, &paint);
         }
         break;
@@ -512,7 +526,11 @@ std::intptr_t Client::HandleMessage(NativeHandle windowHandle, unsigned message,
         // [원본] FUN_004a1470: 전체화면이면 DirectDraw 표면을 되살린다 — 옮기지 않았다.
         break;
     case WM_SETCURSOR:
-        // [원본] DAT_005c7a38이 0이면 0을 돌려준다(커서 모양을 직접 정한다). 커서 모양 표를 옮기면 더한다.
+        if (cursor_ && LOWORD(lParam) == HTCLIENT) {
+            if (screen_ && (screen_->Flags() & ScreenMode::kSoftwareMouse) != 0) SetCursor(nullptr);
+            else cursor_->Apply();
+            return TRUE;
+        }
         break;
     case WM_GETMINMAXINFO:
         if (windowWidth_ != -1) {
@@ -587,6 +605,18 @@ const o::BaseFileSystem& Client::Files() const { return files_; }
 const GameAssets& Client::Assets() const { return *assets_; }
 // 프로세스 커널.
 o::Kernel& Client::GetKernel() { return kernel_; }
+// 원본 변경 영역 기반의 Renderer.
+Renderer& Client::GetRenderer() { return *renderer_; }
+// 원본 글꼴 슬롯.
+FontStore& Client::Fonts() { return *fonts_; }
+// 원본 커서 번호와 프레임.
+Cursor& Client::GetCursor() { return *cursor_; }
+// 통계 출력은 창을 초기화 도중 닫았어도 아직 없는 Renderer를 참조하지 않는다.
+std::pair<std::uint64_t, std::uint64_t> Client::RenderCounts() const {
+    return renderer_ ? std::make_pair(renderer_->DrawCount(), renderer_->PresentCount()) : std::make_pair(std::uint64_t{0}, std::uint64_t{0});
+}
+// 준비된 장면을 로딩 화면 대신 표시하고 남아 있는 창 영역도 검증한다.
+void Client::ShowScene() { sceneVisible_ = true; renderer_->InvalidateAll(); InvalidateRect(static_cast<HWND>(window_), nullptr, FALSE); }
 // 이번 프레임의 시각.
 const o::FrameTime& Client::Time() const { return time_; }
 // 창이 활성인가.

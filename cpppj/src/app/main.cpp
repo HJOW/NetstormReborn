@@ -1,5 +1,5 @@
 // 새로 쓰는 실행 진입점: 복원된 데이터 계층을 실제 원본/CD 파일로 검증한다.
-// 화면·게임 전체 루프는 아직 구현하지 않았다.
+// 창·Renderer·원본 글꼴·커서로 검사 화면을 표시한다. 실제 메뉴·월드·게임 규칙은 후속이다.
 #include <cstdio>
 #include <cstdlib>
 #include <bit>
@@ -46,7 +46,8 @@ void PrintBuildInfo() {
     std::printf("  --config-save <game-dir> <output-file> [key=value ...] [--cd]\n");
     std::printf("  --dump-types <game-dir> [--cd]\n  --inspect-fort <game-dir> <mission-or-path> [--cd]\n  --dump-forts <game-dir> [--cd]\n");
     std::printf("  --inspect-mission <game-dir> <mission> [--cd]\n  --dump-territories <game-dir> [--cd]\n");
-    std::printf("  --run <game-dir> [--view types|<mission>] [--window] [--frames N] [--screenshot out.bmp] [--set \"k=v;k=v\"] [--cd]\n");
+    std::printf("  --run <game-dir> [--view types|fonts|<mission>] [--window] [--frames N] [--screenshot out.bmp] [--render-stats] [--set \"k=v;k=v\"] [--cd]\n");
+    std::printf("  --dump-font <game-dir> <font-path>\n");
 }
 
 // 실제 자산을 읽는 VFS를 만든다. 아카이브 등록 순서는 명시적으로 지정한다.
@@ -477,13 +478,14 @@ int RunFortCommand(const std::string& command, std::vector<std::string> argument
     throw std::invalid_argument("Invalid fort command arguments");
 }
 
-// 원본 방식의 창을 띄운다. Renderer를 옮기기 전까지는 검사용 화면(InspectView)이 내용을 그린다.
+// 원본 방식의 창과 Renderer를 띄운다. 게임 월드 복원 전까지 InspectView가 장면 목록을 만든다.
 int RunClient(std::vector<std::string> arguments) {
     netstorm::client::ClientOptions options;
     options.edition = TakeEdition(arguments);
     if (arguments.empty()) throw std::invalid_argument("Missing game directory");
     options.gameDirectory = arguments[0];
     std::string view;
+    bool renderStats = false;
     // 나머지 인자: 원본 명령줄의 "window"에 해당하는 것과 검사용 옵션.
     for (std::size_t i = 1; i < arguments.size(); ++i) {
         const auto& argument = arguments[i];
@@ -496,12 +498,47 @@ int RunClient(std::vector<std::string> arguments) {
         else if (argument == "--screenshot") options.screenshot = value();
         else if (argument == "--set") options.settings = value();
         else if (argument == "--view") view = value();
+        else if (argument == "--render-stats") renderStats = true;
         else throw std::invalid_argument("Unknown --run option: " + argument);
     }
     netstorm::client::Client client(std::move(options));
     std::optional<netstorm::app::InspectView> inspect;
     if (!view.empty()) inspect.emplace(client, view);
-    return client.Run();
+    const int result = client.Run();
+    if (renderStats) {
+        const auto counts = client.RenderCounts();
+        std::printf("Renderer draws=%llu presents=%llu\n", static_cast<unsigned long long>(counts.first), static_cast<unsigned long long>(counts.second));
+    }
+    return result;
+}
+
+// 실제 글꼴 캐시의 표·사각형·해독 픽셀을 읽기 전용 검사 스트림으로 내보낸다.
+void DumpFont(const std::filesystem::path& root, std::string_view path) {
+    const netstorm::client::BitmapFont font(Files(root).Read(path));
+    std::vector<std::uint8_t> output;
+    // 부호 있는 값도 원본 비트 패턴을 리틀 엔디언으로 쓴다.
+    const auto put = [&output](std::uint32_t value) {
+        // 한 정수의 네 바이트.
+        for (int shift = 0; shift < 32; shift += 8) output.push_back(static_cast<std::uint8_t>(value >> shift));
+    };
+    put(static_cast<std::uint32_t>(font.Height())); put(static_cast<std::uint32_t>(font.Ascent())); put(static_cast<std::uint32_t>(font.Descent()));
+    // 256개 글자에 대해 표와 실제 불투명 픽셀을 내보낸다.
+    for (int c = 0; c < 256; ++c) {
+        const auto& glyph = font.Glyph(static_cast<std::uint8_t>(c));
+        put(static_cast<std::uint32_t>(glyph.advance)); put(static_cast<std::uint32_t>(glyph.bearing)); put(static_cast<std::uint32_t>(glyph.drawAdvance));
+        const auto* frame = glyph.shape ? &glyph.shape->Blocks()[0].frames[0] : nullptr;
+        put(frame ? 1u : 0u);
+        if (frame) {
+            put(static_cast<std::uint32_t>(frame->rect.left)); put(static_cast<std::uint32_t>(frame->rect.top));
+            put(static_cast<std::uint32_t>(frame->rect.right)); put(static_cast<std::uint32_t>(frame->rect.bottom));
+            if (!frame->IsSpecial()) {
+                const auto image = glyph.shape->Decode(0, 0);
+                put(static_cast<std::uint32_t>(image.width)); put(static_cast<std::uint32_t>(image.height));
+                output.insert(output.end(), image.indices.begin(), image.indices.end()); output.insert(output.end(), image.opacity.begin(), image.opacity.end());
+            } else { put(0); put(0); }
+        }
+    }
+    WriteBytes(output);
 }
 
 // 설정 검사 명령: 버퍼 전체, 키 조회, 경로 지정값, 값 쓰기 뒤 저장 내용.
@@ -556,6 +593,7 @@ int main(int argc, char** argv) {
     try {
         if (argc == 1 || (argc == 2 && std::string(argv[1]) == "--help")) { PrintBuildInfo(); return 0; }
         const std::string command = argv[1];
+        if (command == "--dump-font" && argc == 4) { DumpFont(argv[2], argv[3]); return 0; }
         if (command.starts_with("--config-")) return RunConfigCommand(command, std::vector<std::string>(argv + 2, argv + argc));
         if (command == "--run") return RunClient(std::vector<std::string>(argv + 2, argv + argc));
         if (command == "--dump-types" || command == "--inspect-fort" || command == "--dump-forts" || command == "--inspect-mission"

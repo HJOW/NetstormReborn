@@ -1,4 +1,4 @@
-// 새로 쓰는 코드(원본에 없음): 검사용 화면. 원본 Renderer의 동작을 옮긴 것이 아니다.
+// 새로 쓰는 코드(원본에 없음): 원본 Renderer 기반에 정적 검사 장면을 공급한다.
 #include "app/InspectView.h"
 #include "client/Mission.h"
 #include "client/VFXDraw.h"
@@ -18,8 +18,6 @@ constexpr int kTypeCellWidth = 64;
 constexpr int kTypeCellHeight = 96;
 // 화살표 키를 누르고 있을 때 프레임마다 움직이는 픽셀 수.
 constexpr int kScrollStep = 12;
-// 바탕색 팔레트 번호(0 = 검정, 원본이 고정하는 항목).
-constexpr std::uint8_t kBackground = 0;
 // 검사 화면에서 영역의 소유 플레이어로 쓰는 번호(요새 파일은 한 플레이어의 영역 배치를 담는다).
 constexpr int kOwner = 1;
 // 영역 패턴을 그리는 타입의 파일 이름(원본 DAT_00541204 = 107 = 70 + 37).
@@ -32,13 +30,12 @@ constexpr std::uint32_t kEscapeCharacter = 0x1b;
 // 임시 연결점에 이 화면의 함수를 건다.
 InspectView::InspectView(netstorm::client::Client& client, std::string view) : view_(std::move(view)) {
     client.ready = [this](netstorm::client::Client& c) { Ready(c); };
-    client.draw = [this](netstorm::client::Client& c, std::uint8_t* buffer) { Draw(c, buffer); };
     client.input = [this](netstorm::client::Client& c) { return Input(c); };
 }
 
 // 미션이면: 스크립트 → 요새 경로 → 요새 읽기 → 영역 배치 → 오브젝트의 월드 칸 좌표.
 void InspectView::Ready(netstorm::client::Client& client) {
-    if (view_ == "types") return;
+    if (view_ == "types" || view_ == "fonts") { BuildScene(client); client.ShowScene(); return; }
     const auto& assets = client.Assets();
     const auto& types = assets.TypeTable();
     netstorm::client::MissionScript mission(client.Configuration(), view_);
@@ -77,10 +74,7 @@ void InspectView::Ready(netstorm::client::Client& client) {
     // 영역 섹션: 그 영역이 차지한 청크를 y·x 순서로.
     for (int territory = 0; territory < netstorm::o::kTerritoryCount; ++territory)
         place(fort.territories[static_cast<std::size_t>(territory)], netstorm::o::TerritoryChunks(map, islands, kOwner, territory));
-    // 아래쪽 것이 위에 오도록 y, x 순으로 그린다(원본의 그리기 순서가 아니다).
-    std::stable_sort(placed_.begin(), placed_.end(), [](const Placed& a, const Placed& b) {
-        return a.cellY != b.cellY ? a.cellY < b.cellY : a.cellX < b.cellX; });
-    if (placed_.empty()) return;
+    if (placed_.empty()) { BuildScene(client); client.ShowScene(); return; }
     // 처음에는 오브젝트들의 가운데를 화면 가운데에 둔다.
     int minX = placed_[0].cellX, maxX = minX, minY = placed_[0].cellY, maxY = minY;
     // 놓인 범위를 구한다.
@@ -90,53 +84,54 @@ void InspectView::Ready(netstorm::client::Client& client) {
     }
     scrollX_ = (minX + maxX) * kCellPixelsX / 2 - client.GetScreen().Width() / 2;
     scrollY_ = (minY + maxY) * kCellPixelsY / 2 - client.GetScreen().Height() / 2;
+    BuildScene(client); client.ShowScene();
 }
 
-// 화면을 바탕색으로 지우고 고른 내용을 그린다.
-void InspectView::Draw(netstorm::client::Client& client, std::uint8_t* buffer) {
-    auto& screen = client.GetScreen();
-    screen.FillRect({0, 0, screen.Width(), screen.Height()}, kBackground);
-    if (view_ == "types") DrawTypes(client, buffer);
-    else DrawFort(client, buffer);
-}
-
-// 타입마다 기본 프레임(레이어 0)을 칸 가운데에 그린다.
-void InspectView::DrawTypes(netstorm::client::Client& client, std::uint8_t* buffer) {
+// 원본 Renderer에 넘길 스프라이트·글자 목록을 만든다. 화면 버퍼를 직접 만지지 않는다.
+void InspectView::BuildScene(netstorm::client::Client& client) {
     auto& screen = client.GetScreen();
     const auto& assets = client.Assets();
-    const std::span<std::uint8_t> pixels(buffer, static_cast<std::size_t>(screen.Pitch()) * static_cast<std::size_t>(screen.Height()));
-    const int columns = std::max(screen.Width() / kTypeCellWidth, 1);
-    // 로딩 순서대로 왼쪽 위부터 채운다.
-    for (std::size_t i = 0; i < assets.Types().size(); ++i) {
-        const auto& type = assets.Types()[i];
-        const auto& frames = assets.Shapes().Blocks()[type.block].frames;
-        const auto index = static_cast<std::size_t>(std::max(type.definition.specialFrames.defaultFrame, 0));
-        if (index >= frames.size() || frames[index].IsSpecial()) continue;
-        const int cellX = static_cast<int>(i) % columns * kTypeCellWidth - scrollX_;
-        const int cellY = static_cast<int>(i) / columns * kTypeCellHeight - scrollY_;
-        const auto& rect = frames[index].rect;
-        // 그림 상자의 가운데가 칸 가운데에 오게 기준점을 정한다. 칸 밖은 자른다.
-        // DrawShape의 좌표는 pane 원점 기준이므로(원본 VFX 규칙) 칸 안의 좌표를 넘긴다.
-        const netstorm::client::ShapeRect pane{cellX, cellY, cellX + kTypeCellWidth - 1, cellY + kTypeCellHeight - 1};
-        netstorm::client::DrawShape(pixels, screen.Pitch(), screen.Height(), assets.Shapes(), type.block, index,
-            kTypeCellWidth / 2 - (rect.left + rect.right) / 2, kTypeCellHeight / 2 - (rect.top + rect.bottom) / 2, pane);
+    std::vector<netstorm::client::RenderSprite> sprites;
+    std::vector<netstorm::client::RenderText> text;
+    if (view_ == "types") {
+        const int columns = std::max(screen.Width() / kTypeCellWidth, 1);
+        // 기본 프레임을 검사 격자의 칸 가운데에 놓는다.
+        for (std::size_t i = 0; i < assets.Types().size(); ++i) {
+            const auto& type = assets.Types()[i];
+            const auto& frames = assets.Shapes().Blocks()[type.block].frames;
+            const auto frame = static_cast<std::size_t>(std::max(type.definition.specialFrames.defaultFrame, 0));
+            if (frame >= frames.size() || frames[frame].IsSpecial()) continue;
+            const int x = static_cast<int>(i) % columns * kTypeCellWidth - scrollX_;
+            const int y = static_cast<int>(i) / columns * kTypeCellHeight - scrollY_;
+            const auto rect = frames[frame].rect;
+            sprites.push_back({&assets.Shapes(), type.block, frame, x + kTypeCellWidth / 2 - (rect.left + rect.right) / 2,
+                y + kTypeCellHeight / 2 - (rect.top + rect.bottom) / 2, {x, y, x + kTypeCellWidth, y + kTypeCellHeight}, {}, {}, false});
+        }
+    } else if (view_ == "fonts") {
+        int y = 20 - scrollY_;
+        // 원본에서 존재하는 슬롯·스타일을 모두 보여 준다.
+        for (int slot = 0; slot < 7; ++slot) {
+            if (slot == 2) continue;
+            // 스타일 번호는 원본 글자 문맥의 순서다.
+            for (int style = 0; style < ((slot == 1 || slot == 3 || slot == 4) ? 1 : 5); ++style) {
+                const auto& font = client.Fonts().Get(slot, static_cast<netstorm::client::FontStyle>(style));
+                text.push_back({&font, "Font " + std::to_string(slot) + "/" + std::to_string(style) + ": NetStorm Islands at War 0123456789",
+                    20 - scrollX_, y, 255, 0, {1, 1}, true, false});
+                y += font.Height() + 12;
+            }
+        }
+    } else {
+        // 월드 오브젝트 복원 전까지 저장된 기본 프레임만 제출한다.
+        for (const auto& item : placed_) {
+            const auto& type = assets.Types()[item.asset];
+            const auto& frames = assets.Shapes().Blocks()[type.block].frames;
+            if (item.frame >= frames.size() || frames[item.frame].IsSpecial()) continue;
+            const int x = item.cellX * kCellPixelsX - scrollX_, y = item.cellY * kCellPixelsY - scrollY_;
+            sprites.push_back({&assets.Shapes(), type.block, item.frame, x, y, {0, 0, screen.Width(), screen.Height()},
+                {static_cast<float>(x), static_cast<float>(y), 0}, {}, false});
+        }
     }
-}
-
-// 오브젝트의 칸 좌표를 화면 점으로 바꿔 그 점에 그림의 기준점을 둔다.
-void InspectView::DrawFort(netstorm::client::Client& client, std::uint8_t* buffer) {
-    auto& screen = client.GetScreen();
-    const auto& assets = client.Assets();
-    const std::span<std::uint8_t> pixels(buffer, static_cast<std::size_t>(screen.Pitch()) * static_cast<std::size_t>(screen.Height()));
-    const netstorm::client::ShapeRect pane{0, 0, screen.Width() - 1, screen.Height() - 1};
-    // 정렬해 둔 순서대로 그린다.
-    for (const auto& item : placed_) {
-        const auto& type = assets.Types()[item.asset];
-        const auto& frames = assets.Shapes().Blocks()[type.block].frames;
-        if (item.frame >= frames.size() || frames[item.frame].IsSpecial()) continue;
-        netstorm::client::DrawShape(pixels, screen.Pitch(), screen.Height(), assets.Shapes(), type.block, item.frame,
-            item.cellX * kCellPixelsX - scrollX_, item.cellY * kCellPixelsY - scrollY_, pane);
-    }
+    client.GetRenderer().SetScene(std::move(sprites), std::move(text), view_ != "types");
 }
 
 // 큐의 사건을 모두 꺼낸다. 화살표 키는 눌려 있는 동안 화면을 옮긴다.
@@ -148,6 +143,7 @@ bool InspectView::Input(netstorm::client::Client& client) {
         if ((event.code & 0xffffu) == kEscapeCharacter && (event.code & netstorm::client::InputCode::kRelease) == 0) quit = true;
     }
     if (!client.Active()) return quit;
+    const int previousX = scrollX_, previousY = scrollY_;
     // 키가 눌려 있으면 뗌 표시가 없다.
     const auto held = [&client](std::uint32_t key) {
         return (client.Poll(key << netstorm::client::InputCode::kVirtualKeyShift).code & netstorm::client::InputCode::kRelease) == 0;
@@ -156,6 +152,7 @@ bool InspectView::Input(netstorm::client::Client& client) {
     if (held(kKeyRight)) scrollX_ += kScrollStep;
     if (held(kKeyUp)) scrollY_ -= kScrollStep;
     if (held(kKeyDown)) scrollY_ += kScrollStep;
+    if (scrollX_ != previousX || scrollY_ != previousY) BuildScene(client);
     return quit;
 }
 }

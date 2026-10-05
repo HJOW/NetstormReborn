@@ -86,7 +86,7 @@
 | `src/o/Xlat.cpp` | Xlat.cpp | xlat.cpp | 3 | 있음 |
 | `src/o/Ztrans.cpp` | Ztrans.cpp | ztrans.cpp | 12 |  |
 
-## `.\` (클라이언트) → `src/client/` (60개, 파일 있음 4개)
+## `.\` (클라이언트) → `src/client/` (60개, 파일 있음 6개)
 
 | cpppj 경로 | 패치판 표기 | CD판 표기 | 함수 수 | 상태 |
 |---|---|---|---|---|
@@ -104,7 +104,7 @@
 | `src/client/ColorSort.cpp` | Colorsort.cpp | ColorSort.cpp | 6 |  |
 | `src/client/CombatGump.cpp` | Combatgump.cpp | CombatGump.cpp | 3 |  |
 | `src/client/Contact.cpp` | Contact.cpp | contact.cpp | 1 |  |
-| `src/client/Cursor.cpp` | Cursor.cpp | cursor.cpp | 5 |  |
+| `src/client/Cursor.cpp` | Cursor.cpp | cursor.cpp | 5 | 있음 |
 | `src/client/Dais.cpp` | Dais.cpp | dais.cpp | 8 |  |
 | `src/client/Dissolve.cpp` | Dissolve.cpp | — | 3 |  |
 | `src/client/Dude.cpp` | Dude.cpp | Dude.cpp | 8 |  |
@@ -136,7 +136,7 @@
 | `src/client/Piecegump.cpp` | — | piecegump.cpp |  |  |
 | `src/client/Priest.cpp` | Priest.cpp | — | 7 |  |
 | `src/client/Recorder.cpp` | Recorder.cpp | recorder.cpp | 1 |  |
-| `src/client/Renderer.cpp` | Renderer.cpp | Renderer.cpp | 5 |  |
+| `src/client/Renderer.cpp` | Renderer.cpp | Renderer.cpp | 5 | 있음 |
 | `src/client/Screen.cpp` | Screen.cpp | Screen.cpp | 14 | 있음 |
 | `src/client/ScrollGump.cpp` | Scrollgump.cpp | ScrollGump.cpp | 1 |  |
 | `src/client/ShapeToBuffer.cpp` | Shapetobuffer.cpp | ShapeToBuffer.cpp | 1 |  |

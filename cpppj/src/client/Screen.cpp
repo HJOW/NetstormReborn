@@ -4,7 +4,7 @@
 //       004a2640(팔레트) ↔ CD 00424500, 004a40d0(커서 표시), 004a4570(DIB 섹션), 004a4fe0(화면 모드) ↔ CD 004220b0,
 //       00445290(사각형 자르기).
 // 범위: 창 모드(DIB 섹션) 경로. DirectDraw 표면(종류 3·4·5), 전체화면 전환, 플리핑, 구름 시차 표면,
-//       소프트웨어 커서, 글꼴, 색 찾기 표는 아직 옮기지 않았다.
+//       색 찾기 표는 아직 옮기지 않았다. 글꼴·소프트웨어 커서는 BitmapFont·Cursor·Renderer에 연결했다.
 #include "client/Screen.h"
 #include <algorithm>
 #include <stdexcept>
