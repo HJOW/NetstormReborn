@@ -6,7 +6,7 @@
 > **함수 수**는 패치판에서 그 파일 이름을 참조하는 함수의 수다([모듈 맵](../docs/exe/modules.md)). 그 파일의 전체 함수 수가 아니다.
 > **상태**는 cpppj 에 그 경로의 파일이 있는지만 본다. 파일이 있어도 일부 함수만 옮긴 것일 수 있다.
 
-## `\Ns\O\` → `src/o/` (75개, 파일 있음 16개)
+## `\Ns\O\` → `src/o/` (75개, 파일 있음 17개)
 
 | cpppj 경로 | 패치판 표기 | CD판 표기 | 함수 수 | 상태 |
 |---|---|---|---|---|
@@ -27,7 +27,7 @@
 | `src/o/BaseProcess.cpp` | Baseprocess.cpp | BaseProcess.cpp | 5 | 있음 |
 | `src/o/BoardCoord.cpp` | Boardcoord.cpp | BoardCoord.cpp | 5 |  |
 | `src/o/Bomb.cpp` | Bomb.cpp | bomb.cpp | 5 |  |
-| `src/o/Bridge.cpp` | Bridge.cpp | bridge.cpp | 6 |  |
+| `src/o/Bridge.cpp` | Bridge.cpp | bridge.cpp | 6 | 있음 |
 | `src/o/Bud.h` | bud.h | bud.h | 2 |  |
 | `src/o/CanonDecoder.cpp` | Canondecoder.cpp | CanonDecoder.cpp | 2 | 있음 |
 | `src/o/Carrier.cpp` | Carrier.cpp | carrier.cpp | 13 |  |

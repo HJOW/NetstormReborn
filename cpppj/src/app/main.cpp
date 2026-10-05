@@ -21,6 +21,7 @@
 #include "client/UberGump.h"
 #include "client/GifImage.h"
 #include "o/BaseFile.h"
+#include "o/CanonDecoder.h"
 #include "o/Config.h"
 #include "o/ConfigInterface.h"
 #include "o/Islandbuilder.h"
@@ -55,6 +56,7 @@ void PrintBuildInfo() {
     std::printf("  --dump-font <game-dir> <font-path>\n");
     std::printf("  --dump-gif <game-dir> <gif-path>\n  --run also accepts --ui-script steps.tsv --ui-report report.tsv\n");
     std::printf("  --dump-world <game-dir> <mission> [--cd]\n");
+    std::printf("  --inspect-bridges <game-dir> [--cd]\n");
 }
 
 // 실제 자산을 읽는 VFS를 만든다. 아카이브 등록 순서는 명시적으로 지정한다.
@@ -243,6 +245,33 @@ netstorm::client::GameAssets LoadAssets(const std::filesystem::path& root, netst
     StartConfiguration(config, root, edition);
     const auto palette = config.PathSpec("GamePalSpec", config.Configuration().Get("battlePal").value_or(std::string()));
     return netstorm::client::GameAssets(files, edition, palette);
+}
+
+// 새 검사 진입점: 원본 다리 모양·판본별 가중치와 실제 bridge.type 프레임의 네 회전을 출력한다.
+void InspectBridges(const netstorm::client::GameAssets& assets, netstorm::o::OriginalEdition edition) {
+    const auto patterns = netstorm::o::BridgePatterns(edition);
+    const auto frames = assets.Find("bridge").definition.FrameTable();
+    int total = 0;
+    // 실제 판본 가중치의 합을 보고한다.
+    for (const auto& pattern : patterns) total += pattern.first;
+    std::ostringstream output;
+    output << "BridgePatterns\t" << patterns.size() << '\t' << total << '\n';
+    // 모양 번호마다 원본 헤더와 회전한 모든 셀을 순서대로 적는다.
+    for (std::size_t i = 0; i < patterns.size(); ++i) {
+        const auto& pattern = patterns[i];
+        output << "Pattern\t" << i << '\t' << pattern.first << '\t' << pattern.width << '\t' << pattern.height << '\n';
+        // 원본 direction은 0,2,4,6이며 회전 번호는 그 절반이다.
+        for (int rotation = 0; rotation < 4; ++rotation) {
+            // 실제 타입의 프레임과 같은 반복자로 줄 우선 출력한다.
+            for (netstorm::o::CanonDecoder decoder(frames, pattern, rotation*2, 0, 0); decoder.Valid(); decoder.Advance()) {
+                const auto& code = frames.Codes()[static_cast<std::size_t>(decoder.Frame())];
+                output << "Cell\t" << i << '\t' << rotation << '\t' << decoder.Frame() << '\t'
+                    << decoder.X() << '\t' << decoder.Y() << '\t' << decoder.Side() << '\t'
+                    << static_cast<int>(code.number) << '\t' << decoder.Label() << '\n';
+            }
+        }
+    }
+    WriteText(output.str());
 }
 
 // 타입 번호를 이름으로 적는다. 이름 없는 타입은 번호로 구분한다.
@@ -688,6 +717,10 @@ int main(int argc, char** argv) {
             const auto assets = LoadAssets(argv[2], Edition(argc, argv, 3));
             if (command == "--inspect-assets") InspectAssets(assets); else DumpAssets(assets);
             return 0;
+        }
+        if ((argc == 3 || argc == 4) && command == "--inspect-bridges") {
+            const auto edition = Edition(argc, argv, 3);
+            InspectBridges(LoadAssets(argv[2], edition), edition); return 0;
         }
         if ((argc == 7 || argc == 8) && command == "--export-frame") {
             const auto assets = LoadAssets(argv[2], Edition(argc, argv, 7));

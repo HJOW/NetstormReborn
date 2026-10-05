@@ -70,9 +70,17 @@ $env:XDG_CACHE_HOME = $CacheDir
 $Mode = @('-noanalysis')
 if (-not $Save) { $Mode += '-readOnly' }
 try {
-    & $Headless $ProjectDir $ProjectName -process $Program @Mode `
-        -scriptPath (Join-Path $Root 'tools\ghidra') -postScript $Script @ScriptArgs
-    $ExitCode = $LASTEXITCODE
+    # Windows PowerShell 5는 Java의 stderr 경고도 NativeCommandError로 만든다.
+    # 이 호출 동안만 경고 출력을 허용하고 실제 실패 여부는 프로세스 종료 코드로 판단한다.
+    $PreviousNativeErrorAction = $ErrorActionPreference
+    try {
+        $ErrorActionPreference = 'Continue'
+        & $Headless $ProjectDir $ProjectName -process $Program @Mode `
+            -scriptPath (Join-Path $Root 'tools\ghidra') -postScript $Script @ScriptArgs
+        $ExitCode = $LASTEXITCODE
+    } finally {
+        $ErrorActionPreference = $PreviousNativeErrorAction
+    }
 } finally {
     $env:XDG_CONFIG_HOME = $PreviousConfigHome
     $env:XDG_CACHE_HOME = $PreviousCacheHome

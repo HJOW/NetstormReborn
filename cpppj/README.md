@@ -21,6 +21,8 @@ C# + MonoGame 빌드(`../dotnetpj/`)는 cpppj 완성 후 이를 분석하여 개
 
 [Renderer·글꼴·커서 복원](../docs/exe/cpp-renderer-reconstruction.md), [표시 기계어 검증 기록](recovery-renderer-evidence.json) — 현재 계획의 1단계 표시 기반과 후속 연결점.
 
+[다리 계산 복원·CD판 차이·신뢰도 보강](../docs/exe/cpp-bridge-reconstruction.md), [다리 기계어 검증 기록](recovery-bridge-evidence.json) — 모양·추첨·회전/프레임·열린 끝·수명 접두 구간을 복원했다. 배치 UI·표면 그래프·전체 붕괴의 월드 연결은 후속이다.
+
 [실제 플레이 복원 계획](../docs/cpp-playable-plan.md)에 현재 실행 순서를, [기반 복원 로드맵](../docs/cpp-roadmap.md)에 완료된 데이터 기반·세부 복원 절차를 정리했다.
 
 ## 빌드와 테스트
@@ -59,13 +61,16 @@ python tools/cpp_menu_smoke.py
 cpppj/build/bin/Release/NetstormCpp.exe --run originals --window --mission TEST01
 cpppj/build/bin/Release/NetstormCpp.exe --dump-world originals thewarbegins
 python tools/cpp_world_smoke.py
+cpppj/build/bin/Release/NetstormCpp.exe --inspect-bridges originals
+cpppj/build/bin/Release/NetstormCpp.exe --inspect-bridges originalCD --cd
+python tools/cpp_bridge_smoke.py
 ```
 
 `--run`은 클론 창을 띄운다(원본 게임을 실행하지 않는다). 기본은 메인 메뉴다. Campaign→Struggle For Freedom→1 The War Begins!→Play Mission에서 사제를 좌클릭해 선택하고 땅을 좌클릭해 이동한다. 화살표로 화면 이동, F4는 신전/F5는 사제 보기, Game/ESC는 정지/복귀다. `--mission TEST01`은 같은 브리핑/월드의 검사 진입점이다. `--view TEST01`은 옛 정적 검사 화면으로 화살표 이동/Esc 종료, `--view fonts`는 글꼴 표시다. `--dump-world`는 원본 파일을 읽기만 한다. [자세한 조작과 검사 옵션](../docs/exe/cpp-world-reconstruction.md).
 
 `--run`은 원본과 공유하는 `d/options.cfg`를 갱신한다. 전체화면을 요구하면 게임 폴더의 `fullscreenStateFile.dat`도 원본 시점에 만든다. DirectDraw는 아직 없으므로 창 모드로 나온다. 스모크는 두 파일을 보관하고 검사 후 바이트·존재 여부를 복구한다.
 
-CTest의 **69개 테스트**에는 두 판본 기계어의 **5,365개 기대값** 검사가 포함되어 있다(공용 1,806＋VFX 709＋설정 2,440＋옵션 저장 16＋Renderer 394). 빌드에는 원본 실행 파일·Ghidra·Python·외부 라이브러리가 필요 없다. 기존 영역·자산·글꼴/커서·메뉴 54개 상태와 새 월드 스모크의 **6개 초기 자료 사례·393,216마스크 바이트·2,593객체·20개 조작 상태**를 검사한다. 새 월드 함수의 x86 대조나 원본 화면 전체 픽셀 일치를 의미하지 않는다. 설정을 공유하는 창 스모크는 순차 실행하고 원본 파일을 복구한다. 이 수치는 게임 전체 완성도가 아니다.
+CTest의 **75개 내부 검사**에는 원본 기계어의 **23,418개 입력 사례**가 포함되어 있다(기존 5,365＋다리 계산 18,053). 이 중 수명 480개는 첫 외부 효과 전의 접두 구간이고 전체 열린 끝은 패치판만 검증했다. 빌드에는 원본 실행 파일·Ghidra·Python·외부 라이브러리가 필요 없다. 기존 메뉴 54개 상태와 월드의 **6개 초기 자료 사례·393,216마스크 바이트·2,593객체·20개 조작 상태** 기록을 유지하며, 새 다리 자산 검사는 두 판본 합계 **936셀**을 독립 판독과 대조한다. `--inspect-bridges`는 파일을 읽기만 한다. 메뉴/월드 전체 함수의 x86 대조나 원본 화면 전체 픽셀 일치를 의미하지 않는다. 설정을 공유하는 창 스모크는 순차 실행하고 원본 파일을 복구한다. 이 수치는 게임 전체 완성도가 아니다.
 
 ## 폴더
 

@@ -1,6 +1,6 @@
 // 원본: FUN_00425c20 @ 00425c20(생성) [신뢰도 A] ↔ CD 0041fcf0, FUN_00425860 @ 00425860(다음 칸) [A] ↔ CD 0041feb0,
 //       FUN_00425700 @ 00425700(셀 해석) [A] ↔ CD 0041fbb0, FUN_00425c00 @ 00425c00(방향 글자) [A] ↔ CD 00420370.
-// 범위: 영역 패턴 경로. 표는 tools/cpp_canon_tables.py가 원본 실행 파일에서 뽑아 CanonDecoderTables.inc로 만든다.
+// 범위: 영역·다리 패턴 경로. 표는 tools/cpp_canon_tables.py가 원본 실행 파일에서 뽑아 CanonDecoderTables.inc로 만든다.
 // 검증: 실제 `.fort` 전체에서 영역마다 유효 칸 수가 `TerrNN`의 청크 레코드 수와 같다(tools/cpp_fort_smoke.py).
 #include "o/CanonDecoder.h"
 #include <stdexcept>
@@ -25,6 +25,25 @@ constexpr int kMaxVariation = 10;
 
 // 실행 파일에 있는 그대로의 표.
 std::span<const CanonPattern> TerritoryPatterns() { return kTerritoryPatterns; }
+// 다리도 같은 셀 반복자를 사용하며 첫 정수만 추첨에 사용한다.
+std::span<const CanonPattern> BridgePatterns(OriginalEdition edition) {
+    return edition == OriginalEdition::Cd1072 ? std::span<const CanonPattern>(kCdBridgePatterns) : kBridgePatterns;
+}
+// 원본은 r=0에서 가중치 0인 첫 항목을 고른다. 음수 입력도 signed 나머지 그대로 첫 항목이다.
+std::size_t SelectBridgePattern(std::int32_t random, OriginalEdition edition) {
+    const auto patterns = BridgePatterns(edition);
+    std::int32_t total = 0;
+    // 원본 26개 항목의 가중치 합을 구한다.
+    for (const auto& pattern : patterns) total += pattern.first;
+    const auto value = random % total;
+    std::int32_t accumulated = 0;
+    // 누적 경계는 엄격한 <가 아닌 <=다.
+    for (std::size_t i = 0; i < patterns.size(); ++i) {
+        accumulated += patterns[i].first;
+        if (value <= accumulated) return i;
+    }
+    throw std::logic_error("Bridge pattern weights");
+}
 
 // 원본은 회전이 홀수면 폭과 높이를 바꿔 센다. 시작 패턴 좌표는 회전별 표에서 정한다.
 CanonDecoder::CanonDecoder(const RiftTypeFrames& frames, const CanonPattern& pattern, int direction, float x, float y)

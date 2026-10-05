@@ -6,4 +6,6 @@ assets/game-data/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-t
 cpppj/recovery-manifest.json text eol=lf
 cpppj/recovery-evidence.json text eol=lf
 cpppj/recovery-graphics-evidence.json text eol=lf
+cpppj/recovery-bridge-evidence.json text eol=lf
+tools/decomp_bridge_oracle.py text eol=lf
 cpppj/tests/fixtures/*.tsv text eol=lf

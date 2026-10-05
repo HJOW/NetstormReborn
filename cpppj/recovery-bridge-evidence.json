@@ -1,0 +1,169 @@
+{
+  "schema": 1,
+  "functions": [
+    {
+      "name": "Draw",
+      "originals": "004257c0",
+      "originalCD": "0041fc70",
+      "purge": 0
+    },
+    {
+      "name": "Random",
+      "originals": "004558c0",
+      "originalCD": "0048cbd0",
+      "purge": 0
+    },
+    {
+      "name": "Ctor",
+      "originals": "00425c20",
+      "originalCD": "0041fcf0",
+      "purge": 24
+    },
+    {
+      "name": "Advance",
+      "originals": "00425860",
+      "originalCD": "0041feb0",
+      "purge": 0
+    },
+    {
+      "name": "Cell",
+      "originals": "00425700",
+      "originalCD": "0041fbb0",
+      "purge": 20
+    },
+    {
+      "name": "FindFrame",
+      "originals": "0049a940",
+      "originalCD": "004442f0",
+      "purge": 12
+    },
+    {
+      "name": "Open",
+      "originals": "00421770",
+      "originalCD": "00449e30",
+      "purge": 8
+    },
+    {
+      "name": "Life",
+      "originals": "00421c30",
+      "originalCD": "0044a1c0",
+      "purge": 4
+    }
+  ],
+  "patch_only": [
+    {
+      "name": "Direction",
+      "originals": "004217f0"
+    }
+  ],
+  "helpers": {
+    "originals": [
+      4827200,
+      4904576,
+      4313216,
+      4254448,
+      4254160,
+      5130688
+    ],
+    "originalCD": [
+      4908016,
+      4454560,
+      5183004
+    ]
+  },
+  "binary_sha256": {
+    "originals": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+  },
+  "fixture_sha256": "35ce571886e24ea79839fdda354b2db8d93711733087b512e769f9286fac1988",
+  "generator_sha256": "c212538f7059cd0c9efac87cb205c71561fcc1f8d97df7830bc57d89a03f01fe",
+  "seed": 4331376,
+  "cases": {
+    "draw": 10005,
+    "random": 1056,
+    "decode": 752,
+    "open": 5760,
+    "life_prefix": 480
+  },
+  "total_cases": 18053,
+  "different_draws": 8733,
+  "weight_totals": {
+    "originals": 287,
+    "originalCD": 306
+  },
+  "rejected_pairs": [
+    {
+      "originals": "004217f0",
+      "originalCD": "00449e30",
+      "reason": "전체 열린 끝 탐색(ret 4)과 한 방향 보조 검사(ret 8)의 오대응. CD판 전체 판단은 00449250에 인라인."
+    }
+  ],
+  "reviewed_pairs": [
+    {
+      "name": "Draw",
+      "originals": "004257c0",
+      "originalCD": "0041fc70",
+      "purge": 0
+    },
+    {
+      "name": "Random",
+      "originals": "004558c0",
+      "originalCD": "0048cbd0",
+      "purge": 0
+    },
+    {
+      "name": "Ctor",
+      "originals": "00425c20",
+      "originalCD": "0041fcf0",
+      "purge": 24
+    },
+    {
+      "name": "Advance",
+      "originals": "00425860",
+      "originalCD": "0041feb0",
+      "purge": 0
+    },
+    {
+      "name": "Cell",
+      "originals": "00425700",
+      "originalCD": "0041fbb0",
+      "purge": 20
+    },
+    {
+      "name": "FindFrame",
+      "originals": "0049a940",
+      "originalCD": "004442f0",
+      "purge": 12
+    },
+    {
+      "name": "Open",
+      "originals": "00421770",
+      "originalCD": "00449e30",
+      "purge": 8
+    }
+  ],
+  "life_stop_sites": {
+    "originals": {
+      "4332667": "remove",
+      "4332726": "update"
+    },
+    "originalCD": {
+      "4497936": "remove",
+      "4497985": "update"
+    }
+  },
+  "assert_reports": {
+    "originals": 111,
+    "originalCD": 111
+  },
+  "native_write_sites": {
+    "originals": 51,
+    "originalCD": 53
+  },
+  "limitations": [
+    "전체 배치·표면 그래프·붕괴 스캔·세계 객체 생성/삭제 검증 아님",
+    "Life는 정상 ret까지 실행하지 않으며 금/그림/낙하 효과 이전의 실제 비트 저장·삭제 인자만 검증",
+    "OpenDirection 전체는 패치판 기계어만 검증; CD판 별도 함수 쌍을 만들지 않음",
+    "정상 A~P·유한 float·정상 수명 입력. 누락 프레임 assert 보고만 대체"
+  ]
+}

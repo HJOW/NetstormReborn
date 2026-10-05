@@ -340,6 +340,29 @@ class Matcher:
             if any(int(ed.conv[address]['purge']) != pair['purge'] for ed, address in ((self.a, x), (self.b, y))):
                 raise ValueError(f'검토된 ret N과 덤프가 다릅니다: {pair["name"]}')
             added += self.accept(x, y, 'reviewed', 1.0)
+        # 다리 검증은 별도 기대값으로 확인했다. 수명 함수의 부분 실행은 강한 앵커에서 제외되어 있다.
+        bridge_path = ROOT / 'cpppj/recovery-bridge-evidence.json'
+        if bridge_path.exists():
+            bridge = json.loads(bridge_path.read_text(encoding='utf-8'))
+            fixture = ROOT / 'cpppj/tests/fixtures/bridge-x86.tsv'
+            generator = ROOT / 'tools/decomp_bridge_oracle.py'
+            if hashlib.sha256(fixture.read_bytes()).hexdigest() != bridge['fixture_sha256'] or \
+               hashlib.sha256(generator.read_bytes()).hexdigest() != bridge['generator_sha256']:
+                raise ValueError('다리 검증 도구/기대값이 변경되었습니다. decomp_bridge_oracle.py로 다시 검증하세요.')
+            # 원본 판본 해시가 다르면 주소를 적용하지 않는다.
+            for key, expected in bridge['binary_sha256'].items():
+                if hashlib.sha256(EDITIONS[key]['exe'].read_bytes()).hexdigest() != expected:
+                    raise ValueError('다리 검토 대응의 원본 SHA-256이 다릅니다.')
+            # 열린 끝 판단 전체와 한 방향 보조 검사의 오대응을 다시 전파하지 않는다.
+            for pair in bridge['rejected_pairs']:
+                self.banned.add((int(pair['originals'],16), int(pair['originalCD'],16)))
+            # 정상 반환과 ret N까지 실행한 함수만 수동 앵커로 적용한다.
+            for pair in bridge['reviewed_pairs']:
+                x, y = int(pair['originals'],16), int(pair['originalCD'],16)
+                if x not in self.a.funcs or y not in self.b.funcs or any(
+                    int(ed.conv[address]['purge']) != pair['purge'] for ed,address in ((self.a,x),(self.b,y))):
+                    raise ValueError(f'다리 검토 함수의 존재/ret N 불일치: {pair["name"]}')
+                added += self.accept(x,y,'reviewed',1.0)
         return added
 
     def accept(self, x, y, method, score):

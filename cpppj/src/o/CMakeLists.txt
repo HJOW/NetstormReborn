@@ -11,6 +11,7 @@ target_sources(netstorm PRIVATE
     TypeParser.cpp TypeLoadOrder.cpp RiftTypeTable.cpp
     Template.cpp Template.h
     CanonDecoder.cpp CanonDecoder.h CanonDecoderTables.inc
+    Bridge.cpp Bridge.h
     ChunkMap.cpp ChunkMap.h
     Islandbuilder.cpp Islandbuilder.h
     TerrainBuilder.cpp TerrainBuilder.h

@@ -110,7 +110,7 @@ python tools/cpp_menu_smoke.py
 
 `--run <게임 폴더>`는 클론 창을 띄운다(원본 게임을 실행하지 않는다). `--view`가 없으면 **원본 메인 메뉴**를 표시한다. `--view types|fonts|<미션>`은 기존 독립 검사 장면이다. [메뉴·브리핑의 현재 범위/검사](exe/cpp-menu-reconstruction.md).
 
-기존 기반에 `Gump`·`State`·`UberGump`·`GifImage`·`DialogScript`, `TerrainBuilder`·`Player`·`Squid` 일부와 새 `GameWorld`/부분 `UserInput`을 연결했다. CTest는 기존 x86 기대값 **5,365개**를 포함한 **69개 검사**다. 새 메뉴/월드는 독립 자료 대조와 클론 창의 조작 검사이며 원본 기계어 전체 대조는 아니다. `--mission TEST01`로 같은 브리핑/월드를 검사한다. 원본 모듈 파일이 생긴 것을 모듈 전체 복원 완료로 세지 않는다.
+기존 기반에 `Gump`·`State`·`UberGump`·`GifImage`·`DialogScript`, `TerrainBuilder`·`Player`·`Squid` 일부와 새 `GameWorld`/부분 `UserInput`을 연결했다. 이어 CanonDecoder 다리 모양/추첨과 Bridge 열린 방향·수명 접두 구간을 복원했다. CTest는 x86 기대값 **23,418개 입력 사례**(기존 5,365＋다리 18,053)를 포함한 **75개 내부 검사**다. 수명 480개는 첫 외부 효과 전까지만 검증했고 전체 열린 끝은 패치판만 검증했다. [판본 차이·기계어 범위·재현 명령](exe/cpp-bridge-reconstruction.md). 배치 UI·전체 붕괴는 아직 월드에 연결하지 않았다. 메뉴/월드는 독립 자료 대조와 클론 창 조작 기록이며 원본 기계어 전체 대조는 아니다. `--mission TEST01`로 같은 브리핑/월드를 검사한다. 원본 모듈 파일이 생긴 것을 모듈 전체 복원 완료로 세지 않는다.
 
 ## 4. 디컴파일한 소스에서 C++ 소스를 만드는 절차
 
