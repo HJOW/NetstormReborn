@@ -34,7 +34,7 @@
 - [x] **회귀·자료 보호:** `cpp_assets_smoke.py`의 217타입·6,777이미지·15,940,472픽셀, `cpp_window_smoke.py`의 488개 요새·2,119영역과 타입 표 픽셀 검사 통과. 설정/시작 표시를 검사 후 복구했으며 원본 해시·목록이 유지됐다. 원본 게임 프로세스는 실행하지 않았다. **커밋하지 않았다.**
 - **수정 범위:** 새 `client/Renderer`·`BitmapFont`·`Cursor`, ClientMain·InspectView·검사 진입점·CMake·RendererTests. 새 `tools/decomp_renderer_oracle.py`·`cpp_renderer_smoke.py`, `renderer-x86.tsv`·`recovery-renderer-evidence.json`, 표시 복원/플레이 계획 문서, README·빌드/로드맵·chfnt 분석·SOURCE_MAP.
 - **미완료:** 원본 `004994b0` 전체 함수, Squid·지형·Gump 목록 수집, 객체별 `00498220`, 실제 프레임/소유자·그림자 표 선택, 구름·시차·카메라 복사·DirectDraw. 원본 qsort 동률 순서는 미확정이며 현재 안정 정렬이다. **메인 메뉴·실제 월드·게임 플레이는 아직 없다.** 표시 기반 완료를 전체 Renderer/게임 완료로 처리하지 않는다.
-- [ ] **바로 다음(현재 계획 2단계):** Gump/MenuGump/UberGump·상태 전환·메뉴 스크립트·타이틀/구름/버튼을 Renderer/글꼴에 연결하여 메뉴→캠페인→브리핑→미션 진입/취소를 만든다. `Client::ClearFullScreenState`를 UberGump의 원본 삭제 사건에 연결한다. 이어 3단계 실제 월드/조작, 4단계 1-1 완주를 진행한다.
+- [x] **후속 연결 완료(현재 계획 2단계 탐색 경로):** 메뉴→캠페인→브리핑→정적 미션 표시/취소와 `Client::ClearFullScreenState` 사건을 연결했다(맨 위 최신 절). 실제 월드/조작은 3단계, 1-1 완주는 4단계다.
 
 ---
 
@@ -95,7 +95,7 @@
 - [ ] **B3. 섬 지형**: `Islandbuilder`의 나머지(`0046da70` 이후)와 Terrainbuilder — [terrain-and-bridges.md](docs/exe/terrain-and-bridges.md). `CanonDecoder`의 다리·섬·그 밖의 패턴 표(`0052f998`, `00531410`, `005314a0`, `005314e8`).
 - [ ] **B4. UserInput**(`004d62b0`): 화면 이동부터. 끝나면 임시 연결점 `Client::input`을 없앤다.
 - [ ] **B5. 화면 장치의 나머지**: DirectDraw 표면(종류 3·4·5)·전체화면·플리핑·구름/시차가 남았다. **글꼴·원본 커서·WM_SETCURSOR·소프트웨어 프레임은 표시 기반 단계에서 완료**(맨 위 최신 절). 상황별 커서 선택은 UserInput 복원 뒤 연결한다.
-- [ ] **B6. 메인 루프의 나머지**: 상태 전환(`004b88c0`), 갱신 목록, 튜토리얼 안내, 플레이어 알림, 소리("init sound" `004aa600`), 네트워크(후순위).
+- [ ] **B6. 메인 루프의 나머지**: **UI 상태 전환은 메뉴 단계에서 연결했다.** 원본 State 전체(`004b88c0`)·갱신 목록·튜토리얼 안내·플레이어 알림·소리("init sound" `004aa600`)·네트워크(후순위)는 남았다.
 - [ ] **B7. 원본과 다르게 둔 것을 원본대로 되돌릴지 정한다**([cpp-screen-reconstruction.md](docs/exe/cpp-screen-reconstruction.md) 7절): 뮤텍스 `TitanicNetStormMutex`(지금은 만들지 않는다 — 원본과 함께 띄우기 위해서였다), 아이콘·로딩 그림을 원본 실행 파일에서 읽는 것, 레지스트리 읽기·CD 찾기, `WM_PAINT` 처리. 1차 목표의 원칙대로면 원본대로 옮기는 것이 기본이다.
 - [ ] **B8. x86 기대값**: 입력 큐·사각형 자르기·패턴 반복자(지금은 실제 자료 대조만 있다). 회전된 영역은 실제 파일에 없으므로 x86 실행으로만 확인할 수 있다.
 
