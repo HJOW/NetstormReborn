@@ -10,7 +10,11 @@ namespace netstorm::app {
 class InspectView {
 public:
     // 보여 줄 내용: "types"는 타입 기본 프레임 표, 그 밖의 값은 미션 이름으로 보고 요새의 오브젝트를 놓는다.
-    InspectView(netstorm::client::Client& client, std::string view);
+    InspectView(netstorm::client::Client& client, std::string view, bool connect = true);
+    // 메뉴의 미션 진입에서도 같은 정적 장면을 제출한다. 실제 월드 생성은 후속이다.
+    void Ready(netstorm::client::Client& client);
+    // 표시 크기를 바꾸거나 대화상자를 닫은 뒤 정적 장면을 다시 제출한다.
+    void BuildScene(netstorm::client::Client& client);
 private:
     // 월드에 놓은 오브젝트 하나: 월드 칸 좌표, 타입(로딩 순서), 그릴 프레임.
     struct Placed {
@@ -18,10 +22,6 @@ private:
         std::size_t asset{};
         std::size_t frame{};
     };
-    // 초기화가 끝난 뒤 한 번: 미션이면 요새를 읽어 오브젝트를 놓는다.
-    void Ready(netstorm::client::Client& client);
-    // 시작/화면 이동 때만 Renderer의 장면 목록을 다시 만든다.
-    void BuildScene(netstorm::client::Client& client);
     // 프레임마다: 입력 큐를 비우고 Esc면 참(종료)을 돌려준다. 화살표 키로 화면을 옮긴다.
     bool Input(netstorm::client::Client& client);
 

@@ -28,11 +28,18 @@ bool Condition(std::string expression) {
     bool negate = false;
     if (!expression.empty() && expression[0] == '!') { negate = true; expression.erase(0, 1); }
     bool value = false;
-    if (!expression.empty() && (expression[0] == '?' || expression[0] == 'g' || expression[0] == 'G' || expression[0] == 'l' || expression[0] == 'L')) {
-        const char compare = static_cast<char>(std::tolower(static_cast<unsigned char>(expression[0]))); expression.erase(0, 1);
-        bool equal = false;
-        if (!expression.empty() && (expression[0] == 'e' || expression[0] == 'E')) { equal = true; expression.erase(0, 1); }
-        if (!expression.empty() && expression[0] == '!') { negate = true; expression.erase(0, 1); }
+    char compare = 0; bool equal = false;
+    if (!expression.empty() && expression[0] == '?') { compare = '?'; expression.erase(0,1); }
+    if (!expression.empty() && (expression[0] == 'g' || expression[0] == 'G')) {
+        compare = 'g'; expression.erase(0,1);
+        if (!expression.empty() && (expression[0] == 'e' || expression[0] == 'E')) { equal = true; expression.erase(0,1); }
+    }
+    if (!expression.empty() && (expression[0] == 'l' || expression[0] == 'L')) {
+        compare = 'l'; equal = false; expression.erase(0,1);
+        if (!expression.empty() && (expression[0] == 'e' || expression[0] == 'E')) { equal = true; expression.erase(0,1); }
+    }
+    if (!expression.empty() && expression[0] == '!') { negate = true; expression.erase(0,1); }
+    if (compare != 0) {
         bool quote = false; std::size_t split = std::string::npos;
         // 따옴표 밖 첫 등호만 비교 구분자로 사용한다.
         for (std::size_t i = 0; i < expression.size(); ++i) {
@@ -46,7 +53,7 @@ bool Condition(std::string expression) {
             const auto a = o::ConfigParseLong(left), b = o::ConfigParseLong(right);
             value = compare == 'g' ? (equal ? a >= b : a > b) : (equal ? a <= b : a < b);
         }
-    } else value = o::ConfigParseLong(expression) != 0;
+    } else value = o::ConfigParseLong(Trim(expression)) != 0;
     return negate ? !value : value;
 }
 // HTML 줄바꿈·스타일을 문단 단위로 보존한다. 원본 StyleText의 본문 슬롯은 출력 단계에서 적용한다.

@@ -4,6 +4,7 @@
 #include "client/Screen.h"
 #include <optional>
 #include <span>
+#include <vector>
 
 namespace netstorm::client {
 struct GumpControl { int id{}; ScreenRect rect{}; bool menu{}, enabled{true}, instant{}; };

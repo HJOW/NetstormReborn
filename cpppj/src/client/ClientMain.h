@@ -24,6 +24,7 @@
 #include <utility>
 
 namespace netstorm::client {
+class UberGump;
 
 // 설정 키 "maxFPS" 의 코드 기본값. 화면 루프를 초당 몇 번까지 돌릴지 정한다.
 // 원본: FUN_00435220 @ 00435220 의 `DAT_005318d8 = 0x4b`
@@ -64,13 +65,29 @@ public:
     int Run();
 
     // 원본 00436e40 ↔ CD 00487720: UberGump의 버튼 사건에서 전체화면 시작 표시 파일을 지운다.
-    // UberGump를 옮긴 뒤 같은 사건 위치에 연결한다. 일반 종료에서는 부르지 않는다.
+    // 기본 메뉴의 활성 버튼 사건에 연결한다. 일반 종료에서는 부르지 않는다.
     void ClearFullScreenState();
+    // 메뉴/브리핑의 게임 시간 정지. 같은 상태를 반복 적용해도 중첩하지 않는다.
+    void Pause(bool paused);
+    // 원본 게임 시계의 실제 정지 여부를 관찰한다.
+    bool Paused() const;
+    // 원본 세 해상도의 창 모드 장치와 Renderer를 다시 만든다.
+    void ChangeResolution(int width, int height);
+    // 원본 창 제목을 현재 미션/메뉴 상태에 맞춘다.
+    void Title(std::string_view title);
+    // 기본 실행의 메뉴 상태와 입력 경로. --view 검사에서는 널이다.
+    UberGump* Menu();
+    // 검사 전용으로 이미 그려진 화면을 지정 파일에 저장한다.
+    void Capture(const std::filesystem::path& path);
 
     // UserInput(FUN_004d62b0)을 옮기기 전까지 쓰는 임시 연결점: 프레임마다 입력 큐를 처리한다. 참을 돌려주면 종료한다.
     std::function<bool(Client&)> input;
     // 초기화가 끝나고 루프에 들어가기 직전에 한 번 부른다(새 연결점).
     std::function<void(Client&)> ready;
+    // 검사 전용 프레임 입력. 일반 실행에서는 비어 있다.
+    std::function<void(Client&)> beforeInput;
+    // 프레임 그리기 뒤의 상태/화면 관찰. 일반 실행에서는 비어 있다.
+    std::function<void(Client&)> afterFrame;
 
     // 원본 FUN_00452e00: 키·버튼의 현재 상태와 커서 위치를 읽는다. code는 가상 키를 16비트 민 값이다.
     InputEvent Poll(std::uint32_t code) const;
@@ -130,6 +147,7 @@ private:
     std::unique_ptr<Renderer> renderer_;
     std::unique_ptr<FontStore> fonts_;
     std::unique_ptr<Cursor> cursor_;
+    std::unique_ptr<UberGump> menu_;
     bool sceneVisible_{};
     InputQueue input_;
     o::GameClock clock_;

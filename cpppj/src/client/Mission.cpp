@@ -15,6 +15,7 @@ MissionScript::MissionScript(o::ConfigInterface& configuration, std::string_view
     script_.AppendArguments(extraSettings, configuration_.Reader());
     scriptPath_ = configuration_.PathSpec("missionSpec", name_);
     if (configuration_.Reader()) if (const auto bytes = configuration_.Reader()(scriptPath_)) script_.LoadBytes(*bytes);
+    if (script_.IsValid()) script_.Set("fileName", name_);
 }
 // 원본은 미션 설정 객체를 this로 FUN_004409d0을 부른다. 스크립트를 읽지 못했으면 찾지 못한다.
 std::optional<std::string> MissionScript::Get(std::string_view key) {
@@ -35,4 +36,9 @@ std::string MissionScript::FortName() {
 std::string MissionScript::FortPath() { return configuration_.PathSpec("fortSpec", FortName()); }
 // 없으면 빈 문자열이다.
 std::string MissionScript::MissionType() { return Get("missionType").value_or(std::string()); }
+// Section은 등록 객체의 접두어를 붙이지 않는 원본 본문 조회다.
+std::optional<std::string> MissionScript::Section(std::string_view name) const {
+    const auto section = script_.Section(name);
+    return section ? std::optional<std::string>(std::string(*section)) : std::nullopt;
+}
 }

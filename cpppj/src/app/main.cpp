@@ -1,10 +1,12 @@
 // 새로 쓰는 실행 진입점: 복원된 데이터 계층을 실제 원본/CD 파일로 검증한다.
-// 창·Renderer·원본 글꼴·커서로 검사 화면을 표시한다. 실제 메뉴·월드·게임 규칙은 후속이다.
+// 메뉴·브리핑과 검사 장면을 표시한다. 실제 월드·게임 규칙은 후속이다.
 #include <cstdio>
 #include <cstdlib>
 #include <bit>
 #include <exception>
 #include <filesystem>
+#include <fstream>
+#include <sstream>
 #include <map>
 #include <stdexcept>
 #include <optional>
@@ -15,6 +17,8 @@
 #include "client/ClientMain.h"
 #include "client/GameAssets.h"
 #include "client/Mission.h"
+#include "client/UberGump.h"
+#include "client/GifImage.h"
 #include "o/BaseFile.h"
 #include "o/Config.h"
 #include "o/ConfigInterface.h"
@@ -32,7 +36,7 @@ constexpr const char* kTargetOriginalVersion = "10.78";
 
 // 실행 가능한 공용 계층의 명령과 아직 구현하지 않은 범위를 출력한다.
 void PrintBuildInfo() {
-    std::printf("NetstormCpp (reconstructed core; game UI pending)\n");
+    std::printf("NetstormCpp (menu and mission entry; playable world pending)\n");
     std::printf("  reconstructed from: NetStorm %s (decompiled)\n", kTargetOriginalVersion);
     std::printf("  default maxFPS: %d (frame interval %.6f s, 1ms clock: %u ms)\n",
         netstorm::client::kDefaultMaxFps, netstorm::client::FrameIntervalSeconds(netstorm::client::kDefaultMaxFps),
@@ -48,6 +52,7 @@ void PrintBuildInfo() {
     std::printf("  --inspect-mission <game-dir> <mission> [--cd]\n  --dump-territories <game-dir> [--cd]\n");
     std::printf("  --run <game-dir> [--view types|fonts|<mission>] [--window] [--frames N] [--screenshot out.bmp] [--render-stats] [--set \"k=v;k=v\"] [--cd]\n");
     std::printf("  --dump-font <game-dir> <font-path>\n");
+    std::printf("  --dump-gif <game-dir> <gif-path>\n  --run also accepts --ui-script steps.tsv --ui-report report.tsv\n");
 }
 
 // 실제 자산을 읽는 VFS를 만든다. 아카이브 등록 순서는 명시적으로 지정한다.
@@ -478,7 +483,26 @@ int RunFortCommand(const std::string& command, std::vector<std::string> argument
     throw std::invalid_argument("Invalid fort command arguments");
 }
 
-// 원본 방식의 창과 Renderer를 띄운다. 게임 월드 복원 전까지 InspectView가 장면 목록을 만든다.
+// 새 검사 도구의 한 단계. 탭 뒤의 라벨은 공백을 보존한다.
+struct UiStep { std::uint64_t frame{}; std::string operation, argument; };
+// 검사용 TSV를 읽는다. 프레임 번호/동작/라벨 또는 캡처 경로 순이다.
+std::vector<UiStep> ReadUiSteps(const std::filesystem::path& path) {
+    std::ifstream file(path, std::ios::binary); if (!file) throw std::runtime_error("Unable to read UI script");
+    std::vector<UiStep> steps; std::string line;
+    // 순서가 뒤바뀐 입력은 조용히 누락하지 않고 거부한다.
+    while (std::getline(file, line)) {
+        if (!line.empty() && line.back() == '\r') line.pop_back();
+        if (line.empty() || line[0] == '#') continue;
+        const auto first = line.find('\t'), second = line.find('\t', first == std::string::npos ? line.size() : first + 1);
+        if (first == std::string::npos) throw std::invalid_argument("UI script needs tab-separated fields");
+        UiStep step{std::stoull(line.substr(0, first)), line.substr(first + 1, second == std::string::npos ? line.size() : second - first - 1),
+            second == std::string::npos ? std::string() : line.substr(second + 1)};
+        if (step.frame == 0 || (!steps.empty() && step.frame < steps.back().frame)) throw std::invalid_argument("UI frames must be positive and sorted");
+        steps.push_back(std::move(step));
+    }
+    return steps;
+}
+// 원본 방식의 창과 Renderer를 띄운다. 기본은 메뉴, --view는 독립 검사 장면이다.
 int RunClient(std::vector<std::string> arguments) {
     netstorm::client::ClientOptions options;
     options.edition = TakeEdition(arguments);
@@ -486,6 +510,7 @@ int RunClient(std::vector<std::string> arguments) {
     options.gameDirectory = arguments[0];
     std::string view;
     bool renderStats = false;
+    std::filesystem::path uiScript, uiReport;
     // 나머지 인자: 원본 명령줄의 "window"에 해당하는 것과 검사용 옵션.
     for (std::size_t i = 1; i < arguments.size(); ++i) {
         const auto& argument = arguments[i];
@@ -499,12 +524,47 @@ int RunClient(std::vector<std::string> arguments) {
         else if (argument == "--set") options.settings = value();
         else if (argument == "--view") view = value();
         else if (argument == "--render-stats") renderStats = true;
+        else if (argument == "--ui-script") uiScript = value();
+        else if (argument == "--ui-report") uiReport = value();
         else throw std::invalid_argument("Unknown --run option: " + argument);
     }
     netstorm::client::Client client(std::move(options));
     std::optional<netstorm::app::InspectView> inspect;
     if (!view.empty()) inspect.emplace(client, view);
+    const auto steps = uiScript.empty() ? std::vector<UiStep>() : ReadUiSteps(uiScript);
+    std::size_t next = 0; std::string report;
+    if (!uiScript.empty()) {
+        if (!view.empty()) throw std::invalid_argument("UI script cannot be combined with --view");
+        client.beforeInput = [&](netstorm::client::Client& c) {
+            // 이번 프레임의 입력만 실제 InputQueue에 넣는다.
+            for (std::size_t i = next; i < steps.size() && steps[i].frame == c.Time().number; ++i) {
+                const auto& step = steps[i]; using namespace netstorm::client;
+                if (step.operation == "snapshot" || step.operation == "report") continue;
+                if (step.operation == "esc") { c.Input().Push(0x1b, 0, 0); continue; }
+                ScreenPoint point{};
+                if (step.operation == "click" || step.operation == "down" || step.operation == "up" || step.operation == "right") {
+                    const auto found = c.Menu()->ControlPoint(step.argument);
+                    if (!found) throw std::runtime_error("UI control not found: " + step.argument);
+                    point = *found;
+                } else if (step.operation == "outside") point = {0, 0};
+                else throw std::invalid_argument("Unknown UI operation: " + step.operation);
+                if (step.operation == "click" || step.operation == "down" || step.operation == "outside") c.Input().Push(InputCode::kLeftButton, point.x, point.y);
+                if (step.operation == "click" || step.operation == "up") c.Input().Push(InputCode::kLeftButton | InputCode::kRelease, point.x, point.y);
+                if (step.operation == "right") { c.Input().Push(InputCode::kRightButton, point.x, point.y); c.Input().Push(InputCode::kRightButton | InputCode::kRelease, point.x, point.y); }
+            }
+        };
+        client.afterFrame = [&](netstorm::client::Client& c) {
+            // 그리기 완료 뒤 같은 프레임의 캡처/상태를 기록한다.
+            while (next < steps.size() && steps[next].frame == c.Time().number) {
+                const auto& step = steps[next++];
+                if (step.operation == "snapshot") c.Capture(step.argument);
+                if (step.operation == "report") report += "frame\t" + std::to_string(step.frame) + "\t" + step.argument + "\n" + c.Menu()->Report();
+            }
+        };
+    }
     const int result = client.Run();
+    if (!uiScript.empty() && next < steps.size()) throw std::runtime_error("UI script ended before all steps ran");
+    if (!uiReport.empty()) netstorm::platform::WriteFileBytes(uiReport, std::span<const std::uint8_t>(reinterpret_cast<const std::uint8_t*>(report.data()), report.size()));
     if (renderStats) {
         const auto counts = client.RenderCounts();
         std::printf("Renderer draws=%llu presents=%llu\n", static_cast<unsigned long long>(counts.first), static_cast<unsigned long long>(counts.second));
@@ -596,6 +656,12 @@ int main(int argc, char** argv) {
         if (command == "--dump-font" && argc == 4) { DumpFont(argv[2], argv[3]); return 0; }
         if (command.starts_with("--config-")) return RunConfigCommand(command, std::vector<std::string>(argv + 2, argv + argc));
         if (command == "--run") return RunClient(std::vector<std::string>(argv + 2, argv + argc));
+        if (command == "--dump-gif") {
+            if (argc != 4) throw std::invalid_argument("Expected game directory and GIF path");
+            const auto image = netstorm::client::DecodeGif(Files(argv[2]).Read(argv[3]));
+            WriteLength(static_cast<std::uint32_t>(image.width)); WriteLength(static_cast<std::uint32_t>(image.height));
+            WriteBytes(image.indices); WriteBytes(image.opacity); return 0;
+        }
         if (command == "--dump-types" || command == "--inspect-fort" || command == "--dump-forts" || command == "--inspect-mission"
             || command == "--dump-territories")
             return RunFortCommand(command, std::vector<std::string>(argv + 2, argv + argc));

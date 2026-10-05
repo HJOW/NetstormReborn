@@ -2,6 +2,7 @@
 #pragma once
 #include "client/DialogScript.h"
 #include <deque>
+#include <optional>
 
 namespace netstorm::client {
 enum class ClientPhase { MainMenu, Dialog, LoadingMission, Briefing, Mission };

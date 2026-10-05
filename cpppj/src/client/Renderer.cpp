@@ -120,6 +120,22 @@ void Renderer::SetBackground(std::shared_ptr<const IndexedImage> image) {
         throw std::invalid_argument("Invalid renderer background");
     background_ = std::move(image); dirty_.InvalidateAll();
 }
+// 실제 월드/Gump 깊이 통합 전 정적 장면의 배경·스프라이트만 별도 버퍼에 합성한다.
+IndexedImage Renderer::SceneImage() {
+    IndexedImage result{static_cast<std::size_t>(width_), static_cast<std::size_t>(height_),
+        std::vector<std::uint8_t>(static_cast<std::size_t>(width_) * height_), std::vector<std::uint8_t>(static_cast<std::size_t>(width_) * height_,255)};
+    const ScreenRect all{0,0,width_,height_};
+    if (background_) DrawIndexedImage(result.indices,width_,height_,*background_,0,0,all);
+    // Renderer 장면 순서를 보존하며 메뉴 글자와 커서는 합성하지 않는다.
+    for (const auto& sprite : sprites_) {
+        const auto cut = ClipScreenRect(all, sprite.clip);
+        if (!Nonempty(ClipScreenRect(Bounds(sprite), cut))) continue;
+        const auto& frame = sprite.database->Blocks()[sprite.block].frames.at(sprite.frame);
+        DrawIndexedImage(result.indices,width_,height_,Image(*sprite.database,sprite.block,sprite.frame),
+            Position(sprite.x,frame.rect.left),Position(sprite.y,frame.rect.top),cut,sprite.colors ? &*sprite.colors : nullptr,sprite.shadow);
+    }
+    return result;
+}
 // 오브젝트 측의 변경 알림.
 void Renderer::Invalidate(ScreenRect rect, std::uint32_t flags) { dirty_.Add(rect, flags); }
 // 커서가 움직이지 않았으면 새 변경 영역을 만들지 않는다.

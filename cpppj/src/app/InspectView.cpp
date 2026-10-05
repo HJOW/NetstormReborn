@@ -28,7 +28,8 @@ constexpr std::uint32_t kEscapeCharacter = 0x1b;
 }
 
 // 임시 연결점에 이 화면의 함수를 건다.
-InspectView::InspectView(netstorm::client::Client& client, std::string view) : view_(std::move(view)) {
+InspectView::InspectView(netstorm::client::Client& client, std::string view, bool connect) : view_(std::move(view)) {
+    if (!connect) return;
     client.ready = [this](netstorm::client::Client& c) { Ready(c); };
     client.input = [this](netstorm::client::Client& c) { return Input(c); };
 }

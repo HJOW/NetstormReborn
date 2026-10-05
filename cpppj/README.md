@@ -7,7 +7,7 @@ C# + MonoGame 빌드(`../dotnetpj/`)는 cpppj 완성 후 이를 분석하여 개
 
 **현재 우선순위(2026-10-05 사용자 요청): 기존 게임이 온전히 동작하고 실제 게임 플레이가 가능하도록 복원한다.** 먼저 메인 메뉴→캠페인 선택→브리핑→선택·이동·건설·경제·전투→승패·결과·재시작을 완성하고, 나머지 원본 기능·캠페인까지 복원한다. 화면비 확장·한국어·Linux·60/120프레임·MCP·추가 기능은 후순위다. 작업 순서와 완료 기준은 [실제 플레이 복원 계획](../docs/cpp-playable-plan.md)을 따른다.
 
-**공용 계층·타입·그래픽 자산 로더·설정·요새 파일·영역 배치·Win32 창·입력 큐와 Renderer·원본 글꼴·커서의 표시 기반이 빌드된다.** TAFF·설정(객체 층·치환·값 쓰기·경로 지정값)·번역·타입(번호 체계·플래그)·프레임 검색·프로세스 커널·게임 시계, SHP 압축 해제·팔레트, `.fort` 읽기와 미션 경로, 영역 패턴에 따른 청크 위치를 복원했다. 화면은 8비트 DIB에 변경 영역만 합성하며 깊이 정렬·색/그림자 변환·프레임 캐시·영어 비트맵 글꼴·원본 커서를 연결했다. **메인 메뉴·실제 월드·게임 플레이·사운드·DirectDraw 전체화면은 아직 없다.** 현재 검사용 장면은 실제 게임 화면의 복원 완료를 뜻하지 않는다.
+**원본 메뉴→캠페인→브리핑→정적 요새 표시/메뉴 복귀를 연결했다.** 기존 공용 계층·자산·설정·요새·영역 배치와 Win32/Renderer·원본 글꼴·커서 기반에 Gump 입력·UberGump·UI 상태·원본 메뉴 스크립트·GIF를 연결했다. 잠금 표시·Back·Quit, 브리핑 정지/확인, 창 해상도 변경·옵션 저장/재실행을 검사했다. **실제 월드·선택/이동·게임 플레이·사운드 출력·DirectDraw 전체화면은 후속이다.** 현재 미션 표시는 지형/게임 객체를 생성하지 않는 기존 정적 검사 어댑터다. [메뉴 연결 범위와 제한](../docs/exe/cpp-menu-reconstruction.md).
 
 [복원 근거·함수 대응·검증 범위](../docs/exe/cpp-reconstruction.md), [검토 목록](recovery-manifest.json), [기계어 검증 기록](recovery-evidence.json).
 
@@ -54,13 +54,15 @@ cpppj/build/bin/Release/NetstormCpp.exe --run originals --view TEST01
 python tools/cpp_window_smoke.py
 cpppj/build/bin/Release/NetstormCpp.exe --run originals --view fonts --window --render-stats
 python tools/cpp_renderer_smoke.py
+cpppj/build/bin/Release/NetstormCpp.exe --run originals --window
+python tools/cpp_menu_smoke.py
 ```
 
-`--run` 은 원본 방식의 창을 띄운다(원본 게임을 실행하지 않는다). `--view` 가 없으면 원본의 "Loading / Please Wait" 화면만 보인다. `--view TEST01` 은 화살표 키로 움직이고 Esc로 닫는다. `--view fonts`는 18개 글꼴/스타일을 표시한다. 검사 장면은 Renderer에 목록을 공급하는 임시 어댑터이며 실제 월드·게임 화면의 재현은 후속이다. `--render-stats`는 그리기 프레임·출력 사각형 횟수, `--dump-font <게임 폴더> <글꼴 경로>`는 독립 비교용 이진 글리프 스트림을 출력한다.
+`--run`은 클론 창을 띄운다(원본 게임을 실행하지 않는다). **`--view`가 없으면 메인 메뉴**다. Campaign→Struggle For Freedom→1 The War Begins!→Play Mission으로 정적 요새를 표시한다. Game/ESC→Leave Battle로 메뉴에 돌아온다. `--view TEST01`은 기존 독립 검사 화면으로 화살표 이동/Esc 종료, `--view fonts`는 18개 글꼴/스타일 표시다. `--render-stats`는 그리기/출력 횟수다. 메뉴 검사 전용 `--ui-script`/`--ui-report`와 `--dump-gif`는 [메뉴 복원 문서](../docs/exe/cpp-menu-reconstruction.md)에 설명했다.
 
 `--run`은 원본과 공유하는 `d/options.cfg`를 갱신한다. 전체화면을 요구하면 게임 폴더의 `fullscreenStateFile.dat`도 원본 시점에 만든다. DirectDraw는 아직 없으므로 창 모드로 나온다. 스모크는 두 파일을 보관하고 검사 후 바이트·존재 여부를 복구한다.
 
-CTest의 52개 테스트에는 두 판본 기계어의 5,365개 기대값 검사가 포함되어 있다(공용 1,806개＋VFX 709개＋설정 2,440개＋옵션 저장 16개＋Renderer 394개). 빌드에는 원본 실행 파일·Ghidra·Python·외부 라이브러리가 필요 없다. 실제 자산 검사는 원본 게임을 실행하지 않는다. 영역 2,119개 전수 대조와 창 픽셀 대조(`cpp_window_smoke.py`), 글꼴 18개·4,608글리프·글자 창 전체 픽셀 대조와 두 판본의 소프트웨어 커서 생성(`cpp_renderer_smoke.py`)을 확인한다. 전체 게임 완성도를 이 검사 수치로 판단하지 않는다.
+CTest의 **59개 테스트**에는 두 판본 기계어의 **5,365개 기대값** 검사가 포함되어 있다(공용 1,806＋VFX 709＋설정 2,440＋옵션 저장 16＋Renderer 394). 빌드에는 원본 실행 파일·Ghidra·Python·외부 라이브러리가 필요 없다. 기존 영역·자산·글꼴/커서 스모크와 `cpp_menu_smoke.py`의 **54개 화면 상태**, GIF **두 판본 각 831,008픽셀**, 메인 메뉴 배경 **774,432픽셀**, 세 해상도·설정 재실행·원본 파일 복구를 검사한다. 이 수치는 게임 전체 완성도가 아니다.
 
 ## 폴더
 

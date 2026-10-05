@@ -1,6 +1,6 @@
 # C++ 빌드 (`cpppj/`)
 
-> 2026-10-05 추가·갱신. **데이터 계층·영역 배치·Win32 창·창 모드 화면·입력 큐와 Renderer·원본 글꼴·커서 표시 기반이 빌드된다.** 메뉴·실제 월드·게임 플레이·MCP는 후속 작업이다. **cpppj는 Windows 전용이다.** [공용 계층 근거](exe/cpp-reconstruction.md), [타입·그래픽 복원](exe/cpp-assets-reconstruction.md), [설정 계층 복원](exe/cpp-config-reconstruction.md), [타입 표·요새 파일 복원](exe/cpp-fort-reconstruction.md), [창·화면 장치 복원](exe/cpp-screen-reconstruction.md), [Renderer·글꼴·커서 복원](exe/cpp-renderer-reconstruction.md).
+> 2026-10-05 추가·갱신. **데이터·표시 기반에 원본 메뉴→캠페인→브리핑→정적 요새 표시/복귀를 연결했다.** 실제 월드·게임 플레이·MCP는 후속이다. **cpppj는 Windows 전용이다.** [공용 계층](exe/cpp-reconstruction.md), [자산](exe/cpp-assets-reconstruction.md), [설정](exe/cpp-config-reconstruction.md), [요새](exe/cpp-fort-reconstruction.md), [창](exe/cpp-screen-reconstruction.md), [표시 기반](exe/cpp-renderer-reconstruction.md), [메뉴 연결](exe/cpp-menu-reconstruction.md).
 
 **기존 게임 전체가 실제 플레이 가능한 수준으로 복원되는 것이 우선이다.** 화면비 확장·한국어·Linux·추가 기능은 이후다. 현재 작업 순서·완료 기준은 [실제 플레이 복원 계획](cpp-playable-plan.md), 기반 복원 세부 항목은 [기존 로드맵](cpp-roadmap.md)에 있다. 이 문서는 빌드와 소스 복원 규칙을 다룬다.
 
@@ -15,7 +15,7 @@
 | 빌드 도구 | .NET 10 SDK (`dotnetpj/Netstorm.sln`) | CMake 3.21 이상 + C++20 컴파일러(MSVC), **Windows 전용** |
 | 플랫폼 | MonoGame (Windows·Linux) | **Win32 API 를 원본처럼 직접 호출** (외부 라이브러리 없음) |
 | 실행 파일 | `NetstormClone` | `NetstormCpp` |
-| 상태 | 캠페인 1-1·1-2 플레이 가능 | 공용 계층·설정·타입·요새 파일·영역 배치·Win32 창·입력 큐·Renderer·글꼴·커서 기반 복원. 검사 장면 가능, 메뉴·월드·게임 플레이는 후속 |
+| 상태 | 캠페인 1-1·1-2 플레이 가능 | 메뉴→캠페인→브리핑→정적 요새 표시/복귀. 실제 월드·선택/이동·게임 플레이는 후속 |
 
 두 빌드가 함께 쓰는 것은 저장소 루트에 그대로 있다.
 
@@ -82,7 +82,7 @@ ctest --test-dir cpppj/build --build-config Release --output-on-failure
 인자 없이 실행하면 빌드 정보·검사 명령을 표시한다. 원본 게임을 실행하지 않고 복원한 모듈을 사용한다.
 
 ```text
-NetstormCpp (reconstructed core; game UI pending)
+NetstormCpp (menu and mission entry; playable world pending)
   reconstructed from: NetStorm 10.78 (decompiled)
   default maxFPS: 75 (frame interval 0.013333 s, 1ms clock: 14 ms)
 ```
@@ -104,11 +104,13 @@ cpppj/build/bin/Release/NetstormCpp.exe --dump-territories originals
 cpppj/build/bin/Release/NetstormCpp.exe --run originals --view TEST01
 python tools/cpp_window_smoke.py
 python tools/cpp_renderer_smoke.py
+cpppj/build/bin/Release/NetstormCpp.exe --run originals --window
+python tools/cpp_menu_smoke.py
 ```
 
-`--run <게임 폴더>` 는 원본 방식의 창을 띄운다(원본 게임을 실행하는 것이 아니다). `--view types|fonts|<미션>` 으로 검사 장면을 고르고, 없으면 원본의 로딩 화면만 보인다. [원본 글꼴·커서와 표시 기반 검사](exe/cpp-renderer-reconstruction.md)에 현재 범위를 기록했다.
+`--run <게임 폴더>`는 클론 창을 띄운다(원본 게임을 실행하지 않는다). `--view`가 없으면 **원본 메인 메뉴**를 표시한다. `--view types|fonts|<미션>`은 기존 독립 검사 장면이다. [메뉴·브리핑의 현재 범위/검사](exe/cpp-menu-reconstruction.md).
 
-현재 소스: `BaseFile`·`Config`·`ConfigInterface`·`Xlat`·`RiftType`(타입 표 포함)·`Template`·`CanonDecoder`·`ChunkMap`·`Islandbuilder`·`BaseProcess`·`Kernel`·`GameClock`·`VFXDraw`·`Screen`·`ClientMain`·`Mission` 일부와 입력 사건 큐, 신규 인코딩·자산 연결·콘솔·BMP·파일 출력 계층·검사 장면, Renderer·BitmapFont·Cursor 표시 기반이다. CTest는 두 판본 x86 기대값 5,365개를 포함한 52개 검사를 실행한다. [표시 기반 근거와 후속 연결](exe/cpp-renderer-reconstruction.md).
+기존 데이터·시간·프로세스·표시 기반에 `Gump`·`State`·`UberGump` 부분과 `GifImage`·`DialogScript`를 연결했다. CTest는 두 판본 x86 기대값 **5,365개**를 포함한 **59개 검사**를 실행한다. 새 메뉴 검사는 입력/파서·독립 GIF 판독·실제 클론 창 탐색이며 원본 메뉴 기계어 전수 대조는 아니다.
 
 ## 4. 디컴파일한 소스에서 C++ 소스를 만드는 절차
 
@@ -156,7 +158,7 @@ AGENTS.md 의 규칙(한국어 주석, UTF-8, 상수·함수·반복문마다 �
 ## 6. 정하지 않은 것
 
 * ~~플랫폼 계층의 라이브러리~~ → **정함(2026-10-05): Win32 직접 호출, 외부 라이브러리 없음.** 소리·글꼴·영상·전체화면(DirectDraw)의 방식은 해당 모듈을 옮길 때 원본 방식을 기본으로 정한다 — [창·화면 장치 복원](exe/cpp-screen-reconstruction.md) 1·8절.
-* ~~설정 저장 위치~~ → **구현 완료(2026-10-05): `options.cfg`는 원본 게임과 동일하게 처리한다.** `<게임 폴더>/d/options.cfg`를 시작·변경 저장 시점에 Windows-1252·XOR로 쓴다. 시작 표시 파일의 존재 검사·생성도 복원했다. 삭제의 UberGump 사건 연결은 남았다. [옵션 저장 복원](exe/cpp-options-reconstruction.md). 스모크는 AGENTS.md가 변경을 허용한 두 파일을 보관하고 검사 후 복구한다.
+* ~~설정 저장 위치~~ → **구현 완료(2026-10-05): `options.cfg`는 원본 게임과 동일하게 처리한다.** `<게임 폴더>/d/options.cfg`를 시작·변경 저장 시점에 Windows-1252·XOR로 쓴다. 시작 표시의 조회·생성·메인 버튼 사건의 삭제도 연결했다. [옵션 저장 복원](exe/cpp-options-reconstruction.md). 스모크는 허용한 두 파일을 보관하고 복구한다.
 * **한국어 글꼴.** D2Coding(TTC)을 그리는 방법이 필요하다(C# 빌드는 FontStashSharp 를 쓴다). cpppj 에서는 후순위다.
 * **원본에 없는 기능을 넣는 방식.** 와이드 화면, 60·120프레임, 전체화면 재실행 오류 수정은 원본 코드에 없다. 다시 만든 코드를 어디서 어떻게 바꿀지는 해당 모듈을 옮길 때 정한다. C# 빌드의 결정(와이드 화면 = 시야 확장, [LEFT_JOBS.md](../LEFT_JOBS.md) 1.7절)을 따르는 것이 기본이다.
 * **옮기는 순서.** [후속 복원 계획](cpp-roadmap.md)의 단계별 완료 기준을 따른다.

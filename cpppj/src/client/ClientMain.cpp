@@ -5,6 +5,7 @@
 // 범위: 창 만들기, 설정 읽기, 화면 장치, 메시지·입력 큐, 프레임 제한과 내보내기까지.
 //       Renderer의 창 모드 기반·원본 글꼴·커서를 연결했다. Squid/지형 수집과 UserInput은 후속이다.
 #include "client/ClientMain.h"
+#include "client/UberGump.h"
 #include "o/OriginalText.h"
 #include "platform/Bitmap.h"
 #include <algorithm>
@@ -113,6 +114,7 @@ Client::Client(ClientOptions options)
 }
 // 화면 장치를 먼저 없앤 뒤 GDI 객체와 창을 정리한다.
 Client::~Client() {
+    menu_.reset();
     renderer_.reset(); fonts_.reset(); cursor_.reset();
     screen_.reset();
     if (loadingFont_) DeleteObject(static_cast<HFONT>(loadingFont_));
@@ -241,9 +243,11 @@ int Client::Run() {
     // "init types"(FUN_0049ebb0): 타입·그림·타입 표.
     assets_ = std::make_unique<GameAssets>(files_, options_.edition, palettePath);
     if (!PumpMessages()) return 0;
-    // [원본] 송수신기, squid 목록(120000), 좌표 해시, spot 배열, gump, 영상, Uber Gump, Guide, 그래프,
-    //        명령 표, 인트로 감지, 연락처, 지도 모드, HTTP 서버 — 옮기지 않았다.
+    // [원본] 송수신기, squid 목록(120000), 좌표 해시, spot 배열, 영상, Guide, 그래프,
+    //        전체 명령 표, 인트로 감지, 연락처, 지도 모드, HTTP 서버 — 옮기지 않았다.
+    // 현재 UberGump는 단일 플레이 메뉴/브리핑과 정적 미션 표시만 연결한다.
     if (ready) ready(*this);
+    else menu_ = std::make_unique<UberGump>(*this);
 
     // 메인 루프(docs/exe/main-loop.md 2절). 옮기지 않은 단계는 순서의 자리에 적는다.
     while (true) {
@@ -254,7 +258,8 @@ int Client::Run() {
         if (level != wanted) SetThreadPriority(GetCurrentThread(), kThreadPriorities[static_cast<std::size_t>(wanted)]);
         // 1. 시각 고정(FUN_00460e90).
         time_ = clock_.Capture(timeGetTime());
-        // 2~6. [원본] 상태 전환(FUN_004b88c0), 효과음 수 세기, 네트워크 폴링·내보내기 — 옮기지 않았다.
+        if (menu_) menu_->Tick();
+        // 3~6. [원본] 효과음 수 세기, 네트워크 폴링·내보내기 — 옮기지 않았다. 2는 위 UI 전환 부분이다.
         // 7. 쌓인 창 메시지를 모두 처리한다. WM_QUIT이면 끝낸다.
         MSG message;
         // 큐가 빌 때까지 꺼내 창 프로시저로 보낸다.
@@ -265,7 +270,8 @@ int Client::Run() {
         }
         // 8. [원본] 튜토리얼 안내(FUN_00463f70) — 옮기지 않았다.
         // 9. 입력·명령 처리(FUN_004d62b0). 0이 아니면 종료 절차다.
-        if (input && input(*this)) {
+        if (beforeInput) beforeInput(*this);
+        if ((input && input(*this)) || (!input && menu_ && menu_->Input())) {
             screen_->SetMode(ScreenMode::kFallbackWindowed, windowWidth_, windowHeight_, initWindowPos_);
             SendMessageA(window, WM_CLOSE, 0, 0);
             continue;
@@ -276,6 +282,7 @@ int Client::Run() {
         kernel_.RunFrame();
         // 11. 프레임 제한 + 그리기.
         Frame();
+        if (afterFrame) afterFrame(*this);
         // 12. 커서 위치를 읽어 같은 자리에 다시 놓고(원본 그대로, 목적 미확인), 설정한 만큼 쉰다.
         POINT cursor{};
         GetCursorPos(&cursor);
@@ -399,6 +406,10 @@ void Client::Frame() {
 
 // 현재 화면 버퍼를 팔레트로 색을 입혀 저장한다.
 void Client::SaveScreenshot() {
+    Capture(options_.screenshot);
+}
+// 프레임 관찰 도구도 종료 화면과 같은 팔레트 변환을 쓴다.
+void Client::Capture(const std::filesystem::path& path) {
     std::vector<std::uint8_t> rgba(static_cast<std::size_t>(screenWidth_) * static_cast<std::size_t>(screenHeight_) * 4);
     const std::uint8_t* buffer = screen_->Lock();
     const auto palette = screen_->Palette();
@@ -413,7 +424,41 @@ void Client::SaveScreenshot() {
         }
     }
     screen_->Unlock();
-    platform::WriteBitmap(options_.screenshot, static_cast<std::uint32_t>(screenWidth_), static_cast<std::uint32_t>(screenHeight_), rgba);
+    platform::WriteBitmap(path, static_cast<std::uint32_t>(screenWidth_), static_cast<std::uint32_t>(screenHeight_), rgba);
+}
+
+// UI는 정지 상태를 한 번만 적용한다. wall 시각은 계속 흐른다.
+void Client::Pause(bool paused) {
+    if (paused && !clock_.IsPaused()) clock_.Pause(timeGetTime());
+    else if (!paused && clock_.IsPaused()) clock_.Resume(timeGetTime());
+}
+// 자동 검사는 표시 단계와 실제 시계 정지를 함께 검사한다.
+bool Client::Paused() const { return clock_.IsPaused(); }
+// 원본 창 제목을 ANSI 바이트로 적용한다(한국어는 후순위).
+void Client::Title(std::string_view title) { SetWindowTextA(static_cast<HWND>(window_), std::string(title).c_str()); }
+// 기본 UI만 제공한다. 검사 장면의 독립 실행은 기존 연결점을 보존한다.
+UberGump* Client::Menu() { return menu_.get(); }
+// 현재 단계의 창 모드 세 해상도만 지원한다. 전체화면 장치는 후속이다.
+void Client::ChangeResolution(int width, int height) {
+    if (!((width == 640 && height == 480) || (width == 800 && height == 600) || (width == 1024 && height == 768)))
+        throw std::invalid_argument("Unsupported original resolution");
+    if (screenWidth_ == width && screenHeight_ == height) return;
+    std::array<ScreenColor, 256> palette{};
+    std::copy(screen_->Palette().begin(), screen_->Palette().end(), palette.begin());
+    sceneVisible_ = false;
+    renderer_.reset(); screen_.reset();
+    screenWidth_ = width; screenHeight_ = height;
+    screen_ = std::make_unique<Screen>(window_, windowDc_, width, height);
+    screen_->Init(); screen_->InitDibSection();
+    screen_->SetPalette(0, 256, palette.data(), true);
+    RECT rect{0, 0, width, height};
+    AdjustWindowRectEx(&rect, static_cast<DWORD>(GetWindowLongPtrA(static_cast<HWND>(window_), GWL_STYLE)), FALSE, 0);
+    windowWidth_ = rect.right - rect.left; windowHeight_ = rect.bottom - rect.top;
+    if (!screen_->SetMode(ScreenMode::kFallbackWindowed, windowWidth_, windowHeight_, initWindowPos_))
+        throw std::runtime_error("Unable to change window resolution");
+    renderer_ = std::make_unique<Renderer>(width, height);
+    sceneVisible_ = true;
+    configuration_.SetInt("SCREENW", width); configuration_.SetInt("SCREENH", height);
 }
 
 // 원본 00435b30. 원본은 WM_QUIT을 받으면 곧바로 프로세스를 끝낸다(_exit).

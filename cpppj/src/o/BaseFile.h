@@ -53,6 +53,8 @@ public:
     std::vector<std::uint8_t> Read(std::string_view name) const;
     // Read와 같은 순서로 찾되, 없으면 예외 대신 빈 값을 돌려준다(없어도 되는 설정 파일용).
     std::optional<std::vector<std::uint8_t>> TryRead(std::string_view name) const;
+    // 캠페인 목록의 와일드카드: 디스크/TAFF/보조 경로를 합쳐 중복을 제거하고 이름순으로 반환한다.
+    std::vector<std::string> Match(std::string_view pattern) const;
 private:
     std::filesystem::path base_;
     std::filesystem::path secondary_;

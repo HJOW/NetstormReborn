@@ -2,7 +2,7 @@
 
 > 2026-10-05. 기준은 패치판 `originals/Netstorm.exe`(10.78), 대조는 CD판 `originalCD/NETSTORM.EXE`(10.72).
 > 원본 게임 프로세스는 실행하지 않았다. 처음 복원할 때 원본 파일은 읽기만 했고, 후속 [옵션 저장 복원](cpp-options-reconstruction.md)의 검사는 허용된 설정·시작 표시만 변경 후 복구했다. [후속 계획](../cpp-roadmap.md)의 2단계 나머지(영역 배치)와 3단계의 앞부분(플랫폼 결정, 창, 화면 장치)에 해당한다.
-> **같은 날 후속:** [실제 플레이 복원 계획](../cpp-playable-plan.md)의 1단계 표시 기반을 완료했다. Renderer·원본 글꼴·커서를 연결했고 `Client::draw`를 제거했다. [현재 구현·근거·제한](cpp-renderer-reconstruction.md). 이 문서의 초기 검증 횟수와 미완료 메모는 당시 범위이며 현재 전체 검사 수는 52개다.
+> **같은 날 후속:** 표시 기반과 [메뉴·브리핑·정적 미션 진입](cpp-menu-reconstruction.md)을 연결했다. [Renderer·글꼴·커서](cpp-renderer-reconstruction.md). 이 문서의 초기 검증 횟수/미완료 메모는 당시 범위이며 현재 전체 검사 수는 59개다. 실제 월드/플레이는 후속이다.
 
 ## 1. 원칙: 원본과 같은 방식으로 만든다
 
@@ -158,7 +158,7 @@ AGENTS.md의 요구(전체화면, 16:9·16:10·4:3, 가장자리 스크롤, **�
 * **`options.cfg`는 원본 게임과 동일하게 처리한다 (2026-10-05 사용자 결정).** AGENTS.md가 `options.cfg`와 `fullScreenStateFile.dat`의 수정·삭제를 예외로 허용한다. cpppj는 원본이 읽는 그 파일(`<게임 폴더>/d/options.cfg`)을 원본과 같은 시점에, 같은 형식으로 읽고 쓴다. 따로 둔 저장 위치는 만들지 않는다. 원본 게임과 설정을 함께 쓰게 되는 것은 의도한 결과다.
   * **구현 완료:** 설정 시작 직후 저장(`00441d10`)과 메인 루프의 변경 후 저장(`00441de0`)을 연결했다. Windows-1252·XOR 형식은 두 판본의 저장 기계어 16개 입력으로 확인했다. [옵션 저장 복원](cpp-options-reconstruction.md).
   * 저장 내용은 `[options.cfg]` 본문과 `[END]` 본문이다. 파일 이름 섹션이 없으면 서명을 추가하지 않는 원본 예외도 보존한다.
-  * `fullScreenStateFile.dat`: 실행 파일의 이름은 `fullscreenStateFile.dat`다. 게임 폴더에서 존재를 검사하고 전체화면 시도 직전에 만든다. 조회·생성·삭제 함수는 복원했으며, **삭제의 UberGump 버튼 사건 연결은 남았다.** 스모크는 두 파일의 바이트·존재 상태를 검사 후 복구한다.
+  * `fullScreenStateFile.dat`: 실행 파일의 이름은 `fullscreenStateFile.dat`다. 게임 폴더의 존재 검사·전체화면 시도 직전 생성과 **UberGump 메인 버튼 활성 사건 삭제**를 연결했다. 스모크는 두 파일의 바이트·존재 상태를 복구한다.
 * **소리·글꼴·영상의 방식.** 원본은 DirectSound, 자체 비트맵 글꼴, Smacker 영상이다. 원칙에 따라 원본 방식으로 옮기는 것이 기본이다.
 * **DirectDraw.** Windows 10/11에서 `ddraw.dll`의 8비트 전체화면은 호환성 계층을 거친다. 원본과 같은 호출로 옮길지, 같은 화면 장치 인터페이스 뒤에 다른 구현을 둘지는 전체화면을 옮길 때 정한다.
 

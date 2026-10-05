@@ -12,6 +12,11 @@ target_sources(netstorm PRIVATE
     Renderer.cpp Renderer.h
     BitmapFont.cpp BitmapFont.h
     Cursor.cpp Cursor.h
+    GifImage.cpp GifImage.h
+    DialogScript.cpp DialogScript.h
+    Gump.cpp Gump.h
+    State.cpp State.h
+    UberGump.cpp UberGump.h
 )
 # 원본처럼 Win32 GDI·멀티미디어 타이머를 직접 쓴다(Screen·ClientMain).
 target_link_libraries(netstorm PUBLIC user32 gdi32 winmm)

@@ -60,6 +60,8 @@ public:
     void SetScene(std::vector<RenderSprite> sprites, std::vector<RenderText> text = {}, bool sort = true);
     // 메뉴가 합성한 화면 크기의 8비트 배경을 소유하여 프레임 사이의 자산 수명을 보장한다.
     void SetBackground(std::shared_ptr<const IndexedImage> image);
+    // 정적 미션 진입 화면을 합성한다. 변경 표·출력 상태·커서는 건드리지 않는다.
+    IndexedImage SceneImage();
     // 배경이나 WM_PAINT 등 화면 전체 변화.
     void InvalidateAll();
     // 외부 오브젝트의 변화 범위를 원본 변경 표에 추가한다.

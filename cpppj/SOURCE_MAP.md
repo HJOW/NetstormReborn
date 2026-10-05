@@ -86,7 +86,7 @@
 | `src/o/Xlat.cpp` | Xlat.cpp | xlat.cpp | 3 | 있음 |
 | `src/o/Ztrans.cpp` | Ztrans.cpp | ztrans.cpp | 12 |  |
 
-## `.\` (클라이언트) → `src/client/` (60개, 파일 있음 6개)
+## `.\` (클라이언트) → `src/client/` (60개, 파일 있음 9개)
 
 | cpppj 경로 | 패치판 표기 | CD판 표기 | 함수 수 | 상태 |
 |---|---|---|---|---|
@@ -116,7 +116,7 @@
 | `src/client/FortSpec.cpp` | Fortspec.cpp | fortSpec.cpp | 4 |  |
 | `src/client/Fountain.cpp` | — | fountain.cpp |  |  |
 | `src/client/Guide.cpp` | Guide.cpp | guide.cpp | 3 |  |
-| `src/client/Gump.cpp` | Gump.cpp | Gump.cpp | 18 |  |
+| `src/client/Gump.cpp` | Gump.cpp | Gump.cpp | 18 | 있음 |
 | `src/client/HtmlGump.cpp` | Htmlgump.cpp | HtmlGump.cpp | 1 |  |
 | `src/client/Image.cpp` | Image.cpp | Image.cpp | 2 |  |
 | `src/client/Kaboom.cpp` | Kaboom.cpp | Kaboom.cpp |  |  |
@@ -143,10 +143,10 @@
 | `src/client/Sound.cpp` | Sound.cpp | sound.cpp | 13 |  |
 | `src/client/SoundProcess.cpp` | Soundprocess.cpp | soundProcess.cpp | 1 |  |
 | `src/client/Splash.cpp` | — | Splash.cpp |  |  |
-| `src/client/State.cpp` | State.cpp | state.cpp | 12 |  |
+| `src/client/State.cpp` | State.cpp | state.cpp | 12 | 있음 |
 | `src/client/StyleText.cpp` | Styletext.cpp | StyleText.cpp | 15 |  |
 | `src/client/TextGump.cpp` | — | TextGump.cpp |  |  |
-| `src/client/Ubergump.cpp` | Ubergump.cpp | ubergump.cpp | 2 |  |
+| `src/client/Ubergump.cpp` | Ubergump.cpp | ubergump.cpp | 2 | 있음 |
 | `src/client/Ui.cpp` | Ui.cpp | ui.cpp | 4 |  |
 | `src/client/UserInput.cpp` | Userinput.cpp | UserInput.cpp | 2 |  |
 | `src/client/VFXDraw.cpp` | Vfxdraw.cpp | VFXDraw.cpp | 3 | 있음 |

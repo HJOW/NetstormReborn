@@ -67,4 +67,4 @@ cpppj/build/bin/Release/NetstormCpp.exe --run originals --view fonts --window
 - 원본 qsort 동률 순서는 미확정이다. 현재 유한 좌표를 검증하고 동률에는 입력 순서를 유지한다.
 - 글자 변경은 보수적인 전체 무효화다. Gump의 원본 변경 알림·깊이와 결합할 때 좁힌다. 프레임 캐시의 참조 자산은 Renderer보다 오래 살아야 한다.
 - 커서 번호에 따른 실게임 상황 선택·숨김 중첩·GDI 생성 캐시의 원본 OS별 픽셀 동일성은 검증하지 않았다.
-- 메인 메뉴·실제 월드·플레이는 완료하지 않았다. 다음은 [현재 계획 2단계](../cpp-playable-plan.md#2단계--바로-다음-작업)의 메뉴·미션 진입이다.
+- **같은 날 후속:** [메뉴·브리핑·정적 미션 진입](cpp-menu-reconstruction.md)을 연결했다. 실제 월드·플레이는 후속이며 다음은 [현재 계획 3단계](../cpp-playable-plan.md)다. 원본 Gump/Renderer의 실제 목록·깊이 통합은 아직 남았다.

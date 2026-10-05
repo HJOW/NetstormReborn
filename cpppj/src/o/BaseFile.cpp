@@ -129,4 +129,46 @@ std::vector<std::uint8_t> BaseFileSystem::Read(std::string_view name) const {
     if (!bytes) throw std::runtime_error("Game file not found: " + std::string(name));
     return std::move(*bytes);
 }
+// 원본 004ce580은 파일 목록을 모은 뒤 이름을 대소문자 없이 정렬한다. 내용 읽기는 기존 우선순위를 따른다.
+std::vector<std::string> BaseFileSystem::Match(std::string_view pattern) const {
+    const auto normalized = NormalizeGamePath(pattern);
+    const std::filesystem::path path(normalized);
+    const auto directory = path.parent_path();
+    const auto mask = path.filename().string();
+    // 파일 이름의 *·?를 ASCII 대소문자 없이 비교한다.
+    const auto matches = [&mask](std::string name) {
+        name = AsciiLower(name); std::size_t n = 0, m = 0, star = std::string::npos, retry = 0;
+        // 실패할 때 직전 *의 소비 길이를 한 문자 늘린다.
+        while (n < name.size()) {
+            if (m < mask.size() && (mask[m] == '?' || mask[m] == name[n])) { ++m; ++n; }
+            else if (m < mask.size() && mask[m] == '*') { star = m++; retry = n; }
+            else if (star != std::string::npos) { m = star + 1; n = ++retry; }
+            else return false;
+        }
+        // 마지막 *는 빈 문자열에도 일치한다.
+        while (m < mask.size() && mask[m] == '*') ++m;
+        return m == mask.size();
+    };
+    std::vector<std::string> result;
+    // 디스크 파일은 이름만 읽고 내용은 변경하지 않는다.
+    const auto disk = [&](const std::filesystem::path& root) {
+        const auto folder = path.is_absolute() ? directory : root / directory;
+        if (!std::filesystem::is_directory(folder)) return;
+        // 요청한 한 디렉터리만 열거한다.
+        for (const auto& entry : std::filesystem::directory_iterator(folder)) if (entry.is_regular_file() && matches(entry.path().filename().string()))
+            result.push_back((directory / entry.path().filename()).generic_string());
+    };
+    disk(base_);
+    // 아카이브 이름도 같은 디렉터리·패턴으로 거른다.
+    for (const auto& archive : archives_)
+        // 원본 디렉터리의 엔트리를 읽기만 한다.
+        for (const auto& entry : archive.Entries()) {
+            const std::filesystem::path name(NormalizeGamePath(entry.name));
+            if (name.parent_path() == directory && matches(name.filename().string())) result.push_back(name.generic_string());
+        }
+    disk(secondary_);
+    std::sort(result.begin(), result.end(), [](const std::string& a, const std::string& b) { return AsciiLower(a) < AsciiLower(b); });
+    result.erase(std::unique(result.begin(), result.end(), [](const std::string& a, const std::string& b) { return AsciiLower(a) == AsciiLower(b); }), result.end());
+    return result;
+}
 }

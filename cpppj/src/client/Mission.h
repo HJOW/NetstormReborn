@@ -1,5 +1,5 @@
 // 원본 Mission.cpp의 미션 시작(FUN_00482fb0 ↔ CD 00481020) 가운데 미션 스크립트와 요새 파일을 정하는 부분.
-// 미션 종류별 객체 생성, 스크립트 명령 실행, 브리핑 화면은 아직 옮기지 않았다.
+// UberGump가 원본 브리핑 본문을 표시한다. 미션 종류별 실제 객체·게임 명령은 후속이다.
 #pragma once
 #include "o/ConfigInterface.h"
 #include <optional>
@@ -26,6 +26,8 @@ public:
     std::string FortPath();
     // `mission.missionType`: 원본은 이 이름으로 등록된 미션 종류를 찾아 객체를 만든다.
     std::string MissionType();
+    // 미션 파일의 원본 브리핑 본문을 설정 치환 전 상태로 읽는다.
+    std::optional<std::string> Section(std::string_view name) const;
 private:
     o::ConfigInterface& configuration_;
     std::string name_;

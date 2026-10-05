@@ -35,14 +35,18 @@ cpppj의 **Win32 직접 호출·Windows 전용** 범위는 유지한다. 기존 
 
 **완료 범위:** 원본 `004994b0` 전체 함수의 완전 복원은 아니다. 원본의 Squid·지형·Gump 목록 수집, 실제 깊이/프레임·소유자 변환표 선택, 객체별 `00498220`, 구름·카메라 복사는 2·3단계에서 연결한다. 원본 `qsort`의 동률 순서는 미확정이어서 안정 정렬로 둔다. 검사 장면은 기본 프레임을 제출한다. 실제 게임 월드/메뉴 복원 전까지 `InspectView`는 Renderer에 목록을 공급하는 어댑터로 남는다. [근거·검사·제한](exe/cpp-renderer-reconstruction.md).
 
-### 2단계 — 바로 다음 작업
+### 2단계 — 메뉴 탐색·브리핑·정적 미션 진입 연결 완료 (2026-10-05)
 
-- [ ] Gump·MenuGump·UberGump·StyleText/HtmlGump·State를 조사해 Renderer·글꼴과 연결한다. `titleMenu.gif`·구름·돌 질감·원본 버튼 반응을 복원한다.
-- [ ] `tell.english`·`offical*.english`의 메뉴·버튼·조건을 실행하고 캠페인 선택·취소·종료·옵션을 연결한다.
-- [ ] 미션 종류의 객체 생성과 브리핑/일시정지, 메뉴→미션/취소→메뉴 전환을 연결한다. 실제 월드는 3·4단계에서 완성한다.
-- [ ] `Client::ClearFullScreenState`를 UberGump의 원본 삭제 사건(`004cebf0`)에 연결한다. 임의의 종료 시점에 지우지 않는다.
+- [x] Gump의 입력·UberGump·UI State와 HTML 본문/조건 부분을 Renderer·원본 글꼴에 연결했다. 타이틀·정적 구름 타일·돌 질감·캡처/뗌·목록 누름을 구현했다.
+- [x] 원본 메뉴 파일에서 캠페인·제목·잠금/완료 표시를 읽고 선택·Back·종료를 연결했다. 원본 옵션 키 저장, 실제 창 해상도 변경, 재실행 유지도 검사했다.
+- [x] 스크립트/요새 로드→원본 A./A1. 브리핑·정지→확인→정적 미션 표시→취소/메뉴 복귀를 연결했다. 1-1과 튜토리얼 1의 MORE/BACK을 실제 클론 창에서 검사했다.
+- [x] `Client::ClearFullScreenState`를 UberGump의 원본 메인 버튼 활성 사건(`004cebf0`)에 연결했다. 오른쪽 클릭/일반 종료에서는 지우지 않는다.
+- [ ] **3단계 연동:** 미션 종류의 실제 객체·Squid·플레이어·지형·조작. 현재 진입 화면은 기존 요새 검사 어댑터이며 게임 플레이가 아니다.
+- [ ] **원본 UI 전체:** 정확한 패널/하위 메뉴 배치·구름 애니메이션·전체 StyleText·이미지/링크/스크롤·Help·기술·팁·자동 데모·음향 등. 이번 연결은 Gump/State/Mission 전체 복원을 의미하지 않는다.
 
 근거: [메인 메뉴](screens/main-menu.md), [메뉴 버튼](videos/menu-buttons-20261003.md), [미션 스크립트](formats/mission-script.md). dotnetpj의 UI/캠페인 기록은 분석 참고이며 cpppj 완료 근거로 세지 않는다.
+
+새 실행은 `cpppj/build/bin/Release/NetstormCpp.exe --run originals --window`다. **기본 메뉴 탐색 경로를 완료했고 바로 다음은 3단계 실제 월드/조작**이다. [연결 범위·검사·미완료 UI](exe/cpp-menu-reconstruction.md).
 
 ### 3·4단계의 주의점
 
@@ -54,7 +58,7 @@ SID·파생 프로세스·객체 수명·좌표 해시·이동 경로/충돌, �
 
 ## 검사와 기록
 
-기본 검사는 [C++ 빌드 규칙](cpp-build.md)과 [기존 로드맵의 복원 절차](cpp-roadmap.md#디컴파일-신뢰도를-높이는-작업-방식)를 따른다. 현재 **52개 검사**, 두 판본 제한 x86 **5,365개 기대값**(기존 4,971＋Renderer 394)이다. 이 수치를 게임 전체 완성도로 해석하지 않는다.
+기본 검사는 [C++ 빌드 규칙](cpp-build.md)과 [기존 로드맵의 복원 절차](cpp-roadmap.md#디컴파일-신뢰도를-높이는-작업-방식)를 따른다. 현재 **59개 검사**, 두 판본 제한 x86 **5,365개 기대값**(기존 4,971＋Renderer 394)이다. 새 메뉴 검사는 부분 동작·독립 GIF 비교·네이티브 창 탐색이며 메뉴 전체 기계어 대조는 아니다. 이 수치를 게임 전체 완성도로 해석하지 않는다.
 
 ```powershell
 cmake --build cpppj/build --config Release
@@ -62,6 +66,7 @@ ctest --test-dir cpppj/build --build-config Release --output-on-failure
 python tools/cpp_assets_smoke.py
 python tools/cpp_window_smoke.py
 python tools/cpp_renderer_smoke.py
+python tools/cpp_menu_smoke.py
 python tools/decomp_renderer_oracle.py
 ```
 
