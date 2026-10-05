@@ -1,0 +1,156 @@
+{
+  "schema": 1,
+  "functions": [
+    {
+      "name": "Connect",
+      "originals": "00441e40",
+      "originalCD": "004d2e00",
+      "purge": 0
+    },
+    {
+      "name": "Find",
+      "originals": "004b23e0",
+      "originalCD": "004ebad0",
+      "purge": 8
+    },
+    {
+      "name": "Next",
+      "originals": "004b1e70",
+      "originalCD": "004ec030",
+      "purge": 0
+    },
+    {
+      "name": "Count",
+      "originals": "004b2660",
+      "originalCD": "004ec150",
+      "purge": 0
+    },
+    {
+      "name": "Collect",
+      "originals": "004218b0",
+      "originalCD": "00449f10",
+      "purge": 8
+    }
+  ],
+  "helpers": {
+    "originals": [
+      4922736,
+      4922400,
+      4923008,
+      4896896,
+      4906608,
+      4906656,
+      4827200,
+      4827392,
+      4828800,
+      4899328,
+      4899296,
+      4900176,
+      4904576,
+      4312720,
+      4253824,
+      4253936,
+      4253696,
+      4313296,
+      5130688,
+      4254208
+    ],
+    "originalCD": [
+      5160752,
+      5160400,
+      5161024,
+      4749328,
+      4910784,
+      4910896,
+      4473520,
+      4475344,
+      4897504,
+      4897472,
+      4898640,
+      4908016,
+      4453920,
+      4454736,
+      5183004
+    ]
+  },
+  "cases": {
+    "connect": 3016,
+    "neighbor": 125,
+    "collect": 309
+  },
+  "total_cases": 3450,
+  "reviewed_pairs": [
+    {
+      "name": "Connect",
+      "originals": "00441e40",
+      "originalCD": "004d2e00",
+      "purge": 0
+    },
+    {
+      "name": "Find",
+      "originals": "004b23e0",
+      "originalCD": "004ebad0",
+      "purge": 8
+    },
+    {
+      "name": "Next",
+      "originals": "004b1e70",
+      "originalCD": "004ec030",
+      "purge": 0
+    },
+    {
+      "name": "Count",
+      "originals": "004b2660",
+      "originalCD": "004ec150",
+      "purge": 0
+    },
+    {
+      "name": "Collect",
+      "originals": "004218b0",
+      "originalCD": "00449f10",
+      "purge": 8
+    },
+    {
+      "name": "Filter",
+      "originals": "004b1e80",
+      "originalCD": "004ec040",
+      "purge": 4
+    },
+    {
+      "name": "SurfaceAdvance",
+      "originals": "004b1c20",
+      "originalCD": "004ebdd0",
+      "purge": 0
+    }
+  ],
+  "rejected_pairs": [
+    {
+      "originals": "004b1810",
+      "originalCD": "004eae20",
+      "reason": "일반 공간 해시 다음 함수(ret 0)와 생성자(ret 16)의 오대응. 이 경로의 실제 동작 검증은 후속."
+    }
+  ],
+  "binary_sha256": {
+    "originals": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+  },
+  "fixture_sha256": "73977006dfa97215ae4836dc1d01c2b33b4b358f945eb40b18603947dd8dd05b",
+  "source_sha256": {
+    "tools/decomp_surface_oracle.py": "9b1711c22db7267bfcc4c9a870ee42c193f2041eee8a4f70b552e462c103b5ec",
+    "tools/decomp_bridge_oracle.py": "c212538f7059cd0c9efac87cb205c71561fcc1f8d97df7830bc57d89a03f01fe",
+    "tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d"
+  },
+  "assert_reports": {
+    "originals": 0,
+    "originalCD": 0
+  },
+  "native_write_addresses_sizes": {
+    "originals": 401,
+    "originalCD": 512
+  },
+  "limitations": [
+    "정수 기준점·정상 발자국과 flag 8 이웃 경로만",
+    "실제 함수 정상 반환까지 검증, assert 보고만 대체",
+    "접합 고리·일반 공간 해시·실제 삭제/수명/그림/소유자 전파/배치 UI 미검증"
+  ]
+}

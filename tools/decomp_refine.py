@@ -363,6 +363,31 @@ class Matcher:
                     int(ed.conv[address]['purge']) != pair['purge'] for ed,address in ((self.a,x),(self.b,y))):
                     raise ValueError(f'다리 검토 함수의 존재/ret N 불일치: {pair["name"]}')
                 added += self.accept(x,y,'reviewed',1.0)
+        # 표면 이웃/재귀 검증도 실제 입력·도구·판본이 그대로일 때만 강한 대응으로 적용한다.
+        surface_path = ROOT / 'cpppj/recovery-surface-evidence.json'
+        if surface_path.exists():
+            surface = json.loads(surface_path.read_text(encoding='utf-8'))
+            fixture = ROOT / 'cpppj/tests/fixtures/surface-x86.tsv'
+            if hashlib.sha256(fixture.read_bytes()).hexdigest() != surface['fixture_sha256']:
+                raise ValueError('표면 기대값이 변경되었습니다. decomp_surface_oracle.py로 다시 검증하세요.')
+            # 다른 버전의 실행 도구 결과를 같은 근거로 적용하지 않는다.
+            for name, expected in surface['source_sha256'].items():
+                if hashlib.sha256((ROOT / name).read_bytes()).hexdigest() != expected:
+                    raise ValueError('표면 검증 도구가 변경되었습니다. decomp_surface_oracle.py로 다시 검증하세요.')
+            # 주소가 같아도 바이너리 내용이 다른 판본은 거부한다.
+            for key, expected in surface['binary_sha256'].items():
+                if hashlib.sha256(EDITIONS[key]['exe'].read_bytes()).hexdigest() != expected:
+                    raise ValueError('표면 검토 대응의 원본 SHA-256이 다릅니다.')
+            # 다음 함수와 생성자의 오대응을 다시 전파하지 않는다.
+            for pair in surface['rejected_pairs']:
+                self.banned.add((int(pair['originals'],16), int(pair['originalCD'],16)))
+            # 실행 범위와 두 판본 ret N을 확인한 함수만 검토 앵커가 된다.
+            for pair in surface['reviewed_pairs']:
+                x, y = int(pair['originals'],16), int(pair['originalCD'],16)
+                if x not in self.a.funcs or y not in self.b.funcs or any(
+                    int(ed.conv[address]['purge']) != pair['purge'] for ed,address in ((self.a,x),(self.b,y))):
+                    raise ValueError(f'표면 검토 함수의 존재/ret N 불일치: {pair["name"]}')
+                added += self.accept(x,y,'reviewed',1.0)
         return added
 
     def accept(self, x, y, method, score):

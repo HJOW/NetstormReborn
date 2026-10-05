@@ -17,6 +17,7 @@ target_sources(netstorm PRIVATE
     TerrainBuilder.cpp TerrainBuilder.h
     Player.cpp Player.h
     Squid.cpp Squid.h
+    SquidFinder.cpp SquidFinder.h
     BaseProcess.cpp BaseProcess.h
     Kernel.cpp Kernel.h
     GameClock.cpp GameClock.h

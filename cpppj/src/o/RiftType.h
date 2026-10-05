@@ -89,6 +89,7 @@ inline constexpr std::uint32_t kMayDropOnIsle = 0x2;    // mayDropOnIsle. 후처
 inline constexpr std::uint32_t kMayDropOnRim = 0x4;     // mayDropOnRim
 inline constexpr std::uint32_t kHasHitPoints = 0x10;    // maxHitPoints 속성이 있으면 켜진다.
 inline constexpr std::uint32_t kSaveFrame = 0x20;       // saveFrame: .fort에 프레임 1바이트.
+inline constexpr std::uint32_t kSurface = 0x800;        // surface: 표면 오브젝트 지도/이웃 탐색 대상.
 inline constexpr std::uint32_t kSaveQA = 0x1000;        // saveQA: .fort에 수량 1바이트.
 inline constexpr std::uint32_t kSaveQB = 0x2000;        // saveQB: .fort에 수량 2바이트(TYPE_FLAG_SAVE_Q16).
 inline constexpr std::uint32_t kUsesPower = 0x4000;     // minUsage·maxUsage가 0이 아니거나 vortex.
