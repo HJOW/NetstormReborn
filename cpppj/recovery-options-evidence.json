@@ -1,0 +1,251 @@
+{
+  "kind": "isolated-x86-options-save",
+  "cases": 16,
+  "functions": {
+    "originals": [
+      4460336,
+      4303120
+    ],
+    "originalCD": [
+      4887152,
+      4960640,
+      4887464,
+      4887482
+    ]
+  },
+  "binary_sha256": {
+    "originals": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+  },
+  "fixture_sha256": "e5bfdd6578dc3f9516ae694e1680e6d59c64f6f49fe061450de8de6c250e01cb",
+  "real_files": {
+    "originals": {
+      "bytes": 834,
+      "sha256": "7fc69f5d2a929b3a41a05da1640542fa8ff008e8d08da4e0f337789db5e85ade"
+    },
+    "originalCD": {
+      "bytes": 114,
+      "sha256": "87df7bf83ea6539d9dacfcf8e11f8aca9d7e3d0f1adc63397ac2b10247047b06"
+    }
+  },
+  "original_game_started": false,
+  "original_machine_code": "Save → Section → BaseFile::Write(XOR 포함)",
+  "stubs": {
+    "originals": {
+      "4563488": [
+        "filename",
+        4
+      ],
+      "4561696": [
+        "basename",
+        4
+      ],
+      "4560368": [
+        "noop",
+        0
+      ],
+      "4302240": [
+        "construct",
+        0
+      ],
+      "4306112": [
+        "open",
+        12
+      ],
+      "4302368": [
+        "key",
+        4
+      ],
+      "4305936": [
+        "close",
+        0
+      ],
+      "5141248": [
+        "strncmp",
+        0
+      ],
+      "5133932": [
+        "tell",
+        0
+      ],
+      "5129382": [
+        "write",
+        0
+      ]
+    },
+    "originalCD": {
+      "4834944": [
+        "filename",
+        4
+      ],
+      "4836336": [
+        "basename",
+        4
+      ],
+      "4834992": [
+        "noop",
+        0
+      ],
+      "4957584": [
+        "construct",
+        0
+      ],
+      "4957952": [
+        "open",
+        12
+      ],
+      "4957824": [
+        "key",
+        4
+      ],
+      "4957600": [
+        "close",
+        0
+      ],
+      "5187360": [
+        "strncmp",
+        0
+      ],
+      "4960064": [
+        "tell",
+        0
+      ],
+      "5186016": [
+        "write",
+        0
+      ]
+    }
+  },
+  "static_facts": {
+    "originals": {
+      "paths": {
+        "00540cec": {
+          "pointer": "00503c8b",
+          "text": ""
+        },
+        "00540cf8": {
+          "pointer": "00508ab4",
+          "text": "d"
+        }
+      },
+      "direct_calls": {
+        "00441d10": [
+          "00435a05"
+        ],
+        "00440f30": [
+          "00441d53",
+          "00441d96",
+          "00441e24"
+        ],
+        "00441de0": [
+          "00439ad3"
+        ],
+        "00436dd0": [
+          "004395a4"
+        ],
+        "00436df0": [
+          "004395b5"
+        ],
+        "00436e40": [
+          "004cec69"
+        ]
+      },
+      "fullscreen_branch": [
+        "004395a4 e827d8ffff call 0x436dd0",
+        "004395a9 3bc3 cmp eax, ebx",
+        "004395ab 7404 je 0x4395b1",
+        "004395ad 33f6 xor esi, esi",
+        "004395af eb2e jmp 0x4395df",
+        "004395b1 3bf3 cmp esi, ebx",
+        "004395b3 742a je 0x4395df",
+        "004395b5 e836d8ffff call 0x436df0",
+        "004395ba 56 push esi",
+        "004395bb c645fc04 mov byte ptr [ebp - 4], 4",
+        "004395bf e81cba0600 call 0x4a4fe0",
+        "004395c4 83c404 add esp, 4",
+        "004395c7 85c0 test eax, eax",
+        "004395c9 7514 jne 0x4395df",
+        "004395cb 33f6 xor esi, esi",
+        "004395cd eb10 jmp 0x4395df",
+        "004395cf c7451000000000 mov dword ptr [ebp + 0x10], 0",
+        "004395d6 b8dc954300 mov eax, 0x4395dc",
+        "004395db c3 ret",
+        "004395dc 8b7510 mov esi, dword ptr [ebp + 0x10]",
+        "004395df 33db xor ebx, ebx",
+        "004395e1 3bf3 cmp esi, ebx",
+        "004395e3 895dfc mov dword ptr [ebp - 4], ebx",
+        "004395e6 7540 jne 0x439628",
+        "004395e8 68885f5000 push 0x505f88",
+        "004395ed e89e7a0000 call 0x441090",
+        "004395f2 83c404 add esp, 4",
+        "004395f5 50 push eax",
+        "004395f6 e8e5b90600 call 0x4a4fe0",
+        "004395fb 83c404 add esp, 4",
+        "004395fe 3bc3 cmp eax, ebx",
+        "00439600 7526 jne 0x439628"
+      ]
+    },
+    "originalCD": {
+      "paths": {
+        "00510940": {
+          "pointer": "00510960",
+          "text": ""
+        },
+        "0051094c": {
+          "pointer": "00510978",
+          "text": "d"
+        }
+      },
+      "direct_calls": {
+        "004a9090": [
+          "00485428",
+          "004a9c3b"
+        ],
+        "004a9270": [
+          "004a910a"
+        ],
+        "004a9c30": [
+          "00486767"
+        ],
+        "00487670": [
+          "00486253"
+        ],
+        "004876a0": [
+          "00486269"
+        ],
+        "00487720": [
+          "004c8791"
+        ]
+      },
+      "fullscreen_branch": [
+        "00486253 e818140000 call 0x487670",
+        "00486258 85c0 test eax, eax",
+        "0048625a 7407 je 0x486263",
+        "0048625c c745ec00000000 mov dword ptr [ebp - 0x14], 0",
+        "00486263 837dec00 cmp dword ptr [ebp - 0x14], 0",
+        "00486267 742d je 0x486296",
+        "00486269 e832140000 call 0x4876a0",
+        "0048626e c645fc02 mov byte ptr [ebp - 4], 2",
+        "00486272 8b45ec mov eax, dword ptr [ebp - 0x14]",
+        "00486275 50 push eax",
+        "00486276 e835bef9ff call 0x4220b0",
+        "0048627b 83c404 add esp, 4",
+        "0048627e 85c0 test eax, eax",
+        "00486280 7507 jne 0x486289",
+        "00486282 c745ec00000000 mov dword ptr [ebp - 0x14], 0",
+        "00486289 c745fc00000000 mov dword ptr [ebp - 4], 0",
+        "00486290 837dec00 cmp dword ptr [ebp - 0x14], 0",
+        "00486294 7540 jne 0x4862d6",
+        "00486296 68c8fa5200 push 0x52fac8",
+        "0048629b e860310200 call 0x4a9400",
+        "004862a0 83c404 add esp, 4",
+        "004862a3 50 push eax",
+        "004862a4 e807bef9ff call 0x4220b0",
+        "004862a9 83c404 add esp, 4",
+        "004862ac 85c0 test eax, eax",
+        "004862ae 7526 jne 0x4862d6"
+      ]
+    }
+  },
+  "limits": "파일 이름 객체·열기·닫기·tell·write·strncmp는 대체; 실제 OS I/O 검증은 별도 스모크"
+}

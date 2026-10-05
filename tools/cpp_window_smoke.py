@@ -24,6 +24,7 @@ import subprocess
 from PIL import Image
 
 import cpp_fort_smoke as fort_smoke
+from cpp_smoke_files import preserve_game_settings
 import fort
 from shp import TYPE_LOAD_ORDER, decode_frame, read_blocks
 from taff import TaffArchive
@@ -146,9 +147,11 @@ def screen_palette(col):
     return colors
 
 
-def run_window(executable, root, flag, settings, view, output):
+def run_window(executable, root, flag, settings, view, output, force_window=True):
     """새 실행 파일의 창을 몇 프레임 띄우고 화면 버퍼 그림을 RGB로 읽는다."""
-    arguments = ['--run', root, '--view', view, '--window', '--frames', FRAMES, '--screenshot', output]
+    arguments = ['--run', root, '--view', view, '--frames', FRAMES, '--screenshot', output]
+    if force_window:
+        arguments += ['--window']
     if settings:
         arguments += ['--set', settings]
     fort_smoke.run(executable, *arguments, *flag)
@@ -221,9 +224,24 @@ def check_window(executable, edition, data_dir, archive_name, flag, settings, mi
     drawn_mission = mission_image.width * mission_image.height - background
     if drawn_mission < MIN_DRAWN_PIXELS:
         raise AssertionError(f'{edition} {mission}: 그려진 픽셀이 {drawn_mission}개뿐이다')
+    # 3) 전체화면 시작 표시 파일: 없으면 생성하고, 남아 있으면 내용을 유지하며 창 모드로 시작한다.
+    # 실제 DirectDraw는 아직 없으므로 화면은 원본의 DirectDraw 없음 규칙대로 창 모드로 나온다.
+    marker = root / 'fullscreenStateFile.dat'
+    if marker.exists():
+        marker.unlink()  # 호출자의 preserve_game_settings가 기존 바이트·존재 상태를 복구한다.
+    fullscreen_settings = settings + ';startInFullScreen=1;workingFullScreenFlags=1'
+    run_window(executable, root, flag, fullscreen_settings, 'types', OUTPUT / f'{edition}-state-created.bmp', force_window=False)
+    if not marker.exists() or marker.read_bytes() != b'':
+        raise AssertionError(f'{edition}: 전체화면 시작 표시 파일이 생성되지 않음')
+    marker.write_bytes(b'previous startup')
+    state_image = run_window(executable, root, flag, fullscreen_settings, 'types',
+                             OUTPUT / f'{edition}-state-present.bmp', force_window=False)
+    if marker.read_bytes() != b'previous startup' or state_image.tobytes() != expected.tobytes():
+        raise AssertionError(f'{edition}: 남은 표시 파일의 창 모드 시작 경로 불일치')
     return {'screen': [actual.width, actual.height], 'palette': palette_name,
             'types_view_pixels_compared': actual.width * actual.height, 'types_view_drawn_pixels': drawn,
-            'mission': mission, 'mission_colors': len(colors), 'mission_drawn_pixels': drawn_mission}
+            'mission': mission, 'mission_colors': len(colors), 'mission_drawn_pixels': drawn_mission,
+            'fullscreen_state_create_and_existing_checked': True}
 
 
 def digest(paths):
@@ -248,10 +266,18 @@ def main():
         before = digest(watched)
         report[edition] = {'territories': check_territories(args.exe, edition, data_dir, archive_name, flag, type_count, patterns)}
         if not args.no_window:
-            report[edition]['window'] = check_window(args.exe, edition, data_dir, archive_name, flag, settings, mission, type_count)
+            # --run은 원본 시점에 options.cfg를 쓴다. 실패해도 사용자 설정·CD판의 파일 부재 상태를 복구한다.
+            with preserve_game_settings(root, data_dir):
+                report[edition]['window'] = check_window(args.exe, edition, data_dir, archive_name, flag, settings, mission, type_count)
         if digest(watched) != before:
             raise AssertionError(f'원본 파일 변경 감지: {edition}')
+        # 원래 없던 options.cfg·시작 표시 파일까지 되돌아갔는지 파일 목록도 확인한다.
+        after_paths = [root / archive_name] + sorted(path for path in (root / data_dir).iterdir() if path.is_file())
+        after_paths += sorted(path for path in root.iterdir() if path.is_file())
+        if watched != after_paths:
+            raise AssertionError(f'원본 파일 존재 상태 변경 감지: {edition}')
         report[edition]['original_files_unchanged'] = len(watched)
+        report[edition]['options_restored'] = not args.no_window
     (OUTPUT / 'report.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')
     print(json.dumps(report, ensure_ascii=False, indent=2))
 

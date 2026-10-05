@@ -525,20 +525,26 @@ int RunConfigCommand(const std::string& command, std::vector<std::string> argume
         WriteText(config.PathSpec(arguments[1], values[0], values[1], values[2])); return 0;
     }
     if (command == "--config-save" && arguments.size() >= 2) {
-        const auto output = std::filesystem::absolute(arguments[1]).lexically_normal();
-        const auto protectedRoot = std::filesystem::absolute(root).lexically_normal();
-        // 원본 게임 폴더 안에는 쓰지 않는다(AGENTS.md: 원본 파일 수정 금지).
-        const auto relative = output.lexically_relative(protectedRoot);
-        if (!relative.empty() && *relative.begin() != "..") throw std::invalid_argument("Refusing to write inside the game directory");
+        const auto output = std::filesystem::weakly_canonical(std::filesystem::absolute(arguments[1]));
+        const auto protectedRoot = std::filesystem::weakly_canonical(std::filesystem::absolute(root));
+        const auto outputName = netstorm::o::AsciiLower(output.generic_string());
+        const auto rootName = netstorm::o::AsciiLower(protectedRoot.generic_string());
+        const auto optionsName = netstorm::o::AsciiLower((protectedRoot / "d" / "options.cfg").generic_string());
+        // AGENTS.md의 예외와 사용자 결정: 게임 폴더에서는 d/options.cfg만 설정 출력으로 덮어쓸 수 있다.
+        // 실제 경로와 Windows의 대소문자 비교로 검사해 '..'·심볼릭 링크 우회를 막는다.
+        if ((outputName == rootName || outputName.starts_with(rootName + "/")) && outputName != optionsName)
+            throw std::invalid_argument("Refusing to write inside the game directory except d/options.cfg");
         // `키=값` 인자를 차례로 쓴다.
         for (std::size_t i = 2; i < arguments.size(); ++i) {
             const auto equals = arguments[i].find('=');
             if (equals == std::string::npos) throw std::invalid_argument("Expected key=value");
             config.Set(arguments[i].substr(0, equals), arguments[i].substr(equals + 1));
         }
-        const auto bytes = netstorm::o::EncodeConfigFile(config.SaveText("options.cfg"));
-        netstorm::platform::WriteFileBytes(output, bytes);
-        std::printf("Saved %zu bytes -> %s\n", bytes.size(), output.string().c_str());
+        // 쓰기 실패 때 변경 표시를 잃지 않도록 게임 시작과 같은 저장 진입점을 쓴다.
+        config.SaveFile("options.cfg", [&output](std::string_view, std::span<const std::uint8_t> bytes) {
+            netstorm::platform::WriteFileBytes(output, bytes);
+            std::printf("Saved %zu bytes -> %s\n", bytes.size(), output.string().c_str());
+        });
         return 0;
     }
     throw std::invalid_argument("Invalid config command arguments");

@@ -2,10 +2,11 @@
 //       00441090/004410f0/004411e0/00441270/00441300/00441470/004414d0/00441520/00441660/00441db0(접근 함수).
 // 범위: 설정 읽기 순서·접근 함수·저장할 내용 만들기. 설정 파일 위치 탐색(6개 후보 경로)·작업 폴더 변경·
 //       CD 찾기·`*.tarc` 등록·로그 출력은 옮기지 않았다(호출자가 경로와 파일 읽기를 준다).
-// 검증: 조회·치환 자체는 Config.cpp의 x86 기대값으로 검증한다. 이 파일의 순서·서식은 정적 대조와 단위 검사다.
+// 검증: 조회·치환은 Config.cpp의 x86 기대값, 저장·XOR 쓰기는 options-x86.tsv의 두 판본 기대값과 대조한다.
+//       시작 순서·접근 함수는 정적 대조와 단위 검사다.
 #include "o/ConfigInterface.h"
 #include "o/BaseFile.h"
-#include <algorithm>
+#include "o/OriginalText.h"
 
 namespace netstorm::o {
 namespace {
@@ -14,8 +15,6 @@ constexpr std::string_view kArgumentsSection = "ARGS";
 constexpr std::string_view kEndSection = "END";
 // `local.1`~`local.3`을 담는 임시 설정 객체의 이름(원본 "local").
 constexpr std::string_view kLocalObjectName = "local";
-// 저장할 때 서명 뒤에 넣는 UTF-8 BOM(새 확장).
-constexpr std::string_view kUtf8Bom = "\xef\xbb\xbf";
 
 // 원본 FUN_00459b20(경로, 1): 마지막 `\` 또는 `:` 뒤의 파일 이름. `/`도 받는 것은 새 확장이다.
 std::string_view FileNamePart(std::string_view path) {
@@ -56,13 +55,7 @@ std::string ConfigListItem(std::string_view list, int index) {
 }
 // 원본 저장은 파일 전체에 키 "mydoghasfleas"를 XOR 한다(0041a620).
 std::vector<std::uint8_t> EncodeConfigFile(std::string_view text) {
-    std::string plain;
-    if (!text.starts_with(kConfigSignature)) plain += kConfigSignature;
-    plain += text;
-    // ASCII 밖의 글자가 있으면 서명 바로 뒤에 BOM을 넣어 UTF-8임을 표시한다.
-    const bool ascii = std::all_of(plain.begin(), plain.end(), [](char c) { return static_cast<unsigned char>(c) < 0x80; });
-    if (!ascii) plain.insert(kConfigSignature.size(), kUtf8Bom);
-    std::vector<std::uint8_t> bytes(plain.begin(), plain.end());
+    auto bytes = EncodeOriginalText(text);
     ApplyXor(bytes);
     return bytes;
 }
@@ -185,6 +178,19 @@ std::string ConfigInterface::SaveText(std::string_view fileName) {
     if (const auto end = configuration_.Section(kEndSection)) result += *end;
     configuration_.changed = false;
     return result;
+}
+// 파일 이름 섹션과 END 섹션을 원본처럼 이어 쓴다. 파일 접근 자체는 공용 계층 밖에서 제공한다.
+void ConfigInterface::SaveFile(std::string_view fileName, const FileWriter& writer) {
+    const bool changed = configuration_.changed;
+    try {
+        const auto bytes = EncodeConfigFile(SaveText(fileName));
+        configuration_.changed = changed;
+        writer(fileName, bytes);
+        configuration_.changed = false;
+    } catch (...) {
+        configuration_.changed = changed;
+        throw;
+    }
 }
 // 전역 설정을 돌려준다.
 Config& ConfigInterface::Configuration() { return configuration_; }

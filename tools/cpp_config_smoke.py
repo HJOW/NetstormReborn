@@ -5,7 +5,7 @@
 - 시작 순서로 만든 설정 버퍼를 Python이 원본 파일에서 독립적으로 구성한 버퍼와 바이트 단위로 비교한다.
 - 미션·요새·언어·팔레트 경로 지정값을 계산하고 그 경로의 파일이 실제로 읽히는지 확인한다.
 - 값을 쓴 뒤 저장한 파일을 기존 Python 도구(nscfg.py)로 복호화해 내용을 확인한다.
-- 원본 폴더 안에는 쓰지 않는지, 원본 파일이 바뀌지 않았는지 확인한다.
+- 원본 폴더에서는 options.cfg만 저장되는지 확인하고, 검사 뒤 설정을 복구한다.
 
 python tools/cpp_config_smoke.py
 """
@@ -16,9 +16,11 @@ import os
 from pathlib import Path
 import re
 import subprocess
+import tempfile
 
 from nscfg import decode_file
 from taff import TaffArchive, xor_decode
+from cpp_smoke_files import preserve_game_settings
 
 # C++ 빌드와 보존된 원본 자산의 공통 루트.
 ROOT = Path(__file__).resolve().parent.parent
@@ -73,12 +75,41 @@ def expected_buffer(root, data_dir, archive, minor, install_dir):
     return text.encode('utf-8')
 
 
+def check_restore_on_failure():
+    """임시 게임 폴더에서 검사 실패 때 설정 두 파일의 바이트·부재 상태가 복구되는지 확인한다."""
+    with tempfile.TemporaryDirectory(dir=OUTPUT) as temporary:
+        root = Path(temporary)
+        (root / 'd').mkdir()
+        paths = [root / 'd/options.cfg', root / 'fullscreenStateFile.dat']
+        # 기존 파일이 있는 경우와 처음부터 없는 경우를 모두 실패 경로로 검사한다.
+        for existed in (True, False):
+            # 두 허용 파일의 초기 존재 상태를 맞춘다.
+            for path in paths:
+                if existed:
+                    path.write_bytes(b'original bytes')
+                elif path.exists():
+                    path.unlink()
+            try:
+                with preserve_game_settings(root, 'd'):
+                    # 파일을 변경한 직후의 예외를 재현한다.
+                    for path in paths:
+                        path.write_bytes(b'changed bytes')
+                    raise RuntimeError('검사 실패를 의도적으로 재현')
+            except RuntimeError:
+                pass
+            # 실패 전 바이트 또는 파일 부재가 두 경로 모두 복구돼야 한다.
+            for path in paths:
+                if path.exists() != existed or (existed and path.read_bytes() != b'original bytes'):
+                    raise AssertionError('검사 실패 뒤 사용자 설정 복구 누락')
+
+
 def main():
     """두 판본의 설정 버퍼·경로 지정값·저장 왕복을 검사하고 보고서를 남긴다."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--exe', type=Path, default=ROOT / 'cpppj/build/bin/Release/NetstormCpp.exe')
     args = parser.parse_args()
     OUTPUT.mkdir(parents=True, exist_ok=True)
+    check_restore_on_failure()
     report = {}
     # 판본마다 같은 검사를 한다.
     for edition, data_dir, archive_name, minor, flag, missions in EDITIONS:
@@ -123,15 +154,26 @@ def main():
                 raise AssertionError(f'저장한 설정에 줄이 없거나 중복됨: {edition} {wanted}')
         if any(line.startswith('SCREENW') and line != 'SCREENW = "800"' for line in lines):
             raise AssertionError(f'이전 SCREENW 줄이 남음: {edition}')
-        # 4) 원본 폴더 안에는 쓰지 않는다.
-        refused = run(args.exe, '--config-save', root, root / data_dir / 'cpp-smoke-should-not-exist.cfg', *flag, check=False)
-        if refused.returncode == 0 or (root / data_dir / 'cpp-smoke-should-not-exist.cfg').exists():
-            raise AssertionError('원본 폴더 안에 쓰기가 거부되지 않음')
+        # 4) 사용자 결정에 따라 원본 options.cfg에도 저장하고, 파일 내용·존재 여부는 반드시 되돌린다.
+        with preserve_game_settings(root, data_dir) as options_path:
+            run(args.exe, '--config-save', root, options_path, 'cloneOnly=inside', *flag)
+            if 'cloneOnly = "inside"' not in decode_file(str(options_path)):
+                raise AssertionError(f'원본 options.cfg 저장 실패: {edition}')
+        # 다른 이름의 원본 폴더 출력은 계속 거부한다.
+        # 대소문자·상위 폴더 표기로도 보호 파일을 덮어쓸 수 없어야 한다.
+        for output in (root / data_dir / 'cpp-smoke-should-not-exist.cfg', root / data_dir.upper() / 'SETUP.CFG',
+                       root / data_dir / '..' / 'Netstorm.exe'):
+            refused = run(args.exe, '--config-save', root, output, *flag, check=False)
+            if refused.returncode == 0:
+                raise AssertionError(f'원본 폴더 안에 쓰기가 거부되지 않음: {output}')
+        if (root / data_dir / 'cpp-smoke-should-not-exist.cfg').exists():
+            raise AssertionError('거부한 설정 파일이 생성됨')
         after = {str(path): hashlib.sha256(path.read_bytes()).hexdigest() for path in watched}
         if before != after:
             raise AssertionError(f'원본 파일 변경 감지: {edition}')
         report[edition] = {'buffer_bytes': len(actual), 'buffer_sha256': hashlib.sha256(actual).hexdigest(),
                            'specs': specs, 'saved_lines': len([line for line in lines if line]),
+                           'options_restored': True,
                            'original_sha256': {Path(path).name: digest for path, digest in before.items()}}
     (OUTPUT / 'report.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')
     print(json.dumps({edition: {key: value for key, value in data.items() if key != 'original_sha256'}

@@ -4,6 +4,7 @@
 #include "o/BaseFile.h"
 #include "client/Mission.h"
 #include "o/ConfigInterface.h"
+#include "o/OriginalText.h"
 #include <map>
 #include <string>
 #include <vector>
@@ -23,7 +24,7 @@ ConfigInterface::FileReader Reader(const FakeFiles& files) {
 }
 // 평문을 원본 형식(서명 + XOR)으로 인코딩한 문자열을 만든다.
 std::string Encoded(std::string_view text) {
-    const auto bytes = EncodeConfigFile(text);
+    const auto bytes = EncodeConfigFile(std::string(kConfigSignature) + std::string(text));
     return std::string(bytes.begin(), bytes.end());
 }
 // 원본 설정 파일 구성을 흉내 낸 가짜 파일.
@@ -129,13 +130,13 @@ TEST_CASE(ConfigInterface_SetAndSave_RoundTripsThroughOriginalFormat) {
     config.onChanged = [&notifications] { ++notifications; };
     CHECK(config.Set("SCREENW", "800"));
     CHECK(!config.SetInt("newKey", -3));
-    CHECK(config.Set("currentLanguage", "korean \xed\x95\x9c")); // UTF-8 값.
+    CHECK(config.Set("currentLanguage", "fran\xc3\xa7" "ais")); // 내부 UTF-8, 원본 파일에서는 Windows-1252.
     CHECK(notifications == 3 && config.Configuration().changed);
     CHECK(config.GetInt("SCREENW") == 800);
     const auto saved = config.SaveText("d\\options.cfg");
     CHECK(!config.Configuration().changed);
     CHECK(saved == "mQdsTInstallDir = \"old\"\r\nInstallDir = \"C:\\NS\"\r\nCDDir = \"C:\\NS\"\r\n"
-                   "SCREENW = \"800\"\r\nnewKey = \"-3\"\r\ncurrentLanguage = \"korean \xed\x95\x9c\"\r\n");
+                   "SCREENW = \"800\"\r\nnewKey = \"-3\"\r\ncurrentLanguage = \"fran\xc3\xa7" "ais\"\r\n");
     // 저장한 바이트를 options.cfg로 다시 읽으면 같은 값이 나온다. setup.cfg의 SCREENW·currentLanguage 줄은 지워졌었다.
     const auto bytes = EncodeConfigFile(saved);
     CHECK(bytes.size() >= 3 && bytes[0] == 0 && bytes[2] == 0); // 원본의 XOR 감지 조건.
@@ -144,8 +145,50 @@ TEST_CASE(ConfigInterface_SetAndSave_RoundTripsThroughOriginalFormat) {
     reloaded.Startup(options);
     CHECK(reloaded.GetInt("SCREENW") == 800);
     CHECK(reloaded.GetInt("newKey") == -3);
-    CHECK(reloaded.Configuration().Get("currentLanguage") == "korean \xed\x95\x9c");
-    CHECK(reloaded.Configuration().Text().find("korean \xed\x95\x9c") != std::string::npos);
+    CHECK(reloaded.Configuration().Get("currentLanguage") == "fran\xc3\xa7" "ais");
+    CHECK(reloaded.Configuration().Text().find("fran\xc3\xa7" "ais") != std::string::npos);
+}
+
+// 256개 원본 바이트 모두 역변환되며 저장 서명 뒤에 UTF-8 BOM이 추가되지 않아야 한다.
+TEST_CASE(ConfigEncoding_PreservesEveryWindows1252Byte) {
+    std::vector<std::uint8_t> original;
+    // 정의되지 않은 Windows-1252 제어 바이트도 그대로 왕복시킨다.
+    for (int i = 0; i < 256; ++i) original.push_back(static_cast<std::uint8_t>(i));
+    CHECK(EncodeOriginalText(DecodeOriginalText(original)) == original);
+    const auto encoded = EncodeConfigFile("mQdsTName = \"caf\xc3\xa9 \xe2\x82\xac\"\r\n");
+    auto decoded = encoded;
+    ApplyXor(decoded);
+    CHECK(std::string(decoded.begin(), decoded.end()) == "mQdsTName = \"caf\xe9 \x80\"\r\n");
+}
+
+// 파일 쓰기·인코딩 실패 때 설정 변경을 보존하고, 성공 뒤에만 변경 표시를 끈다.
+TEST_CASE(ConfigInterface_SaveFile_PreservesChangesOnFailure) {
+    const auto files = MakeFiles();
+    ConfigInterface config(Reader(files));
+    config.Startup({});
+    config.SetInt("SCREENW", 800);
+    bool failed = false;
+    try {
+        // 디스크 쓰기 오류를 재현한다.
+        config.SaveFile("options.cfg", [](std::string_view, std::span<const std::uint8_t>) {
+            throw std::runtime_error("write failure");
+        });
+    } catch (const std::runtime_error&) { failed = true; }
+    CHECK(failed && config.Configuration().changed);
+    std::vector<std::uint8_t> saved;
+    // 성공한 쓰기에서 실제로 전달한 바이트와 이름을 기록한다.
+    config.SaveFile("options.cfg", [&saved](std::string_view name, std::span<const std::uint8_t> bytes) {
+        CHECK(name == "options.cfg");
+        saved.assign(bytes.begin(), bytes.end());
+    });
+    CHECK(!saved.empty() && !config.Configuration().changed);
+    config.Set("name", "\xed\x95\x9c"); // 원본 Windows-1252에 없는 한글.
+    failed = false;
+    try {
+        // 인코딩이 실패하면 파일 쓰기 자체가 시작되지 않아야 한다.
+        config.SaveFile("options.cfg", [](std::string_view, std::span<const std::uint8_t>) { CHECK(false); });
+    } catch (const std::invalid_argument&) { failed = true; }
+    CHECK(failed && config.Configuration().changed);
 }
 
 // 인자 처리: 첫 `@` 인자 전까지는 글, 그 뒤는 파일. 글 안의 `@낱말`은 그 이름('@' 포함)의 파일을 먼저 읽는다.

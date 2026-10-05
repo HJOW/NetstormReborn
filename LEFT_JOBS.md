@@ -1,6 +1,6 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
-> 최종 갱신: 2026-10-05 (**cpppj 인수인계: AGENTS.md의 cpppj 목표 변경(1차 목표 = 디컴파일 코드를 C++로 최대한 복원)과 `options.cfg`를 원본과 동일하게 처리한다는 결정 — 바로 아래 절.** 그 앞: **cpppj 플랫폼 결정(Win32 직접 호출, Windows 전용)·원본 방식의 창과 화면 장치(창 모드)·입력 큐·영역 배치 복원** — [cpp-screen-reconstruction.md](docs/exe/cpp-screen-reconstruction.md). 그 앞: **cpppj 설정 계층·타입 표·요새 파일 읽기 복원** — 계획 1단계 완료, 2단계 파일 읽기까지. [cpp-config-reconstruction.md](docs/exe/cpp-config-reconstruction.md), [cpp-fort-reconstruction.md](docs/exe/cpp-fort-reconstruction.md). 후속 계획 [cpp-roadmap.md](docs/cpp-roadmap.md). 타입·SHP·팔레트·기본 VFX 복원과 C#·C++ 병행 개발의 이전 이력 보존)
+> 최종 갱신: 2026-10-05 (**cpppj 옵션 저장 복원 완료:** 원본 시점의 `d/options.cfg` 저장·Windows-1252/XOR·전체화면 시작 표시 조회/생성, 두 판본 저장 기계어 16개 대조. **전체화면 실패 시 원본도 창 모드로 이어진다는 역어셈블 정정.** [cpp-options-reconstruction.md](docs/exe/cpp-options-reconstruction.md). 그 앞: 목표 변경과 설정 저장 결정, Win32 창·화면 장치·입력 큐·영역 배치, 설정·타입·요새 파일 읽기 복원. 후속 계획 [cpp-roadmap.md](docs/cpp-roadmap.md). 이전 이력 보존)
 > 프로젝트 목표(AGENTS.md): 원본 NetStorm: Islands at War 를 디컴파일/분석하여 클론 코딩하고,
 > **Windows 10/11** 과 **GUI 환경의 Linux** 에서 동작하며 **여러 언어를 지원**하는 게임을 만든다.
 > **모방 범위(2026-10-03 AGENTS.md 변경)**: 기존 게임의 **사운드·그래픽·애니메이션 등 거의 모든 요소를 가능한 한 동일하게** 최대한 모방한다.
@@ -10,9 +10,23 @@
 
 ---
 
+## 2026-10-05 ✅ 완료: cpppj 옵션 저장·전체화면 시작 표시 복원 (원본 게임 실행 없음)
+
+- [x] **원본 저장 시점·경로(A1·A2):** 시작 `004359f0` → `00441d10(0)`에서 설정 해석 전 저장. 메인 루프 `00439ad3` → `00441de0`는 변경 표시가 켜졌을 때 저장한다. 종료 전용 저장 호출은 없다. 경로 포인터는 설치 폴더가 아니라 빈 문자열과 `d`다. CD판 대응과 실제 호출 지점을 함께 확인했다.
+- [x] **저장 연결(A3):** `Client::Run`의 시작 자리와 입력 뒤·커널 갱신 전 변경 검사에서 같은 `<게임 폴더>/d/options.cfg`에 저장한다. `ConfigInterface::SaveFile`은 쓰기·인코딩 실패 때 변경 표시를 보존한다. `global.dd…` 등 실행 중에 쓴 설정도 원본과 같이 저장한다.
+- [x] **바이트 대조(A4):** UTF-8 BOM 추가를 제거하고 내부 UTF-8을 Windows-1252로 되돌린다. `decomp_options_oracle.py`가 두 판본의 저장·섹션 읽기·XOR 쓰기 기계어를 격리 실행한다. 16개 기대값(비ASCII·4KB 경계·실제 설정 버퍼 포함), 실제 설정 저장 834/114바이트가 C++와 일치했다. 파일 이름 섹션이 없으면 원본은 서명을 추가하지 않는 예외도 보존했다. **원본 게임 프로세스를 실행한 대조는 아니다** — 같은 버퍼의 원본 저장 기계어와 대조했다.
+- [x] **검사 보호(A5):** `--config-save`는 게임 폴더에서 `d/options.cfg`만 허용한다. 대소문자·`..` 표기로 다른 원본 파일에 쓰는 것도 거부한다. 설정·창 스모크는 두 허용 파일을 보관하고 `finally`에서 바이트·존재 여부를 복구한다. 실패 경로의 복구도 임시 폴더에서 검사했다. 요새 스모크는 읽기 명령만 실행하므로 쓰기 예외가 필요 없다.
+- [x] **시작 표시 분석·조회/생성(A6 일부):** `fullscreenStateFile.dat`는 게임 폴더에 두며, 내용을 읽지 않고 존재만 검사한다. 전체화면 시도 전 `r+b`/없으면 `w+b`로 열고 닫는다. 조회·생성과 삭제 함수는 복원했다. **삭제 함수의 UberGump 버튼 사건 연결은 남음**(B6와 함께).
+- **분석 정정:** `004395df`는 별도 반환 함수가 아니라 WinMain의 분기 목적지다. 표시 파일이 있거나 전체화면 초기화가 실패하면 원본도 플래그를 0으로 하고 창 모드로 이어 간다. 이전 절의 “복구는 원본과 달라서 이후 단계로 미룬다”는 해석을 취소한다. 재실행 오류의 전체 원인은 DirectDraw·UberGump 복원 뒤 확인한다.
+- **검증:** Windows Release 빌드 경고·오류 0, CTest 실행 파일 내부 **46개 테스트**, x86 기대값 **4,971개**. 실제 자료 스모크 5종(recovery·assets·config·fort·window) 전부 통과. 창 스모크는 전체화면 시작 표시 생성·남은 표시의 창 모드 재실행도 검사했다. 원본 파일 해시·목록과 사용자 설정이 검사 전후 동일하다. AGENTS.md·C# 소스는 수정하지 않았다. **커밋하지 않았다.**
+- **수정 범위:** `ClientMain`, `ConfigInterface`, `OriginalText`, 검사 진입점·파일 출력 주석, 설정 단위/기계어 검사·CMake, 설정/창 스모크. 새 `tools/cpp_smoke_files.py`·`decomp_options_oracle.py`, `cpppj/tests/fixtures/options-x86.tsv`·`recovery-options-evidence.json`, [복원 문서](docs/exe/cpp-options-reconstruction.md). README·빌드/로드맵·설정/화면 복원 문서도 현 상태로 갱신했다.
+- **다음 작업:** 아래 B1 **Renderer**부터. UberGump 버튼 사건을 옮길 때 `Client::ClearFullScreenState`를 원본 `004cebf0`의 삭제 위치에 연결한다. DirectDraw는 아직 없고 검사용 화면은 여전히 임시다.
+
+---
+
 ## 2026-10-05 📌 인수인계: cpppj 목표 변경과 `options.cfg` 결정, 앞으로 할 일
 
-> 이 절은 **문서만** 고친 작업이다. 코드는 바꾸지 않았다. 아래 할 일은 모두 **아직 하지 않은 것**이다. 지금의 코드 상태는 바로 다음 절(Win32 창·화면 장치·입력 큐·영역 배치 복원, 커밋 `bfb780c`)에 있다.
+> 이 절은 당시 **문서만** 고친 인수인계다. 이후 A1~A5와 A6의 분석·조회/생성을 완료했다(바로 위 절). 아래 체크 상태와 정정은 후속 작업 결과를 반영한다.
 
 ### 바뀐 것 (사용자 결정)
 
@@ -28,21 +42,22 @@
 
 ### 목표 순서를 작업에 적용하는 방법 (에이전트의 해석 — 틀리면 고쳐 주세요)
 
-- **① 1차 목표(복원)** 동안에는 원본의 동작을 고치지 않고 그대로 옮긴다. 원본에 없는 기능(와이드 화면, 60·120프레임, 한국어, 가장자리 스크롤의 확장)과 원본 문제의 수정(전체화면 재실행 오류)을 앞당겨 넣지 않는다. 직전 절의 남은 일 4번에 적었던 "전체화면 초기화가 실패하면 창 모드로 되돌아가는 흐름을 유지"는 원본과 달라지는 부분이므로 ② 단계로 미룬다.
+- **① 1차 목표(복원)** 동안에는 원본의 동작을 고치지 않고 그대로 옮긴다. 원본에 없는 기능(와이드 화면, 60·120프레임, 한국어, 가장자리 스크롤의 확장)과 원본 문제의 수정(전체화면 재실행 오류)을 앞당겨 넣지 않는다. **정정:** 전체화면 초기화 실패 후 창 모드로 이어지는 흐름은 역어셈블에서 원본 동작으로 확인했으므로 복원 단계에 포함한다(위 완료 절).
 - **② Windows 10/11에서 실행 가능한 수준**: 복원한 코드가 지금의 Windows에서 돌지 않는 부분(DirectDraw 8비트 전체화면, 전체화면 재실행 오류 등)을 이 단계에서 다룬다.
 - **③ 요구사항 반영과 MCP**: AGENTS.md의 화면비·프레임·언어 요구와 MCP.
-- **dotnetpj**: 새 기능 개발은 cpppj 완성 뒤로 미루는 것으로 읽었다. AGENTS.md에는 "두 가지 버전으로 동시 진행한다"는 문장도 그대로 있어서, dotnetpj의 기존 남은 일(이 문서의 아래쪽 절들)을 지금 멈출지는 **사용자 확인이 필요하다.** 확인 전에는 dotnetpj 쪽 작업을 새로 시작하지 않는다.
+- **dotnetpj**: 현재 AGENTS.md는 "cpppj 완성 후 이를 분석하여 개발"로 정한다. cpppj 작업을 진행하며 dotnetpj의 새 작업은 시작하지 않는다. 아래쪽 dotnetpj 이력·남은 일은 보존한다.
 
 ### 앞으로 할 일
 
-**A. `options.cfg`를 원본과 동일하게 (결정됨, 구현 전 — 지금 cpppj는 읽기만 한다)**
+**A. `options.cfg`를 원본과 동일하게 (A1~A5 완료, A6의 메뉴 사건 연결 남음)**
 
-- [ ] **A1. 원본의 저장 시점을 모두 찾는다(정적 분석).** 지금까지 확인한 것: `00441d10`이 `options.cfg` 경로를 만들어 저장 함수 `00440f30`을 부르고, WinMain이 설정을 읽은 직후("init parse options") 한 번 부른다. `00440f30`을 부르는 곳은 패치판에 세 군데다(둘은 `00441d10` 안, 하나는 다른 함수 — 어떤 함수인지 확인하지 않았다). 옵션 화면에서 값을 바꿀 때·종료할 때 저장하는지, `00441d10`에 인자(0이 아닌 값)를 넘기는 호출자가 있는지 확인한다. CD판의 짝은 `004a9090`(호출자 2곳).
-- [ ] **A2. 경로 조립을 확인한다.** `00441d10`은 `00459c60`에 `PTR_DAT_00540cec`·`PTR_DAT_00540cf8`·`"options.cfg"`를 넘겨 경로를 만든다. 두 포인터가 가리키는 문자열(설치 폴더·데이터 폴더로 추정)을 확인하지 않았다. 실제 파일은 `originals/d/options.cfg`다.
-- [ ] **A3. `Client::Run`의 원본 자리에서 저장한다.** `cpppj/src/client/ClientMain.cpp`의 `// [원본] FUN_00441d10(0): 여기서 options.cfg를 곧바로 다시 저장한다` 주석 자리. 저장 내용을 만드는 `ConfigInterface::SaveText`와 `EncodeConfigFile`은 이미 있다. A1에서 찾은 다른 저장 시점은 해당 모듈(옵션 화면 등)을 옮길 때 같은 자리에 넣는다.
-- [ ] **A4. 원본과 같은 바이트로 저장되는지 확인한다.** 원본 게임이 저장한 `options.cfg`와, 같은 설정 버퍼에서 cpppj가 저장한 파일을 바이트로 대조한다(첫 줄 `mQdsTInstallDir = "…"` 포함). cpppj가 더한 "ASCII 밖의 글자가 있으면 서명 뒤에 UTF-8 BOM"([cpp-config-reconstruction.md](docs/exe/cpp-config-reconstruction.md))은 원본에 없는 처리다 — 원본 방식(Windows-1252)으로 되돌릴지 정한다. **원본이 저장한 파일을 얻으려면 원본 게임을 실행해야 한다**(이 PC `HJOW-Athlon`은 AGENTS.md의 예외 시스템이다. 다른 PC에서는 사용자 확인이 필요하다). `InstallDir`에 저장소 경로가 들어가므로 PC마다 내용이 다르다.
-- [ ] **A5. 검사 도구의 "원본 파일 보호"에서 이 파일을 예외로 한다.** `--config-save`의 "원본 폴더 안 쓰기 거부", `tools/cpp_config_smoke.py`·`cpp_window_smoke.py`·`cpp_fort_smoke.py`의 "원본 파일 해시 유지" 검사. `cpp_window_smoke.py`는 게임 폴더와 `d/`의 모든 파일을 감시하므로, `--run`이 `options.cfg`를 쓰기 시작하면 그대로는 실패한다. 스모크가 사용자의 설정을 바꿔 놓지 않도록, 실행 전에 `options.cfg`를 보관했다가 되돌리는 방식을 권한다.
-- [ ] **A6. `fullscreenStateFile.dat`를 분석한다.** 실행 파일에 이 이름이 있다(패치판 파일 오프셋 `0x105c54`, CD판에도 있음. AGENTS.md의 표기는 `fullScreenStateFile.dat`). 읽고 쓰는 함수와 용도를 분석하지 않았다. 전체화면 전환·재실행 오류와 관련될 가능성이 있다(추정). 분석한 뒤 원본과 같게 처리한다.
+- [x] **A1. 저장 시점 정적 분석.** 시작 한 번과 메인 루프의 변경 후 저장. `00441d10`의 실제 호출은 인자 0 한 곳이다. 자세한 호출 주소는 [옵션 저장 복원](docs/exe/cpp-options-reconstruction.md).
+- [x] **A2. 경로 조립 확인.** 포인터는 빈 문자열과 `d`. 게임 폴더의 `d/options.cfg`다.
+- [x] **A3. 저장 연결.** 시작·변경 검사 자리에서 `SaveOptions` → `ConfigInterface::SaveFile`.
+- [x] **A4. 원본 바이트 대조.** BOM 제거·Windows-1252 역변환. 원본 게임을 실행하지 않고 두 판본의 저장·XOR 쓰기 기계어로 같은 버퍼의 16개 입력 및 실제 저장 파일을 대조했다.
+- [x] **A5. 검사 도구 설정 예외·복구.** 게임 폴더에서는 `d/options.cfg`만 설정 출력 허용. 설정/창 스모크는 설정·시작 표시 파일을 검사 후 복구한다. 요새 검사는 읽기 전용이라 추가 예외 불필요.
+- [x] **A6a. `fullscreenStateFile.dat` 분석·조회/생성·삭제 함수 복원.** 존재 검사·생성·UberGump 사건의 삭제 용도와 창 모드 분기를 확인했다. 조회·생성은 실행 경로에 연결했다.
+- [ ] **A6b. UberGump 삭제 사건 연결.** 메인 메뉴를 옮길 때 `004cebf0`의 원본 위치에서 `Client::ClearFullScreenState`를 부른다. 지금은 함수만 있으며 임의의 종료 시점에 지우지 않는다.
 - **주의:** 지금 `originals/d/options.cfg`는 `startInFullScreen = 1`, `SCREENW = 1024`, `SCREENH = 768`이다(2026-10-05 읽기 전용 확인). cpppj는 DirectDraw가 없어 창 모드로 뜨고 `global.ddFullScreen = 0` 등을 설정 버퍼에 쓴다. 저장을 켜면 이 값들이 `options.cfg`에 들어가 원본 게임의 다음 실행에 영향을 줄 수 있다 — 원본도 같은 키를 저장하는지 A4에서 함께 본다.
 
 **B. 1차 목표: 디컴파일 코드 복원을 이어 간다** ([cpp-roadmap.md](docs/cpp-roadmap.md) "다음 작업 세션의 범위")
@@ -65,8 +80,8 @@
 ### 다음 세션의 시작 방법
 
 1. AGENTS.md와 이 절을 읽는다. 빌드·검사 명령은 [cpp-build.md](docs/cpp-build.md) 3절(`cmake` → `ctest` 43개 → 스모크 5종)이다.
-2. A1·A2·A6은 원본을 실행하지 않는 정적 분석이라 바로 시작할 수 있다(`python tools/decomp_refine.py --show 00441d10`, `--show 00440f30`). A3~A5는 그 결과에 따른다.
-3. B는 B1(Renderer)부터다. 작업 방식은 [cpp-roadmap.md](docs/cpp-roadmap.md) "디컴파일 신뢰도를 높이는 작업 방식"을 따른다.
+2. A1~A5·A6a는 완료했다. [옵션 저장 복원](docs/exe/cpp-options-reconstruction.md)의 역어셈블 정정과 검사 명령을 먼저 본다.
+3. B1(Renderer)부터 진행한다. A6b는 UberGump와 함께 연결한다. 작업 방식은 [cpp-roadmap.md](docs/cpp-roadmap.md) "디컴파일 신뢰도를 높이는 작업 방식"을 따른다.
 
 ---
 

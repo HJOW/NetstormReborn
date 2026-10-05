@@ -2,6 +2,7 @@
 // 기대값 생성: tools/decomp_config_oracle.py
 #include "TestSupport.h"
 #include "o/Config.h"
+#include "o/ConfigInterface.h"
 #include "o/OriginalText.h"
 #include <fstream>
 #include <map>
@@ -17,6 +18,8 @@ namespace {
 const std::map<std::string, std::string> kOracleEnvironment = {{"nsenv", "env{A}val"}, {"nsempty", ""}};
 // 기대값 파일의 줄 수(Def 줄 제외). 도구가 보고한 개수와 같아야 한다.
 constexpr std::size_t kExpectedRows = 2440;
+// 두 판본 저장·XOR 쓰기 기계어가 같은 출력을 낸 입력 수(실제 설정 버퍼 2개 포함).
+constexpr std::size_t kExpectedOptionsRows = 16;
 
 // TSV의 16진수 칸을 바이트 문자열로 바꾼다. '-'는 빈 문자열이다.
 std::string Unhex(const std::string& text) {
@@ -26,6 +29,32 @@ std::string Unhex(const std::string& text) {
     // 두 자리씩 1바이트로 변환한다.
     for (std::size_t pos = 0; pos < text.size(); pos += 2) result.push_back(static_cast<char>(std::stoul(text.substr(pos, 2), nullptr, 16)));
     return result;
+}
+
+// 서명·파일 이름 섹션·END·4KB XOR 경계·비ASCII를 원본 두 판본이 저장한 바이트와 비교한다.
+TEST_CASE(ConfigSave_MatchesBothOriginalX86Editions) {
+    std::ifstream file(NETSTORM_OPTIONS_FIXTURE);
+    CHECK(file.is_open());
+    std::string line;
+    std::size_t count = 0;
+    // 기대값은 tools/decomp_options_oracle.py가 원본 기계어로 만들었다.
+    while (std::getline(file, line)) {
+        if (line.empty() || line[0] == '#') continue;
+        std::istringstream stream(line);
+        std::string nameHex, textHex, expectedHex;
+        stream >> nameHex >> textHex >> expectedHex;
+        CHECK(!stream.fail());
+        const auto raw = Unhex(textHex);
+        const std::vector<std::uint8_t> bytes(raw.begin(), raw.end());
+        ConfigInterface config({});
+        config.Configuration().Assign(DecodeOriginalText(bytes));
+        config.Configuration().changed = true;
+        const auto result = EncodeConfigFile(config.SaveText(Unhex(nameHex)));
+        CHECK(std::string(result.begin(), result.end()) == Unhex(expectedHex));
+        CHECK(!config.Configuration().changed);
+        ++count;
+    }
+    CHECK(count == kExpectedOptionsRows);
 }
 
 // 한 입력의 설정 객체 묶음. 등록 순서가 기대값의 객체 순서다.

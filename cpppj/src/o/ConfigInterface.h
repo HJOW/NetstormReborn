@@ -15,14 +15,15 @@ namespace netstorm::o {
 std::int32_t ConfigParseLong(std::string_view text);
 // 원본 FUN_004411e0 ↔ CD 004a9560: `;`로 나눈 목록의 index번째 항목. 범위를 벗어나면 빈 문자열.
 std::string ConfigListItem(std::string_view list, int index);
-// 설정 버퍼의 한 부분을 원본 형식 파일 바이트로 만든다: XOR 인코딩, 서명 `mQdsT`.
-// 새 확장: ASCII가 아닌 글자가 있으면 서명 뒤에 UTF-8 BOM을 넣는다(Config::LoadBytes가 읽는다).
+// SaveText가 정한 평문을 Windows-1252로 되돌려 XOR한다. 서명·BOM을 추가하지 않는다.
 std::vector<std::uint8_t> EncodeConfigFile(std::string_view text);
 
 class ConfigInterface {
 public:
     // 게임 경로 표기(`d\options.cfg`, `\D\config.english`)의 파일을 읽는다. 없으면 빈 값.
     using FileReader = std::function<std::optional<std::vector<std::uint8_t>>(std::string_view)>;
+    // 원본 저장의 파일 쓰기 경계. 경로와 완성된 바이트를 호출자가 디스크에 쓴다.
+    using FileWriter = std::function<void(std::string_view, std::span<const std::uint8_t>)>;
 
     // 시작 순서(원본 FUN_00441790 ↔ CD 004a8b10의 설정 부분)에 필요한 값.
     struct StartupOptions {
@@ -66,8 +67,10 @@ public:
     // 원본 FUN_00441db0 ↔ CD 004a93d0: 용어표를 비우고 `LanguageSpec` 경로의 파일을 읽는다.
     void LoadLanguage(std::string_view language);
     // 원본 FUN_00440f30 ↔ CD 004a9270: `[파일이름]` 섹션과 `[END]` 섹션을 이어 저장할 평문을 만든다.
-    // 서명이 없으면 붙인다. 변경 표시를 끈다. 파일에 쓰는 일은 호출자가 한다(원본 폴더에 쓰지 않는다).
+    // 파일 본문이 있고 서명이 없으면 붙인다. 변경 표시를 끈다. 파일 쓰기는 SaveFile에서 한다.
     std::string SaveText(std::string_view fileName);
+    // 원본 00440f30: 저장 바이트를 쓰고 변경 표시를 끈다. 쓰기 실패 시 이전 변경 표시를 보존한다.
+    void SaveFile(std::string_view fileName, const FileWriter& writer);
 
     // 원본 DAT_00558dd0: 값을 쓸 때마다 부르는 알림.
     std::function<void()> onChanged;

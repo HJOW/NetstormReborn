@@ -1,4 +1,4 @@
-// 새로 쓰는 코드: 원본 폴더가 아닌 곳에 클론의 출력 파일을 쓴다. 어디에 쓸지는 호출자가 정한다.
+// 새로 쓰는 코드: 호출자가 정한 위치에 바이트를 쓴다. 원본 폴더의 쓰기 허용 여부는 호출자가 검사한다.
 #include "platform/FileOutput.h"
 #include <fstream>
 #include <stdexcept>

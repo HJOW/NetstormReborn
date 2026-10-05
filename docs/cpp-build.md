@@ -4,7 +4,7 @@
 
 후속 작업의 우선순위·의존 관계·완료 기준은 [cpppj 후속 복원 계획](cpp-roadmap.md)에 정리했다. 이 문서는 빌드와 소스 복원 규칙을 다룬다.
 
-## 1. 두 빌드를 함께 개발한다
+## 1. 두 빌드의 관계
 
 저장소에는 게임 빌드가 둘 있다. 서로의 코드를 참조하지 않는다.
 
@@ -107,7 +107,7 @@ python tools/cpp_window_smoke.py
 
 `--run <게임 폴더>` 는 원본 방식의 창을 띄운다(원본 게임을 실행하는 것이 아니다). `--view types|<미션>` 으로 검사용 화면을 고르고, 없으면 원본의 로딩 화면만 보인다. 옵션과 범위는 [창·화면 장치 복원](exe/cpp-screen-reconstruction.md) 10절에 있다.
 
-현재 소스: `BaseFile`·`Config`·`ConfigInterface`·`Xlat`·`RiftType`(타입 표 포함)·`Template`·`CanonDecoder`·`ChunkMap`·`Islandbuilder`·`BaseProcess`·`Kernel`·`GameClock`·`VFXDraw`·`Screen`·`ClientMain`·`Mission` 일부와 입력 사건 큐, 신규 인코딩·자산 연결·콘솔·BMP·파일 출력 계층·검사용 화면. CTest는 두 판본의 x86 기계어 기대값 4,955개를 포함한 43개 테스트를 실행한다. [타입·그래픽 복원 문서](exe/cpp-assets-reconstruction.md)에 실제 자산 전체 대조와 남은 범위를 적었다.
+현재 소스: `BaseFile`·`Config`·`ConfigInterface`·`Xlat`·`RiftType`(타입 표 포함)·`Template`·`CanonDecoder`·`ChunkMap`·`Islandbuilder`·`BaseProcess`·`Kernel`·`GameClock`·`VFXDraw`·`Screen`·`ClientMain`·`Mission` 일부와 입력 사건 큐, 신규 인코딩·자산 연결·콘솔·BMP·파일 출력 계층·검사용 화면. CTest는 두 판본의 x86 기계어 기대값 4,971개를 포함한 46개 테스트를 실행한다. [타입·그래픽 복원 문서](exe/cpp-assets-reconstruction.md)에 실제 자산 전체 대조와 남은 범위를 적었다.
 
 ## 4. 디컴파일한 소스에서 C++ 소스를 만드는 절차
 
@@ -155,7 +155,7 @@ AGENTS.md 의 규칙(한국어 주석, UTF-8, 상수·함수·반복문마다 �
 ## 6. 정하지 않은 것
 
 * ~~플랫폼 계층의 라이브러리~~ → **정함(2026-10-05): Win32 직접 호출, 외부 라이브러리 없음.** 소리·글꼴·영상·전체화면(DirectDraw)의 방식은 해당 모듈을 옮길 때 원본 방식을 기본으로 정한다 — [창·화면 장치 복원](exe/cpp-screen-reconstruction.md) 1·8절.
-* ~~설정 저장 위치~~ → **정함(2026-10-05): `options.cfg` 는 원본 게임과 동일하게 처리한다.** 원본이 읽고 쓰는 `<게임 폴더>/d/options.cfg` 를 같은 시점·같은 형식으로 읽고 쓴다(AGENTS.md 가 이 파일과 `fullScreenStateFile.dat` 의 수정·삭제를 허용한다). **아직 구현하지 않았다** — 지금은 읽기만 한다. [창·화면 장치 복원](exe/cpp-screen-reconstruction.md) 8절, 할 일은 [LEFT_JOBS.md](../LEFT_JOBS.md) 맨 위 절.
+* ~~설정 저장 위치~~ → **구현 완료(2026-10-05): `options.cfg`는 원본 게임과 동일하게 처리한다.** `<게임 폴더>/d/options.cfg`를 시작·변경 저장 시점에 Windows-1252·XOR로 쓴다. 시작 표시 파일의 존재 검사·생성도 복원했다. 삭제의 UberGump 사건 연결은 남았다. [옵션 저장 복원](exe/cpp-options-reconstruction.md). 스모크는 AGENTS.md가 변경을 허용한 두 파일을 보관하고 검사 후 복구한다.
 * **한국어 글꼴.** D2Coding(TTC)을 그리는 방법이 필요하다(C# 빌드는 FontStashSharp 를 쓴다). cpppj 에서는 후순위다.
 * **원본에 없는 기능을 넣는 방식.** 와이드 화면, 60·120프레임, 전체화면 재실행 오류 수정은 원본 코드에 없다. 다시 만든 코드를 어디서 어떻게 바꿀지는 해당 모듈을 옮길 때 정한다. C# 빌드의 결정(와이드 화면 = 시야 확장, [LEFT_JOBS.md](../LEFT_JOBS.md) 1.7절)을 따르는 것이 기본이다.
 * **옮기는 순서.** [후속 복원 계획](cpp-roadmap.md)의 단계별 완료 기준을 따른다.

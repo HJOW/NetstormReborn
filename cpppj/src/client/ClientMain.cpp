@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <array>
 #include <cstdlib>
+#include <cstdio>
 #include <stdexcept>
 #include <vector>
 
@@ -45,6 +46,8 @@ constexpr std::array<int, 3> kThreadPriorities{THREAD_PRIORITY_NORMAL, THREAD_PR
 constexpr int kMajorVersion = 10;
 constexpr int kPatchMinorVersion = 78;
 constexpr int kCdMinorVersion = 72;
+// 원본 시작 표시 파일은 d/ 밖, 게임 폴더에 둔다(00436dd0·00436df0·00436e40).
+constexpr const char* kFullScreenStateFile = "fullscreenStateFile.dat";
 // 언어 이름 → 언어 번호(원본 FUN_004de420). 0·1은 영어다.
 constexpr std::array<const char*, 7> kLanguages{"english", "english", "french", "german", "spanish", "japanese", "portuguese"};
 
@@ -71,6 +74,15 @@ std::uint32_t ModifierBits() {
     if ((GetKeyState(VK_CONTROL) & 0x8000) != 0) bits |= InputCode::kControl;
     if ((GetKeyState(VK_MENU) & 0x8000) != 0) bits |= InputCode::kAlt;
     return bits;
+}
+
+// 원본 00436df0 → BaseFile 모드 1: r+b로 열고 없으면 w+b로 만든 뒤, 데이터를 쓰지 않고 닫는다.
+void CreateFullScreenState(const std::filesystem::path& directory) {
+    const auto name = (directory / kFullScreenStateFile).string();
+    FILE* file = std::fopen(name.c_str(), "r+b");
+    if (!file) file = std::fopen(name.c_str(), "w+b");
+    if (!file) throw std::runtime_error("Unable to open fullscreenStateFile.dat");
+    std::fclose(file);
 }
 }
 
@@ -170,7 +182,7 @@ int Client::Run() {
     startup.identity = identity.value_or(std::string());
     startup.installDir = std::filesystem::absolute(options_.gameDirectory).lexically_normal().string();
     configuration_.Startup(startup);
-    // [원본] FUN_00441d10(0): 여기서 options.cfg를 곧바로 다시 저장한다. cpppj의 설정 저장 위치를 정하기 전까지 저장하지 않는다.
+    SaveOptions(); // 원본 FUN_004359f0 → FUN_00441d10(0): 설정 해석 전에 한 번 저장한다.
     InterpretOptions();
     if (!PumpMessages()) return 0;
     // [원본] 가상 메모리가 부족하면 경고 창을 띄운다 — 옮기지 않았다.
@@ -190,10 +202,16 @@ int Client::Run() {
     // "init screen mode": startInFullScreen이면 workingFullScreenFlags, 아니면 windowScreenFlags.
     std::uint32_t flags = static_cast<std::uint32_t>(configuration_.GetInt("workingFullScreenFlags"));
     if (configuration_.GetInt("startInFullScreen") == 0 || options_.forceWindow) flags = 0;
+    // 원본 00436dd0 → 004dd560(GetFileAttributesA): 남은 표시 파일이 있으면 전체화면 시도를 건너뛴다.
+    // 디컴파일은 004395df를 별도 함수로 잘못 읽었다. 실제 분기(004395ad)는 flags=0인 창 모드 경로다.
+    if (GetFileAttributesA((options_.gameDirectory / kFullScreenStateFile).string().c_str()) != INVALID_FILE_ATTRIBUTES)
+        flags = 0;
     bool modeSet = false;
-    // 원본은 전체화면 초기화가 실패하면 그대로 끝낸다(재실행 오류의 원인). DirectDraw 경로를 옮기기 전에는
-    // Screen::SetMode가 원본의 "DirectDraw 없음" 규칙대로 창 모드 값으로 바꿔 계속한다.
-    if (flags != 0) modeSet = screen_->SetMode(flags, windowWidth_, windowHeight_, initWindowPos_);
+    // 원본 004395b5: 전체화면 시도 전에 표시 파일을 만든다. 실패하면 원본도 창 모드로 이어 간다.
+    if (flags != 0) {
+        CreateFullScreenState(options_.gameDirectory);
+        modeSet = screen_->SetMode(flags, windowWidth_, windowHeight_, initWindowPos_);
+    }
     if (!modeSet) {
         flags = static_cast<std::uint32_t>(configuration_.GetInt("windowScreenFlags"));
         if (!screen_->SetMode(flags, windowWidth_, windowHeight_, initWindowPos_))
@@ -244,6 +262,8 @@ int Client::Run() {
             continue;
         }
         // 10. 갱신 목록. 지금은 프로세스 커널만 돈다(FUN_00471a30). 나머지는 옮기지 않았다.
+        // 원본 00439ad3 → 00441de0: 설정 변경이 있으면 커널 갱신보다 먼저 저장한다.
+        if (configuration_.Configuration().changed) SaveOptions();
         kernel_.RunFrame();
         // 11. 프레임 제한 + 그리기.
         Frame();
@@ -254,6 +274,25 @@ int Client::Run() {
         if (sleepPerLoop_ != 0) Sleep(static_cast<DWORD>(sleepPerLoop_));
         // 13. [원본] 플레이어별 알림(FUN_00490da0) — 옮기지 않았다.
     }
+}
+
+// 원본 00441d10·00441de0의 경로 인자는 빈 문자열(00540cec)·"d"(00540cf8)·"options.cfg"다.
+// 원본은 게임 폴더를 작업 폴더로 바꾸고 d\options.cfg를 연다. cpppj는 같은 위치를 절대 경로로 연다.
+void Client::SaveOptions() {
+    configuration_.SaveFile("d\\options.cfg", [this](std::string_view, std::span<const std::uint8_t> bytes) {
+        // 원본 0041b4c0 → 0041a5b0의 모드 2(w+b): 상위 폴더를 새로 만들지 않고 기존 내용을 잘라 쓴다.
+        const auto name = std::filesystem::absolute(options_.gameDirectory / "d" / "options.cfg").string();
+        FILE* file = std::fopen(name.c_str(), "w+b");
+        if (!file) throw std::runtime_error("Unable to open d/options.cfg");
+        const auto written = std::fwrite(bytes.data(), 1, bytes.size(), file);
+        const int closed = std::fclose(file);
+        if (written != bytes.size() || closed != 0) throw std::runtime_error("Unable to write d/options.cfg");
+    });
+}
+
+// 원본 00436e40은 CRT remove를 부른다. UberGump 004cebf0의 버튼 사건에만 연결되는 함수다.
+void Client::ClearFullScreenState() {
+    std::remove((options_.gameDirectory / kFullScreenStateFile).string().c_str());
 }
 
 // 원본 00435220에서 지금 쓰는 설정만 읽는다. 나머지 키(소리·네트워크·치트·구름 등)는 해당 모듈을 옮길 때 더한다.

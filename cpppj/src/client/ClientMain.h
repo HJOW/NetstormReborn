@@ -60,6 +60,10 @@ public:
     // 원본 WinMain(FUN_00438dc0): 초기화하고 WM_QUIT까지 루프를 돈다. 반환값은 종료 코드다.
     int Run();
 
+    // 원본 00436e40 ↔ CD 00487720: UberGump의 버튼 사건에서 전체화면 시작 표시 파일을 지운다.
+    // UberGump를 옮긴 뒤 같은 사건 위치에 연결한다. 일반 종료에서는 부르지 않는다.
+    void ClearFullScreenState();
+
     // Renderer(FUN_004994b0)를 옮기기 전까지 쓰는 임시 연결점: 프레임마다 잠근 화면에 그린다.
     // 비어 있으면 원본의 "Loading / Please Wait" 화면만 보인다.
     std::function<void(Client&, std::uint8_t* buffer)> draw;
@@ -86,6 +90,8 @@ public:
     // 창 프로시저의 본체(원본 FUN_00436550). 정적 창 프로시저가 부른다.
     std::intptr_t HandleMessage(NativeHandle window, unsigned message, std::uintptr_t wParam, std::intptr_t lParam);
 private:
+    // 원본 00441d10·00441de0: 게임 폴더의 d/options.cfg에 저장한다. 변경 검사 여부는 호출 위치가 정한다.
+    void SaveOptions();
     // 원본 FUN_00435220("Interpret Options")의 일부: 화면 크기·창 위치·프레임 제한 등 설정을 읽는다.
     void InterpretOptions();
     // 원본 FUN_00436260: 로딩 화면(검은 바탕, 가운데 그림, 오른쪽 아래의 두 줄 글).
