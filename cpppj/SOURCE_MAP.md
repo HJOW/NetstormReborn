@@ -6,7 +6,7 @@
 > **함수 수**는 패치판에서 그 파일 이름을 참조하는 함수의 수다([모듈 맵](../docs/exe/modules.md)). 그 파일의 전체 함수 수가 아니다.
 > **상태**는 cpppj 에 그 경로의 파일이 있는지만 본다. 파일이 있어도 일부 함수만 옮긴 것일 수 있다.
 
-## `\Ns\O\` → `src/o/` (75개, 파일 있음 12개)
+## `\Ns\O\` → `src/o/` (75개, 파일 있음 16개)
 
 | cpppj 경로 | 패치판 표기 | CD판 표기 | 함수 수 | 상태 |
 |---|---|---|---|---|
@@ -62,7 +62,7 @@
 | `src/o/Path.h` | path.h | path.h | 8 |  |
 | `src/o/Pathprocess.cpp` | Pathprocess.cpp | pathprocess.cpp | 8 |  |
 | `src/o/Periodicharmer.cpp` | Periodicharmer.cpp | — | 1 |  |
-| `src/o/Player.cpp` | Player.cpp | Player.cpp | 18 |  |
+| `src/o/Player.cpp` | Player.cpp | Player.cpp | 18 | 있음 |
 | `src/o/Regexp.cpp` | Regexp.cpp | regexp.cpp | 8 |  |
 | `src/o/Regular.cpp` | Regular.cpp | regular.cpp | 1 |  |
 | `src/o/RiftType.cpp` | Rifttype.cpp | RiftType.cpp | 14 | 있음 |
@@ -70,14 +70,14 @@
 | `src/o/Serverboard.cpp` | Serverboard.cpp | serverboard.cpp | 3 |  |
 | `src/o/Snart.cpp` | Snart.cpp | snart.cpp | 1 |  |
 | `src/o/Spot.cpp` | Spot.cpp | spot.cpp | 2 |  |
-| `src/o/Squid.cpp` | Squid.cpp | Squid.cpp | 42 |  |
-| `src/o/Squid.h` | squid.h | squid.h | 10 |  |
+| `src/o/Squid.cpp` | Squid.cpp | Squid.cpp | 42 | 있음 |
+| `src/o/Squid.h` | squid.h | squid.h | 10 | 있음 |
 | `src/o/SquidFinder.cpp` | Squidfinder.cpp | SquidFinder.cpp | 7 |  |
 | `src/o/SquidHash.cpp` | Squidhash.cpp | SquidHash.cpp | 2 |  |
 | `src/o/StaticString.cpp` | Staticstring.cpp | staticString.cpp | 1 |  |
 | `src/o/Template.cpp` | Template.cpp | template.cpp | 37 | 있음 |
 | `src/o/Terr.cpp` | — | Terr.cpp |  |  |
-| `src/o/TerrainBuilder.cpp` | Terrainbuilder.cpp | terrainBuilder.cpp | 4 |  |
+| `src/o/TerrainBuilder.cpp` | Terrainbuilder.cpp | terrainBuilder.cpp | 4 | 있음 |
 | `src/o/Totalmade.cpp` | Totalmade.cpp | — | 5 |  |
 | `src/o/Unit.cpp` | Unit.cpp | unit.cpp | 2 |  |
 | `src/o/Unit.h` | unit.h | unit.h |  |  |
@@ -86,7 +86,7 @@
 | `src/o/Xlat.cpp` | Xlat.cpp | xlat.cpp | 3 | 있음 |
 | `src/o/Ztrans.cpp` | Ztrans.cpp | ztrans.cpp | 12 |  |
 
-## `.\` (클라이언트) → `src/client/` (60개, 파일 있음 9개)
+## `.\` (클라이언트) → `src/client/` (60개, 파일 있음 10개)
 
 | cpppj 경로 | 패치판 표기 | CD판 표기 | 함수 수 | 상태 |
 |---|---|---|---|---|
@@ -148,7 +148,7 @@
 | `src/client/TextGump.cpp` | — | TextGump.cpp |  |  |
 | `src/client/Ubergump.cpp` | Ubergump.cpp | ubergump.cpp | 2 | 있음 |
 | `src/client/Ui.cpp` | Ui.cpp | ui.cpp | 4 |  |
-| `src/client/UserInput.cpp` | Userinput.cpp | UserInput.cpp | 2 |  |
+| `src/client/UserInput.cpp` | Userinput.cpp | UserInput.cpp | 2 | 있음 |
 | `src/client/VFXDraw.cpp` | Vfxdraw.cpp | VFXDraw.cpp | 3 | 있음 |
 
 ## `\Ns\Zacket\` → `src/zacket/` (1개, 파일 있음 0개)

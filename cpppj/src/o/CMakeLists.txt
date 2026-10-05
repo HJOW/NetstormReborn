@@ -13,6 +13,9 @@ target_sources(netstorm PRIVATE
     CanonDecoder.cpp CanonDecoder.h CanonDecoderTables.inc
     ChunkMap.cpp ChunkMap.h
     Islandbuilder.cpp Islandbuilder.h
+    TerrainBuilder.cpp TerrainBuilder.h
+    Player.cpp Player.h
+    Squid.cpp Squid.h
     BaseProcess.cpp BaseProcess.h
     Kernel.cpp Kernel.h
     GameClock.cpp GameClock.h

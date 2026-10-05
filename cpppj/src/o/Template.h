@@ -1,5 +1,5 @@
 // 원본 Template.cpp(요새 = "Template")·Datamanager.cpp의 `.fort` 읽기. 파일 내용을 구조화하는 데까지다.
-// 오브젝트를 월드에 놓는 일(Squid 생성, 영역 배치, 소유자 결정)은 아직 옮기지 않았다.
+// 월드 배치는 후속 GameWorld/Squid/IslandBuilder의 부분 구현에 연결하며 이 모듈은 파일 해석만 담당한다.
 // 근거·검증 범위: docs/exe/cpp-fort-reconstruction.md
 #pragma once
 #include "o/RiftType.h"

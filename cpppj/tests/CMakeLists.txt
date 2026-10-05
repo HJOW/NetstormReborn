@@ -15,6 +15,7 @@ add_executable(netstorm_tests
     TerritoryTests.cpp
     RendererTests.cpp
     MenuTests.cpp
+    WorldTests.cpp
 )
 netstorm_apply_compiler_options(netstorm_tests)
 target_link_libraries(netstorm_tests PRIVATE netstorm)

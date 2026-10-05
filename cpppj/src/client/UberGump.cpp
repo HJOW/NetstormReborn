@@ -1,9 +1,10 @@
 // 원본 004d0120·004cebf0·004cf270·004ce580의 메뉴/명령 흐름을 표시 기반과 연결한다.
-// 전체 Gump/StyleText 및 실제 미션 월드는 아직 복원하지 않았다. 범위: docs/exe/cpp-menu-reconstruction.md.
+// 전체 Gump/StyleText와 게임 규칙은 후속이다. 저장 미션 월드는 GameWorld에 연결한다.
 #include "client/UberGump.h"
 #include "client/ClientMain.h"
 #include "client/GifImage.h"
-#include "app/InspectView.h"
+#include "client/GameWorld.h"
+#include "client/UserInput.h"
 #include "o/OriginalText.h"
 #include "o/Template.h"
 #include <algorithm>
@@ -101,8 +102,15 @@ UberGump::UberGump(Client& client) : client_(client) {
     }
     MainMenu(); Compose(); client_.ShowScene();
 }
-// 불완전한 검사 어댑터 타입은 이 구현 파일에서 파괴한다.
-UberGump::~UberGump() = default;
+// 입력 참조를 먼저 없애고 커널이 소유한 월드를 이 구현 파일에서 제거한다.
+UberGump::~UberGump() { ClearWorld(); }
+// 입력 참조를 먼저 없애고 커널의 실제 소유권을 해제한다.
+void UberGump::ClearWorld() {
+    userInput_.reset(); if (worldProcess_) client_.GetKernel().Remove(worldProcess_);
+    world_=nullptr; worldProcess_=0;
+}
+// 기본 메뉴를 초기화한 다음 프레임에 미션을 시작한다.
+void UberGump::StartMission(std::string name) { state_.Post({"MissionBegin",std::move(name)}); }
 // 캠페인 이름의 설정 객체를 보존하여 officalN.title 같은 참조를 복원한다.
 o::Config& UberGump::Script(std::string_view name) {
     const auto key = o::AsciiLower(name);
@@ -158,13 +166,14 @@ void UberGump::Tell(std::string target, bool briefing) {
 // 메인 메뉴로 돌아올 때 미션 설정 객체도 등록 목록에서 제거한다.
 void UberGump::MainMenu() {
     client_.GetRenderer().SetScene({}); client_.GetRenderer().SetBackground(nullptr);
-    preview_.reset(); mission_.reset(); fortObjects_ = 0; briefingSections_.clear(); briefingIndex_ = 0;
+    client_.GetRenderer().SetOverlay(nullptr);
+    ClearWorld(); mission_.reset(); fortObjects_ = 0; briefingSections_.clear(); briefingIndex_ = 0;
     state_.phase = ClientPhase::MainMenu; pageName_ = "main"; popup_.clear(); page_ = {}; input_.Cancel();
     client_.Pause(false); client_.Title(kWindowTitle); rebuild_ = true;
 }
-// 실제 미션 객체 생성 전, 원본 스크립트와 요새 구조의 로드 실패를 먼저 검출한다.
+// 미션 종류를 확인하고 원본 스크립트·요새에서 실제 월드 초기 상태를 만든다.
 void UberGump::BeginMission(std::string name) {
-    preview_.reset(); mission_.reset();
+    ClearWorld(); mission_.reset();
     mission_ = std::make_unique<MissionScript>(client_.Configuration(), name);
     if (!mission_->Loaded()) throw std::runtime_error("Missing mission: " + name);
     const auto type = o::AsciiLower(mission_->MissionType());
@@ -175,18 +184,23 @@ void UberGump::BeginMission(std::string name) {
     fortObjects_ = 0; count(fort.chaff);
     // 플레이어 영역의 저장 오브젝트를 포함한다.
     for (const auto& section : fort.territories) count(section);
+    if (type!="tutorial") { mission_.reset(); Tell("NotImplemented"); return; }
+    // Starting Cash 옵션의 기본 인덱스 1은 6500 SP다(0052f5d0 옵션 표). 옵션 전체 복사는 후속이다.
+    auto players=o::MissionPlayers::Load([this](std::string_view key) { return mission_->Get(key); },fort,client_.Assets().TypeTable(),6500);
+    auto world=std::make_unique<GameWorld>(client_.Assets(),fort,std::move(players));
+    world->elapsed=[this]() { return client_.Time().delta; }; world->paused=[this]() { return client_.Paused(); };
+    world_=world.get(); worldProcess_=client_.GetKernel().Add(std::move(world)); userInput_=std::make_unique<UserInput>(client_,*world_);
     briefingSections_.clear(); briefingIndex_ = 0;
     // 원본 초기 브리핑은 A.이며 A1. 등은 본문 Tell 명령이 넘긴다.
     if (mission_->Section("A.")) briefingSections_.push_back("A.");
     state_.phase = ClientPhase::LoadingMission; pageName_ = "loading"; popup_.clear(); page_ = {}; rebuild_ = true;
     client_.Title(mission_->Get("title").value_or(name)); client_.Pause(true);
 }
-// 첫 브리핑을 표시하거나 브리핑 종료 뒤 기존 정적 요새 표시기에 연결한다.
+// 첫 브리핑을 표시하거나 브리핑 종료 뒤 실제 월드 입력과 표시를 활성화한다.
 void UberGump::AdvanceBriefing() {
     if (briefingIndex_ < briefingSections_.size()) { Tell(briefingSections_[briefingIndex_++], true); return; }
     state_.phase = ClientPhase::Mission; pageName_ = "mission"; page_ = {}; popup_.clear(); client_.Pause(false);
-    preview_ = std::make_unique<app::InspectView>(client_, mission_->Name(), false);
-    client_.GetRenderer().SetBackground(nullptr); preview_->Ready(client_); rebuild_ = true;
+    world_->Resize(client_.GetScreen().Width(),client_.GetScreen().Height()); userInput_->Cancel(); rebuild_=true;
 }
 // 현재 복원 범위에서 의미가 있는 원본 옵션을 구성한다. 소리 장치와 전체화면 항목은 후속이다.
 void UberGump::OpenMenu(std::string name) {
@@ -220,7 +234,18 @@ void UberGump::OpenMenu(std::string name) {
     } else if (popup_ == "game") {
         add("Leave Battle", "Tell", "LeaveNormal");
     } else throw std::runtime_error("Unknown popup: " + name);
+    if (world_) { client_.Pause(true); userInput_->Cancel(); }
     opened_ = client_.Time().wall; rebuild_ = true;
+}
+// 현재 건설과 수확은 미복원이므로 원본 메뉴의 해당 항목을 비활성화한다.
+void UberGump::OpenObjectMenu(o::SquidId id) {
+    if (!world_) return; const auto* object=world_->Object(id); if (!object) return;
+    const auto& type=client_.Assets().Types()[static_cast<std::size_t>(object->type-o::kFirstAssetTypeNumber)];
+    popup_="object"; page_={};
+    page_.items.push_back({std::string(type.definition.String("description").value_or(type.assetName)),{},true,false,false});
+    if (object->owner==1 && o::AsciiLower(type.assetName)=="priest") page_.items.push_back({"Construct >",{},true,false,false});
+    page_.items.push_back({"About",{},true,false,false});
+    userInput_->Cancel(); client_.Pause(true); rebuild_=true;
 }
 // 현재 입력 단계에서는 객체를 파괴하지 않고 다음 프레임의 State로 넘긴다.
 void UberGump::Event(InputEvent event) {
@@ -236,6 +261,10 @@ void UberGump::Event(InputEvent event) {
         (event.code & InputCode::kRelease) == 0 && !GumpInput::Contains(popupRect_, {event.x, event.y})) {
         state_.Post({"Menu", "close"}); return;
     }
+    if (world_ && userInput_ && state_.phase==ClientPhase::Mission && popup_.empty()) {
+        const bool ui=std::any_of(input_.Controls().begin(),input_.Controls().end(),[&](const GumpControl& control) { return GumpInput::Contains(control.rect,{event.x,event.y}); });
+        if (!ui) { if (const auto id=userInput_->Event(event)) { if (*id) state_.Post({"ObjectMenu",std::to_string(*id)}); else world_->Select(0); } return; }
+    }
     const auto old = input_.Pressed(); const auto activated = input_.Event(event);
     if (old != input_.Pressed()) rebuild_ = true;
     if (activated && *activated >= 0 && static_cast<std::size_t>(*activated) < actions_.size()) {
@@ -250,6 +279,9 @@ bool UberGump::Input() {
     while (!client_.Input().Empty()) Event(client_.Input().Pop(false));
     const auto mouse = client_.Poll(InputCode::kLeftButton);
     if (input_.Move({mouse.x, mouse.y}, (mouse.code & InputCode::kOutside) == 0)) rebuild_ = true;
+    if (userInput_ && state_.phase==ClientPhase::Mission && popup_.empty()) userInput_->Tick();
+    else if (userInput_) userInput_->Cancel();
+    if (world_ && world_->TakeChanged()) rebuild_=true;
     if (rebuild_) Compose(false);
     return quit_;
 }
@@ -263,6 +295,8 @@ void UberGump::Tick() {
     }
     if (rebuild_) Compose();
 }
+// 커널에서 진행한 이동 좌표가 같은 프레임의 화면에 반영된다.
+void UberGump::Frame() { if (world_ && world_->TakeChanged()) { rebuild_=true; Compose(false); } }
 // 선택한 원본 명령의 작은 부분집합. 지원하지 않는 항목은 활성화하지 않는다.
 void UberGump::Execute(const DialogAction& action) {
     const auto command = o::AsciiLower(action.command);
@@ -274,21 +308,22 @@ void UberGump::Execute(const DialogAction& action) {
         if (state_.phase == ClientPhase::Briefing) AdvanceBriefing(); else Tell("Blank"); return;
     }
     if (command == "menu") {
-        if (action.argument == "close") { popup_.clear(); page_ = {}; rebuild_ = true; }
+        if (action.argument == "close") { popup_.clear(); page_ = {}; if (world_ && state_.phase==ClientPhase::Mission) client_.Pause(false); rebuild_ = true; }
         else OpenMenu(action.argument);
         return;
     }
+    if (command=="objectmenu") { OpenObjectMenu(static_cast<o::SquidId>(std::stoul(action.argument))); return; }
     if (command == "toggle") {
         auto& config = client_.Configuration(); config.SetInt(action.argument, config.GetInt(action.argument) == 0 ? 1 : 0);
-        popup_.clear(); page_ = {}; rebuild_ = true; return;
+        popup_.clear(); page_ = {}; if (world_ && state_.phase==ClientPhase::Mission) client_.Pause(false); rebuild_ = true; return;
     }
     if (command == "volume") {
         const auto equal = action.argument.find('='); client_.Configuration().SetInt(action.argument.substr(0, equal), o::ConfigParseLong(action.argument.substr(equal + 1)));
-        popup_.clear(); page_ = {}; rebuild_ = true; return;
+        popup_.clear(); page_ = {}; if (world_ && state_.phase==ClientPhase::Mission) client_.Pause(false); rebuild_ = true; return;
     }
     if (command == "resolution") {
         const int width = o::ConfigParseLong(action.argument), height = width == 640 ? 480 : width == 800 ? 600 : 768;
-        client_.ChangeResolution(width, height); popup_.clear(); page_ = {}; rebuild_ = true; return;
+        client_.ChangeResolution(width, height); popup_.clear(); page_ = {}; if (world_ && state_.phase==ClientPhase::Mission) client_.Pause(false); rebuild_ = true; return;
     }
     throw std::runtime_error("Command pending: " + action.command);
 }
@@ -303,10 +338,15 @@ void UberGump::Compose(bool controls) {
     const auto& font = client_.Fonts().Get(0); const auto& body = client_.Fonts().Get(5);
     const auto palette = client_.GetScreen().Palette();
     const auto light = Color(palette, 191, 178, 139), dark = Color(palette, 49, 44, 36);
-    if (mission_ && preview_) {
-        // 실제 월드 복원 전의 정적 장면을 배경에 합성한다. 메뉴는 그 위에 그린다.
-        client_.GetRenderer().SetBackground(canvas); preview_->BuildScene(client_);
-        canvas = std::make_shared<IndexedImage>(client_.GetRenderer().SceneImage());
+    std::vector<RenderSprite> worldSprites;
+    client_.GetRenderer().SetOverlay(nullptr);
+    if (world_ && state_.phase!=ClientPhase::LoadingMission) {
+        world_->Resize(width,height); worldSprites=world_->Sprites();
+        // 정지한 대화상자만 월드를 배경에 합성하고 실제 조작 화면은 살아 있는 스프라이트를 제출한다.
+        if (state_.phase!=ClientPhase::Mission || !popup_.empty()) {
+            client_.GetRenderer().SetBackground(canvas); client_.GetRenderer().SetScene(worldSprites);
+            canvas = std::make_shared<IndexedImage>(client_.GetRenderer().SceneImage());
+        }
     }
     if (controls) { labels_.clear(); actions_.clear(); input_.Cancel(); }
     // 같은 순서의 영역/라벨/명령을 제출한다. 그림만 갱신할 때도 번호가 유지된다.
@@ -337,9 +377,11 @@ void UberGump::Compose(bool controls) {
         for (std::size_t i = 0; i < buttons.size(); ++i) button(buttons[i], x + static_cast<int>(i % 4) * kButtonPitch, y + static_cast<int>(i / 4) * 23, kButtonWidth);
     }
     if (state_.phase == ClientPhase::Mission && popup_.empty()) {
-        // 원본 Game 메뉴의 연결점. 선택/이동 등 실제 게임 UserInput은 다음 단계다.
+        // 현재 연결한 Game 메뉴와 시작 Storm Power를 월드 위에 표시한다.
         button({"Game", {"Menu", "game"}}, 4, 4, kButtonWidth);
-        client_.GetRenderer().SetBackground(canvas); client_.GetRenderer().SetScene({}, std::move(text));
+        if (world_) text.push_back({&font,"Storm Power: "+std::to_string(static_cast<long long>(world_->Players().players[1].stormPower)),width-200,6,255,0,{1,1},true,false});
+        client_.GetRenderer().SetBackground(canvas); client_.GetRenderer().SetScene(std::move(worldSprites), std::move(text));
+        if (world_) client_.GetRenderer().SetOverlay(world_->SelectionImage());
     } else {
         if (!popup_.empty()) {
             if (controls) { regions.clear(); labels_.clear(); actions_.clear(); }
@@ -409,10 +451,12 @@ void UberGump::Compose(bool controls) {
         client_.GetRenderer().SetBackground(canvas); client_.GetRenderer().SetScene({}, std::move(text));
     }
     if (controls) input_.SetControls(std::move(regions));
+    if (world_) world_->TakeChanged();
     rebuild_ = false;
 }
 // 자동 검사는 라벨 좌표를 읽고 실제 버튼 입력을 보낸다. 명령을 직접 호출하지 않는다.
 std::optional<ScreenPoint> UberGump::ControlPoint(std::string_view label) const {
+    if (world_ && (label.starts_with("world:") || label.starts_with("cell:"))) return world_->Point(label);
     // 동일 라벨의 첫 영역을 선택한다.
     for (const auto& control : input_.Controls()) if (labels_.at(static_cast<std::size_t>(control.id)) == label)
         return ScreenPoint{(control.rect.left + control.rect.right) / 2, (control.rect.top + control.rect.bottom) / 2};
@@ -424,9 +468,11 @@ std::string UberGump::Report() const {
     out << "phase\t" << static_cast<int>(state_.phase) << "\npage\t" << Field(pageName_) << "\npopup\t" << Field(popup_) << "\n";
     out << "size\t" << client_.GetScreen().Width() << '\t' << client_.GetScreen().Height() << "\n";
     out << "paused\t" << client_.Paused() << "\nsound\t" << client_.Configuration().GetInt("sound") << "\n";
+    out.precision(12); out<<"time\t"<<client_.Time().game<<'\t'<<client_.Time().wall<<"\n";
     out << "fullscreenMarker\t" << client_.Files().TryRead("fullscreenStateFile.dat").has_value() << "\n";
     out << "musicVolume\t" << client_.Configuration().GetInt("musicVolume") << "\nsoundVolume\t" << client_.Configuration().GetInt("soundVolume") << "\n";
     if (mission_) out << "mission\t" << Field(mission_->Name()) << '\t' << Field(mission_->MissionType()) << '\t' << fortObjects_ << "\n";
+    if (world_) out<<world_->Report();
     // 그리기와 같은 판정 표를 기록한다.
     for (const auto& control : input_.Controls()) {
         const auto& label = labels_.at(static_cast<std::size_t>(control.id));

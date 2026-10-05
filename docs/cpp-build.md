@@ -1,6 +1,6 @@
 # C++ 빌드 (`cpppj/`)
 
-> 2026-10-05 추가·갱신. **데이터·표시 기반에 원본 메뉴→캠페인→브리핑→정적 요새 표시/복귀를 연결했다.** 실제 월드·게임 플레이·MCP는 후속이다. **cpppj는 Windows 전용이다.** [공용 계층](exe/cpp-reconstruction.md), [자산](exe/cpp-assets-reconstruction.md), [설정](exe/cpp-config-reconstruction.md), [요새](exe/cpp-fort-reconstruction.md), [창](exe/cpp-screen-reconstruction.md), [표시 기반](exe/cpp-renderer-reconstruction.md), [메뉴 연결](exe/cpp-menu-reconstruction.md).
+> 2026-10-05 추가·갱신. **메뉴→캠페인→브리핑→지형/객체·선택/이동→복귀를 연결했다.** 건설·경제·전투·AI·승패·소리·MCP는 후속이다. **cpppj는 Windows 전용이다.** [공용 계층](exe/cpp-reconstruction.md), [자산](exe/cpp-assets-reconstruction.md), [설정](exe/cpp-config-reconstruction.md), [요새](exe/cpp-fort-reconstruction.md), [창](exe/cpp-screen-reconstruction.md), [표시 기반](exe/cpp-renderer-reconstruction.md), [메뉴](exe/cpp-menu-reconstruction.md), [월드/조작의 범위와 제한](exe/cpp-world-reconstruction.md).
 
 **기존 게임 전체가 실제 플레이 가능한 수준으로 복원되는 것이 우선이다.** 화면비 확장·한국어·Linux·추가 기능은 이후다. 현재 작업 순서·완료 기준은 [실제 플레이 복원 계획](cpp-playable-plan.md), 기반 복원 세부 항목은 [기존 로드맵](cpp-roadmap.md)에 있다. 이 문서는 빌드와 소스 복원 규칙을 다룬다.
 
@@ -15,7 +15,7 @@
 | 빌드 도구 | .NET 10 SDK (`dotnetpj/Netstorm.sln`) | CMake 3.21 이상 + C++20 컴파일러(MSVC), **Windows 전용** |
 | 플랫폼 | MonoGame (Windows·Linux) | **Win32 API 를 원본처럼 직접 호출** (외부 라이브러리 없음) |
 | 실행 파일 | `NetstormClone` | `NetstormCpp` |
-| 상태 | 캠페인 1-1·1-2 플레이 가능 | 메뉴→캠페인→브리핑→정적 요새 표시/복귀. 실제 월드·선택/이동·게임 플레이는 후속 |
+| 상태 | 캠페인 1-1·1-2 플레이 가능 | 메뉴→브리핑→실제 지형/객체·선택/이동·정지/복귀. 건설·전투·미션 완주는 후속 |
 
 두 빌드가 함께 쓰는 것은 저장소 루트에 그대로 있다.
 
@@ -110,7 +110,7 @@ python tools/cpp_menu_smoke.py
 
 `--run <게임 폴더>`는 클론 창을 띄운다(원본 게임을 실행하지 않는다). `--view`가 없으면 **원본 메인 메뉴**를 표시한다. `--view types|fonts|<미션>`은 기존 독립 검사 장면이다. [메뉴·브리핑의 현재 범위/검사](exe/cpp-menu-reconstruction.md).
 
-기존 데이터·시간·프로세스·표시 기반에 `Gump`·`State`·`UberGump` 부분과 `GifImage`·`DialogScript`를 연결했다. CTest는 두 판본 x86 기대값 **5,365개**를 포함한 **59개 검사**를 실행한다. 새 메뉴 검사는 입력/파서·독립 GIF 판독·실제 클론 창 탐색이며 원본 메뉴 기계어 전수 대조는 아니다.
+기존 기반에 `Gump`·`State`·`UberGump`·`GifImage`·`DialogScript`, `TerrainBuilder`·`Player`·`Squid` 일부와 새 `GameWorld`/부분 `UserInput`을 연결했다. CTest는 기존 x86 기대값 **5,365개**를 포함한 **69개 검사**다. 새 메뉴/월드는 독립 자료 대조와 클론 창의 조작 검사이며 원본 기계어 전체 대조는 아니다. `--mission TEST01`로 같은 브리핑/월드를 검사한다. 원본 모듈 파일이 생긴 것을 모듈 전체 복원 완료로 세지 않는다.
 
 ## 4. 디컴파일한 소스에서 C++ 소스를 만드는 절차
 

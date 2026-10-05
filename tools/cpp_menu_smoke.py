@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""클론 창의 메뉴→캠페인→원본 브리핑→정적 요새 표시/복귀와 GIF 번호를 검사한다. 원본 게임은 실행하지 않는다."""
+"""클론 창의 메뉴→캠페인→원본 브리핑→미션 진입/복귀와 GIF 번호를 검사한다. 이동은 cpp_world_smoke.py가 검사한다."""
 import argparse
 import io
 import json

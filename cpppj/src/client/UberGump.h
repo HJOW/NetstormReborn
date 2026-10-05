@@ -4,12 +4,15 @@
 #include "client/State.h"
 #include "client/Mission.h"
 #include "client/VFXDraw.h"
+#include "o/Kernel.h"
+#include "o/Squid.h"
 #include <map>
 #include <memory>
 
-namespace netstorm::app { class InspectView; }
 namespace netstorm::client {
 class Client;
+class GameWorld;
+class UserInput;
 class UberGump {
 public:
     // 초기화 뒤 원본 타이틀·구름·메뉴 자료를 읽고 기본 메뉴를 연다.
@@ -18,6 +21,10 @@ public:
     ~UberGump();
     // 원본 루프 시작의 State 자리에서 대기 명령을 실행하고 시간 제한을 갱신한다.
     void Tick();
+    // 커널이 월드를 진행한 직후 변경된 실제 장면을 제출한다.
+    void Frame();
+    // 명령줄 검사용 미션도 State→Loading→Briefing의 같은 경로로 예약한다.
+    void StartMission(std::string name);
     // 입력 큐·커서 폴링으로 돌 버튼/목록/ESC를 처리한다. 종료 요구면 참.
     bool Input();
     // 검사도 실제 메뉴가 사용하는 같은 사건 처리기로 입력한다.
@@ -45,6 +52,10 @@ private:
     void MainMenu();
     // 원본 Options/Help의 목록과 하위 메뉴를 구성한다.
     void OpenMenu(std::string name);
+    // 원본 우클릭 메뉴의 연결점. 건설/수확 명령은 다음 단계에서 활성화한다.
+    void OpenObjectMenu(o::SquidId id);
+    // 커널이 소유한 월드와 입력 참조를 안전한 순서로 제거한다.
+    void ClearWorld();
     Client& client_;
     State state_;
     GumpInput input_;
@@ -55,7 +66,9 @@ private:
     std::vector<std::string> labels_;
     std::vector<DialogAction> actions_;
     std::unique_ptr<MissionScript> mission_;
-    std::unique_ptr<app::InspectView> preview_;
+    GameWorld* world_{};
+    o::ProcessId worldProcess_{};
+    std::unique_ptr<UserInput> userInput_;
     std::size_t fortObjects_{};
     std::vector<std::string> briefingSections_;
     std::size_t briefingIndex_{};

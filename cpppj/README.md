@@ -7,7 +7,7 @@ C# + MonoGame 빌드(`../dotnetpj/`)는 cpppj 완성 후 이를 분석하여 개
 
 **현재 우선순위(2026-10-05 사용자 요청): 기존 게임이 온전히 동작하고 실제 게임 플레이가 가능하도록 복원한다.** 먼저 메인 메뉴→캠페인 선택→브리핑→선택·이동·건설·경제·전투→승패·결과·재시작을 완성하고, 나머지 원본 기능·캠페인까지 복원한다. 화면비 확장·한국어·Linux·60/120프레임·MCP·추가 기능은 후순위다. 작업 순서와 완료 기준은 [실제 플레이 복원 계획](../docs/cpp-playable-plan.md)을 따른다.
 
-**원본 메뉴→캠페인→브리핑→정적 요새 표시/메뉴 복귀를 연결했다.** 기존 공용 계층·자산·설정·요새·영역 배치와 Win32/Renderer·원본 글꼴·커서 기반에 Gump 입력·UberGump·UI 상태·원본 메뉴 스크립트·GIF를 연결했다. 잠금 표시·Back·Quit, 브리핑 정지/확인, 창 해상도 변경·옵션 저장/재실행을 검사했다. **실제 월드·선택/이동·게임 플레이·사운드 출력·DirectDraw 전체화면은 후속이다.** 현재 미션 표시는 지형/게임 객체를 생성하지 않는 기존 정적 검사 어댑터다. [메뉴 연결 범위와 제한](../docs/exe/cpp-menu-reconstruction.md).
+**원본 메뉴→캠페인→브리핑→실제 지형/객체·선택·사제 이동→메뉴 복귀를 연결했다.** 1-1과 TEST01의 시작 SP/동맹·지형·점유를 적용하고, 몸통 좌클릭 선택→땅 좌클릭 이동, 우클릭 메뉴, 화면 이동·일시정지·재진입을 검사했다. **건설·채집·전투·AI·승패·사운드 출력·DirectDraw 전체화면은 후속이며 미션 완주는 아직 불가능하다.** [월드/조작의 범위와 제한](../docs/exe/cpp-world-reconstruction.md), [메뉴 연결](../docs/exe/cpp-menu-reconstruction.md).
 
 [복원 근거·함수 대응·검증 범위](../docs/exe/cpp-reconstruction.md), [검토 목록](recovery-manifest.json), [기계어 검증 기록](recovery-evidence.json).
 
@@ -56,13 +56,16 @@ cpppj/build/bin/Release/NetstormCpp.exe --run originals --view fonts --window --
 python tools/cpp_renderer_smoke.py
 cpppj/build/bin/Release/NetstormCpp.exe --run originals --window
 python tools/cpp_menu_smoke.py
+cpppj/build/bin/Release/NetstormCpp.exe --run originals --window --mission TEST01
+cpppj/build/bin/Release/NetstormCpp.exe --dump-world originals thewarbegins
+python tools/cpp_world_smoke.py
 ```
 
-`--run`은 클론 창을 띄운다(원본 게임을 실행하지 않는다). **`--view`가 없으면 메인 메뉴**다. Campaign→Struggle For Freedom→1 The War Begins!→Play Mission으로 정적 요새를 표시한다. Game/ESC→Leave Battle로 메뉴에 돌아온다. `--view TEST01`은 기존 독립 검사 화면으로 화살표 이동/Esc 종료, `--view fonts`는 18개 글꼴/스타일 표시다. `--render-stats`는 그리기/출력 횟수다. 메뉴 검사 전용 `--ui-script`/`--ui-report`와 `--dump-gif`는 [메뉴 복원 문서](../docs/exe/cpp-menu-reconstruction.md)에 설명했다.
+`--run`은 클론 창을 띄운다(원본 게임을 실행하지 않는다). 기본은 메인 메뉴다. Campaign→Struggle For Freedom→1 The War Begins!→Play Mission에서 사제를 좌클릭해 선택하고 땅을 좌클릭해 이동한다. 화살표로 화면 이동, F4는 신전/F5는 사제 보기, Game/ESC는 정지/복귀다. `--mission TEST01`은 같은 브리핑/월드의 검사 진입점이다. `--view TEST01`은 옛 정적 검사 화면으로 화살표 이동/Esc 종료, `--view fonts`는 글꼴 표시다. `--dump-world`는 원본 파일을 읽기만 한다. [자세한 조작과 검사 옵션](../docs/exe/cpp-world-reconstruction.md).
 
 `--run`은 원본과 공유하는 `d/options.cfg`를 갱신한다. 전체화면을 요구하면 게임 폴더의 `fullscreenStateFile.dat`도 원본 시점에 만든다. DirectDraw는 아직 없으므로 창 모드로 나온다. 스모크는 두 파일을 보관하고 검사 후 바이트·존재 여부를 복구한다.
 
-CTest의 **59개 테스트**에는 두 판본 기계어의 **5,365개 기대값** 검사가 포함되어 있다(공용 1,806＋VFX 709＋설정 2,440＋옵션 저장 16＋Renderer 394). 빌드에는 원본 실행 파일·Ghidra·Python·외부 라이브러리가 필요 없다. 기존 영역·자산·글꼴/커서 스모크와 `cpp_menu_smoke.py`의 **54개 화면 상태**, GIF **두 판본 각 831,008픽셀**, 메인 메뉴 배경 **774,432픽셀**, 세 해상도·설정 재실행·원본 파일 복구를 검사한다. 이 수치는 게임 전체 완성도가 아니다.
+CTest의 **69개 테스트**에는 두 판본 기계어의 **5,365개 기대값** 검사가 포함되어 있다(공용 1,806＋VFX 709＋설정 2,440＋옵션 저장 16＋Renderer 394). 빌드에는 원본 실행 파일·Ghidra·Python·외부 라이브러리가 필요 없다. 기존 영역·자산·글꼴/커서·메뉴 54개 상태와 새 월드 스모크의 **6개 초기 자료 사례·393,216마스크 바이트·2,593객체·20개 조작 상태**를 검사한다. 새 월드 함수의 x86 대조나 원본 화면 전체 픽셀 일치를 의미하지 않는다. 설정을 공유하는 창 스모크는 순차 실행하고 원본 파일을 복구한다. 이 수치는 게임 전체 완성도가 아니다.
 
 ## 폴더
 

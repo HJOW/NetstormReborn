@@ -1,5 +1,5 @@
 // 새로 쓰는 실행 진입점: 복원된 데이터 계층을 실제 원본/CD 파일로 검증한다.
-// 메뉴·브리핑과 검사 장면을 표시한다. 실제 월드·게임 규칙은 후속이다.
+// 메뉴·브리핑·저장 미션의 지형/선택/이동과 독립 검사 장면을 표시한다. 건설/전투 규칙은 후속이다.
 #include <cstdio>
 #include <cstdlib>
 #include <bit>
@@ -16,6 +16,7 @@
 #include "app/InspectView.h"
 #include "client/ClientMain.h"
 #include "client/GameAssets.h"
+#include "client/GameWorld.h"
 #include "client/Mission.h"
 #include "client/UberGump.h"
 #include "client/GifImage.h"
@@ -50,9 +51,10 @@ void PrintBuildInfo() {
     std::printf("  --config-save <game-dir> <output-file> [key=value ...] [--cd]\n");
     std::printf("  --dump-types <game-dir> [--cd]\n  --inspect-fort <game-dir> <mission-or-path> [--cd]\n  --dump-forts <game-dir> [--cd]\n");
     std::printf("  --inspect-mission <game-dir> <mission> [--cd]\n  --dump-territories <game-dir> [--cd]\n");
-    std::printf("  --run <game-dir> [--view types|fonts|<mission>] [--window] [--frames N] [--screenshot out.bmp] [--render-stats] [--set \"k=v;k=v\"] [--cd]\n");
+    std::printf("  --run <game-dir> [--view types|fonts|<mission> | --mission <mission>] [--window] [--frames N] [--screenshot out.bmp] [--render-stats] [--set \"k=v;k=v\"] [--cd]\n");
     std::printf("  --dump-font <game-dir> <font-path>\n");
     std::printf("  --dump-gif <game-dir> <gif-path>\n  --run also accepts --ui-script steps.tsv --ui-report report.tsv\n");
+    std::printf("  --dump-world <game-dir> <mission> [--cd]\n");
 }
 
 // 실제 자산을 읽는 VFS를 만든다. 아카이브 등록 순서는 명시적으로 지정한다.
@@ -418,6 +420,14 @@ int RunFortCommand(const std::string& command, std::vector<std::string> argument
         InspectFort(path, netstorm::o::FortTemplate::Parse(files.Read(path), types), types);
         return 0;
     }
+    if (command == "--dump-world" && arguments.size()==2) {
+        netstorm::o::ConfigInterface config([&files](std::string_view file) { return files.TryRead(file); });
+        StartConfiguration(config,root,edition); netstorm::client::MissionScript mission(config,arguments[1]);
+        if (!mission.Loaded() || netstorm::o::AsciiLower(mission.MissionType())!="tutorial") throw std::invalid_argument("World restoration currently supports stored Tutorial missions");
+        const auto fort=netstorm::o::FortTemplate::Parse(files.Read(mission.FortPath()),types);
+        auto players=netstorm::o::MissionPlayers::Load([&mission](std::string_view key) { return mission.Get(key); },fort,types,6500);
+        netstorm::client::GameWorld world(assets,fort,std::move(players)); world.Resize(1024,768); WriteText(world.Report(true)); return 0;
+    }
     if (command == "--inspect-mission" && arguments.size() == 2) {
         netstorm::o::ConfigInterface config([&files](std::string_view file) { return files.TryRead(file); });
         StartConfiguration(config, root, edition);
@@ -523,11 +533,13 @@ int RunClient(std::vector<std::string> arguments) {
         else if (argument == "--screenshot") options.screenshot = value();
         else if (argument == "--set") options.settings = value();
         else if (argument == "--view") view = value();
+        else if (argument == "--mission") options.mission=value();
         else if (argument == "--render-stats") renderStats = true;
         else if (argument == "--ui-script") uiScript = value();
         else if (argument == "--ui-report") uiReport = value();
         else throw std::invalid_argument("Unknown --run option: " + argument);
     }
+    if (!view.empty() && !options.mission.empty()) throw std::invalid_argument("--view and --mission cannot be combined");
     netstorm::client::Client client(std::move(options));
     std::optional<netstorm::app::InspectView> inspect;
     if (!view.empty()) inspect.emplace(client, view);
@@ -541,6 +553,11 @@ int RunClient(std::vector<std::string> arguments) {
                 const auto& step = steps[i]; using namespace netstorm::client;
                 if (step.operation == "snapshot" || step.operation == "report") continue;
                 if (step.operation == "esc") { c.Input().Push(0x1b, 0, 0); continue; }
+                if (step.operation=="key" || step.operation=="keyup") {
+                    const std::map<std::string,unsigned> keys{{"left",0x25},{"up",0x26},{"right",0x27},{"down",0x28},{"home",0x73},{"priest",0x74}};
+                    const auto found=keys.find(step.argument); if (found==keys.end()) throw std::invalid_argument("Unknown UI key: "+step.argument);
+                    c.Input().Push((found->second<<InputCode::kVirtualKeyShift)|(step.operation=="keyup" ? InputCode::kRelease : 0),0,0); continue;
+                }
                 ScreenPoint point{};
                 if (step.operation == "click" || step.operation == "down" || step.operation == "up" || step.operation == "right") {
                     const auto found = c.Menu()->ControlPoint(step.argument);
@@ -662,7 +679,7 @@ int main(int argc, char** argv) {
             WriteLength(static_cast<std::uint32_t>(image.width)); WriteLength(static_cast<std::uint32_t>(image.height));
             WriteBytes(image.indices); WriteBytes(image.opacity); return 0;
         }
-        if (command == "--dump-types" || command == "--inspect-fort" || command == "--dump-forts" || command == "--inspect-mission"
+        if (command == "--dump-types" || command == "--inspect-fort" || command == "--dump-forts" || command == "--inspect-mission" || command=="--dump-world"
             || command == "--dump-territories")
             return RunFortCommand(command, std::vector<std::string>(argv + 2, argv + argc));
         if (argc == 3 && command == "--inspect-data") { InspectData(argv[2]); return 0; }

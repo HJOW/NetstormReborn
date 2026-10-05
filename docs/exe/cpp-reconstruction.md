@@ -1,7 +1,7 @@
 # CD판 대조·기계어 검증과 C++ 1차 복원
 
 > 2026-10-05. 기준은 패치판 `originals/Netstorm.exe`(10.78), 참고는 사용자 제공 CD판 `originalCD/NETSTORM.EXE`(10.72).
-> 원본 파일은 읽기만 했고 원본 게임 프로세스를 실행하지 않았다. `cpppj`는 공용 계층 일부가 실행되는 단계이며 게임 전체 복원은 진행 중이다.
+> 원본 게임 프로세스는 실행하지 않았다. 현재 cpppj는 메뉴/브리핑·저장 미션의 실제 지형/객체·선택/사제 이동·정지/복귀까지 연결했다([월드 검사와 한계](cpp-world-reconstruction.md)). CTest 69개·기존 x86 5365개 기대값이며 건설·전투·미션 완주는 후속이다. 아래 수치와 내용은 당시 1차 복원 기록이다.
 
 > 후속: [타입·그래픽 자산 복원](cpp-assets-reconstruction.md). `.type`·SHP·팔레트와 기본 VFX 그리기를 추가했다. 그 뒤 [설정 계층](cpp-config-reconstruction.md), [타입 표·요새 파일](cpp-fort-reconstruction.md), [Win32 창·화면 장치·입력 큐·영역 배치](cpp-screen-reconstruction.md)를 추가했다. 현재 CTest는 **43개 테스트·4,955개 x86 기대값**을 검사한다. cpppj는 2026-10-05부터 Windows 전용이다. 아래 1차 검증 결과는 당시 작업 기록이다.
 

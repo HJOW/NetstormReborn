@@ -3,7 +3,7 @@
 //       FUN_00436260(로딩 화면), FUN_00436020·FUN_00436190(키·글자 사건), FUN_00435220(설정 해석) ↔ CD FUN_00484ac0,
 //       FUN_00435b30(메시지 처리), FUN_00452e00(입력 폴링).
 // 범위: 창 만들기, 설정 읽기, 화면 장치, 메시지·입력 큐, 프레임 제한과 내보내기까지.
-//       Renderer의 창 모드 기반·원본 글꼴·커서를 연결했다. Squid/지형 수집과 UserInput은 후속이다.
+//       Renderer·원본 글꼴/커서·메뉴와 저장 미션의 기본 지형/객체·선택/이동을 연결했다. 건설/전투는 후속이다.
 #include "client/ClientMain.h"
 #include "client/UberGump.h"
 #include "o/OriginalText.h"
@@ -245,9 +245,9 @@ int Client::Run() {
     if (!PumpMessages()) return 0;
     // [원본] 송수신기, squid 목록(120000), 좌표 해시, spot 배열, 영상, Guide, 그래프,
     //        전체 명령 표, 인트로 감지, 연락처, 지도 모드, HTTP 서버 — 옮기지 않았다.
-    // 현재 UberGump는 단일 플레이 메뉴/브리핑과 정적 미션 표시만 연결한다.
+    // 현재 UberGump는 단일 플레이 메뉴/브리핑과 저장 미션의 지형·선택·이동 월드를 연결한다.
     if (ready) ready(*this);
-    else menu_ = std::make_unique<UberGump>(*this);
+    else { menu_ = std::make_unique<UberGump>(*this); if (!options_.mission.empty()) menu_->StartMission(options_.mission); }
 
     // 메인 루프(docs/exe/main-loop.md 2절). 옮기지 않은 단계는 순서의 자리에 적는다.
     while (true) {
@@ -280,6 +280,7 @@ int Client::Run() {
         // 원본 00439ad3 → 00441de0: 설정 변경이 있으면 커널 갱신보다 먼저 저장한다.
         if (configuration_.Configuration().changed) SaveOptions();
         kernel_.RunFrame();
+        if (menu_) menu_->Frame();
         // 11. 프레임 제한 + 그리기.
         Frame();
         if (afterFrame) afterFrame(*this);

@@ -1,4 +1,4 @@
-// 원본 Renderer.cpp의 정렬·변경 사각형·창 모드 그리기 기반. Squid/지형의 목록 수집은 월드 복원 단계에서 연결한다.
+// 원본 Renderer.cpp의 정렬·변경 사각형·창 모드 그리기 기반. GameWorld가 실제 지형/객체 목록을 제출한다.
 #pragma once
 #include "client/BitmapFont.h"
 #include <functional>
@@ -60,7 +60,9 @@ public:
     void SetScene(std::vector<RenderSprite> sprites, std::vector<RenderText> text = {}, bool sort = true);
     // 메뉴가 합성한 화면 크기의 8비트 배경을 소유하여 프레임 사이의 자산 수명을 보장한다.
     void SetBackground(std::shared_ptr<const IndexedImage> image);
-    // 정적 미션 진입 화면을 합성한다. 변경 표·출력 상태·커서는 건드리지 않는다.
+    // 선택 표시처럼 스프라이트 위에 오는 투명 UI 픽셀을 소유한다.
+    void SetOverlay(std::shared_ptr<const IndexedImage> image);
+    // 정지한 미션 위에 대화상자를 합성하는 배경을 만든다. 변경 표·출력 상태·커서는 건드리지 않는다.
     IndexedImage SceneImage();
     // 배경이나 WM_PAINT 등 화면 전체 변화.
     void InvalidateAll();
@@ -87,6 +89,7 @@ private:
     std::vector<RenderSprite> sprites_;
     std::vector<RenderText> text_;
     std::shared_ptr<const IndexedImage> background_;
+    std::shared_ptr<const IndexedImage> overlay_;
     std::vector<ScreenRect> painted_;
     std::vector<std::uint32_t> paintFlags_;
     const IndexedImage* cursor_{};

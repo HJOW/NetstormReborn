@@ -120,7 +120,14 @@ void Renderer::SetBackground(std::shared_ptr<const IndexedImage> image) {
         throw std::invalid_argument("Invalid renderer background");
     background_ = std::move(image); dirty_.InvalidateAll();
 }
-// 실제 월드/Gump 깊이 통합 전 정적 장면의 배경·스프라이트만 별도 버퍼에 합성한다.
+// 오브젝트 선택 표시는 UI 글자와 같이 월드 스프라이트 뒤에 합성한다.
+void Renderer::SetOverlay(std::shared_ptr<const IndexedImage> image) {
+    if (image && (image->width != static_cast<std::size_t>(width_) || image->height != static_cast<std::size_t>(height_) ||
+        image->indices.size() != image->width*image->height || image->opacity.size() != image->indices.size()))
+        throw std::invalid_argument("Invalid renderer overlay");
+    overlay_=std::move(image); dirty_.InvalidateAll();
+}
+// 정지한 월드 위에 대화상자를 합성할 배경·스프라이트·선택 표시를 별도 버퍼에 그린다.
 IndexedImage Renderer::SceneImage() {
     IndexedImage result{static_cast<std::size_t>(width_), static_cast<std::size_t>(height_),
         std::vector<std::uint8_t>(static_cast<std::size_t>(width_) * height_), std::vector<std::uint8_t>(static_cast<std::size_t>(width_) * height_,255)};
@@ -134,6 +141,7 @@ IndexedImage Renderer::SceneImage() {
         DrawIndexedImage(result.indices,width_,height_,Image(*sprite.database,sprite.block,sprite.frame),
             Position(sprite.x,frame.rect.left),Position(sprite.y,frame.rect.top),cut,sprite.colors ? &*sprite.colors : nullptr,sprite.shadow);
     }
+    if (overlay_) DrawIndexedImage(result.indices,width_,height_,*overlay_,0,0,all);
     return result;
 }
 // 오브젝트 측의 변경 알림.
@@ -213,6 +221,7 @@ std::span<const ScreenRect> Renderer::Draw(std::span<std::uint8_t> pixels, int p
             DrawIndexedImage(pixels, pitch, height_, Image(*sprite.database, sprite.block, sprite.frame), Position(sprite.x, frame.rect.left), Position(sprite.y, frame.rect.top), cut,
                 sprite.colors ? &*sprite.colors : nullptr, sprite.shadow);
         }
+        if (overlay_) DrawIndexedImage(pixels,pitch,height_,*overlay_,0,0,clip);
         // UI 글자는 지형 위에 낸다. Gump 깊이 통합은 메뉴 복원 단계에서 진행한다.
         for (const auto& text : text_) Text(pixels, pitch, clip, text);
         if (cursor_) DrawIndexedImage(pixels, pitch, height_, *cursor_, cursorPosition_.x, cursorPosition_.y, clip);

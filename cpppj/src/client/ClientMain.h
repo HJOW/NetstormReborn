@@ -49,6 +49,7 @@ struct ClientOptions {
     o::OriginalEdition edition{o::OriginalEdition::Patch1078};
     bool forceWindow{};                    // 원본 명령줄 "window": 전체화면 설정을 무시한다.
     std::string settings;                  // 원본 명령줄의 설정 글(`키=값;키=값`).
+    std::string mission;                   // 복원 검사용: 메뉴 목록이 없는 사용자 미션도 같은 브리핑/월드 경로로 시작한다.
     std::uint64_t frameLimit{};            // 새 옵션(검사용): 0이 아니면 그만큼 그린 뒤 창을 닫는다.
     std::filesystem::path screenshot;      // 새 옵션(검사용): 닫기 직전의 화면을 BMP로 저장한다.
 };
@@ -80,7 +81,7 @@ public:
     // 검사 전용으로 이미 그려진 화면을 지정 파일에 저장한다.
     void Capture(const std::filesystem::path& path);
 
-    // UserInput(FUN_004d62b0)을 옮기기 전까지 쓰는 임시 연결점: 프레임마다 입력 큐를 처리한다. 참을 돌려주면 종료한다.
+    // 독립 검사 화면의 입력 연결점. 기본 실행은 부분 UserInput/UberGump를 사용한다. 참이면 종료한다.
     std::function<bool(Client&)> input;
     // 초기화가 끝나고 루프에 들어가기 직전에 한 번 부른다(새 연결점).
     std::function<void(Client&)> ready;
