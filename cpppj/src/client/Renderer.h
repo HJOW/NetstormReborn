@@ -58,6 +58,8 @@ public:
     Renderer(int width, int height);
     // 현재 장면을 바꾼다. 기존/새 사각형을 모두 무효화하여 삭제된 그림도 지운다.
     void SetScene(std::vector<RenderSprite> sprites, std::vector<RenderText> text = {}, bool sort = true);
+    // 메뉴가 합성한 화면 크기의 8비트 배경을 소유하여 프레임 사이의 자산 수명을 보장한다.
+    void SetBackground(std::shared_ptr<const IndexedImage> image);
     // 배경이나 WM_PAINT 등 화면 전체 변화.
     void InvalidateAll();
     // 외부 오브젝트의 변화 범위를 원본 변경 표에 추가한다.
@@ -82,6 +84,7 @@ private:
     DirtyRegions dirty_;
     std::vector<RenderSprite> sprites_;
     std::vector<RenderText> text_;
+    std::shared_ptr<const IndexedImage> background_;
     std::vector<ScreenRect> painted_;
     std::vector<std::uint32_t> paintFlags_;
     const IndexedImage* cursor_{};

@@ -113,6 +113,13 @@ void Renderer::SetScene(std::vector<RenderSprite> sprites, std::vector<RenderTex
 }
 // 화면 모드 변경·전체 다시 그리기.
 void Renderer::InvalidateAll() { dirty_.InvalidateAll(); }
+// 배경 팔레트 번호를 변환하지 않고 변경 영역의 합성에서 재사용한다.
+void Renderer::SetBackground(std::shared_ptr<const IndexedImage> image) {
+    if (image && (image->width != static_cast<std::size_t>(width_) || image->height != static_cast<std::size_t>(height_) ||
+        image->indices.size() != image->width * image->height || image->opacity.size() != image->indices.size()))
+        throw std::invalid_argument("Invalid renderer background");
+    background_ = std::move(image); dirty_.InvalidateAll();
+}
 // 오브젝트 측의 변경 알림.
 void Renderer::Invalidate(ScreenRect rect, std::uint32_t flags) { dirty_.Add(rect, flags); }
 // 커서가 움직이지 않았으면 새 변경 영역을 만들지 않는다.
@@ -181,6 +188,7 @@ std::span<const ScreenRect> Renderer::Draw(std::span<std::uint8_t> pixels, int p
                 const auto row = static_cast<std::size_t>(y) * static_cast<std::size_t>(pitch);
                 std::fill(pixels.begin() + row + clip.left, pixels.begin() + row + clip.right, background);
             }
+        if (background_) DrawIndexedImage(pixels, pitch, height_, *background_, 0, 0, clip);
         // 원본 깊이 키로 정렬한 스프라이트.
         for (const auto& sprite : sprites_) {
             const auto bounds = Bounds(sprite); const auto cut = ClipScreenRect(clip, sprite.clip);
