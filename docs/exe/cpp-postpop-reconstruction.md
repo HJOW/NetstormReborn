@@ -56,4 +56,6 @@ x64 Release 경고/오류 0, CTest 내부 **124개·실패 0**. 최초 등록/�
 
 ## 남은 연결
 
+후속에서 [정수 표면 Graph의 연결·flood·병합/표 관리](cpp-graph-reconstruction.md)를 계산 계층에 복원했다. 아직 raw graph byte와 공통 postPop의 surface 분기에 연결하지 않았다.
+
 표면 그래프/영역 통지·AI·배치 선택·생산 덱/자원 계산·SP 차감·dirty/grid·표면 부착 프레임·섬/다리/건물/파생 가상·삭제/의존 객체/참조 수명·form/process·SID 소진/Take 목록을 이어 복원한다. 실제 SID/표면/프레임을 GameWorld에 연결한 뒤 다리 배치/Construction·건설/경제/전투/AI/승패로 이어야 한다. 현재 미션 완주는 불가능하다.

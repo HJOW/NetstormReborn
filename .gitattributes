@@ -46,3 +46,6 @@ cpppj/recovery-display-evidence.json text eol=lf
 # 공통 postPop의 독립 실행 도구·기록도 체크아웃 후 같은 SHA-256을 유지한다.
 tools/decomp_postpop_oracle.py text eol=lf
 cpppj/recovery-postpop-evidence.json text eol=lf
+# 표면 그래프의 기계어 기대값과 실행 도구 해시도 같은 LF로 보존한다.
+tools/decomp_graph_oracle.py text eol=lf
+cpppj/recovery-graph-evidence.json text eol=lf

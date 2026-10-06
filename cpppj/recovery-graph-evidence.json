@@ -1,0 +1,154 @@
+{
+  "schema": 1,
+  "public_calls": {
+    "Add": 512,
+    "Flood": 512,
+    "Remove": 512,
+    "Free": 512,
+    "Allocate": 512
+  },
+  "total_calls": 2560,
+  "sequences": 4,
+  "editions": {
+    "originals": {
+      "binary_sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "function_ranges": [
+        {
+          "entry": "00462d40",
+          "ranges": "00462d40-00462e4e"
+        },
+        {
+          "entry": "004633c0",
+          "ranges": "004633c0-004634d9;004634e0-00463525;00463530-004637a5"
+        },
+        {
+          "entry": "00462a50",
+          "ranges": "00462a50-00462abc"
+        },
+        {
+          "entry": "00462ac0",
+          "ranges": "00462ac0-00462b1b"
+        },
+        {
+          "entry": "00462bc0",
+          "ranges": "00462bc0-00462c23"
+        },
+        {
+          "entry": "00462c80",
+          "ranges": "00462c80-00462ca3"
+        },
+        {
+          "entry": "00462e50",
+          "ranges": "00462e50-00462ea4"
+        },
+        {
+          "entry": "00462f10",
+          "ranges": "00462f10-00462f7c;00462f80-00463109"
+        },
+        {
+          "entry": "00463330",
+          "ranges": "00463330-0046333c;00463340-004633b9"
+        },
+        {
+          "entry": "004637b0",
+          "ranges": "004637b0-004639cb"
+        },
+        {
+          "entry": "004ad390",
+          "ranges": "004ad390-004ad3db"
+        },
+        {
+          "entry": "004ad3e0",
+          "ranges": "004ad3e0-004ad46b"
+        },
+        {
+          "entry": "004c2630",
+          "ranges": "004c2630-004c265c;004c2660-004c26cc;004c26d0-004c2789"
+        }
+      ],
+      "assert_calls": 0
+    },
+    "originalCD": {
+      "binary_sha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "function_ranges": [
+        {
+          "entry": "0045c210",
+          "ranges": "0045c210-0045c382"
+        },
+        {
+          "entry": "0045b7d0",
+          "ranges": "0045b7d0-0045bad5"
+        },
+        {
+          "entry": "0045b530",
+          "ranges": "0045b530-0045b556"
+        },
+        {
+          "entry": "0045b560",
+          "ranges": "0045b560-0045b560"
+        },
+        {
+          "entry": "0045b7a0",
+          "ranges": "0045b7a0-0045b7c2"
+        },
+        {
+          "entry": "0045bb90",
+          "ranges": "0045bb90-0045bd5b"
+        },
+        {
+          "entry": "0045c390",
+          "ranges": "0045c390-0045c430"
+        },
+        {
+          "entry": "0045b4e0",
+          "ranges": "0045b4e0-0045b4f2"
+        },
+        {
+          "entry": "0045b4d0",
+          "ranges": "0045b4d0-0045b4db"
+        },
+        {
+          "entry": "0045b520",
+          "ranges": "0045b520-0045b520"
+        },
+        {
+          "entry": "0045c440",
+          "ranges": "0045c440-0045c45d"
+        },
+        {
+          "entry": "004adbc0",
+          "ranges": "004adbc0-004adbc5"
+        },
+        {
+          "entry": "004adbd0",
+          "ranges": "004adbd0-004adbd9"
+        },
+        {
+          "entry": "0048ca70",
+          "ranges": "0048ca70-0048cbc6"
+        },
+        {
+          "entry": "0045c460",
+          "ranges": "0045c460-0045c4ac"
+        },
+        {
+          "entry": "0045b6f0",
+          "ranges": "0045b6f0-0045b740"
+        }
+      ],
+      "assert_calls": 0
+    }
+  },
+  "stubbed": [],
+  "fixture_sha256": "93e21a38e9d761de5234122e5bf7962dba262ea3849b51637f92e15eadb46c18",
+  "sources": {
+    "decomp_graph_oracle.py": "47d2565b9d36a2654d4e60e20111995df889c383bad702a4ce6694e77dfadca5",
+    "decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+    "decomp_bridge_oracle.py": "c212538f7059cd0c9efac87cb205c71561fcc1f8d97df7830bc57d89a03f01fe",
+    "decomp_surface_oracle.py": "9b1711c22db7267bfcc4c9a870ee42c193f2041eee8a4f70b552e462c103b5ec"
+  },
+  "limitations": [
+    "기존 표/스택·정수 표면 스냅샷·소진 전; graph 복구/삭제 분할/영역 통지/postPop/raw 월드 연결 미검증",
+    "표/전체 스택은 Adler-32, membership graph/state는 모든 항목 직접 비교"
+  ]
+}

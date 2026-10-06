@@ -11,6 +11,8 @@ C# + MonoGame 빌드(`../dotnetpj/`)는 cpppj 완성 후 이를 분석하여 개
 
 [복원 근거·함수 대응·검증 범위](../docs/exe/cpp-reconstruction.md), [검토 목록](recovery-manifest.json), [기계어 검증 기록](recovery-evidence.json).
 
+[정수 표면 Graph 연결·flood·병합](../docs/exe/cpp-graph-reconstruction.md), [독립 기계어 기록](recovery-graph-evidence.json) — 기존 표/스택의 할당·반납·표면 수와 탐색 순서를 복원했다. 새 x86 2,560회, Release 빌드·내부 검사 128개가 통과했다. Graph의 raw SidPool/Pop/postPop·영역 통지/삭제 분할/소진 복구·GameWorld 연결은 남았다.
+
 [raw 공통 postPop 일부 효과 후속](../docs/exe/cpp-postpop-reconstruction.md), [독립 기계어 기록](recovery-postpop-evidence.json) — 비용 집계·공급/소유자별 작업장 목록·타입 통계·noGraph 리셋을 선택 연결했다. 새 x86 984회, 내부 검사 124개와 기존 1-1/TEST01 창 회귀를 통과했다. 표면 그래프/영역 통지·AI/배치 선택·생산 덱/자원/SP 차감·raw GameWorld 연결은 남았다.
 
 [raw 공통 표시 활성 후속](../docs/exe/cpp-display-reconstruction.md), [독립 기계어 기록](recovery-display-evidence.json) — Pop·Unpop의 프레임 경계/선택/그림자 갱신을 실제 Renderer 변경 표로 연결했다. 새 x86 1,728회, 내부 검사 120개, 실제 SHP 추가 헤더 6,950개를 확인했다. 공통 postPop 영역/소유자/생산 효과와 raw GameWorld 연결은 남았다.
