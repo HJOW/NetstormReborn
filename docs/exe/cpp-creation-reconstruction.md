@@ -1,6 +1,6 @@
 # cpppj 기본 객체 생성·Take·가상 초기화 복원
 
-2026-10-06. [SquidFactory](../../cpppj/src/o/SquidFactory.h)를 기존 [SidPool](../../cpppj/src/o/SidPool.h)에 연결했다. 원본/복사본 게임 프로세스와 클론 창은 실행하지 않았다. **실제 GameWorld, 파생 생성자와 non-void 객체의 공간 해제는 아직 연결하지 않았다.**
+2026-10-06 기본 복원 기록. [SquidFactory](../../cpppj/src/o/SquidFactory.h)를 기존 [SidPool](../../cpppj/src/o/SidPool.h)에 연결했다. 원본/복사본 게임 프로세스와 클론 창은 실행하지 않았다. 아래 964회 검증은 base 경로다. **후속에서 자산 파생 생성자·void Take를 확장했다**([153개 생성자·6,028회 검증](cpp-derived-reconstruction.md)). 이 문서의 constructor=0 제한과 104개 검사 수는 당시 범위이며, 실제 GameWorld와 non-void 공간 해제는 여전히 미연결이다.
 
 ## 정적 근거와 판본 차이
 

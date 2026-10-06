@@ -59,9 +59,10 @@ TEST_CASE(TypeConstructors_X86Table_MatchesBothEditions) {
     CHECK(Throws([] { TypeConstructorAddress(OriginalEdition::Cd1072,171); }));
 }
 
+namespace {
 // 대상 raw 슬롯은 hex의 모든 바이트, 풀은 카운터/목록/Adler를 기계어 기대값과 대조한다.
-TEST_CASE(SquidFactory_X86Fixture_ReplaysBaseCreationAndVoidTake) {
-    std::ifstream input(NETSTORM_CREATION_FIXTURE); CHECK(static_cast<bool>(input));
+void Replay(const char* path,int expectedBegins,int expectedRows) {
+    std::ifstream input(path); CHECK(static_cast<bool>(input));
     std::unique_ptr<SidPool> pool; std::unique_ptr<SquidFactory> factory;
     std::vector<RiftTypeRecord> types; std::string line; bool weak=false; int rows=0,begins=0;
     // Type/Fill/Abstract는 합성 입력이며 원본 명령 호출 수에는 넣지 않는다.
@@ -93,6 +94,7 @@ TEST_CASE(SquidFactory_X86Fixture_ReplaysBaseCreationAndVoidTake) {
             CHECK(row.size()==13); const auto type=static_cast<std::uint32_t>(std::stoul(row[2]));
             const auto arg=static_cast<std::uint32_t>(std::stoul(row[3])); Sid result{static_cast<std::uint16_t>(arg)};
             if (row[1]=="Create") result=factory->Create(type,arg);
+            else if (row[1]=="Construct") result=factory->Construct(type,result);
             else if (row[1]=="Take") result=factory->Take(type,result);
             else if (row[1]=="PostCreate") factory->PostCreate(result);
             else if (row[1]=="PostTake") factory->PostTake(result);
@@ -107,7 +109,18 @@ TEST_CASE(SquidFactory_X86Fixture_ReplaysBaseCreationAndVoidTake) {
             ++rows;
         }
     }
-    CHECK(begins==4); CHECK(rows==964);
+    CHECK(begins==expectedBegins); CHECK(rows==expectedRows);
+}
+}
+
+// 기존 base 생성/초기화 검증 범위와 고정된 원본 기대값을 보존한다.
+TEST_CASE(SquidFactory_X86Fixture_ReplaysBaseCreationAndVoidTake) {
+    Replay(NETSTORM_CREATION_FIXTURE,4,964);
+}
+
+// 모든 지원 파생 주소와 각 타입 바인딩은 서버/클라이언트·mana 옵션 양쪽에서 실제 원본과 같다.
+TEST_CASE(SquidFactory_X86Fixture_ReplaysDerivedConstructorsAndVoidTake) {
+    Replay(NETSTORM_DERIVED_FIXTURE,8,6028);
 }
 
 // 미복원 파생/잘못된 타입/클라이언트 권한/패치 금지 타입을 슬롯 할당 전에 거부한다.
@@ -115,7 +128,7 @@ TEST_CASE(SquidFactory_CreateGuards_LeavePoolUnchanged) {
     SidPool pool(OriginalEdition::Patch1078,32768,false); auto types=Types(pool.Edition());
     SquidFactory factory(pool,types); const auto before=std::vector(pool.Bytes().begin(),pool.Bytes().end());
     CHECK(Throws([&] { factory.Create(1,2); })); CHECK(Throws([&] { factory.Create(188,2); }));
-    CHECK(Throws([&] { factory.Create(82,2); })); CHECK(Throws([&] { factory.Create(162,2); }));
+    CHECK(Throws([&] { factory.Create(153,2); })); CHECK(Throws([&] { factory.Create(162,2); }));
     CHECK(Throws([&] { factory.Create(74,0); }));
     CHECK(std::equal(before.begin(),before.end(),pool.Bytes().begin()));
     CHECK(pool.FreeCount()==32763 && pool.PredictableCursor()==1);
@@ -160,6 +173,60 @@ TEST_CASE(SquidFactory_TypeLoader_ConnectsHpDepthAndConstructorMetadata) {
         SidPool pool(edition,32768); SquidFactory factory(pool,table.Types()); const auto sid=factory.Create(74);
         const auto bytes=pool.Slot(sid); const bool patch=edition==OriginalEdition::Patch1078;
         CHECK(bytes[patch ? 35 : 33]==243 && bytes[26]==0 && bytes[27]==0);
-        CHECK(bytes[28]==(patch ? 1 : 0)); CHECK(Throws([&] { factory.Create(82); }));
+        CHECK(bytes[28]==(patch ? 1 : 0)); CHECK(factory.Create(82).value==sid.value+1);
     }
+}
+
+// null/assert/미확인 주소는 할당·생성자·수신 전에 거부하여 기존 데이터가 유지된다.
+TEST_CASE(SquidFactory_DerivedGuards_RejectNullAssertAndUnknownAddressBeforeWrites) {
+    // CD null 생성자 둘과 패치의 공유 null 생성자를 각각 타입 번호로 확인한다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
+        SidPool pool(edition,32768); auto types=Types(edition);
+        types[82].constructorAddress=0x12345678; SquidFactory factory(pool,types);
+        const auto sid=factory.Create(74); const auto before=std::vector(pool.Bytes().begin(),pool.Bytes().end());
+        const auto free=pool.FreeCount(); const auto cursor=pool.PredictableCursor();
+        // 잘못된 생성자로 갈 모든 진입 경로에서 변경 전 거부를 확인한다.
+        for (const auto type:{82U,153U,159U,169U}) {
+            CHECK(Throws([&] { factory.Create(type); }));
+            CHECK(Throws([&] { factory.Construct(type,sid); }));
+            CHECK(Throws([&] { factory.Take(type,sid); }));
+        }
+        CHECK(std::equal(before.begin(),before.end(),pool.Bytes().begin()));
+        CHECK(pool.FreeCount()==free && pool.PredictableCursor()==cursor);
+    }
+}
+
+// anim의 생성자가 HP를 지우는 것과 공통 postTake가 HP를 보존하는 것을 구별한다.
+TEST_CASE(SquidFactory_AnimTake_UsesEditionHpWidthAndReturnsToSidPool) {
+    // CD는 HP 뒤의 두 바이트를 보존하며 패치는 네 바이트를 지운다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
+        SidPool pool(edition,32768); auto types=Types(edition); SquidFactory factory(pool,types);
+        const auto sid=factory.Create(161); auto bytes=pool.AllocatedBytes(sid);
+        bytes[26]=1; bytes[27]=2; bytes[28]=3; bytes[29]=4;
+        const auto ownerOffset=edition==OriginalEdition::Patch1078 ? 34U : 32U;
+        bytes[ownerOffset]=9; factory.PostTake(sid);
+        CHECK(bytes[26]==1 && bytes[27]==2 && bytes[28]==3 && bytes[29]==4);
+        CHECK(factory.Take(161,sid)==sid); CHECK(bytes[26]==0 && bytes[27]==0 && bytes[ownerOffset]==9);
+        CHECK(bytes[28]==(edition==OriginalEdition::Patch1078 ? 0 : 3));
+        CHECK(bytes[29]==(edition==OriginalEdition::Patch1078 ? 0 : 4));
+        const auto free=pool.FreeCount(); pool.Release(sid);
+        CHECK(pool.FreeCount()==free+1 && (pool.Slot(sid)[11]&1)!=0);
+    }
+}
+
+// 독립 생성자 호출은 기존 type/상태/HP/깊이를 초기화하지 않으며 잘못된 슬롯도 쓰지 않는다.
+TEST_CASE(SquidFactory_Construct_PreservesCallerFieldsAndGuardsSlotState) {
+    SidPool pool(OriginalEdition::Patch1078,32768); auto types=Types(pool.Edition());
+    types[82].flags1=TypeFlag1::kHasHitPoints; types[82].maxHitPoints=999; types[82].zOrder=5;
+    SquidFactory factory(pool,types); const auto sid=factory.Create(82); auto bytes=pool.AllocatedBytes(sid);
+    bytes[10]=0; bytes[26]=7; bytes[35]=77; bytes[34]=9;
+    const auto before=std::vector(pool.Bytes().begin(),pool.Bytes().end());
+    CHECK(factory.Construct(82,sid)==sid); CHECK(std::equal(before.begin(),before.end(),pool.Bytes().begin()));
+    CHECK(Throws([&] { factory.Construct(82,Sid{0}); }));
+    CHECK(Throws([&] { factory.Construct(82,Sid{32768}); }));
+    CHECK(Throws([&] { factory.Construct(82,Sid{15001}); }));
+    CHECK(std::equal(before.begin(),before.end(),pool.Bytes().begin()));
+    bytes[11]|=8; const auto contained=std::vector(pool.Bytes().begin(),pool.Bytes().end());
+    CHECK(Throws([&] { factory.Construct(82,sid); }));
+    CHECK(std::equal(contained.begin(),contained.end(),pool.Bytes().begin()));
 }

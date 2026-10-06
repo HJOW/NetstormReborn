@@ -1,4 +1,4 @@
-// 원본 함수의 바이트 쓰기를 보존하며 미복원 파생/공간 효과는 변경 전에 거부한다.
+// 원본 함수의 바이트 쓰기를 보존하며 미복원 생성자/공간 효과는 변경 전에 거부한다.
 #include "o/SquidFactory.h"
 #include <stdexcept>
 
@@ -12,6 +12,22 @@ constexpr std::uint32_t kManaType=158,kFakeSurface=162,kDaisFlag=0x400000;
 // 호스트 포인터로 사용하지 않는 실제 32비트 base vtable 기록값이다.
 constexpr std::uint32_t kPatchVtable=0x501dd0,kCdVtable=0x5058d8;
 #include "TypeConstructors.inc"
+// 순서 있는 생성자 쓰기의 위치·폭·OR 여부와 기록값이다. 최대 다섯 쓰기를 보관한다.
+struct ConstructorWrite { std::uint8_t offset,width; bool orBits; std::uint32_t value; };
+struct ConstructorRecipe {
+    std::uint32_t address,vtable;
+    std::uint8_t count;
+    std::array<ConstructorWrite,5> writes;
+};
+#include "DerivedConstructors.inc"
+// 호스트 함수 호출 없이 판본과 원본 주소가 일치하는 검증된 쓰기 계약을 찾는다.
+const ConstructorRecipe* Recipe(OriginalEdition edition,std::uint32_t address) {
+    const auto recipes=edition==OriginalEdition::Patch1078 ? std::span<const ConstructorRecipe>(kPatchRecipes) :
+        std::span<const ConstructorRecipe>(kCdRecipes);
+    // 주소가 표에 없으면 null/assert/미복원 생성자로 간주한다.
+    for (const auto& recipe:recipes) if (recipe.address==address) return &recipe;
+    return nullptr;
+}
 // 원본 포인터/HP를 little endian raw 필드로 쓴다. 정렬되지 않은 +26 쓰기도 안전하다.
 void Put(std::span<std::uint8_t> bytes,std::size_t offset,std::uint32_t value,std::size_t width) {
     // CD HP는 2바이트이고 패치 HP는 4바이트다.
@@ -38,11 +54,12 @@ SquidFactory::SquidFactory(SidPool& pool,std::span<const RiftTypeRecord> types,b
     const auto count=pool_.Edition()==OriginalEdition::Patch1078 ? kPatchConstructors.size() : kCdConstructors.size();
     if (types_.size()!=count) throw std::invalid_argument("SID 판본과 타입 수가 다릅니다");
 }
-// 미복원 생성자 호출이나 form에 base 가상 메서드를 적용하는 것을 막는다.
-const RiftTypeRecord& SquidFactory::Type(std::uint32_t number,bool requireBase) const {
+// 미복원 생성자 호출이나 form에 자산 가상 메서드를 적용하는 것을 막는다.
+const RiftTypeRecord& SquidFactory::Type(std::uint32_t number,bool requireSupported) const {
     if (number<kFirstAssetTypeNumber || number>=types_.size()) throw std::out_of_range("base Squid 타입 번호 오류");
     const auto& type=types_[number];
-    if (requireBase && type.constructorAddress) throw std::logic_error("파생 Squid 생성자는 아직 복원하지 않았습니다");
+    if (requireSupported && type.constructorAddress && !Recipe(pool_.Edition(),type.constructorAddress))
+        throw std::logic_error("null/assert 또는 미복원 Squid 생성자는 지원하지 않습니다");
     return type;
 }
 // Take로 받은 예측 머리도 원본 범위 안이다. 일반 Allocate의 예약 검사와 분리한다.
@@ -55,33 +72,58 @@ std::span<std::uint8_t> SquidFactory::LiveBytes(Sid sid) {
 }
 // 판본별 실제 base vtable의 기록값이다.
 std::uint32_t SquidFactory::BaseVtable() const { return pool_.Edition()==OriginalEdition::Patch1078 ? kPatchVtable : kCdVtable; }
-// 기존 SID 할당→base vtable→type→base postCreate를 원본 순서로 적용한다.
+// 각 생성자의 최종 vtable만 읽는다. 중간 vtable은 ApplyConstructor에서 원본 순서로 쓴다.
+std::uint32_t SquidFactory::ConstructorVtable(const RiftTypeRecord& type) const {
+    return type.constructorAddress ? Recipe(pool_.Edition(),type.constructorAddress)->vtable : BaseVtable();
+}
+// 원본의 짧은 생성자는 같은 raw 슬롯에 mov/OR를 적용한다. CD Bomb 보조 생성자도 포함한다.
+void SquidFactory::ApplyConstructor(std::span<std::uint8_t> bytes,const RiftTypeRecord& type) const {
+    if (!type.constructorAddress) { Put(bytes,0,BaseVtable(),4); return; }
+    const auto& recipe=*Recipe(pool_.Edition(),type.constructorAddress);
+    // 쓰기 순서와 폭을 유지하여 frame·플래그·anim HP의 판본 차이를 보존한다.
+    for (std::size_t i=0;i<recipe.count;++i) {
+        const auto& write=recipe.writes[i]; auto value=write.value;
+        if (write.orBits) {
+            // OR에 필요한 기존 바이트만 읽는다. 이웃 필드는 보존한다.
+            for (std::size_t j=0;j<write.width;++j) value|=static_cast<std::uint32_t>(bytes[write.offset+j])<<(j*8);
+        }
+        Put(bytes,write.offset,value,write.width);
+    }
+}
+// 생성자 자체는 type 번호·상태·가상 초기화를 쓰지 않는다. 독립 검증과 재초기화에 사용한다.
+Sid SquidFactory::Construct(std::uint32_t type,Sid sid) {
+    const auto& record=Type(type,true); const auto offset=pool_.Offset(sid);
+    auto bytes=std::span(pool_.bytes_).subspan(offset,pool_.layout_.stride);
+    if (sid.value<5 || (bytes[kState]&(kFree|kContained))) throw std::logic_error("생성자 슬롯 상태 오류");
+    ApplyConstructor(bytes,record); return sid;
+}
+// 기존 SID 할당→파생/base 생성자→type→공통 postCreate를 원본 순서로 적용한다.
 Sid SquidFactory::Create(std::uint32_t type,std::uint32_t flags) {
-    Type(type,true);
+    const auto& record=Type(type,true);
     if (pool_.Edition()==OriginalEdition::Patch1078 && type==kFakeSurface)
         throw std::logic_error("패치판 fakeThreeByThreeSurface는 생성할 수 없습니다");
     const auto sid=pool_.Allocate(flags);
     auto bytes=pool_.AllocatedBytes(sid);
-    Put(bytes,0,BaseVtable(),4);
+    ApplyConstructor(bytes,record);
     bytes[kType]=static_cast<std::uint8_t>(type);
     PostCreate(sid);
     return sid;
 }
-// free/dead만 지우고 payload와 풀 카운터는 유지한다. 공간 해제 필요 여부를 먼저 검사한다.
+// free/dead를 지운 뒤 생성자 필드만 다시 쓴다. 풀 카운터를 유지하며 공간 해제 필요성을 먼저 검사한다.
 Sid SquidFactory::Take(std::uint32_t type,Sid sid) {
-    Type(type,true);
+    const auto& record=Type(type,true);
     if (sid.value<pool_.layout_.serverFirst) throw std::out_of_range("Take는 서버 영역 SID만 받습니다");
     const auto offset=pool_.Offset(sid);
     auto bytes=std::span(pool_.bytes_).subspan(offset,pool_.layout_.stride);
     if (bytes[kState]&kContained) throw std::logic_error("contained 객체의 base Take는 지원하지 않습니다");
     if (!(bytes[kState]&kFree)) {
         if (bytes[kType]!=type) throw std::logic_error("Take 타입이 기존 객체와 다릅니다");
-        if (!(bytes[kState]&kVoid) || Vtable(bytes)!=BaseVtable())
-            throw std::logic_error("Take의 파생/공간 해제 효과는 아직 복원하지 않았습니다");
+        if (!(bytes[kState]&kVoid) || Vtable(bytes)!=ConstructorVtable(record))
+            throw std::logic_error("Take의 미복원 가상/공간 해제 효과가 필요합니다");
         // 실제 base Unpop은 이미 void이면 쓰기 없이 반환한다.
     }
     bytes[kState]=static_cast<std::uint8_t>((bytes[kState]&0xfc)|kVoid);
-    Put(bytes,0,BaseVtable(),4);
+    ApplyConstructor(bytes,record);
     bytes[kType]=static_cast<std::uint8_t>(type);
     PostTake(sid);
     return sid;
@@ -100,7 +142,7 @@ void SquidFactory::PostCreate(Sid sid) {
         Put(bytes,kHp,static_cast<std::uint32_t>(hp),patch ? 4 : 2);
     }
 }
-// Take는 네트워크에서 받은 owner/HP를 초기값으로 덮지 않는다.
+// 공통 postTake는 zOrder만 쓴다. 앞선 anim 생성자는 HP를 별도로 초기화한다.
 void SquidFactory::PostTake(Sid sid) {
     auto bytes=LiveBytes(sid);
     bytes[pool_.Edition()==OriginalEdition::Patch1078 ? 35 : 33]=static_cast<std::uint8_t>(Type(bytes[kType],false).zOrder);

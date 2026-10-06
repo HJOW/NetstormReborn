@@ -28,3 +28,7 @@ cpppj/recovery-creation-evidence.json text eol=lf
 cpppj/src/o/TypeConstructors.inc text eol=lf
 tools/decomp_creation_oracle.py text eol=lf
 tools/ghidra/ExportCreation.java text eol=lf
+# 자산 파생 생성자 검증의 도구/기록/raw 쓰기 표를 같은 SHA-256으로 유지한다.
+cpppj/recovery-derived-evidence.json text eol=lf
+cpppj/src/o/DerivedConstructors.inc text eol=lf
+tools/decomp_derived_oracle.py text eol=lf
