@@ -1,6 +1,6 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
-> 최종 갱신: 2026-10-06 (**raw SID의 표시 비활성 일반 Unpop·non-void Take·공통 firstPop 플래그와 void 반납을 연결했다.** [실제 플레이 계획](docs/cpp-playable-plan.md), [원본 근거·3,618회 검증·제한](docs/exe/cpp-unpop-reconstruction.md). 내부 검사 **112개**·제한 x86 입력 **46,156행**, 생성자 표 **359행/vtable 표 151행은 별도**다. 기존 공간 등록 878개는 의존성 계약 대체, 수명 480개는 접두 구간, 해시 초기화 4개는 할당 없는 경로이며 SID 3,168회는 기존 메모리/소진 전이다. **form/process·섬/다리/건물/파생 효과·표시 활성/dirty/grid·실제 Pop/삭제/의존 객체/참조 수명·SID 소진 복구·수신 목록/카운터·GameWorld·다리 UI/전체 붕괴·건설/경제/전투/AI/승패는 남아 미션 완주는 불가능하다. 이 PC에서는 원본/복사본 실행과 클론 GUI 표시를 계속 금지하며 실행 확인은 다른 PC로 인계한다.** 앞선 복원 이력은 보존한다.)
+> 최종 갱신: 2026-10-06 (**raw SID의 일반 Pop→firstPop·비전투 Activate·억제된 공통 postPop→Unpop·반납을 연결하고 이번 PC의 창 회귀를 실행했다.** [실제 플레이 계획](docs/cpp-playable-plan.md), [원본 근거·4,600회 대조·GUI 결과와 제한](docs/exe/cpp-pop-reconstruction.md). 내부 검사 **116개**·제한 x86 입력 **50,756행**이다. 생성자 표 359행과 vtable 151행은 호출 수와 별도다. 기존 공간 등록 878개는 의존성 계약 대체, 수명 480개는 접두 구간, 해시 초기화 4개는 할당 없는 경로이며 SID 3,168회는 기존 메모리/소진 전이다. **최신 사용자 지시로 이번 PC의 창 검사를 허용했다. 이전 PC의 창 금지는 과거 작업 조건이다.** 원본/복사본 게임 프로세스는 실행하지 않았다. **표시/postPop 효과 활성·섬/다리/건물/파생 효과·dirty/grid·삭제/의존 객체/참조 수명·form/process·SID 소진 복구·수신 목록·raw GameWorld 연결·건설/경제/전투/AI/승패는 남아 미션 완주는 불가능하다.** 앞선 복원 이력은 보존한다.)
 > 프로젝트 목표(AGENTS.md): 원본 NetStorm: Islands at War 를 디컴파일/분석하여 클론 코딩하고,
 > **Windows 10/11** 과 **GUI 환경의 Linux** 에서 동작하며 **여러 언어를 지원**하는 게임을 만든다.
 > **모방 범위(2026-10-03 AGENTS.md 변경)**: 기존 게임의 **사운드·그래픽·애니메이션 등 거의 모든 요소를 가능한 한 동일하게** 최대한 모방한다.
@@ -10,7 +10,22 @@
 
 ---
 
-## 2026-10-06 ✅ 완료: cpppj raw 일반 공간 해제·non-void Take·firstPop 플래그 (창 검증 제외)
+## 2026-10-06 ✅ 완료: cpppj raw 일반 Pop·원본 기계어 대조·Release 컴파일·창 회귀
+
+- [x] **진행 파악/허용:** AGENTS.md와 최신 LEFT_JOBS·실제 플레이 계획을 읽었다. 이번 사용자의 "이 PC에서는 창 뜨는 작업 해도 돼"를 적용해 이전 PC의 창 금지 인수인계를 해소했다. 원본/복사본 게임 프로세스는 실행하지 않았고 AGENTS.md/기존 원본 자료/C#은 수정하지 않았다.
+- [x] **디컴파일:** 읽기 전용·헤드리스 Ghidra로 Pop 관련 패치 22개+보조 2개/CD 18개 함수를 내보냈다. 이 PC에 없던 SID/기본 생성 내보내기도 재생성했다. `extracted/pop/<판본>/creation.c`, `functions.tsv`, `helpers-originals/`. 완료 로그와 내보내기 수를 확인했고 프로젝트 변경은 버렸다. 기존 대응 2,496쌍·검토 앵커 24쌍은 유지했다.
+- [x] **C++:** `SquidPop`은 같은 raw SidPool/SquidHash/spot의 좌표·화면 캐시→spot OR→현재 SHP 크기의 level/next/머리→최초 등록 extra→void 해제를 연결한다. 패치의 overlap 부분 변경·CD의 충돌 후 계속 등록·재등록을 보존한다. PE 표 151행 중 공통 firstPop/postPop·표시 두 경로를 확인한 패치 26개/CD 16개 vtable을 지원한다. 일반/매몰 경로이며 미복원 영역·건물 부착·파생 후처리는 변경 전에 거부한다.
+- [x] **해석 정정:** CD 디컴파일의 `(int)param_2 < 1`은 실제로 float 비트값의 signed 비교다. 좌표 절삭이라고 해석한 변경은 x86/기존 fixture에서 실패해 되돌렸다. 양 판본의 0.25 좌표 보존을 추가 검사하고 SquidSpatial 주석에 근거를 남겼다.
+- [x] **기계어:** 8시퀀스·**4,600회**(Create 752/Pop 1,712/Unpop 1,384/Release 752), 대체 함수/assert 도달 0. 풀 32,768/65,535·x87 두 정밀도·네 단계·실제 Pop으로 만든 3객체 체인의 중간/머리/꼬리·소수/보정 좌표·부분 충돌·SID 65,534·재등록을 포함한다. 실제 firstPop 패치 208/CD 216, 성공 postPop 패치 688/CD 696회는 상위 Pop 호출 수 안에 포함된다. Reset 8회/vtable 151행은 별도다. raw 슬롯 전체와 풀/해시/spot Adler-32를 대조한다. [고정 근거](cpppj/recovery-pop-evidence.json).
+- [x] **컴파일/콘솔:** Release 빌드 경고/오류 0, CTest 한 실행 파일 내부 **116개 검사 통과**. 새 Pop과 기존 Unpop/derived/creation/SID의 원본·도구·fixture SHA-256/호출 수 `--verify`를 확인했다. 제한 x86 누적은 **50,756행**이며 완성도가 아니다.
+- [x] **이번 PC의 클론 GUI:** `cpp_window_smoke.py`, `cpp_renderer_smoke.py`, `cpp_menu_smoke.py`, `cpp_world_smoke.py` 통과. 영역 488요새/2,607줄, 타입 화면 1,266,432픽셀, 18글꼴/4,608글리프, 메뉴 54상태와 창 해상도/옵션 재실행, 1-1/TEST01 선택·사제 이동·정지·카메라·복귀/재진입을 확인했다. 새 모듈 빌드 후 월드 스모크도 재검사했다. 허용된 설정 두 파일을 복구했고 원본 자료 해시는 동일하다.
+- **제한:** 새 raw Pop은 **표시·공통 postPop 효과 억제/비전투·빈 grid/dirty** 입력이다. 합성 타입/SHP/기존 파생 vtable payload이며 새 oracle에서 파생 ctor/월드 초기화를 실행하지 않았다. 고위 SID Claim은 목록/Allocate 복원이 아니다. GUI는 기존 임시 GameWorld 회귀이며 새 raw SID 연결의 실행 증명이 아니다. [근거·재현·제한](docs/exe/cpp-pop-reconstruction.md).
+- [ ] **바로 다음:** raw 표시 활성/dirty·영역/소유자·postPop 생산 효과·grid/표면 부착·섬/다리/건물/파생 가상·삭제/의존 객체/참조 수명을 복원한다. form/process·Take 목록/카운터·SID 소진 복구도 남았다. GameWorld 원본 SID/표면/실제 프레임→다리 배치/Construction·전체 붕괴·생산·건설/경제/전투/AI/승패로 잇는다.
+- [ ] **raw 월드 연결 후 실행:** 현재 허용된 이 PC 또는 다음 PC에서 TEST01/1-1의 원본 SID 생성·표시·선택·이동·해제·재진입을 확인한다. 원본 게임을 실제 실행하는 단계는 AGENTS.md와 그 단계의 사용자 허용을 따른다.
+
+---
+
+## 2026-10-06 ✅ 완료: cpppj raw 일반 공간 해제·non-void Take·firstPop 플래그 (당시 창 검증 제외)
 
 - [x] **제한:** AGENTS.md·최신 LEFT_JOBS를 확인하고 후속 복원을 진행했다. 원본/복사본 게임 프로세스·클론 GUI·창 스모크 실행 없음. 원본/AGENTS.md/C# 수정·커밋 없음.
 - [x] **디컴파일:** Unpop·공통 firstPop·표시 갱신·Renderer 조기 반환·섬 번호/좌표 보조 등 패치 22개/CD 17개 함수를 읽기 전용·헤드리스 Ghidra로 내보냈다. `extracted/lifecycle/<판본>/creation.c`, `functions.tsv`. 정의가 부족한 함수는 메모리에서 정의하고 변경을 버렸으며 완료 로그/행 수를 확인했다. 기존 대응 2,496쌍·검토 앵커 24쌍은 그대로다.
@@ -20,8 +35,8 @@
 - [x] **기계어:** 18시퀀스·**3,618회**(Create 34/firstPop 896/Take 768/Unpop 1,536/Release 384). 양 판본·풀 32,768/65,535·서버/클라이언트·x87 53/64비트·SID 50,000/65,534·네 단계/머리/중간/꼬리·소수 좌표·다른 저장 level·반복 void/free를 포함한다. 실제 non-void Unpop 패치 384/CD 384회, CD 미발견 활성 입력 16개, firstPop extra 전수 512회. 대체 함수/assert 도달 0. Reset 18회와 vtable 151행/생성자 359행은 호출 수에 더하지 않았다. raw 슬롯 모든 바이트와 전체 풀/삭제 기록/86,272머리/65,536 spot의 Adler-32를 대조한다. [기록](cpppj/recovery-unpop-evidence.json).
 - [x] **검증:** x64 Release 빌드 경고/오류 0, CTest 한 실행 파일 내부 **112개 검사 통과**(추가 4개). 새 unpop과 기존 derived/creation/SID의 원본/도구/표/fixture SHA-256·행 수 `--verify` 통과. 누적 **46,156행**은 제한이 있는 입력 수이며 실제 월드/GUI나 미션 완주를 증명하지 않는다.
 - **남은 계약:** 합성 타입/기존 배치 상태와 표시 억제 입력이다. 실제 Pop·표시 활성/dirty·grid/표면 알림·섬/다리/건물 부착/파생 효과·파생 destructor/의존 객체·참조/패킷 수명·GameWorld는 미연결이다. Take는 free list/freeCount를 조정하지 않으므로 상위 수신/할당 흐름도 남았다. 단순 void 반납 검증을 삭제 전체 복원으로 세지 않는다. [근거·재현·제한](docs/exe/cpp-unpop-reconstruction.md).
-- [ ] **다음 창 없는 복원:** raw Pop/좌표·실제 firstPop/postPop/Activate를 SID 풀에 연결하되 영역/소유자·dirty/grid·섬/다리/건물 효과의 실제 호출을 복원한다. 파생 삭제/의존 객체→최근 기록→반납, Take 호출자의 목록/카운터·참조 수명, form/process 생성자·SID 소진 복구를 이어서 확인한다. 이후 GameWorld 원본 SID/표면 지도→다리 배치/Construction·전체 붕괴·생산·건설/경제/전투/AI/승패.
-- [ ] **다른 PC 실행 인수인계:** raw Pop/수명/월드 연결 뒤 TEST01/1-1의 생성·표시·선택·이동·공간 해제·정지·카메라·재진입을 `cpp_world_smoke.py`로 확인한다. 창/표시/메뉴 회귀는 `cpp_window_smoke.py`, `cpp_renderer_smoke.py`, `cpp_menu_smoke.py`. 이 도구들과 `NetstormCpp.exe --run`은 **여기서 실행하지 않는다**. 현재 임시 월드와 raw SID는 별개이므로 기존 GUI 기록을 이번 raw 연동 검증으로 세면 안 된다. 원본 실행이 필요한 단계는 다른 PC에서 AGENTS.md/사용자 허용 범위를 확인한다.
+- [x] **후속 일부 완료:** 일반 raw Pop/좌표·실제 firstPop/Activate·억제된 공통 postPop 연결은 위 최신 절에서 완료했다. 표시 활성/영역/소유자·dirty/grid·섬/다리/건물 효과·삭제/참조·월드 연결은 최신 남은 작업으로 유지한다.
+- [x] **기본 GUI 보류 해소:** 최신 사용자 허용으로 위 window/renderer/menu/world 회귀를 이번 PC에서 실행했다. raw 월드 연결 뒤의 원본 SID 동작 검사는 아직 미완료이며 맨 위 다음 작업으로 인계한다. 이전 "여기서 실행하지 않는다"는 당시 PC의 제한이었다.
 
 ---
 

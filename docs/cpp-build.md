@@ -65,7 +65,7 @@ cpppj/
 
 ## 3. 빌드와 테스트
 
-**2026-10-06 사용자 제한:** 현재 PC의 검증은 창 없는 빌드·콘솔 CTest·정적/격리 분석으로 한정한다. 원본/복사본 실행과 클론 GUI 스모크는 여기서 진행하지 않고 다른 PC의 인수인계에 남긴다. [SID 풀의 복원·검증 범위](exe/cpp-sid-reconstruction.md).
+**2026-10-06 최신 사용자 지시:** 이번 PC에서는 창이 뜨는 검사를 허용했다. Release 빌드·CTest와 클론 window/renderer/menu/world GUI 스모크를 실행했다. 원본/복사본 게임 프로세스는 실행하지 않았다. 이전 PC의 창 금지는 과거 작업 조건이다. [raw Pop 후속·실행 검증의 범위](exe/cpp-pop-reconstruction.md).
 
 후속 [기본 생성/Take·가상 초기화](exe/cpp-creation-reconstruction.md)는 SID raw 풀과 타입 표에 연결했다. 자산 파생 생성자는 후속 연결했으며 form/process·실제 월드 연결은 남았다. 생성자 표 359행은 964회 새 기계어 호출과 별도로 센다. [자산 파생 생성자 후속](exe/cpp-derived-reconstruction.md)에서 153개 생성자·179개 타입 연결을 추가했다(6,028회). 이어 [raw 일반 공간 해제·non-void Take·firstPop 플래그](exe/cpp-unpop-reconstruction.md)를 표시 비활성 경로에서 연결했다(3,618회, vtable 메타데이터 151행 별도). 섬·다리·건물 부착/파생 효과·표시 활성·실제 Pop/삭제·월드 연결은 남았다. raw +8 word는 섬 번호로 정정했다.
 

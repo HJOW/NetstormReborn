@@ -36,3 +36,7 @@ tools/decomp_derived_oracle.py text eol=lf
 cpppj/recovery-unpop-evidence.json text eol=lf
 cpppj/src/o/UnpopVtables.inc text eol=lf
 tools/decomp_unpop_oracle.py text eol=lf
+# raw Pop의 기계어 검증 기록/도구/공통 가상 표를 같은 SHA-256으로 보존한다.
+cpppj/recovery-pop-evidence.json text eol=lf
+cpppj/src/o/PopVtables.inc text eol=lf
+tools/decomp_pop_oracle.py text eol=lf

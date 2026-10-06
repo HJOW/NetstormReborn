@@ -58,6 +58,7 @@ bool SquidSpatial::WritesSpots(const SpatialObject& object) {
 // 원본은 잘못된 유한 좌표를 (10,10)으로 바꾸고 화면 캐시를 별도 배율로 계산한다.
 void SquidSpatial::Coordinates(SpatialObject& object,float x,float y) {
     if (!std::isfinite(x) || !std::isfinite(y)) throw std::invalid_argument("Spatial finite coordinates");
+    // CD의 정수처럼 보이는 검사는 float 비트값 비교다. 두 판본 모두 양수 소수 좌표를 보존한다.
     if (x<=0 || y<=0 || x>=kWorldCells || y>=kWorldCells) x=y=10;
     object.x=x; object.y=y;
     object.screenX=static_cast<std::int16_t>(static_cast<double>(x)*kScreenScaleX+kScreenBias);

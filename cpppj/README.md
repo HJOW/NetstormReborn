@@ -11,6 +11,8 @@ C# + MonoGame 빌드(`../dotnetpj/`)는 cpppj 완성 후 이를 분석하여 개
 
 [복원 근거·함수 대응·검증 범위](../docs/exe/cpp-reconstruction.md), [검토 목록](recovery-manifest.json), [기계어 검증 기록](recovery-evidence.json).
 
+[raw 일반 Pop 후속·이번 PC의 GUI 회귀](../docs/exe/cpp-pop-reconstruction.md), [독립 기계어 기록](recovery-pop-evidence.json) — SID 풀·해시·spot의 등록→해제→반납을 연결했다. 표시와 postPop 효과가 억제된 비전투 경로이며 기존 GameWorld는 별개다. 최신 사용자 지시로 클론 창·글꼴·메뉴·1-1/TEST01 조작 회귀를 실행했다.
+
 [타입·그래픽 복원과 판본 차이](../docs/exe/cpp-assets-reconstruction.md), [VFX 기계어 검증 기록](recovery-graphics-evidence.json).
 
 [설정 계층 복원](../docs/exe/cpp-config-reconstruction.md), [설정 기계어 검증 기록](recovery-config-evidence.json), [타입 표·요새 파일 복원](../docs/exe/cpp-fort-reconstruction.md).
@@ -37,7 +39,7 @@ C# + MonoGame 빌드(`../dotnetpj/`)는 cpppj 완성 후 이를 분석하여 개
 
 [raw 일반 공간 해제·non-void Take·firstPop 플래그](../docs/exe/cpp-unpop-reconstruction.md), [수명 기계어 검증 기록](recovery-unpop-evidence.json) — 표시 비활성의 일반 자산/매몰 객체를 실제 SID 풀·해시·spot에 연결했다. 새 3,618회에는 실제 non-void Unpop 768회와 CD 체인 미발견 차이를 포함한다. vtable 표 151행은 별도다. 섬·다리·건물 부착/파생 효과·표시 활성·실제 Pop/삭제·GameWorld 연결은 남았다. raw +8 word는 프레임이 아니라 섬 번호이며 이전 생성자 라벨을 정정했다.
 
-**2026-10-06 작업 제한:** 현재 PC에서는 원본 게임·복사본을 실행하거나 클론 창을 띄우는 검사를 진행하지 않는다. 아래 `--run`과 window/renderer/menu/world 스모크 명령은 다른 PC의 실행 확인용이다. 이번 작업은 정적 디컴파일·기계어 격리 검사·빌드·콘솔 CTest만 수행했다.
+**2026-10-06 최신 사용자 지시:** 이번 PC에서는 창 검사를 허용했다. 아래 window/renderer/menu/world 스모크를 실행하여 기본 GUI 회귀를 통과했고 원본/복사본 게임 프로세스는 실행하지 않았다. 이전 창 금지는 과거 PC의 작업 조건이다. raw Pop의 제한과 기존 임시 월드의 검증 범위는 위 후속 문서에 기록했다.
 
 [실제 플레이 복원 계획](../docs/cpp-playable-plan.md)에 현재 실행 순서를, [기반 복원 로드맵](../docs/cpp-roadmap.md)에 완료된 데이터 기반·세부 복원 절차를 정리했다.
 
