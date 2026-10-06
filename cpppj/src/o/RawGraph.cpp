@@ -56,23 +56,84 @@ void RawGraph::ValidateTypes(std::span<const RiftTypeRecord> types) const {
             types[i].footX!=types_[i].footX || types[i].footY!=types_[i].footY)
             throw std::invalid_argument("postPop/raw 그래프 타입이 다릅니다");
 }
+// 원본 일반 SquidFinder는 단계 0..3의 y/x 버킷과 next 체인을 순회하고 매몰 후보만 건너뛴다.
+void RawGraph::Region(Sid sid,const RawGraphPop* pop,std::span<const std::uint8_t> spots,Plan& plan) const {
+    const auto root=pool_.Slot(sid); const auto& source=types_[root[10]];
+    const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
+    const auto extraOffset=patch ? 40U : 35U,graphOffset=patch ? 30U : 28U;
+    const int x=Coordinate(pop ? pop->x : std::bit_cast<float>(Read(root,14)));
+    const int y=Coordinate(pop ? pop->y : std::bit_cast<float>(Read(root,18)));
+    if (source.footX<1 || source.footY<1 || source.footX>kWorldCells || source.footY>kWorldCells)
+        throw std::out_of_range("그래프 영역 발자국 오류");
+    const int left=std::max(0,x-source.footX+1),top=std::max(0,y-source.footY+1);
+    const int right=x,bottom=y;
+    // 단계별 끝 버킷을 한 칸 늘리는 원본 탐색을 보존한다. 이는 표면 이웃 탐색과 다른 경로다.
+    for (int level=0;level<4;++level) {
+        const int scale=SquidHash::kScales[static_cast<std::size_t>(level)],side=SquidHash::Side(level);
+        const int startX=left/scale,startY=top/scale,endX=std::min(side-1,right/scale+1),endY=std::min(side-1,bottom/scale+1);
+        const auto heads=hash_.Entries(level);
+        // 일반 탐색의 y 바깥/x 안쪽 순서다.
+        for (int cy=startY;cy<=endY;++cy)
+            // 최대 발자국이 더 큰 객체의 기준점도 끝 버킷에서 잡는다.
+            for (int cx=startX;cx<=endX;++cx) {
+                const auto index=static_cast<std::size_t>(cy*side+cx);
+                const bool projected=pop && pop->level==level && index==SquidHash::BucketIndex(level,pop->x,pop->y);
+                auto current=projected ? sid.value : heads[index]; std::vector<std::uint16_t> chain;
+                // 각 버킷의 실제 머리/next 순서로 조회하며 손상된 순환은 쓰기 전에 거부한다.
+                while (current) {
+                    if (current<5 || current>kMaximumId || current>=pool_.Capacity() ||
+                        std::find(chain.begin(),chain.end(),current)!=chain.end())
+                        throw std::logic_error("그래프 영역 해시 범위/순환 오류");
+                    chain.push_back(current); const Sid candidate{current}; const auto bytes=pool_.Slot(candidate);
+                    const auto next=pop && candidate==sid ? hash_.Entries(pop->level)[SquidHash::BucketIndex(pop->level,pop->x,pop->y)] : Read(bytes,4,2);
+                    current=static_cast<std::uint16_t>(next);
+                    if (bytes[11]&(kFree|kContained)) throw std::logic_error("그래프 영역 후보 상태 오류");
+                    if (bytes[extraOffset]&kBuried) continue;
+                    if (bytes[10]<kFirstAssetTypeNumber || bytes[10]>=types_.size()) throw std::logic_error("그래프 영역 후보 타입 오류");
+                    const int ax=Coordinate(pop && candidate==sid ? pop->x : std::bit_cast<float>(Read(bytes,14)));
+                    const int ay=Coordinate(pop && candidate==sid ? pop->y : std::bit_cast<float>(Read(bytes,18)));
+                    // 원본 패치 일반 탐색은 유효 좌표 밖을 건너뛰고 CD는 assert한다. 이 경로는 정상 입력만 받는다.
+                    if (ax<=0 || ay<=0) throw std::out_of_range("그래프 영역 후보의 유효 좌표가 필요합니다");
+                    const auto& type=types_[bytes[10]];
+                    if (type.footX<1 || type.footY<1 || type.footX>kWorldCells || type.footY>kWorldCells)
+                        throw std::out_of_range("그래프 영역 후보 발자국 오류");
+                    const int aLeft=ax-type.footX+1,aTop=ay-type.footY+1;
+                    if (ax<left || aLeft>right || ay<top || aTop>bottom || !(type.flags1&TypeFlag1::kSurface) ||
+                        !(spots[static_cast<std::size_t>(ay*kWorldCells+ax)]&8)) continue;
+                    const auto staged=std::find_if(plan.numbers.begin(),plan.numbers.end(),[&](const auto& item){return item.first==candidate;});
+                    const auto graph=staged==plan.numbers.end() ? bytes[graphOffset] : staged->second;
+                    if (graph!=Graph::kInvalid) {
+                        if (graph>=Graph::kCount) throw std::out_of_range("그래프 영역 후보 번호 오류");
+                        auto& record=plan.records[graph];
+                        // Remove의 활성/양수 조건을 유지하며 0이 되면 사용 여부도 지운다. reserved는 보존한다.
+                        if (record.inUse && record.surfaces>0) { --record.surfaces; if (!record.surfaces) record.inUse=0; }
+                        if (staged==plan.numbers.end()) plan.numbers.emplace_back(candidate,Graph::kInvalid);
+                        else staged->second=Graph::kInvalid;
+                    }
+                }
+            }
+    }
+}
 // 전체 계산을 복사본에서 수행하며 미지원 입력·소진·연결 오류를 쓰기 전에 보고한다.
-RawGraph::Plan RawGraph::Calculate(Sid sid,bool add,std::uint8_t target,const RawGraphPop* pop) const {
+RawGraph::Plan RawGraph::Calculate(Sid sid,Operation operation,std::uint8_t target,const RawGraphPop* pop) const {
+    const bool region=operation==Operation::Region || operation==Operation::RegionAdd;
+    const bool add=operation==Operation::Add || operation==Operation::RegionAdd;
     const auto root=pool_.Slot(sid); const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     const auto graphOffset=patch ? 30U : 28U,extraOffset=patch ? 40U : 35U,frameOffset=patch ? 36U : 34U;
     if (sid.value<5 || sid.value>kMaximumId || (root[11]&(kFree|kContained)) ||
-        root[10]<kFirstAssetTypeNumber || root[10]>=types_.size() || !(types_[root[10]].flags1&TypeFlag1::kSurface))
+        root[10]<kFirstAssetTypeNumber || root[10]>=types_.size() ||
+        (operation!=Operation::Region && !(types_[root[10]].flags1&TypeFlag1::kSurface)))
         throw std::logic_error("raw 그래프 표면 SID 오류");
     Plan plan{records_,stack_,{},0};
     if (pop) {
         const auto& type=types_[root[10]];
-        if (!add || !pop->type || pop->level<0 || pop->level>3 || type.flags1!=pop->type->flags1 ||
+        if (operation==Operation::Flood || !pop->type || pop->level<0 || pop->level>3 || type.flags1!=pop->type->flags1 ||
             type.flags2!=pop->type->flags2 || type.footX!=pop->type->footX || type.footY!=pop->type->footY)
             throw std::invalid_argument("Pop/raw 그래프 타입/단계 오류");
     }
     // Add의 비활성 입력은 원본처럼 그래프 표/스택을 읽지 않고 돌아간다.
     const auto state=static_cast<std::uint8_t>(pop ? root[11]&~kVoid : root[11]);
-    if (add && (state&7)) return plan;
+    if (add && (state&7) && !region) return plan;
     std::vector<std::uint16_t> map(hash_.Entries(0).begin(),hash_.Entries(0).end());
     std::vector<std::uint8_t> spots(spots_.begin(),spots_.end());
     if (pop) {
@@ -90,6 +151,8 @@ RawGraph::Plan RawGraph::Calculate(Sid sid,bool add,std::uint8_t target,const Ra
                 }
         }
     }
+    if (region) Region(sid,pop,spots,plan);
+    if (operation==Operation::Region || (add && (state&7))) return plan;
     std::vector<bool> required(pool_.Capacity()); required[sid.value]=true;
     // 0단계 머리만 읽는다. 전체 발자국을 가짜 객체 번호로 채우거나 다른 해시 단계를 섞지 않는다.
     for (auto id:map) if (id) {
@@ -119,38 +182,52 @@ RawGraph::Plan RawGraph::Calculate(Sid sid,bool add,std::uint8_t target,const Ra
             const auto frame=Read(bytes,frameOffset,patch ? 4U : 1U);
             if (frame>=frames_[bytes[10]].size()) throw std::out_of_range("raw 그래프 프레임 번호 오류");
             code=frames_[bytes[10]][frame];
-            members.push_back({current.value,bytes[graphOffset],currentState});
+            const auto staged=std::find_if(plan.numbers.begin(),plan.numbers.end(),[&](const auto& item){return item.first==current;});
+            members.push_back({current.value,staged==plan.numbers.end() ? bytes[graphOffset] : staged->second,currentState});
         }
         objects.push_back({current.value,Coordinate(x),Coordinate(y),type.footX,type.footY,
             type.flags1,type.flags2,code,(currentState&kDead)!=0,(bytes[extraOffset]&kBuried)!=0});
     }
-    SurfaceFinder finder(objects,map,spots); Graph graph(finder,members,records_,stack_);
+    SurfaceFinder finder(objects,map,spots); Graph graph(finder,members,plan.records,plan.stack);
     if (add) graph.Add(sid.value); else plan.changed=graph.Flood(sid.value,target);
     std::copy(graph.Records().begin(),graph.Records().end(),plan.records.begin());
     std::copy(graph.FloodStack().begin(),graph.FloodStack().end(),plan.stack.begin());
-    // 変更対象の全スロットを先に検査し、確保済み graph byte のみを結果に含める。
-    for (auto member:members) if (graph.Number(member.id)!=member.graph) {
-        static_cast<void>(pool_.Slot(Sid{member.id})); plan.numbers.emplace_back(Sid{member.id},graph.Number(member.id));
+    // 영역에서 변경한 번호도 최종 Add 결과로 덮고 다른 raw 필드에는 쓰지 않는다.
+    for (auto member:members) {
+        const Sid current{member.id}; const auto number=graph.Number(member.id);
+        const auto staged=std::find_if(plan.numbers.begin(),plan.numbers.end(),[&](const auto& item){return item.first==current;});
+        if (staged!=plan.numbers.end()) staged->second=number;
+        else if (number!=member.graph) plan.numbers.emplace_back(current,number);
     }
     return plan;
 }
-// 副作用なしの試算で Pop 前の保護にも使用する。
-void RawGraph::ValidateAdd(Sid sid,const RawGraphPop* pop) const { static_cast<void>(Calculate(sid,true,0,pop)); }
-// graph byte 以外の payload、座標、owner、state は書き換えない。
+// 부작용 없는 계산으로 Pop 전 검사에도 사용한다.
+void RawGraph::ValidateAdd(Sid sid,const RawGraphPop* pop) const { static_cast<void>(Calculate(sid,Operation::Add,0,pop)); }
+// 원본 영역 통지가 먼저 만든 무효 번호/표를 같은 복사본의 Add가 읽는다.
+void RawGraph::ValidatePostPop(Sid sid,bool invalidate,bool add,const RawGraphPop* pop) const {
+    if (invalidate || add) static_cast<void>(Calculate(sid,invalidate ? (add ? Operation::RegionAdd : Operation::Region) : Operation::Add,0,pop));
+}
+// graph byte 외의 payload·좌표·owner·state는 보존한다.
 void RawGraph::Commit(const Plan& plan) {
     const auto offset=pool_.Edition()==OriginalEdition::Patch1078 ? 30U : 28U;
-    // 成功した計算の変更分だけを raw プールへ戻す。
+    // 성공한 계산의 변경분만 raw 풀에 반영한다.
     for (const auto& [sid,number]:plan.numbers) pool_.AllocatedBytes(sid)[offset]=number;
     records_=plan.records; stack_=plan.stack;
 }
-// 現在のフレーム・状態・地図から毎回再計算する。
-void RawGraph::Add(Sid sid) { Commit(Calculate(sid,true,0,nullptr)); }
-// 既存スタックの未使用 DWORD を保ったまま flood の結果をコミットする。
+// 현재 프레임·상태·지도로 매번 다시 계산한다.
+void RawGraph::Add(Sid sid) { Commit(Calculate(sid,Operation::Add,0,nullptr)); }
+// 기존 스택의 미사용 DWORD를 보존하여 flood 결과를 반영한다.
 std::uint32_t RawGraph::Flood(Sid sid,std::uint8_t graph) {
-    const auto plan=Calculate(sid,false,graph,nullptr); Commit(plan); return plan.changed;
+    const auto plan=Calculate(sid,Operation::Flood,graph,nullptr); Commit(plan); return plan.changed;
 }
-// sentinel と reserved WORD も含む全表を提供する。
+// 영역 단독 helper도 동일한 원본 탐색·표 감소를 사용한다.
+void RawGraph::InvalidateRegion(Sid sid) { Commit(Calculate(sid,Operation::Region,0,nullptr)); }
+// 성공한 전체 후처리를 한 번에 raw 번호와 그래프 표에 반영한다.
+void RawGraph::PostPop(Sid sid,bool invalidate,bool add) {
+    if (invalidate || add) Commit(Calculate(sid,invalidate ? (add ? Operation::RegionAdd : Operation::Region) : Operation::Add,0,nullptr));
+}
+// sentinel과 reserved WORD를 포함한 전체 표를 제공한다.
 std::span<const GraphRecord> RawGraph::Records() const { return records_; }
-// 使用後の痕跡も次の演算に引き継ぐ。
+// 사용 후 스택 흔적을 다음 연산에도 이어 준다.
 std::span<const std::uint32_t> RawGraph::FloodStack() const { return stack_; }
 }

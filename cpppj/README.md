@@ -11,7 +11,11 @@ C# + MonoGame 빌드(`../dotnetpj/`)는 cpppj 완성 후 이를 분석하여 개
 
 [복원 근거·함수 대응·검증 범위](../docs/exe/cpp-reconstruction.md), [검토 목록](recovery-manifest.json), [기계어 검증 기록](recovery-evidence.json).
 
-[raw SID 그래프·공통 postPop 연결](../docs/exe/cpp-rawgraph-reconstruction.md), [독립 기계어 기록](recovery-rawgraph-evidence.json) — 실제 프레임·0단계 해시·spot에서 계산하고 graph byte에 반영한다. Pop의 최종 상태를 쓰기 전에 검사한다. 새 x86 1,536회, Release 빌드·내부 검사 132개가 통과했다. 정상 다리/섬의 영역·부착 효과·삭제 분할/소진 복구·raw GameWorld 연결은 남았다.
+[2026-10-07 영역 그래프·일반 다리/섬 비전투 Pop](../docs/exe/cpp-regiongraph-reconstruction.md), [기계어 기록](recovery-regiongraph-evidence.json) — 네 단계 해시의 교차 발자국/내부 spot 표면을 무효화한 뒤 Add한다. 최종 상태의 사전 검사와 체인 순환/소진 보호를 유지한다. 세 실제 PE의 새 x86 1,536회, Release 빌드·내부 검사 **134개·실패 0**. 일반 다리/섬 Unpop·건물 부착·삭제 분할/전역 복구·raw GameWorld는 남았다.
+
+[추가 10.37 전체 디컴파일·CD 비교](../docs/exe/original1037-comparison.md), [근거](recovery-original1037-evidence.json) — 3,711개 함수·실패 0. CD와 실행 파일 전체 차이는 InsertCD 안내창 분기 한 바이트이며 두 `netstorm.ver`는 모두 10.37이다. 같은 그래프 배치를 새 알고리즘으로 세지 않고 패치 10.78을 복원 기준으로 유지한다.
+
+[raw SID 그래프·공통 postPop 연결](../docs/exe/cpp-rawgraph-reconstruction.md), [독립 기계어 기록](recovery-rawgraph-evidence.json) — 실제 프레임·0단계 해시·spot에서 계산하고 graph byte에 반영한다. Pop의 최종 상태를 쓰기 전에 검사한다. 당시 x86 1,536회·내부 검사 132개가 통과했으며 영역/일반 다리·섬 Pop은 위 후속에서 추가했다.
 
 [정수 표면 Graph 연결·flood·병합](../docs/exe/cpp-graph-reconstruction.md), [독립 기계어 기록](recovery-graph-evidence.json) — 기존 표/스택의 할당·반납·표면 수와 탐색 순서를 복원했다. 당시 새 x86 2,560회·내부 검사 128개가 통과했으며 raw 연결은 위 후속에서 추가했다.
 

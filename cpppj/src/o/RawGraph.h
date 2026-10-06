@@ -1,4 +1,4 @@
-// 실제 SID·프레임 코드·0단계 해시·spot을 정수 Graph 계산에 연결한다.
+// 실제 SID·프레임 코드·4단계 해시·spot을 정수 Graph/영역 계산에 연결한다.
 #pragma once
 #include "o/Graph.h"
 #include "o/SidPool.h"
@@ -15,6 +15,12 @@ public:
         std::span<const GraphRecord> records={},std::span<const std::uint32_t> stack={});
     // 새 좌표/void 해제/spot·해시 등록까지 예측하여 실패를 공간 쓰기 전에 검출한다.
     void ValidateAdd(Sid sid,const RawGraphPop* pop=nullptr) const;
+    // 영역 통지→표면 Add 순서를 한 복사본에서 시험하여 Pop 전에 모든 실패를 검출한다.
+    void ValidatePostPop(Sid sid,bool invalidate,bool add,const RawGraphPop* pop=nullptr) const;
+    // 00462d40 ↔ CD 0045c210: 4단계 해시의 발자국 교차 후보 중 내부 spot 표면을 무효화한다.
+    void InvalidateRegion(Sid sid);
+    // 공통 postPop의 영역 통지와 표면 Add를 성공한 최종 결과로 함께 반영한다.
+    void PostPop(Sid sid,bool invalidate,bool add);
     // 계산이 모두 성공한 뒤 관련 슬롯의 graph byte와 표/스택을 함께 반영한다.
     void Add(Sid sid);
     // 기존 raw 표면을 실제 탐색 순서로 flood하고 변경한 객체 수를 돌려준다.
@@ -37,8 +43,12 @@ private:
         std::vector<std::pair<Sid,std::uint8_t>> numbers;
         std::uint32_t changed{};
     };
+    // Add/Flood 외에 영역 단독·영역 후 Add를 구별한다. 원본 순서를 한 계획에 보존한다.
+    enum class Operation { Add,Flood,Region,RegionAdd };
     // 각 호출에서 현재 raw 입력을 다시 읽는다. noGraph 리셋/프레임 변경을 캐시하지 않는다.
-    Plan Calculate(Sid sid,bool add,std::uint8_t target,const RawGraphPop* pop) const;
+    Plan Calculate(Sid sid,Operation operation,std::uint8_t target,const RawGraphPop* pop) const;
+    // 원본 일반 탐색기의 단계/행/열/next 순서와 한 칸 넓은 끝 버킷을 유지한다.
+    void Region(Sid sid,const RawGraphPop* pop,std::span<const std::uint8_t> spots,Plan& plan) const;
     // 검사한 슬롯의 graph 필드 외에는 쓰지 않는다.
     void Commit(const Plan& plan);
     SidPool& pool_;

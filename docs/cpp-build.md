@@ -65,6 +65,8 @@ cpppj/
 
 ## 3. 빌드와 테스트
 
+**2026-10-07 영역/10.37 후속:** [영역 그래프·일반 다리/섬 비전투 Pop](exe/cpp-regiongraph-reconstruction.md)의 새 x86 1,536회·최종 x64 Release 경고/오류 0·CTest 내부 **134개·실패 0**을 확인했다. 제한 입력 누적은 59,100개다. [새 10.37의 3,711개 함수와 CD 비교](exe/original1037-comparison.md)를 기록하고 세 PE의 실제 함수로 대조했다. CD/10.37은 같은 그래프 배치이며 안내창 분기 한 바이트만 다르다. 일반 다리/섬 Unpop·건물 부착·삭제 분할/소진 복구·raw GameWorld는 후속이다.
+
 **2026-10-06 raw Graph 후속:** [실제 SID·프레임·해시·spot과 공통 postPop 연결](exe/cpp-rawgraph-reconstruction.md)을 추가했다. Pop의 최종 상태를 쓰기 전에 시험하고 raw graph byte를 갱신한다. x64 Release 경고/오류 0·CTest 내부 132개·새 x86 1,536회가 통과했다. 누적 제한 입력은 57,564개다. 정상 다리/섬의 영역·부착 효과·그래프 삭제 분할/소진 복구·raw GameWorld 연결은 남았다. 이번 단계는 새 GUI 실행 없이 raw 계산/후처리를 검사했다.
 
 **2026-10-06 Graph 계산:** [정수 표면 연결·flood·병합/표 관리](exe/cpp-graph-reconstruction.md)를 추가했다. 당시 Release·CTest 내부 128개·새 x86 2,560회가 통과했다. raw Pop/postPop 연결은 위 후속에서 추가했다.

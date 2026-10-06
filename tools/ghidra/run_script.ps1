@@ -13,7 +13,7 @@ param(
     # 스크립트에 넘길 인자 목록
     [string[]]$ScriptArgs = @(),
     # 분석할 판본 (run_decomp.ps1 의 -Edition 과 같다)
-    [ValidateSet('originals', 'originalCD')]
+    [ValidateSet('originals', 'originalCD', 'original1037')]
     [string]$Edition = 'originals',
     # 정밀 분석 프로젝트(extracted\refined\<판본>\ghidra)를 열지 여부
     [switch]$Refined,
@@ -27,7 +27,11 @@ param(
 $Root = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
 
 # 판본별 프로젝트 이름과 프로그램 이름
-if ($Edition -eq 'originalCD') {
+if ($Edition -eq 'original1037') {
+    $ProjectName = 'netstorm'
+    $Program = 'netstorm.exe'
+    $BaseProjectDir = Join-Path $Root 'extracted\original1037\ghidra'
+} elseif ($Edition -eq 'originalCD') {
     $ProjectName = 'NETSTORM'
     $Program = 'NETSTORM.EXE'
     $BaseProjectDir = Join-Path $Root 'extracted\originalCD\ghidra'

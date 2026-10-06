@@ -2,6 +2,8 @@
 
 2026-10-06. [독립 Graph 계산](cpp-graph-reconstruction.md)을 실제 `SidPool`의 graph/state/프레임, `SquidHash`의 0단계 머리, 공유 spot에 연결했다. 공통 postPop의 표면 생성 분기와 지원하는 Pop에서 선택적으로 사용한다. 기존 GUI의 GameWorld는 아직 별도다.
 
+**2026-10-07 후속:** [주변 영역 무효화와 일반 다리/섬 비전투 Pop](cpp-regiongraph-reconstruction.md)을 추가했다. 아래 미지원 표기는 2026-10-06 당시 범위다. 건물 부착·일반 다리/섬 Unpop·삭제 분할/소진 복구·raw GameWorld는 계속 남아 있다.
+
 ## 입력과 반영
 
 [RawGraph.h](../../cpppj/src/o/RawGraph.h), [구현](../../cpppj/src/o/RawGraph.cpp)은 타입과 실제 `FrameCode` 배열을 복사하고 풀·해시·spot을 참조한다. 프레임 코드는 SHP 표시 경계 헤더와 구별한다. 패치 frame은 +36 DWORD, graph는 +30 byte이며 CD는 +34/+28 byte다. 각 계산에서 현재 슬롯을 다시 읽어 프레임 변경과 noGraph 리셋을 반영한다.

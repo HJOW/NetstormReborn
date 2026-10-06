@@ -15,7 +15,7 @@ constexpr std::size_t kNext=4,kIsland=8,kType=10,kState=11,kX=14,kY=18,kScreenX=
 // 상태와 extra 비트다. free/transmitting 입력은 원본 assert 경로 대신 사전에 거부한다.
 constexpr std::uint8_t kFree=1,kVoid=4,kContained=8,kTransmitting=16,kBuried=8,kFirstPop=128;
 // 영역 갱신/부착 효과를 요구하는 타입군과 spot 선택 마스크다.
-constexpr std::uint32_t kBuildingMask=0x50444200,kIslandBridge=6,kSpotMask=kBuildingMask|0x400ff;
+constexpr std::uint32_t kBuildingMask=0x50444200,kSpotMask=kBuildingMask|0x400ff;
 // SetIsland의 무효 번호와 화면 좌표 배율/오프셋이다.
 constexpr std::uint16_t kInvalidIsland=127;
 constexpr double kScaleX=16,kScaleY=11,kBias=0.5;
@@ -64,8 +64,9 @@ RawPopResult SquidPop::Pop(Sid sid,const RiftTypeRecord& type,float frameWidth,f
     if (x<=0 || y<=0 || x>=kWorldCells || y>=kWorldCells) x=y=10;
     const auto extraOffset=patch ? 40U : 35U,levelOffset=patch ? 33U : 31U;
     const auto extra=old[extraOffset]; const bool buried=(extra&kBuried)!=0;
-    if (!buried && (type.flags2&(kIslandBridge|kBuildingMask)))
-        throw std::logic_error("Pop 영역/부착 표면 효과는 아직 지원하지 않습니다");
+    // 비전투의 null dirty 큐에서 섬/다리 변경 알림은 자연 반환한다. 건물의 옆면 부착 효과는 후속이다.
+    if (!buried && (type.flags2&kBuildingMask))
+        throw std::logic_error("Pop 건물 부착 효과는 아직 지원하지 않습니다");
     if (!Supports(pool_.Edition(),Read(old,0),flags))
         throw std::logic_error("Pop 파생 가상 후처리는 아직 지원하지 않습니다");
     const auto level=SquidHash::ObjectLevel(type.flags2,frameWidth,frameHeight);

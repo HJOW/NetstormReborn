@@ -122,9 +122,9 @@ std::array<std::uint32_t,2> GraphHashes(const o::RawGraph& graph) {
 }
 }
 
-// 원본 실제 postPop/Pop→그래프→raw byte·비용/통계·표시를 같은 풀에서 재생한다.
-TEST_CASE(RawGraph_X86_AllocatedSidPostPopAndProjectedPop) {
-    std::ifstream input(NETSTORM_RAWGRAPH_FIXTURE); CHECK(input.good()); std::string line; int lineNumber=0,begins=0,calls=0;
+// 공통 입력/전체 출력 대조를 공유하되 기대값은 각 실제 x86 도구가 독립적으로 기록한다.
+static void ReplayRawGraph(const char* path,int expectedBegins,int expectedCalls,bool regionFixture) {
+    std::ifstream input(path); CHECK(input.good()); std::string line; int lineNumber=0,begins=0,calls=0;
     std::unique_ptr<o::SidPool> pool; std::unique_ptr<o::SquidHash> hash; std::unique_ptr<o::RawGraph> graph;
     std::unique_ptr<o::SquidPostPop> post; std::unique_ptr<o::SquidPop> pop; std::unique_ptr<o::SquidDisplay> display; std::unique_ptr<Sink> sink;
     std::vector<o::Sid> ids; std::vector<o::RiftTypeRecord> types; std::vector<std::vector<o::FrameCode>> frames;
@@ -138,19 +138,24 @@ TEST_CASE(RawGraph_X86_AllocatedSidPostPopAndProjectedPop) {
             types=Types(edition); frames.assign(types.size(),{}); shapes.assign(types.size(),{}); spots.assign(o::kWorldCells*o::kWorldCells,0);
             pool=std::make_unique<o::SidPool>(edition,32768,false); hash=std::make_unique<o::SquidHash>();
             o::SquidFactory factory(*pool,types); ids.clear(); const auto expected=Rows(row[3]).at(0);
-            // 두 판본의 실제 client SID 할당 순서도 확인한다.
+            // 각 실행 파일 배치의 실제 client SID 할당 순서도 확인한다.
             for (int i=0;i<7;++i) { ids.push_back(factory.Create(74,2)); CHECK(ids.back().value==expected[static_cast<std::size_t>(i)]); }
             ++begins;
         } else if (row[0]=="Setup") {
             pop.reset(); post.reset(); graph.reset(); display.reset(); sink=std::make_unique<Sink>(); hash->Reset(); std::fill(spots.begin(),spots.end(),std::uint8_t{});
             const auto nodes=Rows(row[1]); CHECK(nodes.size()==ids.size());
-            // 0단계 지도는 발자국 전체가 아니라 실제 기준점 머리만 입력한다.
+            // 지도는 발자국 전체가 아니라 실제 기준점 버킷/체인을 입력한다.
             for (std::size_t i=0;i<nodes.size();++i) {
                 const auto& n=nodes[i]; auto& type=types[74+i]; type.flags1=static_cast<std::uint32_t>(n[4]); type.flags2=static_cast<std::uint32_t>(n[5]);
                 type.footX=n[2]; type.footY=n[3]; frames[74+i]={{static_cast<std::uint8_t>(n[6]),static_cast<std::uint8_t>(n[7]),1,0},{65,80,2,0}};
                 shapes[74+i]={2,true,{{11,17,12,16},{19,23,-3,5},{11,17,12,16},{19,23,-3,5}}};
                 Node(*pool,ids[i],static_cast<std::uint8_t>(74+i),n);
-                if (!(n[9]&4) && n[12]==0) hash->Cell(0,n[0],n[1])=ids[i].value;
+                if (!(n[9]&4) && (regionFixture || n[12]==0)) {
+                    const auto level=regionFixture ? n[12] : 0;
+                    auto& head=hash->Bucket(level,static_cast<float>(n[0]),static_cast<float>(n[1]));
+                    if (regionFixture) Put(pool->AllocatedBytes(ids[i]),4,head,2);
+                    head=ids[i].value;
+                }
             }
             // 내부 spot 후보를 별도로 준비한다.
             for (const auto& s:Rows(row[2])) spots[static_cast<std::size_t>(s[1]*o::kWorldCells+s[0])]=static_cast<std::uint8_t>(s[2]);
@@ -160,15 +165,22 @@ TEST_CASE(RawGraph_X86_AllocatedSidPostPopAndProjectedPop) {
                 const auto value=31337U+static_cast<std::uint32_t>(i)*2654435761U;
                 state.localCounts[i]=value; state.localSecondaryCounts[i]=value+17; state.globalCounts[i]=value+34;
             }
-            graph=std::make_unique<o::RawGraph>(*pool,*hash,spots,types,frames,Records(row[3]),Stack(row[4]));
+            auto stack=regionFixture ? std::array<std::uint32_t,o::Graph::kFloodSize>{} : Stack(row[4]);
+            // 새 fixture는 긴 stale 스택을 반복 저장하지 않고 입력 시드로 복원한다.
+            if (regionFixture) for (std::size_t i=0;i<stack.size();++i) stack[i]=static_cast<std::uint32_t>(std::stoul(row[4])+i);
+            graph=std::make_unique<o::RawGraph>(*pool,*hash,spots,types,frames,Records(row[3]),stack);
             post=std::make_unique<o::SquidPostPop>(*pool,types,state,graph.get());
             display=std::make_unique<o::SquidDisplay>(pool->Edition(),types,shapes,*sink,o::SquidDisplayView{0,0,65536,{0,0,640,480}});
             pop=std::make_unique<o::SquidPop>(*pool,*hash,spots,display.get(),post.get());
         } else {
             const auto args=Rows(row[1]);
             if (row[0]=="Pop") {
-                const auto& a=args.at(0); CHECK(pop->Pop(ids[0],types[74],1,1,static_cast<float>(a[1]),static_cast<float>(a[2]),static_cast<std::uint32_t>(a[0]))==o::RawPopResult::Registered);
+                // void 입력의 결과는 실제 x86 출력의 void 해제 여부로 읽는다. 패치 충돌은 부분 쓰기를 남긴다.
+                const auto expectedRoot=Bytes(Split(row[3],';').front());
+                const auto expected=(expectedRoot[11]&4) ? o::RawPopResult::Overlap : o::RawPopResult::Registered;
+                const auto& a=args.at(0); CHECK(pop->Pop(ids[0],types[74],1,1,static_cast<float>(a[1]),static_cast<float>(a[2]),static_cast<std::uint32_t>(a[0]))==expected);
             } else if (row[0]=="PostPop") post->PostPop(ids[0],static_cast<std::uint32_t>(args.at(0)[0]));
+            else if (row[0]=="Region") graph->InvalidateRegion(ids[0]);
             else if (row[0]=="Add") graph->Add(ids[0]);
             else if (row[0]=="Flood") CHECK(graph->Flood(ids[0],static_cast<std::uint8_t>(args.at(0)[0]))==std::stoul(row[2])); else CHECK(false);
             const auto raw=Split(row[3],';');
@@ -202,7 +214,17 @@ TEST_CASE(RawGraph_X86_AllocatedSidPostPopAndProjectedPop) {
         }
         if (test::FailureCount()!=before) { std::cerr<<"raw 그래프 fixture 행: "<<lineNumber<<'\n'; break; }
     }
-    CHECK(begins==4); CHECK(calls==1536);
+    CHECK(begins==expectedBegins); CHECK(calls==expectedCalls);
+}
+
+// 기존 fixture를 그대로 재생하여 일반 표면/매몰 다리 경로의 회귀를 확인한다.
+TEST_CASE(RawGraph_X86_AllocatedSidPostPopAndProjectedPop) {
+    ReplayRawGraph(NETSTORM_RAWGRAPH_FIXTURE,4,1536,false);
+}
+
+// 세 실제 PE와 두 x87 정밀도의 일반 탐색/다리/섬 Pop 결과를 전체 슬롯/메모리와 대조한다.
+TEST_CASE(RawGraph_RegionX86_ThreeBinariesAndNormalBridgeIslandPop) {
+    ReplayRawGraph(NETSTORM_REGIONGRAPH_FIXTURE,6,1536,true);
 }
 
 // void 해제 전 옛 좌표로 시험하면 놓칠 그래프 소진/소수 좌표를 Pop 쓰기 전에 잡는다.
@@ -222,6 +244,30 @@ TEST_CASE(RawGraph_ProjectedPopRejectsExhaustionAndFractionalBeforeMutation) {
     CHECK(hash.Bucket(1,20,20)==0); CHECK(std::all_of(spots.begin(),spots.end(),[](auto byte){return byte==0;}));
 }
 
+// 영역 후보를 감소시켜도 표가 소진되면 Pop의 좌표/spot/후처리까지 전부 쓰기 전에 거부한다.
+TEST_CASE(RawGraph_RegionThenAddExhaustionRejectsBeforeAnyPopMutation) {
+    const auto edition=o::OriginalEdition::Patch1078; auto types=Types(edition);
+    types[74].flags1=types[75].flags1=o::TypeFlag1::kSurface; types[74].flags2=8;
+    types[74].footX=types[74].footY=3; types[75].footX=3;
+    std::vector<std::vector<o::FrameCode>> frames(types.size()); frames[74]=frames[75]={{65,80,1,0}};
+    o::SidPool pool(edition,32768,false); o::SquidFactory factory(pool,types);
+    const auto root=factory.Create(74,2),candidate=factory.Create(75,2);
+    Node(pool,root,74,{90,90,3,3,0x800,8,65,80,0,4,0,254,1});
+    Node(pool,candidate,75,{21,20,3,1,0x800,0,65,80,0,0,0,0,1});
+    o::SquidHash hash; hash.Bucket(1,21,20)=candidate.value;
+    std::vector<std::uint8_t> spots(o::kWorldCells*o::kWorldCells); spots[20*o::kWorldCells+21]=8;
+    std::array<o::GraphRecord,o::Graph::kTableSize> records{};
+    // 한 후보를 빼도 어느 그래프도 비지 않는 입력이다.
+    for (std::size_t i=0;i<o::Graph::kCount;++i) records[i]={2,1,71};
+    o::RawGraph graph(pool,hash,spots,types,frames,records); o::SquidPostPopState state; state.graphsEnabled=true;
+    o::SquidPostPop post(pool,types,state,&graph); o::SquidPop pop(pool,hash,spots,nullptr,&post);
+    const std::vector<std::uint8_t> raw(pool.Bytes().begin(),pool.Bytes().end()),beforeSpots=spots;
+    const auto before=GraphHashes(graph); const auto oldHead=hash.Bucket(1,20,20);
+    CHECK(Throws([&]{pop.Pop(root,types[74],1,1,20,20,0x201);}));
+    CHECK(std::equal(raw.begin(),raw.end(),pool.Bytes().begin())); CHECK(spots==beforeSpots); CHECK(GraphHashes(graph)==before);
+    CHECK(hash.Bucket(1,20,20)==oldHead); CHECK(state.depth==0); CHECK(state.totalCost==0);
+}
+
 // 프레임/지도 변경은 각 호출에서 다시 읽고 graph byte 외의 raw 필드는 유지한다.
 TEST_CASE(RawGraph_RefreshesFramesMapAndRawMembershipBetweenCalls) {
     const auto edition=o::OriginalEdition::Cd1072; auto types=Types(edition); types[74].flags1=types[75].flags1=o::TypeFlag1::kSurface;
@@ -237,7 +283,7 @@ TEST_CASE(RawGraph_RefreshesFramesMapAndRawMembershipBetweenCalls) {
     CHECK(pool.Slot(a)[34]==1); CHECK(pool.Slot(a)[11]==0); CHECK(pool.Slot(b)[28]==1); CHECK(graph.Records()[1].reserved==91);
 }
 
-// 서로 다른 풀/지도, 손상된 후보와 미복원 영역 통지는 결과를 쓰기 전에 거부한다.
+// 서로 다른 풀/지도, 손상된 후보와 영역 체인 순환은 결과를 쓰기 전에 거부한다.
 TEST_CASE(RawGraph_CorruptCandidatesAndMismatchedConnectionsRejectBeforeMutation) {
     const auto edition=o::OriginalEdition::Patch1078; auto types=Types(edition); types[74].flags1=o::TypeFlag1::kSurface;
     std::vector<std::vector<o::FrameCode>> frames(types.size()); frames[74]={{65,80,1,0}};
@@ -254,5 +300,8 @@ TEST_CASE(RawGraph_CorruptCandidatesAndMismatchedConnectionsRejectBeforeMutation
     pool.AllocatedBytes(sid)[36]=0; types[74].flags2=8;
     CHECK(Throws([&]{o::SquidPostPop mismatch(pool,types,state,&graph);}));
     o::RawGraph regionGraph(pool,hash,spots,types,frames); o::SquidPostPop region(pool,types,state,&regionGraph);
+    hash.Bucket(1,20,20)=sid.value; Put(pool.AllocatedBytes(sid),4,sid.value,2);
     CHECK(Throws([&]{region.Activate(sid,1);})); CHECK(state.depth==0); CHECK(pool.Slot(sid)[30]==254);
+    Put(pool.AllocatedBytes(sid),4,0,2); region.Activate(sid,1);
+    CHECK(state.depth==0); CHECK(pool.Slot(sid)[30]==0); CHECK(regionGraph.Records()[0].surfaces==1);
 }

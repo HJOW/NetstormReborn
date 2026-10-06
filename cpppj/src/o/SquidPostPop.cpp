@@ -67,15 +67,13 @@ void SquidPostPop::Validate(Sid sid,std::uint32_t flags,const RawGraphPop* pop) 
     if (state_.suppressed) return;
     const auto& type=types_[bytes[10]];
     if (state_.graphsEnabled) {
-        if ((type.flags2&kRegionMask) && (flags&3) && !(flags&kNoGraph))
-            throw std::logic_error("postPop 이웃 영역/그래프 갱신 미복원");
+        const bool region=(type.flags2&kRegionMask) && (flags&3) && !(flags&kNoGraph);
+        const bool add=(type.flags1&TypeFlag1::kSurface) && (flags&kGraphChange) && !(flags&kNoGraph);
         if ((flags&kGraphChange) && !(flags&kNoGraph)) {
             if (flags&kDestroyGraph) throw std::logic_error("postPop destroyGraph 원본 assert 경로");
-            if (type.flags1&TypeFlag1::kSurface) {
-                if (!graph_) throw std::logic_error("postPop 표면 그래프가 연결되지 않았습니다");
-                graph_->ValidateAdd(sid,pop);
-            }
         }
+        if ((region || add) && !graph_) throw std::logic_error("postPop 표면/영역 그래프가 연결되지 않았습니다");
+        if (graph_) graph_->ValidatePostPop(sid,region,add,pop);
     }
     if (!(flags&1) || (bytes[patch ? 40 : 35]&kAbstractBuried)) return;
     const auto owner=bytes[patch ? 34 : 32];
@@ -93,14 +91,15 @@ void SquidPostPop::Validate(Sid sid,std::uint32_t flags,const RawGraphPop* pop) 
 void SquidPostPop::Activate(Sid sid,std::uint32_t flags) {
     Validate(sid,flags); ++state_.depth; PostPop(sid,flags);
 }
-// 공통 후처리의 순서: 그래프 생성/리셋→비용→공급/작업장 목록→소유자 조건 통계→깊이 감소다.
+// 공통 후처리의 순서: 영역 무효화→그래프 생성/리셋→비용→공급/작업장 목록→소유자 조건 통계→깊이 감소다.
 void SquidPostPop::PostPop(Sid sid,std::uint32_t flags) {
     Validate(sid,flags);
     if (state_.suppressed) { --state_.depth; return; }
     const auto bytes=pool_.Slot(sid); const auto number=bytes[10]; const auto& type=types_[number];
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
-    if (state_.graphsEnabled && (type.flags1&TypeFlag1::kSurface) && (flags&kGraphChange) && !(flags&kNoGraph))
-        graph_->Add(sid);
+    if (state_.graphsEnabled && graph_)
+        graph_->PostPop(sid,(type.flags2&kRegionMask) && (flags&3) && !(flags&kNoGraph),
+            (type.flags1&TypeFlag1::kSurface) && (flags&kGraphChange) && !(flags&kNoGraph));
     if (state_.graphsEnabled && (type.flags1&TypeFlag1::kSurface) && (flags&1) && (flags&kNoGraph))
         pool_.AllocatedBytes(sid)[patch ? 30 : 28]=state_.invalidGraph;
     if ((flags&1) && !(bytes[patch ? 40 : 35]&kAbstractBuried)) {

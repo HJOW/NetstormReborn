@@ -10,8 +10,8 @@
 param(
     # 분석할 바이너리 경로 (생략하면 판본별 기본 실행 파일)
     [string]$Binary = '',
-    # 기존 패치판과 CD판의 프로젝트·결과 디렉터리를 분리하는 판본 선택
-    [ValidateSet('originals', 'originalCD')]
+    # 패치판·CD판·10.37의 프로젝트와 출력 디렉터리를 분리한다.
+    [ValidateSet('originals', 'originalCD', 'original1037')]
     [string]$Edition = 'originals',
     # Ghidra 설치 폴더 (PREPARE.ps1 기본 설치 위치에서 검색)
     [string]$GhidraDir = ''
@@ -21,7 +21,11 @@ param(
 $Root = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
 
 # CD판은 기존 패치판 프로젝트와 C 파일을 덮어쓰지 않도록 별도 폴더를 사용한다.
-if ($Edition -eq 'originalCD') {
+if ($Edition -eq 'original1037') {
+    $ProjectDir = Join-Path $Root 'extracted\original1037\ghidra'
+    $OutDir = Join-Path $Root 'extracted\original1037\decomp'
+    if (-not $Binary) { $Binary = 'original1037\netstorm.exe' }
+} elseif ($Edition -eq 'originalCD') {
     $ProjectDir = Join-Path $Root 'extracted\originalCD\ghidra'
     $OutDir = Join-Path $Root 'extracted\originalCD\decomp'
     if (-not $Binary) { $Binary = 'originalCD\NETSTORM.EXE' }
@@ -62,9 +66,15 @@ $env:XDG_CACHE_HOME = $CacheDir
 
 # 자동 분석 + 디컴파일 내보내기 (기존 프로젝트가 있으면 덮어씀)
 try {
-    & $Headless $ProjectDir $ProjectName -import $BinaryPath -overwrite `
-        -scriptPath (Join-Path $Root 'tools\ghidra') -postScript ExportDecomp.java $OutFile
-    $GhidraExitCode = $LASTEXITCODE
+    # PowerShell 5에서 Java 경고를 실패로 취급하지 않고 실제 종료 코드를 확인한다.
+    $PreviousNativeErrorAction = $ErrorActionPreference
+    try {
+        $ErrorActionPreference = 'Continue'
+        & $Headless $ProjectDir $ProjectName -import $BinaryPath -overwrite `
+            -scriptPath (Join-Path $Root 'tools\ghidra') -postScript ExportDecomp.java $OutFile `
+            -postScript DumpFunctions.java (Join-Path $OutDir 'functions.tsv')
+        $GhidraExitCode = $LASTEXITCODE
+    } finally { $ErrorActionPreference = $PreviousNativeErrorAction }
 } finally {
     $env:XDG_CONFIG_HOME = $PreviousConfigHome
     $env:XDG_CACHE_HOME = $PreviousCacheHome
