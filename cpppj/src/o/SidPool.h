@@ -8,6 +8,7 @@
 
 namespace netstorm::o {
 class SquidFactory;
+class SquidUnpop;
 // 암묵적인 런타임 SquidId 변환을 막는 원본 슬롯 번호다.
 struct Sid {
     std::uint16_t value{};
@@ -51,6 +52,8 @@ public:
 private:
     // Take는 free 슬롯도 받되 풀 목록/카운터를 고치지 않으므로 전용 어댑터만 raw 접근을 허용한다.
     friend class SquidFactory;
+    // 공간 해제는 raw next와 void만 갱신하고 풀 목록/반납은 별도로 유지한다.
+    friend class SquidUnpop;
     // 원본 short next 필드를 little endian으로 읽거나 쓴다. serverHead는 0번 슬롯+14의 겹친 객체다.
     std::uint16_t ReadNext(std::size_t offset) const;
     void WriteNext(std::size_t offset,std::uint16_t next);

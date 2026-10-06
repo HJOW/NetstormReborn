@@ -1,5 +1,6 @@
 // 원본 함수의 바이트 쓰기를 보존하며 미복원 생성자/공간 효과는 변경 전에 거부한다.
 #include "o/SquidFactory.h"
+#include "o/SquidUnpop.h"
 #include <stdexcept>
 
 namespace netstorm::o {
@@ -49,10 +50,11 @@ std::uint32_t TypeConstructorAddress(OriginalEdition edition,std::size_t number)
     return values[number];
 }
 // pool 판본에 맞는 타입 배열을 소유한다. 실제 타입 로더 또는 합성 검증 입력을 사용할 수 있다.
-SquidFactory::SquidFactory(SidPool& pool,std::span<const RiftTypeRecord> types,bool weakenedMana)
-    :pool_(pool),types_(types.begin(),types.end()),weakenedMana_(weakenedMana) {
+SquidFactory::SquidFactory(SidPool& pool,std::span<const RiftTypeRecord> types,bool weakenedMana,SquidUnpop* unpop)
+    :pool_(pool),types_(types.begin(),types.end()),weakenedMana_(weakenedMana),unpop_(unpop) {
     const auto count=pool_.Edition()==OriginalEdition::Patch1078 ? kPatchConstructors.size() : kCdConstructors.size();
     if (types_.size()!=count) throw std::invalid_argument("SID 판본과 타입 수가 다릅니다");
+    if (unpop_ && &unpop_->Pool()!=&pool_) throw std::invalid_argument("Unpop과 Factory의 SID 풀이 다릅니다");
 }
 // 미복원 생성자 호출이나 form에 자산 가상 메서드를 적용하는 것을 막는다.
 const RiftTypeRecord& SquidFactory::Type(std::uint32_t number,bool requireSupported) const {
@@ -80,7 +82,7 @@ std::uint32_t SquidFactory::ConstructorVtable(const RiftTypeRecord& type) const 
 void SquidFactory::ApplyConstructor(std::span<std::uint8_t> bytes,const RiftTypeRecord& type) const {
     if (!type.constructorAddress) { Put(bytes,0,BaseVtable(),4); return; }
     const auto& recipe=*Recipe(pool_.Edition(),type.constructorAddress);
-    // 쓰기 순서와 폭을 유지하여 frame·플래그·anim HP의 판본 차이를 보존한다.
+    // 쓰기 순서와 폭을 유지하여 섬 번호·플래그·anim HP의 판본 차이를 보존한다.
     for (std::size_t i=0;i<recipe.count;++i) {
         const auto& write=recipe.writes[i]; auto value=write.value;
         if (write.orBits) {
@@ -118,15 +120,26 @@ Sid SquidFactory::Take(std::uint32_t type,Sid sid) {
     if (bytes[kState]&kContained) throw std::logic_error("contained 객체의 base Take는 지원하지 않습니다");
     if (!(bytes[kState]&kFree)) {
         if (bytes[kType]!=type) throw std::logic_error("Take 타입이 기존 객체와 다릅니다");
-        if (!(bytes[kState]&kVoid) || Vtable(bytes)!=ConstructorVtable(record))
+        if (Vtable(bytes)!=ConstructorVtable(record))
             throw std::logic_error("Take의 미복원 가상/공간 해제 효과가 필요합니다");
-        // 실제 base Unpop은 이미 void이면 쓰기 없이 반환한다.
+        if (!(bytes[kState]&kVoid)) {
+            if (!unpop_) throw std::logic_error("Take의 non-void 공간 해제 연결이 없습니다");
+            unpop_->Unpop(sid,record);
+        }
+        // 이미 void인 실제 base Unpop은 쓰기 없이 반환한다.
     }
     bytes[kState]=static_cast<std::uint8_t>((bytes[kState]&0xfc)|kVoid);
     ApplyConstructor(bytes,record);
     bytes[kType]=static_cast<std::uint8_t>(type);
     PostTake(sid);
     return sid;
+}
+// 모든 지원 자산의 공통 firstPop은 type/풀을 쓰지 않고 extra의 두 비트만 읽는다.
+std::uint32_t SquidFactory::FirstPopFlags(Sid sid) {
+    const auto bytes=LiveBytes(sid); const auto& type=Type(bytes[kType],true);
+    if (Vtable(bytes)!=ConstructorVtable(type)) throw std::logic_error("firstPop vtable 오류");
+    const auto extra=bytes[pool_.Edition()==OriginalEdition::Patch1078 ? 40 : 35];
+    return (extra&9)==0 ? 1U : ((extra&1)!=0 ? 2U : 0U)|((extra&8)!=0 ? 4U : 0U);
 }
 // base 서버 초기화의 owner와 HP만 갱신하고 나머지 payload는 보존한다.
 void SquidFactory::PostCreate(Sid sid) {

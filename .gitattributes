@@ -32,3 +32,7 @@ tools/ghidra/ExportCreation.java text eol=lf
 cpppj/recovery-derived-evidence.json text eol=lf
 cpppj/src/o/DerivedConstructors.inc text eol=lf
 tools/decomp_derived_oracle.py text eol=lf
+# raw 공간 해제의 기계어 검증 기록·도구·가상 주소 표를 재현 가능한 LF로 고정한다.
+cpppj/recovery-unpop-evidence.json text eol=lf
+cpppj/src/o/UnpopVtables.inc text eol=lf
+tools/decomp_unpop_oracle.py text eol=lf

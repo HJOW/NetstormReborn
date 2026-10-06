@@ -3,11 +3,13 @@
 > 작업일: 2026-10-04~06 (`HJOW-Athlon`, Windows 10, Ghidra 12.1.4, JDK 25). **원본 게임은 실행하지 않았고 원본 파일은 읽기만 했다.**
 > 대상: 패치판 `originals/Netstorm.exe`(10.78)와 CD판 `originalCD/NETSTORM.EXE`(10.72).
 > 결과는 `extracted/refined/` 아래에 생기며 Git 에 커밋되지 않는다. 다른 PC 에서는 아래 명령으로 다시 만든다.
-> 2026-10-06 후속: [C++ 1차 복원](cpp-reconstruction.md), [다리 계산](cpp-bridge-reconstruction.md), [표면 이웃/재귀](cpp-surface-reconstruction.md), [공간 해시/점유·x87 검증](cpp-hash-reconstruction.md), [공간 등록/해제·CD 충돌 차이](cpp-spatial-reconstruction.md), [SID 풀·판본 경계/반납](cpp-sid-reconstruction.md). 현재 대응 **2,496쌍·검토 앵커 24쌍**이며 아래 표는 앞선 정밀 분석의 기록이다. C++ 누적 기대값 42,538개 중 공간 등록 878개는 의존성 계약 대체 조건부 검증, 수명 480개는 접두 구간, 해시 초기화 4개는 할당 없는 경로이며 전체 붕괴 검증은 아니다.
+> 2026-10-06 후속: [C++ 1차 복원](cpp-reconstruction.md), [다리 계산](cpp-bridge-reconstruction.md), [표면 이웃/재귀](cpp-surface-reconstruction.md), [공간 해시/점유·x87 검증](cpp-hash-reconstruction.md), [공간 등록/해제·CD 충돌 차이](cpp-spatial-reconstruction.md), [SID 풀·판본 경계/반납](cpp-sid-reconstruction.md), [raw 일반 해제·non-void Take](cpp-unpop-reconstruction.md). 현재 대응 **2,496쌍·검토 앵커 24쌍**이며 아래 표는 앞선 정밀 분석의 기록이다. C++ 누적 기대값 46,156개 중 공간 등록 878개는 의존성 계약 대체 조건부 검증, 수명 480개는 접두 구간, 해시 초기화 4개는 할당 없는 경로이며 전체 붕괴 검증은 아니다.
 
 > 생성 후속: [생성자 주소 표·base 생성/Take·가상 초기화](cpp-creation-reconstruction.md). 964회는 합성 타입 입력과 free/void Take이며 실제 파생/공간 효과를 검증하지 않았다. 생성자 표 359행은 호출 수와 별도다. raw 슬롯은 모든 바이트를 직접 비교했고 풀 전체는 Adler-32를 대조했다.
 
-> 자산 파생 후속: [153개 생성자·179개 타입 연결](cpp-derived-reconstruction.md). 새 6,028회는 실제 ctor 쓰기와 공통 postCreate/postTake/free·void Take이며 대체 함수가 없다. non-void 공간/다른 가상/참조 수명·GameWorld는 미연결이다. 누적 42,538행은 복원 완성도가 아니다.
+> 자산 파생 당시 기록: [153개 생성자·179개 타입 연결](cpp-derived-reconstruction.md). 새 6,028회는 실제 ctor 쓰기와 공통 postCreate/postTake/free·void Take이며 대체 함수가 없다. 당시 non-void 공간/다른 가상/참조 수명·GameWorld는 미연결이었다. 당시 누적 42,538행은 복원 완성도가 아니며 일반 non-void 후속은 아래에 별도로 기록했다.
+
+> raw 수명 후속: [표시 비활성 일반 Unpop·Take·firstPop 플래그](cpp-unpop-reconstruction.md). 새 3,618회는 실제 기계어·대체 함수 없음이며 non-void Unpop 768회와 CD 체인 미발견 16입력을 포함한다. 합성 타입·기존 배치 상태를 입력하고 실제 Pop/섬/다리/건물/표시 활성/파생 삭제·GameWorld는 미연결이다. 내부 검사 112개, 누적 46,156행, 생성자 359행/vtable 151행은 호출 수와 별도다. raw +8 word를 프레임이 아닌 섬 번호로 정정했고 기존 생성자 바이트/fixture는 보존했다.
 
 > 추가 후속: [타입·그래픽 C++ 복원](cpp-assets-reconstruction.md). VFX 기계어 709개 기대값·두 판본 자산 전체 픽셀 대조를 추가하고, CD판 RiftType 자료형 크기를 500에서 468바이트로 정정했다.
 

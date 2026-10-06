@@ -1,6 +1,6 @@
 # cpppj 자산 파생 생성자 복원
 
-2026-10-06. [SquidFactory](../../cpppj/src/o/SquidFactory.h)의 기존 base 경로에 실제 자산 생성자를 연결했다. 패치판 **82개 생성자·98개 타입 연결**, CD판 **71개 생성자·81개 타입 연결**이다. 생성자 주소가 0인 기존 fallback도 유지한다. 원본/복사본 게임 프로세스와 클론 GUI는 실행하지 않았다.
+2026-10-06 생성자 복원 기록. [SquidFactory](../../cpppj/src/o/SquidFactory.h)의 기존 base 경로에 실제 자산 생성자를 연결했다. 패치판 **82개 생성자·98개 타입 연결**, CD판 **71개 생성자·81개 타입 연결**이다. 생성자 주소가 0인 기존 fallback도 유지한다. 원본/복사본 게임 프로세스와 클론 GUI는 실행하지 않았다. 후속 [raw 일반 공간 해제·non-void Take](cpp-unpop-reconstruction.md)를 추가했고 아래 +8 프레임 표기는 섬 번호로 정정했다. 아래 108개 검사 수는 당시 범위다.
 
 ## 원본 근거와 적용 범위
 
@@ -12,7 +12,7 @@
 |---|---|---|
 | vtable 기록 | `+0`의 4바이트 | 동일 |
 | 일부 자산 플래그 | `+40 OR 2` | `+35 OR 2` |
-| playerIsland/battleIsland/anim 프레임 | `+8`의 word를 0으로 | 동일 |
+| playerIsland/battleIsland/anim 섬 번호 | `+8`의 word를 0으로 | 동일 |
 | anim HP | `+26`의 **4바이트를 0으로** | `+26`의 **2바이트를 0으로** |
 | outpost | 플래그·최종 vtable 쓰기 | 플래그·factory vtable·outpost vtable 쓰기 |
 | Bomb 계열 | 해당 생성자의 쓰기 | 실제 Bomb 보조 생성자 뒤 최종 vtable 쓰기 |
@@ -25,7 +25,7 @@
 
 ## 독립 검증과 한계
 
-[decomp_derived_oracle.py](../../tools/decomp_derived_oracle.py)는 실제 PE를 Unicorn 메모리에 복사하여 확인한 몸체에서만 실행한다. **대체 함수 없이**, ctor 반환 포인터·EIP/ESP·쓰기/시간/명령 범위·assert 미도달을 확인한다. 두 오염 패턴의 생성자 쓰기와 mov/or 명령을 해독하며, 컴파일러의 load→register OR→store도 슬롯 OR로 확인한다. vtable·frame·HP·플래그 이외의 쓰기는 거부한다. 153개 생성자의 준비 감사 306회와 Reset 10회는 아래 fixture 호출 수에 더하지 않는다.
+[decomp_derived_oracle.py](../../tools/decomp_derived_oracle.py)는 실제 PE를 Unicorn 메모리에 복사하여 확인한 몸체에서만 실행한다. **대체 함수 없이**, ctor 반환 포인터·EIP/ESP·쓰기/시간/명령 범위·assert 미도달을 확인한다. 두 오염 패턴의 생성자 쓰기와 mov/or 명령을 해독하며, 컴파일러의 load→register OR→store도 슬롯 OR로 확인한다. vtable·섬 번호·HP·플래그 이외의 쓰기는 거부한다(기존 감사 도구의 frame 라벨은 위 정정 참고). 153개 생성자의 준비 감사 306회와 Reset 10회는 아래 fixture 호출 수에 더하지 않는다.
 
 8시퀀스(두 판본×서버/클라이언트×mana 약화 옵션), **6,028회**: Create 716, Construct 1,432, postCreate 716, postTake 716, Take 2,448. 지원하는 **179개 타입 연결을 모두** 실행한다. 기존 free 슬롯 수신과 반복 void Take, 오염 payload/상태 상위 비트, HP 경계/음수, 예측/클라이언트 flags를 포함한다. 대상 슬롯은 모든 바이트를 직접 비교하고 전체 풀은 Adler-32와 머리/꼬리/카운터를 대조한다. 실제 void Unpop도 패치 948회/CD 784회 호출하며 대체하지 않았다.
 

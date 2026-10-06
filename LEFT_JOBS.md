@@ -1,6 +1,6 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
-> 최종 갱신: 2026-10-06 (**자산 파생 생성자 153개·179개 타입 연결과 free/void Take를 SID 풀에 확장했다.** [실제 플레이 계획](docs/cpp-playable-plan.md), [원본 근거·6,028회 검증·제한](docs/exe/cpp-derived-reconstruction.md). 내부 검사 **108개**·제한 x86 입력 **42,538행**, 생성자 표 **359행은 별도**다. 기존 공간 등록 878개는 의존성 계약 대체, 수명 480개는 접두 구간, 해시 초기화 4개는 할당 없는 경로이며 SID 3,168회는 기존 메모리/소진 전이다. **form/process·다른 가상 메서드·SID 소진 복구·non-void 공간/삭제/참조 수명·네트워크 목록/카운터·GameWorld·다리 UI/전체 붕괴·건설/경제/전투/AI/승패는 남아 미션 완주는 불가능하다. 이 PC에서는 원본/복사본 실행과 클론 GUI 표시를 계속 금지하며 실행 확인은 다른 PC로 인계한다.** 앞선 복원 이력은 보존한다.)
+> 최종 갱신: 2026-10-06 (**raw SID의 표시 비활성 일반 Unpop·non-void Take·공통 firstPop 플래그와 void 반납을 연결했다.** [실제 플레이 계획](docs/cpp-playable-plan.md), [원본 근거·3,618회 검증·제한](docs/exe/cpp-unpop-reconstruction.md). 내부 검사 **112개**·제한 x86 입력 **46,156행**, 생성자 표 **359행/vtable 표 151행은 별도**다. 기존 공간 등록 878개는 의존성 계약 대체, 수명 480개는 접두 구간, 해시 초기화 4개는 할당 없는 경로이며 SID 3,168회는 기존 메모리/소진 전이다. **form/process·섬/다리/건물/파생 효과·표시 활성/dirty/grid·실제 Pop/삭제/의존 객체/참조 수명·SID 소진 복구·수신 목록/카운터·GameWorld·다리 UI/전체 붕괴·건설/경제/전투/AI/승패는 남아 미션 완주는 불가능하다. 이 PC에서는 원본/복사본 실행과 클론 GUI 표시를 계속 금지하며 실행 확인은 다른 PC로 인계한다.** 앞선 복원 이력은 보존한다.)
 > 프로젝트 목표(AGENTS.md): 원본 NetStorm: Islands at War 를 디컴파일/분석하여 클론 코딩하고,
 > **Windows 10/11** 과 **GUI 환경의 Linux** 에서 동작하며 **여러 언어를 지원**하는 게임을 만든다.
 > **모방 범위(2026-10-03 AGENTS.md 변경)**: 기존 게임의 **사운드·그래픽·애니메이션 등 거의 모든 요소를 가능한 한 동일하게** 최대한 모방한다.
@@ -10,15 +10,30 @@
 
 ---
 
+## 2026-10-06 ✅ 완료: cpppj raw 일반 공간 해제·non-void Take·firstPop 플래그 (창 검증 제외)
+
+- [x] **제한:** AGENTS.md·최신 LEFT_JOBS를 확인하고 후속 복원을 진행했다. 원본/복사본 게임 프로세스·클론 GUI·창 스모크 실행 없음. 원본/AGENTS.md/C# 수정·커밋 없음.
+- [x] **디컴파일:** Unpop·공통 firstPop·표시 갱신·Renderer 조기 반환·섬 번호/좌표 보조 등 패치 22개/CD 17개 함수를 읽기 전용·헤드리스 Ghidra로 내보냈다. `extracted/lifecycle/<판본>/creation.c`, `functions.tsv`. 정의가 부족한 함수는 메모리에서 정의하고 변경을 버렸으며 완료 로그/행 수를 확인했다. 기존 대응 2,496쌍·검토 앵커 24쌍은 그대로다.
+- [x] **C++:** 새 `SquidUnpop`이 기존 raw SidPool·4단계 SquidHash·spot의 void→genus 해제→체인 머리/이전 next를 갱신한다. 일반 자산/매몰 객체의 표시 비활성 경로이며 dead는 허용, free/void는 조기 반환한다. 제거 대상 next/저장 level/좌표/HP/섬 번호를 보존한다. 가상 함수 주소 표 151행으로 미복원 override를 거부한다. `SquidFactory`에 같은 풀의 선택적 Unpop 어댑터를 연결하여 non-void Take→기존 ctor/postTake를 지원하고 공통 `FirstPopFlags`를 추가했다.
+- [x] **판본/보호 차이:** CD판의 체인 미발견에도 void 전환하는 경로를 보존했다. 패치 미발견·미복원 섬/다리/건물 부착 효과·unknown vtable·contained/form·잘못된 좌표/발자국·순환 검색 경로는 변경 전에 거부한다. 패치 원본 assert 이전의 부분 변경/오류 UI는 재현하지 않는다.
+- [x] **필드 정정:** 기존 생성자 문서의 `+8 frame word`는 **섬 번호 word**다. 실제 프레임은 패치 +36 DWORD/CD +34 byte이며 `SetIsland 004acd20`↔CD `004aca80`과 표시 함수에서 확인했다. 기존 ctor 쓰기와 fixture는 올바른 오프셋/폭/값이므로 보존하고 현재 주석/문서만 정정했다. 고정 해시의 옛 감사 도구 frame 라벨은 역사적 표현이다.
+- [x] **기계어:** 18시퀀스·**3,618회**(Create 34/firstPop 896/Take 768/Unpop 1,536/Release 384). 양 판본·풀 32,768/65,535·서버/클라이언트·x87 53/64비트·SID 50,000/65,534·네 단계/머리/중간/꼬리·소수 좌표·다른 저장 level·반복 void/free를 포함한다. 실제 non-void Unpop 패치 384/CD 384회, CD 미발견 활성 입력 16개, firstPop extra 전수 512회. 대체 함수/assert 도달 0. Reset 18회와 vtable 151행/생성자 359행은 호출 수에 더하지 않았다. raw 슬롯 모든 바이트와 전체 풀/삭제 기록/86,272머리/65,536 spot의 Adler-32를 대조한다. [기록](cpppj/recovery-unpop-evidence.json).
+- [x] **검증:** x64 Release 빌드 경고/오류 0, CTest 한 실행 파일 내부 **112개 검사 통과**(추가 4개). 새 unpop과 기존 derived/creation/SID의 원본/도구/표/fixture SHA-256·행 수 `--verify` 통과. 누적 **46,156행**은 제한이 있는 입력 수이며 실제 월드/GUI나 미션 완주를 증명하지 않는다.
+- **남은 계약:** 합성 타입/기존 배치 상태와 표시 억제 입력이다. 실제 Pop·표시 활성/dirty·grid/표면 알림·섬/다리/건물 부착/파생 효과·파생 destructor/의존 객체·참조/패킷 수명·GameWorld는 미연결이다. Take는 free list/freeCount를 조정하지 않으므로 상위 수신/할당 흐름도 남았다. 단순 void 반납 검증을 삭제 전체 복원으로 세지 않는다. [근거·재현·제한](docs/exe/cpp-unpop-reconstruction.md).
+- [ ] **다음 창 없는 복원:** raw Pop/좌표·실제 firstPop/postPop/Activate를 SID 풀에 연결하되 영역/소유자·dirty/grid·섬/다리/건물 효과의 실제 호출을 복원한다. 파생 삭제/의존 객체→최근 기록→반납, Take 호출자의 목록/카운터·참조 수명, form/process 생성자·SID 소진 복구를 이어서 확인한다. 이후 GameWorld 원본 SID/표면 지도→다리 배치/Construction·전체 붕괴·생산·건설/경제/전투/AI/승패.
+- [ ] **다른 PC 실행 인수인계:** raw Pop/수명/월드 연결 뒤 TEST01/1-1의 생성·표시·선택·이동·공간 해제·정지·카메라·재진입을 `cpp_world_smoke.py`로 확인한다. 창/표시/메뉴 회귀는 `cpp_window_smoke.py`, `cpp_renderer_smoke.py`, `cpp_menu_smoke.py`. 이 도구들과 `NetstormCpp.exe --run`은 **여기서 실행하지 않는다**. 현재 임시 월드와 raw SID는 별개이므로 기존 GUI 기록을 이번 raw 연동 검증으로 세면 안 된다. 원본 실행이 필요한 단계는 다른 PC에서 AGENTS.md/사용자 허용 범위를 확인한다.
+
+---
+
 ## 2026-10-06 ✅ 완료: cpppj 자산 파생 생성자·void Take 확장 (창 검증 제외)
 
 - [x] **제한:** AGENTS.md·최신 LEFT_JOBS를 확인하고 후속 복원을 진행했다. 원본/복사본 프로세스·클론 GUI·창 스모크 실행 없음. 원본/AGENTS.md/C# 수정·커밋 없음.
 - [x] **디컴파일:** 자산 생성자 패치 84개/CD 75개(CD Bomb 보조 포함), 패치 HP 보조 1개를 읽기 전용·헤드리스 Ghidra로 내보냈다. `extracted/derived/<판본>/creation.c`, `functions.tsv`, `patch-helpers/`. 부족한 함수는 메모리에서 정의하고 변경을 버렸다. 전체 대응 2,496쌍·검토 앵커 24쌍은 그대로다.
-- [x] **C++:** `SquidFactory`에 패치 82개/CD 71개 생성자·98/81개 타입 연결의 순서 있는 raw 쓰기를 연결했다. 플래그 OR·섬/anim frame word 초기화·anim HP의 패치 4/CD 2바이트·CD Bomb/outpost의 중간 vtable을 보존한다. `Construct`는 생성자만, `Create`는 기존 할당/공통 postCreate, `Take`는 free 또는 같은 타입·최종 vtable·void 객체의 실제 공통 Unpop 경로를 지원한다. null/assert(153/159/169)·알 수 없는 주소는 변경 전에 거부한다. 다른 가상 메서드와 유닛 플레이 동작의 복원 완료는 아니다.
+- [x] **C++:** `SquidFactory`에 패치 82개/CD 71개 생성자·98/81개 타입 연결의 순서 있는 raw 쓰기를 연결했다. 플래그 OR·섬/anim 섬 번호 word 초기화·anim HP의 패치 4/CD 2바이트·CD Bomb/outpost의 중간 vtable을 보존한다. `Construct`는 생성자만, `Create`는 기존 할당/공통 postCreate, `Take`는 free 또는 같은 타입·최종 vtable·void 객체의 실제 공통 Unpop 경로를 지원한다. null/assert(153/159/169)·알 수 없는 주소는 변경 전에 거부한다. 다른 가상 메서드와 유닛 플레이 동작의 복원 완료는 아니다.
 - [x] **기계어:** 8시퀀스·총 **6,028회**(Create 716/Construct 1,432/postCreate 716/postTake 716/Take 2,448). 모든 179개 지원 타입 연결·서버/클라이언트·mana 옵션·오염 payload·반복 void Take를 포함한다. 실제 void Unpop 패치 948/CD 784회, 대체 함수·assert 도달 0. 준비 생성자 감사 306회/Reset 10회는 6,028회에 더하지 않았다. 슬롯 전체 바이트·풀 Adler-32·카운터/머리/꼬리를 대조한다. [기록](cpppj/recovery-derived-evidence.json).
 - [x] **검증:** x64 Release 빌드 경고/오류 0, CTest 한 실행 파일 내부 **108개 검사 통과**(추가 4개). 새 derived와 기존 creation/SID의 원본/도구/표/fixture SHA-256·행 수 `--verify` 통과. 누적 **42,538행**은 제한이 있는 입력 수이고 별도 주소 표는 359행이다. 실제 월드/GUI 결과를 증명하지 않는다.
 - **주의할 계약:** 공통 postTake는 HP를 보존하지만 **anim 생성자가 먼저 HP를 지운다**. Take는 기존처럼 free list/freeCount를 조정하지 않으므로 일반 Allocate와 혼용하는 상위 흐름은 미완료다. form/process와 다른 가상 메서드·실제 참조/패킷·non-void 공간 해제·삭제/의존 객체→SidPool 반납·GameWorld 연결은 남았다. [근거·재현·제한](docs/exe/cpp-derived-reconstruction.md).
-- [ ] **다음 창 없는 복원:** `004afe50`↔CD `004ad0b0`의 non-void Unpop과 각 파생 가상/영역 효과→삭제/의존 객체/최근 기록→SidPool 반납을 연결한다. Take 호출자의 목록/카운터 순서·참조 수명도 확인한다. 이어 form/process 생성자·firstPop/postPop·영역/소유자·dirty/grid·부착 프레임→섬/받침/소수 좌표 검색→GameWorld 원본 SID/표면 지도→다리 UI/Construction·전체 붕괴·건설/경제/전투/AI/승패.
+- [x] **후속 일부 완료:** `004afe50`↔CD `004ad0b0`의 표시 비활성 일반 non-void Unpop·Take와 공통 firstPop 플래그·void 반납은 위 최신 절에서 완료했다. 섬/다리/건물/파생 가상·영역 효과, 실제 Pop/삭제/의존 객체/참조 수명·목록/카운터·GameWorld는 남았다. 다음 순서는 맨 위 인수인계를 따른다.
 - [ ] **다른 PC 실행 인수인계:** raw SID/월드 연결 후 TEST01/1-1 생성·선택·이동·정지·카메라·재진입을 `cpp_world_smoke.py`로 확인한다. 창/표시/메뉴 회귀는 `cpp_window_smoke.py`, `cpp_renderer_smoke.py`, `cpp_menu_smoke.py`. 이 도구들과 `NetstormCpp.exe --run`은 **여기서 실행하지 않는다**. 현재 raw SID와 월드는 별개이므로 기존 GUI 기록을 이번 생성자 연동 검증으로 세면 안 된다. 원본 실행이 필요한 단계는 다른 PC에서 AGENTS.md/사용자 허용 범위를 확인한다.
 
 ---
