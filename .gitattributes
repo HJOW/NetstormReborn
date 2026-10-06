@@ -23,3 +23,8 @@ cpppj/recovery-sid-evidence.json text eol=lf
 tools/decomp_sid_oracle.py text eol=lf
 tools/ghidra/ExportSid.java text eol=lf
 cpppj/tests/fixtures/*.tsv text eol=lf
+# 생성자 표/기본 초기화의 독립 검증 자료와 생성 소스 해시를 보존한다.
+cpppj/recovery-creation-evidence.json text eol=lf
+cpppj/src/o/TypeConstructors.inc text eol=lf
+tools/decomp_creation_oracle.py text eol=lf
+tools/ghidra/ExportCreation.java text eol=lf

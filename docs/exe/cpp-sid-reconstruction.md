@@ -59,4 +59,4 @@ ctest --test-dir cpppj/build -C Release --output-on-failure
 
 **2026-10-06 사용자 제한:** 이 PC에서 원본 게임·복사본을 실행하거나 cpppj 창을 띄우는 검사는 진행하지 않는다. `--run`, `cpp_window_smoke.py`, `cpp_renderer_smoke.py`, `cpp_menu_smoke.py`, `cpp_world_smoke.py`는 다른 PC의 인수인계 항목이다. 이번 SID 풀은 월드에 연결하지 않았으므로 기존 GUI 기록을 새 SID 연동 검증으로 간주하지 않는다.
 
-다음은 생성자/가상 초기화→공간 등록/해제와 반납의 수명 연결→실제 firstPop/postPop·영역/소유자·dirty/grid·부착 프레임→GameWorld 원본 SID 연결이다. 이어 다리 배치·건설/경제/전투/AI/승패를 복원한다. 자세한 다음 작업은 [LEFT_JOBS.md](../../LEFT_JOBS.md)에 남긴다.
+후속에서 [생성자 주소 표·base 생성/가상 초기화·free/void Take](cpp-creation-reconstruction.md)를 SID 풀에 연결했다. 파생 생성자·non-void/파생 Take·공간 등록/해제와 반납의 수명→실제 firstPop/postPop·영역/소유자·dirty/grid·부착 프레임→GameWorld 원본 SID 연결은 남았다. 이어 다리 배치·건설/경제/전투/AI/승패를 복원한다. 자세한 다음 작업은 [LEFT_JOBS.md](../../LEFT_JOBS.md)에 남긴다.

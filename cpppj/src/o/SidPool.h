@@ -7,6 +7,7 @@
 #include <vector>
 
 namespace netstorm::o {
+class SquidFactory;
 // 암묵적인 런타임 SquidId 변환을 막는 원본 슬롯 번호다.
 struct Sid {
     std::uint16_t value{};
@@ -38,12 +39,18 @@ public:
     std::span<const SidDeletion> Deletions(bool client) const;
     // 검증과 후속 어댑터에 필요한 판본별 경계·카운터·머리/꼬리를 반환한다.
     SidLayout Layout() const;
+    // base 생성 시 서버 전용 owner/HP 초기화 여부를 반환한다.
+    bool IsServer() const;
+    // 타입 표와 같은 판본의 생성자/가상 배치를 사용하도록 판본을 반환한다.
+    OriginalEdition Edition() const;
     std::uint32_t Capacity() const;
     std::uint32_t FreeCount() const;
     std::uint32_t PredictableCursor() const;
     Sid FirstFree(bool client) const;
     Sid Tail(bool client) const;
 private:
+    // Take는 free 슬롯도 받되 풀 목록/카운터를 고치지 않으므로 전용 어댑터만 raw 접근을 허용한다.
+    friend class SquidFactory;
     // 원본 short next 필드를 little endian으로 읽거나 쓴다. serverHead는 0번 슬롯+14의 겹친 객체다.
     std::uint16_t ReadNext(std::size_t offset) const;
     void WriteNext(std::size_t offset,std::uint16_t next);

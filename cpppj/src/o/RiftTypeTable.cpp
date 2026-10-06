@@ -1,12 +1,14 @@
 // 원본 RiftType.cpp의 타입 표: 0049ebb0 ↔ CD 004434d0(배열 초기화·내장 이름), 0049c3b0 ↔ CD 004460f0(플래그 단어·속성),
 //       0049b0d0 ↔ CD 00444e10(후처리), 0049a860 ↔ CD 00443410(이름 검색).
-// 범위: 타입 번호 체계·이름·플래그 1/2·종류 단어·그룹·목록 플래그·발자국. 생성자 함수 포인터, 사거리·비용 등
-//       전투 수치, 요구 에너지 문자열(+0xa0), 최대 사거리 집계는 아직 옮기지 않았다.
+// 범위: 타입 번호 체계·이름·플래그 1/2·종류 단어·그룹·목록 플래그·발자국·초기 HP/깊이·생성자 주소 기록.
+//       파생 생성자 실행, 사거리·비용 등 전투 수치·요구 에너지 문자열(+0xa0)·최대 사거리 집계는 후속이다.
 // 검증: 이름 해시 표가 실제 .fort의 `TypeNames` 섹션과 같음을 tools/cpp_fort_smoke.py가 두 판본에서 확인한다.
 #include "o/RiftType.h"
 #include "o/OriginalText.h"
 #include <array>
 #include <cmath>
+#include <bit>
+#include <regex>
 #include <stdexcept>
 
 namespace netstorm::o {
@@ -87,6 +89,35 @@ std::int32_t ToInt(double value) {
     return static_cast<std::int32_t>(value);
 }
 
+// 패치 00540d10 / CD 0051c630의 23개 깊이 이름/값은 두 PE에서 같다.
+struct ZOrderName { std::string_view name; std::int32_t value; };
+constexpr std::array<ZOrderName,23> kZOrders{{
+    {"zoNONE",-127},{"zoFALLING",30},{"zoSTALAG",20},{"zoCHALRING",20},{"zoBATTLE",10},
+    {"zoEDGEFARM",0},{"zoISLAND",0},{"zoBRIDGE",0},{"zoBRIDGE_CONNECTOR",-10},{"zoARTIFACTS",-15},
+    {"zoEMPLACEMENTS",-20},{"zoILLEGAL_DITHER",-21},{"zoFLARES",-22},{"zoMISSILES",-25},
+    {"zoFLYER_SHADOWS",-26},{"zoFLYERS",-30},{"zoFENCE",-35},{"zoMANAICON",-36},
+    {"zoUBERGUMP",-40},{"zoMENUGUMP",-60},{"zoDIALOGGUMP",-80},{"zoLOOKGUMP",-100},{"zoRISING",-31}}};
+// 원본 문자열 zorder의 첫 식별자 검색과 이름 표의 부분 문자열 비교, 선택적 +/- 숫자를 처리한다.
+std::int32_t ZOrder(std::string_view text) {
+    // 원본 0049c3b0의 두 정규식이다. 깊이 이름은 stricmp와 달리 대소문자를 구분한다.
+    static const std::regex identifier("([A-Za-z0-9_]+)[ \\t]*");
+    static const std::regex expression("[ \\t]*([A-Za-z0-9_]+)[ \\t]*(\\+|-)[ \\t]*([0-9]+)");
+    const std::string input(text); std::smatch word,offset;
+    if (!std::regex_search(input,word,identifier)) throw std::invalid_argument("zorder 이름이 없습니다");
+    // 원본은 표 순서대로 strstr(표 이름, 입력 식별자)의 첫 일치를 선택한다.
+    for (const auto& item:kZOrders) {
+        if (item.name.find(word[1].str())==std::string_view::npos) continue;
+        auto value=static_cast<std::uint32_t>(item.value);
+        if (std::regex_search(input,offset,expression)) {
+            const auto delta=std::stoull(offset[3].str());
+            if (delta>2147483647) throw std::out_of_range("zorder 오프셋 범위 오류");
+            value=offset[2].str()=="+" ? value+static_cast<std::uint32_t>(delta) : value-static_cast<std::uint32_t>(delta);
+        }
+        return std::bit_cast<std::int32_t>(value);
+    }
+    throw std::invalid_argument("알 수 없는 zorder 이름");
+}
+
 // 종류 필드에 strncpy(dst, word, min(strlen, 8))로 덮어쓴다. 짧은 단어는 이전 내용의 뒤가 남는다(원본 그대로).
 void CopyKind(std::array<char, kKindBytes>& kind, std::string_view word) {
     // 최대 8글자만 덮어쓰고 종료 문자는 쓰지 않는다.
@@ -120,7 +151,16 @@ void ApplyDefinition(RiftTypeRecord& type, const RiftTypeDefinition& definition)
         const auto* number = std::get_if<double>(&property.value);
         const auto* text = std::get_if<std::string>(&property.value);
         const auto is = [&property](std::string_view name) { return Equal(property.name, name); };
-        if (is("maxHitPoints")) type.flags1 |= TypeFlag1::kHasHitPoints;
+        if (is("maxHitPoints")) {
+            if (!number) throw std::invalid_argument("maxHitPoints는 숫자여야 합니다");
+            if (type.maxHitPoints!=0) throw std::logic_error("maxHitPoints == 0");
+            type.flags1 |= TypeFlag1::kHasHitPoints;
+            type.maxHitPoints=ToInt(*number);
+        }
+        else if (is("zorder")) {
+            if (number) type.zOrder=ToInt(*number);
+            else if (text) type.zOrder=ZOrder(*text);
+        }
         else if (is("minUsage") && number) type.minUsage[0] = static_cast<float>(*number);
         else if ((is("maxUsage") || is("maxRainBattleUsage")) && number) type.maxUsage[0] = static_cast<float>(*number);
         else if (is("maxThunderBattleUsage") && number) type.maxUsage[1] = static_cast<float>(*number);
@@ -201,6 +241,8 @@ RiftTypeTable::RiftTypeTable(OriginalEdition edition, std::span<const RiftTypeSo
     for (const auto& builtin : kBuiltinNames) types_.at(builtin.number).name = std::string(builtin.name);
     // 후처리는 번호순으로 모든 타입에 적용된다.
     for (auto& type : types_) PostProcess(type);
+    // 원본은 로딩/후처리 뒤 생성자 표를 대입한다. 주소는 미복원 파생 dispatch를 감지하는 메타데이터다.
+    for (std::size_t i=0;i<types_.size();++i) types_[i].constructorAddress=TypeConstructorAddress(edition,i);
     // 원본은 타입 번호를 전역 변수로 갖는다(패치 DAT_005411a0 = 82, DAT_005411d0 = 94). 로딩 순서에서 찾는다.
     for (std::size_t i = 0; i < order.size(); ++i) {
         if (order[i] == "bridge") bridge_ = kFirstAssetTypeNumber + static_cast<int>(i);

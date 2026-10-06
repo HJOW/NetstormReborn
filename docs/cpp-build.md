@@ -67,6 +67,8 @@ cpppj/
 
 **2026-10-06 사용자 제한:** 현재 PC의 검증은 창 없는 빌드·콘솔 CTest·정적/격리 분석으로 한정한다. 원본/복사본 실행과 클론 GUI 스모크는 여기서 진행하지 않고 다른 PC의 인수인계에 남긴다. [SID 풀의 복원·검증 범위](exe/cpp-sid-reconstruction.md).
 
+후속 [기본 생성/Take·가상 초기화](exe/cpp-creation-reconstruction.md)는 SID raw 풀과 타입 표에 연결했다. 미복원 파생 타입은 거부하며 실제 월드 연결은 남았다. 생성자 표 359행은 964회 새 기계어 호출과 별도로 센다.
+
 저장소 루트에서 실행한다. Windows 10/11 과 Visual Studio 2022(또는 Build Tools)의 C++ 도구가 필요하다. 외부 라이브러리가 없어 인터넷 연결이 필요 없다.
 
 ```sh
@@ -112,7 +114,7 @@ python tools/cpp_menu_smoke.py
 
 `--run <게임 폴더>`는 클론 창을 띄운다(원본 게임을 실행하지 않는다). `--view`가 없으면 **원본 메인 메뉴**를 표시한다. `--view types|fonts|<미션>`은 기존 독립 검사 장면이다. [메뉴·브리핑의 현재 범위/검사](exe/cpp-menu-reconstruction.md).
 
-기존 기반에 `Gump`·`State`·`UberGump`·`GifImage`·`DialogScript`, `TerrainBuilder`·`Player`·`Squid` 일부와 새 `GameWorld`/부분 `UserInput`을 연결했다. 이어 CanonDecoder 다리 모양/추첨과 Bridge 열린 방향·수명 접두 구간을 복원했다. `SurfaceFinder`와 Bridge 확장은 정수 발자국의 flag 8 이웃·양쪽 타입/프레임 연결·붕괴 방문 목록을 계산한다. [표면/재귀의 근거·한계](exe/cpp-surface-reconstruction.md). CTest는 x86 기대값 **35,546개 입력 사례**(기존 5,365＋다리 18,053＋표면/재귀 3,450＋해시/점유 4,632＋공간 등록 878＋SID 3,168)를 포함한 **99개 내부 검사**다. 공간 등록은 가상/영역 효과의 계약 대체 조건, 수명 480개는 접두 구간, 해시 초기화 4개는 할당 없는 경로이며 전체 열린 끝은 패치판만 검증했다. 실제 표면/SID·spot, 배치 UI·전체 붕괴는 아직 월드에 연결하지 않았다. 메뉴/월드는 독립 자료 대조와 클론 창 조작 기록이며 원본 기계어 전체 대조는 아니다. `--mission TEST01`로 같은 브리핑/월드를 검사한다. 원본 모듈 파일이 생긴 것을 모듈 전체 복원 완료로 세지 않는다.
+기존 기반에 `Gump`·`State`·`UberGump`·`GifImage`·`DialogScript`, `TerrainBuilder`·`Player`·`Squid` 일부와 새 `GameWorld`/부분 `UserInput`을 연결했다. 이어 CanonDecoder 다리 모양/추첨과 Bridge 열린 방향·수명 접두 구간을 복원했다. `SurfaceFinder`와 Bridge 확장은 정수 발자국의 flag 8 이웃·양쪽 타입/프레임 연결·붕괴 방문 목록을 계산한다. [표면/재귀의 근거·한계](exe/cpp-surface-reconstruction.md). CTest는 x86 기대값 **36,510개 입력 사례**(기존 5,365＋다리 18,053＋표면/재귀 3,450＋해시/점유 4,632＋공간 등록 878＋SID 3,168＋base 생성/Take 964)를 포함한 **104개 내부 검사**다. 공간 등록은 가상/영역 효과의 계약 대체 조건, 수명 480개는 접두 구간, 해시 초기화 4개는 할당 없는 경로이며 전체 열린 끝은 패치판만 검증했다. 실제 표면/SID·spot, 배치 UI·전체 붕괴는 아직 월드에 연결하지 않았다. 메뉴/월드는 독립 자료 대조와 클론 창 조작 기록이며 원본 기계어 전체 대조는 아니다. `--mission TEST01`로 같은 브리핑/월드를 검사한다. 원본 모듈 파일이 생긴 것을 모듈 전체 복원 완료로 세지 않는다.
 
 `SquidHash`의 네 단계 배열/버킷 주소·객체 단계와 `Squid::EffectiveGenus`의 발자국/지붕 보정을 추가했다. [x87 실행 상태·검사·표면 배열의 관계](exe/cpp-hash-reconstruction.md)를 확인한다. 이어 `SquidSpatial`의 next 체인·등록/해제·spot OR/AND·비전투 상태와 등록 지도→정수 SurfaceFinder 전달을 복원했다. [CD 충돌 차이·조건부 기계어 검증·재현](exe/cpp-spatial-reconstruction.md). SID 풀은 후속 복원했다. [판본 경계·FIFO/예측 할당·반납·검증 제한](exe/cpp-sid-reconstruction.md). 파생 생성자/가상/영역 효과·GameWorld 연결은 남았다.
 

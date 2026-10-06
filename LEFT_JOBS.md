@@ -1,12 +1,27 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
-> 최종 갱신: 2026-10-06 (**SID raw 풀·판본별 번호 경계·FIFO/예측 할당·void 반납·삭제 기록·서버 free list 복원 완료.** [실제 플레이 계획](docs/cpp-playable-plan.md), [SID 검증의 범위·제한](docs/exe/cpp-sid-reconstruction.md). 내부 검사 99개·제한 x86 입력 행 35,546개. 새 SID 3,168회는 두 판본 합계·기존 메모리/소진 전 경로이며 이 경로에는 세대 비트가 없다. 공간 등록 878개는 의존성 계약 대체, 수명 480개는 접두 구간, 해시 초기화 4개는 할당 없는 경로다. **SID 소진 복구·참조/Take·파생 생성자/가상/영역 효과·GameWorld 연결, 다리 UI·전체 붕괴·건설·경제·전투·AI·승패는 남아 미션 완주는 불가능하다. 이 PC에서는 원본/복사본 실행과 클론 GUI 표시를 금지하며 실행 확인은 다른 PC로 인계한다.** 앞선 복원 이력은 보존한다.)
+> 최종 갱신: 2026-10-06 (**생성자 주소 표·base Squid 생성/가상 초기화·free/void Take를 SID 풀에 연결했다.** [실제 플레이 계획](docs/cpp-playable-plan.md), [생성/Take의 검증 범위·제한](docs/exe/cpp-creation-reconstruction.md). 내부 검사 **104개**·제한 x86 입력 행 **36,510개**, 생성자 표 **359행은 별도**다. 새 964회는 합성 타입 입력의 base 생성/초기화와 void Unpop 조기 반환 범위다. 기존 공간 등록 878개는 의존성 계약 대체, 수명 480개는 접두 구간, 해시 초기화 4개는 할당 없는 경로이며 SID 3,168회는 기존 메모리/소진 전 경로다. **SID 소진 복구·non-void/파생 Take·실제 참조 수명·파생 생성자/공간/영역 효과·GameWorld 연결, 다리 UI·전체 붕괴·건설·경제·전투·AI·승패는 남아 미션 완주는 불가능하다. 이 PC에서는 원본/복사본 실행과 클론 GUI 표시를 계속 금지하며 실행 확인은 다른 PC로 인계한다.** 앞선 복원 이력은 보존한다.)
 > 프로젝트 목표(AGENTS.md): 원본 NetStorm: Islands at War 를 디컴파일/분석하여 클론 코딩하고,
 > **Windows 10/11** 과 **GUI 환경의 Linux** 에서 동작하며 **여러 언어를 지원**하는 게임을 만든다.
 > **모방 범위(2026-10-03 AGENTS.md 변경)**: 기존 게임의 **사운드·그래픽·애니메이션 등 거의 모든 요소를 가능한 한 동일하게** 최대한 모방한다.
 > **1차 목표 언어: 영어, 한국어** (그 외 언어는 이후 확장).
 > **우선순위: Windows 10/11 > Linux** (Linux 지원과 멀티플레이 요소 구현은 우선순위가 낮다 — 설계상 이식성은 유지하되 검증·배포는 Windows 먼저. 그 외 사항은 궁극적인 목표다).
 > **화면 요구사항(2026-09-28 AGENTS.md 추가, 2026-10-03·10-05 변경)**: 풀스크린 모드와 화면비 **16:9 · 16:10 · 4:3** 지원, **기존 게임 수준의 프레임으로 먼저 만들고 이후 60·120프레임 지원**(2026-10-05 변경. 원본 수준 = `maxFPS` 75·14ms 루프, 클론 적용 완료), 풀스크린에서 **마우스를 화면 끝에 대면 화면 이동**(원본도 옵션에서 켰을 때 지원), 원본의 **전체화면 전환 뒤 재실행 오류는 클론에서 발생하지 않아야 한다** — 1.4·1.7절
+
+---
+
+## 2026-10-06 ✅ 완료: cpppj 생성자 주소 표·기본 생성/가상 초기화·free/void Take (새 창 없음)
+
+- [x] **요청/제한:** AGENTS.md·최신 인수인계를 다시 확인하고 "새 창이 뜨지 않는 범위"에서 cpppj를 이어 갔다. 원본/복사본·클론 GUI·창 스모크 실행 없음. AGENTS.md/원본/C# 수정·커밋 없음.
+- [x] **정적 디컴파일:** `ExportCreation.java`로 패치 8개/CD 13개 함수를 읽기 전용·헤드리스로 내보냈다. `extracted/creation/<판본>/creation.c`, `functions.tsv`. CD `004ad0b0`은 기존 프로젝트에 함수 정의가 없어 메모리에서만 정의하고 변경을 버렸다. 전체 대응 2,496쌍·검토 앵커 24쌍은 그대로다.
+- [x] **생성자 표:** 타입 초기화의 생성자 대입 두 구간만 실제 x86으로 실행했다. 패치 188타입/122개 연결, CD 171타입/105개 연결. CD 마지막 대입까지 포함한 총 359행을 `TypeConstructors.inc`·`constructors-x86.tsv`에 저장했다. 주소는 기록값이며 호스트 함수/포인터로 사용하지 않는다. 원본 타입 로딩·이름 복사·초기화 전체를 실행한 검증은 아니다.
+- [x] **C++ 연결:** `SquidFactory`의 constructor=0 생성, base postCreate/postTake, free/이미 void인 base `Take`; `RiftTypeTable`의 생성자 주소·최대 HP·숫자/이름 깊이. raw owner/깊이 위치와 HP의 패치 4바이트/CD 2바이트, 서버/클라이언트·dais abstract·약화 mana 정수 /4를 보존했다. Take는 payload·목록·카운터를 보존한다. 미복원 파생/공간 해제·잘못된 상태는 변경 전에 거부한다.
+- [x] **기계어 대조:** 4시퀀스·두 판본 합계 **964회**(Create 192/postCreate 304/postTake 304/Take 164). 대체 함수 없음. 이미 void인 기존 Unpop도 실제 호출(각 판본 74회) 후 조기 반환했다. assert 0회, 함수 몸체/쓰기/시간/명령/EIP/ESP 제한. 대상 슬롯의 모든 바이트·풀 Adler-32·머리/꼬리·카운터를 대조했다. 생성자 359행과 준비 Reset 4회는 964회에 더하지 않았다.
+- [x] **검증:** VS 2026 Insiders/MSVC 19.51 x64 Release 빌드 경고/오류 0, CTest 한 실행 파일의 **104개 검사 통과**(새 검사 5개). 새 생성/Take와 기존 SID의 원본/도구/fixture SHA-256·행 수 `--verify` 통과. 누적 36,510행은 제한을 포함하는 입력 수이며 완성도가 아니다. SOURCE_MAP 파일 존재 수는 29/136으로 동일하다.
+- [x] **실제 자료 회귀:** 창 없는 `python -X utf8 tools/cpp_fort_smoke.py` 통과. 두 판본 합계 **488개 요새·320,634객체·326,169줄**의 구조/타입 이름·플래그·해시·미션 머리 값을 대조했다. 아카이브/낱개 요새의 전후 해시 동일. `extracted/cpp-fort-smoke/report.json`. 새 HP/깊이 원본 파서 전체나 실제 생성자/월드 동작을 검증한 수치는 아니다.
+- **제한:** 실제 파생 생성자 dispatch·non-void/파생 Unpop·삭제/반납·네트워크 패킷/참조 수명·GameWorld 연결은 남았다. Take는 free list/freeCount를 고치지 않으므로 일반 서버 Allocate와 바로 혼용하는 상위 흐름을 완료한 것으로 보면 안 된다. 속성 로더 연결은 C++ 단위 검사이며 원본 파서 전체의 x86 검증은 아니다. [근거·재현·제한](docs/exe/cpp-creation-reconstruction.md).
+- [ ] **다음 창 없는 복원:** 주소 표의 실제 파생 생성자와 필요한 postCreate/postTake부터 확장한다. `004afe50`↔CD `004ad0b0`의 non-void 공간 해제와 파생 가상/영역 효과→삭제/의존 객체/최근 기록→SidPool 반납을 연결한다. Take의 목록/카운터 호출 순서·실제 참조 수명도 분석한다. 이어 firstPop/postPop·영역/소유자·dirty/grid·부착 프레임→섬/받침/소수 좌표 검색→GameWorld 원본 SID/표면 지도→다리 UI/Construction·전체 붕괴·건설/경제/전투/AI/승패.
+- [ ] **다른 PC 실행 인수인계:** 파생/월드 연결 후 `python tools/cpp_world_smoke.py`로 TEST01/1-1의 생성·선택·이동·정지·카메라·재진입을 확인한다. 창/표시/메뉴 회귀는 `cpp_window_smoke.py`, `cpp_renderer_smoke.py`, `cpp_menu_smoke.py`. 이 도구들과 `NetstormCpp.exe --run`은 **여기서 실행하지 않는다**. 아직 월드와 raw SID가 별개이므로 기존 GUI 기록을 새 생성/Take 연동 검증으로 세면 안 된다. 원본 실행은 다른 PC의 해당 단계에서 AGENTS.md와 사용자 허용 범위를 확인한다.
 
 ---
 
@@ -20,7 +35,7 @@
 - [x] **검증:** VS 2026 Insiders/MSVC 19.51·내장 CMake의 VS 18 x64로 Release 구성/빌드 완료, 최종 빌드 경고·오류 0. CTest 한 실행 파일 안의 **99개 검사 통과**. SID와 기존 spatial의 기록/fixture/원본/도구 SHA-256·행 수 `--verify` 통과. 누적 35,546개는 제한을 포함하는 입력 행 수다. SOURCE_MAP 파일 존재 29/136으로 동일하며 완료율이 아니다.
 - **환경:** 기존 `cpppj/build`·정밀 분석 산출물·oracle Python 패키지가 없어 원래 Ghidra 프로젝트에서 SID만 별도로 내보냈고 지정 분석 패키지를 `extracted/oracle-python`에 설치했다. Ghidra/구성/빌드/fixture/CTest 로그 쓰기의 샌드박스 제한은 해당 명령의 자동 승인 후 해결했다. VS 2022 프리셋과 기존 공통 oracle는 수정하지 않았다.
 - **변경 범위:** SidPool·SidTests·sid-x86.tsv·recovery-sid-evidence.json·decomp_sid_oracle.py·ExportSid.java, CMake·.gitattributes·Squid 설명, SID 문서·README·빌드/로드맵/플레이 계획·신뢰도·이 문서. 원본/AGENTS.md/C# 수정·게임/클론 GUI 실행·커밋 없음.
-- [ ] **다음 정적/개발 작업:** 생성자 표/기본 가상 초기화 `004af530`↔CD `004ab390`·Take/참조 `004af610`↔CD `004ab440`·삭제/공간 해제→SidPool 반납 연결. 실제 firstPop/postPop·영역/소유자·dirty/grid·부착 프레임→실제 섬/받침/소수 좌표 검색→GameWorld 원본 SID/표면 지도 연결. 이어 다리 배치 `0049b510`·소유자 전파·Construction·전체 붕괴/삭제·다리 UI·건설/경제/전투/AI/승패.
+- [x] **후속 중 완료:** 생성자 주소 표·constructor=0 기본 생성/가상 초기화·free/void Take는 위 후속에서 완료했다. 파생 생성자·non-void/파생 Take·참조 수명·삭제/공간 해제→SidPool 반납·GameWorld 연결은 남았다. 다음 순서는 위 최신 인수인계를 따른다.
 - [ ] **다른 PC 실행 인수인계:** SID/파생/월드 연결 후 `python tools/cpp_world_smoke.py`로 TEST01/1-1의 선택·이동·정지·카메라·재진입을 확인한다. 표시/메뉴 회귀 명령은 `cpp_window_smoke.py`, `cpp_renderer_smoke.py`, `cpp_menu_smoke.py`다. 이 도구들과 `NetstormCpp.exe --run`은 창을 띄우므로 **여기서는 실행하지 않는다**. 지금은 SID 풀과 월드가 별개라 기존 GUI 기록을 새 SID 연동 검증으로 세면 안 된다. 원본 실행이 필요하면 다른 PC의 해당 단계에서 AGENTS.md/사용자 허용 범위를 확인한다.
 
 ---

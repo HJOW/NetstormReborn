@@ -124,6 +124,10 @@ std::span<const std::uint8_t> SidPool::Bytes() const { return bytes_; }
 std::span<const SidDeletion> SidPool::Deletions(bool client) const { return deletions_[client ? 0 : 1]; }
 // 원본 판본의 raw 슬롯 크기와 영역 경계를 반환한다.
 SidLayout SidPool::Layout() const { return layout_; }
+// owner/HP 초기화의 원본 서버 분기를 선택한다.
+bool SidPool::IsServer() const { return server_; }
+// 이미 확정된 raw 슬롯 크기에서 판본을 반환한다.
+OriginalEdition SidPool::Edition() const { return layout_.stride==50 ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072; }
 // 확보한 raw 슬롯 수를 반환한다.
 std::uint32_t SidPool::Capacity() const { return capacity_; }
 // 원본 카운터를 반환한다. 재구성의 누적과 예측 반납의 비증가도 보존한다.

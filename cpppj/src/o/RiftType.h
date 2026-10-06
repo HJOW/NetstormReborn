@@ -39,6 +39,8 @@ private:
 enum class OriginalEdition { Patch1078, Cd1072 };
 // 패치판 00540dd0의 116개, CD판 0051c6f8의 101개 자산 이름을 반환한다.
 std::span<const std::string_view> TypeLoadOrder(OriginalEdition edition);
+// 타입 초기화의 실제 대입 구간에서 복원한 생성자 주소다. 호스트 함수 포인터로 사용하지 않는다.
+std::uint32_t TypeConstructorAddress(OriginalEdition edition,std::size_t number);
 
 struct TypeProperty {
     std::string name;
@@ -122,6 +124,9 @@ inline constexpr int kFirstAssetTypeNumber = 70;
 
 // 원본 타입 구조체(패치 500바이트, CD 468바이트) 가운데 복원한 필드.
 struct RiftTypeRecord {
+    std::int32_t maxHitPoints{};         // +0: maxHitPoints. 서버 base postCreate의 초기 HP 입력.
+    std::int32_t zOrder{};               // +0x104: base Squid에는 하위 8비트만 복사한다.
+    std::uint32_t constructorAddress{};  // 패치 +0x1d0 / CD +0x1b0. 0이면 base, 그 외는 미복원 파생 경로.
     // +4(20바이트)를 C 문자열로 읽은 값. 내장 프로세스 타입은 20글자로 잘린다. .type 타입은 파일 이름이지만,
     // 20글자 이상이면 종료 문자가 없어 바로 뒤의 설명 필드까지 이어 읽힌다(fakeThreeByThreeSurface).
     std::string name;

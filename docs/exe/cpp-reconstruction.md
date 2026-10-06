@@ -5,6 +5,8 @@
 
 > 후속: [타입·그래픽 자산 복원](cpp-assets-reconstruction.md). `.type`·SHP·팔레트와 기본 VFX 그리기를 추가했다. 그 뒤 [설정 계층](cpp-config-reconstruction.md), [타입 표·요새 파일](cpp-fort-reconstruction.md), [Win32 창·화면 장치·입력 큐·영역 배치](cpp-screen-reconstruction.md)를 추가했다. 현재 CTest는 **43개 테스트·4,955개 x86 기대값**을 검사한다. cpppj는 2026-10-05부터 Windows 전용이다. 아래 1차 검증 결과는 당시 작업 기록이다.
 
+> 최신 생성 후속: [생성자 주소 표·base 생성/가상 초기화·free/void Take](cpp-creation-reconstruction.md)를 원본 SID 풀에 연결했다. 현재 CTest **104개 내부 검사**, 제한 x86 입력 행 **36,510개**이며 생성자 주소 표 359행은 별도다. 파생/공간 수명·실제 GameWorld 연결은 남았다. 위의 43/69개 등의 수치는 앞선 단계의 기록이다.
+
 ## 디컴파일을 더 확실하게 만드는 방법
 
 기존 A~D 등급은 함수가 존재하고 경계가 맞는지에 관한 근거다. C++ 복원에는 반환값·부호·자료형·인자 순서까지 확인해야 한다. 이번에는 다음 세 가지를 실제로 적용했다.
