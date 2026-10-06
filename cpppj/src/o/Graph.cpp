@@ -11,9 +11,12 @@ namespace {
 std::int16_t Word(std::int32_t value) { return std::bit_cast<std::int16_t>(static_cast<std::uint16_t>(value)); }
 }
 // 모든 membership의 표면/상태/번호를 확인하며 판독한 스냅샷을 변경하지 않는다.
-Graph::Graph(const SurfaceFinder& surfaces,std::span<const GraphMembership> members,std::span<const GraphRecord> records)
+Graph::Graph(const SurfaceFinder& surfaces,std::span<const GraphMembership> members,std::span<const GraphRecord> records,
+    std::span<const std::uint32_t> stack)
     :surfaces_(surfaces) {
     if (!records.empty() && records.size()!=kTableSize) throw std::invalid_argument("그래프 표 크기 오류");
+    if (!stack.empty() && stack.size()!=kFloodSize) throw std::invalid_argument("그래프 스택 크기 오류");
+    if (!stack.empty()) std::copy(stack.begin(),stack.end(),stack_.begin());
     if (records.empty()) records_[kInvalid]={0x7dfd,0x7dfd,0};
     else std::copy(records.begin(),records.end(),records_.begin());
     // 입력 객체는 이미 확보한 실제 표면으로 한정한다. 비표면의 위치 조회 경로는 별도다.

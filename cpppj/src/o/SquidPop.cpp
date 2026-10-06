@@ -38,6 +38,7 @@ SquidPop::SquidPop(SidPool& pool,SquidHash& hash,std::span<std::uint8_t> spots,S
     :pool_(pool),hash_(hash),spots_(spots),display_(display),postPop_(postPop) {
     if (spots_.size()!=kWorldCells*kWorldCells) throw std::invalid_argument("Pop spot 지도 크기 오류");
     if (postPop_ && &postPop_->Pool()!=&pool_) throw std::invalid_argument("Pop/postPop SID 풀이 다릅니다");
+    if (postPop_) postPop_->ValidateSpace(hash_,spots_);
 }
 // 실제 PE에서 공통 firstPop/postPop을 확인한 vtable만 허용한다.
 bool SquidPop::Supports(OriginalEdition edition,std::uint32_t vtable,std::uint32_t flags) {
@@ -85,7 +86,8 @@ RawPopResult SquidPop::Pop(Sid sid,const RiftTypeRecord& type,float frameWidth,f
         auto normalized=flags;
         if ((extra&kFirstPop)==0) normalized|=(extra&9)==0 ? 1U : ((extra&1)!=0 ? 2U : 0U)|((extra&8)!=0 ? 4U : 0U);
         if ((normalized&8)==0) normalized|=0x10;
-        postPop_->Validate(sid,normalized);
+        const RawGraphPop projected{x,y,level,&type};
+        postPop_->Validate(sid,normalized,&projected);
     }
     auto bytes=pool_.AllocatedBytes(sid);
     Put(bytes,kX,std::bit_cast<std::uint32_t>(x),4); Put(bytes,kY,std::bit_cast<std::uint32_t>(y),4);

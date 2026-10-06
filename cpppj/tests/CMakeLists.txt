@@ -27,6 +27,7 @@ add_executable(netstorm_tests
     DisplayTests.cpp
     PostPopTests.cpp
     GraphTests.cpp
+    RawGraphTests.cpp
 )
 netstorm_apply_compiler_options(netstorm_tests)
 target_link_libraries(netstorm_tests PRIVATE netstorm)
@@ -51,6 +52,7 @@ target_compile_definitions(netstorm_tests PRIVATE
     NETSTORM_DISPLAY_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/display-x86.tsv"
     NETSTORM_POSTPOP_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/postpop-x86.tsv"
     NETSTORM_GRAPH_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/graph-x86.tsv"
+    NETSTORM_RAWGRAPH_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/rawgraph-x86.tsv"
     NETSTORM_CONSTRUCTOR_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/constructors-x86.tsv")
 
 # ctest 에 실행 파일 하나를 테스트 하나로 등록한다. 실패한 검사가 있으면 종료 코드가 1 이다.

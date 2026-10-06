@@ -65,7 +65,9 @@ cpppj/
 
 ## 3. 빌드와 테스트
 
-**2026-10-06 Graph 후속:** [정수 표면 연결·flood·병합/표 관리](exe/cpp-graph-reconstruction.md)를 추가했다. x64 Release 경고/오류 0·CTest 내부 128개·새 x86 2,560회가 통과했다. 최신 누적 제한 입력은 56,028개이며 아직 Graph의 raw Pop/postPop/월드 연결이 남아 있다. 이번 단계는 새 GUI 실행 없이 계산 계층을 검사했다.
+**2026-10-06 raw Graph 후속:** [실제 SID·프레임·해시·spot과 공통 postPop 연결](exe/cpp-rawgraph-reconstruction.md)을 추가했다. Pop의 최종 상태를 쓰기 전에 시험하고 raw graph byte를 갱신한다. x64 Release 경고/오류 0·CTest 내부 132개·새 x86 1,536회가 통과했다. 누적 제한 입력은 57,564개다. 정상 다리/섬의 영역·부착 효과·그래프 삭제 분할/소진 복구·raw GameWorld 연결은 남았다. 이번 단계는 새 GUI 실행 없이 raw 계산/후처리를 검사했다.
+
+**2026-10-06 Graph 계산:** [정수 표면 연결·flood·병합/표 관리](exe/cpp-graph-reconstruction.md)를 추가했다. 당시 Release·CTest 내부 128개·새 x86 2,560회가 통과했다. raw Pop/postPop 연결은 위 후속에서 추가했다.
 
 **2026-10-06 공통 postPop 후속:** [비용 집계·목록·통계와 noGraph 리셋](exe/cpp-postpop-reconstruction.md)을 raw Pop에 선택 연결했다. x64 Release 경고/오류 0·CTest 내부 124개 검사·새 x86 984회와 기존 world 창 회귀가 통과했다. 최신 누적 제한 입력은 53,468개다. 표면 그래프/영역 통지·AI/배치 선택·생산 계산/SP 차감·raw GameWorld 연결은 남았다.
 

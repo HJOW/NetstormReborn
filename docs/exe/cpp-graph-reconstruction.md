@@ -1,6 +1,6 @@
 # cpppj 표면 그래프 연결·flood·병합 복원
 
-2026-10-06. 원본 Graph.cpp의 기존 표/스택·소진 전 경로를 정수 표면 스냅샷 계층에 복원했다. `Graph`는 `SurfaceFinder`의 실제 이웃 순서를 사용하며 타입 프레임/발자국/내부/죽음 필터를 공유한다. 아직 raw SidPool·Pop/postPop·GameWorld와 연결하지 않았다.
+2026-10-06. 원본 Graph.cpp의 기존 표/스택·소진 전 경로를 정수 표면 스냅샷 계층에 복원했다. `Graph`는 `SurfaceFinder`의 실제 이웃 순서를 사용하며 타입 프레임/발자국/내부/죽음 필터를 공유한다. 후속에서 [raw SID·공통 postPop/지원 Pop 연결](cpp-rawgraph-reconstruction.md)을 추가했으며 GameWorld는 아직 별도다.
 
 ## 원본 근거와 동작
 
@@ -53,4 +53,4 @@ x64 Release 경고/오류 0, CTest 내부 **128개·실패 0**. 동률의 첫 �
 
 ## 다음 연결
 
-raw SidPool의 graph/state/실제 프레임과 0단계 해시·spot에서 이 스냅샷을 구성하고 결과를 raw graph byte에 반영해야 한다. 이후 공통 postPop의 surface 분기, 주변 영역 통지·삭제 시 그래프 분할·소진 복구·섬/다리/건물 부착·raw GameWorld로 이어 간다. 생산 계산/건설/경제/전투/AI/승패와 미션 완주는 남았다.
+raw SidPool의 graph/state/실제 프레임과 0단계 해시·spot에서 스냅샷 구성·graph byte 반영·공통 postPop surface 분기는 [후속](cpp-rawgraph-reconstruction.md)에서 완료했다. 주변 영역 통지·정상 다리/섬 Pop·삭제 시 그래프 분할·소진 복구·섬/다리/건물 부착·raw GameWorld는 남았다. 생산 계산/건설/경제/전투/AI/승패와 미션 완주는 남았다.

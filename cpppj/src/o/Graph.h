@@ -13,8 +13,9 @@ public:
     // 원본 정상 그래프 수·무효 번호·전체 표 폭·flood 스택 크기다.
     static constexpr std::size_t kCount=251,kTableSize=255,kFloodSize=4096;
     static constexpr std::uint8_t kInvalid=254;
-    // 표면 탐색기 수명은 Graph보다 길어야 한다. 기존 표를 생략하면 빈 표와 원본 sentinel을 만든다.
-    Graph(const SurfaceFinder& surfaces,std::span<const GraphMembership> members,std::span<const GraphRecord> records={});
+    // 표면 탐색기 수명은 Graph보다 길어야 한다. 기존 표/스택을 이어 받고 생략한 표는 빈 표와 sentinel로 만든다.
+    Graph(const SurfaceFinder& surfaces,std::span<const GraphMembership> members,std::span<const GraphRecord> records={},
+        std::span<const std::uint32_t> stack={});
     // 00463330 ↔ CD 0045c390. 첫 미사용 번호를 확보한다. 소진 복구는 쓰기 전에 거부한다.
     std::uint8_t Allocate();
     // 00462e50 ↔ CD 0045c460. 254는 그대로 두고 유효 레코드의 앞 두 WORD만 지운다.

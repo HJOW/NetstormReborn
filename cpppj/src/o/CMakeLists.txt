@@ -27,6 +27,7 @@ target_sources(netstorm PRIVATE
     SquidDisplay.cpp SquidDisplay.h
     SquidPostPop.cpp SquidPostPop.h
     Graph.cpp Graph.h
+    RawGraph.cpp RawGraph.h
     BaseProcess.cpp BaseProcess.h
     Kernel.cpp Kernel.h
     GameClock.cpp GameClock.h

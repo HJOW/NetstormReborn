@@ -35,10 +35,12 @@ std::span<const std::uint32_t> SquidPostPopList::Items() const {
     return std::span(entries).first(count);
 }
 // 슬롯 byte type가 가리키는 타입 표를 검증한다.
-SquidPostPop::SquidPostPop(SidPool& pool,std::span<const RiftTypeRecord> types,SquidPostPopState& state)
-    :pool_(pool),types_(types.begin(),types.end()),state_(state) {
+SquidPostPop::SquidPostPop(SidPool& pool,std::span<const RiftTypeRecord> types,SquidPostPopState& state,RawGraph* graph)
+    :pool_(pool),types_(types.begin(),types.end()),state_(state),graph_(graph) {
     const auto count=pool.Edition()==OriginalEdition::Patch1078 ? 188U : 171U;
     if (types.size()!=count) throw std::invalid_argument("postPop 타입 판본/크기 오류");
+    if (graph_ && &graph_->Pool()!=&pool_) throw std::invalid_argument("postPop/Graph SID 풀이 다릅니다");
+    if (graph_) graph_->ValidateTypes(types);
 }
 // 패치는 trunc(cost+type*23)-type*23, CD는 원본 float cost를 누적하고 절삭한다.
 std::int32_t SquidPostPop::TotalCost(std::size_t type) const {
@@ -57,7 +59,7 @@ std::int32_t SquidPostPop::TotalCost(std::size_t type) const {
     return Wrapped(static_cast<std::int64_t>(value));
 }
 // 실제 원본 분기가 미복원 함수를 요구할 때만 거부한다. 표시/통계 억제면 타입 효과를 읽지 않는다.
-void SquidPostPop::Validate(Sid sid,std::uint32_t flags) const {
+void SquidPostPop::Validate(Sid sid,std::uint32_t flags,const RawGraphPop* pop) const {
     const auto bytes=pool_.Slot(sid); const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     if (sid.value<5 || (bytes[11]&(kFree|kContained)) || bytes[10]<kFirstAssetTypeNumber || bytes[10]>=types_.size())
         throw std::logic_error("postPop raw 자산 상태 오류");
@@ -69,7 +71,10 @@ void SquidPostPop::Validate(Sid sid,std::uint32_t flags) const {
             throw std::logic_error("postPop 이웃 영역/그래프 갱신 미복원");
         if ((flags&kGraphChange) && !(flags&kNoGraph)) {
             if (flags&kDestroyGraph) throw std::logic_error("postPop destroyGraph 원본 assert 경로");
-            if (type.flags1&TypeFlag1::kSurface) throw std::logic_error("postPop 표면 그래프 생성 미복원");
+            if (type.flags1&TypeFlag1::kSurface) {
+                if (!graph_) throw std::logic_error("postPop 표면 그래프가 연결되지 않았습니다");
+                graph_->ValidateAdd(sid,pop);
+            }
         }
     }
     if (!(flags&1) || (bytes[patch ? 40 : 35]&kAbstractBuried)) return;
@@ -88,12 +93,14 @@ void SquidPostPop::Validate(Sid sid,std::uint32_t flags) const {
 void SquidPostPop::Activate(Sid sid,std::uint32_t flags) {
     Validate(sid,flags); ++state_.depth; PostPop(sid,flags);
 }
-// 공통 후처리의 순서: 그래프 리셋→비용→공급/작업장 목록→소유자 조건 통계→깊이 감소다.
+// 공통 후처리의 순서: 그래프 생성/리셋→비용→공급/작업장 목록→소유자 조건 통계→깊이 감소다.
 void SquidPostPop::PostPop(Sid sid,std::uint32_t flags) {
     Validate(sid,flags);
     if (state_.suppressed) { --state_.depth; return; }
     const auto bytes=pool_.Slot(sid); const auto number=bytes[10]; const auto& type=types_[number];
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
+    if (state_.graphsEnabled && (type.flags1&TypeFlag1::kSurface) && (flags&kGraphChange) && !(flags&kNoGraph))
+        graph_->Add(sid);
     if (state_.graphsEnabled && (type.flags1&TypeFlag1::kSurface) && (flags&1) && (flags&kNoGraph))
         pool_.AllocatedBytes(sid)[patch ? 30 : 28]=state_.invalidGraph;
     if ((flags&1) && !(bytes[patch ? 40 : 35]&kAbstractBuried)) {
@@ -116,4 +123,8 @@ void SquidPostPop::PostPop(Sid sid,std::uint32_t flags) {
 }
 // 서로 다른 SID 풀의 연결을 막는 읽기 전용 소유자다.
 const SidPool& SquidPostPop::Pool() const { return pool_; }
+// 동일 SID라도 별도 해시/spot을 읽는 구성을 막는다.
+void SquidPostPop::ValidateSpace(const SquidHash& hash,std::span<const std::uint8_t> spots) const {
+    if (graph_) graph_->ValidateSpace(hash,spots);
+}
 }

@@ -2,6 +2,7 @@
 #pragma once
 #include "o/SidPool.h"
 #include "o/Player.h"
+#include "o/RawGraph.h"
 #include <array>
 
 namespace netstorm::o {
@@ -23,10 +24,12 @@ struct SquidPostPopState {
 };
 class SquidPostPop {
 public:
-    // 타입/SHP와 같은 판본의 공유 풀·후처리 상태를 받는다. 타입은 호출자 수명과 분리해 복사한다.
-    SquidPostPop(SidPool& pool,std::span<const RiftTypeRecord> types,SquidPostPopState& state);
-    // 공간 변경 전 미복원 그래프/AI/배치 효과·목록 손상·비용 범위를 확인한다.
-    void Validate(Sid sid,std::uint32_t flags) const;
+    // 같은 판본의 풀·상태·선택적인 raw Graph를 받는다. 타입을 복사하며 상태/Graph 수명은 더 길어야 한다.
+    SquidPostPop(SidPool& pool,std::span<const RiftTypeRecord> types,SquidPostPopState& state,RawGraph* graph=nullptr);
+    // 공간 변경 전 연결된 그래프의 최종 Pop 상태·미복원 영역/AI/배치 효과·목록·비용을 확인한다.
+    void Validate(Sid sid,std::uint32_t flags,const RawGraphPop* pop=nullptr) const;
+    // 선택한 raw Graph가 Pop과 같은 해시·spot을 읽는지 공간 변경 전에 확인한다.
+    void ValidateSpace(const SquidHash& hash,std::span<const std::uint8_t> spots) const;
     // 비전투 Activate에서 postPop을 호출하는 깊이 증가/감소를 보존한다. flags는 Pop이 정규화한다.
     void Activate(Sid sid,std::uint32_t flags);
     // 004b0d30 ↔ CD 004ae180의 공통 몸체. 명시적인 직접 호출은 depth를 한 단계 감소시킨다.
@@ -39,5 +42,6 @@ private:
     SidPool& pool_;
     std::vector<RiftTypeRecord> types_;
     SquidPostPopState& state_;
+    RawGraph* graph_{};
 };
 }
