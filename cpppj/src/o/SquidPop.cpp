@@ -3,6 +3,7 @@
 #include "o/SquidUnpop.h"
 #include "o/Squid.h"
 #include "o/SquidDisplay.h"
+#include "o/SquidPostPop.h"
 #include <bit>
 #include <cmath>
 #include <stdexcept>
@@ -32,10 +33,11 @@ void Put(std::span<std::uint8_t> bytes,std::size_t offset,std::uint32_t value,st
     for (std::size_t i=0;i<width;++i) bytes[offset+i]=static_cast<std::uint8_t>(value>>(i*8));
 }
 }
-// 공유 spot의 크기를 확인한다. 표시 대상은 선택적으로 연결하며 공통 postPop 효과는 억제한다.
-SquidPop::SquidPop(SidPool& pool,SquidHash& hash,std::span<std::uint8_t> spots,SquidDisplay* display)
-    :pool_(pool),hash_(hash),spots_(spots),display_(display) {
+// 공유 spot의 크기와 풀 소유자를 확인한다. 표시와 공통 postPop 일부 효과를 선택 연결한다.
+SquidPop::SquidPop(SidPool& pool,SquidHash& hash,std::span<std::uint8_t> spots,SquidDisplay* display,SquidPostPop* postPop)
+    :pool_(pool),hash_(hash),spots_(spots),display_(display),postPop_(postPop) {
     if (spots_.size()!=kWorldCells*kWorldCells) throw std::invalid_argument("Pop spot 지도 크기 오류");
+    if (postPop_ && &postPop_->Pool()!=&pool_) throw std::invalid_argument("Pop/postPop SID 풀이 다릅니다");
 }
 // 실제 PE에서 공통 firstPop/postPop을 확인한 vtable만 허용한다.
 bool SquidPop::Supports(OriginalEdition edition,std::uint32_t vtable,std::uint32_t flags) {
@@ -45,7 +47,7 @@ bool SquidPop::Supports(OriginalEdition edition,std::uint32_t vtable,std::uint32
     for (auto value:values) if (value==vtable) return SquidUnpop::SupportsDisplay(edition,vtable,flags);
     return false;
 }
-// 비전투 좌표→spot→체인→공통 표시→firstPop→Activate를 처리한다. postPop 효과는 억제한다.
+// 비전투 좌표→spot→체인→공통 표시→firstPop→Activate와 선택한 postPop 효과를 처리한다.
 RawPopResult SquidPop::Pop(Sid sid,const RiftTypeRecord& type,float frameWidth,float frameHeight,
     float x,float y,std::uint32_t flags) {
     const auto old=pool_.Slot(sid);
@@ -78,6 +80,13 @@ RawPopResult SquidPop::Pop(Sid sid,const RiftTypeRecord& type,float frameWidth,f
         if (left<1 || top<1) throw std::out_of_range("Pop 지도 밖 발자국");
     }
     if (display_) display_->Validate(pool_.Edition(),old,flags);
+    // 최초 등록/비전투 Activate가 요구할 후처리를 공간 쓰기 전에 검사한다.
+    if (postPop_) {
+        auto normalized=flags;
+        if ((extra&kFirstPop)==0) normalized|=(extra&9)==0 ? 1U : ((extra&1)!=0 ? 2U : 0U)|((extra&8)!=0 ? 4U : 0U);
+        if ((normalized&8)==0) normalized|=0x10;
+        postPop_->Validate(sid,normalized);
+    }
     auto bytes=pool_.AllocatedBytes(sid);
     Put(bytes,kX,std::bit_cast<std::uint32_t>(x),4); Put(bytes,kY,std::bit_cast<std::uint32_t>(y),4);
     Put(bytes,kScreenX,static_cast<std::uint32_t>(static_cast<double>(x)*kScaleX+kBias),2);
@@ -105,8 +114,9 @@ RawPopResult SquidPop::Pop(Sid sid,const RiftTypeRecord& type,float frameWidth,f
         bytes[extraOffset]|=kFirstPop;
     }
     bytes[kState]=static_cast<std::uint8_t>(bytes[kState]&~kVoid);
-    // 비전투 Activate가 전달하는 플래그다. 억제된 공통 postPop은 raw 객체에 쓰지 않는다.
+    // 비전투 Activate가 전달하는 플래그다. 연결된 공통 postPop의 깊이/효과를 갱신한다.
     if ((flags&8)==0) flags|=0x10;
+    if (postPop_) postPop_->Activate(sid,flags);
     return RawPopResult::Registered;
 }
 }

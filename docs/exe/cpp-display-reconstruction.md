@@ -54,4 +54,4 @@ Release 경고/오류 0, CTest 내부 **120개 검사·실패 0**. raw→실제 
 
 ## 다음 작업
 
-공통 postPop의 실제 영역/소유자/생산·dirty/grid 변경, 표면 부착 프레임/이웃 통지와 섬/다리/건물/파생 가상 효과, 삭제/의존 객체/참조 수명과 SID 소진/Take 목록을 이어 복원한다. 이후 raw SID·표면·실제 프레임을 GameWorld에 연결하고 다리 배치/Construction·경제·전투·AI·승패를 진행한다.
+후속에서 [공통 postPop 비용·공급/소유자별 작업장 목록·통계·noGraph 리셋](cpp-postpop-reconstruction.md)을 일부 완료했다. 남은 표면 그래프/영역 통지·AI/배치 선택·생산 계산/SP 차감·dirty/grid 변경, 표면 부착 프레임/이웃 통지와 섬/다리/건물/파생 가상 효과, 삭제/의존 객체/참조 수명과 SID 소진/Take 목록을 이어 복원한다. 이후 raw SID·표면·실제 프레임을 GameWorld에 연결하고 다리 배치/Construction·경제·전투·AI·승패를 진행한다.

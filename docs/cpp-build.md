@@ -65,6 +65,8 @@ cpppj/
 
 ## 3. 빌드와 테스트
 
+**2026-10-06 공통 postPop 후속:** [비용 집계·목록·통계와 noGraph 리셋](exe/cpp-postpop-reconstruction.md)을 raw Pop에 선택 연결했다. x64 Release 경고/오류 0·CTest 내부 124개 검사·새 x86 984회와 기존 world 창 회귀가 통과했다. 최신 누적 제한 입력은 53,468개다. 표면 그래프/영역 통지·AI/배치 선택·생산 계산/SP 차감·raw GameWorld 연결은 남았다.
+
 **2026-10-06 표시 활성 후속:** [공통 표시 갱신](exe/cpp-display-reconstruction.md)을 raw Pop/Unpop과 실제 Renderer 변경 표에 연결했다. Release·CTest 내부 120개 검사, 새 x86 1,728회와 두 판본 SHP 헤더 6,950개 읽기를 통과했다. renderer/world 창 회귀도 다시 실행했다. 공통 postPop 영역/소유자/생산 효과와 raw GameWorld 연결은 남았다.
 
 **2026-10-06 최신 사용자 지시:** 이번 PC에서는 창이 뜨는 검사를 허용했다. Release 빌드·CTest와 클론 window/renderer/menu/world GUI 스모크를 실행했다. 원본/복사본 게임 프로세스는 실행하지 않았다. 이전 PC의 창 금지는 과거 작업 조건이다. [raw Pop 후속·실행 검증의 범위](exe/cpp-pop-reconstruction.md).

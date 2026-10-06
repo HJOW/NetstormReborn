@@ -124,6 +124,7 @@ inline constexpr int kFirstAssetTypeNumber = 70;
 
 // 원본 타입 구조체(패치 500바이트, CD 468바이트) 가운데 복원한 필드.
 struct RiftTypeRecord {
+    float cost{};                      // +0xc4: cost. postPop 비용 집계/후속 건설 비용 입력.
     std::int32_t maxHitPoints{};         // +0: maxHitPoints. 서버 base postCreate의 초기 HP 입력.
     std::int32_t zOrder{};               // +0x104: base Squid에는 하위 8비트만 복사한다.
     std::uint32_t constructorAddress{};  // 패치 +0x1d0 / CD +0x1b0. 0이면 base, 지원 주소는 자산 파생 생성자.

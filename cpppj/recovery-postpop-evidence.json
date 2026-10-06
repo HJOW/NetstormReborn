@@ -1,0 +1,546 @@
+{
+  "schema": 1,
+  "method": "격리 실제 x86; 공통 postPop/표시 활성; 비전투·AI 미부착·배치 선택 없음",
+  "public_calls": {
+    "PostPop": 768,
+    "Pop": 144,
+    "Unpop": 72
+  },
+  "total_calls": 984,
+  "sequences": 4,
+  "editions": {
+    "originals": {
+      "binary_sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "function_ranges": [
+        {
+          "entry": "004abb10",
+          "ranges": "004abb10-004abb66;004abb70-004abcac;004abcb0-004abdf1"
+        },
+        {
+          "entry": "004af1d0",
+          "ranges": "004af1d0-004af529"
+        },
+        {
+          "entry": "004abf60",
+          "ranges": "004abf60-004ac037"
+        },
+        {
+          "entry": "004abe00",
+          "ranges": "004abe00-004abe26;004abe30-004abf51"
+        },
+        {
+          "entry": "004aba70",
+          "ranges": "004aba70-004abab3"
+        },
+        {
+          "entry": "004952f0",
+          "ranges": "004952f0-0049532a"
+        },
+        {
+          "entry": "004e5b40",
+          "ranges": "004e5b40-004e5b9a;004e5b9c-004e5ba2;004e5bb0-004e5bd8;004e5bdc-004e5bfe;004e5c00-004e5c1c;004e5c40-004e5c89;004e5c9c-004e5ca2;004e5ca4-004e5cae;004e5cb0-004e5cc0;004e5cc4-004e5cda;004e5cdc-004e5d01;004e5d04-004e5d0c;004e5d10-004e5d2e;004e5d3c-004e5d5c;004e5d60-004e5d86;004e5d88-004e5db8;004e5ddc-004e5e25;004e5e38-004e5e3e;004e5e40-004e5e4c;004e5e50-004e5e62;004e5e64-004e5e7c"
+        },
+        {
+          "entry": "004af530",
+          "ranges": "004af530-004af600"
+        },
+        {
+          "entry": "004af610",
+          "ranges": "004af610-004af712"
+        },
+        {
+          "entry": "004b0c60",
+          "ranges": "004b0c60-004b0d2b"
+        },
+        {
+          "entry": "004ad4a0",
+          "ranges": "004ad4a0-004ad4f5"
+        },
+        {
+          "entry": "0049a840",
+          "ranges": "0049a840-0049a852"
+        },
+        {
+          "entry": "0049fce0",
+          "ranges": "0049fce0-0049fd6a"
+        },
+        {
+          "entry": "004afe50",
+          "ranges": "004afe50-004b01fc;004b0200-004b02c4"
+        },
+        {
+          "entry": "0049ebb0",
+          "ranges": "0049ebb0-0049fa87;0049fa90-0049fc80"
+        },
+        {
+          "entry": "004b02d0",
+          "ranges": "004b02d0-004b04d9;004b04e0-004b0831"
+        },
+        {
+          "entry": "004ac560",
+          "ranges": "004ac560-004ac6a2"
+        },
+        {
+          "entry": "004b0d30",
+          "ranges": "004b0d30-004b0fa5"
+        },
+        {
+          "entry": "004ad470",
+          "ranges": "004ad470-004ad498"
+        },
+        {
+          "entry": "004ad500",
+          "ranges": "004ad500-004ad662"
+        },
+        {
+          "entry": "004ad670",
+          "ranges": "004ad670-004ad677"
+        },
+        {
+          "entry": "004210a0",
+          "ranges": "004210a0-004210e4"
+        },
+        {
+          "entry": "004acd20",
+          "ranges": "004acd20-004acd99"
+        },
+        {
+          "entry": "004afd30",
+          "ranges": "004afd30-004afe4f"
+        },
+        {
+          "entry": "004ac1e0",
+          "ranges": "004ac1e0-004ac1f3"
+        },
+        {
+          "entry": "004aba70",
+          "ranges": "004aba70-004abab3"
+        },
+        {
+          "entry": "004b2a90",
+          "ranges": "004b2a90-004b2af1"
+        },
+        {
+          "entry": "0049a840",
+          "ranges": "0049a840-0049a852"
+        },
+        {
+          "entry": "00419850",
+          "ranges": "00419850-004198e2"
+        },
+        {
+          "entry": "0040e800",
+          "ranges": "0040e800-0040e84c"
+        },
+        {
+          "entry": "0040da00",
+          "ranges": "0040da00-0040da31"
+        },
+        {
+          "entry": "004ace40",
+          "ranges": "004ace40-004aceb8"
+        },
+        {
+          "entry": "0049a900",
+          "ranges": "0049a900-0049a939"
+        },
+        {
+          "entry": "0040eaf0",
+          "ranges": "0040eaf0-0040eb3c"
+        },
+        {
+          "entry": "00425df0",
+          "ranges": "00425df0-00425dfa"
+        },
+        {
+          "entry": "00498160",
+          "ranges": "00498119-00498137;00498160-00498172;004981ad-00498217"
+        },
+        {
+          "entry": "00498220",
+          "ranges": "00498220-00498e3c;00498e40-00498fe5"
+        },
+        {
+          "entry": "004990d0",
+          "ranges": "004990d0-0049923f"
+        },
+        {
+          "entry": "004e49c0",
+          "ranges": "004e49c0-004e4a34"
+        },
+        {
+          "entry": "004ad500",
+          "ranges": "004ad500-004ad662"
+        },
+        {
+          "entry": "004ad670",
+          "ranges": "004ad670-004ad677"
+        },
+        {
+          "entry": "004990d0",
+          "ranges": "004990d0-0049923f"
+        },
+        {
+          "entry": "00498ff0",
+          "ranges": "00498ff0-004990cc"
+        },
+        {
+          "entry": "00419850",
+          "ranges": "00419850-004198e2"
+        },
+        {
+          "entry": "00445290",
+          "ranges": "00445290-00445326"
+        },
+        {
+          "entry": "00497580",
+          "ranges": "00497580-00497766"
+        },
+        {
+          "entry": "004970a0",
+          "ranges": "004970a0-004970bd"
+        },
+        {
+          "entry": "004834c0",
+          "ranges": "004834c0-00483504"
+        },
+        {
+          "entry": "004e49c0",
+          "ranges": "004e49c0-004e4a34"
+        },
+        {
+          "entry": "004b0d30",
+          "ranges": "004b0d30-004b0fa5"
+        },
+        {
+          "entry": "004c25e0",
+          "ranges": "004c25e0-004c25fc"
+        },
+        {
+          "entry": "004c25b0",
+          "ranges": "004c25b0-004c25bb"
+        },
+        {
+          "entry": "004da650",
+          "ranges": "004da650-004da6ae"
+        },
+        {
+          "entry": "00490050",
+          "ranges": "00490050-00490096"
+        },
+        {
+          "entry": "0044f770",
+          "ranges": "0044f770-0044f796"
+        },
+        {
+          "entry": "00472f70",
+          "ranges": "00472f70-00472fea"
+        },
+        {
+          "entry": "004166e0",
+          "ranges": "004166e0-0041671b"
+        },
+        {
+          "entry": "004ad3e0",
+          "ranges": "004ad3e0-004ad46b"
+        },
+        {
+          "entry": "0049c2e0",
+          "ranges": "0049c2e0-0049c3ae"
+        }
+      ],
+      "actual_effect_calls": {
+        "provider_fn": 28,
+        "owner_fn": 36,
+        "factory_fn": 36
+      },
+      "actual_lifecycle_calls": {
+        "postPop": 456,
+        "Pop": 72,
+        "firstPop": 32,
+        "Unpop": 36
+      },
+      "actual_display_calls": {
+        "update": 108,
+        "mark": 108,
+        "bounds": 144,
+        "dirty": 106,
+        "alternate": 36
+      },
+      "cost_encode_segments": 192,
+      "assert_calls": 0
+    },
+    "originalCD": {
+      "binary_sha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "function_ranges": [
+        {
+          "entry": "004aaad0",
+          "ranges": "004aaad0-004aad2f"
+        },
+        {
+          "entry": "004aae40",
+          "ranges": "004aae40-004ab243"
+        },
+        {
+          "entry": "004ab250",
+          "ranges": "004ab250-004ab380"
+        },
+        {
+          "entry": "004aad30",
+          "ranges": "004aad30-004aae34"
+        },
+        {
+          "entry": "004952f0",
+          "ranges": "004952f0-0049530f"
+        },
+        {
+          "entry": "004f1a60",
+          "ranges": "004f1a60-004f1a96;004f1aa8-004f1aba;004f1abc-004f1ac8;004f1acc-004f1ad6;004f1ad8-004f1afc;004f1b00-004f1b08;004f1b0c-004f1b2f;004f1b40-004f1b55;004f1b58-004f1b75;004f1b78-004f1ba2;004f1ba4-004f1bad"
+        },
+        {
+          "entry": "004ab390",
+          "ranges": "004ab390-004ab435"
+        },
+        {
+          "entry": "004ab440",
+          "ranges": "004ab440-004ab57b"
+        },
+        {
+          "entry": "004ae040",
+          "ranges": "004ae040-004ae0e6"
+        },
+        {
+          "entry": "004ae120",
+          "ranges": "004ae120-004ae17e"
+        },
+        {
+          "entry": "00444720",
+          "ranges": "00444720-00444749"
+        },
+        {
+          "entry": "004aecf0",
+          "ranges": "004aecf0-004aed16"
+        },
+        {
+          "entry": "004aed20",
+          "ranges": "004aed20-004aed2a"
+        },
+        {
+          "entry": "004abac0",
+          "ranges": "004abac0-004abadd"
+        },
+        {
+          "entry": "004abae0",
+          "ranges": "004abae0-004abafd"
+        },
+        {
+          "entry": "004abf50",
+          "ranges": "004abf50-004abf68"
+        },
+        {
+          "entry": "004448e0",
+          "ranges": "004448e0-004448f2"
+        },
+        {
+          "entry": "004ad0b0",
+          "ranges": "004ad0b0-004ad489"
+        },
+        {
+          "entry": "004434d0",
+          "ranges": "004434d0-00444217"
+        },
+        {
+          "entry": "004cff40",
+          "ranges": "004cff40-004cff7a"
+        },
+        {
+          "entry": "004ad490",
+          "ranges": "004ad490-004adad6"
+        },
+        {
+          "entry": "004abfb0",
+          "ranges": "004abfb0-004ac0f4"
+        },
+        {
+          "entry": "004ae180",
+          "ranges": "004ae180-004ae37f"
+        },
+        {
+          "entry": "004ae0f0",
+          "ranges": "004ae0f0-004ae118"
+        },
+        {
+          "entry": "004ae380",
+          "ranges": "004ae380-004ae3d2"
+        },
+        {
+          "entry": "004ae3e0",
+          "ranges": "004ae3e0-004ae3e7"
+        },
+        {
+          "entry": "004aca80",
+          "ranges": "004aca80-004aca9e"
+        },
+        {
+          "entry": "004acfc0",
+          "ranges": "004acfc0-004ad0a5"
+        },
+        {
+          "entry": "004abf50",
+          "ranges": "004abf50-004abf68"
+        },
+        {
+          "entry": "004abae0",
+          "ranges": "004abae0-004abafd"
+        },
+        {
+          "entry": "004abac0",
+          "ranges": "004abac0-004abadd"
+        },
+        {
+          "entry": "004acb00",
+          "ranges": "004acb00-004acb85"
+        },
+        {
+          "entry": "004ae480",
+          "ranges": "004ae480-004ae4ac"
+        },
+        {
+          "entry": "004442b0",
+          "ranges": "004442b0-004442e6"
+        },
+        {
+          "entry": "00479d20",
+          "ranges": "00479d20-00479d82"
+        },
+        {
+          "entry": "004f161c",
+          "ranges": "004f161c-004f1642"
+        },
+        {
+          "entry": "004abab0",
+          "ranges": "004abab0-004abab8"
+        },
+        {
+          "entry": "00456a00",
+          "ranges": "00456a00-00456c0f"
+        },
+        {
+          "entry": "004ae380",
+          "ranges": "004ae380-004ae3d2"
+        },
+        {
+          "entry": "004ae3e0",
+          "ranges": "004ae3e0-004ae3e7"
+        },
+        {
+          "entry": "00456a00",
+          "ranges": "00456a00-00456c0f"
+        },
+        {
+          "entry": "00456930",
+          "ranges": "00456930-004569f0"
+        },
+        {
+          "entry": "00455c90",
+          "ranges": "00455c90-00455cde"
+        },
+        {
+          "entry": "00457320",
+          "ranges": "00457320-0045750a"
+        },
+        {
+          "entry": "004f161c",
+          "ranges": "004f161c-004f1642"
+        },
+        {
+          "entry": "004ae180",
+          "ranges": "004ae180-004ae37f"
+        },
+        {
+          "entry": "0040bc50",
+          "ranges": "0040bc50-0040bc63"
+        },
+        {
+          "entry": "0040bc20",
+          "ranges": "0040bc20-0040bc2b"
+        },
+        {
+          "entry": "0041eac0",
+          "ranges": "0041eac0-0041eb1f"
+        },
+        {
+          "entry": "004071f0",
+          "ranges": "004071f0-00407240"
+        },
+        {
+          "entry": "0045ec90",
+          "ranges": "0045ec90-0045ecb8"
+        },
+        {
+          "entry": "0048a360",
+          "ranges": "0048a360-0048a3b9"
+        },
+        {
+          "entry": "004d8230",
+          "ranges": "004d8230-004d8664"
+        },
+        {
+          "entry": "004d81f0",
+          "ranges": "004d81f0-004d8222"
+        },
+        {
+          "entry": "004015d0",
+          "ranges": "004015d0-004015d5"
+        },
+        {
+          "entry": "004147a0",
+          "ranges": "004147a0-004147bc"
+        },
+        {
+          "entry": "004adbd0",
+          "ranges": "004adbd0-004adbd9"
+        },
+        {
+          "entry": "004abab0",
+          "ranges": "004abab0-004abab8"
+        }
+      ],
+      "actual_effect_calls": {
+        "provider_fn": 28,
+        "owner_fn": 36,
+        "factory_fn": 36
+      },
+      "actual_lifecycle_calls": {
+        "postPop": 456,
+        "Pop": 72,
+        "firstPop": 32,
+        "Unpop": 36
+      },
+      "actual_display_calls": {
+        "update": 108,
+        "mark": 108,
+        "bounds": 144,
+        "dirty": 106,
+        "alternate": 36
+      },
+      "cost_encode_segments": 0,
+      "assert_calls": 0
+    }
+  },
+  "stubbed": [],
+  "fixture_sha256": "9ddeab230d993a9fbe77b0e46f2786900d9b28a3639a8a2cc02a4ed200dcac62",
+  "tool_sha256": "85a507a48a4f37996e24b16e2766f6773502052199631fd163018a82e2d5a644",
+  "dependencies": {
+    "decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+    "decomp_sid_oracle.py": "eea44b1b0fa8a57b1a49ee246962ea346dec64b280761b0bff0ccdd87631ddd6",
+    "decomp_creation_oracle.py": "a65b8e22a1116d5883745345d0c977d293fd61c3f919bf7ac4cc61ba4c052a38",
+    "decomp_pop_oracle.py": "0120e5ebdc2183ac61a051ca2f4f79dbe0e9ffee864ca37ec04b5b49e70a1204",
+    "decomp_display_oracle.py": "147ccd4c899d97810a025334ac99200df665df657807af4f529c2dd05178c012"
+  },
+  "limitations": [
+    "합성 타입/SHP·기존 확보 풀; graph flood/AI/배치 선택/건설·SP 차감/게임 완주 미복원",
+    "패치 cost 인코딩은 loader의 접두 구간 실행이며 전체 로더 호출로 세지 않는다",
+    "전체 표·목록은 Adler-32, raw 슬롯과 dirty 표는 모든 바이트/항목을 대조한다"
+  ]
+}

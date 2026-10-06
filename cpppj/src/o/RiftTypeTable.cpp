@@ -1,7 +1,7 @@
 // 원본 RiftType.cpp의 타입 표: 0049ebb0 ↔ CD 004434d0(배열 초기화·내장 이름), 0049c3b0 ↔ CD 004460f0(플래그 단어·속성),
 //       0049b0d0 ↔ CD 00444e10(후처리), 0049a860 ↔ CD 00443410(이름 검색).
 // 범위: 타입 번호 체계·이름·플래그 1/2·종류 단어·그룹·목록 플래그·발자국·초기 HP/깊이·생성자 주소 기록.
-//       파생 생성자 실행, 사거리·비용 등 전투 수치·요구 에너지 문자열(+0xa0)·최대 사거리 집계는 후속이다.
+//       비용 +0xc4도 읽는다. 사거리 등 전투 수치·요구 에너지 문자열(+0xa0)·최대 사거리 집계는 후속이다.
 // 검증: 이름 해시 표가 실제 .fort의 `TypeNames` 섹션과 같음을 tools/cpp_fort_smoke.py가 두 판본에서 확인한다.
 #include "o/RiftType.h"
 #include "o/OriginalText.h"
@@ -160,6 +160,10 @@ void ApplyDefinition(RiftTypeRecord& type, const RiftTypeDefinition& definition)
         else if (is("zorder")) {
             if (number) type.zOrder=ToInt(*number);
             else if (text) type.zOrder=ZOrder(*text);
+        }
+        else if (is("cost")) {
+            if (!number) throw std::invalid_argument("cost는 숫자여야 합니다");
+            type.cost=static_cast<float>(*number);
         }
         else if (is("minUsage") && number) type.minUsage[0] = static_cast<float>(*number);
         else if ((is("maxUsage") || is("maxRainBattleUsage")) && number) type.maxUsage[0] = static_cast<float>(*number);

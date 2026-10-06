@@ -2,6 +2,8 @@
 
 > 작업일: 2026-10-04~06 (`HJOW-Athlon`, Windows 10, Ghidra 12.1.4, JDK 25). **원본 게임은 실행하지 않았고 원본 파일은 읽기만 했다.**
 > 대상: 패치판 `originals/Netstorm.exe`(10.78)와 CD판 `originalCD/NETSTORM.EXE`(10.72).
+> 공통 postPop 일부 효과 후속: [비용·공급/소유자별 작업장 목록·타입 통계·noGraph 리셋](cpp-postpop-reconstruction.md). 새 실제 x86 984회·대체/assert 0, 내부 검사 124개·누적 제한 입력 53,468개다. 패치 비용 인코딩 192회는 loader 접두 구간으로 별도 집계하며 전체 로더 실행이 아니다. 비용 누적 x87 피연산자는 디컴파일에서 생략돼 실제 기계어로 판본 차이를 확인했다. 그래프 생성/영역 통지·AI/배치 선택·생산 계산·raw GameWorld는 남았다.
+>
 > 표시 활성 후속: [공통 update88/update8c·실제 Renderer 연결](cpp-display-reconstruction.md). 새 실제 x86 1,728회·대체/assert 0, 내부 검사 120개, 누적 제한 입력 52,484개다. 실제 SHP 헤더 6,950개 읽기는 별도 검사이며 공통 postPop 효과와 raw GameWorld 연결은 남았다.
 >
 > raw Pop 후속: [실제 Pop/firstPop/Activate·억제된 공통 postPop과 GUI 검사](cpp-pop-reconstruction.md). CD의 `(int)param_2 < 1` 디컴파일은 float 비트값의 signed 비교를 수치 변환처럼 표현한 것이었다. 실제 x86/fixture 대조로 양 판본의 양수 소수 좌표 보존을 확인했다. 이번 PC에서는 사용자 지시로 클론 GUI 검사를 허용했고 원본 프로세스는 실행하지 않았다.
