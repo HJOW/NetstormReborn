@@ -1,13 +1,14 @@
-// 원본 raw SID 풀의 non-void 공간 해제. 표시 비활성 경로이며 실제 월드/파생 영역 효과는 후속이다.
+// 원본 raw SID 풀의 non-void 공간 해제. 공통 표시 선택 연결이며 파생 영역 효과는 후속이다.
 #pragma once
 #include "o/SidPool.h"
 #include "o/SquidHash.h"
 
 namespace netstorm::o {
+class SquidDisplay;
 class SquidUnpop {
 public:
-    // 기존 SID 풀·네 단계 해시·spot을 함께 갱신한다. 표시 갱신이 비활성인 호출 단계에서 사용한다.
-    SquidUnpop(SidPool& pool,SquidHash& hash,std::span<std::uint8_t> spots);
+    // 기존 SID 풀·네 단계 해시·spot을 함께 갱신한다. nullptr 표시 대상은 기존 억제 경로다.
+    SquidUnpop(SidPool& pool,SquidHash& hash,std::span<std::uint8_t> spots,SquidDisplay* display=nullptr);
     // 004afe50 ↔ CD 004ad0b0. 일반 자산/매몰 객체의 spot·머리/이전 next를 직접 해제한다.
     // 섬/다리·건물 부착 표면 효과·미복원 화면 override는 활성 상태에서 변경 전에 거부한다.
     void Unpop(Sid sid,const RiftTypeRecord& type,std::uint32_t flags=0);
@@ -21,5 +22,6 @@ private:
     SidPool& pool_;
     SquidHash& hash_;
     std::span<std::uint8_t> spots_;
+    SquidDisplay* display_{}; // 제거 전 위치의 변경 표를 공통 표시 경로로 전달한다.
 };
 }

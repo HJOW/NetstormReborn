@@ -78,6 +78,7 @@ ShapeDatabase::ShapeDatabase(std::vector<std::uint8_t> bytes) : bytes_(std::move
         blocks_.push_back(std::move(block));
     }
     if (blocks_.empty()) throw std::runtime_error("Missing VFX 1.10 shape header");
+    headerEnd_=position;
     std::sort(frameOffsets.begin(), frameOffsets.end());
     frameOffsets.erase(std::unique(frameOffsets.begin(), frameOffsets.end()), frameOffsets.end());
     // 블록 헤더와 겹치는 주소는 거부하고 공유 프레임은 같은 경계를 갖게 한다.
@@ -94,6 +95,17 @@ ShapeDatabase::ShapeDatabase(std::vector<std::uint8_t> bytes) : bytes_(std::move
 
 // 파일의 블록 순서가 곧 타입의 그래픽 순서다.
 std::span<const ShapeBlock> ShapeDatabase::Blocks() const { return blocks_; }
+
+// 런타임 frame table이 가리키는 VFX 레코드 앞의 원본 Squid 전용 헤더다.
+SquidFrameMetrics ShapeDatabase::SquidMetrics(std::size_t block,std::size_t frame) const {
+    const auto offset=blocks_.at(block).frames.at(frame).offset;
+    // 원본 추가 헤더는 36바이트다. 순수 VFX 테스트/글꼴 파일에서 존재한다고 추측하지 않는다.
+    constexpr std::size_t prefix=36;
+    if (offset<headerEnd_ || offset-headerEnd_<prefix) throw std::runtime_error("Squid SHP 추가 헤더가 없습니다");
+    return {std::bit_cast<float>(U32(bytes_,offset-prefix)),std::bit_cast<float>(U32(bytes_,offset-prefix+4)),
+        std::bit_cast<std::int16_t>(U16(bytes_,offset-12)),std::bit_cast<std::int16_t>(U16(bytes_,offset-10)),
+        std::bit_cast<std::int16_t>(U16(bytes_,offset-8)),std::bit_cast<std::int16_t>(U16(bytes_,offset-6))};
+}
 
 // 원본의 0=행 끝, 1=투명 건너뛰기, 홀수=직접 복사, 짝수=반복 복사를 구현한다.
 IndexedImage ShapeDatabase::Decode(std::size_t blockIndex, std::size_t frameIndex) const {

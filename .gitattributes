@@ -40,3 +40,6 @@ tools/decomp_unpop_oracle.py text eol=lf
 cpppj/recovery-pop-evidence.json text eol=lf
 cpppj/src/o/PopVtables.inc text eol=lf
 tools/decomp_pop_oracle.py text eol=lf
+# 표시 활성 검증의 도구와 기록을 동일한 SHA-256으로 유지한다.
+tools/decomp_display_oracle.py text eol=lf
+cpppj/recovery-display-evidence.json text eol=lf

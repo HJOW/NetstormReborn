@@ -16,6 +16,7 @@
 #include "app/InspectView.h"
 #include "client/ClientMain.h"
 #include "client/GameAssets.h"
+#include "client/SquidRenderer.h"
 #include "client/GameWorld.h"
 #include "client/Mission.h"
 #include "client/UberGump.h"
@@ -117,7 +118,7 @@ netstorm::o::OriginalEdition Edition(int argc, char** argv, int expectedCount) {
 }
 
 // 타입·클러스터·그림을 한 번씩 해석하여 실제 로더의 처리 결과를 보고한다.
-void InspectAssets(const netstorm::client::GameAssets& assets) {
+void InspectAssets(const netstorm::client::GameAssets& assets,netstorm::o::OriginalEdition edition) {
     std::size_t frames = 0, images = 0, special = 0;
     // 모든 블록을 검사하여 메타데이터와 이미지 레코드 수를 구분한다.
     for (const auto& type : assets.Types()) {
@@ -130,6 +131,12 @@ void InspectAssets(const netstorm::client::GameAssets& assets) {
         }
     }
     std::printf("Loaded asset types: %zu\nShape frames: %zu\nDecoded images: %zu\nSpecial records: %zu\n", assets.Types().size(), frames, images, special);
+    // 실제 두 판본의 SHP 추가 헤더와 타입 번호 연결을 읽기 전용 검사에 포함한다.
+    const auto displayShapes=netstorm::client::SquidRenderer::Shapes(assets,edition);
+    std::size_t displayFrames=0;
+    // 내장 타입의 빈 shape를 제외하고 모든 물리 헤더를 확인한다.
+    for (const auto& shape:displayShapes) displayFrames+=shape.frames.size();
+    std::printf("Squid display headers: %zu\n",displayFrames);
 }
 
 // 길이가 붙은 UTF-8 문자열을 검사 전용 스트림으로 기록한다.
@@ -715,7 +722,7 @@ int main(int argc, char** argv) {
         if (argc == 3 && command == "--dump-archive") { DumpArchive(argv[2]); return 0; }
         if ((argc == 3 || argc == 4) && (command == "--inspect-assets" || command == "--dump-assets")) {
             const auto assets = LoadAssets(argv[2], Edition(argc, argv, 3));
-            if (command == "--inspect-assets") InspectAssets(assets); else DumpAssets(assets);
+            if (command == "--inspect-assets") InspectAssets(assets,Edition(argc,argv,3)); else DumpAssets(assets);
             return 0;
         }
         if ((argc == 3 || argc == 4) && command == "--inspect-bridges") {

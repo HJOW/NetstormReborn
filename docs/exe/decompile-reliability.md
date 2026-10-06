@@ -2,6 +2,8 @@
 
 > 작업일: 2026-10-04~06 (`HJOW-Athlon`, Windows 10, Ghidra 12.1.4, JDK 25). **원본 게임은 실행하지 않았고 원본 파일은 읽기만 했다.**
 > 대상: 패치판 `originals/Netstorm.exe`(10.78)와 CD판 `originalCD/NETSTORM.EXE`(10.72).
+> 표시 활성 후속: [공통 update88/update8c·실제 Renderer 연결](cpp-display-reconstruction.md). 새 실제 x86 1,728회·대체/assert 0, 내부 검사 120개, 누적 제한 입력 52,484개다. 실제 SHP 헤더 6,950개 읽기는 별도 검사이며 공통 postPop 효과와 raw GameWorld 연결은 남았다.
+>
 > raw Pop 후속: [실제 Pop/firstPop/Activate·억제된 공통 postPop과 GUI 검사](cpp-pop-reconstruction.md). CD의 `(int)param_2 < 1` 디컴파일은 float 비트값의 signed 비교를 수치 변환처럼 표현한 것이었다. 실제 x86/fixture 대조로 양 판본의 양수 소수 좌표 보존을 확인했다. 이번 PC에서는 사용자 지시로 클론 GUI 검사를 허용했고 원본 프로세스는 실행하지 않았다.
 > 결과는 `extracted/refined/` 아래에 생기며 Git 에 커밋되지 않는다. 다른 PC 에서는 아래 명령으로 다시 만든다.
 > 2026-10-06 후속: [C++ 1차 복원](cpp-reconstruction.md), [다리 계산](cpp-bridge-reconstruction.md), [표면 이웃/재귀](cpp-surface-reconstruction.md), [공간 해시/점유·x87 검증](cpp-hash-reconstruction.md), [공간 등록/해제·CD 충돌 차이](cpp-spatial-reconstruction.md), [SID 풀·판본 경계/반납](cpp-sid-reconstruction.md), [raw 일반 해제·non-void Take](cpp-unpop-reconstruction.md). 현재 대응 **2,496쌍·검토 앵커 24쌍**이며 아래 표는 앞선 정밀 분석의 기록이다. C++ 누적 기대값 46,156개 중 공간 등록 878개는 의존성 계약 대체 조건부 검증, 수명 480개는 접두 구간, 해시 초기화 4개는 할당 없는 경로이며 전체 붕괴 검증은 아니다.

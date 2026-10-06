@@ -1,6 +1,7 @@
 // 원본 next/상태/좌표를 직접 사용하며 잘못된 체인·미복원 효과는 변경 전에 거부한다.
 #include "o/SquidUnpop.h"
 #include "o/Squid.h"
+#include "o/SquidDisplay.h"
 #include <bit>
 #include <cmath>
 #include <stdexcept>
@@ -28,14 +29,15 @@ void Next(std::span<std::uint8_t> bytes,std::uint16_t next) {
 }
 }
 // 범위가 정확한 공유 지도만 받아 부분 지도 밖 쓰기를 막는다.
-SquidUnpop::SquidUnpop(SidPool& pool,SquidHash& hash,std::span<std::uint8_t> spots):pool_(pool),hash_(hash),spots_(spots) {
+SquidUnpop::SquidUnpop(SidPool& pool,SquidHash& hash,std::span<std::uint8_t> spots,SquidDisplay* display)
+    :pool_(pool),hash_(hash),spots_(spots),display_(display) {
     if (spots_.size()!=kWorldCells*kWorldCells) throw std::invalid_argument("Unpop spot 지도 크기 오류");
 }
 // 잘못된 SID는 풀 밖 접근 전에 거부한다. 예측 머리도 원본 Take/Unpop 범위에서는 허용된다.
 std::span<std::uint8_t> SquidUnpop::Bytes(Sid sid) {
     return std::span(pool_.bytes_).subspan(pool_.Offset(sid),pool_.layout_.stride);
 }
-// 코드 주소는 비교용 기록값이다. 실제 표시가 켜진 단계의 Renderer 연결은 아직 아니다.
+// 코드 주소는 비교용 기록값이다. 실제 공통 표시 연결도 이 지원 표를 따른다.
 bool SquidUnpop::SupportsDisplay(OriginalEdition edition,std::uint32_t vtable,std::uint32_t flags) {
     const auto values=edition==OriginalEdition::Patch1078 ? std::span<const DisplayVtable>(kPatchDisplayVtables) :
         std::span<const DisplayVtable>(kCdDisplayVtables);
@@ -46,7 +48,7 @@ bool SquidUnpop::SupportsDisplay(OriginalEdition edition,std::uint32_t vtable,st
 }
 // raw 풀 소유자를 읽기 전용으로 확인한다.
 const SidPool& SquidUnpop::Pool() const { return pool_; }
-// 표시 비활성/일반 공간 경로의 상태·spot·체인 쓰기를 원본 순서로 적용한다.
+// 일반 공간 경로의 상태·spot·체인 쓰기 뒤 선택 연결한 공통 표시를 원본 순서로 적용한다.
 void SquidUnpop::Unpop(Sid sid,const RiftTypeRecord& type,std::uint32_t flags) {
     auto bytes=Bytes(sid);
     if (!sid.value || bytes[kType]<kFirstAssetTypeNumber || (bytes[kState]&kContained))
@@ -87,6 +89,7 @@ void SquidUnpop::Unpop(Sid sid,const RiftTypeRecord& type,std::uint32_t flags) {
         }
     }
     if (!found && pool_.Edition()==OriginalEdition::Patch1078) throw std::logic_error("Unpop 해시에서 SID를 찾지 못했습니다");
+    if (display_) display_->Validate(pool_.Edition(),bytes,flags);
     bytes[kState]|=kVoid;
     if (writesSpots) {
         // 원본 y/x 순서로 low byte만 해제하고 다른 spot 비트는 보존한다.
@@ -102,6 +105,7 @@ void SquidUnpop::Unpop(Sid sid,const RiftTypeRecord& type,std::uint32_t flags) {
         const auto next=static_cast<std::uint16_t>(Read(bytes,kNext,2));
         if (!previous) *bucket=next; else Next(Bytes(Sid{previous}),next);
     }
-    // 원본 공통 가상 표시 갱신은 표시 비활성 입력에서 쓰기 없이 반환한다.
+    // 원본은 void/spot/체인 제거 뒤 이전 위치를 갱신한다.
+    if (display_) display_->Update(bytes,flags);
 }
 }

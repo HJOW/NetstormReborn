@@ -22,6 +22,10 @@ struct ShapeBlock {
     std::size_t offset{}; // 프레임 주소의 기준이 되는 "1.10" 헤더 위치.
     std::vector<ShapeFrame> frames;
 };
+struct SquidFrameMetrics {
+    float cellWidth{},cellHeight{}; // SHP의 VFX 앞 36바이트: Pop의 hash level 입력.
+    std::int16_t width{},height{},hotspotX{},hotspotY{}; // VFX 앞 12바이트: Renderer 경계 입력.
+};
 struct IndexedImage {
     std::size_t width{}, height{};
     std::vector<std::uint8_t> indices; // 0과 255도 유효한 불투명 색이다.
@@ -34,11 +38,14 @@ public:
     explicit ShapeDatabase(std::vector<std::uint8_t> bytes);
     // 타입 로딩 순서에 대응하는 블록 목록을 돌려준다.
     std::span<const ShapeBlock> Blocks() const;
+    // 일반 VFX 파일과 달리 _shapes.shp에 들어 있는 Squid의 추가 헤더를 읽는다.
+    SquidFrameMetrics SquidMetrics(std::size_t block,std::size_t frame) const;
     // RLE를 풀되 투명 픽셀과 팔레트 번호를 각각 보존한다.
     IndexedImage Decode(std::size_t block, std::size_t frame) const;
 private:
     std::vector<std::uint8_t> bytes_;
     std::vector<ShapeBlock> blocks_;
+    std::size_t headerEnd_{}; // 추가 헤더가 블록 테이블을 읽는 일을 막는 경계다.
 };
 
 // 원본 00401d92 ↔ CD 00465772: pane 원점 이동·양 끝 포함 클리핑·투명 유지.

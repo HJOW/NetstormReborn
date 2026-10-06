@@ -146,6 +146,8 @@ IndexedImage Renderer::SceneImage() {
 }
 // 오브젝트 측의 변경 알림.
 void Renderer::Invalidate(ScreenRect rect, std::uint32_t flags) { dirty_.Add(rect, flags); }
+// 표시 억제/변경 표 넘침에 대응하는 현재 전체 갱신 상태다.
+bool Renderer::FullRedrawPending() const { return dirty_.FullRedraw(); }
 // 커서가 움직이지 않았으면 새 변경 영역을 만들지 않는다.
 void Renderer::SetSoftwareCursor(const IndexedImage* image, ScreenPoint position) {
     if (cursor_ == image && position.x == cursorPosition_.x && position.y == cursorPosition_.y) return;

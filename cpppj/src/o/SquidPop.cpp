@@ -2,6 +2,7 @@
 #include "o/SquidPop.h"
 #include "o/SquidUnpop.h"
 #include "o/Squid.h"
+#include "o/SquidDisplay.h"
 #include <bit>
 #include <cmath>
 #include <stdexcept>
@@ -31,19 +32,20 @@ void Put(std::span<std::uint8_t> bytes,std::size_t offset,std::uint32_t value,st
     for (std::size_t i=0;i<width;++i) bytes[offset+i]=static_cast<std::uint8_t>(value>>(i*8));
 }
 }
-// 공유 spot의 크기를 확인한다. 표시/후처리 억제는 이 클래스의 명시적인 사용 계약이다.
-SquidPop::SquidPop(SidPool& pool,SquidHash& hash,std::span<std::uint8_t> spots):pool_(pool),hash_(hash),spots_(spots) {
+// 공유 spot의 크기를 확인한다. 표시 대상은 선택적으로 연결하며 공통 postPop 효과는 억제한다.
+SquidPop::SquidPop(SidPool& pool,SquidHash& hash,std::span<std::uint8_t> spots,SquidDisplay* display)
+    :pool_(pool),hash_(hash),spots_(spots),display_(display) {
     if (spots_.size()!=kWorldCells*kWorldCells) throw std::invalid_argument("Pop spot 지도 크기 오류");
 }
 // 실제 PE에서 공통 firstPop/postPop을 확인한 vtable만 허용한다.
 bool SquidPop::Supports(OriginalEdition edition,std::uint32_t vtable,std::uint32_t flags) {
     const auto values=edition==OriginalEdition::Patch1078 ? std::span<const std::uint32_t>(kPatchPopVtables) :
         std::span<const std::uint32_t>(kCdPopVtables);
-    // 표시 함수도 공통 경로여야 표시 억제 반환이 동일하다.
+    // 선택적으로 켠 표시도 공통 가상 경로만 지원한다.
     for (auto value:values) if (value==vtable) return SquidUnpop::SupportsDisplay(edition,vtable,flags);
     return false;
 }
-// 표시·postPop 효과 억제/비전투 단계의 좌표→spot→체인→firstPop→Activate를 처리한다.
+// 비전투 좌표→spot→체인→공통 표시→firstPop→Activate를 처리한다. postPop 효과는 억제한다.
 RawPopResult SquidPop::Pop(Sid sid,const RiftTypeRecord& type,float frameWidth,float frameHeight,
     float x,float y,std::uint32_t flags) {
     const auto old=pool_.Slot(sid);
@@ -75,6 +77,7 @@ RawPopResult SquidPop::Pop(Sid sid,const RiftTypeRecord& type,float frameWidth,f
         left=right-type.footX+1; top=bottom-type.footY+1;
         if (left<1 || top<1) throw std::out_of_range("Pop 지도 밖 발자국");
     }
+    if (display_) display_->Validate(pool_.Edition(),old,flags);
     auto bytes=pool_.AllocatedBytes(sid);
     Put(bytes,kX,std::bit_cast<std::uint32_t>(x),4); Put(bytes,kY,std::bit_cast<std::uint32_t>(y),4);
     Put(bytes,kScreenX,static_cast<std::uint32_t>(static_cast<double>(x)*kScaleX+kBias),2);
@@ -95,7 +98,8 @@ RawPopResult SquidPop::Pop(Sid sid,const RiftTypeRecord& type,float frameWidth,f
     }
     bytes[levelOffset]=static_cast<std::uint8_t>(level); Put(bytes,kNext,head,2); head=sid.value;
     if (level==0 && (type.flags2&TypeFlag2::kBridge)==0) Put(bytes,kIsland,kInvalidIsland,2);
-    // 공통 표시 가상 함수와 postPop은 억제 전역에서 효과 없이 반환한다.
+    // 원본은 공간 머리 등록 뒤, firstPop/void 해제 전에 공통 표시 갱신을 호출한다.
+    if (display_) display_->Update(bytes,flags);
     if ((extra&kFirstPop)==0) {
         flags|=(extra&9)==0 ? 1U : ((extra&1)!=0 ? 2U : 0U)|((extra&8)!=0 ? 4U : 0U);
         bytes[extraOffset]|=kFirstPop;

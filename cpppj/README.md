@@ -11,6 +11,8 @@ C# + MonoGame 빌드(`../dotnetpj/`)는 cpppj 완성 후 이를 분석하여 개
 
 [복원 근거·함수 대응·검증 범위](../docs/exe/cpp-reconstruction.md), [검토 목록](recovery-manifest.json), [기계어 검증 기록](recovery-evidence.json).
 
+[raw 공통 표시 활성 후속](../docs/exe/cpp-display-reconstruction.md), [독립 기계어 기록](recovery-display-evidence.json) — Pop·Unpop의 프레임 경계/선택/그림자 갱신을 실제 Renderer 변경 표로 연결했다. 새 x86 1,728회, 내부 검사 120개, 실제 SHP 추가 헤더 6,950개를 확인했다. 공통 postPop 영역/소유자/생산 효과와 raw GameWorld 연결은 남았다.
+
 [raw 일반 Pop 후속·이번 PC의 GUI 회귀](../docs/exe/cpp-pop-reconstruction.md), [독립 기계어 기록](recovery-pop-evidence.json) — SID 풀·해시·spot의 등록→해제→반납을 연결했다. 표시와 postPop 효과가 억제된 비전투 경로이며 기존 GameWorld는 별개다. 최신 사용자 지시로 클론 창·글꼴·메뉴·1-1/TEST01 조작 회귀를 실행했다.
 
 [타입·그래픽 복원과 판본 차이](../docs/exe/cpp-assets-reconstruction.md), [VFX 기계어 검증 기록](recovery-graphics-evidence.json).

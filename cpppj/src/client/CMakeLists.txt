@@ -10,6 +10,7 @@ target_sources(netstorm PRIVATE
     Mission.cpp Mission.h
     InputEvent.cpp InputEvent.h
     Renderer.cpp Renderer.h
+    SquidRenderer.cpp SquidRenderer.h
     BitmapFont.cpp BitmapFont.h
     Cursor.cpp Cursor.h
     GifImage.cpp GifImage.h

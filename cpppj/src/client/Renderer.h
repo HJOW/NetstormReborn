@@ -68,6 +68,8 @@ public:
     void InvalidateAll();
     // 외부 오브젝트의 변화 범위를 원본 변경 표에 추가한다.
     void Invalidate(ScreenRect rect, std::uint32_t flags = 0);
+    // raw Squid 표시가 원본 전체 갱신 전역처럼 변경 표 추가를 생략할지 확인한다.
+    bool FullRedrawPending() const;
     // 소프트웨어 커서의 이전·새 범위를 모두 무효화한다. nullptr이면 표시를 지운다.
     void SetSoftwareCursor(const IndexedImage* image, ScreenPoint position);
     // 변경 영역만 합성한다. 반환 사각형은 Present 이전까지 유효하다.
