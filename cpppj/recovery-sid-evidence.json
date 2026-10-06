@@ -1,0 +1,96 @@
+{
+  "schema": 1,
+  "classification": "scoped-sid-pool",
+  "cases": {
+    "scenarios": 16,
+    "Reset": 32,
+    "Allocate": 1552,
+    "Release": 1552,
+    "Rebuild": 32
+  },
+  "total_cases": 3168,
+  "editions": {
+    "originals": {
+      "binary_sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "function_ranges": [
+        {
+          "entry": "004abb10",
+          "ranges": "004abb10-004abb66;004abb70-004abcac;004abcb0-004abdf1"
+        },
+        {
+          "entry": "004af1d0",
+          "ranges": "004af1d0-004af529"
+        },
+        {
+          "entry": "004abf60",
+          "ranges": "004abf60-004ac037"
+        },
+        {
+          "entry": "004abe00",
+          "ranges": "004abe00-004abe26;004abe30-004abf51"
+        },
+        {
+          "entry": "004aba70",
+          "ranges": "004aba70-004abab3"
+        },
+        {
+          "entry": "004952f0",
+          "ranges": "004952f0-0049532a"
+        },
+        {
+          "entry": "004e5b40",
+          "ranges": "004e5b40-004e5b9a;004e5b9c-004e5ba2;004e5bb0-004e5bd8;004e5bdc-004e5bfe;004e5c00-004e5c1c;004e5c40-004e5c89;004e5c9c-004e5ca2;004e5ca4-004e5cae;004e5cb0-004e5cc0;004e5cc4-004e5cda;004e5cdc-004e5d01;004e5d04-004e5d0c;004e5d10-004e5d2e;004e5d3c-004e5d5c;004e5d60-004e5d86;004e5d88-004e5db8;004e5ddc-004e5e25;004e5e38-004e5e3e;004e5e40-004e5e4c;004e5e50-004e5e62;004e5e64-004e5e7c"
+        }
+      ],
+      "assert_reports": 0,
+      "crt_copies": 776,
+      "max_instructions_observed": 3282988
+    },
+    "originalCD": {
+      "binary_sha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "function_ranges": [
+        {
+          "entry": "004aaad0",
+          "ranges": "004aaad0-004aad2f"
+        },
+        {
+          "entry": "004aae40",
+          "ranges": "004aae40-004ab243"
+        },
+        {
+          "entry": "004ab250",
+          "ranges": "004ab250-004ab380"
+        },
+        {
+          "entry": "004aad30",
+          "ranges": "004aad30-004aae34"
+        },
+        {
+          "entry": "004cff40",
+          "ranges": "004cff40-004cff7a"
+        },
+        {
+          "entry": "004f1a60",
+          "ranges": "004f1a60-004f1a96;004f1aa8-004f1aba;004f1abc-004f1ac8;004f1acc-004f1ad6;004f1ad8-004f1afc;004f1b00-004f1b08;004f1b0c-004f1b2f;004f1b40-004f1b55;004f1b58-004f1b75;004f1b78-004f1ba2;004f1ba4-004f1bad"
+        }
+      ],
+      "assert_reports": 0,
+      "crt_copies": 776,
+      "max_instructions_observed": 2307679
+    }
+  },
+  "fixture_sha256": "b45b5726f2860a762fd0fa53fa85949f941baf28e836570b43dfd7a2c9e40eb4",
+  "source_sha256": {
+    "tools/decomp_sid_oracle.py": "eea44b1b0fa8a57b1a49ee246962ea346dec64b280761b0bff0ccdd87631ddd6",
+    "tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+    "tools/ghidra/ExportSid.java": "1101f4b1b43d837493749432d68af6d32f559ad92895bb729c3b373b3dd29960"
+  },
+  "limits": [
+    "Init은 기존 풀 경로만; CRT malloc 분기 미실행",
+    "일반/예측 할당은 소진 전 유효 입력만; 소진 UI/다리 파괴 복구 미실행",
+    "삭제 기록 함수와 겹친 152바이트 CRT 복사 모두 실제 기계어",
+    "raw 풀 전체/삭제 기록 전체는 Adler-32와 주요 카운터/머리/꼬리로 대조",
+    "파생 생성자/공간 등록/삭제 효과·네트워크 Take·GameWorld 연결 미실행",
+    "게임 진입점/OS API/원본·복사본·클론 GUI 실행 없음"
+  ]
+}

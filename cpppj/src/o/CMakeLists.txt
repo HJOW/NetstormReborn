@@ -20,6 +20,7 @@ target_sources(netstorm PRIVATE
     SquidFinder.cpp SquidFinder.h
     SquidHash.cpp SquidHash.h
     SquidSpatial.cpp SquidSpatial.h
+    SidPool.cpp SidPool.h
     BaseProcess.cpp BaseProcess.h
     Kernel.cpp Kernel.h
     GameClock.cpp GameClock.h

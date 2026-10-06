@@ -3,7 +3,7 @@
 > 작업일: 2026-10-04~06 (`HJOW-Athlon`, Windows 10, Ghidra 12.1.4, JDK 25). **원본 게임은 실행하지 않았고 원본 파일은 읽기만 했다.**
 > 대상: 패치판 `originals/Netstorm.exe`(10.78)와 CD판 `originalCD/NETSTORM.EXE`(10.72).
 > 결과는 `extracted/refined/` 아래에 생기며 Git 에 커밋되지 않는다. 다른 PC 에서는 아래 명령으로 다시 만든다.
-> 2026-10-06 후속: [C++ 1차 복원](cpp-reconstruction.md), [다리 계산](cpp-bridge-reconstruction.md), [표면 이웃/재귀](cpp-surface-reconstruction.md), [공간 해시/점유·x87 검증](cpp-hash-reconstruction.md), [공간 등록/해제·CD 충돌 차이](cpp-spatial-reconstruction.md). 현재 대응 **2,496쌍·검토 앵커 24쌍**이며 아래 표는 앞선 정밀 분석의 기록이다. C++ 누적 기대값 32,378개 중 공간 등록 878개는 의존성 계약 대체 조건부 검증, 수명 480개는 접두 구간, 해시 초기화 4개는 할당 없는 경로이며 전체 붕괴 검증은 아니다.
+> 2026-10-06 후속: [C++ 1차 복원](cpp-reconstruction.md), [다리 계산](cpp-bridge-reconstruction.md), [표면 이웃/재귀](cpp-surface-reconstruction.md), [공간 해시/점유·x87 검증](cpp-hash-reconstruction.md), [공간 등록/해제·CD 충돌 차이](cpp-spatial-reconstruction.md), [SID 풀·판본 경계/반납](cpp-sid-reconstruction.md). 현재 대응 **2,496쌍·검토 앵커 24쌍**이며 아래 표는 앞선 정밀 분석의 기록이다. C++ 누적 기대값 35,546개 중 공간 등록 878개는 의존성 계약 대체 조건부 검증, 수명 480개는 접두 구간, 해시 초기화 4개는 할당 없는 경로이며 전체 붕괴 검증은 아니다.
 
 > 추가 후속: [타입·그래픽 C++ 복원](cpp-assets-reconstruction.md). VFX 기계어 709개 기대값·두 판본 자산 전체 픽셀 대조를 추가하고, CD판 RiftType 자료형 크기를 500에서 468바이트로 정정했다.
 
@@ -274,3 +274,9 @@ Unicorn 초기 x87 제어 워드 0에서 생긴 소수 경계 결과를 실제 �
 `decomp_spatial_oracle.py`는 실제 Pop/Unpop·좌표/타입/genus/해시/체인/Activate를 실행하여 238개 시퀀스·878회 전이를 기록했다. x87 53/64비트에서 전체 시퀀스를 다시 실행했고 assert 0/0이다. 패치판은 spot 충돌에서 부분 변경을 남긴 채 반환하고 CD판은 등록을 계속하여 32개 전이의 결과가 달랐다. 등록 발자국의 float 절삭 후 편향 덧셈과 genus의 float+편향도 구분했다.
 
 가상 화면 갱신·firstPop/postPop·영역 조회·표면 알림은 명시한 입력 반환/사건 기록 계약으로 대체했다. 따라서 정상 반환/ret N을 확인했어도 **전체 함수 대응 앵커로 승격하지 않았다**. 대응 2,496쌍·검토 24쌍을 유지한다. `--verify`로 기록/fixture/원본/도구 SHA-256과 행 수/판본 차이를 확인한다. 의존성을 대체한 결과는 효과 구현이 완료된 결과와 구분하고, 동작 차이는 한 판본의 결과로 덮지 않는다. [소스·제한·검사·다음 연결](cpp-spatial-reconstruction.md)을 따른다.
+
+## 14. SID raw 풀·판본 경계·할당/반납 (2026-10-06)
+
+읽기 전용 헤드리스로 패치 7개/CD 6개 SID/CRT 함수를 다시 디컴파일하고 실제 몸체 범위를 격리 실행에 사용했다. 판본별 50/36바이트 슬롯·번호 경계·FIFO 예약 꼬리·예측 커서·타입 보존 반납·삭제 기록·서버 목록 재구성을 C++에 옮겼다. 이 할당/반납 경로에는 세대 비트가 없으며 원본에 없는 세대를 새 규칙으로 넣지 않는다.
+
+두 판본 합계 16시퀀스·3,168회 정상 반환, assert 0/0. 대체 함수 없이 겹친 CRT 기록 복사도 실행했다. Init의 malloc과 할당 소진 복구는 미실행이다. 전체 풀/삭제 기록은 Adler-32와 카운터/머리/꼬리로 대조하므로 바이트별 동일성 증명과 구별한다. 파생/공간/삭제 수명·참조/Take·GameWorld 연결은 검증 밖이다. 기존 전체 대응 앵커 수는 유지한다. [입력·함수·판본 경계·재현·실행 제한](cpp-sid-reconstruction.md), [기록](../../cpppj/recovery-sid-evidence.json).

@@ -1,12 +1,27 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
-> 최종 갱신: 2026-10-06 (**공간 등록/해제의 next 체인·spot·좌표 캐시·비전투 상태와 CD판 충돌 차이 복원 완료.** [실제 플레이 복원 계획](docs/cpp-playable-plan.md), [등록 검증의 범위·제한](docs/exe/cpp-spatial-reconstruction.md). 현재 내부 검사 93개·제한 x86 기대값 32,378개 입력 사례. 새 878개는 가상/영역 효과를 계약 대체한 조건부 검증, 수명 480개는 접두 구간, 해시 초기화 4개는 할당 없는 경로다. **SID 할당/세대·파생 가상/영역 효과·GameWorld 연결, 배치 UI·전체 붕괴·건설·경제·전투·AI·승패는 남아 미션 완주는 아직 불가능하다.** 앞선 복원 이력은 보존한다.)
+> 최종 갱신: 2026-10-06 (**SID raw 풀·판본별 번호 경계·FIFO/예측 할당·void 반납·삭제 기록·서버 free list 복원 완료.** [실제 플레이 계획](docs/cpp-playable-plan.md), [SID 검증의 범위·제한](docs/exe/cpp-sid-reconstruction.md). 내부 검사 99개·제한 x86 입력 행 35,546개. 새 SID 3,168회는 두 판본 합계·기존 메모리/소진 전 경로이며 이 경로에는 세대 비트가 없다. 공간 등록 878개는 의존성 계약 대체, 수명 480개는 접두 구간, 해시 초기화 4개는 할당 없는 경로다. **SID 소진 복구·참조/Take·파생 생성자/가상/영역 효과·GameWorld 연결, 다리 UI·전체 붕괴·건설·경제·전투·AI·승패는 남아 미션 완주는 불가능하다. 이 PC에서는 원본/복사본 실행과 클론 GUI 표시를 금지하며 실행 확인은 다른 PC로 인계한다.** 앞선 복원 이력은 보존한다.)
 > 프로젝트 목표(AGENTS.md): 원본 NetStorm: Islands at War 를 디컴파일/분석하여 클론 코딩하고,
 > **Windows 10/11** 과 **GUI 환경의 Linux** 에서 동작하며 **여러 언어를 지원**하는 게임을 만든다.
 > **모방 범위(2026-10-03 AGENTS.md 변경)**: 기존 게임의 **사운드·그래픽·애니메이션 등 거의 모든 요소를 가능한 한 동일하게** 최대한 모방한다.
 > **1차 목표 언어: 영어, 한국어** (그 외 언어는 이후 확장).
 > **우선순위: Windows 10/11 > Linux** (Linux 지원과 멀티플레이 요소 구현은 우선순위가 낮다 — 설계상 이식성은 유지하되 검증·배포는 Windows 먼저. 그 외 사항은 궁극적인 목표다).
 > **화면 요구사항(2026-09-28 AGENTS.md 추가, 2026-10-03·10-05 변경)**: 풀스크린 모드와 화면비 **16:9 · 16:10 · 4:3** 지원, **기존 게임 수준의 프레임으로 먼저 만들고 이후 60·120프레임 지원**(2026-10-05 변경. 원본 수준 = `maxFPS` 75·14ms 루프, 클론 적용 완료), 풀스크린에서 **마우스를 화면 끝에 대면 화면 이동**(원본도 옵션에서 켰을 때 지원), 원본의 **전체화면 전환 뒤 재실행 오류는 클론에서 발생하지 않아야 한다** — 1.4·1.7절
+
+---
+
+## 2026-10-06 ✅ 완료: cpppj SID 풀·번호 할당/반납 복원 (게임/클론 GUI 실행 없음)
+
+- [x] **요청/제한:** AGENTS.md·최신 LEFT_JOBS를 읽고 정적 디컴파일과 cpppj를 이어 갔다. 원본/복사본 실행과 창이 뜨는 cpppj 검사는 금지했다. 호스트 실행 예외보다 이번 사용자 제한을 우선 적용했다.
+- [x] **디컴파일:** `ExportSid.java`로 읽기 전용·헤드리스 Ghidra에서 패치 7개/CD 6개 함수(초기화·할당·반납·서버 목록·next·삭제 기록·CRT 복사)를 다시 디컴파일했다. 결과: `extracted/sid/<판본>/sid.c`, `functions.tsv`. 어셈블리/기계어도 대조했다. 기존 전체 대응 2,496쌍·검토 앵커 24쌍은 그대로다.
+- [x] **C++:** `o/SidPool`에 raw 50/36바이트·pool+0/pool+14 머리·판본별 번호 경계·FIFO 예약 꼬리·예측 커서/서버 next·void 반납의 payload 초기화/타입 보존·영역별 20개 삭제 기록·서버 목록 재구성의 카운터 누적을 복원했다. `Sid`를 임시 월드 `SquidId`와 구별했다. **이 할당/반납 경로에는 세대 비트가 없다**. 원본에 없는 세대를 추가하지 않았으며 참조 수명은 별도 후속이다.
+- [x] **기계어:** 16시퀀스·두 판본 합계 **3,168회**(초기화 32/할당 1,552/반납 1,552/재구성 32). 겹친 CRT 삭제 기록 복사까지 실제 실행했다. 대체 함수/assert 도달 0. Ghidra 몸체·쓰기 범위·정상 EIP/ESP/cdecl ret 0·명령/시간을 제한했다. raw 풀/삭제 기록 전체의 Adler-32와 카운터/머리/꼬리를 대조했으며 체크섬은 바이트별 동일성 증명과 구별한다.
+- **검증 제한:** Init은 기존 메모리 경로, Allocate는 소진 전 경로만 실행했다. malloc/실패·소진 UI/다리 파괴 복구는 미검증이며 C++는 소진/잘못된 상태에서 풀을 바꾸지 않고 예외를 반환한다. 합성 생성자 payload·SID 계산 검사이며 실제 파생/공간/삭제 효과·참조/Take·GameWorld 연결은 남았다. [근거·판본 경계·재현·제한](docs/exe/cpp-sid-reconstruction.md).
+- [x] **검증:** VS 2026 Insiders/MSVC 19.51·내장 CMake의 VS 18 x64로 Release 구성/빌드 완료, 최종 빌드 경고·오류 0. CTest 한 실행 파일 안의 **99개 검사 통과**. SID와 기존 spatial의 기록/fixture/원본/도구 SHA-256·행 수 `--verify` 통과. 누적 35,546개는 제한을 포함하는 입력 행 수다. SOURCE_MAP 파일 존재 29/136으로 동일하며 완료율이 아니다.
+- **환경:** 기존 `cpppj/build`·정밀 분석 산출물·oracle Python 패키지가 없어 원래 Ghidra 프로젝트에서 SID만 별도로 내보냈고 지정 분석 패키지를 `extracted/oracle-python`에 설치했다. Ghidra/구성/빌드/fixture/CTest 로그 쓰기의 샌드박스 제한은 해당 명령의 자동 승인 후 해결했다. VS 2022 프리셋과 기존 공통 oracle는 수정하지 않았다.
+- **변경 범위:** SidPool·SidTests·sid-x86.tsv·recovery-sid-evidence.json·decomp_sid_oracle.py·ExportSid.java, CMake·.gitattributes·Squid 설명, SID 문서·README·빌드/로드맵/플레이 계획·신뢰도·이 문서. 원본/AGENTS.md/C# 수정·게임/클론 GUI 실행·커밋 없음.
+- [ ] **다음 정적/개발 작업:** 생성자 표/기본 가상 초기화 `004af530`↔CD `004ab390`·Take/참조 `004af610`↔CD `004ab440`·삭제/공간 해제→SidPool 반납 연결. 실제 firstPop/postPop·영역/소유자·dirty/grid·부착 프레임→실제 섬/받침/소수 좌표 검색→GameWorld 원본 SID/표면 지도 연결. 이어 다리 배치 `0049b510`·소유자 전파·Construction·전체 붕괴/삭제·다리 UI·건설/경제/전투/AI/승패.
+- [ ] **다른 PC 실행 인수인계:** SID/파생/월드 연결 후 `python tools/cpp_world_smoke.py`로 TEST01/1-1의 선택·이동·정지·카메라·재진입을 확인한다. 표시/메뉴 회귀 명령은 `cpp_window_smoke.py`, `cpp_renderer_smoke.py`, `cpp_menu_smoke.py`다. 이 도구들과 `NetstormCpp.exe --run`은 창을 띄우므로 **여기서는 실행하지 않는다**. 지금은 SID 풀과 월드가 별개라 기존 GUI 기록을 새 SID 연동 검증으로 세면 안 된다. 원본 실행이 필요하면 다른 PC의 해당 단계에서 AGENTS.md/사용자 허용 범위를 확인한다.
 
 ---
 
@@ -20,7 +35,8 @@
 - **검증 제한:** 가상 갱신·firstPop·postPop, 영역 조회·표면 알림은 **입력 반환/사건 기록 계약으로 대체**했다. dirty 큐·Battle 복제는 비활성이고 별도 grid 조회 입력은 비어 있다. 실제 파생/화면/소유자/부착 프레임 효과는 미실행이다. Pop/Unpop을 전체 함수 검토 앵커에 추가하지 않아 대응 **2,496쌍·검토 24쌍**은 그대로다. [상세 근거·후속 순서](docs/exe/cpp-spatial-reconstruction.md).
 - [x] **검증/보호:** Windows Release 빌드 경고·오류 0, CTest 내부 **93개 검사** 통과. 누적 **32,378개 제한 x86 입력 사례**에 새 조건부 878개를 구분해 기록했다. 기록/fixture/원본/도구 SHA-256·행 수 검사 `decomp_spatial_oracle.py --verify`를 추가했다. SOURCE_MAP 파일 존재는 29/136으로 동일하며 완료율이 아니다. 원본/복사본/클론 GUI 실행·AGENTS.md/원본/C# 수정·커밋은 없었다.
 - **변경 범위:** 새 SquidSpatial·SpatialTests·spatial-x86.tsv·recovery-spatial-evidence.json·decomp_spatial_oracle.py, CMake·.gitattributes, 복원 문서·README·신뢰도/빌드/로드맵/플레이 계획·LEFT_JOBS.
-- [ ] **다음:** SID 할당/반납·세대/free list·파생 생성자→firstPop/postPop·영역/소유자・dirty/grid·표면 변경/부착 프레임 실제 효과→섬/지면/noIsland/받침 생성과 GameWorld 연결·소수 좌표/일반 공간 탐색→`0049b510` 배치/소유자 전파·Construction→전체 수명/붕괴/삭제→다리 칸/커서/배치 UI→Construct·건설/경제/전투/AI/승패.
+- [x] **후속 일부 완료:** 위 최신 절에서 SID raw 풀·할당/반납·FIFO/예측·삭제 기록·서버 free list를 복원했다. 이 경로에는 세대 비트가 없다.
+- [ ] **다음:** SID 소진 복구·참조/Take·파생 생성자→firstPop/postPop·영역/소유자・dirty/grid·표면 변경/부착 프레임 실제 효과→섬/지면/noIsland/받침 생성과 GameWorld 연결·소수 좌표/일반 공간 탐색→`0049b510` 배치/소유자 전파·Construction→전체 수명/붕괴/삭제→다리 칸/커서/배치 UI→Construct·건설/경제/전투/AI/승패.
 
 ---
 

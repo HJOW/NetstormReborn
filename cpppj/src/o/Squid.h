@@ -1,4 +1,4 @@
-// Squid의 저장 필드와 이동 상태 일부. 원본 패치 50/CD 36바이트 배열·생성자 표·SID 수명 관리는 아직 복원하지 않았다.
+// Squid의 저장 필드와 이동 상태 일부. 원본 raw 풀은 SidPool에 별도로 복원했으며 생성자/가상 수명 연결은 남았다.
 #pragma once
 #include "o/TerrainBuilder.h"
 #include "o/Template.h"
