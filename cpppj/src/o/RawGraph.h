@@ -23,7 +23,7 @@ public:
     void PostPop(Sid sid,bool invalidate,bool add);
     // 계산이 모두 성공한 뒤 관련 슬롯의 graph byte와 표/스택을 함께 반영한다.
     void Add(Sid sid);
-    // 삭제 준비의 위치/타입 정보를 SID에서 읽는다. 0단계 머리가 비면 원본처럼 자연 반환한다.
+    // 원천의 위치/타입/프레임과 0단계 머리 SID의 그래프 번호를 구별한다. 빈 머리는 자연 반환한다.
     // dead 원천의 이웃 분할·1/특수 9 감소를 계산하며 Unpop/반납과 별도로 호출한다.
     void Detach(Sid sid,bool rebuild=false,std::uint8_t removedSurfaces=1);
     // 그래프 소진/손상 입력에서 공간 해제 전에 기존 번호/표/스택을 보존한다.

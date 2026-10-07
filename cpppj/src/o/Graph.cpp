@@ -100,14 +100,18 @@ void Graph::AddImpl(std::uint16_t id) {
 }
 // 삭제 준비는 원천을 dead로 표시한 시점에 호출한다. flood가 제거 원천을 다시 방문하지 않는다.
 void Graph::Detach(std::uint16_t id,std::span<const std::uint16_t> connections,bool rebuild,std::uint8_t removedSurfaces) {
+    DetachAt(id,members_.at(id).graph,connections,rebuild,removedSurfaces);
+}
+// 조회한 그래프 번호로 표를 고르되 dead 원천의 번호/상태/타입은 교체하지 않는다.
+void Graph::DetachAt(std::uint16_t id,std::uint8_t graph,std::span<const std::uint16_t> connections,bool rebuild,std::uint8_t removedSurfaces) {
+    CheckNumber(graph,true);
     if (!(members_.at(id).state&2) || (removedSurfaces!=1 && removedSurfaces!=9))
         throw std::invalid_argument("그래프 삭제 준비의 dead/감소 수 오류");
-    auto next=*this; next.DetachImpl(id,connections,rebuild,removedSurfaces);
+    auto next=*this; next.DetachImpl(id,graph,connections,rebuild,removedSurfaces);
     records_=next.records_; stack_=next.stack_; members_=std::move(next.members_);
 }
 // 원본은 남은 연결의 마지막 하나를 기존 그래프에 남긴다. 다른 번호의 이웃도 남은 수에 포함한다.
-void Graph::DetachImpl(std::uint16_t id,std::span<const std::uint16_t> connections,bool rebuild,std::uint8_t removedSurfaces) {
-    const auto number=members_.at(id).graph;
+void Graph::DetachImpl(std::uint16_t id,std::uint8_t number,std::span<const std::uint16_t> connections,bool rebuild,std::uint8_t removedSurfaces) {
     if (number==kInvalid || !records_[number].inUse) return;
     if (connections.size()>=64) throw std::out_of_range("그래프 삭제 연결 목록 범위 오류");
     std::size_t remaining=connections.size(); bool keep=!rebuild;

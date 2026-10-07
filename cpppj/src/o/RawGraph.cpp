@@ -186,18 +186,24 @@ RawGraph::Plan RawGraph::Calculate(Sid sid,Operation operation,std::uint8_t targ
         throw std::logic_error("raw 그래프 표면 SID 오류");
     if (operation==Operation::Detach && (!(root[11]&kDead) || (target&~3U)))
         throw std::invalid_argument("raw 그래프 삭제 준비의 dead/정책 오류");
-    Plan plan{records_,stack_,{},0};
+    Plan plan{records_,stack_,{},0}; auto detachGraph=root[graphOffset];
     if (operation==Operation::Detach) {
         // GetGridSid는 해시 객체 +12의 0단계 머리를 읽는다. 다른 단계의 원천은 자연 반환한다.
         const int x=Coordinate(std::bit_cast<float>(Read(root,14))),y=Coordinate(std::bit_cast<float>(Read(root,18)));
         const auto found=hash_.Entries(0)[static_cast<std::size_t>(y*kWorldCells+x)];
         if (!found) return plan;
-        // 같은 기준점의 다른 SID로 그래프를 고르는 상위 위치 정보 경로는 아직 지원하지 않는다.
-        if (found!=sid.value) throw std::logic_error("raw 그래프 삭제 위치 조회의 다른 SID");
+        // 원본 GetGraph(position)은 삭제 원천과 독립적으로 0단계 머리 SID의 graph byte를 읽는다.
+        if (found<5 || found>kMaximumId || found>=pool_.Capacity()) throw std::out_of_range("raw 그래프 삭제 조회 SID 오류");
+        const auto lookup=pool_.Slot(Sid{found});
+        if ((lookup[11]&(kFree|kContained|kVoid)) || lookup[10]<kFirstAssetTypeNumber || lookup[10]>=types_.size() ||
+            !(types_[lookup[10]].flags1&TypeFlag1::kSurface) ||
+            Coordinate(std::bit_cast<float>(Read(lookup,14)))!=x || Coordinate(std::bit_cast<float>(Read(lookup,18)))!=y)
+            throw std::logic_error("raw 그래프 삭제 조회 표면/위치 오류");
         // 원본은 무효/미사용 그래프에서 finder를 만들지 않는다. 손상 이웃도 아직 읽지 않는다.
-        const auto number=root[graphOffset]; if (number==Graph::kInvalid) return plan;
+        const auto number=lookup[graphOffset]; if (number==Graph::kInvalid) return plan;
         if (number>=Graph::kCount) throw std::out_of_range("raw 그래프 삭제 번호 오류");
         if (!records_[number].inUse) return plan;
+        detachGraph=number;
     }
     if (pop) {
         const auto& type=types_[root[10]];
@@ -264,7 +270,7 @@ RawGraph::Plan RawGraph::Calculate(Sid sid,Operation operation,std::uint8_t targ
     }
     SurfaceFinder finder(objects,map,spots); Graph graph(finder,members,plan.records,plan.stack);
     if (add) graph.Add(sid.value);
-    else if (operation==Operation::Detach) graph.Detach(sid.value,DetachConnections(sid,finder),(target&1)!=0,(target&2)!=0 ? 9 : 1);
+    else if (operation==Operation::Detach) graph.DetachAt(sid.value,detachGraph,DetachConnections(sid,finder),(target&1)!=0,(target&2)!=0 ? 9 : 1);
     else plan.changed=graph.Flood(sid.value,target);
     std::copy(graph.Records().begin(),graph.Records().end(),plan.records.begin());
     std::copy(graph.FloodStack().begin(),graph.FloodStack().end(),plan.stack.begin());

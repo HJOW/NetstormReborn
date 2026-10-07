@@ -29,6 +29,9 @@ public:
     // 004637b0 ↔ CD/10.37 0045bfd0의 삭제 준비. 죽은 원천의 이웃 무리를 탐색 순서로 분리한다.
     // rebuild는 전역 재구성 중의 분할 정책만 뜻하며 전역 복구 자체는 실행하지 않는다.
     void Detach(std::uint16_t id,std::span<const std::uint16_t> connections,bool rebuild=false,std::uint8_t removedSurfaces=1);
+    // 위치 조회의 다른 SID에서 고른 번호와 삭제 원천의 타입/프레임을 구별한다.
+    void DetachAt(std::uint16_t source,std::uint8_t graph,std::span<const std::uint16_t> connections,
+        bool rebuild=false,std::uint8_t removedSurfaces=1);
     // 레코드/전체 스택/번호는 읽기 전용으로 제공한다. 스택의 미사용 흔적도 보존한다.
     std::span<const GraphRecord> Records() const;
     // 원본 LIFO 스택의 사용 후 흔적도 검사할 수 있게 전체를 읽는다.
@@ -47,7 +50,7 @@ private:
     // 원본 연결 목록·최대 크기 선택·병합의 내부 처리다.
     void AddImpl(std::uint16_t id);
     // 실패 시 기존 표/번호/스택을 보존하도록 복사본에서 삭제 준비를 처리한다.
-    void DetachImpl(std::uint16_t id,std::span<const std::uint16_t> connections,bool rebuild,std::uint8_t removedSurfaces);
+    void DetachImpl(std::uint16_t id,std::uint8_t graph,std::span<const std::uint16_t> connections,bool rebuild,std::uint8_t removedSurfaces);
     const SurfaceFinder& surfaces_;
     std::array<GraphRecord,kTableSize> records_{};
     std::array<std::uint32_t,kFloodSize> stack_{};

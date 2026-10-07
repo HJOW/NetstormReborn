@@ -233,6 +233,50 @@ TEST_CASE(RawGraph_X86_DetachGeneralIslandBridgeUnpopAndRelease) {
     ReplayRawGraph(NETSTORM_GRAPHREMOVE_FIXTURE,6,1158,true);
 }
 
+// 같은 위치의 다른 SID/번호를 읽어도 원천 타입·프레임·상태는 실제 x86처럼 유지한다.
+TEST_CASE(RawGraph_X86_DetachUsesPositionHeadGraphAndSourceFrame) {
+    ReplayRawGraph(NETSTORM_GRAPHLOOKUP_FIXTURE,6,384,true);
+}
+
+// 조회 머리의 무효/미사용 번호는 원천 프레임 판독보다 먼저 반환하고 손상 입력은 쓰기 전에 실패한다.
+TEST_CASE(RawGraph_PositionHeadEarlyReturnAndPreflightPreserveSource) {
+    // 두 판본의 서로 다른 graph/frame 폭을 같은 조건에서 확인한다.
+    for (auto edition:{o::OriginalEdition::Patch1078,o::OriginalEdition::Cd1072}) {
+        auto types=Types(edition); std::vector<std::vector<o::FrameCode>> frames(types.size());
+        // 원천과 조회 머리의 타입은 같아도 SID/graph byte는 별개다.
+        for (std::size_t type=74;type<=75;++type) {
+            types[type].flags1=o::TypeFlag1::kSurface; frames[type]={{65,80,1,0}};
+        }
+        o::SidPool pool(edition,32768,false); o::SquidFactory factory(pool,types);
+        const auto root=factory.Create(74,2),head=factory.Create(75,2);
+        Node(pool,root,74,{20,20,1,1,0x800,4,65,80,200,2,0,0,0});
+        Node(pool,head,75,{20,20,1,1,0x800,4,65,80,0,2,0,254,0});
+        Put(pool.AllocatedBytes(head),4,root.value,2);
+        o::SquidHash hash; hash.Bucket(0,20,20)=head.value;
+        std::vector<std::uint8_t> spots(o::kWorldCells*o::kWorldCells);
+        std::array<o::GraphRecord,o::Graph::kTableSize> records{}; records[0]={3,1,71}; records[1]={4,0,72};
+        o::RawGraph graph(pool,hash,spots,types,frames,records); const auto before=GraphHashes(graph);
+        const auto offset=edition==o::OriginalEdition::Patch1078 ? 30U : 28U;
+        auto lookup=pool.AllocatedBytes(head);
+        // invalid와 미사용 번호는 읽을 필요 없는 잘못된 원천 프레임을 허용한다.
+        for (auto number:{std::uint8_t{254},std::uint8_t{1}}) {
+            lookup[offset]=number; const std::vector<std::uint8_t> saved(pool.Bytes().begin(),pool.Bytes().end());
+            graph.ValidateDetach(root); graph.Detach(root);
+            CHECK(GraphHashes(graph)==before && std::equal(saved.begin(),saved.end(),pool.Bytes().begin()));
+        }
+        lookup[offset]=0; CHECK(Throws([&]{graph.Detach(root);}));
+        CHECK(GraphHashes(graph)==before && hash.Bucket(0,20,20)==head.value);
+        // 새 조회 경로의 범위 밖 번호와 void 머리도 변경 전에 거부한다.
+        for (auto state:{std::uint8_t{2},std::uint8_t{4}}) {
+            lookup[11]=state; lookup[offset]=state==2 ? 255 : 0;
+            const std::vector<std::uint8_t> saved(pool.Bytes().begin(),pool.Bytes().end());
+            CHECK(Throws([&]{graph.ValidateDetach(root);})); CHECK(Throws([&]{graph.Detach(root);}));
+            CHECK(GraphHashes(graph)==before && std::equal(saved.begin(),saved.end(),pool.Bytes().begin()));
+            CHECK(std::all_of(spots.begin(),spots.end(),[](auto value){return value==0;}));
+        }
+    }
+}
+
 // 세 실제 PE와 두 x87 정밀도의 일반 탐색/다리/섬 Pop 결과를 전체 슬롯/메모리와 대조한다.
 TEST_CASE(RawGraph_RegionX86_ThreeBinariesAndNormalBridgeIslandPop) {
     ReplayRawGraph(NETSTORM_REGIONGRAPH_FIXTURE,6,1536,true);
@@ -316,7 +360,7 @@ TEST_CASE(RawGraph_DetachPreflightRejectsBeforePoolSpaceOrGraphMutation) {
     CHECK(GraphHashes(graph)==before && spots==oldSpots && std::equal(raw.begin(),raw.end(),pool.Bytes().begin()));
     CHECK(hash.Bucket(0,20,20)==root.value && hash.Bucket(0,19,20)==left.value && hash.Bucket(0,21,20)==right.value);
     pool.AllocatedBytes(root)[11]=0; CHECK(Throws([&]{graph.Detach(root);})); pool.AllocatedBytes(root)[11]=2;
-    // 위치 조회가 다른 SID를 고르는 미지원 경로도 그래프/공간 변경 전에 거부한다.
+    // 위치 버킷에 다른 좌표의 SID가 들어간 손상 입력은 그래프/공간 변경 전에 거부한다.
     hash.Bucket(0,20,20)=left.value; CHECK(Throws([&]{graph.ValidateDetach(root);})); CHECK(Throws([&]{graph.Detach(root);}));
     CHECK(GraphHashes(graph)==before && spots==oldSpots && std::equal(raw.begin(),raw.end(),pool.Bytes().begin()));
     hash.Bucket(0,20,20)=root.value;

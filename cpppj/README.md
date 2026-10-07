@@ -3,6 +3,8 @@
 기존 게임(NetStorm: Islands at War)을 디컴파일한 소스를 토대로 C++ 소스를 다시 만드는 프로젝트다.
 C# + MonoGame 빌드(`../dotnetpj/`)는 cpppj 완성 후 이를 분석하여 개발한다.
 
+**1차 복원 기준(2026-10-07 사용자 결정): `originals/Netstorm.exe`의 10.78이다.** 추가 10.37·10.62 패치·10.82 본체와 DevLog는 비교 자료로 사용하며 최신판 규칙/기능을 섞지 않는다. [판본 비교·재현](../docs/exe/cpp-reference-versions.md), [정적 기록](recovery-reference-versions.json).
+
 **방향(AGENTS.md):** 기존 게임을 디컴파일하여 C++ 코드로 **최대한 복원하는 것이 1차 목표**다. 이후 Windows 10/11에서 실행 가능한 수준으로 만들고, 요구사항 반영과 MCP 추가로 이어 간다. 기능 변경을 최소로 하고 원본과 같은 방식으로 만든다. `options.cfg`는 원본과 같은 시작·변경 저장 시점에 `<게임 폴더>/d/options.cfg`로 쓴다(Windows-1252·XOR). 그래서 창·화면·입력은 원본처럼 **Win32 API를 직접 부른다**(외부 라이브러리 없음). **Windows 전용**이다.
 
 **현재 우선순위(2026-10-05 사용자 요청): 기존 게임이 온전히 동작하고 실제 게임 플레이가 가능하도록 복원한다.** 먼저 메인 메뉴→캠페인 선택→브리핑→선택·이동·건설·경제·전투→승패·결과·재시작을 완성하고, 나머지 원본 기능·캠페인까지 복원한다. 화면비 확장·한국어·Linux·60/120프레임·MCP·추가 기능은 후순위다. 작업 순서와 완료 기준은 [실제 플레이 복원 계획](../docs/cpp-playable-plan.md)을 따른다.
@@ -10,6 +12,8 @@ C# + MonoGame 빌드(`../dotnetpj/`)는 cpppj 완성 후 이를 분석하여 개
 **원본 메뉴→캠페인→브리핑→실제 지형/객체·선택·사제 이동→메뉴 복귀를 연결했다.** 1-1과 TEST01의 시작 SP/동맹·지형·점유를 적용하고, 몸통 좌클릭 선택→땅 좌클릭 이동, 우클릭 메뉴, 화면 이동·일시정지·재진입을 검사했다. **건설·채집·전투·AI·승패·사운드 출력·DirectDraw 전체화면은 후속이며 미션 완주는 아직 불가능하다.** [월드/조작의 범위와 제한](../docs/exe/cpp-world-reconstruction.md), [메뉴 연결](../docs/exe/cpp-menu-reconstruction.md).
 
 [복원 근거·함수 대응·검증 범위](../docs/exe/cpp-reconstruction.md), [검토 목록](recovery-manifest.json), [기계어 검증 기록](recovery-evidence.json).
+
+[2026-10-07 같은 위치의 다른 SID 그래프 조회](../docs/exe/cpp-reference-versions.md#cpppj-후속-같은-위치의-다른-sid-조회), [독립 x86 384회](recovery-graphlookup-evidence.json) — 삭제 원천의 타입/프레임과 위치 머리의 그래프 번호를 분리했다. Release·콘솔 CTest 내부 **139개·실패 0**, 누적 제한 입력 **60,642개**다. 전역 소진 복구·특수 조회·건물 부착·파생 삭제/참조 수명·raw GameWorld는 남았다. 이번에도 원본/복사본·업데이터·클론 창을 실행하지 않았으며 GUI 검사는 다른 PC에 인계한다.
 
 [2026-10-07 삭제 준비 분할·일반 다리/섬 Unpop](../docs/exe/cpp-graphremove-reconstruction.md), [새 독립 기록](recovery-graphremove-evidence.json) — 원본 일반 탐색의 이웃 순서·경계 접촉·0단계 위치 조회와 정상/rebuild 분할 정책을 복원했다. 새 x86 **1,158회**, x64 Release·CTest 내부 **137개·실패 0**, 누적 제한 입력 **60,258개**다. 전역 소진 복구·건물 부착·파생 삭제/참조 수명·raw GameWorld는 남았다. **최신 사용자 지시: 이 PC에서는 원본/복사본 게임과 모든 창 검사를 금지하며 다른 PC에 인계한다.**
 

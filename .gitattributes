@@ -53,3 +53,9 @@ cpppj/recovery-graph-evidence.json text eol=lf
 tools/decomp_graphremove_oracle.py text eol=lf
 cpppj/recovery-graphremove-evidence.json text eol=lf
 tools/ghidra/graphremove-functions.json text eol=lf
+# 추가 판본의 정적 복원/비교와 같은 위치 조회의 독립 기록 해시를 보존한다.
+tools/reconstruct_patch1062.py text eol=lf
+tools/compare_reference_versions.py text eol=lf
+tools/decomp_graphlookup_oracle.py text eol=lf
+cpppj/recovery-reference-versions.json text eol=lf
+cpppj/recovery-graphlookup-evidence.json text eol=lf

@@ -13,7 +13,7 @@ param(
     # 스크립트에 넘길 인자 목록
     [string[]]$ScriptArgs = @(),
     # 분석할 판본 (run_decomp.ps1 의 -Edition 과 같다)
-    [ValidateSet('originals', 'originalCD', 'original1037')]
+    [ValidateSet('originals', 'originalCD', 'original1037', 'original1062', 'original1082', 'original1082-launcher', 'patch1062')]
     [string]$Edition = 'originals',
     # 정밀 분석 프로젝트(extracted\refined\<판본>\ghidra)를 열지 여부
     [switch]$Refined,
@@ -27,7 +27,23 @@ param(
 $Root = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
 
 # 판본별 프로젝트 이름과 프로그램 이름
-if ($Edition -eq 'original1037') {
+if ($Edition -eq 'original1082') {
+    $ProjectName = 'netstorm'
+    $Program = 'netstorm.game'
+    $BaseProjectDir = Join-Path $Root 'extracted\original1082\ghidra'
+} elseif ($Edition -eq 'original1082-launcher') {
+    $ProjectName = 'Netstorm'
+    $Program = 'Netstorm.exe'
+    $BaseProjectDir = Join-Path $Root 'extracted\original1082\launcher\ghidra'
+} elseif ($Edition -eq 'patch1062') {
+    $ProjectName = 'zpatch'
+    $Program = 'zpatch.exe'
+    $BaseProjectDir = Join-Path $Root 'extracted\patch1062\ghidra'
+} elseif ($Edition -eq 'original1062') {
+    $ProjectName = 'Netstorm'
+    $Program = 'Netstorm.exe'
+    $BaseProjectDir = Join-Path $Root 'extracted\original1062\ghidra'
+} elseif ($Edition -eq 'original1037') {
     $ProjectName = 'netstorm'
     $Program = 'netstorm.exe'
     $BaseProjectDir = Join-Path $Root 'extracted\original1037\ghidra'
