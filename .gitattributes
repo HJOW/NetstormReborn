@@ -78,3 +78,7 @@ cpppj/recovery-destroylifecycle-evidence.json text eol=lf
 tools/decomp_destroylifecycle_oracle.py text eol=lf
 tools/ghidra/destroylifecycle-functions.json text eol=lf
 tools/ghidra/destroy-functions.json text eol=lf
+# 공통 삭제 Graph의 독립 기록/도구/내보내기 목록의 SHA를 체크아웃 후에도 유지한다.
+tools/decomp_destroygraph_oracle.py text eol=lf
+cpppj/recovery-destroygraph-evidence.json text eol=lf
+tools/ghidra/destroygraph-functions.json text eol=lf

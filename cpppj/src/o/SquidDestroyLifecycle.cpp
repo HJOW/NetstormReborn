@@ -12,8 +12,6 @@ namespace {
 constexpr std::size_t kType=10,kState=11,kX=14,kY=18;
 constexpr std::uint32_t kFactoryMask=0x4200,kProvider=0x10000000,kPlacement=0x30000;
 constexpr std::uint32_t kNoRefund=0x200000,kNoGraph=0x2000000,kDestroyGraph=0x800,kSilentGenus=0x200000;
-// 기본 region 전역 마스크와 다리 비트를 합친 postDestroy의 Graph 효과 조건이다.
-constexpr std::uint32_t kPostRegionMask=0x50444208;
 // 원본 타입 비용 표에 더하는 인코딩 계수다.
 constexpr std::int64_t kCostBias=23;
 // 정렬되지 않은 float의 비트는 원본 바이트 순서대로 읽는다.
@@ -37,11 +35,15 @@ void Remove(SquidPostPopList& list,Sid sid) {
 }
 // 판본별 타입 수/풀 연결을 확인하고 타입을 복사해 장부 처리 동안의 입력을 고정한다.
 SquidDestroyLifecycle::SquidDestroyLifecycle(SidPool& pool,std::span<const RiftTypeRecord> types,SquidPostPopState& bookkeeping,
-    SquidDeletionState& state,RawSquidDestroy& destroy,SquidDeletionHooks hooks)
-    :pool_(pool),types_(types.begin(),types.end()),bookkeeping_(bookkeeping),state_(state),destroy_(destroy),hooks_(std::move(hooks)) {
+    SquidDeletionState& state,RawSquidDestroy& destroy,SquidDeletionHooks hooks,RawGraph* graph)
+    :pool_(pool),types_(types.begin(),types.end()),bookkeeping_(bookkeeping),state_(state),destroy_(destroy),hooks_(std::move(hooks)),graph_(graph) {
     const auto count=pool.Edition()==OriginalEdition::Patch1078 ? 188U : 171U;
     if (types.size()!=count) throw std::invalid_argument("삭제 훅 타입 판본/크기 오류");
     if (&destroy.Pool()!=&pool) throw std::invalid_argument("삭제 훅 SID 풀이 다릅니다");
+    if (graph_) {
+        if (&graph_->Pool()!=&pool_) throw std::invalid_argument("삭제 훅/Graph SID 풀이 다릅니다");
+        graph_->ValidateTypes(types);destroy_.ValidateGraph(*graph_);
+    }
 }
 // 루트 자산에만 공통 장부 처리를 제공한다. form/contained의 파생 메서드는 별도다.
 std::span<const std::uint8_t> SquidDestroyLifecycle::Object(Sid sid) const {
@@ -79,9 +81,7 @@ std::int32_t SquidDestroyLifecycle::RemainingCost(Sid sid) const {
 void SquidDestroyLifecycle::ValidatePre(Sid sid,std::uint32_t flags) const {
     const auto raw=Object(sid);const auto& type=Type(sid);
     if (state_.selected==sid && !hooks_.emit) throw std::invalid_argument("삭제 훅 선택 해제 콜백 누락");
-    if (bookkeeping_.graphsEnabled && !(raw[pool_.Edition()==OriginalEdition::Patch1078 ? 40 : 35]&8) &&
-        (type.flags1&TypeFlag1::kSurface) && ((flags&kDestroyGraph) || !(flags&kNoGraph)))
-        throw std::logic_error("공통 preDestroy Graph 효과 미연결");
+    PreGraph(sid,flags,true);
     if (bookkeeping_.suppressed) return;
     const auto owner=Owner(sid);
     if (owner>kPlayerCount) throw std::out_of_range("삭제 훅 소유자 범위 오류");
@@ -96,15 +96,40 @@ void SquidDestroyLifecycle::ValidatePre(Sid sid,std::uint32_t flags) const {
 }
 // post의 비용 효과는 suppressed와 무관하며 Graph 분기를 앞서 거부한다.
 void SquidDestroyLifecycle::ValidatePost(Sid sid,std::uint32_t flags) const {
-    const auto raw=Object(sid);
-    if (bookkeeping_.graphsEnabled && !(raw[pool_.Edition()==OriginalEdition::Patch1078 ? 40 : 35]&8) &&
-        !(flags&kDestroyGraph) && (Type(sid).flags2&kPostRegionMask))
-        throw std::logic_error("공통 postDestroy Graph 효과 미연결");
+    static_cast<void>(Object(sid));
+    if (NeedsPostGraph(sid,flags)) {
+        if (!graph_) throw std::logic_error("공통 postDestroy Graph 효과 미연결");
+        graph_->ValidatePostDestroy(sid);
+    }
     if (Ordinary(sid)) static_cast<void>(RemainingCost(sid));
 }
 // 선택 복구 효과 뒤 논리 선택을 지우고 실제 UI 변경은 호출자에게 전달한다.
 void SquidDestroyLifecycle::ClearSelection(Sid sid) {
     hooks_.emit({SquidDeletionEffect::ClearSelection,sid,0});state_.selected={};
+}
+// 원본은 0x800 Free를 noGraph보다 먼저 판단하며 buried만 Graph 효과를 생략한다.
+void SquidDestroyLifecycle::PreGraph(Sid sid,std::uint32_t flags,bool validate) const {
+    const auto raw=Object(sid);
+    if (!bookkeeping_.graphsEnabled || (raw[pool_.Edition()==OriginalEdition::Patch1078 ? 40 : 35]&8) ||
+        !(Type(sid).flags1&TypeFlag1::kSurface) || (!(flags&kDestroyGraph) && (flags&kNoGraph))) return;
+    if (!graph_) throw std::logic_error("공통 preDestroy Graph 효과 미연결");
+    if (flags&kDestroyGraph) {
+        const auto number=raw[pool_.Edition()==OriginalEdition::Patch1078 ? 30 : 28];
+        if (validate) graph_->ValidateFree(number);else graph_->Free(number);return;
+    }
+    std::optional<std::uint8_t> sourceType;
+    if (raw[kType]==state_.specialSurfaceType) {
+        if (graph_->Frame(sid).side!='H') return;
+        sourceType=state_.specialSurfaceReplacementType;
+    }
+    const auto removed=static_cast<std::uint8_t>(sourceType.value_or(raw[kType])==state_.largeSurfaceType ? 9 : 1);
+    if (validate) graph_->ValidateDetach(sid,state_.rebuildGraph,removed,sourceType);
+    else graph_->Detach(sid,state_.rebuildGraph,removed,sourceType);
+}
+// noGraph는 pre 분할만 억제한다. post 주변 Add를 임의로 억제하지 않는다.
+bool SquidDestroyLifecycle::NeedsPostGraph(Sid sid,std::uint32_t flags) const {
+    return bookkeeping_.graphsEnabled && !(Object(sid)[pool_.Edition()==OriginalEdition::Patch1078 ? 40 : 35]&8) &&
+        !(flags&kDestroyGraph) && (Type(sid).flags2&(state_.regionMask|8));
 }
 // 원본 순서: 선택→owner 작업장→보상→현재 타입 수→소리/좌표→provider→AI(null)→global 작업장→깊이 감소.
 void SquidDestroyLifecycle::PreDestroy(Sid sid,std::uint32_t flags) {
@@ -116,6 +141,7 @@ void SquidDestroyLifecycle::PreDestroy(Sid sid,std::uint32_t flags) {
         }
         ClearSelection(sid);
     }
+    PreGraph(sid,flags,false);
     if (!bookkeeping_.suppressed) {
         if (Type(sid).flags2&kFactoryMask) { const auto owner=Owner(sid);if (owner) Remove(bookkeeping_.ownerFactories.at(owner),sid); }
         if (Ordinary(sid)) {
@@ -135,9 +161,10 @@ void SquidDestroyLifecycle::PreDestroy(Sid sid,std::uint32_t flags) {
     }
     destroy_.CompletePreDestroy();
 }
-// 선택한 범위에서 Graph 효과가 불필요한지 확인하고 ordinary 비용을 마지막에 차감한다.
+// 주변 표면을 원본 순서로 다시 Add하고 ordinary 비용을 마지막에 차감한다.
 void SquidDestroyLifecycle::PostDestroy(Sid sid,std::uint32_t flags) {
-    ValidatePost(sid,flags);if (Ordinary(sid)) bookkeeping_.totalCost=RemainingCost(sid);
+    ValidatePost(sid,flags);if (NeedsPostGraph(sid,flags)) graph_->PostDestroy(sid);
+    if (Ordinary(sid)) bookkeeping_.totalCost=RemainingCost(sid);
     destroy_.CompletePostDestroy();
 }
 // 원본 파생 가상 메서드는 forward로, 공통 Pre/Post는 위 구현으로 연결한다.

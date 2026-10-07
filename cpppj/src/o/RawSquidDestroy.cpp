@@ -30,6 +30,8 @@ std::uint32_t RawSquidDestroy::PreDepth() const { return preDepth_; }
 std::uint32_t RawSquidDestroy::PostDepth() const { return postDepth_; }
 // 공통 삭제/훅 어댑터의 풀 소유자를 읽기 전용으로 제공한다.
 const SidPool& RawSquidDestroy::Pool() const { return pool_; }
+// 실제 공간 해제 어댑터가 사용하는 해시/spot에 대조한다.
+void RawSquidDestroy::ValidateGraph(const RawGraph& graph) const { unpop_.ValidateGraph(graph); }
 // 원본은 dead를 먼저 켜므로 중첩된 같은 객체 삭제는 모든 외부 효과를 건너뛴다.
 void RawSquidDestroy::Destroy(Sid sid,std::uint32_t flags,const SquidDestroyHooks& hooks) {
     if (sid.value<5 || sid.value==pool_.Layout().predictableFirst || sid.value>=pool_.Capacity())

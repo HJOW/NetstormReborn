@@ -4,6 +4,7 @@
 #include "o/SquidHash.h"
 
 namespace netstorm::o {
+class RawGraph;
 class SquidDisplay;
 class SquidUnpop {
 public:
@@ -16,6 +17,8 @@ public:
     static bool SupportsDisplay(OriginalEdition edition,std::uint32_t vtable,std::uint32_t flags);
     // Factory와 같은 풀을 사용하는지 확인하여 서로 다른 수명 상태의 혼용을 막는다.
     const SidPool& Pool() const;
+    // 삭제 Graph가 이 Unpop과 같은 해시/spot을 사용하는지 확인한다.
+    void ValidateGraph(const RawGraph& graph) const;
 private:
     // 원본 unaligned raw 필드를 호스트 포인터 산술로 해석하지 않는다.
     std::span<std::uint8_t> Bytes(Sid sid);

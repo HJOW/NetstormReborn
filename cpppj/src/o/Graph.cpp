@@ -141,15 +141,17 @@ void Graph::Detach(std::uint16_t id,std::span<const std::uint16_t> connections,b
     DetachAt(id,members_.at(id).graph,connections,rebuild,removedSurfaces,recovery);
 }
 // 조회 번호를 원천에 대입하지 않는다. 선택한 전체 재구성은 원천의 번호도 다시 배정할 수 있다.
-void Graph::DetachAt(std::uint16_t id,std::uint8_t graph,std::span<const std::uint16_t> connections,bool rebuild,std::uint8_t removedSurfaces,GraphRecovery recovery) {
+void Graph::DetachAt(std::uint16_t id,std::uint8_t graph,std::span<const std::uint16_t> connections,bool rebuild,std::uint8_t removedSurfaces,GraphRecovery recovery,
+    std::optional<std::uint32_t> sourceFlags2) {
     CheckNumber(graph,true);
     if (!(members_.at(id).state&2) || (removedSurfaces!=1 && removedSurfaces!=9))
         throw std::invalid_argument("그래프 삭제 준비의 dead/감소 수 오류");
-    auto next=*this; next.DetachImpl(id,graph,connections,rebuild,removedSurfaces,recovery);
+    auto next=*this; next.DetachImpl(id,graph,connections,rebuild,removedSurfaces,recovery,sourceFlags2);
     records_=next.records_; stack_=next.stack_; members_=std::move(next.members_);
 }
 // 원본은 남은 연결의 마지막 하나를 기존 그래프에 남긴다. 다른 번호의 이웃도 남은 수에 포함한다.
-void Graph::DetachImpl(std::uint16_t id,std::uint8_t number,std::span<const std::uint16_t> connections,bool rebuild,std::uint8_t removedSurfaces,GraphRecovery recovery) {
+void Graph::DetachImpl(std::uint16_t id,std::uint8_t number,std::span<const std::uint16_t> connections,bool rebuild,std::uint8_t removedSurfaces,GraphRecovery recovery,
+    std::optional<std::uint32_t> sourceFlags2) {
     if (number==kInvalid || !records_[number].inUse) return;
     if (connections.size()>=64) throw std::out_of_range("그래프 삭제 연결 목록 범위 오류");
     std::size_t remaining=connections.size(); bool keep=!rebuild;
@@ -157,7 +159,8 @@ void Graph::DetachImpl(std::uint16_t id,std::uint8_t number,std::span<const std:
     for (auto neighbor:connections) {
         if (members_.at(neighbor).graph==number) {
             if (!rebuild && remaining<2) {
-                if (!(surfaces_.Object(id).flags2&8)) keep=true;
+                // 특수 프레임의 삭제 정보만 치환한다. 전역 재구성의 실제 객체 타입은 유지한다.
+                if (!(sourceFlags2.value_or(surfaces_.Object(id).flags2)&8)) keep=true;
             } else { const auto allocated=AllocateForOperation(recovery); FloodImpl(neighbor,allocated); }
         }
         --remaining;

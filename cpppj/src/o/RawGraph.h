@@ -26,9 +26,18 @@ public:
     void Add(Sid sid);
     // 원천의 위치/타입/프레임과 0단계 머리 SID의 그래프 번호를 구별한다. 빈 머리는 자연 반환한다.
     // dead 원천의 이웃 분할·1/특수 9 감소를 계산하며 Unpop/반납과 별도로 호출한다.
-    void Detach(Sid sid,bool rebuild=false,std::uint8_t removedSurfaces=1);
+    // sourceType은 삭제 위치 정보만 치환한다. raw 타입과 소진 복구의 전체 풀 입력은 보존한다.
+    void Detach(Sid sid,bool rebuild=false,std::uint8_t removedSurfaces=1,std::optional<std::uint8_t> sourceType={});
     // 그래프 소진/손상 입력에서 공간 해제 전에 기존 번호/표/스택을 보존한다.
-    void ValidateDetach(Sid sid,bool rebuild=false,std::uint8_t removedSurfaces=1) const;
+    void ValidateDetach(Sid sid,bool rebuild=false,std::uint8_t removedSurfaces=1,std::optional<std::uint8_t> sourceType={}) const;
+    // 직접 Free는 좌표/이웃/raw 번호를 바꾸지 않고 지정 레코드의 앞 두 WORD만 지운다.
+    void ValidateFree(std::uint8_t graph) const;
+    void Free(std::uint8_t graph);
+    // 특수 삭제 분기의 원본 프레임 방향 문자를 읽는다. raw 타입/프레임 표를 캐시하지 않는다.
+    FrameCode Frame(Sid sid) const;
+    // 공통 postDestroy의 발자국→일반 finder→표면별 Add를 같은 사본에서 연속 계산한다.
+    void ValidatePostDestroy(Sid sid) const;
+    void PostDestroy(Sid sid);
     // 기존 raw 표면을 실제 탐색 순서로 flood하고 변경한 객체 수를 돌려준다.
     std::uint32_t Flood(Sid sid,std::uint8_t graph);
     // 전체 raw 풀에서 무효 번호 수집 또는 전체 초기화 재구성을 원자적으로 반영한다.
@@ -56,11 +65,13 @@ private:
     // Add/Flood 외에 영역 단독·영역 후 Add를 구별한다. 원본 순서를 한 계획에 보존한다.
     enum class Operation { Add,Flood,Region,RegionAdd,Detach,Rebuild,Allocate };
     // 각 호출에서 현재 raw 입력을 다시 읽는다. noGraph 리셋/프레임 변경을 캐시하지 않는다.
-    Plan Calculate(Sid sid,Operation operation,std::uint8_t target,const RawGraphPop* pop) const;
+    Plan Calculate(Sid sid,Operation operation,std::uint8_t target,const RawGraphPop* pop,std::optional<std::uint8_t> sourceType={}) const;
+    // 공간은 읽기 전용으로 공유하고 SID/그래프 사본에서 순차 Add의 번호/스택 변화를 이어 간다.
+    Plan CalculatePostDestroy(Sid sid) const;
     // 원본 일반 탐색기의 단계/행/열/next 순서와 한 칸 넓은 끝 버킷을 유지한다.
     void Region(Sid sid,const RawGraphPop* pop,std::span<const std::uint8_t> spots,Plan& plan) const;
     // 삭제의 일반 finder는 네 단계/체인 순서와 가로·세로 경계 접촉 교차 XOR를 사용한다.
-    std::vector<std::uint16_t> DetachConnections(Sid sid,const SurfaceFinder& finder) const;
+    std::vector<std::uint16_t> DetachConnections(const SurfaceObject& source,const SurfaceFinder& finder) const;
     // 검사한 슬롯의 graph 필드 외에는 쓰지 않는다.
     void Commit(const Plan& plan);
     SidPool& pool_;

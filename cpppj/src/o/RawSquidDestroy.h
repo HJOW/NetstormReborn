@@ -33,6 +33,8 @@ public:
     std::uint32_t PostDepth() const;
     // 공통 훅이 같은 raw 풀을 처리하는지 생성 단계에서 확인한다.
     const SidPool& Pool() const;
+    // 공통 훅의 Graph와 실제 Unpop이 서로 다른 공간을 갱신하는 연결을 막는다.
+    void ValidateGraph(const RawGraph& graph) const;
 private:
     // raw +4/+6 WORD를 호스트 정렬과 무관하게 읽는다.
     std::uint16_t Word(Sid sid,std::size_t offset) const;

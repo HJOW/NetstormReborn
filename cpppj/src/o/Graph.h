@@ -38,8 +38,10 @@ public:
     void Detach(std::uint16_t id,std::span<const std::uint16_t> connections,bool rebuild=false,std::uint8_t removedSurfaces=1,
         GraphRecovery recovery=GraphRecovery::Reject);
     // 위치 조회의 다른 SID에서 고른 번호와 삭제 원천의 타입/프레임을 구별한다.
+    // sourceFlags2는 특수 위치 정보 타입의 마지막 bit 8 판단에만 사용하며 전체 풀 재구성 입력은 바꾸지 않는다.
     void DetachAt(std::uint16_t source,std::uint8_t graph,std::span<const std::uint16_t> connections,
-        bool rebuild=false,std::uint8_t removedSurfaces=1,GraphRecovery recovery=GraphRecovery::Reject);
+        bool rebuild=false,std::uint8_t removedSurfaces=1,GraphRecovery recovery=GraphRecovery::Reject,
+        std::optional<std::uint32_t> sourceFlags2={});
     // 레코드/전체 스택/번호는 읽기 전용으로 제공한다. 스택의 미사용 흔적도 보존한다.
     std::span<const GraphRecord> Records() const;
     // 원본 LIFO 스택의 사용 후 흔적도 검사할 수 있게 전체를 읽는다.
@@ -63,7 +65,7 @@ private:
     void AddImpl(std::uint16_t id,GraphRecovery recovery);
     // 실패 시 기존 표/번호/스택을 보존하도록 복사본에서 삭제 준비를 처리한다.
     void DetachImpl(std::uint16_t id,std::uint8_t graph,std::span<const std::uint16_t> connections,bool rebuild,
-        std::uint8_t removedSurfaces,GraphRecovery recovery);
+        std::uint8_t removedSurfaces,GraphRecovery recovery,std::optional<std::uint32_t> sourceFlags2);
     const SurfaceFinder& surfaces_;
     std::array<GraphRecord,kTableSize> records_{};
     std::array<std::uint32_t,kFloodSize> stack_{};

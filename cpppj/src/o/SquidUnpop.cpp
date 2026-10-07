@@ -2,6 +2,7 @@
 #include "o/SquidUnpop.h"
 #include "o/Squid.h"
 #include "o/SquidDisplay.h"
+#include "o/RawGraph.h"
 #include <bit>
 #include <cmath>
 #include <stdexcept>
@@ -48,6 +49,8 @@ bool SquidUnpop::SupportsDisplay(OriginalEdition edition,std::uint32_t vtable,st
 }
 // raw 풀 소유자를 읽기 전용으로 확인한다.
 const SidPool& SquidUnpop::Pool() const { return pool_; }
+// 크기뿐 아니라 동일한 공간 인스턴스의 연결을 요구한다.
+void SquidUnpop::ValidateGraph(const RawGraph& graph) const { graph.ValidateSpace(hash_,spots_); }
 // 일반 공간 경로의 상태·spot·체인 쓰기 뒤 선택 연결한 공통 표시를 원본 순서로 적용한다.
 void SquidUnpop::Unpop(Sid sid,const RiftTypeRecord& type,std::uint32_t flags) {
     auto bytes=Bytes(sid);

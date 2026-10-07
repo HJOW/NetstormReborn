@@ -1,6 +1,7 @@
 // 원본 주소를 호스트 포인터로 해석하지 않고 raw 슬롯의 판본별 필드만 읽는다.
 #include "o/RawGraph.h"
 #include "o/Squid.h"
+#include "o/RawSquidFinder.h"
 #include <algorithm>
 #include <bit>
 #include <cmath>
@@ -115,8 +116,8 @@ void RawGraph::Region(Sid sid,const RawGraphPop* pop,std::span<const std::uint8_
     }
 }
 // 삭제 연결의 일반 탐색은 flag 8 표면 탐색의 순서/교차 필터로 대체하지 않는다.
-std::vector<std::uint16_t> RawGraph::DetachConnections(Sid sid,const SurfaceFinder& finder) const {
-    const auto& source=finder.Object(sid.value); std::vector<std::uint16_t> result;
+std::vector<std::uint16_t> RawGraph::DetachConnections(const SurfaceObject& source,const SurfaceFinder& finder) const {
+    std::vector<std::uint16_t> result;
     // 발자국 helper는 두 번째 점을 1..255로 보정한다. 초기 점이 무효면 양 끝을 그 점으로 재설정한다.
     const auto bounds=[](const SurfaceObject& object) {
         const int x=std::clamp(object.x-object.width+1,1,kWorldCells-1);
@@ -175,7 +176,7 @@ std::vector<std::uint16_t> RawGraph::DetachConnections(Sid sid,const SurfaceFind
     return result;
 }
 // 전체 계산을 복사본에서 수행하며 미지원 입력·소진·연결 오류를 쓰기 전에 보고한다.
-RawGraph::Plan RawGraph::Calculate(Sid sid,Operation operation,std::uint8_t target,const RawGraphPop* pop) const {
+RawGraph::Plan RawGraph::Calculate(Sid sid,Operation operation,std::uint8_t target,const RawGraphPop* pop,std::optional<std::uint8_t> sourceType) const {
     const bool global=operation==Operation::Rebuild || operation==Operation::Allocate;
     Plan plan{records_,stack_,{},0};
     if (operation==Operation::Allocate) {
@@ -283,7 +284,21 @@ RawGraph::Plan RawGraph::Calculate(Sid sid,Operation operation,std::uint8_t targ
     if (operation==Operation::Rebuild) graph.Rebuild(target!=0);
     else if (operation==Operation::Allocate) plan.changed=graph.AllocateWithRecovery();
     else if (add) graph.Add(sid.value,recovery_);
-    else if (operation==Operation::Detach) graph.DetachAt(sid.value,detachGraph,DetachConnections(sid,finder),(target&1)!=0,(target&2)!=0 ? 9 : 1,recovery_);
+    else if (operation==Operation::Detach) {
+        auto source=finder.Object(sid.value);
+        if (sourceType) {
+            if (*sourceType>=types_.size()) throw std::out_of_range("raw 그래프 삭제 치환 타입 오류");
+            const auto& replacement=types_[*sourceType];const auto frame=Read(root,frameOffset,patch ? 4U : 1U);
+            if (!(replacement.flags1&TypeFlag1::kSurface) || frame>=frames_[*sourceType].size())
+                throw std::out_of_range("raw 그래프 삭제 치환 프레임/표면 오류");
+            if (replacement.footX<1 || replacement.footY<1 || replacement.footX>kWorldCells || replacement.footY>kWorldCells)
+                throw std::out_of_range("raw 그래프 삭제 치환 발자국 오류");
+            source.width=replacement.footX;source.height=replacement.footY;source.flags1=replacement.flags1;
+            source.flags2=replacement.flags2;source.frame=frames_[*sourceType][frame];
+        }
+        // 연결 판단은 삭제 정보의 타입을 쓰되 전체 풀 재구성은 원본 raw 타입을 읽는다.
+        graph.DetachAt(sid.value,detachGraph,DetachConnections(source,finder),(target&1)!=0,(target&2)!=0 ? 9 : 1,recovery_,source.flags2);
+    }
     else plan.changed=graph.Flood(sid.value,target);
     std::copy(graph.Records().begin(),graph.Records().end(),plan.records.begin());
     std::copy(graph.FloodStack().begin(),graph.FloodStack().end(),plan.stack.begin());
@@ -312,15 +327,59 @@ void RawGraph::Commit(const Plan& plan) {
 // 현재 프레임·상태·지도로 매번 다시 계산한다.
 void RawGraph::Add(Sid sid) { Commit(Calculate(sid,Operation::Add,0,nullptr)); }
 // 분할 정책/특수 감소를 인코딩하고 선택한 전체 풀 소진 복구도 같은 사전 계획에서 검사한다.
-void RawGraph::ValidateDetach(Sid sid,bool rebuild,std::uint8_t removedSurfaces) const {
+void RawGraph::ValidateDetach(Sid sid,bool rebuild,std::uint8_t removedSurfaces,std::optional<std::uint8_t> sourceType) const {
     if (removedSurfaces!=1 && removedSurfaces!=9) throw std::invalid_argument("raw 그래프 감소 수 오류");
-    static_cast<void>(Calculate(sid,Operation::Detach,static_cast<std::uint8_t>((rebuild ? 1 : 0)|(removedSurfaces==9 ? 2 : 0)),nullptr));
+    static_cast<void>(Calculate(sid,Operation::Detach,static_cast<std::uint8_t>((rebuild ? 1 : 0)|(removedSurfaces==9 ? 2 : 0)),nullptr,sourceType));
 }
 // 같은 성공 계획의 번호·표·스택만 적용하고 원천 state/좌표/next는 Unpop에 남긴다.
-void RawGraph::Detach(Sid sid,bool rebuild,std::uint8_t removedSurfaces) {
+void RawGraph::Detach(Sid sid,bool rebuild,std::uint8_t removedSurfaces,std::optional<std::uint8_t> sourceType) {
     if (removedSurfaces!=1 && removedSurfaces!=9) throw std::invalid_argument("raw 그래프 감소 수 오류");
-    Commit(Calculate(sid,Operation::Detach,static_cast<std::uint8_t>((rebuild ? 1 : 0)|(removedSurfaces==9 ? 2 : 0)),nullptr));
+    Commit(Calculate(sid,Operation::Detach,static_cast<std::uint8_t>((rebuild ? 1 : 0)|(removedSurfaces==9 ? 2 : 0)),nullptr,sourceType));
 }
+// 254는 다른 입력을 읽지 않는 자연 반환이며 251..253/255는 정상 번호가 아니다.
+void RawGraph::ValidateFree(std::uint8_t graph) const {
+    if (graph>=Graph::kCount && graph!=Graph::kInvalid) throw std::out_of_range("raw 그래프 Free 번호 오류");
+}
+// 레코드의 reserved WORD·풀 번호·전체 스택을 보존한다.
+void RawGraph::Free(std::uint8_t graph) { ValidateFree(graph);if (graph!=Graph::kInvalid) records_[graph].surfaces=records_[graph].inUse=0; }
+// 판본별 frame 폭을 구별하며 특수 타입의 현재 방향 문자를 조회한다.
+FrameCode RawGraph::Frame(Sid sid) const {
+    const auto raw=pool_.Slot(sid);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
+    const auto number=raw[10];const auto index=Read(raw,patch ? 36 : 34,patch ? 4U : 1U);
+    if (number<kFirstAssetTypeNumber || number>=types_.size() || index>=frames_[number].size())
+        throw std::out_of_range("raw 그래프 프레임 조회 오류");
+    return frames_[number][index];
+}
+// post의 일반 탐색 순서에 따라 이전 Add의 번호/표/스택을 다음 Add가 읽는다.
+RawGraph::Plan RawGraph::CalculatePostDestroy(Sid sid) const {
+    const auto root=pool_.Slot(sid);
+    if (sid.value<5 || (root[11]&(kFree|kContained)) || root[10]<kFirstAssetTypeNumber || root[10]>=types_.size())
+        throw std::logic_error("raw 그래프 postDestroy 자산 오류");
+    const auto& type=types_[root[10]];const int x=Coordinate(std::bit_cast<float>(Read(root,14))),y=Coordinate(std::bit_cast<float>(Read(root,18)));
+    if (type.footX<1 || type.footY<1 || type.footX>kWorldCells || type.footY>kWorldCells)
+        throw std::out_of_range("raw 그래프 postDestroy 발자국 오류");
+    const int left=std::clamp(x-type.footX+1,1,kWorldCells-1),top=std::clamp(y-type.footY+1,1,kWorldCells-1);
+    const SquidSearchArea area{left,top,x>0 && y>0 ? x : left,x>0 && y>0 ? y : top};
+    auto nextPool=pool_;RawGraph next(nextPool,hash_,spots_,types_,frames_,records_,stack_,recovery_);
+    RawSquidFinder finder(nextPool,hash_,types_);
+    // Begin는 첫 Next까지 수행한다. 반환 직전 next 저장과 단계/y/x 순서를 그대로 사용한다.
+    for (auto candidate=finder.Begin(area);candidate.value;candidate=finder.Next()) {
+        const auto raw=nextPool.Slot(candidate);
+        if (raw[10]>=types_.size()) throw std::out_of_range("raw 그래프 postDestroy 후보 타입 오류");
+        if (types_[raw[10]].flags1&TypeFlag1::kSurface) next.Add(candidate);
+    }
+    Plan plan{next.records_,next.stack_,{},0};const auto offset=pool_.Edition()==OriginalEdition::Patch1078 ? 30U : 28U;
+    // 실제 raw 필드 중 graph byte의 변경분만 원본 풀에 반영할 계획에 넣는다.
+    for (std::uint32_t id=5;id<pool_.Capacity();++id) {
+        const Sid current{static_cast<std::uint16_t>(id)};const auto number=nextPool.Slot(current)[offset];
+        if (number!=pool_.Slot(current)[offset]) plan.numbers.emplace_back(current,number);
+    }
+    return plan;
+}
+// 앞선 Add 성공 뒤 뒤 후보가 실패해도 실제 풀/표/스택은 보존한다.
+void RawGraph::ValidatePostDestroy(Sid sid) const { static_cast<void>(CalculatePostDestroy(sid)); }
+// 원본 순차 Add의 최종 결과를 한 번에 반영한다. 이 함수는 Unpop/반납을 수행하지 않는다.
+void RawGraph::PostDestroy(Sid sid) { Commit(CalculatePostDestroy(sid)); }
 // 기존 스택의 미사용 DWORD를 보존하여 flood 결과를 반영한다.
 std::uint32_t RawGraph::Flood(Sid sid,std::uint8_t graph) {
     const auto plan=Calculate(sid,Operation::Flood,graph,nullptr); Commit(plan); return plan.changed;
