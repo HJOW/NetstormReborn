@@ -4,7 +4,9 @@
 #include <map>
 
 namespace netstorm::o {
-// 원본 그래프 레코드의 6바이트 WORD 세 개다. 세 번째 WORD는 이 경로에서 변경하지 않는다.
+// 전역 재구성은 전체 표면/풀 계약을 보장한 입력에서만 선택한다.
+enum class GraphRecovery { Reject,FullPool };
+// 원본 그래프 레코드의 6바이트 WORD 세 개다. 전체 초기화만 0번 reserved의 low byte를 바꾼다.
 struct GraphRecord { std::int16_t surfaces{},inUse{},reserved{}; };
 // 실제 raw 슬롯의 그래프 byte와 state를 표면 스냅샷 번호에 연결한 입력이다.
 struct GraphMembership { std::uint16_t id{}; std::uint8_t graph{254},state{}; };
@@ -30,13 +32,14 @@ public:
     // 00462f10 ↔ CD 0045bb90. 원본 LIFO 순서·중복 push·WORD 감김·변경 수를 유지한다.
     std::uint32_t Flood(std::uint16_t id,std::uint8_t graph);
     // 004633c0 ↔ CD 0045b7d0. 가장 큰 이웃 그래프에 붙이고 나머지를 flood로 병합한다.
-    void Add(std::uint16_t id);
+    void Add(std::uint16_t id,GraphRecovery recovery=GraphRecovery::Reject);
     // 004637b0 ↔ CD/10.37 0045bfd0의 삭제 준비. 죽은 원천의 이웃 무리를 탐색 순서로 분리한다.
-    // rebuild는 전역 재구성 중의 분할 정책만 뜻하며 전역 복구 자체는 실행하지 않는다.
-    void Detach(std::uint16_t id,std::span<const std::uint16_t> connections,bool rebuild=false,std::uint8_t removedSurfaces=1);
+    // rebuild는 분할 정책이며 recovery와 구별한다. FullPool이면 내부 번호 소진 시 재구성한다.
+    void Detach(std::uint16_t id,std::span<const std::uint16_t> connections,bool rebuild=false,std::uint8_t removedSurfaces=1,
+        GraphRecovery recovery=GraphRecovery::Reject);
     // 위치 조회의 다른 SID에서 고른 번호와 삭제 원천의 타입/프레임을 구별한다.
     void DetachAt(std::uint16_t source,std::uint8_t graph,std::span<const std::uint16_t> connections,
-        bool rebuild=false,std::uint8_t removedSurfaces=1);
+        bool rebuild=false,std::uint8_t removedSurfaces=1,GraphRecovery recovery=GraphRecovery::Reject);
     // 레코드/전체 스택/번호는 읽기 전용으로 제공한다. 스택의 미사용 흔적도 보존한다.
     std::span<const GraphRecord> Records() const;
     // 원본 LIFO 스택의 사용 후 흔적도 검사할 수 있게 전체를 읽는다.
@@ -50,14 +53,17 @@ public:
 private:
     // 예외가 발생하면 공개 함수의 복사본을 버려 원래 표/번호/스택을 보존한다.
     void RebuildImpl(bool resetAll);
+    // 동일 복사본 안에서 재구성하여 Add/Detach가 보관한 객체/레코드 참조를 무효화하지 않는다.
+    std::uint8_t AllocateForOperation(GraphRecovery recovery);
     // 호스트 메모리 산술 대신 입력 번호를 검증한다.
     static void CheckNumber(std::uint8_t graph,bool allowInvalid);
     // 손상된 연결·과도한 스택 입력이 있으면 복사본을 버리기 위한 내부 처리다.
     std::uint32_t FloodImpl(std::uint16_t id,std::uint8_t graph);
     // 원본 연결 목록·최대 크기 선택·병합의 내부 처리다.
-    void AddImpl(std::uint16_t id);
+    void AddImpl(std::uint16_t id,GraphRecovery recovery);
     // 실패 시 기존 표/번호/스택을 보존하도록 복사본에서 삭제 준비를 처리한다.
-    void DetachImpl(std::uint16_t id,std::uint8_t graph,std::span<const std::uint16_t> connections,bool rebuild,std::uint8_t removedSurfaces);
+    void DetachImpl(std::uint16_t id,std::uint8_t graph,std::span<const std::uint16_t> connections,bool rebuild,
+        std::uint8_t removedSurfaces,GraphRecovery recovery);
     const SurfaceFinder& surfaces_;
     std::array<GraphRecord,kTableSize> records_{};
     std::array<std::uint32_t,kFloodSize> stack_{};

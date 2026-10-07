@@ -29,8 +29,8 @@ int Coordinate(float value) {
 // 정상 표/스택을 소유하고 호출자가 준 타입/프레임 표의 수명을 분리한다.
 RawGraph::RawGraph(SidPool& pool,SquidHash& hash,std::span<const std::uint8_t> spots,
     std::span<const RiftTypeRecord> types,std::span<const std::vector<FrameCode>> frames,
-    std::span<const GraphRecord> records,std::span<const std::uint32_t> stack)
-    :pool_(pool),hash_(hash),spots_(spots),types_(types.begin(),types.end()),frames_(frames.begin(),frames.end()) {
+    std::span<const GraphRecord> records,std::span<const std::uint32_t> stack,GraphRecovery recovery)
+    :pool_(pool),hash_(hash),spots_(spots),types_(types.begin(),types.end()),frames_(frames.begin(),frames.end()),recovery_(recovery) {
     const auto count=pool.Edition()==OriginalEdition::Patch1078 ? 188U : 171U;
     if (types.size()!=count || frames.size()!=count || spots.size()!=kWorldCells*kWorldCells)
         throw std::invalid_argument("raw 그래프 타입/프레임/지도 크기 오류");
@@ -186,6 +186,8 @@ RawGraph::Plan RawGraph::Calculate(Sid sid,Operation operation,std::uint8_t targ
     }
     const bool region=operation==Operation::Region || operation==Operation::RegionAdd;
     const bool add=operation==Operation::Add || operation==Operation::RegionAdd;
+    // 자동 재구성 가능 경로는 void/contained 표면까지 전체 풀에서 읽는다. 부분 스냅샷 정책은 유지한다.
+    const bool fullPool=global || (recovery_==GraphRecovery::FullPool && (add || operation==Operation::Detach));
     const auto root=pool_.Slot(sid); const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     const auto graphOffset=patch ? 30U : 28U,extraOffset=patch ? 40U : 35U,frameOffset=patch ? 36U : 34U;
     if (!global && (sid.value<5 || sid.value>kMaximumId || (root[11]&(kFree|kContained)) ||
@@ -252,17 +254,17 @@ RawGraph::Plan RawGraph::Calculate(Sid sid,Operation operation,std::uint8_t targ
     for (std::uint32_t id=5;id<pool_.Capacity();++id) {
         const Sid current{static_cast<std::uint16_t>(id)}; const auto bytes=pool_.Slot(current);
         const auto currentState=static_cast<std::uint8_t>(pop && current==sid ? state : bytes[11]);
-        if (currentState&(global ? kFree : (kFree|kVoid))) {
+        if (currentState&(fullPool ? kFree : (kFree|kVoid))) {
             if (required[id] && current!=sid) throw std::logic_error("raw 그래프 해시의 free/void SID");
             if (current!=sid) continue;
         }
         if (bytes[10]<kFirstAssetTypeNumber || bytes[10]>=types_.size()) {
-            if (required[id] || global) throw std::logic_error("raw 그래프 후보 타입 오류");
+            if (required[id] || fullPool) throw std::logic_error("raw 그래프 후보 타입 오류");
             continue;
         }
         const auto& type=types_[bytes[10]]; const bool surface=(type.flags1&TypeFlag1::kSurface)!=0;
         if (!surface && !required[id]) continue;
-        if (id>kMaximumId || ((currentState&kContained) && (!global || required[id])) || (global && (currentState&kVoid) && required[id]))
+        if (id>kMaximumId || ((currentState&kContained) && (!fullPool || required[id])) || (fullPool && (currentState&kVoid) && required[id]))
             throw std::out_of_range("raw 그래프 후보 상태/SID 범위 오류");
         const float x=pop && current==sid ? pop->x : std::bit_cast<float>(Read(bytes,14));
         const float y=pop && current==sid ? pop->y : std::bit_cast<float>(Read(bytes,18));
@@ -280,8 +282,8 @@ RawGraph::Plan RawGraph::Calculate(Sid sid,Operation operation,std::uint8_t targ
     SurfaceFinder finder(objects,map,spots); Graph graph(finder,members,plan.records,plan.stack);
     if (operation==Operation::Rebuild) graph.Rebuild(target!=0);
     else if (operation==Operation::Allocate) plan.changed=graph.AllocateWithRecovery();
-    else if (add) graph.Add(sid.value);
-    else if (operation==Operation::Detach) graph.DetachAt(sid.value,detachGraph,DetachConnections(sid,finder),(target&1)!=0,(target&2)!=0 ? 9 : 1);
+    else if (add) graph.Add(sid.value,recovery_);
+    else if (operation==Operation::Detach) graph.DetachAt(sid.value,detachGraph,DetachConnections(sid,finder),(target&1)!=0,(target&2)!=0 ? 9 : 1,recovery_);
     else plan.changed=graph.Flood(sid.value,target);
     std::copy(graph.Records().begin(),graph.Records().end(),plan.records.begin());
     std::copy(graph.FloodStack().begin(),graph.FloodStack().end(),plan.stack.begin());
@@ -309,7 +311,7 @@ void RawGraph::Commit(const Plan& plan) {
 }
 // 현재 프레임·상태·지도로 매번 다시 계산한다.
 void RawGraph::Add(Sid sid) { Commit(Calculate(sid,Operation::Add,0,nullptr)); }
-// 원본 전역 rebuild 정책과 특수 감소만 인코딩한다. 전체 소진 복구는 여기서 실행하지 않는다.
+// 분할 정책/특수 감소를 인코딩하고 선택한 전체 풀 소진 복구도 같은 사전 계획에서 검사한다.
 void RawGraph::ValidateDetach(Sid sid,bool rebuild,std::uint8_t removedSurfaces) const {
     if (removedSurfaces!=1 && removedSurfaces!=9) throw std::invalid_argument("raw 그래프 감소 수 오류");
     static_cast<void>(Calculate(sid,Operation::Detach,static_cast<std::uint8_t>((rebuild ? 1 : 0)|(removedSurfaces==9 ? 2 : 0)),nullptr));

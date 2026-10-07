@@ -1,0 +1,144 @@
+{
+  "schema": 1,
+  "primary_target": "10.78",
+  "total_calls": 192,
+  "public_calls": {
+    "Add": 48,
+    "PostPop": 48,
+    "Pop": 48,
+    "Detach": 48
+  },
+  "sequences": 6,
+  "cases_per_sequence": 8,
+  "editions": {
+    "originals": {
+      "binary_sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "capacity": 32768,
+      "actual_calls": {
+        "Add": 48,
+        "Allocate": 308,
+        "Rebuild": 64,
+        "Flood": 244,
+        "PostPop": 32,
+        "Pop": 16,
+        "Detach": 16
+      },
+      "assert_calls": 0,
+      "preparation_calls": {
+        "Reset": 2,
+        "Create": 14
+      },
+      "exports": {
+        "graphrecovery": {
+          "creation.c": "ecd16f598d170adfd07570b0e2f250de51adcf052e11fc2137d938421c951f34",
+          "functions.tsv": "08d5e6273302ffa1843e5db0e4505fa22644da75c2ac2b1df9d32d92d49dc0f7"
+        },
+        "graphrebuild": {
+          "creation.c": "ecdd66d340dc36689d51ed85f190e79d6d6ee7d48cc8fcdbe3b85324322002db",
+          "functions.tsv": "609ddee409a7bfaa0344b5ad8d0ac30cd4eff4b90f346411144af139ba67ffdb"
+        },
+        "graphremove": {
+          "creation.c": "08fc021ba770c21bf298a5e5e547dee7ad500cfac334fce29e30e34253deba22",
+          "functions.tsv": "804ff5b28df9aeec65f968d26e660e266ed4a160a64a5d44c223f222219cc3b4",
+          "geometry/creation.c": "e3ad29a66b1b88964ede5cd0c4c921c0df6ac07cf8935180e5004f38dd51d3ca",
+          "geometry/functions.tsv": "ced17335d5e0a8b25e97ae7d05019f43bdaef60955b0a024ca21d2096713587e"
+        }
+      }
+    },
+    "originalCD": {
+      "binary_sha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "capacity": 32768,
+      "actual_calls": {
+        "Add": 48,
+        "Allocate": 308,
+        "Rebuild": 64,
+        "Flood": 244,
+        "PostPop": 32,
+        "Pop": 16,
+        "Detach": 16
+      },
+      "assert_calls": 0,
+      "preparation_calls": {
+        "Reset": 2,
+        "Create": 14
+      },
+      "exports": {
+        "graphrecovery": {
+          "creation.c": "e516389687bfb40fb8ef2bbe87034aad6495d062c7ef89b139792c5eae36baf1",
+          "functions.tsv": "d4c6de6ae6af279205e4e6098c8737d41c5b88417b3abe96bd4e8cf07dce6e77"
+        },
+        "graphrebuild": {
+          "creation.c": "c7dc196839b0d179529ba2e93b09415ae7b39f2a49780650e2bfe2a421efea1c",
+          "functions.tsv": "77f583343a5cfc0117dc52f4e4361abdc8634f23c6dcdce518f196885968b28b"
+        },
+        "graphremove": {
+          "creation.c": "1761289145e9acb05aac79ccbe9eca0402da893bda663da4c53c7245b7a4400a",
+          "functions.tsv": "bc65de793c9e87b34663eafe1e897fcf5f5ace58dd0f07c9c61d372f7acd601e",
+          "geometry/creation.c": "11a0abebca8cfd416d30cd12ce7fbff0ab1216ac0876f98af4f1d587ab498aa5",
+          "geometry/functions.tsv": "a10cbae54b312028f6601e329c64a7dbe30dea72dc033a93f005b875873c22ce",
+          "lookup/creation.c": "c5b70aa1e42ef9abbd4d768501b50a17e2ef6e18a334fbd9b6a38c722251e91c",
+          "lookup/functions.tsv": "793756b25f6a448127d0e9e108f8435fea31511e1cdd8b85d1b447c3b74eba82"
+        }
+      }
+    },
+    "original1037": {
+      "binary_sha256": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+      "capacity": 32768,
+      "actual_calls": {
+        "Add": 48,
+        "Allocate": 308,
+        "Rebuild": 64,
+        "Flood": 244,
+        "PostPop": 32,
+        "Pop": 16,
+        "Detach": 16
+      },
+      "assert_calls": 0,
+      "preparation_calls": {
+        "Reset": 2,
+        "Create": 14
+      },
+      "exports": {
+        "graphrecovery": {
+          "creation.c": "e516389687bfb40fb8ef2bbe87034aad6495d062c7ef89b139792c5eae36baf1",
+          "functions.tsv": "d4c6de6ae6af279205e4e6098c8737d41c5b88417b3abe96bd4e8cf07dce6e77"
+        },
+        "graphrebuild": {
+          "creation.c": "c7dc196839b0d179529ba2e93b09415ae7b39f2a49780650e2bfe2a421efea1c",
+          "functions.tsv": "77f583343a5cfc0117dc52f4e4361abdc8634f23c6dcdce518f196885968b28b"
+        },
+        "graphremove": {
+          "creation.c": "1761289145e9acb05aac79ccbe9eca0402da893bda663da4c53c7245b7a4400a",
+          "functions.tsv": "bc65de793c9e87b34663eafe1e897fcf5f5ace58dd0f07c9c61d372f7acd601e",
+          "geometry/creation.c": "11a0abebca8cfd416d30cd12ce7fbff0ab1216ac0876f98af4f1d587ab498aa5",
+          "geometry/functions.tsv": "a10cbae54b312028f6601e329c64a7dbe30dea72dc033a93f005b875873c22ce",
+          "lookup/creation.c": "c5b70aa1e42ef9abbd4d768501b50a17e2ef6e18a334fbd9b6a38c722251e91c",
+          "lookup/functions.tsv": "793756b25f6a448127d0e9e108f8435fea31511e1cdd8b85d1b447c3b74eba82"
+        }
+      }
+    }
+  },
+  "stubbed": [],
+  "fixture_sha256": "201655d8f2a0693de127a892c8fe0b6e45f8e425c11b6edfb65e888e2d22b8a6",
+  "tool_sha256": "c926d8cc67823e40c0bb0ee0ab3308c422ac12db85539e5b7fa227b6ac08982d",
+  "dependencies": {
+    "decomp_graphrebuild_oracle.py": "c946e3c09d26404f0ba3fd9e9c981836e356049636699d43772168a9dd767c1e",
+    "decomp_graphremove_oracle.py": "9c6241fb8c2e3a2d1378dafa590709bf8e856e234d116d73a02357d102274e40",
+    "decomp_bridge_oracle.py": "c212538f7059cd0c9efac87cb205c71561fcc1f8d97df7830bc57d89a03f01fe",
+    "decomp_rawgraph_oracle.py": "7071a92bf58c3250df18dc1c3261b9fc2c5f17f4a0bafcdcfebf953e0591cd7b",
+    "decomp_graph_oracle.py": "47d2565b9d36a2654d4e60e20111995df889c383bad702a4ce6694e77dfadca5",
+    "decomp_creation_oracle.py": "a65b8e22a1116d5883745345d0c977d293fd61c3f919bf7ac4cc61ba4c052a38",
+    "decomp_sid_oracle.py": "eea44b1b0fa8a57b1a49ee246962ea346dec64b280761b0bff0ccdd87631ddd6",
+    "decomp_pop_oracle.py": "0120e5ebdc2183ac61a051ca2f4f79dbe0e9ffee864ca37ec04b5b49e70a1204",
+    "decomp_display_oracle.py": "147ccd4c899d97810a025334ac99200df665df657807af4f529c2dd05178c012",
+    "decomp_postpop_oracle.py": "85a507a48a4f37996e24b16e2766f6773502052199631fd163018a82e2d5a644",
+    "decomp_surface_oracle.py": "9b1711c22db7267bfcc4c9a870ee42c193f2041eee8a4f70b552e462c103b5ec",
+    "decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d"
+  },
+  "limitations": [
+    "정수·합성 자산 타입/FrameCode/SHP·32768 전체 raw 풀·기존 스택·동결 시계·비전투 null 큐",
+    "7개 슬롯/255개 Graph 레코드/dirty 직접 비교; 전체 풀/해시/spot/스택/통계 Adler-32",
+    "상위 공개 192회 중 각 호출 내부 재구성 1회; 준비/내부 도달은 상위 수에 더하지 않음",
+    "form/process·재구성 중 재소진·SID 소진 파생 삭제·raw GameWorld/GUI는 미검증"
+  ]
+}

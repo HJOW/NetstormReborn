@@ -41,10 +41,14 @@ std::uint8_t Graph::Allocate() {
 // 지역 입력을 전체 풀처럼 취급하지 않도록 소진 복구를 별도 API로 호출한다.
 std::uint8_t Graph::AllocateWithRecovery() {
     auto next=*this;
-    if (std::none_of(next.records_.begin(),next.records_.begin()+kCount,[](auto r){return !r.inUse;}))
-        next.RebuildImpl(true);
-    const auto number=next.Allocate();
+    const auto number=next.AllocateForOperation(GraphRecovery::FullPool);
     records_=next.records_; stack_=next.stack_; members_=std::move(next.members_); return number;
+}
+// 공개 함수의 성공 후 대입까지 같은 표/번호 컨테이너를 유지한다.
+std::uint8_t Graph::AllocateForOperation(GraphRecovery recovery) {
+    if (recovery==GraphRecovery::FullPool &&
+        std::none_of(records_.begin(),records_.begin()+kCount,[](auto r){return !r.inUse;})) RebuildImpl(true);
+    return Allocate();
 }
 // 손상 이웃이나 재구성 중 재소진에도 원본 입력을 부분 변경하지 않는다.
 void Graph::Rebuild(bool resetAll) {
@@ -106,11 +110,11 @@ std::uint32_t Graph::FloodImpl(std::uint16_t id,std::uint8_t graph) {
     return changed;
 }
 // 입력 오류와 지역 입력의 소진은 원본 위치/그래프를 쓰기 전에 처리한다.
-void Graph::Add(std::uint16_t id) {
-    auto next=*this; next.AddImpl(id); records_=next.records_; stack_=next.stack_; members_=std::move(next.members_);
+void Graph::Add(std::uint16_t id,GraphRecovery recovery) {
+    auto next=*this; next.AddImpl(id,recovery); records_=next.records_; stack_=next.stack_; members_=std::move(next.members_);
 }
 // 유효/활성 표면만 처리하고 가장 큰 연결 그래프의 동률에서는 첫 탐색 결과를 유지한다.
-void Graph::AddImpl(std::uint16_t id) {
+void Graph::AddImpl(std::uint16_t id,GraphRecovery recovery) {
     auto& source=members_.at(id); const auto& object=surfaces_.Object(id);
     if (object.x<=0 || object.y<=0 || object.x>=kWorldCells || object.y>=kWorldCells || (source.state&7)) return;
     std::vector<std::uint16_t> connections; int biggestSize=std::numeric_limits<int>::min(); std::uint8_t biggest=0;
@@ -122,7 +126,7 @@ void Graph::AddImpl(std::uint16_t id) {
         connections.push_back(neighbor);
         if (records_[graph].surfaces>biggestSize) { biggest=graph; biggestSize=records_[graph].surfaces; }
     }
-    if (connections.empty()) { FloodImpl(id,Allocate()); return; }
+    if (connections.empty()) { const auto number=AllocateForOperation(recovery); FloodImpl(id,number); return; }
     auto& winner=records_[biggest]; if (!winner.inUse) winner.inUse=1;
     source.graph=biggest; winner.surfaces=Word(winner.surfaces+1);
     if (connections.size()>1) {
@@ -133,19 +137,19 @@ void Graph::AddImpl(std::uint16_t id) {
     }
 }
 // 삭제 준비는 원천을 dead로 표시한 시점에 호출한다. flood가 제거 원천을 다시 방문하지 않는다.
-void Graph::Detach(std::uint16_t id,std::span<const std::uint16_t> connections,bool rebuild,std::uint8_t removedSurfaces) {
-    DetachAt(id,members_.at(id).graph,connections,rebuild,removedSurfaces);
+void Graph::Detach(std::uint16_t id,std::span<const std::uint16_t> connections,bool rebuild,std::uint8_t removedSurfaces,GraphRecovery recovery) {
+    DetachAt(id,members_.at(id).graph,connections,rebuild,removedSurfaces,recovery);
 }
-// 조회한 그래프 번호로 표를 고르되 dead 원천의 번호/상태/타입은 교체하지 않는다.
-void Graph::DetachAt(std::uint16_t id,std::uint8_t graph,std::span<const std::uint16_t> connections,bool rebuild,std::uint8_t removedSurfaces) {
+// 조회 번호를 원천에 대입하지 않는다. 선택한 전체 재구성은 원천의 번호도 다시 배정할 수 있다.
+void Graph::DetachAt(std::uint16_t id,std::uint8_t graph,std::span<const std::uint16_t> connections,bool rebuild,std::uint8_t removedSurfaces,GraphRecovery recovery) {
     CheckNumber(graph,true);
     if (!(members_.at(id).state&2) || (removedSurfaces!=1 && removedSurfaces!=9))
         throw std::invalid_argument("그래프 삭제 준비의 dead/감소 수 오류");
-    auto next=*this; next.DetachImpl(id,graph,connections,rebuild,removedSurfaces);
+    auto next=*this; next.DetachImpl(id,graph,connections,rebuild,removedSurfaces,recovery);
     records_=next.records_; stack_=next.stack_; members_=std::move(next.members_);
 }
 // 원본은 남은 연결의 마지막 하나를 기존 그래프에 남긴다. 다른 번호의 이웃도 남은 수에 포함한다.
-void Graph::DetachImpl(std::uint16_t id,std::uint8_t number,std::span<const std::uint16_t> connections,bool rebuild,std::uint8_t removedSurfaces) {
+void Graph::DetachImpl(std::uint16_t id,std::uint8_t number,std::span<const std::uint16_t> connections,bool rebuild,std::uint8_t removedSurfaces,GraphRecovery recovery) {
     if (number==kInvalid || !records_[number].inUse) return;
     if (connections.size()>=64) throw std::out_of_range("그래프 삭제 연결 목록 범위 오류");
     std::size_t remaining=connections.size(); bool keep=!rebuild;
@@ -154,7 +158,7 @@ void Graph::DetachImpl(std::uint16_t id,std::uint8_t number,std::span<const std:
         if (members_.at(neighbor).graph==number) {
             if (!rebuild && remaining<2) {
                 if (!(surfaces_.Object(id).flags2&8)) keep=true;
-            } else FloodImpl(neighbor,Allocate());
+            } else { const auto allocated=AllocateForOperation(recovery); FloodImpl(neighbor,allocated); }
         }
         --remaining;
     }

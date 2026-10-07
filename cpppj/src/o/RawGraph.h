@@ -10,9 +10,10 @@ struct RawGraphPop { float x{},y{}; int level{}; const RiftTypeRecord* type{}; }
 class RawGraph {
 public:
     // RiftType의 실제 FrameCode 표를 복사한다. 풀·해시·spot의 수명은 RawGraph보다 길어야 한다.
+    // FullPool은 Add/Detach/Pop에서 전체 자산 풀을 검사한 뒤 소진 복구를 허용하는 계약이다.
     RawGraph(SidPool& pool,SquidHash& hash,std::span<const std::uint8_t> spots,
         std::span<const RiftTypeRecord> types,std::span<const std::vector<FrameCode>> frames,
-        std::span<const GraphRecord> records={},std::span<const std::uint32_t> stack={});
+        std::span<const GraphRecord> records={},std::span<const std::uint32_t> stack={},GraphRecovery recovery=GraphRecovery::Reject);
     // 새 좌표/void 해제/spot·해시 등록까지 예측하여 실패를 공간 쓰기 전에 검출한다.
     void ValidateAdd(Sid sid,const RawGraphPop* pop=nullptr) const;
     // 영역 통지→표면 Add 순서를 한 복사본에서 시험하여 Pop 전에 모든 실패를 검출한다.
@@ -69,5 +70,7 @@ private:
     std::vector<std::vector<FrameCode>> frames_;
     std::array<GraphRecord,Graph::kTableSize> records_{};
     std::array<std::uint32_t,Graph::kFloodSize> stack_{};
+    // 전체 원본 자산 풀 계약을 선택한 경우 Add/Detach/Pop의 내부 번호 소진도 복구한다.
+    GraphRecovery recovery_{GraphRecovery::Reject};
 };
 }

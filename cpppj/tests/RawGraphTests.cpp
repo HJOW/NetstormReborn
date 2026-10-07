@@ -124,7 +124,8 @@ std::array<std::uint32_t,2> GraphHashes(const o::RawGraph& graph) {
 }
 
 // 공통 입력/전체 출력 대조를 공유하되 기대값은 각 실제 x86 도구가 독립적으로 기록한다.
-static void ReplayRawGraph(const char* path,int expectedBegins,int expectedCalls,bool regionFixture,bool globalFixture=false) {
+static void ReplayRawGraph(const char* path,int expectedBegins,int expectedCalls,bool regionFixture,bool globalFixture=false,
+    o::GraphRecovery recovery=o::GraphRecovery::Reject) {
     std::ifstream input(path); CHECK(input.good()); std::string line; int lineNumber=0,begins=0,calls=0;
     std::unique_ptr<o::SidPool> pool; std::unique_ptr<o::SquidHash> hash; std::unique_ptr<o::RawGraph> graph;
     std::unique_ptr<o::SquidPostPop> post; std::unique_ptr<o::SquidPop> pop; std::unique_ptr<o::SquidDisplay> display; std::unique_ptr<Sink> sink;
@@ -177,7 +178,7 @@ static void ReplayRawGraph(const char* path,int expectedBegins,int expectedCalls
             auto stack=regionFixture ? std::array<std::uint32_t,o::Graph::kFloodSize>{} : Stack(row[4]);
             // 새 fixture는 긴 stale 스택을 반복 저장하지 않고 입력 시드로 복원한다.
             if (regionFixture) for (std::size_t i=0;i<stack.size();++i) stack[i]=static_cast<std::uint32_t>(std::stoul(row[4])+i);
-            graph=std::make_unique<o::RawGraph>(*pool,*hash,spots,types,frames,Records(row[3]),stack);
+            graph=std::make_unique<o::RawGraph>(*pool,*hash,spots,types,frames,Records(row[3]),stack,recovery);
             post=std::make_unique<o::SquidPostPop>(*pool,types,state,graph.get());
             display=std::make_unique<o::SquidDisplay>(pool->Edition(),types,shapes,*sink,o::SquidDisplayView{0,0,65536,{0,0,640,480}});
             pop=std::make_unique<o::SquidPop>(*pool,*hash,spots,display.get(),post.get());
@@ -256,6 +257,42 @@ TEST_CASE(RawGraph_X86_DetachUsesPositionHeadGraphAndSourceFrame) {
 // 전체 풀을 실제로 순회한 세 PE×두 x87 정밀도의 무효 수집/전체 재구성/소진 할당을 대조한다.
 TEST_CASE(RawGraph_X86_GlobalRebuildAndExhaustedAllocation) {
     ReplayRawGraph(NETSTORM_GRAPHREBUILD_FIXTURE,6,288,true,true);
+}
+
+// 네 상위 호출 내부의 실제 재구성·이후 flood/감소/지도/통계/표시를 192개 독립 출력에 대조한다.
+TEST_CASE(RawGraph_X86_RecoveryInsideAddDetachPopAndPostPop) {
+    ReplayRawGraph(NETSTORM_GRAPHRECOVERY_FIXTURE,6,192,true,true,o::GraphRecovery::FullPool);
+}
+
+// 전체 풀 복구를 선택한 Pop도 다른 void 표면의 손상/내부 타입을 공간 쓰기 전에 거부한다.
+TEST_CASE(RawGraph_RecoveryPreflightRejectsOtherVoidAndInternalTypeBeforePop) {
+    auto types=Types(o::OriginalEdition::Patch1078); types[74].flags1=types[75].flags1=o::TypeFlag1::kSurface;
+    std::vector<std::vector<o::FrameCode>> frames(types.size()); frames[74]=frames[75]={{65,80,1,0}};
+    o::SidPool pool(o::OriginalEdition::Patch1078,32768,false); o::SquidFactory factory(pool,types);
+    const auto root=factory.Create(74,2),other=factory.Create(75,2);
+    Node(pool,root,74,{90,90,1,1,0x800,0,65,80,0,4,0,254,0});
+    Node(pool,other,75,{50,50,1,1,0x800,0,65,80,99,4,0,254,0});
+    o::SquidHash hash; std::vector<std::uint8_t> spots(o::kWorldCells*o::kWorldCells);
+    std::array<o::GraphRecord,o::Graph::kTableSize> records{};
+    // 모든 레코드를 활성으로 하여 Pop 뒤 Add에 반드시 전역 재구성이 필요하게 만든다.
+    for (std::size_t i=0;i<o::Graph::kCount;++i) records[i]={7,1,71};
+    o::RawGraph graph(pool,hash,spots,types,frames,records,{},o::GraphRecovery::FullPool);
+    o::SquidPostPopState state; state.graphsEnabled=true; o::SquidPostPop post(pool,types,state,&graph); o::SquidPop pop(pool,hash,spots,nullptr,&post);
+    // 처음에는 손상 프레임, 다음에는 미복원 내부 타입을 전체 순회에서 검출한다.
+    for (int scenario=0;scenario<2;++scenario) {
+        auto bytes=pool.AllocatedBytes(other); if (scenario) { Put(bytes,36,0); bytes[10]=5; }
+        const std::vector<std::uint8_t> saved(pool.Bytes().begin(),pool.Bytes().end()); const auto before=GraphHashes(graph);
+        CHECK(Throws([&]{pop.Pop(root,types[74],1,1,20,20,0x200);}));
+        CHECK(GraphHashes(graph)==before && std::equal(saved.begin(),saved.end(),pool.Bytes().begin()));
+        CHECK(hash.Bucket(0,20,20)==0 && state.depth==0 && state.totalCost==0);
+        CHECK(std::all_of(spots.begin(),spots.end(),[](auto v){return !v;}));
+    }
+    pool.AllocatedBytes(other)[10]=75;
+    CHECK(pop.Pop(root,types[74],1,1,20,20,0x200)==o::RawPopResult::Registered);
+    // 실제 x86 fixture에서도 genus 0·1칸 일반 표면은 1단계 hash에 등록된다.
+    CHECK(hash.Bucket(1,20,20)==root.value && pool.Slot(root)[33]==1 && !(pool.Slot(root)[11]&4));
+    CHECK(pool.Slot(root)[30]==1 && pool.Slot(other)[30]==3 && pool.Slot(other)[11]==4);
+    CHECK(graph.Records()[1].surfaces==1 && graph.Records()[2].surfaces==0 && graph.Records()[2].inUse==1);
 }
 
 // 여유 번호 경로는 무관한 raw 프레임을 읽지 않고, 전체 재구성 실패는 쓰기를 남기지 않는다.
