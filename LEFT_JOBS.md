@@ -1,6 +1,6 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
-> 최종 갱신: 2026-10-07 (**cpppj 1차 복원 기준은 사용자 결정대로 10.78이다.** 10.62 패치를 실행하지 않고 CD 기준으로 복원·3,729개 함수를 디컴파일했고, 10.82 본체 `netstorm.game` 10,130개/업데이터 2,618개를 별도 분석했다. DevLog와 바이너리/자료 차이를 대조하고 **같은 위치 다른 SID의 삭제 그래프 조회**를 10.78 기준으로 복원했다. [범위/재현/후속](docs/exe/cpp-reference-versions.md), [정적 기록](cpppj/recovery-reference-versions.json), [독립 x86 384회](cpppj/recovery-graphlookup-evidence.json). x64 Release 경고/오류 0·CTest 내부 **139개·실패 0**, 누적 제한 x86 입력 **60,642개**다. **현재 PC에서는 원본/복사본·업데이터/설치 도구 실행과 모든 창 검사를 금지한다. GUI 검사는 다른 PC에 인계한다.** 전역 Graph/SID 소진 복구·건물 부착·특수 타입 위치 조회·dirty/grid·참조/파생 삭제 수명·form/process·상위 수신 목록·AI/배치 선택·생산 덱/자원/SP 차감·raw GameWorld·건설/경제/전투/AI/승패는 남아 미션 완주는 불가능하다.)
+> 최종 갱신: 2026-10-07 (**cpppj 1차 복원 기준은 사용자 결정대로 10.78이다.** 10.62 패치를 실행하지 않고 CD 기준으로 복원·3,729개 함수를 디컴파일했고, 10.82 본체 `netstorm.game` 10,130개/업데이터 2,618개를 별도 분석했다. DevLog와 바이너리/자료 차이를 대조하고 **같은 위치 다른 SID의 삭제 그래프 조회**를 10.78 기준으로 복원했다. [범위/재현/후속](docs/exe/cpp-reference-versions.md), [정적 기록](cpppj/recovery-reference-versions.json), [독립 x86 384회](cpppj/recovery-graphlookup-evidence.json). x64 Release 경고/오류 0·CTest 내부 **139개·실패 0**, 누적 제한 x86 입력 **60,642개**다. **호스트 `DESKTOP-HJOW`에서는 원본/복사본·업데이터/설치 도구 실행과 모든 창 검사를 금지한다. GUI 검사는 `DESKTOP-HJOW` 이외의 PC에 인계한다.** 전역 Graph/SID 소진 복구·건물 부착·특수 타입 위치 조회·dirty/grid·참조/파생 삭제 수명·form/process·상위 수신 목록·AI/배치 선택·생산 덱/자원/SP 차감·raw GameWorld·건설/경제/전투/AI/승패는 남아 미션 완주는 불가능하다.)
 > 프로젝트 목표(AGENTS.md): 원본 NetStorm: Islands at War 를 디컴파일/분석하여 클론 코딩하고,
 > **Windows 10/11** 과 **GUI 환경의 Linux** 에서 동작하며 **여러 언어를 지원**하는 게임을 만든다.
 > **모방 범위(2026-10-03 AGENTS.md 변경)**: 기존 게임의 **사운드·그래픽·애니메이션 등 거의 모든 요소를 가능한 한 동일하게** 최대한 모방한다.
@@ -19,7 +19,7 @@
 - [x] **C++ 후속:** `RawGraph::Detach`가 같은 위치의 정상 다른 표면 SID의 번호를 조회하고, `Graph::DetachAt`이 원천 타입/프레임/genus와 조회 graph를 분리한다. 원천의 graph/state/payload는 바꾸지 않는다. 조회 254/미사용의 조기 반환과 손상 SID/위치/상태/번호·소진/순환의 변경 전 거부를 유지했다. fencemark/windArcher 특수 조회는 후속이다.
 - [x] **검증:** 세 실제 PE×두 x87 정밀도의 새 Detach **384회**를 대체 함수/assert/OS 없이 실행했다. 각 PE 내부 Allocate/Flood 216회는 상위 수에 더하지 않는다. 슬롯/dirty 직접 비교, 전체 풀/해시/spot/표/스택/통계 Adler-32. 최종 Release 경고/오류 0·CTest 내부 **139개·실패 0**(37.81초). 새/기존 graphremove SHA·호출 수와 정적 비교/패치 전체 재계산 확인을 통과했다. 이전 독립 도구/fixture/기록은 보존했다.
 - [ ] **다음 복원:** 10.78 Graph/SID 전역 소진 복구·건물 부착/dirty/grid·특수 타입 위치 조회·참조/파생 삭제/반납 수명·form/process·상위 수신 목록을 진행하고 raw GameWorld에 연결한다. 이어 다리 배치·Construction·생산 덱/자원/SP 차감·경제·전투·AI·승패로 이어 간다.
-- [ ] **다른 PC 창 인수인계:** raw 월드 연결 후 TEST01/1-1 생성·표시·선택·이동·해제·재진입 및 renderer/menu/world·전체화면·오디오 회귀를 검사한다. 현재 PC에서 `--run`·GUI 스모크·원본/복사본/업데이터 실행·`start_session`/`--live`는 실행하지 않는다. 다른 PC의 원본 비교 실행도 해당 AGENTS.md/사용자 지시를 확인한다. 막힌 업데이트 서버 접속을 복원하려 시도하지 않는다.
+- [ ] **다른 PC 창 인수인계:** raw 월드 연결 후 TEST01/1-1 생성·표시·선택·이동·해제·재진입 및 renderer/menu/world·전체화면·오디오 회귀를 `DESKTOP-HJOW` 이외의 PC에서 검사한다. 호스트 `DESKTOP-HJOW`에서 `--run`·GUI 스모크·원본/복사본/업데이터 실행·`start_session`/`--live`는 실행하지 않는다. 다른 PC의 원본 비교 실행도 해당 AGENTS.md/사용자 지시를 확인한다. 막힌 업데이트 서버 접속을 복원하려 시도하지 않는다.
 
 ---
 
