@@ -6,7 +6,7 @@
 
 **실제 삭제/낙하의 완료를 뜻하지 않는다.** raw 풀에서 현재 필드를 읽고 원본 순서로 외부 효과를 호출하는 어댑터다. 일반 탐색·기본 Squid 삭제·walker 가상 낙하·소리·제거 통지는 호출자가 연결한다. 기존 GUI GameWorld는 아직 임시 객체 모델이며 이 어댑터를 사용하지 않는다.
 
-**2026-10-07 후속:** [일반 공간 탐색](cpp-rawfinder-reconstruction.md)의 실제 4단계 해시/next·동적 필드를 복원하고 `MakeBridgeLifecycleHooks`로 연결했다. 이어 [공통 destroy](cpp-destroy-reconstruction.md)의 실제 Unpop/반납과 다리 훅 내부 링크 삭제를 새 x86 1,992개로 대조했다. 아래 6,170개·탐색 대체 범위·157개·창 허용은 이 문서의 당시 검사 기록이며 기존 fixture를 변경하지 않았다. 공통 pre/post의 Graph/목록/통계·파편/낙하/소리·raw GameWorld는 후속이다.
+**2026-10-07 후속:** [일반 공간 탐색](cpp-rawfinder-reconstruction.md)의 실제 4단계 해시/next·동적 필드를 복원하고 `MakeBridgeLifecycleHooks`로 연결했다. 이어 [공통 destroy](cpp-destroy-reconstruction.md)의 실제 Unpop/반납과 다리 훅 내부 링크 삭제를 새 x86 1,992개로 대조했다. 아래 6,170개·탐색 대체 범위·157개·창 허용은 이 문서의 당시 검사 기록이며 기존 fixture를 변경하지 않았다. 공통 pre/post의 Graph/목록/통계·파편/낙하/소리·raw GameWorld는 후속이다. 이어 [공통 장부 훅](cpp-destroylifecycle-reconstruction.md)의 선택·목록·통계·비용을 복원했으며 해당 최신 범위/남은 Graph·보상/SP·AI를 따른다.
 
 ## 원본 함수
 

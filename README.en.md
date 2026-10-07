@@ -24,7 +24,7 @@ There are two game builds, developed side by side.
 | Folder | Contents | Status |
 | --- | --- | --- |
 | `dotnetpj/` | **C# + MonoGame build.** A clone implemented from scratch by analyzing the original. | Campaign 1-1 and 1-2 above are playable. |
-| `cpppj/` | **C++ build.** C++ source reconstructed from the decompiled original version 10.78. | Windows only. Menu → campaign → briefing → terrain/object display, selection, priest movement and return are connected. Raw bridge calculations, decay/deletion hooks, general spatial search and common destruction with actual spatial removal/SID release are restored; common pre/post effects, live world integration, construction, combat and mission completion are pending. |
+| `cpppj/` | **C++ build.** C++ source reconstructed from the decompiled original version 10.78. | Windows only. Menu → campaign → briefing → terrain/object display, selection, priest movement and return are connected. Raw bridge calculations, decay/deletion hooks, general search, common destruction/spatial removal/SID release, and common pre/post selection, lists, counts and cost bookkeeping are restored. Common deletion Graph, refunds/SP and AI effects, live world integration, construction, combat and mission completion are pending. |
 
 Game data (`assets/game-data/`), the font (`fonts/`), the analysis documents (`docs/`), and the analysis tools (`tools/`, `analyzeManager/`) are shared by both builds and stay in the repository root. For the structure of the C++ build, how to build it, and how source is reconstructed from the decompiler output, see [C++ build](docs/cpp-build.md).
 

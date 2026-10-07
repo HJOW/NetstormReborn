@@ -31,6 +31,8 @@ public:
     // 원본의 curDestroy/curPostDestroy 카운터를 검증/후속 연결에 공개한다.
     std::uint32_t PreDepth() const;
     std::uint32_t PostDepth() const;
+    // 공통 훅이 같은 raw 풀을 처리하는지 생성 단계에서 확인한다.
+    const SidPool& Pool() const;
 private:
     // raw +4/+6 WORD를 호스트 정렬과 무관하게 읽는다.
     std::uint16_t Word(Sid sid,std::size_t offset) const;

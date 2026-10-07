@@ -74,4 +74,7 @@ cpppj/recovery-bridgeeffects-evidence.json text eol=lf
 # 공통 삭제의 새 독립 도구/기록/내보내기 목록은 SHA 재현을 위해 LF를 유지한다.
 tools/decomp_destroy_oracle.py text eol=lf
 cpppj/recovery-destroy-evidence.json text eol=lf
+cpppj/recovery-destroylifecycle-evidence.json text eol=lf
+tools/decomp_destroylifecycle_oracle.py text eol=lf
+tools/ghidra/destroylifecycle-functions.json text eol=lf
 tools/ghidra/destroy-functions.json text eol=lf

@@ -4,7 +4,7 @@
 
 **기존 게임 전체가 실제 플레이 가능한 수준으로 복원되는 것이 우선이다.** 화면비 확장·한국어·Linux·추가 기능은 이후다. 현재 작업 순서·완료 기준은 [실제 플레이 복원 계획](cpp-playable-plan.md), 기반 복원 세부 항목은 [기존 로드맵](cpp-roadmap.md)에 있다. 이 문서는 빌드와 소스 복원 규칙을 다룬다.
 
-**1차 판본은 10.78(2026-10-07 사용자 결정)**이다. 최신: [공통 Squid 삭제·실제 Unpop/SID 반납·다리 중첩 삭제](exe/cpp-destroy-reconstruction.md)를 새 x86 **1,992개**로 대조했고 Release 경고/오류 0·CTest 내부 **169개·실패 0**, 누적 제한 입력 **85,584개**다. dead·훅 깊이·종속 체인·전파/선택·공간 해제/반납 순서를 복원했다. 공통 pre/post의 Graph/목록/통계·종속 파생 효과·파편/소리/낙하·이벤트·raw GameWorld 연결은 남았다. [일반 탐색](exe/cpp-rawfinder-reconstruction.md), [삭제 훅/낙하 좌표](exe/cpp-bridgeeffects-reconstruction.md), [붕괴 스캔](exe/cpp-bridgedecay-reconstruction.md), [판본/DevLog 비교](exe/cpp-reference-versions.md)는 앞선 기록이다. **이번 호스트 `DESKTOP-HJOW`에서는 원본/복사본 게임·업데이터/설치 도구·클론 창을 실행하지 않았다.** 이전 클론 창 20개 상태 검사는 당시 작업에 한한 허용의 이력이며 이번에 적용하지 않았다. 창 검증은 다른 허용 PC에 인계한다.
+**1차 판본은 10.78(2026-10-07 사용자 결정)**이다. 최신: [공통 pre/postDestroy 장부](exe/cpp-destroylifecycle-reconstruction.md)를 새 x86 **1,728개**로 대조했고 Release 경고/오류 0·CTest 내부 **175개·실패 0**(60.85초), 누적 제한 입력 **87,312개**다. 선택/abstract 배치 복구·공급/작업장/소유자 목록 제거·현재 타입 수 감소·누적 생산 수 유지·unitLost 사건/좌표·판본별 비용 차감을 공통 destroy의 실제 Unpop/SID 반납에 연결했다. 공통 Graph 분할/Free·주변 표면 Add, 실제 보상/SP·AI 통지·종속 파생 메서드·파편/소리/낙하·이벤트·raw GameWorld 연결은 남았다. [공통 삭제 순서](exe/cpp-destroy-reconstruction.md), [일반 탐색](exe/cpp-rawfinder-reconstruction.md), [삭제 훅/낙하 좌표](exe/cpp-bridgeeffects-reconstruction.md), [판본/DevLog 비교](exe/cpp-reference-versions.md)는 앞선 기록이다. **이번 호스트 `DESKTOP-HJOW`에서는 원본/복사본 게임·업데이터/설치 도구·클론 창을 실행하지 않았다.** 이전 클론 창 허용은 해당 작업에만 적용된 이력이다. 창 검증은 다른 허용 PC에 인계한다.
 
 ## 1. 두 빌드의 관계
 

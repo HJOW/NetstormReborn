@@ -28,6 +28,8 @@ void RawSquidDestroy::CompletePostDestroy() { --postDepth_; }
 std::uint32_t RawSquidDestroy::PreDepth() const { return preDepth_; }
 // 현재 postDestroy 카운터를 읽는다.
 std::uint32_t RawSquidDestroy::PostDepth() const { return postDepth_; }
+// 공통 삭제/훅 어댑터의 풀 소유자를 읽기 전용으로 제공한다.
+const SidPool& RawSquidDestroy::Pool() const { return pool_; }
 // 원본은 dead를 먼저 켜므로 중첩된 같은 객체 삭제는 모든 외부 효과를 건너뛴다.
 void RawSquidDestroy::Destroy(Sid sid,std::uint32_t flags,const SquidDestroyHooks& hooks) {
     if (sid.value<5 || sid.value==pool_.Layout().predictableFirst || sid.value>=pool_.Capacity())

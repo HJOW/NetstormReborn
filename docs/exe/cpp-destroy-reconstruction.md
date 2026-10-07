@@ -4,7 +4,9 @@
 
 소스: [RawSquidDestroy.h](../../cpppj/src/o/RawSquidDestroy.h), [RawSquidDestroy.cpp](../../cpppj/src/o/RawSquidDestroy.cpp). 검사: [RawDestroyTests.cpp](../../cpppj/tests/RawDestroyTests.cpp). 독립 출력: [destroy-x86.tsv](../../cpppj/tests/fixtures/destroy-x86.tsv), [근거 기록](../../cpppj/recovery-destroy-evidence.json), [생성/감사 도구](../../tools/decomp_destroy_oracle.py).
 
-**복원 범위는 공통 삭제의 제어 흐름과 지원 자산의 실제 Unpop/반납이다.** 공통 pre/postDestroy의 그래프·목록·통계·소리/경로 효과와 종속 객체의 파생 가상 메서드는 콜백 계약이다. 기존 GUI GameWorld는 임시 객체 모델이며 이 어댑터에 연결하지 않았다. 미션 완주나 전체 파생 삭제 복원으로 세지 않는다.
+**복원 범위는 공통 삭제의 제어 흐름과 지원 자산의 실제 Unpop/반납이다.** 공통 pre/postDestroy의 그래프·목록·통계·소리/삭제 보상·AI 효과와 종속 객체의 파생 가상 메서드는 콜백 계약이다. 기존 GUI GameWorld는 임시 객체 모델이며 이 어댑터에 연결하지 않았다. 미션 완주나 전체 파생 삭제 복원으로 세지 않는다.
+
+**2026-10-07 후속:** [공통 pre/postDestroy 장부](cpp-destroylifecycle-reconstruction.md)의 선택 복구·작업장/공급/소유자 목록·현재/누적 통계·손실 좌표·비용을 실제 삭제/반납에 연결해 새 x86 1,728개로 대조했다. 아래 1,992개·169개와 공통 훅 대체 설명은 당시 독립 기록이다. Graph·보상/SP·AI·파생 삭제·raw GameWorld는 후속이다.
 
 ## 원본 함수와 재디컴파일
 
@@ -75,6 +77,6 @@ ctest --test-dir cpppj/build -C Release --output-on-failure
 
 ## 바로 다음
 
-공통 preDestroy `004b0950`에서 선택/abstract 처리·표면 Graph 분할/직접 감소·작업장/소유자 목록·타입 통계·unitLost/경로/참조 효과를 복원하고, postDestroy `004b0840`의 표면 무효화/전역 기록을 연결한다. 그다음 종속 form/process의 가상 release/destroy와 파편 `004604a0`, walker vtable +200/칸 위 carrier·이벤트 0x2692의 실행/취소·끝 칸 변환을 잇는다. 다리 배치/Construction·SID 소진·raw GameWorld·건설/경제/전투/AI/승패도 남았다.
+공통 선택/목록/통계/손실 좌표/비용은 [후속 장부 훅](cpp-destroylifecycle-reconstruction.md)에서 복원했다. 다음은 pre의 표면 Graph 분할/Free와 post의 주변 finder→표면 Add, 실제 삭제 보상/SP·AI 통지다. 기존 “경로” 후보 `0044c2f0`/CD `004626d0`는 삭제 보상 함수로 정정했다. 그다음 종속 form/process의 가상 release/destroy와 파편 `004604a0`, walker vtable +200/칸 위 carrier·이벤트 0x2692의 실행/취소·끝 칸 변환을 잇는다. 다리 배치/Construction·SID 소진·raw GameWorld·건설/경제/전투/AI/승패도 남았다.
 
 호스트 **`DESKTOP-HJOW`의 기존 창 제한을 유지한다.** 다른 허용 PC에서 raw 월드 연결 후 다리 붕괴→그래프/공간/반납→파편/소리/낙하와 TEST01/1-1 생성·삭제·재진입을 검사한다. 이전 작업의 일회성 창 허용은 이번에 적용하지 않았다.

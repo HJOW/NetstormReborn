@@ -1,0 +1,159 @@
+{
+  "cases": {
+    "Pair": 1152,
+    "Destroy": 576
+  },
+  "total": 1728,
+  "fpu_controls": [
+    639,
+    895
+  ],
+  "editions": {
+    "originals": {
+      "binary_sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "native_calls": {
+        "Destroy": 192,
+        "Unpop": 104,
+        "Release": 192
+      },
+      "lifecycle_calls": {
+        "Pre": 576,
+        "Post": 576,
+        "provider_remove": 60,
+        "ai": 140,
+        "owner_remove": 232,
+        "factory_remove": 58
+      },
+      "substitutions": {
+        "selected": 768,
+        "clear": 384,
+        "refund": 98,
+        "unit_lost": 20,
+        "log": 192
+      },
+      "asserts": 0
+    },
+    "originalCD": {
+      "binary_sha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "native_calls": {
+        "Destroy": 192,
+        "Unpop": 104,
+        "Release": 192
+      },
+      "lifecycle_calls": {
+        "Pre": 576,
+        "Post": 576,
+        "provider_remove": 60,
+        "ai": 140,
+        "owner_remove": 232,
+        "factory_remove": 58
+      },
+      "substitutions": {
+        "selected": 768,
+        "clear": 384,
+        "refund": 98,
+        "unit_lost": 24,
+        "log": 192
+      },
+      "asserts": 0
+    },
+    "original1037": {
+      "binary_sha256": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+      "native_calls": {
+        "Destroy": 192,
+        "Unpop": 104,
+        "Release": 192
+      },
+      "lifecycle_calls": {
+        "Pre": 576,
+        "Post": 576,
+        "provider_remove": 60,
+        "ai": 140,
+        "owner_remove": 232,
+        "factory_remove": 58
+      },
+      "substitutions": {
+        "selected": 768,
+        "clear": 384,
+        "refund": 98,
+        "unit_lost": 24,
+        "log": 192
+      },
+      "asserts": 0
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/destroylifecycle-x86.tsv": "c3200decd6f3028dcfcefb84429e37f05a6d162fedb969fd331e711fb0846a19",
+    "extracted/bridgeeffects/original1037/creation.c": "76acd15962cfadb844dd6689014a8a67ee0fc744d16c5a32528d4cafdb7fb911",
+    "extracted/bridgeeffects/original1037/functions.tsv": "b99e5f65a90d402a49be3353263e66080fbf1d3825b19685d7a49edd2e4c4abd",
+    "extracted/bridgeeffects/originalCD/creation.c": "76acd15962cfadb844dd6689014a8a67ee0fc744d16c5a32528d4cafdb7fb911",
+    "extracted/bridgeeffects/originalCD/functions.tsv": "b99e5f65a90d402a49be3353263e66080fbf1d3825b19685d7a49edd2e4c4abd",
+    "extracted/bridgeeffects/originals/creation.c": "ac1856212fbd285650dc4ec999fa996a306ba536a3e42d605fba4ab26178fdbc",
+    "extracted/bridgeeffects/originals/functions.tsv": "485cd05093884690ffc94c433c4e040282cd6ca26eb7da469732f74e1c983cec",
+    "extracted/creation/originalCD/creation.c": "6968a5c10a81f60f270671e24c163202da11b99bdf64578d038c3eb54cff49ac",
+    "extracted/creation/originalCD/functions.tsv": "4853e93e88fd741083d3cc6d5ef2429e652e8fa13b3a2315dba6e36585ff3f3d",
+    "extracted/creation/originalCD/sid.c": "0cca76d89c1979de7dee125b438cf1a3188db9b01c95d7f733162650df1f9a13",
+    "extracted/creation/originals/creation.c": "426ae0f7c99bece695fc93cd81c3b291ae3cb8303c9dcb7c6223e330e3fa81ae",
+    "extracted/creation/originals/functions.tsv": "42b14fee0b262fd92c833ec51db3cf772e92fd56b6ccbdc1c589955eb347ccb7",
+    "extracted/creation/originals/sid.c": "426ae0f7c99bece695fc93cd81c3b291ae3cb8303c9dcb7c6223e330e3fa81ae",
+    "extracted/destroy/original1037/creation.c": "9aa6ba6add124bb5cf065adca4a006a6df8c8513e045c9adf61d9d167027536f",
+    "extracted/destroy/original1037/functions.tsv": "6ca9af7728d30a4b79b65f22308067cb66ab80bf7668f5a75efc4ccb0304ae83",
+    "extracted/destroy/originalCD/creation.c": "9aa6ba6add124bb5cf065adca4a006a6df8c8513e045c9adf61d9d167027536f",
+    "extracted/destroy/originalCD/functions.tsv": "6ca9af7728d30a4b79b65f22308067cb66ab80bf7668f5a75efc4ccb0304ae83",
+    "extracted/destroy/originals/creation.c": "a13332eb0e7e64edf76d9db2ef575183203f609d3b27d86220b365983236349b",
+    "extracted/destroy/originals/functions.tsv": "9d33d7cbb6f48eda2ca71f17775579a6b4c2f5d711fc0713274d4182f07b7e09",
+    "extracted/destroylifecycle/original1037/creation.c": "3c3db6548dd7481489e38ec6d9da5a25f0a0964d94da8e489d3e5a4197a62ff5",
+    "extracted/destroylifecycle/original1037/functions.tsv": "20997f82cffb8e11180fcc18ee694dd52c1d1dcb88a3a70d198423885dea5c64",
+    "extracted/destroylifecycle/originalCD/creation.c": "3c3db6548dd7481489e38ec6d9da5a25f0a0964d94da8e489d3e5a4197a62ff5",
+    "extracted/destroylifecycle/originalCD/functions.tsv": "20997f82cffb8e11180fcc18ee694dd52c1d1dcb88a3a70d198423885dea5c64",
+    "extracted/destroylifecycle/originals/creation.c": "9436f4694e03f3682e2a230def8bf7c1986d8902f885de46ac36607a6aa2cde2",
+    "extracted/destroylifecycle/originals/functions.tsv": "35cb83cfc94dba63a72ea449e08a3473f64fcc5a6e283758a8856790e15561d3",
+    "extracted/finder/original1037/creation.c": "822eece37b0a0edde482232eacb0710ae8cf11c759417bc3108fa5ecc0585972",
+    "extracted/finder/original1037/functions.tsv": "60cf1f9e4a7832ebe882a869af2bd2cd69e549e761fb03d7d4d64bb5fb3c5935",
+    "extracted/finder/originalCD/creation.c": "822eece37b0a0edde482232eacb0710ae8cf11c759417bc3108fa5ecc0585972",
+    "extracted/finder/originalCD/functions.tsv": "60cf1f9e4a7832ebe882a869af2bd2cd69e549e761fb03d7d4d64bb5fb3c5935",
+    "extracted/finder/originals/creation.c": "2f6baf5e3cf77598e067963196c8fcd5c7d15ee09db54f3f68e8071191ea9070",
+    "extracted/finder/originals/functions.tsv": "7ee781ffc6200c8f6b231381c4dae7ce88e5c0158f4b8effb222090bf8345704",
+    "extracted/graphremove/original1037/creation.c": "1761289145e9acb05aac79ccbe9eca0402da893bda663da4c53c7245b7a4400a",
+    "extracted/graphremove/original1037/functions.tsv": "bc65de793c9e87b34663eafe1e897fcf5f5ace58dd0f07c9c61d372f7acd601e",
+    "extracted/graphremove/original1037/geometry/creation.c": "11a0abebca8cfd416d30cd12ce7fbff0ab1216ac0876f98af4f1d587ab498aa5",
+    "extracted/graphremove/original1037/geometry/functions.tsv": "a10cbae54b312028f6601e329c64a7dbe30dea72dc033a93f005b875873c22ce",
+    "extracted/graphremove/original1037/lookup/creation.c": "c5b70aa1e42ef9abbd4d768501b50a17e2ef6e18a334fbd9b6a38c722251e91c",
+    "extracted/graphremove/original1037/lookup/functions.tsv": "793756b25f6a448127d0e9e108f8435fea31511e1cdd8b85d1b447c3b74eba82",
+    "extracted/graphremove/originalCD/creation.c": "1761289145e9acb05aac79ccbe9eca0402da893bda663da4c53c7245b7a4400a",
+    "extracted/graphremove/originalCD/functions.tsv": "bc65de793c9e87b34663eafe1e897fcf5f5ace58dd0f07c9c61d372f7acd601e",
+    "extracted/graphremove/originalCD/geometry/creation.c": "11a0abebca8cfd416d30cd12ce7fbff0ab1216ac0876f98af4f1d587ab498aa5",
+    "extracted/graphremove/originalCD/geometry/functions.tsv": "a10cbae54b312028f6601e329c64a7dbe30dea72dc033a93f005b875873c22ce",
+    "extracted/graphremove/originalCD/lookup/creation.c": "c5b70aa1e42ef9abbd4d768501b50a17e2ef6e18a334fbd9b6a38c722251e91c",
+    "extracted/graphremove/originalCD/lookup/functions.tsv": "793756b25f6a448127d0e9e108f8435fea31511e1cdd8b85d1b447c3b74eba82",
+    "extracted/graphremove/originals/creation.c": "08fc021ba770c21bf298a5e5e547dee7ad500cfac334fce29e30e34253deba22",
+    "extracted/graphremove/originals/functions.tsv": "804ff5b28df9aeec65f968d26e660e266ed4a160a64a5d44c223f222219cc3b4",
+    "extracted/graphremove/originals/geometry/creation.c": "e3ad29a66b1b88964ede5cd0c4c921c0df6ac07cf8935180e5004f38dd51d3ca",
+    "extracted/graphremove/originals/geometry/functions.tsv": "ced17335d5e0a8b25e97ae7d05019f43bdaef60955b0a024ca21d2096713587e",
+    "extracted/sid/originalCD/functions.tsv": "a54643de18c5c9480a91e9e2c67abbc3455506d2cd92934d1882eb3710f57de9",
+    "extracted/sid/originalCD/sid.c": "a05d6cdfcf390ff16ecfc6a15acbb8fc9641d6fead52c757778580d5a9c52e70",
+    "extracted/sid/originals/functions.tsv": "3034dd0d393ebdfd77f2e9fafe8a5b252d5437f1e71ab94541cc229e8ef8694b",
+    "extracted/sid/originals/sid.c": "c5a65579154341bba33e0d4f772e9f1184073b5137849a97662182be2e9c11e2",
+    "tools/decomp_creation_oracle.py": "a65b8e22a1116d5883745345d0c977d293fd61c3f919bf7ac4cc61ba4c052a38",
+    "tools/decomp_destroy_oracle.py": "5b62bc7af542d3e12341a7e2c71f102a599bbb1593a73f87f2fd1226f7255456",
+    "tools/decomp_destroylifecycle_oracle.py": "cc206af312f320a0483b7779f683058ef8cfaac343363756d20025107be16eb9",
+    "tools/decomp_display_oracle.py": "147ccd4c899d97810a025334ac99200df665df657807af4f529c2dd05178c012",
+    "tools/decomp_graph_oracle.py": "47d2565b9d36a2654d4e60e20111995df889c383bad702a4ce6694e77dfadca5",
+    "tools/decomp_graphremove_oracle.py": "9c6241fb8c2e3a2d1378dafa590709bf8e856e234d116d73a02357d102274e40",
+    "tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+    "tools/decomp_pop_oracle.py": "0120e5ebdc2183ac61a051ca2f4f79dbe0e9ffee864ca37ec04b5b49e70a1204",
+    "tools/decomp_postpop_oracle.py": "85a507a48a4f37996e24b16e2766f6773502052199631fd163018a82e2d5a644",
+    "tools/decomp_rawgraph_oracle.py": "7071a92bf58c3250df18dc1c3261b9fc2c5f17f4a0bafcdcfebf953e0591cd7b",
+    "tools/decomp_sid_oracle.py": "eea44b1b0fa8a57b1a49ee246962ea346dec64b280761b0bff0ccdd87631ddd6",
+    "tools/decomp_surface_oracle.py": "9b1711c22db7267bfcc4c9a870ee42c193f2041eee8a4f70b552e462c103b5ec",
+    "tools/ghidra/destroylifecycle-functions.json": "e80b3537436e29a938e8ad4e8cadd5191736d25bbb08dbb2e876214f2b1c4990",
+    "tools/ghidra/ExportCreation.java": "f3de091e8e42fe70f2439fcbd97127db18a58161e63bde5ee1638eebd9de3107"
+  },
+  "limits": [
+    "실제 공통 pre/post/list/선택 복구/통계/비용·destroy/Unpop/Release와 CRT 기록 이동",
+    "합성 타입/목록/등록·표시 억제·소진 전·Graph 비활성·AI null·비전투 null 큐",
+    "보상/SP·unitLost 실제 소리·선택 UI·전파·로그는 명시적 사건 대체",
+    "Pair는 직접 훅 호출의 DWORD 깊이 underflow, Destroy는 균형 깊이·실제 반납",
+    "건물 통합 삭제 입력은 이미 void: 실제 건물 Unpop 완료 증명이 아님; 게임/OS/창 실행 없음"
+  ]
+}
