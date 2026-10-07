@@ -1,4 +1,4 @@
-// SquidFinder.cpp의 flag 8 표면 이웃 탐색 경로. 일반 공간 해시/이동 중 소수 좌표는 후속이다.
+// SquidFinder.cpp의 flag 8 표면 이웃 탐색 경로. 일반 사각형/소수 좌표 탐색은 RawSquidFinder에 있다.
 #pragma once
 #include "o/RiftType.h"
 #include "o/TerrainBuilder.h"

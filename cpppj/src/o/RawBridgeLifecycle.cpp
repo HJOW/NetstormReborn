@@ -1,11 +1,23 @@
 // 원본 Bridge.cpp의 삭제 전후 훅과 낙하 이벤트 좌표 인코딩. 세 PE의 제한 x86 기대값으로 검사한다.
 #include "o/RawBridgeLifecycle.h"
+#include "o/RawSquidFinder.h"
 #include <bit>
 #include <cmath>
 #include <limits>
 #include <stdexcept>
+#include <utility>
 
 namespace netstorm::o {
+// 각 후보의 현재 raw 필드를 읽는 일반 탐색기를 기존 순서 있는 삭제 훅 인터페이스에 공급한다.
+BridgeLifecycleHooks MakeBridgeLifecycleHooks(RawSquidFinder& finder,
+    std::function<void(const BridgeLifecycleEvent&)> emit) {
+    return {
+        // 다리 훅의 정수 탐색 범위를 원본 일반 사각형 Begin에 그대로 넘긴다.
+        [&finder](BridgeLifecycleSearch area) { return finder.Begin({area.left,area.top,area.right,area.bottom}); },
+        // 이전 후보의 삭제 뒤 다음 raw 체인/버킷을 읽는다.
+        [&finder] { return finder.Next(); },std::move(emit)
+    };
+}
 namespace {
 // 공통 슬롯 오프셋과 extra/state/genus 마스크. 링크의 첫 참조는 수명 필드와 같은 +12 WORD다.
 constexpr std::size_t kType = 10,kState = 11,kFirstReference = 12,kSecondReference = 8,kX = 14,kY = 18;

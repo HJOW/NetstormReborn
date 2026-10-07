@@ -1,10 +1,11 @@
 // 다리 preDestroy/postDestroy의 raw SID 판단과 외부 효과 호출 순서를 복원한다.
-// 일반 탐색·기본 삭제·낙하 가상 메서드·소리·통지는 호출자가 연결한다. 원본 포인터를 실행하지 않는다.
+// 일반 탐색은 RawSquidFinder로 연결한다. 기본 삭제·낙하·소리·통지는 호출자가 연결한다.
 #pragma once
 #include "o/SidPool.h"
 #include <functional>
 
 namespace netstorm::o {
+class RawSquidFinder;
 // 00421530 ↔ CD 004490b0가 등록하는 낙하 처리 이벤트 번호다.
 inline constexpr std::uint32_t kBridgeFallEvent = 0x2692;
 // 원본 preDestroy의 ±1 사각형과 postDestroy의 한 칸 탐색 범위다(양 끝 포함).
@@ -24,6 +25,10 @@ struct BridgeLifecycleHooks {
     std::function<Sid()> next;
     std::function<void(const BridgeLifecycleEvent&)> emit;
 };
+// 실제 raw 일반 탐색기의 Begin/Next를 삭제 훅에 연결한다. emit의 삭제/소리/낙하 구현은 호출자 책임이다.
+// 반환한 콜백은 finder를 참조하므로 finder가 더 오래 살아야 하며 동시에 다른 탐색에 재사용하면 안 된다.
+BridgeLifecycleHooks MakeBridgeLifecycleHooks(RawSquidFinder& finder,
+    std::function<void(const BridgeLifecycleEvent&)> emit);
 class RawBridgeLifecycle {
 public:
     // 타입 표와 풀은 이 어댑터보다 오래 살아야 하며 같은 판본의 실제 번호 배치를 사용한다.

@@ -69,6 +69,8 @@ ctest --test-dir cpppj/build -C Release --output-on-failure
 
 ## 5. 다음 연결 순서
 
+2026-10-07 후속에서 [일반 공간 탐색 Begin/Next](cpp-rawfinder-reconstruction.md)의 네 단계/next 순회·소수 좌표 발자국·동적 필터 시점을 복원해 raw 다리 삭제 훅에 연결했다. 현재 raw GameWorld 연결과 파생 가상 필터/실제 삭제 효과는 남았다. 위의 탐색 제외 범위와 검사 수는 해시 기반을 복원한 당시 기록이다.
+
 2026-10-06 후속에서 next 체인·Pop/Unpop의 spot/상태·CD 충돌 차이·표면 word·정수 SurfaceFinder 전달을 추가했다. [공간 등록 문서](cpp-spatial-reconstruction.md)의 조건부 검증 범위를 참고한다. 위 87개/31,500개는 해시 계산 단계 당시 기록이며 최신 검사 수는 93개/32,378개다.
 
 1. 실제 SID 번호 할당/반납·세대/free list·파생 생성자를 복원한다. 표면 번호와 새 GameWorld 런타임 번호를 암묵적으로 섞지 않는다.

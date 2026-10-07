@@ -24,7 +24,7 @@ There are two game builds, developed side by side.
 | Folder | Contents | Status |
 | --- | --- | --- |
 | `dotnetpj/` | **C# + MonoGame build.** A clone implemented from scratch by analyzing the original. | Campaign 1-1 and 1-2 above are playable. |
-| `cpppj/` | **C++ build.** C++ source reconstructed from the decompiled original game. | Partial recovery of the core, configuration, types, fort file reading, territory layout, basic graphics, and the original-style window and screen device (windowed mode); asset, configuration and mission inspection, BMP export and an inspection view work. Windows only. The game screen and combat are pending. |
+| `cpppj/` | **C++ build.** C++ source reconstructed from the decompiled original version 10.78. | Windows only. Menu → campaign → briefing → terrain/object display, selection, priest movement and return are connected. Raw bridge calculations, decay/deletion hooks and general spatial search are restored; integration into the live world, construction, combat and mission completion are pending. |
 
 Game data (`assets/game-data/`), the font (`fonts/`), the analysis documents (`docs/`), and the analysis tools (`tools/`, `analyzeManager/`) are shared by both builds and stay in the repository root. For the structure of the C++ build, how to build it, and how source is reconstructed from the decompiler output, see [C++ build](docs/cpp-build.md).
 
