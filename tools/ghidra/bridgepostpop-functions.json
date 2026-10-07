@@ -1,0 +1,8 @@
+{
+  "description": "다리 전용 postPop의 flag/extra 접두와 공통 postPop 호출 순서 대조를 위한 읽기 전용 함수 몸체.",
+  "editions": {
+    "originals": ["00422150"],
+    "originalCD": ["00449890"],
+    "original1037": ["00449890"]
+  }
+}

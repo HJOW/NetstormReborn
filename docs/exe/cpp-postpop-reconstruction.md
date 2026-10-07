@@ -58,4 +58,6 @@ x64 Release 경고/오류 0, CTest 내부 **124개·실패 0**. 최초 등록/�
 
 후속에서 [정수 표면 Graph의 연결·flood·병합/표 관리](cpp-graph-reconstruction.md)를 복원하고 [raw graph byte·공통 postPop surface 분기·지원 Pop](cpp-rawgraph-reconstruction.md)에 선택 연결했다.
 
+2026-10-08에는 실제 다리 vtable +0x20의 `00422150`/CD `00449890` 접두를 [별도로 복원했다](cpp-neighbor-reconstruction.md#다리-전용-postpop의-접두). extra 비트 갱신과 연결 요청이 공통 postPop보다 먼저 실행되며 공통 통계 억제도 이 접두를 막지 않는다. 실제 연결 객체 생성/소유자 전파는 명시적 콜백 경계다. 정확한 다리 가상 표와 콜백을 공급한 인스턴스만 추가로 지원하며 기존 공통 가상 표 목록과 다른 파생 함수의 거부는 유지한다.
+
 주변 영역 통지·정상 다리/섬 Pop·그래프 삭제 분할/소진 복구·AI·배치 선택·생산 덱/자원 계산·SP 차감·dirty/grid·표면 부착 프레임·섬/다리/건물/파생 가상·삭제/의존 객체/참조 수명·form/process·SID 소진/Take 목록을 이어 복원한다. 실제 SID/표면/프레임을 GameWorld에 연결한 뒤 다리 배치/Construction·건설/경제/전투/AI/승패로 이어야 한다. 현재 미션 완주는 불가능하다.

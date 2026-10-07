@@ -17,6 +17,8 @@
 
 using namespace netstorm;
 namespace {
+// client SID 영역의 원본 경계를 포함하는 최소 검증 풀 크기다. 작은 임의 풀은 SidPool 계약상 유효하지 않다.
+constexpr std::uint32_t kBridgePoolCapacity=24000;
 // TSV의 열과 정수 비트 패턴을 손실 없이 읽는다.
 std::vector<std::string> Fields(const std::string& line) {
     std::istringstream input(line); std::vector<std::string> result; std::string item;
@@ -214,6 +216,69 @@ TEST_CASE(SquidPostPop_UnsupportedEffectsAndCorruptList_RejectBeforeSpaceWrites)
     CHECK(Throws([&]{ invalidCost.Activate(sid,0x2000001); })); CHECK(graphState.depth==0); CHECK(Hex(pool.Slot(sid))==registered);
     o::SidPool other(o::OriginalEdition::Patch1078,32768,false); o::SquidPostPop wrong(other,types,state);
     CHECK(Throws([&]{ o::SquidPop invalid(pool,hash,spots,nullptr,&wrong); }));
+}
+
+// 실제 다리 postPop의 접두 관찰 240개를 재생하며 후속 연결/공통 함수는 관찰 경계로 둔다.
+TEST_CASE(SquidPostPop_BridgePrefix_X86_FlagsAndExtra) {
+    std::ifstream input(NETSTORM_BRIDGEPOSTPOP_FIXTURE); CHECK(input.good());
+    std::array<std::size_t,3> counts{}; std::string line;
+    // 세 PE의 flags/extra 입력을 각각 독립 슬롯에서 검사한다.
+    while (std::getline(input,line)) {
+        if (line.empty() || line.front()=='#') continue;
+        const auto row=Fields(line); CHECK(row.size()==5);
+        const std::size_t index=row[0]=="originals" ? 0 : row[0]=="originalCD" ? 1 : 2;
+        const auto edition=index==0 ? o::OriginalEdition::Patch1078 : o::OriginalEdition::Cd1072;
+        o::SidPool pool(edition,kBridgePoolCapacity,false);
+        // 원본 fixture의 번호 50을 client 영역에 확보한다.
+        for (std::uint16_t id=5;id<=50;++id) CHECK(pool.Allocate(2)==o::Sid{id});
+        const o::Sid sid{50}; auto raw=pool.AllocatedBytes(sid);
+        const auto extraOffset=index==0 ? 40U : 35U;
+        raw[extraOffset]=static_cast<std::uint8_t>(std::stoul(row[2]));
+        std::vector<std::uint8_t> expected(raw.begin(),raw.end());
+        expected[extraOffset]=static_cast<std::uint8_t>(std::stoul(row[3]));
+        std::string calls; const auto flags=static_cast<std::uint32_t>(std::stoul(row[1]));
+        o::SquidPostPop::BridgePrefix(pool,sid,flags,[&](o::Sid target) {
+            calls+="L:"+std::to_string(target.value)+":0:0;";
+            // 최초 등록 비트는 연결 함수를 부르기 전에 이미 기록되어야 한다.
+            CHECK(pool.Slot(target)[extraOffset]==expected[extraOffset]);
+        });
+        const auto common=row[4].find("B:"); CHECK(common!=std::string::npos);
+        CHECK(calls==row[4].substr(0,common));
+        CHECK(std::equal(expected.begin(),expected.end(),pool.Slot(sid).begin()));
+        ++counts[index];
+    }
+    CHECK((counts==std::array<std::size_t,3>{80,80,80}));
+}
+
+// 연결 경계가 없거나 다른 파생 표이면 공간 쓰기를 거부하며 공통 통계 억제도 다리 접두를 건너뛰지 않는다.
+TEST_CASE(SquidPostPop_BridgeRequiresConnectorAndRunsBeforeSuppressedCommon) {
+    // 두 raw 레이아웃 모두 같은 가상 호출 계약을 지킨다.
+    for (auto edition:{o::OriginalEdition::Patch1078,o::OriginalEdition::Cd1072}) {
+        auto types=Types(edition); types[82].flags1=o::TypeFlag1::kSurface; types[82].flags2=o::TypeFlag2::kBridge;
+        types[82].constructorAddress=o::TypeConstructorAddress(edition,82);
+        o::SidPool pool(edition,kBridgePoolCapacity,false); o::SquidFactory factory(pool,types); const auto sid=factory.Create(82,2);
+        o::SquidPostPopState state; state.graphsEnabled=false; state.suppressed=true;
+        o::SquidHash hash; std::vector<std::uint8_t> spots(o::kWorldCells*o::kWorldCells);
+        o::SquidPostPop missing(pool,types,state); o::SquidPop guarded(pool,hash,spots,nullptr,&missing);
+        const auto before=Hex(pool.Slot(sid));
+        CHECK(Throws([&] { guarded.Pop(sid,types[82],1,1,20,20); }));
+        CHECK(Hex(pool.Slot(sid))==before); CHECK(hash.Bucket(0,20,20)==0);
+        CHECK(std::all_of(spots.begin(),spots.end(),[](auto bit) { return bit==0; }));
+        std::vector<o::Sid> connected;
+        o::SquidPostPop post(pool,types,state,nullptr,[&](o::Sid target) { connected.push_back(target); });
+        o::SquidPop pop(pool,hash,spots,nullptr,&post);
+        auto raw=pool.AllocatedBytes(sid); Put(raw,0,0xffffffff);
+        const auto invalid=Hex(raw);
+        CHECK(Throws([&] { pop.Pop(sid,types[82],1,1,20,20); })); CHECK(Hex(raw)==invalid);
+        // 전용 bridge 표만 복구하고 최초 등록을 수행한다.
+        Put(raw,0,edition==o::OriginalEdition::Patch1078 ? 0x005034c8 : 0x00501ab0);
+        CHECK(pop.Pop(sid,types[82],1,1,20,20)==o::RawPopResult::Registered);
+        CHECK((connected==std::vector<o::Sid>{sid})); CHECK(raw[edition==o::OriginalEdition::Patch1078 ? 40 : 35]&2);
+        CHECK(state.depth==0); CHECK(state.globalCounts[82]==0); CHECK(state.totalCost==0);
+        // 콜백 누락은 접두 비트를 쓰기 전에 거부한다.
+        const auto active=Hex(raw);
+        CHECK(Throws([&] { o::SquidPostPop::BridgePrefix(pool,sid,1,{}); })); CHECK(Hex(raw)==active);
+    }
 }
 
 // 실제 .type 속성을 float cost로 읽으며 누락/중복/문자열 비용의 원본 규칙을 유지한다.

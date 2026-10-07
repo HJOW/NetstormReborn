@@ -6,6 +6,7 @@
 #include <cmath>
 #include <limits>
 #include <stdexcept>
+#include <utility>
 
 namespace netstorm::o {
 namespace {
@@ -15,6 +16,8 @@ constexpr std::uint32_t kRegionMask=0x50444208,kFactoryMask=0x4200,kProvider=0x1
 constexpr std::uint32_t kNoGraph=0x2000000,kGraphChange=0x203,kDestroyGraph=0x800;
 // 패치 비용 표가 타입 번호마다 더해 저장하는 정수다.
 constexpr std::int64_t kCostBias=23;
+// 실제 다리 가상 표의 postPop은 공통 함수 앞에 연결 접두 처리를 수행한다.
+constexpr std::uint32_t kPatchBridgeVtable=0x005034c8,kCdBridgeVtable=0x00501ab0;
 // raw 가상 주소를 호스트 포인터로 해석하지 않고 읽는다.
 std::uint32_t Vtable(std::span<const std::uint8_t> bytes) {
     std::uint32_t value=0;
@@ -35,12 +38,27 @@ std::span<const std::uint32_t> SquidPostPopList::Items() const {
     return std::span(entries).first(count);
 }
 // 슬롯 byte type가 가리키는 타입 표를 검증한다.
-SquidPostPop::SquidPostPop(SidPool& pool,std::span<const RiftTypeRecord> types,SquidPostPopState& state,RawGraph* graph)
-    :pool_(pool),types_(types.begin(),types.end()),state_(state),graph_(graph) {
+SquidPostPop::SquidPostPop(SidPool& pool,std::span<const RiftTypeRecord> types,SquidPostPopState& state,RawGraph* graph,
+    std::function<void(Sid)> bridgeConnector)
+    :pool_(pool),types_(types.begin(),types.end()),state_(state),graph_(graph),bridgeConnector_(std::move(bridgeConnector)) {
     const auto count=pool.Edition()==OriginalEdition::Patch1078 ? 188U : 171U;
     if (types.size()!=count) throw std::invalid_argument("postPop 타입 판본/크기 오류");
     if (graph_ && &graph_->Pool()!=&pool_) throw std::invalid_argument("postPop/Graph SID 풀이 다릅니다");
     if (graph_) graph_->ValidateTypes(types);
+}
+// 실제 vtable과 명시적인 연결 효과 둘 다 있어야 다리의 파생 후처리를 사용할 수 있다.
+bool SquidPostPop::HandlesBridge(Sid sid) const {
+    const auto expected=pool_.Edition()==OriginalEdition::Patch1078 ? kPatchBridgeVtable : kCdBridgeVtable;
+    return bridgeConnector_ && Vtable(pool_.Slot(sid))==expected;
+}
+// 00422150 ↔ CD 00449890. 공통 postPop을 호출하기 전에 수행하는 부분만 복원한다.
+void SquidPostPop::BridgePrefix(SidPool& pool,Sid sid,std::uint32_t flags,const std::function<void(Sid)>& connector) {
+    const auto extraOffset=pool.Edition()==OriginalEdition::Patch1078 ? 40U : 35U;
+    const auto extra=pool.Slot(sid)[extraOffset];
+    const bool connect=(flags&1)!=0 || ((flags&4)!=0 && (extra&1)==0);
+    if (connect && !connector) throw std::invalid_argument("다리 postPop 연결 효과 누락");
+    if (flags&1) pool.AllocatedBytes(sid)[extraOffset]|=2;
+    if (connect) connector(sid);
 }
 // 패치는 trunc(cost+type*23)-type*23, CD는 원본 float cost를 누적하고 절삭한다.
 std::int32_t SquidPostPop::TotalCost(std::size_t type) const {
@@ -63,7 +81,7 @@ void SquidPostPop::Validate(Sid sid,std::uint32_t flags,const RawGraphPop* pop) 
     const auto bytes=pool_.Slot(sid); const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     if (sid.value<5 || (bytes[11]&(kFree|kContained)) || bytes[10]<kFirstAssetTypeNumber || bytes[10]>=types_.size())
         throw std::logic_error("postPop raw 자산 상태 오류");
-    if (!SquidPop::Supports(pool_.Edition(),Vtable(bytes),flags)) throw std::logic_error("파생 postPop 미복원");
+    if (!SquidPop::Supports(pool_.Edition(),Vtable(bytes),flags) && !HandlesBridge(sid)) throw std::logic_error("파생 postPop 미복원");
     if (state_.suppressed) return;
     const auto& type=types_[bytes[10]];
     if (state_.graphsEnabled) {
@@ -89,7 +107,9 @@ void SquidPostPop::Validate(Sid sid,std::uint32_t flags,const RawGraphPop* pop) 
 }
 // 성공한 공간 Pop이 비전투 Activate에 전달한 flags를 그대로 사용한다.
 void SquidPostPop::Activate(Sid sid,std::uint32_t flags) {
-    Validate(sid,flags); ++state_.depth; PostPop(sid,flags);
+    Validate(sid,flags); ++state_.depth;
+    if (HandlesBridge(sid)) BridgePrefix(pool_,sid,flags,bridgeConnector_);
+    PostPop(sid,flags);
 }
 // 공통 후처리의 순서: 영역 무효화→그래프 생성/리셋→비용→공급/작업장 목록→소유자 조건 통계→깊이 감소다.
 void SquidPostPop::PostPop(Sid sid,std::uint32_t flags) {

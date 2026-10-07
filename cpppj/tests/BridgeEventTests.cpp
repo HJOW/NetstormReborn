@@ -2,6 +2,11 @@
 #include "TestSupport.h"
 #include "o/RawBridgeEvents.h"
 #include "o/SquidOwner.h"
+#include "o/RawSquidNeighbors.h"
+#include "o/RawSquidFinder.h"
+#include "o/SquidFactory.h"
+#include "o/SquidPop.h"
+#include "o/SquidDestroyLifecycle.h"
 #include <algorithm>
 #include <array>
 #include <bit>
@@ -367,4 +372,112 @@ TEST_CASE(bridge_event_runs_from_scheduled_fall_through_regular_process) {
     kernel.RunFrame();
     CHECK(events.empty());
     CHECK(kernel.Size() == 1 && !HasScheduledBridgeFall(host, bridge));
+}
+
+// 기록 훅으로 남았던 이웃/생성/소유자/삭제/Pop을 실제 raw 모듈에 연결한다.
+// 파편/소리/보상/UI 출력은 여전히 외부 사건이며 비전투·Graph 비활성 공간에서의 통합 검사다.
+TEST_CASE(bridge_event_real_raw_conversion_replaces_space_and_removes_its_process) {
+    // 같은 다리 생성자/프레임 배치를 사용하는 두 판본에서 교체·단단한 칸·고립 삭제를 확인한다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
+        // mode 0: 연결된 보통 칸, 1: 연결된 단단한 칸, 2: 이웃 없는 칸.
+        for (int mode=0;mode<3;++mode) {
+            // 실제 raw 생성자/프로세스가 요구하는 원본 전체 슬롯 수다.
+            constexpr std::uint32_t capacity=32768;
+            SidPool pool(edition,capacity,true);SquidHash hash;std::vector<std::uint8_t> spots(65536);
+            std::vector<RiftTypeRecord> types(edition==OriginalEdition::Patch1078 ? 188 : 171);
+            auto& type=types[kBridgeType];type.constructorAddress=TypeConstructorAddress(edition,kBridgeType);
+            type.flags1=TypeFlag1::kSurface;type.flags2=TypeFlag2::kBridge;type.footX=type.footY=1;type.cost=5.0f;
+            const auto frames=RealBridgeFrames();std::vector<RiftTypeFrames> allFrames(types.size(),RiftTypeFrames({}));allFrames[kBridgeType]=frames;
+            SquidPostPopState bookkeeping;bookkeeping.localOwner=3;
+            std::vector<Sid> connectionRequests;
+            SquidPostPop postPop(pool,types,bookkeeping,nullptr,[&](Sid sid) { connectionRequests.push_back(sid); });
+            SquidUnpop unpop(pool,hash,spots);SquidPop pop(pool,hash,spots,nullptr,&postPop);
+            SquidFactory factory(pool,types,false,&unpop);
+            SquidOwnerMode ownerMode;ownerMode.battle=true;SquidOwner owner(pool,types,bookkeeping,ownerMode);
+            RawSquidDestroy destroy(pool,unpop,types);SquidDeletionState deletion;
+            std::vector<SquidDeletionEvent> deletionEffects;
+            SquidDestroyLifecycle lifecycle(pool,types,bookkeeping,deletion,destroy,SquidDeletionHooks{
+                [&](const SquidDeletionEvent& event) { deletionEffects.push_back(event); },
+                [](const SquidDestroyEvent& event) { CHECK(event.effect==SquidDestroyEffect::Transmit); }});
+            RawSquidFinder deletionFinder(pool,hash,types);RawBridgeLifecycle bridgeLifecycle(pool,types);
+            std::vector<BridgeLifecycleEffect> bridgeEffects;
+            const auto lifecycleHooks=MakeBridgeLifecycleHooks(deletionFinder,[&](const BridgeLifecycleEvent& event) {
+                bridgeEffects.push_back(event.effect);
+                if (event.effect==BridgeLifecycleEffect::BasePreDestroy) lifecycle.PreDestroy(event.sid,event.flags);
+                else if (event.effect==BridgeLifecycleEffect::BasePostDestroy) lifecycle.PostDestroy(event.sid,event.flags);
+                else CHECK(event.effect==BridgeLifecycleEffect::NotifyRemoval || event.effect==BridgeLifecycleEffect::FallSound);
+            });
+            auto asset=lifecycle.Hooks();
+            asset.emit=[&](const SquidDestroyEvent& event) {
+                if (event.effect==SquidDestroyEffect::PreDestroy) bridgeLifecycle.PreDestroy(event.sid,event.flags,0,lifecycleHooks);
+                else if (event.effect==SquidDestroyEffect::PostDestroy) bridgeLifecycle.PostDestroy(event.sid,event.flags,lifecycleHooks);
+                else CHECK(event.effect==SquidDestroyEffect::Transmit);
+            };
+            const bool patch=edition==OriginalEdition::Patch1078;
+            const auto frameOffset=patch ? 36U : 34U,extraOffset=patch ? 40U : 35U,ownerOffset=patch ? 34U : 32U;
+            const Sid source=factory.Create(kBridgeType);owner.Set(source,3);
+            Write(pool.AllocatedBytes(source),frameOffset,mode==1 ? 40U : 35U,patch ? 4 : 1);
+            CHECK(pop.Pop(source,type,16,11,20.75f,21.9f)==RawPopResult::Registered);
+            Write(pool.AllocatedBytes(source),8,23,2);pool.AllocatedBytes(source)[extraOffset]|=0x10;
+            Sid neighbor{};
+            if (mode!=2) {
+                neighbor=factory.Create(kBridgeType);owner.Set(neighbor,3);
+                // 실제 L 프레임은 아래쪽만 열린다. 낙하 칸 y=21에서 고른 L에 연결될 이웃은 한 칸 아래다.
+                CHECK(pop.Pop(neighbor,type,16,11,20.75f,22.9f)==RawPopResult::Registered);
+            }
+            RawSquidNeighbors neighbors(pool,hash,spots,types,allFrames);
+            BridgeEventState eventState;eventState.bridgeType=kBridgeType;Sid born{};
+            SquidProcessHost* hostPointer=nullptr;
+            BridgeEventHooks effects;
+            // 표면 알림은 원본의 상태를 바꾸지 않는 수명 범위 검사와 같은 경계다.
+            effects.notifySurface=[&](Sid sid) { CHECK((pool.Slot(sid)[12]&0x78)<=0x38); };
+            effects.create=[&](std::uint32_t number) { born=factory.Create(number);return born; };
+            effects.destroy=[&](Sid sid,std::uint32_t flags) { destroy.Destroy(sid,flags,hostPointer->Hooks()); };
+            effects.setOwner=[&](Sid sid,std::uint8_t player) { owner.Set(sid,player); };
+            effects.pop=[&](Sid sid,float x,float y,std::uint32_t flags) {
+                CHECK(pop.Pop(sid,type,16,11,x,y,flags)==RawPopResult::Registered);
+            };
+            RawBridgeEvents events(pool,eventState,MakeBridgeNeighborHooks(neighbors,std::move(effects)));
+            Kernel kernel;SquidProcessState processState;processState.now=10.0;
+            SquidProcessHost host(pool,types,kernel,destroy,processState,MakeBridgeRegularHandler(pool,events),asset);
+            hostPointer=&host;
+            const auto freeBefore=pool.FreeCount();
+            CHECK(ScheduleBridgeFall(host,source,20,21)!=nullptr);
+            kernel.RunFrame();
+            if (mode==1) {
+                CHECK(born==Sid{} && kernel.Size()==1);
+                CHECK(hash.Bucket(0,20.75f,21.9f)==source.value);
+                CHECK((pool.Slot(source)[12]&0x78)==0x20 && pool.Slot(source)[frameOffset]==40);
+                CHECK(bridgeEffects.empty());
+                auto* scheduled=host.FindEvent(source,kBridgeFallEvent);
+                CHECK(scheduled!=nullptr);
+                if (scheduled) host.Kill(*scheduled,0);
+            } else {
+                CHECK(kernel.Size()==0 && (pool.Slot(source)[11]&1)!=0);
+                CHECK(!HasScheduledBridgeFall(host,source));
+                const std::vector<BridgeLifecycleEffect> expected{BridgeLifecycleEffect::BasePreDestroy,
+                    BridgeLifecycleEffect::NotifyRemoval,BridgeLifecycleEffect::FallSound,BridgeLifecycleEffect::BasePostDestroy};
+                CHECK(bridgeEffects==expected);
+                CHECK(destroy.PreDepth()==0 && destroy.PostDepth()==0);
+                if (mode==0) {
+                    CHECK(born!=Sid{} && hash.Bucket(0,20.75f,21.9f)==born.value);
+                    CHECK(pool.Slot(born)[frameOffset]==47 && pool.Slot(born)[ownerOffset]==3);
+                    CHECK((pool.Slot(born)[12]&0x78)==0x20 && (pool.Slot(born)[extraOffset]&0x10)!=0);
+                    CHECK(pool.Slot(born)[8]==23 && pool.Slot(born)[9]==0);
+                    std::array<std::uint8_t,8> coordinates{};
+                    Write(coordinates,0,std::bit_cast<std::uint32_t>(20.75f),4);
+                    Write(coordinates,4,std::bit_cast<std::uint32_t>(21.9f),4);
+                    CHECK(std::equal(coordinates.begin(),coordinates.end(),pool.Slot(born).begin()+14));
+                    CHECK(spots[21*256+20]==4 && bookkeeping.totalCost==10);
+                    CHECK(bookkeeping.localCounts[kBridgeType]==2 && bookkeeping.globalCounts[kBridgeType]==2);
+                    CHECK(connectionRequests==std::vector<Sid>({source,neighbor,born}));
+                } else {
+                    CHECK(born==Sid{} && hash.Bucket(0,20.75f,21.9f)==0 && spots[21*256+20]==0);
+                    CHECK(bookkeeping.totalCost==0 && bookkeeping.globalCounts[kBridgeType]==0);
+                }
+            }
+            CHECK(kernel.Size()==0 && bookkeeping.depth==0);
+            CHECK(pool.FreeCount()==freeBefore+(mode==2 ? 1U : 0U));
+        }
+    }
 }

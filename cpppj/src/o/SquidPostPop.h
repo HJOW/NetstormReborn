@@ -4,6 +4,7 @@
 #include "o/Player.h"
 #include "o/RawGraph.h"
 #include <array>
+#include <functional>
 
 namespace netstorm::o {
 struct SquidPostPopList {
@@ -25,7 +26,14 @@ struct SquidPostPopState {
 class SquidPostPop {
 public:
     // 같은 판본의 풀·상태·선택적인 raw Graph를 받는다. 타입을 복사하며 상태/Graph 수명은 더 길어야 한다.
-    SquidPostPop(SidPool& pool,std::span<const RiftTypeRecord> types,SquidPostPopState& state,RawGraph* graph=nullptr);
+    SquidPostPop(SidPool& pool,std::span<const RiftTypeRecord> types,SquidPostPopState& state,RawGraph* graph=nullptr,
+        std::function<void(Sid)> bridgeConnector={});
+    // 다리 postPop(00422150 / CD 00449890)의 접두 부분이다. flag 1은 extra 비트 2를 켜며,
+    // flag 1 또는 (flag 4이고 abstract 아님)이면 004213b0/CD 00448b00의 연결 효과를 요청한다.
+    // 연결 효과는 명시적 외부 경계이며 누락되면 쓰기 전에 거부한다.
+    static void BridgePrefix(SidPool& pool,Sid sid,std::uint32_t flags,const std::function<void(Sid)>& connector);
+    // 다리 전용 후처리는 connector가 연결된 인스턴스만 지원한다. 다른 파생 가상 함수를 허용하지 않는다.
+    bool HandlesBridge(Sid sid) const;
     // 공간 변경 전 연결된 그래프의 최종 Pop 상태·미복원 영역/AI/배치 효과·목록·비용을 확인한다.
     void Validate(Sid sid,std::uint32_t flags,const RawGraphPop* pop=nullptr) const;
     // 선택한 raw Graph가 Pop과 같은 해시·spot을 읽는지 공간 변경 전에 확인한다.
@@ -43,5 +51,6 @@ private:
     std::vector<RiftTypeRecord> types_;
     SquidPostPopState& state_;
     RawGraph* graph_{};
+    std::function<void(Sid)> bridgeConnector_; // 연결 객체 생성/소유자 전파(004213b0)는 후속 복원 경계다.
 };
 }

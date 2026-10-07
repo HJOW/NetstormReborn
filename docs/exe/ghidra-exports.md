@@ -10,7 +10,7 @@ powershell -ExecutionPolicy Bypass -File tools/ghidra/export_functions.ps1 -All
 # 일부만
 powershell -ExecutionPolicy Bypass -File tools/ghidra/export_functions.ps1 -Name bridgedecay,finder
 # 모든 감사 실행
-Get-ChildItem tools/decomp_*_oracle.py | ForEach-Object { python -X utf8 $_.FullName --verify }
+Get-ChildItem tools/decomp_*_oracle.py | Where-Object { Select-String -LiteralPath $_.FullName -SimpleMatch "add_argument('--verify'", 'add_argument("--verify"' -Quiet } | ForEach-Object { python -X utf8 $_.FullName --verify }
 ```
 
 [export_functions.ps1](../../tools/ghidra/export_functions.ps1)은 `tools/ghidra/<이름>-functions.json`의 주소 목록을 판본마다 `extracted/<이름>/<판본>/`에 내보낸다. **목록의 순서가 파일 안의 순서이고 SHA가 그 순서에 의존한다.** 선행 조건은 세 판본의 Ghidra 프로젝트(`tools/ghidra/run_decomp.ps1`)다. 내보내기는 결정적이다 — 같은 목록을 두 번 내보낸 86개 파일이 바이트 단위로 같았고, 다른 PC에서 기록한 SHA와도 일치한다.
@@ -28,6 +28,9 @@ Get-ChildItem tools/decomp_*_oracle.py | ForEach-Object { python -X utf8 $_.Full
 | `destroy`·`destroylifecycle`·`destroygraph` | 같은 이름의 도구 | 9/6/6 · 14/20/20 · 15/17/17 | 처음부터 있던 목록 |
 | `reward`·`process` | 같은 이름의 도구 | 27/24/24 · 73/71/71 | 처음부터 있던 목록 |
 | `bridgeevent`·`owner` | 같은 이름의 도구 | 8/6/6 · 5/4/4 | 처음부터 있던 목록 |
+| `bridgepostpop` | bridgepostpop | 1 / 1 / 1 | 다리 vtable +0x20의 실제 함수 |
+
+2026-10-08 후속의 `neighbor`는 새 내보내기 없이 `bridgeevent`·`graphremove`/`geometry`를 재사용한다. `bridgepostpop`의 접두 대조 240개와 함께 [첫 연결 이웃/끝 칸 통합 근거](cpp-neighbor-reconstruction.md)에 정리했다. 두 새 도구를 포함해 **감사 27개가 모두 통과**했다. `--verify` 옵션이 없는 옛 `config`·`graphics`·`options` 생성기는 위 감사 명령에서 제외한다.
 
 `derived`·`lifecycle`(unpop)·`pop`·`postpop`·`display`·`graph`·`regiongraph`는 아직 목록 파일이 없고 각 복원 문서의 명령으로 만든다(이 PC에는 이미 있고 감사가 통과한다).
 

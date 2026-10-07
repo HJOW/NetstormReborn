@@ -1,0 +1,69 @@
+{
+  "total": 240,
+  "fpu_controls": [
+    639,
+    895
+  ],
+  "files": {
+    "cpppj/tests/fixtures/bridgepostpop-x86.tsv": "89893c5dd8c165cc619935924e671c1fdbb49dc4c19dbe77537dd75a5e2beb0c",
+    "extracted/bridgeevent/original1037/creation.c": "53cc74566ec65b041fffb5669157203c433a621f3571c64c927dc8ae93e79150",
+    "extracted/bridgeevent/original1037/functions.tsv": "de7abb58aea96d410f4070616c13c45565f9d33a4393e7b3ad48f5128c39c8dc",
+    "extracted/bridgeevent/originalCD/creation.c": "53cc74566ec65b041fffb5669157203c433a621f3571c64c927dc8ae93e79150",
+    "extracted/bridgeevent/originalCD/functions.tsv": "de7abb58aea96d410f4070616c13c45565f9d33a4393e7b3ad48f5128c39c8dc",
+    "extracted/bridgeevent/originals/creation.c": "98b7be841a2e6cd8fb6c975527b161dce284c0f2ed96bcdcaea5f0e26223aff1",
+    "extracted/bridgeevent/originals/functions.tsv": "b97a2cb196b560d3ac3796fe53e679dfa7f150adef6b16e51a3cdf89fa8d9bb7",
+    "extracted/bridgepostpop/original1037/creation.c": "36d5f1641b80cc62176e498ebf3f3fca01a633172fd71a8fd8b5a163951ba7f0",
+    "extracted/bridgepostpop/original1037/functions.tsv": "7d80cbcd9428741bd45270ad484295403a15c47239853fcfbefe83a7ea30082c",
+    "extracted/bridgepostpop/originalCD/creation.c": "36d5f1641b80cc62176e498ebf3f3fca01a633172fd71a8fd8b5a163951ba7f0",
+    "extracted/bridgepostpop/originalCD/functions.tsv": "7d80cbcd9428741bd45270ad484295403a15c47239853fcfbefe83a7ea30082c",
+    "extracted/bridgepostpop/originals/creation.c": "208d18b190ddb874e893ebfb70f53412afc4da5d702c88084c81b97302b274ae",
+    "extracted/bridgepostpop/originals/functions.tsv": "9f54b7bc9eb68e8e0941d48dfae8341ba9cbb85750daf715cf79413fe390aa89",
+    "tools/decomp_bridgeevent_oracle.py": "eff51573870167881145924f64adbda11a325c576f5bd5dd5568010f3fa5f71a",
+    "tools/decomp_bridgepostpop_oracle.py": "7acbd209e471bfa12c0717ecaaf37ad6c959ece84f3a9070d831cf8dc96915d3",
+    "tools/ghidra/bridgepostpop-functions.json": "542ef7a1683a8f21bb241874a144391ef8ed56a0269d613a2adaff56798775f2"
+  },
+  "editions": {
+    "originals": {
+      "binary": "originals/Netstorm.exe",
+      "sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "assertions": 0,
+      "native_calls": {
+        "Table": 320,
+        "BridgePost": 160
+      },
+      "substitutions": {
+        "common_post": 160,
+        "bridge_connect": 110
+      }
+    },
+    "originalCD": {
+      "binary": "originalCD/NETSTORM.EXE",
+      "sha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "assertions": 0,
+      "native_calls": {
+        "Table": 320,
+        "BridgePost": 160
+      },
+      "substitutions": {
+        "common_post": 160,
+        "bridge_connect": 110
+      }
+    },
+    "original1037": {
+      "binary": "original1037/netstorm.exe",
+      "sha256": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+      "assertions": 0,
+      "native_calls": {
+        "Table": 320,
+        "BridgePost": 160
+      },
+      "substitutions": {
+        "common_post": 160,
+        "bridge_connect": 110
+      }
+    }
+  },
+  "limits": [
+    "다리 postPop의 접두만 실행한다. 연결 객체/소유자 전파와 공통 postPop은 대체한다"
+  ]
+}

@@ -8,6 +8,7 @@
 #include <functional>
 
 namespace netstorm::o {
+class RawSquidNeighbors;
 // 이벤트 0x2691: 권한이 있으면 다리 칸이 스스로 destroy한다. (0x2692 = kBridgeFallEvent는 지연 낙하다.)
 inline constexpr std::uint32_t kBridgeDestroyEvent = 0x2691;
 // 처리기 반환값은 Regular 이벤트 계약을 따른다: 양수 재예약, 0 종료, 음수 유지.
@@ -25,7 +26,7 @@ struct BridgeEventState {
 struct BridgeEventHooks {
     // 타입 번호의 프레임 코드 표. 현재 프레임의 방향 글자·글자별 첫 프레임·플래그 0x40을 읽는다.
     std::function<const RiftTypeFrames&(std::uint32_t type)> frames;
-    // 004b23e0 / CD 004ebad0: 임시 프레임이 써진 채로 flag 8 표면 이웃 탐색기를 만들고 첫 이웃 번호(+0x34)를 돌려준다. 0이면 이웃 없음.
+    // 004b23e0 / CD 004ebad0: 임시 프레임이 써진 채로 flag 0 연결 이웃 탐색기를 만들고 첫 이웃 번호(+0x34)를 돌려준다. 0이면 이웃 없음.
     std::function<Sid(Sid bridge)> firstNeighbor;
     // 004214a0 / CD 00448c10: 호출 사실만 전달한다. 패치판 몸체는 상태를 바꾸지 않는 디버그 검사다(다리 타입·buried 아님·assert 켜짐일 때
     // 수명 비트가 7을 넘으면 "num >= 0 && num <= 7" assert). CD판은 슬롯 주소만 돌려준다. 연결하지 않아도 게임 상태는 같다.
@@ -39,6 +40,9 @@ struct BridgeEventHooks {
     // 가상 Pop(vtable +0x90). 좌표는 옛 객체의 위치 float을 그대로 넘긴다.
     std::function<void(Sid sid, float x, float y, std::uint32_t flags)> pop;
 };
+// 같은 raw 타입 표의 프레임 조회와 실제 flag 0 첫 이웃을 연결한다. 나머지 효과는 호출자가 공급한다.
+// neighbors는 반환한 콜백보다 오래 살아야 하며 조회 중 바뀐 raw 프레임을 그때 읽는다.
+BridgeEventHooks MakeBridgeNeighborHooks(const RawSquidNeighbors& neighbors,BridgeEventHooks effects);
 class RawBridgeEvents {
 public:
     // 풀·상태·훅은 이 객체보다 오래 살아야 한다. 훅은 모두 연결돼 있어야 한다.

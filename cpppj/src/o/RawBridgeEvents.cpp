@@ -1,6 +1,7 @@
 // 다리 이벤트 처리기와 끝 칸 변환. 세 실제 PE의 제한 x86 기대값(bridgeevent-x86.tsv)으로 검사한다.
 #include "o/RawBridgeEvents.h"
 #include "o/Bridge.h"
+#include "o/RawSquidNeighbors.h"
 #include <bit>
 #include <stdexcept>
 #include <utility>
@@ -40,6 +41,13 @@ std::uint32_t FtolLow(float value) {
     return static_cast<std::uint32_t>(static_cast<std::uint64_t>(static_cast<std::int64_t>(wide)));
 }
 }
+// 원본 호출 인자 flag 0의 일반 해시 이웃 조회와 프레임 표를 함께 연결한다.
+BridgeEventHooks MakeBridgeNeighborHooks(const RawSquidNeighbors& neighbors,BridgeEventHooks effects) {
+    effects.frames=[&neighbors](std::uint32_t type) -> const RiftTypeFrames& { return neighbors.Frames(type); };
+    effects.firstNeighbor=[&neighbors](Sid sid) { return neighbors.First(sid); };
+    return effects;
+}
+// 외부 효과는 빠짐없이 연결되어야 한다.
 RawBridgeEvents::RawBridgeEvents(SidPool& pool, const BridgeEventState& state, BridgeEventHooks hooks)
     : pool_(pool), state_(state), hooks_(std::move(hooks)) {
     if (!hooks_.frames || !hooks_.firstNeighbor || !hooks_.notifySurface || !hooks_.create || !hooks_.destroy ||
@@ -92,7 +100,7 @@ void RawBridgeEvents::ConvertEnd(Sid bridge, float x, float y) const {
     const int first = frames.Run(letter).first;
     if (first < 0) throw std::logic_error("다리 타입에 끝 프레임 글자가 없다");
     const auto newFrame = static_cast<std::uint32_t>(first);
-    // 임시로 새 프레임을 써서 flag 8 이웃 탐색기를 만들고 곧바로 원래 프레임을 되돌린다.
+    // 임시로 새 프레임을 써서 flag 0 이웃 탐색기를 만들고 곧바로 원래 프레임을 되돌린다.
     SetFrame(bridge, newFrame);
     Sid neighbor;
     try { neighbor = hooks_.firstNeighbor(bridge); }
