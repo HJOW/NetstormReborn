@@ -1,12 +1,24 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
-> 최종 갱신: 2026-10-07 (**cpppj 1차 복원 기준은 사용자 결정대로 10.78이다.** 10.62 패치를 실행하지 않고 CD 기준으로 복원·3,729개 함수를 디컴파일했고, 10.82 본체 `netstorm.game` 10,130개/업데이터 2,618개를 별도 분석했다. DevLog와 바이너리/자료 차이를 대조하고 **같은 위치 다른 SID의 삭제 그래프 조회**를 10.78 기준으로 복원했다. [범위/재현/후속](docs/exe/cpp-reference-versions.md), [정적 기록](cpppj/recovery-reference-versions.json), [독립 x86 384회](cpppj/recovery-graphlookup-evidence.json). x64 Release 경고/오류 0·CTest 내부 **139개·실패 0**, 누적 제한 x86 입력 **60,642개**다. **호스트 `DESKTOP-HJOW`에서는 원본/복사본·업데이터/설치 도구 실행과 모든 창 검사를 금지한다. GUI 검사는 `DESKTOP-HJOW` 이외의 PC에 인계한다.** 전역 Graph/SID 소진 복구·건물 부착·특수 타입 위치 조회·dirty/grid·참조/파생 삭제 수명·form/process·상위 수신 목록·AI/배치 선택·생산 덱/자원/SP 차감·raw GameWorld·건설/경제/전투/AI/승패는 남아 미션 완주는 불가능하다.)
+> 최종 갱신: 2026-10-07 (**cpppj 1차 기준은 10.78이다. 전역 Graph 재구성·소진 할당 API를 전체 raw 풀에 연결했다.** 세 PE의 읽기 전용 디컴파일 5/7/7개·실제 x86 새 288회, x64 Release 경고/오류 0·콘솔 CTest 내부 **143개·실패 0**, 누적 제한 x86 **60,930개**. [범위/재현/후속](docs/exe/cpp-graphrebuild-reconstruction.md), [독립 기록](cpppj/recovery-graphrebuild-evidence.json). **호스트 `DESKTOP-HJOW`에서는 원본/복사본·업데이터/설치 도구 실행과 모든 창 검사를 금지한다. GUI는 `DESKTOP-HJOW` 이외의 PC에 인계한다.** Add/Detach/Pop 자동 전역 재구성·SID 소진 복구·건물 부착/dirty/grid·특수 조회·파생 삭제/참조 수명·form/process·상위 목록·raw GameWorld·건설/경제/전투/AI/승패는 남아 미션 완주는 불가능하다.)
 > 프로젝트 목표(AGENTS.md): 원본 NetStorm: Islands at War 를 디컴파일/분석하여 클론 코딩하고,
 > **Windows 10/11** 과 **GUI 환경의 Linux** 에서 동작하며 **여러 언어를 지원**하는 게임을 만든다.
 > **모방 범위(2026-10-03 AGENTS.md 변경)**: 기존 게임의 **사운드·그래픽·애니메이션 등 거의 모든 요소를 가능한 한 동일하게** 최대한 모방한다.
 > **1차 목표 언어: 영어, 한국어** (그 외 언어는 이후 확장).
 > **우선순위: Windows 10/11 > Linux** (Linux 지원과 멀티플레이 요소 구현은 우선순위가 낮다 — 설계상 이식성은 유지하되 검증·배포는 Windows 먼저. 그 외 사항은 궁극적인 목표다).
 > **화면 요구사항(2026-09-28 AGENTS.md 추가, 2026-10-03·10-05 변경)**: 풀스크린 모드와 화면비 **16:9 · 16:10 · 4:3** 지원, **기존 게임 수준의 프레임으로 먼저 만들고 이후 60·120프레임 지원**(2026-10-05 변경. 원본 수준 = `maxFPS` 75·14ms 루프, 클론 적용 완료), 풀스크린에서 **마우스를 화면 끝에 대면 화면 이동**(원본도 옵션에서 켰을 때 지원), 원본의 **전체화면 전환 뒤 재실행 오류는 클론에서 발생하지 않아야 한다** — 1.4·1.7절
+
+---
+
+## 2026-10-07 ✅ 완료: cpppj 전역 Graph 재구성·소진 할당
+
+- [x] **조건/보호:** AGENTS.md/최신 인수인계를 읽고 10.78을 기준으로 후속 작업을 진행했다. 원본/복사본 게임·업데이터/설치/SFX/배치·클론 창·GUI 스모크·`start_session`/`--live`를 실행하지 않았다. AGENTS.md/C# 변경은 없다. 보호된 원본/CD/10.37/패치/10.82의 **총 2,445개 파일 SHA와 목록이 시작 스냅샷과 모두 동일**하다.
+- [x] **재디컴파일:** 읽기 전용 Ghidra로 `00463110` ↔ `0045bd60` 전역 재구성 및 초기화/할당/iterator를 새 `extracted/graphrebuild/`에 내보냈다. 10.78 **5개**, CD/추가 10.37 각각 **7개**, 완료 로그 확인. SID `004af1d0`의 최대 50개 다리 파생 삭제 루프를 DevLog 10.73/74(줄 1122)와 대조했지만 SID 소진 복구 완료로 세지 않는다.
+- [x] **C++ API:** `Graph::Rebuild`/`AllocateWithRecovery`와 `RawGraph::Rebuild`/`Allocate`를 추가했다. 전체 raw 풀의 두 SID 오름차순 순회·free 제외·기준점 내부 제외·무효 번호 수집/전체 초기화·임시 그래프·원본 flood·임시 해제를 복원했다. dead/void/contained/buried는 수집 제외 조건이 아니며, 비표면 graph/state/next/좌표/payload는 보존한다.
+- [x] **세부/보호:** 251개 레코드 앞 두 WORD만 초기화하고 0번 예약/reserved low byte 1·254 sentinel·251..253·기존 reserved/4096 DWORD 스택 흔적을 보존한다. 여유 번호 경로는 풀/프레임을 읽지 않는다. 손상·소수 좌표·누락 membership·재소진은 기존 번호/표/스택/공간 쓰기 전에 거부한다. 249개 독립 무리 성공/250개 거부는 C++ 보호 검사이며 해당 원본 재귀 경로는 실행하지 않았다. `Rebuild(false)`는 최초 여유 번호가 있는 입력 범위다.
+- [x] **기계어/회귀:** 세 실제 PE×두 x87 정밀도×16입력×세 경로 **288회**(직접 재구성 192·소진 할당 96), 실제 **32768슬롯 전체 순회**, 대체 함수/assert/OS 0. 각 PE의 내부 Rebuild 96/Allocate 406/Flood 278 및 준비 Reset 2/Create 14는 상위 수에 더하지 않는다. 7개 슬롯/255개 레코드/dirty 직접 비교, 전체 풀/네 단계 해시/spot/스택/통계 Adler-32. 새/기존 graphlookup/graphremove SHA/호출 수 확인 통과. 최종 Release 경고/오류 0·CTest 내부 **143개·실패 0**(40.73초). 최초 fixture의 free 슬롯 재입력은 정상 Reset/Create 준비로 수정했고 기대값은 유지했다. 기존 void 원천 직접 Flood 계약도 검사했다.
+- [ ] **다음 작업:** Add/Detach/Pop에 자동 전역 재구성을 연결할 전체 풀 계약·호출 순서를 분석한다. `Rebuild(false)` 중첩 소진·SID 소진의 파생 삭제/서버·클라이언트 통지·건물 부착/dirty/grid·fencemark/windArcher 특수 위치 조회·파생 삭제/참조/반납 수명·form/process·상위 수신 목록을 이어 간다. 이후 raw GameWorld·다리 배치/Construction·생산 덱/자원/SP 차감·경제/전투/AI/승패로 연결한다.
+- [ ] **다른 PC 창 인수인계:** raw 월드 연결 후 TEST01/1-1 생성·표시·선택·이동·해제·재진입과 renderer/menu/world·전체화면·오디오를 `DESKTOP-HJOW` 이외의 PC에서 검사한다. `DESKTOP-HJOW`에서는 원본/복사본·업데이터/설치 도구 실행과 모든 창 검사가 금지된다. 다른 PC 원본 비교 실행도 해당 AGENTS.md/사용자 지시를 확인한다.
 
 ---
 
@@ -18,7 +30,7 @@
 - [x] **판본/DevLog:** Graph 역할 다섯 개를 각 새 본체에서 읽기 전용으로 다시 내보냈다. 10.82의 SID 77바이트·graph DWORD(+42)·한도 50,000/무효 50,003은 10.78의 50바이트·graph byte(+30)·251/254와 다르므로 도입하지 않았다. Windows-1252 일지의 10.73/74 소진 처리·10.81 다리 재변경·Sun Generator·난이도/옵션 추가를 대조했다. Sun Generator/easy·hard 자료는 후대 요소다. `bridge.type` 자체는 10.78/10.82 동일하지만 코드 동일성으로 확대하지 않는다. 실제 file.list 355개 일치/3개 불일치·auto.list 1개 일치를 기록했다.
 - [x] **C++ 후속:** `RawGraph::Detach`가 같은 위치의 정상 다른 표면 SID의 번호를 조회하고, `Graph::DetachAt`이 원천 타입/프레임/genus와 조회 graph를 분리한다. 원천의 graph/state/payload는 바꾸지 않는다. 조회 254/미사용의 조기 반환과 손상 SID/위치/상태/번호·소진/순환의 변경 전 거부를 유지했다. fencemark/windArcher 특수 조회는 후속이다.
 - [x] **검증:** 세 실제 PE×두 x87 정밀도의 새 Detach **384회**를 대체 함수/assert/OS 없이 실행했다. 각 PE 내부 Allocate/Flood 216회는 상위 수에 더하지 않는다. 슬롯/dirty 직접 비교, 전체 풀/해시/spot/표/스택/통계 Adler-32. 최종 Release 경고/오류 0·CTest 내부 **139개·실패 0**(37.81초). 새/기존 graphremove SHA·호출 수와 정적 비교/패치 전체 재계산 확인을 통과했다. 이전 독립 도구/fixture/기록은 보존했다.
-- [ ] **다음 복원:** 10.78 Graph/SID 전역 소진 복구·건물 부착/dirty/grid·특수 타입 위치 조회·참조/파생 삭제/반납 수명·form/process·상위 수신 목록을 진행하고 raw GameWorld에 연결한다. 이어 다리 배치·Construction·생산 덱/자원/SP 차감·경제·전투·AI·승패로 이어 간다.
+- [x] **후속 일부 완료:** 전역 Graph 재구성·소진 할당 API는 위 최신 절에서 추가했다. Add/Detach/Pop 자동 전역 재구성·SID 소진 복구·건물 부착/dirty/grid·특수 타입 위치 조회·참조/파생 삭제/반납 수명·form/process·상위 수신 목록·raw GameWorld는 후속이다.
 - [ ] **다른 PC 창 인수인계:** raw 월드 연결 후 TEST01/1-1 생성·표시·선택·이동·해제·재진입 및 renderer/menu/world·전체화면·오디오 회귀를 `DESKTOP-HJOW` 이외의 PC에서 검사한다. 호스트 `DESKTOP-HJOW`에서 `--run`·GUI 스모크·원본/복사본/업데이터 실행·`start_session`/`--live`는 실행하지 않는다. 다른 PC의 원본 비교 실행도 해당 AGENTS.md/사용자 지시를 확인한다. 막힌 업데이트 서버 접속을 복원하려 시도하지 않는다.
 
 ---

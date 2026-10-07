@@ -30,6 +30,10 @@ public:
     void ValidateDetach(Sid sid,bool rebuild=false,std::uint8_t removedSurfaces=1) const;
     // 기존 raw 표면을 실제 탐색 순서로 flood하고 변경한 객체 수를 돌려준다.
     std::uint32_t Flood(Sid sid,std::uint8_t graph);
+    // 전체 raw 풀에서 무효 번호 수집 또는 전체 초기화 재구성을 원자적으로 반영한다.
+    void Rebuild(bool resetAll);
+    // 빈 번호가 있으면 표만 갱신하고, 소진되면 전체 raw 풀 재구성 뒤 번호를 확보한다.
+    std::uint8_t Allocate();
     // 기존 레코드의 reserved WORD와 전체 스택의 미사용 흔적도 노출한다.
     std::span<const GraphRecord> Records() const;
     // 다음 스냅샷 계산에서도 이 스택을 초기화하지 않는다.
@@ -49,7 +53,7 @@ private:
         std::uint32_t changed{};
     };
     // Add/Flood 외에 영역 단독·영역 후 Add를 구별한다. 원본 순서를 한 계획에 보존한다.
-    enum class Operation { Add,Flood,Region,RegionAdd,Detach };
+    enum class Operation { Add,Flood,Region,RegionAdd,Detach,Rebuild,Allocate };
     // 각 호출에서 현재 raw 입력을 다시 읽는다. noGraph 리셋/프레임 변경을 캐시하지 않는다.
     Plan Calculate(Sid sid,Operation operation,std::uint8_t target,const RawGraphPop* pop) const;
     // 원본 일반 탐색기의 단계/행/열/next 순서와 한 칸 넓은 끝 버킷을 유지한다.

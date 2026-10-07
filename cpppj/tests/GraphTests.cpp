@@ -181,3 +181,36 @@ TEST_CASE(Graph_DetachKeepsLastComponentAndRejectsExhaustionAtomically) {
     CHECK(Throws([&]{full.Detach(5,connections,true);})); CHECK(RecordsHash(full)==before && StackHash(full)==oldStack);
     CHECK(full.Number(5)==0 && full.Number(6)==0 && full.Number(7)==0 && full.Number(8)==0);
 }
+
+// 예약 0번·임시 1번 때문에 한 번의 전체 재구성은 독립 무리 249개까지 확보할 수 있다.
+TEST_CASE(Graph_GlobalRebuild249ComponentsAndRecursiveExhaustionRollback) {
+    std::vector<o::SurfaceObject> objects; std::vector<o::GraphMembership> members;
+    // 각 표면은 세 칸 간격으로 떨어져 원본 탐색에서도 연결되지 않는다.
+    for (std::uint16_t i=0;i<250;++i) { objects.push_back(Node(static_cast<std::uint16_t>(5+i),20+(i%25)*3,20+(i/25)*3)); members.push_back({static_cast<std::uint16_t>(5+i),254,0}); }
+    std::vector<std::uint8_t> spots(o::kWorldCells*o::kWorldCells);
+    std::array<o::GraphRecord,o::Graph::kTableSize> records{};
+    // 소진과 reserved 보존을 함께 확인한다.
+    for (std::size_t i=0;i<o::Graph::kCount;++i) records[i]={7,1,static_cast<std::int16_t>(0x1234+i)};
+    o::SurfaceFinder all(objects,Map(objects),spots); o::Graph tooMany(all,members,records);
+    const auto before=RecordsHash(tooMany),stack=StackHash(tooMany);
+    CHECK(Throws([&]{tooMany.Rebuild(true);})); CHECK(Throws([&]{tooMany.AllocateWithRecovery();}));
+    CHECK(RecordsHash(tooMany)==before && StackHash(tooMany)==stack && tooMany.Number(5)==254 && tooMany.Number(254)==254);
+    objects.pop_back(); members.pop_back(); o::SurfaceFinder enough(objects,Map(objects),spots); o::Graph graph(enough,members,records);
+    CHECK(graph.AllocateWithRecovery()==1); CHECK(graph.InUse()==251);
+    CHECK(graph.Records()[0].reserved==0x1201 && graph.Records()[1].surfaces==0);
+    // SID 오름차순으로 무리 번호 2..250을 확보하고 각 크기를 1로 만든다.
+    for (std::uint16_t i=0;i<249;++i) { CHECK(graph.Number(static_cast<std::uint16_t>(5+i))==i+2); CHECK(graph.Records()[i+2].surfaces==1); CHECK(graph.Records()[i+2].reserved==records[i+2].reserved); }
+}
+
+// 원본은 기준점 내부 표면을 첫 수집에서 제외하지만 그 번호를 별도로 초기화하지 않는다.
+TEST_CASE(Graph_RebuildPreservesInteriorAndRejectsMissingFloodMembership) {
+    const std::vector<o::SurfaceObject> objects{Node(5,20,20,3),Node(6,40,40),Node(7,21,20)};
+    const std::vector<o::GraphMembership> members{{5,3,0},{6,254,0}};
+    std::vector<std::uint8_t> spots(o::kWorldCells*o::kWorldCells); spots[20*o::kWorldCells+20]=8;
+    o::SurfaceFinder finder(objects,Map(objects),spots); CHECK(finder.OriginInterior(5));
+    o::Graph graph(finder,members); graph.Rebuild(true); CHECK(graph.Number(5)==3 && graph.Number(6)==2);
+    spots[20*o::kWorldCells+20]=0; o::SurfaceFinder damaged(objects,Map(objects),spots); o::Graph missing(damaged,members);
+    const auto before=RecordsHash(missing),stack=StackHash(missing);
+    CHECK(Throws([&]{missing.Rebuild(true);})); CHECK(RecordsHash(missing)==before && StackHash(missing)==stack);
+    CHECK(missing.Number(5)==3 && missing.Number(6)==254);
+}

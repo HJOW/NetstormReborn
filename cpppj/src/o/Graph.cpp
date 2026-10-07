@@ -1,4 +1,4 @@
-// 원본 Graph.cpp의 기존 표/스택·소진 전 경로. 전역 소진 복구와 실제 월드 수명은 후속이다.
+// 원본 Graph.cpp의 표면 연결과 전체 표면 스냅샷의 전역 재구성 경로다.
 #include "o/Graph.h"
 #include <algorithm>
 #include <bit>
@@ -32,11 +32,45 @@ void Graph::CheckNumber(std::uint8_t graph,bool allowInvalid) {
 }
 // 원본은 낮은 번호부터 찾으며 사용 중/미사용 기록의 reserved WORD를 건드리지 않는다.
 std::uint8_t Graph::Allocate() {
-    // 소진은 원본의 전체 재구성/삭제 단계가 필요하므로 기존 표를 변경하지 않는다.
+    // 지역 입력에서는 전체 풀 여부를 알 수 없으므로 소진 복구를 별도 API로 호출한다.
     for (std::size_t i=0;i<kCount;++i) if (!records_[i].inUse) {
         records_[i].surfaces=0; records_[i].inUse=1; return static_cast<std::uint8_t>(i);
     }
-    throw std::logic_error("그래프 소진 복구 미복원");
+    throw std::logic_error("그래프가 소진되어 전체 풀 재구성이 필요합니다");
+}
+// 지역 입력을 전체 풀처럼 취급하지 않도록 소진 복구를 별도 API로 호출한다.
+std::uint8_t Graph::AllocateWithRecovery() {
+    auto next=*this;
+    if (std::none_of(next.records_.begin(),next.records_.begin()+kCount,[](auto r){return !r.inUse;}))
+        next.RebuildImpl(true);
+    const auto number=next.Allocate();
+    records_=next.records_; stack_=next.stack_; members_=std::move(next.members_); return number;
+}
+// 손상 이웃이나 재구성 중 재소진에도 원본 입력을 부분 변경하지 않는다.
+void Graph::Rebuild(bool resetAll) {
+    auto next=*this; next.RebuildImpl(resetAll);
+    records_=next.records_; stack_=next.stack_; members_=std::move(next.members_);
+}
+// 0번 예약·reserved low byte·sentinel을 복원하고 SID 오름차순 두 순회를 수행한다.
+void Graph::RebuildImpl(bool resetAll) {
+    if (resetAll) {
+        // 앞 251개 레코드의 첫 두 WORD만 지운다. 251..253과 reserved WORD는 보존한다.
+        for (std::size_t i=0;i<kCount;++i) records_[i].surfaces=records_[i].inUse=0;
+        records_[0].inUse=1;
+        records_[0].reserved=Word((static_cast<std::uint16_t>(records_[0].reserved)&0xff00U)|1U);
+        records_[kInvalid].surfaces=records_[kInvalid].inUse=0x7dfd;
+    }
+    const auto temporary=Allocate();
+    // free 표면은 원본 전역 iterator가 건너뛴다. dead/void/contained/buried는 이 순회의 제외 조건이 아니다.
+    for (auto& [id,member]:members_) {
+        if ((member.state&1) || (!resetAll && member.graph!=kInvalid) || surfaces_.OriginInterior(id)) continue;
+        member.graph=temporary; records_[temporary].surfaces=Word(records_[temporary].surfaces+1);
+    }
+    // 이전 flood가 바꾼 번호를 매번 읽는다. 기준점 내부라도 기존 번호가 임시 번호이면 원본처럼 처리한다.
+    for (const auto& [id,member]:members_) {
+        if (!(member.state&1) && member.graph==temporary) FloodImpl(id,Allocate());
+    }
+    Free(temporary);
 }
 // 무효 번호의 sentinel과 reserved WORD를 보존한다.
 void Graph::Free(std::uint8_t graph) {
@@ -71,7 +105,7 @@ std::uint32_t Graph::FloodImpl(std::uint16_t id,std::uint8_t graph) {
     }
     return changed;
 }
-// 입력 오류/미복원 소진은 원본 위치/그래프를 쓰기 전에 처리한다.
+// 입력 오류와 지역 입력의 소진은 원본 위치/그래프를 쓰기 전에 처리한다.
 void Graph::Add(std::uint16_t id) {
     auto next=*this; next.AddImpl(id); records_=next.records_; stack_=next.stack_; members_=std::move(next.members_);
 }

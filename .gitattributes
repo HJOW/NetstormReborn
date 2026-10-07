@@ -59,3 +59,6 @@ tools/compare_reference_versions.py text eol=lf
 tools/decomp_graphlookup_oracle.py text eol=lf
 cpppj/recovery-reference-versions.json text eol=lf
 cpppj/recovery-graphlookup-evidence.json text eol=lf
+# 전역 Graph 재구성의 독립 도구와 증거 기록은 SHA 비교를 위해 LF를 유지한다.
+tools/decomp_graphrebuild_oracle.py text eol=lf
+cpppj/recovery-graphrebuild-evidence.json text eol=lf

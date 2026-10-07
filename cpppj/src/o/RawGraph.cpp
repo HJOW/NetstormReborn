@@ -8,7 +8,7 @@
 
 namespace netstorm::o {
 namespace {
-// 두 판본에서 같은 상태 비트다. contained 표면과 소수 좌표는 이번 정수 경로 밖이다.
+// 두 판본에서 같은 상태 비트다. 전역 순회는 void/contained도 읽지만 그런 해시 머리는 거부한다.
 constexpr std::uint8_t kFree=1,kDead=2,kVoid=4,kContained=8,kBuried=8;
 // 부호 있는 short SID를 사용하는 원본 표면 탐색의 한계다.
 constexpr std::uint32_t kMaximumId=32767;
@@ -176,17 +176,25 @@ std::vector<std::uint16_t> RawGraph::DetachConnections(Sid sid,const SurfaceFind
 }
 // 전체 계산을 복사본에서 수행하며 미지원 입력·소진·연결 오류를 쓰기 전에 보고한다.
 RawGraph::Plan RawGraph::Calculate(Sid sid,Operation operation,std::uint8_t target,const RawGraphPop* pop) const {
+    const bool global=operation==Operation::Rebuild || operation==Operation::Allocate;
+    Plan plan{records_,stack_,{},0};
+    if (operation==Operation::Allocate) {
+        // 원본의 여유 번호 경로는 풀/프레임/지도를 읽지 않는다.
+        for (std::size_t i=0;i<Graph::kCount;++i) if (!plan.records[i].inUse) {
+            plan.records[i].surfaces=0; plan.records[i].inUse=1; plan.changed=static_cast<std::uint32_t>(i); return plan;
+        }
+    }
     const bool region=operation==Operation::Region || operation==Operation::RegionAdd;
     const bool add=operation==Operation::Add || operation==Operation::RegionAdd;
     const auto root=pool_.Slot(sid); const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     const auto graphOffset=patch ? 30U : 28U,extraOffset=patch ? 40U : 35U,frameOffset=patch ? 36U : 34U;
-    if (sid.value<5 || sid.value>kMaximumId || (root[11]&(kFree|kContained)) ||
+    if (!global && (sid.value<5 || sid.value>kMaximumId || (root[11]&(kFree|kContained)) ||
         root[10]<kFirstAssetTypeNumber || root[10]>=types_.size() ||
-        (operation!=Operation::Region && !(types_[root[10]].flags1&TypeFlag1::kSurface)))
+        (operation!=Operation::Region && !(types_[root[10]].flags1&TypeFlag1::kSurface))))
         throw std::logic_error("raw 그래프 표면 SID 오류");
     if (operation==Operation::Detach && (!(root[11]&kDead) || (target&~3U)))
         throw std::invalid_argument("raw 그래프 삭제 준비의 dead/정책 오류");
-    Plan plan{records_,stack_,{},0}; auto detachGraph=root[graphOffset];
+    auto detachGraph=root[graphOffset];
     if (operation==Operation::Detach) {
         // GetGridSid는 해시 객체 +12의 0단계 머리를 읽는다. 다른 단계의 원천은 자연 반환한다.
         const int x=Coordinate(std::bit_cast<float>(Read(root,14))),y=Coordinate(std::bit_cast<float>(Read(root,18)));
@@ -233,7 +241,7 @@ RawGraph::Plan RawGraph::Calculate(Sid sid,Operation operation,std::uint8_t targ
     }
     if (region) Region(sid,pop,spots,plan);
     if (operation==Operation::Region || (add && (state&7))) return plan;
-    std::vector<bool> required(pool_.Capacity()); required[sid.value]=true;
+    std::vector<bool> required(pool_.Capacity()); if (!global) required[sid.value]=true;
     // 0단계 머리만 읽는다. 전체 발자국을 가짜 객체 번호로 채우거나 다른 해시 단계를 섞지 않는다.
     for (auto id:map) if (id) {
         if (id<5 || id>kMaximumId || id>=pool_.Capacity()) throw std::out_of_range("raw 그래프 해시 SID 오류");
@@ -244,17 +252,18 @@ RawGraph::Plan RawGraph::Calculate(Sid sid,Operation operation,std::uint8_t targ
     for (std::uint32_t id=5;id<pool_.Capacity();++id) {
         const Sid current{static_cast<std::uint16_t>(id)}; const auto bytes=pool_.Slot(current);
         const auto currentState=static_cast<std::uint8_t>(pop && current==sid ? state : bytes[11]);
-        if (currentState&(kFree|kVoid)) {
+        if (currentState&(global ? kFree : (kFree|kVoid))) {
             if (required[id] && current!=sid) throw std::logic_error("raw 그래프 해시의 free/void SID");
             if (current!=sid) continue;
         }
         if (bytes[10]<kFirstAssetTypeNumber || bytes[10]>=types_.size()) {
-            if (required[id]) throw std::logic_error("raw 그래프 후보 타입 오류");
+            if (required[id] || global) throw std::logic_error("raw 그래프 후보 타입 오류");
             continue;
         }
         const auto& type=types_[bytes[10]]; const bool surface=(type.flags1&TypeFlag1::kSurface)!=0;
         if (!surface && !required[id]) continue;
-        if (id>kMaximumId || (currentState&kContained)) throw std::out_of_range("raw 그래프 후보 상태/SID 범위 오류");
+        if (id>kMaximumId || ((currentState&kContained) && (!global || required[id])) || (global && (currentState&kVoid) && required[id]))
+            throw std::out_of_range("raw 그래프 후보 상태/SID 범위 오류");
         const float x=pop && current==sid ? pop->x : std::bit_cast<float>(Read(bytes,14));
         const float y=pop && current==sid ? pop->y : std::bit_cast<float>(Read(bytes,18));
         FrameCode code{};
@@ -269,7 +278,9 @@ RawGraph::Plan RawGraph::Calculate(Sid sid,Operation operation,std::uint8_t targ
             type.flags1,type.flags2,code,(currentState&kDead)!=0,(bytes[extraOffset]&kBuried)!=0});
     }
     SurfaceFinder finder(objects,map,spots); Graph graph(finder,members,plan.records,plan.stack);
-    if (add) graph.Add(sid.value);
+    if (operation==Operation::Rebuild) graph.Rebuild(target!=0);
+    else if (operation==Operation::Allocate) plan.changed=graph.AllocateWithRecovery();
+    else if (add) graph.Add(sid.value);
     else if (operation==Operation::Detach) graph.DetachAt(sid.value,detachGraph,DetachConnections(sid,finder),(target&1)!=0,(target&2)!=0 ? 9 : 1);
     else plan.changed=graph.Flood(sid.value,target);
     std::copy(graph.Records().begin(),graph.Records().end(),plan.records.begin());
@@ -311,6 +322,12 @@ void RawGraph::Detach(Sid sid,bool rebuild,std::uint8_t removedSurfaces) {
 // 기존 스택의 미사용 DWORD를 보존하여 flood 결과를 반영한다.
 std::uint32_t RawGraph::Flood(Sid sid,std::uint8_t graph) {
     const auto plan=Calculate(sid,Operation::Flood,graph,nullptr); Commit(plan); return plan.changed;
+}
+// 지역 root를 지정하지 않고 전체 할당 풀에서 계산한다.
+void RawGraph::Rebuild(bool resetAll) { Commit(Calculate(Sid{},Operation::Rebuild,resetAll ? 1 : 0,nullptr)); }
+// 재구성 결과의 번호/표/스택을 함께 적용한 뒤 확보한 번호를 돌려준다.
+std::uint8_t RawGraph::Allocate() {
+    const auto plan=Calculate(Sid{},Operation::Allocate,0,nullptr); Commit(plan); return static_cast<std::uint8_t>(plan.changed);
 }
 // 영역 단독 helper도 동일한 원본 탐색·표 감소를 사용한다.
 void RawGraph::InvalidateRegion(Sid sid) { Commit(Calculate(sid,Operation::Region,0,nullptr)); }

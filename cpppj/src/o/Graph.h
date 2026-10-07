@@ -16,8 +16,13 @@ public:
     // 표면 탐색기 수명은 Graph보다 길어야 한다. 기존 표/스택을 이어 받고 생략한 표는 빈 표와 sentinel로 만든다.
     Graph(const SurfaceFinder& surfaces,std::span<const GraphMembership> members,std::span<const GraphRecord> records={},
         std::span<const std::uint32_t> stack={});
-    // 00463330 ↔ CD 0045c390. 첫 미사용 번호를 확보한다. 소진 복구는 쓰기 전에 거부한다.
+    // 첫 미사용 번호만 확보한다. 지역 스냅샷의 자동 전역 재구성은 허용하지 않는다.
     std::uint8_t Allocate();
+    // 00463330 ↔ CD 0045c390의 소진 경로. 전체 표면 입력에서 재구성 뒤 첫 번호를 확보한다.
+    std::uint8_t AllocateWithRecovery();
+    // 00463110 ↔ CD/10.37 0045bd60. 전체 SID 순회·임시 번호·flood·임시 해제를 복원한다.
+    // resetAll=false는 기존 표에 여유가 있을 때 무효 번호만 수집한다. 전체 표면 입력이 필요하다.
+    void Rebuild(bool resetAll);
     // 00462e50 ↔ CD 0045c460. 254는 그대로 두고 유효 레코드의 앞 두 WORD만 지운다.
     void Free(std::uint8_t graph);
     // 00462a50 ↔ CD 0045b530. 활성/양수일 때 감소하고 0이 되면 미사용으로 전환한다.
@@ -43,6 +48,8 @@ public:
     // 앞 251개 레코드에서 inUse가 0이 아닌 개수를 센다.
     std::size_t InUse() const;
 private:
+    // 예외가 발생하면 공개 함수의 복사본을 버려 원래 표/번호/스택을 보존한다.
+    void RebuildImpl(bool resetAll);
     // 호스트 메모리 산술 대신 입력 번호를 검증한다.
     static void CheckNumber(std::uint8_t graph,bool allowInvalid);
     // 손상된 연결·과도한 스택 입력이 있으면 복사본을 버리기 위한 내부 처리다.

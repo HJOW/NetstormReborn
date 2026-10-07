@@ -101,10 +101,10 @@ std::vector<o::RiftTypeRecord> Types(o::OriginalEdition edition) {
     return types;
 }
 // 할당한 슬롯 전체를 fixture 입력으로 채운다. derived ctor/월드 초기화의 복원이 아니다.
-void Node(o::SidPool& pool,o::Sid sid,std::uint8_t number,const std::vector<int>& n) {
+void Node(o::SidPool& pool,o::Sid sid,std::uint8_t number,const std::vector<int>& n,std::uint16_t next=0) {
     auto bytes=pool.AllocatedBytes(sid); std::fill(bytes.begin(),bytes.end(),std::uint8_t{});
     const bool patch=pool.Edition()==o::OriginalEdition::Patch1078;
-    Put(bytes,0,patch ? 0x501dd0U : 0x5058d8U); Put(bytes,8,23,2); bytes[10]=number; bytes[11]=static_cast<std::uint8_t>(n[9]);
+    Put(bytes,0,patch ? 0x501dd0U : 0x5058d8U); Put(bytes,4,next,2); Put(bytes,8,23,2); bytes[10]=number; bytes[11]=static_cast<std::uint8_t>(n[9]);
     Put(bytes,14,std::bit_cast<std::uint32_t>(static_cast<float>(n[0]))); Put(bytes,18,std::bit_cast<std::uint32_t>(static_cast<float>(n[1])));
     bytes[patch ? 30 : 28]=static_cast<std::uint8_t>(n[11]); bytes[patch ? 33 : 31]=static_cast<std::uint8_t>(n[12]);
     bytes[patch ? 34 : 32]=1; Put(bytes,patch ? 36 : 34,static_cast<std::uint32_t>(n[8]),patch ? 4U : 1U);
@@ -124,7 +124,7 @@ std::array<std::uint32_t,2> GraphHashes(const o::RawGraph& graph) {
 }
 
 // 공통 입력/전체 출력 대조를 공유하되 기대값은 각 실제 x86 도구가 독립적으로 기록한다.
-static void ReplayRawGraph(const char* path,int expectedBegins,int expectedCalls,bool regionFixture) {
+static void ReplayRawGraph(const char* path,int expectedBegins,int expectedCalls,bool regionFixture,bool globalFixture=false) {
     std::ifstream input(path); CHECK(input.good()); std::string line; int lineNumber=0,begins=0,calls=0;
     std::unique_ptr<o::SidPool> pool; std::unique_ptr<o::SquidHash> hash; std::unique_ptr<o::RawGraph> graph;
     std::unique_ptr<o::SquidPostPop> post; std::unique_ptr<o::SquidPop> pop; std::unique_ptr<o::SquidDisplay> display; std::unique_ptr<Sink> sink;
@@ -145,17 +145,24 @@ static void ReplayRawGraph(const char* path,int expectedBegins,int expectedCalls
             ++begins;
         } else if (row[0]=="Setup") {
             unpop.reset(); pop.reset(); post.reset(); graph.reset(); display.reset(); sink=std::make_unique<Sink>(); hash->Reset(); std::fill(spots.begin(),spots.end(),std::uint8_t{});
+            if (globalFixture) {
+                // 이 fixture는 free 슬롯도 입력한다. 다음 Setup은 기존 쓰기 보호를 우회하지 않고 같은 풀/번호를 다시 준비한다.
+                pool=std::make_unique<o::SidPool>(pool->Edition(),32768,false); o::SquidFactory factory(*pool,types);
+                // 실제 Reset/Create 이후 번호가 Begin의 준비 입력과 같은지 확인한다.
+                for (auto id:ids) CHECK(factory.Create(74,2)==id);
+            }
             const auto nodes=Rows(row[1]); CHECK(nodes.size()==ids.size());
             // 지도는 발자국 전체가 아니라 실제 기준점 버킷/체인을 입력한다.
             for (std::size_t i=0;i<nodes.size();++i) {
                 const auto& n=nodes[i]; auto& type=types[74+i]; type.flags1=static_cast<std::uint32_t>(n[4]); type.flags2=static_cast<std::uint32_t>(n[5]);
                 type.footX=n[2]; type.footY=n[3]; frames[74+i]={{static_cast<std::uint8_t>(n[6]),static_cast<std::uint8_t>(n[7]),1,0},{65,80,2,0}};
                 shapes[74+i]={2,true,{{11,17,12,16},{19,23,-3,5},{11,17,12,16},{19,23,-3,5}}};
-                Node(*pool,ids[i],static_cast<std::uint8_t>(74+i),n);
+                const auto level=regionFixture ? n[12] : 0;
+                const bool mapped=!(n[9]&4) && (regionFixture || n[12]==0);
+                const auto next=static_cast<std::uint16_t>(mapped && regionFixture ? hash->Bucket(level,static_cast<float>(n[0]),static_cast<float>(n[1])) : 0);
+                Node(*pool,ids[i],static_cast<std::uint8_t>(74+i),n,next);
                 if (!(n[9]&4) && (regionFixture || n[12]==0)) {
-                    const auto level=regionFixture ? n[12] : 0;
                     auto& head=hash->Bucket(level,static_cast<float>(n[0]),static_cast<float>(n[1]));
-                    if (regionFixture) Put(pool->AllocatedBytes(ids[i]),4,head,2);
                     head=ids[i].value;
                 }
             }
@@ -188,7 +195,16 @@ static void ReplayRawGraph(const char* path,int expectedBegins,int expectedCalls
             else if (row[0]=="Detach") graph->Detach(ids[0],args.at(0)[0]!=0,static_cast<std::uint8_t>(args.at(0)[1]));
             else if (row[0]=="Unpop") unpop->Unpop(ids[0],types[74],static_cast<std::uint32_t>(args.at(0)[0]));
             else if (row[0]=="Release") pool->Release(ids[0]);
+            else if (row[0]=="Rebuild") graph->Rebuild(args.at(0)[0]!=0);
+            else if (row[0]=="Allocate") CHECK(graph->Allocate()==std::stoul(row[2]));
             else if (row[0]=="Flood") CHECK(graph->Flood(ids[0],static_cast<std::uint8_t>(args.at(0)[0]))==std::stoul(row[2])); else CHECK(false);
+            if (row.size()==17) {
+                // 전역 재구성 fixture는 checksum 외에 255개 레코드의 모든 바이트도 직접 비교한다.
+                std::vector<std::uint8_t> table;
+                // 앞 두 WORD·reserved·sentinel/미사용 번호를 원본 순서로 직렬화한다.
+                for (auto r:graph->Records()) { Append(table,static_cast<std::uint16_t>(r.surfaces),2); Append(table,static_cast<std::uint16_t>(r.inUse),2); Append(table,static_cast<std::uint16_t>(r.reserved),2); }
+                CHECK(table==Bytes(row[16]));
+            }
             const auto raw=Split(row[3],';');
             // 7개 슬롯의 vtable·graph·좌표·state·payload 모든 바이트를 직접 비교한다.
             for (std::size_t i=0;i<ids.size();++i) {
@@ -236,6 +252,34 @@ TEST_CASE(RawGraph_X86_DetachGeneralIslandBridgeUnpopAndRelease) {
 // 같은 위치의 다른 SID/번호를 읽어도 원천 타입·프레임·상태는 실제 x86처럼 유지한다.
 TEST_CASE(RawGraph_X86_DetachUsesPositionHeadGraphAndSourceFrame) {
     ReplayRawGraph(NETSTORM_GRAPHLOOKUP_FIXTURE,6,384,true);
+}
+// 전체 풀을 실제로 순회한 세 PE×두 x87 정밀도의 무효 수집/전체 재구성/소진 할당을 대조한다.
+TEST_CASE(RawGraph_X86_GlobalRebuildAndExhaustedAllocation) {
+    ReplayRawGraph(NETSTORM_GRAPHREBUILD_FIXTURE,6,288,true,true);
+}
+
+// 여유 번호 경로는 무관한 raw 프레임을 읽지 않고, 전체 재구성 실패는 쓰기를 남기지 않는다.
+TEST_CASE(RawGraph_RebuildRejectsDamageAndFastAllocateDoesNotReadPool) {
+    auto types=Types(o::OriginalEdition::Patch1078); types[74].flags1=o::TypeFlag1::kSurface;
+    std::vector<std::vector<o::FrameCode>> frames(types.size()); frames[74]={{65,80,1,0}};
+    o::SidPool pool(o::OriginalEdition::Patch1078,32768,false); o::SquidFactory factory(pool,types); const auto sid=factory.Create(74,2);
+    Node(pool,sid,74,{20,20,1,1,0x800,2,65,80,99,0,0,254,0});
+    o::SquidHash hash; hash.Bucket(0,20,20)=sid.value; std::vector<std::uint8_t> spots(o::kWorldCells*o::kWorldCells);
+    std::array<o::GraphRecord,o::Graph::kTableSize> records{}; records[0]={31,0,71}; records[1]={0,0,83};
+    o::RawGraph graph(pool,hash,spots,types,frames,records);
+    const std::vector<std::uint8_t> saved(pool.Bytes().begin(),pool.Bytes().end());
+    CHECK(graph.Allocate()==0); CHECK(graph.Records()[0].surfaces==0 && graph.Records()[0].reserved==71);
+    const auto before=GraphHashes(graph);
+    CHECK(Throws([&]{graph.Rebuild(true);})); CHECK(Throws([&]{graph.Rebuild(false);}));
+    CHECK(GraphHashes(graph)==before && std::equal(saved.begin(),saved.end(),pool.Bytes().begin()));
+    CHECK(hash.Bucket(0,20,20)==sid.value && std::all_of(spots.begin(),spots.end(),[](auto v){return !v;}));
+    // 같은 손상 풀도 전체 251개 소진 시에는 재구성 전에 거부한다.
+    for (std::size_t i=0;i<o::Graph::kCount;++i) records[i]={1,1,71};
+    o::RawGraph full(pool,hash,spots,types,frames,records); const auto old=GraphHashes(full);
+    CHECK(Throws([&]{full.Allocate();})); CHECK(GraphHashes(full)==old && std::equal(saved.begin(),saved.end(),pool.Bytes().begin()));
+    // 기존 직접 Flood는 지도에 없는 void 원천도 받는다. 전역 해시 보호가 그 계약을 바꾸지 않는다.
+    auto bytes=pool.AllocatedBytes(sid); Put(bytes,36,0); bytes[11]=4; hash.Bucket(0,20,20)=0;
+    CHECK(graph.Flood(sid,2)==1); CHECK(bytes[11]==4 && bytes[30]==2);
 }
 
 // 조회 머리의 무효/미사용 번호는 원천 프레임 판독보다 먼저 반환하고 손상 입력은 쓰기 전에 실패한다.
