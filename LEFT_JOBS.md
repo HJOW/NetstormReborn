@@ -10,6 +10,18 @@
 
 ---
 
+## 2026-10-07 ✅ 완료: `original1082v12/` (10.82 V12) 식별·전체 디컴파일 (호스트 `DESKTOP-HJOW`, 게임 실행 없음)
+
+- [x] **요청/보호:** "original1082v12 쪽도 디컴파일 진행". AGENTS.md/LEFT_JOBS.md를 먼저 읽었다. 원본/복사본·업데이터·클론 창을 실행하지 않았다. AGENTS.md/C#/원본 변경 없음. 보호된 `originals`/`originalCD`/`original1037`/`originalPatches`/`original1082`/`original1082v12`의 **2,782개 파일 SHA/목록이 시작 스냅샷과 동일**하다.
+- [x] **식별:** `DevLog.txt` 맨 위가 `10.82 V12`다. 기존 `original1082`는 DevLog 상 **V10**이고 v12에는 V11(단축키 Shift+Q/W/A/S/X/Z, 오래된 `.tarc` 읽기 수정)·V12(멀티 요새 메뉴, `\d\backups\` 백업, Whirligig 복귀, Send Money 옵션, Fence check 기본 활성, 편집기 요새 128개)가 추가돼 있다. `netstorm.ver`는 두 폴더 모두 **10.64**로 판본 근거가 아니다. v12에는 `README.txt`·`disclaimer.txt`가 있고 `file.list.txt`/`auto.list.txt`/`remote*.txt`/`trace.txt`/`libbz2.dll`/`d/options.cfg` 등 업데이터 부산물과 일부 음악·gif는 없다.
+- [x] **PE:** 본체 `netstorm.game` 2,333,696바이트(SHA-256 `4c4a52ac…`, 10.82 V10은 `a8c15ef1…`, 2,330,112바이트), 업데이터 `Netstorm.exe` 603,136바이트(`4e3074c5…`, V10은 `5b1c7a84…`, 크기 동일·내용 다름). 두 PE 모두 ImageBase 0x400000이고 본체 .text는 1,628,672→1,631,744바이트, EntryPoint는 `0x135840`→`0x136367`로 바뀌었다.
+- [x] **TARC:** `netstorm.tarc` 291개 항목 중 추가 0·삭제 0·**변경 18개**(`help.english`, `tell.english`, rain/sun/thunder/wind 계열 `.type` 16개). 내용 SHA-256 기준(`tools/taff.py`)이다.
+- [x] **디컴파일:** `tools/ghidra/run_decomp.ps1`/`run_script.ps1`에 `-Edition original1082v12`/`original1082v12-launcher`를 추가했다(기존 10.82 프로젝트/출력과 분리). 읽기 전용 Ghidra 12.1.4로 **본체 10,141개·실패 0**(5분 20초)과 **업데이터 2,618개·실패 0**(약 1분)을 `extracted/original1082v12/decomp/`·`launcher/decomp/`에 내보냈다(Git 제외). 기존 10.82는 10,130/2,618개라 본체만 11개 늘었고 업데이터 함수 수는 같다. GIF/PNG/MinGW 분석 경고는 남아 있으며 함수 의미 복원 완료를 뜻하지 않는다.
+- [x] **정적 비교(대략):** 주소·전역·지역 이름을 정규화한 함수 본문 SHA-1이 10.82 V10과 같은 것은 약 **6,306개**, 다른 것은 약 3,830개다. 주소가 밀리면서 생기는 차이가 섞여 있어 **실제 변경 함수 수의 상한**일 뿐이다. 변경이 큰 후보는 `FUN_004bbd80`, `FUN_00509820`, `FUN_00500750`, `FUN_004db150`, `FUN_0055aa9a`, `FUN_0052a4d3`, `FUN_00455280`, `FUN_005298a8`이다. 개별 의미는 확인하지 않았다.
+- [ ] **다음 작업:** (1) v12의 Graph 관련 다섯 역할 함수(10.82 V10은 `004728c0`/`00472dd0`/`00472150`/`004cf4b0`/`004720f0`)가 V12에서 어느 주소로 옮겨졌는지 찾아 SID 폭 77·graph +42/DWORD·한도 50,000이 유지되는지 `ExportCreation.java`로 확인, (2) DevLog V11/V12 항목(단축키, `\d\backups\` 백업, Whirligig 복귀, 편집기 128개 한도, Fence check 기본값)에 대응하는 함수·문자열을 찾아 대조, (3) `tools/compare_reference_versions.py`에 v12를 추가(현재는 10.82 V10만 대상). cpppj 1차 기준은 계속 10.78이며 v12는 교차 확인 자료다.
+
+---
+
 ## 2026-10-07 ✅ 완료: cpppj 상위 Add·Detach·Pop의 자동 Graph 소진 복구
 
 - [x] **추가 지침/보호:** AGENTS.md/LEFT_JOBS를 먼저 읽고 사용자가 추가한 인수인계 분리 지침을 확인했다. 이번 cpppj/디컴파일 결과는 이 문서에 기록하며 `LEFT_JOBS.dotnetpj.md`와 C#은 변경하지 않았다. 원본/복사본·업데이터/설치/SFX/배치·클론 창·GUI 스모크·`start_session`/`--live`를 실행하지 않았다. AGENTS.md 변경 없음. 보호된 다섯 디렉터리 **총 2,445개 파일 SHA/목록이 시작 스냅샷과 동일**하다.
@@ -18,7 +30,7 @@
 - [x] **원본 순서/보호:** 다른 void/contained 표면도 전체 순회에 포함하며 Pop의 새 좌표/void 해제/hash/spot을 사전 예측한다. 다른 표면의 손상 프레임/내부 타입은 공간·풀·표·스택·비용·깊이 쓰기 전에 거부한다. 재구성 이후 크기 0의 inUse를 임의로 지우지 않는다. Detach는 최초 조회 레코드와 원래 연결 목록을 유지하며 현재 번호를 다시 읽고 최초 레코드에 1/특수 9 감소·해제를 수행한다. 전역 재구성으로 dead 원천의 graph도 변경될 수 있다.
 - [x] **기계어/콘솔:** 세 PE×두 x87 정밀도×8입력×네 상위 경로 **192회**(Add/PostPop/Pop/Detach 각각 48), 각 호출에서 실제 **32768슬롯 전체 재구성 1회**를 확인했다. 각 PE 내부 Rebuild 64/Allocate 308/Flood 244/Add 48/PostPop 32/Pop 16/Detach 16과 준비 Reset 2/Create 14는 상위 수에 더하지 않는다. 7개 슬롯/255개 레코드/dirty 직접 비교·전체 풀/hash/spot/스택/통계 Adler-32. 대체 함수/OS 0·최종 assert 0. 이전 특수 감소 타입의 생성 준비 상태를 초기화했고 원본 assert 몸체는 실행하지 않았다. 기존 graphrebuild/graphlookup/graphremove SHA·호출 수 유지. 최종 Release 경고/오류 0·CTest 내부 **145개·실패 0**(43.59초). 추가 보호 검사의 genus 0 일반 표면 hash 단계를 실제 x86 출력인 1로 정정했으며 독립 fixture는 유지했다.
 - [ ] **다음 작업:** 미복원 form/process 타입을 포함한 실제 전체 풀 계약·`Rebuild(false)` 중첩 소진·재구성 중 재소진·SID 소진의 파생 삭제/서버·클라이언트 통지를 이어 복원한다. 건물 부착/dirty/grid·fencemark/windArcher 특수 위치 조회·파생 삭제/참조/반납 수명·상위 수신 목록 뒤 raw GameWorld·다리 배치/Construction·덱/자원/SP·경제/전투/AI/승패로 연결한다. 자동 복구는 전체 자산 타입(74 이상)·SID 5..32767·정수·비전투 null 큐 계약이며 실제 플레이 전체 복구로 세지 않는다.
-- [ ] **새 비교 자료:** 작업 중 나타난 미추적 `original1082v12/`는 수정/실행하지 않았다. 이번 구현 기준에 도입하지 않았으며 별도 본체/업데이터·버전 식별과 10.78 정적 비교는 미실시다.
+- [x] **새 비교 자료:** 작업 중 나타난 미추적 `original1082v12/`는 수정/실행하지 않았다. 이번 구현 기준에 도입하지 않았다. (후속: 10.82 V12로 식별하고 본체/업데이터를 전체 디컴파일했다 — 위 최신 절. 10.78 정적 비교는 아직 미실시.)
 - [ ] **다른 PC 창 인수인계:** raw 월드 연결 후 TEST01/1-1 생성·표시·선택·이동·해제·재진입 및 renderer/menu/world·전체화면·오디오 회귀를 `DESKTOP-HJOW` 이외의 PC에서 검사한다. 원본 비교 실행은 해당 AGENTS.md/사용자 지시를 확인한다. cpppj/디컴파일 인수인계는 이 문서, 별도 dotnetpj 작업은 `LEFT_JOBS.dotnetpj.md`를 사용한다.
 
 ---

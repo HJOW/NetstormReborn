@@ -40,6 +40,22 @@
 
 10.82는 SID 지도 항목 폭도 달라 기존 raw 레이아웃에 그대로 연결할 수 없다. 비교 주소는 검토한 역할 대응이며 전체 자동 매칭/기계어 동일성을 주장하지 않는다. cpppj의 50바이트 슬롯·1바이트 graph·251개 표는 유지했다.
 
+## 10.82 V12 (`original1082v12/`)
+
+`original1082v12/DevLog.txt` 맨 위가 `10.82 V12`이고, 기존 `original1082`는 같은 일지의 **V10**이다(v12는 V11·V12 항목이 추가됨). `netstorm.ver`는 둘 다 10.64여서 판본 근거가 아니다.
+
+| 분석 대상 | 크기 | SHA-256 | 전체 내보낸 함수 |
+|---|---:|---|---:|
+| `original1082v12/netstorm.game` | 2,333,696 | `4c4a52ac9265667d288e4404c89579d9b43f6ee964a976915aa60d80ef0bcfd5` | 10,141 (V10: 10,130) |
+| `original1082v12/Netstorm.exe` | 603,136 | `4e3074c542a165e3b27eac68ed2dda1d37b674a1ea04e7aa4179fb142adfa93a` | 2,618 (V10과 같음) |
+
+디컴파일 실패 집계는 둘 다 0이다. TARC는 291개 항목 중 추가/삭제 0, 변경 18개(`help.english`, `tell.english`, rain/sun/thunder/wind 계열 `.type` 16개)다. 주소를 정규화한 함수 본문 비교에서 V10과 같은 것은 약 6,306개이며 나머지는 주소 이동 때문에 생긴 차이를 포함하는 상한이다. Graph 함수 대응과 DevLog V11/V12 항목의 코드 대조는 아직 하지 않았다. 10.78 복원 기준은 바뀌지 않는다.
+
+```powershell
+& tools/ghidra/run_decomp.ps1 -Edition original1082v12
+& tools/ghidra/run_decomp.ps1 -Edition original1082v12-launcher
+```
+
 ## 개발 일지와 바이너리/자료의 대조
 
 `original1082/DevLog.txt`는 Windows-1252로 읽고 원본 인코딩을 바꾸지 않았다. 일지의 주장과 실제 확인 범위를 구분했다.

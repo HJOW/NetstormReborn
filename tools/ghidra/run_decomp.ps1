@@ -11,7 +11,7 @@ param(
     # 분석할 바이너리 경로 (생략하면 판본별 기본 실행 파일)
     [string]$Binary = '',
     # 게임 본체·업데이터·패치 도구의 프로젝트와 출력 디렉터리를 분리한다.
-    [ValidateSet('originals', 'originalCD', 'original1037', 'original1062', 'original1082', 'original1082-launcher', 'patch1062')]
+    [ValidateSet('originals', 'originalCD', 'original1037', 'original1062', 'original1082', 'original1082-launcher', 'original1082v12', 'original1082v12-launcher', 'patch1062')]
     [string]$Edition = 'originals',
     # Ghidra 설치 폴더 (PREPARE.ps1 기본 설치 위치에서 검색)
     [string]$GhidraDir = ''
@@ -21,7 +21,17 @@ param(
 $Root = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
 
 # CD판은 기존 패치판 프로젝트와 C 파일을 덮어쓰지 않도록 별도 폴더를 사용한다.
-if ($Edition -eq 'original1082') {
+if ($Edition -eq 'original1082v12') {
+    # 10.82 V12 게임 본체 (netstorm.game) — 10.82 초기 빌드와 프로젝트/출력을 분리한다.
+    $ProjectDir = Join-Path $Root 'extracted\original1082v12\ghidra'
+    $OutDir = Join-Path $Root 'extracted\original1082v12\decomp'
+    if (-not $Binary) { $Binary = 'original1082v12\netstorm.game' }
+} elseif ($Edition -eq 'original1082v12-launcher') {
+    # 10.82 V12 자동 업데이터 (Netstorm.exe)
+    $ProjectDir = Join-Path $Root 'extracted\original1082v12\launcher\ghidra'
+    $OutDir = Join-Path $Root 'extracted\original1082v12\launcher\decomp'
+    if (-not $Binary) { $Binary = 'original1082v12\Netstorm.exe' }
+} elseif ($Edition -eq 'original1082') {
     $ProjectDir = Join-Path $Root 'extracted\original1082\ghidra'
     $OutDir = Join-Path $Root 'extracted\original1082\decomp'
     if (-not $Binary) { $Binary = 'original1082\netstorm.game' }
