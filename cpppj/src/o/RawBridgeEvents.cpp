@@ -85,7 +85,7 @@ void RawBridgeEvents::ConvertEnd(Sid bridge, float x, float y) const {
     // 비교가 거짓이거나 NaN이면(`!(a<b)`) 각각 L, O 쪽이다(x87 fcomp의 C0/C2 판정과 같다).
     const auto side = static_cast<std::int8_t>(codes[static_cast<std::size_t>(oldFrame)].side);
     std::uint8_t letter = 0;
-    if (side == static_cast<std::int8_t>(kSideJ)) letter = (objectY >= y) ? kEndL : kEndN;
+    if (side == static_cast<std::int8_t>(kSideJ)) letter = (objectY < y) ? kEndN : kEndL;
     else if (side == static_cast<std::int8_t>(kSideK)) letter = (objectX < x) ? kEndM : kEndO;
     else return;
     // 타입의 글자별 첫 프레임 표(+0x2c + 글자*4). 끝 프레임이 없는 타입은 원본도 -1을 프레임으로 써 정의되지 않는 동작이다.
