@@ -232,7 +232,7 @@ def generate():
             entries={k:f'{v:08x}' for k,v in oracle.spec['entries'].items()},
             native_calls=dict(oracle.native_calls),stubs=dict(oracle.stub_calls),assertions=oracle.assertions)
     FIXTURE.write_text('# 실제 PE 제한 x86 다리 삭제 전후/낙하 좌표 기대값; 일반 탐색과 외부 효과는 계약 대체\n'+
-        '\n'.join('\t'.join(map(str,row)) for row in rows)+'\n',encoding='utf-8')
+        '\n'.join('\t'.join(map(str,row)) for row in rows)+'\n',encoding='utf-8',newline='\n')
     paths = [Path(__file__),ROOT/'tools/decomp_bridgedecay_oracle.py',FIXTURE]
     # 기존 도구가 생성한 기록과 입력 PE/새 내보내기도 해시를 고정한다.
     for edition in SPECS:
@@ -240,7 +240,7 @@ def generate():
     report = dict(cases=dict(counts),total=sum(counts.values()),editions=reports,os_calls=0,
         files={p.relative_to(ROOT).as_posix():sha(p) for p in paths},
         limits=['prepared ordered finder results','external destroy/walker/base hooks','synthetic type metadata','no GameWorld or event execution'])
-    REPORT.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    REPORT.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
     print(json.dumps(dict(cases=dict(counts),total=sum(counts.values())),ensure_ascii=False))
 
 

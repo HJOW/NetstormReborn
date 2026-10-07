@@ -139,4 +139,15 @@ float RawBridgeEvents::Handle(Sid bridge, std::uint32_t event, std::uint32_t, fl
     // 처리하지 않는 이벤트는 payload를 그대로 돌려준다(base 이벤트 처리기와 같다).
     return payload;
 }
+RegularHandler MakeBridgeRegularHandler(const SidPool& pool, const RawBridgeEvents& events, RegularHandler fallback) {
+    const std::uint32_t bridgeVtable = pool.Edition() == OriginalEdition::Patch1078 ? kPatchBridgeVtable : kCdBridgeVtable;
+    return [&pool, &events, bridgeVtable, fallback = std::move(fallback)](Sid parent, std::uint32_t event, std::uint32_t count, float payload) {
+        const auto raw = pool.Slot(parent);
+        std::uint32_t vtable = 0;
+        // 슬롯 맨 앞 DWORD가 가상 표 주소 기록값이다.
+        for (std::size_t i = 0; i < 4; ++i) vtable |= static_cast<std::uint32_t>(raw[i]) << (8 * i);
+        if (vtable == bridgeVtable) return events.Handle(parent, event, count, payload);
+        return fallback ? fallback(parent, event, count, payload) : payload;
+    };
+}
 }

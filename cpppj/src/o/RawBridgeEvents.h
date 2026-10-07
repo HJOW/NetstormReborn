@@ -4,6 +4,7 @@
 #include "o/RawBridgeLifecycle.h"
 #include "o/RiftType.h"
 #include "o/SidPool.h"
+#include "o/SquidProcess.h"
 #include <functional>
 
 namespace netstorm::o {
@@ -12,6 +13,8 @@ inline constexpr std::uint32_t kBridgeDestroyEvent = 0x2691;
 // 처리기 반환값은 Regular 이벤트 계약을 따른다: 양수 재예약, 0 종료, 음수 유지.
 // 권한이 없으면 두 이벤트 모두 0(종료)을 돌려 예약을 없앤다. 권한이 있으면 -1(유지)이다.
 inline constexpr float kBridgeEventEnd = 0.0f, kBridgeEventKeep = -1.0f;
+// 다리 클래스의 가상 표 주소 기록값(패치 10.78 / CD·10.37). raw 슬롯 +0의 DWORD와 비교만 하고 호스트에서 역참조하지 않는다.
+inline constexpr std::uint32_t kPatchBridgeVtable = 0x005034c8, kCdBridgeVtable = 0x00501ab0;
 // 처리기가 읽는 원본 전역이다. 패치 주소 / CD 주소를 괄호에 둔다.
 struct BridgeEventState {
     bool authority{true};   // 00540bc4 / CD 00540a2c: 이벤트를 실제로 실행할 권한.
@@ -56,4 +59,8 @@ private:
     const BridgeEventState& state_;
     BridgeEventHooks hooks_;
 };
+// Regular 프로세스가 부르는 부모 이벤트 처리기(vtable +0x5c)를 객체의 가상 표로 분배한다.
+// 부모의 가상 표가 다리 클래스이면 다리 처리기를, 아니면 fallback을 부른다. fallback이 없으면 원본 base 처리기처럼 payload를 돌려준다.
+// pool·events는 반환한 처리기보다 오래 살아야 한다.
+RegularHandler MakeBridgeRegularHandler(const SidPool& pool, const RawBridgeEvents& events, RegularHandler fallback = {});
 }

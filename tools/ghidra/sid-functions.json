@@ -1,0 +1,23 @@
+{
+  "description": "SID 풀 초기화·할당·반납·서버 목록·삭제 기록·CRT 복사의 읽기 전용 내보내기(문서 cpp-sid-reconstruction.md의 명령과 같다). sid.c와 functions.tsv를 만든다.",
+  "script": "ExportSid.java",
+  "editions": {
+    "originals": [
+      "004abb10",
+      "004af1d0",
+      "004abf60",
+      "004abe00",
+      "004aba70",
+      "004952f0",
+      "004e5b40"
+    ],
+    "originalCD": [
+      "004aaad0",
+      "004aae40",
+      "004ab250",
+      "004aad30",
+      "004cff40",
+      "004f1a60"
+    ]
+  }
+}

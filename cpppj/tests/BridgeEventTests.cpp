@@ -1,6 +1,7 @@
 // 다리 이벤트 처리기·끝 칸 변환·글자별 프레임 구간 표를 저장된 실제 PE 제한 x86 관찰과 비교한다.
 #include "TestSupport.h"
 #include "o/RawBridgeEvents.h"
+#include "o/SquidOwner.h"
 #include <algorithm>
 #include <array>
 #include <bit>
@@ -237,4 +238,130 @@ TEST_CASE(bridge_event_letter_run_table_matches_x86) {
     CHECK(rows >= 300);
     CHECK(Throws([] { return Frames({}).Run('Q'); }));
     CHECK(Throws([] { return Frames({}).Run('@'); }));
+}
+
+namespace {
+// 실제 bridge.type의 프레임 코드 60개. 다리 붕괴 기대값 파일의 "Frames 0" 행에 원본 자산에서 읽은 값이 있다.
+RiftTypeFrames RealBridgeFrames() {
+    std::ifstream input(NETSTORM_BRIDGEDECAY_FIXTURE);
+    if (!input) throw std::runtime_error("Missing bridge decay fixture");
+    std::string line;
+    // 첫 "Frames 0" 행만 쓴다.
+    while (std::getline(input, line)) {
+        if (!line.empty() && line.back() == '\r') line.pop_back();
+        const auto row = Split(line, '\t');
+        if (row.size() == 3 && row[0] == "Frames" && row[1] == "0") return Frames(Bytes(row[2]));
+    }
+    throw std::runtime_error("Missing bridge frame row");
+}
+}
+// 실제 다리 타입에서 끝 칸 변환이 고르는 프레임: L·M·N·O의 첫 프레임은 보통(번호 1, 플래그 0) 프레임이고
+// J·K에서 교체가 막히는 것은 단단한(번호 20, 플래그 0x40) 프레임뿐이다.
+TEST_CASE(bridge_event_real_bridge_type_end_frames) {
+    const auto frames = RealBridgeFrames();
+    const auto codes = frames.Codes();
+    CHECK(codes.size() == 60);
+    CHECK(frames.LetterKinds() == 16);
+    CHECK(frames.Run('J').first == 35 && frames.Run('J').count == 6);
+    CHECK(frames.Run('K').first == 41 && frames.Run('K').count == 6);
+    const std::array<std::pair<char, int>, 4> ends{{{'L', 47}, {'M', 50}, {'N', 53}, {'O', 56}}};
+    // 끝 글자 네 개의 첫 프레임과 개수를 확인한다.
+    for (const auto& [letter, first] : ends) {
+        const auto run = frames.Run(static_cast<std::uint8_t>(letter));
+        CHECK(run.first == first && run.count == 3);
+        CHECK(codes[static_cast<std::size_t>(run.first)].number == 1 && codes[static_cast<std::size_t>(run.first)].flags == 0);
+    }
+    int hard = 0;
+    // J·K 프레임 가운데 0x40이 켜진 것은 번호 20뿐이다.
+    for (const auto& code : codes) {
+        if (code.side != 'J' && code.side != 'K') continue;
+        CHECK(((code.flags & 0x40) != 0) == (code.number == 20));
+        hard += (code.flags & 0x40) != 0;
+    }
+    CHECK(hard == 2);
+}
+// 지연 낙하 예약 → Kernel 프레임 → 가상 표로 분배한 다리 처리기 → 끝 칸 변환까지 한 흐름으로 이어진다.
+// 다리가 아닌 부모는 base 처리기처럼 payload가 주기가 된다.
+TEST_CASE(bridge_event_runs_from_scheduled_fall_through_regular_process) {
+    constexpr std::uint32_t capacity = 32768;
+    SidPool pool(OriginalEdition::Patch1078, capacity, true);
+    SquidHash hash;
+    std::vector<std::uint8_t> spots(65536);
+    std::vector<RiftTypeRecord> types(188);
+    types[kBridgeType].flags2 = 4;
+    SquidUnpop unpop(pool, hash, spots);
+    RawSquidDestroy destroy(pool, unpop, types);
+    Kernel kernel;
+    SquidProcessState processState;
+    processState.now = 10.0;
+    BridgeEventState bridgeState;
+    bridgeState.bridgeType = kBridgeType;
+    const auto frames = RealBridgeFrames();
+    std::vector<std::string> events;
+    Sid born{};
+    // 소유자 지정은 실제 복원 함수에 잇는다. 다리 genus는 작업장 목록 대상이 아니므로 소유자 바이트만 바뀐다.
+    SquidPostPopState bookkeeping;
+    SquidOwnerMode ownerMode;
+    ownerMode.battle = true;
+    SquidOwner owner(pool, types, bookkeeping, ownerMode);
+    RawBridgeEvents bridgeEvents(pool, bridgeState, BridgeEventHooks{
+        [&](std::uint32_t) -> const RiftTypeFrames& { return frames; },
+        [&](Sid sid) { events.push_back("F:" + std::to_string(pool.Slot(sid)[0x24])); return Sid{1234}; },
+        [&](Sid sid) { events.push_back("N:" + std::to_string(sid.value)); },
+        // 새 객체는 실제 풀에서 번호를 받고 다리 가상 표와 타입만 쓴다.
+        [&](std::uint32_t type) {
+            born = pool.Allocate(2);
+            auto raw = pool.AllocatedBytes(born);
+            Write(raw, 0, kPatchBridgeVtable, 4);
+            raw[10] = static_cast<std::uint8_t>(type);
+            events.push_back("C:" + std::to_string(type));
+            return born;
+        },
+        [&](Sid sid, std::uint32_t flags) { events.push_back("D:" + std::to_string(sid.value) + ":" + std::to_string(flags)); },
+        [&](Sid sid, std::uint8_t player) {
+            owner.Set(sid, player);
+            events.push_back("O:" + std::to_string(sid.value == born.value) + ":" + std::to_string(player));
+        },
+        [&](Sid sid, float x, float y, std::uint32_t) {
+            events.push_back("P:" + std::to_string(sid.value == born.value) + ":" + std::to_string(x) + ":" + std::to_string(y));
+        }});
+    SquidProcessHost host(pool, types, kernel, destroy, processState, MakeBridgeRegularHandler(pool, bridgeEvents),
+        SquidDestroyHooks{[](const SquidDestroyEvent&) {}, [] { return Sid{}; }, {}});
+    // 다리 칸: 실제 타입의 J 프레임(35), 위치 (20.75, 21.9), 소유자 3.
+    const Sid bridge = pool.Allocate(2);
+    auto raw = pool.AllocatedBytes(bridge);
+    Write(raw, 0, kPatchBridgeVtable, 4);
+    raw[10] = static_cast<std::uint8_t>(kBridgeType);
+    Write(raw, 14, std::bit_cast<std::uint32_t>(20.75f), 4);
+    Write(raw, 18, std::bit_cast<std::uint32_t>(21.9f), 4);
+    raw[0x22] = 3;
+    Write(raw, 0x24, 35, 4);
+    // 가상 표가 다른 객체: 다리 처리기가 아니라 payload 주기로 반복한다.
+    const Sid plain = pool.Allocate(2);
+    auto other = pool.AllocatedBytes(plain);
+    Write(other, 0, 0x00501dd0, 4);
+    other[10] = static_cast<std::uint8_t>(kBridgeType);
+    auto* fall = ScheduleBridgeFall(host, bridge, 20.0f, 21.0f);
+    auto* periodic = host.AddRegular(plain, kBridgeFallEvent, 0.5f);
+    CHECK(fall && periodic && HasScheduledBridgeFall(host, bridge));
+    kernel.RunFrame();
+    // 낙하 칸 y(21)가 객체 y(21.9)보다 크지 않으므로 L(첫 프레임 47)이다. 임시 프레임이 쓰인 채 이웃을 묻고 되돌린다.
+    const std::vector<std::string> expected{"F:47", "N:" + std::to_string(bridge.value), "C:82", "O:1:3", "N:" + std::to_string(born.value),
+        "D:" + std::to_string(bridge.value) + ":0", "P:1:" + std::to_string(20.75f) + ":" + std::to_string(21.9f)};
+    CHECK(events == expected);
+    CHECK(pool.Slot(bridge)[0x24] == 35);
+    CHECK(pool.Slot(born)[0x24] == 47);
+    // 옛 칸의 소유자(3)가 새 객체로 옮겨진다.
+    CHECK(pool.Slot(born)[0x22] == 3);
+    // 수명 비트는 4(0x20)로 쓰이고 새 객체로 옮겨진다.
+    CHECK((pool.Slot(bridge)[12] & 0x78) == 0x20 && (pool.Slot(born)[12] & 0x78) == 0x20);
+    // 다리 처리기는 -1을 돌려 예약을 그대로 두고, 다른 객체는 payload(0.5초) 뒤로 다시 예약된다.
+    CHECK(kernel.Size() == 2 && fall->Count() == 0 && fall->Time() == 10.0);
+    CHECK(periodic->Count() == 1 && periodic->Time() == 10.5);
+    // 권한이 없으면 처리기가 0을 돌려 예약이 끝난다.
+    events.clear();
+    bridgeState.authority = false;
+    kernel.RunFrame();
+    CHECK(events.empty());
+    CHECK(kernel.Size() == 1 && !HasScheduledBridgeFall(host, bridge));
 }

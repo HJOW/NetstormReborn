@@ -1,0 +1,29 @@
+{
+  "description": "상위 Add·Detach·Pop의 자동 Graph 소진 복구 읽기 전용 내보내기(문서 cpp-graphrecovery-reconstruction.md의 명령과 같다).",
+  "editions": {
+    "originals": [
+      "004633c0",
+      "004637b0",
+      "00463330",
+      "00463110",
+      "004b02d0",
+      "004b0d30"
+    ],
+    "originalCD": [
+      "0045b7d0",
+      "0045bfd0",
+      "0045c390",
+      "0045bd60",
+      "004ad490",
+      "004ae180"
+    ],
+    "original1037": [
+      "0045b7d0",
+      "0045bfd0",
+      "0045c390",
+      "0045bd60",
+      "004ad490",
+      "004ae180"
+    ]
+  }
+}

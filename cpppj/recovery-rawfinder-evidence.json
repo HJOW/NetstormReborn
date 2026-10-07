@@ -18,11 +18,11 @@
     "extracted/bridgeeffects/original1037/functions.tsv": "b99e5f65a90d402a49be3353263e66080fbf1d3825b19685d7a49edd2e4c4abd",
     "extracted/finder/original1037/creation.c": "822eece37b0a0edde482232eacb0710ae8cf11c759417bc3108fa5ecc0585972",
     "extracted/finder/original1037/functions.tsv": "60cf1f9e4a7832ebe882a869af2bd2cd69e549e761fb03d7d4d64bb5fb3c5935",
-    "tools/decomp_rawfinder_oracle.py": "1e3d8438a29ee858cb4524ad9bc4c9bba63e9379cb41d0cda76e3d7b7ef9a19f",
-    "tools/decomp_bridgeeffects_oracle.py": "0bd612f828a033a7d81372ca990f80f4e72b768e83859bc282efb936d45c2040",
+    "tools/decomp_rawfinder_oracle.py": "bfa95ab177d6ab3d0a38e312db7320b0aa14f57b526d9fba2645d9582185592b",
+    "tools/decomp_bridgeeffects_oracle.py": "84fd8a1d474efc26a46533454aaf9204d2a68b74df0436b8265c06919f46577d",
     "tools/decomp_bridgedecay_oracle.py": "55b660d1f73e054162230a98b0decc1149ed1084d68f1ae647c6d7689f86697d",
     "tools/ghidra/ExportCreation.java": "f3de091e8e42fe70f2439fcbd97127db18a58161e63bde5ee1638eebd9de3107",
-    "cpppj/tests/fixtures/rawfinder-x86.tsv": "98a900b53644558919f51f5a705a3177ade035ee001a7900bad1c22e2d1eebae"
+    "cpppj/tests/fixtures/rawfinder-x86.tsv": "f67209295fcedf4e44283ca8a099a48b220a2a4ea556f5cf8cd9a77db224ad16"
   },
   "binaries": {
     "originals": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",

@@ -166,7 +166,7 @@ def generate():
                     events,states=oracle.lifecycle(post,control,reverse)
                     rows.append(['Post' if post else 'Pre',edition,control,int(reverse),events,states]);counts['Post' if post else 'Pre']+=1
     FIXTURE.write_text('# 세 실제 PE의 일반 탐색/삭제 훅 출력. 입력과 커서는 정수, 좌표는 float 비트다.\n'+
-        '\n'.join('\t'.join(map(str,row)) for row in rows)+'\n',encoding='utf-8')
+        '\n'.join('\t'.join(map(str,row)) for row in rows)+'\n',encoding='utf-8',newline='\n')
     files={path.relative_to(ROOT).as_posix():sha(path) for oracle in oracles.values() for path in oracle.body_paths}
     # 부모 실행기의 출처를 고정하되 부모 도구/fixture 자체는 수정하지 않는다.
     for path in [Path(__file__),ROOT/'tools/decomp_bridgeeffects_oracle.py',ROOT/'tools/decomp_bridgedecay_oracle.py',
@@ -179,7 +179,7 @@ def generate():
         limits=['실제 네 버킷 배열/next를 직접 준비한 합성 등록 상태','정상 월드 좌표/발자국·flag 1/4와 기본 true 필터',
                 '일반 탐색 원본 명령의 쓰기는 커서/스택/FS만 허용, 풀/타입/해시는 읽기 전용',
                 '삭제 훅의 destroy/fall·소리·공통 pre/postDestroy·제거 통지는 대체','게임/OS/창/일반 Pop·실제 삭제/낙하 검증 아님'])
-    REPORT.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    REPORT.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
     print(json.dumps({'cases':dict(counts),'native_calls':report['native_calls'],'asserts':report['assert_reports']}))
 
 

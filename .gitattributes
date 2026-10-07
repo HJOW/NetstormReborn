@@ -94,3 +94,10 @@ tools/ghidra/process-functions.json text eol=lf
 tools/decomp_bridgeevent_oracle.py text eol=lf
 cpppj/recovery-bridgeevent-evidence.json text eol=lf
 tools/ghidra/bridgeevent-functions.json text eol=lf
+# 기계어 대조 도구·증거·Ghidra 내보내기 스크립트/목록은 어느 PC에서나 LF로 체크아웃한다. 증거가 기록하는 SHA가 작업 사본의 줄바꿈(core.autocrlf)에 좌우되지 않게 한다.
+tools/decomp_*.py text eol=lf
+tools/ghidra/*.java text eol=lf
+tools/ghidra/*-functions.json text eol=lf
+cpppj/recovery-*.json text eol=lf
+# PowerShell 스크립트는 .editorconfig 규칙(BOM·CRLF)대로 체크아웃한다. 일부 증거가 run_script.ps1의 SHA를 기록한다.
+*.ps1 text eol=crlf

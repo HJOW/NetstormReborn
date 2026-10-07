@@ -110,18 +110,18 @@
   },
   "os_calls": 0,
   "files": {
-    "tools/decomp_bridgeevent_oracle.py": "80042c78242cbdf62e37ad908c0bede74b95096473772af6a512991117788214",
+    "tools/decomp_bridgeevent_oracle.py": "eff51573870167881145924f64adbda11a325c576f5bd5dd5568010f3fa5f71a",
     "cpppj/tests/fixtures/bridgeevent-x86.tsv": "d5c767563c7cfdc4d00728201150a5501394685d1acfaed18e6d6c6dd7d6ee94",
     "tools/ghidra/bridgeevent-functions.json": "d98a8d2629c4565fc99854911ba40391fcf907d832aed289f5a293349954d6d4",
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
-    "extracted/bridgeevent/final-originals/creation.c": "98b7be841a2e6cd8fb6c975527b161dce284c0f2ed96bcdcaea5f0e26223aff1",
-    "extracted/bridgeevent/final-originals/functions.tsv": "b97a2cb196b560d3ac3796fe53e679dfa7f150adef6b16e51a3cdf89fa8d9bb7",
+    "extracted/bridgeevent/originals/creation.c": "98b7be841a2e6cd8fb6c975527b161dce284c0f2ed96bcdcaea5f0e26223aff1",
+    "extracted/bridgeevent/originals/functions.tsv": "b97a2cb196b560d3ac3796fe53e679dfa7f150adef6b16e51a3cdf89fa8d9bb7",
     "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
-    "extracted/bridgeevent/final-originalCD/creation.c": "53cc74566ec65b041fffb5669157203c433a621f3571c64c927dc8ae93e79150",
-    "extracted/bridgeevent/final-originalCD/functions.tsv": "de7abb58aea96d410f4070616c13c45565f9d33a4393e7b3ad48f5128c39c8dc",
+    "extracted/bridgeevent/originalCD/creation.c": "53cc74566ec65b041fffb5669157203c433a621f3571c64c927dc8ae93e79150",
+    "extracted/bridgeevent/originalCD/functions.tsv": "de7abb58aea96d410f4070616c13c45565f9d33a4393e7b3ad48f5128c39c8dc",
     "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
-    "extracted/bridgeevent/final-original1037/creation.c": "53cc74566ec65b041fffb5669157203c433a621f3571c64c927dc8ae93e79150",
-    "extracted/bridgeevent/final-original1037/functions.tsv": "de7abb58aea96d410f4070616c13c45565f9d33a4393e7b3ad48f5128c39c8dc"
+    "extracted/bridgeevent/original1037/creation.c": "53cc74566ec65b041fffb5669157203c433a621f3571c64c927dc8ae93e79150",
+    "extracted/bridgeevent/original1037/functions.tsv": "de7abb58aea96d410f4070616c13c45565f9d33a4393e7b3ad48f5128c39c8dc"
   },
   "limitations": [
     "prepared first-neighbor result of the flag-8 finder",

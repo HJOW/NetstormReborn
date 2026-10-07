@@ -1,0 +1,30 @@
+{
+  "description": "생성/void Take/타입 초기화의 읽기 전용 내보내기(문서 cpp-creation-reconstruction.md의 명령과 같다).",
+  "editions": {
+    "originals": [
+      "004af530",
+      "004af610",
+      "004b0c60",
+      "004ad4a0",
+      "0049a840",
+      "0049fce0",
+      "004afe50",
+      "0049ebb0"
+    ],
+    "originalCD": [
+      "004ab390",
+      "004ab440",
+      "004ae040",
+      "004ae120",
+      "00444720",
+      "004aecf0",
+      "004aed20",
+      "004abac0",
+      "004abae0",
+      "004abf50",
+      "004448e0",
+      "004ad0b0",
+      "004434d0"
+    ]
+  }
+}

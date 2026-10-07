@@ -125,7 +125,7 @@ class EventOracle:
                               (POOL, (CAPACITY * self.stride + 4095) & ~4095), (STOP, 0x1000), (STACK_BASE, 0x40000)):
             self.mu.mem_map(address, size)
         # 내보낸 함수의 불연속 몸체만 실행을 허용한다.
-        self.exports = [ROOT / f'extracted/bridgeevent/final-{edition}/{name}' for name in ('creation.c', 'functions.tsv')]
+        self.exports = [ROOT / f'extracted/bridgeevent/{edition}/{name}' for name in ('creation.c', 'functions.tsv')]
         self.allowed = []
         with self.exports[1].open(encoding='utf-8') as fp:
             # 함수마다 Ghidra가 계산한 몸체 범위를 그대로 허용한다.
@@ -441,8 +441,8 @@ def generate():
     FIXTURE.write_text('\n'.join(header) + '\n' + '\n'.join('\t'.join(map(str, row)) for row in rows) + '\n', encoding='utf-8', newline='\n')
     paths = [Path(__file__), FIXTURE, ROOT / 'tools/ghidra/bridgeevent-functions.json']
     for edition in SPECS:
-        paths.extend([ROOT / reports[edition]['binary'], ROOT / f'extracted/bridgeevent/final-{edition}/creation.c',
-                      ROOT / f'extracted/bridgeevent/final-{edition}/functions.tsv'])
+        paths.extend([ROOT / reports[edition]['binary'], ROOT / f'extracted/bridgeevent/{edition}/creation.c',
+                      ROOT / f'extracted/bridgeevent/{edition}/functions.tsv'])
     report = dict(schema=1, primary_target='10.78', method='Unicorn x86 32-bit; OS/API/file/window execution forbidden',
         unicorn_version=importlib.metadata.version('unicorn'), seed=SEED, x87_control_words=[hex(v) for v in CONTROLS],
         cases=dict(counts), total=sum(counts.values()), editions=reports, os_calls=0,

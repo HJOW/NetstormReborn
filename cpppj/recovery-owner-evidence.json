@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "primary_target": "10.78",
+  "method": "Unicorn x86 32-bit; OS/API/file/window execution forbidden",
+  "unicorn_version": "2.1.4",
+  "seed": 4906752,
+  "cases": {
+    "Owner": 3000
+  },
+  "total": 3000,
+  "editions": {
+    "originals": {
+      "binary": "originals/Netstorm.exe",
+      "sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "entry": "004adf00",
+      "native_calls": {
+        "004adf00": 1000,
+        "0049a840": 1492,
+        "004900a0": 467,
+        "0040ea00": 411,
+        "00490050": 165
+      },
+      "assertions": 0,
+      "instructions": 73045
+    },
+    "originalCD": {
+      "binary": "originalCD/NETSTORM.EXE",
+      "sha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "entry": "004aefa0",
+      "native_calls": {
+        "004aefa0": 1000,
+        "004abae0": 1492,
+        "00407250": 467,
+        "004071f0": 165
+      },
+      "assertions": 0,
+      "instructions": 79203
+    },
+    "original1037": {
+      "binary": "original1037/netstorm.exe",
+      "sha256": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+      "entry": "004aefa0",
+      "native_calls": {
+        "004aefa0": 1000,
+        "004abae0": 1492,
+        "00407250": 467,
+        "004071f0": 165
+      },
+      "assertions": 0,
+      "instructions": 79203
+    }
+  },
+  "stubbed": [],
+  "os_calls": 0,
+  "files": {
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "cpppj/tests/fixtures/owner-x86.tsv": "83de310340ea458c9d22d7417a0489dfaecc08761bfb567ad8d03b0c655c43fa",
+    "tools/ghidra/owner-functions.json": "8a74fdaf286926d0931e0930e29a0483a619be8afa4508b3cff2e4f7881c0412",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/owner/originals/creation.c": "f9919c046d5259526946f106b47b6259fe5e04971f743d6fa02d6a5361b9dc16",
+    "extracted/owner/originals/functions.tsv": "3ea66dace80a85999a8b2c2dbadb4d5f1bd18b0dcdb0768f9c41075206c7c72d",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "extracted/owner/originalCD/creation.c": "115d3f4790315c3647e18c087579cf3aa08af06cdbaeca42adbac1e82725af62",
+    "extracted/owner/originalCD/functions.tsv": "4e184997f62c2622b26b3fa4f047a2580a609d2d919f0e414a75e8efd49d4439",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "extracted/owner/original1037/creation.c": "115d3f4790315c3647e18c087579cf3aa08af06cdbaeca42adbac1e82725af62",
+    "extracted/owner/original1037/functions.tsv": "4e184997f62c2622b26b3fa4f047a2580a609d2d919f0e414a75e8efd49d4439"
+  },
+  "limitations": [
+    "synthetic type genus, object slot and per-owner list storage",
+    "owner numbers 0..8 only (assert paths and 9..39 of the other mode are not generated)",
+    "no GameWorld; AI/production recalculation after the list change is outside this function"
+  ]
+}

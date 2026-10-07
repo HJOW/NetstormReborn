@@ -96,9 +96,9 @@
   },
   "os_calls": 0,
   "files": {
-    "tools/decomp_bridgeeffects_oracle.py": "0bd612f828a033a7d81372ca990f80f4e72b768e83859bc282efb936d45c2040",
+    "tools/decomp_bridgeeffects_oracle.py": "84fd8a1d474efc26a46533454aaf9204d2a68b74df0436b8265c06919f46577d",
     "tools/decomp_bridgedecay_oracle.py": "55b660d1f73e054162230a98b0decc1149ed1084d68f1ae647c6d7689f86697d",
-    "cpppj/tests/fixtures/bridgeeffects-x86.tsv": "d42ed0aae06805098ded55ddb147a69216fbd1714bc56c3da1d7576ac57c7f61",
+    "cpppj/tests/fixtures/bridgeeffects-x86.tsv": "cb68d6265d0d71ede7ed96f85e0be3311ebc6f6fec6279442c7607c7ca1ff3f5",
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
     "extracted/bridgeeffects/originals/creation.c": "ac1856212fbd285650dc4ec999fa996a306ba536a3e42d605fba4ab26178fdbc",
     "extracted/bridgeeffects/originals/functions.tsv": "485cd05093884690ffc94c433c4e040282cd6ca26eb7da469732f74e1c983cec",

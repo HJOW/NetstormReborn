@@ -22,7 +22,7 @@
 | 새 객체 생성 | `004af530` | `004ab390` |
 | 소유자 지정(vtable +0x74) | `004adf00` | `004aefa0` |
 
-CD와 추가 10.37은 이 함수들의 주소와 디컴파일 결과가 같다(내보낸 `creation.c`가 바이트 단위로 같다). 읽기 전용 Ghidra로 패치 8개·CD/10.37 각 6개를 `extracted/bridgeevent/final-<판본>/`에 내보냈다(Git 제외). 프로젝트 변경은 저장하지 않았다.
+CD와 추가 10.37은 이 함수들의 주소와 디컴파일 결과가 같다(내보낸 `creation.c`가 바이트 단위로 같다). 읽기 전용 Ghidra로 패치 8개·CD/10.37 각 6개를 `extracted/bridgeevent/<판본>/`에 내보냈다(Git 제외). 프로젝트 변경은 저장하지 않았다.
 
 ## 이벤트 처리기
 
@@ -72,11 +72,8 @@ CD와 추가 10.37은 이 함수들의 주소와 디컴파일 결과가 같다(�
 **제한:** CD/10.37은 끝 칸 변환이 처리기에 인라인되어 직접 호출 행이 없다. 그 판본은 정수 좌표 payload가 닿는 범위만 대조한다(NaN 같은 경계는 패치판 직접 호출로만 확인). 이웃 탐색기의 실제 결과·새 객체의 실제 생성/Pop/소유자 등록·표면 알림의 실제 효과는 이 단계의 범위가 아니다.
 
 ```powershell
-# 1) 읽기 전용 Ghidra 내보내기 (프로젝트 변경은 저장하지 않는다)
-$j = Get-Content tools/ghidra/bridgeevent-functions.json -Raw -Encoding UTF8 | ConvertFrom-Json
-foreach ($e in 'originals','originalCD','original1037') {
-  & ./tools/ghidra/run_script.ps1 -Edition $e -Script ExportCreation.java -ScriptArgs (@("extracted/bridgeevent/final-$e") + @($j.editions.$e))
-}
+# 1) 읽기 전용 Ghidra 내보내기 (프로젝트 변경은 저장하지 않는다). 결과: extracted/bridgeevent/<판본>/
+powershell -ExecutionPolicy Bypass -File tools/ghidra/export_functions.ps1 -Name bridgeevent
 # 2) 기대값 생성(약 3분) / 저장된 기록 확인
 python -X utf8 tools/decomp_bridgeevent_oracle.py
 python -X utf8 tools/decomp_bridgeevent_oracle.py --verify
