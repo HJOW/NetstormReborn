@@ -2,6 +2,7 @@
 #pragma once
 #include "o/RawSquidDestroy.h"
 #include "o/SquidPostPop.h"
+#include "o/SquidReward.h"
 
 namespace netstorm::o {
 // UI 전체·삭제 보상/SP·실제 소리 출력은 명시적인 외부 효과로 연결한다.
@@ -29,7 +30,7 @@ class SquidDestroyLifecycle {
 public:
     // Pop과 같은 장부/풀을 사용한다. 풀·원본 삭제 어댑터·상태의 수명은 이 객체보다 길어야 한다.
     SquidDestroyLifecycle(SidPool& pool,std::span<const RiftTypeRecord> types,SquidPostPopState& bookkeeping,
-        SquidDeletionState& state,RawSquidDestroy& destroy,SquidDeletionHooks hooks,RawGraph* graph=nullptr);
+        SquidDeletionState& state,RawSquidDestroy& destroy,SquidDeletionHooks hooks,RawGraph* graph=nullptr,SquidReward* reward=nullptr);
     // 손상 목록·미연결 Graph/AI 효과·비유한 비용·누락 외부 효과를 장부 쓰기 전에 거부한다.
     void ValidatePre(Sid sid,std::uint32_t flags) const;
     void ValidatePost(Sid sid,std::uint32_t flags) const;
@@ -61,5 +62,6 @@ private:
     RawSquidDestroy& destroy_;
     SquidDeletionHooks hooks_;
     RawGraph* graph_{}; // 풀/타입/공간을 생성 시 확인하며 연결 객체는 더 오래 살아야 한다.
+    SquidReward* reward_{}; // 있으면 보상 사건을 외부로 내보내지 않고 실제 SP/지갑/샘 풀 계산을 수행한다. 풀과 장부가 같아야 한다.
 };
 }

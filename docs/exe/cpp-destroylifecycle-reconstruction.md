@@ -19,7 +19,7 @@
 
 [함수 목록](../../tools/ghidra/destroylifecycle-functions.json)으로 읽기 전용 Ghidra를 실행했다. 패치 **14개**, CD/추가 10.37 각각 **20개**를 새 `extracted/destroylifecycle/<판본>/creation.c`·`functions.tsv`에 내보냈고 완료/read-only 로그를 확인했다. 이전 독립 내보내기/도구/fixture는 보존했다. 10.37은 CD와 한 바이트의 CD 관련 분기만 다른 별도 실제 PE이며 이 훅 몸체는 동일하다.
 
-이전 후속 후보의 “경로” 표현을 정정한다. `0044c2f0` / `004626d0`는 가상 +0x80 비용 조회와 소유자 보상 비율, SP 및 누적 수입을 처리하는 **삭제 보상 계산**이다. 이번에는 인자 `sid, (flags >> 16) & 15, 0`을 보상 사건으로 전달한다. 실제 SP·비율·수입 갱신을 구현한 것은 아니다. AI 통지와 이동 경로 처리는 별개 후속이다.
+이전 후속 후보의 “경로” 표현을 정정한다. `0044c2f0` / `004626d0`는 가상 +0x80 비용 조회와 소유자 보상 비율, SP 및 누적 수입을 처리하는 **삭제 보상 계산**이다. 이번에는 인자 `sid, (flags >> 16) & 15, 0`을 보상 사건으로 전달한다. 실제 SP·비율·수입 갱신은 이 단계에서 구현하지 않았고 이후 [보상 복원](cpp-reward-reconstruction.md)에서 구현했다. AI 통지와 이동 경로 처리는 별개 후속이다.
 
 ## 공통 훅의 장부 순서
 
@@ -69,6 +69,6 @@ ctest --test-dir cpppj/build -C Release --output-on-failure
 
 ## 다음 단계
 
-공통 pre의 표면 Graph 분할/직접 Free와 post의 주변 finder→표면 Add를 기존 RawGraph/RawSquidFinder에 연결한다. 그 뒤 실제 삭제 보상/SP·AI 통지, 종속 form/process의 파생 release/destroy·참조 수명, Flyingshrapnel 파편·walker 낙하·0x2692 실행/취소·끝 칸 변환·raw GameWorld를 잇는다. 다리 배치/Construction·SID 소진·건설/경제/전투/승패도 후속이다.
+공통 pre의 표면 Graph 분할/직접 Free와 post의 주변 표면 Add는 [후속](cpp-destroygraph-reconstruction.md)에서, 삭제 보상 `0044c2f0`/CD `004626d0`의 실제 SP 지급·AI 지갑·샘 풀은 [그다음 후속](cpp-reward-reconstruction.md)에서 연결했다. 이 문서의 175개/87,312개와 보상 사건 표현은 당시 상태다. 남은 일은 AI 부착 통지, 종속 form/process의 파생 release/destroy·참조 수명, Flyingshrapnel 파편·walker 낙하·0x2692 실행/취소·끝 칸 변환·raw GameWorld다. 다리 배치/Construction·SID 소진·건설/경제/전투/승패도 후속이다.
 
 원본/복사본·업데이터/설치 도구 실행과 모든 창 검사는 호스트 **DESKTOP-HJOW에서 금지**되어 있다. 창 검증은 다른 허용 PC에서 raw 월드 연결 후 TEST01/1-1 생성→선택→삭제/반납→재진입, 파편/소리/낙하·전체화면을 확인한다. 해당 PC의 AGENTS.md/사용자 지시를 먼저 확인한다.

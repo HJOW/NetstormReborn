@@ -35,8 +35,8 @@ void Remove(SquidPostPopList& list,Sid sid) {
 }
 // 판본별 타입 수/풀 연결을 확인하고 타입을 복사해 장부 처리 동안의 입력을 고정한다.
 SquidDestroyLifecycle::SquidDestroyLifecycle(SidPool& pool,std::span<const RiftTypeRecord> types,SquidPostPopState& bookkeeping,
-    SquidDeletionState& state,RawSquidDestroy& destroy,SquidDeletionHooks hooks,RawGraph* graph)
-    :pool_(pool),types_(types.begin(),types.end()),bookkeeping_(bookkeeping),state_(state),destroy_(destroy),hooks_(std::move(hooks)),graph_(graph) {
+    SquidDeletionState& state,RawSquidDestroy& destroy,SquidDeletionHooks hooks,RawGraph* graph,SquidReward* reward)
+    :pool_(pool),types_(types.begin(),types.end()),bookkeeping_(bookkeeping),state_(state),destroy_(destroy),hooks_(std::move(hooks)),graph_(graph),reward_(reward) {
     const auto count=pool.Edition()==OriginalEdition::Patch1078 ? 188U : 171U;
     if (types.size()!=count) throw std::invalid_argument("삭제 훅 타입 판본/크기 오류");
     if (&destroy.Pool()!=&pool) throw std::invalid_argument("삭제 훅 SID 풀이 다릅니다");
@@ -44,6 +44,8 @@ SquidDestroyLifecycle::SquidDestroyLifecycle(SidPool& pool,std::span<const RiftT
         if (&graph_->Pool()!=&pool_) throw std::invalid_argument("삭제 훅/Graph SID 풀이 다릅니다");
         graph_->ValidateTypes(types);destroy_.ValidateGraph(*graph_);
     }
+    // 보상은 같은 풀과 같은 장부(로컬 소유자/AI 부착)를 읽어야 지급 대상이 어긋나지 않는다.
+    if (reward_ && (&reward_->Pool()!=&pool_ || &reward_->Bookkeeping()!=&bookkeeping_)) throw std::invalid_argument("삭제 훅/보상 풀 또는 장부가 다릅니다");
 }
 // 루트 자산에만 공통 장부 처리를 제공한다. form/contained의 파생 메서드는 별도다.
 std::span<const std::uint8_t> SquidDestroyLifecycle::Object(Sid sid) const {
@@ -88,7 +90,8 @@ void SquidDestroyLifecycle::ValidatePre(Sid sid,std::uint32_t flags) const {
     if (type.flags2&kFactoryMask) { if (owner) static_cast<void>(bookkeeping_.ownerFactories[owner].Items()); }
     if (!Ordinary(sid)) return;
     if (owner && bookkeeping_.aiAttached[owner]) throw std::logic_error("삭제 훅 AI 통지 미복원");
-    if (!(flags&kNoRefund) && !hooks_.emit) throw std::invalid_argument("삭제 훅 보상 콜백 누락");
+    // 보상 객체가 있으면 계산 입력 오류를 쓰기 전에 거부하고, 없으면 외부 보상 콜백이 필요하다.
+    if (!(flags&kNoRefund)) { if (reward_) static_cast<void>(reward_->Plan(sid,(flags>>16)&15,false)); else if (!hooks_.emit) throw std::invalid_argument("삭제 훅 보상 콜백 누락"); }
     if (LostNotice(sid,flags) && (pool_.Edition()==OriginalEdition::Cd1072 || raw[kType]!=state_.silentType) && !hooks_.emit)
         throw std::invalid_argument("삭제 훅 소리 콜백 누락");
     if (type.flags1&kProvider) static_cast<void>(bookkeeping_.providers.Items());
@@ -145,7 +148,11 @@ void SquidDestroyLifecycle::PreDestroy(Sid sid,std::uint32_t flags) {
     if (!bookkeeping_.suppressed) {
         if (Type(sid).flags2&kFactoryMask) { const auto owner=Owner(sid);if (owner) Remove(bookkeeping_.ownerFactories.at(owner),sid); }
         if (Ordinary(sid)) {
-            if (!(flags&kNoRefund)) hooks_.emit({SquidDeletionEffect::Refund,sid,(flags>>16)&15});
+            if (!(flags&kNoRefund)) {
+                // 원본 인자: sid, 플래그 16..19비트의 수신자, 마지막 0(삭제 보상 비율).
+                if (reward_) reward_->Refund(sid,(flags>>16)&15,false);
+                else hooks_.emit({SquidDeletionEffect::Refund,sid,(flags>>16)&15});
+            }
             const auto number=Object(sid)[kType];
             if (Owner(sid)==bookkeeping_.localOwner) --bookkeeping_.localCounts[number];
             --bookkeeping_.globalCounts[number]; // localSecondaryCounts는 누적 생산 수이므로 유지한다.

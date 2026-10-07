@@ -30,6 +30,8 @@ target_sources(netstorm PRIVATE
     SquidPop.cpp SquidPop.h PopVtables.inc
     SquidDisplay.cpp SquidDisplay.h
     SquidPostPop.cpp SquidPostPop.h
+    SpStore.cpp SpStore.h
+    SquidReward.cpp SquidReward.h
     Graph.cpp Graph.h
     RawGraph.cpp RawGraph.h
     BaseProcess.cpp BaseProcess.h

@@ -82,3 +82,7 @@ tools/ghidra/destroy-functions.json text eol=lf
 tools/decomp_destroygraph_oracle.py text eol=lf
 cpppj/recovery-destroygraph-evidence.json text eol=lf
 tools/ghidra/destroygraph-functions.json text eol=lf
+# 삭제 보상(SP) 경로의 독립 기록/도구/내보내기 목록도 SHA를 체크아웃 후에도 유지한다.
+tools/decomp_reward_oracle.py text eol=lf
+cpppj/recovery-reward-evidence.json text eol=lf
+tools/ghidra/reward-functions.json text eol=lf

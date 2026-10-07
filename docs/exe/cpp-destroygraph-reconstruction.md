@@ -67,8 +67,12 @@ ctest --test-dir cpppj/build -C Release --output-on-failure
 
 기대값 생성에는 원본 PE/읽기 전용 내보내기/Python 의존성이 필요하다. `--verify`는 저장된 SHA·고정 행 수·실제/대체 호출 경계만 감사한다. C++ 콘솔 검사에는 저장 fixture만 필요하다. 최신 빌드/회귀와 보호 파일 결과는 [LEFT_JOBS.md](../../LEFT_JOBS.md)를 따른다. 새 로그는 `extracted/destroygraph/build.log`·`ctest.log`·`oracle.log`다.
 
+## 최종 빌드/검사와 원본 보호
+
+최종 x64 Release 경고/오류 0·CTest 실행 파일 1개 안의 내부 **182개·실패 0**(87.53초), 누적 제한 x86은 **89,040개**(87,312 + 1,728)다. 기존 장부·공통 삭제·일반 탐색·다리 효과/붕괴·Graph 소진 복구·삭제 준비의 `--verify` 감사가 통과했고 원본 여섯 디렉터리 **2,782개 파일의 SHA/목록이 시작과 동일**했다(`extracted/destroygraph/protected-before.json`). 로그는 `extracted/destroygraph/build.log`·`ctest.log`·`oracle.log`다. 이후 [삭제 보상](cpp-reward-reconstruction.md)이 같은 삭제 장부에 연결되어 최신 수치는 191개/96,240개다.
+
 ## 남은 연결
 
-공통 pre/post Graph는 완료했지만 실제 보상 비율/SP/누적 수입·AI 부착 통지·종속 form/process 파생 release/destroy·참조 수명·Flyingshrapnel 파편·walker 낙하·0x2692 실행/취소·끝 칸 변환과 raw GameWorld는 남았다. 다리 전용 훅/장부/Graph/실제 효과를 전부 결합한 월드나 미션 완주를 검사하지 않았다. 다리 배치/Construction·SID 소진·건설/경제/전투/승패·V12 비교 도구 확장도 후속이다.
+공통 pre/post Graph는 완료했고 실제 보상 비율/SP/누적 수입은 [후속](cpp-reward-reconstruction.md)에서 복원했다. 남은 것은 AI 부착 통지·종속 form/process 파생 release/destroy·참조 수명·Flyingshrapnel 파편·walker 낙하·0x2692 실행/취소·끝 칸 변환과 raw GameWorld다. 다리 전용 훅/장부/Graph/실제 효과를 전부 결합한 월드나 미션 완주를 검사하지 않았다. 다리 배치/Construction·SID 소진·건설/경제/전투/승패·V12 비교 도구 확장도 후속이다.
 
 원본/복사본·업데이터/설치 도구 실행과 모든 창 검사는 호스트 **DESKTOP-HJOW에서 금지**되어 있다. 다른 허용 PC에서 raw 월드 연결 후 TEST01/1-1 생성→선택→삭제/반납→재진입, 그래프 연결/파편/소리/낙하·전체화면을 검사한다. 해당 PC의 AGENTS.md/사용자 지시를 먼저 확인한다.

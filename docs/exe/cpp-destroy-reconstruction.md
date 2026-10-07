@@ -77,6 +77,6 @@ ctest --test-dir cpppj/build -C Release --output-on-failure
 
 ## 바로 다음
 
-공통 선택/목록/통계/손실 좌표/비용은 [후속 장부 훅](cpp-destroylifecycle-reconstruction.md)에서 복원했다. 다음은 pre의 표면 Graph 분할/Free와 post의 주변 finder→표면 Add, 실제 삭제 보상/SP·AI 통지다. 기존 “경로” 후보 `0044c2f0`/CD `004626d0`는 삭제 보상 함수로 정정했다. 그다음 종속 form/process의 가상 release/destroy와 파편 `004604a0`, walker vtable +200/칸 위 carrier·이벤트 0x2692의 실행/취소·끝 칸 변환을 잇는다. 다리 배치/Construction·SID 소진·raw GameWorld·건설/경제/전투/AI/승패도 남았다.
+공통 선택/목록/통계/손실 좌표/비용은 [후속 장부 훅](cpp-destroylifecycle-reconstruction.md)에서, Graph 분할/Free·주변 표면 Add는 [삭제 Graph](cpp-destroygraph-reconstruction.md)에서, 삭제 보상 `0044c2f0`/CD `004626d0`는 [보상 복원](cpp-reward-reconstruction.md)에서 연결했다. 남은 일은 AI 통지, 종속 form/process의 가상 release/destroy와 파편 `004604a0`, walker vtable +200/칸 위 carrier·이벤트 0x2692의 실행/취소·끝 칸 변환이다. 다리 배치/Construction·SID 소진·raw GameWorld·건설/경제/전투/AI/승패도 남았다.
 
 호스트 **`DESKTOP-HJOW`의 기존 창 제한을 유지한다.** 다른 허용 PC에서 raw 월드 연결 후 다리 붕괴→그래프/공간/반납→파편/소리/낙하와 TEST01/1-1 생성·삭제·재진입을 검사한다. 이전 작업의 일회성 창 허용은 이번에 적용하지 않았다.

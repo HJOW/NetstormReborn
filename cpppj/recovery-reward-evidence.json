@@ -1,0 +1,127 @@
+{
+  "schema": 1,
+  "method": "Unicorn x86 32-bit; OS/API/file/window execution forbidden",
+  "unicorn_version": "2.1.4",
+  "seed": 276300293,
+  "editions": {
+    "originals": {
+      "binary_sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "accepted": 2400,
+      "precision_sensitive": 0,
+      "reward_applied": 1617,
+      "native_hits": {
+        "004e49c0": 23298,
+        "cost_encode": 14400,
+        "0040edb0": 46434,
+        "0040eba0": 4800,
+        "004558c0": 7587840,
+        "0044c2f0": 4800,
+        "004ad0f0": 3280,
+        "004ad0a0": 3280,
+        "0049a840": 9582,
+        "0044b220": 4794,
+        "0040eec0": 1818,
+        "0040ec50": 46434,
+        "00413bb0": 3234,
+        "00485f70": 3234,
+        "0044c240": 1000,
+        "0043cb30": 870,
+        "004adc60": 870,
+        "004adcb0": 762,
+        "0049fce0": 762,
+        "0041df80": 1416,
+        "00463b50": 744
+      },
+      "exports": {
+        "creation.c": "bd80bca7562980a89ded9c5f91aa26763333ca050c408aadc8c28b5eda977575",
+        "functions.tsv": "23e31f31576cea3ac9c95749a60da6efd12811bc5c7847dec12bf6b67df0b10f"
+      }
+    },
+    "originalCD": {
+      "binary_sha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "accepted": 2400,
+      "precision_sensitive": 0,
+      "reward_applied": 991,
+      "native_hits": {
+        "004626d0": 4800,
+        "004ace00": 3410,
+        "004acdc0": 3410,
+        "004acd90": 3410,
+        "004abf50": 3410,
+        "004abac0": 4166,
+        "004147c0": 4788,
+        "004f161c": 7820,
+        "00414680": 1982,
+        "004d8cc0": 3558,
+        "004d81f0": 3558,
+        "00415d00": 3558,
+        "00462610": 1198,
+        "00414830": 1050,
+        "004aecf0": 1050,
+        "004abae0": 2004,
+        "004aed30": 954,
+        "00444720": 954,
+        "004448e0": 488,
+        "004175a0": 804,
+        "00417060": 804
+      },
+      "exports": {
+        "creation.c": "4c8f3e476f7e5885cf9a0b634dc38fe7c73dcba9c259214e1c43f9ffa83d84be",
+        "functions.tsv": "2bf226bbe0d2a3c61d292d9f7e33771f65324748701aa30ed1c25bb59c0d6b95"
+      }
+    },
+    "original1037": {
+      "binary_sha256": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+      "accepted": 2400,
+      "precision_sensitive": 0,
+      "reward_applied": 991,
+      "native_hits": {
+        "004626d0": 4800,
+        "004ace00": 3410,
+        "004acdc0": 3410,
+        "004acd90": 3410,
+        "004abf50": 3410,
+        "004abac0": 4166,
+        "004147c0": 4788,
+        "004f161c": 7820,
+        "00414680": 1982,
+        "004d8cc0": 3558,
+        "004d81f0": 3558,
+        "00415d00": 3558,
+        "00462610": 1198,
+        "00414830": 1050,
+        "004aecf0": 1050,
+        "004abae0": 2004,
+        "004aed30": 954,
+        "00444720": 954,
+        "004448e0": 488,
+        "004175a0": 804,
+        "00417060": 804
+      },
+      "exports": {
+        "creation.c": "4c8f3e476f7e5885cf9a0b634dc38fe7c73dcba9c259214e1c43f9ffa83d84be",
+        "functions.tsv": "2bf226bbe0d2a3c61d292d9f7e33771f65324748701aa30ed1c25bb59c0d6b95"
+      }
+    }
+  },
+  "tool_sha256": "7933a5f61e794b9e9d7e872a949890901bb28d486d7e2d4eb845b867488e1ce5",
+  "fpu_controls": [
+    639,
+    895
+  ],
+  "total_cases": 7200,
+  "fixture_sha256": "a1fedbc77eca2e3f73976138aec2ea15d10a50b90967400b1f0ca6f6e5a8879c",
+  "stubbed": [
+    "SP 표시 갱신",
+    "시각 기반 난수 재시드(패치)",
+    "0x24바이트 힙 할당(패치)",
+    "패치 assert 보고",
+    "파생 vtable +0x80 개수"
+  ],
+  "limitations": [
+    "합성 타입/객체·소유자 0~8·정수 비용 표 범위·재귀 없는 개수 입력",
+    "게임/창/OS 실행 없음",
+    "파생 vtable +0x80(dais 전달/프레임 기반 개수)은 호출자 계약",
+    "SP 표시와 AI 객체 안쪽은 지갑 필드만 대조"
+  ]
+}
