@@ -332,6 +332,8 @@ TEST_CASE(bridge_event_runs_from_scheduled_fall_through_regular_process) {
     auto raw = pool.AllocatedBytes(bridge);
     Write(raw, 0, kPatchBridgeVtable, 4);
     raw[10] = static_cast<std::uint8_t>(kBridgeType);
+    // 할당 직후의 void 상태를 지운다. void 부모의 Regular는 실행되지 않는다.
+    raw[11] = 0;
     Write(raw, 14, std::bit_cast<std::uint32_t>(20.75f), 4);
     Write(raw, 18, std::bit_cast<std::uint32_t>(21.9f), 4);
     raw[0x22] = 3;
@@ -341,6 +343,7 @@ TEST_CASE(bridge_event_runs_from_scheduled_fall_through_regular_process) {
     auto other = pool.AllocatedBytes(plain);
     Write(other, 0, 0x00501dd0, 4);
     other[10] = static_cast<std::uint8_t>(kBridgeType);
+    other[11] = 0;
     auto* fall = ScheduleBridgeFall(host, bridge, 20.0f, 21.0f);
     auto* periodic = host.AddRegular(plain, kBridgeFallEvent, 0.5f);
     CHECK(fall && periodic && HasScheduledBridgeFall(host, bridge));

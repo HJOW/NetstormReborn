@@ -2,8 +2,10 @@
 # -*- coding: utf-8 -*-
 """cpppj 소스를 일부러 한 군데씩 틀리게 바꿔, 기계어 대조 검사가 그 차이를 실제로 잡아내는지 확인한다.
 
-변이마다 소스 한 파일을 바꿔 Release 빌드와 콘솔 검사를 실행하고, 끝나면(실패/중단 포함) 원래 바이트로 되돌린 뒤 다시 빌드한다.
-게임·클론 창·원본 실행 파일은 실행하지 않는다. 빌드 폴더(cpppj/build)가 이미 구성돼 있어야 한다.
+**저장소의 소스는 바꾸지 않는다.** cpppj(빌드 폴더 제외)를 Git 제외 폴더 extracted/mutation-work/cpppj 로 복사하고
+별도 빌드 폴더(extracted/mutation-work/build)에서 변이마다 사본의 파일 하나를 바꿔 Release 빌드와 콘솔 검사를 실행한다.
+그래서 확인이 도는 동안 커밋해도 변이된 소스가 저장소에 들어가지 않는다. 사본은 실행할 때마다 저장소와 다시 맞춘다.
+게임·클론 창·원본 실행 파일은 실행하지 않는다. 첫 실행은 사본 전체를 빌드하므로 몇 분 더 걸린다.
 
     python -X utf8 tools/cpp_mutation_check.py --list           # 변이 목록과 적용 가능 여부만 확인(빌드 없음)
     python -X utf8 tools/cpp_mutation_check.py                  # 모든 변이 실행
@@ -11,16 +13,22 @@
     python -X utf8 tools/cpp_mutation_check.py --cmake "C:/.../cmake.exe"
 
 각 변이는 기대하는 실패 검사 이름의 접두사를 갖는다. 그 접두사의 검사가 하나도 실패하지 않으면 "미검출"로 보고한다.
+변이를 적용하지 않은 사본의 검사가 먼저 모두 통과해야 한다(아니면 "검출"이 의미가 없으므로 중단한다).
 """
 import argparse
 import subprocess
 import sys
 from pathlib import Path
 
-# 저장소 루트와 빌드/검사 실행 파일 위치.
+# 저장소 루트, 저장소의 cpppj, Git 제외 작업 사본과 그 빌드/검사 실행 파일 위치.
 ROOT = Path(__file__).resolve().parent.parent
-BUILD = ROOT / 'cpppj/build'
+REPOSITORY = ROOT / 'cpppj'
+WORK = ROOT / 'extracted/mutation-work'
+SOURCE = WORK / 'cpppj'
+BUILD = WORK / 'build'
 TESTS = BUILD / 'bin/Release/netstorm_tests.exe'
+# 사본에 복사하지 않는 저장소 cpppj 안의 최상위 폴더(빌드 산출물).
+EXCLUDED = {'build'}
 # 변이 목록: 이름, 대상 파일, 바꿀 원문(파일에 정확히 한 번 있어야 한다), 바꾼 문장, 실패해야 하는 검사 이름 접두사.
 MUTATIONS = [
     dict(name='process-zero-keeps-running', file='cpppj/src/o/SquidProcess.cpp', expect='process_',
@@ -104,9 +112,47 @@ def run(command):
     return result.returncode, result.stdout + result.stderr
 
 
+def sync():
+    """저장소의 cpppj(빌드 폴더 제외)를 작업 사본과 바이트 단위로 맞춘다. 달라진 파일만 써서 증분 빌드를 유지한다."""
+    wanted, copied, removed = set(), 0, 0
+    # 저장소 쪽 파일을 모두 훑어 사본에 없거나 다른 것만 복사한다.
+    for path in REPOSITORY.rglob('*'):
+        relative = path.relative_to(REPOSITORY)
+        if relative.parts[0] in EXCLUDED or path.is_dir():
+            continue
+        wanted.add(relative)
+        target = SOURCE / relative
+        data = path.read_bytes()
+        if not target.exists() or target.read_bytes() != data:
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(data)
+            copied += 1
+    # 저장소에서 없어진 파일은 사본에서도 지운다.
+    for path in list(SOURCE.rglob('*')) if SOURCE.exists() else []:
+        if path.is_file() and path.relative_to(SOURCE) not in wanted:
+            path.unlink()
+            removed += 1
+    return copied, removed
+
+
+def configure(cmake):
+    """사본의 빌드 폴더를 처음 한 번 구성한다."""
+    if (BUILD / 'CMakeCache.txt').exists():
+        return 0, ''
+    return run([cmake, '-S', str(SOURCE), '-B', str(BUILD)])
+
+
 def build(cmake):
-    """Release 빌드를 실행한다. 빌드 오류는 변이가 컴파일되지 않았다는 뜻이므로 그대로 보고한다."""
+    """사본을 Release로 빌드한다. 빌드 오류는 변이가 컴파일되지 않았다는 뜻이므로 그대로 보고한다."""
     return run([cmake, '--build', str(BUILD), '--config', 'Release'])
+
+
+def test():
+    """사본의 검사 실행 파일을 돌려 (실패한 검사 이름 목록, 실패 CHECK 수)를 돌려준다."""
+    _, output = run([str(TESTS)])
+    failed = [line.split('] ', 1)[1].strip() for line in output.splitlines() if line.startswith('[FAIL]')]
+    checks = sum('CHECK failed' in line for line in output.splitlines())
+    return failed, checks
 
 
 def adapt(text, mutation):
@@ -119,9 +165,9 @@ def adapt(text, mutation):
     return before, after
 
 
-def check(mutation):
-    """대상 파일에 원문이 정확히 한 번 있는지 확인하고 원래 바이트를 돌려준다."""
-    path = ROOT / mutation['file']
+def check(mutation, base=ROOT):
+    """대상 파일에 원문이 정확히 한 번 있는지 확인하고 (경로, 원래 바이트, 횟수)를 돌려준다. base가 WORK면 사본을 본다."""
+    path = base / mutation['file']
     original = path.read_bytes()
     text = original.decode('utf-8')
     count = text.count(adapt(text, mutation)[0])
@@ -129,7 +175,7 @@ def check(mutation):
 
 
 def main():
-    """변이를 차례로 적용/빌드/검사하고, 어떤 경우에도 원래 소스로 되돌린 뒤 다시 빌드한다."""
+    """사본을 저장소와 맞추고, 변이를 사본에 차례로 적용/빌드/검사한 뒤 사본을 원래 바이트로 되돌린다."""
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('--list', action='store_true', help='변이 목록과 적용 가능 여부만 출력한다')
     parser.add_argument('--only', action='append', help='이 이름의 변이만 실행한다(여러 번 줄 수 있다)')
@@ -137,18 +183,30 @@ def main():
     options = parser.parse_args()
     selected = [m for m in MUTATIONS if not options.only or m['name'] in options.only]
     if options.list:
-        # 빌드 없이 원문 위치만 확인한다.
+        # 빌드 없이 저장소 소스에서 원문 위치만 확인한다.
         for mutation in selected:
             _, _, count = check(mutation)
             print(f"{mutation['name']}\t{mutation['file']}\t원문 {count}곳\t{mutation['note']}")
         return 0 if all(check(m)[2] == 1 for m in selected) else 1
-    if not TESTS.exists():
-        print('검사 실행 파일이 없습니다. 먼저 cpppj를 Release로 빌드하세요.')
+    copied, removed = sync()
+    print(f'작업 사본 맞춤: 복사 {copied}개, 삭제 {removed}개 ({SOURCE})', flush=True)
+    code, output = configure(options.cmake)
+    if code != 0:
+        print('사본 빌드 구성 실패:\n' + output[-2000:])
         return 2
+    code, output = build(options.cmake)
+    if code != 0:
+        print('변이 전 사본 빌드 실패:\n' + output[-2000:])
+        return 2
+    failed, checks = test()
+    if failed or checks:
+        print(f"변이 전 사본의 검사가 실패한다({', '.join(failed)}; CHECK {checks}개). 먼저 저장소 소스를 고쳐야 한다.")
+        return 2
+    print('변이 전 사본: 빌드·검사 통과', flush=True)
     missed = 0
-    # 변이는 한 번에 하나만 적용한다. 원래 바이트는 메모리에 들고 있다가 finally에서 되돌린다.
+    # 변이는 한 번에 하나만 사본에 적용한다. 원래 바이트는 메모리에 들고 있다가 finally에서 되돌린다.
     for mutation in selected:
-        path, original, count = check(mutation)
+        path, original, count = check(mutation, WORK)
         if count != 1:
             print(f"{mutation['name']}: 원문이 {count}곳이라 건너뜀(소스가 바뀌었으면 변이 정의를 고쳐야 함)")
             missed += 1
@@ -162,20 +220,15 @@ def main():
                 print(f"{mutation['name']}: 빌드 실패(변이가 컴파일되지 않음)")
                 missed += 1
                 continue
-            _, output = run([str(TESTS)])
-            failed = [line.split('] ', 1)[1].strip() for line in output.splitlines() if line.startswith('[FAIL]')]
-            checks = sum('CHECK failed' in line for line in output.splitlines())
+            failed, checks = test()
             hit = [name for name in failed if name.startswith(mutation['expect'])]
             status = '검출' if hit else '미검출'
             if not hit: missed += 1
-            print(f"{mutation['name']}: {status} — 실패 검사 {len(failed)}개({', '.join(failed) or '없음'}), 실패 CHECK {checks}개")
+            print(f"{mutation['name']}: {status} — 실패 검사 {len(failed)}개({', '.join(failed) or '없음'}), 실패 CHECK {checks}개", flush=True)
         finally:
             path.write_bytes(original)
-    # 마지막 변이의 목적 파일이 남지 않도록 원래 소스로 다시 빌드한다.
-    code, _ = build(options.cmake)
-    print('원래 소스로 재빌드:', '성공' if code == 0 else '실패')
-    print(f'변이 {len(selected)}개 중 미검출/건너뜀 {missed}개')
-    return 1 if missed or code else 0
+    print(f'변이 {len(selected)}개 중 미검출/건너뜀 {missed}개 (저장소 소스는 바꾸지 않았다)')
+    return 1 if missed else 0
 
 
 if __name__ == '__main__':

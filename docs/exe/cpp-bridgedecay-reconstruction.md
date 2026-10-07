@@ -177,9 +177,10 @@ x64 Release 경고/오류 0. CTest 내부 **152개·실패 0**(이전 145개 + �
 ## 10. 재현
 
 ```powershell
-# 1) 읽기 전용 Ghidra 내보내기 (프로젝트 변경은 버린다). 주소 목록은 실행 기록과 아래 로그에 있다.
-#    결과: extracted/bridgedecay/<판본>/creation.c, functions.tsv — 완료 로그의 함수 수는 패치 51, CD/10.37 각 35
-#    로그: extracted/bridgedecay-<판본>-ghidra.log 의 "Execute script" 줄에 전체 인자가 남는다
+# 1) 읽기 전용 Ghidra 내보내기 (프로젝트 변경은 버린다). 목록: tools/ghidra/bridgedecay-functions.json
+#    결과: extracted/bridgedecay/<판본>/creation.c, functions.tsv — 패치 48, CD/10.37 각 34개
+#    (처음 기록은 패치 51·CD 35개였으나 그 목록이 남지 않아 2026-10-07에 실행 추적으로 다시 정했다. 기대값은 바이트 단위로 같다 — ghidra-exports.md)
+powershell -ExecutionPolicy Bypass -File tools/ghidra/export_functions.ps1 -Name bridgedecay
 # 2) 기대값 생성 (수 분) / 저장된 기록 확인
 python -X utf8 tools/decomp_bridgedecay_oracle.py
 python -X utf8 tools/decomp_bridgedecay_oracle.py --verify

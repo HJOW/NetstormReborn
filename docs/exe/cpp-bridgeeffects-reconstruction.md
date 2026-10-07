@@ -20,7 +20,7 @@
 | 주변 좌표 보정 | `0041d7a0` | `00440a80` |
 | 칸 위 좌표 절삭 | `0041d770` | `00440a50` |
 
-읽기 전용 Ghidra로 `extracted/bridgeeffects/<판본>/creation.c`·`functions.tsv`를 새로 내보냈다. 패치 12개·CD/10.37 각 7개이며 타입 genus 조회와 CRT `_ftol`도 포함한다. 프로젝트에 변경을 저장하지 않았다. 세 완료 로그는 같은 폴더의 `<판본>-ghidra.log`다.
+읽기 전용 Ghidra로 `extracted/bridgeeffects/<판본>/creation.c`·`functions.tsv`를 새로 내보냈다. 패치 12개·CD/10.37 각 7개이며 타입 genus 조회와 CRT `_ftol`도 포함한다. 프로젝트에 변경을 저장하지 않았다. 세 완료 로그는 같은 폴더의 `<판본>-ghidra.log`다. 주소 목록과 순서는 [bridgeeffects-functions.json](../../tools/ghidra/bridgeeffects-functions.json)에 있고 `tools/ghidra/export_functions.ps1 -Name bridgeeffects`로 다시 만든다([내보내기 정리](ghidra-exports.md)).
 
 ## preDestroy와 좌표 보정
 

@@ -19,7 +19,7 @@
 | 기본 true 가상 필터 | `0044daa0` | `0040f180` |
 | CRT `_ftol` | `004e49c0` | `004f161c` |
 
-읽기 전용 Ghidra로 패치 8개·CD/10.37 각 6개를 새 `extracted/finder/<판본>/creation.c`·`functions.tsv`에 내보냈다. 같은 디렉터리의 `ghidra.log` 세 완료 로그를 확인했고 프로젝트 변경을 저장하지 않았다. 이전 삭제/붕괴 내보내기와 독립 기대값은 보존했다. 원본 파일을 OS 프로세스로 실행하지 않고 내보낸 실제 함수 몸체만 Unicorn의 격리된 x86 메모리에서 실행했다.
+읽기 전용 Ghidra로 패치 8개·CD/10.37 각 6개를 새 `extracted/finder/<판본>/creation.c`·`functions.tsv`에 내보냈다(목록과 순서: [finder-functions.json](../../tools/ghidra/finder-functions.json), 다시 만들기: `tools/ghidra/export_functions.ps1 -Name finder`, [내보내기 정리](ghidra-exports.md)). 같은 디렉터리의 `ghidra.log` 세 완료 로그를 확인했고 프로젝트 변경을 저장하지 않았다. 이전 삭제/붕괴 내보내기와 독립 기대값은 보존했다. 원본 파일을 OS 프로세스로 실행하지 않고 내보낸 실제 함수 몸체만 Unicorn의 격리된 x86 메모리에서 실행했다.
 
 ## 사각형·단계·체인
 

@@ -27,7 +27,8 @@ struct BridgeEventHooks {
     std::function<const RiftTypeFrames&(std::uint32_t type)> frames;
     // 004b23e0 / CD 004ebad0: 임시 프레임이 써진 채로 flag 8 표면 이웃 탐색기를 만들고 첫 이웃 번호(+0x34)를 돌려준다. 0이면 이웃 없음.
     std::function<Sid(Sid bridge)> firstNeighbor;
-    // 004214a0 / CD 00448c10: 표면 알림.
+    // 004214a0 / CD 00448c10: 호출 사실만 전달한다. 패치판 몸체는 상태를 바꾸지 않는 디버그 검사다(다리 타입·buried 아님·assert 켜짐일 때
+    // 수명 비트가 7을 넘으면 "num >= 0 && num <= 7" assert). CD판은 슬롯 주소만 돌려준다. 연결하지 않아도 게임 상태는 같다.
     std::function<void(Sid sid)> notifySurface;
     // 004af530(type, 0) / CD 004ab390: 새 객체 생성. 타입 바이트와 가상 표가 채워진 할당 슬롯의 번호를 돌려준다.
     std::function<Sid(std::uint32_t type)> create;
