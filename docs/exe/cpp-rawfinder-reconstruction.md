@@ -4,6 +4,8 @@
 
 소스: [RawSquidFinder.h](../../cpppj/src/o/RawSquidFinder.h), [RawSquidFinder.cpp](../../cpppj/src/o/RawSquidFinder.cpp), [RawBridgeLifecycle.cpp](../../cpppj/src/o/RawBridgeLifecycle.cpp). 검사: [RawFinderTests.cpp](../../cpppj/tests/RawFinderTests.cpp). 독립 출력: [rawfinder-x86.tsv](../../cpppj/tests/fixtures/rawfinder-x86.tsv), [근거 기록](../../cpppj/recovery-rawfinder-evidence.json), [생성/감사 도구](../../tools/decomp_rawfinder_oracle.py).
 
+**2026-10-07 후속:** [공통 destroy](cpp-destroy-reconstruction.md)의 실제 Unpop/SID 반납·종속 체인·전파/선택과 다리 훅 내부 링크 삭제를 새 x86 1,992개로 대조했다. 공통 Pre/Post의 Graph/목록/통계·종속 파생 메서드·파편/낙하/소리·raw GameWorld는 남았다. 아래 1,776개/163개와 외부 삭제 효과 대체 범위는 당시 기록이며 기존 fixture는 보존했다.
+
 ## 원본 함수와 자료
 
 | 역할 | 10.78 | CD / 추가 10.37 |
@@ -65,6 +67,6 @@ ctest --test-dir cpppj/build -C Release --output-on-failure
 
 최종 x64 Release 경고/오류 0·CTest 내부 **163개·실패 0**(56.38초)다. 기존 157개에 새 6개를 더했으며 누적 제한 x86 입력은 **83,592개**(81,816 + 1,776)다. 기존 삭제/붕괴 감사와 원본 여섯 디렉터리 **2,782개 파일 SHA/목록 동일**을 확인했다. 로그는 `extracted/finder/build.log`·`ctest.log`다. AGENTS.md·C#·LEFT_JOBS.dotnetpj.md는 변경하지 않았다.
 
-기본 Squid destroy/pre/postDestroy의 공통 삭제·Graph 분할·Unpop·참조/의존 객체·SID 반납, 제거 통지 목록 `00460600`, walker vtable +200/칸 위 carrier 처리는 후속이다. `0x2692` 이벤트의 등록/실행/취소와 `004215d0` 끝 칸 변환도 남았다. 다른 일반 탐색 파생 필터와 raw GameWorld 연결, 실제 다리 배치/소유자·Construction, 건설/경제/전투/AI/승패를 이어야 한다.
+공통 destroy의 순서·실제 Unpop/SID 반납은 위 후속에서 연결했다. 공통 pre/post의 Graph 분할/목록/통계·종속 파생 효과, 파편 생성 `00460600`(기존 “제거 통지 목록” 해석 정정), walker vtable +200/칸 위 carrier 처리는 남았다. `0x2692` 이벤트의 등록/실행/취소와 `004215d0` 끝 칸 변환도 남았다. 다른 일반 탐색 파생 필터와 raw GameWorld 연결, 실제 다리 배치/소유자·Construction, 건설/경제/전투/AI/승패를 이어야 한다.
 
 기존 GUI GameWorld는 임시 객체 모델이며 이번 raw 탐색/삭제 훅을 사용하지 않는다. 호스트 `DESKTOP-HJOW`의 이번 검사는 콘솔 범위다. 창 검증은 다른 허용 PC에서 raw 월드 연결 후 다리 붕괴/낙하/소리·TEST01/1-1 생성/삭제/재진입을 확인한다. 이전 작업의 일회성 창 허용을 이번에 적용하지 않았다. 최신 검사 수와 완료 결과는 [LEFT_JOBS.md](../../LEFT_JOBS.md)와 [cpppj README](../../cpppj/README.md)를 따른다.

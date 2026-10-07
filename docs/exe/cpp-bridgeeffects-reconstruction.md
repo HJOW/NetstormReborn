@@ -6,7 +6,7 @@
 
 **실제 삭제/낙하의 완료를 뜻하지 않는다.** raw 풀에서 현재 필드를 읽고 원본 순서로 외부 효과를 호출하는 어댑터다. 일반 탐색·기본 Squid 삭제·walker 가상 낙하·소리·제거 통지는 호출자가 연결한다. 기존 GUI GameWorld는 아직 임시 객체 모델이며 이 어댑터를 사용하지 않는다.
 
-**2026-10-07 후속:** [일반 공간 탐색](cpp-rawfinder-reconstruction.md)의 실제 4단계 해시/next·동적 필드를 복원하고 `MakeBridgeLifecycleHooks`로 연결했다. 새 독립 x86 1,776개는 Begin/Next를 대체하지 않는다. 아래 6,170개·탐색 대체 범위·157개·창 허용은 이 문서의 당시 검사 기록이며 기존 fixture를 변경하지 않았다. 기본 삭제/낙하/소리·raw GameWorld는 계속 후속이다.
+**2026-10-07 후속:** [일반 공간 탐색](cpp-rawfinder-reconstruction.md)의 실제 4단계 해시/next·동적 필드를 복원하고 `MakeBridgeLifecycleHooks`로 연결했다. 이어 [공통 destroy](cpp-destroy-reconstruction.md)의 실제 Unpop/반납과 다리 훅 내부 링크 삭제를 새 x86 1,992개로 대조했다. 아래 6,170개·탐색 대체 범위·157개·창 허용은 이 문서의 당시 검사 기록이며 기존 fixture를 변경하지 않았다. 공통 pre/post의 Graph/목록/통계·파편/낙하/소리·raw GameWorld는 후속이다.
 
 ## 원본 함수
 
@@ -38,7 +38,7 @@ abstract/buried(extra & 9)가 아니면 주변 ±1칸 탐색을 시작한다. �
 
 `BridgeLifecycleHooks.begin/next`가 탐색 순서와 0 종료 표식을 공급하며 `emit`이 외부 효과를 소비한다. 앞선 destroy/fall 콜백은 같은 풀을 바꿀 수 있다. 각 후속 판단은 그 시점의 타입/참조/state를 다시 읽는다. 이 순서를 고정 스냅샷으로 대체하지 않는다. 제거 통지/소리 이후 좌표도 다시 읽는다.
 
-`NotifyRemoval`의 내부 목록 효과(`00460600` → `004604a0`)와 공통 pre/postDestroy 전체는 이 단계에서 실행하지 않는다. 원본 32비트 vtable 주소는 호스트에서 호출하지 않는다. 잘못된 자기 SID·누락 콜백·범위 밖 좌표/타입은 안전하게 거부하며, 콜백 이후 오류까지 전체 롤백한다고 보장하지 않는다.
+`NotifyRemoval`은 기존 사건 이름이다. 새 디컴파일에서 `00460600` → `004604a0`의 의미를 **Flyingshrapnel 파편/입자 생성**으로 정정했다([근거](cpp-destroy-reconstruction.md#파편-효과의-의미-정정)). 이 함수의 실제 효과와 공통 pre/postDestroy 전체는 이 단계에서 실행하지 않는다. 원본 32비트 vtable 주소는 호스트에서 호출하지 않는다. 잘못된 자기 SID·누락 콜백·범위 밖 좌표/타입은 안전하게 거부하며, 콜백 이후 오류까지 전체 롤백한다고 보장하지 않는다.
 
 ## 지연 낙하 이벤트
 

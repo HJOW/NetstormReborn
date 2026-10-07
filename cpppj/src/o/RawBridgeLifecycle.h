@@ -11,6 +11,7 @@ inline constexpr std::uint32_t kBridgeFallEvent = 0x2692;
 // 원본 preDestroy의 ±1 사각형과 postDestroy의 한 칸 탐색 범위다(양 끝 포함).
 struct BridgeLifecycleSearch { int left{},top{},right{},bottom{}; };
 // 원본에서 호출되는 외부 효과. Base는 공통 Squid 구현으로 이어지는 단계다.
+// NotifyRemoval은 기존 API 이름이다. 실제 00460600의 의미는 Flyingshrapnel 파편 생성이다.
 enum class BridgeLifecycleEffect { DestroyLink,NotifyRemoval,FallSound,FallWalker,BasePreDestroy,BasePostDestroy };
 struct BridgeLifecycleEvent {
     BridgeLifecycleEffect effect{};
@@ -37,7 +38,7 @@ public:
     bool LinkNeedsDestroy(Sid link) const;
     // 004221b0 ↔ CD 004498e0: 주변 특수 타입을 순서대로 처리한 뒤 공통 preDestroy로 이어진다.
     void PreDestroy(Sid bridge,std::uint32_t flags,std::uint32_t linkType,const BridgeLifecycleHooks& hooks) const;
-    // 00422300 ↔ CD 00449c60: 제거 통지→소리→칸 위 walker 낙하→공통 postDestroy 순서다.
+    // 00422300 ↔ CD 00449c60: 파편 생성 요청→소리→칸 위 walker 낙하→공통 postDestroy 순서다.
     void PostDestroy(Sid bridge,std::uint32_t flags,const BridgeLifecycleHooks& hooks) const;
     // 00421530/00421f90 ↔ CD 004490b0: 두 _ftol의 하위 비트를 합친 signed DWORD를 float 수치로 저장한다.
     // 반환값은 이벤트 0x2692의 payload다. 등록/실행·끝 칸 변환(004215d0)은 별도 연결이 필요하다.

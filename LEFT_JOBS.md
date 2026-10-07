@@ -1,6 +1,6 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
-> 최종 갱신: 2026-10-07 (**cpppj 1차 기준은 10.78이다. 일반 Begin/Next의 실제 raw 풀·4단계 해시/next·소수 좌표 발자국·동적 필드 조회를 복원해 다리 삭제 훅에 연결했다.** 새 x86 **1,776개**·Release 경고/오류 0·CTest 내부 **163개·실패 0**, 누적 제한 x86 **83,592개**. [근거/대체 경계/재현/후속](docs/exe/cpp-rawfinder-reconstruction.md), [독립 기록](cpppj/recovery-rawfinder-evidence.json). **호스트 `DESKTOP-HJOW`의 이번 작업은 게임/복사본·업데이터/설치 도구·클론 창을 실행하지 않았다. 이전 작업의 일회성 창 허용은 끝났으며 창 검증은 다른 허용 PC에 인계한다.** 실제 삭제/낙하/소리·제거 통지·이벤트 실행·파생 탐색 필터·raw GameWorld·다리 배치·SID 소진·form/process·건설/경제/전투/AI/승패는 남아 미션 완주는 불가능하다.)
+> 최종 갱신: 2026-10-07 (**cpppj 1차 기준은 10.78이다. 공통 Squid destroy의 dead·가상 훅·종속 체인·전파/선택·실제 Unpop/SID 반납 순서를 복원하고 다리 훅 내부의 실제 링크 삭제를 대조했다.** 새 x86 **1,992개**·Release 경고/오류 0·CTest 내부 **169개·실패 0**, 누적 제한 x86 **85,584개**. [근거/대체 경계/재현/후속](docs/exe/cpp-destroy-reconstruction.md), [독립 기록](cpppj/recovery-destroy-evidence.json). **호스트 `DESKTOP-HJOW`의 이번 작업은 게임/복사본·업데이터/설치 도구·클론 창을 실행하지 않았다. 이전 작업의 일회성 창 허용은 끝났으며 창 검증은 다른 허용 PC에 인계한다.** 공통 pre/post의 그래프/목록/통계·종속 파생 효과·파편/낙하/소리·이벤트·raw GameWorld·다리 배치·SID 소진/form/process·건설/경제/전투/AI/승패는 남아 미션 완주는 불가능하다.)
 > 프로젝트 목표(AGENTS.md): 원본 NetStorm: Islands at War 를 디컴파일/분석하여 클론 코딩하고,
 > **Windows 10/11** 과 **GUI 환경의 Linux** 에서 동작하며 **여러 언어를 지원**하는 게임을 만든다.
 > **모방 범위(2026-10-03 AGENTS.md 변경)**: 기존 게임의 **사운드·그래픽·애니메이션 등 거의 모든 요소를 가능한 한 동일하게** 최대한 모방한다.
@@ -14,6 +14,21 @@
 
 ---
 
+## 2026-10-07 ✅ 완료: cpppj 공통 destroy·실제 Unpop/SID 반납·다리 훅의 중첩 삭제 (DESKTOP-HJOW, 게임/창 실행 없음)
+
+- [x] **지침/기준:** 현재 AGENTS.md·LEFT_JOBS.md를 먼저 읽고 기본 삭제의 후속을 진행했다. 기준은 10.78이며 CD/추가 10.37은 비교 자료다. AGENTS.md·C#·LEFT_JOBS.dotnetpj.md 변경/커밋은 없다. 이전 일회성 창 허용은 적용하지 않았다.
+- [x] **읽기 전용 디컴파일:** 공통 destroy·client SID·공통 pre/post·파편 효과를 새 `extracted/destroy/<판본>/`에 패치 9개·CD/10.37 각 6개 내보냈다. 세 완료/read-only 로그를 확인했다. 디컴파일의 `unaff_retaddr`를 실제 flags 전달로 정정해 복원했다. 이전 도구/내보내기/fixture는 보존했다.
+- [x] **C++:** `RawSquidDestroy`의 dead 선표시·서버/client flags·훅 깊이·pre 이후 head·release 전 next 저장·종속 free 재조회·전파/선택·실제 `SquidUnpop`/`SidPool::Release` 순서를 구현했다. form/contained 종속의 파생 release/destroy와 공통 Pre/Post 전체는 호출자 계약이며 완료 콜백은 깊이 감소만 수행한다. 지원 밖 root/권한/풀은 변경 전, 손상 종속/완료 누락은 해당 효과 경계에서 거부하며 전체 롤백을 보장하지 않는다.
+- [x] **다리 중첩 연결:** 실제 일반 `RawSquidFinder`·`RawBridgeLifecycle`에서 DestroyLink가 공통 destroy에 재진입해 공간 해제/반납을 수행한다. 같은 버킷의 next/슬롯이 바뀐 뒤 탐색·다음 참조 판단·post의 walker 호출 순서를 대조했다. 기본 Graph 분할/목록/통계·파편/소리/낙하는 여전히 효과 대체다. raw GUI GameWorld는 미연결이다.
+- [x] **의미 정정:** 기존 “제거 통지 목록” `00460600` → `004604a0`는 **Flyingshrapnel 파편/입자 생성**이다(0x68 할당·생성자 `004603a0`·vtable `0050a4f0`·위치/목록 `00460000`). 기존 API 사건 이름 NotifyRemoval/N과 독립 fixture는 유지하며 실제 파편 구현은 후속으로 구분했다.
+- [x] **독립 x86/콘솔:** 세 실제 PE×x87 53/64비트, 새 **1,992개**(공통 Destroy 1,800·다리 중첩 192). 실제 common destroy/다리 훅/finder/Unpop/Release와 CRT 삭제 기록 이동이며 Pre/Post·종속·전파/선택·로그·파편/소리/낙하는 명시적 대체다. 슬롯 바이트·전체 풀/네 해시/spot/두 삭제 기록·목록/카운터·선택/깊이를 대조했다. 각 PE 내부 Destroy 712/Unpop 440/Release 600/BridgePre/Post 각각 48/Begin 96/Next 704, assert 0·정상 반환/ESP/x87 확인. 별도 FS 감사는 추가하지 않았다.
+- [x] **최종 검증/보호:** x64 Release 경고/오류 0·콘솔 CTest 실행 파일 1개 안의 내부 **169개·실패 0**(68.81초), 누적 제한 x86 **85,584개**. 재삭제·훅 완료 누락·권한/다른 풀·손상 종속을 검사했다. 최초 C++ 합성 입력의 판본 타입 개수/비종속 next를 수정했으며 독립 기계어 기대값은 보존했다. 새/기존 탐색·삭제 훅·붕괴 감사 통과. 로그 `extracted/destroy/build.log`·`ctest.log`. 여섯 원본 디렉터리 **2,782개 파일 SHA/목록이 시작과 동일**하다. 원본/복사본·업데이터/설치·클론 창 실행 없음.
+- [x] **문서:** [공통 삭제 복원](docs/exe/cpp-destroy-reconstruction.md), cpppj README·빌드/로드맵/실제 플레이 계획·앞선 훅/탐색 문서·한국어/영어 루트 README에 최신 범위와 파편 함수 정정을 반영했다. dotnetpj 인수인계는 보존했다.
+- [ ] **바로 다음:** 공통 preDestroy `004b0950`의 선택/abstract·표면 Graph 분할/직접 감소·작업장/소유자 목록·타입 통계·unitLost/경로/참조와 postDestroy `004b0840`의 표면 무효화/기록을 복원해 이번 순서 어댑터에 연결한다. 이후 종속 form/process의 가상 release/destroy·파편 `004604a0`·walker +200/칸 위 carrier·0x2692 이벤트 실행/취소·끝 칸 변환을 이어야 한다. raw GameWorld·다리 배치/Construction·SID 소진·건설/경제/전투/AI/승패·V12 비교 도구 확장도 남았다.
+- [ ] **창 검증 인계:** 호스트 **`DESKTOP-HJOW`의 기존 창 제한을 유지**한다. 다른 허용 PC에서 raw 월드 연결 후 다리 붕괴→Graph/공간/반납→파편/소리/낙하와 TEST01/1-1 생성·삭제·재진입을 검사한다. 원본 실행은 해당 AGENTS.md/사용자 지시를 확인한다.
+
+---
+
 ## 2026-10-07 ✅ 완료: cpppj 일반 공간 탐색·다리 삭제 훅 연결 (DESKTOP-HJOW, 게임/창 실행 없음)
 
 - [x] **지침/기준:** 현재 AGENTS.md·LEFT_JOBS.md와 앞선 복원 근거를 읽고 다음 항목인 일반 탐색을 진행했다. 기준은 10.78이며 CD/추가 10.37은 비교 자료다. 이전 작업의 일회성 창 허용은 이번에 적용하지 않았다. AGENTS.md·C#·LEFT_JOBS.dotnetpj.md를 변경하지 않았고 커밋하지 않았다.
@@ -23,7 +38,8 @@
 - [x] **기계어/콘솔:** 세 실제 PE×x87 53/64비트의 새 **1,776개**(Find 1,752/Pre 12/Post 12). Begin/Next·버킷·발자국·CRT·기본 필터는 원본 명령이다. 커서 15 DWORD와 마지막 0 반환 전체를 비교했다. 원본 assert 0·정상 반환/스택/x87/FS 복구, 일반 탐색 쓰기는 finder/스택/FS만 허용하고 풀/타입/해시는 읽기 전용이다. 합성 버킷 등록 입력과 destroy/fall/base/소리/통지 효과 대체 경계를 [독립 기록](cpppj/recovery-rawfinder-evidence.json)에 남겼다. 기존 삭제/붕괴 SHA 감사도 통과했다.
 - [x] **최종 검증/보호:** x64 Release 경고/오류 0·CTest 실행 파일 1개 안의 내부 **163개·실패 0**(56.38초), 누적 제한 x86 **83,592개**. 풀/네 해시 배열 불변·필터 변경 시 next 유지·뒤 버킷 변경·손상 보호를 검사했다. 로그는 `extracted/finder/build.log`·`ctest.log`. 여섯 원본 디렉터리 **2,782개 파일 SHA/목록이 시작과 동일**하다. 게임/복사본·업데이터/설치 도구·클론 창 실행 없음.
 - [x] **문서:** [일반 탐색 복원 문서](docs/exe/cpp-rawfinder-reconstruction.md), cpppj README·빌드/로드맵/실제 플레이 계획·이전 삭제/해시 근거와 한국어/영어 루트 README의 cpppj 상태를 갱신했다. 과거 검사 수와 창 허용은 당시 기록으로 구별했고 dotnetpj 인수인계는 보존했다.
-- [ ] **바로 다음:** 기본 Squid destroy/pre/postDestroy의 공통 삭제·Graph 분할·Unpop·참조/의존 객체·SID 반납과 제거 통지 목록 `00460600`을 복원해 이번 탐색/다리 훅에 연결한다. 이후 walker vtable +200/칸 위 carrier, `0x2692` 이벤트 실행/취소·`004215d0` 끝 칸 변환과 raw GameWorld 연결을 이어야 한다. 다리 배치/소유자·Construction·SID 소진/form/process·건설/경제/전투/AI/승패와 V12 비교 도구 확장은 계속 남았다.
+- [x] **후속 일부 완료(위 최신 절):** 공통 destroy의 순서·종속 체인·실제 Unpop/SID 반납과 다리 훅 내부의 링크 삭제를 연결했다. `00460600`의 의미는 Flyingshrapnel 파편 생성으로 정정했다.
+- [ ] **남은 공통 삭제:** pre/post의 Graph/목록/통계·종속 파생 메서드·파편/낙하/소리·이벤트 실행/끝 칸 변환·raw GameWorld, 다리 배치/Construction·SID 소진/form/process·건설/경제/전투/AI/승패·V12 비교 도구 확장은 남았다.
 - [ ] **창 검증 인계:** 호스트 **`DESKTOP-HJOW`에서는 기존 창 제한을 유지**하며 후속에 명시적인 새로운 허용이 있는지 확인한다. 다른 허용 PC에서 raw 월드 연결 후 다리 붕괴/낙하/소리·TEST01/1-1 생성/삭제/재진입을 확인한다. 이번 결과는 실제 삭제/낙하/게임 플레이 완료의 증명이 아니다.
 
 ---
