@@ -65,3 +65,6 @@ cpppj/recovery-graphrebuild-evidence.json text eol=lf
 # 상위 Graph 소진 복구의 독립 도구/기록도 LF로 SHA를 보존한다.
 tools/decomp_graphrecovery_oracle.py text eol=lf
 cpppj/recovery-graphrecovery-evidence.json text eol=lf
+# 다리 붕괴 스캔/한 칸 처리의 독립 도구와 증거 기록도 LF로 SHA를 보존한다.
+tools/decomp_bridgedecay_oracle.py text eol=lf
+cpppj/recovery-bridgedecay-evidence.json text eol=lf

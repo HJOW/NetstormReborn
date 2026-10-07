@@ -1,12 +1,26 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
-> 최종 갱신: 2026-10-07 (**cpppj 1차 기준은 10.78이다. 전체 자산 풀 계약에서 Add/Detach/Pop·공통 postPop의 자동 Graph 소진 복구를 연결했다.** 세 PE의 읽기 전용 디컴파일 각 6개·실제 상위 x86 새 192회, Release 경고/오류 0·콘솔 CTest 내부 **145개·실패 0**, 누적 제한 x86 **61,122개**. [계약/순서/재현/후속](docs/exe/cpp-graphrecovery-reconstruction.md), [독립 기록](cpppj/recovery-graphrecovery-evidence.json). **호스트 `DESKTOP-HJOW`에서는 원본/복사본·업데이터/설치 도구 실행과 모든 창 검사를 금지한다. GUI는 `DESKTOP-HJOW` 이외의 PC에 인계한다.** SID 소진·form/process를 포함한 실제 전체 월드 계약·중첩 소진·건물 부착/dirty/grid·특수 조회·파생 삭제/참조 수명·상위 목록·raw GameWorld·건설/경제/전투/AI/승패는 남아 미션 완주는 불가능하다.)
+> 최종 갱신: 2026-10-07 (**cpppj 1차 기준은 10.78이다. 다리 붕괴 스캔·한 칸 처리·수명 감소 전체·프레임 전환·다리 destroy 재정의를 복원했다.** 세 PE의 읽기 전용 디컴파일(패치 51·CD/10.37 각 35개)·새 x86 입력 14,524개, Release 경고/오류 0·콘솔 CTest 내부 **152개·실패 0**, 누적 제한 x86 **75,646개**. [식/순서/대체 범위/재현/후속](docs/exe/cpp-bridgedecay-reconstruction.md), [독립 기록](cpppj/recovery-bridgedecay-evidence.json). **호스트 `DESKTOP-HJOW`에서는 원본/복사본·업데이터/설치 도구 실행과 모든 창 검사를 금지한다. GUI는 `DESKTOP-HJOW` 이외의 PC에 인계한다.** 붕괴 사건의 실제 삭제/낙하/소리·다리 배치·SID 소진·form/process를 포함한 실제 전체 월드 계약·건물 부착/dirty/grid·특수 조회·파생 삭제/참조 수명·상위 목록·raw GameWorld·건설/경제/전투/AI/승패는 남아 미션 완주는 불가능하다.)
 > 프로젝트 목표(AGENTS.md): 원본 NetStorm: Islands at War 를 디컴파일/분석하여 클론 코딩하고,
 > **Windows 10/11** 과 **GUI 환경의 Linux** 에서 동작하며 **여러 언어를 지원**하는 게임을 만든다.
 > **모방 범위(2026-10-03 AGENTS.md 변경)**: 기존 게임의 **사운드·그래픽·애니메이션 등 거의 모든 요소를 가능한 한 동일하게** 최대한 모방한다.
 > **1차 목표 언어: 영어, 한국어** (그 외 언어는 이후 확장).
 > **우선순위: Windows 10/11 > Linux** (Linux 지원과 멀티플레이 요소 구현은 우선순위가 낮다 — 설계상 이식성은 유지하되 검증·배포는 Windows 먼저. 그 외 사항은 궁극적인 목표다).
 > **화면 요구사항(2026-09-28 AGENTS.md 추가, 2026-10-03·10-05 변경)**: 풀스크린 모드와 화면비 **16:9 · 16:10 · 4:3** 지원, **기존 게임 수준의 프레임으로 먼저 만들고 이후 60·120프레임 지원**(2026-10-05 변경. 원본 수준 = `maxFPS` 75·14ms 루프, 클론 적용 완료), 풀스크린에서 **마우스를 화면 끝에 대면 화면 이동**(원본도 옵션에서 켰을 때 지원), 원본의 **전체화면 전환 뒤 재실행 오류는 클론에서 발생하지 않아야 한다** — 1.4·1.7절
+
+---
+
+## 2026-10-07 ✅ 완료: cpppj 다리 붕괴 스캔·한 칸 처리·수명 감소 전체와 V12 구조 확인 (호스트 `DESKTOP-HJOW`, 게임/창 실행 없음)
+
+- [x] **요청/보호:** "디컴파일 소스 분석 및 cpppj 더 진행". AGENTS.md/LEFT_JOBS.md를 먼저 읽었다. 원본/복사본 게임·업데이터·클론 창·GUI 스모크·`start_session`/`--live`를 실행하지 않았다. AGENTS.md/C#/원본 변경 없음. 보호된 여섯 디렉터리 **2,782개 파일 SHA/목록이 시작 스냅샷과 동일**하다. 커밋하지 않았다.
+- [x] **디컴파일:** 읽기 전용 Ghidra `ExportCreation.java`로 새 `extracted/bridgedecay/<판본>/`에 패치 **51개**, CD/추가 10.37 각 **35개** 함수를 내보냈다(완료 로그 확인, 프로젝트 변경 폐기). CD/10.37은 범위표가 같다.
+- [x] **분석으로 새로 확정한 것:** (1) 스캔 `00422bc0`의 프레임당 개수는 디컴파일에 없는 x87 식 `trunc(delta / 10.0f × (끝 − 시작))`이다(14ms에서 11개). 남은 시간이 0 이하인 프레임에 남은 번호를 한꺼번에 처리하고 커서를 되돌리며 다음 시각 = 그 프레임 시각 + 10이다. (2) 범위는 서버 SID 영역 + 예측 머리(패치 15000..23001, CD 6000..14000)다. (3) 수명 0에서 제거를 가르는 `00540bc0`은 "전투 모드"가 아니라 **서버 플래그**다(`ReduceLife` 인자 이름 정정, 값/기대값 불변). (4) 다리 vtable `005034c8`(CD `00501ab0`)의 +0x10은 destroy 재정의 `004220f0`이며 큰 그래프(표면 수 ≥ 5)의 단단한 다리는 destroy되지 않는다. (5) CD판은 한 칸 처리·열린 방향·금 간 프레임 전환이 스캔/수명 함수에 인라인돼 있다. (6) 그래프 254인 칸은 한 칸 처리가 NULL 레코드를 읽는다(스캔에 try/catch가 있다. 실행 검증 없음).
+- [x] **C++:** `Bridge::CrackedFrame`/`NormalFrame`/`Weaken`/`Restore`/`DestroyProceeds`/`ApplyLife`/`DecayCell`과 `BridgeDecayScan::Reset`/`Advance`/`Eligible`, `SurfaceFinder::Map`을 추가했다. `BridgeLifeChange`에 금·이동체 확인 조건을 넣었다. 실제 삭제·화면 갱신·소리·이동체 확인은 사건(`BridgeDecayEvent`)으로 돌려준다. 접합 고리·그래프 254·수명 7 초과 결과는 상태를 바꾸기 전에 구분/거부한다(원본에 없는 보호).
+- [x] **기계어/콘솔:** 세 실제 PE×x87 53/64비트. **x86 입력 14,524개**(한 칸 처리 4,241·수명 3,264·destroy 재정의 1,152·프레임 전환 1,914·스캔 초기화/프레임 3,953), 원본 assert 도달 0. 패치판은 직접 호출과 스캔 경유 결과가 같고, CD/10.37은 스캔 범위를 번호 하나로 좁혀 실제 스캔 함수로 실행한 결과가 패치판과 같다. 대체한 진입점은 할당/해제·소리·칸 위 이동체 탐색·기본 destroy(dead 표시만)·공통 화면 갱신 다섯 가지다. CD판 delta 0.3 한 프레임은 64비트 정밀도에서 개수가 달라(240/239) 제외·기록했다. 최종 Release 경고/오류 0·CTest 내부 **152개·실패 0**(64초). 목표 수명을 일부러 틀리게 바꾼 확인 실행에서 실패 1,004건이 나왔고 되돌린 뒤 0건이다. `--verify` 통과.
+- [x] **10.82 V12 후속(정적):** V10에서 검토한 Graph 함수 다섯 개의 V12 주소를 찾았다(모두 +0x500). **V12는 SID 슬롯 75바이트·graph +40/DWORD·타입 구조체 508바이트로 V10(77·+42·504)과도 다르다.** 그래프 한도 50,000은 같다. DevLog V11/V12 항목에 대응하는 새 문자열(요새 백업, Reset to Rank 1, Shift Z 템플·`defaultTemple`, `sendMoney1/2`, `disableFenceCheck`)을 확인했다. [표·근거](docs/exe/cpp-reference-versions.md).
+- [x] **문서:** 새 [cpp-bridgedecay-reconstruction.md](docs/exe/cpp-bridgedecay-reconstruction.md), `bridge-pieces.md` 8.1(반올림→절삭·주기 끝 일괄 처리·서버 플래그 정정), `cpp-bridge-reconstruction.md`·`cpp-reference-versions.md`·`cpp-playable-plan.md`·`cpp-roadmap.md`·`cpp-build.md`·`cpppj/README.md`, `.gitattributes`(새 도구/기록 LF 고정), `LEFT_JOBS.dotnetpj.md`(스캔 항목 갱신).
+- [ ] **다음 작업:** (1) 붕괴 사건을 raw GameWorld에서 실제 효과로 소비 — destroy → 삭제 준비 분할·Unpop·SID 반납, 다리 postDestroy `00422300`(`bridgeFall.wav`·walker 낙하), preDestroy `004221b0`. (2) 칸 위 이동체 처리(`004202f0` → `00427de0`/`00426120`/`00427e00`)와 지연 낙하 `00421f90`/`00421530`. (3) 다리 배치 `0049b510`·소유자 전파 `00421240`/`004213b0`·Construction `00442c80`(다리 조각의 SID 할당 인자 확인 포함). (4) 이전 절의 SID 소진·form/process·건물 부착 등. (5) V12: `tools/compare_reference_versions.py`에 V12 추가, 편집기 128개 한도·새 기능의 코드 경로는 미확인.
+- [ ] **다른 PC 창 인수인계:** raw 월드 연결 후 다리가 금 가고 무너지는 화면·소리와 TEST01/1-1 생성·표시·선택·이동·해제·재진입을 `DESKTOP-HJOW` 이외의 PC에서 검사한다. 원본 비교 실행은 AGENTS.md/사용자 지시를 확인한다.
 
 ---
 
@@ -18,7 +32,8 @@
 - [x] **TARC:** `netstorm.tarc` 291개 항목 중 추가 0·삭제 0·**변경 18개**(`help.english`, `tell.english`, rain/sun/thunder/wind 계열 `.type` 16개). 내용 SHA-256 기준(`tools/taff.py`)이다.
 - [x] **디컴파일:** `tools/ghidra/run_decomp.ps1`/`run_script.ps1`에 `-Edition original1082v12`/`original1082v12-launcher`를 추가했다(기존 10.82 프로젝트/출력과 분리). 읽기 전용 Ghidra 12.1.4로 **본체 10,141개·실패 0**(5분 20초)과 **업데이터 2,618개·실패 0**(약 1분)을 `extracted/original1082v12/decomp/`·`launcher/decomp/`에 내보냈다(Git 제외). 기존 10.82는 10,130/2,618개라 본체만 11개 늘었고 업데이터 함수 수는 같다. GIF/PNG/MinGW 분석 경고는 남아 있으며 함수 의미 복원 완료를 뜻하지 않는다.
 - [x] **정적 비교(대략):** 주소·전역·지역 이름을 정규화한 함수 본문 SHA-1이 10.82 V10과 같은 것은 약 **6,306개**, 다른 것은 약 3,830개다. 주소가 밀리면서 생기는 차이가 섞여 있어 **실제 변경 함수 수의 상한**일 뿐이다. 변경이 큰 후보는 `FUN_004bbd80`, `FUN_00509820`, `FUN_00500750`, `FUN_004db150`, `FUN_0055aa9a`, `FUN_0052a4d3`, `FUN_00455280`, `FUN_005298a8`이다. 개별 의미는 확인하지 않았다.
-- [ ] **다음 작업:** (1) v12의 Graph 관련 다섯 역할 함수(10.82 V10은 `004728c0`/`00472dd0`/`00472150`/`004cf4b0`/`004720f0`)가 V12에서 어느 주소로 옮겨졌는지 찾아 SID 폭 77·graph +42/DWORD·한도 50,000이 유지되는지 `ExportCreation.java`로 확인, (2) DevLog V11/V12 항목(단축키, `\d\backups\` 백업, Whirligig 복귀, 편집기 128개 한도, Fence check 기본값)에 대응하는 함수·문자열을 찾아 대조, (3) `tools/compare_reference_versions.py`에 v12를 추가(현재는 10.82 V10만 대상). cpppj 1차 기준은 계속 10.78이며 v12는 교차 확인 자료다.
+- [x] **후속 일부 완료(위 최신 절):** (1) V12의 Graph 함수 다섯 개 주소를 찾았고 **SID 폭 75·graph +40·타입 508바이트로 V10과 다름**을 확인했다(한도 50,000은 유지). (2) DevLog V11/V12 항목에 대응하는 새 문자열을 확인했다.
+- [ ] **다음 작업:** `tools/compare_reference_versions.py`에 v12를 추가(현재는 10.82 V10만 대상). 편집기 128개 한도·Whirligig 복귀 등 문자열로 확인되지 않는 항목의 코드 경로. cpppj 1차 기준은 계속 10.78이며 v12는 교차 확인 자료다.
 
 ---
 

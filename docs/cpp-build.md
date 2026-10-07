@@ -4,7 +4,7 @@
 
 **기존 게임 전체가 실제 플레이 가능한 수준으로 복원되는 것이 우선이다.** 화면비 확장·한국어·Linux·추가 기능은 이후다. 현재 작업 순서·완료 기준은 [실제 플레이 복원 계획](cpp-playable-plan.md), 기반 복원 세부 항목은 [기존 로드맵](cpp-roadmap.md)에 있다. 이 문서는 빌드와 소스 복원 규칙을 다룬다.
 
-**1차 판본은 10.78(2026-10-07 사용자 결정)**이다. [Add·Detach·Pop/postPop의 자동 Graph 소진 복구](exe/cpp-graphrecovery-reconstruction.md)를 전체 자산 풀 계약에 연결하고 Release 경고/오류 0·콘솔 CTest 내부 **145개·실패 0**, 제한 x86 누적 **61,122개**를 확인했다. 새 실제 x86 192회는 각 상위 호출 내부의 전체 풀 재구성과 이후 동작을 대조한다. SID 소진·form/process를 포함한 실제 전체 월드 계약·raw GameWorld는 남았다. [판본/DevLog 비교](exe/cpp-reference-versions.md)를 유지한다. **`DESKTOP-HJOW`의 게임/복사본·업데이터/설치 도구 실행과 모든 창 검사를 금지하며 GUI는 다른 PC에서 검사한다.**
+**1차 판본은 10.78(2026-10-07 사용자 결정)**이다. 최신: [다리 붕괴 스캔·한 칸 처리](exe/cpp-bridgedecay-reconstruction.md)를 세 실제 PE의 새 x86 14,524개로 대조했고 Release 경고/오류 0·콘솔 CTest 내부 **152개·실패 0**, 제한 x86 누적 **75,646개**다. 아래 문장의 145개/61,122개는 그 직전 단계의 기록이다. [Add·Detach·Pop/postPop의 자동 Graph 소진 복구](exe/cpp-graphrecovery-reconstruction.md)를 전체 자산 풀 계약에 연결하고 Release 경고/오류 0·콘솔 CTest 내부 **145개·실패 0**, 제한 x86 누적 **61,122개**를 확인했다. 새 실제 x86 192회는 각 상위 호출 내부의 전체 풀 재구성과 이후 동작을 대조한다. SID 소진·form/process를 포함한 실제 전체 월드 계약·raw GameWorld는 남았다. [판본/DevLog 비교](exe/cpp-reference-versions.md)를 유지한다. **`DESKTOP-HJOW`의 게임/복사본·업데이터/설치 도구 실행과 모든 창 검사를 금지하며 GUI는 다른 PC에서 검사한다.**
 
 ## 1. 두 빌드의 관계
 

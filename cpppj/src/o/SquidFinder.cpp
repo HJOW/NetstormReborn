@@ -43,6 +43,8 @@ bool SurfaceFinder::OriginInterior(std::uint16_t id) const {
     const auto& object=Object(id);
     return (spots_[static_cast<std::size_t>(object.y*kWorldCells+object.x)]&kInteriorBit)!=0;
 }
+// 지도 사본을 그대로 내준다. 탐색기보다 오래 보관하면 안 된다.
+std::span<const std::uint16_t> SurfaceFinder::Map() const { return map_; }
 // 동일한 중심/방향 동률 규칙과 원본 프레임 접합 표를 사용한다.
 bool SurfaceFinder::Connects(const SurfaceObject& from,const SurfaceObject& to) {
     return Bridge::Connects(from.frame,from.flags2,to.frame,to.flags2,Direction(from,to));

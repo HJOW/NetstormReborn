@@ -1,0 +1,160 @@
+{
+  "schema": 1,
+  "primary_target": "10.78",
+  "method": "Unicorn x86 32-bit; 게임 진입점·OS API 실행 없음; Ghidra 내보내기 몸체만 허용",
+  "binary_sha256": {
+    "originals": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "original1037": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8"
+  },
+  "entries": {
+    "originals": {
+      "Scan": "00422bc0",
+      "Init": "00422490",
+      "Cell": "004227e0",
+      "Life": "00421c30",
+      "Crack": "00421b60",
+      "Normal": "00421bd0",
+      "Weaken": "00421db0",
+      "Restore": "00421e60",
+      "Destroy": "004220f0"
+    },
+    "originalCD": {
+      "Scan": "00449250",
+      "Init": "00449200",
+      "Life": "0044a1c0",
+      "Destroy": "00449820"
+    },
+    "original1037": {
+      "Scan": "00449250",
+      "Init": "00449200",
+      "Life": "0044a1c0",
+      "Destroy": "00449820"
+    }
+  },
+  "replaced_entry_points": {
+    "originals": {
+      "004e4391": "new",
+      "004e4354": "free",
+      "004a9d70": "sound",
+      "004202f0": "carriers",
+      "004af780": "destroy",
+      "004ad500": "redraw"
+    },
+    "originalCD": {
+      "004f1650": "new",
+      "00407c50": "free",
+      "00438c00": "sound",
+      "004eae20": "carriers",
+      "004ab7e0": "destroy",
+      "004ae380": "redraw"
+    },
+    "original1037": {
+      "004f1650": "new",
+      "00407c50": "free",
+      "00438c00": "sound",
+      "004eae20": "carriers",
+      "004ab7e0": "destroy",
+      "004ae380": "redraw"
+    }
+  },
+  "replaced_entry_calls": {
+    "originals": {
+      "new": 9234,
+      "free": 9234,
+      "redraw": 7674,
+      "destroy": 6820,
+      "carriers": 10377,
+      "sound": 561
+    },
+    "originalCD": {
+      "new": 6156,
+      "free": 6156,
+      "redraw": 2180,
+      "destroy": 5602,
+      "carriers": 8222,
+      "sound": 374
+    },
+    "original1037": {
+      "new": 6156,
+      "free": 6156,
+      "redraw": 2180,
+      "destroy": 5602,
+      "carriers": 8222,
+      "sound": 374
+    }
+  },
+  "vtables": {
+    "originals": "005034c8",
+    "originalCD": "00501ab0",
+    "original1037": "00501ab0"
+  },
+  "x87_control_words": [
+    "0x27f",
+    "0x37f"
+  ],
+  "seed": 4335584,
+  "cases": {
+    "Cell": 4241,
+    "Life": 3264,
+    "Destroy": 1152,
+    "Crack": 348,
+    "Normal": 174,
+    "Weaken": 696,
+    "Restore": 696,
+    "Init": 12,
+    "ScanScene": 12,
+    "Scan": 3941,
+    "Frames": 3
+  },
+  "x86_inputs": {
+    "Cell": 4241,
+    "Life": 3264,
+    "Destroy": 1152,
+    "Crack": 348,
+    "Normal": 174,
+    "Weaken": 696,
+    "Restore": 696,
+    "Init": 12,
+    "Scan": 3941
+  },
+  "x86_input_total": 14524,
+  "skipped_inputs": {
+    "scan_precision_dependent_originalCD": 1
+  },
+  "assert_reports": {
+    "originals": 0,
+    "originalCD": 0,
+    "original1037": 0
+  },
+  "instructions": {
+    "originals": 52583447,
+    "originalCD": 34548424,
+    "original1037": 34548424
+  },
+  "fixture_sha256": "1009c82b63b6b655bde417aeecf287fd43099b3a75295cd28ac6b474cdd4b638",
+  "export_sha256": {
+    "extracted/bridgedecay/originals/functions.tsv": "7f47b827ccc689f1884db1faefc87ad288a4955d716cc81c83adc6cf3b9bfd7d",
+    "extracted/bridgedecay/originals/creation.c": "536d46e2166f81892ae388262d4b37c7fa8a1e79e74b68528a62ade573163cfc",
+    "extracted/bridgedecay/originalCD/functions.tsv": "3268c77ae1a39bef5fca61ea6b6cbb13a9dc93b9eab30438523dfd624ce3fcc6",
+    "extracted/bridgedecay/originalCD/creation.c": "52e19432baf41c288ea3f21fa411f5481ef8f35ad09d253b754cb5a73672ecc2",
+    "extracted/bridgedecay/original1037/functions.tsv": "3268c77ae1a39bef5fca61ea6b6cbb13a9dc93b9eab30438523dfd624ce3fcc6",
+    "extracted/bridgedecay/original1037/creation.c": "52e19432baf41c288ea3f21fa411f5481ef8f35ad09d253b754cb5a73672ecc2"
+  },
+  "source_sha256": {
+    "tools/decomp_bridgedecay_oracle.py": "55b660d1f73e054162230a98b0decc1149ed1084d68f1ae647c6d7689f86697d",
+    "tools/decomp_bridge_oracle.py": "c212538f7059cd0c9efac87cb205c71561fcc1f8d97df7830bc57d89a03f01fe",
+    "tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d"
+  },
+  "limitations": [
+    "합성 타입/객체·실제 bridge.type 프레임 표·정수 좌표·1×1 다리와 1×1/3×3 섬 입력",
+    "표면 번호 지도는 발자국 전체에 번호를 적은 탐색기 입력 규약이다(실제 등록 순서의 복원이 아니다)",
+    "기본 destroy는 dead 비트 표시만 대체했다. 실제 Unpop·그래프 분할·SID 반납·소리·낙하는 실행하지 않는다",
+    "칸 위 이동체 탐색은 결과 없음으로 대체하고 호출 사실만 기록했다",
+    "그래프 번호 254(레코드 NULL)와 접합 칸 고리(끝없는 재귀)는 기대값에서 제외했다",
+    "CD/10.37의 한 칸 처리는 스캔 범위를 번호 하나로 좁혀 실제 스캔 함수로 실행했다",
+    "스캔 행은 53비트 정밀도(CRT 기본값)의 연속 궤적이며, 64비트 정밀도에서 처리 개수가 달라지는 프레임은 제외하고 skipped_inputs에 셌다",
+    "금 간/보통/약화/복구 전환의 별도 함수는 패치판에만 있어 패치판 기계어만 실행했다",
+    "스캔의 try/catch 착지점은 실행하지 않았다"
+  ]
+}

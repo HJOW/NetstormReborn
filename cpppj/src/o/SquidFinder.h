@@ -25,6 +25,8 @@ public:
     const SurfaceObject& Object(std::uint16_t id) const;
     // 전역 Graph 재구성은 발자국 AND와 달리 기준점 spot의 내부 비트만 읽는다.
     bool OriginInterior(std::uint16_t id) const;
+    // 열린 방향 검사(00421770)가 읽는 256×256 표면 번호 지도를 읽기 전용으로 내준다.
+    std::span<const std::uint16_t> Map() const;
     // 일반 삭제 탐색과 flag 8 이웃 탐색이 공유하는 프레임/방향 접합 판정이다.
     static bool Connects(const SurfaceObject& from,const SurfaceObject& to);
 private:
