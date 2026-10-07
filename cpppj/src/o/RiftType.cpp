@@ -46,4 +46,24 @@ int RiftTypeFrames::FindFlags(std::uint8_t side, std::uint8_t variant, std::int3
 }
 // 원본 코드의 저장 순서를 보존한 배열을 반환한다.
 std::span<const FrameCode> RiftTypeFrames::Codes() const { return frames_; }
+// 원본 0049b060 ↔ CD 00444da0: 글자마다 배열을 앞에서부터 훑어 첫 번호와 개수를 센다. 비교는 signed char라
+// 0x80 이상의 방향 바이트는 'A'~'P'(0x41~0x50)와 같아질 수 없다.
+RiftTypeFrames::LetterRun RiftTypeFrames::Run(std::uint8_t letter) const {
+    if (letter < 'A' || letter > 'P') throw std::out_of_range("프레임 글자 구간은 A~P만 있다");
+    LetterRun run;
+    // 배열 전체를 한 번 훑어 같은 글자를 센다.
+    for (std::size_t i = 0; i < frames_.size(); ++i) {
+        if (frames_[i].side != letter) continue;
+        if (run.first == -1) run.first = static_cast<int>(i);
+        ++run.count;
+    }
+    return run;
+}
+// 원본이 글자 16개를 차례로 보며 첫 번호가 처음 정해질 때마다 올리는 +0x12c 값이다.
+int RiftTypeFrames::LetterKinds() const {
+    int kinds = 0;
+    // 글자 'A'~'P'를 하나씩 확인한다.
+    for (std::uint8_t letter = 'A'; letter <= 'P'; ++letter) kinds += Run(letter).first != -1;
+    return kinds;
+}
 }

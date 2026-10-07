@@ -31,6 +31,13 @@ public:
     int FindFlags(std::uint8_t side, std::uint8_t variant, std::int32_t flags) const;
     // 코드 배열을 검증·직렬화 도구에 공개한다.
     std::span<const FrameCode> Codes() const;
+    // 방향 글자 하나('A'~'P' 16개)가 차지하는 프레임: 첫 프레임 번호(없으면 -1)와 그 글자를 가진 프레임 수.
+    // 원본 타입 +0x130(첫 번호)·+0x170(개수) 표를 만드는 0049b060 ↔ CD 00444da0의 결과다.
+    struct LetterRun { int first{-1}; int count{}; };
+    // 'A'~'P' 밖의 글자는 원본 표에 없으므로 거부한다.
+    LetterRun Run(std::uint8_t letter) const;
+    // 구간이 하나라도 있는 글자 수(원본 타입 +0x12c).
+    int LetterKinds() const;
 private:
     std::vector<FrameCode> frames_;
 };

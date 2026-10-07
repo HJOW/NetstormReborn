@@ -13,6 +13,7 @@ target_sources(netstorm PRIVATE
     CanonDecoder.cpp CanonDecoder.h CanonDecoderTables.inc
     Bridge.cpp Bridge.h
     RawBridgeLifecycle.cpp RawBridgeLifecycle.h
+    RawBridgeEvents.cpp RawBridgeEvents.h
     RawSquidFinder.cpp RawSquidFinder.h
     RawSquidDestroy.cpp RawSquidDestroy.h
     SquidDestroyLifecycle.cpp SquidDestroyLifecycle.h

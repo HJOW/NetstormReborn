@@ -51,6 +51,30 @@ MUTATIONS = [
          before='        for (int n=0;n<kNoisePerBit;++n) word|=(std::uint32_t{1}<<rng_.Next(kBitLimit))&~mask;\n',
          after='        // 변이: SP 저장소의 난수 잡음 생략.\n',
          note='패치판 SP 저장소가 난수를 소비하지 않음'),
+    dict(name='bridge-end-hard-flag-of-new-frame', file='cpppj/src/o/RawBridgeEvents.cpp', expect='bridge_event_',
+         before='if (codes[static_cast<std::size_t>(current)].flags & kHardFrameFlag) return;',
+         after='if (codes[static_cast<std::size_t>(first)].flags & kHardFrameFlag) return;',
+         note='단단한 프레임 검사를 되돌린 옛 프레임이 아니라 새 끝 프레임의 플래그로 함'),
+    dict(name='bridge-end-nan-direction', file='cpppj/src/o/RawBridgeEvents.cpp', expect='bridge_event_patch',
+         before='letter = (objectY < y) ? kEndN : kEndL;',
+         after='letter = (objectY >= y) ? kEndL : kEndN;',
+         note='J 칸 방향 판정에서 NaN을 L이 아니라 N으로 취급'),
+    dict(name='bridge-end-life-bits', file='cpppj/src/o/RawBridgeEvents.cpp', expect='bridge_event_',
+         before='(kBridgeCrackLife * 8 - 8) & kBridgeLifeMask',
+         after='(kBridgeCrackLife * 8) & kBridgeLifeMask',
+         note='끝 칸의 수명 비트를 금 간 수명 - 1이 아니라 금 간 수명으로 씀'),
+    dict(name='bridge-end-skip-flag-copy', file='cpppj/src/o/RawBridgeEvents.cpp', expect='bridge_event_',
+         before='(pool_.Slot(bridge)[flagOffset] & kCopiedFlagBit)',
+         after='0',
+         note='새 객체로 플래그 비트 0x10을 옮기지 않음'),
+    dict(name='bridge-event-no-authority-keeps', file='cpppj/src/o/RawBridgeEvents.cpp', expect='bridge_event_',
+         before='if (event == kBridgeFallEvent) {\n        if (!state_.authority) return kBridgeEventEnd;',
+         after='if (event == kBridgeFallEvent) {\n        if (!state_.authority) return kBridgeEventKeep;',
+         note='권한이 없을 때 지연 낙하 이벤트가 종료(0)가 아니라 유지(-1)를 돌려줌'),
+    dict(name='letter-run-last-frame', file='cpppj/src/o/RiftType.cpp', expect='bridge_event_',
+         before='if (run.first == -1) run.first = static_cast<int>(i);',
+         after='run.first = static_cast<int>(i);',
+         note='글자별 첫 프레임이 아니라 마지막 프레임을 기록'),
 ]
 
 
@@ -65,11 +89,22 @@ def build(cmake):
     return run([cmake, '--build', str(BUILD), '--config', 'Release'])
 
 
+def adapt(text, mutation):
+    """파일이 CRLF로 체크아웃된 경우(core.autocrlf=true) 변이 정의의 줄바꿈을 파일에 맞춰 돌려준다."""
+    before, after = mutation['before'], mutation['after']
+    if '\r\n' in text:
+        # 이미 CR이 있는 문장은 건드리지 않도록 LF만 CRLF로 바꾼다.
+        before = before.replace('\r\n', '\n').replace('\n', '\r\n')
+        after = after.replace('\r\n', '\n').replace('\n', '\r\n')
+    return before, after
+
+
 def check(mutation):
     """대상 파일에 원문이 정확히 한 번 있는지 확인하고 원래 바이트를 돌려준다."""
     path = ROOT / mutation['file']
     original = path.read_bytes()
-    count = original.decode('utf-8').count(mutation['before'])
+    text = original.decode('utf-8')
+    count = text.count(adapt(text, mutation)[0])
     return path, original, count
 
 
@@ -99,7 +134,9 @@ def main():
             missed += 1
             continue
         try:
-            path.write_bytes(original.decode('utf-8').replace(mutation['before'], mutation['after']).encode('utf-8'))
+            text = original.decode('utf-8')
+            before, after = adapt(text, mutation)
+            path.write_bytes(text.replace(before, after).encode('utf-8'))
             code, output = build(options.cmake)
             if code != 0:
                 print(f"{mutation['name']}: 빌드 실패(변이가 컴파일되지 않음)")

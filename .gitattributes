@@ -91,3 +91,7 @@ tools/decomp_process_oracle.py text eol=lf
 cpppj/recovery-process-evidence.json text eol=lf
 tools/ghidra/process-functions.json text eol=lf
 tools/decomp_process_oracle.coverage.patch text eol=lf
+# 다리 이벤트 처리기·끝 칸 변환·글자별 프레임 구간 표의 독립 기록/도구/내보내기 목록도 SHA를 체크아웃 후에도 유지한다.
+tools/decomp_bridgeevent_oracle.py text eol=lf
+cpppj/recovery-bridgeevent-evidence.json text eol=lf
+tools/ghidra/bridgeevent-functions.json text eol=lf

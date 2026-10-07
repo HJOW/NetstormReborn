@@ -276,6 +276,31 @@ TEST_CASE(process_dependent_chain_order_and_unlink) {
     scene.host.Kill(*scene.created[0],0);
     CHECK(scene.host.FindEvent(parent,5)==nullptr);CHECK(scene.kernel.Size()==0);
 }
+// 부모가 지워지는 중(dead)이면 form의 Unpop은 void만 켜고 종속 체인과 contained 비트를 그대로 둔다(004ae140/004ac6b0 ↔ CD 004af270/004ac160).
+// 최종 풀 상태만 비교하는 기계어 관찰로는 부모가 정리된 뒤 이 차이가 지워지므로 Unpop 직후의 raw 필드를 직접 확인한다.
+TEST_CASE(process_form_unpop_keeps_chain_while_parent_is_dying) {
+    for (const bool patch:{true,false}) {
+        // 체인 머리 쪽 form을 부모가 살아 있을 때와 죽는 중일 때 각각 Unpop한다. 두 판본 모두 같은 계약이다.
+        for (const bool dying:{false,true}) {
+            Scene scene(patch,true,true,0.0,0);
+            const auto parent=Sid{static_cast<std::uint16_t>(scene.Apply("P:2:82:0:0"))};
+            scene.Apply("A:0:1:1065353216");scene.Apply("A:0:2:1065353216");
+            const auto older=scene.created[0]->Form(),head=scene.created[1]->Form();
+            // 부모의 머리(+6)는 가장 최근 form, 그 form의 다음(+4)은 먼저 붙인 form이다.
+            auto word=[&](Sid sid,std::size_t offset) { const auto raw=scene.pool.Slot(sid);return static_cast<std::uint16_t>(raw[offset]|(raw[offset+1]<<8)); };
+            CHECK(word(parent,6)==head.value && word(head,4)==older.value);
+            if (dying) scene.pool.AllocatedBytes(parent)[11]|=2;
+            scene.host.Hooks().unpopForm(head);
+            // 어느 쪽이든 form은 void가 된다.
+            CHECK((scene.pool.Slot(head)[11]&4)!=0);
+            if (dying) {
+                CHECK(word(parent,6)==head.value);CHECK(word(head,4)==older.value);CHECK((scene.pool.Slot(head)[11]&8)!=0);
+            } else {
+                CHECK(word(parent,6)==older.value);CHECK((scene.pool.Slot(head)[11]&8)==0);
+            }
+        }
+    }
+}
 // 잘못된 타입·전송이 필요한 flags·CD의 죽은 부모는 등록 전에 거부하고, 패치의 죽은 부모는 조용히 건너뛴다.
 TEST_CASE(process_attach_guards) {
     Scene patch(true,true,true,0.0,7);

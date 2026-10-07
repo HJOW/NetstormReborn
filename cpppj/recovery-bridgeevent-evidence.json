@@ -1,0 +1,133 @@
+{
+  "schema": 1,
+  "primary_target": "10.78",
+  "method": "Unicorn x86 32-bit; OS/API/file/window execution forbidden",
+  "unicorn_version": "2.1.4",
+  "seed": 9874,
+  "x87_control_words": [
+    "0x27f",
+    "0x37f"
+  ],
+  "cases": {
+    "Handler": 3621,
+    "End": 726,
+    "Table": 306
+  },
+  "total": 4653,
+  "editions": {
+    "originals": {
+      "binary": "originals/Netstorm.exe",
+      "sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "entries": {
+        "Handler": "00422740",
+        "End": "004215d0",
+        "Table": "0049b060"
+      },
+      "replaced_entry_points": {
+        "004b23e0": "finder",
+        "004214a0": "notify",
+        "004af530": "create",
+        "20000100": "destroy",
+        "20000110": "owner",
+        "20000120": "pop"
+      },
+      "native_calls": {
+        "Table": 8344,
+        "Handler": 2414,
+        "End": 3386
+      },
+      "stub_calls": {
+        "finder": 2446,
+        "notify": 3490,
+        "create": 1678,
+        "owner": 1678,
+        "destroy": 2214,
+        "pop": 1678
+      },
+      "assertions": 0,
+      "instructions": 20175406
+    },
+    "originalCD": {
+      "binary": "originalCD/NETSTORM.EXE",
+      "sha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "entries": {
+        "Handler": "00449a20",
+        "Table": "00444da0"
+      },
+      "replaced_entry_points": {
+        "004ebad0": "finder",
+        "00448c10": "notify",
+        "004ab390": "create",
+        "20000100": "destroy",
+        "20000110": "owner",
+        "20000120": "pop"
+      },
+      "native_calls": {
+        "Table": 5440,
+        "Handler": 2414
+      },
+      "stub_calls": {
+        "finder": 1478,
+        "notify": 1554,
+        "create": 710,
+        "owner": 710,
+        "destroy": 1246,
+        "pop": 710
+      },
+      "assertions": 0,
+      "instructions": 13021080
+    },
+    "original1037": {
+      "binary": "original1037/netstorm.exe",
+      "sha256": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+      "entries": {
+        "Handler": "00449a20",
+        "Table": "00444da0"
+      },
+      "replaced_entry_points": {
+        "004ebad0": "finder",
+        "00448c10": "notify",
+        "004ab390": "create",
+        "20000100": "destroy",
+        "20000110": "owner",
+        "20000120": "pop"
+      },
+      "native_calls": {
+        "Table": 5440,
+        "Handler": 2414
+      },
+      "stub_calls": {
+        "finder": 1478,
+        "notify": 1554,
+        "create": 710,
+        "owner": 710,
+        "destroy": 1246,
+        "pop": 710
+      },
+      "assertions": 0,
+      "instructions": 13021080
+    }
+  },
+  "os_calls": 0,
+  "files": {
+    "tools/decomp_bridgeevent_oracle.py": "80042c78242cbdf62e37ad908c0bede74b95096473772af6a512991117788214",
+    "cpppj/tests/fixtures/bridgeevent-x86.tsv": "d5c767563c7cfdc4d00728201150a5501394685d1acfaed18e6d6c6dd7d6ee94",
+    "tools/ghidra/bridgeevent-functions.json": "d98a8d2629c4565fc99854911ba40391fcf907d832aed289f5a293349954d6d4",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/bridgeevent/final-originals/creation.c": "98b7be841a2e6cd8fb6c975527b161dce284c0f2ed96bcdcaea5f0e26223aff1",
+    "extracted/bridgeevent/final-originals/functions.tsv": "b97a2cb196b560d3ac3796fe53e679dfa7f150adef6b16e51a3cdf89fa8d9bb7",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "extracted/bridgeevent/final-originalCD/creation.c": "53cc74566ec65b041fffb5669157203c433a621f3571c64c927dc8ae93e79150",
+    "extracted/bridgeevent/final-originalCD/functions.tsv": "de7abb58aea96d410f4070616c13c45565f9d33a4393e7b3ad48f5128c39c8dc",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "extracted/bridgeevent/final-original1037/creation.c": "53cc74566ec65b041fffb5669157203c433a621f3571c64c927dc8ae93e79150",
+    "extracted/bridgeevent/final-original1037/functions.tsv": "de7abb58aea96d410f4070616c13c45565f9d33a4393e7b3ad48f5128c39c8dc"
+  },
+  "limitations": [
+    "prepared first-neighbor result of the flag-8 finder",
+    "external surface notify/create/destroy/owner/pop calls",
+    "synthetic type frame codes and bridge type number",
+    "no GameWorld, Kernel scheduling or real Pop",
+    "CD/10.37 end-cell conversion is inline in the handler (no direct entry): reached only with integral payload coordinates"
+  ]
+}
