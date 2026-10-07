@@ -16,6 +16,8 @@ struct SquidDestroyEvent {
 struct SquidDestroyHooks {
     std::function<void(const SquidDestroyEvent&)> emit;
     std::function<Sid()> selected;
+    // form(타입 70 미만) 루트의 가상 Unpop(vtable +0x48)이다. 있으면 contained form 루트를 삭제할 수 있다.
+    std::function<void(Sid)> unpopForm;
 };
 class RawSquidDestroy {
 public:
@@ -24,6 +26,7 @@ public:
     // 004af780 ↔ CD 004ab7e0. 지원 자산의 실제 Unpop/반납을 연결하며 이미 dead이면 반환한다.
     // pre/post 훅은 각각 CompletePreDestroy/CompletePostDestroy를 정확히 한 번 호출해야 한다.
     // 종속 form/contained의 가상 release/destroy와 파생 훅 내부 구현은 emit 호출자 계약이다.
+    // form 루트는 unpopForm 훅이 있을 때만 받으며 자산 공간 해제 대신 그 훅을 부른다.
     void Destroy(Sid sid,std::uint32_t flags,const SquidDestroyHooks& hooks);
     // 공통 pre/postDestroy의 마지막 깊이 감소를 연결하는 지점이다. 그 외 효과까지 수행하지 않는다.
     void CompletePreDestroy();

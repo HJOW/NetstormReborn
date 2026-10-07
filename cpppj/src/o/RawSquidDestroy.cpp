@@ -38,7 +38,9 @@ void RawSquidDestroy::Destroy(Sid sid,std::uint32_t flags,const SquidDestroyHook
         throw std::out_of_range("Destroy SID");
     auto raw=pool_.Slot(sid);
     if (raw[kState]&kDead) return;
-    if ((raw[kState]&(kFree|kContained)) || raw[kType]<kFirstAssetTypeNumber || raw[kType]>=types_.size())
+    // 자산 루트는 contained가 아니어야 한다. form 루트는 부모 안에 들어 있으며 전용 Unpop 훅이 필요하다.
+    const bool form=raw[kType]<kFirstAssetTypeNumber;
+    if ((raw[kState]&kFree) || raw[kType]>=types_.size() || (form ? !hooks.unpopForm : (raw[kState]&kContained)!=0))
         throw std::logic_error("Destroy unsupported root");
     if (!hooks.emit || !hooks.selected) throw std::invalid_argument("Destroy hooks");
     const bool client=sid.value<pool_.Layout().serverFirst;
@@ -71,7 +73,12 @@ void RawSquidDestroy::Destroy(Sid sid,std::uint32_t flags,const SquidDestroyHook
     // 파생 효과 뒤 현재 타입/void를 사용한다. 실제 공간 해제는 flags 0으로 호출한다.
     if (!(raw[kState]&kVoid)) {
         if (raw[kType]>=types_.size()) throw std::out_of_range("Destroy live type");
-        unpop_.Unpop(sid,types_[raw[kType]],0);
+        if (raw[kType]<kFirstAssetTypeNumber) {
+            // form의 가상 Unpop은 void를 켜고 부모의 종속 체인에서 빠진다.
+            if (!hooks.unpopForm) throw std::logic_error("Destroy form unpop hook");
+            hooks.unpopForm(sid);
+            if (!(pool_.Slot(sid)[kState]&kVoid)) throw std::logic_error("Destroy form unpop result");
+        } else unpop_.Unpop(sid,types_[raw[kType]],0);
     }
     const auto post=postDepth_++;
     hooks.emit({SquidDestroyEffect::PostDestroy,sid,{},flags});

@@ -22,6 +22,8 @@ ProcessId Kernel::Find(const BaseProcess& process) const {
     for (ProcessId id = 1; id <= kProcessCapacity; ++id) if (processes_[id].get() == &process) return id;
     return 0;
 }
+// 슬롯 0은 미등록이므로 항상 null이다. 원본의 범위 밖 배열 읽기는 복제하지 않는다.
+BaseProcess* Kernel::Get(ProcessId id) const { return id == 0 || id > kProcessCapacity ? nullptr : processes_[id].get(); }
 // 원본처럼 제거 시 바로 소멸한다. 실행 중 자기 자신을 제거한 콜백은 멤버를 다시 사용하지 않아야 한다.
 void Kernel::Remove(ProcessId id) {
     if (id == 0 || id > kProcessCapacity || !processes_[id]) throw std::out_of_range("Process not registered");

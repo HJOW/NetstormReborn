@@ -19,6 +19,8 @@ public:
     ProcessId Add(std::unique_ptr<BaseProcess> process);
     // 원본의 이미 등록된 포인터 검색을 별도 안전 API로 제공한다. 없으면 0.
     ProcessId Find(const BaseProcess& process) const;
+    // 원본 00471aa0 ↔ CD 004ed640: 슬롯의 프로세스를 그대로 읽는다. 빈 슬롯과 범위 밖 번호는 null이다.
+    BaseProcess* Get(ProcessId id) const;
     // 원본 004719e0처럼 가상 소멸자를 호출하고 슬롯을 비운다.
     void Remove(ProcessId id);
     // 원본 00471a30: 그 순간의 슬롯을 직접 읽으며 1..39999를 순회한다.

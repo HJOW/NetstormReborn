@@ -80,6 +80,6 @@ ctest --test-dir cpppj/build -C Release --output-on-failure
 
 ## 남은 연결
 
-AI 부착 통지(`004166e0` 등)·종속 form/process의 파생 release/destroy·참조 수명·Flyingshrapnel 파편·walker 낙하·0x2692 실행/취소·끝 칸 변환·파생 vtable +0x80(dais 전달/프레임 기반 개수)과 raw GameWorld는 남았다. 샘 풀을 읽는 샘 생성 코드와 SP 표시/UI(`0043dad0`)도 아직 없다. 건설/경제/전투/승패와 미션 완주는 검사하지 않았다.
+종속 ProcessForm의 release/destroy와 `0x2692`의 예약/조회·실행 틀은 [후속](cpp-process-reconstruction.md)에서 복원했다. AI 부착 통지(`004166e0` 등)·다른 form 종류의 파생 release/destroy·참조 수명·Flyingshrapnel 파편·walker 낙하·0x2692 처리기 몸체·끝 칸 변환·파생 vtable +0x80(dais 전달/프레임 기반 개수)과 raw GameWorld는 남았다. 샘 풀을 읽는 샘 생성 코드와 SP 표시/UI(`0043dad0`)도 아직 없다. 건설/경제/전투/승패와 미션 완주는 검사하지 않았다.
 
 원본/복사본·업데이터/설치 도구 실행과 모든 창 검사는 호스트 **DESKTOP-HJOW에서 금지**되어 있다. 다른 허용 PC에서 raw 월드 연결 후 삭제→SP 지급→재진입을 확인한다. 해당 PC의 AGENTS.md/사용자 지시를 먼저 확인한다.
