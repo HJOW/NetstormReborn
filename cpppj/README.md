@@ -11,7 +11,9 @@ C# + MonoGame 빌드(`../dotnetpj/`)는 cpppj 완성 후 이를 분석하여 개
 
 [복원 근거·함수 대응·검증 범위](../docs/exe/cpp-reconstruction.md), [검토 목록](recovery-manifest.json), [기계어 검증 기록](recovery-evidence.json).
 
-[2026-10-07 영역 그래프·일반 다리/섬 비전투 Pop](../docs/exe/cpp-regiongraph-reconstruction.md), [기계어 기록](recovery-regiongraph-evidence.json) — 네 단계 해시의 교차 발자국/내부 spot 표면을 무효화한 뒤 Add한다. 최종 상태의 사전 검사와 체인 순환/소진 보호를 유지한다. 세 실제 PE의 새 x86 1,536회, Release 빌드·내부 검사 **134개·실패 0**. 일반 다리/섬 Unpop·건물 부착·삭제 분할/전역 복구·raw GameWorld는 남았다.
+[2026-10-07 삭제 준비 분할·일반 다리/섬 Unpop](../docs/exe/cpp-graphremove-reconstruction.md), [새 독립 기록](recovery-graphremove-evidence.json) — 원본 일반 탐색의 이웃 순서·경계 접촉·0단계 위치 조회와 정상/rebuild 분할 정책을 복원했다. 새 x86 **1,158회**, x64 Release·CTest 내부 **137개·실패 0**, 누적 제한 입력 **60,258개**다. 전역 소진 복구·건물 부착·파생 삭제/참조 수명·raw GameWorld는 남았다. **최신 사용자 지시: 이 PC에서는 원본/복사본 게임과 모든 창 검사를 금지하며 다른 PC에 인계한다.**
+
+[2026-10-07 영역 그래프·일반 다리/섬 비전투 Pop](../docs/exe/cpp-regiongraph-reconstruction.md), [기계어 기록](recovery-regiongraph-evidence.json) — 네 단계 해시의 교차 발자국/내부 spot 표면을 무효화한 뒤 Add한다. 최종 상태의 사전 검사와 체인 순환/소진 보호를 유지한다. 세 실제 PE의 새 x86 1,536회, Release 빌드·내부 검사 **134개·실패 0**. 일반 다리/섬 Unpop·삭제 분할은 위 후속에서 추가했고 건물 부착·전역 복구·raw GameWorld는 남았다.
 
 [추가 10.37 전체 디컴파일·CD 비교](../docs/exe/original1037-comparison.md), [근거](recovery-original1037-evidence.json) — 3,711개 함수·실패 0. CD와 실행 파일 전체 차이는 InsertCD 안내창 분기 한 바이트이며 두 `netstorm.ver`는 모두 10.37이다. 같은 그래프 배치를 새 알고리즘으로 세지 않고 패치 10.78을 복원 기준으로 유지한다.
 
@@ -23,7 +25,7 @@ C# + MonoGame 빌드(`../dotnetpj/`)는 cpppj 완성 후 이를 분석하여 개
 
 [raw 공통 표시 활성 후속](../docs/exe/cpp-display-reconstruction.md), [독립 기계어 기록](recovery-display-evidence.json) — Pop·Unpop의 프레임 경계/선택/그림자 갱신을 실제 Renderer 변경 표로 연결했다. 새 x86 1,728회, 내부 검사 120개, 실제 SHP 추가 헤더 6,950개를 확인했다. 공통 postPop 영역/소유자/생산 효과와 raw GameWorld 연결은 남았다.
 
-[raw 일반 Pop 후속·이번 PC의 GUI 회귀](../docs/exe/cpp-pop-reconstruction.md), [독립 기계어 기록](recovery-pop-evidence.json) — SID 풀·해시·spot의 등록→해제→반납을 연결했다. 표시와 postPop 효과가 억제된 비전투 경로이며 기존 GameWorld는 별개다. 최신 사용자 지시로 클론 창·글꼴·메뉴·1-1/TEST01 조작 회귀를 실행했다.
+[raw 일반 Pop 후속·이번 PC의 GUI 회귀](../docs/exe/cpp-pop-reconstruction.md), [독립 기계어 기록](recovery-pop-evidence.json) — SID 풀·해시·spot의 등록→해제→반납을 연결했다. 표시와 postPop 효과가 억제된 비전투 경로이며 기존 GameWorld는 별개다. 2026-10-06 당시 허용으로 클론 창·글꼴·메뉴·1-1/TEST01 조작 회귀를 실행했다. 현재 PC의 창 금지 지시를 우선한다.
 
 [타입·그래픽 복원과 판본 차이](../docs/exe/cpp-assets-reconstruction.md), [VFX 기계어 검증 기록](recovery-graphics-evidence.json).
 
@@ -100,7 +102,7 @@ python tools/cpp_bridge_smoke.py
 
 `--run`은 원본과 공유하는 `d/options.cfg`를 갱신한다. 전체화면을 요구하면 게임 폴더의 `fullscreenStateFile.dat`도 원본 시점에 만든다. DirectDraw는 아직 없으므로 창 모드로 나온다. 스모크는 두 파일을 보관하고 검사 후 바이트·존재 여부를 복구한다.
 
-CTest의 **112개 내부 검사**에는 원본 기계어의 **46,156개 입력 사례**가 포함되어 있다(기존 5,365＋다리 계산 18,053＋표면/재귀 3,450＋해시/점유 4,632＋공간 등록 878＋SID 3,168＋base 생성/Take 964＋자산 파생 생성/Take 6,028＋raw 일반 공간 해제/수명 3,618). 공간 등록은 가상/영역 효과를 계약으로 대체한 조건부 검증이다. 새 raw 해제는 표시 비활성·합성 기존 배치 상태이며 대체 함수가 없다. 수명 480개는 첫 외부 효과 전의 접두 구간, 해시 초기화 4개는 할당 없는 경로이고 전체 열린 끝은 패치판만 검증했다. 생성자 359행/vtable 151행은 호출 수와 별도다. 빌드에는 원본 실행 파일·Ghidra·Python·외부 라이브러리가 필요 없다. 기존 메뉴 54개 상태와 월드의 **6개 초기 자료 사례·393,216마스크 바이트·2,593객체·20개 조작 상태** 기록을 유지하며, 다리 자산 검사는 두 판본 합계 **936셀**을 독립 판독과 대조한다. `--inspect-bridges`는 파일을 읽기만 한다. 메뉴/월드 전체 함수의 x86 대조나 원본 화면 전체 픽셀 일치를 의미하지 않는다. 설정을 공유하는 창 스모크는 순차 실행하고 원본 파일을 복구한다. 이 수치는 게임 전체 완성도가 아니다.
+현재 CTest는 **137개 내부 검사**, 누적 제한 x86 입력 **60,258개**다(기존 5,365＋다리 계산 18,053＋표면/재귀 3,450＋해시/점유 4,632＋공간 등록 878＋SID 3,168＋base 생성/Take 964＋자산 파생 생성/Take 6,028＋raw 일반 공간 해제/수명 3,618＋raw 일반 Pop/수명 4,600＋공통 표시 활성 1,728＋공통 postPop 일부 효과 984＋Graph 2,560＋raw Graph 1,536＋영역/일반 Pop 1,536＋삭제 준비/일반 Unpop 1,158). 공간 등록은 가상/영역 효과를 계약으로 대체한 조건부 검증이다. 최신 삭제 준비/일반 Unpop은 공통 표시 활성·정수·dead 원천·소진 전·비전투 null 큐·합성 타입/SHP 범위이고 raw GameWorld는 미연결이다. 앞선 raw 해제 기록은 표시 비활성·합성 기존 배치 상태이며 대체 함수가 없다. 수명 480개는 첫 외부 효과 전의 접두 구간, 해시 초기화 4개는 할당 없는 경로이고 전체 열린 끝은 패치판만 검증했다. 생성자 359행/vtable 151행은 호출 수와 별도다. 빌드에는 원본 실행 파일·Ghidra·Python·외부 라이브러리가 필요 없다. 기존 메뉴 54개 상태와 월드의 **6개 초기 자료 사례·393,216마스크 바이트·2,593객체·20개 조작 상태** 기록을 유지하며, 다리 자산 검사는 두 판본 합계 **936셀**을 독립 판독과 대조한다. `--inspect-bridges`는 파일을 읽기만 한다. 메뉴/월드 전체 함수의 x86 대조나 원본 화면 전체 픽셀 일치를 의미하지 않는다. 설정을 공유하는 창 스모크는 순차 실행하고 원본 파일을 복구한다. 이 수치는 게임 전체 완성도가 아니다.
 
 ## 폴더
 

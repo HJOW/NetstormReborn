@@ -166,7 +166,7 @@ TEST_CASE(SquidUnpop_Guards_PreserveRawPoolAndSpaceBeforeUnsupportedEffects) {
     bytes[11]=8; const auto contained=std::vector(pool.Bytes().begin(),pool.Bytes().end());
     CHECK(Throws([&] { unpop.Unpop(sid,types[82]); }));
     CHECK(std::equal(contained.begin(),contained.end(),pool.Bytes().begin())); bytes[11]=0;
-    auto unsupported=types[82]; unsupported.flags2=TypeFlag2::kBridge;
+    auto unsupported=types[82]; unsupported.flags2=TypeFlag2::kFactory;
     CHECK(Throws([&] { unpop.Unpop(sid,unsupported); }));
     Put(bytes,4,sid.value,2); auto corrupt=std::vector(pool.Bytes().begin(),pool.Bytes().end());
     CHECK(Throws([&] { unpop.Unpop(sid,types[82]); })); CHECK(std::equal(corrupt.begin(),corrupt.end(),pool.Bytes().begin()));

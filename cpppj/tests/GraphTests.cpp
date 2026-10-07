@@ -160,3 +160,24 @@ TEST_CASE(Graph_InvalidAndExhaustedInputsRejectBeforeMutation) {
     o::Graph full(finder,members,records); const auto fullBefore=RecordsHash(full);
     CHECK(Throws([&]{full.Allocate();})); CHECK(RecordsHash(full)==fullBefore); CHECK(full.InUse()==251);
 }
+
+// 마지막 연결 무리는 원래 번호에 남고 소진/잘못된 감소 수는 모든 표/스택/번호를 보존한다.
+TEST_CASE(Graph_DetachKeepsLastComponentAndRejectsExhaustionAtomically) {
+    auto dead=Node(5,20,20); dead.dead=true;
+    const std::vector<o::SurfaceObject> objects{dead,Node(6,19,20),Node(7,21,20),Node(8,18,20)};
+    const std::vector<o::GraphMembership> members{{5,0,2},{6,0,0},{7,0,0},{8,0,0}};
+    std::vector<std::uint8_t> spots(o::kWorldCells*o::kWorldCells); o::SurfaceFinder finder(objects,Map(objects),spots);
+    std::array<o::GraphRecord,o::Graph::kTableSize> records{}; records[0]={4,1,71}; records[1].reserved=83;
+    const std::array<std::uint16_t,2> connections{6,7}; o::Graph graph(finder,members,records);
+    graph.Detach(5,connections); CHECK(graph.Number(5)==0 && graph.State(5)==2);
+    CHECK(graph.Number(6)==1 && graph.Number(8)==1 && graph.Number(7)==0);
+    CHECK(graph.Records()[0].surfaces==1 && graph.Records()[1].surfaces==2);
+    CHECK(graph.Records()[0].reserved==71 && graph.Records()[1].reserved==83);
+    const auto hash=RecordsHash(graph),stack=StackHash(graph);
+    CHECK(Throws([&]{graph.Detach(5,connections,false,2);})); CHECK(RecordsHash(graph)==hash && StackHash(graph)==stack);
+    // 첫 새 무리를 만들 번호가 없으면 복사본의 부분 flood도 원본에 반영하지 않는다.
+    for (std::size_t i=0;i<o::Graph::kCount;++i) records[i]={4,1,71};
+    o::Graph full(finder,members,records); const auto before=RecordsHash(full),oldStack=StackHash(full);
+    CHECK(Throws([&]{full.Detach(5,connections,true);})); CHECK(RecordsHash(full)==before && StackHash(full)==oldStack);
+    CHECK(full.Number(5)==0 && full.Number(6)==0 && full.Number(7)==0 && full.Number(8)==0);
+}

@@ -11,8 +11,8 @@ namespace {
 // raw 위치와 상태/매몰 비트. dead는 Unpop을 막지 않는다.
 constexpr std::size_t kNext=4,kType=10,kState=11,kX=14,kY=18;
 constexpr std::uint8_t kFree=1,kVoid=4,kContained=8,kBuried=8;
-// 원본 건물군/spot 마스크와 섬·다리 효과 선택 비트다.
-constexpr std::uint32_t kBuildingMask=0x50444200,kSpotMask=kBuildingMask|0x400ff,kIslandBridge=6;
+// 원본 건물군/spot 마스크다. 일반 섬/다리 통지 helper는 비전투 null 큐에서 자연 반환한다.
+constexpr std::uint32_t kBuildingMask=0x50444200,kSpotMask=kBuildingMask|0x400ff;
 // 선택한 가상 경로의 지원 비트. update8c가 update88로 꼬리 호출하는 것까지 확인했다.
 struct DisplayVtable { std::uint32_t vtable; std::uint8_t mask; };
 #include "UnpopVtables.inc"
@@ -55,8 +55,8 @@ void SquidUnpop::Unpop(Sid sid,const RiftTypeRecord& type,std::uint32_t flags) {
         throw std::logic_error("Unpop 자산/SID 상태 오류");
     if ((bytes[kState]&(kFree|kVoid))!=0) return;
     const bool buried=(bytes[pool_.Edition()==OriginalEdition::Patch1078 ? 40 : 35]&kBuried)!=0;
-    if (!buried && (type.flags2&(kIslandBridge|kBuildingMask)))
-        throw std::logic_error("Unpop 섬/다리/부착 표면 효과는 아직 지원하지 않습니다");
+    if (!buried && (type.flags2&kBuildingMask))
+        throw std::logic_error("Unpop 건물 부착 표면 효과는 아직 지원하지 않습니다");
     if (!SupportsDisplay(pool_.Edition(),Read(bytes,0,4),flags))
         throw std::logic_error("Unpop의 파생 표시 갱신 효과는 아직 지원하지 않습니다");
     const auto x=std::bit_cast<float>(Read(bytes,kX,4)),y=std::bit_cast<float>(Read(bytes,kY,4));

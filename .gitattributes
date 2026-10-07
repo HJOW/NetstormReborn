@@ -49,3 +49,7 @@ cpppj/recovery-postpop-evidence.json text eol=lf
 # 표면 그래프의 기계어 기대값과 실행 도구 해시도 같은 LF로 보존한다.
 tools/decomp_graph_oracle.py text eol=lf
 cpppj/recovery-graph-evidence.json text eol=lf
+# 삭제 준비 분할/일반 Unpop의 도구와 새 세 판본 기록을 같은 SHA-256으로 보존한다.
+tools/decomp_graphremove_oracle.py text eol=lf
+cpppj/recovery-graphremove-evidence.json text eol=lf
+tools/ghidra/graphremove-functions.json text eol=lf

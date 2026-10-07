@@ -65,7 +65,9 @@ cpppj/
 
 ## 3. 빌드와 테스트
 
-**2026-10-07 영역/10.37 후속:** [영역 그래프·일반 다리/섬 비전투 Pop](exe/cpp-regiongraph-reconstruction.md)의 새 x86 1,536회·최종 x64 Release 경고/오류 0·CTest 내부 **134개·실패 0**을 확인했다. 제한 입력 누적은 59,100개다. [새 10.37의 3,711개 함수와 CD 비교](exe/original1037-comparison.md)를 기록하고 세 PE의 실제 함수로 대조했다. CD/10.37은 같은 그래프 배치이며 안내창 분기 한 바이트만 다르다. 일반 다리/섬 Unpop·건물 부착·삭제 분할/소진 복구·raw GameWorld는 후속이다.
+**2026-10-07 삭제 준비/일반 Unpop 후속:** [일반 다리/섬 해제와 Graph 분할](exe/cpp-graphremove-reconstruction.md)의 새 x86 **1,158회**, x64 Release 경고/오류 0·CTest 내부 **137개·실패 0**을 확인했다. 누적 제한 입력은 **60,258개**다. 새 10.37 전체 3,711개 함수와 삭제 helper를 다시 디컴파일하고 새 독립 SHA 기록으로 검사했다. 전역 소진 복구·건물 부착·파생 삭제/참조 수명·raw GameWorld는 남았다. **최신 사용자 지시로 이번 PC에서는 원본/복사본 실행과 모든 창 검사를 금지한다. GUI 명령은 다른 PC 인수인계용이다.**
+
+**2026-10-07 영역/10.37 후속:** [영역 그래프·일반 다리/섬 비전투 Pop](exe/cpp-regiongraph-reconstruction.md)의 새 x86 1,536회·최종 x64 Release 경고/오류 0·CTest 내부 **134개·실패 0**을 확인했다. 제한 입력 누적은 59,100개다. [새 10.37의 3,711개 함수와 CD 비교](exe/original1037-comparison.md)를 기록하고 세 PE의 실제 함수로 대조했다. CD/10.37은 같은 그래프 배치이며 안내창 분기 한 바이트만 다르다. 일반 다리/섬 Unpop·삭제 분할은 위 후속에서 추가했고 건물 부착·전역 소진 복구·raw GameWorld는 후속이다.
 
 **2026-10-06 raw Graph 후속:** [실제 SID·프레임·해시·spot과 공통 postPop 연결](exe/cpp-rawgraph-reconstruction.md)을 추가했다. Pop의 최종 상태를 쓰기 전에 시험하고 raw graph byte를 갱신한다. x64 Release 경고/오류 0·CTest 내부 132개·새 x86 1,536회가 통과했다. 누적 제한 입력은 57,564개다. 정상 다리/섬의 영역·부착 효과·그래프 삭제 분할/소진 복구·raw GameWorld 연결은 남았다. 이번 단계는 새 GUI 실행 없이 raw 계산/후처리를 검사했다.
 
@@ -75,7 +77,7 @@ cpppj/
 
 **2026-10-06 표시 활성 후속:** [공통 표시 갱신](exe/cpp-display-reconstruction.md)을 raw Pop/Unpop과 실제 Renderer 변경 표에 연결했다. Release·CTest 내부 120개 검사, 새 x86 1,728회와 두 판본 SHP 헤더 6,950개 읽기를 통과했다. renderer/world 창 회귀도 다시 실행했다. 공통 postPop 영역/소유자/생산 효과와 raw GameWorld 연결은 남았다.
 
-**2026-10-06 최신 사용자 지시:** 이번 PC에서는 창이 뜨는 검사를 허용했다. Release 빌드·CTest와 클론 window/renderer/menu/world GUI 스모크를 실행했다. 원본/복사본 게임 프로세스는 실행하지 않았다. 이전 PC의 창 금지는 과거 작업 조건이다. [raw Pop 후속·실행 검증의 범위](exe/cpp-pop-reconstruction.md).
+**2026-10-06 당시 실행 기록:** 당시 PC에서는 창이 뜨는 검사를 허용했다. Release 빌드·CTest와 클론 window/renderer/menu/world GUI 스모크를 실행했다. 원본/복사본 게임 프로세스는 실행하지 않았다. 이 허용은 현재 PC의 2026-10-07 창 금지 지시로 대체한다. [raw Pop 후속·실행 검증의 범위](exe/cpp-pop-reconstruction.md).
 
 후속 [기본 생성/Take·가상 초기화](exe/cpp-creation-reconstruction.md)는 SID raw 풀과 타입 표에 연결했다. 자산 파생 생성자는 후속 연결했으며 form/process·실제 월드 연결은 남았다. 생성자 표 359행은 964회 새 기계어 호출과 별도로 센다. [자산 파생 생성자 후속](exe/cpp-derived-reconstruction.md)에서 153개 생성자·179개 타입 연결을 추가했다(6,028회). 이어 [raw 일반 공간 해제·non-void Take·firstPop 플래그](exe/cpp-unpop-reconstruction.md)를 표시 비활성 경로에서 연결했다(3,618회, vtable 메타데이터 151행 별도). 섬·다리·건물 부착/파생 효과·표시 활성·실제 Pop/삭제·월드 연결은 남았다. raw +8 word는 섬 번호로 정정했다.
 
@@ -124,7 +126,7 @@ python tools/cpp_menu_smoke.py
 
 `--run <게임 폴더>`는 클론 창을 띄운다(원본 게임을 실행하지 않는다). `--view`가 없으면 **원본 메인 메뉴**를 표시한다. `--view types|fonts|<미션>`은 기존 독립 검사 장면이다. [메뉴·브리핑의 현재 범위/검사](exe/cpp-menu-reconstruction.md).
 
-기존 기반에 `Gump`·`State`·`UberGump`·`GifImage`·`DialogScript`, `TerrainBuilder`·`Player`·`Squid` 일부와 새 `GameWorld`/부분 `UserInput`을 연결했다. 이어 CanonDecoder 다리 모양/추첨과 Bridge 열린 방향·수명 접두 구간을 복원했다. `SurfaceFinder`와 Bridge 확장은 정수 발자국의 flag 8 이웃·양쪽 타입/프레임 연결·붕괴 방문 목록을 계산한다. [표면/재귀의 근거·한계](exe/cpp-surface-reconstruction.md). CTest는 x86 기대값 **46,156개 입력 사례**(기존 5,365＋다리 18,053＋표면/재귀 3,450＋해시/점유 4,632＋공간 등록 878＋SID 3,168＋base 생성/Take 964＋자산 파생 생성/Take 6,028＋raw 일반 공간 해제/수명 3,618)를 포함한 **112개 내부 검사**다. 공간 등록은 가상/영역 효과의 계약 대체 조건, 새 raw 해제는 표시 비활성·합성 기존 배치 상태이며 대체 함수가 없다. 수명 480개는 접두 구간, 해시 초기화 4개는 할당 없는 경로이며 전체 열린 끝은 패치판만 검증했다. 실제 표면/SID·spot, 배치 UI·전체 붕괴는 아직 월드에 연결하지 않았다. 메뉴/월드는 독립 자료 대조와 클론 창 조작 기록이며 원본 기계어 전체 대조는 아니다. `--mission TEST01`로 같은 브리핑/월드를 검사한다. 원본 모듈 파일이 생긴 것을 모듈 전체 복원 완료로 세지 않는다.
+기존 기반에 `Gump`·`State`·`UberGump`·`GifImage`·`DialogScript`, `TerrainBuilder`·`Player`·`Squid` 일부와 새 `GameWorld`/부분 `UserInput`을 연결했다. 이어 CanonDecoder 다리 모양/추첨과 Bridge 열린 방향·수명 접두 구간을 복원했다. `SurfaceFinder`와 Bridge 확장은 정수 발자국의 flag 8 이웃·양쪽 타입/프레임 연결·붕괴 방문 목록을 계산한다. [표면/재귀의 근거·한계](exe/cpp-surface-reconstruction.md). 당시 CTest는 x86 기대값 **46,156개 입력 사례**(기존 5,365＋다리 18,053＋표면/재귀 3,450＋해시/점유 4,632＋공간 등록 878＋SID 3,168＋base 생성/Take 964＋자산 파생 생성/Take 6,028＋raw 일반 공간 해제/수명 3,618)를 포함한 **112개 내부 검사**다. 공간 등록은 가상/영역 효과의 계약 대체 조건, 새 raw 해제는 표시 비활성·합성 기존 배치 상태이며 대체 함수가 없다. 수명 480개는 접두 구간, 해시 초기화 4개는 할당 없는 경로이며 전체 열린 끝은 패치판만 검증했다. 실제 표면/SID·spot, 배치 UI·전체 붕괴는 아직 월드에 연결하지 않았다. 메뉴/월드는 독립 자료 대조와 클론 창 조작 기록이며 원본 기계어 전체 대조는 아니다. `--mission TEST01`로 같은 브리핑/월드를 검사한다. 원본 모듈 파일이 생긴 것을 모듈 전체 복원 완료로 세지 않는다.
 
 `SquidHash`의 네 단계 배열/버킷 주소·객체 단계와 `Squid::EffectiveGenus`의 발자국/지붕 보정을 추가했다. [x87 실행 상태·검사·표면 배열의 관계](exe/cpp-hash-reconstruction.md)를 확인한다. 이어 `SquidSpatial`의 next 체인·등록/해제·spot OR/AND·비전투 상태와 등록 지도→정수 SurfaceFinder 전달을 복원했다. [CD 충돌 차이·조건부 기계어 검증·재현](exe/cpp-spatial-reconstruction.md). SID 풀은 후속 복원했다. [판본 경계·FIFO/예측 할당·반납·검증 제한](exe/cpp-sid-reconstruction.md). form/process 생성자·다른 가상/영역 효과·GameWorld 연결은 남았다.
 

@@ -49,8 +49,8 @@ ctest --test-dir cpppj/build --build-config Release --output-on-failure
 
 x64 Release 경고/오류 0, CTest 내부 **128개·실패 0**. 동률의 첫 이웃 선택/패배 무리 병합·여러 칸 객체의 수 1·16비트 감김·미사용 WORD 보존·소진/누락/번호 손상의 변경 전 거부도 검사했다. 누적 **56,028개**는 제한 x86 입력 수이며 게임 전체 완성도가 아니다. 기존 공간 878개는 의존성 계약 대체, 수명 480개는 접두 구간, 해시 초기화 4개는 할당 없는 경로이고 생성자 359행/vtable 151행은 별도다.
 
-이번 단계는 클론 창을 실행하지 않았다. Graph가 아직 기존 GUI 월드에 연결되지 않았으므로 단위/기계어 검사로 새 계산을 확인했다. 기존 창 허용은 유지하며, 연결 후 실제 클론 조작을 검사한다.
+이번 단계는 클론 창을 실행하지 않았다. Graph가 아직 기존 GUI 월드에 연결되지 않았으므로 단위/기계어 검사로 새 계산을 확인했다. 현재 사용자 지시로 이 PC의 모든 창 검사는 금지한다. 연결 후 실제 클론 조작은 다른 PC에 인계한다.
 
 ## 다음 연결
 
-raw SidPool의 graph/state/실제 프레임과 0단계 해시·spot에서 스냅샷 구성·graph byte 반영·공통 postPop surface 분기는 [후속](cpp-rawgraph-reconstruction.md)에서 완료했다. 주변 영역 통지·정상 다리/섬 Pop·삭제 시 그래프 분할·소진 복구·섬/다리/건물 부착·raw GameWorld는 남았다. 생산 계산/건설/경제/전투/AI/승패와 미션 완주는 남았다.
+raw SidPool의 graph/state/실제 프레임과 0단계 해시·spot에서 스냅샷 구성·graph byte 반영·공통 postPop surface 분기는 [후속](cpp-rawgraph-reconstruction.md)에서 완료했다. [주변 영역 통지·일반 다리/섬 Pop](cpp-regiongraph-reconstruction.md)과 [삭제 준비 분할·일반 Unpop](cpp-graphremove-reconstruction.md)은 추가했다. 전역 소진 복구·건물 부착·파생 삭제/참조 수명·raw GameWorld는 남았다. 생산 계산/건설/경제/전투/AI/승패와 미션 완주는 남았다.

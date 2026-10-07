@@ -23,6 +23,11 @@ public:
     void PostPop(Sid sid,bool invalidate,bool add);
     // 계산이 모두 성공한 뒤 관련 슬롯의 graph byte와 표/스택을 함께 반영한다.
     void Add(Sid sid);
+    // 삭제 준비의 위치/타입 정보를 SID에서 읽는다. 0단계 머리가 비면 원본처럼 자연 반환한다.
+    // dead 원천의 이웃 분할·1/특수 9 감소를 계산하며 Unpop/반납과 별도로 호출한다.
+    void Detach(Sid sid,bool rebuild=false,std::uint8_t removedSurfaces=1);
+    // 그래프 소진/손상 입력에서 공간 해제 전에 기존 번호/표/스택을 보존한다.
+    void ValidateDetach(Sid sid,bool rebuild=false,std::uint8_t removedSurfaces=1) const;
     // 기존 raw 표면을 실제 탐색 순서로 flood하고 변경한 객체 수를 돌려준다.
     std::uint32_t Flood(Sid sid,std::uint8_t graph);
     // 기존 레코드의 reserved WORD와 전체 스택의 미사용 흔적도 노출한다.
@@ -44,11 +49,13 @@ private:
         std::uint32_t changed{};
     };
     // Add/Flood 외에 영역 단독·영역 후 Add를 구별한다. 원본 순서를 한 계획에 보존한다.
-    enum class Operation { Add,Flood,Region,RegionAdd };
+    enum class Operation { Add,Flood,Region,RegionAdd,Detach };
     // 각 호출에서 현재 raw 입력을 다시 읽는다. noGraph 리셋/프레임 변경을 캐시하지 않는다.
     Plan Calculate(Sid sid,Operation operation,std::uint8_t target,const RawGraphPop* pop) const;
     // 원본 일반 탐색기의 단계/행/열/next 순서와 한 칸 넓은 끝 버킷을 유지한다.
     void Region(Sid sid,const RawGraphPop* pop,std::span<const std::uint8_t> spots,Plan& plan) const;
+    // 삭제의 일반 finder는 네 단계/체인 순서와 가로·세로 경계 접촉 교차 XOR를 사용한다.
+    std::vector<std::uint16_t> DetachConnections(Sid sid,const SurfaceFinder& finder) const;
     // 검사한 슬롯의 graph 필드 외에는 쓰지 않는다.
     void Commit(const Plan& plan);
     SidPool& pool_;

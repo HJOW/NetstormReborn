@@ -4,6 +4,7 @@
 #include "o/SquidFactory.h"
 #include "o/SquidPostPop.h"
 #include "o/SquidPop.h"
+#include "o/SquidUnpop.h"
 #include "o/SquidDisplay.h"
 #include "client/Renderer.h"
 #include <algorithm>
@@ -127,13 +128,14 @@ static void ReplayRawGraph(const char* path,int expectedBegins,int expectedCalls
     std::ifstream input(path); CHECK(input.good()); std::string line; int lineNumber=0,begins=0,calls=0;
     std::unique_ptr<o::SidPool> pool; std::unique_ptr<o::SquidHash> hash; std::unique_ptr<o::RawGraph> graph;
     std::unique_ptr<o::SquidPostPop> post; std::unique_ptr<o::SquidPop> pop; std::unique_ptr<o::SquidDisplay> display; std::unique_ptr<Sink> sink;
+    std::unique_ptr<o::SquidUnpop> unpop;
     std::vector<o::Sid> ids; std::vector<o::RiftTypeRecord> types; std::vector<std::vector<o::FrameCode>> frames;
     std::vector<o::SquidDisplayShape> shapes; std::vector<std::uint8_t> spots; o::SquidPostPopState state;
     // Begin/Setup은 기계어 함수 검증 횟수에 포함하지 않는 명시적 준비 입력이다.
     while (std::getline(input,line)) {
         ++lineNumber; if (line.empty() || line[0]=='#') continue; const auto row=Split(line,'\t'); const auto before=test::FailureCount();
         if (row[0]=="Begin") {
-            pop.reset(); post.reset(); graph.reset(); display.reset(); sink.reset();
+            unpop.reset(); pop.reset(); post.reset(); graph.reset(); display.reset(); sink.reset();
             const auto edition=row[1]=="originals" ? o::OriginalEdition::Patch1078 : o::OriginalEdition::Cd1072;
             types=Types(edition); frames.assign(types.size(),{}); shapes.assign(types.size(),{}); spots.assign(o::kWorldCells*o::kWorldCells,0);
             pool=std::make_unique<o::SidPool>(edition,32768,false); hash=std::make_unique<o::SquidHash>();
@@ -142,7 +144,7 @@ static void ReplayRawGraph(const char* path,int expectedBegins,int expectedCalls
             for (int i=0;i<7;++i) { ids.push_back(factory.Create(74,2)); CHECK(ids.back().value==expected[static_cast<std::size_t>(i)]); }
             ++begins;
         } else if (row[0]=="Setup") {
-            pop.reset(); post.reset(); graph.reset(); display.reset(); sink=std::make_unique<Sink>(); hash->Reset(); std::fill(spots.begin(),spots.end(),std::uint8_t{});
+            unpop.reset(); pop.reset(); post.reset(); graph.reset(); display.reset(); sink=std::make_unique<Sink>(); hash->Reset(); std::fill(spots.begin(),spots.end(),std::uint8_t{});
             const auto nodes=Rows(row[1]); CHECK(nodes.size()==ids.size());
             // 지도는 발자국 전체가 아니라 실제 기준점 버킷/체인을 입력한다.
             for (std::size_t i=0;i<nodes.size();++i) {
@@ -172,6 +174,7 @@ static void ReplayRawGraph(const char* path,int expectedBegins,int expectedCalls
             post=std::make_unique<o::SquidPostPop>(*pool,types,state,graph.get());
             display=std::make_unique<o::SquidDisplay>(pool->Edition(),types,shapes,*sink,o::SquidDisplayView{0,0,65536,{0,0,640,480}});
             pop=std::make_unique<o::SquidPop>(*pool,*hash,spots,display.get(),post.get());
+            unpop=std::make_unique<o::SquidUnpop>(*pool,*hash,spots,display.get());
         } else {
             const auto args=Rows(row[1]);
             if (row[0]=="Pop") {
@@ -182,6 +185,9 @@ static void ReplayRawGraph(const char* path,int expectedBegins,int expectedCalls
             } else if (row[0]=="PostPop") post->PostPop(ids[0],static_cast<std::uint32_t>(args.at(0)[0]));
             else if (row[0]=="Region") graph->InvalidateRegion(ids[0]);
             else if (row[0]=="Add") graph->Add(ids[0]);
+            else if (row[0]=="Detach") graph->Detach(ids[0],args.at(0)[0]!=0,static_cast<std::uint8_t>(args.at(0)[1]));
+            else if (row[0]=="Unpop") unpop->Unpop(ids[0],types[74],static_cast<std::uint32_t>(args.at(0)[0]));
+            else if (row[0]=="Release") pool->Release(ids[0]);
             else if (row[0]=="Flood") CHECK(graph->Flood(ids[0],static_cast<std::uint8_t>(args.at(0)[0]))==std::stoul(row[2])); else CHECK(false);
             const auto raw=Split(row[3],';');
             // 7개 슬롯의 vtable·graph·좌표·state·payload 모든 바이트를 직접 비교한다.
@@ -220,6 +226,11 @@ static void ReplayRawGraph(const char* path,int expectedBegins,int expectedCalls
 // 기존 fixture를 그대로 재생하여 일반 표면/매몰 다리 경로의 회귀를 확인한다.
 TEST_CASE(RawGraph_X86_AllocatedSidPostPopAndProjectedPop) {
     ReplayRawGraph(NETSTORM_RAWGRAPH_FIXTURE,4,1536,false);
+}
+
+// 삭제의 일반 finder/판본별 경계/분할 정책과 실제 다리·섬 해제/반납을 세 PE에 대조한다.
+TEST_CASE(RawGraph_X86_DetachGeneralIslandBridgeUnpopAndRelease) {
+    ReplayRawGraph(NETSTORM_GRAPHREMOVE_FIXTURE,6,1158,true);
 }
 
 // 세 실제 PE와 두 x87 정밀도의 일반 탐색/다리/섬 Pop 결과를 전체 슬롯/메모리와 대조한다.
@@ -281,6 +292,40 @@ TEST_CASE(RawGraph_RefreshesFramesMapAndRawMembershipBetweenCalls) {
     pool.AllocatedBytes(a)[34]=1; graph.Add(a); CHECK(pool.Slot(a)[28]==1); CHECK(graph.Records()[1].surfaces==3);
     pool.AllocatedBytes(a)[28]=254; hash.Cell(0,21,20)=0; graph.Add(a); CHECK(pool.Slot(a)[28]==2); CHECK(graph.Records()[2].surfaces==1);
     CHECK(pool.Slot(a)[34]==1); CHECK(pool.Slot(a)[11]==0); CHECK(pool.Slot(b)[28]==1); CHECK(graph.Records()[1].reserved==91);
+}
+
+// raw 삭제 계획의 소진/손상/활성 원천 거부는 공간 해제 전에 전체 슬롯/지도/표/스택을 보존한다.
+TEST_CASE(RawGraph_DetachPreflightRejectsBeforePoolSpaceOrGraphMutation) {
+    const auto edition=o::OriginalEdition::Cd1072; auto types=Types(edition);
+    std::vector<std::vector<o::FrameCode>> frames(types.size());
+    // 삭제 원천과 두 이웃은 동일한 정상 표면 프레임을 가진다.
+    for (int type=74;type<=76;++type) { types[static_cast<std::size_t>(type)].flags1=o::TypeFlag1::kSurface;
+        types[static_cast<std::size_t>(type)].flags2=4; frames[static_cast<std::size_t>(type)]={{65,80,1,0}}; }
+    o::SidPool pool(edition,32768,false); o::SquidFactory factory(pool,types);
+    const auto root=factory.Create(74,2),left=factory.Create(75,2),right=factory.Create(76,2);
+    Node(pool,root,74,{20,20,1,1,0x800,4,65,80,0,2,0,0,0});
+    Node(pool,left,75,{19,20,1,1,0x800,4,65,80,0,0,0,0,0});
+    Node(pool,right,76,{21,20,1,1,0x800,4,65,80,0,0,0,0,0});
+    o::SquidHash hash; hash.Bucket(0,20,20)=root.value; hash.Bucket(0,19,20)=left.value; hash.Bucket(0,21,20)=right.value;
+    std::vector<std::uint8_t> spots(o::kWorldCells*o::kWorldCells); std::array<o::GraphRecord,o::Graph::kTableSize> records{};
+    // 소진 복구는 이 범위 밖이므로 새 번호 확보 전에 실패해야 한다.
+    for (std::size_t i=0;i<o::Graph::kCount;++i) records[i]={3,1,71};
+    o::RawGraph graph(pool,hash,spots,types,frames,records); const auto before=GraphHashes(graph);
+    const std::vector<std::uint8_t> raw(pool.Bytes().begin(),pool.Bytes().end()),oldSpots=spots;
+    CHECK(Throws([&]{graph.ValidateDetach(root);})); CHECK(Throws([&]{graph.Detach(root);}));
+    CHECK(GraphHashes(graph)==before && spots==oldSpots && std::equal(raw.begin(),raw.end(),pool.Bytes().begin()));
+    CHECK(hash.Bucket(0,20,20)==root.value && hash.Bucket(0,19,20)==left.value && hash.Bucket(0,21,20)==right.value);
+    pool.AllocatedBytes(root)[11]=0; CHECK(Throws([&]{graph.Detach(root);})); pool.AllocatedBytes(root)[11]=2;
+    // 위치 조회가 다른 SID를 고르는 미지원 경로도 그래프/공간 변경 전에 거부한다.
+    hash.Bucket(0,20,20)=left.value; CHECK(Throws([&]{graph.ValidateDetach(root);})); CHECK(Throws([&]{graph.Detach(root);}));
+    CHECK(GraphHashes(graph)==before && spots==oldSpots && std::equal(raw.begin(),raw.end(),pool.Bytes().begin()));
+    hash.Bucket(0,20,20)=root.value;
+    Put(pool.AllocatedBytes(left),4,left.value,2); CHECK(Throws([&]{graph.Detach(root);}));
+    CHECK(GraphHashes(graph)==before && spots==oldSpots);
+    // 미사용 원천은 finder 생성 전 반환하므로 이웃의 손상 next를 읽지 않는다.
+    auto inactiveRecords=records; inactiveRecords[0].inUse=0;
+    o::RawGraph inactive(pool,hash,spots,types,frames,inactiveRecords); const auto inactiveBefore=GraphHashes(inactive);
+    inactive.Detach(root); CHECK(GraphHashes(inactive)==inactiveBefore && spots==oldSpots);
 }
 
 // 서로 다른 풀/지도, 손상된 후보와 영역 체인 순환은 결과를 쓰기 전에 거부한다.

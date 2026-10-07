@@ -12,7 +12,7 @@
 
 Pop 사전 검사도 최종 좌표·void 해제·새 해시 머리/next·genus OR 이후 spot을 반영한다. 옛 void 좌표로 영역을 조회하거나 Add 전에 그래프 표를 부분 변경하지 않는다. 해시 체인 순환, 미할당 후보, 잘못된 번호/발자국, 소수 좌표, 소진은 실제 공간 쓰기 전에 거부한다. 영역 처리 후 Add가 실패하는 경우에도 graph byte·표·스택·슬롯·해시·spot·비용/깊이를 보존하는 검사를 추가했다.
 
-일반 다리/섬 Pop의 비전투 알림 helper는 원본에서 dirty 큐가 null이면 자연 반환한다. 이 범위에서 기존 등록·표시·firstPop·postPop을 허용했다. 전투 dirty 큐를 구현한 것은 아니며 건물 옆면 부착은 계속 거부한다. **일반 다리/섬 Unpop과 삭제 시 분할, 전역 그래프 소진 복구, 건물 부착, raw GameWorld는 남았다.**
+일반 다리/섬 Pop의 비전투 알림 helper는 원본에서 dirty 큐가 null이면 자연 반환한다. 이 범위에서 기존 등록·표시·firstPop·postPop을 허용했다. 전투 dirty 큐를 구현한 것은 아니며 건물 옆면 부착은 계속 거부한다. **일반 다리/섬 Unpop과 삭제 준비 분할은 [후속](cpp-graphremove-reconstruction.md)에서 추가했다. 전역 그래프 소진 복구, 건물 부착, raw GameWorld는 남았다.**
 
 ## 대조 범위와 재현
 
@@ -41,4 +41,4 @@ cmake --build cpppj/build --config Release --parallel 4
 ctest --test-dir cpppj/build --build-config Release --output-on-failure
 ```
 
-빌드 종료 후 검사를 실행한다. 이번 단계는 GUI GameWorld에 아직 연결되지 않은 raw 계층의 기계어/단위 검사다. 기존 클론 창 실행 허용은 유지하며 raw 월드 연결 후 TEST01/1-1 생성·표시·선택·이동·해제·재진입을 검사한다.
+빌드 종료 후 검사를 실행한다. 이번 단계는 GUI GameWorld에 아직 연결되지 않은 raw 계층의 기계어/단위 검사다. 최신 사용자 지시로 현재 PC에서는 원본/복사본 실행과 모든 창 검사를 금지한다. raw 월드 연결 후 TEST01/1-1 생성·표시·선택·이동·해제·재진입은 다른 PC에서 검사한다. 이번 단계의 수치와 최신 137개/60,258개 기록은 구별한다.

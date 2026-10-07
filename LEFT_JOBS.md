@@ -1,6 +1,6 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
-> 최종 갱신: 2026-10-07 (**주변 영역 그래프 무효화와 일반 다리/섬의 비전투 Pop을 연결했고 추가 10.37을 전체 디컴파일했다.** [계획](docs/cpp-playable-plan.md), [영역 복원·새 x86 1,536회](docs/exe/cpp-regiongraph-reconstruction.md), [10.37 비교](docs/exe/original1037-comparison.md). 내부 검사 **134개·실패 0**, 제한 x86 입력 누적 **59,100개**다. 세 PE 중 CD/10.37은 동일한 그래프 배치이며 실행 파일은 InsertCD 분기 한 바이트만 다르다. 두 버전 파일은 모두 10.37로 표시된다. Pop의 최종 영역→Add를 공간 쓰기 전에 검사하며 graph byte·표·스택을 보존한다. GUI GameWorld는 아직 별도다. 앞선 공간 878개는 계약 대체, 수명 480개/비용 인코딩은 접두 구간, 해시 초기화 4개는 할당 없는 경로다. **이번 PC의 클론 창 허용은 유지한다.** 이번 단계는 새 창 실행 없이 raw 단위/기계어 검사를 완료했다. **일반 다리/섬 Unpop·건물 부착·그래프 삭제 분할/소진 복구·AI/배치 선택·생산 덱/자원/SP 차감·dirty/grid·파생 삭제/참조 수명·form/process·SID 소진 복구·수신 목록·raw GameWorld·건설/경제/전투/AI/승패는 남아 미션 완주는 불가능하다.**)
+> 최종 갱신: 2026-10-07 (**추가 10.37 전체 재디컴파일 3,711개 함수·실패 0, cpppj 일반 다리/섬 Unpop과 삭제 준비 Graph 분할을 복원했다.** [새 범위/재현](docs/exe/cpp-graphremove-reconstruction.md), [독립 x86 1,158회](cpppj/recovery-graphremove-evidence.json). x64 Release 경고/오류 0·CTest 내부 **137개·실패 0**, 누적 제한 x86 입력 **60,258개**다. CD/10.37 실행 파일의 전체 차이는 InsertCD 분기 한 바이트이며 같은 코드 배치를 별도 규칙으로 세지 않는다. **최신 사용자 지시: 현재 PC에서는 원본/복사본 게임 실행과 모든 창 검사를 금지한다. 과거 클론 창 허용 기록은 현재 작업에 적용하지 않으며 GUI 검사는 다른 PC에 인계한다.** 전역 Graph/SID 소진 복구·건물 부착·동일 위치 다른 SID 조회·dirty/grid·참조/파생 삭제 수명·form/process·상위 수신 목록·AI/배치 선택·생산 덱/자원/SP 차감·raw GameWorld·건설/경제/전투/AI/승패는 남아 미션 완주는 불가능하다.)
 > 프로젝트 목표(AGENTS.md): 원본 NetStorm: Islands at War 를 디컴파일/분석하여 클론 코딩하고,
 > **Windows 10/11** 과 **GUI 환경의 Linux** 에서 동작하며 **여러 언어를 지원**하는 게임을 만든다.
 > **모방 범위(2026-10-03 AGENTS.md 변경)**: 기존 게임의 **사운드·그래픽·애니메이션 등 거의 모든 요소를 가능한 한 동일하게** 최대한 모방한다.
@@ -10,9 +10,25 @@
 
 ---
 
+## 2026-10-07 ✅ 완료: cpppj 삭제 준비 분할·일반 다리/섬 Unpop과 10.37 재디컴파일
+
+- [x] **작업 조건/보호:** AGENTS.md/LEFT_JOBS.md와 이전 복원 기록을 읽었다. 사용자 최신 지시대로 원본/복사본 프로세스와 클론 창을 실행하지 않았다. 원본 `originals` 1,394개/CD 425개/10.37 261개 파일이 시작 SHA와 동일하다. AGENTS.md·기존 원본·C# 변경은 없다. 작업 도중 나타난 별도 `originalPatches/` 미추적 자료는 건드리지 않았다.
+- [x] **10.37 전체 재디컴파일:** 별도 `extracted/original1037/ghidra/netstorm.gpr`에서 **3,711개 함수·실패 0**을 다시 내보냈다. GIF 분석 경고는 있었지만 분석/내보내기/저장 완료. 전체 C/함수 표 SHA는 기존 기록과 동일하며 새 독립 기록에도 저장했다. CD/새 PE 전체 차이 `0003314c`/VA `00433d4c`의 `75→eb` 하나와 두 `netstorm.ver=10.37`을 확인했다. [비교](docs/exe/original1037-comparison.md).
+- [x] **삭제 helper 분석:** `004637b0` ↔ CD/10.37 `0045bfd0`와 일반 finder/기하/Graph/Unpop/표시 등을 읽기 전용 Ghidra로 새 `extracted/graphremove/`에 통합 내보냈다. 패치 **95+2**, CD/10.37 각각 **90+2+1**개, 완료 로그/불연속 몸체 확인·프로젝트 변경 폐기. 과거 SHA 기록/도구/fixture는 수정하지 않았다. [재현 주소 목록](tools/ghidra/graphremove-functions.json).
+- [x] **C++ 분할:** `Graph::Detach`/`RawGraph::Detach`·사전 검사를 추가했다. dead 원천·원본 일반 탐색의 네 단계/y/x/next·경계 접촉 XOR·현재 이웃 번호 재판독·일반/rebuild 분할·1/특수 9 감소·reserved WORD/스택 보존을 복원했다. 위치 조회는 0단계 머리가 없으면 자연 반환한다. 동일 위치 다른 SID·잘못된 프레임/체인·소진은 부분 변경 전에 거부한다.
+- [x] **일반 Unpop:** 일반 다리/섬의 비전투 null 알림 큐 자연 반환 범위에서 void→spot AND→머리/이전 next→공통 표시 순서를 허용했다. Graph 분할·Unpop·반납은 원본처럼 별도 단계다. 건물 부착·파생 destructor·참조 수명과 전투 큐를 복원한 것은 아니다.
+- [x] **해석 정정:** 패치 사각형의 `(작음 != 같음)`도 정수 좌표에서는 `<=`다. 실제 ECX/스택 인자로 세 판본 모두 경계 접촉을 인정함을 확인했다. `GetGridSid`의 전역은 해시 객체 +12/0단계 머리여서 별도 grid가 아니었다. 초기 대조 실패를 기대값 변경 없이 C++ 조회/교차 해석을 수정하여 해결했다. 발자국의 1..255 보정/무효 초기 점 재설정을 포함하고, CD의 0 좌표 후보 `pos.isValid()` assert는 oracle에서 즉시 중단/C++에서 쓰기 전 예외로 거부한다.
+- [x] **기계어:** 세 실제 PE×두 x87 정밀도·6시퀀스 **1,158회**(Detach 384/Unpop 768/반납 6), 대체/assert 0. 각 PE의 비전투 통지 86회와 내부 Allocate/Flood(패치 각각 38, CD/10.37 각각 52)는 상위 수에 더하지 않는다. 가장자리 입력은 패치의 0 후보/CD의 최소 1 후보로 구별하며 도달 수를 같은 입력의 규칙 차이로 해석하지 않는다. 전체 7개 raw 슬롯/dirty 직접 비교, 풀/4단계 해시/spot/표/스택/통계 Adler-32. 원본/새 도구/부모 도구/내보내기/전체 10.37/fixture SHA·호출 수 `--verify` 통과. [독립 기록](cpppj/recovery-graphremove-evidence.json).
+- [x] **검사/문서:** x64 Release 경고/오류 0·CTest 내부 **137개·실패 0**. 그래프 소진·active 원천·체인 순환·다른 위치 SID의 변경 전 거부, 미사용 그래프가 손상 이웃 탐색 전에 반환하는 순서·정상 마지막 무리 유지/WORD 흔적과 전체 기존 fixture 회귀를 확인했다. README·빌드/로드맵/실제 플레이 계획·개별 복원/신뢰도/비교 문서를 맞췄다. [범위·명령](docs/exe/cpp-graphremove-reconstruction.md).
+- [ ] **바로 다음:** 전역 Graph/SID 소진 복구·건물 부착/dirty/grid·동일 위치 다른 SID 조회·참조/파생 삭제/반납 수명·form/process·상위 수신 목록을 복원하고 raw GameWorld에 연결한다. 이어 다리 배치/Construction·생산 덱/자원/SP 차감·경제/전투/AI/승패를 진행한다.
+- [ ] **다른 PC GUI 인수인계:** raw 월드 연결 후 TEST01/1-1 생성·표시·선택·이동·해제·재진입과 renderer/menu/world 창 회귀를 검사한다. 현재 PC에서는 `--run`·window/renderer/menu/world 스모크·원본/복사본 실행·analyzeManager `start_session`/`--live`를 실행하지 않는다. 원본 실행 허용은 해당 PC에서 AGENTS.md와 사용자 지시를 확인한다.
+- [ ] **과거 검증 재현 조건:** 현재 PC에는 과거 `extracted/regiongraph/` 등 일부 Git 제외 내보내기가 없어 과거 `compare_original1037.py --verify` 전체 통과를 새로 주장하지 않는다. 이번 확인은 새 통합 내보내기와 `decomp_graphremove_oracle.py --verify`로 수행했다. 과거 명령을 재현하려면 해당 문서의 과거 추출물을 먼저 준비한다.
+
+---
+
 ## 2026-10-07 ✅ 완료: cpppj 영역 그래프·일반 다리/섬 Pop과 10.37 비교
 
-- [x] **진행/원본 보호:** AGENTS.md/최신 인수인계를 읽고 바로 다음 영역 helper부터 복원했다. AGENTS.md/기존 원본/C# 변경과 원본/복사본 게임 프로세스 실행은 없다. 추가 10.37도 전체 261개 파일이 시작 SHA와 동일하다. 이전 클론 창 허용은 유지한다.
+- [x] **진행/원본 보호:** AGENTS.md/최신 인수인계를 읽고 바로 다음 영역 helper부터 복원했다. AGENTS.md/기존 원본/C# 변경과 원본/복사본 게임 프로세스 실행은 없다. 추가 10.37도 전체 261개 파일이 시작 SHA와 동일하다. 당시 클론 창 허용 기록은 위 최신 창 금지 지시로 대체한다.
 - [x] **10.37 전체 디컴파일:** 새 `-Edition original1037` 프로젝트/출력을 기존 것과 분리했다. `extracted/original1037/decomp/netstorm.c`/`functions.tsv`, **3,711개 함수·실패 0**. 내장 GIF 분석 경고가 있었지만 분석/내보내기/저장은 성공했다. [SHA·자료 목록·검토 함수·비교 근거](cpppj/recovery-original1037-evidence.json).
 - [x] **구버전 비교:** CD와 새 실행 파일은 1,647,616바이트이며 전체 차이는 `0003314c`/VA `00433d4c`의 `75→eb` 하나다. `InsertCD` 창 생성 구간을 건너뛰는 분기로 해석하며 전체 CD 검사 우회를 주장하지 않는다. 두 `netstorm.ver`는 모두 10.37이다. 배포판 설명 10.72와 실행 파일 표시를 구분하고 기존 `Cd1072` 레이아웃 식별자는 유지한다. 공통 자료 236개와 TARC 동일, 변경 8개·신규 17개 목록을 기록했다. [비교·재현](docs/exe/original1037-comparison.md).
 - [x] **영역 재디컴파일:** 읽기 전용 Ghidra로 패치 13+3/CD 14+1/10.37 14+1개 helper를 새 `extracted/regiongraph/`에 내보냈다. 새 PE의 검토 함수 바이트도 CD와 동일하다. 기존 함수 대응 2,496쌍/앵커 24쌍은 유지한다.
@@ -21,8 +37,8 @@
 - [x] **기계어:** 세 실제 PE×x87 두 정밀도, 6시퀀스 **1,536회**(영역 480/직접 postPop 480/Pop 288/Add 288), 대체 함수/assert 0. 구버전 두 PE는 같은 그래프 코드이며 별도 시대 규칙으로 세지 않는다. Patch의 Pop 충돌 32회도 부분 좌표/spot 쓰기와 void 유지까지 대조했다. 슬롯/dirty 항목 직접 비교, 전체 풀/4단계 해시/spot/표/스택/통계는 Adler-32다. [SHA·범위·공개/내부 호출](cpppj/recovery-regiongraph-evidence.json).
 - [x] **컴파일/검사:** 최종 x64 Release 경고/오류 0·CTest 내부 **134개·실패 0**(50.88초). 최초 대조에서 항상 등록 성공을 기대한 테스트 오류를 실제 x86 출력의 void 상태로 정정했다. 새/기존 raw Graph/Graph/postPop/display/pop/unpop/derived/creation/SID SHA/호출 수 확인 통과. 기존 표면 x86 3,450회도 재생성 결과가 기존 기록과 동일하다.
 - [x] **범위/후속 기록:** 합성 타입/FrameCode/SHP·client 풀 32768·정수 좌표·비전투 null dirty 큐·AI/배치 선택 없음 범위다. raw GUI 월드는 미연결이므로 이번에는 새 창 검사를 실행하지 않았다. [세부·재현·남은 작업](docs/exe/cpp-regiongraph-reconstruction.md).
-- [ ] **바로 다음:** 일반 다리/섬 Unpop과 삭제 시 그래프 분할·전역 소진 복구·건물 옆면 부착·dirty/grid·참조 수명을 복원하고 raw GameWorld로 연결한다. 이후 다리 배치/Construction·생산 덱/자원/SP 차감·건설/경제/전투/AI/승패로 이어 간다.
-- [ ] **raw 월드 연결 후 클론 창:** TEST01/1-1 raw 생성·표시·선택·이동·해제·재진입을 이번 PC 허용으로 검사한다. 원본 실행은 AGENTS.md의 해당 단계 확인/예외를 따른다.
+- [x] **후속 일부 완료:** 일반 다리/섬 Unpop과 삭제 준비 Graph 분할은 위 최신 절에서 완료했다. 전역 소진 복구·건물 옆면 부착·dirty/grid·참조 수명과 raw GameWorld 연결은 남았다. 이후 다리 배치/Construction·생산 덱/자원/SP 차감·건설/경제/전투/AI/승패로 이어 간다.
+- [ ] **raw 월드 연결 후 클론 창:** TEST01/1-1 raw 생성·표시·선택·이동·해제·재진입을 다른 PC에서 검사한다(현재 PC 창 금지). 원본 실행은 AGENTS.md의 해당 단계 확인/예외를 따른다.
 
 ---
 
@@ -35,7 +51,7 @@
 - [x] **검사:** 최종 x64 Release 경고/오류 0·CTest 내부 **132개·실패 0**, 새/기존 graph/postPop/display/pop/unpop의 SHA/호출 수 확인 통과. 최초 빌드 완료 전 검사로 실행 파일이 잠겨 링크가 실패했으며 검사 종료 후 빌드→전체 검사 순서로 해결했다. 프레임/지도/raw membership 재판독·소진/소수·손상 후보·다른 연결·미복원 영역 통지를 검사했다. SOURCE_MAP은 도구로 갱신했고 파일 존재 30/136이며 모듈 전체 완료 수가 아니다.
 - [x] **실행 범위/보호:** 새 GUI 검사는 실행하지 않았다. raw Graph가 GUI GameWorld에는 아직 미연결이므로 raw 단위/기계어 검사로 완료했다. 기존 클론 창 허용은 유지한다. 원본/복사본 게임 프로세스 실행·AGENTS.md/기존 원본 자료/C# 수정은 없다. [재현·범위·다음 순서](docs/exe/cpp-rawgraph-reconstruction.md).
 - [x] **후속 일부 완료:** 주변 영역 통지 `00462d40` ↔ CD/10.37 `0045c210`과 일반 다리/섬 비전투 Pop은 위 2026-10-07 절에서 완료했다. 건물 부착·일반 다리/섬 Unpop·삭제 분할/소진 복구·raw GameWorld는 최신 남은 작업을 따른다.
-- [ ] **raw 월드 연결 후 클론 창:** TEST01/1-1의 raw 생성·표시·선택·이동·해제·재진입을 이번 PC 허용으로 검사한다. 원본 실행은 AGENTS.md의 해당 단계 확인/예외를 따른다.
+- [ ] **raw 월드 연결 후 클론 창:** TEST01/1-1의 raw 생성·표시·선택·이동·해제·재진입을 다른 PC에서 검사한다(현재 PC 창 금지). 원본 실행은 AGENTS.md의 해당 단계 확인/예외를 따른다.
 
 ---
 
@@ -48,7 +64,7 @@
 - [x] **검사:** x64 Release 경고/오류 0, CTest 내부 **128개·실패 0**. 동률 첫 이웃·병합·다중 칸 수 1·WORD 경계·미사용 WORD·소진/누락/손상 번호의 변경 전 거부를 확인했다. [재현·기대값·제한](docs/exe/cpp-graph-reconstruction.md).
 - [x] **실행 범위:** 이번 단계는 GUI에 미연결인 Graph의 단위/기계어 검사로 완료했다. 새 클론 창 회귀는 실행하지 않았다. 원본/복사본 프로세스·AGENTS.md/기존 원본 자료/C# 수정도 없다. 이전 클론 창 허용은 유지한다.
 - [x] **후속 일부 완료:** raw SidPool의 graph/state/실제 프레임·0단계 해시/spot 스냅샷과 graph byte 반영·공통 postPop surface 분기는 위 최신 절에서 완료했다. 주변 영역 통지·정상 다리/섬 Pop·삭제 분할/소진 복구·raw GameWorld·생산/건설/경제/전투/AI/승패는 최신 남은 작업을 따른다.
-- [ ] **연결 후 클론 창:** TEST01/1-1 raw 생성·표시·선택·이동·해제·재진입을 이번 PC 허용으로 검사한다. 원본 실행은 AGENTS.md의 단계 확인/예외를 따른다.
+- [ ] **연결 후 클론 창:** TEST01/1-1 raw 생성·표시·선택·이동·해제·재진입을 다른 PC에서 검사한다(현재 PC 창 금지). 원본 실행은 AGENTS.md의 단계 확인/예외를 따른다.
 
 ---
 
@@ -62,7 +78,7 @@
 - [x] **검사:** x64 Release 경고/오류 0, CTest 내부 **124개·실패 0**. 비용 문법의 테스트 입력 오류를 수정한 뒤 전체 통과했다. 첫 등록/재등록·중복·미지원 그래프/AI/배치 선택·비유한 비용/손상 목록·다른 풀 연결을 확인했다. 이전 display/pop/unpop/derived/creation/SID의 SHA/호출 수도 재확인했다.
 - [x] **클론 창:** `cpp_world_smoke.py`에서 기존 1-1/TEST01 선택·사제 이동·정지·카메라·복귀/재진입 20개 상태, 두 판본 초기 자료 회귀를 통과했다. 설정 복구/원본 자료 해시 동일. 보고서 `extracted/cpp-world-smoke/report.json`, 빌드/창 로그 `extracted/cpp-postpop-*.log`. GUI는 기존 임시 GameWorld이며 새 raw 월드 연결의 증명이 아니다. [범위·재현·후속](docs/exe/cpp-postpop-reconstruction.md).
 - [x] **후속 일부 완료:** Graph의 정수 표면 연결/flood/병합/표 관리와 raw postPop/graph byte 연결을 위 후속 절들에서 완료했다. 영역 통지/정상 다리·섬 Pop/삭제 분할/소진 복구·AI/배치 선택·생산 계산·월드 연결은 최신 남은 작업을 따른다.
-- [ ] **raw 월드 연결 후 창 검사:** 이번 PC의 허용으로 TEST01/1-1의 raw 생성·표시·선택·이동·해제·재진입을 검사한다. 원본 게임 실행은 AGENTS.md의 해당 단계 확인 규칙/예외를 따른다.
+- [ ] **raw 월드 연결 후 창 검사:** 다른 PC에서 TEST01/1-1의 raw 생성·표시·선택·이동·해제·재진입을 검사한다. 원본 게임 실행은 AGENTS.md의 해당 단계 확인 규칙/예외를 따른다.
 
 ---
 
@@ -75,7 +91,7 @@
 - [x] **검사:** x64 Release 경고/오류 0, CTest 내부 **120개·실패 0**. raw→실제 Renderer의 이전/새 위치 부분 Draw/Present 픽셀, 추가 헤더 signed short/float와 순수 VFX 거부, 잘못된 표시 연결의 변경 전 거부를 확인했다. `--inspect-assets`에서 패치 3,783/CD 3,167개, 합계 **6,950개** 실제 SHP 표시 헤더 연결을 확인했다.
 - [x] **창 회귀:** `cpp_renderer_smoke.py`, `cpp_world_smoke.py`를 다시 실행했다. 기존 글꼴/커서/화면, 1-1/TEST01 선택·사제 이동·정지·카메라·재진입 회귀 통과. 설정 복구/원본 자료 해시 동일. 이 GUI는 기존 임시 GameWorld 검사이며 raw SID 월드 연결의 증명이 아니다. [재현·결과·제한](docs/exe/cpp-display-reconstruction.md).
 - [x] **후속 일부 완료:** 공통 postPop 비용/공급·소유자별 작업장 목록/통계와 noGraph 리셋을 위 최신 절에서 완료했다. 그래프/영역 통지·AI/배치 선택·생산 계산·dirty/grid·원본 월드 연결은 최신 남은 작업을 따른다.
-- [ ] **raw 월드 연결 후 실행:** 이번 PC의 창 허용을 적용해 TEST01/1-1의 원본 SID 생성·표시·선택·이동·해제·재진입을 검사한다. 원본 게임 실제 실행 단계는 AGENTS.md와 해당 단계의 사용자 허용을 따른다.
+- [ ] **raw 월드 연결 후 실행:** 다른 PC에서 TEST01/1-1의 원본 SID 생성·표시·선택·이동·해제·재진입을 검사한다. 원본 게임 실제 실행 단계는 AGENTS.md와 해당 단계의 사용자 허용을 따른다.
 
 ---
 

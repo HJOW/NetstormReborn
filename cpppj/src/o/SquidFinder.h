@@ -23,6 +23,8 @@ public:
     std::vector<std::uint16_t> Neighbors(std::uint16_t id) const;
     // 원본 배열 범위 확인을 이름 있는 조회로 옮긴다. 없는 번호는 예외다.
     const SurfaceObject& Object(std::uint16_t id) const;
+    // 일반 삭제 탐색과 flag 8 이웃 탐색이 공유하는 프레임/방향 접합 판정이다.
+    static bool Connects(const SurfaceObject& from,const SurfaceObject& to);
 private:
     // 원본 004ab880 ↔ CD 00487810: 각 좌표를 1..255로 자르고 사각형의 모든 spot 비트를 AND한다.
     bool Interior(const SurfaceObject& object) const;

@@ -114,6 +114,66 @@ void RawGraph::Region(Sid sid,const RawGraphPop* pop,std::span<const std::uint8_
             }
     }
 }
+// 삭제 연결의 일반 탐색은 flag 8 표면 탐색의 순서/교차 필터로 대체하지 않는다.
+std::vector<std::uint16_t> RawGraph::DetachConnections(Sid sid,const SurfaceFinder& finder) const {
+    const auto& source=finder.Object(sid.value); std::vector<std::uint16_t> result;
+    // 발자국 helper는 두 번째 점을 1..255로 보정한다. 초기 점이 무효면 양 끝을 그 점으로 재설정한다.
+    const auto bounds=[](const SurfaceObject& object) {
+        const int x=std::clamp(object.x-object.width+1,1,kWorldCells-1);
+        const int y=std::clamp(object.y-object.height+1,1,kWorldCells-1);
+        return object.x>0 && object.y>0 ? std::array<int,4>{x,y,object.x,object.y} : std::array<int,4>{x,y,x,y};
+    };
+    const auto rect=bounds(source); const int left=rect[0],top=rect[1],right=rect[2],bottom=rect[3];
+    std::uint8_t interior=0xff;
+    // 원본은 원천 발자국 spot 전체의 AND로 내부 상태를 확인한다.
+    for (int y=top;y<=bottom;++y)
+        // 원천의 정수 발자국 각 칸을 확인한다.
+        for (int x=left;x<=right;++x) interior&=spots_[static_cast<std::size_t>(y*kWorldCells+x)];
+    if (interior&8) return result;
+    const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
+    // 패치의 (작음 != 같음)도 정수 좌표에서는 <=다. 세 판본 모두 경계 접촉을 센다.
+    const auto intersects=[&](int aLeft,int aTop,int aRight,int aBottom) {
+        const int x1=std::max(left,aLeft),y1=std::max(top,aTop),x2=std::min(right,aRight),y2=std::min(bottom,aBottom);
+        return x1>0 && y1>0 && x2<kWorldCells && y2<kWorldCells &&
+            x1<=x2 && y1<=y2;
+    };
+    // 일반 finder는 원천을 한 칸 넓히고 단계별 마지막 버킷도 하나 늘린다.
+    for (int level=0;level<4;++level) {
+        const int scale=SquidHash::kScales[static_cast<std::size_t>(level)],side=SquidHash::Side(level);
+        const int startX=std::max(0,left-1)/scale,startY=std::max(0,top-1)/scale;
+        const int endX=std::min(side-1,std::min(kWorldCells-1,right+1)/scale+1);
+        const int endY=std::min(side-1,std::min(kWorldCells-1,bottom+1)/scale+1);
+        const auto heads=hash_.Entries(level);
+        // 같은 단계 안에서는 y/x, 같은 버킷 안에서는 next 순서를 보존한다.
+        for (int cy=startY;cy<=endY;++cy)
+            // 끝 버킷의 큰 발자국 후보도 원본과 같은 순서로 판정한다.
+            for (int cx=startX;cx<=endX;++cx) {
+                auto current=heads[static_cast<std::size_t>(cy*side+cx)]; std::vector<std::uint16_t> chain;
+                // 손상된 SID/자기 next/순환은 계획 계산 중에 거부한다.
+                while (current) {
+                    if (current<5 || current>kMaximumId || current>=pool_.Capacity() ||
+                        std::find(chain.begin(),chain.end(),current)!=chain.end())
+                        throw std::logic_error("그래프 삭제 해시 범위/순환 오류");
+                    chain.push_back(current); const auto bytes=pool_.Slot(Sid{current}); const auto candidate=current;
+                    current=static_cast<std::uint16_t>(Read(bytes,4,2));
+                    if (bytes[11]&(kFree|kContained|kVoid)) throw std::logic_error("그래프 삭제 후보 상태 오류");
+                    if (bytes[10]<kFirstAssetTypeNumber || bytes[10]>=types_.size()) throw std::logic_error("그래프 삭제 후보 타입 오류");
+                    // CD 일반 finder는 매몰 제외 뒤 모든 후보의 양수 위치를 assert한다. UI 대신 변경 전 거부한다.
+                    if (!patch && !(bytes[35]&kBuried) &&
+                        (Coordinate(std::bit_cast<float>(Read(bytes,14)))<=0 || Coordinate(std::bit_cast<float>(Read(bytes,18)))<=0))
+                        throw std::logic_error("CD 그래프 삭제 후보의 무효 위치");
+                    if ((bytes[11]&kDead) || (bytes[patch ? 40 : 35]&kBuried) || !(types_[bytes[10]].flags1&TypeFlag1::kSurface)) continue;
+                    const auto& object=finder.Object(candidate); const auto a=bounds(object);
+                    if ((spots_[static_cast<std::size_t>(object.y*kWorldCells+object.x)]&8) ||
+                        intersects(a[0]-1,a[1],a[2]+1,a[3])==intersects(a[0],a[1]-1,a[2],a[3]+1) ||
+                        !SurfaceFinder::Connects(object,source)) continue;
+                    if (std::find(result.begin(),result.end(),candidate)!=result.end()) throw std::logic_error("그래프 삭제 중복 해시 후보");
+                    result.push_back(candidate);
+                }
+            }
+    }
+    return result;
+}
 // 전체 계산을 복사본에서 수행하며 미지원 입력·소진·연결 오류를 쓰기 전에 보고한다.
 RawGraph::Plan RawGraph::Calculate(Sid sid,Operation operation,std::uint8_t target,const RawGraphPop* pop) const {
     const bool region=operation==Operation::Region || operation==Operation::RegionAdd;
@@ -124,7 +184,21 @@ RawGraph::Plan RawGraph::Calculate(Sid sid,Operation operation,std::uint8_t targ
         root[10]<kFirstAssetTypeNumber || root[10]>=types_.size() ||
         (operation!=Operation::Region && !(types_[root[10]].flags1&TypeFlag1::kSurface)))
         throw std::logic_error("raw 그래프 표면 SID 오류");
+    if (operation==Operation::Detach && (!(root[11]&kDead) || (target&~3U)))
+        throw std::invalid_argument("raw 그래프 삭제 준비의 dead/정책 오류");
     Plan plan{records_,stack_,{},0};
+    if (operation==Operation::Detach) {
+        // GetGridSid는 해시 객체 +12의 0단계 머리를 읽는다. 다른 단계의 원천은 자연 반환한다.
+        const int x=Coordinate(std::bit_cast<float>(Read(root,14))),y=Coordinate(std::bit_cast<float>(Read(root,18)));
+        const auto found=hash_.Entries(0)[static_cast<std::size_t>(y*kWorldCells+x)];
+        if (!found) return plan;
+        // 같은 기준점의 다른 SID로 그래프를 고르는 상위 위치 정보 경로는 아직 지원하지 않는다.
+        if (found!=sid.value) throw std::logic_error("raw 그래프 삭제 위치 조회의 다른 SID");
+        // 원본은 무효/미사용 그래프에서 finder를 만들지 않는다. 손상 이웃도 아직 읽지 않는다.
+        const auto number=root[graphOffset]; if (number==Graph::kInvalid) return plan;
+        if (number>=Graph::kCount) throw std::out_of_range("raw 그래프 삭제 번호 오류");
+        if (!records_[number].inUse) return plan;
+    }
     if (pop) {
         const auto& type=types_[root[10]];
         if (operation==Operation::Flood || !pop->type || pop->level<0 || pop->level>3 || type.flags1!=pop->type->flags1 ||
@@ -189,7 +263,9 @@ RawGraph::Plan RawGraph::Calculate(Sid sid,Operation operation,std::uint8_t targ
             type.flags1,type.flags2,code,(currentState&kDead)!=0,(bytes[extraOffset]&kBuried)!=0});
     }
     SurfaceFinder finder(objects,map,spots); Graph graph(finder,members,plan.records,plan.stack);
-    if (add) graph.Add(sid.value); else plan.changed=graph.Flood(sid.value,target);
+    if (add) graph.Add(sid.value);
+    else if (operation==Operation::Detach) graph.Detach(sid.value,DetachConnections(sid,finder),(target&1)!=0,(target&2)!=0 ? 9 : 1);
+    else plan.changed=graph.Flood(sid.value,target);
     std::copy(graph.Records().begin(),graph.Records().end(),plan.records.begin());
     std::copy(graph.FloodStack().begin(),graph.FloodStack().end(),plan.stack.begin());
     // 영역에서 변경한 번호도 최종 Add 결과로 덮고 다른 raw 필드에는 쓰지 않는다.
@@ -216,6 +292,16 @@ void RawGraph::Commit(const Plan& plan) {
 }
 // 현재 프레임·상태·지도로 매번 다시 계산한다.
 void RawGraph::Add(Sid sid) { Commit(Calculate(sid,Operation::Add,0,nullptr)); }
+// 원본 전역 rebuild 정책과 특수 감소만 인코딩한다. 전체 소진 복구는 여기서 실행하지 않는다.
+void RawGraph::ValidateDetach(Sid sid,bool rebuild,std::uint8_t removedSurfaces) const {
+    if (removedSurfaces!=1 && removedSurfaces!=9) throw std::invalid_argument("raw 그래프 감소 수 오류");
+    static_cast<void>(Calculate(sid,Operation::Detach,static_cast<std::uint8_t>((rebuild ? 1 : 0)|(removedSurfaces==9 ? 2 : 0)),nullptr));
+}
+// 같은 성공 계획의 번호·표·스택만 적용하고 원천 state/좌표/next는 Unpop에 남긴다.
+void RawGraph::Detach(Sid sid,bool rebuild,std::uint8_t removedSurfaces) {
+    if (removedSurfaces!=1 && removedSurfaces!=9) throw std::invalid_argument("raw 그래프 감소 수 오류");
+    Commit(Calculate(sid,Operation::Detach,static_cast<std::uint8_t>((rebuild ? 1 : 0)|(removedSurfaces==9 ? 2 : 0)),nullptr));
+}
 // 기존 스택의 미사용 DWORD를 보존하여 flood 결과를 반영한다.
 std::uint32_t RawGraph::Flood(Sid sid,std::uint8_t graph) {
     const auto plan=Calculate(sid,Operation::Flood,graph,nullptr); Commit(plan); return plan.changed;

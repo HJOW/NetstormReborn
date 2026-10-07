@@ -38,6 +38,10 @@ const SurfaceObject& SurfaceFinder::Object(std::uint16_t id) const {
     if (found==objects_.end()) throw std::out_of_range("Missing surface object");
     return found->second;
 }
+// 동일한 중심/방향 동률 규칙과 원본 프레임 접합 표를 사용한다.
+bool SurfaceFinder::Connects(const SurfaceObject& from,const SurfaceObject& to) {
+    return Bridge::Connects(from.frame,from.flags2,to.frame,to.flags2,Direction(from,to));
+}
 // 영역 전체가 내부인지 검사하는 원본 AND 계산을 보존한다.
 bool SurfaceFinder::Interior(const SurfaceObject& object) const {
     const int left=std::clamp(object.x-object.width+1,1,kWorldCells-1),right=std::clamp(object.x,1,kWorldCells-1);
@@ -67,7 +71,7 @@ std::vector<std::uint16_t> SurfaceFinder::Neighbors(std::uint16_t id) const {
             if (left<=object.x && object.x<=source.x && top<=object.y && object.y<=source.y) continue;
             if ((object.flags1 & TypeFlag1::kSurface)==0 || object.dead ||
                 (spots_[static_cast<std::size_t>(object.y*kWorldCells+object.x)] & kInteriorBit)!=0) continue;
-            if (!Bridge::Connects(object.frame,object.flags2,source.frame,source.flags2,Direction(object,source))) continue;
+            if (!Connects(object,source)) continue;
             if (std::find(result.begin(),result.end(),candidate)==result.end()) result.push_back(candidate);
         }
     }

@@ -1,0 +1,1468 @@
+{
+  "schema": 1,
+  "public_calls": {
+    "Detach": 384,
+    "Unpop": 768,
+    "Release": 6
+  },
+  "total_calls": 1158,
+  "sequences": 6,
+  "editions": {
+    "originals": {
+      "binary_sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "layout": "originals",
+      "function_ranges": [
+        {
+          "entry": "004abb10",
+          "ranges": "004abb10-004abb66;004abb70-004abcac;004abcb0-004abdf1"
+        },
+        {
+          "entry": "004af1d0",
+          "ranges": "004af1d0-004af529"
+        },
+        {
+          "entry": "004abf60",
+          "ranges": "004abf60-004ac037"
+        },
+        {
+          "entry": "004abe00",
+          "ranges": "004abe00-004abe26;004abe30-004abf51"
+        },
+        {
+          "entry": "004aba70",
+          "ranges": "004aba70-004abab3"
+        },
+        {
+          "entry": "004952f0",
+          "ranges": "004952f0-0049532a"
+        },
+        {
+          "entry": "004e5b40",
+          "ranges": "004e5b40-004e5b9a;004e5b9c-004e5ba2;004e5bb0-004e5bd8;004e5bdc-004e5bfe;004e5c00-004e5c1c;004e5c40-004e5c89;004e5c9c-004e5ca2;004e5ca4-004e5cae;004e5cb0-004e5cc0;004e5cc4-004e5cda;004e5cdc-004e5d01;004e5d04-004e5d0c;004e5d10-004e5d2e;004e5d3c-004e5d5c;004e5d60-004e5d86;004e5d88-004e5db8;004e5ddc-004e5e25;004e5e38-004e5e3e;004e5e40-004e5e4c;004e5e50-004e5e62;004e5e64-004e5e7c"
+        },
+        {
+          "entry": "004af530",
+          "ranges": "004af530-004af600"
+        },
+        {
+          "entry": "004af610",
+          "ranges": "004af610-004af712"
+        },
+        {
+          "entry": "004b0c60",
+          "ranges": "004b0c60-004b0d2b"
+        },
+        {
+          "entry": "004ad4a0",
+          "ranges": "004ad4a0-004ad4f5"
+        },
+        {
+          "entry": "0049a840",
+          "ranges": "0049a840-0049a852"
+        },
+        {
+          "entry": "0049fce0",
+          "ranges": "0049fce0-0049fd6a"
+        },
+        {
+          "entry": "004afe50",
+          "ranges": "004afe50-004b01fc;004b0200-004b02c4"
+        },
+        {
+          "entry": "0049ebb0",
+          "ranges": "0049ebb0-0049fa87;0049fa90-0049fc80"
+        },
+        {
+          "entry": "0040da00",
+          "ranges": "0040da00-0040da31"
+        },
+        {
+          "entry": "0040e800",
+          "ranges": "0040e800-0040e84c"
+        },
+        {
+          "entry": "0040e880",
+          "ranges": "0040e880-0040e8e1"
+        },
+        {
+          "entry": "0040e8f0",
+          "ranges": "0040e8f0-0040e958"
+        },
+        {
+          "entry": "0040ea00",
+          "ranges": "0040ea00-0040ea37"
+        },
+        {
+          "entry": "0040eaf0",
+          "ranges": "0040eaf0-0040eb3c"
+        },
+        {
+          "entry": "004166e0",
+          "ranges": "004166e0-0041671b"
+        },
+        {
+          "entry": "00419850",
+          "ranges": "00419850-004198e2"
+        },
+        {
+          "entry": "0041ce90",
+          "ranges": "0041ce90-0041cfbb"
+        },
+        {
+          "entry": "0041d0d0",
+          "ranges": "0041d0d0-0041d148"
+        },
+        {
+          "entry": "0041d770",
+          "ranges": "0041d770-0041d79a"
+        },
+        {
+          "entry": "0041d7a0",
+          "ranges": "0041d7a0-0041d7d6"
+        },
+        {
+          "entry": "0041def0",
+          "ranges": "0041def0-0041df51"
+        },
+        {
+          "entry": "004210a0",
+          "ranges": "004210a0-004210e4"
+        },
+        {
+          "entry": "004214a0",
+          "ranges": "004214a0-004214f7"
+        },
+        {
+          "entry": "00425df0",
+          "ranges": "00425df0-00425dfa"
+        },
+        {
+          "entry": "00434380",
+          "ranges": "00434380-0043440d"
+        },
+        {
+          "entry": "00441e40",
+          "ranges": "00441e40-00441f17"
+        },
+        {
+          "entry": "00445290",
+          "ranges": "00445290-00445326"
+        },
+        {
+          "entry": "0044daa0",
+          "ranges": "0044daa0-0044daa7"
+        },
+        {
+          "entry": "0044f770",
+          "ranges": "0044f770-0044f796"
+        },
+        {
+          "entry": "00460cd0",
+          "ranges": "00460cd0-00460d66"
+        },
+        {
+          "entry": "00462a50",
+          "ranges": "00462a50-00462abc"
+        },
+        {
+          "entry": "00462ac0",
+          "ranges": "00462ac0-00462b1b"
+        },
+        {
+          "entry": "00462bc0",
+          "ranges": "00462bc0-00462c23"
+        },
+        {
+          "entry": "00462c30",
+          "ranges": "00462c30-00462c76"
+        },
+        {
+          "entry": "00462c80",
+          "ranges": "00462c80-00462ca3"
+        },
+        {
+          "entry": "00462d40",
+          "ranges": "00462d40-00462e4e"
+        },
+        {
+          "entry": "00462e50",
+          "ranges": "00462e50-00462ea4"
+        },
+        {
+          "entry": "00462f10",
+          "ranges": "00462f10-00462f7c;00462f80-00463109"
+        },
+        {
+          "entry": "00463330",
+          "ranges": "00463330-0046333c;00463340-004633b9"
+        },
+        {
+          "entry": "004633c0",
+          "ranges": "004633c0-004634d9;004634e0-00463525;00463530-004637a5"
+        },
+        {
+          "entry": "004637b0",
+          "ranges": "004637b0-004639cb"
+        },
+        {
+          "entry": "00472f70",
+          "ranges": "00472f70-00472fea"
+        },
+        {
+          "entry": "00481510",
+          "ranges": "00481510-004815ab"
+        },
+        {
+          "entry": "004834c0",
+          "ranges": "004834c0-00483504"
+        },
+        {
+          "entry": "00490050",
+          "ranges": "00490050-00490096"
+        },
+        {
+          "entry": "004952f0",
+          "ranges": "004952f0-0049532a"
+        },
+        {
+          "entry": "004970a0",
+          "ranges": "004970a0-004970bd"
+        },
+        {
+          "entry": "00497580",
+          "ranges": "00497580-00497766"
+        },
+        {
+          "entry": "00498160",
+          "ranges": "00498119-00498137;00498160-00498172;004981ad-00498217"
+        },
+        {
+          "entry": "00498220",
+          "ranges": "00498220-00498e3c;00498e40-00498fe5"
+        },
+        {
+          "entry": "00498ff0",
+          "ranges": "00498ff0-004990cc"
+        },
+        {
+          "entry": "004990d0",
+          "ranges": "004990d0-0049923f"
+        },
+        {
+          "entry": "0049a840",
+          "ranges": "0049a840-0049a852"
+        },
+        {
+          "entry": "0049a900",
+          "ranges": "0049a900-0049a939"
+        },
+        {
+          "entry": "0049ae80",
+          "ranges": "0049ae80-0049af05"
+        },
+        {
+          "entry": "0049c2e0",
+          "ranges": "0049c2e0-0049c3ae"
+        },
+        {
+          "entry": "0049ebb0",
+          "ranges": "0049ebb0-0049fa87;0049fa90-0049fc80"
+        },
+        {
+          "entry": "0049fce0",
+          "ranges": "0049fce0-0049fd6a"
+        },
+        {
+          "entry": "004ab880",
+          "ranges": "004ab880-004ab93e"
+        },
+        {
+          "entry": "004aba70",
+          "ranges": "004aba70-004abab3"
+        },
+        {
+          "entry": "004abb10",
+          "ranges": "004abb10-004abb66;004abb70-004abcac;004abcb0-004abdf1"
+        },
+        {
+          "entry": "004abe00",
+          "ranges": "004abe00-004abe26;004abe30-004abf51"
+        },
+        {
+          "entry": "004abf60",
+          "ranges": "004abf60-004ac037"
+        },
+        {
+          "entry": "004ac1e0",
+          "ranges": "004ac1e0-004ac1f3"
+        },
+        {
+          "entry": "004ac200",
+          "ranges": "004ac200-004ac213"
+        },
+        {
+          "entry": "004ac550",
+          "ranges": "004ac550-004ac55d"
+        },
+        {
+          "entry": "004ac560",
+          "ranges": "004ac560-004ac6a2"
+        },
+        {
+          "entry": "004acd20",
+          "ranges": "004acd20-004acd99"
+        },
+        {
+          "entry": "004ace40",
+          "ranges": "004ace40-004aceb8"
+        },
+        {
+          "entry": "004ad390",
+          "ranges": "004ad390-004ad3db"
+        },
+        {
+          "entry": "004ad3e0",
+          "ranges": "004ad3e0-004ad46b"
+        },
+        {
+          "entry": "004ad470",
+          "ranges": "004ad470-004ad498"
+        },
+        {
+          "entry": "004ad4a0",
+          "ranges": "004ad4a0-004ad4f5"
+        },
+        {
+          "entry": "004ad500",
+          "ranges": "004ad500-004ad662"
+        },
+        {
+          "entry": "004ad670",
+          "ranges": "004ad670-004ad677"
+        },
+        {
+          "entry": "004ad680",
+          "ranges": "004ad680-004ad6bd"
+        },
+        {
+          "entry": "004ade70",
+          "ranges": "004ade70-004ade9e"
+        },
+        {
+          "entry": "004adea0",
+          "ranges": "004adea0-004adeff"
+        },
+        {
+          "entry": "004af1d0",
+          "ranges": "004af1d0-004af529"
+        },
+        {
+          "entry": "004af530",
+          "ranges": "004af530-004af600"
+        },
+        {
+          "entry": "004af610",
+          "ranges": "004af610-004af712"
+        },
+        {
+          "entry": "004afd30",
+          "ranges": "004afd30-004afe4f"
+        },
+        {
+          "entry": "004afe50",
+          "ranges": "004afe50-004b01fc;004b0200-004b02c4"
+        },
+        {
+          "entry": "004b02d0",
+          "ranges": "004b02d0-004b04d9;004b04e0-004b0831"
+        },
+        {
+          "entry": "004b0c60",
+          "ranges": "004b0c60-004b0d2b"
+        },
+        {
+          "entry": "004b0d30",
+          "ranges": "004b0d30-004b0fa5"
+        },
+        {
+          "entry": "004b16d0",
+          "ranges": "004b16d0-004b1804"
+        },
+        {
+          "entry": "004b1810",
+          "ranges": "004b1810-004b1a8f"
+        },
+        {
+          "entry": "004b1c20",
+          "ranges": "004b1c20-004b1d6a"
+        },
+        {
+          "entry": "004b1d70",
+          "ranges": "004b1d70-004b1e68"
+        },
+        {
+          "entry": "004b1e70",
+          "ranges": "004b1e70-004b1e7f"
+        },
+        {
+          "entry": "004b1e80",
+          "ranges": "004b1e80-004b1f95"
+        },
+        {
+          "entry": "004b23e0",
+          "ranges": "004b23e0-004b24bb"
+        },
+        {
+          "entry": "004b24c0",
+          "ranges": "004b24c0-004b2583"
+        },
+        {
+          "entry": "004b2660",
+          "ranges": "004b2660-004b26ef"
+        },
+        {
+          "entry": "004b2a90",
+          "ranges": "004b2a90-004b2af1"
+        },
+        {
+          "entry": "004b2b00",
+          "ranges": "004b2b00-004b2b46"
+        },
+        {
+          "entry": "004c25b0",
+          "ranges": "004c25b0-004c25bb"
+        },
+        {
+          "entry": "004c25e0",
+          "ranges": "004c25e0-004c25fc"
+        },
+        {
+          "entry": "004c2630",
+          "ranges": "004c2630-004c265c;004c2660-004c26cc;004c26d0-004c2789"
+        },
+        {
+          "entry": "004da650",
+          "ranges": "004da650-004da6ae"
+        },
+        {
+          "entry": "004e49c0",
+          "ranges": "004e49c0-004e4a34"
+        },
+        {
+          "entry": "004e5b40",
+          "ranges": "004e5b40-004e5b9a;004e5b9c-004e5ba2;004e5bb0-004e5bd8;004e5bdc-004e5bfe;004e5c00-004e5c1c;004e5c40-004e5c89;004e5c9c-004e5ca2;004e5ca4-004e5cae;004e5cb0-004e5cc0;004e5cc4-004e5cda;004e5cdc-004e5d01;004e5d04-004e5d0c;004e5d10-004e5d2e;004e5d3c-004e5d5c;004e5d60-004e5d86;004e5d88-004e5db8;004e5ddc-004e5e25;004e5e38-004e5e3e;004e5e40-004e5e4c;004e5e50-004e5e62;004e5e64-004e5e7c"
+        },
+        {
+          "entry": "0041d9b0",
+          "ranges": "0041d9b0-0041dae9"
+        },
+        {
+          "entry": "0041d8c0",
+          "ranges": "0041d8c0-0041d9a8"
+        }
+      ],
+      "assert_calls": 0,
+      "actual_calls": {
+        "Detach": 128,
+        "Allocate": 38,
+        "Flood": 38,
+        "Unpop": 256,
+        "Notify": 86,
+        "Release": 2
+      },
+      "preparation_calls": {
+        "Reset": 2,
+        "Create": 14
+      },
+      "exports": {
+        "creation.c": "08fc021ba770c21bf298a5e5e547dee7ad500cfac334fce29e30e34253deba22",
+        "functions.tsv": "804ff5b28df9aeec65f968d26e660e266ed4a160a64a5d44c223f222219cc3b4",
+        "geometry/creation.c": "e3ad29a66b1b88964ede5cd0c4c921c0df6ac07cf8935180e5004f38dd51d3ca",
+        "geometry/functions.tsv": "ced17335d5e0a8b25e97ae7d05019f43bdaef60955b0a024ca21d2096713587e"
+      }
+    },
+    "originalCD": {
+      "binary_sha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "layout": "originalCD",
+      "function_ranges": [
+        {
+          "entry": "004aaad0",
+          "ranges": "004aaad0-004aad2f"
+        },
+        {
+          "entry": "004aae40",
+          "ranges": "004aae40-004ab243"
+        },
+        {
+          "entry": "004ab250",
+          "ranges": "004ab250-004ab380"
+        },
+        {
+          "entry": "004aad30",
+          "ranges": "004aad30-004aae34"
+        },
+        {
+          "entry": "004cff40",
+          "ranges": "004cff40-004cff7a"
+        },
+        {
+          "entry": "004f1a60",
+          "ranges": "004f1a60-004f1a96;004f1aa8-004f1aba;004f1abc-004f1ac8;004f1acc-004f1ad6;004f1ad8-004f1afc;004f1b00-004f1b08;004f1b0c-004f1b2f;004f1b40-004f1b55;004f1b58-004f1b75;004f1b78-004f1ba2;004f1ba4-004f1bad"
+        },
+        {
+          "entry": "004ab390",
+          "ranges": "004ab390-004ab435"
+        },
+        {
+          "entry": "004ab440",
+          "ranges": "004ab440-004ab57b"
+        },
+        {
+          "entry": "004ae040",
+          "ranges": "004ae040-004ae0e6"
+        },
+        {
+          "entry": "004ae120",
+          "ranges": "004ae120-004ae17e"
+        },
+        {
+          "entry": "00444720",
+          "ranges": "00444720-00444749"
+        },
+        {
+          "entry": "004aecf0",
+          "ranges": "004aecf0-004aed16"
+        },
+        {
+          "entry": "004aed20",
+          "ranges": "004aed20-004aed2a"
+        },
+        {
+          "entry": "004abac0",
+          "ranges": "004abac0-004abadd"
+        },
+        {
+          "entry": "004abae0",
+          "ranges": "004abae0-004abafd"
+        },
+        {
+          "entry": "004abf50",
+          "ranges": "004abf50-004abf68"
+        },
+        {
+          "entry": "004448e0",
+          "ranges": "004448e0-004448f2"
+        },
+        {
+          "entry": "004ad0b0",
+          "ranges": "004ad0b0-004ad489"
+        },
+        {
+          "entry": "004434d0",
+          "ranges": "004434d0-00444217"
+        },
+        {
+          "entry": "00401130",
+          "ranges": "00401130-004011a2"
+        },
+        {
+          "entry": "004015d0",
+          "ranges": "004015d0-004015d5"
+        },
+        {
+          "entry": "004071f0",
+          "ranges": "004071f0-00407240"
+        },
+        {
+          "entry": "0040bc20",
+          "ranges": "0040bc20-0040bc2b"
+        },
+        {
+          "entry": "0040bc50",
+          "ranges": "0040bc50-0040bc63"
+        },
+        {
+          "entry": "0040f180",
+          "ranges": "0040f180-0040f187"
+        },
+        {
+          "entry": "004147a0",
+          "ranges": "004147a0-004147bc"
+        },
+        {
+          "entry": "0041eac0",
+          "ranges": "0041eac0-0041eb1f"
+        },
+        {
+          "entry": "0043f620",
+          "ranges": "0043f620-0043f742"
+        },
+        {
+          "entry": "0043f950",
+          "ranges": "0043f950-0043f9b0"
+        },
+        {
+          "entry": "00440a50",
+          "ranges": "00440a50-00440a7e"
+        },
+        {
+          "entry": "00440a80",
+          "ranges": "00440a80-00440aba"
+        },
+        {
+          "entry": "00442f30",
+          "ranges": "00442f30-00442fdb"
+        },
+        {
+          "entry": "004434d0",
+          "ranges": "004434d0-00444217"
+        },
+        {
+          "entry": "004442b0",
+          "ranges": "004442b0-004442e6"
+        },
+        {
+          "entry": "00444720",
+          "ranges": "00444720-00444749"
+        },
+        {
+          "entry": "004448e0",
+          "ranges": "004448e0-004448f2"
+        },
+        {
+          "entry": "004449d0",
+          "ranges": "004449d0-00444b48"
+        },
+        {
+          "entry": "00448c10",
+          "ranges": "00448c10-00448c21"
+        },
+        {
+          "entry": "00455c90",
+          "ranges": "00455c90-00455cde"
+        },
+        {
+          "entry": "00456930",
+          "ranges": "00456930-004569f0"
+        },
+        {
+          "entry": "00456a00",
+          "ranges": "00456a00-00456c0f"
+        },
+        {
+          "entry": "00457320",
+          "ranges": "00457320-0045750a"
+        },
+        {
+          "entry": "0045b4d0",
+          "ranges": "0045b4d0-0045b4db"
+        },
+        {
+          "entry": "0045b4e0",
+          "ranges": "0045b4e0-0045b4f2"
+        },
+        {
+          "entry": "0045b520",
+          "ranges": "0045b520-0045b520"
+        },
+        {
+          "entry": "0045b530",
+          "ranges": "0045b530-0045b556"
+        },
+        {
+          "entry": "0045b560",
+          "ranges": "0045b560-0045b560"
+        },
+        {
+          "entry": "0045b6f0",
+          "ranges": "0045b6f0-0045b740"
+        },
+        {
+          "entry": "0045b750",
+          "ranges": "0045b750-0045b777"
+        },
+        {
+          "entry": "0045b7a0",
+          "ranges": "0045b7a0-0045b7c2"
+        },
+        {
+          "entry": "0045b7d0",
+          "ranges": "0045b7d0-0045bad5"
+        },
+        {
+          "entry": "0045bb90",
+          "ranges": "0045bb90-0045bd5b"
+        },
+        {
+          "entry": "0045bfd0",
+          "ranges": "0045bfd0-0045c209"
+        },
+        {
+          "entry": "0045c210",
+          "ranges": "0045c210-0045c382"
+        },
+        {
+          "entry": "0045c390",
+          "ranges": "0045c390-0045c430"
+        },
+        {
+          "entry": "0045c440",
+          "ranges": "0045c440-0045c45d"
+        },
+        {
+          "entry": "0045c460",
+          "ranges": "0045c460-0045c4ac"
+        },
+        {
+          "entry": "0045ec90",
+          "ranges": "0045ec90-0045ecb8"
+        },
+        {
+          "entry": "00479d20",
+          "ranges": "00479d20-00479d82"
+        },
+        {
+          "entry": "00479d90",
+          "ranges": "00479d90-00479dd5"
+        },
+        {
+          "entry": "00487810",
+          "ranges": "00487810-004878c3"
+        },
+        {
+          "entry": "0048a360",
+          "ranges": "0048a360-0048a3b9"
+        },
+        {
+          "entry": "0048ca70",
+          "ranges": "0048ca70-0048cbc6"
+        },
+        {
+          "entry": "004952f0",
+          "ranges": "004952f0-0049530f"
+        },
+        {
+          "entry": "004aaad0",
+          "ranges": "004aaad0-004aad2f"
+        },
+        {
+          "entry": "004aad30",
+          "ranges": "004aad30-004aae34"
+        },
+        {
+          "entry": "004aae40",
+          "ranges": "004aae40-004ab243"
+        },
+        {
+          "entry": "004ab250",
+          "ranges": "004ab250-004ab380"
+        },
+        {
+          "entry": "004ab390",
+          "ranges": "004ab390-004ab435"
+        },
+        {
+          "entry": "004ab440",
+          "ranges": "004ab440-004ab57b"
+        },
+        {
+          "entry": "004abab0",
+          "ranges": "004abab0-004abab8"
+        },
+        {
+          "entry": "004abac0",
+          "ranges": "004abac0-004abadd"
+        },
+        {
+          "entry": "004abae0",
+          "ranges": "004abae0-004abafd"
+        },
+        {
+          "entry": "004abf50",
+          "ranges": "004abf50-004abf68"
+        },
+        {
+          "entry": "004abfb0",
+          "ranges": "004abfb0-004ac0f4"
+        },
+        {
+          "entry": "004aca80",
+          "ranges": "004aca80-004aca9e"
+        },
+        {
+          "entry": "004acb00",
+          "ranges": "004acb00-004acb85"
+        },
+        {
+          "entry": "004acfc0",
+          "ranges": "004acfc0-004ad0a5"
+        },
+        {
+          "entry": "004ad0b0",
+          "ranges": "004ad0b0-004ad489"
+        },
+        {
+          "entry": "004ad490",
+          "ranges": "004ad490-004adad6"
+        },
+        {
+          "entry": "004adbc0",
+          "ranges": "004adbc0-004adbc5"
+        },
+        {
+          "entry": "004adbd0",
+          "ranges": "004adbd0-004adbd9"
+        },
+        {
+          "entry": "004ae040",
+          "ranges": "004ae040-004ae0e6"
+        },
+        {
+          "entry": "004ae0f0",
+          "ranges": "004ae0f0-004ae118"
+        },
+        {
+          "entry": "004ae120",
+          "ranges": "004ae120-004ae17e"
+        },
+        {
+          "entry": "004ae180",
+          "ranges": "004ae180-004ae37f"
+        },
+        {
+          "entry": "004ae380",
+          "ranges": "004ae380-004ae3d2"
+        },
+        {
+          "entry": "004ae3e0",
+          "ranges": "004ae3e0-004ae3e7"
+        },
+        {
+          "entry": "004ae3f0",
+          "ranges": "004ae3f0-004ae437"
+        },
+        {
+          "entry": "004ae480",
+          "ranges": "004ae480-004ae4ac"
+        },
+        {
+          "entry": "004aecf0",
+          "ranges": "004aecf0-004aed16"
+        },
+        {
+          "entry": "004aed20",
+          "ranges": "004aed20-004aed2a"
+        },
+        {
+          "entry": "004aeec0",
+          "ranges": "004aeec0-004aeefc"
+        },
+        {
+          "entry": "004aef30",
+          "ranges": "004aef30-004aef91"
+        },
+        {
+          "entry": "004cff40",
+          "ranges": "004cff40-004cff7a"
+        },
+        {
+          "entry": "004d2e00",
+          "ranges": "004d2e00-004d2ee5"
+        },
+        {
+          "entry": "004d81f0",
+          "ranges": "004d81f0-004d8222"
+        },
+        {
+          "entry": "004d8230",
+          "ranges": "004d8230-004d8664"
+        },
+        {
+          "entry": "004eae20",
+          "ranges": "004eae20-004eaf5c"
+        },
+        {
+          "entry": "004eafe0",
+          "ranges": "004eafe0-004eb254"
+        },
+        {
+          "entry": "004ebad0",
+          "ranges": "004ebad0-004ebbd8"
+        },
+        {
+          "entry": "004ebbe0",
+          "ranges": "004ebbe0-004ebcd3"
+        },
+        {
+          "entry": "004ebdd0",
+          "ranges": "004ebdd0-004ebf2a"
+        },
+        {
+          "entry": "004ebf30",
+          "ranges": "004ebf30-004ec02d"
+        },
+        {
+          "entry": "004ec030",
+          "ranges": "004ec030-004ec03f"
+        },
+        {
+          "entry": "004ec040",
+          "ranges": "004ec040-004ec14b"
+        },
+        {
+          "entry": "004ec150",
+          "ranges": "004ec150-004ec1d7"
+        },
+        {
+          "entry": "004f161c",
+          "ranges": "004f161c-004f1642"
+        },
+        {
+          "entry": "004f1a60",
+          "ranges": "004f1a60-004f1a96;004f1aa8-004f1aba;004f1abc-004f1ac8;004f1acc-004f1ad6;004f1ad8-004f1afc;004f1b00-004f1b08;004f1b0c-004f1b2f;004f1b40-004f1b55;004f1b58-004f1b75;004f1b78-004f1ba2;004f1ba4-004f1bad"
+        },
+        {
+          "entry": "0043fe10",
+          "ranges": "0043fe10-0043ffdf"
+        },
+        {
+          "entry": "0043fa70",
+          "ranges": "0043fa70-0043fc42"
+        },
+        {
+          "entry": "0045b670",
+          "ranges": "0045b670-0045b6ea"
+        }
+      ],
+      "assert_calls": 0,
+      "actual_calls": {
+        "Detach": 128,
+        "Allocate": 52,
+        "Flood": 52,
+        "Unpop": 256,
+        "Notify": 86,
+        "Release": 2
+      },
+      "preparation_calls": {
+        "Reset": 2,
+        "Create": 14
+      },
+      "exports": {
+        "creation.c": "1761289145e9acb05aac79ccbe9eca0402da893bda663da4c53c7245b7a4400a",
+        "functions.tsv": "bc65de793c9e87b34663eafe1e897fcf5f5ace58dd0f07c9c61d372f7acd601e",
+        "geometry/creation.c": "11a0abebca8cfd416d30cd12ce7fbff0ab1216ac0876f98af4f1d587ab498aa5",
+        "geometry/functions.tsv": "a10cbae54b312028f6601e329c64a7dbe30dea72dc033a93f005b875873c22ce",
+        "lookup/creation.c": "c5b70aa1e42ef9abbd4d768501b50a17e2ef6e18a334fbd9b6a38c722251e91c",
+        "lookup/functions.tsv": "793756b25f6a448127d0e9e108f8435fea31511e1cdd8b85d1b447c3b74eba82"
+      }
+    },
+    "original1037": {
+      "binary_sha256": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+      "layout": "originalCD",
+      "function_ranges": [
+        {
+          "entry": "004aaad0",
+          "ranges": "004aaad0-004aad2f"
+        },
+        {
+          "entry": "004aae40",
+          "ranges": "004aae40-004ab243"
+        },
+        {
+          "entry": "004ab250",
+          "ranges": "004ab250-004ab380"
+        },
+        {
+          "entry": "004aad30",
+          "ranges": "004aad30-004aae34"
+        },
+        {
+          "entry": "004cff40",
+          "ranges": "004cff40-004cff7a"
+        },
+        {
+          "entry": "004f1a60",
+          "ranges": "004f1a60-004f1a96;004f1aa8-004f1aba;004f1abc-004f1ac8;004f1acc-004f1ad6;004f1ad8-004f1afc;004f1b00-004f1b08;004f1b0c-004f1b2f;004f1b40-004f1b55;004f1b58-004f1b75;004f1b78-004f1ba2;004f1ba4-004f1bad"
+        },
+        {
+          "entry": "004ab390",
+          "ranges": "004ab390-004ab435"
+        },
+        {
+          "entry": "004ab440",
+          "ranges": "004ab440-004ab57b"
+        },
+        {
+          "entry": "004ae040",
+          "ranges": "004ae040-004ae0e6"
+        },
+        {
+          "entry": "004ae120",
+          "ranges": "004ae120-004ae17e"
+        },
+        {
+          "entry": "00444720",
+          "ranges": "00444720-00444749"
+        },
+        {
+          "entry": "004aecf0",
+          "ranges": "004aecf0-004aed16"
+        },
+        {
+          "entry": "004aed20",
+          "ranges": "004aed20-004aed2a"
+        },
+        {
+          "entry": "004abac0",
+          "ranges": "004abac0-004abadd"
+        },
+        {
+          "entry": "004abae0",
+          "ranges": "004abae0-004abafd"
+        },
+        {
+          "entry": "004abf50",
+          "ranges": "004abf50-004abf68"
+        },
+        {
+          "entry": "004448e0",
+          "ranges": "004448e0-004448f2"
+        },
+        {
+          "entry": "004ad0b0",
+          "ranges": "004ad0b0-004ad489"
+        },
+        {
+          "entry": "004434d0",
+          "ranges": "004434d0-00444217"
+        },
+        {
+          "entry": "00401130",
+          "ranges": "00401130-004011a2"
+        },
+        {
+          "entry": "004015d0",
+          "ranges": "004015d0-004015d5"
+        },
+        {
+          "entry": "004071f0",
+          "ranges": "004071f0-00407240"
+        },
+        {
+          "entry": "0040bc20",
+          "ranges": "0040bc20-0040bc2b"
+        },
+        {
+          "entry": "0040bc50",
+          "ranges": "0040bc50-0040bc63"
+        },
+        {
+          "entry": "0040f180",
+          "ranges": "0040f180-0040f187"
+        },
+        {
+          "entry": "004147a0",
+          "ranges": "004147a0-004147bc"
+        },
+        {
+          "entry": "0041eac0",
+          "ranges": "0041eac0-0041eb1f"
+        },
+        {
+          "entry": "0043f620",
+          "ranges": "0043f620-0043f742"
+        },
+        {
+          "entry": "0043f950",
+          "ranges": "0043f950-0043f9b0"
+        },
+        {
+          "entry": "00440a50",
+          "ranges": "00440a50-00440a7e"
+        },
+        {
+          "entry": "00440a80",
+          "ranges": "00440a80-00440aba"
+        },
+        {
+          "entry": "00442f30",
+          "ranges": "00442f30-00442fdb"
+        },
+        {
+          "entry": "004434d0",
+          "ranges": "004434d0-00444217"
+        },
+        {
+          "entry": "004442b0",
+          "ranges": "004442b0-004442e6"
+        },
+        {
+          "entry": "00444720",
+          "ranges": "00444720-00444749"
+        },
+        {
+          "entry": "004448e0",
+          "ranges": "004448e0-004448f2"
+        },
+        {
+          "entry": "004449d0",
+          "ranges": "004449d0-00444b48"
+        },
+        {
+          "entry": "00448c10",
+          "ranges": "00448c10-00448c21"
+        },
+        {
+          "entry": "00455c90",
+          "ranges": "00455c90-00455cde"
+        },
+        {
+          "entry": "00456930",
+          "ranges": "00456930-004569f0"
+        },
+        {
+          "entry": "00456a00",
+          "ranges": "00456a00-00456c0f"
+        },
+        {
+          "entry": "00457320",
+          "ranges": "00457320-0045750a"
+        },
+        {
+          "entry": "0045b4d0",
+          "ranges": "0045b4d0-0045b4db"
+        },
+        {
+          "entry": "0045b4e0",
+          "ranges": "0045b4e0-0045b4f2"
+        },
+        {
+          "entry": "0045b520",
+          "ranges": "0045b520-0045b520"
+        },
+        {
+          "entry": "0045b530",
+          "ranges": "0045b530-0045b556"
+        },
+        {
+          "entry": "0045b560",
+          "ranges": "0045b560-0045b560"
+        },
+        {
+          "entry": "0045b6f0",
+          "ranges": "0045b6f0-0045b740"
+        },
+        {
+          "entry": "0045b750",
+          "ranges": "0045b750-0045b777"
+        },
+        {
+          "entry": "0045b7a0",
+          "ranges": "0045b7a0-0045b7c2"
+        },
+        {
+          "entry": "0045b7d0",
+          "ranges": "0045b7d0-0045bad5"
+        },
+        {
+          "entry": "0045bb90",
+          "ranges": "0045bb90-0045bd5b"
+        },
+        {
+          "entry": "0045bfd0",
+          "ranges": "0045bfd0-0045c209"
+        },
+        {
+          "entry": "0045c210",
+          "ranges": "0045c210-0045c382"
+        },
+        {
+          "entry": "0045c390",
+          "ranges": "0045c390-0045c430"
+        },
+        {
+          "entry": "0045c440",
+          "ranges": "0045c440-0045c45d"
+        },
+        {
+          "entry": "0045c460",
+          "ranges": "0045c460-0045c4ac"
+        },
+        {
+          "entry": "0045ec90",
+          "ranges": "0045ec90-0045ecb8"
+        },
+        {
+          "entry": "00479d20",
+          "ranges": "00479d20-00479d82"
+        },
+        {
+          "entry": "00479d90",
+          "ranges": "00479d90-00479dd5"
+        },
+        {
+          "entry": "00487810",
+          "ranges": "00487810-004878c3"
+        },
+        {
+          "entry": "0048a360",
+          "ranges": "0048a360-0048a3b9"
+        },
+        {
+          "entry": "0048ca70",
+          "ranges": "0048ca70-0048cbc6"
+        },
+        {
+          "entry": "004952f0",
+          "ranges": "004952f0-0049530f"
+        },
+        {
+          "entry": "004aaad0",
+          "ranges": "004aaad0-004aad2f"
+        },
+        {
+          "entry": "004aad30",
+          "ranges": "004aad30-004aae34"
+        },
+        {
+          "entry": "004aae40",
+          "ranges": "004aae40-004ab243"
+        },
+        {
+          "entry": "004ab250",
+          "ranges": "004ab250-004ab380"
+        },
+        {
+          "entry": "004ab390",
+          "ranges": "004ab390-004ab435"
+        },
+        {
+          "entry": "004ab440",
+          "ranges": "004ab440-004ab57b"
+        },
+        {
+          "entry": "004abab0",
+          "ranges": "004abab0-004abab8"
+        },
+        {
+          "entry": "004abac0",
+          "ranges": "004abac0-004abadd"
+        },
+        {
+          "entry": "004abae0",
+          "ranges": "004abae0-004abafd"
+        },
+        {
+          "entry": "004abf50",
+          "ranges": "004abf50-004abf68"
+        },
+        {
+          "entry": "004abfb0",
+          "ranges": "004abfb0-004ac0f4"
+        },
+        {
+          "entry": "004aca80",
+          "ranges": "004aca80-004aca9e"
+        },
+        {
+          "entry": "004acb00",
+          "ranges": "004acb00-004acb85"
+        },
+        {
+          "entry": "004acfc0",
+          "ranges": "004acfc0-004ad0a5"
+        },
+        {
+          "entry": "004ad0b0",
+          "ranges": "004ad0b0-004ad489"
+        },
+        {
+          "entry": "004ad490",
+          "ranges": "004ad490-004adad6"
+        },
+        {
+          "entry": "004adbc0",
+          "ranges": "004adbc0-004adbc5"
+        },
+        {
+          "entry": "004adbd0",
+          "ranges": "004adbd0-004adbd9"
+        },
+        {
+          "entry": "004ae040",
+          "ranges": "004ae040-004ae0e6"
+        },
+        {
+          "entry": "004ae0f0",
+          "ranges": "004ae0f0-004ae118"
+        },
+        {
+          "entry": "004ae120",
+          "ranges": "004ae120-004ae17e"
+        },
+        {
+          "entry": "004ae180",
+          "ranges": "004ae180-004ae37f"
+        },
+        {
+          "entry": "004ae380",
+          "ranges": "004ae380-004ae3d2"
+        },
+        {
+          "entry": "004ae3e0",
+          "ranges": "004ae3e0-004ae3e7"
+        },
+        {
+          "entry": "004ae3f0",
+          "ranges": "004ae3f0-004ae437"
+        },
+        {
+          "entry": "004ae480",
+          "ranges": "004ae480-004ae4ac"
+        },
+        {
+          "entry": "004aecf0",
+          "ranges": "004aecf0-004aed16"
+        },
+        {
+          "entry": "004aed20",
+          "ranges": "004aed20-004aed2a"
+        },
+        {
+          "entry": "004aeec0",
+          "ranges": "004aeec0-004aeefc"
+        },
+        {
+          "entry": "004aef30",
+          "ranges": "004aef30-004aef91"
+        },
+        {
+          "entry": "004cff40",
+          "ranges": "004cff40-004cff7a"
+        },
+        {
+          "entry": "004d2e00",
+          "ranges": "004d2e00-004d2ee5"
+        },
+        {
+          "entry": "004d81f0",
+          "ranges": "004d81f0-004d8222"
+        },
+        {
+          "entry": "004d8230",
+          "ranges": "004d8230-004d8664"
+        },
+        {
+          "entry": "004eae20",
+          "ranges": "004eae20-004eaf5c"
+        },
+        {
+          "entry": "004eafe0",
+          "ranges": "004eafe0-004eb254"
+        },
+        {
+          "entry": "004ebad0",
+          "ranges": "004ebad0-004ebbd8"
+        },
+        {
+          "entry": "004ebbe0",
+          "ranges": "004ebbe0-004ebcd3"
+        },
+        {
+          "entry": "004ebdd0",
+          "ranges": "004ebdd0-004ebf2a"
+        },
+        {
+          "entry": "004ebf30",
+          "ranges": "004ebf30-004ec02d"
+        },
+        {
+          "entry": "004ec030",
+          "ranges": "004ec030-004ec03f"
+        },
+        {
+          "entry": "004ec040",
+          "ranges": "004ec040-004ec14b"
+        },
+        {
+          "entry": "004ec150",
+          "ranges": "004ec150-004ec1d7"
+        },
+        {
+          "entry": "004f161c",
+          "ranges": "004f161c-004f1642"
+        },
+        {
+          "entry": "004f1a60",
+          "ranges": "004f1a60-004f1a96;004f1aa8-004f1aba;004f1abc-004f1ac8;004f1acc-004f1ad6;004f1ad8-004f1afc;004f1b00-004f1b08;004f1b0c-004f1b2f;004f1b40-004f1b55;004f1b58-004f1b75;004f1b78-004f1ba2;004f1ba4-004f1bad"
+        },
+        {
+          "entry": "0043fe10",
+          "ranges": "0043fe10-0043ffdf"
+        },
+        {
+          "entry": "0043fa70",
+          "ranges": "0043fa70-0043fc42"
+        },
+        {
+          "entry": "0045b670",
+          "ranges": "0045b670-0045b6ea"
+        }
+      ],
+      "assert_calls": 0,
+      "actual_calls": {
+        "Detach": 128,
+        "Allocate": 52,
+        "Flood": 52,
+        "Unpop": 256,
+        "Notify": 86,
+        "Release": 2
+      },
+      "preparation_calls": {
+        "Reset": 2,
+        "Create": 14
+      },
+      "exports": {
+        "creation.c": "1761289145e9acb05aac79ccbe9eca0402da893bda663da4c53c7245b7a4400a",
+        "functions.tsv": "bc65de793c9e87b34663eafe1e897fcf5f5ace58dd0f07c9c61d372f7acd601e",
+        "geometry/creation.c": "11a0abebca8cfd416d30cd12ce7fbff0ab1216ac0876f98af4f1d587ab498aa5",
+        "geometry/functions.tsv": "a10cbae54b312028f6601e329c64a7dbe30dea72dc033a93f005b875873c22ce",
+        "lookup/creation.c": "c5b70aa1e42ef9abbd4d768501b50a17e2ef6e18a334fbd9b6a38c722251e91c",
+        "lookup/functions.tsv": "793756b25f6a448127d0e9e108f8435fea31511e1cdd8b85d1b447c3b74eba82"
+      }
+    }
+  },
+  "original1037_full_decompile": {
+    "function_count": 3711,
+    "exports": {
+      "netstorm.c": "52144b688fe0943fb1faf2a8627b977a9e4716fa5f60c6c7744fd1405153df3d",
+      "functions.tsv": "d720fc9421c68b9bf78db598e58f0ab217ace3ff38bee75813172bbd5dcd108e"
+    }
+  },
+  "original1037_cd_difference": {
+    "file_offset": 209228,
+    "virtual_address": 4406604,
+    "cd": 117,
+    "original1037": 235
+  },
+  "stubbed": [],
+  "tool_sha256": "9c6241fb8c2e3a2d1378dafa590709bf8e856e234d116d73a02357d102274e40",
+  "fixture_sha256": "82a2f1291b867d958ccdae64231185b27877a069abec53b7dd3c747b26a782b7",
+  "dependencies": {
+    "decomp_rawgraph_oracle.py": "7071a92bf58c3250df18dc1c3261b9fc2c5f17f4a0bafcdcfebf953e0591cd7b",
+    "decomp_graph_oracle.py": "47d2565b9d36a2654d4e60e20111995df889c383bad702a4ce6694e77dfadca5",
+    "decomp_creation_oracle.py": "a65b8e22a1116d5883745345d0c977d293fd61c3f919bf7ac4cc61ba4c052a38",
+    "decomp_sid_oracle.py": "eea44b1b0fa8a57b1a49ee246962ea346dec64b280761b0bff0ccdd87631ddd6",
+    "decomp_pop_oracle.py": "0120e5ebdc2183ac61a051ca2f4f79dbe0e9ffee864ca37ec04b5b49e70a1204",
+    "decomp_display_oracle.py": "147ccd4c899d97810a025334ac99200df665df657807af4f529c2dd05178c012",
+    "decomp_postpop_oracle.py": "85a507a48a4f37996e24b16e2766f6773502052199631fd163018a82e2d5a644",
+    "decomp_surface_oracle.py": "9b1711c22db7267bfcc4c9a870ee42c193f2041eee8a4f70b552e462c103b5ec",
+    "decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d"
+  },
+  "limitations": [
+    "합성 타입/FrameCode/SHP·client 32768·dead 원천·정수·소진 전·동결 시계·비전투 null 큐",
+    "위치 조회는 해시 객체 +12의 0단계 머리; 실제 grid 갱신/상위 삭제/파생 destructor/raw GameWorld는 미연결",
+    "rebuild 분할 정책만 검증; 전역 소진 복구/할당/OS 실행 없음",
+    "7개 슬롯/dirty 항목 직접 비교, 전체 풀/해시/spot/표/스택/통계는 Adler-32"
+  ]
+}
