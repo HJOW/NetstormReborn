@@ -1,12 +1,27 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
-> 최종 갱신: 2026-10-07 (**cpppj 1차 기준은 10.78이다. 다리 붕괴 스캔·한 칸 처리·수명 감소 전체·프레임 전환·다리 destroy 재정의를 복원했다.** 세 PE의 읽기 전용 디컴파일(패치 51·CD/10.37 각 35개)·새 x86 입력 14,524개, Release 경고/오류 0·콘솔 CTest 내부 **152개·실패 0**, 누적 제한 x86 **75,646개**. [식/순서/대체 범위/재현/후속](docs/exe/cpp-bridgedecay-reconstruction.md), [독립 기록](cpppj/recovery-bridgedecay-evidence.json). **호스트 `DESKTOP-HJOW`에서는 원본/복사본·업데이터/설치 도구 실행과 모든 창 검사를 금지한다. GUI는 `DESKTOP-HJOW` 이외의 PC에 인계한다.** 붕괴 사건의 실제 삭제/낙하/소리·다리 배치·SID 소진·form/process를 포함한 실제 전체 월드 계약·건물 부착/dirty/grid·특수 조회·파생 삭제/참조 수명·상위 목록·raw GameWorld·건설/경제/전투/AI/승패는 남아 미션 완주는 불가능하다.)
+> 최종 갱신: 2026-10-07 (**cpppj 1차 기준은 10.78이다. 다리 preDestroy/postDestroy의 참조 판단·좌표 보정·외부 효과 순서와 지연 낙하 payload를 복원했다.** 새 x86 **6,170개**·Release 경고/오류 0·CTest 내부 **157개·실패 0**, 누적 제한 x86 **81,816개**. [근거/대체 범위/재현/후속](docs/exe/cpp-bridgeeffects-reconstruction.md), [독립 기록](cpppj/recovery-bridgeeffects-evidence.json). **이번 작업에 한해 사용자가 호스트 `DESKTOP-HJOW`의 창 실행을 허용했고 클론 캠페인/TEST01의 20개 조작 상태를 검사했다. 원본 게임/복사본·업데이터/설치 도구는 실행하지 않았다. 다음 작업은 기존 창 제한과 최신 사용자 지시를 확인한다.** 일반 탐색·실제 삭제/낙하/소리·이벤트 실행·raw GameWorld·다리 배치·SID 소진·form/process·건설/경제/전투/AI/승패는 남아 미션 완주는 불가능하다.)
 > 프로젝트 목표(AGENTS.md): 원본 NetStorm: Islands at War 를 디컴파일/분석하여 클론 코딩하고,
 > **Windows 10/11** 과 **GUI 환경의 Linux** 에서 동작하며 **여러 언어를 지원**하는 게임을 만든다.
 > **모방 범위(2026-10-03 AGENTS.md 변경)**: 기존 게임의 **사운드·그래픽·애니메이션 등 거의 모든 요소를 가능한 한 동일하게** 최대한 모방한다.
 > **1차 목표 언어: 영어, 한국어** (그 외 언어는 이후 확장).
 > **우선순위: Windows 10/11 > Linux** (Linux 지원과 멀티플레이 요소 구현은 우선순위가 낮다 — 설계상 이식성은 유지하되 검증·배포는 Windows 먼저. 그 외 사항은 궁극적인 목표다).
 > **화면 요구사항(2026-09-28 AGENTS.md 추가, 2026-10-03·10-05 변경)**: 풀스크린 모드와 화면비 **16:9 · 16:10 · 4:3** 지원, **기존 게임 수준의 프레임으로 먼저 만들고 이후 60·120프레임 지원**(2026-10-05 변경. 원본 수준 = `maxFPS` 75·14ms 루프, 클론 적용 완료), 풀스크린에서 **마우스를 화면 끝에 대면 화면 이동**(원본도 옵션에서 켰을 때 지원), 원본의 **전체화면 전환 뒤 재실행 오류는 클론에서 발생하지 않아야 한다** — 1.4·1.7절
+
+---
+
+## 2026-10-07 ✅ 완료: cpppj 다리 삭제 전후 훅·지연 낙하 좌표 (이번 작업의 클론 창 허용)
+
+- [x] **현재 지침/다른 AI 작업 확인:** AGENTS.md와 최신 LEFT_JOBS.md를 다시 읽었다. 다른 AI가 추가한 다리 붕괴 스캔/수명 감소·V12 비교를 보존하고 그 다음 경로를 복원했다. 기준은 계속 10.78이다. 인수인계 분리 지침을 유지하며 AGENTS.md/C#/LEFT_JOBS.dotnetpj.md는 변경하지 않았다. 커밋하지 않았다.
+- [x] **읽기 전용 디컴파일:** 새 `extracted/bridgeeffects/<판본>/`에 패치 12개·CD/추가 10.37 각 7개를 내보냈다. pre/postDestroy·연결 helper·낙하 wrapper/포장·주변/칸 위 좌표·타입 genus/CRT를 포함하며 세 완료 로그를 확인했다. 프로젝트 변경은 저장하지 않았다.
+- [x] **C++:** 새 `RawBridgeLifecycle`이 +12/+8 참조의 경계/첫 참조 extra/두 dead 판단, ±1 주변 탐색→특수 타입 destroy(0)→공통 preDestroy, 제거 통지→원본 좌표 `bridgeFall.wav`→칸 위 walker→공통 postDestroy를 연결한다. 순서 있는 begin/next·emit 콜백의 변경 뒤 다음 raw 필드를 다시 읽는다. 기본 삭제/가상 낙하/일반 탐색/소리/통지의 내부 구현은 호출자 계약이다.
+- [x] **디컴파일 누락 교정:** preDestroy의 좌표는 `trunc(float좌표 + 0.9999899864196777f)`이며 상수 `3f7fff58`은 표면 조회의 0.9999와 다르다. C 디컴파일에 없는 fadd를 실제 명령에서 확인했다. 최초 무보정 C++의 범위 비교 504건 실패를 고치고 보정 경계 위/아래 입력을 추가했다. postDestroy는 무보정 절삭이다. 중간 덧셈은 float로 좁히지 않는다.
+- [x] **낙하 payload:** `0x2692`의 좌표 `(ftol(x)&255)|(ftol(y)<<8)`를 signed DWORD 수치→float로 바꾼다. bit_cast로 float 비트 재해석하는 경로가 아니다. wrapper/직접 함수도 같은 결과다. 이벤트 프로세스의 실제 생성/실행/취소·끝 칸 변환은 복원 완료로 세지 않는다.
+- [x] **기계어/콘솔:** 세 실제 PE×x87 53/64비트의 새 **6,170개**(Link 882/Pre 2,520/Post 1,800/Delay 726/Pack 242). patch helper/직접 Pack만 패치판에 존재하며 CD는 인라인 경로다. 실제 패치 내부 Link 1,410/Pre 840/Post 600/Delay 242/Pack 484, CD/10.37 각각 Pre 840/Post 600/Delay 242는 fixture 상위 수에 더하지 않는다. 원본 assert/OS 0·정상 반환/스택/x87/FS 복구, 입력 슬롯 전체 및 효과 순서 대조. 일반 탐색 결과·destroy/fall/base/소리/통지/할당/등록은 대체했다. 기존 붕괴 기록 SHA 감사 유지. 최종 Release 경고/오류 0·CTest 내부 **157개·실패 0**(51.89초), 누적 제한 x86 **81,816개**.
+- [x] **이번 호스트의 창 검증:** 사용자 명시적 허용으로 `DESKTOP-HJOW`에서 `cpp_world_smoke.py`를 실행했다. 캠페인 1-1 진입/선택·1.8칸/초 이동·일시정지·우클릭/닫기·허공 거부·카메라/Home·복귀/재진입 15개와 TEST01 브리핑/SP 50,000/선택·이동·도착 5개, 총 **20개 상태** 통과. 초기 자료 6개·393,216 마스크 바이트·2,593 객체를 대조하고 선택 화면을 확인했다. 새 raw 다리 훅의 게임 플레이 검증은 아니다. 보고서/이미지는 `extracted/bridgeeffects/world-smoke-report.json`·`selected.bmp`·`TEST01.bmp`다. 클론 창 종료, 원본/복사본 게임·업데이터/설치 도구 실행 없음.
+- [x] **원본 보호/문서:** 여섯 원본 디렉터리 **2,782개 파일 SHA/목록이 시작과 동일**하고 허용된 설정도 원래 바이트/존재 상태로 복구했다. 새 [복원 문서](docs/exe/cpp-bridgeeffects-reconstruction.md)와 cpppj README·빌드/계획·기존 붕괴 후속을 갱신했다. 별도 dotnetpj 인수인계는 보존했다.
+- [ ] **다음 작업:** 일반 탐색 begin/next의 실제 raw 풀/4단계 해시 필터를 복원하여 이번 훅에 연결한다. 기본 Squid destroy/pre/postDestroy의 공통 삭제·Graph 분할·Unpop·참조/의존 객체·SID 반납과 `00460600` 제거 통지 목록, walker vtable +200/칸 위 carrier 처리, `0x2692` 프로세스 실행/취소·`004215d0` 끝 칸 변환 뒤 raw GameWorld에 연결한다. 이후 다리 배치·소유자/Construction·건설/경제/전투/AI/승패. V12 비교 도구 확장과 이전 SID 소진/form/process 등도 유지한다.
+- [ ] **후속 실행 범위:** 이번 창 허용은 **이번 작업에만** 적용한다. 다음 작업은 호스트 `DESKTOP-HJOW`의 기존 제한과 최신 사용자 지시를 확인한다. raw 월드 연결 후 다리 붕괴 화면·낙하·소리 및 TEST01/1-1 생성/삭제/재진입을 검사해야 한다. cpppj/디컴파일 인수인계는 LEFT_JOBS.md, 별도 dotnetpj 작업은 LEFT_JOBS.dotnetpj.md를 쓴다.
 
 ---
 
@@ -19,6 +34,7 @@
 - [x] **기계어/콘솔:** 세 실제 PE×x87 53/64비트. **x86 입력 14,524개**(한 칸 처리 4,241·수명 3,264·destroy 재정의 1,152·프레임 전환 1,914·스캔 초기화/프레임 3,953), 원본 assert 도달 0. 패치판은 직접 호출과 스캔 경유 결과가 같고, CD/10.37은 스캔 범위를 번호 하나로 좁혀 실제 스캔 함수로 실행한 결과가 패치판과 같다. 대체한 진입점은 할당/해제·소리·칸 위 이동체 탐색·기본 destroy(dead 표시만)·공통 화면 갱신 다섯 가지다. CD판 delta 0.3 한 프레임은 64비트 정밀도에서 개수가 달라(240/239) 제외·기록했다. 최종 Release 경고/오류 0·CTest 내부 **152개·실패 0**(64초). 목표 수명을 일부러 틀리게 바꾼 확인 실행에서 실패 1,004건이 나왔고 되돌린 뒤 0건이다. `--verify` 통과.
 - [x] **10.82 V12 후속(정적):** V10에서 검토한 Graph 함수 다섯 개의 V12 주소를 찾았다(모두 +0x500). **V12는 SID 슬롯 75바이트·graph +40/DWORD·타입 구조체 508바이트로 V10(77·+42·504)과도 다르다.** 그래프 한도 50,000은 같다. DevLog V11/V12 항목에 대응하는 새 문자열(요새 백업, Reset to Rank 1, Shift Z 템플·`defaultTemple`, `sendMoney1/2`, `disableFenceCheck`)을 확인했다. [표·근거](docs/exe/cpp-reference-versions.md).
 - [x] **문서:** 새 [cpp-bridgedecay-reconstruction.md](docs/exe/cpp-bridgedecay-reconstruction.md), `bridge-pieces.md` 8.1(반올림→절삭·주기 끝 일괄 처리·서버 플래그 정정), `cpp-bridge-reconstruction.md`·`cpp-reference-versions.md`·`cpp-playable-plan.md`·`cpp-roadmap.md`·`cpp-build.md`·`cpppj/README.md`, `.gitattributes`(새 도구/기록 LF 고정), `LEFT_JOBS.dotnetpj.md`(스캔 항목 갱신).
+- [x] **후속 일부 완료(위 최신 절):** 다리 pre/postDestroy의 참조 판단·좌표/효과 순서와 지연 낙하 payload를 복원했다. 실제 일반 탐색·삭제/낙하/소리·이벤트 실행·raw 월드는 남았다.
 - [ ] **다음 작업:** (1) 붕괴 사건을 raw GameWorld에서 실제 효과로 소비 — destroy → 삭제 준비 분할·Unpop·SID 반납, 다리 postDestroy `00422300`(`bridgeFall.wav`·walker 낙하), preDestroy `004221b0`. (2) 칸 위 이동체 처리(`004202f0` → `00427de0`/`00426120`/`00427e00`)와 지연 낙하 `00421f90`/`00421530`. (3) 다리 배치 `0049b510`·소유자 전파 `00421240`/`004213b0`·Construction `00442c80`(다리 조각의 SID 할당 인자 확인 포함). (4) 이전 절의 SID 소진·form/process·건물 부착 등. (5) V12: `tools/compare_reference_versions.py`에 V12 추가, 편집기 128개 한도·새 기능의 코드 경로는 미확인.
 - [ ] **다른 PC 창 인수인계:** raw 월드 연결 후 다리가 금 가고 무너지는 화면·소리와 TEST01/1-1 생성·표시·선택·이동·해제·재진입을 `DESKTOP-HJOW` 이외의 PC에서 검사한다. 원본 비교 실행은 AGENTS.md/사용자 지시를 확인한다.
 

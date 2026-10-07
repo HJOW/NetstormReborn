@@ -68,3 +68,6 @@ cpppj/recovery-graphrecovery-evidence.json text eol=lf
 # 다리 붕괴 스캔/한 칸 처리의 독립 도구와 증거 기록도 LF로 SHA를 보존한다.
 tools/decomp_bridgedecay_oracle.py text eol=lf
 cpppj/recovery-bridgedecay-evidence.json text eol=lf
+# 다리 삭제 전후의 독립 도구/기록은 SHA 비교를 위해 LF를 유지한다.
+tools/decomp_bridgeeffects_oracle.py text eol=lf
+cpppj/recovery-bridgeeffects-evidence.json text eol=lf

@@ -12,6 +12,7 @@ target_sources(netstorm PRIVATE
     Template.cpp Template.h
     CanonDecoder.cpp CanonDecoder.h CanonDecoderTables.inc
     Bridge.cpp Bridge.h
+    RawBridgeLifecycle.cpp RawBridgeLifecycle.h
     ChunkMap.cpp ChunkMap.h
     Islandbuilder.cpp Islandbuilder.h
     TerrainBuilder.cpp TerrainBuilder.h

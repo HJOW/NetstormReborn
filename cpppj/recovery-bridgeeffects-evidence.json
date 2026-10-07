@@ -1,0 +1,118 @@
+{
+  "cases": {
+    "Link": 882,
+    "Pre": 2520,
+    "Post": 1800,
+    "Delay": 726,
+    "Pack": 242
+  },
+  "total": 6170,
+  "editions": {
+    "originals": {
+      "binary": "originals/Netstorm.exe",
+      "sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "entries": {
+        "Pre": "004221b0",
+        "Link": "00422290",
+        "Post": "00422300",
+        "Delay": "00421f90",
+        "Pack": "00421530"
+      },
+      "native_calls": {
+        "Link": 1410,
+        "Pre": 840,
+        "Post": 600,
+        "Delay": 242,
+        "Pack": 484
+      },
+      "stubs": {
+        "destroy": 434,
+        "begin": 576,
+        "basepre": 840,
+        "next": 1152,
+        "notify": 240,
+        "sound": 240,
+        "basepost": 600,
+        "fall": 384,
+        "new": 484,
+        "schedule": 484
+      },
+      "assertions": 0
+    },
+    "originalCD": {
+      "binary": "originalCD/NETSTORM.EXE",
+      "sha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "entries": {
+        "Pre": "004498e0",
+        "Post": "00449c60",
+        "Delay": "004490b0"
+      },
+      "native_calls": {
+        "Pre": 840,
+        "Post": 600,
+        "Delay": 242
+      },
+      "stubs": {
+        "begin": 576,
+        "basepre": 840,
+        "destroy": 384,
+        "next": 1152,
+        "notify": 240,
+        "sound": 240,
+        "basepost": 600,
+        "fall": 384,
+        "new": 242,
+        "schedule": 242
+      },
+      "assertions": 0
+    },
+    "original1037": {
+      "binary": "original1037/netstorm.exe",
+      "sha256": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+      "entries": {
+        "Pre": "004498e0",
+        "Post": "00449c60",
+        "Delay": "004490b0"
+      },
+      "native_calls": {
+        "Pre": 840,
+        "Post": 600,
+        "Delay": 242
+      },
+      "stubs": {
+        "begin": 576,
+        "basepre": 840,
+        "destroy": 384,
+        "next": 1152,
+        "notify": 240,
+        "sound": 240,
+        "basepost": 600,
+        "fall": 384,
+        "new": 242,
+        "schedule": 242
+      },
+      "assertions": 0
+    }
+  },
+  "os_calls": 0,
+  "files": {
+    "tools/decomp_bridgeeffects_oracle.py": "0bd612f828a033a7d81372ca990f80f4e72b768e83859bc282efb936d45c2040",
+    "tools/decomp_bridgedecay_oracle.py": "55b660d1f73e054162230a98b0decc1149ed1084d68f1ae647c6d7689f86697d",
+    "cpppj/tests/fixtures/bridgeeffects-x86.tsv": "d42ed0aae06805098ded55ddb147a69216fbd1714bc56c3da1d7576ac57c7f61",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/bridgeeffects/originals/creation.c": "ac1856212fbd285650dc4ec999fa996a306ba536a3e42d605fba4ab26178fdbc",
+    "extracted/bridgeeffects/originals/functions.tsv": "485cd05093884690ffc94c433c4e040282cd6ca26eb7da469732f74e1c983cec",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "extracted/bridgeeffects/originalCD/creation.c": "76acd15962cfadb844dd6689014a8a67ee0fc744d16c5a32528d4cafdb7fb911",
+    "extracted/bridgeeffects/originalCD/functions.tsv": "b99e5f65a90d402a49be3353263e66080fbf1d3825b19685d7a49edd2e4c4abd",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "extracted/bridgeeffects/original1037/creation.c": "76acd15962cfadb844dd6689014a8a67ee0fc744d16c5a32528d4cafdb7fb911",
+    "extracted/bridgeeffects/original1037/functions.tsv": "b99e5f65a90d402a49be3353263e66080fbf1d3825b19685d7a49edd2e4c4abd"
+  },
+  "limits": [
+    "prepared ordered finder results",
+    "external destroy/walker/base hooks",
+    "synthetic type metadata",
+    "no GameWorld or event execution"
+  ]
+}
