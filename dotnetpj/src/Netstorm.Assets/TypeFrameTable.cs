@@ -64,6 +64,14 @@ public sealed partial class TypeFrameTable
         ("hard", FrameCodeFlags.Hard),
     ];
 
+    /// <summary>이미 읽은 4바이트 코드 표로 만든다. 순서와 비ASCII 바이트를 그대로 보존한다.</summary>
+    public TypeFrameTable(IEnumerable<FrameCode> codes)
+    {
+        Codes = codes.ToArray();
+        HelpFrame = -1;
+        BaseFrame = -1;
+    }
+
     /// <summary>클러스터 순서대로의 프레임 코드</summary>
     public IReadOnlyList<FrameCode> Codes { get; }
 
@@ -164,12 +172,19 @@ public sealed partial class TypeFrameTable
         c.Side == side && c.Variant == variant && c.Number == number);
 
     /// <summary>(측면, 변형, 번호)가 같고 플래그가 mask 와 겹치는 첫 프레임 (원본 0049a9e0). 없으면 -1</summary>
-    public int Find(char side, char variant, int number, FrameCodeFlags mask) => FindFirst(c =>
-        c.Side == side && c.Variant == variant && c.Number == number && (c.Flags & mask) != 0);
+    public int Find(char side, char variant, int number, FrameCodeFlags mask) => Find(side, variant, number, (uint)mask);
+
+    /// <summary>원본 0049a9e0의 movsx처럼 플래그 바이트를 부호 확장한 뒤 32비트 마스크와 비교한다.</summary>
+    public int Find(char side, char variant, int number, uint mask) => FindFirst(c =>
+        c.Side == side && c.Variant == variant && c.Number == number
+        && (unchecked((uint)(sbyte)(byte)c.Flags) & mask) != 0);
 
     /// <summary>(측면, 변형)이 같고 플래그가 정확히 같은 첫 프레임 (원본 0049aa30). 없으면 -1</summary>
-    public int FindExactFlags(char side, char variant, FrameCodeFlags flags) => FindFirst(c =>
-        c.Side == side && c.Variant == variant && c.Flags == flags);
+    public int FindExactFlags(char side, char variant, FrameCodeFlags flags) => FindExactFlags(side, variant, (int)flags);
+
+    /// <summary>원본 0049aa30은 부호 확장한 플래그 바이트와 부호 있는 32비트 인자를 비교한다.</summary>
+    public int FindExactFlags(char side, char variant, int flags) => FindFirst(c =>
+        c.Side == side && c.Variant == variant && unchecked((sbyte)(byte)c.Flags) == flags);
 
     /// <summary>
     /// 측면·변형이 같은 프레임을 파일 순서로 모은다. 원본 0049aa90 의 1차 후보 목록과 같으며

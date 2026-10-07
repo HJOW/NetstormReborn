@@ -20,7 +20,7 @@ public sealed class ConfigText
     /// <summary>따옴표 밖 주석 시작 (원본 PTR_DAT_00532540)</summary>
     private const string CommentMarker = "//";
 
-    /// <summary>줄 단위로 나눈 텍스트 (CR 제거)</summary>
+    /// <summary>LF 기준으로 나눈 텍스트. CR 단독은 새 줄로 취급하지 않는다.</summary>
     private readonly string[] _lines;
 
     /// <summary>원본 텍스트</summary>
@@ -30,8 +30,10 @@ public sealed class ConfigText
     /// <param name="text">설정 텍스트</param>
     public ConfigText(string text)
     {
-        Text = text;
-        _lines = text.Replace("\r", "", StringComparison.Ordinal).Split('\n');
+        int nul = text.IndexOf('\0');
+        Text = nul < 0 ? text : text[..nul];
+        // 원본 0043fd70은 다음 LF 뒤의 CR·들여쓰기만 건너뛴다. 첫 줄의 CR은 그대로 둔다.
+        _lines = Text.Split('\n').Select((line, index) => index == 0 ? line : line.TrimStart('\r', ' ', '\t')).ToArray();
     }
 
     /// <summary>
@@ -72,6 +74,40 @@ public sealed class ConfigText
     /// <summary>키의 원시 값을 돌려준다. 없으면 null</summary>
     /// <param name="key">설정 키 (대소문자 무시)</param>
     public string? GetRaw(string key) => TryGetRaw(key, out string value) ? value : null;
+
+    /// <summary>원본 00440570의 첫 섹션 본문. 다음 섹션은 들여쓰기 없는 '['에서만 끝난다.</summary>
+    public string? Section(string name)
+    {
+        string header = name.StartsWith('[') ? name : $"[{name}]";
+        int position = 0;
+        // LF로 시작하는 줄을 차례로 검사한다. 같은 줄의 여러 '['도 원본처럼 비교한다.
+        while (position < Text.Length)
+        {
+            // 줄 앞 공백·탭만 건너뛴다.
+            while (position < Text.Length && Text[position] is ' ' or '\t') position++;
+            int nextLine = Text.IndexOf('\n', position);
+            if (nextLine < 0) return null;
+            if (position < Text.Length && Text[position] == '[')
+            {
+                // 줄의 각 '['에서 대소문자를 무시한 접두어 일치를 찾는다.
+                for (int candidate = position; candidate < nextLine; candidate++)
+                {
+                    if (Text[candidate] != '[' || !Text.AsSpan(candidate).StartsWith(header, StringComparison.OrdinalIgnoreCase)) continue;
+                    int start = nextLine + 1;
+                    if (start < Text.Length && Text[start] == '\r') start++;
+                    if (start >= Text.Length) return null;
+                    int end = start;
+                    // 본문 첫 문자부터 다음 들여쓰기 없는 섹션이나 버퍼 끝까지 읽는다.
+                    while (end < Text.Length && !(Text[end] == '[' && Text[end - 1] is '\n' or '\r')) end++;
+                    return Text[start..end];
+                }
+            }
+            position = nextLine + 1;
+            // 원본 다음 줄 이동은 빈 줄과 들여쓰기를 함께 건너뛴다.
+            while (position < Text.Length && Text[position] is '\n' or '\r' or ' ' or '\t') position++;
+        }
+        return null;
+    }
 
     /// <summary>
     /// 값이 있는 모든 키를 나온 순서대로 돌려준다 (같은 키는 처음 것만). 키는 원본 표기 그대로다.
@@ -146,6 +182,7 @@ public sealed class ConfigText
         for (; pos < line.Length; pos++)
         {
             char c = line[pos];
+            if (c is '\r' or '\n') break;
             if (!quoted && string.CompareOrdinal(line, pos, CommentMarker, 0, CommentMarker.Length) == 0)
             {
                 break;

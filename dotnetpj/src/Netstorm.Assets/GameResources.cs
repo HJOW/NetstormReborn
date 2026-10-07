@@ -55,28 +55,30 @@ public sealed class GameResources
                 texts.Add(ConfigText.FromFileBytes(data).Text);
             }
         }
-        Settings.Push(new ConfigText(string.Join('\n', texts)));
+        var global = new ConfigText(string.Join('\n', texts));
+        Settings.Push(global);
         Language = GameLanguage.Normalize(language ?? Settings.Get("currentLanguage")
             ?? GameLanguage.FromCulture(culture ?? CultureInfo.CurrentUICulture));
 
-        // 일부만 번역된 용어표도 누락 키는 영어 표에서 찾을 수 있도록 바닥에 영어를 둔다.
+        // 경로 지정식은 먼저 전역 설정에서 읽는다. 영어 대체는 다국어 클론의 추가 기능이다.
         string englishPath = LanguageSpec("languageSpec", GameLanguage.English, GameLanguage.English);
         byte[]? english = Files.TryReadAllBytes(englishPath);
-        if (english != null)
-        {
-            Settings.Push(ConfigText.FromFileBytes(english));
-            LanguageConfigPath = englishPath;
-        }
+        byte[]? translated = null;
+        LanguageConfigPath = english == null ? null : englishPath;
         if (Language != GameLanguage.English)
         {
             string wanted = LanguageSpec("languageSpec", Language, Language);
-            byte[]? translated = Files.TryReadAllBytes(wanted);
+            translated = Files.TryReadAllBytes(wanted);
             if (translated != null)
             {
-                Settings.Push(ConfigText.FromFileBytes(translated));
                 LanguageConfigPath = wanted;
             }
         }
+        Settings.Pop();
+        // 원본 005280ac/005280b0의 등록 순서: 용어표가 먼저, 전역 설정이 나중이라 전역이 우선한다.
+        if (english != null) Settings.Push(ConfigText.FromFileBytes(english));
+        if (translated != null) Settings.Push(ConfigText.FromFileBytes(translated));
+        Settings.Push(global);
         // 용어표에 같은 키가 있더라도 실제 선택 언어를 유지한다. 원본 파일은 수정하지 않는다.
         Settings.Push(LanguageOverride(Language));
         TranslationPath = GameLanguage.ResolveFile(Files, "d/xlat", Language);

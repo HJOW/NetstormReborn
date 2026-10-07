@@ -14,8 +14,9 @@ public sealed class FortFileTests
     public void NameHash_MatchesOriginalRule()
     {
         Assert.Equal(0x65647564u, TypeCatalog.NameHash("dude"));
-        // 20바이트를 넘는 이름은 잘라서 계산한다
-        Assert.Equal(TypeCatalog.NameHash("fakeThreeByThreeSurf"), TypeCatalog.NameHash("fakeThreeByThreeSurface"));
+        // 긴 런타임 이름은 설명 필드까지 이어진다. 원본 TypeNames에 기록된 해시다.
+        TypeDefinition definition = TypeDefinition.Parse("typename fakeThreeByThreeSurface\ntypeflags surface;\n{description=\"fake3x3Surface\";}");
+        Assert.Equal(0x0534a54bu, TypeCatalog.NameHash(TypeCatalog.RuntimeName("fakeThreeByThreeSurface", definition)));
     }
 
     /// <summary>파생 플래그 규칙: walker 는 container, buried 는 saveQA</summary>

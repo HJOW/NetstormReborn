@@ -2,321 +2,477 @@
   {
     "Width": 3,
     "Height": 3,
-    "Cells": ".L.FAGINH"
+    "Cells": ".L.FAGINH",
+    "Variations": [0, 1, 0, 1, 1, 1, 1, 1, 1],
+    "Labels": [-97, -97, -97, -97, -97, -97, -97, -97, -97]
   },
   {
     "Width": 3,
     "Height": 3,
-    "Cells": "FG.BAGINH"
+    "Cells": "FG.BAGINH",
+    "Variations": [1, 1, 0, 1, 1, 1, 1, 1, 1],
+    "Labels": [-97, -97, -97, -97, -97, -97, -97, -97, -97]
   },
   {
     "Width": 3,
     "Height": 3,
-    "Cells": "FCGBADINH"
+    "Cells": "FCGBADINH",
+    "Variations": [1, 1, 1, 1, 1, 1, 1, 1, 1],
+    "Labels": [-97, -97, -97, -97, -97, -97, -97, -97, -97]
   },
   {
     "Width": 2,
     "Height": 2,
-    "Cells": "OG.N"
+    "Cells": "OG.N",
+    "Variations": [1, 1, 0, 1],
+    "Labels": [-97, -97, -97, -97]
   },
   {
     "Width": 3,
     "Height": 1,
-    "Cells": "OKM"
+    "Cells": "OKM",
+    "Variations": [1, 1, 1],
+    "Labels": [-97, -97, -97]
   },
   {
     "Width": 3,
     "Height": 2,
-    "Cells": "OKG..N"
+    "Cells": "OKG..N",
+    "Variations": [1, 1, 1, 0, 0, 1],
+    "Labels": [-97, -97, -97, -97, -97, -97]
   },
   {
     "Width": 3,
     "Height": 2,
-    "Cells": "OCM.N."
+    "Cells": "OCM.N.",
+    "Variations": [1, 1, 1, 0, 1, 0],
+    "Labels": [-97, -97, -97, -97, -97, -97]
   },
   {
     "Width": 2,
     "Height": 2,
-    "Cells": "FGIH"
+    "Cells": "FGIH",
+    "Variations": [1, 1, 1, 1],
+    "Labels": [-97, -97, -97, -97]
   },
   {
     "Width": 3,
     "Height": 2,
-    "Cells": "OG..IM"
+    "Cells": "OG..IM",
+    "Variations": [1, 1, 0, 0, 1, 1],
+    "Labels": [-97, -97, -97, -97, -97, -97]
   },
   {
     "Width": 3,
     "Height": 2,
-    "Cells": "OCG.IH"
+    "Cells": "OCG.IH",
+    "Variations": [1, 1, 1, 0, 1, 1],
+    "Labels": [-97, -97, -97, -97, -97, -97]
   },
   {
     "Width": 3,
     "Height": 2,
-    "Cells": "FKGN.N"
+    "Cells": "FKGN.N",
+    "Variations": [1, 1, 1, 1, 0, 1],
+    "Labels": [-97, -97, -97, -97, -97, -97]
   },
   {
     "Width": 3,
     "Height": 3,
-    "Cells": ".L.OAM.N."
+    "Cells": ".L.OAM.N.",
+    "Variations": [0, 1, 0, 1, 1, 1, 0, 1, 0],
+    "Labels": [-97, -97, -97, -97, -97, -97, -97, -97, -97]
   },
   {
     "Width": 3,
     "Height": 3,
-    "Cells": "L..IG..IM"
+    "Cells": "L..IG..IM",
+    "Variations": [1, 0, 0, 1, 1, 0, 0, 1, 1],
+    "Labels": [-97, -97, -97, -97, -97, -97, -97, -97, -97]
   },
   {
     "Width": 3,
     "Height": 3,
-    "Cells": "FKGJ.JIKH"
+    "Cells": "FKGJ.JIKH",
+    "Variations": [1, 1, 1, 1, 0, 1, 1, 1, 1],
+    "Labels": [-97, -97, -97, -97, -97, -97, -97, -97, -97]
   },
   {
     "Width": 3,
     "Height": 3,
-    "Cells": ".L.OAG.IH"
+    "Cells": ".L.OAG.IH",
+    "Variations": [0, 1, 0, 1, 1, 1, 0, 1, 1],
+    "Labels": [-97, -97, -97, -97, -97, -97, -97, -97, -97]
   },
   {
     "Width": 3,
     "Height": 3,
-    "Cells": "..LOCD.IH"
+    "Cells": "..LOCD.IH",
+    "Variations": [0, 0, 1, 1, 1, 1, 0, 1, 1],
+    "Labels": [-97, -97, -97, -97, -97, -97, -97, -97, -97]
   },
   {
     "Width": 3,
     "Height": 2,
-    "Cells": "OCG.IH"
+    "Cells": "OCG.IH",
+    "Variations": [1, 1, 1, 0, 1, 1],
+    "Labels": [-97, -97, -97, -97, -97, -97]
   },
   {
     "Width": 3,
     "Height": 3,
-    "Cells": "FKGN.J..N"
+    "Cells": "FKGN.J..N",
+    "Variations": [1, 1, 1, 1, 0, 1, 0, 0, 1],
+    "Labels": [-97, -97, -97, -97, -97, -97, -97, -97, -97]
   },
   {
     "Width": 3,
     "Height": 2,
-    "Cells": ".FMOH."
+    "Cells": ".FMOH.",
+    "Variations": [0, 1, 1, 1, 1, 0],
+    "Labels": [-97, -97, -97, -97, -97, -97]
   },
   {
     "Width": 3,
     "Height": 3,
-    "Cells": "L..BKGN.N"
+    "Cells": "L..BKGN.N",
+    "Variations": [1, 0, 0, 1, 1, 1, 1, 0, 1],
+    "Labels": [-97, -97, -97, -97, -97, -97, -97, -97, -97]
   },
   {
     "Width": 3,
     "Height": 3,
-    "Cells": ".L.FEGN.N"
+    "Cells": ".L.FEGN.N",
+    "Variations": [0, 1, 0, 1, 1, 1, 1, 0, 1],
+    "Labels": [-97, -97, -97, -97, -97, -97, -97, -97, -97]
   },
   {
     "Width": 4,
     "Height": 1,
-    "Cells": "PPPP"
+    "Cells": "PPPP",
+    "Variations": [1, 1, 1, 1],
+    "Labels": [0, 1, 2, 3]
   },
   {
     "Width": 2,
     "Height": 3,
-    "Cells": "PP.P.P"
+    "Cells": "PP.P.P",
+    "Variations": [1, 1, 0, 1, 0, 1],
+    "Labels": [0, 1, 2, 3, 4, 5]
   },
   {
     "Width": 2,
     "Height": 3,
-    "Cells": ".PPP.P"
+    "Cells": ".PPP.P",
+    "Variations": [0, 1, 1, 1, 0, 1],
+    "Labels": [0, 1, 2, 3, 4, 5]
   },
   {
     "Width": 3,
     "Height": 2,
-    "Cells": "PP..PP"
+    "Cells": "PP..PP",
+    "Variations": [1, 1, 0, 0, 1, 1],
+    "Labels": [0, 1, 2, 3, 4, 5]
   },
   {
     "Width": 2,
     "Height": 2,
-    "Cells": "PPPP"
+    "Cells": "PPPP",
+    "Variations": [1, 1, 1, 1],
+    "Labels": [0, 1, 2, 3]
   },
   {
     "Width": 5,
     "Height": 1,
-    "Cells": "PPPPP"
+    "Cells": "PPPPP",
+    "Variations": [1, 1, 1, 1, 1],
+    "Labels": [0, 1, 2, 3, 4]
   },
   {
     "Width": 4,
     "Height": 2,
-    "Cells": "PPPP...P"
+    "Cells": "PPPP...P",
+    "Variations": [1, 1, 1, 1, 0, 0, 0, 1],
+    "Labels": [0, 1, 2, 3, 4, 5, 6, 7]
   },
   {
     "Width": 4,
     "Height": 2,
-    "Cells": "PPPP..P."
+    "Cells": "PPPP..P.",
+    "Variations": [1, 1, 1, 1, 0, 0, 1, 0],
+    "Labels": [0, 1, 2, 3, 4, 5, 6, 7]
   },
   {
     "Width": 3,
     "Height": 2,
-    "Cells": "PPP.PP"
+    "Cells": "PPP.PP",
+    "Variations": [1, 1, 1, 0, 1, 1],
+    "Labels": [0, 1, 2, 3, 4, 5]
   },
   {
     "Width": 3,
     "Height": 2,
-    "Cells": "PPPP.P"
+    "Cells": "PPPP.P",
+    "Variations": [1, 1, 1, 1, 0, 1],
+    "Labels": [0, 1, 2, 3, 4, 5]
   },
   {
     "Width": 3,
     "Height": 3,
-    "Cells": "P..PPP..P"
+    "Cells": "P..PPP..P",
+    "Variations": [1, 0, 0, 1, 1, 1, 0, 0, 1],
+    "Labels": [0, 1, 2, 3, 4, 5, 6, 7, 8]
   },
   {
     "Width": 3,
     "Height": 3,
-    "Cells": ".P.PP..PP"
+    "Cells": ".P.PP..PP",
+    "Variations": [0, 1, 0, 1, 1, 0, 0, 1, 1],
+    "Labels": [0, 1, 2, 3, 4, 5, 6, 7, 8]
   },
   {
     "Width": 3,
     "Height": 3,
-    "Cells": "..PPPP..P"
+    "Cells": "..PPPP..P",
+    "Variations": [0, 0, 1, 1, 1, 1, 0, 0, 1],
+    "Labels": [0, 1, 2, 3, 4, 5, 6, 7, 8]
   },
   {
     "Width": 4,
     "Height": 2,
-    "Cells": "PPP...PP"
+    "Cells": "PPP...PP",
+    "Variations": [1, 1, 1, 0, 0, 0, 1, 1],
+    "Labels": [0, 1, 2, 3, 4, 5, 6, 7]
   },
   {
     "Width": 3,
     "Height": 3,
-    "Cells": ".P.PPP.P."
+    "Cells": ".P.PPP.P.",
+    "Variations": [0, 1, 0, 1, 1, 1, 0, 1, 0],
+    "Labels": [0, 1, 2, 3, 4, 5, 6, 7, 8]
   },
   {
     "Width": 3,
     "Height": 3,
-    "Cells": "P..PP..PP"
+    "Cells": "P..PP..PP",
+    "Variations": [1, 0, 0, 1, 1, 0, 0, 1, 1],
+    "Labels": [0, 1, 2, 3, 4, 5, 6, 7, 8]
   },
   {
     "Width": 6,
     "Height": 1,
-    "Cells": "PPPPPP"
+    "Cells": "PPPPPP",
+    "Variations": [1, 1, 1, 1, 1, 1],
+    "Labels": [0, 1, 2, 3, 4, 5]
   },
   {
     "Width": 5,
     "Height": 2,
-    "Cells": "PPPPP....P"
+    "Cells": "PPPPP....P",
+    "Variations": [1, 1, 1, 1, 1, 0, 0, 0, 0, 1],
+    "Labels": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
   },
   {
     "Width": 5,
     "Height": 2,
-    "Cells": "PPPPP...P."
+    "Cells": "PPPPP...P.",
+    "Variations": [1, 1, 1, 1, 1, 0, 0, 0, 1, 0],
+    "Labels": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
   },
   {
     "Width": 5,
     "Height": 2,
-    "Cells": "PPPPP..P.."
+    "Cells": "PPPPP..P..",
+    "Variations": [1, 1, 1, 1, 1, 0, 0, 1, 0, 0],
+    "Labels": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
   },
   {
     "Width": 5,
     "Height": 2,
-    "Cells": "PPPP....PP"
+    "Cells": "PPPP....PP",
+    "Variations": [1, 1, 1, 1, 0, 0, 0, 0, 1, 1],
+    "Labels": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
   },
   {
     "Width": 4,
     "Height": 3,
-    "Cells": "PPPP...P...P"
-  },
-  {
-    "Width": 4,
-    "Height": 2,
-    "Cells": "PPPP..PP"
-  },
-  {
-    "Width": 4,
-    "Height": 2,
-    "Cells": "PPPP.P.P"
+    "Cells": "PPPP...P...P",
+    "Variations": [1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1],
+    "Labels": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
   },
   {
     "Width": 4,
     "Height": 2,
-    "Cells": "PPPPP..P"
-  },
-  {
-    "Width": 4,
-    "Height": 3,
-    "Cells": "P...PPPP...P"
-  },
-  {
-    "Width": 4,
-    "Height": 3,
-    "Cells": ".P..PPPP...P"
-  },
-  {
-    "Width": 4,
-    "Height": 3,
-    "Cells": "..P.PPPP..P."
-  },
-  {
-    "Width": 4,
-    "Height": 3,
-    "Cells": "...PPPPP..P."
-  },
-  {
-    "Width": 4,
-    "Height": 3,
-    "Cells": "PPPP..P...P."
+    "Cells": "PPPP..PP",
+    "Variations": [1, 1, 1, 1, 0, 0, 1, 1],
+    "Labels": [0, 1, 2, 3, 4, 5, 6, 7]
   },
   {
     "Width": 4,
     "Height": 2,
-    "Cells": "PPPP.PP."
-  },
-  {
-    "Width": 3,
-    "Height": 2,
-    "Cells": "PPPPPP"
-  },
-  {
-    "Width": 3,
-    "Height": 3,
-    "Cells": "P..PPP.PP"
-  },
-  {
-    "Width": 3,
-    "Height": 3,
-    "Cells": ".P.PPP.PP"
-  },
-  {
-    "Width": 3,
-    "Height": 3,
-    "Cells": "..PPPP.PP"
+    "Cells": "PPPP.P.P",
+    "Variations": [1, 1, 1, 1, 0, 1, 0, 1],
+    "Labels": [0, 1, 2, 3, 4, 5, 6, 7]
   },
   {
     "Width": 4,
     "Height": 2,
-    "Cells": "PPP..PPP"
+    "Cells": "PPPPP..P",
+    "Variations": [1, 1, 1, 1, 1, 0, 0, 1],
+    "Labels": [0, 1, 2, 3, 4, 5, 6, 7]
   },
   {
-    "Width": 3,
+    "Width": 4,
     "Height": 3,
-    "Cells": "P..PP.PPP"
+    "Cells": "P...PPPP...P",
+    "Variations": [1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1],
+    "Labels": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
   },
   {
-    "Width": 3,
+    "Width": 4,
     "Height": 3,
-    "Cells": "PPPP.P..P"
+    "Cells": ".P..PPPP...P",
+    "Variations": [0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1],
+    "Labels": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+  },
+  {
+    "Width": 4,
+    "Height": 3,
+    "Cells": "..P.PPPP..P.",
+    "Variations": [0, 0, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0],
+    "Labels": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+  },
+  {
+    "Width": 4,
+    "Height": 3,
+    "Cells": "...PPPPP..P.",
+    "Variations": [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0],
+    "Labels": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+  },
+  {
+    "Width": 4,
+    "Height": 3,
+    "Cells": "PPPP..P...P.",
+    "Variations": [1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0],
+    "Labels": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
   },
   {
     "Width": 4,
     "Height": 2,
-    "Cells": ".PPPPP.P"
+    "Cells": "PPPP.PP.",
+    "Variations": [1, 1, 1, 1, 0, 1, 1, 0],
+    "Labels": [0, 1, 2, 3, 4, 5, 6, 7]
+  },
+  {
+    "Width": 3,
+    "Height": 2,
+    "Cells": "PPPPPP",
+    "Variations": [1, 1, 1, 1, 1, 1],
+    "Labels": [0, 1, 2, 3, 4, 5]
   },
   {
     "Width": 3,
     "Height": 3,
-    "Cells": "P..PPPP.P"
+    "Cells": "P..PPP.PP",
+    "Variations": [1, 0, 0, 1, 1, 1, 0, 1, 1],
+    "Labels": [0, 1, 2, 3, 4, 5, 6, 7, 8]
   },
   {
     "Width": 3,
     "Height": 3,
-    "Cells": ".P.PPPP.P"
+    "Cells": ".P.PPP.PP",
+    "Variations": [0, 1, 0, 1, 1, 1, 0, 1, 1],
+    "Labels": [0, 1, 2, 3, 4, 5, 6, 7, 8]
+  },
+  {
+    "Width": 3,
+    "Height": 3,
+    "Cells": "..PPPP.PP",
+    "Variations": [0, 0, 1, 1, 1, 1, 0, 1, 1],
+    "Labels": [0, 1, 2, 3, 4, 5, 6, 7, 8]
+  },
+  {
+    "Width": 4,
+    "Height": 2,
+    "Cells": "PPP..PPP",
+    "Variations": [1, 1, 1, 0, 0, 1, 1, 1],
+    "Labels": [0, 1, 2, 3, 4, 5, 6, 7]
+  },
+  {
+    "Width": 3,
+    "Height": 3,
+    "Cells": "P..PP.PPP",
+    "Variations": [1, 0, 0, 1, 1, 0, 1, 1, 1],
+    "Labels": [0, 1, 2, 3, 4, 5, 6, 7, 8]
+  },
+  {
+    "Width": 3,
+    "Height": 3,
+    "Cells": "PPPP.P..P",
+    "Variations": [1, 1, 1, 1, 0, 1, 0, 0, 1],
+    "Labels": [0, 1, 2, 3, 4, 5, 6, 7, 8]
+  },
+  {
+    "Width": 4,
+    "Height": 2,
+    "Cells": ".PPPPP.P",
+    "Variations": [0, 1, 1, 1, 1, 1, 0, 1],
+    "Labels": [0, 1, 2, 3, 4, 5, 6, 7]
+  },
+  {
+    "Width": 3,
+    "Height": 3,
+    "Cells": "P..PPPP.P",
+    "Variations": [1, 0, 0, 1, 1, 1, 1, 0, 1],
+    "Labels": [0, 1, 2, 3, 4, 5, 6, 7, 8]
+  },
+  {
+    "Width": 3,
+    "Height": 3,
+    "Cells": ".P.PPPP.P",
+    "Variations": [0, 1, 0, 1, 1, 1, 1, 0, 1],
+    "Labels": [0, 1, 2, 3, 4, 5, 6, 7, 8]
   },
   {
     "Width": 4,
     "Height": 3,
-    "Cells": "..PP..P.PPP."
+    "Cells": "..PP..P.PPP.",
+    "Variations": [0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0],
+    "Labels": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
   },
   {
     "Width": 4,
     "Height": 3,
-    "Cells": "PPP...PP..P."
+    "Cells": "PPP...PP..P.",
+    "Variations": [1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0],
+    "Labels": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+  },
+  {
+    "Width": 4,
+    "Height": 3,
+    "Cells": "...PPPPP...P",
+    "Variations": [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1],
+    "Labels": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+  },
+  {
+    "Width": 4,
+    "Height": 3,
+    "Cells": ".P..PPP...PP",
+    "Variations": [0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1],
+    "Labels": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+  },
+  {
+    "Width": 4,
+    "Height": 3,
+    "Cells": "PP...PPP...P",
+    "Variations": [1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1],
+    "Labels": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+  },
+  {
+    "Width": 4,
+    "Height": 3,
+    "Cells": "PP...PP...PP",
+    "Variations": [1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1],
+    "Labels": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
   }
 ]

@@ -7,7 +7,7 @@ namespace Netstorm.Assets;
 /// 원본 Config.cpp 분석 결과 (docs/formats/config.md "치환 규칙"):
 /// <list type="bullet">
 /// <item>층은 마지막에 쌓은 것부터 조회한다. 이름이 있는 층(예: "local")은 "local.1" 처럼 접두어가 붙은 키만 받는다.</item>
-/// <item>{키} → 값(값 안의 {..} 도 다시 치환), {키|기본값} → 없으면 기본값, 둘 다 없으면 "{Not Found:키(대문자)}".</item>
+/// <item>{키} → 값(값 안의 {..} 도 다시 치환), {키|기본값} → 없으면 기본값, 둘 다 없으면 "{키(대문자)}".</item>
 /// <item>'`' 이스케이프: `n 줄바꿈, `r CR, `t 탭, 그 밖의 문자는 그 문자 자체 (`" → ", `{ → {).</item>
 /// <item>{@미션.키} → 해당 미션 스크립트(missionSpec)의 머리 값. {&amp;레지스트리} 는 지원하지 않는다(찾지 못함 처리).</item>
 /// <item>치환 결과 끝의 공백·탭은 잘라 낸다 (첫 글자는 남긴다).</item>
@@ -24,21 +24,21 @@ public sealed class ConfigStore
     /// <summary>기본값 구분자 (원본 DAT_0053253b)</summary>
     private const char DefaultSeparator = '|';
 
-    /// <summary>찾지 못한 키 표시 접두어 (원본 문자열 "Not Found:")</summary>
-    public const string NotFoundPrefix = "Not Found:";
-
     /// <summary>
     /// 치환 중첩 한도. 원본에는 없지만 값이 자기 자신을 참조하면 무한 반복되므로 막는다.
     /// </summary>
     private const int MaxDepth = 32;
 
     /// <summary>쌓인 층 (앞이 바닥). 접두어는 "local." 형식, 이름 없는 층은 ""</summary>
-    private readonly List<(string Prefix, ConfigText Text)> _layers = [];
+    private readonly List<(string Prefix, ConfigText? Text, bool Environment)> _layers = [];
 
     /// <summary>
     /// {@미션.키} 조회에 쓸 미션 텍스트 공급자. 인자는 미션 이름, 결과는 미션 스크립트 설정 텍스트(없으면 null).
     /// </summary>
     public Func<string, ConfigText?>? MissionLoader { get; set; }
+
+    /// <summary>명시적으로 허용한 층만 쓰는 환경 변수 공급자. 기본은 비활성이라 PC 환경에 의존하지 않는다.</summary>
+    public Func<string, string?>? EnvironmentLookup { get; set; }
 
     /// <summary>현재 쌓인 층 수</summary>
     public int LayerCount => _layers.Count;
@@ -46,8 +46,8 @@ public sealed class ConfigStore
     /// <summary>층을 맨 위에 쌓는다</summary>
     /// <param name="text">설정 텍스트</param>
     /// <param name="scopeName">층 이름 (예: "local"). null 이면 모든 키를 받는 층</param>
-    public void Push(ConfigText text, string? scopeName = null) =>
-        _layers.Add((string.IsNullOrEmpty(scopeName) ? "" : scopeName + ".", text));
+    public void Push(ConfigText? text, string? scopeName = null, bool environmentEnabled = false) =>
+        _layers.Add((scopeName == null ? "" : scopeName + ".", text, environmentEnabled));
 
     /// <summary>맨 위 층을 걷어 낸다</summary>
     public void Pop() => _layers.RemoveAt(_layers.Count - 1);
@@ -57,7 +57,10 @@ public sealed class ConfigStore
     /// </summary>
     /// <param name="key">설정 키 (대소문자 무시)</param>
     /// <param name="raw">원시 값</param>
-    public bool TryGetRaw(string key, out string raw)
+    public bool TryGetRaw(string key, out string raw) => TryGetRaw(key, false, out raw);
+
+    /// <summary>원본 00440760의 환경 변수·미션·층 조회. 환경 허용 여부는 조회를 시작한 객체를 따른다.</summary>
+    private bool TryGetRaw(string key, bool environment, out string raw)
     {
         if (key.StartsWith('@'))
         {
@@ -68,10 +71,16 @@ public sealed class ConfigStore
             raw = "";
             return false;
         }
+        if (environment && key.StartsWith('_') && EnvironmentLookup?.Invoke(key[1..]) is string value)
+        {
+            raw = value;
+            return true;
+        }
         // 맨 위 층부터 차례로 조회한다
         for (int i = _layers.Count - 1; i >= 0; i--)
         {
-            (string prefix, ConfigText text) = _layers[i];
+            (string prefix, ConfigText? text, _) = _layers[i];
+            if (text == null) continue;
             if (prefix.Length == 0)
             {
                 if (text.TryGetRaw(key, out raw))
@@ -92,6 +101,20 @@ public sealed class ConfigStore
     /// <summary>키의 값을 치환까지 마쳐 돌려준다. 없으면 null</summary>
     /// <param name="key">설정 키 (대소문자 무시)</param>
     public string? Get(string key) => TryGetRaw(key, out string raw) ? Expand(raw) : null;
+
+    /// <summary>지정한 원본 설정 객체에서 조회한다. 그 객체에 버퍼가 없으면 다른 층이 있어도 null이다.</summary>
+    public string? GetFromLayer(int layer, string key)
+    {
+        var source = _layers[layer];
+        return source.Text != null && TryGetRaw(key, source.Environment, out string raw) ? Expand(raw, 0, source.Environment) : null;
+    }
+
+    /// <summary>지정한 원본 설정 객체에서 치환한다. 버퍼 없는 객체는 아무 문자도 쓰지 않는다.</summary>
+    public string ExpandFromLayer(int layer, string text)
+    {
+        var source = _layers[layer];
+        return source.Text == null ? "" : Expand(text, 0, source.Environment);
+    }
 
     /// <summary>
     /// 경로 지정 키(예: "missionSpec")를 {local.1}, {local.2} … 인자와 함께 치환한다 (원본 FUN_004410f0).
@@ -121,7 +144,7 @@ public sealed class ConfigStore
 
     /// <summary>문자열 속 {키} 와 '`' 이스케이프를 치환한다</summary>
     /// <param name="text">치환할 문자열</param>
-    public string Expand(string text) => Expand(text, 0);
+    public string Expand(string text) => Expand(text, 0, false);
 
     /// <summary>
     /// 값에 넣을 문자열의 따옴표·이스케이프 문자·중괄호를 '`' 로 감싼다 (조회 후 치환하면 원래 문자열이 된다).
@@ -158,7 +181,7 @@ public sealed class ConfigStore
     /// <summary>치환 본체 (원본 FUN_00440b60)</summary>
     /// <param name="text">치환할 문자열</param>
     /// <param name="depth">현재 중첩 깊이</param>
-    private string Expand(string text, int depth)
+    private string Expand(string text, int depth, bool environment)
     {
         var sb = new StringBuilder(text.Length);
         int i = 0;
@@ -182,7 +205,7 @@ public sealed class ConfigStore
             }
             else if (c == OpenBrace)
             {
-                i = ExpandBrace(text, i, sb, depth);
+                i = ExpandBrace(text, i, sb, depth, environment);
             }
             else
             {
@@ -202,7 +225,7 @@ public sealed class ConfigStore
     /// <param name="start">'{' 위치</param>
     /// <param name="output">결과를 붙일 곳</param>
     /// <param name="depth">현재 중첩 깊이</param>
-    private int ExpandBrace(string text, int start, StringBuilder output, int depth)
+    private int ExpandBrace(string text, int start, StringBuilder output, int depth, bool environment)
     {
         int j = start + 1;
         var key = new StringBuilder();
@@ -211,11 +234,13 @@ public sealed class ConfigStore
         {
             if (text[j] == OpenBrace)
             {
-                j = ExpandBrace(text, j, key, depth + 1);
+                j = ExpandBrace(text, j, key, depth + 1, environment);
             }
             else
             {
-                key.Append(char.ToUpperInvariant(text[j]));
+                // 원본 CRT의 C 로케일은 ASCII 소문자만 대문자로 바꾼다.
+                char c = text[j];
+                key.Append(c is >= 'a' and <= 'z' ? (char)(c - ('a' - 'A')) : c);
                 j++;
             }
         }
@@ -228,7 +253,7 @@ public sealed class ConfigStore
             {
                 if (text[j] == OpenBrace)
                 {
-                    j = ExpandBrace(text, j, fallback, depth + 1);
+                    j = ExpandBrace(text, j, fallback, depth + 1, environment);
                 }
                 else
                 {
@@ -237,31 +262,33 @@ public sealed class ConfigStore
                 }
             }
         }
-        Lookup(key.ToString(), fallback.ToString(), output, depth);
+        Lookup(key.ToString(), fallback.ToString(), output, depth, environment);
         return j < text.Length ? j + 1 : j;
     }
 
     /// <summary>
-    /// 키를 찾아 치환한 값을 붙인다. 없으면 기본값, 기본값도 비었으면 "{Not Found:키}" (원본 FUN_00440760).
+    /// 키를 찾아 치환한 값을 붙인다. 없으면 기본값, 기본값도 비었으면 "{키}" (원본 FUN_00440760).
     /// </summary>
     /// <param name="key">키</param>
     /// <param name="fallback">기본값 (없으면 빈 문자열)</param>
     /// <param name="output">결과를 붙일 곳</param>
     /// <param name="depth">현재 중첩 깊이</param>
-    private void Lookup(string key, string fallback, StringBuilder output, int depth)
+    private void Lookup(string key, string fallback, StringBuilder output, int depth, bool environment)
     {
         bool registry = key.StartsWith('&');
-        if (depth < MaxDepth && TryGetRaw(key, out string raw))
+        if (depth < MaxDepth && TryGetRaw(key, environment, out string raw))
         {
-            output.Append(Expand(raw, depth + 1));
+            output.Append(Expand(raw, depth + 1, environment));
         }
         else if (fallback.Length > 0)
         {
-            output.Append(depth < MaxDepth ? Expand(fallback, depth + 1) : fallback);
+            output.Append(depth < MaxDepth ? Expand(fallback, depth + 1, environment) : fallback);
         }
         else if (!registry)
         {
-            output.Append(OpenBrace).Append(NotFoundPrefix).Append(key).Append(CloseBrace);
+            // 원본은 미션 키의 '.' 자리를 NUL로 덮으므로 실패 표시도 미션 이름에서 끝난다.
+            int dot = key.StartsWith('@') ? key.IndexOf('.') : -1;
+            output.Append(OpenBrace).Append(dot < 0 ? key : key[..dot]).Append(CloseBrace);
         }
     }
 
@@ -272,7 +299,12 @@ public sealed class ConfigStore
     {
         raw = "";
         int dot = key.IndexOf('.');
-        if (dot < 0 || MissionLoader == null)
+        if (dot < 0)
+        {
+            // 원본은 '.' 없는 @키를 빈 값을 찾은 것으로 처리한다.
+            return true;
+        }
+        if (MissionLoader == null)
         {
             return false;
         }

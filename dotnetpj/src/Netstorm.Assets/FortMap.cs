@@ -42,6 +42,17 @@ public sealed class FortMap
 
     private static readonly Pattern[] Patterns = LoadPatterns();
 
+    /// <summary>표 전체 68개 영역의 변형·번호까지 보존한 원본 패턴. 파일의 Shape는 하위 6비트만 사용한다.</summary>
+    public static CanonicalPattern TerritoryPattern(int index)
+    {
+        Pattern pattern = Patterns[index];
+        var cells = new PatternCell[pattern.Cells.Length];
+        // 원본 행 우선 셀마다 방향·변형·'a' 기준 번호를 대응시킨다.
+        for (int i = 0; i < cells.Length; i++)
+            cells[i] = new PatternCell(pattern.Cells[i], pattern.Cells[i] == '.' ? 0 : pattern.Variations[i], pattern.Labels[i]);
+        return new CanonicalPattern(pattern.Width, pattern.Height, cells);
+    }
+
     /// <summary>영역 표 (항상 20개).</summary>
     public IReadOnlyList<FortTerritory> Territories { get; }
     /// <summary>내용물과 생성 지형을 제외한, 저장된 월드 오브젝트.</summary>
@@ -160,5 +171,5 @@ public sealed class FortMap
     }
 
     /// <summary>패턴 원본의 폭·높이와 행 우선 셀 문자 ('.'은 빈 칸).</summary>
-    private sealed record Pattern(int Width, int Height, string Cells);
+    private sealed record Pattern(int Width, int Height, string Cells, int[] Variations, int[] Labels);
 }

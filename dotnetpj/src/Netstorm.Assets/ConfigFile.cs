@@ -32,6 +32,8 @@ public sealed partial class ConfigFile
         {
             throw new InvalidDataException("설정 파일 서명(mQdsT)이 맞지 않습니다.");
         }
+        // 원본 Config::LoadBytes는 서명을 남겨 첫 키를 가린다. 클론은 InstallDir을 조회하지 않고 VFS 루트를 쓰며,
+        // analyzeManager의 복사본 편집·바이트 왕복을 위해 기존의 서명 제거 API를 유지한다.
         return new ConfigFile(TextEncoding.GetString(plain, Signature.Length, plain.Length - Signature.Length));
     }
 
@@ -39,13 +41,29 @@ public sealed partial class ConfigFile
     /// <param name="path">.cfg 경로</param>
     public static ConfigFile Load(string path) => Decode(File.ReadAllBytes(path));
 
-    /// <summary>서명을 붙여 인코딩한 파일 내용을 돌려준다 (원본과 바이트 단위로 같게 복원된다)</summary>
+    /// <summary>서명을 뗀 단일 파일 본문에 서명을 붙여 인코딩한다. analyzeManager의 복사본 설정 편집도 이 API를 쓴다.</summary>
     public byte[] Encode()
     {
         byte[] body = TextEncoding.GetBytes(Text);
         var data = new byte[Signature.Length + body.Length];
         Signature.CopyTo(data);
         body.CopyTo(data, Signature.Length);
+        XorCipher.Apply(data);
+        return data;
+    }
+
+    /// <summary>
+    /// 원본 004406b0의 저장 형식: 파일 이름 섹션 + END 본문을 XOR 인코딩한다.
+    /// 파일 이름 섹션이 없으면 서명도 붙이지 않는다. Encode와 구분하여 기존 분석기 동작을 보존한다.
+    /// </summary>
+    public byte[] EncodeSections(string fileName)
+    {
+        string name = fileName.Replace('\\', '/').Split('/')[^1];
+        var config = new ConfigText(Text);
+        string? body = config.Section(name);
+        string plain = body == null ? "" : body.StartsWith("mQdsT", StringComparison.Ordinal) ? body : "mQdsT" + body;
+        plain += config.Section("END") ?? "";
+        byte[] data = TextEncoding.GetBytes(plain);
         XorCipher.Apply(data);
         return data;
     }
@@ -62,6 +80,7 @@ public sealed partial class ConfigFile
     /// <summary>
     /// 'key = "값"' 형식으로 값을 바꾼다. 처음으로 키가 나온 줄(조회에 쓰이는 줄)을 통째로 바꾸며,
     /// 키가 없으면 끝에 새 줄로 추가한다. 줄 앞 들여쓰기와 키 표기는 유지하고, 그 줄의 주석은 사라진다.
+    /// 원본 Set은 같은 키를 모두 지우고 END 뒤에 쓴다. 이 함수는 analyzeManager의 복사본 편집용으로 첫 줄 교체를 유지한다.
     /// </summary>
     /// <param name="key">설정 키</param>
     /// <param name="value">새 값</param>

@@ -1,3 +1,6 @@
+using System.Globalization;
+using System.Text.RegularExpressions;
+
 namespace Netstorm.Assets;
 
 /// <summary>
@@ -50,6 +53,7 @@ public static class TypeFlagBits
             ["randframe"] = 0x100000, ["matchframe"] = 0x200000, ["flyershadow"] = 0x400000,
             ["opaqueCollide"] = 0x800000, ["not_selectable"] = 0x8000000, ["notselectable"] = 0x8000000,
             ["dontSave"] = 0x20000000, ["not_real"] = 0x28000000, ["notreal"] = 0x28000000,
+            ["predictable"] = 0,
         };
 
     /// <summary>typeflags 단어 → 플래그2 비트</summary>
@@ -63,6 +67,7 @@ public static class TypeFlagBits
             ["priest"] = 0x200000, ["dais"] = 0x400000, ["islandThreeByThree"] = 0x1000000,
             ["not_real"] = 0x2000000, ["notreal"] = 0x2000000, ["geyser"] = 0x10000000, ["fence"] = 0x20000000,
             ["residence"] = 0x40000000, ["altar"] = 0x80000000,
+            ["focus"] = 0,
         };
 }
 
@@ -76,6 +81,24 @@ public sealed record TypeInfo(int LoadIndex, string Name, TypeDefinition Definit
 {
     /// <summary>현재 실행 파일 기준 타입 번호 (70 + 로딩 순서)</summary>
     public int RuntimeIndex => TypeCatalog.RuntimeIndexBase + LoadIndex;
+
+    /// <summary>설명 필드로 넘친 긴 이름을 포함한 원본 런타임 이름. 자산 파일 이름은 Name으로 유지한다.</summary>
+    public string RuntimeName => TypeCatalog.RuntimeName(Name, Definition);
+
+    /// <summary>원본 zorder 깊이. 실제 그리기 비교에서는 부호 있는 16비트로 읽는다.</summary>
+    public int ZOrder => TypeCatalog.ParseZOrder(Definition.GetString("zorder") ?? "0");
+
+    /// <summary>원본 +0xc4의 단정밀도 비용. 플레이어 SP 차감과는 별개다.</summary>
+    public float Cost => (float)(Definition.GetDouble("cost") ?? 0);
+
+    /// <summary>원본은 level 속성을 0부터 시작하는 값으로 보관하며 누락 시 0이다.</summary>
+    public int Level => Definition.GetDouble("level") is double level ? (int)level - 1 : 0;
+
+    /// <summary>vortex/factory는 0x10, walker/balloon은 0x20 내용물 목록을 가진다.</summary>
+    public byte ContainerListFlags => (Flags2 & TypeFlagBits.ContainerSources) == 0 ? (byte)0 : (Flags2 & 0x30000) == 0 ? (byte)0x10 : (byte)0x20;
+
+    /// <summary>bomb 타입 항목이 그릇의 목록 플래그보다 먼저 적용하는 값.</summary>
+    public byte ContentListFlags => (Flags2 & 0x100) == 0 ? (byte)0 : (byte)1;
 }
 
 /// <summary>
@@ -88,6 +111,19 @@ public sealed class TypeCatalog
 
     /// <summary>원본이 타입 이름을 저장하는 최대 길이 (strncpy 0x14)</summary>
     private const int StoredNameLength = 20;
+
+    /// <summary>원본 설명 필드의 최대 바이트 수. 원본 타입 이름과 설명은 단일 바이트 문자열이다.</summary>
+    private const int StoredDescriptionLength = 40;
+
+    /// <summary>원본 00540d10의 깊이 이름과 값. 대소문자를 구분한 부분 문자열 첫 일치다.</summary>
+    private static readonly (string Name, int Value)[] ZOrders =
+    [
+        ("zoNONE", -127), ("zoFALLING", 30), ("zoSTALAG", 20), ("zoCHALRING", 20), ("zoBATTLE", 10),
+        ("zoEDGEFARM", 0), ("zoISLAND", 0), ("zoBRIDGE", 0), ("zoBRIDGE_CONNECTOR", -10), ("zoARTIFACTS", -15),
+        ("zoEMPLACEMENTS", -20), ("zoILLEGAL_DITHER", -21), ("zoFLARES", -22), ("zoMISSILES", -25),
+        ("zoFLYER_SHADOWS", -26), ("zoFLYERS", -30), ("zoFENCE", -35), ("zoMANAICON", -36),
+        ("zoUBERGUMP", -40), ("zoMENUGUMP", -60), ("zoDIALOGGUMP", -80), ("zoLOOKGUMP", -100), ("zoRISING", -31),
+    ];
 
     private readonly Dictionary<string, TypeInfo> _byName = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<uint, TypeInfo> _byHash = [];
@@ -116,11 +152,11 @@ public sealed class TypeCatalog
         {
             string name = TypeLoadOrder.Names[i];
             TypeDefinition def = TypeDefinition.Parse(OriginalText.Decode(read($"d/{name}.type")));
-            (uint f1, uint f2) = ComputeFlags(def.Flags);
+            (uint f1, uint f2) = ComputeFlags(def);
             var info = new TypeInfo(i, name, def, f1, f2);
             types.Add(info);
             _byName[name] = info;
-            _byHash[NameHash(name)] = info;
+            _byHash.TryAdd(NameHash(info.RuntimeName), info);
         }
         Types = types;
     }
@@ -142,13 +178,14 @@ public sealed class TypeCatalog
     }
 
     /// <summary>
-    /// 원본의 타입 이름 해시: 이름을 20바이트로 자르고 각 글자(부호 있는 8비트)를 (i % 4)*8 비트 밀어 더한다.
+    /// 원본의 타입 이름 해시: NUL 앞까지 각 글자(부호 있는 8비트)를 (i % 4)*8 비트 밀어 더한다.
     /// </summary>
     /// <param name="name">타입 이름</param>
     public static uint NameHash(string name)
     {
         uint sum = 0;
-        int length = Math.Min(name.Length, StoredNameLength);
+        int nul = name.IndexOf('\0');
+        int length = nul < 0 ? name.Length : nul;
         // 글자마다 자리를 바꿔 누적 (오버플로는 32비트에서 버림)
         for (int i = 0; i < length; i++)
         {
@@ -158,18 +195,74 @@ public sealed class TypeCatalog
         return sum;
     }
 
+    /// <summary>원본 이름 필드가 20바이트 이상일 때 description이 뒤를 덮어쓰는 규칙.</summary>
+    public static string RuntimeName(string name, TypeDefinition definition)
+    {
+        string? description = definition.GetString("description");
+        return name.Length < StoredNameLength || description == null ? name
+            : name[..StoredNameLength] + description[..Math.Min(description.Length, StoredDescriptionLength)];
+    }
+
+    /// <summary>숫자 또는 원본 깊이 이름과 선택적 +/- 오프셋을 해석한다(docs/exe/cpp-fort-reconstruction.md).</summary>
+    public static int ParseZOrder(string text)
+    {
+        if (double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out double number)) return (int)number;
+        Match identifier = Regex.Match(text, @"([A-Za-z0-9_]+)[ \t]*");
+        if (identifier.Success)
+        {
+            // 표에서 입력 식별자를 포함하는 첫 이름을 찾는다. zoBRIDGE가 CONNECTOR보다 앞선다.
+            foreach ((string name, int value) in ZOrders)
+            {
+                if (!name.Contains(identifier.Groups[1].Value, StringComparison.Ordinal)) continue;
+                Match offset = Regex.Match(text, @"[ \t]*([A-Za-z0-9_]+)[ \t]*(\+|-)[ \t]*([0-9]+)");
+                if (!offset.Success) return value;
+                int delta = int.Parse(offset.Groups[3].Value, CultureInfo.InvariantCulture);
+                return unchecked(offset.Groups[2].Value == "+" ? value + delta : value - delta);
+            }
+        }
+        throw new InvalidDataException($"알 수 없는 원본 깊이 이름: {text}");
+    }
+
     /// <summary>typeflags 단어 목록으로 플래그1·2 를 계산하고 파생 규칙을 적용한다</summary>
     /// <param name="words">typeflags 단어</param>
-    public static (uint Flags1, uint Flags2) ComputeFlags(IEnumerable<string> words)
+    public static (uint Flags1, uint Flags2) ComputeFlags(IEnumerable<string> words) => ComputeFlags(words, null);
+
+    /// <summary>0049c3b0의 속성 적용과 0049b0d0의 파생 플래그를 함께 계산한다.</summary>
+    public static (uint Flags1, uint Flags2) ComputeFlags(TypeDefinition definition) => ComputeFlags(definition.Flags, definition);
+
+    /// <summary>그룹·사용량·발자국을 포함한 원본 플래그 후처리(docs/exe/cpp-fort-reconstruction.md).</summary>
+    private static (uint Flags1, uint Flags2) ComputeFlags(IEnumerable<string> words, TypeDefinition? definition)
     {
         uint f1 = 0;
         uint f2 = 0;
         // 단어마다 대응 비트를 켠다 (모르는 단어는 무시)
         foreach (string word in words)
         {
+            if (word.Equals("dontdrawdefault", StringComparison.OrdinalIgnoreCase)) throw new InvalidDataException("원본이 거부하는 dontdrawdefault 플래그입니다.");
             f1 |= TypeFlagBits.Flag1Words.GetValueOrDefault(word);
             f2 |= TypeFlagBits.Flag2Words.GetValueOrDefault(word);
         }
+        if ((f1 & 0x440000) == 0x440000) throw new InvalidDataException("shadow와 flyershadow를 함께 사용할 수 없습니다.");
+        string? group = definition?.GetString("group");
+        if (string.Equals(group, "battery", StringComparison.OrdinalIgnoreCase)) f2 |= 0x800;
+        if (string.Equals(group, "archer", StringComparison.OrdinalIgnoreCase) || string.Equals(group, "cannon", StringComparison.OrdinalIgnoreCase)) f2 |= 0x8000000;
+        if (string.Equals(group, "blocker", StringComparison.OrdinalIgnoreCase)) f2 |= 0x4000000;
+        if (definition?.GetDouble("maxHitPoints") != null) f1 |= 0x10;
+        var usage = new float[4];
+        if (definition != null)
+        {
+            // 사용량 별칭은 파일에 나온 순서대로 적용한다. 중복 속성도 이 목록에 남아 있다.
+            foreach ((string key, string value) in definition.PropertySequence)
+            {
+                int slot = key.ToLowerInvariant() switch
+                {
+                    "minusage" => 0, "maxusage" or "maxrainbattleusage" => 1,
+                    "maxthunderbattleusage" => 2, "maxwindbattleusage" => 3, _ => -1,
+                };
+                if (slot >= 0 && float.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out float power)) usage[slot] = power;
+            }
+        }
+        if (usage.Any(power => power != 0)) f1 |= 0x4000;
         // 파생 규칙 (Rifttype.cpp 후처리): 이동체·신전·작업장은 내용물을 가진다
         if ((f2 & TypeFlagBits.ContainerSources) != 0)
         {
@@ -180,6 +273,20 @@ public sealed class TypeCatalog
         {
             f1 |= TypeFlagBits.SaveQA;
         }
+        // vortex와 battery 계열의 수명/표시, factory, vortex 전용 후처리 비트.
+        if ((f2 & 0xA00) != 0) f1 |= 0x10000000;
+        if ((f2 & TypeFlagBits.Factory) != 0) f1 |= 0x4000000;
+        if ((f2 & 0x200) != 0) f1 |= 0x84000;
+        if ((f1 & (TypeFlagBits.SaveQA | TypeFlagBits.SaveQB)) == (TypeFlagBits.SaveQA | TypeFlagBits.SaveQB))
+            throw new InvalidDataException("saveQA와 saveQB를 함께 사용할 수 없습니다.");
+        // 테두리 전용이 아닌 타입은 섬 위 배치를 허용한다. emplacement는 다리의 부착을 막는다.
+        if ((f1 & 4) == 0) f1 |= 2;
+        if ((f2 & 0x40000) != 0) f2 |= TypeFlagBits.DropBlocking;
+        int footX = (int)(definition?.GetDouble("foot_x") ?? definition?.GetDouble("footx") ?? 1);
+        int footY = (int)(definition?.GetDouble("foot_y") ?? definition?.GetDouble("footy") ?? 1);
+        if ((f2 & 0x40000) != 0 && (f2 & 0x4200) == 0 && footX == 3 && footY == 3) f1 |= 6;
+        if ((f2 & 0x408100) != 0) f1 |= 2;
+        if ((f2 & 0x70000) != 0 && (f2 & TypeFlagBits.Factory) == 0) f1 |= 0x8000;
         return (f1, f2);
     }
 }

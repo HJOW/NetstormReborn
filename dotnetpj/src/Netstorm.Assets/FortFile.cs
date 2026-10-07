@@ -8,7 +8,11 @@ namespace Netstorm.Assets;
 /// <param name="QA">추가 값 A (saveQA 타입만)</param>
 /// <param name="QB">추가 값 B (saveQB 타입만)</param>
 /// <param name="Contents">중첩 내용물</param>
-public sealed record FortContent(TypeInfo Type, byte? QA, short? QB, IReadOnlyList<FortContent> Contents);
+public sealed record FortContent(TypeInfo Type, byte? QA, short? QB, IReadOnlyList<FortContent> Contents)
+{
+    /// <summary>항목 타입 → 그릇 타입 → 파일 바이트 순서로 정한 목록 플래그.</summary>
+    public byte ListFlags { get; init; }
+}
 
 /// <summary>청크 안의 오브젝트 하나 (docs/formats/fort.md "오브젝트 레코드")</summary>
 /// <param name="CellHigh">위치 바이트 상위 4비트 (청크 안 x)</param>
@@ -23,7 +27,17 @@ public sealed record FortContent(TypeInfo Type, byte? QA, short? QB, IReadOnlyLi
 /// <param name="Contents">내용물 (container)</param>
 public sealed record FortObject(
     int CellHigh, int CellLow, TypeInfo Type, byte? Frame, byte? QA, short? QB, byte? BridgeShape,
-    byte? FactoryState, int? Owner, IReadOnlyList<FortContent> Contents);
+    byte? FactoryState, int? Owner, IReadOnlyList<FortContent> Contents)
+{
+    /// <summary>버전 0에서 모든 일반 타입 뒤에 저장하던 상태 바이트. 파일 값만 보존한다.</summary>
+    public byte? LegacyState { get; init; }
+
+    /// <summary>원본 004bdc60의 저장 소유자 정규화. 저장하지 않은 값은 null로 남긴다.</summary>
+    public int? NormalizedOwner => Owner is int owner ? owner == 0 || owner > 8 ? 1 : owner : null;
+
+    /// <summary>geyser·buried·island는 중립이다. 실제 세션에 적용하는 위치는 월드 복원 뒤 결정한다.</summary>
+    public int? OwnerForLoad => (Type.Flags2 & 0x10002002) != 0 ? 0 : NormalizedOwner;
+}
 
 /// <summary>청크 하나의 오브젝트 목록</summary>
 /// <param name="Index">섹션 안 청크 순번 (Chaff 는 y*16 + x)</param>
@@ -131,7 +145,7 @@ public sealed class FortFile
         // 길이 접두 섹션을 파일 끝까지 자르고, 앞의 35개에 이름을 붙인다
         while (pos + 2 <= data.Length)
         {
-            int length = BinaryPrimitives.ReadUInt16LittleEndian(data.AsSpan(pos));
+            int length = BinaryPrimitives.ReadInt16LittleEndian(data.AsSpan(pos));
             if (length < 2 || pos + length > data.Length)
             {
                 break;
@@ -192,9 +206,9 @@ public sealed class FortFile
             }
             byte? qa = (type.Flags1 & TypeFlagBits.SaveQA) != 0 ? reader.U8() : null;
             short? qb = (type.Flags1 & TypeFlagBits.SaveQB) != 0 ? (short)reader.U16() : null;
-            byte listFlags = reader.U8();
+            byte listFlags = type.ContentListFlags != 0 ? type.ContentListFlags : reader.U8();
             IReadOnlyList<FortContent> contents = (type.Flags1 & TypeFlagBits.Container) != 0
-                ? ReadContents(ref reader, conversion)
+                ? ReadContents(ref reader, conversion, type.ContainerListFlags)
                 : [];
             entries.Add(new FortTechnologyEntry(typeNumber, type, qa, qb, listFlags, contents));
         }
@@ -225,7 +239,10 @@ public sealed class FortFile
         {
             int offset = 1 + i * DeckEntryByteSize;
             byte typeNumber = section[offset];
-            entries.Add(new FortDeckEntry(typeNumber, conversion.GetValueOrDefault(typeNumber),
+            TypeInfo? type = conversion.GetValueOrDefault(typeNumber);
+            // 원본은 변환 결과 0인 카드를 덱에 넣지 않는다. 원시 바이트는 Deck 섹션에 그대로 남는다.
+            if (type == null) continue;
+            entries.Add(new FortDeckEntry(typeNumber, type,
                 section[offset + 1], unchecked((sbyte)section[offset + 2]), section[offset + 3]));
         }
         return entries;
@@ -250,15 +267,15 @@ public sealed class FortFile
             return map;
         }
         int count = section[0];
-        // 해시마다 현재 타입을 찾는다 (내장 타입 등 못 찾은 번호는 비워 둔다)
+        // 원본은 현재 타입마다 해시가 맞는 첫 파일 번호를 찾는다. 중복 파일 해시는 첫 번호에만 등록된다.
+        var firstNumbers = new Dictionary<uint, int>();
         for (int i = 0; i < count && 1 + i * 4 + 4 <= section.Length; i++)
         {
-            TypeInfo? t = catalog.FindByHash(BinaryPrimitives.ReadUInt32LittleEndian(section[(1 + i * 4)..]));
-            if (t != null)
-            {
-                map[i] = t;
-            }
+            firstNumbers.TryAdd(BinaryPrimitives.ReadUInt32LittleEndian(section[(1 + i * 4)..]), i);
         }
+        // 현재 타입 번호순으로 등록하며 해시 충돌은 원본처럼 뒤의 타입이 같은 파일 번호를 덮어쓴다.
+        foreach (TypeInfo type in catalog.Types)
+            if (firstNumbers.TryGetValue(TypeCatalog.NameHash(type.RuntimeName), out int number)) map[number] = type;
         return map;
     }
 
@@ -335,21 +352,22 @@ public sealed class FortFile
         byte? qa = (type.Flags1 & TypeFlagBits.SaveQA) != 0 ? r.U8() : null;
         short? qb = (type.Flags1 & TypeFlagBits.SaveQB) != 0 ? (short)r.U16() : null;
         byte? bridge = (type.Flags2 & TypeFlagBits.Bridge) != 0 ? r.U8() : null;
+        byte? legacy = version == 0 ? r.U8() : null;
         byte? factory = version > 1 && (type.Flags2 & TypeFlagBits.Factory) != 0 ? r.U8() : null;
         if (version > 0 && (type.Flags2 & TypeFlagBits.OwnerSaved) != 0)
         {
             owner = r.U8();
         }
         IReadOnlyList<FortContent> contents = (type.Flags1 & TypeFlagBits.Container) != 0
-            ? ReadContents(ref r, conversion)
+            ? ReadContents(ref r, conversion, type.ContainerListFlags)
             : [];
-        return new FortObject(cell >> 4, cell & 0xF, type, frame, qa, qb, bridge, factory, owner, contents);
+        return new FortObject(cell >> 4, cell & 0xF, type, frame, qa, qb, bridge, factory, owner, contents) { LegacyState = legacy };
     }
 
     /// <summary>내용물 목록 (Template.cpp FUN_004bd130): [개수 u8] + 항목 반복</summary>
     /// <param name="r">읽기 위치</param>
     /// <param name="conversion">타입 번호 변환표</param>
-    private static List<FortContent> ReadContents(ref SpanReader r, Dictionary<int, TypeInfo> conversion)
+    private static List<FortContent> ReadContents(ref SpanReader r, Dictionary<int, TypeInfo> conversion, byte containerListFlags)
     {
         var items = new List<FortContent>();
         int count = r.U8();
@@ -367,10 +385,11 @@ public sealed class FortFile
             }
             byte? qa = (type.Flags1 & TypeFlagBits.SaveQA) != 0 ? r.U8() : null;
             short? qb = (type.Flags1 & TypeFlagBits.SaveQB) != 0 ? (short)r.U16() : null;
+            byte listFlags = type.ContentListFlags != 0 ? type.ContentListFlags : containerListFlags != 0 ? containerListFlags : r.U8();
             IReadOnlyList<FortContent> nested = (type.Flags1 & TypeFlagBits.Container) != 0
-                ? ReadContents(ref r, conversion)
+                ? ReadContents(ref r, conversion, type.ContainerListFlags)
                 : [];
-            items.Add(new FortContent(type, qa, qb, nested));
+            items.Add(new FortContent(type, qa, qb, nested) { ListFlags = listFlags });
         }
         return items;
     }

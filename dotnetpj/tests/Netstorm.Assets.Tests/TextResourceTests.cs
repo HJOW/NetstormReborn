@@ -88,7 +88,7 @@ public sealed class TextResourceTests
         Assert.Equal("The Temple", store.Expand("The {vortex}"));
         Assert.Equal("Build a Workshop.", store.Expand("Build {a factory}."));
         Assert.Equal("Owner: Not Registered", store.Expand("Owner: {fort.mySubHandle|Not Registered}"));
-        Assert.Equal("x {Not Found:NOSUCHKEY} y", store.Expand("x {NoSuchKey} y"));
+        Assert.Equal("x {NOSUCHKEY} y", store.Expand("x {NoSuchKey} y"));
         Assert.Equal("Temple", store.Expand("{{which}}"));
         Assert.Equal("say \"hi\"\n{literal}", store.Expand("say `\"hi`\"`n`{literal`}"));
         Assert.Equal("trail", store.Expand("trail  \t"));
@@ -96,7 +96,7 @@ public sealed class TextResourceTests
         Assert.Equal("$Button=OK,DoNothing,0", store.Get("okbutton"));
         Assert.Null(store.Get("absent"));
         // 자기 참조는 무한 반복하지 않고 멈춘다
-        Assert.Contains("Not Found", store.Get("loop"));
+        Assert.Equal("{LOOP}", store.Get("loop"));
     }
 
     /// <summary>위에 쌓은 층이 먼저 조회되고, 이름 있는 층은 접두어가 맞는 키만 받는다</summary>
@@ -112,7 +112,7 @@ public sealed class TextResourceTests
         Assert.Equal("scoped", store.Get("mission.title"));
         Assert.Equal("Done Tutorial1", store.Expand("Done {mission.fileName}"));
         store.Pop();
-        Assert.Equal("{Not Found:MISSION.FILENAME}", store.Expand("{mission.fileName}"));
+        Assert.Equal("{MISSION.FILENAME}", store.Expand("{mission.fileName}"));
     }
 
     /// <summary>{@미션.키} 는 미션 공급자에서 머리 값을 읽는다</summary>
@@ -342,15 +342,17 @@ public sealed class TextResourceTests
     /// <param name="files">(원본 경로, 내용) 목록</param>
     private static byte[] BuildArchive(params (string Name, string Content)[] files)
     {
+        // TAFF 고정 헤더의 바이트 크기.
         const int headerSize = 0x30;
         var directory = new MemoryStream();
         var data = new MemoryStream();
+        // 반복 사용하므로 스택 버퍼는 루프 밖에서 한 번만 만든다.
+        Span<byte> fixedPart = stackalloc byte[8];
         // 파일마다 디렉터리 레코드와 인코딩된 데이터를 쓴다
         foreach ((string name, string content) in files)
         {
             byte[] body = Encoding.ASCII.GetBytes(content);
             XorCipher.Apply(body);
-            Span<byte> fixedPart = stackalloc byte[8];
             BinaryPrimitives.WriteInt32LittleEndian(fixedPart, (int)data.Length);
             BinaryPrimitives.WriteInt32LittleEndian(fixedPart[4..], body.Length);
             directory.Write(fixedPart);

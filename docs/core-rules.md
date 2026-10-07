@@ -6,6 +6,7 @@
 > 사제의 가이저 왕복 수집과 튜토리얼 1 진행 조건을 구현했다. 2026-10-01 포대 전투·체력·파괴·사제 기절, 수송 사제 포획·제단 의식·미션 승패 이벤트를 추가했다.
 > 전투에는 명시적인 근사가 있다([확정 근거·추정값·검증](gameplay/combat.md)).
 > Whirlibase·Whirligig의 출격·이동·공격·귀환을 추가했다([비행체 계약](gameplay/flyers.md)). [캠페인 1-1](gameplay/campaign-one.md)·[1-2](gameplay/campaign-two.md)에 한정한 임시 방어 AI·골렘 수확·일반 이동/정지·워크샵 업그레이드 명령을 추가했다. 원본 전략 복원, 다른 공중 공격 유닛과 비행 수송의 이륙·착륙 연출은 후속이다.
+> 2026-10-07: 다리 추첨·난수·전체 패턴·프레임 검색·설정을 C++의 원본 x86 기대값에 연결했다. 설정·타입·요새·SHP 자료 계층 정정과 검증 범위는 [dotnetpj 복원 기록](dotnet-reconstruction-20261007.md) 참조. 전투·AI·붕괴 스캔의 근사는 유지한다.
 
 ## 구성
 
@@ -29,7 +30,7 @@
 | `Bridges/BridgePatternCatalog.cs` | 다리 조각 모양 26개(가중치 합 287)와 누적 가중치 추첨 | VA 0x52f998, `Canondecoder.cpp` `004257c0` |
 | `Bridges/BridgePiece.cs` | 모양 + 회전(1 = 시계 방향 90°) → 회전된 칸 목록. 원본 조작: 오른쪽 클릭 = 시계, C(반대 회전)면 반시계 | `00425c20`·`00425860`, 원본 실행 |
 | `Bridges/BridgeGrid.cs` | 놓인 다리 칸의 연결망·배치 판정(겹침 불가, 섬 가장자리·내 다리 열린 끝에 이어짐)·10초 주기 칸 단위 붕괴(끝 칸만 구동자, 접합 칸 무리는 함께, 섬에서 떨어진 5칸 미만 조각은 즉시, 수명 7→0, 5 아래 금 감)·조각 품질별 시작 상태(금 감 = 수명 4)·건물형 유닛이 없어질 때 주변 ±2칸 한 단계 약화(`WeakenAround`) | `Bridge.cpp` `00422bc0`·`004227e0`·`00421c30`, `Rifttype.cpp` `0049b510`, `Construction.cpp` `00442c80`, 공통 제거 처리 `0044b9e0` ([bridge-pieces.md](exe/bridge-pieces.md) 8절). 이어짐 판정과 칸 처리 순서는 근사 |
-| `Bridges/BridgeAnchors.cs` | 다리를 시작할 수 없는 섬 칸: 가장자리 초목(edgeFarm) 칸 + dropBlocking 타입 오브젝트 발자국 (사용자 확인 규칙 "초목이 있는 가장자리에서는 다리를 시작할 수 없다") | edgefarm.type `dropBlocking`, `Squid.cpp` `004b02d0` 스폿 비트 0x10, `Rifttype.cpp` `0049b510` ([bridge-pieces.md](exe/bridge-pieces.md) 8.4절) |
+| `Bridges/BridgeAnchors.cs` | 다리를 시작할 수 없는 섬 칸: 가장자리 초목(edgeFarm) 칸 + dropBlocking 타입 오브젝트 발자국. 2026-10-07 타입 후처리를 연결하여 포대·궁수 등 모든 emplacement도 이 비트를 가진다 | edgefarm.type `dropBlocking`, 타입 후처리 `0049b0d0`, `Squid.cpp` `004b02d0` 스폿 비트 0x10, `Rifttype.cpp` `0049b510` ([bridge-pieces.md](exe/bridge-pieces.md) 8.4절) |
 | `Rules/MissionStart.cs` | 미션 머리 값 → 시작 SP(myStartMoney, 없으면 전투 옵션)·시작 지식(myTech)·기술 허용 표(techAllowed: deny/allow/all 순서 적용, **실행 중 `Set`·`SetAll`로 바뀜**)·denySalvage 시작 값 등. 머리 값은 시작 상태이고 튜토리얼 단계 처리가 실행 중에 바꾼다 | `Mission.cpp` `00482eb0`, `Totalmade.cpp` `004c23c0`~`004c2400`, [mission-header-flags.md](exe/mission-header-flags.md), 튜토리얼 1·2 원본 관찰 |
 | `Bridges/BridgeCursor.cs` | 커서 → 들고 있는 조각의 왼쪽 위 칸: (⌊(x + 7) / 16⌋, ⌊y / 11⌋), 크기·회전 무관 | 원본 실행 측정 ([bridge-pieces.md](exe/bridge-pieces.md) 4절) |
 | `Bridges/BridgeFrames.cs` | 칸 → bridge.type 프레임 (보통 / 금 감 +10 / 단단함 20) | `0049a940`, bridge.type 주석 |

@@ -1,3 +1,5 @@
+using Netstorm.Assets;
+
 namespace Netstorm.Core.Bridges;
 
 /// <summary>다리 조각 모양의 한 칸: 방향 글자와 변형 번호 (bridge.type 클러스터 "J01" = 글자 J, 변형 1)</summary>
@@ -71,6 +73,10 @@ public sealed class BridgePattern
 
     /// <summary>다리가 놓인 칸 수</summary>
     public int FilledCount => Cells.Count(c => c != null);
+
+    /// <summary>영역과 다리가 함께 사용하는 원본 CanonDecoder의 셀 표로 변환한다.</summary>
+    public CanonicalPattern Canonical => new(Width, Height, Cells.Select(cell =>
+        cell is BridgeCell value ? new PatternCell(value.Letter, value.Variation) : new PatternCell('.', 0)).ToArray());
 }
 
 /// <summary>
@@ -124,10 +130,9 @@ public static class BridgePatternCatalog
     /// r = value % 가중치 합일 때 누적 가중치가 처음으로 r 이상이 되는 모양을 고른다.
     /// 비교가 "이하"라서 r = 0 이면 가중치 0 인 0번(한 칸)이 뽑힌다.
     /// </summary>
-    /// <param name="value">0 이상의 난수 (원본은 0~9999)</param>
+    /// <param name="value">부호 있는 원본 입력. 실제 게임의 난수는 0~9999이며 음수 나머지는 첫 조각을 고른다.</param>
     public static int Draw(int value)
     {
-        ArgumentOutOfRangeException.ThrowIfNegative(value);
         int r = value % TotalWeight;
         int cumulative = 0;
         // 표 순서로 누적 가중치를 더하며 r 이 들어가는 첫 모양을 찾는다

@@ -287,7 +287,7 @@ public sealed class TutorialDialogScriptTests
         Assert.Equal(TutorialDialogActionKind.Navigate, dialog.Choose(0).Kind);
         Assert.Equal("TryAgain", dialog.Current!.Section);
         Assert.Contains("The War Begins!", string.Concat(dialog.Current.Runs.Select(run => run.Text)));
-        Assert.DoesNotContain("Not Found", string.Concat(dialog.Current.Runs.Select(run => run.Text)));
+        Assert.DoesNotContain("{MISSION.", string.Concat(dialog.Current.Runs.Select(run => run.Text)));
         Assert.Equal(["Replay Mission", "Leave Missions"], dialog.Current.Buttons.Select(button => button.Label));
         Assert.Equal(TutorialDialogActionKind.RestartMission, dialog.Choose(0).Kind);
         // 미션 치환 층은 섹션을 준비한 뒤 남지 않는다

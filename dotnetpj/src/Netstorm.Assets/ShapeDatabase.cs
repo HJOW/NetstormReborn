@@ -6,10 +6,10 @@ namespace Netstorm.Assets;
 /// 셰이프 프레임 헤더. 픽셀 영역은 기준점(0,0) 대비 [XMin..XMax] × [YMin..YMax] (양 끝 포함).
 /// </summary>
 /// <param name="Offset">파일 내 절대 위치</param>
-/// <param name="Bounds0">bounds 첫 값 (원본 그림 크기 추정)</param>
-/// <param name="Bounds1">bounds 둘째 값</param>
-/// <param name="Origin0">origin 첫 값 (원본 그림 안 기준점 추정)</param>
-/// <param name="Origin1">origin 둘째 값</param>
+/// <param name="Bounds0">VFX 내부 bounds 첫 u16. Squid의 부호 있는 표시 폭과는 별도 필드다.</param>
+/// <param name="Bounds1">VFX 내부 bounds 둘째 u16</param>
+/// <param name="Origin0">VFX 내부 origin 첫 u16. 실제 Squid hotspot은 추가 헤더에서 읽는다.</param>
+/// <param name="Origin1">VFX 내부 origin 둘째 u16</param>
 /// <param name="XMin">기준점 대비 왼쪽 끝</param>
 /// <param name="YMin">기준점 대비 위쪽 끝</param>
 /// <param name="XMax">기준점 대비 오른쪽 끝 (포함)</param>
@@ -48,6 +48,9 @@ public sealed record ShapeBlock(int Index, int Offset, IReadOnlyList<ShapeFrame>
 /// <param name="Opaque">불투명 여부 (행 우선)</param>
 public sealed record IndexedImage(int Width, int Height, byte[] Indices, bool[] Opaque);
 
+/// <summary>VFX 바로 앞의 원본 Squid 전용 헤더. 표시 치수와 hotspot은 부호 있는 16비트다.</summary>
+public readonly record struct SquidFrameMetrics(float CellWidth, float CellHeight, short DisplayWidth, short DisplayHeight, short HotspotX, short HotspotY);
+
 /// <summary>
 /// d/_shapes.shp (Miles VFX 셰이프 데이터베이스) 읽기. 포맷: docs/formats/shp.md
 /// </summary>
@@ -65,10 +68,16 @@ public sealed class ShapeDatabase
     /// <summary>프레임 헤더 크기 (u16×4 + i32×4)</summary>
     private const int FrameHeaderSize = 24;
 
+    /// <summary>원본 Squid 프레임마다 VFX 앞에 붙는 추가 헤더의 바이트 수.</summary>
+    private const int SquidHeaderSize = 36;
+
     /// <summary>원본 파일 이름</summary>
     public const string FileName = "_shapes.shp";
 
     private readonly byte[] _raw;
+
+    /// <summary>연속 블록 표의 끝. 순수 VFX 파일의 앞부분을 Squid 헤더로 읽지 않도록 검사한다.</summary>
+    private readonly int _headerEnd;
 
     /// <summary>블록 목록 (파일 앞부분에 연속으로 놓인 순서)</summary>
     public IReadOnlyList<ShapeBlock> Blocks { get; }
@@ -95,11 +104,26 @@ public sealed class ShapeDatabase
             pos += BlockHeaderSize + count * FrameEntrySize;
         }
         Blocks = blocks;
+        _headerEnd = pos;
     }
 
     /// <summary>파일에서 읽는다</summary>
     /// <param name="path">_shapes.shp 경로</param>
     public static ShapeDatabase Load(string path) => new(File.ReadAllBytes(path));
+
+    /// <summary>
+    /// 원본 Squid SHP의 추가 헤더를 명시적으로 읽는다(docs/exe/cpp-display-reconstruction.md).
+    /// 일반 VFX/글꼴의 Decode는 이 헤더를 가정하지 않는다.
+    /// </summary>
+    public SquidFrameMetrics SquidMetrics(int block, int frame)
+    {
+        int offset = Blocks[block].Frames[frame].Offset;
+        if (offset - _headerEnd < SquidHeaderSize) throw new InvalidDataException("Squid SHP 추가 헤더가 없습니다.");
+        ReadOnlySpan<byte> prefix = _raw.AsSpan(offset - SquidHeaderSize, SquidHeaderSize);
+        return new SquidFrameMetrics(BinaryPrimitives.ReadSingleLittleEndian(prefix), BinaryPrimitives.ReadSingleLittleEndian(prefix[4..]),
+            BinaryPrimitives.ReadInt16LittleEndian(prefix[24..]), BinaryPrimitives.ReadInt16LittleEndian(prefix[26..]),
+            BinaryPrimitives.ReadInt16LittleEndian(prefix[28..]), BinaryPrimitives.ReadInt16LittleEndian(prefix[30..]));
+    }
 
     /// <summary>타입 이름(대소문자 무시)으로 블록을 찾는다</summary>
     /// <param name="typeName">예: "sunCannon"</param>

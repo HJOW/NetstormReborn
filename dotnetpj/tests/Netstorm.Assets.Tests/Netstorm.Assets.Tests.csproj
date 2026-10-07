@@ -16,4 +16,13 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Netstorm.Assets\Netstorm.Assets.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <!-- 원본 실행 없이 C++와 동일한 기계어 결과를 검사한다. -->
+    <None Include="../../../cpppj/tests/fixtures/original-x86.tsv" Link="X86/original-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/config-x86.tsv" Link="X86/config-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/options-x86.tsv" Link="X86/options-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <Compile Include="../Shared/X86Fixture.cs" Link="Shared/X86Fixture.cs" />
+    <!-- C++의 정적 자산 메타데이터는 x86 실행 기대값과 출처를 구분한다. -->
+    <None Update="Fixtures/type-metadata-1078.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

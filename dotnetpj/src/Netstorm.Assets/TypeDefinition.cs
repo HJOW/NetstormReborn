@@ -35,6 +35,9 @@ public sealed partial class TypeDefinition
     /// <summary>{ } 안의 속성 (키는 대소문자 무시, 값은 따옴표를 뗀 원문)</summary>
     public IReadOnlyDictionary<string, string> Properties { get; }
 
+    /// <summary>속성이 나온 순서. 중복과 별칭의 적용 순서를 원본 0049c3b0대로 보존한다.</summary>
+    public IReadOnlyList<KeyValuePair<string, string>> PropertySequence { get; }
+
     /// <summary>클러스터 목록 (파일에 나온 순서 = 셰이프 블록 안 순번)</summary>
     public IReadOnlyList<Cluster> Clusters { get; }
 
@@ -49,12 +52,13 @@ public sealed partial class TypeDefinition
 
     /// <summary>해석 결과로 만든다</summary>
     private TypeDefinition(string name, string modifier, IReadOnlyList<string> flags,
-        IReadOnlyDictionary<string, string> properties, IReadOnlyList<Cluster> clusters)
+        IReadOnlyDictionary<string, string> properties, IReadOnlyList<KeyValuePair<string, string>> propertySequence, IReadOnlyList<Cluster> clusters)
     {
         Name = name;
         Modifier = modifier;
         Flags = flags;
         Properties = properties;
+        PropertySequence = propertySequence;
         Clusters = clusters;
     }
 
@@ -103,17 +107,20 @@ public sealed partial class TypeDefinition
             : [];
 
         var properties = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        var propertySequence = new List<KeyValuePair<string, string>>();
         Match body = BodyRegex().Match(clean);
         if (body.Success)
         {
             // { } 안의 "키 = 값;" 을 차례로 읽는다 (같은 키가 반복되면 마지막 값)
             foreach (Match p in PropertyRegex().Matches(body.Groups[1].Value))
             {
-                properties[p.Groups[1].Value] = Unquote(p.Groups[2].Value.Trim());
+                string key = p.Groups[1].Value, value = Unquote(p.Groups[2].Value.Trim());
+                properties[key] = value;
+                propertySequence.Add(new KeyValuePair<string, string>(key, value));
             }
         }
 
-        return new TypeDefinition(name, modifier, flags, properties, ParseClusters(text));
+        return new TypeDefinition(name, modifier, flags, properties, propertySequence, ParseClusters(text));
     }
 
     /// <summary>클러스터 줄을 순서대로 읽는다 (줄 단위로 주석을 떼고 검사)</summary>

@@ -24,6 +24,22 @@ public sealed class GameResourcesTests
         Assert.Equal(@"\D\config.german", resources.LanguageConfigPath);
     }
 
+    /// <summary>전역 설정이 용어표의 같은 키보다 우선하되 명시적인 한국어 선택과 영어 누락 보충은 보존한다.</summary>
+    [Fact]
+    public void Startup_GlobalSettingsOverrideLanguageTerms()
+    {
+        using var data = new ResourceDirectory();
+        data.WriteText("d/options.cfg", "currentLanguage = german\nvortex = Custom Temple\n");
+        data.WriteText("d/setup.cfg", "battlePal = chosen\n");
+        data.WriteText("d/config.english", "vortex = Temple\npriest = High Priest\nbattlePal = incorrect\n");
+        data.WriteText("d/config.korean", "vortex = 신전\ncurrentLanguage = french\n");
+        var resources = new GameResources(data.Files(), "korean");
+        Assert.Equal("Custom Temple", resources.Settings.Get("vortex"));
+        Assert.Equal("High Priest", resources.Settings.Get("priest"));
+        Assert.Equal("chosen", resources.Settings.Get("battlePal"));
+        Assert.Equal("korean", resources.Settings.Get("currentLanguage"));
+    }
+
     /// <summary>명시 언어가 설정보다 우선하며 UTF-8 한국어 용어표·번역표·미션을 실제로 조회한다.</summary>
     [Fact]
     public void ExplicitKorean_LoadsUtf8ResourcesAndMissionHeaderReferences()
@@ -67,7 +83,7 @@ public sealed class GameResourcesTests
         Assert.Equal("d/xlat.english", resources.TranslationPath);
         Assert.Equal("Welcome", resources.Settings.Expand("{@intro.name}"));
         Assert.Null(resources.TryLoadMission("absent"));
-        Assert.Equal("{Not Found:@ABSENT.NAME}", resources.Settings.Expand("{@absent.name}"));
+        Assert.Equal("{@ABSENT}", resources.Settings.Expand("{@absent.name}"));
         Assert.Equal("korean", resources.Settings.Get("currentLanguage"));
         Assert.Equal(layers, resources.Settings.LayerCount);
     }
