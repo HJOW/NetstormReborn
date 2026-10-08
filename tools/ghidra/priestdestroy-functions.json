@@ -1,0 +1,8 @@
+{
+  "description": "사제 preDestroy·목록 제거·보호막 삭제·Carrier 경계의 읽기 전용 내보내기. 마지막 디컴파일 PC: HJOW-Athlon, 2026-10-08.",
+  "editions": {
+    "originals": ["004919b0", "0040ea00", "004918e0", "00426890"],
+    "originalCD": ["0040c330", "0040c0d0", "0040bf00", "004e43b0"],
+    "original1037": ["0040c330", "0040c0d0", "0040bf00", "004e43b0"]
+  }
+}

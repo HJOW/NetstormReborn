@@ -47,6 +47,7 @@ target_sources(netstorm PRIVATE
     RawPriestPostPop.cpp RawPriestPostPop.h
     RawPriestState.cpp RawPriestState.h
     RawPriestRegen.cpp RawPriestRegen.h
+    RawPriestPreDestroy.cpp RawPriestPreDestroy.h
     RawCarrierPostPop.cpp RawCarrierPostPop.h
     SquidProcess.cpp SquidProcess.h
     Graph.cpp Graph.h
