@@ -33,6 +33,7 @@ Get-ChildItem tools/decomp_*_oracle.py | Where-Object { Select-String -LiteralPa
 | `bridgepostpop` | bridgepostpop | 1 / 1 / 1 | 다리 vtable +0x20의 실제 함수 |
 | `bridgeconnect` | bridgeconnect·islandlifecycle | 10 / 10 / 10 | 2026-10-08 추가([다리/섬 연결](cpp-bridgeconnect-reconstruction.md)) |
 | `setframe` | setframe | 3 / 3 / 3 | 2026-10-08 추가([프레임 지정](cpp-setframe-reconstruction.md)) |
+| `pathanimation` | pathanimation | 3 / 3 / 3 | 2026-10-08 추가([방향 조회·도착 프레임 접두](cpp-path-animation-reconstruction.md)), `VM-W11-CODEX`에서 내보냄 |
 | `islandlifecycle` | islandlifecycle | 4 / 2 / 2 | 2026-10-08 추가([섬 삭제 훅](cpp-islandlifecycle-reconstruction.md)) |
 | `islandpostpop` | islandpostpop | 5 / 4 / 4 | 2026-10-08 추가([noIsland 최초 등록·받침 소유자](cpp-islandpostpop-reconstruction.md)), `VM-W11-CODEX`에서 내보냄 |
 | `regiongraph` | regiongraph | 13+3 / 14+1 / 14+1 | **증거 JSON의 `function_ranges` 순서에서 복원**(아래 "남은 문제") |

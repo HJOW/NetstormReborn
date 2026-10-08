@@ -1,5 +1,6 @@
 #include "client/GameWorld.h"
 #include "client/SquidRenderer.h"
+#include "o/RawPathAnimation.h"
 #include "o/OriginalText.h"
 #include <algorithm>
 #include <cmath>
@@ -259,7 +260,10 @@ o::CellPoint GameWorld::ToCell(ScreenPoint p) const { return {static_cast<int>(s
 std::size_t GameWorld::Frame(const o::Squid& object) const {
     if (object.heading<0) return object.initialFrame;
     const auto& type=assets_.Types()[static_cast<std::size_t>(object.type-o::kFirstAssetTypeNumber)];
-    const int number=object.walking ? static_cast<int>(object.animation*12)%8 : 1;
+    // 도착/보행 중단 시 현재 프레임의 글자 구간 첫 물리 번호 +1을 사용한다.
+    if (!object.walking) return static_cast<std::size_t>(o::RawPathAnimation::RestFrame(type.definition.FrameTable(),static_cast<std::int32_t>(object.frame)));
+    // 보행 중 12Hz 임시 표시는 원본 PathProcess의 프레임 진행 복원까지 유지한다.
+    const int number=static_cast<int>(object.animation*12)%8;
     const int frame=type.definition.FrameTable().FindNumber(static_cast<std::uint8_t>('A'+object.heading),'P',static_cast<std::uint8_t>(number));
     return frame>=0 ? static_cast<std::size_t>(frame) : object.initialFrame;
 }

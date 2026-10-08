@@ -1,7 +1,7 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
-> 최종 갱신: 2026-10-08 (**cpppj 10.78 기준 raw 표면 월드·GUI·고정 게임 시각 연결 완료.** Release 경고/오류 0·CTest 내부 **261개·실패 0**, 관련 감사 **15종 통과**. 창 회귀 4종+새 표면 창 검사 통과, 실제 10.78/CD 5개 raw 미션 로드 확인. 표면은 실제 SID/Graph/미션 내부 Kernel이며 건물·walker는 기존 어댑터다. 다음은 **비표면 raw 전환·애니메이션 프로세스·walker 낙하·파편/소리**. 배치·건설·경제·전투·승패는 남고 미션 완주는 불가능하다. 새 독립 x86 없음·누적 **131,542개 유지**. 원본 게임/복사본 실행·보호 파일 변경·커밋/푸시 없음. cpppj/공통은 이 문서, dotnetpj는 LEFT_JOBS.dotnetpj.md를 따른다.)
-> **마지막 디컴파일 수행 PC(AGENTS.md 2026-10-08 추가 규칙): `VM-W11-CODEX` (IP 10.0.0.17), 2026-10-08.** 이 PC에서 한 것: 세 판본 기본 Ghidra 프로젝트 위의 읽기 전용 내보내기 전체(`tools/ghidra/export_functions.ps1 -All`과 새 목록 `bridgeconnect`·`setframe`·`islandlifecycle`·`regiongraph`·`pop`·`display`·`postpop`·`graph`·`lifecycle`·`islandpostpop`), 정밀 디컴파일(`tools/ghidra/refine_all.ps1`, 10.78·CD). 결과는 Git 제외 `extracted/`에 있어 **다른 PC에서 cpppj/디컴파일 분석을 이어가려면 그 PC에서 다시 만들어야 한다**([절차](docs/exe/ghidra-exports.md)). 10.62·10.82(V10/V12) 판본은 이 PC에서 디컴파일하지 않았다.
+> 최종 갱신: 2026-10-08 (**cpppj 10.78 기준 방향 조회·보행 도착 프레임 접두 복원/표시 연결 완료.** Release 경고/오류 0·CTest 내부 **266개·실패 0**, 관련 감사 **7종**, world/surface 창 회귀 통과. 새 독립 x86 **6,048개**, 누적 **137,590개**. raw 유닛 전체 전환·보행 중 프레임 진행/경로 종료는 미완료다. 다음은 **사제 전용 소유자/postPop·PathProcess 진행·비표면 raw 전환**, 이후 낙하·파편/소리·배치·건설·경제·전투·승패. 미션 완주는 아직 불가능하다. 원본 게임/복사본 실행·보호 파일 변경·커밋/푸시 없음. cpppj/공통은 이 문서, dotnetpj는 LEFT_JOBS.dotnetpj.md를 따른다.)
+> **마지막 디컴파일 수행 PC(AGENTS.md 2026-10-08 추가 규칙): `VM-W11-CODEX` (IP 10.0.0.17), 2026-10-08.** 이 PC에서 한 것: 세 판본 기본 Ghidra 프로젝트 위의 읽기 전용 내보내기 전체(`tools/ghidra/export_functions.ps1 -All`과 새 목록 `bridgeconnect`·`setframe`·`islandlifecycle`·`regiongraph`·`pop`·`display`·`postpop`·`graph`·`lifecycle`·`islandpostpop`·`pathanimation`), 정밀 디컴파일(`tools/ghidra/refine_all.ps1`, 10.78·CD). 결과는 Git 제외 `extracted/`에 있어 **다른 PC에서 cpppj/디컴파일 분석을 이어가려면 그 PC에서 다시 만들어야 한다**([절차](docs/exe/ghidra-exports.md)). 10.62·10.82(V10/V12) 판본은 이 PC에서 디컴파일하지 않았다.
 > 프로젝트 목표(AGENTS.md): 원본 NetStorm: Islands at War 를 디컴파일/분석하여 클론 코딩하고,
 > **Windows 10/11** 과 **GUI 환경의 Linux** 에서 동작하며 **여러 언어를 지원**하는 게임을 만든다.
 > **모방 범위(2026-10-03 AGENTS.md 변경)**: 기존 게임의 **사운드·그래픽·애니메이션 등 거의 모든 요소를 가능한 한 동일하게** 최대한 모방한다.
@@ -12,6 +12,18 @@
 > **문서 분할 정리(2026-10-07, DESKTOP-HJOW):** 기존 dotnetpj 전용 구현·검증·기술 스택·개발 계획을 [LEFT_JOBS.dotnetpj.md의 이관 이력](LEFT_JOBS.dotnetpj.md#legacy-dotnet-history)으로 옮겼다. 기존 절 제목은 이관 링크를 위해 유지했다. 이번에는 두 인수인계 문서만 정리했으며 게임/창 실행·빌드/테스트를 하지 않았다.
 > **공통사항의 적용 범위:** 원본 10.78 동작·판본 비교·디컴파일·포맷·그래픽/소리/영상·글꼴·사용자 게임 요구사항과 tools/analyzeManager/PREPARE 기록은 두 프로젝트의 공통 근거로 여기에 남긴다. 공용 분석기가 C#이어도 dotnetpj 게임 전용이 아니다. Netstorm.Core/Assets/Game·MonoGame·게임 .cs 변경·xUnit/clone 스모크 완료는 dotnetpj 기록이다. **원본 분석 완료가 두 게임의 구현 완료를 뜻하지 않는다.**
 > **과거 기록 읽기:** 프로젝트 분리 전 “클론” 구현/화면 확인은 C# 클론이다. 옛 테스트 수/단계 체크는 당시 이력이고 최신 dotnetpj 상태는 별도 문서 맨 위, cpppj 상태는 이 문서 맨 위를 따른다. 궁극적인 Linux/다국어 요구사항은 공통이지만 현재 cpppj 구현 범위는 Windows용이며 dotnetpj Linux 지원은 후순위다.
+
+---
+
+## 2026-10-08 ✅ 완료 / ⏭ 부분 인계: 방향 조회·보행 도착 프레임 접두 (VM-W11-CODEX)
+
+- [x] **지침/호스트:** AGENTS.md·LEFT_JOBS.md·LEFT_JOBS.dotnetpj.md를 읽고 직전 다음 구현의 보행 애니메이션부터 범위를 좁혔다. 현재 `VM-W11-Codex`와 마지막 디컴파일 PC가 일치한다. **마지막 디컴파일 수행 PC: VM-W11-CODEX, 2026-10-08.** 새 `pathanimation` 목록을 같은 PC의 세 기본 Ghidra 프로젝트에서 읽기 전용으로 내보냈다(함수 각 3개). 원본 게임/복사본 실행·AGENTS.md·dotnetpj/인계 변경·커밋/푸시 없음. 허용된 클론 창만 실행했고 두 스모크가 originals/originalCD 전체 해시·존재 상태/설정 복구를 확인했다.
+- [x] **복원:** [`RawPathAnimation`](cpppj/src/o/RawPathAnimation.h)으로 signed side `004ad680`/CD `004ae3f0`, direction `004ad710`/CD `004ae4b0`, 도착 접두 `0048bd90`/CD `00480580`을 복원했다. 타입 글자별 첫 물리 번호+1을 사용하며 같은 프레임이어도 Unpop(0)→쓰기→Repop(0x40)한다. 패치 DWORD/CD BYTE 폭과 extra 보존을 유지한다. free/예약 SID·타입/현재 프레임·A~P 표 밖 입력은 효과 전 거부한다. GUI 보행 종료 계산은 `RestFrame`으로 교체했다. [원본 주소·범위·재현](docs/exe/cpp-path-animation-reconstruction.md).
+- [x] **독립 대조:** 새 [`decomp_pathanimation_oracle.py`](tools/decomp_pathanimation_oracle.py), 세 PE×(조회 608 + 접두 1,408) = **6,048개**. x87 두 정밀도, signed side 256값·A~P·비연속 코드/variant·owner·extra·이미 정지 프레임·BYTE 넘침을 대조했다. C++ 사건/슬롯 전체 일치, 예상 밖 assert/OS 호출 0. **Unpop/Pop은 기록 대체**, 패치 `0048bdd0`/CD `0047e220`에서 멈추므로 이후 종료/경로 처리와 원본 함수 전체 반환을 증명하지 않는다. 넘침 번호 256은 Pop 대체 상태의 필드 쓰기만 검사한다.
+- [x] **통합/검증:** 실제 두 판본 Factory·Unpop·Pop의 단계 1→2 재등록/같은 프레임 반복/단일 체인·SID 여유를 검사했다(일반 bridgeConnector 155·합성 코드/크기, 표시/Graph 없음). Release 경고/오류 0·CTest 내부 **266개·실패 0**(기존 261 + 새 5, 60.46초). 관련 감사 **7종 모두 통과**(pathanimation/setframe/bridgeevent/process/display/pop/unpop). world 창 검사 1-1/TEST01 **20개 상태**, 1-1 동쪽 C 구간 도착 물리 프레임 17과 캡처 확인. surface 창 검사 예약/재개 삭제·픽셀 변화·미션 재진입/두 판본 5개 미션 로드 통과. 누적 독립 x86 **137,590개**. 로그 `extracted/pathanimation-export.log`·`pathanimation-generate.log`·`build-pathanimation-final.log`·`ctest-pathanimation.log`·`audit-pathanimation.json`·`gui-pathanimation-world.log`·`gui-pathanimation-surface.log`.
+- [ ] **다음 작은 구현:** 실제 priest 타입 **158**의 전용 소유자/postPop부터 복원한다. 생성자 `004952a0`/CD `0040d790`, vtable `0050f210`/CD `005003e0`, postPop `004950f0`/CD `0040c110`, owner `00491790`/CD `0040bda0`, preDestroy `004919b0`/CD `0040c330`. postPop에 regen Regular(`0x25a`)·carrier/damageable·낙하/경로 무효화가 있어 공통 가상 표로 대체해 raw 표면 Pop에 넣으면 원본 효과를 잃는다. 합성 예전 fixture의 85는 실제 priest 번호가 아니다.
+- [ ] **계속 구현:** 보행 진행 `0048bb40`/CD `004805d0`의 SHP float 이동량·정지/목표 판정·물리 프레임 진행과 도착 뒤 경로 종료/명령 처리를 별도 복원한다. GUI walker/건물과 보행 중 12Hz 타이머는 기존 어댑터다. 검증된 lifecycle/process/표시를 raw 월드·Kernel로 옮긴 뒤 walker 낙하·파편/소리·배치·건설·경제·전투·승패를 진행한다. 이번에 유닛 raw 전환/애니메이션 전체를 완료한 것은 아니다.
+- [ ] **장시간 검사 인계 유지:** 기존 프레임 지정 6개·섬 삭제 훅 5개 변이(약 40분), noIsland/표시/삭제/새 연결부 변이, 최대 지도·SID 소진/로드 실패 재시도. 테스트 포함 개별 15분 이상 작업은 인계한다는 기존 지침을 유지한다.
 
 ---
 
