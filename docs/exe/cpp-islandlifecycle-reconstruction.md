@@ -59,3 +59,7 @@ python -X utf8 tools/decomp_islandlifecycle_oracle.py --verify
 cmake --build cpppj/build --config Release --parallel 4
 ctest --test-dir cpppj/build -C Release --output-on-failure
 ```
+
+## 2026-10-08 후속 통합
+
+[섬 삭제·지연 낙하·끝 칸 변환·연결 객체 정리](cpp-surface-lifecycle-integration.md)를 `RawSurfaceLifecycle`과 실제 raw 모듈로 연결했다. 10.78/CD의 콘솔 통합이 통과하고 전체 검사는 246개·실패 0이다. 개별 함수의 기계어 기대값/대체 경계는 위 기록을 유지한다. Graph 활성·GUI 월드·실제 walker 낙하/파편/소리는 후속이다.

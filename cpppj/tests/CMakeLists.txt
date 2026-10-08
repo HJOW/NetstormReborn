@@ -24,6 +24,7 @@ add_executable(netstorm_tests
     BridgeConnectTests.cpp
     IslandLifecycleTests.cpp
     IslandPostPopTests.cpp
+    SurfaceLifecycleTests.cpp
     SetFrameTests.cpp
     OwnerTests.cpp
     RawFinderTests.cpp

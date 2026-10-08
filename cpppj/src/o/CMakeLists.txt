@@ -17,6 +17,7 @@ target_sources(netstorm PRIVATE
     RawBridgeConnect.cpp RawBridgeConnect.h
     RawIslandLifecycle.cpp RawIslandLifecycle.h
     RawIslandPostPop.cpp RawIslandPostPop.h
+    RawSurfaceLifecycle.cpp RawSurfaceLifecycle.h
     RawSquidFinder.cpp RawSquidFinder.h
     RawSquidNeighbors.cpp RawSquidNeighbors.h
     RawSquidDestroy.cpp RawSquidDestroy.h
