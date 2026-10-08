@@ -1,7 +1,7 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
-> 최종 갱신: 2026-10-08 (**cpppj 10.78 기준 사제 소유자 재정의 복원·실제 생성자/공통 지정/분배 합성 통합 완료.** Release 경고/오류 0·CTest 내부 **272개·실패 0**, 관련 감사 **4종 통과**. 새 독립 x86 **7,416개**는 대체 함수 없이 실행, 누적 **145,006개**. 다음은 **사제 postPop/preDestroy·회복 Regular·낙하/경로**, 이후 보행 진행/종료·비표면 raw 월드·파편/소리·배치·건설·경제·전투·승패. GUI 유닛/이동은 기존 어댑터이며 포획 플레이/미션 완주는 미완성이다. 원본 게임/복사본·클론 창 실행·보호 파일 변경·커밋/푸시 없음. cpppj/공통은 이 문서, dotnetpj는 LEFT_JOBS.dotnetpj.md를 따른다.)
-> **마지막 디컴파일 수행 PC(AGENTS.md 2026-10-08 추가 규칙): `VM-W11-CODEX` (IP 10.0.0.17), 2026-10-08.** 이 PC에서 한 것: 세 판본 기본 Ghidra 프로젝트 위의 읽기 전용 내보내기 전체(`tools/ghidra/export_functions.ps1 -All`과 새 목록 `bridgeconnect`·`setframe`·`islandlifecycle`·`regiongraph`·`pop`·`display`·`postpop`·`graph`·`lifecycle`·`islandpostpop`·`pathanimation`·`priestowner`), 정밀 디컴파일(`tools/ghidra/refine_all.ps1`, 10.78·CD). 결과는 Git 제외 `extracted/`에 있어 **다른 PC에서 cpppj/디컴파일 분석을 이어가려면 그 PC에서 다시 만들어야 한다**([절차](docs/exe/ghidra-exports.md)). 10.62·10.82(V10/V12) 판본은 이 PC에서 디컴파일하지 않았다.
+> 최종 갱신: 2026-10-08 (**cpppj 10.78 기준 사제 postPop 목록·회복 예약 prefix 및 실제 ProcessHost 통합 완료.** Release 경고/오류 0·CTest 내부 **278개·실패 0**, 관련 감사 **5종 통과**. 새 독립 x86 **7,176개**, 누적 **152,182개**. 원본 실행은 carrier 진입 전까지이며 Regular 검색/확보/생성만 대체한다. 다음은 **carrier/damageable postPop·실제 회복 이벤트·사제 낙하/경로·preDestroy**, 이후 보행 진행/종료·비표면 raw 월드·파편/소리·배치·건설·경제·전투·승패. GUI 유닛/이동은 기존 어댑터이며 포획 플레이/미션 완주는 미완성이다. 원본 게임/복사본·클론 창 실행·보호 파일 변경·커밋/푸시 없음. cpppj/공통은 이 문서, dotnetpj는 LEFT_JOBS.dotnetpj.md를 따른다.)
+> **마지막 디컴파일 수행 PC(AGENTS.md 2026-10-08 추가 규칙): `VM-W11-CODEX` (IP 10.0.0.17), 2026-10-08.** 이 PC에서 한 것: 세 판본 기본 Ghidra 프로젝트 위의 읽기 전용 내보내기 전체(`tools/ghidra/export_functions.ps1 -All`과 새 목록 `bridgeconnect`·`setframe`·`islandlifecycle`·`regiongraph`·`pop`·`display`·`postpop`·`graph`·`lifecycle`·`islandpostpop`·`pathanimation`·`priestowner`·`priestpostpop`), 정밀 디컴파일(`tools/ghidra/refine_all.ps1`, 10.78·CD). 결과는 Git 제외 `extracted/`에 있어 **다른 PC에서 cpppj/디컴파일 분석을 이어가려면 그 PC에서 다시 만들어야 한다**([절차](docs/exe/ghidra-exports.md)). 10.62·10.82(V10/V12) 판본은 이 PC에서 디컴파일하지 않았다.
 > 프로젝트 목표(AGENTS.md): 원본 NetStorm: Islands at War 를 디컴파일/분석하여 클론 코딩하고,
 > **Windows 10/11** 과 **GUI 환경의 Linux** 에서 동작하며 **여러 언어를 지원**하는 게임을 만든다.
 > **모방 범위(2026-10-03 AGENTS.md 변경)**: 기존 게임의 **사운드·그래픽·애니메이션 등 거의 모든 요소를 가능한 한 동일하게** 최대한 모방한다.
@@ -15,6 +15,17 @@
 
 ---
 
+## 2026-10-08 ✅ 완료 / ⏭ 부분 인계: 사제 postPop 목록·회복 예약 prefix (VM-W11-CODEX)
+
+- [x] **지침/호스트:** AGENTS.md·LEFT_JOBS.md·LEFT_JOBS.dotnetpj.md를 읽고 최신 인계의 다음 작은 구현을 진행했다. 현재 호스트와 마지막 디컴파일 PC가 같다. **마지막 디컴파일 수행 PC: VM-W11-CODEX, 2026-10-08.** 새 `priestpostpop` 목록을 같은 PC에서 읽기 전용 내보내기(5/6/6개)했다. 원본 게임/복사본·클론 창 실행·보호 파일·AGENTS.md·dotnetpj/인계 변경·커밋/푸시 없음.
+- [x] **복원:** [`RawPriestPostPop`](cpppj/src/o/RawPriestPostPop.h)의 `Prefix`로 `004950f0`/CD `0040c110`의 **carrier 호출 전까지만** 복원했다. extra & 9 차단→flags & 1이면 용량/중복을 지키는 사제 목록→기존 회복 이벤트 `0x25a` 검색→확보 성공일 때만 HP/생성→같은 원래/현재 소유자 1~8 상태 칸 0 순서다. 중복/가득 찬 목록도 회복 검색을 계속하고, 예약 생성 뒤 현재 소유자를 다시 읽는다. [판본별 경계/계산](docs/exe/cpp-priest-postpop-reconstruction.md).
+- [x] **회복 예약/통합:** 두 PE의 float 배율 50.0과 정수 HP/6 절삭→곱셈 후 float 저장→정수 최대 HP로 나누고 float 저장을 보존했다. 기존 `SquidReward`의 HP 조회를 재사용하며 SP 지급/저장을 호출하지 않는다. `MakePriestPostPopProcessHooks`로 실제 `SquidProcessHost::FindEvent/AddRegular`에 연결했다. 두 판본 server/client 실제 생성자·소유자→Form/Kernel 예약·중복 방지→Kernel 재예약→form 삭제/해제→HP 1/4 뒤 새 예약(8.25→8.0)을 검사했다. 부모의 회복 처리기는 기록/재예약 대체이므로 **실제 HP 회복 효과는 미복원**이다. 기본 연결의 호스트 메모리 부족은 C++ 예외로 전파하고 원본 new 실패는 reserve 훅으로 검사한다.
+- [x] **독립 대조:** 새 [`decomp_priestpostpop_oracle.py`](tools/decomp_priestpostpop_oracle.py), 판본마다 **2,392개**, 총 **7,176개**. 두 x87 정밀도·목록/소유자/상태·이벤트 중복/확보 실패·큰/음수 HP에서 목록 저장소·소유자 칸 전체·사건/payload 비트·raw 슬롯이 일치한다. 목록/HP/소유자 helper는 실제 명령이며 **Regular 검색/new/생성자만 대체**, carrier 진입의 this/flags/x87 스택 확인 뒤 중단한다. 정상 반환/SEH 복구나 carrier 이후 실행을 주장하지 않는다. assert/OS 호출 0. 원본/Ghidra 없이 CTest fixture 재생 가능.
+- [x] **검증:** 최종 Release 경고/오류 0·CTest 내부 **278개·실패 0**(기존 272 + 새 6, 57.75초). 감사 **5종 통과**(priestpostpop/priestowner/process/reward/owner), 누적 독립 x86 **152,182개**. 최초 통합 검사의 client 생성에 필요한 flags 2 누락을 고친 뒤 재빌드/전체 회귀를 통과했다. 로그 `extracted/priestpostpop-export.log`·`priestpostpop-generate.log`·`build-priestpostpop-final.log`·`ctest-priestpostpop-final.log`.
+- [ ] **다음 작은 구현:** carrier postPop `00427720`/CD `004e6360`의 비권한 상태 가상 +0xcc 및 damageable postPop `0044bf80`/CD `004621c0`부터 복원한다. 이 몸체 뒤에 사제 지면/방향별 낙하·경로 처리가 이어진다. 회복 이벤트 `0x25a`의 실제 부모 처리기와 HP 쓰기도 다음 구현이다. **전체 postPop/preDestroy가 갖춰지기 전에는 공통 Pop에 사제 가상 표를 허용하지 않는다.**
+- [ ] **계속 구현:** 사제 preDestroy `004919b0`/CD `0040c330` 목록 제거·종속 처리·carrier 훅, PathProcess 진행 `0048bb40`/CD `004805d0` 및 종료. 이후 raw 비표면 유닛/GUI, 실제 낙하·파편/소리·배치·건설·경제·전투·승패를 진행한다. 기존 GUI walker/건물·12Hz 보행 타이머는 어댑터다.
+- [ ] **장시간 검사 유지:** 기존 프레임 지정/섬 삭제 훅 변이 약 40분, noIsland/표시/삭제/새 연결부 변이, 최대 지도·SID 소진/로드 재시도는 계속 인계한다. 테스트 포함 개별 15분 이상 작업을 인계하는 기존 지침을 유지한다.
+
 ## 2026-10-08 ✅ 완료 / ⏭ 부분 인계: 사제 소유자 재정의 (VM-W11-CODEX)
 
 - [x] **지침/호스트:** AGENTS.md·LEFT_JOBS.md·LEFT_JOBS.dotnetpj.md를 읽고 직전 다음 작은 구현의 소유자 지정을 진행했다. 현재 `VM-W11-Codex`와 마지막 디컴파일 PC가 일치한다. **마지막 디컴파일 수행 PC: VM-W11-CODEX, 2026-10-08.** 새 `priestowner` 목록을 같은 PC의 기본 Ghidra 프로젝트에서 읽기 전용으로 내보냈다(사제 몸체/알림, 판본마다 2개). 공통 owner 내보내기는 재사용했다. 원본 게임/복사본·클론 창 실행·AGENTS.md·dotnetpj/인계 변경·커밋/푸시 없음.
@@ -22,7 +33,7 @@
 - [x] **판본/보호 차이:** 패치의 갱신 분기 요청 0은 변경 전 예외다. 범위 밖의 0이 아닌 요청은 원래 WORD/표식/알림만 처리하고 공통 지정을 생략한다. CD 요청 0은 원래/현재 지정만 생략하며 마지막 표식 처리는 모드대로 한다. CD 공통 assert·free/예약 SID·타입/가상 표 불일치는 효과 전 거부한다. 무시되는 전투 요청 0/0xffffffff는 거부하지 않는다. 공통 소유자와 같은 0~8 지원 범위, challenge 9~39는 후속이며 challenge의 0 거부만 보호 검사했다.
 - [x] **독립 대조/통합:** 새 [`decomp_priestowner_oracle.py`](tools/decomp_priestowner_oracle.py), 패치 **3,528** + CD/10.37 각 **1,944** = **7,416개**. 사제/공통 지정/타입 조회/알림을 **대체 함수 없이** 실제 PE 명령으로 실행하고 정상 반환/스택을 확인했다. 사건 인자·호출 시점 WORD/현재 소유자·슬롯 전체가 C++과 일치한다. assert/OS 호출 0. 두 판본 실제 사제 생성자→로딩→전투 요청 무시→로컬 표식→비전투 로딩 전환을 실제 공통 지정과 검사했다. 섬/종유석 분배 합성·공통 fallback/보호 입력도 통과한다. **Pop/postPop·Graph·GUI·포획 플레이는 미연결**이다.
 - [x] **검증:** 최종 Release 경고/오류 0·CTest 내부 **272개·실패 0**(기존 266 + 새 6, 62.21초), 관련 감사 **4종 모두 통과**(priestowner/owner/bridgeconnect/pathanimation). 최초 빌드의 새 소스 namespace 닫기 누락을 수정한 뒤 통과했다. 누적 독립 x86 **145,006개**. 로그 `extracted/priestowner-export.log`·`priestowner-generate.log`·`build-priestowner-final.log`·`ctest-priestowner.log`.
-- [ ] **다음 작은 구현:** 사제 postPop `004950f0`/CD `0040c110`의 목록·회복 Regular(`0x25a`)·소유자별 상태 칸 정리부터 별도 복원한다. 읽기 전용 소스에서 carrier postPop `00427720`/CD `004e6360` 호출 뒤 지면/방향에 따라 낙하/경로 처리가 이어짐을 확인했다. 회복 payload의 타입/HP 조회·float 나눗셈과 두 판본 분기를 기계어로 대조해야 한다. 지금 소유자 모듈만으로 일반 Pop에 사제 가상 표를 허용하면 전용 효과가 빠진다.
+- [x] **당시 다음 작은 구현 중 prefix 완료(위 최신 기록):** 사제 postPop `004950f0`/CD `0040c110`의 목록·회복 Regular(`0x25a`) 예약·소유자별 상태 칸 정리를 복원했다. carrier 이후/실제 회복 효과는 미완성이다. 읽기 전용 소스에서 carrier postPop `00427720`/CD `004e6360` 호출 뒤 지면/방향에 따라 낙하/경로 처리가 이어짐을 확인했다. 회복 payload의 타입/HP 조회·float 나눗셈과 두 판본 prefix는 이번 기계어 대조로 확인했다. 지금 소유자 모듈만으로 일반 Pop에 사제 가상 표를 허용하면 전용 효과가 빠진다.
 - [ ] **계속 구현:** 사제 preDestroy `004919b0`/CD `0040c330`의 목록/종속 처리·carrier 훅, 보행 진행 `0048bb40`/CD `004805d0`과 도착 뒤 종료/명령 처리. 검증된 lifecycle/process/표시를 raw 유닛 월드/Kernel로 옮긴 뒤 실제 walker 낙하·파편/소리·배치·건설·경제·전투·승패를 진행한다. GUI walker/건물과 보행 중 12Hz 타이머는 기존 어댑터다.
 - [ ] **장시간 검사 인계 유지:** 기존 프레임 지정/섬 삭제 훅 변이 약 40분, noIsland/표시/삭제/새 연결부 변이, 최대 지도·SID 소진/로드 실패 재시도. 테스트 포함 개별 15분 이상 작업은 인계한다는 기존 지침을 유지한다.
 

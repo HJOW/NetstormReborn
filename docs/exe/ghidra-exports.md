@@ -35,6 +35,7 @@ Get-ChildItem tools/decomp_*_oracle.py | Where-Object { Select-String -LiteralPa
 | `setframe` | setframe | 3 / 3 / 3 | 2026-10-08 추가([프레임 지정](cpp-setframe-reconstruction.md)) |
 | `pathanimation` | pathanimation | 3 / 3 / 3 | 2026-10-08 추가([방향 조회·도착 프레임 접두](cpp-path-animation-reconstruction.md)), `VM-W11-CODEX`에서 내보냄 |
 | `priestowner` | priestowner·owner | 2 / 2 / 2 | 2026-10-08 추가([사제 소유자 재정의](cpp-priest-owner-reconstruction.md)), 공통 owner 내보내기 재사용·`VM-W11-CODEX`에서 내보냄 |
+| `priestpostpop` | priestpostpop·owner | 5 / 6 / 6 | 2026-10-08 추가([사제 목록·회복 예약 prefix](cpp-priest-postpop-reconstruction.md)), carrier 진입에서 중단·`VM-W11-CODEX`에서 내보냄 |
 | `islandlifecycle` | islandlifecycle | 4 / 2 / 2 | 2026-10-08 추가([섬 삭제 훅](cpp-islandlifecycle-reconstruction.md)) |
 | `islandpostpop` | islandpostpop | 5 / 4 / 4 | 2026-10-08 추가([noIsland 최초 등록·받침 소유자](cpp-islandpostpop-reconstruction.md)), `VM-W11-CODEX`에서 내보냄 |
 | `regiongraph` | regiongraph | 13+3 / 14+1 / 14+1 | **증거 JSON의 `function_ranges` 순서에서 복원**(아래 "남은 문제") |

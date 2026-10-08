@@ -44,6 +44,7 @@ target_sources(netstorm PRIVATE
     SquidReward.cpp SquidReward.h
     SquidOwner.cpp SquidOwner.h
     RawPriestOwner.cpp RawPriestOwner.h
+    RawPriestPostPop.cpp RawPriestPostPop.h
     SquidProcess.cpp SquidProcess.h
     Graph.cpp Graph.h
     RawGraph.cpp RawGraph.h

@@ -56,6 +56,10 @@ public:
     const SquidPostPopState& Bookkeeping() const;
     // 원본 vtable +0x80을 물은 횟수다. 기계어 대조에서 호출 순서와 횟수를 확인하는 진단 값이다.
     std::uint32_t VirtualCountCalls() const;
+    // 004adcb0/004aed30와 0049fce0/00444720: 회복 예약도 사용하는 객체/타입의 최대 HP다.
+    // 현재 HP와 구별하며 사제 1/4 모드 및 dais 부류를 그대로 적용한다.
+    std::int32_t MaxHitPoints(Sid sid) const;
+    std::int32_t TypeHitPoints(std::uint32_t type) const;
 private:
     // vtable +0x80의 개수. 훅이 있으면 파생 구현이고 없으면 base의 상태 상위 3비트다.
     std::int32_t Count(Sid sid) const;
@@ -67,9 +71,6 @@ private:
     std::int32_t SalvageRefund(Sid sid,std::uint32_t type,std::int32_t count) const;
     // 004adc60/004aecf0: HP가 있는 객체인지 판단한다.
     bool HasHitPoints(Sid sid) const;
-    // 004adcb0/004aed30와 0049fce0/00444720: 객체의 최대 HP다.
-    std::int32_t MaxHitPoints(Sid sid) const;
-    std::int32_t TypeHitPoints(std::uint32_t type) const;
     // 로컬/소유자 SP 가산과 AI 지갑 갱신이다. delta는 float로 반올림된 지급액이다.
     void AddSp(std::uint32_t owner,float delta);
     void AddWallet(std::uint32_t owner,std::int32_t amount);

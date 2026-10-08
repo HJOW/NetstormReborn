@@ -67,6 +67,8 @@ ctest --test-dir cpppj/build --build-config Release --output-on-failure
 
 ## 다음 구현
 
+2026-10-08 후속: 아래 postPop의 **목록·회복 예약·소유자 상태 초기화 prefix는 완료**했다([독립 관찰·ProcessHost 통합](cpp-priest-postpop-reconstruction.md)). carrier 이후와 실제 회복 이벤트 효과·preDestroy는 계속 남는다. 아래 내용은 당시 인계다.
+
 다음은 **사제 postPop `004950f0`/CD `0040c110`**이다. 최초 등록에서 사제 목록에 추가하고 regen Regular(`0x25a`)가 없으면 붙이며, 원래/현재 소유자가 같으면 플레이어 상태를 초기화한다. 이후 carrier postPop(`00427720`/CD `004e6360`)을 호출한 뒤 지면·방향에 따라 낙하/경로 처리를 한다. 회복 payload의 타입/HP 조회·float 나눗셈과 판본별 실제 판단을 별도로 대조한다.
 
 preDestroy `004919b0`/CD `0040c330`도 목록·종속 처리와 carrier 훅에 연결해야 한다. 소유자 모듈만으로 공통 Pop에 사제 가상 표를 허용하면 전용 효과가 빠진다. 해당 lifecycle/process 검증 뒤 raw 유닛 월드로 옮기고 PathProcess 보행 진행/종료, 낙하·파편/소리·배치·건설·경제·전투·승패를 이어 간다.

@@ -1,0 +1,113 @@
+{
+  "schema": 1,
+  "primary_target": "10.78",
+  "total": 7176,
+  "controls": [
+    639,
+    895
+  ],
+  "editions": {
+    "originals": {
+      "binary": "originals/Netstorm.exe",
+      "cases": 2392,
+      "entry": "004950f0",
+      "carrier": "00427720",
+      "scale_bits": "00004842",
+      "boundaries": 2392,
+      "native_calls": {
+        "004950f0": 2392,
+        "00414450": 770,
+        "0049a840": 1344,
+        "0049fce0": 896,
+        "004adcb0": 448
+      },
+      "stub_calls": {
+        "004afb40": 770,
+        "004e4391": 594,
+        "00496e80": 448
+      },
+      "assertions": 0,
+      "instructions": 133344
+    },
+    "originalCD": {
+      "binary": "originalCD/NETSTORM.EXE",
+      "cases": 2392,
+      "entry": "0040c110",
+      "carrier": "004e6360",
+      "scale_bits": "00004842",
+      "boundaries": 2392,
+      "native_calls": {
+        "0040c110": 2392,
+        "0040d9c0": 886,
+        "00444720": 896,
+        "004aed30": 448,
+        "004abae0": 448,
+        "004448e0": 456
+      },
+      "stub_calls": {
+        "004ac890": 770,
+        "004f1650": 594,
+        "0048efd0": 448
+      },
+      "assertions": 0,
+      "instructions": 130184
+    },
+    "original1037": {
+      "binary": "original1037/netstorm.exe",
+      "cases": 2392,
+      "entry": "0040c110",
+      "carrier": "004e6360",
+      "scale_bits": "00004842",
+      "boundaries": 2392,
+      "native_calls": {
+        "0040c110": 2392,
+        "0040d9c0": 886,
+        "00444720": 896,
+        "004aed30": 448,
+        "004abae0": 448,
+        "004448e0": 456
+      },
+      "stub_calls": {
+        "004ac890": 770,
+        "004f1650": 594,
+        "0048efd0": 448
+      },
+      "assertions": 0,
+      "instructions": 130184
+    }
+  },
+  "stubbed": [
+    "find Regular",
+    "new(0x28)",
+    "Regular constructor"
+  ],
+  "stopped_before": "carrier postPop",
+  "os_calls": 0,
+  "files": {
+    "cpppj/tests/fixtures/priestpostpop-x86.tsv": "3924ceb7ffb2315eae4fd8a9a3e89b9bff261994d36c0109ac684c1d89738cdd",
+    "extracted/owner/original1037/creation.c": "115d3f4790315c3647e18c087579cf3aa08af06cdbaeca42adbac1e82725af62",
+    "extracted/owner/original1037/functions.tsv": "4e184997f62c2622b26b3fa4f047a2580a609d2d919f0e414a75e8efd49d4439",
+    "extracted/owner/originalCD/creation.c": "115d3f4790315c3647e18c087579cf3aa08af06cdbaeca42adbac1e82725af62",
+    "extracted/owner/originalCD/functions.tsv": "4e184997f62c2622b26b3fa4f047a2580a609d2d919f0e414a75e8efd49d4439",
+    "extracted/owner/originals/creation.c": "f9919c046d5259526946f106b47b6259fe5e04971f743d6fa02d6a5361b9dc16",
+    "extracted/owner/originals/functions.tsv": "3ea66dace80a85999a8b2c2dbadb4d5f1bd18b0dcdb0768f9c41075206c7c72d",
+    "extracted/priestpostpop/original1037/creation.c": "9e5d5c5a6974ef6681a4f1b23d57fd961c66806bb4516d145ea632fd50ca1906",
+    "extracted/priestpostpop/original1037/functions.tsv": "c3be74861ae930787cc9c63ae6976370c9ee76a00a66bd075afe8036bda5c74e",
+    "extracted/priestpostpop/originalCD/creation.c": "9e5d5c5a6974ef6681a4f1b23d57fd961c66806bb4516d145ea632fd50ca1906",
+    "extracted/priestpostpop/originalCD/functions.tsv": "c3be74861ae930787cc9c63ae6976370c9ee76a00a66bd075afe8036bda5c74e",
+    "extracted/priestpostpop/originals/creation.c": "81de40d4dc35391df71c8cfd41daa7dc46820e3a482efaceb127ae3fa3c100b7",
+    "extracted/priestpostpop/originals/functions.tsv": "5bd05db7fb98d15ca76586b497d64c9d24b98090e0b85ea366a2ef3ecb18f96e",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/decomp_priestpostpop_oracle.py": "50e454fc58258dcfebdbcf612f2aa1e812d75ca442e4790a4f616ed9d6732449",
+    "tools/ghidra/priestpostpop-functions.json": "6522e0e7de85512ff0983dfe4b33d7d1813bc1fbdc242921946e1f3235903434"
+  },
+  "limitations": [
+    "synthetic priest raw slot/type HP, list storage and owner state",
+    "nonzero effective maximum HP; CD Pentium FDIV workaround disabled",
+    "Regular attachment verified separately in C++ with real ProcessHost",
+    "no carrier/falling/path continuation, priest regen handler or GUI world"
+  ]
+}
