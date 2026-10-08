@@ -1,0 +1,103 @@
+{
+  "total": 20256,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-08",
+  "normal_return": true,
+  "os_calls": 0,
+  "controls": [
+    639,
+    895
+  ],
+  "editions": {
+    "originals": {
+      "binary": "originals/Netstorm.exe",
+      "cases": 6752,
+      "native_calls": {
+        "00492090": 8160,
+        "004ac200": 8160,
+        "0049a840": 28752,
+        "00427030": 5440,
+        "004adcb0": 10296,
+        "0049fce0": 10296,
+        "004e49c0": 5540,
+        "004942b0": 2624,
+        "004adca0": 3304,
+        "0041d7a0": 280
+      },
+      "substitutions": {
+        "U": 424,
+        "R": 424
+      },
+      "assertions": 0
+    },
+    "originalCD": {
+      "binary": "originalCD/NETSTORM.EXE",
+      "cases": 6752,
+      "native_calls": {
+        "0040d7b0": 8160,
+        "004abae0": 18632,
+        "004e5150": 5440,
+        "004aed30": 10472,
+        "00444720": 10472,
+        "004f161c": 5524,
+        "004448e0": 5196,
+        "0040ca40": 2624,
+        "0040c3b0": 5768,
+        "004aed20": 3368,
+        "00440a80": 392
+      },
+      "substitutions": {
+        "U": 520,
+        "R": 520
+      },
+      "assertions": 0
+    },
+    "original1037": {
+      "binary": "original1037/netstorm.exe",
+      "cases": 6752,
+      "native_calls": {
+        "0040d7b0": 8160,
+        "004abae0": 18632,
+        "004e5150": 5440,
+        "004aed30": 10472,
+        "00444720": 10472,
+        "004f161c": 5524,
+        "004448e0": 5196,
+        "0040ca40": 2624,
+        "0040c3b0": 5768,
+        "004aed20": 3368,
+        "00440a80": 392
+      },
+      "substitutions": {
+        "U": 520,
+        "R": 520
+      },
+      "assertions": 0
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/prieststate-x86.tsv": "a8edd9d0c9bc1a4f29c2518bb34d432713b53fe44eaced85e821bf7ec2809223",
+    "extracted/owner/original1037/creation.c": "115d3f4790315c3647e18c087579cf3aa08af06cdbaeca42adbac1e82725af62",
+    "extracted/owner/original1037/functions.tsv": "4e184997f62c2622b26b3fa4f047a2580a609d2d919f0e414a75e8efd49d4439",
+    "extracted/owner/originalCD/creation.c": "115d3f4790315c3647e18c087579cf3aa08af06cdbaeca42adbac1e82725af62",
+    "extracted/owner/originalCD/functions.tsv": "4e184997f62c2622b26b3fa4f047a2580a609d2d919f0e414a75e8efd49d4439",
+    "extracted/owner/originals/creation.c": "f9919c046d5259526946f106b47b6259fe5e04971f743d6fa02d6a5361b9dc16",
+    "extracted/owner/originals/functions.tsv": "3ea66dace80a85999a8b2c2dbadb4d5f1bd18b0dcdb0768f9c41075206c7c72d",
+    "extracted/prieststate/original1037/creation.c": "4f4984e042fff39cc51d6e4ca8c47260f1a3b768aaa2e6df9ffebc48e82647a4",
+    "extracted/prieststate/original1037/functions.tsv": "76489befe38ba5501a8559e245e0bbc0c4fa945f2c345ad806965538fe7bf4f5",
+    "extracted/prieststate/originalCD/creation.c": "4f4984e042fff39cc51d6e4ca8c47260f1a3b768aaa2e6df9ffebc48e82647a4",
+    "extracted/prieststate/originalCD/functions.tsv": "76489befe38ba5501a8559e245e0bbc0c4fa945f2c345ad806965538fe7bf4f5",
+    "extracted/prieststate/originals/creation.c": "2b223e27e39e3fe1fb6faf3bd44553f0c8b97dea73435a8914944b376003459b",
+    "extracted/prieststate/originals/functions.tsv": "9e2df28e61030ead366119eadbbbca11b2f944ae64720370b75f1d455ba3f084",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/decomp_prieststate_oracle.py": "a936ab8b0abcf8d6333f330ff63c93530d354f2b39c1d8649f85e45f99eaa717",
+    "tools/ghidra/prieststate-functions.json": "fbef010adbc098f36658c3890cd0720411fba99434aa45fd212bfc4f0d29734b"
+  },
+  "limits": [
+    "정상 합성 타입/spot/raw 입력, 판본별 HP 폭 및 동일 관찰의 두 x87 정밀도",
+    "setter의 사제 Unpop/Repop은 기록/입력 변화 대체, 회복 이벤트/보호막/GUI는 실행하지 않음"
+  ]
+}

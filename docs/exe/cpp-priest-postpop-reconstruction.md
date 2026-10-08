@@ -1,5 +1,7 @@
 # 사제 postPop의 목록·회복 예약 복원
 
+2026-10-08 후속(`HJOW-Athlon`): [사제 HP/지면 상태 조회와 HP setter](cpp-priest-state-reconstruction.md)를 복원했다. 절반 HP 경계의 권한/회복 허용·Unpop/Repop 호출을 새 독립 x86 20,256개로 대조했다. 이번 문서의 회복 예약은 유지하며 **실제 0x25a 이벤트 처리·사제 공간 효과는 후속**이다. 최신 디컴파일 수행 호스트는 [내보내기 문서](ghidra-exports.md)를 따른다.
+
 2026-10-08, 기준 판본 **10.78**. 마지막 디컴파일 수행 PC: **VM-W11-CODEX**(현재 호스트 `VM-W11-Codex`, IP 10.0.0.17). 같은 PC의 Ghidra 프로젝트를 읽기 전용으로 열어 `priestpostpop` 목록을 내보냈다. 10.78은 5개, CD/추가 10.37은 각각 6개다. 원본 게임/복사본·클론 창을 실행하지 않았으며 보호 파일·AGENTS.md·dotnetpj를 변경하거나 커밋/푸시하지 않았다.
 
 [`RawPriestPostPop`](../../cpppj/src/o/RawPriestPostPop.h)은 사제 postPop의 **carrier 호출 전 구간**을 복원한다. 전체 가상 postPop은 아직 구현하지 않았으므로 공통 `SquidPop`의 허용 가상 표나 GUI raw 유닛 월드에는 등록하지 않았다. 이전 [소유자 복원](cpp-priest-owner-reconstruction.md)에 이어 실제 사제 생성자·공통/사제 소유자·회복 ProcessForm/Kernel까지 콘솔에서 연결한다.

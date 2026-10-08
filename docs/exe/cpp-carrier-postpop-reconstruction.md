@@ -1,5 +1,7 @@
 # Carrier·Damageable postPop의 직접 호출 복원
 
+2026-10-08 후속(`HJOW-Athlon`): [사제 HP/지면 상태 조회와 HP setter](cpp-priest-state-reconstruction.md)를 복원했다. 절반 HP 전환에서 실제 가상 공간 효과는 여전히 외부 훅이며, 전체 사제 Pop/회복 이벤트/보호막/낙하/GUI는 후속이다. 최신 디컴파일 수행 호스트는 [내보내기 문서](ghidra-exports.md)를 따른다.
+
 2026-10-08, 기준 판본 **10.78**. 마지막 디컴파일 수행 PC: **VM-W11-CODEX**(현재 호스트 `VM-W11-Codex`, IP 10.0.0.17). 최신 AGENTS.md와 두 인계 문서를 읽고 사용자가 지정한 **30분 이내에 구현·검증할 범위**로 진행했다. 같은 PC에서 `carrierpostpop` 목록을 Ghidra 읽기 전용으로 내보냈다(세 판본 각각 5개). 원본 게임/복사본·클론 창 실행·보호 파일 변경·AGENTS.md/dotnetpj 수정·커밋/푸시 없음.
 
 [`RawCarrierPostPop`](../../cpppj/src/o/RawCarrierPostPop.h)은 **Carrier → Damageable → 공통 Squid postPop**의 직접 호출 흐름을 복원한다. 이전 [사제 목록·회복 예약 prefix](cpp-priest-postpop-reconstruction.md)와 실제 공통 장부를 합성했다. 사제 전체 가상 postPop 및 비표면 GUI 월드의 완성은 후속이다.
