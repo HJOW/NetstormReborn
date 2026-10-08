@@ -1,6 +1,6 @@
 # 기계어 대조 입력(Ghidra 내보내기) 준비
 
-> **마지막 디컴파일 수행 PC: `HJOW-Athlon`, 2026-10-08** (`VM-W11-CODEX`의 변경을 pull한 뒤 `export_functions.ps1 -All`로 다시 만들었고, 이어 새 `prieststate` 목록 11/12/12개를 같은 PC에서 읽기 전용으로 내보냈다. 감사 **36개 모두 통과**. 정밀 디컴파일은 이 PC에서 다시 하지 않았다. 그 앞은 `VM-W11-CODEX`, 2026-10-08.) (AGENTS.md 규칙: 디컴파일 소스를 바꾸면 여기와 [LEFT_JOBS.md](../../LEFT_JOBS.md) 머리말의 호스트명을 갱신한다. 현재 PC가 이 호스트가 아니면 아래 절차로 디컴파일/내보내기를 다시 만든 뒤 작업한다). 그 앞은 `HJOW-Athlon`(2026-10-07~08)이다.
+> **마지막 디컴파일 수행 PC: `HJOW-Athlon`, 2026-10-08** (`VM-W11-CODEX`의 변경을 pull한 뒤 `export_functions.ps1 -All`로 다시 만들었고, 이어 새 `prieststate` 목록 11/12/12개를 같은 PC에서 읽기 전용으로 내보냈다. 이어 `priestregen` 목록 10/11/11개도 같은 PC에서 읽기 전용으로 내보냈다. 감사 **37개 모두 통과**. 정밀 디컴파일은 이 PC에서 다시 하지 않았다. 그 앞은 `VM-W11-CODEX`, 2026-10-08.) (AGENTS.md 규칙: 디컴파일 소스를 바꾸면 여기와 [LEFT_JOBS.md](../../LEFT_JOBS.md) 머리말의 호스트명을 갱신한다. 현재 PC가 이 호스트가 아니면 아래 절차로 디컴파일/내보내기를 다시 만든 뒤 작업한다). 그 앞은 `HJOW-Athlon`(2026-10-07~08)이다.
 
 2026-10-07~08 정리. `tools/decomp_*_oracle.py`는 원본 PE의 함수를 Unicorn에서 실행할 때 **Ghidra가 내보낸 함수 몸체 범위**(`functions.tsv`)만 실행을 허용하고, 감사(`--verify`)에서 그 파일과 디컴파일 C(`creation.c`)의 SHA를 확인한다. 이 파일들은 `extracted/`(Git 제외)에 있어 **PC마다 한 번 만들어야 한다.**
 
@@ -38,6 +38,7 @@ Get-ChildItem tools/decomp_*_oracle.py | Where-Object { Select-String -LiteralPa
 | `priestpostpop` | priestpostpop·owner | 5 / 6 / 6 | 2026-10-08 추가([사제 목록·회복 예약 prefix](cpp-priest-postpop-reconstruction.md)), carrier 진입에서 중단·`VM-W11-CODEX`에서 내보냄 |
 | `carrierpostpop` | carrierpostpop·owner | 5 / 5 / 5 | 2026-10-08 추가([Carrier/Damageable 직접 호출](cpp-carrier-postpop-reconstruction.md)), 외부 세 효과 대체·전체 몸체 반환·`VM-W11-CODEX`에서 내보냄 |
 | `prieststate` | prieststate·owner | 11 / 12 / 12 | 2026-10-08 추가([사제 HP/지면 상태·HP setter](cpp-priest-state-reconstruction.md)), 조회 대체 없음·setter 공간 두 효과 대체·전체 몸체 반환·`HJOW-Athlon`에서 내보냄 |
+| `priestregen` | priestregen·prieststate·owner | 10 / 11 / 11 | 2026-10-08 추가([사제 회복 0x25a](cpp-priest-regen-reconstruction.md)), 회복/HP/중립 조건/난수 실제 실행·외부 공간/표시/추적 효과 대체·`HJOW-Athlon`에서 내보냄 |
 | `islandlifecycle` | islandlifecycle | 4 / 2 / 2 | 2026-10-08 추가([섬 삭제 훅](cpp-islandlifecycle-reconstruction.md)) |
 | `islandpostpop` | islandpostpop | 5 / 4 / 4 | 2026-10-08 추가([noIsland 최초 등록·받침 소유자](cpp-islandpostpop-reconstruction.md)), `VM-W11-CODEX`에서 내보냄 |
 | `regiongraph` | regiongraph | 13+3 / 14+1 / 14+1 | **증거 JSON의 `function_ranges` 순서에서 복원**(아래 "남은 문제") |

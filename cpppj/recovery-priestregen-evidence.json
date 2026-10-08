@@ -1,0 +1,123 @@
+{
+  "total": 4539,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-08",
+  "normal_return": true,
+  "os_calls": 0,
+  "controls": [
+    639,
+    895
+  ],
+  "editions": {
+    "originals": {
+      "cases": 1513,
+      "native_calls": {
+        "00494580": 3026,
+        "004558c0": 3026,
+        "004adcb0": 9584,
+        "0049a840": 23308,
+        "0049fce0": 13724,
+        "004942b0": 2106,
+        "004adca0": 2206,
+        "00491a80": 3026,
+        "0041d7a0": 12,
+        "004e49c0": 24
+      },
+      "substitutions": {
+        "V": 2106,
+        "D": 2106,
+        "A": 3026,
+        "M": 2024,
+        "U": 70,
+        "R": 70,
+        "F": 16,
+        "O": 16,
+        "N": 10
+      },
+      "assertions": 0
+    },
+    "originalCD": {
+      "cases": 1513,
+      "native_calls": {
+        "0040ccd0": 3026,
+        "004aed30": 10208,
+        "004abae0": 10208,
+        "00444720": 14780,
+        "0040ca40": 2322,
+        "0040c3b0": 4724,
+        "004aed20": 2410,
+        "0040c400": 3026,
+        "0040c3d0": 1522,
+        "004448e0": 6516
+      },
+      "substitutions": {
+        "V": 2322,
+        "D": 2322,
+        "U": 58,
+        "R": 58,
+        "F": 16,
+        "O": 16,
+        "N": 10
+      },
+      "assertions": 0
+    },
+    "original1037": {
+      "cases": 1513,
+      "native_calls": {
+        "0040ccd0": 3026,
+        "004aed30": 10208,
+        "004abae0": 10208,
+        "00444720": 14780,
+        "0040ca40": 2322,
+        "0040c3b0": 4724,
+        "004aed20": 2410,
+        "0040c400": 3026,
+        "0040c3d0": 1522,
+        "004448e0": 6516
+      },
+      "substitutions": {
+        "V": 2322,
+        "D": 2322,
+        "U": 58,
+        "R": 58,
+        "F": 16,
+        "O": 16,
+        "N": 10
+      },
+      "assertions": 0
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/priestregen-x86.tsv": "d2235ca27e9cce81d5d4ea9ba15f6424f36e5e91f1aa37235bb112ce6df933bc",
+    "extracted/owner/original1037/creation.c": "115d3f4790315c3647e18c087579cf3aa08af06cdbaeca42adbac1e82725af62",
+    "extracted/owner/original1037/functions.tsv": "4e184997f62c2622b26b3fa4f047a2580a609d2d919f0e414a75e8efd49d4439",
+    "extracted/owner/originalCD/creation.c": "115d3f4790315c3647e18c087579cf3aa08af06cdbaeca42adbac1e82725af62",
+    "extracted/owner/originalCD/functions.tsv": "4e184997f62c2622b26b3fa4f047a2580a609d2d919f0e414a75e8efd49d4439",
+    "extracted/owner/originals/creation.c": "f9919c046d5259526946f106b47b6259fe5e04971f743d6fa02d6a5361b9dc16",
+    "extracted/owner/originals/functions.tsv": "3ea66dace80a85999a8b2c2dbadb4d5f1bd18b0dcdb0768f9c41075206c7c72d",
+    "extracted/priestregen/original1037/creation.c": "9378663623bc08d44a75735a936b2d442a5f6bf053f5ba2fbf10a4131af6914e",
+    "extracted/priestregen/original1037/functions.tsv": "21cd1e42b4ae7cdde4a80be9243ffe2898567210f1eabb8cc3079fb75f1ea93f",
+    "extracted/priestregen/originalCD/creation.c": "9378663623bc08d44a75735a936b2d442a5f6bf053f5ba2fbf10a4131af6914e",
+    "extracted/priestregen/originalCD/functions.tsv": "21cd1e42b4ae7cdde4a80be9243ffe2898567210f1eabb8cc3079fb75f1ea93f",
+    "extracted/priestregen/originals/creation.c": "bf0ccc2595906a2a3a7cbe971e788e795e31edef6d59c886c5805cb17e6a24fb",
+    "extracted/priestregen/originals/functions.tsv": "0d9e81d067f72453a5336afe85b2dfa4fbe8e7c273645baea67c6eaf3f5faeed",
+    "extracted/prieststate/original1037/creation.c": "4f4984e042fff39cc51d6e4ca8c47260f1a3b768aaa2e6df9ffebc48e82647a4",
+    "extracted/prieststate/original1037/functions.tsv": "76489befe38ba5501a8559e245e0bbc0c4fa945f2c345ad806965538fe7bf4f5",
+    "extracted/prieststate/originalCD/creation.c": "4f4984e042fff39cc51d6e4ca8c47260f1a3b768aaa2e6df9ffebc48e82647a4",
+    "extracted/prieststate/originalCD/functions.tsv": "76489befe38ba5501a8559e245e0bbc0c4fa945f2c345ad806965538fe7bf4f5",
+    "extracted/prieststate/originals/creation.c": "2b223e27e39e3fe1fb6faf3bd44553f0c8b97dea73435a8914944b376003459b",
+    "extracted/prieststate/originals/functions.tsv": "9e2df28e61030ead366119eadbbbca11b2f944ae64720370b75f1d455ba3f084",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/decomp_priestregen_oracle.py": "f6615dba0cdc59acfcc4baa3a66f87f3fa68abdae71683957561a68c385b46bc",
+    "tools/decomp_prieststate_oracle.py": "a936ab8b0abcf8d6333f330ff63c93530d354f2b39c1d8649f85e45f99eaa717",
+    "tools/ghidra/priestregen-functions.json": "99927e49e213e0df9c5d1fde1a825360b37b37572e949b64a02564ae5cda5cbc"
+  },
+  "limits": [
+    "회복 이벤트 분기만 실행. 다른 사제 이벤트/GUI/전체 Pop은 미복원",
+    "Unpop/Repop·+0x88·damageable·shape/occupied·중립 동작·패치 audit/측정은 외부 대체",
+    "난수/HP getter/setter/중립 조건/분기와 전역 필드 쓰기는 실제 명령"
+  ]
+}

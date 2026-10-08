@@ -1,5 +1,7 @@
 # 사제 postPop의 목록·회복 예약 복원
 
+2026-10-08 최신 후속(`HJOW-Athlon`): [실제 회복 이벤트 0x25a](cpp-priest-regen-reconstruction.md)를 HP setter와 ProcessForm/Kernel에 연결했다. 생성자→이 문서의 회복 예약→실제 HP 80→113→146→179→200·재예약/종료 정리를 두 판본 server/client에서 확인했다. 공간/표시·중립 동작·패치 검증/측정 하위 효과와 전체 사제 Pop/GUI는 후속이다. 아래 이전 구현 기록의 “실제 회복 미복원”은 당시 상태다.
+
 2026-10-08 후속(`HJOW-Athlon`): [사제 HP/지면 상태 조회와 HP setter](cpp-priest-state-reconstruction.md)를 복원했다. 절반 HP 경계의 권한/회복 허용·Unpop/Repop 호출을 새 독립 x86 20,256개로 대조했다. 이번 문서의 회복 예약은 유지하며 **실제 0x25a 이벤트 처리·사제 공간 효과는 후속**이다. 최신 디컴파일 수행 호스트는 [내보내기 문서](ghidra-exports.md)를 따른다.
 
 2026-10-08, 기준 판본 **10.78**. 마지막 디컴파일 수행 PC: **VM-W11-CODEX**(현재 호스트 `VM-W11-Codex`, IP 10.0.0.17). 같은 PC의 Ghidra 프로젝트를 읽기 전용으로 열어 `priestpostpop` 목록을 내보냈다. 10.78은 5개, CD/추가 10.37은 각각 6개다. 원본 게임/복사본·클론 창을 실행하지 않았으며 보호 파일·AGENTS.md·dotnetpj를 변경하거나 커밋/푸시하지 않았다.

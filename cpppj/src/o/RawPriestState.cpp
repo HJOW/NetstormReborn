@@ -45,6 +45,8 @@ std::span<const std::uint8_t> RawPriestState::Raw(Sid sid) const {
         throw std::invalid_argument("사제 상태 조회 raw 자산 오류");
     return raw;
 }
+// 회복 처리기의 연결 검사용 원본 풀을 반환한다.
+const SidPool& RawPriestState::Pool() const { return pool_; }
 // CD의 음수 WORD를 32비트로 부호 확장하며 옆의 stale 두 바이트는 읽지 않는다.
 std::int32_t RawPriestState::CurrentHitPoints(Sid sid) const {
     const auto raw=Raw(sid);

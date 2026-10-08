@@ -35,6 +35,7 @@ add_executable(netstorm_tests
     PriestPostPopTests.cpp
     CarrierPostPopTests.cpp
     PriestStateTests.cpp
+    PriestRegenTests.cpp
     RawFinderTests.cpp
     NeighborTests.cpp
     RawDestroyTests.cpp
@@ -108,4 +109,7 @@ target_compile_definitions(netstorm_tests PRIVATE
     NETSTORM_CONSTRUCTOR_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/constructors-x86.tsv")
 
 # ctest 에 실행 파일 하나를 테스트 하나로 등록한다. 실패한 검사가 있으면 종료 코드가 1 이다.
+# 새 회복 fixture는 해당 소스에만 지정해 기존 검사 전체의 재컴파일을 줄인다.
+set_source_files_properties(PriestRegenTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PRIESTREGEN_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/priestregen-x86.tsv\"")
 add_test(NAME netstorm_tests COMMAND netstorm_tests)

@@ -48,4 +48,4 @@ cmake --build cpppj/build --config Release --parallel 4
 ctest --test-dir cpppj/build -C Release --output-on-failure
 ```
 
-다음은 이벤트 처리기 `00494580`/CD `0040ccd0`의 **회복 0x25a 분기**를 이 HP setter·기존 ProcessForm/Kernel과 연결하는 것이다. 일반 사제 Pop 허용은 전용 공간/보호막/낙하/postPop/preDestroy가 갖춰진 뒤 진행한다. SharedRegular 낙하 0x25b를 일반 Regular로 대체하지 않는다. 기존 장시간 변이·최대 지도·SID 소진/로드 재시도 검사는 계속 인계한다.
+2026-10-08 후속(`HJOW-Athlon`): [회복 이벤트 0x25a](cpp-priest-regen-reconstruction.md)를 이 HP setter·기존 ProcessForm/Kernel에 연결했다. 실제 회복/중립 조건/난수와 외부 효과의 호출 순서를 독립 x86 4,539개로 대조했다. 공간/표시·중립 동작·패치 검증/측정의 하위 몸체와 전체 사제 이벤트/Pop은 후속이다. 일반 사제 Pop 허용은 전용 공간/보호막/낙하/postPop/preDestroy가 갖춰진 뒤 진행한다. SharedRegular 낙하 0x25b를 일반 Regular로 대체하지 않는다. 기존 장시간 변이·최대 지도·SID 소진/로드 재시도 검사는 계속 인계한다.

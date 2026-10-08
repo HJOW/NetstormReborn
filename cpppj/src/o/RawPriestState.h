@@ -18,6 +18,8 @@ public:
         std::span<const std::uint8_t> spots);
     // 패치 DWORD/CD signed WORD의 현재 HP를 읽는다. 최대 HP 모드와 별개인 raw 값이다.
     std::int32_t CurrentHitPoints(Sid sid) const;
+    // 후속 회복 처리기의 같은 풀 연결을 검사한다.
+    const SidPool& Pool() const;
     // 00492090 / CD 0040d7b0: genus 0x200000, HP/2 경계, 거의 올림한 지면 spot & 6과 extra를 읽는다.
     bool GroundImmobile(Sid sid) const;
     // 00427030 / CD 004e5150: extra 0x20이면 HP/좌표를 조회하지 않고 바로 참을 돌려준다.
