@@ -95,10 +95,17 @@ std::int32_t SquidPostPop::TotalCost(std::size_t type) const {
 }
 // 실제 원본 분기가 미복원 함수를 요구할 때만 거부한다. 표시/통계 억제면 타입 효과를 읽지 않는다.
 void SquidPostPop::Validate(Sid sid,std::uint32_t flags,const RawGraphPop* pop) const {
-    const auto bytes=pool_.Slot(sid); const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
+    const auto bytes=pool_.Slot(sid);
     if (sid.value<5 || (bytes[11]&(kFree|kContained)) || bytes[10]<kFirstAssetTypeNumber || bytes[10]>=types_.size())
         throw std::logic_error("postPop raw 자산 상태 오류");
     if (!SquidPop::Supports(pool_.Edition(),Vtable(bytes),flags) && !HandlesDerived(sid)) throw std::logic_error("파생 postPop 미복원");
+    ValidateBase(sid,flags,pop);
+}
+// 파생 몸체의 명시적 공통 호출용 검사다. 자동 가상 분배의 지원 검사는 Validate에 남긴다.
+void SquidPostPop::ValidateBase(Sid sid,std::uint32_t flags,const RawGraphPop* pop) const {
+    const auto bytes=pool_.Slot(sid);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
+    if (sid.value<5 || (bytes[11]&(kFree|kContained)) || bytes[10]<kFirstAssetTypeNumber || bytes[10]>=types_.size())
+        throw std::logic_error("postPop raw 자산 상태 오류");
     if (state_.suppressed) return;
     const auto& type=types_[bytes[10]];
     if (state_.graphsEnabled) {
@@ -135,6 +142,11 @@ void SquidPostPop::Activate(Sid sid,std::uint32_t flags) {
 // 공통 후처리의 순서: 영역 무효화→그래프 생성/리셋→비용→공급/작업장 목록→소유자 조건 통계→깊이 감소다.
 void SquidPostPop::PostPop(Sid sid,std::uint32_t flags) {
     Validate(sid,flags);
+    PostPopBase(sid,flags);
+}
+// 직접 base 호출도 공통 상태·효과의 검사와 깊이 감소를 그대로 수행한다.
+void SquidPostPop::PostPopBase(Sid sid,std::uint32_t flags) {
+    ValidateBase(sid,flags);
     if (state_.suppressed) { --state_.depth; return; }
     const auto bytes=pool_.Slot(sid); const auto number=bytes[10]; const auto& type=types_[number];
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;

@@ -47,12 +47,18 @@ public:
     bool HandlesDerived(Sid sid) const;
     // 공간 변경 전 연결된 그래프의 최종 Pop 상태·미복원 영역/AI/배치 효과·목록·비용을 확인한다.
     void Validate(Sid sid,std::uint32_t flags,const RawGraphPop* pop=nullptr) const;
+    // 복원한 파생 몸체가 공통 함수를 직접 부르기 전에 검사한다. 가상 표의 전체 postPop 지원 여부만 제외한다.
+    // Pop/Activate의 가상 분배는 계속 Validate를 사용한다.
+    void ValidateBase(Sid sid,std::uint32_t flags,const RawGraphPop* pop=nullptr) const;
     // 선택한 raw Graph가 Pop과 같은 해시·spot을 읽는지 공간 변경 전에 확인한다.
     void ValidateSpace(const SquidHash& hash,std::span<const std::uint8_t> spots) const;
     // 비전투 Activate에서 postPop을 호출하는 깊이 증가/감소를 보존한다. flags는 Pop이 정규화한다.
     void Activate(Sid sid,std::uint32_t flags);
     // 004b0d30 ↔ CD 004ae180의 공통 몸체. 명시적인 직접 호출은 depth를 한 단계 감소시킨다.
     void PostPop(Sid sid,std::uint32_t flags);
+    // 004b0d30 / CD 004ae180의 비가상 직접 호출이다. 파생 흐름의 일부만 복원한 호스트에서도 호출할 수 있다.
+    // raw/Graph/장부 보호 검사는 유지하며 Pop의 허용 가상 표를 늘리지 않는다.
+    void PostPopBase(Sid sid,std::uint32_t flags);
     // Pop과 다른 풀을 연결하지 않도록 소유자를 제공한다.
     const SidPool& Pool() const;
 private:

@@ -62,4 +62,6 @@ ctest --test-dir cpppj/build --build-config Release --output-on-failure
 
 ## 다음 구현
 
+2026-10-08 후속: 아래 **Carrier/Damageable→공통 장부 직접 호출부는 완료**했다([전체 몸체 대조·사제/공통 통합](cpp-carrier-postpop-reconstruction.md)). +0xcc/지면 공간 효과와 사제 회복·보호막/낙하·전체 postPop/preDestroy는 남는다. `00493d30`/CD `0040bfb0`은 보호막 생성·소리 처리이며 경로 무효화로 취급하면 안 된다. 다음 범위와 이번 사용자 30분 기준은 최신 인계를 따른다. 아래는 당시 인계다.
+
 carrier postPop(`00427720`/CD `004e6360`)의 비권한 상태 가상 호출 및 damageable/common postPop부터 이어 간다. 그 뒤 지면·방향에 따른 사제 낙하/경로 분기와 회복 이벤트 처리기(`0x25a`)를 복원한다. preDestroy의 목록 제거·종속 처리, 보행 진행/종료도 남는다. 이 전용 흐름을 갖춘 뒤 사제를 공통 Pop·비표면 raw 월드/GUI에 연결해야 한다. 장시간 변이/최대 지도/SID 소진 검사는 기존 15분 이상 작업 인계를 유지한다.

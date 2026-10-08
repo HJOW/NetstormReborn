@@ -1,0 +1,101 @@
+{
+  "schema": 1,
+  "primary_target": "10.78",
+  "total": 7344,
+  "editions": {
+    "originals": {
+      "binary": "originals/Netstorm.exe",
+      "cases": 2448,
+      "carrier": "00427720",
+      "damageable": "0044bf80",
+      "native_calls": {
+        "00427720": 1968,
+        "0044bf80": 2448,
+        "004ac1e0": 336,
+        "0049a840": 1536,
+        "004ad080": 1200
+      },
+      "stub_calls": {
+        "00426fc0": 528,
+        "004b0d30": 2448,
+        "0044bd20": 176
+      },
+      "assertions": 0,
+      "instructions": 93072
+    },
+    "originalCD": {
+      "binary": "originalCD/NETSTORM.EXE",
+      "cases": 2448,
+      "carrier": "004e6360",
+      "damageable": "004621c0",
+      "native_calls": {
+        "004e6360": 1968,
+        "004621c0": 2448,
+        "004abac0": 336,
+        "004acdb0": 1200,
+        "004abae0": 1200
+      },
+      "stub_calls": {
+        "004e50d0": 528,
+        "004ae180": 2448,
+        "00461f00": 176
+      },
+      "assertions": 0,
+      "instructions": 97376
+    },
+    "original1037": {
+      "binary": "original1037/netstorm.exe",
+      "cases": 2448,
+      "carrier": "004e6360",
+      "damageable": "004621c0",
+      "native_calls": {
+        "004e6360": 1968,
+        "004621c0": 2448,
+        "004abac0": 336,
+        "004acdb0": 1200,
+        "004abae0": 1200
+      },
+      "stub_calls": {
+        "004e50d0": 528,
+        "004ae180": 2448,
+        "00461f00": 176
+      },
+      "assertions": 0,
+      "instructions": 97376
+    }
+  },
+  "stubbed": [
+    "vtable +0xcc",
+    "ground ownership",
+    "common Squid postPop"
+  ],
+  "os_calls": 0,
+  "normal_return": true,
+  "files": {
+    "cpppj/tests/fixtures/carrierpostpop-x86.tsv": "4efa1cd19250a64a436a9c9bddeaa15f88429fcd8e5b7aa2c9b0dfd4eca31124",
+    "extracted/carrierpostpop/original1037/creation.c": "77c7a57039487fc0d849862f4195ee09ba4c845bf783dcf8fcb354c3113fae2a",
+    "extracted/carrierpostpop/original1037/functions.tsv": "9b8da4c1a9ce5a346ada8e8824aa8dbab6880a40a707c529f0f983033b2cd8c4",
+    "extracted/carrierpostpop/originalCD/creation.c": "77c7a57039487fc0d849862f4195ee09ba4c845bf783dcf8fcb354c3113fae2a",
+    "extracted/carrierpostpop/originalCD/functions.tsv": "9b8da4c1a9ce5a346ada8e8824aa8dbab6880a40a707c529f0f983033b2cd8c4",
+    "extracted/carrierpostpop/originals/creation.c": "cb43ed661d4f060f344f50e641c1bf4a841ebb78c7b56f5c93a5254f48671844",
+    "extracted/carrierpostpop/originals/functions.tsv": "e0ee46d4fb84d736fa2585b043cb16da57ab6dc7e57f722790d637c56a345b65",
+    "extracted/owner/original1037/creation.c": "115d3f4790315c3647e18c087579cf3aa08af06cdbaeca42adbac1e82725af62",
+    "extracted/owner/original1037/functions.tsv": "4e184997f62c2622b26b3fa4f047a2580a609d2d919f0e414a75e8efd49d4439",
+    "extracted/owner/originalCD/creation.c": "115d3f4790315c3647e18c087579cf3aa08af06cdbaeca42adbac1e82725af62",
+    "extracted/owner/originalCD/functions.tsv": "4e184997f62c2622b26b3fa4f047a2580a609d2d919f0e414a75e8efd49d4439",
+    "extracted/owner/originals/creation.c": "f9919c046d5259526946f106b47b6259fe5e04971f743d6fa02d6a5361b9dc16",
+    "extracted/owner/originals/functions.tsv": "3ea66dace80a85999a8b2c2dbadb4d5f1bd18b0dcdb0768f9c41075206c7c72d",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_carrierpostpop_oracle.py": "342076cd9ffb62dacabb38dd13f6b47452f3a3bd851d00201dab6ca151a6b569",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/ghidra/carrierpostpop-functions.json": "57f7d0ae56e49c6e96af0d78e19b7b3d9b3557374aef0eb10fcb8fe455159c12"
+  },
+  "limitations": [
+    "synthetic asset type metadata and priest vtable carrier call target",
+    "external effects recorded/injected; their complete bodies are not executed",
+    "real common bookkeeping and priest prefix/ProcessHost composition verified separately in C++",
+    "no original game, priest falling/force field/regen handler or GUI migration"
+  ]
+}
