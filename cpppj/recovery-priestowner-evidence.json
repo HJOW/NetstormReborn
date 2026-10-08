@@ -1,0 +1,87 @@
+{
+  "schema": 1,
+  "primary_target": "10.78",
+  "total": 7416,
+  "cases": {
+    "Owner": 7416
+  },
+  "editions": {
+    "originals": {
+      "binary": "originals/Netstorm.exe",
+      "sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "cases": 3528,
+      "entry": "00491790",
+      "base_entry": "004adf00",
+      "notify_entry": "004214a0",
+      "native_calls": {
+        "00491790": 3528,
+        "004214a0": 5256,
+        "004adf00": 1584,
+        "0049a840": 2520
+      },
+      "assertions": 0,
+      "instructions": 362808
+    },
+    "originalCD": {
+      "binary": "originalCD/NETSTORM.EXE",
+      "sha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "cases": 1944,
+      "entry": "0040bda0",
+      "base_entry": "004aefa0",
+      "notify_entry": "00448c10",
+      "native_calls": {
+        "0040bda0": 1944,
+        "00448c10": 2448,
+        "004aefa0": 1584,
+        "004abae0": 2520
+      },
+      "assertions": 0,
+      "instructions": 212004
+    },
+    "original1037": {
+      "binary": "original1037/netstorm.exe",
+      "sha256": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+      "cases": 1944,
+      "entry": "0040bda0",
+      "base_entry": "004aefa0",
+      "notify_entry": "00448c10",
+      "native_calls": {
+        "0040bda0": 1944,
+        "00448c10": 2448,
+        "004aefa0": 1584,
+        "004abae0": 2520
+      },
+      "assertions": 0,
+      "instructions": 212004
+    }
+  },
+  "stubbed": [],
+  "os_calls": 0,
+  "files": {
+    "cpppj/tests/fixtures/priestowner-x86.tsv": "fe892a4fe7f1687079d12a2ebc99709a905d6ae5cde18a00e1897ad601ab5d01",
+    "extracted/owner/original1037/creation.c": "115d3f4790315c3647e18c087579cf3aa08af06cdbaeca42adbac1e82725af62",
+    "extracted/owner/original1037/functions.tsv": "4e184997f62c2622b26b3fa4f047a2580a609d2d919f0e414a75e8efd49d4439",
+    "extracted/owner/originalCD/creation.c": "115d3f4790315c3647e18c087579cf3aa08af06cdbaeca42adbac1e82725af62",
+    "extracted/owner/originalCD/functions.tsv": "4e184997f62c2622b26b3fa4f047a2580a609d2d919f0e414a75e8efd49d4439",
+    "extracted/owner/originals/creation.c": "f9919c046d5259526946f106b47b6259fe5e04971f743d6fa02d6a5361b9dc16",
+    "extracted/owner/originals/functions.tsv": "3ea66dace80a85999a8b2c2dbadb4d5f1bd18b0dcdb0768f9c41075206c7c72d",
+    "extracted/priestowner/original1037/creation.c": "d9e4a9bc5c3f46e8676f3e20c9692e97ae0d51d8051f5a287589b5b65c9a3eef",
+    "extracted/priestowner/original1037/functions.tsv": "44517581d056383a082066b1f47833934e87c4e72b474d39c5b1c0c54cd8288c",
+    "extracted/priestowner/originalCD/creation.c": "d9e4a9bc5c3f46e8676f3e20c9692e97ae0d51d8051f5a287589b5b65c9a3eef",
+    "extracted/priestowner/originalCD/functions.tsv": "44517581d056383a082066b1f47833934e87c4e72b474d39c5b1c0c54cd8288c",
+    "extracted/priestowner/originals/creation.c": "dbefb3179002b4c20c45eebe288b12b6837d43b6c389efba5ea834c42f20aabb",
+    "extracted/priestowner/originals/functions.tsv": "4960daa75531b1afb78cff5f9ff4aba5a39135a128d6434d247b1a9a2fce24eb",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/decomp_priestowner_oracle.py": "3334cd00fc4b95e4a5d996beacc709b1a5c57589171b11bf32159fb78a498abc",
+    "tools/ghidra/owner-functions.json": "8a74fdaf286926d0931e0930e29a0483a619be8afa4508b3cff2e4f7881c0412",
+    "tools/ghidra/priestowner-functions.json": "d589a6beda2b3ebfcb5acc6ca120245d75407e608be70059435a86ff6083a357"
+  },
+  "limitations": [
+    "actual priest type 158 with synthetic raw state and type genus",
+    "challenge mode, patch loading/nonbattle owner 0 and CD out-of-range base owners excluded (original assertions)",
+    "no postPop, capture gameplay, GUI unit migration or game loop"
+  ]
+}

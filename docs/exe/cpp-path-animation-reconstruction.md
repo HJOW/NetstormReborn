@@ -50,6 +50,8 @@ python -X utf8 tools/cpp_surface_world_smoke.py
 
 ## 다음 구현에 필요한 경계
 
+2026-10-08 후속에서 아래 1번의 **사제 소유자 재정의는 복원 완료**했다([근거·범위](cpp-priest-owner-reconstruction.md)). 사제 postPop/preDestroy와 보행 진행/종료·raw 유닛 전환은 계속 남았다.
+
 1. **사제 전용 lifecycle/소유자/postPop**부터 복원한다. 실제 priest 타입은 **158**, 생성자는 `004952a0`/CD `0040d790`, 가상 표는 `0050f210`/CD `005003e0`이다. postPop `004950f0`/CD `0040c110`은 regen Regular(`0x25a`)·carrier/damageable 처리·낙하/경로 무효화를 포함한다. 소유자는 `00491790`/CD `0040bda0`, preDestroy는 `004919b0`/CD `0040c330`이다. 공통 가상 표로 바꾸어 현재 표면 Pop에 넣으면 이 전용 효과를 잃는다.
 2. **PathProcess 보행 프레임 진행** `0048bb40`/CD `004805d0`과 도착 뒤 종료/명령 처리를 별도로 복원한다. SHP 추가 헤더의 float 이동량·정지/목표 판정·물리 프레임 진행을 포함하므로 현재 12Hz 타이머로 원본을 재현했다고 볼 수 없다.
 3. 검증된 유닛 lifecycle·process·표시를 raw 월드/Kernel로 전환한 뒤 실제 walker 낙하·파편/소리, 배치·건설·경제·전투·승패를 연결한다. 장시간 변이 검사/최대 지도·SID 소진 등은 기존 인수인계를 유지한다.
