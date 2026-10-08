@@ -62,3 +62,7 @@ C++는 전체 144바이트 배열·현재 편집기/동맹/관계/genus·표면 
 검증 결과와 다음 작업은 [LEFT_JOBS.md](../../LEFT_JOBS.md)에 기록한다. 로그는 `extracted/cpp-priestpreview-export.log`, `cpp-priestpreview-export-patch.log`, `cpp-priestpreview-oracle-final.log`, `cpp-priestpreview-build-final.log`, `cpp-priestpreview-ctest-final.log`, `cpp-priestpreview-audits-final.log`다.
 
 최종 Release 경고/오류 0·CTest 내부 **330개·실패 0**(96.68초)·감사 **45종 모두 통과**이며 새 독립 입력을 더한 누적 x86은 **221,209개**다. `git diff --check`와 새 파일 UTF-8/줄 끝 검사도 통과했다.
+
+## 2026-10-09 후속 후보 충돌 완료
+
+[사제 충돌 후보 복원](cpp-priest-collision-reconstruction.md)에서 `0049ade0`/CD `00444900`의 타입별 무시 함수, client SID 조건, 후보별 로컬 발자국 표시와 extra/mode 거부를 복원하고 실제 `RawSquidFinder`에 연결했다. 새 연결은 같은 풀/미리보기 상태를 공유한다. 실제 CanonDecoder 모양 순회·모양별 finder 정수 범위·후보별 지형/지역/관계 효과와 일반 Pop/Carrier 검사 몸체는 후속 경계다. 앞 절의 미리보기 독립 fixture/감사 도구는 변경하지 않았다.
