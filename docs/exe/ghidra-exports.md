@@ -34,6 +34,7 @@ Get-ChildItem tools/decomp_*_oracle.py | Where-Object { Select-String -LiteralPa
 | `bridgeconnect` | bridgeconnect·islandlifecycle | 10 / 10 / 10 | 2026-10-08 추가([다리/섬 연결](cpp-bridgeconnect-reconstruction.md)) |
 | `setframe` | setframe | 3 / 3 / 3 | 2026-10-08 추가([프레임 지정](cpp-setframe-reconstruction.md)) |
 | `islandlifecycle` | islandlifecycle | 4 / 2 / 2 | 2026-10-08 추가([섬 삭제 훅](cpp-islandlifecycle-reconstruction.md)) |
+| `islandpostpop` | islandpostpop | 5 / 4 / 4 | 2026-10-08 추가([noIsland 최초 등록·받침 소유자](cpp-islandpostpop-reconstruction.md)), `VM-W11-CODEX`에서 내보냄 |
 | `regiongraph` | regiongraph | 13+3 / 14+1 / 14+1 | **증거 JSON의 `function_ranges` 순서에서 복원**(아래 "남은 문제") |
 | `pop` | pop·display·postpop·rawgraph·regiongraph | 22(+보조 2) / 18 / — | 문서의 명령. 패치판 보조 둘은 `extracted/pop/helpers-originals`(목록의 `aliases`) |
 | `display` | display 계열 | 10 / 7 / — | 증거 JSON의 누적 `function_ranges`에서 앞 단계 몫을 뺀 나머지 |
@@ -55,14 +56,16 @@ Get-ChildItem tools/decomp_*_oracle.py | Where-Object { Select-String -LiteralPa
 - **Ghidra 헤드리스는 같은 설정 폴더(`extracted/ghidra-settings`)로 동시에 두 개를 돌릴 수 없다.** 둘째 실행이 번들 캐시 잠금(`Unable to create bundle cache lock file`)으로 스크립트를 싣지 못하고 멈춘다. `refine_all.ps1`이 도는 동안에는 내보내기를 하지 않는다.
 - `powershell -File export_functions.ps1 -Name a,b`처럼 부르면 쉼표 목록이 한 문자열로 넘어와 실패했다. 스크립트가 쉼표를 직접 나누도록 고쳤다.
 
-### 남은 문제: `regiongraph`
+### 해결한 문제: `regiongraph` (2026-10-08, VM-W11-CODEX)
+
+후속 세션에서 위 준비된 내보내기로 `decomp_regiongraph_oracle.py`를 실제로 재실행했다. **1,536개 fixture는 파일 전체가 바이트 단위로 그대로**이며 `--verify`도 통과한다. 증거 JSON의 디컴파일 C SHA와 누적 함수 경계 메타데이터(CD/10.37 helper 구분)를 현재 PC의 판독에 맞췄다. 새 noIsland 도구를 포함해 감사 **31개 모두 통과**한다. 아래 문장은 재생성 전의 원인과 절차 기록이다.
 
 `regiongraph`는 목록이 없어 이 PC에서 감사가 실패했다. 증거 JSON의 `function_ranges`가 내보낸 순서 그대로 남아 있어 [목록 파일](../../tools/ghidra/regiongraph-functions.json)로 복원했다(CD/10.37의 InsertCD 비교 함수 `00433bf0`의 위치는 `functions.tsv` SHA로 확정 — 맨 끝). 결과:
 
 - `functions.tsv`(실행 허용 범위)는 **세 판본·두 묶음 모두 기록 SHA와 일치**한다.
 - `creation.c`(디컴파일 텍스트)는 **10.37만 일치**하고 10.78·CD는 다르다. 기록은 다른 PC의 예전 Ghidra 프로젝트 상태에서 만든 것으로 보인다(앞서 `sid`·`creation`에서 같은 현상이 있었다). 텍스트만 다르고 실행 범위는 같다.
 
-그래서 이 PC에서는 `decomp_regiongraph_oracle.py --verify`가 `creation.c` SHA에서 멈춘다. 고치려면 새 내보내기로 기대값을 다시 생성해 fixture가 그대로인지 확인하고 증거를 다시 기록해야 한다. **그 준비는 이 PC에서 끝냈다**: 앞 단계의 `pop`·`display`·`postpop`·`graph` 내보내기(위 목록)와 `extracted/refined/`(정밀 디컴파일)가 모두 있다. **다시 생성하는 실행 자체는 하지 않았다**(소요 시간을 몰라 다음 작업으로 넘겼다). 절차:
+당시 이 PC의 `decomp_regiongraph_oracle.py --verify`는 `creation.c` SHA에서 멈췄다. 앞 단계의 `pop`·`display`·`postpop`·`graph` 내보내기(위 목록)와 `extracted/refined/`가 준비돼 있었고 후속 세션에서 아래 절차로 재생성해 해결했다.
 
 ```powershell
 python -X utf8 tools/decomp_regiongraph_oracle.py            # 기대값 재생성(소요 시간 미측정)

@@ -183,7 +183,7 @@ TEST_CASE(bridge_connect_walk_reads_live_chain_between_next_calls) {
 
 // 기록 훅으로 남았던 생성·소유자 지정·Pop을 실제 raw 모듈에 연결한다: 중립 섬 받침 옆에 다리를 놓으면
 // 다리 postPop 접두 → 연결 순회 → 연결 객체 생성/등록 → 섬 받침·종유석·표면 칸으로 소유자와 색이 전파된다.
-// 프레임 지정도 실제 복원 함수(SquidFrame)를 거친다. 표시 갱신과 noIsland의 파생 postPop은 여전히 외부 경계이며
+// 프레임 지정도 실제 복원 함수(SquidFrame)를 거친다. 이 검사는 표면 칸을 직접 입력하며 noIsland 최초 등록은 IslandPostPopTests에서 별도로 검증한다.
 // 비전투·Graph 비활성 공간에서의 통합 검사다.
 TEST_CASE(bridge_connect_real_raw_modules_capture_neutral_island) {
     // 같은 타입 번호와 생성자 배치를 쓰는 두 판본에서 확인한다.
@@ -253,7 +253,7 @@ TEST_CASE(bridge_connect_real_raw_modules_capture_neutral_island) {
         CHECK(stalag.value!=0 && stalag==created[0]);
         CHECK(pool.Slot(stalag)[ownerOffset]==0 && Get(pool.Slot(stalag),frameOffset,frameWidth)==8 && (pool.Slot(stalag)[11]&4)==0);
         CHECK(connect.FindTypeAt(29.0f,28.0f,islandType)==island);
-        // 2. 받침 위의 표면 칸(noIsland) 둘은 파생 postPop이 미복원이라 기존 배치 상태를 직접 입력한다.
+        // 2. 이미 생성된 받침의 다리 점령만 분리해 확인하려고 noIsland 둘의 기존 배치 상태를 직접 입력한다.
         const auto surface=[&](float x,float y) {
             const Sid sid=factory.Create(noIslandType);auto raw=pool.AllocatedBytes(sid);
             raw[11]=static_cast<std::uint8_t>(raw[11]&~4);

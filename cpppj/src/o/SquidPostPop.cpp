@@ -1,6 +1,7 @@
 // 실제 공통 후처리에서 선택한 효과만 구현하며 미복원 호출을 변경 전에 거부한다.
 #include "o/SquidPostPop.h"
 #include "o/SquidPop.h"
+#include "o/RawIslandPostPop.h"
 #include <algorithm>
 #include <bit>
 #include <cmath>
@@ -18,8 +19,6 @@ constexpr std::uint32_t kNoGraph=0x2000000,kGraphChange=0x203,kDestroyGraph=0x80
 constexpr std::int64_t kCostBias=23;
 // 실제 다리 가상 표의 postPop은 공통 함수 앞에 연결 접두 처리를 수행한다.
 constexpr std::uint32_t kPatchBridgeVtable=0x005034c8,kCdBridgeVtable=0x00501ab0;
-// 섬 받침(island 타입)의 가상 표. postPop(+0x20)이 004421c0 / CD 004d01d0으로 재정의돼 있다.
-constexpr std::uint32_t kPatchIslandVtable=0x00506d98,kCdIslandVtable=0x00506960;
 // raw 가상 주소를 호스트 포인터로 해석하지 않고 읽는다.
 std::uint32_t Vtable(std::span<const std::uint8_t> bytes) {
     std::uint32_t value=0;
@@ -60,8 +59,15 @@ bool SquidPostPop::HandlesIsland(Sid sid) const {
     const auto expected=pool_.Edition()==OriginalEdition::Patch1078 ? kPatchIslandVtable : kCdIslandVtable;
     return islandPrefix_ && Vtable(pool_.Slot(sid))==expected;
 }
-// 두 파생 표는 서로 다른 주소이므로 한쪽만 참이 된다.
-bool SquidPostPop::HandlesDerived(Sid sid) const { return HandlesBridge(sid) || HandlesIsland(sid); }
+// 파생 표는 서로 다른 주소이므로 한 종류만 참이 된다.
+bool SquidPostPop::HandlesDerived(Sid sid) const { return HandlesBridge(sid) || HandlesIsland(sid) || HandlesSurface(sid); }
+// 순환하는 생성/Pop 연결을 인스턴스 구성 뒤에 공급한다.
+void SquidPostPop::SetSurfacePrefix(std::function<void(Sid,std::uint32_t)> prefix) { surfacePrefix_=std::move(prefix); }
+// 가상 표와 명시적 접두가 둘 다 있어야 noIsland 후처리를 허용한다.
+bool SquidPostPop::HandlesSurface(Sid sid) const {
+    const auto expected=pool_.Edition()==OriginalEdition::Patch1078 ? kPatchNoIslandVtable : kCdNoIslandVtable;
+    return surfacePrefix_ && Vtable(pool_.Slot(sid))==expected;
+}
 // 00422150 ↔ CD 00449890. 공통 postPop을 호출하기 전에 수행하는 부분만 복원한다.
 void SquidPostPop::BridgePrefix(SidPool& pool,Sid sid,std::uint32_t flags,const std::function<void(Sid)>& connector) {
     const auto extraOffset=pool.Edition()==OriginalEdition::Patch1078 ? 40U : 35U;
@@ -122,6 +128,8 @@ void SquidPostPop::Activate(Sid sid,std::uint32_t flags) {
     if (HandlesBridge(sid)) BridgePrefix(pool_,sid,flags,bridgeConnector_);
     // 섬 받침은 접두(종유석·연결 순회) 뒤에 같은 flags로 공통 후처리를 부른다.
     else if (HandlesIsland(sid)) islandPrefix_(sid,flags);
+    // 표면 칸 접두가 만든 받침/종유석의 중첩 postPop을 마친 뒤 자기 공통 장부를 갱신한다.
+    else if (HandlesSurface(sid)) surfacePrefix_(sid,flags);
     PostPop(sid,flags);
 }
 // 공통 후처리의 순서: 영역 무효화→그래프 생성/리셋→비용→공급/작업장 목록→소유자 조건 통계→깊이 감소다.

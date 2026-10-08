@@ -39,7 +39,11 @@ public:
     void SetIslandPrefix(std::function<void(Sid,std::uint32_t)> prefix);
     // 섬 받침의 가상 표이고 접두 효과가 연결돼 있는가.
     bool HandlesIsland(Sid sid) const;
-    // 이 인스턴스가 처리할 수 있는 파생 postPop(다리·섬 받침)인가. Pop이 공간 변경 전에 묻는다.
+    // noIsland postPop(004423b0 / CD 004d2790)의 접두를 연결한다. RawIslandPostPop::Prefix를 공급한다.
+    void SetSurfacePrefix(std::function<void(Sid,std::uint32_t)> prefix);
+    // noIsland 가상 표이며 접두가 연결돼 있는가.
+    bool HandlesSurface(Sid sid) const;
+    // 이 인스턴스가 처리할 수 있는 파생 postPop(다리·섬 받침·noIsland)인가. Pop이 공간 변경 전에 묻는다.
     bool HandlesDerived(Sid sid) const;
     // 공간 변경 전 연결된 그래프의 최종 Pop 상태·미복원 영역/AI/배치 효과·목록·비용을 확인한다.
     void Validate(Sid sid,std::uint32_t flags,const RawGraphPop* pop=nullptr) const;
@@ -60,5 +64,6 @@ private:
     RawGraph* graph_{};
     std::function<void(Sid)> bridgeConnector_; // 연결 객체 생성/소유자 전파(004213b0). RawBridgeConnect::Connect를 잇는다.
     std::function<void(Sid,std::uint32_t)> islandPrefix_; // 섬 받침 postPop의 접두. RawBridgeConnect::IslandPostPopPrefix를 잇는다.
+    std::function<void(Sid,std::uint32_t)> surfacePrefix_; // noIsland 최초 등록의 프레임/받침/소유자 효과.
 };
 }
