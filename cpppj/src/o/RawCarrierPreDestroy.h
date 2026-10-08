@@ -1,13 +1,11 @@
 // Carrier 삭제 준비와 contained finder의 타입·WORD 조건 조회를 복원한다.
 #pragma once
 #include "o/RawPriestPreDestroy.h"
+#include "o/RawContainedFinder.h"
 
 namespace netstorm::o {
-struct CarrierPreDestroyState {
-    bool boss{true}; // 00540bc4 / CD 00540a2c: Damageable 호출 뒤 현재 권한을 읽는다.
-    std::uint32_t containedType{6}; // 00541088 / CD 0051c978: 종속 finder가 허용하는 DWORD 타입이다.
-    bool checkingDead{}; // 005e4794: 패치판에서 권한 없는 dead 부모 조회의 assert를 활성화한다.
-};
+// Carrier와 Damageable이 같은 권한/contained 타입 전역을 공유한다.
+using CarrierPreDestroyState=ContainedFinderState;
 struct CarrierPreDestroyHooks {
     std::function<void(Sid,std::uint32_t)> validateDamageable; // 효과 전 하위 경계의 순수 사전 검사다.
     std::function<void(Sid,std::uint32_t)> damageablePre; // 0044b4b0 / CD 004615e0의 하위 효과 경계다.

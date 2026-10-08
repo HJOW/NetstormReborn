@@ -1,15 +1,14 @@
 // 종속의 next를 먼저 읽고 원본 DWORD 타입과 두 WORD 조건을 순서대로 평가한다.
 #include "o/RawCarrierPreDestroy.h"
 #include <stdexcept>
-#include <unordered_set>
 #include <utility>
 
 namespace netstorm::o {
 namespace {
 // 두 판본에서 공통인 종속 링크·타입·상태와 조회 조건의 raw 위치다.
-constexpr std::size_t kNext=4,kHead=6,kType=10,kState=11,kKind=18,kMask=20;
+constexpr std::size_t kType=10,kState=11,kKind=18,kMask=20;
 // free/contained는 직접 자산 호출에서 거부하고 dead는 원본 삭제 준비에서 허용한다.
-constexpr std::uint8_t kFreeContained=9,kDead=2;
+constexpr std::uint8_t kFreeContained=9;
 // 정렬되지 않은 little endian WORD를 읽는다.
 std::uint16_t Word(std::span<const std::uint8_t> raw,std::size_t offset) {
     return static_cast<std::uint16_t>(raw[offset]|(static_cast<std::uint16_t>(raw[offset+1])<<8));
@@ -36,22 +35,15 @@ void RawCarrierPreDestroy::PreDestroy(Sid sid,std::uint32_t flags) const {
 }
 // 실제 contained finder는 전체 종속 중 전역 타입과 같은 BYTE만 기본 true 필터에 넘긴다.
 Sid RawCarrierPreDestroy::FindContained(Sid parent,std::uint32_t mask,std::uint32_t kind,std::uint32_t index) const {
-    if (!parent.value || parent.value>=pool_.Capacity()) throw std::out_of_range("종속 조회 부모 SID 범위 오류");
-    const auto raw=pool_.Slot(parent);
-    if (pool_.Edition()==OriginalEdition::Patch1078 && state_.checkingDead && (raw[kState]&kDead) && !state_.boss)
-        throw std::logic_error("권한 없는 dead 부모 종속 조회 assert 경로");
-    Sid current{Word(raw,kHead)};std::unordered_set<std::uint16_t> visited;
-    // 가장 최근 종속부터 진행한다. 첫 일치 전에만 순환/범위 오류를 거부한다.
-    while (current.value) {
-        if (current.value>=pool_.Capacity() || !visited.insert(current.value).second)
-            throw std::logic_error("contained finder 종속 체인 손상");
-        const auto candidate=pool_.Slot(current);const Sid next{Word(candidate,kNext)};
-        if (candidate[kType]==state_.containedType && (!kind || Word(candidate,kKind)==kind)
+    RawContainedFinder finder(pool_,state_);
+    // 공용 커서는 가장 최근 종속부터 진행하며 다음 링크를 먼저 저장한다.
+    for (Sid current=finder.Begin(parent);current.value;current=finder.Next()) {
+        const auto candidate=pool_.Slot(current);
+        if ((!kind || Word(candidate,kKind)==kind)
             && (!mask || (Word(candidate,kMask)&mask))) {
             if (!index) return current;
             --index;
         }
-        current=next;
     }
     return {};
 }

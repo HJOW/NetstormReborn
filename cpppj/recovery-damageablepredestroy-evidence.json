@@ -1,0 +1,121 @@
+{
+  "total": 4896,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-08",
+  "normal_return": true,
+  "os_calls": 0,
+  "controls": [
+    639,
+    895
+  ],
+  "editions": {
+    "originals": {
+      "cases": 1632,
+      "native_calls": {
+        "0044b4b0": 3264,
+        "004e49c0": 1920,
+        "004b2270": 1408,
+        "004b1b20": 2448,
+        "00426890": 1632,
+        "004ac9f0": 832,
+        "0044daa0": 1656
+      },
+      "substitutions": {
+        "B": 3264,
+        "R-region": 320,
+        "C": 640,
+        "A0": 640,
+        "X": 640,
+        "A1": 640,
+        "F": 736,
+        "T": 616
+      },
+      "assertions": 0,
+      "replaced_region": [
+        "0044b626",
+        "0044b80c"
+      ]
+    },
+    "originalCD": {
+      "cases": 1632,
+      "native_calls": {
+        "004615e0": 3264,
+        "004f161c": 1920,
+        "004eb8d0": 1408,
+        "004eb900": 2448,
+        "004e43b0": 1632,
+        "004ac560": 832,
+        "0040f230": 1656
+      },
+      "substitutions": {
+        "B": 3264,
+        "R-region": 320,
+        "C": 640,
+        "A0": 640,
+        "X": 640,
+        "A1": 640,
+        "F": 736,
+        "T": 616
+      },
+      "assertions": 0,
+      "replaced_region": [
+        "0046174e",
+        "0046195a"
+      ]
+    },
+    "original1037": {
+      "cases": 1632,
+      "native_calls": {
+        "004615e0": 3264,
+        "004f161c": 1920,
+        "004eb8d0": 1408,
+        "004eb900": 2448,
+        "004e43b0": 1632,
+        "004ac560": 832,
+        "0040f230": 1656
+      },
+      "substitutions": {
+        "B": 3264,
+        "R-region": 320,
+        "C": 640,
+        "A0": 640,
+        "X": 640,
+        "A1": 640,
+        "F": 736,
+        "T": 616
+      },
+      "assertions": 0,
+      "replaced_region": [
+        "0046174e",
+        "0046195a"
+      ]
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/damageablepredestroy-x86.tsv": "a0dd75327aa55f130acabb28d848a86c8f4beee563aadcfa1d2784442d50db8c",
+    "extracted/damageablepredestroy/original1037/creation.c": "7e8fbe02ca95b3c16c1e9eaa92da1f2a9bb907e29e04ab351bef8039d9ed0862",
+    "extracted/damageablepredestroy/original1037/functions.tsv": "8ff5adbb8d4cea75eeb7d31c32d119d1a73c40f5d5b525ac4b54949a3ce7699c",
+    "extracted/damageablepredestroy/originalCD/creation.c": "7e8fbe02ca95b3c16c1e9eaa92da1f2a9bb907e29e04ab351bef8039d9ed0862",
+    "extracted/damageablepredestroy/originalCD/functions.tsv": "8ff5adbb8d4cea75eeb7d31c32d119d1a73c40f5d5b525ac4b54949a3ce7699c",
+    "extracted/damageablepredestroy/originals/creation.c": "351761968640f20ca65918eb94b241c81c2979ed7e4020a10daecdc0a5b1f843",
+    "extracted/damageablepredestroy/originals/functions.tsv": "827ec0ef635b2bd144e6336dca5fede9cf813283429f2af7a88fa7cfb8571955",
+    "extracted/owner/original1037/creation.c": "115d3f4790315c3647e18c087579cf3aa08af06cdbaeca42adbac1e82725af62",
+    "extracted/owner/original1037/functions.tsv": "4e184997f62c2622b26b3fa4f047a2580a609d2d919f0e414a75e8efd49d4439",
+    "extracted/owner/originalCD/creation.c": "115d3f4790315c3647e18c087579cf3aa08af06cdbaeca42adbac1e82725af62",
+    "extracted/owner/originalCD/functions.tsv": "4e184997f62c2622b26b3fa4f047a2580a609d2d919f0e414a75e8efd49d4439",
+    "extracted/owner/originals/creation.c": "f9919c046d5259526946f106b47b6259fe5e04971f743d6fa02d6a5361b9dc16",
+    "extracted/owner/originals/functions.tsv": "3ea66dace80a85999a8b2c2dbadb4d5f1bd18b0dcdb0768f9c41075206c7c72d",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_damageablepredestroy_oracle.py": "b6bd591b17b886224e81b9d35dc863f12dea570c67aabf8a66280c7361785e75",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/ghidra/damageablepredestroy-functions.json": "4f23db2879c992bf39029b06f7af4823c005353b4bc9ad2d5f1a88e03153bfde"
+  },
+  "limits": [
+    "효과/소리/공통 pre/Carrier 전역 후처리 함수 호출을 기록 대체",
+    "권한 해방 구간은 첫 명령에서 종료 구간으로 건너뛰며 조건만 실제 실행",
+    "spot +0.9999·CRT 절삭·contained 순회/true 필터·바깥 분기는 실제 실행",
+    "일반 공간 수명·파편/소리 출력·해방 생성/배치의 완성을 뜻하지 않음"
+  ]
+}

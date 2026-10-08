@@ -35,6 +35,7 @@ add_executable(netstorm_tests
     PriestPostPopTests.cpp
     CarrierPostPopTests.cpp
     CarrierPreDestroyTests.cpp
+    DamageablePreDestroyTests.cpp
     PriestStateTests.cpp
     PriestRegenTests.cpp
     PriestPreDestroyTests.cpp
@@ -125,3 +126,6 @@ add_test(NAME netstorm_tests COMMAND netstorm_tests)
 # Carrier/실제 contained 조회의 독립 fixture는 해당 검사 소스에만 지정한다.
 set_source_files_properties(CarrierPreDestroyTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CARRIERPREDESTROY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrierpredestroy-x86.tsv\"")
+# Damageable 소리 접두/실제 종속 순회의 독립 fixture를 해당 검사에만 지정한다.
+set_source_files_properties(DamageablePreDestroyTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_DAMAGEABLEPREDESTROY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/damageablepredestroy-x86.tsv\"")

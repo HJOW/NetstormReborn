@@ -36,6 +36,8 @@
 
 최종 Release 경고/오류 0·CTest 내부 **307개·실패 0**(101.70초), 감사 **40종 모두 통과**다. 검증 결과는 [LEFT_JOBS.md](../../LEFT_JOBS.md)의 이 단계 기록에 남긴다. 로그는 `extracted/cpp-carrierpredestroy-build.log`·`cpp-carrierpredestroy-ctest.log`·`cpp-carrierpredestroy-audits.log`다. 누적 독립 x86 입력은 **202,681개**다.
 
+2026-10-08 후속: [Damageable 효과·소리 접두와 실제 종속 순회](cpp-damageable-predestroy-reconstruction.md)를 완료해 Carrier/사제 연결 검사에 적용했다. 공용 `RawContainedFinder`를 사용하며 기존 Carrier 독립 2,880행도 통과했다. 파편/소리 출력과 권한 해방 생성/배치 내부는 계속 외부 경계다. 다음 작업은 최신 LEFT_JOBS를 따른다. 아래는 앞 단계 인계다.
+
 ## 다음 작업
 
 Damageable pre `0044b4b0`/CD `004615e0`는 flags `0x200000`/`0x100000`의 파편·collapse/explosion 소리, 지면과 contained 조회에 따른 priestFree 소리, 권한/flags에 따른 추가 공간 효과 등을 갖는다. 이를 하위 효과별로 나눠 복원하거나 전역 후처리 `00485e40`/CD `004151d0`를 진행한다. 보호막 생성/해제 `00493d30`/CD `0040bfb0`·낙하 `004941f0`/CD `0040c880`·전체 postPop/Unpop/Repop도 남았다. 일반 사제 Pop/비표면 raw GUI와 실제 포획·미션 완주는 계속 미완성이다.

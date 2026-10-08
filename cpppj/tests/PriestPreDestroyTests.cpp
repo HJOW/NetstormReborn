@@ -3,6 +3,7 @@
 #include "o/RawPriestPreDestroy.h"
 #include "o/RawPriestForcefield.h"
 #include "o/RawCarrierPreDestroy.h"
+#include "o/RawDamageablePreDestroy.h"
 #include "o/SquidDestroyLifecycle.h"
 #include "o/SquidFactory.h"
 
@@ -121,7 +122,7 @@ TEST_CASE(priest_predestroy_guards_and_dispatch) {
     }
 }
 
-// void 자산의 삭제에 실제 Carrier·장부·종속 form·Kernel·SID 반납을 연결한다. Damageable/보호막 효과는 대체다.
+// void 자산의 삭제에 실제 Damageable 접두·Carrier·장부·종속 form·Kernel·SID 반납을 연결한다.
 TEST_CASE(priest_predestroy_cleans_real_regen_form_kernel_and_common_bookkeeping) {
     // 두 판본과 server/client SID의 깊이/전파 분기를 각각 검사한다.
     for (auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) for (bool server:{false,true}) {
@@ -144,14 +145,19 @@ TEST_CASE(priest_predestroy_cleans_real_regen_form_kernel_and_common_bookkeeping
         hash.Bucket(1,20.75f,21.9f)=child.value;
         PriestForcefieldState forcefieldState;RawPriestForcefield lookup(pool,hash,types,forcefieldState);
         PriestPostPopState priests;priests.priests.entries.resize(3);SquidProcessHost* hostPointer=nullptr;
-        CarrierPreDestroyState carrierState;int dependentEffects=0;
-        RawCarrierPreDestroy carrier(pool,carrierState,{
+        CarrierPreDestroyState carrierState;int dependentEffects=0,collapsed=0,sounds=0,releases=0;
+        DamageablePreDestroyState damageableState;
+        RawDamageablePreDestroy damageable(pool,spots,carrierState,damageableState,{
+            [&](Sid sid) { CHECK(sid==root);++collapsed; },[](Sid) { CHECK(false); },
+            [&](const DamageableSoundEvent& event) { CHECK(event.sound==DamageableSound::Collapse && event.x==20.75f && event.y==21.9f);++sounds; },
+            [&](Sid sid) { CHECK(sid==root);++releases; },
             [&](Sid sid,std::uint32_t flags) { lifecycle.ValidatePre(sid,flags);lifecycle.ValidatePost(sid,flags); },
             [&](Sid sid,std::uint32_t flags) {
                 CHECK(sid==root && (pool.Slot(child)[11]&1) && destroy.PreDepth()==1);++carrierCalls;
-                // Damageable의 미복원 효과를 대체하고 실제 공통 장부/깊이만 호출한다.
+                // 파편/소리 출력·권한 해방은 기록 경계이며 공통 장부/깊이는 실제 몸체다.
                 lifecycle.PreDestroy(sid,flags);
-            },[&] { ++dependentEffects; }});
+            }});
+        RawCarrierPreDestroy carrier(pool,carrierState,MakeDamageablePreDestroyHooks(pool,damageable,{{},{},[&] { ++dependentEffects; }}));
         RawPriestPreDestroy pre(pool,priests,MakeCarrierPreDestroyHooks(pool,carrier,MakePriestForcefieldHooks(pool,lookup,{
             {},[&](Sid sid,std::uint32_t flags) {
                 CHECK(sid==child && flags==0 && priests.priests.count==0 && (pool.Slot(root)[11]&2));
@@ -167,6 +173,7 @@ TEST_CASE(priest_predestroy_cleans_real_regen_form_kernel_and_common_bookkeeping
         const Sid form=regular->Form();CHECK(pool.FreeCount()==initialFree-3);
         destroy.Destroy(root,0x200000,host.Hooks());
         CHECK(forceRequests==1 && carrierCalls==1 && dependentEffects==0 && priests.priests.count==0 && kernel.Size()==0);
+        CHECK(collapsed==1 && sounds==1 && releases==1);
         CHECK((pool.Slot(root)[11]&1) && (pool.Slot(child)[11]&1) && (pool.Slot(form)[11]&1));
         CHECK(pool.FreeCount()==initialFree && destroy.PreDepth()==0 && destroy.PostDepth()==0);
         CHECK(book.totalCost==10 && book.localCounts[kPriestType]==0 && book.globalCounts[kPriestType]==0 && book.globalCounts[kForcefieldType]==0);
