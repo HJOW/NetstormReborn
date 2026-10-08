@@ -1,6 +1,6 @@
 # 기계어 대조 입력(Ghidra 내보내기) 준비
 
-> **마지막 디컴파일 수행 PC: `HJOW-Athlon`, 2026-10-08** (`VM-W11-CODEX`의 변경을 pull한 뒤 `export_functions.ps1 -All`로 다시 만들었고, 이어 새 `prieststate` 목록 11/12/12개를 같은 PC에서 읽기 전용으로 내보냈다. 이어 `priestregen` 목록 10/11/11개도 같은 PC에서 읽기 전용으로 내보냈다. 이어 `priestdestroy` 목록 4/4/4개도 같은 PC에서 읽기 전용으로 내보냈다. 이어 `priestforcefield` 목록 12/10/10개도 같은 PC에서 읽기 전용으로 내보냈다. 감사 **39개 모두 통과**. 정밀 디컴파일은 이 PC에서 다시 하지 않았다. 그 앞은 `VM-W11-CODEX`, 2026-10-08.) (AGENTS.md 규칙: 디컴파일 소스를 바꾸면 여기와 [LEFT_JOBS.md](../../LEFT_JOBS.md) 머리말의 호스트명을 갱신한다. 현재 PC가 이 호스트가 아니면 아래 절차로 디컴파일/내보내기를 다시 만든 뒤 작업한다). 그 앞은 `HJOW-Athlon`(2026-10-07~08)이다.
+> **마지막 디컴파일 수행 PC: `HJOW-Athlon`, 2026-10-08** (`VM-W11-CODEX`의 변경을 pull한 뒤 `export_functions.ps1 -All`로 다시 만들었고, 이어 새 `prieststate` 목록 11/12/12개를 같은 PC에서 읽기 전용으로 내보냈다. 이어 `priestregen` 목록 10/11/11개도 같은 PC에서 읽기 전용으로 내보냈다. 이어 `priestdestroy` 목록 4/4/4개도 같은 PC에서 읽기 전용으로 내보냈다. 이어 `priestforcefield` 목록 12/10/10개도 같은 PC에서 읽기 전용으로 내보냈다. 이어 `carrierpredestroy` 목록 7/7/7개도 같은 PC에서 읽기 전용으로 내보냈다. 감사 **40개 모두 통과**. 정밀 디컴파일은 이 PC에서 다시 하지 않았다. 그 앞은 `VM-W11-CODEX`, 2026-10-08.) (AGENTS.md 규칙: 디컴파일 소스를 바꾸면 여기와 [LEFT_JOBS.md](../../LEFT_JOBS.md) 머리말의 호스트명을 갱신한다. 현재 PC가 이 호스트가 아니면 아래 절차로 디컴파일/내보내기를 다시 만든 뒤 작업한다). 그 앞은 `HJOW-Athlon`(2026-10-07~08)이다.
 
 2026-10-07~08 정리. `tools/decomp_*_oracle.py`는 원본 PE의 함수를 Unicorn에서 실행할 때 **Ghidra가 내보낸 함수 몸체 범위**(`functions.tsv`)만 실행을 허용하고, 감사(`--verify`)에서 그 파일과 디컴파일 C(`creation.c`)의 SHA를 확인한다. 이 파일들은 `extracted/`(Git 제외)에 있어 **PC마다 한 번 만들어야 한다.**
 
@@ -41,6 +41,7 @@ Get-ChildItem tools/decomp_*_oracle.py | Where-Object { Select-String -LiteralPa
 | `priestregen` | priestregen·prieststate·owner | 10 / 11 / 11 | 2026-10-08 추가([사제 회복 0x25a](cpp-priest-regen-reconstruction.md)), 회복/HP/중립 조건/난수 실제 실행·외부 공간/표시/추적 효과 대체·`HJOW-Athlon`에서 내보냄 |
 | `priestdestroy` | priestdestroy·owner | 4 / 4 / 4 | 2026-10-08 추가([사제 삭제 준비](cpp-priest-destroy-reconstruction.md)), 목록 압축/범위 검사 실제 실행·조회/가상 삭제/Carrier 대체·전체 본문 반환·`HJOW-Athlon`에서 내보냄 |
 | `priestforcefield` | priestforcefield·owner | 12 / 10 / 10 | 2026-10-08 추가([사제 보호막 실제 조회](cpp-priest-forcefield-reconstruction.md)), 좌표/일반 finder/필터 대체 없이 실행·Pre의 가상 삭제/Carrier만 대체·`HJOW-Athlon`에서 내보냄 |
+| `carrierpredestroy` | carrierpredestroy·owner | 7 / 7 / 7 | 2026-10-08 추가([Carrier 삭제 준비·실제 contained 조회](cpp-carrier-predestroy-reconstruction.md)), 직접 조회 대체 0·Carrier의 Damageable/전역 후처리만 대체·전체 본문 반환·`HJOW-Athlon`에서 내보냄 |
 | `islandlifecycle` | islandlifecycle | 4 / 2 / 2 | 2026-10-08 추가([섬 삭제 훅](cpp-islandlifecycle-reconstruction.md)) |
 | `islandpostpop` | islandpostpop | 5 / 4 / 4 | 2026-10-08 추가([noIsland 최초 등록·받침 소유자](cpp-islandpostpop-reconstruction.md)), `VM-W11-CODEX`에서 내보냄 |
 | `regiongraph` | regiongraph | 13+3 / 14+1 / 14+1 | **증거 JSON의 `function_ranges` 순서에서 복원**(아래 "남은 문제") |

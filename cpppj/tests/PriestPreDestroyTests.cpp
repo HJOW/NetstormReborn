@@ -2,6 +2,7 @@
 #include "RawSceneSupport.h"
 #include "o/RawPriestPreDestroy.h"
 #include "o/RawPriestForcefield.h"
+#include "o/RawCarrierPreDestroy.h"
 #include "o/SquidDestroyLifecycle.h"
 #include "o/SquidFactory.h"
 
@@ -120,7 +121,7 @@ TEST_CASE(priest_predestroy_guards_and_dispatch) {
     }
 }
 
-// void 자산의 삭제에 실제 장부·종속 form·Kernel·SID 반납을 연결한다. 공간 및 파생 Carrier/보호막 효과는 대체다.
+// void 자산의 삭제에 실제 Carrier·장부·종속 form·Kernel·SID 반납을 연결한다. Damageable/보호막 효과는 대체다.
 TEST_CASE(priest_predestroy_cleans_real_regen_form_kernel_and_common_bookkeeping) {
     // 두 판본과 server/client SID의 깊이/전파 분기를 각각 검사한다.
     for (auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) for (bool server:{false,true}) {
@@ -143,18 +144,20 @@ TEST_CASE(priest_predestroy_cleans_real_regen_form_kernel_and_common_bookkeeping
         hash.Bucket(1,20.75f,21.9f)=child.value;
         PriestForcefieldState forcefieldState;RawPriestForcefield lookup(pool,hash,types,forcefieldState);
         PriestPostPopState priests;priests.priests.entries.resize(3);SquidProcessHost* hostPointer=nullptr;
-        RawPriestPreDestroy pre(pool,priests,MakePriestForcefieldHooks(pool,lookup,{
+        CarrierPreDestroyState carrierState;int dependentEffects=0;
+        RawCarrierPreDestroy carrier(pool,carrierState,{
+            [&](Sid sid,std::uint32_t flags) { lifecycle.ValidatePre(sid,flags);lifecycle.ValidatePost(sid,flags); },
+            [&](Sid sid,std::uint32_t flags) {
+                CHECK(sid==root && (pool.Slot(child)[11]&1) && destroy.PreDepth()==1);++carrierCalls;
+                // Damageable의 미복원 효과를 대체하고 실제 공통 장부/깊이만 호출한다.
+                lifecycle.PreDestroy(sid,flags);
+            },[&] { ++dependentEffects; }});
+        RawPriestPreDestroy pre(pool,priests,MakeCarrierPreDestroyHooks(pool,carrier,MakePriestForcefieldHooks(pool,lookup,{
             {},[&](Sid sid,std::uint32_t flags) {
                 CHECK(sid==child && flags==0 && priests.priests.count==0 && (pool.Slot(root)[11]&2));
                 // 같은 dead 사제를 중첩 삭제해도 새 pre/종속/장부 효과가 생기지 않는다.
                 destroy.Destroy(root,0,hostPointer->Hooks());++forceRequests;destroy.Destroy(sid,flags,hostPointer->Hooks());
-            },
-            [&](Sid sid,std::uint32_t flags) { lifecycle.ValidatePre(sid,flags);lifecycle.ValidatePost(sid,flags); },
-            [&](Sid sid,std::uint32_t flags) {
-                CHECK(sid==root && (pool.Slot(child)[11]&1) && destroy.PreDepth()==1);++carrierCalls;
-                // Carrier/Damageable의 미복원 파생 효과를 대체하고 실제 공통 장부만 호출한다.
-                lifecycle.PreDestroy(sid,flags);
-            }}));
+            },{}, {}})));
         Kernel kernel;SquidProcessState processState;
         SquidProcessHost host(pool,types,kernel,destroy,processState,{},MakePriestPreDestroyHooks(pool,pre,lifecycle.Hooks()));hostPointer=&host;
         GameRandom random;ScrambledSpStore store(random,[] { return 1U; });SquidRewardState hpState;
@@ -163,7 +166,7 @@ TEST_CASE(priest_predestroy_cleans_real_regen_form_kernel_and_common_bookkeeping
         auto* regular=host.FindEvent(root,kPriestRegenEvent);CHECK(regular && kernel.Size()==1 && priests.priests.count==1);
         const Sid form=regular->Form();CHECK(pool.FreeCount()==initialFree-3);
         destroy.Destroy(root,0x200000,host.Hooks());
-        CHECK(forceRequests==1 && carrierCalls==1 && priests.priests.count==0 && kernel.Size()==0);
+        CHECK(forceRequests==1 && carrierCalls==1 && dependentEffects==0 && priests.priests.count==0 && kernel.Size()==0);
         CHECK((pool.Slot(root)[11]&1) && (pool.Slot(child)[11]&1) && (pool.Slot(form)[11]&1));
         CHECK(pool.FreeCount()==initialFree && destroy.PreDepth()==0 && destroy.PostDepth()==0);
         CHECK(book.totalCost==10 && book.localCounts[kPriestType]==0 && book.globalCounts[kPriestType]==0 && book.globalCounts[kForcefieldType]==0);
