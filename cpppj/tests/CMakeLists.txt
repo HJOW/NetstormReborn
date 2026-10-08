@@ -37,6 +37,7 @@ add_executable(netstorm_tests
     CarrierPreDestroyTests.cpp
     DamageablePreDestroyTests.cpp
     DamageableReleaseTests.cpp
+    PriestSpawnTests.cpp
     PriestStateTests.cpp
     PriestRegenTests.cpp
     PriestPreDestroyTests.cpp
@@ -134,3 +135,7 @@ set_source_files_properties(DamageablePreDestroyTests.cpp PROPERTIES COMPILE_DEF
 # 실제 종속 해방과 WORD 복사의 독립 fixture는 해당 검사에만 지정한다.
 set_source_files_properties(DamageableReleaseTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_DAMAGEABLERELEASE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/damageablerelease-x86.tsv\"")
+
+# 사제 나선 탐색·생성/활성화의 독립 fixture는 해당 검사에만 지정한다.
+set_source_files_properties(PriestSpawnTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PRIESTSPAWN_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/priestspawn-x86.tsv\"")

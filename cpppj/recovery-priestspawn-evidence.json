@@ -1,0 +1,95 @@
+{
+  "total": 1236,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-09",
+  "normal_return": true,
+  "os_calls": 0,
+  "controls": [
+    639,
+    895
+  ],
+  "editions": {
+    "originals": {
+      "cases": 408,
+      "native_calls": {
+        "0044b2e0": 816,
+        "0041d7a0": 816,
+        "004e49c0": 3264,
+        "0049a840": 1776,
+        "004ac220": 480,
+        "00426230": 480,
+        "004ac200": 960
+      },
+      "substitutions": {
+        "N": 480,
+        "O": 480,
+        "L": 480,
+        "K": 480,
+        "S": 240,
+        "Q": 40468
+      },
+      "assertions": 0
+    },
+    "originalCD": {
+      "cases": 414,
+      "native_calls": {
+        "00461430": 828,
+        "00440a80": 828,
+        "004f161c": 3312,
+        "004abb00": 492,
+        "004e38f0": 492,
+        "004abae0": 492
+      },
+      "substitutions": {
+        "N": 492,
+        "O": 492,
+        "L": 492,
+        "K": 480,
+        "S": 240,
+        "Q": 40468
+      },
+      "assertions": 0
+    },
+    "original1037": {
+      "cases": 414,
+      "native_calls": {
+        "00461430": 828,
+        "00440a80": 828,
+        "004f161c": 3312,
+        "004abb00": 492,
+        "004e38f0": 492,
+        "004abae0": 492
+      },
+      "substitutions": {
+        "N": 492,
+        "O": 492,
+        "L": 492,
+        "K": 480,
+        "S": 240,
+        "Q": 40468
+      },
+      "assertions": 0
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/priestspawn-x86.tsv": "d303adced95eee52b4b5b8be520116e8c51abb4ced84413e12b9344282bcdd86",
+    "extracted/priestspawn/original1037/creation.c": "d9b02f61e0d6bdb993e6506662d0f39a52322e6c433152e5671eff4b411c1da0",
+    "extracted/priestspawn/original1037/functions.tsv": "35404e164b9b9d02d0a09bfb4a75766bd3d543893a8f8313f096e55b93a28108",
+    "extracted/priestspawn/originalCD/creation.c": "d9b02f61e0d6bdb993e6506662d0f39a52322e6c433152e5671eff4b411c1da0",
+    "extracted/priestspawn/originalCD/functions.tsv": "35404e164b9b9d02d0a09bfb4a75766bd3d543893a8f8313f096e55b93a28108",
+    "extracted/priestspawn/originals/creation.c": "02f8fd5fdd340a156eefe010e9d29143765db64d1204a0fff126b3d2201f45b9",
+    "extracted/priestspawn/originals/functions.tsv": "fcc98207d0b7556f45f4f5008404258f58a93045f61c4abc5c241b39cf088d41",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_damageablepredestroy_oracle.py": "b6bd591b17b886224e81b9d35dc863f12dea570c67aabf8a66280c7361785e75",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/decomp_priestspawn_oracle.py": "fb39cc253b8a83d01604657228ff8c6b4bc6171090463ac23d2e5c289d73e4cb",
+    "tools/ghidra/priestspawn-functions.json": "f1d657770c9e6162b101cfa0218dad95b955b485457ba31e2098fa682671a37c"
+  },
+  "limits": [
+    "스냅/132개 나선 후보/WORD/Carrier genus 래퍼 실제 실행; 중간 구간 대체 없음",
+    "배치 검사/생성/가상 소유자/Pop/Carrier 검사/표면 알림 함수 진입 대체",
+    "패치 정상 탐색 실패 입력은 debug 전역 0; 일반 Pop/배치 검사 공간 효과와 GUI 완성 아님"
+  ]
+}

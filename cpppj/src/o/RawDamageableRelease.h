@@ -11,7 +11,7 @@ struct DamageableReleaseState {
     std::uint32_t bridgeType{82}; // 005411a0 / CD 0051ca8c: WORD 쓰기 후 표면 알림 대상이다.
 };
 struct DamageableReleaseHooks {
-    // 0044b2e0 / CD 00461430: 사제 생성/자리 탐색의 하위 몸체다. WORD는 마스킹하지 않고 전달한다.
+    // 0044b2e0 / CD 00461430: MakePriestSpawnHooks로 나선 생성 몸체를 연결한다. WORD 전체를 전달한다.
     std::function<void(float,float,std::uint32_t,std::uint16_t)> spawnPriest;
     // 004af530 / CD 004ab390: 일반 자산 생성(type,0). 초기화된 할당 슬롯을 반환한다.
     std::function<Sid(std::uint32_t,std::uint32_t)> create;
