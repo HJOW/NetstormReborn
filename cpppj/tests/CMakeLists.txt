@@ -36,6 +36,7 @@ add_executable(netstorm_tests
     CarrierPostPopTests.cpp
     CarrierPreDestroyTests.cpp
     DamageablePreDestroyTests.cpp
+    DamageableReleaseTests.cpp
     PriestStateTests.cpp
     PriestRegenTests.cpp
     PriestPreDestroyTests.cpp
@@ -129,3 +130,7 @@ set_source_files_properties(CarrierPreDestroyTests.cpp PROPERTIES COMPILE_DEFINI
 # Damageable 소리 접두/실제 종속 순회의 독립 fixture를 해당 검사에만 지정한다.
 set_source_files_properties(DamageablePreDestroyTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_DAMAGEABLEPREDESTROY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/damageablepredestroy-x86.tsv\"")
+
+# 실제 종속 해방과 WORD 복사의 독립 fixture는 해당 검사에만 지정한다.
+set_source_files_properties(DamageableReleaseTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_DAMAGEABLERELEASE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/damageablerelease-x86.tsv\"")

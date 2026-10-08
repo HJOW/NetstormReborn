@@ -15,7 +15,7 @@ struct DamageablePreDestroyHooks {
     std::function<void(Sid)> collapse; // 004605f0 / CD 00454800: 붕괴 효과의 하위 몸체다.
     std::function<void(Sid)> explosion; // 004605d0 / CD 004547d0: 폭발 효과의 하위 몸체다.
     std::function<void(const DamageableSoundEvent&)> sound; // 좌표 소리와 전역 priestFree 소리의 요청 경계다.
-    std::function<void(Sid)> releaseContained; // 권한·flags 조건 뒤 생성/좌표/소유자/배치를 수행하는 미복원 구간이다.
+    std::function<void(Sid)> releaseContained; // 권한·flags 조건 뒤 해방 몸체다. MakeDamageableReleaseHooks로 실제 순회/요청을 연결한다.
     std::function<void(Sid,std::uint32_t)> validateBase; // 공통 장부/깊이/후속 공간 효과의 순수 사전 검사다.
     std::function<void(Sid,std::uint32_t)> base; // 004b0950 / CD 004add20: 같은 flags의 공통 preDestroy다.
 };

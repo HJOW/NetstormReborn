@@ -53,6 +53,7 @@ target_sources(netstorm PRIVATE
     RawCarrierPreDestroy.cpp RawCarrierPreDestroy.h
     RawContainedFinder.cpp RawContainedFinder.h
     RawDamageablePreDestroy.cpp RawDamageablePreDestroy.h
+    RawDamageableRelease.cpp RawDamageableRelease.h
     SquidProcess.cpp SquidProcess.h
     Graph.cpp Graph.h
     RawGraph.cpp RawGraph.h
