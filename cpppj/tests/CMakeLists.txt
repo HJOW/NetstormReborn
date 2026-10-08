@@ -39,6 +39,7 @@ add_executable(netstorm_tests
     DamageableReleaseTests.cpp
     PriestSpawnTests.cpp
     PriestPlacementTests.cpp
+    PriestPlacementPreviewTests.cpp
     PriestStateTests.cpp
     PriestRegenTests.cpp
     PriestPreDestroyTests.cpp
@@ -144,3 +145,7 @@ set_source_files_properties(PriestSpawnTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 사제 배치 접두의 실제 기계어 관찰은 해당 검사 소스에만 지정한다.
 set_source_files_properties(PriestPlacementTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PRIESTPLACEMENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/priestplacement-x86.tsv\"")
+
+# 사제 배치 미리보기의 실제 지도/관계 관찰은 해당 검사 소스에만 지정한다.
+set_source_files_properties(PriestPlacementPreviewTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PRIESTPREVIEW_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/priestpreview-x86.tsv\"")

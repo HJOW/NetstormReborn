@@ -1,0 +1,85 @@
+{
+  "total": 4860,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-09",
+  "normal_return": true,
+  "os_calls": 0,
+  "controls": [
+    639,
+    895
+  ],
+  "editions": {
+    "originals": {
+      "cases": 1620,
+      "native_calls": {
+        "0049b510": 3240,
+        "004e49c0": 2880,
+        "0040da00": 35882,
+        "004ac200": 23772,
+        "0049a840": 23772,
+        "004629e0": 14742
+      },
+      "substitutions": {
+        "shape": 2880,
+        "decoder": 2520,
+        "bounds": 2520,
+        "collision_region": 2250
+      },
+      "assertions": 0
+    },
+    "originalCD": {
+      "cases": 1620,
+      "native_calls": {
+        "00445200": 3240,
+        "004448e0": 2880,
+        "004f161c": 2880,
+        "004abae0": 26460
+      },
+      "substitutions": {
+        "shape": 2880,
+        "decoder": 2520,
+        "bounds": 2520,
+        "collision_region": 2880
+      },
+      "assertions": 0
+    },
+    "original1037": {
+      "cases": 1620,
+      "native_calls": {
+        "00445200": 3240,
+        "004448e0": 2880,
+        "004f161c": 2880,
+        "004abae0": 26460
+      },
+      "substitutions": {
+        "shape": 2880,
+        "decoder": 2520,
+        "bounds": 2520,
+        "collision_region": 2880
+      },
+      "assertions": 0
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/priestpreview-x86.tsv": "e16e2df64f4dbd06afc689e1c8d4da264f67628407518af0d0b22b143f865a40",
+    "extracted/priestpreview/original1037/creation.c": "5943ea3eb0a5edd4aa188d50a157a051cdbc91732c378d78f0e564b531b79931",
+    "extracted/priestpreview/original1037/functions.tsv": "e066b984ac826dba57fb365d665a1a2a50a60def7534020e1797a73c2cbb200b",
+    "extracted/priestpreview/originalCD/creation.c": "5943ea3eb0a5edd4aa188d50a157a051cdbc91732c378d78f0e564b531b79931",
+    "extracted/priestpreview/originalCD/functions.tsv": "e066b984ac826dba57fb365d665a1a2a50a60def7534020e1797a73c2cbb200b",
+    "extracted/priestpreview/originals/creation.c": "6b4e9edd68217cdfedfc9345f6e69f0cf6bc2d73727d4bd26f8d930e06d495bb",
+    "extracted/priestpreview/originals/functions.tsv": "ffaa02f37f91b25a90a5b8219753d648b0911c78638e71a9327401f8ced8d90a",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_damageablepredestroy_oracle.py": "b6bd591b17b886224e81b9d35dc863f12dea570c67aabf8a66280c7361785e75",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/decomp_priestplacement_oracle.py": "e5a080b4437e72c9698d5d4ac774eb54080dcfd96a29f09ee6b7bc2a1c325ff2",
+    "tools/decomp_priestpreview_oracle.py": "4e573998fde22ff7e2eab6a47f84d19df4f702c601fe11e9b0e7f6421d27a6d9",
+    "tools/ghidra/priestpreview-functions.json": "6564b7d719cbe4c25516baa62bdd6eca54f7eba5a4702adb0cea5763c57df825"
+  },
+  "limits": [
+    "진입/여백/로컬 분기/144바이트 초기화/순회/지도/표면 genus/관계/반환은 실제 실행",
+    "모양·CanonDecoder 생성/범위 조회 함수 진입 대체; 이후 0049b825 또는 CD 0044550e부터 충돌/지역 구간 대체",
+    "CD의 할당 지도 밖 읽기·관계 표 밖 입력·패치 assert는 정상 fixture에서 제외; 실제 모양/충돌/지도 수명 검증 아님"
+  ]
+}

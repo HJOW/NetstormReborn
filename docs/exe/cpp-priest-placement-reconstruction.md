@@ -49,3 +49,5 @@ C++는 반환 bool·모양/후반 경계의 인자/순서/진입 유무·현재 
 검증 결과와 다음 작업은 [LEFT_JOBS.md](../../LEFT_JOBS.md)에 기록한다. 로그는 `extracted/cpp-priestplacement-export.log`, `cpp-priestplacement-oracle-final.log`, `cpp-priestplacement-build-final.log`, `cpp-priestplacement-ctest-final.log`, `cpp-priestplacement-audits-final.log`다.
 
 최종 Release 경고/오류 0·CTest 내부 **325개·실패 0**(95.21초)·감사 **44종 모두 통과**이며 새 독립 입력을 더한 누적 x86은 **216,349개**다. 기존 독립 fixture/감사 도구는 변경하지 않았다.
+
+2026-10-09 후속: [로컬 미리보기·고정 표면/관계](cpp-priest-preview-reconstruction.md)를 복원하고 이 접두/사제 생성에 연결했다. 위 미복원 설명은 접두 단계 당시의 범위이며, 실제 충돌/지역 본체와 CanonDecoder 생성/범위는 후속에서도 남아 있다. 최신 결과는 LEFT_JOBS.md를 따른다.
