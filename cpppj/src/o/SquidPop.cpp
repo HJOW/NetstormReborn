@@ -67,9 +67,9 @@ RawPopResult SquidPop::Pop(Sid sid,const RiftTypeRecord& type,float frameWidth,f
     // 비전투의 null dirty 큐에서 섬/다리 변경 알림은 자연 반환한다. 건물의 옆면 부착 효과는 후속이다.
     if (!buried && (type.flags2&kBuildingMask))
         throw std::logic_error("Pop 건물 부착 효과는 아직 지원하지 않습니다");
-    // 다리는 전용 postPop의 접두 동작과 연결 효과를 공급한 경우에만 허용한다. 기존 공통 가상 표 목록은 바꾸지 않는다.
+    // 다리와 섬 받침은 전용 postPop의 접두 동작과 연결 효과를 공급한 경우에만 허용한다. 기존 공통 가상 표 목록은 바꾸지 않는다.
     if (!Supports(pool_.Edition(),Read(old,0),flags) &&
-        !(postPop_ && postPop_->HandlesBridge(sid) && SquidUnpop::SupportsDisplay(pool_.Edition(),Read(old,0),flags)))
+        !(postPop_ && postPop_->HandlesDerived(sid) && SquidUnpop::SupportsDisplay(pool_.Edition(),Read(old,0),flags)))
         throw std::logic_error("Pop 파생 가상 후처리는 아직 지원하지 않습니다");
     const auto level=SquidHash::ObjectLevel(type.flags2,frameWidth,frameHeight);
     auto& head=hash_.Bucket(level,x,y);

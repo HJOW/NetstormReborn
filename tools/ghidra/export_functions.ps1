@@ -7,6 +7,7 @@
 .DESCRIPTION
     목록 파일의 "editions" 는 판본 이름 -> 주소 배열이다. 배열 대신 { "base": [...], "geometry": [...] } 같은 묶음이면
     base 는 판본 폴더에, 나머지 묶음은 그 이름의 하위 폴더에 내보낸다. "script" 가 있으면 그 Ghidra 스크립트를 쓴다(기본 ExportCreation.java).
+    "aliases" 가 있으면 { 출력 폴더 이름: 실제 판본 } 으로 읽어, 그 이름의 폴더에 실제 판본의 함수를 내보낸다.
     원본 게임·업데이터는 실행하지 않는다. Ghidra 프로젝트는 -readOnly 로 열어 변경을 저장하지 않는다.
 
 .EXAMPLE
@@ -36,6 +37,9 @@ if ($All) {
     $Name = @(Get-ChildItem $PSScriptRoot -Filter '*-functions.json' | Sort-Object Name |
               ForEach-Object { $_.Name -replace '-functions\.json$', '' })
 }
+# `powershell -File ... -Name a,b` 로 부르면 쉼표 목록이 한 문자열로 들어온다. 이름과 판본을 쉼표에서 나눈다.
+$Name = @($Name | ForEach-Object { $_ -split ',' } | Where-Object { $_ })
+$Edition = @($Edition | ForEach-Object { $_ -split ',' } | Where-Object { $_ })
 if (-not $Name -or $Name.Count -eq 0) { throw '내보낼 이름이 없습니다. -Name <이름> 또는 -All 을 주세요.' }
 
 # 함수 수가 목록과 다르거나 Ghidra 가 실패한 묶음 수
@@ -52,6 +56,9 @@ try {
         foreach ($Property in $Plan.editions.PSObject.Properties) {
             $Target = $Property.Name
             if ($Edition.Count -gt 0 -and ($Edition -notcontains $Target)) { continue }
+            # 목록의 "aliases"는 출력 폴더 이름 -> 실제 판본이다. 한 판본을 폴더 둘로 나눠 내보낸 옛 기록(pop/helpers-originals)을 그대로 재현한다.
+            $Source = $Target
+            if ($Plan.aliases -and $Plan.aliases.PSObject.Properties[$Target]) { $Source = $Plan.aliases.PSObject.Properties[$Target].Value }
             # 단순 배열은 base 묶음 하나로 본다
             $Groups = [ordered]@{}
             if ($Property.Value -is [System.Array]) {
@@ -67,7 +74,7 @@ try {
                 $Out = "$OutputBase/$Item/$Target$Suffix"
                 $Log = "$OutputBase/$Item/$Target$LogSuffix-ghidra.log"
                 New-Item -ItemType Directory -Force (Join-Path $Root "$OutputBase/$Item") | Out-Null
-                & (Join-Path $PSScriptRoot 'run_script.ps1') -Edition $Target -Script $Script -ScriptArgs (@($Out) + $Addresses) *> $Log
+                & (Join-Path $PSScriptRoot 'run_script.ps1') -Edition $Source -Script $Script -ScriptArgs (@($Out) + $Addresses) *> $Log
                 $Code = $LASTEXITCODE
                 # 머리말 한 줄을 뺀 줄 수가 내보낸 함수 수다
                 $Table = Join-Path $Root "$Out/functions.tsv"

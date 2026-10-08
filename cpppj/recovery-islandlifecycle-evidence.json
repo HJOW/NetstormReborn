@@ -1,0 +1,217 @@
+{
+  "schema": 1,
+  "primary_target": "10.78",
+  "method": "Unicorn x86 32-bit; OS/API/file/window execution forbidden",
+  "unicorn_version": "2.1.4",
+  "seed": 4465216,
+  "x87_control_words": [
+    "0x27f",
+    "0x37f"
+  ],
+  "cases": {
+    "IslandPre": 780,
+    "SurfacePost": 780
+  },
+  "total": 1560,
+  "scenes": 495,
+  "editions": {
+    "originals": {
+      "binary": "originals/Netstorm.exe",
+      "sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "entries": {
+        "Handler": "00422740",
+        "End": "004215d0",
+        "Table": "0049b060",
+        "Find": "004b23e0",
+        "Connect": "004213b0",
+        "Link": "004210f0",
+        "Owner": "00421240",
+        "FindAt": "004b1fa0",
+        "Color": "004421a0",
+        "IslandOwner": "00442310",
+        "StalagOwner": "00442310",
+        "IslandPost": "004421c0",
+        "Next": "004b1e70",
+        "IslandPre": "00442240",
+        "SurfacePost": "00442640"
+      },
+      "replaced_entry_points": {
+        "004214a0": "notify",
+        "004af530": "create",
+        "20000100": "destroy",
+        "20000110": "owner",
+        "20000120": "pop",
+        "004acee0": "setframe",
+        "004adf00": "baseowner",
+        "004b0d30": "basepost",
+        "00421530": "fall_this",
+        "004b0950": "basepre",
+        "004b0840": "basepost_destroy",
+        "20000160": "walker"
+      },
+      "native_calls": {
+        "Table": 2080,
+        "IslandPre": 520,
+        "Find": 398,
+        "Next": 1306,
+        "SurfacePost": 520
+      },
+      "stub_calls": {
+        "fall_this": 418,
+        "basepre": 520,
+        "basepost_destroy": 520,
+        "walker": 178
+      },
+      "finder_calls": 398,
+      "assertions": 0,
+      "instructions": 9280050
+    },
+    "originalCD": {
+      "binary": "originalCD/NETSTORM.EXE",
+      "sha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "entries": {
+        "Handler": "00449a20",
+        "Table": "00444da0",
+        "Find": "004ebad0",
+        "Connect": "00448b00",
+        "Link": "004487c0",
+        "Owner": "00448910",
+        "FindAt": "004eb4b0",
+        "Color": "004d0180",
+        "IslandOwner": "004d01a0",
+        "StalagOwner": "004d0350",
+        "IslandPost": "004d01d0",
+        "Next": "004ec030",
+        "IslandPre": "004d0250",
+        "SurfacePost": "004d2a40"
+      },
+      "replaced_entry_points": {
+        "00448c10": "notify",
+        "004ab390": "create",
+        "20000100": "destroy",
+        "20000110": "owner",
+        "20000120": "pop",
+        "004acbc0": "setframe",
+        "004aefa0": "baseowner",
+        "004ae180": "basepost",
+        "004490b0": "fall_cdecl",
+        "004add20": "basepre",
+        "004adbe0": "basepost_destroy",
+        "20000160": "walker"
+      },
+      "native_calls": {
+        "Table": 2080,
+        "IslandPre": 520,
+        "Find": 398,
+        "Next": 1306,
+        "SurfacePost": 520
+      },
+      "stub_calls": {
+        "fall_cdecl": 418,
+        "basepre": 520,
+        "basepost_destroy": 520,
+        "walker": 178
+      },
+      "finder_calls": 398,
+      "assertions": 0,
+      "instructions": 8576046
+    },
+    "original1037": {
+      "binary": "original1037/netstorm.exe",
+      "sha256": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+      "entries": {
+        "Handler": "00449a20",
+        "Table": "00444da0",
+        "Find": "004ebad0",
+        "Connect": "00448b00",
+        "Link": "004487c0",
+        "Owner": "00448910",
+        "FindAt": "004eb4b0",
+        "Color": "004d0180",
+        "IslandOwner": "004d01a0",
+        "StalagOwner": "004d0350",
+        "IslandPost": "004d01d0",
+        "Next": "004ec030",
+        "IslandPre": "004d0250",
+        "SurfacePost": "004d2a40"
+      },
+      "replaced_entry_points": {
+        "00448c10": "notify",
+        "004ab390": "create",
+        "20000100": "destroy",
+        "20000110": "owner",
+        "20000120": "pop",
+        "004acbc0": "setframe",
+        "004aefa0": "baseowner",
+        "004ae180": "basepost",
+        "004490b0": "fall_cdecl",
+        "004add20": "basepre",
+        "004adbe0": "basepost_destroy",
+        "20000160": "walker"
+      },
+      "native_calls": {
+        "Table": 2080,
+        "IslandPre": 520,
+        "Find": 398,
+        "Next": 1306,
+        "SurfacePost": 520
+      },
+      "stub_calls": {
+        "fall_cdecl": 418,
+        "basepre": 520,
+        "basepost_destroy": 520,
+        "walker": 178
+      },
+      "finder_calls": 398,
+      "assertions": 0,
+      "instructions": 8576046
+    }
+  },
+  "os_calls": 0,
+  "files": {
+    "cpppj/tests/fixtures/islandlifecycle-x86.tsv": "27bf7b2a9427a9885886272359f9ddff38fdf813d984082bc870dc9ba1fef9fe",
+    "extracted/bridgeconnect/original1037/creation.c": "208584bdd87e05061549d41ce53ca7a5cead4d6352c71556a12c3b9c89d443a7",
+    "extracted/bridgeconnect/original1037/functions.tsv": "49967cfe31ab61a3e96281b76f6a77071cfb6634b7d57864b1593b1831d40693",
+    "extracted/bridgeconnect/originalCD/creation.c": "208584bdd87e05061549d41ce53ca7a5cead4d6352c71556a12c3b9c89d443a7",
+    "extracted/bridgeconnect/originalCD/functions.tsv": "49967cfe31ab61a3e96281b76f6a77071cfb6634b7d57864b1593b1831d40693",
+    "extracted/bridgeconnect/originals/creation.c": "b72bd7a00e601559295dab7924447cfe991c7cfef6ec4c60040bde1df9d373cd",
+    "extracted/bridgeconnect/originals/functions.tsv": "2923cf6f03bfeef677aa71a2b51807f9ee7ae4184da08166e9bfc5be8c6388cd",
+    "extracted/bridgeevent/original1037/creation.c": "53cc74566ec65b041fffb5669157203c433a621f3571c64c927dc8ae93e79150",
+    "extracted/bridgeevent/original1037/functions.tsv": "de7abb58aea96d410f4070616c13c45565f9d33a4393e7b3ad48f5128c39c8dc",
+    "extracted/bridgeevent/originalCD/creation.c": "53cc74566ec65b041fffb5669157203c433a621f3571c64c927dc8ae93e79150",
+    "extracted/bridgeevent/originalCD/functions.tsv": "de7abb58aea96d410f4070616c13c45565f9d33a4393e7b3ad48f5128c39c8dc",
+    "extracted/bridgeevent/originals/creation.c": "98b7be841a2e6cd8fb6c975527b161dce284c0f2ed96bcdcaea5f0e26223aff1",
+    "extracted/bridgeevent/originals/functions.tsv": "b97a2cb196b560d3ac3796fe53e679dfa7f150adef6b16e51a3cdf89fa8d9bb7",
+    "extracted/graphremove/original1037/creation.c": "1761289145e9acb05aac79ccbe9eca0402da893bda663da4c53c7245b7a4400a",
+    "extracted/graphremove/original1037/functions.tsv": "bc65de793c9e87b34663eafe1e897fcf5f5ace58dd0f07c9c61d372f7acd601e",
+    "extracted/graphremove/original1037/geometry/creation.c": "11a0abebca8cfd416d30cd12ce7fbff0ab1216ac0876f98af4f1d587ab498aa5",
+    "extracted/graphremove/original1037/geometry/functions.tsv": "a10cbae54b312028f6601e329c64a7dbe30dea72dc033a93f005b875873c22ce",
+    "extracted/graphremove/originalCD/creation.c": "1761289145e9acb05aac79ccbe9eca0402da893bda663da4c53c7245b7a4400a",
+    "extracted/graphremove/originalCD/functions.tsv": "bc65de793c9e87b34663eafe1e897fcf5f5ace58dd0f07c9c61d372f7acd601e",
+    "extracted/graphremove/originalCD/geometry/creation.c": "11a0abebca8cfd416d30cd12ce7fbff0ab1216ac0876f98af4f1d587ab498aa5",
+    "extracted/graphremove/originalCD/geometry/functions.tsv": "a10cbae54b312028f6601e329c64a7dbe30dea72dc033a93f005b875873c22ce",
+    "extracted/graphremove/originals/creation.c": "08fc021ba770c21bf298a5e5e547dee7ad500cfac334fce29e30e34253deba22",
+    "extracted/graphremove/originals/functions.tsv": "804ff5b28df9aeec65f968d26e660e266ed4a160a64a5d44c223f222219cc3b4",
+    "extracted/graphremove/originals/geometry/creation.c": "e3ad29a66b1b88964ede5cd0c4c921c0df6ac07cf8935180e5004f38dd51d3ca",
+    "extracted/graphremove/originals/geometry/functions.tsv": "ced17335d5e0a8b25e97ae7d05019f43bdaef60955b0a024ca21d2096713587e",
+    "extracted/islandlifecycle/original1037/creation.c": "e85b9b80cc8c81b7570ab9b45c85d564b5a1e7da51bf48784194e96d01dff3e6",
+    "extracted/islandlifecycle/original1037/functions.tsv": "4bae71fc399ada5eaeabcb3f264938c55d6c913b7627beeaec2c817bd8130e1f",
+    "extracted/islandlifecycle/originalCD/creation.c": "e85b9b80cc8c81b7570ab9b45c85d564b5a1e7da51bf48784194e96d01dff3e6",
+    "extracted/islandlifecycle/originalCD/functions.tsv": "4bae71fc399ada5eaeabcb3f264938c55d6c913b7627beeaec2c817bd8130e1f",
+    "extracted/islandlifecycle/originals/creation.c": "224febe50bdde0a06463fe80ec7d5d96c0b79c2490d86c8e191546b52e23793d",
+    "extracted/islandlifecycle/originals/functions.tsv": "cb39ee561e7af3471f8cda13cff38939259b4742a39445c4b855c552ae97216c",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_bridgeconnect_oracle.py": "9511c05b9022b4c77eeab9257e64ce751a7c9cf9f0f955cdcfc2e305dfa39f50",
+    "tools/decomp_bridgeevent_oracle.py": "eff51573870167881145924f64adbda11a325c576f5bd5dd5568010f3fa5f71a",
+    "tools/decomp_islandlifecycle_oracle.py": "42b1a8d2dc6a16acacc16607320a29a8e5e0ce115c1ee8dd2d01f5ecf89e2141",
+    "tools/decomp_neighbor_oracle.py": "9fefac01b7811eb6cb4f4de58c82a02734f396a64f61e415b0f0c4f21a646070",
+    "tools/ghidra/islandlifecycle-functions.json": "9fb7396465dce4e744f496eeca4c6d68a1bf822c1acd7b04e3dfae18fc219fb2"
+  },
+  "limitations": [
+    "delayed-fall scheduling, virtual walker fall and common pre/postDestroy are recorded substitutes",
+    "synthetic type numbers with the real 10.78 flags/footprints, synthetic frame codes and hash registration",
+    "no GameWorld, Kernel scheduling or real deletion"
+  ]
+}

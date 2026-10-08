@@ -2,6 +2,8 @@
 
 2026-10-08, `HJOW-Athlon`. 기준은 10.78이다. 원본 게임·복사본·클론 창을 실행하지 않고 실제 PE의 제한 x86 명령과 콘솔 검사로 진행했다.
 
+> **2026-10-08 후속([다리/섬 연결](cpp-bridgeconnect-reconstruction.md)):** 연결 함수 몸체·연결 객체 생성·소유자 전파를 복원했고 탐색기를 flags 0~7과 Next 순회까지 넓혔다. 그 과정에서 아래 필터의 마지막 조건을 정정했다 — **후보 기준점의 spot은 좌표를 그대로 자른 칸이 아니라 0.9999를 더해 자른 칸에서 읽는다**(정수 좌표에서는 같다). 이 문서의 "아직 콜백 경계"라는 서술은 그 후속에서 실제 효과로 바뀌었다.
+
 [RawSquidNeighbors](../../cpppj/src/o/RawSquidNeighbors.h)는 현재 raw 풀·일반 해시·spot에서 첫 연결 이웃을 구한다. [MakeBridgeNeighborHooks](../../cpppj/src/o/RawBridgeEvents.cpp)는 이 조회와 동일한 프레임 표를 끝 칸 변환에 연결한다. [NeighborTests](../../cpppj/tests/NeighborTests.cpp)와 [BridgeEventTests](../../cpppj/tests/BridgeEventTests.cpp)가 독립 기대값 및 실제 raw 모듈 연결을 검사한다.
 
 ## 인수인계의 flag 8 설명 정정

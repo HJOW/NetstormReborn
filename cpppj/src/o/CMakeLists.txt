@@ -14,6 +14,8 @@ target_sources(netstorm PRIVATE
     Bridge.cpp Bridge.h
     RawBridgeLifecycle.cpp RawBridgeLifecycle.h
     RawBridgeEvents.cpp RawBridgeEvents.h
+    RawBridgeConnect.cpp RawBridgeConnect.h
+    RawIslandLifecycle.cpp RawIslandLifecycle.h
     RawSquidFinder.cpp RawSquidFinder.h
     RawSquidNeighbors.cpp RawSquidNeighbors.h
     RawSquidDestroy.cpp RawSquidDestroy.h
@@ -31,6 +33,7 @@ target_sources(netstorm PRIVATE
     SquidUnpop.cpp SquidUnpop.h UnpopVtables.inc
     SquidPop.cpp SquidPop.h PopVtables.inc
     SquidDisplay.cpp SquidDisplay.h
+    SquidFrame.cpp SquidFrame.h
     SquidPostPop.cpp SquidPostPop.h
     SpStore.cpp SpStore.h
     SquidReward.cpp SquidReward.h

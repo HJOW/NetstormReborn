@@ -18,6 +18,8 @@ constexpr std::uint32_t kNoGraph=0x2000000,kGraphChange=0x203,kDestroyGraph=0x80
 constexpr std::int64_t kCostBias=23;
 // 실제 다리 가상 표의 postPop은 공통 함수 앞에 연결 접두 처리를 수행한다.
 constexpr std::uint32_t kPatchBridgeVtable=0x005034c8,kCdBridgeVtable=0x00501ab0;
+// 섬 받침(island 타입)의 가상 표. postPop(+0x20)이 004421c0 / CD 004d01d0으로 재정의돼 있다.
+constexpr std::uint32_t kPatchIslandVtable=0x00506d98,kCdIslandVtable=0x00506960;
 // raw 가상 주소를 호스트 포인터로 해석하지 않고 읽는다.
 std::uint32_t Vtable(std::span<const std::uint8_t> bytes) {
     std::uint32_t value=0;
@@ -51,6 +53,15 @@ bool SquidPostPop::HandlesBridge(Sid sid) const {
     const auto expected=pool_.Edition()==OriginalEdition::Patch1078 ? kPatchBridgeVtable : kCdBridgeVtable;
     return bridgeConnector_ && Vtable(pool_.Slot(sid))==expected;
 }
+// 접두 효과는 생성 뒤에 연결한다(연결 계층이 Pop을 거쳐 이 객체를 다시 부르기 때문이다).
+void SquidPostPop::SetIslandPrefix(std::function<void(Sid,std::uint32_t)> prefix) { islandPrefix_=std::move(prefix); }
+// 실제 vtable과 명시적인 접두 효과 둘 다 있어야 섬 받침의 파생 후처리를 사용할 수 있다.
+bool SquidPostPop::HandlesIsland(Sid sid) const {
+    const auto expected=pool_.Edition()==OriginalEdition::Patch1078 ? kPatchIslandVtable : kCdIslandVtable;
+    return islandPrefix_ && Vtable(pool_.Slot(sid))==expected;
+}
+// 두 파생 표는 서로 다른 주소이므로 한쪽만 참이 된다.
+bool SquidPostPop::HandlesDerived(Sid sid) const { return HandlesBridge(sid) || HandlesIsland(sid); }
 // 00422150 ↔ CD 00449890. 공통 postPop을 호출하기 전에 수행하는 부분만 복원한다.
 void SquidPostPop::BridgePrefix(SidPool& pool,Sid sid,std::uint32_t flags,const std::function<void(Sid)>& connector) {
     const auto extraOffset=pool.Edition()==OriginalEdition::Patch1078 ? 40U : 35U;
@@ -81,7 +92,7 @@ void SquidPostPop::Validate(Sid sid,std::uint32_t flags,const RawGraphPop* pop) 
     const auto bytes=pool_.Slot(sid); const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     if (sid.value<5 || (bytes[11]&(kFree|kContained)) || bytes[10]<kFirstAssetTypeNumber || bytes[10]>=types_.size())
         throw std::logic_error("postPop raw 자산 상태 오류");
-    if (!SquidPop::Supports(pool_.Edition(),Vtable(bytes),flags) && !HandlesBridge(sid)) throw std::logic_error("파생 postPop 미복원");
+    if (!SquidPop::Supports(pool_.Edition(),Vtable(bytes),flags) && !HandlesDerived(sid)) throw std::logic_error("파생 postPop 미복원");
     if (state_.suppressed) return;
     const auto& type=types_[bytes[10]];
     if (state_.graphsEnabled) {
@@ -109,6 +120,8 @@ void SquidPostPop::Validate(Sid sid,std::uint32_t flags,const RawGraphPop* pop) 
 void SquidPostPop::Activate(Sid sid,std::uint32_t flags) {
     Validate(sid,flags); ++state_.depth;
     if (HandlesBridge(sid)) BridgePrefix(pool_,sid,flags,bridgeConnector_);
+    // 섬 받침은 접두(종유석·연결 순회) 뒤에 같은 flags로 공통 후처리를 부른다.
+    else if (HandlesIsland(sid)) islandPrefix_(sid,flags);
     PostPop(sid,flags);
 }
 // 공통 후처리의 순서: 영역 무효화→그래프 생성/리셋→비용→공급/작업장 목록→소유자 조건 통계→깊이 감소다.

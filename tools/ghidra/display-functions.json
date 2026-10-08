@@ -1,0 +1,7 @@
+{
+  "description": "공통 표시 갱신(update88/update8c)과 프레임 경계·변경 표 helper의 읽기 전용 함수 몸체. recovery-display-evidence.json의 function_ranges에서 앞 단계(sid·creation·pop) 몫을 뺀 나머지를 그 순서대로 옮겼다.",
+  "editions": {
+    "originals": ["004ad500", "004ad670", "004990d0", "00498ff0", "00419850", "00445290", "00497580", "004970a0", "004834c0", "004e49c0"],
+    "originalCD": ["004ae380", "004ae3e0", "00456a00", "00456930", "00455c90", "00457320", "004f161c"]
+  }
+}

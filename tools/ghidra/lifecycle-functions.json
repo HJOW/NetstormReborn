@@ -1,0 +1,7 @@
+{
+  "description": "raw 일반 Unpop·non-void Take·firstPop 플래그의 읽기 전용 함수 몸체(패치 22개/CD 17개). docs/exe/cpp-unpop-reconstruction.md의 명령에서 옮겼다. decomp_unpop_oracle.py가 extracted/lifecycle에서 읽는다.",
+  "editions": {
+    "originals": ["004afe50", "004ad500", "004ad670", "004ad470", "004990d0", "004210a0", "0049a840", "00481510", "0040e800", "004afd30", "004e49c0", "0040da00", "00425df0", "004ac1e0", "0040eaf0", "004ace40", "0049a900", "00419850", "004b2a90", "004aba70", "004acd20", "004ac560"],
+    "originalCD": ["004ad0b0", "004ae380", "004ae3e0", "004ae0f0", "00456a00", "004abf50", "004abae0", "00442f30", "004abac0", "004acfc0", "004f161c", "004acb00", "004ae480", "004442b0", "00479d20", "004aca80", "004abfb0"]
+  }
+}

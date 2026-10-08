@@ -44,6 +44,11 @@ inline void ReportFailure(const char* file, int line, const char* expression) {
     std::fprintf(stderr, "%s(%d): CHECK failed: %s\n", file, line, expression);
 }
 
+// 검사 결과를 받아 실패만 기록한다. 조건을 함수 인자로 받으므로 상수 조건식도 컴파일러 경고(C4127) 없이 검사할 수 있다.
+inline void Check(bool passed, const char* file, int line, const char* expression) {
+    if (!passed) ReportFailure(file, line, expression);
+}
+
 }  // namespace netstorm::test
 
 // 테스트 함수를 정의하고 등록한다.
@@ -53,12 +58,8 @@ inline void ReportFailure(const char* file, int line, const char* expression) {
     static void name()
 
 // 조건이 참인지 검사한다. 거짓이어도 테스트는 계속 실행한다.
-#define CHECK(condition)                                                    \
-    do {                                                                    \
-        if (!(condition)) {                                                 \
-            ::netstorm::test::ReportFailure(__FILE__, __LINE__, #condition); \
-        }                                                                   \
-    } while (false)
+#define CHECK(condition) \
+    ::netstorm::test::Check(static_cast<bool>(condition), __FILE__, __LINE__, #condition)
 
 // 실수 값이 기대값에서 허용오차 안에 있는지 검사한다.
 #define CHECK_NEAR(actual, expected, tolerance) \

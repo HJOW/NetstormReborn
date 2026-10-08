@@ -1,0 +1,7 @@
+{
+  "description": "공통 postPop의 비용 집계·목록·통계 helper의 읽기 전용 함수 몸체(패치 10개/CD 13개). recovery-postpop-evidence.json의 function_ranges에서 앞 단계(sid·creation·pop·display) 몫을 뺀 나머지를 그 순서대로 옮겼다.",
+  "editions": {
+    "originals": ["004b0d30", "004c25e0", "004c25b0", "004da650", "00490050", "0044f770", "00472f70", "004166e0", "004ad3e0", "0049c2e0"],
+    "originalCD": ["004ae180", "0040bc50", "0040bc20", "0041eac0", "004071f0", "0045ec90", "0048a360", "004d8230", "004d81f0", "004015d0", "004147a0", "004adbd0", "004abab0"]
+  }
+}

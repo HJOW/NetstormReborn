@@ -1,0 +1,8 @@
+{
+  "description": "섬 받침의 preDestroy 재정의(00442240 / CD 004d0250)와 noIsland의 postDestroy 재정의(00442640 / CD 004d2a40), 패치판의 지연 낙하 넘김 함수(00421f90)와 한 칸 탐색기 생성자(004202f0)의 읽기 전용 함수 몸체. 이웃 탐색·일반 탐색·기하 몸체는 bridgeevent·graphremove 내보내기를 재사용한다.",
+  "editions": {
+    "originals": ["00442240", "00442640", "00421f90", "004202f0"],
+    "originalCD": ["004d0250", "004d2a40"],
+    "original1037": ["004d0250", "004d2a40"]
+  }
+}

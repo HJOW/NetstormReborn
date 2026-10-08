@@ -1,5 +1,7 @@
 # 기계어 대조 입력(Ghidra 내보내기) 준비
 
+> **마지막 디컴파일 수행 PC: `VM-W11-CODEX`, 2026-10-08** (AGENTS.md 규칙: 디컴파일 소스를 바꾸면 여기와 [LEFT_JOBS.md](../../LEFT_JOBS.md) 머리말의 호스트명을 갱신한다. 현재 PC가 이 호스트가 아니면 아래 절차로 디컴파일/내보내기를 다시 만든 뒤 작업한다). 그 앞은 `HJOW-Athlon`(2026-10-07~08)이다.
+
 2026-10-07~08 정리. `tools/decomp_*_oracle.py`는 원본 PE의 함수를 Unicorn에서 실행할 때 **Ghidra가 내보낸 함수 몸체 범위**(`functions.tsv`)만 실행을 허용하고, 감사(`--verify`)에서 그 파일과 디컴파일 C(`creation.c`)의 SHA를 확인한다. 이 파일들은 `extracted/`(Git 제외)에 있어 **PC마다 한 번 만들어야 한다.**
 
 ## 만드는 방법
@@ -29,10 +31,46 @@ Get-ChildItem tools/decomp_*_oracle.py | Where-Object { Select-String -LiteralPa
 | `reward`·`process` | 같은 이름의 도구 | 27/24/24 · 73/71/71 | 처음부터 있던 목록 |
 | `bridgeevent`·`owner` | 같은 이름의 도구 | 8/6/6 · 5/4/4 | 처음부터 있던 목록 |
 | `bridgepostpop` | bridgepostpop | 1 / 1 / 1 | 다리 vtable +0x20의 실제 함수 |
+| `bridgeconnect` | bridgeconnect·islandlifecycle | 10 / 10 / 10 | 2026-10-08 추가([다리/섬 연결](cpp-bridgeconnect-reconstruction.md)) |
+| `setframe` | setframe | 3 / 3 / 3 | 2026-10-08 추가([프레임 지정](cpp-setframe-reconstruction.md)) |
+| `islandlifecycle` | islandlifecycle | 4 / 2 / 2 | 2026-10-08 추가([섬 삭제 훅](cpp-islandlifecycle-reconstruction.md)) |
+| `regiongraph` | regiongraph | 13+3 / 14+1 / 14+1 | **증거 JSON의 `function_ranges` 순서에서 복원**(아래 "남은 문제") |
+| `pop` | pop·display·postpop·rawgraph·regiongraph | 22(+보조 2) / 18 / — | 문서의 명령. 패치판 보조 둘은 `extracted/pop/helpers-originals`(목록의 `aliases`) |
+| `display` | display 계열 | 10 / 7 / — | 증거 JSON의 누적 `function_ranges`에서 앞 단계 몫을 뺀 나머지 |
+| `postpop` | postpop 계열 | 10 / 13 / — | 같은 방법 |
+| `graph` | graph·rawgraph 계열 | 13 / 16 / — | 증거 JSON의 `function_ranges` 그대로 |
+| `lifecycle` | unpop | 22 / 17 / — | 문서의 명령(`decomp_unpop_oracle.py`가 `extracted/lifecycle`에서 읽는다) |
 
 2026-10-08 후속의 `neighbor`는 새 내보내기 없이 `bridgeevent`·`graphremove`/`geometry`를 재사용한다. `bridgepostpop`의 접두 대조 240개와 함께 [첫 연결 이웃/끝 칸 통합 근거](cpp-neighbor-reconstruction.md)에 정리했다. 두 새 도구를 포함해 **감사 27개가 모두 통과**했다. `--verify` 옵션이 없는 옛 `config`·`graphics`·`options` 생성기는 위 감사 명령에서 제외한다.
 
-`derived`·`lifecycle`(unpop)·`pop`·`postpop`·`display`·`graph`·`regiongraph`는 아직 목록 파일이 없고 각 복원 문서의 명령으로 만든다(이 PC에는 이미 있고 감사가 통과한다).
+`derived`만 아직 목록 파일이 없다(주소를 스크립트로 계산하는 명령이 [그 문서](cpp-derived-reconstruction.md)에 있다). `pop`·`display`·`postpop`·`graph`·`lifecycle`의 `--verify`는 저장소 안의 파일만 확인하므로 내보내기가 없는 PC에서도 통과하지만, **기대값을 다시 생성하려면** 그 내보내기가 있어야 한다. 2026-10-08에 이 다섯 묶음의 목록을 저장소에 넣었다 — 새로 내보낸 `functions.tsv`의 (진입 주소, 범위)가 **두 판본 모두 각 증거 JSON에 기록된 것과 순서까지 같음**을 확인했다(`rawgraph`는 여기에 더해 정밀 디컴파일의 `extracted/refined/<판본>/functions.tsv`를 읽는다 — `tools/ghidra/refine_all.ps1`, 이 PC에서 약 20분).
+
+## 2026-10-08 `VM-W11-CODEX`에서 처음 준비한 결과
+
+새로 받은 PC에서 위 절차를 그대로 따랐다: `run_decomp.ps1`로 만든 세 판본의 기본 Ghidra 프로젝트(10.78 4,506개·CD/10.37 각 3,711개 함수) → `export_functions.ps1 -All` → CRLF로 남아 있던 도구/증거/스크립트 사본 21개를 지우고 `git checkout`으로 다시 받음 → 감사. 처음에 **27개 가운데 26개가 통과**했고, 이 날 더한 세 도구(`bridgeconnect`·`setframe`·`islandlifecycle`)까지 **30개 가운데 29개가 통과**한다. 내보내기는 이 PC에서도 다른 PC가 기록한 SHA와 일치했다.
+
+알아 둘 것:
+
+- Python 의존성은 `extracted/oracle-python`에 격리 설치한다. 요구사항 파일에 한글 주석이 있어 한국어 Windows에서는 `PYTHONUTF8=1`(또는 `python -X utf8 -m pip ...`)이 필요하다.
+- **Ghidra 헤드리스는 같은 설정 폴더(`extracted/ghidra-settings`)로 동시에 두 개를 돌릴 수 없다.** 둘째 실행이 번들 캐시 잠금(`Unable to create bundle cache lock file`)으로 스크립트를 싣지 못하고 멈춘다. `refine_all.ps1`이 도는 동안에는 내보내기를 하지 않는다.
+- `powershell -File export_functions.ps1 -Name a,b`처럼 부르면 쉼표 목록이 한 문자열로 넘어와 실패했다. 스크립트가 쉼표를 직접 나누도록 고쳤다.
+
+### 남은 문제: `regiongraph`
+
+`regiongraph`는 목록이 없어 이 PC에서 감사가 실패했다. 증거 JSON의 `function_ranges`가 내보낸 순서 그대로 남아 있어 [목록 파일](../../tools/ghidra/regiongraph-functions.json)로 복원했다(CD/10.37의 InsertCD 비교 함수 `00433bf0`의 위치는 `functions.tsv` SHA로 확정 — 맨 끝). 결과:
+
+- `functions.tsv`(실행 허용 범위)는 **세 판본·두 묶음 모두 기록 SHA와 일치**한다.
+- `creation.c`(디컴파일 텍스트)는 **10.37만 일치**하고 10.78·CD는 다르다. 기록은 다른 PC의 예전 Ghidra 프로젝트 상태에서 만든 것으로 보인다(앞서 `sid`·`creation`에서 같은 현상이 있었다). 텍스트만 다르고 실행 범위는 같다.
+
+그래서 이 PC에서는 `decomp_regiongraph_oracle.py --verify`가 `creation.c` SHA에서 멈춘다. 고치려면 새 내보내기로 기대값을 다시 생성해 fixture가 그대로인지 확인하고 증거를 다시 기록해야 한다. **그 준비는 이 PC에서 끝냈다**: 앞 단계의 `pop`·`display`·`postpop`·`graph` 내보내기(위 목록)와 `extracted/refined/`(정밀 디컴파일)가 모두 있다. **다시 생성하는 실행 자체는 하지 않았다**(소요 시간을 몰라 다음 작업으로 넘겼다). 절차:
+
+```powershell
+python -X utf8 tools/decomp_regiongraph_oracle.py            # 기대값 재생성(소요 시간 미측정)
+git status --short cpppj/tests/fixtures/regiongraph-x86.tsv   # 바뀌지 않아야 한다(바뀌면 증거를 되돌리고 원인을 먼저 본다)
+python -X utf8 tools/decomp_regiongraph_oracle.py --verify
+```
+
+fixture가 바이트 단위로 그대로이고 증거 JSON의 SHA 항목만 바뀌면 30개 감사가 모두 통과한다. 같은 방법으로 `pop`·`display`·`postpop`·`graph`·`rawgraph` 도구의 재생성도 이 PC에서 확인할 수 있다(하지 않았다).
 
 ## 2026-10-07~08에 고친 것 (`HJOW-Athlon`)
 

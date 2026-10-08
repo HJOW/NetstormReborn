@@ -1,0 +1,9 @@
+{
+  "description": "raw 일반 Pop·firstPop·공통 postPop·표시 갱신의 읽기 전용 함수 몸체. docs/exe/cpp-pop-reconstruction.md의 명령에서 옮겼고 recovery-pop-evidence.json의 function_ranges 순서와 같다. 패치판 보조 둘은 원래 기록대로 extracted/pop/helpers-originals에 따로 내보낸다.",
+  "aliases": { "helpers-originals": "originals" },
+  "editions": {
+    "originals": ["004b02d0", "004ac560", "004b0d30", "004ad470", "004ad500", "004ad670", "004210a0", "004acd20", "004afd30", "004ac1e0", "004aba70", "004b2a90", "0049a840", "00419850", "0040e800", "0040da00", "004ace40", "0049a900", "0040eaf0", "00425df0", "00498160", "00498220"],
+    "helpers-originals": ["004990d0", "004e49c0"],
+    "originalCD": ["004ad490", "004abfb0", "004ae180", "004ae0f0", "004ae380", "004ae3e0", "004aca80", "004acfc0", "004abf50", "004abae0", "004abac0", "004acb00", "004ae480", "004442b0", "00479d20", "004f161c", "004abab0", "00456a00"]
+  }
+}
