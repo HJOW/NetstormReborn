@@ -21,6 +21,7 @@ target_sources(netstorm PRIVATE
     RawSquidFinder.cpp RawSquidFinder.h
     RawSquidNeighbors.cpp RawSquidNeighbors.h
     RawSquidDestroy.cpp RawSquidDestroy.h
+    RawSquidDestroyDispatch.cpp RawSquidDestroyDispatch.h
     SquidDestroyLifecycle.cpp SquidDestroyLifecycle.h
     ChunkMap.cpp ChunkMap.h
     Islandbuilder.cpp Islandbuilder.h

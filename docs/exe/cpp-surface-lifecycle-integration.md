@@ -40,6 +40,8 @@ Graph는 비활성이다. 다리 프레임 코드는 실제 `bridge.type` 추출
 
 ## 다음 작업
 
+**2026-10-08 후속 완료:** [실제 SHP/표시 연결](cpp-frame-display-integration.md)과 [Graph 활성 통합·다리 가상 삭제](cpp-surface-graph-integration.md)를 완료했다. 다음은 raw GameWorld/GUI·Kernel 게임 루프 연결이다. 아래 설명은 이 문서 작성 당시의 인계다.
+
 `SquidFrame` 표시 콜백을 실제 `SquidDisplay::Update`에 연결하고 실제 SHP 크기를 공급한다. 이어 Graph 활성 상태에서 끝 칸 생성/삭제/Pop·받침 생성을 통합한 뒤 raw GameWorld/GUI와 Kernel 게임 루프를 연결한다. 장시간 변이 검사는 기존 인수인계대로 별도 작업이다.
 
 근거: [다리 삭제 훅](cpp-bridgeeffects-reconstruction.md), [다리 이벤트](cpp-bridgeevent-reconstruction.md), [연결/소유자 전파](cpp-bridgeconnect-reconstruction.md), [섬 삭제 훅](cpp-islandlifecycle-reconstruction.md), [noIsland 최초 등록](cpp-islandpostpop-reconstruction.md), [객체 부착 프로세스](cpp-process-reconstruction.md).

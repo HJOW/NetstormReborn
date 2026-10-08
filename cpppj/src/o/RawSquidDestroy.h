@@ -24,6 +24,7 @@ public:
     // 풀/공간 해제/타입 입력의 수명은 어댑터보다 길어야 한다. 서로 다른 풀 연결은 거부한다.
     RawSquidDestroy(SidPool& pool,SquidUnpop& unpop,std::span<const RiftTypeRecord> types);
     // 004af780 ↔ CD 004ab7e0. 지원 자산의 실제 Unpop/반납을 연결하며 이미 dead이면 반환한다.
+    // 이 함수는 공통 몸체다. vtable +0x10 호출은 RawSquidDestroyDispatch를 통해 다리 재정의를 거친다.
     // pre/post 훅은 각각 CompletePreDestroy/CompletePostDestroy를 정확히 한 번 호출해야 한다.
     // 종속 form/contained의 가상 release/destroy와 파생 훅 내부 구현은 emit 호출자 계약이다.
     // form 루트는 unpopForm 훅이 있을 때만 받으며 자산 공간 해제 대신 그 훅을 부른다.

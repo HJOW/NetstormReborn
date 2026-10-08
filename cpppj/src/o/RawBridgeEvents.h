@@ -33,7 +33,7 @@ struct BridgeEventHooks {
     std::function<void(Sid sid)> notifySurface;
     // 004af530(type, 0) / CD 004ab390: 새 객체 생성. 타입 바이트와 가상 표가 채워진 할당 슬롯의 번호를 돌려준다.
     std::function<Sid(std::uint32_t type)> create;
-    // 가상 destroy(vtable +0x10).
+    // 가상 destroy(vtable +0x10). Graph 활성 시 RawSquidDestroyDispatch로 다리 삭제 거부를 먼저 판정한다.
     std::function<void(Sid sid, std::uint32_t flags)> destroy;
     // 가상 소유자 지정(vtable +0x74). 인자는 옛 객체의 소유자 바이트다.
     std::function<void(Sid sid, std::uint8_t owner)> setOwner;

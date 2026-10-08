@@ -49,6 +49,8 @@ cpppj/build/bin/Release/NetstormCpp.exe --inspect-frame-binding originalCD --cd
 
 ## 다음 구현과 제한
 
+**2026-10-08 후속 완료:** [Graph 활성 섬 생성·다리 가상 삭제·끝 칸 재등록](cpp-surface-graph-integration.md)을 완료했다. 다음은 raw GameWorld/GUI·Kernel 프레임/게임 시각 연결이다. 아래 범위는 표시 연결 단계 당시의 기록이다.
+
 다음은 Graph 활성 상태에서 끝 칸 생성/삭제/Pop 및 받침 생성을 같은 raw 흐름으로 통합하는 일이다. 이후 raw GameWorld/GUI와 Kernel 프레임·게임 시각을 연결한다. 프레임 지정에 쓰는 애니메이션 프로세스, 파생 표시 override, 실제 walker 낙하·파편·소리·건설·경제·전투·승패는 후속이다. 이번 통합 검사는 Graph 비활성이고 원본 파일을 수정하지 않았다.
 
 기존 근거: [프레임 지정](cpp-setframe-reconstruction.md), [공통 표시](cpp-display-reconstruction.md), [섬 삭제 통합](cpp-surface-lifecycle-integration.md).

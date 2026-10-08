@@ -25,12 +25,14 @@ add_executable(netstorm_tests
     IslandLifecycleTests.cpp
     IslandPostPopTests.cpp
     SurfaceLifecycleTests.cpp
+    SurfaceLifecycleInspect.h
     SetFrameTests.cpp
     FrameDisplayTests.cpp
     OwnerTests.cpp
     RawFinderTests.cpp
     NeighborTests.cpp
     RawDestroyTests.cpp
+    DestroyDispatchTests.cpp
     DestroyLifecycleTests.cpp
     DestroyGraphTests.cpp
     RewardTests.cpp

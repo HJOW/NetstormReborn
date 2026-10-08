@@ -8,7 +8,7 @@ namespace netstorm::o {
 // 프로세스·재귀 삭제·아직 복원하지 않은 표시/소리 경계는 호출자가 공급한다.
 struct SurfaceLifecycleHooks {
     std::function<void(Sid,float,float)> scheduleFall; // 실제 ScheduleBridgeFall로 연결한다.
-    std::function<void(Sid,std::uint32_t)> destroy; // ProcessHost::Hooks까지 포함한 최종 삭제 경로로 재진입한다.
+    std::function<void(Sid,std::uint32_t)> destroy; // 가상 +0x10이다. DestroyDispatch와 ProcessHost::Hooks로 재진입한다.
     std::function<void(Sid)> fallWalker; // 섬 표면과 다리의 가상 walker 낙하를 공유한다.
     std::function<void(const BridgeLifecycleEvent&)> bridgeEffect; // 파편 생성 요청과 낙하 소리만 전달한다.
 };

@@ -95,6 +95,8 @@ call  _ftol                   ; 0 방향 절삭
 
 ## 5. 다리 destroy 재정의 (`004220f0`)
 
+**2026-10-08 연결 완료(VM-W11-CODEX):** [RawSquidDestroyDispatch와 Graph 활성 통합](cpp-surface-graph-integration.md)이 현재 raw 그래프/프레임에 이 판정을 적용한다. 가상 +0x10과 공통 destroy 직접 호출을 구별했고, 두 판본의 실제 자산에서 hard 삭제 거부와 editor 전환 후 정리를 확인했다.
+
 ```
 편집기가 아니고 && 권한 플래그(00540bc4)가 켜져 있고 && (extra & 9) == 0 && 그래프 표면 수 ≥ 5 이면
     단단한 프레임(0x40)이면 그냥 돌아간다
