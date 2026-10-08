@@ -1,6 +1,7 @@
 // 독립 원본 preDestroy 관찰과 실제 공통 삭제·회복 form/Kernel 정리를 검사한다.
 #include "RawSceneSupport.h"
 #include "o/RawPriestPreDestroy.h"
+#include "o/RawPriestForcefield.h"
 #include "o/SquidDestroyLifecycle.h"
 #include "o/SquidFactory.h"
 
@@ -126,10 +127,12 @@ TEST_CASE(priest_predestroy_cleans_real_regen_form_kernel_and_common_bookkeeping
         const bool patch=edition==OriginalEdition::Patch1078;SidPool pool(edition,32768,server);const auto initialFree=pool.FreeCount();
         std::vector<RiftTypeRecord> types(patch ? 188 : 171);auto& type=types[kPriestType];
         type.constructorAddress=TypeConstructorAddress(edition,kPriestType);type.flags1=0x69012;type.flags2=0x210000;type.maxHitPoints=200;type.cost=123;
-        types[kForcefieldType].cost=20;
+        type.footX=type.footY=1;types[kForcefieldType].cost=20;types[kForcefieldType].footX=types[kForcefieldType].footY=1;
         SquidFactory factory(pool,types);const auto root=factory.Create(kPriestType,server ? 0U : 2U);
         const auto child=pool.Allocate(server ? 0U : 2U);pool.AllocatedBytes(child)[10]=kForcefieldType;
         pool.AllocatedBytes(root)[patch ? 34 : 32]=1;pool.AllocatedBytes(child)[patch ? 34 : 32]=1;
+        // 일반 Pop 미복원 범위는 유지하며 합성 void 자산의 실제 공간 조회 입력을 등록한다.
+        for (auto sid:{root,child}) { Put(pool.AllocatedBytes(sid),14,std::bit_cast<std::uint32_t>(20.75f));Put(pool.AllocatedBytes(sid),18,std::bit_cast<std::uint32_t>(21.9f)); }
         SquidPostPopState book;book.localOwner=1;book.totalCost=10;book.depth=2;
         SquidPostPop post(pool,types,book);post.PostPopBase(root,1);post.PostPopBase(child,1);
         CHECK(book.totalCost==153 && book.globalCounts[kPriestType]==1 && book.globalCounts[kForcefieldType]==1);
@@ -137,19 +140,21 @@ TEST_CASE(priest_predestroy_cleans_real_regen_form_kernel_and_common_bookkeeping
         SquidDeletionState deletion;int transmitted=0,forceRequests=0,carrierCalls=0;
         SquidDestroyLifecycle lifecycle(pool,types,book,deletion,destroy,{
             [](const SquidDeletionEvent&) {},[&](const SquidDestroyEvent& event) { CHECK(event.effect==SquidDestroyEffect::Transmit);++transmitted; }});
+        hash.Bucket(1,20.75f,21.9f)=child.value;
+        PriestForcefieldState forcefieldState;RawPriestForcefield lookup(pool,hash,types,forcefieldState);
         PriestPostPopState priests;priests.priests.entries.resize(3);SquidProcessHost* hostPointer=nullptr;
-        RawPriestPreDestroy pre(pool,priests,{
-            [&](Sid sid) {
-                CHECK(sid==root && priests.priests.count==0 && (pool.Slot(root)[11]&2));
+        RawPriestPreDestroy pre(pool,priests,MakePriestForcefieldHooks(pool,lookup,{
+            {},[&](Sid sid,std::uint32_t flags) {
+                CHECK(sid==child && flags==0 && priests.priests.count==0 && (pool.Slot(root)[11]&2));
                 // 같은 dead 사제를 중첩 삭제해도 새 pre/종속/장부 효과가 생기지 않는다.
-                destroy.Destroy(root,0,hostPointer->Hooks());return child;
-            },[&](Sid sid,std::uint32_t flags) { CHECK(sid==child && flags==0);++forceRequests;destroy.Destroy(sid,flags,hostPointer->Hooks()); },
+                destroy.Destroy(root,0,hostPointer->Hooks());++forceRequests;destroy.Destroy(sid,flags,hostPointer->Hooks());
+            },
             [&](Sid sid,std::uint32_t flags) { lifecycle.ValidatePre(sid,flags);lifecycle.ValidatePost(sid,flags); },
             [&](Sid sid,std::uint32_t flags) {
                 CHECK(sid==root && (pool.Slot(child)[11]&1) && destroy.PreDepth()==1);++carrierCalls;
                 // Carrier/Damageable의 미복원 파생 효과를 대체하고 실제 공통 장부만 호출한다.
                 lifecycle.PreDestroy(sid,flags);
-            }});
+            }}));
         Kernel kernel;SquidProcessState processState;
         SquidProcessHost host(pool,types,kernel,destroy,processState,{},MakePriestPreDestroyHooks(pool,pre,lifecycle.Hooks()));hostPointer=&host;
         GameRandom random;ScrambledSpStore store(random,[] { return 1U; });SquidRewardState hpState;

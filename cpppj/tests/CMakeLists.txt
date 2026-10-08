@@ -37,6 +37,7 @@ add_executable(netstorm_tests
     PriestStateTests.cpp
     PriestRegenTests.cpp
     PriestPreDestroyTests.cpp
+    PriestForcefieldTests.cpp
     RawFinderTests.cpp
     NeighborTests.cpp
     RawDestroyTests.cpp
@@ -116,4 +117,7 @@ set_source_files_properties(PriestRegenTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 사제 삭제 준비의 독립 fixture는 해당 검사 소스에만 지정한다.
 set_source_files_properties(PriestPreDestroyTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PRIESTDESTROY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/priestdestroy-x86.tsv\"")
+# 실제 보호막 조회와 삭제 준비의 독립 fixture는 해당 검사에만 지정한다.
+set_source_files_properties(PriestForcefieldTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PRIESTFORCEFIELD_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/priestforcefield-x86.tsv\"")
 add_test(NAME netstorm_tests COMMAND netstorm_tests)

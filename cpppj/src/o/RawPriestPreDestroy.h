@@ -4,7 +4,7 @@
 
 namespace netstorm::o {
 struct PriestPreDestroyHooks {
-    std::function<Sid(Sid)> findForcefield; // 동일 소유자/위치의 보호막 조회(004918e0 / CD 0040bf00)는 외부 경계다.
+    std::function<Sid(Sid)> findForcefield; // 동일 소유자/위치의 보호막 조회다. MakePriestForcefieldHooks로 실제 finder에 연결한다.
     std::function<void(Sid,std::uint32_t)> destroyForcefield; // 반환 SID가 풀 범위 안이면 가상 destroy(flags=0)를 요청한다.
     std::function<void(Sid,std::uint32_t)> validateCarrier; // 순수 사전 검사다. raw/목록을 바꾸지 않고 미연결 하위 효과를 거부한다.
     std::function<void(Sid,std::uint32_t)> carrierPre; // Carrier→Damageable의 전체 삭제 준비는 명시적인 외부 경계다.
