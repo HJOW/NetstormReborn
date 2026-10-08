@@ -19,6 +19,7 @@ target_sources(netstorm PRIVATE
     State.cpp State.h
     UberGump.cpp UberGump.h
     GameWorld.cpp GameWorld.h
+    RawSurfaceWorld.cpp RawSurfaceWorld.h
     UserInput.cpp UserInput.h
 )
 # 원본처럼 Win32 GDI·멀티미디어 타이머를 직접 쓴다(Screen·ClientMain).

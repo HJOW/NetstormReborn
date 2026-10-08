@@ -1,6 +1,6 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
-> 최종 갱신: 2026-10-08 (**cpppj 1차 기준 10.78. Graph 활성 섬 생성·다리 가상 삭제·끝 칸 재등록 통합 완료.** Release 경고/오류 0·CTest 내부 **257개·실패 0**(62.12초), 관련 근거 감사 **10종 모두 통과**. 실제 두 판본 타입/SHP로 **8개 통합 흐름 통과**. 다리 `004220f0`/CD `00449820`의 hard/debugKeep 삭제 거부 연결·Graph 0번 예약 초기화 반영. 새 독립 x86 입력 없음·누적 제한 x86 **131,542개 유지**. 다음은 **raw GameWorld/GUI·Kernel 프레임/게임 시각 연결**. 실제 애니메이션·낙하/파편/소리·건설/경제/전투/승패는 남았으며 미션 완주는 불가능하다. 원본 게임/복사본·클론 창 실행·커밋/푸시 없음. cpppj·공통 인계는 이 문서, dotnetpj 인계는 LEFT_JOBS.dotnetpj.md를 따른다.)
+> 최종 갱신: 2026-10-08 (**cpppj 10.78 기준 raw 표면 월드·GUI·고정 게임 시각 연결 완료.** Release 경고/오류 0·CTest 내부 **261개·실패 0**, 관련 감사 **15종 통과**. 창 회귀 4종+새 표면 창 검사 통과, 실제 10.78/CD 5개 raw 미션 로드 확인. 표면은 실제 SID/Graph/미션 내부 Kernel이며 건물·walker는 기존 어댑터다. 다음은 **비표면 raw 전환·애니메이션 프로세스·walker 낙하·파편/소리**. 배치·건설·경제·전투·승패는 남고 미션 완주는 불가능하다. 새 독립 x86 없음·누적 **131,542개 유지**. 원본 게임/복사본 실행·보호 파일 변경·커밋/푸시 없음. cpppj/공통은 이 문서, dotnetpj는 LEFT_JOBS.dotnetpj.md를 따른다.)
 > **마지막 디컴파일 수행 PC(AGENTS.md 2026-10-08 추가 규칙): `VM-W11-CODEX` (IP 10.0.0.17), 2026-10-08.** 이 PC에서 한 것: 세 판본 기본 Ghidra 프로젝트 위의 읽기 전용 내보내기 전체(`tools/ghidra/export_functions.ps1 -All`과 새 목록 `bridgeconnect`·`setframe`·`islandlifecycle`·`regiongraph`·`pop`·`display`·`postpop`·`graph`·`lifecycle`·`islandpostpop`), 정밀 디컴파일(`tools/ghidra/refine_all.ps1`, 10.78·CD). 결과는 Git 제외 `extracted/`에 있어 **다른 PC에서 cpppj/디컴파일 분석을 이어가려면 그 PC에서 다시 만들어야 한다**([절차](docs/exe/ghidra-exports.md)). 10.62·10.82(V10/V12) 판본은 이 PC에서 디컴파일하지 않았다.
 > 프로젝트 목표(AGENTS.md): 원본 NetStorm: Islands at War 를 디컴파일/분석하여 클론 코딩하고,
 > **Windows 10/11** 과 **GUI 환경의 Linux** 에서 동작하며 **여러 언어를 지원**하는 게임을 만든다.
@@ -15,6 +15,18 @@
 
 ---
 
+## 2026-10-08 ✅ 완료 / ⏭ 부분 인계: raw 표면 월드·GUI·Kernel 게임 시각 연결 (VM-W11-CODEX)
+
+- [x] **지침/호스트:** AGENTS.md·LEFT_JOBS.md·LEFT_JOBS.dotnetpj.md를 먼저 읽었다. 현재 `VM-W11-Codex`와 마지막 디컴파일 PC가 같으며 **마지막 디컴파일 수행 PC: VM-W11-CODEX, 2026-10-08(유지)**. 기존 내보내기/복원 모듈을 사용했고 새 디컴파일·원본 게임/복사본 실행 없음. 허용된 클론 창만 실행했다. AGENTS.md·dotnetpj·dotnet 인계 변경·커밋/푸시 없음. 스모크가 두 원본 디렉터리의 전체 해시/존재 상태를 확인하고 options.cfg/fullscreenStateFile.dat를 복구했다.
+- [x] **실제 표면 월드:** [`RawSurfaceWorld`](cpppj/src/client/RawSurfaceWorld.h)가 같은 풀/4단계 해시/spot/타입/프레임/SHP에서 실제 생성·소유자·Pop/Unpop·Graph·가상 삭제·파생 pre/post·Regular를 구성한다. isle/noIsland/다리의 초기 등록→F/H 받침/종유석→연결 조각 생성 뒤 `Rebuild(true)` 한 번으로 전체 Graph를 만들고 활성화한다. 입력 필드 사전 검사, 적재 카운터 종료, 원본 비용/타입 장부를 유지한다. [범위/재현](docs/exe/cpp-raw-world-integration.md).
+- [x] **GUI/게임 시각:** GameWorld는 현재 raw 표면 슬롯으로 스프라이트를 제출하고 기존 저장 다리/정적 받침은 표시하지 않는다. 현재 Renderer·카메라/viewport로 변경 요청을 전달하며 해상도 장치 교체를 견딘다. 기존 GroundGrid도 현재 raw 다리/받침 지면을 반영한다. 클라이언트 `Time()`의 고정 game/number를 미션 내부 Kernel에 공급하며 정지 중에는 Regular를 실행하지 않는다. 월드 해제 시 예약을 먼저 정리한다. 전역 Kernel은 GameWorld를 소유하는 호스트 구성이며 원본 전역 프로세스 구조 전체 복원은 아니다.
+- [x] **실제 자산/창:** `cpp_surface_world_smoke.py` 추가. 10.78 1-1/Save the Island/TEST01 + CD 1-1/Save the Island **5개 raw 로드**에서 표면/Graph/다리 입력을 대조했다. 각각 표면 **1637/2413/6546/1637/2413**, 연결 조각 **2/31/77/2/31**. 1-1 클론 창에서 ESC 정지→(135,138) 받침 삭제(`surface-delete` 검사 경계)→예약 1개 보존→재개 시 (133,135) 새 끝 칸/(133,136) 연결 제거→140×150 영역 실제 픽셀 변화→메뉴 복귀/미션 재진입 초기화를 확인했고 캡처를 직접 보았다. 기존 world 스모크의 1-1/TEST01 조작도 통과했다.
+- [x] **검증:** Release 경고/오류 0·CTest 내부 **261개·실패 0**(기존 257 + raw 월드 4). 기존 클론 창 회귀 **4종(window/renderer/menu/world)**과 새 표면 창 검사가 통과했다. 관련 근거 감사 **15종 모두 통과**(bridgedecay/bridgeevent/bridgeeffects/bridgeconnect/islandpostpop/islandlifecycle/process/setframe/display/rawgraph/graphrebuild/destroygraph/postpop/pop/unpop). 새 독립 x86 입력 없음·누적 **131,542개 유지**. 로그 `extracted/build-raw-world.log`·`ctest-raw-world.log`·`gui-raw-world-regression.log`·`gui-raw-cpp_*-smoke.log`·`audit-raw-world-*.log`, 새 GUI 결과 `extracted/cpp-surface-world-smoke/`.
+- [ ] **다음 구현:** (1) 비표면 객체/선택/이동의 raw 전환과 원본 애니메이션 프로세스. (2) 실제 walker 가상 낙하·Flyingshrapnel/파편·소리와 공통 삭제 보상/UI 장치 연결. (3) 다리 배치/Construction→건설·생산 덱·경제/SP→전투·AI·승패. 이번에는 건물/walker·본섬 생성/변형·fringe/깊이 등 기존 어댑터를 유지했다. battle=true·mission=false의 초기 색 어댑터이며 원본 미션 전역 전환 순서 전체는 후속이다. 파편/소리/보상은 진단 요청, 네트워크 Transmit은 전송 없음. 받침 삭제 뒤 남는 종유석/noIsland·건물의 전체 붕괴/낙하 애니메이션은 아직 미복원이다.
+- [ ] **계속 인계:** 기존 프레임 지정 6개·섬 삭제 훅 5개 변이(약 40분), noIsland/표시/가상 삭제/새 월드 연결 변이 검사, 최대 지도·SID 소진·불완전 받침 입력/로드 실패 재시도. 테스트 포함 개별 15분 이상 작업을 인계하라는 기존 지침을 유지한다. 이번 검증은 클론의 raw 상태/정적 픽셀 변화이며 원본 화면 전체 픽셀 일치나 낙하 애니메이션 검증은 아니다.
+
+---
+
 ## 2026-10-08 ✅ 완료: Graph 활성 섬 생성·다리 가상 삭제·끝 칸 재등록 (VM-W11-CODEX)
 
 - [x] **지침/호스트:** AGENTS.md·두 인수인계를 읽고 다른 AI가 추가한 다리 destroy 재정의 누락을 먼저 반영했다. 현재 `VM-W11-Codex`와 마지막 디컴파일 PC `VM-W11-CODEX`가 일치한다. **마지막 디컴파일 수행 PC: VM-W11-CODEX, 2026-10-08(유지).** 기존 내보내기만 읽었고 새 디컴파일·원본 게임/복사본·클론 창 실행 없음. 원본 파일·AGENTS.md·dotnetpj·dotnet 인계 변경·커밋/푸시 없음.
@@ -22,7 +34,7 @@
 - [x] **Graph 활성 통합:** 같은 Graph를 postPop/삭제 공통 훅에 연결하고 graphsEnabled를 켰다. 빈 월드의 `Rebuild(true)`로 예약 0번을 먼저 초기화한다. 받침/종유석·소유자 생성→섬 삭제→Kernel 지연 낙하→끝 칸 생성/삭제/Pop→연결/ProcessForm 정리를 실제 프레임/표시 훅과 함께 검사한다. 정상/고립/hard/flags 0x1000 흐름에서 raw 번호별 그래프 표면 수·활성 표·깊이·비용/타입 수·해시/spot·풀 여유를 대조한다. hard는 실제 자기 삭제 이벤트도 거부하며 editor 전환 후에만 정리한다. [근거·재현](docs/exe/cpp-surface-graph-integration.md).
 - [x] **실제 자산 읽기 전용:** 테스트 실행 파일의 `--inspect-surface-graph originals` / `--inspect-surface-graph originalCD --cd`로 실제 두 판본 타입·프레임 코드·SHP를 공급했다. **두 판본 × 네 흐름 = 8개 모두 통과**, 최종 삭제 구간 표시 전달 교체 4회/나머지 3회와 부분 Draw/Present 확인. 일반 CTest는 원본 파일 없이 동작한다. 실제 스프라이트 GUI 검사는 아니다.
 - [x] **검증:** x64 Release 경고/오류 0·CTest 내부 **257개·실패 0**(62.12초)(기존 251 + 가상 삭제 5 + Graph 통합 1). 관련 감사 bridgedecay/bridgeevent/bridgeeffects/graphrebuild/destroygraph/rawgraph/postpop/islandpostpop/setframe/display **10종 모두 통과**. 새 독립 x86 입력 없음·누적 **131,542개 유지**. 최초 검사에서 Graph 예약 초기화·해시 단계 필드·Transmit 억제 훅 수 기대값을 수정한 뒤 회귀 통과. 로그 `extracted/build-surface-graph.log`·`ctest-surface-graph.log`·`surface-graph-originals.log`·`surface-graph-cd.log`·`audit-surface-graph.json`.
-- [ ] **다음 구현:** raw GameWorld/GUI에서 이번 모듈들을 사용하도록 월드 객체·SID·프레임/표시의 단일 상태를 연결하고 Kernel 프레임/게임 시각을 게임 루프에 잇는다. GUI raw 월드 연결 후 TEST01/1-1에서 받침·색·연결 조각·끝 칸 변환을 화면으로 확인한다. 그 뒤 애니메이션 프로세스·walker 낙하·파편·소리·배치·건설·경제·전투·승패.
+- [x] **당시 다음 구현 완료(위 최신 raw 월드 절):** 표면 SID/Graph/프레임/표시를 GUI에 연결하고 고정 게임 시각으로 미션 내부 Kernel을 실행했다. 1-1/TEST01에서 받침·색·연결 조각 표시와 기존 조작, 1-1에서 정지 중 예약→재개 끝 칸 교체/연결 제거→픽셀 변화→미션 재진입을 확인했다. 비표면 raw 전환과 실제 애니메이션·walker 낙하·파편/소리·배치·건설·경제·전투·승패는 최신 다음 구현으로 남긴다.
 - [ ] **장시간 검사/남은 범위:** 기존 프레임 지정 6개·섬 삭제 훅 5개 변이 검사(약 40분), noIsland/삭제 분배기/표시/새 가상 삭제의 변이 검사는 인계한다. 테스트 포함 15분 이상 작업을 인계하라는 기존 사용자 지침을 유지한다. 이번은 Graph 활성 호스트 통합이며 새 독립 원본 실행 대조나 GUI raw GameWorld 검사는 아니다.
 
 ---

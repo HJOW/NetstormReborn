@@ -16,6 +16,7 @@ add_executable(netstorm_tests
     RendererTests.cpp
     MenuTests.cpp
     WorldTests.cpp
+    RawSurfaceWorldTests.cpp
     BridgeTests.cpp
     BridgeDecayTests.cpp
     BridgeLifecycleTests.cpp

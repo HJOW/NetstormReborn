@@ -1,4 +1,5 @@
 #include "client/GameWorld.h"
+#include "client/SquidRenderer.h"
 #include "o/OriginalText.h"
 #include <algorithm>
 #include <cmath>
@@ -50,6 +51,7 @@ GameWorld::GameWorld(const GameAssets& assets,const o::FortTemplate& fort,o::Mis
     // 004c04b0의 연속 하위 2비트 중복 보정을 적용한다.
     for (std::size_t i=0;i<coreVariants_.size();++i) { int value=next(); if (i>0 && (value&3)==(coreVariants_[i-1]&3)) ++value; coreVariants_[i]=value; }
     BuildTerrain();
+    BuildSurfaces();
 }
 // 섬 타입의 저장 레코드는 원본처럼 건너뛰고 다른 자산 객체에 런타임 번호를 배정한다.
 void GameWorld::Place(const o::FortChunkSection& section,std::span<const o::ChunkCoordinate> chunks,int territory) {
@@ -155,7 +157,7 @@ void GameWorld::BuildTerrain() {
     // 지면 이외의 저장 객체는 다리 또는 발자국 점유를 등록한다.
     for (const auto& object:objects_) {
         const auto& type=assets_.Types()[static_cast<std::size_t>(object.type-o::kFirstAssetTypeNumber)];
-        if (Has(type,"bridge")) { auto& cell=*ground_->At(object.cell.x,object.cell.y); cell.bridge=true; cell.owner=object.owner; continue; }
+        if (Has(type,"bridge")) continue; // 현재 다리 격자는 raw 등록 후 공급한다.
         if (!object.visible || Has(type,"balloon") || Has(type,"flyer") || Has(type,"not_real")) continue;
         const auto footprint=type.definition.Footprint();
         // 기준점은 발자국의 오른쪽 아래 칸이다(0049ae80).
@@ -164,13 +166,69 @@ void GameWorld::BuildTerrain() {
             for (int x=object.cell.x-footprint[0]+1;x<=object.cell.x;++x) if (auto* cell=ground_->At(x,y)) { cell->occupant=object.id; if (Has(type,"createsisland")) cell->land=true; }
     }
 }
-// 프레임 시간차를 공급받으며 정지한 미션에서는 어떤 이동도 진행하지 않는다.
-void GameWorld::RunFrame() { if (elapsed && (!paused || !paused())) Step(elapsed()); }
-// 이동 상태를 실제 객체에 적용하고 표시 프레임을 갱신한다.
+// 표면 객체는 raw 풀에서 소유한다. 건물/사제 등 비표면 객체와 땅의 생성 입력만 기존 어댑터가 공급한다.
+void GameWorld::BuildSurfaces() {
+    const auto types=assets_.TypeTable().Types();std::vector<o::RiftTypeFrames> frames(types.size(),o::RiftTypeFrames({}));
+    // 모든 타입 번호를 실제 자산 프레임 코드에 대응시킨다.
+    for (std::size_t i=0;i<assets_.Types().size();++i) frames[o::kFirstAssetTypeNumber+i]=assets_.Types()[i].definition.FrameTable();
+    // 자산 이름을 판본별 타입 번호로 변환한다.
+    const auto number=[this](std::string_view name) { return static_cast<std::uint32_t>(o::kFirstAssetTypeNumber+assets_.Find(name).block); };
+    o::BridgeConnectState links;links.bridgeType=number("bridge");links.noIslandType=number("noIsland");links.islandType=number("island");
+    links.stalagType=number("islandStalag");links.connectorType=number("bridgeConnector");links.battle=true;
+    bridgeType_=links.bridgeType;noIslandType_=links.noIslandType;
+    // 기존 미션 플레이어의 색 번호를 복원된 받침 소유자 재정의에 공급한다.
+    for (std::size_t i=0;i<links.ownerColors.size();++i) links.ownerColors[i]=players_.players[i].color;
+    const auto terrainType=number("isle");std::vector<SurfaceSeed> seeds;
+    // 본섬의 원본 지면 프레임을 같은 위치의 일반 raw 표면으로 등록한다. 절벽은 표시 레이어로 남긴다.
+    for (const auto& tile:tiles_) if (tile.type->block+o::kFirstAssetTypeNumber==terrainType)
+        seeds.push_back({terrainType,static_cast<std::uint32_t>(tile.owner),static_cast<std::int32_t>(tile.frame),static_cast<float>(tile.x),static_cast<float>(tile.y)});
+    // 저장 noIsland와 다리만 raw 객체가 된다. 비표면 선택/이동의 번호는 기존대로 유지한다.
+    for (const auto& object:objects_) if (static_cast<std::uint32_t>(object.type)==links.bridgeType || static_cast<std::uint32_t>(object.type)==links.noIslandType)
+        seeds.push_back({static_cast<std::uint32_t>(object.type),static_cast<std::uint32_t>(object.owner),static_cast<std::int32_t>(object.frame),static_cast<float>(object.x),static_cast<float>(object.y)});
+    surfaces_=std::make_unique<RawSurfaceWorld>(assets_.Edition(),types,frames,SquidRenderer::Shapes(assets_,assets_.Edition()),links,terrainType);
+    surfaces_->Load(seeds);
+    // 생성 명령 전체 복원 전까지 저장 건물의 받침 소유자 공급은 기존 월드 초기화 경계로 유지한다.
+    for (const auto& object:objects_) {
+        const auto& type=assets_.Types()[static_cast<std::size_t>(object.type-o::kFirstAssetTypeNumber)];
+        if (object.owner>0 && (Has(type,"createsisland") || Has(type,"geyser"))) surfaces_->SetSupportOwner(static_cast<float>(object.x),static_cast<float>(object.y),static_cast<std::uint32_t>(object.owner));
+    }
+    RefreshSurfaceGround();
+}
+// 삭제된 다리가 예전 저장 목록 때문에 보행 가능한 칸으로 남지 않게 한다.
+void GameWorld::RefreshSurfaceGround() {
+    // 이전 raw 칸의 다리/받침 지면만 지우고 본섬과 비표면 점유자는 보존한다.
+    for (const auto point:surfaceCells_) {
+        auto& cell=*ground_->At(point.x,point.y);cell.bridge=false;cell.owner=0;cell.land=terrain_->At(point.x,point.y)!=o::kEmptyTerrain;
+    }
+    surfaceCells_.clear();
+    // 표면 칸 삭제와 다리 끝 칸 교체를 실제 현재 위치/소유자로 반영한다.
+    for (const auto& snapshot:surfaces_->Objects()) {
+        const auto& object=snapshot.object;if (object.type!=bridgeType_ && object.type!=noIslandType_) continue;
+        const o::CellPoint point{static_cast<int>(object.x),static_cast<int>(object.y)};auto& cell=*ground_->At(point.x,point.y);
+        if (object.type==bridgeType_) { cell.bridge=true;cell.owner=static_cast<int>(object.owner); } else cell.land=true;
+        surfaceCells_.push_back(point);
+    }
+}
+// 절대 시각을 먼저 전달하고 raw Kernel과 기존 비표면 이동을 같은 프레임에 진행한다.
+void GameWorld::RunFrame() {
+    const bool stopped=paused && paused();
+    if (frameTime) {
+        surfaceTime_=frameTime();SurfaceView();surfaces_->RunFrame(surfaceTime_,stopped);RefreshSurfaceGround();
+        if (!stopped) AdvanceObjects(surfaceTime_.delta);
+    } else if (elapsed && !stopped) Step(elapsed());
+}
+// 콘솔에서는 같은 실행 경로에 누적된 게임 시각을 공급한다.
 void GameWorld::Step(double seconds) {
+    if (!std::isfinite(seconds) || seconds<0) throw std::invalid_argument("월드 시간차 범위 오류");
+    surfaceTime_.game+=seconds;surfaceTime_.delta=seconds;++surfaceTime_.number;SurfaceView();surfaces_->RunFrame(surfaceTime_,false);RefreshSurfaceGround();AdvanceObjects(seconds);
+}
+// 비표면 유닛의 관찰 기반 이동은 raw 표면 렌더링과 구별한다.
+void GameWorld::AdvanceObjects(double seconds) {
     // 객체 번호 순서로 갱신한다.
     for (auto& object:objects_) if (object.owner>0 && object.owner<=o::kPlayerCount && object.Advance(seconds,*ground_,players_.players[static_cast<std::size_t>(object.owner)].allies)) { object.frame=Frame(object); changed_=true; }
 }
+// Renderer 교체/카메라 변경 뒤에도 현재 객체의 표시 범위가 현재 화면으로 전달되게 한다.
+void GameWorld::SurfaceView() { surfaces_->SetDisplay({scrollX_,scrollY_,65536,{0,std::min(kMenuHeight,height_),width_,height_}},surfaceDisplay); }
 // 카메라 크기만 바뀌어도 다시 표시한다.
 void GameWorld::Resize(int width,int height) {
     const bool first=width_==0; if (width_==width && height_==height) return;
@@ -227,6 +285,7 @@ o::SquidId GameWorld::Pick(ScreenPoint point) const {
 void GameWorld::Select(o::SquidId id) { const auto* object=Object(id); selected_=object && object->selectable ? id : 0; changed_=true; }
 // 선택한 유닛의 주인이 나일 때만 명령을 적용한다.
 bool GameWorld::MoveSelected(ScreenPoint point) {
+    RefreshSurfaceGround();
     const auto id=selected_; selected_=0; changed_=true; if (id==0 || id>objects_.size()) return false;
     auto& object=objects_[id-1]; if (object.owner!=1 || !object.mobile || object.speed<=0) return false;
     const auto goal=ToCell(point); auto route=ground_->Path(object.cell,goal,object.id,players_.players[1].allies);
@@ -251,9 +310,16 @@ std::vector<RenderSprite> GameWorld::Sprites() const {
         result.push_back({&assets_.Shapes(),type.block,frame,p.x,p.y,clip,{static_cast<float>(x),static_cast<float>(y),depth},shadow ? std::optional<ColorMap>{} : Remap(type,owner),shadow});
     };
     // 받침·지면·절벽은 원본 이미지 기준점으로 제출한다.
-    for (const auto& tile:tiles_) add(*tile.type,tile.frame,tile.x,tile.y,tile.owner,tile.depth,false);
+    for (const auto& tile:tiles_) if (o::AsciiLower(tile.type->assetName)=="fringe") add(*tile.type,tile.frame,tile.x,tile.y,tile.owner,tile.depth,false);
+    // 지면·받침·종유석·다리·연결 조각은 현재 raw SID의 프레임/좌표/소유자를 직접 제출한다.
+    for (const auto& snapshot:surfaces_->Objects()) {
+        const auto& object=snapshot.object;const auto& type=assets_.Types()[object.type-o::kFirstAssetTypeNumber];
+        const auto name=o::AsciiLower(type.assetName);if (name=="noisland") continue;
+        const auto depth=name=="islandstalag" ? kCliffDepth : (name=="isle" || name=="island" ? kLandDepth : kObjectDepth);
+        add(type,static_cast<std::size_t>(object.frame),object.x,object.y,static_cast<int>(object.owner),depth,false);
+    }
     // 살아 있는 객체의 현재 좌표와 현재 프레임을 제출한다.
-    for (const auto& object:objects_) if (object.visible) {
+    for (const auto& object:objects_) if (object.visible && !Has(assets_.Types()[static_cast<std::size_t>(object.type-o::kFirstAssetTypeNumber)],"bridge")) {
         const auto& type=assets_.Types()[static_cast<std::size_t>(object.type-o::kFirstAssetTypeNumber)];
         add(type,object.frame,object.x,object.y,object.owner,kObjectDepth,false);
     }
@@ -331,9 +397,11 @@ std::optional<ScreenPoint> GameWorld::Point(std::string_view label) const {
     return {};
 }
 // 표시 요청을 한 번만 소비한다.
-bool GameWorld::TakeChanged() { return std::exchange(changed_,false); }
+bool GameWorld::TakeChanged() { const bool rawChanged=surfaces_->TakeChanged();return std::exchange(changed_,false) || rawChanged; }
 // 순수한 플레이어 초기 상태 조회다.
 const o::MissionPlayers& GameWorld::Players() const { return players_; }
+// 게임 명령/검사와 렌더링은 같은 raw 상태를 참조한다.
+RawSurfaceWorld& GameWorld::Surfaces() { return *surfaces_; }
 // 스모크 관찰용이며 실제 게임 화면에는 구현 세부 정보를 표시하지 않는다.
 std::string GameWorld::Report(bool mask) const {
     std::ostringstream out; out.precision(12);
@@ -350,6 +418,7 @@ std::string GameWorld::Report(bool mask) const {
         for (const auto value:terrain_->Mask()) out<<digits[value>>4]<<digits[value&15];
         out<<"\n";
     }
+    out<<surfaces_->Report();
     return out.str();
 }
 }

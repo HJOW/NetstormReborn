@@ -33,6 +33,8 @@ public:
     std::string Report() const;
     // 버튼/목록의 실제 위치를 라벨로 찾는다. 없으면 빈 값.
     std::optional<ScreenPoint> ControlPoint(std::string_view label) const;
+    // --ui-script 전용 검사 경계다. 실제 월드의 가상 삭제를 호출하며 일반 게임 입력에는 노출하지 않는다.
+    bool InspectDestroySurface(std::string_view type,float x,float y);
 private:
     // 원본 Tell의 파일.섹션/현재 tell 섹션을 읽어 대화상자를 연다.
     void Tell(std::string target, bool briefing = false);

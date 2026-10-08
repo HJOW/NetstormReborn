@@ -24,12 +24,14 @@ MISSIONS = ('thewarbegins', 'savetheisland', 'tutorial1', 'TEST01')
 
 def parse(text):
     """같은 프레임의 객체를 번호로 유지하여 이동 전후 같은 유닛을 비교한다."""
-    state = {'objects': {}, 'players': {}, 'controls': {}}
+    state = {'objects': {}, 'raw_objects': {}, 'players': {}, 'controls': {}}
     # TSV의 종류별로 반복 레코드와 단일 레코드를 구분한다.
     for line in text.splitlines():
         fields = line.split('\t')
         if fields[0] == 'object':
             state['objects'][int(fields[1])] = fields[2:]
+        elif fields[0] == 'raw_object':
+            state['raw_objects'][int(fields[1])] = fields[2:]
         elif fields[0] == 'player':
             state['players'][int(fields[1])] = fields[2:]
         elif fields[0] == 'control':

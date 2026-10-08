@@ -12,6 +12,14 @@
 #include <stdexcept>
 
 namespace netstorm::client {
+// 화면 검사도 GUI가 표시하는 같은 raw 월드의 삭제/프로세스 경로를 사용한다.
+bool UberGump::InspectDestroySurface(std::string_view type,float x,float y) {
+    if (!world_ || (type!="bridge" && type!="island" && type!="noIsland")) throw std::invalid_argument("검사할 raw 월드/표면 종류 오류");
+    const auto number=static_cast<std::uint32_t>(o::kFirstAssetTypeNumber+client_.Assets().Find(type).block);
+    const auto sid=world_->Surfaces().Find(x,y,number);
+    if (!sid.value) throw std::out_of_range("검사할 raw 표면 없음");
+    return world_->Surfaces().Destroy(sid);
+}
 namespace {
 // 원본 메인 메뉴의 돌 버튼 폭·높이·피치와 목록 행 높이.
 constexpr int kButtonWidth = 75, kButtonHeight = 19, kButtonPitch = 79, kRowHeight = 18;
@@ -189,6 +197,11 @@ void UberGump::BeginMission(std::string name) {
     auto players=o::MissionPlayers::Load([this](std::string_view key) { return mission_->Get(key); },fort,client_.Assets().TypeTable(),6500);
     auto world=std::make_unique<GameWorld>(client_.Assets(),fort,std::move(players));
     world->elapsed=[this]() { return client_.Time().delta; }; world->paused=[this]() { return client_.Paused(); };
+    world->frameTime=[this]() { return client_.Time(); };
+    // 장치 재생성 뒤에도 현재 Renderer로 raw 변경 영역을 전달한다.
+    world->surfaceDisplay={
+        [this]() { return client_.GetRenderer().FullRedrawPending(); },
+        [this](o::SquidDisplayRect rect,std::uint32_t flags) { client_.GetRenderer().Invalidate({rect.left,rect.top,rect.right,rect.bottom},flags); }};
     world_=world.get(); worldProcess_=client_.GetKernel().Add(std::move(world)); userInput_=std::make_unique<UserInput>(client_,*world_);
     briefingSections_.clear(); briefingIndex_ = 0;
     // 원본 초기 브리핑은 A.이며 A1. 등은 본문 Tell 명령이 넘긴다.

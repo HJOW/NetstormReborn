@@ -34,7 +34,10 @@ public:
     const GamePalette& Palette() const;
     // 전체 타입 번호 체계(내장 타입 포함)와 플래그. `.fort`의 타입 번호를 풀 때 쓴다.
     const o::RiftTypeTable& TypeTable() const;
+    // raw 풀/프레임 필드가 자산을 읽은 판본과 같은 배치를 사용하도록 제공한다.
+    o::OriginalEdition Edition() const;
 private:
+    o::OriginalEdition edition_;
     ShapeDatabase shapes_;
     GamePalette palette_;
     std::vector<TypeAsset> types_;

@@ -13,7 +13,7 @@ bool Equal(std::string_view left, std::string_view right) {
 }
 // 팔레트 경로는 호출자가 설정에서 계산해 준다. 주지 않으면 원본 setup.cfg의 공통 팔레트 gifcloud다.
 GameAssets::GameAssets(const o::BaseFileSystem& files, o::OriginalEdition edition, std::string_view palettePath)
-    : shapes_(files.Read("d/_shapes.shp")), palette_(files.Read(palettePath)) {
+    : edition_(edition),shapes_(files.Read("d/_shapes.shp")), palette_(files.Read(palettePath)) {
     const auto order = o::TypeLoadOrder(edition);
     if (shapes_.Blocks().size() != order.size()) throw std::runtime_error("Shape block count does not match selected edition (use --cd for CD data)");
     types_.reserve(order.size());
@@ -58,6 +58,8 @@ std::size_t GameAssets::FrameIndex(const TypeAsset& type, std::string_view clust
 const ShapeDatabase& GameAssets::Shapes() const { return shapes_; }
 // 생성자에서 항상 만들어지므로 비어 있지 않다.
 const o::RiftTypeTable& GameAssets::TypeTable() const { return *typeTable_; }
+// 타입 개수로 판본을 재추정하지 않고 선택한 판본을 돌려준다.
+o::OriginalEdition GameAssets::Edition() const { return edition_; }
 // 팔레트는 투명 마스크와 별도로 적용한다.
 const GamePalette& GameAssets::Palette() const { return palette_; }
 }

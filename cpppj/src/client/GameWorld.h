@@ -3,6 +3,7 @@
 #pragma once
 #include "client/GameAssets.h"
 #include "client/Renderer.h"
+#include "client/RawSurfaceWorld.h"
 #include "o/BaseProcess.h"
 #include "o/Player.h"
 #include "o/Squid.h"
@@ -17,6 +18,9 @@ public:
     // Kernel에서 호출할 실제 게임 시간과 정지 상태의 공급자를 연결한다.
     std::function<double()> elapsed;
     std::function<bool()> paused;
+    // 클라이언트 GameClock이 고정한 절대 게임 시각/프레임 번호를 raw Kernel과 공유한다.
+    std::function<o::FrameTime()> frameTime;
+    SurfaceDisplayHooks surfaceDisplay;
     // 원본 클라이언트 커널의 갱신 단계에서 이동을 진행한다.
     void RunFrame() override;
     // 검사에서는 OS 시계 없이 같은 이동 경로를 진행한다.
@@ -50,12 +54,22 @@ public:
     std::string Report(bool mask=false) const;
     // 현재 미션의 시작 자원·기술·동맹 상태를 읽기 전용으로 조회한다.
     const o::MissionPlayers& Players() const;
+    // 검사/후속 게임 명령이 사용하는 실제 raw 표면 월드다. 표시도 같은 슬롯을 읽는다.
+    RawSurfaceWorld& Surfaces();
 private:
     struct Tile { const TypeAsset* type{}; std::size_t frame{}; int x{},y{},owner{}; std::int16_t depth{}; };
     // 청크 순서의 저장 객체를 월드 좌표에 생성한다.
     void Place(const o::FortChunkSection& section,std::span<const o::ChunkCoordinate> chunks,int territory);
     // 지면·받침·절벽 프레임과 정지 점유 격자를 만든다.
     void BuildTerrain();
+    // 지형/저장 입력을 실제 표면 SID로 등록한다. 비표면 유닛 이동은 기존 어댑터에 남긴다.
+    void BuildSurfaces();
+    // 기존 비표면 유닛의 관찰 기반 이동을 진행한다.
+    void AdvanceObjects(double seconds);
+    // 현재 카메라/장치 변경을 raw 표시 경계에 전달한다.
+    void SurfaceView();
+    // 임시 보행 격자의 표면/다리 상태도 현재 raw 슬롯에서 갱신한다.
+    void RefreshSurfaceGround();
     // 지면 방향·원소와 조명 조건으로 허용 프레임을 선택한다. 변형 선택은 고정 시드의 어댑터다.
     std::size_t TerrainFrame(const TypeAsset& type,char a,char b,int theme,int x,int y,bool core) const;
     // 클러스터 기준 프레임과 보행 상태에서 실제 표시 프레임을 결정한다.
@@ -74,6 +88,10 @@ private:
     o::MissionPlayers players_;
     std::vector<o::Squid> objects_;
     std::vector<Tile> tiles_;
+    std::unique_ptr<RawSurfaceWorld> surfaces_;
+    o::FrameTime surfaceTime_{};
+    std::vector<o::CellPoint> surfaceCells_;
+    std::uint32_t bridgeType_{},noIslandType_{};
     std::array<int,o::kTerritoryCount> regionOwners_{},regionThemes_{};
     std::array<int,99> coreVariants_{};
     std::array<PaletteColor,256> palette_{};

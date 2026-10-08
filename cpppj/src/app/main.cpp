@@ -590,6 +590,13 @@ int RunClient(std::vector<std::string> arguments) {
             for (std::size_t i = next; i < steps.size() && steps[i].frame == c.Time().number; ++i) {
                 const auto& step = steps[i]; using namespace netstorm::client;
                 if (step.operation == "snapshot" || step.operation == "report") continue;
+                // 검사 명령은 실제 raw 삭제를 사용한다. 건설/전투 UI 구현으로 취급하지 않는다.
+                if (step.operation=="surface-delete") {
+                    std::istringstream fields(step.argument);std::string type;float x{},y{};char comma{};
+                    if (!std::getline(fields,type,':') || !(fields>>x>>comma>>y) || comma!=',' || !(fields>>std::ws).eof())
+                        throw std::invalid_argument("surface-delete needs type:x,y");
+                    c.Menu()->InspectDestroySurface(type,x,y);continue;
+                }
                 if (step.operation == "esc") { c.Input().Push(0x1b, 0, 0); continue; }
                 if (step.operation=="key" || step.operation=="keyup") {
                     const std::map<std::string,unsigned> keys{{"left",0x25},{"up",0x26},{"right",0x27},{"down",0x28},{"home",0x73},{"priest",0x74}};
