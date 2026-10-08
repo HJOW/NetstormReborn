@@ -21,6 +21,7 @@ add_subdirectory(platform)
 
 # 실행 파일. C# 빌드의 NetstormClone 과 구분되도록 이름을 달리한다.
 target_sources(netstorm PRIVATE app/InspectView.cpp app/InspectView.h)
+target_sources(netstorm PRIVATE app/FrameBindingInspect.cpp app/FrameBindingInspect.h)
 add_executable(NetstormCpp app/main.cpp)
 netstorm_apply_compiler_options(NetstormCpp)
 target_link_libraries(NetstormCpp PRIVATE netstorm)

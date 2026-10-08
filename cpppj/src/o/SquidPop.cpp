@@ -40,6 +40,11 @@ SquidPop::SquidPop(SidPool& pool,SquidHash& hash,std::span<std::uint8_t> spots,S
     if (postPop_ && &postPop_->Pool()!=&pool_) throw std::invalid_argument("Pop/postPop SID 풀이 다릅니다");
     if (postPop_) postPop_->ValidateSpace(hash_,spots_);
 }
+// 표시를 생략한 Pop으로 프레임을 재등록하면 새 영역이 누락되므로 미연결 구성도 거부한다.
+void SquidPop::ValidateFrameBinding(const SidPool& pool,const SquidDisplay& display,const SquidUnpop& unpop) const {
+    if (&pool!=&pool_ || &display!=display_) throw std::invalid_argument("프레임 Pop 풀/표시 연결 불일치");
+    unpop.ValidateFrameBinding(pool,display,hash_,spots_);
+}
 // 실제 PE에서 공통 firstPop/postPop을 확인한 vtable만 허용한다.
 bool SquidPop::Supports(OriginalEdition edition,std::uint32_t vtable,std::uint32_t flags) {
     const auto values=edition==OriginalEdition::Patch1078 ? std::span<const std::uint32_t>(kPatchPopVtables) :

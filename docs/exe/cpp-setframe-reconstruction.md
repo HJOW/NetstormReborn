@@ -59,3 +59,7 @@ python -X utf8 tools/decomp_setframe_oracle.py --verify
 cmake --build cpppj/build --config Release --parallel 4
 ctest --test-dir cpppj/build -C Release --output-on-failure
 ```
+
+## 2026-10-08 프레임·표시 후속 통합
+
+[SquidFrame 표시 갱신·실제 SHP 크기 공급](cpp-frame-display-integration.md)을 `MakeSquidFrameHooks`로 실제 Update/Unpop/Pop·Renderer에 연결했다. 전체 콘솔 검사는 251개·실패 0, 실제 두 판본 SHP 물리 6,950개 메타데이터·범위 안 크기 공급 6,946개 확인이 통과했다. Graph 활성·GUI raw 스프라이트 동기화·애니메이션 프로세스는 후속이며 위 독립 기계어 검증 범위는 그대로다.

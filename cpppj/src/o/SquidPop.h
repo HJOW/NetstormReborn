@@ -6,6 +6,7 @@
 namespace netstorm::o {
 class SquidDisplay;
 class SquidPostPop;
+class SquidUnpop;
 // 패치판 overlap은 좌표와 앞선 spot 쓰기를 남기고 활성화하지 않는다.
 enum class RawPopResult { Unchanged,Registered,Overlap };
 class SquidPop {
@@ -18,6 +19,8 @@ public:
         float x,float y,std::uint32_t flags=0);
     // 원본 가상 주소를 메타데이터로 비교한다. 호스트 포인터로 호출하지 않는다.
     static bool Supports(OriginalEdition edition,std::uint32_t vtable,std::uint32_t flags);
+    // 프레임 변경의 제자리 갱신과 재등록이 같은 풀/표시 대상을 쓰는지 확인한다.
+    void ValidateFrameBinding(const SidPool& pool,const SquidDisplay& display,const SquidUnpop& unpop) const;
 private:
     SidPool& pool_;
     SquidHash& hash_;

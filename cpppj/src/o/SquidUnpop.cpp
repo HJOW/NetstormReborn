@@ -49,6 +49,12 @@ bool SquidUnpop::SupportsDisplay(OriginalEdition edition,std::uint32_t vtable,st
 }
 // raw 풀 소유자를 읽기 전용으로 확인한다.
 const SidPool& SquidUnpop::Pool() const { return pool_; }
+// 표시를 생략한 Unpop으로 옛 영역을 남기는 연결을 구성 단계에서 거부한다.
+void SquidUnpop::ValidateFrameBinding(const SidPool& pool,const SquidDisplay& display,const SquidHash& hash,
+    std::span<const std::uint8_t> spots) const {
+    if (&pool!=&pool_ || &display!=display_ || &hash!=&hash_ || spots.data()!=spots_.data() || spots.size()!=spots_.size())
+        throw std::invalid_argument("프레임 Unpop 풀/표시/공간 연결 불일치");
+}
 // 크기뿐 아니라 동일한 공간 인스턴스의 연결을 요구한다.
 void SquidUnpop::ValidateGraph(const RawGraph& graph) const { graph.ValidateSpace(hash_,spots_); }
 // 일반 공간 경로의 상태·spot·체인 쓰기 뒤 선택 연결한 공통 표시를 원본 순서로 적용한다.

@@ -58,6 +58,28 @@ void SquidDisplay::SetView(SquidDisplayView view) {
         throw std::invalid_argument("표시 카메라/viewport 오류");
     view_=view;
 }
+// 타입 번호가 같아도 다른 표의 플래그/발자국으로 공간을 쓰는 연결을 구성 전에 거부한다.
+void SquidDisplay::ValidateFrameBinding(OriginalEdition edition,std::span<const RiftTypeRecord> types) const {
+    if (edition!=edition_ || types.size()!=types_.size()) throw std::invalid_argument("프레임 표시 판본/타입 목록 불일치");
+    // 표시 레이어/유효성 및 공간 재등록이 사용하는 타입 필드를 비교한다.
+    for (std::size_t i=0;i<types.size();++i) {
+        const auto& a=types[i];const auto& b=types_[i];
+        if (a.flags1!=b.flags1 || a.flags2!=b.flags2 || a.maxHitPoints!=b.maxHitPoints || a.footX!=b.footX || a.footY!=b.footY)
+            throw std::invalid_argument("프레임 표시 타입 내용 불일치");
+    }
+}
+// 해시 단계용 헤더는 표시 억제와 무관하게 읽는다. shadow/abstract 물리 프레임 순서도 그대로 유지한다.
+std::array<float,2> SquidDisplay::FrameSize(OriginalEdition edition,std::span<const std::uint8_t> bytes,int frame) const {
+    if (edition!=edition_) throw std::invalid_argument("프레임 SHP 판본 불일치");
+    const auto type=Read(bytes,10,1);
+    if (type>=shapes_.size()) throw std::out_of_range("프레임 SHP 타입 번호 범위 오류");
+    const auto& shape=shapes_[type];
+    if (!shape.loaded || (edition_==OriginalEdition::Patch1078 && !PatchFrameValid(type,frame)))
+        throw std::out_of_range("프레임 SHP 조회 실패(00419850 frameCheck)");
+    if (frame<0 || static_cast<std::size_t>(frame)>=shape.frames.size()) throw std::out_of_range("프레임 SHP 물리 범위 오류");
+    const auto& header=shape.frames[static_cast<std::size_t>(frame)];
+    return {header.cellWidth,header.cellHeight};
+}
 // 패치의 일반 경로에도 남아 있는 frameCheck 조건이다. debug/assert UI는 복원 범위 밖이다.
 bool SquidDisplay::PatchFrameValid(std::size_t type,int frame) const {
     const auto& record=types_[type]; const auto& shape=shapes_[type];

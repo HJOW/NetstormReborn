@@ -1,6 +1,7 @@
 // 공통 update88/update8c의 raw 프레임·SHP 경계 갱신. 클라이언트 장치에는 의존하지 않는다.
 #pragma once
 #include "o/RiftType.h"
+#include <array>
 #include <cstdint>
 #include <span>
 #include <vector>
@@ -9,6 +10,7 @@ namespace netstorm::o {
 struct SquidDisplayRect { int left{},top{},right{},bottom{}; }; // right/bottom 제외.
 struct SquidDisplayFrame {
     std::int16_t width{},height{},hotspotX{},hotspotY{}; // SHP 프레임 앞 12바이트의 signed short.
+    float cellWidth{},cellHeight{}; // 같은 프레임 앞 36바이트의 float. 픽셀 크기와 별도로 해시 단계에 쓴다.
 };
 struct SquidDisplayShape {
     int frameCount{}; // 타입 +0x114의 클러스터 수. 그림자/abstract 레이어를 포함하지 않는다.
@@ -35,6 +37,10 @@ public:
         std::span<const SquidDisplayShape> shapes,SquidDisplaySink& sink,SquidDisplayView view);
     // 카메라/viewport 변경은 호출자의 전체 갱신과 함께 사용한다.
     void SetView(SquidDisplayView view);
+    // 프레임 연결부가 같은 판본/타입 목록을 쓰는지 구성 때 확인한다.
+    void ValidateFrameBinding(OriginalEdition edition,std::span<const RiftTypeRecord> types) const;
+    // 00419850의 현재 프레임 검사와 실제 SHP 칸 크기 공급이다. CD의 표 밖 메모리 접근은 예외로 거부한다.
+    std::array<float,2> FrameSize(OriginalEdition edition,std::span<const std::uint8_t> bytes,int frame) const;
     // 공간 쓰기 전에 미지원 vtable·물리 프레임 범위·판본 불일치를 확인한다.
     void Validate(OriginalEdition edition,std::span<const std::uint8_t> bytes,std::uint32_t flags) const;
     // 공통 가상 메서드의 프레임/extra 비트를 읽어 변경 표에 등록한다.

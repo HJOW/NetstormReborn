@@ -36,6 +36,7 @@ target_sources(netstorm PRIVATE
     SquidPop.cpp SquidPop.h PopVtables.inc
     SquidDisplay.cpp SquidDisplay.h
     SquidFrame.cpp SquidFrame.h
+    SquidFrameBinding.cpp SquidFrameBinding.h
     SquidPostPop.cpp SquidPostPop.h
     SpStore.cpp SpStore.h
     SquidReward.cpp SquidReward.h

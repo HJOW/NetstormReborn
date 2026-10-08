@@ -25,7 +25,7 @@ std::vector<o::SquidDisplayShape> SquidRenderer::Shapes(const GameAssets& assets
         // 그림자/abstract 레이어와 공유 프레임도 물리 테이블 순서를 보존한다.
         for (std::size_t frame=0;frame<assets.Shapes().Blocks()[asset.block].frames.size();++frame) {
             const auto m=assets.Shapes().SquidMetrics(asset.block,frame);
-            shape.frames.push_back({m.width,m.height,m.hotspotX,m.hotspotY});
+            shape.frames.push_back({m.width,m.height,m.hotspotX,m.hotspotY,m.cellWidth,m.cellHeight});
         }
     }
     return shapes;

@@ -55,3 +55,7 @@ Release 경고/오류 0, CTest 내부 **120개 검사·실패 0**. raw→실제 
 ## 다음 작업
 
 후속에서 [공통 postPop 비용·공급/소유자별 작업장 목록·통계·noGraph 리셋](cpp-postpop-reconstruction.md)을 일부 완료했다. 남은 표면 그래프/영역 통지·AI/배치 선택·생산 계산/SP 차감·dirty/grid 변경, 표면 부착 프레임/이웃 통지와 섬/다리/건물/파생 가상 효과, 삭제/의존 객체/참조 수명과 SID 소진/Take 목록을 이어 복원한다. 이후 raw SID·표면·실제 프레임을 GameWorld에 연결하고 다리 배치/Construction·경제·전투·AI·승패를 진행한다.
+
+## 2026-10-08 프레임·표시 후속 통합
+
+[SquidFrame 표시 갱신·실제 SHP 크기 공급](cpp-frame-display-integration.md)을 `MakeSquidFrameHooks`로 실제 Update/Unpop/Pop·Renderer에 연결했다. 전체 콘솔 검사는 251개·실패 0, 실제 두 판본 SHP 물리 6,950개 메타데이터·범위 안 크기 공급 6,946개 확인이 통과했다. Graph 활성·GUI raw 스프라이트 동기화·애니메이션 프로세스는 후속이며 위 독립 기계어 검증 범위는 그대로다.

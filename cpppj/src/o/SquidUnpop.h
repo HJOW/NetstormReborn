@@ -17,6 +17,9 @@ public:
     static bool SupportsDisplay(OriginalEdition edition,std::uint32_t vtable,std::uint32_t flags);
     // Factory와 같은 풀을 사용하는지 확인하여 서로 다른 수명 상태의 혼용을 막는다.
     const SidPool& Pool() const;
+    // 프레임 변경의 옛 영역 제거가 같은 풀/표시 대상을 쓰는지 확인한다.
+    void ValidateFrameBinding(const SidPool& pool,const SquidDisplay& display,const SquidHash& hash,
+        std::span<const std::uint8_t> spots) const;
     // 삭제 Graph가 이 Unpop과 같은 해시/spot을 사용하는지 확인한다.
     void ValidateGraph(const RawGraph& graph) const;
 private:

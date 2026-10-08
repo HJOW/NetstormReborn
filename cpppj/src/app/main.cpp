@@ -14,6 +14,7 @@
 #include <string_view>
 #include <vector>
 #include "app/InspectView.h"
+#include "app/FrameBindingInspect.h"
 #include "client/ClientMain.h"
 #include "client/GameAssets.h"
 #include "client/SquidRenderer.h"
@@ -47,6 +48,7 @@ void PrintBuildInfo() {
     std::printf("  --inspect-data <game-dir>\n  --read-archive <tarc> <entry>\n  --dump-archive <tarc>\n  --read-game <game-dir> <entry>\n");
     std::printf("  --config <file> <key>\n  --translate-game <game-dir> <language-number> <original-text>\n");
     std::printf("  --inspect-assets <game-dir> [--cd]\n  --dump-assets <game-dir> [--cd]\n");
+    std::printf("  --inspect-frame-binding <game-dir> [--cd]\n");
     std::printf("  --export-frame <game-dir> <type> <cluster> <layer> <output.bmp> [--cd]\n");
     std::printf("  --config-dump <game-dir> [--cd]\n  --config-get <game-dir> <key> [--cd]\n");
     std::printf("  --config-spec <game-dir> <key> [arg1 [arg2 [arg3]]] [--cd]\n");
@@ -728,6 +730,9 @@ int main(int argc, char** argv) {
         if ((argc == 3 || argc == 4) && command == "--inspect-bridges") {
             const auto edition = Edition(argc, argv, 3);
             InspectBridges(LoadAssets(argv[2], edition), edition); return 0;
+        }
+        if ((argc == 3 || argc == 4) && command == "--inspect-frame-binding") {
+            netstorm::app::InspectFrameBinding(argv[2],Edition(argc,argv,3));return 0;
         }
         if ((argc == 7 || argc == 8) && command == "--export-frame") {
             const auto assets = LoadAssets(argv[2], Edition(argc, argv, 7));

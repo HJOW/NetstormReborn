@@ -1,6 +1,6 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
-> 최종 갱신: 2026-10-08 (**cpppj 1차 기준 10.78. 섬 삭제→지연 낙하→다리 끝 칸 변환→연결 객체 정리의 실제 raw 콘솔 통합 완료.** Release 경고/오류 0·CTest 내부 **246개·실패 0**(60.27초), 관련 근거 감사 **7종 모두 통과**. 새 기계어 관찰 없음·누적 제한 x86 **131,542개 유지**. 다음은 **SquidFrame→SquidDisplay 표시 갱신 및 실제 SHP 크기 공급**. GUI raw GameWorld·Graph 활성 통합·Kernel↔게임 루프·실제 낙하/파편/소리·건설/경제/전투/승패는 남았으며 미션 완주는 불가능하다. 원본 게임/복사본·클론 창 실행·커밋/푸시 없음. cpppj·공통 인계는 이 문서, dotnetpj 인계는 LEFT_JOBS.dotnetpj.md를 따른다.)
+> 최종 갱신: 2026-10-08 (**cpppj 1차 기준 10.78. SquidFrame 표시 갱신과 실제 SHP 크기 공급 완료.** Release 경고/오류 0·CTest 내부 **251개·실패 0**(57.52초), 관련 근거 감사 **4종 모두 통과**. 실제 두 판본 SHP 물리 **6,950개**/크기 공급 **6,946개** 확인·부분 Draw/Present 통과. 새 독립 x86 입력 없음·누적 제한 x86 **131,542개 유지**. 다음은 **Graph 활성 상태의 끝 칸 생성/삭제/Pop·받침 생성 통합**. GUI raw GameWorld·Kernel↔게임 루프·실제 낙하/파편/소리·건설/경제/전투/승패는 남았으며 미션 완주는 불가능하다. 원본 게임/복사본·클론 창 실행·커밋/푸시 없음. cpppj·공통 인계는 이 문서, dotnetpj 인계는 LEFT_JOBS.dotnetpj.md를 따른다.)
 > **마지막 디컴파일 수행 PC(AGENTS.md 2026-10-08 추가 규칙): `VM-W11-CODEX` (IP 10.0.0.17), 2026-10-08.** 이 PC에서 한 것: 세 판본 기본 Ghidra 프로젝트 위의 읽기 전용 내보내기 전체(`tools/ghidra/export_functions.ps1 -All`과 새 목록 `bridgeconnect`·`setframe`·`islandlifecycle`·`regiongraph`·`pop`·`display`·`postpop`·`graph`·`lifecycle`·`islandpostpop`), 정밀 디컴파일(`tools/ghidra/refine_all.ps1`, 10.78·CD). 결과는 Git 제외 `extracted/`에 있어 **다른 PC에서 cpppj/디컴파일 분석을 이어가려면 그 PC에서 다시 만들어야 한다**([절차](docs/exe/ghidra-exports.md)). 10.62·10.82(V10/V12) 판본은 이 PC에서 디컴파일하지 않았다.
 > 프로젝트 목표(AGENTS.md): 원본 NetStorm: Islands at War 를 디컴파일/분석하여 클론 코딩하고,
 > **Windows 10/11** 과 **GUI 환경의 Linux** 에서 동작하며 **여러 언어를 지원**하는 게임을 만든다.
@@ -15,6 +15,18 @@
 
 ---
 
+## 2026-10-08 ✅ 완료: SquidFrame 표시 갱신·실제 SHP 크기 공급 (VM-W11-CODEX)
+
+- [x] **지침/호스트:** AGENTS.md·LEFT_JOBS.md·LEFT_JOBS.dotnetpj.md를 읽고 직전 다음 구현 (1)을 진행했다. 현재 `VM-W11-Codex`와 마지막 디컴파일 PC `VM-W11-CODEX`가 일치한다. **마지막 디컴파일 수행 PC: VM-W11-CODEX, 2026-10-08(유지).** 같은 PC의 기존 함수 내보내기를 읽었고 새 디컴파일·원본 게임/복사본·클론 창 실행 없음. 원본 파일·AGENTS.md·dotnetpj·dotnet 인계는 변경하지 않았고 커밋/푸시하지 않았다.
+- [x] **실제 연결:** [`SquidFrameBinding`](cpppj/src/o/SquidFrameBinding.h)의 `MakeSquidFrameHooks`로 실제 SHP 칸 크기 공급→SquidDisplay의 old/new Update→일반 Unpop/Pop 표시 갱신을 연결했다. `SquidRenderer::Shapes`가 기존 픽셀 크기/hotspot에 칸 크기 float 두 개를 함께 보존한다. 판본/타입 내용·풀/표시/해시/spot 공유를 구성 때 검사한다. 현재 프레임 기준의 원본 단계 계산/재등록 지연은 유지한다. [범위·재현](docs/exe/cpp-frame-display-integration.md).
+- [x] **범위/표시 분기:** 패치 `00419850`의 logical/shadow 두 배 범위·SHP 유무·해제 흔적 검사를 크기 공급에 사용했다. CD에는 logical 검사를 추가하지 않고 물리 배열 밖 접근을 거부한다. 두 판본의 old/new 픽셀·해시 이동·그림자·선택 표식·alternate 갱신·같은 프레임 반복·전체 갱신 억제를 검사했다. 잘못된 현재 프레임/미연결 표시/다른 풀·타입·공간도 확인한다.
+- [x] **실제 자산 읽기 전용:** 새 `--inspect-frame-binding` 콘솔 명령으로 10.78 자산 116타입/물리 **3,783개**/크기 공급 **3,779개**, CD 101타입/물리 **3,167개**/크기 공급 **3,167개** 통과. 합계 물리 **6,950개**/크기 공급 **6,946개**다. 패치 logical 범위 밖 물리 4개는 메타데이터만 검사했다. 실제 연결 객체의 프레임 변경과 같은 프레임 alternate 변경은 각 판본에서 영역 전달 4회→부분 Draw/Present 1영역으로 이어진다.
+- [x] **검증:** x64 Release 경고/오류 0·전체 콘솔 CTest 내부 **251개·실패 0**(기존 246 + 새 5, 테스트 57.48초·전체 57.52초). 관련 감사 display/setframe/pop/unpop **4종 모두 통과**. 최초 선택 표식 기대값의 좌우 확장 계산 2건을 수정한 뒤 전체 회귀 통과. 새 독립 기계어 입력은 없으며 누적 제한 x86 **131,542개 유지**다. 로그 `extracted/build-frame-display.log`·`extracted/ctest-frame-display.log`·`extracted/frame-binding-originals.log`·`extracted/frame-binding-cd.log`·`extracted/audit-frame-display.json`.
+- [ ] **다음 구현:** (1) Graph 활성 상태의 끝 칸 생성/삭제/Pop 및 받침 생성 통합. 이번 실제 SHP/표시 훅을 재사용하고 Graph 번호/표/깊이·공통 장부·공간 쓰기를 함께 확인한다. (2) raw GameWorld/GUI와 Kernel 프레임·게임 시각 연결. 그 뒤 애니메이션 프로세스·walker 낙하·파편·소리·배치·건설·경제·전투·승패.
+- [ ] **장시간 검사/남은 범위:** 기존 프레임 지정 6개·섬 삭제 훅 5개 변이 검사(약 40분), noIsland/삭제 분배기/표시 연결부 변이 검사는 인계한다. 테스트 포함 15분 이상 작업을 인계하라는 기존 사용자 지침을 유지한다. 이번 통합은 Graph 비활성·공통 표시 override 범위다. 원본 SHP 검사는 C++ 자료 전달/표시 영역 검증이며 새 x86 독립 대조나 GUI raw 스프라이트 동기화 검사가 아니다.
+
+---
+
 ## 2026-10-08 ✅ 완료: 섬 삭제·다리 지연 낙하·연결 객체 정리 콘솔 통합 (VM-W11-CODEX)
 
 - [x] **착수/호스트:** AGENTS.md·LEFT_JOBS.md·LEFT_JOBS.dotnetpj.md를 읽고 직전 다음 구현 (1)을 진행했다. 현재 `VM-W11-Codex`는 마지막 디컴파일 PC `VM-W11-CODEX`와 일치해 같은 PC의 기존 내보내기를 사용했다. **마지막 디컴파일 수행 PC: VM-W11-CODEX, 2026-10-08(기존 기록 유지).** 새 내보내기·디컴파일·원본 게임/복사본·클론 창 실행 없음. AGENTS.md·원본 파일·dotnetpj·dotnet 인계는 변경하지 않았고 커밋/푸시하지 않았다.
@@ -22,7 +34,8 @@
 - [x] **실제 raw 통합:** Factory/Pop으로 noIsland 9칸→받침/종유석 생성→K 다리와 연결 객체 생성→받침 실제 삭제→payload 7196의 Regular 예약→Kernel 다음 프레임→O 끝 프레임 56 새 다리 생성/옛 다리 삭제→dead 참조에 따라 연결 객체 삭제→실행 중 ProcessForm 정리까지 연결했다. 소유자/수명/부모 단어/0x10 비트·해시/spot·비용/통계·SID 여유 수·삭제/등록 깊이를 검사한다.
 - [x] **분기/표면:** 10.78/CD 각각 정상 교체·고립 삭제·hard 유지·flags `0x1000` 보존·noIsland 삭제의 walker 낙하 분배를 확인했다. hard의 예약/연결은 유지되며 후속 실제 부모 삭제가 둘을 정리한다. 받침만 삭제한 단계에서는 표면 9칸과 종유석이 남는다. 포괄적인 섬 제거 명령/실제 낙하 몸체는 후속이다.
 - [x] **빌드/검증:** x64 Release 경고/오류 0·콘솔 CTest 내부 **246개·실패 0**(기존 240 + 새 6, 테스트 60.22초·전체 60.27초). 관련 감사 7종(bridgeeffects/event/connect·islandlifecycle/postpop·setframe·process) 모두 통과. 새 독립 기계어 관찰 없음, 누적 제한 x86 **131,542개 유지**. 최초 SID 기대값의 받침 반납 누락을 수정한 뒤 최종 전체 검사가 통과했다. 로그 `extracted/build-surface-lifecycle.log`·`extracted/ctest-surface-lifecycle.log`·`extracted/audit-surface-lifecycle.json`.
-- [ ] **다음 구현:** (1) `SquidFrame` 표시 콜백→실제 `SquidDisplay::Update`, 실제 SHP 크기 공급. (2) Graph 활성 상태의 끝 칸 생성/삭제/Pop 및 받침 생성 통합. (3) raw GameWorld/GUI와 Kernel 프레임·게임 시각 연결. 그 뒤 walker 낙하·파편·소리·배치·건설·경제·전투·승패.
+- [x] **후속 완료:** SquidFrame 표시 콜백과 실제 SHP 크기 공급은 위 최신 기록에서 완료했다.
+- [ ] **다음 구현:** (1) Graph 활성 상태의 끝 칸 생성/삭제/Pop 및 받침 생성 통합. (2) raw GameWorld/GUI와 Kernel 프레임·게임 시각 연결. 그 뒤 walker 낙하·파편·소리·배치·건설·경제·전투·승패.
 - [ ] **장시간 검사:** 기존 프레임 지정 6개·섬 삭제 훅 5개 변이 검사(약 40분), noIsland/새 분배기 변이 검사는 인계한다. 테스트 포함 15분 이상 작업을 다음 작업으로 인계하라는 기존 사용자 지침을 유지한다. Graph 비활성·합성 SHP/비다리 프레임·표시/소리/보상 기록 훅 범위이며 GUI에서 이번 raw 흐름을 확인한 것은 아니다.
 
 ---

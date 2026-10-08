@@ -26,6 +26,7 @@ add_executable(netstorm_tests
     IslandPostPopTests.cpp
     SurfaceLifecycleTests.cpp
     SetFrameTests.cpp
+    FrameDisplayTests.cpp
     OwnerTests.cpp
     RawFinderTests.cpp
     NeighborTests.cpp
