@@ -2,7 +2,7 @@
 
 2026-10-09. **마지막 디컴파일 수행 PC: `HJOW-Athlon`, 2026-10-09.** AGENTS.md·두 인계 문서·cpppj 내부 문서를 읽고 현재/마지막 호스트 일치를 확인했다. 새 `playeranchor` 목록 14/15/15개를 같은 PC에서 읽기 전용으로 내보냈다. 원본 게임/복사본·클론 창·OS는 실행하지 않았다.
 
-[`RawPlayerPlacementAnchor`](../../cpppj/src/o/RawPlayerPlacementAnchor.h)은 앞 단계의 필수 Player 조회 경계를 실제 후보 수집·거리 선택·그래프·종속 조회로 채운다. 공통 `SquidPostPopState.ownerFactories`는 기존 소유자 지정/공통 postPop 장부와 공유한다. **별도 추가 목록 `0055a70c`/CD `005670e0`는 공통 factories 목록과 다른 자료**이므로 별도 `SquidPostPopList`로 받는다. 이 추가 목록의 전체 생성/삭제 수명 연결은 후속이다.
+[`RawPlayerPlacementAnchor`](../../cpppj/src/o/RawPlayerPlacementAnchor.h)은 앞 단계의 필수 Player 조회 경계를 실제 후보 수집·거리 선택·그래프·종속 조회로 채운다. 공통 `SquidPostPopState.ownerFactories`는 기존 소유자 지정/공통 postPop 장부와 공유한다. **별도 추가 목록 `0055a70c`/CD `005670e0`는 공통 factories 목록과 다른 자료**이므로 별도 `SquidPostPopList`로 받는다. 후속 [outpost 등록/삭제 준비 접두](cpp-outpost-lifecycle-reconstruction.md)를 복원해 같은 추가 목록의 변화가 실제 Player 조회에 반영됨을 검사했다. 지역 소유 투표·작업장 부모·미션 목록 수명과 실제 맵 연결은 후속이다.
 
 | 몸체 | 10.78 | CD·추가 10.37 |
 |---|---|---|
@@ -42,7 +42,7 @@ Player·거리 선택/실제 sqrt helper·그래프·현재 타입 flags·contai
 
 ## 다음 단계와 재현
 
-후속 [실제 주변 표면 finder/권한 누적](cpp-canon-surrounding-reconstruction.md)은 완료했다. 다음은 최종 표면 소유 관계·특수 지역·거부 조건과 별도 추가 목록의 공간 수명 연결이다. 이어 사제 Pop·보호막 생성/회복 예약·Carrier 상태 검사, raw GUI·건설·경제·전투·승패를 진행한다. **전체 MayPlace와 실제 미션 완주는 아직 미완료**다. 여러 판본 실제 자산 전수·창/픽셀·최대 지도 회귀는 계속 인계한다.
+후속 [실제 주변 권한](cpp-canon-surrounding-reconstruction.md)·[최종 관계](cpp-canon-relations-reconstruction.md)·[전체 MayPlace 제한 대조](cpp-canon-mayplace-reconstruction.md)와 [outpost 추가 목록 접두](cpp-outpost-lifecycle-reconstruction.md)를 완료했다. 다음은 지역 소유 투표·작업장 postPop/Regular·미션 목록 수명과 실제 맵/raw 일반 Pop/삭제 연결이다. 이어 사제 Pop·보호막 생성/회복 예약·Carrier 상태 검사, raw GUI·건설·경제·전투·승패를 진행한다. **전체 MayPlace의 제한 원본 대조는 완료했으며 실제 미션 완주는 미완료**다. 여러 판본 실제 자산 전수·창/픽셀·최대 지도 회귀는 계속 인계한다.
 
 ```powershell
 tools/ghidra/export_functions.ps1 -Name playeranchor

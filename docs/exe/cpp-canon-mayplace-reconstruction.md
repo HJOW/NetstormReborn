@@ -39,4 +39,4 @@ python -X utf8 tools/cpp_canonmayplace_smoke.py
 
 최종 검증 결과와 시간은 [LEFT_JOBS.md](../../LEFT_JOBS.md)의 이번 완료 항목을 따른다. 로그는 `extracted/canonmayplace-export.log`, `canonmayplace-oracle-final.log`, `canonmayplace-build-final.log`, `canonmayplace-ctest-final.log`, `canonmayplace-audits-final.log`, `canonmayplace-assets.log`와 `cpp-canonmayplace-assets-report.json`이다.
 
-다음은 **실제 저장 맵/raw 세계·공간 장부·Player 별도 추가 목록의 생성/삭제 수명 연결**이다. 이어 사제 Pop·보호막 생성/회복 예약·Carrier 상태 검사와 GUI 건설·경제·전투·승패가 남았다. 전체 함수의 제한 입력 대조 완료를 자산 전수·미션 완주·플레이 가능한 게임 완성으로 해석하지 않는다. 여러 판본 자산 전수·장시간 변이·최대 지도·창/픽셀 회귀·0 발자국/비정상 입력 전수는 후속이다.
+후속 [outpost의 두 목록 등록/삭제 준비 접두](cpp-outpost-lifecycle-reconstruction.md)를 복원하고 실제 Player 조회에 연결했다. 다음은 **지역 소유 투표·작업장 postPop/Regular·미션 목록 확보/해제와 실제 저장 맵/raw 세계의 일반 Pop/삭제 연결**이다. 이어 사제 Pop·보호막 생성/회복 예약·Carrier 상태 검사와 GUI 건설·경제·전투·승패가 남았다. 전체 함수의 제한 입력 대조 완료를 자산 전수·미션 완주·플레이 가능한 게임 완성으로 해석하지 않는다. 여러 판본 자산 전수·장시간 변이·최대 지도·창/픽셀 회귀·0 발자국/비정상 입력 전수는 후속이다.

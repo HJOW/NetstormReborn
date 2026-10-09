@@ -1,0 +1,74 @@
+{
+  "total": 2304,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-09",
+  "controls": [
+    639,
+    895
+  ],
+  "os_calls": 0,
+  "editions": {
+    "originals": {
+      "cases": 768,
+      "returns": 1536,
+      "native_calls": {
+        "004557c0": 768,
+        "00414450": 576,
+        "00455840": 768,
+        "0040ea00": 768
+      },
+      "substitutions": {
+        "R": 672,
+        "B": 1536
+      },
+      "assertions": 0
+    },
+    "originalCD": {
+      "cases": 768,
+      "returns": 1536,
+      "native_calls": {
+        "0047b680": 768,
+        "0047b790": 768
+      },
+      "substitutions": {
+        "R": 672,
+        "B": 1536
+      },
+      "assertions": 0
+    },
+    "original1037": {
+      "cases": 768,
+      "returns": 1536,
+      "native_calls": {
+        "0047b680": 768,
+        "0047b790": 768
+      },
+      "substitutions": {
+        "R": 672,
+        "B": 1536
+      },
+      "assertions": 0
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/outpostlifecycle-x86.tsv": "2c67fc95cb21da2c1d3bf3bfb2d355f9c2c7c8d3085b7250b06ce421570f9b51",
+    "extracted/outpostlifecycle/original1037/creation.c": "1e55b693cda890c22d5c1fd48915d3c986e690aa02801647dae9762b1b66d614",
+    "extracted/outpostlifecycle/original1037/functions.tsv": "d87399ece013b98f0ecbe9cd5e04391839196a082a5fc67f7baf6b1add4fcbf8",
+    "extracted/outpostlifecycle/originalCD/creation.c": "1e55b693cda890c22d5c1fd48915d3c986e690aa02801647dae9762b1b66d614",
+    "extracted/outpostlifecycle/originalCD/functions.tsv": "d87399ece013b98f0ecbe9cd5e04391839196a082a5fc67f7baf6b1add4fcbf8",
+    "extracted/outpostlifecycle/originals/creation.c": "79aae8b13cc31f8238051deed1ec41d84f09dc75d07326d7b605f2560abc15e9",
+    "extracted/outpostlifecycle/originals/functions.tsv": "18a990788038e0093dd96c768943edf7de6e468f0dbbd3b24f21fb1116cd5804",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_damageablepredestroy_oracle.py": "b6bd591b17b886224e81b9d35dc863f12dea570c67aabf8a66280c7361785e75",
+    "tools/decomp_outpostlifecycle_oracle.py": "dc9d9c0f1a3faffc5a4346f9f73dcf805c53e5a35f9749f69188f0e117a8a565",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/ghidra/outpostlifecycle-functions.json": "d1102d9c3c6d2186633a7c119bf91c0d73b99ce388453388795d4c59d42a3645"
+  },
+  "limits": [
+    "outpost 두 목록 등록/삭제 wrapper와 Array helper 정상 반환/ABI/x87",
+    "지역 소유 투표·작업장 postPop·Damageable preDestroy 몸체는 명시 대체",
+    "합성 목록/raw 입력; 일반 Pop/실제 맵/전체 파생 삭제/GUI/게임 미검증"
+  ]
+}

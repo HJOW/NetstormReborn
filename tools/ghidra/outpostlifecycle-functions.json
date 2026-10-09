@@ -1,0 +1,19 @@
+{
+  "description": "outpost postPop/preDestroy의 배치 추가 목록·거리 선택 목록 등록/삭제와 실제 Array helper. 원본 외부 지역 통지/작업장 base는 별도 경계다.",
+  "editions": {
+    "originals": [
+      "004557c0",
+      "00455840",
+      "00414450",
+      "0040ea00"
+    ],
+    "originalCD": [
+      "0047b680",
+      "0047b790"
+    ],
+    "original1037": [
+      "0047b680",
+      "0047b790"
+    ]
+  }
+}

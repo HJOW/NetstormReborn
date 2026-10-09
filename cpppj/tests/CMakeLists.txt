@@ -21,6 +21,7 @@ add_executable(netstorm_tests
     CanonPlacementSurroundingTests.cpp
     CanonPlacementRelationsTests.cpp
     CanonMayPlaceTests.cpp
+    OutpostLifecycleTests.cpp
     ConfigOracleTests.cpp
     ConfigInterfaceTests.cpp
     FortTests.cpp
@@ -224,3 +225,6 @@ set_source_files_properties(CanonPlacementRelationsTests.cpp PROPERTIES COMPILE_
 # 전체 MayPlace 정상 반환의 독립 관찰을 새 파이프라인 검사에서만 읽는다.
 set_source_files_properties(CanonMayPlaceTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CANONMAYPLACE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/canonmayplace-x86.tsv\"")
+# outpost의 두 별도 목록 수명 접두 관찰을 새 검사 소스에서만 읽는다.
+set_source_files_properties(OutpostLifecycleTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_OUTPOSTLIFECYCLE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/outpostlifecycle-x86.tsv\"")
