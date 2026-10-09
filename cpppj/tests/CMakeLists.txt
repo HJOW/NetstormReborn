@@ -22,6 +22,7 @@ add_executable(netstorm_tests
     CanonPlacementRelationsTests.cpp
     CanonMayPlaceTests.cpp
     OutpostLifecycleTests.cpp
+    RegionOwnershipTests.cpp
     ConfigOracleTests.cpp
     ConfigInterfaceTests.cpp
     FortTests.cpp
@@ -228,3 +229,6 @@ set_source_files_properties(CanonMayPlaceTests.cpp PROPERTIES COMPILE_DEFINITION
 # outpost의 두 별도 목록 수명 접두 관찰을 새 검사 소스에서만 읽는다.
 set_source_files_properties(OutpostLifecycleTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_OUTPOSTLIFECYCLE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/outpostlifecycle-x86.tsv\"")
+# 지역 소유 투표 전체 wrapper의 독립 기계어 관찰 경로다.
+set_source_files_properties(RegionOwnershipTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_REGIONOWNERSHIP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/regionownership-x86.tsv\"")

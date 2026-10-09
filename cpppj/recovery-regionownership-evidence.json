@@ -1,0 +1,93 @@
+{
+  "total": 1320,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-09",
+  "controls": [
+    639,
+    895
+  ],
+  "os_calls": 0,
+  "editions": {
+    "originals": {
+      "cases": 440,
+      "returns": 880,
+      "native_calls": {
+        "00455380": 1168,
+        "00455160": 1152,
+        "00454560": 816,
+        "0046ebd0": 1168,
+        "0049a840": 14112,
+        "004e49c0": 54944,
+        "0046f530": 13152,
+        "0041d7a0": 13152,
+        "004acda0": 11960,
+        "004ac970": 984
+      },
+      "substitutions": {
+        "P": 2336,
+        "C": 984
+      },
+      "assertions": 0
+    },
+    "originalCD": {
+      "cases": 440,
+      "returns": 880,
+      "native_calls": {
+        "0047b3c0": 880,
+        "004bd070": 880,
+        "004f161c": 36128,
+        "004bdc50": 8592,
+        "00440a80": 8592,
+        "004bdbf0": 8592,
+        "004acaa0": 6840,
+        "004abae0": 6840
+      },
+      "substitutions": {
+        "P": 880,
+        "C": 0
+      },
+      "assertions": 0
+    },
+    "original1037": {
+      "cases": 440,
+      "returns": 880,
+      "native_calls": {
+        "0047b3c0": 880,
+        "004bd070": 880,
+        "004f161c": 36128,
+        "004bdc50": 8592,
+        "00440a80": 8592,
+        "004bdbf0": 8592,
+        "004acaa0": 6840,
+        "004abae0": 6840
+      },
+      "substitutions": {
+        "P": 880,
+        "C": 0
+      },
+      "assertions": 0
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/regionownership-x86.tsv": "57a4147390431cb044e46724e492571816cafbd7864e173d3d0c12a27a5e2a6d",
+    "extracted/regionownership/original1037/creation.c": "4a4a7a877cebeec7ca16ef1e2dc3a3968096ca79cafeee22040ed0b041e3d934",
+    "extracted/regionownership/original1037/functions.tsv": "ee73cb1bbd5c005df75871395b4fe12b20a5dd3701214c3b7c553e2bbe58788c",
+    "extracted/regionownership/originalCD/creation.c": "4a4a7a877cebeec7ca16ef1e2dc3a3968096ca79cafeee22040ed0b041e3d934",
+    "extracted/regionownership/originalCD/functions.tsv": "ee73cb1bbd5c005df75871395b4fe12b20a5dd3701214c3b7c553e2bbe58788c",
+    "extracted/regionownership/originals/creation.c": "97153b27683289af766a8228238718b77b1e4b43abb88ec9d1459504a3a260da",
+    "extracted/regionownership/originals/functions.tsv": "af3ef5cda38393e40ff28f99d5fa6accb2761650a1ccfa1c893b2ae641d6ebde",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_damageablepredestroy_oracle.py": "b6bd591b17b886224e81b9d35dc863f12dea570c67aabf8a66280c7361785e75",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/decomp_regionownership_oracle.py": "b5775bde51b102aba4a9b407f4d694c2804408f541457d86b42e6e412ee6748b",
+    "tools/ghidra/regionownership-functions.json": "9451e497898928726508e705afdddb7a8474fe4cfce6de3998f66d2aee541f8b"
+  },
+  "limits": [
+    "실제 지역 소유 wrapper·getter·Array clear·drawer 생성자 정상 반환/ABI/x87",
+    "지형 flood/도장 내부와 theammode 옵션 조회만 명시 대체; 외부 도장 후 영향 지역 입력 제공",
+    "합성 타입 +0x98 테마/목록/지도/raw; 실제 옵션/지형 변경/미션 수명/전체 Pop/GUI 미검증",
+    "revision은 투표 wrapper 자체 증가만 관찰하며 미실행 도장 몸체 내부 증가는 포함하지 않음"
+  ]
+}

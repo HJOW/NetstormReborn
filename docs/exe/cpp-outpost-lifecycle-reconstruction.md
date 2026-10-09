@@ -25,7 +25,7 @@ preDestroy는 extra `& 9`가 0이면 flags와 무관하게 두 목록의 **모�
 
 알려진 잘못된 count/필수 훅/동일 목록 연결을 검사하고 부모의 순수 사전 검증을 쓰기 전에 수행한다. 실제 읽지 않는 목록은 abstract 객체/두 번째 Pop에서 미리 검사하지 않는다. 지역 콜백의 실패나 변경 이후 모든 예외를 되돌리는 트랜잭션을 주장하지 않는다.
 
-[`MakeOutpostDamageablePreDestroyHooks`](../../cpppj/src/o/RawOutpostLifecycle.cpp)는 부모 삭제 경계를 기존 [Damageable 접두](cpp-damageable-predestroy-reconstruction.md)에 연결하고 다른 풀의 참조를 거부한다. **지역 소유 투표와 작업장 postPop 본문은 필수 외부 경계**다. 이 단계에서 작업장 Regular·영역 소유 투표·실제 outpost 일반 Pop 전체를 복원한 것은 아니다.
+[`MakeOutpostDamageablePreDestroyHooks`](../../cpppj/src/o/RawOutpostLifecycle.cpp)는 부모 삭제 경계를 기존 [Damageable 접두](cpp-damageable-predestroy-reconstruction.md)에 연결하고 다른 풀의 참조를 거부한다. **이 접두 단계의 원본 대조에서는 지역 소유 투표와 작업장 postPop 본문을 대체**했다. 후속 [지역 소유 투표](cpp-region-ownership-reconstruction.md)는 `MakeOutpostRegionOwnershipHooks`로 실제 모듈에 연결했다. 지형 flood/도장·작업장 postPop/Regular·실제 outpost 일반 Pop 전체는 남았다.
 
 ## 독립 원본 관찰과 C++ 연결 검사
 
@@ -49,4 +49,4 @@ ctest --test-dir cpppj/build -C Release --output-on-failure
 
 최종 검사 수/시간과 로그는 [LEFT_JOBS.md](../../LEFT_JOBS.md)의 이번 완료 항목을 따른다. 기존 fixture/감사 도구·보호 파일·AGENTS.md·dotnetpj를 수정하지 않았다.
 
-다음은 **지역 소유 투표·작업장 postPop 본문/Regular와 실제 저장 맵/raw 세계의 outpost 생성·삭제 경로 연결**이다. 전체 MayPlace는 제한 원본 대조까지 완료했지만, 실제 맵·비표면 raw 객체·공간/Player 장부 수명은 여전히 연결할 부분이 있다. 사제 Pop·보호막 생성/회복 예약·Carrier와 GUI 건설·경제·전투·승패도 남았다. 목록 접두 검증을 실제 게임/미션 완주로 해석하지 않는다. 자산 전수·장시간 변이·최대 지도·창/픽셀 회귀는 계속 인계한다.
+[지역 소유 투표](cpp-region-ownership-reconstruction.md)는 후속 단계에서 복원했다. 다음은 **지역 지형 flood/도장·작업장 postPop 본문/Regular와 실제 저장 맵/raw 세계의 outpost 생성·삭제 경로 연결**이다. 전체 MayPlace는 제한 원본 대조까지 완료했지만, 실제 맵·비표면 raw 객체·공간/Player 장부 수명은 여전히 연결할 부분이 있다. 사제 Pop·보호막 생성/회복 예약·Carrier와 GUI 건설·경제·전투·승패도 남았다. 목록 접두 검증을 실제 게임/미션 완주로 해석하지 않는다. 자산 전수·장시간 변이·최대 지도·창/픽셀 회귀는 계속 인계한다.
