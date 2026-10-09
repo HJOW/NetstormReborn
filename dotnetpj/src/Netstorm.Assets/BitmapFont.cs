@@ -20,17 +20,30 @@ public sealed class BitmapGlyph
     /// <summary>그릴 픽셀이 없는 빈 글리프인지.</summary>
     public bool IsBlank => Image == null;
 
+    /// <summary>
+    /// 글자를 놓는 점(줄의 왼쪽 위)에서 <see cref="Image"/> 의 왼쪽 끝까지의 가로 거리. 원본 출력(004a3430)은
+    /// 놓는 점에 이 값을 더한 곳에 모양을 그린다. 빈 글리프는 0 이다. 2026-10-10 추가 (UI 출력 연결).
+    /// </summary>
+    public int OffsetX { get; }
+
+    /// <summary>글자를 놓는 점(줄의 왼쪽 위)에서 <see cref="Image"/> 의 위쪽 끝까지의 세로 거리. 빈 글리프는 0 이다.</summary>
+    public int OffsetY { get; }
+
     /// <summary>글리프를 만든다.</summary>
     /// <param name="advance">측정 폭</param>
     /// <param name="bearing">ABC A</param>
     /// <param name="drawAdvance">그리기 전진 폭</param>
     /// <param name="image">해독된 모양 (빈 글리프는 null)</param>
-    internal BitmapGlyph(int advance, int bearing, int drawAdvance, IndexedImage? image)
+    /// <param name="offsetX">놓는 점에서 모양 왼쪽 끝까지의 거리 (VFX 프레임의 xmin)</param>
+    /// <param name="offsetY">놓는 점에서 모양 위쪽 끝까지의 거리 (VFX 프레임의 ymin)</param>
+    internal BitmapGlyph(int advance, int bearing, int drawAdvance, IndexedImage? image, int offsetX = 0, int offsetY = 0)
     {
         Advance = advance;
         Bearing = bearing;
         DrawAdvance = drawAdvance;
         Image = image;
+        OffsetX = offsetX;
+        OffsetY = offsetY;
     }
 }
 
@@ -74,6 +87,49 @@ public sealed class BitmapFont
     /// <param name="path">.chfnt 경로</param>
     public static BitmapFont Load(string path) => new(File.ReadAllBytes(path));
 
+    /// <summary>원본 글꼴 슬롯 수 (0~6, 2 는 쓰지 않는다).</summary>
+    public const int SlotCount = 7;
+
+    /// <summary>원본 UI 의 본문·버튼·목록 글꼴 슬롯 (Arial 14픽셀, 굵기 700).</summary>
+    public const int BodySlot = 0;
+
+    /// <summary>원본 UI 의 제목 글꼴 슬롯 (Arial 20픽셀, 굵기 700).</summary>
+    public const int TitleSlot = 3;
+
+    /// <summary>원본 도움말 본문의 보통 굵기 글꼴 슬롯 (Arial 14픽셀, 굵기 0).</summary>
+    public const int PlainSlot = 5;
+
+    /// <summary>원본의 작은 글꼴 슬롯 (Arial 12픽셀, 굵기 0).</summary>
+    public const int SmallSlot = 6;
+
+    /// <summary>슬롯별 CreateFontA 픽셀 높이 (원본 004a39f0, 슬롯 2 는 미사용이라 0).</summary>
+    private static readonly int[] SlotHeights = [14, 13, 0, 20, 48, 14, 12];
+
+    /// <summary>슬롯별 글꼴 굵기.</summary>
+    private static readonly int[] SlotWeights = [700, 0, 0, 700, 0, 0, 0];
+
+    /// <summary>
+    /// 원본 글꼴 슬롯의 캐시 파일 경로 (자료 폴더 기준, 예: <c>d/!Arial.normal.14.700.chfnt</c>).
+    /// 슬롯 1 은 Courier New, 나머지는 설정의 글꼴 이름(기본 Arial)을 쓴다. 사용법:
+    /// <c>resources.Files.TryReadAllBytes(BitmapFont.CachePath(BitmapFont.BodySlot))</c>.
+    /// </summary>
+    /// <param name="slot">글꼴 슬롯 (0·1·3·4·5·6)</param>
+    /// <param name="style">문맥 스타일 이름 (normal·italic·bold·strikeout·underline)</param>
+    /// <param name="face">글꼴 이름 (설정 fontFaceName, 기본 Arial)</param>
+    /// <remarks>
+    /// 슬롯 표와 파일 이름 규칙은 원본 004a39f0 (docs/exe/cpp-renderer-reconstruction.md, 기준 구현 cpppj/src/client/BitmapFont.cpp).
+    /// 2026-10-10 추가: 영어 UI 를 원본 글꼴로 그리기 위해 (LEFT_JOBS.dotnetpj.md 5-3).
+    /// </remarks>
+    public static string CachePath(int slot, string style = "normal", string face = "Arial")
+    {
+        if (slot < 0 || slot >= SlotCount || SlotHeights[slot] == 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(slot), slot, "원본 글꼴 슬롯은 0·1·3·4·5·6 입니다.");
+        }
+        string name = slot == 1 ? "Courier New" : face;
+        return $"d/!{name}.{style}.{SlotHeights[slot]}.{SlotWeights[slot]}.chfnt";
+    }
+
     /// <summary>메모리에 올린 파일 내용으로부터 만든다. 손상된 캐시는 거부한다.</summary>
     /// <param name="raw">.chfnt 전체 내용</param>
     public BitmapFont(byte[] raw)
@@ -107,6 +163,7 @@ public sealed class BitmapFont
                 throw new InvalidDataException($"비트맵 글리프 {c} 블록이 잘렸습니다.");
             }
             IndexedImage? image = null;
+            int offsetX = 0, offsetY = 0;
             if (size != 0)
             {
                 // 한 프레임짜리 VFX 블록 하나를 기존 판독기로 읽는다.
@@ -120,9 +177,11 @@ public sealed class BitmapFont
                 if (!frame.IsSpecial)
                 {
                     image = block.Decode(frame);
+                    offsetX = frame.XMin;
+                    offsetY = frame.YMin;
                 }
             }
-            glyphs[c] = new BitmapGlyph(advance, bearing, drawAdvance, image);
+            glyphs[c] = new BitmapGlyph(advance, bearing, drawAdvance, image, offsetX, offsetY);
             position += size;
         }
         // 남는 바이트가 있으면 거부한다.

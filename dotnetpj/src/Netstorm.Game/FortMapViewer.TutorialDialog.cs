@@ -14,10 +14,13 @@ namespace Netstorm.Game;
 /// </summary>
 internal sealed partial class FortMapViewer
 {
-    /// <summary>본문의 줄 높이.</summary>
-    private const int TutorialLineHeight = 16;
-    /// <summary>문단 사이에 더하는 간격.</summary>
-    private const int TutorialParagraphGap = 12;
+    /// <summary>
+    /// 본문의 줄 높이. 글꼴에 따라 다르다: 원본 글꼴(영어) 14, D2Coding(한국어) 16 (<see cref="OriginalUiSkin.LineHeight"/>).
+    /// 2026-10-10: 고정값 16 에서 글꼴을 따르도록 바꿨다 (원본 브리핑의 줄 간격은 14픽셀이다).
+    /// </summary>
+    private int TutorialLineHeight => _uiSkin.LineHeight;
+    /// <summary>문단 사이에 더하는 간격. 원본 글꼴(영어)은 빈 줄 하나(14), D2Coding(한국어)은 12.</summary>
+    private int TutorialParagraphGap => _uiSkin.ParagraphGap;
     /// <summary>스크롤 키가 한 번에 이동하는 본문 높이.</summary>
     private const int TutorialPageScroll = 180;
     /// <summary>글 사이 그림과 그 뒤 글자 사이의 간격(논리 픽셀).</summary>
@@ -185,8 +188,23 @@ internal sealed partial class FortMapViewer
     /// <summary>창 위쪽에 따로 그릴 제목. 제목이 본문 흐름 안에 있는 안내(그림 옆 제목)는 빈 문자열이다.</summary>
     private static string TutorialTitle(TutorialDialogContent content) => content.TitleInBody ? "" : content.Title;
 
-    /// <summary>버튼의 번역된 문구 폭에 맞춰 원본의 낮은 버튼 너비를 계산한다.</summary>
-    private int TutorialButtonWidth(TutorialDialogButton button) => Math.Max(36, (int)Math.Ceiling(_uiSkin.Body.MeasureString(button.Label).X) + 12);
+    /// <summary>
+    /// 안내 창 하단 버튼 하나의 폭. 원본 글꼴(영어)에서는 원본처럼 **창의 모든 버튼이 같은 폭**(가장 긴 문구의 폭 + 11)이고,
+    /// D2Coding(한국어)에서는 버튼마다 자기 문구 폭 + 12 다.
+    /// </summary>
+    /// <param name="button">폭을 구할 버튼</param>
+    /// <remarks>
+    /// 원본 캡처 세 장의 버튼 테두리와 글자 위치로 확인했다: 브리핑 117 = "Review Knowledge" 106 + 11,
+    /// 승리·패배 창 99 = "Leave Missions" 88 + 11, 버튼 사이 16 (docs/dotnet-reconstruction-20261010.md). 2026-10-10 수정.
+    /// </remarks>
+    private int TutorialButtonWidth(TutorialDialogButton button)
+    {
+        if (_uiSkin.UsesOriginalFonts && _tutorialDialog?.Current is { } current)
+        {
+            return OriginalUiSkin.EqualButtonWidth(_uiSkin.Body, LocalizeCampaign(current).Buttons.Select(b => b.Label));
+        }
+        return Math.Max(36, (int)Math.Ceiling(_uiSkin.Body.MeasureString(button.Label).X) + 12);
+    }
 
     /// <summary>같은 번역·글꼴·간격으로 하단 버튼의 표시와 클릭 영역을 계산한다.</summary>
     private Rectangle TutorialButton(Rectangle panel, int count, int index)
@@ -269,7 +287,7 @@ internal sealed partial class FortMapViewer
     };
 
     /// <summary>본문 흐름 안의 제목 한 줄이 차지하는 높이 (제목 글꼴의 글자 높이 + 여백 2).</summary>
-    private static int TutorialHeadingHeight(SpriteFontBase headingFont) =>
+    private int TutorialHeadingHeight(SpriteFontBase headingFont) =>
         Math.Max(TutorialLineHeight, (int)Math.Ceiling(headingFont.MeasureString("Ag").Y) + 2);
 
     /// <summary>

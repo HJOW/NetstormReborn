@@ -18,8 +18,11 @@ internal sealed class MainMenuView : IDisposable
     private const int MainButtonWidth = 75;
     /// <summary>원본 메인 메뉴의 버튼 가로 간격.</summary>
     private const int MainButtonPitch = 79;
-    /// <summary>캠페인 설명의 작은 본문 줄 높이.</summary>
-    private const int DescriptionLineHeight = 16;
+    /// <summary>
+    /// 캠페인 설명·팁 본문의 줄 높이. 글꼴에 따라 다르다: 원본 글꼴(영어) 14, D2Coding(한국어) 16.
+    /// 2026-10-10: 고정값 16 에서 글꼴을 따르도록 바꿨다.
+    /// </summary>
+    private int DescriptionLineHeight => _skin.LineHeight;
     /// <summary>시작 팁 창의 폭 (2026-10-01 녹화 g5: 약 424px)</summary>
     private const int TipPanelWidth = 424;
     /// <summary>시작 팁 창의 높이 (녹화 g5: 약 158px)</summary>

@@ -35,18 +35,70 @@ internal sealed class OriginalUiSkin : IDisposable
     private static readonly Color DarkEdge = new(49, 44, 36);
     private readonly Texture2D _pixel;
     private readonly Dictionary<string, Texture2D> _frames = new(StringComparer.OrdinalIgnoreCase);
-    /// <summary>본문·버튼에 사용하는 작은 D2Coding 글꼴.</summary>
+    /// <summary>D2Coding(한국어 화면)으로 그릴 때의 본문 줄 높이.</summary>
+    private const int FallbackLineHeight = 16;
+    /// <summary>D2Coding(한국어 화면)으로 그릴 때 문단 사이에 더하는 간격.</summary>
+    private const int FallbackParagraphGap = 12;
+
+    /// <summary>본문·버튼·목록 행 글꼴. 영어 화면은 원본 Arial 14픽셀 굵은 글꼴(<see cref="OriginalFonts"/>), 한국어 화면은 D2Coding.</summary>
     public SpriteFontBase Body { get; }
-    /// <summary>대화상자 제목에 사용하는 D2Coding 글꼴.</summary>
+    /// <summary>
+    /// 도움말 본문의 보통 굵기 글꼴. 영어 화면은 원본 Arial 14픽셀 보통 글꼴, 한국어 화면은 <see cref="Body"/> 와 같은 D2Coding.
+    /// 2026-10-10 추가: 원본 도움말은 본문이 보통 굵기이고 굵은 글씨(&lt;b&gt;)만 <see cref="Body"/> 글꼴이다.
+    /// </summary>
+    public SpriteFontBase Plain { get; }
+    /// <summary>대화상자 제목 글꼴. 영어 화면은 원본 Arial 20픽셀 굵은 글꼴, 한국어 화면은 D2Coding.</summary>
     public SpriteFontBase Title { get; }
-    /// <summary>카드 이름·보조 정보에 사용하는 D2Coding 글꼴.</summary>
+    /// <summary>카드 이름·보조 정보 글꼴. 영어 화면은 원본 Arial 12픽셀 글꼴, 한국어 화면은 D2Coding.</summary>
     public SpriteFontBase Small { get; }
 
-    /// <summary>타입의 클러스터 이름으로 원본 UI 프레임을 찾아 팔레트를 적용한다.</summary>
+    /// <summary>본문을 원본 비트맵 글꼴로 그리는지 (언어가 영어이고 글꼴 캐시를 읽었을 때).</summary>
+    public bool UsesOriginalFonts => IsOriginal(Body);
+
+    /// <summary>
+    /// 본문 한 줄의 높이. 원본 글꼴이면 글꼴 높이 14(원본 브리핑의 줄 간격), D2Coding 이면 16.
+    /// 줄을 감아 그리는 화면(안내 창·캠페인 설명·팁)이 줄 위치를 정할 때 쓴다.
+    /// </summary>
+    public int LineHeight => UsesOriginalFonts ? Body.LineHeight : FallbackLineHeight;
+
+    /// <summary>문단 사이에 더하는 간격. 원본 글꼴이면 빈 줄 하나(14), D2Coding 이면 12.</summary>
+    public int ParagraphGap => UsesOriginalFonts ? Body.LineHeight : FallbackParagraphGap;
+
+    /// <summary>글꼴이 원본 비트맵 글꼴로 만든 것인지.</summary>
+    /// <param name="font">확인할 글꼴</param>
+    public static bool IsOriginal(SpriteFontBase font) => font.Tag is OriginalFontInfo;
+
+    /// <summary>원본 대화상자에서 버튼 폭이 가장 긴 문구의 폭보다 넓은 정도.</summary>
+    private const int EqualButtonPadding = 11;
+
+    /// <summary>원본 대화상자 버튼의 최소 폭 (짧은 문구 하나뿐일 때. 원본 근거가 없는 클론 값이다).</summary>
+    private const int EqualButtonMinimum = 36;
+
+    /// <summary>
+    /// 원본 대화상자의 버튼 폭: 한 창의 버튼은 모두 같은 폭이고 그 값은 가장 긴 문구의 폭 + 11 이다.
+    /// 원본 글꼴(영어 화면)로 그리는 창이 버튼을 나란히 놓을 때 쓴다. 버튼 사이 간격은 16 이다.
+    /// </summary>
+    /// <param name="font">버튼 글꼴</param>
+    /// <param name="labels">그 창의 버튼 문구 전부</param>
+    public static int EqualButtonWidth(SpriteFontBase font, IEnumerable<string> labels) =>
+        Math.Max(EqualButtonMinimum, labels.Select(label => (int)font.MeasureString(label).X).DefaultIfEmpty(0).Max() + EqualButtonPadding);
+
+    /// <summary>
+    /// 타입의 클러스터 이름으로 원본 UI 프레임을 찾아 팔레트를 적용하고 UI 글꼴을 연결한다.
+    /// 글꼴은 호출한 쪽이 언어에 맞게 고른다: 영어는 <see cref="OriginalFonts"/> 의 원본 글꼴, 한국어는 D2Coding.
+    /// </summary>
+    /// <param name="device">텍스처를 만들 그래픽 장치</param>
+    /// <param name="shapes">셰이프 데이터베이스</param>
+    /// <param name="palette">UI 프레임에 적용할 팔레트</param>
+    /// <param name="definition">fortGump 타입 정의</param>
+    /// <param name="body">본문·버튼 글꼴</param>
+    /// <param name="title">제목 글꼴</param>
+    /// <param name="small">작은 글꼴</param>
+    /// <param name="plain">도움말 본문의 보통 굵기 글꼴 (없으면 본문 글꼴)</param>
     public OriginalUiSkin(GraphicsDevice device, ShapeDatabase shapes, Palette palette, TypeDefinition definition,
-        SpriteFontBase body, SpriteFontBase title, SpriteFontBase small)
+        SpriteFontBase body, SpriteFontBase title, SpriteFontBase small, SpriteFontBase? plain = null)
     {
-        Body = body; Title = title; Small = small;
+        Body = body; Title = title; Small = small; Plain = plain ?? body;
         _pixel = new Texture2D(device, 1, 1);
         _pixel.SetData(new[] { Color.White });
         ShapeBlock? block = shapes.FindBlock("fortGump");
@@ -112,11 +164,21 @@ internal sealed class OriginalUiSkin : IDisposable
         batch.Draw(_pixel, new Rectangle(x, y + 1, width, 1), LightEdge);
     }
 
-    /// <summary>글자를 픽셀 좌표에 맞춰 1픽셀 검은 그림자와 함께 쓴다.</summary>
+    /// <summary>
+    /// 글자를 픽셀 좌표에 맞춰 오른쪽 아래 1픽셀의 검은 그림자와 함께 쓴다. 위치는 줄의 왼쪽 위다.
+    /// 원본 글꼴은 좌표를 정수로 내리고 그림자를 불투명한 검정으로 그린다 (원본 004a3430 의 그림자: 색 0, 이동 (1,1)).
+    /// </summary>
+    /// <param name="batch">스프라이트 배치</param>
+    /// <param name="font">글꼴</param>
+    /// <param name="text">문자열</param>
+    /// <param name="position">줄의 왼쪽 위</param>
+    /// <param name="color">글자 색 (없으면 흰색)</param>
     public static void Text(SpriteBatch batch, SpriteFontBase font, string text, Vector2 position, Color? color = null)
     {
-        position = new Vector2(MathF.Round(position.X), MathF.Round(position.Y));
-        batch.DrawString(font, text, position + Vector2.One, Color.Black * 0.9f);
+        bool original = IsOriginal(font);
+        position = original ? new Vector2(MathF.Floor(position.X), MathF.Floor(position.Y))
+            : new Vector2(MathF.Round(position.X), MathF.Round(position.Y));
+        batch.DrawString(font, text, position + Vector2.One, original ? Color.Black : Color.Black * 0.9f);
         batch.DrawString(font, text, position, color ?? Color.White);
     }
 
@@ -141,8 +203,18 @@ internal sealed class OriginalUiSkin : IDisposable
         Bevel(batch, area, pressed);
         SpriteFontBase font = Body.MeasureString(label).X > area.Width - 6 ? Small : Body;
         Vector2 size = font.MeasureString(label);
-        Text(batch, font, label, new Vector2(area.Center.X - size.X / 2 + (pressed ? 1 : 0),
-            area.Center.Y - size.Y / 2 + (pressed ? 1 : 0)), enabled ? Color.White : new Color(145, 141, 130));
+        int shift = pressed ? 1 : 0;
+        Color color = enabled ? Color.White : new Color(145, 141, 130);
+        if (IsOriginal(font))
+        {
+            // 원본 돌 버튼의 글자 위치: x + 1 + (폭 − 글자 폭) ÷ 2, y + (버튼 높이 − 글꼴 높이) ÷ 2 (정수 나눗셈).
+            // 가로의 +1 은 원본 메인 메뉴 캡처(screenShots/mainMenu.png)의 Campaign·Help·Options·Quit 글자 위치를 대어 확인했다
+            // (글자 폭이 짝수·홀수인 버튼 모두 1픽셀 오른쪽). cpppj UberGump 의 식에는 이 +1 이 없다.
+            Text(batch, font, label, new Vector2(area.X + 1 + (area.Width - (int)size.X) / 2 + shift,
+                area.Y + (area.Height - font.LineHeight) / 2 + shift), color);
+            return;
+        }
+        Text(batch, font, label, new Vector2(area.Center.X - size.X / 2 + shift, area.Center.Y - size.Y / 2 + shift), color);
     }
 
     /// <summary>원본의 작은 파란 원으로 선택·켜짐 상태를 표시한다.</summary>

@@ -101,6 +101,9 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     private FontSystem? _fonts;
     /// <summary>메뉴와 미션 창에서 공유하는 원본 돌 질감·장식·글꼴.</summary>
     private OriginalUiSkin? _uiSkin;
+
+    /// <summary>언어가 영어일 때 UI 가 쓰는 원본 비트맵 글꼴 (한국어이거나 캐시가 없으면 null).</summary>
+    private OriginalFonts? _originalFonts;
     private readonly List<SpriteAnimation> _animations = [];
     private readonly List<string> _statusLines = [];
     private int _frameCount;
@@ -319,8 +322,12 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         _audio = new AudioPlayer(dataDir, settings.SoundOn, settings.PlayMusic, settings.SoundVolume, settings.MusicVolume);
         _audio.WindNoise = settings.WindNoise;
         _audio.SetSpeakerSwap(settings.SpeakerSwap);
+        // 언어가 영어이면 UI 글자를 원본 비트맵 글꼴로 그린다 (2026-10-10 사용자 결정). 한국어이거나 캐시를 읽지 못하면 D2Coding 이다.
+        SpriteFontBase bodyFont = _fonts!.GetFont(BodyFontSize), titleFont = _fonts.GetFont(TitleFontSize), smallFont = _fonts.GetFont(SmallFontSize);
+        _originalFonts = resources.Language == GameLanguage.English
+            ? OriginalFonts.TryLoad(GraphicsDevice, resources, bodyFont, titleFont, smallFont) : null;
         _uiSkin = new OriginalUiSkin(GraphicsDevice, shapes, palette, resources.LoadTypes().Find("fortGump")!.Definition,
-            _fonts!.GetFont(BodyFontSize), _fonts.GetFont(TitleFontSize), _fonts.GetFont(SmallFontSize));
+            _originalFonts?.Body ?? bodyFont, _originalFonts?.Title ?? titleFont, _originalFonts?.Small ?? smallFont, _originalFonts?.Plain);
         if (_help != null) _helpWindow = new HelpWindow(GraphicsDevice, _uiSkin, resources, _help, shapes, palette)
         { SoundRequested = sound => _audio.PlaySound(sound) };
         _mainMenu = new MainMenuView(GraphicsDevice, resources, palette, _uiSkin, _display, _audio, PlayCampaign, Exit, OpenHelp);
@@ -699,9 +706,12 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
 
         SpriteFontBase title = _fonts!.GetFont(TitleFontSize);
         SpriteFontBase body = _fonts.GetFont(BodyFontSize);
+        // 게임 화면(맵·메뉴)에는 UI 글꼴(영어 = 원본 글꼴, 한국어 = D2Coding)을 넘기고, 개발용 화면은 D2Coding 을 그대로 쓴다.
+        SpriteFontBase uiBody = _uiSkin?.Body ?? body;
+        SpriteFontBase uiSmall = _uiSkin?.Small ?? _fonts.GetFont(SmallFontSize);
         if (_mapViewer != null)
         {
-            _mapViewer.Draw(batch, body, width, height, _display.Description, _fonts.GetFont(SmallFontSize));
+            _mapViewer.Draw(batch, uiBody, width, height, _display.Description, uiSmall);
         }
         else if (_spriteBrowser != null)
         {
@@ -709,7 +719,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         }
         else if (_mainMenu != null)
         {
-            _mainMenu.Draw(batch, body, _fonts.GetFont(SmallFontSize), width, height);
+            _mainMenu.Draw(batch, uiBody, uiSmall, width, height);
         }
         else
         {
@@ -745,7 +755,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
             batch.DrawString(body, "Esc: 종료 · F11: 전체화면 · F10: 와이드 처리 · F9: 해상도 높이 · F7: 가장자리 스크롤",
                 new Vector2(24, height - 40), Color.Gray);
         }
-        if (MissionOptionsOpen) _mainMenu?.Draw(batch, body, _fonts.GetFont(SmallFontSize), width, height);
+        if (MissionOptionsOpen) _mainMenu?.Draw(batch, uiBody, uiSmall, width, height);
         _helpWindow?.Draw(batch, width, height);
         if (_perf != null)
         {
@@ -847,6 +857,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
             _batch?.Dispose();
             _fonts?.Dispose();
             _uiSkin?.Dispose();
+            _originalFonts?.Dispose();
             _display.Dispose();
         }
         base.Dispose(disposing);

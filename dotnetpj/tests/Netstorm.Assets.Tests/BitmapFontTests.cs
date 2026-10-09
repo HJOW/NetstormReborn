@@ -92,6 +92,98 @@ public sealed class BitmapFontTests
         Assert.Equal(expected, font.MeasureBytes(word));
     }
 
+    /// <summary>
+    /// 원본 슬롯의 캐시 경로가 실제 파일을 가리키고, UI 가 쓰는 세 슬롯의 높이·어센트·디센트가 원본 값이다
+    /// (슬롯 0 본문 14/11/3, 슬롯 3 제목 19/15/4, 슬롯 6 작은 글자 12/9/3).
+    /// </summary>
+    /// <param name="slot">글꼴 슬롯</param>
+    /// <param name="path">기대하는 캐시 경로</param>
+    /// <param name="height">글꼴 높이</param>
+    /// <param name="ascent">기준선 위 높이</param>
+    /// <param name="descent">기준선 아래 높이</param>
+    [Theory]
+    [InlineData(BitmapFont.BodySlot, "d/!Arial.normal.14.700.chfnt", 14, 11, 3)]
+    [InlineData(BitmapFont.TitleSlot, "d/!Arial.normal.20.700.chfnt", 19, 15, 4)]
+    [InlineData(BitmapFont.SmallSlot, "d/!Arial.normal.12.0.chfnt", 12, 9, 3)]
+    [InlineData(1, "d/!Courier New.normal.13.0.chfnt", 12, 9, 3)]
+    public void CachePath_PointsAtOriginalSlotFiles(int slot, string path, int height, int ascent, int descent)
+    {
+        Assert.Equal(path, BitmapFont.CachePath(slot));
+        BitmapFont font = BitmapFont.Load(OriginalData.RequireFile(path));
+        Assert.Equal((height, ascent, descent), (font.Height, font.Ascent, font.Descent));
+        Assert.Equal("d/!Arial.italic.14.0.chfnt", BitmapFont.CachePath(5, "italic"));
+        Assert.Throws<ArgumentOutOfRangeException>(() => BitmapFont.CachePath(2));
+        Assert.Throws<ArgumentOutOfRangeException>(() => BitmapFont.CachePath(7));
+    }
+
+    /// <summary>
+    /// 캐시 18개 모두 측정 폭(첫 표)과 그리기 전진 폭(셋째 표)이 256글자에서 같고, 글리프 상자가 놓는 점의 오른쪽·아래에만 있으며
+    /// 글꼴 높이를 넘지 않는다. 화면 글꼴이 폭 표 하나로 재고 그려도 원본과 같다는 전제다.
+    /// </summary>
+    [Fact]
+    public void OriginalCaches_MeasureAndDrawAdvancesAgree()
+    {
+        // 18개 캐시를 경로 순서대로 본다.
+        foreach (string path in CacheFiles())
+        {
+            BitmapFont font = BitmapFont.Load(path);
+            // 캐시 안의 글리프를 코드 순서대로 본다.
+            foreach (BitmapGlyph glyph in font.Glyphs)
+            {
+                Assert.Equal(glyph.Advance, glyph.DrawAdvance);
+                Assert.True(glyph.OffsetX >= 0 && glyph.OffsetY >= 0);
+                if (glyph.Image is { } image) Assert.True(glyph.OffsetY + image.Height <= font.Height);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 아틀라스: 코드 32~255 의 칸이 겹치지 않고, 칸 높이가 줄 높이로 같으며, 칸 안의 글자 픽셀이 글리프 모양을 상자 위치에 놓은 것과 같다.
+    /// 문자열 폭(칸 전진 폭의 합)은 원본 측정과 같다.
+    /// </summary>
+    [Fact]
+    public void Atlas_PlacesGlyphsAtTheirBoxOffsets()
+    {
+        BitmapFont font = BitmapFont.Load(OriginalData.RequireFile(BitmapFont.CachePath(BitmapFont.BodySlot)));
+        var atlas = new BitmapFontAtlas(font);
+        Assert.Equal(14, atlas.LineHeight);
+        Assert.Equal(256 - BitmapFontAtlas.FirstCode, atlas.Cells.Count);
+        var claimed = new bool[atlas.Width * atlas.Height];
+        int ink = 0;
+        // 칸마다 영역이 겹치지 않는지와 글자 픽셀 위치를 확인한다.
+        foreach (BitmapFontCell cell in atlas.Cells)
+        {
+            BitmapGlyph glyph = font.Glyph(cell.Code);
+            Assert.Equal(atlas.LineHeight, cell.Height);
+            Assert.Equal(glyph.DrawAdvance, cell.Advance);
+            Assert.True(cell.X >= 0 && cell.Y >= 0 && cell.X + cell.Width <= atlas.Width && cell.Y + cell.Height <= atlas.Height);
+            // 칸의 행을 위에서부터 본다.
+            for (int y = 0; y < cell.Height; y++)
+            {
+                // 칸의 열을 왼쪽부터 본다.
+                for (int x = 0; x < cell.Width; x++)
+                {
+                    int index = (cell.Y + y) * atlas.Width + cell.X + x;
+                    Assert.False(claimed[index]);
+                    claimed[index] = true;
+                    bool expected = glyph.Image is { } image && x >= glyph.OffsetX && y >= glyph.OffsetY
+                        && x < glyph.OffsetX + image.Width && y < glyph.OffsetY + image.Height
+                        && image.Opaque[(y - glyph.OffsetY) * image.Width + x - glyph.OffsetX];
+                    Assert.Equal(expected, atlas.Coverage[index]);
+                    if (expected) ink++;
+                }
+            }
+        }
+        // 칸 밖에는 글자 픽셀이 없다.
+        Assert.Equal(ink, atlas.Coverage.Count(pixel => pixel));
+        Assert.True(ink > 0);
+        byte[] text = "Review Knowledge"u8.ToArray();
+        Assert.Equal(106, font.MeasureBytes(text));
+        Assert.Equal(106, text.Sum(code => atlas.Cells[code - BitmapFontAtlas.FirstCode].Advance));
+        Assert.Equal('A', atlas.Cells['A' - BitmapFontAtlas.FirstCode].Character);
+        Assert.Equal('€', atlas.Cells[0x80 - BitmapFontAtlas.FirstCode].Character);
+    }
+
     /// <summary>손상된 캐시는 거부한다 (원본은 GDI 로 다시 만든다).</summary>
     [Fact]
     public void RejectsCorruptCaches()
