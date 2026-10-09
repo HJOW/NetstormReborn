@@ -11,6 +11,7 @@ add_executable(netstorm_tests
     TypeHotspotTests.cpp
     CanonTypeDecoderTests.cpp
     CanonPixelShapeTests.cpp
+    CanonPlacementGeometryTests.cpp
     ConfigOracleTests.cpp
     ConfigInterfaceTests.cpp
     FortTests.cpp
@@ -182,3 +183,7 @@ set_source_files_properties(CanonTypeDecoderTests.cpp PROPERTIES COMPILE_DEFINIT
 # 일반/패턴 픽셀 모양의 독립 기계어 관찰 경로다.
 set_source_files_properties(CanonPixelShapeTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CANONSHAPE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/canonshape-x86.tsv\"")
+
+# 일반/패턴 전체 배치 모양의 독립 원본 관찰 경로다.
+set_source_files_properties(CanonPlacementGeometryTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CANONGEOMETRY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/canongeometry-x86.tsv\"")

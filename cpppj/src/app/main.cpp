@@ -52,6 +52,7 @@ void PrintBuildInfo() {
     std::printf("  --inspect-priest-assets <game-dir> [--cd]\n");
     std::printf("  --inspect-canon-patterns <game-dir> [--cd]\n");
     std::printf("  --inspect-canon-shapes <game-dir> [--cd]\n");
+    std::printf("  --inspect-canon-geometry <game-dir> [--cd]\n");
     std::printf("  --export-frame <game-dir> <type> <cluster> <layer> <output.bmp> [--cd]\n");
     std::printf("  --config-dump <game-dir> [--cd]\n  --config-get <game-dir> <key> [--cd]\n");
     std::printf("  --config-spec <game-dir> <key> [arg1 [arg2 [arg3]]] [--cd]\n");
@@ -750,6 +751,10 @@ int main(int argc, char** argv) {
         // 일반 자산과 특수 패턴의 픽셀 모양을 창 없이 읽기 전용으로 검사한다.
         if ((argc == 3 || argc == 4) && command == "--inspect-canon-shapes") {
             netstorm::app::InspectCanonPixelShapes(argv[2],Edition(argc,argv,3));return 0;
+        }
+        // 실제 타입/패턴의 배치 모양과 finder 인자를 읽기 전용 콘솔로 조회한다.
+        if ((argc == 3 || argc == 4) && command == "--inspect-canon-geometry") {
+            netstorm::app::InspectCanonPlacementGeometry(argv[2],Edition(argc,argv,3));return 0;
         }
         if ((argc == 3 || argc == 4) && command == "--inspect-canon-patterns") {
             netstorm::app::InspectCanonPatterns(argv[2],Edition(argc,argv,3));return 0;

@@ -4,6 +4,7 @@
 #include "client/PriestPlacementAssets.h"
 #include "o/CanonTypeDecoder.h"
 #include "o/RawCanonPixelShape.h"
+#include "o/RawCanonPlacementGeometry.h"
 #include "o/SquidFrameBinding.h"
 #include "o/SquidFactory.h"
 #include <algorithm>
@@ -118,6 +119,36 @@ void InspectCanonPixelShapes(const std::filesystem::path& root,o::OriginalEditio
         for (int index=0;index<kCounts[kind];++index)
             // 패턴의 argument는 프레임 번호가 아니라 패턴 표의 번호다.
             for (std::uint32_t direction=0;direction<8;direction+=2) output(type,static_cast<std::uint32_t>(index),direction);
+    }
+}
+// 일반 자산과 모든 특수 패턴의 모양 순회/현재 발자국 finder 사각형을 콘솔로 관찰한다.
+void InspectCanonPlacementGeometry(const std::filesystem::path& root,o::OriginalEdition edition) {
+    o::BaseFileSystem files(root);files.RegisterArchive(root/"netstorm.tarc");client::GameAssets assets(files,edition);client::PriestPlacementAssets data(assets);
+    o::SidPool pool(edition,32768,true);o::RawCanonPlacementGeometry geometry(pool,assets.TypeTable().Types(),data.frames,data.geometry);
+    // 특수 타입의 정상 패턴 개수다. 나머지 타입은 기본 프레임 한 칸 또는 빈 모양이다.
+    constexpr std::array<int,8> kCounts{68,26,2,1,1,1,1,1};
+    // 이 콘솔 검사는 모양 계산만 관찰한다. 지형/관계 판단은 호출하지 않는다.
+    const o::CanonPlacementGeometryHooks hooks{[](const o::CanonTypeQuery&) {},{},
+        [](const o::CanonTypeQuery&,const o::CanonPlacementCell&) { return true; },[](const o::CanonTypeQuery&) { return true; }};
+    // 같은 출력 형식으로 초기 범위와 각 유효 모양의 실제 입력을 보존한다.
+    const auto output=[&](std::uint32_t type,int argument,int direction) {
+        const o::CanonTypeQuery query{type,argument,direction,20.5f,21.25f,false};const auto area=geometry.Bounds(query);bool first=true;
+        std::printf("{\"type\":%u,\"argument\":%d,\"direction\":%d,\"bounds\":[%d,%d,%d,%d],\"cells\":[",type,argument,direction,area.left,area.top,area.right,area.bottom);
+        geometry.Inspect(query,[&](const o::CanonPlacementCell& cell) {
+            std::printf("%s[%d,%u,%u,%d,%u,%u,%u,%d,%d,%d,%d]",first ? "" : ",",cell.frame,std::bit_cast<std::uint32_t>(cell.x),std::bit_cast<std::uint32_t>(cell.y),cell.label,static_cast<unsigned>(cell.side),
+                std::bit_cast<std::uint32_t>(cell.snappedX),std::bit_cast<std::uint32_t>(cell.snappedY),cell.area.left,cell.area.top,cell.area.right,cell.area.bottom);first=false;return true;
+        },hooks);
+        std::printf("]}\n");
+    };
+    // 실제 타입 순서로 모든 자산을 검사하고 특수 타입은 전체 패턴/네 회전을 펼친다.
+    for (const auto& asset:assets.Types()) {
+        const auto type=static_cast<std::uint32_t>(o::kFirstAssetTypeNumber+asset.block);const auto found=std::find(data.geometry.patternTypes.begin(),data.geometry.patternTypes.end(),type);
+        if (found==data.geometry.patternTypes.end()) { output(type,static_cast<int>(type),0);continue; }
+        const auto kind=static_cast<std::size_t>(found-data.geometry.patternTypes.begin());
+        // 원본 정상 패턴 번호마다 CD도 허용하는 짝수 방향을 사용한다.
+        for (int index=0;index<kCounts[kind];++index)
+            // 각 회전의 칸 순서/사각형을 따로 기록한다.
+            for (int direction=0;direction<8;direction+=2) output(type,index,direction);
     }
 }
 // 각 출력 줄은 하나의 실제 타입/패턴/방향이며 원본 파일/GUI 상태를 바꾸지 않는다.

@@ -36,8 +36,8 @@ public:
     // 어댑터는 같은 풀/판본에만 연결한다.
     const SidPool& Pool() const;
 private:
-    // 현재 genus/패턴 전역을 검사하고 실제 decoder를 구성한다.
-    CanonDecoder Decode(const PriestPlacementQuery& query) const;
+    // 공통 계산기로 위임하기 전에 현재 사제 genus/비패턴 계약을 검사한다.
+    void CheckQuery(const PriestPlacementQuery& query) const;
     const SidPool& pool_;
     std::span<const RiftTypeRecord> types_;
     std::span<const PriestPlainCanonType> frames_;

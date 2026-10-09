@@ -1,0 +1,93 @@
+{
+  "total": 5967,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-09",
+  "controls": [
+    639,
+    895
+  ],
+  "os_calls": 0,
+  "editions": {
+    "originals": {
+      "cases": 3159,
+      "valid_cells": 12393,
+      "native_calls": {
+        "00425c20": 6318,
+        "0049a840": 37440,
+        "00425860": 31104,
+        "00425700": 34560,
+        "0049a940": 24318,
+        "00425b90": 6318,
+        "0049a900": 6318,
+        "004e49c0": 161352,
+        "00425c00": 24786,
+        "0041d770": 24786,
+        "00425830": 1710
+      },
+      "area_entries": 24786,
+      "finder_boundaries": 24786,
+      "assertions": 0
+    },
+    "originalCD": {
+      "cases": 1404,
+      "valid_cells": 5508,
+      "native_calls": {
+        "0041fcf0": 2808,
+        "0041feb0": 13824,
+        "0041fbb0": 15360,
+        "004442f0": 10808,
+        "004202e0": 2808,
+        "004442b0": 2808,
+        "004f161c": 71712,
+        "00420370": 11016,
+        "00440a50": 11016,
+        "0041fcc0": 760
+      },
+      "area_entries": 11016,
+      "finder_boundaries": 11016,
+      "assertions": 0
+    },
+    "original1037": {
+      "cases": 1404,
+      "valid_cells": 5508,
+      "native_calls": {
+        "0041fcf0": 2808,
+        "0041feb0": 13824,
+        "0041fbb0": 15360,
+        "004442f0": 10808,
+        "004202e0": 2808,
+        "004442b0": 2808,
+        "004f161c": 71712,
+        "00420370": 11016,
+        "00440a50": 11016,
+        "0041fcc0": 760
+      },
+      "area_entries": 11016,
+      "finder_boundaries": 11016,
+      "assertions": 0
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/canongeometry-x86.tsv": "a842473cbc5b493f75c3a6dfd262576f12af0acb9f75d498e03d07a90dcc3ae8",
+    "extracted/canongeometry/original1037/creation.c": "233168d5f71df070bd5c6ed0735a9b8bffd86ba13687b3630789fd281dd6a5b4",
+    "extracted/canongeometry/original1037/functions.tsv": "706e8b2df7185324d49f9020c9d40bc6416c3c30ceeedf123a208eb67fe2d521",
+    "extracted/canongeometry/originalCD/creation.c": "233168d5f71df070bd5c6ed0735a9b8bffd86ba13687b3630789fd281dd6a5b4",
+    "extracted/canongeometry/originalCD/functions.tsv": "706e8b2df7185324d49f9020c9d40bc6416c3c30ceeedf123a208eb67fe2d521",
+    "extracted/canongeometry/originals/creation.c": "102642e086dfac2f662522ab4f9d323231828c32fce2ec80b3d9681bf3c003e8",
+    "extracted/canongeometry/originals/functions.tsv": "b7d0e33a08f4939ef8f87aa9a7869d9c7550107d7177a85dec4e3445d894c763",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_canongeometry_oracle.py": "c140e79fcdb6e86e13551917cbea73fedd899ec304640298a8d69910cc8fa2b0",
+    "tools/decomp_canontype_oracle.py": "d04aabe29f5c9d5129431182836883356dec1a0669e2435eb253482c7c754a9f",
+    "tools/decomp_damageablepredestroy_oracle.py": "b6bd591b17b886224e81b9d35dc863f12dea570c67aabf8a66280c7361785e75",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/decomp_priestgeometry_oracle.py": "c8d62204fcd8ec2fcb86cc9842ca46e0d3cdfba3c9afce3e90f9caec8fedc9bc",
+    "tools/ghidra/canongeometry-functions.json": "1981276f8e22553c4b24b192f867ea9f7b2c2a84c7ffd45a7e5bd57c94acceeb"
+  },
+  "limits": [
+    "전체 decoder 생성/진행/Bounds/셀/검색/방향 getter 정상 반환/ABI/x87 대조",
+    "각 칸의 snap/CRT/충돌 사각형은 MayPlace 중간 구간에 실제 좌표/타입을 공급하고 finder 진입에서 관찰 종료",
+    "타입/코드/발자국은 분석 입력; 패턴 표는 실제 PE 데이터; 전체 MayPlace/finder/후보/지형/OS/게임 미실행"
+  ]
+}
