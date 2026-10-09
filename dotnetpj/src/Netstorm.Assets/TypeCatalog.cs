@@ -21,8 +21,20 @@ public static class TypeFlagBits
     /// <summary>플래그1: 내용물 목록 저장</summary>
     public const uint Container = 0x20000;
 
+    /// <summary>플래그1: 표면 오브젝트 (typeflags "surface"). 표면 번호 지도와 이웃 탐색(원본 004b1e80)의 대상이다.</summary>
+    public const uint Surface = 0x800;
+
+    /// <summary>플래그2: 섬 (typeflags "island")</summary>
+    public const uint Island = 0x2;
+
     /// <summary>플래그2: 다리 조각</summary>
     public const uint Bridge = 0x4;
+
+    /// <summary>플래그2: 폭탄 (typeflags "bomb")</summary>
+    public const uint Bomb = 0x100;
+
+    /// <summary>플래그2: 포대류 건물 (typeflags "emplacement"). 연결 판정(원본 00441e40)에서 프레임 글자를 'P' 로 만든다.</summary>
+    public const uint Emplacement = 0x40000;
 
     /// <summary>
     /// 플래그2: 놓기 막음(typeflags "dropBlocking"). 원본은 오브젝트 발자국 칸의 스폿 지도(Spot.cpp, 256×256 바이트)에

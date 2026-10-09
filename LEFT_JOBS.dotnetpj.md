@@ -1,8 +1,27 @@
 # LEFT_JOBS.dotnetpj — dotnetpj(C# + MonoGame) 작업 계획 및 인수인계
 
-> 최종 갱신: 2026-10-07 (호스트 `vm-debian-codex`, Debian 13 / .NET SDK 10.0.401). **사용자 요청으로 병행 개발 착수, 1~2단계의 자산 타입·자료 판독 범위 완료.** 원본 x86 14,615개 입력과 정적 C++ 타입 116개 대조. 최종 빌드·테스트 결과는 바로 아래 완료 절 참조. 게임·클론 창 실행 없음.
+> 최종 갱신: 2026-10-09 (호스트 `HJOW-X3D`, Windows 11 / .NET SDK 10.0.401). **3단계(다리·표면 계산) 완료, 4단계의 그래프·번호 할당기·점유 비트와 5-1 그리기 순서 비교는 계산·검증까지 완료(세션 미연결).** 원본 x86 대조 입력 누적 **48,639개**(이번 34,024개). Release 경고 0·오류 0, 테스트 **861개 통과**. 게임·클론 창 실행 없음, 디컴파일 없음. **사용자 결정(2026-10-09): 번호 할당기와 스캔 커서를 세션에 연결한다. 같은 지시로 코드는 아직 고치지 않았고 계획만 [4-5](#sid-session-plan)에 적었다.**
+> 이전 갱신: 2026-10-07 (호스트 `vm-debian-codex`, Debian 13 / .NET SDK 10.0.401). 사용자 요청으로 병행 개발 착수, 1~2단계의 자산 타입·자료 판독 범위 완료. 원본 x86 14,615개 입력과 정적 C++ 타입 116개 대조.
 > 이 문서는 [LEFT_JOBS.md](LEFT_JOBS.md) 맨 끝 "인수인계 문서 임시 분할" 지침에 따라 **dotnetpj 의 진행 상황과 인수인계만** 담는다. cpppj·디컴파일 기록은 LEFT_JOBS.md 에 적는다.
 > 2026-10-07 문서 분할 정리: 기존 dotnetpj 구현·검증·후속 과제와 구 기술 스택/계획은 [14절 이관 이력](#legacy-dotnet-history)에 보존했다. 원본 분석·자료·공용 도구는 LEFT_JOBS.md에 남기고 적용 범위를 보충했다. 이번 이관은 문서 작업이며 게임/창 실행·빌드/테스트는 하지 않았다.
+
+---
+
+## 2026-10-09 ✅ 완료 / ⏭ 부분 인계: 다리·표면 계산(3단계)과 그래프·번호·점유·그리기 순서 계산 (HJOW-X3D)
+
+- [x] **착수/조건:** 사용자 요청 "AGENTS.md·LEFT_JOBS.dotnetpj.md를 읽고 dotnetpj 더 진행"에 따라 아래 [ ] 다음 항목을 진행했다. 현재 PC `HJOW-X3D`는 마지막 디컴파일 PC(`HJOW-Athlon`)와 다르고 디컴파일을 하지 않기로 한 PC다(LEFT_JOBS.md 2026-09-30 사용자 지시). 그래서 **디컴파일 결과를 읽지 않고 커밋된 cpppj C++ 소스·분석 문서·x86 기대값 TSV만 썼다.** 원본 게임·복사본·클론 창 실행 없음. `cpppj/`·AGENTS.md·LEFT_JOBS.md·원본 파일 변경 없음, 커밋/푸시 없음.
+- [x] **기준선:** Release 빌드 경고 0·오류 0, 테스트 **825개 통과**(Assets 281 + Core 544). 10월 7일 기록과 같다.
+- [x] **3단계 완료(3-1~3-5):** 새 [`SurfaceFinder`](dotnetpj/src/Netstorm.Core/Bridges/SurfaceFinder.cs)(오브젝트 단위 이웃 탐색)·[`BridgeSurfaceRules`](dotnetpj/src/Netstorm.Core/Bridges/BridgeSurfaceRules.cs)(연결·열린 방향·붕괴 방문 목록)·[`BridgeDecayRules`](dotnetpj/src/Netstorm.Core/Bridges/BridgeDecayRules.cs)(수명 감소·프레임 전환·destroy 재정의·한 칸 처리·스캔 커서). 완료 기준의 **9,690개 입력 전부 일치**(Connect 3,016·Neighbor 125·Collect 309·Open 5,760·Life 480).
+- [x] **붕괴 스캔 반영(8절의 2026-10-07 확정 사항):** `bridgedecay-x86.tsv` **14,524개** 대조(Cell 4,241·Life 3,264·Destroy 1,152·Crack/Normal/Weaken/Restore 1,914·Init/Scan 3,953). Life 400개는 결과 수명 7 초과로 cpppj와 같이 예외로 거부한다. CD·10.37 Scan 행은 범위를 행에서 읽어 진행 규칙만 대조했다.
+- [x] **게임 코드 연결:** [`BridgeGrid`](dotnetpj/src/Netstorm.Core/Bridges/BridgeGrid.cs)의 한 칸 처리가 위 규칙을 그대로 쓴다. **바뀐 동작:** (a) 표면 수 5 이상인 그래프의 단단한 칸은 수명 0에서도 남는다(`004220f0`. 없애려는 시점의 그래프 크기로 판정한다 — 원본 destroy가 그 자리에서 그래프를 고치기 때문이며, 기대값은 destroy를 대체 실행해 이 순서까지는 x86 대조가 아니다), (b) 접합 칸 고리에 붙은 구동자는 아무것도 바꾸지 않는다(cpppj 정책), (c) 금 간 프레임이 없는 칸(P)은 수명만 준다 — 세션이 bridge 프레임 표를 격자에 넘긴다, (d) 월드 밖 칸은 이웃이 아니다, (e) 수명 7 초과는 예외. `ScanCell`·`OpenDirection`(방향 반환)을 공개했고 그래프 표면 수 공급자를 생성자에서 받는다. 기존 `BridgeGridTests`·원본 맵 회귀는 수정 없이 통과.
+- [x] **격자를 원본 기대값으로 재현:** Cell 행 가운데 격자가 표현할 수 있는 **2,692개**(서버·디버그 꺼짐·spot 없음)를 `BridgeGrid.ScanCell`로 재현해 없어진 칸/금 간 칸의 순서와 칸별 수명·프레임이 **전부 일치**. 여러 칸 섬 180개 포함. **3-2의 "섬 칸마다 이웃 하나라 이웃 수가 달라진다"는 우려는 직사각형 섬에서는 성립하지 않는다**(한 칸 다리는 직사각형 하나와 한 면에서만 닿는다). 남은 근사는 "어느 칸에 어떤 표면 오브젝트가 있는가"·그래프 크기(칸 수)·스캔 시각/순서다.
+- [x] **4단계 계산:** [`SurfaceGraph`](dotnetpj/src/Netstorm.Core/Bridges/SurfaceGraph.cs) `graph-x86.tsv` **2,560개**(표·스택 전체 Adler-32와 번호·상태), [`SidPool`](dotnetpj/src/Netstorm.Core/Simulation/SidPool.cs) `sid-x86.tsv` **3,168개**(머리/꼬리·카운터·삭제 기록 + **원본 풀 전체 바이트 체크섬** — 테스트가 번호별 값에서 원본 슬롯을 되살린다), [`SpotRules`](dotnetpj/src/Netstorm.Core/Rules/SpotRules.cs) `hash-x86.tsv` Genus 3,216·Level 605, [`DrawOrder`](dotnetpj/src/Netstorm.Core/Display/DrawOrder.cs) `renderer-x86.tsv` Order **261개**. 전부 일치. **모두 세션·점유 지도·뷰어에 연결하지 않은 계산이다.**
+- [x] **근거 수준이 낮은 부분:** `SurfaceGraph`의 삭제 준비(`Detach`)·전체 재구성(`Rebuild`)·표면 수 동률 선택은 x86 직접 대조가 없다(기대값이 원본 슬롯 바이트 입력이거나 해당 입력 없음). cpppj `GraphTests.cpp`의 단위 검사를 옮겨 **cpppj와 일치**까지만 확인했다.
+- [x] **판별력 확인:** 규칙을 일부러 틀리게 바꾸면(접합 글자 경계·단단한 칸 제거·최소 수명 조건·꼬리 연결·타입 보존·flood 순서·점유 좌표 보정·x 비교 방향) 해당 검사가 실패함을 확인하고 소스를 되돌렸다.
+- [x] **최종 검증:** Release 빌드 **경고 0·오류 0**, 전체 테스트 **861개 통과·실패/스킵 0**(Assets 281 + Core 580). 원본 x86 대조 입력 이번 **34,024개**, 누적 **48,639개**. [상세 기록](docs/dotnet-reconstruction-20261009.md), [core-rules.md](docs/core-rules.md)·[bridge-pieces.md](docs/exe/bridge-pieces.md) 8.2 갱신.
+- [ ] **사용자 결정 완료 → 작업 미착수(10절 4번):** 2026-10-09 사용자가 "번호 할당기와 스캔 커서를 세션에 연결한다"고 정했다. 같은 지시("지금 작업하지 말고 문서에만 반영")에 따라 **코드는 고치지 않았다.** 다음 작업자가 [4-5 절](#sid-session-plan)의 선행 확인과 단계대로 진행한다. 연결하면 스캔 시각/순서가 원본대로 되고 결정론 검사합과 관련 테스트 기대값이 함께 바뀐다. **다리 조각 생성(`00442c80`)의 할당 플래그는 디컴파일 확인이 필요해 이 PC(`HJOW-X3D`)에서 하지 못했다.**
+- [ ] **다음(헤드리스 가능):** 점유 지도 클래스(발자국 OR 등록·AND 해제, `spatial-x86.tsv`) → 4-4 postPop 집계 → 5-2 표시 경계(`display-x86.tsv` Bounds 368)·5-3 `.chfnt` 판독기·5-4 커서 표·5-5 타이틀 팔레트 비교 → 6단계 시작 값/본섬 마스크 회귀. 뷰어 정렬을 `zorder`로 바꾸는 5-1 첫 항목과 금 가는 소리의 원본 조건(`CrackSound`) 연결은 화면·소리 확인이 필요하다.
+- [ ] **cpppj 작업자에게 전달(이 문서에만 기록, cpppj 미수정):** `cpppj/tests/GraphTests.cpp`의 Setup 판독이 오브젝트 열 `v[10]`·`v[11]`을 죽음·매장으로 읽는데, `graph-x86.tsv`의 오브젝트는 11개 정수(0~10)이고 `tools/decomp_graph_oracle.py`의 `node` 순서는 죽음 9·매장 10이다. `v[11]`은 벡터 범위 밖 읽기이고 죽음 열은 읽히지 않는다. 결과가 맞는 것은 소속 정보의 상태가 0이어서로 보인다. C# 테스트는 죽음을 소속 정보의 dead 비트에서 읽었다.
 
 ---
 
@@ -16,7 +35,7 @@
 - [x] **정적 C++ 대조:** 순수 자료 소스만 임시 콘솔로 빌드해 클론 자산 타입 **116개의 두 플래그·깊이·비용·level·목록·해시 전부 일치**를 확인했다. x86 직접 기대값과 구분하여 `Fixtures/type-metadata-1078.tsv`에 출처 SHA를 남겼다. 재생성: `python3 dotnetpj/tools/export_cpp_reference.py`(g++ 필요, 원본/클론 게임 실행 없음).
 - [x] **패턴/SHP:** CanonDecoder의 다리 26개·영역 68개 전체 출력·기존 `BridgePiece.Cells`를 대조했다. JSON 기존 64모양 유지·변형/라벨/추가 4모양 보존. Squid 추가 헤더 36바이트를 읽고 **3,783개 참조** 전수 확인. VFX 내부 값과 표시 폭 3,711·높이 3,697·hotspot X 3,388·Y 3,434개가 달라 뷰어/클릭 판정 교체는 5-2에 남긴다. 기존 **465개 요새 전수 판독**도 통과했다.
 - [x] **최종 검증:** Release 빌드 **경고 0·오류 0**. 전체 테스트 **825개 통과·실패/스킵 0**(Assets 281 + Core 544). 원본 x86 **14,615개 입력 일치**, 정적 타입 116개 일치, 자료 재생성 도구 실행 성공, `git diff --check` 통과. 보호된 원본 7개 디렉터리의 **2,782개 파일 SHA·목록 동일**(수정/삭제/새 파일 0). `cpppj/`·AGENTS.md·LEFT_JOBS.md 변경 없음. 게임·클론 창 검사는 하지 않았다.
-- [ ] **다음:** 3-1~3-5의 객체 단위 연결/이웃/열린 방향/수명/붕괴 방문 목록(월드와 분리한 라이브러리) → 4단계 Graph/점유/SID → 5-1·5-2 표시 순서/경계. 전체 188타입 표·SID 실제 월드 연결·소유자 적용은 후속이다. cpppj가 미복원한 8절 항목과 영어 글꼴 정책은 이번에 구현하지 않았다.
+- [x] **다음(2026-10-09 진행, 위 절 참조):** 3-1~3-5의 객체 단위 연결/이웃/열린 방향/수명/붕괴 방문 목록(월드와 분리한 라이브러리) → 4단계 Graph/점유/SID → 5-1·5-2 표시 순서/경계. 5-2와 점유 지도 클래스·월드 연결은 남았다. 전체 188타입 표·SID 실제 월드 연결·소유자 적용은 후속이다. cpppj가 미복원한 8절 항목과 영어 글꼴 정책은 이번에 구현하지 않았다.
 
 ---
 
@@ -39,7 +58,7 @@ cpppj(원본 10.78 을 디컴파일해 C++ 로 복원하는 프로젝트)와 디
 1. **기준 판본은 10.78(`originals/Netstorm.exe`)이다.** CD 10.72(실행 파일 표시 10.37)·10.62·10.82(V10, V12)는 비교 자료다. 판본마다 다른 값은 패치 10.78 값을 쓴다 — 다리 가중치 합 287, 타입 188개, Sun Cannon `hpPerSec` 16, `manabolt` 8프레임, 선택 표시 위쪽 여유 15픽셀, 점유 충돌 시 조기 반환.
 2. **AGENTS.md 는 "dotnetpj — cpppj 완성 후 이를 분석하여 개발"로 적혀 있다.** 한편 LEFT_JOBS.md 끝의 분할 지침은 병행 작업을 전제로 한다. 그래서 이 문서는 "cpppj 에서 이미 확정돼 지금 반영해도 뒤집힐 가능성이 낮은 것"(1~6단계)과 "cpppj 가 더 진행돼야 하는 것"(8절)을 나눴다. **2026-10-07 사용자 요청으로 병행 착수했다.** 현재는 확정된 범위부터 진행한다(10절).
 3. **`DESKTOP-HJOW` 에서는 원본/복사본 게임 실행과 모든 창 검사가 금지다**(LEFT_JOBS.md 머리말의 사용자 지시). 이 PC 에서는 `dotnet build`·`dotnet test`(헤드리스)만 돌리고, `tools/clone_*_smoke.ps1` 처럼 클론 창을 띄우는 검사는 다른 PC 에 넘긴다. 다른 PC 에서도 원본 게임 실행은 AGENTS.md 의 확인 규칙을 따른다.
-4. 2026-10-07 착수 기준선은 단위 테스트 **803개 통과**(Assets 262 + Core 541)였다. 최신 결과는 이 문서 맨 위 완료 절에 있다.
+4. 2026-10-07 착수 기준선은 단위 테스트 **803개 통과**(Assets 262 + Core 541)였다. 2026-10-09 착수 기준선은 825개, 최종은 **861개**다. 최신 결과는 이 문서 맨 위 완료 절에 있다.
 5. 정밀 디컴파일(`extracted/refined/`)은 Git 제외라 이 PC 에 없다. 함수 본문을 직접 읽으려면 `tools/ghidra/refine_all.ps1`(약 20분)을 먼저 돌린다. 기본 디컴파일 `extracted/decomp/Netstorm.c` 는 이 PC 에 있다.
 
 ---
@@ -165,13 +184,13 @@ cpppj(원본 10.78 을 디컴파일해 C++ 로 복원하는 프로젝트)와 디
 
 [BridgeGrid.cs](dotnetpj/src/Netstorm.Core/Bridges/BridgeGrid.cs) 는 2026-09-30 에 원본 `004227e0`·`004218b0`·`004217f0` 을 칸 단위로 옮겼고 근사한 부분을 주석에 적어 두었다. cpppj 는 같은 함수들을 기계어로 대조했다([cpp-bridge-reconstruction.md](docs/exe/cpp-bridge-reconstruction.md), [cpp-surface-reconstruction.md](docs/exe/cpp-surface-reconstruction.md)). 기준 구현은 `cpppj/src/o/Bridge.cpp`·`SquidFinder.cpp` 다.
 
-- [ ] **3-1. 연결 판정 `00441e40` [x86: `surface-x86.tsv` `Connect` 3,016].** 짝수 방향은 프레임의 측면 글자, **홀수(대각) 방향은 변형 글자**를 본다. 타입 플래그 2 의 emplacement(`0x40000`)는 글자를 `P` 로 만든다. 다리·폭탄(`0x104`)과 섬·건물군(`0x1044202`)이 만나면 섬·건물 쪽을 `A`(사방)로 본다. 이 보정의 순서와 if/else 우선순위도 원본대로다. C# 은 "섬 칸은 늘 이어진다"로 근사한다(`NeighborsOf`, `SurfacesConnect`).
-- [ ] **3-2. 이웃 탐색 [x86: `Neighbor` 125].** 원본은 **표면 객체 단위**다. 같은 객체는 여러 칸에서 발견해도 한 번만 낸다. 후보의 기준점이 자기 사각형 안이면 제외하고, 죽음 비트와 후보 기준점의 spot 안쪽 비트 8 을 본다. 후보 중심 → 자기 중심의 네 방향을 고르며 절댓값이 같으면 세로가 먼저다. 1×1 은 북 → 서 → 자기 → 동 → 남 순서로 C# 의 `ScanOrder` 와 같다. C# 은 **섬 칸마다 이웃 하나**로 세므로 접합 칸이 같은 섬에 두 면으로 닿으면 이웃 수(`< 3`, `< 2` 판정)가 달라진다.
-- [ ] **3-3. 열린 방향 `00421770`·`004217f0` [x86: `Open` 5,760, 전체 방향은 패치판만].** 좌표에 `0.9999f`(비트 `3f7ff972`)를 더해 0 쪽으로 자른다. 지도 밖이나 번호 0 은 열린 것이다. B~E 는 두 번째, F~K 는 첫 번째 열린 방향을 만난 즉시 그 방향을 돌려주고, L·M·N·O 는 고정 방향 0·2·4·6, A·P 는 −1 이다. C# `HasOpenSide` 는 참/거짓만 계산한다. 반환 방향을 쓰는 후속(끝 칸 변환 등)을 위해 방향을 돌려주게 바꾼다.
-- [ ] **3-4. 수명 감소 `00421c30` [x86: `Life` 480, 첫 외부 효과 전 구간만].** 수명은 상태 단어의 비트 3~6(`0x78`)이다. Battle 모드에서 0 이 되면 **상태 단어를 그대로 두고** 제거를 예약하며, J·K 판자는 제거 플래그 `0x02000000` 을 넘긴다. C# `LowerTimeLeft` 는 결과가 같은 단순화다. 수명 7 초과 입력은 원본 디버그 검사 대상이므로 C# 도 거부한다.
-- [ ] **3-5. 붕괴 방문 목록 `004218b0` [x86: `Collect` 309].** 규칙은 C# `Walk` 와 같다(부모만 제외, 목록 용량 100, 목록이 차도 재귀는 계속, 경계에서 같은 번호의 모든 항목 제거). **고리 처리 정책이 다르다:** 원본은 접합 칸 고리에서 끝없이 재귀한다. cpppj 는 고리나 깊이 256 에서 "불완전, 붕괴 없음"으로 중단하고, C# 은 재귀 경로에 있는 칸을 건너뛰고 계속한다. 둘 다 새 코드의 안전 처리다. **cpppj 정책(중단, 수명 변화 없음)으로 맞춘다** — 불완전한 목록으로 수명을 바꾸지 않는 쪽이 원본에 없던 결과를 덜 만든다.
+- [x] **3-1. 연결 판정 `00441e40` [x86: `surface-x86.tsv` `Connect` 3,016].** (2026-10-09 `BridgeSurfaceRules.Connects`, 전부 일치) 짝수 방향은 프레임의 측면 글자, **홀수(대각) 방향은 변형 글자**를 본다. 타입 플래그 2 의 emplacement(`0x40000`)는 글자를 `P` 로 만든다. 다리·폭탄(`0x104`)과 섬·건물군(`0x1044202`)이 만나면 섬·건물 쪽을 `A`(사방)로 본다. 이 보정의 순서와 if/else 우선순위도 원본대로다. C# 은 "섬 칸은 늘 이어진다"로 근사한다(`NeighborsOf`, `SurfacesConnect`).
+- [x] **3-2. 이웃 탐색 [x86: `Neighbor` 125].** (2026-10-09 `SurfaceFinder.Neighbors`, 전부 일치. `BridgeGrid`는 칸 단위를 유지하되 직사각형 섬에서는 결과가 같음을 격자 재현 2,692개로 확인) 원본은 **표면 객체 단위**다. 같은 객체는 여러 칸에서 발견해도 한 번만 낸다. 후보의 기준점이 자기 사각형 안이면 제외하고, 죽음 비트와 후보 기준점의 spot 안쪽 비트 8 을 본다. 후보 중심 → 자기 중심의 네 방향을 고르며 절댓값이 같으면 세로가 먼저다. 1×1 은 북 → 서 → 자기 → 동 → 남 순서로 C# 의 `ScanOrder` 와 같다. C# 은 **섬 칸마다 이웃 하나**로 세므로 접합 칸이 같은 섬에 두 면으로 닿으면 이웃 수(`< 3`, `< 2` 판정)가 달라진다.
+- [x] **3-3. 열린 방향 `00421770`·`004217f0` [x86: `Open` 5,760, 전체 방향은 패치판만].** (2026-10-09 `BridgeSurfaceRules.IsOpen`·`OpenDirection`, `BridgeGrid.OpenDirection`이 방향을 돌려준다) 좌표에 `0.9999f`(비트 `3f7ff972`)를 더해 0 쪽으로 자른다. 지도 밖이나 번호 0 은 열린 것이다. B~E 는 두 번째, F~K 는 첫 번째 열린 방향을 만난 즉시 그 방향을 돌려주고, L·M·N·O 는 고정 방향 0·2·4·6, A·P 는 −1 이다. C# `HasOpenSide` 는 참/거짓만 계산한다. 반환 방향을 쓰는 후속(끝 칸 변환 등)을 위해 방향을 돌려주게 바꾼다.
+- [x] **3-4. 수명 감소 `00421c30` [x86: `Life` 480, 첫 외부 효과 전 구간만].** (2026-10-09 `BridgeDecayRules.ReduceLife`·`ApplyLife`, `BridgeGrid.LowerTimeLeft`가 사용. 수명 7 초과 거부) 수명은 상태 단어의 비트 3~6(`0x78`)이다. Battle 모드에서 0 이 되면 **상태 단어를 그대로 두고** 제거를 예약하며, J·K 판자는 제거 플래그 `0x02000000` 을 넘긴다. C# `LowerTimeLeft` 는 결과가 같은 단순화다. 수명 7 초과 입력은 원본 디버그 검사 대상이므로 C# 도 거부한다.
+- [x] **3-5. 붕괴 방문 목록 `004218b0` [x86: `Collect` 309].** (2026-10-09 `BridgeSurfaceRules.CollectDecay`, cpppj 정책으로 맞춤. `BridgeGrid`가 `ISurfaceLinks` 어댑터로 같은 함수를 쓴다) 규칙은 C# `Walk` 와 같다(부모만 제외, 목록 용량 100, 목록이 차도 재귀는 계속, 경계에서 같은 번호의 모든 항목 제거). **고리 처리 정책이 다르다:** 원본은 접합 칸 고리에서 끝없이 재귀한다. cpppj 는 고리나 깊이 256 에서 "불완전, 붕괴 없음"으로 중단하고, C# 은 재귀 경로에 있는 칸을 건너뛰고 계속한다. 둘 다 새 코드의 안전 처리다. **cpppj 정책(중단, 수명 변화 없음)으로 맞춘다** — 불완전한 목록으로 수명을 바꾸지 않는 쪽이 원본에 없던 결과를 덜 만든다.
 - [x] **3-6. 조각 추첨의 음수 입력.** 1-2 표 참고. `Draw` 가 음수를 원본처럼 처리하게 한다(실제 호출은 0~9999 라 게임 결과에는 영향이 없다).
-- [ ] **완료 기준:** 3-1~3-5 의 기대값(합 9,690개 입력)이 C# 테스트로 통과한다. 기존 `BridgeGridTests`·`BridgePieceTests` 와 원본 맵 회귀(`OriginalMaps_StoredBridgesMostlySurviveFiveMinutes`)가 통과하거나, 바뀐 수치의 이유가 기록된다.
+- [x] **완료 기준(2026-10-09 달성, 기존 테스트 수치 변화 없음):** 3-1~3-5 의 기대값(합 9,690개 입력)이 C# 테스트로 통과한다. 기존 `BridgeGridTests`·`BridgePieceTests` 와 원본 맵 회귀(`OriginalMaps_StoredBridgesMostlySurviveFiveMinutes`)가 통과하거나, 바뀐 수치의 이유가 기록된다.
 
 > 3-2 는 "섬이 어떤 표면 객체로 놓이는가"를 알아야 월드에 붙일 수 있다. cpppj 도 섬·지면·`noIsland`·받침의 실제 생성·등록을 아직 월드에 연결하지 않았다(8절). 이번 단계에서는 **객체 번호 지도와 spot 지도를 입력으로 받는 계산 함수**까지 만들고 기대값으로 검증한다. `BridgeGrid` 의 칸 단위 근사는 그때까지 유지한다.
 
@@ -192,8 +211,8 @@ cpppj(원본 10.78 을 디컴파일해 C++ 로 복원하는 프로젝트)와 디
 - 삭제 준비(`004637b0`, [cpp-graphremove-reconstruction.md](docs/exe/cpp-graphremove-reconstruction.md)): 남은 무리를 새 번호로 나누고 표면 수를 1(특수 타입은 9) 줄인다.
 - 주변 영역 무효화(`00462d40`)와 번호 소진 시 전역 재구성(`00463110`)은 [cpp-regiongraph-reconstruction.md](docs/exe/cpp-regiongraph-reconstruction.md)·[cpp-graphrebuild-reconstruction.md](docs/exe/cpp-graphrebuild-reconstruction.md)에 있다.
 
-- [ ] `Netstorm.Core` 에 그래프 표(할당·반납·감소·flood·등록·분할)를 추가하고 `graph-x86.tsv` 의 `Add`·`Flood`·`Remove`·`Free`·`Allocate` 각 512개로 검증한다. 기대값의 표·스택 열은 Adler-32 체크섬이므로 같은 체크섬을 계산해 비교한다.
-- [ ] 영역 무효화·분할·재구성은 `rawgraph`·`regiongraph`·`graphremove`·`graphlookup`·`graphrebuild`·`graphrecovery` 기대값이 raw 슬롯 바이트를 입력으로 삼는다. C# 이 raw 배치를 복제하지 않으므로 **이 파일들은 그대로 쓰기 어렵다.** 정수 스냅샷 수준의 `graph-x86.tsv` 까지를 이번 단계의 검증 범위로 한다.
+- [x] (2026-10-09 `Bridges/SurfaceGraph`, 2,560개 일치. 월드 미연결) `Netstorm.Core` 에 그래프 표(할당·반납·감소·flood·등록·분할)를 추가하고 `graph-x86.tsv` 의 `Add`·`Flood`·`Remove`·`Free`·`Allocate` 각 512개로 검증한다. 기대값의 표·스택 열은 Adler-32 체크섬이므로 같은 체크섬을 계산해 비교한다.
+- [ ] (2026-10-09: 삭제 준비 `Detach`·전체 재구성 `Rebuild`는 cpppj `Graph.cpp`에서 옮기고 cpppj 단위 검사로만 확인했다. 영역 무효화 `00462d40`은 옮기지 않았다) 영역 무효화·분할·재구성은 `rawgraph`·`regiongraph`·`graphremove`·`graphlookup`·`graphrebuild`·`graphrecovery` 기대값이 raw 슬롯 바이트를 입력으로 삼는다. C# 이 raw 배치를 복제하지 않으므로 **이 파일들은 그대로 쓰기 어렵다.** 정수 스냅샷 수준의 `graph-x86.tsv` 까지를 이번 단계의 검증 범위로 한다.
 
 ### 4-2. 오브젝트 번호(SID) 할당 순서 **[x86: `sid-x86.tsv` 3,168]**
 
@@ -205,9 +224,9 @@ cpppj(원본 10.78 을 디컴파일해 C++ 로 복원하는 프로젝트)와 디
 - 이 경로에는 세대 비트가 없다.
 - `bridge-pieces.md` 8.1 에 따르면 붕괴 스캔은 번호 15000~23001 을 훑는다. 서버 범위 + 예측 머리와 같다.
 
-- [ ] `Netstorm.Core` 에 번호 할당기(범위·FIFO·예약 꼬리·예측 커서)를 추가한다. `sid-x86.tsv` 는 raw 풀 체크섬을 비교하므로 그대로 쓰기 어렵다. 머리·꼬리·카운터 열만 비교하거나 `cpppj/tests/SidTests.cpp` 의 경계 검사를 C# 으로 옮긴다.
-- [ ] **확인 필요(디컴파일):** 싱글 플레이에서 다리 조각이 어느 범위(서버·예측)로 할당되는지. `Construction.cpp` `00442c80` 의 할당 플래그를 본다. 이것이 정해져야 `Sequence` 를 번호로 바꿀 수 있다.
-- [ ] 정해지면 `BattleMap.NextId()`(1부터 증가)와 `BridgeCellState.Sequence` 를 이 할당기로 바꾸는 방안을 검토한다. 결정론 검사합(`Checksum`)이 바뀌므로 관련 테스트의 기대값을 함께 갱신한다.
+- [x] (2026-10-09 `Simulation/SidPool`, 3,168개 일치 — 테스트가 원본 슬롯 바이트를 되살려 풀 전체 체크섬까지 비교한다. 세션 미연결) `Netstorm.Core` 에 번호 할당기(범위·FIFO·예약 꼬리·예측 커서)를 추가한다. `sid-x86.tsv` 는 raw 풀 체크섬을 비교하므로 그대로 쓰기 어렵다. 머리·꼬리·카운터 열만 비교하거나 `cpppj/tests/SidTests.cpp` 의 경계 검사를 C# 으로 옮긴다.
+- [ ] **확인 필요(디컴파일):** 싱글 플레이에서 다리 조각이 어느 범위(서버·예측)로 할당되는지. `Construction.cpp` `00442c80` 의 할당 플래그를 본다. 이것이 정해져야 `Sequence` 를 번호로 바꿀 수 있다. (4-5 의 선행 확인 1번)
+- [ ] `BattleMap.NextId()`(1부터 증가)와 `BridgeCellState.Sequence` 를 이 할당기로 바꾼다. **2026-10-09 사용자 결정으로 "검토"가 아니라 "한다"로 정해졌다.** 결정론 검사합(`Checksum`)이 바뀌므로 관련 테스트의 기대값을 함께 갱신한다. 단계는 4-5 를 따른다.
 
 ### 4-3. 점유(spot) 비트와 해시 단계 **[x86: `hash-x86.tsv` `Genus` 3,216, `Level` 605]**
 
@@ -219,7 +238,7 @@ cpppj(원본 10.78 을 디컴파일해 C++ 로 복원하는 프로젝트)와 디
 - 10.78 은 등록 중 `(기존 spot & 새 genus) != 0` 이면 즉시 돌아간다(앞서 쓴 칸은 되돌리지 않는다). **이것은 등록 함수의 동작이지 배치 가능 여부 판정이 아니다.** 배치 판정은 `0049b510` 이다(8절).
 - 해시 단계는 발자국이 아니라 **현재 SHP 헤더의 크기**(2-7 의 두 float)로 정한다. 섬·다리는 0, 가로·세로 최댓값이 2 이하면 1, 4 이하면 2, 그보다 크면 3.
 
-- [ ] `EffectiveGenus`(칸별 점유 비트)와 해시 단계 계산을 `Netstorm.Core` 에 추가하고 기대값으로 검증한다.
+- [x] (2026-10-09 `Rules/SpotRules.EffectiveGenus`·`HashLevel`, 3,821개 일치) `EffectiveGenus`(칸별 점유 비트)와 해시 단계 계산을 `Netstorm.Core` 에 추가하고 기대값으로 검증한다.
 - [ ] spot 지도 클래스(발자국 OR 등록, AND 해제)를 추가한다. `BattleMap._occupied` 를 바꾸는 것은 8절의 배치 판정이 복원된 뒤에 한다.
 
 ### 4-4. 공통 postPop 의 집계 **[x86: `postpop-x86.tsv` 984]**
@@ -227,6 +246,39 @@ cpppj(원본 10.78 을 디컴파일해 C++ 로 복원하는 프로젝트)와 디
 [cpp-postpop-reconstruction.md](docs/exe/cpp-postpop-reconstruction.md): 오브젝트가 **처음** 월드에 등록될 때 타입 통계 표가 1 증가하고(재등록에서는 다시 늘지 않는다), 비용 집계·공급 목록·작업장 목록이 갱신된다. 공급 목록은 중복을 넣지 않고 작업장 목록은 중복 검사가 없다. 이 비용 집계는 플레이어 SP 차감이 아니다.
 
 - [ ] `docs/core-rules.md` 의 "원본은 다리의 **누적 제작 수**를 보지만 현재 클론은 살아 있는 내 다리 칸 수를 센다"(튜토리얼 1 의 단계 B·C)를 고친다. `PlayerState.Made` 계열에 다리 칸의 누적 수를 넣고 `TutorialStages` 가 그것을 보게 한다. 통계가 "첫 등록 시 1 증가, 감소 없음"이라는 점은 cpppj 가 확정했다. 튜토리얼 1 함수(`004c3a20`)가 실제로 어느 표를 읽는지는 디컴파일로 한 번 더 확인한다.
+
+<a id="sid-session-plan"></a>
+
+### 4-5. 번호 할당기·스캔 커서의 세션 연결 **[사용자 결정 2026-10-09, 미착수]**
+
+**결정:** 사용자가 2026-10-09 "번호 할당기와 스캔 커서를 세션에 연결한다"고 정했다(10절 4번). 같은 지시로 그날은 코드를 고치지 않고 이 계획만 적었다. **아래는 아직 아무것도 구현되지 않았다.**
+
+**목표:** 다리 붕괴 스캔의 시각과 순서를 원본대로 만든다. 지금 `BridgeGrid.Update` 는 10초 경계에서 모든 칸을 만든 순서(`BridgeCellState.Sequence`)대로 한 번에 처리한다. 원본은 오브젝트 번호 15000~23001 을 프레임마다 조금씩 훑으므로 칸의 스캔 시각이 번호에 따라 주기 안에서 0~10초 어긋난다(8절 "붕괴 스캔").
+
+**이미 있는 것(2026-10-09, x86 대조 완료·세션 미연결):** `Simulation/SidPool`(번호 할당·반납), `Bridges/BridgeDecayScan`(커서·주기), `BridgeGrid.ScanCell`(한 칸 처리, 공개), `BridgeDecayRules`.
+
+**선행 확인 — 연결하기 전에 한다.** 1·2번은 디컴파일을 읽어야 하므로 디컴파일 결과가 있는 PC(마지막 디컴파일 PC 확인 규칙, AGENTS.md)에서 한다. `HJOW-X3D` 에서는 하지 않는다.
+
+- [ ] **1. 다리 조각의 할당 영역.** `Construction.cpp` `00442c80` 이 번호 할당(`004af1d0`)에 넘기는 flags 를 본다(비트 1 = 예측, 비트 2 = 클라이언트, 둘 다 없으면 서버). 정황은 서버 영역을 가리킨다 — 스캔 범위가 서버 영역 + 예측 머리이고, cpppj 의 10.78 사제 생성 통합 검사가 서버 모드에서 15001 을 받는다. **정황일 뿐이므로 확인 없이 서버 영역으로 고정하지 않는다.** 저장된 `.fort` 다리가 로딩될 때의 할당 영역과 순서도 같이 본다.
+- [ ] **2. 원본 풀의 크기(번호 개수).** [cpp-sid-reconstruction.md](docs/exe/cpp-sid-reconstruction.md) 에는 영역 경계만 있고 풀 크기가 없다. 예측 영역이 몇 개인지가 여기서 정해진다.
+- [ ] **3. 다른 오브젝트도 같은 서버 영역에서 번호를 받는다.** 섬 받침·건물·유닛·투사체 등이 다리보다 먼저/사이에 번호를 쓰면 다리 칸의 번호(= 주기 안의 스캔 시각)가 달라진다. 다리만 할당기에 올리면 **다리끼리의 순서는 맞지만 주기 안의 절대 위치는 근사**다. 어디까지 올릴지(다리만 / `BattleMap.NextId()` 를 쓰는 모든 엔티티)를 정하고, 다리만 올리면 그 근사를 `docs/core-rules.md` 에 적는다. 원본의 오브젝트 생성 순서는 cpppj 의 월드 연결(8절)이 끝나야 확정된다.
+
+**구현 단계:**
+
+- [ ] **A. 세션이 할당기를 가진다.** `BattleSession`(또는 `BattleSessionFactory`)이 서버 모드 `SidPool` 하나를 만든다. 싱글 플레이는 로컬이 서버다(원본 `00540bc0`).
+- [ ] **B. 다리 칸에 번호를 준다.** `BridgeCellState.Sequence` 를 번호로 바꾼다(또는 번호 속성을 추가하고 `Sequence` 를 없앤다). `BridgeGrid.AddStored`·`Place` 에서 할당하고, 칸이 없어지는 모든 경로(`Kill`, `WeakenAround` 의 제거)에서 반납한다. 반납한 번호는 목록의 꼬리에 붙어 한참 뒤에 다시 쓰인다 — 이 순서가 바뀌면 안 된다. 번호 → 칸 조회(사전)를 둔다.
+- [ ] **C. 스캔을 커서로 바꾼다.** `BridgeGrid.Update(now)` 의 "10초 경계에서 전체 처리"를 없애고, 틱마다 `BridgeDecayScan.Advance(state, now, delta, paused)` 가 돌려준 구간 `[begin, end)` 의 번호를 오름차순으로 보며 그 번호의 살아 있는 다리 칸에 `ScanCell` 을 부른다. 24Hz 틱에서는 틱마다 33개 번호이고 주기의 남은 시간이 0 이하가 된 틱에 나머지를 한꺼번에 훑는다. 초기화(`BridgeDecayScan.Reset`)는 전투를 시작할 때와 월드를 다시 만들 때 부른다(원본 `00422490`, [cpp-bridgedecay-reconstruction.md](docs/exe/cpp-bridgedecay-reconstruction.md) 1절). 안내·브리핑 창이 게임 시간을 멈추는 동안에는 틱이 돌지 않으므로 스캔도 멈춘다 — 기존 정지 규칙과 맞는지 확인한다.
+- [ ] **D. `BattleMap.NextId()` 를 할당기로 바꿀지 반영한다**(선행 확인 3번의 결정). 바꾸면 엔티티 번호가 1부터가 아니라 15000부터가 되고, 번호를 정렬 키나 검사합에 쓰는 곳이 모두 영향을 받는다.
+- [ ] **E. 번호 소진.** `SidPool.Allocate` 는 소진되면 예외를 던진다. 원본의 소진 처리(다리 최대 50개 삭제, `004af1d0`)는 8절의 미복원 항목이다. 서버 영역은 약 8,000개이고 반납 번호가 재사용되므로 보통의 판에서는 닿지 않지만, 닿았을 때 세션이 죽지 않도록 처리 방침을 정한다(원본 미확정이면 "새 코드의 안전 처리"라고 주석에 적는다).
+
+**함께 바뀌는 것(미리 알고 시작한다):**
+
+- `BridgeGridTests` 의 시각 기대값. 지금은 "10초·20초… 경계에서 수명이 준다"로 적혀 있다. 커서로 바꾸면 칸마다 스캔 시각이 번호에 따라 달라진다. 테스트는 번호를 알고 기대 시각을 계산하게 고친다.
+- 원본 맵 회귀 `OriginalMaps_StoredBridgesMostlySurviveFiveMinutes` 의 수치. 바뀌면 이유를 기록한다.
+- 결정론 검사합(`BattleSession.Checksum`)과 그것을 쓰는 테스트. Core 테스트 15개 파일이 검사합을 참조한다(`BattleSessionTests`·`CampaignOneTests`·`CampaignTwoTests`·`CombatTests`·`ConstructionTests` 등). 고정 기대값을 쓰는지, 두 실행의 값을 서로 비교만 하는지는 파일마다 확인한다. D 를 하면 영향 범위가 넓어진다. 다리의 `Sequence` 를 직접 읽는 테스트는 없다.
+- 화면: 다리가 금 가고 무너지는 시각이 칸마다 흩어진다. 클론 창 확인이 필요하다.
+
+**완료 기준:** (1) 선행 확인 1·2번의 결과가 이 문서에 적혀 있다. (2) 다리 칸의 스캔 시각이 "번호가 커서 구간에 들어오는 틱"과 같음을 보이는 테스트가 있다. (3) 기존 x86 대조(`dotnet test --filter "FullyQualifiedName~X86"`)가 그대로 통과한다. (4) 바뀐 테스트 기대값마다 이유가 기록돼 있다. (5) `docs/core-rules.md`·`docs/exe/bridge-pieces.md` 8.2 의 "만든 순서·10초 경계" 근사 표기를 고쳤다.
 
 ---
 
@@ -240,7 +292,7 @@ cpppj(원본 10.78 을 디컴파일해 C++ 로 복원하는 프로젝트)와 디
 | C# 현재 | [FortMapViewer.cs:111](dotnetpj/src/Netstorm.Game/FortMapViewer.cs#L111) 은 `surface` 플래그 여부 → y → x 로 정렬한다 |
 
 - [ ] 2-5 의 `zorder` 를 써서 정렬 키를 원본대로 바꾼다. 완전 동률의 순서는 원본 `qsort` 라 미확정이다. cpppj 처럼 입력 순서를 유지한다.
-- [ ] 비교 함수를 `Netstorm.Core` 에 두고 `Order` 261개로 검증한다.
+- [x] (2026-10-09 `Display/DrawOrder.Compare`·`Sort`, 261개 일치) 비교 함수를 `Netstorm.Core` 에 두고 `Order` 261개로 검증한다.
 
 ### 5-2. 오브젝트의 화면 위치와 경계 **[x86: `display-x86.tsv` `Bounds` 368]**
 
@@ -351,6 +403,8 @@ cpppj 가 아직 복원하지 않았거나 월드에 연결하지 않은 부분�
 
 섬이 어떤 표면 객체로 놓이는지와 실제 삭제·낙하는 여전히 cpppj 대기 항목이다. **스캔 커서와 한 칸 처리의 결정 부분만 3단계에 추가할 수 있다**(4-2 의 번호 할당 결정이 선행).
 
+> **2026-10-09 반영:** 한 칸 처리의 (a)·(c)와 수명 규칙을 `BridgeGrid`에 적용했고 `Cell`·`Life`·`Scan` 행을 모두 대조했다(맨 위 절). 스캔 커서(`BridgeDecayScan`)와 번호 할당기(`SidPool`)는 계산으로만 있고 `BridgeGrid.Update`는 여전히 10초 경계에서 만든 순서대로 한 번에 처리한다. (b)의 이동체 확인은 효과(`Carriers`)로만 나오고 처리는 없다.
+
 **삭제 보상(SP)·객체 부착 프로세스 — 2026-10-07 cpppj 에서 확정됨.** (cpppj 작업자가 `DESKTOP-HJOW`에서 추가. C# 코드는 읽거나 고치지 않았다.) 근거는 [cpp-reward-reconstruction.md](docs/exe/cpp-reward-reconstruction.md)·[cpp-process-reconstruction.md](docs/exe/cpp-process-reconstruction.md), 기대값은 `cpppj/tests/fixtures/reward-x86.tsv`·`process-x86.tsv`다. dotnetpj 에 반영할 내용:
 
 - **삭제 보상:** 객체가 삭제될 때 삭제 flags 의 16~19비트가 가리키는 소유자(처치한 쪽)가 `비용 × 25 ÷ 100`(정수, 0방향 절삭)을 SP 로 받는다. 비율은 전투 초기화가 25 로 정하는 전역이다. 수신자가 0 이면 지급액은 0 이다. `rainBlocker`(147)는 삭제 보상 대상이 아니고 `altar`(164)는 항상 제외된다. `growingRainBlocker`(150)는 `rainBlocker` 의 비용으로 계산한다.
@@ -397,7 +451,7 @@ cpppj 는 "원본을 그대로 되살린다"가 목표라 아래를 원본대로
 1. **착수 시점 — 해결(2026-10-07).** 사용자 요청으로 병행 개발을 시작했다. 이미 확정된 1~2단계를 완료했으며 미복원 범위는 8절대로 기다린다.
 2. **영어 UI 글꼴(5-3).** 영어를 원본 `.chfnt` 비트맵 글꼴로 바꾸고 한국어만 D2Coding 으로 둘지, 지금처럼 D2Coding 으로 통일할지.
 3. **설정 층 순서(2-2) — 해결(2026-10-07).** 실제 용어표 4개와 setup의 중복 키는 0개다. 전역 우선순위를 원본대로 정정하고, 명시 언어 층·영어 누락 보충으로 한국어 선택을 유지했다. 관련 회귀 통과.
-4. **번호 할당기 도입(4-2).** 오브젝트 번호를 원본 범위·순서로 바꾸면 결정론 검사합과 관련 테스트 기대값이 한꺼번에 바뀐다. 지금 할지, cpppj 가 붕괴 스캔을 복원한 뒤에 할지.
+4. **번호 할당기 도입(4-2) — 해결(2026-10-09): 연결한다.** 사용자가 "번호 할당기와 스캔 커서를 세션에 연결한다"고 정했다. 결정론 검사합과 관련 테스트 기대값이 함께 바뀌는 것을 감수한다. 같은 지시로 그날은 문서에만 반영했고 **구현은 미착수**다. 선행 확인(다리 조각 생성 `00442c80` 의 할당 플래그, 원본 풀 크기 — 디컴파일 필요)과 단계는 [4-5](#sid-session-plan)에 있다. 남은 세부 결정은 "다리만 할당기에 올릴지, 모든 엔티티를 올릴지"(4-5 선행 확인 3번)다.
 
 ---
 
@@ -430,6 +484,7 @@ cpppj/build/bin/Release/NetstormCpp.exe --inspect-bridges originals
 ```
 
 - 클론 창을 띄우는 검사(`tools/clone_*_smoke.ps1`, `dotnet run --project dotnetpj/src/Netstorm.Game`)는 `DESKTOP-HJOW` 가 아닌 PC 에서 한다.
+- 원본 x86 기대값 대조만 돌릴 때: `dotnet test -c Release --filter "FullyQualifiedName~X86"`(Core 39개 + Assets). 새 기대값 파일은 `tests/Netstorm.Core.Tests/Netstorm.Core.Tests.csproj`에 링크로 추가한다(사본 금지).
 - 새 코드의 상수·함수·반복문에는 한국어 주석을 달고, 새 파일은 UTF-8 로 쓴다(AGENTS.md).
 - 원본 주소를 주석에 적을 때는 10.78 주소를 쓰고, 근거 문서(`docs/exe/cpp-*.md`)를 함께 적는다.
 - 작업이 끝난 항목은 이 문서에서 체크하거나 지운다. 중단하면 변경 파일·검사 결과·다음 항목을 이 문서 맨 위에 날짜 절로 남긴다.
@@ -453,6 +508,7 @@ cpppj/build/bin/Release/NetstormCpp.exe --inspect-bridges originals
 | 메인 루프·프레임 | [main-loop.md](docs/exe/main-loop.md) | `client/ClientMain.cpp` |
 | 판본 비교(10.37·10.62·10.82·V12) | [cpp-reference-versions.md](docs/exe/cpp-reference-versions.md) | — |
 | C# 규칙 코어의 현재 범위와 근사 목록 | [core-rules.md](docs/core-rules.md) | — |
+| dotnetpj 복원 기록(날짜별) | [2026-10-07 자료 계층](docs/dotnet-reconstruction-20261007.md), [2026-10-09 다리·표면·그래프·번호·점유](docs/dotnet-reconstruction-20261009.md) | — |
 
 ---
 

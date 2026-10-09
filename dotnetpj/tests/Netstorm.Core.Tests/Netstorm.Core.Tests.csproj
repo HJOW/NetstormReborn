@@ -21,6 +21,12 @@
     <None Update="Fixtures/bridge-tables.json" CopyToOutputDirectory="PreserveNewest" />
     <!-- C++ 기대값을 링크로 공유하여 별도 사본이 서로 어긋나지 않게 한다. -->
     <None Include="../../../cpppj/tests/fixtures/bridge-x86.tsv" Link="X86/bridge-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/surface-x86.tsv" Link="X86/surface-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/bridgedecay-x86.tsv" Link="X86/bridgedecay-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/graph-x86.tsv" Link="X86/graph-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/sid-x86.tsv" Link="X86/sid-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/hash-x86.tsv" Link="X86/hash-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/renderer-x86.tsv" Link="X86/renderer-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <Compile Include="../Shared/X86Fixture.cs" Link="Shared/X86Fixture.cs" />
   </ItemGroup>
 </Project>

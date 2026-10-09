@@ -19,7 +19,8 @@ public sealed record BridgeCellState(int X, int Y, BridgeCell Cell, int Owner)
     public int TimeLeft { get; set; }
 
     /// <summary>
-    /// 칸이 격자에 들어온 순서(1부터). 원본은 붕괴 스캔이 오브젝트 번호 순으로 칸을 훑는데, 번호 재사용 규칙을 몰라서
+    /// 칸이 격자에 들어온 순서(1부터). 원본은 붕괴 스캔이 오브젝트 번호(15000~23001) 순으로 칸을 훑는다.
+    /// 번호 할당 규칙은 확인됐지만(docs/exe/cpp-sid-reconstruction.md) 할당기를 아직 월드에 연결하지 않아
     /// 만든 순서로 대신한다(근사). 격자가 붙이므로 직접 바꾸지 않는다.
     /// </summary>
     public int Sequence { get; internal set; }
@@ -60,7 +61,11 @@ public sealed record BridgeDecayResult(IReadOnlyList<BridgeCellState> Cracked, I
 /// 이웃이 없으면 수명 −1, 열린 쪽이 없는 칸은 구동자가 아님(FUN_004217f0), 구동자에서 접합 칸(A~I)만 따라 방문 목록을 만들어
 /// 0이 아닌 최소 수명 − 1(없으면 7)로 맞춤(FUN_004218b0), 수명 0~7·금 감 기준 5(0x52f960)·0 이면 제거(FUN_00421c30).
 /// 겹치는 칸이 있으면 배치 불가(Rifttype.cpp FUN_0049b510).
+/// 열린 방향·방문 목록·수명 감소는 원본 기계어 기대값으로 검증한 <see cref="BridgeSurfaceRules"/>·<see cref="BridgeDecayRules"/> 를
+/// 그대로 쓴다(2026-10-09). 접합 칸 고리에서는 원본이 끝없이 재귀하므로 그 구동자의 처리를 건너뛴다(수명 변화 없음, cpppj 와 같은 안전 처리).
+/// 큰 그래프의 단단한 칸은 수명 0 에서도 남는다(원본 다리 destroy 재정의 004220f0).
 /// 근사한 부분: "섬 가장자리 또는 내 다리의 열린 끝에 이어짐"(원본은 영역 소유 판정 FUN_0048fdb0), 칸 처리 순서(만든 순서),
+/// 10초 경계에서 한 번에 스캔(원본은 번호 범위를 10초에 나눠 훑는다), 표면 그래프의 크기를 칸 수로 셈(원본은 지속되는 표의 객체 수),
 /// 섬 오브젝트를 칸 단위로 봄(원본은 여러 칸 오브젝트가 하나), 초목 가장자리 제외는 호출자 판정.
 /// </summary>
 public sealed class BridgeGrid
@@ -90,10 +95,10 @@ public sealed class BridgeGrid
     public const int MinSurfaceGraphSize = 5;
 
     /// <summary>붕괴 스캔 방문 목록의 최대 길이 (원본 정적 객체 0x5453c0 를 인자 0x64 로 만든다)</summary>
-    public const int VisitedCapacity = 100;
+    public const int VisitedCapacity = BridgeSurfaceRules.VisitedCapacity;
 
-    /// <summary>접합 칸의 마지막 방향 글자: 'A'~'I' 는 갈래·모퉁이(접합), 'J'~'P' 는 판자·끝 칸·빈 칸 (원본 글자 코드 &lt; 0x4a)</summary>
-    private const char LastJunctionLetter = 'I';
+    /// <summary>섬 칸의 표면 오브젝트가 쓰는 프레임 코드: 사방으로 이어진다 (원본은 다리와 만나는 섬 쪽 글자를 'A' 로 본다)</summary>
+    private static readonly FrameCode IslandFrame = new(BridgeDirections.FirstLetter, BridgeDirections.FirstLetter, 1, FrameCodeFlags.None);
 
     /// <summary>네 방향 (북·동·남·서)</summary>
     private static readonly BridgeLinks[] Directions = [BridgeLinks.North, BridgeLinks.East, BridgeLinks.South, BridgeLinks.West];
@@ -113,6 +118,15 @@ public sealed class BridgeGrid
     /// <summary>섬 칸의 그 방향 가장자리에 다리를 붙일 수 있는지 (섬 x, 섬 y, 섬에서 다리 쪽 방향, 플레이어)</summary>
     private readonly Func<int, int, BridgeLinks, int, bool> _canAttachToIsland;
 
+    /// <summary>칸이 속한 표면 그래프의 표면 수를 주는 공급자 (없으면 이어진 칸 수로 센다)</summary>
+    private readonly Func<BridgeCellState, int>? _graphSurfaces;
+
+    /// <summary>bridge 타입의 프레임 표 (없으면 모든 보통 칸에 금 간 프레임이 있다고 본다)</summary>
+    private readonly TypeFrameTable? _frames;
+
+    /// <summary>붕괴 방문이 읽는 칸 단위 표면 연결</summary>
+    private readonly CellLinks _links;
+
     /// <summary>다음 붕괴 갱신 시각(초)</summary>
     private double _nextDecay = DecaySeconds;
 
@@ -126,12 +140,21 @@ public sealed class BridgeGrid
     /// <param name="isIsland">섬 칸 판정</param>
     /// <param name="isOccupied">다른 오브젝트 점유 판정 (없으면 항상 비어 있음)</param>
     /// <param name="canAttachToIsland">섬 가장자리 부착 가능 판정 (없으면 모든 섬 가장자리 허용)</param>
+    /// <param name="graphSurfaces">
+    /// 칸이 속한 표면 그래프의 표면 수 (원본 Graph 레코드). 없으면 이어진 표면 칸 수로 센다.
+    /// 지속되는 그래프 표(계획 4-1)를 월드에 연결할 때와 원본 기대값 대조에 쓴다.
+    /// </param>
+    /// <param name="frames">bridge 타입의 프레임 표. 금 간 프레임이 없는 칸(빈 칸 P)은 수명만 줄고 금이 가지 않는다</param>
     public BridgeGrid(Func<int, int, bool> isIsland, Func<int, int, bool>? isOccupied = null,
-        Func<int, int, BridgeLinks, int, bool>? canAttachToIsland = null)
+        Func<int, int, BridgeLinks, int, bool>? canAttachToIsland = null, Func<BridgeCellState, int>? graphSurfaces = null,
+        TypeFrameTable? frames = null)
     {
         _isIsland = isIsland;
         _isOccupied = isOccupied ?? ((_, _) => false);
         _canAttachToIsland = canAttachToIsland ?? ((_, _, _, _) => true);
+        _graphSurfaces = graphSurfaces;
+        _frames = frames;
+        _links = new CellLinks(this);
     }
 
     /// <summary>놓인 다리 칸 전체</summary>
@@ -393,15 +416,38 @@ public sealed class BridgeGrid
 
     /// <summary>
     /// 칸 하나의 붕괴 처리 (원본 Bridge.cpp FUN_004227e0). 이 칸이 "구동자"가 되어 자기와 이어진 접합 칸들의 수명을 줄인다.
-    /// 1. 표면 연결 그래프가 <see cref="MinSurfaceGraphSize"/> 칸 미만이면 곧바로 제거한다.
+    /// 1. 표면 연결 그래프가 <see cref="MinSurfaceGraphSize"/> 미만이면 곧바로 제거한다.
     /// 2. 단단한 칸은 아무것도 하지 않는다.
     /// 3. 이웃이 하나도 없으면 수명을 1 줄인다 (그래프 조건 때문에 실제로는 거의 닿지 않는다).
-    /// 4. 열린 쪽이 없는 칸은 구동자가 아니다 (<see cref="HasOpenSide"/>) — 양쪽이 이어진 판자는 수명이 줄지 않는다.
-    /// 5. 방문 목록을 만들고(<see cref="Walk"/>) 붕괴 조건이 서면 목록 칸들의 수명을 "0 이 아닌 최소값 − 1"(없으면 7)로 맞춘다.
+    /// 4. 열린 방향이 없는 칸은 구동자가 아니다 (<see cref="OpenDirection(BridgeCellState)"/>) — 양쪽이 이어진 판자는 수명이 줄지 않는다.
+    /// 5. 방문 목록을 만들고(<see cref="BridgeSurfaceRules.CollectDecay"/>) 붕괴 조건이 서면 목록 칸들의 수명을
+    ///    "0 이 아닌 최소값 − 1"(없으면 7)로 맞춘다. 접합 칸 고리 때문에 방문이 불완전하면 아무것도 바꾸지 않는다.
+    /// 붕괴 스캔(<see cref="Update"/>)이 칸마다 부른다. 원본 번호 순서의 스캔을 붙일 때와 원본 기대값 대조에서는 직접 부른다.
     /// </summary>
+    /// <param name="cell">격자에 있는 다리 칸</param>
+    public BridgeDecayResult ScanCell(BridgeCellState cell)
+    {
+        var cracked = new List<BridgeCellState>();
+        var removed = new List<BridgeCellState>();
+        if (IsAlive(cell))
+        {
+            ScanCell(cell, cracked, removed);
+        }
+        return new BridgeDecayResult(cracked, removed);
+    }
+
+    /// <summary>
+    /// 칸의 열린 방향 (원본 FUN_004217f0): 북 0, 동 2, 남 4, 서 6, 없으면 −1.
+    /// 세 갈래 B~E 는 두 번째, 모퉁이·판자 F~K 는 첫 번째 열린 방향이고, 끝 칸 L~O 는 고정 방향이며, A·P 는 −1 이다.
+    /// −1 이 아닌 칸만 붕괴의 구동자가 된다. 끝 칸 변환 등 방향을 쓰는 후속 처리에도 이 값을 쓴다.
+    /// </summary>
+    /// <param name="cell">다리 칸</param>
+    public int OpenDirection(BridgeCellState cell) => OpenDirection(cell, NeighborsOf(cell));
+
+    /// <summary>칸 하나의 붕괴 처리 본체. 결과를 넘겨받은 목록에 덧붙인다.</summary>
     private void ScanCell(BridgeCellState cell, List<BridgeCellState> cracked, List<BridgeCellState> removed)
     {
-        if (!SurfaceGraphReaches(cell, MinSurfaceGraphSize))
+        if (!InLargeGraph(cell))
         {
             Kill(cell, removed);
             return;
@@ -416,41 +462,42 @@ public sealed class BridgeGrid
             LowerTimeLeft(cell, 1, cracked, removed);
             return;
         }
-        if (!HasOpenSide(cell, neighbors))
+        if (OpenDirection(cell, neighbors) < 0)
         {
             return;
         }
-        var walk = new CollapseWalk();
-        walk.Visited.Add(cell);
-        Walk(cell, 0, null, walk);
-        if (!walk.CanCollapse)
+        BridgeDecayWalk walk = BridgeSurfaceRules.CollectDecay(_links, IdOf(cell.X, cell.Y));
+        if (!walk.Complete || !walk.CanDecay)
         {
             return;
         }
-        // 방문 목록에서 0 이 아닌 수명의 최소값을 찾는다 (목록의 칸은 만든 뒤 처음 스캔되면 0 이다)
+        BridgeCellState[] visited = walk.Visited.Select(id => _cells[CellOf(id)]).ToArray();
         int lowest = int.MaxValue;
-        foreach (BridgeCellState visited in walk.Visited)
+        // 방문 목록에서 0 이 아닌 수명의 최소값을 찾는다 (목록의 칸은 만든 뒤 처음 스캔되면 0 이다)
+        foreach (BridgeCellState item in visited)
         {
-            if (visited.TimeLeft != 0 && visited.TimeLeft < lowest)
+            if (item.TimeLeft != 0 && item.TimeLeft < lowest)
             {
-                lowest = visited.TimeLeft;
+                lowest = item.TimeLeft;
             }
         }
         int next = lowest == int.MaxValue ? MaxTimeLeft : Math.Min(lowest, MaxTimeLeft) - 1;
         // 목록의 모든 칸을 같은 수명으로 맞춘다 (단단한 접합 칸도 수명은 바뀌며 프레임만 그대로다, 중복 항목은 두 번째부터 변화가 없다)
-        foreach (BridgeCellState visited in walk.Visited.ToArray())
+        foreach (BridgeCellState item in visited)
         {
-            if (IsAlive(visited))
+            if (IsAlive(item))
             {
-                LowerTimeLeft(visited, visited.TimeLeft - next, cracked, removed);
+                LowerTimeLeft(item, item.TimeLeft - next, cracked, removed);
             }
         }
     }
 
     /// <summary>
-    /// 수명을 줄인다 (원본 FUN_00421c30). 0 이 되면 칸을 없애고, 5 이상에서 5 미만으로 내려가는 순간 보통 칸이 금 간 상태가 된다.
+    /// 수명을 줄인다 (원본 FUN_00421c30, <see cref="BridgeDecayRules.ReduceLife"/>). 0 이 되면 칸을 없애고,
+    /// 5 이상에서 5 미만으로 내려가는 순간 보통 칸이 금 간 상태가 된다.
     /// 수명이 0 이던 칸이 곧바로 5 미만으로 맞춰질 때는 금이 가지 않는다 (원본이 "이전 수명 ≥ 5" 를 요구한다).
-    /// 이 수명 이하(5)에서 칸 위 이동체가 떨어지는 처리는 아직 없다.
+    /// 없애는 경로에서는 원본처럼 수명 값을 그대로 둔다. 이 수명 이하(5)에서 칸 위 이동체가 떨어지는 처리는 아직 없다.
+    /// 표면 수 5 이상인 그래프의 단단한 칸은 수명 0 에서도 없어지지 않는다 (원본 다리 destroy 재정의 004220f0).
     /// </summary>
     /// <param name="cell">칸</param>
     /// <param name="delta">줄일 양 (음수면 늘어난다)</param>
@@ -458,24 +505,35 @@ public sealed class BridgeGrid
     /// <param name="removed">사라진 칸 목록</param>
     private void LowerTimeLeft(BridgeCellState cell, int delta, List<BridgeCellState> cracked, List<BridgeCellState> removed)
     {
-        int before = cell.TimeLeft;
-        int after = Math.Max(0, before - delta);
-        if (after == 0)
+        // 싱글 플레이는 로컬이 서버다 (원본 00540bc0). 수명 7 초과는 ReduceLife 가 예외로 거부한다
+        BridgeLifeChange change = BridgeDecayRules.ReduceLife((ushort)(cell.TimeLeft << BridgeDecayRules.LifeShift), delta, true,
+            cell.Cell.Letter);
+        if (change.Remove)
         {
-            Kill(cell, removed);
+            // 원본 destroy 는 그 자리에서 그래프를 고친다(죽음 표시 → 그래프 분리 → 월드에서 빼기, docs/exe/cpp-destroygraph-reconstruction.md).
+            // 그래서 같은 처리에서 앞서 없어진 칸이 반영된 지금의 그래프 크기로 판정한다
+            if (cell.Condition != BridgeCondition.Hard || !InLargeGraph(cell))
+            {
+                Kill(cell, removed);
+            }
             return;
         }
-        cell.TimeLeft = after;
-        if (after < CrackBelow && before >= CrackBelow && cell.Condition == BridgeCondition.Normal)
+        cell.TimeLeft = change.Remaining;
+        if (change.Crack && cell.Condition == BridgeCondition.Normal && HasCrackedFrame(cell))
         {
             cell.Condition = BridgeCondition.Cracked;
             cracked.Add(cell);
         }
     }
 
+    /// <summary>보통 칸에 금 간 프레임이 있는지 (원본 FUN_00421b60 이 못 찾으면 그림을 바꾸지 않는다). 프레임 표가 없으면 있다고 본다.</summary>
+    private bool HasCrackedFrame(BridgeCellState cell) =>
+        _frames == null || BridgeFrames.Find(_frames, cell.Cell, BridgeCondition.Cracked) >= 0;
+
     /// <summary>
     /// 칸의 이웃 (원본 FUN_004b2660 → 탐색기 FUN_004b1e80/FUN_00441e40): 북·서·동·남 칸의 표면 오브젝트 가운데
     /// 이 칸이 그쪽으로 연결되어 있고, 다리라면 마주 보는 연결도 있는 것. 섬 칸은 늘 이어진다(원본은 섬 쪽 글자를 'A' 로 본다).
+    /// 월드 밖의 칸은 원본처럼 건너뛴다. 섬을 칸 단위로 보는 근사이며 오브젝트 단위의 원본 규칙은 <see cref="SurfaceFinder"/> 에 있다.
     /// </summary>
     /// <param name="cell">다리 칸</param>
     private List<Neighbor> NeighborsOf(BridgeCellState cell)
@@ -490,6 +548,10 @@ public sealed class BridgeGrid
             }
             (int dx, int dy) = BridgeDirections.Offset(direction);
             (int nx, int ny) = (cell.X + dx, cell.Y + dy);
+            if (nx < 0 || ny < 0 || nx >= WorldSize || ny >= WorldSize)
+            {
+                continue;
+            }
             if (_cells.TryGetValue((nx, ny), out BridgeCellState? other))
             {
                 if (other.Cell.Links.HasFlag(BridgeDirections.Opposite(direction)))
@@ -506,108 +568,31 @@ public sealed class BridgeGrid
     }
 
     /// <summary>
-    /// 구동자가 될 수 있는지: 이어지는 방향 가운데 이웃 목록에 없는 "열린 쪽" (원본 FUN_004217f0·FUN_00421770).
-    /// 갈래 B~E 는 열린 쪽이 2개 이상, 모퉁이·판자 F~K 는 1개 이상 있어야 하고, 끝 칸 L~O 는 늘 열려 있으며, A·P 는 열린 쪽이 없다.
+    /// 이웃 목록으로 열린 방향을 구한다 (원본 FUN_004217f0·FUN_00421770): 이어지는 방향 가운데 그쪽 칸이 이웃 목록에 없으면 열린 쪽이다.
     /// </summary>
     /// <param name="cell">다리 칸</param>
     /// <param name="neighbors">이 칸의 이웃</param>
-    private bool HasOpenSide(BridgeCellState cell, List<Neighbor> neighbors)
-    {
-        char letter = cell.Cell.Letter;
-        if (letter is >= 'L' and <= 'O')
+    private static int OpenDirection(BridgeCellState cell, List<Neighbor> neighbors) =>
+        BridgeSurfaceRules.OpenDirection(cell.Cell.Letter, direction =>
         {
-            return true;
-        }
-        int needed = letter switch
-        {
-            >= 'B' and <= 'E' => 2,
-            >= 'F' and <= 'K' => 1,
-            _ => int.MaxValue,
-        };
-        int open = 0;
-        // 이어지는 방향마다 그쪽 칸의 오브젝트가 이웃이 아니면 열린 쪽으로 센다
-        foreach (BridgeLinks direction in Directions)
-        {
-            if (!cell.Cell.Links.HasFlag(direction))
+            BridgeLinks link = Directions[direction / 2];
+            if (!cell.Cell.Links.HasFlag(link))
             {
-                continue;
+                return false;
             }
-            (int dx, int dy) = BridgeDirections.Offset(direction);
-            (int nx, int ny) = (cell.X + dx, cell.Y + dy);
-            bool joined = neighbors.Any(n => n.X == nx && n.Y == ny);
-            if (!joined)
-            {
-                open++;
-            }
-        }
-        return open >= needed;
-    }
+            (int dx, int dy) = BridgeDirections.Offset(link);
+            return !neighbors.Any(n => n.X == cell.X + dx && n.Y == cell.Y + dy);
+        });
 
-    /// <summary>
-    /// 붕괴 방문 (원본 FUN_004218b0): <paramref name="cell"/> 의 이웃을 훑으며 접합 칸(A~I)으로만 재귀해 방문 목록을 만든다.
-    /// 판자(J·K)·끝 칸·섬은 경계다. 경계 이웃이 어떤 조건이면 붕괴가 진행되고(<see cref="CollapseWalk.CanCollapse"/>), 목록에서 빠진다:
-    /// 깊이 0, 또는 깊이 1 이고 "이웃이 3개 미만인 접합 칸"이 이미 있을 때는 항상 붕괴 진행 + 목록에서 제외.
-    /// 그 밖에는 이웃이 2개 미만인 다리(자기 쪽에서만 이어진 끝)면 붕괴 진행 + 목록에 남고, 이웃이 2개 이상이면 목록에서만 빠진다.
-    /// 섬은 다리가 아니므로 이웃 수가 0 으로 계산되어 늘 붕괴 진행이다.
-    /// </summary>
-    /// <param name="cell">방문 중인 칸</param>
-    /// <param name="depth">재귀 깊이 (구동자 = 0)</param>
-    /// <param name="parent">바로 앞에서 들어온 칸 (구동자는 null)</param>
-    /// <param name="walk">방문 상태</param>
-    private void Walk(BridgeCellState cell, int depth, BridgeCellState? parent, CollapseWalk walk)
-    {
-        walk.OnPath.Add(cell);
-        // 이웃마다 앞에서 들어온 칸은 건너뛴다
-        foreach (Neighbor neighbor in NeighborsOf(cell))
-        {
-            if (neighbor.Bridge is { } bridge && (ReferenceEquals(bridge, parent) || walk.OnPath.Contains(bridge)))
-            {
-                // 원본은 접합 칸이 고리를 이루면 끝없이 재귀한다. 지금 재귀 경로에 있는 칸은 건너뛰어 막는다.
-                continue;
-            }
-            if (neighbor.Bridge is { } added && walk.Visited.Count < VisitedCapacity)
-            {
-                walk.Visited.Add(added);
-            }
-            bool junction = neighbor.Bridge is { } candidate && candidate.Cell.Letter <= LastJunctionLetter;
-            if (junction)
-            {
-                BridgeCellState next = neighbor.Bridge!;
-                if (depth == 0 && NeighborsOf(next).Count < 3)
-                {
-                    walk.ShortJunction = true;
-                }
-                Walk(next, depth + 1, cell, walk);
-            }
-            else if (depth == 0 || (depth == 1 && walk.ShortJunction))
-            {
-                walk.CanCollapse = true;
-                RemoveFromVisited(walk, neighbor.Bridge);
-            }
-            else
-            {
-                int count = neighbor.Bridge is { } other ? NeighborsOf(other).Count : 0;
-                if (count < 2)
-                {
-                    walk.CanCollapse = true;
-                }
-                else
-                {
-                    RemoveFromVisited(walk, neighbor.Bridge);
-                }
-            }
-        }
-        walk.OnPath.Remove(cell);
-    }
+    /// <summary>칸이 속한 표면 그래프가 <see cref="MinSurfaceGraphSize"/> 이상인지 (공급자가 있으면 그 표면 수로 판정한다)</summary>
+    private bool InLargeGraph(BridgeCellState cell) => _graphSurfaces != null
+        ? _graphSurfaces(cell) >= MinSurfaceGraphSize : SurfaceGraphReaches(cell, MinSurfaceGraphSize);
 
-    /// <summary>방문 목록에서 그 칸의 모든 항목을 뺀다 (섬이면 목록에 없으므로 아무 일도 없다)</summary>
-    private static void RemoveFromVisited(CollapseWalk walk, BridgeCellState? bridge)
-    {
-        if (bridge != null)
-        {
-            walk.Visited.RemoveAll(v => ReferenceEquals(v, bridge));
-        }
-    }
+    /// <summary>칸 좌표를 붕괴 방문용 번호로 바꾼다 (1부터, 행 우선)</summary>
+    private static int IdOf(int x, int y) => y * WorldSize + x + 1;
+
+    /// <summary>붕괴 방문용 번호를 칸 좌표로 되돌린다</summary>
+    private static (int X, int Y) CellOf(int id) => ((id - 1) % WorldSize, (id - 1) / WorldSize);
 
     /// <summary>
     /// 칸이 속한 표면 연결 그래프의 크기가 <paramref name="size"/> 이상인지 (원본 Graph.cpp 의 numSurface 검사).
@@ -666,19 +651,24 @@ public sealed class BridgeGrid
     /// <summary>다리 칸의 이웃 하나: 이웃 칸 좌표와 다리 칸 (섬 칸이면 null)</summary>
     private readonly record struct Neighbor(int X, int Y, BridgeCellState? Bridge);
 
-    /// <summary>붕괴 방문 상태: 방문 목록, 재귀 경로, 붕괴 진행 여부, 짧은 접합 칸 여부 (원본 전역 0x5453c0·0x5453a4·0x5453a0)</summary>
-    private sealed class CollapseWalk
+    /// <summary>
+    /// 붕괴 방문(<see cref="BridgeSurfaceRules.CollectDecay"/>)에 격자를 표면 연결 정보로 보여 준다.
+    /// 다리 칸과 섬 칸을 각각 1×1 표면 오브젝트로 본다 (섬을 칸 단위로 보는 근사).
+    /// </summary>
+    private sealed class CellLinks(BridgeGrid grid) : ISurfaceLinks
     {
-        /// <summary>수명을 맞출 칸 목록 (구동자 포함, 중복 가능, 최대 <see cref="VisitedCapacity"/>)</summary>
-        public List<BridgeCellState> Visited { get; } = [];
+        /// <summary>번호의 칸을 표면 오브젝트로 만든다: 다리 칸이면 그 방향 글자, 아니면 사방으로 이어지는 섬</summary>
+        public SurfaceObject Object(int id)
+        {
+            (int x, int y) = CellOf(id);
+            return grid._cells.TryGetValue((x, y), out BridgeCellState? cell)
+                ? new SurfaceObject(id, x, y, 1, 1, TypeFlagBits.Surface, TypeFlagBits.Bridge,
+                    new FrameCode(cell.Cell.Letter, TypeFrameTable.DefaultVariant, cell.Cell.Variation, FrameCodeFlags.None))
+                : new SurfaceObject(id, x, y, 1, 1, TypeFlagBits.Surface, TypeFlagBits.Island, IslandFrame);
+        }
 
-        /// <summary>지금 재귀 경로에 있는 칸 (고리 방지, 참조 비교)</summary>
-        public HashSet<BridgeCellState> OnPath { get; } = new(ReferenceEqualityComparer.Instance);
-
-        /// <summary>붕괴가 진행되는지 (원본 DAT_005453a4)</summary>
-        public bool CanCollapse { get; set; }
-
-        /// <summary>구동자 바로 옆 접합 칸 가운데 이웃이 3개 미만인 것이 있는지 (원본 DAT_005453a0)</summary>
-        public bool ShortJunction { get; set; }
+        /// <summary>다리 칸의 이웃 번호를 탐색 순서로 돌려준다. 섬 칸의 이웃은 방문이 묻지 않으므로 비어 있다</summary>
+        public IReadOnlyList<int> Neighbors(int id) => grid._cells.TryGetValue(CellOf(id), out BridgeCellState? cell)
+            ? grid.NeighborsOf(cell).Select(n => IdOf(n.X, n.Y)).ToArray() : [];
     }
 }
