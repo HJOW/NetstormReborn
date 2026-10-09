@@ -1,6 +1,7 @@
 // GUI raw 월드 연결에 앞서 실제 SHP 추가 헤더를 같은 프레임/표시 모듈로 공급하는 읽기 전용 검사다.
 #include "app/FrameBindingInspect.h"
 #include "client/SquidRenderer.h"
+#include "client/PriestPlacementAssets.h"
 #include "o/SquidFrameBinding.h"
 #include "o/SquidFactory.h"
 #include <bit>
@@ -64,5 +65,30 @@ void InspectFrameBinding(const std::filesystem::path& root,o::OriginalEdition ed
     if (!painted) throw std::logic_error("실제 프레임 부분 Draw 누락");
     std::printf("{\"edition\":\"%s\",\"types\":%zu,\"physical_frames\":%zu,\"frame_size_queries\":%zu,\"invalidations\":%zu,\"painted_rects\":%zu,\"passed\":true}\n",
         edition==o::OriginalEdition::Patch1078 ? "10.78" : "CD",assets.Types().size(),physical,checked,sink.count,painted);
+}
+// 창을 만들지 않고 모든 자산의 배치 자료와 사제 getter 결과를 독립 대조 도구에 공급한다.
+void InspectPriestAssets(const std::filesystem::path& root,o::OriginalEdition edition) {
+    o::BaseFileSystem files(root);files.RegisterArchive(root/"netstorm.tarc");client::GameAssets assets(files,edition);
+    client::PriestPlacementAssets data(assets);o::SidPool pool(edition,32768,true);o::PriestPlacementShapeState state;
+    o::RawPriestPlacementShape shape(pool,assets.TypeTable().Types(),data.frames,data.shapes,data.hotspots,data.geometry,state);
+    std::printf("{\"patterns\":[");
+    // 패턴 식별 자료는 실제 PE 전역의 타입 번호와 비교한다.
+    for (std::size_t i=0;i<data.geometry.patternTypes.size();++i) std::printf("%s%u",i ? "," : "",data.geometry.patternTypes[i]);
+    std::printf("],\"types\":[");bool first=true;
+    // 내장 타입은 SHP가 없으므로 자산 타입 70부터 원래 순서대로 출력한다.
+    for (const auto& asset:assets.Types()) {
+        const auto type=static_cast<std::uint32_t>(o::kFirstAssetTypeNumber+asset.block);const auto& meta=data.frames[type];const auto& hot=data.hotspots[type];
+        std::printf("%s{\"number\":%u,\"name\":\"%s\",\"default\":%d,\"hotspot\":[%d,%d],\"codes\":\"",first ? "" : ",",type,asset.assetName.c_str(),meta.defaultFrame,hot.x,hot.y);first=false;
+        // 4바이트 코드 순서를 독립 parser와 대조할 수 있게 그대로 보존한다.
+        for (const auto code:meta.frames.Codes()) std::printf("%02x%02x%02x%02x",code.side,code.variant,code.number,code.flags);
+        std::printf("\",\"physical\":%zu",data.shapes[type].frames.size());
+        if ((assets.TypeTable().Types()[type].flags2&0x200000)!=0) {
+            const auto measured=shape.Measure(type,type,0);
+            std::printf(",\"shape_bits\":[%u,%u,%u,%u,%u,%u]",std::bit_cast<std::uint32_t>(measured.bounds.left),std::bit_cast<std::uint32_t>(measured.bounds.top),
+                std::bit_cast<std::uint32_t>(measured.bounds.right),std::bit_cast<std::uint32_t>(measured.bounds.bottom),std::bit_cast<std::uint32_t>(measured.anchorX),std::bit_cast<std::uint32_t>(measured.anchorY));
+        }
+        std::printf("}");
+    }
+    std::printf("]}\n");
 }
 }

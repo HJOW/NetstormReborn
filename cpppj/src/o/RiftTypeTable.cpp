@@ -8,6 +8,7 @@
 #include <array>
 #include <cmath>
 #include <bit>
+#include <limits>
 #include <regex>
 #include <stdexcept>
 
@@ -171,6 +172,12 @@ void ApplyDefinition(RiftTypeRecord& type, const RiftTypeDefinition& definition)
         else if (is("maxWindBattleUsage") && number) type.maxUsage[2] = static_cast<float>(*number);
         else if ((is("foot_x") || is("footx")) && number) type.footX = ToInt(*number);
         else if ((is("foot_y") || is("footy")) && number) type.footY = ToInt(*number);
+        else if (is("hotFootRatioX") || is("hotFootRatioY")) {
+            if (!number) throw std::invalid_argument("hotFootRatio는 숫자여야 합니다");
+            const bool vertical=is("hotFootRatioY");
+            (vertical ? type.hotspotY : type.hotspotX)=TypeHotFootOffset(static_cast<float>(*number),vertical);
+        }
+        else if (is("hotFootX") || is("hotFootY")) throw std::invalid_argument("원본이 거부하는 hotFootX/Y 속성입니다");
         else if (is("level") && number) type.level = ToInt(*number) - 1;
         else if (is("description") && text) { type.description = text->substr(0, kDescriptionBytes); hasDescription = true; }
         else if (is("group") && text) {
@@ -218,6 +225,16 @@ void PostProcess(RiftTypeRecord& type) {
     if ((final2 & 0x70000) != 0 && (final2 & TypeFlag2::kFactory) == 0) type.flags1 |= 0x8000;
     if (type.footY == 6) type.footY = 8; // 원본: foot_y 6은 8로 바꾼다.
 }
+}
+
+// AST의 float32 값은 x87에 올린 뒤 중간 float 저장 없이 배율을 곱한다.
+std::int32_t TypeHotFootOffset(float ratio,bool vertical) {
+    // 00503358/0050334c ↔ CD 005019b8/005019bc의 고정 칸 배율이다.
+    constexpr double kHorizontal=16.0,kVertical=11.0;
+    const double value=std::trunc(static_cast<double>(ratio)*(vertical ? kVertical : kHorizontal));
+    if (!std::isfinite(value) || value<std::numeric_limits<std::int32_t>::min() || value>std::numeric_limits<std::int32_t>::max())
+        throw std::out_of_range("타입 기준점의 32비트 정수 범위 초과");
+    return static_cast<std::int32_t>(value);
 }
 
 // 판본의 타입 수만큼 0으로 초기화한 뒤 이름·정의·후처리를 적용한다.

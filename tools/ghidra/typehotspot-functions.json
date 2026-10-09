@@ -1,0 +1,8 @@
+{
+  "description": "타입 기준점 hotFootRatioX/Y의 실제 속성 처리와 초기화 근거를 읽기 전용으로 내보낸다. 마지막 디컴파일 PC: HJOW-Athlon, 2026-10-09.",
+  "editions": {
+    "originals": ["0049c3b0", "004e49c0", "0049ebb0"],
+    "originalCD": ["004460f0", "004f161c", "004434d0"],
+    "original1037": ["004460f0", "004f161c", "004434d0"]
+  }
+}

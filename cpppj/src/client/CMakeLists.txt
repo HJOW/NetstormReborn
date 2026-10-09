@@ -7,6 +7,7 @@ target_sources(netstorm PRIVATE
     VFXDraw.cpp VFXDraw.h
     Screen.cpp Screen.h
     GameAssets.cpp GameAssets.h
+    PriestPlacementAssets.cpp PriestPlacementAssets.h
     Mission.cpp Mission.h
     InputEvent.cpp InputEvent.h
     Renderer.cpp Renderer.h

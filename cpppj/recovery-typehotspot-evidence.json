@@ -1,0 +1,58 @@
+{
+  "total": 1404,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-09",
+  "controls": [
+    639,
+    895
+  ],
+  "os_calls": 0,
+  "editions": {
+    "originals": {
+      "cases": 468,
+      "boundaries": 1872,
+      "property_ops": 936,
+      "native_calls": {
+        "004e49c0": 1872
+      },
+      "assertions": 0
+    },
+    "originalCD": {
+      "cases": 468,
+      "boundaries": 1872,
+      "property_ops": 936,
+      "native_calls": {
+        "004f161c": 1872
+      },
+      "assertions": 0
+    },
+    "original1037": {
+      "cases": 468,
+      "boundaries": 1872,
+      "property_ops": 936,
+      "native_calls": {
+        "004f161c": 1872
+      },
+      "assertions": 0
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/typehotspot-x86.tsv": "ee67509d37ed9947884e16d88a66fa6433768bd19faaf53cb2e3e0a5929d2999",
+    "extracted/typehotspot/original1037/creation.c": "427873d02c3c280055710d54849a86f5f5cb2d7a067c122316cbbf4cb0682695",
+    "extracted/typehotspot/original1037/functions.tsv": "9f63e7ed94cee2fb19a971eba0b0281f7bc6d04ea81b4b7f3e995fe766943e85",
+    "extracted/typehotspot/originalCD/creation.c": "427873d02c3c280055710d54849a86f5f5cb2d7a067c122316cbbf4cb0682695",
+    "extracted/typehotspot/originalCD/functions.tsv": "9f63e7ed94cee2fb19a971eba0b0281f7bc6d04ea81b4b7f3e995fe766943e85",
+    "extracted/typehotspot/originals/creation.c": "5416da087aff725ef8dcbcd41ebabe4ccf17c2f45d316cd24bd1a6e090b95bdc",
+    "extracted/typehotspot/originals/functions.tsv": "999a7f27a6ea9b14dec2caaf2de497cdb26fdd547588ae2c0601d8b03c1a4de8",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/decomp_typehotspot_oracle.py": "24be107a120343de66d680c0f01d5a09a6fb95e3a96eb6c9f0a6214ca99b4fe3",
+    "tools/ghidra/typehotspot-functions.json": "9bd2b9357470ce669cf3de76314ce4a192cbc8ba81658a2784ffdb9d02dca85f"
+  },
+  "limits": [
+    "실제 숫자 속성 중간 진입에서 다음 속성 경계까지, 전체 로더 ABI 검증 아님",
+    "AST float32/정수 범위 안 입력만 관찰, 문자열 비교/파싱/잘못된 입력 assert 경로 미실행"
+  ]
+}

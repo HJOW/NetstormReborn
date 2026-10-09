@@ -6,4 +6,6 @@
 namespace netstorm::app {
 // 판본별 SHP 메타데이터 전체와 실제 연결 객체의 프레임 변경/Renderer 영역 전달을 검사한다.
 void InspectFrameBinding(const std::filesystem::path& root,o::OriginalEdition edition);
+// 실제 배치 메타 자료와 사제 기본 프레임의 픽셀 범위를 JSON으로 내보낸다. GUI는 만들지 않는다.
+void InspectPriestAssets(const std::filesystem::path& root,o::OriginalEdition edition);
 }

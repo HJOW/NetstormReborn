@@ -1,5 +1,6 @@
 #include "client/GameWorld.h"
 #include "client/SquidRenderer.h"
+#include "client/PriestPlacementAssets.h"
 #include "o/RawPathAnimation.h"
 #include "o/OriginalText.h"
 #include <algorithm>
@@ -169,9 +170,9 @@ void GameWorld::BuildTerrain() {
 }
 // 표면 객체는 raw 풀에서 소유한다. 건물/사제 등 비표면 객체와 땅의 생성 입력만 기존 어댑터가 공급한다.
 void GameWorld::BuildSurfaces() {
-    const auto types=assets_.TypeTable().Types();std::vector<o::RiftTypeFrames> frames(types.size(),o::RiftTypeFrames({}));
-    // 모든 타입 번호를 실제 자산 프레임 코드에 대응시킨다.
-    for (std::size_t i=0;i<assets_.Types().size();++i) frames[o::kFirstAssetTypeNumber+i]=assets_.Types()[i].definition.FrameTable();
+    const auto types=assets_.TypeTable().Types();PriestPlacementAssets placement(assets_);std::vector<o::RiftTypeFrames> frames;frames.reserve(types.size());
+    // 사제 배치와 표면 월드는 같은 로더의 실제 프레임/SHP 자료를 사용한다.
+    for (auto& meta:placement.frames) frames.push_back(std::move(meta.frames));
     // 자산 이름을 판본별 타입 번호로 변환한다.
     const auto number=[this](std::string_view name) { return static_cast<std::uint32_t>(o::kFirstAssetTypeNumber+assets_.Find(name).block); };
     o::BridgeConnectState links;links.bridgeType=number("bridge");links.noIslandType=number("noIsland");links.islandType=number("island");
@@ -186,7 +187,7 @@ void GameWorld::BuildSurfaces() {
     // 저장 noIsland와 다리만 raw 객체가 된다. 비표면 선택/이동의 번호는 기존대로 유지한다.
     for (const auto& object:objects_) if (static_cast<std::uint32_t>(object.type)==links.bridgeType || static_cast<std::uint32_t>(object.type)==links.noIslandType)
         seeds.push_back({static_cast<std::uint32_t>(object.type),static_cast<std::uint32_t>(object.owner),static_cast<std::int32_t>(object.frame),static_cast<float>(object.x),static_cast<float>(object.y)});
-    surfaces_=std::make_unique<RawSurfaceWorld>(assets_.Edition(),types,frames,SquidRenderer::Shapes(assets_,assets_.Edition()),links,terrainType);
+    surfaces_=std::make_unique<RawSurfaceWorld>(assets_.Edition(),types,frames,placement.shapes,links,terrainType);
     surfaces_->Load(seeds);
     // 생성 명령 전체 복원 전까지 저장 건물의 받침 소유자 공급은 기존 월드 초기화 경계로 유지한다.
     for (const auto& object:objects_) {

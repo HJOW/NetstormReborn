@@ -8,6 +8,7 @@ add_executable(netstorm_tests
     RecoveryTests.cpp
     OracleTests.cpp
     AssetTests.cpp
+    TypeHotspotTests.cpp
     ConfigOracleTests.cpp
     ConfigInterfaceTests.cpp
     FortTests.cpp
@@ -169,3 +170,6 @@ set_source_files_properties(PriestPlacementShapeTests.cpp PROPERTIES COMPILE_DEF
 # 일반 사제 지형/지역 조회의 독립 원본 관찰 fixture 경로다.
 set_source_files_properties(PriestPlacementTerrainTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PRIESTTERRAIN_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/priestterrain-x86.tsv\"")
+# 타입 기준점의 실제 속성/ftol 관찰 fixture를 해당 검사에만 지정한다.
+set_source_files_properties(TypeHotspotTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_TYPEHOTSPOT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/typehotspot-x86.tsv\"")

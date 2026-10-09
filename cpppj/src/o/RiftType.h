@@ -128,6 +128,8 @@ inline constexpr std::uint32_t kOwnerClearedMask = 0x10002000;
 inline constexpr int kTypeNoGroup = 10;
 // .type 타입의 번호 = 이 값 + 로딩 순서(원본 0049c3b0의 `(읽은 파일 수 + 0x45) * 500`). 두 판본이 같다.
 inline constexpr int kFirstAssetTypeNumber = 70;
+// hotFootRatioX/Y의 float32 입력에 원본 고정 배율 16/11을 곱해 0쪽으로 버린다.
+std::int32_t TypeHotFootOffset(float ratio,bool vertical);
 
 // 원본 타입 구조체(패치 500바이트, CD 468바이트) 가운데 복원한 필드.
 struct RiftTypeRecord {
@@ -151,6 +153,7 @@ struct RiftTypeRecord {
     std::uint32_t contentListFlags{};   // +0x100: 이 타입이 내용물일 때의 목록 플래그(0이면 그릇 것을 쓴다)
     std::int32_t footX{}, footY{};      // 패치 +0x1d4/+0x1d8, CD +0x1b4/+0x1b8. .type 타입의 기본값은 1.
     bool fromAsset{};                   // .type 파일에서 읽은 타입인가.
+    std::int32_t hotspotX{},hotspotY{};  // 패치 +0x1dc/+0x1e0, CD +0x1bc/+0x1c0. 초기값은 0이다.
 };
 
 // .type 한 개를 타입 표에 넣을 때 쓰는 입력.
