@@ -1,0 +1,65 @@
+{
+  "total": 16890,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-09",
+  "controls": [
+    639,
+    895
+  ],
+  "os_calls": 0,
+  "editions": {
+    "originals": {
+      "cases": 5850,
+      "candidates": 11040,
+      "related": 660,
+      "substitutions": 3768,
+      "native_calls": {
+        "00462cb0": 11040,
+        "004629e0": 660
+      },
+      "assertions": 0
+    },
+    "originalCD": {
+      "cases": 5520,
+      "candidates": 11040,
+      "related": 0,
+      "substitutions": 3768,
+      "native_calls": {
+        "0045bae0": 11040
+      },
+      "assertions": 0
+    },
+    "original1037": {
+      "cases": 5520,
+      "candidates": 11040,
+      "related": 0,
+      "substitutions": 3768,
+      "native_calls": {
+        "0045bae0": 11040
+      },
+      "assertions": 0
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/canonpermission-x86.tsv": "1b8122a85562e67d6a971a377ae3b2b240d56cb4b10cabfaf4e1deb520744270",
+    "extracted/canonpermission/original1037/creation.c": "bb760e0fd4179c8bda0ef0221347bcec18c95970b4cee2dc58ae7f5c32bec346",
+    "extracted/canonpermission/original1037/functions.tsv": "9d5eb661a40ce20f7b647840a08640d20df419b98ba7773a757c97482fb5dc6c",
+    "extracted/canonpermission/originalCD/creation.c": "bb760e0fd4179c8bda0ef0221347bcec18c95970b4cee2dc58ae7f5c32bec346",
+    "extracted/canonpermission/originalCD/functions.tsv": "9d5eb661a40ce20f7b647840a08640d20df419b98ba7773a757c97482fb5dc6c",
+    "extracted/canonpermission/originals/creation.c": "95cb768a0ea7ba2dc7ac0a9210a3f801a64a237eba3b971453feb8ee4e05e1ff",
+    "extracted/canonpermission/originals/functions.tsv": "47f3f4042c95655ea942fa178f7aced0b25716778fac22d37fc1b63279445aeb",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_canonpermission_oracle.py": "90ba0a01bc7b157905043ffc1f9affa6a51d6eb584aaa916709c73e62ec8ec85",
+    "tools/decomp_damageablepredestroy_oracle.py": "b6bd591b17b886224e81b9d35dc863f12dea570c67aabf8a66280c7361785e75",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/ghidra/canonpermission-functions.json": "03bd9c329497ec6935362d6b36f3d4f033d3526b9fcb4afe9cb538019a854a60"
+  },
+  "limits": [
+    "후보 helper/패치 방향 관계 helper 정상 반환/ABI/보존 레지스터·실제 조기 분기/현재 raw/관계 읽기",
+    "Player 작업장/그래프 locator 진입에서 인자/호출 횟수 관찰 후 지정 반환/변화 대체, 몸체 미실행",
+    "실제 관계 읽기가 81개 표 밖인 입력 제외, 조기 반환의 큰 SID/owner는 유지",
+    "전체 MayPlace/지형/주변 finder/최종 관계·Player locator/게임/OS 검증 아님"
+  ]
+}

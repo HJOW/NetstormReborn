@@ -4,6 +4,8 @@
 
 [`RawCanonPlacementTerrain`](../../cpppj/src/o/RawCanonPlacementTerrain.h)은 일반 타입/패턴의 초기 권한, 후보 다리·섬 효과, 지역 배열, 모양 종료, 최종 관계 진입 전 지면/권한 누적을 복원한다. 기존 사제 지형 API/구현은 유지했다. 이 단계는 전체 MayPlace나 최종 배치 관계 판정의 완료를 뜻하지 않는다.
 
+후속으로 [후보 권한·방향 소유 관계](cpp-canon-permission-reconstruction.md)를 복원하고 이 지형에 연결했다. 아래 내용과 검사 수는 지형 단계 당시의 기록이다. 현재 미복원 경계는 Player 내부 작업장·그래프 조회, 주변 권한 finder, 최종 표면 소유 관계/특수 지역이다.
+
 | 관찰 구간 | 10.78 | CD·추가 10.37 |
 |---|---|---|
 | decoder 직후 초기화 | `0049b84e..0049b8af` | `00445542..0044559d` |

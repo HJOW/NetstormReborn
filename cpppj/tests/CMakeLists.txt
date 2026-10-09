@@ -16,6 +16,7 @@ add_executable(netstorm_tests
     CanonPlacementPreviewTests.cpp
     CanonPlacementCollisionTests.cpp
     CanonPlacementTerrainTests.cpp
+    CanonPlacementPermissionTests.cpp
     ConfigOracleTests.cpp
     ConfigInterfaceTests.cpp
     FortTests.cpp
@@ -204,3 +205,6 @@ set_source_files_properties(CanonPlacementCollisionTests.cpp PROPERTIES COMPILE_
 # 일반 후보 지형/초기 권한/최종 지면 누적의 독립 원본 구간을 재생한다.
 set_source_files_properties(CanonPlacementTerrainTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CANONTERRAIN_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/canonterrain-x86.tsv\"")
+# 후보 권한/방향 소유 관계의 독립 원본 관찰을 해당 검사 소스에서만 읽는다.
+set_source_files_properties(CanonPlacementPermissionTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CANONPERMISSION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/canonpermission-x86.tsv\"")
