@@ -27,6 +27,7 @@ add_executable(netstorm_tests
     PriestPostPopTailTests.cpp
     PriestFallTests.cpp
     CarrierCheckTests.cpp
+    FrameAdvanceTests.cpp
     ConfigOracleTests.cpp
     ConfigInterfaceTests.cpp
     FortTests.cpp
@@ -250,3 +251,7 @@ set_source_files_properties(PriestFallTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # Carrier 지면 조회/사제 가상 낙하의 독립 원본 관찰을 재생할 경로다.
 set_source_files_properties(CarrierCheckTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CARRIERCHECK_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carriercheck-x86.tsv\"")
+
+# 실제 프레임 진행/지정/글자 구간 생성의 독립 원본 관찰을 재생할 경로다.
+set_source_files_properties(FrameAdvanceTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FRAMEADVANCE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/frameadvance-x86.tsv\"")

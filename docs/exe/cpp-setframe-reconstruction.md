@@ -63,3 +63,7 @@ ctest --test-dir cpppj/build -C Release --output-on-failure
 ## 2026-10-08 프레임·표시 후속 통합
 
 [SquidFrame 표시 갱신·실제 SHP 크기 공급](cpp-frame-display-integration.md)을 `MakeSquidFrameHooks`로 실제 Update/Unpop/Pop·Renderer에 연결했다. 전체 콘솔 검사는 251개·실패 0, 실제 두 판본 SHP 물리 6,950개 메타데이터·범위 안 크기 공급 6,946개 확인이 통과했다. Graph 활성·GUI raw 스프라이트 동기화·애니메이션 프로세스는 후속이며 위 독립 기계어 검증 범위는 그대로다.
+
+## 2026-10-10 공통 프레임 진행 연결
+
+현재 글자 구간의 한 번 감싸기를 `RawFrameAdvance`로 복원하고 실제 지정/표시/공간에 연결했다. 기존 지정의 단계 계산/갱신 순서는 유지한다. 새 독립 원본 23,040개와 실제 사제 낙하/예약 연결을 확인했다. 마지막 디컴파일 수행 PC는 **HJOW-Athlon, 2026-10-10**이다. 상세 계약/검증은 [후속 기록](cpp-frame-advance-reconstruction.md)을 따른다.

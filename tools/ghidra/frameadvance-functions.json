@@ -1,0 +1,8 @@
+{
+  "description": "현재 프레임의 글자 구간에서 정수 증분을 한 번 감싸고 실제 SetFrame을 부르는 공통 프레임 진행 함수. 단계 계산/프레임 지정/글자 구간 생성은 기존 setframe·graphremove·bridgeevent 내보내기를 재사용한다.",
+  "editions": {
+    "originals": ["004afc90", "0049a840"],
+    "originalCD": ["004acce0", "004abf50", "004ae4b0", "004ae3f0"],
+    "original1037": ["004acce0", "004abf50", "004ae4b0", "004ae3f0"]
+  }
+}

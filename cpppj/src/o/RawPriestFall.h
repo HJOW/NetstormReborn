@@ -6,6 +6,8 @@
 #include "o/SquidProcess.h"
 
 namespace netstorm::o {
+class RawFrameAdvance;
+class SquidFrame;
 // 낙하 처리기가 선택하는 실제 이벤트 번호다. 원본: 004941f0 / CD 0040c880.
 inline constexpr std::uint32_t kPriestFallEvent=0x25b;
 // 타입별 프레임 선택 입력이다. 실제 공간을 바꾸는 프레임 설정은 훅으로 연결한다.
@@ -62,4 +64,6 @@ std::function<bool(Sid)> MakePriestFallWalker(const SidPool& pool,const RawPries
 // 실제 공유 Regular/보호막 생성·조회와 공급된 공간/소리 훅을 합친다.
 PriestFallHooks MakePriestFallHooks(SquidProcessHost& host,const RawPriestShield& shield,
     const RawPriestForcefield& lookup,std::function<void(Sid,std::uint32_t)> destroy,PriestFallHooks hooks);
+// 0x25b의 시작/도착 지정과 J 진행을 같은 실제 프레임 지정기에 연결한다. 나머지 효과는 공급된 훅을 유지한다.
+PriestFallHooks MakePriestFallFrameHooks(const SquidFrame& setter,const RawFrameAdvance& advance,PriestFallHooks hooks);
 }

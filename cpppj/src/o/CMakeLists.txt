@@ -79,6 +79,7 @@ target_sources(netstorm PRIVATE
     RawDamageableRelease.cpp RawDamageableRelease.h
     SquidProcess.cpp SquidProcess.h
     RawPriestFall.cpp RawPriestFall.h
+    RawFrameAdvance.cpp RawFrameAdvance.h
     RawCarrierCheck.cpp RawCarrierCheck.h
     Graph.cpp Graph.h
     RawGraph.cpp RawGraph.h

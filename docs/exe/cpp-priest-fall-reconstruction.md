@@ -62,3 +62,7 @@ ctest --test-dir cpppj/build -C Release --output-on-failure
 ```
 
 최종 Release **경고/오류 0**, CTest 내부 **446개·실패 0**(118.93초), 원본 근거 감사 **67종 모두 통과**. 최종 검사 로그는 [LEFT_JOBS.md](../../LEFT_JOBS.md)의 최신 단계에 기록한다. 다음은 **Carrier +0xcc의 실제 상태 검사·일반 사제 Pop·프레임/공간·보호막/소리 수명**, 이어 저장 맵/raw GUI·건설·경제·전투·승패다. 싱글플레이 완주와 플레이 가능한 게임은 아직 후속이다.
+
+## 2026-10-10 실제 프레임 지정/진행 연결
+
+`MakePriestFallFrameHooks`로 시작/착지 지정과 J 진행을 실제 `SquidFrame`/`RawFrameAdvance`에 연결했다. SharedRegular/Kernel의 J 반복과 착지/예약 제거, 실제 표시 계산을 두 판본에서 확인했다. 보호막/소리와 일반 사제 Pop은 별도 수명 경계다. 마지막 디컴파일 수행 PC는 **HJOW-Athlon, 2026-10-10**이다. 상세 계약/검증은 [후속 기록](cpp-frame-advance-reconstruction.md)을 따른다.

@@ -1,5 +1,6 @@
 // 실제 조회를 각 외부 효과 다음에 실행하여 현재 상태/타입/좌표를 읽는다.
 #include "o/RawPriestFall.h"
+#include "o/RawFrameAdvance.h"
 #include "o/RawPriestOwner.h"
 #include <bit>
 #include <cmath>
@@ -105,6 +106,15 @@ PriestFallHooks MakePriestFallHooks(SquidProcessHost& host,const RawPriestShield
         const auto found=lookup.Find(sid);
         if (found.value>0 && found.value<pool.Capacity()) destroy(found,0);
     };
+    return hooks;
+}
+// 지정/진행의 같은 실체를 확인하고 이벤트의 DWORD 증분을 signed 인자 비트로 전달한다.
+PriestFallHooks MakePriestFallFrameHooks(const SquidFrame& setter,const RawFrameAdvance& advance,PriestFallHooks hooks) {
+    if (&setter.Pool()!=&advance.Pool() || &setter!=&advance.Setter()) throw std::invalid_argument("사제 낙하 프레임 연결 오류");
+    // 시작과 도착의 직접 지정도 공통 Set의 표시/공간 순서를 사용한다.
+    hooks.setFrame=[&setter](Sid sid,std::int32_t frame,std::uint32_t flags) { setter.Set(sid,frame,flags); };
+    // J 방향의 주기 갱신에서는 반환값을 버린다. 원본 0x25b도 감싸기 여부를 사용하지 않는다.
+    hooks.advanceFrame=[&advance](Sid sid,std::uint32_t delta,std::uint32_t flags) { static_cast<void>(advance.Advance(sid,std::bit_cast<std::int32_t>(delta),flags)); };
     return hooks;
 }
 }

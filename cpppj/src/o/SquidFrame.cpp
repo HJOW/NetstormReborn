@@ -71,4 +71,6 @@ void SquidFrame::Set(Sid sid, std::int32_t frame, std::uint32_t flags) const {
     const auto raw = pool_.Slot(sid);
     hooks_.pop(sid, std::bit_cast<float>(Read(raw, kX)), std::bit_cast<float>(Read(raw, kY)), flags | kFrameRepopFlags);
 }
+// 다른 풀의 객체를 프레임 진행기에 섞지 않도록 참조를 공개한다.
+const SidPool& SquidFrame::Pool() const { return pool_; }
 }

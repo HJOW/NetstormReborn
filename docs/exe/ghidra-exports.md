@@ -1,5 +1,7 @@
 # 기계어 대조 입력(Ghidra 내보내기) 준비
 
+2026-10-10 최신(`HJOW-Athlon`): **`frameadvance` 목록 2/4/4개를 읽기 전용으로 내보냈다.** 실제 진행→지정/단계/글자 표/구판 방향의 독립 입력 **23,040개**, 감사 **69종 모두 통과**. [복원/검증 범위](cpp-frame-advance-reconstruction.md). 기존 아래 목록/날짜는 앞 단계 이력이다.
+
 2026-10-10 후속: **마지막 디컴파일 수행 PC HJOW-Athlon**에서 `carriercheck` 목록 **9/10/10개**를 읽기 전용으로 내보냈다. 실제 +0xcc/+0xc8·낙하 요청/공유 생성자의 독립 입력 **2,028개**, 두 x87 정밀도 총 4,056회 정상 반환을 대조했다. 최신 감사 **68종 모두 통과**. [조건/효과 경계](cpp-carrier-check-reconstruction.md).
 
 2026-10-10 후속: **마지막 디컴파일 수행 PC HJOW-Athlon**에서 `priestfall` 목록 **15/15/15개**를 읽기 전용으로 내보냈다. 낙하 요청·실제 SharedRegular 생성자·0x25b 분배/실제 상태·방향·지도/CRT를 정상 반환까지 실행한 독립 입력 **1,368개**를 생성했다. 두 x87 정밀도 총 2,736회 실행이며 최신 감사 **67종 모두 통과**. [범위/대체 경계](cpp-priest-fall-reconstruction.md).
@@ -44,6 +46,7 @@ Get-ChildItem tools/decomp_*_oracle.py | Where-Object { Select-String -LiteralPa
 | `priestpostpop` | priestpostpop·owner | 5 / 6 / 6 | 2026-10-08 추가([사제 목록·회복 예약 prefix](cpp-priest-postpop-reconstruction.md)), carrier 진입에서 중단·`VM-W11-CODEX`에서 내보냄 |
 | `carrierpostpop` | carrierpostpop·owner | 5 / 5 / 5 | 2026-10-08 추가([Carrier/Damageable 직접 호출](cpp-carrier-postpop-reconstruction.md)), 외부 세 효과 대체·전체 몸체 반환·`VM-W11-CODEX`에서 내보냄 |
 | `carriercheck` | carriercheck | 9 / 10 / 10 | Carrier +0xcc/사제 +0xc8·실제 낙하 요청의 최신 읽기 전용 내보내기 |
+| `frameadvance` | frameadvance | 2 / 4 / 4 | 공통 프레임 진행·타입/구판 방향 helper의 최신 읽기 전용 내보내기 |
 | `prieststate` | prieststate·owner | 11 / 12 / 12 | 2026-10-08 추가([사제 HP/지면 상태·HP setter](cpp-priest-state-reconstruction.md)), 조회 대체 없음·setter 공간 두 효과 대체·전체 몸체 반환·`HJOW-Athlon`에서 내보냄 |
 | `priestregen` | priestregen·prieststate·owner | 10 / 11 / 11 | 2026-10-08 추가([사제 회복 0x25a](cpp-priest-regen-reconstruction.md)), 회복/HP/중립 조건/난수 실제 실행·외부 공간/표시/추적 효과 대체·`HJOW-Athlon`에서 내보냄 |
 | `priestdestroy` | priestdestroy·owner | 4 / 4 / 4 | 2026-10-08 추가([사제 삭제 준비](cpp-priest-destroy-reconstruction.md)), 목록 압축/범위 검사 실제 실행·조회/가상 삭제/Carrier 대체·전체 본문 반환·`HJOW-Athlon`에서 내보냄 |

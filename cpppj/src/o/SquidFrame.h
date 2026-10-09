@@ -34,6 +34,8 @@ public:
     // 004ace40 ↔ CD 004acb00: 객체의 현재 프레임으로 해시 단계를 구해 단계 바이트(패치 +0x21, CD +0x1f)에 쓰고 돌려준다.
     // island·bridge genus는 0, 그 밖은 프레임 크기의 큰 쪽이 2 이하면 1, 4 이하면 2, 넘으면 3이다.
     int StoreLevel(Sid sid) const;
+    // 프레임 진행/이벤트 연결 시 같은 raw 월드인지 확인하는 읽기 전용 풀 참조다.
+    const SidPool& Pool() const;
 private:
     // 판본별 프레임 번호 필드를 읽는다. 패치는 +0x24 DWORD, CD는 +0x22 바이트다.
     std::int32_t Frame(Sid sid) const;

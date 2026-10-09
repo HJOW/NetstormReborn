@@ -1,0 +1,177 @@
+{
+  "format": 1,
+  "decompile_host": "HJOW-Athlon",
+  "decompile_date": "2026-10-10",
+  "cases_per_edition": 7680,
+  "total": 23040,
+  "editions": {
+    "originals": {
+      "binary": "originals/Netstorm.exe",
+      "sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "entries": {
+        "Handler": "00422740",
+        "End": "004215d0",
+        "Table": "0049b060",
+        "Find": "004b23e0",
+        "SetFrame": "004acee0",
+        "Thunk8c": "004ad670",
+        "Advance": "004afc90",
+        "AdvanceType": "0049a840"
+      },
+      "native_calls": {
+        "Table": 4,
+        "Advance": 15360,
+        "AdvanceType": 46080,
+        "SetFrame": 15360
+      },
+      "stub_calls": {
+        "update88": 3072,
+        "update8c": 3072,
+        "unpop": 9856,
+        "pop": 9856
+      },
+      "assertions": 0,
+      "instructions": 2155468,
+      "abi_checks": 15364,
+      "replaced_entry_points": {
+        "004214a0": "notify",
+        "004af530": "create",
+        "20000100": "destroy",
+        "20000110": "owner",
+        "20000120": "pop",
+        "20000130": "unpop",
+        "20000140": "update88",
+        "20000150": "update8c"
+      }
+    },
+    "originalCD": {
+      "binary": "originalCD/NETSTORM.EXE",
+      "sha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "entries": {
+        "Handler": "00449a20",
+        "Table": "00444da0",
+        "Find": "004ebad0",
+        "SetFrame": "004acbc0",
+        "Thunk8c": "004ae3e0",
+        "Advance": "004acce0",
+        "AdvanceType": "004abf50",
+        "Direction": "004ae4b0",
+        "Side": "004ae3f0"
+      },
+      "native_calls": {
+        "Table": 4,
+        "Advance": 15360,
+        "AdvanceType": 46080,
+        "Direction": 15360,
+        "SetFrame": 15360
+      },
+      "stub_calls": {
+        "update88": 3072,
+        "update8c": 3072,
+        "unpop": 9856,
+        "pop": 9856
+      },
+      "assertions": 0,
+      "instructions": 1966276,
+      "abi_checks": 15364,
+      "replaced_entry_points": {
+        "00448c10": "notify",
+        "004ab390": "create",
+        "20000100": "destroy",
+        "20000110": "owner",
+        "20000120": "pop",
+        "20000130": "unpop",
+        "20000140": "update88",
+        "20000150": "update8c"
+      }
+    },
+    "original1037": {
+      "binary": "original1037/netstorm.exe",
+      "sha256": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+      "entries": {
+        "Handler": "00449a20",
+        "Table": "00444da0",
+        "Find": "004ebad0",
+        "SetFrame": "004acbc0",
+        "Thunk8c": "004ae3e0",
+        "Advance": "004acce0",
+        "AdvanceType": "004abf50",
+        "Direction": "004ae4b0",
+        "Side": "004ae3f0"
+      },
+      "native_calls": {
+        "Table": 4,
+        "Advance": 15360,
+        "AdvanceType": 46080,
+        "Direction": 15360,
+        "SetFrame": 15360
+      },
+      "stub_calls": {
+        "update88": 3072,
+        "update8c": 3072,
+        "unpop": 9856,
+        "pop": 9856
+      },
+      "assertions": 0,
+      "instructions": 1966276,
+      "abi_checks": 15364,
+      "replaced_entry_points": {
+        "00448c10": "notify",
+        "004ab390": "create",
+        "20000100": "destroy",
+        "20000110": "owner",
+        "20000120": "pop",
+        "20000130": "unpop",
+        "20000140": "update88",
+        "20000150": "update8c"
+      }
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/frameadvance-x86.tsv": "74f24374bf31a47be3a48024052102ae5f8edfcedd3ccc940e1ecfdacaac75f1",
+    "extracted/bridgeevent/original1037/creation.c": "53cc74566ec65b041fffb5669157203c433a621f3571c64c927dc8ae93e79150",
+    "extracted/bridgeevent/original1037/functions.tsv": "de7abb58aea96d410f4070616c13c45565f9d33a4393e7b3ad48f5128c39c8dc",
+    "extracted/bridgeevent/originalCD/creation.c": "53cc74566ec65b041fffb5669157203c433a621f3571c64c927dc8ae93e79150",
+    "extracted/bridgeevent/originalCD/functions.tsv": "de7abb58aea96d410f4070616c13c45565f9d33a4393e7b3ad48f5128c39c8dc",
+    "extracted/bridgeevent/originals/creation.c": "98b7be841a2e6cd8fb6c975527b161dce284c0f2ed96bcdcaea5f0e26223aff1",
+    "extracted/bridgeevent/originals/functions.tsv": "b97a2cb196b560d3ac3796fe53e679dfa7f150adef6b16e51a3cdf89fa8d9bb7",
+    "extracted/frameadvance/original1037/creation.c": "55c7cb1c0145ac15568eefa4aa2e413c5b737d7e25364e051f910c6bf6c7e8be",
+    "extracted/frameadvance/original1037/functions.tsv": "582b00b1a418904c2bf56501b504c55816650f08cc0391fbe16bdeb387d52023",
+    "extracted/frameadvance/originalCD/creation.c": "55c7cb1c0145ac15568eefa4aa2e413c5b737d7e25364e051f910c6bf6c7e8be",
+    "extracted/frameadvance/originalCD/functions.tsv": "582b00b1a418904c2bf56501b504c55816650f08cc0391fbe16bdeb387d52023",
+    "extracted/frameadvance/originals/creation.c": "845432595db34fadb63ce5e2bc7ca0e49c38e9d54adb2624b90a3261a22d93ad",
+    "extracted/frameadvance/originals/functions.tsv": "7c8ef6db38057bddcb3d6db0c6172be80b23ea89f3cbc9fa423948e60a3144d6",
+    "extracted/graphremove/original1037/creation.c": "1761289145e9acb05aac79ccbe9eca0402da893bda663da4c53c7245b7a4400a",
+    "extracted/graphremove/original1037/functions.tsv": "bc65de793c9e87b34663eafe1e897fcf5f5ace58dd0f07c9c61d372f7acd601e",
+    "extracted/graphremove/original1037/geometry/creation.c": "11a0abebca8cfd416d30cd12ce7fbff0ab1216ac0876f98af4f1d587ab498aa5",
+    "extracted/graphremove/original1037/geometry/functions.tsv": "a10cbae54b312028f6601e329c64a7dbe30dea72dc033a93f005b875873c22ce",
+    "extracted/graphremove/originalCD/creation.c": "1761289145e9acb05aac79ccbe9eca0402da893bda663da4c53c7245b7a4400a",
+    "extracted/graphremove/originalCD/functions.tsv": "bc65de793c9e87b34663eafe1e897fcf5f5ace58dd0f07c9c61d372f7acd601e",
+    "extracted/graphremove/originalCD/geometry/creation.c": "11a0abebca8cfd416d30cd12ce7fbff0ab1216ac0876f98af4f1d587ab498aa5",
+    "extracted/graphremove/originalCD/geometry/functions.tsv": "a10cbae54b312028f6601e329c64a7dbe30dea72dc033a93f005b875873c22ce",
+    "extracted/graphremove/originals/creation.c": "08fc021ba770c21bf298a5e5e547dee7ad500cfac334fce29e30e34253deba22",
+    "extracted/graphremove/originals/functions.tsv": "804ff5b28df9aeec65f968d26e660e266ed4a160a64a5d44c223f222219cc3b4",
+    "extracted/graphremove/originals/geometry/creation.c": "e3ad29a66b1b88964ede5cd0c4c921c0df6ac07cf8935180e5004f38dd51d3ca",
+    "extracted/graphremove/originals/geometry/functions.tsv": "ced17335d5e0a8b25e97ae7d05019f43bdaef60955b0a024ca21d2096713587e",
+    "extracted/setframe/original1037/creation.c": "62bb22d0ef37cecddcc1927f7ccf219ac6ce7ed7122856500e3d96844217ef6f",
+    "extracted/setframe/original1037/functions.tsv": "674200974a1a54c0b7ad8dd9e4a596b3926f6a1b08678cb8f7f7ea0e14f19c27",
+    "extracted/setframe/originalCD/creation.c": "62bb22d0ef37cecddcc1927f7ccf219ac6ce7ed7122856500e3d96844217ef6f",
+    "extracted/setframe/originalCD/functions.tsv": "674200974a1a54c0b7ad8dd9e4a596b3926f6a1b08678cb8f7f7ea0e14f19c27",
+    "extracted/setframe/originals/creation.c": "ac6f886701b50c2ee25ef5fb5411fbba8c97dfacd866220c3df6c50a70777b31",
+    "extracted/setframe/originals/functions.tsv": "31422114edd78937f1d285df1480190ad4ceb87b5436e6e1d407e335f621425e",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_bridgeevent_oracle.py": "eff51573870167881145924f64adbda11a325c576f5bd5dd5568010f3fa5f71a",
+    "tools/decomp_frameadvance_oracle.py": "af2689553c099ea5af10a0a626d6c5d3d4222865a0f9b8fb2caa57322a230ac1",
+    "tools/decomp_neighbor_oracle.py": "9fefac01b7811eb6cb4f4de58c82a02734f396a64f61e415b0f0c4f21a646070",
+    "tools/decomp_setframe_oracle.py": "c6b072a0fc0096c1db5589231e55327f01619f5f70ad8b050a4b5ea055279c6b",
+    "tools/ghidra/frameadvance-functions.json": "569f6227c1564d1a0b9ad3918e80131df6a1a83ea05883edb3e765fa0d0c7853"
+  },
+  "scope": [
+    "실제 진행/지정/현재 프레임 단계/글자 구간 생성/구판 방향",
+    "표시·Unpop·Pop은 호출 기록 대체",
+    "합성 타입/SHP/코드 표",
+    "GUI/일반 사제 Pop/소리 수명/OS 실행은 검증 범위 밖"
+  ]
+}
