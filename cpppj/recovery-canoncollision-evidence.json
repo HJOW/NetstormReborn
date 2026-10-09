@@ -1,0 +1,75 @@
+{
+  "total": 22680,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-09",
+  "controls": [
+    639,
+    895
+  ],
+  "os_calls": 0,
+  "editions": {
+    "originals": {
+      "cases": 7560,
+      "helper": 0,
+      "candidates": 7560,
+      "native_calls": {
+        "004ac550": 15120,
+        "0049a840": 15120,
+        "0049ade0": 12096,
+        "004e49c0": 12888
+      },
+      "candidate_entries": 15120,
+      "region_exits": 15120,
+      "assertions": 0
+    },
+    "originalCD": {
+      "cases": 7560,
+      "helper": 0,
+      "candidates": 7560,
+      "native_calls": {
+        "004abf50": 15120,
+        "00444900": 12096,
+        "004f161c": 15018
+      },
+      "candidate_entries": 15120,
+      "region_exits": 15120,
+      "assertions": 0
+    },
+    "original1037": {
+      "cases": 7560,
+      "helper": 0,
+      "candidates": 7560,
+      "native_calls": {
+        "004abf50": 15120,
+        "00444900": 12096,
+        "004f161c": 15018
+      },
+      "candidate_entries": 15120,
+      "region_exits": 15120,
+      "assertions": 0
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/canoncollision-x86.tsv": "c83e9d19f380b110a18c04a42029fe4b8877a936d71b51d46d3996bc8ece582f",
+    "extracted/canoncollision/original1037/creation.c": "49192049defba78746dd75845aaef3463a08d15d444ccb7a0434c48bee967f7e",
+    "extracted/canoncollision/original1037/functions.tsv": "36a553185025dc6920344230d50800c957fa68661d9b65d8612cbeb7e1e6738a",
+    "extracted/canoncollision/originalCD/creation.c": "49192049defba78746dd75845aaef3463a08d15d444ccb7a0434c48bee967f7e",
+    "extracted/canoncollision/originalCD/functions.tsv": "36a553185025dc6920344230d50800c957fa68661d9b65d8612cbeb7e1e6738a",
+    "extracted/canoncollision/originals/creation.c": "a6021a186a76e1e50d806450f6fa787c09b5620dad389779ebfc730843406655",
+    "extracted/canoncollision/originals/functions.tsv": "a4eb95abcc7af154edc946669044303797524b1ac005aeace863cb4906600ccc",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_canoncollision_oracle.py": "624d37087243ac5ee1eb31f123dce83d06a432cac72ebcd3167475e364b744eb",
+    "tools/decomp_damageablepredestroy_oracle.py": "b6bd591b17b886224e81b9d35dc863f12dea570c67aabf8a66280c7361785e75",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/ghidra/canoncollision-functions.json": "9bdd63d1f975033cca43440becae562f0047b13f8a4f105d0861e9b652689ad3"
+  },
+  "limits": [
+    "무시 helper는 후보 안에서 실제 실행; 단독 전체 DWORD 반환/ABI 대조는 기존 priestcollision 근거",
+    "후보는 MayPlace 중간 구간에 지역 변수/현재 SID를 공급하며 helper/타입/CRT/표시/거부 분기를 실제 실행",
+    "후보 구간 끝에서 관찰 종료: 전체 MayPlace ABI/모양/preview/finder/지형 실행 검증 아님",
+    "일반 genus/flags/0 발자국의 후보 입력만 새 관찰; 기존 무시 함수 독립 fixture는 변경하지 않음",
+    "C++ 실제 패턴/finder 연결은 별도 통합 검사이며 지형/최종 정책은 외부 경계"
+  ]
+}

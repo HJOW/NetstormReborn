@@ -1,12 +1,11 @@
 // 사제 배치의 후보 무시·로컬 발자국 표시·충돌 거부를 실제 사각형 탐색기에 연결한다.
 #pragma once
 #include "o/RawPriestPlacementPreview.h"
+#include "o/RawCanonPlacementCollision.h"
 
 namespace netstorm::o {
-struct PriestPlacementCollisionState {
-    std::uint32_t clientMode{}; // 00540bc0 / CD 00540a28: 예측 가능한 클라이언트 SID를 충돌에서 제외한다.
-    std::uint32_t ignoredGenus{}; // 005325b4 / CD 0053fc28: 배치 타입과 겹칠 때 후보 마스크를 반환하는 전역이다.
-};
+// 사제와 일반 타입은 같은 클라이언트/무시 전역을 공유한다.
+using PriestPlacementCollisionState=CanonPlacementCollisionState;
 // 0049ade0 / CD 00444900: 임의 타입의 원본 무시 함수다. 반환 비트값을 bool로 축소하지 않는다.
 std::uint32_t PlacementIgnoreValue(OriginalEdition edition,const RiftTypeRecord& placing,
     const RiftTypeRecord& candidate,std::uint32_t mode,std::uint32_t ignoredGenus);
@@ -36,9 +35,8 @@ private:
     const SidPool& pool_;
     const SquidHash& hash_;
     std::span<const RiftTypeRecord> types_;
-    PriestPlacementCollisionState& state_;
-    PriestPlacementPreviewState& preview_;
     PriestPlacementCollisionHooks hooks_;
+    RawCanonPlacementCollision collision_;
 };
 // 미리보기의 inspectCollisions만 실제 후보 검사/탐색기로 연결한다. 모양/지형 경계는 호출자가 제공한다.
 PriestPlacementPreviewHooks MakePriestPlacementCollisionHooks(const SidPool& pool,

@@ -7,37 +7,21 @@
 
 namespace netstorm::o {
 namespace {
-// 공통 raw 타입/float 좌표와 판본별 extra 오프셋이다.
-constexpr std::size_t kType=10,kX=14,kY=18,kPatchExtra=40,kCdExtra=35;
-// 예측 가능한 SID 범위의 시작과 미리보기 내부 시작 오프셋이다.
-constexpr std::uint16_t kFirstClient=5;
-constexpr int kSide=12,kInterior=13;
-// 비정렬 little endian float를 원본 바이트로부터 읽는다.
-float Coordinate(std::span<const std::uint8_t> raw,std::size_t offset) {
-    std::uint32_t bits=0;
-    // 낮은 바이트부터 DWORD를 조립한다.
-    for (std::size_t index=0;index<4;++index) bits|=static_cast<std::uint32_t>(raw[offset+index])<<(8*index);
-    return std::bit_cast<float>(bits);
+// 공통 요청에서 사제 API의 원래 여섯 값 인자를 복구한다.
+PriestPlacementQuery PriestQuery(const CanonPlacementQuery& query) {
+    return {query.type,query.x,query.y,query.flags,query.owner,query.mode};
 }
+// 기존 필수 경계를 진단한 뒤 공통 계산기의 콜백으로 연결한다.
+CanonPlacementCollisionHooks AdaptHooks(const PriestPlacementCollisionHooks& hooks) {
+    if (!hooks.inspectRegions || !hooks.inspectCandidateTerrain) throw std::invalid_argument("사제 충돌 지역 경계 누락");
+    return {[regions=hooks.inspectRegions](const CanonPlacementQuery& query,const std::function<bool(SquidSearchArea)>& scan) { return regions(PriestQuery(query),scan); },
+        [terrain=hooks.inspectCandidateTerrain](const CanonPlacementQuery& query,Sid sid) { terrain(PriestQuery(query),sid); }};
 }
-// 조기 분기의 순서와 판본별 bridge/전역 마스크 차이를 그대로 보존한다.
-std::uint32_t PlacementIgnoreValue(OriginalEdition edition,const RiftTypeRecord& placing,
-    const RiftTypeRecord& candidate,std::uint32_t mode,std::uint32_t ignoredGenus) {
-    const auto own=placing.flags2,other=candidate.flags2;
-    if (!mode && (own&0x20000)) return 1;
-    if (other&0x02000000) return 1;
-    if (other&0x120000) return 1;
-    if ((own&4) && (other&(edition==OriginalEdition::Patch1078 ? 0x200000u : 0x208000u))) return 1;
-    if ((other&2) && !(placing.flags1&0x800)) return 1;
-    if ((other&0x30006) && (own&0x208100)) return 1;
-    if (ignoredGenus&own) return other&(edition==OriginalEdition::Patch1078 ? 0x218000u : 0x210000u);
-    if (!mode && (own&0x30000)) return 1;
-    return 0;
 }
 // 미리보기 상태를 직접 공유하여 후보 검사 이전의 표시를 유지한다.
 RawPriestPlacementCollision::RawPriestPlacementCollision(const SidPool& pool,const SquidHash& hash,
     std::span<const RiftTypeRecord> types,PriestPlacementCollisionState& state,PriestPlacementPreviewState& preview,
-    PriestPlacementCollisionHooks hooks):pool_(pool),hash_(hash),types_(types),state_(state),preview_(preview),hooks_(std::move(hooks)) {
+    PriestPlacementCollisionHooks hooks):pool_(pool),hash_(hash),types_(types),hooks_(std::move(hooks)),collision_(pool,hash,types,state,preview,AdaptHooks(hooks_)) {
     if (types.size()!=(pool.Edition()==OriginalEdition::Patch1078 ? 188U : 171U) || !hooks_.inspectRegions || !hooks_.inspectCandidateTerrain)
         throw std::invalid_argument("사제 충돌 자료/지역 경계 누락");
 }
@@ -47,31 +31,10 @@ const RiftTypeRecord& RawPriestPlacementCollision::Placing(const PriestPlacement
         throw std::invalid_argument("사제 충돌 요청 타입/좌표 오류");
     return types_[query.type];
 }
-// 현재 raw 타입을 먼저 읽고 클라이언트 SID 조건, 현재 전역 무시 조건, 표시, extra/mode 순서로 검사한다.
+// 매 후보의 현재 사제 genus 계약을 확인하고 공통 무시/표시/거부 본문을 사용한다.
 bool RawPriestPlacementCollision::InspectCandidate(PriestPlacementQuery query,bool localOwner,Sid candidate) const {
-    const auto& placing=Placing(query);const auto raw=pool_.Slot(candidate);const auto type=raw[kType];
-    if (type>=types_.size()) throw std::out_of_range("사제 충돌 후보 타입 오류");
-    const auto& other=types_[type];const float x=Coordinate(raw,kX),y=Coordinate(raw,kY);
-    const auto firstServer=pool_.Edition()==OriginalEdition::Patch1078 ? 15000U : 6000U;
-    if (state_.clientMode && candidate.value>=kFirstClient && candidate.value<firstServer) return true;
-    if (PlacementIgnoreValue(pool_.Edition(),placing,other,query.mode,state_.ignoredGenus)) return true;
-    if (localOwner) {
-        if (!std::isfinite(x) || !std::isfinite(y) || other.footX<0 || other.footY<0 || other.footX>256 || other.footY>256)
-            throw std::out_of_range("사제 충돌 후보 발자국/좌표 오류");
-        // 후보의 아래쪽부터 y를 늘리고 각 행에서 x를 늘린다. float 저장 없이 넓은 차를 CRT처럼 절삭한다.
-        for (int cy=0;cy<other.footY;++cy) {
-            // 빈 가로 축은 원본처럼 좌표 계산/표시를 수행하지 않는다.
-            for (int cx=0;cx<other.footX;++cx) {
-                const double dx=std::trunc(static_cast<double>(query.x)-(static_cast<double>(x)-cx));
-                const double dy=std::trunc(static_cast<double>(query.y)-(static_cast<double>(y)-cy));
-                if (dx<0 || dy<0 || dx>=placing.footX || dy>=placing.footY) continue;
-                const auto index=dx*kSide+dy+kInterior;
-                if (index>=preview_.blocked.size()) throw std::out_of_range("사제 충돌 미리보기 배열 오류");
-                preview_.blocked[static_cast<std::size_t>(index)]=1;
-            }
-        }
-    }
-    return (raw[pool_.Edition()==OriginalEdition::Patch1078 ? kPatchExtra : kCdExtra]&1) && !query.mode;
+    Placing(query);
+    return collision_.InspectCandidate({query.type,query.type,query.x,query.y,query.flags,query.owner,query.mode},localOwner,candidate);
 }
 // 일반 finder의 기본 가상 필터와 flag 0을 사용하므로 buried만 finder 내부에서 제외한다.
 bool RawPriestPlacementCollision::InspectArea(PriestPlacementQuery query,bool localOwner,SquidSearchArea area) const {

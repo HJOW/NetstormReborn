@@ -14,6 +14,7 @@ add_executable(netstorm_tests
     CanonPlacementGeometryTests.cpp
     CanonPlacementTests.cpp
     CanonPlacementPreviewTests.cpp
+    CanonPlacementCollisionTests.cpp
     ConfigOracleTests.cpp
     ConfigInterfaceTests.cpp
     FortTests.cpp
@@ -196,3 +197,6 @@ set_source_files_properties(CanonPlacementTests.cpp PROPERTIES COMPILE_DEFINITIO
 # 일반 타입/별도 패턴 인자의 미리보기 관찰은 기존 사제 fixture와 분리한다.
 target_compile_definitions(netstorm_tests PRIVATE
     "NETSTORM_CANONPREVIEW_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/canonpreview-x86.tsv\"")
+# 일반 후보의 실제 중간 구간 관찰은 새 검사 소스에서만 읽는다.
+set_source_files_properties(CanonPlacementCollisionTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CANONCOLLISION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/canoncollision-x86.tsv\"")

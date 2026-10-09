@@ -7,7 +7,9 @@
 
 > 최신 생성 후속: [생성자 주소 표·base 생성/가상 초기화·free/void Take](cpp-creation-reconstruction.md)를 원본 SID 풀에 연결했다. 현재 CTest **104개 내부 검사**, 제한 x86 입력 행 **36,510개**이며 생성자 주소 표 359행은 별도다. 파생/공간 수명·실제 GameWorld 연결은 남았다. 위의 43/69개 등의 수치는 앞선 단계의 기록이다.
 
-> 2026-10-09 최신: [일반 타입·패턴 로컬 미리보기](cpp-canon-preview-reconstruction.md). 새 독립 x86 4,860개·누적 277,333개, 실제 decoder 범위/3×3 받침 연결, CTest 내부 382개·감사 55종 통과. 모양/decoder 진입과 후반 충돌 구간 대체를 구별하며 전체 MayPlace/건설·전투·미션 완주는 후속이다.
+> 2026-10-09 최신: [일반 타입 후보 충돌·실제 패턴 연결](cpp-canon-collision-reconstruction.md). 새 독립 x86 22,680개·누적 300,013개, 실제 받침/미리보기/finder와 후속 모양 생략 검사, CTest 내부 389개·감사 56종 통과. 원본 후보 중간 구간 관찰과 C++ 합성을 구별하며 전체 MayPlace/건설·전투·미션 완주는 후속이다.
+
+> 2026-10-09 앞 단계: [일반 타입·패턴 로컬 미리보기](cpp-canon-preview-reconstruction.md). 새 독립 x86 4,860개·누적 277,333개, 실제 decoder 범위/3×3 받침 연결, CTest 내부 382개·감사 55종 통과. 모양/decoder 진입과 후반 충돌 구간 대체를 구별하며 전체 MayPlace/건설·전투·미션 완주는 후속이다.
 
 > 2026-10-09 앞 단계: [일반 타입·패턴 배치 접두](cpp-canon-placement-reconstruction.md). 새 독립 x86 3,360개·누적 272,473개, 실제 두 판본 자산 접두 8,072개 일치, CTest 내부 377개·감사 54종 통과. 전체 MayPlace/건설·전투·실제 플레이 완주는 후속이다.
 
