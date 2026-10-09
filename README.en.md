@@ -19,7 +19,7 @@ The linked documents are written in Korean.
 
 # Project layout
 
-There are two game builds, developed side by side.
+There are two game builds, developed side by side. The C++ build proceeds in this order: single-player reconstruction of version 10.78 → error-free execution on Windows 10/11 → TCP/IP LAN multiplayer and outposts (the official server is not restored) → added requirements, MCP and Korean language support. It is Windows only. The C# build is developed by analyzing the finished C++ build: it first aims to behave exactly like the original and adds the new requirements afterwards. Linux work on the C# build has lower priority.
 
 | Folder | Contents | Status |
 | --- | --- | --- |
