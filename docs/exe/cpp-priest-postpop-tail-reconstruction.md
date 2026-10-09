@@ -2,6 +2,8 @@
 
 2026-10-10. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-10.** AGENTS.md·두 인계·cpppj 계획과 주석 규칙을 다시 읽었다. 같은 PC에서 새 `priestpostpoptail` 목록 **18/20/20개**를 읽기 전용으로 내보냈다. 10.78 싱글플레이 복원이 현재 우선이며 outpost/LAN은 3차, 한국어·요구사항/MCP는 4차다. 원본 게임/복사본·클론 창은 실행하지 않았다.
 
+후속 완료(2026-10-10): [사제 낙하 요청·공유 Regular·0x25b 처리](cpp-priest-fall-reconstruction.md)를 복원했다. 이 문서의 낙하 경계는 `RawPriestFall::Begin`으로 연결할 수 있다. 프레임/공간/소리 하위 효과와 일반 사제 Pop은 후속이다.
+
 [`RawPriestPostPopTail`](../../cpppj/src/o/RawPriestPostPopTail.h)은 [목록/회복 접두](cpp-priest-postpop-reconstruction.md)→[Carrier/Damageable/공통 장부](cpp-carrier-postpop-reconstruction.md)→현재 이동 불가/지면/프레임→낙하/보호막 요청의 전체 wrapper 순서를 조합한다. 직접 호출용이며 일반 `SquidPop`의 사제 가상 표 지원은 계속 제한한다. **낙하 몸체·보호막 Pop/destroy·오디오·GUI 완료가 아니다.**
 
 | 동작 | 10.78 | CD·추가 10.37 |

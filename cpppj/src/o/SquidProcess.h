@@ -27,7 +27,8 @@ private:
     ProcessId pid_{};
     SquidProcessHost* host_{};
 };
-// Regular.cpp의 RegularProcess(타입 46): 정해진 시각에 부모의 이벤트 처리기(vtable +0x5c)를 부르고 반환값으로 다음 시각을 정한다.
+// 정해진 시각에 부모의 이벤트 처리기를 부르고 반환값으로 다음 시각을 정한다.
+// 원본: Regular.cpp의 Regular(타입 46)와 SharedRegular(타입 61)는 같은 RunFrame 몸체를 쓴다.
 class RegularProcess final : public SquidProcess {
 public:
     // 00496e80 ↔ CD 0048efd0의 필드 초기값이다. 시각은 부착 때의 현재 시각으로 정해진다.
@@ -67,6 +68,11 @@ public:
     // 00496e80 ↔ CD 0048efd0: RegularProcess를 붙이고 시각을 현재 시각으로 둔다. 원본 생성자의 flags는 항상 로컬 전용 0x50이며
     // 다른 값은 BaseProcess 생성자의 할당/권한 분기를 검사할 때만 쓴다.
     RegularProcess* AddRegular(Sid parent,std::uint32_t event,float payload,std::uint32_t flags=0x50);
+    // 일반 Regular와 같은 실행 몸체를 타입 61로 부착한다. 시각은 부착 후 현재 시각이다.
+    // 원본: SharedRegular 생성자 00496f00 / CD 0048f1d0. 네트워크 저장 가상 함수는 별도 미복원이다.
+    RegularProcess* AddSharedRegular(Sid parent,std::uint32_t event,float payload);
+    // 모듈을 연결할 때 다른 월드의 풀을 섞지 않도록 참조를 제공한다.
+    const SidPool& Pool() const;
     // 0041bf10 ↔ CD 0048f7b0: 권한 조건이 맞으면 form을 공통 destroy로 지운다. 프로세스는 form의 preDestroy에서 소멸한다.
     void Kill(SquidProcess& process,std::uint32_t flags);
     // 004afb40 ↔ CD 004ac890: 부모의 종속 체인에서 이벤트 번호가 같은 첫 Regular 프로세스를 찾는다.

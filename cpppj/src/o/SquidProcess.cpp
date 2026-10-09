@@ -127,6 +127,15 @@ RegularProcess* SquidProcessHost::AddRegular(Sid parent,std::uint32_t event,floa
     if (attached) attached->time_=state_.now;
     return attached;
 }
+// 같은 Regular 객체를 공유 타입으로 부착한다. 부모 체인/Kernel/예약 규칙을 재사용한다.
+// 원본: 00496f00 / CD 0048f1d0. 실행 vtable +0x18은 일반 Regular와 동일하다.
+RegularProcess* SquidProcessHost::AddSharedRegular(Sid parent,std::uint32_t event,float payload) {
+    auto* attached=static_cast<RegularProcess*>(Attach(std::make_unique<RegularProcess>(event,payload),kSharedRegularType,parent,0x50));
+    if (attached) attached->time_=state_.now;
+    return attached;
+}
+// 실제 부착과 사제 낙하 연결이 같은 풀인지 검사할 때 사용한다.
+const SidPool& SquidProcessHost::Pool() const { return pool_; }
 void SquidProcessHost::UnpopForm(Sid form) {
     const auto raw=pool_.Slot(form);
     if (raw[kType]>kLastFormType || (raw[kState]&kVoid)) throw std::logic_error("프로세스 form Unpop 상태 오류");

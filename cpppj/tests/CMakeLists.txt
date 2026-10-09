@@ -25,6 +25,7 @@ add_executable(netstorm_tests
     RegionOwnershipTests.cpp
     PriestShieldTests.cpp
     PriestPostPopTailTests.cpp
+    PriestFallTests.cpp
     ConfigOracleTests.cpp
     ConfigInterfaceTests.cpp
     FortTests.cpp
@@ -240,3 +241,7 @@ set_source_files_properties(PriestShieldTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 사제 postPop 전체 wrapper의 독립 원본 관찰 경로다.
 set_source_files_properties(PriestPostPopTailTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PRIESTPOSTPOPTAIL_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/priestpostpoptail-x86.tsv\"")
+
+# 원본 낙하 요청/0x25b 관찰을 일반 C++ 검사에서 재생할 경로다.
+set_source_files_properties(PriestFallTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PRIESTFALL_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/priestfall-x86.tsv\"")

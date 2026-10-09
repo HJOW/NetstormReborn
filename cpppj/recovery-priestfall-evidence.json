@@ -1,0 +1,142 @@
+{
+  "schema": 1,
+  "primary_target": "10.78",
+  "last_decompiled_host": "HJOW-Athlon",
+  "date": "2026-10-10",
+  "total": 1368,
+  "controls": [
+    639,
+    895
+  ],
+  "editions": {
+    "originals": {
+      "binary": "originals/Netstorm.exe",
+      "cases": 456,
+      "executions": 912,
+      "native_calls": {
+        "004941f0": 192,
+        "00496f00": 96,
+        "00494580": 720,
+        "00493e60": 720,
+        "00427030": 1110,
+        "00492090": 642,
+        "004ac200": 642,
+        "0049a840": 3432,
+        "004adcb0": 642,
+        "0049fce0": 642,
+        "004ad710": 720,
+        "004ac550": 786,
+        "0040eaf0": 720,
+        "004e49c0": 2256
+      },
+      "stub_calls": {
+        "S": 822,
+        "new": 192,
+        "W": 192,
+        "U": 96,
+        "P": 96,
+        "attach": 96,
+        "F": 786,
+        "N": 324,
+        "find": 114,
+        "destroy": 114
+      },
+      "assertions": 0,
+      "instructions": 205866
+    },
+    "originalCD": {
+      "binary": "originalCD/NETSTORM.EXE",
+      "cases": 456,
+      "executions": 912,
+      "native_calls": {
+        "0040c880": 192,
+        "0048f1d0": 96,
+        "0048ef50": 96,
+        "0040ccd0": 720,
+        "0040c430": 720,
+        "004e5150": 1110,
+        "0040d7b0": 642,
+        "004abae0": 1284,
+        "004aed30": 642,
+        "00444720": 642,
+        "004ae4b0": 720,
+        "004abf50": 1506,
+        "004f161c": 2256
+      },
+      "stub_calls": {
+        "S": 822,
+        "new": 192,
+        "W": 192,
+        "U": 96,
+        "P": 96,
+        "attach": 96,
+        "F": 786,
+        "N": 324,
+        "X": 114
+      },
+      "assertions": 0,
+      "instructions": 184902
+    },
+    "original1037": {
+      "binary": "original1037/netstorm.exe",
+      "cases": 456,
+      "executions": 912,
+      "native_calls": {
+        "0040c880": 192,
+        "0048f1d0": 96,
+        "0048ef50": 96,
+        "0040ccd0": 720,
+        "0040c430": 720,
+        "004e5150": 1110,
+        "0040d7b0": 642,
+        "004abae0": 1284,
+        "004aed30": 642,
+        "00444720": 642,
+        "004ae4b0": 720,
+        "004abf50": 1506,
+        "004f161c": 2256
+      },
+      "stub_calls": {
+        "S": 822,
+        "new": 192,
+        "W": 192,
+        "U": 96,
+        "P": 96,
+        "attach": 96,
+        "F": 786,
+        "N": 324,
+        "X": 114
+      },
+      "assertions": 0,
+      "instructions": 184902
+    }
+  },
+  "os_calls": 0,
+  "stopped_before": null,
+  "stubbed": [
+    "new(0x28)",
+    "BaseProcess Attach",
+    "ensure/clear shield",
+    "Unpop/Repop",
+    "set/advance frame",
+    "positional sound",
+    "patch shield find/destroy"
+  ],
+  "files": {
+    "cpppj/tests/fixtures/priestfall-x86.tsv": "e74b1a855885e1846c29fb6082de20cfec3f770185bcee18955bc2251161c10a",
+    "extracted/priestfall/original1037/creation.c": "fd9480485c29cfe02cc04538e0811e5afb24d8d75670bdb7c2cdbf00f946de4f",
+    "extracted/priestfall/original1037/functions.tsv": "e62fd9abb239647dba635f63c2ab9731bc27c9bc7ae2f774306092f11619407e",
+    "extracted/priestfall/originalCD/creation.c": "fd9480485c29cfe02cc04538e0811e5afb24d8d75670bdb7c2cdbf00f946de4f",
+    "extracted/priestfall/originalCD/functions.tsv": "e62fd9abb239647dba635f63c2ab9731bc27c9bc7ae2f774306092f11619407e",
+    "extracted/priestfall/originals/creation.c": "9dac4d981f58c84ff34c5cb0cabec87ad202a1de347b607cae0691749993bb3c",
+    "extracted/priestfall/originals/functions.tsv": "f7c58c4fb076721c23ce96b17e953e6b77090f5653529beebcbdc146b42bb429",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/decomp_priestfall_oracle.py": "015ce9d9738a088acc941e1931f44c10bed13a89b554bd5c03d8fc608c02c845",
+    "tools/decomp_priestpostpop_oracle.py": "50e454fc58258dcfebdbcf612f2aa1e812d75ca442e4790a4f616ed9d6732449",
+    "tools/decomp_prieststate_oracle.py": "a936ab8b0abcf8d6333f330ff63c93530d354f2b39c1d8649f85e45f99eaa717",
+    "tools/ghidra/priestfall-functions.json": "c9a6fde47a9da53ff932c4f88b55b3e10081826255659936b5af10fdf4fd7082"
+  }
+}
