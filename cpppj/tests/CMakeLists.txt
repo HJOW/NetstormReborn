@@ -13,6 +13,7 @@ add_executable(netstorm_tests
     CanonPixelShapeTests.cpp
     CanonPlacementGeometryTests.cpp
     CanonPlacementTests.cpp
+    CanonPlacementPreviewTests.cpp
     ConfigOracleTests.cpp
     ConfigInterfaceTests.cpp
     FortTests.cpp
@@ -192,3 +193,6 @@ set_source_files_properties(CanonPlacementGeometryTests.cpp PROPERTIES COMPILE_D
 # 일반 배치 접두의 별도 패턴 인자/원본 전역 관찰 경로다.
 set_source_files_properties(CanonPlacementTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CANONPLACEMENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/canonplacement-x86.tsv\"")
+# 일반 타입/별도 패턴 인자의 미리보기 관찰은 기존 사제 fixture와 분리한다.
+target_compile_definitions(netstorm_tests PRIVATE
+    "NETSTORM_CANONPREVIEW_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/canonpreview-x86.tsv\"")

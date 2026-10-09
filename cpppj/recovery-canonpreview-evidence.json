@@ -1,0 +1,85 @@
+{
+  "total": 4860,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-09",
+  "normal_return": true,
+  "os_calls": 0,
+  "controls": [
+    639,
+    895
+  ],
+  "editions": {
+    "originals": {
+      "cases": 1620,
+      "native_calls": {
+        "0049b510": 3240,
+        "004e49c0": 2780,
+        "0040da00": 34588,
+        "004ac200": 22924,
+        "0049a840": 22924,
+        "004629e0": 14114
+      },
+      "substitutions": {
+        "shape": 2780,
+        "decoder": 2432,
+        "bounds": 2432,
+        "collision_region": 2172
+      },
+      "assertions": 0
+    },
+    "originalCD": {
+      "cases": 1620,
+      "native_calls": {
+        "00445200": 3240,
+        "004448e0": 2780,
+        "004f161c": 2780,
+        "004abae0": 25506
+      },
+      "substitutions": {
+        "shape": 2780,
+        "decoder": 2432,
+        "bounds": 2432,
+        "collision_region": 2780
+      },
+      "assertions": 0
+    },
+    "original1037": {
+      "cases": 1620,
+      "native_calls": {
+        "00445200": 3240,
+        "004448e0": 2780,
+        "004f161c": 2780,
+        "004abae0": 25506
+      },
+      "substitutions": {
+        "shape": 2780,
+        "decoder": 2432,
+        "bounds": 2432,
+        "collision_region": 2780
+      },
+      "assertions": 0
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/canonpreview-x86.tsv": "f85f5e24f83f2fa9c1cd7ed00981dae471d43363b53543c398d0303f4de17aa9",
+    "extracted/canonpreview/original1037/creation.c": "5943ea3eb0a5edd4aa188d50a157a051cdbc91732c378d78f0e564b531b79931",
+    "extracted/canonpreview/original1037/functions.tsv": "e066b984ac826dba57fb365d665a1a2a50a60def7534020e1797a73c2cbb200b",
+    "extracted/canonpreview/originalCD/creation.c": "5943ea3eb0a5edd4aa188d50a157a051cdbc91732c378d78f0e564b531b79931",
+    "extracted/canonpreview/originalCD/functions.tsv": "e066b984ac826dba57fb365d665a1a2a50a60def7534020e1797a73c2cbb200b",
+    "extracted/canonpreview/originals/creation.c": "6b4e9edd68217cdfedfc9345f6e69f0cf6bc2d73727d4bd26f8d930e06d495bb",
+    "extracted/canonpreview/originals/functions.tsv": "ffaa02f37f91b25a90a5b8219753d648b0911c78638e71a9327401f8ced8d90a",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_canonplacement_oracle.py": "d1c6592ddf5964fac72b77f68f55570773fa83133da21354fcf81c85a147977f",
+    "tools/decomp_canonpreview_oracle.py": "090605a3ff6b81cbdedb566a17527c0a514bdcc5545df453d1368afd1ad000c5",
+    "tools/decomp_damageablepredestroy_oracle.py": "b6bd591b17b886224e81b9d35dc863f12dea570c67aabf8a66280c7361785e75",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/ghidra/canonpreview-functions.json": "e961000a9670b32229a57af90390fdffb93fc059fabb492ea2bd51a1c74681fb"
+  },
+  "limits": [
+    "진입/여백/로컬 분기/144바이트 초기화/순회/지도/표면 genus/관계/반환은 실제 실행",
+    "모양·CanonDecoder 생성/범위 조회 함수 진입 대체; 이후 0049b825 또는 CD 0044550e부터 충돌/지역 구간 대체",
+    "CD의 할당 지도 밖 읽기·관계 표 밖 입력·패치 assert는 정상 fixture에서 제외; 실제 모양/충돌/지도 수명 검증 아님"
+  ]
+}
