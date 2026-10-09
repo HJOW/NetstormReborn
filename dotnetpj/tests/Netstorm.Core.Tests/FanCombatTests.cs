@@ -13,7 +13,7 @@ public sealed class FanCombatTests
     public void SunCannon_UnfoldsBeforeFirstShot()
     {
         BattleSession session = Create(Object("sunCannon", 1, 10, 10), Object("sunBlocker", 2, 18, 10));
-        GameEntity cannon = session.Entity(1)!;
+        GameEntity cannon = session.Entity(OriginalData.Sid(1))!;
         Assert.Equal(16, cannon.SunCannonFrame);
         session.RunTicks(1);
         Assert.Equal(17, cannon.SunCannonFrame);
@@ -47,8 +47,8 @@ public sealed class FanCombatTests
         // 원본 전이표의 회전 경로가 끝날 때까지 기다리고 중간 자세에서의 발사를 거부한다.
         for (int tick = 0; tick < 100 && session.Shots.Count == 0; tick++) session.RunTicks(1);
         Assert.Single(session.Shots);
-        Assert.Equal(direction, session.Entity(1)!.CannonDirection);
-        Assert.Equal(firingFrame, session.Entity(1)!.SunCannonFrame);
+        Assert.Equal(direction, session.Entity(OriginalData.Sid(1))!.CannonDirection);
+        Assert.Equal(firingFrame, session.Entity(OriginalData.Sid(1))!.SunCannonFrame);
     }
 
     /// <summary>조준 중 목표를 잃으면 원본 접힌 자세로 돌아가고 사라진 목표에 발사하지 않는다.</summary>
@@ -57,10 +57,10 @@ public sealed class FanCombatTests
     {
         BattleSession session = Create(Object("sunCannon", 1, 10, 10), Object("sunBlocker", 2, 18, 10));
         session.RunTicks(1);
-        session.Submit(new SalvageCommand(2, 2));
+        session.Submit(new SalvageCommand(2, OriginalData.Sid(2)));
         session.RunTicks(60);
-        Assert.Equal(0, session.Entity(1)!.AttackTargetId);
-        Assert.Equal(16, session.Entity(1)!.SunCannonFrame);
+        Assert.Equal(0, session.Entity(OriginalData.Sid(1))!.AttackTargetId);
+        Assert.Equal(16, session.Entity(OriginalData.Sid(1))!.SunCannonFrame);
         Assert.DoesNotContain(session.DrainEvents(), e => e.Kind == SessionEventKind.ShotFired);
     }
 
@@ -70,16 +70,16 @@ public sealed class FanCombatTests
     {
         BattleSession session = Create(Object("sunCannon", 1, 10, 10), Object("sunBlocker", 2, 18, 10), Object("sunBlocker", 2, 10, 2));
         session.RunTicks(1);
-        Assert.Equal(17, session.Entity(1)!.SunCannonFrame);
-        session.Submit(new SalvageCommand(2, 2));
+        Assert.Equal(17, session.Entity(OriginalData.Sid(1))!.SunCannonFrame);
+        session.Submit(new SalvageCommand(2, OriginalData.Sid(2)));
         session.RunTicks(4);
-        Assert.Equal(3, session.Entity(1)!.AttackTargetId);
-        Assert.Equal(17, session.Entity(1)!.SunCannonFrame);
+        Assert.Equal(OriginalData.Sid(3), session.Entity(OriginalData.Sid(1))!.AttackTargetId);
+        Assert.Equal(17, session.Entity(OriginalData.Sid(1))!.SunCannonFrame);
         session.RunTicks(1);
-        Assert.Equal(16, session.Entity(1)!.SunCannonFrame);
+        Assert.Equal(16, session.Entity(OriginalData.Sid(1))!.SunCannonFrame);
         session.RunTicks(40);
-        Assert.Equal(3, Assert.Single(session.Shots).TargetId);
-        Assert.Equal(25, session.Entity(1)!.SunCannonFrame);
+        Assert.Equal(OriginalData.Sid(3), Assert.Single(session.Shots).TargetId);
+        Assert.Equal(25, session.Entity(OriginalData.Sid(1))!.SunCannonFrame);
     }
 
     /// <summary>원반·석궁 탄도 발사 때 정한 착탄점을 벗어난 이동 목표에 예약 피해를 주지 않는다.</summary>
@@ -92,9 +92,9 @@ public sealed class FanCombatTests
         session.RunTicks(1);
         CombatShot shot = Assert.Single(session.Shots);
         // 원반의 짧은 사거리에서도 폭이 1칸인 사제가 직각으로 벗어날 충분한 시간을 확보한다.
-        session.Submit(new MoveEntityCommand(2, 2, x, y + 5));
+        session.Submit(new MoveEntityCommand(2, OriginalData.Sid(2), x, y + 5));
         session.RunTicks((int)(shot.ImpactTick - session.Tick));
-        Assert.Equal(100, session.Entity(2)!.HitPoints);
+        Assert.Equal(100, session.Entity(OriginalData.Sid(2))!.HitPoints);
         Assert.Empty(session.Impacts);
     }
 
@@ -104,7 +104,7 @@ public sealed class FanCombatTests
     {
         BattleSession session = Create(Object("sunCannon", 1, 10, 10, 3), Object("windVortex", 2, 24, 12, health: 50));
         session.RunTicks(30);
-        Assert.Null(session.Entity(2));
+        Assert.Null(session.Entity(OriginalData.Sid(2)));
         CombatImpact impact = Assert.Single(session.Impacts, i => i.Group == 'A');
         TypeDefinition animation = OriginalData.RequireTypes().Find("anim")!.Definition;
         int frame = ProjectileAnimation.ImpactFrame(animation, impact, session.Tick, session.TicksPerSecond);

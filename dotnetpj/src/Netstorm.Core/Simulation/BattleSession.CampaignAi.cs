@@ -31,6 +31,7 @@ public sealed partial class BattleSession
                     int.MaxValue, connectedToHome: false, atOwnBridgeEnd: false).Allowed);
                 if (position == null) break;
                 PlacementCheck site = Map.CheckUnit(walker, position.Value.X, position.Value.Y, player.Number, int.MaxValue, false, false);
+                if (!Map.Sids.CanAllocateServer()) break;
                 int id = Map.PlaceUnit(walker, site, player.Number);
                 _entities.Add(id, new GameEntity(id, walker, ObjectKind.Transport, player.Number, site.Footprint,
                     Map.TerritoryAt(position.Value.X, position.Value.Y), null));

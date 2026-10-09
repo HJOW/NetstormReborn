@@ -13,7 +13,7 @@ public sealed class RecordedCombatTests
     public void IceTower_RegrowsRepeatedlyWithoutRewardOrSupportLoss()
     {
         BattleSession session = Create(Object("sunCannon", 1, 10, 10, 3, overrides: "hpPerSec = 400;"), Object("rainBlocker", 2, 18, 10));
-        GameEntity tower = session.Entity(2)!;
+        GameEntity tower = session.Entity(OriginalData.Sid(2))!;
         int money = session.Player(1).StormPower;
         session.Submit(new SelectEntityCommand(2, tower.Id));
         // 두 번의 파괴와 재성장을 모두 검증해 후속 탄의 중복 보상·재파괴를 막는다.
@@ -50,7 +50,7 @@ public sealed class RecordedCombatTests
     {
         BattleSession session = Create(Object("sunCannon", 1, 10, 10, 3, overrides: "hpPerSec = 400;"), Object("rainBlocker", 2, 18, 10));
         session.RunTicks(12);
-        GameEntity tower = session.Entity(2)!;
+        GameEntity tower = session.Entity(OriginalData.Sid(2))!;
         session.CombatEnabled = false;
         session.RunTicks(576 - (int)(session.Tick - tower.RegenerationStartTick));
         Assert.Equal(10, session.IceGrowthFrame(tower));
@@ -72,7 +72,7 @@ public sealed class RecordedCombatTests
         BattleSession session = Create(Object("sunCannon", 1, 10, 10, 3, overrides: "hpPerSec = 400;"),
             Object("sunCannon", 1, 26, 10, overrides: "hpPerSec = 400;"), Object("rainBlocker", 2, 18, 10));
         session.RunTicks(160);
-        Assert.True(session.Entity(3)!.IsRegenerating);
+        Assert.True(session.Entity(OriginalData.Sid(3))!.IsRegenerating);
         Assert.Single(session.DrainEvents(), e => e.Kind == SessionEventKind.IceTowerShattered);
         Assert.Empty(session.Shots);
         Assert.All(session.Entities.Take(2), e => Assert.Equal(0, e.AttackTargetId));
@@ -84,9 +84,9 @@ public sealed class RecordedCombatTests
     {
         BattleSession session = Create(Object("sunCannon", 1, 10, 10, 3), Object("rainBlocker", 2, 18, 10), Object("sunwalker", 2, 26, 9));
         session.RunTicks(15);
-        Assert.Equal(2, session.Entity(1)!.AttackTargetId);
-        Assert.Equal(1060 - 80, session.Entity(2)!.HitPoints);
-        Assert.Equal(session.Entity(3)!.MaxHitPoints, session.Entity(3)!.HitPoints);
+        Assert.Equal(OriginalData.Sid(2), session.Entity(OriginalData.Sid(1))!.AttackTargetId);
+        Assert.Equal(1060 - 80, session.Entity(OriginalData.Sid(2))!.HitPoints);
+        Assert.Equal(session.Entity(OriginalData.Sid(3))!.MaxHitPoints, session.Entity(OriginalData.Sid(3))!.HitPoints);
     }
 
     /// <summary>가장 가까운 동맹 기둥만 연결하며 세 기둥을 하나의 긴 선으로 중복 연결하지 않는다.</summary>
@@ -96,8 +96,8 @@ public sealed class RecordedCombatTests
         BattleSession session = Create(Object("sunFence", 1, 10, 10), Object("sunFence", 1, 20, 10),
             Object("sunFence", 1, 30, 10), Object("sunFence", 1, 20, 20), Object("sunFence", 1, 22, 23));
         Assert.Equal(3, session.SunForceFields.Count);
-        Assert.DoesNotContain(session.SunForceFields, f => f.FirstId == 1 && f.SecondId == 3);
-        Assert.Contains(session.SunForceFields, f => f.FirstId == 2 && f.SecondId == 4);
+        Assert.DoesNotContain(session.SunForceFields, f => f.FirstId == OriginalData.Sid(1) && f.SecondId == OriginalData.Sid(3));
+        Assert.Contains(session.SunForceFields, f => f.FirstId == OriginalData.Sid(2) && f.SecondId == OriginalData.Sid(4));
     }
 
     /// <summary>동맹 소유자가 달라도 연결하지만 중간의 적 기둥은 긴 선을 끊는다.</summary>
@@ -110,7 +110,7 @@ public sealed class RecordedCombatTests
         Assert.Equal(2, allied.SunForceFields.Count);
         BattleSession hostile = Create(posts);
         Assert.Empty(hostile.SunForceFields);
-        hostile.Submit(new SalvageCommand(3, 2));
+        hostile.Submit(new SalvageCommand(3, OriginalData.Sid(2)));
         hostile.RunTicks(1);
         Assert.Single(hostile.SunForceFields);
     }
@@ -138,12 +138,12 @@ public sealed class RecordedCombatTests
             ? [Object("sunCannon", 1, 20, 10, 0), Object("sunBlocker", 2, 20, 28), Object("sunFence", owner, 10, 20), Object("sunFence", owner, 30, 20)]
             : [Object("sunCannon", 1, 10, 20, 3), Object("sunBlocker", 2, 28, 20), Object("sunFence", owner, 20, 10), Object("sunFence", owner, 20, 30)];
         BattleSession session = Create(objects);
-        double before = session.Entity(2)!.HitPoints;
+        double before = session.Entity(OriginalData.Sid(2))!.HitPoints;
         session.RunTicks(1);
         CombatShot shot = Assert.Single(session.Shots);
         Assert.Equal(blocked, shot.BlockedByFenceId != 0);
         session.RunTicks(30);
-        Assert.Equal(before - (blocked ? 0 : 80), session.Entity(2)!.HitPoints);
+        Assert.Equal(before - (blocked ? 0 : 80), session.Entity(OriginalData.Sid(2))!.HitPoints);
         Assert.Equal(blocked, session.DrainEvents().Any(e => e.Kind == SessionEventKind.ShotBlocked));
     }
 
@@ -156,13 +156,13 @@ public sealed class RecordedCombatTests
         session.EnforceProductionRules = false;
         session.RunTicks(1);
         Assert.Equal(0, Assert.Single(session.Shots).BlockedByFenceId);
-        session.Submit(new SalvageCommand(2, 4));
+        session.Submit(new SalvageCommand(2, OriginalData.Sid(4)));
         session.RunTicks(1);
         session.Submit(new PlaceUnitCommand(2, "sunFence", 20, 30));
-        double before = session.Entity(2)!.HitPoints;
+        double before = session.Entity(OriginalData.Sid(2))!.HitPoints;
         session.RunTicks(30);
         Assert.Single(session.SunForceFields);
-        Assert.Equal(before, session.Entity(2)!.HitPoints);
+        Assert.Equal(before, session.Entity(OriginalData.Sid(2))!.HitPoints);
         Assert.Contains(session.DrainEvents(), e => e.Kind == SessionEventKind.ShotBlocked);
     }
 
@@ -173,11 +173,11 @@ public sealed class RecordedCombatTests
         BattleSession session = Create(Object("sunCannon", 1, 10, 20, 3), Object("sunBlocker", 2, 28, 20),
             Object("sunFence", 2, 20, 10), Object("sunFence", 2, 20, 30));
         session.RunTicks(30);
-        double health = session.Entity(2)!.HitPoints;
-        session.Submit(new SalvageCommand(2, 3));
+        double health = session.Entity(OriginalData.Sid(2))!.HitPoints;
+        session.Submit(new SalvageCommand(2, OriginalData.Sid(3)));
         session.RunTicks(121);
         Assert.Empty(session.SunForceFields);
-        Assert.Equal(health - 80, session.Entity(2)!.HitPoints);
+        Assert.Equal(health - 80, session.Entity(OriginalData.Sid(2))!.HitPoints);
     }
 
     /// <summary>원본 공통 발사 경로처럼 Vander Tower의 번개도 적 방어선 교점에서 끝난다.</summary>
@@ -192,7 +192,7 @@ public sealed class RecordedCombatTests
         Assert.NotEqual(0, beam.BlockedByFenceId);
         Assert.Equal(14, beam.EndX);
         session.RunTicks(1);
-        Assert.Equal(session.Entity(2)!.MaxHitPoints, session.Entity(2)!.HitPoints);
+        Assert.Equal(session.Entity(OriginalData.Sid(2))!.MaxHitPoints, session.Entity(OriginalData.Sid(2))!.HitPoints);
         Assert.Contains(session.DrainEvents(), e => e.Kind == SessionEventKind.ShotBlocked);
     }
 
@@ -242,13 +242,13 @@ public sealed class RecordedCombatTests
         BattleSession session = Create(Object("windArcher", 1, 30, 30, frame),
             Object("sunBlocker", 2, frontX, frontY), Object("sunBlocker", 2, backX, backY));
         session.RunTicks(1);
-        Assert.Equal(2, session.Entity(1)!.AttackTargetId);
+        Assert.Equal(OriginalData.Sid(2), session.Entity(OriginalData.Sid(1))!.AttackTargetId);
         // 저장된 중간 조준 자세는 실제 회전이 끝나야 탄을 놓는다. 앞쪽 목표 유지·발사 단언은 그대로 검사한다.
         session.RunTicks(19);
-        Assert.Contains(session.DrainEvents(), e => e.Kind == SessionEventKind.ShotFired && e.EntityId == 1);
-        session.Submit(new SalvageCommand(2, 2));
+        Assert.Contains(session.DrainEvents(), e => e.Kind == SessionEventKind.ShotFired && e.EntityId == OriginalData.Sid(1));
+        session.Submit(new SalvageCommand(2, OriginalData.Sid(2)));
         session.RunTicks(1);
-        Assert.Equal(0, session.Entity(1)!.AttackTargetId);
+        Assert.Equal(0, session.Entity(OriginalData.Sid(1))!.AttackTargetId);
     }
 
     /// <summary>썬 캐논은 고정 캐논용 배치 방위 값이 있어도 설치 방향에 구속되지 않는다(사용자 확인 2026-10-03).</summary>
@@ -277,19 +277,19 @@ public sealed class RecordedCombatTests
     {
         BattleSession session = Create(Object("sunCannon", 1, 10, 10, 1), Object("priest", 2, 9, 2), Object("priest", 2, 18, 9));
         session.RunTicks(1);
-        GameEntity cannon = session.Entity(1)!;
-        Assert.Equal(2, cannon.AttackTargetId);
+        GameEntity cannon = session.Entity(OriginalData.Sid(1))!;
+        Assert.Equal(OriginalData.Sid(2), cannon.AttackTargetId);
         Assert.Equal(0, cannon.CannonDirection);
         CombatShot north = Assert.Single(session.Shots);
         Assert.Equal(north.StartX, north.EndX);
         session.RunTicks(11);
-        Assert.True(session.Entity(2)!.IsStunned);
-        Assert.Equal(3, cannon.AttackTargetId);
+        Assert.True(session.Entity(OriginalData.Sid(2))!.IsStunned);
+        Assert.Equal(OriginalData.Sid(3), cannon.AttackTargetId);
         Assert.Equal(1, cannon.CannonDirection);
         Assert.Empty(session.Shots);
         session.RunTicks(109);
         CombatShot east = Assert.Single(session.Shots);
-        Assert.Equal(3, east.TargetId);
+        Assert.Equal(OriginalData.Sid(3), east.TargetId);
         Assert.Equal(east.StartY, east.EndY);
     }
 
@@ -301,14 +301,14 @@ public sealed class RecordedCombatTests
     {
         BattleSession session = Create(Object(name, 1, 10, 10, 0), Object("priest", 2, 9, 2), Object("priest", 2, 18, 9));
         session.RunTicks(1);
-        GameEntity cannon = session.Entity(1)!;
-        Assert.Equal(2, cannon.AttackTargetId);
+        GameEntity cannon = session.Entity(OriginalData.Sid(1))!;
+        Assert.Equal(OriginalData.Sid(2), cannon.AttackTargetId);
         session.RunTicks(240);
-        Assert.True(session.Entity(2)!.IsStunned);
+        Assert.True(session.Entity(OriginalData.Sid(2))!.IsStunned);
         Assert.Equal(0, cannon.AttackTargetId);
         Assert.Equal(0, cannon.CannonDirection);
-        Assert.Equal(100, session.Entity(3)!.HitPoints);
-        Assert.DoesNotContain(session.Shots, shot => shot.TargetId == 3);
+        Assert.Equal(100, session.Entity(OriginalData.Sid(3))!.HitPoints);
+        Assert.DoesNotContain(session.Shots, shot => shot.TargetId == OriginalData.Sid(3));
     }
 
     /// <summary>받침의 각도 저장 프레임은 실제 북·동·남·서 사격 방향으로 복원한다.</summary>
@@ -326,9 +326,9 @@ public sealed class RecordedCombatTests
         TypeInfo type = OriginalData.RequireTypes().Find(name)!;
         byte frame = (byte)type.Definition.Frames.Find(CannonAnimation.Side(direction), TypeFrameTable.DefaultVariant, 0);
         BattleSession session = Create(Object(name, 1, 10, 10, frame), Object("sunBlocker", 2, x, y));
-        Assert.Equal(direction, session.Entity(1)!.CannonDirection);
+        Assert.Equal(direction, session.Entity(OriginalData.Sid(1))!.CannonDirection);
         session.RunTicks(1);
-        Assert.Equal(2, session.Entity(1)!.AttackTargetId);
+        Assert.Equal(OriginalData.Sid(2), session.Entity(OriginalData.Sid(1))!.AttackTargetId);
         session.RunTicks(100);
         Assert.Contains(session.DrainEvents(), e => e.Kind == SessionEventKind.ShotFired);
     }
@@ -353,7 +353,7 @@ public sealed class RecordedCombatTests
     public void ThunderCannon_ChargesBeforeFiringAndUsesOriginalSpeed()
     {
         BattleSession session = Create(Object("thunderCannon", 1, 10, 20, 0), Object("sunBlocker", 2, 10, 10));
-        GameEntity cannon = session.Entity(1)!;
+        GameEntity cannon = session.Entity(OriginalData.Sid(1))!;
         session.RunTicks(1);
         Assert.Equal(1, CannonAnimation.Frame(cannon, session.Tick, session.TicksPerSecond));
         session.RunTicks(83);
@@ -375,7 +375,7 @@ public sealed class RecordedCombatTests
         for (int tick = 0; tick < 96; tick++)
         {
             session.RunTicks(1);
-            GameEntity cannon = session.Entity(1)!;
+            GameEntity cannon = session.Entity(OriginalData.Sid(1))!;
             if (cannon.LastShotTick == session.Tick)
                 Assert.Equal(2, CannonAnimation.Frame(cannon, session.Tick, session.TicksPerSecond));
         }
@@ -394,10 +394,10 @@ public sealed class RecordedCombatTests
         session.RunTicks(1);
         CombatShot shot = Assert.Single(session.Shots);
         Assert.Equal(shot.StartY, shot.EndY);
-        session.Submit(new MoveEntityCommand(2, 2, 28, 16));
+        session.Submit(new MoveEntityCommand(2, OriginalData.Sid(2), 28, 16));
         session.RunTicks(30);
-        Assert.False(session.Entity(2)!.IsStunned);
-        Assert.Equal(100, session.Entity(2)!.HitPoints);
+        Assert.False(session.Entity(OriginalData.Sid(2))!.IsStunned);
+        Assert.Equal(100, session.Entity(OriginalData.Sid(2))!.HitPoints);
     }
 
     /// <summary>착탄 경계에 걸친 이동체도 화면 보간 시간 때문에 명중 결과가 달라지지 않는다.</summary>
@@ -410,11 +410,11 @@ public sealed class RecordedCombatTests
         second.Advance(1.99 / second.TicksPerSecond);
         Assert.Equal(first.Tick, second.Tick);
         first.RunTicks(3); second.RunTicks(3);
-        first.Submit(new MoveEntityCommand(2, 2, 16, 16));
-        second.Submit(new MoveEntityCommand(2, 2, 16, 16));
+        first.Submit(new MoveEntityCommand(2, OriginalData.Sid(2), 16, 16));
+        second.Submit(new MoveEntityCommand(2, OriginalData.Sid(2), 16, 16));
         first.RunTicks(6); second.RunTicks(6);
-        Assert.True(first.Entity(2)!.IsStunned);
-        Assert.True(second.Entity(2)!.IsStunned);
+        Assert.True(first.Entity(OriginalData.Sid(2))!.IsStunned);
+        Assert.True(second.Entity(OriginalData.Sid(2))!.IsStunned);
         Assert.Equal(first.Checksum(), second.Checksum());
     }
 

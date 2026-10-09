@@ -347,6 +347,7 @@ public sealed partial class BattleSession
         }
         else if (entity.Kind == ObjectKind.Workshop) player?.Deck.RemoveWorkshop(entity.Id);
         _entities.Remove(entity.Id);
+        Map.Sids.ReleaseWorld(entity.Id);
         if (entity.Type.Definition.HasFlag("createsisland")) Bridges.InvalidateTerrain();
         _harvestTasks.Remove(entity.Id);
         if (entity.Kind != ObjectKind.Flyer && entity.Production == null) WeakenBridgesAround(entity);

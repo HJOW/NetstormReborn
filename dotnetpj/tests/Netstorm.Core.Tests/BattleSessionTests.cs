@@ -232,25 +232,29 @@ public sealed class BattleSessionTests
         Assert.Same(second, player.Tray.Slots[1]);
     }
 
-    /// <summary>한쪽만 섬에 붙은 다리 한 칸은 40초에 금이 가고 80초에 무너진다 (10초 주기·수명 7→0, 5 아래 금 감)</summary>
+    /// <summary>한쪽만 붙은 칸은 자기 SID의 첫 스캔 후 3주기에 금이 가고 7주기에 무너진다.</summary>
     [Fact]
     public void DanglingBridge_CracksThenCollapsesOnTick()
     {
         BattleSession session = SessionData.FromMission("tutorial1");
         (int rotation, int x, int y) = SessionData.FindBridgeSite(session, BridgePatternCatalog.SinglePiece);
-        session.Bridges.Place(new BridgePiece(BridgePatternCatalog.SinglePiece, rotation), x, y, 1);
+        BridgeCellState cell = session.Bridges.Place(new BridgePiece(BridgePatternCatalog.SinglePiece, rotation), x, y, 1)[0];
         session.DrainEvents();
-        // 39초까지는 금이 가지 않는다
-        session.RunTicks(39 * session.TicksPerSecond);
-        Assert.Equal(BridgeCondition.Normal, session.Bridges.At(x, y)!.Condition);
-        // 40초 갱신에서 금이 간다
-        session.RunTicks(1 * session.TicksPerSecond);
-        Assert.Equal(BridgeCondition.Cracked, session.Bridges.At(x, y)!.Condition);
-        Assert.Equal(1, Count(session.DrainEvents(), SessionEventKind.BridgeCracked));
-        // 80초 갱신에서 무너진다
-        session.RunTicks(40 * session.TicksPerSecond);
+        // 24Hz 틱의 처리 수는 trunc((1/24)/10 × 8001) = 33이다.
+        int slotsPerTick = 33;
+        int firstScanTick = (cell.Sid - BridgeDecayScan.FirstId) / slotsPerTick + 1;
+        int periodTicks = (int)BridgeDecayScan.Period * session.TicksPerSecond;
+        int crackTick = firstScanTick + 3 * periodTicks;
+        session.RunTicks(crackTick - 1);
+        Assert.Equal(BridgeCondition.Normal, cell.Condition);
+        session.RunTicks(1);
+        Assert.Equal(BridgeCondition.Cracked, cell.Condition);
+        Assert.Equal(crackTick, Assert.Single(session.DrainEvents(), e => e.Kind == SessionEventKind.BridgeCracked).Tick);
+        session.RunTicks(4 * periodTicks - 1);
+        Assert.Same(cell, session.Bridges.At(x, y));
+        session.RunTicks(1);
         Assert.Null(session.Bridges.At(x, y));
-        Assert.Equal(1, Count(session.DrainEvents(), SessionEventKind.BridgeCollapsed));
+        Assert.Equal(crackTick + 4 * periodTicks, Assert.Single(session.DrainEvents(), e => e.Kind == SessionEventKind.BridgeCollapsed).Tick);
     }
 
     /// <summary>생산 창에 들어온 지 6초가 안 된 조각은 금 간 상태·수명 4 로 놓이고, 오래된 조각은 보통으로 놓인다</summary>

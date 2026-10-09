@@ -26,7 +26,7 @@ public sealed class CrossbowDefenseTests
     public void Crossbow_TurnsBeforeReleasingAndKeepsFixedSector()
     {
         BattleSession session = Create(Object("windArcher", 1, 20, 30, 0), Object("sunBlocker", 2, 25, 18));
-        GameEntity bow = session.Entity(1)!;
+        GameEntity bow = session.Entity(OriginalData.Sid(1))!;
         session.RunTicks(1);
         Assert.Equal(5, bow.CrossbowFrame);
         Assert.Empty(session.Shots);
@@ -46,7 +46,7 @@ public sealed class CrossbowDefenseTests
     public void Crossbow_ReloadsBeforeSecondRelease()
     {
         BattleSession session = Create(Object("windArcher", 1, 20, 30, 0), Object("sunBlocker", 2, 20, 18));
-        GameEntity bow = session.Entity(1)!;
+        GameEntity bow = session.Entity(OriginalData.Sid(1))!;
         session.RunTicks(1);
         Assert.Equal(4, bow.CrossbowFrame);
         Assert.Equal(1, bow.LastShotTick);
@@ -71,11 +71,11 @@ public sealed class CrossbowDefenseTests
     {
         BattleSession session = Create(Object("windArcher", 1, 20, 30, 0), Object("sunBlocker", 2, 20, 18));
         session.RunTicks(2);
-        Assert.True(session.Entity(1)!.CrossbowFiring);
-        session.Submit(new SalvageCommand(2, 2));
+        Assert.True(session.Entity(OriginalData.Sid(1))!.CrossbowFiring);
+        session.Submit(new SalvageCommand(2, OriginalData.Sid(2)));
         session.RunTicks(60);
-        Assert.False(session.Entity(1)!.CrossbowFiring);
-        Assert.Equal(0, session.Entity(1)!.AttackTargetId);
+        Assert.False(session.Entity(OriginalData.Sid(1))!.CrossbowFiring);
+        Assert.Equal(0, session.Entity(OriginalData.Sid(1))!.AttackTargetId);
         Assert.Equal(1, session.DrainEvents().Count(e => e.Kind == SessionEventKind.ShotFired));
     }
 
@@ -104,14 +104,14 @@ public sealed class CrossbowDefenseTests
         byte frame = (byte)EmplacementDirection.PlacementFrame(towerType, direction);
         BattleSession immune = Create(Object("sunCannon", 1, x, y, sunFrame), Object("windBlocker", 2, 20, 20, frame));
         immune.RunTicks(30);
-        Assert.Equal(600, immune.Entity(2)!.HitPoints);
-        Assert.Equal(direction, immune.Entity(2)!.CannonDirection);
+        Assert.Equal(600, immune.Entity(OriginalData.Sid(2))!.HitPoints);
+        Assert.Equal(direction, immune.Entity(OriginalData.Sid(2))!.CannonDirection);
         Assert.Empty(immune.Shots);
-        Assert.Equal(0, immune.Entity(1)!.AttackTargetId);
+        Assert.Equal(0, immune.Entity(OriginalData.Sid(1))!.AttackTargetId);
         byte opposite = (byte)EmplacementDirection.PlacementFrame(towerType, (direction + 2) % 4);
         BattleSession vulnerable = Create(Object("sunCannon", 1, x, y, sunFrame), Object("windBlocker", 2, 20, 20, opposite));
         vulnerable.RunTicks(30);
-        Assert.Equal(520, vulnerable.Entity(2)!.HitPoints);
+        Assert.Equal(520, vulnerable.Entity(OriginalData.Sid(2))!.HitPoints);
     }
 
     /// <summary>Wind Tower는 공중 공격·주문 폭탄·번개 울타리·폭발에 방위 면역을 적용하지 않는다.</summary>
@@ -122,7 +122,7 @@ public sealed class CrossbowDefenseTests
     [InlineData(null)]
     public void WindTower_DirectionalImmunityHasOriginalExceptions(string? name)
     {
-        GameEntity tower = Create(Object("windBlocker", 2, 20, 20, 0)).Entity(1)!;
+        GameEntity tower = Create(Object("windBlocker", 2, 20, 20, 0)).Entity(OriginalData.Sid(1))!;
         TypeInfo? attacker = name == null ? null : OriginalData.RequireTypes().Find(name);
         if (name != null) Assert.NotNull(attacker);
         Assert.False(CombatImmunity.Blocks(tower, attacker, tower.WorldX, tower.WorldY - 8));
@@ -135,10 +135,10 @@ public sealed class CrossbowDefenseTests
         BattleSession session = Create(Object("sunaviary", 1, 10, 10), Object("thunderBlocker", 2, 17, 10), Object("windBlocker", 2, 20, 14, 0));
         session.RunTicks(400);
         GameEntity flyer = Assert.Single(session.Entities, e => e.Flight != null);
-        Assert.Equal(3, flyer.AttackTargetId);
-        Assert.Equal(3900, session.Entity(2)!.HitPoints);
-        Assert.True(session.Entity(3)!.HitPoints < 600);
-        Assert.False(CombatImmunity.Blocks(session.Entity(2)!, OriginalData.RequireTypes().Find("sunCannon"), 10, 10));
+        Assert.Equal(OriginalData.Sid(3), flyer.AttackTargetId);
+        Assert.Equal(3900, session.Entity(OriginalData.Sid(2))!.HitPoints);
+        Assert.True(session.Entity(OriginalData.Sid(3))!.HitPoints < 600);
+        Assert.False(CombatImmunity.Blocks(session.Entity(OriginalData.Sid(2))!, OriginalData.RequireTypes().Find("sunCannon"), 10, 10));
     }
 
     /// <summary>석궁 상태를 포함한 검사합·피해·효과음 순서가 화면 갱신 간격에 좌우되지 않는다.</summary>

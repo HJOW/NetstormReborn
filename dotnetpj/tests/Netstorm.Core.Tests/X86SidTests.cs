@@ -259,7 +259,7 @@ public sealed class X86SidTests
     public void InvalidInput_IsRejected()
     {
         Assert.Throws<ArgumentOutOfRangeException>(() => new SidPool(23002));
-        Assert.Throws<ArgumentOutOfRangeException>(() => new SidPool(65536));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new SidPool(SidPool.MaximumCapacity + 1));
         var pool = new SidPool(23300);
         Assert.Throws<InvalidOperationException>(() => pool.Release(5));
         Assert.Throws<InvalidOperationException>(() => pool.SetType(0, 1));

@@ -13,13 +13,13 @@ public sealed class CombatTests
     public void VanderTower_UsesLightningInsteadOfTravellingProjectile()
     {
         BattleSession session = Create(Object("thunderArcher", 1, 10, 10), Object("sunBlocker", 2, 20, 14));
-        double health = session.Entity(2)!.HitPoints;
+        double health = session.Entity(OriginalData.Sid(2))!.HitPoints;
         session.RunTicks(1);
         CombatShot beam = Assert.Single(session.Shots);
         Assert.True(beam.IsBeam);
         Assert.Equal(beam.FiredTick + 1, beam.ImpactTick);
         session.RunTicks(1);
-        Assert.Equal(health - 35, session.Entity(2)!.HitPoints);
+        Assert.Equal(health - 35, session.Entity(OriginalData.Sid(2))!.HitPoints);
         Assert.Single(session.Lightning);
         session.RunTicks(5);
         Assert.Empty(session.Lightning);
@@ -53,10 +53,10 @@ public sealed class CombatTests
         BattleSession session = Create(Object("sunCannon", 1, 20, 20),
             Object("sunBlocker", 2, 28, 20), Object("sunBlocker", 2, 12, 20));
         session.RunTicks(1);
-        Assert.Equal(2, session.Entity(1)!.AttackTargetId);
+        Assert.Equal(OriginalData.Sid(2), session.Entity(OriginalData.Sid(1))!.AttackTargetId);
         session.RunTicks(120);
-        Assert.Equal(2, session.Entity(1)!.AttackTargetId);
-        Assert.All(session.Shots, shot => Assert.Equal(2, shot.TargetId));
+        Assert.Equal(OriginalData.Sid(2), session.Entity(OriginalData.Sid(1))!.AttackTargetId);
+        Assert.All(session.Shots, shot => Assert.Equal(OriginalData.Sid(2), shot.TargetId));
     }
 
     /// <summary>중립·같은 소유자·사거리 밖·대각선 목표는 Sun Cannon이 쏘지 않는다.</summary>
@@ -100,7 +100,7 @@ public sealed class CombatTests
     {
         BattleSession session = Create(Object("sunCannon", 1, 10, 10, frame: 3), Object("sunCannon", 1, 26, 10, frame: 2),
             Object("rainBattery", 2, 18, 10, "maxHitPoints = 50;"));
-        GameEntity target = session.Entity(3)!;
+        GameEntity target = session.Entity(OriginalData.Sid(3))!;
         int money = session.Player(1).StormPower;
         session.Submit(new SelectEntityCommand(1, target.Id));
         session.RunTicks(12);
@@ -119,10 +119,10 @@ public sealed class CombatTests
         BattleSession session = Create(Object("sunCannon", 1, 10, 10, frame: 3),
             Object("windVortex", 2, 24, 12, "maxHitPoints = 50;"), Object("priest", 2, 30, 20));
         session.RunTicks(30);
-        Assert.Null(session.Entity(2));
+        Assert.Null(session.Entity(OriginalData.Sid(2)));
         Assert.Null(session.Map.Ownership.OwnerOf(1));
         Assert.False(session.Player(2).HasTemple);
-        Assert.NotNull(session.Entity(3));
+        Assert.NotNull(session.Entity(OriginalData.Sid(3)));
         Assert.DoesNotContain(session.DrainEvents(), e => e.Kind == SessionEventKind.TutorialTell);
     }
 
@@ -136,11 +136,11 @@ public sealed class CombatTests
         BattleSession session = Create(Object("sunCannon", 1, 10, 10, frame: 3),
             Object("windVortex", 2, 24, 12, "maxHitPoints = 50;"), Object("sunwalker", 2, 25, 12), Object("priest", 2, 25, 11),
             Object("sunArcher", 2, 26, 14), Object("priest", 2, 30, 20));
-        GameEntity temple = session.Entity(2)!;
-        GameEntity golem = session.Entity(3)!;
-        GameEntity nearPriest = session.Entity(4)!;
-        GameEntity archer = session.Entity(5)!;
-        GameEntity farPriest = session.Entity(6)!;
+        GameEntity temple = session.Entity(OriginalData.Sid(2))!;
+        GameEntity golem = session.Entity(OriginalData.Sid(3))!;
+        GameEntity nearPriest = session.Entity(OriginalData.Sid(4))!;
+        GameEntity archer = session.Entity(OriginalData.Sid(5))!;
+        GameEntity farPriest = session.Entity(OriginalData.Sid(6))!;
         int money = session.Player(1).StormPower;
         int percent = session.Map.Options.KillRewardPercent;
         // 템플이 파괴될 때까지 진행한다
@@ -170,22 +170,22 @@ public sealed class CombatTests
     {
         BattleSession destroyed = Create(Object("sunCannon", 1, 10, 10, frame: 3),
             Object("sunArcher", 2, 24, 10, "maxHitPoints = 40;"), Object("sunBlocker", 2, 27, 10));
-        GameEntity blocker = destroyed.Entity(3)!;
+        GameEntity blocker = destroyed.Entity(OriginalData.Sid(3))!;
         double before = blocker.HitPoints;
         // 궁수가 파괴될 때까지 진행한다 (Sun Cannon 한 발 80 피해)
-        for (int tick = 0; tick < 600 && destroyed.Entity(2) != null; tick++)
+        for (int tick = 0; tick < 600 && destroyed.Entity(OriginalData.Sid(2)) != null; tick++)
         {
             destroyed.RunTicks(1);
         }
-        Assert.Null(destroyed.Entity(2));
+        Assert.Null(destroyed.Entity(OriginalData.Sid(2)));
         Assert.Equal(before - (40 / 2 + 1), blocker.HitPoints);
 
         BattleSession salvaged = Create(Object("sunArcher", 1, 24, 10), Object("sunwalker", 1, 25, 10));
         salvaged.CombatEnabled = false;
-        salvaged.Submit(new SalvageCommand(1, 1));
+        salvaged.Submit(new SalvageCommand(1, OriginalData.Sid(1)));
         salvaged.RunTicks(1);
-        Assert.Null(salvaged.Entity(1));
-        Assert.NotNull(salvaged.Entity(2));
+        Assert.Null(salvaged.Entity(OriginalData.Sid(1)));
+        Assert.NotNull(salvaged.Entity(OriginalData.Sid(2)));
         Assert.DoesNotContain(salvaged.DrainEvents(), e => e.Kind == SessionEventKind.EntityExploded);
     }
 
@@ -195,7 +195,7 @@ public sealed class CombatTests
     {
         BattleSession session = Create(Object("sunCannon", 1, 10, 10, frame: 3), Object("priest", 2, 18, 9));
         session.RunTicks(300);
-        GameEntity priest = session.Entity(2)!;
+        GameEntity priest = session.Entity(OriginalData.Sid(2))!;
         Assert.True(priest.IsStunned);
         Assert.Equal(50, priest.HitPoints);
         Assert.Single(session.DrainEvents(), e => e.Kind == SessionEventKind.PriestStunned);
@@ -208,11 +208,11 @@ public sealed class CombatTests
         BattleSession session = Create(Object("sunCannon", 1, 10, 10, frame: 3), Object("priest", 2, 18, 9),
             Object("windVortex", 2, 50, 50));
         session.RunTicks(12);
-        Assert.True(session.Entity(2)!.IsStunned);
-        session.Submit(new SalvageCommand(1, 1));
+        Assert.True(session.Entity(OriginalData.Sid(2))!.IsStunned);
+        session.Submit(new SalvageCommand(1, OriginalData.Sid(1)));
         session.RunTicks(250);
-        Assert.False(session.Entity(2)!.IsStunned);
-        Assert.Equal(100, session.Entity(2)!.HitPoints);
+        Assert.False(session.Entity(OriginalData.Sid(2))!.IsStunned);
+        Assert.Equal(100, session.Entity(OriginalData.Sid(2))!.HitPoints);
         Assert.Contains(session.DrainEvents(), e => e.Kind == SessionEventKind.PriestRecovered);
     }
 
@@ -227,9 +227,9 @@ public sealed class CombatTests
         second.RunTicks(200);
         Assert.Equal(first.Checksum(), second.Checksum());
         first.CombatEnabled = false;
-        double hp = first.Entity(2)!.HitPoints;
+        double hp = first.Entity(OriginalData.Sid(2))!.HitPoints;
         first.RunTicks(500);
-        Assert.Equal(hp, first.Entity(2)!.HitPoints);
+        Assert.Equal(hp, first.Entity(OriginalData.Sid(2))!.HitPoints);
         Assert.NotEqual(first.Checksum(), second.Checksum());
     }
 

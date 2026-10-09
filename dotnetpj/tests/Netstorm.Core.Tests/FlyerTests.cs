@@ -19,13 +19,13 @@ public sealed class FlyerTests
         session.RunTicks(1);
         GameEntity flyer = Assert.Single(session.Entities, e => e.Kind == ObjectKind.Flyer);
         Assert.Equal(50, flyer.HitPoints);
-        Assert.Equal(1, flyer.Flight!.BaseId);
+        Assert.Equal(OriginalData.Sid(1), flyer.Flight!.BaseId);
         session.RunTicks(48);
         Assert.InRange(flyer.WorldX, 12, 14);
         Assert.False(session.Map.IsOccupied(flyer.Footprint));
-        Assert.Equal(2000, session.Entity(2)!.HitPoints);
+        Assert.Equal(2000, session.Entity(OriginalData.Sid(2))!.HitPoints);
         session.RunTicks(240);
-        Assert.True(session.Entity(2)!.HitPoints < 2000);
+        Assert.True(session.Entity(OriginalData.Sid(2))!.HitPoints < 2000);
         Assert.Single(session.Entities, e => e.Kind == ObjectKind.Flyer);
         Assert.Equal(money, session.Player(1).StormPower);
     }
@@ -39,7 +39,7 @@ public sealed class FlyerTests
         session.RunTicks(160);
         GameEntity[] flyers = session.Entities.Where(e => e.Flight != null).ToArray();
         Assert.Equal(4, flyers.Length);
-        Assert.Equal(3, flyers.Count(e => e.AttackTargetId == 5));
+        Assert.Equal(3, flyers.Count(e => e.AttackTargetId == OriginalData.Sid(5)));
         Assert.Single(flyers, e => e.Flight!.Phase == FlyerPhase.Docked);
     }
 
@@ -60,7 +60,7 @@ public sealed class FlyerTests
         Assert.Equal(0, flyer.AttackTargetId);
         Assert.Equal(FlyerPhase.Docked, flyer.Flight!.Phase);
         Assert.Empty(session.Shots);
-        if (type == "sunwalker") Assert.NotNull(session.Entity(2));
+        if (type == "sunwalker") Assert.NotNull(session.Entity(OriginalData.Sid(2)));
     }
 
     /// <summary>커스텀 동맹 콜백도 포대와 같은 판정을 사용한다.</summary>
@@ -98,9 +98,9 @@ public sealed class FlyerTests
         session.RunTicks(200);
         GameEntity flyer = Assert.Single(session.Entities, e => e.Flight != null);
         int enemyMoney = session.Player(2).StormPower;
-        session.Submit(new SalvageCommand(1, 1));
+        session.Submit(new SalvageCommand(1, OriginalData.Sid(1)));
         session.RunTicks(1);
-        Assert.Null(session.Entity(1));
+        Assert.Null(session.Entity(OriginalData.Sid(1)));
         Assert.Same(flyer, session.Entity(flyer.Id));
         session.RunTicks(1440);
         Assert.DoesNotContain(session.Entities, e => e.Flight != null);
@@ -117,7 +117,7 @@ public sealed class FlyerTests
         session.RunTicks(400);
         GameEntity flyer = Assert.Single(session.Entities, e => e.Flight != null);
         Assert.True(flyer.WorldX > 30);
-        session.Submit(new SalvageCommand(2, 2));
+        session.Submit(new SalvageCommand(2, OriginalData.Sid(2)));
         session.RunTicks(1);
         Assert.Equal(0, flyer.AttackTargetId);
         Assert.Equal(FlyerPhase.Returning, flyer.Flight!.Phase);
@@ -131,9 +131,9 @@ public sealed class FlyerTests
             Object("sunCannon", 2, 18, 11, 2));
         int money = session.Player(2).StormPower;
         session.RunTicks(30);
-        Assert.Null(session.Entity(1));
+        Assert.Null(session.Entity(OriginalData.Sid(1)));
         Assert.True(session.Map.IsOccupied(new Footprint(10, 10, 1, 1)));
-        Assert.Equal(2000, session.Entity(2)!.HitPoints);
+        Assert.Equal(2000, session.Entity(OriginalData.Sid(2))!.HitPoints);
         Assert.Equal(money, session.Player(2).StormPower);
     }
 
@@ -146,7 +146,7 @@ public sealed class FlyerTests
         int first = Assert.Single(session.Entities, e => e.Flight != null).Id;
         session.RunTicks(550);
         Assert.Null(session.Entity(first));
-        Assert.NotNull(session.Entity(1));
+        Assert.NotNull(session.Entity(OriginalData.Sid(1)));
         Assert.True(session.DrainEvents().Count(e => e.Kind == SessionEventKind.FlyerLaunched) >= 2);
         Assert.InRange(session.Entities.Count(e => e.Flight != null), 0, 1);
     }
@@ -166,7 +166,7 @@ public sealed class FlyerTests
         first.CombatEnabled = false;
         first.RunTicks(500);
         Assert.Equal(x, flyer.WorldX);
-        Assert.Equal(2000, first.Entity(2)!.HitPoints);
+        Assert.Equal(2000, first.Entity(OriginalData.Sid(2))!.HitPoints);
     }
 
     /// <summary>지형의 영향을 제외한 빈 다리 격자를 만든다.</summary>

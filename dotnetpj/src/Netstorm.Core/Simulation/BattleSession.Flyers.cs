@@ -29,9 +29,10 @@ public sealed partial class BattleSession
                 _entities.Values.Any(e => e.Flight?.BaseId == home.Id)) continue;
             if (home.NextAttackTick == 0) home.NextAttackTick = Tick + TicksFor(WhirligigBuildSeconds);
             if (Tick < home.NextAttackTick) continue;
+            if (!Map.Sids.CanAllocateServer()) continue;
             var flight = new FlyerFlight { BaseId = home.Id, OriginX = home.WorldX, OriginY = home.WorldY,
                 X = home.WorldX, Y = home.WorldY };
-            var flyer = new GameEntity(Map.NextId(), flyerType, ObjectKind.Flyer, home.Owner,
+            var flyer = new GameEntity(Map.NextId(flyerType), flyerType, ObjectKind.Flyer, home.Owner,
                 new Footprint((int)flight.X, (int)flight.Y, 1, 1), null, null) { Flight = flight };
             _entities.Add(flyer.Id, flyer);
             Emit(SessionEventKind.FlyerLaunched, flyer.Owner, flyer.Id, $"{home.DisplayName}: Whirligig 생성");

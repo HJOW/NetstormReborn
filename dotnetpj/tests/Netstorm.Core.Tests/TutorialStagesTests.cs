@@ -196,7 +196,7 @@ public sealed class TutorialStagesTests
     public void SelectEntity_RejectsUnknownAndClearsWhenSalvaged()
     {
         BattleSession session = SessionData.FromMission("tutorial2");
-        session.Submit(new SelectEntityCommand(1, 99999));
+        session.Submit(new SelectEntityCommand(1, OriginalData.Sid(99999)));
         session.RunTicks(1);
         Assert.Contains(session.DrainEvents(), e => e.Failure == CommandFailure.NoSuchEntity);
         Assert.Equal(0, session.Player(1).SelectedEntityId);

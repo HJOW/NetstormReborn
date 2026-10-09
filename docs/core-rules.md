@@ -7,7 +7,7 @@
 > 전투에는 명시적인 근사가 있다([확정 근거·추정값·검증](gameplay/combat.md)).
 > Whirlibase·Whirligig의 출격·이동·공격·귀환을 추가했다([비행체 계약](gameplay/flyers.md)). [캠페인 1-1](gameplay/campaign-one.md)·[1-2](gameplay/campaign-two.md)에 한정한 임시 방어 AI·골렘 수확·일반 이동/정지·워크샵 업그레이드 명령을 추가했다. 원본 전략 복원, 다른 공중 공격 유닛과 비행 수송의 이륙·착륙 연출은 후속이다.
 > 2026-10-07: 다리 추첨·난수·전체 패턴·프레임 검색·설정을 C++의 원본 x86 기대값에 연결했다. 설정·타입·요새·SHP 자료 계층 정정과 검증 범위는 [dotnetpj 복원 기록](dotnet-reconstruction-20261007.md) 참조. 전투·AI·붕괴 스캔의 근사는 유지한다.
-> 2026-10-09: 다리의 열린 방향·붕괴 방문 목록·수명 감소를 원본 x86 기대값으로 검증한 규칙 클래스(`BridgeSurfaceRules`·`BridgeDecayRules`)로 바꾸고, `BridgeGrid`의 한 칸 붕괴 처리를 원본 기대값 2,692개 입력으로 재현해 일치를 확인했다. 큰 그래프의 단단한 칸은 수명 0에서도 남고, 접합 칸 고리에 붙은 구동자는 아무것도 바꾸지 않는다. 표면 그래프(`SurfaceGraph`)·번호 할당기(`SidPool`)·점유 비트(`SpotRules`)·그리기 순서(`DrawOrder`)는 계산과 검증만 했고 세션에는 아직 쓰지 않는다. [복원 기록](dotnet-reconstruction-20261009.md) 참조. 붕괴 스캔의 시각·순서(10초 경계에서 만든 순서대로)와 그래프 크기(이어진 칸 수)는 계속 근사다. 스캔 시각·순서는 번호 할당기와 스캔 커서를 세션에 연결해 원본대로 바꾸기로 했다(2026-10-09 사용자 결정, 미착수. 계획은 LEFT_JOBS.dotnetpj.md 4-5절).
+> 2026-10-09: 다리의 열린 방향·방문 목록·수명 계산을 x86 기대값으로 검증했다. 후속으로 공유 `SidPool`과 `BridgeDecayScan`을 세션에 연결해 틱마다 SID 구간을 처리한다. `SurfaceGraph`·`SpotRules`·`DrawOrder`의 월드 연결은 아직 남았고 그래프 크기는 칸 수 근사다. 원본의 전체 생성 순서·동적 받침·투사체 SID는 미복원이므로 절대 스캔 위상은 차이 날 수 있다. [계산 복원](dotnet-reconstruction-20261009.md)·[SID 세션 연결](dotnet-sid-session-20261009.md) 참조.
 
 ## 구성
 
@@ -30,11 +30,11 @@
 | `Bridges/BridgeLinks.cs` | 방향 글자 'A'~'P' ↔ 연결 비트, 회전 표, 반대 방향 | VA 0x52f910·0x531590 |
 | `Bridges/BridgePatternCatalog.cs` | 다리 조각 모양 26개(가중치 합 287)와 누적 가중치 추첨 | VA 0x52f998, `Canondecoder.cpp` `004257c0` |
 | `Bridges/BridgePiece.cs` | 모양 + 회전(1 = 시계 방향 90°) → 회전된 칸 목록. 원본 조작: 오른쪽 클릭 = 시계, C(반대 회전)면 반시계 | `00425c20`·`00425860`, 원본 실행 |
-| `Bridges/BridgeGrid.cs` | 놓인 다리 칸의 연결망·배치 판정(겹침 불가, 섬 가장자리·내 다리 열린 끝에 이어짐)·10초 주기 칸 단위 붕괴(끝 칸만 구동자, 접합 칸 무리는 함께, 섬에서 떨어진 5칸 미만 조각은 즉시, 수명 7→0, 5 아래 금 감)·조각 품질별 시작 상태(금 감 = 수명 4)·건물형 유닛이 없어질 때 주변 ±2칸 한 단계 약화(`WeakenAround`) | `Bridge.cpp` `00422bc0`·`004227e0`·`00421c30`, `Rifttype.cpp` `0049b510`, `Construction.cpp` `00442c80`, 공통 제거 처리 `0044b9e0` ([bridge-pieces.md](exe/bridge-pieces.md) 8절). 한 칸 처리는 원본 기대값과 일치(2026-10-09). 이어짐 판정·스캔 시각/순서·그래프 크기는 근사 |
+| `Bridges/BridgeGrid.cs` | 놓인 다리 칸의 연결망·배치 판정(겹침 불가, 섬 가장자리·내 다리 열린 끝에 이어짐)·SID 구간을 틱마다 나누는 10초 주기 칸 단위 붕괴(끝 칸만 구동자, 접합 칸 무리는 함께, 섬에서 떨어진 5칸 미만 조각은 즉시, 수명 7→0, 5 아래 금 감)·조각 품질별 시작 상태(금 감 = 수명 4)·건물형 유닛이 없어질 때 주변 ±2칸 한 단계 약화(`WeakenAround`) | `Bridge.cpp` `00422bc0`·`004227e0`·`00421c30`, `Rifttype.cpp` `0049b510`, `Construction.cpp` `00442c80`, 공통 제거 처리 `0044b9e0` ([bridge-pieces.md](exe/bridge-pieces.md) 8절). 한 칸 처리는 원본 기대값과 일치(2026-10-09). 이어짐 판정·그래프 크기·전체 원본 생성 순서는 근사 |
 | `Bridges/BridgeSurfaceRules.cs`, `Bridges/SurfaceFinder.cs` | 표면 연결 판정·열린 방향·붕괴 방문 목록, 표면 번호 지도의 오브젝트 단위 이웃 탐색 (월드와 분리한 계산) | `00441e40`·`00421770`·`004217f0`·`004218b0`, `004b23e0` 외. 원본 x86 기대값 9,210개 |
 | `Bridges/BridgeDecayRules.cs` | 수명 감소·금 간/보통 프레임 전환·약화/복구·destroy 재정의·스캔의 한 칸 처리, 붕괴 스캔 커서(`BridgeDecayScan`) | `00421c30`·`00421b60`·`00421bd0`·`00421db0`·`00421e60`·`004220f0`·`004227e0`·`00422bc0`. 원본 x86 기대값 15,004개 |
 | `Bridges/SurfaceGraph.cs` | 표면 그래프 표(무리 번호와 표면 수): 할당·반납·감소·flood·등록·삭제 준비·전체 재구성. 세션에는 미연결 | `Graph.cpp` `00463330` 외. 원본 x86 기대값 2,560개 |
-| `Simulation/SidPool.cs` | 오브젝트 번호 할당기(영역·선입선출·예약 꼬리·예측 커서). 세션에는 미연결 | `Squid.cpp` `004af1d0` 외. 원본 x86 기대값 3,168개 |
+| `Simulation/SidPool.cs` | 오브젝트 번호 할당기(영역·FIFO·예약 꼬리·예측 커서). 저장 오브젝트·noIsland·다리·생산·건설·비행체가 공유하는 서버 풀 | `Squid.cpp` `004af1d0` 외, 120000슬롯 초기화. 원본 x86 기대값 3,168개. [연결 기록](dotnet-sid-session-20261009.md) |
 | `Rules/SpotRules.cs` | 칸별 점유 비트(발자국 안쪽 비트 8)와 공간 해시 단계. 점유 지도에는 미연결 | `004afd30`·`004ace40`. 원본 x86 기대값 3,821개 |
 | `Display/DrawOrder.cs` | 그리기 순서 비교(깊이 내림차순 → y → x)와 안정 정렬. 뷰어에는 미연결 | `00497900`. 원본 x86 기대값 261개 |
 | `Bridges/BridgeAnchors.cs` | 다리를 시작할 수 없는 섬 칸: 가장자리 초목(edgeFarm) 칸 + dropBlocking 타입 오브젝트 발자국. 2026-10-07 타입 후처리를 연결하여 포대·궁수 등 모든 emplacement도 이 비트를 가진다 | edgefarm.type `dropBlocking`, 타입 후처리 `0049b0d0`, `Squid.cpp` `004b02d0` 스폿 비트 0x10, `Rifttype.cpp` `0049b510` ([bridge-pieces.md](exe/bridge-pieces.md) 8.4절) |

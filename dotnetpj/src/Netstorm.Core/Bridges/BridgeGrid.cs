@@ -1,4 +1,5 @@
 using Netstorm.Assets;
+using Netstorm.Core.Simulation;
 
 namespace Netstorm.Core.Bridges;
 
@@ -18,12 +19,8 @@ public sealed record BridgeCellState(int X, int Y, BridgeCell Cell, int Owner)
     /// </summary>
     public int TimeLeft { get; set; }
 
-    /// <summary>
-    /// 칸이 격자에 들어온 순서(1부터). 원본은 붕괴 스캔이 오브젝트 번호(15000~23001) 순으로 칸을 훑는다.
-    /// 번호 할당 규칙은 확인됐지만(docs/exe/cpp-sid-reconstruction.md) 할당기를 아직 월드에 연결하지 않아
-    /// 만든 순서로 대신한다(근사). 격자가 붙이므로 직접 바꾸지 않는다.
-    /// </summary>
-    public int Sequence { get; internal set; }
+    /// <summary>공유 서버 풀의 오브젝트 번호. 붕괴 스캔은 이 번호가 현재 구간에 들어올 때 처리한다.</summary>
+    public int Sid { get; internal set; }
 }
 
 /// <summary>다리 조각을 놓을 수 없는 이유</summary>
@@ -64,8 +61,7 @@ public sealed record BridgeDecayResult(IReadOnlyList<BridgeCellState> Cracked, I
 /// 열린 방향·방문 목록·수명 감소는 원본 기계어 기대값으로 검증한 <see cref="BridgeSurfaceRules"/>·<see cref="BridgeDecayRules"/> 를
 /// 그대로 쓴다(2026-10-09). 접합 칸 고리에서는 원본이 끝없이 재귀하므로 그 구동자의 처리를 건너뛴다(수명 변화 없음, cpppj 와 같은 안전 처리).
 /// 큰 그래프의 단단한 칸은 수명 0 에서도 남는다(원본 다리 destroy 재정의 004220f0).
-/// 근사한 부분: "섬 가장자리 또는 내 다리의 열린 끝에 이어짐"(원본은 영역 소유 판정 FUN_0048fdb0), 칸 처리 순서(만든 순서),
-/// 10초 경계에서 한 번에 스캔(원본은 번호 범위를 10초에 나눠 훑는다), 표면 그래프의 크기를 칸 수로 셈(원본은 지속되는 표의 객체 수),
+/// 근사한 부분: "섬 가장자리 또는 내 다리의 열린 끝에 이어짐"(원본은 영역 소유 판정 FUN_0048fdb0), 표면 그래프의 크기를 칸 수로 셈(원본은 지속되는 표의 객체 수),
 /// 섬 오브젝트를 칸 단위로 봄(원본은 여러 칸 오브젝트가 하나), 초목 가장자리 제외는 호출자 판정.
 /// </summary>
 public sealed class BridgeGrid
@@ -127,11 +123,26 @@ public sealed class BridgeGrid
     /// <summary>붕괴 방문이 읽는 칸 단위 표면 연결</summary>
     private readonly CellLinks _links;
 
-    /// <summary>다음 붕괴 갱신 시각(초)</summary>
-    private double _nextDecay = DecaySeconds;
+    /// <summary>다리 번호 → 현재 격자 칸. 비어 있거나 다른 종류인 SID는 스캔에서 건너뛴다.</summary>
+    private readonly Dictionary<int, BridgeCellState> _bySid = [];
 
-    /// <summary>마지막으로 붙인 칸 순번 (<see cref="BridgeCellState.Sequence"/>)</summary>
-    private int _lastSequence;
+    /// <summary>세션과 공유하는 번호 풀. 독립 격자도 같은 서버 할당 규칙을 쓴다.</summary>
+    public SidPool Sids { get; private set; }
+
+    /// <summary>다리 슬롯에 적는 원본 타입 번호.</summary>
+    private byte _bridgeType;
+
+    /// <summary>번호 범위를 틱마다 나누어 훑는 커서·다음 주기 경계.</summary>
+    private readonly BridgeDecayScanState _scan = BridgeDecayScan.Reset(0);
+
+    /// <summary>마지막 스캔 호출 시각. 단독 격자 호출의 delta 계산에도 쓴다.</summary>
+    public double LastScanTime { get; private set; }
+
+    /// <summary>다음 틱에서 처리할 첫 SID (진단·재현 검사).</summary>
+    public int ScanCursor => _scan.Cursor;
+
+    /// <summary>스캔 주기가 다시 시작하는 게임 시각.</summary>
+    public double NextScanTime => _scan.Next;
 
     /// <summary>다리 칸이 추가·제거될 때마다 커지는 번호 (연결 결과 캐시의 유효 여부 확인용)</summary>
     public int Version { get; private set; }
@@ -145,10 +156,14 @@ public sealed class BridgeGrid
     /// 지속되는 그래프 표(계획 4-1)를 월드에 연결할 때와 원본 기대값 대조에 쓴다.
     /// </param>
     /// <param name="frames">bridge 타입의 프레임 표. 금 간 프레임이 없는 칸(빈 칸 P)은 수명만 줄고 금이 가지 않는다</param>
+    /// <param name="sids">세션과 공유하는 번호 풀</param>
+    /// <param name="bridgeType">슬롯에 기록할 bridge 타입 번호</param>
     public BridgeGrid(Func<int, int, bool> isIsland, Func<int, int, bool>? isOccupied = null,
         Func<int, int, BridgeLinks, int, bool>? canAttachToIsland = null, Func<BridgeCellState, int>? graphSurfaces = null,
-        TypeFrameTable? frames = null)
+        TypeFrameTable? frames = null, SidPool? sids = null, byte bridgeType = 0)
     {
+        Sids = sids ?? new SidPool(SidPool.NativeCapacity1078);
+        _bridgeType = bridgeType;
         _isIsland = isIsland;
         _isOccupied = isOccupied ?? ((_, _) => false);
         _canAttachToIsland = canAttachToIsland ?? ((_, _, _, _) => true);
@@ -180,7 +195,8 @@ public sealed class BridgeGrid
     /// <param name="x">월드 칸 x</param>
     /// <param name="y">월드 칸 y</param>
     /// <param name="owner">소유 플레이어</param>
-    public BridgeCellState AddStored(TypeFrameTable frames, int cluster, int x, int y, int owner)
+    /// <param name="sid">맵이 먼저 할당한 번호. 없으면 격자가 서버 번호를 받는다</param>
+    public BridgeCellState AddStored(TypeFrameTable frames, int cluster, int x, int y, int owner, int? sid = null)
     {
         FrameCode code = frames.Codes[cluster];
         (BridgeCondition condition, int variation) = code.Number switch
@@ -193,8 +209,7 @@ public sealed class BridgeGrid
         // 원본 다리 방향 글자(A~P)만 다리 칸으로 본다 (그 밖의 특수 프레임은 연결 계산에서 제외)
         if (BridgeDirections.IsLetter(code.Side))
         {
-            state.Sequence = ++_lastSequence;
-            _cells[(x, y)] = state;
+            Register(state, sid);
             Version++;
         }
         return state;
@@ -277,6 +292,8 @@ public sealed class BridgeGrid
     public IReadOnlyList<BridgeCellState> Place(BridgePiece piece, int originX, int originY, int player,
         BridgeCondition quality = BridgeCondition.Normal)
     {
+        if (!Sids.CanAllocateServer(piece.Cells().Count))
+            throw new InvalidOperationException("다리 조각을 위한 번호가 부족합니다");
         var placed = new List<BridgeCellState>();
         // 회전된 칸마다 상태를 만들어 격자에 넣는다
         foreach (PlacedBridgeCell cell in piece.Cells())
@@ -285,9 +302,8 @@ public sealed class BridgeGrid
             {
                 Condition = quality,
                 TimeLeft = quality == BridgeCondition.Cracked ? WeakenedTimeLeft : 0,
-                Sequence = ++_lastSequence,
             };
-            _cells[(state.X, state.Y)] = state;
+            Register(state, null);
             placed.Add(state);
         }
         Version++;
@@ -318,9 +334,7 @@ public sealed class BridgeGrid
                 }
                 if (cell.Condition == BridgeCondition.Cracked)
                 {
-                    _cells.Remove((x, y));
-                    removed.Add(cell);
-                    Version++;
+                    Kill(cell, removed);
                 }
                 else
                 {
@@ -371,35 +385,66 @@ public sealed class BridgeGrid
         return networks;
     }
 
-    /// <summary>
-    /// 게임 시각을 진행한다. 10초마다 모든 다리 칸을 만든 순서대로 한 번씩 붕괴 처리한다(<see cref="DecayOnce"/>).
-    /// 원본은 오브젝트 번호 범위를 10초에 걸쳐 나누어 훑으며(Bridge.cpp FUN_00422bc0), 클론은 10초 경계에서 한 번에 처리한다.
-    /// </summary>
-    /// <param name="now">게임 시각(초)</param>
-    public BridgeDecayResult Update(double now)
+    /// <summary>마지막 호출 이후 경과 시간으로 번호 스캔 한 번을 진행한다. 여러 틱의 재생은 호출자가 맡는다.</summary>
+    public BridgeDecayResult Update(double now) => Update(now, now - LastScanTime);
+
+    /// <summary>원본 00422bc0의 번호 구간을 진행하고 그 구간의 살아 있는 다리만 SID 순으로 처리한다.</summary>
+    public BridgeDecayResult Update(double now, double delta, bool paused = false)
     {
         var cracked = new List<BridgeCellState>();
         var removed = new List<BridgeCellState>();
-        // 밀린 갱신이 있으면 모두 처리한다 (한 번에 여러 주기가 지난 경우)
-        while (now >= _nextDecay)
+        (int begin, int end) = BridgeDecayScan.Advance(_scan, now, delta, paused);
+        LastScanTime = now;
+        // 원본과 같이 빈 슬롯·다른 오브젝트 슬롯을 건너뛰며 각 번호의 현재 칸을 찾는다.
+        for (int sid = begin; sid < end; sid++)
         {
-            _nextDecay += DecaySeconds;
-            DecayOnce(cracked, removed);
+            if (_bySid.TryGetValue(sid, out BridgeCellState? cell)) ScanCell(cell, cracked, removed);
         }
         return new BridgeDecayResult(cracked, removed);
     }
 
-    /// <summary>붕괴 스캔 한 번: 스캔이 시작될 때 있던 칸을 만든 순서대로 처리한다. 스캔 중 사라진 칸은 건너뛴다.</summary>
-    private void DecayOnce(List<BridgeCellState> cracked, List<BridgeCellState> removed)
+    /// <summary>독립 격자를 세션의 번호 풀에 연결한다. 이미 공유 중이면 저장 다리의 번호를 보존한다.</summary>
+    internal void AttachSidPool(SidPool sids, byte bridgeType)
     {
-        // 칸마다 원본 FUN_004227e0 의 처리를 한 번씩 한다
-        foreach (BridgeCellState cell in _cells.Values.OrderBy(c => c.Sequence).ToArray())
+        _bridgeType = bridgeType;
+        if (ReferenceEquals(Sids, sids))
         {
-            if (IsAlive(cell))
-            {
-                ScanCell(cell, cracked, removed);
-            }
+            // 이미 공유하는 저장 다리도 세션의 실제 타입 번호를 유지한다.
+            foreach (BridgeCellState cell in _cells.Values) Sids.SetType(cell.Sid, bridgeType);
+            return;
         }
+        if (!sids.CanAllocateServer(_cells.Count)) throw new InvalidOperationException("저장 다리의 번호가 부족합니다");
+        // 독립 격자의 기존 칸은 추가된 번호순으로 새 풀에 등록하고 이전 번호를 돌려준다.
+        foreach (BridgeCellState cell in _bySid.Values.OrderBy(c => c.Sid).ToArray())
+        {
+            Sids.ReleaseWorld(cell.Sid);
+            cell.Sid = sids.AllocateWorld(_bridgeType);
+        }
+        Sids = sids;
+        _bySid.Clear();
+        // 바뀐 번호로 조회 표를 다시 만든다.
+        foreach (BridgeCellState cell in _cells.Values) _bySid.Add(cell.Sid, cell);
+    }
+
+    /// <summary>칸을 등록한다. 저장 다리는 맵 로딩 중 이미 할당된 번호를 받아 이중 할당을 피한다.</summary>
+    private void Register(BridgeCellState cell, int? sid)
+    {
+        if (sid is int stored && (stored < Sids.ServerFirst || stored >= Sids.PredictableFirst ||
+            (Sids.State(stored) & (SidPool.FreeBit | SidPool.DeadBit | SidPool.VoidBit)) != 0 || _bySid.ContainsKey(stored)))
+            throw new ArgumentException("저장 다리의 번호가 사용 가능한 월드 서버 번호가 아닙니다", nameof(sid));
+        int assigned = sid ?? Sids.AllocateWorld(_bridgeType);
+        if (_cells.TryGetValue((cell.X, cell.Y), out BridgeCellState? previous)) RemoveSlot(previous);
+        cell.Sid = assigned;
+        _cells[(cell.X, cell.Y)] = cell;
+        _bySid.Add(assigned, cell);
+    }
+
+    /// <summary>좌표·번호 조회를 함께 지우고 번호를 FIFO 꼬리에 돌려준다.</summary>
+    private void RemoveSlot(BridgeCellState cell)
+    {
+        _cells.Remove((cell.X, cell.Y));
+        _bySid.Remove(cell.Sid);
+        Sids.ReleaseWorld(cell.Sid);
     }
 
     /// <summary>칸이 아직 격자에 있는지 (같은 좌표의 다른 칸이 아닌 그 칸 자신)</summary>
@@ -409,7 +454,7 @@ public sealed class BridgeGrid
     /// <summary>칸을 격자에서 없앤다 (원본 오브젝트 제거)</summary>
     private void Kill(BridgeCellState cell, List<BridgeCellState> removed)
     {
-        _cells.Remove((cell.X, cell.Y));
+        RemoveSlot(cell);
         removed.Add(cell);
         Version++;
     }
@@ -422,7 +467,7 @@ public sealed class BridgeGrid
     /// 4. 열린 방향이 없는 칸은 구동자가 아니다 (<see cref="OpenDirection(BridgeCellState)"/>) — 양쪽이 이어진 판자는 수명이 줄지 않는다.
     /// 5. 방문 목록을 만들고(<see cref="BridgeSurfaceRules.CollectDecay"/>) 붕괴 조건이 서면 목록 칸들의 수명을
     ///    "0 이 아닌 최소값 − 1"(없으면 7)로 맞춘다. 접합 칸 고리 때문에 방문이 불완전하면 아무것도 바꾸지 않는다.
-    /// 붕괴 스캔(<see cref="Update"/>)이 칸마다 부른다. 원본 번호 순서의 스캔을 붙일 때와 원본 기대값 대조에서는 직접 부른다.
+    /// 붕괴 스캔(<see cref="Update"/>)이 칸마다 부른다. 원본 기대값 대조에서는 한 칸을 직접 부른다.
     /// </summary>
     /// <param name="cell">격자에 있는 다리 칸</param>
     public BridgeDecayResult ScanCell(BridgeCellState cell)

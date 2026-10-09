@@ -245,6 +245,7 @@ internal sealed partial class FortMapViewer
     /// <param name="failure">거부 이유</param>
     private string PlayFailureText(CommandFailure failure) => Language == GameLanguage.Korean ? SessionText.Describe(failure) : failure switch
     {
+        CommandFailure.ObjectLimit => "Too many objects. Try again after some have been removed.",
         CommandFailure.TechDenied => "That knowledge is not allowed in this mission.",
         CommandFailure.NotInDeck => "Put this knowledge into production at a workshop first.",
         CommandFailure.NotReady => "Still recharging.",

@@ -10,6 +10,9 @@ namespace Netstorm.Core.Tests;
 /// </summary>
 internal static class OriginalData
 {
+    /// <summary>합성 맵의 저장 순번(1부터)을 공유 서버 풀의 시작 SID로 바꾼다. 번호 0은 빈 참조다.</summary>
+    public static int Sid(int ordinal) => ordinal == 0 ? 0 : Netstorm.Core.Simulation.SidPool.ServerFirst1078 + ordinal - 1;
+
     /// <summary>찾은 원본 데이터 폴더 (없으면 null)</summary>
     private static readonly Lazy<string?> DirectoryLazy = new(GameDataLocator.FindDataDirectory);
 

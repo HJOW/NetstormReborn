@@ -130,6 +130,7 @@ public sealed partial class BattleSession
     {
         Map = map;
         Bridges = bridges;
+        Bridges.AttachSidPool(map.Sids, (byte)(types.Find("bridge")?.RuntimeIndex ?? 0));
         _storedBridges = storedBridges ?? new Dictionary<FortMapObject, BridgeCellState>();
         StoredBridgeCells = new HashSet<BridgeCellState>(_storedBridges.Values, ReferenceEqualityComparer.Instance);
         _types = types;
@@ -323,7 +324,7 @@ public sealed partial class BattleSession
                 Emit(SessionEventKind.BridgePieceAdded, player.Number, 0, $"새 다리 조각 {added.Pattern.Index}번");
             }
         }
-        BridgeDecayResult decay = Bridges.Update(now);
+        BridgeDecayResult decay = Bridges.Update(now, 1.0 / TicksPerSecond);
         UpdateGroundSupport();
         // 다리 붕괴까지 반영한 뒤 승패·AI 이벤트를 판정한다 (원본은 미션 객체 프레임 함수에서 매 프레임 검사)
         UpdateMissionEvents();
@@ -437,6 +438,20 @@ public sealed partial class BattleSession
         var hash = new Fnv1a();
         hash.Add(Tick);
         hash.Add(_random.State);
+        hash.Add(Bridges.ScanCursor);
+        hash.Add(BitConverter.DoubleToInt64Bits(Bridges.NextScanTime));
+        // 빈 목록의 순서도 다음 생성 번호를 바꾸므로 풀 상태를 검사합에 넣는다.
+        hash.Add(Map.Sids.FreeCount);
+        hash.Add(Map.Sids.PredictableCursor);
+        hash.Add(Map.Sids.ServerHead);
+        hash.Add(Map.Sids.Tail(false));
+        // 슬롯별 연결·상태·타입은 삭제 이력에 따른 FIFO 재사용을 결정한다.
+        for (int sid = Map.Sids.ServerFirst; sid < Map.Sids.PredictableFirst; sid++)
+        {
+            hash.Add(Map.Sids.Next(sid));
+            hash.Add(Map.Sids.State(sid));
+            hash.Add(Map.Sids.Type(sid));
+        }
         // 회수 금지는 명령의 결과를 바꾸는 상태이므로 검사합에 넣는다
         hash.Add(DenySalvage ? 1 : 0);
         // 튜토리얼 단계와 타이머도 상태다
@@ -541,6 +556,7 @@ public sealed partial class BattleSession
         // 다리 칸: 좌표 순서로 모양·소유자·상태·수명
         foreach (BridgeCellState cell in Bridges.Cells.OrderBy(c => c.Y).ThenBy(c => c.X))
         {
+            hash.Add(cell.Sid);
             hash.Add(cell.X);
             hash.Add(cell.Y);
             hash.Add(cell.Cell.Letter);

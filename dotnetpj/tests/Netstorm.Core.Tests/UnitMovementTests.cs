@@ -21,14 +21,14 @@ public sealed class UnitMovementTests
     public void TerrainChange_PreservesASafeStepInProgress(int x, int y)
     {
         BattleSession changed = Create(2, 2), reference = Create(2, 2);
-        changed.Submit(new MoveEntityCommand(1, 1, x, y));
-        reference.Submit(new MoveEntityCommand(1, 1, x, y));
+        changed.Submit(new MoveEntityCommand(1, OriginalData.Sid(1), x, y));
+        reference.Submit(new MoveEntityCommand(1, OriginalData.Sid(1), x, y));
         changed.RunTicks(7); reference.RunTicks(7);
         changed.Bridges.InvalidateTerrain();
         changed.RunTicks(1); reference.RunTicks(1);
-        Assert.Equal(reference.VisualCell(reference.Entity(1)!), changed.VisualCell(changed.Entity(1)!));
+        Assert.Equal(reference.VisualCell(reference.Entity(OriginalData.Sid(1))!), changed.VisualCell(changed.Entity(OriginalData.Sid(1))!));
         changed.RunTicks(180); reference.RunTicks(180);
-        Assert.Equal(reference.Entity(1)!.Footprint, changed.Entity(1)!.Footprint);
+        Assert.Equal(reference.Entity(OriginalData.Sid(1))!.Footprint, changed.Entity(OriginalData.Sid(1))!.Footprint);
         Assert.False(changed.IsMoveBlocked(1));
     }
 
@@ -37,7 +37,7 @@ public sealed class UnitMovementTests
     public void MoveToCell_WalksDiagonalsFirstThenStraight()
     {
         BattleSession session = Create(2, 2);
-        GameEntity priest = session.Entity(1)!;
+        GameEntity priest = session.Entity(OriginalData.Sid(1))!;
         session.Submit(new MoveEntityCommand(1, priest.Id, 9, 5));
         List<(int Dx, int Dy)> steps = Walk(session, priest);
         Assert.Equal(new Footprint(9, 5, 1, 1), priest.Footprint);
@@ -50,7 +50,7 @@ public sealed class UnitMovementTests
     public void MoveToCell_VerticalGoalStaysStraight()
     {
         BattleSession session = Create(5, 5);
-        GameEntity priest = session.Entity(1)!;
+        GameEntity priest = session.Entity(OriginalData.Sid(1))!;
         session.Submit(new MoveEntityCommand(1, priest.Id, 5, 12));
         List<(int Dx, int Dy)> steps = Walk(session, priest);
         Assert.Equal(7, steps.Count);
@@ -73,7 +73,7 @@ public sealed class UnitMovementTests
     public void VisualCell_InterpolatesBetweenCellsAndSettlesOnArrival()
     {
         BattleSession session = Create(2, 2);
-        GameEntity priest = session.Entity(1)!;
+        GameEntity priest = session.Entity(OriginalData.Sid(1))!;
         session.Submit(new MoveEntityCommand(1, priest.Id, 8, 2));
         // 명령이 실행되고 약 0.45칸을 걸은 시점(6틱 = 0.25초 × 1.8칸/초)
         session.RunTicks(7);
@@ -96,7 +96,7 @@ public sealed class UnitMovementTests
     public void Heading_FollowsTheWalkingDirection(int x, int y, int expected)
     {
         BattleSession session = Create(5, 2);
-        GameEntity priest = session.Entity(1)!;
+        GameEntity priest = session.Entity(OriginalData.Sid(1))!;
         Assert.Equal(UnitHeading.None, priest.Heading);
         session.Submit(new MoveEntityCommand(1, priest.Id, x, y));
         session.RunTicks(3);
@@ -127,7 +127,7 @@ public sealed class UnitMovementTests
     {
         // (5,3) 한 칸만 허공이라 (4,3)→(5,4) 대각선은 허공 모서리를 가로지른다.
         BattleSession session = Create(4, 3, island: (x, y) => x is >= 0 and < IslandSize && y is >= 0 and < IslandSize && (x, y) != (5, 3));
-        GameEntity priest = session.Entity(1)!;
+        GameEntity priest = session.Entity(OriginalData.Sid(1))!;
         session.Submit(new MoveEntityCommand(1, priest.Id, 5, 4));
         List<(int Dx, int Dy)> steps = Walk(session, priest);
         Assert.Equal([(0, 1), (1, 0)], steps);
@@ -138,7 +138,7 @@ public sealed class UnitMovementTests
     public void MoveToVoid_IsRejectedWithoutMoving()
     {
         BattleSession session = Create(5, 5);
-        GameEntity priest = session.Entity(1)!;
+        GameEntity priest = session.Entity(OriginalData.Sid(1))!;
         session.Submit(new MoveEntityCommand(1, priest.Id, 60, 60));
         session.RunTicks(2);
         Assert.Contains(session.DrainEvents(), e => e.Kind == SessionEventKind.CommandRejected && e.Failure == CommandFailure.NoRoute);
@@ -151,7 +151,7 @@ public sealed class UnitMovementTests
     public void Redirect_MidStep_KeepsTheVisualPositionContinuous()
     {
         BattleSession session = Create(2, 2);
-        GameEntity priest = session.Entity(1)!;
+        GameEntity priest = session.Entity(OriginalData.Sid(1))!;
         session.Submit(new MoveEntityCommand(1, priest.Id, 25, 2));
         // 한 걸음(약 13틱)의 3/4쯤 걸은 시점
         session.RunTicks(10);
@@ -175,8 +175,8 @@ public sealed class UnitMovementTests
     {
         BattleSession first = Create(2, 2);
         BattleSession second = Create(2, 2);
-        first.Submit(new MoveEntityCommand(1, 1, 30, 20));
-        second.Submit(new MoveEntityCommand(1, 1, 30, 20));
+        first.Submit(new MoveEntityCommand(1, OriginalData.Sid(1), 30, 20));
+        second.Submit(new MoveEntityCommand(1, OriginalData.Sid(1), 30, 20));
         first.RunTicks(300);
         second.RunTicks(300);
         Assert.Equal(first.Checksum(), second.Checksum());
@@ -206,7 +206,7 @@ public sealed class UnitMovementTests
     private static int TicksToArrive(int fromX, int fromY, int toX, int toY)
     {
         BattleSession session = Create(fromX, fromY);
-        GameEntity priest = session.Entity(1)!;
+        GameEntity priest = session.Entity(OriginalData.Sid(1))!;
         session.Submit(new MoveEntityCommand(1, priest.Id, toX, toY));
         int ticks = 0;
         // 목적 칸에 닿을 때까지 한 틱씩 진행한다.

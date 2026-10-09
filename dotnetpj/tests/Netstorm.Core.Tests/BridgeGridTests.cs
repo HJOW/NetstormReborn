@@ -5,6 +5,21 @@ namespace Netstorm.Core.Tests;
 /// <summary>다리 배치 판정·연결망·붕괴 규칙 테스트 (docs/exe/bridge-pieces.md 8절)</summary>
 public sealed class BridgeGridTests
 {
+    /// <summary>고정 24Hz로 스캔을 재생하고 구간 동안의 알림을 모은다. 큰 시간 점프를 한 스캔으로 취급하지 않는다.</summary>
+    private static BridgeDecayResult AdvanceGrid(BridgeGrid grid, double until)
+    {
+        var cracked = new List<BridgeCellState>();
+        var removed = new List<BridgeCellState>();
+        // 마지막 처리 틱 다음부터 목표 시각까지 원본의 프레임별 스캔을 재생한다.
+        for (int tick = (int)Math.Round(grid.LastScanTime * 24) + 1; tick <= (int)Math.Round(until * 24); tick++)
+        {
+            BridgeDecayResult result = grid.Update(tick / 24.0, 1.0 / 24);
+            cracked.AddRange(result.Cracked);
+            removed.AddRange(result.Removed);
+        }
+        return new BridgeDecayResult(cracked, removed);
+    }
+
     /// <summary>시험용 섬: x ≤ 9 인 칸 전체 (오른쪽 가장자리 x = 9)</summary>
     private static bool LeftIsland(int x, int y) => x <= 9;
 
@@ -57,29 +72,30 @@ public sealed class BridgeGridTests
     }
 
     /// <summary>
-    /// 한쪽만 섬에 붙은 칸: 10초마다 7 → 6 → 5 (보통), 4 에서 금 감, 3 → 2 → 1, 0 이 되는 80초째에 사라진다.
+    /// 한쪽만 섬에 붙은 칸: 자기 SID 첫 스캔에서 7, 이후 주기마다 감소해 4에서 금이 가고 0에서 사라진다.
+    /// 15000번의 첫 검사는 1/24초이며 10초 경계의 표본은 그 직전 주기까지의 결과다.
     /// </summary>
     [Fact]
     public void Decay_DanglingBridgeCracksAndCrumbles()
     {
         var grid = new BridgeGrid(LeftIsland);
         BridgeCellState cell = grid.Place(HorizontalSingle(), 10, 5, 1)[0];
-        grid.Update(10);
+        AdvanceGrid(grid, 10);
         Assert.Equal(7, cell.TimeLeft);
-        grid.Update(30);
+        AdvanceGrid(grid, 30);
         Assert.Equal((5, BridgeCondition.Normal), (cell.TimeLeft, cell.Condition));
-        BridgeDecayResult crack = grid.Update(40);
+        BridgeDecayResult crack = AdvanceGrid(grid, 40);
         Assert.Equal([cell], crack.Cracked);
         Assert.Equal((4, BridgeCondition.Cracked), (cell.TimeLeft, cell.Condition));
-        Assert.Empty(grid.Update(70).Removed);
-        BridgeDecayResult gone = grid.Update(80);
+        Assert.Empty(AdvanceGrid(grid, 70).Removed);
+        BridgeDecayResult gone = AdvanceGrid(grid, 80);
         Assert.Equal([cell], gone.Removed);
         Assert.Null(grid.At(10, 5));
     }
 
     /// <summary>
     /// 금 간 품질로 놓인 칸은 처음부터 금 간 상태·수명 4 이고(원본 FUN_00442c80), 한쪽만 붙어 있으면
-    /// 10초마다 3 → 2 → 1 → 0 으로 줄어 40초째에 사라진다.
+    /// 자기 번호를 방문할 때마다 3 → 2 → 1 → 0으로 줄어 네 번째 방문에 사라진다.
     /// </summary>
     [Fact]
     public void Place_CrackedQualityStartsWeakAndCrumblesSooner()
@@ -88,10 +104,10 @@ public sealed class BridgeGridTests
         BridgeCellState cell = grid.Place(HorizontalSingle(), 10, 5, 1, BridgeCondition.Cracked)[0];
         Assert.Equal((BridgeGrid.WeakenedTimeLeft, BridgeCondition.Cracked), (cell.TimeLeft, cell.Condition));
         // 이미 금이 가 있으므로 수명이 줄어도 금 감 알림은 다시 나오지 않는다
-        Assert.Empty(grid.Update(10).Cracked);
+        Assert.Empty(AdvanceGrid(grid, 10).Cracked);
         Assert.Equal(3, cell.TimeLeft);
-        Assert.Empty(grid.Update(30).Removed);
-        Assert.Equal([cell], grid.Update(40).Removed);
+        Assert.Empty(AdvanceGrid(grid, 30).Removed);
+        Assert.Equal([cell], AdvanceGrid(grid, 40).Removed);
     }
 
     /// <summary>
@@ -127,7 +143,7 @@ public sealed class BridgeGridTests
         var grid = new BridgeGrid((x, y) => x <= 9 || x >= 12);
         grid.Place(HorizontalSingle(), 10, 5, 1);
         grid.Place(HorizontalSingle(), 11, 5, 1);
-        grid.Update(200);
+        AdvanceGrid(grid, 200);
         Assert.All(grid.Cells, c => Assert.Equal((0, BridgeCondition.Normal), (c.TimeLeft, c.Condition)));
         Assert.Single(grid.Networks());
     }
@@ -150,7 +166,7 @@ public sealed class BridgeGridTests
 
     /// <summary>
     /// 섬에 붙은 판자 두 칸: 양쪽이 이어진 안쪽 칸은 열린 쪽이 없어 구동자가 아니고, 바깥 끝 칸만 10초마다 줄어
-    /// 80초에 먼저 사라진다 (원본 FUN_004217f0, 2026-09-29 관찰 "두 칸짜리는 끝 칸이 먼저 사라진다"). 그다음 안쪽 칸이 끝 칸이 되어 처음부터 다시 센다.
+    /// 여덟 번째 방문(이 시험에서는 70~80초 구간)에 먼저 사라진다 (원본 FUN_004217f0, 2026-09-29 관찰 "두 칸짜리는 끝 칸이 먼저 사라진다"). 그다음 안쪽 칸이 끝 칸이 되어 처음부터 다시 센다.
     /// </summary>
     [Fact]
     public void Decay_PlankChainCollapsesFromTheTip()
@@ -158,25 +174,26 @@ public sealed class BridgeGridTests
         var grid = new BridgeGrid(LeftIsland);
         BridgeCellState inner = grid.Place(HorizontalSingle(), 10, 5, 1)[0];
         BridgeCellState tip = grid.Place(HorizontalSingle(), 11, 5, 1)[0];
-        grid.Update(10);
+        AdvanceGrid(grid, 10);
         Assert.Equal((0, 7), (inner.TimeLeft, tip.TimeLeft));
-        grid.Update(40);
+        AdvanceGrid(grid, 40);
         Assert.Equal((0, BridgeCondition.Normal, 4, BridgeCondition.Cracked), (inner.TimeLeft, inner.Condition, tip.TimeLeft, tip.Condition));
-        // 80초 스캔: 안쪽 칸을 먼저 살피는 동안 바깥 끝 칸이 아직 있어 수명이 줄지 않고, 곧이어 끝 칸이 사라진다
-        BridgeDecayResult firstGone = grid.Update(80);
+        // 70~80초 구간: 안쪽 칸의 SID를 먼저 살피는 동안 바깥 끝 칸이 아직 있어 수명이 줄지 않고, 곧이어 끝 칸이 사라진다
+        BridgeDecayResult firstGone = AdvanceGrid(grid, 80);
         Assert.Equal([tip], firstGone.Removed);
         Assert.Equal(0, inner.TimeLeft);
-        // 이제 안쪽 칸이 끝 칸이다: 90초에 7 부터 시작해 160초에 사라진다
-        grid.Update(90);
+        // 이제 안쪽 칸이 끝 칸이다: 다음 자기 SID 방문에서 7로 시작해 여덟 번째 방문에 사라진다
+        AdvanceGrid(grid, 90);
         Assert.Equal(7, inner.TimeLeft);
-        Assert.Empty(grid.Update(150).Removed);
+        Assert.Empty(AdvanceGrid(grid, 150).Removed);
         Assert.Equal(1, inner.TimeLeft);
-        Assert.Equal([inner], grid.Update(160).Removed);
+        Assert.Equal([inner], AdvanceGrid(grid, 160).Removed);
     }
 
     /// <summary>
     /// 접합 칸(A~I)에 이어진 판자 무리: 섬 쪽 판자는 경계라 수명이 줄지 않고, 접합 칸과 그 끝 판자 두 개가 함께 줄어든다.
-    /// 끝 판자 두 개가 각각 구동자라 한 스캔에 두 번씩 줄어 40초에 모두 사라진다. 그다음 섬에 붙은 판자가 끝 칸이 되어 50초에 7 부터 시작한다.
+    /// 끝 판자 두 개가 각각 구동자라 한 주기에 두 번씩 줄어 네 번째 주기에 모두 사라진다.
+    /// 그다음 섬에 붙은 판자가 끝 칸이 되어 다음 자기 SID 방문에서 7로 시작한다.
     /// </summary>
     [Fact]
     public void Decay_JunctionClusterDecaysTogetherButAttachedPlankWaits()
@@ -192,25 +209,25 @@ public sealed class BridgeGridTests
         BridgeCellState bottom = grid.At(11, 7)!;
         Assert.Equal(("J", "K", "D", "J"), ($"{top.Cell.Letter}", $"{plank.Cell.Letter}", $"{junction.Cell.Letter}", $"{bottom.Cell.Letter}"));
         // 첫 스캔: 위 판자가 구동자로 7, 이어서 아래 판자가 구동자로 6
-        grid.Update(10);
+        AdvanceGrid(grid, 10);
         Assert.Equal((6, 6, 6, 0), (top.TimeLeft, junction.TimeLeft, bottom.TimeLeft, plank.TimeLeft));
         // 두 번째 스캔: 5 를 거쳐 4 가 되며 세 칸 모두 금이 간다. 섬에 붙은 판자는 그대로다
-        grid.Update(20);
+        AdvanceGrid(grid, 20);
         Assert.All(new[] { top, junction, bottom }, c => Assert.Equal((4, BridgeCondition.Cracked), (c.TimeLeft, c.Condition)));
         Assert.Equal((0, BridgeCondition.Normal), (plank.TimeLeft, plank.Condition));
-        BridgeDecayResult gone = grid.Update(40);
+        BridgeDecayResult gone = AdvanceGrid(grid, 40);
         Assert.Equal(3, gone.Removed.Count);
         Assert.Null(grid.At(11, 5));
         Assert.Null(grid.At(11, 6));
         Assert.Null(grid.At(11, 7));
         Assert.Equal(0, plank.TimeLeft);
-        grid.Update(50);
+        AdvanceGrid(grid, 50);
         Assert.Equal(7, plank.TimeLeft);
     }
 
     /// <summary>
     /// 섬에서 떨어져 나온 표면 무리가 5칸 미만이면 다음 스캔에서 한 번에 무너진다 (원본 Graph.cpp numSurface &lt; 5).
-    /// 5칸짜리는 양 끝부터 줄어 80초에 무너지고, 그때 끝 칸이 사라지면서 남은 4칸이 같은 스캔에서 함께 무너진다.
+    /// 5칸짜리는 양 끝부터 줄어 여덟 번째 주기에 무너지고, 그때 끝 칸이 사라지면서 남은 4칸이 같은 스캔에서 함께 무너진다.
     /// </summary>
     [Fact]
     public void Decay_DetachedFragmentUnderFiveCellsCrumblesAtOnce()
@@ -218,7 +235,7 @@ public sealed class BridgeGridTests
         var small = new BridgeGrid(LeftIsland);
         small.Place(new BridgePiece(3, 1), 20, 5, 1);
         Assert.Equal(4, small.Cells.Count);
-        BridgeDecayResult result = small.Update(10);
+        BridgeDecayResult result = AdvanceGrid(small, 10);
         Assert.Equal(4, result.Removed.Count);
         Assert.Empty(small.Cells);
 
@@ -226,11 +243,11 @@ public sealed class BridgeGridTests
         chain.Place(new BridgePiece(3, 1), 20, 5, 1);
         chain.Place(HorizontalSingle(), 24, 5, 1);
         Assert.Equal(5, chain.Cells.Count);
-        chain.Update(70);
+        AdvanceGrid(chain, 70);
         // 양 끝만 줄고 가운데 세 칸은 그대로다
         Assert.Equal((1, 0, 1), (chain.At(20, 5)!.TimeLeft, chain.At(22, 5)!.TimeLeft, chain.At(24, 5)!.TimeLeft));
         Assert.Equal(5, chain.Cells.Count);
-        Assert.Equal(5, chain.Update(80).Removed.Count);
+        Assert.Equal(5, AdvanceGrid(chain, 80).Removed.Count);
         Assert.Empty(chain.Cells);
     }
 
@@ -240,7 +257,7 @@ public sealed class BridgeGridTests
     {
         var grid = new BridgeGrid(LeftIsland);
         BridgeCellState hard = grid.Place(HorizontalSingle(), 10, 5, 1, BridgeCondition.Hard)[0];
-        grid.Update(300);
+        AdvanceGrid(grid, 300);
         Assert.NotNull(grid.At(10, 5));
         Assert.Equal((0, BridgeCondition.Hard), (hard.TimeLeft, hard.Condition));
     }

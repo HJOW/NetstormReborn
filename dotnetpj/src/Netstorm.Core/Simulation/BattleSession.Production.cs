@@ -163,6 +163,7 @@ public sealed partial class BattleSession
         Player(entity.Owner).StormPower += entity.Cost;
         if (entity.OccupiesGround) Map.RemoveOccupant(entity.Footprint);
         _entities.Remove(entity.Id);
+        Map.Sids.ReleaseWorld(entity.Id);
         // 없어진 예약을 선택한 모든 플레이어의 선택을 해제한다.
         foreach (PlayerState viewer in _players.Values.Where(p => p.SelectedEntityId == entity.Id)) ClearSelection(viewer);
         Emit(SessionEventKind.UnitProductionCancelled, entity.Owner, entity.Id, $"{entity.DisplayName} 발판 소멸·생산 환불 (+{entity.Cost})");

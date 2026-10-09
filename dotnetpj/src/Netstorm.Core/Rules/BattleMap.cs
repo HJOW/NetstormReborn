@@ -1,3 +1,4 @@
+using Netstorm.Core.Simulation;
 using Netstorm.Assets;
 
 namespace Netstorm.Core.Rules;
@@ -38,8 +39,8 @@ public sealed class BattleMap
     /// <summary>맵을 읽을 때 등록한 오브젝트와 번호 (noIsland 제외, 저장 순서)</summary>
     private readonly List<(int Id, FortMapObject Item)> _initialObjects = [];
 
-    /// <summary>다음에 붙일 오브젝트·공급원 번호</summary>
-    private int _nextId;
+    /// <summary>한 판의 모든 알려진 월드 오브젝트가 공유하는 서버 번호 풀.</summary>
+    public SidPool Sids { get; }
 
     /// <summary>섬 소유권</summary>
     public IslandOwnership Ownership { get; } = new();
@@ -63,21 +64,23 @@ public sealed class BattleMap
     /// <param name="territoryAt">칸 → 영역 번호 (지면 미리보기의 섬 칸 등). 섬 칸이 아니면 null</param>
     /// <param name="options">전투 옵션 (null 이면 원본 기본값)</param>
     /// <param name="allied">동맹 판정 (null 이면 같은 플레이어만)</param>
+    /// <param name="sids">공유 번호 풀 (없으면 원본 크기의 로컬 서버 풀)</param>
     public BattleMap(IEnumerable<FortMapObject> objects, Func<int, int, int?> territoryAt, BattleOptions? options = null,
-        Func<int, int, bool>? allied = null)
+        Func<int, int, bool>? allied = null, SidPool? sids = null)
     {
+        Sids = sids ?? new SidPool(SidPool.NativeCapacity1078);
         _territoryAt = territoryAt;
         Options = options ?? new BattleOptions();
         _allied = allied ?? ((a, b) => a == b);
         // 저장된 오브젝트마다 소유권·공급원·점유 칸을 등록한다.
         foreach (FortMapObject item in objects)
         {
-            // noIsland 는 투명한 논리 지면이라 자리를 차지하지 않는다.
+            int id = NextId(item.Object.Type);
+            // noIsland도 원본의 논리 오브젝트 번호를 받지만 엔티티·점유는 만들지 않는다.
             if (item.Object.Type.Name.Equals(LogicalGroundType, StringComparison.OrdinalIgnoreCase))
             {
                 continue;
             }
-            int id = NextId();
             _initialObjects.Add((id, item));
             ObjectKind kind = ObjectKinds.Of(item.Object.Type);
             int owner = item.Object.Owner ?? 0;
@@ -98,8 +101,8 @@ public sealed class BattleMap
     /// <summary>자리를 차지하지 않는 논리 지면 타입 (작은 받침 칸)</summary>
     private const string LogicalGroundType = "noIsland";
 
-    /// <summary>새 오브젝트·공급원 번호를 하나 받는다 (맵을 읽을 때와 게임 중 새로 짓거나 놓을 때 같은 순서로 이어 붙인다).</summary>
-    public int NextId() => ++_nextId;
+    /// <summary>새 서버 오브젝트 번호를 받는다. 저장 오브젝트·다리·게임 중 생성이 같은 FIFO 풀을 쓴다.</summary>
+    public int NextId(TypeInfo? type = null) => Sids.AllocateWorld((byte)(type?.RuntimeIndex ?? 0));
 
     /// <summary>발자국 칸을 점유로 표시한다 (새 오브젝트를 놓을 때)</summary>
     /// <param name="footprint">차지할 발자국</param>
@@ -154,7 +157,7 @@ public sealed class BattleMap
         {
             throw new InvalidOperationException($"배치할 수 없는 위치입니다: {PlacementRules.Describe(check.Problem)}");
         }
-        int id = NextId();
+        int id = NextId(type);
         if (!type.Definition.HasFlag("balloon") && ObjectKinds.Of(type) != ObjectKind.Flyer) AddOccupant(check.Footprint);
         Element? element = Elements.FromTheme(type.Definition.GetString("theme"));
         if (activate && ObjectKinds.IsEnergySource(ObjectKinds.Of(type)) && element != null)

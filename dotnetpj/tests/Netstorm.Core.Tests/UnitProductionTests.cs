@@ -33,7 +33,7 @@ public sealed class UnitProductionTests
     private static void Register(BattleSession session, string type, int workshopId = 2)
     {
         session.Player(1).Deck.LearnKnowledge(type);
-        session.Submit(new RegisterKnowledgeCommand(1, workshopId, type));
+        session.Submit(new RegisterKnowledgeCommand(1, OriginalData.Sid(workshopId), type));
         session.RunTicks(1);
         Assert.DoesNotContain(session.DrainEvents(), e => e.Kind == SessionEventKind.CommandRejected);
     }
@@ -55,8 +55,8 @@ public sealed class UnitProductionTests
         BattleSession session = Create();
         GameEntity golem = Order(session, "sunwalker", 20, 8);
         UnitProduction production = Assert.IsType<UnitProduction>(golem.Production);
-        Assert.Equal(1, production.SourceId);
-        Assert.Equal(1, Assert.Single(production.Deliveries, d => d.IsStormPower).SourceId);
+        Assert.Equal(OriginalData.Sid(1), production.SourceId);
+        Assert.Equal(OriginalData.Sid(1), Assert.Single(production.Deliveries, d => d.IsStormPower).SourceId);
         Assert.False(golem.IsComplete);
         Assert.Equal(0, golem.HitPoints);
         Assert.Equal(StartingPower - golem.Cost, session.Player(1).StormPower);
@@ -85,10 +85,10 @@ public sealed class UnitProductionTests
         BattleSession session = Create(null, Object("windVortex", 38, 30), Object("sunFactory", 12, 18), Object("sunFactory", 32, 18));
         Register(session, "sunCannon");
         GameEntity cannon = Order(session, "sunCannon", 40, 18);
-        Assert.Equal(2, cannon.Production!.SourceId);
+        Assert.Equal(OriginalData.Sid(2), cannon.Production!.SourceId);
         ProductionDelivery storm = Assert.Single(cannon.Production.Deliveries, d => d.IsStormPower);
-        Assert.InRange(storm.PreviousX, session.Entity(2)!.Footprint.Left, session.Entity(2)!.Footprint.AnchorX);
-        Assert.True(storm.TargetX > session.Entity(3)!.Footprint.AnchorX);
+        Assert.InRange(storm.PreviousX, session.Entity(OriginalData.Sid(2))!.Footprint.Left, session.Entity(OriginalData.Sid(2))!.Footprint.AnchorX);
+        Assert.True(storm.TargetX > session.Entity(OriginalData.Sid(3))!.Footprint.AnchorX);
         SessionData.RunUntilComplete(session, cannon);
         Assert.True(cannon.IsComplete);
     }
@@ -104,8 +104,8 @@ public sealed class UnitProductionTests
         ProductionDelivery[] energy = [.. cannon.Production!.Deliveries.Where(d => !d.IsStormPower)];
         Assert.Equal(2, energy.Length);
         Assert.Equal(Element.Thunder, energy[0].Element);
-        Assert.Equal(4, energy[0].SourceId);
-        Assert.Equal(5, energy[1].SourceId);
+        Assert.Equal(OriginalData.Sid(4), energy[0].SourceId);
+        Assert.Equal(OriginalData.Sid(5), energy[1].SourceId);
         Assert.All(energy, d => Assert.True(d.IsAirborne));
         Assert.Equal(2, energy.Select(d => d.SourceId).Distinct().Count());
     }
@@ -175,9 +175,9 @@ public sealed class UnitProductionTests
         BattleSession session = Create();
         Register(session, "rainBattery");
         GameEntity generator = Order(session, "rainBattery", 22, 18);
-        session.Submit(new SalvageCommand(1, 2));
+        session.Submit(new SalvageCommand(1, OriginalData.Sid(2)));
         session.RunTicks(1);
-        Assert.Null(session.Entity(2));
+        Assert.Null(session.Entity(OriginalData.Sid(2)));
         Assert.DoesNotContain(session.Player(1).Deck.Entries(), e => e.TypeName.Equals("rainBattery", StringComparison.OrdinalIgnoreCase));
         SessionData.RunUntilComplete(session, generator);
         Assert.True(generator.IsComplete);
@@ -190,10 +190,10 @@ public sealed class UnitProductionTests
         BattleSession session = Create(null, Object("windVortex", 8, 8), Object("sunFactory", 12, 18), Object("rainBattery", 24, 24));
         Register(session, "sunCannon");
         GameEntity cannon = Order(session, "sunCannon", 28, 26);
-        Assert.Equal(3, Assert.Single(cannon.Production!.Deliveries, d => !d.IsStormPower).SourceId);
-        session.Submit(new SalvageCommand(1, 3));
+        Assert.Equal(OriginalData.Sid(3), Assert.Single(cannon.Production!.Deliveries, d => !d.IsStormPower).SourceId);
+        session.Submit(new SalvageCommand(1, OriginalData.Sid(3)));
         session.RunTicks(1);
-        Assert.DoesNotContain(session.Map.Sources, s => s.Id == 3);
+        Assert.DoesNotContain(session.Map.Sources, s => s.Id == OriginalData.Sid(3));
         SessionData.RunUntilComplete(session, cannon);
         Assert.True(cannon.IsComplete);
     }
@@ -320,7 +320,7 @@ public sealed class UnitProductionTests
     {
         BattleSession session = Create(null, Object("windVortex", 8, 8), Object("sunFactory", 12, 18), Object("geyser", 28, 25));
         GameEntity golem = Order(session, "sunwalker", 20, 8);
-        session.Submit(new HarvestGeyserCommand(1, 3, golem.Id));
+        session.Submit(new HarvestGeyserCommand(1, OriginalData.Sid(3), golem.Id));
         session.RunTicks(1);
         Assert.Contains(session.DrainEvents(), e => e.Failure == CommandFailure.NotComplete);
         Assert.Equal(0, golem.CarriedCrystals);

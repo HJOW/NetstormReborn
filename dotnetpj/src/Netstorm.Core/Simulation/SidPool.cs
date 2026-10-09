@@ -25,7 +25,7 @@ public readonly record struct SidDeletion(uint Sid, uint Type);
 ///   반납한 번호는 그 목록의 꼬리에 붙으므로 한참 뒤에야 다시 쓰인다.
 /// - 예측 번호는 커서로만 증가하며 반납해도 커서가 돌아가지 않는다. 세대 비트는 없다.
 /// 다리 붕괴 스캔은 번호 15000~23001 을 차례로 훑으므로, 이 순서가 다리 칸의 처리 순서를 정한다.
-/// 원본의 50바이트 슬롯은 복제하지 않고 번호마다 다음 번호·타입·상태만 가진다. 월드에는 아직 연결하지 않았다.
+/// 원본의 50바이트 슬롯은 복제하지 않고 번호마다 다음 번호·타입·상태만 가진다. 싱글 플레이 세션의 저장 오브젝트·다리·건설·생산·비행체가 하나의 서버 풀을 공유한다.
 /// 검증은 원본 기계어 기대값 sid-x86.tsv 로 한다 (같은 값에서 원본 슬롯 바이트를 되살려 풀 전체의 체크섬까지 비교한다).
 /// </summary>
 public sealed class SidPool
@@ -39,8 +39,11 @@ public sealed class SidPool
     /// <summary>10.78 의 예측 머리 번호 (그 자체는 할당하지 않는다)</summary>
     public const int PredictableFirst1078 = 23001;
 
-    /// <summary>번호가 가질 수 있는 최대 개수 (부호 없는 16비트)</summary>
-    public const int MaximumCapacity = 65535;
+    /// <summary>원본 Clientmain.cpp의 004395df가 004af170에 전달하는 슬롯 수. 빈 목록 연결은 여전히 16비트다.</summary>
+    public const int NativeCapacity1078 = 120000;
+
+    /// <summary>지원하는 최대 슬롯 수. 예측 영역의 16비트 연결 넘침은 원본과 같이 남기며 세션은 서버 영역만 쓴다.</summary>
+    public const int MaximumCapacity = NativeCapacity1078;
 
     /// <summary>영역마다 남기는 삭제 기록의 수</summary>
     public const int DeletionHistory = 20;
@@ -122,6 +125,40 @@ public sealed class SidPool
 
     /// <summary>서버 목록의 머리가 가리키는 첫 빈 번호</summary>
     public int ServerHead => _serverHead;
+
+    /// <summary>
+    /// 서버 빈 목록에 예약 꼬리 외에 요청한 개수의 번호가 있는지. 소진 거부는 풀을 바꾸지 않는다.
+    /// 세션의 새 안전 처리: 원본의 최대 50개 다리 삭제가 미복원이므로, 비용·조각 소비 전에 생성을 거부하는 데 쓴다.
+    /// </summary>
+    public bool CanAllocateServer(int count = 1)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegative(count);
+        if (!IsServer) return false;
+        int sid = ServerHead;
+        // 필요한 번호만 미리 훑어 다리 조각의 일부만 생성되는 일을 막는다.
+        for (int i = 0; i < count; i++)
+        {
+            if (sid == 0 || sid == Tail(false)) return false;
+            sid = Next(sid);
+        }
+        return true;
+    }
+
+    /// <summary>서버 번호를 받고 타입·월드 등록 상태를 함께 적는다. 원본 생성자의 void → pop 순서를 묶는다.</summary>
+    public int AllocateWorld(byte type = 0)
+    {
+        int sid = Allocate();
+        SetType(sid, type);
+        SetState(sid, 0);
+        return sid;
+    }
+
+    /// <summary>월드에서 빠진 번호를 void로 바꾸고 FIFO 꼬리에 반납한다.</summary>
+    public void ReleaseWorld(int sid)
+    {
+        SetState(sid, (byte)(State(sid) | VoidBit));
+        Release(sid);
+    }
 
     /// <summary>영역의 머리가 가리키는 첫 빈 번호</summary>
     /// <param name="client">클라이언트 영역이면 참</param>

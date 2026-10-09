@@ -228,6 +228,7 @@ public sealed partial class BattleSession
         PlayerState player = _players[command.Player];
         TypeInfo type = _types.Find(command.TypeName)!;
         PlacementCheck site = check.Site!;
+        if (!Map.Sids.CanAllocateServer()) return new CommandResult(CommandFailure.ObjectLimit);
         int id = Map.PlaceUnit(type, site, command.Player, activate: !EnforceProductionRules);
         player.StormPower -= site.Cost;
         var entity = new GameEntity(id, type, ObjectKinds.Of(type), command.Player, site.Footprint, Map.TerritoryAt(command.X, command.Y), null);
@@ -412,6 +413,7 @@ public sealed partial class BattleSession
         {
             return new CommandResult(CommandFailure.BridgeBlocked, SessionText.Describe(check.Problem));
         }
+        if (!Map.Sids.CanAllocateServer(piece.Cells().Count)) return new CommandResult(CommandFailure.ObjectLimit);
         // 생산 창에 들어온 지 6초가 안 된 조각은 금 간 채로 놓인다
         BridgeCondition quality = BridgeTray.QualityAt(held, Seconds);
         Bridges.Place(piece, command.X, command.Y, command.Player, quality);

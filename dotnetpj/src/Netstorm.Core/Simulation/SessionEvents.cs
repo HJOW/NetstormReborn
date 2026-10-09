@@ -89,6 +89,9 @@ public enum CommandFailure
 
     /// <summary>수송 유닛이 이미 사제를 운반하고 있음.</summary>
     AlreadyCarrying,
+
+    /// <summary>서버 번호가 부족해 새 오브젝트를 만들 수 없음. 비용·조각은 유지한다.</summary>
+    ObjectLimit,
 }
 
 /// <summary>명령 실행 결과.</summary>
@@ -328,6 +331,7 @@ public static class SessionText
     public static string Describe(CommandFailure failure) => failure switch
     {
         CommandFailure.None => "성공",
+        CommandFailure.ObjectLimit => "오브젝트 수가 한도에 도달했습니다",
         CommandFailure.UnknownCommand => "알 수 없는 명령",
         CommandFailure.UnknownPlayer => "없는 플레이어",
         CommandFailure.UnknownType => "없는 타입",

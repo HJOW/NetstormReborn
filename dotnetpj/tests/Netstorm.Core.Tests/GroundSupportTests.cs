@@ -14,15 +14,15 @@ public sealed class GroundSupportTests
     {
         BattleSession session = Create((_, _) => false, Object("sunwalker", 1, 10, 10));
         AddBridge(session, 10, 10);
-        session.Submit(new SelectEntityCommand(1, 1));
-        session.RunTicks(239);
-        Assert.NotNull(session.Entity(1));
+        session.Submit(new SelectEntityCommand(1, OriginalData.Sid(1)));
+        // 15001번 다리는 첫 틱의 15000~15032 구간에 있다.
+        Assert.NotNull(session.Entity(OriginalData.Sid(1)));
         session.RunTicks(1);
         Assert.Null(session.Bridges.At(10, 10));
-        Assert.Null(session.Entity(1));
+        Assert.Null(session.Entity(OriginalData.Sid(1)));
         Assert.Equal(0, session.Player(1).SelectedEntityId);
         Assert.False(session.Map.IsOccupied(new Footprint(10, 10, 1, 1)));
-        Assert.Equal(240, Assert.Single(session.DrainEvents(), e => e.Kind == SessionEventKind.UnitFell).Tick);
+        Assert.Equal(1, Assert.Single(session.DrainEvents(), e => e.Kind == SessionEventKind.UnitFell).Tick);
     }
 
     /// <summary>
@@ -34,14 +34,14 @@ public sealed class GroundSupportTests
     {
         BattleSession session = Create((_, _) => false, Object("sunwalker", 1, 10, 10));
         AddBridge(session, 10, 10);
-        session.RunTicks(240);
+        session.RunTicks(1);
         IReadOnlyList<FallenObject> fallen = session.DrainFallen();
         FallenObject cell = Assert.Single(fallen, item => item.Cell != null);
         Assert.Equal((10, 10), (cell.Cell!.X, cell.Cell.Y));
         FallenObject walker = Assert.Single(fallen, item => item.Entity != null);
         Assert.Equal((10, 10), (walker.Entity!.Footprint.AnchorX, walker.Entity.Footprint.AnchorY));
         Assert.Equal("sunwalker", walker.Entity.Type.Name, ignoreCase: true);
-        Assert.All(fallen, item => Assert.Equal(240, item.Tick));
+        Assert.All(fallen, item => Assert.Equal(1, item.Tick));
         Assert.Empty(session.DrainFallen());
     }
 
@@ -54,7 +54,7 @@ public sealed class GroundSupportTests
         session.RunTicks(1);
         Cut(session, 10, 10);
         session.RunTicks(1);
-        GameEntity priest = session.Entity(1)!;
+        GameEntity priest = session.Entity(OriginalData.Sid(1))!;
         Assert.True(priest.IsStunned);
         Assert.True(priest.IsSuspended);
         Assert.Equal(100, priest.HitPoints);
@@ -79,7 +79,7 @@ public sealed class GroundSupportTests
         BattleSession session = Create(LeftIsland, Object("priest", 1, 10, 10), Object("sunCannon", 2, 18, 11, 2));
         AddBridge(session, 10, 10);
         session.RunTicks(30);
-        GameEntity priest = session.Entity(1)!;
+        GameEntity priest = session.Entity(OriginalData.Sid(1))!;
         Assert.True(priest.IsStunned);
         Assert.Equal(50, priest.HitPoints);
         session.CombatEnabled = false;
@@ -101,7 +101,7 @@ public sealed class GroundSupportTests
         session.RunTicks(30);
         Cut(session, 10, 10);
         session.RunTicks(1);
-        GameEntity priest = session.Entity(1)!;
+        GameEntity priest = session.Entity(OriginalData.Sid(1))!;
         double health = priest.HitPoints;
         session.RunTicks(200);
         Assert.Equal(health, priest.HitPoints);
@@ -116,14 +116,14 @@ public sealed class GroundSupportTests
         BattleSession session = Create(LeftIsland, Object("priest", 2, 10, 10),
             Object("sunwalker", 1, 9, 10), Object("sunBalloon", 1, 12, 10));
         session.RunTicks(1);
-        session.Submit(new CapturePriestCommand(1, 2, 1));
+        session.Submit(new CapturePriestCommand(1, OriginalData.Sid(2), OriginalData.Sid(1)));
         session.RunTicks(1);
         Assert.Contains(session.DrainEvents(), e => e.Failure == CommandFailure.NoRoute);
-        session.Submit(new CapturePriestCommand(1, 3, 1));
+        session.Submit(new CapturePriestCommand(1, OriginalData.Sid(3), OriginalData.Sid(1)));
         session.RunTicks(60);
-        GameEntity priest = session.Entity(1)!;
+        GameEntity priest = session.Entity(OriginalData.Sid(1))!;
         Assert.Equal(PriestCaptivity.Carried, priest.Captivity);
-        Assert.Equal(3, priest.CaptorId);
+        Assert.Equal(OriginalData.Sid(3), priest.CaptorId);
         Assert.False(priest.IsSuspended);
         // 원래 칸에 다리가 복구되어도 운반 중인 사제를 자유 상태로 풀지 않는다.
         session.Bridges.Place(Horizontal(), 10, 10, 1);
@@ -137,13 +137,13 @@ public sealed class GroundSupportTests
     {
         BattleSession session = Create(LeftIsland, Object("priest", 2, 10, 10), Object("sunBalloon", 1, 12, 10));
         session.RunTicks(1);
-        session.Submit(new CapturePriestCommand(1, 2, 1));
+        session.Submit(new CapturePriestCommand(1, OriginalData.Sid(2), OriginalData.Sid(1)));
         session.RunTicks(60);
-        GameEntity priest = session.Entity(1)!;
+        GameEntity priest = session.Entity(OriginalData.Sid(1))!;
         Footprint position = priest.Footprint;
-        session.Submit(new SalvageCommand(1, 2));
+        session.Submit(new SalvageCommand(1, OriginalData.Sid(2)));
         session.RunTicks(1);
-        Assert.Null(session.Entity(2));
+        Assert.Null(session.Entity(OriginalData.Sid(2)));
         Assert.Equal(PriestCaptivity.Free, priest.Captivity);
         Assert.Equal(position, priest.Footprint);
         Assert.True(priest.IsSuspended);
@@ -158,14 +158,14 @@ public sealed class GroundSupportTests
         MissionStart mission = MissionStart.FromHeader(k => k == "allowAnyCapture" ? "1" : null);
         BattleSession session = Create(LeftIsland, mission, Object("priest", 2, 9, 10), Object("sunwalker", 1, 10, 10));
         AddBridge(session, 10, 10);
-        session.Submit(new CapturePriestCommand(1, 2, 1));
+        session.Submit(new CapturePriestCommand(1, OriginalData.Sid(2), OriginalData.Sid(1)));
         session.RunTicks(2);
-        Assert.Equal(PriestCaptivity.Carried, session.Entity(1)!.Captivity);
+        Assert.Equal(PriestCaptivity.Carried, session.Entity(OriginalData.Sid(1))!.Captivity);
         int money = session.Player(2).StormPower;
         Cut(session, 10, 10);
         session.RunTicks(1);
-        Assert.Null(session.Entity(2));
-        GameEntity priest = session.Entity(1)!;
+        Assert.Null(session.Entity(OriginalData.Sid(2)));
+        GameEntity priest = session.Entity(OriginalData.Sid(1))!;
         Assert.Equal(PriestCaptivity.Free, priest.Captivity);
         Assert.True(priest.IsSuspended);
         Assert.Equal((10, 10), (priest.Footprint.AnchorX, priest.Footprint.AnchorY));
@@ -180,8 +180,8 @@ public sealed class GroundSupportTests
     {
         BattleSession session = Create((_, _) => false, Object(type, 1, 10, 10));
         session.RunTicks(20);
-        Assert.NotNull(session.Entity(1));
-        Assert.False(session.Entity(1)!.OccupiesGround);
+        Assert.NotNull(session.Entity(OriginalData.Sid(1)));
+        Assert.False(session.Entity(OriginalData.Sid(1))!.OccupiesGround);
         Assert.DoesNotContain(session.DrainEvents(), e => e.Kind == SessionEventKind.UnitFell);
     }
 
@@ -190,9 +190,10 @@ public sealed class GroundSupportTests
     public void EnemyBridge_StillSupportsStandingWalker()
     {
         BattleSession session = Create((_, _) => false, Object("sunwalker", 1, 10, 10));
-        AddBridge(session, 10, 10, owner: 2);
+        // 섬 없는 다섯 칸 연결망은 작은 그래프 즉시 삭제 조건을 피한다.
+        for (int x = 10; x < 15; x++) AddBridge(session, x, 10, owner: 2);
         session.RunTicks(20);
-        Assert.NotNull(session.Entity(1));
+        Assert.NotNull(session.Entity(OriginalData.Sid(1)));
     }
 
     /// <summary>허공 기절도 사제의 생존 상태이므로 사망·실패 이벤트를 잘못 내지 않는다.</summary>
@@ -206,7 +207,7 @@ public sealed class GroundSupportTests
         session.DrainEvents();
         Cut(session, 10, 10);
         session.RunTicks(100);
-        Assert.True(session.Entity(1)!.IsSuspended);
+        Assert.True(session.Entity(OriginalData.Sid(1))!.IsSuspended);
         Assert.DoesNotContain(session.DrainEvents(), e => e.Kind == SessionEventKind.MissionTell &&
             (e.Text == "Failed" || e.Text.EndsWith("PriestDead", StringComparison.OrdinalIgnoreCase)));
     }
@@ -216,10 +217,10 @@ public sealed class GroundSupportTests
     public void AirCarrierRemoval_DoesNotLeaveOrClearGroundOccupancy()
     {
         BattleSession session = Create((_, _) => true, Object("sunBlocker", 1, 10, 10), Object("sunBalloon", 1, 10, 10));
-        session.Submit(new SalvageCommand(1, 2));
+        session.Submit(new SalvageCommand(1, OriginalData.Sid(2)));
         session.RunTicks(1);
         Assert.True(session.Map.IsOccupied(new Footprint(10, 10, 1, 1)));
-        session.Submit(new SalvageCommand(1, 1));
+        session.Submit(new SalvageCommand(1, OriginalData.Sid(1)));
         session.RunTicks(1);
         Assert.False(session.Map.IsOccupied(new Footprint(10, 10, 1, 1)));
     }
@@ -229,10 +230,10 @@ public sealed class GroundSupportTests
     public void UnsupportedPriest_CannotWalkOutBeforeSupportCheck()
     {
         BattleSession session = Create(LeftIsland, Object("priest", 1, 10, 10), Object("altar", 1, 8, 10));
-        session.Submit(new MovePriestToAltarCommand(1, 2, 1));
+        session.Submit(new MovePriestToAltarCommand(1, OriginalData.Sid(2), OriginalData.Sid(1)));
         session.RunTicks(1);
-        Assert.True(session.Entity(1)!.IsSuspended);
-        Assert.Equal(10, session.Entity(1)!.Footprint.AnchorX);
+        Assert.True(session.Entity(OriginalData.Sid(1))!.IsSuspended);
+        Assert.Equal(10, session.Entity(OriginalData.Sid(1))!.Footprint.AnchorX);
         Assert.Contains(session.DrainEvents(), e => e.Failure == CommandFailure.NoRoute);
     }
 

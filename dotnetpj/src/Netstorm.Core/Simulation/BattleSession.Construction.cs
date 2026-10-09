@@ -131,9 +131,10 @@ public sealed partial class BattleSession
         double carried = 0;
         List<(int X, int Y)>? path = builder == null ? null : PlanPath(builder, site.Footprint, exact: false, out carried);
         if (builder != null && path == null) return new CommandResult(CommandFailure.NoRoute);
+        if (!Map.Sids.CanAllocateServer()) return new CommandResult(CommandFailure.ObjectLimit);
         // 사제의 새 지시는 도착 전 공사장을 취소한다 (웹 팬게임의 Io). 판정은 취소 전 상태로 이미 끝났다.
         if (builder != null) CancelPendingConstructionOf(builder.Id);
-        int id = Map.NextId();
+        int id = Map.NextId(type);
         Map.AddOccupant(site.Footprint);
         player.StormPower -= site.Cost;
         var entity = new GameEntity(id, type, kind, command.Player, site.Footprint, Map.TerritoryAt(command.X, command.Y), null)
@@ -208,6 +209,7 @@ public sealed partial class BattleSession
         if (_players.TryGetValue(site.Owner, out PlayerState? owner)) owner.StormPower += site.Cost;
         Map.RemoveOccupant(site.Footprint);
         _entities.Remove(site.Id);
+        Map.Sids.ReleaseWorld(site.Id);
         // 이 공사장을 가리키던 선택과 이동 작업을 정리한다
         foreach (PlayerState viewer in _players.Values.Where(p => p.SelectedEntityId == site.Id)) ClearSelection(viewer);
         foreach (UnitMoveTask task in _moveTasks.Values.Where(t => t.TargetId == site.Id && t.Purpose == UnitMovePurpose.ConstructBuilding).ToArray())

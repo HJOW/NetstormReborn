@@ -14,7 +14,7 @@ public sealed class MovementPathingTests
     {
         BattleSession session = Create();
         StartThenCut(session);
-        GameEntity priest = session.Entity(1)!;
+        GameEntity priest = session.Entity(OriginalData.Sid(1))!;
         Footprint waiting = priest.Footprint;
         session.RunTicks(48);
         Assert.True(session.IsMoveBlocked(priest.Id));
@@ -48,12 +48,12 @@ public sealed class MovementPathingTests
         Assert.Single(session.DrainEvents(), e => e.Kind == SessionEventKind.MoveBlocked);
         AddBridge(session, 10, 70);
         session.RunTicks(2);
-        Assert.True(session.IsMoveBlocked(1));
+        Assert.True(session.IsMoveBlocked(OriginalData.Sid(1)));
         Assert.DoesNotContain(session.DrainEvents(), e => e.Kind == SessionEventKind.MoveBlocked);
-        session.Submit(new SalvageCommand(1, 2));
+        session.Submit(new SalvageCommand(1, OriginalData.Sid(2)));
         session.RunTicks(1);
-        Assert.Null(session.Entity(2));
-        Assert.False(session.IsMoveBlocked(1));
+        Assert.Null(session.Entity(OriginalData.Sid(2)));
+        Assert.False(session.IsMoveBlocked(OriginalData.Sid(1)));
         Repair(session);
         session.RunTicks(240);
         Assert.DoesNotContain(session.DrainEvents(), e => e.Kind is SessionEventKind.MoveResumed or SessionEventKind.CrystalCollected);
@@ -65,7 +65,7 @@ public sealed class MovementPathingTests
     {
         BattleSession session = Create(detour: true);
         StartThenCut(session);
-        GameEntity priest = session.Entity(1)!;
+        GameEntity priest = session.Entity(OriginalData.Sid(1))!;
         bool usedDetour = false;
         var events = new List<SessionEvent>();
         // 가이저로 가는 첫 여정에서 우회 행을 통과했는지 확인한다.
@@ -89,13 +89,13 @@ public sealed class MovementPathingTests
         BattleSession second = Create();
         StartThenCut(first);
         StartThenCut(second);
-        Assert.True(first.IsMoveBlocked(1));
+        Assert.True(first.IsMoveBlocked(OriginalData.Sid(1)));
         Assert.Equal(first.Checksum(), second.Checksum());
         Repair(first);
         Repair(second);
         first.RunTicks(360);
         second.RunTicks(360);
-        Assert.False(first.IsMoveBlocked(1));
+        Assert.False(first.IsMoveBlocked(OriginalData.Sid(1)));
         Assert.Equal(first.Checksum(), second.Checksum());
     }
 
@@ -116,9 +116,9 @@ public sealed class MovementPathingTests
     /// <summary>사제가 다리 앞부분에 도착한 뒤 발밑을 남기고 뒤쪽 네 칸을 끊는다.</summary>
     private static void StartThenCut(BattleSession session)
     {
-        session.Submit(new HarvestGeyserCommand(1, 3));
+        session.Submit(new HarvestGeyserCommand(1, OriginalData.Sid(3)));
         session.RunTicks(24);
-        Assert.Equal(10, session.Entity(1)!.Footprint.AnchorX);
+        Assert.Equal(10, session.Entity(OriginalData.Sid(1))!.Footprint.AnchorX);
         session.Bridges.WeakenAround(18, 50);
         session.Bridges.WeakenAround(18, 50);
         session.RunTicks(1);
