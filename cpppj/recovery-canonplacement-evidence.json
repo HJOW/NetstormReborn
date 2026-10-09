@@ -1,0 +1,72 @@
+{
+  "total": 3360,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-09",
+  "normal_return": true,
+  "os_calls": 0,
+  "controls": [
+    639,
+    895
+  ],
+  "editions": {
+    "originals": {
+      "cases": 1120,
+      "native_calls": {
+        "0049b510": 2240,
+        "004e49c0": 1600
+      },
+      "substitutions": {
+        "shape": 1600,
+        "geometry_region": 890
+      },
+      "assertions": 0
+    },
+    "originalCD": {
+      "cases": 1120,
+      "native_calls": {
+        "00445200": 2240,
+        "004448e0": 1600,
+        "004f161c": 1600
+      },
+      "substitutions": {
+        "shape": 1600,
+        "geometry_region": 860
+      },
+      "assertions": 0
+    },
+    "original1037": {
+      "cases": 1120,
+      "native_calls": {
+        "00445200": 2240,
+        "004448e0": 1600,
+        "004f161c": 1600
+      },
+      "substitutions": {
+        "shape": 1600,
+        "geometry_region": 860
+      },
+      "assertions": 0
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/canonplacement-x86.tsv": "c35d8d23a65a4bac2a49c3081784a323fbd713dcf047731663a6c1c544cb00e2",
+    "extracted/canonplacement/original1037/creation.c": "7f1077b8435e0fcf33ee611fb75c187f8409306ca5beed20420386332861036a",
+    "extracted/canonplacement/original1037/functions.tsv": "b56442fe8a35cc5fe50613f4429c55575230378c1ca8583102c98101936cd8a2",
+    "extracted/canonplacement/originalCD/creation.c": "7f1077b8435e0fcf33ee611fb75c187f8409306ca5beed20420386332861036a",
+    "extracted/canonplacement/originalCD/functions.tsv": "b56442fe8a35cc5fe50613f4429c55575230378c1ca8583102c98101936cd8a2",
+    "extracted/canonplacement/originals/creation.c": "fe4890f162068cb7ce6621b6b0748aad8ab1146468a7100f98731473f36a6036",
+    "extracted/canonplacement/originals/functions.tsv": "86c36cae69378d6dcbee655641a6b56c29d6341d3173b56caf27ee07ce20fcb4",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_canonplacement_oracle.py": "d1c6592ddf5964fac72b77f68f55570773fa83133da21354fcf81c85a147977f",
+    "tools/decomp_damageablepredestroy_oracle.py": "b6bd591b17b886224e81b9d35dc863f12dea570c67aabf8a66280c7361785e75",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/ghidra/canonplacement-functions.json": "cf98af3a6c6277d8985a9d07ad69cb4a0d499a7bd6314408a545ad774a2b479c"
+  },
+  "limits": [
+    "전역 초기화/강제 허용/타입 번호/여백/지도 조건/반환은 실제 실행; 타입 번호와 패턴 argument 구별",
+    "모양 함수 진입 대체; 후반 0049b661~0049bfbb / CD 0044537c~00445ce2 중간 구간 대체",
+    "미리보기/충돌/지역/관계 본체 또는 실제 모양/지도 수명 검증이 아님"
+  ]
+}

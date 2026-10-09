@@ -11,7 +11,8 @@ void InspectPriestAssets(const std::filesystem::path& root,o::OriginalEdition ed
 // 실제 자산과 현재 타입 전역으로 모든 패턴/짝수 방향을 콘솔에서 순회한다.
 void InspectCanonPatterns(const std::filesystem::path& root,o::OriginalEdition edition);
 // 창 없이 일반 자산/모든 패턴의 실제 SHP 픽셀 범위 비트를 출력한다.
-void InspectCanonPixelShapes(const std::filesystem::path& root,o::OriginalEdition edition);
+// inspectPlacement이면 같은 자산/패턴의 접두를 실제 getter에 연결해 관찰한다.
+void InspectCanonPixelShapes(const std::filesystem::path& root,o::OriginalEdition edition,bool inspectPlacement=false);
 // 실제 자산의 패턴별 모양 순회와 finder 정수 사각형을 창 없이 출력한다.
 void InspectCanonPlacementGeometry(const std::filesystem::path& root,o::OriginalEdition edition);
 }

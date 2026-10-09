@@ -53,6 +53,7 @@ void PrintBuildInfo() {
     std::printf("  --inspect-canon-patterns <game-dir> [--cd]\n");
     std::printf("  --inspect-canon-shapes <game-dir> [--cd]\n");
     std::printf("  --inspect-canon-geometry <game-dir> [--cd]\n");
+    std::printf("  --inspect-canon-placement <game-dir> [--cd]\n");
     std::printf("  --export-frame <game-dir> <type> <cluster> <layer> <output.bmp> [--cd]\n");
     std::printf("  --config-dump <game-dir> [--cd]\n  --config-get <game-dir> <key> [--cd]\n");
     std::printf("  --config-spec <game-dir> <key> [arg1 [arg2 [arg3]]] [--cd]\n");
@@ -751,6 +752,10 @@ int main(int argc, char** argv) {
         // 일반 자산과 특수 패턴의 픽셀 모양을 창 없이 읽기 전용으로 검사한다.
         if ((argc == 3 || argc == 4) && command == "--inspect-canon-shapes") {
             netstorm::app::InspectCanonPixelShapes(argv[2],Edition(argc,argv,3));return 0;
+        }
+        // 일반 타입 배치 접두를 실제 전체 픽셀 getter와 연결해 창 없이 관찰한다.
+        if ((argc == 3 || argc == 4) && command == "--inspect-canon-placement") {
+            netstorm::app::InspectCanonPixelShapes(argv[2],Edition(argc,argv,3),true);return 0;
         }
         // 실제 타입/패턴의 배치 모양과 finder 인자를 읽기 전용 콘솔로 조회한다.
         if ((argc == 3 || argc == 4) && command == "--inspect-canon-geometry") {

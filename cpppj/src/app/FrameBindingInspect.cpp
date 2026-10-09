@@ -4,6 +4,7 @@
 #include "client/PriestPlacementAssets.h"
 #include "o/CanonTypeDecoder.h"
 #include "o/RawCanonPixelShape.h"
+#include "o/RawCanonPlacement.h"
 #include "o/RawCanonPlacementGeometry.h"
 #include "o/SquidFrameBinding.h"
 #include "o/SquidFactory.h"
@@ -96,7 +97,7 @@ void InspectPriestAssets(const std::filesystem::path& root,o::OriginalEdition ed
     std::printf("]}\n");
 }
 // 일반 자산의 기본 프레임과 모든 패턴/정상 회전을 실제 SHP getter로 계산한다.
-void InspectCanonPixelShapes(const std::filesystem::path& root,o::OriginalEdition edition) {
+void InspectCanonPixelShapes(const std::filesystem::path& root,o::OriginalEdition edition,bool inspectPlacement) {
     o::BaseFileSystem files(root);files.RegisterArchive(root/"netstorm.tarc");client::GameAssets assets(files,edition);client::PriestPlacementAssets data(assets);
     o::SidPool pool(edition,32768,true);o::PriestPlacementShapeState state;
     o::RawCanonPixelShape shape(pool,assets.TypeTable().Types(),data.frames,data.shapes,data.hotspots,data.geometry,state);
@@ -104,6 +105,24 @@ void InspectCanonPixelShapes(const std::filesystem::path& root,o::OriginalEditio
     constexpr std::array<int,8> kCounts{68,26,2,1,1,1,1,1};
     // 같은 관찰 형식으로 패턴과 일반 자산의 여섯 float 비트를 출력한다.
     const auto output=[&](std::uint32_t type,std::uint32_t argument,std::uint32_t direction) {
+        if (inspectPlacement) {
+            // 안쪽/여백 직전·직후/지도 끝·강제 허용·부호 BYTE 비교를 독립 관찰한다.
+            constexpr std::array<float,8> kX{0,1.99999f,2,20.5f,255,256,-1,20.5f};
+            // 후반 정책은 기록 경계이며 성공/실패를 교차해 접두의 위임을 확인한다.
+            for (std::size_t profile=0;profile<kX.size();++profile) {
+                o::PriestPlacementState placementState{profile==6 ? 1U : 0U,profile==7 ? -1 : 8,99};
+                bool entered=false,local=false;const auto lower=profile%2==0;
+                o::RawCanonPlacement placement(pool,assets.TypeTable().Types(),placementState,o::MakeCanonShapePlacementHooks(pool,shape,{{},
+                    [&](const o::CanonPlacementQuery& request,bool localOwner) {
+                        if (request.type!=type || request.argument!=argument || request.flags!=direction) throw std::logic_error("일반 배치 인자 전달 오류");
+                        entered=true;local=localOwner;placementState.blockedRelation=0x77;return lower; }}));
+                const auto owner=profile==7 ? 255U : 0x108U;
+                const bool allowed=placement.MayPlace({type,argument,kX[profile],21.25f,direction,owner,0});
+                std::printf("{\"type\":%u,\"argument\":%u,\"direction\":%u,\"profile\":%zu,\"allowed\":%u,\"entered\":%u,\"local\":%u,\"blocked\":%u}\n",
+                    type,argument,direction,profile,allowed ? 1U : 0U,entered ? 1U : 0U,local ? 1U : 0U,placementState.blockedRelation);
+            }
+            return;
+        }
         const auto measured=shape.Measure(type,argument,direction);
         std::printf("{\"type\":%u,\"argument\":%u,\"direction\":%u,\"shape_bits\":[%u,%u,%u,%u,%u,%u]}\n",type,argument,direction,
             std::bit_cast<std::uint32_t>(measured.bounds.left),std::bit_cast<std::uint32_t>(measured.bounds.top),std::bit_cast<std::uint32_t>(measured.bounds.right),
