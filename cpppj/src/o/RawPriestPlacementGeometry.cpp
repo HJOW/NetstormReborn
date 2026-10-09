@@ -54,6 +54,7 @@ bool RawPriestPlacementGeometry::Inspect(PriestPlacementQuery query,const std::f
     // 패턴 없는 사제는 최대 한 칸이지만 원본 Valid/Advance 순서를 그대로 사용한다.
     while (decoder.Valid()) {
         const auto& type=types_[query.type];const float x=decoder.X(),y=decoder.Y();const auto area=CollisionArea(x,y,type.footX,type.footY);
+        if (hooks_.beginShape) hooks_.beginShape(query,decoder.Frame(),static_cast<float>(Truncate(x)),static_cast<float>(Truncate(y)));
         if (!scan(area)) return false;
         if (!hooks_.endShape(query,decoder.Frame(),static_cast<float>(Truncate(x)),static_cast<float>(Truncate(y)))) return false;
         decoder.Advance();

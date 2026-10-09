@@ -1,6 +1,7 @@
 // 세 실제 PE의 비패턴 decoder/범위/충돌 인자를 복원 코드와 대조한다.
 #include "RawSceneSupport.h"
 #include "o/RawPriestPlacementShape.h"
+#include "o/RawPriestPlacementTerrain.h"
 #include "o/SquidFactory.h"
 #include <limits>
 
@@ -65,17 +66,24 @@ TEST_CASE(priest_geometry_region_order_current_footprint_and_empty_frame) {
 }
 // 실제 비패턴 모양/미리보기 범위→finder→다음 나선 위치→사제 생성자를 연결한다.
 TEST_CASE(priest_geometry_preview_collision_spawn_factory) {
-    // 타입 기준점/픽셀 배율·지형·일반 Pop/가상 Carrier 몸체는 입력 경계다.
+    // 타입 기준점/픽셀 배율·일반 Pop/가상 Carrier 몸체는 입력 경계이며 일반 사제 지형은 실제 구현이다.
     for (auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
         const bool patch=edition==OriginalEdition::Patch1078;SidPool pool(edition,kCapacity,true);SquidHash hash;std::vector<RiftTypeRecord> types(patch ? 188 : 171);std::vector<PriestPlainCanonType> frames(types.size());
         types[kPriest].flags2=0x210000;types[kPriest].constructorAddress=TypeConstructorAddress(edition,kPriest);types[kPriest].footX=types[kPriest].footY=1;types[83].footX=types[83].footY=1;
         frames[kPriest].frames=RiftTypeFrames(std::vector<FrameCode>(1));const Sid blocker=pool.Allocate();auto raw=pool.AllocatedBytes(blocker);raw[10]=83;Put(raw,14,std::bit_cast<std::uint32_t>(21.0f));Put(raw,18,std::bit_cast<std::uint32_t>(22.0f));hash.Bucket(1,21,22)=blocker.value;
         std::vector<std::uint8_t> spots(65536,6);std::vector<std::uint16_t> surfaces(65536);PriestPlacementGeometryState geometryState;PriestPlacementPreviewState previewState;PriestPlacementCollisionState collisionState{0,0x200000};PriestPlacementState placementState{0,1,0xffffffff};
         int begins=0,ends=0,finishes=0,pops=0;Sid born{};
-        RawPriestPlacementGeometry geometry(pool,types,frames,geometryState,{
-            [&](const PriestPlacementQuery&) { ++begins; },[&](const PriestPlacementQuery&,int frame,float x,float y) { CHECK(frame==0 && x==21 && y==21);++ends;return true; },
-            [&](const PriestPlacementQuery&) { ++finishes;return true; }});
-        RawPriestPlacementCollision collision(pool,hash,types,collisionState,previewState,MakePriestGeometryCollisionHooks(pool,geometry,{{},[](const PriestPlacementQuery&,Sid) {}}));
+        PriestPlacementTerrainState terrainState;RawPriestPlacementTerrain terrain(pool,types,frames,surfaces,terrainState);
+        auto terrainHooks=MakePriestTerrainGeometryHooks(pool,terrain);
+        // 기존 단계 관찰을 실제 지형 효과 뒤에 유지한다.
+        const auto beginTerrain=terrainHooks.beginRegions;
+        const auto endTerrain=terrainHooks.endShape;
+        const auto finishTerrain=terrainHooks.finishRegions;
+        terrainHooks.beginRegions=[&](const PriestPlacementQuery& q) { beginTerrain(q);++begins; };
+        terrainHooks.endShape=[&](const PriestPlacementQuery& q,int frame,float x,float y) { CHECK(frame==0 && x==21 && y==21);++ends;return endTerrain(q,frame,x,y); };
+        terrainHooks.finishRegions=[&](const PriestPlacementQuery& q) { ++finishes;return finishTerrain(q); };
+        RawPriestPlacementGeometry geometry(pool,types,frames,geometryState,std::move(terrainHooks));
+        RawPriestPlacementCollision collision(pool,hash,types,collisionState,previewState,MakePriestGeometryCollisionHooks(pool,geometry,MakePriestTerrainCollisionHooks(pool,terrain,{})));
         RawPriestPlacementPreview preview(pool,types,spots,surfaces,previewState,MakePriestGeometryPreviewHooks(pool,geometry,MakePriestPlacementCollisionHooks(pool,collision,{})));
         std::vector<SquidDisplayShape> shapes(types.size());std::vector<PriestTypeHotspot> hotspots(types.size());PriestPlacementShapeState shapeState;
         shapes[kPriest]={1,true,{{16,11,0,0,0,0}}};
@@ -88,6 +96,7 @@ TEST_CASE(priest_geometry_preview_collision_spawn_factory) {
         spawn.Spawn(20.75f,21.9f,kPriest,0x8101);
         CHECK(begins==2 && ends==1 && finishes==1 && pops==1 && born.value==(patch ? 15001 : 6001));
         CHECK(Get(pool.Slot(born),12,2)==0x8101 && std::count(previewState.blocked.begin(),previewState.blocked.end(),std::uint8_t{1})==16);
+        CHECK(!terrainState.groundComplete && !terrainState.canPlaceGround && terrainState.regions[0]==127);
     }
 }
 // CD 홀수 회전/명시 프레임 assert와 미지원 패턴/자료/풀 연결을 별도 C++ 진단으로 검사한다.

@@ -19,6 +19,8 @@ struct PriestPlacementGeometryHooks {
     std::function<bool(const PriestPlacementQuery&,int,float,float)> endShape;
     // 모든 모양 진행 뒤 최종 지역/관계 판정 경계다. 일반 자산 몸체와 구분한다.
     std::function<bool(const PriestPlacementQuery&)> finishRegions;
+    // finder 탐색 직전 모양별 지역 배열/발자국 원점을 준비한다. 기존 외부 경계에는 선택 사항이다.
+    std::function<void(const PriestPlacementQuery&,int,float,float)> beginShape;
 };
 class RawPriestPlacementGeometry {
 public:

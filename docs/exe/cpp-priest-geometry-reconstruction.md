@@ -71,3 +71,7 @@ bottom = trunc(wide(currentY) + float(0.99999))
 ## 2026-10-09 후속 픽셀/SHP 조회 완료
 
 [사제 비패턴 픽셀 범위 복원](cpp-priest-shape-reconstruction.md)에서 초기 getter와 실제 SHP 프레임 조회를 복원했다. 이 문서의 두 판본 생성 통합도 초기 합성 픽셀 반환을 실제 SHP 메타 조회로 교체했다. 기존 decoder/범위 독립 fixture는 유지한다. 타입 기준점 초기화/실제 자산 메타 연결·특수 패턴·후보별 지형/지역/관계·일반 Pop/Carrier 몸체는 후속 경계다.
+
+## 2026-10-09 후속 일반 사제 지형 효과 완료
+
+[사제 다리·섬·지역 효과 복원](cpp-priest-terrain-reconstruction.md)에서 일반 사제의 후보 지형, 지역 번호 조회/배열, 모양 종료와 최종 사제 우회를 실제 geometry/finder/미리보기/나선 생성 통합에 연결했다. 이 범위의 외부 지형 경계는 완료했다. 타입 기준점/프레임 메타 자산 연결, 특수 패턴/타입 조합, 일반 사제 Pop/보호막·회복 예약/Carrier 검사는 계속 후속이다. 앞 절의 독립 fixture와 감사 도구는 변경하지 않았다. 최신 검증은 LEFT_JOBS.md를 따른다.
