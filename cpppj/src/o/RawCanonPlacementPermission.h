@@ -15,6 +15,8 @@ public:
         std::function<std::uint32_t(std::uint32_t,std::uint32_t,float,float)> playerAnchor);
     // 00462cb0 / CD 0045bae0: 그래프 비활성→요청자 0→현재 raw 소유 관계→Player 조회 순서다.
     std::uint32_t Candidate(Sid candidate,std::uint32_t owner) const;
+    // MayPlace 주변 순회의 바깥 관계 검사를 먼저 적용한다. 중립도 이 바깥 검사를 통과해야 한다.
+    std::uint32_t Surrounding(Sid candidate,std::uint32_t owner) const;
     // 004629e0: 편집기/동일 소유자/방향 동맹을 검사한다. 중립/다른 소유자 허용은 여기 없다.
     bool Related(std::uint32_t currentOwner,std::uint32_t owner) const;
     // 같은 raw 풀을 사용하는 지형 경계만 연결한다.

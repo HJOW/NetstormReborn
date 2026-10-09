@@ -7,7 +7,9 @@
 
 > 최신 생성 후속: [생성자 주소 표·base 생성/가상 초기화·free/void Take](cpp-creation-reconstruction.md)를 원본 SID 풀에 연결했다. 현재 CTest **104개 내부 검사**, 제한 x86 입력 행 **36,510개**이며 생성자 주소 표 359행은 별도다. 파생/공간 수명·실제 GameWorld 연결은 남았다. 위의 43/69개 등의 수치는 앞선 단계의 기록이다.
 
-> 2026-10-09 최신: [Player 작업장·그래프 기준점 조회](cpp-player-anchor-reconstruction.md). 새 독립 x86 4,794개·누적 332,917개, 전체 조회/거리/그래프/contained 정상 반환·임시 메모리만 대체, 실제 작업장 장부/후보 권한/지형 연결, CTest 내부 406개·감사 59종 통과. 주변 권한/최종 관계·전체 MayPlace/실제 플레이 완주는 후속이다. 마지막 디컴파일 PC: HJOW-Athlon, 2026-10-09.
+> 2026-10-09 최신: [배치 모양의 주변 표면 탐색·권한 누적](cpp-canon-surrounding-reconstruction.md). 새 독립 x86 1,572개·누적 334,489개, flag 8 finder 전체 정상 반환/주변 구간·Player 진입만 대체, 실제 Player 조회→EndShape 연결, 동적 raw/지도/프레임 코드 표 검증, CTest 내부 411개·감사 60종 통과. 최종 표면 관계/특수 지역/거부·전체 MayPlace/실제 플레이 완주는 후속이다. 마지막 디컴파일 PC: HJOW-Athlon, 2026-10-09.
+
+> 2026-10-09 앞 단계: [Player 작업장·그래프 기준점 조회](cpp-player-anchor-reconstruction.md). 새 독립 x86 4,794개·누적 332,917개, 전체 조회/거리/그래프/contained 정상 반환·임시 메모리만 대체, 실제 작업장 장부/후보 권한/지형 연결, CTest 내부 406개·감사 59종 통과. 주변 권한/최종 관계·전체 MayPlace/실제 플레이 완주는 후속이다. 마지막 디컴파일 PC: HJOW-Athlon, 2026-10-09.
 
 > 2026-10-09 앞 단계: [일반 배치 후보 권한·방향 소유 관계](cpp-canon-permission-reconstruction.md). 새 독립 x86 16,890개·누적 328,123개, 실제 3×3 받침/미리보기/finder/지형의 권한 누적 연결, CTest 내부 401개·감사 58종 통과. Player 작업장·그래프 조회 몸체/주변 권한/최종 표면 관계는 필수 경계이며 전체 MayPlace/건설·전투·미션 완주는 후속이다. 마지막 디컴파일 PC: HJOW-Athlon, 2026-10-09.
 

@@ -39,6 +39,13 @@ std::uint32_t RawCanonPlacementPermission::Candidate(Sid candidate,std::uint32_t
     if (!Related(currentOwner,owner) && currentOwner && !state_.allowOtherOwners) return 0;
     return playerAnchor_(owner,raw[kType],Coordinate(raw,kX),Coordinate(raw,kY));
 }
+// 주변 순회의 바깥 관계는 중립 소유자에도 적용하고 다른 소유자 허용은 마지막에 읽는다.
+std::uint32_t RawCanonPlacementPermission::Surrounding(Sid candidate,std::uint32_t owner) const {
+    const auto raw=pool_.Slot(candidate);
+    const auto currentOwner=raw[pool_.Edition()==OriginalEdition::Patch1078 ? kPatchOwner : kCdOwner];
+    if (!Related(currentOwner,owner) && !state_.allowOtherOwners) return 0;
+    return Candidate(candidate,owner);
+}
 // 연결 시 동일 풀인지 확인할 참조를 반환한다.
 const SidPool& RawCanonPlacementPermission::Pool() const { return pool_; }
 // 캡처한 요청자의 원래 DWORD는 유지하고 helper 인자만 signed BYTE 계약으로 바꾼다.

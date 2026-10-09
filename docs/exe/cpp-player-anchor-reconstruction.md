@@ -42,7 +42,7 @@ Player·거리 선택/실제 sqrt helper·그래프·현재 타입 flags·contai
 
 ## 다음 단계와 재현
 
-다음 작은 구현은 **실제 주변 권한 finder**, 최종 표면 소유 관계·특수 지역·거부 조건과 별도 추가 목록의 공간 수명 연결이다. 이어 사제 Pop·보호막 생성/회복 예약·Carrier 상태 검사, raw GUI·건설·경제·전투·승패를 진행한다. **전체 MayPlace와 실제 미션 완주는 아직 미완료**다. 여러 판본 실제 자산 전수·창/픽셀·최대 지도 회귀는 계속 인계한다.
+후속 [실제 주변 표면 finder/권한 누적](cpp-canon-surrounding-reconstruction.md)은 완료했다. 다음은 최종 표면 소유 관계·특수 지역·거부 조건과 별도 추가 목록의 공간 수명 연결이다. 이어 사제 Pop·보호막 생성/회복 예약·Carrier 상태 검사, raw GUI·건설·경제·전투·승패를 진행한다. **전체 MayPlace와 실제 미션 완주는 아직 미완료**다. 여러 판본 실제 자산 전수·창/픽셀·최대 지도 회귀는 계속 인계한다.
 
 ```powershell
 tools/ghidra/export_functions.ps1 -Name playeranchor

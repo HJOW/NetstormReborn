@@ -1,0 +1,117 @@
+{
+  "total": 1572,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-09",
+  "controls": [
+    639,
+    895
+  ],
+  "os_calls": 0,
+  "editions": {
+    "originals": {
+      "cases": 524,
+      "calls": 682,
+      "fragments": 768,
+      "substitutions": 256,
+      "native_calls": {
+        "004b2590": 664,
+        "0049a840": 9138,
+        "00425af0": 664,
+        "0049a900": 3654,
+        "0040e880": 664,
+        "0041d0d0": 1328,
+        "0040e800": 1328,
+        "0040e8f0": 664,
+        "00425a90": 664,
+        "004b1d70": 664,
+        "004e49c0": 9940,
+        "004ab880": 664,
+        "004b1c20": 2080,
+        "004b1e80": 2494,
+        "004ac1e0": 2494,
+        "004adea0": 2326,
+        "0041ce90": 2326,
+        "004ac550": 2326,
+        "00441e40": 2326,
+        "004b1e70": 1506,
+        "00462cb0": 970
+      },
+      "assertions": 0
+    },
+    "originalCD": {
+      "cases": 524,
+      "calls": 682,
+      "fragments": 768,
+      "substitutions": 256,
+      "native_calls": {
+        "004ebce0": 664,
+        "00420140": 664,
+        "004442b0": 3654,
+        "0043f950": 1328,
+        "004200d0": 664,
+        "004ebf30": 664,
+        "004f161c": 9940,
+        "00487810": 664,
+        "004ebdd0": 2080,
+        "004ec040": 2494,
+        "004abac0": 2494,
+        "004aef30": 2326,
+        "004abf50": 4652,
+        "0043f620": 2326,
+        "004d2e00": 2326,
+        "004ec030": 1506,
+        "0045bae0": 970
+      },
+      "assertions": 0
+    },
+    "original1037": {
+      "cases": 524,
+      "calls": 682,
+      "fragments": 768,
+      "substitutions": 256,
+      "native_calls": {
+        "004ebce0": 664,
+        "00420140": 664,
+        "004442b0": 3654,
+        "0043f950": 1328,
+        "004200d0": 664,
+        "004ebf30": 664,
+        "004f161c": 9940,
+        "00487810": 664,
+        "004ebdd0": 2080,
+        "004ec040": 2494,
+        "004abac0": 2494,
+        "004aef30": 2326,
+        "004abf50": 4652,
+        "0043f620": 2326,
+        "004d2e00": 2326,
+        "004ec030": 1506,
+        "0045bae0": 970
+      },
+      "assertions": 0
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/canonsurrounding-x86.tsv": "e83537b3bf455a319604bf18e557b6aedf8d474444c85647752ed8ac48a8e2b6",
+    "extracted/canonsurrounding/original1037/creation.c": "e9cf843b0f6de1ec3b343ae9490b6739677f1721dd675cd3faecac5c12f17f32",
+    "extracted/canonsurrounding/original1037/functions.tsv": "9e14851a3237f10b2c300163fa37800c3c8c624ba2254ae8a72bc9acba8bc1f6",
+    "extracted/canonsurrounding/originalCD/creation.c": "e9cf843b0f6de1ec3b343ae9490b6739677f1721dd675cd3faecac5c12f17f32",
+    "extracted/canonsurrounding/originalCD/functions.tsv": "9e14851a3237f10b2c300163fa37800c3c8c624ba2254ae8a72bc9acba8bc1f6",
+    "extracted/canonsurrounding/originals/creation.c": "ddef44c43fb663c96696d56d6c715bab3a06a4763ebdabe9b5eef26fcb2f5f82",
+    "extracted/canonsurrounding/originals/functions.tsv": "520745f7a9f6511f9b314b9777cb551fefd80f8484bcde47200ba16cbaa8054e",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_canonpermission_oracle.py": "90ba0a01bc7b157905043ffc1f9affa6a51d6eb584aaa916709c73e62ec8ec85",
+    "tools/decomp_canonsurrounding_oracle.py": "864b5c94687d4ac266728b6b73db52d0d8c0942cacdaeb1eecf1b31c33f3a77a",
+    "tools/decomp_damageablepredestroy_oracle.py": "b6bd591b17b886224e81b9d35dc863f12dea570c67aabf8a66280c7361785e75",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/ghidra/canonsurrounding-functions.json": "b3f35ceb518c1e43b2a33de1527bbc699086ae4a1730d600bdd551274d3eb2b6"
+  },
+  "limits": [
+    "flag 8 모양 finder 생성/순회/가상 필터/기하/접합/CRT의 실제 몸체와 정상 반환 ABI",
+    "MayPlace 주변 구간만 실행, 실제 방향 관계/후보 helper와 원본 루프 실행",
+    "Player locator 진입 인자/횟수 관찰 후 결과/미래 후보/지도 변경만 명시 대체",
+    "정상 유한 지도 좌표/양수 발자국/64개 이하 signed WORD 캐시 입력, 전체 MayPlace/최종 관계/게임/OS는 검증 아님"
+  ]
+}
