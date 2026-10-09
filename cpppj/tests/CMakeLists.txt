@@ -28,6 +28,7 @@ add_executable(netstorm_tests
     PriestFallTests.cpp
     CarrierCheckTests.cpp
     FrameAdvanceTests.cpp
+    ForcefieldLifecycleTests.cpp
     PriestPopTests.cpp
     ConfigOracleTests.cpp
     ConfigInterfaceTests.cpp
@@ -260,3 +261,7 @@ set_source_files_properties(FrameAdvanceTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 실제 공통 Pop/Activate→사제 postPop의 독립 원본 관찰을 재생한다.
 set_source_files_properties(PriestPopTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PRIESTPOP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/priestpop-x86.tsv\"")
+
+# 보호막 전용 postPop/Regular/일반 타입 finder의 독립 원본 관찰이다.
+set_source_files_properties(ForcefieldLifecycleTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FORCEFIELDPOSTPOP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/forcefieldpostpop-x86.tsv\"")

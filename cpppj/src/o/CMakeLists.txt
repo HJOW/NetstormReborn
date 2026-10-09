@@ -80,6 +80,7 @@ target_sources(netstorm PRIVATE
     SquidProcess.cpp SquidProcess.h
     RawPriestFall.cpp RawPriestFall.h
     RawFrameAdvance.cpp RawFrameAdvance.h
+    RawForcefieldLifecycle.cpp RawForcefieldLifecycle.h
     RawCarrierCheck.cpp RawCarrierCheck.h
     Graph.cpp Graph.h
     RawGraph.cpp RawGraph.h

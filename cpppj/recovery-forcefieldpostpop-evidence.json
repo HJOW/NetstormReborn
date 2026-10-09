@@ -1,0 +1,167 @@
+{
+  "schema": 1,
+  "host": "HJOW-Athlon",
+  "decompile_date": "2026-10-10",
+  "total": 3624,
+  "controls": [
+    639,
+    895
+  ],
+  "editions": {
+    "originals": {
+      "cases": 1208,
+      "returns": {
+        "Prefix": 256,
+        "Regular": 2160
+      },
+      "native_calls": {
+        "00448d20": 256,
+        "00448e00": 2160,
+        "004b1fa0": 720,
+        "0049a840": 1344,
+        "0041d770": 720,
+        "004e49c0": 4128,
+        "004b16d0": 720,
+        "00434380": 3648,
+        "004b2b00": 5096,
+        "004b1810": 1080,
+        "0049a900": 624,
+        "0044daa0": 552
+      },
+      "substitutions": {
+        "004b0d30": 256,
+        "004e4391": 256,
+        "00496e80": 128,
+        "004afc90": 720,
+        "004af780": 528
+      },
+      "vtable": {
+        "10": "004af780",
+        "14": "004b0950",
+        "18": "004b0840",
+        "20": "00448d20",
+        "30": "004ad470",
+        "48": "004afe50",
+        "5c": "00448e00",
+        "90": "004b02d0"
+      },
+      "assertions": 0,
+      "instructions": 822136
+    },
+    "originalCD": {
+      "cases": 1208,
+      "returns": {
+        "Prefix": 256,
+        "Regular": 2160
+      },
+      "native_calls": {
+        "004847d0": 256,
+        "004848c0": 2160,
+        "004eb4b0": 720,
+        "00440a50": 720,
+        "004f161c": 4128,
+        "004eae20": 720,
+        "00479d90": 5096,
+        "004eafe0": 1080,
+        "004442b0": 624,
+        "0040f180": 552
+      },
+      "substitutions": {
+        "004ae180": 256,
+        "004f1650": 256,
+        "0048efd0": 128,
+        "004acce0": 720,
+        "004ab7e0": 528
+      },
+      "vtable": {
+        "10": "004ab7e0",
+        "14": "004add20",
+        "18": "004adbe0",
+        "20": "004847d0",
+        "30": "004ae0f0",
+        "48": "004ad0b0",
+        "5c": "004848c0",
+        "90": "004ad490"
+      },
+      "assertions": 0,
+      "instructions": 589400
+    },
+    "original1037": {
+      "cases": 1208,
+      "returns": {
+        "Prefix": 256,
+        "Regular": 2160
+      },
+      "native_calls": {
+        "004847d0": 256,
+        "004848c0": 2160,
+        "004eb4b0": 720,
+        "00440a50": 720,
+        "004f161c": 4128,
+        "004eae20": 720,
+        "00479d90": 5096,
+        "004eafe0": 1080,
+        "004442b0": 624,
+        "0040f180": 552
+      },
+      "substitutions": {
+        "004ae180": 256,
+        "004f1650": 256,
+        "0048efd0": 128,
+        "004acce0": 720,
+        "004ab7e0": 528
+      },
+      "vtable": {
+        "10": "004ab7e0",
+        "14": "004add20",
+        "18": "004adbe0",
+        "20": "004847d0",
+        "30": "004ae0f0",
+        "48": "004ad0b0",
+        "5c": "004848c0",
+        "90": "004ad490"
+      },
+      "assertions": 0,
+      "instructions": 589400
+    }
+  },
+  "os_calls": 0,
+  "stubbed": [
+    "Regular new/생성",
+    "공통 postPop",
+    "프레임 진행",
+    "가상 destroy"
+  ],
+  "limitations": [
+    "합성 raw/타입/해시",
+    "오디오/GUI/일반 Pop 전체 원본 실행 제외"
+  ],
+  "files": {
+    "cpppj/tests/fixtures/forcefieldpostpop-x86.tsv": "001ee50b7a9f42e6e834a3c0bf271ccf7ea9af33ea7682a7ef50aa2416189355",
+    "extracted/forcefieldpostpop/original1037/creation.c": "53b64d1afd551f1e86344afe03a3c5241a16fb2d143887ec69418021914dd167",
+    "extracted/forcefieldpostpop/original1037/functions.tsv": "eb1a6d193ce6736609b02362777e155a2c41ae3bdad397a5e336b84f728697b6",
+    "extracted/forcefieldpostpop/originalCD/creation.c": "53b64d1afd551f1e86344afe03a3c5241a16fb2d143887ec69418021914dd167",
+    "extracted/forcefieldpostpop/originalCD/functions.tsv": "eb1a6d193ce6736609b02362777e155a2c41ae3bdad397a5e336b84f728697b6",
+    "extracted/forcefieldpostpop/originals/creation.c": "7a7c6713371a924e5f29703c312a888c7e7df1ba6e7cac01525e547ddca485c6",
+    "extracted/forcefieldpostpop/originals/functions.tsv": "51bea9cc44d044e1a60930ac5c517785c4929bea2be8ad97e4c88656c2fced3c",
+    "extracted/owner/original1037/creation.c": "115d3f4790315c3647e18c087579cf3aa08af06cdbaeca42adbac1e82725af62",
+    "extracted/owner/original1037/functions.tsv": "4e184997f62c2622b26b3fa4f047a2580a609d2d919f0e414a75e8efd49d4439",
+    "extracted/owner/originalCD/creation.c": "115d3f4790315c3647e18c087579cf3aa08af06cdbaeca42adbac1e82725af62",
+    "extracted/owner/originalCD/functions.tsv": "4e184997f62c2622b26b3fa4f047a2580a609d2d919f0e414a75e8efd49d4439",
+    "extracted/owner/originals/creation.c": "f9919c046d5259526946f106b47b6259fe5e04971f743d6fa02d6a5361b9dc16",
+    "extracted/owner/originals/functions.tsv": "3ea66dace80a85999a8b2c2dbadb4d5f1bd18b0dcdb0768f9c41075206c7c72d",
+    "extracted/priestforcefield/original1037/creation.c": "860217e15a6577606eca70c845203209e76c6f0188a44602726221ada5082786",
+    "extracted/priestforcefield/original1037/functions.tsv": "eaefe69254e019d4f5817b82a352a5d6dc480d6abf5fde84f1d9cb872bd30224",
+    "extracted/priestforcefield/originalCD/creation.c": "860217e15a6577606eca70c845203209e76c6f0188a44602726221ada5082786",
+    "extracted/priestforcefield/originalCD/functions.tsv": "eaefe69254e019d4f5817b82a352a5d6dc480d6abf5fde84f1d9cb872bd30224",
+    "extracted/priestforcefield/originals/creation.c": "8965d7fc0437bc040efa54a8747958b7c1d79a9ad375ca1a76c35fc60f74175c",
+    "extracted/priestforcefield/originals/functions.tsv": "4bf754a7efabd06547326f5fe9edd72eef0db78f62e3a100de7699c5cedfafb7",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_forcefieldpostpop_oracle.py": "ce67e8238c508ce8cfcd9bdd0e87c52e959ff3e05f275876970a9bb94ccdd924",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/decomp_priestforcefield_oracle.py": "52ca14335984c621215dc2a0ff088187dab242c49a87e546bdd88e6c75385fe9",
+    "tools/ghidra/forcefieldpostpop-functions.json": "7201c905e6657fdd2696b0fb2334d72bddecffe55b601332b5472fc5d1174b09"
+  }
+}

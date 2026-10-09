@@ -2,6 +2,8 @@
 
 2026-10-10. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-09.** AGENTS.md·두 인계·cpppj 문서를 읽고 호스트 일치를 확인했다. KST 자정 전에 `priestshield` 15/13/13개를 같은 PC에서 읽기 전용으로 내보냈으며 구현·검증은 자정 뒤 이어졌다. 원본 게임/복사본·클론 창은 실행하지 않았다.
 
+후속 완료(2026-10-10): [보호막 일반 Pop·Regular·공간 삭제 수명](cpp-forcefield-lifecycle-reconstruction.md)을 실제 공통 공간/장부·form/Kernel에 연결했다. 아래 보호막 Pop/destroy 미복원 표기는 이 후속 단계 전의 범위다. SfxProcess/실제 소리 수명·월드/GUI 연결은 계속 후속이다.
+
 변경된 AGENTS.md에 따라 **10.78 싱글플레이 복원 → Windows 10/11 안정 구동 → TCP/IP 로컬 멀티플레이와 outpost → 요구사항/MCP** 순서를 따른다. 이미 복원한 outpost/지역 투표는 보존하고 outpost 전용 후속 연결은 3차 목표로 옮겼다. 이번 구현은 싱글플레이 사제의 이동 불가 상태에서 필요한 보호막 생성이다.
 
 [`RawPriestShield`](../../cpppj/src/o/RawPriestShield.h)은 `00493d30`/CD `0040bfb0` **전체 wrapper**를 복원했다. [실제 보호막 조회](cpp-priest-forcefield-reconstruction.md)와 원본 자산 생성자/소유자 지정에 연결하고 보호막 가상 Pop·오디오·안내 창은 필수 외부 경계로 둔다. 전체 사제 postPop/GUI의 완료는 아니다.

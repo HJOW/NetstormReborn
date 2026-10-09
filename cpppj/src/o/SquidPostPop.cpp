@@ -1,6 +1,7 @@
 // 실제 공통 후처리에서 선택한 효과만 구현하며 미복원 호출을 변경 전에 거부한다.
 #include "o/SquidPostPop.h"
 #include "o/RawPriestPostPopTail.h"
+#include "o/RawForcefieldLifecycle.h"
 #include "o/SquidPop.h"
 #include "o/RawIslandPostPop.h"
 #include <algorithm>
@@ -61,7 +62,17 @@ bool SquidPostPop::HandlesIsland(Sid sid) const {
     return islandPrefix_ && Vtable(pool_.Slot(sid))==expected;
 }
 // 파생 표는 서로 다른 주소이므로 한 종류만 참이 된다.
-bool SquidPostPop::HandlesDerived(Sid sid) const { return HandlesBridge(sid) || HandlesIsland(sid) || HandlesSurface(sid) || HandlesPriest(sid); }
+bool SquidPostPop::HandlesDerived(Sid sid) const { return HandlesBridge(sid) || HandlesIsland(sid) || HandlesSurface(sid) || HandlesPriest(sid) || HandlesForcefield(sid); }
+// 공간이 바뀌기 전에 전체 예약 접두의 풀을 확인한다. 참조 대상은 연결보다 오래 살아야 한다.
+void SquidPostPop::SetForcefieldPostPop(const RawForcefieldPostPop* postPop) {
+    if (postPop && &postPop->Pool()!=&pool_) throw std::invalid_argument("보호막 Pop/접두 풀 불일치");
+    forcefieldPostPop_=postPop;
+}
+// 보호막도 공통 firstPop/Pop을 공유하지만 postPop 재정의는 반드시 연결해야 한다.
+bool SquidPostPop::HandlesForcefield(Sid sid) const {
+    const auto raw=pool_.Slot(sid);
+    return forcefieldPostPop_ && raw[10]==kForcefieldType && Vtable(raw)==(pool_.Edition()==OriginalEdition::Patch1078 ? kPatchForcefieldVtable : kCdForcefieldVtable);
+}
 // 완성한 후처리와 같은 풀인지 구성 시 확인한다. 전역 지원 vtable 표는 확장하지 않는다.
 void SquidPostPop::SetPriestPostPop(const RawPriestPostPopTail* postPop) {
     if (postPop && &postPop->Pool()!=&pool_) throw std::invalid_argument("사제 Pop/후처리 풀 불일치");
@@ -111,6 +122,7 @@ void SquidPostPop::Validate(Sid sid,std::uint32_t flags,const RawGraphPop* pop) 
         throw std::logic_error("postPop raw 자산 상태 오류");
     if (!SquidPop::Supports(pool_.Edition(),Vtable(bytes),flags) && !HandlesDerived(sid)) throw std::logic_error("파생 postPop 미복원");
     if (HandlesPriest(sid)) priestPostPop_->Validate(sid);
+    if (HandlesForcefield(sid)) forcefieldPostPop_->Validate(sid);
     ValidateBase(sid,flags,pop);
 }
 // 파생 몸체의 명시적 공통 호출용 검사다. 자동 가상 분배의 지원 검사는 Validate에 남긴다.
@@ -154,6 +166,8 @@ void SquidPostPop::Activate(Sid sid,std::uint32_t flags) {
     else if (HandlesIsland(sid)) islandPrefix_(sid,flags);
     // 표면 칸 접두가 만든 받침/종유석의 중첩 postPop을 마친 뒤 자기 공통 장부를 갱신한다.
     else if (HandlesSurface(sid)) surfacePrefix_(sid,flags);
+    // 보호막의 두 Regular 예약을 마친 뒤 자기 공통 장부/깊이를 한 번 처리한다.
+    else if (HandlesForcefield(sid)) forcefieldPostPop_->Prefix(sid,flags);
     PostPop(sid,flags);
 }
 // 공통 후처리의 순서: 영역 무효화→그래프 생성/리셋→비용→공급/작업장 목록→소유자 조건 통계→깊이 감소다.

@@ -8,6 +8,7 @@
 
 namespace netstorm::o {
 class RawPriestPostPopTail;
+class RawForcefieldPostPop;
 struct SquidPostPopList {
     std::vector<std::uint32_t> entries; // 원본 미리 확보한 DWORD 배열. entries.size()가 capacity다.
     std::uint32_t count{};
@@ -49,6 +50,10 @@ public:
     void SetPriestPostPop(const RawPriestPostPopTail* postPop);
     // 실제 사제 타입/가상 표이며 전체 후처리를 등록했는가.
     bool HandlesPriest(Sid sid) const;
+    // 보호막의 최초 Regular 예약 접두를 같은 풀에 명시 등록한다. nullptr은 해제한다.
+    void SetForcefieldPostPop(const RawForcefieldPostPop* postPop);
+    // 실제 보호막 타입/가상 표이며 전용 접두가 등록돼 있는가.
+    bool HandlesForcefield(Sid sid) const;
     // 이 인스턴스가 처리할 수 있는 파생 postPop인가. Pop이 공간 변경 전에 묻는다.
     bool HandlesDerived(Sid sid) const;
     // 공간 변경 전 연결된 그래프의 최종 Pop 상태·미복원 영역/AI/배치 효과·목록·비용을 확인한다.
@@ -78,5 +83,6 @@ private:
     std::function<void(Sid,std::uint32_t)> islandPrefix_; // 섬 받침 postPop의 접두. RawBridgeConnect::IslandPostPopPrefix를 잇는다.
     std::function<void(Sid,std::uint32_t)> surfacePrefix_; // noIsland 최초 등록의 프레임/받침/소유자 효과.
     const RawPriestPostPopTail* priestPostPop_{}; // 전체 wrapper다. 접두처럼 공통 장부를 추가 호출하지 않는다.
+    const RawForcefieldPostPop* forcefieldPostPop_{}; // 예약 접두 뒤 공통 후처리는 이 인스턴스가 한 번 호출한다.
 };
 }

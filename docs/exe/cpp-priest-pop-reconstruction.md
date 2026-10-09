@@ -2,6 +2,8 @@
 
 2026-10-10. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-10.** AGENTS.md·두 인계·cpppj 문서를 다시 읽고 같은 호스트에서 새 `priestpop` 목록 **24/18/18개**를 읽기 전용으로 내보냈다. 10.78 싱글플레이 복원이 우선이며 outpost/LAN은 3차, 한국어/요구사항/MCP는 4차다. 게임 프로세스/창은 실행하지 않았다.
 
+후속 완료(2026-10-10): [보호막 일반 Pop·Regular·공간 삭제 수명](cpp-forcefield-lifecycle-reconstruction.md)을 실제 공통 공간/장부·form/Kernel에 연결했다. 아래 보호막 Pop/destroy 미복원 표기는 이 후속 단계 전의 범위다. SfxProcess/실제 소리 수명·월드/GUI 연결은 계속 후속이다.
+
 [`SquidPostPop::SetPriestPostPop`](../../cpppj/src/o/SquidPostPop.h)는 [전체 사제 후처리](cpp-priest-postpop-tail-reconstruction.md)를 명시 등록한다. 이후 실제 사제 타입 158과 가상 표가 일치하면 `SquidPop`→공통 firstPop/Activate→목록/회복 접두→Carrier/Damageable/공통 장부→현재 이동 불가/지면/방향→낙하/보호막 순서로 실행한다. 연결을 해제하거나 전체 후처리를 공급하지 않으면 기존처럼 공간 변경 전에 거부한다. 전역 `SquidPop::Supports`의 가상 표 목록은 그대로다.
 
 ## 원본 대응과 사용 계약
