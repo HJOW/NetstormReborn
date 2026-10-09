@@ -42,6 +42,7 @@ add_executable(netstorm_tests
     PriestPlacementPreviewTests.cpp
     PriestPlacementCollisionTests.cpp
     PriestPlacementGeometryTests.cpp
+    PriestPlacementShapeTests.cpp
     PriestStateTests.cpp
     PriestRegenTests.cpp
     PriestPreDestroyTests.cpp
@@ -159,3 +160,7 @@ set_source_files_properties(PriestPlacementCollisionTests.cpp PROPERTIES COMPILE
 # 비패턴 사제 모양의 독립 원본 관찰 fixture 경로다.
 set_source_files_properties(PriestPlacementGeometryTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PRIESTGEOMETRY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/priestgeometry-x86.tsv\"")
+
+# 비패턴 사제 픽셀 모양의 독립 원본 관찰 fixture 경로다.
+set_source_files_properties(PriestPlacementShapeTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PRIESTSHAPE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/priestshape-x86.tsv\"")

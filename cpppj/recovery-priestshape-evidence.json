@@ -1,0 +1,66 @@
+{
+  "total": 8064,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-09",
+  "controls": [
+    639,
+    895
+  ],
+  "os_calls": 0,
+  "editions": {
+    "originals": {
+      "cases": 4032,
+      "native_calls": {
+        "0043cbd0": 8064,
+        "00425c20": 8064,
+        "00425830": 8064,
+        "0049a840": 16128,
+        "00425860": 14112,
+        "00419850": 6048
+      },
+      "assertions": 0
+    },
+    "originalCD": {
+      "cases": 2016,
+      "native_calls": {
+        "004ed7c0": 4032,
+        "0041fcf0": 4032,
+        "0041fcc0": 4032,
+        "0041feb0": 7168
+      },
+      "assertions": 0
+    },
+    "original1037": {
+      "cases": 2016,
+      "native_calls": {
+        "004ed7c0": 4032,
+        "0041fcf0": 4032,
+        "0041fcc0": 4032,
+        "0041feb0": 7168
+      },
+      "assertions": 0
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/priestshape-x86.tsv": "f81259fa6c49401cb286dbd923d24e6f56f97db78d4a2cdf040798cfb4c182d2",
+    "extracted/priestshape/original1037/creation.c": "dd2e98729529bcc0e33c1f095b19f3ef0785e685b041e7f93b5a750037ad842a",
+    "extracted/priestshape/original1037/functions.tsv": "f5c004210a8afec416101181bb221fcc4b6b5d6da1d85627f7414445f07b8052",
+    "extracted/priestshape/originalCD/creation.c": "dd2e98729529bcc0e33c1f095b19f3ef0785e685b041e7f93b5a750037ad842a",
+    "extracted/priestshape/originalCD/functions.tsv": "f5c004210a8afec416101181bb221fcc4b6b5d6da1d85627f7414445f07b8052",
+    "extracted/priestshape/originals/creation.c": "60573f54272f154203263e51e74c92bd4109621649ea14dcc71492b3b1bb5d4a",
+    "extracted/priestshape/originals/functions.tsv": "1f1475e4a935280e19e1deba7577c9a07b85583672b343d0b4aa8c6c9330f4f2",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_damageablepredestroy_oracle.py": "b6bd591b17b886224e81b9d35dc863f12dea570c67aabf8a66280c7361785e75",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/decomp_priestgeometry_oracle.py": "c8d62204fcd8ec2fcb86cc9842ca46e0d3cdfba3c9afce3e90f9caec8fedc9bc",
+    "tools/decomp_priestshape_oracle.py": "03079b0a9a1709e81397a6d28cd1d8a76c2ed9dc6c128e453e5ec80613f95385",
+    "tools/ghidra/priestshape-functions.json": "3e4c8b13af7d3470325254986dd7248dd49acb8ed6719052bb9caf1552c64b04"
+  },
+  "limits": [
+    "비패턴 픽셀 범위 getter·decoder ctor/Advance·패치 SHP/frameCheck helper 전체 정상 반환 및 cdecl/보존 레지스터/x87 검사",
+    "특수 패턴 번호=0·프레임 디버그 전역=0; 타입/SHP 주소 표/메타/기준점/배율은 분석 입력",
+    "SHP 자산 로더/특수 패턴/전체 MayPlace/후보별 지형/게임/OS 미실행; assert 오류 입력은 C++ 진단으로 구분"
+  ]
+}

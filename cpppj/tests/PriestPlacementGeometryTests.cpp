@@ -1,6 +1,6 @@
 // 세 실제 PE의 비패턴 decoder/범위/충돌 인자를 복원 코드와 대조한다.
 #include "RawSceneSupport.h"
-#include "o/RawPriestPlacementGeometry.h"
+#include "o/RawPriestPlacementShape.h"
 #include "o/SquidFactory.h"
 #include <limits>
 
@@ -65,7 +65,7 @@ TEST_CASE(priest_geometry_region_order_current_footprint_and_empty_frame) {
 }
 // 실제 비패턴 모양/미리보기 범위→finder→다음 나선 위치→사제 생성자를 연결한다.
 TEST_CASE(priest_geometry_preview_collision_spawn_factory) {
-    // 초기 픽셀 모양/SHP·지형·일반 Pop/가상 Carrier 몸체만 입력 경계다.
+    // 타입 기준점/픽셀 배율·지형·일반 Pop/가상 Carrier 몸체는 입력 경계다.
     for (auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
         const bool patch=edition==OriginalEdition::Patch1078;SidPool pool(edition,kCapacity,true);SquidHash hash;std::vector<RiftTypeRecord> types(patch ? 188 : 171);std::vector<PriestPlainCanonType> frames(types.size());
         types[kPriest].flags2=0x210000;types[kPriest].constructorAddress=TypeConstructorAddress(edition,kPriest);types[kPriest].footX=types[kPriest].footY=1;types[83].footX=types[83].footY=1;
@@ -77,8 +77,10 @@ TEST_CASE(priest_geometry_preview_collision_spawn_factory) {
             [&](const PriestPlacementQuery&) { ++finishes;return true; }});
         RawPriestPlacementCollision collision(pool,hash,types,collisionState,previewState,MakePriestGeometryCollisionHooks(pool,geometry,{{},[](const PriestPlacementQuery&,Sid) {}}));
         RawPriestPlacementPreview preview(pool,types,spots,surfaces,previewState,MakePriestGeometryPreviewHooks(pool,geometry,MakePriestPlacementCollisionHooks(pool,collision,{})));
-        RawPriestPlacement placement(pool,types,placementState,MakePriestPlacementPreviewHooks(pool,preview,{
-            [](std::uint32_t,std::uint32_t,std::uint32_t) { return PriestPlacementRect{0,0,16,11}; },{}}));
+        std::vector<SquidDisplayShape> shapes(types.size());std::vector<PriestTypeHotspot> hotspots(types.size());PriestPlacementShapeState shapeState;
+        shapes[kPriest]={1,true,{{16,11,0,0,0,0}}};
+        RawPriestPlacementShape shape(pool,types,frames,shapes,hotspots,geometryState,shapeState);
+        RawPriestPlacement placement(pool,types,placementState,MakePriestShapePlacementHooks(pool,shape,MakePriestPlacementPreviewHooks(pool,preview,{})));
         SquidFactory factory(pool,types);PriestSpawnState spawnState;
         RawPriestSpawn spawn(pool,types,spots,spawnState,MakePriestPlacementHooks(pool,placement,{
             {},[&](std::uint32_t type,std::uint32_t flags) { born=factory.Create(type,flags);return born; },[](Sid,std::uint32_t) {},
