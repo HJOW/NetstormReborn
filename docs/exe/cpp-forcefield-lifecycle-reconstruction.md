@@ -4,6 +4,8 @@
 
 [`RawForcefieldPostPop`](../../cpppj/src/o/RawForcefieldLifecycle.h)을 `SquidPostPop::SetForcefieldPostPop`에 명시 등록하면 실제 보호막 타입 167/가상 표의 일반 Pop이 전용 예약 접두→공통 후처리로 이어진다. [`RawForcefieldRegular`](../../cpppj/src/o/RawForcefieldLifecycle.cpp)은 애니메이션 진행과 같은 위치의 사제 존재 검사를 처리한다. 보호막 생성 wrapper의 Pop과 삭제 요청을 실제 공간/form/Kernel 모듈에 연결해 검사했다. 전체 월드/GUI·오디오의 완료는 아니다.
 
+후속 완료(2026-10-10): [소리 프로세스·소리 이름 표](cpp-sound-process-reconstruction.md)를 복원해 보호막 생성 wrapper의 소리 조회/소리 프로세스 부착에 연결했다. 이 문서의 SfxProcess/소리 프로세스 미복원 표기는 그 후속 단계 전의 범위다. 소리 장치의 실제 재생/정지와 월드/GUI 연결은 계속 후속이다.
+
 ## 원본 대응과 계약
 
 | 동작 | 10.78 | CD·추가 10.37 |

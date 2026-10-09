@@ -29,6 +29,7 @@ add_executable(netstorm_tests
     CarrierCheckTests.cpp
     FrameAdvanceTests.cpp
     ForcefieldLifecycleTests.cpp
+    SoundProcessTests.cpp
     PriestPopTests.cpp
     ConfigOracleTests.cpp
     ConfigInterfaceTests.cpp
@@ -265,3 +266,7 @@ set_source_files_properties(PriestPopTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 보호막 전용 postPop/Regular/일반 타입 finder의 독립 원본 관찰이다.
 set_source_files_properties(ForcefieldLifecycleTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_FORCEFIELDPOSTPOP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/forcefieldpostpop-x86.tsv\"")
+
+# 소리 프로세스/이름 표의 독립 원본 관찰을 재생한다.
+set_source_files_properties(SoundProcessTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_SOUNDPROCESS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/soundprocess-x86.tsv\"")

@@ -1,0 +1,156 @@
+{
+  "schema": 1,
+  "host": "HJOW-Athlon",
+  "decompile_date": "2026-10-10",
+  "total": 18381,
+  "controls": [
+    639,
+    895
+  ],
+  "editions": {
+    "originals": {
+      "cases": 6127,
+      "returns": {
+        "Run": 11616,
+        "Destroy": 288,
+        "Ctor": 336,
+        "Lookup": 14
+      },
+      "lookups": 248,
+      "native_calls": {
+        "004ab070": 11616,
+        "004ac550": 5888,
+        "0049a840": 5888,
+        "0041be80": 5808,
+        "004ab030": 288,
+        "004ab240": 336,
+        "004a8ee0": 248,
+        "004a8d50": 248,
+        "004a8a60": 182,
+        "004ef510": 2912
+      },
+      "substitutions": {
+        "clock": 11616,
+        "assert": 1232,
+        "play": 400,
+        "loop": 768,
+        "kill": 2336,
+        "once": 400,
+        "stop": 72,
+        "playing": 72,
+        "attach": 336,
+        "locale": 2912
+      },
+      "vtable": {
+        "0c": "004ab030",
+        "18": "004ab070"
+      },
+      "assertions": 0,
+      "instructions": 12365202
+    },
+    "originalCD": {
+      "cases": 6127,
+      "returns": {
+        "Run": 11616,
+        "Destroy": 288,
+        "Ctor": 336,
+        "Lookup": 14
+      },
+      "lookups": 248,
+      "native_calls": {
+        "00453900": 11616,
+        "004abf50": 11648,
+        "004538b0": 288,
+        "00453800": 336,
+        "00437d20": 248,
+        "00437b29": 248,
+        "004f2980": 2912
+      },
+      "substitutions": {
+        "clock": 11616,
+        "play": 784,
+        "loop": 1536,
+        "kill": 4640,
+        "once": 784,
+        "stop": 72,
+        "playing": 72,
+        "assert": 84,
+        "attach": 336
+      },
+      "vtable": {
+        "0c": "004538b0",
+        "18": "00453900"
+      },
+      "assertions": 0,
+      "instructions": 6402352
+    },
+    "original1037": {
+      "cases": 6127,
+      "returns": {
+        "Run": 11616,
+        "Destroy": 288,
+        "Ctor": 336,
+        "Lookup": 14
+      },
+      "lookups": 248,
+      "native_calls": {
+        "00453900": 11616,
+        "004abf50": 11648,
+        "004538b0": 288,
+        "00453800": 336,
+        "00437d20": 248,
+        "00437b29": 248,
+        "004f2980": 2912
+      },
+      "substitutions": {
+        "clock": 11616,
+        "play": 784,
+        "loop": 1536,
+        "kill": 4640,
+        "once": 784,
+        "stop": 72,
+        "playing": 72,
+        "assert": 84,
+        "attach": 336
+      },
+      "vtable": {
+        "0c": "004538b0",
+        "18": "00453900"
+      },
+      "assertions": 0,
+      "instructions": 6402352
+    }
+  },
+  "os_calls": 0,
+  "sound_list_base": "15000000",
+  "stubbed": [
+    "BaseProcess 부착",
+    "벽시계 조회",
+    "위치 반복/위치 한 번/전역 재생",
+    "정지/재생 여부 조회",
+    "프로세스 Kill",
+    "assert 보고(기록 뒤 계속)",
+    "패치 CRT 스레드 로캘 선택(C 로캘 ASCII 비교 본문은 실제 실행)",
+    "소리 장치 초기화의 표 확보/0 채움/대체 소리 대입"
+  ],
+  "limitations": [
+    "합성 프로세스 객체/부모 raw/타입 레코드",
+    "소리 장치(DirectSound)·실제 재생/정지·파일 읽기 제외",
+    "빈 이름·표 끝을 넘는 이름·손상된 표 제외"
+  ],
+  "files": {
+    "cpppj/tests/fixtures/soundprocess-x86.tsv": "1687245d52763e0e26111e95c3984e9977a1504a882bd825e8f828f1b55b9203",
+    "extracted/soundprocess/original1037/creation.c": "040e9fdd050282a16cca8e1caebd704b56d96d08359e4394c661390433b34217",
+    "extracted/soundprocess/original1037/functions.tsv": "4594b2ab1dbfad7e33ecaa154447c07721b5bcc26789ad6ccdd8d8ae639fcfe3",
+    "extracted/soundprocess/originalCD/creation.c": "040e9fdd050282a16cca8e1caebd704b56d96d08359e4394c661390433b34217",
+    "extracted/soundprocess/originalCD/functions.tsv": "4594b2ab1dbfad7e33ecaa154447c07721b5bcc26789ad6ccdd8d8ae639fcfe3",
+    "extracted/soundprocess/originals/creation.c": "56a6051674d29888bf08f8b97f6ee13652d81f2dd3b815b7f6d55b117fb66cfa",
+    "extracted/soundprocess/originals/functions.tsv": "d4cf7e4d8b4f3c8f427b4dc9e0f99dfb3fa278d354147a76fd9d49b2bce87c36",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/decomp_soundprocess_oracle.py": "235b1fa0123f9f931ca603522f93dadbc22a0d472d9eb6c36078ac4b41e932d8",
+    "tools/ghidra/soundprocess-functions.json": "674b41ef2792b54a5dde3d35993b6ea1b93c62c7f7b28c9442cc601b7e5f385b"
+  }
+}

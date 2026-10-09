@@ -22,6 +22,8 @@ target_sources(netstorm PRIVATE
     GameWorld.cpp GameWorld.h
     RawSurfaceWorld.cpp RawSurfaceWorld.h
     UserInput.cpp UserInput.h
+    Sound.cpp Sound.h
+    SoundProcess.cpp SoundProcess.h
 )
 # 원본처럼 Win32 GDI·멀티미디어 타이머를 직접 쓴다(Screen·ClientMain).
 target_link_libraries(netstorm PUBLIC user32 gdi32 winmm)
