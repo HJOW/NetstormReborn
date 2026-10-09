@@ -53,6 +53,7 @@ target_sources(netstorm PRIVATE
     RawPriestPlacement.cpp RawPriestPlacement.h
     RawPriestPlacementPreview.cpp RawPriestPlacementPreview.h
     RawPriestPlacementCollision.cpp RawPriestPlacementCollision.h
+    RawPriestPlacementGeometry.cpp RawPriestPlacementGeometry.h
     RawCarrierPostPop.cpp RawCarrierPostPop.h
     RawCarrierPreDestroy.cpp RawCarrierPreDestroy.h
     RawContainedFinder.cpp RawContainedFinder.h

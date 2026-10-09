@@ -1,0 +1,80 @@
+{
+  "total": 4352,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-09",
+  "controls": [
+    639,
+    895
+  ],
+  "os_calls": 0,
+  "editions": {
+    "originals": {
+      "cases": 2304,
+      "native_calls": {
+        "00425c20": 4608,
+        "00425830": 4608,
+        "0049a840": 15552,
+        "00425860": 9216,
+        "00425b90": 9216,
+        "0049a900": 9216,
+        "004e49c0": 39168,
+        "0041d770": 3456
+      },
+      "area_entries": 3456,
+      "finder_boundaries": 3456,
+      "assertions": 0
+    },
+    "originalCD": {
+      "cases": 1024,
+      "native_calls": {
+        "0041fcf0": 2048,
+        "0041fcc0": 2048,
+        "0041feb0": 4096,
+        "004202e0": 4096,
+        "004442b0": 4096,
+        "004f161c": 17408,
+        "00440a50": 1536
+      },
+      "area_entries": 1536,
+      "finder_boundaries": 1536,
+      "assertions": 0
+    },
+    "original1037": {
+      "cases": 1024,
+      "native_calls": {
+        "0041fcf0": 2048,
+        "0041fcc0": 2048,
+        "0041feb0": 4096,
+        "004202e0": 4096,
+        "004442b0": 4096,
+        "004f161c": 17408,
+        "00440a50": 1536
+      },
+      "area_entries": 1536,
+      "finder_boundaries": 1536,
+      "assertions": 0
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/priestgeometry-x86.tsv": "b49b1ce9cb4145afdd45806ba43404c49ab5523ca05e1a259ce83fa273c8e12a",
+    "extracted/priestgeometry/original1037/creation.c": "eb2b51e00cb495505f37886ea384ebbef09b2728ecb103978440462d404d4a57",
+    "extracted/priestgeometry/original1037/functions.tsv": "7d7b3b3f69ea26f90871e8e57518075c2c02d24d0405a7f9ce7dc410014d1eaf",
+    "extracted/priestgeometry/originalCD/creation.c": "eb2b51e00cb495505f37886ea384ebbef09b2728ecb103978440462d404d4a57",
+    "extracted/priestgeometry/originalCD/functions.tsv": "7d7b3b3f69ea26f90871e8e57518075c2c02d24d0405a7f9ce7dc410014d1eaf",
+    "extracted/priestgeometry/originals/creation.c": "d9d6c28a56abe94b99b2c14db3050748c3c3f2b0ccf9345f4e85bf9f75851788",
+    "extracted/priestgeometry/originals/functions.tsv": "9d2e3da993b993d66f1c20a12cbcbf923b90d282f16e3399227843fca865f4f0",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_damageablepredestroy_oracle.py": "b6bd591b17b886224e81b9d35dc863f12dea570c67aabf8a66280c7361785e75",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/decomp_priestgeometry_oracle.py": "c8d62204fcd8ec2fcb86cc9842ca46e0d3cdfba3c9afce3e90f9caec8fedc9bc",
+    "tools/ghidra/priestgeometry-functions.json": "3573f47bf111d1e02eeb51cc4ae2eb1ad14d388d1d67bb2695a15dca9186789e"
+  },
+  "limits": [
+    "비패턴 ctor/Advance/Bounds/타입·발자국 조회/snap/CRT 실제 실행; 메서드 thiscall 정상 반환/ABI 대조",
+    "충돌 사각형은 MayPlace 중간 구간에 지역 변수를 공급하고 finder 진입에서 관찰 종료: 전체 MayPlace/finder/후보/지형 미실행",
+    "패턴 전역 번호=0·패치 프레임 디버그 검사 전역=0; CD 홀수 회전/잘못된 명시 프레임 assert는 정상 fixture에서 제외",
+    "초기 픽셀 모양/SHP 조회와 실제 후보별 지형/관계 몸체는 외부 경계"
+  ]
+}

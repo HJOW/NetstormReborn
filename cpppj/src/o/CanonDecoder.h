@@ -1,6 +1,6 @@
 // 원본 CanonDecoder.cpp: 패턴 표(여러 칸으로 이루어진 모양)를 회전을 반영해 한 칸씩 풀어 주는 반복자.
 // 영역(puzzlePiece)·다리(bridge) 패턴을 옮겼다.
-// 섬(00531410)·그 밖의 타입(005314a0, 005314e8) 패턴과 패턴 없는 타입의 경로는 아직 옮기지 않았다.
+// 섬(00531410)·그 밖의 타입(005314a0, 005314e8) 패턴은 아직 옮기지 않았다.
 #pragma once
 #include "o/RiftType.h"
 #include <array>
@@ -29,6 +29,11 @@ public:
     // 원본 FUN_00425c20 ↔ CD 0041fcf0의 영역·다리 패턴 경로. direction은 방향 값이며 회전은 direction / 2다.
     // frames는 그 타입의 프레임 코드 표다. (x, y)는 첫 칸의 좌표다.
     CanonDecoder(const RiftTypeFrames& frames, const CanonPattern& pattern, int direction, float x, float y);
+    // 패턴 없는 타입은 한 칸이다. 기본 프레임 또는 명시 프레임 인자를 선택하며 CD는 홀수 direction을 assert한다.
+    CanonDecoder(const RiftTypeFrames& frames,int defaultFrame,int argument,int direction,float x,float y,
+        bool explicitFrame=false,OriginalEdition edition=OriginalEdition::Patch1078);
+    // 00425b90 / CD 004202e0: 현재 좌표 절삭에서 순회 개수×현재 발자국을 뺀 미리보기 사각형이다.
+    std::array<int,4> Bounds(int footX,int footY) const;
     // 아직 칸이 남았는가(원본 +0x14).
     bool Valid() const;
     // 원본 FUN_00425860 ↔ CD 0041feb0: 다음 유효 칸으로 간다. 빈 칸과 프레임을 찾지 못한 칸은 건너뛴다.
@@ -59,5 +64,7 @@ private:
     int patternY_{};        // +0x44
     int outer_{};           // +0x48
     int inner_{};           // +0x4c
+    int defaultFrame_{},argument_{}; // 패턴 없는 타입의 기본 프레임과 원본 첫 인자다.
+    bool explicitFrame_{}; // +0x50: 첫 인자를 프레임 번호로 사용할지 결정한다.
 };
 }
