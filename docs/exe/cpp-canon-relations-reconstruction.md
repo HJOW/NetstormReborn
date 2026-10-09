@@ -58,6 +58,6 @@ cmake --build cpppj/build --config Release
 ctest --test-dir cpppj/build -C Release --output-on-failure
 ```
 
-다음은 **전체 MayPlace 진입부터 반환까지 원본 대조와 실제 자산 연결**, 별도 Player 추가 목록의 생성/삭제/공간 수명이다. 이어 사제 Pop·보호막 생성/회복 예약·Carrier 상태 검사와 raw GUI·건설·경제·전투·승패를 연결한다. 여러 판본 자산 전수·장시간 변이·최대 지도·창/픽셀 회귀는 [LEFT_JOBS.md](../../LEFT_JOBS.md)에 인계한다.
+2026-10-09 후속: [전체 MayPlace 제한 입력의 정상 반환 대조·대표 실제 자산 연결](cpp-canon-mayplace-reconstruction.md)을 완료했다. 다음은 실제 저장 맵/raw 세계·공간 장부와 별도 Player 추가 목록의 생성/삭제/공간 수명이다. 이어 사제 Pop·보호막 생성/회복 예약·Carrier 상태 검사와 raw GUI·건설·경제·전투·승패를 연결한다. 여러 판본 자산 전수·장시간 변이·최대 지도·창/픽셀 회귀는 [LEFT_JOBS.md](../../LEFT_JOBS.md)에 인계한다.
 
 검증 로그는 `extracted/canonrelations-export.log`, `canonrelations-oracle-final.log`, `canonrelations-build-final.log`, `canonrelations-ctest-final.log`, `canonrelations-audits-final.log`다. Release 경고/오류 **0**, CTest 내부 **417개·실패 0**(109.58초), 감사 **61종 모두 통과**. 기존 fixture/감사 도구는 바꾸지 않았다.

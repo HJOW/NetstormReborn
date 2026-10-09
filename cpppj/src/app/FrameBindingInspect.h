@@ -15,4 +15,6 @@ void InspectCanonPatterns(const std::filesystem::path& root,o::OriginalEdition e
 void InspectCanonPixelShapes(const std::filesystem::path& root,o::OriginalEdition edition,bool inspectPlacement=false);
 // 실제 자산의 패턴별 모양 순회와 finder 정수 사각형을 창 없이 출력한다.
 void InspectCanonPlacementGeometry(const std::filesystem::path& root,o::OriginalEdition edition);
+// 실제 대표 요청자 TYPE/SHP를 전체 배치 파이프라인에 연결해 합성 장면의 결과를 출력한다.
+void InspectCanonMayPlace(const std::filesystem::path& root,o::OriginalEdition edition);
 }

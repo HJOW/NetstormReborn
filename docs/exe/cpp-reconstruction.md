@@ -7,7 +7,9 @@
 
 > 최신 생성 후속: [생성자 주소 표·base 생성/가상 초기화·free/void Take](cpp-creation-reconstruction.md)를 원본 SID 풀에 연결했다. 현재 CTest **104개 내부 검사**, 제한 x86 입력 행 **36,510개**이며 생성자 주소 표 359행은 별도다. 파생/공간 수명·실제 GameWorld 연결은 남았다. 위의 43/69개 등의 수치는 앞선 단계의 기록이다.
 
-> 2026-10-09 최신: [배치의 최종 표면 관계·특수 지역·거부](cpp-canon-relations-reconstruction.md). 새 독립 x86 6,921개·누적 341,410개, 최종 구간/실제 helper/성공·실패 에필로그 정상 반환·함수 대체 0, 실제 일반/3×3 배치 모듈 합성, CTest 내부 417개·감사 61종 통과. 전체 MayPlace 진입부터 반환까지 독립 대조/실제 자산 전수/GUI 건설·미션 완주는 후속이다. 마지막 디컴파일 PC: HJOW-Athlon, 2026-10-09.
+> 2026-10-09 최신: [전체 MayPlace 연결·독립 원본 대조](cpp-canon-mayplace-reconstruction.md). 새 x86 432개·누적 341,842개, 대표 실제 TYPE/SHP 두 판본 960개, CTest 내부 420개·감사 62종 통과. 실제 helper를 정상 반환까지 실행하고 임시 160바이트 확보/반납만 대체한다. 실제 맵/객체 수명·자산 전수·GUI 건설·플레이 가능 게임은 후속이다. 마지막 디컴파일 PC: HJOW-Athlon, 2026-10-09.
+
+> 2026-10-09 앞 단계: [배치의 최종 표면 관계·특수 지역·거부](cpp-canon-relations-reconstruction.md). 새 독립 x86 6,921개·누적 341,410개, 최종 구간/실제 helper/성공·실패 에필로그 정상 반환·함수 대체 0, 실제 일반/3×3 배치 모듈 합성, CTest 내부 417개·감사 61종 통과. 전체 MayPlace 진입부터 반환까지 독립 대조/실제 자산 전수/GUI 건설·미션 완주는 후속이다. 마지막 디컴파일 PC: HJOW-Athlon, 2026-10-09.
 
 > 2026-10-09 앞 단계: [배치 모양의 주변 표면 탐색·권한 누적](cpp-canon-surrounding-reconstruction.md). 새 독립 x86 1,572개·누적 334,489개, flag 8 finder 전체 정상 반환/주변 구간·Player 진입만 대체, 실제 Player 조회→EndShape 연결, 동적 raw/지도/프레임 코드 표 검증, CTest 내부 411개·감사 60종 통과. 최종 표면 관계/특수 지역/거부·전체 MayPlace/실제 플레이 완주는 후속이다. 마지막 디컴파일 PC: HJOW-Athlon, 2026-10-09.
 

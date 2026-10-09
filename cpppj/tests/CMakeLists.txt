@@ -20,6 +20,7 @@ add_executable(netstorm_tests
     PlayerPlacementAnchorTests.cpp
     CanonPlacementSurroundingTests.cpp
     CanonPlacementRelationsTests.cpp
+    CanonMayPlaceTests.cpp
     ConfigOracleTests.cpp
     ConfigInterfaceTests.cpp
     FortTests.cpp
@@ -220,3 +221,6 @@ set_source_files_properties(CanonPlacementSurroundingTests.cpp PROPERTIES COMPIL
 # 최종 표면 관계/특수 지역/실제 반환 구간의 독립 관찰을 해당 검사 소스에서만 읽는다.
 set_source_files_properties(CanonPlacementRelationsTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CANONRELATIONS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/canonrelations-x86.tsv\"")
+# 전체 MayPlace 정상 반환의 독립 관찰을 새 파이프라인 검사에서만 읽는다.
+set_source_files_properties(CanonMayPlaceTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CANONMAYPLACE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/canonmayplace-x86.tsv\"")
