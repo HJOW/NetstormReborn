@@ -28,7 +28,7 @@
 - 기존 `SquidRenderer::Shapes`의 실제 SHP 물리 프레임 헤더. 칸 크기와 픽셀 크기/기준점을 혼동하지 않는다.
 - CanonDecoder의 현재 패턴 타입 8개: puzzlePiece 107, bridge 82, island 94, noIsland 157, thunderCannon 131, rainCannon 129, windArcher 140, windBlocker 142. 실제 PE 전역과 대조한다.
 
-배치 모듈의 span은 이 객체의 배열을 참조해야 하므로 객체는 모듈보다 오래 살아야 한다. `GameWorld::BuildSurfaces`도 이 공통 자료의 프레임 코드와 SHP를 사용한다. 패턴 번호 연결은 기존 비패턴 검사가 정확한 타입을 거부하도록 하는 자료 공급이며, 패턴 몸체를 복원한 것은 아니다.
+배치 모듈의 span은 이 객체의 배열을 참조해야 하므로 객체는 모듈보다 오래 살아야 한다. `GameWorld::BuildSurfaces`도 이 공통 자료의 프레임 코드와 SHP를 사용한다. 패턴 선택/표/전체 순회는 [후속 CanonTypeDecoder 단계](cpp-canon-type-reconstruction.md)에서 복원했다. 사제 전용 배치의 genus/비패턴 종류 계약은 유지하며 일반 특수 자산의 전체 배치 연결은 후속이다.
 
 새 콘솔 명령 `--inspect-priest-assets <game-dir> [--cd]`는 창 없이 실제 자산의 프레임 코드/defaultFrame/기준점/물리 프레임 개수와 일반 사제의 픽셀 getter 결과를 JSON으로 출력한다. 사제 GUI/일반 Pop을 활성화하지 않는다.
 
@@ -51,4 +51,4 @@ python -X utf8 tools/cpp_priestassets_smoke.py
 ctest --test-dir cpppj/build -C Release --output-on-failure
 ```
 
-최종 Release 빌드 경고/오류 **0**, CTest 내부 **358개·실패 0**(110.19초), 전체 원본 근거 감사 **50종 모두 통과**, 두 판본 실제 자산 대조 통과다. 최종 검증 로그는 [LEFT_JOBS.md](../../LEFT_JOBS.md)의 이번 단계 기록을 따른다. 숫자 속성 분석은 **로더 중간 진입에서 다음 속성 경계까지**이며 전체 로더의 파싱/문자열 비교/ABI를 실행한 근거가 아니다. 실제 자산 검사도 전체 MayPlace/일반 사제 Pop/보호막 생성/GUI 플레이를 대조한 근거가 아니다. 다음은 특수 패턴/타입 조합, 일반 사제 Pop·회복 예약·Carrier 상태 검사와 비표면 raw 월드 연결이다.
+최종 Release 빌드 경고/오류 **0**, CTest 내부 **358개·실패 0**(110.19초), 전체 원본 근거 감사 **50종 모두 통과**, 두 판본 실제 자산 대조 통과다. 최종 검증 로그는 [LEFT_JOBS.md](../../LEFT_JOBS.md)의 이번 단계 기록을 따른다. 숫자 속성 분석은 **로더 중간 진입에서 다음 속성 경계까지**이며 전체 로더의 파싱/문자열 비교/ABI를 실행한 근거가 아니다. 실제 자산 검사도 전체 MayPlace/일반 사제 Pop/보호막 생성/GUI 플레이를 대조한 근거가 아니다. 타입별 패턴 decoder는 [후속 단계](cpp-canon-type-reconstruction.md)에서 완료했다. 다음은 패턴의 일반 자산 픽셀/지형·관계 연결, 일반 사제 Pop·회복 예약·Carrier 상태 검사와 비표면 raw 월드 연결이다.

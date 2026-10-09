@@ -50,6 +50,7 @@ void PrintBuildInfo() {
     std::printf("  --inspect-assets <game-dir> [--cd]\n  --dump-assets <game-dir> [--cd]\n");
     std::printf("  --inspect-frame-binding <game-dir> [--cd]\n");
     std::printf("  --inspect-priest-assets <game-dir> [--cd]\n");
+    std::printf("  --inspect-canon-patterns <game-dir> [--cd]\n");
     std::printf("  --export-frame <game-dir> <type> <cluster> <layer> <output.bmp> [--cd]\n");
     std::printf("  --config-dump <game-dir> [--cd]\n  --config-get <game-dir> <key> [--cd]\n");
     std::printf("  --config-spec <game-dir> <key> [arg1 [arg2 [arg3]]] [--cd]\n");
@@ -744,6 +745,9 @@ int main(int argc, char** argv) {
         }
         if ((argc == 3 || argc == 4) && command == "--inspect-priest-assets") {
             netstorm::app::InspectPriestAssets(argv[2],Edition(argc,argv,3));return 0;
+        }
+        if ((argc == 3 || argc == 4) && command == "--inspect-canon-patterns") {
+            netstorm::app::InspectCanonPatterns(argv[2],Edition(argc,argv,3));return 0;
         }
         if ((argc == 7 || argc == 8) && command == "--export-frame") {
             const auto assets = LoadAssets(argv[2], Edition(argc, argv, 7));

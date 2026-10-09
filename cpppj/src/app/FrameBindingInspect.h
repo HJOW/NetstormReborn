@@ -8,4 +8,6 @@ namespace netstorm::app {
 void InspectFrameBinding(const std::filesystem::path& root,o::OriginalEdition edition);
 // 실제 배치 메타 자료와 사제 기본 프레임의 픽셀 범위를 JSON으로 내보낸다. GUI는 만들지 않는다.
 void InspectPriestAssets(const std::filesystem::path& root,o::OriginalEdition edition);
+// 실제 자산과 현재 타입 전역으로 모든 패턴/짝수 방향을 콘솔에서 순회한다.
+void InspectCanonPatterns(const std::filesystem::path& root,o::OriginalEdition edition);
 }

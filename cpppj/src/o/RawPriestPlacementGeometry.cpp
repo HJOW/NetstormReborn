@@ -1,5 +1,6 @@
 // 미리보기 범위와 충돌 탐색 범위의 원본 계산 차이를 보존한다.
 #include "o/RawPriestPlacementGeometry.h"
+#include "o/CanonTypeDecoder.h"
 #include <algorithm>
 #include <bit>
 #include <cmath>
@@ -32,7 +33,8 @@ CanonDecoder RawPriestPlacementGeometry::Decode(const PriestPlacementQuery& quer
         std::find(state_.patternTypes.begin(),state_.patternTypes.end(),query.type)!=state_.patternTypes.end())
         throw std::invalid_argument("사제 비패턴 CanonDecoder 타입 계약 오류");
     const auto& meta=frames_[query.type];
-    return CanonDecoder(meta.frames,meta.defaultFrame,static_cast<int>(query.type),std::bit_cast<std::int32_t>(query.flags),query.x,query.y,false,pool_.Edition());
+    return DecodeCanonType(meta.frames,meta.defaultFrame,state_.patternTypes,
+        {query.type,static_cast<int>(query.type),std::bit_cast<std::int32_t>(query.flags),query.x,query.y,false},pool_.Edition());
 }
 // 생성자의 첫 Advance 이후 현재 좌표와 순회 개수(비패턴은 1×1)를 사용한다.
 SquidSearchArea RawPriestPlacementGeometry::Bounds(PriestPlacementQuery query) const {

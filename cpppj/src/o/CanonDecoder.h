@@ -1,6 +1,6 @@
 // 원본 CanonDecoder.cpp: 패턴 표(여러 칸으로 이루어진 모양)를 회전을 반영해 한 칸씩 풀어 주는 반복자.
 // 영역(puzzlePiece)·다리(bridge) 패턴을 옮겼다.
-// 섬(00531410)·그 밖의 타입(005314a0, 005314e8) 패턴은 아직 옮기지 않았다.
+// 타입별 선택과 섬·받침·공유 전투 패턴은 CanonTypeDecoder에서 제공한다.
 #pragma once
 #include "o/RiftType.h"
 #include <array>

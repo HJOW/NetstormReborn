@@ -2,6 +2,7 @@
 #include "app/FrameBindingInspect.h"
 #include "client/SquidRenderer.h"
 #include "client/PriestPlacementAssets.h"
+#include "o/CanonTypeDecoder.h"
 #include "o/SquidFrameBinding.h"
 #include "o/SquidFactory.h"
 #include <bit>
@@ -90,5 +91,34 @@ void InspectPriestAssets(const std::filesystem::path& root,o::OriginalEdition ed
         std::printf("}");
     }
     std::printf("]}\n");
+}
+// 각 출력 줄은 하나의 실제 타입/패턴/방향이며 원본 파일/GUI 상태를 바꾸지 않는다.
+void InspectCanonPatterns(const std::filesystem::path& root,o::OriginalEdition edition) {
+    o::BaseFileSystem files(root);files.RegisterArchive(root/"netstorm.tarc");client::GameAssets assets(files,edition);client::PriestPlacementAssets data(assets);
+    // 모든 타입별 표의 정상 패턴 개수와 앞 단계에서 복원한 일반 사제 번호다.
+    constexpr std::array<int,9> kCounts{68,26,2,1,1,1,1,1,1};
+    const auto types=assets.TypeTable().Types();
+    // 실제 자산 프레임 표에서 모든 패턴을 네 회전으로 진행한다.
+    for (std::size_t kind=0;kind<kCounts.size();++kind) {
+        const auto type=kind<8 ? data.geometry.patternTypes[kind] : static_cast<std::uint32_t>(o::kFirstAssetTypeNumber+assets.Find("priest").block);
+        const auto& record=types[type];const auto& meta=data.frames[type];
+        // 비패턴 사제는 배치 경로처럼 타입 번호를 첫 인자로 보낸다.
+        for (int index=0;index<kCounts[kind];++index) {
+            const int argument=kind<8 ? index : static_cast<int>(type);
+            // CD의 홀수 회전은 원본 assert이므로 정상 자산 검사는 짝수 방향만 사용한다.
+            for (int direction=0;direction<8;direction+=2) {
+                auto decoder=o::DecodeCanonType(meta.frames,meta.defaultFrame,data.geometry.patternTypes,{type,argument,direction,20.5f,21.25f,false},edition);
+                const auto area=decoder.Bounds(record.footX,record.footY);
+                std::printf("{\"kind\":%zu,\"type\":%u,\"argument\":%d,\"direction\":%d,\"bounds\":[%d,%d,%d,%d],\"sequence\":[",kind,type,argument,direction,area[0],area[1],area[2],area[3]);bool first=true;
+                // 칸 좌표의 float 비트와 현재 프레임/라벨/방향을 원본 순서로 내보낸다.
+                while (decoder.Valid()) {
+                    std::printf("%s[%d,%u,%u,%d,%d]",first ? "" : ",",decoder.Frame(),std::bit_cast<std::uint32_t>(decoder.X()),std::bit_cast<std::uint32_t>(decoder.Y()),decoder.Label(),static_cast<int>(decoder.Side()));
+                    first=false;decoder.Advance();
+                }
+                const auto end=decoder.Bounds(record.footX,record.footY);
+                std::printf("],\"end\":[%d,%u,%u,%d],\"end_bounds\":[%d,%d,%d,%d]}\n",decoder.Frame(),std::bit_cast<std::uint32_t>(decoder.X()),std::bit_cast<std::uint32_t>(decoder.Y()),decoder.Label(),end[0],end[1],end[2],end[3]);
+            }
+        }
+    }
 }
 }

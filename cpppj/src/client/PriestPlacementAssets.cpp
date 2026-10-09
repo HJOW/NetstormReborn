@@ -11,7 +11,7 @@ PriestPlacementAssets::PriestPlacementAssets(const GameAssets& assets)
     for (std::size_t i=0;i<types.size();++i) hotspots[i]={types[i].hotspotX,types[i].hotspotY};
     // 자산 번호 70부터 프레임 순서와 특수 기본 프레임을 복사한다.
     for (const auto& asset:assets.Types()) frames[o::kFirstAssetTypeNumber+asset.block]={asset.definition.FrameTable(),asset.definition.specialFrames.defaultFrame};
-    // CanonDecoder가 패턴 몸체로 분기하는 원본 전역의 순서다. 몸체 복원 전에는 기존 검사가 거부한다.
+    // CanonTypeDecoder가 패턴을 고르는 원본 전역의 순서다. 사제 전용 배치의 종류 계약은 별도로 유지한다.
     constexpr std::array<std::string_view,8> kPatterns{"puzzlePiece","bridge","island","noIsland","thunderCannon","rainCannon","windArcher","windBlocker"};
     // 이름은 typename 대신 실제 로딩 파일 이름으로 해석한다.
     for (std::size_t i=0;i<kPatterns.size();++i) geometry.patternTypes[i]=static_cast<std::uint32_t>(o::kFirstAssetTypeNumber+assets.Find(kPatterns[i]).block);

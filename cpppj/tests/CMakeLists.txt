@@ -9,6 +9,7 @@ add_executable(netstorm_tests
     OracleTests.cpp
     AssetTests.cpp
     TypeHotspotTests.cpp
+    CanonTypeDecoderTests.cpp
     ConfigOracleTests.cpp
     ConfigInterfaceTests.cpp
     FortTests.cpp
@@ -173,3 +174,6 @@ set_source_files_properties(PriestPlacementTerrainTests.cpp PROPERTIES COMPILE_D
 # 타입 기준점의 실제 속성/ftol 관찰 fixture를 해당 검사에만 지정한다.
 set_source_files_properties(TypeHotspotTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_TYPEHOTSPOT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/typehotspot-x86.tsv\"")
+# 타입별 패턴 생성/전체 순회의 독립 원본 fixture는 해당 검사 소스에만 지정한다.
+set_source_files_properties(CanonTypeDecoderTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CANONTYPE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/canontype-x86.tsv\"")

@@ -1,5 +1,6 @@
 // 패치/CD의 x87 중간 저장 위치·signed WORD와 DWORD 차·빈 범위를 보존한다.
 #include "o/RawPriestPlacementShape.h"
+#include "o/CanonTypeDecoder.h"
 #include <algorithm>
 #include <bit>
 #include <cmath>
@@ -41,7 +42,8 @@ PriestPlacementPixelShape RawPriestPlacementShape::Measure(std::uint32_t type,st
     if (type>=types_.size() || !(types_[type].flags2&0x200000) ||
         std::find(geometryState_.patternTypes.begin(),geometryState_.patternTypes.end(),type)!=geometryState_.patternTypes.end())
         throw std::invalid_argument("사제 픽셀 모양 비패턴 타입 계약 오류");
-    const auto& meta=frames_[type];CanonDecoder decoder(meta.frames,meta.defaultFrame,std::bit_cast<std::int32_t>(argument),std::bit_cast<std::int32_t>(direction),0,0,explicitFrame,pool_.Edition());
+    const auto& meta=frames_[type];auto decoder=DecodeCanonType(meta.frames,meta.defaultFrame,geometryState_.patternTypes,
+        {type,std::bit_cast<std::int32_t>(argument),std::bit_cast<std::int32_t>(direction),0,0,explicitFrame},pool_.Edition());
     PriestPlacementPixelShape result{{1000,1000,0,0},state_.scaleX,state_.scaleY};
     // 패턴 없는 사제는 한 프레임만 유효하지만 원본 순회 종료를 그대로 유지한다.
     while (decoder.Valid()) {
