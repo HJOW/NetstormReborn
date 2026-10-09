@@ -111,6 +111,8 @@ Sid SquidFactory::Create(std::uint32_t type,std::uint32_t flags) {
     PostCreate(sid);
     return sid;
 }
+// 할당/생성 연결에서 월드 혼합을 거부하기 위한 참조다.
+const SidPool& SquidFactory::Pool() const { return pool_; }
 // free/dead를 지운 뒤 생성자 필드만 다시 쓴다. 풀 카운터를 유지하며 공간 해제 필요성을 먼저 검사한다.
 Sid SquidFactory::Take(std::uint32_t type,Sid sid) {
     const auto& record=Type(type,true);

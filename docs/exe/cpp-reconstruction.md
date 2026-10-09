@@ -7,7 +7,9 @@
 
 > 최신 생성 후속: [생성자 주소 표·base 생성/가상 초기화·free/void Take](cpp-creation-reconstruction.md)를 원본 SID 풀에 연결했다. 현재 CTest **104개 내부 검사**, 제한 x86 입력 행 **36,510개**이며 생성자 주소 표 359행은 별도다. 파생/공간 수명·실제 GameWorld 연결은 남았다. 위의 43/69개 등의 수치는 앞선 단계의 기록이다.
 
-> 2026-10-09 최신: [outpost·작업장 지역 소유 투표](cpp-region-ownership-reconstruction.md). 새 독립 x86 1,320개·누적 345,466개, 실제 좌표/지역 getter와 outpost/Damageable 수명 연결, CTest 내부 430개·감사 64종 통과. 원본 전체 투표/재귀/getter/clear/생성자를 정상 반환까지 실행하고 지형 flood/도장과 옵션 조회만 대체한다. 지형 도장·작업장 전체·실제 맵/raw 일반 Pop/삭제·플레이 가능한 게임은 후속이다. 마지막 디컴파일 PC: HJOW-Athlon, 2026-10-09.
+> 2026-10-10 최신: [사제 보호막 생성·소리·안내 요청](cpp-priest-shield-reconstruction.md). 새 독립 x86 2,496개·누적 인계 347,962개, 실제 factory/owner·lookup/삭제 준비 연결, CTest 내부 435개·감사 65종 통과. 전체 wrapper/실제 finder·공통 owner 정상 반환이며 생성/Pop·소리/문구 하위 몸체만 대체한다. 보호막 공간 수명·사제 postPop 후반/일반 Pop·싱글플레이 완주는 후속이다. 변경 AGENTS.md대로 outpost/TCP/IP LAN은 3차 목표다. 마지막 디컴파일 PC: HJOW-Athlon, 2026-10-09(자정 뒤 구현/검증은 10-10).
+
+> 2026-10-09 앞 단계: [outpost·작업장 지역 소유 투표](cpp-region-ownership-reconstruction.md). 새 독립 x86 1,320개·누적 345,466개, 실제 좌표/지역 getter와 outpost/Damageable 수명 연결, CTest 내부 430개·감사 64종 통과. 원본 전체 투표/재귀/getter/clear/생성자를 정상 반환까지 실행하고 지형 flood/도장과 옵션 조회만 대체한다. 지형 도장·작업장 전체·실제 맵/raw 일반 Pop/삭제·플레이 가능한 게임은 후속이다. 마지막 디컴파일 PC: HJOW-Athlon, 2026-10-09.
 
 > 2026-10-09 앞 단계: [outpost 두 목록 수명 접두](cpp-outpost-lifecycle-reconstruction.md). 새 독립 x86 2,304개·누적 344,146개, 실제 Player 기준점/기존 Damageable 연결, CTest 내부 425개·감사 63종 통과. 원본 wrapper/Array 정상 반환이며 지역 투표·작업장 post·Damageable 부모 몸체는 명시 대체한다. 지역 투표/작업장 전체·실제 맵/raw 일반 Pop/삭제·플레이 가능한 게임은 후속이다. 마지막 디컴파일 PC: HJOW-Athlon, 2026-10-09.
 

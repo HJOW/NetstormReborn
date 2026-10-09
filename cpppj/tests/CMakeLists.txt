@@ -23,6 +23,7 @@ add_executable(netstorm_tests
     CanonMayPlaceTests.cpp
     OutpostLifecycleTests.cpp
     RegionOwnershipTests.cpp
+    PriestShieldTests.cpp
     ConfigOracleTests.cpp
     ConfigInterfaceTests.cpp
     FortTests.cpp
@@ -232,3 +233,6 @@ set_source_files_properties(OutpostLifecycleTests.cpp PROPERTIES COMPILE_DEFINIT
 # 지역 소유 투표 전체 wrapper의 독립 기계어 관찰 경로다.
 set_source_files_properties(RegionOwnershipTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_REGIONOWNERSHIP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/regionownership-x86.tsv\"")
+# 사제 보호막 전체 생성 wrapper의 독립 원본 관찰이다.
+set_source_files_properties(PriestShieldTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PRIESTSHIELD_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/priestshield-x86.tsv\"")

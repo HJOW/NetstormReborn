@@ -46,6 +46,8 @@ Sid RawPriestForcefield::Find(Sid priest) const {
 }
 // 삭제 준비 훅의 풀 연결을 읽기 전용으로 확인한다.
 const SidPool& RawPriestForcefield::Pool() const { return pool_; }
+// lookup과 생성이 같은 현재 타입 전역을 공유한다.
+std::uint32_t RawPriestForcefield::Type() const { return state_.type; }
 // 보호막 lookup만 교체해 다른 파생 효과를 암묵적으로 생략하지 않는다.
 PriestPreDestroyHooks MakePriestForcefieldHooks(const SidPool& pool,const RawPriestForcefield& lookup,PriestPreDestroyHooks hooks) {
     if (&pool!=&lookup.Pool()) throw std::invalid_argument("사제 보호막 조회/삭제 준비 풀이 다릅니다");

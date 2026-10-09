@@ -3,6 +3,8 @@
 #include <stdexcept>
 
 namespace netstorm::o {
+// 보호막 등 생성 효과의 풀 연결을 읽기 전용으로 확인한다.
+const SidPool& SquidOwner::Pool() const { return pool_; }
 namespace {
 // 공통 raw 필드: 타입(+10), 상태(+11). 상태의 void 비트와 extra의 buried 비트가 목록 추가를 막는다.
 constexpr std::size_t kType = 10, kState = 11;

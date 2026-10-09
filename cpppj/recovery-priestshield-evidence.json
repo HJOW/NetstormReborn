@@ -1,0 +1,113 @@
+{
+  "total": 2496,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-10",
+  "decompile_date": "2026-10-09",
+  "controls": [
+    639,
+    895
+  ],
+  "os_calls": 0,
+  "editions": {
+    "originals": {
+      "cases": 832,
+      "returns": 1664,
+      "native_calls": {
+        "00493d30": 1664,
+        "004918e0": 1664,
+        "0041d770": 1664,
+        "004e49c0": 10368,
+        "004b16d0": 1664,
+        "00434380": 11392,
+        "004b2b00": 17888,
+        "004b1810": 2944,
+        "004adf00": 1280,
+        "0049a840": 1856,
+        "0049a900": 1856,
+        "0044daa0": 1664
+      },
+      "substitutions": {
+        "C": 1280,
+        "P": 1280,
+        "A": 1280,
+        "N": 224,
+        "T": 224,
+        "D": 224,
+        "L": 640,
+        "S": 640
+      },
+      "assertions": 0
+    },
+    "originalCD": {
+      "cases": 832,
+      "returns": 1664,
+      "native_calls": {
+        "0040bfb0": 1664,
+        "0040bf00": 1664,
+        "00440a50": 1664,
+        "004f161c": 10368,
+        "004eae20": 1664,
+        "00479d90": 17888,
+        "004eafe0": 2944,
+        "004aefa0": 1280,
+        "004442b0": 1856,
+        "0040f180": 1664
+      },
+      "substitutions": {
+        "C": 1280,
+        "P": 1280,
+        "A": 1280,
+        "N": 224,
+        "L": 640,
+        "S": 640
+      },
+      "assertions": 0
+    },
+    "original1037": {
+      "cases": 832,
+      "returns": 1664,
+      "native_calls": {
+        "0040bfb0": 1664,
+        "0040bf00": 1664,
+        "00440a50": 1664,
+        "004f161c": 10368,
+        "004eae20": 1664,
+        "00479d90": 17888,
+        "004eafe0": 2944,
+        "004aefa0": 1280,
+        "004442b0": 1856,
+        "0040f180": 1664
+      },
+      "substitutions": {
+        "C": 1280,
+        "P": 1280,
+        "A": 1280,
+        "N": 224,
+        "L": 640,
+        "S": 640
+      },
+      "assertions": 0
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/priestshield-x86.tsv": "98bc837c0862a0c31c7a3a7b517054fccc38ead2460335f8b04d59afca2af68b",
+    "extracted/priestshield/original1037/creation.c": "131dfdc646c9736cfadb9a6b8ae6d0c9130fa98a2f2347935f38b8e32c074bb0",
+    "extracted/priestshield/original1037/functions.tsv": "98d88f10a2f74e469da5008842d6874bcf298ab848e374a2de5c5567f6cc826e",
+    "extracted/priestshield/originalCD/creation.c": "131dfdc646c9736cfadb9a6b8ae6d0c9130fa98a2f2347935f38b8e32c074bb0",
+    "extracted/priestshield/originalCD/functions.tsv": "98d88f10a2f74e469da5008842d6874bcf298ab848e374a2de5c5567f6cc826e",
+    "extracted/priestshield/originals/creation.c": "3261529b0301ad246433085b38f5cd0890db50effacfbf7ea5c7911760e67375",
+    "extracted/priestshield/originals/functions.tsv": "109a0f6e4474c003479b930f5b383ca64796dcb7bf07f1b05f0d5280a7deb932",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/decomp_priestforcefield_oracle.py": "52ca14335984c621215dc2a0ff088187dab242c49a87e546bdd88e6c75385fe9",
+    "tools/decomp_priestshield_oracle.py": "2fa8aa63b2109ae327144dfb51559ad2127614e7c4a090aac5668ab7395c4e3b",
+    "tools/ghidra/priestshield-functions.json": "c774db4116616515406ca86a3329a78592ab26e6e60261ad977157ad18805a36"
+  },
+  "limits": [
+    "전체 생성 wrapper/실제 보호막 lookup·finder/공통 소유자 지정 정상 반환/ABI/x87/SEH",
+    "자산 생성·가상 Pop·new/SfxProcess·소리 조회/출력·번역/창은 명시 외부 대체",
+    "합성 발자국/해시/raw·소유자 0~8; 실제 보호막 Pop/오디오/전체 사제 postPop/GUI 미완료"
+  ]
+}

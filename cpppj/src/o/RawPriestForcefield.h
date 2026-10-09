@@ -16,6 +16,8 @@ public:
     Sid Find(Sid priest) const;
     // 삭제 준비 연결 시 다른 월드의 풀 혼합을 거부한다.
     const SidPool& Pool() const;
+    // 조회 뒤 생성에 사용할 현재 DWORD 타입 전역을 다시 읽는다.
+    std::uint32_t Type() const;
 private:
     const SidPool& pool_;
     const SquidHash& hash_;

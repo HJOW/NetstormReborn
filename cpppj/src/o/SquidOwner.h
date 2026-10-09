@@ -18,6 +18,8 @@ public:
     // 이전 소유자의 작업장 목록에서 이 번호를 모두 빼고, void·buried가 아니면 새 소유자의 목록 끝에 넣는다(가득 차면 넣지 않는다).
     // 소유자 0은 목록이 없다. 범위 밖 번호는 원본이 assert를 보고한 뒤 하위 바이트를 쓰지만 여기서는 쓰기 전에 거부한다.
     void Set(Sid sid, std::uint32_t player);
+    // 가상 효과 어댑터가 같은 실제 풀의 소유자를 변경하는지 확인한다.
+    const SidPool& Pool() const;
 private:
     SidPool& pool_;
     std::vector<RiftTypeRecord> types_;

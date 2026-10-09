@@ -1,5 +1,7 @@
 # 사제 보호막 조회와 삭제 준비 연결
 
+2026-10-10 후속(`HJOW-Athlon`): [보호막 생성·소리·로컬 안내 요청](cpp-priest-shield-reconstruction.md)을 전체 wrapper/실제 lookup·소유자 지정으로 복원했다. factory/owner·조회/삭제 준비 연결을 검사한다. 보호막의 가상 Pop/destroy·실제 오디오/안내 창 및 사제 postPop 후반 결합은 후속이다. 아래 생성 미복원 표기는 이전 단계의 기록이다.
+
 2026-10-08, 기준 판본 **10.78**. 마지막 디컴파일 수행 PC: **HJOW-Athlon**(IP 192.168.0.94). AGENTS.md·LEFT_JOBS.md·LEFT_JOBS.dotnetpj.md를 읽고 현재 PC와 마지막 디컴파일 PC가 같음을 확인했다. 새 `priestforcefield` 목록을 읽기 전용으로 내보냈다(10.78 **12개**, CD/추가 10.37 각각 **10개**). 정밀 디컴파일은 다시 하지 않았다. 원본 게임/복사본·클론 창 실행·보호 파일/AGENTS.md/dotnetpj 변경·커밋/푸시 없음.
 
 [`RawPriestForcefield`](../../cpppj/src/o/RawPriestForcefield.h)는 사제 보호막 조회의 **좌표 절삭→한 점의 일반 finder→타입/소유자 필터→첫 일치 SID**를 복원한다. 기존 [사제 preDestroy](cpp-priest-destroy-reconstruction.md)의 조회 훅을 `MakePriestForcefieldHooks`로 연결한다. **직접 조회에는 외부 대체가 없다.** 보호막 생성/해제와 가상 삭제·Carrier/Damageable의 파생 효과·일반 사제 Pop/공간 해제·GUI는 후속이다.
