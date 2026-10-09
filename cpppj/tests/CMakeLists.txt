@@ -15,6 +15,7 @@ add_executable(netstorm_tests
     CanonPlacementTests.cpp
     CanonPlacementPreviewTests.cpp
     CanonPlacementCollisionTests.cpp
+    CanonPlacementTerrainTests.cpp
     ConfigOracleTests.cpp
     ConfigInterfaceTests.cpp
     FortTests.cpp
@@ -200,3 +201,6 @@ target_compile_definitions(netstorm_tests PRIVATE
 # 일반 후보의 실제 중간 구간 관찰은 새 검사 소스에서만 읽는다.
 set_source_files_properties(CanonPlacementCollisionTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CANONCOLLISION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/canoncollision-x86.tsv\"")
+# 일반 후보 지형/초기 권한/최종 지면 누적의 독립 원본 구간을 재생한다.
+set_source_files_properties(CanonPlacementTerrainTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CANONTERRAIN_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/canonterrain-x86.tsv\"")

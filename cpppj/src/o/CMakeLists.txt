@@ -54,6 +54,7 @@ target_sources(netstorm PRIVATE
     RawCanonPlacement.cpp RawCanonPlacement.h
     RawCanonPlacementPreview.cpp RawCanonPlacementPreview.h
     RawCanonPlacementCollision.cpp RawCanonPlacementCollision.h
+    RawCanonPlacementTerrain.cpp RawCanonPlacementTerrain.h
     RawPriestPlacement.cpp RawPriestPlacement.h
     RawPriestPlacementPreview.cpp RawPriestPlacementPreview.h
     RawPriestPlacementCollision.cpp RawPriestPlacementCollision.h

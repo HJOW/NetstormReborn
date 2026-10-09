@@ -1,0 +1,92 @@
+{
+  "total": 11220,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-09",
+  "controls": [
+    639,
+    895
+  ],
+  "os_calls": 0,
+  "editions": {
+    "originals": {
+      "cases": 3740,
+      "boundaries": {
+        "B": 56,
+        "C": 6400,
+        "E": 288,
+        "R": 256,
+        "F": 480
+      },
+      "native_calls": {
+        "004ac550": 6400,
+        "0049a840": 7184,
+        "004e49c0": 3200,
+        "0046f4e0": 1856,
+        "004acda0": 784
+      },
+      "assertions": 0
+    },
+    "originalCD": {
+      "cases": 3740,
+      "boundaries": {
+        "B": 56,
+        "C": 6400,
+        "E": 288,
+        "R": 256,
+        "F": 480
+      },
+      "native_calls": {
+        "004abf50": 6400,
+        "004448e0": 3200,
+        "004f161c": 3200,
+        "004bdbf0": 1856,
+        "004acaa0": 784,
+        "004abae0": 784
+      },
+      "assertions": 0
+    },
+    "original1037": {
+      "cases": 3740,
+      "boundaries": {
+        "B": 56,
+        "C": 6400,
+        "E": 288,
+        "R": 256,
+        "F": 480
+      },
+      "native_calls": {
+        "004abf50": 6400,
+        "004448e0": 3200,
+        "004f161c": 3200,
+        "004bdbf0": 1856,
+        "004acaa0": 784,
+        "004abae0": 784
+      },
+      "assertions": 0
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/canonterrain-x86.tsv": "19aaa625b1958e05dbf638893baee30103e5c09a16751bd81671ec7758a7f449",
+    "extracted/canonterrain/original1037/creation.c": "594565f1adffed404c7d8c010e450137392cc4f4444f8cdb248b0e168d4e950d",
+    "extracted/canonterrain/original1037/functions.tsv": "d2992b781fd87b81c98442be01e8db9d453423bf364d6c465550ab2436fe780d",
+    "extracted/canonterrain/originalCD/creation.c": "594565f1adffed404c7d8c010e450137392cc4f4444f8cdb248b0e168d4e950d",
+    "extracted/canonterrain/originalCD/functions.tsv": "d2992b781fd87b81c98442be01e8db9d453423bf364d6c465550ab2436fe780d",
+    "extracted/canonterrain/originals/creation.c": "264953a954b17a7cdb0044a15349f895ab0d0e4900cf77e1b866cb3e5d7867a2",
+    "extracted/canonterrain/originals/functions.tsv": "845c844e5667316c8bb2ab63afc777ff00be06840433a8f95f4ebe4c5c6a3519",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_canonterrain_oracle.py": "8194360847125b9a4db60e78a725c3925b05ece01282640743465972df2c919e",
+    "tools/decomp_damageablepredestroy_oracle.py": "b6bd591b17b886224e81b9d35dc863f12dea570c67aabf8a66280c7361785e75",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/decomp_priestcollision_oracle.py": "5e664ada3df812f949b3ca929a1558542b1c1a0f91a4c6ec35b485c16e32a00a",
+    "tools/ghidra/canonterrain-functions.json": "a94c6dee9af418f0e9b9572d9829f888275320f6ecd336ef224e47a697dca7af"
+  },
+  "limits": [
+    "후보/모양 종료는 중간 구간 지역 변수 입력, finder Next/주변 관계 진입 직전 종료",
+    "지역 조회는 실제 thiscall 정상 반환/ABI/보존 레지스터",
+    "최종 지면/permission 누적 뒤 관계 분기 직전 종료, 전체 반환/관계/MayPlace ABI 검증 아님",
+    "후보 permission=true는 입력으로 공급하여 권한 helper를 우회, 모양 종료는 주변 권한 진입 전 종료",
+    "B는 decoder 직후 초기화 구간이며 지역 배열 유지/그룹10/genus/bridge 초기 permission 관찰"
+  ]
+}
