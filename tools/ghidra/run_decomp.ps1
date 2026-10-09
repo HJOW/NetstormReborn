@@ -11,7 +11,7 @@ param(
     # 분석할 바이너리 경로 (생략하면 판본별 기본 실행 파일)
     [string]$Binary = '',
     # 게임 본체·업데이터·패치 도구의 프로젝트와 출력 디렉터리를 분리한다.
-    [ValidateSet('originals', 'originalCD', 'original1037', 'original1062', 'original1082', 'original1082-launcher', 'original1082v12', 'original1082v12-launcher', 'patch1062')]
+    [ValidateSet('originals', 'originalCD', 'original1037', 'original1037JP', 'original1062', 'original1082', 'original1082-launcher', 'original1082v12', 'original1082v12-launcher', 'patch1062')]
     [string]$Edition = 'originals',
     # Ghidra 설치 폴더 (PREPARE.ps1 기본 설치 위치에서 검색)
     [string]$GhidraDir = ''
@@ -51,6 +51,11 @@ if ($Edition -eq 'original1082v12') {
     $ProjectDir = Join-Path $Root 'extracted\original1037\ghidra'
     $OutDir = Join-Path $Root 'extracted\original1037\decomp'
     if (-not $Binary) { $Binary = 'original1037\netstorm.exe' }
+} elseif ($Edition -eq 'original1037JP') {
+    # 10.37 일본판 CD (Git 제외 디렉터리) — 다른 판본과 프로젝트/출력을 분리한다.
+    $ProjectDir = Join-Path $Root 'extracted\original1037JP\ghidra'
+    $OutDir = Join-Path $Root 'extracted\original1037JP\decomp'
+    if (-not $Binary) { $Binary = 'original1037JP\NetStorm.exe' }
 } elseif ($Edition -eq 'originalCD') {
     $ProjectDir = Join-Path $Root 'extracted\originalCD\ghidra'
     $OutDir = Join-Path $Root 'extracted\originalCD\decomp'

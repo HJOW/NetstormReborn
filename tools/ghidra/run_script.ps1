@@ -13,7 +13,7 @@ param(
     # 스크립트에 넘길 인자 목록
     [string[]]$ScriptArgs = @(),
     # 분석할 판본 (run_decomp.ps1 의 -Edition 과 같다)
-    [ValidateSet('originals', 'originalCD', 'original1037', 'original1062', 'original1082', 'original1082-launcher', 'original1082v12', 'original1082v12-launcher', 'patch1062')]
+    [ValidateSet('originals', 'originalCD', 'original1037', 'original1037JP', 'original1062', 'original1082', 'original1082-launcher', 'original1082v12', 'original1082v12-launcher', 'patch1062')]
     [string]$Edition = 'originals',
     # 정밀 분석 프로젝트(extracted\refined\<판본>\ghidra)를 열지 여부
     [switch]$Refined,
@@ -55,6 +55,10 @@ if ($Edition -eq 'original1082v12') {
     $ProjectName = 'netstorm'
     $Program = 'netstorm.exe'
     $BaseProjectDir = Join-Path $Root 'extracted\original1037\ghidra'
+} elseif ($Edition -eq 'original1037JP') {
+    $ProjectName = 'NetStorm'
+    $Program = 'NetStorm.exe'
+    $BaseProjectDir = Join-Path $Root 'extracted\original1037JP\ghidra'
 } elseif ($Edition -eq 'originalCD') {
     $ProjectName = 'NETSTORM'
     $Program = 'NETSTORM.EXE'

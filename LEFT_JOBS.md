@@ -15,6 +15,17 @@
 
 ---
 
+## 2026-10-09 ✅ 완료: 10.37 일본 유통 CD(original1037JP) 디컴파일 (HJOW-Athlon)
+
+- [x] **보관 정책:** `original1037JP/`는 **Git에 커밋하지 않고(.gitignore) `HJOW-Athlon`과 `HJOW-X3D` 두 PC에만 파일로 보관**한다. 다른 PC에는 폴더가 없다. `tools/compare_original1037jp.py`는 폴더가 없으면 건너뛰고 정상 종료한다. 문서/근거 JSON/스크립트만 Git에 있다.
+- [x] **디컴파일:** `tools/ghidra/run_decomp.ps1 -Edition original1037JP`(`run_script.ps1`도 같은 판본 지원 추가). 별도 프로젝트 `extracted/original1037JP/ghidra/NetStorm.gpr`, 결과 `decomp/NetStorm.c`·`functions.tsv`, **3,711개 함수·실패 0**(Git 제외). 마지막 디컴파일 수행 PC: `HJOW-Athlon`.
+- [x] **핵심 결과:** `original1037JP/NetStorm.exe`는 `originalCD/NETSTORM.EXE`와 **바이트 단위로 동일**(SHA-256 같음)이고, 디컴파일 C 파일도 CD와 SHA까지 같다. `original1037/netstorm.exe`와는 `0x3314c` 한 바이트(`75`↔`eb`)만 다르다. 새 코드 배치/규칙 차이는 없으므로 CD/10.37 비교 해석을 그대로 쓴다. 기준은 10.78 유지.
+- [x] **자료:** 3,402개 파일(약 696MB). `originalCD`와 공통 362개 중 361개 동일(`autorun.inf`만 다름), `netstorm.tarc` 동일. 번들 자료: `directx/` 3,036개, `demos/` AVI 3개(Heavy Gear·Zork GI·Dark Reign), `spart/` 다른 게임 로고 BMP. 상세: [비교 문서](docs/exe/original1037jp-comparison.md), [근거](cpppj/recovery-original1037jp-evidence.json).
+- [x] **판본 성격(사용자 판단):** 일본어 리소스가 없고(영어/독일어 `nsenglishres.dll`·`nsgermanres.dll`, `d/lang.english`) 실행 파일이 CD와 같으므로, **일본에서 유통만 했을 뿐 실제로는 영문판일 가능성이 높다.** 문서의 "일본판"은 폴더/유통 이름이다. 일본어 자료로 쓰지 않는다. 언어 확정은 게임 실행이 필요해 하지 않았다.
+- [x] **보호/범위:** 폴더 3,402개 파일 SHA가 작업 전후 동일(`extracted/original1037JP/protected-before.json`). 게임/설치 프로그램/클론 창은 실행하지 않았다. AGENTS.md·기존 원본·C#·`LEFT_JOBS.dotnetpj.md` 변경과 커밋/푸시는 없다.
+
+---
+
 ## 2026-10-09 ✅ 완료 / ⏭ 부분 인계: 일반 타입 후보 충돌·실제 패턴/finder 연결 (HJOW-Athlon)
 
 - [x] **지침/호스트:** AGENTS.md·두 LEFT_JOBS/내부 문서를 읽고 현재/마지막 PC 일치를 확인했다. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-09.** 새 `canoncollision` 목록 5/4/4개를 읽기 전용으로 내보냈다. 원본 게임/복사본·클론 창 실행·보호 파일/AGENTS.md/dotnetpj 변경·커밋/푸시 없음.
