@@ -55,7 +55,7 @@ public sealed class BitmapFont
     /// <summary>표 하나당 바이트 수 (i32·u32 × 256).</summary>
     private const int TableBytes = 1024;
 
-    /// <summary>글리프 블록 시작. 네 표 끝(36 + 1024 × 4 = 4132)이며 문서의 0x1024 표기보다 4바이트 뒤다 (C++ 구현과 같다).</summary>
+    /// <summary>글리프 블록 시작. 네 표 끝(36 + 1024 × 4 = 4132 = 0x1024)이며 문서/C++ 구현과 같다.</summary>
     private const int PayloadStart = 4132;
 
     /// <summary>글자 높이 (CreateFontA 의 양수 픽셀 높이).</summary>

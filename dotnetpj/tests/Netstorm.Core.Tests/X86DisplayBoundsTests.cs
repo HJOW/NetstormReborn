@@ -96,7 +96,7 @@ public sealed class X86DisplayBoundsTests
         // 유한하지 않거나 32비트에 못 들어가는 좌표는 거부한다.
         Assert.Throws<ArgumentOutOfRangeException>(() => DisplayBounds.Project(float.NaN, DisplayBounds.ScreenScaleX, 0));
         Assert.Throws<ArgumentOutOfRangeException>(() => DisplayBounds.Project(float.PositiveInfinity, DisplayBounds.ScreenScaleX, 0));
-        // 선택 확장: 폭 9 미만이면 양쪽 9, 항상 양쪽 3, 위쪽은 판본별 15·9다. 다시 자르지 않는다.
+        // 선택 확장: 폭 19 미만이면 양쪽 9, 항상 양쪽 3, 위쪽은 판본별 15·9다. 다시 자르지 않는다.
         Assert.Equal(new DisplayRect(-13, -18, 21, 1),
             DisplayBounds.ExpandForSelection(new DisplayRect(-1, -3, 9, 1), DisplayEdition.Patch1078));
         Assert.Equal(new DisplayRect(-13, -12, 21, 1),
@@ -110,5 +110,67 @@ public sealed class X86DisplayBoundsTests
         // 그림자 타입은 프레임 수 + 현재 프레임이다.
         Assert.Equal(7, DisplayBounds.ShadowFrameIndex(DisplayBounds.ShadowFlag1, 5, 2));
         Assert.Equal(2, DisplayBounds.ShadowFrameIndex(0, 5, 2));
+    }
+
+    /// <summary>1배 뷰어의 카메라 이동은 실제 x86 경계 84개의 위치만 옮긴다. 음수 화면 좌표도 다시 반올림하지 않는다.</summary>
+    [Fact]
+    public void ViewBounds_MatchesNativeBoundsBeforeCameraTranslation()
+    {
+        var frames = new List<(short Width, short Height, short HotspotX, short HotspotY)>();
+        int cameraX = 0, cameraY = 0, zoom = 0, count = 0;
+        bool loaded = false;
+        // 원본 관찰의 문맥을 재생하고 실제 1배 표시 행을 비교한다.
+        foreach (string[] row in X86Fixture.Read("display"))
+        {
+            if (row[0] == "Type")
+            {
+                frames.Clear();
+                // 실제 입력 헤더를 읽으며 기대 경계를 구현으로 계산하지 않는다.
+                foreach (string group in row[5].Split(';', StringSplitOptions.RemoveEmptyEntries))
+                {
+                    string[] values = group.Split(',');
+                    frames.Add(((short)X86Fixture.Int(values[0]), (short)X86Fixture.Int(values[1]),
+                        (short)X86Fixture.Int(values[2]), (short)X86Fixture.Int(values[3])));
+                }
+                loaded = row[3] != "0";
+            }
+            else if (row[0] == "View")
+            {
+                cameraX = X86Fixture.Int(row[3]);
+                cameraY = X86Fixture.Int(row[4]);
+                zoom = X86Fixture.Int(row[5]);
+            }
+            else if (row[0] == "Bounds" && loaded && zoom == DisplayBounds.ZoomOne)
+            {
+                var header = frames[X86Fixture.Int(row[1])];
+                float x = X86Fixture.FloatBits(row[2]), y = X86Fixture.FloatBits(row[3]);
+                var native = new DisplayRect(X86Fixture.Int(row[4]), X86Fixture.Int(row[5]),
+                    X86Fixture.Int(row[6]), X86Fixture.Int(row[7]));
+                Assert.Equal(native, DisplayBounds.BoundsInView(header.Width, header.Height, header.HotspotX,
+                    header.HotspotY, x, y, cameraX, cameraY, 0, 0, zoom));
+                // 카메라를 오른쪽/아래로 옮겨 화면 밖 음수 좌표에서도 원본 경계의 단순 이동인지 확인한다.
+                var moved = new DisplayRect(native.Left - 3584, native.Top - 3712, native.Right - 3584, native.Bottom - 3712);
+                Assert.Equal(moved, DisplayBounds.BoundsInView(header.Width, header.Height, header.HotspotX,
+                    header.HotspotY, x, y, cameraX + 4096, cameraY + 4096, 512, 384, zoom));
+                count++;
+            }
+        }
+        Assert.Equal(84, count);
+    }
+
+    /// <summary>화면 왼쪽/위쪽의 한 픽셀 오류와 뷰어의 소수 카메라·확대·범위 보호를 검사한다.</summary>
+    [Fact]
+    public void ViewBounds_PreservesOffscreenProjectionAndViewerScale()
+    {
+        // 원본 투영은 (1604,2200), 카메라/중심 이동 뒤 기준점은 (-1,-25)다.
+        Assert.Equal(new DisplayRect(-4, -22, 14, -12),
+            DisplayBounds.BoundsInView(17, 9, 3, -3, 100.25f, 200, 2117, 2609, 512, 384, DisplayBounds.ZoomOne));
+        // 0.5배 뷰어 확장은 위치와 Q16 치수를 별도로 변환하며 원본 산술 이동을 보존한다.
+        Assert.Equal(new DisplayRect(9, 22, 18, 27),
+            DisplayBounds.BoundsInView(17, 9, 3, -3, 100.25f, 200, 1604.25, 2200.5, 10.25, 20.75, 32768));
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            DisplayBounds.BoundsInView(17, 9, 3, -3, 100.25f, 200, 0, 0, 0, 0, 0));
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            DisplayBounds.BoundsInView(17, 9, 3, -3, 100.25f, 200, double.NaN, 0, 0, 0, DisplayBounds.ZoomOne));
     }
 }

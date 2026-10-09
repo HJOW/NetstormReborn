@@ -68,7 +68,11 @@ internal sealed partial class FortMapViewer
         Vector2 anchor = Screen(IsMobile(entity) ? MobileWorldPixels(entity)
             : WorldPixels(entity.Footprint.AnchorX, entity.Footprint.AnchorY), center) + shift * _zoom;
         // 원본 SHP 경계(00498ff0)의 Squid 헤더로 상자를 구한다. 폭·높이는 +1이다.
-        if (TrySquidFrameBox(type.LoadIndex, frames.Body, anchor, out Rectangle box)) return box;
+        (double worldX, double worldY) = IsMobile(entity) ? _session.VisualCell(entity)
+            : (entity.Footprint.AnchorX, entity.Footprint.AnchorY);
+        if (TrySquidFrameBox(type.LoadIndex, frames.Body,
+            (float)(worldX + shift.X / DisplayBounds.ScreenScaleX),
+            (float)(worldY + shift.Y / DisplayBounds.ScreenScaleY), center, out Rectangle box)) return box;
         // 추가 헤더가 없는 순수 VFX면 기존처럼 VFX 내부 값으로 대신한다.
         ShapeFrame frame = block.Frames[frames.Body];
         // 헤더 값은 (높이, 폭)·(기준점 y, 기준점 x) 순서다.
@@ -79,9 +83,11 @@ internal sealed partial class FortMapViewer
     /// <summary>Squid 추가 헤더의 표시 폭·높이·hotspot으로 그림 상자를 구한다. 헤더가 없으면 false.</summary>
     /// <param name="block">셰이프 블록 번호 (= 타입 로딩 순서)</param>
     /// <param name="frame">프레임 번호</param>
-    /// <param name="anchor">화면 기준점 (이미 카메라·이동량을 반영한 논리 좌표)</param>
+    /// <param name="worldX">기준점 보정을 포함한 월드 x 좌표</param>
+    /// <param name="worldY">기준점 보정을 포함한 월드 y 좌표</param>
+    /// <param name="center">논리 화면 중심</param>
     /// <param name="box">그림 상자</param>
-    private bool TrySquidFrameBox(int block, int frame, Vector2 anchor, out Rectangle box)
+    private bool TrySquidFrameBox(int block, int frame, float worldX, float worldY, Vector2 center, out Rectangle box)
     {
         box = default;
         SquidFrameMetrics metrics;
@@ -96,11 +102,10 @@ internal sealed partial class FortMapViewer
         // 화면 확대율을 Q16으로 바꿔 원본 Scale과 같은 산술 이동을 쓴다.
         int zoom = (int)(_zoom * DisplayBounds.ZoomOne);
         if (zoom <= 0) return false;
-        // 기준 화면 위치는 0 쪽으로 자르고 Q16 hotspot 을 뺀다 (원본 Project 절삭).
-        int x = (int)(anchor.X + 0.5f) - DisplayBounds.Scale(metrics.HotspotX, zoom);
-        int y = (int)(anchor.Y + 0.5f) - DisplayBounds.Scale(metrics.HotspotY, zoom);
-        box = new Rectangle(x, y,
-            DisplayBounds.Scale(metrics.DisplayWidth, zoom) + 1, DisplayBounds.Scale(metrics.DisplayHeight, zoom) + 1);
+        // 독립 x86 대조를 통과한 월드 투영을 카메라 이동 전에 수행한다.
+        DisplayRect bounds = DisplayBounds.BoundsInView(metrics.DisplayWidth, metrics.DisplayHeight,
+            metrics.HotspotX, metrics.HotspotY, worldX, worldY, _camera.X, _camera.Y, center.X, center.Y, zoom);
+        box = new Rectangle(bounds.Left, bounds.Top, bounds.Width, bounds.Height);
         return true;
     }
 

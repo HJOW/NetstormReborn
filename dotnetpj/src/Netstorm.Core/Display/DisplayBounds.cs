@@ -34,7 +34,7 @@ public readonly record struct DisplayRect(int Left, int Top, int Right, int Bott
 /// 화면 좌표는 trunc(x × 16 + 0.5) − 카메라X, trunc(y × 11 + 0.5) − 카메라Y 에서 hotspot 을 뺀다.
 /// 폭·높이는 표시 폭·높이 + 1 이다. 선택 표시는 폭 19 미만이면 양쪽 9, 항상 양쪽 3, 위쪽 여유(패치 15·CD 9)를 더한다.
 /// 그림자 프레임(타입 플래그1 0x40000)은 프레임 수 + 현재 프레임이며 확장을 적용하지 않는다.
-/// 변경 표(dirty)·화면 합성·클릭 판정은 이 계산을 쓰는 쪽에서 한다. 세션·뷰어에는 아직 연결하지 않았다.
+/// 변경 표(dirty)·화면 합성·클릭 판정은 호출자가 처리한다. 뷰어의 선택/체력 상자는 BoundsInView를 쓴다.
 /// 검증은 원본 기계어 기대값 display-x86.tsv 의 Bounds 행으로 한다.
 /// </summary>
 public static class DisplayBounds
@@ -128,6 +128,44 @@ public static class DisplayBounds
         int right = ToCoordinate((long)left + Scale(width, zoom) + 1);
         int bottom = ToCoordinate((long)top + Scale(height, zoom) + 1);
         return new DisplayRect(left, top, right, bottom);
+    }
+
+    /// <summary>
+    /// 클론 뷰어의 카메라 중심·확대율을 반영한 표시 상자다.
+    /// 원본 월드 투영을 먼저 절삭하고 뷰어 이동/확대를 적용한다. 이동 뒤 0.5를 더하면 화면 밖 음수 좌표가 1픽셀 어긋난다.
+    /// 1배·정수 카메라/중심에서는 Bounds의 원본 계산에 중심 이동만 더한 결과와 같다.
+    /// </summary>
+    /// <param name="width">Squid 표시 폭</param>
+    /// <param name="height">Squid 표시 높이</param>
+    /// <param name="hotspotX">Squid hotspot x</param>
+    /// <param name="hotspotY">Squid hotspot y</param>
+    /// <param name="x">기준점 보정을 포함한 월드 x 좌표</param>
+    /// <param name="y">기준점 보정을 포함한 월드 y 좌표</param>
+    /// <param name="cameraX">뷰어 카메라의 원본 픽셀 x 좌표</param>
+    /// <param name="cameraY">뷰어 카메라의 원본 픽셀 y 좌표</param>
+    /// <param name="centerX">논리 화면 중심 x</param>
+    /// <param name="centerY">논리 화면 중심 y</param>
+    /// <param name="zoom">뷰어 확대율 Q16</param>
+    public static DisplayRect BoundsInView(short width, short height, short hotspotX, short hotspotY,
+        float x, float y, double cameraX, double cameraY, double centerX, double centerY, int zoom)
+    {
+        if (zoom <= 0) throw new ArgumentOutOfRangeException(nameof(zoom), "표시 확대율은 양수여야 합니다");
+        double factor = zoom / (double)ZoomOne;
+        int anchorX = ViewCoordinate((Project(x, ScreenScaleX, 0) - cameraX) * factor + centerX);
+        int anchorY = ViewCoordinate((Project(y, ScreenScaleY, 0) - cameraY) * factor + centerY);
+        int left = ToCoordinate((long)anchorX - Scale(hotspotX, zoom));
+        int top = ToCoordinate((long)anchorY - Scale(hotspotY, zoom));
+        return new DisplayRect(left, top, ToCoordinate((long)left + Scale(width, zoom) + 1),
+            ToCoordinate((long)top + Scale(height, zoom) + 1));
+    }
+
+    /// <summary>뷰어에서 변환한 기준점을 범위 확인 후 절삭한다. 원본 투영의 0.5를 다시 더하지 않는다.</summary>
+    /// <param name="value">카메라·중심·확대를 반영한 픽셀 좌표</param>
+    private static int ViewCoordinate(double value)
+    {
+        if (!double.IsFinite(value) || value < int.MinValue || value > int.MaxValue)
+            throw new ArgumentOutOfRangeException(nameof(value), "뷰어 표시 좌표가 범위를 벗어났습니다");
+        return (int)value;
     }
 
     /// <summary>
