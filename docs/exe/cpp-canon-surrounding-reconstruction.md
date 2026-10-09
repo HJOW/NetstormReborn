@@ -2,7 +2,7 @@
 
 2026-10-09, **마지막 디컴파일 수행 PC: `HJOW-Athlon`**. AGENTS.md·두 인계 문서·cpppj 문서를 읽고 현재 호스트와 이전 디컴파일 호스트가 같음을 확인했다. 새 `canonsurrounding` 목록을 읽기 전용으로 내보냈다(10.78 25개·CD/추가 10.37 각각 21개). 원본 게임/복사본·클론 창·OS를 실행하지 않았다. 보호 파일·AGENTS.md·dotnetpj는 변경하지 않았고 커밋/푸시는 하지 않았다.
 
-`RawCanonSurfaceWalk`는 현재 CanonDecoder 모양의 flag 8 표면 지도 순회를, `RawCanonPlacementSurrounding`은 그 반환 표면에서의 주변 권한 누적을 복원한다. 이전의 후보 권한/Player 조회와 연결해 `RawCanonPlacementTerrain::EndShape`의 주변 경계를 실제 구현으로 바꾼다. **최종 표면 관계/특수 지역/최종 거부는 필수 외부 정책이며 전체 MayPlace와 실제 건설 플레이는 아직 미완료**다.
+`RawCanonSurfaceWalk`는 현재 CanonDecoder 모양의 flag 8 표면 지도 순회를, `RawCanonPlacementSurrounding`은 그 반환 표면에서의 주변 권한 누적을 복원한다. 이전의 후보 권한/Player 조회와 연결해 `RawCanonPlacementTerrain::EndShape`의 주변 경계를 실제 구현으로 바꾼다. 이 단계에서는 최종 표면 관계/특수 지역/최종 거부를 필수 외부 정책으로 남겼다. 같은 날 [최종 관계 후속](cpp-canon-relations-reconstruction.md)에서 실제 구현을 연결했다. 전체 MayPlace 원본 독립 대조와 실제 건설 플레이는 후속이다.
 
 ## 함수 대응과 자료
 
@@ -51,6 +51,6 @@ cmake --build cpppj/build --config Release
 ctest --test-dir cpppj/build -C Release --output-on-failure
 ```
 
-다음은 **최종 표면 소유 관계·특수 지역·최종 거부**와 별도 Player 추가 목록의 생성/삭제/공간 수명이다. 이후 사제 Pop·보호막 생성/회복 예약·Carrier 상태 검사, raw GUI·건설·경제·전투·승패로 이어 간다. 실제 자산 전수/장시간 변이·최대 지도·창/픽셀 회귀는 계속 [LEFT_JOBS.md](../../LEFT_JOBS.md)에 인계한다.
+**최종 표면 소유 관계·특수 지역·최종 거부는 [후속 단계](cpp-canon-relations-reconstruction.md)에서 완료**했다. 다음은 전체 MayPlace 독립 대조/실제 자산 연결과 별도 Player 추가 목록의 생성/삭제/공간 수명이다. 이후 사제 Pop·보호막 생성/회복 예약·Carrier 상태 검사, raw GUI·건설·경제·전투·승패로 이어 간다. 실제 자산 전수/장시간 변이·최대 지도·창/픽셀 회귀는 계속 [LEFT_JOBS.md](../../LEFT_JOBS.md)에 인계한다.
 
 Release 경고/오류 **0**, CTest 내부 **411개·실패 0**(114.98초), 감사 **60종 모두 통과**. 로그는 `extracted/canonsurrounding-oracle-final.log`, `canonsurrounding-build-final.log`, `canonsurrounding-ctest-final.log`, `canonsurrounding-audits-final.log`다. 기존 fixture/감사 도구는 바꾸지 않았다.

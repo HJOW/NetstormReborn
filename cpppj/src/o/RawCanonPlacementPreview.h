@@ -14,7 +14,7 @@ struct CanonPlacementPreviewState {
 struct CanonPlacementPreviewHooks {
     // CanonDecoder 생성/정수 사각형 조회(00425c20·00425b90 / CD 0041fcf0·004202e0)의 경계다.
     std::function<SquidSearchArea(const CanonPlacementQuery&)> bounds;
-    // 0049b825 이후 / CD 0044550e 이후: 아직 복원하지 않은 실제 충돌/지역 처리다.
+    // 0049b825 이후 / CD 0044550e 이후: 실제 충돌/지역 구현을 연결하는 경계다.
     std::function<bool(const CanonPlacementQuery&,bool)> inspectCollisions;
 };
 class RawCanonPlacementPreview {

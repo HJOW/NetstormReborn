@@ -18,7 +18,7 @@ struct CanonPlacementTerrainHooks {
 };
 class RawCanonPlacementTerrain {
 public:
-    // 지역 SID 지도와 실제 프레임 코드 표를 받으며 미복원 권한/관계 경계 세 개를 필수로 요구한다.
+    // 지역 SID 지도와 실제 프레임 코드 표를 받고 후보/주변 권한·최종 관계 훅을 필수로 요구한다.
     RawCanonPlacementTerrain(const SidPool& pool,std::span<const RiftTypeRecord> types,
         std::span<const PriestPlainCanonType> frames,std::span<const std::uint16_t> islands,
         CanonPlacementTerrainState& state,CanonPlacementTerrainHooks hooks);

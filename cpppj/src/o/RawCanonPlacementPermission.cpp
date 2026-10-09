@@ -26,6 +26,10 @@ RawCanonPlacementPermission::RawCanonPlacementPermission(const SidPool& pool,Can
 bool RawCanonPlacementPermission::Related(std::uint32_t currentOwner,std::uint32_t owner) const {
     if (state_.editor || currentOwner==owner) return true;
     if (!state_.useAlliances) return false;
+    return Alliance(currentOwner,owner);
+}
+// 최종 소유 관계의 직접 DWORD 읽기도 같은 방향/감김/범위 계약을 사용한다.
+bool RawCanonPlacementPermission::Alliance(std::uint32_t currentOwner,std::uint32_t owner) const {
     const std::uint32_t index=currentOwner*9U+owner;
     if (index>=state_.alliances.size()) throw std::out_of_range("배치 권한 관계 표 범위 오류");
     return state_.alliances[index]!=0;

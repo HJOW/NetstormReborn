@@ -19,6 +19,8 @@ public:
     std::uint32_t Surrounding(Sid candidate,std::uint32_t owner) const;
     // 004629e0: 편집기/동일 소유자/방향 동맹을 검사한다. 중립/다른 소유자 허용은 여기 없다.
     bool Related(std::uint32_t currentOwner,std::uint32_t owner) const;
+    // 최종 소유자 거부는 원본처럼 관계 표를 직접 읽으며 편집기/동일 owner/활성 조건을 붙이지 않는다.
+    bool Alliance(std::uint32_t currentOwner,std::uint32_t owner) const;
     // 같은 raw 풀을 사용하는 지형 경계만 연결한다.
     const SidPool& Pool() const;
 private:

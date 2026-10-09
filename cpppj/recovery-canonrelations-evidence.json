@@ -1,0 +1,67 @@
+{
+  "total": 6921,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-09",
+  "controls": [
+    639,
+    895
+  ],
+  "os_calls": 0,
+  "substitutions": 0,
+  "editions": {
+    "originals": {
+      "cases": 2307,
+      "fragments": 4614,
+      "conditions": 3522,
+      "native_calls": {
+        "0040eaf0": 5338,
+        "004e49c0": 10676,
+        "0040ea40": 4994,
+        "004629e0": 1098,
+        "0046f260": 932
+      },
+      "assertions": 0
+    },
+    "originalCD": {
+      "cases": 2307,
+      "fragments": 4614,
+      "conditions": 3522,
+      "native_calls": {
+        "004f161c": 10676
+      },
+      "assertions": 0
+    },
+    "original1037": {
+      "cases": 2307,
+      "fragments": 4614,
+      "conditions": 3522,
+      "native_calls": {
+        "004f161c": 10676
+      },
+      "assertions": 0
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/canonrelations-x86.tsv": "343f5bee5c7ef8914f81757eb48787e8aa90298dd97108ab393c38d47e28c16b",
+    "extracted/canonrelations/original1037/creation.c": "1285f8f8c02246c9b6a1075d353071f451a0f981a307fa7b194067e6cf853ca5",
+    "extracted/canonrelations/original1037/functions.tsv": "3c6e1e50d2d49295fef38be8eba5e399451fee050c112e26d7b51e8035d317d5",
+    "extracted/canonrelations/originalCD/creation.c": "1285f8f8c02246c9b6a1075d353071f451a0f981a307fa7b194067e6cf853ca5",
+    "extracted/canonrelations/originalCD/functions.tsv": "3c6e1e50d2d49295fef38be8eba5e399451fee050c112e26d7b51e8035d317d5",
+    "extracted/canonrelations/originals/creation.c": "1fca7ae0d556b3ca918c333649b6d89901de49fabe05c880d87e85bc96ae83ea",
+    "extracted/canonrelations/originals/functions.tsv": "f7e45e8fa25d6fd52b039b9d0263ba70d239dd3c24c24e2e2620a176fbb3a918",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_canonpermission_oracle.py": "90ba0a01bc7b157905043ffc1f9affa6a51d6eb584aaa916709c73e62ec8ec85",
+    "tools/decomp_canonrelations_oracle.py": "38b67fbb4c30aba86fcc52940aa7a3446ebb9aa49ff8855171e24c5184daf0a3",
+    "tools/decomp_damageablepredestroy_oracle.py": "b6bd591b17b886224e81b9d35dc863f12dea570c67aabf8a66280c7361785e75",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/ghidra/canonrelations-functions.json": "19687286883f1a5c5525095c05ab80d3bd719b300090cdd052d54ef6b5fdd7e1"
+  },
+  "limits": [
+    "최종 구간/실제 성공·실패 에필로그·ESP/ret 24/보존 레지스터/x87 정상 반환",
+    "앞부분 지면/권한/지역/이전 거부만 입력하며 전체 MayPlace/decoder/finder/Player는 실행하지 않음",
+    "패치 표면/포인터 유효/방향 관계/특수 지역 getter 실제 몸체, CD 표면/관계 인라인 실제 명령, 함수 대체 없음",
+    "원본 특수 지역 존재 assert에 닿는 입력 제외, 전체 자산/미션/게임/OS/창 검증 아님"
+  ]
+}

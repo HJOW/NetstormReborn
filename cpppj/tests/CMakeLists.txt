@@ -19,6 +19,7 @@ add_executable(netstorm_tests
     CanonPlacementPermissionTests.cpp
     PlayerPlacementAnchorTests.cpp
     CanonPlacementSurroundingTests.cpp
+    CanonPlacementRelationsTests.cpp
     ConfigOracleTests.cpp
     ConfigInterfaceTests.cpp
     FortTests.cpp
@@ -216,3 +217,6 @@ set_source_files_properties(PlayerPlacementAnchorTests.cpp PROPERTIES COMPILE_DE
 # 모양 표면 finder/주변 권한 구간의 독립 원본 관찰을 해당 검사 소스에서만 읽는다.
 set_source_files_properties(CanonPlacementSurroundingTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CANONSURROUNDING_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/canonsurrounding-x86.tsv\"")
+# 최종 표면 관계/특수 지역/실제 반환 구간의 독립 관찰을 해당 검사 소스에서만 읽는다.
+set_source_files_properties(CanonPlacementRelationsTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CANONRELATIONS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/canonrelations-x86.tsv\"")
