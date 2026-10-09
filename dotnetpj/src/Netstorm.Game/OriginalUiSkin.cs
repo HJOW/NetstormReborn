@@ -20,8 +20,25 @@ internal sealed class OriginalUiSkin : IDisposable
     /// <summary>하위 메뉴(">" 항목)를 펼칠 때 <see cref="MenuItemSound"/> 에 더해 재생하는 효과음 (<c>FUN_00476820</c> 정적 분석, 직접 청취로 확인하지는 않았다).</summary>
     public const string MenuOpenSound = "openGump.wav";
 
-    /// <summary>원본 메뉴의 한 행 높이. 버튼과 펼침 목록의 입력 영역에도 사용한다.</summary>
-    public const int RowHeight = 18;
+    /// <summary>
+    /// 원본 메뉴 목록의 한 행 높이. 펼침 목록·하위 목록·우클릭 메뉴의 입력 영역에도 쓴다.
+    /// 2026-10-10: 18 → 17. 원본 캡처의 옵션·도움말·미션 메뉴·우클릭 메뉴 행 글자가 모두 17픽셀 간격이다.
+    /// </summary>
+    public const int RowHeight = 17;
+    /// <summary>목록의 그룹 사이 구분 구간 높이 (원본 16). 구간 위에서 <see cref="MenuSeparatorLine"/> 만큼 내려간 곳에 두 줄 선을 긋는다.</summary>
+    public const int MenuSeparatorHeight = 16;
+    /// <summary>구분 구간의 위에서 어두운 선까지의 거리 (바로 아래 줄이 밝은 선).</summary>
+    public const int MenuSeparatorLine = 8;
+    /// <summary>목록 왼쪽 끝에서 행 글자까지의 거리.</summary>
+    public const int MenuTextInset = 15;
+    /// <summary>목록 폭이 가장 긴 행의 글자 폭보다 넓은 정도 (왼쪽 15 + 오른쪽 16).</summary>
+    public const int MenuWidthPadding = 31;
+    /// <summary>행 글자 끝에서 하위 목록 화살표(&gt;)까지의 거리.</summary>
+    public const int MenuArrowGap = 4;
+    /// <summary>목록 왼쪽 끝에서 켜짐 표시(파란 원) 중심까지의 거리.</summary>
+    public const int MenuPipInset = 8;
+    /// <summary>창·목록 테두리의 두께 (원본은 밝은 선 2줄·어두운 선 2줄).</summary>
+    public const int FrameThickness = 2;
     /// <summary>원본의 낮은 텍스트 버튼이 그려지는 높이.</summary>
     public const int ButtonHeight = 19;
     /// <summary>
@@ -29,10 +46,29 @@ internal sealed class OriginalUiSkin : IDisposable
     /// 334~353(20px)까지 눌린다 (2026-10-03 경계 스캔). 가로는 그려진 폭(75px)과 같다.
     /// </summary>
     public const int ButtonHitExtraHeight = 1;
-    /// <summary>돌 테두리의 밝은 가장자리 색.</summary>
+    /// <summary>돌 버튼 테두리의 밝은 가장자리 색.</summary>
     private static readonly Color LightEdge = new(191, 178, 139);
-    /// <summary>돌 테두리의 어두운 가장자리 색.</summary>
+    /// <summary>돌 버튼 테두리의 어두운 가장자리 색.</summary>
     private static readonly Color DarkEdge = new(49, 44, 36);
+    /// <summary>
+    /// 원본 UI 의 노란 글자색 (단축키·정보 값·강조 이름). 게임 팔레트 197번 (242, 228, 152).
+    /// 2026-10-10: 원본 캡처의 "Shift-F9"·"You"·"Sun"·미션 제목 글자 색(중앙값 (242, 222, 153))에 가장 가까운 팔레트 색으로 정했다.
+    /// 이전 값 (240, 214, 90) 은 밝게 찍힌 녹화에서 어림한 것이었다.
+    /// </summary>
+    public static readonly Color ValueColor = new(242, 228, 152);
+
+    /// <summary>
+    /// 원본 안내 창의 기울임(&lt;i&gt;) 글자색. 게임 팔레트 96번 (233, 214, 186) — 원본 브리핑 인용문 글자 색(중앙값 (229, 214, 187))에 가장 가깝다.
+    /// 2026-10-10: 이전에는 Wheat (245, 222, 179) 를 썼다.
+    /// </summary>
+    public static readonly Color EmphasisColor = new(233, 214, 186);
+
+    /// <summary>회색 돌 창(안내·확인·우클릭 창) 테두리의 밝은 선 색. 원본 캡처의 테두리 행 평균이다 (캡처가 손실 압축이라 ±10 정도의 오차가 있다).</summary>
+    private static readonly Color PanelLight = new(155, 147, 138);
+    /// <summary>메뉴 돌 바탕(펼침 목록·메뉴 막대·안쪽 판) 테두리와 구분선의 밝은 선 색. 원본 캡처의 테두리 행 평균이다.</summary>
+    private static readonly Color MenuLight = new(199, 185, 165);
+    /// <summary>테두리·구분선의 어두운 선. 바탕 질감을 약 0.61배로 어둡게 한다 (원본 캡처: 창 103 → 65, 메뉴 131 → 80).</summary>
+    private static readonly Color FrameDark = Color.Black * 0.39f;
     private readonly Texture2D _pixel;
     private readonly Dictionary<string, Texture2D> _frames = new(StringComparer.OrdinalIgnoreCase);
     /// <summary>D2Coding(한국어 화면)으로 그릴 때의 본문 줄 높이.</summary>
@@ -142,26 +178,114 @@ internal sealed class OriginalUiSkin : IDisposable
         batch.Draw(_pixel, new Rectangle(area.Right - 1, area.Y, 1, area.Height), dark);
     }
 
-    /// <summary>안내·선택·결과 창에 원본 회색 돌 바탕과 네 금색 모서리를 그린다.</summary>
+    /// <summary>
+    /// 영역 안쪽 가장자리에 2픽셀 테두리를 그린다. 도드라진 테두리는 위·왼쪽이 밝고 아래·오른쪽이 어둡다. 들어간 테두리(<paramref name="inset"/>)는 반대다.
+    /// 밝은 선은 바탕 종류의 색으로, 어두운 선은 바탕을 어둡게 겹쳐 그린다. 창·목록 바탕을 채운 뒤에 부른다.
+    /// </summary>
+    /// <param name="batch">스프라이트 배치</param>
+    /// <param name="area">테두리를 두를 영역 (테두리는 영역 안쪽에 그린다)</param>
+    /// <param name="menu">메뉴 돌 바탕(밝은 쪽) 위인지. 아니면 회색 돌 창 위</param>
+    /// <param name="inset">들어간 모양(위·왼쪽이 어두움)인지 — 우클릭 창의 안쪽 판</param>
+    /// <remarks>
+    /// 2026-10-10 추가: 원본 캡처에서 안내 창·옵션 목록·미션 메뉴·우클릭 창의 테두리가 모두 2줄이었다
+    /// (docs/dotnet-reconstruction-20261010.md 8절). 이전에는 1줄 단색(<see cref="Bevel"/>)이었다.
+    /// </remarks>
+    public void Frame(SpriteBatch batch, Rectangle area, bool menu = false, bool inset = false)
+    {
+        Color light = menu ? MenuLight : PanelLight;
+        Color topLeft = inset ? FrameDark : light;
+        Color bottomRight = inset ? light : FrameDark;
+        const int t = FrameThickness;
+        batch.Draw(_pixel, new Rectangle(area.X, area.Y, area.Width, t), topLeft);
+        batch.Draw(_pixel, new Rectangle(area.X, area.Y + t, t, area.Height - t), topLeft);
+        batch.Draw(_pixel, new Rectangle(area.X + t, area.Bottom - t, area.Width - t, t), bottomRight);
+        batch.Draw(_pixel, new Rectangle(area.Right - t, area.Y + t, t, area.Height - t * 2), bottomRight);
+    }
+
+    /// <summary>안내·선택·결과 창에 원본 회색 돌 바탕과 2픽셀 테두리, 네 금색 모서리를 그린다.</summary>
+    /// <param name="batch">스프라이트 배치</param>
+    /// <param name="area">창 영역</param>
     public void Panel(SpriteBatch batch, Rectangle area)
     {
         Tile(batch, area);
-        Bevel(batch, area);
+        Frame(batch, area);
         DrawFrame(batch, "I00", new Point(area.X, area.Y));
         DrawFrame(batch, "I01", new Point(area.Right - FrameWidth("I01"), area.Y));
         DrawFrame(batch, "I02", new Point(area.Right - FrameWidth("I02"), area.Bottom - FrameHeight("I02")));
         DrawFrame(batch, "I03", new Point(area.X, area.Bottom - FrameHeight("I03")));
     }
 
-    /// <summary>메뉴 바탕을 채우고 원본처럼 얇은 테두리만 붙인다.</summary>
+    /// <summary>메뉴 바탕을 채우고 2픽셀 테두리를 붙인다. 행은 영역의 맨 위부터 놓이며 테두리가 첫 행·끝 행의 가장자리 2픽셀과 겹친다.</summary>
+    /// <param name="batch">스프라이트 배치</param>
+    /// <param name="area">목록 영역</param>
     public void Menu(SpriteBatch batch, Rectangle area)
-    { Tile(batch, area, menu: true); Bevel(batch, area); }
+    { Tile(batch, area, menu: true); Frame(batch, area, menu: true); }
 
-    /// <summary>목록의 그룹 사이에 밝고 어두운 두 선을 붙인다.</summary>
-    public void Separator(SpriteBatch batch, int x, int y, int width)
+    /// <summary>
+    /// 목록의 그룹 사이 구분 구간에 어둡고 밝은 두 줄 선을 긋는다. <paramref name="top"/> 은 구분 구간(높이
+    /// <see cref="MenuSeparatorHeight"/>)의 위쪽이고 선은 거기서 <see cref="MenuSeparatorLine"/> 내려간 곳이다.
+    /// 2026-10-10: 선의 y 를 직접 받던 것을 구간 위쪽을 받도록 바꿨다 (원본 구간 16, 선 +8·+9).
+    /// </summary>
+    /// <param name="batch">스프라이트 배치</param>
+    /// <param name="x">선의 왼쪽 끝</param>
+    /// <param name="top">구분 구간의 위쪽</param>
+    /// <param name="width">선의 길이</param>
+    public void Separator(SpriteBatch batch, int x, int top, int width)
     {
-        batch.Draw(_pixel, new Rectangle(x, y, width, 1), DarkEdge);
-        batch.Draw(_pixel, new Rectangle(x, y + 1, width, 1), LightEdge);
+        batch.Draw(_pixel, new Rectangle(x, top + MenuSeparatorLine, width, 1), FrameDark);
+        batch.Draw(_pixel, new Rectangle(x, top + MenuSeparatorLine + 1, width, 1), MenuLight);
+    }
+
+    /// <summary>
+    /// 목록 행 글자의 폭: 글자 폭에, 하위 목록 화살표가 있으면 화살표 자리(간격 4 + &gt; 폭)를 더한다.
+    /// 목록 폭은 이 값의 최댓값 + <see cref="MenuWidthPadding"/> 이다 (<see cref="MenuWidth"/>).
+    /// </summary>
+    /// <param name="label">행 문구 (화살표 제외, 단축키 표기 포함)</param>
+    /// <param name="arrow">하위 목록 화살표가 붙는지</param>
+    public int MenuLabelWidth(string label, bool arrow = false) =>
+        (int)Math.Ceiling(Body.MeasureString(label).X) + (arrow ? MenuArrowGap + (int)Math.Ceiling(Body.MeasureString(">").X) : 0);
+
+    /// <summary>원본 목록의 폭: 가장 긴 행의 글자 폭 + 31. 예: 옵션 목록 166 = "Edge Scroll in Fullscreen" 135 + 31.</summary>
+    /// <param name="labelWidths">각 행의 <see cref="MenuLabelWidth"/></param>
+    public static int MenuWidth(IEnumerable<int> labelWidths) => labelWidths.DefaultIfEmpty(0).Max() + MenuWidthPadding;
+
+    /// <summary>
+    /// 목록 행의 글자를 놓을 위치. 원본 글꼴은 행 아래에서 2픽셀 띄운 자리(높이 17 인 행이면 위에서 +1, 아이콘이 있는 19 행이면 +3),
+    /// D2Coding 은 행 가운데다. 가로는 목록 왼쪽 끝 + <see cref="MenuTextInset"/>.
+    /// </summary>
+    /// <param name="menuLeft">목록(또는 안쪽 판)의 왼쪽 끝</param>
+    /// <param name="row">행 영역</param>
+    /// <param name="label">행 문구 (D2Coding 의 세로 가운데 정렬에 쓴다)</param>
+    public Vector2 MenuTextPosition(int menuLeft, Rectangle row, string label) => UsesOriginalFonts
+        ? new Vector2(menuLeft + MenuTextInset, row.Bottom - 2 - Body.LineHeight)
+        : new Vector2(menuLeft + MenuTextInset, row.Center.Y - Body.MeasureString(label).Y / 2);
+
+    /// <summary>
+    /// 목록 행 한 줄을 그린다: 문구, 노란 단축키(" - 키"), 하위 목록 화살표. 켜짐 표시와 커서 강조는 호출한 쪽이 그린다.
+    /// </summary>
+    /// <param name="batch">스프라이트 배치</param>
+    /// <param name="menuLeft">목록(또는 안쪽 판)의 왼쪽 끝</param>
+    /// <param name="row">행 영역</param>
+    /// <param name="label">행 문구</param>
+    /// <param name="color">문구 색</param>
+    /// <param name="key">단축키 표기 (없으면 빈 문자열). 문구 뒤에 " - " 를 두고 <paramref name="keyColor"/> 로 쓴다</param>
+    /// <param name="keyColor">단축키 색</param>
+    /// <param name="arrow">하위 목록 화살표를 붙일지</param>
+    /// <returns>그린 글자의 오른쪽 끝 x (뒤에 아이콘을 붙일 때 쓴다)</returns>
+    public float MenuRow(SpriteBatch batch, int menuLeft, Rectangle row, string label, Color color,
+        string key = "", Color? keyColor = null, bool arrow = false)
+    {
+        string head = key.Length > 0 ? label + " - " : label;
+        Vector2 position = MenuTextPosition(menuLeft, row, head + key);
+        Text(batch, Body, head, position, color);
+        float x = position.X + Body.MeasureString(head).X;
+        if (key.Length > 0)
+        {
+            Text(batch, Body, key, new Vector2(x, position.Y), keyColor ?? color);
+            x += Body.MeasureString(key).X;
+        }
+        if (arrow) Text(batch, Body, ">", new Vector2(x + MenuArrowGap, position.Y), color);
+        return x;
     }
 
     /// <summary>

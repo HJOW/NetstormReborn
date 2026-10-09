@@ -19,7 +19,7 @@ internal sealed class HelpWindow : IDisposable
     /// <summary>내부 링크 글자색 (녹화의 연한 청록, 약 176,214,214)</summary>
     private static readonly Color LinkColor = new(176, 214, 214);
     /// <summary>능력치 머리 값의 노란 글자색 (녹화 "Alignment: None" 의 None)</summary>
-    private static readonly Color StatValueColor = new(240, 214, 90);
+    private static readonly Color StatValueColor = OriginalUiSkin.ValueColor;
     /// <summary>스크롤바 홈 색 (녹화 표본 약 48,48,48)</summary>
     private static readonly Color TrackColor = new(48, 48, 48);
     private readonly GraphicsDevice _device;
@@ -312,7 +312,7 @@ internal sealed class HelpWindow : IDisposable
             else
             {
                 bool unsupported = fragment.Link?.StartsWith("cmd:", StringComparison.OrdinalIgnoreCase) == true;
-                Color color = unsupported ? Color.Gray : fragment.Link != null ? LinkColor : fragment.Style == TutorialTextStyle.Emphasis ? Color.Wheat : Color.White;
+                Color color = unsupported ? Color.Gray : fragment.Link != null ? LinkColor : fragment.Style == TutorialTextStyle.Emphasis ? OriginalUiSkin.EmphasisColor : Color.White;
                 OriginalUiSkin.Text(batch, RunFont(fragment.Style), fragment.Text, rect.Location.ToVector2(), color);
             }
         }

@@ -31,29 +31,31 @@ internal enum MissionMenuAction
 /// </summary>
 internal sealed partial class FortMapViewer
 {
-    /// <summary>원본 상단 메뉴 막대 높이에 맞춘 메뉴 높이.</summary>
-    private const int MissionMenuBarHeight = 18;
+    /// <summary>
+    /// 상단 메뉴 막대의 높이. 2026-10-10: 18 → 17 (원본 캡처 screenShots/The War Begins! - In game menu.png 의 막대는 테두리 2줄을 포함해 17줄이다).
+    /// </summary>
+    private const int MissionMenuBarHeight = 17;
 
-    /// <summary>펼침 목록 한 줄 높이 (원본 1024×768 기준 약 17px).</summary>
+    /// <summary>펼침 목록 한 줄 높이 (원본 17).</summary>
     private const int MissionMenuRowHeight = OriginalUiSkin.RowHeight;
 
-    /// <summary>목록 그룹 사이 구분선이 차지하는 높이.</summary>
-    private const int MissionMenuSeparatorHeight = 12;
+    /// <summary>목록 그룹 사이 구분 구간의 높이 (원본 16).</summary>
+    private const int MissionMenuSeparatorHeight = OriginalUiSkin.MenuSeparatorHeight;
 
     /// <summary>원본 게임 왼쪽 패널 다음에서 시작하는 메뉴 막대 x 좌표.</summary>
     private const int MissionMenuLeft = 84;
 
-    /// <summary>Game 펼침 목록의 폭 (녹화 g915: 약 205px).</summary>
-    private const int MissionGameMenuWidth = 205;
+    /// <summary>
+    /// 막대 항목 사이의 간격. 원본은 문구 길이와 관계없이 53픽셀마다 항목을 둔다 (캡처의 View·Options·Players·About 글자 x 142·195·248·301).
+    /// 2026-10-10: 문구 폭에 맞추던 것을 고정 간격으로 바꿨다.
+    /// </summary>
+    private const int MissionTabPitch = 53;
 
-    /// <summary>View 펼침 목록의 폭 (녹화 g3000: 1280 화면에서 약 280px → 1024 기준 224px, 클론 글꼴 폭만큼 여유를 둔다).</summary>
-    private const int MissionViewMenuWidth = 236;
-
-    /// <summary>About 펼침 목록의 폭.</summary>
-    private const int MissionAboutMenuWidth = 170;
+    /// <summary>항목 영역의 왼쪽에서 글자까지의 거리.</summary>
+    private const int MissionTabTextInset = 5;
 
     /// <summary>단축키 글씨 색 (녹화의 노란 키 이름)</summary>
-    private static readonly Color MenuKeyColor = new(240, 214, 90);
+    private static readonly Color MenuKeyColor = OriginalUiSkin.ValueColor;
 
     /// <summary>Esc로 표시한 상단 막대 상태.</summary>
     private bool _missionMenuVisible;
@@ -136,11 +138,15 @@ internal sealed partial class FortMapViewer
     /// <summary>펼침 목록의 화면 영역 (행 높이와 구분선 높이를 더한다).</summary>
     /// <param name="tab">상단 항목 번호</param>
     /// <param name="rows">목록 행</param>
+    /// <remarks>
+    /// 2026-10-10: 원본 캡처의 Game 목록 치수로 바꿨다 — 왼쪽은 항목 영역 + 1(글자가 항목 글자와 같은 x 에서 10 오른쪽),
+    /// 위쪽은 막대 바로 아래, 폭은 가장 긴 행("문구 - 키") + 31(Game 목록 207), 높이는 행 17 × 개수 + 구분 구간 16 × 개수(Game 목록 100).
+    /// </remarks>
     private Rectangle MissionDropdownPanel(int tab, List<MissionMenuRow> rows)
     {
-        int width = tab switch { 0 => MissionGameMenuWidth, 1 => MissionViewMenuWidth, _ => MissionAboutMenuWidth };
-        int height = rows.Count * MissionMenuRowHeight + rows.Count(r => r.SeparatorAfter) * MissionMenuSeparatorHeight + 4;
-        return new Rectangle(MissionTab(tab).X, MissionMenuBarHeight, width, height);
+        int width = OriginalUiSkin.MenuWidth(rows.Select(r => _uiSkin.MenuLabelWidth(r.Key.Length > 0 ? r.Label + " - " + r.Key : r.Label)));
+        int height = rows.Count * MissionMenuRowHeight + rows.Count(r => r.SeparatorAfter) * MissionMenuSeparatorHeight;
+        return new Rectangle(MissionTab(tab).X + 1, MissionMenuBarHeight, width, height);
     }
 
     /// <summary>펼침 목록 행의 화면 영역을 위에서부터 차례로 돌려준다.</summary>
@@ -149,11 +155,11 @@ internal sealed partial class FortMapViewer
     {
         List<MissionMenuRow> rows = MissionMenuRows(tab);
         Rectangle panel = MissionDropdownPanel(tab, rows);
-        int y = panel.Y + 2;
-        // 행마다 같은 높이로 쌓고 구분선 자리를 건너뛴다
+        int y = panel.Y;
+        // 행을 목록 맨 위부터 같은 높이·목록 폭 전체로 쌓고 구분 구간을 건너뛴다
         foreach (MissionMenuRow row in rows)
         {
-            yield return (row, new Rectangle(panel.X + 2, y, panel.Width - 4, MissionMenuRowHeight));
+            yield return (row, new Rectangle(panel.X, y, panel.Width, MissionMenuRowHeight));
             y += MissionMenuRowHeight + (row.SeparatorAfter ? MissionMenuSeparatorHeight : 0);
         }
     }
@@ -245,14 +251,10 @@ internal sealed partial class FortMapViewer
     /// <summary>원본 상단 항목의 표시 문구와 폭 계산을 입력·그리기에서 공유한다.</summary>
     private string[] MissionTabs() => [Ui("게임", "Game"), Ui("보기", "View"), Ui("옵션", "Options"), Ui("플레이어", "Players"), Ui("정보", "About")];
 
-    /// <summary>언어별 실제 글자 폭에 맞춘 상단 항목의 클릭 영역 (녹화 g915 의 항목 간격 약 53px).</summary>
-    private Rectangle MissionTab(int index)
-    {
-        string[] tabs = MissionTabs(); int x = MissionMenuLeft + 5;
-        // 앞 항목의 글자 폭과 여백을 더해 표시 위치와 클릭 영역을 일치시킨다.
-        for (int i = 0; i < index; i++) x += Math.Max(50, (int)_uiSkin.Body.MeasureString(tabs[i]).X + 16);
-        return new(x - 5, 0, Math.Max(50, (int)_uiSkin.Body.MeasureString(tabs[index]).X + 16), MissionMenuBarHeight);
-    }
+    /// <summary>상단 항목의 클릭 영역: 막대 왼쪽부터 53픽셀 간격으로 놓인다. 글자는 영역 왼쪽 + 5 에 쓴다.</summary>
+    /// <param name="index">항목 번호 (0 Game · 1 View · 2 Options · 3 Players · 4 About)</param>
+    private static Rectangle MissionTab(int index) =>
+        new(MissionMenuLeft + index * MissionTabPitch, 0, MissionTabPitch, MissionMenuBarHeight);
 
     /// <summary>상단 돌 메뉴 막대·펼침 목록·떠나기 확인 창을 지도 위에 그린다.</summary>
     private void DrawMissionMenu(SpriteBatch batch, SpriteFontBase font, int width, int height)
@@ -267,7 +269,7 @@ internal sealed partial class FortMapViewer
             {
                 Rectangle tab = MissionTab(i);
                 if (i == _missionDropdown) batch.Draw(_pixel, tab, Color.Black * 0.25f);
-                OriginalUiSkin.Text(batch, font, tabs[i], new Vector2(tab.X + 5, 1), i == 3 ? new Color(185, 180, 166) : Color.White);
+                OriginalUiSkin.Text(batch, font, tabs[i], new Vector2(tab.X + MissionTabTextInset, 1), i == 3 ? new Color(185, 180, 166) : Color.White);
             }
             if (_missionDropdown >= 0)
             {
@@ -278,14 +280,11 @@ internal sealed partial class FortMapViewer
                 foreach ((MissionMenuRow row, Rectangle bounds) in MissionDropdownLayout(_missionDropdown))
                 {
                     if (row.Enabled && bounds.Contains(_previousMouse.Position)) batch.Draw(_pixel, bounds, Color.Black * 0.25f);
-                    if (row.Check == true) _uiSkin.Pip(batch, new Point(bounds.X + 6, bounds.Center.Y), true);
+                    if (row.Check == true) _uiSkin.Pip(batch, new Point(bounds.X + OriginalUiSkin.MenuPipInset, bounds.Y + MissionMenuRowHeight / 2), true);
                     Color textColor = row.Enabled ? Color.White : new Color(185, 180, 166);
-                    var position = new Vector2(bounds.X + 14, bounds.Center.Y - font.MeasureString(row.Label).Y / 2);
-                    string label = row.Key.Length > 0 ? row.Label + " - " : row.Label;
-                    OriginalUiSkin.Text(batch, font, label, position, textColor);
-                    if (row.Key.Length > 0)
-                        OriginalUiSkin.Text(batch, font, row.Key, position + new Vector2(font.MeasureString(label).X, 0), row.Enabled ? MenuKeyColor : textColor);
-                    if (row.SeparatorAfter) _uiSkin.Separator(batch, panel.X + 1, bounds.Bottom + MissionMenuSeparatorHeight / 2 - 1, panel.Width - 2);
+                    _uiSkin.MenuRow(batch, panel.X, bounds, row.Label, textColor, row.Key, row.Enabled ? MenuKeyColor : textColor);
+                    if (row.SeparatorAfter)
+                        _uiSkin.Separator(batch, panel.X + OriginalUiSkin.FrameThickness, bounds.Bottom, panel.Width - OriginalUiSkin.FrameThickness * 2);
                 }
             }
         }

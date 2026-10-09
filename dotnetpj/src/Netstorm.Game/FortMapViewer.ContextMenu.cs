@@ -22,26 +22,43 @@ internal sealed partial class FortMapViewer
     /// <summary>정보 창의 최대 폭</summary>
     private const int ContextMaximumWidth = 380;
 
+    // 아래 치수는 2026-10-10 에 원본 캡처 두 장(screenShots/The War Begins! - Sun Workshop·High Priest Context Menu.png)의
+    // 글자 위치와 테두리 줄로 다시 쟀다 (이전 값은 125% 녹화에서 어림한 12·22·10·14·8·14). docs/dotnet-reconstruction-20261010.md 8절.
+
     /// <summary>창 왼쪽 끝에서 제목·정보 글자까지의 여백</summary>
     private const int ContextTextInset = 16;
 
-    /// <summary>창 위쪽 끝에서 제목까지의 여백</summary>
-    private const int ContextTopInset = 12;
+    /// <summary>창 위쪽 끝에서 제목까지의 여백 (원본 16)</summary>
+    private const int ContextTopInset = 16;
 
-    /// <summary>제목 줄 높이</summary>
-    private const int ContextTitleHeight = 22;
+    /// <summary>제목 줄 높이: 제목 위쪽에서 첫 정보 줄(없으면 안쪽 판 여백 시작)까지 (원본 21)</summary>
+    private const int ContextTitleHeight = 21;
 
-    /// <summary>정보 줄 높이 (녹화 약 15px)</summary>
+    /// <summary>정보 줄 높이 (원본 15)</summary>
     private const int ContextInfoHeight = 15;
 
-    /// <summary>정보 줄과 안쪽 판 사이 간격</summary>
-    private const int ContextGroupGap = 10;
+    /// <summary>정보 줄과 안쪽 판 사이 간격 (원본 16). 정보 줄이 없는 창은 15 다 (<see cref="ContextInnerOffset"/>).</summary>
+    private const int ContextGroupGap = 16;
 
-    /// <summary>안쪽 판의 좌우 여백</summary>
-    private const int ContextInnerInset = 14;
+    /// <summary>
+    /// 창 위쪽에서 안쪽 판(명령 줄)까지의 거리: 위 여백 16 + 제목 21 + 정보 줄 15 × 개수 + 간격.
+    /// 원본 캡처의 값은 정보 줄 3개 98, 1개 68, 0개 52 — 정보 줄이 없으면 간격이 15 다.
+    /// </summary>
+    /// <param name="infoCount">정보 줄 수</param>
+    private static int ContextInnerOffset(int infoCount) =>
+        ContextTopInset + ContextTitleHeight + infoCount * ContextInfoHeight + (infoCount == 0 ? ContextGroupGap - 1 : ContextGroupGap);
 
-    /// <summary>명령 줄 높이 (녹화 약 17px)</summary>
-    private const int ContextRowHeight = 17;
+    /// <summary>안쪽 판의 좌우 여백 (원본 16)</summary>
+    private const int ContextInnerInset = 16;
+
+    /// <summary>명령 줄 높이 (원본 17)</summary>
+    private const int ContextRowHeight = OriginalUiSkin.RowHeight;
+
+    /// <summary>Storm Power 아이콘이 붙는 명령 줄의 높이 (원본 19: "Upgrade costs 800"·"Salvage gains 200"·"Build … for 500" 줄)</summary>
+    private const int ContextIconRowHeight = 19;
+
+    /// <summary>하위 창이 부모의 안쪽 판 오른쪽 끝에서 왼쪽으로 겹치는 폭 (원본: 하위 창 왼쪽 = 부모 안쪽 판 오른쪽 끝 − 16)</summary>
+    private const int ContextSubmenuOverlap = 16;
 
     /// <summary>TEST02의 최종 건설 항목 줄 간격 (Sun·Wind·Rain·Thunder 워크샵은 21px 간격).</summary>
     private const int ConstructionRowHeight = 21;
@@ -52,14 +69,17 @@ internal sealed partial class FortMapViewer
     /// <summary>제목 없는 최종 건설 목록의 안쪽 여백.</summary>
     private const int ConstructionListInset = 3;
 
-    /// <summary>명령 그룹 사이 구분선 자리 높이</summary>
-    private const int ContextSeparatorHeight = 8;
+    /// <summary>명령 그룹 사이 구분 구간 높이 (원본 16)</summary>
+    private const int ContextSeparatorHeight = OriginalUiSkin.MenuSeparatorHeight;
 
-    /// <summary>창 아래쪽 여백</summary>
-    private const int ContextBottomInset = 14;
+    /// <summary>제목 없는 최종 건설 목록의 구분선 자리 높이 (TEST02 관찰 값 그대로)</summary>
+    private const int CompactSeparatorHeight = 8;
+
+    /// <summary>창 아래쪽 여백 (원본 16)</summary>
+    private const int ContextBottomInset = 16;
 
     /// <summary>정보 값·강조 글자의 노란색 (녹화의 You·Sun·High Priest 등)</summary>
-    private static readonly Color ContextValueColor = new(240, 214, 90);
+    private static readonly Color ContextValueColor = OriginalUiSkin.ValueColor;
 
     /// <summary>Storm Power 가 모자랄 때의 원본 빨간 경고 글자색</summary>
     private static readonly Color ContextWarningColor = new(255, 72, 56);
@@ -91,7 +111,13 @@ internal sealed partial class FortMapViewer
     /// <param name="Enabled">고를 수 있는지</param>
     /// <param name="Accent">노란 글자로 쓸지 (Current Production 항목)</param>
     /// <param name="ElementIcon">최종 건설 목록 앞의 밝은 mana 그림 번호. -1이면 아이콘 없음.</param>
-    private sealed record ContextCommand(string Label, Action? Action, string Highlight = "", bool StormIcon = false, bool Enabled = true, bool Accent = false, int ElementIcon = -1);
+    /// <param name="Opens">이 줄이 여는 하위 창 이름 (없으면 null). 하위 창을 이 줄 높이에 맞춰 놓는 데 쓴다.</param>
+    private sealed record ContextCommand(string Label, Action? Action, string Highlight = "", bool StormIcon = false, bool Enabled = true, bool Accent = false, int ElementIcon = -1, string? Opens = null);
+
+    /// <summary>명령 문구 끝의 하위 창 표시(" >")를 떼어 문구와 화살표 여부로 나눈다. 화살표는 문구 끝 + 4 에 따로 그린다.</summary>
+    /// <param name="label">명령 문구</param>
+    private static (string Text, bool Arrow) SplitArrow(string label) =>
+        label.EndsWith(" >", StringComparison.Ordinal) ? (label[..^2], true) : (label, false);
 
     /// <summary>창 하나 (부모 또는 하위 창)의 내용과 화면 영역</summary>
     /// <param name="Title">큰 제목</param>
@@ -188,7 +214,7 @@ internal sealed partial class FortMapViewer
         }
         if (own && _contextEntity!.Kind == ObjectKind.Priest)
         {
-            groups.Add([new(Ui("건설", "Construct") + " >", () => OpenContextSubmenu("construct")),
+            groups.Add([new(Ui("건설", "Construct") + " >", () => OpenContextSubmenu("construct"), Opens: "construct"),
                 new(Ui("NetStorm 지식 보기", "View Netstorm Knowledge"), () => { CloseContextMenu(); OpenKnowledge(); })]);
         }
         if (own && _contextEntity is { Kind: ObjectKind.Transport } transport && transport.CarriedPriestId != 0)
@@ -202,8 +228,8 @@ internal sealed partial class FortMapViewer
         {
             GameEntity workshop = _contextEntity;
             int cost = BattleSession.WorkshopUpgradeCostFor(workshop.Type.Definition);
-            groups.Add([new(Ui("현재 생산 보기", "View Current Production") + " >", () => OpenContextSubmenu("production")),
-                new(Ui("지식을 생산에 등록", "Put Knowledge into Production") + " >", () => OpenContextSubmenu("knowledge")),
+            groups.Add([new(Ui("현재 생산 보기", "View Current Production") + " >", () => OpenContextSubmenu("production"), Opens: "production"),
+                new(Ui("지식을 생산에 등록", "Put Knowledge into Production") + " >", () => OpenContextSubmenu("knowledge"), Opens: "knowledge"),
                 new(Ui($"업그레이드 비용 {cost}", $"Upgrade costs {cost}"), () => { SubmitCommand(new UpgradeWorkshopCommand(TestPlayer, workshop.Id)); CloseContextMenu(); }, StormIcon: true)]);
         }
         if (own && _contextEntity!.Kind is not (ObjectKind.Priest or ObjectKind.Geyser))
@@ -221,8 +247,7 @@ internal sealed partial class FortMapViewer
         Point parentPoint = _contextPoint;
         bool priestMenu = _contextEntity?.Kind == ObjectKind.Priest;
         if (priestMenu)
-            parentPoint.Y += 21 - (ContextTopInset + ContextTitleHeight + infos.Count * ContextInfoHeight
-                + ContextGroupGap + 3 + ContextRowHeight / 2);
+            parentPoint.Y += 21 - (ContextInnerOffset(infos.Count) + ContextRowHeight / 2);
         ContextPanel parent = LayoutContextPanel(title, infos, groups, parentPoint, width, height);
         if (_contextSubmenu == null) return;
         var childInfos = new List<ContextInfo>();
@@ -239,7 +264,8 @@ internal sealed partial class FortMapViewer
                 new(Ui("워크샵", "Workshop") + " >", () => OpenContextSubmenu("workshops")),
             };
             TypeInfo? altar = _candidates.FirstOrDefault(t => t.Name.Equals("altar", StringComparison.OrdinalIgnoreCase));
-            string altarLevel = RomanLevel(altar?.Definition.GetInt("level") ?? 1);
+            // 원본 문구는 로마 숫자가 아니라 "Build Level 1 Altar for 500" 이다 (screenShots/The War Begins! - High Priest Context Menu.png).
+            string altarLevel = (altar?.Definition.GetInt("level") ?? 1).ToString(System.Globalization.CultureInfo.InvariantCulture);
             if (altar != null) rows.Add(Construct(altar, Ui($"제단 Level {altarLevel} 건설: ", $"Build Level {altarLevel} Altar for ")));
             childGroups.Add(rows);
         }
@@ -270,9 +296,14 @@ internal sealed partial class FortMapViewer
             }
         }
         if (childGroups.All(g => g.Count == 0)) childGroups = [[new(Ui("없음", "None"), null, Enabled: false)]];
-        // 원본처럼 하위 창은 부모 오른쪽에 겹쳐 열고, 화면 끝이면 왼쪽에 연다
-        Point anchor = new(parent.Bounds.Right - 20, parent.Bounds.Y + 10);
-        if (priestMenu) anchor.Y = parent.Bounds.Y + 45;
+        // 원본처럼 하위 창은 부모의 안쪽 판 오른쪽 끝에 16픽셀 겹쳐 열고(화면 끝이면 왼쪽), 하위 창의 첫 명령 줄이 연 줄과 같은 높이에 온다.
+        // (원본 캡처: 사제 Construct → 하위 창 위쪽 = 부모 위쪽 + 45, 워크샵 Put Knowledge → + 47. 둘 다 이 규칙과 맞는다.)
+        string opener = _contextSubmenu is "temples" or "workshops" ? "construct" : _contextSubmenu;
+        ContextRow? openerRow = _contextRows.FirstOrDefault(r => r.Panel == parent.Bounds && r.Command.Opens == opener);
+        // 하위 창의 위쪽은 정보 줄 유무와 관계없이 간격 16 으로 계산한 자리다 (정보 줄이 없는 Construct Building 창은 그래서 첫 줄이 연 줄보다 1픽셀 위에 온다).
+        int childInnerOffset = ContextTopInset + ContextTitleHeight + childInfos.Count * ContextInfoHeight + ContextGroupGap;
+        Point anchor = new(parent.Inner == Rectangle.Empty ? parent.Bounds.Right - 20 : parent.Inner.Right - ContextSubmenuOverlap,
+            openerRow != null ? openerRow.Bounds.Y - childInnerOffset : parent.Bounds.Y + 10);
         ContextPanel child = LayoutContextPanel(childTitle, childInfos, childGroups, anchor, width, height, parent.Bounds);
         if (_contextSubmenu is "temples" or "workshops")
         {
@@ -317,33 +348,53 @@ internal sealed partial class FortMapViewer
         int icon = _uiSkin.FrameWidth("A03") + 4;
         // 제목·정보·명령 가운데 가장 긴 글자에 맞춘다
         float textWidth = Math.Max(_uiSkin.Title.MeasureString(title).X, infos.Count == 0 ? 0 : infos.Max(i => body.MeasureString(i.Label + i.Value).X));
-        float commandWidth = groups.SelectMany(g => g).Select(c => body.MeasureString(c.Label + c.Highlight).X
-            + (c.StormIcon ? icon : 0) + (c.ElementIcon >= 0 ? ConstructionRowHeight : 0)).DefaultIfEmpty(0).Max();
-        int panelWidth = Math.Clamp((int)Math.Max(textWidth + ContextTextInset * 2, commandWidth + ContextInnerInset * 2 + 24), ContextMinimumWidth, ContextMaximumWidth);
         List<List<ContextCommand>> filled = [.. groups.Where(g => g.Count > 0)];
         int rows = filled.Sum(g => g.Count);
-        int innerHeight = rows == 0 ? 0 : rows * rowHeight + (filled.Count - 1) * ContextSeparatorHeight + 6;
-        int panelHeight = compact ? innerHeight : ContextTopInset + ContextTitleHeight + infos.Count * ContextInfoHeight + ContextGroupGap + innerHeight + ContextBottomInset;
+        // 줄 높이: 보통 창은 아이콘이 붙는 줄만 19, 최종 건설 목록은 모든 줄이 넘겨받은 높이다.
+        int RowHeightOf(ContextCommand command) => compact ? rowHeight : command.StormIcon ? ContextIconRowHeight : rowHeight;
+        int panelWidth, innerHeight;
+        if (compact)
+        {
+            float commandWidth = filled.SelectMany(g => g).Select(c => body.MeasureString(c.Label + c.Highlight).X
+                + (c.StormIcon ? icon : 0) + (c.ElementIcon >= 0 ? ConstructionRowHeight : 0)).DefaultIfEmpty(0).Max();
+            panelWidth = Math.Clamp((int)(commandWidth + ContextInnerInset * 2 + 24), ContextMinimumWidth, ContextMaximumWidth);
+            innerHeight = rows == 0 ? 0 : rows * rowHeight + (filled.Count - 1) * CompactSeparatorHeight + 6;
+        }
+        else
+        {
+            // 안쪽 판은 목록과 같은 규칙(가장 긴 줄 + 31)이고 창은 그 양쪽에 16 씩 더한다.
+            int innerWidth = OriginalUiSkin.MenuWidth(filled.SelectMany(g => g).Select(c =>
+            {
+                (string text, bool arrow) = SplitArrow(c.Label);
+                return _uiSkin.MenuLabelWidth(text + c.Highlight, arrow) + (c.StormIcon ? icon : 0);
+            }));
+            panelWidth = Math.Clamp(Math.Max((int)Math.Ceiling(textWidth) + ContextTextInset * 2, innerWidth + ContextInnerInset * 2), ContextMinimumWidth, ContextMaximumWidth);
+            innerHeight = rows == 0 ? 0 : filled.SelectMany(g => g).Sum(RowHeightOf) + (filled.Count - 1) * ContextSeparatorHeight;
+        }
+        int panelHeight = compact ? innerHeight : ContextInnerOffset(infos.Count) + innerHeight + ContextBottomInset;
         int x = anchor.X;
         if (x + panelWidth > width - 2)
             x = !compact && parent is { } owner ? owner.X - panelWidth + 20 : width - panelWidth - 2;
         Rectangle bounds = new(Math.Max(2, x), Math.Clamp(anchor.Y, 2, Math.Max(2, height - panelHeight - 2)), panelWidth, panelHeight);
-        int innerTop = compact ? bounds.Y : bounds.Y + ContextTopInset + ContextTitleHeight + infos.Count * ContextInfoHeight + ContextGroupGap;
+        int innerTop = compact ? bounds.Y : bounds.Y + ContextInnerOffset(infos.Count);
         int inset = compact ? ConstructionListInset : ContextInnerInset;
         Rectangle inner = rows == 0 ? Rectangle.Empty : new(bounds.X + inset, innerTop, bounds.Width - inset * 2, innerHeight);
         var panel = new ContextPanel(title, infos, filled, bounds, inner, compact, rowHeight);
         _contextPanels.Add(panel);
-        int y = inner.Y + 3;
+        // 보통 창의 줄은 안쪽 판 맨 위부터 판 폭 전체로 놓인다 (테두리가 첫 줄·끝 줄과 겹친다). 최종 건설 목록은 3 내려서 2 들여 놓는다.
+        int y = compact ? inner.Y + 3 : inner.Y;
         // 그룹 순서대로 명령 줄을 쌓고 그룹 사이에는 구분선 자리를 둔다
         foreach (List<ContextCommand> group in filled)
         {
-            // 한 그룹 안의 명령 줄을 같은 높이로 쌓는다
+            // 한 그룹 안의 명령 줄을 차례로 쌓는다
             foreach (ContextCommand command in group)
             {
-                _contextRows.Add(new(new(inner.X + 2, y, inner.Width - 4, rowHeight), command, bounds, parent != null));
-                y += rowHeight;
+                int rowTall = RowHeightOf(command);
+                Rectangle row = compact ? new(inner.X + 2, y, inner.Width - 4, rowTall) : new(inner.X, y, inner.Width, rowTall);
+                _contextRows.Add(new(row, command, bounds, parent != null));
+                y += rowTall;
             }
-            y += ContextSeparatorHeight;
+            y += compact ? CompactSeparatorHeight : ContextSeparatorHeight;
         }
         return panel;
     }
@@ -389,15 +440,26 @@ internal sealed partial class FortMapViewer
                 y += ContextInfoHeight;
             }
             if (panel.Inner == Rectangle.Empty) continue;
-            batch.Draw(_pixel, panel.Inner, Color.White * 0.13f);
-            _uiSkin.Bevel(batch, panel.Inner);
-            // 그룹 사이(마지막 그룹 제외)에 구분선을 긋는다
-            int lineY = panel.Inner.Y + 3;
+            if (panel.Compact)
+            {
+                batch.Draw(_pixel, panel.Inner, Color.White * 0.13f);
+                _uiSkin.Bevel(batch, panel.Inner);
+            }
+            else
+            {
+                // 안쪽 판은 메뉴 돌 바탕에 들어간 2픽셀 테두리다 (원본 캡처: 위·왼쪽 어두운 선, 아래·오른쪽 밝은 선).
+                _uiSkin.Tile(batch, panel.Inner, menu: true);
+                _uiSkin.Frame(batch, panel.Inner, menu: true, inset: true);
+            }
+            // 그룹 사이(마지막 그룹 제외)에 구분선을 긋는다. 그룹의 마지막 줄 아래가 구분 구간의 위쪽이다.
+            ContextRow[] panelRows = [.. _contextRows.Where(r => r.Panel == panel.Bounds)];
+            int index = 0;
             for (int group = 0; group < panel.Groups.Count - 1; group++)
             {
-                lineY += panel.Groups[group].Count * panel.RowHeight;
-                _uiSkin.Separator(batch, panel.Inner.X + 1, lineY + ContextSeparatorHeight / 2 - 1, panel.Inner.Width - 2);
-                lineY += ContextSeparatorHeight;
+                index += panel.Groups[group].Count;
+                int top = panelRows[index - 1].Bounds.Bottom;
+                if (panel.Compact) _uiSkin.Separator(batch, panel.Inner.X + 1, top + CompactSeparatorHeight / 2 - 1 - OriginalUiSkin.MenuSeparatorLine, panel.Inner.Width - 2);
+                else _uiSkin.Separator(batch, panel.Inner.X + OriginalUiSkin.FrameThickness, top, panel.Inner.Width - OriginalUiSkin.FrameThickness * 2);
             }
             DrawContextRows(batch, body, panel);
         }
@@ -412,6 +474,23 @@ internal sealed partial class FortMapViewer
             ContextCommand command = row.Command;
             if (command.Enabled && command.Action != null && row.Bounds.Contains(_previousMouse.Position)) batch.Draw(_pixel, row.Bounds, Color.Black * 0.25f);
             Color color = !command.Enabled ? ContextDisabledColor : command.Accent ? ContextValueColor : Color.White;
+            if (!panel.Compact)
+            {
+                // 보통 창의 줄: 글자는 안쪽 판 왼쪽 + 15, 줄 아래에서 2 띄운 자리. 강조 이름·화살표·Storm Power 아이콘이 뒤에 붙는다.
+                (string text, bool arrow) = SplitArrow(command.Label);
+                Vector2 at = _uiSkin.MenuTextPosition(panel.Inner.X, row.Bounds, text + command.Highlight);
+                OriginalUiSkin.Text(batch, body, text, at, color);
+                float end = at.X + body.MeasureString(text).X;
+                if (command.Highlight.Length > 0)
+                {
+                    OriginalUiSkin.Text(batch, body, command.Highlight, new Vector2(end, at.Y), ContextValueColor);
+                    end += body.MeasureString(command.Highlight).X;
+                }
+                if (arrow) OriginalUiSkin.Text(batch, body, ">", new Vector2(end + OriginalUiSkin.MenuArrowGap, at.Y), color);
+                if (command.StormIcon)
+                    _uiSkin.DrawFrame(batch, "A03", new Point((int)end + 3, row.Bounds.Y + 1));
+                continue;
+            }
             var position = new Vector2(row.Bounds.X + 10, row.Bounds.Y + 1);
             if (command.ElementIcon >= 0 && _knowledgeTypes.Find("mana") is { } mana)
             {

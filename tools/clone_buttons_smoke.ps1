@@ -2,6 +2,8 @@
 # 근거: 2026-10-03 원본 메인 메뉴 자동 분석(docs/videos/menu-buttons-20261003.md) — 돌 버튼은 누르는 순간 소리·눌린 모양,
 # 눌린 채 안쪽에서 뗄 때 실행, 메뉴 항목(펼침 목록·목록 행)은 누르는 순간 실행, 호버 표시·키보드 조작 없음.
 # 1024x768 창의 고정 좌표를 쓰므로 창 크기를 바꿔 실행하지 않는다.
+# 2026-10-10: 옵션 목록이 원본처럼 Options 버튼의 가운데 x(551)에서 시작하므로, 목록이 열린 채 버튼을 다시 누르는 검사는
+# 목록에 가려지지 않은 버튼 왼쪽(530,343)을 누른다.
 param([string]$OutputDirectory = 'extracted/screens/buttons-smoke-20261004')
 $ErrorActionPreference = 'Stop'
 # 저장소 루트와 결과 폴더
@@ -52,7 +54,7 @@ down 620,409; wait 3; assert main; assert-detail audio-last=openSubGump.wav; ass
 click 551,343; wait 6; assert options; assert-detail audio-buttons=16;
 down 900,550; wait 3; assert main; up; wait 6; assert main; assert-detail audio-buttons=16;
 click 551,343; wait 6; assert options; assert-detail audio-buttons=17;
-down 551,343; wait 3; assert main; assert-detail pressed=none; up; wait 6; assert main; assert-detail audio-buttons=17;
+down 530,343; wait 3; assert main; assert-detail pressed=none; up; wait 6; assert main; assert-detail audio-buttons=17;
 click 393,320; wait 6; assert campaigns; assert-detail audio-buttons=18;
 down 512,415; wait 3; assert missions; assert-detail audio-last=openSubGump.wav; assert-detail audio-buttons=18; up; wait 6; assert missions;
 quit;

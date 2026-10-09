@@ -101,8 +101,44 @@ public sealed class TutorialDialogScript
     /// </summary>
     private static readonly Regex PictureMark = new(@"(~\[I[A-Za-z0-9_]+[.,][A-Za-z0-9*]+\])", RegexOptions.Compiled);
 
-    /// <summary>원본 줄바꿈·연속 공백을 한 칸으로 바꾸는 정규식.</summary>
+    /// <summary>
+    /// 공백 문자가 이어진 구간을 찾는 정규식. 줄바꿈·탭이 낀 구간은 한 칸으로 바꾸고, 빈칸만 이어진 구간은 개수를 그대로 둔다
+    /// (<see cref="NormalizeSpaces"/>).
+    /// </summary>
     private static readonly Regex Whitespace = new(@"\s+", RegexOptions.Compiled);
+
+    /// <summary>
+    /// 본문의 공백을 원본 표시와 같게 정리한다: 줄바꿈이나 탭이 낀 공백 구간은 빈칸 하나, 빈칸만 이어진 구간은 그대로.
+    /// 원본 브리핑은 "holy man!  Now" 처럼 문장 사이 두 칸을 그대로 그리고, 줄 끝의 "Darkness \r\nare" 는 한 칸으로 그린다
+    /// (원본 캡처 screenShots/The War Begins! - Briefing.png 의 줄 폭으로 확인).
+    /// </summary>
+    /// <param name="source">태그 사이의 원문 조각</param>
+    /// <remarks>2026-10-10 수정: 이전에는 모든 공백 구간을 한 칸으로 줄였다.</remarks>
+    private static string NormalizeSpaces(string source) =>
+        Whitespace.Replace(source, match => match.Value.All(c => c == ' ') ? match.Value : " ");
+
+    /// <summary>
+    /// 글자 모양을 바꾸는 제어 표시를 찾는 정규식: <c>~w</c>·<c>~i</c>·<c>~y</c>·<c>~r</c>·<c>~o</c>(색), <c>~B</c>·<c>~E</c>(굵기 등),
+    /// <c>~.</c>(되돌림), <c>~숫자</c>, <c>~[…]</c>. 도움말(<see cref="HelpDocument"/>)과 같은 모양이다.
+    /// 글 사이 그림 <c>~[I타입.프레임]</c> 은 <see cref="PictureMark"/> 가 먼저 떼어 내므로 여기 오지 않는다.
+    /// </summary>
+    private static readonly Regex ControlMark = new(@"~(?:\[[^\]]*\]|[A-Za-z.]|[0-9]+)", RegexOptions.Compiled);
+
+    /// <summary>제어 표시를 지우는 동안 글자 '~' 하나(<c>~~</c>)를 잠시 바꿔 둘 자리 표시 문자.</summary>
+    private const char TildePlaceholder = '\u0001';
+
+    /// <summary>
+    /// 글자 제어 표시를 지우고 <c>~~</c> 는 글자 '~' 하나로 바꾼다. 화면에 "~wCampaign" 처럼 표시가 그대로 보이지 않게 한다
+    /// (설정의 <c>{H2}</c>·<c>{Text}</c> 가 <c>~w</c>, <c>{CText}</c> 가 <c>~i</c> 로 치환된다).
+    /// </summary>
+    /// <param name="source">태그 사이의 원문 조각 또는 제목</param>
+    /// <remarks>
+    /// 2026-10-10 추가 (캠페인 선택창 [UCampaign] 의 제목 <c>{H2}Campaign</c> 을 읽기 위해). 표시만 지우며 색·굵기는 아직 반영하지 않는다
+    /// — 남은 일은 LEFT_JOBS.dotnetpj.md 5-6.
+    /// </remarks>
+    private static string StripControls(string source) => source.Contains('~')
+        ? ControlMark.Replace(source.Replace("~~", TildePlaceholder.ToString()), "").Replace(TildePlaceholder, '~')
+        : source;
 
     private readonly MissionScript _script;
     private readonly ConfigStore _settings;
@@ -172,6 +208,14 @@ public sealed class TutorialDialogScript
             return false;
         }
         Current = PrepareContent(section, prepared);
+        if (ConfigHandler != null)
+        {
+            // 원본처럼 섹션을 보여 줄 때 본문의 설정 명령을 실행한다 (승리 창의 미션 완료 표시 등).
+            foreach ((string key, string value) in FindConfigCommands(prepared.Body))
+            {
+                ConfigHandler(key, value);
+            }
+        }
         return true;
     }
 
@@ -256,15 +300,40 @@ public sealed class TutorialDialogScript
         !int.TryParse(argument.Trim(), System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out int value)
         || value == 0;
 
-    /// <summary>조건·변수 치환을 마친 본문에서 제목·버튼·표시용 HTML 구간을 만든다.</summary>
-    private static TutorialDialogContent PrepareContent(string section, PreparedMissionSection prepared)
+    /// <summary>본문 안의 설정 명령 <c>&lt;$Config,키=값&gt;</c> 을 찾는 정규식 (치환을 마친 본문 기준).</summary>
+    private static readonly Regex InlineConfig = new(@"<\$Config\s*,\s*([^=>\s]+)\s*=\s*([^>]*)>",
+        RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+    /// <summary>
+    /// 준비된 섹션 본문에서 설정 명령 <c>&lt;$Config,키=값&gt;</c> 을 나온 순서대로 뽑는다.
+    /// 원본은 섹션을 보여 줄 때 이 명령을 실행해 설정에 값을 적는다 (예: 승리 창의 <c>&lt;$Config,Done{mission.fileName}=1&gt;</c> 이 미션 완료 표시를 남긴다).
+    /// 실행(저장)은 호출한 쪽이 한다 — <see cref="ConfigHandler"/>.
+    /// </summary>
+    /// <param name="body">변수 치환·조건 평가를 마친 본문</param>
+    /// <remarks>2026-10-10 추가: 캠페인 목록의 완료·잠금 표시(Done…)를 원본 스크립트 값으로 읽기 위해 (LEFT_JOBS.dotnetpj.md 5-6).</remarks>
+    public static IReadOnlyList<KeyValuePair<string, string>> FindConfigCommands(string body) =>
+        [.. InlineConfig.Matches(body).Select(match => new KeyValuePair<string, string>(match.Groups[1].Value.Trim(),
+            match.Groups[2].Value.Trim().Trim('"')))];
+
+    /// <summary>
+    /// 섹션을 열 때 그 본문의 설정 명령(키, 값)을 받아 실행할 처리기. 연결하지 않으면 설정 명령은 무시된다.
+    /// </summary>
+    public Action<string, string>? ConfigHandler { get; set; }
+
+    /// <summary>
+    /// 조건·변수 치환을 마친 본문에서 제목·버튼·표시용 HTML 구간을 만든다.
+    /// 캠페인 선택창(<see cref="CampaignMenu"/>)도 같은 해석을 쓴다.
+    /// </summary>
+    /// <param name="section">섹션 이름 (제목이 없을 때의 기본 제목에 쓴다)</param>
+    /// <param name="prepared">준비된 섹션</param>
+    internal static TutorialDialogContent PrepareContent(string section, PreparedMissionSection prepared)
     {
         Match heading = FirstHeading.Match(prepared.Body);
         // 제목 앞에 그림이 있으면(TEST01 의 "~[IsunBalloon.a1]<h2>TEST01</h2>") 원본은 제목을 그림 옆에 이어 쓴다.
         // 그런 본문은 제목을 따로 떼지 않고 본문 흐름에 그대로 둔다.
         bool inlineHeading = heading.Success && PictureMark.IsMatch(prepared.Body[..heading.Index]);
         string title = heading.Success
-            ? WebUtility.HtmlDecode(Tag.Replace(heading.Groups[1].Value, "")).Trim()
+            ? WebUtility.HtmlDecode(StripControls(Tag.Replace(heading.Groups[1].Value, ""))).Trim()
             : $"튜토리얼 {section}";
         string body = heading.Success && !inlineHeading ? prepared.Body.Remove(heading.Index, heading.Length) : prepared.Body;
         body = LineCommand.Replace(body, "");
@@ -382,7 +451,7 @@ public sealed class TutorialDialogScript
         /// <summary>텍스트 조각 하나를 현재 스타일과 줄 간격으로 붙인다.</summary>
         void AppendText(string source)
         {
-            string text = WebUtility.HtmlDecode(Whitespace.Replace(source, " "));
+            string text = WebUtility.HtmlDecode(NormalizeSpaces(StripControls(source)));
             if (text.Trim().Length == 0)
             {
                 return;

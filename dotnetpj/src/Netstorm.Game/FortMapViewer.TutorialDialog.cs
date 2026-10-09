@@ -170,17 +170,42 @@ internal sealed partial class FortMapViewer
     private bool TutorialButtonLocked(TutorialDialogButton button) => _playUi && button.Action.Equals("MissionBegin", StringComparison.OrdinalIgnoreCase)
         && !Netstorm.Core.Rules.CampaignAccess.IsAvailable(button.Argument);
 
-    /// <summary>본문 길이·버튼 폭으로 원본처럼 작은 안내 창을 만들고 화면 안에 둔다.</summary>
+    /// <summary>제목 있는 안내 창에서 창 위쪽부터 본문 첫 줄까지의 거리 (원본 55).</summary>
+    private const int TutorialTitledBodyTop = 55;
+    /// <summary>제목 없는 안내 창에서 창 위쪽부터 본문 첫 줄까지의 거리 (원본 20).</summary>
+    private const int TutorialPlainBodyTop = 20;
+    /// <summary>제목 있는 안내 창의 높이에서 본문 높이를 뺀 값 (원본: 위 55 + 아래 60 = 115).</summary>
+    private const int TutorialTitledChrome = 115;
+    /// <summary>제목 없는 안내 창의 높이에서 본문 높이를 뺀 값 (클론 값. 원본 "다시 도전" 창은 최소 높이 136 에 걸린다).</summary>
+    private const int TutorialPlainChrome = 78;
+
+    /// <summary>안내 창 본문의 좌우 여백: 초기 브리핑(섹션 A.)은 50, 그 밖은 30 (원본 캡처의 제목 x).</summary>
+    /// <param name="content">표시할 안내</param>
+    private static int TutorialPadding(TutorialDialogContent content) => content.Section == "A." ? 50 : 30;
+
+    /// <summary>
+    /// 본문 길이·버튼 폭으로 원본처럼 작은 안내 창을 만들고 화면 안에 둔다.
+    /// 폭은 섹션 종류별 기준 폭(브리핑 등 제목 있는 창 351, 승리 창 375, 제목 없는 창 300)과 버튼·제목 폭 가운데 큰 값이고,
+    /// 높이는 본문 높이 + 위아래 여백이다.
+    /// </summary>
+    /// <param name="width">논리 화면 폭</param>
+    /// <param name="height">논리 화면 높이</param>
+    /// <remarks>
+    /// 2026-10-10: 원본 캡처 세 장으로 다시 쟀다 — 브리핑 351×283(본문 168), 승리 창 375×213(본문 98), 둘 다 제목 (+여백, +20)·본문 +55·
+    /// 버튼 위쪽 = 창 아래 − 35. 이전 값은 350·374·여백 48·본문 +54·높이 +110 이었다. 원본이 폭을 정하는 규칙(스크립트에 폭 지정이 없다)은
+    /// 확인하지 못해 섹션 종류별 기준 폭을 그대로 쓴다. 제목 없는 "다시 도전" 창은 원본이 275×136 인데 클론은 300 이다.
+    /// </remarks>
     private Rectangle TutorialPanel(int width, int height)
     {
         TutorialDialogContent content = LocalizeCampaign(_tutorialDialog!.Current!);
-        int desiredWidth = content.Section is "Succeeded" or "BadTeamDead" ? 374 : TutorialTitle(content).Length == 0 ? 300 : 350;
+        bool titled = TutorialTitle(content).Length > 0;
+        int desiredWidth = content.Section is "Succeeded" or "BadTeamDead" ? 375 : titled ? 351 : 300;
         int buttonsWidth = content.Buttons.Sum(b => TutorialButtonWidth(b)) + (content.Buttons.Count - 1) * 16;
         int panelWidth = Math.Min(width - 32, Math.Max(desiredWidth, Math.Max(buttonsWidth + 48,
             (int)_uiSkin.Title.MeasureString(TutorialTitle(content)).X + 60)));
-        int padding = content.Section == "A." ? 48 : 30;
+        int padding = TutorialPadding(content);
         int bodyHeight = LayoutTutorialText(content.Runs, _uiSkin.Body, panelWidth - padding * 2, _uiSkin.Title).Sum(l => l.Height);
-        int panelHeight = Math.Min(height - 32, Math.Max(136, bodyHeight + (TutorialTitle(content).Length == 0 ? 78 : 110)));
+        int panelHeight = Math.Min(height - 32, Math.Max(136, bodyHeight + (titled ? TutorialTitledChrome : TutorialPlainChrome)));
         int centerX = width / 2 + (_playUi ? 42 : 0);
         return new Rectangle(Math.Clamp(centerX - panelWidth / 2, 16, width - panelWidth - 16), (height - panelHeight) / 2, panelWidth, panelHeight);
     }
@@ -211,7 +236,8 @@ internal sealed partial class FortMapViewer
     {
         var buttons = LocalizeCampaign(_tutorialDialog!.Current!).Buttons;
         int totalWidth = buttons.Sum(TutorialButtonWidth) + (count - 1) * 16;
-        int x = panel.Center.X - totalWidth / 2;
+        // 원본은 남는 폭이 홀수이면 왼쪽을 1픽셀 더 띄운다 (브리핑 351 − 250 → 51, 승리 창 375 − 214 → 81, 다시 도전 창 275 − 214 → 31).
+        int x = panel.X + (panel.Width - totalWidth + 1) / 2;
         // 앞 버튼의 실제 폭을 더해 짧은 문구의 버튼도 가운데에 모인다.
         for (int i = 0; i < index; i++) x += TutorialButtonWidth(buttons[i]) + 16;
         return new Rectangle(x, panel.Bottom - 35, TutorialButtonWidth(buttons[index]), OriginalUiSkin.ButtonHeight);
@@ -227,8 +253,8 @@ internal sealed partial class FortMapViewer
             return;
         }
         Rectangle panel = TutorialPanel(width, height);
-        int padding = content.Section == "A." ? 48 : 30;
-        int top = TutorialTitle(content).Length == 0 ? 22 : 54;
+        int padding = TutorialPadding(content);
+        int top = TutorialTitle(content).Length == 0 ? TutorialPlainBodyTop : TutorialTitledBodyTop;
         var body = new Rectangle(panel.X + padding, panel.Y + top, panel.Width - padding * 2, panel.Height - top - 51);
         IReadOnlyList<TutorialVisualLine> lines = LayoutTutorialText(content.Runs, font, body.Width, _uiSkin.Title);
         int contentHeight = lines.Sum(line => line.Height);
@@ -281,8 +307,8 @@ internal sealed partial class FortMapViewer
     private static Color TutorialColor(TutorialTextStyle style) => style switch
     {
         TutorialTextStyle.Heading => Color.White,
-        TutorialTextStyle.Emphasis => Color.Wheat,
-        TutorialTextStyle.Highlight => Color.Yellow,
+        TutorialTextStyle.Emphasis => OriginalUiSkin.EmphasisColor,
+        TutorialTextStyle.Highlight => OriginalUiSkin.ValueColor,
         _ => Color.White,
     };
 
@@ -301,7 +327,8 @@ internal sealed partial class FortMapViewer
         var lines = new List<TutorialVisualLine>();
         var current = new TutorialVisualLine(TutorialLineHeight);
         float currentWidth = 0;
-        bool spacePending = false;
+        // 다음 단어 앞에 넣을 공백 (없으면 null). 원본처럼 연속 공백의 개수를 그대로 둔다 ("shackles.  Who" 의 두 칸).
+        string? spacePending = null;
         // 문단·줄바꿈을 먼저 처리하고 텍스트와 공백을 순서대로 배치한다.
         foreach (TutorialTextRun run in runs)
         {
@@ -322,7 +349,7 @@ internal sealed partial class FortMapViewer
                     current.Height = Math.Max(current.Height, sprite.Texture.Height + 2);
                     currentWidth += sprite.Texture.Width + TutorialPictureGap;
                 }
-                spacePending = false;
+                spacePending = null;
                 continue;
             }
             SpriteFontBase runFont = run.Style == TutorialTextStyle.Heading && headingFont != null ? headingFont : font;
@@ -331,11 +358,12 @@ internal sealed partial class FortMapViewer
             {
                 if (string.IsNullOrWhiteSpace(token.Value))
                 {
-                    spacePending = true;
+                    // 구간 경계에서 공백이 이어지면 더 긴 쪽 하나만 남긴다.
+                    if (spacePending == null || token.Value.Length > spacePending.Length) spacePending = token.Value;
                     continue;
                 }
                 string word = token.Value;
-                string piece = currentWidth > 0 && spacePending ? " " + word : word;
+                string piece = currentWidth > 0 && spacePending != null ? spacePending + word : word;
                 if (currentWidth > 0 && currentWidth + runFont.MeasureString(piece).X > maxWidth)
                 {
                     FlushLine();
@@ -355,7 +383,7 @@ internal sealed partial class FortMapViewer
                 {
                     AddText(piece, run.Style, runFont);
                 }
-                spacePending = false;
+                spacePending = null;
             }
         }
         FlushLine();
@@ -378,7 +406,7 @@ internal sealed partial class FortMapViewer
             if (current.Spans.Count > 0) lines.Add(current);
             current = new TutorialVisualLine(TutorialLineHeight);
             currentWidth = 0;
-            spacePending = false;
+            spacePending = null;
         }
     }
 

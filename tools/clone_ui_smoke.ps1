@@ -1,4 +1,6 @@
 ﻿# 원본 실행과 OS 입력 없이 클론의 공통 마우스 입력·화면 전환·설정 저장을 검사한다.
+# 옵션 목록 좌표는 2026-10-10 의 원본 치수(화면 중심 기준 목록 왼쪽 +39·위 −90, 행 17, 구분 16, 하위 목록은 부모 오른쪽)에 맞춘 값이다.
+# 음량·해상도 줄은 창 모드로 확인했고, 전체화면 줄(138,-82)은 좌표만 계산해 넣었다 (그날 전체화면 전환은 실행하지 않았다).
 param([string]$OutputDirectory = 'extracted/screens/ui-smoke-20261001')
 $ErrorActionPreference = 'Stop'
 $taskRoot = Split-Path -Parent $PSScriptRoot
@@ -22,14 +24,14 @@ key Escape; assert mission-menu; click 109,8; click 150,77; assert leave; captur
 click-center -82,48; assert main; capture $OutputDirectory/10-return.png;
 click-center -120,-64; assert campaigns; click-center 0,28; assert missions;
 click-center 0,46; assert briefing; capture $OutputDirectory/10a-briefing-1-2.png;
-click-center 83,121; assert battle; wait 90; capture $OutputDirectory/10b-battle-1-2.png;
+click-center 83,131; assert battle; wait 90; capture $OutputDirectory/10b-battle-1-2.png;
 key Escape; assert mission-menu; click 109,8; click 150,77; assert leave; click-center -82,48; assert main;
 click-center 38,-42; assert options; capture $OutputDirectory/11-options.png;
-click-center 148,44; capture $OutputDirectory/12-volume.png; click-center 238,107; assert main;
-click-center 38,-42; click-center 148,63; click-center 238,99; assert main;
-click-center 38,-42; click-center 108,-58; capture $OutputDirectory/13-resolutions.png; click-center 278,-4; assert main; wait 45; capture $OutputDirectory/14-wide.png;
-click-center 38,-42; click-center 110,-79; assert main; wait 45; capture $OutputDirectory/15-fullscreen.png;
-click-center 38,-42; click-center 110,-79; assert main; wait 45; capture $OutputDirectory/16-windowed.png;
+click-center 138,36; capture $OutputDirectory/12-volume.png; click-center 256,87; assert main;
+click-center 38,-42; click-center 138,53; click-center 256,87; assert main;
+click-center 38,-42; click-center 138,-65; capture $OutputDirectory/13-resolutions.png; click-center 256,-14; assert main; wait 45; capture $OutputDirectory/14-wide.png;
+click-center 38,-42; click-center 138,-82; assert main; wait 45; capture $OutputDirectory/15-fullscreen.png;
+click-center 38,-42; click-center 138,-82; assert main; wait 45; capture $OutputDirectory/16-windowed.png;
 quit;
 "@
 $taskFile = Join-Path $taskOutput 'commands.txt'

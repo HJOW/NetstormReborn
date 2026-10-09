@@ -31,10 +31,8 @@ internal sealed class MainMenuView : IDisposable
     private const int TipButtonWidth = 84;
     /// <summary>시작 팁 창 버튼 간격 (녹화 약 100px)</summary>
     private const int TipButtonPitch = 100;
-    /// <summary>Help 펼침 목록의 폭 (녹화 g1015: 약 116px)</summary>
-    private const int HelpMenuWidth = 124;
     /// <summary>펼침 목록의 단축키 글자색 (녹화 "General Help - F1" 의 노란 F1)</summary>
-    private static readonly Color MenuKeyColor = new(240, 214, 90);
+    private static readonly Color MenuKeyColor = OriginalUiSkin.ValueColor;
     private readonly Texture2D _pixel;
     private readonly Texture2D? _background;
     private readonly Texture2D? _clouds;
@@ -300,7 +298,7 @@ internal sealed class MainMenuView : IDisposable
     private void ActivateRow(MenuButton row)
     {
         _audio?.PlaySound(OriginalUiSkin.MenuItemSound);
-        if (row.Label.EndsWith(">", StringComparison.Ordinal)) _audio?.PlaySound(OriginalUiSkin.MenuOpenSound);
+        if (row.Arrow) _audio?.PlaySound(OriginalUiSkin.MenuOpenSound);
         row.Action();
     }
 
@@ -339,7 +337,8 @@ internal sealed class MainMenuView : IDisposable
             int[] offsets = [0, 18, 50, 68, 86, 118];
             // 튜토리얼·공식 캠페인·사용자 캠페인 세 그룹을 작은 목록으로 묶는다.
             for (int i = 0; i < labels.Length; i++) Add(new Rectangle(list.X + 2, list.Y + offsets[i] + 1, list.Width - 4, 17), labels[i], i == 2, () => Open("missions"), listRow: true);
-            _separators.Add(list.Y + 42); _separators.Add(list.Y + 110);
+            // 구분선은 구간 위쪽을 넘긴다 (선은 +8 에 그려진다). 이전과 같은 줄(list.Y + 42·+110)에 오도록 맞춘다.
+            _separators.Add(list.Y + 42 - OriginalUiSkin.MenuSeparatorLine); _separators.Add(list.Y + 110 - OriginalUiSkin.MenuSeparatorLine);
         }
         else
         {
@@ -361,67 +360,110 @@ internal sealed class MainMenuView : IDisposable
     /// 원본 Help 버튼의 펼침 목록 (2026-10-01 녹화 g1015): General Help - F1 · Technical Help · Version.
     /// Technical Help 는 원본에서 별도 Windows 도움말 파일을 여는 항목이라 클론에서는 비활성이다.
     /// </summary>
+    /// <remarks>
+    /// 2026-10-10: 위치·폭을 원본 캡처(screenShots/mainMenu - Help.png)에 맞췄다. 목록 왼쪽 = Help 버튼의 가운데 x,
+    /// 위쪽 = 버튼 위쪽, 폭 = 가장 긴 행 + 31, 행 높이 17.
+    /// </remarks>
     private void BuildHelpMenu(int width, int height)
     {
         int cx = width / 2; int cy = height / 2;
-        int x = Math.Clamp(cx - 156 + 3 * MainButtonPitch + 44, 2, width - HelpMenuWidth - 2);
-        var menu = new Rectangle(x, cy - 73, HelpMenuWidth, OriginalUiSkin.RowHeight * 3 + 4); _lists.Add(menu);
-        Add(new Rectangle(x + 2, menu.Y + 2, HelpMenuWidth - 4, OriginalUiSkin.RowHeight), Text("일반 도움말 - ", "General Help - ") + "F1", true, () => { Open(); _help("F1Help"); }, listRow: true);
-        Add(new Rectangle(x + 2, menu.Y + 2 + OriginalUiSkin.RowHeight, HelpMenuWidth - 4, OriginalUiSkin.RowHeight), Text("기술 도움말", "Technical Help"), false, () => { }, listRow: true);
-        Add(new Rectangle(x + 2, menu.Y + 2 + OriginalUiSkin.RowHeight * 2, HelpMenuWidth - 4, OriginalUiSkin.RowHeight), Text("버전", "Version"), true, () => { Open(); _modal = "version"; }, listRow: true);
+        (string Label, string Key, bool Enabled, Action Action)[] rows =
+        [
+            (Text("일반 도움말", "General Help"), "F1", true, () => { Open(); _help("F1Help"); }),
+            (Text("기술 도움말", "Technical Help"), "", false, () => { }),
+            (Text("버전", "Version"), "", true, () => { Open(); _modal = "version"; }),
+        ];
+        int menuWidth = OriginalUiSkin.MenuWidth(rows.Select(r => _skin.MenuLabelWidth(r.Key.Length > 0 ? r.Label + " - " + r.Key : r.Label)));
+        int x = Math.Clamp(cx - 156 + 3 * MainButtonPitch + MainButtonWidth / 2, 2, width - menuWidth - 2);
+        var menu = new Rectangle(x, cy - 73, menuWidth, OriginalUiSkin.RowHeight * rows.Length); _lists.Add(menu);
+        // 행을 목록 맨 위부터 같은 높이로 쌓는다.
+        for (int i = 0; i < rows.Length; i++)
+        {
+            Add(new Rectangle(x, menu.Y + i * OriginalUiSkin.RowHeight, menuWidth, OriginalUiSkin.RowHeight), rows[i].Label, rows[i].Enabled,
+                rows[i].Action, listRow: true, key: rows[i].Key);
+        }
     }
 
-    /// <summary>옵션을 버튼 옆 펼침 목록과 클릭으로 여는 하위 목록에 둔다.</summary>
+    /// <summary>옵션 목록의 한 행 (배치 전에 폭을 재려고 먼저 모은다).</summary>
+    /// <param name="Label">문구</param>
+    /// <param name="Action">고르면 할 일</param>
+    /// <param name="Check">켜짐 표시 (null 이면 표시 없는 명령)</param>
+    /// <param name="Arrow">하위 목록을 여는 행인지</param>
+    /// <param name="Key">단축키 표기 (없으면 빈 문자열)</param>
+    /// <param name="GapAfter">이 행 뒤에 구분 구간이 있는지</param>
+    /// <param name="Submenu">여는 하위 목록 이름 (없으면 null)</param>
+    private sealed record OptionRow(string Label, Action Action, bool? Check = null, bool Arrow = false, string Key = "",
+        bool GapAfter = false, string? Submenu = null);
+
+    /// <summary>
+    /// 옵션을 버튼 옆 펼침 목록과 클릭으로 여는 하위 목록에 둔다. 행은 목록 맨 위부터 17픽셀씩 쌓이고 그룹 사이에 16픽셀 구분 구간이 있다.
+    /// 목록 폭은 가장 긴 행 + 31, 하위 목록은 부모 목록의 오른쪽에 붙고 첫 행이 부모 행과 같은 높이에 온다.
+    /// </summary>
+    /// <param name="width">논리 화면 폭</param>
+    /// <param name="height">논리 화면 높이</param>
+    /// <remarks>
+    /// 2026-10-10: 원본 캡처(screenShots/mainMenu - Options*.png)의 치수로 바꿨다 — 영어 1024×768 에서 목록 (551, 294) 166×269,
+    /// 행 글자 x 566, 하위 목록 x 717. "Pause - Shift-F9" 행을 더했다. 세로 위치(화면 중심 − 90)는 캡처 한 장의 값이며
+    /// 원본이 어떤 규칙으로 정하는지는 확인하지 못했다. 미션 중 목록의 위치는 메뉴 막대의 Options 항목 아래다.
+    /// </remarks>
     private void BuildOptions(int width, int height)
     {
         DisplaySettings s = _display.Settings;
-        int menuWidth = 180;
-        int x = Math.Clamp(OptionsOnly ? 184 : width / 2 + 41, 2, width - menuWidth - 2);
-        int y = OptionsOnly ? 18 : Math.Clamp(height / 2 - 88, 2, height - 258);
-        var menu = new Rectangle(x, y, menuWidth, 256); _lists.Add(menu);
-        int rowY = y + 2;
-        // 입력과 표시를 같은 행에 두고 선택형 항목에는 파란 표시를 붙인다.
-        void Row(string label, Action action, bool enabled = true, bool? check = null)
-        { Add(new Rectangle(x + 2, rowY, menuWidth - 4, OriginalUiSkin.RowHeight), label, enabled, action, listRow: true, check: check); rowY += OriginalUiSkin.RowHeight; }
-        // 원본의 메뉴 그룹 사이에 구분선을 넣는다.
-        void Gap() { _separators.Add(rowY + 3); rowY += 12; }
-        Row(Text("전체화면", "Direct Draw / Full Screen"), () => { _display.SetFullscreen(!s.Fullscreen); Open(); });
-        int resolutionY = rowY;
-        Row(Text("해상도", "Resolution") + " >", () => ToggleSubmenu("resolution"));
-        Gap();
-        Row(Text("효과음", "Sound On"), () => { s.SoundOn = !s.SoundOn; ApplySound(); Open(); }, check: s.SoundOn);
-        Row(Text("음악 재생", "Play Music"), () => { s.PlayMusic = !s.PlayMusic; ApplySound(); Open(); }, check: s.PlayMusic);
-        Row(Text("바람 소리", "Wind Noise"), () => { s.WindNoise = !s.WindNoise; ApplySound(); Open(); }, check: s.WindNoise);
-        Row(Text("스피커 좌우 교환", "Speaker Swap L/R"), () => { s.SpeakerSwap = !s.SpeakerSwap; ApplySound(); Open(); }, check: s.SpeakerSwap);
-        int soundY = rowY;
-        Row(Text("효과음 볼륨", "Sound Effect Volume") + " >", () => ToggleSubmenu("sound"));
-        int musicY = rowY;
-        Row(Text("음악 볼륨", "Music Volume") + " >", () => ToggleSubmenu("music"));
-        Gap();
-        Row(Text("전체화면 가장자리 이동", "Edge Scroll in Fullscreen"), () => { s.EdgeScroll = !s.EdgeScroll; _display.SaveOptions(); Open(); }, check: s.EdgeScroll);
-        // 원본 녹화(00:05~00:38)처럼 세 항목도 켜고 끌 수 있다. 자동 데모 재생·서버 진단은 클론에 없어 값만 저장한다.
-        Row(Text("자동 데모", "Auto-Demo"), () => { s.AutoDemo = !s.AutoDemo; _display.SaveOptions(); Open(); }, check: s.AutoDemo);
-        Row(Text("시작할 때 팁 표시", "Tell Tips at Startup"), () => { s.TellTips = !s.TellTips; _display.SaveOptions(); Open(); }, check: s.TellTips);
-        Gap();
-        Row(Text("서버 진단 통과", "Pass Server Diagnostic"), () => { s.PassServerDiagnostic = !s.PassServerDiagnostic; _display.SaveOptions(); Open(); }, check: s.PassServerDiagnostic);
+        OptionRow[] rows =
+        [
+            new(Text("전체화면", "Direct Draw / Full Screen"), () => { _display.SetFullscreen(!s.Fullscreen); Open(); }),
+            new(Text("해상도", "Resolution"), () => ToggleSubmenu("resolution"), Arrow: true, GapAfter: true, Submenu: "resolution"),
+            new(Text("효과음", "Sound On"), () => { s.SoundOn = !s.SoundOn; ApplySound(); Open(); }, s.SoundOn),
+            new(Text("음악 재생", "Play Music"), () => { s.PlayMusic = !s.PlayMusic; ApplySound(); Open(); }, s.PlayMusic),
+            new(Text("바람 소리", "Wind Noise"), () => { s.WindNoise = !s.WindNoise; ApplySound(); Open(); }, s.WindNoise),
+            new(Text("스피커 좌우 교환", "Speaker Swap L/R"), () => { s.SpeakerSwap = !s.SpeakerSwap; ApplySound(); Open(); }, s.SpeakerSwap),
+            new(Text("효과음 볼륨", "Sound Effect Volume"), () => ToggleSubmenu("sound"), Arrow: true, Submenu: "sound"),
+            new(Text("음악 볼륨", "Music Volume"), () => ToggleSubmenu("music"), Arrow: true, GapAfter: true, Submenu: "music"),
+            new(Text("전체화면 가장자리 이동", "Edge Scroll in Fullscreen"), () => { s.EdgeScroll = !s.EdgeScroll; _display.SaveOptions(); Open(); }, s.EdgeScroll),
+            // 원본 녹화(00:05~00:38)처럼 세 항목도 켜고 끌 수 있다. 자동 데모 재생·서버 진단은 클론에 없어 값만 저장한다.
+            new(Text("자동 데모", "Auto-Demo"), () => { s.AutoDemo = !s.AutoDemo; _display.SaveOptions(); Open(); }, s.AutoDemo),
+            new(Text("시작할 때 팁 표시", "Tell Tips at Startup"), () => { s.TellTips = !s.TellTips; _display.SaveOptions(); Open(); }, s.TellTips),
+            // 원본 옵션 목록의 Pause 행. 미션 중이면 일시정지를 바꾸고 메인 메뉴에서는 아무 일도 하지 않는다.
+            new(Text("일시정지", "Pause"), () => { PauseRequested?.Invoke(); Open(); }, Key: "Shift-F9", GapAfter: true),
+            new(Text("서버 진단 통과", "Pass Server Diagnostic"), () => { s.PassServerDiagnostic = !s.PassServerDiagnostic; _display.SaveOptions(); Open(); }, s.PassServerDiagnostic),
+        ];
+        int menuWidth = OriginalUiSkin.MenuWidth(rows.Select(r => _skin.MenuLabelWidth(r.Key.Length > 0 ? r.Label + " - " + r.Key : r.Label, r.Arrow)));
+        int menuHeight = rows.Length * OriginalUiSkin.RowHeight + rows.Count(r => r.GapAfter) * OriginalUiSkin.MenuSeparatorHeight;
+        int buttonCenter = width / 2 - 156 + 2 * MainButtonPitch + MainButtonWidth / 2;
+        int x = Math.Clamp(OptionsOnly ? MissionOptionsLeft : buttonCenter, 2, Math.Max(2, width - menuWidth - 2));
+        int y = OptionsOnly ? MissionOptionsTop : Math.Clamp(height / 2 - 90, 2, Math.Max(2, height - menuHeight - 2));
+        var menu = new Rectangle(x, y, menuWidth, menuHeight); _lists.Add(menu);
+        int rowY = y;
+        int submenuY = y;
+        // 입력과 표시를 같은 행에 두고 그룹 뒤에는 구분 구간을 둔다.
+        foreach (OptionRow row in rows)
+        {
+            if (row.Submenu != null && row.Submenu == _submenu) submenuY = rowY;
+            Add(new Rectangle(x, rowY, menuWidth, OriginalUiSkin.RowHeight), row.Label, true, row.Action, listRow: true, check: row.Check,
+                key: row.Key, arrow: row.Arrow);
+            rowY += OriginalUiSkin.RowHeight;
+            if (row.GapAfter) { _separators.Add(rowY); rowY += OriginalUiSkin.MenuSeparatorHeight; }
+        }
         if (_submenu == null) return;
-        int subWidth = _submenu == "resolution" ? 130 : 90;
-        int count = _submenu == "resolution" ? Resolutions.Length : 5;
-        int subX = menu.Right - 1;
-        if (subX + subWidth > width - 2) subX = menu.X - subWidth + 1;
-        int subY = _submenu == "resolution" ? resolutionY : _submenu == "sound" ? soundY : musicY;
-        subY = Math.Clamp(subY, 2, height - count * OriginalUiSkin.RowHeight - 4);
-        var sub = new Rectangle(subX, subY, subWidth, count * OriginalUiSkin.RowHeight + 4); _lists.Add(sub);
+        bool resolution = _submenu == "resolution";
+        bool sound = _submenu == "sound";
+        int count = resolution ? Resolutions.Length : 5;
+        // 원본 해상도 표기는 "1024 by 768" 이다. 한국어 화면은 곱셈 기호를 쓴다.
+        string[] labels = [.. Enumerable.Range(0, count).Select(i => resolution
+            ? Text($"{Resolutions[i].Width} × {Resolutions[i].Height}", $"{Resolutions[i].Width} by {Resolutions[i].Height}")
+            : Text($"음량 {i + 1}", $"Volume {i + 1}"))];
+        int subWidth = OriginalUiSkin.MenuWidth(labels.Select(label => _skin.MenuLabelWidth(label)));
+        int subX = menu.Right;
+        if (subX + subWidth > width - 2) subX = menu.X - subWidth;
+        int subY = Math.Clamp(submenuY, 2, Math.Max(2, height - count * OriginalUiSkin.RowHeight - 2));
+        var sub = new Rectangle(subX, subY, subWidth, count * OriginalUiSkin.RowHeight); _lists.Add(sub);
         // 클릭한 값을 적용한 뒤 원본처럼 상위 옵션 메뉴까지 닫는다.
         for (int i = 0; i < count; i++)
         {
             int index = i;
-            bool resolution = _submenu == "resolution";
-            bool sound = _submenu == "sound";
             var r = Resolutions[i];
-            string label = resolution ? $"{r.Width} × {r.Height}" : Text($"음량 {i + 1}", $"Volume {i + 1}");
             bool selected = resolution ? s.WindowWidth == r.Width && s.WindowHeight == r.Height : (sound ? s.SoundVolume : s.MusicVolume) == i + 1;
-            Add(new Rectangle(sub.X + 2, sub.Y + 2 + i * OriginalUiSkin.RowHeight, sub.Width - 4, OriginalUiSkin.RowHeight), label, true, () =>
+            Add(new Rectangle(sub.X, sub.Y + i * OriginalUiSkin.RowHeight, sub.Width, OriginalUiSkin.RowHeight), labels[i], true, () =>
             {
                 if (resolution) _display.SetResolution(Resolutions[index].Width, Resolutions[index].Height, Resolutions[index].Height);
                 else { if (sound) s.SoundVolume = index + 1; else s.MusicVolume = index + 1; ApplySound(); if (sound) _audio?.PlaySound("bell.wav"); }
@@ -429,6 +471,15 @@ internal sealed class MainMenuView : IDisposable
             }, listRow: true, check: selected);
         }
     }
+
+    /// <summary>미션 중 옵션 목록의 왼쪽 끝: 메뉴 막대의 Options 항목 아래 (막대 왼쪽 84 + 1 + 항목 간격 53 × 2).</summary>
+    private const int MissionOptionsLeft = 191;
+
+    /// <summary>미션 중 옵션 목록의 위쪽: 메뉴 막대(높이 17) 바로 아래.</summary>
+    private const int MissionOptionsTop = 17;
+
+    /// <summary>옵션 목록의 Pause 행을 골랐을 때 부르는 동작 (미션 중 일시정지 전환). 연결하지 않으면 아무 일도 하지 않는다.</summary>
+    public Action? PauseRequested { get; set; }
 
     /// <summary>같은 항목을 다시 누르면 하위 목록을 닫고 다른 항목이면 전환한다.</summary>
     private void ToggleSubmenu(string name) { _submenu = _submenu == name ? null : name; }
@@ -449,8 +500,17 @@ internal sealed class MainMenuView : IDisposable
     }
 
     /// <summary>버튼과 펼침 목록의 클릭 영역·표시 상태를 함께 기록한다.</summary>
-    private void Add(Rectangle bounds, string label, bool enabled, Action action, bool listRow = false, bool? check = null) =>
-        _buttons.Add(new MenuButton(bounds, label, enabled, action, listRow, check));
+    /// <param name="bounds">클릭·표시 영역</param>
+    /// <param name="label">문구</param>
+    /// <param name="enabled">고를 수 있는지</param>
+    /// <param name="action">고르면 할 일</param>
+    /// <param name="listRow">목록 행인지 (아니면 돌 버튼)</param>
+    /// <param name="check">켜짐 표시 (null 이면 없음)</param>
+    /// <param name="key">문구 뒤에 노란색으로 쓸 단축키 표기</param>
+    /// <param name="arrow">하위 목록 화살표가 붙는지</param>
+    private void Add(Rectangle bounds, string label, bool enabled, Action action, bool listRow = false, bool? check = null,
+        string key = "", bool arrow = false) =>
+        _buttons.Add(new MenuButton(bounds, label, enabled, action, listRow, check, key, arrow));
 
     /// <summary>캠페인 설명을 원본과 같은 세 문단으로 제공한다.</summary>
     private IReadOnlyList<string> MissionLines(int width) => _skin.WrapText(Text(
@@ -505,32 +565,34 @@ internal sealed class MainMenuView : IDisposable
         }
         // 목록 바탕을 먼저 그린다.
         foreach (Rectangle list in _lists) _skin.Menu(batch, list);
-        // 캠페인·옵션 목록의 그룹 구분선을 덧붙인다.
-        foreach (int y in _separators) _skin.Separator(batch, _lists[0].X + 1, y, _lists[0].Width - 2);
+        // 캠페인·옵션 목록의 그룹 구분선을 덧붙인다 (테두리 안쪽 폭).
+        foreach (int y in _separators) _skin.Separator(batch, _lists[0].X + OriginalUiSkin.FrameThickness, y, _lists[0].Width - OriginalUiSkin.FrameThickness * 2);
+        bool popup = _page is "options" or "help";
         // 목록 행은 왼쪽 정렬하고 일반 버튼만 작은 입체 테두리를 그린다. 돌 버튼에는 호버 표시가 없고 목록 행에는 있다.
         for (int index = 0; index < _buttons.Count; index++)
         {
             MenuButton button = _buttons[index];
-            if (_page is "options" or "help" && !button.ListRow) continue;
+            if (popup && !button.ListRow) continue;
             bool hover = button.Bounds.Contains(_previousMouse.Position);
+            Color labelColor = button.Enabled ? Color.White : new Color(185, 180, 166);
             if (!button.ListRow) _skin.Button(batch, button.Bounds, button.Label, button.Enabled, pressed: _gump.IsPressed(index));
+            else if (popup)
+            {
+                // 펼침 목록(옵션·도움말·하위 목록)의 행: 행 영역이 목록 폭 전체이고 글자는 목록 왼쪽 + 15, 켜짐 표시는 + 8 에 온다.
+                if (button.Enabled && hover) batch.Draw(_pixel, button.Bounds, Color.Black * 0.25f);
+                if (button.Check.HasValue)
+                    _skin.Pip(batch, new Point(button.Bounds.X + OriginalUiSkin.MenuPipInset, button.Bounds.Y + OriginalUiSkin.RowHeight / 2), button.Check.Value, button.Enabled);
+                _skin.MenuRow(batch, button.Bounds.X, button.Bounds, button.Label, labelColor, button.Key, button.Enabled ? MenuKeyColor : labelColor, button.Arrow);
+            }
             else
             {
+                // 창 안의 선택 목록(캠페인·미션)의 행.
                 if (button.Enabled && hover) batch.Draw(_pixel, button.Bounds, Color.Black * 0.25f);
-                int inset = _page == "options" || button.Check.HasValue ? 13 : 10;
+                int inset = button.Check.HasValue ? 13 : 10;
                 if (button.Check.HasValue) _skin.Pip(batch, new Point(button.Bounds.X + 5, button.Bounds.Center.Y), button.Check.Value, button.Enabled);
                 SpriteFontBase rowFont = font.MeasureString(button.Label).X > button.Bounds.Width - inset - 3 ? small : font;
                 var labelPosition = new Vector2(button.Bounds.X + inset, button.Bounds.Center.Y - rowFont.MeasureString(button.Label).Y / 2);
-                Color labelColor = button.Enabled ? Color.White : new Color(185, 180, 166);
-                // "이름 - 키" 형식의 Help 목록은 녹화처럼 키 이름만 노란색으로 쓴다
-                int dash = _page == "help" ? button.Label.LastIndexOf(" - ", StringComparison.Ordinal) : -1;
-                if (dash < 0) OriginalUiSkin.Text(batch, rowFont, button.Label, labelPosition, labelColor);
-                else
-                {
-                    string head = button.Label[..(dash + 3)];
-                    OriginalUiSkin.Text(batch, rowFont, head, labelPosition, labelColor);
-                    OriginalUiSkin.Text(batch, rowFont, button.Label[(dash + 3)..], labelPosition + new Vector2(rowFont.MeasureString(head).X, 0), MenuKeyColor);
-                }
+                OriginalUiSkin.Text(batch, rowFont, button.Label, labelPosition, labelColor);
             }
         }
         if (_error.Length > 0) OriginalUiSkin.Text(batch, small, _error, new Vector2(16, height - 24), Color.OrangeRed);
@@ -538,7 +600,16 @@ internal sealed class MainMenuView : IDisposable
     }
 
     /// <summary>버튼과 목록 행의 영역·표시·동작.</summary>
-    private sealed record MenuButton(Rectangle Bounds, string Label, bool Enabled, Action Action, bool ListRow, bool? Check);
+    /// <param name="Bounds">클릭·표시 영역</param>
+    /// <param name="Label">문구</param>
+    /// <param name="Enabled">고를 수 있는지</param>
+    /// <param name="Action">고르면 할 일</param>
+    /// <param name="ListRow">목록 행인지 (아니면 돌 버튼)</param>
+    /// <param name="Check">켜짐 표시 (null 이면 없음)</param>
+    /// <param name="Key">문구 뒤에 노란색으로 쓸 단축키 표기 (없으면 빈 문자열)</param>
+    /// <param name="Arrow">하위 목록 화살표가 붙는지</param>
+    private sealed record MenuButton(Rectangle Bounds, string Label, bool Enabled, Action Action, bool ListRow, bool? Check,
+        string Key = "", bool Arrow = false);
 
     /// <summary>메뉴 전용 텍스처를 해제한다. 공통 스킨은 게임 본체가 소유한다.</summary>
     public void Dispose() { _pixel.Dispose(); _background?.Dispose(); _clouds?.Dispose(); }

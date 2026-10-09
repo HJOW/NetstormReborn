@@ -36,6 +36,12 @@ internal sealed partial class FortMapViewer
     /// <summary>최근 세션 이벤트 문구 (배치 성공·거부·건설 완료 등)</summary>
     private string _notice = "";
 
+    /// <summary>
+    /// 일시정지를 켜거나 끈다 (Shift+F9·Pause 키와 같은 동작). 옵션 목록의 "Pause - Shift-F9" 행이 부른다.
+    /// 2026-10-10 추가: 원본 옵션 목록에 있는 Pause 행을 연결하기 위해.
+    /// </summary>
+    public void TogglePause() => _simulationPaused = !_simulationPaused;
+
     /// <summary>세션 시간이 흐르고 있는지: 일시정지가 아니고, 미션 또는 배치·다리·전투 시험이 켜져 있다.</summary>
     private bool SimulationRunning => !_simulationPaused && (_mission != null || _placementMode || _bridgeMode || _session.CombatEnabled);
 
