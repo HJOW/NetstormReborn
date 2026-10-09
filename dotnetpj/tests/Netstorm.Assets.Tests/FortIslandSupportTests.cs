@@ -74,6 +74,49 @@ public sealed class FortIslandSupportTests
         }
     }
 
+    /// <summary>
+    /// 네 미션에서 받침의 기준점 집합이 cpppj 월드 조립(GameWorld::BuildTerrain)의 묶는 방식과 같다 (LEFT_JOBS.dotnetpj.md 6-4).
+    /// cpppj 는 createsisland·geyser 타입 오브젝트의 칸을 저장 순서로 먼저, 이어 noIsland 칸을 (x, y) 순서로 기준점 후보로 보고,
+    /// 후보의 왼쪽 위 3×3 이 모두 noIsland 이며 아직 다른 받침에 쓰이지 않았으면 받침으로 삼는다 (소유자가 섞였는지는 보지 않는다).
+    /// 받침은 기준점(오른쪽 아래 칸)에 그리며 일반 절벽과 달리 y 를 옮기지 않는다 — 뷰어도 <see cref="FortIslandSupport"/> 의 칸에 그대로 그린다.
+    /// </summary>
+    /// <param name="name">맵 이름</param>
+    /// <param name="expectedCount">받침 수</param>
+    [Theory]
+    [InlineData("thewarbegins", 13)]
+    [InlineData("savetheisland", 26)]
+    [InlineData("BridgeTheGap", 0)]
+    [InlineData("TEST01", 53)]
+    public void Original_SupportAnchorsMatchCppGrouping(string name, int expectedCount)
+    {
+        var resources = new GameResources(GameFileSystem.Open(OriginalData.RequireDirectory()), GameLanguage.English);
+        TypeCatalog catalog = resources.LoadTypes();
+        IReadOnlyList<FortMapObject> objects = new FortMap(resources.LoadFort(name, catalog)).Objects;
+        var pad = objects.Where(item => item.Object.Type.Name.Equals("noIsland", StringComparison.OrdinalIgnoreCase))
+            .Select(item => (item.X, item.Y)).ToHashSet();
+        var candidates = objects.Where(item => item.Object.Type.Definition.HasFlag("createsisland") || item.Object.Type.Definition.HasFlag("geyser"))
+            .Select(item => (item.X, item.Y)).ToList();
+        candidates.AddRange(pad.OrderBy(cell => cell.X).ThenBy(cell => cell.Y));
+        var claimed = new HashSet<(int X, int Y)>();
+        var anchors = new List<(int X, int Y)>();
+        // cpppj 와 같은 순서로 후보를 보며 완전한 9칸만 받침으로 삼는다.
+        foreach ((int x, int y) in candidates)
+        {
+            var cells = new List<(int X, int Y)>();
+            // 기준점의 왼쪽 위 3×3 칸을 모은다.
+            for (int i = 0; i < FortIslandSupports.Size * FortIslandSupports.Size; i++)
+            {
+                cells.Add((x - i % FortIslandSupports.Size, y - i / FortIslandSupports.Size));
+            }
+            if (cells.Any(cell => !pad.Contains(cell) || claimed.Contains(cell))) continue;
+            claimed.UnionWith(cells);
+            anchors.Add((x, y));
+        }
+        IReadOnlyList<FortIslandSupport> supports = FortIslandSupports.Find(objects);
+        Assert.Equal(expectedCount, supports.Count);
+        Assert.Equal(anchors.OrderBy(a => a.Y).ThenBy(a => a.X), supports.Select(s => (s.X, s.Y)));
+    }
+
     /// <summary>원본처럼 오른쪽 아래 기준점에서 왼쪽 위로 3×3 noIsland 논리 칸을 만든다.</summary>
     private static IEnumerable<FortMapObject> Square(int anchorX, int anchorY, int owner)
     {

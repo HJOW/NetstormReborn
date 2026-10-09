@@ -45,7 +45,7 @@ internal sealed partial class FortMapViewer
     {
         _playUi = true; _simulationPaused = false;
         _previousMouse = Mouse.GetState(); _previousKeyboard = Keyboard.GetState();
-        _sky = MainMenuView.LoadImage(_device, resources, "d/Gifcloud.gif");
+        _sky = MainMenuView.LoadImage(_device, resources, "d/Gifcloud.gif", _palette);
         CenterOnPriest();
     }
 

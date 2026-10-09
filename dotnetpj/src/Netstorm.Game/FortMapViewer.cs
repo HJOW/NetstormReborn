@@ -383,7 +383,7 @@ internal sealed partial class FortMapViewer : IDisposable
             // 가이저 증기·워크샵 레벨·신전 회오리·풍선·걷기 그림을 고르고 그림자 → 본체 → 겹침 순서로 그린다.
             (TypeInfo drawn, StructureFrames frames, Vector2 shift) = ObjectSprite(item.Object.Type, live, item);
             if (!DrawObjectSprite(batch, drawn, frames, anchor + shift * _zoom,
-                color: _playerColors.GetValueOrDefault(live?.Owner ?? item.Object.Owner ?? 0)))
+                color: _playerColors.GetValueOrDefault(live?.Owner ?? item.Object.LoadOwner)))
             {
                 // 이미지가 없는 특수 프레임은 소유자색 표식으로 위치만 표시한다.
                 batch.Draw(_pixel, new Rectangle((int)anchor.X - 3, (int)anchor.Y - 3, 6, 6),

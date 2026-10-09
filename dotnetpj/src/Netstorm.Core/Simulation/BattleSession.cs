@@ -148,7 +148,7 @@ public sealed partial class BattleSession
         // 저장 오브젝트의 소유자 번호를 모은다
         foreach ((int _, FortMapObject item) in map.InitialObjects)
         {
-            if (item.Object.Owner is int owner and > 0)
+            if (item.Object.LoadOwner is int owner and > 0)
             {
                 numbers.Add(owner);
             }
@@ -168,7 +168,7 @@ public sealed partial class BattleSession
                 continue;
             }
             Footprint footprint = Footprint.ForType(item.Object.Type.Definition, item.X, item.Y);
-            int owner = item.Object.Owner ?? 0;
+            int owner = item.Object.LoadOwner;
             var entity = new GameEntity(id, item.Object.Type, kind, owner, footprint, map.TerritoryAt(item.X, item.Y), item);
             _entities.Add(id, entity);
             _initialEntityIds[item] = id;
@@ -185,7 +185,17 @@ public sealed partial class BattleSession
         InitializeCampaignAi();
     }
 
-    /// <summary>플레이어 시작 상태를 만든다: Storm Power, 다리 칸, 사람 플레이어는 미션의 시작 지식과 기술 허용</summary>
+    /// <summary>
+    /// 플레이어 시작 상태를 만든다: Storm Power, 다리 칸, 시작 지식과 기술 허용.
+    /// 미션이 있으면 사람은 myStartMoney·myTech·techAllowed 를, AI 는 aiNStartMoney·aiNTech(없으면 0·빈 목록)를 쓴다.
+    /// 미션 없이 맵만 연 세션은 모든 플레이어가 <paramref name="startStormPower"/>(없으면 전투 옵션 금액)로 시작한다.
+    /// </summary>
+    /// <param name="number">플레이어 번호</param>
+    /// <param name="startStormPower">미션 값이 없을 때 쓸 시작 Storm Power</param>
+    /// <remarks>
+    /// 원본 시작 조건 읽기 004c2b20 → 004c2d40 (기준 구현 cpppj/src/o/Player.cpp).
+    /// 2026-10-10 수정: AI 의 시작 금액·지식을 공개 캠페인 미션에만 적용하던 것을 모든 미션에 적용한다 (LEFT_JOBS.dotnetpj.md 6-2).
+    /// </remarks>
     private PlayerState CreatePlayer(int number, int? startStormPower)
     {
         BattleOptions options = Map.Options;
@@ -194,11 +204,11 @@ public sealed partial class BattleSession
         // 표는 실행 중에 바뀌므로 세션마다 복사본을 쓴다 (같은 미션으로 만든 다른 세션에 영향을 주지 않는다)
         TechPermissions tech = human && Mission != null ? Mission.Tech.Clone() : TechPermissions.Parse(null);
         var player = new PlayerState(number, stormPower, new BridgeTray(options.BridgeSlotCount, _random), tech);
-        if (!human && Mission is { UsesCampaignAi: true })
+        if (!human && Mission != null)
         {
-            player.StormPower = Mission.AiStartMoney ?? stormPower;
+            player.StormPower = Mission.AiStormPower(number);
             // 초기 AI 지식은 원본 미션 머리 값만 사용한다.
-            foreach (string name in MissionStart.ExpandKnowledge(Mission.AiKnowledge, _types)) player.Deck.LearnKnowledge(name);
+            foreach (string name in MissionStart.ExpandKnowledge(Mission.AiKnowledgeFor(number), _types)) player.Deck.LearnKnowledge(name);
         }
         if (human && Mission != null)
         {

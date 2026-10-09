@@ -323,7 +323,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
             _fonts!.GetFont(BodyFontSize), _fonts.GetFont(TitleFontSize), _fonts.GetFont(SmallFontSize));
         if (_help != null) _helpWindow = new HelpWindow(GraphicsDevice, _uiSkin, resources, _help, shapes, palette)
         { SoundRequested = sound => _audio.PlaySound(sound) };
-        _mainMenu = new MainMenuView(GraphicsDevice, resources, _uiSkin, _display, _audio, PlayCampaign, Exit, OpenHelp);
+        _mainMenu = new MainMenuView(GraphicsDevice, resources, palette, _uiSkin, _display, _audio, PlayCampaign, Exit, OpenHelp);
         _mainMenu.Open(ParseValueArgument(Environment.GetCommandLineArgs(), "--menu") ?? "main");
         // 원본처럼 메인 메뉴로 시작하면 "Did You Know?" 팁 창을 연다 (Options "Tell Tips at Startup").
         // 자동 UI 검사는 고정 입력이 팁 창에 막히지 않게 --tips 를 줄 때만 열고, --no-tips 는 이번 실행에서 끈다.

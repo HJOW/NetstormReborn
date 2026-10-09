@@ -8,10 +8,6 @@ namespace Netstorm.Game;
 /// <summary>원본 Windows 단색 커서를 SDL로 재생한다. 게임 프레임과 별개로 움직이며 AND/XOR의 배경 반전을 보존한다.</summary>
 internal sealed class OriginalCursor : IDisposable
 {
-    /// <summary>확인된 상태와 exe의 RT_CURSOR 이미지 번호. 실행 중에는 동봉된 리소스만 읽는다.</summary>
-    private static readonly (GameCursor Kind, int Resource)[] Resources =
-        [(GameCursor.Arrow, 8), (GameCursor.Forbidden, 5), (GameCursor.Move, 20), (GameCursor.Temple, 7), (GameCursor.Place, 6)];
-
     /// <summary>SDL 단색 커서 생성 함수의 ABI.</summary>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate nint CreateCursor([In] byte[] data, [In] byte[] mask, int width, int height, int hotX, int hotY);
@@ -39,7 +35,13 @@ internal sealed class OriginalCursor : IDisposable
     /// <summary>SDL이 실제로 이 커서를 사용 중인지 (UI 검사에서 네이티브 연결도 확인한다).</summary>
     public bool Active => !_disposed && _handles.TryGetValue(Kind, out nint handle) && _get() == handle;
 
-    /// <summary>게임 데이터의 원본 커서를 모두 읽어 SDL 핸들을 만든다.</summary>
+    /// <summary>
+    /// 게임 데이터에 동봉된 원본 커서 18개(<see cref="GameCursors.All"/>)를 모두 읽어 SDL 핸들을 만들고 화살표로 시작한다.
+    /// 실행 중에는 동봉 파일 <c>cursors/RT_CURSOR_&lt;그림 번호&gt;.bin</c> 만 읽으며 원본 실행 파일은 읽지 않는다.
+    /// 파일이 하나라도 없거나 SDL 이 커서를 만들지 못하면 만든 핸들을 정리하고 예외를 던진다.
+    /// 2026-10-10: 확인된 다섯 가지에서 원본 표 전체로 넓혔다 (그림 번호는 <see cref="GameCursors.ImageResource"/>).
+    /// </summary>
+    /// <param name="resources">동봉 커서 파일을 읽을 게임 자료</param>
     public OriginalCursor(GameResources resources)
     {
         string name = OperatingSystem.IsWindows() ? "SDL2.dll" : OperatingSystem.IsMacOS() ? "libSDL2-2.0.0.dylib" : "libSDL2-2.0.so.0";
@@ -53,9 +55,10 @@ internal sealed class OriginalCursor : IDisposable
         _previous = _get();
         try
         {
-            // 확인된 다섯 리소스를 한 번씩 만들고 이후 상태 전환에는 핸들만 바꾼다.
-            foreach ((GameCursor kind, int id) in Resources)
+            // 원본 표의 18개 모양을 번호순으로 한 번씩 만들고 이후 상태 전환에는 핸들만 바꾼다.
+            foreach (GameCursor kind in GameCursors.All)
             {
+                int id = GameCursors.ImageResource(kind);
                 byte[] bytes = resources.Files.TryReadAllBytes($"cursors/RT_CURSOR_{id}.bin")
                     ?? throw new FileNotFoundException($"원본 커서 데이터가 없습니다: {id}");
                 CursorBitmap bitmap = CursorBitmap.Parse(bytes);

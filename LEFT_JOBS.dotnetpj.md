@@ -1,3 +1,21 @@
+## 2026-10-10 ✅ 완료 / ⏭ 부분 인계: 5-4 커서 표·5-5 배경 GIF 색·5-6 확인·6단계 미션 시작 값 (`HJOW-X3D`)
+
+- [x] **착수/조건:** 사용자 요청 "AGENTS.md·LEFT_JOBS.dotnetpj.md를 읽고 dotnetpj 중 지금 작업 가능한 부분을 진행". 현재 PC `HJOW-X3D`는 마지막 디컴파일 PC(`HJOW-Athlon`)와 다르고 디컴파일을 하지 않기로 한 PC라서 **디컴파일 결과를 읽지 않았다.** 커밋된 cpppj 소스·분석 문서·원본 자료 파일과 이미 추출돼 있던 `extracted/res/Netstorm/` 리소스만 썼다. 원본 게임·복사본 실행 없음, 새 디컴파일/내보내기 없음, `cpppj/` 소스·AGENTS.md·LEFT_JOBS.md·원본 폴더 변경 없음, 커밋/푸시 없음. [상세 기록](docs/dotnet-reconstruction-20261010.md).
+- [x] **cpppj 는 빌드만 했다:** 6단계 기대값을 얻으려고 커밋된 소스를 `cpppj/build/`(Git 제외)에 Release 로 빌드하고 콘솔 명령 `--dump-world`(창·게임 실행 없음, 원본 폴더 읽기 전용)만 돌렸다. 작업 시작 뒤 `originals/`·`originalCD/` 에 바뀐 파일이 없음을 확인했다.
+- [x] **기준선:** Release 경고/오류 0, **888개 통과**(Assets 285 + Core 603). 2026-10-09 기록과 같다.
+- [x] **5-5 배경 GIF 색:** `titleMenu.gif` 는 쓰는 색 번호 181개 중 **177개**의 내장 RGB 가 게임 팔레트와 다르다(295,080픽셀, 채널 최대 12). `Gifcloud.gif` 는 243번 하나. 새 [`GifImage`](dotnetpj/src/Netstorm.Assets/GifImage.cs)로 색 번호를 해독해 게임 팔레트로 칠한다(메뉴 타이틀·구름, 미션 하늘). **타이틀을 640 폭으로 늘려 그리던 것도 제 크기(639×480)로 고쳤다.** 클론 메인 메뉴 캡처의 버튼 밖 **768,282픽셀 전부**가 "색 번호 × 게임 팔레트" 독립 합성과 같다(옛 방식 합성과는 482,653픽셀만 같음).
+- [x] **5-4 커서 표:** `GameCursor` 를 원본 번호 1~18(값 = 원본 커서 번호)로 넓히고 `GameCursors`(번호 → 그룹 → 그림 번호)를 추가했다. 그림 13개를 `assets/game-data/cursors/` 에 더했다(추출본 복사). `OriginalCursor` 가 18개를 만든다. **상황별 선택은 넣지 않았고** 기존 다섯 상태 매핑은 그대로다.
+- [x] **5-6 메인 메뉴 확인:** 버튼 크기·위치·판정 +1·돌 버튼/목록 행의 누름 동작은 원본 수치와 같다. 타이틀 그림 크기만 달라 고쳤다. **캠페인 목록을 `offical*.english`·`Done...` 값에서 읽는 것은 미착수**(클론은 목록이 코드에 고정).
+- [x] **6-1 소유자:** 네 미션 2,036개 저장 오브젝트의 수·순서·타입·영역·좌표·프레임·수량·내용물 수가 cpppj `--dump-world` 와 줄 단위로 같다. 소유자는 세션이 저장 값을 그대로 써서 Save the Island! 의 residence 2개(저장 0 → 원본·cpppj 1)가 달랐다 → 세션이 새 `FortObject.LoadOwner`(0·9 이상 → 1, geyser·buried·island → 0)를 쓰게 했고 2,036개가 모두 같다. 소유자를 저장하지 않는 타입은 cpppj 어댑터(1)를 따르지 않고 0 으로 뒀으며 네 미션에는 그런 오브젝트가 없다.
+- [x] **6-2 시작 값:** AI 의 시작 SP·지식을 번호 없는 키로만 읽고 1-1·1-2 에만 적용하던 것을 고쳤다. `aiNStartMoney`·`aiNTech`(플레이어 2 는 번호 없는 구식 키도 가능, SP 가 없으면 0)를 모든 미션에 적용한다. 수정 전: Save the Island! AI = 전투 옵션 금액(게임 경로에서는 맵의 Money 100000)·지식 없음, TEST01 AI 2·3 = 같은 문제. 수정 뒤 네 미션 플레이어 8명의 SP·지식·동맹 비트·색이 cpppj 와 같다. **AI 가 실제로 행동하는 미션은 여전히 1-1·1-2 뿐이다.**
+- [x] **6-3·6-4·6-5:** 본섬 마스크 SHA 네 개·받침 기준점 집합(13·26·0·53개)·시작 HP 가 cpppj 와 같다(수정 없이 통과, 회귀 검사만 추가). mana 약화 옵션(최대 HP ÷ 4)은 C# 에 없고 cpppj 도 생성자 인자로만 받아 넣지 않았다.
+- [x] **최종 검증:** Release 경고/오류 **0**, **940개 통과·실패/스킵 0**(Assets 316 + Core 624, 새 검사 52개). 기존 x86 fixture 미변경. 클론 창(창 모드, 숨김 시작): 메뉴 → 1-1 → 1-2 왕복 **UI 검사 20개**, `clone_test01_smoke` **4개 조합·96개 검사**, `clone_combat_smoke` **12개 장면** 통과, stderr 비어 있음. **`clone_ui_smoke`(전체화면 전환·설정 저장)는 돌리지 않았다** — 사용자 화면을 전체화면으로 덮지 않으려는 것이며 이번 변경은 화면 설정 코드를 건드리지 않았다. 캡처는 `extracted/screens/dotnet-x3d-20261010/`.
+- [ ] **5-3 은 하지 않았다 — 사용자 확인 대기.** 영어를 원본 `.chfnt` 비트맵 글꼴로 바꿀지(한국어만 D2Coding)는 10절 2번의 미해결 항목이다. 판독기는 있고 UI 출력·폭 측정 연결이 남았다. 참고로 cpppj 는 버튼·목록 행에 슬롯 0(Arial 14/700), 본문에 슬롯 5(Arial 14/0)를 쓴다(`cpppj/src/client/UberGump.cpp`). 글자를 쓰는 곳이 `Netstorm.Game` 18개 파일·124군데라 화면 확인이 필요한 작업이다.
+- [ ] **다음:** (사용자 확인 뒤) 5-3 → 5-6 캠페인 목록(`offical*.english`·`Done...`) → 5-1 전체 월드 표시 목록 → [9-1](#original-parity-plan) 판정(A → C → B → D·E·F). 8절 항목은 cpppj 진행을 기다린다. 다음에 `clone_ui_smoke` 를 돌릴 수 있는 PC 에서 한 번 돌려 메뉴·전체화면·설정 저장 회귀를 확인한다.
+- [ ] **cpppj 작업자에게 전달(이 문서에만 기록, cpppj 미수정):** `--dump-world` 의 소유자 열은 소유자를 저장하지 않는 타입을 1 로 둔다(`GameWorld::Place` 의 `value_or(1)`). 네 미션에는 해당 오브젝트가 없어 지금은 차이가 드러나지 않는다. dotnetpj 는 이 경우를 0 으로 뒀다.
+
+---
+
 ## 2026-10-10 ✅ 완료(문서만): AGENTS.md 최근 변경과 사용자 결정 3건을 dotnetpj 계획에 반영 (`HJOW-Athlon`)
 
 - [x] **범위:** AGENTS.md·두 인계 문서를 읽고 **문서만** 고쳤다. dotnetpj/cpppj 코드·테스트·fixture·원본·AGENTS.md 변경, 빌드/테스트, 게임·클론 창 실행, 새 디컴파일, 커밋/푸시는 없다. 구현 상태와 테스트 수(888개)는 아래 2026-10-09 절 그대로다. 공통 기록과 변경별 반영 위치 표는 [LEFT_JOBS.md](LEFT_JOBS.md) 맨 위 같은 날짜 절에 있다.
@@ -70,7 +88,8 @@
 
 # LEFT_JOBS.dotnetpj — dotnetpj(C# + MonoGame) 작업 계획 및 인수인계
 
-> 최종 갱신: 2026-10-10 (호스트 `HJOW-Athlon`, **문서만**). AGENTS.md 최근 변경(원본과 완전히 동일한 동작 우선·Linux 후순위·주석 규칙·글꼴 1.4.0·팬게임보다 디컴파일 우선)을 계획에 반영했고, 같은 날 사용자 결정 3건(의도적 차이를 원본처럼 동작하게·기존 주석 정비 시점·글꼴 교체 우선순위)도 반영했다. 코드·테스트 변경은 없으며 구현 상태는 아래 2026-10-09 갱신과 같다.
+> 최종 갱신: 2026-10-10 (호스트 `HJOW-X3D`, .NET SDK 10.0.401). **5-4 커서 표·5-5 배경 GIF 색·5-6 확인·6단계(소유자·시작 값·본섬 마스크·받침·HP) 완료.** **940개 통과**(Assets 316 + Core 624), Release 경고/오류 0. 원본 x86 대조 49,007개는 그대로이고, cpppj `--dump-world` 대조(오브젝트 2,036개·플레이어 8명, x86 직접 기대값 아님)를 더했다. 5-3 원본 영어 글꼴은 사용자 확인 대기, 캠페인 목록·전체 표시 정렬·9-1 판정은 후속이다. 원본 게임·새 디컴파일 없음. 최신 내용은 맨 위 절과 [상세 기록](docs/dotnet-reconstruction-20261010.md)을 따른다.
+> 이전 갱신: 2026-10-10 (호스트 `HJOW-Athlon`, **문서만**). AGENTS.md 최근 변경(원본과 완전히 동일한 동작 우선·Linux 후순위·주석 규칙·글꼴 1.4.0·팬게임보다 디컴파일 우선)을 계획에 반영했고, 같은 날 사용자 결정 3건(의도적 차이를 원본처럼 동작하게·기존 주석 정비 시점·글꼴 교체 우선순위)도 반영했다. 코드·테스트 변경은 없으며 구현 상태는 아래 2026-10-09 갱신과 같다.
 > 이전 갱신: 2026-10-09 (호스트 `HJOW-Athlon`, .NET SDK 10.0.401). **최근 변경 점검·화면 밖 표시 상자 오류 수정 완료.** 공유 SID/붕괴 스캔은 세션 연결 완료, SpotMap은 클래스/검사 완료·세션 미연결, 표시 순서/경계의 제한된 뷰어 연결 완료, 다리 누적 제작/튜토리얼 판정과 `.chfnt` 판독기 완료. **888개 통과**(Assets 285 + Core 603), Release 경고/오류 0. 기존 원본 x86 48,639개에 표시 경계 368개를 더한 **49,007개** 대조(새 뷰어 84행 재생은 기존 입력의 반복 검사). 원본 영어 글꼴 UI·전체 표시 정렬·공통 postPop/실제 Graph/점유 지도 세션 연결은 후속이다. 클론 창 3종 통과, 원본 게임·새 디컴파일 없음. 최신 점검은 맨 위와 [상세 기록](docs/dotnet-review-20261009.md)을 따른다.
 > 이전 갱신: 2026-10-07 (호스트 `vm-debian-codex`, Debian 13 / .NET SDK 10.0.401). 사용자 요청으로 병행 개발 착수, 1~2단계의 자산 타입·자료 판독 범위 완료. 원본 x86 14,615개 입력과 정적 C++ 타입 116개 대조.
 > 이 문서는 [LEFT_JOBS.md](LEFT_JOBS.md) 맨 끝 "인수인계 문서 임시 분할" 지침에 따라 **dotnetpj 의 진행 상황과 인수인계만** 담는다. cpppj·디컴파일 기록은 LEFT_JOBS.md 에 적는다.
@@ -390,31 +409,31 @@ C# 은 모든 글자를 D2Coding(FontStashSharp)으로 그린다. `dotnetpj` 에
 ### 5-4. 커서 **[정적]**
 
 - 원본 커서 번호 1~18 의 리소스 그룹: 113, 110, 111, 108, 107, 109, 115, 116, 131, 117, 130, 129, 132, 133, 134, 136, 141, 148(패치 `005423a8`). 번호 0 은 미설정.
-- C# `GameCursor` 는 다섯 가지(113·109·148·111·110)만 있다.
-- [ ] `GameCursor` 와 `OriginalCursor.Resources` 를 18개 표로 넓힌다. `assets/game-data/cursors/` 에는 지금 다섯 개(`RT_CURSOR_5·6·7·8·20.bin`)만 있다. 나머지는 `docs/formats/README.md` 의 추출 순서로 실행 파일 리소스에서 뽑고, `tools/cursor_catalog.py` 로 그룹 번호와 그림을 맞춘다(C# 은 그룹 번호가 아니라 개별 `RT_CURSOR` 번호로 읽는다).
+- C# `GameCursor` 는 2026-10-10 전까지 다섯 가지(113·109·148·111·110)만 있었다.
+- [x] (2026-10-10 `Rules/GameCursor.cs` 의 `GameCursor`·`GameCursors`, 그림 13개 추가, `GameCursorTests` 8개·핫스팟 검사 18개, 클론 창 시작 확인) `GameCursor` 를 18개 표로 넓혔다. 값이 원본 커서 번호(1~18)이고 `GameCursors.ImageResource` 가 개별 `RT_CURSOR` 번호를 준다. `OriginalCursor` 는 이 표로 18개를 만든다. 그림은 `extracted/res/Netstorm/` 의 추출본을 `assets/game-data/cursors/` 에 복사했다([표](assets/game-data/cursors/README.md)).
 - [ ] **어떤 상황에 어떤 번호를 쓰는지는 넣지 않는다.** UserInput(`004d62b0`)을 cpppj 가 복원한 뒤에 연결한다(8절). 지금 다섯 상태의 매핑은 TEST02 관찰 기반이므로 유지한다.
 
 ### 5-5. 타이틀·구름 그림의 색 **[정적]**
 
 - 원본(`00419ec0` → `004dae60`)은 GIF 의 **색 번호를 화면 팔레트에 그대로 복사**한다. GIF 안의 RGB 표로 색을 다시 맞추지 않는다.
-- C# [MainMenuView.cs](dotnetpj/src/Netstorm.Game/MainMenuView.cs) `LoadImage` 는 `Texture2D.FromStream` 으로 GIF 자체의 RGB 표를 쓴다.
-- [ ] `d/titleMenu.gif`·`d/Gifcloud.gif` 의 내장 RGB 표와 게임 팔레트(`GamePalSpec` + `fortPal`)가 같은지 먼저 비교한다. 같으면 할 일이 없다. 다르면 색 번호를 해독해 게임 팔레트로 칠한다(GIF 해독은 `cpppj/src/client/GifImage.cpp` 가 인터레이스·투명·LZW 폭 증가까지 처리한 참고 구현이다).
+- C# [MainMenuView.cs](dotnetpj/src/Netstorm.Game/MainMenuView.cs) `LoadImage` 는 2026-10-10 전까지 `Texture2D.FromStream` 으로 GIF 자체의 RGB 표를 썼다.
+- [x] (2026-10-10 비교 결과 **다르다**: `titleMenu.gif` 177/181 번호·295,080픽셀·채널 최대 12, `Gifcloud.gif` 1/18 번호. 새 `Netstorm.Assets/GifImage` + `LoadImage(…, palette)`, `GifImageTests` 10개, 메인 메뉴 캡처 768,282픽셀 일치) 색 번호를 해독해 게임 팔레트로 칠한다. 타이틀 그림을 640 폭으로 늘려 그리던 것도 제 크기(639×480)로 고쳤다.
 
 ### 5-6. 메인 메뉴 — 확인만
 
 [cpp-menu-reconstruction.md](docs/exe/cpp-menu-reconstruction.md) 의 수치와 C# 을 맞춰 본다. C# 은 폭 75·피치 79·시작 `(356,311)` 을 이미 쓴다.
 
-- [ ] 버튼 높이 19, 둘째 줄 y 334, 아래쪽 판정 +1픽셀.
-- [ ] 돌 버튼은 **누름을 잡고 같은 영역에서 뗄 때** 실행하며 호버 변화가 없다. 목록 항목은 호버 강조가 있고 **누르는 즉시** 실행한다. 오른쪽 버튼·잠금 항목·밖에서 뗀 돌 버튼은 실행하지 않는다.
-- [ ] 캠페인 목록은 `offical*.english`(원본 철자)에서 모으고 `Done...` 값으로 완료·잠금을 읽는다. 클론이 임의로 완료 값을 쓰지 않는다.
+- [x] (2026-10-10 코드 대조: `ButtonHeight` 19, `cy − 73 + 23` = 334, `ButtonHitExtraHeight` 1) 버튼 높이 19, 둘째 줄 y 334, 아래쪽 판정 +1픽셀.
+- [x] (2026-10-10 코드 대조: 돌 버튼은 `ButtonGump`, 목록 행은 누름 순간 실행·활성 행만 호버 강조, 왼쪽 버튼만 처리) 돌 버튼은 **누름을 잡고 같은 영역에서 뗄 때** 실행하며 호버 변화가 없다. 목록 항목은 호버 강조가 있고 **누르는 즉시** 실행한다. 오른쪽 버튼·잠금 항목·밖에서 뗀 돌 버튼은 실행하지 않는다.
+- [ ] 캠페인 목록은 `offical*.english`(원본 철자)에서 모으고 `Done...` 값으로 완료·잠금을 읽는다. 클론이 임의로 완료 값을 쓰지 않는다. **2026-10-10 확인: 클론은 다르다.** 장 여섯 개와 "Struggle For Freedom" 의 미션 여섯 개가 `MainMenuView.BuildButtons` 에 문구째 고정돼 있고, 공개 여부는 `CampaignAccess`(1-1·1-2 만 열림)가 정한다. 원본 방식으로 바꾸려면 Tell 섹션의 `$Menu`·`$Checked`·`@guideSpec` 목록 처리가 필요하다(cpppj `UberGump`·`DialogScript` 참고).
 
 ---
 
 ## 7. 6단계 — 미션 시작 값과 회귀 검사
 
-- [ ] **6-1. 소유자 결정.** 2-6 의 정규화를 어디에 적용할지 정한다. cpppj 의 현재 월드는 "소유자 정규화/중립 처리"를 적용한 어댑터다([cpp-world-reconstruction.md](docs/exe/cpp-world-reconstruction.md)). `cpppj ... --dump-world originals thewarbegins`(콘솔, 창 없음)의 오브젝트 소유자 열과 C# `FortMap` + `BattleSessionFactory` 결과를 미션 4개에서 줄 단위로 비교하는 테스트를 만든다.
-- [ ] **6-2. 시작 값 회귀.** 같은 `--dump-world` 출력의 시작 SP(1-1 은 저장 `Money` 100000 이 아니라 미션의 3000, Save the Island 2000, tutorial1 0, TEST01 50000)·동맹·색과 `MissionStart` 결과를 비교한다.
-- [ ] **6-3. 본섬 마스크.** cpppj 가 기록한 256×256 마스크 SHA-256 네 개를 C# 회귀에 모두 넣는다. `MapRenderingTests.cs` 에 이미 일부가 있다.
+- [x] **6-1. 소유자 결정.** (2026-10-10 `FortObject.LoadOwner` 를 세션 세 곳에 적용, `CppWorldStartTests` 의 오브젝트 2,036개 줄 단위 대조) 2-6 의 정규화를 세션(`BattleMap`·`BattleSession`·`BattleSessionFactory`)에 적용했다. 기대값은 `dotnetpj/tools/export_cpp_world.py` 가 cpppj `--dump-world` 에서 만드는 `Fixtures/world-start-1078.tsv` 다(cpppj 를 Release 로 빌드해야 다시 만들 수 있다). 소유자를 저장하지 않는 타입은 0 으로 뒀다 — cpppj 어댑터의 1 은 원본 근거가 없고 네 미션에는 그런 오브젝트가 없다. 받침 색(`FortIslandSupports`)은 noIsland 의 저장 소유자를 계속 쓴다.
+- [x] **6-2. 시작 값 회귀.** (2026-10-10 `MissionStart.AiStormPower`·`AiKnowledgeFor`, `CppWorldStartTests.Players_StartWithCppValues`) 사람의 시작 SP(3000·2000·0·50000)·동맹·색은 이미 같았고, **AI 의 시작 SP·지식이 달라 고쳤다**(번호별 `aiNStartMoney`·`aiNTech`, 플레이어 2 는 번호 없는 구식 키, 없으면 0. 모든 미션에 적용).
+- [x] **6-3. 본섬 마스크.** (2026-10-10 `MapRenderingTests.Original_IslandMaskMatchesCppWorld`, 네 개 통과) cpppj 가 기록한 256×256 마스크 SHA-256 네 개를 C# 회귀에 모두 넣었다.
 
 | 미션 | 본섬 칸 | SHA-256 |
 |---|---:|---|
@@ -423,9 +442,9 @@ C# 은 모든 글자를 D2Coding(FontStashSharp)으로 그린다. `dotnetpj` 에
 | tutorial1 → BridgeTheGap | 763 | `e16dd045520434a91d8ba43d078c7a11f56f3b8a87303ab8a6b2fa2496882584` |
 | TEST01 | 5,172 | `ad2dafb1e5225e6be32e3a70a77cdc5b0475841dead39a4490804f6a404e6079` |
 
-- [ ] **6-4. 받침 표시.** 완전한 `noIsland` 3×3 저장 묶음은 island/islandStalag 로 그리며 기준점은 오른쪽 아래, **일반 절벽과 달리 y 를 옮기지 않는다.** `FortIslandSupports` 가 같은지 확인한다.
-- [ ] **6-5. 최대 HP.** 시작 HP 는 타입 `maxHitPoints` 다. mana(타입 158)는 약화 옵션이 켜지면 최대 HP 를 **0 쪽으로 자르는 정수 ÷ 4** 로 계산한다([cpp-creation-reconstruction.md](docs/exe/cpp-creation-reconstruction.md)). C# 에 이 옵션이 있는지 확인한다.
-- [ ] **6-6. 문서.** 위 단계가 끝날 때마다 `docs/core-rules.md` 의 "근사한 부분"·"근사·미구현" 목록과 `docs/exe/bridge-pieces.md` 8.2 표에서 해소된 항목을 고친다.
+- [x] **6-4. 받침 표시.** (2026-10-10 `FortIslandSupportTests.Original_SupportAnchorsMatchCppGrouping`, 네 미션 13·26·0·53개) 완전한 `noIsland` 3×3 저장 묶음은 island/islandStalag 로 그리며 기준점은 오른쪽 아래, **일반 절벽과 달리 y 를 옮기지 않는다.** `FortIslandSupports` 의 기준점 집합이 cpppj 의 묶는 방식과 같고, 뷰어는 기준점 칸에 그대로 그린다. 차이: C# 은 9칸의 소유자가 같아야 받침으로 보고 색도 그 소유자로 고르며, cpppj 는 소유자를 보지 않고 받침 위 건물의 소유자로 색을 고른다(둘 다 어댑터, 네 미션에서는 기준점이 같다).
+- [x] **6-5. 최대 HP.** (2026-10-10 `CppWorldStartTests.SessionEntities_StartWithCppOwnersAndHitPoints`) 시작 HP 는 타입 `maxHitPoints` 이고 네 미션에서 cpppj 와 같다. mana(타입 158)의 "약화 옵션이 켜지면 최대 HP 를 0 쪽으로 자르는 정수 ÷ 4"([cpp-creation-reconstruction.md](docs/exe/cpp-creation-reconstruction.md))는 **C# 에 없다**: `BattleOptions` 에 해당 옵션이 없고 세션이 mana 를 HP 있는 엔티티로 만들지 않는다. cpppj 도 생성자 인자(`weakenedMana`, 기본 꺼짐)로만 받고 어느 전투 옵션인지 연결하지 않았으므로, 그 연결이 확정되면 넣는다(8절 대기).
+- [x] **6-6. 문서.** (2026-10-10 `docs/core-rules.md` 의 MissionStart 행·GameCursor 행·"미션 시작 조건"·"저장 오브젝트의 소유자" 갱신) 위 단계가 끝날 때마다 `docs/core-rules.md` 의 "근사한 부분"·"근사·미구현" 목록과 `docs/exe/bridge-pieces.md` 8.2 표에서 해소된 항목을 고친다. 이번 단계는 다리 표(8.2)에 해당 항목이 없다.
 
 ---
 
@@ -531,7 +550,7 @@ cpppj 는 "원본을 그대로 되살린다"가 목표라 아래를 원본대로
 ## 10. 사용자 확인이 필요한 것
 
 1. **착수 시점 — 해결(2026-10-07).** 사용자 요청으로 병행 개발을 시작했다. 이미 확정된 1~2단계를 완료했으며 미복원 범위는 8절대로 기다린다.
-2. **영어 UI 글꼴(5-3).** 영어를 원본 `.chfnt` 비트맵 글꼴로 바꾸고 한국어만 D2Coding 으로 둘지, 지금처럼 D2Coding 으로 통일할지.
+2. **영어 UI 글꼴(5-3) — 미해결, 지금 작업 순서의 첫 항목을 막고 있다(2026-10-10).** 영어를 원본 `.chfnt` 비트맵 글꼴로 바꾸고 한국어만 D2Coding 으로 둘지, 지금처럼 D2Coding 으로 통일할지. 에이전트 의견: AGENTS.md 의 "그래픽을 가능한 한 동일하게"와 2026-10-10 결정("원본과 완전히 동일한 동작" 우선)에 맞는 것은 **영어 = 원본 글꼴, 한국어 = D2Coding** 이다. 2026-10-10 `HJOW-X3D` 작업에서는 이 확인이 없어 5-3 을 건너뛰고 5-4·5-5·6단계를 먼저 했다.
 3. **설정 층 순서(2-2) — 해결(2026-10-07).** 실제 용어표 4개와 setup의 중복 키는 0개다. 전역 우선순위를 원본대로 정정하고, 명시 언어 층·영어 누락 보충으로 한국어 선택을 유지했다. 관련 회귀 통과.
 4. **번호 할당기 도입(4-2) — 해결(2026-10-09): 연결한다.** 사용자가 "번호 할당기와 스캔 커서를 세션에 연결한다"고 정했다. 결정론 검사합과 관련 테스트 기대값이 함께 바뀌는 것을 감수한다. 같은 지시로 그날은 문서에만 반영했고 **구현은 미착수**다. 선행 확인(다리 조각 생성 `00442c80` 의 할당 플래그, 원본 풀 크기 — 디컴파일 필요)과 단계는 [4-5](#sid-session-plan)에 있다. 남은 세부 결정은 "다리만 할당기에 올릴지, 모든 엔티티를 올릴지"(4-5 선행 확인 3번)다.
 5. **"원본과 완전히 동일한 동작"과 9절의 의도적 차이 — 해결(2026-10-10 사용자 결정): 원본처럼 동작하도록 바꾼다. 지금 구조를 둔 채 원본 게임의 경험을 거의 동일하게 만들 수 있으면 구조는 유지해도 되지만, 그렇게 할 수 없으면 구조 자체를 원본처럼 바꾼다.** 항목별 판정과 작업은 [9-1](#original-parity-plan)에 있다. 같은 날 먼저 적었던 에이전트 기본값("구조를 두고 cpppj 와 대조")은 폐기했다.
@@ -594,7 +613,7 @@ cpppj/build/bin/Release/NetstormCpp.exe --inspect-bridges originals
 | 메인 루프·프레임 | [main-loop.md](docs/exe/main-loop.md) | `client/ClientMain.cpp` |
 | 판본 비교(10.37·10.62·10.82·V12) | [cpp-reference-versions.md](docs/exe/cpp-reference-versions.md) | — |
 | C# 규칙 코어의 현재 범위와 근사 목록 | [core-rules.md](docs/core-rules.md) | — |
-| dotnetpj 복원 기록(날짜별) | [2026-10-07 자료 계층](docs/dotnet-reconstruction-20261007.md), [2026-10-09 다리·표면·그래프·번호·점유](docs/dotnet-reconstruction-20261009.md) | — |
+| dotnetpj 복원 기록(날짜별) | [2026-10-07 자료 계층](docs/dotnet-reconstruction-20261007.md), [2026-10-09 다리·표면·그래프·번호·점유](docs/dotnet-reconstruction-20261009.md), [2026-10-10 커서 표·배경 GIF 색·미션 시작 값](docs/dotnet-reconstruction-20261010.md) | — |
 
 ---
 

@@ -67,8 +67,20 @@ internal sealed class MainMenuView : IDisposable
     /// <summary>미션 지도 위에 옵션 목록만 표시하는 상태.</summary>
     public bool OptionsOnly { get; private set; }
 
-    /// <summary>원본 GIF를 읽고 메뉴와 미션이 공유하는 UI 장식을 연결한다.</summary>
-    public MainMenuView(GraphicsDevice device, GameResources resources, OriginalUiSkin skin,
+    /// <summary>
+    /// 원본 GIF를 읽고 메뉴와 미션이 공유하는 UI 장식을 연결한다.
+    /// 2026-10-10: 배경 GIF 를 게임 팔레트로 칠하도록 <paramref name="palette"/> 를 받는다 (<see cref="LoadImage"/>).
+    /// </summary>
+    /// <param name="device">텍스처를 만들 그래픽 장치</param>
+    /// <param name="resources">게임 자료 (GIF·팁·언어)</param>
+    /// <param name="palette">타이틀·구름 GIF 의 색 번호에 적용할 메뉴 화면 팔레트 (fortPal)</param>
+    /// <param name="skin">공유 UI 그리기 도구</param>
+    /// <param name="display">해상도·옵션 관리자</param>
+    /// <param name="audio">효과음 재생기 (없으면 소리 없이 동작)</param>
+    /// <param name="play">미션 이름을 받아 캠페인을 시작하는 동작</param>
+    /// <param name="quit">게임을 끝내는 동작</param>
+    /// <param name="help">도움말 주제를 여는 동작</param>
+    public MainMenuView(GraphicsDevice device, GameResources resources, Palette palette, OriginalUiSkin skin,
         DisplayManager display, AudioPlayer? audio, Action<string> play, Action quit, Action<string> help)
     {
         _display = display; _audio = audio; _play = play; _quit = quit; _skin = skin;
@@ -77,17 +89,29 @@ internal sealed class MainMenuView : IDisposable
         _tips = tipList == null ? null : new StartupTips(tipList);
         _korean = resources.Language == GameLanguage.Korean;
         _pixel = new Texture2D(device, 1, 1); _pixel.SetData(new[] { Color.White });
-        _background = LoadImage(device, resources, "d/titleMenu.gif");
-        _clouds = LoadImage(device, resources, "d/Gifcloud.gif");
+        _background = LoadImage(device, resources, "d/titleMenu.gif", palette);
+        _clouds = LoadImage(device, resources, "d/Gifcloud.gif", palette);
     }
 
-    /// <summary>파일이 없거나 읽을 수 없으면 단색 화면으로 계속 실행한다.</summary>
-    internal static Texture2D? LoadImage(GraphicsDevice device, GameResources resources, string path)
+    /// <summary>
+    /// 배경 GIF 를 색 번호로 해독해 화면 팔레트로 칠한 텍스처를 만든다. 원본처럼 GIF 안의 RGB 색 표는 쓰지 않는다.
+    /// 파일이 없거나 읽을 수 없으면 null 을 돌려주며 호출한 쪽은 단색 화면으로 계속 실행한다.
+    /// </summary>
+    /// <param name="device">텍스처를 만들 그래픽 장치</param>
+    /// <param name="resources">게임 자료</param>
+    /// <param name="path">자료 폴더 기준 GIF 경로 (예: "d/titleMenu.gif")</param>
+    /// <param name="palette">색 번호에 적용할 화면 팔레트</param>
+    /// <remarks>
+    /// 원본 00419ec0 → 004dae60 은 GIF 색 번호를 화면에 그대로 복사한다 (docs/exe/cpp-menu-reconstruction.md).
+    /// 2026-10-10 수정: 이전에는 Texture2D.FromStream 으로 GIF 내장 RGB 표를 써서 titleMenu.gif 의 295,080픽셀이
+    /// 원본 화면 색과 달랐다 (채널당 최대 12, LEFT_JOBS.dotnetpj.md 5-5).
+    /// </remarks>
+    internal static Texture2D? LoadImage(GraphicsDevice device, GameResources resources, string path, Palette palette)
     {
         byte[]? bytes = resources.Files.TryReadAllBytes(path);
         if (bytes == null) return null;
-        try { using var stream = new MemoryStream(bytes); return Texture2D.FromStream(device, stream); }
-        catch (Exception error) when (error is InvalidOperationException or ArgumentException) { return null; }
+        try { return SpriteAnimation.ToTexture(device, GifImage.Decode(bytes), palette); }
+        catch (InvalidDataException) { return null; }
     }
 
     /// <summary>선택 언어에 맞는 UI 문구를 고른다.</summary>
@@ -453,7 +477,9 @@ internal sealed class MainMenuView : IDisposable
                 // 구름 그림을 가로로 반복한다.
                 for (int x = 0; x < width; x += _clouds.Width) batch.Draw(_clouds, new Vector2(x, y), Color.White);
         }
-        if (!OptionsOnly && _background != null) batch.Draw(_background, new Rectangle((width - 640) / 2, (height - 480) / 2, 640, 480), Color.White);
+        // 타이틀 그림은 640×480 자리의 왼쪽 위에 **제 크기 그대로**(titleMenu.gif 는 639×480) 놓는다. 원본 004d0530 도 늘리지 않고 붙인다
+        // (cpppj UberGump 의 Paste 위치와 같다). 2026-10-10 수정: 이전에는 640 폭으로 늘려 그려 가로로 1픽셀 번졌다.
+        if (!OptionsOnly && _background != null) batch.Draw(_background, new Vector2((width - 640) / 2, (height - 480) / 2), Color.White);
         if (_page is "campaigns" or "missions")
         {
             Rectangle panel = Panel(width, height); _skin.Panel(batch, panel);

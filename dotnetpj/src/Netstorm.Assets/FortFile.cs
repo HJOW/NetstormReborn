@@ -35,8 +35,24 @@ public sealed record FortObject(
     /// <summary>원본 004bdc60의 저장 소유자 정규화. 저장하지 않은 값은 null로 남긴다.</summary>
     public int? NormalizedOwner => Owner is int owner ? owner == 0 || owner > 8 ? 1 : owner : null;
 
-    /// <summary>geyser·buried·island는 중립이다. 실제 세션에 적용하는 위치는 월드 복원 뒤 결정한다.</summary>
+    /// <summary>
+    /// 원본 로더가 정하는 소유자: geyser·buried·island 타입(플래그 2 의 0x10002002)은 0(중립), 그 밖에는 정규화한 저장 값.
+    /// 소유자를 저장하지 않는 타입은 null 이다 (원본은 호출자가 준 영역 소유자를 쓴다).
+    /// </summary>
     public int? OwnerForLoad => (Type.Flags2 & 0x10002002) != 0 ? 0 : NormalizedOwner;
+
+    /// <summary>
+    /// 게임 세션이 이 저장 오브젝트에 주는 소유 플레이어 번호: <see cref="OwnerForLoad"/>, 소유자를 저장하지 않는 타입은 0(중립).
+    /// 세션·규칙 코드는 저장 값 <see cref="Owner"/> 를 직접 쓰지 말고 이 값을 쓴다.
+    /// </summary>
+    /// <remarks>
+    /// 원본 004bdc60: 저장 소유자 바이트가 0 이거나 8 보다 크면 1 로 바꾼다 (docs/exe/cpp-fort-reconstruction.md).
+    /// 2026-10-10 추가: 세션이 저장 값을 그대로 써서 Save the Island! 의 residence 두 채(저장 값 0)가 원본·cpppj 의
+    /// 소유자 1 과 달리 중립이었다. 네 미션 2,036개 오브젝트의 소유자를 cpppj --dump-world 와 대조했다
+    /// (LEFT_JOBS.dotnetpj.md 6-1). 저장하지 않는 타입을 cpppj 어댑터처럼 1 로 두지는 않는다 — 원본 근거가 없고
+    /// 대조한 네 미션에는 그런 오브젝트가 없다.
+    /// </remarks>
+    public int LoadOwner => OwnerForLoad ?? 0;
 }
 
 /// <summary>청크 하나의 오브젝트 목록</summary>

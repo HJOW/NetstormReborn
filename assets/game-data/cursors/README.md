@@ -1,13 +1,32 @@
 # 원본 마우스 커서
 
-Netstorm 10.78 `originals/Netstorm.exe`의 `RT_CURSOR` 리소스에서 이미 추출된 파일을 복사했다. 원본 실행 파일을 수정하거나 클론 실행 중 읽지 않는다. 각 파일은 핫스폿 좌표 4바이트와 단색 DIB를 합친 308바이트이며 크기는 32×32다.
+Netstorm 10.78 `originals/Netstorm.exe`의 `RT_CURSOR` 리소스에서 이미 추출된 파일(`extracted/res/Netstorm/`, `tools/peres.py`)을 복사했다. 원본 실행 파일을 수정하거나 클론 실행 중 읽지 않는다. 각 파일은 핫스폿 좌표 4바이트와 단색 DIB를 합친 308바이트이며 크기는 32×32다.
 
-| 파일 | 그룹 ID | 상태 | 핫스폿 |
-|---|---:|---|---|
-| `RT_CURSOR_8.bin` | 113 | 화살표 | (10, 6) |
-| `RT_CURSOR_5.bin` | 109 | 금지 | (16, 16) |
-| `RT_CURSOR_20.bin` | 148 | 사제 이동: 얇은 × | (16, 16) |
-| `RT_CURSOR_7.bin` | 111 | 사제 선택 후 내 템플 위: 안쪽 화살표 네 개 | (16, 16) |
-| `RT_CURSOR_6.bin` | 110 | 사제 건물 배치: 굵은 × | (16, 16) |
+원본은 커서 번호 1~18을 리소스 그룹(`RT_GROUP_CURSOR`) 번호로 바꾸는 표(10.78 `005423a8`, CD판 `00516c60`)를 쓴다. 번호 0은 "아직 모양을 정하지 않음"이다. 그룹마다 그림(`RT_CURSOR`)이 하나씩 있고, 클론은 그림 번호로 파일을 읽는다. 표는 `Netstorm.Core/Rules/GameCursor.cs`(`GameCursor`·`GameCursors`)에 있다.
 
-원본 실행 중 커서와 리소스의 픽셀 대조 근거는 [TEST02 분석](../../../docs/videos/auto-test02-construct-20261004.md) 5절이다. `CursorBitmap`이 Windows AND/XOR 비트를 SDL 단색 커서의 data/mask로 바꾸므로 투명·검정·흰색·배경 반전 픽셀을 보존한다. [SDL_CreateCursor의 픽셀 규칙](https://wiki.libsdl.org/SDL2/SDL_CreateCursor)을 따른다.
+| 번호 | 그룹 ID | 파일 | 핫스폿 | 그림 | 쓰임 |
+|---:|---:|---|---|---|---|
+| 1 | 113 | `RT_CURSOR_8.bin` | (10, 6) | 흰 화살표 | 기본 커서 |
+| 2 | 110 | `RT_CURSOR_6.bin` | (16, 16) | × (흰 28픽셀·검정 28픽셀) | 사제 건물 배치 |
+| 3 | 111 | `RT_CURSOR_7.bin` | (16, 16) | 안쪽을 향한 화살표 네 개 | 사제 선택 후 내 템플 위 |
+| 4 | 108 | `RT_CURSOR_4.bin` | (16, 15) | 좌우 양방향 화살표 | 미확인 |
+| 5 | 107 | `RT_CURSOR_3.bin` | (15, 14) | 상하 양방향 화살표 | 미확인 |
+| 6 | 109 | `RT_CURSOR_5.bin` | (16, 16) | 금지 표시 | 사제의 이동 불가 대상·허공 |
+| 7 | 115 | `RT_CURSOR_9.bin` | (16, 10) | 좌우 양방향 화살표 가운데에 위쪽 삼각형 | 미확인 |
+| 8 | 116 | `RT_CURSOR_10.bin` | (16, 15) | 움켜쥐는 손 | 미확인 |
+| 9 | 131 | `RT_CURSOR_14.bin` | (16, 16) | 가로 막대 위의 위쪽 삼각형 | 미확인 |
+| 10 | 117 | `RT_CURSOR_11.bin` | (16, 16) | 속이 찬 아래쪽 삼각형 두 개 | 미확인 |
+| 11 | 130 | `RT_CURSOR_13.bin` | (16, 15) | 금지 표시 위아래에 삼각형 | 미확인 |
+| 12 | 129 | `RT_CURSOR_12.bin` | (16, 16) | 윤곽만 있는 아래쪽 삼각형 두 개 | 미확인 |
+| 13 | 132 | `RT_CURSOR_15.bin` | (16, 15) | 움켜쥐는 손 (파일 내용이 `RT_CURSOR_10.bin` 과 같다) | 미확인 |
+| 14 | 133 | `RT_CURSOR_16.bin` | (16, 16) | 받침 위의 위쪽 삼각형 | 미확인 |
+| 15 | 134 | `RT_CURSOR_17.bin` | (15, 13) | 가로 막대를 지나는 상하 화살표 | 미확인 |
+| 16 | 136 | `RT_CURSOR_18.bin` | (12, 9) | 가리키는 손 | 미확인 |
+| 17 | 141 | `RT_CURSOR_19.bin` | (15, 15) | 번개 모양 날이 달린 단검 | 미확인 |
+| 18 | 148 | `RT_CURSOR_20.bin` | (16, 16) | × (흰 55픽셀·검정 28픽셀) | 사제 이동 |
+
+- "쓰임"이 적힌 다섯 가지는 원본 실행 중 커서와 리소스의 픽셀 대조로 확인했다. 근거는 [TEST02 분석](../../../docs/videos/auto-test02-construct-20261004.md) 5절이다.
+- 나머지 13개는 2026-10-10에 표와 그림만 넣었다. **어떤 상황에 어떤 번호를 쓰는지는 원본 입력 처리(UserInput `004d62b0`)가 복원된 뒤에 연결한다.** "그림" 칸은 생김새를 적은 것이며 용도를 뜻하지 않는다. 그림을 한 장으로 보려면 `python tools/cursor_catalog.py catalog -o <png>`를 쓴다.
+- 핫스폿은 리소스 머리말의 값이다.
+
+`CursorBitmap`이 Windows AND/XOR 비트를 SDL 단색 커서의 data/mask로 바꾸므로 투명·검정·흰색·배경 반전 픽셀을 보존한다. [SDL_CreateCursor의 픽셀 규칙](https://wiki.libsdl.org/SDL2/SDL_CreateCursor)을 따른다.

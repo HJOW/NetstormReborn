@@ -127,10 +127,44 @@ public sealed record MissionStart(string? Title, string? LoadFort, int? StartSto
 
     /// <summary>임시 전략 AI를 쓰는 공개 캠페인 미션인지.</summary>
     public bool UsesCampaignAi => Campaign != null;
-    /// <summary>원본 aiStartMoney. 맵의 개발용 Money와 구분한다.</summary>
+    /// <summary>
+    /// 번호 없는 구식 머리 값 aiStartMoney (없으면 null). 원본에서 번호 없는 ai 설정은 **플레이어 2** 의 기본 입력이다.
+    /// 맵의 개발용 Money와 구분한다. 플레이어별 값은 <see cref="AiStormPower"/> 로 얻는다.
+    /// </summary>
     public int? AiStartMoney { get; init; }
-    /// <summary>원본 aiTech의 시작 지식.</summary>
+    /// <summary>번호 없는 구식 머리 값 aiTech 의 시작 지식 (플레이어 2 의 기본 입력). 플레이어별 값은 <see cref="AiKnowledgeFor"/> 로 얻는다.</summary>
     public IReadOnlyList<string> AiKnowledge { get; init; } = [];
+
+    /// <summary>번호가 붙은 머리 값 aiNStartMoney (AI 번호 → 시작 Storm Power). 적히지 않은 번호는 없다.</summary>
+    public IReadOnlyDictionary<int, int> AiStartMoneyByPlayer { get; init; } = new Dictionary<int, int>();
+
+    /// <summary>번호가 붙은 머리 값 aiNTech (AI 번호 → 시작 지식 이름 목록). 적히지 않은 번호는 없다.</summary>
+    public IReadOnlyDictionary<int, IReadOnlyList<string>> AiKnowledgeByPlayer { get; init; } = new Dictionary<int, IReadOnlyList<string>>();
+
+    /// <summary>
+    /// AI 플레이어의 시작 Storm Power. 번호가 붙은 값(aiNStartMoney)이 먼저이고, 플레이어 2 는 번호 없는 aiStartMoney 를
+    /// 대신 쓸 수 있으며, 어느 것도 없으면 0 이다. 사람 플레이어의 시작 값은 <see cref="StormPower"/> 다.
+    /// </summary>
+    /// <param name="player">AI 플레이어 번호 (2~8)</param>
+    /// <remarks>
+    /// 원본 시작 조건 읽기 004c2b20 → 004c2d40 (기준 구현 cpppj/src/o/Player.cpp, docs/exe/cpp-world-reconstruction.md).
+    /// 2026-10-10 추가: 이전에는 번호 없는 값만 읽고 공개 캠페인 미션에만 적용해, Save the Island! 의 AI 가 2000 대신
+    /// 전투 옵션 금액으로, TEST01 의 AI 2·3 이 0 대신 전투 옵션 금액으로 시작했다 (LEFT_JOBS.dotnetpj.md 6-2).
+    /// </remarks>
+    public int AiStormPower(int player) =>
+        AiStartMoneyByPlayer.TryGetValue(player, out int money) ? money : player == LegacyAiPlayer ? AiStartMoney ?? 0 : 0;
+
+    /// <summary>
+    /// AI 플레이어의 시작 지식 이름 목록 (all 은 확장하지 않은 머리 값 그대로). 번호가 붙은 값(aiNTech)이 먼저이고,
+    /// 플레이어 2 는 번호 없는 aiTech 를 대신 쓸 수 있으며, 어느 것도 없으면 빈 목록이다.
+    /// all 확장은 <see cref="ExpandKnowledge"/> 로 한다.
+    /// </summary>
+    /// <param name="player">AI 플레이어 번호 (2~8)</param>
+    public IReadOnlyList<string> AiKnowledgeFor(int player) =>
+        AiKnowledgeByPlayer.TryGetValue(player, out IReadOnlyList<string>? names) ? names : player == LegacyAiPlayer ? AiKnowledge : [];
+
+    /// <summary>번호 없는 구식 ai 머리 값(aiName·aiTech·aiStartMoney 등)이 가리키는 플레이어 번호.</summary>
+    public const int LegacyAiPlayer = 2;
     /// <summary>원본 aiCollectors의 초기 수집 유닛 수.</summary>
     public int AiCollectors { get; init; }
     /// <summary>AI 판단 간격(초). 원본 aiTimeBetweenMoves를 우선한다.</summary>
@@ -190,18 +224,33 @@ public sealed record MissionStart(string? Title, string? LoadFort, int? StartSto
         static int[] Numbers(string? text) => [.. (text ?? "").Split(';', ',', ' ')
             .Select(part => int.TryParse(part, out int number) ? number : 0).Where(number => number > 0)];
         var colors = new Dictionary<int, int>();
-        // ai1~ai8 의 동맹 목록과 색을 읽는다
+        var money = new Dictionary<int, int>();
+        var tech = new Dictionary<int, IReadOnlyList<string>>();
+        // 이름 목록 문자열("a;b")을 나눈다
+        static string[] Names(string? text) => (text ?? "").Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        // ai1~ai8 의 동맹 목록·색·시작 금액·시작 지식을 읽는다. 번호 없는 구식 키는 원본처럼 플레이어 2 가 대신 쓴다
+        // (동맹·색은 여기서 합치고, 금액·지식은 AiStormPower·AiKnowledgeFor 가 조회할 때 합친다).
         for (int player = 1; player <= MaximumPlayer; player++)
         {
-            int[] list = Numbers(Text($"ai{player}AllyList"));
+            // 이 번호의 ai 머리 값을 읽는다: "ai<번호><접미어>" 가 먼저이고 플레이어 2 는 번호 없는 "ai<접미어>" 도 본다
+            string? Ai(string suffix) => Text($"ai{player}{suffix}") ?? (player == LegacyAiPlayer ? Text($"ai{suffix}") : null);
+            int[] list = Numbers(Ai("AllyList"));
             if (list.Length > 0)
             {
                 allies[player] = list;
             }
-            int color = PlayerColors.Parse(Text($"ai{player}Color"));
+            int color = PlayerColors.Parse(Ai("Color"));
             if (color > PlayerColors.None)
             {
                 colors[player] = color;
+            }
+            if (Number($"ai{player}StartMoney") is int start)
+            {
+                money[player] = start;
+            }
+            if (Text($"ai{player}Tech") is { } names)
+            {
+                tech[player] = Names(names);
             }
         }
         return new MissionStart(Text("title"), Text("loadFort"), Number("myStartMoney"), knowledge,
@@ -212,7 +261,9 @@ public sealed record MissionStart(string? Title, string? LoadFort, int? StartSto
             MyAllyList = Numbers(Text("myAllyList")),
             AllowAnyCapture = Flag("allowAnyCapture"),
             AiStartMoney = Number("aiStartMoney"),
-            AiKnowledge = (Text("aiTech") ?? "").Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries),
+            AiKnowledge = Names(Text("aiTech")),
+            AiStartMoneyByPlayer = money,
+            AiKnowledgeByPlayer = tech,
             AiCollectors = Math.Clamp(Number("aiCollectors") ?? 0, 0, 8),
             AiMoveInterval = Math.Max(1, Number("aiTimeBetweenMoves") ?? 6),
         };

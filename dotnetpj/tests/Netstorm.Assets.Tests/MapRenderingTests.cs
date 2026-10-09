@@ -350,4 +350,34 @@ public sealed class MapRenderingTests
         Assert.Equal(secondCount, terrain.IslandCells.Count(cell => cell.Region == secondRegion));
         Assert.Equal(firstCount + secondCount, terrain.IslandCells.Count);
     }
+
+    /// <summary>
+    /// cpppj 가 기록한 네 미션의 본섬 마스크(256×256, 빈 칸 255·섬 칸은 영역 번호)의 SHA-256 과 본섬 칸 수를 대조한다.
+    /// 기대값은 docs/exe/cpp-world-reconstruction.md "검사 결과" 표이며, cpppj <c>--dump-world</c> 의 마스크와 같은 형식이다.
+    /// 아카이브 안의 맵과 느슨한 파일(TEST01)을 같은 경로(<see cref="GameResources.LoadFort"/>)로 읽는다.
+    /// 2026-10-10 추가 (LEFT_JOBS.dotnetpj.md 6-3): 기존 검사에는 두 미션만 있었다.
+    /// </summary>
+    /// <param name="name">맵 이름 (.fort 확장자 없이)</param>
+    /// <param name="cells">본섬 칸 수</param>
+    /// <param name="expectedHash">마스크 65,536바이트의 SHA-256 (소문자 16진수)</param>
+    [Theory]
+    [InlineData("thewarbegins", 1505, "b24af563875ef935aa1053d521a6abf8490c4ddea840ac1845b43223fd0436d1")]
+    [InlineData("savetheisland", 2082, "68e699f55ad34041f316f4466f6c33d2edb6807833a648462a64ebbc2c505cc8")]
+    [InlineData("BridgeTheGap", 763, "e16dd045520434a91d8ba43d078c7a11f56f3b8a87303ab8a6b2fa2496882584")]
+    [InlineData("TEST01", 5172, "ad2dafb1e5225e6be32e3a70a77cdc5b0475841dead39a4490804f6a404e6079")]
+    public void Original_IslandMaskMatchesCppWorld(string name, int cells, string expectedHash)
+    {
+        var resources = new GameResources(GameFileSystem.Open(OriginalData.RequireDirectory()), GameLanguage.English);
+        TypeCatalog catalog = resources.LoadTypes();
+        var terrain = new FortTerrainPreview(new FortMap(resources.LoadFort(name, catalog)), catalog.Find("isle")!.Definition);
+        var mask = Enumerable.Repeat(byte.MaxValue, MaskSize * MaskSize).ToArray();
+        // 본섬 칸마다 영역 번호를 적는다. 한 칸이 두 번 나오면 마스크가 달라지므로 먼저 비어 있는지 본다.
+        foreach (FortTerrainCell cell in terrain.IslandCells)
+        {
+            Assert.Equal(byte.MaxValue, mask[cell.Y * MaskSize + cell.X]);
+            mask[cell.Y * MaskSize + cell.X] = checked((byte)cell.Region);
+        }
+        Assert.Equal(cells, terrain.IslandCells.Count);
+        Assert.Equal(expectedHash, Convert.ToHexStringLower(SHA256.HashData(mask)));
+    }
 }

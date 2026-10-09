@@ -99,7 +99,7 @@ public static class BattleSessionFactory
         // 저장 다리 오브젝트마다 격자 칸을 만들어 짝지어 둔다
         foreach ((int id, FortMapObject item) in battle.InitialObjects.Where(o => ObjectKinds.Of(o.Item.Object.Type) == ObjectKind.Bridge && o.Item.Object.BridgeShape is not null))
         {
-            stored[item] = grid.AddStored(frames, item.Object.BridgeShape!.Value, item.X, item.Y, item.Object.Owner ?? 0, id);
+            stored[item] = grid.AddStored(frames, item.Object.BridgeShape!.Value, item.X, item.Y, item.Object.LoadOwner, id);
         }
         session = new BattleSession(battle, grid, types, mission, humanPlayer, startStormPower, seed, stored);
         return session;

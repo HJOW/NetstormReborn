@@ -45,12 +45,32 @@ public sealed class CursorBitmapTests
         Assert.Throws<InvalidDataException>(() => CursorBitmap.Parse(bytes));
     }
 
-    /// <summary>동봉된 다섯 원본 리소스의 크기와 픽셀 대조로 확정한 핫스팟을 확인한다.</summary>
+    /// <summary>
+    /// 동봉된 원본 커서 리소스 18개(그림 번호 3~20)의 크기와 핫스팟을 확인한다.
+    /// 핫스팟은 원본 실행 파일의 RT_CURSOR 머리말 값이며 5·6·7·8·20 은 실행 중 커서와의 픽셀 대조로도 확인했다.
+    /// 2026-10-10: 다섯 개에서 원본 커서 표 전체로 넓혔다.
+    /// </summary>
+    /// <param name="resource">그림 리소스 번호 (RT_CURSOR)</param>
+    /// <param name="hotX">핫스팟 x</param>
+    /// <param name="hotY">핫스팟 y</param>
     [Theory]
+    [InlineData(3, 15, 14)]
+    [InlineData(4, 16, 15)]
     [InlineData(5, 16, 16)]
     [InlineData(6, 16, 16)]
     [InlineData(7, 16, 16)]
     [InlineData(8, 10, 6)]
+    [InlineData(9, 16, 10)]
+    [InlineData(10, 16, 15)]
+    [InlineData(11, 16, 16)]
+    [InlineData(12, 16, 16)]
+    [InlineData(13, 16, 15)]
+    [InlineData(14, 16, 16)]
+    [InlineData(15, 16, 15)]
+    [InlineData(16, 16, 16)]
+    [InlineData(17, 15, 13)]
+    [InlineData(18, 12, 9)]
+    [InlineData(19, 15, 15)]
     [InlineData(20, 16, 16)]
     public void OriginalResources_KeepTheirDimensionsAndHotspots(int resource, int hotX, int hotY)
     {

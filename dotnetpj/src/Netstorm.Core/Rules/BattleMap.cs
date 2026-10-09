@@ -83,7 +83,7 @@ public sealed class BattleMap
             }
             _initialObjects.Add((id, item));
             ObjectKind kind = ObjectKinds.Of(item.Object.Type);
-            int owner = item.Object.Owner ?? 0;
+            int owner = item.Object.LoadOwner;
             if (kind == ObjectKind.Temple && item.Territory is int territory && owner != 0)
             {
                 Ownership.SetTemple(territory, owner);
