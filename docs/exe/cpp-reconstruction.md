@@ -1,6 +1,8 @@
 # CD판 대조·기계어 검증과 C++ 1차 복원
 
-2026-10-10 최신(`HJOW-Athlon`): **[공통 프레임 진행·사제 낙하 프레임 연결](cpp-frame-advance-reconstruction.md)** 완료. signed DWORD 증분의 한 번 보정/반환과 실제 프레임 지정을 복원했다. 실제 Display·Unpop/Pop의 한 호출 늦은 해시 이동, SharedRegular/Kernel의 J 반복→착지→예약 제거에 연결했다. 새 독립 원본 **23,040개**, 누적 인계 **380,542개**. Release 경고/오류 **0**, CTest 내부 **457개·실패 0**(111.87초), 감사 **69종 모두 통과**. 다음은 일반 사제 Pop/Activate의 파생 후처리·보호막 Pop/destroy/소리 수명, 이어 raw GUI 건설·경제·전투·승패다. outpost/LAN 3차·한국어/요구사항/MCP 4차 유지. 최신 인계는 [LEFT_JOBS.md](../../LEFT_JOBS.md)를 따른다.
+2026-10-10 최신(`HJOW-Athlon`): **[일반 사제 Pop/Activate 연결·영어 원본 글꼴 확인](cpp-priest-pop-reconstruction.md)** 완료. 명시 등록한 전체 사제 후처리로 가상 분배하고 공통 장부/깊이를 한 번 처리한다. 실제 회복/낙하 예약→중첩 Pop→프레임 크기의 해시 이동→착지에 연결했다. 새 독립 원본 **3,840개**, 누적 인계 **384,382개**. Release 경고/오류 **0**, CTest 내부 **462개·실패 0**(115.39초), 원본 근거 감사 **70종 모두 통과**. 영어 원본 글꼴 18개·4,608자·302,480픽셀 대조, 브리핑 기본 본문 슬롯 0(Arial 14/700)으로 수정. 한국어=D2Coding 정책이며 Unicode 출력 경로는 4차 후속이다. 다음은 보호막 Pop/destroy/소리 수명·raw 월드/GUI 건설·경제·전투·승패다. outpost/LAN 3차 유지. 최신 인계는 [LEFT_JOBS.md](../../LEFT_JOBS.md)를 따른다.
+
+2026-10-10 앞 단계(`HJOW-Athlon`): **[공통 프레임 진행·사제 낙하 프레임 연결](cpp-frame-advance-reconstruction.md)** 완료. signed DWORD 증분의 한 번 보정/반환과 실제 프레임 지정을 복원했다. 실제 Display·Unpop/Pop의 한 호출 늦은 해시 이동, SharedRegular/Kernel의 J 반복→착지→예약 제거에 연결했다. 새 독립 원본 **23,040개**, 누적 인계 **380,542개**. Release 경고/오류 **0**, CTest 내부 **457개·실패 0**(111.87초), 감사 **69종 모두 통과**. 다음은 일반 사제 Pop/Activate의 파생 후처리·보호막 Pop/destroy/소리 수명, 이어 raw GUI 건설·경제·전투·승패다. outpost/LAN 3차·한국어/요구사항/MCP 4차 유지. 최신 인계는 [LEFT_JOBS.md](../../LEFT_JOBS.md)를 따른다.
 
 2026-10-10 앞 단계(`HJOW-Athlon`): **[Carrier +0xcc·사제 +0xc8 낙하 연결](cpp-carrier-check-reconstruction.md)** 완료. 현재 genus/0.9999f spot 조회와 J 방향의 재시작 생략을 복원했다. 실제 사제 +0xcc는 genus 0x210000의 제외 조건으로 거짓이며 HP/상태 전환이 아니다. 실제 표면 삭제/finder→공유 Regular·비권한 postPop/공통 장부·나선 생성 검사에 연결했다. 새 독립 원본 **2,028개**, 누적 인계 **357,502개**. Release 경고/오류 **0**, CTest 내부 **451개·실패 0**(115.64초), 감사 **68종 모두 통과**. 일반 사제 Pop·프레임/공간/보호막/소리 수명·raw GUI 건설/경제/전투/승패는 후속이다. outpost/LAN은 3차, 한국어/요구사항/MCP는 4차로 유지했다. 최종 인계는 [LEFT_JOBS.md](../../LEFT_JOBS.md)를 따른다.
 
@@ -15,7 +17,7 @@
 
 > 최신 생성 후속: [생성자 주소 표·base 생성/가상 초기화·free/void Take](cpp-creation-reconstruction.md)를 원본 SID 풀에 연결했다. 현재 CTest **104개 내부 검사**, 제한 x86 입력 행 **36,510개**이며 생성자 주소 표 359행은 별도다. 파생/공간 수명·실제 GameWorld 연결은 남았다. 위의 43/69개 등의 수치는 앞선 단계의 기록이다.
 
-> 2026-10-10 최신: [사제 보호막 생성·소리·안내 요청](cpp-priest-shield-reconstruction.md). 새 독립 x86 2,496개·누적 인계 347,962개, 실제 factory/owner·lookup/삭제 준비 연결, CTest 내부 435개·감사 65종 통과. 전체 wrapper/실제 finder·공통 owner 정상 반환이며 생성/Pop·소리/문구 하위 몸체만 대체한다. 보호막 공간 수명·사제 postPop 후반/일반 Pop·싱글플레이 완주는 후속이다. 변경 AGENTS.md대로 outpost/TCP/IP LAN은 3차 목표다. 마지막 디컴파일 PC: HJOW-Athlon, 2026-10-09(자정 뒤 구현/검증은 10-10).
+> 2026-10-10 앞 단계: [사제 보호막 생성·소리·안내 요청](cpp-priest-shield-reconstruction.md). 새 독립 x86 2,496개·누적 인계 347,962개, 실제 factory/owner·lookup/삭제 준비 연결, CTest 내부 435개·감사 65종 통과. 전체 wrapper/실제 finder·공통 owner 정상 반환이며 생성/Pop·소리/문구 하위 몸체만 대체한다. 보호막 공간 수명·사제 postPop 후반/일반 Pop·싱글플레이 완주는 후속이다. 변경 AGENTS.md대로 outpost/TCP/IP LAN은 3차 목표다. 마지막 디컴파일 PC: HJOW-Athlon, 2026-10-09(자정 뒤 구현/검증은 10-10).
 
 > 2026-10-09 앞 단계: [outpost·작업장 지역 소유 투표](cpp-region-ownership-reconstruction.md). 새 독립 x86 1,320개·누적 345,466개, 실제 좌표/지역 getter와 outpost/Damageable 수명 연결, CTest 내부 430개·감사 64종 통과. 원본 전체 투표/재귀/getter/clear/생성자를 정상 반환까지 실행하고 지형 flood/도장과 옵션 조회만 대체한다. 지형 도장·작업장 전체·실제 맵/raw 일반 Pop/삭제·플레이 가능한 게임은 후속이다. 마지막 디컴파일 PC: HJOW-Athlon, 2026-10-09.
 

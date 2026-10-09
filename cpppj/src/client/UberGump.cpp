@@ -425,9 +425,10 @@ void UberGump::Compose(bool controls) {
             }
             const int contentWidth = std::min(480, width - 64), panelWidth = contentWidth + 32;
             std::vector<RenderText> lines; int contentHeight = 0, menuRows = 0, totalButtonWidth = 0, buttons = 0;
-            // 제목·본문은 원본 슬롯 3/5와 원본 스타일 캐시로 측정한다.
+            // 브리핑/안내 창은 원본 캡처와 같은 제목 슬롯 3·본문 슬롯 0으로 측정하고 그린다.
+            // 도움말 문서 전용 슬롯 5는 별도 도움말 창 복원 때 사용한다(현재는 About 안내만 지원).
             for (const auto& p : page_.paragraphs) {
-                const auto& f = p.heading ? client_.Fonts().Get(3) : client_.Fonts().Get(5, p.italic ? FontStyle::Italic : p.bold ? FontStyle::Bold : FontStyle::Normal);
+                const auto& f = p.heading ? client_.Fonts().Get(3) : client_.Fonts().Get(0, p.italic ? FontStyle::Italic : p.bold ? FontStyle::Bold : FontStyle::Normal);
                 // 줄마다 같은 원본 스타일을 보존한다.
                 for (const auto& line : Wrap(f, FontBytes(p.text), contentWidth)) { lines.push_back({&f, line, 0, contentHeight, 255, 0, {1, 1}, true, false}); contentHeight += f.Height(); }
                 contentHeight += 8;

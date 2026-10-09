@@ -24,6 +24,8 @@ public:
     // 004950f0 / CD 0040c110의 carrier 진입 전까지만 실행한다. 전체 가상 postPop으로 등록하지 않는다.
     // extra & 9면 아무 효과도 없고, flags & 1일 때만 목록/회복을 예약한다.
     void Prefix(Sid sid,std::uint32_t flags) const;
+    // 일반 Pop이 공간 쓰기 전에 가상 표/타입과 목록 개수를 확인한다. 효과는 발생시키지 않는다.
+    void Validate(Sid sid) const;
     // 전체 postPop 조합이 같은 풀의 접두를 연결하는지 확인한다.
     const SidPool& Pool() const;
 private:

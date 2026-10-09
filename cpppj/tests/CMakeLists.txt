@@ -28,6 +28,7 @@ add_executable(netstorm_tests
     PriestFallTests.cpp
     CarrierCheckTests.cpp
     FrameAdvanceTests.cpp
+    PriestPopTests.cpp
     ConfigOracleTests.cpp
     ConfigInterfaceTests.cpp
     FortTests.cpp
@@ -255,3 +256,7 @@ set_source_files_properties(CarrierCheckTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 실제 프레임 진행/지정/글자 구간 생성의 독립 원본 관찰을 재생할 경로다.
 set_source_files_properties(FrameAdvanceTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_FRAMEADVANCE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/frameadvance-x86.tsv\"")
+
+# 실제 공통 Pop/Activate→사제 postPop의 독립 원본 관찰을 재생한다.
+set_source_files_properties(PriestPopTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PRIESTPOP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/priestpop-x86.tsv\"")

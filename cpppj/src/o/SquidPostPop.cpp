@@ -1,5 +1,6 @@
 // 실제 공통 후처리에서 선택한 효과만 구현하며 미복원 호출을 변경 전에 거부한다.
 #include "o/SquidPostPop.h"
+#include "o/RawPriestPostPopTail.h"
 #include "o/SquidPop.h"
 #include "o/RawIslandPostPop.h"
 #include <algorithm>
@@ -60,7 +61,17 @@ bool SquidPostPop::HandlesIsland(Sid sid) const {
     return islandPrefix_ && Vtable(pool_.Slot(sid))==expected;
 }
 // 파생 표는 서로 다른 주소이므로 한 종류만 참이 된다.
-bool SquidPostPop::HandlesDerived(Sid sid) const { return HandlesBridge(sid) || HandlesIsland(sid) || HandlesSurface(sid); }
+bool SquidPostPop::HandlesDerived(Sid sid) const { return HandlesBridge(sid) || HandlesIsland(sid) || HandlesSurface(sid) || HandlesPriest(sid); }
+// 완성한 후처리와 같은 풀인지 구성 시 확인한다. 전역 지원 vtable 표는 확장하지 않는다.
+void SquidPostPop::SetPriestPostPop(const RawPriestPostPopTail* postPop) {
+    if (postPop && &postPop->Pool()!=&pool_) throw std::invalid_argument("사제 Pop/후처리 풀 불일치");
+    priestPostPop_=postPop;
+}
+// 원본 사제 postPop 재정의는 사제 자산 타입과 실제 가상 표 둘 다 필요하다.
+bool SquidPostPop::HandlesPriest(Sid sid) const {
+    const auto raw=pool_.Slot(sid);
+    return priestPostPop_ && raw[10]==kPriestType && Vtable(raw)==(pool_.Edition()==OriginalEdition::Patch1078 ? kPatchPriestVtable : kCdPriestVtable);
+}
 // 순환하는 생성/Pop 연결을 인스턴스 구성 뒤에 공급한다.
 void SquidPostPop::SetSurfacePrefix(std::function<void(Sid,std::uint32_t)> prefix) { surfacePrefix_=std::move(prefix); }
 // 가상 표와 명시적 접두가 둘 다 있어야 noIsland 후처리를 허용한다.
@@ -99,6 +110,7 @@ void SquidPostPop::Validate(Sid sid,std::uint32_t flags,const RawGraphPop* pop) 
     if (sid.value<5 || (bytes[11]&(kFree|kContained)) || bytes[10]<kFirstAssetTypeNumber || bytes[10]>=types_.size())
         throw std::logic_error("postPop raw 자산 상태 오류");
     if (!SquidPop::Supports(pool_.Edition(),Vtable(bytes),flags) && !HandlesDerived(sid)) throw std::logic_error("파생 postPop 미복원");
+    if (HandlesPriest(sid)) priestPostPop_->Validate(sid);
     ValidateBase(sid,flags,pop);
 }
 // 파생 몸체의 명시적 공통 호출용 검사다. 자동 가상 분배의 지원 검사는 Validate에 남긴다.
@@ -129,9 +141,14 @@ void SquidPostPop::ValidateBase(Sid sid,std::uint32_t flags,const RawGraphPop* p
         if (owner) static_cast<void>(state_.ownerFactories[owner].Items());
     }
 }
-// 성공한 공간 Pop이 비전투 Activate에 전달한 flags를 그대로 사용한다.
+// 성공한 공간 Pop의 flags로 가상 후처리를 분배한다. 전체 사제 wrapper는 자기 공통 깊이를 감소시킨다.
 void SquidPostPop::Activate(Sid sid,std::uint32_t flags) {
-    Validate(sid,flags); ++state_.depth;
+    Validate(sid,flags);const auto before=state_.depth; ++state_.depth;
+    if (HandlesPriest(sid)) {
+        priestPostPop_->PostPop(sid,flags);
+        if (state_.depth!=before) throw std::logic_error("사제 Activate 공통 깊이 불일치");
+        return;
+    }
     if (HandlesBridge(sid)) BridgePrefix(pool_,sid,flags,bridgeConnector_);
     // 섬 받침은 접두(종유석·연결 순회) 뒤에 같은 flags로 공통 후처리를 부른다.
     else if (HandlesIsland(sid)) islandPrefix_(sid,flags);

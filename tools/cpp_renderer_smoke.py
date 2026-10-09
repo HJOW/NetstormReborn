@@ -96,9 +96,10 @@ def render_text(image, font, text, x, y):
 
 
 def main():
-    """원본 해시를 보존하며 새 cpppj 창만 실행한다. 옵션·시작 표시는 finally에서 복구한다."""
+    """원본 해시를 보존하며 콘솔 전수 대조와 선택적 cpppj 창 검사를 실행한다. 창 설정은 복구한다."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--exe', type=Path, default=ROOT / 'cpppj/build/bin/Release/NetstormCpp.exe')
+    parser.add_argument('--console-only', action='store_true', help='창/설정 변경 없이 원본 글꼴의 모든 표/픽셀과 커서 리소스만 대조한다')
     args = parser.parse_args()
     executable = args.exe.resolve()
     OUTPUT.mkdir(parents=True, exist_ok=True)
@@ -127,6 +128,13 @@ def main():
             report['glyphs'] += 256
             render_text(expected, font, f'Font {slot}/{style}: NetStorm Islands at War 0123456789', 20, y)
             y += font['height'] + 12
+    if args.console_only:
+        if snapshots(root) != before: raise RuntimeError('콘솔 글꼴 검사 뒤 원본 변경')
+        report['original_files_unchanged'] = len(before)
+        report['console_only'] = True
+        (OUTPUT / 'console-report.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+        return
     screenshot = OUTPUT / 'fonts.bmp'
     with preserve_game_settings(root, 'd'):
         result = subprocess.run([str(executable), '--run', str(root), '--view', 'fonts', '--window', '--frames', '5',

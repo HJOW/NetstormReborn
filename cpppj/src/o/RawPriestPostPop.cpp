@@ -32,13 +32,18 @@ RawPriestPostPop::RawPriestPostPop(SidPool& pool,const SquidReward& hp,PriestPos
     if (&hp.Pool()!=&pool) throw std::invalid_argument("사제 postPop/최대 HP의 SID 풀이 다릅니다");
     if (!hooks_.findRegular || !hooks_.reserveRegular || !hooks_.addRegular) throw std::invalid_argument("사제 회복 예약 효과 누락");
 }
-// carrier 호출 이후 낙하/경로/전용 이벤트 실행은 다음 복원 단계다.
-void RawPriestPostPop::Prefix(Sid sid,std::uint32_t flags) const {
-    const auto raw=pool_.AllocatedBytes(sid);
+// 최초 등록의 공간 쓰기 전에 접두 계약을 확인한다. 상태/목록/예약은 바꾸지 않는다.
+void RawPriestPostPop::Validate(Sid sid) const {
+    const auto raw=pool_.Slot(sid);
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     if (raw[kType]!=kPriestType || Vtable(raw)!=(patch ? kPatchPriestVtable : kCdPriestVtable))
         throw std::invalid_argument("사제 postPop 가상 표/타입 불일치");
     if (state_.priests.count>state_.priests.entries.size()) throw std::invalid_argument("사제 목록 개수 오류");
+}
+// 목록/회복 접두 뒤 전체 Carrier/보호막 처리는 RawPriestPostPopTail이 이어 준다.
+void RawPriestPostPop::Prefix(Sid sid,std::uint32_t flags) const {
+    Validate(sid);const auto raw=pool_.AllocatedBytes(sid);
+    const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     if (raw[patch ? 40 : 35]&9) return;
     if (flags&1) {
         AddUnique(state_.priests,sid);

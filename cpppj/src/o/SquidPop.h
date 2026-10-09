@@ -14,7 +14,7 @@ public:
     // Unpop과 같은 풀/해시/spot을 받는다. 공통 표시·비용/목록/통계 후처리를 선택 연결한다.
     SquidPop(SidPool& pool,SquidHash& hash,std::span<std::uint8_t> spots,SquidDisplay* display=nullptr,SquidPostPop* postPop=nullptr);
     // 004b02d0 ↔ CD 004ad490. 현재 SHP 프레임 크기로 단계를 정하고 실제 raw 공간 필드를 갱신한다.
-    // 일반 다리/섬의 비전투 경로와 공통 firstPop/postPop을 지원한다. 건물 부착·파생 후처리는 사전 거부한다.
+    // 공통 firstPop/postPop과 명시 연결한 파생 후처리를 지원한다. 건물 부착·미연결 파생은 사전 거부한다.
     RawPopResult Pop(Sid sid,const RiftTypeRecord& type,float frameWidth,float frameHeight,
         float x,float y,std::uint32_t flags=0);
     // 원본 가상 주소를 메타데이터로 비교한다. 호스트 포인터로 호출하지 않는다.

@@ -7,6 +7,7 @@
 #include <functional>
 
 namespace netstorm::o {
+class RawPriestPostPopTail;
 struct SquidPostPopList {
     std::vector<std::uint32_t> entries; // 원본 미리 확보한 DWORD 배열. entries.size()가 capacity다.
     std::uint32_t count{};
@@ -43,7 +44,12 @@ public:
     void SetSurfacePrefix(std::function<void(Sid,std::uint32_t)> prefix);
     // noIsland 가상 표이며 접두가 연결돼 있는가.
     bool HandlesSurface(Sid sid) const;
-    // 이 인스턴스가 처리할 수 있는 파생 postPop(다리·섬 받침·noIsland)인가. Pop이 공간 변경 전에 묻는다.
+    // 완성한 사제 후처리를 명시 등록한다. 같은 풀이어야 하며 nullptr은 연결을 해제한다.
+    // 후처리의 Carrier는 이 인스턴스의 PostPopBase에 연결해야 한다. 후처리가 공통 깊이를 한 번 감소시킨다.
+    void SetPriestPostPop(const RawPriestPostPopTail* postPop);
+    // 실제 사제 타입/가상 표이며 전체 후처리를 등록했는가.
+    bool HandlesPriest(Sid sid) const;
+    // 이 인스턴스가 처리할 수 있는 파생 postPop인가. Pop이 공간 변경 전에 묻는다.
     bool HandlesDerived(Sid sid) const;
     // 공간 변경 전 연결된 그래프의 최종 Pop 상태·미복원 영역/AI/배치 효과·목록·비용을 확인한다.
     void Validate(Sid sid,std::uint32_t flags,const RawGraphPop* pop=nullptr) const;
@@ -71,5 +77,6 @@ private:
     std::function<void(Sid)> bridgeConnector_; // 연결 객체 생성/소유자 전파(004213b0). RawBridgeConnect::Connect를 잇는다.
     std::function<void(Sid,std::uint32_t)> islandPrefix_; // 섬 받침 postPop의 접두. RawBridgeConnect::IslandPostPopPrefix를 잇는다.
     std::function<void(Sid,std::uint32_t)> surfacePrefix_; // noIsland 최초 등록의 프레임/받침/소유자 효과.
+    const RawPriestPostPopTail* priestPostPop_{}; // 전체 wrapper다. 접두처럼 공통 장부를 추가 호출하지 않는다.
 };
 }

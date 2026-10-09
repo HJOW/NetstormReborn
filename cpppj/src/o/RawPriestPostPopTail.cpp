@@ -51,6 +51,10 @@ void RawPriestPostPopTail::PostPop(Sid sid,std::uint32_t flags) const {
     }
     hooks_.ensureShield(sid);
 }
+// 공간 변경 전에는 현재 위치의 이동 불가/지면을 읽지 않고 접두 계약만 확인한다.
+void RawPriestPostPopTail::Validate(Sid sid) const { prefix_.Validate(sid); }
+// Pop/Activate 분배가 같은 raw 풀을 사용하는지 확인한다.
+const SidPool& RawPriestPostPopTail::Pool() const { return pool_; }
 // 이동 가능한 현재 좌표의 조회 결과만 삭제하고 기존 보호막 생성을 그대로 연결한다.
 PriestPostPopTailHooks MakePriestPostPopTailShieldHooks(const SidPool& pool,const RawPriestShield& shield,
     const RawPriestForcefield& lookup,std::function<void(Sid,std::uint32_t)> destroy,std::function<void(Sid)> fall) {
