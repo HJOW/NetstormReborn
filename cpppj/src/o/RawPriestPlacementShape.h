@@ -26,8 +26,6 @@ public:
     // 배치 접두와 같은 풀/판본에 연결하는지 확인한다.
     const SidPool& Pool() const;
 private:
-    // 패치의 실제 frameCheck 조건과 CD의 물리 테이블 범위를 검사한다.
-    const SquidDisplayFrame& Header(std::uint32_t type,int frame) const;
     const SidPool& pool_;
     std::span<const RiftTypeRecord> types_;
     std::span<const PriestPlainCanonType> frames_;

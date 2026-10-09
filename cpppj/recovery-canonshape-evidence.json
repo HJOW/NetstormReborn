@@ -1,0 +1,77 @@
+{
+  "total": 5950,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-09",
+  "controls": [
+    639,
+    895
+  ],
+  "os_calls": 0,
+  "editions": {
+    "originals": {
+      "cases": 3150,
+      "valid_cells": 12510,
+      "native_calls": {
+        "0043cbd0": 6300,
+        "00425c20": 6300,
+        "0049a840": 31338,
+        "00425860": 31320,
+        "00425700": 34992,
+        "0049a940": 24714,
+        "00419850": 25020,
+        "00425830": 1620
+      },
+      "assertions": 0
+    },
+    "originalCD": {
+      "cases": 1400,
+      "valid_cells": 5560,
+      "native_calls": {
+        "004ed7c0": 2800,
+        "0041fcf0": 2800,
+        "0041feb0": 13920,
+        "0041fbb0": 15552,
+        "004442f0": 10984,
+        "0041fcc0": 720
+      },
+      "assertions": 0
+    },
+    "original1037": {
+      "cases": 1400,
+      "valid_cells": 5560,
+      "native_calls": {
+        "004ed7c0": 2800,
+        "0041fcf0": 2800,
+        "0041feb0": 13920,
+        "0041fbb0": 15552,
+        "004442f0": 10984,
+        "0041fcc0": 720
+      },
+      "assertions": 0
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/canonshape-x86.tsv": "271aa7ded45fe38dbeee9c533bd7d3ca8e1bc27d7fe0172dff3e95e5a34c8a5d",
+    "extracted/canonshape/original1037/creation.c": "b85978044de05ad7c46da512e0246f9369893ede4e3e06d2bd257784b1f535cb",
+    "extracted/canonshape/original1037/functions.tsv": "c84913585f0bfd6933937244fad51ac50c64ea17fe841633831f329c02a1924c",
+    "extracted/canonshape/originalCD/creation.c": "b85978044de05ad7c46da512e0246f9369893ede4e3e06d2bd257784b1f535cb",
+    "extracted/canonshape/originalCD/functions.tsv": "c84913585f0bfd6933937244fad51ac50c64ea17fe841633831f329c02a1924c",
+    "extracted/canonshape/originals/creation.c": "2cfb0e8d7099808f6381e88d7504be77d32485d42d1ef32a87f7e70ba76e506c",
+    "extracted/canonshape/originals/functions.tsv": "1dc6556c52dd3a171530bbd501f77eb48b8f9ba09b8e3a689fb159a1344a3c92",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_canonshape_oracle.py": "dda2099304ca41d6b0f8058e5c441bed4b3958f6842231de77c49d4364c576b5",
+    "tools/decomp_canontype_oracle.py": "d04aabe29f5c9d5129431182836883356dec1a0669e2435eb253482c7c754a9f",
+    "tools/decomp_damageablepredestroy_oracle.py": "b6bd591b17b886224e81b9d35dc863f12dea570c67aabf8a66280c7361785e75",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/decomp_priestgeometry_oracle.py": "c8d62204fcd8ec2fcb86cc9842ca46e0d3cdfba3c9afce3e90f9caec8fedc9bc",
+    "tools/decomp_priestshape_oracle.py": "03079b0a9a1709e81397a6d28cd1d8a76c2ed9dc6c128e453e5ec80613f95385",
+    "tools/ghidra/canonshape-functions.json": "f4bfbac909d648d2e71857ca635c8b90f32f906b104d0b4c6402e9881d311482"
+  },
+  "limits": [
+    "전체 getter·ctor/Advance·cell/FindFrame·패치 SHP helper 정상 반환/보존 레지스터/x87 검사",
+    "타입/프레임/SHP 헤더/기준점/배율은 분석 입력; 패턴 표는 실제 PE 데이터",
+    "대체 함수/OS/게임 실행 없음; 자산 로더/전체 MayPlace/지형/일반 Pop/GUI 검증 아님"
+  ]
+}

@@ -3,8 +3,10 @@
 #include "client/SquidRenderer.h"
 #include "client/PriestPlacementAssets.h"
 #include "o/CanonTypeDecoder.h"
+#include "o/RawCanonPixelShape.h"
 #include "o/SquidFrameBinding.h"
 #include "o/SquidFactory.h"
+#include <algorithm>
 #include <bit>
 #include <cstdio>
 #include <stdexcept>
@@ -91,6 +93,32 @@ void InspectPriestAssets(const std::filesystem::path& root,o::OriginalEdition ed
         std::printf("}");
     }
     std::printf("]}\n");
+}
+// 일반 자산의 기본 프레임과 모든 패턴/정상 회전을 실제 SHP getter로 계산한다.
+void InspectCanonPixelShapes(const std::filesystem::path& root,o::OriginalEdition edition) {
+    o::BaseFileSystem files(root);files.RegisterArchive(root/"netstorm.tarc");client::GameAssets assets(files,edition);client::PriestPlacementAssets data(assets);
+    o::SidPool pool(edition,32768,true);o::PriestPlacementShapeState state;
+    o::RawCanonPixelShape shape(pool,assets.TypeTable().Types(),data.frames,data.shapes,data.hotspots,data.geometry,state);
+    // 각 특수 타입의 실제 패턴 개수다. 전투 네 타입은 같은 한 칸 표를 공유한다.
+    constexpr std::array<int,8> kCounts{68,26,2,1,1,1,1,1};
+    // 같은 관찰 형식으로 패턴과 일반 자산의 여섯 float 비트를 출력한다.
+    const auto output=[&](std::uint32_t type,std::uint32_t argument,std::uint32_t direction) {
+        const auto measured=shape.Measure(type,argument,direction);
+        std::printf("{\"type\":%u,\"argument\":%u,\"direction\":%u,\"shape_bits\":[%u,%u,%u,%u,%u,%u]}\n",type,argument,direction,
+            std::bit_cast<std::uint32_t>(measured.bounds.left),std::bit_cast<std::uint32_t>(measured.bounds.top),std::bit_cast<std::uint32_t>(measured.bounds.right),
+            std::bit_cast<std::uint32_t>(measured.bounds.bottom),std::bit_cast<std::uint32_t>(measured.anchorX),std::bit_cast<std::uint32_t>(measured.anchorY));
+    };
+    // 실제 자산 타입은 내장 번호 70 뒤의 원본 순서다.
+    for (const auto& asset:assets.Types()) {
+        const auto type=static_cast<std::uint32_t>(o::kFirstAssetTypeNumber+asset.block);
+        const auto found=std::find(data.geometry.patternTypes.begin(),data.geometry.patternTypes.end(),type);
+        if (found==data.geometry.patternTypes.end()) { output(type,type,0);continue; }
+        const auto kind=static_cast<std::size_t>(found-data.geometry.patternTypes.begin());
+        // CD의 홀수 방향 assert를 피하고 네 실제 회전의 전체 범위를 출력한다.
+        for (int index=0;index<kCounts[kind];++index)
+            // 패턴의 argument는 프레임 번호가 아니라 패턴 표의 번호다.
+            for (std::uint32_t direction=0;direction<8;direction+=2) output(type,static_cast<std::uint32_t>(index),direction);
+    }
 }
 // 각 출력 줄은 하나의 실제 타입/패턴/방향이며 원본 파일/GUI 상태를 바꾸지 않는다.
 void InspectCanonPatterns(const std::filesystem::path& root,o::OriginalEdition edition) {

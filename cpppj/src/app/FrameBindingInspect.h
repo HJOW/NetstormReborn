@@ -10,4 +10,6 @@ void InspectFrameBinding(const std::filesystem::path& root,o::OriginalEdition ed
 void InspectPriestAssets(const std::filesystem::path& root,o::OriginalEdition edition);
 // 실제 자산과 현재 타입 전역으로 모든 패턴/짝수 방향을 콘솔에서 순회한다.
 void InspectCanonPatterns(const std::filesystem::path& root,o::OriginalEdition edition);
+// 창 없이 일반 자산/모든 패턴의 실제 SHP 픽셀 범위 비트를 출력한다.
+void InspectCanonPixelShapes(const std::filesystem::path& root,o::OriginalEdition edition);
 }
