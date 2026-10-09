@@ -1,5 +1,7 @@
 # 사제 postPop의 목록·회복 예약 복원
 
+2026-10-10 최신(`HJOW-Athlon`): [사제 postPop 후반·전체 wrapper 연결](cpp-priest-postpop-tail-reconstruction.md)을 완료했다. 이 문서의 접두→실제 Carrier/공통 장부→이동 불가/지면/프레임→낙하·보호막 요청을 조합하고 세 PE 전체 wrapper를 정상 반환까지 6,144개로 대조했다. 낙하/보호막 공간/일반 Pop/GUI는 후속이며 아래 접두 전용 기록과 구별한다.
+
 2026-10-10 후속(`HJOW-Athlon`): [보호막 생성·소리·로컬 안내 요청](cpp-priest-shield-reconstruction.md)을 전체 wrapper/실제 lookup·소유자 지정으로 복원했다. factory/owner·조회/삭제 준비 연결을 검사한다. 보호막의 가상 Pop/destroy·실제 오디오/안내 창 및 사제 postPop 후반 결합은 후속이다. 아래 생성 미복원 표기는 이전 단계의 기록이다.
 
 2026-10-08 최신 후속(`HJOW-Athlon`): [실제 회복 이벤트 0x25a](cpp-priest-regen-reconstruction.md)를 HP setter와 ProcessForm/Kernel에 연결했다. 생성자→이 문서의 회복 예약→실제 HP 80→113→146→179→200·재예약/종료 정리를 두 판본 server/client에서 확인했다. 공간/표시·중립 동작·패치 검증/측정 하위 효과와 전체 사제 Pop/GUI는 후속이다. 아래 이전 구현 기록의 “실제 회복 미복원”은 당시 상태다.

@@ -5,6 +5,8 @@
 #include <utility>
 
 namespace netstorm::o {
+// 사제 전체 postPop의 연결 검사를 위한 실제 풀 참조다.
+const SidPool& RawCarrierPostPop::Pool() const { return pool_; }
 namespace {
 // raw 공통 타입/상태/좌표와 지면 소유자 갱신을 허용하는 타입 flags1 비트다.
 constexpr std::size_t kType=10,kState=11,kX=14,kY=18;

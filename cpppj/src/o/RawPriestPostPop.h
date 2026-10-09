@@ -16,6 +16,7 @@ struct PriestPostPopHooks {
     std::function<bool()> reserveRegular; // 원본 new(0x28)의 성공 여부. 실패하면 HP 조회/생성을 생략한다.
     std::function<void(Sid,std::uint32_t,float)> addRegular; // 확보 성공 뒤 payload를 계산하여 Regular에 연결한다.
 };
+// 사제 목록/회복 예약 접두를 실행한다. 전체 postPop 조합에서도 이 접두를 재사용한다.
 class RawPriestPostPop {
 public:
     // 풀과 최대 HP 모듈은 같은 월드를 참조해야 하며, 상태와 훅의 참조 대상은 이 객체보다 오래 살아야 한다.
@@ -23,6 +24,8 @@ public:
     // 004950f0 / CD 0040c110의 carrier 진입 전까지만 실행한다. 전체 가상 postPop으로 등록하지 않는다.
     // extra & 9면 아무 효과도 없고, flags & 1일 때만 목록/회복을 예약한다.
     void Prefix(Sid sid,std::uint32_t flags) const;
+    // 전체 postPop 조합이 같은 풀의 접두를 연결하는지 확인한다.
+    const SidPool& Pool() const;
 private:
     SidPool& pool_;
     const SquidReward& hp_;

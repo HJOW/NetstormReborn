@@ -51,6 +51,7 @@ target_sources(netstorm PRIVATE
     RawPriestPreDestroy.cpp RawPriestPreDestroy.h
     RawPriestForcefield.cpp RawPriestForcefield.h
     RawPriestShield.cpp RawPriestShield.h
+    RawPriestPostPopTail.cpp RawPriestPostPopTail.h
     RawPriestSpawn.cpp RawPriestSpawn.h
     RawCanonPlacement.cpp RawCanonPlacement.h
     RawCanonPlacementPreview.cpp RawCanonPlacementPreview.h

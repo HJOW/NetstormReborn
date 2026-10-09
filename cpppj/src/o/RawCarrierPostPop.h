@@ -14,6 +14,7 @@ struct CarrierPostPopHooks {
     std::function<void(Sid,std::uint32_t)> validateBase; // 효과 전에 공통 후처리의 상태/Graph/장부를 검사한다.
     std::function<void(Sid,std::uint32_t)> base; // 같은 flags로 SquidPostPop의 비가상 몸체를 부른다.
 };
+// Carrier 확인→Damageable 지면 처리→공통 장부를 직접 호출한다. 파생 가상 지원은 별도다.
 class RawCarrierPostPop {
 public:
     // 직접 호출용 몸체다. 전체 파생 흐름/가상 분배를 자동으로 허용하지 않는다.
@@ -23,6 +24,8 @@ public:
     void PostPop(Sid sid,std::uint32_t flags) const;
     // 0044bf80 / CD 004621c0: 로딩 중 조건이 맞으면 지면 소유자 갱신, 이후 항상 공통 postPop이다.
     void DamageablePostPop(Sid sid,std::uint32_t flags) const;
+    // 사제 후처리 조합에서 다른 월드의 Carrier 연결을 거부한다.
+    const SidPool& Pool() const;
 private:
     // 효과 발생 전에 raw 자산/타입과 공통 경계를 검사한다.
     void Validate(Sid sid,std::uint32_t flags) const;

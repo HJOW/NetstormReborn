@@ -24,6 +24,7 @@ add_executable(netstorm_tests
     OutpostLifecycleTests.cpp
     RegionOwnershipTests.cpp
     PriestShieldTests.cpp
+    PriestPostPopTailTests.cpp
     ConfigOracleTests.cpp
     ConfigInterfaceTests.cpp
     FortTests.cpp
@@ -236,3 +237,6 @@ set_source_files_properties(RegionOwnershipTests.cpp PROPERTIES COMPILE_DEFINITI
 # 사제 보호막 전체 생성 wrapper의 독립 원본 관찰이다.
 set_source_files_properties(PriestShieldTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PRIESTSHIELD_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/priestshield-x86.tsv\"")
+# 사제 postPop 전체 wrapper의 독립 원본 관찰 경로다.
+set_source_files_properties(PriestPostPopTailTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PRIESTPOSTPOPTAIL_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/priestpostpoptail-x86.tsv\"")

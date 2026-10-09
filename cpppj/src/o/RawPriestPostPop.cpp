@@ -4,6 +4,8 @@
 #include <utility>
 
 namespace netstorm::o {
+// 후반 조합의 풀 혼합 검사를 위해 읽기 전용 참조를 반환한다.
+const SidPool& RawPriestPostPop::Pool() const { return pool_; }
 namespace {
 // 판본 공통 raw 필드 위치와 원본 회복 분모/배율이다. 배율은 두 PE에서 float 50.0이다.
 constexpr std::size_t kType=10,kOriginalOwner=12;
