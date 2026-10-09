@@ -1,5 +1,7 @@
 # Carrier·Damageable postPop의 직접 호출 복원
 
+후속 완료(2026-10-10): [실제 Carrier +0xcc·사제 +0xc8](cpp-carrier-check-reconstruction.md)를 복원했다. 실제 사제 +0xcc는 genus 0x210000의 제외 조건 때문에 거짓이다. 지면 소유/공간 효과와 일반 사제 Pop은 후속이며 아래 내용은 2026-10-08 당시 범위다.
+
 2026-10-08 최신 후속(`HJOW-Athlon`): [실제 사제 회복 이벤트 0x25a](cpp-priest-regen-reconstruction.md)를 HP setter·기존 Kernel에 연결했다. 전체 회복 분기의 호출 순서를 대조했으며, 이번 문서의 postPop +0xcc/지면 효과 및 회복 쪽 공간/표시·중립/추적 하위 효과는 계속 외부 훅이다. 일반 사제 Pop/GUI·보호막/낙하/preDestroy는 후속이다.
 
 2026-10-08 후속(`HJOW-Athlon`): [사제 HP/지면 상태 조회와 HP setter](cpp-priest-state-reconstruction.md)를 복원했다. 절반 HP 전환에서 실제 가상 공간 효과는 여전히 외부 훅이며, 전체 사제 Pop/회복 이벤트/보호막/낙하/GUI는 후속이다. 최신 디컴파일 수행 호스트는 [내보내기 문서](ghidra-exports.md)를 따른다.

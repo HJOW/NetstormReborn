@@ -35,6 +35,9 @@ public:
     // 보호막→공유 이벤트 예약→권한 Unpop(0)/Repop(0x800)→현재 좌표 소리 순서다.
     // 원본: 004941f0 / CD 0040c880. 기존 낙하 예약 중복은 검색하지 않는다.
     void Begin(Sid sid) const;
+    // 현재 signed 방향이 J가 아닐 때만 Begin을 호출하고 항상 참을 반환한다.
+    // 원본: 사제 vtable +0xc8, 00494e80 / CD 0040d770. 기존 예약 개수는 검사하지 않는다.
+    bool TryFall(Sid sid) const;
     // count/payload는 읽지 않는다. 지면이 있으면 0, 없으면 0.1f를 반환한다.
     // 원본: 00494580→00493e60 / CD 0040ccd0→0040c430.
     float Handle(Sid sid,std::uint32_t event,std::uint32_t count,float payload) const;
@@ -53,6 +56,9 @@ private:
 };
 // 실제 사제 vtable의 0x25b를 처리하고 다른 사건은 명시 fallback에 넘긴다.
 RegularHandler MakePriestFallHandler(const SidPool& pool,const RawPriestFall& fall,RegularHandler fallback={});
+// 실제 사제 vtable의 +0xc8을 연결한다. 다른 walker는 명시 fallback이 있어야 처리한다.
+std::function<bool(Sid)> MakePriestFallWalker(const SidPool& pool,const RawPriestFall& fall,
+    std::function<bool(Sid)> fallback={});
 // 실제 공유 Regular/보호막 생성·조회와 공급된 공간/소리 훅을 합친다.
 PriestFallHooks MakePriestFallHooks(SquidProcessHost& host,const RawPriestShield& shield,
     const RawPriestForcefield& lookup,std::function<void(Sid,std::uint32_t)> destroy,PriestFallHooks hooks);

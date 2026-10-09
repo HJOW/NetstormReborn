@@ -26,6 +26,7 @@ add_executable(netstorm_tests
     PriestShieldTests.cpp
     PriestPostPopTailTests.cpp
     PriestFallTests.cpp
+    CarrierCheckTests.cpp
     ConfigOracleTests.cpp
     ConfigInterfaceTests.cpp
     FortTests.cpp
@@ -245,3 +246,7 @@ set_source_files_properties(PriestPostPopTailTests.cpp PROPERTIES COMPILE_DEFINI
 # 원본 낙하 요청/0x25b 관찰을 일반 C++ 검사에서 재생할 경로다.
 set_source_files_properties(PriestFallTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PRIESTFALL_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/priestfall-x86.tsv\"")
+
+# Carrier 지면 조회/사제 가상 낙하의 독립 원본 관찰을 재생할 경로다.
+set_source_files_properties(CarrierCheckTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CARRIERCHECK_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carriercheck-x86.tsv\"")

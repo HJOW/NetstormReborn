@@ -1,5 +1,7 @@
 # 사제 낙하 요청·공유 Regular·0x25b 처리 복원
 
+후속 완료(2026-10-10): [Carrier 지면 조회·사제 가상 낙하](cpp-carrier-check-reconstruction.md)의 사제 +0xc8/J 재시작 생략을 `TryFall`로 복원하고 표면 삭제의 실제 finder→공유 Regular에 연결했다. 일반 사제 Pop·프레임/공간/소리 수명은 후속이다.
+
 2026-10-10. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-10.** AGENTS.md·두 인계와 cpppj 내부 계획/주석 규칙을 다시 읽고 현재 호스트 일치를 확인했다. 새 `priestfall` 목록 **15/15/15개**를 같은 PC에서 읽기 전용으로 내보냈다. 10.78 싱글플레이 복원이 현재 우선이며 outpost/LAN은 3차, 한국어·요구사항/MCP는 4차다. 게임·클론 창 실행과 보호 파일/dotnetpj 변경·커밋/푸시 없음.
 
 [`RawPriestFall`](../../cpppj/src/o/RawPriestFall.h)은 [postPop 후반](cpp-priest-postpop-tail-reconstruction.md)에 남아 있던 낙하 요청과 이벤트 `0x25b`의 **분기·호출 순서·예약/종료 반환**을 복원한다. 실제 프로세스와 보호막 생성/조회는 기존 모듈을 재사용한다. 프레임/공간/오디오 하위 효과는 명시적인 외부 경계다.

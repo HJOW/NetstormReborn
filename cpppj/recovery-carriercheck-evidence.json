@@ -1,0 +1,130 @@
+{
+  "schema": 1,
+  "primary_target": "10.78",
+  "last_decompiled_host": "HJOW-Athlon",
+  "date": "2026-10-10",
+  "total": 2028,
+  "controls": [
+    639,
+    895
+  ],
+  "editions": {
+    "originals": {
+      "binary": "originals/Netstorm.exe",
+      "cases": 676,
+      "executions": 1352,
+      "native_calls": {
+        "00426fc0": 776,
+        "004ac200": 776,
+        "0049a840": 1412,
+        "004e49c0": 576,
+        "00494e80": 636,
+        "004ad710": 636,
+        "004941f0": 414,
+        "00496f00": 222
+      },
+      "stub_calls": {
+        "virtual_c8": 60,
+        "S": 414,
+        "new": 414,
+        "attach": 222,
+        "W": 414,
+        "U": 192,
+        "P": 192
+      },
+      "assertions": 0,
+      "instructions": 79308
+    },
+    "originalCD": {
+      "binary": "originalCD/NETSTORM.EXE",
+      "cases": 676,
+      "executions": 1352,
+      "native_calls": {
+        "004e50d0": 776,
+        "004abae0": 776,
+        "004f161c": 576,
+        "0040d770": 636,
+        "0040c5b0": 636,
+        "004ae4b0": 636,
+        "004abf50": 636,
+        "0040c880": 414,
+        "0048f1d0": 222,
+        "0048ef50": 222
+      },
+      "stub_calls": {
+        "virtual_c8": 60,
+        "S": 414,
+        "new": 414,
+        "attach": 222,
+        "W": 414,
+        "U": 192,
+        "P": 192
+      },
+      "assertions": 0,
+      "instructions": 90870
+    },
+    "original1037": {
+      "binary": "original1037/netstorm.exe",
+      "cases": 676,
+      "executions": 1352,
+      "native_calls": {
+        "004e50d0": 776,
+        "004abae0": 776,
+        "004f161c": 576,
+        "0040d770": 636,
+        "0040c5b0": 636,
+        "004ae4b0": 636,
+        "004abf50": 636,
+        "0040c880": 414,
+        "0048f1d0": 222,
+        "0048ef50": 222
+      },
+      "stub_calls": {
+        "virtual_c8": 60,
+        "S": 414,
+        "new": 414,
+        "attach": 222,
+        "W": 414,
+        "U": 192,
+        "P": 192
+      },
+      "assertions": 0,
+      "instructions": 90870
+    }
+  },
+  "os_calls": 0,
+  "stopped_before": null,
+  "stubbed": [
+    "synthetic nonpriest virtual C8",
+    "new(0x28)",
+    "BaseProcess Attach",
+    "ensure shield",
+    "Unpop/Repop",
+    "positional sound"
+  ],
+  "files": {
+    "cpppj/tests/fixtures/carriercheck-x86.tsv": "949a692a3cbd4f8dfd9a3eae79c63fd005b9a7c40fd6eae4de385014ff9caee3",
+    "extracted/carriercheck/original1037/creation.c": "73eb94c6084c9b7d5d95c9a973c017dffeb78d9a96caa707b2468e20e6020ff6",
+    "extracted/carriercheck/original1037/functions.tsv": "e1d78f9eaefda81afbdf08b55dfdc7703f1c31d9ea2e1f02beed3a1398390198",
+    "extracted/carriercheck/originalCD/creation.c": "73eb94c6084c9b7d5d95c9a973c017dffeb78d9a96caa707b2468e20e6020ff6",
+    "extracted/carriercheck/originalCD/functions.tsv": "e1d78f9eaefda81afbdf08b55dfdc7703f1c31d9ea2e1f02beed3a1398390198",
+    "extracted/carriercheck/originals/creation.c": "2e883568e9a649ed481aa91d3b33e810abf4e73e56279863d5b7d5f1efa13c9e",
+    "extracted/carriercheck/originals/functions.tsv": "c5ce94678effb2c9f7028dc8c108051039f9511dbd60983a497ddb4834186e7d",
+    "extracted/priestfall/original1037/creation.c": "fd9480485c29cfe02cc04538e0811e5afb24d8d75670bdb7c2cdbf00f946de4f",
+    "extracted/priestfall/original1037/functions.tsv": "e62fd9abb239647dba635f63c2ab9731bc27c9bc7ae2f774306092f11619407e",
+    "extracted/priestfall/originalCD/creation.c": "fd9480485c29cfe02cc04538e0811e5afb24d8d75670bdb7c2cdbf00f946de4f",
+    "extracted/priestfall/originalCD/functions.tsv": "e62fd9abb239647dba635f63c2ab9731bc27c9bc7ae2f774306092f11619407e",
+    "extracted/priestfall/originals/creation.c": "9dac4d981f58c84ff34c5cb0cabec87ad202a1de347b607cae0691749993bb3c",
+    "extracted/priestfall/originals/functions.tsv": "f7c58c4fb076721c23ce96b17e953e6b77090f5653529beebcbdc146b42bb429",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_carriercheck_oracle.py": "08b9e0a69f58d1b3d4e290ca0776c0f48f4bd9b4f187dd18c9a0516d101c4fd9",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/decomp_priestfall_oracle.py": "015ce9d9738a088acc941e1931f44c10bed13a89b554bd5c03d8fc608c02c845",
+    "tools/decomp_priestpostpop_oracle.py": "50e454fc58258dcfebdbcf612f2aa1e812d75ca442e4790a4f616ed9d6732449",
+    "tools/decomp_prieststate_oracle.py": "a936ab8b0abcf8d6333f330ff63c93530d354f2b39c1d8649f85e45f99eaa717",
+    "tools/ghidra/carriercheck-functions.json": "fc0179265cb2ea9cbaaafa3e94dc8c13a91f468b44c8d3cb23c68849882faceb",
+    "tools/ghidra/priestfall-functions.json": "c9a6fde47a9da53ff932c4f88b55b3e10081826255659936b5af10fdf4fd7082"
+  }
+}

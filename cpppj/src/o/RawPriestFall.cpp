@@ -36,6 +36,15 @@ void RawPriestFall::Begin(Sid sid) const {
     const auto raw=pool_.Slot(sid);
     hooks_.sound(sid,std::bit_cast<float>(Read(raw,kX)),std::bit_cast<float>(Read(raw,kY)));
 }
+// 이미 낙하 방향이면 요청을 반복하지 않는다. 반환은 실제 효과 발생 여부와 관계없이 참이다.
+// 원본: 00494e80 / CD 0040d770→0040c5b0.
+bool RawPriestFall::TryFall(Sid sid) const {
+    const auto raw=pool_.Slot(sid);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
+    if (raw[10]>=frames_.size()) throw std::out_of_range("사제 낙하 요청 프레임 타입 오류");
+    const auto frame=patch ? std::bit_cast<std::int32_t>(Read(raw,kPatchFrame)) : static_cast<std::int32_t>(raw[kCdFrame]);
+    if (RawPathAnimation::Direction(frames_[raw[10]],frame)!=9) Begin(sid);
+    return true;
+}
 // float 입력의 합을 double로 유지한 뒤 0방향 절삭한다. 지도 WORD는 유효 SID 여부 없이 검사한다.
 bool RawPriestFall::SurfaceAt(Sid sid) const {
     const auto raw=pool_.Slot(sid);
@@ -72,6 +81,16 @@ RegularHandler MakePriestFallHandler(const SidPool& pool,const RawPriestFall& fa
         if (fallback) return fallback(sid,event,count,payload);
         if (priest) throw std::invalid_argument("미복원 사제 이벤트 분배");
         return payload;
+    };
+}
+// 표면 삭제/Carrier 조회에서 같은 사제 낙하 요청을 공유한다. 일반 Pop 지원은 넓히지 않는다.
+std::function<bool(Sid)> MakePriestFallWalker(const SidPool& pool,const RawPriestFall& fall,std::function<bool(Sid)> fallback) {
+    if (&pool!=&fall.Pool()) throw std::invalid_argument("walker 낙하 분배 풀 불일치");
+    return [&pool,&fall,fallback=std::move(fallback)](Sid sid) {
+        const auto raw=pool.Slot(sid);
+        if (Read(raw,0)==(pool.Edition()==OriginalEdition::Patch1078 ? kPatchPriestVtable : kCdPriestVtable)) return fall.TryFall(sid);
+        if (fallback) return fallback(sid);
+        throw std::invalid_argument("미복원 walker 낙하 가상 표");
     };
 }
 // 실제 보호막/ProcessHost를 사용하며 공간/프레임/소리 전체 몸체는 공급된 경계에 둔다.
