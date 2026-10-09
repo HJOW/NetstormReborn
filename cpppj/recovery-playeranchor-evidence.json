@@ -1,0 +1,106 @@
+{
+  "total": 4794,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-09",
+  "controls": [
+    639,
+    895
+  ],
+  "os_calls": 0,
+  "editions": {
+    "originals": {
+      "cases": 1598,
+      "native_calls": {
+        "0048fdb0": 2592,
+        "00462b80": 16662,
+        "0040eaf0": 15564,
+        "004e49c0": 31128,
+        "004ad390": 36538,
+        "0049a840": 116678,
+        "004ac9f0": 20018,
+        "004b2270": 20018,
+        "004b1b20": 23416,
+        "0044daa0": 13368,
+        "00462bc0": 40276,
+        "004ac1e0": 40156,
+        "0048fd30": 1622,
+        "0041cfc0": 16378
+      },
+      "substitutions": {
+        "allocate": 2524,
+        "free": 2524
+      },
+      "assertions": 0
+    },
+    "originalCD": {
+      "cases": 1598,
+      "native_calls": {
+        "00406f80": 2592,
+        "0045b670": 16662,
+        "004071d8": 716,
+        "004f161c": 31128,
+        "004071d0": 2524,
+        "004adbc0": 36538,
+        "004ac560": 20018,
+        "004eb8d0": 20018,
+        "004eb900": 23416,
+        "0040f230": 13368,
+        "0045b6f0": 40276,
+        "004abac0": 40156,
+        "00406ef0": 1622,
+        "0043f750": 16378
+      },
+      "substitutions": {
+        "allocate": 2524,
+        "free": 2524
+      },
+      "assertions": 0
+    },
+    "original1037": {
+      "cases": 1598,
+      "native_calls": {
+        "00406f80": 2592,
+        "0045b670": 16662,
+        "004071d8": 716,
+        "004f161c": 31128,
+        "004071d0": 2524,
+        "004adbc0": 36538,
+        "004ac560": 20018,
+        "004eb8d0": 20018,
+        "004eb900": 23416,
+        "0040f230": 13368,
+        "0045b6f0": 40276,
+        "004abac0": 40156,
+        "00406ef0": 1622,
+        "0043f750": 16378
+      },
+      "substitutions": {
+        "allocate": 2524,
+        "free": 2524
+      },
+      "assertions": 0
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/playeranchor-x86.tsv": "2f21f734822ec3b3fd8875ca329c049f549c602becdb7d395aed799cbdf0192d",
+    "extracted/playeranchor/original1037/creation.c": "aa0e70b2bfcb92fa961721b923e213a4d73ec328d891cf98d47662146ea7fdfe",
+    "extracted/playeranchor/original1037/functions.tsv": "858dd511db09e96513a5069a9570caa9eafe06452458808a3833e8a2fd71037d",
+    "extracted/playeranchor/originalCD/creation.c": "aa0e70b2bfcb92fa961721b923e213a4d73ec328d891cf98d47662146ea7fdfe",
+    "extracted/playeranchor/originalCD/functions.tsv": "858dd511db09e96513a5069a9570caa9eafe06452458808a3833e8a2fd71037d",
+    "extracted/playeranchor/originals/creation.c": "8e0f797e588f4b903e97fde2d099f8426976accedccf821d195b260f1b9cb00a",
+    "extracted/playeranchor/originals/functions.tsv": "359725e6c969763958517013cc853f2e368ef32ff48c548668e441becb43d741",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_damageablepredestroy_oracle.py": "b6bd591b17b886224e81b9d35dc863f12dea570c67aabf8a66280c7361785e75",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/decomp_playeranchor_oracle.py": "f858526ae6e4e5fc6ece9bf17cdc28e8271e5538d6cc7be7d9d4c4f0de18e26a",
+    "tools/ghidra/playeranchor-functions.json": "8b0811c7f5ccf981659f8f5ce2f730a230388829da980963b5459b8034315331"
+  },
+  "limits": [
+    "Player/거리/그래프/contained 몸체 전체 정상 반환; CRT 160바이트 확보/반납만 대체",
+    "정상 확보 입력; 호스트 CRT 실패/예외 전달과 원본 밖 SID/타입/비유한 그래프 좌표는 C++ 진단",
+    "거리 중간값 double/최소값 float; 두 x87 정밀도가 같은 관찰 입력, 임의 80비트 경계 전체 동등성 아님",
+    "전체 MayPlace/주변 권한/최종 관계/게임/GUI/OS 검증 아님"
+  ]
+}

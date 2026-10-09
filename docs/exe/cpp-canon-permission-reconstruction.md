@@ -4,6 +4,8 @@
 
 [`RawCanonPlacementPermission`](../../cpppj/src/o/RawCanonPlacementPermission.h)은 그래프 준비 상태·요청 소유자·현재 raw 소유 관계를 검사하고, 조건을 통과한 후보의 Player 작업장·그래프 조회 결과 DWORD를 그대로 돌려준다. **Player 조회 몸체는 필수 외부 경계이며 전체 MayPlace의 복원 완료를 뜻하지 않는다.**
 
+후속 [Player 작업장·그래프 기준점 조회](cpp-player-anchor-reconstruction.md)에서 이 필수 경계를 실제 조회 몸체로 채웠다. 아래 내용과 검사 수는 후보 권한 단계 당시의 기록이며 주변 권한·최종 관계·전체 MayPlace는 계속 후속이다.
+
 | 함수/전역 | 10.78 | CD·추가 10.37 |
 |---|---|---|
 | 후보 권한 helper | `00462cb0` | `0045bae0` |

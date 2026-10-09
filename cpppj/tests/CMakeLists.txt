@@ -17,6 +17,7 @@ add_executable(netstorm_tests
     CanonPlacementCollisionTests.cpp
     CanonPlacementTerrainTests.cpp
     CanonPlacementPermissionTests.cpp
+    PlayerPlacementAnchorTests.cpp
     ConfigOracleTests.cpp
     ConfigInterfaceTests.cpp
     FortTests.cpp
@@ -208,3 +209,6 @@ set_source_files_properties(CanonPlacementTerrainTests.cpp PROPERTIES COMPILE_DE
 # 후보 권한/방향 소유 관계의 독립 원본 관찰을 해당 검사 소스에서만 읽는다.
 set_source_files_properties(CanonPlacementPermissionTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CANONPERMISSION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/canonpermission-x86.tsv\"")
+# Player 기준점/거리/그래프/종속의 실제 함수 관찰은 해당 검사 소스에서만 읽는다.
+set_source_files_properties(PlayerPlacementAnchorTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PLAYERANCHOR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/playeranchor-x86.tsv\"")
