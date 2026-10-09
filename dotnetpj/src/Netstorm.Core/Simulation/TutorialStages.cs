@@ -28,10 +28,10 @@ public sealed class TutorialStages
     /// <summary>튜토리얼 1의 완료 단계.</summary>
     private const char BridgeTheGapLastStage = 'G';
 
-    /// <summary>튜토리얼 1의 다리 실습 첫 통과 기준(원본은 7보다 큰 칸 수).</summary>
+    /// <summary>튜토리얼 1의 다리 실습 첫 통과 기준(원본 004c3a20 단계 B: 누적 수가 7보다 큼).</summary>
     private const int FirstBridgeTarget = 8;
 
-    /// <summary>튜토리얼 1의 다리 회전 실습 통과 기준(원본은 18보다 큰 칸 수).</summary>
+    /// <summary>튜토리얼 1의 다리 회전 실습 통과 기준(원본 004c3a20 단계 C: 누적 수가 0x12(18)보다 큼).</summary>
     private const int SecondBridgeTarget = 19;
 
     /// <summary>튜토리얼 1의 최종 Storm Power 목표(미션 스크립트 F.).</summary>
@@ -51,6 +51,9 @@ public sealed class TutorialStages
 
     /// <summary>템플 타입의 플래그2 비트 (typeflags "vortex" = 0x200)</summary>
     private static readonly uint VortexFlag = TypeFlagBits.Flag2Words["vortex"];
+
+    /// <summary>다리 타입의 플래그2 비트 (typeflags "bridge" = 0x4). 튜토리얼 1 단계 A·B·C 가 누적 제작 수의 합으로 읽는다</summary>
+    private static readonly uint BridgeFlag = TypeFlagBits.Bridge;
 
     /// <summary>단계 C 보정 안내 섹션 이름 (스크립트 [NotVortex])</summary>
     public const string NotVortexSection = "NotVortex";
@@ -163,27 +166,30 @@ public sealed class TutorialStages
         }
     }
 
-    /// <summary>튜토리얼 1의 F4·다리 칸·가이저 연결·결정 전달·600 SP 단계.</summary>
+    /// <summary>튜토리얼 1의 F4·다리 칸·가이저 연결·결정 전달·600 SP 단계 (원본 004c3a20).</summary>
     private void UpdateBridgeTheGap(BattleSession session, IReadOnlyList<SessionEvent> tickEvents)
     {
         PlayerState player = session.Player(session.HumanPlayer);
-        int placedBridges = session.Bridges.Cells.Count(cell => cell.Owner == player.Number);
+        // 원본은 살아 있는 칸 수가 아니라 누적 제작 표의 합(FUN_004c2500(4) = DAT_005c98d0 에서 플래그2 4번 비트 타입들의 합)을 본다.
+        // 무너진 다리는 표에서 줄지 않으므로 (줄이는 곳은 전체 삭제 004c27c0 뿐) 놓은 칸의 누적 수로 판정한다.
+        // 단계 A·B·C 의 기준(0 보다 큼·7 보다 큼·0x12 보다 큼)은 정밀 디컴파일(004c3a20)로 확인했다.
+        int builtBridges = player.MadeWithFlags(BridgeFlag);
         switch (Stage)
         {
             case 'A':
-                if (placedBridges > 0 || tickEvents.Any(e => e.Kind == SessionEventKind.ReturnedHome && e.Player == player.Number))
+                if (builtBridges > 0 || tickEvents.Any(e => e.Kind == SessionEventKind.ReturnedHome && e.Player == player.Number))
                 {
                     Advance(session);
                 }
                 break;
             case 'B':
-                if (placedBridges >= FirstBridgeTarget)
+                if (builtBridges >= FirstBridgeTarget)
                 {
                     Advance(session);
                 }
                 break;
             case 'C':
-                if (placedBridges >= SecondBridgeTarget)
+                if (builtBridges >= SecondBridgeTarget)
                 {
                     Advance(session);
                 }

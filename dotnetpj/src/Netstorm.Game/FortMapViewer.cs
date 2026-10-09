@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Netstorm.Assets;
+using Netstorm.Core.Display;
 using Netstorm.Core.Rules;
 using Netstorm.Core.Simulation;
 
@@ -108,8 +109,10 @@ internal sealed partial class FortMapViewer : IDisposable
         _edgeFarmCells = _edgeFarms.Select(tile => (tile.X, tile.Y)).ToHashSet();
         Name = name;
         Language = language;
-        _sorted = _map.Objects.OrderBy(o => o.Object.Type.Definition.HasFlag("surface") ? 0 : 1)
-            .ThenBy(o => o.Y).ThenBy(o => o.X).ToArray();
+        // 원본 그리기 순서(00497900): 깊이(zorder, 부호 있는 16비트) 내림차순 → y 오름차순 → x 오름차순.
+        // 깊이가 완전히 같은 항목은 입력(저장) 순서를 유지한다 (DrawOrder.Sort 의 안정 정렬).
+        _sorted = DrawOrder.Sort(_map.Objects,
+            o => new DrawOrder(o.X, o.Y, (short)Math.Clamp(o.Object.Type.ZOrder, short.MinValue, short.MaxValue))).ToArray();
         _pixel = new Texture2D(device, 1, 1);
         _pixel.SetData(new[] { Color.White });
         InitializeSession(fort, catalog, mission);

@@ -27,6 +27,7 @@
     <None Include="../../../cpppj/tests/fixtures/sid-x86.tsv" Link="X86/sid-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/hash-x86.tsv" Link="X86/hash-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/renderer-x86.tsv" Link="X86/renderer-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/display-x86.tsv" Link="X86/display-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <Compile Include="../Shared/X86Fixture.cs" Link="Shared/X86Fixture.cs" />
   </ItemGroup>
 </Project>

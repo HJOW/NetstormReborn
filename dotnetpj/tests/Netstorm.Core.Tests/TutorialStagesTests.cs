@@ -1,3 +1,5 @@
+using Netstorm.Assets;
+using Netstorm.Core.Bridges;
 using Netstorm.Core.Rules;
 using Netstorm.Core.Simulation;
 
@@ -146,6 +148,52 @@ public sealed class TutorialStagesTests
         Assert.Equal('I', session.Tutorial.Stage);
         Assert.True(session.Tutorial.Finished);
         return Tells(session, log);
+    }
+
+    /// <summary>튜토리얼 1 단계 B·C 는 살아 있는 칸이 아니라 놓은 칸의 누적 수(FUN_004c2500(4))를 본다.
+    /// 중간에 놓은 칸을 모두 걷어내고 누적 8칸을 채우면, 그때 살아 있는 칸이 8칸보다 적어도 단계 C 로 넘어간다
+    /// (원본 004c3a20, 디컴파일 확인).</summary>
+    [Fact]
+    public void Tutorial1_BridgeStagesUseCumulativeMadeCount()
+    {
+        BattleSession session = SessionData.FromMission("tutorial1");
+        PlayerState player = session.Player(1);
+        session.Submit(new ReturnHomeCommand(1));
+        session.RunTicks(1);
+        Assert.Equal('B', session.Tutorial!.Stage);
+
+        // 조각을 명령 경로로 하나 놓으면 누적 수가 놓은 칸 수만큼 는다.
+        int first = SessionData.PlaceBridgePiece(session, player);
+        Assert.True(first > 0);
+        Assert.Equal(first, player.MadeWithFlags(TypeFlagBits.Bridge));
+
+        // 놓은 칸을 모두 걷어내면 살아 있는 칸은 없어도 누적 수는 그대로다.
+        KillPlacedBridges(session);
+        Assert.DoesNotContain(session.Bridges.Cells, c => c.Owner == 1 && !session.StoredBridgeCells.Contains(c));
+        Assert.Equal(first, player.MadeWithFlags(TypeFlagBits.Bridge));
+        Assert.Equal('B', session.Tutorial.Stage);
+
+        // 놓을 때마다 걷어내며 누적 8칸을 채우면, 살아 있는 칸이 8칸보다 적어도 단계 C 가 된다.
+        while (player.MadeWithFlags(TypeFlagBits.Bridge) < 8)
+        {
+            SessionData.PlaceBridgePiece(session, player);
+            KillPlacedBridges(session);
+        }
+        Assert.True(session.Bridges.Cells.Count(c => c.Owner == 1 && !session.StoredBridgeCells.Contains(c)) < 8);
+        Assert.Equal('C', session.Tutorial.Stage);
+    }
+
+    /// <summary>게임 중에 놓은 다리 칸(저장 다리 제외)을 모두 걷어낸다 (보통 칸은 두 번 약화하면 무너진다).</summary>
+    /// <param name="session">세션</param>
+    private static void KillPlacedBridges(BattleSession session)
+    {
+        // 걷어낼 칸을 미리 모아둔다.
+        foreach (BridgeCellState cell in session.Bridges.Cells.Where(c => c.Owner == 1 && !session.StoredBridgeCells.Contains(c)).ToArray())
+        {
+            // 놓은 칸을 중심으로 두 번 약화한다.
+            session.Bridges.WeakenAround(cell.X, cell.Y);
+            session.Bridges.WeakenAround(cell.X, cell.Y);
+        }
     }
 
     /// <summary>튜토리얼 2 는 단계 A 안내로 시작하고, 명령만으로 A~I 를 걸으면 단계마다의 안내가 차례로 나온다</summary>

@@ -35,8 +35,9 @@
 | `Bridges/BridgeDecayRules.cs` | 수명 감소·금 간/보통 프레임 전환·약화/복구·destroy 재정의·스캔의 한 칸 처리, 붕괴 스캔 커서(`BridgeDecayScan`) | `00421c30`·`00421b60`·`00421bd0`·`00421db0`·`00421e60`·`004220f0`·`004227e0`·`00422bc0`. 원본 x86 기대값 15,004개 |
 | `Bridges/SurfaceGraph.cs` | 표면 그래프 표(무리 번호와 표면 수): 할당·반납·감소·flood·등록·삭제 준비·전체 재구성. 세션에는 미연결 | `Graph.cpp` `00463330` 외. 원본 x86 기대값 2,560개 |
 | `Simulation/SidPool.cs` | 오브젝트 번호 할당기(영역·FIFO·예약 꼬리·예측 커서). 저장 오브젝트·noIsland·다리·생산·건설·비행체가 공유하는 서버 풀 | `Squid.cpp` `004af1d0` 외, 120000슬롯 초기화. 원본 x86 기대값 3,168개. [연결 기록](dotnet-sid-session-20261009.md) |
-| `Rules/SpotRules.cs` | 칸별 점유 비트(발자국 안쪽 비트 8)와 공간 해시 단계. 점유 지도에는 미연결 | `004afd30`·`004ace40`. 원본 x86 기대값 3,821개 |
-| `Display/DrawOrder.cs` | 그리기 순서 비교(깊이 내림차순 → y → x)와 안정 정렬. 뷰어에는 미연결 | `00497900`. 원본 x86 기대값 261개 |
+| `Rules/SpotRules.cs`·`Rules/SpotMap.cs` | 칸별 점유 비트(발자국 안쪽 비트 8)와 공간 해시 단계, 256×256 점유 지도의 발자국 OR 등록·AND 해제(패치 중복 조기반환·CD 계속, 행 우선·표면/매몰/포함 필터). 세션·배치 판정에는 미연결 | `004afd30`·`004ace40`·`004b02d0`·`004afe50`. 원본 x86 기대값 3,821개 + 지도 단위 검사 7개 |
+| `Display/DrawOrder.cs` | 그리기 순서 비교(깊이 내림차순 → y → x)와 안정 정렬. 저장 오브젝트 그리기(`FortMapViewer._sorted`)에 연결 | `00497900`. 원본 x86 기대값 261개. 클론 창 ui·test01 스모크 통과 |
+| `Display/DisplayBounds.cs` | 화면 투영(trunc(x × 16 + 0.5) − 카메라)·Q16 hotspot·표시 폭·높이 + 1 의 경계, 표시 영역 자르기·선택 확장(패치 위 15·CD 위 9)·그림자 프레임 번호. 체력 막대·선택 괄호 상자(`FortMapViewer.EntityFrameBox`)에 연결 | `00498ff0`·`004990d0`. 원본 x86 기대값 368개. 그리는 그림 위치는 기존 VFX 기준 유지. 클론 창 combat·test01 스모크 통과 |
 | `Bridges/BridgeAnchors.cs` | 다리를 시작할 수 없는 섬 칸: 가장자리 초목(edgeFarm) 칸 + dropBlocking 타입 오브젝트 발자국. 2026-10-07 타입 후처리를 연결하여 포대·궁수 등 모든 emplacement도 이 비트를 가진다 | edgefarm.type `dropBlocking`, 타입 후처리 `0049b0d0`, `Squid.cpp` `004b02d0` 스폿 비트 0x10, `Rifttype.cpp` `0049b510` ([bridge-pieces.md](exe/bridge-pieces.md) 8.4절) |
 | `Rules/MissionStart.cs` | 미션 머리 값 → 시작 SP(myStartMoney, 없으면 전투 옵션)·시작 지식(myTech)·기술 허용 표(techAllowed: deny/allow/all 순서 적용, **실행 중 `Set`·`SetAll`로 바뀜**)·denySalvage 시작 값 등. 머리 값은 시작 상태이고 튜토리얼 단계 처리가 실행 중에 바꾼다 | `Mission.cpp` `00482eb0`, `Totalmade.cpp` `004c23c0`~`004c2400`, [mission-header-flags.md](exe/mission-header-flags.md), 튜토리얼 1·2 원본 관찰 |
 | `Bridges/BridgeCursor.cs` | 커서 → 들고 있는 조각의 왼쪽 위 칸: (⌊(x + 7) / 16⌋, ⌊y / 11⌋), 크기·회전 무관 | 원본 실행 측정 ([bridge-pieces.md](exe/bridge-pieces.md) 4절) |
@@ -98,7 +99,7 @@
 * 세션을 만들면 첫 단계 안내 `TutorialTell "A."` 이벤트가 나온다. 단계마다 그 단계의 스크립트 섹션 이름(`"B."` …)을 `TutorialTell` 이벤트로 알리고, 화면이 본문을 안내 창으로 띄운다. `MissionTell`도 대응 미션 스크립트 섹션이 있으면 같은 안내 창으로 연결된다.
 * 조건은 세션 상태만 본다: 지은 수(`PlayerState.Made`·`MadeWithFlags`, 누적 — 파괴·회수로 줄지 않는다), 워크샵 등록 여부, 선택한 오브젝트(`SelectedEntityId`), 이번 틱의 회수 이벤트, 타이머(단계 F 4초·H 2초·C의 `NotVortex` 2초 — exe 상수 값).
 * 표·회수 금지·전투 옵션(Short·Fast)을 바꾸는 것도 단계 처리 몫이다: 단계 A 옵션 덮어쓰기, 단계 B `Tech.Set("sunFactory", true)`, 단계 H `DenySalvage = false`. 팩토리는 시작 시점에도 옵션을 덮어쓴다(단계 A 첫 프레임과 같은 결과).
-* 튜토리얼 1은 F4 또는 첫 다리(A), 다리 8·19칸(B·C), 가이저 연결(D), 200·600 SP(E·F)로 G까지 진행한다. 원본은 다리의 **누적 제작 수**를 보지만 현재 클론은 살아 있는 내 다리 칸 수를 센다. 원본 위치 생성식도 아직 복원하지 못해 연습 가이저 받침을 결정적으로 만든다.
+* 튜토리얼 1은 F4 또는 첫 다리(A), 다리 8·19칸(B·C), 가이저 연결(D), 200·600 SP(E·F)로 G까지 진행한다. 단계 B·C 는 살아 있는 칸이 아니라 놓은 칸의 누적 수(`FUN_004c2500(4)`, 정밀 디컴파일 004c3a20 확인)를 본다. 명령 경로로 놓은 칸마다 `PlayerState.Made` 에 다리 칸을 넣고 `TutorialStages` 가 그 합으로 판정한다. 원본 위치 생성식도 아직 복원하지 못해 연습 가이저 받침을 결정적으로 만든다.
 * `RunsTutorial = false`로 끌 수 있고, 구현되지 않은 튜토리얼(3~6)과 튜토리얼이 아닌 미션은 `Tutorial == null`이다. 단계·타이머·지은 수·선택·기술 표·회수 금지·사제 운반 상태는 `Checksum()`에 들어간다.
 * 원본이 기술 허용 표를 확인하는 곳(메뉴 항목·덱)에 맞춰 세션도 Construct 판정(`CheckBuilding`)·지식 등록·덱 배치에서 표를 확인한다.
 * 근사: 단계를 넘긴 뒤 원본이 열 번 세는 동안 다음 단계 처리를 멈추는 잠금(`+0x84`, 안내 창이 뜨고 닫힐 때까지로 추정)은 "다음 틱부터 검사"로 대신한다. 건물은 완공 시점에, 유닛은 자원 도착 후 실체화 완료 시점에 지은 수로 센다(원본의 정확한 출생 콜백 시점은 미확인).

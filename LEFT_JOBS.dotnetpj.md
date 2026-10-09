@@ -1,10 +1,41 @@
+## 2026-10-09 ✅ 완료: 5-2 표시 경계 계산·그림 상자 연결 (`HJOW-Athlon`)
+
+- [x] AGENTS.md와 두 인계 문서를 읽고 진행했다. 현재 PC와 마지막 디컴파일 PC가 `HJOW-Athlon`으로 같다. 기존 정밀 디컴파일·커밋된 C++ 소스만 읽었으며 새 디컴파일·내보내기는 하지 않았다. cpppj·LEFT_JOBS.md·원본·AGENTS.md는 미수정이다. 이 PC의 창 실행 허용(사용자 지시 + AGENTS.md 예외 시스템 3)을 이용해 클론 창 검사를 했다.
+- [x] **5-2 경계 계산:** 새 [`DisplayBounds`](dotnetpj/src/Netstorm.Core/Display/DisplayBounds.cs)(투영 trunc·Q16 Scale 산술 이동·경계·독립 모서리 자르기·선택 확장·그림자 번호, `cpppj/src/o/SquidDisplay.cpp` 그대로). `display-x86.tsv` Bounds **368개 전부 일치**(Type/View 문맥 재생). 판별력 확인(+1 변이에 368개 실패)과 원복을 했다.
+- [x] **뷰어 연결:** `FortMapViewer.EntityFrameBox`(체력 막대·선택 괄호 상자)를 VFX 내부 Bounds/Origin에서 Squid 표시 폭·높이(+1)·hotspot·trunc으로 바꿨다. 추가 헤더가 없는 순수 VFX는 기존 계산으로 대신한다. 그리는 그림 위치·그림자 합성·이동형 클릭 판정은 그대로다 (VFX 원점이 화면 기준점이며 녹화로 검증됨을 실제 수치로 확인).
+- [x] **검증:** Release 경고 0·오류 0, **882개 통과**(Assets 281 + Core 601 = 기존 880 + 신규 2). `clone_combat_smoke`·`clone_test01_smoke` 통과. [규칙 문서](docs/core-rules.md) 갱신.
+- [ ] **다음:** 5-3 `.chfnt` 판독기·5-4 커서 표·5-5 타이틀 팔레트 비교 → 6단계 시작 값/본섬 마스크 회귀. 실제 그래프/표면 identity 연결과 `BattleMap._occupied` 교체(8절 배치 판정 복원 뒤)는 미착수다.
+
+---
+
+## 2026-10-09 ✅ 완료: 4-4 다리 누적 수·튜토리얼 1 B·C 판정 (`HJOW-Athlon`)
+
+- [x] AGENTS.md와 두 인계 문서를 읽고 진행했다. 현재 PC와 마지막 디컴파일 PC가 `HJOW-Athlon`으로 같다. 기존 정밀 디컴파일을 읽었으며 새 디컴파일·내보내기는 하지 않았다. cpppj·LEFT_JOBS.md·원본·AGENTS.md는 미수정이다. 이 PC의 창 실행 허용(사용자 지시 + AGENTS.md 예외 시스템 3)을 이용해 클론 창 검사를 했다.
+- [x] **선행 확인(디컴파일 읽기):** 튜토리얼 1 `004c3a20` 단계 B·C 는 `FUN_004c2500(4)`(누적 제작 표 `DAT_005c98d0`에서 플래그2 4번 비트 타입들의 합, 기준 7보다 큼·0x12보다 큼)를 읽는다. `004c2500` 본문과 단계 A(0보다 큼)도 확인했다. 저장 로더 `004bdc60`은 Pop(`+0x90`)을 부르지만 저장 다리는 명령 경로를 타지 않아 `Made`에 넣지 않는다(기존 "처음부터 있던 오브젝트는 세지 않는다" 유지).
+- [x] **구현:** `ExecutePlaceBridge`에서 놓은 칸 수만큼 `PlayerState.RecordMade("bridge", 실제 bridge 타입 Flags2)`를 기록한다(무너져도 줄지 않음). `TutorialStages` 단계 A·B·C 를 살아 있는 칸 수에서 `MadeWithFlags(bridge 0x4)` 합으로 바꿨다.
+- [x] **검사:** `SessionData.PlaceBridgePiece`(생산 창 집기 → 놓기 명령 경로, 칸이 비어야 추첨이 들어오므로 종류를 가리지 않고 놓는다)를 추가했다. `HarvestEconomyTests` 8·19칸 과정을 명령 경로로 바꿨고, 분별 검사 `Tutorial1_BridgeStagesUseCumulativeMadeCount`(놓고 걷어낸 뒤 누적 8칸에 C — 옛 살아 있는 칸 판정에서는 B에 머무름을 변이 확인 후 원복)를 넣었다.
+- [x] **검증:** Release 경고 0·오류 0, **880개 통과**(Assets 281 + Core 599 = 기존 879 + 신규 1). `clone_test01_smoke`·`clone_ui_smoke` 통과. [규칙 문서](docs/core-rules.md) 갱신.
+- [ ] **다음(2026-10-09 5-2 완료로 해소):** 5-2 표시 경계 → 5-3 `.chfnt` 판독기·5-4 커서 표·5-5 타이틀 팔레트 비교 → 6단계 시작 값/본섬 마스크 회귀. 실제 그래프/표면 identity 연결과 `BattleMap._occupied` 교체(8절 배치 판정 복원 뒤)는 미착수다.
+
+---
+
+## 2026-10-09 ✅ 완료: 점유 지도 클래스·뷰어 그리기 순서 연결 (`HJOW-Athlon`)
+
+- [x] AGENTS.md와 두 인계 문서를 읽고 진행했다. 현재 PC와 마지막 디컴파일 PC가 `HJOW-Athlon`으로 같다. 새 디컴파일·내보내기는 하지 않았다. cpppj·LEFT_JOBS.md·원본·AGENTS.md는 미수정이다. 이 PC의 창 실행 허용(사용자 지시 + AGENTS.md 예외 시스템 3)을 이용해 클론 창 검사를 했다.
+- [x] **4-3 점유 지도:** 새 [`SpotMap`](dotnetpj/src/Netstorm.Core/Rules/SpotMap.cs)(256×256 바이트, 발자국 OR 등록·AND 해제, 행 우선, 패치 중복 조기반환·CD 계속, 표면/매몰/포함 필터, 잘못된 유한 좌표 (10,10) 복구·지도 밖 거부). 값은 `SpotRules.EffectiveGenus` 하위 바이트다. 해시 버킷·표면 word·사건은 미복원이라 `spatial-x86.tsv` 전체 대신 `SpatialTests.cpp` 경계 검사를 옮긴 단위 검사 7개를 넣었다. 판별력 확인(판본 조건 뒤집기 → 2개 실패)과 원복을 했다.
+- [x] **5-1 뷰어 연결:** `FortMapViewer._sorted`를 표면 플래그 → y → x 에서 `DrawOrder.Sort`(zorder 내림차순 → y → x, 동률은 저장 순서 유지)로 바꿨다. 진단용 `DumpObjects` 콘솔 순서는 그대로다.
+- [x] **검증:** Release 경고 0·오류 0, **879개 통과**(Assets 281 + Core 598 = 기존 872 + 신규 7). `clone_ui_smoke`·`clone_test01_smoke` 통과. [규칙 문서](docs/core-rules.md) 2행 갱신.
+- [ ] **다음(2026-10-09 4-4 완료로 해소):** 4-4 postPop 집계 → 5-2 표시 경계(`display-x86.tsv` Bounds 368)·5-3 `.chfnt` 판독기·5-4 커서 표·5-5 타이틀 팔레트 비교 → 6단계 시작 값/본섬 마스크 회귀. 실제 그래프/표면 identity 연결과 `BattleMap._occupied` 교체(8절 배치 판정 복원 뒤)는 미착수다.
+
+---
+
 ## 2026-10-09 ✅ 완료: 공유 SID·붕괴 스캔 세션 연결 (`HJOW-Athlon`)
 
 - [x] AGENTS.md와 두 인계 문서를 읽고 4-5의 사용자 결정을 구현했다. 현재 PC와 마지막 디컴파일 PC가 `HJOW-Athlon`으로 같다. 기존 정밀 디컴파일을 읽었으며 새 디컴파일·내보내기는 하지 않았다. cpppj·LEFT_JOBS.md·원본·AGENTS.md는 미수정이다.
 - [x] **선행 확인:** 건설 확정 `00444590`·저장 로더 `004bdc60`은 `004af530(type, 0)`(서버), 임시 클라이언트 배치 `004433b0`은 flags 2. `00442c80`은 이미 받은 SID 목록을 배치한다. `004395df`→`004af170(120000)`→`004abb10`으로 원본 풀 크기를 확인했다.
 - [x] **세션 연결:** `BattleMap.Sids` 공유 서버 풀(120000슬롯), `BridgeCellState.Sid`·SID 조회, 저장 다리 번호 재사용, 생성/붕괴/약화/회수/파괴/생산·공사 취소 반납, 24Hz 틱의 33슬롯 스캔·10초 경계 재설정. 저장 noIsland도 번호를 받는다. 비용·조각 소비 전 소진 거부와 FIFO 상태 검사합을 추가했다.
 - [x] **검증:** Release 경고 0·오류 0, **872개 통과**(Assets 281 + Core 591). 기존 x86 **48,639입력** fixture 미변경. 새 통합 검사 11개, 실제 맵 9개의 5분 생존 기준 유지. 클론 창에서 캠페인·조각·배치 모드·해상도/전체화면 복귀·설정 저장과 한 칸 다리의 금 감·붕괴 화면을 검증했다. [작업·기대값 변경 근거](docs/dotnet-sid-session-20261009.md).
-- [ ] **다음:** 4-3 spot 지도 클래스(OR 등록·AND 해제) → 4-4 postPop 집계 → 실제 그래프/표면 identity 연결. 전체 원본 생성 순서·별도 동적 받침/투사체 SID·원본 소진 시 최대 50개 다리 삭제는 미복원이다. 커서 알고리즘과 현재 SID의 방문 틱은 확인됐지만 원본 플레이의 절대 위상은 보장하지 않는다.
+- [ ] **다음:** 4-4 postPop 집계 → 5-2 표시 경계·5-3 `.chfnt`·5-4 커서·5-5 타이틀 팔레트 → 6단계 시작 값/본섬 마스크 → 실제 그래프/표면 identity 연결. 4-3 spot 지도 클래스와 5-1 뷰어 정렬 연결은 2026-10-09 같은 날 후속 절에서 완료했다. 전체 원본 생성 순서·별도 동적 받침/투사체 SID·원본 소진 시 최대 50개 다리 삭제는 미복원이다. 커서 알고리즘과 현재 SID의 방문 틱은 확인됐지만 원본 플레이의 절대 위상은 보장하지 않는다.
 
 ---
 
@@ -249,13 +280,13 @@ cpppj(원본 10.78 을 디컴파일해 C++ 로 복원하는 프로젝트)와 디
 - 해시 단계는 발자국이 아니라 **현재 SHP 헤더의 크기**(2-7 의 두 float)로 정한다. 섬·다리는 0, 가로·세로 최댓값이 2 이하면 1, 4 이하면 2, 그보다 크면 3.
 
 - [x] (2026-10-09 `Rules/SpotRules.EffectiveGenus`·`HashLevel`, 3,821개 일치) `EffectiveGenus`(칸별 점유 비트)와 해시 단계 계산을 `Netstorm.Core` 에 추가하고 기대값으로 검증한다.
-- [ ] spot 지도 클래스(발자국 OR 등록, AND 해제)를 추가한다. `BattleMap._occupied` 를 바꾸는 것은 8절의 배치 판정이 복원된 뒤에 한다.
+- [x] (2026-10-09 `Rules/SpotMap`, 단위 검사 7개. 세션·배치 판정 미연결) spot 지도 클래스(발자국 OR 등록, AND 해제)를 추가했다. `BattleMap._occupied` 를 바꾸는 것은 8절의 배치 판정이 복원된 뒤에 한다.
 
 ### 4-4. 공통 postPop 의 집계 **[x86: `postpop-x86.tsv` 984]**
 
 [cpp-postpop-reconstruction.md](docs/exe/cpp-postpop-reconstruction.md): 오브젝트가 **처음** 월드에 등록될 때 타입 통계 표가 1 증가하고(재등록에서는 다시 늘지 않는다), 비용 집계·공급 목록·작업장 목록이 갱신된다. 공급 목록은 중복을 넣지 않고 작업장 목록은 중복 검사가 없다. 이 비용 집계는 플레이어 SP 차감이 아니다.
 
-- [ ] `docs/core-rules.md` 의 "원본은 다리의 **누적 제작 수**를 보지만 현재 클론은 살아 있는 내 다리 칸 수를 센다"(튜토리얼 1 의 단계 B·C)를 고친다. `PlayerState.Made` 계열에 다리 칸의 누적 수를 넣고 `TutorialStages` 가 그것을 보게 한다. 통계가 "첫 등록 시 1 증가, 감소 없음"이라는 점은 cpppj 가 확정했다. 튜토리얼 1 함수(`004c3a20`)가 실제로 어느 표를 읽는지는 디컴파일로 한 번 더 확인한다.
+- [x] (2026-10-09 완료. `004c3a20`이 `FUN_004c2500(4)` 합을 읽음을 디컴파일로 확인) `docs/core-rules.md` 의 근사 항목을 고쳤다. `PlayerState.Made` 계열에 명령 경로로 놓은 다리 칸의 누적 수를 넣고 `TutorialStages` 단계 A·B·C 가 그 합을 보게 한다.
 
 <a id="sid-session-plan"></a>
 
@@ -282,7 +313,7 @@ cpppj(원본 10.78 을 디컴파일해 C++ 로 복원하는 프로젝트)와 디
 | 원본 | 정렬 비교 `00497900`: **깊이(부호 있는 16비트) 내림차순 → y 오름차순 → x 오름차순**. 깊이는 타입의 `zorder`(2-5)에서 온다 |
 | C# 현재 | [FortMapViewer.cs:111](dotnetpj/src/Netstorm.Game/FortMapViewer.cs#L111) 은 `surface` 플래그 여부 → y → x 로 정렬한다 |
 
-- [ ] 2-5 의 `zorder` 를 써서 정렬 키를 원본대로 바꾼다. 완전 동률의 순서는 원본 `qsort` 라 미확정이다. cpppj 처럼 입력 순서를 유지한다.
+- [x] (2026-10-09 `FortMapViewer._sorted`를 `DrawOrder.Sort`로 연결, `clone_ui_smoke`·`clone_test01_smoke` 통과) 2-5 의 `zorder` 를 써서 정렬 키를 원본대로 바꿨다. 완전 동률의 순서는 원본 `qsort` 라 미확정이다. cpppj 처럼 입력 순서를 유지한다.
 - [x] (2026-10-09 `Display/DrawOrder.Compare`·`Sort`, 261개 일치) 비교 함수를 `Netstorm.Core` 에 두고 `Order` 261개로 검증한다.
 
 ### 5-2. 오브젝트의 화면 위치와 경계 **[x86: `display-x86.tsv` `Bounds` 368]**
@@ -291,7 +322,8 @@ cpppj(원본 10.78 을 디컴파일해 C++ 로 복원하는 프로젝트)와 디
 - 선택 표시가 켜진 오브젝트는 폭이 19 미만이면 양쪽 9, 항상 양쪽 3, 위쪽 15픽셀(10.78)을 더 무효화한다.
 - 타입 플래그 1 `0x40000`(shadow)이면 그림자 프레임은 `프레임 수 + 현재 프레임` 이다.
 
-- [ ] C# 의 스프라이트 배치(`FortMapViewer.Sprites.cs`, `Units.cs`)가 같은 식인지 확인하고 다르면 맞춘다. 클릭 판정 사각형(`Combat.cs:71`)도 2-7 의 값으로 다시 계산한다.
+- [x] (2026-10-09 `Display/DisplayBounds`, Bounds 368개 일치. `EntityFrameBox` 연결, combat·test01 스모크 통과) C# 의 스프라이트 배치를 확인했다. 그리는 그림 위치는 VFX 원점 + hotFoot 이동으로 원본과 일치해 유지하고, 클릭·체력 상자만 Squid 값으로 다시 계산한다.
+- [x] (2026-10-09 `DisplayBounds.ShadowFrameIndex`, 그림자 합성은 기존 검정 알파 유지) 타입 플래그 1 `0x40000`(shadow)이면 그림자 프레임은 `프레임 수 + 현재 프레임` 이다.
 - [ ] **그림자 합성은 지금 바꾸지 않는다.** 원본은 불투명 영역 아래 **화면의 팔레트 색을 변환표로 바꾸고**, C# 은 검정 알파 92 를 덮는다. 변환표의 생성·선택은 cpppj 도 아직 복원하지 않았다(8절).
 
 ### 5-3. 원본 글꼴 `.chfnt` **[정적, 실제 캐시 18개·4,608글리프 전수 대조]**

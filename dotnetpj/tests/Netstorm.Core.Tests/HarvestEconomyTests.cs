@@ -47,14 +47,22 @@ public sealed class HarvestEconomyTests
         session.RunTicks(1);
         Assert.Equal('B', session.Tutorial!.Stage);
 
-        // 다리 조각 하나씩 실제 배치 판정을 통과시켜 튜토리얼의 원본 8·19칸 기준을 채운다.
-        for (int count = 1; count <= 19; count++)
+        // 생산 창의 조각을 명령 경로(집기 → 놓기)로 놓아 원본 8·19칸 기준을 채운다.
+        // 원본은 놓은 칸의 누적 수(FUN_004c2500(4))를 보므로 누적 합으로 단계를 확인한다.
+        PlayerState builder = session.Player(1);
+        int built = 0;
+        bool sawC = false;
+        while (built < 19)
         {
-            (int rotation, int x, int y) = SessionData.FindBridgeSite(session, BridgePatternCatalog.SinglePiece);
-            session.Bridges.Place(new BridgePiece(BridgePatternCatalog.SinglePiece, rotation), x, y, 1);
-            session.RunTicks(1);
-            if (count == 8) Assert.Equal('C', session.Tutorial.Stage);
+            built += SessionData.PlaceBridgePiece(session, builder);
+            // 누적 8칸을 처음 넘긴 놓기에 단계 C 가 된다.
+            if (built >= 8 && !sawC)
+            {
+                Assert.Equal('C', session.Tutorial.Stage);
+                sawC = true;
+            }
         }
+        Assert.True(sawC);
         Assert.Equal('D', session.Tutorial.Stage);
 
         ConnectPracticeGeyser(session, geyser);

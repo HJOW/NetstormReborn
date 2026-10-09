@@ -113,4 +113,50 @@ internal static class SessionData
         }
         throw new InvalidOperationException("다리 조각을 놓을 수 있는 곳이 없습니다.");
     }
+
+    /// <summary>
+    /// 생산 창의 조각을 집어 명령 경로(집기 → 놓기)로 놓는다.
+    /// 원본 Construction 경로(00442c80)라 놓은 칸이 누적 제작 표에 센다. 직접 격자에 두는 것과 달리 튜토리얼 1 단계 B·C 가 읽는다.
+    /// 칸이 비어야 다음 추첨이 들어오므로 (트레이가 가득 차면 추첨이 멈춘다) 있는 조각은 종류를 가리지 않고 놓는다.
+    /// </summary>
+    /// <param name="session">세션</param>
+    /// <param name="player">놓는 플레이어 상태</param>
+    /// <returns>놓아서 누적 수에 더해진 칸 수</returns>
+    public static int PlaceBridgePiece(BattleSession session, PlayerState player)
+    {
+        // 칸에 조각이 들어올 때까지 기다린다 (놓을 때마다 칸이 비므로 막히지 않는다).
+        int slot = -1;
+        for (int guard = 0; slot < 0 && guard < 50000; guard++)
+        {
+            // 칸의 조각들을 왼쪽부터 본다.
+            for (int i = 0; i < player.Tray.Slots.Count; i++)
+            {
+                if (player.Tray.Slots[i] != null)
+                {
+                    slot = i;
+                    break;
+                }
+            }
+            if (slot < 0)
+            {
+                session.RunTicks(1);
+            }
+        }
+        if (slot < 0)
+        {
+            throw new InvalidOperationException("다리 조각이 생산 창에 들어오지 않았습니다.");
+        }
+        int pattern = player.Tray.Slots[slot]!.Pattern.Index;
+        session.Submit(new PickBridgePieceCommand(1, slot));
+        session.RunTicks(1);
+        (int rotation, int x, int y) = FindBridgeSite(session, pattern);
+        int before = player.Made(ProductionDeck.BridgeType);
+        session.Submit(new PlaceBridgeCommand(1, rotation, x, y));
+        session.RunTicks(1);
+        if (player.HeldPiece != null)
+        {
+            throw new InvalidOperationException("다리 조각 놓기가 거부되었습니다.");
+        }
+        return player.Made(ProductionDeck.BridgeType) - before;
+    }
 }

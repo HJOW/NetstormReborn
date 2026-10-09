@@ -416,7 +416,17 @@ public sealed partial class BattleSession
         if (!Map.Sids.CanAllocateServer(piece.Cells().Count)) return new CommandResult(CommandFailure.ObjectLimit);
         // 생산 창에 들어온 지 6초가 안 된 조각은 금 간 채로 놓인다
         BridgeCondition quality = BridgeTray.QualityAt(held, Seconds);
-        Bridges.Place(piece, command.X, command.Y, command.Player, quality);
+        IReadOnlyList<BridgeCellState> placed = Bridges.Place(piece, command.X, command.Y, command.Player, quality);
+        // 원본은 놓은 칸마다 다리 오브젝트를 만들어 첫 등록 때 누적 제작 표(DAT_005c98d0)에 센다.
+        // 튜토리얼 1 단계 B·C 가 이 표의 합(FUN_004c2500(4))을 읽는다 (004c3a20, 디컴파일 확인).
+        // 무너지거나 회수해도 표는 줄지 않는다 (줄이는 곳은 전체 삭제 004c27c0 뿐).
+        TypeInfo? bridgeType = _types.Find(ProductionDeck.BridgeType);
+        uint bridgeFlags = bridgeType?.Flags2 ?? TypeFlagBits.Bridge;
+        // 놓은 칸의 수만큼 누적 수에 넣는다.
+        for (int i = 0; i < placed.Count; i++)
+        {
+            player.RecordMade(bridgeType?.Name ?? ProductionDeck.BridgeType, bridgeFlags);
+        }
         // 놓은 조각의 칸을 비운다 (원본도 다음 채우기에서 그 자리를 채운다)
         player.Tray.ConsumeHeld();
         player.HeldPiece = null;
