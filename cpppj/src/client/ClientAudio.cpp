@@ -24,7 +24,7 @@ SceneMusicHooks CompleteSceneBoundaries(std::function<double()> wallSeconds,Scen
     hooks.wallSeconds=std::move(wallSeconds);
     // 희생 판정은 월드가 필요하다: 아직 항상 "진행 중 아님"이다.
     if (!hooks.sacrificing) hooks.sacrificing=[](std::uint32_t) { return false; };
-    // 멀티플레이 대기실은 3차 목표다.
+    // 대기실 판정은 멀티플레이 전용이라 아직 연결하지 않고 항상 "대기실 아님"을 돌려준다. 멀티플레이(TCP/IP LAN)는 4차 목표다. (2026-10-10 AGENTS.md 목표 번호 변경으로 3차에서 4차로 고침)
     if (!hooks.waitingRoom) hooks.waitingRoom=[] { return false; };
     // 공급되지 않은 화면 기능만 비운다. 음악/효과음의 내부 경계는 MakeSceneMusicHooks가 맡는다.
     if (!hooks.refresh) hooks.refresh=[] {};

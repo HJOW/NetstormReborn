@@ -17,7 +17,7 @@ AI 를 이용해 되살리는 프로젝트입니다.
 
 # 프로젝트 구성
 
-게임 빌드가 둘 있으며 cpppj는 **10.78 싱글플레이 복원 → Windows 10/11 안정 구동 → TCP/IP 로컬 멀티플레이/outpost → 요구사항·MCP·한국어 지원** 순서로 진행합니다. outpost는 멀티플레이 전용이므로 Windows 안정 구동 이후에 구현하며 공식 서버 접속은 복원하지 않습니다. cpppj는 Windows 전용입니다. dotnetpj는 cpppj 완성 후 분석하여 **원본과 완전히 동일한 동작을 먼저 구현하고 이후 요구사항을 반영**합니다. dotnetpj의 Linux 개발은 후순위입니다.
+게임 빌드가 둘 있으며 cpppj는 **10.78 싱글플레이 복원 → Windows 10/11 안정 구동 → 한국어 지원 → TCP/IP 로컬 멀티플레이/outpost → 요구사항·MCP 추가** 순서로 진행합니다. outpost는 멀티플레이 전용이므로 한국어 지원까지 끝낸 뒤 멀티플레이와 함께 구현하며 공식 서버 접속은 복원하지 않습니다. cpppj는 Windows 전용입니다. dotnetpj는 cpppj 완성 후 분석하여 **원본과 완전히 동일한 동작을 먼저 구현하고 이후 요구사항을 반영**합니다. dotnetpj의 Linux 개발은 후순위입니다.
 
 | 폴더 | 내용 | 상태 |
 | --- | --- | --- |
@@ -119,7 +119,7 @@ cmake --build cpppj/build --config Release
 ctest --test-dir cpppj/build --build-config Release --output-on-failure
 ```
 
-cpppj는 **10.78 싱글플레이 복원과 Windows 10/11 안정 구동을 우선**하며 LAN 멀티플레이·outpost는 3차, 화면비·한국어·추가 기능·MCP는 4차 목표입니다. cpppj는 Windows 전용이고 Linux는 이후 dotnetpj에서 진행합니다. 현재 실행 파일(`NetstormCpp`)은 메뉴→캠페인→브리핑→지형/객체 표시·선택/사제 이동·메뉴 복귀와 자산·글꼴 검사 장면을 제공합니다. 건설·경제·전투·승패와 raw 월드 연결은 남아 있어 미션 완주는 아직 불가능합니다. 예: `cpppj/build/bin/Release/NetstormCpp.exe --run originals --view fonts --window`. 자세한 내용은 [C++ 빌드](docs/cpp-build.md), [실제 플레이 복원 계획](docs/cpp-playable-plan.md), [표시 기반 근거](docs/exe/cpp-renderer-reconstruction.md)에 있습니다.
+cpppj는 **10.78 싱글플레이 복원과 Windows 10/11 안정 구동을 우선**하며 한국어 지원은 3차, LAN 멀티플레이·outpost는 4차, 화면비·추가 기능·MCP는 5차 목표입니다. cpppj는 Windows 전용이고 Linux는 이후 dotnetpj에서 진행합니다. 현재 실행 파일(`NetstormCpp`)은 메뉴→캠페인→브리핑→지형/객체 표시·선택/사제 이동·메뉴 복귀와 자산·글꼴 검사 장면을 제공합니다. 건설·경제·전투·승패와 raw 월드 연결은 남아 있어 미션 완주는 아직 불가능합니다. 예: `cpppj/build/bin/Release/NetstormCpp.exe --run originals --view fonts --window`. 자세한 내용은 [C++ 빌드](docs/cpp-build.md), [실제 플레이 복원 계획](docs/cpp-playable-plan.md), [표시 기반 근거](docs/exe/cpp-renderer-reconstruction.md)에 있습니다.
 
 # License
 
