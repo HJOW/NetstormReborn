@@ -28,6 +28,7 @@ add_executable(netstorm_tests
     ConstructionClearTests.cpp
     ConstructionNoticeTests.cpp
     ConstructionRequestTests.cpp
+    ConstructionLocalTests.cpp
     PriestShieldTests.cpp
     PriestPostPopTailTests.cpp
     PriestFallTests.cpp
@@ -359,3 +360,7 @@ set_source_files_properties(ConstructionNoticeTests.cpp PROPERTIES COMPILE_DEFIN
 # 서버 건설 요청 전체의 독립 원본 관찰이다. CTest는 실제 게임/Python을 실행하지 않는다.
 set_source_files_properties(ConstructionRequestTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CONSTRUCTIONREQUEST_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/constructionrequest-x86.tsv\"")
+
+# 로컬 건설 배치 전체의 저장 PE 관찰이다. CTest는 원본 게임/Python을 실행하지 않는다.
+set_source_files_properties(ConstructionLocalTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CONSTRUCTIONLOCAL_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/constructionlocal-x86.tsv\"")

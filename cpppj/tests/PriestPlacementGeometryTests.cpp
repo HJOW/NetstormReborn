@@ -103,7 +103,9 @@ TEST_CASE(priest_geometry_preview_collision_spawn_factory) {
 TEST_CASE(priest_geometry_guards) {
     const RiftTypeFrames frames(std::vector<FrameCode>(1));CHECK(Throws([&] { CanonDecoder bad(frames,0,1,0,20,21,true); }));
     CHECK(Throws([&] { CanonDecoder odd(frames,0,0,1,20,21,false,OriginalEdition::Cd1072); }));
-    CHECK(Throws([&] { CanonDecoder bad(frames,0,0,8,20,21); }));CHECK(Throws([&] { RawPriestPlacementGeometry::CollisionArea(20,21,0,1); }));
+    // 비패턴 방향 8은 새 실제 로컬 배치 관찰처럼 한 칸을 정상 처리한다. CD 홀수/패턴 회전 거부와 구별한다.
+    CanonDecoder largeDirection(frames,0,0,8,20,21);CHECK(largeDirection.Valid() && largeDirection.Frame()==0 && largeDirection.X()==20 && largeDirection.Y()==21);
+    largeDirection.Advance();CHECK(!largeDirection.Valid());CHECK(Throws([&] { RawPriestPlacementGeometry::CollisionArea(20,21,0,1); }));
     SidPool pool(OriginalEdition::Patch1078,kCapacity,true),other(pool.Edition(),kCapacity,true);std::vector<RiftTypeRecord> types(188);std::vector<PriestPlainCanonType> metadata(188);PriestPlacementGeometryState state;
     CHECK(Throws([&] { RawPriestPlacementGeometry missing(pool,types,metadata,state,{}); }));
     RawPriestPlacementGeometry geometry(pool,types,metadata,state,AllowRegions());PriestPlacementQuery query{kPriest,20,21,0,1,0};CHECK(Throws([&] { geometry.Bounds(query); }));

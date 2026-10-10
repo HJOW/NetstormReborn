@@ -29,7 +29,7 @@ public:
     // 원본 FUN_00425c20 ↔ CD 0041fcf0의 영역·다리 패턴 경로. direction은 방향 값이며 회전은 direction / 2다.
     // frames는 그 타입의 프레임 코드 표다. (x, y)는 첫 칸의 좌표다.
     CanonDecoder(const RiftTypeFrames& frames, const CanonPattern& pattern, int direction, float x, float y);
-    // 패턴 없는 타입은 한 칸이다. 기본 프레임 또는 명시 프레임 인자를 선택하며 CD는 홀수 direction을 assert한다.
+    // 패턴 없는 타입은 한 칸이고 방향의 크기/부호는 출력에 영향을 주지 않는다. 기본 프레임 또는 명시 프레임을 선택하며 CD는 홀수를 assert한다.
     CanonDecoder(const RiftTypeFrames& frames,int defaultFrame,int argument,int direction,float x,float y,
         bool explicitFrame=false,OriginalEdition edition=OriginalEdition::Patch1078);
     // 00425b90 / CD 004202e0: 현재 좌표 절삭에서 순회 개수×현재 발자국을 뺀 미리보기 사각형이다.

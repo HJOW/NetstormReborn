@@ -1,6 +1,7 @@
 // 서버 요청 전체의 독립 PE 관찰과 실제 MayPlace→확정→통지→정리/배치 연결을 검사한다.
 #include "ConstructionNoticeSupport.h"
 #include "o/RawConstructionRequest.h"
+#include "o/RawConstructionLocal.h"
 #include <cmath>
 
 namespace {
@@ -145,9 +146,23 @@ TEST_CASE(ConstructionRequest_ConnectsPipelineConfirmAndNotice) {
         };
         RawConstructionPlace place(pool,types,frames,placeState,reward,MakeConstructionPlaceHooks(pool,factory,owner,reward,patch ? &store : nullptr,placeState,placeHooks));
         std::vector<std::uint16_t> predicted,removed;
-        // 클라이언트 영역의 아홉 void 객체를 예측 배치의 실제 입력으로 만든다.
-        for (int i=0;i<9;++i) predicted.push_back(factory.Create(kTypeNoIsland,2).value);
-        place.Place({kTypeNoIsland,20.25F,21.5F,0,0,1,predicted,1,0});
+        ConstructionLocalState localState;localState.localPlayer=1;ConstructionLocalHooks localHooks;
+        // Form 미리보기 생성/가상 삭제는 아직 경계다. 삭제는 할당된 void SID를 실제 풀에 반납한다.
+        const Sid preview=factory.Create(kTypeNoIsland,2);auto previewRaw=pool.AllocatedBytes(preview);
+        Put(previewRaw,18,kTypeNoIsland,2);Put(previewRaw,20,0,2);previewRaw[patch ? 30 : 26]=0;
+        localHooks.previewSource=[](Sid) { return 0U; };
+        localHooks.destroyPreview=[&](Sid sid,std::uint32_t flags) { CHECK(sid==preview && flags==0);pool.Release(sid); };
+        localHooks.returnPiece=[](std::uint32_t,std::uint32_t,std::uint32_t) { CHECK(false); };
+        localHooks.moveBuilder=[](std::uint32_t,Sid,std::uint32_t,std::uint32_t) { CHECK(false); };
+        std::vector<ConstructionLocalMessage> outbound;
+        localHooks.send=[&](std::uint32_t target,const ConstructionLocalMessage& message) { CHECK(target==9);outbound.push_back(message); };
+        localHooks=MakeConstructionLocalHooks(pool,factory,place,localHooks);
+        const auto allocate=localHooks.create;
+        // 실제 factory 경계를 호출하고 반환 SID만 관찰한다. 수동으로 예측 조각을 만들지 않는다.
+        localHooks.create=[&](std::uint32_t type,std::uint32_t flags) { CHECK(flags==2);const Sid sid=allocate(type,flags);predicted.push_back(sid.value);return sid; };
+        RawConstructionLocal local(pool,types,frames,spots,localState,localHooks);
+        local.Place({preview,20.25F,21.5F,0,0});CHECK(predicted.size()==9 && outbound.size()==1);
+        const auto& sent=outbound.front();CHECK(sent.type==kTypeNoIsland && sent.x==20.25F && sent.y==21.5F && sent.timeLow==0 && sent.timeHigh==0);
         ConstructionClearState clearState;
         // 가상 삭제 경계는 해당 칸의 머리를 빼고 SID를 반납한다. 실제 삭제 전체를 실행했다고 주장하지 않는다.
         RawConstructionClear clear(pool,hash,types,frames,clearState,{[&](Sid sid,std::uint32_t flags) {
@@ -174,11 +189,12 @@ TEST_CASE(ConstructionRequest_ConnectsPipelineConfirmAndNotice) {
         requestHooks.displaceCd=[](float,float,std::uint32_t) { CHECK(false); };requestHooks.cancel=[](float,float,std::uint32_t,std::uint32_t) { CHECK(false); };
         RawConstructionRequest request(pool,hash,types,frames,spots,requestState,MakeConstructionRequestHooks(pool,pipeline,confirm,requestHooks));
         CHECK(&pipeline.Pool()==&pool);SidPool other(edition,kCapacity,false);CHECK(Throws([&] { MakeConstructionRequestHooks(other,pipeline,confirm,requestHooks); }));
+        CHECK(Throws([&] { MakeConstructionLocalHooks(other,factory,place,localHooks); }));
         // 지면이 없는 첫 요청은 실제 최종 지형 정책이 거부한다. SID 생성·방송·삭제·배치는 일어나지 않는다.
-        CHECK(!request.Request({kTypeNoIsland,20.25F,21.5F,1}) && broadcasts==0 && refreshed==0 && removed.empty());
+        CHECK(!request.Request({sent.type,sent.x,sent.y,1,sent.argument,sent.direction,0,sent.timeLow,sent.timeHigh,sent.quality}) && broadcasts==0 && refreshed==0 && removed.empty());
         // 원본의 지면 허용 전역만 켠다. 강제 MayPlace는 0이며 모양/미리보기/충돌/지형/최종 관계 몸체는 모두 실행한다.
         placementState.relations.bypassGroundPermission=1;
-        CHECK(request.Request({kTypeNoIsland,20.25F,21.5F,1}) && broadcasts==1 && refreshed==1 && removed==predicted);
+        CHECK(request.Request({sent.type,sent.x,sent.y,1,sent.argument,sent.direction,0,sent.timeLow,sent.timeHigh,sent.quality}) && broadcasts==1 && refreshed==1 && removed==predicted);
         CHECK(noticeState.history[0].x==20.25F && noticeState.history[0].y==21.5F && placementState.placement.forcePlacement==0);
         RawSquidFinder finder(pool,hash,types);std::size_t found=0;
         // 조각을 교체한 전체 범위에는 서버 SID·올바른 소유자·비abstract 조각 아홉 개만 남아야 한다.

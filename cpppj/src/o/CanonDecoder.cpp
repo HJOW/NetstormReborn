@@ -58,11 +58,12 @@ CanonDecoder::CanonDecoder(const RiftTypeFrames& frames, const CanonPattern& pat
     patternY_ = (height - 1) * kStartY[static_cast<std::size_t>(rotation_)];
     Advance();
 }
-// 패턴 없는 경로의 폭/높이는 타입 발자국과 별개로 모두 1이다.
+// 패턴 없는 경로의 폭/높이는 타입 발자국과 별개로 모두 1이다. 원본은 큰/음수 방향도 받아들이며
+// 회전표에서 읽은 값은 비패턴 출력에 영향을 주지 않는다. 내부 회전은 0으로 두어 불필요한 표 밖 접근을 피한다.
 CanonDecoder::CanonDecoder(const RiftTypeFrames& frames,int defaultFrame,int argument,int direction,float x,float y,
-    bool explicitFrame,OriginalEdition edition):frames_(&frames),pattern_(nullptr),rotation_(direction/2),
+    bool explicitFrame,OriginalEdition edition):frames_(&frames),pattern_(nullptr),rotation_(0),
     originX_(x),originY_(y),outerCount_(1),innerCount_(1),defaultFrame_(defaultFrame),argument_(argument),explicitFrame_(explicitFrame) {
-    if (rotation_<0 || rotation_>3 || (edition==OriginalEdition::Cd1072 && (direction&1))) throw std::out_of_range("패턴 없는 CanonDecoder 회전 오류");
+    if (edition==OriginalEdition::Cd1072 && (direction&1)) throw std::out_of_range("CD 비패턴 CanonDecoder 홀수 방향 오류");
     if (!std::isfinite(x) || !std::isfinite(y)) throw std::invalid_argument("패턴 없는 CanonDecoder 좌표 오류");
     Advance();
 }
