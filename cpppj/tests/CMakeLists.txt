@@ -48,6 +48,7 @@ add_executable(netstorm_tests
     PaletteFlashTests.cpp
     PaletteColorsTests.cpp
     GumpVisualTests.cpp
+    GumpBackgroundTests.cpp
     TerritoryTests.cpp
     RendererTests.cpp
     MenuTests.cpp
@@ -170,6 +171,9 @@ add_test(NAME netstorm_tests COMMAND netstorm_tests)
 # 원본 돌 버튼의 전체 생성/그리기 관찰은 새 검사 소스에서만 읽는다.
 set_source_files_properties(GumpVisualTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_GUMPVISUAL_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gumpvisual-x86.tsv\"")
+# 원본 전체 ColorSort/명암 생성/질감 배경의 독립 관찰을 이 검사에만 지정한다.
+set_source_files_properties(GumpBackgroundTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_GUMPBACKGROUND_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gumpbackground-x86.tsv\"")
 # Carrier/실제 contained 조회의 독립 fixture는 해당 검사 소스에만 지정한다.
 set_source_files_properties(CarrierPreDestroyTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CARRIERPREDESTROY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrierpredestroy-x86.tsv\"")

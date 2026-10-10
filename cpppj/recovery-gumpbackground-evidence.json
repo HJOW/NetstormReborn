@@ -1,0 +1,93 @@
+{
+  "total": 177,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-10",
+  "controls": [
+    639,
+    895
+  ],
+  "os_calls": 0,
+  "editions": {
+    "originals": {
+      "cases": 59,
+      "returns": 124,
+      "native_calls": {
+        "00439de0": 6,
+        "0043c010": 6,
+        "00465880": 112,
+        "00465690": 358,
+        "00445290": 564
+      },
+      "boundaries": {
+        "typeget": 358,
+        "frameget": 358,
+        "setclip": 636,
+        "raw": 3096,
+        "setmap": 236,
+        "shaded": 3582
+      },
+      "assertions": 0
+    },
+    "originalCD": {
+      "cases": 59,
+      "returns": 124,
+      "native_calls": {
+        "00458a90": 6,
+        "00496530": 6,
+        "00496510": 61766,
+        "00494a20": 112,
+        "00494720": 358,
+        "004951a0": 58
+      },
+      "boundaries": {
+        "setclip": 636,
+        "raw": 3096,
+        "setmap": 236,
+        "shaded": 3582
+      },
+      "assertions": 0
+    },
+    "original1037": {
+      "cases": 59,
+      "returns": 124,
+      "native_calls": {
+        "00458a90": 6,
+        "00496530": 6,
+        "00496510": 61766,
+        "00494a20": 112,
+        "00494720": 358,
+        "004951a0": 58
+      },
+      "boundaries": {
+        "setclip": 636,
+        "raw": 3096,
+        "setmap": 236,
+        "shaded": 3582
+      },
+      "assertions": 0
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/gumpbackground-x86.tsv": "dd13aeb17a45453cb918427dab68d4c3d94927700d85f7dd2f1f953347e8c4e1",
+    "extracted/gumpbackground/original1037/creation.c": "9adfd587232a2068f873ff6fcc7f6320b6303c035444642dfbab3241a29ace3b",
+    "extracted/gumpbackground/original1037/functions.tsv": "cf429f5a33098638d03bbf27d72ed861282e70a1eb279657a0d68b2ca15eabb7",
+    "extracted/gumpbackground/originalCD/creation.c": "9adfd587232a2068f873ff6fcc7f6320b6303c035444642dfbab3241a29ace3b",
+    "extracted/gumpbackground/originalCD/functions.tsv": "cf429f5a33098638d03bbf27d72ed861282e70a1eb279657a0d68b2ca15eabb7",
+    "extracted/gumpbackground/originals/creation.c": "27eb8b91b31efd7579872ec373f77e6046d089ee8882f7936d9580c9530f4977",
+    "extracted/gumpbackground/originals/functions.tsv": "16f342ccfe19127c285dc12bb66450c59b1ca1a7564bfb75ace6c11a71afa215",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/d/GIFCLOUD.COL": "785a2cda6ac1d3e295d375815b6d9650720683099db7c249382d598b5da00532",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_gumpbackground_oracle.py": "4b3c30c03607bba3c4de146a479f4ded3840fdd7fd6c0b021ceb49ced6ee4c99",
+    "tools/decomp_gumpvisual_oracle.py": "cc17b2b6f6246b32c1111fad9c2a2fce1292c4499a4b07308e5aeaec55361e2e",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/ghidra/gumpbackground-functions.json": "fe916855f11c05805402623e2001ed313d171c9ade20cea69ece1341f59a321b"
+  },
+  "limits": [
+    "질감 경로만 대조; 체크/단색 fill·flat line·debug 출력 제외",
+    "Patch 타입/프레임 조회 및 clip/map/shape 출력은 명시 경계; 전체 배경/타일/클립 분기는 실제 원본 실행",
+    "명암 생성은 전체 몸체 실행, 복원/대조 출력은 밝음/어두움 두 표; 나머지 일곱 표는 후속",
+    "파일 캐시 !color.dat·ColorSort 재정렬·paletteDirty 소비·전체 자식 Gump 수명은 후속"
+  ]
+}

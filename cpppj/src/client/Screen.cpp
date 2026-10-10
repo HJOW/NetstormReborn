@@ -278,9 +278,12 @@ void Screen::LoadPalette(const GamePalette& palette,o::OriginalEdition edition) 
     }
     SetPalette(0, kPaletteSize, nullptr, true);
     colors_=BuildPaletteColorTable(logical_,edition);
+    shadeMaps_=BuildGumpShadeMaps(logical_);
 }
 // 원본처럼 파일 읽기가 끝난 뒤 계산된 표를 보존한다. 번개의 부분 적용/복구는 표를 다시 만들지 않는다.
 const PaletteColorTable& Screen::Colors() const { return colors_; }
+// GUI 어댑터는 마지막 파일에서 만든 표를 참조한다. 원본 paletteDirty 소비 수명은 후속 복원 대상이다.
+const GumpShadeMaps& Screen::ShadeMaps() const { return shadeMaps_; }
 // apply와 무관하게 논리 팔레트가 색 검색의 원본이다.
 std::uint32_t Screen::FindColor(std::int32_t red,std::int32_t green,std::int32_t blue) const {
     return FindPaletteColor(logical_,red,green,blue);

@@ -5,6 +5,7 @@
 #include "client/ClientMain.h"
 #include "client/GifImage.h"
 #include "client/GumpVisual.h"
+#include "client/GumpBackground.h"
 #include "client/GameWorld.h"
 #include "client/UserInput.h"
 #include "o/OriginalText.h"
@@ -109,6 +110,11 @@ UberGump::UberGump(Client& client) : client_(client) {
     for (const char* name : {"A00", "A01", "I00", "I01", "I02", "I03", "J02"}) {
         const auto frame = client_.Assets().FrameIndex(type, name, 0);
         decorations_.emplace(name, client_.Assets().Shapes().Decode(type.block, frame));
+        if (std::string_view(name)=="A00") {
+            buttonTextureMetrics_=client_.Assets().Shapes().SquidMetrics(type.block,frame);
+            const auto rect=client_.Assets().Shapes().Blocks()[type.block].frames[frame].rect;
+            buttonTextureOffset_={rect.left,rect.top};
+        }
     }
     MainMenu(); Compose(); client_.ShowScene();
 }
@@ -408,9 +414,11 @@ void UberGump::Compose(bool controls) {
         const auto label = FontBytes(item.label);
         const int id = control(item, {x, y, x + w, y + kButtonHeight + 1});
         const bool down = input_.Pressed() == id;
-        const ScreenRect r{x, y, x + w, y + kButtonHeight};Tile(*canvas,decorations_.at("A00"),r);
-        // 배경 자식의 원본 명암 변환표는 후속이다. 현재 질감/안쪽 명암 위에 부모의 실제 외곽선과 글자 계획을 적용한다.
-        Bevel(*canvas,{r.left+1,r.top+1,r.right-1,r.bottom-2},light,dark,down);
+        const ScreenRect r{x, y, x + w, y + kButtonHeight};
+        // 원본 배경 자식은 상대 (1,1), 폭 w-2/높이 17이다. 눌림은 테두리 명암 방향만 바꾼다.
+        const auto background=PlanGumpBackground({r.left+1,r.top+1,r.right-1,r.bottom-1},all,
+            buttonTextureMetrics_.width,buttonTextureMetrics_.height,GumpBackgroundFlags::kButton|(down ? GumpBackgroundFlags::kPressed : 0U));
+        DrawGumpBackground(*canvas,decorations_.at("A00"),buttonTextureOffset_,background,client_.GetScreen().ShadeMaps());
         const auto plan=PlanButtonDraw({r,font.Measure(label),font.Height(),0,down ? 1 : 0,item.enabled ? 0U : 1U},buttonContexts,buttonColors.edge);
         DrawGumpLines(*canvas,plan.lines);
         text.push_back({&font,label,x+plan.textOffset.x,y+plan.textOffset.y,static_cast<std::uint8_t>(plan.text.color),

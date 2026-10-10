@@ -3,6 +3,7 @@
 // 근거·범위: docs/exe/cpp-screen-reconstruction.md
 #pragma once
 #include "client/PaletteColors.h"
+#include "client/PaletteShade.h"
 #include <array>
 #include <cstdint>
 #include <memory>
@@ -115,6 +116,8 @@ public:
     void LoadPalette(const GamePalette& palette,o::OriginalEdition edition=o::OriginalEdition::Patch1078);
     // 마지막 파일 팔레트로 계산한 원본 기본/표시/날씨 색 표다. SetPalette의 일시 번개/모드 적용으로 다시 계산하지 않는다.
     const PaletteColorTable& Colors() const;
+    // 파일 팔레트의 GUI 밝음/어두움 변환표다. 번개의 일시 SetPalette와 화면 모드 적용으로 갱신하지 않는다.
+    const GumpShadeMaps& ShadeMaps() const;
     // 현재 논리 팔레트에서 RGB 색을 찾는다. SetPalette(apply=false)로 준비한 논리 팔레트도 검색에 반영한다.
     std::uint32_t FindColor(std::int32_t red,std::int32_t green,std::int32_t blue) const;
     // 현재 논리 팔레트에서 날씨 RGB 네 색을 검색하는 계산 도우미다. 파일 로더의 저장 별칭은 Colors().weather를 쓴다.
@@ -164,6 +167,7 @@ private:
     std::array<ScreenColor, 256> saved_{};         // DAT_005acd28
     std::array<std::uint32_t, 256> logical_{};     // DAT_005c7954: PALETTEENTRY(빨강·초록·파랑·플래그) 256개
     PaletteColorTable colors_;                   // 파일 팔레트 로더가 다시 계산하는 원본 기본/표시/날씨 색 표.
+    GumpShadeMaps shadeMaps_;                    // 돌 배경 소스 번호를 변환하는 파일 팔레트 명암 표.
     std::uint32_t flags_{};                        // DAT_005c78d4
     int lockDepth_{};                              // DAT_005c7920
     std::uint8_t* buffer_{};                       // DAT_0059af88 / DAT_005c78f8

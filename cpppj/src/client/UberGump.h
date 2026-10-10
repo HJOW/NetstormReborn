@@ -69,6 +69,8 @@ private:
     GumpInput input_;
     std::map<std::string, std::unique_ptr<o::Config>> scripts_;
     std::map<std::string, IndexedImage> decorations_;
+    SquidFrameMetrics buttonTextureMetrics_{}; // 원본 A00의 signed short 폭/높이. 반복 주기는 각각 1을 뺀 값이다.
+    ScreenPoint buttonTextureOffset_{}; // A00 VFX 픽셀 영역의 기준점 상대 위치.
     IndexedImage title_, clouds_;
     DialogPage page_;
     std::vector<std::string> labels_;
