@@ -1,6 +1,8 @@
 # 기계어 대조 입력(Ghidra 내보내기) 준비
 
-2026-10-10 최신(`HJOW-Athlon`): **`musicopen` 목록 3/2/2개**를 읽기 전용으로 내보냈다. 공개 음악 시작/경로/실제 헤더/곡 길이·생성/되감기의 독립 입력 **1,872개**, 감사 **78종 모두 통과**. 두 x87 제어값의 공개 시작 3,744회·헤더 3,234회(root 11,232회) 정상 반환. C++는 53비트 raw96와 정확히 비교하고 10.78 72개의 64비트 차이(1 ULP)도 보존한다. CD 생성/시작도 실제 공개 몸체에서 검증했다. find/상위 옵션 callback·COM·Winmm만 명시 대체, 실제 장치/게임/스레드 실행 없음. [주소/계약/범위](cpp-music-open-reconstruction.md). 마지막 디컴파일 수행 PC **HJOW-Athlon, 2026-10-10**.
+2026-10-10 최신(`HJOW-Athlon`): **`musicselection` 목록 4/4/4개**를 읽기 전용으로 내보냈다. 상위 음악 옵션/현재 곡·존재 검사·실제 strncpy·특수 곡 loop·demo 재선택의 독립 입력 **2,064개**, 감사 **79종 모두 통과**. 상위 fallback 대체를 제거하고 기존 공개 Play/Stop·실제 헤더까지 실행했다. 두 x87 관찰 일치, raw96/raw256·사건·파일 위치/남은 파일 수를 비교한다. 직접 선택/래퍼 4,128회(root 12,384회) 정상 반환. 실제 게임/장치/스레드 실행 없음. [주소/계약/범위](cpp-music-selection-reconstruction.md). 마지막 디컴파일 수행 PC **HJOW-Athlon, 2026-10-10**.
+
+2026-10-10 앞 단계(`HJOW-Athlon`): **`musicopen` 목록 3/2/2개**를 읽기 전용으로 내보냈다. 공개 음악 시작/경로/실제 헤더/곡 길이·생성/되감기의 독립 입력 **1,872개**, 감사 **78종 모두 통과**. 두 x87 제어값의 공개 시작 3,744회·헤더 3,234회(root 11,232회) 정상 반환. C++는 53비트 raw96와 정확히 비교하고 10.78 72개의 64비트 차이(1 ULP)도 보존한다. CD 생성/시작도 실제 공개 몸체에서 검증했다. find/상위 옵션 callback·COM·Winmm만 명시 대체, 실제 장치/게임/스레드 실행 없음. [주소/계약/범위](cpp-music-open-reconstruction.md). 마지막 디컴파일 수행 PC **HJOW-Athlon, 2026-10-10**.
 
 2026-10-10 앞 단계(`HJOW-Athlon`): **`musicstream` 목록 2/4/4개**를 읽기 전용으로 내보냈다. 음악 버퍼 생성/채우기와 실제 Read/Stop/helper의 독립 입력 **5,088개**, 최신 감사 **77종 모두 통과**. 두 x87 제어값에서 직접 생성/갱신 10,176회(root 총 30,528회) 정상 반환. CD 생성은 공개 시작 안의 정적 대조이며 생성 입력은 10.78에만 있다. 실제 장치/게임/스레드 실행 없음. [주소/계약/검증 범위](cpp-music-stream-reconstruction.md). 마지막 디컴파일 수행 PC **HJOW-Athlon, 2026-10-10**.
 
@@ -70,6 +72,7 @@ Get-ChildItem tools/decomp_*_oracle.py | Where-Object { Select-String -LiteralPa
 | `soundprocess` | soundprocess·owner(실행기만) | 10 / 7 / 7 | 소리 프로세스 생성자/실행/통지·소리 이름 표 조회, 장치·시계·부착 경계 대체, HJOW-Athlon 2026-10-10 |
 | `soundplay` | soundplay·owner(실행기만) | 19 / 16 / 16 | 소리 재생 계층(전역/위치 재생·정지·재생 여부·화면 위치 계산), 장치 버퍼 COM 호출·적재·기록 대체, HJOW-Athlon 2026-10-10 |
 | `sounddevice` | sounddevice·owner(실행기만) | 7 / 7 / 7 | 장치/파일/WAVE 읽기 코드, WAVE 세 몸체의 native 관찰, HJOW-Athlon 2026-10-10 |
+| `musicselection` | musicselection·musicopen·musicstream·musiccontrol·soundcontrol·soundplay·sounddevice·owner(실행기만) | 4 / 4 / 4 | 상위 옵션/이름/존재/strncpy·실제 demo 재선택, HJOW-Athlon 2026-10-10 |
 | `musicopen` | musicopen·musicstream·musiccontrol·soundcontrol·soundplay·sounddevice·owner(실행기만) | 3 / 2 / 2 | 공개 음악 시작/경로/헤더/곡 길이·CD 생성/시작, x87 두 raw 보존, HJOW-Athlon 2026-10-10 |
 | `musicstream` | musicstream·musiccontrol·soundcontrol·soundplay·owner(실행기만) | 2 / 4 / 4 | 음악 버퍼 생성/갱신, CD 생성 인라인은 정적 대조, HJOW-Athlon 2026-10-10 |
 | `musiccontrol` | musiccontrol·soundcontrol·soundplay·owner(실행기만) | 11 / 13 / 13 | 음악 채널 제어/공유 음소거, CD 시작 인라인은 정적 대조, HJOW-Athlon 2026-10-10 |

@@ -1,4 +1,4 @@
-// 원본 음악 채널의 파일 열기·길이·읽기·공개 시작·정지·버퍼 갱신과 공유 음소거를 복원한다. 작업 스레드/상위 옵션/클라이언트 부착은 후속이다.
+// 원본 음악 채널의 파일 열기·길이·읽기·공개 시작·정지·버퍼 갱신과 공유 음소거를 복원한다. 상위 선택은 SoundMusicSelection이며 작업 스레드/클라이언트 부착은 후속이다.
 #pragma once
 #include "client/Sound.h"
 #include <array>
@@ -28,6 +28,9 @@ struct MusicOpenHooks {
     // 원본 상위 음악 옵션/현재 이름 관리자가 demo.mus를 선택한다. 콜백 뒤 활성 비트가 공개 Play의 실패 반환값이다.
     std::function<void(std::string_view)> fallback;
 };
+// 음악 조회 문자열을 원본 기본/보조 경로 규칙으로 구성해 첫 파일을 찾는다. 존재 검사와 채널 열기가 같은 규칙을 공유한다.
+std::optional<std::string> FindMusicFile(std::string_view name,const MusicDirectories& directories,
+    const std::function<std::optional<std::string>(std::string_view)>& find);
 // 원본 채널 배치의 상태다. 버퍼/파일은 장치 경계의 32비트 토큰이고, 남은 바이트는 수정하지 않은 원본 필드를 보존한다.
 // 사용: 파일 적재가 File/Length/Format/DataOffset/Duration, 버퍼 확보가 Buffer/BufferBytes를 채운 뒤 채널을 시작한다.
 class MusicChannelState {

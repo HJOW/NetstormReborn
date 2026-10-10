@@ -2,7 +2,7 @@
 
 2026-10-10, 마지막 디컴파일 수행 PC **HJOW-Athlon**(192.168.0.94). [musicopen 목록](../../tools/ghidra/musicopen-functions.json) **3/2/2개**를 같은 PC의 세 Ghidra 프로젝트에서 읽기 전용으로 내보냈다. 원본 게임·복사본·창·오디오 장치·작업 스레드는 실행하지 않았다.
 
-[SoundMusic](../../cpppj/src/client/SoundMusic.h)에 `MusicChannel::Open`·`Active`, `SoundMusic::Play`를 추가했다. [MusicFileStore](../../cpppj/src/client/SoundMusicFile.h)는 실제 Winmm 음악 파일을 열린 상태로 소유하고 기존 `Read`·`Rewind`·`Close`·`Stop`에 연결한다. `ReadSoundWave`의 효과음 전체 적재와 달리 **헤더와 요청한 표본 구간만 읽는다.** 두 채널/이벤트/스레드·상위 음악 옵션 관리자 본체·실제 오디오/GUI 연결은 후속이다.
+[SoundMusic](../../cpppj/src/client/SoundMusic.h)에 `MusicChannel::Open`·`Active`, `SoundMusic::Play`를 추가했다. [MusicFileStore](../../cpppj/src/client/SoundMusicFile.h)는 실제 Winmm 음악 파일을 열린 상태로 소유하고 기존 `Read`·`Rewind`·`Close`·`Stop`에 연결한다. `ReadSoundWave`의 효과음 전체 적재와 달리 **헤더와 요청한 표본 구간만 읽는다.** 상위 음악 옵션 관리자 본체는 [다음 단계](cpp-music-selection-reconstruction.md)에서 완료했다. 두 채널/이벤트/스레드·실제 오디오/GUI 연결은 후속이다.
 
 ## 주소와 계약
 
@@ -19,7 +19,7 @@
 
 원본은 디렉터리 포인터가 있으면 끝에 역슬래시를 무조건 붙인다. 빈 문자열 포인터와 null은 다르고, 후행 구분자가 있어도 하나 더 붙인다. **첫 조회 실패 뒤 보조 디렉터리가 null이면 기존 검색 문자열에 이름을 한 번 더 붙인다.** 예를 들어 기본=`music`, 보조=null, 이름=`track.mus`이면 두 조회는 `music\track.mus`, `music\track.mustrack.mus`다. 이 동작을 임의로 정상화하지 않았다. 두 조회 실패의 채널 0x13 로그는 null `%s` 경계의 `(null)` 문자열로 기록한다.
 
-열기 실패 때만 이름을 ASCII 대소문자 구분 없이 `demo.mus`와 비교한다. 이미 demo라면 0을 반환하고, 그 외에는 상위 옵션 경계에 demo를 요청한 뒤 활성 비트를 반환한다. 버퍼 생성/되감기 실패에는 fallback하지 않는다. **상위 옵션 함수는 현재 곡 이름·음악 옵션·특수 곡 loop·이전 음악 정지를 함께 관리하므로 단순 재귀 Play로 대체하지 않았다.** `MusicOpenHooks::fallback`에 명시 콜백으로 남겼으며 독립 검사는 선택 사건/활성 반환만 공급한다. 아직 상위 옵션 관리자와 게임에 연결한 것은 아니다.
+열기 실패 때만 이름을 ASCII 대소문자 구분 없이 `demo.mus`와 비교한다. 이미 demo라면 0을 반환하고, 그 외에는 상위 옵션 경계에 demo를 요청한 뒤 활성 비트를 반환한다. 버퍼 생성/되감기 실패에는 fallback하지 않는다. **상위 옵션 함수는 현재 곡 이름·음악 옵션·특수 곡 loop·이전 음악 정지를 함께 관리하므로 단순 재귀 Play로 대체하지 않았다.** 이 단계에서는 `MusicOpenHooks::fallback`에 명시 콜백을 남겨 독립 검사에 선택 사건/활성 반환만 공급했다. 이후 [상위 음악 선택 단계](cpp-music-selection-reconstruction.md)에서 **실제 옵션 래퍼/선택 본체를 연결하고 상위 fallback 대체 없이 원본과 대조**했다. GUI 옵션/게임 연결은 남는다.
 
 ## 실제 파일 소유권과 부분 출력
 
@@ -57,4 +57,4 @@ cpppj/build/bin/Release/netstorm_tests.exe --inspect-music-files originals
 ctest --test-dir cpppj/build -C Release --output-on-failure
 ```
 
-누적 독립 관찰 **437,605개**. 최종 회귀/감사 결과는 [LEFT_JOBS.md](../../LEFT_JOBS.md)에 기록한다. 다음은 두 채널·이벤트/작업 스레드 초기화/종료·장치/파일 토큰 표 동기화와 상위 음악 옵션/클라이언트 연결이다. 실제 소리 청취·GUI 건설·경제·전투·AI·승패도 남아 미션 완주는 아직 불가능하다. 영어 원본 글꼴·outpost/LAN 3차·한국어/D2Coding/화면 요구사항/MCP 4차 순서를 유지한다.
+누적 독립 관찰 **437,605개**. 최종 회귀/감사 결과는 [LEFT_JOBS.md](../../LEFT_JOBS.md)에 기록한다. 상위 음악 옵션 본체는 [후속 단계](cpp-music-selection-reconstruction.md)에서 완료했다. 다음은 두 채널·이벤트/작업 스레드 초기화/종료·장치/파일 토큰 표 동기화와 GUI 옵션/클라이언트 연결이다. 실제 소리 청취·GUI 건설·경제·전투·AI·승패도 남아 미션 완주는 아직 불가능하다. 영어 원본 글꼴·outpost/LAN 3차·한국어/D2Coding/화면 요구사항/MCP 4차 순서를 유지한다.

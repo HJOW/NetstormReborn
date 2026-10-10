@@ -39,10 +39,10 @@ MusicChannel::Guard::Guard(MusicChannel& owner):channel(owner) {
 MusicChannel::Guard::~Guard() { if (channel.hooks_.lockEvent) channel.hooks_.lockEvent(false);channel.mutex_.unlock(); }
 // 문장의 줄바꿈도 원본 그대로 전달한다.
 void MusicChannel::Log(std::string_view text) { if (hooks_.log) hooks_.log(9,text); }
-// 조회 문자열은 원본 256바이트 지역 버퍼 범위 안에서만 구성한다. 해석되지 않은 null 경로도 그대로 유지한다.
-bool MusicChannel::Open(std::string_view name,const MusicDirectories& directories,const MusicOpenHooks& hooks) {
-    if (!hooks.find || !hooks.open) throw std::invalid_argument("음악 파일 열기 경계 누락");
-    Guard guard(*this);
+// 원본 256바이트 조회 버퍼의 null/빈 경로·이름 재붙이기를 존재 검사와 열기에서 공통으로 사용한다.
+std::optional<std::string> FindMusicFile(std::string_view name,const MusicDirectories& directories,
+    const std::function<std::optional<std::string>(std::string_view)>& find) {
+    if (!find) throw std::invalid_argument("음악 파일 조회 경계 누락");
     std::string query;
     // 원본은 디렉터리가 null일 때 이전 검색 문자열을 남긴다. 빈 문자열은 역슬래시부터 시작하는 별개 경로다.
     const auto append=[&](const std::optional<std::string>& directory) {
@@ -50,8 +50,14 @@ bool MusicChannel::Open(std::string_view name,const MusicDirectories& directorie
         query+=name;
         if (query.size()>255 || query.find('\0')!=std::string::npos) throw std::length_error("음악 경로가 원본 버퍼 범위를 벗어났습니다");
     };
-    append(directories.primary);auto found=hooks.find(query);
-    if (!found) { append(directories.secondary);found=hooks.find(query); }
+    append(directories.primary);auto found=find(query);
+    if (!found) { append(directories.secondary);found=find(query); }
+    return found;
+}
+// 조회/헤더는 채널 잠금 안에서 처리하고 실패한 헤더의 부분 출력도 원본처럼 보존한다.
+bool MusicChannel::Open(std::string_view name,const MusicDirectories& directories,const MusicOpenHooks& hooks) {
+    if (!hooks.find || !hooks.open) throw std::invalid_argument("음악 파일 열기 경계 누락");
+    Guard guard(*this);auto found=FindMusicFile(name,directories,hooks.find);
     if (!found) {
         if (hooks_.log) hooks_.log(0x13,"Missing music: \"(null)\"\n");
         return false;

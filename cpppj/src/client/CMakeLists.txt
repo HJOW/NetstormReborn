@@ -26,6 +26,7 @@ target_sources(netstorm PRIVATE
     SoundDevice.cpp SoundDevice.h
     SoundMusic.cpp SoundMusic.h
     SoundMusicFile.cpp SoundMusicFile.h
+    SoundMusicSelection.cpp SoundMusicSelection.h
     SoundProcess.cpp SoundProcess.h
 )
 # 원본처럼 Win32 GDI·멀티미디어 타이머를 직접 쓴다(Screen·ClientMain).

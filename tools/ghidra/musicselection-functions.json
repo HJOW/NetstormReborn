@@ -1,0 +1,8 @@
+{
+  "description": "상위 음악 옵션/현재 곡 선택·존재 검사·실제 strncpy. 마지막 디컴파일 PC HJOW-Athlon, 2026-10-10. musicopen의 find/config 대체 중 config를 제거하고 공개 Play/Stop·헤더/생성/되감기와 함께 실제 실행한다.",
+  "editions": {
+    "originals": ["00435200", "00435160", "004aa480", "004e51f0"],
+    "originalCD": ["00484aa0", "00484a10", "00439260", "004f2440"],
+    "original1037": ["00484aa0", "00484a10", "00439260", "004f2440"]
+  }
+}
