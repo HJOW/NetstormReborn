@@ -74,4 +74,4 @@ ctest --test-dir cpppj/build -C Release --output-on-failure
 
 음악 버퍼 생성 `004aa040` / CD `004393b0` 내부와 링 버퍼 갱신 `004aaad0` / CD `00439a20`·COM 경계는 후속 [musicstream](cpp-music-stream-reconstruction.md)에서 완료했다. **CD `00439260`은 버퍼 생성이 아니라 파일 존재 검사**다. 파일 열기/format·duration `004aa220` / CD `004393b0`와 실제 파일 토큰 수명은 아직 남았다. 이어 음악 초기화 `004aadd0` / CD `00439000`와 종료 `004aaf00` / CD `00439130`, 두 채널·이벤트/작업 스레드 수명을 다룬다. 원본 종료의 강제 스레드 중단은 Windows 안정 구동 목표를 고려해 검토해야 한다.
 
-기존 무음 `--inspect-sound-device originals`도 아직 실행하지 않았다. 실제 장치 검증/청취·장치 소실·음질 하향·반복 실행, HWND/장치 수명·옵션·프레임/벽시계·화면/카메라·Recount 시점·나머지 소리 호출자도 후속이다. raw GUI 건설·경제·전투·AI·승패가 남아 미션 완주는 아직 불가능하다. 영어 원본 글꼴, outpost/LAN 3차와 한국어/D2Coding·화면 요구사항/MCP 4차 순서를 유지한다.
+기존 무음 `--inspect-sound-device originals`도 아직 실행하지 않았다. 실제 장치 검증/청취·장치 소실·음질 하향·반복 실행, HWND/장치 수명·옵션·프레임/벽시계·화면/카메라·Recount 시점·나머지 소리 호출자도 후속이다. raw GUI 건설·경제·전투·AI·승패가 남아 미션 완주는 아직 불가능하다. 영어 원본 글꼴, outpost/LAN 3차와 한국어/D2Coding·화면 요구사항/MCP 4차 순서를 유지한다. **(2026-10-10 갱신: 이후 HJOW-Athlon에서 실행·통과했고 클라이언트 부착은 [cpp-client-audio.md](cpp-client-audio.md)에서 끝냈다. 실제 청취는 아직 미검증.)**

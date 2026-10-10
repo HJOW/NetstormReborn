@@ -61,7 +61,7 @@ void PrintBuildInfo() {
     std::printf("  --config-save <game-dir> <output-file> [key=value ...] [--cd]\n");
     std::printf("  --dump-types <game-dir> [--cd]\n  --inspect-fort <game-dir> <mission-or-path> [--cd]\n  --dump-forts <game-dir> [--cd]\n");
     std::printf("  --inspect-mission <game-dir> <mission> [--cd]\n  --dump-territories <game-dir> [--cd]\n");
-    std::printf("  --run <game-dir> [--view types|fonts|<mission> | --mission <mission>] [--window] [--frames N] [--screenshot out.bmp] [--render-stats] [--set \"k=v;k=v\"] [--cd]\n");
+    std::printf("  --run <game-dir> [--view types|fonts|<mission> | --mission <mission>] [--window] [--frames N] [--screenshot out.bmp] [--render-stats] [--no-audio | --mute-audio] [--audio-report out.txt] [--set \"k=v;k=v\"] [--cd]\n");
     std::printf("  --dump-font <game-dir> <font-path>\n");
     std::printf("  --dump-gif <game-dir> <gif-path>\n  --run also accepts --ui-script steps.tsv --ui-report report.tsv\n");
     std::printf("  --dump-world <game-dir> <mission> [--cd]\n");
@@ -579,11 +579,16 @@ int RunClient(std::vector<std::string> arguments) {
         else if (argument == "--view") view = value();
         else if (argument == "--mission") options.mission=value();
         else if (argument == "--render-stats") renderStats = true;
+        else if (argument == "--no-audio") options.noAudio = true;
+        else if (argument == "--mute-audio") options.audioMute = true;
+        else if (argument == "--audio-report") options.audioReport = value();
         else if (argument == "--ui-script") uiScript = value();
         else if (argument == "--ui-report") uiReport = value();
         else throw std::invalid_argument("Unknown --run option: " + argument);
     }
     if (!view.empty() && !options.mission.empty()) throw std::invalid_argument("--view and --mission cannot be combined");
+    // 자동 검사 스크립트가 소리를 내지 않도록 환경 변수로도 끈다(새 검사 기능). 비어 있거나 "0"이면 켜 둔다.
+    if (const char* silent = std::getenv("NETSTORM_CPP_NO_AUDIO"); silent && *silent && std::string(silent) != "0") options.noAudio = true;
     netstorm::client::Client client(std::move(options));
     std::optional<netstorm::app::InspectView> inspect;
     if (!view.empty()) inspect.emplace(client, view);

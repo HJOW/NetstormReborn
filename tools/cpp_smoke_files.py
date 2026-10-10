@@ -2,7 +2,11 @@
 # -*- coding: utf-8 -*-
 """cpppj 검사 동안 원본 설정을 보관하고 성공·실패 모두 원래 바이트와 존재 상태로 되돌린다."""
 from contextlib import contextmanager
+import os
 from pathlib import Path
+
+# 자동 검사가 소리 장치를 열거나 음악을 내지 않게 한다(NetstormCpp --run이 읽는 환경 변수). 소리를 일부러 검사하는 도구만 이 값을 지운다.
+os.environ.setdefault('NETSTORM_CPP_NO_AUDIO', '1')
 
 
 @contextmanager

@@ -69,6 +69,8 @@ python -X utf8 tools/decomp_sounddevice_oracle.py --verify
 cpppj/build/bin/Release/netstorm_tests.exe --inspect-sound-device originals
 ```
 
+**2026-10-10 갱신:** HJOW-Athlon에서 사용자 허가 아래 이 명령을 처음 실행해 통과했다(`DirectSound device: initialize/load/duplicate/play/stop/shutdown/reinitialize passed; volume -10000`). 클라이언트 부착 뒤의 반복 검사는 [cpp-client-audio.md](cpp-client-audio.md)를 따른다.
+
 이 명령은 초기화→원본 보호막 WAV 적재→반복 재생→복제/좌우 설정→상태 조회/정지→종료→음질 0 재초기화→기존 복제 항목 복원→정지/반복 종료를 검사한다. COM 실패 때는 오류로 끝내고 자원을 반납한다. 실제 장치 실행·음질 하향 실패·장치 소실/다른 Windows 환경·청취는 아직 미검증이다.
 
 다음 구현은 `Sound.cpp`의 재생 수 재계산(`004a8e60`), 이름 정지/조회/켜고 끄기(`004a9d20`·`004a9da0`·`004a9de0`), 반복 소리 정지(`004a9e50`), 전체 음량(`004a9f10`), 음악(`004a9fa0` 이후)이다. 이어 GameWorld의 실제 HWND/장치 수명·프레임/벽시계·화면/카메라·옵션/언어/소리 경로와 나머지 소리 요청을 연결한다. raw 월드/GUI 건설·경제·전투·승패는 아직 남아 미션 완주는 불가능하다. outpost/LAN은 3차, 한국어/요구사항/MCP는 4차이며 영어=원본 글꼴/한국어=D2Coding 정책을 유지한다.

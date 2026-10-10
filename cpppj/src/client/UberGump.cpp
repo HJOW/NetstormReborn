@@ -1,6 +1,7 @@
 // 원본 004d0120·004cebf0·004cf270·004ce580의 메뉴/명령 흐름을 표시 기반과 연결한다.
 // 전체 Gump/StyleText와 게임 규칙은 후속이다. 저장 미션 월드는 GameWorld에 연결한다.
 #include "client/UberGump.h"
+#include "client/ClientAudio.h"
 #include "client/ClientMain.h"
 #include "client/GifImage.h"
 #include "client/GameWorld.h"
@@ -208,6 +209,8 @@ void UberGump::BeginMission(std::string name) {
     if (mission_->Section("A.")) briefingSections_.push_back("A.");
     state_.phase = ClientPhase::LoadingMission; pageName_ = "loading"; popup_.clear(); page_ = {}; rebuild_ = true;
     client_.Title(mission_->Get("title").value_or(name)); client_.Pause(true);
+    // 원본 004b6dd0의 미션 시작 절차(전투 여부를 켜고 FUN_00469fc0): 난수로 고른 원소 곡으로 전투 음악을 시작한다.
+    if (client_.Audio()) client_.Audio()->StartScene(true);
 }
 // 첫 브리핑을 표시하거나 브리핑 종료 뒤 실제 월드 입력과 표시를 활성화한다.
 void UberGump::AdvanceBriefing() {
@@ -316,7 +319,12 @@ void UberGump::Execute(const DialogAction& action) {
     if (command == "quit") { quit_ = true; return; }
     if (command == "tell") { Tell(action.argument, state_.phase == ClientPhase::Briefing); return; }
     if (command == "missionbegin") { BeginMission(action.argument); return; }
-    if (command == "missionabort" || command == "leavebattle") { MainMenu(); return; }
+    if (command == "missionabort" || command == "leavebattle") {
+        MainMenu();
+        // 전투를 떠나면 메뉴 곡으로 돌아간다. 원본은 004b2df0(전투 값이 남은 채 Start)과 결과 화면 종료 004b7453(ser22.mus 요청)으로 나누어 하며, 클론은 하나로 합쳤다.
+        if (client_.Audio()) client_.Audio()->StartScene(false);
+        return;
+    }
     if (command == "donothing" || command == "resume") {
         if (state_.phase == ClientPhase::Briefing) AdvanceBriefing(); else Tell("Blank"); return;
     }
@@ -328,10 +336,13 @@ void UberGump::Execute(const DialogAction& action) {
     if (command=="objectmenu") { OpenObjectMenu(static_cast<o::SquidId>(std::stoul(action.argument))); return; }
     if (command == "toggle") {
         auto& config = client_.Configuration(); config.SetInt(action.argument, config.GetInt(action.argument) == 0 ? 1 : 0);
+        // 소리·음악·좌우 바꿈은 원본 Interpret Options처럼 장치와 현재 곡에 바로 반영한다.
+        if (action.argument == "sound" || action.argument == "music" || action.argument == "swapLeftRightSpeakers") client_.ApplyAudioOptions();
         popup_.clear(); page_ = {}; if (world_ && state_.phase==ClientPhase::Mission) client_.Pause(false); rebuild_ = true; return;
     }
     if (command == "volume") {
         const auto equal = action.argument.find('='); client_.Configuration().SetInt(action.argument.substr(0, equal), o::ConfigParseLong(action.argument.substr(equal + 1)));
+        client_.ApplyAudioOptions(); // 효과음·음악 음량 단계를 장치에 바로 적용한다.
         popup_.clear(); page_ = {}; if (world_ && state_.phase==ClientPhase::Mission) client_.Pause(false); rebuild_ = true; return;
     }
     if (command == "resolution") {

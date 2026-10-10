@@ -5,6 +5,7 @@
 // 범위: 창 만들기, 설정 읽기, 화면 장치, 메시지·입력 큐, 프레임 제한과 내보내기까지.
 //       Renderer·원본 글꼴/커서·메뉴와 저장 미션의 기본 지형/객체·선택/이동을 연결했다. 건설/전투는 후속이다.
 #include "client/ClientMain.h"
+#include "client/ClientAudio.h"
 #include "client/UberGump.h"
 #include "o/OriginalText.h"
 #include "platform/Bitmap.h"
@@ -12,6 +13,7 @@
 #include <array>
 #include <cstdlib>
 #include <cstdio>
+#include <fstream>
 #include <stdexcept>
 #include <vector>
 
@@ -114,6 +116,7 @@ Client::Client(ClientOptions options)
 }
 // 화면 장치를 먼저 없앤 뒤 GDI 객체와 창을 정리한다.
 Client::~Client() {
+    audio_.reset(); // 음악 스레드를 합류하고 소리 장치를 닫는다(협조 창이 살아 있는 동안).
     menu_.reset();
     renderer_.reset(); fonts_.reset(); cursor_.reset();
     screen_.reset();
@@ -232,7 +235,14 @@ int Client::Run() {
     configuration_.SetInt("global.ddParallax", (mode & ScreenMode::kParallax) != 0);
     configuration_.SetInt("global.ddSoftwareMouse", (mode & ScreenMode::kSoftwareMouse) != 0);
     configuration_.SetInt("global.ddFourPage", 0);
-    // [원본] "init sound"(FUN_004aa600) — 옮기지 않았다.
+    // "init sound"(FUN_004aa600 → FUN_004a9520("thunderCrack.wav") → FUN_004aadd0): 소리 장치·음악 스레드.
+    // 장치가 없거나 열리지 않으면 소리 없이 계속 실행한다. 검사용 noAudio이면 만들지 않는다.
+    if (!options_.noAudio) {
+        audio_ = std::make_unique<ClientAudio>(options_.gameDirectory, options_.edition, kLanguages[static_cast<std::size_t>(languageNumber_)],
+            [this]() { return clock_.WallSeconds(timeGetTime()); }, timeGetTime());
+        audio_->Initialize(reinterpret_cast<std::uintptr_t>(window_), ReadAudioOptions());
+        if (options_.audioMute) audio_->PushMute();
+    }
     // "init kernel"(FUN_00471930): Kernel은 멤버로 이미 만들어져 있다.
     // "init renderer": 화면 장치와 같은 크기의 변경 표·프레임 캐시를 만든다.
     renderer_ = std::make_unique<Renderer>(screenWidth_, screenHeight_);
@@ -245,6 +255,8 @@ int Client::Run() {
     if (!PumpMessages()) return 0;
     // [원본] 송수신기, squid 목록(120000), 좌표 해시, spot 배열, 영상, Guide, 그래프,
     //        전체 명령 표, 인트로 감지, 연락처, 지도 모드, HTTP 서버 — 옮기지 않았다.
+    // 원본 00438dc0 "loadContactList" 다음의 FUN_00469fc0: 전투 밖이므로 메뉴 곡 ser22.mus로 시작한다.
+    if (audio_) audio_->StartScene(false);
     // 현재 UberGump는 단일 플레이 메뉴/브리핑과 저장 미션의 지형·선택·이동 월드를 연결한다.
     if (ready) ready(*this);
     else { menu_ = std::make_unique<UberGump>(*this); if (!options_.mission.empty()) menu_->StartMission(options_.mission); }
@@ -259,7 +271,8 @@ int Client::Run() {
         // 1. 시각 고정(FUN_00460e90).
         time_ = clock_.Capture(timeGetTime());
         if (menu_) menu_->Tick();
-        // 3~6. [원본] 효과음 수 세기, 네트워크 폴링·내보내기 — 옮기지 않았다. 2는 위 UI 전환 부분이다.
+        // 3. 재생 중인 효과음 수를 다시 센다(FUN_004a8e60). 4~6. [원본] 네트워크 폴링·내보내기 — 옮기지 않았다. 2는 위 UI 전환 부분이다.
+        if (audio_) audio_->CountPlaying();
         // 7. 쌓인 창 메시지를 모두 처리한다. WM_QUIT이면 끝낸다.
         MSG message;
         // 큐가 빌 때까지 꺼내 창 프로시저로 보낸다.
@@ -279,6 +292,8 @@ int Client::Run() {
         // 10. 갱신 목록. 지금은 프로세스 커널만 돈다(FUN_00471a30). 나머지는 옮기지 않았다.
         // 원본 00439ad3 → 00441de0: 설정 변경이 있으면 커널 갱신보다 먼저 저장한다.
         if (configuration_.Configuration().changed) SaveOptions();
+        // 갱신 목록의 배경 음악 전환(FUN_00469f60)은 프로세스 커널(FUN_00471a30)보다 앞이다. 프레임 갱신 정지는 영상 창일 때뿐이라 게임 시계 정지와 무관하다.
+        if (audio_) audio_->SceneFrame();
         kernel_.RunFrame();
         if (menu_) menu_->Frame();
         // 11. 프레임 제한 + 그리기.
@@ -291,6 +306,31 @@ int Client::Run() {
         if (sleepPerLoop_ != 0) Sleep(static_cast<DWORD>(sleepPerLoop_));
         // 13. [원본] 플레이어별 알림(FUN_00490da0) — 옮기지 않았다.
     }
+}
+
+// 소리·음악 묶음이다. noAudio이거나 초기화 전이면 널이다.
+ClientAudio* Client::Audio() { return audio_.get(); }
+
+// 설정 키 이름은 원본 Interpret Options(00435220)가 FUN_00441270으로 읽는 문자열이다(sound·music·soundQuality·soundVolume·musicVolume·maxSimulSounds·swapLeftRightSpeakers).
+// 원본 ReadInt는 키가 있고 변수의 현재 값과 다를 때만 변수를 바꾼다. 그래서 변수는 읽기 전에 기본값(setup.cfg·options.cfg의 기본값)을 가져야 하며,
+// 0으로 시작해 읽으면 설정이 0인 경우(소리·음악 끄기)를 놓친다.
+ClientAudioOptions Client::ReadAudioOptions() {
+    ClientAudioOptions result;
+    // 현재 값에서 시작해 설정이 있으면 그 값으로 바꿔 돌려준다(없으면 현재 값 그대로).
+    const auto read = [this](const char* key, std::int32_t current) { configuration_.ReadInt(key, current); return current; };
+    result.sound = read("sound", result.sound ? 1 : 0) != 0;
+    result.music = read("music", result.music ? 1 : 0) != 0;
+    result.quality = read("soundQuality", result.quality);
+    result.soundVolumeStep = read("soundVolume", result.soundVolumeStep);
+    result.musicVolumeStep = read("musicVolume", result.musicVolumeStep);
+    result.maxSimulSounds = read("maxSimulSounds", result.maxSimulSounds);
+    result.swapSpeakers = read("swapLeftRightSpeakers", result.swapSpeakers ? 1 : 0) != 0;
+    return result;
+}
+
+// 옵션 메뉴가 소리 설정을 바꾼 뒤 부른다. 소리 묶음이 없으면(noAudio) 아무 일도 하지 않는다.
+void Client::ApplyAudioOptions() {
+    if (audio_) audio_->Interpret(reinterpret_cast<std::uintptr_t>(window_), ReadAudioOptions());
 }
 
 // 원본 00441d10·00441de0의 경로 인자는 빈 문자열(00540cec)·"d"(00540cf8)·"options.cfg"다.
@@ -401,6 +441,11 @@ void Client::Frame() {
     ++frames_;
     if (options_.frameLimit != 0 && frames_ == options_.frameLimit) {
         if (!options_.screenshot.empty()) SaveScreenshot();
+        // 새 검사 기능: 소리·음악 상태를 줄 단위 글로 남긴다(소리 장치가 실제로 재생 중인지 청취 없이 확인한다).
+        if (!options_.audioReport.empty() && audio_) {
+            std::ofstream report(options_.audioReport, std::ios::binary);
+            report << audio_->Describe();
+        }
         PostMessageA(static_cast<HWND>(window_), WM_CLOSE, 0, 0);
     }
 }

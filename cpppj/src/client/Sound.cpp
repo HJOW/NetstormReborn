@@ -464,6 +464,17 @@ SoundHandle SoundPlayer::PlayOnceAt(float x,float y,SoundHandle sound,std::uint3
     return Play(sound,loop,SoundVolume(state_.view,point),pan,priority,0);
 }
 
+// 조회한 항목의 버퍼가 0일 때만 적재 경계를 부르고, 적재된 버퍼가 있으면 감쇠도 함께 적는다(Play의 인라인 적재와 같은 필드 기록이다).
+SoundHandle SoundPlayer::Preload(std::string_view name) {
+    const auto entry=list_.Lookup(name);
+    if (Get(entry,SoundField::Buffer)==0) {
+        const auto loaded=hooks_.load(name);
+        Set(entry,SoundField::Buffer,loaded.buffer);
+        if (loaded.buffer!=0) Set(entry,SoundField::Attenuation,static_cast<std::uint32_t>(loaded.attenuation));
+    }
+    return entry;
+}
+
 // 원본은 이름을 두 번 조회한다(유일성 확인용, 재생용). 조회가 표에 이름을 등록하므로 재생하지 못해도 항목은 남는다.
 SoundHandle SoundPlayer::PlayByName(std::string_view name,std::uint32_t loop,std::int32_t volume,std::int32_t pan,std::uint32_t priority,std::int32_t limit) {
     if (loop!=0) {

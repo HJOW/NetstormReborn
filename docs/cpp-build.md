@@ -162,6 +162,7 @@ python tools/cpp_window_smoke.py
 python tools/cpp_renderer_smoke.py
 cpppj/build/bin/Release/NetstormCpp.exe --run originals --window
 python tools/cpp_menu_smoke.py
+python tools/cpp_audio_smoke.py
 ```
 
 `--run <게임 폴더>`는 클론 창을 띄운다(원본 게임을 실행하지 않는다). `--view`가 없으면 **원본 메인 메뉴**를 표시한다. `--view types|fonts|<미션>`은 기존 독립 검사 장면이다. [메뉴·브리핑의 현재 범위/검사](exe/cpp-menu-reconstruction.md).

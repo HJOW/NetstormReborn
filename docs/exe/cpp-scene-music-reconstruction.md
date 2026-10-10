@@ -128,6 +128,6 @@ ctest --test-dir cpppj/build -C Release --output-on-failure
 **남은 것:**
 
 - **경계의 실제 연결.** 희생 판정 `00449220`(플레이어 → 제단 → 룬 단계, 월드 필요), 대기실 판정 `0042cbd0`, 화면 갱신 `0043dad0`, 설정 조회 `00441470`, 팔레트 경로 조립 `00459c60`·적재 `004a4850`(0x308 또는 0x400바이트 팔레트 파일), 번개 효과 `00470fa0`, 실시간 시계 `00460d70`(`GameClock::WallSeconds`로 잇는다). 이들은 월드·화면 복원과 함께 잇는다.
-- **클라이언트 연결.** `MusicRuntime`을 부착하고(HWND/장치/종료 순서), `GameWorld`의 프레임에서 `Frame()`을 부르며, 전투 시작/메뉴 진입에서 `Start()`를, 제단 희생 시작·결과 화면에서 `Request()`를 부르는 일. 소리 옵션(`sound`·`maxSimulSounds`·`swapLeftRightSpeakers`)과 음악 옵션의 GUI도 같은 단계다.
+- **클라이언트 연결(2026-10-10 일부 완료).** `MusicRuntime` 부착(HWND/장치/종료 순서)·메인 루프의 `Frame()`·메뉴/미션 진입의 `Start()`·옵션 메뉴의 소리/음악/음량은 [클라이언트 부착](cpp-client-audio.md)에서 끝냈다. 남은 것: 제단 희생 시작(`00494efb`)·결과 화면(`004b7053` 외)·대기실의 `Request()`, 전투 이탈의 원본 두 단계 분리(`004b2df0`·`004b7453`). 이전 문장: **클라이언트 연결.** `MusicRuntime`을 부착하고(HWND/장치/종료 순서), `GameWorld`의 프레임에서 `Frame()`을 부르며, 전투 시작/메뉴 진입에서 `Start()`를, 제단 희생 시작·결과 화면에서 `Request()`를 부르는 일. 소리 옵션(`sound`·`maxSimulSounds`·`swapLeftRightSpeakers`)과 음악 옵션의 GUI도 같은 단계다.
 - 날씨 색 표를 팔레트에서 채우는 `004a2820`과 그 초기화.
 - 이어서 raw 월드/GUI·건설·경제·전투·승패. 현재 미션 완주는 불가능하다. 장치를 실제로 여는 검사(`--inspect-sound-device`)와 실제 청취는 여전히 미검증이다.

@@ -39,6 +39,7 @@ add_executable(netstorm_tests
     SoundMusicSelectionTests.cpp
     SoundMusicRuntimeTests.cpp
     SoundSceneMusicTests.cpp
+    ClientAudioTests.cpp
     PriestPopTests.cpp
     ConfigOracleTests.cpp
     ConfigInterfaceTests.cpp

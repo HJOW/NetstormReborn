@@ -25,6 +25,8 @@
 
 namespace netstorm::client {
 class UberGump;
+class ClientAudio;
+struct ClientAudioOptions;
 
 // 설정 키 "maxFPS" 의 코드 기본값. 화면 루프를 초당 몇 번까지 돌릴지 정한다.
 // 원본: FUN_00435220 @ 00435220 의 `DAT_005318d8 = 0x4b`
@@ -52,6 +54,9 @@ struct ClientOptions {
     std::string mission;                   // 복원 검사용: 메뉴 목록이 없는 사용자 미션도 같은 브리핑/월드 경로로 시작한다.
     std::uint64_t frameLimit{};            // 새 옵션(검사용): 0이 아니면 그만큼 그린 뒤 창을 닫는다.
     std::filesystem::path screenshot;      // 새 옵션(검사용): 닫기 직전의 화면을 BMP로 저장한다.
+    bool noAudio{};                        // 새 옵션(검사용): 참이면 소리 장치와 음악 스레드를 만들지 않는다(자동 검사가 소리를 내지 않게 한다).
+    bool audioMute{};                      // 새 옵션(검사용): 참이면 장치를 열고 음악을 실제로 재생하되 소리는 내지 않는다(음소거 깊이 1로 시작).
+    std::filesystem::path audioReport;     // 새 옵션(검사용): 닫기 직전의 소리·음악 상태를 이 파일에 `이름	값` 줄로 저장한다.
 };
 
 // 원본 전역 변수로 흩어져 있던 클라이언트 상태를 객체 하나로 묶는다. 한 프로세스에 하나만 만든다.
@@ -107,6 +112,10 @@ public:
     std::pair<std::uint64_t, std::uint64_t> RenderCounts() const;
     // 로딩 화면에서 실제 Renderer 장면으로 전환한다. 후속 메인 메뉴도 이 경로를 사용한다.
     void ShowScene();
+    // 소리·음악 묶음. 소리를 끈 실행(noAudio)이거나 초기화 전이면 널이다.
+    ClientAudio* Audio();
+    // 원본 Interpret Options(00435220)의 소리 부분: 설정을 다시 읽어 장치·음량·현재 곡을 맞춘다. 옵션 메뉴에서 소리 설정을 바꾼 뒤 부른다.
+    void ApplyAudioOptions();
     // 이번 프레임에 고정된 시각(원본 FUN_00460e90).
     const o::FrameTime& Time() const;
     // 창이 활성인가(원본 DAT_0054dc50).
@@ -131,6 +140,9 @@ private:
     bool PumpMessages();
     // 화면을 BMP로 저장한다(새 검사 기능).
     void SaveScreenshot();
+    // 설정 객체에서 소리·음악 설정(sound·music·soundQuality·soundVolume·musicVolume·maxSimulSounds·swapLeftRightSpeakers)을 읽는다.
+    // 읽지 못한 키는 원본 setup.cfg·options.cfg의 기본값을 유지한다(원본 FUN_00441270의 ReadInt와 같다).
+    ClientAudioOptions ReadAudioOptions();
 
     ClientOptions options_;
     o::BaseFileSystem files_;
@@ -149,6 +161,7 @@ private:
     std::unique_ptr<FontStore> fonts_;
     std::unique_ptr<Cursor> cursor_;
     std::unique_ptr<UberGump> menu_;
+    std::unique_ptr<ClientAudio> audio_; // 원본 "init sound"가 만드는 소리·음악 묶음. 화면보다 먼저 닫는다.
     bool sceneVisible_{};
     InputQueue input_;
     o::GameClock clock_;
