@@ -95,6 +95,8 @@ public:
     std::function<void(Client&)> beforeInput;
     // 프레임 그리기 뒤의 상태/화면 관찰. 일반 실행에서는 비어 있다.
     std::function<void(Client&)> afterFrame;
+    // 검사 전용 폴링 공급자다. 값이 있으면 해당 키/버튼에 적용하고 빈 값이면 실제 Win32 상태를 읽는다.
+    std::function<std::optional<InputEvent>(std::uint32_t)> inspectPoll;
 
     // 원본 FUN_00452e00: 키·버튼의 현재 상태와 커서 위치를 읽는다. code는 가상 키를 16비트 민 값이다.
     InputEvent Poll(std::uint32_t code) const;

@@ -623,6 +623,8 @@ void Client::CharacterEvent(NativeHandle windowHandle, std::uintptr_t wParam) {
 
 // 원본 00452e00.
 InputEvent Client::Poll(std::uint32_t code) const {
+    // UI 스크립트는 사건 좌표와 다음 폴링 좌표를 함께 제공한다. 일반 실행은 비어 있어 원본 경로를 따른다.
+    if (inspectPoll) if (const auto event=inspectPoll(code)) return *event;
     const std::uint32_t kept = code & 0x43ffffffu;
     const SHORT state = GetAsyncKeyState(static_cast<int>(kept) >> 16);
     // 지금 눌려 있지 않으면 뗌 표시, 지난 확인 뒤에 눌렸으면 0x40000000.

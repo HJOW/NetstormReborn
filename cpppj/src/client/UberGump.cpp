@@ -4,6 +4,7 @@
 #include "client/ClientAudio.h"
 #include "client/ClientMain.h"
 #include "client/GifImage.h"
+#include "client/GumpVisual.h"
 #include "client/GameWorld.h"
 #include "client/UserInput.h"
 #include "o/OriginalText.h"
@@ -382,6 +383,9 @@ void UberGump::Compose(bool controls) {
     const auto& font = client_.Fonts().Get(0); const auto& body = client_.Fonts().Get(5);
     const auto palette = client_.GetScreen().Palette();
     const auto light = Color(palette, 191, 178, 139), dark = Color(palette, 49, 44, 36);
+    // 마지막 파일 로딩의 실제 버튼 색/문맥을 사용한다. 일시 번개 팔레트에서 색 번호를 다시 찾지 않는다.
+    const auto buttonColors=ButtonColors(client_.GetScreen().Colors());
+    const auto buttonContexts=ButtonTextContexts(buttonColors);
     std::vector<RenderSprite> worldSprites;
     client_.GetRenderer().SetOverlay(nullptr);
     if (world_ && state_.phase!=ClientPhase::LoadingMission) {
@@ -404,10 +408,13 @@ void UberGump::Compose(bool controls) {
         const auto label = FontBytes(item.label);
         const int id = control(item, {x, y, x + w, y + kButtonHeight + 1});
         const bool down = input_.Pressed() == id;
-        const ScreenRect r{x, y, x + w, y + kButtonHeight}; Tile(*canvas, decorations_.at("A00"), r); Bevel(*canvas, r, light, dark, down);
-        const int shift = down ? 1 : 0;
-        text.push_back({&font, label, x + (w - font.Measure(label)) / 2 + shift, y + (kButtonHeight - font.Height()) / 2 + shift,
-            item.enabled ? static_cast<std::uint8_t>(255) : dark, 0, {1, 1}, true, false});
+        const ScreenRect r{x, y, x + w, y + kButtonHeight};Tile(*canvas,decorations_.at("A00"),r);
+        // 배경 자식의 원본 명암 변환표는 후속이다. 현재 질감/안쪽 명암 위에 부모의 실제 외곽선과 글자 계획을 적용한다.
+        Bevel(*canvas,{r.left+1,r.top+1,r.right-1,r.bottom-2},light,dark,down);
+        const auto plan=PlanButtonDraw({r,font.Measure(label),font.Height(),0,down ? 1 : 0,item.enabled ? 0U : 1U},buttonContexts,buttonColors.edge);
+        DrawGumpLines(*canvas,plan.lines);
+        text.push_back({&font,label,x+plan.textOffset.x,y+plan.textOffset.y,static_cast<std::uint8_t>(plan.text.color),
+            static_cast<std::uint8_t>(plan.text.shadowColor),{plan.text.shadowX,plan.text.shadowY},(plan.text.flags&2)!=0,(plan.text.flags&4)!=0});
     };
     if (state_.phase == ClientPhase::MainMenu || (!mission_ && !popup_.empty())) {
         Paste(*canvas, title_, (width - 640) / 2, (height - 480) / 2, all);

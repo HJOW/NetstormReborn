@@ -47,6 +47,7 @@ add_executable(netstorm_tests
     ScreenTests.cpp
     PaletteFlashTests.cpp
     PaletteColorsTests.cpp
+    GumpVisualTests.cpp
     TerritoryTests.cpp
     RendererTests.cpp
     MenuTests.cpp
@@ -166,6 +167,9 @@ set_source_files_properties(PriestPreDestroyTests.cpp PROPERTIES COMPILE_DEFINIT
 set_source_files_properties(PriestForcefieldTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PRIESTFORCEFIELD_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/priestforcefield-x86.tsv\"")
 add_test(NAME netstorm_tests COMMAND netstorm_tests)
+# 원본 돌 버튼의 전체 생성/그리기 관찰은 새 검사 소스에서만 읽는다.
+set_source_files_properties(GumpVisualTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_GUMPVISUAL_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gumpvisual-x86.tsv\"")
 # Carrier/실제 contained 조회의 독립 fixture는 해당 검사 소스에만 지정한다.
 set_source_files_properties(CarrierPreDestroyTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CARRIERPREDESTROY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrierpredestroy-x86.tsv\"")

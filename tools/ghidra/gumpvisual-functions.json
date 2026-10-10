@@ -1,0 +1,9 @@
+{
+  "description": "Buttongump 전체 생성자의 글자 문맥과 전체 그리기의 팔레트/선/배치. 마지막 디컴파일 PC: HJOW-Athlon, 2026-10-10.",
+  "editions": {
+    "originals": ["004254b0", "00424ff0"],
+    "originalCD": ["00441310", "00441660"],
+    "original1037": ["00441310", "00441660"]
+  },
+  "aliases": {"original1037": "original1037"}
+}

@@ -1,0 +1,87 @@
+{
+  "total": 192,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-10",
+  "controls": [
+    639,
+    895
+  ],
+  "os_calls": 0,
+  "editions": {
+    "originals": {
+      "cases": 64,
+      "returns": 256,
+      "native_calls": {
+        "004254b0": 128,
+        "00424ff0": 128
+      },
+      "boundaries": {
+        "base": 128,
+        "alloc": 128,
+        "child": 128,
+        "attach": 128,
+        "rect": 128,
+        "line": 256,
+        "text": 128
+      },
+      "assertions": 0
+    },
+    "originalCD": {
+      "cases": 64,
+      "returns": 256,
+      "native_calls": {
+        "00441310": 128,
+        "00441660": 128
+      },
+      "boundaries": {
+        "base": 128,
+        "alloc": 128,
+        "child": 128,
+        "attach": 128,
+        "rect": 128,
+        "line": 256,
+        "text": 128
+      },
+      "assertions": 0
+    },
+    "original1037": {
+      "cases": 64,
+      "returns": 256,
+      "native_calls": {
+        "00441310": 128,
+        "00441660": 128
+      },
+      "boundaries": {
+        "base": 128,
+        "alloc": 128,
+        "child": 128,
+        "attach": 128,
+        "rect": 128,
+        "line": 256,
+        "text": 128
+      },
+      "assertions": 0
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/gumpvisual-x86.tsv": "64f6ce99dd4270d9af82ee3e5067bb0822ea272431fd759275041ce15b5c527c",
+    "extracted/gumpvisual/original1037/creation.c": "4a3604933babcc8678224d719c73f31922321dd1b8cd888c5474e4db656b7ea6",
+    "extracted/gumpvisual/original1037/functions.tsv": "bf722313085ff7afff10fe6696e87f37906221acc19c4cb16ea2498fe908604a",
+    "extracted/gumpvisual/originalCD/creation.c": "4a3604933babcc8678224d719c73f31922321dd1b8cd888c5474e4db656b7ea6",
+    "extracted/gumpvisual/originalCD/functions.tsv": "bf722313085ff7afff10fe6696e87f37906221acc19c4cb16ea2498fe908604a",
+    "extracted/gumpvisual/originals/creation.c": "5070aa88791a4c8a856be5a6e578156d851ca9e69c65f4f8dd1af8790821e236",
+    "extracted/gumpvisual/originals/functions.tsv": "99292ebca88e6130d6fb1c6ba77d93ed34c2262c3a9631c3ca6594d0e343d7b0",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_gumpvisual_oracle.py": "cc17b2b6f6246b32c1111fad9c2a2fce1292c4499a4b07308e5aeaec55361e2e",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/ghidra/gumpvisual-functions.json": "24ac56ed6d13505aa92834c92453173f890e4a6927248f179677d0f8995d93e7"
+  },
+  "limits": [
+    "GUI 기반/자식 생성·할당·가상 부착·부모 사각형 공급·선/글자 래스터 출력은 명시 경계",
+    "생성 입력의 객체 메모리는 0으로 준비; 원본이 초기화하지 않는 비사용 문맥 필드를 원본의 항상 0 값으로 주장하지 않음",
+    "생성자 라벨 null/기본 문맥 경로만 실행; strncpy·사용자 문맥 복사·할당 실패/예외 제외",
+    "자식의 질감/명암 변환표·전체 Gump 계층/입력·실제 원본 창 출력은 범위 밖"
+  ]
+}

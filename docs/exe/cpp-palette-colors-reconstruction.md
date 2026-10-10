@@ -37,4 +37,4 @@
 
 ## 남은 범위
 
-전체 색 표의 **각 GUI 소비자/역할**, 원본 팔레트 갱신 표시의 소비, tint 후속 효과, raw 번개 부모 수명과 실제 전체화면 표시는 남아 있다. 네 날씨 COL은 보존 자료에 없으므로 [합성 COL 창 검사](cpp-weather-palette-integration.md)가 원본 날씨 RGB 재현을 증명하지는 않는다. 월드 효과음 호출자/SoundProcess·건설·경제·전투·AI·승패도 남았으며 **미션 완주는 아직 불가능하다**.
+후속 [돌 버튼 단계](cpp-gump-visual-reconstruction.md)에서 부모의 검정/흰색/외곽선 역할·문맥·배치를 연결했다. 배경 자식과 **나머지 GUI 소비자/역할**, 원본 팔레트 갱신 표시의 소비, tint 후속 효과, raw 번개 부모 수명과 실제 전체화면 표시는 남아 있다. 네 날씨 COL은 보존 자료에 없으므로 [합성 COL 창 검사](cpp-weather-palette-integration.md)가 원본 날씨 RGB 재현을 증명하지는 않는다. 월드 효과음 호출자/SoundProcess·건설·경제·전투·AI·승패도 남았으며 **미션 완주는 아직 불가능하다**.

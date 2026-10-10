@@ -595,8 +595,14 @@ int RunClient(std::vector<std::string> arguments) {
     if (!view.empty()) inspect.emplace(client, view);
     const auto steps = uiScript.empty() ? std::vector<UiStep>() : ReadUiSteps(uiScript);
     std::size_t next = 0; std::string report;
+    // UI 스크립트의 마지막 마우스 좌표/왼쪽 버튼 상태다. 실제 커서를 움직이지 않고 폴링과 사건을 일치시킨다.
+    std::optional<netstorm::client::InputEvent> scriptPointer;
     if (!uiScript.empty()) {
         if (!view.empty()) throw std::invalid_argument("UI script cannot be combined with --view");
+        // 왼쪽 버튼 폴링만 스크립트가 공급한다. 키보드 등 다른 폴링은 실제 장치 경로를 유지한다.
+        client.inspectPoll=[&](std::uint32_t code) -> std::optional<netstorm::client::InputEvent> {
+            return code==netstorm::client::InputCode::kLeftButton ? scriptPointer : std::nullopt;
+        };
         client.beforeInput = [&](netstorm::client::Client& c) {
             // 이번 프레임의 입력만 실제 InputQueue에 넣는다.
             for (std::size_t i = next; i < steps.size() && steps[i].frame == c.Time().number; ++i) {
@@ -627,6 +633,8 @@ int RunClient(std::vector<std::string> arguments) {
                     point = *found;
                 } else if (step.operation == "outside") point = {0, 0};
                 else throw std::invalid_argument("Unknown UI operation: " + step.operation);
+                // down 이후 프레임에서도 같은 위치를 폴링해 누름 캡처가 실제 바탕 화면 커서 때문에 취소되지 않게 한다.
+                scriptPointer=InputEvent{InputCode::kLeftButton | (step.operation=="down" || step.operation=="outside" ? 0U : InputCode::kRelease),point.x,point.y};
                 if (step.operation == "click" || step.operation == "down" || step.operation == "outside") c.Input().Push(InputCode::kLeftButton, point.x, point.y);
                 if (step.operation == "click" || step.operation == "up") c.Input().Push(InputCode::kLeftButton | InputCode::kRelease, point.x, point.y);
                 if (step.operation == "right") { c.Input().Push(InputCode::kRightButton, point.x, point.y); c.Input().Push(InputCode::kRightButton | InputCode::kRelease, point.x, point.y); }

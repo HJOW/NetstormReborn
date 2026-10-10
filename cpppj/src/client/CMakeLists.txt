@@ -21,6 +21,7 @@ target_sources(netstorm PRIVATE
     GifImage.cpp GifImage.h
     DialogScript.cpp DialogScript.h
     Gump.cpp Gump.h
+    GumpVisual.cpp GumpVisual.h
     State.cpp State.h
     UberGump.cpp UberGump.h
     GameWorld.cpp GameWorld.h
