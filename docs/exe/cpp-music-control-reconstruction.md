@@ -2,7 +2,7 @@
 
 2026-10-10, 마지막 디컴파일 수행 PC **HJOW-Athlon**(192.168.0.94). 같은 PC의 10.78·CD·추가 10.37 Ghidra 프로젝트에서 [musiccontrol 목록](../../tools/ghidra/musiccontrol-functions.json) **11/13/13개**를 읽기 전용으로 내보냈다. 게임·창·실제 오디오 장치·작업 스레드를 실행하지 않았다.
 
-[SoundMusic.h](../../cpppj/src/client/SoundMusic.h)·[SoundMusic.cpp](../../cpppj/src/client/SoundMusic.cpp)는 음악 채널의 읽기·되감기·시작·닫기·정지·음량과 효과음/음악의 공유 음소거를 복원한다. 기존 `SoundPlayer::SetMasterVolume`을 직접 사용한다. **음악 파일 열기·버퍼 생성·스트리밍 갱신·스레드 초기화/종료·실제 장치/클라이언트 연결은 아직 남아 있다.** `Start`는 상태만 활성화하고 실제 버퍼 `Play`는 호출하지 않는다.
+[SoundMusic.h](../../cpppj/src/client/SoundMusic.h)·[SoundMusic.cpp](../../cpppj/src/client/SoundMusic.cpp)는 음악 채널의 읽기·되감기·시작·닫기·정지·음량과 효과음/음악의 공유 음소거를 복원한다. 기존 `SoundPlayer::SetMasterVolume`을 직접 사용한다. **버퍼 생성/스트리밍 갱신과 실제 COM 경계는 후속 [musicstream](cpp-music-stream-reconstruction.md)에서 완료했다.** 음악 파일 열기·스레드 초기화/종료·실제 장치/클라이언트 연결은 아직 남아 있다. `Start`는 상태만 활성화하고 실제 버퍼 `Play`는 호출하지 않는다.
 
 ## 주소와 상태
 
@@ -72,6 +72,6 @@ ctest --test-dir cpppj/build -C Release --output-on-failure
 
 ## 다음 연결
 
-음악 버퍼 생성 `004aa040` / CD `00439260`, 파일 열기/format·duration 계산 `004aa220` / CD `004393b0`, 링 버퍼 채우기/커서·Lock/Unlock·재생 `004aaad0` / CD `00439a20`을 복원하고 실제 자원 토큰 경계에 연결해야 한다. 이어 음악 초기화 `004aadd0` / CD `00439000`와 종료 `004aaf00` / CD `00439130`, 두 채널·이벤트/작업 스레드 수명을 다룬다. 원본 종료의 강제 스레드 중단은 Windows 안정 구동 목표를 고려해 검토해야 한다.
+음악 버퍼 생성 `004aa040` / CD `004393b0` 내부와 링 버퍼 갱신 `004aaad0` / CD `00439a20`·COM 경계는 후속 [musicstream](cpp-music-stream-reconstruction.md)에서 완료했다. **CD `00439260`은 버퍼 생성이 아니라 파일 존재 검사**다. 파일 열기/format·duration `004aa220` / CD `004393b0`와 실제 파일 토큰 수명은 아직 남았다. 이어 음악 초기화 `004aadd0` / CD `00439000`와 종료 `004aaf00` / CD `00439130`, 두 채널·이벤트/작업 스레드 수명을 다룬다. 원본 종료의 강제 스레드 중단은 Windows 안정 구동 목표를 고려해 검토해야 한다.
 
 기존 무음 `--inspect-sound-device originals`도 아직 실행하지 않았다. 실제 장치 검증/청취·장치 소실·음질 하향·반복 실행, HWND/장치 수명·옵션·프레임/벽시계·화면/카메라·Recount 시점·나머지 소리 호출자도 후속이다. raw GUI 건설·경제·전투·AI·승패가 남아 미션 완주는 아직 불가능하다. 영어 원본 글꼴, outpost/LAN 3차와 한국어/D2Coding·화면 요구사항/MCP 4차 순서를 유지한다.

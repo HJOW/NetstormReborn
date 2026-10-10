@@ -118,6 +118,70 @@ void MusicChannel::Stop() {
     Close();
     state_.SetField(MusicField::StopDepth,0);
 }
+// 생성 실패 기록은 원본처럼 잠금을 푼 뒤 남긴다. COM이 쓴 출력 토큰은 HRESULT와 무관하게 보존한다.
+bool MusicChannel::EnsureBuffer(const MusicBufferHooks& hooks) {
+    {
+        Guard guard(*this);
+        if (state_.Field(MusicField::Buffer)!=0) return true;
+        if (!hooks.create) throw std::invalid_argument("음악 버퍼 생성 경계 누락");
+        auto buffer=state_.Field(MusicField::Buffer);
+        const auto result=hooks.create(state_.Raw().subspan(0x28,18),kMusicBufferFlags,kMusicBufferBytes,buffer);
+        state_.SetField(MusicField::Buffer,buffer);
+        if (result>=0) { state_.SetField(MusicField::BufferBytes,kMusicBufferBytes);return true; }
+    }
+    Log("Failed to create a music buffer.\n");return false;
+}
+// 원본은 status의 재생/반복 비트(5)로 첫 채우기와 부분 갱신을 구별하고 장치 쓰기 커서는 사용하지 않는다.
+bool MusicChannel::FillBuffer(const MusicBufferHooks& hooks,const SoundState& sound) {
+    Guard guard(*this);
+    if ((state_.Field(MusicField::Flags)&1U)==0) return false;
+    if (!hooks.status || !hooks.restore || !hooks.cursor || !hooks.lock || !hooks.unlock || !hooks.play)
+        throw std::invalid_argument("음악 버퍼 갱신 경계 누락");
+    const auto buffer=state_.Field(MusicField::Buffer);
+    if (buffer==0) throw std::invalid_argument("활성 음악 버퍼 누락");
+    // 장치 오류를 기록한 뒤 중첩 정리하고 반환한다. 표본 읽기 실패에는 별도 기록 문장이 없다.
+    const auto fail=[&](std::string_view text) { if (!text.empty()) Log(text);Stop();return false; };
+    std::uint32_t status{};
+    if (hooks.status(buffer,status)<0) return fail("Failed to get music buffer status.\n");
+    if ((status&2U)!=0 && hooks.restore(buffer)<0) return fail("Failed to restore music buffer.\n");
+    if (hooks_.setVolume(buffer,sound.musicVolume)<0) Log("Failed to set music buffer volume in fillBuffer().\n");
+    const auto bytes=state_.Field(MusicField::BufferBytes);
+    std::uint32_t count{};
+    if ((status&5U)==0) { state_.SetField(MusicField::WriteOffset,0);count=bytes; }
+    else {
+        std::uint32_t play{},write{};
+        if (hooks.cursor(buffer,play,write)<0) return fail("Failed to get current music buffer position.\n");
+        const auto offset=state_.Field(MusicField::WriteOffset);
+        if (play>=bytes || offset>=bytes) throw std::out_of_range("음악 버퍼 커서 범위 밖");
+        count=play<offset ? bytes-offset+play : play-offset;
+    }
+    if (count!=0) {
+        if (bytes>INT_MAX) throw std::out_of_range("음악 버퍼 크기 범위 밖");
+        MusicBufferRegions regions;
+        if (hooks.lock(buffer,state_.Field(MusicField::WriteOffset),count,regions)<0) return fail("Failed to lock music buffer.\n");
+        bool shortRead=false;
+        try {
+            if (regions.first.size()>count || regions.second.size()!=count-regions.first.size())
+                throw std::out_of_range("음악 버퍼 잠금 구간 크기 불일치");
+            const auto first=Read(regions.first);
+            if (first==static_cast<std::int32_t>(regions.first.size())) {
+                state_.SetField(MusicField::WriteOffset,state_.Field(MusicField::WriteOffset)+static_cast<std::uint32_t>(first));
+                if (regions.first.size()!=count) {
+                    const auto second=Read(regions.second);
+                    if (second!=static_cast<std::int32_t>(regions.second.size())) shortRead=true;
+                    else state_.SetField(MusicField::WriteOffset,state_.Field(MusicField::WriteOffset)+static_cast<std::uint32_t>(second));
+                }
+            } else shortRead=true;
+        } catch (...) {
+            hooks.unlock(buffer,regions);throw; // 원본 밖의 호스트 IO 예외도 실제 DirectSound 잠금을 남기지 않는다.
+        }
+        state_.SetField(MusicField::WriteOffset,state_.Field(MusicField::WriteOffset)%bytes);
+        if (hooks.unlock(buffer,regions)<0) return fail("Failed to unlock music buffer.\n");
+        if (shortRead) return fail({});
+    }
+    if ((status&5U)==0 && hooks.play(buffer,1)<0) return fail("Failed to play music buffer.\n");
+    return true;
+}
 // 같은 공유 전역과 두 재생 계층을 참조한다.
 SoundMusic::SoundMusic(o::OriginalEdition edition,SoundState& state,SoundPlayer& effects,MusicChannel& channel)
     :edition_(edition),state_(state),effects_(effects),channel_(channel) {}
@@ -148,4 +212,6 @@ void SoundMusic::Stop() {
     if (!state_.musicInitialized) return;
     channel_.Stop();
 }
+// 초기화된 음악만 갱신한다. 실제 작업 스레드/이벤트 수명은 후속 계층이 맡는다.
+bool SoundMusic::Update(const MusicBufferHooks& hooks) { return state_.musicInitialized && channel_.FillBuffer(hooks,state_); }
 }

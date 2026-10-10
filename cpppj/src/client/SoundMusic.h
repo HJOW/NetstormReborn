@@ -1,4 +1,4 @@
-// 원본 음악 채널의 파일 읽기·시작·정지와 효과음/음악의 공유 음소거를 복원한다. 스트리밍 갱신/스레드/장치 부착은 후속이다.
+// 원본 음악 채널의 파일 읽기·시작·정지·버퍼 갱신과 공유 음소거를 복원한다. 파일 열기/작업 스레드/클라이언트 부착은 후속이다.
 #pragma once
 #include "client/Sound.h"
 #include <array>
@@ -7,6 +7,8 @@
 namespace netstorm::client {
 // 음악 채널의 x86 상태 크기다. 호스트의 mutex/COM 포인터는 이 바이트 배열에 넣지 않는다.
 inline constexpr std::size_t kMusicChannelBytes=0x60;
+// 원본 음악 버퍼의 기능 비트와 크기다. CreateSoundBuffer에 넘기며 PCM 형식과 무관하게 크기는 고정이다.
+inline constexpr std::uint32_t kMusicBufferFlags=0xe2,kMusicBufferBytes=0x2af80;
 // 원본 음악 채널의 DWORD 위치다. +0x18의 길이는 double 두 DWORD, +0x28은 WAVEFORMATEX 18바이트다.
 // Flags 비트 1은 채널 활성, 2는 파일 반복이다. StopDepth는 중첩 정지 중 같은 버퍼의 재정지를 막는다.
 enum class MusicField : std::uint32_t { Buffer=0,BufferBytes=4,Flags=8,File=0xc,Length=0x10,
@@ -46,6 +48,26 @@ struct MusicChannelHooks {
     SoundAssertReport report;
     std::function<void(bool entering)> lockEvent;
 };
+// DirectSound Lock의 두 쓰기 구간이다. Unlock까지 유효하며 첫 구간 뒤에 링 버퍼 시작 구간이 이어질 수 있다.
+struct MusicBufferRegions { std::span<std::uint8_t> first,second; };
+// 음악 버퍼의 생성/갱신 COM 경계다. HRESULT는 음수일 때 실패하며 status/cursor/lock 출력은 성공 시 유효하다.
+// 사용: create는 원본 형식 18바이트와 기능 비트/크기를 받고 버퍼 토큰을 쓴다. lock의 두 span 합은 요청 길이여야 한다.
+struct MusicBufferHooks {
+    // x86 DSBUFFERDESC를 호스트 구조체로 바꾸어 버퍼를 만든다. 실패 때 출력 토큰 변경도 원본 상태에 반영된다.
+    std::function<std::int32_t(std::span<const std::uint8_t>,std::uint32_t,std::uint32_t,SoundBuffer&)> create;
+    // 재생/손실/반복 상태 비트를 읽는다.
+    std::function<std::int32_t(SoundBuffer,std::uint32_t&)> status;
+    // 손실된 버퍼를 복구한다.
+    std::function<std::int32_t(SoundBuffer)> restore;
+    // 현재 재생/쓰기 커서다. 원본의 갱신 길이 계산에는 재생 커서만 쓴다.
+    std::function<std::int32_t(SoundBuffer,std::uint32_t&,std::uint32_t&)> cursor;
+    // 지정 구간을 잠그고 두 span을 돌려준다. 정상 반환 뒤에는 예외 경로도 unlock한다.
+    std::function<std::int32_t(SoundBuffer,std::uint32_t,std::uint32_t,MusicBufferRegions&)> lock;
+    // 잠금 때 받은 span을 그대로 해제한다. IO 예외 정리 중에도 예외를 던지지 않아야 한다.
+    std::function<std::int32_t(SoundBuffer,MusicBufferRegions)> unlock;
+    // flags=1로 링 버퍼를 반복 재생한다. 파일 반복 플래그와 별개다.
+    std::function<std::int32_t(SoundBuffer,std::uint32_t)> play;
+};
 // 한 음악 채널의 제어다. 원본 CRITICAL_SECTION과 같은 재귀 잠금으로 파일/버퍼 상태를 보호한다.
 // 사용: state/hooks 대상은 이 객체보다 오래 살아야 한다. 소멸자는 파일/버퍼를 닫지 않으므로 수명 끝에 Stop을 명시 호출한다.
 class MusicChannel {
@@ -67,6 +89,11 @@ public:
     // 재귀 정지 깊이가 0일 때 버퍼 정지→활성 비트 제거→버퍼 해제→파일 닫기→깊이 0 순서다. 원본: 004aa9c0 / CD 00439ea0.
     // 공개 정지에서도 WAVEFORMATEX 뒤의 패딩 WORD를 보존한다.
     void Stop();
+    // 버퍼가 없을 때 원본 고정 크기로 생성한다. 기존 버퍼는 형식/크기를 바꾸지 않는다. 원본: 004aa040 / CD 004393b0 내부.
+    bool EnsureBuffer(const MusicBufferHooks& hooks);
+    // 활성 채널의 잃음 복구→음량→커서/구간 잠금→Read→Unlock→필요 시 반복 Play를 수행한다.
+    // IO/COM 실패는 원본처럼 Stop하고 false다. 손상된 버퍼 크기/커서/구간은 예외다. 원본: 004aaad0 / CD 00439a20 내부.
+    bool FillBuffer(const MusicBufferHooks& hooks,const SoundState& sound);
 private:
     // 범위 전체를 잠금/해제로 감싸며 예외 경로도 잠금을 풀어 준다.
     struct Guard {
@@ -97,6 +124,8 @@ public:
     void PopMute();
     // 음악이 준비됐을 때 기본 채널을 정지한다. 원본: 004aad70 / CD 00439910.
     void Stop();
+    // 음악 준비 상태에서 기본 채널을 한 번 갱신한다. CD 공개 갱신의 초기화 검사를 포함한다. 작업 스레드를 만들지 않는다.
+    bool Update(const MusicBufferHooks& hooks);
 private:
     // 판본별 음소거 해제 분기와 공유 전역, 실제 두 제어 계층을 참조한다.
     o::OriginalEdition edition_;SoundState& state_;SoundPlayer& effects_;MusicChannel& channel_;

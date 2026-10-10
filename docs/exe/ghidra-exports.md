@@ -1,6 +1,8 @@
 # 기계어 대조 입력(Ghidra 내보내기) 준비
 
-2026-10-10 최신(`HJOW-Athlon`): **`musiccontrol` 목록 11/13/13개**를 읽기 전용으로 내보냈다. 음악 채널 읽기/되감기/상태 시작/닫기/정지·음량·공유 음소거와 기존 효과음 제어 몸체의 독립 입력 **5,292개**, 최신 감사 **76종 모두 통과**. 두 x87 제어값에서 스크립트 10,584회·음악 직접 호출 44,244회(root 총 66,132회) 정상 반환. CD 시작은 정적 대조이며 직접 시작 입력은 10.78에만 있다. 실제 장치/게임/스레드 실행 없음. [주소/계약/검증 범위](cpp-music-control-reconstruction.md). 마지막 디컴파일 수행 PC **HJOW-Athlon, 2026-10-10**.
+2026-10-10 최신(`HJOW-Athlon`): **`musicstream` 목록 2/4/4개**를 읽기 전용으로 내보냈다. 음악 버퍼 생성/채우기와 실제 Read/Stop/helper의 독립 입력 **5,088개**, 최신 감사 **77종 모두 통과**. 두 x87 제어값에서 직접 생성/갱신 10,176회(root 총 30,528회) 정상 반환. CD 생성은 공개 시작 안의 정적 대조이며 생성 입력은 10.78에만 있다. 실제 장치/게임/스레드 실행 없음. [주소/계약/검증 범위](cpp-music-stream-reconstruction.md). 마지막 디컴파일 수행 PC **HJOW-Athlon, 2026-10-10**.
+
+2026-10-10 앞 단계(`HJOW-Athlon`): **`musiccontrol` 목록 11/13/13개**를 읽기 전용으로 내보냈다. 음악 채널 읽기/되감기/상태 시작/닫기/정지·음량·공유 음소거와 기존 효과음 제어 몸체의 독립 입력 **5,292개**, 최신 감사 **76종 모두 통과**. 두 x87 제어값에서 스크립트 10,584회·음악 직접 호출 44,244회(root 총 66,132회) 정상 반환. CD 시작은 정적 대조이며 직접 시작 입력은 10.78에만 있다. 실제 장치/게임/스레드 실행 없음. [주소/계약/검증 범위](cpp-music-control-reconstruction.md). 마지막 디컴파일 수행 PC **HJOW-Athlon, 2026-10-10**.
 
 2026-10-10 앞 단계(`HJOW-Athlon`): **`soundcontrol` 목록 6/6/6개**를 읽기 전용으로 내보냈다. 소리 재계산·이름 정지/조회/켜기·반복 정지·전체 음량 여섯 몸체와 기존 `soundplay` 호출 몸체의 독립 입력 **3,189개**, 최신 감사 **75종 모두 통과**. 두 x87 제어값에서 스크립트 6,378회·직접 함수 호출 76,458회 정상 반환. 실제 장치/게임 실행 없음. [주소/계약/검증 범위](cpp-sound-control-reconstruction.md). 마지막 디컴파일 수행 PC **HJOW-Athlon, 2026-10-10**.
 
@@ -66,6 +68,7 @@ Get-ChildItem tools/decomp_*_oracle.py | Where-Object { Select-String -LiteralPa
 | `soundprocess` | soundprocess·owner(실행기만) | 10 / 7 / 7 | 소리 프로세스 생성자/실행/통지·소리 이름 표 조회, 장치·시계·부착 경계 대체, HJOW-Athlon 2026-10-10 |
 | `soundplay` | soundplay·owner(실행기만) | 19 / 16 / 16 | 소리 재생 계층(전역/위치 재생·정지·재생 여부·화면 위치 계산), 장치 버퍼 COM 호출·적재·기록 대체, HJOW-Athlon 2026-10-10 |
 | `sounddevice` | sounddevice·owner(실행기만) | 7 / 7 / 7 | 장치/파일/WAVE 읽기 코드, WAVE 세 몸체의 native 관찰, HJOW-Athlon 2026-10-10 |
+| `musicstream` | musicstream·musiccontrol·soundcontrol·soundplay·owner(실행기만) | 2 / 4 / 4 | 음악 버퍼 생성/갱신, CD 생성 인라인은 정적 대조, HJOW-Athlon 2026-10-10 |
 | `musiccontrol` | musiccontrol·soundcontrol·soundplay·owner(실행기만) | 11 / 13 / 13 | 음악 채널 제어/공유 음소거, CD 시작 인라인은 정적 대조, HJOW-Athlon 2026-10-10 |
 | `soundcontrol` | soundcontrol·soundplay·owner(실행기만) | 6 / 6 / 6 | 효과음 제어 여섯 몸체, 호출 몸체는 기존 soundplay, HJOW-Athlon 2026-10-10 |
 | `prieststate` | prieststate·owner | 11 / 12 / 12 | 2026-10-08 추가([사제 HP/지면 상태·HP setter](cpp-priest-state-reconstruction.md)), 조회 대체 없음·setter 공간 두 효과 대체·전체 몸체 반환·`HJOW-Athlon`에서 내보냄 |

@@ -1,6 +1,7 @@
 // 원본 Sound.cpp의 WAVE 읽기와 DirectSound 장치를 연결한다. 생성자는 장치를 열지 않는다.
 #pragma once
 #include "client/Sound.h"
+#include "client/SoundMusic.h"
 #include <array>
 #include <filesystem>
 #include <memory>
@@ -32,11 +33,11 @@ std::optional<std::filesystem::path> FindSoundFile(std::string_view name,std::st
 // 사용: 적재 성공/실패 표식이 0이 아니면 소리별 감쇠로 저장한다. 음수·공백·부분 숫자도 원본처럼 허용한다.
 std::int32_t SoundFileAttenuation(std::string_view path);
 
-// 동적 dsound.dll·주 버퍼·효과음 버퍼를 소유하는 Windows 장치다. 원본 COM 순서와 SoundDeviceHooks를 연결한다.
+// 동적 dsound.dll·주 버퍼·효과음/음악 버퍼를 소유하는 Windows 장치다. 원본 COM 순서와 장치 경계를 연결한다.
 // 사용: list/state/resolver를 준비→Initialize(실제 HWND, 음질 0~3)→Hooks를 SoundPlayer에 전달→Shutdown.
 //       이 객체는 Player/Process보다 오래 살아야 하고 list/state는 이 객체보다 오래 살아야 한다. 단일 스레드 전용이다.
 //       Shutdown은 표의 버퍼만 비우며 이름/감쇠/사슬은 보존한다. 장치 포인터는 32비트 토큰으로 매핑하여 64비트 빌드를 지원한다.
-// 범위: 효과음 장치만 복원한다. 초기화/종료의 음악 호출(004aadd0/004aaf00)은 음악 복원 후 연결한다.
+// 범위: 효과음 수명과 음악 버퍼 COM 경계다. 초기화/종료의 음악 스레드 호출(004aadd0/004aaf00)은 후속 연결한다.
 class SoundDevice {
 public:
     // 자원 없이 만든다. resolver는 필수이고 디렉터리·언어는 파일 선택 순서에 사용한다.
@@ -59,6 +60,12 @@ public:
     // 원본 버퍼의 상태/재생/위치/음량/좌우/정지/복제와 WAV 적재를 호출하는 여덟 경계를 돌려준다.
     // load는 장치가 없으면 {0,0}, 파일/버퍼 실패이면 {kSilentSoundBuffer,감쇠}다. log는 호출자가 필요하면 연결한다.
     SoundDeviceHooks Hooks();
+    // 음악 파일의 seek/read/close 경계에 이 장치의 음량/정지/참조 해제를 붙인다. 파일은 여기서 열지 않는다.
+    // 사용: 연결한 MusicChannel은 장치 Shutdown 전에 Stop한다. Hooks/토큰은 이 장치의 수명 안에서만 유효하다.
+    MusicChannelHooks BindMusicBuffers(MusicChannelHooks files);
+    // 음악 버퍼의 생성·상태/복구·커서·잠금/해제·반복 재생을 실제 DirectSound COM에 연결한다.
+    // 작업 스레드를 만들지 않으며 현재 SoundDevice와 같이 단일 스레드에서 호출한다.
+    MusicBufferHooks MusicBuffers();
 private:
     // Windows COM 포인터와 DLL 핸들을 숨기는 소유 구조체다.
     struct Impl;

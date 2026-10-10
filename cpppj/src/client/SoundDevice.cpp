@@ -232,4 +232,48 @@ SoundDeviceHooks SoundDevice::Hooks() {
     hooks.load=[p](std::string_view name) { return p->Load(name); }; // 실제 파일 선택/읽기/버퍼 확보다.
     return hooks;
 }
+// 파일 경계와 기록/잠금 관찰자는 호출자에게 두고 COM 버퍼 경계만 이 장치에 연결한다.
+MusicChannelHooks SoundDevice::BindMusicBuffers(MusicChannelHooks files) {
+    auto* p=impl_.get();
+    files.setVolume=[p](SoundBuffer token,std::int32_t volume) { return static_cast<std::int32_t>(p->Get(token)->SetVolume(volume)); }; // 음악 음량을 적용한다.
+    files.stop=[p](SoundBuffer token) { p->Get(token)->Stop(); }; // 음악 버퍼를 정지한다.
+    files.release=[p](SoundBuffer token) {
+        const auto result=p->Get(token)->Release();p->buffers.erase(token);return static_cast<std::int32_t>(result);
+    }; // 해제한 토큰을 제거하여 장치 종료에서 두 번 반납하지 않는다.
+    if (!files.report) files.report=p->report;
+    return files;
+}
+// 생성한 음악 버퍼도 장치 토큰 표가 소유한다. 형식/커서/잠금 span은 호스트 포인터를 raw 채널에 넣지 않는다.
+MusicBufferHooks SoundDevice::MusicBuffers() {
+    auto* p=impl_.get();MusicBufferHooks hooks;
+    // 파일 형식은 PCM의 추가 크기만 보정하고 원본 기능 비트/버퍼 크기를 그대로 전달한다.
+    hooks.create=[p](std::span<const std::uint8_t> raw,std::uint32_t flags,std::uint32_t bytes,SoundBuffer& token)->std::int32_t {
+        if (!p->device) return static_cast<std::int32_t>(DSERR_NODRIVER);
+        if (raw.size()!=18) throw std::invalid_argument("음악 형식은 WAVEFORMATEX 18바이트여야 합니다");
+        WAVEFORMATEX format{};std::memcpy(&format,raw.data(),raw.size());
+        if (format.wFormatTag==WAVE_FORMAT_PCM) format.cbSize=0;
+        // 추가 코덱 바이트를 소유하지 않으므로 COM이 형식 구조체 밖을 읽는 입력은 거부한다.
+        else if (format.cbSize!=0) return static_cast<std::int32_t>(DSERR_BADFORMAT);
+        DSBUFFERDESC desc{};desc.dwSize=sizeof(desc);desc.dwFlags=flags;desc.dwBufferBytes=bytes;desc.lpwfxFormat=&format;
+        LPDIRECTSOUNDBUFFER buffer{};const auto result=p->device->CreateSoundBuffer(&desc,&buffer,nullptr);
+        if (SUCCEEDED(result)) token=p->Add(buffer);
+        return static_cast<std::int32_t>(result);
+    };
+    hooks.status=[p](SoundBuffer token,std::uint32_t& state) { DWORD value{};const auto result=p->Get(token)->GetStatus(&value);state=value;return static_cast<std::int32_t>(result); }; // 상태와 HRESULT를 모두 반환한다.
+    hooks.restore=[p](SoundBuffer token) { return static_cast<std::int32_t>(p->Get(token)->Restore()); }; // 잃은 음악 버퍼를 복구한다.
+    hooks.cursor=[p](SoundBuffer token,std::uint32_t& play,std::uint32_t& write) {
+        DWORD first{},second{};const auto result=p->Get(token)->GetCurrentPosition(&first,&second);play=first;write=second;return static_cast<std::int32_t>(result);
+    }; // 장치의 재생/쓰기 커서를 받는다.
+    hooks.lock=[p](SoundBuffer token,std::uint32_t offset,std::uint32_t count,MusicBufferRegions& regions) {
+        void* first{};void* second{};DWORD firstSize{},secondSize{};
+        const auto result=p->Get(token)->Lock(offset,count,&first,&firstSize,&second,&secondSize,0);
+        if (SUCCEEDED(result)) regions={{static_cast<std::uint8_t*>(first),firstSize},{static_cast<std::uint8_t*>(second),secondSize}};
+        return static_cast<std::int32_t>(result);
+    }; // 링 끝에서 나뉜 두 구간을 호스트 span으로 만든다.
+    hooks.unlock=[p](SoundBuffer token,MusicBufferRegions regions) {
+        return static_cast<std::int32_t>(p->Get(token)->Unlock(regions.first.data(),static_cast<DWORD>(regions.first.size()),regions.second.data(),static_cast<DWORD>(regions.second.size())));
+    }; // 받은 포인터/크기를 그대로 반납한다.
+    hooks.play=[p](SoundBuffer token,std::uint32_t flags) { return static_cast<std::int32_t>(p->Get(token)->Play(0,0,flags)); }; // 음악 버퍼 반복 재생의 실패도 반환한다.
+    return hooks;
+}
 }

@@ -1,0 +1,8 @@
+{
+  "description": "음악 링 버퍼 생성/채우기와 CD 초기 오류 정리 helper. 마지막 디컴파일 PC HJOW-Athlon, 2026-10-10. CD 생성은 004393b0 내부 인라인이며 00439260은 파일 존재 검사이다. 기존 musiccontrol/soundplay 몸체도 실제 실행한다.",
+  "editions": {
+    "originals": ["004aa040", "004aaad0"],
+    "originalCD": ["00439a20", "00439e60", "00439f60", "004393b0"],
+    "original1037": ["00439a20", "00439e60", "00439f60", "004393b0"]
+  }
+}
