@@ -1,5 +1,5 @@
 // Sound.cpp(원본 .\Sound.cpp / CD sound.cpp) 가운데 소리 이름 표(bigSoundList)와 재생 계층(전역/위치 재생·정지·재생 여부)을 복원한다.
-// 소리 장치(DirectSound)의 초기화·wav 읽기·버퍼 호출은 SoundDeviceHooks로 받는다(장치 쪽은 아직 옮기지 않았다).
+// 소리 장치의 초기화·WAVE 읽기·버퍼 COM 호출은 SoundDevice.h의 실제 장치가 맡고 SoundDeviceHooks로 연결한다.
 #pragma once
 #include "o/RiftType.h"
 #include <cstdint>
@@ -81,7 +81,7 @@ public:
     explicit SoundList(o::OriginalEdition edition,SoundAssertReport report={});
     // 아직 하지 않았으면 대체 소리 "nonexistant.wav"를 첫 항목으로 등록한다. 여러 번 불러도 한 번만 등록한다.
     // 원본: 004aa600 / CD 00437820에서 표를 처음 확보한 직후의 조회와 대체 소리 전역 대입.
-    // 범위: 같은 함수의 DirectSound 초기화는 옮기지 않았다.
+    // 역할: 이름 표만 준비한다. 같은 원본 함수의 DirectSound 초기화는 SoundDevice::Initialize가 맡는다.
     // 이력: 2026-10-10 추가.
     void Initialize();
     // 이름을 ASCII 대소문자 구분 없이 찾아 항목 값을 돌려준다. 없으면 표 끝에 추가한다.

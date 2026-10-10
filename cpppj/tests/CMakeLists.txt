@@ -31,6 +31,7 @@ add_executable(netstorm_tests
     ForcefieldLifecycleTests.cpp
     SoundProcessTests.cpp
     SoundPlayTests.cpp
+    SoundDeviceTests.cpp
     PriestPopTests.cpp
     ConfigOracleTests.cpp
     ConfigInterfaceTests.cpp
@@ -275,3 +276,7 @@ set_source_files_properties(SoundProcessTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 소리 재생 계층(전역/위치 재생·정지·화면 위치 계산)의 독립 원본 관찰을 재생한다.
 set_source_files_properties(SoundPlayTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_SOUNDPLAY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/soundplay-x86.tsv\"")
+
+# 실제 Winmm 읽기를 세 PE의 독립 WAVE 관찰과 대조한다. 장치를 열지 않는다.
+set_source_files_properties(SoundDeviceTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_SOUNDDEVICE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/sounddevice-x86.tsv\"")

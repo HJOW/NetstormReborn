@@ -1,0 +1,102 @@
+{
+  "schema": 1,
+  "host": "HJOW-Athlon",
+  "decompile_date": "2026-10-10",
+  "total": 1305,
+  "os_calls": 0,
+  "editions": {
+    "originals": {
+      "cases": 435,
+      "native_calls": {
+        "004a8b50": 435,
+        "004a8cf0": 288,
+        "004a8d30": 288
+      },
+      "returns": {
+        "004a8b50": 435,
+        "004a8cf0": 288,
+        "004a8d30": 288
+      },
+      "substitutions": {
+        "mmioOpenA": 435,
+        "mmioDescend": 1302,
+        "mmioRead": 721,
+        "mmioAscend": 433,
+        "mmioClose": 435
+      },
+      "assertions": 0,
+      "instructions": 64095
+    },
+    "originalCD": {
+      "cases": 435,
+      "native_calls": {
+        "004375c0": 435,
+        "00437790": 288,
+        "00437800": 288
+      },
+      "returns": {
+        "004375c0": 435,
+        "00437790": 288,
+        "00437800": 288
+      },
+      "substitutions": {
+        "mmioOpenA": 435,
+        "mmioDescend": 1302,
+        "mmioRead": 721,
+        "mmioAscend": 433,
+        "mmioClose": 435
+      },
+      "assertions": 0,
+      "instructions": 54243
+    },
+    "original1037": {
+      "cases": 435,
+      "native_calls": {
+        "004375c0": 435,
+        "00437790": 288,
+        "00437800": 288
+      },
+      "returns": {
+        "004375c0": 435,
+        "00437790": 288,
+        "00437800": 288
+      },
+      "substitutions": {
+        "mmioOpenA": 435,
+        "mmioDescend": 1302,
+        "mmioRead": 721,
+        "mmioAscend": 433,
+        "mmioClose": 435
+      },
+      "assertions": 0,
+      "instructions": 54243
+    }
+  },
+  "stubbed": [
+    "mmioOpenA",
+    "mmioDescend",
+    "mmioRead",
+    "mmioAscend",
+    "mmioClose"
+  ],
+  "limitations": [
+    "DirectSound 초기화/버퍼/파일 검색은 독립 대조 범위 밖",
+    "온전한 PCM fmt 16/17/18/24바이트·누락 청크·빈 data",
+    "잘린/코덱 확장/제로 분모 입력은 C++ 별도 안전 검사"
+  ],
+  "files": {
+    "cpppj/tests/fixtures/sounddevice-x86.tsv": "dd72ca4d8b10600b3955282d5619233173c8059071fe0b3c0a0fe37f9a2447d5",
+    "extracted/sounddevice/original1037/creation.c": "206c6a69221326e1352ba1fed3308b1ad41e912f131393e4b7444c50aa56099e",
+    "extracted/sounddevice/original1037/functions.tsv": "a7d15a352c74d294653c0d1d67040d9febbb8482b1bd098332f54d91e106b152",
+    "extracted/sounddevice/originalCD/creation.c": "206c6a69221326e1352ba1fed3308b1ad41e912f131393e4b7444c50aa56099e",
+    "extracted/sounddevice/originalCD/functions.tsv": "a7d15a352c74d294653c0d1d67040d9febbb8482b1bd098332f54d91e106b152",
+    "extracted/sounddevice/originals/creation.c": "79adab539b26123b2a978d435f40fdd395489275eb55bf0a93537ae67bde434b",
+    "extracted/sounddevice/originals/functions.tsv": "07a6e8ecdc07701c9b1c5b9543f55f1e5b452b77ea4a2195659b03b3e7d35cd1",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/decomp_sounddevice_oracle.py": "0db27807f9a0cb3de7322794da13f429ffc6480a82c5abfcaaf259a232f76169",
+    "tools/ghidra/sounddevice-functions.json": "8afd8188818394268a7048913ec84ac578a3f8eee47ff68e4f3a0cdf5ef85eb7"
+  }
+}
