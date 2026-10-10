@@ -3,6 +3,7 @@
 #include "o/RawConstructionClear.h"
 #include "o/RawConstructionConfirm.h"
 #include "o/RawConstructionPlace.h"
+#include "ConstructionNoticeSupport.h"
 
 namespace {
 using namespace netstorm::test::construction;
@@ -124,14 +125,16 @@ TEST_CASE(ConstructionClear_RemovesOnePredictionPerCell) {
     CHECK(Throws([&] { clear.Clear({300,20.5F,21.25F,0,0,1}); }) && scene.events.empty());
 }
 
-// 로컬 예측 → 서버 확정 → 통지 처리(예측 정리 → 확정 조각 배치)를 실제 세 모듈과 실제 SID 생성·소유자 지정으로 한 번에 잇는다.
-// Pop과 삭제는 탐색에 필요한 해시 등록/해제만 하는 경계이며, 처리기의 abstract 판정은 아직 복원 전이라 0으로 둔다.
+// 로컬 예측 → 서버 확정 → 통지 처리(예측 정리 → 확정 조각 배치)를 실제 네 모듈과 실제 SID 생성·소유자 지정으로 한 번에 잇는다.
+// Pop과 삭제는 탐색에 필요한 해시 등록/해제만 하는 경계이며, 실제 통지 처리기가 abstract를 판정한다.
 TEST_CASE(ConstructionClear_ReplacesLocalPredictionWithConfirmedPieces) {
     // 두 판본에서 noIsland 아홉 칸을 예측으로 놓았다가 확정 조각으로 바꾼다.
     for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
         const bool patch=edition==OriginalEdition::Patch1078;SidPool pool(edition,kCapacity,true);SquidHash hash;
         std::vector<RiftTypeRecord> types(patch ? 188 : 171);std::vector<PriestPlainCanonType> frames(types.size());
         types[kTypeNoIsland].footX=types[kTypeNoIsland].footY=1;frames[kTypeNoIsland]={InputFrames(0),3};
+        // 이 장면의 로컬 통지가 배치 이력도 갱신하도록 그룹 10 밖의 입력을 준다.
+        types[kTypeNoIsland].group=1;
         SquidFactory factory(pool,types);SquidPostPopState books;SquidOwnerMode mode;SquidOwner owner(pool,types,books,mode);
         SquidRewardState rewardState;GameRandom rng;ScrambledSpStore store(rng,[] { return 1U; });
         SquidReward reward(pool,types,books,rewardState,patch ? &store : nullptr);
@@ -165,14 +168,20 @@ TEST_CASE(ConstructionClear_ReplacesLocalPredictionWithConfirmedPieces) {
             CHECK(head==sid.value);head=static_cast<std::uint16_t>(Get(raw,4,2));
             raw[11]=static_cast<std::uint8_t>(raw[11]|4);pool.Release(sid);
         },{}});
-        ConstructionConfirmState confirmState;std::uint32_t handled=0;
+        ConstructionNoticeState noticeState;noticeState.localPlayer=2;std::uint32_t refreshed=0;
+        auto noticeHooks=SilentNoticeHooks();
+        // 정상 통지 처리의 마지막 갱신을 정확히 한 번 요청했는지 센다.
+        noticeHooks.refresh=[&] { ++refreshed; };
+        RawConstructionNotice noticeHandler(pool,types,noticeState,MakeConstructionNoticeHooks(pool,clear,place,noticeHooks));
+        ConstructionConfirmState confirmState;
         ConstructionConfirmHooks confirmHooks{[](std::uint32_t,std::uint32_t,float,float) { return Sid{77}; },{},[](const ConstructionNotice&) {},
-            [&](const ConstructionNotice& notice) {
-                ++handled;clear.Clear({notice.type,notice.x,notice.y,notice.argument,notice.direction,notice.player});
-                place.Place({notice.type,notice.x,notice.y,notice.argument,notice.direction,notice.player,notice.sids,0,notice.quality});
-            },[] { return false; },[](Sid) {}};
-        RawConstructionConfirm confirm(pool,types,frames,confirmState,MakeConstructionConfirmHooks(pool,factory,confirmHooks));
-        CHECK(confirm.Confirm({kTypeNoIsland,20.0F,21.0F,2,0,0,0,0,0,0}) && handled==1);
+            {},[] { return false; },[](Sid) {}};
+        RawConstructionConfirm confirm(pool,types,frames,confirmState,MakeConstructionConfirmHooks(pool,factory,
+            MakeConstructionNoticeConfirmHooks(pool,noticeHandler,confirmHooks)));
+        CHECK(confirm.Confirm({kTypeNoIsland,20.0F,21.0F,2,0,0,0,0,0,0}) && refreshed==1);
+        CHECK(noticeState.history[0].x==20.0F && noticeState.history[0].y==21.0F);
+        SidPool other(edition,kCapacity,false);
+        CHECK(Throws([&] { MakeConstructionNoticeHooks(other,clear,place,noticeHooks); }));
         // 예측 아홉 개가 칸 순서대로 모두 지워지고, 칸마다 서버 영역 번호의 확정 조각 하나만 남는다.
         CHECK(removed==predicted);
         RawSquidFinder finder(pool,hash,types);std::size_t found=0;

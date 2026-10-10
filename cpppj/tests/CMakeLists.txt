@@ -26,6 +26,7 @@ add_executable(netstorm_tests
     ConstructionPlaceTests.cpp
     ConstructionConfirmTests.cpp
     ConstructionClearTests.cpp
+    ConstructionNoticeTests.cpp
     PriestShieldTests.cpp
     PriestPostPopTailTests.cpp
     PriestFallTests.cpp
@@ -349,3 +350,7 @@ set_source_files_properties(PaletteFlashTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 전체 파일 팔레트 로더/색 표의 독립 x86 관찰이다. CTest는 원본/장치를 실행하지 않는다.
 set_source_files_properties(PaletteColorsTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PALETTECOLORS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/palettecolors-x86.tsv\"")
+
+# 건설 배치 통지 처리기의 독립 원본 관찰이다. CTest는 원본 게임/Python을 실행하지 않는다.
+set_source_files_properties(ConstructionNoticeTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CONSTRUCTIONNOTICE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/constructionnotice-x86.tsv\"")

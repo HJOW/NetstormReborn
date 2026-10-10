@@ -1,0 +1,117 @@
+{
+  "total": 1611,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-11",
+  "decompile_date": "2026-10-10",
+  "controls": [
+    639,
+    895
+  ],
+  "os_calls": 0,
+  "editions": {
+    "originals": {
+      "cases": 537,
+      "returns": 1074,
+      "native_calls": {
+        "004441b0": 1074,
+        "0049a840": 1820,
+        "0040a840": 1580,
+        "004ac200": 746,
+        "0041d7a0": 404,
+        "004e49c0": 808
+      },
+      "substitutions": {
+        "clear": 1074,
+        "place": 1074,
+        "refresh": 1074,
+        "priest": 832,
+        "contained": 416,
+        "remove": 416,
+        "immobile": 258,
+        "foot": 404,
+        "approach": 404,
+        "move": 404,
+        "builder": 42,
+        "start": 24,
+        "refund": 242,
+        "destroy": 242
+      },
+      "assertions": 0
+    },
+    "originalCD": {
+      "cases": 537,
+      "returns": 1074,
+      "native_calls": {
+        "004d1d00": 1074,
+        "0040a540": 1580,
+        "004abae0": 746,
+        "00440a80": 404,
+        "004f161c": 808
+      },
+      "substitutions": {
+        "clear": 1074,
+        "place": 1074,
+        "refresh": 1074,
+        "priest": 416,
+        "immobile": 258,
+        "foot": 404,
+        "approach": 404,
+        "move": 404,
+        "builder": 42,
+        "start": 24,
+        "refund": 242,
+        "destroy": 242
+      },
+      "assertions": 0
+    },
+    "original1037": {
+      "cases": 537,
+      "returns": 1074,
+      "native_calls": {
+        "004d1d00": 1074,
+        "0040a540": 1580,
+        "004abae0": 746,
+        "00440a80": 404,
+        "004f161c": 808
+      },
+      "substitutions": {
+        "clear": 1074,
+        "place": 1074,
+        "refresh": 1074,
+        "priest": 416,
+        "immobile": 258,
+        "foot": 404,
+        "approach": 404,
+        "move": 404,
+        "builder": 42,
+        "start": 24,
+        "refund": 242,
+        "destroy": 242
+      },
+      "assertions": 0
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/constructionnotice-x86.tsv": "b3fd22d42e3fd30d261433436e696c0442abd1987b9e14073fa94f469121a2d1",
+    "extracted/constructionnotice/original1037/creation.c": "375b3b55514c396f51d113cd5f6119d219ddff2c0936ad7d789efaa2f6773147",
+    "extracted/constructionnotice/original1037/functions.tsv": "24d6e7153df60bc2a09758b82e0e9e04e93c8316be8699d1384f19b0d09c6474",
+    "extracted/constructionnotice/originalCD/creation.c": "375b3b55514c396f51d113cd5f6119d219ddff2c0936ad7d789efaa2f6773147",
+    "extracted/constructionnotice/originalCD/functions.tsv": "24d6e7153df60bc2a09758b82e0e9e04e93c8316be8699d1384f19b0d09c6474",
+    "extracted/constructionnotice/originals/creation.c": "7b7082a21a7eac51e326943519e19fedaaa6695cf1c2c08a8a003d2b0fd65d9c",
+    "extracted/constructionnotice/originals/functions.tsv": "1732c00a9b2b103304a91df9ab915ba9a5040ab51b1d6452c58db925dccd2c52",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_constructionnotice_oracle.py": "07dbe90846714cd979f75e1be6be228486155c6639aaff0b7fd4868c8a1726c1",
+    "tools/decomp_damageablepredestroy_oracle.py": "b6bd591b17b886224e81b9d35dc863f12dea570c67aabf8a66280c7361785e75",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/decomp_priestgeometry_oracle.py": "c8d62204fcd8ec2fcb86cc9842ca46e0d3cdfba3c9afce3e90f9caec8fedc9bc",
+    "tools/ghidra/constructionnotice-functions.json": "95f6c23d67fdc4575037ca7afcd801add014d986c31ec7db42b9813508dfaace"
+  },
+  "limits": [
+    "전체 통지 처리 분기·이력 쓰기·SID 항목/genus 조회·거의 올림/CRT는 실제 명령; 정상 반환/보존 레지스터/스택/x87 검사",
+    "정리·배치·사제 조회/이동·contained 타입/삭제·발자국/접근점·이동 불가·환불·가상 삭제·건설 시작·갱신은 명시 효과 경계",
+    "배치 경계가 조각 타입/소유자를 바꾸고 첫 이동 경계가 사제 좌표를 바꾸는 합성 입력 포함; 실제 공간/경로 탐색/GUI 미실행",
+    "C++ 어댑터의 실제 Clear/Place/Refund 연결은 별도 통합 검사에서 검증; 통지 wire 해독·서버 요청·건설 진행은 후속 작업"
+  ]
+}
