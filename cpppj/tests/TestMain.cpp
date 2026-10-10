@@ -10,6 +10,8 @@
 namespace netstorm::test {
 // 실제 원본 WAV 전수 읽기의 선택 검사다. 소리 장치와 창을 열지 않는다.
 void InspectSoundFiles(const std::filesystem::path& root);
+// 열린 원본 음악 파일의 헤더/처음·끝 부분 읽기/닫기를 확인한다. 장치·창은 열지 않는다.
+void InspectMusicFiles(const std::filesystem::path& root);
 // 사용자가 명시적으로 선택하는 실제 장치 검사다. 기본 CTest에서 실행하지 않는다.
 void InspectSoundDevice(const std::filesystem::path& root);
 }
@@ -24,11 +26,14 @@ int main(int argc,char** argv) {
             if (argc==3 && std::string_view(argv[1])=="--inspect-sound-files") {
                 netstorm::test::InspectSoundFiles(argv[2]);return 0;
             }
+            if (argc==3 && std::string_view(argv[1])=="--inspect-music-files") {
+                netstorm::test::InspectMusicFiles(argv[2]);return 0;
+            }
             if (argc==3 && std::string_view(argv[1])=="--inspect-sound-device") {
                 netstorm::test::InspectSoundDevice(argv[2]);return 0;
             }
             if ((argc!=3 && argc!=4) || std::string_view(argv[1])!="--inspect-surface-graph" ||
-                (argc==4 && std::string_view(argv[3])!="--cd")) throw std::runtime_error("--filter <name> | --inspect-sound-files <game-dir> | --inspect-sound-device <game-dir> | --inspect-surface-graph <game-dir> [--cd]");
+                (argc==4 && std::string_view(argv[3])!="--cd")) throw std::runtime_error("--filter <name> | --inspect-sound-files <game-dir> | --inspect-music-files <game-dir> | --inspect-sound-device <game-dir> | --inspect-surface-graph <game-dir> [--cd]");
             netstorm::test::InspectSurfaceLifecycle(argv[2],argc==4 ? netstorm::o::OriginalEdition::Cd1072 : netstorm::o::OriginalEdition::Patch1078);
         } catch (const std::exception& error) { netstorm::test::ReportFailure(__FILE__,__LINE__,error.what()); }
         return netstorm::test::FailureCount()==0 ? 0 : 1;

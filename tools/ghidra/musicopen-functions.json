@@ -1,0 +1,8 @@
+{
+  "description": "음악 파일 경로/실제 WAVE 헤더·길이 계산/공개 시작과 실패 fallback 경계. 마지막 디컴파일 PC HJOW-Athlon, 2026-10-10. find/config fallback만 명시 대체하고 헤더/생성/시작/읽기/정지는 원본 명령으로 실행한다.",
+  "editions": {
+    "originals": ["004aa220", "004aace0", "004a8b50"],
+    "originalCD": ["004393b0", "004375c0"],
+    "original1037": ["004393b0", "004375c0"]
+  }
+}

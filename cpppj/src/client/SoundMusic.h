@@ -1,8 +1,9 @@
-// 원본 음악 채널의 파일 읽기·시작·정지·버퍼 갱신과 공유 음소거를 복원한다. 파일 열기/작업 스레드/클라이언트 부착은 후속이다.
+// 원본 음악 채널의 파일 열기·길이·읽기·공개 시작·정지·버퍼 갱신과 공유 음소거를 복원한다. 작업 스레드/상위 옵션/클라이언트 부착은 후속이다.
 #pragma once
 #include "client/Sound.h"
 #include <array>
 #include <mutex>
+#include <optional>
 
 namespace netstorm::client {
 // 음악 채널의 x86 상태 크기다. 호스트의 mutex/COM 포인터는 이 바이트 배열에 넣지 않는다.
@@ -13,6 +14,20 @@ inline constexpr std::uint32_t kMusicBufferFlags=0xe2,kMusicBufferBytes=0x2af80;
 // Flags 비트 1은 채널 활성, 2는 파일 반복이다. StopDepth는 중첩 정지 중 같은 버퍼의 재정지를 막는다.
 enum class MusicField : std::uint32_t { Buffer=0,BufferBytes=4,Flags=8,File=0xc,Length=0x10,
     Duration=0x18,ReadOffset=0x20,WriteOffset=0x24,Format=0x28,DataOffset=0x3c,StopDepth=0x40 };
+// null 경로와 빈 문자열 경로를 구별한다. 원본은 경로가 있으면 끝에 역슬래시를 무조건 붙인다.
+struct MusicDirectories { std::optional<std::string> primary,secondary; };
+// 파일 열기의 입출력이다. 실패해도 파일 토큰/읽은 format만 바뀔 수 있으므로 기존 값으로 시작한다.
+struct MusicFileHeader {
+    std::uint32_t file{},length{},dataOffset{};
+    std::array<std::uint8_t,18> format{};
+};
+// 경로 탐색·열린 파일 헤더와 상위 옵션의 demo.mus 선택 경계다. 파일 탐색에는 효과음의 언어/와일드카드 규칙을 적용하지 않는다.
+struct MusicOpenHooks {
+    std::function<std::optional<std::string>(std::string_view)> find;
+    std::function<bool(std::string_view,MusicFileHeader&)> open;
+    // 원본 상위 음악 옵션/현재 이름 관리자가 demo.mus를 선택한다. 콜백 뒤 활성 비트가 공개 Play의 실패 반환값이다.
+    std::function<void(std::string_view)> fallback;
+};
 // 원본 채널 배치의 상태다. 버퍼/파일은 장치 경계의 32비트 토큰이고, 남은 바이트는 수정하지 않은 원본 필드를 보존한다.
 // 사용: 파일 적재가 File/Length/Format/DataOffset/Duration, 버퍼 확보가 Buffer/BufferBytes를 채운 뒤 채널을 시작한다.
 class MusicChannelState {
@@ -74,6 +89,10 @@ class MusicChannel {
 public:
     // 장치를 열지 않고 상태/판본/필수 파일·버퍼 경계를 보관한다.
     MusicChannel(o::OriginalEdition edition,MusicChannelState& state,MusicChannelHooks hooks);
+    // 기본/보조 경로에서 헤더를 열고 길이를 계산한다. 보조 경로가 null이면 앞 경로에 이름을 다시 붙이는 원본 동작도 보존한다.
+    bool Open(std::string_view name,const MusicDirectories& directories,const MusicOpenHooks& hooks);
+    // 원본 공개 시작의 활성 비트 검사다. 작업 스레드와의 공유 수명은 후속 초기화 계층에서 다룬다.
+    bool Active() const;
     // 현재 버퍼에 음량을 그대로 적용한다. 버퍼가 없어도 잠금/해제는 수행한다. 원본: 004a9fa0(CD는 음악 음량에 인라인).
     void SetVolume(std::int32_t volume);
     // data 시작으로 돌아가 성공하면 ReadOffset=0이다. 실패하면 파일을 닫고 잠금을 푼 뒤 기록한다. 원본: 004a9fe0 / CD 004377d0 호출 구간.
@@ -116,6 +135,9 @@ class SoundMusic {
 public:
     // 외부의 효과음/음악 상태를 참조한다. OS 자원은 열지 않는다.
     SoundMusic(o::OriginalEdition edition,SoundState& state,SoundPlayer& effects,MusicChannel& channel);
+    // 준비/장치/활성/null 이름을 검사한 뒤 파일→버퍼→되감기/활성화를 연결한다. 열기 실패만 상위 demo.mus 선택을 요청한다.
+    // Start와 같이 실제 COM Play는 다음 Update에서 수행한다. 원본: 004aace0 / CD 004393b0.
+    bool Play(const char* name,std::uint32_t loop,const MusicDirectories& directories,const MusicOpenHooks& files,const MusicBufferHooks& buffers);
     // 보류 중에는 예약 음악 음량만 바꾸고, 그 외에는 저장 후 음악 준비 상태에서 채널에 적용한다. 원본: 004aa5d0 / CD 00439dd0.
     void SetVolume(std::int32_t volume);
     // 깊이가 0이면 두 음량을 예약→효과음 -10000→음악 -10000, 그 뒤 DWORD 깊이를 증가시킨다. 원본: 004aa900 / CD 00438f10.

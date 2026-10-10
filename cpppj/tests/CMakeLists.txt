@@ -35,6 +35,7 @@ add_executable(netstorm_tests
     SoundControlTests.cpp
     SoundMusicTests.cpp
     SoundMusicStreamTests.cpp
+    SoundMusicOpenTests.cpp
     PriestPopTests.cpp
     ConfigOracleTests.cpp
     ConfigInterfaceTests.cpp
@@ -295,3 +296,7 @@ set_source_files_properties(SoundMusicTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 실제 음악 버퍼 생성/채우기의 독립 관찰이다. 기본 검사는 장치/스레드를 실행하지 않는다.
 set_source_files_properties(SoundMusicStreamTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_MUSICSTREAM_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/musicstream-x86.tsv\"")
+
+# 실제 음악 파일 열기/길이/공개 시작의 두 x87 관찰을 이 검사에만 지정한다.
+set_source_files_properties(SoundMusicOpenTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_MUSICOPEN_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/musicopen-x86.tsv\"")

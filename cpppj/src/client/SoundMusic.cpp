@@ -2,6 +2,7 @@
 #include "client/SoundMusic.h"
 #include <algorithm>
 #include <climits>
+#include <cstring>
 #include <stdexcept>
 #include <utility>
 
@@ -38,6 +39,45 @@ MusicChannel::Guard::Guard(MusicChannel& owner):channel(owner) {
 MusicChannel::Guard::~Guard() { if (channel.hooks_.lockEvent) channel.hooks_.lockEvent(false);channel.mutex_.unlock(); }
 // 문장의 줄바꿈도 원본 그대로 전달한다.
 void MusicChannel::Log(std::string_view text) { if (hooks_.log) hooks_.log(9,text); }
+// 조회 문자열은 원본 256바이트 지역 버퍼 범위 안에서만 구성한다. 해석되지 않은 null 경로도 그대로 유지한다.
+bool MusicChannel::Open(std::string_view name,const MusicDirectories& directories,const MusicOpenHooks& hooks) {
+    if (!hooks.find || !hooks.open) throw std::invalid_argument("음악 파일 열기 경계 누락");
+    Guard guard(*this);
+    std::string query;
+    // 원본은 디렉터리가 null일 때 이전 검색 문자열을 남긴다. 빈 문자열은 역슬래시부터 시작하는 별개 경로다.
+    const auto append=[&](const std::optional<std::string>& directory) {
+        if (directory) query=*directory+"\\";
+        query+=name;
+        if (query.size()>255 || query.find('\0')!=std::string::npos) throw std::length_error("음악 경로가 원본 버퍼 범위를 벗어났습니다");
+    };
+    append(directories.primary);auto found=hooks.find(query);
+    if (!found) { append(directories.secondary);found=hooks.find(query); }
+    if (!found) {
+        if (hooks_.log) hooks_.log(0x13,"Missing music: \"(null)\"\n");
+        return false;
+    }
+    MusicFileHeader header;header.file=state_.Field(MusicField::File);header.length=state_.Field(MusicField::Length);
+    header.dataOffset=state_.Field(MusicField::DataOffset);auto raw=state_.Raw();std::copy_n(raw.begin()+0x28,18,header.format.begin());
+    const bool opened=hooks.open(*found,header);
+    state_.SetField(MusicField::File,header.file);state_.SetField(MusicField::Length,header.length);state_.SetField(MusicField::DataOffset,header.dataOffset);
+    std::copy(header.format.begin(),header.format.end(),raw.begin()+0x28);
+    if (!opened) { Log("Failed to open music file: \""+*found+"\"\n");return false; }
+    // Ghidra의 float 캐스트와 달리 실제 x87에는 중간 float32 저장이 없다. C++는 53비트 연산으로 판본별 순서를 유지한다.
+    const auto word=[&](std::size_t at) { return static_cast<std::uint32_t>(header.format[at])|(static_cast<std::uint32_t>(header.format[at+1])<<8); }; // format WORD를 읽는다.
+    std::uint32_t rate{};std::memcpy(&rate,header.format.data()+4,4);const auto channels=word(2),bits=word(14);
+    if (header.length>INT_MAX || !rate || !channels || !bits) throw std::out_of_range("음악 길이 계산 인자가 올바르지 않습니다");
+    double duration;
+    if (edition_==o::OriginalEdition::Patch1078) {
+        duration=static_cast<double>(header.length)/(static_cast<double>(bits)*0.125);
+        duration=duration/static_cast<double>(rate);duration=duration/static_cast<double>(channels);
+    } else {
+        double denominator=(static_cast<double>(bits)*0.125)*static_cast<double>(channels);
+        denominator=denominator*static_cast<double>(rate);duration=static_cast<double>(header.length)/denominator;
+    }
+    std::memcpy(raw.data()+0x18,&duration,sizeof(duration));return true;
+}
+// 활성 여부는 원본과 같이 flags의 최하위 비트만 사용한다.
+bool MusicChannel::Active() const { return (state_.Field(MusicField::Flags)&1U)!=0; }
 // 버퍼가 없어도 잠금은 수행한다. 음량은 자르지 않고 실패만 기록한다.
 void MusicChannel::SetVolume(std::int32_t volume) {
     Guard guard(*this);const auto buffer=state_.Field(MusicField::Buffer);
@@ -185,6 +225,19 @@ bool MusicChannel::FillBuffer(const MusicBufferHooks& hooks,const SoundState& so
 // 같은 공유 전역과 두 재생 계층을 참조한다.
 SoundMusic::SoundMusic(o::OriginalEdition edition,SoundState& state,SoundPlayer& effects,MusicChannel& channel)
     :edition_(edition),state_(state),effects_(effects),channel_(channel) {}
+// 열기 실패 뒤의 fallback은 상위 옵션 관리자 경계다. 생성/되감기 실패에는 곡을 바꾸지 않는다.
+bool SoundMusic::Play(const char* name,std::uint32_t loop,const MusicDirectories& directories,const MusicOpenHooks& files,const MusicBufferHooks& buffers) {
+    if (!state_.musicInitialized || !state_.device || channel_.Active() || !name) return false;
+    if (!channel_.Open(name,directories,files)) {
+        std::string folded(name);
+        // 원본 demo.mus 비교에 필요한 ASCII 대소문자만 접는다. 음악 파일 이름 자체는 변경하지 않는다.
+        for (auto& ch:folded) if (ch>='A' && ch<='Z') ch=static_cast<char>(ch-'A'+'a');
+        if (folded=="demo.mus") return false;
+        if (files.fallback) files.fallback("demo.mus");
+        return channel_.Active();
+    }
+    return channel_.EnsureBuffer(buffers) && channel_.Start(loop);
+}
 // 음악 준비 전에도 현재/예약 전역은 갱신하며 음량은 자르지 않는다.
 void SoundMusic::SetVolume(std::int32_t volume) {
     if (state_.volumeHoldDepth!=0) { state_.pendingMusicVolume=volume;return; }

@@ -75,7 +75,9 @@ SoundFileResolver MakeDiskSoundResolver(std::filesystem::path primary,std::files
     return [primary=std::move(primary),secondary=std::move(secondary)](std::string_view pattern,bool alternate)->std::optional<std::filesystem::path> {
         const auto& root=alternate ? secondary : primary;
         if (root.empty()) return {};
-        const auto query=root/std::filesystem::path(pattern);WIN32_FIND_DATAW found{};
+        // 프로젝트의 경로 문자열은 UTF-8이다. 시스템 ANSI 코드 페이지로 해석하면 비ASCII 음악/소리 경로가 달라진다.
+        const std::u8string utf8(reinterpret_cast<const char8_t*>(pattern.data()),pattern.size());
+        const auto query=root/std::filesystem::path(utf8);WIN32_FIND_DATAW found{};
         const auto handle=FindFirstFileW(query.c_str(),&found);
         if (handle==INVALID_HANDLE_VALUE) return {};
         FindClose(handle);

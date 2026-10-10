@@ -2,7 +2,7 @@
 
 2026-10-10, 마지막 디컴파일 수행 PC **HJOW-Athlon**(192.168.0.94). [musicstream 목록](../../tools/ghidra/musicstream-functions.json) **2/4/4개**를 같은 PC의 세 Ghidra 프로젝트에서 읽기 전용으로 내보냈다. 게임·창·실제 오디오 장치·작업 스레드는 실행하지 않았다.
 
-[SoundMusic.h](../../cpppj/src/client/SoundMusic.h)·[SoundMusic.cpp](../../cpppj/src/client/SoundMusic.cpp)에 버퍼 생성 `EnsureBuffer`와 링 버퍼 갱신 `FillBuffer`, 준비 상태의 공개 갱신 `SoundMusic::Update`를 추가했다. 앞 단계의 실제 `Read`/`Stop`과 연결한다. [SoundDevice](../../cpppj/src/client/SoundDevice.cpp)의 `BindMusicBuffers`·`MusicBuffers`는 파일 경계에 실제 DirectSound 음량/정지/참조 해제·생성/상태/복구/커서/잠금/해제/재생을 연결한다. **음악 파일 열기·두 채널/이벤트/작업 스레드·실제 장치/클라이언트 연결은 후속이다.**
+[SoundMusic.h](../../cpppj/src/client/SoundMusic.h)·[SoundMusic.cpp](../../cpppj/src/client/SoundMusic.cpp)에 버퍼 생성 `EnsureBuffer`와 링 버퍼 갱신 `FillBuffer`, 준비 상태의 공개 갱신 `SoundMusic::Update`를 추가했다. 앞 단계의 실제 `Read`/`Stop`과 연결한다. [SoundDevice](../../cpppj/src/client/SoundDevice.cpp)의 `BindMusicBuffers`·`MusicBuffers`는 파일 경계에 실제 DirectSound 음량/정지/참조 해제·생성/상태/복구/커서/잠금/해제/재생을 연결한다. 음악 파일 열기/공개 시작은 [다음 단계](cpp-music-open-reconstruction.md)에서 완료했다. **두 채널/이벤트/작업 스레드·상위 음악 옵션·실제 장치/클라이언트 연결은 후속이다.**
 
 ## 주소·원본 계약
 
@@ -12,7 +12,7 @@
 | 버퍼 채우기 | `004aaad0`(채널 thiscall, 성공 여부 반환) | `00439a20`(기본 채널 공개 cdecl, void) |
 | CD 초기 오류의 정지/해제 helper | 채널 `004aa9c0` 호출 | `00439e60` / `00439f60`, 이어 실제 `0043a130` |
 
-이전 인계에서 버퍼 생성으로 적은 **CD `00439260`은 실제로 음악 파일 존재 검사**다. 버퍼 생성은 `004393b0`에 있으며 이번에 주소 설명을 바로잡았다. CD 생성은 정적 소스와 비교했고 **독립 native 생성 입력은 10.78에만 포함**한다. CD 공개 갱신은 음악 준비 전역이 0이면 잠금 없이 반환한다.
+이전 인계에서 버퍼 생성으로 적은 **CD `00439260`은 실제로 음악 파일 존재 검사**다. 버퍼 생성은 `004393b0`에 있으며 이번에 주소 설명을 바로잡았다. 이 단계의 CD 생성은 정적 소스와 비교했고 **독립 native 생성 입력은 10.78에만 포함**한다. 이후 [공개 음악 시작 단계](cpp-music-open-reconstruction.md)에서 CD 생성/시작도 실제 명령으로 검증했다. CD 공개 갱신은 음악 준비 전역이 0이면 잠금 없이 반환한다.
 
 생성은 재귀 잠금 안에서 현재 버퍼가 0일 때만 x86 DSBUFFERDESC(크기 `0x14`, flags `0xe2`, 버퍼 크기 `0x2af80`=176,000, reserved/outer 0, format=채널 `+0x28`)를 넘긴다. 성공 HRESULT는 버퍼 크기를 고정값으로 저장하며, 기존 버퍼가 있으면 크기/형식을 바꾸지 않는다. **COM 출력 토큰은 HRESULT와 별개로 원본 상태에 남는다.** 실패는 잠금을 푼 뒤 `Failed to create a music buffer.`을 기록한다.
 
@@ -55,4 +55,4 @@ cpppj/build/bin/Release/netstorm_tests.exe --filter SoundMusicStream_
 ctest --test-dir cpppj/build -C Release --output-on-failure
 ```
 
-누적 독립 관찰 **435,733개**. 최종 회귀/감사 결과와 다음 작업은 [LEFT_JOBS.md](../../LEFT_JOBS.md)의 최신 인계에 기록한다. 다음은 음악 파일 열기/format·duration/경로·fallback, 두 채널·이벤트/스레드 초기화/종료와 장치 동기화, 실제 장치/클라이언트 연결이다. GUI 건설·경제·전투·AI·승패가 남아 미션 완주는 아직 불가능하다. 영어 원본 글꼴·outpost/LAN 3차·한국어/D2Coding/화면 요구사항/MCP 4차 순서를 유지한다.
+누적 독립 관찰 **435,733개**. 최종 회귀/감사 결과와 다음 작업은 [LEFT_JOBS.md](../../LEFT_JOBS.md)의 최신 인계에 기록한다. 음악 파일 열기/format·duration/경로·공개 시작은 [후속 단계](cpp-music-open-reconstruction.md)에서 완료했다. 다음은 두 채널·이벤트/스레드 초기화/종료와 장치 동기화·상위 음악 옵션·실제 장치/클라이언트 연결이다. GUI 건설·경제·전투·AI·승패가 남아 미션 완주는 아직 불가능하다. 영어 원본 글꼴·outpost/LAN 3차·한국어/D2Coding/화면 요구사항/MCP 4차 순서를 유지한다.
