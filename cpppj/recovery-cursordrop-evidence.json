@@ -1,0 +1,156 @@
+{
+  "total": 2058,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-11",
+  "decompile_date": "2026-10-11",
+  "controls": [
+    639,
+    895
+  ],
+  "os_calls": 0,
+  "editions": {
+    "originals": {
+      "cases": 686,
+      "returns": {
+        "004473e0": 1372
+      },
+      "native_calls": {
+        "004473e0": 1372,
+        "0043fa60": 3952,
+        "004e62a0": 3952,
+        "004ec4c1": 7904,
+        "004f5bac": 3952,
+        "00441f80": 634,
+        "004e49c0": 392
+      },
+      "substitutions": {
+        "Q": 1348,
+        "P": 2684,
+        "H": 1342,
+        "S": 1342,
+        "E": 2458,
+        "C": 1236,
+        "L": 634,
+        "F": 1222,
+        "X": 1220,
+        "R": 216,
+        "A": 392,
+        "V": 392,
+        "B": 368,
+        "U": 1200,
+        "O": 216,
+        "D": 402,
+        "G": 864,
+        "N": 372,
+        "J": 372,
+        "T": 78,
+        "I": 120
+      },
+      "assertions": 0
+    },
+    "originalCD": {
+      "cases": 686,
+      "returns": {
+        "0043d660": 1372
+      },
+      "native_calls": {
+        "0043d660": 1372,
+        "0043c7b0": 1372,
+        "0048ee20": 3952,
+        "004f3540": 3952,
+        "004f9d30": 7904,
+        "004fa180": 3952,
+        "0043c740": 1856,
+        "004f161c": 392
+      },
+      "substitutions": {
+        "Q": 1348,
+        "P": 2684,
+        "H": 1342,
+        "S": 1342,
+        "E": 2458,
+        "C": 1236,
+        "L": 634,
+        "F": 1222,
+        "X": 1220,
+        "R": 216,
+        "A": 392,
+        "V": 392,
+        "B": 368,
+        "U": 1200,
+        "O": 216,
+        "D": 402,
+        "G": 864,
+        "N": 372,
+        "J": 372,
+        "T": 78,
+        "I": 120
+      },
+      "assertions": 0
+    },
+    "original1037": {
+      "cases": 686,
+      "returns": {
+        "0043d660": 1372
+      },
+      "native_calls": {
+        "0043d660": 1372,
+        "0043c7b0": 1372,
+        "0048ee20": 3952,
+        "004f3540": 3952,
+        "004f9d30": 7904,
+        "004fa180": 3952,
+        "0043c740": 1856,
+        "004f161c": 392
+      },
+      "substitutions": {
+        "Q": 1348,
+        "P": 2684,
+        "H": 1342,
+        "S": 1342,
+        "E": 2458,
+        "C": 1236,
+        "L": 634,
+        "F": 1222,
+        "X": 1220,
+        "R": 216,
+        "A": 392,
+        "V": 392,
+        "B": 368,
+        "U": 1200,
+        "O": 216,
+        "D": 402,
+        "G": 864,
+        "N": 372,
+        "J": 372,
+        "T": 78,
+        "I": 120
+      },
+      "assertions": 0
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/cursordrop-x86.tsv": "9a89077c528939f3450d4137a553d727a6d42869fe83b3ea226ffae962006d73",
+    "extracted/cursordrop/original1037/creation.c": "27838017aea1bc08127191d9c7cfe02872a50e4b297dc5ed050ebeca504a1831",
+    "extracted/cursordrop/original1037/functions.tsv": "0dad286a35489ef2a9b15c214215bd99b9fd7ac626e262f71ad42ccead3f1711",
+    "extracted/cursordrop/originalCD/creation.c": "27838017aea1bc08127191d9c7cfe02872a50e4b297dc5ed050ebeca504a1831",
+    "extracted/cursordrop/originalCD/functions.tsv": "0dad286a35489ef2a9b15c214215bd99b9fd7ac626e262f71ad42ccead3f1711",
+    "extracted/cursordrop/originals/creation.c": "ccc830e010699c7a8932d35b98f0e3439c378db3b00c27c46be206f47a57fb1c",
+    "extracted/cursordrop/originals/functions.tsv": "3470a4986ca733d682b015be62a885b1b91314724f10a0f6ada249505c4cf606",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_constructionplace_oracle.py": "9fe27089ff7591a9a5a442b8185fdc8632e01859c59335dd78cef12d40cfe12c",
+    "tools/decomp_cursordrop_oracle.py": "dc25248939baedbf2573cb12ed109038ed62f04633359347a938ab55450cc8e9",
+    "tools/decomp_damageablepredestroy_oracle.py": "b6bd591b17b886224e81b9d35dc863f12dea570c67aabf8a66280c7361785e75",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/decomp_priestgeometry_oracle.py": "c8d62204fcd8ec2fcb86cc9842ca46e0d3cdfba3c9afce3e90f9caec8fedc9bc",
+    "tools/ghidra/cursordrop-functions.json": "8ae2dfa73d1fd3baf7f5f279dbcffdf3a13756ab78ee444ace8d12f39f76937e"
+  },
+  "limits": [
+    "커서 전체/반올림·스냅/CRT floor·ftol/CD 잠금 조회·증가는 실제 원본 명령",
+    "Form/Gump 가상 효과, 위치 판정/준비, 강조/소리/기록/로컬 배치/SP/화면 갱신은 명시 경계",
+    "CD SP 가산 ST0 반환은 도구 fldz 1개로 ABI 공급; GUI 메시지 번호/부모·타입/Form은 합성 입력",
+    "유한 좌표·유효 미리보기/이동 연관 SID·부모 123; 원본 assert/게임/OS/실제 GUI 미실행"
+  ]
+}

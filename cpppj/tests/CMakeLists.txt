@@ -2,6 +2,7 @@
 # (첫 구성 때 인터넷에서 내려받을 것이 없다).
 # 테스트 파일을 만들면 아래 목록에 더한다. 파일 안의 TEST_CASE 는 자동으로 등록된다.
 add_executable(netstorm_tests
+    CursorDropTests.cpp
     TestMain.cpp
     TestSupport.h
     ClientMainTests.cpp
@@ -364,3 +365,7 @@ set_source_files_properties(ConstructionRequestTests.cpp PROPERTIES COMPILE_DEFI
 # 로컬 건설 배치 전체의 저장 PE 관찰이다. CTest는 원본 게임/Python을 실행하지 않는다.
 set_source_files_properties(ConstructionLocalTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CONSTRUCTIONLOCAL_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/constructionlocal-x86.tsv\"")
+
+# 커서 내려놓기의 세 실제 PE 관찰이다. 기본 검사는 게임/창/Python을 실행하지 않는다.
+set_source_files_properties(CursorDropTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CURSORDROP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/cursordrop-x86.tsv\"")

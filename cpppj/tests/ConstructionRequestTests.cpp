@@ -2,6 +2,7 @@
 #include "ConstructionNoticeSupport.h"
 #include "o/RawConstructionRequest.h"
 #include "o/RawConstructionLocal.h"
+#include "client/RawCursorDrop.h"
 #include <cmath>
 
 namespace {
@@ -118,19 +119,22 @@ TEST_CASE(ConstructionRequest_ReadsCurrentFlagsAfterConfirm) {
     CHECK(!request.Request({kTypePlain,20,21,3}) && cancelled==1);CHECK(!request.Request({kTypePlain,20,21,3}) && cancelled==1);
 }
 
-// 실제 전체 MayPlace가 거부하면 예측 조각을 보존하고, 허용하면 서버 확정/통지/정리/배치로 아홉 조각을 교체한다.
+// 실제 커서→로컬 예측/SP/소리→전체 MayPlace→서버 확정/통지/정리/배치로 아홉 조각을 교체한다.
 TEST_CASE(ConstructionRequest_ConnectsPipelineConfirmAndNotice) {
     // 두 판본에서 같은 저장소를 공유한 원본 모듈 연결을 검사한다.
     for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
         const bool patch=edition==OriginalEdition::Patch1078;SidPool pool(edition,kCapacity,true);SquidHash hash;
         std::vector<RiftTypeRecord> types(patch ? 188 : 171);std::vector<PriestPlainCanonType> frames(types.size());
         types[kTypeNoIsland].footX=types[kTypeNoIsland].footY=1;types[kTypeNoIsland].group=1;frames[kTypeNoIsland]={InputFrames(0),3};
+        types[kTypeNoIsland].cost=32.75F;
         std::vector<SquidDisplayShape> shapes(types.size());std::vector<PriestTypeHotspot> hotspots(types.size());
         shapes[kTypeNoIsland]={static_cast<int>(frames[kTypeNoIsland].frames.Codes().size()),true,
             std::vector<SquidDisplayFrame>(frames[kTypeNoIsland].frames.Codes().size(),{16,11,8,5,0,0})};
         std::vector<std::uint8_t> spots(65536);std::vector<std::uint16_t> islands(65536);std::vector<CanonPlacementIslandRegion> regions(128,{0,1});
         SquidFactory factory(pool,types);SquidPostPopState books;SquidOwnerMode ownerMode;SquidOwner owner(pool,types,books,ownerMode);
         SquidRewardState rewardState;GameRandom rng;ScrambledSpStore store(rng,[] { return 1U; });
+        if (patch) store.Set(1,Bits(1000.0F));else rewardState.cdLocalSp=1000.0F;
+        books.aiAttached[1]=true;rewardState.aiWallet[1]=1000;
         SquidReward reward(pool,types,books,rewardState,patch ? &store : nullptr);ConstructionPlaceState placeState;placeState.localPlayer=1;
         ConstructionPlaceHooks placeHooks;
         // 관찰하지 않는 금액/문구 효과다. 실제 소유자 지정과 SID 수신은 어댑터가 연결한다.
@@ -161,8 +165,30 @@ TEST_CASE(ConstructionRequest_ConnectsPipelineConfirmAndNotice) {
         // 실제 factory 경계를 호출하고 반환 SID만 관찰한다. 수동으로 예측 조각을 만들지 않는다.
         localHooks.create=[&](std::uint32_t type,std::uint32_t flags) { CHECK(flags==2);const Sid sid=allocate(type,flags);predicted.push_back(sid.value);return sid; };
         RawConstructionLocal local(pool,types,frames,spots,localState,localHooks);
-        local.Place({preview,20.25F,21.5F,0,0});CHECK(predicted.size()==9 && outbound.size()==1);
-        const auto& sent=outbound.front();CHECK(sent.type==kTypeNoIsland && sent.x==20.25F && sent.y==21.5F && sent.timeLow==0 && sent.timeHigh==0);
+        // 소리 이름/재생 계층은 실제 모듈이며 장치 호출만 기록 경계다. 파일/장치/창은 열지 않는다.
+        using namespace netstorm::client;
+        SoundState soundState;soundState.initialized=soundState.device=soundState.enabled=true;
+        SoundList sounds(edition);sounds.Initialize();SoundDeviceHooks device;std::size_t played=0,shown=0;
+        device.load=[](std::string_view name) { CHECK(name=="droppiece.wav");return SoundLoad{42,0}; };
+        device.status=[](SoundBuffer) { return 0U; };device.play=[&](SoundBuffer buffer,std::uint32_t flags) { CHECK(buffer==42 && flags==0);++played; };
+        device.setPosition=[](SoundBuffer,std::uint32_t) {};device.setVolume=[](SoundBuffer,std::int32_t) { return 0; };device.setPan=[](SoundBuffer,std::int32_t) { return 0; };
+        device.stop=[](SoundBuffer) {};device.duplicate=[](SoundBuffer,SoundBuffer&) { CHECK(false);return -1; };SoundPlayer sound(sounds,soundState,device);
+        CursorDropState cursorState;cursorState.legal=1;cursorState.preview=preview;cursorState.type=kTypeNoIsland;cursorState.x=20.25F;cursorState.y=21.5F;
+        cursorState.costFlags=0x40;cursorState.localPlayer=1;cursorState.screenX=100;cursorState.screenY=200;cursorState.cursorWidth=17;cursorState.cursorGump=2;
+        CursorDropHooks cursorHooks;cursorHooks.queryCursor=[] {};cursorHooks.prepareCursor=[] {};cursorHooks.highlight=[](std::uint32_t) {};
+        cursorHooks.previewSource=[](Sid) { CHECK(false);return 0U; };cursorHooks.destroy=[](Sid,std::uint32_t) { CHECK(false); };
+        cursorHooks.pop=[](Sid,float,float,std::uint32_t) { CHECK(false); };cursorHooks.record=[](std::uint32_t,std::string_view,float,float,std::uint32_t,std::uint32_t) { CHECK(false); };
+        cursorHooks.showSp=[&](std::int32_t amount,std::int32_t x,std::int32_t y,std::uint32_t flags) { CHECK(amount==32 && x==84 && y==200 && flags==0 && predicted.size()==9);++shown; };
+        cursorHooks.battleRefresh=[] { CHECK(false); };cursorHooks.invalidGui=[] { CHECK(false); };cursorHooks.guiFlags=[](std::uint32_t) { CHECK(false);return 0U; };
+        cursorHooks.guiParent=[](std::uint32_t) { CHECK(false);return 0U; };cursorHooks.detach=[](Sid,std::uint32_t) { CHECK(false); };cursorHooks.attach=[](Sid,std::uint32_t,std::uint32_t) { CHECK(false); };
+        cursorHooks.guiReceive=[](std::uint32_t,Sid) { CHECK(false); };cursorHooks.returnPiece=[](std::uint32_t,std::uint32_t,std::uint32_t) { CHECK(false); };
+        cursorHooks.activatePreview=[](std::uint32_t) {};cursorHooks.selectCursor=[](std::uint32_t value) { CHECK(value==1); };cursorHooks.refresh=[](std::uint32_t,std::uint32_t,std::uint32_t) {};
+        cursorHooks.closeGump=[](std::uint32_t gump,std::uint32_t a,std::uint32_t b,std::uint32_t c) { CHECK(gump==2 && a==3 && b==0 && c==0); };
+        RawCursorDrop cursor(pool,types,cursorState,MakeCursorDropHooks(pool,local,reward,sound,cursorState,cursorHooks));cursor.Drop();
+        CHECK(predicted.size()==9 && outbound.size()==1 && shown==1 && played==1 && soundState.playing==1);
+        CHECK(cursorState.lockDepth==2 && cursorState.preview.value==0 && cursorState.cursorGump==0 && rewardState.aiWallet[1]==968);
+        CHECK((patch ? Float(store.Get(1)) : rewardState.cdLocalSp)==967.25F);
+        const auto& sent=outbound.front();CHECK(sent.type==kTypeNoIsland && sent.x==20.0F && sent.y==22.0F && sent.timeLow==0 && sent.timeHigh==0);
         ConstructionClearState clearState;
         // 가상 삭제 경계는 해당 칸의 머리를 빼고 SID를 반납한다. 실제 삭제 전체를 실행했다고 주장하지 않는다.
         RawConstructionClear clear(pool,hash,types,frames,clearState,{[&](Sid sid,std::uint32_t flags) {
@@ -190,15 +216,17 @@ TEST_CASE(ConstructionRequest_ConnectsPipelineConfirmAndNotice) {
         RawConstructionRequest request(pool,hash,types,frames,spots,requestState,MakeConstructionRequestHooks(pool,pipeline,confirm,requestHooks));
         CHECK(&pipeline.Pool()==&pool);SidPool other(edition,kCapacity,false);CHECK(Throws([&] { MakeConstructionRequestHooks(other,pipeline,confirm,requestHooks); }));
         CHECK(Throws([&] { MakeConstructionLocalHooks(other,factory,place,localHooks); }));
+        CHECK(Throws([&] { MakeCursorDropHooks(other,local,reward,sound,cursorState,cursorHooks); }));
         // 지면이 없는 첫 요청은 실제 최종 지형 정책이 거부한다. SID 생성·방송·삭제·배치는 일어나지 않는다.
         CHECK(!request.Request({sent.type,sent.x,sent.y,1,sent.argument,sent.direction,0,sent.timeLow,sent.timeHigh,sent.quality}) && broadcasts==0 && refreshed==0 && removed.empty());
         // 원본의 지면 허용 전역만 켠다. 강제 MayPlace는 0이며 모양/미리보기/충돌/지형/최종 관계 몸체는 모두 실행한다.
         placementState.relations.bypassGroundPermission=1;
         CHECK(request.Request({sent.type,sent.x,sent.y,1,sent.argument,sent.direction,0,sent.timeLow,sent.timeHigh,sent.quality}) && broadcasts==1 && refreshed==1 && removed==predicted);
-        CHECK(noticeState.history[0].x==20.25F && noticeState.history[0].y==21.5F && placementState.placement.forcePlacement==0);
+        CHECK(noticeState.history[0].x==20.0F && noticeState.history[0].y==22.0F && placementState.placement.forcePlacement==0);
+        CHECK((patch ? Float(store.Get(1)) : rewardState.cdLocalSp)==967.25F);
         RawSquidFinder finder(pool,hash,types);std::size_t found=0;
         // 조각을 교체한 전체 범위에는 서버 SID·올바른 소유자·비abstract 조각 아홉 개만 남아야 한다.
-        for (Sid current=finder.Begin({20,21,23,24});current.value;current=finder.Next()) {
+        for (Sid current=finder.Begin({20,22,23,25});current.value;current=finder.Next()) {
             ++found;const auto raw=pool.Slot(current);CHECK(current.value>=pool.Layout().serverFirst && raw[10]==kTypeNoIsland && raw[patch ? 34 : 32]==1 && !(raw[patch ? 40 : 35]&1));
         }
         CHECK(found==9);
