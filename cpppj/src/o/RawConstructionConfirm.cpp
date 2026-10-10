@@ -1,4 +1,4 @@
-// 서버 건설 확정의 사제 조회 조건·조각별 SID 확보·통지 필드·전송/처리/기록 순서를 원본대로 유지한다.
+// 서버 건설 확정의 그래프 기준점 조회 조건·조각별 SID 확보·통지 필드·전송/처리/기록 순서를 원본대로 유지한다.
 #include "o/RawConstructionConfirm.h"
 #include <bit>
 #include <stdexcept>
@@ -6,7 +6,7 @@
 
 namespace netstorm::o {
 namespace {
-// 타입 flags1의 "사제가 지어야 함" 비트와 확정 플래그의 "사제 조회 생략" 비트다.
+// 타입 flags1의 "사제가 지어야 함" 비트와 확정 플래그의 "기준점 조회 생략" 비트다.
 constexpr std::uint32_t kNeedsBuilder=0x8000,kSkipBuilderFlag=1;
 // 통지 하나에 담을 수 있는 SID 수의 상한이다. 원본은 20번째를 넣은 뒤 assert(sidCount < MAX_SIDS)한다.
 constexpr std::size_t kMaxSids=20;
@@ -20,7 +20,7 @@ RawConstructionConfirm::RawConstructionConfirm(const SidPool& pool,std::span<con
     if (!hooks_.findBuilder || !hooks_.create || !hooks_.broadcast || !hooks_.handle || !hooks_.recorderActive || !hooks_.record)
         throw std::invalid_argument("건설 확정 필수 효과 연결 오류");
 }
-// 원본 순서: 사제 조회 → decoder 생성 → 조각마다 SID 생성 → 통지 필드 → 전송 → 직접 처리 → 기록기.
+// 원본 순서: 기준점 조회 → decoder 생성 → 조각마다 SID 생성 → 통지 필드 → 전송 → 직접 처리 → 기록기.
 bool RawConstructionConfirm::Confirm(const ConstructionConfirmRequest& request) const {
     if (request.type>=types_.size() || request.type>=frames_.size() || request.type>0xff) throw std::out_of_range("건설 확정 타입 번호 오류");
     if ((types_[request.type].flags1&kNeedsBuilder) && !(request.flags&kSkipBuilderFlag) && !state_.skipBuilderCheck &&

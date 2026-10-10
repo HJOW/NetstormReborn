@@ -64,7 +64,7 @@ Release 경고/오류 **0**·CTest 내부 **606개·실패 0**(158.44초, 전체
 
 ## 다음 순서와 재실행
 
-다음은 확정의 **실제 사제 선택**이다. 이후 사제 이동 `00443000`/CD `004d1120`, 건설 시작 `00443fe0`/CD `004d06a0`와 진행/완료·소유 사제/접근점/contained를 잇는다. 경로 contained와 타입별 공간/삭제·추락/알림·메시지 수신·건설 GUI도 남는다. 한국어 3차 → outpost/LAN 4차 → 요구사항/MCP 5차 순서를 유지한다.
+**2026-10-11 [확정의 실제 그래프 기준점 연결과 배치 통지의 소유 사제 조회](cpp-construction-selection-reconstruction.md)를 완료했다.** 기존 “확정의 실제 사제 선택”은 서로 다른 두 조회를 혼동한 표현이었다. 다음은 건설 사제 생성/이동 `00443000`/CD `004d1120`, 건설 시작 `00443fe0`/CD `004d06a0`와 진행/완료·접근점/contained다. 경로 contained와 타입별 공간/삭제·추락/알림·메시지 수신·건설 GUI도 남는다. 한국어 3차 → outpost/LAN 4차 → 요구사항/MCP 5차 순서를 유지한다.
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools/ghidra/export_functions.ps1 -Name constructioneffects

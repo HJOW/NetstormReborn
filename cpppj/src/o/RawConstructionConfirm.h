@@ -10,7 +10,7 @@
 namespace netstorm::o {
 // 확정이 읽는 전역이다. 주소는 패치 / CD 순서다.
 struct ConstructionConfirmState {
-    bool skipBuilderCheck{}; // 0054db14 / CD 0052e8a8: 켜져 있으면 지을 사제를 찾지 않는다.
+    bool skipBuilderCheck{}; // 0054db14 / CD 0052e8a8: 켜져 있으면 작업장/그래프 기준점 검사를 생략한다.
     bool recorderEnabled{};  // 0059a7e4 / CD 00537214: 켜져 있으면 기록기에 활성 여부를 묻는다.
     // CanonDecoder가 패턴으로 분기하는 여덟 타입 전역의 현재 번호다(puzzlePiece, bridge, island, noIsland, 전투 타입 넷).
     std::array<std::uint32_t,8> patternTypes{107,82,94,157,131,129,140,142};
@@ -22,7 +22,7 @@ struct ConstructionConfirmRequest {
     std::uint32_t player{};    // 소유자가 될 플레이어. 통지에는 하위 바이트만 실린다.
     std::uint32_t argument{};  // decoder 인자(패턴 번호 또는 프레임 인자). 통지에는 하위 바이트만 실린다.
     std::uint32_t direction{}; // 방향 값. 통지에는 하위 바이트만 실린다.
-    std::uint32_t flags{};     // bit 0이 켜지면 사제 조회를 건너뛴다. 통지에는 하위 바이트가 실린다.
+    std::uint32_t flags{};     // bit 0이 켜지면 기준점 조회를 건너뛴다. 통지에는 하위 바이트가 실린다.
     std::uint32_t timeLow{},timeHigh{}; // 통지 +0x12의 double을 이루는 두 DWORD(사제 도착 시각 인자).
     std::uint32_t quality{};   // 다리 품질. 통지에는 하위 바이트만 실린다.
 };
@@ -37,7 +37,8 @@ struct ConstructionNotice {
 };
 // 이 모듈 밖의 효과다. 모두 필수다.
 struct ConstructionConfirmHooks {
-    // 0048fdb0 / CD 00406f80: (플레이어, 타입, x, y)로 지을 사제를 찾는다. 0이면 확정하지 않는다.
+    // 0048fdb0 / CD 00406f80: (플레이어, 타입, x, y)로 작업장/그래프 기준점을 찾는다. 0이면 확정하지 않는다.
+    // 이름은 기존 API를 유지한다. 소유 사제 조회 004921f0은 통지 처리기의 별도 경계다.
     std::function<Sid(std::uint32_t,std::uint32_t,float,float)> findBuilder;
     // 004af530 / CD 004ab390: (타입, 0)으로 서버 SID의 void 객체를 만든다.
     std::function<Sid(std::uint32_t,std::uint32_t)> create;
@@ -56,7 +57,7 @@ public:
     // 풀·타입 표·프레임 표·상태는 이 객체보다 오래 살아야 한다. 경계가 하나라도 비어 있으면 생성에서 거부한다.
     RawConstructionConfirm(const SidPool& pool,std::span<const RiftTypeRecord> types,std::span<const PriestPlainCanonType> frames,
         const ConstructionConfirmState& state,ConstructionConfirmHooks hooks);
-    // 00444590 / CD 004d0f10: 사제가 지어야 하는 타입(flags1 0x8000)이면 먼저 사제를 찾고, 없으면 아무 효과 없이 false다.
+    // 00444590 / CD 004d0f10: 사제가 지어야 하는 타입(flags1 0x8000)이면 먼저 그래프 기준점을 찾고, 없으면 아무 효과 없이 false다.
     // 그 밖에는 조각마다 SID를 만들어 통지에 담고 전송 → 직접 처리 → (기록기) 순서로 부른 뒤 true를 돌려준다.
     bool Confirm(const ConstructionConfirmRequest& request) const;
     // 어댑터가 같은 실제 풀을 연결하는지 확인하는 데 쓴다.
@@ -68,6 +69,6 @@ private:
     const ConstructionConfirmState& state_;
     ConstructionConfirmHooks hooks_;
 };
-// SID 생성만 같은 풀의 실제 factory로 바꾼다. 사제 조회·통지·기록기 경계는 받은 그대로 둔다.
+// SID 생성만 같은 풀의 실제 factory로 바꾼다. 기준점 조회·통지·기록기 경계는 받은 그대로 둔다.
 ConstructionConfirmHooks MakeConstructionConfirmHooks(const SidPool& pool,SquidFactory& factory,ConstructionConfirmHooks hooks);
 }

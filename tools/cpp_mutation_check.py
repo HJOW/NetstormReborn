@@ -32,6 +32,23 @@ TESTS = BUILD / 'bin/Release/netstorm_tests.exe'
 EXCLUDED = {'build'}
 # 변이 목록: 이름, 대상 파일, 바꿀 원문(파일에 정확히 한 번 있어야 한다), 바꾼 문장, 실패해야 하는 검사 이름 접두사.
 MUTATIONS = [
+    # 소유 사제 조회와 건설 조회 연결의 실제 관찰/통합 검사가 의미 차이를 잡는지 검사한다.
+    dict(name='priest-lookup-free-filter',file='cpppj/src/o/RawPriestLookup.cpp',expect='PriestLookup_',
+         before='constexpr std::uint8_t kDead=2;',after='constexpr std::uint8_t kDead=3;',note='조회에서 free 상태도 제외'),
+    dict(name='priest-lookup-owner-width',file='cpppj/src/o/RawPriestLookup.cpp',expect='PriestLookup_',
+         before='raw[owner]==player',after='raw[owner]==static_cast<std::uint8_t>(player)',note='요청 소유자 DWORD를 BYTE로 절단'),
+    dict(name='priest-lookup-original-owner',file='cpppj/src/o/RawPriestLookup.cpp',expect='PriestLookup_',
+         before='raw[owner]==player',after='raw[12]==player',note='현재 소유자 대신 원래 소유자 필드를 조회'),
+    dict(name='priest-lookup-void-filter',file='cpppj/src/o/RawPriestLookup.cpp',expect='PriestLookup_',
+         before='!(raw[kState]&kDead)',after='!(raw[kState]&(kDead|4))',note='조회에서 void 상태도 제외'),
+    dict(name='priest-lookup-inactive-tail',file='cpppj/src/o/RawPriestLookup.cpp',expect='PriestLookup_',
+         before='for (const auto sid:state_.priests.Items())',after='for (const auto sid:state_.priests.entries)',note='활성 개수 뒤의 오래된 꼬리도 조회'),
+    dict(name='priest-lookup-sid-width',file='cpppj/src/o/RawPriestLookup.cpp',expect='PriestLookup_',
+         before='if (sid>=pool_.Capacity())',after='if (static_cast<std::uint16_t>(sid)>=pool_.Capacity())',note='풀 범위 검사 전에 DWORD SID를 WORD로 절단'),
+    dict(name='priest-lookup-anchor-pool',file='cpppj/src/o/RawConstructionSelection.cpp',expect='PriestLookup_',
+         before='if (&pool!=&anchor.Pool())',after='if (false && &pool!=&anchor.Pool())',note='확정의 기준점 연결에서 다른 풀을 허용'),
+    dict(name='priest-lookup-notice-player',file='cpppj/src/o/RawConstructionSelection.cpp',expect='PriestLookup_',
+         before='lookup.Find(player)',after='lookup.Find(player+1)',note='통지가 요청한 플레이어 대신 다음 소유자를 조회'),
     dict(name='process-zero-keeps-running', file='cpppj/src/o/SquidProcess.cpp', expect='process_',
          before='if (result>0.0f || (patch && std::isnan(result))) {',
          after='if (result>=0.0f || (patch && std::isnan(result))) {',
