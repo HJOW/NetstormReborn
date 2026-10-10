@@ -1,5 +1,5 @@
 // Soundprocess.cpp(원본 .\Soundprocess.cpp / CD soundProcess.cpp): 객체에 붙어 소리를 내는 프로세스(soundProcessType, 타입 47)를 복원한다.
-// 실제 소리 장치의 재생/정지는 SoundProcessHooks로 받는다(Sound.cpp의 재생 계층은 아직 옮기지 않았다).
+// 재생/정지는 SoundProcessHooks로 받으며 MakeSoundProcessHooks가 실제 재생 계층(SoundPlayer)에 잇는다.
 #pragma once
 #include "client/Sound.h"
 #include "o/RawPriestShield.h"
@@ -15,8 +15,8 @@ inline constexpr std::uint32_t kSoundProcessType=47;
 //   kSoundPlayAt       : 부모 객체의 현재 좌표를 넘겨 재생한다(없으면 좌표를 넘기지 않는 전역 재생).
 //   kSoundUseAlternate : 부모의 상태 단어(raw +0xc)가 0이 아니면 대체 소리를 쓴다.
 //   kSoundPlayOnce     : 한 번 재생을 요청한 뒤 프로세스를 끝낸다(없으면 반복 재생하고 프로세스가 살아 있는 동안 유지한다).
-//   kSoundPlayPriority : 값 8을 재생 함수에 그대로 넘긴다. 전역 재생에서는 다섯째 인자, 위치 한 번 재생에서는 넷째 인자다.
-//                        이름은 원본 assert 문자열의 playPriority이며 재생 함수 안에서의 뜻은 재생 계층을 옮길 때 확정한다.
+//   kSoundPlayPriority : 값 8을 재생 함수에 그대로 넘긴다. 전역 재생에서는 우선 인자(동시 재생 한도를 건너뛴다)로 들어가지만,
+//                        위치 한 번 재생에서는 원본이 이 값을 반복 인자 자리에 넘긴다(우선 인자는 0). 원본 그대로 따른다.
 // 사용: SoundProcessSystem::Add의 flags로 조합해 준다. 보호막은 kSoundPlayAt만 쓴다.
 // 원본: 004ab070 / CD 00453900의 `flags & 1/2/4/8`, assert 문자열 "playOnce || playAt"·"playOnce || !playPriority".
 // 이력: 2026-10-10 추가.
@@ -45,10 +45,10 @@ struct SoundProcessHooks {
     std::function<double()> wallSeconds;
     // 위치 반복 재생 (x, y, 재생 중인 항목, 소리) → 재생 중인 항목(없으면 0). 004a9860 / CD 00438800.
     std::function<SoundHandle(float,float,SoundHandle,SoundHandle)> playLoopAt;
-    // 위치 한 번 재생 (x, y, 소리, flags & 8, 0). 반환값은 쓰지 않는다. 004a9c30 / CD 00438ae0.
+    // 위치 한 번 재생 (x, y, 소리, 반복, 우선). 소리 프로세스는 반복 자리에 flags & 8, 우선 자리에 0을 넘기고 반환값은 쓰지 않는다. 004a9c30 / CD 00438ae0.
     std::function<SoundHandle(float,float,SoundHandle,std::uint32_t,std::uint32_t)> playOnceAt;
-    // 전역 재생 (소리, 한 번 재생이면 0·아니면 1, 0, 0, flags & 8, 0) → 재생 중인 항목(없으면 0). 004a9550 / CD 004383f0.
-    // 둘째 인자는 반복 재생 여부로 보인다(추정 — 재생 함수 몸체는 아직 대조하지 않았다).
+    // 전역 재생 (소리, 반복, 음량, 좌우, 우선, 같은 소리 한도) → 재생에 쓴 항목(없으면 0). 004a9550 / CD 004383f0.
+    // 소리 프로세스는 (소리, 한 번 재생이면 0·아니면 1, 0, 0, flags & 8, 0)을 넘긴다.
     std::function<SoundHandle(SoundHandle,std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t)> play;
     // 재생 중인 항목을 멈춘다. 004a97e0 / CD 004386f0.
     std::function<void(SoundHandle)> stop;
@@ -139,4 +139,20 @@ private:
 // 원본: 00493d30 / CD 0040bfb0의 `004a8ee0("priestForceField.wav")` → `004ab240(보호막, 소리, 0, 1)`.
 // 이력: 2026-10-10 추가.
 o::PriestShieldHooks MakePriestShieldSoundHooks(const o::SidPool& pool,SoundList& sounds,SoundProcessSystem& system,o::PriestShieldHooks hooks);
+// 소리 프로세스의 재생·정지·재생 여부 경계를 실제 재생 계층으로 채운 SoundProcessHooks를 만든다.
+// 사용: wallSeconds(정지와 무관한 벽시계, 초)는 호출자가 준다(예: GameClock::WallSeconds). report는 소리 프로세스의 assert 보고를 받을 함수다(없어도 된다).
+//       player는 돌려준 hooks와 그것을 받은 SoundProcessSystem보다 오래 살아야 한다. wallSeconds가 비어 있으면 std::invalid_argument를 던진다.
+// 원본: 004ab070 / CD 00453900이 부르는 004a9860·004a9c30·004a9550, 004ab030 / CD 004538b0이 부르는 004a97e0·004a9810.
+// 이력: 2026-10-10 추가 — 재생 계층을 옮기면서.
+SoundProcessHooks MakeSoundProcessHooks(SoundPlayer& player,std::function<double()> wallSeconds,SoundAssertReport report={});
+// 사제 보호막 생성 wrapper의 로컬 안내 소리 요청(ourPriestImmobile.wav, 인자 0·0·0·1·0 = 반복 없음·음량 0·좌우 0·우선·한도 없음)을
+// 실제 이름 기반 전역 재생으로 바꾼다. 다른 효과는 hooks 그대로다. player는 돌려준 hooks보다 오래 살아야 한다.
+// 원본: 00493d30 / CD 0040bfb0의 `004a9cb0("ourPriestImmobile.wav", 0, 0, 0, 1, 0)` / CD 00438b50.
+// 이력: 2026-10-10 추가.
+o::PriestShieldHooks MakePriestShieldNoticeHooks(SoundPlayer& player,o::PriestShieldHooks hooks);
+// 사제 낙하 요청(RawPriestFall)의 위치 소리 경계에 넣을 함수를 만든다: 현재 좌표에서 priestFall.wav를 반복 없이 재생한다.
+// 사용: PriestFallHooks::sound에 대입한다. player는 돌려준 함수보다 오래 살아야 한다.
+// 원본: 004941f0 / CD 0040c880의 `004a9d70(x, y, "priestFall.wav", 0)` / CD 00438c00.
+// 이력: 2026-10-10 추가.
+std::function<void(o::Sid,float,float)> MakePriestFallSound(SoundPlayer& player);
 }

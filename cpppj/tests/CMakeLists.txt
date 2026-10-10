@@ -30,6 +30,7 @@ add_executable(netstorm_tests
     FrameAdvanceTests.cpp
     ForcefieldLifecycleTests.cpp
     SoundProcessTests.cpp
+    SoundPlayTests.cpp
     PriestPopTests.cpp
     ConfigOracleTests.cpp
     ConfigInterfaceTests.cpp
@@ -270,3 +271,7 @@ set_source_files_properties(ForcefieldLifecycleTests.cpp PROPERTIES COMPILE_DEFI
 # 소리 프로세스/이름 표의 독립 원본 관찰을 재생한다.
 set_source_files_properties(SoundProcessTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_SOUNDPROCESS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/soundprocess-x86.tsv\"")
+
+# 소리 재생 계층(전역/위치 재생·정지·화면 위치 계산)의 독립 원본 관찰을 재생한다.
+set_source_files_properties(SoundPlayTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_SOUNDPLAY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/soundplay-x86.tsv\"")

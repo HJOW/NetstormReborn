@@ -1,0 +1,172 @@
+{
+  "schema": 1,
+  "host": "HJOW-Athlon",
+  "decompile_date": "2026-10-10",
+  "total": 14472,
+  "controls": [
+    639,
+    895
+  ],
+  "editions": {
+    "originals": {
+      "cases": 4824,
+      "returns": {
+        "Script": 2130,
+        "Screen": 798,
+        "Point": 6720
+      },
+      "calls": 35002,
+      "native_calls": {
+        "004a8ee0": 4276,
+        "004a8d50": 4780,
+        "004a8a60": 5556,
+        "004ef510": 3578,
+        "004a9550": 3860,
+        "004a9810": 3586,
+        "004a8a80": 10284,
+        "004a97e0": 738,
+        "004a8ad0": 526,
+        "004a9860": 1008,
+        "00497220": 2634,
+        "004e49c0": 5268,
+        "004c6b30": 8556,
+        "004a9840": 524,
+        "004c6a40": 7532,
+        "004c6ac0": 7532,
+        "004a9c30": 864,
+        "004a9d70": 288,
+        "004a9cb0": 144
+      },
+      "substitutions": {
+        "locale": 3578,
+        "load": 1886,
+        "status": 10502,
+        "gain": 3744,
+        "balance": 3744,
+        "start": 3220,
+        "halt": 526,
+        "seek": 526,
+        "log": 842,
+        "copy": 1214,
+        "assert": 36
+      },
+      "assertions": 0,
+      "instructions": 2717576
+    },
+    "originalCD": {
+      "cases": 4824,
+      "returns": {
+        "Script": 2130,
+        "Screen": 798,
+        "Point": 6720
+      },
+      "calls": 35002,
+      "native_calls": {
+        "00437d20": 4276,
+        "00437b29": 4780,
+        "004f2980": 3578,
+        "004383f0": 4258,
+        "004387a0": 3586,
+        "004386f0": 738,
+        "00438800": 1008,
+        "00455c90": 2634,
+        "004f161c": 5268,
+        "004cdeb0": 8556,
+        "00438ac0": 812,
+        "004cdd00": 7532,
+        "004cde00": 7532,
+        "00438ae0": 864,
+        "00438c00": 288,
+        "00438b50": 144
+      },
+      "substitutions": {
+        "load": 1886,
+        "status": 10502,
+        "gain": 3744,
+        "balance": 3744,
+        "start": 3220,
+        "halt": 526,
+        "seek": 526,
+        "log": 842,
+        "copy": 1214,
+        "assert": 36
+      },
+      "assertions": 0,
+      "instructions": 2202048
+    },
+    "original1037": {
+      "cases": 4824,
+      "returns": {
+        "Script": 2130,
+        "Screen": 798,
+        "Point": 6720
+      },
+      "calls": 35002,
+      "native_calls": {
+        "00437d20": 4276,
+        "00437b29": 4780,
+        "004f2980": 3578,
+        "004383f0": 4258,
+        "004387a0": 3586,
+        "004386f0": 738,
+        "00438800": 1008,
+        "00455c90": 2634,
+        "004f161c": 5268,
+        "004cdeb0": 8556,
+        "00438ac0": 812,
+        "004cdd00": 7532,
+        "004cde00": 7532,
+        "00438ae0": 864,
+        "00438c00": 288,
+        "00438b50": 144
+      },
+      "substitutions": {
+        "load": 1886,
+        "status": 10502,
+        "gain": 3744,
+        "balance": 3744,
+        "start": 3220,
+        "halt": 526,
+        "seek": 526,
+        "log": 842,
+        "copy": 1214,
+        "assert": 36
+      },
+      "assertions": 0,
+      "instructions": 2202048
+    }
+  },
+  "os_calls": 0,
+  "sound_list_base": "15000000",
+  "buffer_base": "16001000",
+  "stubbed": [
+    "IDirectSoundBuffer GetStatus/Play/SetCurrentPosition/SetVolume/SetPan/Stop",
+    "IDirectSound DuplicateSoundBuffer",
+    "항목 적재(wav 읽기)",
+    "기록 출력",
+    "assert 보고(기록 뒤 계속)",
+    "패치 CRT 스레드 로캘 선택(C 로캘 ASCII 비교 본문은 실제 실행)",
+    "소리 장치 초기화의 표 확보/0 채움/대체 소리 대입"
+  ],
+  "limitations": [
+    "장치는 재생/정지만 흉내 내는 상태표",
+    "소리 장치(DirectSound)·실제 재생/정지·wav 읽기 제외",
+    "버퍼가 0이거나 소리 없음 표식인 항목의 직접 정지·손상된 사슬 제외",
+    "변조 감지 때의 고의 고장 값(패치 DAT_005318ec == 7)은 초기값 그대로"
+  ],
+  "files": {
+    "cpppj/tests/fixtures/soundplay-x86.tsv": "b2e2d5ad3a065fcd1659920e7ebf104610a298da91a47828ab74fd895e860861",
+    "extracted/soundplay/original1037/creation.c": "bd884b869d734f67925b780b5deab7a53eef93e8e02cb40e62f826d03b3b475b",
+    "extracted/soundplay/original1037/functions.tsv": "f02aef06586ae85e7583710c29308d9bd929b7ae85ab4d079ce33407931a9d3b",
+    "extracted/soundplay/originalCD/creation.c": "bd884b869d734f67925b780b5deab7a53eef93e8e02cb40e62f826d03b3b475b",
+    "extracted/soundplay/originalCD/functions.tsv": "f02aef06586ae85e7583710c29308d9bd929b7ae85ab4d079ce33407931a9d3b",
+    "extracted/soundplay/originals/creation.c": "a8b0fc00c96069a087470be4b4479b426c40b61afdf1b1e2dfd4339ac5151853",
+    "extracted/soundplay/originals/functions.tsv": "eeb471425021a75180fdd3d247a842dbad2777ebb0731c9a33b52295ed99860f",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/decomp_soundplay_oracle.py": "9a67f082b1079f8ed8bf8b1be45d12d84169e24c5827844678333ea39b80964f",
+    "tools/ghidra/soundplay-functions.json": "f001ea12c907d265f0fae0fdd12e718c900ce1ac30eb61fe4636a14249665217"
+  }
+}

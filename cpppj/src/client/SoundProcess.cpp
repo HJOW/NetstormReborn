@@ -131,4 +131,34 @@ o::PriestShieldHooks MakePriestShieldSoundHooks(const o::SidPool& pool,SoundList
     };
     return hooks;
 }
+
+// 재생 계층의 다섯 함수를 인자 순서 그대로 잇는다. 부호 없는 인자는 원본처럼 32비트 값 그대로 부호 있는 수로 읽는다.
+SoundProcessHooks MakeSoundProcessHooks(SoundPlayer& player,std::function<double()> wallSeconds,SoundAssertReport report) {
+    if (!wallSeconds) throw std::invalid_argument("소리 프로세스의 벽시계 효과 누락");
+    SoundProcessHooks hooks;
+    hooks.wallSeconds=std::move(wallSeconds);
+    hooks.playLoopAt=[&player](float x,float y,SoundHandle current,SoundHandle sound) { return player.PlayLoopAt(x,y,current,sound); };
+    hooks.playOnceAt=[&player](float x,float y,SoundHandle sound,std::uint32_t loop,std::uint32_t priority) { return player.PlayOnceAt(x,y,sound,loop,priority); };
+    hooks.play=[&player](SoundHandle sound,std::uint32_t loop,std::uint32_t volume,std::uint32_t pan,std::uint32_t priority,std::uint32_t limit) {
+        return player.Play(sound,loop,static_cast<std::int32_t>(volume),static_cast<std::int32_t>(pan),priority,static_cast<std::int32_t>(limit));
+    };
+    hooks.stop=[&player](SoundHandle sound) { player.Stop(sound); };
+    hooks.isPlaying=[&player](SoundHandle sound) { return player.IsPlaying(sound); };
+    hooks.report=std::move(report);
+    return hooks;
+}
+
+// 안내 소리 구조체의 다섯 인자를 이름 기반 전역 재생의 (반복, 음량, 좌우, 우선, 한도)로 넘긴다.
+o::PriestShieldHooks MakePriestShieldNoticeHooks(SoundPlayer& player,o::PriestShieldHooks hooks) {
+    hooks.noticeSound=[&player](const o::PriestShieldNotice& notice) {
+        static_cast<void>(player.PlayByName(notice.file,notice.arguments[0],static_cast<std::int32_t>(notice.arguments[1]),
+            static_cast<std::int32_t>(notice.arguments[2]),notice.arguments[3],static_cast<std::int32_t>(notice.arguments[4])));
+    };
+    return hooks;
+}
+
+// 낙하하는 사제의 SID는 소리에 쓰이지 않는다. 좌표만 넘긴다.
+std::function<void(o::Sid,float,float)> MakePriestFallSound(SoundPlayer& player) {
+    return [&player](o::Sid,float x,float y) { static_cast<void>(player.PlayNameAt(x,y,"priestFall.wav",0)); };
+}
 }

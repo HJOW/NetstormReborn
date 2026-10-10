@@ -8,6 +8,8 @@
 - [`SoundList`](../../cpppj/src/client/Sound.h) — 소리 파일 이름을 항목으로 바꾸는 이름 표(원본 `Sound.cpp`의 `bigSoundList`).
 - `MakePriestShieldSoundHooks` — 보호막 생성 wrapper의 `loadSound`·`attachSound`를 위 두 모듈로 바꾼다.
 
+후속 완료(2026-10-10): 재생/정지/재생 여부와 화면 위치에 따른 음량/좌우 계산은 [재생 계층](cpp-sound-play-reconstruction.md)에서 복원해 `MakeSoundProcessHooks`로 이 프로세스에 연결했다. 아래의 "재생 함수 인자의 뜻 미확정" 표기는 그 단계에서 기계어로 확정됐다(둘째 = 반복, 다섯째 = 우선, 여섯째 = 같은 소리 한도. 위치 한 번 재생은 `flags & 8`을 반복 자리에 넘긴다). 남은 것은 DirectSound 호출과 wav 읽기다.
+
 **소리 장치(DirectSound)의 초기화·wav 읽기·실제 재생/정지/음량/좌우 배치는 아직 옮기지 않았다.** 소리 프로세스는 그 계층을 `SoundProcessHooks`로 받는다. 따라서 아직 소리는 나지 않으며, 이번 단계는 "언제·무엇을·어떤 인자로 재생/정지를 요청하는가"의 복원이다.
 
 ## 원본 대응

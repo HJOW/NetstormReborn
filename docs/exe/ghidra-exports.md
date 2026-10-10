@@ -1,6 +1,8 @@
 # 기계어 대조 입력(Ghidra 내보내기) 준비
 
-2026-10-10 최신(`HJOW-Athlon`): **`soundprocess` 목록 10/7/7개**를 읽기 전용으로 내보냈다. 소리 프로세스 생성자/실행/form 삭제 통지·부모 타입 조회·패치 SID 범위 검사와 소리 이름 표 조회/이름 복사/ASCII 비교 본문의 독립 입력 **18,381개**, 최신 감사 **72종 모두 통과**. [복원/검증 범위](cpp-sound-process-reconstruction.md). 마지막 디컴파일 수행 PC **HJOW-Athlon, 2026-10-10**.
+2026-10-10 최신(`HJOW-Athlon`): **`soundplay` 목록 19/16/16개**를 읽기 전용으로 내보냈다. 전역/위치 재생·정지·재생 여부·이름 기반 재생과 월드→화면·화면 안 판정·좌우/음량 계산, 이름 표 조회·CRT 정수 변환의 독립 입력 **14,472개**, 최신 감사 **73종 모두 통과**. [복원/검증 범위](cpp-sound-play-reconstruction.md). 마지막 디컴파일 수행 PC **HJOW-Athlon, 2026-10-10**.
+
+2026-10-10 앞 단계(`HJOW-Athlon`): **`soundprocess` 목록 10/7/7개**를 읽기 전용으로 내보냈다. 소리 프로세스 생성자/실행/form 삭제 통지·부모 타입 조회·패치 SID 범위 검사와 소리 이름 표 조회/이름 복사/ASCII 비교 본문의 독립 입력 **18,381개**, 최신 감사 **72종 모두 통과**. [복원/검증 범위](cpp-sound-process-reconstruction.md). 마지막 디컴파일 수행 PC **HJOW-Athlon, 2026-10-10**.
 
 2026-10-10 앞 단계(`HJOW-Athlon`): **`forcefieldpostpop` 목록 7/6/6개**를 읽기 전용으로 내보냈다. 실제 보호막 전용 후처리/Regular/좌표 타입 helper·일반 finder의 독립 입력 **3,624개**, 최신 감사 **71종 모두 통과**. [공간/프로세스/삭제 연결 범위](cpp-forcefield-lifecycle-reconstruction.md). 마지막 디컴파일 수행 PC **HJOW-Athlon, 2026-10-10**.
 
@@ -56,6 +58,7 @@ Get-ChildItem tools/decomp_*_oracle.py | Where-Object { Select-String -LiteralPa
 | `priestpop` | priestpop·priestpostpoptail·priestpostpop·owner | 24 / 18 / 18 | 일반 사제 Pop/firstPop/Activate의 실제 가상 분배·전체 wrapper 정상 반환, HJOW-Athlon 2026-10-10 |
 | `forcefieldpostpop` | forcefieldpostpop·priestforcefield·owner | 7 / 6 / 6 | 보호막 최초 예약/Regular/실제 좌표 타입 finder·생성자/가상 대응, HJOW-Athlon 2026-10-10 |
 | `soundprocess` | soundprocess·owner(실행기만) | 10 / 7 / 7 | 소리 프로세스 생성자/실행/통지·소리 이름 표 조회, 장치·시계·부착 경계 대체, HJOW-Athlon 2026-10-10 |
+| `soundplay` | soundplay·owner(실행기만) | 19 / 16 / 16 | 소리 재생 계층(전역/위치 재생·정지·재생 여부·화면 위치 계산), 장치 버퍼 COM 호출·적재·기록 대체, HJOW-Athlon 2026-10-10 |
 | `prieststate` | prieststate·owner | 11 / 12 / 12 | 2026-10-08 추가([사제 HP/지면 상태·HP setter](cpp-priest-state-reconstruction.md)), 조회 대체 없음·setter 공간 두 효과 대체·전체 몸체 반환·`HJOW-Athlon`에서 내보냄 |
 | `priestregen` | priestregen·prieststate·owner | 10 / 11 / 11 | 2026-10-08 추가([사제 회복 0x25a](cpp-priest-regen-reconstruction.md)), 회복/HP/중립 조건/난수 실제 실행·외부 공간/표시/추적 효과 대체·`HJOW-Athlon`에서 내보냄 |
 | `priestdestroy` | priestdestroy·owner | 4 / 4 / 4 | 2026-10-08 추가([사제 삭제 준비](cpp-priest-destroy-reconstruction.md)), 목록 압축/범위 검사 실제 실행·조회/가상 삭제/Carrier 대체·전체 본문 반환·`HJOW-Athlon`에서 내보냄 |
