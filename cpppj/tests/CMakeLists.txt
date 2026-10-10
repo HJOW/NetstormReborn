@@ -38,6 +38,7 @@ add_executable(netstorm_tests
     SoundMusicOpenTests.cpp
     SoundMusicSelectionTests.cpp
     SoundMusicRuntimeTests.cpp
+    SoundSceneMusicTests.cpp
     PriestPopTests.cpp
     ConfigOracleTests.cpp
     ConfigInterfaceTests.cpp
@@ -308,3 +309,7 @@ set_source_files_properties(SoundMusicSelectionTests.cpp PROPERTIES COMPILE_DEFI
 # 두 음악 채널/worker 초기화·종료의 독립 기계어 관찰이다. 실제 Windows worker 검사는 원본/장치를 열지 않는다.
 set_source_files_properties(SoundMusicRuntimeTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_MUSICRUNTIME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/musicruntime-x86.tsv\"")
+
+# 장면별 음악 감독(곡 요청·다음 곡·프레임·시작·날씨)의 독립 원본 관찰을 재생한다.
+set_source_files_properties(SoundSceneMusicTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_SCENEMUSIC_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/scenemusic-x86.tsv\"")

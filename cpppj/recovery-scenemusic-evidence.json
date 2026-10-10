@@ -1,0 +1,164 @@
+{
+  "schema": 1,
+  "host": "HJOW-Athlon",
+  "decompile_date": "2026-10-10",
+  "total": 9339,
+  "controls": [
+    639,
+    895
+  ],
+  "editions": {
+    "originals": {
+      "cases": 3113,
+      "returns": {
+        "lock": 430,
+        "req": 4534,
+        "next": 1278,
+        "frame": 1268,
+        "start": 1440,
+        "weather": 324
+      },
+      "calls": 9274,
+      "native_calls": {
+        "00469d30": 7056,
+        "004ef510": 40022,
+        "00469db0": 7906,
+        "004aa5b0": 10604,
+        "00424930": 520,
+        "00469f00": 2406,
+        "00469c80": 2120,
+        "00469f60": 2708,
+        "00469fc0": 1440,
+        "004558f0": 758
+      },
+      "substitutions": {
+        "locale": 40022,
+        "wall": 10610,
+        "select": 5876,
+        "refresh": 2120,
+        "option": 2120,
+        "join": 1146,
+        "apply": 1146,
+        "sacrificing": 1400,
+        "thunder": 350,
+        "sound": 350,
+        "waiting": 284
+      },
+      "assertions": 0,
+      "instructions": 2700436
+    },
+    "originalCD": {
+      "cases": 3113,
+      "returns": {
+        "lock": 430,
+        "req": 4534,
+        "next": 1278,
+        "frame": 1268,
+        "start": 1440,
+        "weather": 324
+      },
+      "calls": 9274,
+      "native_calls": {
+        "00436a10": 7056,
+        "004f2980": 40022,
+        "00436a90": 7906,
+        "004398f0": 10604,
+        "00436c40": 2406,
+        "00436960": 2120,
+        "00436ca0": 2708,
+        "00436d00": 1440,
+        "0048cc10": 758
+      },
+      "substitutions": {
+        "wall": 10610,
+        "select": 5876,
+        "refresh": 2120,
+        "option": 2120,
+        "join": 1146,
+        "apply": 1146,
+        "sacrificing": 1400,
+        "thunder": 350,
+        "sound": 350,
+        "waiting": 284
+      },
+      "assertions": 0,
+      "instructions": 2897042
+    },
+    "original1037": {
+      "cases": 3113,
+      "returns": {
+        "lock": 430,
+        "req": 4534,
+        "next": 1278,
+        "frame": 1268,
+        "start": 1440,
+        "weather": 324
+      },
+      "calls": 9274,
+      "native_calls": {
+        "00436a10": 7056,
+        "004f2980": 40022,
+        "00436a90": 7906,
+        "004398f0": 10604,
+        "00436c40": 2406,
+        "00436960": 2120,
+        "00436ca0": 2708,
+        "00436d00": 1440,
+        "0048cc10": 758
+      },
+      "substitutions": {
+        "wall": 10610,
+        "select": 5876,
+        "refresh": 2120,
+        "option": 2120,
+        "join": 1146,
+        "apply": 1146,
+        "sacrificing": 1400,
+        "thunder": 350,
+        "sound": 350,
+        "waiting": 284
+      },
+      "assertions": 0,
+      "instructions": 2897042
+    }
+  },
+  "os_calls": 0,
+  "default_tints": [
+    4369,
+    8738,
+    13107,
+    17476
+  ],
+  "stubbed": [
+    "실시간 시계",
+    "곡 선택(현재 이름 갱신과 곡 길이 설치를 입력대로 흉내)",
+    "희생 의식 판정",
+    "대기실 판정",
+    "화면 갱신",
+    "설정 조회",
+    "팔레트 경로 조립/적용",
+    "번개 효과",
+    "날씨 효과음",
+    "패치 CRT 스레드 로캘 선택(C 로캘 ASCII 비교 본문은 실제 실행)"
+  ],
+  "limitations": [
+    "색인이 0~3을 벗어나는 입력(원본은 표 앞 메모리를 읽음) 제외",
+    "실제 곡 선택/재생/월드/화면은 이 대조의 범위 밖",
+    "날씨 색 표는 시험 값"
+  ],
+  "files": {
+    "cpppj/tests/fixtures/scenemusic-x86.tsv": "8b929913764b980ffff4d9746e8b00f700dd54ea9406d4638a9553aacb6ceef7",
+    "extracted/scenemusic/original1037/creation.c": "0b1a36239462efe4d3117ad4c7585ca090bd8d1487179170b34812650c670946",
+    "extracted/scenemusic/original1037/functions.tsv": "01b9128bfe6f24be9510c32a1966f26e256f5080d09292f11f64dcc36fb3636b",
+    "extracted/scenemusic/originalCD/creation.c": "0b1a36239462efe4d3117ad4c7585ca090bd8d1487179170b34812650c670946",
+    "extracted/scenemusic/originalCD/functions.tsv": "01b9128bfe6f24be9510c32a1966f26e256f5080d09292f11f64dcc36fb3636b",
+    "extracted/scenemusic/originals/creation.c": "5b38b3a92262b5c5ea1b49a7c28af33fddd59115ec3e0a0fd067d5956859f854",
+    "extracted/scenemusic/originals/functions.tsv": "1c75f89f93c2917464d8240948c52af4637de7d29f4460c272a4e848e737ea4d",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/decomp_scenemusic_oracle.py": "ba173ab1843d34995b2a6268f83fb95b281b9a0fca510ae707f6eaa3fd34fa7a",
+    "tools/ghidra/scenemusic-functions.json": "401ab5923278dc918fce4ee5c1791e50d1d1306a90e4d3f4e44f136a7a149814"
+  }
+}
