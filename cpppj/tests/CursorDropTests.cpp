@@ -1,6 +1,7 @@
 // 커서 내려놓기의 세 PE 관찰·현재 상태 읽기·실제 로컬 배치/SP/소리 연결을 검사한다.
 #include "ConstructionSupport.h"
 #include "client/RawCursorDrop.h"
+#include "client/RawCursorReturnPiece.h"
 
 namespace {
 using namespace netstorm::test::construction;
@@ -116,6 +117,25 @@ TEST_CASE(CursorDrop_ReplaysOriginals) { Replay("originals"); }
 TEST_CASE(CursorDrop_ReplaysCd) { Replay("originalCD"); }
 // 추가 10.37 PE의 독립 관찰을 비교한다.
 TEST_CASE(CursorDrop_ReplaysExtra1037) { Replay("original1037"); }
+
+// GUI 수신 후에는 캡처한 기존 품질/플래그와 두 번째 연관 SID로 실제 생산 칸 조각을 반환한다.
+TEST_CASE(ReturnPiece_ConnectsGuiDrop) {
+    // 두 판본에서 실제 factory/반환 어댑터를 검사한다. Form/Gump 화면 효과는 합성 경계다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
+        DropScene scene(edition);auto values=Inputs(Fixture().front()[1]);values[LegalGump]=1;values[DetachChange]=1;
+        scene.Prepare(values);SquidFactory factory(scene.pool,scene.types);const Sid productionParent=factory.Create(100,2);
+        scene.input[Second]=productionParent.value;ContainedCreateState containedState;ContainedCreateHooks hooks;Sid returned{};
+        hooks.notifySurface=[](Sid) { CHECK(false); };
+        hooks.attach=[&](Sid sid,Sid parent,std::uint32_t flags) { CHECK(parent==productionParent && flags==0x10);returned=sid; };
+        RawContainedCreate contained(scene.pool,containedState,MakeContainedCreateHooks(scene.pool,factory,hooks));
+        CursorReturnPieceState state;state.type=100;state.keepPieces=1;GameRandom random;
+        RawCursorReturnPiece body(contained,state,random,{[](std::uint32_t) { CHECK(false);return false; },[](Sid,std::uint32_t,float) { CHECK(false); }});
+        RawCursorDrop drop(scene.pool,scene.types,scene.state,MakeReturnPieceHooks(scene.pool,body,scene.Hooks()));drop.Drop();
+        CHECK(returned.value!=0 && scene.state.preview.value==0 && scene.state.lockDepth==1);
+        const auto raw=scene.pool.Slot(returned);CHECK(raw[10]==6 && Get(raw,18,2)==100 && Get(raw,20,2)==8 && raw[edition==OriginalEdition::Patch1078 ? 30 : 26]==2);
+        CHECK(Get(scene.pool.Slot(kPreview),20,2)==0x100 && scene.pool.Slot(kPreview)[edition==OriginalEdition::Patch1078 ? 30 : 26]==0xfe && random.State()==0);
+    }
+}
 
 // 원본 assert/잘못된 호스트 자료 계약을 거부하며 조기 반환은 자료를 읽지 않는다.
 TEST_CASE(CursorDrop_RejectsInvalidInputs) {

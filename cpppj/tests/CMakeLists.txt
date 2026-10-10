@@ -2,6 +2,7 @@
 # (첫 구성 때 인터넷에서 내려받을 것이 없다).
 # 테스트 파일을 만들면 아래 목록에 더한다. 파일 안의 TEST_CASE 는 자동으로 등록된다.
 add_executable(netstorm_tests
+    ReturnPieceTests.cpp
     CursorDropTests.cpp
     TestMain.cpp
     TestSupport.h
@@ -369,3 +370,7 @@ set_source_files_properties(ConstructionLocalTests.cpp PROPERTIES COMPILE_DEFINI
 # 커서 내려놓기의 세 실제 PE 관찰이다. 기본 검사는 게임/창/Python을 실행하지 않는다.
 set_source_files_properties(CursorDropTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CURSORDROP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/cursordrop-x86.tsv\"")
+
+# 생산 칸 반환/contained 생성의 세 실제 PE 관찰이다. 기본 검사는 게임/Python을 실행하지 않는다.
+set_source_files_properties(ReturnPieceTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_RETURNPIECE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/returnpiece-x86.tsv\"")

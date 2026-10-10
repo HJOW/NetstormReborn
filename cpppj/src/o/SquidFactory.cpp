@@ -12,6 +12,8 @@ constexpr std::uint8_t kFree=1,kVoid=4,kContained=8;
 constexpr std::uint32_t kManaType=158,kFakeSurface=162,kDaisFlag=0x400000;
 // 호스트 포인터로 사용하지 않는 실제 32비트 base vtable 기록값이다.
 constexpr std::uint32_t kPatchVtable=0x501dd0,kCdVtable=0x5058d8;
+// contained Form 생성자가 기록하는 실제 가상 표다. 호스트에서 역참조하지 않는다.
+constexpr std::uint32_t kContainedType=6,kPatchContainedVtable=0x512208,kCdContainedVtable=0x505b00;
 #include "TypeConstructors.inc"
 // 순서 있는 생성자 쓰기의 위치·폭·OR 여부와 기록값이다. 최대 다섯 쓰기를 보관한다.
 struct ConstructorWrite { std::uint8_t offset,width; bool orBits; std::uint32_t value; };
@@ -113,6 +115,11 @@ Sid SquidFactory::Create(std::uint32_t type,std::uint32_t flags) {
 }
 // 할당/생성 연결에서 월드 혼합을 거부하기 위한 참조다.
 const SidPool& SquidFactory::Pool() const { return pool_; }
+Sid SquidFactory::CreateContained(std::uint32_t flags) {
+    const auto sid=pool_.Allocate(flags);auto raw=pool_.AllocatedBytes(sid);
+    Put(raw,0,pool_.Edition()==OriginalEdition::Patch1078 ? kPatchContainedVtable : kCdContainedVtable,4);
+    raw[kType]=static_cast<std::uint8_t>(kContainedType);return sid;
+}
 // free/dead를 지운 뒤 생성자 필드만 다시 쓴다. 풀 카운터를 유지하며 공간 해제 필요성을 먼저 검사한다.
 Sid SquidFactory::Take(std::uint32_t type,Sid sid) {
     const auto& record=Type(type,true);

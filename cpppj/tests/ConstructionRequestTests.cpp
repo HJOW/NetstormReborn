@@ -3,6 +3,7 @@
 #include "o/RawConstructionRequest.h"
 #include "o/RawConstructionLocal.h"
 #include "client/RawCursorDrop.h"
+#include "client/RawCursorReturnPiece.h"
 #include <cmath>
 
 namespace {
@@ -152,11 +153,20 @@ TEST_CASE(ConstructionRequest_ConnectsPipelineConfirmAndNotice) {
         std::vector<std::uint16_t> predicted,removed;
         ConstructionLocalState localState;localState.localPlayer=1;ConstructionLocalHooks localHooks;
         // Form 미리보기 생성/가상 삭제는 아직 경계다. 삭제는 할당된 void SID를 실제 풀에 반납한다.
+        const Sid productionParent=factory.Create(kTypePlain,2);
         const Sid preview=factory.Create(kTypeNoIsland,2);auto previewRaw=pool.AllocatedBytes(preview);
-        Put(previewRaw,18,kTypeNoIsland,2);Put(previewRaw,20,0,2);previewRaw[patch ? 30 : 26]=0;
-        localHooks.previewSource=[](Sid) { return 0U; };
+        Put(previewRaw,18,kTypeNoIsland,2);Put(previewRaw,20,8,2);previewRaw[patch ? 30 : 26]=3;
+        localHooks.previewSource=[&](Sid) { return static_cast<std::uint32_t>(productionParent.value); };
         localHooks.destroyPreview=[&](Sid sid,std::uint32_t flags) { CHECK(sid==preview && flags==0);pool.Release(sid); };
-        localHooks.returnPiece=[](std::uint32_t,std::uint32_t,std::uint32_t) { CHECK(false); };
+        // 생산 칸 반환은 실제 contained 생성/품질 감소 몸체다. Form 부착만 SID를 관찰하는 경계다.
+        ContainedCreateState containedState;ContainedCreateHooks containedHooks;Sid returned{};
+        containedHooks.notifySurface=[](Sid) { CHECK(false); };
+        containedHooks.attach=[&](Sid sid,Sid parent,std::uint32_t flags) { CHECK(parent==productionParent && flags==0x10);returned=sid; };
+        RawContainedCreate containedCreate(pool,containedState,MakeContainedCreateHooks(pool,factory,containedHooks));
+        netstorm::client::CursorReturnPieceState returnState;returnState.type=kTypeNoIsland;returnState.keepPieces=1;
+        netstorm::client::RawCursorReturnPiece returnPiece(containedCreate,returnState,rng,
+            {[](std::uint32_t) { CHECK(false);return false; },[](Sid,std::uint32_t,float) { CHECK(false); }});
+        localHooks=netstorm::client::MakeReturnPieceHooks(pool,returnPiece,localHooks);
         localHooks.moveBuilder=[](std::uint32_t,Sid,std::uint32_t,std::uint32_t) { CHECK(false); };
         std::vector<ConstructionLocalMessage> outbound;
         localHooks.send=[&](std::uint32_t target,const ConstructionLocalMessage& message) { CHECK(target==9);outbound.push_back(message); };
@@ -186,6 +196,8 @@ TEST_CASE(ConstructionRequest_ConnectsPipelineConfirmAndNotice) {
         cursorHooks.closeGump=[](std::uint32_t gump,std::uint32_t a,std::uint32_t b,std::uint32_t c) { CHECK(gump==2 && a==3 && b==0 && c==0); };
         RawCursorDrop cursor(pool,types,cursorState,MakeCursorDropHooks(pool,local,reward,sound,cursorState,cursorHooks));cursor.Drop();
         CHECK(predicted.size()==9 && outbound.size()==1 && shown==1 && played==1 && soundState.playing==1);
+        CHECK(returned.value!=0 && pool.Slot(returned)[10]==6 && Get(pool.Slot(returned),18,2)==kTypeNoIsland &&
+            Get(pool.Slot(returned),20,2)==8 && pool.Slot(returned)[patch ? 30 : 26]==2);
         CHECK(cursorState.lockDepth==2 && cursorState.preview.value==0 && cursorState.cursorGump==0 && rewardState.aiWallet[1]==968);
         CHECK((patch ? Float(store.Get(1)) : rewardState.cdLocalSp)==967.25F);
         const auto& sent=outbound.front();CHECK(sent.type==kTypeNoIsland && sent.x==20.0F && sent.y==22.0F && sent.timeLow==0 && sent.timeHigh==0);
@@ -229,6 +241,6 @@ TEST_CASE(ConstructionRequest_ConnectsPipelineConfirmAndNotice) {
         for (Sid current=finder.Begin({20,22,23,25});current.value;current=finder.Next()) {
             ++found;const auto raw=pool.Slot(current);CHECK(current.value>=pool.Layout().serverFirst && raw[10]==kTypeNoIsland && raw[patch ? 34 : 32]==1 && !(raw[patch ? 40 : 35]&1));
         }
-        CHECK(found==9);
+        CHECK(found==9 && pool.Slot(returned)[10]==6 && !(pool.Slot(returned)[11]&1));
     }
 }
