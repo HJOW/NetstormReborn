@@ -10,6 +10,7 @@
 3. 옵션 메뉴의 버튼(실제 마우스 사건)으로 음악 끄기·켜기, 소리 끄기·켜기, 음량 단계 변경이 장치와 곡에 반영된다.
 4. 설정 sound=0;music=0이면 곡이 시작되지 않는다. 환경 변수 NETSTORM_CPP_NO_AUDIO이면 소리 묶음 자체가 없다.
 5. 원본 파일(옵션·전체화면 표시 파일 제외)이 바뀌지 않았는지 확인한다.
+6. 위치 효과음의 화면·카메라가 미션 진입/스크롤/홈/해상도 변경/메뉴 복귀/재진입과 같은 프레임에 일치한다.
 
 창이 몇 초씩 뜬다(시나리오당 3~10초). 설정 파일은 실행 전후로 보관·복원한다.
 
@@ -108,6 +109,7 @@ def check_menu(executable, root):
     assert number(values, 'musicPlayCursor') > 0 and values['workerFailed'] == '0', values
     # 곡 끝 시각은 시작 시각 + 곡 길이(30초보다 긴 곡)다.
     assert abs(number(values, 'songEnd') - number(values, 'musicDuration')) < 3, values
+    assert [int(values[key]) for key in ('soundCameraX', 'soundCameraY', 'soundLeft', 'soundTop', 'soundRight', 'soundBottom')] == [0, 0, 0, 0, 1024, 768], values
     return {key: values[key] for key in ('musicName', 'musicDuration', 'musicReadOffset', 'musicBufferStatus', 'songEnd')}
 
 
@@ -181,6 +183,55 @@ def check_disabled(executable, root):
     return result
 
 
+def check_view(executable, root):
+    """실제 입력과 메뉴의 해상도 변경/재진입 뒤 같은 프레임의 월드/화면과 위치 효과음 기준을 비교한다."""
+    # 현재 미션 UI에는 Options가 없으므로 메뉴에 돌아가 실제 옵션으로 크기를 바꾼 다음 같은 미션에 다시 들어간다.
+    # 브리핑 중에도 초기 카메라를 공급하고, 조작·옵션·메뉴 왕복으로 이전 미션의 원점이 남지 않게 한다.
+    steps = [
+        (2, 'report', 'briefing'), (3, 'click', 'Play Mission'), (4, 'report', 'initial'),
+        (5, 'key', 'right'), (15, 'keyup', 'right'), (16, 'report', 'scrolled'),
+        (17, 'key', 'home'), (18, 'keyup', 'home'), (19, 'report', 'home'),
+        (21, 'click', 'Game'), (23, 'click', 'Leave Battle'), (25, 'click', 'Leave Honorably'), (26, 'report', 'menu'),
+        (29, 'click', 'Options'), (31, 'click', 'Resolution >'), (33, 'click', '800 by 600'), (34, 'report', '800'),
+        (37, 'click', 'Options'), (39, 'click', 'Sound On'), (40, 'report', 'sound_off'),
+        (43, 'click', 'Options'), (45, 'click', 'Sound On'), (46, 'report', 'sound_on'),
+        (49, 'click', 'Campaign'), (51, 'click', 'Struggle For Freedom'), (53, 'click', '1 The War Begins!'),
+        (56, 'report', 'reloaded800'), (57, 'click', 'Play Mission'), (58, 'report', 'world800'),
+        (61, 'click', 'Game'), (63, 'click', 'Leave Battle'), (65, 'click', 'Leave Honorably'),
+        (69, 'click', 'Options'), (71, 'click', 'Resolution >'), (73, 'click', '640 by 480'), (74, 'report', '640'),
+        (77, 'click', 'Campaign'), (79, 'click', 'Struggle For Freedom'), (81, 'click', '1 The War Begins!'),
+        (84, 'report', 'reloaded640'), (85, 'click', 'Play Mission'), (86, 'report', 'world640'),
+        (89, 'click', 'Game'), (91, 'click', 'Leave Battle'), (93, 'click', 'Leave Honorably'),
+        (97, 'click', 'Options'), (99, 'click', 'Resolution >'), (101, 'click', '1024 by 768'), (102, 'report', '1024'),
+        (105, 'click', 'Campaign'), (107, 'click', 'Struggle For Freedom'), (109, 'click', '1 The War Begins!'),
+        (112, 'report', 'reloaded1024'), (113, 'click', 'Play Mission'), (114, 'report', 'world1024'),
+    ]
+    run(executable, root, 'view', 116, extra=['--mission', 'thewarbegins'], script=steps)
+    # 기존 월드 스모크의 순수 TSV 판독기만 사용한다. 창을 실행하는 함수를 호출하지 않는다.
+    from cpp_world_smoke import states
+    observed = states(OUTPUT / 'view-states.tsv')
+    # 모든 관찰 프레임에서 GUI의 실제 크기·카메라가 재생 계층의 현재 값과 같다.
+    for label, state in observed.items():
+        camera = [int(value) for value in state.get('camera', ['0', '0'])]
+        width, height = [int(value) for value in state['size']]
+        # 현재 월드 어댑터의 표시 영역은 상단 메뉴 28픽셀을 제외한다. 메뉴에서는 화면 전체를 쓴다.
+        top = 28 if 'camera' in state else 0
+        assert [int(value) for value in state['audio_view']] == camera + [0, top, width, height], (label, state['audio_view'], camera)
+    assert observed['briefing']['paused'] == ['1']
+    assert observed['scrolled']['camera'] != observed['initial']['camera']
+    assert observed['home']['camera'] == observed['initial']['camera']
+    assert [observed[label]['size'] for label in ('800', '640', '1024')] == [['800', '600'], ['640', '480'], ['1024', '768']]
+    assert observed['sound_off']['sound'] == ['0'] and observed['sound_on']['sound'] == ['1']
+    assert observed['menu']['audio_view'] == ['0', '0', '0', '0', '1024', '768'] and 'camera' not in observed['menu']
+    # 각 해상도에서 브리핑과 미션 조작이 같은 카메라를 쓰며, 1024 복귀는 최초 원점과 같다.
+    for width in (800, 640, 1024):
+        assert observed[f'reloaded{width}']['paused'] == ['1']
+        assert observed[f'reloaded{width}']['camera'] == observed[f'world{width}']['camera']
+    assert observed['reloaded1024']['camera'] == observed['initial']['camera']
+    return {'observed_states': len(observed), 'camera_and_home': True, 'resolutions': [[800, 600], [640, 480], [1024, 768]],
+            'sound_off_on_preserves_view': True, 'menu_resets_camera': True, 'reload_initializes_view': True}
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('--exe', type=Path, default=ROOT / 'cpppj/build/bin/Release/NetstormCpp.exe')
@@ -195,6 +246,7 @@ def main():
             report['battle'] = check_battle(arguments.exe, root)
             report['options'] = check_options(arguments.exe, root)
             report['disabled'] = check_disabled(arguments.exe, root)
+            report['view'] = check_view(arguments.exe, root)
     finally:
         assert snapshots(root) == before, '원본 파일의 바이트/존재 상태 변경'
     report['original_files_unchanged'] = len(before)

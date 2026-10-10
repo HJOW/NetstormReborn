@@ -1,6 +1,6 @@
 // 원본 WinMain의 "init sound" 단계와 Interpret Options의 소리·음악 부분, 장면 음악 호출 위치를 클라이언트에 붙이는 소유자다.
 // 이미 복원한 효과음(SoundList·SoundPlayer·SoundDevice)과 음악(MusicFileStore·MusicChannel·SoundMusic·MusicRuntime·MusicSelection)·
-// 장면 음악(SceneMusic)을 한 객체에 담아 원본의 초기화·종료 순서대로 연다. 게임 화면·월드와의 경계는 아직 비워 두었다(ClientAudio.cpp 참고).
+// 장면 음악(SceneMusic)을 한 객체에 담아 원본의 초기화·종료 순서대로 연다. 위치 효과음의 화면·카메라는 클라이언트가 공급한다.
 #pragma once
 #include "client/Sound.h"
 #include "client/SoundDevice.h"
@@ -46,7 +46,8 @@ struct ClientAudioOptions {
 //       메인 루프는 매 프레임 CountPlaying()과 SceneFrame()을 부르고, 장면이 바뀌면 StartScene()·RequestMusic()을 부른다.
 //       옵션이 바뀌면 Interpret()를 다시 부른다. 소멸자가 음악 스레드를 합류한 뒤 장치를 닫는다.
 //       주 스레드에서만 부른다(음악 스레드와는 SoundMusic·장치의 잠금으로 분리돼 있다).
-// 범위: 월드·화면 경계(희생 판정·대기실 판정·화면 갱신·날씨 팔레트·번개 효과)는 비어 있다. 효과음의 화면 영역(SoundView)도 아직 채우지 않는다.
+// 범위: 월드·화면 경계(희생 판정·대기실 판정·화면 갱신·날씨 팔레트·번개 효과)는 비어 있다.
+//       효과음의 화면 영역·카메라는 SetView로 갱신한다. 현재 GUI의 표시 영역을 쓰며 원본 가변 패널 배치는 후속이다.
 // 이력: 2026-10-10 추가.
 class ClientAudio {
 public:
@@ -71,7 +72,7 @@ public:
     void Shutdown();
     // 메인 루프 3단계(원본 004a8e60): 재생 중인 효과음 수를 다시 센다.
     void CountPlaying();
-    // 메인 루프 10단계(원본 00469f60): 곡이 끝났는지 확인하고 다음 곡을 요청한다. 게임 시계가 멈춘 동안에는 호출하지 않는다.
+    // 메인 루프 10단계(원본 00469f60): 곡이 끝났는지 확인하고 다음 곡을 요청한다. 게임 시계 정지와 무관하게 호출한다.
     void SceneFrame();
     // 장면에 들어가며 곡을 시작한다(원본 00469fc0). battle이 거짓이면 메뉴 곡 ser22.mus, 참이면 난수로 고른 원소 곡이다.
     void StartScene(bool battle);
@@ -86,6 +87,12 @@ public:
     SoundPlayer& Sounds();
     // 효과음 이름 표다.
     SoundList& Names();
+    // 위치 효과음이 읽는 화면 영역과 카메라를 교체한다. 주 스레드에서 화면 크기·카메라가 바뀐 직후 호출한다.
+    // 재생 중인 반복 소리의 음량·좌우·화면 밖 정지는 다음 PlayLoopAt 요청이 처리한다. 장치 재초기화에도 이 값은 보존한다.
+    // 원본: 00497220·004c6a40·004c6ac0·004c6b30이 읽는 카메라/화면 전역을 복원한 SoundState::view에 공급한다.
+    void SetView(SoundView view);
+    // 현재 위치 효과음의 화면·카메라를 읽는다. 검사 및 후속 가변 패널 연결에 사용한다.
+    const SoundView& View() const;
     // 장면 음악의 상태(곡 색인·곡 끝 시각 등)다. 검사에서만 읽는다.
     const SceneMusicState& Scene() const;
     // 소리 장치가 열려 있으면 참이다.

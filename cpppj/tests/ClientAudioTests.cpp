@@ -158,19 +158,39 @@ void InspectClientAudio(const std::filesystem::path& root) {
         auto values=Parse(audio.Describe());
         require(values["deviceReady"]=="1" && values["musicRuntime"]=="1" && values["musicName"]=="ser22.mus" && values["musicActive"]=="1","메뉴 곡 시작 실패",audio.Describe());
         require((std::stoul(values["musicBufferStatus"])&5U)==5U && std::stoul(values["musicReadOffset"])>ringBytes && values["workerFailed"]=="0","메뉴 곡 스트림 진행 실패",audio.Describe());
+        // 실제 위치 반복 재생이 최신 화면을 읽는지 확인한다. 800×600 중심 → 카메라 200 이동 → 화면 밖 → 재진입 순서다.
+        // 공유 음소거가 유지되므로 음악과 효과음 모두 들리지 않는다. 좌우 계산은 기존 독립 x86 대조 검사에서 별도로 검증한다.
+        const auto thunder=audio.Names().Lookup("thunderCrack.wav");
+        audio.SetView({0,0,0,0,800,600});
+        const auto centered=audio.Sounds().PlayLoopAt(25.0f,300.0f/11.0f,0,thunder);
+        require(centered!=0 && audio.Sounds().IsPlaying(centered)!=0 && audio.Names().Field(centered,SoundField::Volume)==0,
+            "화면 중심의 위치 반복 재생 실패",audio.Describe());
+        audio.SetView({200,0,0,0,800,600});
+        const auto shifted=audio.Sounds().PlayLoopAt(25.0f,300.0f/11.0f,centered,thunder);
+        require(shifted==centered && static_cast<std::int32_t>(audio.Names().Field(shifted,SoundField::Volume))==-250,
+            "카메라 이동 뒤 위치 음량 갱신 실패",audio.Describe());
+        audio.SetView({1000,0,0,0,800,600});
+        require(audio.Sounds().PlayLoopAt(25.0f,300.0f/11.0f,shifted,thunder)==0 && audio.Sounds().IsPlaying(shifted)==0,
+            "화면 밖 반복 소리 정지 실패",audio.Describe());
+        audio.SetView({0,0,0,0,800,600});
+        const auto restarted=audio.Sounds().PlayLoopAt(25.0f,300.0f/11.0f,0,thunder);
+        require(restarted!=0 && audio.Sounds().IsPlaying(restarted)!=0,"화면 재진입 반복 소리 재시작 실패",audio.Describe());
+        audio.Sounds().Stop(restarted);
         // 소리 끄기: 스레드를 합류하고 장치를 닫는다.
         options.sound=false;audio.Interpret(native,options);
         values=Parse(audio.Describe());
         require(values["deviceReady"]=="0" && values["musicRuntime"]=="0" && values["musicActive"]=="0","소리 끄기 실패",audio.Describe());
+        require(audio.View().right==800 && audio.View().bottom==600,"소리 끄기 뒤 화면 영역 손실",audio.Describe());
         // 소리 켜기: 장치를 다시 열고 같은 곡을 다시 시작한다.
         options.sound=true;audio.Interpret(native,options);pump(audio,1500);
         values=Parse(audio.Describe());
         require(values["deviceReady"]=="1" && values["musicActive"]=="1" && (std::stoul(values["musicBufferStatus"])&5U)==5U,"소리 켜기 실패",audio.Describe());
+        require(audio.View().right==800 && audio.View().bottom==600,"소리 재초기화 뒤 화면 영역 손실",audio.Describe());
         // 전투 장면: 원소 곡 하나가 시작된다.
         audio.StartScene(true);pump(audio,1500);
         values=Parse(audio.Describe());
         require(values["sceneBattle"]=="1" && values["musicActive"]=="1" && values["workerFailed"]=="0","전투 곡 시작 실패",audio.Describe());
-        std::printf("Client audio cycle %d: menu stream, sound off/on, battle song %s passed\n",cycle,values["musicName"].c_str());
+        std::printf("Client audio cycle %d: menu stream, positional loop/camera/offscreen/reentry, sound off/on, battle song %s passed\n",cycle,values["musicName"].c_str());
         audio.Shutdown();
     }
     std::printf("Client audio device: two cycles of initialize/stream/sound off-on/battle/shutdown passed; muted\n");

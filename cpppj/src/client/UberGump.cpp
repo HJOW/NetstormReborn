@@ -113,10 +113,11 @@ UberGump::UberGump(Client& client) : client_(client) {
 }
 // 입력 참조를 먼저 없애고 커널이 소유한 월드를 이 구현 파일에서 제거한다.
 UberGump::~UberGump() { ClearWorld(); }
-// 입력 참조를 먼저 없애고 커널의 실제 소유권을 해제한다.
+// 입력 참조를 먼저 없애고 커널의 실제 소유권을 해제한다. 위치 효과음은 카메라 0의 전체 메뉴 영역으로 되돌린다.
 void UberGump::ClearWorld() {
     userInput_.reset(); if (worldProcess_) client_.GetKernel().Remove(worldProcess_);
     world_=nullptr; worldProcess_=0;
+    if (client_.Audio()) client_.Audio()->SetView({0,0,0,0,client_.GetScreen().Width(),client_.GetScreen().Height()});
 }
 // 기본 메뉴를 초기화한 다음 프레임에 미션을 시작한다.
 void UberGump::StartMission(std::string name) { state_.Post({"MissionBegin",std::move(name)}); }
@@ -199,11 +200,15 @@ void UberGump::BeginMission(std::string name) {
     auto world=std::make_unique<GameWorld>(client_.Assets(),fort,std::move(players));
     world->elapsed=[this]() { return client_.Time().delta; }; world->paused=[this]() { return client_.Paused(); };
     world->frameTime=[this]() { return client_.Time(); };
+    // 카메라/해상도 변경 직후 위치 효과음의 기준을 갱신한다. 월드와 소리 묶음의 수신은 모두 주 스레드에서 실행한다.
+    world->soundViewChanged=[this](SoundView view) { if (client_.Audio()) client_.Audio()->SetView(view); };
     // 장치 재생성 뒤에도 현재 Renderer로 raw 변경 영역을 전달한다.
     world->surfaceDisplay={
         [this]() { return client_.GetRenderer().FullRedrawPending(); },
         [this](o::SquidDisplayRect rect,std::uint32_t flags) { client_.GetRenderer().Invalidate({rect.left,rect.top,rect.right,rect.bottom},flags); }};
     world_=world.get(); worldProcess_=client_.GetKernel().Add(std::move(world)); userInput_=std::make_unique<UserInput>(client_,*world_);
+    // 브리핑으로 게임 시계가 멈추기 전에도 첫 카메라/표시 영역이 음악·효과음에 전달되게 한다.
+    world_->Resize(client_.GetScreen().Width(),client_.GetScreen().Height());
     briefingSections_.clear(); briefingIndex_ = 0;
     // 원본 초기 브리핑은 A.이며 A1. 등은 본문 Tell 명령이 넘긴다.
     if (mission_->Section("A.")) briefingSections_.push_back("A.");
@@ -498,6 +503,11 @@ std::string UberGump::Report() const {
     out << "musicVolume\t" << client_.Configuration().GetInt("musicVolume") << "\nsoundVolume\t" << client_.Configuration().GetInt("soundVolume") << "\n";
     if (mission_) out << "mission\t" << Field(mission_->Name()) << '\t' << Field(mission_->MissionType()) << '\t' << fortObjects_ << "\n";
     if (world_) out<<world_->Report();
+    // 화면/월드와 같은 프레임에 위치 효과음이 실제로 읽는 여섯 값을 기록한다. 소리 없는 실행에는 항목을 만들지 않는다.
+    if (client_.Audio()) {
+        const auto& view=client_.Audio()->View();
+        out<<"audio_view\t"<<view.cameraX<<'\t'<<view.cameraY<<'\t'<<view.left<<'\t'<<view.top<<'\t'<<view.right<<'\t'<<view.bottom<<'\n';
+    }
     // 그리기와 같은 판정 표를 기록한다.
     for (const auto& control : input_.Controls()) {
         const auto& label = labels_.at(static_cast<std::size_t>(control.id));

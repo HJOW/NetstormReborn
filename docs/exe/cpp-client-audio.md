@@ -1,5 +1,7 @@
 # cpppj 클라이언트 소리·음악 부착
 
+> 후속 갱신(2026-10-10, HJOW-Athlon): [위치 효과음의 화면·카메라 연결](cpp-sound-view-integration.md)을 완료했다. 아래 SoundView 미연결 설명은 부착 단계 당시 이력이다. 원본 가변 패널 영역과 나머지 효과음 호출자/월드 프로세스 연결은 남는다.
+
 2026-10-10, 실행·분석 PC **HJOW-Athlon**(이 PC에서 클론 창 실행이 허용됐다). 복원해 둔 효과음·음악·장면 음악 모듈을 **클라이언트(`Client::Run`)에 붙였다.** 이제 `NetstormCpp --run`이 원본처럼 소리 장치를 열고, 메뉴에서 `ser22.mus`를 틀고, 미션에 들어가면 원소 곡을 틀고, 옵션 메뉴의 소리·음악·음량 버튼이 장치에 반영된다.
 
 디컴파일 소스(`extracted/`)는 바꾸지 않았다. 새로 읽은 근거는 기존 정밀 디컴파일 `extracted/refined/originals/Netstorm.c`와 원본 실행 파일의 기계어 직접 판독이다(`python tools/exe_callscan.py --dis/--str/--refs`). **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-10**(변동 없음).

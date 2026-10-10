@@ -127,6 +127,12 @@ SoundPlayer& ClientAudio::Sounds() { return player_; }
 // 효과음 이름 표다.
 SoundList& ClientAudio::Names() { return list_; }
 
+// 화면·카메라 값만 바꾼다. 소리 요청 시점의 위치 계산은 기존 SoundPlayer가 맡는다.
+void ClientAudio::SetView(SoundView view) { state_.view=view; }
+
+// 장치 수명과 독립적으로 보존되는 위치 효과음의 기준 화면이다.
+const SoundView& ClientAudio::View() const { return state_.view; }
+
 // 장면 음악의 읽기 전용 상태다.
 const SceneMusicState& ClientAudio::Scene() const { return scene_; }
 
@@ -187,6 +193,13 @@ std::string ClientAudio::Describe() {
     line("playingEffects",state_.playing);
     // 지금까지 효과음을 재생한 횟수(다음 재생 일련번호)다. 천둥 곡이 시작되면 천둥 효과음 때문에 0보다 커진다.
     line("soundSerial",state_.serial);
+    // 현재 GUI가 위치 효과음에 전달한 카메라와 표시 영역이다. 음악 상태와 별도로 연결을 검사한다.
+    line("soundCameraX",state_.view.cameraX);
+    line("soundCameraY",state_.view.cameraY);
+    line("soundLeft",state_.view.left);
+    line("soundTop",state_.view.top);
+    line("soundRight",state_.view.right);
+    line("soundBottom",state_.view.bottom);
     line("musicName",std::string(selected_.Current()));
     line("musicActive",primary_.Active() ? 1 : 0);
     line("musicDuration",MusicChannelDuration(primaryState_));

@@ -3,13 +3,15 @@
 기존 게임(NetStorm: Islands at War)을 디컴파일한 소스를 토대로 C++ 소스를 다시 만드는 프로젝트다.
 C# + MonoGame 빌드(`../dotnetpj/`)는 cpppj 완성 후 이를 분석하여 개발한다.
 
+2026-10-10 최신(`HJOW-Athlon`): **[위치 효과음의 화면·카메라 연결](../docs/exe/cpp-sound-view-integration.md)** 완료. 기본 640×480/카메라 0 대신 실제 화면·미션 카메라를 공급하며 브리핑 정지·스크롤·홈·해상도 변경·메뉴 복귀/재진입·장치 재초기화를 처리한다. Release 경고/오류 0·CTest 내부 **533개 통과**, 실제 무음 장치 위치 반복 재생 **2회**와 화면 연결 **51개 관찰** 통과. 원본 가변 패널의 영역 계산과 나머지 효과음 호출자·월드 프로세스 연결은 남아 있다. 아래 이전 단계 기록과 최신 인계는 [LEFT_JOBS.md](../LEFT_JOBS.md)를 구분해 읽는다.
+
 **1차 복원 기준(2026-10-07 사용자 결정): `originals/Netstorm.exe`의 10.78이다.** 추가 10.37·10.62 패치·10.82 본체와 DevLog는 비교 자료로 사용하며 최신판 규칙/기능을 섞지 않는다. [판본 비교·재현](../docs/exe/cpp-reference-versions.md), [정적 기록](recovery-reference-versions.json).
 
 **방향(변경된 AGENTS.md):** 1차는 **10.78의 싱글플레이를 C++로 최대한 복원**, 2차는 **Windows 10/11에서 오류 없이 실행**, 3차는 **TCP/IP 기반 로컬 네트워크 멀티플레이와 outpost**, 4차는 **요구사항 반영·MCP·한국어 지원 추가**다. 공식 서버 접속 복원은 대상이 아니다. MCP는 이후 dotnetpj 개발을 위한 게임 분석에 사용한다. cpppj는 **Windows 전용**이다. `options.cfg`는 원본과 같은 시점에 `<게임 폴더>/d/options.cfg`로 저장하며 화면·입력은 Win32 API를 직접 사용한다.
 
 **현재 우선순위(2026-10-10 반영): 싱글플레이 복원과 Windows 안정 구동이 먼저다.** 메뉴→캠페인→브리핑→선택·이동·건설·경제·전투→승패·결과·재시작과 나머지 싱글플레이 기능을 복원한다. **outpost는 멀티플레이 전용이므로 전용 후속 구현은 3차 목표로 미룬다.** 기존 outpost/지역 투표 근거는 유지하며 공통 지역 처리에는 재사용한다. 화면비·한국어·60/120프레임·MCP는 4차 목표이고 dotnetpj도 원본과 동일한 동작을 먼저 완성한 뒤 요구사항을 반영한다. Linux는 dotnetpj에서 후순위로 진행한다. 작업 순서는 [실제 플레이 복원 계획](../docs/cpp-playable-plan.md)을 따른다.
 
-**원본 메뉴→캠페인→브리핑→실제 지형/객체·선택·사제 이동→메뉴 복귀를 연결했다.** 1-1과 TEST01의 시작 SP/동맹·지형·점유를 적용하고, 몸통 좌클릭 선택→땅 좌클릭 이동, 우클릭 메뉴, 화면 이동·일시정지·재진입을 검사했다. **건설·채집·전투·AI·승패·사운드 출력·DirectDraw 전체화면은 후속이며 미션 완주는 아직 불가능하다.** [월드/조작의 범위와 제한](../docs/exe/cpp-world-reconstruction.md), [메뉴 연결](../docs/exe/cpp-menu-reconstruction.md).
+**원본 메뉴→캠페인→브리핑→실제 지형/객체·선택·사제 이동→메뉴 복귀를 연결했다.** 1-1과 TEST01의 시작 SP/동맹·지형·점유를 적용하고, 몸통 좌클릭 선택→땅 좌클릭 이동, 우클릭 메뉴, 화면 이동·일시정지·재진입을 검사했다. **건설·채집·전투·AI·승패·나머지 효과음 호출자·DirectDraw 전체화면은 후속이며 미션 완주는 아직 불가능하다.** [월드/조작의 범위와 제한](../docs/exe/cpp-world-reconstruction.md), [메뉴 연결](../docs/exe/cpp-menu-reconstruction.md).
 
 [복원 근거·함수 대응·검증 범위](../docs/exe/cpp-reconstruction.md), [검토 목록](recovery-manifest.json), [기계어 검증 기록](recovery-evidence.json).
 

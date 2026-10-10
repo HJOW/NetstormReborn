@@ -240,6 +240,7 @@ int Client::Run() {
     if (!options_.noAudio) {
         audio_ = std::make_unique<ClientAudio>(options_.gameDirectory, options_.edition, kLanguages[static_cast<std::size_t>(languageNumber_)],
             [this]() { return clock_.WallSeconds(timeGetTime()); }, timeGetTime());
+        audio_->SetView({0,0,0,0,screenWidth_,screenHeight_});
         audio_->Initialize(reinterpret_cast<std::uintptr_t>(window_), ReadAudioOptions());
         if (options_.audioMute) audio_->PushMute();
     }
@@ -503,6 +504,11 @@ void Client::ChangeResolution(int width, int height) {
     if (!screen_->SetMode(ScreenMode::kFallbackWindowed, windowWidth_, windowHeight_, initWindowPos_))
         throw std::runtime_error("Unable to change window resolution");
     renderer_ = std::make_unique<Renderer>(width, height);
+    // 메뉴/독립 검사 화면도 새 화면 크기로 위치 효과음을 계산한다. 미션은 다음 Compose/Resize에서 실제 카메라를 공급한다.
+    if (audio_) {
+        const auto previous=audio_->View();
+        audio_->SetView({previous.cameraX,previous.cameraY,previous.left,previous.top,width,height});
+    }
     sceneVisible_ = true;
     configuration_.SetInt("SCREENW", width); configuration_.SetInt("SCREENH", height);
 }

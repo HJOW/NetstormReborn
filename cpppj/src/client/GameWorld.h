@@ -4,6 +4,7 @@
 #include "client/GameAssets.h"
 #include "client/Renderer.h"
 #include "client/RawSurfaceWorld.h"
+#include "client/Sound.h"
 #include "o/BaseProcess.h"
 #include "o/Player.h"
 #include "o/Squid.h"
@@ -21,6 +22,9 @@ public:
     // 클라이언트 GameClock이 고정한 절대 게임 시각/프레임 번호를 raw Kernel과 공유한다.
     std::function<o::FrameTime()> frameTime;
     SurfaceDisplayHooks surfaceDisplay;
+    // 현재 카메라와 실제 월드 표시 영역을 위치 효과음에 전달한다. Resize·Scroll 및 raw 프레임 처리 전에 호출한다.
+    // 수신 객체는 월드보다 오래 살아야 한다. 비어 있으면 소리 없이 같은 월드 경로를 사용한다.
+    std::function<void(SoundView)> soundViewChanged;
     // 원본 클라이언트 커널의 갱신 단계에서 이동을 진행한다.
     void RunFrame() override;
     // 검사에서는 OS 시계 없이 같은 이동 경로를 진행한다.

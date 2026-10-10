@@ -229,18 +229,24 @@ void GameWorld::AdvanceObjects(double seconds) {
     // 객체 번호 순서로 갱신한다.
     for (auto& object:objects_) if (object.owner>0 && object.owner<=o::kPlayerCount && object.Advance(seconds,*ground_,players_.players[static_cast<std::size_t>(object.owner)].allies)) { object.frame=Frame(object); changed_=true; }
 }
-// Renderer 교체/카메라 변경 뒤에도 현재 객체의 표시 범위가 현재 화면으로 전달되게 한다.
-void GameWorld::SurfaceView() { surfaces_->SetDisplay({scrollX_,scrollY_,65536,{0,std::min(kMenuHeight,height_),width_,height_}},surfaceDisplay); }
-// 카메라 크기만 바뀌어도 다시 표시한다.
+// 현재 카메라·월드 표시 영역을 raw 표시와 위치 효과음에 함께 전달한다. 메뉴 줄을 제외한 현재 GUI 영역을 그대로 쓴다.
+// 원본 가변 생산/상태 패널의 영역 계산은 아직 복원하지 않았으며, 위치 계산 함수 자체는 SoundPlayer의 원본 규칙을 쓴다.
+void GameWorld::SurfaceView() {
+    const o::SquidDisplayRect clip{0,std::min(kMenuHeight,height_),width_,height_};
+    surfaces_->SetDisplay({scrollX_,scrollY_,65536,clip},surfaceDisplay);
+    if (soundViewChanged) soundViewChanged({scrollX_,scrollY_,clip.left,clip.top,clip.right,clip.bottom});
+}
+// 카메라 크기만 바뀌어도 다시 표시하고 위치 효과음의 화면 기준을 갱신한다. 같은 크기로 불러도 새 수신자를 갱신한다.
 void GameWorld::Resize(int width,int height) {
-    const bool first=width_==0; if (width_==width && height_==height) return;
+    const bool first=width_==0; if (width_==width && height_==height) { SurfaceView();return; }
     width_=width; height_=height; if (first) Home(false); else Scroll(0,0); changed_=true;
 }
-// 월드 테두리 밖으로 카메라가 나가지 않게 제한한다.
+// 월드 테두리 밖으로 카메라가 나가지 않게 제한하고, 같은 입력 단계의 위치 효과음에 새 원점을 전달한다.
 void GameWorld::Scroll(int dx,int dy) {
     const int x=std::clamp(scrollX_+dx,0,std::max(0,o::kWorldCells*kCellPixelsX-width_));
     const int y=std::clamp(scrollY_+dy,0,std::max(0,o::kWorldCells*kCellPixelsY-height_));
     if (x!=scrollX_ || y!=scrollY_) { scrollX_=x; scrollY_=y; changed_=true; }
+    SurfaceView();
 }
 // 처음에는 내 신전, 신전이 없으면 내 사제를 가운데에 둔다.
 void GameWorld::Home(bool priest) {
