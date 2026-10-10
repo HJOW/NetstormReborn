@@ -11,6 +11,7 @@
 #include <cstring>
 #include <limits>
 #include <map>
+#include <mutex>
 #include <stdexcept>
 #include <utility>
 
@@ -112,6 +113,8 @@ std::int32_t SoundFileAttenuation(std::string_view path) {
 
 // COM 포인터를 토큰에 매핑한다. DLL을 해제하기 전에 모든 버퍼와 장치를 해제해야 한다.
 struct SoundDevice::Impl {
+    // worker의 음악 COM과 주 스레드의 효과음 COM이 토큰 표를 동시에 조회/수정하지 않게 한다.
+    std::recursive_mutex mutex;
     SoundList& list;SoundState& state;SoundFileResolver resolver;std::string language,directory;SoundAssertReport report;
     HMODULE module{};LPDIRECTSOUND device{};LPDIRECTSOUNDBUFFER primary{};
     std::map<SoundBuffer,LPDIRECTSOUNDBUFFER> buffers;SoundBuffer next{1};
@@ -168,7 +171,7 @@ SoundDevice::~SoundDevice() { Shutdown(); }
 
 // 초기화의 음악 부착은 후속이며 효과음 쪽 음질 하향/준비 상태는 원본대로다.
 bool SoundDevice::Initialize(std::uintptr_t window,int quality) {
-    auto& p=*impl_;p.list.Initialize();
+    auto& p=*impl_;std::lock_guard guard(p.mutex);p.list.Initialize();
     if (p.state.initialized) return false;
     if (window==0) throw std::invalid_argument("소리 장치 초기화에 창 핸들이 필요합니다");
     if (quality<0 || quality>3) quality=3;
@@ -198,7 +201,7 @@ bool SoundDevice::Initialize(std::uintptr_t window,int quality) {
 
 // 이름/사슬 필드를 유지하여 다음 초기화/재생에서 같은 이름 표를 재사용한다.
 void SoundDevice::Shutdown() {
-    auto& p=*impl_;
+    auto& p=*impl_;std::lock_guard guard(p.mutex);
     // 확보한 모든 효과음 버퍼를 반납한다(복제 버퍼 포함).
     for (const auto& [token,buffer]:p.buffers) { static_cast<void>(token);buffer->Stop();buffer->Release(); }
     p.buffers.clear();
@@ -218,28 +221,30 @@ void SoundDevice::Shutdown() {
 // 각 경계는 토큰을 실제 COM 포인터로 바꾸고 원본 메서드를 호출한다. load도 이 객체의 실제 WAV 적재를 쓴다.
 SoundDeviceHooks SoundDevice::Hooks() {
     auto* p=impl_.get();SoundDeviceHooks hooks;
-    hooks.status=[p](SoundBuffer token) { DWORD status=0;p->Get(token)->GetStatus(&status);return status; }; // 재생/손실 상태를 조회한다.
-    hooks.play=[p](SoundBuffer token,std::uint32_t flags) { p->Get(token)->Play(0,0,flags); }; // 원본 반복 플래그를 전달한다.
-    hooks.setPosition=[p](SoundBuffer token,std::uint32_t position) { p->Get(token)->SetCurrentPosition(position); }; // 재생 위치를 설정한다.
-    hooks.setVolume=[p](SoundBuffer token,std::int32_t volume) { return static_cast<std::int32_t>(p->Get(token)->SetVolume(volume)); }; // 음량 HRESULT를 반환한다.
-    hooks.setPan=[p](SoundBuffer token,std::int32_t pan) { return static_cast<std::int32_t>(p->Get(token)->SetPan(pan)); }; // 좌우 HRESULT를 반환한다.
-    hooks.stop=[p](SoundBuffer token) { p->Get(token)->Stop(); }; // 버퍼 재생을 멈춘다.
+    hooks.status=[p](SoundBuffer token) { std::lock_guard guard(p->mutex);DWORD status=0;p->Get(token)->GetStatus(&status);return status; }; // 재생/손실 상태를 조회한다.
+    hooks.play=[p](SoundBuffer token,std::uint32_t flags) { std::lock_guard guard(p->mutex);p->Get(token)->Play(0,0,flags); }; // 원본 반복 플래그를 전달한다.
+    hooks.setPosition=[p](SoundBuffer token,std::uint32_t position) { std::lock_guard guard(p->mutex);p->Get(token)->SetCurrentPosition(position); }; // 재생 위치를 설정한다.
+    hooks.setVolume=[p](SoundBuffer token,std::int32_t volume) { std::lock_guard guard(p->mutex);return static_cast<std::int32_t>(p->Get(token)->SetVolume(volume)); }; // 음량 HRESULT를 반환한다.
+    hooks.setPan=[p](SoundBuffer token,std::int32_t pan) { std::lock_guard guard(p->mutex);return static_cast<std::int32_t>(p->Get(token)->SetPan(pan)); }; // 좌우 HRESULT를 반환한다.
+    hooks.stop=[p](SoundBuffer token) { std::lock_guard guard(p->mutex);p->Get(token)->Stop(); }; // 버퍼 재생을 멈춘다.
     // 복제 COM 실패는 토큰을 쓰지 않는다. 장치/원본 버퍼가 없으면 HRESULT 실패다.
     hooks.duplicate=[p](SoundBuffer token,SoundBuffer& copy)->std::int32_t {
+        std::lock_guard guard(p->mutex);
         if (!p->device || token==0 || token==kSilentSoundBuffer) return static_cast<std::int32_t>(DSERR_INVALIDPARAM);
         LPDIRECTSOUNDBUFFER buffer{};const auto result=p->device->DuplicateSoundBuffer(p->Get(token),&buffer);
         if (SUCCEEDED(result)) copy=p->Add(buffer);
         return static_cast<std::int32_t>(result);
     };
-    hooks.load=[p](std::string_view name) { return p->Load(name); }; // 실제 파일 선택/읽기/버퍼 확보다.
+    hooks.load=[p](std::string_view name) { std::lock_guard guard(p->mutex);return p->Load(name); }; // 실제 파일 선택/읽기/버퍼 확보다.
     return hooks;
 }
 // 파일 경계와 기록/잠금 관찰자는 호출자에게 두고 COM 버퍼 경계만 이 장치에 연결한다.
 MusicChannelHooks SoundDevice::BindMusicBuffers(MusicChannelHooks files) {
     auto* p=impl_.get();
-    files.setVolume=[p](SoundBuffer token,std::int32_t volume) { return static_cast<std::int32_t>(p->Get(token)->SetVolume(volume)); }; // 음악 음량을 적용한다.
-    files.stop=[p](SoundBuffer token) { p->Get(token)->Stop(); }; // 음악 버퍼를 정지한다.
+    files.setVolume=[p](SoundBuffer token,std::int32_t volume) { std::lock_guard guard(p->mutex);return static_cast<std::int32_t>(p->Get(token)->SetVolume(volume)); }; // 음악 음량을 적용한다.
+    files.stop=[p](SoundBuffer token) { std::lock_guard guard(p->mutex);p->Get(token)->Stop(); }; // 음악 버퍼를 정지한다.
     files.release=[p](SoundBuffer token) {
+        std::lock_guard guard(p->mutex);
         const auto result=p->Get(token)->Release();p->buffers.erase(token);return static_cast<std::int32_t>(result);
     }; // 해제한 토큰을 제거하여 장치 종료에서 두 번 반납하지 않는다.
     if (!files.report) files.report=p->report;
@@ -250,6 +255,7 @@ MusicBufferHooks SoundDevice::MusicBuffers() {
     auto* p=impl_.get();MusicBufferHooks hooks;
     // 파일 형식은 PCM의 추가 크기만 보정하고 원본 기능 비트/버퍼 크기를 그대로 전달한다.
     hooks.create=[p](std::span<const std::uint8_t> raw,std::uint32_t flags,std::uint32_t bytes,SoundBuffer& token)->std::int32_t {
+        std::lock_guard guard(p->mutex);
         if (!p->device) return static_cast<std::int32_t>(DSERR_NODRIVER);
         if (raw.size()!=18) throw std::invalid_argument("음악 형식은 WAVEFORMATEX 18바이트여야 합니다");
         WAVEFORMATEX format{};std::memcpy(&format,raw.data(),raw.size());
@@ -261,21 +267,24 @@ MusicBufferHooks SoundDevice::MusicBuffers() {
         if (SUCCEEDED(result)) token=p->Add(buffer);
         return static_cast<std::int32_t>(result);
     };
-    hooks.status=[p](SoundBuffer token,std::uint32_t& state) { DWORD value{};const auto result=p->Get(token)->GetStatus(&value);state=value;return static_cast<std::int32_t>(result); }; // 상태와 HRESULT를 모두 반환한다.
-    hooks.restore=[p](SoundBuffer token) { return static_cast<std::int32_t>(p->Get(token)->Restore()); }; // 잃은 음악 버퍼를 복구한다.
+    hooks.status=[p](SoundBuffer token,std::uint32_t& state) { std::lock_guard guard(p->mutex);DWORD value{};const auto result=p->Get(token)->GetStatus(&value);state=value;return static_cast<std::int32_t>(result); }; // 상태와 HRESULT를 모두 반환한다.
+    hooks.restore=[p](SoundBuffer token) { std::lock_guard guard(p->mutex);return static_cast<std::int32_t>(p->Get(token)->Restore()); }; // 잃은 음악 버퍼를 복구한다.
     hooks.cursor=[p](SoundBuffer token,std::uint32_t& play,std::uint32_t& write) {
+        std::lock_guard guard(p->mutex);
         DWORD first{},second{};const auto result=p->Get(token)->GetCurrentPosition(&first,&second);play=first;write=second;return static_cast<std::int32_t>(result);
     }; // 장치의 재생/쓰기 커서를 받는다.
     hooks.lock=[p](SoundBuffer token,std::uint32_t offset,std::uint32_t count,MusicBufferRegions& regions) {
+        std::lock_guard guard(p->mutex);
         void* first{};void* second{};DWORD firstSize{},secondSize{};
         const auto result=p->Get(token)->Lock(offset,count,&first,&firstSize,&second,&secondSize,0);
         if (SUCCEEDED(result)) regions={{static_cast<std::uint8_t*>(first),firstSize},{static_cast<std::uint8_t*>(second),secondSize}};
         return static_cast<std::int32_t>(result);
     }; // 링 끝에서 나뉜 두 구간을 호스트 span으로 만든다.
     hooks.unlock=[p](SoundBuffer token,MusicBufferRegions regions) {
+        std::lock_guard guard(p->mutex);
         return static_cast<std::int32_t>(p->Get(token)->Unlock(regions.first.data(),static_cast<DWORD>(regions.first.size()),regions.second.data(),static_cast<DWORD>(regions.second.size())));
     }; // 받은 포인터/크기를 그대로 반납한다.
-    hooks.play=[p](SoundBuffer token,std::uint32_t flags) { return static_cast<std::int32_t>(p->Get(token)->Play(0,0,flags)); }; // 음악 버퍼 반복 재생의 실패도 반환한다.
+    hooks.play=[p](SoundBuffer token,std::uint32_t flags) { std::lock_guard guard(p->mutex);return static_cast<std::int32_t>(p->Get(token)->Play(0,0,flags)); }; // 음악 버퍼 반복 재생의 실패도 반환한다.
     return hooks;
 }
 }

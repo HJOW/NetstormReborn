@@ -1,4 +1,4 @@
-// 원본 음악 채널의 파일 열기·길이·읽기·공개 시작·정지·버퍼 갱신과 공유 음소거를 복원한다. 상위 선택은 SoundMusicSelection이며 작업 스레드/클라이언트 부착은 후속이다.
+// 원본 음악 채널·공개 시작/정지/갱신·공유 음소거다. 상위 선택은 SoundMusicSelection, worker 수명은 SoundMusicRuntime이며 클라이언트 부착은 후속이다.
 #pragma once
 #include "client/Sound.h"
 #include <array>
@@ -44,7 +44,7 @@ public:
     // DWORD를 little endian으로 쓰며 나머지 바이트는 보존한다.
     void SetField(MusicField field,std::uint32_t value);
 private:
-    // 새 채널의 상태는 0으로 시작한다. 초기화/파일 적재의 전체 수명은 후속 계층이 맡는다.
+    // 새 채널의 상태는 0으로 시작한다. 두 채널 초기화/종료는 MusicRuntime이 맡으며 직접 raw 접근은 worker 종료 상태에서만 한다.
     std::array<std::uint8_t,kMusicChannelBytes> raw_{};
 };
 // 음악 파일/버퍼 경계다. 생성자에는 필수 여섯 함수를 연결한다. seek/read/close는 원본 mmio 의미이며 파일을 새로 열지 않는다.
@@ -94,7 +94,7 @@ public:
     MusicChannel(o::OriginalEdition edition,MusicChannelState& state,MusicChannelHooks hooks);
     // 기본/보조 경로에서 헤더를 열고 길이를 계산한다. 보조 경로가 null이면 앞 경로에 이름을 다시 붙이는 원본 동작도 보존한다.
     bool Open(std::string_view name,const MusicDirectories& directories,const MusicOpenHooks& hooks);
-    // 원본 공개 시작의 활성 비트 검사다. 작업 스레드와의 공유 수명은 후속 초기화 계층에서 다룬다.
+    // 원본 공개 시작의 활성 비트 검사다. 호스트 mutex로 worker 갱신과 동시에 읽지 않는다.
     bool Active() const;
     // 현재 버퍼에 음량을 그대로 적용한다. 버퍼가 없어도 잠금/해제는 수행한다. 원본: 004a9fa0(CD는 음악 음량에 인라인).
     void SetVolume(std::int32_t volume);
@@ -117,6 +117,8 @@ public:
     // IO/COM 실패는 원본처럼 Stop하고 false다. 손상된 버퍼 크기/커서/구간은 예외다. 원본: 004aaad0 / CD 00439a20 내부.
     bool FillBuffer(const MusicBufferHooks& hooks,const SoundState& sound);
 private:
+    // 초기화/종료만 raw 필드와 호스트 잠금 수명을 연결한다. 일반 호출자는 Runtime의 종료 순서를 따른다.
+    friend class MusicRuntime;
     // 범위 전체를 잠금/해제로 감싸며 예외 경로도 잠금을 풀어 준다.
     struct Guard {
         MusicChannel& channel;
@@ -130,7 +132,7 @@ private:
     // 선택 기록 경계에 채널 9의 원본 오류 문장을 전달한다.
     void Log(std::string_view text);
     // 상태 참조·경계·판본과 재귀 잠금이다. raw의 +0x44 잠금 바이트와 호스트 mutex를 분리한다.
-    o::OriginalEdition edition_;MusicChannelState& state_;MusicChannelHooks hooks_;std::recursive_mutex mutex_;
+    o::OriginalEdition edition_;MusicChannelState& state_;MusicChannelHooks hooks_;mutable std::recursive_mutex mutex_;
 };
 // 효과음과 음악의 공통 음소거 제어다. 최초 PushMute에서 음량을 예약하고 마지막 PopMute에서 최신 예약값을 복원한다.
 // 사용: 모두 같은 SoundState를 쓰는 effects/channel을 넘긴다. 음악 준비 전에도 전역 음량은 저장한다.
@@ -138,7 +140,7 @@ class SoundMusic {
 public:
     // 외부의 효과음/음악 상태를 참조한다. OS 자원은 열지 않는다.
     SoundMusic(o::OriginalEdition edition,SoundState& state,SoundPlayer& effects,MusicChannel& channel);
-    // 준비/장치/활성/null 이름을 검사한 뒤 파일→버퍼→되감기/활성화를 연결한다. 열기 실패만 상위 demo.mus 선택을 요청한다.
+    // 준비/장치/활성/null 이름을 검사한 뒤 파일→버퍼→되감기/활성화를 연결한다. 열기 실패만 상위 demo.mus 선택을 요청한다. 종료 대기 중에는 새 시작을 거부한다.
     // Start와 같이 실제 COM Play는 다음 Update에서 수행한다. 원본: 004aace0 / CD 004393b0.
     bool Play(const char* name,std::uint32_t loop,const MusicDirectories& directories,const MusicOpenHooks& files,const MusicBufferHooks& buffers);
     // 보류 중에는 예약 음악 음량만 바꾸고, 그 외에는 저장 후 음악 준비 상태에서 채널에 적용한다. 원본: 004aa5d0 / CD 00439dd0.
@@ -152,7 +154,11 @@ public:
     // 음악 준비 상태에서 기본 채널을 한 번 갱신한다. CD 공개 갱신의 초기화 검사를 포함한다. 작업 스레드를 만들지 않는다.
     bool Update(const MusicBufferHooks& hooks);
 private:
+    // Runtime은 같은 명령 잠금으로 초기화/종료 상태와 worker를 연결한다.
+    friend class MusicRuntime;
     // 판본별 음소거 해제 분기와 공유 전역, 실제 두 제어 계층을 참조한다.
     o::OriginalEdition edition_;SoundState& state_;SoundPlayer& effects_;MusicChannel& channel_;
+    // worker의 Update와 공개 Play/Stop/음량/음소거를 직렬화한다. 종료 중 새 시작은 받아들이지 않는다.
+    std::recursive_mutex mutex_;bool stopping_=false;
 };
 }

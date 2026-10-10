@@ -35,9 +35,9 @@ std::int32_t SoundFileAttenuation(std::string_view path);
 
 // 동적 dsound.dll·주 버퍼·효과음/음악 버퍼를 소유하는 Windows 장치다. 원본 COM 순서와 장치 경계를 연결한다.
 // 사용: list/state/resolver를 준비→Initialize(실제 HWND, 음질 0~3)→Hooks를 SoundPlayer에 전달→Shutdown.
-//       이 객체는 Player/Process보다 오래 살아야 하고 list/state는 이 객체보다 오래 살아야 한다. 단일 스레드 전용이다.
+//       이 객체는 Player/Process보다 오래 살아야 하고 list/state는 이 객체보다 오래 살아야 한다. 효과음 표/Player는 주 스레드 전용이며 COM/토큰 표는 음악 worker와 직렬화한다.
 //       Shutdown은 표의 버퍼만 비우며 이름/감쇠/사슬은 보존한다. 장치 포인터는 32비트 토큰으로 매핑하여 64비트 빌드를 지원한다.
-// 범위: 효과음 수명과 음악 버퍼 COM 경계다. 초기화/종료의 음악 스레드 호출(004aadd0/004aaf00)은 후속 연결한다.
+// 범위: 효과음 수명과 음악 버퍼 COM 경계다. Initialize 이후 MusicRuntime.Initialize, MusicRuntime.Shutdown 이후 Shutdown 순서로 별도 수명을 연결한다. GUI 부착은 후속이다.
 class SoundDevice {
 public:
     // 자원 없이 만든다. resolver는 필수이고 디렉터리·언어는 파일 선택 순서에 사용한다.
@@ -64,7 +64,7 @@ public:
     // 사용: 연결한 MusicChannel은 장치 Shutdown 전에 Stop한다. Hooks/토큰은 이 장치의 수명 안에서만 유효하다.
     MusicChannelHooks BindMusicBuffers(MusicChannelHooks files);
     // 음악 버퍼의 생성·상태/복구·커서·잠금/해제·반복 재생을 실제 DirectSound COM에 연결한다.
-    // 작업 스레드를 만들지 않으며 현재 SoundDevice와 같이 단일 스레드에서 호출한다.
+    // 작업 스레드는 MusicRuntime이 만든다. COM/토큰 표는 호출별로 잠그며 Lock~Unlock 중 Shutdown은 Runtime 종료 순서로 막는다.
     MusicBufferHooks MusicBuffers();
 private:
     // Windows COM 포인터와 DLL 핸들을 숨기는 소유 구조체다.

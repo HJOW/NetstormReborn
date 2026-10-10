@@ -83,7 +83,7 @@ bool MusicChannel::Open(std::string_view name,const MusicDirectories& directorie
     std::memcpy(raw.data()+0x18,&duration,sizeof(duration));return true;
 }
 // 활성 여부는 원본과 같이 flags의 최하위 비트만 사용한다.
-bool MusicChannel::Active() const { return (state_.Field(MusicField::Flags)&1U)!=0; }
+bool MusicChannel::Active() const { std::lock_guard guard(mutex_);return (state_.Field(MusicField::Flags)&1U)!=0; }
 // 버퍼가 없어도 잠금은 수행한다. 음량은 자르지 않고 실패만 기록한다.
 void MusicChannel::SetVolume(std::int32_t volume) {
     Guard guard(*this);const auto buffer=state_.Field(MusicField::Buffer);
@@ -233,7 +233,8 @@ SoundMusic::SoundMusic(o::OriginalEdition edition,SoundState& state,SoundPlayer&
     :edition_(edition),state_(state),effects_(effects),channel_(channel) {}
 // 열기 실패 뒤의 fallback은 상위 옵션 관리자 경계다. 생성/되감기 실패에는 곡을 바꾸지 않는다.
 bool SoundMusic::Play(const char* name,std::uint32_t loop,const MusicDirectories& directories,const MusicOpenHooks& files,const MusicBufferHooks& buffers) {
-    if (!state_.musicInitialized || !state_.device || channel_.Active() || !name) return false;
+    std::lock_guard guard(mutex_);
+    if (stopping_ || !state_.musicInitialized || !state_.device || channel_.Active() || !name) return false;
     if (!channel_.Open(name,directories,files)) {
         std::string folded(name);
         // 원본 demo.mus 비교에 필요한 ASCII 대소문자만 접는다. 음악 파일 이름 자체는 변경하지 않는다.
@@ -246,11 +247,13 @@ bool SoundMusic::Play(const char* name,std::uint32_t loop,const MusicDirectories
 }
 // 음악 준비 전에도 현재/예약 전역은 갱신하며 음량은 자르지 않는다.
 void SoundMusic::SetVolume(std::int32_t volume) {
+    std::lock_guard guard(mutex_);
     if (state_.volumeHoldDepth!=0) { state_.pendingMusicVolume=volume;return; }
-    state_.musicVolume=volume;if (state_.musicInitialized) channel_.SetVolume(volume);
+    state_.musicVolume=volume;if (state_.musicInitialized && !stopping_) channel_.SetVolume(volume);
 }
 // 효과음 적용 중 재진입해 깊이가 바뀌면 음악 변경은 현재 보류 상태를 다시 따라간다.
 void SoundMusic::PushMute() {
+    std::lock_guard guard(mutex_);
     if (state_.volumeHoldDepth==0) {
         state_.pendingMasterVolume=state_.masterVolume;state_.pendingMusicVolume=state_.musicVolume;
         effects_.SetMasterVolume(kSoundMinimum);SetVolume(kSoundMinimum);
@@ -259,6 +262,7 @@ void SoundMusic::PushMute() {
 }
 // 양수만 감소시킨다. 효과음 복원 중 깊이가 바뀌면 원본처럼 음악 즉시 복원을 건너뛴다.
 void SoundMusic::PopMute() {
+    std::lock_guard guard(mutex_);
     if (state_.volumeHoldDepth<=0) return;
     --state_.volumeHoldDepth;
     if (state_.volumeHoldDepth==0) {
@@ -268,9 +272,10 @@ void SoundMusic::PopMute() {
 }
 // 준비된 음악의 기본 채널을 정지한다. 두 판본 모두 WAVEFORMATEX 뒤의 패딩 WORD는 보존한다.
 void SoundMusic::Stop() {
+    std::lock_guard guard(mutex_);
     if (!state_.musicInitialized) return;
     channel_.Stop();
 }
 // 초기화된 음악만 갱신한다. 실제 작업 스레드/이벤트 수명은 후속 계층이 맡는다.
-bool SoundMusic::Update(const MusicBufferHooks& hooks) { return state_.musicInitialized && channel_.FillBuffer(hooks,state_); }
+bool SoundMusic::Update(const MusicBufferHooks& hooks) { std::lock_guard guard(mutex_);return !stopping_ && state_.musicInitialized && channel_.FillBuffer(hooks,state_); }
 }

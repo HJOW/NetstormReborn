@@ -2,7 +2,7 @@
 
 2026-10-10, 마지막 디컴파일 수행 PC **HJOW-Athlon**(192.168.0.94). [musicselection 목록](../../tools/ghidra/musicselection-functions.json) **4/4/4개**를 같은 PC의 세 Ghidra 프로젝트에서 읽기 전용으로 내보냈다. 게임·복사본·창·오디오 장치·작업 스레드는 실행하지 않았다.
 
-[MusicSelection](../../cpppj/src/client/SoundMusicSelection.h)을 기존 [공개 음악 시작/열린 파일 소유자](cpp-music-open-reconstruction.md)에 연결했다. 상위 옵션·현재 곡 이름·존재 검사·곡 전환·특수 곡 반복 여부와 실제 `demo.mus` 재선택을 처리한다. **두 채널/이벤트/작업 스레드·GUI 옵션·실제 장치/클라이언트 연결은 후속이다.**
+[MusicSelection](../../cpppj/src/client/SoundMusicSelection.h)을 기존 [공개 음악 시작/열린 파일 소유자](cpp-music-open-reconstruction.md)에 연결했다. 상위 옵션·현재 곡 이름·존재 검사·곡 전환·특수 곡 반복 여부와 실제 `demo.mus` 재선택을 처리한다. 두 채널/이벤트/작업 스레드는 [다음 단계](cpp-music-runtime-reconstruction.md)에서 완료했다. **GUI 옵션·실제 장치/클라이언트 연결은 후속이다.**
 
 ## 주소와 계약
 
@@ -29,7 +29,7 @@
 
 공개 Play의 파일 열기 실패는 `demo.mus`가 아닐 때만 **실제 상위 래퍼**를 다시 호출한다. 이때 명시 Select 인자가 아니라 **현재 전역 음악 옵션을 다시 읽는다.** 예를 들어 `Select("track.mus",1)`이라도 전역 옵션이 0이면 fallback은 demo 이름을 저장한 뒤 Stop하며 음악을 시작하지 않는다. demo 자체의 실패는 더 재귀하지 않는다. 생성/되감기 실패에는 원본처럼 fallback하지 않는다.
 
-`MusicSelection`은 이 래퍼를 `MusicOpenHooks::fallback`에 연결한다. 앞 단계의 명시 상위 callback 응답 대체를 제거했으며 콜백을 단순 재귀 Play로 바꾸지 않았다. 참조 상태/음악과 파일·버퍼 콜백 대상이 이 객체보다 오래 살아야 하고, 내부 callback의 this 주소를 보존하도록 복제/이동을 금지했다. 아직 단일 스레드 전용이다.
+`MusicSelection`은 이 래퍼를 `MusicOpenHooks::fallback`에 연결한다. 앞 단계의 명시 상위 callback 응답 대체를 제거했으며 콜백을 단순 재귀 Play로 바꾸지 않았다. 참조 상태/음악과 파일·버퍼 콜백 대상이 이 객체보다 오래 살아야 하고, 내부 callback의 this 주소를 보존하도록 복제/이동을 금지했다. 이 단계에서는 단일 스레드 전용이었다. 이후 [Runtime 단계](cpp-music-runtime-reconstruction.md)에서 SoundMusic 명령과 worker를 직렬화했다. 옵션/이름은 주 스레드에서 관리한다.
 
 ## 독립 원본 관찰과 검증
 
@@ -50,4 +50,4 @@ cpppj/build/bin/Release/netstorm_tests.exe --filter SoundMusicSelection_
 ctest --test-dir cpppj/build -C Release --output-on-failure
 ```
 
-Release 경고/오류 **0**, CTest 내부 **517개·실패 0**(126.36초, 전체 126.40초), 근거 감사 **79종 모두 통과**. 최종 회귀/감사 결과는 [LEFT_JOBS.md](../../LEFT_JOBS.md)에 기록한다. 다음은 두 음악 채널·이벤트/작업 스레드 초기화/종료, 장치/파일 토큰 표 동기화와 종료 대기·GUI 옵션/클라이언트 연결이다. 실제 소리 청취·raw GUI 건설·경제·전투·AI·승패도 남아 **미션 완주는 아직 불가능하다.** 영어 원본 글꼴·outpost/LAN 3차·한국어/D2Coding/화면 요구사항/MCP 4차 순서를 유지한다.
+Release 경고/오류 **0**, CTest 내부 **517개·실패 0**(126.36초, 전체 126.40초), 근거 감사 **79종 모두 통과**. 최종 회귀/감사 결과는 [LEFT_JOBS.md](../../LEFT_JOBS.md)에 기록한다. 두 채널/이벤트/worker·종료 대기·토큰 표 동기화는 [후속 단계](cpp-music-runtime-reconstruction.md)에서 완료했다. 다음은 장면별 음악/실시간 전환·GUI 옵션/장치/클라이언트 연결이다. 실제 소리 청취·raw GUI 건설·경제·전투·AI·승패도 남아 **미션 완주는 아직 불가능하다.** 영어 원본 글꼴·outpost/LAN 3차·한국어/D2Coding/화면 요구사항/MCP 4차 순서를 유지한다.
