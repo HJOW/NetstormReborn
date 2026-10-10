@@ -1,0 +1,192 @@
+{
+  "schema": 1,
+  "host": "HJOW-Athlon",
+  "decompile_date": "2026-10-10",
+  "total": 5292,
+  "controls": [
+    639,
+    895
+  ],
+  "os_calls": 0,
+  "editions": {
+    "originals": {
+      "cases": 1780,
+      "calls": 22236,
+      "direct_returns": {
+        "read": 6448,
+        "close": 3248,
+        "stop": 3296,
+        "allstop": 48,
+        "mv": 492,
+        "push": 492,
+        "pop": 756,
+        "start": 48,
+        "rewind": 48
+      },
+      "native_calls": {
+        "004a8ee0": 7120,
+        "004a8d50": 7120,
+        "004a8a60": 7120,
+        "004ef510": 3560,
+        "004aa0e0": 6448,
+        "004aa410": 6568,
+        "004aa9c0": 3320,
+        "004a9fe0": 1604,
+        "004a8cf0": 2908,
+        "004aad70": 48,
+        "004aa5d0": 492,
+        "004aa900": 492,
+        "004a9f10": 512,
+        "004aa970": 756,
+        "004a9fa0": 172,
+        "004aaa40": 48
+      },
+      "substitutions": {
+        "locale": 3560,
+        "EnterCriticalSection": 24800,
+        "LeaveCriticalSection": 24800,
+        "mmioClose": 11272,
+        "halt": 3232,
+        "release": 3248,
+        "mmioSeek": 1604,
+        "mmioRead": 4852,
+        "log": 1080,
+        "gain": 324,
+        "assert": 48
+      },
+      "assertions": 0,
+      "instructions": 2511320
+    },
+    "originalCD": {
+      "cases": 1756,
+      "calls": 21948,
+      "direct_returns": {
+        "read": 6400,
+        "close": 3248,
+        "stop": 3248,
+        "allstop": 48,
+        "mv": 492,
+        "push": 492,
+        "pop": 756
+      },
+      "native_calls": {
+        "00437d20": 7024,
+        "00437b29": 7024,
+        "004f2980": 3512,
+        "00439fb0": 6400,
+        "0043a130": 3248,
+        "00437800": 6520,
+        "00439ea0": 3248,
+        "004377d0": 1476,
+        "00437790": 4808,
+        "00439910": 48,
+        "00439dd0": 764,
+        "00438f10": 492,
+        "00438f00": 108,
+        "00439dc0": 108,
+        "00438e50": 512,
+        "00438f60": 756
+      },
+      "substitutions": {
+        "EnterCriticalSection": 24384,
+        "LeaveCriticalSection": 24384,
+        "mmioClose": 11120,
+        "halt": 3208,
+        "release": 3224,
+        "mmioSeek": 1476,
+        "mmioRead": 4808,
+        "log": 1008,
+        "gain": 324
+      },
+      "assertions": 0,
+      "instructions": 1850840
+    },
+    "original1037": {
+      "cases": 1756,
+      "calls": 21948,
+      "direct_returns": {
+        "read": 6400,
+        "close": 3248,
+        "stop": 3248,
+        "allstop": 48,
+        "mv": 492,
+        "push": 492,
+        "pop": 756
+      },
+      "native_calls": {
+        "00437d20": 7024,
+        "00437b29": 7024,
+        "004f2980": 3512,
+        "00439fb0": 6400,
+        "0043a130": 3248,
+        "00437800": 6520,
+        "00439ea0": 3248,
+        "004377d0": 1476,
+        "00437790": 4808,
+        "00439910": 48,
+        "00439dd0": 764,
+        "00438f10": 492,
+        "00438f00": 108,
+        "00439dc0": 108,
+        "00438e50": 512,
+        "00438f60": 756
+      },
+      "substitutions": {
+        "EnterCriticalSection": 24384,
+        "LeaveCriticalSection": 24384,
+        "mmioClose": 11120,
+        "halt": 3208,
+        "release": 3224,
+        "mmioSeek": 1476,
+        "mmioRead": 4808,
+        "log": 1008,
+        "gain": 324
+      },
+      "assertions": 0,
+      "instructions": 1850840
+    }
+  },
+  "stubbed": [
+    "COM 음량/정지/참조 해제",
+    "Winmm read/seek/close",
+    "잠금(중첩/균형 확인)",
+    "기록/예정 assert/패치 CRT 로캘",
+    "표/채널/파일/버퍼 초기 배치",
+    "명시 COM 재진입 깊이/예약 전역 입력"
+  ],
+  "limitations": [
+    "실제 장치/파일/스레드 실행 제외",
+    "음악 파일 열기/버퍼 생성/스트리밍 갱신/스레드 초기화·종료 후속",
+    "CD 시작/독립 되감기는 인라인이므로 10.78에만 단독 진입 대조",
+    "손상된 음수/범위 밖 길이/포인터 제외"
+  ],
+  "files": {
+    "cpppj/tests/fixtures/musiccontrol-x86.tsv": "182d5d85568022e10f31358416e484074bc0a7063d4172dedc577db94e856fa6",
+    "extracted/musiccontrol/original1037/creation.c": "2df4f8925c830761f0df184cb5aff9368e83355ea9692632c6703f06c06ab4cb",
+    "extracted/musiccontrol/original1037/functions.tsv": "be88a297fb59b54d72c010e1267018839de7ce67fd35c61b55417d2843d8c2fd",
+    "extracted/musiccontrol/originalCD/creation.c": "2df4f8925c830761f0df184cb5aff9368e83355ea9692632c6703f06c06ab4cb",
+    "extracted/musiccontrol/originalCD/functions.tsv": "be88a297fb59b54d72c010e1267018839de7ce67fd35c61b55417d2843d8c2fd",
+    "extracted/musiccontrol/originals/creation.c": "5323d89c832f7b01af12a37ec35e3e6c903b882e314c0f377812c58ab1f02ee1",
+    "extracted/musiccontrol/originals/functions.tsv": "ce199609061e8a47f3db63bf2f7d89cf630bd35fb47e87ced9806ee1838ac007",
+    "extracted/soundcontrol/original1037/creation.c": "780b557f4ecc829df489ccf7fa61eae14a44ce65be422ef9afe7dfc213bbfab7",
+    "extracted/soundcontrol/original1037/functions.tsv": "19243829ec57cd62da41fda8261263ab93f5c2e750b2c6e701b0a9c1952e4712",
+    "extracted/soundcontrol/originalCD/creation.c": "780b557f4ecc829df489ccf7fa61eae14a44ce65be422ef9afe7dfc213bbfab7",
+    "extracted/soundcontrol/originalCD/functions.tsv": "19243829ec57cd62da41fda8261263ab93f5c2e750b2c6e701b0a9c1952e4712",
+    "extracted/soundcontrol/originals/creation.c": "61a2bb302ace9ffb257078cbc8f3b458c94a286c775c027120e983c0c30fe2a9",
+    "extracted/soundcontrol/originals/functions.tsv": "4bcc9fd3d3cd087e0a08427a28afdf5e75b600b1441440e22dfd3b915e6ac142",
+    "extracted/soundplay/original1037/creation.c": "bd884b869d734f67925b780b5deab7a53eef93e8e02cb40e62f826d03b3b475b",
+    "extracted/soundplay/original1037/functions.tsv": "f02aef06586ae85e7583710c29308d9bd929b7ae85ab4d079ce33407931a9d3b",
+    "extracted/soundplay/originalCD/creation.c": "bd884b869d734f67925b780b5deab7a53eef93e8e02cb40e62f826d03b3b475b",
+    "extracted/soundplay/originalCD/functions.tsv": "f02aef06586ae85e7583710c29308d9bd929b7ae85ab4d079ce33407931a9d3b",
+    "extracted/soundplay/originals/creation.c": "a8b0fc00c96069a087470be4b4479b426c40b61afdf1b1e2dfd4339ac5151853",
+    "extracted/soundplay/originals/functions.tsv": "eeb471425021a75180fdd3d247a842dbad2777ebb0731c9a33b52295ed99860f",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_musiccontrol_oracle.py": "e5d2acf03ccdc492317d46b206cfcc9160172be9570295d1e6885835065e22be",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/decomp_soundcontrol_oracle.py": "05833b91e68d879fb28532db76ce04d4ed2a7858973715ce80dbdc29e44fe661",
+    "tools/decomp_soundplay_oracle.py": "9a67f082b1079f8ed8bf8b1be45d12d84169e24c5827844678333ea39b80964f",
+    "tools/ghidra/musiccontrol-functions.json": "88544c67e3c2431df95b29a8db8b5d07ec6e20de11ab4605935465b735c5ccef"
+  }
+}

@@ -33,6 +33,7 @@ add_executable(netstorm_tests
     SoundPlayTests.cpp
     SoundDeviceTests.cpp
     SoundControlTests.cpp
+    SoundMusicTests.cpp
     PriestPopTests.cpp
     ConfigOracleTests.cpp
     ConfigInterfaceTests.cpp
@@ -285,3 +286,7 @@ set_source_files_properties(SoundDeviceTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 소리 제어 여섯 몸체의 독립 원본 관찰이다. CTest는 장치/PE/Python 실행 없이 저장한 결과를 대조한다.
 set_source_files_properties(SoundControlTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_SOUNDCONTROL_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/soundcontrol-x86.tsv\"")
+
+# 실제 음악 채널/공유 음소거 명령 관찰이다. 테스트는 파일/장치/스레드를 열지 않는다.
+set_source_files_properties(SoundMusicTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_MUSICCONTROL_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/musiccontrol-x86.tsv\"")

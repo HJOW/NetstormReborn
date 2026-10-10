@@ -186,6 +186,10 @@ struct SoundState {
     std::int32_t volumeHoldDepth{};
     // 보류 중 가장 최근에 요청한 효과음 음량이다(DAT_005c7b2c / CD 0051a72c). 보류가 없을 때의 변경은 이 값을 건드리지 않는다.
     std::int32_t pendingMasterVolume{};
+    // 음악 갱신 계층 준비 상태(DAT_005c7b5c / CD 0051a764). 효과음 장치 준비와 별도이며 작업 스레드 초기화가 설정한다.
+    bool musicInitialized{};
+    // 현재 음악 음량(DAT_005c7b24 / CD 0051a724)과 보류 중 최신 요청(DAT_005c7b30 / CD 0051a730)이다.
+    std::int32_t musicVolume{},pendingMusicVolume{};
     // 다음 재생에 매길 일련번호다(DAT_005c7b34 / CD 0051a734).
     std::uint32_t serial{};
     // 화면 영역과 카메라 원점이다.
