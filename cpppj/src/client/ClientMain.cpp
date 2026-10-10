@@ -6,6 +6,7 @@
 //       Renderer·원본 글꼴/커서·메뉴와 저장 미션의 기본 지형/객체·선택/이동을 연결했다. 건설/전투는 후속이다.
 #include "client/ClientMain.h"
 #include "client/ClientAudio.h"
+#include "client/PaletteFlash.h"
 #include "client/UberGump.h"
 #include "o/OriginalText.h"
 #include "platform/Bitmap.h"
@@ -25,6 +26,35 @@
 
 namespace netstorm::client {
 namespace {
+// 원본의 부모 Squid 등록 경계를 현재 월드/Kernel 어댑터에 잇는다. 화면 계산은 독립 복원한 PaletteFlash에 맡긴다.
+class ThunderProcess final:public o::BaseProcess {
+public:
+    // 생성 시의 표시 모드로 수명을 정하고, 현재 팔레트 두 배열을 준비한다. 시각은 프레임의 고정 실시간이다.
+    ThunderProcess(Client& client,std::function<void(o::ProcessId)> destroyed):client_(client),destroyed_(std::move(destroyed)),
+        flash_(state_,{
+            [&client]() { return client.Time().wall; },
+            [&client]() { return (client.GetScreen().Flags()&ScreenMode::kFullScreen)!=0; },
+            [&client](unsigned start,unsigned count,ScreenColor* destination) {
+                std::copy_n(client.GetScreen().Palette().data()+start,count,destination);
+            },
+            [&client](unsigned start,unsigned count,ScreenColor* colors) { client.GetScreen().SetPalette(start,count,colors,true); },
+            [&client]() { client.GetScreen().SetPalette(0,256,nullptr,true); }
+        }) {
+        state_.duration=ThunderDuration((client.GetScreen().Flags()&ScreenMode::kFullScreen)!=0);flash_.Init();
+    }
+    // 화면이 살아 있는 동안 취소/복구하고 번호 목록에서도 제거한다.
+    ~ThunderProcess() override { flash_.Cancel();destroyed_(id_); }
+    // Kernel 등록 직후 할당된 번호를 저장한다. 초기화 도중 예외가 나면 번호 0은 등록되지 않은 상태다.
+    void Registered(o::ProcessId id) { id_=id; }
+    // 원본처럼 종료 판정 뒤 즉시 자신을 제거한다. 삭제 뒤에는 멤버에 접근하지 않는다.
+    void RunFrame() override { if (!flash_.Frame()) client_.GetKernel().Remove(id_); }
+private:
+    Client& client_;
+    std::function<void(o::ProcessId)> destroyed_;
+    PaletteFlashState state_;
+    PaletteFlash flash_;
+    o::ProcessId id_{};
+};
 // 원본 창 클래스 스타일 0x23: CS_VREDRAW | CS_HREDRAW | CS_OWNDC.
 constexpr UINT kWindowClassStyle = CS_VREDRAW | CS_HREDRAW | CS_OWNDC;
 // 원본이 CreateWindowExA에 넘기는 처음 창 크기(0x1c4 × 0x1d7). 곧 화면 크기에 맞춰 바뀐다.
@@ -119,6 +149,7 @@ Client::Client(ClientOptions options)
 Client::~Client() {
     audio_.reset(); // 음악 스레드를 합류하고 소리 장치를 닫는다(협조 창이 살아 있는 동안).
     menu_.reset();
+    ClearThunderFlashes();
     renderer_.reset(); fonts_.reset(); cursor_.reset();
     screen_.reset();
     if (loadingFont_) DeleteObject(static_cast<HFONT>(loadingFont_));
@@ -246,6 +277,8 @@ int Client::Run() {
         scene.ascendancyPalette=[this]() { return configuration_.GetInt(kAscendancyPaletteOption)==1; };
         // 파일 이름에는 이미 .col이 포함돼 있으므로 GamePalSpec의 .COL을 추가하지 않는다.
         scene.loadPalette=[this](std::string_view name) { LoadScenePalette(name); };
+        // 원본 00469c80은 천둥 효과음을 내기 전에 번개 프로세스를 생성한다. 소리 옵션과 별개로 진행한다.
+        scene.thunderFlash=[this]() { StartThunderFlash(); };
         audio_ = std::make_unique<ClientAudio>(options_.gameDirectory, options_.edition, kLanguages[static_cast<std::size_t>(languageNumber_)],
             [this]() { return clock_.WallSeconds(timeGetTime()); }, timeGetTime(),std::move(scene));
         audio_->SetSceneTints(screen_->WeatherTints());
@@ -502,11 +535,26 @@ void Client::LoadScenePalette(std::string_view name) {
     if (cursor_ && (screen_->Flags()&ScreenMode::kSoftwareMouse)!=0) cursor_->BuildSoftware(screen_->Palette());
     if (menu_) menu_->PaletteChanged();else if (renderer_) renderer_->InvalidateAll();
 }
+// 날씨의 부모 조회는 현재 월드의 존재로 연결한다. raw Squid/SpStore의 원본 등록은 후속 단계다.
+void Client::StartThunderFlash() {
+    if (!menu_ || !menu_->HasWorld()) return;
+    auto process=std::make_unique<ThunderProcess>(*this,[this](o::ProcessId id) { std::erase(thunderProcesses_,id); });
+    auto* pointer=process.get();const auto id=kernel_.Add(std::move(process));pointer->Registered(id);
+    thunderProcesses_.push_back(id);
+}
+// 종료 중 콜백이 번호를 지우므로 뒤 번호를 하나씩 읽어 제거한다. Screen이 사라지기 전에 호출한다.
+void Client::ClearThunderFlashes() {
+    // 등록된 프로세스를 즉시 파괴하여 전체화면 복구와 목록 정리가 끝나도록 한다.
+    while (!thunderProcesses_.empty()) kernel_.Remove(thunderProcesses_.back());
+}
+// 개별 효과의 종료/취소 콜백으로 유지되는 현재 등록 수다.
+std::size_t Client::ThunderFlashCount() const { return thunderProcesses_.size(); }
 // 현재 단계의 창 모드 세 해상도만 지원한다. 전체화면 장치는 후속이다.
 void Client::ChangeResolution(int width, int height) {
     if (!((width == 640 && height == 480) || (width == 800 && height == 600) || (width == 1024 && height == 768)))
         throw std::invalid_argument("Unsupported original resolution");
     if (screenWidth_ == width && screenHeight_ == height) return;
+    ClearThunderFlashes();
     // 현재 RGBQUAD 256개를 새 장치의 저장 팔레트로도 옮긴다. SetPalette만 하면 SetMode의 기본 팔레트 재적용에서 검정으로 덮인다.
     std::array<std::uint8_t,1024> palette{};
     std::memcpy(palette.data(),screen_->Palette().data(),palette.size());

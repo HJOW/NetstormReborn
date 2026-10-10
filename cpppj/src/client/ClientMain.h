@@ -22,6 +22,7 @@
 #include <optional>
 #include <string>
 #include <utility>
+#include <vector>
 
 namespace netstorm::client {
 class UberGump;
@@ -116,6 +117,10 @@ public:
     ClientAudio* Audio();
     // 원본 Interpret Options(00435220)의 소리 부분: 설정을 다시 읽어 장치·음량·현재 곡을 맞춘다. 옵션 메뉴에서 소리 설정을 바꾼 뒤 부른다.
     void ApplyAudioOptions();
+    // 월드에 붙은 번개 프로세스를 화면/월드 해제 전에 제거한다. 부모 Squid 수명을 대신하는 현재 어댑터의 경계다.
+    void ClearThunderFlashes();
+    // 같은 프레임의 검사 보고에 쓰는 현재 등록된 번개 프로세스 수다.
+    std::size_t ThunderFlashCount() const;
     // 이번 프레임에 고정된 시각(원본 FUN_00460e90).
     const o::FrameTime& Time() const;
     // 창이 활성인가(원본 DAT_0054dc50).
@@ -127,6 +132,8 @@ public:
 private:
     // 날씨의 완전한 파일 이름을 DataDir 아래에서 읽어 화면에 적용하고 색 표·커서·월드/UI를 갱신한다.
     void LoadScenePalette(std::string_view name);
+    // 천둥 곡의 화면 효과를 현재 월드에 붙인다. 월드가 없으면 원본의 부모 조회 실패처럼 생성하지 않는다.
+    void StartThunderFlash();
     // 원본 00441d10·00441de0: 게임 폴더의 d/options.cfg에 저장한다. 변경 검사 여부는 호출 위치가 정한다.
     void SaveOptions();
     // 원본 FUN_00435220("Interpret Options")의 일부: 화면 크기·창 위치·프레임 제한 등 설정을 읽는다.
@@ -169,6 +176,7 @@ private:
     o::GameClock clock_;
     o::FrameTime time_{};
     o::Kernel kernel_;
+    std::vector<o::ProcessId> thunderProcesses_; // 커널이 소유한 번개 번호. 파괴 콜백에서 제거하므로 재사용된 슬롯을 지우지 않는다.
     int screenWidth_{kDefaultScreenWidth};   // DAT_00531860
     int screenHeight_{kDefaultScreenHeight}; // DAT_00531864
     int windowWidth_{-1};              // DAT_00542390

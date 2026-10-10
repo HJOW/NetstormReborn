@@ -115,10 +115,13 @@ UberGump::UberGump(Client& client) : client_(client) {
 UberGump::~UberGump() { ClearWorld(); }
 // 입력 참조를 먼저 없애고 커널의 실제 소유권을 해제한다. 위치 효과음은 카메라 0의 전체 메뉴 영역으로 되돌린다.
 void UberGump::ClearWorld() {
+    client_.ClearThunderFlashes();
     userInput_.reset(); if (worldProcess_) client_.GetKernel().Remove(worldProcess_);
     world_=nullptr; worldProcess_=0;
     if (client_.Audio()) client_.Audio()->SetView({0,0,0,0,client_.GetScreen().Width(),client_.GetScreen().Height()});
 }
+// 현재 어댑터의 월드 수명으로 원본 번개 부모 조회 경계를 제공한다.
+bool UberGump::HasWorld() const { return world_!=nullptr; }
 // 기본 메뉴를 초기화한 다음 프레임에 미션을 시작한다.
 void UberGump::StartMission(std::string name) { state_.Post({"MissionBegin",std::move(name)}); }
 // 캠페인 이름의 설정 객체를 보존하여 officalN.title 같은 참조를 복원한다.
@@ -510,6 +513,7 @@ std::string UberGump::Report() const {
     out << "phase\t" << static_cast<int>(state_.phase) << "\npage\t" << Field(pageName_) << "\npopup\t" << Field(popup_) << "\n";
     out << "size\t" << client_.GetScreen().Width() << '\t' << client_.GetScreen().Height() << "\n";
     out << "paused\t" << client_.Paused() << "\nsound\t" << client_.Configuration().GetInt("sound") << "\n";
+    out << "thunder_processes\t" << client_.ThunderFlashCount() << '\n';
     out.precision(12); out<<"time\t"<<client_.Time().game<<'\t'<<client_.Time().wall<<"\n";
     out << "fullscreenMarker\t" << client_.Files().TryRead("fullscreenStateFile.dat").has_value() << "\n";
     out << "musicVolume\t" << client_.Configuration().GetInt("musicVolume") << "\nsoundVolume\t" << client_.Configuration().GetInt("soundVolume") << "\n";

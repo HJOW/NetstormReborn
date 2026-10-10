@@ -1,0 +1,96 @@
+{
+  "total": 768,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-10",
+  "controls": [
+    639,
+    895
+  ],
+  "os_calls": 0,
+  "editions": {
+    "originals": {
+      "cases": 256,
+      "returns": 1024,
+      "native_calls": {
+        "00470fa0": 160,
+        "00470d40": 160,
+        "00470e30": 512,
+        "004a2800": 1024,
+        "00471650": 496,
+        "00471820": 16
+      },
+      "boundaries": {
+        "new": 160,
+        "parent": 160,
+        "attach": 160,
+        "kill": 178,
+        "apply": 256,
+        "base": 16
+      },
+      "assertions": 0
+    },
+    "originalCD": {
+      "cases": 256,
+      "returns": 1024,
+      "native_calls": {
+        "004b10d0": 160,
+        "004b1310": 512,
+        "004246c0": 1024,
+        "004b1450": 496,
+        "004b15d0": 16,
+        "004b165b": 16
+      },
+      "boundaries": {
+        "new": 160,
+        "parent": 160,
+        "attach": 160,
+        "apply": 256,
+        "base": 16,
+        "kill": 48
+      },
+      "assertions": 0
+    },
+    "original1037": {
+      "cases": 256,
+      "returns": 1024,
+      "native_calls": {
+        "004b10d0": 160,
+        "004b1310": 512,
+        "004246c0": 1024,
+        "004b1450": 496,
+        "004b15d0": 16,
+        "004b165b": 16
+      },
+      "boundaries": {
+        "new": 160,
+        "parent": 160,
+        "attach": 160,
+        "apply": 256,
+        "base": 16,
+        "kill": 48
+      },
+      "assertions": 0
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/paletteflash-x86.tsv": "3e3c769c896a52448ec675cdf82724382faf2336767afb76221ae3fdca0902b6",
+    "extracted/paletteflash/original1037/creation.c": "e706c8b9d012dfd6b5568c570af2bce437ac5c409fdb31c55f179415a3e89bae",
+    "extracted/paletteflash/original1037/functions.tsv": "038afa335ebd6ea0bed761d60dbd12201ccddee189e306dd120b714148deaec5",
+    "extracted/paletteflash/originalCD/creation.c": "e706c8b9d012dfd6b5568c570af2bce437ac5c409fdb31c55f179415a3e89bae",
+    "extracted/paletteflash/originalCD/functions.tsv": "038afa335ebd6ea0bed761d60dbd12201ccddee189e306dd120b714148deaec5",
+    "extracted/paletteflash/originals/creation.c": "11db81aa97530654749a1219c1e0f428364a83b38c7a4fef47269a501cf6e93f",
+    "extracted/paletteflash/originals/functions.tsv": "77166e596dd1d2773ebbeb4529aa429ddd1dbf567d188ec34641f3995fcd3f34",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/decomp_paletteflash_oracle.py": "e35b1862042c6844817e8f39b76a42fe57a1f09078cb6902b01bfdefd485af55",
+    "tools/ghidra/paletteflash-functions.json": "c06f3118aa9e3a9c40062cf348ea4eb5b50759fdd6c0429436add43bd3670120"
+  },
+  "limits": [
+    "메모리 할당·부모 조회/등록·OS 팔레트 적용·프로세스 해제/기반 소멸자는 명시 경계로 대체",
+    "등록 경계는 원본 초기화 몸체를 실제 호출; 실제 Squid/SpStore 연결과 DirectDraw 장치는 실행하지 않음",
+    "CD/10.37 프레임의 초기화되지 않은 STACK-8 입력을 매 호출 0으로 고정; 복원 목표 10.78에는 이 버그가 없음",
+    "중단 뒤 소멸된 객체의 initialized는 안전 API 종료 상태 0으로 정규화"
+  ]
+}

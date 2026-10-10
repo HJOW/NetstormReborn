@@ -45,6 +45,7 @@ add_executable(netstorm_tests
     ConfigInterfaceTests.cpp
     FortTests.cpp
     ScreenTests.cpp
+    PaletteFlashTests.cpp
     TerritoryTests.cpp
     RendererTests.cpp
     MenuTests.cpp
@@ -318,3 +319,7 @@ set_source_files_properties(SoundSceneMusicTests.cpp PROPERTIES COMPILE_DEFINITI
 # 팔레트 색 검색의 세 실제 PE 관찰이다. 기본 CTest는 원본/창/장치를 실행하지 않고 저장한 관찰을 비교한다.
 set_source_files_properties(ScreenTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PALETTECOLOR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/palettecolor-x86.tsv\"")
+
+# 번개 생성/초기화/진행/중단의 실제 x86 관찰 파일을 새 검사에만 전달한다.
+set_source_files_properties(PaletteFlashTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PALETTEFLASH_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/paletteflash-x86.tsv\"")

@@ -8,6 +8,7 @@ target_sources(netstorm PRIVATE
     ClientMain.h
     VFXDraw.cpp VFXDraw.h
     Screen.cpp Screen.h
+    PaletteFlash.cpp PaletteFlash.h
     GameAssets.cpp GameAssets.h
     PriestPlacementAssets.cpp PriestPlacementAssets.h
     Mission.cpp Mission.h

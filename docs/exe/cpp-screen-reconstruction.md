@@ -1,5 +1,7 @@
 # cpppj 창·화면 장치·입력 큐·영역 배치 복원 (Win32)
 
+> 후속 갱신(2026-10-10, HJOW-Athlon): [번개 생성·팔레트 진행·정상/중단 복구](cpp-palette-flash-reconstruction.md)를 복원해 천둥 곡과 현재 월드 Kernel에 연결했다. 창 모드는 원본처럼 팔레트를 바꾸지 않는다. 실제 전체화면 표시와 raw 부모 수명은 후속이며 아래 번개 미복원 설명은 앞 단계 이력이다.
+
 > 후속 갱신(2026-10-10, HJOW-Athlon): [원본 가장 가까운 색 검색·날씨 네 색 표·실제 화면 연결](cpp-weather-palette-integration.md)을 추가했다. 새 색 검색은 세 PE 독립 관찰 786개로 대조했다. 해상도 변경 때 저장 팔레트가 비어 색이 검정으로 덮이던 문제도 수정했다. 전체 이름 붙은 색 표와 번개는 후속이다.
 
 > 2026-10-05. 기준은 패치판 `originals/Netstorm.exe`(10.78), 대조는 CD판 `originalCD/NETSTORM.EXE`(10.72).
