@@ -154,6 +154,12 @@ constexpr std::uint32_t kLogError=9,kLogSound=0x1d;
 // 장치 상태 비트: 재생 중, 버퍼를 잃음(DSBSTATUS_PLAYING, DSBSTATUS_BUFFERLOST).
 // 이력: 2026-10-10 추가.
 constexpr std::uint32_t kStatusPlaying=1,kStatusLost=2;
+// 장치의 반복 재생 상태 비트(DSBSTATUS_LOOPING). 재생 중 비트와 별도로 조회해 반복 소리만 정지한다.
+constexpr std::uint32_t kStatusLooping=4;
+// 이름 정지의 유일성 조건식과 CD 전체 표 순회의 견고성 조건식이다. 이름 재생의 "qq"와 구별한다.
+constexpr std::string_view kStopUniqueExpression="sound->isUnique()",kRobustExpression="s->isRobust()";
+// 세 판본에서 실제 보고하는 줄 번호다. CD 견고성 검사는 버퍼가 없거나 소리 없음 표식인 항목에서도 수행한다.
+constexpr int kPatchStopUniqueLine=0x3f8,kCdStopUniqueLine=0x3f3,kCdRecountLine=0x1e7,kCdMasterLine=0x442;
 // 버퍼 도우미와 이름 기반 반복 재생이 보고하는 조건식과 줄 번호다. 유일성 보고의 줄만 판본마다 다르다.
 // 원본: 004a8a89("buffer", 0x82), 004a8ada("buffer", 0x9b), 004a8b11("!isLost()", 0x9c), 004a9cd5("qq", 0x3ef) / CD 00438b7d("qq", 0x3ea).
 // 이력: 2026-10-10 추가.
@@ -282,6 +288,73 @@ void SoundPlayer::Stop(SoundHandle sound) {
 std::uint32_t SoundPlayer::IsPlaying(SoundHandle sound) {
     if (!state_.initialized || sound==0 || !state_.enabled || Get(sound,SoundField::Buffer)==0) return 0;
     return BufferPlaying(sound);
+}
+
+// 복제 사슬이 아닌 표의 물리적 배치를 순회하며 실제 재생 상태를 센다. 빈 이름은 원본의 끝 표식이다.
+std::int32_t SoundPlayer::Recount() {
+    state_.playing=0;
+    // 각 가변 길이 항목은 머리·이름·NUL 크기만큼 진행한다. 복제 버퍼도 독립 항목으로 센다.
+    for (SoundHandle sound=kSoundListBase;;) {
+        const auto name=list_.Name(sound);
+        if (name.empty()) break;
+        if (list_.Edition()!=o::OriginalEdition::Patch1078 && name.back()!='v') Report(kRobustExpression,kCdRecountLine);
+        const auto buffer=Get(sound,SoundField::Buffer);
+        if (buffer!=0 && buffer!=kSilentSoundBuffer && (hooks_.status(buffer)&kStatusPlaying)) ++state_.playing;
+        sound+=kSoundHeaderBytes+static_cast<SoundHandle>(name.size())+1U;
+    }
+    return state_.playing;
+}
+
+// 조회가 먼저다. 유일성 보고 뒤에도 원본 항목만 정지하며 복제 버퍼는 그대로 둔다.
+void SoundPlayer::StopByName(std::string_view name) {
+    const auto sound=list_.Lookup(name);
+    if (Get(sound,SoundField::Root)!=sound || Get(sound,SoundField::Next)!=0)
+        Report(kStopUniqueExpression,list_.Edition()==o::OriginalEdition::Patch1078 ? kPatchStopUniqueLine : kCdStopUniqueLine);
+    Stop(sound);
+}
+
+// 옵션·초기화 검사는 항목 조회 후 IsPlaying에서 수행한다.
+std::uint32_t SoundPlayer::IsPlayingByName(std::string_view name) { return IsPlaying(list_.Lookup(name)); }
+
+// 이미 재생 중이면 반복/음량을 갱신하지 않는다. on은 성공 여부가 아니라 호출 인자를 그대로 돌려주는 값이다.
+std::int32_t SoundPlayer::SetNamePlaying(std::int32_t on,const char* name,std::uint32_t loop,std::int32_t volume) {
+    if (!state_.initialized || name==nullptr || !state_.enabled) return 0;
+    if (on==0) { StopByName(name);return 0; }
+    const auto sound=list_.Lookup(name);
+    if (Get(sound,SoundField::Buffer)==0 || !BufferPlaying(sound)) PlayByName(name,loop,volume,0,0,0);
+    return on;
+}
+
+// 반복 정지는 실제 상태를 별도로 두 번 조회한다. 중간에 장치 상태가 바뀌는 경우도 원본 순서대로 처리한다.
+void SoundPlayer::StopLoops() {
+    // 전체 표에서 복제 항목까지 검사하며, 재생·반복 상태가 확인된 항목만 정지한다.
+    for (SoundHandle sound=kSoundListBase;;) {
+        const auto name=list_.Name(sound);
+        if (name.empty()) break;
+        const auto buffer=Get(sound,SoundField::Buffer);
+        if (buffer!=0 && buffer!=kSilentSoundBuffer && (hooks_.status(buffer)&kStatusPlaying) && (hooks_.status(buffer)&kStatusLooping))
+            StopBuffer(sound);
+        sound+=kSoundHeaderBytes+static_cast<SoundHandle>(name.size())+1U;
+    }
+}
+
+// 재생할 때의 Gain과 달리 범위를 자르지 않는다. 음량 저장은 초기화와 무관하고 버퍼 갱신만 초기화 상태를 검사한다.
+void SoundPlayer::SetMasterVolume(std::int32_t volume) {
+    if (state_.volumeHoldDepth!=0) { state_.pendingMasterVolume=volume;return; }
+    state_.masterVolume=volume;
+    if (!state_.initialized) return;
+    // 현재 재생 여부를 조회하지 않고 모든 적재된 실제 버퍼를 갱신한다. 필드 값들은 유지한다.
+    for (SoundHandle sound=kSoundListBase;;) {
+        const auto name=list_.Name(sound);
+        if (name.empty()) break;
+        if (list_.Edition()!=o::OriginalEdition::Patch1078 && name.back()!='v') Report(kRobustExpression,kCdMasterLine);
+        const auto buffer=Get(sound,SoundField::Buffer);
+        if (buffer!=0 && buffer!=kSilentSoundBuffer) {
+            const auto gain=Get(sound,SoundField::Volume)-Get(sound,SoundField::Attenuation)+static_cast<std::uint32_t>(state_.masterVolume);
+            static_cast<void>(hooks_.setVolume(buffer,static_cast<std::int32_t>(gain)));
+        }
+        sound+=kSoundHeaderBytes+static_cast<SoundHandle>(name.size())+1U;
+    }
 }
 
 // 순서: 준비 확인 → 동시 재생 한도 → (미적재면 적재/되살리기) → 소리 없음 확인 → 쓸 항목 고르기 → 필드 기록 → 음량·좌우·재생.

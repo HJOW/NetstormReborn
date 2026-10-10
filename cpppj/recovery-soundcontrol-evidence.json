@@ -1,0 +1,159 @@
+{
+  "schema": 1,
+  "host": "HJOW-Athlon",
+  "decompile_date": "2026-10-10",
+  "total": 3189,
+  "controls": [
+    639,
+    895
+  ],
+  "os_calls": 0,
+  "editions": {
+    "originals": {
+      "cases": 1063,
+      "returns": {
+        "Script": 2126
+      },
+      "calls": 25486,
+      "native_calls": {
+        "004a8ee0": 7832,
+        "004a8d50": 10682,
+        "004a8a60": 11036,
+        "004ef510": 16842,
+        "004a9550": 6846,
+        "004a8a80": 10488,
+        "004a8e60": 4176,
+        "004a9e50": 1804,
+        "004a9d20": 1366,
+        "004a9da0": 1346,
+        "004a8ad0": 1374,
+        "004a9de0": 646,
+        "004a9cb0": 50,
+        "004a9f10": 1540
+      },
+      "substitutions": {
+        "locale": 16842,
+        "load": 3928,
+        "status": 30002,
+        "gain": 5924,
+        "balance": 4964,
+        "start": 4964,
+        "copy": 2882,
+        "assert": 1612,
+        "halt": 1374,
+        "seek": 1374,
+        "log": 2
+      },
+      "assertions": 0,
+      "instructions": 6058508
+    },
+    "originalCD": {
+      "cases": 1063,
+      "returns": {
+        "Script": 2126
+      },
+      "calls": 25486,
+      "native_calls": {
+        "00437d20": 7832,
+        "00437b29": 10682,
+        "004f2980": 16842,
+        "004383f0": 6846,
+        "00437c80": 4176,
+        "00438d20": 1804,
+        "00438bc0": 1366,
+        "004386f0": 1366,
+        "00438c30": 1346,
+        "004387a0": 1346,
+        "00438c80": 646,
+        "00438b50": 50,
+        "00438e50": 1540
+      },
+      "substitutions": {
+        "assert": 8050,
+        "load": 3928,
+        "status": 30002,
+        "gain": 5924,
+        "balance": 4964,
+        "start": 4964,
+        "copy": 2882,
+        "halt": 1374,
+        "seek": 1374,
+        "log": 2
+      },
+      "assertions": 0,
+      "instructions": 4647940
+    },
+    "original1037": {
+      "cases": 1063,
+      "returns": {
+        "Script": 2126
+      },
+      "calls": 25486,
+      "native_calls": {
+        "00437d20": 7832,
+        "00437b29": 10682,
+        "004f2980": 16842,
+        "004383f0": 6846,
+        "00437c80": 4176,
+        "00438d20": 1804,
+        "00438bc0": 1366,
+        "004386f0": 1366,
+        "00438c30": 1346,
+        "004387a0": 1346,
+        "00438c80": 646,
+        "00438b50": 50,
+        "00438e50": 1540
+      },
+      "substitutions": {
+        "assert": 8050,
+        "load": 3928,
+        "status": 30002,
+        "gain": 5924,
+        "balance": 4964,
+        "start": 4964,
+        "copy": 2882,
+        "halt": 1374,
+        "seek": 1374,
+        "log": 2
+      },
+      "assertions": 0,
+      "instructions": 4647940
+    }
+  },
+  "stubbed": [
+    "장치 COM 상태/재생/정지/음량/좌우/복제",
+    "WAVE 항목 적재",
+    "기록",
+    "assert(기록 후 계속)",
+    "패치 CRT 로캘 선택(ASCII 몸체는 실제 명령)",
+    "초기 표 확보/0 채움/대체 이름 대입"
+  ],
+  "limitations": [
+    "실제 소리 장치/소리 출력 제외",
+    "음악과 음소거 깊이 증감 호출 계층 제외(전역 깊이를 명시 입력)",
+    "null 표·손상된 표/복제 사슬·빈 이름의 계약 위반 제외"
+  ],
+  "files": {
+    "cpppj/tests/fixtures/soundcontrol-x86.tsv": "490c4ad9faf92ed2f3762725819c8b8a3bbe20c4a26e1869f84e40d570904b94",
+    "extracted/soundcontrol/original1037/creation.c": "780b557f4ecc829df489ccf7fa61eae14a44ce65be422ef9afe7dfc213bbfab7",
+    "extracted/soundcontrol/original1037/functions.tsv": "19243829ec57cd62da41fda8261263ab93f5c2e750b2c6e701b0a9c1952e4712",
+    "extracted/soundcontrol/originalCD/creation.c": "780b557f4ecc829df489ccf7fa61eae14a44ce65be422ef9afe7dfc213bbfab7",
+    "extracted/soundcontrol/originalCD/functions.tsv": "19243829ec57cd62da41fda8261263ab93f5c2e750b2c6e701b0a9c1952e4712",
+    "extracted/soundcontrol/originals/creation.c": "61a2bb302ace9ffb257078cbc8f3b458c94a286c775c027120e983c0c30fe2a9",
+    "extracted/soundcontrol/originals/functions.tsv": "4bcc9fd3d3cd087e0a08427a28afdf5e75b600b1441440e22dfd3b915e6ac142",
+    "extracted/soundplay/original1037/creation.c": "bd884b869d734f67925b780b5deab7a53eef93e8e02cb40e62f826d03b3b475b",
+    "extracted/soundplay/original1037/functions.tsv": "f02aef06586ae85e7583710c29308d9bd929b7ae85ab4d079ce33407931a9d3b",
+    "extracted/soundplay/originalCD/creation.c": "bd884b869d734f67925b780b5deab7a53eef93e8e02cb40e62f826d03b3b475b",
+    "extracted/soundplay/originalCD/functions.tsv": "f02aef06586ae85e7583710c29308d9bd929b7ae85ab4d079ce33407931a9d3b",
+    "extracted/soundplay/originals/creation.c": "a8b0fc00c96069a087470be4b4479b426c40b61afdf1b1e2dfd4339ac5151853",
+    "extracted/soundplay/originals/functions.tsv": "eeb471425021a75180fdd3d247a842dbad2777ebb0731c9a33b52295ed99860f",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/decomp_soundcontrol_oracle.py": "05833b91e68d879fb28532db76ce04d4ed2a7858973715ce80dbdc29e44fe661",
+    "tools/decomp_soundplay_oracle.py": "9a67f082b1079f8ed8bf8b1be45d12d84169e24c5827844678333ea39b80964f",
+    "tools/ghidra/soundcontrol-functions.json": "11eed532ea113bb551848a888ea380555d51ff28e2f9c164e8948d4d70edd092",
+    "tools/ghidra/soundplay-functions.json": "f001ea12c907d265f0fae0fdd12e718c900ce1ac30eb61fe4636a14249665217"
+  }
+}

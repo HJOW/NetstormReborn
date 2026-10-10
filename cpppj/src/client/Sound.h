@@ -177,10 +177,15 @@ struct SoundState {
     bool enabled{},swapSpeakers{};
     // 옵션 maxSimulSounds(DAT_005424a8 / CD 0051a73c, 기본 8). 0이면 한도가 없다. 우선 재생은 이 한도를 건너뛴다.
     std::int32_t maxPlaying{8};
-    // 지금 재생 중이라고 센 버퍼 수다(DAT_005c7b38 / CD 0051a738). 재생할 때 늘리고 정지할 때 줄인다(스스로 끝난 소리는 줄이지 않는다).
+    // 지금 재생 중이라고 센 버퍼 수다(DAT_005c7b38 / CD 0051a738). 재생/정지로 증감하며 자연 종료한 소리는 Recount로 다시 센다.
     std::int32_t playing{};
     // 전체 효과음 음량이다(DAT_005c7b20 / CD 0051a720, 1/100 dB).
     std::int32_t masterVolume{};
+    // 음량 변경 보류 깊이(DAT_005c7b28 / CD 0051a728). 0 이외에는 전체 음량을 적용하지 않고 아래 예약값만 바꾼다.
+    // 음악과 공유하는 원본 음소거 호출 계층이 관리할 값이다. 음수도 변경을 보류하며, bool로 축약하지 않는다.
+    std::int32_t volumeHoldDepth{};
+    // 보류 중 가장 최근에 요청한 효과음 음량이다(DAT_005c7b2c / CD 0051a72c). 보류가 없을 때의 변경은 이 값을 건드리지 않는다.
+    std::int32_t pendingMasterVolume{};
     // 다음 재생에 매길 일련번호다(DAT_005c7b34 / CD 0051a734).
     std::uint32_t serial{};
     // 화면 영역과 카메라 원점이다.
@@ -217,7 +222,7 @@ struct SoundDeviceHooks {
 // 사용: 월드마다(실제로는 클라이언트에 하나) 만들고, SoundList::Lookup으로 얻은 항목을 넘겨 재생한다.
 //       list·state·장치 효과 대상은 이 객체보다 오래 살아야 한다. 필수 장치 효과가 빠져 있으면 std::invalid_argument를 던진다.
 //       재생 함수가 돌려준 값은 "실제로 재생에 쓴 항목"이며 요청한 항목과 다를 수 있다(같은 소리가 이미 재생 중이면 복제 항목을 쓴다).
-// 판본 차이: 기록 문장의 파일 이름/줄 번호와 보고 줄 번호만 다르다. 패치판의 변조 감지용 고의 고장(DAT_005318ec == 7이면 null 버퍼로 재생)은 옮기지 않았다.
+// 판본 차이: 기록 문장/보고 줄 번호와 CD의 전체 표 이름 견고성 검사를 보존한다. 패치판의 변조 감지용 고의 고장(DAT_005318ec == 7이면 null 버퍼로 재생)은 옮기지 않았다.
 // 이력: 2026-10-10 추가.
 class SoundPlayer {
 public:
@@ -258,6 +263,29 @@ public:
     // 원본: 004a9d70 / CD 00438c00.
     // 이력: 2026-10-10 추가.
     SoundHandle PlayNameAt(float x,float y,std::string_view name,std::uint32_t loop);
+    // 전체 표의 실제 버퍼 상태를 다시 세어 playing을 대입하고 반환한다. 자연 종료한 효과음의 누적 재생 수를 바로잡을 때 호출한다.
+    // 초기화·옵션 여부와 무관하게 실행하며 미적재·소리 없음 버퍼는 제외한다. CD는 모든 이름의 마지막 글자 'v'를 검사한다(줄 0x1e7).
+    // 원본: 004a8e60 / CD 00437c80.
+    std::int32_t Recount();
+    // 이름을 조회/등록하고 유일한 항목인지 보고한 뒤 원본 항목만 정지한다. 복제 항목들을 정지하지 않는다.
+    // 복제 항목이 있으면 "sound->isUnique()"를 보고한다(패치 줄 0x3f8 / CD 0x3f3). 옵션·초기화 여부로 건너뛰지 않는다.
+    // 원본: 004a9d20 / CD 00438bc0.
+    void StopByName(std::string_view name);
+    // 이름을 먼저 조회/등록하고 IsPlaying으로 원본 항목의 상태를 반환한다. 소리 옵션이 꺼져 있어도 이름은 등록된다.
+    // 원본: 004a9da0 / CD 00438c30.
+    std::uint32_t IsPlayingByName(std::string_view name);
+    // on이 0이면 이름으로 정지하고, 그 밖에는 원본 항목이 멈춰 있을 때만 이름으로 재생한다(좌우·우선·한도 인자 모두 0).
+    // 초기화 전·옵션 꺼짐·null 이름이면 조회 없이 0. 그 외에는 재생 성공 여부와 무관하게 on 값을 그대로 반환한다.
+    // 원본: 004a9de0 / CD 00438c80. name은 NUL 종료 문자열이며 빈 이름은 SoundList의 계약에 따라 거부한다.
+    std::int32_t SetNamePlaying(std::int32_t on,const char* name,std::uint32_t loop,std::int32_t volume);
+    // 전체 표에서 재생 비트와 반복 비트가 모두 켜진 버퍼만 정지한다. 복제 항목도 검사하며 한 번 재생하는 소리는 유지한다.
+    // 옵션·초기화와 무관하고 재생 수를 먼저 다시 세지 않는다. 상태 조회 두 번 뒤 StopBuffer의 잃음 검사를 거친다.
+    // 원본: 004a9e50 / CD 00438d20.
+    void StopLoops();
+    // 전체 음량을 저장하고 초기화된 표의 모든 실제 버퍼에 Volume − Attenuation + 음량을 적용한다(32비트 넘침, 자르기 없음).
+    // 멈춘 버퍼에도 적용하며 실패 HRESULT는 무시한다. 보류 깊이가 0이 아니면 pendingMasterVolume만 바꾼다.
+    // 원본: 004a9f10 / CD 00438e50. CD 이름 견고성 보고 줄은 0x442다.
+    void SetMasterVolume(std::int32_t volume);
 private:
     // 항목의 버퍼가 재생 중인지 장치에 묻는다. 소리 없음 표식이면 묻지 않고 0이다. 원본: 004a8a80 (CD는 인라인).
     std::uint32_t BufferPlaying(SoundHandle entry);
