@@ -24,4 +24,6 @@ bool RawCanonPlacementPipeline::MayPlace(CanonPlacementQuery query) {
     state_.preview.alliances=state_.permission.alliances;state_.anchor.graphReady=state_.permission.graphReady;
     state_.terrain.noIslandType=state_.geometry.patternTypes[3];return placement_.MayPlace(query);
 }
+// 전체 배치 파이프라인에 연결된 실제 풀 참조다.
+const SidPool& RawCanonPlacementPipeline::Pool() const { return placement_.Pool(); }
 }

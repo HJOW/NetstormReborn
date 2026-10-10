@@ -40,6 +40,8 @@ public:
     RawCanonPlacementPipeline& operator=(RawCanonPlacementPipeline&&)=delete;
     // 공통 전역의 중복 표현을 현재 값으로 맞춘 뒤 실제 접두부터 최종 반환까지 실행한다.
     bool MayPlace(CanonPlacementQuery query);
+    // 서버 건설 요청 어댑터가 같은 풀을 사용하는지 확인한다.
+    const SidPool& Pool() const;
 private:
     CanonPlacementPipelineState& state_;
     RawPlayerPlacementAnchor anchor_;

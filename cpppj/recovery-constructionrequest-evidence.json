@@ -1,0 +1,148 @@
+{
+  "total": 2192,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-11",
+  "decompile_date": "2026-10-11",
+  "controls": [
+    639,
+    895
+  ],
+  "os_calls": 0,
+  "editions": {
+    "originals": {
+      "cases": 816,
+      "nodes": 1439,
+      "areas": 2608,
+      "returns": {
+        "00444760": 1632
+      },
+      "native_calls": {
+        "00444760": 1632,
+        "0049a840": 11258,
+        "00425c20": 1376,
+        "00425830": 864,
+        "00425860": 3628,
+        "0049ae80": 3460,
+        "0040e880": 3460,
+        "0041d0d0": 6920,
+        "0040e800": 6920,
+        "0040e8f0": 3460,
+        "0041d770": 2608,
+        "004e49c0": 39020,
+        "0041d7a0": 2608,
+        "004b16d0": 2608,
+        "00434380": 19004,
+        "004b2b00": 66828,
+        "004b1810": 5728,
+        "0049a900": 7398,
+        "0044daa0": 3476,
+        "0040eaf0": 560,
+        "0041d360": 560,
+        "00425700": 2272,
+        "0049a940": 1760
+      },
+      "substitutions": {
+        "M": 1632,
+        "C": 1334,
+        "D": 284,
+        "K": 102
+      },
+      "assertions": 0
+    },
+    "originalCD": {
+      "cases": 688,
+      "nodes": 755,
+      "areas": 1736,
+      "returns": {
+        "004d17d0": 1376
+      },
+      "native_calls": {
+        "004d17d0": 1376,
+        "0041fcf0": 1120,
+        "0041fcc0": 864,
+        "0041feb0": 2640,
+        "004449d0": 2640,
+        "004442b0": 6490,
+        "0043f950": 5280,
+        "00440a50": 1736,
+        "004f161c": 25140,
+        "00440a80": 1736,
+        "004eae20": 1736,
+        "00479d90": 48630,
+        "004eafe0": 3362,
+        "0040f180": 1842,
+        "00440060": 592,
+        "00413c10": 506,
+        "0041fbb0": 1162,
+        "004442f0": 888
+      },
+      "substitutions": {
+        "M": 1376,
+        "C": 1410,
+        "V": 216,
+        "K": 118
+      },
+      "assertions": 0
+    },
+    "original1037": {
+      "cases": 688,
+      "nodes": 755,
+      "areas": 1736,
+      "returns": {
+        "004d17d0": 1376
+      },
+      "native_calls": {
+        "004d17d0": 1376,
+        "0041fcf0": 1120,
+        "0041fcc0": 864,
+        "0041feb0": 2640,
+        "004449d0": 2640,
+        "004442b0": 6490,
+        "0043f950": 5280,
+        "00440a50": 1736,
+        "004f161c": 25140,
+        "00440a80": 1736,
+        "004eae20": 1736,
+        "00479d90": 48630,
+        "004eafe0": 3362,
+        "0040f180": 1842,
+        "00440060": 592,
+        "00413c10": 506,
+        "0041fbb0": 1162,
+        "004442f0": 888
+      },
+      "substitutions": {
+        "M": 1376,
+        "C": 1410,
+        "V": 216,
+        "K": 118
+      },
+      "assertions": 0
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/constructionrequest-x86.tsv": "e36176be5730d4dde45fc356f96e7118c0d027f2b83541e52e71e2dbd75403aa",
+    "extracted/constructionrequest/original1037/creation.c": "f5f796876b1bb2259f0619807acaefed96ca4482f05ed29ae8416271eb000aab",
+    "extracted/constructionrequest/original1037/functions.tsv": "f8fe75295603d758bb03293fe95b4a7978ee842e8faab0a74ec4c4ac5718fcea",
+    "extracted/constructionrequest/originalCD/creation.c": "f5f796876b1bb2259f0619807acaefed96ca4482f05ed29ae8416271eb000aab",
+    "extracted/constructionrequest/originalCD/functions.tsv": "f8fe75295603d758bb03293fe95b4a7978ee842e8faab0a74ec4c4ac5718fcea",
+    "extracted/constructionrequest/originals/creation.c": "3ae9906d0d0b470453849d870c30c5c165651b743ed94752cfa2cb515fc302e3",
+    "extracted/constructionrequest/originals/functions.tsv": "75f59698de07e5c24ec3eb82782620227a11d6cca0b4d98b5c5932f09198e4ff",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_constructionclear_oracle.py": "8678de191d243a1abdbc2dc31e354472433621febbba6fc5deefb41a963fa666",
+    "tools/decomp_constructionplace_oracle.py": "9fe27089ff7591a9a5a442b8185fdc8632e01859c59335dd78cef12d40cfe12c",
+    "tools/decomp_constructionrequest_oracle.py": "ad15445cfdd601c092b8202d048598a40114a4d71edadb41ea22036f913e2748",
+    "tools/decomp_damageablepredestroy_oracle.py": "b6bd591b17b886224e81b9d35dc863f12dea570c67aabf8a66280c7361785e75",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/decomp_priestgeometry_oracle.py": "c8d62204fcd8ec2fcb86cc9842ca46e0d3cdfba3c9afce3e90f9caec8fedc9bc",
+    "tools/ghidra/constructionrequest-functions.json": "e2bb4a1fc6aa4fc76b42fffae3d612b376adf8e0c8969a5b43a09f6d84b3c4ab"
+  },
+  "limits": [
+    "요청 전체·decoder·발자국/좌표 자르기·절삭/거의 올림·일반 탐색·spot/표면 실제 몸체와 정상 반환 ABI/x87",
+    "MayPlace·유닛 밀어내기·확정·확정 실패 정리는 명시 경계이며 이 도구에서는 실제 하위 효과 미실행",
+    "합성 타입/프레임/풀/4단계 해시/spot 입력; 유한 좌표와 1~10 발자국, 후보 1~255; 원본 assert 경로 제외",
+    "로컬 요청/커서·실제 유닛 밀어내기/실패 정리·게임/GUI/메시지 미실행"
+  ]
+}
