@@ -69,6 +69,7 @@ target_sources(netstorm PRIVATE
     RawConstructionClear.cpp RawConstructionClear.h
     RawConstructionNotice.cpp RawConstructionNotice.h
     RawConstructionRequest.cpp RawConstructionRequest.h
+    RawConstructionEffects.cpp RawConstructionEffects.h
     RawConstructionLocal.cpp RawConstructionLocal.h
     RawContainedCreate.cpp RawContainedCreate.h
     RawPriestPlacement.cpp RawPriestPlacement.h

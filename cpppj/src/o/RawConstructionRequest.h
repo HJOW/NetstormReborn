@@ -16,13 +16,13 @@ struct ConstructionRequestState {
 struct ConstructionRequestHooks {
     // 0049b510 / 00445200: 원본 인자 그대로 전체 배치 가능 판정을 호출한다. mode는 항상 0이다.
     std::function<bool(const CanonPlacementQuery&)> mayPlace;
-    // 00443800(10.78): 유닛을 밀어내고 실패하면 요청을 중단한다. 이 함수 전체의 실제 효과는 후속이다.
+    // 00443800(10.78): 유닛을 밀어내고 실패하면 요청을 중단한다. RawConstructionEffects 어댑터로 몸체를 연결한다.
     std::function<bool(float,float,std::uint32_t,std::uint32_t)> displace;
     // 004d2450(CD): 플레이어 인자가 없는 void 호출이다. 반환 결과를 검사하지 않는다.
     std::function<void(float,float,std::uint32_t)> displaceCd;
     // 00444590 / 004d0f10: 받침 또는 요청 자체를 확정한다. 받침 확정의 반환값은 무시한다.
     std::function<bool(const ConstructionConfirmRequest&)> confirm;
-    // 0046e6c0 / 0048f960: flags1 0x400 타입의 본 확정이 실패했을 때 (x,y,0x1000,player)로 정리한다.
+    // 0046e6c0 / 0048f960: flags1 0x400 타입의 본 확정 실패에서 (x,y,0x1000,player)로 RawConstructionEffects 섬 정리를 연결한다.
     std::function<void(float,float,std::uint32_t,std::uint32_t)> cancel;
     // 원본에 없는 진단 지점이다. 각 decoder 칸의 탐색 범위만 관찰하며 비워 둘 수 있다.
     std::function<void(const SquidSearchArea&)> scan;

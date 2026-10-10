@@ -1,0 +1,186 @@
+{
+  "total": 3534,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-11",
+  "controls": [
+    639,
+    895
+  ],
+  "os_calls": 0,
+  "editions": {
+    "originals": {
+      "cases": {
+        "Displace": 770,
+        "Drop": 408
+      },
+      "nodes": 3212,
+      "areas": 1972,
+      "returns": {
+        "00443800": 1540,
+        "0046e6c0": 816
+      },
+      "native_calls": {
+        "00443800": 1540,
+        "0049a840": 10488,
+        "0049ae80": 1540,
+        "0040e880": 1540,
+        "0041d0d0": 3080,
+        "0040e800": 3080,
+        "0040e8f0": 1540,
+        "0041d3e0": 1540,
+        "0041def0": 1972,
+        "0041d770": 1972,
+        "004e49c0": 29428,
+        "0041d7a0": 1972,
+        "004b16d0": 1972,
+        "00434380": 15096,
+        "004b2b00": 68396,
+        "004b1810": 5496,
+        "0049a900": 3656,
+        "0044daa0": 3640,
+        "004ac200": 4860,
+        "0046e6c0": 816
+      },
+      "substitutions": {
+        "R": 808,
+        "C": 808,
+        "U": 808,
+        "P": 808,
+        "I": 144,
+        "B": 144,
+        "N": 840,
+        "F": 720,
+        "S": 720,
+        "K": 960,
+        "E": 168
+      },
+      "reported": {
+        "noIslandTypeCount == 9": 72,
+        "islandTypeCount == 1": 48,
+        "islandStalagTypeCount == 1": 48
+      },
+      "assertions": 0
+    },
+    "originalCD": {
+      "cases": {
+        "Displace": 770,
+        "Drop": 408
+      },
+      "nodes": 3212,
+      "areas": 1972,
+      "returns": {
+        "004d2450": 1540,
+        "0048f960": 816
+      },
+      "native_calls": {
+        "004d2450": 1540,
+        "004449d0": 1540,
+        "004442b0": 5196,
+        "0043f950": 3080,
+        "00440210": 1540,
+        "00440a50": 1972,
+        "004f161c": 27724,
+        "00440a80": 1972,
+        "004eae20": 1972,
+        "00479d90": 71436,
+        "004eafe0": 5612,
+        "0040f180": 3640,
+        "004abae0": 4060,
+        "004d2420": 7544,
+        "0048f960": 816
+      },
+      "substitutions": {
+        "R": 536,
+        "C": 536,
+        "U": 536,
+        "P": 536,
+        "I": 144,
+        "B": 144,
+        "N": 840,
+        "F": 720,
+        "S": 720,
+        "K": 960,
+        "E": 168
+      },
+      "reported": {
+        "noIslandTypeCount == 9": 72,
+        "islandTypeCount == 1": 48,
+        "islandStalagTypeCount == 1": 48
+      },
+      "assertions": 0
+    },
+    "original1037": {
+      "cases": {
+        "Displace": 770,
+        "Drop": 408
+      },
+      "nodes": 3212,
+      "areas": 1972,
+      "returns": {
+        "004d2450": 1540,
+        "0048f960": 816
+      },
+      "native_calls": {
+        "004d2450": 1540,
+        "004449d0": 1540,
+        "004442b0": 5196,
+        "0043f950": 3080,
+        "00440210": 1540,
+        "00440a50": 1972,
+        "004f161c": 27724,
+        "00440a80": 1972,
+        "004eae20": 1972,
+        "00479d90": 71436,
+        "004eafe0": 5612,
+        "0040f180": 3640,
+        "004abae0": 4060,
+        "004d2420": 7544,
+        "0048f960": 816
+      },
+      "substitutions": {
+        "R": 536,
+        "C": 536,
+        "U": 536,
+        "P": 536,
+        "I": 144,
+        "B": 144,
+        "N": 840,
+        "F": 720,
+        "S": 720,
+        "K": 960,
+        "E": 168
+      },
+      "reported": {
+        "noIslandTypeCount == 9": 72,
+        "islandTypeCount == 1": 48,
+        "islandStalagTypeCount == 1": 48
+      },
+      "assertions": 0
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/constructioneffects-x86.tsv": "e4700757b9e4e12a2bdfc09325e3bfd387d684343bed80f22efa12e8ac6c4091",
+    "extracted/constructioneffects/original1037/creation.c": "fc242ed6dfa1c002e63a78ad0c4d56dcd1e42201fbc9449b67a7924fb969e907",
+    "extracted/constructioneffects/original1037/functions.tsv": "261ba383977a1deefa5b5048d7fd212200dfcd536da23e27521a1b0b7d4d2e25",
+    "extracted/constructioneffects/originalCD/creation.c": "fc242ed6dfa1c002e63a78ad0c4d56dcd1e42201fbc9449b67a7924fb969e907",
+    "extracted/constructioneffects/originalCD/functions.tsv": "261ba383977a1deefa5b5048d7fd212200dfcd536da23e27521a1b0b7d4d2e25",
+    "extracted/constructioneffects/originals/creation.c": "334e169117316e34b439856285805afb9dc61ec38a1d267bd468cdea805db6e2",
+    "extracted/constructioneffects/originals/functions.tsv": "320cb3a4b5fc73f269eab0b1e8bc2546a3d5a766f354412870ae5c89b48067a9",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_constructionclear_oracle.py": "8678de191d243a1abdbc2dc31e354472433621febbba6fc5deefb41a963fa666",
+    "tools/decomp_constructioneffects_oracle.py": "709ab02a114ba598824b76505f27b30aedea54890b2306ceced6a953b41192d2",
+    "tools/decomp_constructionplace_oracle.py": "9fe27089ff7591a9a5a442b8185fdc8632e01859c59335dd78cef12d40cfe12c",
+    "tools/decomp_damageablepredestroy_oracle.py": "b6bd591b17b886224e81b9d35dc863f12dea570c67aabf8a66280c7361785e75",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/decomp_priestgeometry_oracle.py": "c8d62204fcd8ec2fcb86cc9842ca46e0d3cdfba3c9afce3e90f9caec8fedc9bc",
+    "tools/ghidra/constructioneffects-functions.json": "d690ccc1388b57e5a15d926482d33d11b54ba649c993280a5614db3e2b9d076d"
+  },
+  "limits": [
+    "실제 루트·발자국/좌표/절삭·일반 finder·spot·현재 genus, 정상 반환 스택/보존 레지스터/x87",
+    "경로 타입/contained 삭제·가상 공간 이동/삭제/알림·추락/소리·메시지 초기화/전파·assert 보고는 명시 경계",
+    "합성 지도/풀/타입/관계 표, 유한 시작 좌표/발자국, 0..8 밀어내기 관계 인자",
+    "fall 좌표 변경/destroy genus 변경은 경계가 입력을 바꾸는 관찰; 원본 게임/GUI/OS 미실행"
+  ]
+}
