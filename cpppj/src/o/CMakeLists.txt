@@ -64,6 +64,9 @@ target_sources(netstorm PRIVATE
     RawCanonPlacementPipeline.cpp RawCanonPlacementPipeline.h
     RawOutpostLifecycle.cpp RawOutpostLifecycle.h
     RawRegionOwnership.cpp RawRegionOwnership.h
+    RawConstructionPlace.cpp RawConstructionPlace.h
+    RawConstructionConfirm.cpp RawConstructionConfirm.h
+    RawConstructionClear.cpp RawConstructionClear.h
     RawPriestPlacement.cpp RawPriestPlacement.h
     RawPriestPlacementPreview.cpp RawPriestPlacementPreview.h
     RawPriestPlacementCollision.cpp RawPriestPlacementCollision.h

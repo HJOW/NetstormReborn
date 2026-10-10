@@ -1,0 +1,128 @@
+{
+  "total": 1300,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-10",
+  "decompile_date": "2026-10-10",
+  "controls": [
+    639,
+    895
+  ],
+  "os_calls": 0,
+  "editions": {
+    "originals": {
+      "cases": 508,
+      "pieces": 1370,
+      "returns": {
+        "00444590": 1016
+      },
+      "native_calls": {
+        "00444590": 1016,
+        "0049a840": 2012,
+        "004e4a40": 996,
+        "00425c20": 996,
+        "00425830": 530,
+        "00425860": 3718,
+        "0040a840": 2722,
+        "00425700": 3346,
+        "0049a940": 2194
+      },
+      "substitutions": {
+        "C": 2722,
+        "S": 996,
+        "H": 996,
+        "B": 38,
+        "Q": 256,
+        "R": 144
+      },
+      "assertions": 0,
+      "message_ids": [
+        63
+      ]
+    },
+    "originalCD": {
+      "cases": 396,
+      "pieces": 862,
+      "returns": {
+        "004d0f10": 792
+      },
+      "native_calls": {
+        "004d0f10": 792,
+        "004f1bd0": 772,
+        "0041f9d0": 15440,
+        "0041fcf0": 772,
+        "0041fcc0": 530,
+        "0041feb0": 2478,
+        "0040a540": 1706,
+        "0041fbb0": 1754,
+        "004442f0": 1178
+      },
+      "substitutions": {
+        "C": 1706,
+        "S": 772,
+        "H": 772,
+        "B": 38,
+        "Q": 136,
+        "R": 24
+      },
+      "assertions": 0,
+      "message_ids": [
+        63
+      ]
+    },
+    "original1037": {
+      "cases": 396,
+      "pieces": 862,
+      "returns": {
+        "004d0f10": 792
+      },
+      "native_calls": {
+        "004d0f10": 792,
+        "004f1bd0": 772,
+        "0041f9d0": 15440,
+        "0041fcf0": 772,
+        "0041fcc0": 530,
+        "0041feb0": 2478,
+        "0040a540": 1706,
+        "0041fbb0": 1754,
+        "004442f0": 1178
+      },
+      "substitutions": {
+        "C": 1706,
+        "S": 772,
+        "H": 772,
+        "B": 38,
+        "Q": 136,
+        "R": 24
+      },
+      "assertions": 0,
+      "message_ids": [
+        63
+      ]
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/constructionconfirm-x86.tsv": "0970aaa9df5042a43d41d858d49e66e8beccc65c3a5841ea179c8e697ccb1777",
+    "extracted/constructionconfirm/original1037/creation.c": "505150ff2bf71192049299e6f2af055135023bf5f538f1f8f33b9c25921dee29",
+    "extracted/constructionconfirm/original1037/functions.tsv": "b8a653de89739660572ae4256908edee5d211b1db9dca5319b80f9c8de7633ed",
+    "extracted/constructionconfirm/originalCD/creation.c": "505150ff2bf71192049299e6f2af055135023bf5f538f1f8f33b9c25921dee29",
+    "extracted/constructionconfirm/originalCD/functions.tsv": "b8a653de89739660572ae4256908edee5d211b1db9dca5319b80f9c8de7633ed",
+    "extracted/constructionconfirm/originals/creation.c": "80d6db54ba290f974fc10b4108b826f023a87b274c9c0a8bb965e067e5c4ed04",
+    "extracted/constructionconfirm/originals/functions.tsv": "6a1e451ed1d292f124bd17fbee43a0f58660ea2c902d0d9c5ac1afb5a7c12211",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_constructionconfirm_oracle.py": "33a844c7c1405938f09b2b00e42bfcc441bc95daa04cf1da0dac2c330506a396",
+    "tools/decomp_constructionplace_oracle.py": "9fe27089ff7591a9a5a442b8185fdc8632e01859c59335dd78cef12d40cfe12c",
+    "tools/decomp_damageablepredestroy_oracle.py": "b6bd591b17b886224e81b9d35dc863f12dea570c67aabf8a66280c7361785e75",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/decomp_priestgeometry_oracle.py": "c8d62204fcd8ec2fcb86cc9842ca46e0d3cdfba3c9afce3e90f9caec8fedc9bc",
+    "tools/ghidra/constructionconfirm-functions.json": "2dcc80497190ddfd7e419b6a6c4f8c9511722e98a2945063964a377a9f2c368f"
+  },
+  "limits": [
+    "확정 전체 몸체/사제 조회 조건/스택 확보/조각 순회/SID 목록·메시지 필드/기록기 조건과 CanonDecoder·프레임 검색 정상 반환/ABI/x87",
+    "지을 사제 조회·메시지 생성/전송·SID 생성·통지 처리기·기록기 활성 조회/기록은 명시 경계",
+    "합성 타입/프레임 표, 유한 좌표; 조각 20개 이상 assert는 패턴 크기상 입력 불가",
+    "조각이 없을 때 기록기에 넘기는 SID는 원본에서 초기화되지 않은 지역 값이라 그 조합은 입력에서 제외",
+    "요청 00444760·통지 처리기 004441b0·로컬 배치 004433b0·실제 메시지 계층/GUI 미실행"
+  ]
+}

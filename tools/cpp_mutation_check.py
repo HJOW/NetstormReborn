@@ -10,6 +10,7 @@
     python -X utf8 tools/cpp_mutation_check.py --list           # 변이 목록과 적용 가능 여부만 확인(빌드 없음)
     python -X utf8 tools/cpp_mutation_check.py                  # 모든 변이 실행
     python -X utf8 tools/cpp_mutation_check.py --only process-zero-keeps-running
+    python -X utf8 tools/cpp_mutation_check.py --focused --only place-pop-flag-placed   # 변이마다 기대 접두사의 검사만 실행(빠름)
     python -X utf8 tools/cpp_mutation_check.py --cmake "C:/.../cmake.exe"
 
 각 변이는 기대하는 실패 검사 이름의 접두사를 갖는다. 그 접두사의 검사가 하나도 실패하지 않으면 "미검출"로 보고한다.
@@ -430,6 +431,145 @@ MUTATIONS = [
          before='    const auto entry=list_.Lookup(name);\n    if (Get(entry,SoundField::Buffer)==0) {\n',
          after='    const auto entry=list_.Lookup(name);\n    if (state_.initialized && Get(entry,SoundField::Buffer)==0) {\n',
          note='준비되지 않았으면 적재하지 않음(원본은 검사하지 않는다)'),
+    # 건설 배치 실행·비용 부족 처리·환불/취소 통지(2026-10-10). 기대 검사는 세 PE 관찰 재생이다.
+    dict(name='place-pop-flag-placed', file='cpppj/src/o/RawConstructionPlace.cpp', expect='ConstructionPlace_',
+         before='constexpr std::uint32_t kPopPlaced=0x41,kPopAbstract=2;',
+         after='constexpr std::uint32_t kPopPlaced=0x40,kPopAbstract=2;',
+         note='확정 배치의 Pop 플래그에서 bit 0을 뺌'),
+    dict(name='place-hp-zero-only-odd-abstract', file='cpppj/src/o/RawConstructionPlace.cpp', expect='ConstructionPlace_',
+         before='const auto hp=request.abstract ? 0U : std::bit_cast<std::uint32_t>(reward_.MaxHitPoints(sid));',
+         after='const auto hp=(request.abstract&1) ? 0U : std::bit_cast<std::uint32_t>(reward_.MaxHitPoints(sid));',
+         note='abstract 인자의 bit 0만 보고 HP 0을 정함(원본은 0이 아닌지 본다)'),
+    dict(name='place-abstract-bit-nonzero', file='cpppj/src/o/RawConstructionPlace.cpp', expect='ConstructionPlace_',
+         before='raw[extraOffset]=static_cast<std::uint8_t>((raw[extraOffset]&0xfe)|(request.abstract&1));',
+         after='raw[extraOffset]=static_cast<std::uint8_t>((raw[extraOffset]&0xfe)|(request.abstract ? 1U : 0U));',
+         note='abstract 인자가 0이 아니면 abstract 비트를 켬(원본은 bit 0만 옮긴다)'),
+    dict(name='place-take-ignores-server-flag', file='cpppj/src/o/RawConstructionPlace.cpp', expect='ConstructionPlace_',
+         before='if (!state_.server && (sid.value<kFirstSid || sid.value>=serverFirst)) sid=hooks_.take(request.type,sid);',
+         after='if (sid.value<kFirstSid || sid.value>=serverFirst) sid=hooks_.take(request.type,sid);',
+         note='서버에서도 서버 영역 SID를 수신'),
+    dict(name='place-origin-compares-x-only', file='cpppj/src/o/RawConstructionPlace.cpp', expect='ConstructionPlace_',
+         before='(patch ? (x==request.x && y==request.y) :',
+         after='(patch ? (x==request.x) :',
+         note='noIsland 시작 칸 판정에서 y 비교를 뺌'),
+    dict(name='place-bridge-life-side-inclusive', file='cpppj/src/o/RawConstructionPlace.cpp', expect='ConstructionPlace_',
+         before='if (static_cast<std::int8_t>(code.side)>kLastPlankSide) life=state_.bridgeLife-1;',
+         after='if (static_cast<std::int8_t>(code.side)>=kLastPlankSide) life=state_.bridgeLife-1;',
+         note='방향 글자 K도 수명이 하나 준 끝 칸으로 취급'),
+    dict(name='place-bridge-flags-unsigned', file='cpppj/src/o/RawConstructionPlace.cpp', expect='ConstructionPlace_',
+         before='static_cast<std::int32_t>(static_cast<std::int8_t>(code.flags))|std::bit_cast<std::int32_t>(qualityFlags));',
+         after='static_cast<std::int32_t>(code.flags)|std::bit_cast<std::int32_t>(qualityFlags));',
+         note='프레임 플래그를 부호 확장하지 않고 품질 프레임을 찾음'),
+    dict(name='place-bridge-single-notify', file='cpppj/src/o/RawConstructionPlace.cpp', expect='ConstructionPlace_',
+         before='            Put(raw,kWord,mixed,2);\n            hooks_.notifySurface(sid);\n',
+         after='            Put(raw,kWord,mixed,2);\n',
+         note='다리 품질을 정한 뒤의 두 번째 표면 알림 생략'),
+    dict(name='place-bridge-life-overwrites-word', file='cpppj/src/o/RawConstructionPlace.cpp', expect='ConstructionPlace_',
+         before='constexpr std::uint16_t kLifeMask=0x78;',
+         after='constexpr std::uint16_t kLifeMask=0xf8;',
+         note='수명 비트를 bit 3~7로 넓힘'),
+    dict(name='place-cost-zero-not-skipped', file='cpppj/src/o/RawConstructionPlace.cpp', expect='ConstructionPlace_',
+         before='    if (cost==0.0F || request.type==state_.nuggetType) return;\n',
+         after='    if (request.type==state_.nuggetType) return;\n',
+         note='비용 0인 타입도 비용을 판정'),
+    dict(name='place-nan-money-is-enough', file='cpppj/src/o/RawConstructionPlace.cpp', expect='ConstructionPlace_',
+         before='if (!(Money(request.player)>=cost)) ChargeShortfall(',
+         after='if (Money(request.player)<cost) ChargeShortfall(',
+         note='비교할 수 없는 잔액/비용(NaN)을 충분한 것으로 취급'),
+    dict(name='charge-shortfall-flag-not-set', file='cpppj/src/o/RawConstructionPlace.cpp', expect='ConstructionPlace_',
+         before='    flags|=kShortfallFlag;\n',
+         after='    // 변이: 비용 부족 표시 비트를 켜지 않는다.\n',
+         note='비용 부족 처리가 Player 표시 비트를 켜지 않음'),
+    dict(name='charge-reject-ignores-position', file='cpppj/src/o/RawConstructionPlace.cpp', expect='ConstructionPlace_',
+         before='        if (ValidPosition(x,y)) Reject(type,player,x,y,argument,direction);\n',
+         after='        Reject(type,player,x,y,argument,direction);\n',
+         note='좌표가 유효하지 않아도 환불/취소 통지를 보냄'),
+    dict(name='position-zero-is-valid', file='cpppj/src/o/RawConstructionPlace.cpp', expect='ConstructionPlace_',
+         before='return 0.0F<x && x<kMapLimit && 0.0F<y && y<kMapLimit;',
+         after='return 0.0F<=x && x<kMapLimit && 0.0F<=y && y<kMapLimit;',
+         note='좌표 0을 유효한 것으로 취급'),
+    dict(name='refund-shown-local-still-paid', file='cpppj/src/o/RawConstructionPlace.cpp', expect='ConstructionPlace_',
+         before='    if (patch && !(state_.battleShown && player==state_.localPlayer)) AddMoney(player,static_cast<float>(amount));\n',
+         after='    if (patch) AddMoney(player,static_cast<float>(amount));\n',
+         note='전투 표시 중의 로컬 플레이어에게도 환불 가산'),
+    dict(name='refund-notice-for-zero', file='cpppj/src/o/RawConstructionPlace.cpp', expect='ConstructionPlace_',
+         before='    if (amount>0) hooks_.sendMoney(',
+         after='    if (amount>=0) hooks_.sendMoney(',
+         note='환불 금액 0에도 SP 통지를 보냄'),
+    dict(name='place-cd-hp-writes-dword', file='cpppj/src/o/RawConstructionPlace.cpp', expect='ConstructionPlace_ReplaysCd',
+         before='            Put(raw,kHp,hp,patch ? 4 : 2);\n',
+         after='            Put(raw,kHp,hp,4);\n',
+         note='CD판 HP를 WORD가 아니라 DWORD로 씀'),
+    dict(name='money-range-includes-zero', file='cpppj/src/o/RawConstructionPlace.cpp', expect='ConstructionPlace_',
+         before='return number>0 && number<static_cast<std::int32_t>(kServerPlayer) ? hooks_.storedSp(player) : 0.0F;',
+         after='return number>=0 && number<static_cast<std::int32_t>(kServerPlayer) ? hooks_.storedSp(player) : 0.0F;',
+         note='플레이어 0의 SP도 저장소에서 읽음'),
+    # 서버 건설 확정(2026-10-10). 기대 검사는 세 PE 관찰 재생이다.
+    dict(name='confirm-builder-ignores-call-flag', file='cpppj/src/o/RawConstructionConfirm.cpp', expect='ConstructionConfirm_',
+         before='    if ((types_[request.type].flags1&kNeedsBuilder) && !(request.flags&kSkipBuilderFlag) && !state_.skipBuilderCheck &&\n',
+         after='    if ((types_[request.type].flags1&kNeedsBuilder) && !state_.skipBuilderCheck &&\n',
+         note='호출 플래그 bit 0이 켜져 있어도 지을 사제를 찾음'),
+    dict(name='confirm-builder-ignores-skip-global', file='cpppj/src/o/RawConstructionConfirm.cpp', expect='ConstructionConfirm_',
+         before='    if ((types_[request.type].flags1&kNeedsBuilder) && !(request.flags&kSkipBuilderFlag) && !state_.skipBuilderCheck &&\n',
+         after='    if ((types_[request.type].flags1&kNeedsBuilder) && !(request.flags&kSkipBuilderFlag) &&\n',
+         note='건너뛰기 전역이 켜져 있어도 지을 사제를 찾음'),
+    dict(name='confirm-needs-builder-bit', file='cpppj/src/o/RawConstructionConfirm.cpp', expect='ConstructionConfirm_',
+         before='constexpr std::uint32_t kNeedsBuilder=0x8000,kSkipBuilderFlag=1;',
+         after='constexpr std::uint32_t kNeedsBuilder=0x4000,kSkipBuilderFlag=1;',
+         note='사제가 지어야 하는 타입 비트를 0x4000으로 읽음'),
+    dict(name='confirm-handle-before-broadcast', file='cpppj/src/o/RawConstructionConfirm.cpp', expect='ConstructionConfirm_',
+         before='    hooks_.broadcast(notice);\n    hooks_.handle(notice);\n',
+         after='    hooks_.handle(notice);\n    hooks_.broadcast(notice);\n',
+         note='통지를 보내기 전에 직접 처리'),
+    dict(name='confirm-record-without-active-query', file='cpppj/src/o/RawConstructionConfirm.cpp', expect='ConstructionConfirm_',
+         before='    if (state_.recorderEnabled && hooks_.recorderActive()) hooks_.record(',
+         after='    if (state_.recorderEnabled) hooks_.record(',
+         note='기록기 활성 여부를 묻지 않고 기록'),
+    dict(name='confirm-flags-keep-bit0-only', file='cpppj/src/o/RawConstructionConfirm.cpp', expect='ConstructionConfirm_',
+         before='notice.flags=static_cast<std::uint8_t>(request.flags);',
+         after='notice.flags=static_cast<std::uint8_t>(request.flags&1);',
+         note='통지의 플래그 바이트에 bit 0만 실음'),
+    dict(name='confirm-create-uses-client-flag', file='cpppj/src/o/RawConstructionConfirm.cpp', expect='ConstructionConfirm_',
+         before='        const Sid sid=hooks_.create(request.type,0);\n',
+         after='        const Sid sid=hooks_.create(request.type,2);\n',
+         note='서버 SID가 아니라 클라이언트 영역 플래그로 생성'),
+    # 로컬 예측 조각 정리(2026-10-10). 기대 검사는 세 PE 관찰 재생이다.
+    dict(name='clear-authority-ignored', file='cpppj/src/o/RawConstructionClear.cpp', expect='ConstructionClear_',
+         before='current.value>=serverFirst || (type!=request.type && state_.authority)) continue;',
+         after='current.value>=serverFirst || type!=request.type) continue;',
+         note='권한이 없어도 타입이 다른 조각을 후보에서 뺌'),
+    dict(name='clear-server-range-included', file='cpppj/src/o/RawConstructionClear.cpp', expect='ConstructionClear_',
+         before='if (!(raw[extraOffset]&1) || current.value<kFirstSid || current.value>=serverFirst || ',
+         after='if (!(raw[extraOffset]&1) || current.value<kFirstSid || ',
+         note='서버 영역 번호의 조각도 후보로 취급'),
+    dict(name='clear-abstract-not-required', file='cpppj/src/o/RawConstructionClear.cpp', expect='ConstructionClear_',
+         before='if (!(raw[extraOffset]&1) || current.value<kFirstSid || ',
+         after='if (current.value<kFirstSid || ',
+         note='abstract가 아닌 조각도 후보로 취급'),
+    dict(name='clear-all-candidates-per-cell', file='cpppj/src/o/RawConstructionClear.cpp', expect='ConstructionClear_',
+         before='            hooks_.destroy(current,flags);\n            break;\n',
+         after='            hooks_.destroy(current,flags);\n',
+         note='한 칸에서 조건에 맞는 후보를 모두 지움'),
+    dict(name='clear-bridge-side-inverted', file='cpppj/src/o/RawConstructionClear.cpp', expect='ConstructionClear_',
+         before='same=static_cast<std::int8_t>(codes[frame].side)==static_cast<std::int8_t>(decoder.Side());',
+         after='same=static_cast<std::int8_t>(codes[frame].side)!=static_cast<std::int8_t>(decoder.Side());',
+         note='다리의 방향 글자 비교를 뒤집음'),
+    dict(name='clear-owner-ignored', file='cpppj/src/o/RawConstructionClear.cpp', expect='ConstructionClear_',
+         before='if (same && static_cast<std::uint32_t>(raw[ownerOffset])==request.player) flags=kSamePieceFlag;',
+         after='if (same) flags=kSamePieceFlag;',
+         note='소유자가 달라도 같은 조각 플래그로 지움'),
+    dict(name='clear-area-round-half', file='cpppj/src/o/RawConstructionClear.cpp', expect='ConstructionClear_',
+         before='constexpr float kRoundUpBias=0.9999899864196777F;',
+         after='constexpr float kRoundUpBias=0.5F;',
+         note='큰 쪽 모서리를 0.5만 더해 절삭'),
+    dict(name='clear-invalid-cell-keeps-corner', file='cpppj/src/o/RawConstructionClear.cpp', expect='ConstructionClear_',
+         before='    if (Valid(x,y)) {\n',
+         after='    if (Valid(x,y) || x==x) {\n',
+         note='지도 밖 칸 좌표도 모서리 비교에 사용'),
+    dict(name='clear-clamp-low-zero', file='cpppj/src/o/RawConstructionClear.cpp', expect='ConstructionClear_',
+         before='constexpr float kClampLow=1.0F,kClampHigh=255.0F,kMapLimit=256.0F;',
+         after='constexpr float kClampLow=0.0F,kClampHigh=255.0F,kMapLimit=256.0F;',
+         note='좌표를 0~255로 자름(원본은 1~255)'),
 ]
 
 
@@ -474,9 +614,10 @@ def build(cmake):
     return run([cmake, '--build', str(BUILD), '--config', 'Release'])
 
 
-def test():
-    """사본의 검사 실행 파일을 돌려 (실패한 검사 이름 목록, 실패 CHECK 수)를 돌려준다."""
-    _, output = run([str(TESTS)])
+def test(name_filter=None):
+    """사본의 검사 실행 파일을 돌려 (실패한 검사 이름 목록, 실패 CHECK 수)를 돌려준다.
+    name_filter를 주면 이름에 그 글자가 들어 있는 검사만 실행한다(검사 실행 파일의 --filter). 2026-10-10 --focused용으로 추가했다."""
+    _, output = run([str(TESTS)] + (['--filter', name_filter] if name_filter else []))
     failed = [line.split('] ', 1)[1].strip() for line in output.splitlines() if line.startswith('[FAIL]')]
     checks = sum('CHECK failed' in line for line in output.splitlines())
     return failed, checks
@@ -507,6 +648,8 @@ def main():
     parser.add_argument('--list', action='store_true', help='변이 목록과 적용 가능 여부만 출력한다')
     parser.add_argument('--only', action='append', help='이 이름의 변이만 실행한다(여러 번 줄 수 있다)')
     parser.add_argument('--cmake', default='cmake', help='cmake 실행 파일 경로')
+    parser.add_argument('--focused', action='store_true',
+                        help='변이를 적용한 뒤에는 그 변이의 기대 접두사가 이름에 들어 있는 검사만 실행한다(변이 전 사본은 항상 전체 검사)')
     options = parser.parse_args()
     selected = [m for m in MUTATIONS if not options.only or m['name'] in options.only]
     if options.list:
@@ -547,7 +690,8 @@ def main():
                 print(f"{mutation['name']}: 빌드 실패(변이가 컴파일되지 않음)")
                 missed += 1
                 continue
-            failed, checks = test()
+            # --focused이면 기대 접두사의 검사만 돌린다. 다른 검사의 실패는 볼 수 없지만 검출 여부 판정은 같다.
+            failed, checks = test(mutation['expect'] if options.focused else None)
             hit = [name for name in failed if name.startswith(mutation['expect'])]
             status = '검출' if hit else '미검출'
             if not hit: missed += 1

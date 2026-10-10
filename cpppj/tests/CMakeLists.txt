@@ -23,6 +23,9 @@ add_executable(netstorm_tests
     CanonMayPlaceTests.cpp
     OutpostLifecycleTests.cpp
     RegionOwnershipTests.cpp
+    ConstructionPlaceTests.cpp
+    ConstructionConfirmTests.cpp
+    ConstructionClearTests.cpp
     PriestShieldTests.cpp
     PriestPostPopTailTests.cpp
     PriestFallTests.cpp
@@ -59,6 +62,7 @@ add_executable(netstorm_tests
     BridgeLifecycleTests.cpp
     BridgeEventTests.cpp
     RawSceneSupport.h
+    ConstructionSupport.h
     BridgeConnectTests.cpp
     IslandLifecycleTests.cpp
     IslandPostPopTests.cpp
@@ -260,6 +264,15 @@ set_source_files_properties(OutpostLifecycleTests.cpp PROPERTIES COMPILE_DEFINIT
 # 지역 소유 투표 전체 wrapper의 독립 기계어 관찰 경로다.
 set_source_files_properties(RegionOwnershipTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_REGIONOWNERSHIP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/regionownership-x86.tsv\"")
+# 건설 배치 실행·비용 부족 처리·환불/취소 통지의 독립 원본 관찰이다.
+set_source_files_properties(ConstructionPlaceTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CONSTRUCTIONPLACE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/constructionplace-x86.tsv\"")
+# 서버 건설 확정 전체 몸체의 독립 원본 관찰이다.
+set_source_files_properties(ConstructionConfirmTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CONSTRUCTIONCONFIRM_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/constructionconfirm-x86.tsv\"")
+# 로컬 예측 조각 정리 전체 몸체의 독립 원본 관찰이다.
+set_source_files_properties(ConstructionClearTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CONSTRUCTIONCLEAR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/constructionclear-x86.tsv\"")
 # 사제 보호막 전체 생성 wrapper의 독립 원본 관찰이다.
 set_source_files_properties(PriestShieldTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PRIESTSHIELD_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/priestshield-x86.tsv\"")

@@ -60,6 +60,12 @@ public:
     // 현재 HP와 구별하며 사제 1/4 모드 및 dais 부류를 그대로 적용한다.
     std::int32_t MaxHitPoints(Sid sid) const;
     std::int32_t TypeHitPoints(std::uint32_t type) const;
+    // 004adc60/004aecf0: HP가 있는 객체인지 판단한다. dais 부류(flags2 0x400000)는 객체의 abstract 비트가, 그 밖에는 타입 flags1 0x10이 정한다.
+    // 건설 배치도 HP를 쓰기 전에 이 판정을 부른다. (2026-10-10 건설 배치 연결을 위해 공개했다.)
+    bool HasHitPoints(Sid sid) const;
+    // 패치 0040eec0/0041df80 및 CD 00414680: 소유자의 SP에 delta를 더하고 AI 지갑과 SP 표시를 갱신한다.
+    // 음수 delta는 차감이다. SP 고정 모드에서는 delta 대신 고정값과의 차이가 쓰인다. (2026-10-10 건설 비용 차감 연결을 위해 공개했다.)
+    void AddSp(std::uint32_t owner,float delta);
 private:
     // vtable +0x80의 개수. 훅이 있으면 파생 구현이고 없으면 base의 상태 상위 3비트다.
     std::int32_t Count(Sid sid) const;
@@ -69,10 +75,7 @@ private:
     float SalvageCost(std::uint32_t type,std::int32_t count) const;
     // 0044c240 / CD 00462610. 남은 HP 비례 환불이다.
     std::int32_t SalvageRefund(Sid sid,std::uint32_t type,std::int32_t count) const;
-    // 004adc60/004aecf0: HP가 있는 객체인지 판단한다.
-    bool HasHitPoints(Sid sid) const;
-    // 로컬/소유자 SP 가산과 AI 지갑 갱신이다. delta는 float로 반올림된 지급액이다.
-    void AddSp(std::uint32_t owner,float delta);
+    // AI가 부착된 소유자의 지갑(AI 객체 +0x2d8)에 정수 금액을 더한다. SP 가산이 함께 부른다.
     void AddWallet(std::uint32_t owner,std::int32_t amount);
     std::span<const std::uint8_t> Raw(Sid sid) const;
     SidPool& pool_;

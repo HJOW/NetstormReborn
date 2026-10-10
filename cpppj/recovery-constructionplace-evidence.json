@@ -1,0 +1,169 @@
+{
+  "total": 3682,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-10",
+  "decompile_date": "2026-10-10",
+  "controls": [
+    639,
+    895
+  ],
+  "os_calls": 0,
+  "editions": {
+    "originals": {
+      "cases": {
+        "Place": 1246,
+        "Refund": 144,
+        "Charge": 292,
+        "Reject": 24,
+        "Money": 48,
+        "Add": 24
+      },
+      "pieces": 3510,
+      "returns": {
+        "00442c80": 2492,
+        "00442a40": 288,
+        "00442b50": 584,
+        "00442af0": 48,
+        "0040ef30": 96,
+        "0041dff0": 48
+      },
+      "native_calls": {
+        "00442c80": 2492,
+        "0049a840": 30006,
+        "00425c20": 2492,
+        "00425830": 1204,
+        "00425860": 9512,
+        "004adc60": 7020,
+        "004adcb0": 3000,
+        "0049fce0": 3000,
+        "004adca0": 5960,
+        "004ac220": 7020,
+        "0040ef30": 1180,
+        "0041dff0": 728,
+        "00442b50": 988,
+        "0048f7e0": 988,
+        "0048f7b0": 988,
+        "0040e800": 500,
+        "00442af0": 228,
+        "00442a40": 516,
+        "004e49c0": 330,
+        "00425700": 8192,
+        "0049a940": 5832,
+        "0049aa30": 3952
+      },
+      "substitutions": {
+        "O": 7020,
+        "P": 7020,
+        "G": 1116,
+        "A": 1370,
+        "F": 504,
+        "X": 258,
+        "Y": 500,
+        "M": 422,
+        "D": 246,
+        "T": 906,
+        "N": 7904,
+        "L": 144
+      },
+      "assertions": 0
+    },
+    "originalCD": {
+      "cases": {
+        "Place": 916,
+        "Refund": 36
+      },
+      "pieces": 2812,
+      "returns": {
+        "004d0ca0": 1832,
+        "004d1bc0": 72
+      },
+      "native_calls": {
+        "004d0ca0": 1832,
+        "0041fcf0": 1832,
+        "0041fcc0": 768,
+        "0041feb0": 7456,
+        "004aecf0": 5624,
+        "004abae0": 7824,
+        "004abac0": 5336,
+        "004aed30": 2200,
+        "00444720": 2200,
+        "004aed20": 4882,
+        "004abb00": 5624,
+        "0041fbb0": 6656,
+        "004442f0": 4872,
+        "00444460": 3000,
+        "004d1bc0": 72,
+        "004f161c": 72
+      },
+      "substitutions": {
+        "O": 5624,
+        "P": 5624,
+        "T": 680,
+        "N": 6000,
+        "M": 24
+      },
+      "assertions": 0
+    },
+    "original1037": {
+      "cases": {
+        "Place": 916,
+        "Refund": 36
+      },
+      "pieces": 2812,
+      "returns": {
+        "004d0ca0": 1832,
+        "004d1bc0": 72
+      },
+      "native_calls": {
+        "004d0ca0": 1832,
+        "0041fcf0": 1832,
+        "0041fcc0": 768,
+        "0041feb0": 7456,
+        "004aecf0": 5624,
+        "004abae0": 7824,
+        "004abac0": 5336,
+        "004aed30": 2200,
+        "00444720": 2200,
+        "004aed20": 4882,
+        "004abb00": 5624,
+        "0041fbb0": 6656,
+        "004442f0": 4872,
+        "00444460": 3000,
+        "004d1bc0": 72,
+        "004f161c": 72
+      },
+      "substitutions": {
+        "O": 5624,
+        "P": 5624,
+        "T": 680,
+        "N": 6000,
+        "M": 24
+      },
+      "assertions": 0
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/constructionplace-x86.tsv": "aace8e0b8b24d41ee120ff99c711a0241ddb4b799b5d0f6044f9a521ed8dfcbb",
+    "extracted/constructionplace/original1037/creation.c": "d672c4782d27929a66452b850773aec9fe52385436a83084172628bf6ac32df9",
+    "extracted/constructionplace/original1037/functions.tsv": "0fe4d46b40e295fb8483d3094172d37062e0491e50f9ded594a8aba710b36a15",
+    "extracted/constructionplace/originalCD/creation.c": "d672c4782d27929a66452b850773aec9fe52385436a83084172628bf6ac32df9",
+    "extracted/constructionplace/originalCD/functions.tsv": "0fe4d46b40e295fb8483d3094172d37062e0491e50f9ded594a8aba710b36a15",
+    "extracted/constructionplace/originals/creation.c": "3e182a370e7344350ff234dde03ae96440157f404aa8542af64e6e1b4c3e5426",
+    "extracted/constructionplace/originals/functions.tsv": "581cd3c146d6133b11e9bdce0ce7458d79208acf578806571c90610cb9c59152",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_constructionplace_oracle.py": "9fe27089ff7591a9a5a442b8185fdc8632e01859c59335dd78cef12d40cfe12c",
+    "tools/decomp_damageablepredestroy_oracle.py": "b6bd591b17b886224e81b9d35dc863f12dea570c67aabf8a66280c7361785e75",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/decomp_priestgeometry_oracle.py": "c8d62204fcd8ec2fcb86cc9842ca46e0d3cdfba3c9afce3e90f9caec8fedc9bc",
+    "tools/ghidra/constructionplace-functions.json": "7876a1b8d8eb4be6103754c4148091679c82aa06c7ffe9420b2e9cba0ea7ea6d"
+  },
+  "limits": [
+    "배치 전체 몸체/비용 판정/조각 순회/abstract·HP·프레임·단어·다리 품질/Pop 플래그와 CanonDecoder·프레임 검색·HP helper 정상 반환/ABI/x87",
+    "패치판 비용 부족 처리·환불·취소 통지·SP 조회/가산 분배·좌표 유효성·Player 표시 비트 실제 실행; CD/10.37은 환불 통지만 있음",
+    "SID 수신(Take)·SP 저장소 읽기/가산·표면 알림·가상 소유자/Pop·문구 조립/안내·메시지 초기화/전송은 명시 경계",
+    "합성 타입/프레임 표/슬롯 입력, 유한 좌표; 서버 번호 9·void 아님·개수 불일치 assert와 번호 5 미만 SID는 입력에서 제외",
+    "로컬 배치 004433b0·서버 확정 00444590/00444760·사제 이동 00443000·메시지 수신 처리·실제 Pop/GUI 미실행"
+  ]
+}

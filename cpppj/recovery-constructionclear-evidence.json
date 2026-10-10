@@ -1,0 +1,142 @@
+{
+  "total": 1020,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-10",
+  "decompile_date": "2026-10-10",
+  "controls": [
+    639,
+    895
+  ],
+  "seed": 4464592,
+  "os_calls": 0,
+  "editions": {
+    "originals": {
+      "cases": 420,
+      "cells": 1484,
+      "nodes": 1049,
+      "areas": 2968,
+      "returns": {
+        "00441fd0": 840
+      },
+      "native_calls": {
+        "00441fd0": 840,
+        "00425c20": 840,
+        "00425830": 340,
+        "0049a840": 8064,
+        "00425860": 3808,
+        "00425af0": 2968,
+        "0049a900": 6600,
+        "0040e880": 2968,
+        "0041d0d0": 5936,
+        "0040e800": 5936,
+        "0040e8f0": 2968,
+        "0041d770": 2968,
+        "004e49c0": 31008,
+        "0041d7a0": 2968,
+        "004b16d0": 2968,
+        "00434380": 21076,
+        "004b2b00": 55696,
+        "004b1810": 3602,
+        "0044daa0": 1416,
+        "00425700": 3780,
+        "0049a940": 2628,
+        "004ad680": 312,
+        "00425c00": 312
+      },
+      "substitutions": {
+        "K": 782
+      },
+      "assertions": 0
+    },
+    "originalCD": {
+      "cases": 300,
+      "cells": 872,
+      "nodes": 745,
+      "areas": 1744,
+      "returns": {
+        "004cff80": 600
+      },
+      "native_calls": {
+        "004cff80": 600,
+        "0041fcf0": 600,
+        "0041fcc0": 340,
+        "0041feb0": 2344,
+        "00420140": 1744,
+        "004442b0": 3894,
+        "0043f950": 3488,
+        "00440a50": 1744,
+        "004f161c": 18252,
+        "00440a80": 1744,
+        "004eae20": 1744,
+        "00479d90": 32584,
+        "004eafe0": 2206,
+        "0040f180": 932,
+        "0041fbb0": 1980,
+        "004442f0": 1404,
+        "004ae3f0": 118,
+        "00420370": 118
+      },
+      "substitutions": {
+        "K": 470
+      },
+      "assertions": 0
+    },
+    "original1037": {
+      "cases": 300,
+      "cells": 872,
+      "nodes": 745,
+      "areas": 1744,
+      "returns": {
+        "004cff80": 600
+      },
+      "native_calls": {
+        "004cff80": 600,
+        "0041fcf0": 600,
+        "0041fcc0": 340,
+        "0041feb0": 2344,
+        "00420140": 1744,
+        "004442b0": 3894,
+        "0043f950": 3488,
+        "00440a50": 1744,
+        "004f161c": 18252,
+        "00440a80": 1744,
+        "004eae20": 1744,
+        "00479d90": 32584,
+        "004eafe0": 2206,
+        "0040f180": 932,
+        "0041fbb0": 1980,
+        "004442f0": 1404,
+        "004ae3f0": 118,
+        "00420370": 118
+      },
+      "substitutions": {
+        "K": 470
+      },
+      "assertions": 0
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/constructionclear-x86.tsv": "9453f28cccf71d2cff848744f53b1b3ebec39821110d3188a9100e68c1b63f88",
+    "extracted/constructionclear/original1037/creation.c": "4105c80822d73b754eabe269f2db53daee7e16f80e4b2aa352c607597c55bbe6",
+    "extracted/constructionclear/original1037/functions.tsv": "c83145cacf4e6d0222a9cf2290a7eaa2cb0babb95fad06605b3f26718d0a51e5",
+    "extracted/constructionclear/originalCD/creation.c": "4105c80822d73b754eabe269f2db53daee7e16f80e4b2aa352c607597c55bbe6",
+    "extracted/constructionclear/originalCD/functions.tsv": "c83145cacf4e6d0222a9cf2290a7eaa2cb0babb95fad06605b3f26718d0a51e5",
+    "extracted/constructionclear/originals/creation.c": "3f05e28db3ff11747d709bffd41a6069039aab27ff687f8bfdf0c4396d89e7b9",
+    "extracted/constructionclear/originals/functions.tsv": "a6691de25cfdf20214483f2753dcf79aca59c2f57f1acc8735be1825362446f1",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_constructionclear_oracle.py": "8678de191d243a1abdbc2dc31e354472433621febbba6fc5deefb41a963fa666",
+    "tools/decomp_constructionplace_oracle.py": "9fe27089ff7591a9a5a442b8185fdc8632e01859c59335dd78cef12d40cfe12c",
+    "tools/decomp_damageablepredestroy_oracle.py": "b6bd591b17b886224e81b9d35dc863f12dea570c67aabf8a66280c7361785e75",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/decomp_priestgeometry_oracle.py": "c8d62204fcd8ec2fcb86cc9842ca46e0d3cdfba3c9afce3e90f9caec8fedc9bc",
+    "tools/ghidra/constructionclear-functions.json": "febd54c10d4c985208f5fc8d39f36db4c5e89e192eadf8c735bdbc09649e9505"
+  },
+  "limits": [
+    "정리 전체 몸체/칸 순회/후보 조건/타입·프레임·방향 글자·소유자 비교와 CanonDecoder·칸 범위·좌표 자르기/유효성·절삭/올림·일반 탐색기·기본 필터 정상 반환/ABI/x87",
+    "후보의 가상 삭제(+0x10)만 명시 경계이며 삭제 뒤에도 후보는 해시에 남는다(실제 삭제의 공간 해제는 미실행)",
+    "합성 타입/프레임 표/해시 등록 입력, 유한 시작 좌표, 후보 좌표는 1 이상 255 이하(CD 탐색기의 좌표 assert 제외)",
+    "통지 처리기 004441b0·요청 00444760·실제 삭제/GUI 미실행"
+  ]
+}

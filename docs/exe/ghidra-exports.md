@@ -1,6 +1,12 @@
 # 기계어 대조 입력(Ghidra 내보내기) 준비
 
-2026-10-10 최신(`HJOW-Athlon`): **`gumpvisual` 목록 2/2/2개**를 읽기 전용으로 내보냈다. 전체 정상 버튼 생성/그리기의 문맥·플래그·선·글자 위치를 제한 x86으로 실행했다. 세 실제 PE 새 독립 원본 **192개**·누적 **455,578개**, 두 x87 생성/그리기 정상 반환 **768회**, 근거 감사 **85종 통과**. Release 경고/오류 **0**·CTest 내부 **550개·실패 0**(148.27초). GUI 기반/자식/부착·사각형 공급·선/글자 래스터는 명시 경계다. [주소·계약·관찰 범위](cpp-gump-visual-reconstruction.md). **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-10**.
+2026-10-10 최신(`HJOW-Athlon`): **`constructionclear` 목록 23/19/19개**를 읽기 전용으로 내보냈다. 로컬 예측 조각 정리 전체 몸체와 실제 CanonDecoder·칸 범위·자르기/유효성·절삭/올림·일반 탐색기·방향 글자 조회를 제한 x86으로 실행했다. 세 실제 PE 새 독립 원본 **1,020개**·누적 **461,757개**, 두 x87 정상 반환 **2,040회**, 근거 감사 **89종 통과**. Release 경고/오류 **0**·CTest 내부 **572개·실패 0**(136.53초). 새 변이 9개 **모두 검출**(기대 검사만 돌리는 `--focused` 실행. 변이 전 사본은 전체 검사 통과). 후보의 가상 삭제만 명시 경계다. [주소·순서·관찰 범위](cpp-construction-clear-reconstruction.md). **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-10**.
+
+2026-10-10 앞 단계(`HJOW-Athlon`): **`constructionconfirm` 목록 11/11/11개**를 읽기 전용으로 내보냈다. 서버 건설 확정 전체 몸체와 실제 CanonDecoder·스택 확보·메시지 항목 주소 계산을 제한 x86으로 실행했다. 세 실제 PE 새 독립 원본 **1,300개**·누적 **460,737개**, 두 x87 정상 반환 **2,600회**, 근거 감사 **88종 통과**. Release 경고/오류 **0**·CTest 내부 **566개·실패 0**(144.12초). 새 변이 7개 **모두 검출**(기대 검사만 돌리는 `--focused` 실행. 변이 전 사본은 전체 검사 통과). 지을 사제 조회·메시지 생성/전송·SID 생성·통지 처리기·기록기는 명시 경계다. [주소·순서·관찰 범위](cpp-construction-confirm-reconstruction.md). **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-10**.
+
+2026-10-10 앞 단계(`HJOW-Athlon`): **`constructionplace` 목록 23/17/17개**를 읽기 전용으로 내보냈다. 건설 배치 실행 전체 몸체와 패치판 비용 부족 처리·환불/취소 통지·SP 조회, 실제 CanonDecoder/HP/단어/프레임 helper를 제한 x86으로 실행했다. 세 실제 PE 새 독립 원본 **3,682개**·누적 **459,437개**, 두 x87 정상 반환 **7,364회**, 근거 감사 **87종 통과**. Release 경고/오류 **0**·CTest 내부 **561개·실패 0**(145.73초). 새 변이 18개 **모두 검출**(첫 실행의 미검출 1개는 검사 빈틈이어서 수명 상수 17·33 원본 입력을 더해 메웠다). SID 수신·SP 저장소·표면 알림·가상 소유자/Pop·문구/메시지는 명시 경계다. [주소·순서·관찰 범위](cpp-construction-place-reconstruction.md). **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-10**.
+
+2026-10-10 앞 단계(`HJOW-Athlon`): **`gumpvisual` 목록 2/2/2개**를 읽기 전용으로 내보냈다. 전체 정상 버튼 생성/그리기의 문맥·플래그·선·글자 위치를 제한 x86으로 실행했다. 세 실제 PE 새 독립 원본 **192개**·누적 **455,578개**, 두 x87 생성/그리기 정상 반환 **768회**, 근거 감사 **85종 통과**. Release 경고/오류 **0**·CTest 내부 **550개·실패 0**(148.27초). GUI 기반/자식/부착·사각형 공급·선/글자 래스터는 명시 경계다. [주소·계약·관찰 범위](cpp-gump-visual-reconstruction.md). **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-10**.
 
 2026-10-10 앞 단계(`HJOW-Athlon`): **`palettecolors` 목록 2/3/3개**를 읽기 전용으로 내보냈다. 전체 정상 파일 로더·58/50색 검색·기본 9색·날씨 별칭의 새 독립 입력 **24개**, 두 x87 로더 진입/정상 반환 **48회**·색 검색 **2,528회**, 누적 **455,386개**, 근거 감사 **84종 통과**. 파일/할당과 SetPalette 장치 적용은 명시 경계다. [주소·파일 형식·관찰 범위](cpp-palette-colors-reconstruction.md). **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-10**.
 
@@ -95,6 +101,9 @@ Get-ChildItem tools/decomp_*_oracle.py | Where-Object { Select-String -LiteralPa
 | `priestregen` | priestregen·prieststate·owner | 10 / 11 / 11 | 2026-10-08 추가([사제 회복 0x25a](cpp-priest-regen-reconstruction.md)), 회복/HP/중립 조건/난수 실제 실행·외부 공간/표시/추적 효과 대체·`HJOW-Athlon`에서 내보냄 |
 | `priestdestroy` | priestdestroy·owner | 4 / 4 / 4 | 2026-10-08 추가([사제 삭제 준비](cpp-priest-destroy-reconstruction.md)), 목록 압축/범위 검사 실제 실행·조회/가상 삭제/Carrier 대체·전체 본문 반환·`HJOW-Athlon`에서 내보냄 |
 | `priestforcefield` | priestforcefield·owner | 12 / 10 / 10 | 2026-10-08 추가([사제 보호막 실제 조회](cpp-priest-forcefield-reconstruction.md)), 좌표/일반 finder/필터 대체 없이 실행·Pre의 가상 삭제/Carrier만 대체·`HJOW-Athlon`에서 내보냄 |
+| `constructionclear` | constructionclear·constructionplace(실행기만) | 23 / 19 / 19 | 2026-10-10 추가([로컬 예측 조각 정리](cpp-construction-clear-reconstruction.md)), 정리 전체 몸체·실제 decoder/칸 범위/탐색기/방향 글자 정상 반환·후보의 가상 삭제만 명시 대체·`HJOW-Athlon` |
+| `constructionconfirm` | constructionconfirm·constructionplace(실행기만) | 11 / 11 / 11 | 2026-10-10 추가([서버의 건설 확정](cpp-construction-confirm-reconstruction.md)), 확정 전체 몸체·실제 decoder/스택 확보/항목 주소 정상 반환·사제 조회/메시지 생성·전송/SID 생성/통지 처리기/기록기만 명시 대체·`HJOW-Athlon` |
+| `constructionplace` | constructionplace·constructionconfirm·constructionclear·priestgeometry·damageablepredestroy·owner(실행기만) | 23 / 17 / 17 | 2026-10-10 추가([건설 배치 실행](cpp-construction-place-reconstruction.md)), 배치 전체 몸체·패치판 비용 처리·실제 decoder/HP/단어/프레임 helper 정상 반환·SID 수신/SP 저장소/표면 알림/가상 소유자·Pop/문구·메시지만 명시 대체·`HJOW-Athlon` |
 | `priestshield` | priestshield | 15 / 13 / 13 | 2026-10-09 내보내기/10-10 완료([사제 보호막 생성](cpp-priest-shield-reconstruction.md)), 전체 wrapper/lookup/finder/공통 owner 정상 반환·자산 생성/Pop·소리/문구만 명시 대체·`HJOW-Athlon` |
 | `priestpostpoptail` | priestpostpoptail·priestpostpop·owner | 18 / 20 / 20 | 2026-10-10 추가([사제 postPop 전체 연결](cpp-priest-postpop-tail-reconstruction.md)), 전체 wrapper/접두·이동 불가/지면/프레임 정상 반환·Carrier/낙하/보호막·Regular만 명시 대체·`HJOW-Athlon` |
 | `priestfall` | priestfall | 15 / 15 / 15 | 사제 낙하 요청·SharedRegular 생성·0x25b 처리의 최신 읽기 전용 내보내기 |
