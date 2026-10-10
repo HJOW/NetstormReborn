@@ -125,6 +125,8 @@ public:
     // 창 프로시저의 본체(원본 FUN_00436550). 정적 창 프로시저가 부른다.
     std::intptr_t HandleMessage(NativeHandle window, unsigned message, std::uintptr_t wParam, std::intptr_t lParam);
 private:
+    // 날씨의 완전한 파일 이름을 DataDir 아래에서 읽어 화면에 적용하고 색 표·커서·월드/UI를 갱신한다.
+    void LoadScenePalette(std::string_view name);
     // 원본 00441d10·00441de0: 게임 폴더의 d/options.cfg에 저장한다. 변경 검사 여부는 호출 위치가 정한다.
     void SaveOptions();
     // 원본 FUN_00435220("Interpret Options")의 일부: 화면 크기·창 위치·프레임 제한 등 설정을 읽는다.

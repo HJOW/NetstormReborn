@@ -43,6 +43,49 @@ std::map<std::string,std::string> Parse(const std::string& text) {
 }
 }
 
+// 호출자가 제공한 날씨 경계와 팔레트 갱신 전/후 색 대입을 실제 ClientAudio→SceneMusic 경로에서 확인한다. 장치는 열지 않는다.
+TEST_CASE(ClientAudio_WeatherHooksPreservePaletteAndTintOrder) {
+    bool enabled=true;std::vector<std::string> events;ClientAudio* target=nullptr;
+    std::array<std::uint32_t,4> nextTints{21,22,23,24};
+    SceneMusicHooks hooks;
+    // 모든 날씨에서 화면 갱신이 먼저 요청돼야 한다.
+    hooks.refresh=[&]() { events.emplace_back("refresh"); };
+    // 옵션은 매 날씨 변경마다 다시 읽는다.
+    hooks.ascendancyPalette=[&]() { events.emplace_back("option");return enabled; };
+    // 로드 전에는 기존 색 표의 tint, 로드 후에는 새 색 표를 유지한다.
+    hooks.loadPalette=[&](std::string_view name) {
+        CHECK(target->Scene().tint==target->Scene().tints[static_cast<std::size_t>(target->Scene().index)]);
+        events.emplace_back(name);target->SetSceneTints(nextTints);
+    };
+    // 천둥 화면 경계는 팔레트 적용 뒤에만 호출된다.
+    hooks.thunderFlash=[&]() { events.emplace_back("flash");CHECK(target->Scene().paletteDirty==1); };
+    ClientAudio audio({},OriginalEdition::Patch1078,"english",[] { return 10.0; },1,std::move(hooks));target=&audio;
+    audio.SetSceneTints({11,12,13,14});audio.StartScene(false);
+    CHECK(audio.Scene().tint==14 && events.empty());
+    // 네 원소를 한 바퀴 돌며 원본 파일 이름, 기존 색 대입, 새 색 표를 확인한다.
+    for (int i=0;i<4;++i) {
+        events.clear();const auto before=audio.Scene().tints;
+        audio.NextSceneMusic();const auto index=static_cast<std::size_t>(audio.Scene().index);
+        CHECK(events.size()==(index==2 ? 4U : 3U));
+        CHECK(events[0]=="refresh" && events[1]=="option" && events[2]==kAscendancyPalettes[index]);
+        CHECK(audio.Scene().tint==before[index] && audio.Scene().tints==nextTints);
+        nextTints[index]+=10;
+    }
+    enabled=false;events.clear();const auto tint=audio.Scene().tint;const auto tints=audio.Scene().tints;
+    audio.NextSceneMusic();
+    CHECK((events==std::vector<std::string>{"refresh","option"}));
+    CHECK(audio.Scene().tint==tint && audio.Scene().tints==tints);
+    audio.Shutdown();CHECK(audio.Scene().tints==tints);
+}
+
+// 옵션 조회만 또는 팔레트 로더만 주면 반쪽 연결이다. OS 자원을 열기 전에 실패해야 한다.
+TEST_CASE(ClientAudio_RejectsIncompletePaletteHooks) {
+    SceneMusicHooks option;option.ascendancyPalette=[] { return true; };
+    SceneMusicHooks loader;loader.loadPalette=[](std::string_view) {};
+    CHECK(Throws([&] { ClientAudio audio({},OriginalEdition::Patch1078,"english",[] { return 0.0; },1,option); }));
+    CHECK(Throws([&] { ClientAudio audio({},OriginalEdition::Patch1078,"english",[] { return 0.0; },1,loader); }));
+}
+
 // 원본 점프 표(004359d0·004359e0)의 값이다. 단계 - 1을 부호 없이 3과 비교하므로 0 이하와 5 이상은 모두 0(최대)이다.
 TEST_CASE(ClientAudio_VolumeStepFollowsOriginalJumpTable) {
     CHECK(VolumeFromStep(1)==-4000);

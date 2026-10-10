@@ -314,3 +314,7 @@ set_source_files_properties(SoundMusicRuntimeTests.cpp PROPERTIES COMPILE_DEFINI
 # 장면별 음악 감독(곡 요청·다음 곡·프레임·시작·날씨)의 독립 원본 관찰을 재생한다.
 set_source_files_properties(SoundSceneMusicTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_SCENEMUSIC_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/scenemusic-x86.tsv\"")
+
+# 팔레트 색 검색의 세 실제 PE 관찰이다. 기본 CTest는 원본/창/장치를 실행하지 않고 저장한 관찰을 비교한다.
+set_source_files_properties(ScreenTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PALETTECOLOR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/palettecolor-x86.tsv\"")

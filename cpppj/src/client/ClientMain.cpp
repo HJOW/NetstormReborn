@@ -11,6 +11,7 @@
 #include "platform/Bitmap.h"
 #include <algorithm>
 #include <array>
+#include <cstring>
 #include <cstdlib>
 #include <cstdio>
 #include <fstream>
@@ -238,8 +239,16 @@ int Client::Run() {
     // "init sound"(FUN_004aa600 → FUN_004a9520("thunderCrack.wav") → FUN_004aadd0): 소리 장치·음악 스레드.
     // 장치가 없거나 열리지 않으면 소리 없이 계속 실행한다. 검사용 noAudio이면 만들지 않는다.
     if (!options_.noAudio) {
+        SceneMusicHooks scene;
+        // 원본 0043dad0의 전체 재표시 경계를 현재 UI 어댑터의 합성/Renderer 변경 영역에 연결한다.
+        scene.refresh=[this]() { if (menu_) menu_->Refresh();else if (renderer_) renderer_->InvalidateAll(); };
+        // 원본 00441470(key,1)은 값이 정확히 1일 때만 참이다. 음악/소리 옵션과는 별개다.
+        scene.ascendancyPalette=[this]() { return configuration_.GetInt(kAscendancyPaletteOption)==1; };
+        // 파일 이름에는 이미 .col이 포함돼 있으므로 GamePalSpec의 .COL을 추가하지 않는다.
+        scene.loadPalette=[this](std::string_view name) { LoadScenePalette(name); };
         audio_ = std::make_unique<ClientAudio>(options_.gameDirectory, options_.edition, kLanguages[static_cast<std::size_t>(languageNumber_)],
-            [this]() { return clock_.WallSeconds(timeGetTime()); }, timeGetTime());
+            [this]() { return clock_.WallSeconds(timeGetTime()); }, timeGetTime(),std::move(scene));
+        audio_->SetSceneTints(screen_->WeatherTints());
         audio_->SetView({0,0,0,0,screenWidth_,screenHeight_});
         audio_->Initialize(reinterpret_cast<std::uintptr_t>(window_), ReadAudioOptions());
         if (options_.audioMute) audio_->PushMute();
@@ -485,19 +494,28 @@ bool Client::Paused() const { return clock_.IsPaused(); }
 void Client::Title(std::string_view title) { SetWindowTextA(static_cast<HWND>(window_), std::string(title).c_str()); }
 // 기본 UI만 제공한다. 검사 장면의 독립 실행은 기존 연결점을 보존한다.
 UberGump* Client::Menu() { return menu_.get(); }
+// 팔레트 적용 → 원소 색 표 갱신 순서다. SceneMusic은 이 함수 호출 전에 tint를 썼으므로 여기서 현재 tint를 덮어쓰지 않는다.
+void Client::LoadScenePalette(std::string_view name) {
+    const auto path=configuration_.PathSpec("DataDir")+"\\"+std::string(name);
+    screen_->LoadPalette(GamePalette(files_.Read(path)));
+    if (audio_) audio_->SetSceneTints(screen_->WeatherTints());
+    if (cursor_ && (screen_->Flags()&ScreenMode::kSoftwareMouse)!=0) cursor_->BuildSoftware(screen_->Palette());
+    if (menu_) menu_->PaletteChanged();else if (renderer_) renderer_->InvalidateAll();
+}
 // 현재 단계의 창 모드 세 해상도만 지원한다. 전체화면 장치는 후속이다.
 void Client::ChangeResolution(int width, int height) {
     if (!((width == 640 && height == 480) || (width == 800 && height == 600) || (width == 1024 && height == 768)))
         throw std::invalid_argument("Unsupported original resolution");
     if (screenWidth_ == width && screenHeight_ == height) return;
-    std::array<ScreenColor, 256> palette{};
-    std::copy(screen_->Palette().begin(), screen_->Palette().end(), palette.begin());
+    // 현재 RGBQUAD 256개를 새 장치의 저장 팔레트로도 옮긴다. SetPalette만 하면 SetMode의 기본 팔레트 재적용에서 검정으로 덮인다.
+    std::array<std::uint8_t,1024> palette{};
+    std::memcpy(palette.data(),screen_->Palette().data(),palette.size());
     sceneVisible_ = false;
     renderer_.reset(); screen_.reset();
     screenWidth_ = width; screenHeight_ = height;
     screen_ = std::make_unique<Screen>(window_, windowDc_, width, height);
     screen_->Init(); screen_->InitDibSection();
-    screen_->SetPalette(0, 256, palette.data(), true);
+    screen_->LoadPalette(GamePalette(palette));
     RECT rect{0, 0, width, height};
     AdjustWindowRectEx(&rect, static_cast<DWORD>(GetWindowLongPtrA(static_cast<HWND>(window_), GWL_STYLE)), FALSE, 0);
     windowWidth_ = rect.right - rect.left; windowHeight_ = rect.bottom - rect.top;

@@ -46,15 +46,16 @@ struct ClientAudioOptions {
 //       메인 루프는 매 프레임 CountPlaying()과 SceneFrame()을 부르고, 장면이 바뀌면 StartScene()·RequestMusic()을 부른다.
 //       옵션이 바뀌면 Interpret()를 다시 부른다. 소멸자가 음악 스레드를 합류한 뒤 장치를 닫는다.
 //       주 스레드에서만 부른다(음악 스레드와는 SoundMusic·장치의 잠금으로 분리돼 있다).
-// 범위: 월드·화면 경계(희생 판정·대기실 판정·화면 갱신·날씨 팔레트·번개 효과)는 비어 있다.
+// 범위: 화면 경계는 생성자의 external로 연결한다. 희생·대기실·번개 효과는 클라이언트에서 아직 비어 있다.
 //       효과음의 화면 영역·카메라는 SetView로 갱신한다. 현재 GUI의 표시 영역을 쓰며 원본 가변 패널 배치는 후속이다.
 // 이력: 2026-10-10 추가.
 class ClientAudio {
 public:
     // gameDirectory 아래의 sound·music 폴더를 쓴다. language는 효과음 언어 폴더 이름(보통 "english"),
     // wallSeconds는 정지와 무관하게 흐르는 실시간 시계(초), randomSeed는 첫 원소 곡을 고르는 난수의 시작 상태다.
+    // external은 화면/월드 경계다. 미제공 기능은 기본값으로 비우며 팔레트 설정 조회와 로더는 한 쌍으로 제공한다.
     ClientAudio(std::filesystem::path gameDirectory,o::OriginalEdition edition,std::string language,
-        std::function<double()> wallSeconds,std::uint32_t randomSeed);
+        std::function<double()> wallSeconds,std::uint32_t randomSeed,SceneMusicHooks external={});
     // 음악 스레드를 합류하고 장치를 닫는다. 이미 닫혔으면 아무 일도 하지 않는다.
     ~ClientAudio();
     // 내부 객체가 서로의 주소를 보관하므로 복제·이동하지 않는다.
@@ -78,6 +79,10 @@ public:
     void StartScene(bool battle);
     // 곡을 직접 요청한다(원본 00469db0). 결과 화면·희생 의식·대기실에서 쓴다. 현재 곡과 같으면 아무 일도 하지 않는다.
     void RequestMusic(std::string_view name);
+    // 원본 다음 곡 요청(00469f00)이다. 곡 순환과 날씨를 함께 적용한다. 명시 검사 및 후속 장면 전환 호출자에서 쓴다.
+    void NextSceneMusic();
+    // 팔레트 로더가 채운 원소별 색 번호를 복사한다. 현재 tint는 바꾸지 않아 ApplyWeather의 팔레트 로드 전 대입 순서를 보존한다.
+    void SetSceneTints(std::array<std::uint32_t,4> tints);
     // 효과음과 음악을 함께 음소거한다(원본 004aa900/004aa970 — 영상·안내 창이 열릴 때 쓰는 공유 음소거). 깊이가 0이 아닌 동안은 음량 옵션이 바뀌어도 예약만 된다.
     // 사용: 검사 실행이 장치와 음악 스트림을 실제로 돌리면서도 소리는 내지 않게 할 때 쓴다. PopMute가 마지막 해제에서 예약한 음량을 되돌린다.
     void PushMute();

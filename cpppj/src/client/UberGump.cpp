@@ -209,6 +209,8 @@ void UberGump::BeginMission(std::string name) {
     world_=world.get(); worldProcess_=client_.GetKernel().Add(std::move(world)); userInput_=std::make_unique<UserInput>(client_,*world_);
     // 브리핑으로 게임 시계가 멈추기 전에도 첫 카메라/표시 영역이 음악·효과음에 전달되게 한다.
     world_->Resize(client_.GetScreen().Width(),client_.GetScreen().Height());
+    // 직전 미션의 날씨 팔레트가 유지된 재진입도 현재 화면 색을 사용한다.
+    world_->SetPalette(client_.GetScreen().Palette());
     briefingSections_.clear(); briefingIndex_ = 0;
     // 원본 초기 브리핑은 A.이며 A1. 등은 본문 Tell 명령이 넘긴다.
     if (mission_->Section("A.")) briefingSections_.push_back("A.");
@@ -316,8 +318,18 @@ void UberGump::Tick() {
     }
     if (rebuild_) Compose();
 }
-// 커널에서 진행한 이동 좌표가 같은 프레임의 화면에 반영된다.
-void UberGump::Frame() { if (world_ && world_->TakeChanged()) { rebuild_=true; Compose(false); } }
+// 커널의 이동과 장면 음악의 날씨 갱신 요청을 같은 프레임에 반영한다. 입력 영역/누름 상태는 유지한다.
+void UberGump::Frame() {
+    if (world_ && world_->TakeChanged()) rebuild_=true;
+    if (rebuild_) Compose(false);
+}
+// UI 합성을 예약하고 이미 제출된 정적 픽셀도 다시 그리게 한다.
+void UberGump::Refresh() { rebuild_=true;client_.GetRenderer().InvalidateAll(); }
+// 새 RGB를 월드에 공급한 뒤 UI의 장식·글자·선택 색도 다시 합성한다.
+void UberGump::PaletteChanged() {
+    if (world_) world_->SetPalette(client_.GetScreen().Palette());
+    Refresh();
+}
 // 선택한 원본 명령의 작은 부분집합. 지원하지 않는 항목은 활성화하지 않는다.
 void UberGump::Execute(const DialogAction& action) {
     const auto command = o::AsciiLower(action.command);
@@ -507,6 +519,11 @@ std::string UberGump::Report() const {
     if (client_.Audio()) {
         const auto& view=client_.Audio()->View();
         out<<"audio_view\t"<<view.cameraX<<'\t'<<view.cameraY<<'\t'<<view.left<<'\t'<<view.top<<'\t'<<view.right<<'\t'<<view.bottom<<'\n';
+        const auto& scene=client_.Audio()->Scene();
+        out<<"weather\t"<<scene.index<<'\t'<<scene.tint<<'\t'<<scene.paletteDirty;
+        // 현재 팔레트에서 계산한 네 원소 색도 같은 관찰에 기록한다.
+        for (const auto tint:scene.tints) out<<'\t'<<tint;
+        out<<'\n';
     }
     // 그리기와 같은 판정 표를 기록한다.
     for (const auto& control : input_.Controls()) {

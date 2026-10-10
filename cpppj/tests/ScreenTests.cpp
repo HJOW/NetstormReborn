@@ -1,10 +1,77 @@
 // 화면 장치(Screen)의 순수 계산과 입력 사건 큐의 단위 검사. 창을 만들지 않는다.
 // 창·DIB·팔레트가 실제로 동작하는지는 tools/cpp_window_smoke.py가 실행 파일을 띄워 확인한다.
+#define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
+#include <windows.h>
 #include "TestSupport.h"
 #include "client/InputEvent.h"
 #include "client/Screen.h"
+#include <fstream>
+#include <sstream>
+#include <string>
 
 using namespace netstorm::client;
+
+// 실제 GDI에서 100번 팔레트를 바꾸고 끝낼 때 선택된 객체가 누수되지 않는지 검사한다. 창과 소리 장치는 만들지 않는다.
+TEST_CASE(ScreenPalette_ReplacementsAndDestructionReleaseGdiObjects) {
+    // 검사 참조 DC만 소유하는 도우미다. Screen이 먼저 사라지고 마지막에 참조 DC를 해제한다.
+    struct ReferenceDc {
+        HDC handle{};
+        // 화면과 호환되는 메모리 DC를 만든다. 바탕 화면이나 창의 선택 객체를 건드리지 않는다.
+        ReferenceDc():handle(CreateCompatibleDC(nullptr)) {}
+        // 생성에 성공한 참조 DC만 해제한다.
+        ~ReferenceDc() { if (handle) DeleteDC(handle); }
+    } reference;
+    CHECK(reference.handle!=nullptr);if (!reference.handle) return;
+    const auto before=GetGuiResources(GetCurrentProcess(),GR_GDIOBJECTS);
+    {
+        Screen screen(nullptr,reference.handle,640,480);screen.Init();screen.InitDibSection();
+        std::array<std::uint8_t,776> bytes{};
+        // 검사 COL의 256색을 회색 단계로 채운다. 파일 읽기 없이 실제 팔레트 적용만 반복한다.
+        for (std::size_t i=8;i<bytes.size();++i) bytes[i]=static_cast<std::uint8_t>((i-8)/3);
+        const GamePalette palette(bytes);const auto live=GetGuiResources(GetCurrentProcess(),GR_GDIOBJECTS);
+        // 각 교체 직후 객체 수가 같아야 한다. 이전 팔레트가 DC에 선택된 채 남으면 DeleteObject가 실패하여 증가한다.
+        for (int i=0;i<100;++i) {
+            screen.LoadPalette(palette);CHECK(GetGuiResources(GetCurrentProcess(),GR_GDIOBJECTS)==live);
+        }
+    }
+    CHECK(GetGuiResources(GetCurrentProcess(),GR_GDIOBJECTS)==before);
+}
+
+// 파일 로더/화면을 거치지 않고 실제 원본 검색 몸체의 전체 32비트 입력·두 x87 결과와 대조한다.
+TEST_CASE(ScreenPalette_NearestColorMatchesThreeNativeBodies) {
+    std::ifstream input(NETSTORM_PALETTECOLOR_FIXTURE);CHECK(input.good());
+    std::string line;std::size_t cases=0;
+    // 주석을 건너뛰고 관찰 행마다 논리 팔레트의 little-endian DWORD 256개를 복원한다.
+    while (std::getline(input,line)) {
+        if (line.empty() || line.front()=='#') continue;
+        std::istringstream row(line);std::string edition,hex;std::int32_t red{},green{},blue{};std::uint32_t expected{};
+        row>>edition>>red>>green>>blue>>hex>>expected;
+        CHECK(!row.fail() && hex.size()==2048);if (row.fail() || hex.size()!=2048) continue;
+        std::array<std::uint32_t,256> palette{};
+        // DWORD마다 네 바이트를 원본 순서로 합친다. 최상위 플래그도 유지한다.
+        for (std::size_t i=0;i<palette.size();++i)
+            // RGB와 플래그가 서로 바뀌지 않도록 각 바이트를 정해진 자리로 옮긴다.
+            for (std::size_t byte=0;byte<4;++byte)
+                palette[i]|=static_cast<std::uint32_t>(std::stoul(hex.substr(i*8+byte*2,2),nullptr,16))<<(byte*8);
+        CHECK(FindPaletteColor(palette,red,green,blue)==expected);++cases;
+    }
+    CHECK(cases==786);
+}
+
+// 논리 팔레트는 apply=false 준비에서도 바뀐다. 검색이 표시 팔레트 BGR이나 예약 바이트를 읽지 않는지 본다.
+TEST_CASE(ScreenPalette_PreparedLogicalColorsAndWeatherTable) {
+    Screen screen(nullptr,nullptr,640,480);
+    std::array<ScreenColor,256> colors{};
+    colors[17]={22,255,255,193};colors[38]={255,22,22,147};
+    colors[69]={22,22,255,91};colors[127]={111,140,181,255};
+    screen.SetPalette(0,256,colors.data(),false);
+    const auto tints=screen.WeatherTints();
+    CHECK((tints==std::array<std::uint32_t,4>{17,38,69,127}));
+    CHECK(screen.FindColor(0,0,0)==0 && screen.FindColor(255,255,255)==255);
+    // 표시 버퍼는 적용하지 않았으므로 여전히 검정이다.
+    CHECK(screen.Palette()[17].red==0 && screen.Palette()[17].green==0);
+}
 
 // 원본 004a13d0의 다섯 조건. setup.cfg의 기본값(창 10, 전체화면 11)이 허용되는지도 본다.
 TEST_CASE(ScreenMode_LegalCombinations_FollowOriginalRules) {

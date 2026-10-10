@@ -16,6 +16,7 @@
 #include "app/InspectView.h"
 #include "app/FrameBindingInspect.h"
 #include "client/ClientMain.h"
+#include "client/ClientAudio.h"
 #include "client/GameAssets.h"
 #include "client/SquidRenderer.h"
 #include "client/GameWorld.h"
@@ -601,6 +602,11 @@ int RunClient(std::vector<std::string> arguments) {
             for (std::size_t i = next; i < steps.size() && steps[i].frame == c.Time().number; ++i) {
                 const auto& step = steps[i]; using namespace netstorm::client;
                 if (step.operation == "snapshot" || step.operation == "report") continue;
+                // 날씨 순환의 실제 다음 곡 경로를 검사용으로만 호출한다. 몇 분짜리 곡 끝을 기다리지 않고 네 팔레트를 검사한다.
+                if (step.operation=="music-next") {
+                    if (!c.Audio()) throw std::runtime_error("music-next requires client audio");
+                    c.Audio()->NextSceneMusic();continue;
+                }
                 // 검사 명령은 실제 raw 삭제를 사용한다. 건설/전투 UI 구현으로 취급하지 않는다.
                 if (step.operation=="surface-delete") {
                     std::istringstream fields(step.argument);std::string type;float x{},y{};char comma{};

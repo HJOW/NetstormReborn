@@ -4,9 +4,10 @@
 //       004a2640(팔레트) ↔ CD 00424500, 004a40d0(커서 표시), 004a4570(DIB 섹션), 004a4fe0(화면 모드) ↔ CD 004220b0,
 //       00445290(사각형 자르기).
 // 범위: 창 모드(DIB 섹션) 경로. DirectDraw 표면(종류 3·4·5), 전체화면 전환, 플리핑, 구름 시차 표면,
-//       색 찾기 표는 아직 옮기지 않았다. 글꼴·소프트웨어 커서는 BitmapFont·Cursor·Renderer에 연결했다.
+//       이름 붙은 색 표 전체는 후속이다. 가장 가까운 색 검색과 날씨 네 색, 글꼴·커서는 실제 모듈에 연결했다.
 #include "client/Screen.h"
 #include <algorithm>
+#include <bit>
 #include <stdexcept>
 
 #define WIN32_LEAN_AND_MEAN
@@ -27,6 +28,11 @@ constexpr BYTE kPaletteEntryFlags = PC_NOCOLLAPSE;
 // 원본 LOGPALETTE의 버전(0x300)과 항목 수.
 constexpr WORD kLogicalPaletteVersion = 0x300;
 constexpr WORD kPaletteSize = 0x100;
+// 색 검색의 초기 거리 상한이다(00509ce0 / CD 004246e3의 float32 0x4b189680). 모두 이 이상이면 0번을 반환한다.
+constexpr float kInitialColorDistance=10000000.0f;
+// 파일 팔레트 적용 뒤 채우는 원소별 RGB 색이다. 바람=노랑, 비=파랑, 천둥=빨강, 해=갈색 순서다.
+// 원본: 004a4850의 DAT_005b5da8..005b5db4 / CD DAT_00549b40..00549b4c 대입.
+constexpr std::array<std::array<std::int32_t,3>,4> kWeatherRgb{{{255,255,22},{22,22,255},{255,22,22},{181,140,111}}};
 
 // 원본 FUN_00445290의 좌표 하나: 값을 [low, high] 안으로 넣는다.
 int Clamp(int value, int low, int high) {
@@ -47,6 +53,24 @@ GamePalette::GamePalette(std::span<const std::uint8_t> bytes) {
 }
 // 팔레트 내부에는 투명 색을 강제로 지정하지 않는다.
 PaletteColor GamePalette::Color(std::uint8_t index) const { return colors_[index]; }
+
+// 실제 x87는 새 정수 거리를 반올림하기 전에 이전 float32 최솟값과 비교한다. 먼저 float로 바꾸면 큰 거리의 동률 처리에서 달라진다.
+std::uint32_t FindPaletteColor(std::span<const std::uint32_t,256> logical,std::int32_t red,std::int32_t green,std::int32_t blue) {
+    float best=kInitialColorDistance;
+    std::uint32_t chosen=0;
+    // 256색을 번호 순으로 검색한다. 플래그 바이트는 색 거리에 쓰지 않는다.
+    for (std::size_t i=0;i<logical.size();++i) {
+        const auto color=logical[i];
+        const std::uint32_t dr=(color&255U)-static_cast<std::uint32_t>(red);
+        const std::uint32_t dg=((color>>8)&255U)-static_cast<std::uint32_t>(green);
+        const std::uint32_t db=((color>>16)&255U)-static_cast<std::uint32_t>(blue);
+        const auto distance=std::bit_cast<std::int32_t>(dr*dr+dg*dg+db*db);
+        if (static_cast<double>(distance)<static_cast<double>(best)) {
+            best=static_cast<float>(distance);chosen=static_cast<std::uint32_t>(i);
+        }
+    }
+    return chosen;
+}
 
 // 원본 004a13d0. 원본은 맞지 않는 조건마다 "Illegal screen mode: …" 로그를 남기고 개수를 센다.
 bool ScreenModeIsLegal(std::uint32_t flags, bool directDrawInstalled) {
@@ -130,6 +154,8 @@ Screen::~Screen() {
     windowSurface_.reset();
     if (palette_) {
         if (previousPalette_) SelectPalette(static_cast<HDC>(windowDc_), static_cast<HPALETTE>(previousPalette_), FALSE);
+        // GDI는 다른 DC에 선택된 팔레트도 삭제하지 못한다. 메모리 DC의 선택도 먼저 되돌린다.
+        if (previousMemoryPalette_) SelectPalette(static_cast<HDC>(memoryDc_),static_cast<HPALETTE>(previousMemoryPalette_),FALSE);
         DeleteObject(static_cast<HPALETTE>(palette_));
     }
     if (memoryDc_) DeleteDC(static_cast<HDC>(memoryDc_));
@@ -145,7 +171,7 @@ void Screen::Init() {
     logical.count = kPaletteSize;
     palette_ = CreatePalette(reinterpret_cast<LOGPALETTE*>(&logical));
     previousPalette_ = SelectPalette(static_cast<HDC>(windowDc_), static_cast<HPALETTE>(palette_), FALSE);
-    SelectPalette(static_cast<HDC>(memoryDc_), static_cast<HPALETTE>(palette_), FALSE);
+    previousMemoryPalette_=SelectPalette(static_cast<HDC>(memoryDc_),static_cast<HPALETTE>(palette_),FALSE);
 }
 // 원본 004a4570.
 void Screen::InitDibSection() {
@@ -221,6 +247,8 @@ void Screen::SetPalette(unsigned start, unsigned count, ScreenColor* colors, boo
     const HDC windowDc = static_cast<HDC>(windowDc_);
     if (palette_) {
         SelectPalette(windowDc, static_cast<HPALETTE>(previousPalette_), FALSE);
+        // 반복 날씨/모드 전환마다 이전 팔레트가 남지 않도록 두 DC 모두에서 선택을 해제한다.
+        if (previousMemoryPalette_) SelectPalette(static_cast<HDC>(memoryDc_),static_cast<HPALETTE>(previousMemoryPalette_),FALSE);
         DeleteObject(static_cast<HPALETTE>(palette_));
     }
     struct { WORD version; WORD count; PALETTEENTRY entries[256]; } logical{};
@@ -237,7 +265,7 @@ void Screen::SetPalette(unsigned start, unsigned count, ScreenColor* colors, boo
     RealizePalette(windowDc);
 }
 // 원본 004a4850: 파일의 256색을 저장 팔레트(DAT_005acd28)에 RGBQUAD 순서로 읽고 FUN_004a2640(0, 256, 0, 1)로 적용한다.
-// 화면 모드가 이미 정해진 뒤 부르면 원본은 먼저 화면을 지운다 — 그 부분과 이름 붙은 색 찾기(004a2820)는 아직 옮기지 않았다.
+// 날씨 호출은 원본의 두 번째 인자 0(화면 지우지 않음)에 해당한다. 전체 이름 붙은 색 표는 후속이며 날씨 네 색은 WeatherTints로 읽는다.
 void Screen::LoadPalette(const GamePalette& palette) {
     // 색 번호를 그대로 유지한다.
     for (std::size_t i = 0; i < saved_.size(); ++i) {
@@ -245,6 +273,17 @@ void Screen::LoadPalette(const GamePalette& palette) {
         saved_[i] = {color.blue, color.green, color.red, 0};
     }
     SetPalette(0, kPaletteSize, nullptr, true);
+}
+// apply와 무관하게 논리 팔레트가 색 검색의 원본이다.
+std::uint32_t Screen::FindColor(std::int32_t red,std::int32_t green,std::int32_t blue) const {
+    return FindPaletteColor(logical_,red,green,blue);
+}
+// 팔레트 로더의 노랑·파랑·빨강·갈색 대입 순서다. tint 자체는 장면 음악 감독이 원본 순서로 변경한다.
+std::array<std::uint32_t,4> Screen::WeatherTints() const {
+    std::array<std::uint32_t,4> result{};
+    // 각 원소의 RGB에 가장 가까운 현재 팔레트 번호를 기록한다.
+    for (std::size_t i=0;i<result.size();++i) result[i]=FindColor(kWeatherRgb[i][0],kWeatherRgb[i][1],kWeatherRgb[i][2]);
+    return result;
 }
 // 처음 잠글 때만 그리기 표면에서 버퍼를 얻는다.
 std::uint8_t* Screen::Lock() {

@@ -23,6 +23,10 @@ public:
     void Tick();
     // 커널이 월드를 진행한 직후 변경된 실제 장면을 제출한다.
     void Frame();
+    // 날씨 곡 전환의 화면 갱신 요청이다(0043dad0 경계). 같은 프레임의 Frame에서 UI를 다시 합성한다.
+    void Refresh();
+    // 새 화면 팔레트를 월드 어댑터에도 전달하고 UI/표시를 다시 그린다.
+    void PaletteChanged();
     // 명령줄 검사용 미션도 State→Loading→Briefing의 같은 경로로 예약한다.
     void StartMission(std::string name);
     // 입력 큐·커서 폴링으로 돌 버튼/목록/ESC를 처리한다. 종료 요구면 참.

@@ -16,21 +16,21 @@ constexpr std::string_view kPreloadedSound="thunderCrack.wav";
 constexpr const char* kSoundDirectory="sound";
 constexpr const char* kMusicDirectory="music";
 
-// 장면 음악이 쓰는 경계 가운데 아직 월드·화면이 없어 비워 두는 것들을 채운다. 비어 있어도 안전한 값을 돌려준다.
-// 사용: 월드(희생 판정·대기실)와 화면(갱신·팔레트·번개)이 복원되면 해당 항목을 실제 연결로 바꾼다.
-// 이력: 2026-10-10 추가 — 날씨 팔레트는 적용하지 않으므로 ascendancyPalette 조회를 거짓으로 둔다(색만 바꾸고 팔레트를 안 바꾸는 중간 상태를 피한다).
-SceneMusicHooks UnconnectedSceneBoundaries(std::function<double()> wallSeconds) {
-    SceneMusicHooks hooks;
+// 호출자가 준 장면 경계를 보존하고 미연결 부분만 안전한 기본값으로 채운다. 장치 없는 독립 검사도 같은 생성자를 쓴다.
+// 사용: 팔레트를 적용하려면 ascendancyPalette와 loadPalette를 모두 제공해야 한다. clock은 wallSeconds 인자로 통일한다.
+SceneMusicHooks CompleteSceneBoundaries(std::function<double()> wallSeconds,SceneMusicHooks hooks) {
+    if (static_cast<bool>(hooks.ascendancyPalette)!=static_cast<bool>(hooks.loadPalette))
+        throw std::invalid_argument("Both palette option and loader must be connected");
     hooks.wallSeconds=std::move(wallSeconds);
     // 희생 판정은 월드가 필요하다: 아직 항상 "진행 중 아님"이다.
-    hooks.sacrificing=[](std::uint32_t) { return false; };
+    if (!hooks.sacrificing) hooks.sacrificing=[](std::uint32_t) { return false; };
     // 멀티플레이 대기실은 3차 목표다.
-    hooks.waitingRoom=[] { return false; };
-    // 화면 갱신·날씨 팔레트·번개 효과는 화면 복원 때 연결한다.
-    hooks.refresh=[] {};
-    hooks.ascendancyPalette=[] { return false; };
-    hooks.loadPalette=[](std::string_view) {};
-    hooks.thunderFlash=[] {};
+    if (!hooks.waitingRoom) hooks.waitingRoom=[] { return false; };
+    // 공급되지 않은 화면 기능만 비운다. 음악/효과음의 내부 경계는 MakeSceneMusicHooks가 맡는다.
+    if (!hooks.refresh) hooks.refresh=[] {};
+    if (!hooks.ascendancyPalette) hooks.ascendancyPalette=[] { return false; };
+    if (!hooks.loadPalette) hooks.loadPalette=[](std::string_view) {};
+    if (!hooks.thunderFlash) hooks.thunderFlash=[] {};
     return hooks;
 }
 }
@@ -51,7 +51,7 @@ std::int32_t VolumeFromStep(std::int32_t step) {
 // 선언 순서대로 만든다: 이름 표/상태 → 장치 → 재생 → 음악 파일 → 두 채널 → 음악 제어 → 스레드 실행기 → 곡 선택 → 장면 음악.
 // 어떤 OS 자원도 여기서 열지 않는다(장치·스레드는 Initialize가 연다).
 ClientAudio::ClientAudio(std::filesystem::path gameDirectory,o::OriginalEdition edition,std::string language,
-    std::function<double()> wallSeconds,std::uint32_t randomSeed)
+    std::function<double()> wallSeconds,std::uint32_t randomSeed,SceneMusicHooks external)
     :list_(edition),
      device_(list_,state_,MakeDiskSoundResolver(gameDirectory),language,kSoundDirectory),
      player_(list_,state_,device_.Hooks()),
@@ -62,7 +62,7 @@ ClientAudio::ClientAudio(std::filesystem::path gameDirectory,o::OriginalEdition 
      selection_(selected_,music_,MusicDirectories{std::string(kMusicDirectory),std::nullopt},
          files_.OpenHooks(MakeDiskSoundResolver(gameDirectory)),device_.MusicBuffers()),
      random_(randomSeed),
-     sceneMusic_(scene_,random_,MakeSceneMusicHooks(selection_,selected_,primaryState_,player_,UnconnectedSceneBoundaries(std::move(wallSeconds)))) {}
+     sceneMusic_(scene_,random_,MakeSceneMusicHooks(selection_,selected_,primaryState_,player_,CompleteSceneBoundaries(std::move(wallSeconds),std::move(external)))) {}
 
 // 스레드 합류 → 장치 닫기 순서를 Shutdown이 지킨다. 그 뒤 멤버가 선언의 반대 순서로 사라진다.
 ClientAudio::~ClientAudio() {
@@ -114,6 +114,10 @@ void ClientAudio::StartScene(bool battle) {
 void ClientAudio::RequestMusic(std::string_view name) {
     sceneMusic_.Request(name);
 }
+// 감독의 다음 곡/날씨 적용을 그대로 전달한다. 소리 옵션이 꺼져도 날씨는 진행한다.
+void ClientAudio::NextSceneMusic() { sceneMusic_.Next(); }
+// 팔레트 검색 결과만 갱신한다. 현재 tint의 변경 시점은 SceneMusic이 맡는다.
+void ClientAudio::SetSceneTints(std::array<std::uint32_t,4> tints) { scene_.tints=tints; }
 
 // 음악 제어가 효과음 음량 예약까지 함께 맡는다.
 void ClientAudio::PushMute() { music_.PushMute(); }
@@ -208,6 +212,10 @@ std::string ClientAudio::Describe() {
     line("musicDataLength",primaryState_.Field(MusicField::Length));
     line("sceneIndex",scene_.index);
     line("sceneBattle",scene_.battle);
+    line("sceneTint",scene_.tint);
+    line("scenePaletteDirty",scene_.paletteDirty);
+    // 원소별 검색 색은 현재 색과 따로 기록한다(팔레트 로드 전의 tint를 유지하는 원본 순서 확인).
+    for (std::size_t i=0;i<scene_.tints.size();++i) line(("sceneTint"+std::to_string(i)).c_str(),scene_.tints[i]);
     line("songEnd",scene_.songEnd);
     const auto token=primaryState_.Field(MusicField::Buffer);
     if (state_.initialized && token!=0) {

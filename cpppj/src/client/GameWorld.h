@@ -31,6 +31,8 @@ public:
     void Step(double seconds);
     // 화면 크기를 갱신하고 최초에는 내 신전/사제에 카메라를 둔다.
     void Resize(int width,int height);
+    // 표시 팔레트를 바꾸고 팔레트에 의존하는 지면 명도 변환표를 다시 계산하게 한다. 화면 팔레트 적용 직후 부른다.
+    void SetPalette(std::span<const ScreenColor> palette);
     // 카메라를 월드 픽셀 범위 안에서 옮긴다.
     void Scroll(int dx,int dy);
     // F4/H·F5의 원본 홈 신전/사제 보기를 연결한다.

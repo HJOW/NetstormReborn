@@ -1,0 +1,56 @@
+{
+  "total": 786,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-10",
+  "controls": [
+    639,
+    895
+  ],
+  "os_calls": 0,
+  "stubs": 0,
+  "editions": {
+    "originals": {
+      "cases": 262,
+      "returns": 524,
+      "native_calls": {
+        "004a2820": 524
+      },
+      "assertions": 0
+    },
+    "originalCD": {
+      "cases": 262,
+      "returns": 524,
+      "native_calls": {
+        "004246e0": 524
+      },
+      "assertions": 0
+    },
+    "original1037": {
+      "cases": 262,
+      "returns": 524,
+      "native_calls": {
+        "004246e0": 524
+      },
+      "assertions": 0
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/palettecolor-x86.tsv": "c888cf78e03718019d7061fc926ba1dbe63c0a9f052ee6b528f50fbfd67577dc",
+    "extracted/palettecolor/original1037/creation.c": "800b96d62b52280479f9c49bf8c407adf52d5e51573cf10ea8d1cedc8605a9bc",
+    "extracted/palettecolor/original1037/functions.tsv": "68e72ea06d0a8f37242b63cc64c8d864c33f041ca2c34a60e815003a43dada83",
+    "extracted/palettecolor/originalCD/creation.c": "800b96d62b52280479f9c49bf8c407adf52d5e51573cf10ea8d1cedc8605a9bc",
+    "extracted/palettecolor/originalCD/functions.tsv": "68e72ea06d0a8f37242b63cc64c8d864c33f041ca2c34a60e815003a43dada83",
+    "extracted/palettecolor/originals/creation.c": "c8a10445e9b65ae43703f7a296b085b15d1ecc4889b0fa0f9f4757e7517ed803",
+    "extracted/palettecolor/originals/functions.tsv": "f33b545c593cb3879082f07447a9998215605b6a62edd507f0cf9b71e496ba32",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/decomp_palettecolor_oracle.py": "724006865faf4c8c1a4fe5be74c11636fbbe6116096820b862d6bf0d238fb7b0",
+    "tools/ghidra/palettecolor-functions.json": "048025c1508cbb8b74080cb0c237b13fa16c3f8bfac19341e71228123e290c99"
+  },
+  "limits": [
+    "검색 전체 몸체만 실제 실행; 로더/경로/Win32 팔레트 적용은 정적 판독 및 클론 창 검사",
+    "x87 기본 반올림(nearest)의 두 정밀도만 관찰"
+  ]
+}

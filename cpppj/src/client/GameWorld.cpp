@@ -85,6 +85,13 @@ void GameWorld::Place(const o::FortChunkSection& section,std::span<const o::Chun
             objects_.push_back(std::move(object));
         }
 }
+// 기존 월드 어댑터의 색 검색·소유자별 지면 명도도 현재 화면 팔레트를 사용한다.
+void GameWorld::SetPalette(std::span<const ScreenColor> palette) {
+    if (palette.size()!=palette_.size()) throw std::invalid_argument("World palette needs 256 colors");
+    // 색 번호는 유지하고 RGB만 교체한다.
+    for (std::size_t i=0;i<palette_.size();++i) palette_[i]={palette[i].red,palette[i].green,palette[i].blue};
+    remaps_.clear();changed_=true;
+}
 // 연결 방향 후보와 원소별 묶음에서 지면/절벽의 실제 클러스터를 고른다.
 std::size_t GameWorld::TerrainFrame(const TypeAsset& type,char a,char b,int theme,int x,int y,bool core) const {
     const auto& clusters=type.definition.clusters;

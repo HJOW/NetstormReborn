@@ -38,6 +38,10 @@ bool ScreenModeIsLegal(std::uint32_t flags, bool directDrawInstalled);
 
 // Windows RGBQUAD와 같은 순서의 색(파랑·초록·빨강·예약).
 struct ScreenColor { std::uint8_t blue{}, green{}, red{}, reserved{}; };
+// 원본 004a2820 / CD 004246e0: 논리 팔레트(R·G·B·플래그 DWORD 256개)에서 RGB 제곱 거리가 가장 작은 색 번호를 찾는다.
+// 사용: byte 범위 RGB의 동률은 먼저 나온 번호를 유지한다. 좌표 차·곱·합은 32비트로 감고, 비교는 signed 거리와 float32 최솟값으로 한다.
+// 범위 밖 RGB에서는 저장 반올림으로 정수 거리가 같아도 뒤 번호가 선택될 수 있다. 원본의 비교/저장 순서를 유지한다.
+std::uint32_t FindPaletteColor(std::span<const std::uint32_t,256> logical,std::int32_t red,std::int32_t green,std::int32_t blue);
 // 화면 좌표의 사각형. right·bottom은 포함하지 않는다(원본 004a1800의 인자).
 struct ScreenRect { int left{}, top{}, right{}, bottom{}; };
 // 원본 FUN_00445290: 사각형을 경계 안으로 자른다.
@@ -103,6 +107,10 @@ public:
     void SetPalette(unsigned start, unsigned count, ScreenColor* colors, bool apply);
     // 원본 FUN_004a4850: 팔레트 파일의 색을 저장 팔레트에 넣고 적용한다.
     void LoadPalette(const GamePalette& palette);
+    // 현재 논리 팔레트에서 RGB 색을 찾는다. SetPalette(apply=false)로 준비한 논리 팔레트도 검색에 반영한다.
+    std::uint32_t FindColor(std::int32_t red,std::int32_t green,std::int32_t blue) const;
+    // 원본 004a4850의 날씨 색 표(바람·비·천둥·해)를 구한다. 팔레트 적용 직후 ClientAudio의 tints에 복사한다.
+    std::array<std::uint32_t,4> WeatherTints() const;
     // 원본 FUN_004a14e0 / 004a1550: 그리기 표면 잠금(중첩 횟수를 센다). 처음 잠글 때만 버퍼를 얻는다.
     std::uint8_t* Lock();
     void Unlock();
@@ -138,6 +146,7 @@ private:
     NativeHandle memoryDc_{};                     // DAT_005c7928
     NativeHandle palette_{};                      // DAT_005c795c
     NativeHandle previousPalette_{};              // DAT_005c7960 / DAT_005c7964
+    NativeHandle previousMemoryPalette_{};        // 메모리 DC의 이전 팔레트. 교체/종료 전에 복원하여 선택된 GDI 객체의 삭제 실패를 막는다.
     NativeHandle menu_{};                         // DAT_005c78e8
     std::unique_ptr<ScreenSurface> windowSurface_; // DAT_005c792c
     std::unique_ptr<ScreenSurface> dibSurface_;    // DAT_005c7930
