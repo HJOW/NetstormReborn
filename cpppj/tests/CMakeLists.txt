@@ -46,6 +46,7 @@ add_executable(netstorm_tests
     FortTests.cpp
     ScreenTests.cpp
     PaletteFlashTests.cpp
+    PaletteColorsTests.cpp
     TerritoryTests.cpp
     RendererTests.cpp
     MenuTests.cpp
@@ -323,3 +324,7 @@ set_source_files_properties(ScreenTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 번개 생성/초기화/진행/중단의 실제 x86 관찰 파일을 새 검사에만 전달한다.
 set_source_files_properties(PaletteFlashTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PALETTEFLASH_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/paletteflash-x86.tsv\"")
+
+# 전체 파일 팔레트 로더/색 표의 독립 x86 관찰이다. CTest는 원본/장치를 실행하지 않는다.
+set_source_files_properties(PaletteColorsTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PALETTECOLORS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/palettecolors-x86.tsv\"")

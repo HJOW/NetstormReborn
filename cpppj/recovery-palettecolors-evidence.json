@@ -1,0 +1,88 @@
+{
+  "total": 24,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-10",
+  "controls": [
+    639,
+    895
+  ],
+  "os_calls": 0,
+  "editions": {
+    "originals": {
+      "cases": 8,
+      "returns": 16,
+      "native_calls": {
+        "004a4850": 16,
+        "004a2820": 928
+      },
+      "boundaries": {
+        "open": 16,
+        "size": 24,
+        "seek": 8,
+        "read": 6152,
+        "apply": 16,
+        "alloc": 8,
+        "close": 16
+      },
+      "assertions": 0
+    },
+    "originalCD": {
+      "cases": 8,
+      "returns": 16,
+      "native_calls": {
+        "00424760": 16,
+        "004246e0": 800,
+        "00424df8": 16
+      },
+      "boundaries": {
+        "open": 16,
+        "size": 24,
+        "seek": 8,
+        "read": 6152,
+        "apply": 16,
+        "alloc": 8,
+        "close": 16
+      },
+      "assertions": 0
+    },
+    "original1037": {
+      "cases": 8,
+      "returns": 16,
+      "native_calls": {
+        "00424760": 16,
+        "004246e0": 800,
+        "00424df8": 16
+      },
+      "boundaries": {
+        "open": 16,
+        "size": 24,
+        "seek": 8,
+        "read": 6152,
+        "apply": 16,
+        "alloc": 8,
+        "close": 16
+      },
+      "assertions": 0
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/palettecolors-x86.tsv": "e68627ed2932c481316f8ac9a9dae24da1b509caf3394e3984a29154be04ab52",
+    "extracted/palettecolors/original1037/creation.c": "147e23be072caab34e3104526434180df6ecc7866cb3f9d1c03528309168ff16",
+    "extracted/palettecolors/original1037/functions.tsv": "8485d5dd8927364205959aa242644625da17781578f5dc2d99d855ab1353c5c3",
+    "extracted/palettecolors/originalCD/creation.c": "147e23be072caab34e3104526434180df6ecc7866cb3f9d1c03528309168ff16",
+    "extracted/palettecolors/originalCD/functions.tsv": "8485d5dd8927364205959aa242644625da17781578f5dc2d99d855ab1353c5c3",
+    "extracted/palettecolors/originals/creation.c": "6b5e80c65a5c255eb99ee266e74d9b8c09e82e64d41af6a911533be57900b2bf",
+    "extracted/palettecolors/originals/functions.tsv": "1f611ca7ceef6242e7a3dcd164eb60b79f3de0466564384acda7a74b9fdb9ca9",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/decomp_palettecolors_oracle.py": "4fad1230f3a9876e8869be825312f6669b9a7726b847220ab4f32405496c39e8",
+    "tools/ghidra/palettecolors-functions.json": "40302ba6586282e2d5ef461303fe598c67f29a8c0669e37b4e76e9c2b5c42b55"
+  },
+  "limits": [
+    "파일 열기/크기/seek/read/닫기와 9색 메모리 할당은 합성 경계",
+    "SetPalette 전체 적용은 기존 논리 팔레트/끝점 계약으로 대체; 실제 GDI/DirectDraw 미실행",
+    "화면 지우기 인자 0의 정상 파일 경로만 실행; 파일 오류/assert/전체화면 지우기 및 SEH 예외 경로 제외"
+  ]
+}

@@ -3,8 +3,8 @@
 //       004a1270(화면 초기화), 004a13d0(모드 검사), 004a14e0/004a1550(화면 잠금), 004a1580(자르기), 004a1800(창으로 복사),
 //       004a2640(팔레트) ↔ CD 00424500, 004a40d0(커서 표시), 004a4570(DIB 섹션), 004a4fe0(화면 모드) ↔ CD 004220b0,
 //       00445290(사각형 자르기).
-// 범위: 창 모드(DIB 섹션) 경로. DirectDraw 표면(종류 3·4·5), 전체화면 전환, 플리핑, 구름 시차 표면,
-//       이름 붙은 색 표 전체는 후속이다. 가장 가까운 색 검색과 날씨 네 색, 글꼴·커서는 실제 모듈에 연결했다.
+// 범위: 창 모드(DIB 섹션) 경로와 가장 가까운 색 검색·파일 팔레트의 전체 색 표다. 글꼴·커서는 별도 실제 모듈에 연결했다.
+// DirectDraw 표면(종류 3·4·5), 전체화면 전환, 플리핑, 구름 시차 표면은 아직 옮기지 않았다.
 #include "client/Screen.h"
 #include <algorithm>
 #include <bit>
@@ -45,14 +45,17 @@ int Clamp(int value, int low, int high) {
 // COL은 RGB 순서이고 1024바이트 파일은 Windows RGBQUAD의 BGRX 순서다.
 GamePalette::GamePalette(std::span<const std::uint8_t> bytes) {
     if (bytes.size() != 0x308 && bytes.size() != 0x400) throw std::runtime_error("Unsupported game palette size");
+    bgrx_=bytes.size()==0x400;
     // 256개의 원본 색 번호를 변경하지 않고 변환한다.
     for (std::size_t i = 0; i < colors_.size(); ++i) {
         if (bytes.size() == 0x308) colors_[i] = {bytes[8+i*3], bytes[9+i*3], bytes[10+i*3]};
-        else colors_[i] = {bytes[i*4+2], bytes[i*4+1], bytes[i*4]};
+        else { colors_[i] = {bytes[i*4+2], bytes[i*4+1], bytes[i*4]};reserved_[i]=bytes[i*4+3]; }
     }
 }
 // 팔레트 내부에는 투명 색을 강제로 지정하지 않는다.
 PaletteColor GamePalette::Color(std::uint8_t index) const { return colors_[index]; }
+// RGB COL은 원본이 세 채널만 읽으므로 기존 저장 팔레트의 예약 바이트를 유지한다.
+std::optional<std::uint8_t> GamePalette::Reserved(std::uint8_t index) const { return bgrx_ ? std::optional{reserved_[index]} : std::nullopt; }
 
 // 실제 x87는 새 정수 거리를 반올림하기 전에 이전 float32 최솟값과 비교한다. 먼저 float로 바꾸면 큰 거리의 동률 처리에서 달라진다.
 std::uint32_t FindPaletteColor(std::span<const std::uint32_t,256> logical,std::int32_t red,std::int32_t green,std::int32_t blue) {
@@ -265,15 +268,19 @@ void Screen::SetPalette(unsigned start, unsigned count, ScreenColor* colors, boo
     RealizePalette(windowDc);
 }
 // 원본 004a4850: 파일의 256색을 저장 팔레트(DAT_005acd28)에 RGBQUAD 순서로 읽고 FUN_004a2640(0, 256, 0, 1)로 적용한다.
-// 날씨 호출은 원본의 두 번째 인자 0(화면 지우지 않음)에 해당한다. 전체 이름 붙은 색 표는 후속이며 날씨 네 색은 WeatherTints로 읽는다.
-void Screen::LoadPalette(const GamePalette& palette) {
+// 원본의 두 번째 인자 0(화면 지우지 않음)에 해당한다. 파일 적용 뒤 전체 색 표를 다시 계산하고 별칭을 저장한다.
+void Screen::LoadPalette(const GamePalette& palette,o::OriginalEdition edition) {
     // 색 번호를 그대로 유지한다.
     for (std::size_t i = 0; i < saved_.size(); ++i) {
         const auto color = palette.Color(static_cast<std::uint8_t>(i));
-        saved_[i] = {color.blue, color.green, color.red, 0};
+        const auto reserved=palette.Reserved(static_cast<std::uint8_t>(i)).value_or(saved_[i].reserved);
+        saved_[i] = {color.blue, color.green, color.red, reserved};
     }
     SetPalette(0, kPaletteSize, nullptr, true);
+    colors_=BuildPaletteColorTable(logical_,edition);
 }
+// 원본처럼 파일 읽기가 끝난 뒤 계산된 표를 보존한다. 번개의 부분 적용/복구는 표를 다시 만들지 않는다.
+const PaletteColorTable& Screen::Colors() const { return colors_; }
 // apply와 무관하게 논리 팔레트가 색 검색의 원본이다.
 std::uint32_t Screen::FindColor(std::int32_t red,std::int32_t green,std::int32_t blue) const {
     return FindPaletteColor(logical_,red,green,blue);

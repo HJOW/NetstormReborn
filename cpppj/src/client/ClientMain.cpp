@@ -230,7 +230,7 @@ int Client::Run() {
     screen_ = std::make_unique<Screen>(window_, windowDc_, screenWidth_, screenHeight_);
     screen_->Init();
     const auto palettePath = configuration_.PathSpec("GamePalSpec", configuration_.PathSpec("fortPal"));
-    screen_->LoadPalette(GamePalette(files_.Read(palettePath)));
+    screen_->LoadPalette(GamePalette(files_.Read(palettePath)),options_.edition);
     // [원본] 설치 검사(GameInstalledTest), 전체 시계·zacket·프로토콜 검사·플레이어 초기화 — 옮기지 않았다.
     clock_ = o::GameClock(timeGetTime()); // "init full time"(FUN_00461090)의 시작 시각.
     // "init dib section"
@@ -281,7 +281,7 @@ int Client::Run() {
         scene.thunderFlash=[this]() { StartThunderFlash(); };
         audio_ = std::make_unique<ClientAudio>(options_.gameDirectory, options_.edition, kLanguages[static_cast<std::size_t>(languageNumber_)],
             [this]() { return clock_.WallSeconds(timeGetTime()); }, timeGetTime(),std::move(scene));
-        audio_->SetSceneTints(screen_->WeatherTints());
+        audio_->SetSceneTints(screen_->Colors().weather);
         audio_->SetView({0,0,0,0,screenWidth_,screenHeight_});
         audio_->Initialize(reinterpret_cast<std::uintptr_t>(window_), ReadAudioOptions());
         if (options_.audioMute) audio_->PushMute();
@@ -530,8 +530,8 @@ UberGump* Client::Menu() { return menu_.get(); }
 // 팔레트 적용 → 원소 색 표 갱신 순서다. SceneMusic은 이 함수 호출 전에 tint를 썼으므로 여기서 현재 tint를 덮어쓰지 않는다.
 void Client::LoadScenePalette(std::string_view name) {
     const auto path=configuration_.PathSpec("DataDir")+"\\"+std::string(name);
-    screen_->LoadPalette(GamePalette(files_.Read(path)));
-    if (audio_) audio_->SetSceneTints(screen_->WeatherTints());
+    screen_->LoadPalette(GamePalette(files_.Read(path)),options_.edition);
+    if (audio_) audio_->SetSceneTints(screen_->Colors().weather);
     if (cursor_ && (screen_->Flags()&ScreenMode::kSoftwareMouse)!=0) cursor_->BuildSoftware(screen_->Palette());
     if (menu_) menu_->PaletteChanged();else if (renderer_) renderer_->InvalidateAll();
 }
@@ -563,7 +563,7 @@ void Client::ChangeResolution(int width, int height) {
     screenWidth_ = width; screenHeight_ = height;
     screen_ = std::make_unique<Screen>(window_, windowDc_, width, height);
     screen_->Init(); screen_->InitDibSection();
-    screen_->LoadPalette(GamePalette(palette));
+    screen_->LoadPalette(GamePalette(palette),options_.edition);
     RECT rect{0, 0, width, height};
     AdjustWindowRectEx(&rect, static_cast<DWORD>(GetWindowLongPtrA(static_cast<HWND>(window_), GWL_STYLE)), FALSE, 0);
     windowWidth_ = rect.right - rect.left; windowHeight_ = rect.bottom - rect.top;

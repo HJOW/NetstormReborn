@@ -2,9 +2,11 @@
 // 창 모드(8비트 DIB 섹션 → BitBlt)를 원본 방식 그대로 옮겼다. DirectDraw 표면(전체화면·플리핑)은 아직 옮기지 않았다.
 // 근거·범위: docs/exe/cpp-screen-reconstruction.md
 #pragma once
+#include "client/PaletteColors.h"
 #include <array>
 #include <cstdint>
 #include <memory>
+#include <optional>
 #include <span>
 
 namespace netstorm::client {
@@ -15,8 +17,12 @@ public:
     explicit GamePalette(std::span<const std::uint8_t> bytes);
     // 원본 팔레트 번호에 대응하는 RGB 색을 반환한다.
     PaletteColor Color(std::uint8_t index) const;
+    // BGRX 파일은 네 번째 바이트를 반환한다. RGB COL은 예약 바이트를 쓰지 않으므로 빈 값을 반환하여 이전 저장값을 보존하게 한다.
+    std::optional<std::uint8_t> Reserved(std::uint8_t index) const;
 private:
     std::array<PaletteColor, 256> colors_{};
+    std::array<std::uint8_t,256> reserved_{}; // BGRX 파일의 원본 예약 바이트. 색 거리/표시 RGB에는 쓰지 않는다.
+    bool bgrx_{};
 };
 
 // 화면 모드 플래그(원본 DAT_005c78d4). 설정 `windowScreenFlags`·`workingFullScreenFlags`의 값이며,
@@ -106,10 +112,12 @@ public:
     // apply가 참이면 현재 팔레트에 복사하고 DIB 색 표와 논리 팔레트에 반영한다.
     void SetPalette(unsigned start, unsigned count, ScreenColor* colors, bool apply);
     // 원본 FUN_004a4850: 팔레트 파일의 색을 저장 팔레트에 넣고 적용한다.
-    void LoadPalette(const GamePalette& palette);
+    void LoadPalette(const GamePalette& palette,o::OriginalEdition edition=o::OriginalEdition::Patch1078);
+    // 마지막 파일 팔레트로 계산한 원본 기본/표시/날씨 색 표다. SetPalette의 일시 번개/모드 적용으로 다시 계산하지 않는다.
+    const PaletteColorTable& Colors() const;
     // 현재 논리 팔레트에서 RGB 색을 찾는다. SetPalette(apply=false)로 준비한 논리 팔레트도 검색에 반영한다.
     std::uint32_t FindColor(std::int32_t red,std::int32_t green,std::int32_t blue) const;
-    // 원본 004a4850의 날씨 색 표(바람·비·천둥·해)를 구한다. 팔레트 적용 직후 ClientAudio의 tints에 복사한다.
+    // 현재 논리 팔레트에서 날씨 RGB 네 색을 검색하는 계산 도우미다. 파일 로더의 저장 별칭은 Colors().weather를 쓴다.
     std::array<std::uint32_t,4> WeatherTints() const;
     // 원본 FUN_004a14e0 / 004a1550: 그리기 표면 잠금(중첩 횟수를 센다). 처음 잠글 때만 버퍼를 얻는다.
     std::uint8_t* Lock();
@@ -155,6 +163,7 @@ private:
     std::array<ScreenColor, 256> current_{};       // DAT_0059afe0
     std::array<ScreenColor, 256> saved_{};         // DAT_005acd28
     std::array<std::uint32_t, 256> logical_{};     // DAT_005c7954: PALETTEENTRY(빨강·초록·파랑·플래그) 256개
+    PaletteColorTable colors_;                   // 파일 팔레트 로더가 다시 계산하는 원본 기본/표시/날씨 색 표.
     std::uint32_t flags_{};                        // DAT_005c78d4
     int lockDepth_{};                              // DAT_005c7920
     std::uint8_t* buffer_{};                       // DAT_0059af88 / DAT_005c78f8

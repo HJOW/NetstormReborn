@@ -1,0 +1,9 @@
+{
+  "description": "팔레트 파일 전체 로더·기본/표시/날씨 색 표·예약 바이트 처리의 원본 근거. 마지막 디컴파일 PC: HJOW-Athlon, 2026-10-10.",
+  "editions": {
+    "originals": ["004a4850", "004a2820"],
+    "originalCD": ["00424760", "004246e0", "00424df8"],
+    "original1037": ["00424760", "004246e0", "00424df8"]
+  },
+  "aliases": {"original1037": "original1037"}
+}
