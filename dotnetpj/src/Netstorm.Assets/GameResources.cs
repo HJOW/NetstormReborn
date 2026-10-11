@@ -25,6 +25,12 @@ public sealed class GameResources
     /// <summary>원본 설정 조회·치환과 미션 머리 값 조회에 사용하는 설정 층.</summary>
     public ConfigStore Settings { get; } = new();
 
+    /// <summary>현재 설정 층에 반영된 사용자별 미션 스크립트 값.</summary>
+    private readonly Dictionary<string, string> _scriptValues = new(StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>설정 저장소 맨 위에 미션 스크립트 층을 쌓았는지.</summary>
+    private bool _scriptValuesLayerPushed;
+
     /// <summary>요청한 언어. 개별 파일이 영어로 대체되어도 이 값은 유지한다.</summary>
     public string Language { get; }
 
@@ -41,7 +47,8 @@ public sealed class GameResources
     /// <param name="files">자산 파일 시스템.</param>
     /// <param name="language">명시적 언어 선택. 생략하면 설정, 그 값도 없으면 OS UI 언어를 사용한다.</param>
     /// <param name="culture">OS 언어 대체값. 테스트에서는 고정된 문화권을 전달할 수 있다.</param>
-    public GameResources(GameFileSystem files, string? language = null, CultureInfo? culture = null)
+    public GameResources(GameFileSystem files, string? language = null, CultureInfo? culture = null,
+        IEnumerable<KeyValuePair<string, string>>? scriptValues = null)
     {
         Files = files;
         Settings.Push(new ConfigText(DefaultSettings));
@@ -85,6 +92,46 @@ public sealed class GameResources
         Translations = TranslationPath == null ? XlatTable.Empty
             : XlatTable.FromFileBytes(Files.ReadAllBytes(TranslationPath));
         Settings.MissionLoader = name => TryLoadMission(name)?.Script.Header;
+        if (scriptValues != null)
+        {
+            SetScriptValues(scriptValues);
+        }
+    }
+
+    /// <summary>사용자 설정의 스크립트 값 전체를 치환용 최상위 설정 층으로 교체한다.</summary>
+    /// <param name="values">설정 키와 저장된 값</param>
+    public void SetScriptValues(IEnumerable<KeyValuePair<string, string>> values)
+    {
+        var updated = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        // 중복 키는 입력 순서상 마지막 값으로 합친다.
+        foreach ((string key, string value) in values)
+        {
+            updated[key] = value;
+        }
+        if (_scriptValuesLayerPushed)
+        {
+            Settings.Pop();
+            _scriptValuesLayerPushed = false;
+        }
+        _scriptValues.Clear();
+        foreach ((string key, string value) in updated)
+        {
+            _scriptValues.Add(key, value);
+        }
+        if (_scriptValues.Count > 0)
+        {
+            Settings.Push(ConfigStore.FromPairs(_scriptValues));
+            _scriptValuesLayerPushed = true;
+        }
+    }
+
+    /// <summary>미션 본문의 설정 명령 결과를 저장하고 이후 치환에서도 바로 읽히게 한다.</summary>
+    /// <param name="key">스크립트 설정 키</param>
+    /// <param name="value">기록할 값</param>
+    public void SetScriptValue(string key, string value)
+    {
+        _scriptValues[key] = value;
+        SetScriptValues(_scriptValues);
     }
 
     /// <summary>GamePalSpec과 모드별 팔레트 이름으로 팔레트를 읽는다.</summary>

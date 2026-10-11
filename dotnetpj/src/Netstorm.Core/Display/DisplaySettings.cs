@@ -98,6 +98,9 @@ public sealed class DisplaySettings
     /// <summary>다음에 보여 줄 팁 번호 (원본 설정 tipNumber, tell.english [TipList] 의 tipN)</summary>
     public int TipNumber { get; set; }
 
+    /// <summary>클론의 미션 스크립트가 기록한 완료·진행 설정 값. 원본 options.cfg 대신 사용자 설정 JSON 에 저장한다.</summary>
+    public Dictionary<string, string> ScriptValues { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+
     /// <summary>원본 Options "Pass Server Diagnostic" 켜짐 상태 (온라인 서버 진단 통과용). 클론은 값만 저장한다.</summary>
     public bool PassServerDiagnostic { get; set; }
 
@@ -187,6 +190,9 @@ public sealed class DisplaySettings
         SoundVolume = Math.Clamp(SoundVolume, MinimumVolume, MaximumVolume);
         MusicVolume = Math.Clamp(MusicVolume, MinimumVolume, MaximumVolume);
         TipNumber = Math.Max(0, TipNumber);
+        ScriptValues = ScriptValues == null
+            ? new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+            : new Dictionary<string, string>(ScriptValues, StringComparer.OrdinalIgnoreCase);
         if (!Enum.IsDefined(WideScreen))
         {
             WideScreen = WideScreenMode.Extend;

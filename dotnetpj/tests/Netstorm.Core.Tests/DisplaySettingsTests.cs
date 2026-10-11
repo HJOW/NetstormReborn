@@ -27,6 +27,7 @@ public sealed class DisplaySettingsTests : IDisposable
             Fullscreen = true, ViewHeight = 600, WideScreen = WideScreenMode.Letterbox,
             EdgeScroll = false, EdgeScrollSpeed = 20, WindowWidth = 1280, WindowHeight = 720,
         };
+        settings.ScriptValues["DoneTheWarBegins"] = "1";
         Assert.True(settings.Save(path));
         DisplaySettings loaded = DisplaySettings.Load(path);
         Assert.True(loaded.Fullscreen);
@@ -35,6 +36,7 @@ public sealed class DisplaySettingsTests : IDisposable
         Assert.False(loaded.EdgeScroll);
         Assert.Equal(20, loaded.EdgeScrollSpeed);
         Assert.Equal((1280, 720), (loaded.WindowWidth, loaded.WindowHeight));
+        Assert.Equal("1", loaded.ScriptValues["donethewarbegins"]);
         Assert.False(File.Exists(path + ".tmp"));
     }
 

@@ -3,6 +3,36 @@ namespace Netstorm.Assets.Tests;
 /// <summary>튜토리얼 안내의 본문 표시, 버튼 이동, 단계 다시 보기를 검사한다.</summary>
 public sealed class TutorialDialogScriptTests
 {
+    /// <summary>본문에서 미션 완료 설정 명령을 순서와 값 그대로 추출한다.</summary>
+    [Fact]
+    public void FindConfigCommands_ParsesCompletedValues()
+    {
+        IReadOnlyList<KeyValuePair<string, string>> commands = TutorialDialogScript.FindConfigCommands(
+            """Won <$Config,DoneTheWarBegins=1> Tip <$Config,tipNumber="4">""");
+
+        Assert.Equal(
+            [new KeyValuePair<string, string>("DoneTheWarBegins", "1"), new KeyValuePair<string, string>("tipNumber", "4")],
+            commands);
+    }
+
+    /// <summary>섹션을 열면 mission.fileName 이 치환된 완료 설정 명령을 처리기에 전달한다.</summary>
+    [Fact]
+    public void OpenSection_RaisesConfigCommandsWithMissionValues()
+    {
+        var script = new MissionScript("""
+            [Succeeded]
+            Mission complete <$Config,Done{mission.fileName}=1>
+            $Button=Back,DoNothing,0
+            """);
+        var values = new Dictionary<string, string> { ["fileName"] = "TheWarBegins" };
+        var dialog = new TutorialDialogScript(script, new ConfigStore(), missionValues: values);
+        var saved = new List<KeyValuePair<string, string>>();
+        dialog.ConfigHandler = (key, value) => saved.Add(new(key, value));
+
+        Assert.True(dialog.OpenSection("Succeeded"));
+        Assert.Equal([new KeyValuePair<string, string>("DoneTheWarBegins", "1")], saved);
+    }
+
     /// <summary>MORE/BACK으로 옮겨도 F8은 단계 시작으로 돌아가고 보정 안내는 복귀 지점을 바꾸지 않는다.</summary>
     [Fact]
     public void StageNavigation_ReviewReturnsToLatestStage()

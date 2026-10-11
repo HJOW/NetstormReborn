@@ -90,6 +90,12 @@ public static partial class CampaignMenu
             }
         }
         TutorialDialogContent content = TutorialDialogScript.PrepareContent(section, prepared);
+        if (section.Equals("overview", StringComparison.OrdinalIgnoreCase)
+            && script?.GetHeader("title") is string chapterTitle)
+        {
+            // 원본 overview 의 HTML 제목은 [OFFICALn.TITLE] 자리표시를 쓰므로 장 파일의 title 머리 값을 제목으로 쓴다.
+            content = content with { Title = chapterTitle.Trim().Trim('"').Trim() };
+        }
         return new CampaignPage(target, content, items, TrailingBreaks().Match(StripCommands().Replace(prepared.Body, "")) is { Success: true } tail
             ? LineBreak().Matches(tail.Value).Count : 0);
     }

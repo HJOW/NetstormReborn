@@ -39,6 +39,7 @@ internal sealed class MainMenuView : IDisposable
     private readonly OriginalUiSkin _skin;
     private readonly DisplayManager _display;
     private readonly AudioPlayer? _audio;
+    private readonly GameResources _resources;
     private readonly bool _korean;
     private readonly Action<string> _play;
     private readonly Action _quit;
@@ -55,6 +56,12 @@ internal sealed class MainMenuView : IDisposable
     private MouseState _previousMouse;
     private KeyboardState _previousKeyboard;
     private string _page = "main";
+    /// <summary>현재 표시 중인 스크립트 기반 캠페인 페이지.</summary>
+    private CampaignPage? _campaignPage;
+    /// <summary>선택한 장의 Tell 대상. 캠페인 페이지를 다시 열 때 유지한다.</summary>
+    private string _campaignTarget = "offical3.overview";
+    /// <summary>캠페인 창의 본문·목록·뒤로 버튼에 공유하는 좌표 계산 결과.</summary>
+    private CampaignLayout? _campaignLayout;
     private string? _submenu;
     private string _error = "";
     /// <summary>돌 버튼(메인 메뉴 버튼·Back)의 누름·떼기 처리기. 번호는 <see cref="_buttons"/> 안의 순번이다.</summary>
@@ -84,7 +91,7 @@ internal sealed class MainMenuView : IDisposable
     public MainMenuView(GraphicsDevice device, GameResources resources, Palette palette, OriginalUiSkin skin,
         DisplayManager display, AudioPlayer? audio, Action<string> play, Action quit, Action<string> help)
     {
-        _display = display; _audio = audio; _play = play; _quit = quit; _skin = skin;
+        _resources = resources; _display = display; _audio = audio; _play = play; _quit = quit; _skin = skin;
         _help = help;
         string? tipList = resources.TryLoadMission("tell")?.Script.GetSection(StartupTips.SectionName);
         _tips = tipList == null ? null : new StartupTips(tipList);
@@ -229,6 +236,19 @@ internal sealed class MainMenuView : IDisposable
     {
         OptionsOnly = optionsOnly;
         _page = page is "campaigns" or "missions" or "options" or "help" ? page : "main";
+        if (_page == "campaigns")
+        {
+            _campaignTarget = CampaignMenu.Root;
+            _campaignPage = CampaignMenu.Open(_resources, _campaignTarget);
+        }
+        else if (_page == "missions")
+        {
+            _campaignPage = CampaignMenu.Open(_resources, _campaignTarget);
+        }
+        if (_page is "campaigns" or "missions" && _campaignPage == null)
+        {
+            _error = $"캠페인 메뉴를 읽지 못했습니다: {_campaignTarget}";
+        }
         _submenu = null;
         _gump.Cancel(); _modalGump.Cancel(); PressedLabel = null;
         _previousMouse = Mouse.GetState(); _previousKeyboard = Keyboard.GetState();
@@ -305,7 +325,7 @@ internal sealed class MainMenuView : IDisposable
     /// <summary>모든 클릭 영역을 그리기와 같은 원본 기준 좌표로 만든다.</summary>
     private void BuildButtons(int width, int height)
     {
-        _buttons.Clear(); _lists.Clear(); _separators.Clear();
+        _buttons.Clear(); _lists.Clear(); _separators.Clear(); _campaignLayout = null;
         int cx = width / 2; int cy = height / 2;
         if (_page is "main" or "options" or "help")
         {
@@ -328,33 +348,149 @@ internal sealed class MainMenuView : IDisposable
             if (_page == "help") BuildHelpMenu(width, height);
             return;
         }
-        Rectangle panel = Panel(width, height);
         if (_page == "campaigns")
         {
-            string[] labels = [Text("초기 미션", "Early Missions"), Text("사제 훈련", "Priest Training"), Text("자유를 위한 투쟁", "Struggle For Freedom"),
-                Text("국가의 탄생", "A Nation Rises"), Text("완전한 승리", "Complete Victory"), Text("사용자 캠페인", "User Made Campaigns")];
-            var list = new Rectangle(cx - 76, panel.Y + 124, 152, 134); _lists.Add(list);
-            int[] offsets = [0, 18, 50, 68, 86, 118];
-            // 튜토리얼·공식 캠페인·사용자 캠페인 세 그룹을 작은 목록으로 묶는다.
-            for (int i = 0; i < labels.Length; i++) Add(new Rectangle(list.X + 2, list.Y + offsets[i] + 1, list.Width - 4, 17), labels[i], i == 2, () => Open("missions"), listRow: true);
-            // 구분선은 구간 위쪽을 넘긴다 (선은 +8 에 그려진다). 이전과 같은 줄(list.Y + 42·+110)에 오도록 맞춘다.
-            _separators.Add(list.Y + 42 - OriginalUiSkin.MenuSeparatorLine); _separators.Add(list.Y + 110 - OriginalUiSkin.MenuSeparatorLine);
+            BuildCampaignButtons(width, height);
         }
-        else
+        else if (_page == "missions") BuildCampaignButtons(width, height);
+    }
+
+    /// <summary>캠페인 스크립트의 목록·조건·동작으로 선택창의 클릭 행을 만든다.</summary>
+    /// <param name="width">논리 화면 폭</param>
+    /// <param name="height">논리 화면 높이</param>
+    private void BuildCampaignButtons(int width, int height)
+    {
+        if (_campaignPage == null) return;
+        CampaignLayout layout = CreateCampaignLayout(_campaignPage, width, height);
+        _campaignLayout = layout;
+        _lists.Add(layout.List);
+        foreach (int separator in layout.Separators)
         {
-            string[] names = [Text("1 전쟁의 시작!", "1 The War Begins!"), Text("2 휘리기그의 지배자", "2 Master of Whirligigs"), "3 Save the Island!", "4 Fragile Fortune", "5 Thundering Power!", "6 Dissolved Alliance"];
-            int listWidth = Math.Max(152, (int)names.Max(n => _skin.Body.MeasureString(n).X) + 18);
-            var list = new Rectangle(cx - listWidth / 2, panel.Bottom - 146, listWidth, 108); _lists.Add(list);
-            // 파란 선택 표시와 비활성 글자로 아직 구현하지 않은 미션을 구분한다. 공개 여부는 CampaignAccess 하나로 정한다.
-            for (int i = 0; i < names.Length; i++)
-            {
-                string file = CampaignAccess.FirstChapter[i];
-                Add(new Rectangle(list.X + 2, list.Y + 1 + i * 18, list.Width - 4, 18), names[i], CampaignAccess.IsAvailable(file), () => _play(file), listRow: true, check: false);
-            }
+            _separators.Add(layout.List.Y + separator - OriginalUiSkin.MenuSeparatorLine);
         }
-        Add(new Rectangle(cx - 22, panel.Bottom - 31, 44, OriginalUiSkin.ButtonHeight), Text("뒤로", "Back"), true,
+        // 스크립트 순서대로 항목을 그리며, 구분 파일은 행 대신 간격과 선으로 표시한다.
+        for (int index = 0; index < layout.Page.Items.Count; index++)
+        {
+            CampaignItem item = layout.Page.Items[index];
+            int rowY = layout.RowOffsets[index];
+            if (rowY < 0) continue;
+            bool available = item.Enabled
+                && (!item.Action.Equals("MissionBegin", StringComparison.OrdinalIgnoreCase)
+                    || CampaignAccess.IsAvailable(item.Argument));
+            Add(new Rectangle(layout.List.X + 2, layout.List.Y + rowY + 1, layout.List.Width - 4, OriginalUiSkin.RowHeight),
+                CampaignItemLabel(item), available, () => ActivateCampaignItem(item), listRow: true, check: item.Checked);
+        }
+        Add(layout.Back, Text("뒤로", "Back"), true,
             () => Open(_page == "missions" ? "campaigns" : "main"));
     }
+
+    /// <summary>캠페인 항목을 원본의 Tell 또는 MissionBegin 명령으로 실행한다.</summary>
+    /// <param name="item">선택된 스크립트 항목</param>
+    private void ActivateCampaignItem(CampaignItem item)
+    {
+        if (item.Action.Equals("Tell", StringComparison.OrdinalIgnoreCase))
+        {
+            _campaignTarget = item.Argument;
+            Open("missions");
+        }
+        else if (item.Action.Equals("MissionBegin", StringComparison.OrdinalIgnoreCase)
+                 && CampaignAccess.IsAvailable(item.Argument))
+        {
+            _play(item.Argument);
+        }
+    }
+
+    /// <summary>메뉴 언어가 한국어일 때 이미 번역해 둔 캠페인 이름을 적용한다.</summary>
+    /// <param name="item">원본 스크립트에서 읽은 행</param>
+    private string CampaignItemLabel(CampaignItem item)
+    {
+        if (!_korean) return item.Label;
+        return item.Label switch
+        {
+            "Early Missions" => "초기 미션",
+            "Priest Training" => "사제 훈련",
+            "Struggle For Freedom" => "자유를 위한 투쟁",
+            "A Nation Rises" => "국가의 탄생",
+            "Complete Victory" => "완전한 승리",
+            "User Made Campaigns" => "사용자 캠페인",
+            "1 The War Begins!" => "1 전쟁의 시작!",
+            "2 Master of Whirligigs" => "2 휘리기그의 지배자",
+            _ => item.Label,
+        };
+    }
+
+    /// <summary>현재 캠페인 스크립트의 본문을 화면 폭에 맞게 줄 단위로 준비한다.</summary>
+    /// <param name="page">열린 캠페인 페이지</param>
+    /// <param name="width">본문 폭</param>
+    private IReadOnlyList<string> CampaignBodyLines(CampaignPage page, int width)
+    {
+        if (page.Target.Equals(CampaignMenu.Root, StringComparison.OrdinalIgnoreCase))
+        {
+            return _skin.WrapText(Text("어느 부분을\n플레이하시겠습니까?", "Which section would\nyou like to play?"), width);
+        }
+        if (_korean && page.Target.Equals("offical3.overview", StringComparison.OrdinalIgnoreCase))
+        {
+            return MissionLines(width);
+        }
+        var body = new System.Text.StringBuilder();
+        // 본문 구간의 문단 표시를 줄바꿈으로 바꾸고, 그림은 선택창에서 렌더링하지 않는다.
+        foreach (TutorialTextRun run in page.Content.Runs)
+        {
+            if (run.Style == TutorialTextStyle.Picture) continue;
+            if (run.BreakBefore == TutorialTextBreak.Line) body.Append('\n');
+            else if (run.BreakBefore == TutorialTextBreak.Paragraph) body.Append("\n\n");
+            body.Append(run.Text);
+        }
+        return _skin.WrapText(body.ToString(), width);
+    }
+
+    /// <summary>스크립트 본문과 목록 길이에 맞춰 캠페인 창의 패널·행·뒤로 버튼 좌표를 계산한다.</summary>
+    /// <param name="page">열린 캠페인 페이지</param>
+    /// <param name="width">논리 화면 폭</param>
+    /// <param name="height">논리 화면 높이</param>
+    private CampaignLayout CreateCampaignLayout(CampaignPage page, int width, int height)
+    {
+        bool root = page.Target.Equals(CampaignMenu.Root, StringComparison.OrdinalIgnoreCase);
+        int panelWidth = Math.Min(root ? 238 : 458, width - 32);
+        int bodyInset = root ? 50 : 30;
+        int bodyTop = root ? 57 : 54;
+        IReadOnlyList<string> lines = CampaignBodyLines(page, panelWidth - bodyInset * 2);
+        int listTop = root ? 124 : bodyTop + (lines.Count + page.TrailingBlankLines) * DescriptionLineHeight + 25;
+        int rowY = 0;
+        var rowOffsets = new List<int>();
+        var separators = new List<int>();
+        // 목록 줄은 18픽셀 간격, 제목 없는 구분 파일은 원본의 14픽셀 여백과 선 위치를 쓴다.
+        foreach (CampaignItem item in page.Items)
+        {
+            if (item.Separator)
+            {
+                rowOffsets.Add(-1);
+                separators.Add(rowY + 6);
+                rowY += 14;
+            }
+            else
+            {
+                rowOffsets.Add(rowY);
+                rowY += OriginalUiSkin.RowHeight + 1;
+            }
+        }
+        int listWidth = root ? 152 : Math.Min(panelWidth - 60,
+            Math.Max(152, (int)page.Items.Where(item => !item.Separator)
+                .Select(item => _skin.Body.MeasureString(CampaignItemLabel(item)).X).DefaultIfEmpty(0).Max() + 28));
+        int listHeight = Math.Max(OriginalUiSkin.RowHeight, rowY);
+        int panelHeight = root ? 304 : listTop + listHeight + 40;
+        panelHeight = Math.Min(panelHeight, height - 24);
+        int panelX = (width - panelWidth) / 2;
+        int panelY = (height - panelHeight) / 2;
+        var panel = new Rectangle(panelX, panelY, panelWidth, panelHeight);
+        var list = new Rectangle((width - listWidth) / 2, panel.Y + listTop, listWidth, listHeight);
+        var back = new Rectangle(width / 2 - 22, list.Bottom + 10, 44, OriginalUiSkin.ButtonHeight);
+        return new CampaignLayout(page, panel, list, lines, bodyInset, bodyTop, rowOffsets, separators, back);
+    }
+
+    /// <summary>캠페인 창을 화면에 그릴 때 공유하는 배치 값.</summary>
+    private sealed record CampaignLayout(CampaignPage Page, Rectangle Panel, Rectangle List, IReadOnlyList<string> BodyLines,
+        int BodyInset, int BodyTop, IReadOnlyList<int> RowOffsets, IReadOnlyList<int> Separators, Rectangle Back);
 
     /// <summary>
     /// 원본 Help 버튼의 펼침 목록 (2026-10-01 녹화 g1015): General Help - F1 · Technical Help · Version.
@@ -517,13 +653,17 @@ internal sealed class MainMenuView : IDisposable
         "님버스의 선량한 주민들은 바람, 비, 번개의 어둠의 군주들에게 노예가 되고 있습니다. 섬들이 하나씩 정복되고 지도자들은 살해되었으며, 주민들은 사악한 전쟁 기계에 굴복했습니다.\n\n님버스에서 정의를 지키는 유일한 수호자로서 어둠의 군주들을 물리치고 주민들을 노예 생활에서 해방해야 합니다.\n\n점점 강해지는 어둠의 세력에 맞설 동맹을 모으십시오.",
         "The good people of Nimbus are being enslaved by the Dark Lords of Wind, Rain and Thunder. One by one islands have been conquered, leaders slaughtered, and citizens bent to the will of the evil war machine.\n\nAs the sole guardian of justice in Nimbus, you must defeat the Dark Lords and free the people of Nimbus from slavery.\n\nYour goal is to gather allies to oppose the rising forces of darkness."), width);
 
-    /// <summary>선택창을 원본 크기와 본문 높이에 맞춰 화면 중심에 둔다.</summary>
-    private Rectangle Panel(int width, int height)
+    /// <summary>캠페인 스크립트 제목에 기존 한국어 메뉴 번역을 적용한다.</summary>
+    /// <param name="page">열린 캠페인 페이지</param>
+    private string CampaignPageTitle(CampaignPage page)
     {
-        int w = _page == "campaigns" ? 238 : Math.Min(458, width - 32);
-        int h = _page == "campaigns" ? 304 : 198 + MissionLines(w - 60).Count * DescriptionLineHeight;
-        h = Math.Min(h, height - 24);
-        return new Rectangle((width - w) / 2, (height - h) / 2, w, h);
+        if (!_korean) return page.Content.Title;
+        if (page.Target.Equals(CampaignMenu.Root, StringComparison.OrdinalIgnoreCase)) return "캠페인";
+        return page.Content.Title switch
+        {
+            "Struggle For Freedom" => "자유를 위한 투쟁",
+            _ => page.Content.Title,
+        };
     }
 
     /// <summary>플레이 시작 실패 원인을 메뉴에 보여 준다.</summary>
@@ -545,15 +685,18 @@ internal sealed class MainMenuView : IDisposable
         if (!OptionsOnly && _background != null) batch.Draw(_background, new Vector2((width - 640) / 2, (height - 480) / 2), Color.White);
         if (_page is "campaigns" or "missions")
         {
-            Rectangle panel = Panel(width, height); _skin.Panel(batch, panel);
-            OriginalUiSkin.Text(batch, _skin.Title, _page == "campaigns" ? Text("캠페인", "Campaign") : Text("자유를 위한 투쟁", "Struggle For Freedom"), new Vector2(panel.X + 30, panel.Y + 20));
-            if (_page == "campaigns") OriginalUiSkin.Text(batch, font, Text("어느 부분을\n플레이하시겠습니까?", "Which section would\nyou like to play?"), new Vector2(panel.X + 50, panel.Y + 57));
-            else
+            if (_campaignLayout is { } layout)
             {
-                int y = panel.Y + 54;
-                // 원본 캠페인 설명의 문단 간격을 작은 본문으로 유지한다.
-                foreach (string line in MissionLines(panel.Width - 60))
-                { OriginalUiSkin.Text(batch, font, line, new Vector2(panel.X + 30, y)); y += DescriptionLineHeight; }
+                _skin.Panel(batch, layout.Panel);
+                OriginalUiSkin.Text(batch, _skin.Title, CampaignPageTitle(layout.Page),
+                    new Vector2(layout.Panel.X + 30, layout.Panel.Y + 20));
+                int y = layout.Panel.Y + layout.BodyTop;
+                // 원본 본문 줄 간격을 유지하면서 스크립트에서 준비한 문구를 그린다.
+                foreach (string line in layout.BodyLines)
+                {
+                    OriginalUiSkin.Text(batch, font, line, new Vector2(layout.Panel.X + layout.BodyInset, y));
+                    y += DescriptionLineHeight;
+                }
             }
         }
         // 옵션이 메인 버튼을 덮는 원본 순서를 지키기 위해 타이틀 버튼을 먼저 그린다.

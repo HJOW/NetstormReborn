@@ -299,7 +299,8 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         ShapeDatabase shapes;
         try
         {
-            resources = new GameResources(GameFileSystem.Open(dataDir), _languageName);
+            resources = new GameResources(GameFileSystem.Open(dataDir), _languageName,
+                scriptValues: _display.Settings.ScriptValues);
             palette = resources.LoadPalette(_mapName == null && _missionName == null && _spriteName == null ? "fortPal" : "battlePal");
             shapes = resources.LoadShapes();
         }
@@ -407,6 +408,16 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         { _mainMenu?.ShowError($"미션 시작 실패: {error.Message}"); }
     }
 
+    /// <summary>미션 본문의 완료·진행 값을 사용자 설정에 기록하고 현재 게임 자료의 치환 층도 갱신한다.</summary>
+    /// <param name="key">원본 미션 스크립트 설정 키</param>
+    /// <param name="value">저장할 값</param>
+    private void SaveScriptValue(string key, string value)
+    {
+        _display.Settings.ScriptValues[key] = value;
+        _resources?.SetScriptValue(key, value);
+        _display.SaveOptions();
+    }
+
     /// <summary>미션을 정리하고 메뉴 음악과 메인 메뉴로 복귀한다.</summary>
     private void ReturnToMainMenu()
     {
@@ -441,7 +452,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         TypeCatalog catalog = resources.LoadTypes();
         FortMapViewer nextViewer = new(GraphicsDevice, shapes, palette, resources.LoadFort(name, catalog), name,
             catalog, resources.Language, _uiSkin!, mission, tutorialScript, resources.Settings, _help,
-            mission != null ? resources.TryLoadMission("tell")?.Script : null);
+            mission != null ? resources.TryLoadMission("tell")?.Script : null, SaveScriptValue);
         _mapViewer?.Dispose();
         _mapViewer = nextViewer;
         _mapViewer.HelpRequested = OpenHelp;

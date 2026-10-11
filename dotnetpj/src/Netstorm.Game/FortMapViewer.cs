@@ -88,7 +88,7 @@ internal sealed partial class FortMapViewer : IDisposable
     public FortMapViewer(GraphicsDevice device, ShapeDatabase shapes, Palette palette, FortFile fort, string name,
         TypeCatalog catalog, string language, OriginalUiSkin uiSkin, MissionStart? mission = null,
         MissionScript? tutorialScript = null, ConfigStore? tutorialSettings = null, HelpTopics? help = null,
-        MissionScript? commonScript = null)
+        MissionScript? commonScript = null, Action<string, string>? scriptConfigChanged = null)
     {
         _device = device;
         _uiSkin = uiSkin;
@@ -117,7 +117,7 @@ internal sealed partial class FortMapViewer : IDisposable
         _pixel.SetData(new[] { Color.White });
         InitializeSession(fort, catalog, mission);
         InitializeKnowledge(fort, catalog, help);
-        InitializeTutorialDialog(tutorialScript, tutorialSettings, commonScript);
+        InitializeTutorialDialog(tutorialScript, tutorialSettings, commonScript, scriptConfigChanged);
         InitializePlacement(catalog);
         InitializeBridges(catalog);
         CenterOnPriest();
@@ -364,7 +364,7 @@ internal sealed partial class FortMapViewer : IDisposable
         float nearest = 20f * 20f;
         var mousePosition = new Vector2(_previousMouse.X, _previousMouse.Y);
         // 건물은 발자국 크기를 추가 보정하지 않고 프레임 xmin/ymin을 기준점에 더한다.
-        foreach (FortMapObject item in _sorted)
+        foreach (FortMapObject item in SortStoredObjectsForFrame())
         {
             // noIsland는 투명한 논리 지면이다. 미리보기 지면에 반영했으므로 표식을 그리지 않는다.
             // 무너진 저장 다리와 회수되어 사라진 저장 오브젝트는 그리지 않는다.
@@ -432,6 +432,21 @@ internal sealed partial class FortMapViewer : IDisposable
         DrawContextMenu(batch, width, height);
         DrawMissionMenu(batch, font, width, height);
     }
+
+    /// <summary>저장 오브젝트를 현재 세션 좌표의 깊이·y·x 순으로 매 프레임 정렬한다.</summary>
+    private IReadOnlyList<FortMapObject> SortStoredObjectsForFrame() =>
+        DrawOrder.Sort(_map.Objects, item =>
+        {
+            double x = item.X;
+            double y = item.Y;
+            GameEntity? live = _session.EntityForInitial(item);
+            if (live != null && IsMobile(live))
+            {
+                (x, y) = _session.VisualCell(live);
+            }
+            return new DrawOrder((float)x, (float)y,
+                (short)Math.Clamp(item.Object.Type.ZOrder, short.MinValue, short.MaxValue));
+        });
 
     /// <summary>지면 타일을 기준점과 프레임 오프셋에 맞춰 그린다.</summary>
     /// <param name="scale">배율 (없으면 현재 확대 배율)</param>

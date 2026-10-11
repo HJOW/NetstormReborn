@@ -109,8 +109,9 @@
 
 ## 6. 남은 것
 
-- 5-6 캠페인 목록을 `offical*.english`·`Done...` 값에서 읽기 → 같은 날 후속으로 자료 읽기만 만들었다(9절). 화면 연결·완료 값 저장이 남았다.
-- 5-1 전체 월드 표시 목록, 9-1 의도적 차이 판정, LEFT_JOBS.dotnetpj.md 8절의 cpppj 대기 항목.
+- **5-6 캠페인 목록**은 화면 연결·완료 값 저장까지 구현하고 Release 전체 검사 및 창 모드 잠금/해제 스모크를 통과했다(9절).
+- **5-1 전체 월드 표시 목록**은 저장된 이동형 오브젝트를 현재 시각 좌표로 매 프레임 정렬하는 단계까지 연결했고, 사제·골렘 이동 창 모드 스모크 22개 검사를 통과했다. 이 스모크는 정렬 순서를 직접 단언하지 않는다. 새 유닛·지면·다리/받침을 같은 표시 목록으로 통합하는 작업과 렌더 교차 순서 검증이 남았다.
+- 9-1 의도적 차이 판정, LEFT_JOBS.dotnetpj.md 8절의 cpppj 대기 항목.
 - 7절 끝의 "창·메뉴 치수" 목록 (글꼴을 맞춘 뒤 드러난 차이) → 같은 날 후속으로 대부분 고쳤다(8절). 돌 버튼 모양·도움말 줄 간격 등이 남았다.
 
 ## 7. 원본 영어 글꼴 (5-3)
@@ -252,9 +253,16 @@
 - 창 폭·여백을 정하는 규칙(위 표는 창마다 잰 값이다), 옵션 목록의 세로 위치 규칙(잰 값 "중심 − 90" 을 썼다).
 - 클론의 TryAgain 창 폭은 300 이다(원본 275).
 
-## 9. 캠페인 목록 (5-6) — 자료 읽기만 만들었고 화면에 연결하지 않았다
+## 9. 캠페인 목록 (5-6) — 화면 연결 및 완료값 저장까지 구현
 
-사용자 지시(2026-10-10): "코드 수정이 마무리되는 대로 테스트는 진행하지 말고 인수인계". 그래서 이 절의 코드는 **Release 빌드(경고/오류 0)만 확인했고 단위 검사와 클론 창 검사를 돌리지 않았다.** 8절의 검증 수치는 이 절의 코드를 넣기 전의 것이다.
+### 2026-10-11 후속 구현 및 검증
+
+- 스크립트에서 읽은 장·미션 목록을 캠페인·미션 화면에 연결했다. 스크립트 조건과 `CampaignAccess` 를 함께 적용해 클론에서 지원하지 않는 미션은 비활성화한다.
+- 미션의 `<$Config,...>` 명령은 `DisplaySettings.ScriptValues` 에 반영하고 `settings.json` 에 저장한다. 장 제목은 각 캠페인 스크립트의 `title` 에서 가져온다.
+- Release 전체 테스트 **951개 통과**(Assets 327, Core 624), 빌드 경고/오류 0. 캠페인 창 모드 스모크에서 완료값이 없을 때 1-2가 잠기고 `DoneTheWarBegins=1` 일 때 해제되어 브리핑으로 진입하는 것을 확인했다. 버튼·도움말·옵션 창 모드 스모크도 통과했다.
+- 전체화면 전환을 포함하는 `clone_ui_smoke.ps1` 는 사용자 화면을 바꾸지 않도록 실행하지 않았다.
+
+아래 원본 스크립트 분석 및 초기 구현 기록은 작업 당시의 근거다. 초기 시점에는 Release 빌드만 확인했으나, 후속 작업에서 연결·검사를 완료했다.
 
 ### 원본 스크립트의 구조 (`extracted/tarc/d/` 로 확인)
 
@@ -265,16 +273,15 @@
 - 완료 값은 미션의 `[Succeeded]` 본문에 있는 `<$Config,Done{mission.fileName}=1>` 이 적는다.
 - cpppj(`DialogScript.cpp`·`UberGump.cpp` 의 `ExpandMenus`)는 완료식·가능식을 설정 치환 뒤 `ParseLong(값) != 0` 으로 본다. 값이 없는 `{DoneX}` 는 치환되지 않고 남아 0 이다. `offical2` 의 가능식은 `2`~`7` 같은 상수와 여러 `{Done…}` 을 이어 붙인 값도 쓴다.
 
-### 만든 코드 (컴파일만 확인)
+### 구현 코드
 
-- 새 [`CampaignMenu`](../dotnetpj/src/Netstorm.Assets/CampaignMenu.cs): `CampaignMenu.Open(resources, "UCampaign" 또는 "offical3.overview")` → `CampaignPage(Target, Content, Items, TrailingBlankLines)`. `$Menu=@…`/`%…` 는 `GameFileSystem.Find` 로 파일을 찾아 이름순으로 늘어놓고(선택 언어 파일이 없으면 영어), 제목이 `--` 로 시작하면 구분선, `{cur.file}` 은 파일 이름으로 바꾼다. `$Checked` 의 완료식·가능식은 `MissionConditions.Evaluate` 로 본다. **아직 어느 화면도 이 클래스를 쓰지 않는다.**
-- [`TutorialDialogScript`](../dotnetpj/src/Netstorm.Assets/TutorialDialogScript.cs): `FindConfigCommands(body)`(본문의 `<$Config,키=값>`), `ConfigHandler`(섹션을 열 때 그 명령을 받는 처리기 — **아직 아무 데도 연결하지 않았다**), `PrepareContent` 를 어셈블리 안에서 쓸 수 있게 함, `StripControls`(제목·본문의 `~w`·`~i`·`~y`·`~r`·`~o`·`~B`·`~E`·`~.`·`~숫자`·`~[…]` 를 지우고 `~~` 는 `~` 로. 색·굵기는 반영하지 않는다).
-- **`StripControls` 는 이미 쓰이는 안내·브리핑 창의 글에도 적용된다.** 지금까지는 이런 표시가 글자 그대로 보였다(`bc*76` 미션 등). 기존 단위 검사에 영향이 있는지는 돌려 보지 않아 모른다.
+- 새 [`CampaignMenu`](../dotnetpj/src/Netstorm.Assets/CampaignMenu.cs): `CampaignMenu.Open(resources, "UCampaign" 또는 "offical3.overview")` → `CampaignPage(Target, Content, Items, TrailingBlankLines)`. `$Menu=@…`/`%…` 는 `GameFileSystem.Find` 로 파일을 찾아 이름순으로 늘어놓고(선택 언어 파일이 없으면 영어), 제목이 `--` 로 시작하면 구분선, `{cur.file}` 은 파일 이름으로 바꾼다. `$Checked` 의 완료식·가능식은 `MissionConditions.Evaluate` 로 본다. 후속 작업에서 `MainMenuView` 에 연결했다.
+- [`TutorialDialogScript`](../dotnetpj/src/Netstorm.Assets/TutorialDialogScript.cs): `FindConfigCommands(body)`(본문의 `<$Config,키=값>`), `ConfigHandler`(섹션을 열 때 그 명령을 받는 처리기), `PrepareContent` 를 어셈블리 안에서 쓸 수 있게 함, `StripControls`(제목·본문의 `~w`·`~i`·`~y`·`~r`·`~o`·`~B`·`~E`·`~.`·`~숫자`·`~[…]` 를 지우고 `~~` 는 `~` 로. 색·굵기는 반영하지 않는다). `ConfigHandler` 는 완료값 저장에 연결했다.
+- **`StripControls` 는 이미 쓰이는 안내·브리핑 창의 글에도 적용된다.** 이전에는 이런 표시가 글자 그대로 보였다(`bc*76` 미션 등). 후속 Release 전체 검사에서 관련 검사도 포함해 통과했다.
 
-### 남은 일
+### 완료 사항과 다음 단계
 
-1. 단위 검사를 돌려 946개가 그대로 통과하는지 본다. 그 뒤 `CampaignMenu`·`FindConfigCommands`·`StripControls` 검사를 더한다(장 목록의 순서와 구분선 두 개, Struggle For Freedom 의 여섯 줄과 `Done…` 값에 따른 완료·가능, 영어 대체).
-2. 완료 값 저장: `DisplaySettings` 에 스크립트 값 표(예: `ScriptValues`)를 두어 `settings.json` 에 저장하고, `NetstormGame` 이 그 표를 설정 층으로 올린다(`ConfigStore.FromPairs`). `FortMapViewer` 가 `TutorialDialogScript.ConfigHandler` 를 이 표에 연결한다. 원본은 `options.cfg` 에 적는다 — 저장 위치는 9-1 의 C 판정과 함께 정한다.
-3. `MainMenuView` 의 "campaigns"·"missions" 화면을 `CampaignPage` 로 그린다. 치수는 8절 표(첫 창 238/50, 장 창 458/30, 목록 위 = 본문 끝 + 25, 행 17, 구분 16, 완료 표시 점, Back 버튼 = 목록 끝 + 10). 자동화가 쓰는 화면 이름("campaigns"·"missions")은 그대로 둔다.
-4. `CampaignAccess`(1-1·1-2 만 열림)와의 관계: 클론이 아직 돌릴 수 없는 미션은 스크립트 조건이 참이어도 막아야 한다(가능 = 스크립트 조건 그리고 `CampaignAccess.IsAvailable`). 한국어 문구는 지금처럼 클론 안의 번역을 쓴다.
-5. 스모크 스크립트: 목록 좌표가 바뀌고, 1-2 를 여는 검사는 설정에 `DoneTheWarBegins=1` 을 미리 넣어야 한다.
+- [x] `CampaignMenu`·`FindConfigCommands`·`StripControls` 검사 추가 및 전체 Release 테스트 통과.
+- [x] `DisplaySettings.ScriptValues` 의 영속 저장, `NetstormGame` 설정 층 연결, 미션 완료 명령 연결.
+- [x] `MainMenuView` 의 campaigns/missions 화면 연결, 스크립트 조건과 `CampaignAccess` 결합, 창 모드 잠금/해제 스모크 확인.
+- [ ] 5-1 전체 월드 표시 목록: 저장된 이동 객체는 현재 보간 좌표로 매 프레임 정렬한다. 신규 배치 객체·지면·다리/받침 등의 별도 렌더 패스를 통합하고 겹침 순서를 검사한다.

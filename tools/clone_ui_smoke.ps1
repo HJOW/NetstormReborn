@@ -8,14 +8,14 @@ $taskOutput = Join-Path $taskRoot $OutputDirectory
 New-Item -ItemType Directory -Force -Path $taskOutput | Out-Null
 $taskSettings = Join-Path $taskOutput 'settings'
 New-Item -ItemType Directory -Force -Path $taskSettings | Out-Null
-Set-Content -LiteralPath (Join-Path $taskSettings 'settings.json') -Encoding UTF8 -Value '{"WindowWidth":1024,"WindowHeight":768,"ViewHeight":768,"SoundVolume":3,"MusicVolume":2}'
+Set-Content -LiteralPath (Join-Path $taskSettings 'settings.json') -Encoding UTF8 -Value '{"WindowWidth":1024,"WindowHeight":768,"ViewHeight":768,"SoundVolume":3,"MusicVolume":2,"ScriptValues":{"DoneTheWarBegins":"1"}}'
 $taskScript = @"
 assert main; capture $OutputDirectory/01-main.png;
 click-center -120,-64; assert campaigns; capture $OutputDirectory/02-campaigns.png;
 click-center 0,-19; assert campaigns;
 click-center 0,28; assert missions; capture $OutputDirectory/03-missions.png;
-click-center 0,64; assert missions;
-click-center 0,27; assert briefing; capture $OutputDirectory/04-briefing.png;
+click-center 0,87; assert missions;
+click-center 0,51; assert briefing; capture $OutputDirectory/04-briefing.png;
 click-center 82,114; assert battle; wait 90; capture $OutputDirectory/05-battle.png;
 click 40,181; assert placement; capture $OutputDirectory/06-placement.png;
 right-click 500,400; assert battle; capture $OutputDirectory/07-bridges.png;
@@ -23,7 +23,7 @@ click 22,47; assert holding; capture $OutputDirectory/08-held.png;
 key Escape; assert mission-menu; click 109,8; click 150,77; assert leave; capture $OutputDirectory/09-leave.png;
 click-center -82,48; assert main; capture $OutputDirectory/10-return.png;
 click-center -120,-64; assert campaigns; click-center 0,28; assert missions;
-click-center 0,46; assert briefing; capture $OutputDirectory/10a-briefing-1-2.png;
+click-center 0,69; assert briefing; capture $OutputDirectory/10a-briefing-1-2.png;
 click-center 83,131; assert battle; wait 90; capture $OutputDirectory/10b-battle-1-2.png;
 key Escape; assert mission-menu; click 109,8; click 150,77; assert leave; click-center -82,48; assert main;
 click-center 38,-42; assert options; capture $OutputDirectory/11-options.png;
