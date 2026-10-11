@@ -2,6 +2,7 @@
 # (첫 구성 때 인터넷에서 내려받을 것이 없다).
 # 테스트 파일을 만들면 아래 목록에 더한다. 파일 안의 TEST_CASE 는 자동으로 등록된다.
 add_executable(netstorm_tests
+    TileGroupCollectionTests.cpp
     GumpCollectionTests.cpp
     DrawSubmissionTests.cpp
     DrawSortTests.cpp
@@ -453,3 +454,7 @@ target_compile_definitions(netstorm_tests PRIVATE
 # 실제 건설 프로세스 제출 순서도 같은 독립 동률 관찰과 비교한다.
 set_source_files_properties(ConstructionVisualSystemTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_DRAWSORT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/drawsort-x86.tsv\"")
+
+# 행별 지면/다리 묶음의 실제 PE 관찰은 이 검사 소스에서만 읽는다.
+set_source_files_properties(TileGroupCollectionTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_TILEGROUP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/tilegroup-x86.tsv\"")

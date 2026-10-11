@@ -27,7 +27,7 @@ DrawCollectionResult CollectDrawEntries(const DrawCollectionRequest& request,
     if (request.dirtyFlags&4U) return result;
     append(hooks.construction,request.visible);
     if (hooks.groups) {
-        const auto groups=hooks.groups(request.visible,request.groupTime,result.backgroundCovered);
+        const auto groups=hooks.groups(request.visible,request.groupRowLimit,result.backgroundCovered);
         if (groups.size()>work.size()-static_cast<std::size_t>(result.count)) throw std::length_error("표시 묶음 용량 초과");
         // 묶음의 첫 키와 8바이트 헤더 토큰을 복사하며 사용하지 않는 마지막 바이트는 쓰지 않는다.
         for (const auto& group:groups) {

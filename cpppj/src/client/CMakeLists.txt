@@ -25,6 +25,7 @@ target_sources(netstorm PRIVATE
     DialogScript.cpp DialogScript.h
     Gump.cpp Gump.h
     GumpCollection.cpp GumpCollection.h
+    TileGroupCollection.cpp TileGroupCollection.h
     GumpVisual.cpp GumpVisual.h
     GumpBackground.cpp GumpBackground.h
     PaletteShade.cpp PaletteShade.h

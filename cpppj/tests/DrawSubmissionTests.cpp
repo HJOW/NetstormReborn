@@ -57,7 +57,7 @@ void Replay(std::string_view edition) {
             if (fields[0]=="ui") request.screen={static_cast<int>(coordinates[0]),static_cast<int>(coordinates[1]),static_cast<int>(coordinates[2]),static_cast<int>(coordinates[3])};
             if (fields[0]=="construction") request.visible={Float(coordinates[0]),Float(coordinates[1]),Float(coordinates[2]),Float(coordinates[3])};
             if (fields[0]=="preview") request.unclipped={Float(coordinates[0]),Float(coordinates[1]),Float(coordinates[2]),Float(coordinates[3])};
-            if (fields[0]=="group") request.groupTime=std::stoi(fields[1]);
+            if (fields[0]=="group") request.groupRowLimit=std::stoi(fields[1]);
         }
         std::vector<RenderCollectionEntry> guarded(static_cast<std::size_t>(kDrawSubmissionCapacity)+2);
         std::memset(guarded.data(),0xa5,guarded.size()*sizeof(RenderCollectionEntry));auto work=std::span(guarded).subspan(1,kDrawSubmissionCapacity);

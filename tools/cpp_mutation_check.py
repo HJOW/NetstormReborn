@@ -32,6 +32,27 @@ TESTS = BUILD / 'bin/Release/netstorm_tests.exe'
 EXCLUDED = {'build'}
 # 변이 목록: 이름, 대상 파일, 바꿀 원문(파일에 정확히 한 번 있어야 한다), 바꾼 문장, 실패해야 하는 검사 이름 접두사.
 MUTATIONS = [
+    # 실제 행별 묶음 관찰과 SID/해시의 공통 연결이 아래 의미 차이를 검출해야 한다.
+    dict(name='tilegroup-coordinate-bias',file='cpppj/src/client/TileGroupCollection.cpp',expect='TileGroupCollection_',
+         before='static_cast<double>(coordinate)+0.5',after='static_cast<double>(coordinate)',note='셀 좌표의 +0.5 보정을 생략'),
+    dict(name='tilegroup-lower-expansion',file='cpppj/src/client/TileGroupCollection.cpp',expect='TileGroupCollection_',
+         before='expand(Cell(view.left),0xffffffffU)',after='expand(Cell(view.left),0)',note='왼쪽 한 칸 확장을 생략'),
+    dict(name='tilegroup-cell-order',file='cpppj/src/client/TileGroupCollection.cpp',expect='TileGroupCollection_',
+         before='const o::Sid sid{hash_.At(x,y)};',after='const o::Sid sid{hash_.At(y,x)};',note='행/열 해시 주소를 뒤바꿈'),
+    dict(name='tilegroup-signed-depth',file='cpppj/src/client/TileGroupCollection.cpp',expect='TileGroupCollection_',
+         before='entry.depth=std::bit_cast<std::int8_t>(raw[depthOffset]);',after='entry.depth=raw[depthOffset];',note='signed BYTE 깊이를 비음수로 처리'),
+    dict(name='tilegroup-tail',file='cpppj/src/client/TileGroupCollection.cpp',expect='TileGroupCollection_',
+         before='entry.kind=1;entry.tail=0;',after='entry.kind=1;entry.tail=1;',note='멤버 tail 0을 다른 값으로 기록'),
+    dict(name='tilegroup-empty-covered',file='cpppj/src/client/TileGroupCollection.cpp',expect='TileGroupCollection_',
+         before='if (!sid.value) { covered=false;continue; }',after='if (!sid.value) { continue; }',note='빈 칸의 배경 덮음 해제를 생략'),
+    dict(name='tilegroup-restore-level',file='cpppj/src/client/TileGroupCollection.cpp',expect='TileGroupCollection_',
+         before='hash_.Select(2);backgroundCovered=covered;',after='hash_.Select(1);backgroundCovered=covered;',note='정상 반환의 해시 2단계 선택을 변경'),
+    dict(name='tilegroup-total-limit',file='cpppj/src/client/TileGroupCollection.cpp',expect='TileGroupCollection_',
+         before='if (count>=rowLimit)',after='if (static_cast<std::int32_t>(entries_.size())>=rowLimit)',note='행별 제한을 전체 누적 제한으로 바꿈'),
+    dict(name='tilegroup-cd-row-bound',file='cpppj/src/client/TileGroupCollection.cpp',expect='TileGroupCollection_',
+         before='state_.screenHeight/11+6 : 49;',after='state_.screenHeight/11+6 : state_.screenHeight/11+6;',note='CD 고정 49 행 상한을 패치 동적 상한으로 변경'),
+    dict(name='tilegroup-common-collection',file='cpppj/src/client/TileGroupCollection.cpp',expect='TileGroupCollection_',
+         before='return collector.Collect(view,rowLimit,covered);',after='return std::span<const DrawGroupView>{};',note='공통 묶음 슬롯의 실제 해시 수집 생략'),
     # 실제 Gump 위치/경계/트리 관찰과 공통 연결이 아래 의미 차이를 검출해야 한다.
     dict(name='gumpcollection-touching-edge',file='cpppj/src/client/GumpCollection.cpp',expect='GumpCollection_',
          before='a.left<b.right && b.left<a.right',after='a.left<=b.right && b.left<a.right',note='맞닿은 화면 경계도 교차로 처리'),
@@ -1092,6 +1113,10 @@ def main():
     parser.add_argument('--focused', action='store_true',
                         help='변이를 적용한 뒤에는 그 변이의 기대 접두사가 이름에 들어 있는 검사만 실행한다(변이 전 사본은 항상 전체 검사)')
     options = parser.parse_args()
+    # 알 수 없는 이름은 사본 빌드 전에 거부한다. 0개 실행을 성공으로 보고하지 않게 한다.
+    unknown = set(options.only or ()) - {mutation['name'] for mutation in MUTATIONS}
+    if unknown:
+        parser.error('알 수 없는 변이 이름: ' + ', '.join(sorted(unknown)))
     selected = [m for m in MUTATIONS if not options.only or m['name'] in options.only]
     if options.list:
         # 빌드 없이 저장소 소스에서 원문 위치만 확인한다.

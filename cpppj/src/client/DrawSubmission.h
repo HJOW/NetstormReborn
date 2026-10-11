@@ -24,12 +24,12 @@ struct DrawCollectionHooks {
     std::function<std::int32_t(o::RenderWorldRect,std::span<o::RenderCollectionEntry>,std::int32_t)> preview;
 };
 // 이미 환산한 두 월드 영역을 구분해 전달한다. 미리보기는 클립 전 영역, 나머지는 가시 영역을 받는다.
-// dirtyFlags bit 2는 UI만 수집한다. groupTime은 원본 판본별 계산/상수를 호출자가 공급한다.
+// dirtyFlags bit 2는 UI만 수집한다. groupRowLimit은 묶음 각 행의 count<limit assert에 쓰는 판본별 값이다.
 struct DrawCollectionRequest {
     ScreenRect screen;
     o::RenderWorldRect visible,unclipped;
     std::uint32_t dirtyFlags{};
-    std::int32_t groupTime{};
+    std::int32_t groupRowLimit{};
 };
 // 묶음 수집기의 배경 덮음 관찰을 함께 반환한다. false면 원본은 월드 배경을 다시 그린다.
 struct DrawCollectionResult { std::int32_t count{};bool backgroundCovered{}; };
