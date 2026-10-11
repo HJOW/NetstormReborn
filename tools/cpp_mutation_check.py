@@ -32,6 +32,23 @@ TESTS = BUILD / 'bin/Release/netstorm_tests.exe'
 EXCLUDED = {'build'}
 # 변이 목록: 이름, 대상 파일, 바꿀 원문(파일에 정확히 한 번 있어야 한다), 바꾼 문장, 실패해야 하는 검사 이름 접두사.
 MUTATIONS = [
+    # 건설 프레임의 독립 PE 관찰이 HP 폭·시간 반올림·확장/만료·색 조회·Draw 변경을 검출해야 한다.
+    dict(name='frame-hp-width',file='cpppj/src/o/RawConstructionFrame.cpp',expect='ConstructionFrame_',
+         before='patch ? static_cast<double>(savedHp)',after='patch ? static_cast<double>(static_cast<std::int16_t>(savedHp))',note='패치 HP DWORD를 WORD로 절단'),
+    dict(name='frame-clock-accumulation',file='cpppj/src/o/RawConstructionFrame.cpp',expect='ConstructionFrame_',
+         before='v.elapsed+=fields.delta;',after='v.elapsed=static_cast<float>(v.elapsed+fields.delta);',note='double 누적 시각을 float로 반올림'),
+    dict(name='frame-rate-rounding',file='cpppj/src/o/RawConstructionFrame.cpp',expect='ConstructionFrame_',
+         before='static_cast<float>(difference*state_.rate)',after='static_cast<float>(static_cast<double>(fields.delta)*state_.rate)',note='배율 계산 전에 시간 차이를 float로 반올림'),
+    dict(name='frame-neighbor-direction',file='cpppj/src/o/RawConstructionFrame.cpp',expect='ConstructionFrame_',
+         before='pixel-static_cast<std::uint32_t>(v.image.width)',after='pixel+static_cast<std::uint32_t>(v.image.width)',note='위 이웃 대신 아래 이웃으로 확장'),
+    dict(name='frame-capacity-activation',file='cpppj/src/o/RawConstructionFrame.cpp',expect='ConstructionFrame_',
+         before='v.active<v.total && v.total<v.capacity',after='v.active<v.total && v.total<=v.capacity',note='가득 찬 저장소에서도 미활성 입자를 활성화'),
+    dict(name='frame-expiration-copy',file='cpppj/src/o/RawConstructionFrame.cpp',expect='ConstructionFrame_',
+         before='particle=v.particles[v.active];v.particles[v.active]=v.particles[v.total];',after='particle=v.particles[v.total];v.particles[v.active]=v.particles[v.total];',note='만료 칸에 마지막 활성 입자 대신 마지막 전체 입자를 복사'),
+    dict(name='frame-palette-rounding',file='cpppj/src/o/RawConstructionFrame.cpp',expect='ConstructionFrame_',
+         before='position=static_cast<double>(static_cast<float>(palette_.count))*value*reciprocal;',after='position=static_cast<double>(palette_.count)*value/maximum;',note='패치의 float 역수 저장 반올림을 없앰'),
+    dict(name='frame-draw-total',file='cpppj/src/o/RawConstructionFrame.cpp',expect='ConstructionFrame_',
+         before='const auto& v=fields.visual;if (!v.capacity) return;',after='const auto& v=fields.visual;if (!v.total) return;',note='입자가 모두 만료되면 원래 픽셀 버퍼 Draw를 생략'),
     # 건설 표시 초기화의 원본 픽셀·입자·난수 관찰이 의미 변화를 검출해야 한다.
     dict(name='visual-blue-start',file='cpppj/src/o/RawConstructionVisual.cpp',expect='ConstructionVisual_',
          before='kBlue{0.0,0.0,1.0}',after='kBlue{0.0,0.0,0.0}',note='첫 색 띠를 파랑 대신 검정에서 시작'),

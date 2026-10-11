@@ -91,6 +91,7 @@ target_sources(netstorm PRIVATE
     RawContainedFinder.cpp RawContainedFinder.h
     RawContainedLookup.cpp RawContainedLookup.h
     RawConstructionVisual.cpp RawConstructionVisual.h
+    RawConstructionFrame.cpp RawConstructionFrame.h
     RawDamageablePreDestroy.cpp RawDamageablePreDestroy.h
     RawDamageableRelease.cpp RawDamageableRelease.h
     SquidProcess.cpp SquidProcess.h

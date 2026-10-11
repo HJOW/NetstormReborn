@@ -1,5 +1,7 @@
 # 건설 표시 생성과 초기 입자 복원
 
+> 후속 [건설 표시 프레임·입자 확장·Draw 복원](cpp-construction-frame-reconstruction.md)에서 RunFrame/입자/시각/팔레트/사각형/Draw 호출을 완료했다. 이 문서는 앞 생성 단계의 검증 이력이다. 실제 표시 삭제/등록·SHP 캡처/장치 연결은 계속 후속이다.
+
 2026-10-11, **HJOW-Athlon**. AGENTS.md와 두 LEFT_JOBS 문서를 읽고 현재 PC가 마지막 디컴파일 PC와 같음을 확인했다. `constructionvisual` 목록 **13/13/13개**를 세 판본의 Ghidra 프로젝트에서 읽기 전용으로 내보냈다. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-11.** 원본 게임·analyzeManager·클론 창은 실행하지 않았다.
 
 `RawConstructionVisual`은 즉시/일반 건설 표시의 생성, 공유 팔레트 요청, 캡처 버퍼 준비, 좌표 동기화와 초기 입자 선택을 복원한다. `MakeConstructionVisualHooks`는 실제 `RawConstructionProcess::Start`의 표시 경계를 연결하고 생성한 초기 상태의 소유권을 호출자의 저장소로 넘긴다. **프레임마다 입자를 활성화/이동하는 몸체와 실제 화면 출력은 아직 복원하지 않았다. 게임 내 건설/미션 완주도 아직 불가능하다.**
