@@ -45,7 +45,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     private readonly DisplayManager _display;
     private readonly EdgeScrollController _edgeScroll = new();
     /// <summary>합성 화면 갱신·시간 상한 없이 실제 밀리초 시각을 전달하는 루프 시계.</summary>
-    private readonly FrameLoopClock _frameLoop = new();
+    private readonly FrameLoopClock _frameLoop;
     /// <summary>Windows에서 원본 WINMM 시계를 읽고 다른 플랫폼에서는 단조 밀리초 시계를 공급한다.</summary>
     private readonly FrameWallClock _frameWallClock = new();
     /// <summary>원본 maxFPS의 그리기 제한 값. 게임 시계 정지 중에는 적용하지 않는다.</summary>
@@ -124,6 +124,10 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     /// <summary>창과 그래픽 장치 설정</summary>
     public NetstormGame()
     {
+        // 원본 숫자 시계의 시작 오프셋을 캡처한다. OS 우선순위/초 경계 바쁜 대기는 후속이다.
+        uint origin = unchecked((uint)_frameWallClock.ReadMilliseconds());
+        uint epoch = unchecked((uint)DateTimeOffset.UtcNow.ToUnixTimeSeconds() - OriginalGameClock.EpochReferenceSeconds);
+        _frameLoop = new FrameLoopClock(new OriginalGameClock(origin, epoch));
         _graphics = new GraphicsDeviceManager(this);
         string[] args = Environment.GetCommandLineArgs();
         string? uiScript = ParseValueArgument(args, "--ui-script-file");

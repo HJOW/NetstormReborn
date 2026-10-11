@@ -1,0 +1,135 @@
+{
+  "total": 519,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-12",
+  "controls": [
+    639,
+    895
+  ],
+  "os_calls": 0,
+  "assertions": 0,
+  "editions": {
+    "originals": {
+      "cases": 173,
+      "entries": {
+        "00465330": 38,
+        "004653c0": 34,
+        "00465550": 258,
+        "004e5b40": 98,
+        "00466480": 190,
+        "00464c80": 44,
+        "004662b0": 16,
+        "00466460": 66,
+        "00464420": 78
+      },
+      "returns": {
+        "00465330": 38,
+        "004653c0": 28,
+        "00465550": 68,
+        "00466480": 178,
+        "00464c80": 12,
+        "004662b0": 16,
+        "00464420": 12,
+        "00466460": 50
+      },
+      "boundaries": {
+        "Push": 82,
+        "Form": 80,
+        "Destructor": 28,
+        "Free": 112
+      }
+    },
+    "originalCD": {
+      "cases": 173,
+      "entries": {
+        "00494380": 44,
+        "00494410": 34,
+        "004945a0": 258,
+        "004f1a60": 98,
+        "00493a40": 190,
+        "00493a20": 190,
+        "00493b20": 44,
+        "00493b00": 44,
+        "004929b0": 16,
+        "004950d0": 66,
+        "00492ef0": 78
+      },
+      "returns": {
+        "00494380": 38,
+        "00494410": 28,
+        "004945a0": 68,
+        "00493a40": 178,
+        "00493b20": 12,
+        "004929b0": 16,
+        "00492ef0": 12,
+        "004950d0": 50
+      },
+      "boundaries": {
+        "Push": 82,
+        "Form": 80,
+        "Destructor": 28,
+        "Free": 112
+      }
+    },
+    "original1037": {
+      "cases": 173,
+      "entries": {
+        "00494380": 44,
+        "00494410": 34,
+        "004945a0": 258,
+        "004f1a60": 98,
+        "00493a40": 190,
+        "00493a20": 190,
+        "00493b20": 44,
+        "00493b00": 44,
+        "004929b0": 16,
+        "004950d0": 66,
+        "00492ef0": 78
+      },
+      "returns": {
+        "00494380": 38,
+        "00494410": 28,
+        "004945a0": 68,
+        "00493a40": 178,
+        "00493b20": 12,
+        "004929b0": 16,
+        "00492ef0": 12,
+        "004950d0": 50
+      },
+      "boundaries": {
+        "Push": 82,
+        "Form": 80,
+        "Destructor": 28,
+        "Free": 112
+      }
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/gumplifetime-x86.tsv": "52d85b1de6e7b040ff2dc3352609293c4b7a4e86acf4d3207ba6757847c4d11c",
+    "extracted/gumplifetime/original1037/creation.c": "48a32abe881ce7d97eeefda8b3ac163d547a2034d96e9d7cf119c89ace84c43c",
+    "extracted/gumplifetime/original1037/functions.tsv": "887490cc9289fc425d75355923dc7f5f75178d7bdf416c33ea49cb276cb2d44b",
+    "extracted/gumplifetime/originalCD/creation.c": "48a32abe881ce7d97eeefda8b3ac163d547a2034d96e9d7cf119c89ace84c43c",
+    "extracted/gumplifetime/originalCD/functions.tsv": "887490cc9289fc425d75355923dc7f5f75178d7bdf416c33ea49cb276cb2d44b",
+    "extracted/gumplifetime/originals/creation.c": "bc94336c43d743885c4a508a57cf8a3f357f31a3fa5345bc8dd6cbe522f30479",
+    "extracted/gumplifetime/originals/functions.tsv": "f2f179280906a5f3132cdd45707796eca912d559899a8c9befc49d2f81ce6a26",
+    "extracted/process/original1037/creation.c": "c06b0142f8cd167c6f9043f596c82606f79a6f89814d57574f76116d09c976a4",
+    "extracted/process/original1037/functions.tsv": "66dc3e2da36a5a849a900c0b20fd2ef56951a9d0158acccf33ad0568cbaac1af",
+    "extracted/process/originalCD/creation.c": "c06b0142f8cd167c6f9043f596c82606f79a6f89814d57574f76116d09c976a4",
+    "extracted/process/originalCD/functions.tsv": "66dc3e2da36a5a849a900c0b20fd2ef56951a9d0158acccf33ad0568cbaac1af",
+    "extracted/process/originals/creation.c": "93a6d7ba1061a0bdd7d586a089108ead00a838ce06fc274c12f7649f3b583104",
+    "extracted/process/originals/functions.tsv": "407f9321dfe05d98ff81c4368f097f5133067f2bcc0753b3b145064d6a9eb6d3",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_drawsort_oracle.py": "ed92fd9cd8b7c069742cc9158226db6c5cfc75213816d56f40ffb562b5542bb7",
+    "tools/decomp_gumplifetime_oracle.py": "b082dfb5e0ed1ed7e1be40a56296dad9f037f03a12a25ddb52cbe518298dd76b",
+    "tools/decomp_process_oracle.py": "c548fa37c3cb10edb030bba3b67c8970b7575207efca217fdf4ea0b51354cfd1",
+    "tools/ghidra/gumplifetime-functions.json": "f5d4e488788410cbd4dddcc866ea8e4aba678a2addf98e165379c45b4fe83e66"
+  },
+  "limits": [
+    "삭제 요청/정리/등록 해제/기본·scalar 소멸자/idle·overlay·dialog 해제와 CRT 복사 전체 정상 몸체",
+    "전체 여섯 0xa0바이트/다섯 표/스칼라/콜백 당시 전체 상태·인자를 실제 관찰; 기본 scalar 가상 바인딩 포함",
+    "가상 Push/파생 소멸자/Form 삭제/free만 명시 응답; 실제 파생 소멸자·메모리 allocator·assert/log/예외 전파 제외",
+    "최상위 정상 반환/재귀 진입/보존 레지스터/스택/x87/SEH/허용 실행·쓰기/읽기 전용/보호 바이트/SHA 감사"
+  ]
+}

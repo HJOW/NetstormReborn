@@ -86,4 +86,27 @@ public sealed class FrameLoopClockTests
         Assert.Throws<ArgumentOutOfRangeException>(() => clock.RemainingWaitMilliseconds(0, 75, false));
         Assert.Equal(1, clock.ElapsedSeconds);
     }
+
+    /// <summary>1.001−1.0의 실제 double 값이 1ms보다 작으면 원본처럼 다음 눈금까지 기다린다.</summary>
+    [Fact]
+    public void Limit_UsesConvertedDoubleDifferenceAtExactBoundary()
+    {
+        var clock = new FrameLoopClock(new OriginalGameClock(100));
+        clock.BeginDraw(1100);
+        Assert.Equal(1, clock.RemainingWaitMilliseconds(1101, 1000, false));
+        Assert.Equal(0, clock.RemainingWaitMilliseconds(1102, 1000, false));
+    }
+
+    /// <summary>epoch 밀리초 합의 감김에서 음수 벽시각 차이로 긴 대기를 만드는 것을 방지한다.</summary>
+    [Fact]
+    public void Limit_WrappedWallUsesHostMonotonicInterval()
+    {
+        var clock = new FrameLoopClock(new OriginalGameClock(0, 4294967));
+        clock.BeginDraw(295);
+        Assert.Equal(13, clock.RemainingWaitMilliseconds(296, 75, false));
+        Assert.Equal(0, clock.RemainingWaitMilliseconds(309, 75, false));
+        clock.BeginDraw(309);
+        Assert.Equal(14, clock.RemainingWaitMilliseconds(309, 75, false));
+        Assert.Equal(0, clock.RemainingWaitMilliseconds(309 + (1L << 32), 75, false));
+    }
 }

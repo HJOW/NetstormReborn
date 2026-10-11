@@ -11,6 +11,7 @@ add_executable(netstorm_tests
     GumpDrawTests.cpp
     GumpCreateTests.cpp
     GumpTreeTests.cpp
+    GumpLifetimeTests.cpp
     DrawSubmissionTests.cpp
     DrawSortTests.cpp
     RenderCollectionTests.cpp
@@ -493,3 +494,7 @@ set_source_files_properties(GumpCreateTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # Gump 트리 전체 바이트/콜백 당시 상태는 이 검사 소스에서만 읽는다.
 set_source_files_properties(GumpTreeTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_GUMPTREE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gumptree-x86.tsv\"")
+
+# 지연 삭제/기본 소멸자의 전체 표/노드/콜백 상태를 이 검사 소스에서만 읽는다.
+set_source_files_properties(GumpLifetimeTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_GUMPLIFETIME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gumplifetime-x86.tsv\"")
