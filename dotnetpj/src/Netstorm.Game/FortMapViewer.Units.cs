@@ -51,6 +51,7 @@ internal sealed partial class FortMapViewer
         + ";sites=" + string.Join(',', _session.Entities.Where(e => e.Owner == TestPlayer && !e.IsComplete && e.Production == null)
             .Select(e => $"{e.Type.Name.ToLowerInvariant()}:{(e.AwaitingBuilder ? "waiting" : "building")}"))
         + $";sp={_session.Player(TestPlayer).StormPower};shown-sp={_shownStormPower};refunds={_cancelledSites.Count};context-panels={_contextPanels.Count};productions={ProductionDetail}"
+        + $";world-order={WorldOrderDetail}"
         + $";preview-size={(_lastCheck?.Site is { } preview ? $"{preview.Footprint.Width}x{preview.Footprint.Height}" : "none")}";
 
     /// <summary>걷기 그림 시계(초). 게임 시간이 흐르는 동안에만 진행해 일시정지 중에는 걷는 자세가 멈춘다.</summary>
@@ -145,52 +146,58 @@ internal sealed partial class FortMapViewer
         return CellCenterScreen(entity.WorldX + x - entity.Footprint.AnchorX, entity.WorldY + y - entity.Footprint.AnchorY, center);
     }
 
-    /// <summary>이동형 유닛의 지금 그림(텍스처·기준점 오프셋)과 화면 기준점. 그릴 그림이 없으면 null.</summary>
-    private (Texture2D Texture, Point Offset, Vector2 Anchor)? MobileSprite(GameEntity entity, Vector2 center)
+    /// <summary>모바일은 기존 그림 사각형과 4픽셀 여유로, 고정 객체는 본체 불투명 화소와 발자국으로 판정한다.</summary>
+    private bool HitWorldEntity(GameEntity entity, Point screen)
     {
-        // 화면에 그리는 것과 같은 그림·위치로 판정한다 (풍선의 기준점 이동, Sail Skater 의 방향 그림 포함).
+        if (entity.Kind == ObjectKind.Flyer || entity.Captivity == PriestCaptivity.Carried || entity.Production != null) return false;
+        bool mobile = IsMobile(entity);
+        if (mobile && !entity.IsComplete) return false;
         (TypeInfo type, StructureFrames frames, Vector2 shift) = ObjectSprite(entity.Type, entity, entity.Source);
         var sprite = GetTexture(type.LoadIndex, frames.Body, _playerColors.GetValueOrDefault(entity.Owner));
-        return sprite is { } s ? (s.Texture, s.Offset, Screen(MobileWorldPixels(entity), center) + shift * _zoom) : null;
-    }
-
-    /// <summary>
-    /// 화면 좌표에서 클릭한 이동형 유닛을 찾는다. 규칙상 칸(발자국)이 아니라 **그려진 그림 사각형**(+여유)으로 판정하므로
-    /// 몸통·머리를 눌러도 선택된다. 여럿이 겹치면 그림 중심에 가까운 유닛을 고른다.
-    /// 포획되어 수송 유닛 안에 있는 사제는 건너뛴다.
-    /// </summary>
-    /// <param name="screen">논리 화면 좌표</param>
-    private GameEntity? PickMobileAt(Point screen)
-    {
-        GameEntity? best = null;
-        float bestDistance = float.MaxValue;
-        // 모든 이동형 유닛의 그림 사각형을 확인한다.
-        foreach (GameEntity entity in _session.Entities)
+        if (sprite is { } image)
         {
-            if (!IsMobile(entity) || entity.Captivity == PriestCaptivity.Carried || !entity.IsComplete) continue;
-            if (MobileSprite(entity, _lastCenter) is not { } sprite) continue;
-            Vector2 topLeft = sprite.Anchor + sprite.Offset.ToVector2() * _zoom;
-            var rect = new Rectangle((int)topLeft.X - PickMargin, (int)topLeft.Y - PickMargin,
-                (int)(sprite.Texture.Width * _zoom) + 2 * PickMargin, (int)(sprite.Texture.Height * _zoom) + 2 * PickMargin);
-            if (!rect.Contains(screen)) continue;
-            float distance = Vector2.DistanceSquared(new Vector2(rect.Center.X, rect.Center.Y), screen.ToVector2());
-            if (distance >= bestDistance) continue;
-            best = entity;
-            bestDistance = distance;
+            Vector2 world = mobile ? MobileWorldPixels(entity) : WorldPixels(entity.Footprint.AnchorX, entity.Footprint.AnchorY);
+            Vector2 topLeft = Screen(world, _lastCenter) + (shift + image.Offset.ToVector2()) * _zoom;
+            if (mobile)
+                return screen.X >= topLeft.X - PickMargin && screen.X < topLeft.X + image.Texture.Width * _zoom + PickMargin
+                    && screen.Y >= topLeft.Y - PickMargin && screen.Y < topLeft.Y + image.Texture.Height * _zoom + PickMargin;
+            int x = (int)MathF.Floor((screen.X - topLeft.X) / _zoom);
+            int y = (int)MathF.Floor((screen.Y - topLeft.Y) / _zoom);
+            int firstVisibleRow = 0;
+            if (!entity.IsComplete && ObjectKinds.IsBuilding(entity.Kind))
+            {
+                // 공사장 본체는 실제 그린 바닥 띠·진행 높이만 선택한다.
+                int height = entity.AwaitingBuilder ? Math.Min(SiteGroundPixels, image.Texture.Height)
+                    : Math.Clamp((int)Math.Ceiling(image.Texture.Height * _session.ConstructionProgress(entity)), 1, image.Texture.Height);
+                firstVisibleRow = image.Texture.Height - height;
+            }
+            if (x >= 0 && x < image.Texture.Width && y >= firstVisibleRow && y < image.Texture.Height)
+            {
+                if (!_pickPixels.TryGetValue(image.Texture, out Color[]? pixels))
+                {
+                    pixels = new Color[image.Texture.Width * image.Texture.Height];
+                    image.Texture.GetData(pixels);
+                    _pickPixels.Add(image.Texture, pixels);
+                }
+                if (pixels[y * image.Texture.Width + x].A != 0) return true;
+            }
         }
-        return best;
+        // 건물의 발자국 클릭도 지원하며 큰 그림의 투명한 바깥 부분은 뒤쪽 객체에 넘긴다.
+        (int cellX, int cellY) = CellAt(screen.ToVector2());
+        return !mobile && entity.Footprint.Contains(cellX, cellY);
     }
 
-    /// <summary>
-    /// 화면 좌표의 오브젝트: 이동형 유닛은 그림 모양으로, 건물·가이저 같은 나머지는 차지한 칸으로 찾는다.
-    /// 유닛은 건물 앞에 서 있으므로 같은 자리에서는 유닛이 먼저다.
-    /// </summary>
-    /// <param name="screen">논리 화면 좌표</param>
+    /// <summary>실제로 그린 순서를 뒤집어 가장 앞쪽 객체를 고른다. 숨김·제거·운송 대기 객체는 표시 목록에 없다.</summary>
     private GameEntity? PickEntityAt(Point screen)
     {
-        if (PickMobileAt(screen) is { } unit) return unit;
-        (int x, int y) = CellAt(screen.ToVector2());
-        return _session.EntityAt(x, y);
+        EnsureWorldDisplayView();
+        // 깊이·현재 위치가 같은 경우에도 실제 마지막에 그린 객체가 먼저 선택된다.
+        for (int index = _worldDisplay.Count - 1; index >= 0; index--)
+        {
+            if (_worldDisplay[index].Entity is not { } entity || _session.Entity(entity.Id) == null) continue;
+            if (HitWorldEntity(entity, screen)) return entity;
+        }
+        return null;
     }
 
     /// <summary>
@@ -223,13 +230,13 @@ internal sealed partial class FortMapViewer
             GetTexture(_supportTopType.LoadIndex, MapSpriteFrames.BodyFrame(_supportTopType.Definition, Math.Min(cluster, _supportTopType.Definition.Clusters.Count - 1)));
         }
         // 저장된 오브젝트의 기본 그림
-        foreach (FortMapObject item in _sorted)
+        foreach (FortMapObject item in _map.Objects)
         {
             if (item.Object.Type.Name == "noIsland") continue;
             GetTexture(item.Object.Type.LoadIndex, MapSpriteFrames.BodyFrame(item, _terrain.TerritoryTheme(item.Territory)));
         }
         // 제자리 애니메이션이 있는 타입(가이저 증기·워크샵 레벨·신전 회오리·풍선)은 모든 클러스터와 그 그림자를 만들어 둔다.
-        foreach (TypeInfo type in _sorted.Select(o => o.Object.Type).DistinctBy(t => t.LoadIndex)
+        foreach (TypeInfo type in _map.Objects.Select(o => o.Object.Type).DistinctBy(t => t.LoadIndex)
                      .Where(t => ObjectKinds.Of(t) is ObjectKind.Geyser or ObjectKind.Workshop or ObjectKind.Temple || t.Definition.HasFlag("balloon")))
         {
             // 클러스터 번호가 곧 본체 프레임 번호다.

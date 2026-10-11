@@ -17,24 +17,6 @@ internal sealed partial class FortMapViewer
     /// <summary>직전 지면 갱신에 사용한 완공 신전 번호 목록.</summary>
     private string? _terrainTempleSignature;
 
-    /// <summary>비행체를 지상·다리 위에 원본 A00~A07 회전 그림으로 그린다. 12fps는 임시 재생 속도다.</summary>
-    private void DrawFlyers(SpriteBatch batch, Vector2 center)
-    {
-        // 연속 비행 좌표로 그려 칸 경계에서 튀지 않게 한다. 지상 깊이 정렬과 분리한다.
-        foreach (GameEntity entity in _session.Entities.Where(e => e.Kind == ObjectKind.Flyer))
-        {
-            TypeDefinition type = entity.Type.Definition;
-            int count = type.Clusters.Count(c => c.Name.StartsWith("A", StringComparison.Ordinal));
-            int frame = count == 0 ? type.Frames.DefaultFrame :
-                type.Frames.Find('A', TypeFrameTable.DefaultVariant, (int)(_session.Tick / 2 % count));
-            if (frame < 0) frame = type.Frames.DefaultFrame;
-            Vector2 anchor = Screen(new Vector2((float)(entity.WorldX * FortMap.CellPixelWidth),
-                (float)(entity.WorldY * FortMap.CellPixelHeight)), center);
-            DrawShadow(batch, entity.Type, frame, anchor);
-            DrawSprite(batch, entity.Type.LoadIndex, frame, anchor, _playerColors.GetValueOrDefault(entity.Owner));
-        }
-    }
-
     /// <summary>완공 신전 목록이나 섬 테마 숨기기(Shift+F3)가 바뀔 때 지면 테마·소유자색을 다시 만든다. 섬 마스크는 그대로다.</summary>
     private void RefreshTerritoryAppearance()
     {
@@ -137,7 +119,7 @@ internal sealed partial class FortMapViewer
         }
     }
 
-    /// <summary>손상·선택 체력, 기절 보호막 및 비행 중 탄을 그린다. 탄 그림은 임시 표현이다.</summary>
+    /// <summary>손상·선택 체력, 기절 보호막과 이동 대기 문구를 월드 위의 오버레이로 그린다.</summary>
     private void DrawCombat(SpriteBatch batch, SpriteFontBase font, Vector2 center)
     {
         DrawRangeIndicators(batch, center);
@@ -145,6 +127,7 @@ internal sealed partial class FortMapViewer
         // 엔티티 번호순으로 체력 표시를 겹쳐 그린다.
         foreach (GameEntity entity in _session.Entities.Where(e => e.MaxHitPoints > 0 && e.IsComplete && !e.IsRegenerating))
         {
+            if (HiddenByBuildingToggle(entity.Type) || entity.Captivity == PriestCaptivity.Carried) continue;
             if (entity.HitPoints >= entity.MaxHitPoints && entity.Id != selected && !entity.IsStunned) continue;
             Vector2 anchor = EntityCenterScreen(entity, center);
             if (EntityFrameBox(entity, center) is { } box)
@@ -188,35 +171,6 @@ internal sealed partial class FortMapViewer
         {
             Vector2 anchor = EntityCenterScreen(entity, center);
             batch.DrawString(font, "길 막힘·대기", anchor + new Vector2(-36, -43), Color.Gold);
-        }
-        // 세션 틱 사이의 탄 경로를 선형 보간한다. 정지 중에는 탄도 같은 위치에 남는다.
-        foreach (CombatShot shot in _session.Shots)
-        {
-            if (shot.IsBeam) continue;
-            float progress = (float)Math.Clamp((CombatRenderTick - shot.FiredTick) / (shot.ImpactTick - shot.FiredTick), 0, 1);
-            Vector2 from = CellCenterScreen(shot.StartX, shot.StartY, center);
-            Vector2 to = CellCenterScreen(shot.EndX, shot.EndY, center);
-            Vector2 point = Vector2.Lerp(from, to, progress);
-            if (DrawProjectile(batch, shot, point, from, to)) continue;
-            Vector2 tail = Vector2.Lerp(from, to, Math.Max(0, progress - 0.08f));
-            Line(batch, tail, point, shot.Owner == TestPlayer ? Color.Gold : Color.OrangeRed);
-            batch.Draw(_pixel, new Rectangle((int)point.X - 2, (int)point.Y - 2, 4, 4), Color.White);
-        }
-        DrawCombatImpacts(batch, center);
-        // 영상에서 확인한 흰색·청록색 번개를 짧은 꺾은 선으로 표현한다. 화면 난수는 세션 난수를 소비하지 않는다.
-        foreach (CombatShot beam in _session.Lightning)
-        {
-            Vector2 from = CellCenterScreen(beam.StartX, beam.StartY, center) - new Vector2(0, 26 * _zoom);
-            Vector2 to = CellCenterScreen(beam.EndX, beam.EndY, center) - new Vector2(0, 12 * _zoom);
-            Vector2 previous = from;
-            const int segments = 12; // 번개의 꺾임 수. 원본 절차적 번개 알고리즘은 미분석이다.
-            for (int index = 1; index <= segments; index++)
-            {
-                Vector2 point = Vector2.Lerp(from, to, index / (float)segments);
-                if (index < segments) point.Y += (index % 2 == 0 ? 2 : -2) * _zoom;
-                Line(batch, previous, point, Color.LightCyan);
-                previous = point;
-            }
         }
     }
 }

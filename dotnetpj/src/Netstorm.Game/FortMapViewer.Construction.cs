@@ -39,13 +39,5 @@ internal sealed partial class FortMapViewer
         if (!_playUi && !waiting) DrawProgressBar(batch, anchor, progress);
     }
 
-    /// <summary>논리상 취소되어 점유하지 않는 현장의 그림자를 잠깐 더 보여 준다.</summary>
-    private void DrawCancelledSites(SpriteBatch batch, Vector2 center)
-    {
-        // 취소 순서대로 화면용 그림자를 그리며 실제 건물 목록에는 넣지 않는다.
-        foreach (CancelledSiteVisual cancelled in _cancelledSites)
-        {
-            if (cancelled.Age < CancelledSiteSeconds) DrawConstruction(batch, cancelled.Site, center, waiting: true);
-        }
-    }
+
 }

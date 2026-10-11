@@ -52,7 +52,6 @@ internal sealed partial class FortMapViewer : IDisposable
     private readonly OriginalUiSkin _uiSkin;
     /// <summary>타입마다 색 변환 대상이 다르므로 타입·프레임 위치·소유자색을 함께 캐시한다.</summary>
     private readonly Dictionary<(int Type, int Frame, int Color), (Texture2D Texture, Point Offset)> _textures = [];
-    private readonly FortMapObject[] _sorted;
     private FortTerrainPreview _terrain;
     private readonly TypeInfo _terrainType;
     private readonly TypeInfo _edgeFarmType;
@@ -109,10 +108,6 @@ internal sealed partial class FortMapViewer : IDisposable
         _edgeFarmCells = _edgeFarms.Select(tile => (tile.X, tile.Y)).ToHashSet();
         Name = name;
         Language = language;
-        // 원본 그리기 순서(00497900): 깊이(zorder, 부호 있는 16비트) 내림차순 → y 오름차순 → x 오름차순.
-        // 깊이가 완전히 같은 항목은 입력(저장) 순서를 유지한다 (DrawOrder.Sort 의 안정 정렬).
-        _sorted = DrawOrder.Sort(_map.Objects,
-            o => new DrawOrder(o.X, o.Y, (short)Math.Clamp(o.Object.Type.ZOrder, short.MinValue, short.MaxValue))).ToArray();
         _pixel = new Texture2D(device, 1, 1);
         _pixel.SetData(new[] { Color.White });
         InitializeSession(fort, catalog, mission);
@@ -153,6 +148,8 @@ internal sealed partial class FortMapViewer : IDisposable
         KeyboardState? input = null, bool inputBlocked = false)
     {
         if (width < 320 || height < 320) return;
+        _viewSize = new Point(width, height);
+        _lastCenter = new Vector2(width / 2f, (height + HeaderHeight) / 2f);
         UpdateEffects(seconds);
         UpdateWalkClock(seconds);
         KeyboardState keyboard = input ?? Keyboard.GetState();
@@ -253,7 +250,7 @@ internal sealed partial class FortMapViewer : IDisposable
         _previousMouse = mouse;
     }
 
-    /// <summary>영역 청크 윤곽과 정적 스프라이트를 그리고 마우스 가까운 오브젝트를 설명한다.</summary>
+    /// <summary>현재 월드 표시 목록을 정렬해 그리고, 화면 입력과 안내·미리보기를 겹쳐 표시한다.</summary>
     /// <param name="batch">스프라이트 배치</param>
     /// <param name="font">안내 글꼴</param>
     /// <param name="width">논리 화면 폭</param>
@@ -292,117 +289,13 @@ internal sealed partial class FortMapViewer : IDisposable
                 }
             }
         }
-        // 화면 밖 그림은 건너뛴다. 월드 전체의 지면·오브젝트를 매 프레임 그리면 보이지 않는 수천 개의 그리기 호출이 프레임을 깎는다.
-        // 여유는 그림이 기준점에서 뻗는 최대 크기(작은 지면 조각 96px, 건물·증기 등 큰 오브젝트 400px)를 확대 배율에 맞춰 잡는다.
-        float tileMargin = TileCullMargin * _zoom;
-        float objectMargin = ObjectCullMargin * _zoom;
-        bool Visible(Vector2 point, float margin) =>
-            point.X > -margin && point.X < width + margin && point.Y > -margin && point.Y < height + margin;
-        long perfTerrain = Stopwatch.GetTimestamp();
-        // 시드로 생성한 지면을 원본 isle 타일로 그린다.
-        RefreshTerritoryAppearance();
-        foreach (FortTerrainTile tile in _terrain.Tiles)
-        {
-            Vector2 tilePosition = Screen(WorldPixels(tile.X, tile.Y), center);
-            if (!Visible(tilePosition, tileMargin)) continue;
-            // 건물 소멸로 사라진 개발용 받침 타일은 현재 지지 판정에 맞춰 숨긴다.
-            if (tile.Region < 0 && !_session.Bridges.IsIsland(tile.X, tile.Y)) continue;
-            if (_edgeFarmCells.Contains((tile.X, tile.Y)))
-            {
-                continue;
-            }
-            int color = _islandColors ? _playerColors.GetValueOrDefault(tile.Owner) : 0;
-            DrawSprite(batch, _terrainType.LoadIndex, MapSpriteFrames.BodyFrame(_terrainType.Definition, tile.Cluster),
-                tilePosition, color);
-        }
-        // 절벽은 별도 기준점을 사용하며 본체 지면 위·건물 아래에 표시한다. 원본의 깊이 정렬은 추가 검증 대상이다.
-        foreach (FortTerrainFringeSprite fringe in _fringes)
-        {
-            Vector2 fringePosition = Screen(WorldPixels(fringe.X, fringe.Y), center);
-            if (!Visible(fringePosition, tileMargin)) continue;
-            // 절벽의 원본 지면 기준점은 표시 기준점보다 OffsetY만큼 위에 있다.
-            if (!_session.Bridges.IsIsland(fringe.X, fringe.Y - FortTerrainFringe.OffsetY)) continue;
-            DrawSprite(batch, _fringeType.LoadIndex, MapSpriteFrames.BodyFrame(_fringeType.Definition, fringe.Cluster), fringePosition);
-        }
-        // edgeFarm은 원본의 matchframe으로 해당 isle을 대체한다. 원본과 같은 소유자 색상표를 적용한다.
-        foreach (FortEdgeFarmTile tile in _edgeFarms)
-        {
-            Vector2 farmPosition = Screen(WorldPixels(tile.X, tile.Y), center);
-            if (!Visible(farmPosition, tileMargin)) continue;
-            int color = _islandColors ? _playerColors.GetValueOrDefault(tile.Owner) : 0;
-            DrawSprite(batch, _edgeFarmType.LoadIndex, MapSpriteFrames.BodyFrame(_edgeFarmType.Definition, tile.Cluster),
-                farmPosition, color);
-        }
-        // 확인된 3×3 받침은 같은 기준점에서 전용 하단 바위와 윗면을 그린다.
-        foreach (FortIslandSupport support in _terrain.Supports)
-        {
-            Vector2 anchor = Screen(WorldPixels(support.X, support.Y), center);
-            if (!Visible(anchor, objectMargin)) continue;
-            // 저장된 받침도 건물 회수·파괴로 지지를 잃으면 화면에서 함께 사라진다.
-            if (!_session.Bridges.IsIsland(support.X, support.Y)) continue;
-            int cluster = FortIslandSupports.ColorCluster(support.Owner, _playerColors);
-            // 받침의 주황 테두리도 본섬처럼 소유자 색으로 바뀐다 (TEST01 녹화: 내 탑의 받침 테두리가 파랑).
-            int color = _islandColors ? _playerColors.GetValueOrDefault(support.Owner) : 0;
-            DrawSprite(batch, _supportBottomType.LoadIndex, MapSpriteFrames.BodyFrame(_supportBottomType.Definition, cluster), anchor, color);
-            DrawSprite(batch, _supportTopType.LoadIndex, MapSpriteFrames.BodyFrame(_supportTopType.Definition, cluster), anchor, color);
-        }
-        // 세션에서 새로 배치한 건물형 유닛의 받침도 저장된 받침과 같은 원본 그림으로 표시한다.
-        foreach (GameEntity entity in _session.Entities.Where(e => e.Source == null && e.IsComplete &&
-                     e.Type.Definition.HasFlag("createsisland") && _session.Map.TerritoryAt(e.Footprint.AnchorX, e.Footprint.AnchorY) == null))
-        {
-            if (_terrain.Supports.Any(s => s.X == entity.Footprint.AnchorX && s.Y == entity.Footprint.AnchorY)) continue;
-            int cluster = FortIslandSupports.ColorCluster(entity.Owner, _playerColors);
-            int color = _islandColors ? _playerColors.GetValueOrDefault(entity.Owner) : 0;
-            Vector2 anchor = Screen(WorldPixels(entity.Footprint.AnchorX, entity.Footprint.AnchorY), center);
-            DrawSprite(batch, _supportBottomType.LoadIndex, MapSpriteFrames.BodyFrame(_supportBottomType.Definition, cluster), anchor, color);
-            DrawSprite(batch, _supportTopType.LoadIndex, MapSpriteFrames.BodyFrame(_supportTopType.Definition, cluster), anchor, color);
-        }
-        PerfMeter.Current?.Section("terrain", perfTerrain);
-        long perfObjects = Stopwatch.GetTimestamp();
-        DrawSunForceFields(batch, center);
-        FortMapObject? hovered = null;
-        float nearest = 20f * 20f;
-        var mousePosition = new Vector2(_previousMouse.X, _previousMouse.Y);
-        // 건물은 발자국 크기를 추가 보정하지 않고 프레임 xmin/ymin을 기준점에 더한다.
-        foreach (FortMapObject item in SortStoredObjectsForFrame())
-        {
-            // noIsland는 투명한 논리 지면이다. 미리보기 지면에 반영했으므로 표식을 그리지 않는다.
-            // 무너진 저장 다리와 회수되어 사라진 저장 오브젝트는 그리지 않는다.
-            if (item.Object.Type.Name == "noIsland" || ObjectKinds.Of(item.Object.Type) == ObjectKind.Flyer || IsCrumbledStoredBridge(item) || IsRemovedInitialObject(item))
-            {
-                continue;
-            }
-            GameEntity? live = _session.EntityForInitial(item);
-            if (HiddenByBuildingToggle(item.Object.Type)) continue;
-            // 사제뿐 아니라 저장된 수송 유닛도 현재 이동 좌표로 그린다. 걷는 유닛은 칸 사이 보간 위치와 걷는 방향 그림을 쓴다.
-            bool mobile = live != null && IsMobile(live);
-            int itemX = live?.Footprint.AnchorX ?? item.X;
-            int itemY = live?.Footprint.AnchorY ?? item.Y;
-            Vector2 anchor = Screen(mobile ? MobileWorldPixels(live!) : WorldPixels(itemX, itemY), center);
-            if (!Visible(anchor, objectMargin)) continue;
-            // 가이저 증기·워크샵 레벨·신전 회오리·풍선·걷기 그림을 고르고 그림자 → 본체 → 겹침 순서로 그린다.
-            (TypeInfo drawn, StructureFrames frames, Vector2 shift) = ObjectSprite(item.Object.Type, live, item);
-            if (!DrawObjectSprite(batch, drawn, frames, anchor + shift * _zoom,
-                color: _playerColors.GetValueOrDefault(live?.Owner ?? item.Object.LoadOwner)))
-            {
-                // 이미지가 없는 특수 프레임은 소유자색 표식으로 위치만 표시한다.
-                batch.Draw(_pixel, new Rectangle((int)anchor.X - 3, (int)anchor.Y - 3, 6, 6),
-                    item.Object.Owner == 2 ? Color.OrangeRed : Color.Turquoise);
-            }
-            float distance = Vector2.DistanceSquared(anchor, mousePosition);
-            if (distance < nearest)
-            {
-                nearest = distance;
-                hovered = item;
-            }
-        }
-        PerfMeter.Current?.Section("objects", perfObjects);
         long perfWorld = Stopwatch.GetTimestamp();
-        DrawPlacedUnits(batch, center);
-        DrawProductionDeliveries(batch, center);
-        DrawBridgeWorld(batch, center);
-        DrawFalling(batch, center);
-        DrawFlyers(batch, center);
+        _lastCenter = center;
+        DrawWorldDisplay(batch, center);
+        FortMapObject? hovered = _worldDisplay.LastOrDefault(item => item.Stored != null
+            && Vector2.DistanceSquared(Screen(new Vector2(item.Order.X * FortMap.CellPixelWidth, item.Order.Y * FortMap.CellPixelHeight), center),
+                new Vector2(_previousMouse.X, _previousMouse.Y)) < 20 * 20)?.Stored;
+        DrawHeldBridgePreview(batch, center);
         DrawCombat(batch, font, center);
         DrawSacrificeStatus(batch, font, center);
         PerfMeter.Current?.Section("world", perfWorld);
@@ -432,21 +325,6 @@ internal sealed partial class FortMapViewer : IDisposable
         DrawContextMenu(batch, width, height);
         DrawMissionMenu(batch, font, width, height);
     }
-
-    /// <summary>저장 오브젝트를 현재 세션 좌표의 깊이·y·x 순으로 매 프레임 정렬한다.</summary>
-    private IReadOnlyList<FortMapObject> SortStoredObjectsForFrame() =>
-        DrawOrder.Sort(_map.Objects, item =>
-        {
-            double x = item.X;
-            double y = item.Y;
-            GameEntity? live = _session.EntityForInitial(item);
-            if (live != null && IsMobile(live))
-            {
-                (x, y) = _session.VisualCell(live);
-            }
-            return new DrawOrder((float)x, (float)y,
-                (short)Math.Clamp(item.Object.Type.ZOrder, short.MinValue, short.MaxValue));
-        });
 
     /// <summary>지면 타일을 기준점과 프레임 오프셋에 맞춰 그린다.</summary>
     /// <param name="scale">배율 (없으면 현재 확대 배율)</param>

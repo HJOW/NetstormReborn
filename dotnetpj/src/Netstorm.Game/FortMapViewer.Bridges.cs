@@ -180,16 +180,10 @@ internal sealed partial class FortMapViewer
         return BridgeCursor.TopLeftCell(world.X, world.Y);
     }
 
-    /// <summary>놓인 다리 칸과 들고 있는 조각 미리보기를 그린다 (저장 오브젝트 뒤, 안내 영역 앞).</summary>
-    private void DrawBridgeWorld(SpriteBatch batch, Vector2 center)
+    /// <summary>커서가 들고 있는 다리 조각을 월드 그림 위에 반투명 미리보기로 그린다.</summary>
+    private void DrawHeldBridgePreview(SpriteBatch batch, Vector2 center)
     {
         TypeFrameTable frames = _bridgeType.Definition.Frames;
-        var stored = _session.StoredBridgeCells;
-        // 게임 중 놓은 칸을 상태(보통·금 감·단단함)에 맞는 프레임으로 y·x 순서로 그린다 (저장 다리는 본 그리기에서 처리)
-        foreach (BridgeCellState cell in _session.Bridges.Cells.Where(c => !stored.Contains(c)).OrderBy(c => c.Y).ThenBy(c => c.X))
-        {
-            DrawSprite(batch, _bridgeType.LoadIndex, BridgeFrames.Find(frames, cell.Cell, cell.Condition), Screen(WorldPixels(cell.X, cell.Y), center));
-        }
         if (!_bridgeMode || HeldPreview is not { } held || _bridgeCursor is not (int cx, int cy))
         {
             return;

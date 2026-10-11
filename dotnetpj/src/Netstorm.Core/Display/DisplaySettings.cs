@@ -190,9 +190,13 @@ public sealed class DisplaySettings
         SoundVolume = Math.Clamp(SoundVolume, MinimumVolume, MaximumVolume);
         MusicVolume = Math.Clamp(MusicVolume, MinimumVolume, MaximumVolume);
         TipNumber = Math.Max(0, TipNumber);
-        ScriptValues = ScriptValues == null
-            ? new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
-            : new Dictionary<string, string>(ScriptValues, StringComparer.OrdinalIgnoreCase);
+        var normalizedScriptValues = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        // JSON에 대소문자만 다른 키가 중복되어도 설정 읽기를 멈추지 않고 입력 순서상 마지막 값을 쓴다.
+        foreach ((string key, string value) in ScriptValues ?? [])
+        {
+            normalizedScriptValues[key] = value;
+        }
+        ScriptValues = normalizedScriptValues;
         if (!Enum.IsDefined(WideScreen))
         {
             WideScreen = WideScreenMode.Extend;

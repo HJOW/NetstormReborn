@@ -14,9 +14,9 @@ foreach ($taskSound in @($true, $false)) {
 wait 15; assert main; assert-detail audio-buttons=0;
 click 470,320; assert main; assert-detail audio-buttons=0;
 click 392,320; assert campaigns; assert-detail audio-buttons=1; assert-detail audio-result=$taskResult;
-click 512,365; assert campaigns; assert-detail audio-buttons=1;
-click 512,412; assert missions; assert-detail audio-buttons=1;
-click 512,411; assert briefing; assert-detail audio-buttons=1;
+click-center 0,10; assert campaigns; assert-detail audio-buttons=1;
+click-center 0,28; assert missions; assert-detail audio-buttons=1;
+click-center 0,38; assert briefing; assert-detail mission=thewarbegins; assert-detail audio-buttons=1;
 click-center 82,114; assert battle; assert-detail audio-buttons=2; assert-detail audio-result=$taskResult;
 key Escape; assert mission-menu; click 109,8; click 150,77; assert leave;
 click-center -82,48; assert main; assert-detail audio-buttons=3; assert-detail audio-result=$taskResult; quit;

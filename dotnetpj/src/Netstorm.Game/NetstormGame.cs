@@ -571,7 +571,9 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
             string detail = (_mapViewer?.UiDetail ?? "") + $";audio-buttons={_audio?.ButtonSoundRequests ?? 0}"
                 + $";pointer={_cursor?.Kind.ToString().ToLowerInvariant() ?? "arrow"};pointer-active={_cursor?.Active == true}"
                 + $";pressed={_helpWindow?.PressedLabel ?? _mapViewer?.PressedLabel ?? _mainMenu?.PressedLabel ?? "none"}"
-                + $";audio-last={_audio?.LastSoundCue ?? "none"};audio-result={_audio?.LastSoundResult ?? "none"}";
+                + $";audio-last={_audio?.LastSoundCue ?? "none"};audio-result={_audio?.LastSoundResult ?? "none"}"
+                // 화면 전환 검사는 저장 설정뿐 아니라 실제 그래픽 장치의 전체화면·백버퍼 상태를 확인한다.
+                + $";mission={_mapViewer?.Name ?? "none"};fullscreen={(_display.BorderlessScreen ? "true" : "false")};display={_display.ScreenWidth}x{_display.ScreenHeight};";
             keyboard = new KeyboardState();
             mouse = _uiAutomation.Update(_helpWindow?.IsOpen == true ? _helpWindow.State : MissionOptionsOpen ? "options" : _mapViewer?.UiState ?? _mainMenu?.Page ?? "unavailable", detail, Exit,
                 _display.Layout.LogicalWidth, _display.Layout.LogicalHeight, dt);

@@ -277,43 +277,6 @@ internal sealed partial class FortMapViewer
     /// <summary>키를 이번 갱신에 새로 눌렀는지</summary>
     private bool Pressed(KeyboardState keyboard, Keys key) => keyboard.IsKeyDown(key) && !_previousKeyboard.IsKeyDown(key);
 
-    /// <summary>
-    /// 게임 중 놓거나 지은 오브젝트를 그린다 (저장 오브젝트 뒤, 안내 영역 앞). 맵에 저장된 오브젝트는 본 그리기가 그린다.
-    /// 건설 중인 건물은 바닥부터 드러내며, 진행 막대는 개발용 배치 시험 모드에만 붙인다.
-    /// </summary>
-    private void DrawPlacedUnits(SpriteBatch batch, Vector2 center)
-    {
-        DrawCancelledSites(batch, center);
-        // 세션 오브젝트 번호 순서로 그린다 (게임 중 새로 만든 것만)
-        foreach (GameEntity entity in _session.Entities.Where(e => e.Kind != ObjectKind.Flyer && (e.Source == null || e.Kind == ObjectKind.Geyser && !_map.Objects.Contains(e.Source))))
-        {
-            // 예약 위치에는 모든 생산 자원이 도착한 뒤에만 유닛 그림이 나타난다.
-            if (entity.Production is { AwaitingDeliveries: true }) continue;
-            if (HiddenByBuildingToggle(entity.Type)) continue;
-            bool mobile = IsMobile(entity);
-            Vector2 anchor = Screen(mobile ? MobileWorldPixels(entity) : WorldPixels(entity.Footprint.AnchorX, entity.Footprint.AnchorY), center);
-            // 화면 밖에 있는 오브젝트는 그리지 않는다.
-            if (anchor.X < -ObjectCullMargin * _zoom || anchor.X > _viewSize.X + ObjectCullMargin * _zoom
-                || anchor.Y < -ObjectCullMargin * _zoom || anchor.Y > _viewSize.Y + ObjectCullMargin * _zoom) continue;
-            if (!entity.IsComplete && entity.Production == null && ObjectKinds.IsBuilding(entity.Kind))
-            {
-                DrawConstruction(batch, entity, center, entity.AwaitingBuilder);
-                continue;
-            }
-            if (entity.Kind == ObjectKind.Geyser && entity.Source != null)
-            {
-                // 미션 시작 때 생성된 연습 가이저는 저장 맵 지면에 없으므로 작은 받침도 함께 그린다.
-                DrawSprite(batch, _supportBottomType.LoadIndex, MapSpriteFrames.BodyFrame(_supportBottomType.Definition, 0), anchor);
-                DrawSprite(batch, _supportTopType.LoadIndex, MapSpriteFrames.BodyFrame(_supportTopType.Definition, 0), anchor);
-            }
-            // 저장된 오브젝트와 같은 규칙으로 그림을 고른다 (걷는 유닛의 방향·걷기 프레임, 워크샵 레벨, 신전 회오리, 그림자).
-            (TypeInfo drawn, StructureFrames frames, Vector2 shift) = ObjectSprite(entity.Type, entity, null);
-            // 생산 유닛은 자원이 도착한 뒤 실체화하고 완성된 오브젝트는 원본 그림으로 그린다.
-            DrawObjectSprite(batch, drawn, frames, anchor + shift * _zoom,
-                entity.Production != null ? ProductionOpacity(entity) : 1f, _playerColors.GetValueOrDefault(entity.Owner));
-        }
-    }
-
     /// <summary>건설 진행 막대를 오브젝트 기준점 위에 그린다.</summary>
     private void DrawProgressBar(SpriteBatch batch, Vector2 anchor, double progress)
     {

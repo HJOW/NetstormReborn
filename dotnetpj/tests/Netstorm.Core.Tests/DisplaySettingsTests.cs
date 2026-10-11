@@ -71,6 +71,27 @@ public sealed class DisplaySettingsTests : IDisposable
         Assert.Equal(WideScreenMode.Letterbox, loaded.WideScreen);
     }
 
+    /// <summary>대소문자만 다른 진행 키가 JSON에 함께 있어도 마지막 값을 사용하고 다른 설정을 보존한다.</summary>
+    [Fact]
+    public void Load_ScriptKeysDifferingOnlyInCase_LastValueWins()
+    {
+        string path = Path.Combine(_directory, DisplaySettings.FileName);
+        Directory.CreateDirectory(_directory);
+        File.WriteAllText(path, """
+            { "WindowWidth": 1280, "ScriptValues": {
+                "DoneTheWarBegins": "0", "donethewarbegins": "1", "DoneMasterOfWhirligigs": "1"
+            } }
+            """);
+
+        DisplaySettings loaded = DisplaySettings.Load(path);
+        Assert.Equal(1280, loaded.WindowWidth);
+        Assert.Equal(2, loaded.ScriptValues.Count);
+        Assert.Equal("1", loaded.ScriptValues["DONETHEWARBEGINS"]);
+        Assert.Equal("1", loaded.ScriptValues["DoneMasterOfWhirligigs"]);
+        Assert.True(loaded.Save(path));
+        Assert.Equal(2, DisplaySettings.Load(path).ScriptValues.Count);
+    }
+
     /// <summary>소리 설정: 기본값은 원본 options.cfg(효과음 3·음악 2, 둘 다 켬)이고 볼륨은 1~5 로 맞춘다</summary>
     [Fact]
     public void Audio_DefaultsAndNormalize()

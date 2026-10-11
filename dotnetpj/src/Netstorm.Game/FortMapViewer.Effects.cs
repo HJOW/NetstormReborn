@@ -224,19 +224,6 @@ internal sealed partial class FortMapViewer
         }
     }
 
-    /// <summary>떨어지는 그림을 등가속 낙하 위치에 그리고 사라지기 직전에 흐리게 한다.</summary>
-    private void DrawFalling(SpriteBatch batch, Vector2 center)
-    {
-        // 먼저 떨어진 것부터 그린다
-        foreach (FallingSprite sprite in _falling)
-        {
-            float t = (float)sprite.Age;
-            float drop = FallStartSpeed * t + 0.5f * FallAcceleration * t * t;
-            float alpha = (float)Math.Clamp((sprite.Duration - sprite.Age) / FallFadeSeconds, 0, 1);
-            DrawSprite(batch, sprite.TypeIndex, sprite.Frame, Screen(sprite.World + new Vector2(0, drop), center), sprite.Color, alpha: alpha);
-        }
-    }
-
     /// <summary>
     /// 생산 창 Storm Power 숫자를 원본처럼 실제 값으로 천천히 따라가게 한다(<see cref="StormPower.StepDisplay"/>).
     /// 게임 시간이 멈춘 동안은 곧바로 실제 값이 된다 — 2026-10-01 녹화에서 성공 창(게임 정지)과 같은 프레임에 +5,000 이 한 번에 올랐다.

@@ -22,6 +22,7 @@ try {
         $taskConfig = @{ WindowWidth = $taskCase.Width; WindowHeight = $taskCase.Height; ViewHeight = 768;
             PlayMusic = $false; WindNoise = $false }
         Set-Content -LiteralPath (Join-Path $taskSettings 'settings.json') -Encoding UTF8 -Value ($taskConfig | ConvertTo-Json)
+        # 신전은 오른쪽 Sun Workshop이 가리는 발자국 대신 화면에 드러난 본체 중앙을 누른다.
         $taskScript = @"
 wait 60; assert briefing; capture $taskRelative/00-briefing.png;
 click-center 82,79; wait 40; assert battle; assert-detail camera=2720,2210;
@@ -31,7 +32,7 @@ click-center 8,-4; assert-detail selected=priest; capture $taskRelative/02-pries
 click-center 32,-111; assert-detail selected=rainballoon; capture $taskRelative/03-balloon.png;
 click-center -20,-204; assert-detail selected=windwalker; capture $taskRelative/04-sail.png;
 click-center 388,-54; assert-detail selected=sunfactory; capture $taskRelative/05-workshop.png;
-click-center 308,-19; assert-detail selected=thundervortex; capture $taskRelative/06-temple.png;
+click-center 252,-48; assert-detail selected=thundervortex; capture $taskRelative/06-temple.png;
 key F7; capture $taskRelative/07-neutral-rims.png; key F7;
 key LeftShift+D1; click 70,700; assert battle; assert-detail-not camera=2720,2210;
 capture $taskRelative/08-minimap-click.png;

@@ -151,7 +151,7 @@ internal sealed partial class FortMapViewer
         bool right = mouse.RightButton == ButtonState.Pressed && _previousMouse.RightButton == ButtonState.Released;
         if (!left && !right) return;
         (int x, int y) = CellAt(new Vector2(mouse.X, mouse.Y));
-        // 사제·골렘은 칸이 아니라 그려진 그림(몸통·머리)으로 누른다. 건물·가이저는 차지한 칸으로 찾는다.
+        // 실제 표시 순서의 앞쪽부터 그림·발자국을 검사하여 겹친 객체도 화면과 같은 대상을 고른다.
         GameEntity? target = PickEntityAt(mouse.Position);
         GameEntity? selected = _session.Entity(_session.Player(TestPlayer).SelectedEntityId);
         if (left && target?.Owner == TestPlayer && !(target.Kind == ObjectKind.Altar && selected?.Kind is ObjectKind.Priest or ObjectKind.Transport))

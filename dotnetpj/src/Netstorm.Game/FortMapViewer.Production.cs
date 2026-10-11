@@ -45,12 +45,12 @@ internal sealed partial class FortMapViewer
     }
 
     /// <summary>활성 운송만 그린다. 저장 맵 오브젝트와 자원이 도착한 유닛에는 새 효과를 붙이지 않는다.</summary>
-    private void DrawProductionDeliveries(SpriteBatch batch, Vector2 center)
+    private void AddProductionDeliveries(List<WorldDisplayItem> items, Vector2 center)
     {
         var active = new HashSet<int>();
         TypeInfo? manaBolt = _knowledgeTypes.Find("manabolt");
         bool movingSound = false;
-        // 엔티티 번호순으로 독립적인 자원 운송을 그린다.
+        // 활성 운송의 현재 위치를 공통 표시 목록에 넣는다.
         foreach (GameEntity entity in _session.Entities.Where(e => e.Production != null))
         {
             // 스톰 파워와 필요 원소 보석은 각각의 현재 위치에서 그린다.
@@ -60,7 +60,10 @@ internal sealed partial class FortMapViewer
                 if (delivery.IsStormPower)
                 {
                     active.Add(entity.Id);
-                    DrawStormDelivery(batch, entity.Id, delivery, position, center);
+                    Vector2 world = (position - center) / _zoom + _camera;
+                    short depth = (short)(manaBolt?.ZOrder ?? TypeCatalog.ParseZOrder("zoFLARES"));
+                    var order = new Netstorm.Core.Display.DrawOrder(world.X / FortMap.CellPixelWidth, world.Y / FortMap.CellPixelHeight, depth);
+                    items.Add(new WorldDisplayItem(order, paint => DrawStormDelivery(paint, entity.Id, delivery, position, center)));
                     movingSound |= position.X >= PlaySidebarWidth && position.X < _viewSize.X
                         && position.Y >= HeaderHeight && position.Y < _viewSize.Y;
                 }
@@ -68,7 +71,8 @@ internal sealed partial class FortMapViewer
                 {
                     char side = delivery.Element switch { Element.Wind => 'A', Element.Rain => 'B', Element.Thunder => 'C', _ => 'D' };
                     int frame = manaBolt.Definition.Frames.Find(side, TypeFrameTable.DefaultVariant, 1);
-                    if (frame >= 0) DrawSprite(batch, manaBolt.LoadIndex, frame, position);
+                    if (frame >= 0)
+                        AddWorldSprite(items, manaBolt, frame, (position - center) / _zoom + _camera, center);
                 }
             }
         }

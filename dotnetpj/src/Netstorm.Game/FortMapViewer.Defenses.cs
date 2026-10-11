@@ -26,8 +26,8 @@ internal sealed partial class FortMapViewer
         return null;
     }
 
-    /// <summary>기둥 머리 사이를 원본 fenceShield의 가로·세로 그림으로 채운다. 기둥보다 먼저 그려 끝점을 가린다.</summary>
-    private void DrawSunForceFields(SpriteBatch batch, Vector2 center)
+    /// <summary>기둥 머리 사이를 원본 fenceShield의 가로·세로 그림으로 채운다. 각 칸 그림을 원본 타입 깊이로 정렬한다.</summary>
+    private void AddSunForceFields(List<WorldDisplayItem> items, Vector2 center)
     {
         if (_knowledgeTypes.Find("fenceShield") is not { } type) return;
         // 규칙에서 계산한 실제 연결만 표시해 적 기둥·거리·기둥 제거 결과와 일치시킨다.
@@ -47,7 +47,10 @@ internal sealed partial class FortMapViewer
                 if (horizontal) position.Y -= image.Texture.Height * _zoom / 2;
                 else position.X -= image.Texture.Width * _zoom / 2;
                 Color color = field.Owner == TestPlayer ? Color.Turquoise : field.Owner == 2 ? Color.Salmon : Color.White;
-                batch.Draw(image.Texture, position, null, color, 0, Vector2.Zero, _zoom, SpriteEffects.None, 0);
+                Vector2 world = new((float)(field.StartX + (horizontal ? cell : 0)) * FortMap.CellPixelWidth,
+                    (float)(field.StartY + (horizontal ? 0 : cell)) * FortMap.CellPixelHeight);
+                items.Add(new WorldDisplayItem(WorldOrder(type, world), paint =>
+                    paint.Draw(image.Texture, position, null, color, 0, Vector2.Zero, _zoom, SpriteEffects.None, 0)));
             }
         }
     }
@@ -89,16 +92,5 @@ internal sealed partial class FortMapViewer
     /// <summary>세션 틱 사이의 그림 보간 시각. 일시정지·안내 창에서는 마지막 논리 틱에 고정한다.</summary>
     private double CombatRenderTick => _session.Tick + (SimulationRunning && !TutorialDialogOpen ? _session.InterpolationAlpha : 0);
 
-    /// <summary>착탄·방어선 먼지·파괴 폭발을 원본 anim 그림으로 표시한다. 제거된 엔티티를 다시 조회하지 않는다.</summary>
-    private void DrawCombatImpacts(SpriteBatch batch, Vector2 center)
-    {
-        if (_knowledgeTypes.Find("anim") is not { } type) return;
-        // 발생 순서대로 그려 같은 틱의 연쇄 폭발도 모두 표시한다.
-        foreach (CombatImpact impact in _session.Impacts)
-        {
-            int frame = ProjectileAnimation.ImpactFrame(type.Definition, impact, CombatRenderTick, _session.TicksPerSecond);
-            if (frame >= 0)
-                DrawSprite(batch, type.LoadIndex, frame, CellCenterScreen(impact.X, impact.Y, center) - new Vector2(0, 20 * _zoom));
-        }
-    }
+
 }

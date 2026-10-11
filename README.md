@@ -26,6 +26,8 @@ AI 를 이용해 되살리는 프로젝트입니다.
 
 cpppj 최신(2026-10-11): [건설 표시 프레임·입자 확장·Draw 복원](docs/exe/cpp-construction-frame-reconstruction.md). HP별 활성화·만료 픽셀 복원·시각/팔레트/사각형·Draw 요청과 실제 표시 생성 연결을 검증했습니다. 새 독립 원본 1,317개, Release 경고/오류 0, 내부 검사 674개·실패 0, 근거 감사 104종·새 변이 8개 통과. 표시 삭제/등록·실제 SHP 캡처/장치 출력·타입 준비 소리 자료·부모 공간/사제 contained·건설 GUI는 후속입니다.
 
+dotnetpj 최신(2026-10-11): [월드 표시 목록·실제 선택 통합](docs/dotnet-world-display-20261011.md). 저장/신규 객체·지면·다리·받침·비행체·월드 효과를 함께 정렬하고 앞쪽 객체를 선택합니다. 카메라 복원 뒤 선택 회귀도 수정했습니다. Release 경고/오류 0, 단위 952개·GUI 56회/상태 단언 662개 모두 통과했습니다. 겹침 화소·이동 순서·와이드 선택·전체화면 재실행을 확인했으며, 다음은 9-1 원본 동작 차이 판정과 실제 캠페인 완주 후 진행 저장 경로입니다.
+
 C++의 최신 복원: [로컬 예측 조각 정리](docs/exe/cpp-construction-clear-reconstruction.md), [서버의 건설 확정·배치 통지](docs/exe/cpp-construction-confirm-reconstruction.md), [건설 배치 실행·비용 부족 처리](docs/exe/cpp-construction-place-reconstruction.md). 건설 요청을 확정해 조각 번호를 확보하는 함수, 미리 놓아 둔 예측 조각을 치우는 함수, 건물·다리 조각을 실제로 놓는 함수를 옮겨 원본 함수 관찰과 대조했습니다. 건설 메뉴·건설 진행·전투는 이어서 복원하며 게임 안에서 건물을 지을 수는 아직 없습니다. 그 앞 단계는 [돌 버튼의 화면 기준 질감 반복·명암 테두리](docs/exe/cpp-gump-background-reconstruction.md)입니다.
 
 게임 데이터(`assets/game-data/`), 글꼴(`fonts/`), 분석 문서(`docs/`), 분석 도구(`tools/`, `analyzeManager/`)는 두 빌드가 함께 쓰며 저장소 루트에 있습니다. C++ 빌드의 구조와 빌드 방법, 디컴파일 결과에서 소스를 만드는 절차는 [C++ 빌드](docs/cpp-build.md)를 참고하세요.
