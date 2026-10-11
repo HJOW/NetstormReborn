@@ -3,6 +3,7 @@
 # 테스트 파일을 만들면 아래 목록에 더한다. 파일 안의 TEST_CASE 는 자동으로 등록된다.
 add_executable(netstorm_tests
     ConstructionTimeTests.cpp
+    ConstructionDataTests.cpp
     ConstructionProcessTests.cpp
     ConstructionBuilderTests.cpp
     PriestLookupTests.cpp
@@ -399,3 +400,7 @@ set_source_files_properties(ConstructionProcessTests.cpp PROPERTIES COMPILE_DEFI
 # 끝 시각 재설정 전체의 세 PE 관찰은 실제 host 연결 검사에서만 읽는다.
 set_source_files_properties(ConstructionTimeTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CONSTRUCTIONTIME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/constructiontime-x86.tsv\"")
+
+# 건설 상태의 독립 원본 패킷/필드 관찰만 읽으며 원본 게임을 실행하지 않는다.
+set_source_files_properties(ConstructionDataTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CONSTRUCTIONDATA_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/constructiondata-x86.tsv\"")

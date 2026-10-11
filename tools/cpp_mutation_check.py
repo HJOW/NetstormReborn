@@ -32,6 +32,23 @@ TESTS = BUILD / 'bin/Release/netstorm_tests.exe'
 EXCLUDED = {'build'}
 # 변이 목록: 이름, 대상 파일, 바꿀 원문(파일에 정확히 한 번 있어야 한다), 바꾼 문장, 실패해야 하는 검사 이름 접두사.
 MUTATIONS = [
+    # 건설 상태의 독립 원본 패킷/필드/수신 순서 관찰이 실제 의미 변화를 잡는지 검사한다.
+    dict(name='data-dirty-clear',file='cpppj/src/o/RawConstructionData.cpp',expect='ConstructionData_',
+         before='packet[8]=fields.dirty;fields.dirty=0;',after='packet[8]=fields.dirty;fields.dirty=1;',note='쓰기 뒤 변경 비트를 남김'),
+    dict(name='data-parent-width',file='cpppj/src/o/RawConstructionData.cpp',expect='ConstructionData_',
+         before='WriteBits(packet,cursor,parent,4);cursor+=4;',after='WriteBits(packet,cursor,parent,2);cursor+=4;',note='부모 DWORD를 WORD로 절단'),
+    dict(name='data-wrapper-force-parent',file='cpppj/src/o/RawConstructionData.cpp',expect='ConstructionData_',
+         before='(includeParent || force)',after='(includeParent)',note='force 전송에서 부모를 누락'),
+    dict(name='data-read-dirty',file='cpppj/src/o/RawConstructionData.cpp',expect='ConstructionData_',
+         before='return parent;\n}',after='if (fields) fields->dirty=mask;return parent;\n}',note='수신 비트로 로컬 dirty를 덮어씀'),
+    dict(name='data-read-additional',file='cpppj/src/o/RawConstructionData.cpp',expect='ConstructionData_',
+         before='fields->additional=packet[cursor];',after='fields->additional=0;',note='추가 바이트를 복원하지 않음'),
+    dict(name='data-current-type',file='cpppj/src/o/RawConstructionData.cpp',expect='ConstructionData_',
+         before='hooks_.attach(*fields,state_.processType,parent,number,0x10)',after='hooks_.attach(*fields,30,parent,number,0x10)',note='할당 뒤 현재 프로세스 타입 변동을 무시'),
+    dict(name='data-captured-form',file='cpppj/src/o/RawConstructionData.cpp',expect='ConstructionData_',
+         before='hooks_.attach(*fields,state_.processType,parent,number,0x10)',after='hooks_.attach(*fields,state_.processType,parent,static_cast<std::uint32_t>(ReadBits(packet,4,4)),0x10)',note='할당 전에 캡처한 form 대신 변동된 패킷 번호 사용'),
+    dict(name='data-kernel-dword',file='cpppj/src/o/RawConstructionData.cpp',expect='ConstructionData_',
+         before='ReadBits(raw,18,4)',after='ReadBits(raw,18,2)',note='기존 form의 Kernel DWORD 번호를 WORD로 절단'),
     # 끝 시각 재설정과 실제 form 조회의 의미 차이를 독립 원본/host 검사로 검증한다.
     dict(name='time-end-from-start',file='cpppj/src/o/RawConstructionProcess.cpp',expect='ConstructionTime_',
          before='fields.end=state_.now+kDefaultSeconds;fields.dirty|=4;return',after='fields.end=fields.start+kDefaultSeconds;fields.dirty|=4;return',note='현재 시각 대신 시작 시각에서 10초를 더함'),

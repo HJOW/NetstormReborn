@@ -68,6 +68,7 @@ target_sources(netstorm PRIVATE
     RawConstructionConfirm.cpp RawConstructionConfirm.h
     RawConstructionBuilder.cpp RawConstructionBuilder.h
     RawConstructionProcess.cpp RawConstructionProcess.h
+    RawConstructionData.cpp RawConstructionData.h
     RawConstructionSelection.cpp RawConstructionSelection.h
     RawPriestLookup.cpp RawPriestLookup.h
     RawConstructionClear.cpp RawConstructionClear.h
