@@ -1183,6 +1183,43 @@ MUTATIONS.extend([
 ])
 
 
+# Gump 트리의 실제 링크/판본 float/현재 콜백/깊이/이동 순서를 검출하는 변이다.
+MUTATIONS.extend([
+    dict(name='gump-tree-keeps-void',file='cpppj/src/client/GumpTree.cpp',expect='GumpTree_',
+         before='node.flags&=~kVoid;if (parent) node.parent=parent;',after='if (parent) node.parent=parent;',note='부착에서 void 비트를 지우지 않음'),
+    dict(name='gump-tree-keeps-previous',file='cpppj/src/client/GumpTree.cpp',expect='GumpTree_',
+         before='node.previous=0;node.next=Node(node.parent).child;',after='node.next=Node(node.parent).child;',note='머리 삽입에서 이전 형제 링크를 지우지 않음'),
+    dict(name='gump-tree-default-depth',file='cpppj/src/client/GumpTree.cpp',expect='GumpTree_',
+         before='node.secondaryDepth : 0xfffffffdU',after='node.secondaryDepth : 0xfffffffeU',note='기본 부모 깊이 차이를 -3에서 -2로 바꿈'),
+    dict(name='gump-tree-own-depth-bit',file='cpppj/src/client/GumpTree.cpp',expect='GumpTree_',
+         before='kOwnDepth=0x200000',after='kOwnDepth=0x100000',note='깊이 상속 생략 플래그를 인접 비트로 바꿈'),
+    dict(name='gump-tree-parent-current-size',file='cpppj/src/client/GumpTree.cpp',expect='GumpTree_',
+         before='float width=parent.baseWidth,height=parent.baseHeight',after='float width=parent.width,height=parent.height',note='정렬에서 부모 기본 크기 대신 배율 적용 크기를 사용'),
+    dict(name='gump-tree-patch-float-screen',file='cpppj/src/client/GumpTree.cpp',expect='GumpTree_',
+         before='const double width=patch ? double(state_.screenWidth) : double(static_cast<float>(state_.screenWidth));',after='const double width=double(static_cast<float>(state_.screenWidth));',note='패치판 화면 제한에서도 정수 크기를 float으로 먼저 저장'),
+    dict(name='gump-tree-patch-negative-zero',file='cpppj/src/client/GumpTree.cpp',expect='GumpTree_',
+         before='if (patch ? x<0.0F : x<=0.0F) x=0.0F;',after='if (x==0.0F) x=std::bit_cast<float>(std::bit_cast<std::uint32_t>(x)&0x7fffffffU);if (x<0.0F) x=0.0F;',note='비트 마스크로 패치판 음수 0도 양수 0으로 바꿈'),
+    dict(name='gump-tree-child-current-next',file='cpppj/src/client/GumpTree.cpp',expect='GumpTree_',
+         before='        child=next;',after='        child=Node(child).next;',note='자식 가상 처리 전 next 대신 처리 후 현재 next를 순회'),
+    dict(name='gump-tree-child-stale-secondary',file='cpppj/src/client/GumpTree.cpp',expect='GumpTree_',
+         before='            hooks_.push(child);\n            if (below.secondaryDepth) below.depth=node.depth+below.secondaryDepth;',
+         after='            if (below.secondaryDepth) below.depth=node.depth+below.secondaryDepth;\n            hooks_.push(child);',note='가상 Push 전에 자식 깊이를 갱신'),
+    dict(name='gump-tree-skip-secondary-child',file='cpppj/src/client/GumpTree.cpp',expect='GumpTree_',
+         before='if (below.alignFlags || below.secondaryDepth)',after='if (below.alignFlags)',note='정렬 비트 없이 깊이 종속만 있는 자식 재배치를 생략'),
+    dict(name='gump-tree-push-clears-parent',file='cpppj/src/client/GumpTree.cpp',expect='GumpTree_',
+         before='hooks_.redraw(token,true);',after='hooks_.redraw(token,true);node.parent=0;',note='밀어내기에서 재부착에 필요한 기존 부모를 지움'),
+    dict(name='gump-tree-move-late-grab',file='cpppj/src/client/GumpTree.cpp',expect='GumpTree_',
+         before='    if (node.flags&kGrab) { x=static_cast<float>(double(x)-std::bit_cast<float>(node.positioning[0]));y=static_cast<float>(double(y)-std::bit_cast<float>(node.positioning[1])); }\n    if (!(node.flags&kVoid)) hooks_.push(token);hooks_.attach(token,x,y,parent,0);',
+         after='    if (!(node.flags&kVoid)) hooks_.push(token);\n    if (node.flags&kGrab) { x=static_cast<float>(double(x)-std::bit_cast<float>(node.positioning[0]));y=static_cast<float>(double(y)-std::bit_cast<float>(node.positioning[1])); }\n    hooks_.attach(token,x,y,parent,0);',note='드래그 기준점을 가상 Push 뒤에 읽음'),
+    dict(name='gump-tree-relative-always-offset',file='cpppj/src/client/GumpTree.cpp',expect='GumpTree_',
+         before='if (reference!=node.parent)',after='if (true)',note='현재 부모가 기준인 상대 이동에도 기준 위치를 더함'),
+    dict(name='gump-tree-depth-skips-children',file='cpppj/src/client/GumpTree.cpp',expect='GumpTree_',
+         before='for (auto child=node.child;child;child=Node(child).next) { Enter(seen,child);Depth(child,value,add,active); }',after='for (auto child=0U;child;child=Node(child).next) { Enter(seen,child);Depth(child,value,add,active); }',note='깊이 갱신에서 자식을 생략'),
+    dict(name='gump-tree-center-no-wrap',file='cpppj/src/client/GumpTree.cpp',expect='GumpTree_',
+         before='return std::bit_cast<std::int32_t>(std::uint32_t(low)+std::uint32_t(high))/2;',after='return static_cast<std::int32_t>((std::int64_t(low)+high)/2);',note='지도 중심 signed DWORD 합의 감김을 없앰'),
+])
+
+
 def run(command):
     """명령을 실행하고 표준 출력/오류를 합쳐 돌려준다. 실패 코드는 호출자가 판단한다."""
     result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, encoding='utf-8', errors='replace')

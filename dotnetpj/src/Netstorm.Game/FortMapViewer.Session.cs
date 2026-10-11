@@ -45,6 +45,9 @@ internal sealed partial class FortMapViewer
     /// <summary>세션 시간이 흐르고 있는지: 일시정지가 아니고, 미션 또는 배치·다리·전투 시험이 켜져 있다.</summary>
     private bool SimulationRunning => !_simulationPaused && (_mission != null || _placementMode || _bridgeMode || _session.CombatEnabled);
 
+    /// <summary>실제 게임 시간이 멈추는 화면인지. 그리기 제한도 같은 정지 상태를 따른다.</summary>
+    public bool GameClockPaused => !SimulationRunning || TutorialDialogOpen || KnowledgeOpen;
+
     /// <summary>
     /// 맵에서 게임 세션을 만든다. 미션이 있으면 시작 Storm Power·지식·전투 옵션이 미션 값이고 생산 규칙(기술 허용 표·덱·재충전·회수 금지)을
     /// 켠다. 맵만 열면 시험 모드라 생산 규칙을 끄고 저장된 Money 로 시작한다.

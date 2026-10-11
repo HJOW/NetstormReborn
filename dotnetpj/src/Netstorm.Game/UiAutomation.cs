@@ -20,6 +20,8 @@ internal sealed class UiAutomation
     private const double WaitTolerance = 1e-9;
     /// <summary>조건에 해당하는 세부 상태가 나타날 때까지 기다리는 문자열.</summary>
     private string? _waitDetail;
+    /// <summary>명시적인 stall 검사 명령으로 요청한 갱신 뒤 지연. 소비하면 null로 지운다.</summary>
+    private int? _stallMilliseconds;
     /// <summary>조건 대기에 남은 시간(초).</summary>
     private double _waitDetailSeconds;
     private readonly Queue<string> _commands;
@@ -101,6 +103,11 @@ internal sealed class UiAutomation
             case "wait":
                 // 값은 1/60초 단위다 (wait 60 = 1초). 화면 루프 속도와 무관하게 같은 시간만큼 기다린다.
                 _waitSeconds = Seconds(int.Parse(value)); break;
+            case "stall":
+                // 클론 스레드에 긴 프레임을 만들어 실제 시계 전달·그리기 생략 여부를 검사한다.
+                int stall = int.Parse(value);
+                if (stall is < 1 or > 5000) throw new ArgumentOutOfRangeException(nameof(value), "stall은 1~5000ms입니다.");
+                _stallMilliseconds = stall; break;
             case "wait-detail":
                 // 생산·이동의 실제 완료를 기다려 화면 FPS에 따라 검사 시각이 달라지는 문제를 피한다.
                 _waitDetail = value; _waitDetailSeconds = Seconds(DetailWaitFrameLimit); break;
@@ -161,6 +168,9 @@ internal sealed class UiAutomation
                 Console.WriteLine($"UI PASS: {(excluded ? "excluded " : "")}{value}"); break;
             case "remember-detail":
                 _rememberedDetails[value] = DetailValue(detail, value); break;
+            case "trace-detail":
+                // 실제 프레임의 숫자 상태를 외부 스모크에서 읽도록 기록한다. 검사 스크립트에서만 사용한다.
+                Console.WriteLine($"UI DETAIL: {detail}"); break;
             case "assert-unchanged-detail":
                 string current = DetailValue(detail, value);
                 if (!_rememberedDetails.TryGetValue(value, out string? previous) || current != previous)
@@ -188,6 +198,9 @@ internal sealed class UiAutomation
 
     /// <summary>mission-section 명령이 요청한 섹션 이름을 한 번만 꺼낸다 (없으면 null).</summary>
     public string? TakeMissionSection() { string? section = _missionSection; _missionSection = null; return section; }
+
+    /// <summary>요청한 실제 지연을 한 번만 꺼낸다. 일반 실행이나 wait 명령에는 지연을 삽입하지 않는다.</summary>
+    public int? TakeStallMilliseconds() { int? stall = _stallMilliseconds; _stallMilliseconds = null; return stall; }
 
     /// <summary>그리기가 끝난 뒤 캡처 요청을 한 번 꺼낸다.</summary>
     public string? TakeCapture() { string? path = CapturePath; CapturePath = null; return path; }

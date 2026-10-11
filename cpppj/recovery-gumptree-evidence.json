@@ -1,0 +1,131 @@
+{
+  "total": 1722,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-12",
+  "controls": [
+    639,
+    895
+  ],
+  "os_calls": 0,
+  "assertions": 0,
+  "editions": {
+    "originals": {
+      "cases": 574,
+      "entries": {
+        "00464600": 782,
+        "00497fc0": 290,
+        "00497fe0": 290,
+        "00466750": 288,
+        "00464560": 26,
+        "004652b0": 32,
+        "004652f0": 32,
+        "00464d10": 16,
+        "00464d60": 160
+      },
+      "returns": {
+        "00464600": 646,
+        "00466750": 288,
+        "00464560": 26,
+        "004652b0": 8,
+        "004652f0": 8,
+        "00464d10": 16,
+        "00464d60": 160
+      },
+      "boundaries": {
+        "Redraw": 314,
+        "Project": 14,
+        "Kill": 52,
+        "Push": 100,
+        "Attach": 188
+      }
+    },
+    "originalCD": {
+      "cases": 574,
+      "entries": {
+        "00493370": 782,
+        "00458a30": 290,
+        "00458a50": 290,
+        "00493070": 288,
+        "00493000": 26,
+        "00494300": 32,
+        "00494340": 32,
+        "00493bb0": 16,
+        "00493c00": 160
+      },
+      "returns": {
+        "00493370": 646,
+        "00493070": 288,
+        "00493000": 26,
+        "00494300": 8,
+        "00494340": 8,
+        "00493bb0": 16,
+        "00493c00": 160
+      },
+      "boundaries": {
+        "Redraw": 314,
+        "Project": 14,
+        "Kill": 52,
+        "Push": 100,
+        "Attach": 188
+      }
+    },
+    "original1037": {
+      "cases": 574,
+      "entries": {
+        "00493370": 782,
+        "00458a30": 290,
+        "00458a50": 290,
+        "00493070": 288,
+        "00493000": 26,
+        "00494300": 32,
+        "00494340": 32,
+        "00493bb0": 16,
+        "00493c00": 160
+      },
+      "returns": {
+        "00493370": 646,
+        "00493070": 288,
+        "00493000": 26,
+        "00494300": 8,
+        "00494340": 8,
+        "00493bb0": 16,
+        "00493c00": 160
+      },
+      "boundaries": {
+        "Redraw": 314,
+        "Project": 14,
+        "Kill": 52,
+        "Push": 100,
+        "Attach": 188
+      }
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/gumptree-x86.tsv": "a7c87acffdb45ab27d8a8ecb50e3669da403d121a22dd557fc498855d7c2b0e6",
+    "extracted/gumptree/original1037/creation.c": "1f3891b57d1c6aa9ec172b9c94bce002f5103b982587b98a2c433a27f1a29054",
+    "extracted/gumptree/original1037/functions.tsv": "9bd0d30a193f993333ea1a13a4a1a5878f4caf0d1d9bd411dc40acde29910ac0",
+    "extracted/gumptree/originalCD/creation.c": "1f3891b57d1c6aa9ec172b9c94bce002f5103b982587b98a2c433a27f1a29054",
+    "extracted/gumptree/originalCD/functions.tsv": "9bd0d30a193f993333ea1a13a4a1a5878f4caf0d1d9bd411dc40acde29910ac0",
+    "extracted/gumptree/originals/creation.c": "ceecba83a1af12966927c219d8eed053685f8f674304d1891941482b4334f2e4",
+    "extracted/gumptree/originals/functions.tsv": "5c6dcab685c834d4a7446ae8f9eb0edb2f35b7149158316d272525bd65fff9f0",
+    "extracted/process/original1037/creation.c": "c06b0142f8cd167c6f9043f596c82606f79a6f89814d57574f76116d09c976a4",
+    "extracted/process/original1037/functions.tsv": "66dc3e2da36a5a849a900c0b20fd2ef56951a9d0158acccf33ad0568cbaac1af",
+    "extracted/process/originalCD/creation.c": "c06b0142f8cd167c6f9043f596c82606f79a6f89814d57574f76116d09c976a4",
+    "extracted/process/originalCD/functions.tsv": "66dc3e2da36a5a849a900c0b20fd2ef56951a9d0158acccf33ad0568cbaac1af",
+    "extracted/process/originals/creation.c": "93a6d7ba1061a0bdd7d586a089108ead00a838ce06fc274c12f7649f3b583104",
+    "extracted/process/originals/functions.tsv": "407f9321dfe05d98ff81c4368f097f5133067f2bcc0753b3b145064d6a9eb6d3",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_drawsort_oracle.py": "ed92fd9cd8b7c069742cc9158226db6c5cfc75213816d56f40ffb562b5542bb7",
+    "tools/decomp_gumptree_oracle.py": "b699c2a328b3c4cdc03d8aa0d6a02d24bd63775b3ac83996e3e90800c948356d",
+    "tools/decomp_process_oracle.py": "c548fa37c3cb10edb030bba3b67c8970b7575207efca217fdf4ea0b51354cfd1",
+    "tools/ghidra/gumptree-functions.json": "962ab33d5790045a8d2731bc7a7b217398f045cae1a9115cf68498e6da6d5cad"
+  },
+  "limits": [
+    "부착/밀어내기/정렬/깊이/이동/지도 중심 전체 정상 몸체; 가상 +8/+0x18/+0x20·삭제 요청·월드 투영만 명시 응답",
+    "전체 여섯 0xa0바이트/콜백 당시 전체 노드·전역·인자/현재 링크/정렬/판본별 float 저장을 실제 관찰",
+    "유한 float 좌표/크기/scale·정상 트리·원본 assert/log 입력 및 실제 가상 처리기/삭제/예외 전파 제외",
+    "최상위 정상 반환/재귀 진입/보존 레지스터/스택/x87/SEH/허용 실행·쓰기/읽기 전용/보호 바이트/SHA 감사"
+  ]
+}

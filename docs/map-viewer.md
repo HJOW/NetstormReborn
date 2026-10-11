@@ -237,10 +237,10 @@ dotnet run --project dotnetpj/src/Netstorm.Game -- --map bridgethegap --bridges 
 
 AGENTS.md는 **"새 클론 게임도 기존 게임 수준의 프레임으로 먼저 만든다. 이후 60, 120프레임을 지원하도록 수정한다"**(화면 갱신 속도 및 애니메이션의 품질)고 정했다. 2026-10-03 의 "30프레임 먼저" 문구를 대체한다.
 
-* **구현(2026-10-05):** 화면 루프가 원본과 같은 속도로 돈다. 원본은 한 바퀴마다 "입력 → 갱신 → 그리기"를 한 번씩 돌고 `maxFPS`(기본 75)로 상한을 두는데, 밀리초 눈금 시계로 재기 때문에 실제 간격은 **14ms, 초당 약 71.4바퀴**다([exe/main-loop.md](exe/main-loop.md) 4절). 클론은 수직 동기 없이 같은 간격으로 갱신 한 번 + 그리기 한 번을 돈다(`--perf` 실측 71.5fps).
-* **설정:** `settings.json` 의 `MaxFps`(기본 75 = 원본 `maxFPS`, 0 = 제한 없음)와 `VerticalSync`(기본 꺼짐 — 원본도 쓰지 않았다). 간격은 원본의 방식대로 `1000 / MaxFps` 를 밀리초로 올림한다(코드 `Netstorm.Core.Display.FramePacing`). 명령줄은 `--max-fps 수`, `--vsync`. 환경 변수 `NETSTORM_NOVSYNC=1`은 설정에서 수직 동기를 켰더라도 끈다.
-* **게임 속도는 화면 루프 속도와 무관하다.** 규칙은 24Hz 고정 틱(`FixedTimestep`)으로 돌고 화면은 `VisualCell` 보간으로 그리며, 애니메이션은 원본 기본 속도 기준의 고정 간격(24Hz·12Hz 계열 — [animation-timing.md](videos/animation-timing.md))으로 진행한다. 입력은 화면 루프마다 읽고, 규칙에 영향을 주는 명령만 다음 틱 처음에 실행한다.
-* **원본에서 프레임마다 하던 것**은 원본 루프 속도(초당 약 71.43)로 환산해 고정했다: 가장자리 스크롤 속도(프레임당 픽셀), 생산 창 Storm Power 숫자 따라가기(프레임마다 한 단계). 화면 루프가 원본 간격이면 한 프레임에 정확히 원본과 같은 양만큼 움직인다.
+* **구현(2026-10-12):** MonoGame을 가변 루프로 두고 화면마다 입력·갱신·그리기를 한 번씩 호출한다. Windows에서는 원본과 같은 `timeGetTime()`으로 실제 경과 시간을 읽으며 긴 지연도 잘라내지 않는다. 그리기 직전에 **직전 그리기 시각부터 `1 / maxFPS`**가 지났는지 확인한다. 늦은 프레임과 게임 시계 정지 중에는 기다리지 않는다. 1ms 눈금·충분한 처리 여유에서 기본 75는 14ms이며 실제 간격은 시스템 시계·처리 비용에 따라 달라진다. [범위·검증](dotnet-loop-parity-20261012.md).
+* **설정:** `settings.json` 의 `MaxFps`(기본 75 = 원본 `maxFPS`, 0 = 제한 없음)와 `VerticalSync`(기본 꺼짐). 명령줄은 `--max-fps 수`, `--vsync`. `NETSTORM_NOVSYNC=1`은 설정에서 수직 동기를 켰더라도 끈다. `FramePacing.FrameMilliseconds`는 1ms 눈금에서의 계산값이며 실제 루프를 고정 간격으로 실행하지 않는다.
+* **시간 모델 이행 중:** 명령은 같은 화면 갱신에서 실행되고 다리 스캔은 실제 프레임 시각을 사용한다. 이동·전투·건설·생산·애니메이션 등의 24Hz 규칙과 화면 보간, 따라잡기 8틱 상한은 남아 있다. 긴 프레임에서는 이 논리 시각이 실제 게임 시각에 뒤처질 수 있다. [9-1 A](../LEFT_JOBS.dotnetpj.md#original-parity-plan) 전체 완료가 아니다.
+* **남은 프레임별 처리:** 가장자리 스크롤과 Storm Power 숫자는 기존 약 71.43회/초 환산을 유지한다. 실제 불규칙 루프에서도 원본과 같다는 판정은 하지 않았으며 각 처리의 원본화는 후속이다.
 * **자동 검사·스크린샷의 시간 단위:** `--ui-script-file` 의 `wait N` 과 `--screenshot-frames N` 은 프레임 수가 아니라 **1/60초 단위의 시간**이다(`wait 60` = 1초). 화면 루프 속도가 달라도 같은 게임 시각에 검사·촬영한다.
 * **남은 것(이후):** 60·120프레임 지원. 지금도 `--max-fps 60`·`--max-fps 120` 으로 돌릴 수 있지만 원본의 밀리초 올림 때문에 실제로는 58.8·111.1fps 가 된다. 정확한 60·120 과 옵션 화면 항목은 다음 단계다.
 
@@ -251,7 +251,7 @@ AGENTS.md는 **"새 클론 게임도 기존 게임 수준의 프레임으로 먼
 명령줄 옵션 (아래를 쓰면 그 실행은 설정을 저장하지 않는다): `--fullscreen`, `--windowed`, `--window 1920x1080`,
 `--wide extend|letterbox`, `--view-height 480|600|768`, `--no-edge-scroll`, `--no-sound`, `--no-music`,
 `--max-fps 75`(화면 루프 상한, 0 = 제한 없음), `--vsync`(수직 동기 켜기).
-성능 진단(2026-10-03): `--perf`는 1초마다 프레임 수·갱신/그리기 평균 시간과 구간별 시간(지면 `terrain`·오브젝트 `objects`·세계 `world`·UI `ui`·그리기 호출 제출 `batchEnd`)을 콘솔에 쓰고 화면 오른쪽 아래에 FPS를 띄운다. 수직 동기는 2026-10-05 부터 기본으로 꺼져 있다(원본 방식). `--vsync` 로 켜면 원격 데스크톱처럼 표시 주사율이 낮은 환경에서는 그리기가 그 주사율(예: 32Hz)에 묶이고 갱신만 초당 약 71회 돈다. 환경 변수 `NETSTORM_NOVSYNC=1`은 수직 동기를 켠 설정에서도 끈다. UI 자동 검사(`--ui-script-file`)에는 `assert-detail 값`(선택 유닛·내 이동형 유닛의 방향/이동 상태, 예: `assert-detail selected=priest`, `assert-detail priest:C:moving`)이 있다.
+성능 진단(2026-10-03): `--perf`는 1초마다 프레임 수·갱신/그리기 평균 시간과 구간별 시간(지면 `terrain`·오브젝트 `objects`·세계 `world`·UI `ui`·그리기 호출 제출 `batchEnd`)을 콘솔에 쓰고 화면 오른쪽 아래에 FPS를 띄운다. 수직 동기는 기본으로 꺼져 있다. 가변 루프에서는 `--vsync`의 표시 대기도 다음 실제 프레임 간격에 포함하며 갱신만 여러 번 따라잡지 않는다. `NETSTORM_NOVSYNC=1`은 수직 동기를 켠 설정에서도 끈다. UI 자동 검사에는 `assert-detail 값`(선택·이동 상태), `trace-detail`(실제 숫자 상태 기록), `stall 밀리초`(1~5000ms의 명시적인 지연 삽입)가 있다. 일반 실행에는 검사 지연을 넣지 않는다.
 
 TEST01 후속 검증: `powershell -NoProfile -ExecutionPolicy Bypass -File tools/clone_test01_smoke.ps1`은 4:3 두 크기·16:9·16:10에서 영어/한국어를 번갈아 검사한다. 선택·워크샵 레벨·미니맵 클릭/끌기·Shift+숫자 저장/숫자 복귀·배치·아이스/썬더 캐논의 배치 전 우클릭 회전을 확인하며 설정은 별도 폴더에 둔다. UI 명령 `move-center dx,dy`는 논리 화면 중심 기준으로 커서를 옮기고 `assert-detail-not 값`은 상태에 해당 문자열이 없음을 검사한다. 추가 상태는 `camera=x,y`, `workshops=타입:레벨,...`, `placement=allowed|실패명|none`, `cursor=타입|none`이다. [결과와 시각 차이](videos/test01-verification-20261003.md).
 

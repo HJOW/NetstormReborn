@@ -27,6 +27,7 @@ target_sources(netstorm PRIVATE
     GumpCollection.cpp GumpCollection.h
     GumpDraw.cpp GumpDraw.h
     GumpCreate.cpp GumpCreate.h
+    GumpTree.cpp GumpTree.h
     TileGroupCollection.cpp TileGroupCollection.h
     ObjectCollection.cpp ObjectCollection.h
     PreviewCollection.cpp PreviewCollection.h

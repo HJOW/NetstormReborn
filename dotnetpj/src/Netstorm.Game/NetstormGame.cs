@@ -44,6 +44,16 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     private readonly GraphicsDeviceManager _graphics;
     private readonly DisplayManager _display;
     private readonly EdgeScrollController _edgeScroll = new();
+    /// <summary>합성 화면 갱신·시간 상한 없이 실제 밀리초 시각을 전달하는 루프 시계.</summary>
+    private readonly FrameLoopClock _frameLoop = new();
+    /// <summary>Windows에서 원본 WINMM 시계를 읽고 다른 플랫폼에서는 단조 밀리초 시계를 공급한다.</summary>
+    private readonly FrameWallClock _frameWallClock = new();
+    /// <summary>원본 maxFPS의 그리기 제한 값. 게임 시계 정지 중에는 적용하지 않는다.</summary>
+    private int _maxFps;
+    /// <summary>직전 그리기 이후 실제 갱신 호출 수. 자동 검사에서 합성 따라잡기 갱신을 검출한다.</summary>
+    private int _updatesSinceDraw;
+    /// <summary>직전 그리기와 짝지은 갱신 수. MonoGame의 초기 준비 갱신 이후에는 1이어야 한다.</summary>
+    private int _lastUpdatesPerDraw;
     private readonly string? _screenshotPath;
     /// <summary>스크린샷을 저장하기 전에 기다릴 시간, 1/60초 단위 (--screenshot-frames, 기본 ScreenshotDelayFrames)</summary>
     private readonly int _screenshotFrames;
@@ -160,18 +170,14 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
 
     /// <summary>
     /// 화면 루프의 속도를 정한다. 원본은 한 바퀴마다 입력 → 갱신 → 그리기를 한 번씩 돌고 <c>maxFPS</c>(기본 75)로 상한을 둔다.
-    /// 클론은 MonoGame 의 고정 간격 루프를 그 간격(75 → 14ms)에 맞춰, 갱신 한 번에 그리기 한 번이 따라오게 한다.
-    /// 상한이 없으면(0) 가변 간격으로 낼 수 있는 만큼 돈다. 규칙(24Hz 틱)과 애니메이션은 흐른 시간으로 진행하므로 속도가 달라지지 않는다.
+    /// MonoGame은 가변 루프로 두어 갱신·그리기를 한 번씩 호출한다. 실제 그리기 직전의 제한은 WaitBeforeDraw가 맡는다.
+    /// 남은 규칙의 24Hz 틱은 별도 이행 대상이며 화면 루프에서 밀린 갱신을 합성하지 않는다.
     /// </summary>
     /// <param name="maxFps">초당 바퀴 수 상한 (0 = 제한 없음)</param>
     private void ApplyFramePacing(int maxFps)
     {
-        TimeSpan? interval = FramePacing.FrameInterval(maxFps);
-        IsFixedTimeStep = interval != null;
-        if (interval != null)
-        {
-            TargetElapsedTime = interval.Value;
-        }
+        _maxFps = FramePacing.Normalize(maxFps);
+        IsFixedTimeStep = false;
     }
 
     /// <summary>
@@ -537,17 +543,20 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     /// <param name="gameTime">경과 시간</param>
     protected override void Update(GameTime gameTime)
     {
+        // MonoGame의 경과 시간은 긴 프레임에서 잘릴 수 있으므로 실제 단조 밀리초 시계를 한 번 고정한다.
+        double seconds = _frameLoop.BeginFrame(_frameWallClock.ReadMilliseconds());
+        _updatesSinceDraw++;
         long perfStart = Stopwatch.GetTimestamp();
-        UpdateGame(gameTime);
+        UpdateGame(gameTime, seconds);
         _perf?.EndUpdate(perfStart);
     }
 
     /// <summary>
     /// 입력 처리와 애니메이션 진행의 본체 (성능 측정을 위해 <see cref="Update"/> 가 감싼다).
     /// 원본의 한 바퀴와 같은 순서다: 입력·명령 처리 → 갱신(세션 틱·연출) → 그리기 (docs/exe/main-loop.md 2절).
-    /// 입력은 화면 루프마다 읽고, 규칙에 영향을 주는 명령만 세션의 다음 틱 처음에 실행된다.
+    /// 입력·명령은 같은 화면 갱신에서 실행된다. 경과 시간은 MonoGame의 합성 시간이 아닌 루프 시계에서 받는다.
     /// </summary>
-    private void UpdateGame(GameTime gameTime)
+    private void UpdateGame(GameTime gameTime, double dt)
     {
         KeyboardState keyboard = Keyboard.GetState();
         bool popupOpen = _helpWindow?.IsOpen == true || MissionOptionsOpen;
@@ -557,7 +566,6 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         {
             Exit();
         }
-        double dt = gameTime.ElapsedGameTime.TotalSeconds;
         _elapsedSeconds += dt;
         if (!tutorialOpen)
         {
@@ -574,7 +582,12 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
                 + (_helpWindow?.DiagnosticDetail(_display.Layout.LogicalWidth, _display.Layout.LogicalHeight) ?? "")
                 + $";audio-last={_audio?.LastSoundCue ?? "none"};audio-result={_audio?.LastSoundResult ?? "none"}"
                 // 화면 전환 검사는 저장 설정뿐 아니라 실제 그래픽 장치의 전체화면·백버퍼 상태를 확인한다.
-                + $";mission={_mapViewer?.Name ?? "none"};fullscreen={(_display.BorderlessScreen ? "true" : "false")};display={_display.ScreenWidth}x{_display.ScreenHeight};";
+                + $";mission={_mapViewer?.Name ?? "none"};fullscreen={(_display.BorderlessScreen ? "true" : "false")};display={_display.ScreenWidth}x{_display.ScreenHeight}"
+                // 자동 창 검사 전용: 실제 지연 전달·갱신/그리기 짝·정지 제한 분기를 확인한다.
+                + $";loop-fixed={IsFixedTimeStep.ToString().ToLowerInvariant()};loop-updates-per-draw={_lastUpdatesPerDraw}"
+                + $";loop-long-frame={(_frameLoop.LongestElapsedSeconds >= 0.6 ? "true" : "false")}"
+                + ";loop-delta-ms=" + (_frameLoop.ElapsedSeconds * 1000).ToString("R", System.Globalization.CultureInfo.InvariantCulture)
+                + $";loop-paused={(_mapViewer?.GameClockPaused == true ? "true" : "false")};";
             keyboard = new KeyboardState();
             mouse = _uiAutomation.Update(_helpWindow?.IsOpen == true ? _helpWindow.State : MissionOptionsOpen ? "options" : _mapViewer?.UiState ?? _mainMenu?.Page ?? "unavailable", detail, Exit,
                 _display.Layout.LogicalWidth, _display.Layout.LogicalHeight, dt);
@@ -614,6 +627,8 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
             animation.Update(dt);
         }
         base.Update(gameTime);
+        // 명시적인 검사 스크립트의 지연은 이 갱신 뒤 한 번만 적용한다. 다음 화면은 실제 긴 간격을 받아야 한다.
+        if (_uiAutomation?.TakeStallMilliseconds() is int stall) Thread.Sleep(stall);
     }
 
     /// <summary>뷰어가 요청한 효과음을 틀고 배경음악 교체·스트리밍을 진행한다.</summary>
@@ -705,9 +720,31 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     /// <param name="gameTime">경과 시간</param>
     protected override void Draw(GameTime gameTime)
     {
+        WaitBeforeDraw();
+        _lastUpdatesPerDraw = _updatesSinceDraw;
+        _updatesSinceDraw = 0;
         long perfStart = Stopwatch.GetTimestamp();
         DrawGame(gameTime);
         _perf?.EndDraw(perfStart);
+    }
+
+    /// <summary>
+    /// 갱신 비용까지 포함해 직전 그리기부터 1/maxFPS가 지났는지 확인한 뒤 실제 그리기 시각을 기록한다.
+    /// 정지·무제한·늦은 프레임은 기다리지 않는다. 대기 중 CPU 양보 방식의 원본 대조는 9-1 D 후속이다.
+    /// </summary>
+    private void WaitBeforeDraw()
+    {
+        long now = _frameWallClock.ReadMilliseconds();
+        int wait = _frameLoop.RemainingWaitMilliseconds(now, _maxFps, _mapViewer?.GameClockPaused == true);
+        // 매번 실제 시각을 다시 읽어 Sleep의 초과 대기도 다음 프레임의 기준에 반영한다.
+        while (wait > 0)
+        {
+            if (wait > 1) Thread.Sleep(wait - 1);
+            else Thread.Yield();
+            now = _frameWallClock.ReadMilliseconds();
+            wait = _frameLoop.RemainingWaitMilliseconds(now, _maxFps, _mapViewer?.GameClockPaused == true);
+        }
+        _frameLoop.BeginDraw(now);
     }
 
     /// <summary>화면 그리기의 본체 (성능 측정을 위해 <see cref="Draw"/> 가 감싼다)</summary>
@@ -781,7 +818,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
             batch.DrawString(body, overlay, new Vector2(width - overlaySize.X - 16, height - 56), Color.LimeGreen);
         }
         // 화면 설정을 바꿨을 때 잠깐 보이는 알림 (오른쪽 아래)
-        string? notice = _display.TickNotice(gameTime.ElapsedGameTime.TotalSeconds);
+        string? notice = _display.TickNotice(_frameLoop.ElapsedSeconds);
         if (notice != null)
         {
             Vector2 size = body.MeasureString(notice);

@@ -10,6 +10,7 @@ add_executable(netstorm_tests
     GumpCollectionTests.cpp
     GumpDrawTests.cpp
     GumpCreateTests.cpp
+    GumpTreeTests.cpp
     DrawSubmissionTests.cpp
     DrawSortTests.cpp
     RenderCollectionTests.cpp
@@ -488,3 +489,7 @@ set_source_files_properties(GumpDrawTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 기본/루트 생성의 전체 바이트와 1000개 등록 칸 관찰은 이 검사 소스에서만 읽는다.
 set_source_files_properties(GumpCreateTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_GUMPCREATE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gumpcreate-x86.tsv\"")
+
+# Gump 트리 전체 바이트/콜백 당시 상태는 이 검사 소스에서만 읽는다.
+set_source_files_properties(GumpTreeTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_GUMPTREE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gumptree-x86.tsv\"")
