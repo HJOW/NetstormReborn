@@ -32,6 +32,23 @@ TESTS = BUILD / 'bin/Release/netstorm_tests.exe'
 EXCLUDED = {'build'}
 # 변이 목록: 이름, 대상 파일, 바꿀 원문(파일에 정확히 한 번 있어야 한다), 바꾼 문장, 실패해야 하는 검사 이름 접두사.
 MUTATIONS = [
+    # 건설 표시 초기화의 원본 픽셀·입자·난수 관찰이 의미 변화를 검출해야 한다.
+    dict(name='visual-blue-start',file='cpppj/src/o/RawConstructionVisual.cpp',expect='ConstructionVisual_',
+         before='kBlue{0.0,0.0,1.0}',after='kBlue{0.0,0.0,0.0}',note='첫 색 띠를 파랑 대신 검정에서 시작'),
+    dict(name='visual-selected-reset',file='cpppj/src/o/RawConstructionVisual.cpp',expect='ConstructionVisual_',
+         before='fields.particles.assign(fields.capacity,{});fields.total=0;',after='fields.particles.assign(fields.capacity,{});fields.total=0;fields.selected=0;',note='재초기화에서 누적 선택 수를 지움'),
+    dict(name='visual-capacity-floor',file='cpppj/src/o/RawConstructionVisual.cpp',expect='ConstructionVisual_',
+         before='kMinParticles=500',after='kMinParticles=499',note='최소 입자 저장소를 한 칸 줄임'),
+    dict(name='visual-final-pixel',file='cpppj/src/o/RawConstructionVisual.cpp',expect='ConstructionVisual_',
+         before='fields.image.pixels.back()=kTransparent;',after='fields.image.pixels.back()=fields.output.back();',note='마지막 픽셀을 초기 입자 후보에서 제거하지 않음'),
+    dict(name='visual-center-column',file='cpppj/src/o/RawConstructionVisual.cpp',expect='ConstructionVisual_',
+         before='column=(width-1)/2',after='column=width/2',note='짝수 폭 이미지의 시작 열을 오른쪽으로 옮김'),
+    dict(name='visual-row-boundary',file='cpppj/src/o/RawConstructionVisual.cpp',expect='ConstructionVisual_',
+         before='row>height/3',after='row>=height/3',note='원본이 제외하는 경계 행도 선택'),
+    dict(name='visual-shuffle-count',file='cpppj/src/o/RawConstructionVisual.cpp',expect='ConstructionVisual_',
+         before='for (std::int32_t i=0;i<width;++i)',after='for (std::int32_t i=0;i<width-1;++i)',note='입자 순열 난수를 두 개 덜 소비'),
+    dict(name='visual-signed-z',file='cpppj/src/o/RawConstructionVisual.cpp',expect='ConstructionVisual_',
+         before='fields.zOrder=std::bit_cast<std::int8_t>(z);',after='fields.zOrder=z;',note='부모 zOrder의 음수 확장을 없앰'),
     # 종속 조회의 독립 PE 관찰과 실제 건설 진행음 정지가 의미 변화를 검출해야 한다.
     dict(name='contained-type-truncation',file='cpppj/src/o/RawContainedLookup.cpp',expect='ContainedLookup_',
          before='raw[kType]==type',after='raw[kType]==static_cast<std::uint8_t>(type)',note='조회 타입 DWORD를 BYTE로 절단'),
