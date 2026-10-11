@@ -97,6 +97,22 @@ void ConstructionVisualSystem::Draw() const {
         if (found!=processes_.end()) found->second->Draw();
     }
 }
+// 원본 collector는 등록 필드/부모 raw를 읽는다. 호스트 생성 중 객체만 lookup에서 제외한다.
+std::int32_t ConstructionVisualSystem::Collect(RenderWorldRect view,std::span<RenderCollectionEntry> output,std::int32_t limit) const {
+    RawRenderCollection collection(pool_,visualState_,registry_,[this](std::uint32_t token)->const RenderProcessFields* {
+        const auto found=processes_.find(token);
+        return found!=processes_.end() && found->second->ready_ ? &found->second->registration_ : nullptr;
+    });
+    return collection.Collect(view,output,limit);
+}
+// 원본 kind 3 분배를 현재 토큰 조회로 연결한다. 삭제된 포인터를 호출하는 원본 오류 경로는 재현하지 않는다.
+void ConstructionVisualSystem::DrawCollected(std::span<const RenderCollectionEntry> entries) const {
+    // 목록은 수집된 시점의 항목이다. 출력 중 새 객체를 만들어도 이번 목록에 추가하지 않는다.
+    for (const auto& entry:entries) {
+        if (entry.kind!=3) throw std::invalid_argument("건설 표시 수집 항목 종류 오류");
+        const auto found=processes_.find(entry.token);if (found!=processes_.end()) found->second->Draw();
+    }
+}
 // 소멸 경계는 예외를 던지지 않는 계약이다. 부착 전 확보 실패라면 아직 등록할 칸이 없다.
 void ConstructionVisualSystem::Destroy(ConstructionVisualProcess& process) {
     const auto token=process.registration_.token;

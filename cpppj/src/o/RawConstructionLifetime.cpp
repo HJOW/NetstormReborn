@@ -55,6 +55,8 @@ void RawRenderRegistry::Destroy(RenderProcessFields& fields) {
 }
 // 원본 시스템 배열은 구멍을 압축하거나 소멸 때 줄이지 않는다.
 std::span<const std::uint32_t> RawRenderRegistry::Slots() const { return slots_; }
+// 호스트 어댑터의 풀 연결 검사용 참조다.
+const SidPool& RawRenderRegistry::Pool() const { return pool_; }
 // free는 카운터/팔레트를 고치지 않는다. 호스트 벡터만 실제로 반납하며 외부 효과의 원본 순서를 유지한다.
 void DestroyConstructionVisual(ConstructionVisualFields& visual,RenderProcessFields& registration,
     RawRenderRegistry& registry,std::uint32_t flags,const std::function<void(ConstructionRelease)>& release) {

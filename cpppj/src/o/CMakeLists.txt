@@ -93,6 +93,7 @@ target_sources(netstorm PRIVATE
     RawConstructionVisual.cpp RawConstructionVisual.h
     RawConstructionFrame.cpp RawConstructionFrame.h
     RawConstructionLifetime.cpp RawConstructionLifetime.h
+    RawRenderCollection.cpp RawRenderCollection.h
     ConstructionVisualSystem.cpp ConstructionVisualSystem.h
     RawDamageablePreDestroy.cpp RawDamageablePreDestroy.h
     RawDamageableRelease.cpp RawDamageableRelease.h

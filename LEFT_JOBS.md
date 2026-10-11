@@ -1,6 +1,8 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
-> **최신 cpppj 갱신: 2026-10-11 (`HJOW-Athlon`) — 건설 표시 실제 Kernel/form·소멸 연결 완료.** 건설 표시를 실제 client ProcessForm/부모 종속 체인/Kernel에 붙이는 `ConstructionVisualSystem`을 추가했다. Start의 표시 타입 17→HP 진행 타입 30 순서, Kernel 자동 Run, 목록 Draw 제출, 자기 종료·contained/부모 삭제·시스템 종료의 버퍼/등록/form 반납과 생성 실패 정리를 연결했다. 새 통합 검사 **9개**, Release 경고/오류 **0**·CTest 내부 **689개·실패 0**(154.42초, 전체 154.46초), 기존 근거 감사 **105종**·새 연결 변이 **7개** 모두 통과. 원본 독립 관찰 누적 **498,660개**는 유지한다. **원본 클라이언트 깊이 정렬/가시 영역/프레임 루프·실제 SHP 캡처/팔레트 생성/장치 출력·타입 준비 소리·부모 공간/사제 contained·건설 GUI는 후속이며 게임 내 건설/미션 완주는 아직 불가능하다.** 마지막 디컴파일 PC: **HJOW-Athlon, 2026-10-11**(기존 `constructionlifetime` 내보내기 사용). [상세 기록](docs/exe/cpp-construction-visual-system-integration.md). 아래 cpppj 기록은 당시 상태로 보존한다.
+> **최신 cpppj 갱신: 2026-10-11 (`HJOW-Athlon`) — 표시 목록 수집·가시 영역·정렬 제출 복원 완료.** 표시 영역 환산·엄격한 교차·16바이트 목록 수집을 `RawRenderCollection`으로 복원하고 실제 건설 표시의 가시 수집/깊이 정렬/선택 Draw에 연결했다. CD판의 NaN 분기 차이·signed WORD 깊이·y 보정·미사용 바이트도 원본과 대조했다. 새 독립 원본 **4,305개**·누적 **502,965개**, 두 x87 정상 반환 **8,610회**. 새 C++ 검사 **7개**, Release 경고/오류 **0**·CTest 내부 **696개·실패 0**(159.54초, 전체 159.59초), 근거 감사 **106종 모두 통과**. 새 변이 **8개 모두 검출**(`--focused`, 변이 전 사본 전체 검사 통과). **원본 클라이언트의 공통 자산/효과 목록·CRT qsort/종류 분배·프레임 루프와 실제 SHP/팔레트/장치 출력은 후속이며 게임 내 건설/미션 완주는 아직 불가능하다.** 마지막 디컴파일 수행 PC: **HJOW-Athlon, 2026-10-11**(`rendercollection` 5/4/4개 읽기 전용 내보내기). [상세 기록](docs/exe/cpp-render-collection-reconstruction.md). 아래 cpppj 기록은 당시 상태로 보존한다.
+
+> **앞 단계 cpppj 갱신: 2026-10-11 (`HJOW-Athlon`) — 건설 표시 실제 Kernel/form·소멸 연결 완료.** 건설 표시를 실제 client ProcessForm/부모 종속 체인/Kernel에 붙이는 `ConstructionVisualSystem`을 추가했다. Start의 표시 타입 17→HP 진행 타입 30 순서, Kernel 자동 Run, 목록 Draw 제출, 자기 종료·contained/부모 삭제·시스템 종료의 버퍼/등록/form 반납과 생성 실패 정리를 연결했다. 새 통합 검사 **9개**, Release 경고/오류 **0**·CTest 내부 **689개·실패 0**(154.42초, 전체 154.46초), 기존 근거 감사 **105종**·새 연결 변이 **7개** 모두 통과. 원본 독립 관찰 누적 **498,660개**는 유지한다. **원본 클라이언트 깊이 정렬/가시 영역/프레임 루프·실제 SHP 캡처/팔레트 생성/장치 출력·타입 준비 소리·부모 공간/사제 contained·건설 GUI는 후속이며 게임 내 건설/미션 완주는 아직 불가능하다.** 마지막 디컴파일 PC: **HJOW-Athlon, 2026-10-11**(기존 `constructionlifetime` 내보내기 사용). [상세 기록](docs/exe/cpp-construction-visual-system-integration.md). 아래 cpppj 기록은 당시 상태로 보존한다.
 
 > **앞 단계 cpppj 갱신: 2026-10-11 (`HJOW-Athlon`) — 건설 표시 등록·삭제 수명 복원 완료.** 40칸 확장·첫 빈 칸 재사용·등록 후 부모 부착·signed 깊이와 캡처→출력→입자→등록/base→scalar 객체 반납을 복원했다. 실제 Create→Run/Draw→Kill 요청→소유 버퍼/등록 해제와 같은 슬롯 재사용도 검사했다. 새 독립 원본 **1,377개**·누적 **498,660개**, 정상 루트 반환 **2,766회**. Release 경고/오류 **0**·CTest 내부 **680개·실패 0**(164.59초, 전체 164.64초), 근거 감사 **105종**·새 변이 **8개** 모두 통과. **표시 프로세스의 실제 Kernel/form 부착·클라이언트 자동 Run/Draw 목록·SHP 캡처/팔레트 생성/장치 출력·타입 준비 소리 자료·부모 공간/사제 contained·건설 GUI는 후속이며 게임 내 건설/미션 완주는 아직 불가능하다.** **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-11**(`constructionlifetime` 7/13/13개 읽기 전용 내보내기). [상세 기록](docs/exe/cpp-construction-lifetime-reconstruction.md). 아래 같은 날의 cpppj 앞 단계 기록은 당시 상태로 보존한다.
 
@@ -78,6 +80,16 @@
 
 ---
 
+## 2026-10-11 ✅ 완료 / ⏭ 부분 인계: 표시 목록 수집·가시 영역·정렬 제출 (HJOW-Athlon)
+
+- [x] **착수/호스트:** AGENTS.md·두 LEFT_JOBS 확인, 깨끗한 트리·현재/마지막 PC 일치. `rendercollection` **5/4/4개** 읽기 전용 내보내기. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-11.** 원본/복사본 게임·analyzeManager·클론 창·장치 미실행.
+- [x] **전체 몸체:** `RawRenderCollection`의 부모 head 조회·패치 역수 곱셈/CD 직접 나눗셈·엄격한 영역 교차·CD unordered 분기·구멍/limit 조기 종료·현재 부모 좌표 재조회·원본 y 보정·signed 하위 WORD 깊이·종류 3·tail/미사용 출력 보존. 부모 상태 필터를 추가하지 않았으며 계산/효과 응답 대체·원본 assert/OS는 0이다.
+- [x] **실제 연결:** `ConstructionVisualSystem::Collect/DrawCollected`·`client::DrawVisibleConstruction`. 초기화 완료 가시 객체만 수집→깊이/y/x 정렬 또는 순서 보존→현재 프로세스 Draw 제출. 수집 후 삭제/슬롯 재사용·용량 제한·생성 중 Collect 차단·현재 카메라 환산 연결. 동률은 호스트 안정 정렬이고 원본 CRT qsort 동률 순서의 근거는 아니다.
+- [x] **독립 근거:** 세 PE 각 **1,435개**, 새 **4,305개**·누적 **502,965개**, 두 x87 정상 반환 **8,610회**. Bounds 226·Intersect 225·Collect 948·Order 36/판본. ABI/비영 보존 레지스터/스택/x87/SEH·허용 실행/쓰기·전체 출력/입력/SHA·실제 진입/루트 반환 감사.
+- [x] **검증:** 새 C++ **7개**, Release 경고/오류 **0**·CTest 내부 **696개·실패 0**(159.54초, 전체 159.59초), 근거 감사 **106종 모두 통과**. 새 변이 **8개 모두 검출**(`--focused`, 변이 전 사본 전체 검사 통과). 저장 fixture를 C++에서 재생하며 게임/Python을 CTest에서 실행하지 않는다. 통합 검사는 합성 캡처/HP/색 표이며 실제 SHP/장치 검사는 아니다.
+- [x] **인계/보호:** 앞 단계의 수집/가시 영역/건설 표시 정렬·선택 제출 완료 표시. README·cpppj README·계획·내보내기 안내·[상세 기록](docs/exe/cpp-render-collection-reconstruction.md) 갱신. AGENTS.md·보호 원본·dotnetpj/인계 변경, 커밋/푸시 없음. 로그 `extracted/rendercollection-{export,oracle,build,ctest,audits,mutations}.log`.
+- [ ] **다음 건설:** ① 원본 Client/GameWorld의 자산/구름/다른 효과와 공통 목록 병합·CRT qsort·종류별 분배·프레임 루프·실제 SHP 캡처/공유 팔레트 생성/현재 색 표/dirty·화면/장치 출력 연결. 이번 helper는 GUI에서 자동 호출되지 않는다. ② 타입 준비 소리(+0x90), 가상 표시/부모 Unpop/재등록·하위 경로/접근점/자원 정책/공간 Pop·소유 사제 이동/contained·파생 삭제. ③ 집합/지연 분배·사용 중인 지정 form 재부착·부모 상태 전파·소켓/종료/삭제 메시지. ④ 법적 위치/미리보기·건설 메뉴/커서 GUI. **게임 내 건설/미션 완주는 아직 불가능하다.**
+
 ## 2026-10-11 ✅ 완료 / ⏭ 부분 인계: 건설 표시 실제 Kernel/form·소멸 연결 (HJOW-Athlon)
 
 - [x] **착수/호스트:** AGENTS.md·두 LEFT_JOBS 재확인, 착수 시 깨끗한 트리·현재/마지막 PC 일치. 기존 내보내기 사용, 새 원본 함수 복원/내보내기 없음. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-11**(`constructionlifetime` 7/13/13개). 원본 게임/복사본/analyzeManager/클론 창/장치 미실행.
@@ -85,7 +97,7 @@
 - [x] **실제 수명:** host Kill/contained 삭제/부모의 공통 종속 삭제/시스템 종료→Kernel 가상 소멸→소유 버퍼/등록/base/scalar→form Unpop/SID 반납. 다른 표시/Regular/부모 링크·공유 팔레트 보존. 생성 중 실행 차단·중첩 Add 거부·부착 전후 실패/취소 정리·Draw 중 자기 삭제/40→80칸 확장. 부모 삭제 검사는 이미 void인 부모이며 공간 Unpop 전체 검사가 아님.
 - [x] **검증:** 새 통합 **9개**, Release 경고/오류 **0**·CTest 내부 **689개·실패 0**(154.42초, 전체 154.46초), 기존 근거 감사 **105종 모두 통과**, 새 연결 변이 **7개 모두 검출**(`--focused`, 변이 전 사본 전체 검사 통과). 기존 원본 독립 관찰 누적 **498,660개 유지**; 새 x86 관찰 추가 없음. 합성 캡처/HP/색 표이며 장치/실제 SHP 자료 검사는 아님.
 - [x] **인계/보호:** 앞 단계의 실제 Kernel/form 부착·자동 Run·종속 소멸 완료 표시. README·cpppj README·계획·[상세 기록](docs/exe/cpp-construction-visual-system-integration.md) 갱신. AGENTS.md·보호 원본·dotnetpj 변경, 커밋/푸시 없음. 로그 `extracted/constructionvisualsystem-{build,ctest,audits,mutations}.log`.
-- [ ] **다음 건설:** ① 원본 클라이언트 표시 수집/깊이 정렬/가시 영역/프레임 루프와 실제 SHP 캡처/팔레트 생성/장치 출력 연결. 타입 준비 소리(+0x90), 가상 표시/부모 Unpop/재등록. ② 하위 경로/접근점·자원 정책/정렬·공간 Pop·소유 사제 이동/contained·통지 contained 삭제/파생 삭제. ③ 집합/지연 분배·사용 중인 지정 form 재부착·소켓/연결/종료/삭제 메시지·부모 상태 전파. ④ 타입별 공간/파생 삭제/추락/알림·법적 위치/미리보기·건설 메뉴/커서 GUI. **게임 내 건설/미션 완주는 아직 불가능하다.**
+- [ ] **다음 건설:** ① **표시 수집/가시 영역/건설 표시 깊이 정렬·선택 Draw는 위 최신 절에서 완료.** 원본 클라이언트 공통 자산/효과 목록·qsort/종류 분배·프레임 루프와 실제 SHP 캡처/팔레트 생성/장치 출력은 후속이다. 타입 준비 소리(+0x90), 가상 표시/부모 Unpop/재등록. ② 하위 경로/접근점·자원 정책/정렬·공간 Pop·소유 사제 이동/contained·통지 contained 삭제/파생 삭제. ③ 집합/지연 분배·사용 중인 지정 form 재부착·소켓/연결/종료/삭제 메시지·부모 상태 전파. ④ 타입별 공간/파생 삭제/추락/알림·법적 위치/미리보기·건설 메뉴/커서 GUI. **게임 내 건설/미션 완주는 아직 불가능하다.**
 
 ## 2026-10-11 ✅ 완료 / ⏭ 부분 인계: 건설 표시 등록·삭제 수명 (HJOW-Athlon)
 

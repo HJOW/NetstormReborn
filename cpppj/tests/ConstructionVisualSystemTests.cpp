@@ -3,6 +3,7 @@
 #include "o/ConstructionVisualSystem.h"
 #include "o/RawConstructionProcess.h"
 #include "o/RawContainedLookup.h"
+#include "client/ConstructionVisualRenderer.h"
 
 using namespace netstorm::test::construction;
 namespace {
@@ -195,6 +196,7 @@ TEST_CASE(ConstructionVisualSystem_CreationReentrySkipsIncompleteBuffers) {
     hooks.capture=[&](Sid sid) {
         const auto calls=world.maximumCalls;const auto draws=world.draws.size();world.kernel.RunFrame();world.system->Draw();
         CHECK(world.maximumCalls==calls && world.draws.size()==draws);
+        std::array<RenderCollectionEntry,1> work{};CHECK(world.system->Collect({-1000,-1000,1000,1000},work,1)==0);
         CHECK(Throws([&] { world.system->Add(world.parent,false); }));return capture(sid);
     };world.CreateSystem(hooks,world.FrameHooks(),world.RegistryHooks());world.system->Add(world.parent,false);world.kernel.RunFrame();
     CHECK(world.maximumCalls==1 && world.system->Size()==1);
@@ -210,6 +212,49 @@ TEST_CASE(ConstructionVisualSystem_DrawDeletionAndListGrowth) {
     };world.CreateSystem(world.VisualHooks(),hooks,world.RegistryHooks());first=world.system->Add(world.parent,false);world.system->Draw();
     CHECK(draws==41 && world.system->Size()==41 && world.system->Slots().size()==80 && world.allocations==std::vector<std::uint32_t>({160,320}));
     world.system->Draw();CHECK(draws==82 && Released(world.released,1));world.system.reset();CHECK(world.kernel.Size()==0 && Released(world.released,42));
+}
+
+// 실제 프레임이 갱신한 영역을 선별하고 signed 깊이로 정렬해 현재 카메라 Draw에 제출한다.
+TEST_CASE(RenderCollection_VisibleConstructionSubmission) {
+    // 두 판본에서 같은 host/Kernel/collector/그리기 경로를 실행한다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
+        World world(edition);world.CreateSystem();auto* first=world.system->Add(world.parent,false);
+        world.pool.AllocatedBytes(world.parent)[world.patch ? 35 : 33]=7;auto* second=world.system->Add(world.parent,false);
+        world.pool.AllocatedBytes(world.parent)[world.patch ? 35 : 33]=0;auto* third=world.system->Add(world.parent,false);
+        world.Hp(50);world.kernel.RunFrame();std::array<RenderCollectionEntry,3> work{};
+        const RenderWorldRect view{20,20,22,23};
+        CHECK(netstorm::client::DrawVisibleConstruction(*world.system,view,work)==3 && world.draws.size()==3);
+        CHECK(work[0].token==second->Registration().token && work[1].token==third->Registration().token && work[2].token==first->Registration().token);
+        CHECK(work[0].depth==7 && work[1].depth==0 && work[2].depth==-1 && work[0].kind==3);
+        world.draws.clear();CHECK(netstorm::client::DrawVisibleConstruction(*world.system,{100,100,110,110},work)==0 && world.draws.empty());
+        const auto right=first->Registration().right/world.visualState.scaleX;
+        CHECK(netstorm::client::DrawVisibleConstruction(*world.system,{right,20,right+1,23},work)==0 && world.draws.empty());
+        world.frameState.cameraX=4;world.frameState.cameraY=5;
+        CHECK(netstorm::client::DrawVisibleConstruction(*world.system,view,std::span(work).first(2))==2 && world.draws.size()==2);
+        CHECK(work[0].token==second->Registration().token && work[1].token==first->Registration().token && world.draws[0]==std::make_pair(322,225));
+        world.draws.clear();CHECK(netstorm::client::DrawVisibleConstruction(*world.system,view,work,false)==3);
+        CHECK(work[0].token==first->Registration().token && work[1].token==second->Registration().token && work[2].token==third->Registration().token);
+    }
+}
+
+// 수집 후 삭제된 토큰은 건너뛰고 재사용된 슬롯의 새 객체를 이전 목록에 섞지 않는다.
+TEST_CASE(RenderCollection_SnapshotDeletionAndReuse) {
+    World world(OriginalEdition::Patch1078);world.CreateSystem();auto* first=world.system->Add(world.parent,false);auto* second=world.system->Add(world.parent,false);
+    std::array<RenderCollectionEntry,3> work{};CHECK(world.system->Collect({20,20,22,23},work,3)==2);const auto oldToken=work[0].token;
+    world.host.Kill(*first,0);auto* replacement=world.system->Add(world.parent,false);
+    CHECK(replacement->Registration().slot==0 && replacement->Registration().token!=oldToken);
+    world.system->DrawCollected(std::span(work).first(2));CHECK(world.draws.size()==1 && work[1].token==second->Registration().token);
+    world.draws.clear();work[0].kind=2;CHECK(Throws([&] { world.system->DrawCollected(std::span(work).first(1)); }));CHECK(world.draws.empty());
+}
+
+// 동률은 호스트에서 안정 순서를 유지하고 비유한 정렬 좌표는 그리기 전에 거부한다.
+TEST_CASE(RenderCollection_StableTiesAndInvalidSortCoordinates) {
+    World world(OriginalEdition::Patch1078);world.CreateSystem();auto* first=world.system->Add(world.parent,false);auto* second=world.system->Add(world.parent,false);
+    std::array<RenderCollectionEntry,2> work{};const RenderWorldRect view{20,20,22,23};
+    CHECK(netstorm::client::DrawVisibleConstruction(*world.system,view,work)==2);
+    CHECK(work[0].token==first->Registration().token && work[1].token==second->Registration().token);
+    world.draws.clear();Put(world.pool.AllocatedBytes(world.parent),14,0x7fc00000);
+    CHECK(Throws([&] { netstorm::client::DrawVisibleConstruction(*world.system,view,work); }));CHECK(world.draws.empty());
 }
 
 // 서로 다른 풀이나 누락된 장치 경계는 생성 전에 거부한다. 캡처 중 취소된 객체도 다시 접근하지 않는다.

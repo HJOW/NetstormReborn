@@ -30,6 +30,6 @@ Release 경고/오류 **0**, 전체 CTest 내부 **689개·실패 0**(154.42초,
 
 재검사: `cmake --build cpppj/build --config Release --parallel 4`, `cpppj/build/bin/Release/netstorm_tests.exe --filter ConstructionVisualSystem_`, `ctest --test-dir cpppj/build -C Release --output-on-failure`. 새 변이는 `tools/cpp_mutation_check.py --focused --only visualsystem-run` 등 `visualsystem-` 7종이며 저장소 밖 사본에서 실행한다.
 
-다음은 **원본 클라이언트 표시 수집/깊이 정렬/가시 영역과 프레임 루프 연결, 실제 SHP 캡처/공유 팔레트 생성/장치 출력**이다. 타입 준비 소리 +0x90, 부모 공간/소유 사제 contained/하위 경로와 건설 GUI도 남아 있다. 게임 내 건설/미션 완주는 아직 불가능하다. AGENTS.md·보호 원본·dotnetpj 수정, 커밋/푸시는 하지 않았다.
+2026-10-11 후속: **표시 수집/가시 영역/건설 표시 깊이 정렬·선택 Draw는 [다음 단계](cpp-render-collection-reconstruction.md)에서 완료했다.** 원본 클라이언트 공통 자산/효과 목록·qsort/종류 분배·프레임 루프와 실제 SHP 캡처/공유 팔레트 생성/장치 출력은 남아 있다. 타입 준비 소리 +0x90, 부모 공간/소유 사제 contained/하위 경로와 건설 GUI도 남아 있다. 게임 내 건설/미션 완주는 아직 불가능하다. AGENTS.md·보호 원본·dotnetpj 수정, 커밋/푸시는 하지 않았다.
 
 관련 파일: `cpppj/src/o/ConstructionVisualSystem.{h,cpp}`, `cpppj/tests/ConstructionVisualSystemTests.cpp`, `tools/cpp_mutation_check.py`. 기존 몸체 근거: [표시 생성](cpp-construction-visual-reconstruction.md), [프레임](cpp-construction-frame-reconstruction.md), [등록/소멸](cpp-construction-lifetime-reconstruction.md), [종속 조회/삭제](cpp-contained-lookup-reconstruction.md), [HP 진행](cpp-construction-process-reconstruction.md).

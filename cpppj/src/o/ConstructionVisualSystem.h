@@ -2,6 +2,7 @@
 #pragma once
 #include "o/RawConstructionFrame.h"
 #include "o/RawConstructionLifetime.h"
+#include "o/RawRenderCollection.h"
 #include "o/SquidProcess.h"
 #include <unordered_map>
 
@@ -45,8 +46,12 @@ public:
     // 생성 중 목록 등록→실제 client form 부착→캡처/입자 초기화 순서다. 경계에서 중첩 Add는 거부한다.
     // 실패하면 생성 중인 form/Kernel/표시 등록을 정리한다. 반환 포인터는 자기 종료/부모 삭제 때 무효다.
     ConstructionVisualProcess* Add(Sid parent,bool instant);
-    // 현재 표시 슬롯의 순서로 Draw를 제출한다. 원본 클라이언트의 깊이 정렬/가시 영역 선별 복원은 후속이다.
+    // 전체 표시 슬롯의 순서로 Draw를 제출하는 검사 경로다. 가시 영역 출력은 Collect/DrawCollected를 사용한다.
     void Draw() const;
+    // 원본 수집 몸체로 초기화 완료 객체의 가시 항목을 만든다. view는 월드 좌표이고 출력은 슬롯 순서다.
+    std::int32_t Collect(RenderWorldRect view,std::span<RenderCollectionEntry> output,std::int32_t limit) const;
+    // 수집/정렬한 종류 3 항목을 현재 토큰으로 조회해 제출한다. 수집 뒤 삭제된 항목은 건너뛴다.
+    void DrawCollected(std::span<const RenderCollectionEntry> entries) const;
     // 목록의 구멍과 현재 소유 프로세스 수를 읽는다. Slots의 span은 Add의 확장 때 무효다.
     std::span<const std::uint32_t> Slots() const;
     std::size_t Size() const;

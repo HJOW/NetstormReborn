@@ -1,0 +1,103 @@
+{
+  "total": 4305,
+  "controls": [
+    639,
+    895
+  ],
+  "host": "HJOW-Athlon",
+  "date": "2026-10-11",
+  "os_calls": 0,
+  "boundaries": {},
+  "editions": {
+    "originals": {
+      "cases": {
+        "Bounds": 226,
+        "Intersect": 225,
+        "Collect": 948,
+        "Order": 36
+      },
+      "entries": {
+        "00487a40": 10260,
+        "0041bfb0": 11744,
+        "00487740": 10258,
+        "00487f10": 1896,
+        "00497900": 72
+      },
+      "returns": {
+        "00487a40": 452,
+        "00487740": 450,
+        "00487f10": 1896,
+        "00497900": 72
+      },
+      "assertions": 0
+    },
+    "originalCD": {
+      "cases": {
+        "Bounds": 226,
+        "Intersect": 225,
+        "Collect": 948,
+        "Order": 36
+      },
+      "entries": {
+        "0045c9e0": 10710,
+        "0048f870": 12270,
+        "0045c4b0": 2346,
+        "00458240": 72
+      },
+      "returns": {
+        "0045c9e0": 452,
+        "0045c4b0": 2346,
+        "00458240": 72
+      },
+      "assertions": 0
+    },
+    "original1037": {
+      "cases": {
+        "Bounds": 226,
+        "Intersect": 225,
+        "Collect": 948,
+        "Order": 36
+      },
+      "entries": {
+        "0045c9e0": 10710,
+        "0048f870": 12270,
+        "0045c4b0": 2346,
+        "00458240": 72
+      },
+      "returns": {
+        "0045c9e0": 452,
+        "0045c4b0": 2346,
+        "00458240": 72
+      },
+      "assertions": 0
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/rendercollection-x86.tsv": "175e14a99b9ffbd73fd10db360ebe33060457885036c21d3f01d1958758916d0",
+    "extracted/process/original1037/creation.c": "c06b0142f8cd167c6f9043f596c82606f79a6f89814d57574f76116d09c976a4",
+    "extracted/process/original1037/functions.tsv": "66dc3e2da36a5a849a900c0b20fd2ef56951a9d0158acccf33ad0568cbaac1af",
+    "extracted/process/originalCD/creation.c": "c06b0142f8cd167c6f9043f596c82606f79a6f89814d57574f76116d09c976a4",
+    "extracted/process/originalCD/functions.tsv": "66dc3e2da36a5a849a900c0b20fd2ef56951a9d0158acccf33ad0568cbaac1af",
+    "extracted/process/originals/creation.c": "93a6d7ba1061a0bdd7d586a089108ead00a838ce06fc274c12f7649f3b583104",
+    "extracted/process/originals/functions.tsv": "407f9321dfe05d98ff81c4368f097f5133067f2bcc0753b3b145064d6a9eb6d3",
+    "extracted/rendercollection/original1037/creation.c": "d69fc4989aada0dff783b3cbd26fc2ca2da1d26e103f016bbdd4f79cdb2c5953",
+    "extracted/rendercollection/original1037/functions.tsv": "78b971bd383638b259c1daa812fa0be2ffff6f4172e625649d8ef5225469c318",
+    "extracted/rendercollection/originalCD/creation.c": "d69fc4989aada0dff783b3cbd26fc2ca2da1d26e103f016bbdd4f79cdb2c5953",
+    "extracted/rendercollection/originalCD/functions.tsv": "78b971bd383638b259c1daa812fa0be2ffff6f4172e625649d8ef5225469c318",
+    "extracted/rendercollection/originals/creation.c": "f2e3fd43905c871c2b0253186c84ef038d75f9364b9f019754545c9896d114d7",
+    "extracted/rendercollection/originals/functions.tsv": "1e8e9301e33e827e86429d414791b099d96be9889b520913e683bfe43bb356af",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_process_oracle.py": "c548fa37c3cb10edb030bba3b67c8970b7575207efca217fdf4ea0b51354cfd1",
+    "tools/decomp_rendercollection_oracle.py": "396170c6de3d6a7439c4448529ad2f62e93749da2b1dbe0dc6ad205e4dd7a1e3",
+    "tools/ghidra/rendercollection-functions.json": "64ec582bf1c9c07f066dd4fcb0c6367c1c269dbdca82745d1a6431e6d700e3db"
+  },
+  "limits": [
+    "전체 수집/환산/부모 getter/교차/비교의 실제 원본 명령; 계산/효과 응답 대체 없음",
+    "빈/80칸/구멍/개수 제한·부모 모든 상태 비트·현재 좌표·depth WORD/tail BYTE·점/선/역전/NaN/무한대 영역",
+    "배율은 유한 비영 float, 부모 head 비영 합성 raw, CD FDIV 우회=0; 손상 부모/목록/assert/OS는 실행하지 않음",
+    "클라이언트 전체 렌더러·CRT qsort 순서·실제 SHP/팔레트/장치 출력 근거가 아님",
+    "비영 보존 레지스터/스택/x87/SEH·허용 실행/출력 쓰기·전체 출력/잔여 바이트·입력/진입/반환/SHA 감사"
+  ]
+}

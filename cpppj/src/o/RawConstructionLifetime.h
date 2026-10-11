@@ -31,6 +31,8 @@ public:
     void Destroy(RenderProcessFields& fields);
     // 현재 슬롯 순서와 빈 칸을 읽는다. 다음 Construct의 확장 뒤 span은 무효가 될 수 있다.
     std::span<const std::uint32_t> Slots() const;
+    // 수집기와 표시 등록이 같은 부모 raw 풀을 공유하는지 확인한다.
+    const SidPool& Pool() const;
 private:
     // 현재 raw 부모의 signed BYTE 깊이를 읽는다. 번호 0도 원본처럼 읽을 수 있다.
     std::int32_t Depth(Sid parent) const;

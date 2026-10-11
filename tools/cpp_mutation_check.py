@@ -32,6 +32,26 @@ TESTS = BUILD / 'bin/Release/netstorm_tests.exe'
 EXCLUDED = {'build'}
 # 변이 목록: 이름, 대상 파일, 바꿀 원문(파일에 정확히 한 번 있어야 한다), 바꾼 문장, 실패해야 하는 검사 이름 접두사.
 MUTATIONS = [
+    # 표시 수집의 실제 PE 바이트 관찰과 가시 목록 통합 검사가 의미 차이를 검출해야 한다.
+    dict(name='rendercollection-reciprocal-rounding',file='cpppj/src/o/RawRenderCollection.cpp',expect='RenderCollection_',
+         before='const auto x=1.0/static_cast<double>(state_.scaleX),y=1.0/static_cast<double>(state_.scaleY);',
+         after='const auto x=static_cast<double>(1.0F/state_.scaleX),y=static_cast<double>(1.0F/state_.scaleY);',note='패치 역수를 float로 먼저 반올림'),
+    dict(name='rendercollection-touching-edge',file='cpppj/src/o/RawRenderCollection.cpp',expect='RenderCollection_',
+         before='view.left<bounds.right && bounds.left<view.right',after='view.left<=bounds.right && bounds.left<view.right',note='경계만 닿은 영역을 가시 목록에 포함'),
+    dict(name='rendercollection-cd-unordered',file='cpppj/src/o/RawRenderCollection.cpp',expect='RenderCollection_',
+         before='if (edition!=OriginalEdition::Patch1078)',after='if (edition==OriginalEdition::Patch1078)',note='CD의 unordered 교차 분기를 패치와 뒤바꿈'),
+    dict(name='rendercollection-limit',file='cpppj/src/o/RawRenderCollection.cpp',expect='RenderCollection_',
+         before='if (count>=limit) return count;',after='if (count>=limit-1) return count;',note='출력 용량을 다 채우기 한 항목 전에 종료'),
+    dict(name='rendercollection-depth-word',file='cpppj/src/o/RawRenderCollection.cpp',expect='RenderCollection_',
+         before='entry.depth=std::bit_cast<std::int16_t>(static_cast<std::uint16_t>(fields->zOrder));',
+         after='entry.depth=static_cast<std::uint8_t>(fields->zOrder);',note='signed WORD 깊이를 unsigned BYTE로 절단'),
+    dict(name='rendercollection-y-bias',file='cpppj/src/o/RawRenderCollection.cpp',expect='RenderCollection_',
+         before='kOrderBias=std::bit_cast<float>(0x3a83126fU)',after='kOrderBias=0.0F',note='부모 자산 뒤에 오는 y 보정을 생략'),
+    dict(name='rendercollection-tail-byte',file='cpppj/src/o/RawRenderCollection.cpp',expect='RenderCollection_',
+         before='entry.kind=kRenderKind;',after='entry.kind=kRenderKind;entry.tail=0;',note='원본이 보존하는 마지막 BYTE를 덮어씀'),
+    dict(name='rendercollection-sort-direction',file='cpppj/src/client/ConstructionVisualRenderer.cpp',expect='RenderCollection_',
+         before='CompareDrawOrder({a.x,a.y,a.depth},{b.x,b.y,b.depth})<0',
+         after='CompareDrawOrder({b.x,b.y,b.depth},{a.x,a.y,a.depth})<0',note='가시 항목의 깊이 정렬을 뒤집음'),
     # 실제 표시 프로세스 연결 검사가 실행/출력/부착/소멸 어댑터의 누락도 검출해야 한다.
     dict(name='visualsystem-run',file='cpppj/src/o/ConstructionVisualSystem.cpp',expect='ConstructionVisualSystem_',
          before='frame.Run(process.fields_);',after='static_cast<void>(process.fields_);',note='Kernel의 건설 표시 프레임 실행을 생략'),
