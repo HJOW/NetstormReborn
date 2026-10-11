@@ -14,6 +14,19 @@ public sealed class HelpDocumentTests
         Assert.True(topics.HasInformation("alias"));
     }
 
+    /// <summary>굵은 글씨(&lt;b&gt;)와 색 글씨(&lt;c&gt;)는 서로 다른 스타일이고, 링크 색 구간은 닫는 ~. 뒤 본문으로 돌아온다.</summary>
+    [Fact]
+    public void Parse_SeparatesBoldColorAndLinkColorStyles()
+    {
+        // 원본 F1Help 첫 문장과 같은 꼴: 링크 색 "blue", 색 글씨 "drag", 굵은 "GAME HELP".
+        IReadOnlyList<HelpTextRun> runs = HelpDocument.Parse("Click on ~lblue~. text and <c>drag</c> now.<p><b>GAME HELP</b>");
+        Assert.Contains(runs, r => r.Text == "blue" && r.Style == TutorialTextStyle.LinkColor);
+        Assert.Contains(runs, r => r.Text == " text and " && r.Style == TutorialTextStyle.Body);
+        Assert.Contains(runs, r => r.Text == "drag" && r.Style == TutorialTextStyle.ColorText);
+        Assert.Contains(runs, r => r.Text == "GAME HELP" && r.Style == TutorialTextStyle.Highlight
+            && r.BreakBefore == TutorialTextBreak.Paragraph);
+    }
+
     /// <summary>내부·외부 링크를 보존하고 그림·제어 문자·미션 조건문을 본문으로 노출하지 않는다.</summary>
     [Fact]
     public void Parse_PreservesLinksPicturesAndMissionCondition()
@@ -22,7 +35,9 @@ public sealed class HelpDocumentTests
         const string html = "<h2>Title</h2><p>~lblue~. ~~ <a href=\"#next\">Next</a><br><!\"priest.*\"><?{global.inMission}>F8</?><a href=\"https://example.com\">Site</a>";
         IReadOnlyList<HelpTextRun> runs = HelpDocument.Parse(html);
         Assert.Contains(runs, r => r.Text == "Title" && r.Style == TutorialTextStyle.Heading);
-        Assert.Contains(runs, r => r.Text.Contains("blue ~"));
+        // ~l … ~. 로 감싼 구간은 링크 색 보통 글씨로 따로 나뉘고, ~~ 는 틸드 한 글자로 남는다.
+        Assert.Contains(runs, r => r.Text == "blue" && r.Style == TutorialTextStyle.LinkColor && r.Link == null);
+        Assert.Contains(runs, r => r.Text.Contains('~') && r.Style == TutorialTextStyle.Body);
         Assert.Contains(runs, r => r.Link == "#next" && r.Text == "Next");
         Assert.Contains(runs, r => r.Picture == "priest.*");
         Assert.Contains(runs, r => r.Link == "https://example.com");

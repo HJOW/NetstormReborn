@@ -26,6 +26,8 @@ internal sealed class UiAutomation
     /// <summary>정지 검사 등에서 비교할 세부 상태 항목의 이전 값. remember-detail로 저장하고 assert-unchanged-detail로 비교한다.</summary>
     private readonly Dictionary<string, string> _rememberedDetails = new(StringComparer.OrdinalIgnoreCase);
     private MouseState _mouse;
+    /// <summary>mission-section 명령이 게임 본체에 넘길 미션 스크립트 섹션 이름.</summary>
+    private string? _missionSection;
     /// <summary>다음 명령을 실행하기 전에 남은 대기 시간(초).</summary>
     private double _waitSeconds = Seconds(StartWaitFrames);
     private bool _release;
@@ -139,6 +141,9 @@ internal sealed class UiAutomation
                 _dragFrames = Math.Max(1, int.Parse(drag[4])); _dragStep = 0;
                 _mouse = MakeMouse(_dragFromX, _dragFromY, ButtonState.Pressed); break;
             case "capture": CapturePath = value; break;
+            case "mission-section":
+                // 지금 열린 미션에서 스크립트 섹션을 연다 (실제 승패 알림 경로를 재현하는 검증용).
+                _missionSection = value; break;
             case "assert":
                 if (state != value) throw new InvalidOperationException($"UI 검사 실패: 예상={value}, 실제={state}");
                 Console.WriteLine($"UI PASS: {state}"); break;
@@ -175,6 +180,9 @@ internal sealed class UiAutomation
         string? entry = detail.Split(';').FirstOrDefault(item => item.StartsWith(prefix, StringComparison.OrdinalIgnoreCase));
         return entry == null ? throw new InvalidOperationException($"UI 상태 항목 없음: {key}") : entry[prefix.Length..];
     }
+
+    /// <summary>mission-section 명령이 요청한 섹션 이름을 한 번만 꺼낸다 (없으면 null).</summary>
+    public string? TakeMissionSection() { string? section = _missionSection; _missionSection = null; return section; }
 
     /// <summary>그리기가 끝난 뒤 캡처 요청을 한 번 꺼낸다.</summary>
     public string? TakeCapture() { string? path = CapturePath; CapturePath = null; return path; }

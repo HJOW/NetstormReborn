@@ -34,6 +34,8 @@ public static partial class HelpDocument
         TutorialTextStyle style = TutorialTextStyle.Body;
         TutorialTextBreak gap = TutorialTextBreak.None;
         string? link = null;
+        // ~l ... ~. 로 감싼 구간은 링크와 같은 색 글씨다 (도움말 첫 문장의 "blue").
+        bool linkColor = false;
         // 원본은 일부 닫는 태그가 잘못되어 있어 알 수 없는 태그는 글자로 노출하지 않는다.
         foreach (string piece in Tags().Split(html))
         {
@@ -51,15 +53,32 @@ public static partial class HelpDocument
                 else if (tag is "<br>" or "<br/>") gap = TutorialTextBreak.Line;
                 else if (tag.StartsWith("<h")) { style = TutorialTextStyle.Heading; gap = TutorialTextBreak.Paragraph; }
                 else if (tag.StartsWith("</h")) { style = TutorialTextStyle.Body; gap = TutorialTextBreak.Paragraph; }
-                else if (tag is "<b>" or "<c>") style = TutorialTextStyle.Highlight;
+                else if (tag is "<b>") style = TutorialTextStyle.Highlight;
+                else if (tag is "<c>") style = TutorialTextStyle.ColorText;
                 else if (tag is "<i>" or "<q>") style = TutorialTextStyle.Emphasis;
                 else if (tag is "</b>" or "</c>" or "</i>" or "</q>") style = TutorialTextStyle.Body;
                 continue;
             }
-            string text = Spaces().Replace(WebUtility.HtmlDecode(Controls().Replace(piece.Replace("~~", "\u0001"), "").Replace('\u0001', '~')), " ");
-            if (string.IsNullOrWhiteSpace(text)) continue;
-            runs.Add(new(text, style, gap, link));
-            gap = TutorialTextBreak.None;
+            string raw = WebUtility.HtmlDecode(piece.Replace("~~", "\u0001"));
+            int cursor = 0;
+            // ~l 은 링크 색 글씨를 켜고 ~. 은 끈다. 그 밖의 제어 문자는 표시에서 지운다. 구간마다 따로 조각을 만든다.
+            foreach (Match control in Controls().Matches(raw))
+            {
+                AddText(raw[cursor..control.Index]);
+                cursor = control.Index + control.Length;
+                if (control.Value == "~l") linkColor = true;
+                else if (control.Value == "~.") linkColor = false;
+            }
+            AddText(raw[cursor..]);
+
+            // 한 구간의 공백을 정리해 조각으로 추가한다 (공백뿐인 구간은 버린다).
+            void AddText(string segment)
+            {
+                string text = Spaces().Replace(segment.Replace('\u0001', '~'), " ");
+                if (string.IsNullOrWhiteSpace(text)) return;
+                runs.Add(new(text, linkColor && style == TutorialTextStyle.Body ? TutorialTextStyle.LinkColor : style, gap, link));
+                gap = TutorialTextBreak.None;
+            }
         }
         return runs;
     }

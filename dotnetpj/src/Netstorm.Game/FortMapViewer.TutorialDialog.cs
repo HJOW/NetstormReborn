@@ -85,6 +85,13 @@ internal sealed partial class FortMapViewer
         }
     }
 
+    /// <summary>
+    /// 자동 검사가 미션 스크립트의 섹션(예: Succeeded)을 실제 승패 알림과 같은 경로로 연다.
+    /// 승리 창의 완료값 저장처럼 실제 플레이를 오래 해야 닿는 흐름을 검증할 때 쓴다. 2026-10-11 캠페인 진행 저장 검증을 위해 추가.
+    /// </summary>
+    /// <param name="section">대괄호 없는 섹션 이름</param>
+    public void OpenMissionSection(string section) => OpenTutorialTell(section);
+
     /// <summary>창 바깥에서 처리해야 하는 미션 이동 또는 종료 요청을 한 번만 돌려준다.</summary>
     public TutorialDialogAction? TakeTutorialAction()
     {

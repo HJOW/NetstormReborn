@@ -15,6 +15,16 @@ public enum TutorialTextStyle
     /// <summary>조작법이나 중요한 단어.</summary>
     Highlight,
     /// <summary>
+    /// 도움말의 색 글씨(<c>&lt;c&gt;</c>). 굵게 하지 않고 노란 값 색으로만 구분한다 (원본 도움말 캡처의 "drag").
+    /// 도움말 해석(<see cref="HelpDocument"/>)에서만 만든다. 2026-10-11 추가.
+    /// </summary>
+    ColorText,
+    /// <summary>
+    /// 도움말의 링크 색 글씨(<c>~l … ~.</c>). 클릭되는 링크가 아니라 링크와 같은 색의 보통 글씨다 (원본 도움말 캡처의 "blue").
+    /// 도움말 해석에서만 만든다. 2026-10-11 추가.
+    /// </summary>
+    LinkColor,
+    /// <summary>
     /// 글 사이에 넣는 원본 그림 (<c>~[I타입.프레임]</c>). 구간의 Text 는 "타입.프레임" 이며
     /// <see cref="InlinePicture"/> 로 타입과 클러스터를 찾는다.
     /// </summary>

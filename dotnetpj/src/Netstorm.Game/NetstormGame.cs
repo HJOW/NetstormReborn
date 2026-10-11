@@ -578,6 +578,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
             mouse = _uiAutomation.Update(_helpWindow?.IsOpen == true ? _helpWindow.State : MissionOptionsOpen ? "options" : _mapViewer?.UiState ?? _mainMenu?.Page ?? "unavailable", detail, Exit,
                 _display.Layout.LogicalWidth, _display.Layout.LogicalHeight, dt);
             keyboard = _uiAutomation.Keyboard;
+            if (_uiAutomation.TakeMissionSection() is string section) _mapViewer?.OpenMissionSection(section);
         }
         if (!tutorialOpen && keyboard.IsKeyDown(Keys.F1) && !_previousKeyboard.IsKeyDown(Keys.F1))
         { OpenHelp("F1Help"); popupOpen = true; }

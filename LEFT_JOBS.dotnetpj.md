@@ -1,3 +1,23 @@
+## 2026-10-11 인계(사용자 지시: 구현 후 컴파일까지만, 테스트 금지): 캠페인 진행 저장 확인 ✅ / 돌 버튼 모양 ✅ / 도움말 본문 원본화 구현만 ⚠ (`HJOW-X3D`)
+
+- [x] **착수/조건:** "AGENTS.md·LEFT_JOBS.dotnetpj.md 를 읽고 dotnetpj 작업 더 진행". 이 PC(`HJOW-X3D`)는 마지막 디컴파일 PC(`HJOW-Athlon`)가 아니고 디컴파일을 하지 않기로 한 PC라서 **디컴파일 산출물을 읽지 않았다**(`extracted/refined/` 없음). 원본/복사본 게임 실행·새 디컴파일·cpppj/AGENTS.md/원본 폴더 변경·커밋/푸시 없음. 변경은 모두 작업 트리에 있다(미커밋). [진행 기록](docs/dotnet-ui-progress-20261011.md).
+- [x] **실제 캠페인 완주→저장→재실행→다음 미션 해제:** 창 모드 클론으로 1-1 승리 창 → `settings.json` 에 `DoneTheWarBegins=1` → 재실행 → 1-2 해제·브리핑 진입까지 **통과**. 실제 플레이 대신 UI 자동화 명령 `mission-section Succeeded`(실제 승패 알림과 같은 `OpenTutorialTell` 경로)를 새로 넣었다. 스모크는 `tools/clone_campaign_progress_smoke.ps1`.
+- [x] **돌 버튼 모양:** `OriginalUiSkin.Button` 을 원본 메인 메뉴 버튼 8개에서 잰 모양(바깥 윤곽 (53,51,52)·모서리 비움·밝은 선 위 2/왼 2·어두운 선 아래 1/오른 2)으로 바꿨다. 원본 대비 테두리 평균 차이 62.69 → 18.26. 이 변경까지는 buttons·campaign·help_options Menu/Mission 창 스모크 통과.
+- [ ] **⚠ 테스트·스모크를 돌리지 않은 마지막 코드(컴파일만 확인 — Release 경고/오류 0):** 도움말 본문 원본화. [`HelpWindow`](dotnetpj/src/Netstorm.Game/HelpWindow.cs) 줄 간격 17→**15**·문단 간격 8→**14**·제목 줄 **21**(어림)·줄 끝 공백이 빈 줄을 만들던 결함 수정·본문 글자색 (217,212,203) **그림자 없음**·링크 (154,209,205) 그림자 있음·본문 바탕 (54,51,53), [`HelpDocument`](dotnetpj/src/Netstorm.Assets/HelpDocument.cs) 의 `~l … ~.` → 새 `TutorialTextStyle.LinkColor`·`<c>` → 새 `ColorText`(노란색, 굵지 않음)·`<b>` 만 `Highlight`, `OriginalUiSkin.PlainText`. **다음 작업자는 먼저 아래를 순서대로 한다.**
+  1. `dotnet test dotnetpj/Netstorm.sln -c Release` — 마지막 전체 통과 기록은 Athlon 의 **964개**. 이번에 `HelpDocumentTests` 의 `Parse_PreservesLinksPicturesAndMissionCondition`(예전 `Contains("blue ~")` 가정 수정)과 새 `Parse_SeparatesBoldColorAndLinkColorStyles` 를 **돌리지 않고** 고치거나 추가했다. 실패하면 새 `blue`/`" ~ "` 분리 동작에 맞춰 단언을 고친다.
+  2. **`tools/clone_help_options_smoke.ps1`(Menu·Mission) 클릭 좌표를 새 배치에 맞춘다.** 34~38행의 `click 340,222`(High Priests 링크)는 줄 간격 17·빈 줄이 있던 옛 배치 값이다. 새 배치의 5번째 링크는 본문 윗선 +139 부근이라 **약 (340, 204)** 로 예상한다(확인 필요). 그 뒤 클릭·`assert help:…` 가 통과하는지 본다.
+  3. 클론 F1 창(영어, 1024×768)을 캡처해 원본 `screenShots/help - NetStorm Instructions.png` 와 줄 윗선을 대조한다. 원본(스크린샷 좌표): 제목 96, 첫 문단 131, GAME HELP 159, 목록 173·188·203·218·233·248·263·278, GAME SUPPORT 307, 321·336·351. 클론이 같은 간격이 아니면 `HeadingRowHeight` 21 부터 조정한다(어림값이다). 원본↔클론 정렬은 원본 mainMenu.png 오프셋 (2,33), help 캡처는 추가로 (+2,+1).
+  4. 한국어(D2Coding) 도움말도 본다. 줄 간격 15 가 D2Coding 글자 높이에 비해 좁을 수 있다(원본 글꼴이 아니라 근거 없음). 필요하면 한국어만 줄 간격을 글꼴 높이로 둔다. 도움말 목록 스크롤 칸(`LineHeight` 15)·휠(×3)·손잡이 크기도 같이 확인한다. Knowledge 상세창(`FortMapViewer.Knowledge`)은 `HelpDocument` 가 아니라 자체 해석을 쓰므로 이번 변경 대상이 아니다.
+  5. 미션 중 도움말(`inMission` 의 "You may hit F8…" 줄)과 info 주제(능력치 머리, 본문 시작 152)의 배치도 확인한다.
+- [ ] **발견했으나 고치지 않음 — 실패(Failed) 창 크기:** 원본 `The War Begins! - Lose 1.png` 의 실패 창은 폭 **≈403**(좌우 테두리 x=358~359·759~760)·본문 시작 = 창 왼쪽 +약 50·본문 4줄+2줄. 클론은 제목 있는 창 기준 **351·여백 30** 이라 본문이 5줄로 감긴다. 승리 창 375, 브리핑 351(여백 50), TryAgain 275 도 있어 **폭을 정하는 원본 규칙이 창마다 다르다.** 규칙은 디컴파일(`HJOW-Athlon`)로 확인해야 한다. 현재 클론 코드: `FortMapViewer.TutorialPanel`.
+- [ ] **9-1 A 나머지(이동·전투·건설·생산·수확·의식·AI·튜토리얼·애니메이션의 정수 틱 → 실제 시각/원본 타이머):** **이번에 시작하지 않았다.** 이 PC 는 디컴파일을 읽지 못하고, cpppj 에 Pathprocess(경로 꼭짓점 도착 시각)·타이머별 간격이 복원돼 있지 않아 근거 없이 바꾸면 "비교 근거 없이 같다고 적지 않는다" 원칙을 어긴다. `HJOW-Athlon` 에서 `FixedTimestep`·`BattleSession.Step`·`Tick` 참조(수백 곳)를 계통별로 나눠 진행하길 권한다. 이 PC 에서 할 수 있는 일은 판정 문서·테스트 보강까지다.
+- [ ] **9-1 C(`options.cfg`) — 사용자 결정 필요:** (1) 원본 형식(XOR+Windows-1252, `[options.cfg]`+`[END]`)으로 어디에 쓸지(게임 폴더 `d/options.cfg` 직접 vs 클론 전용 복사본), (2) 스모크 격리용 경로 재지정 방식, (3) `ScriptValues`(`Done…`)를 `options.cfg` 로 옮길지. 정하지 않고 구현하지 않았다. 전체화면 재실행 오류가 클론에서 나지 않아야 한다는 조건은 그대로다.
+- [ ] **돌 버튼 남은 것:** 비활성 버튼(검정 45% 덮기)과 눌린 모양은 원본 캡처가 없어 근거가 없다(눌린 모양은 명암 맞바꿈만). 도움말 `{Text}` 뒤 빈칸 3픽셀 밀림, TryAgain 창 폭(원본 275·클론 300)은 그대로다.
+- [ ] **돌리지 않은 것:** `dotnet test`(이번 세션 전체), 전체화면 전환을 포함하는 `tools/clone_ui_smoke.ps1`, 도움말 변경 이후의 모든 창 스모크.
+- [ ] **다음:** 위 1~5 확인 → (Athlon) 9-1 A 나머지 → C 결정 → B → D·E·F, 실패 창 폭 규칙, 실제 Graph/표면 identity 연결.
+
+---
+
 ## 2026-10-11 최신 작업: 9-1 A 첫 단계 — 프레임 명령·붕괴 스캔·정지 입력 수정 완료 (`HJOW-Athlon`)
 
 - [x] **판정·구현:** 24Hz 구조를 그대로 유지해도 원본과 같다는 판단을 폐기했다. 명령의 틱 대기와 붕괴 스캔 33개/틱을 실제 화면 프레임 처리로 바꿨다. 14ms에서는 매 프레임 11개 번호를 처리한다. 지도 배치·다리 입력도 세션 갱신 전에 모아 같은 프레임의 그리기에 반영한다. [상세 기록](docs/dotnet-frame-parity-20261011.md).
@@ -44,7 +64,7 @@
   - 새 [`Netstorm.Assets/CampaignMenu.cs`](dotnetpj/src/Netstorm.Assets/CampaignMenu.cs) — `[UCampaign]` 의 `$Menu=@{guideSpec}` 와 `offical*.english [Overview]` 의 `$Checked` 를 읽어 `CampaignPage` 를 만든다. **어느 화면도 아직 쓰지 않는다.** 단위 검사 없음.
   - [`TutorialDialogScript`](dotnetpj/src/Netstorm.Assets/TutorialDialogScript.cs) — `FindConfigCommands`·`ConfigHandler`(연결한 곳 없음)·`PrepareContent` 공개 범위(internal)·**`StripControls`**. `StripControls` 는 제목·본문의 `~w`·`~i`·`~.` 같은 글자 제어 표시를 지우며 **이미 쓰이는 안내·브리핑 창의 글에도 적용된다**(지금까지는 `bc*76` 미션 등에서 표시가 글자 그대로 보였다). 기존 검사에 영향이 있는지 돌려 보지 않았다. 색·굵기는 반영하지 않는다.
 - [x] **5-6 캠페인 목록 연결·저장·검증:** 2026-10-11 `CampaignMenu`의 목록·조건을 화면에 연결하고 완료값을 저장했다. 후속 검토에서 오래된 한국어 행 좌표를 수정하여 1-1·1-2 왕복과 실제 미션 이름을 확인했다. [구현 기록](docs/dotnet-reconstruction-20261010.md), [검토 기록](docs/dotnet-review-20261011.md).
-- [ ] **창·메뉴 치수에서 남은 것:** 돌 버튼 모양(잰 값만 있고 `OriginalUiSkin.Button` 은 예전 모양 — 바깥 어두운 선 1, 위·왼쪽 밝은 선 2, 오른쪽 어두운 선 2·아래 1, 바탕을 어둡게 하지 않음), 도움말 본문 줄 간격(원본 약 15, 클론 17), 도움말 `<c>` 색 글씨의 굵기, `{Text}` 뒤 빈칸의 3픽셀 밀림, TryAgain 창 폭(원본 275, 클론 300), 마지막 건설 목록(좁은 우클릭 창)의 치수. 창 폭·여백을 정하는 규칙과 옵션 목록의 세로 위치 규칙은 모른다(창마다 잰 값을 썼다).
+- [x] **돌 버튼 모양(2026-10-11 해결, `HJOW-X3D`):** `OriginalUiSkin.Button` 을 원본 메인 메뉴 버튼 8개에서 잰 모양으로 교체했다([진행 기록](docs/dotnet-ui-progress-20261011.md)). 아래 목록의 나머지(도움말 줄 간격은 **구현만·미확인**)는 맨 위 인계 절을 본다. **창·메뉴 치수에서 남은 것(2026-10-10):** 도움말 본문 줄 간격(원본 약 15, 클론 17 → 2026-10-11 15 로 바꿨으나 미검증), 도움말 `<c>` 색 글씨의 굵기(2026-10-11 노란색·굵지 않음으로 구현, 미검증), `{Text}` 뒤 빈칸의 3픽셀 밀림, TryAgain 창 폭(원본 275, 클론 300), 마지막 건설 목록(좁은 우클릭 창)의 치수. 창 폭·여백을 정하는 규칙과 옵션 목록의 세로 위치 규칙은 모른다(창마다 잰 값을 썼다).
 - [x] **당시 보류한 전체화면:** 2026-10-11 실제 그래픽 장치 상태를 단언하며 전환·저장·재실행까지 통과했다.
 - [x] **기존 Workshop 실패:** 2026-10-11 재현·원인 확인 완료. (98,98)의 7×8 발자국이 섬 경계를 벗어났다. (109,106)으로 수정하고 메뉴 좌표·두 지식 등록·생산 커서 검사를 갱신해 통과했다.
 - [ ] **다음:** 5-1 전체 표시 목록·선택 통합과 직접 GUI 검사는 2026-10-11 완료했다. [9-1](#original-parity-plan) 판정(A → C → B → D·E·F), 실제 캠페인 완주→저장→재실행→다음 미션 해제, cpppj를 기다리는 실제 Graph/표면 identity 연결을 이어간다.

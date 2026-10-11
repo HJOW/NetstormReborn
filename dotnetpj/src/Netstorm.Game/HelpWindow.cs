@@ -10,14 +10,29 @@ namespace Netstorm.Game;
 /// <summary>원본 도움말의 내부 링크·본문 드래그·스크롤바·Back/OK를 공유하는 창.</summary>
 internal sealed class HelpWindow : IDisposable
 {
-    /// <summary>원본 도움말의 본문 줄 높이.</summary>
-    private const int LineHeight = 17;
+    /// <summary>
+    /// 원본 도움말의 본문 줄 간격 (원본 캡처의 목록 줄 시작이 15픽셀 간격).
+    /// 2026-10-11: 이전 값 17 은 녹화에서 어림한 것이었다. 원본 캡처로 목록 8줄의 간격이 모두 15 임을 확인했다.
+    /// </summary>
+    private const int LineHeight = 15;
+    /// <summary>문단(&lt;p&gt;) 앞에 줄 간격 말고 더하는 간격. 원본 캡처에서 "GAME SUPPORT" 앞이 줄 간격 + 14 였다.</summary>
+    private const int ParagraphGap = 14;
+    /// <summary>
+    /// 원본 글꼴 제목 줄의 높이. 제목 윗부분에서 첫 문단 윗부분까지가 35픽셀(= 21 + 문단 간격 14)이었다.
+    /// 한국어(D2Coding)에서는 글꼴이 재는 높이를 쓴다.
+    /// </summary>
+    private const int HeadingRowHeight = 21;
     /// <summary>스크롤바 폭과 위·아래 화살표 단추 한 변 (녹화 g1940 의 오른쪽 화살표 스크롤바)</summary>
     private const int ScrollBarSize = 11;
-    /// <summary>본문 바탕색 (녹화 g1940 본문 표본 약 52,49,51)</summary>
-    private static readonly Color BodyColor = new(52, 49, 51);
-    /// <summary>내부 링크 글자색 (녹화의 연한 청록, 약 176,214,214)</summary>
-    private static readonly Color LinkColor = new(176, 214, 214);
+    /// <summary>본문 바탕색 (원본 캡처 본문 바탕 (54, 51, 53))</summary>
+    private static readonly Color BodyColor = new(54, 51, 53);
+    /// <summary>
+    /// 본문 글자색 (원본 캡처 보통·굵은 글씨의 값 (217, 212, 203)). 본문은 그림자 없이 그린다.
+    /// 흰색에 검은 그림자를 쓰는 것은 제목과 클릭되는 링크뿐이다.
+    /// </summary>
+    private static readonly Color TextColor = new(217, 212, 203);
+    /// <summary>링크 글자색 (원본 캡처의 링크·"blue" 값 (154, 209, 205)). 클릭되는 링크는 그림자와 함께 그린다.</summary>
+    private static readonly Color LinkColor = new(154, 209, 205);
     /// <summary>능력치 머리 값의 노란 글자색 (녹화 "Alignment: None" 의 None)</summary>
     private static readonly Color StatValueColor = OriginalUiSkin.ValueColor;
     /// <summary>스크롤바 홈 색 (녹화 표본 약 48,48,48)</summary>
@@ -128,7 +143,7 @@ internal sealed class HelpWindow : IDisposable
             // 설정 치환기는 끝 공백을 지우므로 태그 양옆 단어가 붙지 않게 원문 공백을 복원한다.
             HelpTextRun run = source with { Text = _resources.Settings.Expand(source.Text) + (source.Text.EndsWith(' ') ? " " : "") };
             if (run.BreakBefore != TutorialTextBreak.None && (x > 0 || y > 0))
-                NewLine(run.BreakBefore == TutorialTextBreak.Paragraph ? 8 : 0);
+                NewLine(run.BreakBefore == TutorialTextBreak.Paragraph ? ParagraphGap : 0);
             if (run.Picture is { } name)
             {
                 Texture2D? picture = Picture(name);
@@ -150,8 +165,11 @@ internal sealed class HelpWindow : IDisposable
             {
                 if (word.Length == 0) continue;
                 float size = font.MeasureString(word).X;
+                bool blank = string.IsNullOrWhiteSpace(word);
+                // 줄 끝에 걸린 공백은 새 줄을 만들지 않고 버린다 (이전에는 한 줄이 꽉 차면 빈 줄이 하나 생겼다).
+                if (blank && x + size > width) continue;
                 if (x + size > width && x > 0) NewLine();
-                if (x == 0 && string.IsNullOrWhiteSpace(word)) continue;
+                if (x == 0 && blank) continue;
                 string part = "";
                 // 창 폭보다 긴 단어도 글자 단위로 나눠 잘림 없이 읽을 수 있게 한다.
                 foreach (char letter in word)
@@ -165,7 +183,8 @@ internal sealed class HelpWindow : IDisposable
                 void AddPart(string value)
                 {
                     int w = (int)Math.Ceiling(font.MeasureString(value).X);
-                    int h = Math.Max(LineHeight, (int)Math.Ceiling(font.MeasureString(value).Y));
+                    int h = run.Style == TutorialTextStyle.Heading && _skin.UsesOriginalFonts ? HeadingRowHeight
+                        : Math.Max(LineHeight, (int)Math.Ceiling(font.MeasureString(value).Y));
                     _fragments.Add(new(new((int)x, y, w, h), value, run.Style, run.Link, null));
                     x += w; rowHeight = Math.Max(rowHeight, h);
                 }
@@ -312,8 +331,15 @@ internal sealed class HelpWindow : IDisposable
             else
             {
                 bool unsupported = fragment.Link?.StartsWith("cmd:", StringComparison.OrdinalIgnoreCase) == true;
-                Color color = unsupported ? Color.Gray : fragment.Link != null ? LinkColor : fragment.Style == TutorialTextStyle.Emphasis ? OriginalUiSkin.EmphasisColor : Color.White;
-                OriginalUiSkin.Text(batch, RunFont(fragment.Style), fragment.Text, rect.Location.ToVector2(), color);
+                Color color = unsupported ? Color.Gray
+                    : fragment.Link != null || fragment.Style == TutorialTextStyle.LinkColor ? LinkColor
+                    : fragment.Style == TutorialTextStyle.Emphasis ? OriginalUiSkin.EmphasisColor
+                    : fragment.Style == TutorialTextStyle.ColorText ? OriginalUiSkin.ValueColor
+                    : fragment.Style == TutorialTextStyle.Heading ? Color.White : TextColor;
+                // 원본 도움말은 제목과 클릭되는 링크만 그림자를 쓰고 본문·굵은 글씨·색 글씨는 그림자 없이 그린다.
+                if (fragment.Style == TutorialTextStyle.Heading || fragment.Link != null)
+                    OriginalUiSkin.Text(batch, RunFont(fragment.Style), fragment.Text, rect.Location.ToVector2(), color);
+                else OriginalUiSkin.PlainText(batch, RunFont(fragment.Style), fragment.Text, rect.Location.ToVector2(), color);
             }
         }
         batch.End(); _device.ScissorRectangle = old; batch.Begin(samplerState: SamplerState.PointClamp);

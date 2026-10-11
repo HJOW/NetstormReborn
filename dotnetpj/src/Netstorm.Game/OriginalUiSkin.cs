@@ -50,6 +50,8 @@ internal sealed class OriginalUiSkin : IDisposable
     private static readonly Color LightEdge = new(191, 178, 139);
     /// <summary>돌 버튼 테두리의 어두운 가장자리 색.</summary>
     private static readonly Color DarkEdge = new(49, 44, 36);
+    /// <summary>돌 버튼 바깥 윤곽(1픽셀)의 색. 원본 메인 메뉴 버튼 8개의 윤곽 행·열 평균 (53, 51, 52).</summary>
+    private static readonly Color ButtonOutline = new(53, 51, 52);
     /// <summary>
     /// 원본 UI 의 노란 글자색 (단축키·정보 값·강조 이름). 게임 팔레트 197번 (242, 228, 152).
     /// 2026-10-10: 원본 캡처의 "Shift-F9"·"You"·"Sun"·미션 제목 글자 색(중앙값 (242, 222, 153))에 가장 가까운 팔레트 색으로 정했다.
@@ -307,6 +309,22 @@ internal sealed class OriginalUiSkin : IDisposable
     }
 
     /// <summary>
+    /// 글자를 그림자 없이 쓴다. 위치는 <see cref="Text"/>와 같은 규칙으로 정수에 맞춘다.
+    /// 원본 도움말의 본문·굵은 글씨·색 글씨가 이렇게 그려진다 (2026-10-11 원본 캡처에서 검은 그림자 픽셀이 없음을 확인).
+    /// </summary>
+    /// <param name="batch">스프라이트 배치</param>
+    /// <param name="font">글꼴</param>
+    /// <param name="text">문자열</param>
+    /// <param name="position">줄의 왼쪽 위</param>
+    /// <param name="color">글자 색</param>
+    public static void PlainText(SpriteBatch batch, SpriteFontBase font, string text, Vector2 position, Color color)
+    {
+        position = IsOriginal(font) ? new Vector2(MathF.Floor(position.X), MathF.Floor(position.Y))
+            : new Vector2(MathF.Round(position.X), MathF.Round(position.Y));
+        batch.DrawString(font, text, position, color);
+    }
+
+    /// <summary>
     /// 그려진 버튼 영역을 원본의 판정 영역으로 바꾼다 (<see cref="ButtonHitExtraHeight"/> 만큼 아래로 길다).
     /// </summary>
     /// <param name="id">버튼 번호</param>
@@ -320,11 +338,17 @@ internal sealed class OriginalUiSkin : IDisposable
     /// 눌린 모양은 돌 무늬를 어둡게 하지 않고 테두리 명암을 뒤집으며 글자를 오른쪽·아래로 1픽셀 옮긴다
     /// (2026-10-03 녹화: 눌린 프레임과 평소 프레임의 차이는 테두리와 글자뿐이었다).
     /// </summary>
+    /// <remarks>
+    /// 2026-10-11 수정: 평소 모양의 바탕을 어둡게 덮던 것(검정 16%)과 1픽셀 테두리를 없애고
+    /// 원본 메인 메뉴 버튼 8개에서 잰 모양(<see cref="StoneButtonFrame"/>)으로 바꿨다. 비활성 버튼의 어둡게 덮는 값(45%)은 원본 근거가 없어 그대로 뒀다.
+    /// </remarks>
     public void Button(SpriteBatch batch, Rectangle area, string label, bool enabled = true, bool pressed = false)
     {
-        Tile(batch, area, menu: true);
-        batch.Draw(_pixel, area, Color.Black * (enabled ? 0.16f : 0.45f));
-        Bevel(batch, area, pressed);
+        // 바깥 윤곽(1픽셀)은 질감 위에 따로 그리므로 질감은 그 안쪽에만 깐다. 네 모서리 픽셀은 바탕이 그대로 보인다.
+        var inner = new Rectangle(area.X + 1, area.Y + 1, Math.Max(0, area.Width - 2), Math.Max(0, area.Height - 2));
+        Tile(batch, inner, menu: true);
+        if (!enabled) batch.Draw(_pixel, inner, Color.Black * 0.45f);
+        StoneButtonFrame(batch, area, pressed);
         SpriteFontBase font = Body.MeasureString(label).X > area.Width - 6 ? Small : Body;
         Vector2 size = font.MeasureString(label);
         int shift = pressed ? 1 : 0;
@@ -339,6 +363,40 @@ internal sealed class OriginalUiSkin : IDisposable
             return;
         }
         Text(batch, font, label, new Vector2(area.Center.X - size.X / 2 + shift, area.Center.Y - size.Y / 2 + shift), color);
+    }
+
+    /// <summary>
+    /// 돌 버튼의 테두리를 원본 모양으로 그린다. 원본 메인 메뉴 캡처의 버튼 8개(75×19)에서 잰 구성이다.
+    /// 바깥 윤곽 1픽셀은 네 모서리를 비운다(위·아래 가로줄은 x 1..폭-2, 왼쪽·오른쪽 세로줄은 y 1..높이-2).
+    /// 윤곽 안쪽에는 위 2줄(안쪽 전체 폭)과 왼쪽 2칸이 밝고, 아래 1줄(안쪽 전체 폭)과 오른쪽 2칸(위 2줄 아래부터)이 어둡다.
+    /// 눌린 모양은 밝고 어두운 쪽을 맞바꾼다.
+    /// </summary>
+    /// <remarks>
+    /// 잰 값(RGB 평균): 윤곽 (53, 51, 52), 밝은 선 (198, 183, 162), 어두운 선 (82, 77, 69). 밝은 선은 메뉴 돌 바탕 테두리 색(<see cref="MenuLight"/>)과,
+    /// 어두운 선은 질감을 약 0.61배로 어둡게 한 값(<see cref="FrameDark"/>)과 같아서 두 상수를 다시 쓴다. 캡처가 손실 압축이라 ±10 정도의 오차가 있다.
+    /// 눌린 모양은 이 캡처에 없어 명암 맞바꿈이라는 기존 기록(2026-10-03 녹화)만 따른다. 2026-10-11 추가.
+    /// </remarks>
+    /// <param name="batch">스프라이트 배치</param>
+    /// <param name="area">버튼이 그려지는 전체 영역(윤곽 포함)</param>
+    /// <param name="pressed">눌린 모양인지</param>
+    private void StoneButtonFrame(SpriteBatch batch, Rectangle area, bool pressed)
+    {
+        int innerWidth = Math.Max(0, area.Width - 2);
+        int bottom = area.Bottom - 1;
+        batch.Draw(_pixel, new Rectangle(area.X + 1, area.Y, innerWidth, 1), ButtonOutline);
+        batch.Draw(_pixel, new Rectangle(area.X + 1, bottom, innerWidth, 1), ButtonOutline);
+        batch.Draw(_pixel, new Rectangle(area.X, area.Y + 1, 1, Math.Max(0, area.Height - 2)), ButtonOutline);
+        batch.Draw(_pixel, new Rectangle(area.Right - 1, area.Y + 1, 1, Math.Max(0, area.Height - 2)), ButtonOutline);
+        Color topLeft = pressed ? FrameDark : MenuLight;
+        Color bottomRight = pressed ? MenuLight : FrameDark;
+        const int t = FrameThickness;
+        // 옆면 두 칸은 위 2줄 아래부터 아래쪽 1줄 위까지다.
+        int sideTop = area.Y + 1 + t;
+        int sideHeight = Math.Max(0, bottom - 1 - sideTop);
+        batch.Draw(_pixel, new Rectangle(area.X + 1, area.Y + 1, innerWidth, t), topLeft);
+        batch.Draw(_pixel, new Rectangle(area.X + 1, sideTop, t, sideHeight), topLeft);
+        batch.Draw(_pixel, new Rectangle(area.Right - 1 - t, sideTop, t, sideHeight), bottomRight);
+        batch.Draw(_pixel, new Rectangle(area.X + 1, bottom - 1, innerWidth, 1), bottomRight);
     }
 
     /// <summary>원본의 작은 파란 원으로 선택·켜짐 상태를 표시한다.</summary>
