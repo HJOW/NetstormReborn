@@ -187,6 +187,13 @@ void SquidProcessHost::Kill(SquidProcess& process,std::uint32_t flags) {
 }
 // 슬롯의 현재 주소와 비교만 한다. 이미 해제된 프로세스의 주소를 넘겨도 객체를 읽지 않는다.
 bool SquidProcessHost::IsRegistered(ProcessId pid,const SquidProcess* process) const { return process && kernel_.Get(pid)==process; }
+// 정렬되지 않은 form의 현재 Kernel 번호를 읽는다. 다른 종류의 BaseProcess는 null로 거부한다.
+SquidProcess* SquidProcessHost::FromForm(Sid form) const {
+    const auto raw=pool_.Slot(form);ProcessId pid=0;
+    // 원본 getter처럼 DWORD 전체를 조립하며 WORD로 절단하지 않는다.
+    for (std::size_t i=0;i<4;++i) pid|=static_cast<ProcessId>(raw[kFormPid+i])<<(8*i);
+    return dynamic_cast<SquidProcess*>(kernel_.Get(pid));
+}
 template<class Predicate> RegularProcess* SquidProcessHost::Find(Sid parent,Predicate match) const {
     if (parent.value==0 || parent.value>=pool_.Capacity()) throw std::out_of_range("이벤트 조회 SID 범위 오류");
     std::uint16_t current=Word(parent,kHead);std::uint32_t guard=0;

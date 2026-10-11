@@ -74,6 +74,29 @@ void RawConstructionProcess::Start(Sid parent,float duration) const {
     if (!hooks_.reserve()) return;
     Construct(parent,duration);
 }
+// 최대 HP 조회 뒤의 현재 시각을 사용한다. 시작·소리 필드나 부모 HP를 덮어쓰지 않는다.
+void RawConstructionProcess::ResetEnd(ConstructionProcessFields& fields,Sid parent,std::uint32_t damage) const {
+    const auto maximum=hooks_.maxHitPoints(parent);
+    auto candidate=maximum;
+    if (pool_.Edition()==OriginalEdition::Cd1072) {
+        const auto progress=Ftol(((state_.now-fields.start)/(fields.end-fields.start))*static_cast<double>(maximum));
+        // x86 sub의 DWORD 감김 뒤 signed 비교를 보존한다. 결과는 기본 시간 helper의 미사용 인자다.
+        candidate=std::bit_cast<std::int32_t>(std::bit_cast<std::uint32_t>(progress)-damage);
+        if (candidate<=1) candidate=1;
+    }
+    static_cast<void>(DefaultTime(fields,parent,candidate));
+}
+// 원본의 null 프로세스 접근 대신 유효한 실제 건설 프로세스 연결을 요구한다.
+void RawConstructionProcess::ResetEndFromForm(Sid form,std::uint32_t damage) const {
+    if (!host_) throw std::logic_error("건설 끝 시각 변경에 프로세스 host가 필요합니다");
+    auto* process=dynamic_cast<ConstructionProcess*>(host_->FromForm(form));
+    if (!process || process->Form()!=form) throw std::invalid_argument("건설 끝 시각 변경의 form 연결 오류");
+    ResetEnd(process->Fields(),process->Parent(),damage);
+}
+// CD helper가 받는 부모/HP는 무시하고 현재 전역 시각을 더한다. 패치의 직접 쓰기도 같은 결과다.
+float RawConstructionProcess::DefaultTime(ConstructionProcessFields& fields,Sid,std::int32_t) const {
+    fields.end=state_.now+kDefaultSeconds;fields.dirty|=4;return static_cast<float>(kDefaultSeconds);
+}
 // 표시 효과 뒤의 현재 시각으로 시작/끝을 정하고, 부착 뒤에 진행음을 붙인다.
 void RawConstructionProcess::Construct(Sid parent,float duration) const {
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;

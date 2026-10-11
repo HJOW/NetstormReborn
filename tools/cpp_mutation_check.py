@@ -32,6 +32,19 @@ TESTS = BUILD / 'bin/Release/netstorm_tests.exe'
 EXCLUDED = {'build'}
 # 변이 목록: 이름, 대상 파일, 바꿀 원문(파일에 정확히 한 번 있어야 한다), 바꾼 문장, 실패해야 하는 검사 이름 접두사.
 MUTATIONS = [
+    # 끝 시각 재설정과 실제 form 조회의 의미 차이를 독립 원본/host 검사로 검증한다.
+    dict(name='time-end-from-start',file='cpppj/src/o/RawConstructionProcess.cpp',expect='ConstructionTime_',
+         before='fields.end=state_.now+kDefaultSeconds;fields.dirty|=4;return',after='fields.end=fields.start+kDefaultSeconds;fields.dirty|=4;return',note='현재 시각 대신 시작 시각에서 10초를 더함'),
+    dict(name='time-dirty-overwrite',file='cpppj/src/o/RawConstructionProcess.cpp',expect='ConstructionTime_',
+         before='fields.end=state_.now+kDefaultSeconds;fields.dirty|=4;return',after='fields.end=state_.now+kDefaultSeconds;fields.dirty=4;return',note='끝 변경 비트 외의 기존 변경 비트를 지움'),
+    dict(name='time-use-ignored-damage',file='cpppj/src/o/RawConstructionProcess.cpp',expect='ConstructionTime_',
+         before='static_cast<void>(DefaultTime(fields,parent,candidate));',after='static_cast<void>(DefaultTime(fields,parent,candidate));fields.end-=static_cast<double>(damage);',note='원본 helper의 미사용 damage로 끝 시각을 변경'),
+    dict(name='time-old-clock',file='cpppj/src/o/RawConstructionProcess.cpp',expect='ConstructionTime_',
+         before='const auto maximum=hooks_.maxHitPoints(parent);\n    auto candidate=maximum;',after='const auto previous=state_.now;const auto maximum=hooks_.maxHitPoints(parent);state_.now=previous;\n    auto candidate=maximum;',note='최대 HP 경계가 바꾼 현재 시각을 이전 값으로 되돌림'),
+    dict(name='time-form-pid-width',file='cpppj/src/o/SquidProcess.cpp',expect='ConstructionTime_',
+         before='return dynamic_cast<SquidProcess*>(kernel_.Get(pid));',after='return dynamic_cast<SquidProcess*>(kernel_.Get(static_cast<std::uint16_t>(pid)));',note='form의 Kernel 번호 DWORD를 WORD로 절단'),
+    dict(name='time-overwrite-start',file='cpppj/src/o/RawConstructionProcess.cpp',expect='ConstructionTime_',
+         before='fields.end=state_.now+kDefaultSeconds;fields.dirty|=4;return',after='fields.start=state_.now;fields.end=state_.now+kDefaultSeconds;fields.dirty|=4;return',note='재설정 때 원래 시작 시각도 현재 시각으로 변경'),
     # 건설 프로세스 시작/진행/완료의 원본 순서·판본 폭·경계 뒤 재조회를 독립 관찰로 검증한다.
     dict(name='process-default-seconds',file='cpppj/src/o/RawConstructionProcess.cpp',expect='ConstructionProcess_',
          before='constexpr double kDefaultSeconds=10.0;',after='constexpr double kDefaultSeconds=5.0;',note='지속 시간 0의 기본 건설 시간을 5초로 변경'),

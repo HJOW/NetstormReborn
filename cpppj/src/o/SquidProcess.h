@@ -82,6 +82,8 @@ public:
     // Kill이 프로세스를 없앴는지 확인할 때 쓸 수 있다. 번호와 주소는 Kill 전에 읽어 둔 값을 넘긴다.
     // 이력: 2026-10-11 추가 — 건설 프로세스의 둘째 Kill 판단을 위해.
     bool IsRegistered(ProcessId pid,const SquidProcess* process) const;
+    // 004ae2d0 / CD 004af4e0: form +0x12의 현재 DWORD 번호로 Kernel의 프로세스를 조회한다. 비어 있으면 null이다.
+    SquidProcess* FromForm(Sid form) const;
     // 004afb40 ↔ CD 004ac890: 부모의 종속 체인에서 이벤트 번호가 같은 첫 Regular 프로세스를 찾는다.
     RegularProcess* FindEvent(Sid parent,std::uint32_t event) const;
     // 004afbe0 ↔ CD 004ac9c0: (이벤트 & mask) == value인 첫 Regular 프로세스를 찾는다.

@@ -90,6 +90,13 @@ public:
     // 원본: 00443fe0 → 00443c40 / CD 004d06a0 → 004d0720(기본 시간 helper 004d08a0 포함).
     // 이력: 2026-10-11 추가.
     void Start(Sid parent,float duration) const;
+    // 00443dc0 / CD 004d0930→004d0970: 시작/소리를 유지하고 끝만 현재 시각+10초로 바꾼다.
+    // 최대 HP 경계를 먼저 실행하며 CD는 진행 HP에서 damage를 뺀 값을 계산한 뒤 기본 시간 helper에 넘긴다.
+    // 그 helper의 부모/HP 인자는 사용되지 않는다. end 변경 비트 4만 켜고 다른 비트는 보존한다.
+    void ResetEnd(ConstructionProcessFields& fields,Sid parent,std::uint32_t damage) const;
+    // 실제 host의 form→Kernel 조회로 건설 프로세스를 찾아 ResetEnd를 실행한다. host/유효한 건설 form이 필요하다.
+    // 빈 슬롯·다른 프로세스·오래된 form 연결은 필드 쓰기 전에 예외로 거부한다.
+    void ResetEndFromForm(Sid form,std::uint32_t damage) const;
     // 한 프레임의 진행이다. HP = 절삭((현재-시작)/(끝-시작)×최대)를 0~최대로 제한해 부모에 쓰고 표시를 갱신한다.
     // quickBuild(또는 vortex의 quickVortex)이면 바로 최대가 된다. 부모가 abstract가 아니면 Kill하고,
     // HP가 최대이고 권한이 있으면 Kill한다. 첫 Kill이 프로세스를 없앴으면(kill이 거짓) 둘째 Kill은 하지 않는다.
@@ -123,6 +130,8 @@ private:
     bool Confirmed(Sid sid) const;
     // 생성자 몸체다. Start가 확보에 성공한 뒤 부른다.
     void Construct(Sid parent,float duration) const;
+    // CD 004d08a0: 끝을 현재 시각+10초로 쓰고 10.0f를 돌려준다. 부모/HP 인자는 원본이 읽지 않는다.
+    float DefaultTime(ConstructionProcessFields& fields,Sid parent,std::int32_t hitPoints) const;
     SidPool& pool_;                          // 부모의 HP/abstract 바이트를 쓰는 실제 풀이다.
     std::span<const RiftTypeRecord> types_;  // 부모 현재 타입의 genus를 재조회한다.
     ConstructionProcessState& state_;        // 경계가 바꾼 현재 전역을 공유한다.
