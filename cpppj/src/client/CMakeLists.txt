@@ -29,6 +29,7 @@ target_sources(netstorm PRIVATE
     ObjectCollection.cpp ObjectCollection.h
     PreviewCollection.cpp PreviewCollection.h
     PreviewDraw.cpp PreviewDraw.h
+    SpriteDraw.cpp SpriteDraw.h
     GumpVisual.cpp GumpVisual.h
     GumpBackground.cpp GumpBackground.h
     PaletteShade.cpp PaletteShade.h

@@ -32,6 +32,29 @@ TESTS = BUILD / 'bin/Release/netstorm_tests.exe'
 EXCLUDED = {'build'}
 # 변이 목록: 이름, 대상 파일, 바꿀 원문(파일에 정확히 한 번 있어야 한다), 바꾼 문장, 실패해야 하는 검사 이름 접두사.
 MUTATIONS = [
+    # 일반 Draw의 독립 명령열·현재 상태·픽셀 연결이 원본 차이를 검출해야 한다.
+    dict(name='spritedraw-tail-shadow',file='cpppj/src/client/SpriteDraw.cpp',expect='SpriteDraw_',
+         before='if (entry.tail&4U)',after='if (entry.tail&2U)',note='그림자 tail 비트를 바꿈'),
+    dict(name='spritedraw-shadow-wrap',file='cpppj/src/client/SpriteDraw.cpp',expect='SpriteDraw_',
+         before='view.shape.frameCount<=std::bit_cast<std::int32_t>(index)',after='view.shape.frameCount<std::bit_cast<std::int32_t>(index)',note='첫 그림자 프레임 경계 비교를 바꿈'),
+    dict(name='spritedraw-screen-word',file='cpppj/src/client/SpriteDraw.cpp',expect='SpriteDraw_',
+         before='ReadSprite(raw,22,2)',after='ReadSprite(raw,24,2)',note='화면 x 대신 y를 읽음'),
+    dict(name='spritedraw-wide-owner',file='cpppj/src/client/SpriteDraw.cpp',expect='SpriteDraw_',
+         before='ReadSprite(raw,12,2) : ReadSprite',after='ReadSprite(raw,12,1) : ReadSprite',note='특수 소유자의 WORD를 BYTE로 줄임'),
+    dict(name='spritedraw-virtual-minus-one',file='cpppj/src/client/SpriteDraw.cpp',expect='SpriteDraw_',
+         before='custom==-1 ? view.gumpFrame',after='custom==0 ? view.gumpFrame',note='가상 프레임 -1의 기본 프레임 선택을 바꿈'),
+    dict(name='spritedraw-selection-quarter',file='cpppj/src/client/SpriteDraw.cpp',expect='SpriteDraw_',
+         before='horizontal=header.width/4',after='horizontal=header.width/3',note='선택선 모서리 길이를 바꿈'),
+    dict(name='spritedraw-hp-quarter',file='cpppj/src/client/SpriteDraw.cpp',expect='SpriteDraw_',
+         before='current<=maximum/4 ? s.hitPointColors[2]',after='current<maximum/4 ? s.hitPointColors[2]',note='HP 1/4 색 경계를 바꿈'),
+    dict(name='spritedraw-kernel-zero',file='cpppj/src/client/SpriteDraw.cpp',expect='SpriteDraw_',
+         before='index=1;index<s.processes.size()',after='index=0;index<s.processes.size()',note='예약 Kernel 슬롯 0까지 스캔함'),
+    dict(name='spritedraw-shadow-destination',file='cpppj/src/client/SpriteDraw.cpp',expect='SpriteDraw_',
+         before='clip_,colors);',after='clip_,colors,request.mode==SpriteShapeMode::Shadow);',note='그림자를 소스 치환 대신 대상 화면 변환으로 출력함'),
+    dict(name='spritedraw-surface-bias',file='cpppj/src/client/SpriteDraw.cpp',expect='SpriteDraw_',
+         before='const int column=TruncateSprite(static_cast<double>(x)+static_cast<double>(0.9999F));',after='const int column=TruncateSprite(static_cast<double>(x));',note='표식 표면 조회의 +0.9999를 제거함'),
+    dict(name='spritedraw-common-dispatch',file='cpppj/src/client/SpriteDraw.cpp',expect='SpriteDraw_',
+         before='hooks.sprite=[&draw](const auto& entry) { draw.Draw(entry); };',after='hooks.sprite=[](const auto&) {};',note='공통 sprite/그룹 분배 연결을 제거함'),
     # 실제 미리보기 Draw 관찰과 픽셀·공통 분배 검사가 아래 차이를 검출해야 한다.
     dict(name='previewdraw-tail-layer',file='cpppj/src/client/PreviewDraw.cpp',expect='PreviewDraw_',
          before='if (!(entry.tail&2U))',after='if (!(entry.tail&4U))',note='본체/보조 레이어 선택 비트를 변경'),

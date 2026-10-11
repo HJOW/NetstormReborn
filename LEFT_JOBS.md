@@ -1,6 +1,8 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
-> **최신 cpppj 갱신: 2026-10-11 (`HJOW-Athlon`) — 커서 미리보기 Draw 복원 완료.** `PreviewDraw`의 raw 화면 WORD·판본별 프레임·본체 색 표/윤곽·격자 floor/교차/체크 무늬·글자/실패 사유/비용 배치를 복원하고 공통 kind 4 Draw에 연결했다. 실제 SHP 투명/색 표/8비트 출력과 GameAssets 블록 바인딩도 연결했다. 새 독립 원본 **1,431개**·누적 **511,734개**, 두 x87 정상 반환 **2,862회**. 새 C++ **8개**, Release 경고/오류 **0**·CTest 내부 **746개·실패 0**(150.26초, 전체 150.29초), 근거 감사 **113종**·새 변이 **11개 모두 검출**(`--focused`, 변이 전 사본 전체 검사 통과). 실제 자산 **318개 블록 바인딩**, 정상 SHP **297개**를 클론의 기존 VFX 출력과 픽셀별 대조했다. **실제 커서 생성/입력·문구/가격 이미지/색 표 공급·일반 sprite Draw·SP lazy 전역·Gump 생성/Draw·구름/배경/dirty/장치·Client/GameWorld 자동 프레임·클릭 선택·건설 GUI는 후속이며 게임 내 건설/미션 완주는 아직 불가능하다.** 마지막 디컴파일 수행 PC: **HJOW-Athlon, 2026-10-11**(`previewdraw` 10/10/10개 읽기 전용 내보내기). [상세 기록](docs/exe/cpp-preview-draw-reconstruction.md). 아래 기록은 당시 상태로 보존한다.
+> **최신 cpppj 갱신: 2026-10-12 (`HJOW-Athlon`) — 일반 sprite Draw 복원 완료.** `SpriteDraw`의 본체/그림자·판본별 raw 프레임/소유자·색 선택·가상 frame/Draw·표식·선택선·체력/상태 막대 분기를 복원하고 공통 kind 0/묶음에 연결했다. 실제 SHP 색/투명·선/막대 픽셀 출력, 현재 그림자 alias와 0단계 표면 조회도 연결했다. 새 독립 원본 **1,389개**·누적 **513,123개**, 두 x87 정상 반환 **2,778회**. 새 C++ **12개**, Release 경고/오류 **0**·CTest 내부 **758개·실패 0**(153.83초, 전체 153.86초), 근거 감사 **114종**·새 변이 **11개 모두 검출**(`--focused`, 변이 전 사본 전체 검사 통과). 실제 **318개 자산 블록/선택 헤더/기본 프레임 바인딩**과 정상 SHP **297개**의 클론 VFX 픽셀 대조를 확인했다. **실제 게임 조회/가상 처리기·색 표/추가 타입 상태/Kernel 공급·Gump 생성/Draw·커서 입력/클릭 선택·SP lazy·구름/배경/dirty/장치·Client/GameWorld 자동 프레임·건설 GUI는 후속이며 게임 내 건설/미션 완주는 아직 불가능하다.** 마지막 디컴파일 수행 PC: **HJOW-Athlon, 2026-10-12**(`spritedraw` 10/10/10개 읽기 전용 내보내기). [상세 기록](docs/exe/cpp-sprite-draw-reconstruction.md). 아래 기록은 당시 상태로 보존한다.
+
+> **앞 단계 cpppj 갱신: 2026-10-11 (`HJOW-Athlon`) — 커서 미리보기 Draw 복원 완료.** `PreviewDraw`의 raw 화면 WORD·판본별 프레임·본체 색 표/윤곽·격자 floor/교차/체크 무늬·글자/실패 사유/비용 배치를 복원하고 공통 kind 4 Draw에 연결했다. 실제 SHP 투명/색 표/8비트 출력과 GameAssets 블록 바인딩도 연결했다. 새 독립 원본 **1,431개**·누적 **511,734개**, 두 x87 정상 반환 **2,862회**. 새 C++ **8개**, Release 경고/오류 **0**·CTest 내부 **746개·실패 0**(150.26초, 전체 150.29초), 근거 감사 **113종**·새 변이 **11개 모두 검출**(`--focused`, 변이 전 사본 전체 검사 통과). 실제 자산 **318개 블록 바인딩**, 정상 SHP **297개**를 클론의 기존 VFX 출력과 픽셀별 대조했다. **실제 커서 생성/입력·문구/가격 이미지/색 표 공급·일반 sprite Draw·SP lazy 전역·Gump 생성/Draw·구름/배경/dirty/장치·Client/GameWorld 자동 프레임·클릭 선택·건설 GUI는 후속이며 게임 내 건설/미션 완주는 아직 불가능하다.** 마지막 디컴파일 수행 PC: **HJOW-Athlon, 2026-10-11**(`previewdraw` 10/10/10개 읽기 전용 내보내기). [상세 기록](docs/exe/cpp-preview-draw-reconstruction.md). 아래 기록은 당시 상태로 보존한다.
 
 > **앞 단계 cpppj 갱신: 2026-10-11 (`HJOW-Athlon`) — 커서 미리보기 표시 수집 복원 완료.** 커서 조각의 실제 raw SID 목록/선택 타입/부모 깊이/spot을 읽는 `PreviewCollection`을 복원하고 공통 수집/정렬/kind 4 분배에 연결했다. 실패 후보의 14바이트 부분 기록·kind/tail 보존·+0.9999/CRT·두 레이어/원래 보조 깊이·soft 쌍 제한·현재 목록·판본별 잠금/피드백을 원본과 대조했다. 준비한 실제 SP 저장소의 읽기도 연결했다. 새 독립 원본 **1,560개**·누적 **510,303개**, 두 x87 정상 반환 **3,120회**. 새 C++ **8개**, Release 경고/오류 **0**·CTest 내부 **738개·실패 0**(151.98초, 전체 152.03초), 근거 감사 **112종**·새 변이 **11개 모두 검출**(`--focused`, 변이 전 사본 전체 검사 통과). **미리보기/일반 sprite 실제 Draw·커서 생성/입력·SP lazy 상태 연결·월드 투영·실제 Gump/구름/배경/dirty/장치·Client/GameWorld 자동 프레임·클릭 선택·건설 SHP/팔레트 출력은 후속이며 게임 내 건설/미션 완주는 아직 불가능하다.** 마지막 디컴파일 수행 PC: **HJOW-Athlon, 2026-10-11**(`previewcollection` 3/3/3개 읽기 전용 내보내기). [상세 기록](docs/exe/cpp-preview-collection-reconstruction.md). 아래 기록은 당시 상태로 보존한다.
 
@@ -96,6 +98,16 @@
 
 ---
 
+## 2026-10-12 ✅ 완료 / ⏭ 부분 인계: 일반 sprite Draw (HJOW-Athlon)
+
+- [x] **착수/호스트:** AGENTS.md·두 LEFT_JOBS 확인, 깨끗한 트리·현재/마지막 PC 일치. `spritedraw` **10/10/10개** 읽기 전용 내보내기. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-12.** 원본/복사본 게임·analyzeManager·클론 창 미실행.
+- [x] **완료:** `00498220`/CD `00455f60`의 raw 화면/월드 assert·판본별 프레임/extra/소유자·그림자 한 번 보정/alias·소유자/명시 색·가상 -1/Draw/필터·표식·signed 선택 헤더/8선·판본별 HP/막대·패치 건설/자원/타이머/Kernel 상태/비용 분기와 순서를 복원했다.
+- [x] **실제 연결:** `BindSpriteDraw`→kind 0/묶음→`SpritePixelTarget`→실제 SHP 투명/색·선/막대. `MakeSpriteAssetViews/Shapes`→원본 자산/현재 alias, `MakeSpriteSurfaceLookup`→+0.9999/CRT/0단계 표. 실제 수집→CRT→Draw→픽셀·현재 raw/필터/alias·손상 계약 검사. 게임 조회/색/타입 추가 상태/Kernel 공급은 후속이다.
+- [x] **독립 근거:** 세 PE 각 **463개**, 새 **1,389개**·누적 **513,123개**, 두 x87 정상 반환 **2,778회**. 전체 Draw/타입/선택 헤더/HP/막대/지도/Kernel/CRT 몸체, VFX/가상 처리기/게임 조회만 경계. 명령열·선택 SID/alias·ABI/x87/SEH·입력/허용 실행·쓰기·SHA/진입/반환/경계 집계 감사. finite 정상 입력, 게임/OS/assert 0.
+- [x] **검증:** 새 C++ **12개**, Release 경고/오류 **0**·CTest 내부 **758개·실패 0**(153.83초, 전체 153.86초), 근거 감사 **114종**·새 변이 **11개 모두 검출**(`--focused`, 변이 전 사본 전체 검사 통과). 집중 검사 **12개·실패 0**. 실제 **318개 자산 블록/선택 헤더/기본 프레임 바인딩**·정상 SHP **297개**의 기존 클론 VFX 픽셀 대조. 원본 게임 화면 캡처 일치의 근거는 아니다. 초기 부족 입력/실패 후 접근도 수정한 최종 결과다.
+- [x] **인계/보호:** 앞 단계 일반 sprite Draw TODO 완료 표시. README·계획·내보내기 안내·[상세 기록](docs/exe/cpp-sprite-draw-reconstruction.md) 갱신. AGENTS.md·보호 원본·dotnetpj/인계 변경 없음, 커밋/푸시 없음. 로그 `extracted/spritedraw-{export,export-cd,smoke,oracle,build,focused,ctest,audits,mutations,assets}.log`. 변이는 별도 사본 소스만 적용/복구했다.
+- [ ] **다음:** ① 공통 kind 2의 Gump 실제 Draw `00466310`/CD `00492aa0`·생성과 일반/미리보기 게임 조회/가상 처리기·실제 색 표·타입 +0x1b8/+0x1bc/+0x1cc·ProcessKernel 현재 슬롯 공급. ② 커서 생성/입력/문구/가격 이미지/클릭 선택·SP lazy·구름/배경/dirty/장치·Client/GameWorld 자동 프레임. ③ 실제 건설 SHP/팔레트/준비 소리(+0x90)·부모 공간/사제 contained·하위 경로/자원·집합/지연 분배·건설 GUI. **게임 내 건설/미션 완주는 아직 불가능하다.**
+
 ## 2026-10-11 ✅ 완료 / ⏭ 부분 인계: 커서 미리보기 Draw (HJOW-Athlon)
 
 - [x] **착수/호스트:** AGENTS.md·두 LEFT_JOBS 확인, 깨끗한 트리·현재/마지막 PC 일치. `previewdraw` **10/10/10개** 읽기 전용 내보내기. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-11.** 원본/복사본 게임·analyzeManager·클론 창 미실행.
@@ -104,7 +116,8 @@
 - [x] **독립 근거:** 세 PE 각 **477개**, 새 **1,431개**·누적 **511,734개**, 두 x87 정상 반환 **2,862회**. 실제 Draw/타입/월드 투영/CRT floor/절삭/교차 몸체, 픽셀/번역/글꼴만 명시 경계. 전체 명령열/ABI/x87/SEH·읽기 전용 슬롯/타입/격자/문자·허용 실행/쓰기·SHA/진입·정상 반환/경계 집계 감사. finite 좌표/기본 x87 floor 범위, 게임/OS/assert 0.
 - [x] **검증:** 새 C++ **8개**, Release 경고/오류 **0**·CTest 내부 **746개·실패 0**(150.26초, 전체 150.29초), 근거 감사 **113종**·새 변이 **11개 모두 검출**(`--focused`, 변이 전 사본 전체 검사 통과). 집중 검사 **8개·실패 0**. 변이는 별도 사본에서만 적용/복구, 미검출/건너뜀 **0개**. 실제 자산 **318개 블록 바인딩**, 정상 SHP **297개**를 클론의 기존 VFX 출력과 픽셀별 대조했다. 이 픽셀 검사는 원본 화면 캡처 일치의 근거가 아니다.
 - [x] **인계/보호:** 앞 단계 미리보기 Draw TODO 완료 표시. README·계획·내보내기 안내·[상세 기록](docs/exe/cpp-preview-draw-reconstruction.md) 갱신. AGENTS.md·보호 원본·dotnetpj/인계 변경 없음, 커밋/푸시 없음. 로그 `extracted/previewdraw-{export,smoke,oracle,build,focused,ctest,audits,mutations,assets}.log`.
-- [ ] **다음:** ① 일반 sprite Draw `00498220`의 실제 SHP/그림자/표식/선택 분기. ② 실제 커서 생성/입력·색/글자 표·가격 이미지/번역·SP lazy 전역·Gump 생성/Draw·구름/배경/dirty/장치·Client/GameWorld 자동 프레임·클릭 선택. ③ 실제 건설 SHP/팔레트/현재 색 표·준비 소리(+0x90)·부모 공간/사제 contained·하위 경로/자원·집합/지연 분배·건설 GUI. **게임 내 건설/미션 완주는 아직 불가능하다.**
+- [x] **일반 sprite Draw 완료(2026-10-12):** 본체/그림자/표식/선택/상태 막대의 분기·실제 SHP 픽셀·공통 분배를 복원했다. 실제 게임 상태/색 공급은 새 인계 참조.
+- [ ] **다음:** ① 실제 커서 생성/입력·색/글자 표·가격 이미지/번역·SP lazy 전역·Gump 생성/Draw·구름/배경/dirty/장치·Client/GameWorld 자동 프레임·클릭 선택. ② 실제 건설 SHP/팔레트/현재 색 표·준비 소리(+0x90)·부모 공간/사제 contained·하위 경로/자원·집합/지연 분배·건설 GUI. **게임 내 건설/미션 완주는 아직 불가능하다.**
 
 ## 2026-10-11 ✅ 완료 / ⏭ 부분 인계: 커서 미리보기 표시 수집 (HJOW-Athlon)
 

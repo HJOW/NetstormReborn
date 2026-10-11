@@ -6,6 +6,7 @@ add_executable(netstorm_tests
     ObjectCollectionTests.cpp
     PreviewCollectionTests.cpp
     PreviewDrawTests.cpp
+    SpriteDrawTests.cpp
     GumpCollectionTests.cpp
     DrawSubmissionTests.cpp
     DrawSortTests.cpp
@@ -473,3 +474,7 @@ set_source_files_properties(PreviewCollectionTests.cpp PROPERTIES COMPILE_DEFINI
 # 미리보기 Draw의 전체 분기/격자/색 표/문구 배치 관찰이다.
 set_source_files_properties(PreviewDrawTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PREVIEWDRAW_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/previewdraw-x86.tsv\"")
+
+# 일반 sprite Draw의 세 판본별 전체 기계어 관찰이다.
+set_source_files_properties(SpriteDrawTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_SPRITEDRAW_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/spritedraw-x86.tsv\"")

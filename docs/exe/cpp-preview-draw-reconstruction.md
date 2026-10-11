@@ -63,4 +63,4 @@ CD 디컴파일은 겹친 스택 지역 변수 때문에 보조 이미지/문구
 
 ## 남은 범위
 
-일반 sprite Draw `00498220`의 실제 SHP/그림자/표식·선택 분기, 실제 커서 생성·입력과 표 생성/가격 이미지/문구·색 표 공급, SP lazy 전역 연결, Gump 생성/Draw·구름/배경·dirty 순회·장치·Client/GameWorld 자동 프레임·클릭 선택을 이어간다. 실제 건설 SHP·팔레트·준비 소리/부모 공간·contained·건설 GUI도 남았다. **게임 내 건설/미션 완주는 아직 불가능하다.**
+일반 sprite Draw는 [2026-10-12 복원 완료](cpp-sprite-draw-reconstruction.md)했다. 실제 커서 생성·입력과 표 생성/가격 이미지/문구·색 표 공급, SP lazy 전역 연결, Gump 생성/Draw·구름/배경·dirty 순회·장치·Client/GameWorld 자동 프레임·클릭 선택을 이어간다. 실제 건설 SHP·팔레트·준비 소리/부모 공간·contained·건설 GUI도 남았다. **게임 내 건설/미션 완주는 아직 불가능하다.**
