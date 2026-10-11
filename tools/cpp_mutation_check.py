@@ -1155,6 +1155,34 @@ MUTATIONS.extend([
 ])
 
 
+# Gump 생성/등록의 원본 미작성 필드·현재 전역·동일 표시 저장소를 검사하는 변이다.
+MUTATIONS.extend([
+    dict(name='gump-create-no-void-bit',file='cpppj/src/client/GumpCreate.cpp',expect='GumpCreate_',
+         before='node->flags=flags|kVoid;',after='node->flags=flags;',note='초기 void 비트 8을 생략'),
+    dict(name='gump-create-zero-unwritten-form',file='cpppj/src/client/GumpCreate.cpp',expect='GumpCreate_',
+         before='node->form=form;',after='node->form=0;',note='기본 생성자가 쓰지 않는 +0x28을 0으로 초기화'),
+    dict(name='gump-create-zero-unwritten-word',file='cpppj/src/client/GumpCreate.cpp',expect='GumpCreate_',
+         before='node->untouched=untouched;',after='node->untouched=0;',note='기본 생성자가 쓰지 않는 +0x74를 0으로 초기화'),
+    dict(name='gump-create-zero-text-defaults',file='cpppj/src/client/GumpCreate.cpp',expect='GumpCreate_',
+         before='node->textContext={0,0,0,0,0,0,1,1};',after='node->textContext={0,0,0,0,0,0,0,0};',note='기본 글자 문맥의 마지막 두 필드를 0으로 바꿈'),
+    dict(name='gump-create-skip-unregistered-serial',file='cpppj/src/client/GumpCreate.cpp',expect='GumpCreate_',
+         before='node->serial=++state_.serial;',after='node->serial=(flags&kUnregistered) ? state_.serial : ++state_.serial;',note='미등록 생성에서 serial 증가를 생략'),
+    dict(name='gump-create-last-hole',file='cpppj/src/client/GumpCreate.cpp',expect='GumpCreate_',
+         before='node->id=static_cast<std::uint32_t>(index);break;',after='node->id=static_cast<std::uint32_t>(index);',note='첫 빈 칸에서 멈추지 않고 모든 빈 칸에 같은 토큰을 등록'),
+    dict(name='gump-create-wrong-unregistered-bit',file='cpppj/src/client/GumpCreate.cpp',expect='GumpCreate_',
+         before='kUnregistered=0x100000',after='kUnregistered=0x200000',note='등록 생략 플래그를 인접 비트로 바꿈'),
+    dict(name='gump-create-root-resets-counters',file='cpppj/src/client/GumpCreate.cpp',expect='GumpCreate_',
+         before='state_.entries.fill(0);state_.collection.root=0;',after='state_.entries.fill(0);state_.collection.root=0;state_.count=0;state_.serial=0;',note='루트 초기화에서 기존 개수/serial을 지움'),
+    dict(name='gump-create-root-stale-screen',file='cpppj/src/client/GumpCreate.cpp',expect='GumpCreate_',
+         before='const auto token=hooks_.allocate(kGumpBaseSize);\n    if (token) Construct(token,0,static_cast<float>(state_.screenWidth),static_cast<float>(state_.screenHeight),1);',
+         after='const auto width=state_.screenWidth,height=state_.screenHeight;const auto token=hooks_.allocate(kGumpBaseSize);\n    if (token) Construct(token,0,static_cast<float>(width),static_cast<float>(height),1);',note='할당 경계가 바꾸기 전 화면 크기로 루트를 생성'),
+    dict(name='gump-create-root-keeps-table',file='cpppj/src/client/GumpCreate.cpp',expect='GumpCreate_',
+         before='state_.entries.fill(0);state_.collection.root=0;',after='state_.collection.root=0;',note='루트 new 전에 등록 표를 비우지 않음'),
+    dict(name='gump-create-collection-disconnected',file='cpppj/src/client/GumpCreate.cpp',expect='GumpCreate_',
+         before='return token ? hooks_.node(token) : nullptr;',after='(void)token;return nullptr;',note='생성 저장소를 현재 Gump 표시 수집에 연결하지 않음'),
+])
+
+
 def run(command):
     """명령을 실행하고 표준 출력/오류를 합쳐 돌려준다. 실패 코드는 호출자가 판단한다."""
     result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, encoding='utf-8', errors='replace')

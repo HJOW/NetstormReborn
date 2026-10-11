@@ -1,0 +1,8 @@
+{
+  "description": "Gump 기본 생성/첫 빈 칸 등록과 루트 초기화의 전체 몸체. 루트 new만 명시 할당 경계다. 마지막 디컴파일 PC: HJOW-Athlon, 2026-10-12.",
+  "editions": {
+    "originals": ["004642c0", "004663d0"],
+    "originalCD": ["00492da0", "00492b30"],
+    "original1037": ["00492da0", "00492b30"]
+  }
+}
