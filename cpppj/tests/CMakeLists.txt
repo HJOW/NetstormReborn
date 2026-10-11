@@ -8,6 +8,7 @@ add_executable(netstorm_tests
     PreviewDrawTests.cpp
     SpriteDrawTests.cpp
     GumpCollectionTests.cpp
+    GumpDrawTests.cpp
     DrawSubmissionTests.cpp
     DrawSortTests.cpp
     RenderCollectionTests.cpp
@@ -478,3 +479,7 @@ set_source_files_properties(PreviewDrawTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 일반 sprite Draw의 세 판본별 전체 기계어 관찰이다.
 set_source_files_properties(SpriteDrawTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_SPRITEDRAW_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/spritedraw-x86.tsv\"")
+
+# Gump Draw의 전체 클립 보호/가상 호출 관찰은 이 검사 소스에서만 읽는다.
+set_source_files_properties(GumpDrawTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_GUMPDRAW_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gumpdraw-x86.tsv\"")

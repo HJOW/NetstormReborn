@@ -48,4 +48,4 @@ extra bit 2는 vtable +0x78의 가상 프레임과 +0xa4의 가상 Draw를 사�
 
 게임 조회/가상 frame/Draw·실제 플레이어/명시 색 표·추가 상태 타입 필드/ProcessKernel 공급과 전체 Client/GameWorld 프레임은 후속이다. 초기화하지 않은 색/조회 경계를 조용히 생략하지 않고 사용하는 분기에서 예외로 알린다. `MakeSpriteAssetViews`가 +0x1b8/+0x1bc/+0x1cc까지 자산에서 자동 준비했다는 뜻은 아니다.
 
-다음은 공통 kind 2의 **Gump 실제 Draw `00466310`/CD `00492aa0` 및 생성**, 일반/미리보기 자산 상태 공급·입력/클릭 선택, SP lazy 전역, 구름/배경/dirty/장치, 건설 SHP/팔레트·준비 소리/contained·건설 GUI다. **게임 내 건설/미션 완주는 아직 불가능하다.**
+공통 kind 2의 Gump Draw·클립 보호는 [2026-10-12 복원 완료](cpp-gump-draw-reconstruction.md)했다. 다음은 **Gump 기본/파생 생성·실제 가상 처리기**, 일반/미리보기 자산 상태 공급·입력/클릭 선택, SP lazy 전역, 구름/배경/dirty/장치, 건설 SHP/팔레트·준비 소리/contained·건설 GUI다. **게임 내 건설/미션 완주는 아직 불가능하다.**

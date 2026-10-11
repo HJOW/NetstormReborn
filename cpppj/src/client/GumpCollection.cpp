@@ -67,6 +67,8 @@ ScreenRect GumpCollection::Bounds(std::uint32_t token) const {
     const auto point=Position(token);const auto& node=Node(token);
     return {point.x,point.y,Ftol(static_cast<double>(point.x)+node.width),Ftol(static_cast<double>(point.y)+node.height)};
 }
+// 좌표/캐시를 갱신하지 않고 현재 플래그만 반환한다. 없는 토큰은 공통 저장소 계약으로 거부한다.
+std::uint32_t GumpCollection::Flags(std::uint32_t token) const { return Node(token).flags; }
 std::int32_t GumpCollection::CollectNode(std::uint32_t token,ScreenRect view,
     std::span<o::RenderCollectionEntry> output,std::int32_t limit) const {
     std::unordered_set<std::uint32_t> active;

@@ -29,6 +29,8 @@ public:
     ScreenPoint Position(std::uint32_t token) const;
     // 정수 위치에 배율 적용 크기를 더해 절삭한다. 합산 직후 float으로 재반올림하지 않는다.
     ScreenRect Bounds(std::uint32_t token) const;
+    // Draw 직전에 같은 저장소의 현재 raw 플래그를 읽는다. visible/dead 필터는 수집기가 담당한다.
+    std::uint32_t Flags(std::uint32_t token) const;
     // 원본의 root.child/override 순서로 수집한다. limit은 각 최상위 노드에 같은 값으로 전달한다.
     // 따라서 전체 반환 수는 limit을 넘을 수 있다. 실제 output 크기를 넘기는 쓰기는 예외로 거부한다.
     std::int32_t Collect(ScreenRect view,std::span<o::RenderCollectionEntry> output,std::int32_t limit) const;

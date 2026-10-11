@@ -1126,6 +1126,35 @@ MUTATIONS = [
 ]
 
 
+# Gump Draw의 클립 보호/현재 상태/공통 연결과 실제 픽셀 경계를 검사하는 변이다.
+MUTATIONS.extend([
+    dict(name='gump-draw-wrong-clip-bit',file='cpppj/src/client/GumpDraw.h',expect='GumpDraw_',
+         before='kGumpDrawClip=0x00400000',after='kGumpDrawClip=0x00800000',note='Gump 임시 클립 플래그를 인접 비트로 바꿈'),
+    dict(name='gump-draw-no-restore',file='cpppj/src/client/GumpDraw.cpp',expect='GumpDraw_',
+         before='~ClipGuard() { SetGumpDrawClip(state_,saved_); }',after='~ClipGuard() {}',note='정상/예외 반환의 클립 복구를 생략'),
+    dict(name='gump-draw-intersection-instead-of-clamp',file='cpppj/src/client/GumpDraw.cpp',expect='GumpDraw_',
+         before='SetGumpDrawClip(state_,ClipScreenRect(bounds,saved_));',
+         after='SetGumpDrawClip(state_,{std::max(bounds.left,saved_.left),std::max(bounds.top,saved_.top),std::min(bounds.right,saved_.right),std::min(bounds.bottom,saved_.bottom)});',note='독립 경계 제한을 단순 교차로 바꿈'),
+    dict(name='gump-draw-save-before-projection',file='cpppj/src/client/GumpDraw.cpp',expect='GumpDraw_',
+         before='const auto bounds=collection_.Bounds(token);const ClipGuard guard(state_,bounds);',
+         after='const auto saved=state_.clip;const auto bounds=collection_.Bounds(token);state_.clip=saved;const ClipGuard guard(state_,bounds);',note='투영이 클립을 바꾸기 전의 영역을 저장'),
+    dict(name='gump-draw-skip-empty-virtual',file='cpppj/src/client/GumpDraw.cpp',expect='GumpDraw_',
+         before='hooks_.draw(token);return;',after='if (state_.clip.left>=state_.clip.right || state_.clip.top>=state_.clip.bottom) return;hooks_.draw(token);return;',note='빈/역전 클립에서 가상 Draw를 생략'),
+    dict(name='gump-draw-restore-unclipped',file='cpppj/src/client/GumpDraw.cpp',expect='GumpDraw_',
+         before='    hooks_.draw(token);\n}',after='    const auto saved=state_.clip;hooks_.draw(token);SetGumpDrawClip(state_,saved);\n}',note='flagless 가상 Draw의 클립 변경을 되돌림'),
+    dict(name='gump-draw-vfx-end-not-decremented',file='cpppj/src/client/GumpDraw.cpp',expect='GumpDraw_',
+         before='std::uint32_t(value)-1U',after='std::uint32_t(value)-0U',note='VFX inclusive 끝점에서 1을 빼지 않음'),
+    dict(name='gump-draw-pixel-logical-clip',file='cpppj/src/client/GumpDraw.cpp',expect='GumpDraw_',
+         before='const auto clip=state_.vfxClip;',after='const auto clip=state_.clip;',note='현재 VFX 전역 대신 논리 전역을 픽셀 클립으로 사용'),
+    dict(name='gump-draw-line-last-excluded',file='cpppj/src/client/GumpDraw.cpp',expect='GumpDraw_',
+         before='std::int64_t(std::max(line.first.x,line.last.x))+1',after='std::int64_t(std::max(line.first.x,line.last.x))',note='수평선 마지막 픽셀을 제외'),
+    dict(name='gump-draw-image-ignore-colors',file='cpppj/src/client/GumpDraw.cpp',expect='GumpDraw_',
+         before='position.x,position.y,Clip(),colors);',after='position.x,position.y,Clip(),nullptr);',note='이미지 소스 색 치환을 생략'),
+    dict(name='gump-draw-dispatch-disconnected',file='cpppj/src/client/GumpDraw.cpp',expect='GumpDraw_',
+         before='hooks.ui=[&draw](auto token) { draw.Draw(token); };',after='hooks.ui=[&draw](auto token) { (void)draw;(void)token; };',note='공통 kind 2를 실제 Gump Draw에 연결하지 않음'),
+])
+
+
 def run(command):
     """명령을 실행하고 표준 출력/오류를 합쳐 돌려준다. 실패 코드는 호출자가 판단한다."""
     result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, encoding='utf-8', errors='replace')
