@@ -32,6 +32,29 @@ TESTS = BUILD / 'bin/Release/netstorm_tests.exe'
 EXCLUDED = {'build'}
 # 변이 목록: 이름, 대상 파일, 바꿀 원문(파일에 정확히 한 번 있어야 한다), 바꾼 문장, 실패해야 하는 검사 이름 접두사.
 MUTATIONS = [
+    # 실제 미리보기 Draw 관찰과 픽셀·공통 분배 검사가 아래 차이를 검출해야 한다.
+    dict(name='previewdraw-tail-layer',file='cpppj/src/client/PreviewDraw.cpp',expect='PreviewDraw_',
+         before='if (!(entry.tail&2U))',after='if (!(entry.tail&4U))',note='본체/보조 레이어 선택 비트를 변경'),
+    dict(name='previewdraw-screen-word',file='cpppj/src/client/PreviewDraw.cpp',expect='PreviewDraw_',
+         before='ReadPreviewDraw(raw,22,2)',after='ReadPreviewDraw(raw,24,2)',note='raw 화면 x 대신 y WORD를 읽음'),
+    dict(name='previewdraw-hotspot',file='cpppj/src/client/PreviewDraw.cpp',expect='PreviewDraw_',
+         before='sx=SubPreview(x,record.hotspotX)',after='sx=x',note='본체 SHP hotspot 보정을 생략'),
+    dict(name='previewdraw-parent-outline',file='cpppj/src/client/PreviewDraw.cpp',expect='PreviewDraw_',
+         before='outlined=!c.parentGump &&',after='outlined=',note='부모 Gump의 윤곽/격자 억제를 제거'),
+    dict(name='previewdraw-owner-zero',file='cpppj/src/client/PreviewDraw.cpp',expect='PreviewDraw_',
+         before='std::bit_cast<std::int32_t>(c.localPlayer)>0',after='std::bit_cast<std::int32_t>(c.localPlayer)>=0',note='소유자 0도 플레이어 색 표 사용'),
+    dict(name='previewdraw-patch-frame',file='cpppj/src/client/PreviewDraw.cpp',expect='PreviewDraw_',
+         before='OriginalEdition::Patch1078 ? 4 : 1',after='OriginalEdition::Patch1078 ? 1 : 1',note='패치 DWORD 프레임을 BYTE로 읽음'),
+    dict(name='previewdraw-grid-snap',file='cpppj/src/client/PreviewDraw.cpp',expect='PreviewDraw_',
+         before='std::floor(static_cast<double>(wx)+0.5)',after='std::trunc(static_cast<double>(wx)+0.5)',note='음수 격자 좌표의 floor를 절삭으로 변경'),
+    dict(name='previewdraw-grid-index',file='cpppj/src/client/PreviewDraw.cpp',expect='PreviewDraw_',
+         before='(column+1)*12+row+1',after='(row+1)*12+column+1',note='배치 격자 표의 열/행 주소를 뒤바꿈'),
+    dict(name='previewdraw-message-priority',file='cpppj/src/client/PreviewDraw.cpp',expect='PreviewDraw_',
+         before='if (!c.legal && s.blocked) message=2;',after='if (!c.legal && s.blocked) message=3;',note='가로막힌 배치의 우선 문구 번호 변경'),
+    dict(name='previewdraw-checker-phase',file='cpppj/src/client/PreviewDraw.cpp',expect='PreviewDraw_',
+         before='if (((x^y)&1)!=0)',after='if (((x^y)&1)==0)',note='배치 격자의 체크 무늬 위상을 반전'),
+    dict(name='previewdraw-common-dispatch',file='cpppj/src/client/PreviewDraw.cpp',expect='PreviewDraw_',
+         before='draw.Draw(entry);',after='(void)entry;',note='공통 kind 4의 실제 Draw 호출 생략'),
     # 미리보기의 부분 기록/두 레이어/준비된 SP 상태 관찰과 공통 연결이 각 차이를 검출해야 한다.
     dict(name='previewcollection-spot-bias',file='cpppj/src/client/PreviewCollection.cpp',expect='PreviewCollection_',
          before='static_cast<double>(coordinate)+kSpotBias',after='static_cast<double>(coordinate)+0.5',note='배치 칸의 +0.9999를 +0.5로 변경'),
