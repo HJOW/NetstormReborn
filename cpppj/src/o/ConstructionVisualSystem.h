@@ -52,6 +52,8 @@ public:
     std::int32_t Collect(RenderWorldRect view,std::span<RenderCollectionEntry> output,std::int32_t limit) const;
     // 수집/정렬한 종류 3 항목을 현재 토큰으로 조회해 제출한다. 수집 뒤 삭제된 항목은 건너뛴다.
     void DrawCollected(std::span<const RenderCollectionEntry> entries) const;
+    // 공통 kind 3 분배가 현재 살아 있는 표시 토큰 하나를 그린다. 수집 이후 삭제된 토큰은 건너뛴다.
+    void DrawToken(std::uint32_t token) const;
     // 목록의 구멍과 현재 소유 프로세스 수를 읽는다. Slots의 span은 Add의 확장 때 무효다.
     std::span<const std::uint32_t> Slots() const;
     std::size_t Size() const;

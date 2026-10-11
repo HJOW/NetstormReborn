@@ -296,3 +296,50 @@ TEST_CASE(ConstructionVisualSystem_RejectsForeignPoolAndHandlesCaptureCancellati
     cancel=false;world.system->Add(world.parent,false);CHECK(world.kernel.Size()==1 && world.system->Size()==1);
     CHECK(Throws([&] { MakeConstructionVisualSystemHooks(other.pool,*world.system,{}); }));
 }
+
+// 실제 건설 두 프로세스가 UI/묶음/자산/미리보기와 한 번 정렬되며 공통 분배에서 원래 출력 버퍼를 그린다.
+TEST_CASE(DrawSubmission_ActualConstructionMergesWithOtherKinds) {
+    using namespace netstorm::client;
+    // 두 판본의 실제 form/Kernel/가시 수집/Draw를 같은 혼합 목록에 연결한다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
+        World world(edition);std::vector<std::string> drawn;const std::uint8_t* firstPixels=nullptr;
+        auto frame=world.FrameHooks();const auto draw=frame.draw;
+        frame.draw=[&](const ConstructionFrameDraw& request) { draw(request);drawn.push_back(request.pixels.data()==firstPixels ? "C1" : "C2"); };
+        world.CreateSystem(world.VisualHooks(),frame,world.RegistryHooks());auto* first=world.system->Add(world.parent,false);
+        firstPixels=first->Fields().visual.output.data();world.pool.AllocatedBytes(world.parent)[world.patch ? 35 : 33]=7;
+        auto* second=world.system->Add(world.parent,false);world.Hp(50);world.kernel.RunFrame();
+        std::array<RenderCollectionEntry,2> members{{{0,0,77,20,0,0},{0,0,78,100,4,2}}};std::int32_t count=2;
+        const std::array<DrawGroupView,1> groups{{{500,members,&count}}};DrawCollectionHooks collect;
+        collect.ui=[](auto,auto output,auto limit) { CHECK(limit==10);output[0]={0,0,99,30,2,0};return 1; };
+        collect.groups=[&](auto,auto,bool& covered)->std::span<const DrawGroupView> { covered=true;return groups; };
+        collect.objects=[](auto,auto output,auto limit) { CHECK(limit==6);output[0]={0,0,103,5,0,0};return 1; };
+        collect.preview=[](auto,auto output,auto limit) { CHECK(limit==5);output[0]={0,0,104,-30,4,2};return 1; };
+        DrawDispatchHooks dispatch;
+        dispatch.ui=[&](auto token) { drawn.push_back("U"+std::to_string(token)); };
+        dispatch.sprite=[&](const auto& entry) { drawn.push_back("S"+std::to_string(entry.token)); };
+        dispatch.group=[&](auto token) { CHECK(token==500);return groups[0]; };
+        dispatch.preview=[&](const auto& entry) { CHECK(entry.tail==2);drawn.push_back("P"+std::to_string(entry.token)); };
+        std::array<RenderCollectionEntry,10> work{};DrawCollectionRequest request{{0,0,500,500},{20,20,22,23},{19,19,24,24},0,17};
+        const auto result=DrawVisibleScene(*world.system,request,work,collect,{},dispatch);
+        CHECK(result.count==6 && result.backgroundCovered && world.draws.size()==2);
+        CHECK(drawn==std::vector<std::string>({"U99","S77","S78","C2","S103","C1","P104"}));
+        CHECK(work[2].token==second->Registration().token && work[4].token==first->Registration().token);
+        drawn.clear();world.draws.clear();CHECK(DrawVisibleScene(*world.system,request,work,collect,{},dispatch,false).count==6);
+        CHECK(drawn==std::vector<std::string>({"U99","C1","C2","S77","S78","S103","P104"}));
+        drawn.clear();world.draws.clear();request.dirtyFlags=4;
+        const auto uiOnly=DrawVisibleScene(*world.system,request,work,collect,{},dispatch);
+        CHECK(uiOnly.count==1 && !uiOnly.backgroundCovered && drawn==std::vector<std::string>({"U99"}) && world.draws.empty());
+    }
+}
+
+// 앞선 종류의 Draw가 건설 토큰을 삭제해도 현재 슬롯의 새 토큰을 이전 목록에 섞지 않는다.
+TEST_CASE(DrawSubmission_ConstructionDeletionDuringMixedDispatch) {
+    using namespace netstorm::client;World world(OriginalEdition::Patch1078);world.CreateSystem();
+    auto* first=world.system->Add(world.parent,false);const auto old=first->Registration().token;ConstructionVisualProcess* replacement=nullptr;
+    DrawCollectionHooks collect;collect.ui=[](auto,auto output,auto) { output[0]={0,0,99,30,2,0};return 1; };
+    DrawDispatchHooks dispatch;dispatch.ui=[&](auto) { world.host.Kill(*first,0);replacement=world.system->Add(world.parent,false); };
+    std::array<RenderCollectionEntry,2> work{};
+    CHECK(DrawVisibleScene(*world.system,{{},{20,20,22,23},{20,20,22,23},0,0},work,collect,{},dispatch).count==2);
+    CHECK(world.draws.empty() && replacement && replacement->Registration().token!=old && work[1].token==old && Released(world.released,1));
+    world.system->DrawToken(replacement->Registration().token);CHECK(world.draws.size()==1);
+}

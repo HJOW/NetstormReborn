@@ -9,8 +9,19 @@ namespace netstorm::client {
 std::int32_t DrawVisibleConstruction(o::ConstructionVisualSystem& system,o::RenderWorldRect view,
     std::span<o::RenderCollectionEntry> work,bool sort) {
     if (work.size()>static_cast<std::size_t>(std::numeric_limits<std::int32_t>::max())) throw std::length_error("건설 표시 작업 버퍼 크기 오류");
-    const auto count=system.Collect(view,work,static_cast<std::int32_t>(work.size()));auto entries=work.first(static_cast<std::size_t>(count));
+    return DrawVisibleScene(system,{{},view,view,0,0},work,{}, {},{},sort).count;
+}
+// 수집기는 호출 동안만 system을 참조하며 정렬은 같은 풀의 판본을 따른다.
+DrawCollectionResult DrawVisibleScene(o::ConstructionVisualSystem& system,const DrawCollectionRequest& request,
+    std::span<o::RenderCollectionEntry> work,DrawCollectionHooks collection,
+    const DrawDispatchState& state,DrawDispatchHooks dispatch,bool sort) {
+    collection.construction=[&system](o::RenderWorldRect view,std::span<o::RenderCollectionEntry> output,std::int32_t limit) {
+        return system.Collect(view,output,limit);
+    };
+    dispatch.construction=[&system](std::uint32_t token) { system.DrawToken(token); };
+    const auto result=CollectDrawEntries(request,work,collection);
+    auto entries=work.first(static_cast<std::size_t>(result.count));
     if (sort) SortDrawEntries(entries,system.Pool().Edition());
-    system.DrawCollected(entries);return count;
+    DispatchDrawEntries(entries,state,dispatch);return result;
 }
 }

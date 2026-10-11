@@ -110,8 +110,12 @@ void ConstructionVisualSystem::DrawCollected(std::span<const RenderCollectionEnt
     // 목록은 수집된 시점의 항목이다. 출력 중 새 객체를 만들어도 이번 목록에 추가하지 않는다.
     for (const auto& entry:entries) {
         if (entry.kind!=3) throw std::invalid_argument("건설 표시 수집 항목 종류 오류");
-        const auto found=processes_.find(entry.token);if (found!=processes_.end()) found->second->Draw();
+        DrawToken(entry.token);
     }
+}
+// 상위 공통 목록의 kind 3은 키/종류 대신 표시 토큰만 전달한다.
+void ConstructionVisualSystem::DrawToken(std::uint32_t token) const {
+    const auto found=processes_.find(token);if (found!=processes_.end()) found->second->Draw();
 }
 // 소멸 경계는 예외를 던지지 않는 계약이다. 부착 전 확보 실패라면 아직 등록할 칸이 없다.
 void ConstructionVisualSystem::Destroy(ConstructionVisualProcess& process) {

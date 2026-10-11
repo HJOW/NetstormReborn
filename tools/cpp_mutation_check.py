@@ -32,6 +32,26 @@ TESTS = BUILD / 'bin/Release/netstorm_tests.exe'
 EXCLUDED = {'build'}
 # 변이 목록: 이름, 대상 파일, 바꿀 원문(파일에 정확히 한 번 있어야 한다), 바꾼 문장, 실패해야 하는 검사 이름 접두사.
 MUTATIONS = [
+    # 공통 표시 병합/분배의 실제 상위 Renderer 관찰과 건설 통합이 의미 차이를 검출해야 한다.
+    dict(name='drawsubmission-ui-only-bit',file='cpppj/src/client/DrawSubmission.cpp',expect='DrawSubmission_',
+         before='if (request.dirtyFlags&4U) return result;',after='if (request.dirtyFlags&1U) return result;',note='UI 전용 dirty 비트를 바꿈'),
+    dict(name='drawsubmission-preview-view',file='cpppj/src/client/DrawSubmission.cpp',expect='DrawSubmission_',
+         before='append(hooks.preview,request.unclipped);',after='append(hooks.preview,request.visible);',note='미리보기에 클립된 월드 영역을 공급'),
+    dict(name='drawsubmission-group-key',file='cpppj/src/client/DrawSubmission.cpp',expect='DrawSubmission_',
+         before='const auto& first=group.entries.front();',after='const auto& first=group.entries.back();',note='묶음의 첫 키 대신 마지막 키로 정렬'),
+    dict(name='drawsubmission-group-tail',file='cpppj/src/client/DrawSubmission.cpp',expect='DrawSubmission_',
+         before='entry.token=group.token;entry.kind=1;',after='entry.token=group.token;entry.kind=1;entry.tail=0;',note='묶음 키의 미사용 마지막 바이트를 덮어씀'),
+    dict(name='drawsubmission-group-count-snapshot',file='cpppj/src/client/DrawSubmission.cpp',expect='DrawSubmission_',
+         before='for (std::int32_t index=0;index<*group.count;++index)',
+         after='const auto fixedCount=*group.count;for (std::int32_t index=0;index<fixedCount;++index)',note='묶음 그리기 중 증가/감소한 개수를 읽지 않음'),
+    dict(name='drawsubmission-group-hidden',file='cpppj/src/client/DrawSubmission.cpp',expect='DrawSubmission_',
+         before='if (!state.hideGroups)',after='if (true)',note='현재 묶음 숨김 전역을 무시'),
+    dict(name='drawsubmission-unknown-debug',file='cpppj/src/client/DrawSubmission.cpp',expect='DrawSubmission_',
+         before='if (state.debugAfterEach) Required(hooks.afterEach)();',
+         after='if (state.debugAfterEach && entry.kind<=4) Required(hooks.afterEach)();',note='알 수 없는 종류의 상위 debug 관찰을 생략'),
+    dict(name='drawsubmission-construction-dispatch',file='cpppj/src/client/ConstructionVisualRenderer.cpp',expect='DrawSubmission_',
+         before='dispatch.construction=[&system](std::uint32_t token) { system.DrawToken(token); };',
+         after='dispatch.construction=[](std::uint32_t) {};',note='공통 kind 3 분배의 실제 건설 Draw를 생략'),
     # 판본별 실제 CRT 관찰과 Renderer/건설 제출의 동률 검사가 알고리즘 변경을 검출해야 한다.
     dict(name='drawsort-small-threshold',file='cpppj/src/client/DrawSort.cpp',expect='DrawSort_',
          before='kSmall=8',after='kSmall=9',note='9항목에서도 작은 구간 정렬을 사용'),

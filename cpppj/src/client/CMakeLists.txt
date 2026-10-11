@@ -16,6 +16,7 @@ target_sources(netstorm PRIVATE
     InputEvent.cpp InputEvent.h
     Renderer.cpp Renderer.h
     DrawSort.cpp DrawSort.h
+    DrawSubmission.cpp DrawSubmission.h
     SquidRenderer.cpp SquidRenderer.h
     ConstructionVisualRenderer.cpp ConstructionVisualRenderer.h
     BitmapFont.cpp BitmapFont.h
