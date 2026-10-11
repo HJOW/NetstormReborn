@@ -66,6 +66,7 @@ target_sources(netstorm PRIVATE
     RawRegionOwnership.cpp RawRegionOwnership.h
     RawConstructionPlace.cpp RawConstructionPlace.h
     RawConstructionConfirm.cpp RawConstructionConfirm.h
+    RawConstructionBuilder.cpp RawConstructionBuilder.h
     RawConstructionSelection.cpp RawConstructionSelection.h
     RawPriestLookup.cpp RawPriestLookup.h
     RawConstructionClear.cpp RawConstructionClear.h

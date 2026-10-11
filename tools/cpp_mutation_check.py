@@ -32,6 +32,28 @@ TESTS = BUILD / 'bin/Release/netstorm_tests.exe'
 EXCLUDED = {'build'}
 # 변이 목록: 이름, 대상 파일, 바꿀 원문(파일에 정확히 한 번 있어야 한다), 바꾼 문장, 실패해야 하는 검사 이름 접두사.
 MUTATIONS = [
+    # 건설 사제 생성/이동의 원본 순서·현재 자료·판본 폭을 독립 관찰로 검증한다.
+    dict(name='builder-pop-flags',file='cpppj/src/o/RawConstructionBuilder.cpp',expect='ConstructionBuilder_',
+         before='kFirstPop=0x10,kClientCreate=2',after='kFirstPop=0,kClientCreate=2',note='최초 객체 Pop의 0x10을 제거'),
+    dict(name='builder-create-flags',file='cpppj/src/o/RawConstructionBuilder.cpp',expect='ConstructionBuilder_',
+         before='kFirstPop=0x10,kClientCreate=2',after='kFirstPop=0x10,kClientCreate=0',note='클라이언트 생성 플래그 2를 제거'),
+    dict(name='builder-consume-count',file='cpppj/src/o/RawConstructionBuilder.cpp',expect='ConstructionBuilder_',
+         before='state_.sources.entries[i]=0;return sid;',after='state_.sources.entries[i]=0;--state_.sources.count;return sid;',note='소비 후 개수를 줄여 활성 꼬리를 유실'),
+    dict(name='builder-source-center',file='cpppj/src/o/RawConstructionBuilder.cpp',expect='ConstructionBuilder_',
+         before='static_cast<double>(x)-type.footX*0.5',after='static_cast<double>(x)-(type.footX-1)*0.5',note='공급원 중심을 (크기-1)/2로 이동'),
+    dict(name='builder-cd-frame-width',file='cpppj/src/o/RawConstructionBuilder.cpp',expect='ConstructionBuilder_',
+         before='meta.firstFrames[frameIndex]),patch ? 4 : 1',after='meta.firstFrames[frameIndex]),4',note='CD 프레임도 DWORD로 써 주변 필드를 손상'),
+    dict(name='builder-carrier-owner',file='cpppj/src/o/RawConstructionBuilder.cpp',expect='ConstructionBuilder_',
+         before='hooks_.setOwner(carrier,pool_.Slot(anchor)[ownerOffset]);',after='hooks_.setOwner(carrier,player);',note='현재 기준점 소유자 대신 최초 요청 소유자 사용'),
+    dict(name='builder-current-step',file='cpppj/src/o/RawConstructionBuilder.cpp',expect='ConstructionBuilder_',
+         before='return path.arrivalTimes[path.currentStep];',after='return path.arrivalTimes[0];',note='속도/운반 경계 뒤 현재 경로 단계 재조회 생략'),
+    dict(name='builder-current-carrier-type',file='cpppj/src/o/RawConstructionBuilder.cpp',expect='ConstructionBuilder_',
+         before='const auto& meta=Metadata(carrier);',after='const auto& meta=metadata_[state_.carrierType];',note='factory가 바꾼 운반 객체의 현재 타입을 무시'),
+    dict(name='builder-timer-failure-move',file='cpppj/src/o/RawConstructionBuilder.cpp',expect='ConstructionBuilder_',
+         before='if (hooks_.reserveTimer()) hooks_.addTimer(carrier,state_.timerEvent,0.0F);',
+         after='if (hooks_.reserveTimer()) hooks_.addTimer(carrier,state_.timerEvent,0.0F); else continue;',note='타이머 할당 실패 때 운반 이동도 생략'),
+    dict(name='builder-requested-zero',file='cpppj/src/o/RawConstructionBuilder.cpp',expect='ConstructionBuilder_',
+         before='if (requested!=0.0)',after='if (true)',note='요청 시각 0/-0에서도 속도 조정'),
     # 소유 사제 조회와 건설 조회 연결의 실제 관찰/통합 검사가 의미 차이를 잡는지 검사한다.
     dict(name='priest-lookup-free-filter',file='cpppj/src/o/RawPriestLookup.cpp',expect='PriestLookup_',
          before='constexpr std::uint8_t kDead=2;',after='constexpr std::uint8_t kDead=3;',note='조회에서 free 상태도 제외'),
