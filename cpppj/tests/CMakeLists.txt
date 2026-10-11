@@ -2,6 +2,7 @@
 # (첫 구성 때 인터넷에서 내려받을 것이 없다).
 # 테스트 파일을 만들면 아래 목록에 더한다. 파일 안의 TEST_CASE 는 자동으로 등록된다.
 add_executable(netstorm_tests
+    ConstructionVisualSystemTests.cpp
     ConstructionLifetimeTests.cpp
     ConstructionFrameTests.cpp
     ConstructionVisualTests.cpp

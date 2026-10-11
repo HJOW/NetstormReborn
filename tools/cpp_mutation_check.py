@@ -32,6 +32,22 @@ TESTS = BUILD / 'bin/Release/netstorm_tests.exe'
 EXCLUDED = {'build'}
 # 변이 목록: 이름, 대상 파일, 바꿀 원문(파일에 정확히 한 번 있어야 한다), 바꾼 문장, 실패해야 하는 검사 이름 접두사.
 MUTATIONS = [
+    # 실제 표시 프로세스 연결 검사가 실행/출력/부착/소멸 어댑터의 누락도 검출해야 한다.
+    dict(name='visualsystem-run',file='cpppj/src/o/ConstructionVisualSystem.cpp',expect='ConstructionVisualSystem_',
+         before='frame.Run(process.fields_);',after='static_cast<void>(process.fields_);',note='Kernel의 건설 표시 프레임 실행을 생략'),
+    dict(name='visualsystem-draw',file='cpppj/src/o/ConstructionVisualSystem.cpp',expect='ConstructionVisualSystem_',
+         before='frame.Draw(process.fields_);',after='static_cast<void>(process.fields_);',note='표시 목록의 실제 Draw 제출을 생략'),
+    dict(name='visualsystem-rectangle',file='cpppj/src/o/ConstructionVisualSystem.cpp',expect='ConstructionVisualSystem_',
+         before='SynchronizeRegistration(found->second->registration_,found->second->fields_.visual);',
+         after='static_cast<void>(found->second);',note='프레임 뒤 현재 표시 사각형의 등록 필드 반영을 생략'),
+    dict(name='visualsystem-form-flags',file='cpppj/src/o/ConstructionVisualSystem.cpp',expect='ConstructionVisualSystem_',
+         before='type,parent,flags);',after='type,parent,(flags&~0x10U)|0x40U);',note='표시 부착의 client form 대신 서버 form을 할당'),
+    dict(name='visualsystem-form-type',file='cpppj/src/o/ConstructionVisualSystem.cpp',expect='ConstructionVisualSystem_',
+         before='type,parent,flags);',after='type+1,parent,flags);',note='표시 form의 실제 프로세스 타입을 한 칸 바꿈'),
+    dict(name='visualsystem-object-release',file='cpppj/src/o/ConstructionVisualSystem.cpp',expect='ConstructionVisualSystem_',
+         before='registry_,1,release_);',after='registry_,0,release_);',note='Kernel 소멸의 scalar 객체 반납 관찰을 생략'),
+    dict(name='visualsystem-instant',file='cpppj/src/o/ConstructionVisualSystem.cpp',expect='ConstructionVisualSystem_',
+         before='system.Add(parent,instant)',after='system.Add(parent,!instant)',note='건설 Start의 즉시/일반 표시를 뒤집음'),
     # 표시 등록/소멸자의 독립 PE 관찰이 목록·부호·순서·flags 변경을 검출해야 한다.
     dict(name='lifetime-growth',file='cpppj/src/o/RawConstructionLifetime.cpp',expect='ConstructionLifetime_',
          before='kGrowth=40',after='kGrowth=39',note='표시 목록 확장을 한 칸 줄임'),
