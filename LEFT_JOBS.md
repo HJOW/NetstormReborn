@@ -1,6 +1,8 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
-> **최신 cpppj 갱신: 2026-10-11 (`HJOW-Athlon`) — 일반 자산·그림자 표시 수집 복원 완료.** 일반 자산/그림자의 실제 1~3단계 해시·raw SID 체인·타입/SHP 경계를 읽는 `ObjectCollection`을 복원하고 공통 수집/정렬/분배에 연결했다. 본체와 그림자 별도 교차·판본별 float 저장/NaN·abstract tail·walker/그림자 y 보정·signed 깊이·현재 next·strict 누적 제한·정상 해시 2단계를 원본과 대조했다. 실제 SHP 월드 hotspot을 로더/프레임 캐시에 연결했다. 새 독립 원본 **1,431개**·누적 **508,743개**, 두 x87 정상 반환 **2,862회**. 새 C++ **7개**, Release 경고/오류 **0**·CTest 내부 **730개·실패 0**(199.98초, 전체 200.05초), 근거 감사 **111종**·새 변이 **10개 모두 검출**(`--focused`, 변이 전 사본 전체 검사 통과). **미리보기 수집 내부·월드 투영·실제 Gump/각 종류 Draw·구름/배경/dirty/장치·Client/GameWorld 자동 프레임·클릭 선택·건설 SHP/팔레트 출력은 후속이며 게임 내 건설/미션 완주는 아직 불가능하다.** 마지막 디컴파일 수행 PC: **HJOW-Athlon, 2026-10-11**(`objectcollection` 7/4/4개 읽기 전용 내보내기). [상세 기록](docs/exe/cpp-object-collection-reconstruction.md). 아래 기록은 당시 상태로 보존한다.
+> **최신 cpppj 갱신: 2026-10-11 (`HJOW-Athlon`) — 커서 미리보기 표시 수집 복원 완료.** 커서 조각의 실제 raw SID 목록/선택 타입/부모 깊이/spot을 읽는 `PreviewCollection`을 복원하고 공통 수집/정렬/kind 4 분배에 연결했다. 실패 후보의 14바이트 부분 기록·kind/tail 보존·+0.9999/CRT·두 레이어/원래 보조 깊이·soft 쌍 제한·현재 목록·판본별 잠금/피드백을 원본과 대조했다. 준비한 실제 SP 저장소의 읽기도 연결했다. 새 독립 원본 **1,560개**·누적 **510,303개**, 두 x87 정상 반환 **3,120회**. 새 C++ **8개**, Release 경고/오류 **0**·CTest 내부 **738개·실패 0**(151.98초, 전체 152.03초), 근거 감사 **112종**·새 변이 **11개 모두 검출**(`--focused`, 변이 전 사본 전체 검사 통과). **미리보기/일반 sprite 실제 Draw·커서 생성/입력·SP lazy 상태 연결·월드 투영·실제 Gump/구름/배경/dirty/장치·Client/GameWorld 자동 프레임·클릭 선택·건설 SHP/팔레트 출력은 후속이며 게임 내 건설/미션 완주는 아직 불가능하다.** 마지막 디컴파일 수행 PC: **HJOW-Athlon, 2026-10-11**(`previewcollection` 3/3/3개 읽기 전용 내보내기). [상세 기록](docs/exe/cpp-preview-collection-reconstruction.md). 아래 기록은 당시 상태로 보존한다.
+
+> **앞 단계 cpppj 갱신: 2026-10-11 (`HJOW-Athlon`) — 일반 자산·그림자 표시 수집 복원 완료.** 일반 자산/그림자의 실제 1~3단계 해시·raw SID 체인·타입/SHP 경계를 읽는 `ObjectCollection`을 복원하고 공통 수집/정렬/분배에 연결했다. 본체와 그림자 별도 교차·판본별 float 저장/NaN·abstract tail·walker/그림자 y 보정·signed 깊이·현재 next·strict 누적 제한·정상 해시 2단계를 원본과 대조했다. 실제 SHP 월드 hotspot을 로더/프레임 캐시에 연결했다. 새 독립 원본 **1,431개**·누적 **508,743개**, 두 x87 정상 반환 **2,862회**. 새 C++ **7개**, Release 경고/오류 **0**·CTest 내부 **730개·실패 0**(199.98초, 전체 200.05초), 근거 감사 **111종**·새 변이 **10개 모두 검출**(`--focused`, 변이 전 사본 전체 검사 통과). **미리보기 수집 내부·월드 투영·실제 Gump/각 종류 Draw·구름/배경/dirty/장치·Client/GameWorld 자동 프레임·클릭 선택·건설 SHP/팔레트 출력은 후속이며 게임 내 건설/미션 완주는 아직 불가능하다.** 마지막 디컴파일 수행 PC: **HJOW-Athlon, 2026-10-11**(`objectcollection` 7/4/4개 읽기 전용 내보내기). [상세 기록](docs/exe/cpp-object-collection-reconstruction.md). 아래 기록은 당시 상태로 보존한다.
 
 > **앞 단계 cpppj 갱신: 2026-10-11 (`HJOW-Athlon`) — 지면·다리 행별 표시 묶음 복원 완료.** 지면/다리의 0단계 해시 머리 SID를 raw 슬롯에서 행별로 수집하는 `TileGroupCollection`을 복원하고 공통 묶음 수집/분배에 연결했다. +0.5/CRT 절삭·한 칸 확장·독립 클램프·행/열 순서·첫 SID·signed BYTE 깊이·kind 1/tail 0·빈 칸 배경 판정·strict 행별/판본별 헤더 제한·정상 반환의 해시 2단계를 원본과 대조했다. 묶음 인수 이름을 시각에서 `groupRowLimit`으로 바로잡았다. 새 독립 원본 **1,059개**·누적 **507,312개**, 두 x87 정상 루트 반환 **2,118회**. 새 C++ **6개**, Release 경고/오류 **0**·CTest 내부 **723개·실패 0**(153.36초, 전체 153.41초), 근거 감사 **110종**·새 변이 **10개 모두 통과**(`--focused`, 변이 전 사본 전체 검사 통과). **일반 자산·효과/미리보기 수집 내부·월드 투영·실제 Gump/각 종류 Draw·구름/배경/dirty/장치·Client/GameWorld 자동 프레임·클릭 선택·건설 SHP/팔레트 출력은 후속이며 게임 내 건설/미션 완주는 아직 불가능하다.** 마지막 디컴파일 수행 PC: **HJOW-Athlon, 2026-10-11**(`tilegroup` 5/4/4개 읽기 전용 내보내기). [상세 기록](docs/exe/cpp-tile-group-collection-reconstruction.md). 아래 기록은 당시 상태로 보존한다.
 
@@ -92,6 +94,16 @@
 
 ---
 
+## 2026-10-11 ✅ 완료 / ⏭ 부분 인계: 커서 미리보기 표시 수집 (HJOW-Athlon)
+
+- [x] **착수/호스트:** AGENTS.md·두 LEFT_JOBS 확인, 깨끗한 트리·현재/마지막 PC 일치. `previewcollection` **3/3/3개** 읽기 전용 내보내기. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-11.** 원본/복사본 게임·analyzeManager·클론 창 미실행.
+- [x] **완료 범위:** `00446060`/CD `0043da30`의 잠금·signed 현재 count/목록·raw XY·선택/부모/타입 우선 깊이·실패 후보 14바이트 기록·특수 타입 legal/spot·+0.9999/CRT/DWORD 주소·kind 4/tail 0·2/원래 보조 깊이·soft 쌍 제한·패치 강조/SP float>7000/카운터/첫 표·CD 피드백 불변을 복원했다.
+- [x] **실제 연결:** `BindPreviewCollection`→공통 마지막 수집→CRT 정렬→kind 4 분배, 초기화한 실제 `ScrambledSpStore` 읽기. UI/지면/자산/미리보기 혼합·화면 밖 preview·UI 전용 dirty, 부분 span/손상 계약·현재 토큰/저장 키를 검사했다. 실제 커서 생성/입력·lazy SP 전역·sprite/월드 투영/Client 자동 프레임은 후속이다.
+- [x] **독립 근거:** 세 PE 각 **520개**, 새 **1,560개**·누적 **510,303개**, 두 x87 정상 반환 **3,120회**. 수집/활성/CRT/준비된 SP 읽기 전체 실제 몸체, **응답 대체 0**. 전체 출력/부분 칸 이후 미사용/보호/읽기 전용 입력·ABI/x87/SEH·불연속 실행/쓰기·SHA/진입/정상 반환 감사. 게임/OS/assert 0.
+- [x] **검증:** 새 C++ **8개**, Release 경고/오류 **0**·CTest 내부 **738개·실패 0**(151.98초, 전체 152.03초), 근거 감사 **112종**·새 변이 **11개 모두 검출**(`--focused`, 변이 전 사본 전체 검사 통과). 집중 검사 **8개·실패 0**. 변이는 별도 사본에서만 적용/복구, 미검출/건너뜀 **0개**.
+- [x] **인계/보호:** 앞 단계 미리보기 수집 TODO 완료 표시. README·계획·내보내기 안내·[상세 기록](docs/exe/cpp-preview-collection-reconstruction.md) 갱신. AGENTS.md·보호 원본·dotnetpj/인계 변경 없음. 커밋/푸시 없음. 로그 `extracted/previewcollection-{export,smoke,oracle,build,focused,ctest,audits,mutations}.log`.
+- [ ] **다음:** ① 미리보기 Draw `00446270`·일반 sprite Draw `00498220`와 월드 투영/실제 SHP 출력. ② 실제 커서 생성/입력·lazy SP 전역·Gump 생성/Draw·구름/배경/dirty/장치·Client/GameWorld 자동 프레임·클릭 선택. ③ 실제 건설 SHP/팔레트/현재 색 표·준비 소리(+0x90)·부모 공간/사제 contained·하위 경로/자원·집합/지연 분배·건설 GUI. **게임 내 건설/미션 완주는 아직 불가능하다.**
+
 ## 2026-10-11 ✅ 완료 / ⏭ 부분 인계: 일반 자산·그림자 표시 수집 (HJOW-Athlon)
 
 - [x] **착수/호스트:** AGENTS.md·두 LEFT_JOBS 확인, 깨끗한 트리·현재/마지막 PC 일치. `objectcollection` **7/4/4개** 읽기 전용 내보내기. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-11.** 원본/복사본 게임·analyzeManager·클론 창 미실행.
@@ -100,7 +112,7 @@
 - [x] **독립 근거:** 세 PE 각 **477개**, 새 **1,431개**·누적 **508,743개**, 두 x87 정상 반환 **2,862회**. 수집/프레임/타입/좌표/해시/CRT 전체 실제 몸체, **응답 대체 0**. 전체 출력/미사용/보호/읽기 전용 입력·ABI/x87/SEH·불연속 실행/쓰기·SHA/진입/정상 반환 감사. 게임/OS/assert 0.
 - [x] **검증:** 새 C++ **7개**, Release 경고/오류 **0**·CTest 내부 **730개·실패 0**(199.98초, 전체 200.05초), 근거 감사 **111종**·새 변이 **10개 모두 검출**(`--focused`, 변이 전 사본 전체 검사 통과). 집중 검사 **7개·실패 0**, 실제 SHP/캐시 **3,783/3,167프레임** 일치. 변이는 별도 사본에서만 적용/복구, 미검출/건너뜀 **0개**.
 - [x] **인계/보호:** 앞 단계 일반 자산 수집 TODO 완료 표시. README·계획·내보내기 안내·[상세 기록](docs/exe/cpp-object-collection-reconstruction.md) 갱신. AGENTS.md·보호 원본·dotnetpj/인계 변경 없음. 커밋/푸시 없음. 로그 `extracted/objectcollection-{export,smoke,oracle,build,focused,ctest,audits,mutations,assets}.log`.
-- [ ] **다음:** ① 미리보기 `00446060` 수집 내부와 월드 투영/실제 sprite Draw. ② 실제 Gump 생성/Draw·구름/배경/dirty/장치·Client/GameWorld 자동 프레임·클릭 선택. ③ 실제 건설 SHP/팔레트/현재 색 표·준비 소리(+0x90)·부모 공간/사제 contained·하위 경로/자원·집합/지연 분배·건설 GUI. **게임 내 건설/미션 완주는 아직 불가능하다.**
+- [ ] **다음:** ① **미리보기 `00446060` 수집 내부는 2026-10-11 후속 PreviewCollection 단계에서 복원 완료.** 월드 투영/실제 sprite Draw. ② 실제 Gump 생성/Draw·구름/배경/dirty/장치·Client/GameWorld 자동 프레임·클릭 선택. ③ 실제 건설 SHP/팔레트/현재 색 표·준비 소리(+0x90)·부모 공간/사제 contained·하위 경로/자원·집합/지연 분배·건설 GUI. **게임 내 건설/미션 완주는 아직 불가능하다.**
 
 ## 2026-10-11 ✅ 완료 / ⏭ 부분 인계: 지면·다리 행별 표시 묶음 (HJOW-Athlon)
 
@@ -110,7 +122,7 @@
 - [x] **독립 근거:** 세 PE 각 **353개**, 새 **1,059개**·누적 **507,312개**, 두 x87 정상 반환 **2,118회**. 수집/좌표/해시/CRT 실제 전체 몸체, **응답 대체 0**. 완성 슬롯/해시·전체 멤버/헤더·배경/현재 단계·미사용/보호/입력 보존·ABI/x87/SEH·불연속 실행/쓰기·SHA/진입/정상 반환 집계 감사. 게임/OS/assert 0.
 - [x] **검증:** 새 C++ **6개**, Release 경고/오류 **0**·CTest 내부 **723개·실패 0**(153.36초, 전체 153.41초), 근거 감사 **110종**·새 변이 **10개 모두 통과**(`--focused`, 변이 전 사본 전체 검사 통과). 집중 검사 **6개·실패 0**. 변이는 별도 사본에서만 적용/복구, 미검출/건너뜀 **0개**.
 - [x] **인계/보호:** 앞 단계의 묶음 수집 내부 TODO 완료 표시. README·계획·내보내기 안내·[상세 기록](docs/exe/cpp-tile-group-collection-reconstruction.md) 갱신. AGENTS.md·보호 원본·dotnetpj/인계 변경 없음. 커밋/푸시 없음. 로그 `extracted/tilegroup-{export,smoke,oracle,build,focused,ctest,audits,mutations}.log`.
-- [ ] **다음:** ① **일반 자산/그림자 `00433660`은 2026-10-11 후속 ObjectCollection 단계에서 복원 완료.** 미리보기 `00446060` 수집 내부와 월드 투영/실제 sprite Draw. ② 실제 Gump 생성/Draw·구름/배경/dirty/장치·Client/GameWorld 자동 프레임·클릭 선택. ③ 실제 건설 SHP/팔레트/현재 색 표·준비 소리(+0x90)·부모 공간/사제 contained·하위 경로/자원·집합/지연 분배·건설 GUI. **게임 내 건설/미션 완주는 아직 불가능하다.**
+- [ ] **다음:** ① **일반 자산/그림자 `00433660`은 ObjectCollection, 미리보기 `00446060`은 PreviewCollection 후속 단계에서 2026-10-11 복원 완료.** 월드 투영/실제 sprite Draw. ② 실제 Gump 생성/Draw·구름/배경/dirty/장치·Client/GameWorld 자동 프레임·클릭 선택. ③ 실제 건설 SHP/팔레트/현재 색 표·준비 소리(+0x90)·부모 공간/사제 contained·하위 경로/자원·집합/지연 분배·건설 GUI. **게임 내 건설/미션 완주는 아직 불가능하다.**
 
 ## 2026-10-11 ✅ 완료 / ⏭ 부분 인계: UI/Gump 화면 좌표·트리 표시 수집 (HJOW-Athlon)
 
@@ -120,7 +132,7 @@
 - [x] **독립 근거:** 세 PE 각 **389개**, 새 **1,167개**·누적 **506,253개**, 두 x87 루트 정상 반환 **2,334회**. 위치/경계/교차/최상위/재귀/CRT/CD 보조는 실제 몸체, 월드 투영만 명시 정수점/next 변경 응답. 완성 노드/전체 출력/캐시/투영 순서·ABI/x87/SEH·허용 실행/쓰기·미사용/보호·SHA/진입/반환/경계 집계 감사, 게임/OS/assert 0.
 - [x] **검증:** 새 C++ **6개**, Release 경고/오류 **0**·CTest 내부 **717개·실패 0**(219.13초, 전체 219.17초), 근거 감사 **109종**·새 변이 **9개 모두 통과**(`--focused`, 변이 전 사본 전체 검사 통과). 집중 검사 **6개·실패 0**. 변이는 별도 사본에서만 적용/복구, 미검출/건너뜀 **0개**.
 - [x] **인계/보호:** 앞 단계의 UI 수집 내부 TODO 완료 표시. README·계획·내보내기 안내·[상세 기록](docs/exe/cpp-gump-collection-reconstruction.md) 갱신. AGENTS.md·보호 원본·dotnetpj/인계 변경 없음. 커밋/푸시 없음. 로그 `extracted/gumpcollection-{export,smoke,oracle,build,focused,ctest,audits,mutations}.log`.
-- [ ] **다음:** ① **묶음 `00433410`은 TileGroupCollection, 일반 자산/그림자 `00433660`은 ObjectCollection 후속 단계에서 2026-10-11 복원 완료.** 미리보기 `00446060` 수집 내부와 월드 투영/SID 자료 연결. ② 실제 Gump 생성/Draw·구름/배경/dirty/장치·Client/GameWorld 자동 프레임·클릭 선택. ③ 실제 건설 SHP/팔레트/현재 색 표·준비 소리(+0x90)·부모 공간/사제 contained·하위 경로/자원·집합/지연 분배·건설 GUI. **게임 내 건설/미션 완주는 아직 불가능하다.**
+- [ ] **다음:** ① **묶음 `00433410`은 TileGroupCollection, 일반 자산/그림자 `00433660`은 ObjectCollection, 미리보기 `00446060`은 PreviewCollection 후속 단계에서 2026-10-11 복원 완료.** 월드 투영/SID 자료 연결. ② 실제 Gump 생성/Draw·구름/배경/dirty/장치·Client/GameWorld 자동 프레임·클릭 선택. ③ 실제 건설 SHP/팔레트/현재 색 표·준비 소리(+0x90)·부모 공간/사제 contained·하위 경로/자원·집합/지연 분배·건설 GUI. **게임 내 건설/미션 완주는 아직 불가능하다.**
 
 ## 2026-10-11 ✅ 완료 / ⏭ 부분 인계: 공통 표시 목록 병합·종류 분배 (HJOW-Athlon)
 
@@ -130,7 +142,7 @@
 - [x] **독립 근거:** 세 PE 각 **322개**, 새 **966개**·누적 **505,086개**, 두 x87 상위 Renderer 정상 반환 **1,932회**. 실제 상위 흐름/병합/CRT/switch/클립/좌표/CD 묶음. 수집 완성 응답/그림·장치 내부만 명시 경계이며 모드 0/128·유효 dirty 한 개/구름·강제 갱신·격자 끔의 관찰이다. 전체 함수의 모든 분기 복원은 아니다. ABI/x87/SEH·허용 실행/쓰기·입력/전체 배열·보호·SHA/진입/정상 반환/경계 집계 감사, 원본 게임/OS/assert 0.
 - [x] **검증:** 새 C++ **8개**, Release 경고/오류 **0**·CTest 내부 **711개·실패 0**(151.17초, 전체 151.21초), 근거 감사 **108종 모두 통과**. 새 변이 **8개 모두 검출**(`--focused`, 변이 전 사본 전체 검사 통과). 변이는 별도 사본에서만 적용/복구.
 - [x] **인계/보호:** 직전 TODO의 공통 병합/종류 분배 완료 표시. README·계획·내보내기 안내·[상세 기록](docs/exe/cpp-draw-submission-reconstruction.md) 갱신. AGENTS.md·보호 원본·dotnetpj/인계 변경, 커밋/푸시 없음. 로그 `extracted/drawsubmission-{export,smoke,oracle,build,focused,ctest,audits,mutations}.log`.
-- [ ] **다음 건설:** ① **UI/Gump `00466070`→`00464b30`의 수집·화면 위치/경계는 GumpCollection, 묶음 `00433410`은 TileGroupCollection, 일반 자산/그림자 `00433660`은 ObjectCollection 후속 단계에서 2026-10-11 복원 완료.** 미리보기 `00446060`의 수집기 내부는 남았다. 실제 Gump 생성/Draw·구름/배경·dirty 순회·장치/프레임 호출·원본 표시 목록과 클릭 선택의 대응. ② 실제 건설 SHP 캡처·공유 팔레트/현재 색 표·dirty·장치 출력을 실제 프레임에 연결. ③ 타입 준비 소리(+0x90)·부모 공간/사제 contained·하위 경로/자원·집합/지연 분배·건설 GUI. **게임 내 건설/미션 완주는 아직 불가능하다.**
+- [ ] **다음 건설:** ① **UI/Gump `00466070`→`00464b30`의 수집·화면 위치/경계는 GumpCollection, 묶음 `00433410`은 TileGroupCollection, 일반 자산/그림자 `00433660`은 ObjectCollection, 미리보기 `00446060`은 PreviewCollection 후속 단계에서 2026-10-11 복원 완료.** 실제 Gump 생성/Draw·구름/배경·dirty 순회·장치/프레임 호출·원본 표시 목록과 클릭 선택의 대응. ② 실제 건설 SHP 캡처·공유 팔레트/현재 색 표·dirty·장치 출력을 실제 프레임에 연결. ③ 타입 준비 소리(+0x90)·부모 공간/사제 contained·하위 경로/자원·집합/지연 분배·건설 GUI. **게임 내 건설/미션 완주는 아직 불가능하다.**
 
 ## 2026-10-11 ✅ 완료 / ⏭ 부분 인계: 원본 CRT 표시 정렬·동률 순서 (HJOW-Athlon)
 

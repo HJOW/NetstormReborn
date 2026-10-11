@@ -4,6 +4,7 @@
 add_executable(netstorm_tests
     TileGroupCollectionTests.cpp
     ObjectCollectionTests.cpp
+    PreviewCollectionTests.cpp
     GumpCollectionTests.cpp
     DrawSubmissionTests.cpp
     DrawSortTests.cpp
@@ -463,3 +464,7 @@ set_source_files_properties(TileGroupCollectionTests.cpp PROPERTIES COMPILE_DEFI
 # 일반 자산/그림자의 실제 PE 관찰은 이 검사 소스에서만 읽는다.
 set_source_files_properties(ObjectCollectionTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_OBJECTCOLLECTION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/objectcollection-x86.tsv\"")
+
+# 커서 미리보기의 부분 출력/두 레이어와 준비된 SP 읽기 실제 관찰이다.
+set_source_files_properties(PreviewCollectionTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PREVIEWCOLLECTION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/previewcollection-x86.tsv\"")

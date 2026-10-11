@@ -32,6 +32,30 @@ TESTS = BUILD / 'bin/Release/netstorm_tests.exe'
 EXCLUDED = {'build'}
 # 변이 목록: 이름, 대상 파일, 바꿀 원문(파일에 정확히 한 번 있어야 한다), 바꾼 문장, 실패해야 하는 검사 이름 접두사.
 MUTATIONS = [
+    # 미리보기의 부분 기록/두 레이어/준비된 SP 상태 관찰과 공통 연결이 각 차이를 검출해야 한다.
+    dict(name='previewcollection-spot-bias',file='cpppj/src/client/PreviewCollection.cpp',expect='PreviewCollection_',
+         before='static_cast<double>(coordinate)+kSpotBias',after='static_cast<double>(coordinate)+0.5',note='배치 칸의 +0.9999를 +0.5로 변경'),
+    dict(name='previewcollection-pair-limit',file='cpppj/src/client/PreviewCollection.cpp',expect='PreviewCollection_',
+         before='if (limit<1) return count;',after='if (limit<2) return count;',note='한 칸 남았을 때 원본의 두 레이어 제출을 생략'),
+    dict(name='previewcollection-partial-kind',file='cpppj/src/client/PreviewCollection.cpp',expect='PreviewCollection_',
+         before='first.depth=std::bit_cast<std::int16_t>(static_cast<std::uint16_t>(depth));',
+         after='first.kind=4;first.tail=0;first.depth=std::bit_cast<std::int16_t>(static_cast<std::uint16_t>(depth));',note='건너뛴 후보의 미사용 kind/tail도 기록'),
+    dict(name='previewcollection-secondary-depth',file='cpppj/src/client/PreviewCollection.cpp',expect='PreviewCollection_',
+         before='static_cast<std::uint16_t>(depth-1U)',after='static_cast<std::uint16_t>(static_cast<std::uint32_t>(first.depth)-1U)',note='보조 깊이를 원래 기준 대신 덮어쓴 본체 깊이에서 계산'),
+    dict(name='previewcollection-gump-depth',file='cpppj/src/client/PreviewCollection.cpp',expect='PreviewCollection_',
+         before='hooks_.gumpDepth(state_.parentGump)-9U',after='hooks_.gumpDepth(state_.parentGump)-8U',note='부모 Gump 깊이 보정을 한 칸 변경'),
+    dict(name='previewcollection-island-priority',file='cpppj/src/client/PreviewCollection.cpp',expect='PreviewCollection_',
+         before='if (type.flags2&kIsland) depth=',after='else if (type.flags2&kIsland) depth=',note='surface 비트와 함께 있는 island 깊이 우선순위를 제거'),
+    dict(name='previewcollection-sp-threshold',file='cpppj/src/client/PreviewCollection.cpp',expect='PreviewCollection_',
+         before='>kSpThreshold',after='>=kSpThreshold',note='SP가 정확히 7000인 경우도 강조'),
+    dict(name='previewcollection-countdown-per-layer',file='cpppj/src/client/PreviewCollection.cpp',expect='PreviewCollection_',
+         before='--state_.countdown;',after='state_.countdown-=2;',note='표시 쌍 대신 각 레이어마다 카운터를 감소'),
+    dict(name='previewcollection-cd-feedback',file='cpppj/src/client/PreviewCollection.cpp',expect='PreviewCollection_',
+         before='if (pool_.Edition()==o::OriginalEdition::Patch1078) PatchFeedback();',after='PatchFeedback();',note='CD에도 패치 전용 강조 상태 변경 적용'),
+    dict(name='previewcollection-current-token',file='cpppj/src/client/PreviewCollection.cpp',expect='PreviewCollection_',
+         before='second={positionX,positionY,tokenBase_+current.value*pool_.Layout().stride,',after='second={positionX,positionY,first.token,',note='보조 레이어의 현재 목록 재조회 대신 이전 토큰 재사용'),
+    dict(name='previewcollection-common-collection',file='cpppj/src/client/PreviewCollection.cpp',expect='PreviewCollection_',
+         before='return collector.Collect(view,output,limit);',after='return 0;',note='공통 미리보기 슬롯의 실제 수집 생략'),
     # 일반 자산의 실제 본체/그림자 관찰과 공통 연결이 각 의미 차이를 검출해야 한다.
     dict(name='objectcollection-skip-level-one',file='cpppj/src/client/ObjectCollection.cpp',expect='ObjectCollection_',
          before='for (int level=1;level<4;++level)',after='for (int level=2;level<4;++level)',note='일반 해시 1단계를 생략'),
