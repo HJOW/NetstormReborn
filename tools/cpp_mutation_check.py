@@ -32,6 +32,23 @@ TESTS = BUILD / 'bin/Release/netstorm_tests.exe'
 EXCLUDED = {'build'}
 # 변이 목록: 이름, 대상 파일, 바꿀 원문(파일에 정확히 한 번 있어야 한다), 바꾼 문장, 실패해야 하는 검사 이름 접두사.
 MUTATIONS = [
+    # 지정 form 재사용과 단일 분배의 실제 명령 관찰/실제 두 월드 검사가 의미 변화를 검출해야 한다.
+    dict(name='form-take-clears-bytes',file='cpppj/src/o/SquidProcess.cpp',expect='ProcessForm_',
+         before='raw[kState]&=0xfc;const auto vtable=FormVtable();',after='// 변이 검사에서 주변 raw 바이트를 의도적으로 지운다.\n    for (auto& byte:raw) byte=0;raw[kState]&=0xfc;const auto vtable=FormVtable();',note='Take가 유지해야 하는 주변 raw 바이트를 지움'),
+    dict(name='form-take-free-counter',file='cpppj/src/o/SquidProcess.cpp',expect='ProcessForm_',
+         before='raw[kState]&=0xfc;const auto vtable=FormVtable();',after='--pool_.freeCount_;raw[kState]&=0xfc;const auto vtable=FormVtable();',note='지정 Take에서 풀 카운터를 감소시킴'),
+    dict(name='packet-version-high-bit',file='cpppj/src/o/RawPacketDispatch.cpp',expect='ProcessForm_',
+         before='const auto incoming=packet[0]&0x7f;',after='const auto incoming=packet[0]&0xff;',note='프로토콜 high bit를 가리지 않음'),
+    dict(name='packet-mismatch-ignore',file='cpppj/src/o/RawPacketDispatch.cpp',expect='ProcessForm_',
+         before='if (incoming!=entry.version) {',after='if (incoming!=entry.version) return true;\n    if (incoming!=entry.version) {',note='정책 0에서도 버전 차이를 무시하며 콜백 생략'),
+    dict(name='packet-heartbeat-target',file='cpppj/src/o/RawPacketDispatch.cpp',expect='ProcessForm_',
+         before='if (type==6) connection.heartbeat=now;',after='if (type==6) connection.received=now;',note='heartbeat를 일반 수신 시각에 기록'),
+    dict(name='packet-callback-depth',file='cpppj/src/o/RawPacketDispatch.cpp',expect='ProcessForm_',
+         before='++connection.depth;',after='connection.depth+=2;',note='즉시 처리기 중첩을 두 번 증가시킴'),
+    dict(name='data-owned-ignores-form',file='cpppj/src/o/RawConstructionData.cpp',expect='ConstructionData_',
+         before='Sid{static_cast<std::uint16_t>(parent)},0x10,form);',after='Sid{static_cast<std::uint16_t>(parent)},0x10);',note='새 수신에서 지정 form 대신 client 번호 할당'),
+    dict(name='data-owned-truncates-parent',file='cpppj/src/o/RawConstructionData.cpp',expect='ConstructionData_',
+         before='if (!parent || parent>=pool_.Capacity())',after='if (!parent || static_cast<std::uint16_t>(parent)>=pool_.Capacity())',note='새 수신 부모 DWORD의 상위 비트를 버림'),
     # 건설 상태의 독립 원본 패킷/필드/수신 순서 관찰이 실제 의미 변화를 잡는지 검사한다.
     dict(name='data-dirty-clear',file='cpppj/src/o/RawConstructionData.cpp',expect='ConstructionData_',
          before='packet[8]=fields.dirty;fields.dirty=0;',after='packet[8]=fields.dirty;fields.dirty=1;',note='쓰기 뒤 변경 비트를 남김'),

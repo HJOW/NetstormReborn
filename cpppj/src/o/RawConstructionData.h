@@ -15,13 +15,15 @@ struct ConstructionDataHooks {
     std::function<ConstructionProcessFields*(ProcessId)> lookup; // 현재 form의 DWORD Kernel 번호를 그대로 조회한다. 없는 슬롯은 null이다.
 };
 // 필드 비트에 따른 상태 패킷과 원본 수신 분기를 다룬다. 실제 host를 주면 기존 form 갱신이 실제 Kernel에 연결된다.
-// 새 form 부착은 명시 경계이며, 전달받은 form 번호를 같은 월드에서 보존해야 한다. socket 전파/등록은 별도 계층이다.
+// hooks 생성자는 새 form 부착을 명시 경계로 둔다. 실제 logic/host 생성자는 지정 서버 form까지 직접 부착한다.
 class RawConstructionData {
 public:
     // 최대 패킷은 헤더 9 + 부모 4 + 시작 8 + 끝 8 + 추가 1바이트다.
     static constexpr std::size_t kMaximumSize=30;
     // pool/state/hooks/host는 이 객체보다 오래 살아야 한다. 실제 host와 pool이 다르거나 필수 경계가 없으면 거부한다.
     RawConstructionData(SidPool& pool,ConstructionProcessState& state,ConstructionDataHooks hooks,SquidProcessHost* host=nullptr);
+    // 같은 풀의 실제 건설 몸체와 host에 새/기존 수신을 연결한다. 새 객체의 소유권은 Kernel에 넘기며 실패 시 자동 해제한다.
+    RawConstructionData(SidPool& pool,ConstructionProcessState& state,RawConstructionProcess& logic,SquidProcessHost& host);
     // 004426d0 / CD 004d0430: 현재 필드를 little endian으로 쓰고 dirty를 0으로 만든다. force이면 먼저 0xff로 둔다.
     // 부모는 인자가 0이 아닐 때만 쓴다. 기존 dirty의 bit 1과 부모 0의 조합도 원본 그대로 유지한다.
     // 부족한 버퍼는 쓰기/dirty 변경 전에 거부한다. 반환은 패킷에 기록한 길이이며 CD의 불명확한 EAX 반환은 사용하지 않는다.
@@ -41,5 +43,6 @@ private:
     ConstructionProcessState& state_; // 할당 경계 뒤의 현재 프로세스 타입을 읽는다.
     ConstructionDataHooks hooks_; // 새 객체/부착/선택적 Kernel 조회의 명시 경계다.
     SquidProcessHost* host_; // 있으면 lookup 경계 대신 현재 실제 프로세스를 찾는다.
+    RawConstructionProcess* logic_{}; // 실제 새 수신 객체의 진행/완료 몸체다. hooks 생성자에서는 null이다.
 };
 }

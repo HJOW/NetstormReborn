@@ -65,9 +65,11 @@ public:
     // 풀/Kernel/공통 삭제/상태는 호출자가 소유하며 host보다 오래 살아야 한다. asset은 form이 아닌 객체의 삭제 훅이다.
     SquidProcessHost(SidPool& pool,std::span<const RiftTypeRecord> types,Kernel& kernel,RawSquidDestroy& destroy,
         SquidProcessState& state,RegularHandler handler={},SquidDestroyHooks asset={});
-    // 0041bd20 ↔ CD 0048f590(formSid 0 경로): Kernel 등록 → ProcessForm 생성 → 타입/pid 기록 → 부모 안에 부착 → OnAttached.
+    // 0041bd20 ↔ CD 0048f590: Kernel 등록 → ProcessForm 생성/지정 슬롯 Take → 타입/pid 기록 → 부모 부착 → OnAttached.
     // 패치판은 부모가 free/dead이면 등록하지 않고 null을 반환한다. CD판의 그 경로(assert 뒤 계속)는 지원하지 않는다.
-    SquidProcess* Attach(std::unique_ptr<SquidProcess> process,std::uint32_t processType,Sid parent,std::uint32_t flags);
+    // form=0은 기존 번호 할당이다. 지정 form은 free인 서버 번호만 받으며 슬롯의 다른 바이트와 풀 목록/카운터는 보존한다.
+    // 이미 사용 중인 지정 form의 Kernel 중복 등록/재부착 경로는 아직 지원하지 않는다.
+    SquidProcess* Attach(std::unique_ptr<SquidProcess> process,std::uint32_t processType,Sid parent,std::uint32_t flags,Sid form={});
     // 00496e80 ↔ CD 0048efd0: RegularProcess를 붙이고 시각을 현재 시각으로 둔다. 원본 생성자의 flags는 항상 로컬 전용 0x50이며
     // 다른 값은 BaseProcess 생성자의 할당/권한 분기를 검사할 때만 쓴다.
     RegularProcess* AddRegular(Sid parent,std::uint32_t event,float payload,std::uint32_t flags=0x50);
@@ -110,6 +112,8 @@ private:
     void FormParentDying(Sid form,Sid parent);
     // form 종속 체인에서 이전 항목 번호를 쓰는 가상 함수(vtable +0xc)다. form과 contained 자산의 필드 위치가 다르다.
     void SetPrevious(Sid sid,std::uint16_t previous);
+    // 004af610 / CD 004ab440의 free ProcessForm 전용 경로다. 가상 생성자/빈 postTake만 적용하고 자산 zOrder는 쓰지 않는다.
+    std::span<std::uint8_t> TakeForm(Sid form);
     // Regular 실행 몸체. 판본별 abstract 처리와 처리기 반환값 분기를 구별한다.
     void RunRegular(RegularProcess& process);
     template<class Predicate> RegularProcess* Find(Sid parent,Predicate match) const;

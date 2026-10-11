@@ -84,7 +84,15 @@ void SquidProcessHost::AttachForm(Sid form,Sid parent,std::uint32_t flags) {
     if (!(raw[kState]&kVoid)) throw std::logic_error("프로세스 form Pop은 void 상태여야 합니다");
     raw[kState]&=static_cast<std::uint8_t>(~kVoid);
 }
-SquidProcess* SquidProcessHost::Attach(std::unique_ptr<SquidProcess> process,std::uint32_t processType,Sid parent,std::uint32_t flags) {
+// 지정 free form의 생성자는 가상 표만 덮는다. 원본 Take처럼 나머지 raw 바이트와 풀 메타데이터를 유지한다.
+std::span<std::uint8_t> SquidProcessHost::TakeForm(Sid form) {
+    auto raw=std::span(pool_.bytes_).subspan(pool_.Offset(form),pool_.layout_.stride);
+    raw[kState]&=0xfc;const auto vtable=FormVtable();
+    // 원본 ProcessForm 생성자의 DWORD 가상 표 기록값만 쓴다.
+    for (std::size_t i=0;i<4;++i) raw[i]=static_cast<std::uint8_t>(vtable>>(8*i));
+    raw[kType]=static_cast<std::uint8_t>(kProcessFormType);raw[kState]|=kVoid;return raw;
+}
+SquidProcess* SquidProcessHost::Attach(std::unique_ptr<SquidProcess> process,std::uint32_t processType,Sid parent,std::uint32_t flags,Sid form) {
     if (!process) throw std::invalid_argument("부착할 프로세스가 없습니다");
     if (processType<kFirstProcessType || processType>=ProcessTypeEnd()) throw std::invalid_argument("프로세스 타입 번호 오류");
     if (parent.value==0 || parent.value>=pool_.Capacity()) throw std::out_of_range("프로세스 부착 SID 범위 오류");
@@ -96,15 +104,25 @@ SquidProcess* SquidProcessHost::Attach(std::unique_ptr<SquidProcess> process,std
     }
     // 서버는 로컬 flags가 없으면 프로세스를 직렬화해 전송한다. 그 경로는 복원하지 않았다.
     if (pool_.IsServer() && !(flags&kLocalMask)) throw std::logic_error("프로세스 전송 직렬화는 복원하지 않았습니다");
+    if (form.value) {
+        if (form.value<pool_.Layout().serverFirst || form.value>=pool_.Capacity() || form.value==pool_.Layout().predictableFirst)
+            throw std::out_of_range("지정 프로세스 form은 예약 머리를 제외한 서버 번호여야 합니다");
+        if (!(pool_.Slot(form)[kState]&kFree)) throw std::logic_error("사용 중인 지정 form 재부착은 지원하지 않습니다");
+        // 새 Take 뒤에는 복구할 수 없으므로 잘못된 genus/체인 머리를 Kernel 등록 전에 거부한다.
+        if (types_.at(processType).flags2&kNoContainerGenus) throw std::logic_error("지정 form genus 오류");
+        const auto head=Word(parent,kHead);
+        if (head==form.value || head>=pool_.Capacity() || (head && (head<5 || head==pool_.Layout().predictableFirst || (pool_.Slot(Sid{head})[kState]&kFree))))
+            throw std::logic_error("지정 form의 부모 종속 체인 오류");
+    }
     auto* attached=process.get();
     const auto pid=kernel_.Add(std::move(process));
     const auto rotation=state_.typeRotation;
     // 패치판 Kernel 등록은 타입 순환 값을 하나 전진시킨다(0049c2c0).
     if (patch) state_.typeRotation=(state_.typeRotation+1)%static_cast<std::uint32_t>(types_.size());
-    Sid form{};
     try {
-        // 004af530: 번호 할당 → ProcessForm 생성자(가상 표) → 타입. form의 postCreate는 빈 함수다.
-        form=pool_.Allocate((flags&kClientForm) ? 2U : 0U);
+        // 지정 번호에서는 Allocate를 부르지 않는다. Take의 postTake도 ProcessForm에서는 빈 함수다.
+        if (form.value) static_cast<void>(TakeForm(form));
+        else form=pool_.Allocate((flags&kClientForm) ? 2U : 0U);
     } catch (...) {
         // 번호 소진이면 등록을 되돌려 form 없는 프로세스가 남지 않게 한다.
         kernel_.Remove(pid);state_.typeRotation=rotation;

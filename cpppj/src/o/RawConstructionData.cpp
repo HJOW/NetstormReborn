@@ -32,6 +32,11 @@ RawConstructionData::RawConstructionData(SidPool& pool,ConstructionProcessState&
     if (!hooks_.allocate || !hooks_.attach || (!host && !hooks_.lookup) || (host && &host->Pool()!=&pool))
         throw std::invalid_argument("건설 상태 수신의 저장소/효과 연결 오류");
 }
+// 실제 새 객체 수신도 같은 월드의 건설/삭제/Kernel을 사용한다.
+RawConstructionData::RawConstructionData(SidPool& pool,ConstructionProcessState& state,RawConstructionProcess& logic,SquidProcessHost& host)
+    :pool_(pool),state_(state),host_(&host),logic_(&logic) {
+    if (&logic.Pool()!=&pool || &host.Pool()!=&pool) throw std::invalid_argument("건설 상태 수신의 실제 풀이 다릅니다");
+}
 std::uint16_t RawConstructionData::Write(ConstructionProcessFields& fields,std::span<std::uint8_t> packet,
     std::uint32_t form,std::uint32_t parent,bool force,ConstructionDataHeader header) {
     const auto mask=force ? std::uint8_t{0xff} : fields.dirty;
@@ -66,10 +71,16 @@ void RawConstructionData::Receive(std::span<const std::uint8_t> packet) const {
     const Sid form{static_cast<std::uint16_t>(number)};const auto raw=pool_.Slot(form);
     if (raw[11]&1) {
         if (mask!=0xff) throw std::invalid_argument("새 건설 상태의 전체 비트가 필요합니다");
-        auto* fields=hooks_.allocate();if (!fields) throw std::bad_alloc();
+        auto owned=logic_ ? std::make_unique<ConstructionProcess>(*logic_,ConstructionProcessFields{}) : nullptr;
+        auto* fields=owned ? &owned->Fields() : hooks_.allocate();if (!fields) throw std::bad_alloc();
         // 원본 수신 생성자가 쓰는 필드만 초기화한다. 추가/소리의 미초기화 영역은 저장소 공급자가 정한다.
         fields->dirty=0xff;fields->start=0;fields->end=0;
-        const auto parent=Read(fields,packet);hooks_.attach(*fields,state_.processType,parent,number,0x10);return;
+        const auto parent=Read(fields,packet);
+        if (owned) {
+            if (!parent || parent>=pool_.Capacity()) throw std::out_of_range("수신한 건설 부모 DWORD 범위 오류");
+            host_->Attach(std::move(owned),state_.processType,Sid{static_cast<std::uint16_t>(parent)},0x10,form);
+        } else hooks_.attach(*fields,state_.processType,parent,number,0x10);
+        return;
     }
     if (mask&kParent) throw std::invalid_argument("기존 건설 상태의 부모 변경 비트 오류");
     ConstructionProcessFields* fields=nullptr;

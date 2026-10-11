@@ -1,6 +1,7 @@
 // 세 PE의 독립 패킷 관찰과 실제 Start→전송→시각 재설정→수신→Kernel 완료를 검사한다.
 #include "ConstructionNoticeSupport.h"
 #include "o/RawConstructionData.h"
+#include "o/RawPacketDispatch.h"
 
 namespace {
 using namespace netstorm::test::construction;
@@ -8,6 +9,8 @@ using namespace netstorm::test::construction;
 enum Input : std::size_t { Dirty,Form,Parent,Force,Include,StartLow,StartHigh,EndLow,EndHigh,Additional,Protocol,Message,Free,Pid,Present,Mutate,Type,Pattern };
 constexpr std::size_t kRows=1780;
 constexpr std::uint32_t kSound=0x15000040;
+// 클라이언트에 도착한 서버 삭제 통지가 사용하는 원본 권한 flag다.
+constexpr std::uint32_t kServerDelete=8;
 // 두 DWORD를 산술 변환 없이 double로 묶는다.
 double Time(std::uint32_t low,std::uint32_t high) { return std::bit_cast<double>((static_cast<std::uint64_t>(high)<<32)|low); }
 // 필드 전체를 실제 기계어 관찰의 일곱 항목으로 만든다.
@@ -34,7 +37,7 @@ std::string Events(const std::vector<std::string>& events) {
     for (const auto& event:events) { if (!out.empty()) out+=';';out+=event; }
     return out.empty() ? "-" : out;
 }
-// 실제 form/Kernel을 소유한 검사 월드다. 새 수신 form 부착은 이 단계에서 별도 경계다.
+// 실제 form/Kernel을 소유한 검사 월드다. hooks 수신과 새 객체 직접 부착을 함께 검사한다.
 struct DataScene {
     SidPool pool; // 프로세스와 부모가 공유하는 실제 풀이다.
     std::vector<RiftTypeRecord> types; // 판본별 타입 표다.
@@ -48,7 +51,7 @@ struct DataScene {
     ConstructionProcessState state; // 건설 프레임이 읽는 현재 전역이다.
     RawConstructionProcess logic; // Start/ResetEnd/완료의 복원 몸체다.
     // 실제 부모를 준비하되 관찰하지 않는 효과는 빈 경계로 연결한다.
-    explicit DataScene(OriginalEdition edition):pool(edition,kCapacity,false),types(edition==OriginalEdition::Patch1078 ? 188 : 171),
+    explicit DataScene(OriginalEdition edition,bool server=false):pool(edition,kCapacity,server),types(edition==OriginalEdition::Patch1078 ? 188 : 171),
         unpop(pool,hash,spots),destroy(pool,unpop,types),host(pool,types,kernel,destroy,clock),logic(pool,types,state,Hooks(),&host) {
         auto raw=InputRaw(pool,Sid{20000});std::fill(raw.begin(),raw.end(),std::uint8_t{});raw[10]=100;raw[edition==OriginalEdition::Patch1078 ? 40 : 35]=1;
     }
@@ -170,4 +173,53 @@ TEST_CASE(ConstructionData_ActualHostRejectsWrongAndStaleForms) {
     Put(scene.pool.AllocatedBytes(Sid{5}),18,1);auto stale=InputRaw(scene.pool,Sid{90});std::copy(scene.pool.Slot(Sid{5}).begin(),scene.pool.Slot(Sid{5}).end(),stale.begin());
     Put(packet,4,90);packet[8]=4;CHECK(Throws([&] { receiver.Receive(packet); }) && Fields(process->Fields())==before);
     auto* regular=scene.host.AddRegular(Sid{20000},1,0);CHECK(regular);if (regular) { Put(packet,4,regular->Form().value);CHECK(Throws([&] { receiver.Receive(packet); })); }
+}
+
+// 서버의 전체/부분 상태를 client의 0x37/Take·진행·권한 대기·삭제 통지 몸체를 거쳐 완료까지 연결한다.
+TEST_CASE(ConstructionData_DispatchesNewOwnedFormBetweenActualWorlds) {
+    // 두 판본 모두 서버 번호를 client 월드에 유지한다.
+    for (auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
+        DataScene source(edition,true),target(edition);target.clock.boss=false;target.state.boss=false;
+        const Sid form{static_cast<std::uint16_t>(source.pool.Layout().serverFirst+50)};
+        auto* sent=static_cast<ConstructionProcess*>(source.host.Attach(std::make_unique<ConstructionProcess>(source.logic,ConstructionProcessFields{255,0,8,kSound,0x5a}),30,Sid{20000},0x10,form));
+        CHECK(sent);if (!sent) continue;RawConstructionData receiver(target.pool,target.state,target.logic,target.host);std::vector<std::string> events;
+        RawPacketDispatch dispatch(edition,{[] { return 42U; },[&](PacketConnection& c,std::span<const std::uint8_t>,std::uint16_t length) {
+            events.push_back(std::to_string(c.depth)+':'+std::to_string(length)); },[](PacketConnection&) { CHECK(false); },[](PacketConnection&) { CHECK(false); },[](PacketConnection&) { CHECK(false); }});
+        RegisterConstructionData(dispatch,receiver);const auto& registration=dispatch.Registration(55);
+        CHECK(registration.receive && !registration.observer && registration.version==1 && registration.mismatch==0 && registration.length==65535);
+        const auto free=target.pool.FreeCount();const auto cursor=target.pool.PredictableCursor();const auto client=target.pool.FirstFree(true),server=target.pool.FirstFree(false);
+        std::array<std::uint8_t,30> packet{};CHECK(RawConstructionData::WriteProcess(*sent,packet,true,false,{0x82,55})==30);
+        PacketConnection connection{0,17,11,22,0,false};CHECK(dispatch.Dispatch(connection,packet));
+        auto* received=dynamic_cast<ConstructionProcess*>(target.host.FromForm(form));CHECK(received);if (!received) continue;
+        CHECK(received->Form()==form && received->Parent()==Sid{20000} && target.kernel.Find(*received)==1 && Get(target.pool.Slot(form),18)==1 && target.kernel.Size()==1);
+        CHECK(received->Fields().dirty==255 && received->Fields().start==0 && received->Fields().end==8 && received->Fields().additional==0x5a && received->Fields().sound==0);
+        CHECK(Get(target.pool.Slot(Sid{20000}),6,2)==form.value && target.pool.FreeCount()==free && target.pool.PredictableCursor()==cursor && target.pool.FirstFree(true)==client && target.pool.FirstFree(false)==server);
+        CHECK(connection.received==42 && connection.heartbeat==22 && connection.depth==0 && Events(events)=="0:30");
+        source.state.now=5;source.logic.ResetEndFromForm(form,1);CHECK(RawConstructionData::WriteProcess(*sent,packet,false,false)==17);
+        received->Fields().dirty=0x88;CHECK(dispatch.Dispatch(connection,std::span<const std::uint8_t>(packet).first(17)));
+        CHECK(received->Fields().end==15 && received->Fields().dirty==0x88 && received->Fields().additional==0x5a && Events(events)=="0:30;0:17");
+        target.state.now=8;target.kernel.RunFrame();CHECK(target.kernel.Size()==1 && Get(target.pool.Slot(Sid{20000}),26,edition==OriginalEdition::Patch1078 ? 4 : 2)==53);
+        target.state.now=15;target.kernel.RunFrame();CHECK(target.kernel.Size()==1 && (target.pool.Slot(Sid{20000})[edition==OriginalEdition::Patch1078 ? 40 : 35]&1));
+        CHECK(Get(target.pool.Slot(Sid{20000}),26,edition==OriginalEdition::Patch1078 ? 4 : 2)==100);
+        // 삭제 메시지 분배는 후속이며 수신된 서버 권한 효과를 기존 실제 삭제 몸체로 직접 전달한다.
+        target.destroy.Destroy(form,kServerDelete,target.host.Hooks());
+        CHECK(target.kernel.Size()==0 && (target.pool.Slot(form)[11]&1) && Get(target.pool.Slot(Sid{20000}),6,2)==0);
+        // 비권한 client는 HP/프로세스 반납만 적용한다. 부모 abstract/재등록은 서버의 후속 상태 전파를 기다린다.
+        CHECK(Get(target.pool.Slot(Sid{20000}),26,edition==OriginalEdition::Patch1078 ? 4 : 2)==100 && (target.pool.Slot(Sid{20000})[edition==OriginalEdition::Patch1078 ? 40 : 35]&1));
+        CHECK(target.pool.FreeCount()==free && target.pool.PredictableCursor()==cursor && target.pool.FirstFree(true)==client && target.pool.FirstFree(false)==server);
+    }
+}
+
+// 새 소유 수신은 잘못된 DWORD 부모/저장소/잘린 패킷 때문에 살아 있는 Kernel 객체를 남기지 않는다.
+TEST_CASE(ConstructionData_OwnedReceiveRejectsForeignPoolsAndInvalidParents) {
+    DataScene scene(OriginalEdition::Patch1078),other(OriginalEdition::Patch1078);RawConstructionData receiver(scene.pool,scene.state,scene.logic,scene.host);
+    CHECK(Throws([&] { RawConstructionData invalid(scene.pool,scene.state,other.logic,scene.host); }) && Throws([&] { RawConstructionData invalid(scene.pool,scene.state,scene.logic,other.host); }));
+    const Sid form{static_cast<std::uint16_t>(scene.pool.Layout().serverFirst+50)};const auto before=Hex(scene.pool.Slot(form));const auto free=scene.pool.FreeCount();
+    std::array<std::uint8_t,30> packet{};ConstructionProcessFields fields{255,0,8,kSound,0x5a};RawConstructionData::Write(fields,packet,form.value,20000,true);
+    // 상위 DWORD가 잘리면 유효한 20000으로 오인할 입력도 거부한다.
+    for (auto parent:{0U,static_cast<std::uint32_t>(kCapacity),0x1004e20U}) {
+        Put(packet,9,parent);CHECK(Throws([&] { receiver.Receive(packet); }));CHECK(scene.kernel.Size()==0 && scene.clock.typeRotation==0 && scene.pool.FreeCount()==free && Hex(scene.pool.Slot(form))==before);
+    }
+    Put(packet,9,20000);CHECK(Throws([&] { receiver.Receive(std::span<const std::uint8_t>(packet).first(29)); }));
+    CHECK(scene.kernel.Size()==0 && Hex(scene.pool.Slot(form))==before);
 }
