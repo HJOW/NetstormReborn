@@ -2,6 +2,7 @@
 # (첫 구성 때 인터넷에서 내려받을 것이 없다).
 # 테스트 파일을 만들면 아래 목록에 더한다. 파일 안의 TEST_CASE 는 자동으로 등록된다.
 add_executable(netstorm_tests
+    ConstructionLifetimeTests.cpp
     ConstructionFrameTests.cpp
     ConstructionVisualTests.cpp
     ContainedLookupTests.cpp
@@ -424,3 +425,7 @@ set_source_files_properties(ConstructionVisualTests.cpp PROPERTIES COMPILE_DEFIN
 # 건설 프레임 전체 몸체의 저장 PE 관찰만 읽고 실제 게임/장치를 실행하지 않는다.
 set_source_files_properties(ConstructionFrameTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CONSTRUCTIONFRAME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/constructionframe-x86.tsv\"")
+
+# 표시 등록/소멸자의 독립 PE 관찰만 읽으며 원본 게임/장치는 실행하지 않는다.
+set_source_files_properties(ConstructionLifetimeTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CONSTRUCTIONLIFETIME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/constructionlifetime-x86.tsv\"")

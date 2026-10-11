@@ -32,6 +32,24 @@ TESTS = BUILD / 'bin/Release/netstorm_tests.exe'
 EXCLUDED = {'build'}
 # 변이 목록: 이름, 대상 파일, 바꿀 원문(파일에 정확히 한 번 있어야 한다), 바꾼 문장, 실패해야 하는 검사 이름 접두사.
 MUTATIONS = [
+    # 표시 등록/소멸자의 독립 PE 관찰이 목록·부호·순서·flags 변경을 검출해야 한다.
+    dict(name='lifetime-growth',file='cpppj/src/o/RawConstructionLifetime.cpp',expect='ConstructionLifetime_',
+         before='kGrowth=40',after='kGrowth=39',note='표시 목록 확장을 한 칸 줄임'),
+    dict(name='lifetime-free-slot',file='cpppj/src/o/RawConstructionLifetime.cpp',expect='ConstructionLifetime_',
+         before='auto free=std::find(slots_.begin(),slots_.end(),0U);',after='auto free=slots_.end();',note='기존 빈 칸을 재사용하지 않고 항상 확장'),
+    dict(name='lifetime-signed-depth',file='cpppj/src/o/RawConstructionLifetime.cpp',expect='ConstructionLifetime_',
+         before='return std::bit_cast<std::int8_t>(pool_.Slot(parent)[pool_.Edition()==OriginalEdition::Patch1078 ? kPatchZ : kCdZ]);',
+         after='return pool_.Slot(parent)[pool_.Edition()==OriginalEdition::Patch1078 ? kPatchZ : kCdZ];',note='부모 깊이를 unsigned BYTE로 확장'),
+    dict(name='lifetime-parent-reread',file='cpppj/src/o/RawConstructionLifetime.cpp',expect='ConstructionLifetime_',
+         before='fields.zOrder=Depth(parent);',after='fields.zOrder=Depth(Sid{static_cast<std::uint16_t>(fields.parent)});',note='진입 부모 대신 부착 뒤 현재 부모의 깊이 조회'),
+    dict(name='lifetime-base-sentinel',file='cpppj/src/o/RawConstructionLifetime.cpp',expect='ConstructionLifetime_',
+         before='fields.form=fields.parent=kDestroyed;',after='fields.form=fields.parent=0;',note='base 소멸자의 -12345 표식을 0으로 교체'),
+    dict(name='lifetime-buffer-order',file='cpppj/src/o/RawConstructionLifetime.cpp',expect='ConstructionLifetime_',
+         before='release(ConstructionRelease::Source);',after='release(ConstructionRelease::Output);',note='첫 캡처 버퍼 반납을 출력 버퍼로 바꿈'),
+    dict(name='lifetime-deleting-flag',file='cpppj/src/o/RawConstructionLifetime.cpp',expect='ConstructionLifetime_',
+         before='if (flags&1U) release(ConstructionRelease::Object);',after='if (flags) release(ConstructionRelease::Object);',note='bit 0 대신 아무 flags에도 객체를 반납'),
+    dict(name='lifetime-attach-flags',file='cpppj/src/o/RawConstructionLifetime.cpp',expect='ConstructionLifetime_',
+         before='kAttachFlags=0x10',after='kAttachFlags=0x50',note='부착 flags에 원본과 다른 전송 억제 bit 추가'),
     # 건설 프레임의 독립 PE 관찰이 HP 폭·시간 반올림·확장/만료·색 조회·Draw 변경을 검출해야 한다.
     dict(name='frame-hp-width',file='cpppj/src/o/RawConstructionFrame.cpp',expect='ConstructionFrame_',
          before='patch ? static_cast<double>(savedHp)',after='patch ? static_cast<double>(static_cast<std::int16_t>(savedHp))',note='패치 HP DWORD를 WORD로 절단'),
