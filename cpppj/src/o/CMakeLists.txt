@@ -89,6 +89,7 @@ target_sources(netstorm PRIVATE
     RawCarrierPostPop.cpp RawCarrierPostPop.h
     RawCarrierPreDestroy.cpp RawCarrierPreDestroy.h
     RawContainedFinder.cpp RawContainedFinder.h
+    RawContainedLookup.cpp RawContainedLookup.h
     RawDamageablePreDestroy.cpp RawDamageablePreDestroy.h
     RawDamageableRelease.cpp RawDamageableRelease.h
     SquidProcess.cpp SquidProcess.h

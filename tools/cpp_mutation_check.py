@@ -32,6 +32,23 @@ TESTS = BUILD / 'bin/Release/netstorm_tests.exe'
 EXCLUDED = {'build'}
 # 변이 목록: 이름, 대상 파일, 바꿀 원문(파일에 정확히 한 번 있어야 한다), 바꾼 문장, 실패해야 하는 검사 이름 접두사.
 MUTATIONS = [
+    # 종속 조회의 독립 PE 관찰과 실제 건설 진행음 정지가 의미 변화를 검출해야 한다.
+    dict(name='contained-type-truncation',file='cpppj/src/o/RawContainedLookup.cpp',expect='ContainedLookup_',
+         before='raw[kType]==type',after='raw[kType]==static_cast<std::uint8_t>(type)',note='조회 타입 DWORD를 BYTE로 절단'),
+    dict(name='contained-dead-filter',file='cpppj/src/o/RawContainedLookup.cpp',expect='ContainedLookup_',
+         before='&& !(raw[kState]&kDead)',after='&& true',note='dead 후보를 일치 순번에서 제외하지 않음'),
+    dict(name='contained-ordinal-decrement',file='cpppj/src/o/RawContainedLookup.cpp',expect='ContainedLookup_',
+         before='--ordinal;',after='if (ordinal) --ordinal;',note='선택 뒤 0 순번의 DWORD 감김을 없애 여러 객체를 삭제'),
+    dict(name='contained-delete-return',file='cpppj/src/o/RawContainedLookup.cpp',expect='ContainedLookup_',
+         before='destroy_(current,0);',after='destroy_(current,0);\n                return current;',note='삭제 모드에서 선택 SID를 반환'),
+    dict(name='contained-client-first',file='cpppj/src/o/RawContainedLookup.cpp',expect='ContainedLookup_',
+         before='current.value>=kFirst',after='current.value>kFirst',note='client 번호 5의 삭제를 막음'),
+    dict(name='contained-server-boundary',file='cpppj/src/o/RawContainedLookup.cpp',expect='ContainedLookup_',
+         before='current.value<pool_.Layout().serverFirst',after='current.value<=pool_.Layout().serverFirst',note='client에서 첫 서버 번호 삭제를 허용'),
+    dict(name='contained-delete-flags',file='cpppj/src/o/RawContainedLookup.cpp',expect='ContainedLookup_',
+         before='destroy_(current,0);',after='destroy_(current,1);',note='가상 삭제에 원본과 다른 flags 전달'),
+    dict(name='contained-construction-query',file='cpppj/src/o/RawContainedLookup.cpp',expect='ContainedLookup_',
+         before='lookup.Find(parent,type,0,true)',after='lookup.Find(parent,type,0,false)',note='건설 완료에서 진행음 form을 조회만 하고 삭제하지 않음'),
     # 지정 form 재사용과 단일 분배의 실제 명령 관찰/실제 두 월드 검사가 의미 변화를 검출해야 한다.
     dict(name='form-take-clears-bytes',file='cpppj/src/o/SquidProcess.cpp',expect='ProcessForm_',
          before='raw[kState]&=0xfc;const auto vtable=FormVtable();',after='// 변이 검사에서 주변 raw 바이트를 의도적으로 지운다.\n    for (auto& byte:raw) byte=0;raw[kState]&=0xfc;const auto vtable=FormVtable();',note='Take가 유지해야 하는 주변 raw 바이트를 지움'),
