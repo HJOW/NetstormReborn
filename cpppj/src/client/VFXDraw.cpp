@@ -104,7 +104,8 @@ SquidFrameMetrics ShapeDatabase::SquidMetrics(std::size_t block,std::size_t fram
     if (offset<headerEnd_ || offset-headerEnd_<prefix) throw std::runtime_error("Squid SHP 추가 헤더가 없습니다");
     return {std::bit_cast<float>(U32(bytes_,offset-prefix)),std::bit_cast<float>(U32(bytes_,offset-prefix+4)),
         std::bit_cast<std::int16_t>(U16(bytes_,offset-12)),std::bit_cast<std::int16_t>(U16(bytes_,offset-10)),
-        std::bit_cast<std::int16_t>(U16(bytes_,offset-8)),std::bit_cast<std::int16_t>(U16(bytes_,offset-6))};
+        std::bit_cast<std::int16_t>(U16(bytes_,offset-8)),std::bit_cast<std::int16_t>(U16(bytes_,offset-6)),
+        std::bit_cast<float>(U32(bytes_,offset-prefix+8)),std::bit_cast<float>(U32(bytes_,offset-prefix+12))};
 }
 
 // 원본의 0=행 끝, 1=투명 건너뛰기, 홀수=직접 복사, 짝수=반복 복사를 구현한다.

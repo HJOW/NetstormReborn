@@ -32,6 +32,27 @@ TESTS = BUILD / 'bin/Release/netstorm_tests.exe'
 EXCLUDED = {'build'}
 # 변이 목록: 이름, 대상 파일, 바꿀 원문(파일에 정확히 한 번 있어야 한다), 바꾼 문장, 실패해야 하는 검사 이름 접두사.
 MUTATIONS = [
+    # 일반 자산의 실제 본체/그림자 관찰과 공통 연결이 각 의미 차이를 검출해야 한다.
+    dict(name='objectcollection-skip-level-one',file='cpppj/src/client/ObjectCollection.cpp',expect='ObjectCollection_',
+         before='for (int level=1;level<4;++level)',after='for (int level=2;level<4;++level)',note='일반 해시 1단계를 생략'),
+    dict(name='objectcollection-signed-depth',file='cpppj/src/client/ObjectCollection.cpp',expect='ObjectCollection_',
+         before='entry.depth=std::bit_cast<std::int8_t>(current[patch ? 35 : 33]);',after='entry.depth=current[patch ? 35 : 33];',note='signed BYTE 깊이를 비음수로 처리'),
+    dict(name='objectcollection-walker-bias',file='cpppj/src/client/ObjectCollection.cpp',expect='ObjectCollection_',
+         before='static_cast<double>(entry.y)+kWalkerBias',after='static_cast<double>(entry.y)',note='walker 본체 y 보정을 생략'),
+    dict(name='objectcollection-shadow-bias',file='cpppj/src/client/ObjectCollection.cpp',expect='ObjectCollection_',
+         before='static_cast<double>(entry.y)-kShadowBias',after='static_cast<double>(entry.y)',note='그림자 y 보정을 생략'),
+    dict(name='objectcollection-abstract-tail',file='cpppj/src/client/ObjectCollection.cpp',expect='ObjectCollection_',
+         before='frame>=shapes_[type].frameCount',after='frame>shapes_[type].frameCount',note='abstract 첫 뒷 레이어의 tail을 누락'),
+    dict(name='objectcollection-shadow-needs-main',file='cpppj/src/client/ObjectCollection.cpp',expect='ObjectCollection_',
+         before='if (record.flags1&kShadow) {',after='if ((record.flags1&kShadow) && Visible(view,positionX,positionY,Frame(type,frame))) {',note='그림자 교차를 본체 교차에 종속'),
+    dict(name='objectcollection-patch-x-rounding',file='cpppj/src/client/ObjectCollection.cpp',expect='ObjectCollection_',
+         before='const double dx=static_cast<double>(x)-frame.cellHotspotX;',after='const double dx=static_cast<float>(static_cast<double>(x)-frame.cellHotspotX);',note='패치 x 차이를 float으로 먼저 저장'),
+    dict(name='objectcollection-cd-top-rounding',file='cpppj/src/client/ObjectCollection.cpp',expect='ObjectCollection_',
+         before='cdTop=static_cast<float>(top)',after='cdTop=top',note='CD top 경계의 float 저장 생략'),
+    dict(name='objectcollection-strict-limit',file='cpppj/src/client/ObjectCollection.cpp',expect='ObjectCollection_',
+         before='++count;if (count>=limit)',after='++count;if (count>limit)',note='기록 후 strict 제한을 완화'),
+    dict(name='objectcollection-common-collection',file='cpppj/src/client/ObjectCollection.cpp',expect='ObjectCollection_',
+         before='return collector.Collect(view,output,limit);',after='return 0;',note='공통 일반 자산 슬롯의 실제 수집 생략'),
     # 실제 행별 묶음 관찰과 SID/해시의 공통 연결이 아래 의미 차이를 검출해야 한다.
     dict(name='tilegroup-coordinate-bias',file='cpppj/src/client/TileGroupCollection.cpp',expect='TileGroupCollection_',
          before='static_cast<double>(coordinate)+0.5',after='static_cast<double>(coordinate)',note='셀 좌표의 +0.5 보정을 생략'),

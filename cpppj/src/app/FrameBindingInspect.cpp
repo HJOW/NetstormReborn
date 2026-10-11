@@ -35,7 +35,7 @@ void InspectFrameBinding(const std::filesystem::path& root,o::OriginalEdition ed
     const auto types=assets.TypeTable().Types();auto shapes=client::SquidRenderer::Shapes(assets,edition);
     client::Renderer renderer(640,480);Sink sink(renderer);o::SquidDisplay display(edition,types,shapes,sink,{0,0,65536,{0,0,640,480}});
     std::size_t physical=0,checked=0;std::vector<std::uint8_t> raw(64);
-    // 모든 자산 블록과 공유/그림자 프레임의 칸 크기 및 픽셀 메타데이터를 확인한다.
+    // 모든 자산 블록과 공유/그림자 프레임의 칸 크기/월드 hotspot 및 픽셀 메타데이터를 확인한다.
     for (std::size_t block=0;block<assets.Types().size();++block) {
         const auto number=o::kFirstAssetTypeNumber+block;raw[10]=static_cast<std::uint8_t>(number);
         const auto& shape=shapes[number];const auto limit=shape.frameCount*((types[number].flags1&0x440000)!=0 ? 2 : 1);
@@ -44,6 +44,8 @@ void InspectFrameBinding(const std::filesystem::path& root,o::OriginalEdition ed
             const auto original=assets.Shapes().SquidMetrics(block,frame);const auto& cached=shape.frames[frame];
             if (std::bit_cast<std::uint32_t>(original.cellWidth)!=std::bit_cast<std::uint32_t>(cached.cellWidth) ||
                 std::bit_cast<std::uint32_t>(original.cellHeight)!=std::bit_cast<std::uint32_t>(cached.cellHeight) ||
+                std::bit_cast<std::uint32_t>(original.cellHotspotX)!=std::bit_cast<std::uint32_t>(cached.cellHotspotX) ||
+                std::bit_cast<std::uint32_t>(original.cellHotspotY)!=std::bit_cast<std::uint32_t>(cached.cellHotspotY) ||
                 original.width!=cached.width || original.height!=cached.height || original.hotspotX!=cached.hotspotX || original.hotspotY!=cached.hotspotY)
                 throw std::logic_error("실제 SHP 표시/칸 메타데이터 불일치");
             ++physical;

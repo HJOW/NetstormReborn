@@ -25,6 +25,7 @@ struct ShapeBlock {
 struct SquidFrameMetrics {
     float cellWidth{},cellHeight{}; // SHP의 VFX 앞 36바이트: Pop의 hash level 입력.
     std::int16_t width{},height{},hotspotX{},hotspotY{}; // VFX 앞 12바이트: Renderer 경계 입력.
+    float cellHotspotX{},cellHotspotY{}; // VFX 앞 28/24바이트: 월드 표시 수집의 float 기준점.
 };
 struct IndexedImage {
     std::size_t width{}, height{};

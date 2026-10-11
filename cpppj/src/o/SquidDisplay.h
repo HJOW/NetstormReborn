@@ -11,6 +11,7 @@ struct SquidDisplayRect { int left{},top{},right{},bottom{}; }; // right/bottom 
 struct SquidDisplayFrame {
     std::int16_t width{},height{},hotspotX{},hotspotY{}; // SHP 프레임 앞 12바이트의 signed short.
     float cellWidth{},cellHeight{}; // 같은 프레임 앞 36바이트의 float. 픽셀 크기와 별도로 해시 단계에 쓴다.
+    float cellHotspotX{},cellHotspotY{}; // 월드 수집에서 폭/높이와 같은 float 추가 헤더의 기준점을 사용한다.
 };
 struct SquidDisplayShape {
     int frameCount{}; // 타입 +0x114의 클러스터 수. 그림자/abstract 레이어를 포함하지 않는다.
