@@ -5,6 +5,7 @@ add_executable(netstorm_tests
     TileGroupCollectionTests.cpp
     ObjectCollectionTests.cpp
     PreviewCollectionTests.cpp
+    PreviewDrawTests.cpp
     GumpCollectionTests.cpp
     DrawSubmissionTests.cpp
     DrawSortTests.cpp
@@ -468,3 +469,7 @@ set_source_files_properties(ObjectCollectionTests.cpp PROPERTIES COMPILE_DEFINIT
 # 커서 미리보기의 부분 출력/두 레이어와 준비된 SP 읽기 실제 관찰이다.
 set_source_files_properties(PreviewCollectionTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PREVIEWCOLLECTION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/previewcollection-x86.tsv\"")
+
+# 미리보기 Draw의 전체 분기/격자/색 표/문구 배치 관찰이다.
+set_source_files_properties(PreviewDrawTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PREVIEWDRAW_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/previewdraw-x86.tsv\"")

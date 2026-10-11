@@ -28,6 +28,7 @@ target_sources(netstorm PRIVATE
     TileGroupCollection.cpp TileGroupCollection.h
     ObjectCollection.cpp ObjectCollection.h
     PreviewCollection.cpp PreviewCollection.h
+    PreviewDraw.cpp PreviewDraw.h
     GumpVisual.cpp GumpVisual.h
     GumpBackground.cpp GumpBackground.h
     PaletteShade.cpp PaletteShade.h
