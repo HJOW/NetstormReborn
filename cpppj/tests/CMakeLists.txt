@@ -13,6 +13,7 @@ add_executable(netstorm_tests
     GumpTreeTests.cpp
     GumpLifetimeTests.cpp
     GumpEventsTests.cpp
+    GumpInputTests.cpp
     DrawSubmissionTests.cpp
     DrawSortTests.cpp
     RenderCollectionTests.cpp
@@ -503,3 +504,7 @@ set_source_files_properties(GumpLifetimeTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 커서 선택/필터/가상 이벤트 당시 전체 노드·전역의 실제 관찰이다.
 set_source_files_properties(GumpEventsTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_GUMPEVENTS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gumpevents-x86.tsv\"")
+
+# 입력 캡처/dialog/overlay의 실제 전체 표·노드·전역·콜백 기록이다.
+set_source_files_properties(GumpInputTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_GUMPINPUT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gumpinput-x86.tsv\"")

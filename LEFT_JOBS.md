@@ -1,6 +1,8 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
-> **최신 cpppj 갱신: 2026-10-12 (`HJOW-Athlon`) —** **Gump 커서 선택·기본 이벤트 전달 복원** 완료. `GumpEvents`의 직계/전체 트리 선택·현재 dialog/기본 필터·자식 우선 전달·부모 전파를 복원했다. 같은 생성/트리/수명/위치 저장소에서 선택→전달→dialog 삭제→후속 선택 제외를 검사했다. 경계·signed 깊이/동률·후보 마스크·dead/void 조건 차이·콜백 뒤 현재 링크·성공 토큰/전체 DWORD 반환을 원본과 대조했다. 새 독립 원본 **771개**·cpppj 누적 **518,508개**, 두 x87 최상위 정상 반환 **4,680회**. 새 C++ **8개**, Release 경고/오류 **0**·CTest 내부 **801개·실패 0**(160.71초, 전체 160.74초), 공통 숫자 시계를 포함한 근거 감사 **120종**·새 변이 **14개 모두 검출**(`--focused`, 변이 전 사본 전체 검사 통과). **파생 Gump/실제 버튼·메뉴 처리기·텍스트 Draw·사건 큐/전체 UI 프레임, 게임 조회/색 표/Kernel 공급·SP lazy·구름/장치·Client/GameWorld 자동 프레임·건설 GUI는 후속이며 게임 내 건설/미션 완주는 아직 불가능하다.** 마지막 디컴파일 수행 PC: **HJOW-Athlon, 2026-10-12**(`gumpevents` 6/6/6개 읽기 전용 내보내기). [상세 기록](docs/exe/cpp-gump-events-reconstruction.md). 아래 기록은 당시 상태로 보존한다.
+> **최신 cpppj 갱신: 2026-10-12 (`HJOW-Athlon`) —** **Gump 입력 캡처·dialog·overlay 전달 복원** 완료. `GumpInput`의 첫 캡처·단일 수집 override·dialog 등록·캡처/dialog/루트 우선 전달·overlay 입력을 복원했다. 같은 생성/트리/수명/위치/이벤트 저장소에서 실제 등록/제거·Push/삭제 요청·후속 전달/선택을 연결했다. 캡처 실패의 재전달 금지·성공 콜백 뒤 현재 캡처·한도/중복 순서·부모 visible·실제 전체 Pick·별도 사건 전역·첫 반환 0 종료를 원본과 대조했다. 새 독립 원본 **696개**·cpppj 누적 **519,204개**, 두 x87 최상위 정상 반환 **1,638회**. 새 C++ **9개**, Release 경고/오류 **0**·CTest 내부 **810개·실패 0**(163.59초, 전체 163.64초), 근거 감사 **121종**·새 변이 **14개 모두 검출**(`--focused`, 변이 전 사본 전체 검사 통과). 최종 미검출/건너뜀 **0개**, 사본 소스 바이트 복구를 확인했다. **파생 Gump/실제 버튼·메뉴 처리기·텍스트 Draw·OS 사건 큐/idle/전체 UI 프레임, 게임 조회/색 표/Kernel 공급·SP lazy·구름/장치·Client/GameWorld 자동 프레임·건설 GUI는 후속이며 게임 내 건설/미션 완주는 아직 불가능하다.** 마지막 디컴파일 수행 PC: **HJOW-Athlon, 2026-10-12**(`gumpinput` 5/6/6개 읽기 전용 내보내기). [상세 기록](docs/exe/cpp-gump-input-reconstruction.md). 아래 기록은 당시 상태로 보존한다.
+
+> **앞 단계 cpppj 갱신: 2026-10-12 (`HJOW-Athlon`) —** **Gump 커서 선택·기본 이벤트 전달 복원** 완료. `GumpEvents`의 직계/전체 트리 선택·현재 dialog/기본 필터·자식 우선 전달·부모 전파를 복원했다. 같은 생성/트리/수명/위치 저장소에서 선택→전달→dialog 삭제→후속 선택 제외를 검사했다. 경계·signed 깊이/동률·후보 마스크·dead/void 조건 차이·콜백 뒤 현재 링크·성공 토큰/전체 DWORD 반환을 원본과 대조했다. 새 독립 원본 **771개**·cpppj 누적 **518,508개**, 두 x87 최상위 정상 반환 **4,680회**. 새 C++ **8개**, Release 경고/오류 **0**·CTest 내부 **801개·실패 0**(160.71초, 전체 160.74초), 공통 숫자 시계를 포함한 근거 감사 **120종**·새 변이 **14개 모두 검출**(`--focused`, 변이 전 사본 전체 검사 통과). **파생 Gump/실제 버튼·메뉴 처리기·텍스트 Draw·사건 큐/전체 UI 프레임, 게임 조회/색 표/Kernel 공급·SP lazy·구름/장치·Client/GameWorld 자동 프레임·건설 GUI는 후속이며 게임 내 건설/미션 완주는 아직 불가능하다.** 마지막 디컴파일 수행 PC: **HJOW-Athlon, 2026-10-12**(`gumpevents` 6/6/6개 읽기 전용 내보내기). [상세 기록](docs/exe/cpp-gump-events-reconstruction.md). 아래 기록은 당시 상태로 보존한다.
 
 > **최신 dotnetpj 후속: 2026-10-12 (`HJOW-Athlon`) —** 원본 숫자 시계·중첩 Pause/Resume을 `OriginalGameClock`으로 복원하고 벽시계 double 차이를 실제 그리기 제한에 연결했다. 기본 x87 원본 **4,464개**·dotnet 누적 **53,471개** 대조, 대안 모드 포함 정상 반환 **8,928회**, 단위 **990개** 통과. **게임 타이머의 24Hz/8틱 상한·절대 게임 시계 소비·중첩 정지 소유권 연결은 후속**이다. 마지막 디컴파일 수행 PC: **HJOW-Athlon, 2026-10-12**(`clockkernel` 5/6/6개 읽기 전용 내보내기). cpppj 최신 완료 범위와 검증은 위 갱신을 따르며 상세 dotnet 인계는 [LEFT_JOBS.dotnetpj.md](LEFT_JOBS.dotnetpj.md), [구현 기록](docs/dotnet-clock-kernel-20261012.md)을 따른다.
 
@@ -112,6 +114,16 @@
 
 ---
 
+## 2026-10-12 ✅ 완료 / ⏭ 부분 인계: Gump 입력 캡처·dialog·overlay 전달 (HJOW-Athlon)
+
+- [x] **착수/호스트:** AGENTS.md·두 LEFT_JOBS 확인, 깨끗한 트리·현재/마지막 PC 일치. `gumpinput` **5/6/6개** 읽기 전용 내보내기. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-12.** 원본/복사본 게임·analyzeManager·클론 창 미실행.
+- [x] **완료:** 첫 캡처·단일 수집 override 설정/해제·활성 구간 dialog 등록·한도 로그/중복 순서, 캡처/dialog/루트 우선 전달·콜백 뒤 현재 캡처·실패 재전달 금지·숨은 자식 force, overlay의 부모 visible/실제 Bounds/Pick/별도 사건 전역/첫 반환 0 종료를 복원했다. 부모 dead/void와 자기 dead/void의 서로 다른 조건도 검사했다.
+- [x] **실제 연결:** 같은 GumpCreate/Tree/Lifetime/Collection/Events 저장소에서 실제 생성/부착→캡처/dialog 등록/제거→실제 Push/삭제 요청→캡처/dialog 해제→후속 전달/선택과 overlay 등록/해제. 원본 실행도 하위 필터/전달/선택/위치/경계/CRT/dialog 제거를 실제 몸체로 연결했다. 전체 메뉴/게임 OS 입력 프레임과 파생 버튼 처리기는 후속이다.
+- [x] **독립 근거:** 세 PE 각 **232개**, 새 **696개**·cpppj 누적 **519,204개**, 두 x87 최상위 정상 반환 **1,638회**. 전체 6노드/11전역·overlay 100칸/dialog 16칸·콜백 당시 전체 상태/인자·반환·ABI/x87/SEH·읽기 전용/보호/허용 실행·쓰기·SHA/진입/반환/경계 감사. 게임/GUI/OS/assert 0. 가상 필터/처리기·투영·한도 로그만 명시 입력 경계, void EAX 의미 비교/파생 버튼/OS 사건 큐/실제 예외 전파 제외.
+- [x] **검증:** 새 C++ **9개**, Release 경고/오류 **0**·CTest 내부 **810개·실패 0**(163.59초, 전체 163.64초), 근거 감사 **121종**·새 변이 **14개 모두 검출**(`--focused`, 변이 전 사본 전체 검사 통과). 최종 미검출/건너뜀 **0개**, 사본 소스 바이트 복구를 확인했다. 집중 검사 **9개·실패 0**. 변이는 별도 사본에서 적용/복구했고 미검출/건너뜀 0개다.
+- [x] **인계/보호:** 기본 캡처/dialog 등록/최상위 전달/overlay 입력 TODO 완료 표시. README·계획·내보내기 안내·[상세 기록](docs/exe/cpp-gump-input-reconstruction.md) 갱신. AGENTS.md·보호 원본·dotnetpj/인계 변경·커밋/푸시 없음. 자료 `extracted/gumpinput-{export,smoke,oracle,build,focused,ctest,audits,mutations}.log`와 native fixture/evidence JSON.
+- [ ] **다음:** ① 파생 Gump 생성·소멸자·실제 Form/버튼/메뉴 처리기·배경/텍스트 Draw·OS 사건 큐/idle/overlay 갱신·전체 UI 프레임 연결·overlay 사건 코드의 원본 Template 공급. ② 일반/미리보기 게임 조회/색 표/추가 타입 상태/Kernel 공급·게임 커서 입력/선택·SP lazy·구름/장치·Client/GameWorld 자동 프레임. ③ 실제 건설 SHP/팔레트/준비 소리·부모 공간/사제 contained·자원·건설 GUI. **게임 내 건설/미션 완주는 아직 불가능하다.**
+
 ## 2026-10-12 ✅ 완료 / ⏭ 부분 인계: Gump 커서 선택·기본 이벤트 전달 (HJOW-Athlon)
 
 - [x] **착수/호스트:** AGENTS.md·두 LEFT_JOBS 확인, 깨끗한 트리·현재/마지막 PC 일치. `gumpevents` **6/6/6개** 읽기 전용 내보내기. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-12.** 원본/복사본 게임·analyzeManager·클론 창 미실행.
@@ -121,6 +133,8 @@
 - [x] **검증:** 새 C++ **8개**, Release 경고/오류 **0**·CTest 내부 **801개·실패 0**(160.71초, 전체 160.74초). 근거 감사 **120종** 통과(앞 단계 118종+공통 숫자 시계+새 이벤트). 집중 검사 **8개·실패 0**. 새 변이 **14개 모두 검출**(`--focused`, 변이 전 사본 전체 검사 통과), 최종 미검출/건너뜀 0개. 사본 소스를 복구했다.
 - [x] **인계/보호:** 기본 Gump 선택/필터/전달/전파 TODO 완료 표시. README·계획·내보내기 안내·[상세 기록](docs/exe/cpp-gump-events-reconstruction.md) 갱신. AGENTS.md·보호 원본·dotnetpj/인계 변경·커밋/푸시 없음. 자료 `extracted/gumpevents-{build,oracle,ctest,audits,mutations}.log`와 native fixture/evidence JSON.
 - [ ] **다음:** ① 파생 Gump 생성·소멸자·실제 Form/버튼/메뉴 처리기·배경/텍스트 Draw·사건 큐/포커스/캡처/idle/overlay·전체 UI 프레임 연결. ② 일반/미리보기 게임 조회/색 표/추가 타입 상태/Kernel 공급·게임 커서 입력/선택·SP lazy·구름/장치·Client/GameWorld 자동 프레임. ③ 실제 건설 SHP/팔레트/준비 소리·부모 공간/사제 contained·자원·건설 GUI. **게임 내 건설/미션 완주는 아직 불가능하다.**
+- [x] **기본 입력 캡처/dialog/overlay 완료(2026-10-12):** 캡처/dialog 등록·최상위 입력 우선 전달·overlay 입력은 최신 단계에서 같은 저장소와 원본 하위 몸체로 연결했다. OS 사건 큐/idle/overlay 갱신·파생 버튼/메뉴·전체 UI 프레임은 후속이다.
+
 
 ## 2026-10-12 ✅ 완료 / ⏭ 부분 인계: Gump 삭제 큐·등록 해제·기본 소멸자 (HJOW-Athlon)
 
