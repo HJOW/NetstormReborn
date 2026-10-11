@@ -7,12 +7,12 @@ namespace netstorm::o {
 struct RenderWorldRect {
     float left{},top{},right{},bottom{}; // 원본 collector의 네 float 인자다.
 };
-// 원본 16바이트 draw entry다. token은 원본 객체 포인터 대신 쓰며 마지막 BYTE는 수집 때 보존한다.
+// 원본 공통 16바이트 draw entry다. token은 객체 포인터 대신 쓰며 마지막 BYTE의 쓰기는 종류별로 다르다.
 struct RenderCollectionEntry {
-    float x{},y{}; // 부모의 현재 월드 좌표다. y에는 원본 float 0.001을 더한다.
+    float x{},y{}; // kind 3은 부모 월드 좌표/y+0.001, kind 2는 Gump의 로컬 좌표다.
     std::uint32_t token{}; // 원본 +8 객체 포인터의 호스트 식별자다.
     std::int16_t depth{}; // 원본 +0xc: 등록 zOrder DWORD의 하위 WORD다.
-    std::uint8_t kind{},tail{}; // 원본 +0xe에는 3을 쓰고 +0xf는 건드리지 않는다.
+    std::uint8_t kind{},tail{}; // +0xe 종류와 +0xf 부가 바이트다. 건설은 tail 보존, UI는 0으로 쓴다.
 };
 // 목록 토큰에 대응하는 현재 등록 필드를 읽는다. null은 생성 중인 호스트 객체를 건너뛰는 확장 계약이다.
 using RenderFieldsLookup=std::function<const RenderProcessFields*(std::uint32_t)>;

@@ -1,0 +1,106 @@
+{
+  "total": 1167,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-11",
+  "controls": [
+    639,
+    895
+  ],
+  "os_calls": 0,
+  "assertions": 0,
+  "boundaries": [
+    "project"
+  ],
+  "editions": {
+    "originals": {
+      "cases": 389,
+      "entries": {
+        "00466070": 454,
+        "00464b30": 858,
+        "004648e0": 778,
+        "00464740": 898,
+        "004e49c0": 3452,
+        "00463f80": 658
+      },
+      "returns": {
+        "00466070": 454,
+        "00464b30": 84,
+        "00464740": 120,
+        "004648e0": 120
+      },
+      "boundaries": {
+        "project": 108
+      }
+    },
+    "originalCD": {
+      "cases": 389,
+      "entries": {
+        "00492750": 454,
+        "004938c0": 858,
+        "00493670": 778,
+        "004934c0": 898,
+        "004f161c": 3452,
+        "004950f0": 50,
+        "00495110": 50
+      },
+      "returns": {
+        "00492750": 454,
+        "004938c0": 84,
+        "004934c0": 120,
+        "00493670": 120
+      },
+      "boundaries": {
+        "project": 108
+      }
+    },
+    "original1037": {
+      "cases": 389,
+      "entries": {
+        "00492750": 454,
+        "004938c0": 858,
+        "00493670": 778,
+        "004934c0": 898,
+        "004f161c": 3452,
+        "004950f0": 50,
+        "00495110": 50
+      },
+      "returns": {
+        "00492750": 454,
+        "004938c0": 84,
+        "004934c0": 120,
+        "00493670": 120
+      },
+      "boundaries": {
+        "project": 108
+      }
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/gumpcollection-x86.tsv": "9e27ea77b8bbf7812b7a923cc84e30877d3c3043633c1d09b5f8b6a7d6e8ba26",
+    "extracted/gumpcollection/original1037/creation.c": "c904f72866dd482399c1a5f9139680a6bc2b32cf5bb9f789f83f892d3fd89e59",
+    "extracted/gumpcollection/original1037/functions.tsv": "0a78bd2594a71d57947a404d04ab80a5f4e8cbc5c4e5c53d9c4ff897809ee663",
+    "extracted/gumpcollection/originalCD/creation.c": "c904f72866dd482399c1a5f9139680a6bc2b32cf5bb9f789f83f892d3fd89e59",
+    "extracted/gumpcollection/originalCD/functions.tsv": "0a78bd2594a71d57947a404d04ab80a5f4e8cbc5c4e5c53d9c4ff897809ee663",
+    "extracted/gumpcollection/originals/creation.c": "4dfd84e6a66587eb948995f61d160414d8c51954f4deb4dbab38c81c068ec11b",
+    "extracted/gumpcollection/originals/functions.tsv": "426bf2cc2bd235fc6bfbc9fcd4164dc1921e977a0871b10fad6b502ccd108921",
+    "extracted/process/original1037/creation.c": "c06b0142f8cd167c6f9043f596c82606f79a6f89814d57574f76116d09c976a4",
+    "extracted/process/original1037/functions.tsv": "66dc3e2da36a5a849a900c0b20fd2ef56951a9d0158acccf33ad0568cbaac1af",
+    "extracted/process/originalCD/creation.c": "c06b0142f8cd167c6f9043f596c82606f79a6f89814d57574f76116d09c976a4",
+    "extracted/process/originalCD/functions.tsv": "66dc3e2da36a5a849a900c0b20fd2ef56951a9d0158acccf33ad0568cbaac1af",
+    "extracted/process/originals/creation.c": "93a6d7ba1061a0bdd7d586a089108ead00a838ce06fc274c12f7649f3b583104",
+    "extracted/process/originals/functions.tsv": "407f9321dfe05d98ff81c4368f097f5133067f2bcc0753b3b145064d6a9eb6d3",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_drawsort_oracle.py": "ed92fd9cd8b7c069742cc9158226db6c5cfc75213816d56f40ffb562b5542bb7",
+    "tools/decomp_gumpcollection_oracle.py": "e555c7e3fb5ae1e811e27fd9efda6995287586142ffd9f0bf38f591f6ea71322",
+    "tools/decomp_process_oracle.py": "c548fa37c3cb10edb030bba3b67c8970b7575207efca217fdf4ea0b51354cfd1",
+    "tools/ghidra/gumpcollection-functions.json": "521bc88084ffcc00096a13fd5d92765275e24a540677c388047911d176b031fd"
+  },
+  "limits": [
+    "최상위/노드 수집, 위치/경계/교차와 CRT 절삭은 실제 전체 몸체",
+    "월드→화면 투영만 완성 정수점 응답 경계; SID/투영/실제 Gump 생성/GUI 프레임은 후속",
+    "CD 부착 부모 int→float 저장 차이, 부모별 float 저장, 64비트 절삭 하위 DWORD, 실제 캐시/출력/링크 관찰",
+    "비영 보존 레지스터/스택/x87/SEH, 실행/쓰기 범위, 전체 노드/미사용/보호 바이트와 SHA 감사"
+  ]
+}

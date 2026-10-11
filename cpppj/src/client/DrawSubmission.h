@@ -1,5 +1,5 @@
 // 원본 Renderer의 한 유효 dirty 사각형 안에서 표시 목록 병합과 kind 0~4 분배를 복원한다.
-// 좌표 환산/dirty 순회/배경/장치 잠금은 호출자의 책임이며 수집기의 내부 몸체는 별도 복원 범위다.
+// 좌표 환산/dirty 순회/배경/장치 잠금은 호출자의 책임이다. UI 내부는 GumpCollection으로 연결할 수 있다.
 #pragma once
 #include "client/Renderer.h"
 #include "o/RawRenderCollection.h"

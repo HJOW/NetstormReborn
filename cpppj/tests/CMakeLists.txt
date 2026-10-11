@@ -2,6 +2,7 @@
 # (첫 구성 때 인터넷에서 내려받을 것이 없다).
 # 테스트 파일을 만들면 아래 목록에 더한다. 파일 안의 TEST_CASE 는 자동으로 등록된다.
 add_executable(netstorm_tests
+    GumpCollectionTests.cpp
     DrawSubmissionTests.cpp
     DrawSortTests.cpp
     RenderCollectionTests.cpp
@@ -445,6 +446,9 @@ set_source_files_properties(DrawSortTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 공통 표시 병합/분배의 상위 Renderer 독립 관찰이다. CTest는 원본 게임/Python/장치를 실행하지 않는다.
 set_source_files_properties(DrawSubmissionTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_DRAWSUBMISSION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/drawsubmission-x86.tsv\"")
+# UI 트리/좌표의 독립 원본 기계어 관찰이다.
+target_compile_definitions(netstorm_tests PRIVATE
+    "NETSTORM_GUMPCOLLECTION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gumpcollection-x86.tsv\"")
 
 # 실제 건설 프로세스 제출 순서도 같은 독립 동률 관찰과 비교한다.
 set_source_files_properties(ConstructionVisualSystemTests.cpp PROPERTIES COMPILE_DEFINITIONS

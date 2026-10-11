@@ -24,6 +24,7 @@ target_sources(netstorm PRIVATE
     GifImage.cpp GifImage.h
     DialogScript.cpp DialogScript.h
     Gump.cpp Gump.h
+    GumpCollection.cpp GumpCollection.h
     GumpVisual.cpp GumpVisual.h
     GumpBackground.cpp GumpBackground.h
     PaletteShade.cpp PaletteShade.h

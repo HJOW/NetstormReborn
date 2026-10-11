@@ -32,6 +32,26 @@ TESTS = BUILD / 'bin/Release/netstorm_tests.exe'
 EXCLUDED = {'build'}
 # 변이 목록: 이름, 대상 파일, 바꿀 원문(파일에 정확히 한 번 있어야 한다), 바꾼 문장, 실패해야 하는 검사 이름 접두사.
 MUTATIONS = [
+    # 실제 Gump 위치/경계/트리 관찰과 공통 연결이 아래 의미 차이를 검출해야 한다.
+    dict(name='gumpcollection-touching-edge',file='cpppj/src/client/GumpCollection.cpp',expect='GumpCollection_',
+         before='a.left<b.right && b.left<a.right',after='a.left<=b.right && b.left<a.right',note='맞닿은 화면 경계도 교차로 처리'),
+    dict(name='gumpcollection-child-dead-filter',file='cpppj/src/client/GumpCollection.cpp',expect='GumpCollection_',
+         before='if (Node(child).flags&kVisible)',after='if ((Node(child).flags&kVisible) && !(Node(child).flags&kDead))',note='원본에 없는 자식 삭제 필터 추가'),
+    dict(name='gumpcollection-top-remaining-limit',file='cpppj/src/client/GumpCollection.cpp',expect='GumpCollection_',
+         before='output.subspan(static_cast<std::size_t>(count)),limit);',after='output.subspan(static_cast<std::size_t>(count)),limit-count);',note='같은 제한 대신 최상위 전체 잔여 개수를 전달'),
+    dict(name='gumpcollection-tail-preserved',file='cpppj/src/client/GumpCollection.cpp',expect='GumpCollection_',
+         before='static_cast<std::uint16_t>(node.depth)),2,0};',after='static_cast<std::uint16_t>(node.depth)),2,remaining.front().tail};',note='원본이 0으로 쓰는 마지막 바이트 보존'),
+    dict(name='gumpcollection-cd-anchor-rounding',file='cpppj/src/client/GumpCollection.cpp',expect='GumpCollection_',
+         before='state_.edition==o::OriginalEdition::Patch1078 ? static_cast<double>(point.x) : static_cast<double>(static_cast<float>(point.x))',
+         after='static_cast<double>(point.x)',note='CD 부착 부모의 int→float 저장을 생략'),
+    dict(name='gumpcollection-bounds-float-rounding',file='cpppj/src/client/GumpCollection.cpp',expect='GumpCollection_',
+         before='Ftol(static_cast<double>(point.x)+node.width)',after='Ftol(static_cast<float>(point.x)+node.width)',note='정수 위치와 폭의 합을 float으로 먼저 반올림'),
+    dict(name='gumpcollection-attached-cache',file='cpppj/src/client/GumpCollection.cpp',expect='GumpCollection_',
+         before='if (node.flags&kWorldAttached) return Anchor(node);',after='if (node.flags&kWorldAttached) { node.cached=Anchor(node);return node.cached; }',note='부착 노드 자신의 캐시를 잘못 갱신'),
+    dict(name='gumpcollection-top-current-next',file='cpppj/src/client/GumpCollection.cpp',expect='GumpCollection_',
+         before='count+=added;\n        }\n    }\n    return count;',after='count+=added;head=node.next;\n        }\n    }\n    return count;',note='최상위에서 저장한 next 대신 재귀 뒤 현재 next 사용'),
+    dict(name='gumpcollection-common-ui-missing',file='cpppj/src/client/GumpCollection.cpp',expect='GumpCollection_',
+         before='return collector.Collect(view,output,limit);',after='return 0;',note='공통 UI 슬롯의 실제 트리 수집 생략'),
     # 공통 표시 병합/분배의 실제 상위 Renderer 관찰과 건설 통합이 의미 차이를 검출해야 한다.
     dict(name='drawsubmission-ui-only-bit',file='cpppj/src/client/DrawSubmission.cpp',expect='DrawSubmission_',
          before='if (request.dirtyFlags&4U) return result;',after='if (request.dirtyFlags&1U) return result;',note='UI 전용 dirty 비트를 바꿈'),
