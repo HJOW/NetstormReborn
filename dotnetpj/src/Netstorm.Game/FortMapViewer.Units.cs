@@ -36,6 +36,7 @@ internal sealed partial class FortMapViewer
     /// (유닛마다 타입 이름:바라보는 방향 글자(움직인 적이 없으면 -):moving/idle, 내 유닛만). rotation은 들고 있는 캐논 방위다.
     /// sunposes·crossbowposes는 포대의 실제 그림 번호이며 shots·impacts는 탄·효과의 진단 개수다.
     /// sites는 아직 완공되지 않은 내 건물(타입 이름:waiting=사제가 오는 중/building=건설 중)이고 sp는 내 Storm Power다.
+    /// simulation·tick·frame-seconds·scan-cursor는 일시정지 및 화면 프레임 처리의 실제 상태를 검증한다.
     /// </summary>
     public string UiDetail => $"selected={_session.Entity(_session.Player(TestPlayer).SelectedEntityId)?.Type.Name.ToLowerInvariant() ?? "none"};units="
         + string.Join(',', _session.Entities.Where(e => e.IsComplete && IsMobile(e) && e.Owner == TestPlayer).Select(e =>
@@ -52,6 +53,8 @@ internal sealed partial class FortMapViewer
             .Select(e => $"{e.Type.Name.ToLowerInvariant()}:{(e.AwaitingBuilder ? "waiting" : "building")}"))
         + $";sp={_session.Player(TestPlayer).StormPower};shown-sp={_shownStormPower};refunds={_cancelledSites.Count};context-panels={_contextPanels.Count};productions={ProductionDetail}"
         + $";world-order={WorldOrderDetail}"
+        + $";simulation={(SimulationRunning && !TutorialDialogOpen ? "running" : "paused")};tick={_session.Tick};scan-cursor={_session.Bridges.ScanCursor}"
+        + ";frame-seconds=" + _session.FrameSeconds.ToString("R", System.Globalization.CultureInfo.InvariantCulture)
         + $";preview-size={(_lastCheck?.Site is { } preview ? $"{preview.Footprint.Width}x{preview.Footprint.Height}" : "none")}";
 
     /// <summary>걷기 그림 시계(초). 게임 시간이 흐르는 동안에만 진행해 일시정지 중에는 걷는 자세가 멈춘다.</summary>

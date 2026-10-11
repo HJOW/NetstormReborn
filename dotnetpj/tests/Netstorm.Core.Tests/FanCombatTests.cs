@@ -136,7 +136,7 @@ public sealed class FanCombatTests
         Assert.Equal(expected, ProjectileAnimation.Frame(OriginalData.RequireTypes().Find("bolt")!.Definition, shot, 0, 24));
     }
 
-    /// <summary>동일한 조준·피해 시나리오는 화면 갱신 간격과 무관하게 동일한 사건·검사합을 낸다.</summary>
+    /// <summary>남은 고정 틱 전투는 같은 사건·피해를 내지만 원본식 다리 스캔은 화면 간격에 따라 다른 상태를 갖는다.</summary>
     [Fact]
     public void TurningAndImpacts_AreDeterministic()
     {
@@ -146,7 +146,9 @@ public sealed class FanCombatTests
         for (int frame = 0; frame < 60; frame++) first.Advance(1.0 / 30);
         // 높은 화면 갱신율에서도 조준·발사·피해 순서는 논리 틱을 따른다.
         for (int frame = 0; frame < 240; frame++) second.Advance(1.0 / 120);
-        Assert.Equal(first.Checksum(), second.Checksum());
+        Assert.NotEqual(first.Bridges.ScanCursor, second.Bridges.ScanCursor);
+        Assert.NotEqual(first.Checksum(), second.Checksum());
+        Assert.Equal(first.Entities.Select(e => (e.Id, e.HitPoints)), second.Entities.Select(e => (e.Id, e.HitPoints)));
         Assert.Equal(first.DrainEvents(), second.DrainEvents());
         Assert.Equal(first.Impacts, second.Impacts);
     }

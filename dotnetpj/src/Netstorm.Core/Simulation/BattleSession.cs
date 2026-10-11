@@ -5,11 +5,11 @@ using Netstorm.Core.Rules;
 namespace Netstorm.Core.Simulation;
 
 /// <summary>
-/// 전투 한 판의 게임 세션: 규칙 코어(BattleMap·BridgeGrid·생산 창·다리 칸)를 고정 틱 루프로 묶는다.
+/// 전투 한 판의 게임 세션: 규칙 코어를 화면 프레임의 명령·다리 스캔과 아직 남아 있는 고정 틱 로직으로 묶는다.
 /// <list type="bullet">
-/// <item><description>상태는 <see cref="GameCommand"/> 로만 바뀐다. 명령은 다음 틱 처음에 넣은 순서대로 실행되므로
-/// 같은 명령열이면 어느 컴퓨터에서나 같은 결과가 나온다 (<see cref="Checksum"/> 으로 확인).</description></item>
-/// <item><description>시간은 정수 틱이다. 게임 시각(초) = 틱 ÷ 초당 틱 수. 다리 조각 채우기(1초)·붕괴(10초)·건설·재충전은 모두 틱으로 센다.</description></item>
+/// <item><description>명령은 <see cref="Advance"/> 또는 <see cref="ProcessCommands"/> 에서 넣은 순서대로 실행한다.
+/// 같은 프레임 시간열과 명령열은 같은 결과를 낸다 (<see cref="Checksum"/> 으로 확인).</description></item>
+/// <item><description>다리 붕괴는 FrameSeconds의 실제 프레임 시각을 사용한다. 나머지 타이머는 아직 정수 틱 ÷ 초당 틱 수를 사용한다.</description></item>
 /// <item><description>화면은 <see cref="Advance"/> 에 흐른 실제 시간을 주고, <see cref="DrainEvents"/> 로 일어난 일을 받아 알림을 띄운다.</description></item>
 /// </list>
 /// 수집·수송·희생 의식·포대·공중 공격체와 캠페인 1-1의 임시 방어 AI를 처리한다. 원본 전략 복원은 후속이다.
@@ -22,7 +22,7 @@ public sealed partial class BattleSession
     /// <summary>오브젝트 번호 → 오브젝트 (번호 순)</summary>
     private readonly SortedDictionary<int, GameEntity> _entities = [];
 
-    /// <summary>다음 틱 처음에 실행할 명령 (넣은 순서)</summary>
+    /// <summary>다음 화면 프레임 또는 명시적 명령 처리에서 실행할 명령 (넣은 순서)</summary>
     private readonly Queue<GameCommand> _commands = new();
 
     /// <summary>아직 화면이 받아가지 않은 이벤트</summary>
@@ -33,6 +33,9 @@ public sealed partial class BattleSession
 
     /// <summary>실제 시간 → 틱 변환</summary>
     private readonly FixedTimestep _timestep = new();
+
+    /// <summary>다리 스캔에 사용하는 실제 게임 프레임 시각. 정지 중 명령 처리에서는 증가하지 않는다.</summary>
+    private double _frameSeconds;
 
     /// <summary>게임 전역 난수 (다리 조각 추첨 등 원본과 같은 식, 원본은 하나를 여러 곳이 함께 쓴다)</summary>
     private readonly NetstormRandom _random;
@@ -103,6 +106,9 @@ public sealed partial class BattleSession
     /// <summary>게임 시각(초). 틱 ÷ 초당 틱 수로 정수에서 곧바로 계산해 오차가 쌓이지 않는다.</summary>
     public double Seconds => Tick / (double)TicksPerSecond;
 
+    /// <summary>고정 틱 경계로 반올림하지 않은 게임 프레임 시각(초). 다리 스캔과 검증에서 사용한다.</summary>
+    public double FrameSeconds => _frameSeconds;
+
     /// <summary>다음 논리 틱까지 흐른 비율. 화면 보간에만 사용하며 전투 판정·검사합에는 넣지 않는다.</summary>
     public double InterpolationAlpha => _timestep.Alpha;
 
@@ -124,12 +130,17 @@ public sealed partial class BattleSession
     /// <param name="startStormPower">미션 값이 없을 때 쓸 시작 Storm Power (없으면 전투 옵션의 시작 금액)</param>
     /// <param name="seed">전역 난수 시드</param>
     /// <param name="storedBridges">맵에 저장된 다리 오브젝트 → 격자 칸 (화면이 무너진 저장 다리를 숨기는 데 쓴다, 없으면 빈 표)</param>
+    /// <param name="initialFrameSeconds">세션 시작의 게임 프레임 시각. 새 게임은 0이며 기존 시계를 이어받을 때는 그 시각을 넘긴다.</param>
     public BattleSession(BattleMap map, BridgeGrid bridges, TypeCatalog types, MissionStart? mission = null,
         int humanPlayer = 1, int? startStormPower = null, uint seed = 0,
-        IReadOnlyDictionary<FortMapObject, BridgeCellState>? storedBridges = null)
+        IReadOnlyDictionary<FortMapObject, BridgeCellState>? storedBridges = null, double initialFrameSeconds = 0)
     {
+        if (!double.IsFinite(initialFrameSeconds) || initialFrameSeconds < 0)
+            throw new ArgumentOutOfRangeException(nameof(initialFrameSeconds));
+        _frameSeconds = initialFrameSeconds;
         Map = map;
         Bridges = bridges;
+        Bridges.ResetScanClock(initialFrameSeconds);
         Bridges.AttachSidPool(map.Sids, (byte)(types.Find("bridge")?.RuntimeIndex ?? 0));
         _storedBridges = storedBridges ?? new Dictionary<FortMapObject, BridgeCellState>();
         StoredBridgeCells = new HashSet<BridgeCellState>(_storedBridges.Values, ReferenceEqualityComparer.Instance);
@@ -249,7 +260,7 @@ public sealed partial class BattleSession
     public bool IsStoredBridgeGone(FortMapObject item) =>
         _storedBridges.TryGetValue(item, out BridgeCellState? state) && !ReferenceEquals(Bridges.At(state.X, state.Y), state);
 
-    /// <summary>명령을 넣는다. 다음 틱 처음에 넣은 순서대로 실행된다.</summary>
+    /// <summary>명령을 넣는다. 다음 화면 프레임 또는 ProcessCommands 호출에서 넣은 순서대로 실행된다.</summary>
     /// <param name="command">명령</param>
     public void Submit(GameCommand command) => _commands.Enqueue(command);
 
@@ -279,19 +290,42 @@ public sealed partial class BattleSession
     }
 
     /// <summary>
-    /// 흐른 실제 시간을 더하고 그만큼 틱을 진행한다. 한 번에 따라잡는 틱 수에는 한도가 있어(FixedTimestep) 창이 멈췄다 풀려도
-    /// 게임이 한꺼번에 튀지 않는다.
+    /// 화면 프레임의 시각을 고정하고 명령·다리 붕괴를 한 번 처리한 뒤, 남은 로직의 고정 틱을 진행한다.
+    /// 다리 스캔은 원본 00422bc0처럼 실제 프레임 간격을 사용하며 틱이 없는 프레임에도 실행한다.
+    /// 이동·전투·건설 타이머의 24Hz 및 따라잡기 상한은 원본 시간 모델로 옮길 후속 작업이다.
     /// </summary>
     /// <param name="elapsedSeconds">지난 화면 갱신 이후 시간(초)</param>
     /// <returns>이번에 진행한 틱 수</returns>
     public int Advance(double elapsedSeconds)
     {
+        if (!double.IsFinite(elapsedSeconds) || elapsedSeconds < 0 || !double.IsFinite(_frameSeconds + elapsedSeconds))
+            throw new ArgumentOutOfRangeException(nameof(elapsedSeconds));
+        _frameSeconds += elapsedSeconds;
+        ProcessCommands();
+        UpdateBridgeFrame(_frameSeconds, elapsedSeconds);
+        UpdateGroundSupport();
         int ticks = _timestep.Advance(elapsedSeconds);
-        RunTicks(ticks);
+        // 화면 프레임에서 이미 처리한 명령·스캔은 따라잡기 틱마다 반복하지 않는다.
+        for (int i = 0; i < ticks; i++) Step(frameWork: false);
+        UpdateMissionEvents();
         return ticks;
     }
 
-    /// <summary>실제 시간과 상관없이 틱을 정확히 그 수만큼 진행한다 (테스트·되감기 없는 앞당기기용).</summary>
+    /// <summary>
+    /// 대기 명령을 게임 시각을 늘리지 않고 처리한다. 일시정지 중 선택·배치·회수에도 사용한다.
+    /// 튜토리얼에는 이번 호출의 명령 사건만 전달하여 같은 틱의 이전 사건을 다시 소비하지 않는다.
+    /// </summary>
+    public void ProcessCommands()
+    {
+        if (_commands.Count == 0) return;
+        int firstEvent = _events.Count;
+        ExecuteQueuedCommands();
+        if (Tutorial != null && RunsTutorial)
+            Tutorial.Update(this, _events.Skip(firstEvent).ToArray());
+        UpdateMissionEvents();
+    }
+
+    /// <summary>실제 시간과 상관없이 1/24초의 합성 프레임을 지정한 수만큼 진행한다 (기존 규칙 테스트·앞당기기용).</summary>
     /// <param name="count">진행할 틱 수</param>
     public void RunTicks(int count)
     {
@@ -303,15 +337,22 @@ public sealed partial class BattleSession
     }
 
     /// <summary>
-    /// 틱 하나를 진행한다. 순서: 명령 실행 → 사제 수집·이동 → 수송·사제 이동(포획·운반·건설 현장 도착) → 도착 전 공사장 점검 → 생산 자원 운송·실체화 → 건설 완료 → 전투 → 희생 의식 → 튜토리얼 단계 처리
+    /// 남은 로직의 틱 하나를 진행한다. 순서: 사제 수집·이동 → 수송·사제 이동(포획·운반·건설 현장 도착) → 도착 전 공사장 점검 → 생산 자원 운송·실체화 → 건설 완료 → 전투 → 희생 의식 → 튜토리얼 단계 처리
     /// → 플레이어별 다리 칸 채우기 → 다리 붕괴 → 지상 낙하·허공 사제 복귀 → 미션 승패 이벤트.
-    /// 이 순서가 바뀌면 같은 명령열의 결과가 달라지므로 락스텝·리플레이를 위해 고정한다.
+    /// 합성 프레임에서는 명령·다리 스캔도 함께 처리한다. 실제 화면 프레임에서는 Advance가 각각 한 번 처리한다.
     /// </summary>
-    private void Step()
+    /// <param name="frameWork">합성 프레임의 명령·시각·스캔도 함께 처리할지</param>
+    private void Step(bool frameWork = true)
     {
+        double frameOffset = _frameSeconds - Seconds;
         Tick++;
         double now = Seconds;
-        ExecuteQueuedCommands();
+        if (frameWork)
+        {
+            // 합성 프레임은 정수 틱에서 시각을 구해 10초 경계의 누적 오차를 피한다. 실제 프레임의 잔여 시각은 유지한다.
+            _frameSeconds = now + frameOffset;
+            ExecuteQueuedCommands();
+        }
         UpdateCampaignAi();
         UpdateHarvests();
         UpdateUnitMoves();
@@ -334,10 +375,20 @@ public sealed partial class BattleSession
                 Emit(SessionEventKind.BridgePieceAdded, player.Number, 0, $"새 다리 조각 {added.Pattern.Index}번");
             }
         }
-        BridgeDecayResult decay = Bridges.Update(now, 1.0 / TicksPerSecond);
-        UpdateGroundSupport();
-        // 다리 붕괴까지 반영한 뒤 승패·AI 이벤트를 판정한다 (원본은 미션 객체 프레임 함수에서 매 프레임 검사)
-        UpdateMissionEvents();
+        if (frameWork)
+        {
+            UpdateBridgeFrame(_frameSeconds, 1.0 / TicksPerSecond);
+            UpdateGroundSupport();
+            UpdateMissionEvents();
+        }
+    }
+
+    /// <summary>한 화면 프레임의 다리 스캔 결과를 낙하 기록·금 감·붕괴 사건으로 옮긴다.</summary>
+    /// <param name="now">현재 게임 프레임 시각(초)</param>
+    /// <param name="delta">직전 게임 프레임 이후 시간(초)</param>
+    private void UpdateBridgeFrame(double now, double delta)
+    {
+        BridgeDecayResult decay = Bridges.Update(now, delta);
         // 금 간 칸을 이벤트로 알린다
         foreach (BridgeCellState cell in decay.Cracked)
         {
@@ -440,13 +491,15 @@ public sealed partial class BattleSession
     internal void ClearSelection(PlayerState player) => player.SelectedEntityId = 0;
 
     /// <summary>
-    /// 지금까지의 게임 상태를 요약한 32비트 검사합 (FNV-1a). 같은 명령열을 같은 틱에 실행한 두 세션은 같은 값을 가져야 하고,
+    /// 지금까지의 게임 상태를 요약한 32비트 검사합 (FNV-1a). 같은 명령열과 프레임 시간열의 두 세션은 같은 값을 가져야 하고,
     /// 다르면 동기화가 깨진 것이다 (멀티플레이·리플레이 검증용). 화면 전용 상태(집은 조각의 회전, 알림)는 포함하지 않는다.
     /// </summary>
     public uint Checksum()
     {
         var hash = new Fnv1a();
         hash.Add(Tick);
+        hash.Add(BitConverter.DoubleToInt64Bits(_frameSeconds));
+        hash.Add(BitConverter.DoubleToInt64Bits(_timestep.Alpha));
         hash.Add(_random.State);
         hash.Add(Bridges.ScanCursor);
         hash.Add(BitConverter.DoubleToInt64Bits(Bridges.NextScanTime));

@@ -400,7 +400,7 @@ public sealed class RecordedCombatTests
         Assert.Equal(100, session.Entity(OriginalData.Sid(2))!.HitPoints);
     }
 
-    /// <summary>착탄 경계에 걸친 이동체도 화면 보간 시간 때문에 명중 결과가 달라지지 않는다.</summary>
+    /// <summary>남은 고정 틱 전투의 명중은 화면 보간과 독립이며 서로 다른 프레임 시각·스캔은 검사합에 구별된다.</summary>
     [Fact]
     public void Cannon_ImpactDoesNotDependOnRenderInterpolation()
     {
@@ -415,7 +415,12 @@ public sealed class RecordedCombatTests
         first.RunTicks(6); second.RunTicks(6);
         Assert.True(first.Entity(OriginalData.Sid(2))!.IsStunned);
         Assert.True(second.Entity(OriginalData.Sid(2))!.IsStunned);
-        Assert.Equal(first.Checksum(), second.Checksum());
+        Assert.Equal(first.Entity(OriginalData.Sid(2))!.HitPoints, second.Entity(OriginalData.Sid(2))!.HitPoints);
+        Assert.Equal(first.Shots, second.Shots);
+        Assert.Equal(first.Impacts, second.Impacts);
+        Assert.Equal(first.DrainEvents(), second.DrainEvents());
+        Assert.NotEqual(first.FrameSeconds, second.FrameSeconds);
+        Assert.NotEqual(first.Checksum(), second.Checksum());
     }
 
     /// <summary>재성장·사격 준비·방어선 흡수를 포함하는 같은 틱열은 같은 검사합과 사건을 낸다.</summary>

@@ -60,7 +60,7 @@ internal sealed partial class FortMapViewer
 
     /// <summary>
     /// 세션 입력과 시간 진행: Space 일시정지, K 생산 규칙 켜기/끄기, T 커서 칸의 오브젝트 선택/해제,
-    /// 흐른 시간만큼 틱 진행, 이벤트 알림 갱신.
+    /// 화면 프레임의 명령·다리 스캔과 남은 논리 틱을 진행하고 이벤트 알림을 갱신한다.
     /// </summary>
     /// <param name="seconds">지난 갱신 이후 경과 시간(초)</param>
     /// <param name="keyboard">현재 키 상태</param>
@@ -98,6 +98,11 @@ internal sealed partial class FortMapViewer
         {
             _session.Advance(seconds);
         }
+        else
+        {
+            // 같은 프레임에서 정지로 바뀐 경우에도 이미 받은 명령은 시각을 진행하지 않고 처리한다.
+            _session.ProcessCommands();
+        }
         // 세션이 알린 일을 알림 문구로 옮긴다 (1초마다 생기는 다리 조각 알림은 칸 패널에 보이므로 뺀다)
         foreach (SessionEvent sessionEvent in _session.DrainEvents())
         {
@@ -123,7 +128,7 @@ internal sealed partial class FortMapViewer
     }
 
     /// <summary>
-    /// 명령을 세션에 넣는다. 세션이 멈춰 있어도(일시정지 등) 눌러 본 결과가 보이도록 한 틱만 곧바로 진행한다.
+    /// 명령을 세션에 넣는다. 정지 중에도 선택·배치 결과를 바로 표시하되 게임 시각과 다른 유닛 로직은 진행하지 않는다.
     /// </summary>
     /// <param name="command">명령</param>
     private void SubmitCommand(GameCommand command)
@@ -131,7 +136,7 @@ internal sealed partial class FortMapViewer
         _session.Submit(command);
         if (!SimulationRunning)
         {
-            _session.RunTicks(1);
+            _session.ProcessCommands();
         }
     }
 

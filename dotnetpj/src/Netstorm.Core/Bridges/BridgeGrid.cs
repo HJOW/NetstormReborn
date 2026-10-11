@@ -385,7 +385,16 @@ public sealed class BridgeGrid
         return networks;
     }
 
-    /// <summary>마지막 호출 이후 경과 시간으로 번호 스캔 한 번을 진행한다. 여러 틱의 재생은 호출자가 맡는다.</summary>
+    /// <summary>새 세션의 게임 시각으로 스캔을 초기화한다. 다리 칸과 SID는 보존하고 커서·주기만 원본 00422490처럼 재설정한다.</summary>
+    /// <param name="now">세션 시작의 게임 시각(초)</param>
+    internal void ResetScanClock(double now)
+    {
+        _scan.Cursor = _scan.First;
+        _scan.Next = (double)BridgeDecayScan.Period + now;
+        LastScanTime = now;
+    }
+
+    /// <summary>마지막 호출 이후 경과 시간으로 번호 스캔 한 번을 진행한다. 여러 프레임의 재생은 호출자가 맡는다.</summary>
     public BridgeDecayResult Update(double now) => Update(now, now - LastScanTime);
 
     /// <summary>원본 00422bc0의 번호 구간을 진행하고 그 구간의 살아 있는 다리만 SID 순으로 처리한다.</summary>

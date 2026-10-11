@@ -141,7 +141,7 @@ public sealed class CrossbowDefenseTests
         Assert.False(CombatImmunity.Blocks(session.Entity(OriginalData.Sid(2))!, OriginalData.RequireTypes().Find("sunCannon"), 10, 10));
     }
 
-    /// <summary>석궁 상태를 포함한 검사합·피해·효과음 순서가 화면 갱신 간격에 좌우되지 않는다.</summary>
+    /// <summary>남은 고정 틱 석궁의 장전·피해·효과음 순서는 유지되며 원본식 스캔 상태는 화면 간격에 따라 달라진다.</summary>
     [Fact]
     public void Crossbow_ReloadIsDeterministicAcrossFrameRates()
     {
@@ -151,7 +151,10 @@ public sealed class CrossbowDefenseTests
         for (int frame = 0; frame < 90; frame++) first.Advance(1.0 / 30);
         // 120Hz에서도 장전·발사·피해 예약은 논리 틱을 사용한다.
         for (int frame = 0; frame < 360; frame++) second.Advance(1.0 / 120);
-        Assert.Equal(first.Checksum(), second.Checksum());
+        Assert.NotEqual(first.Bridges.ScanCursor, second.Bridges.ScanCursor);
+        Assert.NotEqual(first.Checksum(), second.Checksum());
+        Assert.Equal(first.Entities.Select(e => (e.Id, e.HitPoints, e.CrossbowFrame)),
+            second.Entities.Select(e => (e.Id, e.HitPoints, e.CrossbowFrame)));
         Assert.Equal(first.DrainEvents(), second.DrainEvents());
     }
 

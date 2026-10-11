@@ -23,6 +23,8 @@ internal sealed class UiAutomation
     /// <summary>조건 대기에 남은 시간(초).</summary>
     private double _waitDetailSeconds;
     private readonly Queue<string> _commands;
+    /// <summary>정지 검사 등에서 비교할 세부 상태 항목의 이전 값. remember-detail로 저장하고 assert-unchanged-detail로 비교한다.</summary>
+    private readonly Dictionary<string, string> _rememberedDetails = new(StringComparer.OrdinalIgnoreCase);
     private MouseState _mouse;
     /// <summary>다음 명령을 실행하기 전에 남은 대기 시간(초).</summary>
     private double _waitSeconds = Seconds(StartWaitFrames);
@@ -147,6 +149,13 @@ internal sealed class UiAutomation
                 if (detail.Contains(value, StringComparison.OrdinalIgnoreCase) == excluded)
                     throw new InvalidOperationException($"UI 세부 검사 실패: {(excluded ? "제외" : "예상")}={value}, 실제={detail}");
                 Console.WriteLine($"UI PASS: {(excluded ? "excluded " : "")}{value}"); break;
+            case "remember-detail":
+                _rememberedDetails[value] = DetailValue(detail, value); break;
+            case "assert-unchanged-detail":
+                string current = DetailValue(detail, value);
+                if (!_rememberedDetails.TryGetValue(value, out string? previous) || current != previous)
+                    throw new InvalidOperationException($"UI 보존 검사 실패: 항목={value}, 이전={previous}, 실제={current}");
+                Console.WriteLine($"UI PASS: unchanged {value}={current}"); break;
             case "quit": quit(); break;
             default: throw new ArgumentException($"알 수 없는 UI 검사 명령: {raw}");
         }
@@ -156,6 +165,16 @@ internal sealed class UiAutomation
     /// <summary>왼쪽 버튼만 누른 논리 좌표 마우스를 만든다.</summary>
     private static MouseState MakeMouse(int x, int y, ButtonState left) => new(x, y, 0, left, ButtonState.Released,
         ButtonState.Released, ButtonState.Released, ButtonState.Released);
+
+    /// <summary>세미콜론으로 나눈 세부 상태에서 지정한 키의 값을 읽는다. 키가 없으면 잘못된 검사를 즉시 알린다.</summary>
+    /// <param name="detail">현재 화면의 세부 상태</param>
+    /// <param name="key">값을 읽을 항목 이름</param>
+    private static string DetailValue(string detail, string key)
+    {
+        string prefix = key + "=";
+        string? entry = detail.Split(';').FirstOrDefault(item => item.StartsWith(prefix, StringComparison.OrdinalIgnoreCase));
+        return entry == null ? throw new InvalidOperationException($"UI 상태 항목 없음: {key}") : entry[prefix.Length..];
+    }
 
     /// <summary>그리기가 끝난 뒤 캡처 요청을 한 번 꺼낸다.</summary>
     public string? TakeCapture() { string? path = CapturePath; CapturePath = null; return path; }

@@ -100,7 +100,7 @@ internal sealed partial class FortMapViewer
 
     /// <summary>
     /// 다리 모드 입력: B 모드, 1~6 또는 Q W A S Z X 조각 집기, R 회전, C 반대 회전 켜기/끄기, Backspace 되돌리기, 좌클릭 놓기.
-    /// 집기·되돌리기·놓기는 세션 명령이고 결과는 다음 틱에 알림으로 온다.
+    /// 집기·되돌리기·놓기는 세션 명령이고 같은 화면 프레임에서 결과를 처리한다.
     /// </summary>
     /// <param name="mapInput">지도 클릭·커서 칸을 처리할지 (생산 창·메뉴가 입력을 쓴 프레임은 거짓)</param>
     private void UpdateBridges(KeyboardState keyboard, MouseState mouse, bool mapInput = true)

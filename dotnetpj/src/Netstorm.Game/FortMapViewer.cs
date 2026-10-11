@@ -140,7 +140,7 @@ internal sealed partial class FortMapViewer : IDisposable
             : WorldPixels(focus.X, focus.Y) - OriginalStartOffset + new Vector2(0, HeaderHeight / 2f);
     }
 
-    /// <summary>키보드·마우스·화면 끝 스크롤로 카메라를 이동하고 확대 배율을 변경한다.</summary>
+    /// <summary>카메라·지도 입력을 처리한 뒤 같은 화면 프레임의 명령·시간을 갱신한다.</summary>
     /// <param name="seconds">지난 갱신 이후 경과 시간(초)</param>
     /// <param name="mouse">논리 화면 좌표로 바꾼 마우스 상태</param>
     /// <param name="edgeScroll">가장자리 스크롤이 이번 갱신에서 옮길 논리 픽셀 (양수 = 오른쪽·아래)</param>
@@ -236,7 +236,6 @@ internal sealed partial class FortMapViewer : IDisposable
             _showChunks = !_showChunks;
         }
         if (_playUi && !uiConsumed) UpdatePlayOrders(mouse);
-        UpdateSession(seconds, keyboard, mouse);
         if (!TutorialDialogOpen)
         {
             if (!uiConsumed)
@@ -246,6 +245,8 @@ internal sealed partial class FortMapViewer : IDisposable
             // 다리 키(Q W A S Z X·E·C·Backspace)는 커서가 생산 창 위에 있어도 받고, 지도 클릭·커서 칸만 막는다
             UpdateBridges(keyboard, mouse, mapInput: !uiConsumed);
         }
+        // 배치·다리 입력까지 모은 뒤 처리하여 그 프레임의 그리기에 명령 결과가 반영되게 한다.
+        UpdateSession(seconds, keyboard, mouse);
         _previousKeyboard = keyboard;
         _previousMouse = mouse;
     }

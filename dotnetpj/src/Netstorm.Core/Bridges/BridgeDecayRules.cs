@@ -458,7 +458,7 @@ public sealed class BridgeDecayScanState
 /// <summary>
 /// 다리 붕괴 스캔의 커서 진행 (원본 00422bc0 의 바깥 루프). 번호 범위를 10초에 걸쳐 나누어 훑는다.
 /// 한 칸 처리는 호출자가 구간의 번호마다 <see cref="Eligible"/> 을 확인해 <see cref="BridgeDecayRules.DecayCell"/> 로 한다.
-/// 공유 서버 번호 풀을 사용하는 BridgeGrid가 세션의 고정 틱마다 이 커서를 진행한다.
+/// 공유 서버 번호 풀을 사용하는 BridgeGrid가 화면 프레임마다 실제 시각·간격으로 이 커서를 진행한다.
 /// </summary>
 public static class BridgeDecayScan
 {
