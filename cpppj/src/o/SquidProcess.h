@@ -21,6 +21,9 @@ public:
 protected:
     // 부착한 host다. 부착 전에는 null이다.
     SquidProcessHost* Host() const;
+    // Kernel 슬롯 번호다. 부착 전에는 0이다. 파생 프로세스가 Kill 뒤의 등록 여부를 물으려면 Kill 전에 읽어 둔다.
+    // 이력: 2026-10-11 추가 — 건설 프로세스가 한 프레임에 Kill을 두 번 판단하므로.
+    ProcessId Pid() const;
 private:
     friend class SquidProcessHost;
     Sid form_{},parent_{};
@@ -75,6 +78,10 @@ public:
     const SidPool& Pool() const;
     // 0041bf10 ↔ CD 0048f7b0: 권한 조건이 맞으면 form을 공통 destroy로 지운다. 프로세스는 form의 preDestroy에서 소멸한다.
     void Kill(SquidProcess& process,std::uint32_t flags);
+    // 그 번호의 Kernel 슬롯에 지금도 이 프로세스가 등록돼 있는지 본다. 주소만 비교하고 객체를 읽지 않으므로
+    // Kill이 프로세스를 없앴는지 확인할 때 쓸 수 있다. 번호와 주소는 Kill 전에 읽어 둔 값을 넘긴다.
+    // 이력: 2026-10-11 추가 — 건설 프로세스의 둘째 Kill 판단을 위해.
+    bool IsRegistered(ProcessId pid,const SquidProcess* process) const;
     // 004afb40 ↔ CD 004ac890: 부모의 종속 체인에서 이벤트 번호가 같은 첫 Regular 프로세스를 찾는다.
     RegularProcess* FindEvent(Sid parent,std::uint32_t event) const;
     // 004afbe0 ↔ CD 004ac9c0: (이벤트 & mask) == value인 첫 Regular 프로세스를 찾는다.

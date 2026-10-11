@@ -29,6 +29,8 @@ void SquidProcess::OnFormDestroy(std::uint32_t) {}
 void SquidProcess::OnParentDying(Sid) {}
 void SquidProcess::OnAttached() {}
 SquidProcessHost* SquidProcess::Host() const { return host_; }
+// 부착 때 Kernel이 배정한 번호를 그대로 돌려준다.
+ProcessId SquidProcess::Pid() const { return pid_; }
 
 RegularProcess::RegularProcess(std::uint32_t event,float payload):event_(event),payload_(payload) {}
 // 부착하지 않은 프로세스는 Kernel에 없으므로 실행되지 않는다.
@@ -183,6 +185,8 @@ void SquidProcessHost::Kill(SquidProcess& process,std::uint32_t flags) {
         throw std::logic_error("프로세스 form 상태 오류");
     destroy_.Destroy(form,flags,Hooks());
 }
+// 슬롯의 현재 주소와 비교만 한다. 이미 해제된 프로세스의 주소를 넘겨도 객체를 읽지 않는다.
+bool SquidProcessHost::IsRegistered(ProcessId pid,const SquidProcess* process) const { return process && kernel_.Get(pid)==process; }
 template<class Predicate> RegularProcess* SquidProcessHost::Find(Sid parent,Predicate match) const {
     if (parent.value==0 || parent.value>=pool_.Capacity()) throw std::out_of_range("이벤트 조회 SID 범위 오류");
     std::uint16_t current=Word(parent,kHead);std::uint32_t guard=0;

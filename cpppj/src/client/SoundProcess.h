@@ -2,6 +2,7 @@
 // 재생/정지는 SoundProcessHooks로 받으며 MakeSoundProcessHooks가 실제 재생 계층(SoundPlayer)에 잇는다.
 #pragma once
 #include "client/Sound.h"
+#include "o/RawConstructionProcess.h"
 #include "o/RawPriestShield.h"
 #include "o/SquidProcess.h"
 #include <array>
@@ -155,4 +156,13 @@ o::PriestShieldHooks MakePriestShieldNoticeHooks(SoundPlayer& player,o::PriestSh
 // 원본: 004941f0 / CD 0040c880의 `004a9d70(x, y, "priestFall.wav", 0)` / CD 00438c00.
 // 이력: 2026-10-10 추가.
 std::function<void(o::Sid,float,float)> MakePriestFallSound(SoundPlayer& player);
+// 건설 프로세스(RawConstructionProcess)의 네 소리 경계를 실제 이름 표·소리 프로세스·재생 계층으로 바꾼다:
+//   loadSound(진행음 jimBuild.wav 조회), attachSound(부모에 소리 프로세스 부착), playAt(완료음 buildDone.wav), play(타입 준비 소리의 전역 재생).
+// 사용: 다른 효과를 채운 hooks를 넘기면 네 경계만 교체해 돌려준다. reserveSound(new 성공 여부)와 readySound(타입 +0x90 항목)는 호출자가 준다.
+//       pool은 system이 붙는 풀과 같아야 한다(아니면 std::invalid_argument). sounds·system·player는 돌려준 hooks보다 오래 살아야 한다.
+// 원본: 00443c40 / CD 004d0720의 `004a8ee0("jimBuild.wav")` → `004ab240(부모, 소리, 0, 1)`,
+//       00443e20 / CD 004d09e0의 `004a9d70(x, y, "buildDone.wav", 0)` → `004a9550(준비 소리, 0, 0, 0, 0, 0)`.
+// 이력: 2026-10-11 추가 — 건설 진행음과 완료음을 실제 소리 계층에 잇기 위해.
+o::ConstructionProcessHooks MakeConstructionProcessSoundHooks(const o::SidPool& pool,SoundList& sounds,SoundProcessSystem& system,SoundPlayer& player,
+    o::ConstructionProcessHooks hooks);
 }

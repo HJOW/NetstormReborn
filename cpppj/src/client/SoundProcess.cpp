@@ -161,4 +161,17 @@ o::PriestShieldHooks MakePriestShieldNoticeHooks(SoundPlayer& player,o::PriestSh
 std::function<void(o::Sid,float,float)> MakePriestFallSound(SoundPlayer& player) {
     return [&player](o::Sid,float x,float y) { static_cast<void>(player.PlayNameAt(x,y,"priestFall.wav",0)); };
 }
+
+// 조회한 항목을 그대로 소리 프로세스에 넘기고, 완료 소리 둘은 재생 결과(재생에 쓴 항목)를 원본처럼 버린다.
+o::ConstructionProcessHooks MakeConstructionProcessSoundHooks(const o::SidPool& pool,SoundList& sounds,SoundProcessSystem& system,SoundPlayer& player,
+    o::ConstructionProcessHooks hooks) {
+    if (&pool!=&system.Pool()) throw std::invalid_argument("건설/소리 프로세스 SID 풀이 다릅니다");
+    hooks.loadSound=[&sounds](std::string_view name) { return sounds.Lookup(name); };
+    hooks.attachSound=[&system](o::Sid sid,std::uint32_t sound,std::uint32_t alternate,std::uint32_t flags) {
+        static_cast<void>(system.Add(sid,sound,alternate,flags));
+    };
+    hooks.playAt=[&player](float x,float y,std::string_view name,std::uint32_t loop) { static_cast<void>(player.PlayNameAt(x,y,name,loop)); };
+    hooks.play=[&player](std::uint32_t sound) { static_cast<void>(player.Play(sound,0,0,0,0,0)); };
+    return hooks;
+}
 }

@@ -224,6 +224,54 @@ TEST_CASE(SoundPlay_DrivesDeviceFromShieldLifecycle) {
     }
 }
 
+// 실제 건설 프로세스의 진행음(부모 위치 반복)과 완료음·타입 준비 소리가 소리 프로세스→재생 계층→장치 호출로 이어지는지 검사한다.
+// 이력: 2026-10-11 추가.
+TEST_CASE(SoundPlay_DrivesDeviceFromConstructionLifecycle) {
+    // 두 판본에서 실제 프로세스 host/Kernel/공통 삭제와 실제 이름 표/재생 계층을 쓴다. 장치만 상태표다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
+        const bool patch=edition==OriginalEdition::Patch1078;SidPool pool(edition,kCapacity,true);SquidHash hash;std::vector<std::uint8_t> spots(65536);
+        std::vector<RiftTypeRecord> types(patch ? 188 : 171);SquidUnpop unpop(pool,hash,spots);RawSquidDestroy destroy(pool,unpop,types);
+        Kernel kernel;SquidProcessState clock;SquidProcessHost host(pool,types,kernel,destroy,clock);
+        // 서버 번호의 abstract 부모다. 로컬 소유이며 화면 안 좌표에 있다.
+        const Sid parent=pool.Allocate(0);auto raw=pool.AllocatedBytes(parent);raw[10]=100;raw[11]=0;raw[patch ? 34 : 32]=1;raw[patch ? 40 : 35]=1;
+        Put(raw,14,std::bit_cast<std::uint32_t>(20.75f));Put(raw,18,std::bit_cast<std::uint32_t>(21.9f));
+        DeviceMock device;SoundList sounds(edition);sounds.Initialize();
+        SoundState soundState;soundState.initialized=soundState.device=soundState.enabled=true;
+        SoundPlayer player(sounds,soundState,device.Hooks());SoundProcessState processState;processState.frame=100;
+        SoundProcessSystem sound(host,processState,MakeSoundProcessHooks(player,[] { return 3.0; }));
+        ConstructionProcessState state;state.now=2.0;ConstructionProcessHooks base;
+        base.reserve=[] { return true; };base.effect=[](Sid,bool) {};base.reserveSound=[] { return true; };base.refresh=[] {};
+        base.maxHitPoints=[](Sid) { return 300; };base.updateDisplay=[](Sid) {};
+        // contained 삭제(004b1a90)는 아직 경계다. 검사에서는 부모의 종속 체인에서 그 타입의 form을 찾아 실제 Kill로 지운다.
+        base.removeContained=[&](Sid sid,std::uint32_t type) {
+            // form의 다음 항목은 +4, Kernel 번호는 +0x12다.
+            for (auto form=Get(pool.Slot(sid),6,2);form;form=Get(pool.Slot(Sid{static_cast<std::uint16_t>(form)}),4,2)) {
+                const auto slot=pool.Slot(Sid{static_cast<std::uint16_t>(form)});if (slot[10]!=type) continue;
+                host.Kill(*dynamic_cast<SquidProcess*>(kernel.Get(Get(slot,18))),0x10);return;
+            }
+        };
+        const auto ready=sounds.Lookup("ready.wav");base.readySound=[ready](std::uint32_t) { return ready; };
+        base.unpop=[&](Sid sid,std::uint32_t) { pool.AllocatedBytes(sid)[11]|=4; };base.repop=[&](Sid sid,std::uint32_t) { pool.AllocatedBytes(sid)[11]&=0xfb; };
+        base.push=[](float,float,std::uint32_t,std::uint32_t) {};
+        RawConstructionProcess process(pool,types,state,MakeConstructionProcessSoundHooks(pool,sounds,sound,player,std::move(base)),&host);
+        // 시작: 건설 프로세스와 진행음 프로세스가 붙고 장치에는 아직 닿지 않는다.
+        process.Start(parent,8.0f);const auto build=sounds.Lookup("jimBuild.wav");
+        CHECK(kernel.Size()==2 && sounds.Name(build)=="jimBuild.wav" && device.Take()=="-");
+        // 첫 프레임: HP가 오르고 부모 위치에서 진행음 반복 재생이 시작된다.
+        state.now=4.0;kernel.RunFrame();const auto started=device.Take();
+        CHECK(started.starts_with("F:jimBuild.wav;") && started.find(";P:#0:0:0:1")!=std::string::npos && soundState.playing==1);
+        CHECK(Get(pool.Slot(parent),26,patch ? 4 : 2)==75 && processState.typeFrames[100]==100);
+        // 완성 프레임: 진행음 프로세스가 지워지며 반복을 멈추고, 완료음(위치)과 타입 준비 소리(전역)가 차례로 재생된다.
+        state.now=10.0;++processState.frame;kernel.RunFrame();const auto finished=device.Take();
+        const auto stop=finished.find("X:#0"),done=finished.find("F:buildDone.wav"),voice=finished.find("F:ready.wav");
+        CHECK(stop!=std::string::npos && done!=std::string::npos && voice!=std::string::npos && stop<done && done<voice);
+        CHECK(kernel.Size()==0 && device.status[0]==0 && soundState.playing==2 && !(pool.Slot(parent)[patch ? 40 : 35]&1));
+        CHECK(Get(pool.Slot(parent),26,patch ? 4 : 2)==300 && Get(pool.Slot(parent),6,2)==0);
+        // 다른 풀의 소리 프로세스 계층은 거부한다.
+        SidPool other(edition,kCapacity,false);CHECK(Throws([&] { MakeConstructionProcessSoundHooks(other,sounds,sound,player,{}); }));
+    }
+}
+
 // 잘못된 연결/항목/화면 영역의 거부와, 원본이 보고 뒤 멈추는 호출 계약 위반의 진단을 검사한다.
 TEST_CASE(SoundPlay_RejectsInvalidUseAndDiagnosesContractViolations) {
     DeviceMock device;SoundState state;SoundList list(OriginalEdition::Patch1078,device.Report());list.Initialize();
