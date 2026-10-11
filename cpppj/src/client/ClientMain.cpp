@@ -288,7 +288,7 @@ int Client::Run() {
     }
     // "init kernel"(FUN_00471930): Kernel은 멤버로 이미 만들어져 있다.
     // "init renderer": 화면 장치와 같은 크기의 변경 표·프레임 캐시를 만든다.
-    renderer_ = std::make_unique<Renderer>(screenWidth_, screenHeight_);
+    renderer_ = std::make_unique<Renderer>(screenWidth_, screenHeight_,options_.edition);
     cursor_ = std::make_unique<Cursor>(resources_, window_);
     if ((mode & ScreenMode::kSoftwareMouse) != 0) cursor_->BuildSoftware(screen_->Palette());
     screen_->ShowCursor(true);
@@ -569,7 +569,7 @@ void Client::ChangeResolution(int width, int height) {
     windowWidth_ = rect.right - rect.left; windowHeight_ = rect.bottom - rect.top;
     if (!screen_->SetMode(ScreenMode::kFallbackWindowed, windowWidth_, windowHeight_, initWindowPos_))
         throw std::runtime_error("Unable to change window resolution");
-    renderer_ = std::make_unique<Renderer>(width, height);
+    renderer_ = std::make_unique<Renderer>(width, height,options_.edition);
     // 메뉴/독립 검사 화면도 새 화면 크기로 위치 효과음을 계산한다. 미션은 다음 Compose/Resize에서 실제 카메라를 공급한다.
     if (audio_) {
         const auto previous=audio_->View();

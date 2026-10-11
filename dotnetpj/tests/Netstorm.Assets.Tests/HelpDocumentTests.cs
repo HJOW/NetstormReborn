@@ -27,6 +27,39 @@ public sealed class HelpDocumentTests
             && r.BreakBefore == TutorialTextBreak.Paragraph);
     }
 
+    /// <summary>원본 interfaceHelp의 <b><c> 조합은 노란색과 굵기를 함께 유지하고 안쪽 태그가 닫히면 바깥 스타일로 돌아온다.</summary>
+    [Fact]
+    public void Parse_NestedBoldAndColorRestoreOuterStyle()
+    {
+        IReadOnlyList<HelpTextRun> runs = HelpDocument.Parse("<b>bold<c>both</c>bold again</b><c>color<b>both again</b>color again</c>body</c>");
+        Assert.Contains(runs, r => r.Text == "both" && r.Style == TutorialTextStyle.ColorText && r.Bold);
+        Assert.Contains(runs, r => r.Text == "bold again" && r.Style == TutorialTextStyle.Highlight && r.Bold);
+        Assert.Contains(runs, r => r.Text == "both again" && r.Style == TutorialTextStyle.ColorText && r.Bold);
+        Assert.Contains(runs, r => r.Text == "color again" && r.Style == TutorialTextStyle.ColorText && !r.Bold);
+        Assert.Contains(runs, r => r.Text == "body" && r.Style == TutorialTextStyle.Body && !r.Bold);
+    }
+
+    /// <summary>인라인 태그 사이 공백과 그림 옆 공백은 보존하고 문단·줄 앞의 들여쓰기와 빈 줄은 만들지 않는다.</summary>
+    [Fact]
+    public void Parse_InlineSpacesDoNotJoinWordsOrConsumeLineBreaks()
+    {
+        IReadOnlyList<HelpTextRun> runs = HelpDocument.Parse("  <b>one</b> <a href=\"#two\">two</a> <!\"mana.8\"> three<br> \n<b>four</b><p> \n five");
+        Assert.Equal("one two  threefour five", string.Concat(runs.Select(r => r.Text)));
+        Assert.Contains(runs, r => r.Text == "four" && r.BreakBefore == TutorialTextBreak.Line);
+        Assert.Contains(runs, r => r.Text == " five" && r.BreakBefore == TutorialTextBreak.Paragraph);
+        Assert.Equal(2, runs.Count(r => r.Text == " " && r.Picture == null));
+    }
+
+    /// <summary>실제 F1/사용자 인터페이스 원문에서 단독 색 글씨와 중첩 굵은 색 글씨를 구별한다.</summary>
+    [Fact]
+    public void OriginalHelp_StandaloneColorAndBoldColorAreDistinct()
+    {
+        var resources = new GameResources(GameFileSystem.Open(OriginalData.RequireDirectory()), GameLanguage.English);
+        HelpTopics topics = resources.TryLoadHelp()!;
+        Assert.Contains(HelpDocument.Parse(topics.Find("F1Help")!), r => r.Text == "drag" && r.Style == TutorialTextStyle.ColorText && !r.Bold);
+        Assert.Contains(HelpDocument.Parse(topics.Find("interfaceHelp")!), r => r.Text == "Left Click" && r.Style == TutorialTextStyle.ColorText && r.Bold);
+    }
+
     /// <summary>내부·외부 링크를 보존하고 그림·제어 문자·미션 조건문을 본문으로 노출하지 않는다.</summary>
     [Fact]
     public void Parse_PreservesLinksPicturesAndMissionCondition()

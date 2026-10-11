@@ -134,6 +134,11 @@ internal sealed class UiAutomation
                 string[] movePoint = value.Split(',');
                 _mouse = MakeMouse(int.Parse(movePoint[0]) + (parts[0] == "move-center" ? width / 2 : 0),
                     int.Parse(movePoint[1]) + (parts[0] == "move-center" ? height / 2 : 0), ButtonState.Released); break;
+            case "wheel":
+                // 현재 커서 위치에서 휠 눈금을 누적한다. 이후 이동/클릭이 값을 되돌려 반대 스크롤을 만들지 않는다.
+                _mouse = new MouseState(_mouse.X, _mouse.Y, _mouse.ScrollWheelValue + int.Parse(value) * 120,
+                    ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
+                _waitSeconds = Seconds(ReleaseWaitFrames); break;
             case "drag":
                 string[] drag = value.Split(',');
                 _dragFromX = int.Parse(drag[0]); _dragFromY = int.Parse(drag[1]);
@@ -167,8 +172,8 @@ internal sealed class UiAutomation
         return _mouse;
     }
 
-    /// <summary>왼쪽 버튼만 누른 논리 좌표 마우스를 만든다.</summary>
-    private static MouseState MakeMouse(int x, int y, ButtonState left) => new(x, y, 0, left, ButtonState.Released,
+    /// <summary>왼쪽 버튼의 논리 좌표 마우스를 만든다. 이전 휠 누적값을 유지해 이동/떼기가 새 휠 입력이 되지 않게 한다.</summary>
+    private MouseState MakeMouse(int x, int y, ButtonState left) => new(x, y, _mouse.ScrollWheelValue, left, ButtonState.Released,
         ButtonState.Released, ButtonState.Released, ButtonState.Released);
 
     /// <summary>세미콜론으로 나눈 세부 상태에서 지정한 키의 값을 읽는다. 키가 없으면 잘못된 검사를 즉시 알린다.</summary>

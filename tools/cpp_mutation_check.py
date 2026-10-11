@@ -32,6 +32,26 @@ TESTS = BUILD / 'bin/Release/netstorm_tests.exe'
 EXCLUDED = {'build'}
 # 변이 목록: 이름, 대상 파일, 바꿀 원문(파일에 정확히 한 번 있어야 한다), 바꾼 문장, 실패해야 하는 검사 이름 접두사.
 MUTATIONS = [
+    # 판본별 실제 CRT 관찰과 Renderer/건설 제출의 동률 검사가 알고리즘 변경을 검출해야 한다.
+    dict(name='drawsort-small-threshold',file='cpppj/src/client/DrawSort.cpp',expect='DrawSort_',
+         before='kSmall=8',after='kSmall=9',note='9항목에서도 작은 구간 정렬을 사용'),
+    dict(name='drawsort-wrong-edition',file='cpppj/src/client/DrawSort.cpp',expect='DrawSort_',
+         before='if (edition==o::OriginalEdition::Patch1078) PatchSort(entries);else CdSort(entries);',
+         after='if (edition==o::OriginalEdition::Cd1072) PatchSort(entries);else CdSort(entries);',note='패치/CD CRT 선택을 뒤바꿈'),
+    dict(name='drawsort-small-direction',file='cpppj/src/client/DrawSort.cpp',expect='DrawSort_',
+         before='Compare(entries,current,maximum)>0',after='Compare(entries,current,maximum)<0',note='작은 구간에서 최소 항목을 뒤로 보냄'),
+    dict(name='drawsort-patch-pivot-update',file='cpppj/src/client/DrawSort.cpp',expect='DrawSort_',
+         before='if (middle==right) middle=left;',after='static_cast<void>(middle);',note='패치 피벗이 교환된 뒤 위치를 갱신하지 않음'),
+    dict(name='drawsort-cd-pivot',file='cpppj/src/client/DrawSort.cpp',expect='DrawSort_',
+         before='Swap(entries,range.low+(range.high-range.low+1)/2,range.low);',
+         after='Swap(entries,range.high,range.low);',note='CD의 가운데 피벗을 마지막 항목으로 변경'),
+    dict(name='drawsort-partial-swap',file='cpppj/src/client/DrawSort.cpp',expect='DrawSort_',
+         before='std::swap(entries[static_cast<std::size_t>(a)],entries[static_cast<std::size_t>(b)]);',
+         after='std::swap(entries[static_cast<std::size_t>(a)].token,entries[static_cast<std::size_t>(b)].token);',note='전체 16바이트 대신 토큰만 교환'),
+    dict(name='drawsort-renderer-edition',file='cpppj/src/client/Renderer.cpp',expect='DrawSort_',
+         before='SortRenderSprites(sprites,edition_);',after='SortRenderSprites(sprites,o::OriginalEdition::Patch1078);',note='실제 Renderer에서 CD 정렬 판본을 무시'),
+    dict(name='drawsort-construction-edition',file='cpppj/src/client/ConstructionVisualRenderer.cpp',expect='DrawSort_',
+         before='SortDrawEntries(entries,system.Pool().Edition());',after='SortDrawEntries(entries);',note='실제 건설 표시에서 CD 정렬 판본을 무시'),
     # 표시 수집의 실제 PE 바이트 관찰과 가시 목록 통합 검사가 의미 차이를 검출해야 한다.
     dict(name='rendercollection-reciprocal-rounding',file='cpppj/src/o/RawRenderCollection.cpp',expect='RenderCollection_',
          before='const auto x=1.0/static_cast<double>(state_.scaleX),y=1.0/static_cast<double>(state_.scaleY);',
@@ -50,8 +70,8 @@ MUTATIONS = [
     dict(name='rendercollection-tail-byte',file='cpppj/src/o/RawRenderCollection.cpp',expect='RenderCollection_',
          before='entry.kind=kRenderKind;',after='entry.kind=kRenderKind;entry.tail=0;',note='원본이 보존하는 마지막 BYTE를 덮어씀'),
     dict(name='rendercollection-sort-direction',file='cpppj/src/client/ConstructionVisualRenderer.cpp',expect='RenderCollection_',
-         before='CompareDrawOrder({a.x,a.y,a.depth},{b.x,b.y,b.depth})<0',
-         after='CompareDrawOrder({b.x,b.y,b.depth},{a.x,a.y,a.depth})<0',note='가시 항목의 깊이 정렬을 뒤집음'),
+         before='SortDrawEntries(entries,system.Pool().Edition());',
+         after='static_cast<void>(entries);',note='가시 항목의 원본 깊이 정렬을 생략'),
     # 실제 표시 프로세스 연결 검사가 실행/출력/부착/소멸 어댑터의 누락도 검출해야 한다.
     dict(name='visualsystem-run',file='cpppj/src/o/ConstructionVisualSystem.cpp',expect='ConstructionVisualSystem_',
          before='frame.Run(process.fields_);',after='static_cast<void>(process.fields_);',note='Kernel의 건설 표시 프레임 실행을 생략'),

@@ -1,9 +1,20 @@
-## 2026-10-11 인계(사용자 지시: 구현 후 컴파일까지만, 테스트 금지): 캠페인 진행 저장 확인 ✅ / 돌 버튼 모양 ✅ / 도움말 본문 원본화 구현만 ⚠ (`HJOW-X3D`)
+## 2026-10-11 최신: 도움말 보류 검증·중첩 스타일/공백·스크롤 정리 완료 (`HJOW-Athlon`)
+
+- [x] **착수/조건:** cpppj 작업 종료 후 사용자 요청으로 dotnetpj 진행. AGENTS.md·두 LEFT_JOBS 확인. 앞 단계 cpppj 변경 유지, 원본/복사본 게임 실행·새 디컴파일·보호 파일 변경·커밋/푸시 없음. 마지막 디컴파일 PC는 앞 단계 **HJOW-Athlon, 2026-10-11** 그대로다. [상세 기록](docs/dotnet-help-validation-20261011.md).
+- [x] **보류한 도움말 1~5:** 원본 영어 F1 캡처 줄 윗선 대조(정렬 후 최대 2픽셀 차이), 제목 높이 21/목록 간격 15 유지, 영어/한국어(D2Coding)·메뉴/미션·info 머리 확인. 기존 High Priests 검사 좌표 (340,222)의 `unitHelp` 오입력을 재현하고 **(340,204)**로 수정했다. 한국어 모드 검사는 D2Coding으로 원문을 표시한 검사이며 도움말 한글 번역 완료가 아니다.
+- [x] **새 결함 수정:** `<b><c>`의 색/굵기를 분리 보존하고 안쪽 태그 종료 후 바깥 스타일을 복원한다. 인라인 태그 사이 공백이 없어져 단어가 붙던 결함을 고쳤다. 화면 조각에도 굵기를 전달했다. 줄 배치·화살표/휠에 언어별 같은 높이를 사용하고 자동 검사 휠 누적값이 커서 이동 때 되돌아가지 않게 했다.
+- [x] **검증:** Release 경고/오류 **0**, 전체 **968개 통과**(Assets 331 + Core 637), 실패/건너뜀 **0**. 새 회귀 3개·도움말 전용 8개. 최종 GUI **11회/313개 게임 내 단언** 통과: 새 도움말 4회/220, 기존 도움말·옵션·워크샵 3회/49, 공통 UI/전체화면 저장·재실행·창 복귀 재실행 4회/44. 별도 설정 저장/정지 타이머/스크롤 끝/픽셀 검사도 통과. info 머리 50,096화소와 복원 본문 62,216화소의 차이가 네 조합 모두 **0**이다(클론끼리 비교). 원본 x86 누적 **49,007개** 유지.
+- [x] **자료:** `tools/clone_help_layout_smoke.ps1`에 링크 8개·Back·화살표·휠·본문/손잡이 드래그·스크롤바 끝·능력치 머리/본문 픽셀 회귀를 추가했다. `extracted/screens/dotnet-help-20261011/`·`extracted/dotnet-help-20261011-*.log`·`dotnet-help-20261011-{pixels,counts}.json`. 아래 HJOW-X3D 인계는 당시 이력이며 도움말/테스트/전체화면의 보류는 이번에 해소했다.
+- [ ] **다음:** 9-1 A 나머지 실제 시각/원본 타이머 이행 → C 기존 결정 항목 → B → D·E·F. 실패/TryAgain 창 폭, 실제 Graph/표면 identity 연결도 남았다. 도움말의 원본 전체 픽셀 일치·한글 번역·지원 명령 링크 복원은 이번 완료 범위 밖이다.
+
+## 2026-10-11 앞 단계 인계(당시 사용자 지시: 구현 후 컴파일까지만, 테스트 금지): 캠페인 진행 저장 확인 ✅ / 돌 버튼 모양 ✅ / 도움말 구현만 (`HJOW-X3D`)
+
+> 아래는 HJOW-X3D에서 중단한 당시 기록이다. 도움말 1~5 확인과 전체화면/테스트 보류는 위 HJOW-Athlon 후속 작업에서 완료했다.
 
 - [x] **착수/조건:** "AGENTS.md·LEFT_JOBS.dotnetpj.md 를 읽고 dotnetpj 작업 더 진행". 이 PC(`HJOW-X3D`)는 마지막 디컴파일 PC(`HJOW-Athlon`)가 아니고 디컴파일을 하지 않기로 한 PC라서 **디컴파일 산출물을 읽지 않았다**(`extracted/refined/` 없음). 원본/복사본 게임 실행·새 디컴파일·cpppj/AGENTS.md/원본 폴더 변경·커밋/푸시 없음. 변경은 모두 작업 트리에 있다(미커밋). [진행 기록](docs/dotnet-ui-progress-20261011.md).
 - [x] **실제 캠페인 완주→저장→재실행→다음 미션 해제:** 창 모드 클론으로 1-1 승리 창 → `settings.json` 에 `DoneTheWarBegins=1` → 재실행 → 1-2 해제·브리핑 진입까지 **통과**. 실제 플레이 대신 UI 자동화 명령 `mission-section Succeeded`(실제 승패 알림과 같은 `OpenTutorialTell` 경로)를 새로 넣었다. 스모크는 `tools/clone_campaign_progress_smoke.ps1`.
 - [x] **돌 버튼 모양:** `OriginalUiSkin.Button` 을 원본 메인 메뉴 버튼 8개에서 잰 모양(바깥 윤곽 (53,51,52)·모서리 비움·밝은 선 위 2/왼 2·어두운 선 아래 1/오른 2)으로 바꿨다. 원본 대비 테두리 평균 차이 62.69 → 18.26. 이 변경까지는 buttons·campaign·help_options Menu/Mission 창 스모크 통과.
-- [ ] **⚠ 테스트·스모크를 돌리지 않은 마지막 코드(컴파일만 확인 — Release 경고/오류 0):** 도움말 본문 원본화. [`HelpWindow`](dotnetpj/src/Netstorm.Game/HelpWindow.cs) 줄 간격 17→**15**·문단 간격 8→**14**·제목 줄 **21**(어림)·줄 끝 공백이 빈 줄을 만들던 결함 수정·본문 글자색 (217,212,203) **그림자 없음**·링크 (154,209,205) 그림자 있음·본문 바탕 (54,51,53), [`HelpDocument`](dotnetpj/src/Netstorm.Assets/HelpDocument.cs) 의 `~l … ~.` → 새 `TutorialTextStyle.LinkColor`·`<c>` → 새 `ColorText`(노란색, 굵지 않음)·`<b>` 만 `Highlight`, `OriginalUiSkin.PlainText`. **다음 작업자는 먼저 아래를 순서대로 한다.**
+- [x] **당시 미검증 도움말(후속 HJOW-Athlon에서 검증·수정 완료):** 도움말 본문 원본화. [`HelpWindow`](dotnetpj/src/Netstorm.Game/HelpWindow.cs) 줄 간격 17→**15**·문단 간격 8→**14**·제목 줄 **21**(어림)·줄 끝 공백이 빈 줄을 만들던 결함 수정·본문 글자색 (217,212,203) **그림자 없음**·링크 (154,209,205) 그림자 있음·본문 바탕 (54,51,53), [`HelpDocument`](dotnetpj/src/Netstorm.Assets/HelpDocument.cs) 의 `~l … ~.` → 새 `TutorialTextStyle.LinkColor`·`<c>` → 새 `ColorText`(노란색, 굵지 않음)·`<b>` 만 `Highlight`, `OriginalUiSkin.PlainText`. **다음 작업자는 먼저 아래를 순서대로 한다.**
   1. `dotnet test dotnetpj/Netstorm.sln -c Release` — 마지막 전체 통과 기록은 Athlon 의 **964개**. 이번에 `HelpDocumentTests` 의 `Parse_PreservesLinksPicturesAndMissionCondition`(예전 `Contains("blue ~")` 가정 수정)과 새 `Parse_SeparatesBoldColorAndLinkColorStyles` 를 **돌리지 않고** 고치거나 추가했다. 실패하면 새 `blue`/`" ~ "` 분리 동작에 맞춰 단언을 고친다.
   2. **`tools/clone_help_options_smoke.ps1`(Menu·Mission) 클릭 좌표를 새 배치에 맞춘다.** 34~38행의 `click 340,222`(High Priests 링크)는 줄 간격 17·빈 줄이 있던 옛 배치 값이다. 새 배치의 5번째 링크는 본문 윗선 +139 부근이라 **약 (340, 204)** 로 예상한다(확인 필요). 그 뒤 클릭·`assert help:…` 가 통과하는지 본다.
   3. 클론 F1 창(영어, 1024×768)을 캡처해 원본 `screenShots/help - NetStorm Instructions.png` 와 줄 윗선을 대조한다. 원본(스크린샷 좌표): 제목 96, 첫 문단 131, GAME HELP 159, 목록 173·188·203·218·233·248·263·278, GAME SUPPORT 307, 321·336·351. 클론이 같은 간격이 아니면 `HeadingRowHeight` 21 부터 조정한다(어림값이다). 원본↔클론 정렬은 원본 mainMenu.png 오프셋 (2,33), help 캡처는 추가로 (+2,+1).
@@ -13,8 +24,8 @@
 - [ ] **9-1 A 나머지(이동·전투·건설·생산·수확·의식·AI·튜토리얼·애니메이션의 정수 틱 → 실제 시각/원본 타이머):** **이번에 시작하지 않았다.** 이 PC 는 디컴파일을 읽지 못하고, cpppj 에 Pathprocess(경로 꼭짓점 도착 시각)·타이머별 간격이 복원돼 있지 않아 근거 없이 바꾸면 "비교 근거 없이 같다고 적지 않는다" 원칙을 어긴다. `HJOW-Athlon` 에서 `FixedTimestep`·`BattleSession.Step`·`Tick` 참조(수백 곳)를 계통별로 나눠 진행하길 권한다. 이 PC 에서 할 수 있는 일은 판정 문서·테스트 보강까지다.
 - [ ] **9-1 C(`options.cfg`) — 사용자 결정 필요:** (1) 원본 형식(XOR+Windows-1252, `[options.cfg]`+`[END]`)으로 어디에 쓸지(게임 폴더 `d/options.cfg` 직접 vs 클론 전용 복사본), (2) 스모크 격리용 경로 재지정 방식, (3) `ScriptValues`(`Done…`)를 `options.cfg` 로 옮길지. 정하지 않고 구현하지 않았다. 전체화면 재실행 오류가 클론에서 나지 않아야 한다는 조건은 그대로다.
 - [ ] **돌 버튼 남은 것:** 비활성 버튼(검정 45% 덮기)과 눌린 모양은 원본 캡처가 없어 근거가 없다(눌린 모양은 명암 맞바꿈만). 도움말 `{Text}` 뒤 빈칸 3픽셀 밀림, TryAgain 창 폭(원본 275·클론 300)은 그대로다.
-- [ ] **돌리지 않은 것:** `dotnet test`(이번 세션 전체), 전체화면 전환을 포함하는 `tools/clone_ui_smoke.ps1`, 도움말 변경 이후의 모든 창 스모크.
-- [ ] **다음:** 위 1~5 확인 → (Athlon) 9-1 A 나머지 → C 결정 → B → D·E·F, 실패 창 폭 규칙, 실제 Graph/표면 identity 연결.
+- [x] **당시 미실행 검사(후속 HJOW-Athlon에서 전체 단위·도움말·전체화면 확인 완료):** `dotnet test`(이번 세션 전체), 전체화면 전환을 포함하는 `tools/clone_ui_smoke.ps1`, 도움말 변경 이후의 모든 창 스모크.
+- [ ] **다음:** 위 1~5 확인은 후속 HJOW-Athlon에서 완료. 다음은 9-1 A 나머지 → C 결정 → B → D·E·F, 실패 창 폭 규칙, 실제 Graph/표면 identity 연결.
 
 ---
 

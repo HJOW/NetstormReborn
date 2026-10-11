@@ -1,5 +1,6 @@
 // 원본 00497580·00497900·00499fe0. 외부 목록 수집/구름/카메라 복사는 원본 Squid·지형 복원 뒤 확장한다.
 #include "client/Renderer.h"
+#include "client/DrawSort.h"
 #include <algorithm>
 #include <cmath>
 #include <climits>
@@ -87,7 +88,7 @@ void DrawIndexedImage(std::span<std::uint8_t> pixels, int pitch, int height, con
     }
 }
 // 첫 프레임을 원본처럼 전체 화면으로 그린다.
-Renderer::Renderer(int width, int height) : width_(width), height_(height), dirty_(width, height) { dirty_.InvalidateAll(); }
+Renderer::Renderer(int width, int height,o::OriginalEdition edition) : width_(width), height_(height),edition_(edition), dirty_(width, height) { dirty_.InvalidateAll(); }
 // 특수 프레임은 이미지가 아니므로 변경 범위도 갖지 않는다.
 ScreenRect Renderer::Bounds(const RenderSprite& sprite) const {
     if (!sprite.database) throw std::invalid_argument("Null sprite database");
@@ -106,7 +107,7 @@ void Renderer::SetScene(std::vector<RenderSprite> sprites, std::vector<RenderTex
         if (!std::isfinite(sprite.order.x) || !std::isfinite(sprite.order.y)) throw std::invalid_argument("Nonfinite draw order");
         dirty_.Add(Bounds(sprite));
     }
-    if (sort) std::stable_sort(sprites.begin(), sprites.end(), [](const RenderSprite& a, const RenderSprite& b) { return CompareDrawOrder(a.order, b.order) < 0; });
+    if (sort) SortRenderSprites(sprites,edition_);
     // 글자 이동·삭제는 현재 전체를 무효화한다. 후속 Gump가 전용 변경 범위를 등록한다.
     if (!text_.empty() || !text.empty()) dirty_.InvalidateAll();
     sprites_ = std::move(sprites); text_ = std::move(text);

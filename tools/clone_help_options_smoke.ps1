@@ -33,7 +33,7 @@ assert tips; capture $OutputDirectory/00-tip.png; click 462,441; assert tips; cl
 click 630,320; assert help; click 699,358; assert version; capture $OutputDirectory/00-version.png; click 512,447; assert main;
 key F1; assert help:F1Help; capture $OutputDirectory/01-help-main.png;
 key Escape; assert help:F1Help;
-click 340,222; assert help:priestType; capture $OutputDirectory/02-priest-help.png;
+click 340,204; assert help:priestType; capture $OutputDirectory/02-priest-help.png;
 drag 460,330,460,210,20; capture $OutputDirectory/03-priest-scrolled.png;
 click 470,371; assert help:F1Help; click 550,370; assert main;
 click 550,343; assert options; capture $OutputDirectory/04-options-on.png;

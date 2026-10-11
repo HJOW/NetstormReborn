@@ -2,6 +2,7 @@
 # (첫 구성 때 인터넷에서 내려받을 것이 없다).
 # 테스트 파일을 만들면 아래 목록에 더한다. 파일 안의 TEST_CASE 는 자동으로 등록된다.
 add_executable(netstorm_tests
+    DrawSortTests.cpp
     RenderCollectionTests.cpp
     ConstructionVisualSystemTests.cpp
     ConstructionLifetimeTests.cpp
@@ -435,3 +436,11 @@ set_source_files_properties(ConstructionLifetimeTests.cpp PROPERTIES COMPILE_DEF
 # 가시 표시 수집/환산/정렬 비교의 독립 PE 관찰을 새 검사에서만 읽는다.
 set_source_files_properties(RenderCollectionTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_RENDERCOLLECTION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/rendercollection-x86.tsv\"")
+
+# 원본 CRT의 판본별 동률/교환 관찰을 새 검사에서만 읽는다.
+set_source_files_properties(DrawSortTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_DRAWSORT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/drawsort-x86.tsv\"")
+
+# 실제 건설 프로세스 제출 순서도 같은 독립 동률 관찰과 비교한다.
+set_source_files_properties(ConstructionVisualSystemTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_DRAWSORT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/drawsort-x86.tsv\"")

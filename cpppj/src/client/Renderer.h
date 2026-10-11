@@ -54,8 +54,8 @@ struct RenderText {
 };
 class Renderer {
 public:
-    // 원본 창 모드의 8비트 화면 크기로 만들고 첫 화면을 전체 갱신한다.
-    Renderer(int width, int height);
+    // 원본 창 모드의 8비트 화면 크기/정렬 판본으로 만들고 첫 화면을 전체 갱신한다. 기본은 10.78이다.
+    Renderer(int width, int height,o::OriginalEdition edition=o::OriginalEdition::Patch1078);
     // 현재 장면을 바꾼다. 기존/새 사각형을 모두 무효화하여 삭제된 그림도 지운다.
     void SetScene(std::vector<RenderSprite> sprites, std::vector<RenderText> text = {}, bool sort = true);
     // 메뉴가 합성한 화면 크기의 8비트 배경을 소유하여 프레임 사이의 자산 수명을 보장한다.
@@ -87,6 +87,7 @@ private:
     // 현재 변경 영역 안에 바이트 글자를 원본 전진 폭으로 그린다.
     void Text(std::span<std::uint8_t> pixels, int pitch, ScreenRect clip, const RenderText& text);
     int width_, height_;
+    o::OriginalEdition edition_; // 실제 PE마다 다른 CRT 표시 목록 정렬을 선택한다.
     DirtyRegions dirty_;
     std::vector<RenderSprite> sprites_;
     std::vector<RenderText> text_;

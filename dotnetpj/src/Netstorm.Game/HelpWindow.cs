@@ -14,7 +14,9 @@ internal sealed class HelpWindow : IDisposable
     /// 원본 도움말의 본문 줄 간격 (원본 캡처의 목록 줄 시작이 15픽셀 간격).
     /// 2026-10-11: 이전 값 17 은 녹화에서 어림한 것이었다. 원본 캡처로 목록 8줄의 간격이 모두 15 임을 확인했다.
     /// </summary>
-    private const int LineHeight = 15;
+    private const int OriginalLineHeight = 15;
+    /// <summary>줄 배치·화살표·휠에 같은 높이를 쓴다. 한국어는 D2Coding의 실제 줄 높이보다 좁게 이동하지 않는다.</summary>
+    private int BodyLineHeight => _skin.UsesOriginalFonts ? OriginalLineHeight : Math.Max(OriginalLineHeight, _skin.Plain.LineHeight);
     /// <summary>문단(&lt;p&gt;) 앞에 줄 간격 말고 더하는 간격. 원본 캡처에서 "GAME SUPPORT" 앞이 줄 간격 + 14 였다.</summary>
     private const int ParagraphGap = 14;
     /// <summary>
@@ -68,6 +70,15 @@ internal sealed class HelpWindow : IDisposable
     public bool IsOpen => _navigation.Anchor != null;
     /// <summary>UI 검사에서 현재 링크 목적지를 확인한다.</summary>
     public string State => "help:" + _navigation.Anchor;
+    /// <summary>화면 자동 검사에 실제 본문 높이·스크롤·언어별 줄 높이를 제공한다. 사용자 화면에는 표시하지 않는다.</summary>
+    public string DiagnosticDetail(int width, int height)
+    {
+        if (!IsOpen) return "";
+        Rectangle body = Body(Panel(width, height)); Layout(body.Width - 10);
+        return $";help-scroll={_navigation.Scroll};help-max={Math.Max(0, _contentHeight - body.Height)}"
+            + $";help-content={_contentHeight};help-line={BodyLineHeight};help-body-top={body.Y}"
+            + $";help-mission={(_inMission ? "true" : "false")};help-info={InformationType()?.Name ?? "none"}";
+    }
     /// <summary>OK로 닫았을 때 지식 상세창 등의 호출자가 복귀를 처리한다.</summary>
     public Action? Closed { get; set; }
     /// <summary>지식 격자에서 열린 상세창의 Back 버튼 복귀 동작.</summary>
@@ -133,9 +144,9 @@ internal sealed class HelpWindow : IDisposable
     {
         if (_layoutAnchor == _navigation.Anchor && _layoutWidth == width) return;
         _layoutAnchor = _navigation.Anchor; _layoutWidth = width; _fragments.Clear();
-        float x = 0; int y = 0; int rowHeight = LineHeight;
+        float x = 0; int y = 0; int rowHeight = BodyLineHeight;
         // 줄바꿈 시 다음 조각을 새 줄로 옮긴다.
-        void NewLine(int extra = 0) { x = 0; y += rowHeight + extra; rowHeight = LineHeight; }
+        void NewLine(int extra = 0) { x = 0; y += rowHeight + extra; rowHeight = BodyLineHeight; }
         string html = _topics.Find(_navigation.Anchor!) ?? "";
         // 각 조각의 링크 목적지와 글자 스타일을 줄 감기 후에도 함께 보존한다.
         foreach (HelpTextRun source in HelpDocument.Parse(html, _inMission))
@@ -148,18 +159,18 @@ internal sealed class HelpWindow : IDisposable
             {
                 Texture2D? picture = Picture(name);
                 if (picture == null) continue;
-                if (picture.Height <= LineHeight * 2 && run.BreakBefore == TutorialTextBreak.None)
+                if (picture.Height <= BodyLineHeight * 2 && run.BreakBefore == TutorialTextBreak.None)
                 {
                     if (x + picture.Width > width) NewLine();
-                    _fragments.Add(new(new((int)x, y, picture.Width, picture.Height), "", run.Style, run.Link, name));
+                    _fragments.Add(new(new((int)x, y, picture.Width, picture.Height), "", run.Style, run.Link, name, run.Bold));
                     x += picture.Width; rowHeight = Math.Max(rowHeight, picture.Height); continue;
                 }
                 if (x > 0) NewLine();
                 int w = Math.Min(width, picture.Width); int h = picture.Height * w / picture.Width;
-                _fragments.Add(new(new((width - w) / 2, y, w, h), "", run.Style, run.Link, name));
+                _fragments.Add(new(new((width - w) / 2, y, w, h), "", run.Style, run.Link, name, run.Bold));
                 y += h + 8; continue;
             }
-            SpriteFontBase font = RunFont(run.Style);
+            SpriteFontBase font = RunFont(run.Style, run.Bold);
             // 어절 사이 공백과 링크 조각 사이 공백을 유지한다.
             foreach (string word in System.Text.RegularExpressions.Regex.Split(run.Text, "( +)"))
             {
@@ -184,8 +195,8 @@ internal sealed class HelpWindow : IDisposable
                 {
                     int w = (int)Math.Ceiling(font.MeasureString(value).X);
                     int h = run.Style == TutorialTextStyle.Heading && _skin.UsesOriginalFonts ? HeadingRowHeight
-                        : Math.Max(LineHeight, (int)Math.Ceiling(font.MeasureString(value).Y));
-                    _fragments.Add(new(new((int)x, y, w, h), value, run.Style, run.Link, null));
+                        : Math.Max(BodyLineHeight, (int)Math.Ceiling(font.MeasureString(value).Y));
+                    _fragments.Add(new(new((int)x, y, w, h), value, run.Style, run.Link, null, run.Bold));
                     x += w; rowHeight = Math.Max(rowHeight, h);
                 }
             }
@@ -194,19 +205,21 @@ internal sealed class HelpWindow : IDisposable
     }
 
     /// <summary>
-    /// 본문 조각의 글꼴: 제목은 제목 글꼴, 굵은 글씨(&lt;b&gt;·&lt;c&gt;)는 본문·버튼 글꼴(굵게), 나머지는 보통 굵기 글꼴.
+    /// 본문 조각의 글꼴: 제목은 제목 글꼴, &lt;b&gt; 안의 글씨는 본문·버튼 글꼴, 나머지는 보통 굵기 글꼴.
+    /// &lt;c&gt;는 색만 바꾸므로 &lt;b&gt;&lt;c&gt;로 중첩하면 색과 굵기를 함께 적용한다.
     /// 줄 감기(<see cref="Layout"/>)와 그리기가 같은 글꼴을 쓰도록 한 곳에서 정한다. 한국어 화면에서는 굵은·보통이 같은 D2Coding 이다.
     /// </summary>
     /// <param name="style">조각의 스타일</param>
+    /// <param name="bold">색·링크 태그 바깥의 굵은 태그가 열려 있는지</param>
     /// <remarks>
     /// 원본 도움말 캡처(screenShots/help - NetStorm Instructions.png)에서 본문은 Arial 14 보통, "GAME HELP" 는 Arial 14 굵게와 일치했다.
-    /// &lt;c&gt;(색 글씨)도 지금은 굵게 그린다 — 도움말 해석이 &lt;b&gt; 와 &lt;c&gt; 를 같은 스타일로 묶기 때문이다. 2026-10-10 추가.
+    /// 색 글씨와 굵은 글씨는 다른 스타일로 해석하며 실제 그리기에서도 구별한다.
     /// </remarks>
-    private SpriteFontBase RunFont(TutorialTextStyle style) => style switch
+    private SpriteFontBase RunFont(TutorialTextStyle style, bool bold) => style switch
     {
         TutorialTextStyle.Heading => _skin.Title,
         TutorialTextStyle.Highlight => _skin.Body,
-        _ => _skin.Plain,
+        _ => bold ? _skin.Body : _skin.Plain,
     };
 
     /// <summary>삽화 태그의 타입·클러스터를 원본 셰이프 프레임으로 읽고 캐시한다.</summary>
@@ -265,8 +278,8 @@ internal sealed class HelpWindow : IDisposable
         if (down)
         {
             if (Button(panel, 0).Contains(mouse.Position) || Button(panel, 1).Contains(mouse.Position)) { }
-            else if (UpArrow(body).Contains(mouse.Position)) _navigation.Scroll = Math.Clamp(_navigation.Scroll - LineHeight, 0, max);
-            else if (DownArrow(body).Contains(mouse.Position)) _navigation.Scroll = Math.Clamp(_navigation.Scroll + LineHeight, 0, max);
+            else if (UpArrow(body).Contains(mouse.Position)) _navigation.Scroll = Math.Clamp(_navigation.Scroll - BodyLineHeight, 0, max);
+            else if (DownArrow(body).Contains(mouse.Position)) _navigation.Scroll = Math.Clamp(_navigation.Scroll + BodyLineHeight, 0, max);
             else if (Track(body).Contains(mouse.Position))
             {
                 _dragBar = true;
@@ -299,7 +312,7 @@ internal sealed class HelpWindow : IDisposable
             _dragBody = _dragBar = false;
         }
         if (body.Contains(mouse.Position) && mouse.ScrollWheelValue != _previousMouse.ScrollWheelValue)
-            _navigation.Scroll = Math.Clamp(_navigation.Scroll - Math.Sign(mouse.ScrollWheelValue - _previousMouse.ScrollWheelValue) * LineHeight * 3, 0, max);
+            _navigation.Scroll = Math.Clamp(_navigation.Scroll - Math.Sign(mouse.ScrollWheelValue - _previousMouse.ScrollWheelValue) * BodyLineHeight * 3, 0, max);
         _previousMouse = mouse;
     }
 
@@ -338,8 +351,8 @@ internal sealed class HelpWindow : IDisposable
                     : fragment.Style == TutorialTextStyle.Heading ? Color.White : TextColor;
                 // 원본 도움말은 제목과 클릭되는 링크만 그림자를 쓰고 본문·굵은 글씨·색 글씨는 그림자 없이 그린다.
                 if (fragment.Style == TutorialTextStyle.Heading || fragment.Link != null)
-                    OriginalUiSkin.Text(batch, RunFont(fragment.Style), fragment.Text, rect.Location.ToVector2(), color);
-                else OriginalUiSkin.PlainText(batch, RunFont(fragment.Style), fragment.Text, rect.Location.ToVector2(), color);
+                    OriginalUiSkin.Text(batch, RunFont(fragment.Style, fragment.Bold), fragment.Text, rect.Location.ToVector2(), color);
+                else OriginalUiSkin.PlainText(batch, RunFont(fragment.Style, fragment.Bold), fragment.Text, rect.Location.ToVector2(), color);
             }
         }
         batch.End(); _device.ScissorRectangle = old; batch.Begin(samplerState: SamplerState.PointClamp);
@@ -391,7 +404,7 @@ internal sealed class HelpWindow : IDisposable
     }
 
     /// <summary>그리기와 링크 클릭 판정이 공유하는 본문 조각.</summary>
-    private sealed record Fragment(Rectangle Bounds, string Text, TutorialTextStyle Style, string? Link, string? Picture);
+    private sealed record Fragment(Rectangle Bounds, string Text, TutorialTextStyle Style, string? Link, string? Picture, bool Bold);
     /// <summary>본문 그림 캐시와 전용 그리기 자원을 해제한다.</summary>
     public void Dispose()
     {

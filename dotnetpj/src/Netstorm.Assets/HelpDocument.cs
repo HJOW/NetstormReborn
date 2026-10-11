@@ -3,9 +3,9 @@ using System.Text.RegularExpressions;
 
 namespace Netstorm.Assets;
 
-/// <summary>도움말의 본문 조각. 링크와 삽화 이름을 줄 감기 이후에도 보존한다.</summary>
+/// <summary>도움말의 본문 조각. 링크·삽화와 색을 유지하며 중첩 굵은 태그는 Bold로 별도 보존한다.</summary>
 public sealed record HelpTextRun(string Text, TutorialTextStyle Style, TutorialTextBreak BreakBefore,
-    string? Link = null, string? Picture = null);
+    string? Link = null, string? Picture = null, bool Bold = false);
 
 /// <summary>원본 도움말 HTML 부분집합과 색·강조 제어 문자를 화면용 조각으로 해석한다.</summary>
 public static partial class HelpDocument
@@ -34,6 +34,8 @@ public static partial class HelpDocument
         TutorialTextStyle style = TutorialTextStyle.Body;
         TutorialTextBreak gap = TutorialTextBreak.None;
         string? link = null;
+        // 중첩된 원본 <b><c>와 잘못 반복된 닫는 태그도 색과 굵기를 각각 보존한다.
+        int boldDepth = 0, colorDepth = 0, emphasisDepth = 0, headingDepth = 0;
         // ~l ... ~. 로 감싼 구간은 링크와 같은 색 글씨다 (도움말 첫 문장의 "blue").
         bool linkColor = false;
         // 원본은 일부 닫는 태그가 잘못되어 있어 알 수 없는 태그는 글자로 노출하지 않는다.
@@ -46,17 +48,20 @@ public static partial class HelpDocument
                 else if (tag == "</a>") link = null;
                 else if (tag.StartsWith("<!\""))
                 {
-                    runs.Add(new("", style, gap, link, Quoted().Match(piece).Groups[1].Value));
+                    runs.Add(new("", style, gap, link, Quoted().Match(piece).Groups[1].Value, boldDepth > 0));
                     gap = TutorialTextBreak.None;
                 }
                 else if (tag is "<p>" or "</p>") gap = TutorialTextBreak.Paragraph;
                 else if (tag is "<br>" or "<br/>") gap = TutorialTextBreak.Line;
-                else if (tag.StartsWith("<h")) { style = TutorialTextStyle.Heading; gap = TutorialTextBreak.Paragraph; }
-                else if (tag.StartsWith("</h")) { style = TutorialTextStyle.Body; gap = TutorialTextBreak.Paragraph; }
-                else if (tag is "<b>") style = TutorialTextStyle.Highlight;
-                else if (tag is "<c>") style = TutorialTextStyle.ColorText;
-                else if (tag is "<i>" or "<q>") style = TutorialTextStyle.Emphasis;
-                else if (tag is "</b>" or "</c>" or "</i>" or "</q>") style = TutorialTextStyle.Body;
+                else if (tag.StartsWith("<h") && tag.Length > 2 && char.IsDigit(tag[2])) { headingDepth++; gap = TutorialTextBreak.Paragraph; }
+                else if (tag.StartsWith("</h") && tag.Length > 3 && char.IsDigit(tag[3])) { headingDepth = Math.Max(0, headingDepth - 1); gap = TutorialTextBreak.Paragraph; }
+                else if (tag == "<b>") boldDepth++;
+                else if (tag == "</b>") boldDepth = Math.Max(0, boldDepth - 1);
+                else if (tag == "<c>") colorDepth++;
+                else if (tag == "</c>") colorDepth = Math.Max(0, colorDepth - 1);
+                else if (tag is "<i>" or "<q>") emphasisDepth++;
+                else if (tag is "</i>" or "</q>") emphasisDepth = Math.Max(0, emphasisDepth - 1);
+                style = CurrentStyle();
                 continue;
             }
             string raw = WebUtility.HtmlDecode(piece.Replace("~~", "\u0001"));
@@ -71,16 +76,22 @@ public static partial class HelpDocument
             }
             AddText(raw[cursor..]);
 
-            // 한 구간의 공백을 정리해 조각으로 추가한다 (공백뿐인 구간은 버린다).
+            // 줄/문단 앞의 공백은 버리되 인라인 태그 사이 한 칸은 보존하여 서로 다른 단어가 붙지 않게 한다.
             void AddText(string segment)
             {
                 string text = Spaces().Replace(segment.Replace('\u0001', '~'), " ");
-                if (string.IsNullOrWhiteSpace(text)) return;
-                runs.Add(new(text, linkColor && style == TutorialTextStyle.Body ? TutorialTextStyle.LinkColor : style, gap, link));
+                if (text.Length == 0 || (string.IsNullOrWhiteSpace(text) && (runs.Count == 0 || gap != TutorialTextBreak.None))) return;
+                runs.Add(new(text, linkColor && style == TutorialTextStyle.Body ? TutorialTextStyle.LinkColor : style, gap, link, Bold: boldDepth > 0));
                 gap = TutorialTextBreak.None;
             }
         }
         return runs;
+
+        // 원본 태그의 색·기울임·제목을 현재 중첩 상태에서 고른다. 굵기는 별도 플래그로 함께 전달한다.
+        TutorialTextStyle CurrentStyle() => headingDepth > 0 ? TutorialTextStyle.Heading
+            : colorDepth > 0 ? TutorialTextStyle.ColorText
+            : emphasisDepth > 0 ? TutorialTextStyle.Emphasis
+            : boldDepth > 0 ? TutorialTextStyle.Highlight : TutorialTextStyle.Body;
     }
 }
 

@@ -25,7 +25,7 @@ AGENTS.md·LEFT_JOBS.md·LEFT_JOBS.dotnetpj.md를 먼저 확인했다. 착수 �
 - `ConstructionVisualSystem::Collect`는 실제 등록 목록과 현재 부모 raw를 연결한다. 생성 중인 호스트 객체는 건너뛴다. `DrawCollected`는 수집된 항목의 현재 토큰을 조회하여 삭제된 객체를 건너뛰고, 재사용된 슬롯의 새 객체를 이전 목록에 추가하지 않는다.
 - `client::DrawVisibleConstruction`은 작업 버퍼 크기로 목록을 제한한 뒤 기존 `CompareDrawOrder`로 깊이 내림차순/y·x 오름차순 정렬하고 실제 프로세스 Draw를 제출한다. 정렬 끔도 지원한다. 선택적 제출이 현재 카메라 환산/프레임 출력 버퍼에 연결되는지 통합 검사했다.
 
-호스트 계약으로 같은 풀/유효 lookup·부모 번호/head·유한 비영 배율·출력 용량을 검사한다. 손상 자료의 원본 assert나 잘못된 포인터 접근을 실행하는 복원이 아니다. 정렬 어댑터는 비유한 x/y를 Draw 전에 거부한다. 완전 동률의 순서는 `stable_sort`의 안정 순서이며 **원본 CRT qsort의 동률 순서와 같다고 보장하지 않는다.**
+호스트 계약으로 같은 풀/유효 lookup·부모 번호/head·유한 비영 배율·출력 용량을 검사한다. 손상 자료의 원본 assert나 잘못된 포인터 접근을 실행하는 복원이 아니다. 정렬 어댑터는 비유한 x/y를 Draw 전에 거부한다. 이 단계의 완전 동률은 `stable_sort`의 안정 순서였으며 원본 CRT qsort 동률과의 일치는 보장하지 않았다. **2026-10-11 후속 [CRT 정렬 복원](cpp-draw-sort-reconstruction.md)에서 판본별 원본 피벗/교환 순서로 교체하고 실제 Renderer/건설 표시 연결을 대조했다.**
 
 ## 독립 관찰과 검사
 
@@ -58,7 +58,7 @@ ctest --test-dir cpppj/build -C Release --output-on-failure
 
 ## 다음 작업
 
-1. 원본 클라이언트의 자산/구름/다른 효과와 공통 목록 병합·CRT qsort·종류별 분배·프레임 호출 순서를 복원하고 실제 Client/GameWorld에 연결한다. 이번 helper는 건설 표시 목록만 제출하며 GUI에서 자동 호출되지 않는다.
+1. **CRT qsort/동률 순서는 후속 단계에서 완료했다.** 원본 클라이언트의 자산/구름/다른 효과와 공통 목록 병합·종류별 분배·프레임 호출 순서를 복원하고 실제 Client/GameWorld에 연결한다. 건설 helper는 건설 표시 목록만 제출하며 GUI에서 자동 호출되지 않는다.
 2. 건설 캡처의 실제 SHP·공유 팔레트 생성/현재 색 표·dirty와 소프트웨어 화면/장치 출력을 연결한다. 이번 통합 검사는 합성 픽셀/색 표/HP 경계를 사용한다.
 3. 타입 준비 소리(+0x90)·가상 표시/부모 Unpop/재등록·하위 경로/접근점/자원 정책·사제 contained·집합/지연 분배·건설 GUI를 진행한다.
 

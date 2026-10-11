@@ -247,14 +247,39 @@ TEST_CASE(RenderCollection_SnapshotDeletionAndReuse) {
     world.draws.clear();work[0].kind=2;CHECK(Throws([&] { world.system->DrawCollected(std::span(work).first(1)); }));CHECK(world.draws.empty());
 }
 
-// 동률은 호스트에서 안정 순서를 유지하고 비유한 정렬 좌표는 그리기 전에 거부한다.
-TEST_CASE(RenderCollection_StableTiesAndInvalidSortCoordinates) {
+// 원본 작은 구간 정렬의 두 동률 항목 순서를 유지하고 비유한 좌표는 그리기 전에 거부한다.
+TEST_CASE(RenderCollection_SmallTiesAndInvalidSortCoordinates) {
     World world(OriginalEdition::Patch1078);world.CreateSystem();auto* first=world.system->Add(world.parent,false);auto* second=world.system->Add(world.parent,false);
     std::array<RenderCollectionEntry,2> work{};const RenderWorldRect view{20,20,22,23};
     CHECK(netstorm::client::DrawVisibleConstruction(*world.system,view,work)==2);
     CHECK(work[0].token==first->Registration().token && work[1].token==second->Registration().token);
     world.draws.clear();Put(world.pool.AllocatedBytes(world.parent),14,0x7fc00000);
     CHECK(Throws([&] { netstorm::client::DrawVisibleConstruction(*world.system,view,work); }));CHECK(world.draws.empty());
+}
+
+// 실제 건설 표시도 9항목 동률에서 판본별 원본 CRT 순서로 제출한다.
+TEST_CASE(DrawSort_ConstructionUsesNativeTieOrder) {
+    const auto rows=LoadFixture(NETSTORM_DRAWSORT_FIXTURE).rows;
+    // 실제 host/Kernel의 토큰은 원본 관찰과 같은 1~9 순서로 만들어진다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
+        World world(edition);world.CreateSystem();
+        // 같은 부모의 같은 깊이/좌표를 갖는 표시 객체를 9개 등록한다.
+        for (int index=0;index<9;++index) world.system->Add(world.parent,false);
+        std::array<RenderCollectionEntry,9> work{};
+        CHECK(netstorm::client::DrawVisibleConstruction(*world.system,{20,20,22,23},work)==9 && world.draws.size()==9);bool found=false;
+        // 원본 저장 관찰의 동률 행에서 최종 토큰만 읽는다. 기대 정렬은 계산하지 않는다.
+        for (const auto& row:rows) {
+            if (row[0]!=(world.patch ? "originals" : "originalCD") || row[1]!="Sort" || !row[2].starts_with("9,0,")) continue;found=true;
+            // 원본 16바이트 항목의 +8 DWORD 토큰을 같은 출력 위치와 비교한다.
+            for (std::size_t index=0;index<work.size();++index) {
+                std::array<std::uint8_t,4> bytes{};
+                // 원본 토큰을 little endian으로 읽는다.
+                for (std::size_t byte=0;byte<bytes.size();++byte) bytes[byte]=static_cast<std::uint8_t>(std::stoul(row[4].substr(index*32+16+byte*2,2),nullptr,16));
+                CHECK(work[index].token==Get(bytes,0));
+            }
+        }
+        CHECK(found);
+    }
 }
 
 // 서로 다른 풀이나 누락된 장치 경계는 생성 전에 거부한다. 캡처 중 취소된 객체도 다시 접근하지 않는다.
