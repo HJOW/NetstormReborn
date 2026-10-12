@@ -1,5 +1,7 @@
 # C++ 빌드 (`cpppj/`)
 
+현재의 게임 실행·별도 창 작업은 [2026-10-12 사용자 확인 조건](execution-confirmation.md)을 따른다. 아래 날짜별 기록의 “현재 PC” 금지는 당시 호스트·작업의 조건이며, 지금은 현재 호스트와 최신 예외 목록·별도 사용자 지시를 확인해 적용한다.
+
 > 2026-10-05 추가·갱신. **메뉴→캠페인→브리핑→지형/객체·선택/이동→복귀를 연결했다.** 건설·경제·전투·AI·승패·소리·MCP는 후속이다. **cpppj는 Windows 전용이다.** [공용 계층](exe/cpp-reconstruction.md), [자산](exe/cpp-assets-reconstruction.md), [설정](exe/cpp-config-reconstruction.md), [요새](exe/cpp-fort-reconstruction.md), [창](exe/cpp-screen-reconstruction.md), [표시 기반](exe/cpp-renderer-reconstruction.md), [메뉴](exe/cpp-menu-reconstruction.md), [월드/조작의 범위와 제한](exe/cpp-world-reconstruction.md).
 
 **기존 게임 전체가 실제 플레이 가능한 수준으로 복원되는 것이 우선이다.** 화면비 확장·한국어·Linux·추가 기능은 이후다. 현재 작업 순서·완료 기준은 [실제 플레이 복원 계획](cpp-playable-plan.md), 기반 복원 세부 항목은 [기존 로드맵](cpp-roadmap.md)에 있다. 이 문서는 빌드와 소스 복원 규칙을 다룬다.
@@ -104,6 +106,8 @@ cpppj/
 * 지금은 정적 라이브러리 하나(`netstorm`)로 묶는다. `o/` 는 `client/`·`platform/` 을 포함하지 않는 것이 규칙이지만 빌드가 강제하지는 않는다. 라이브러리는 `user32`·`gdi32`·`winmm` 에 연결된다(`client/` 가 원본처럼 Win32 를 직접 부른다).
 
 ## 3. 빌드와 테스트
+
+AI가 게임 또는 클론/도구의 별도 창을 실행할 때는 [실행 전 사용자 확인 조건](execution-confirmation.md)을 따른다(2026-10-12). 지정된 세 시스템에서는 **기존 게임 실행과 별도 창 작업 모두 확인 없이 가능**하다. 게임/창 없는 빌드·정적 분석·단위 테스트는 확인 대상이 아니다.
 
 **2026-10-07 삭제 준비/일반 Unpop 후속:** [일반 다리/섬 해제와 Graph 분할](exe/cpp-graphremove-reconstruction.md)의 새 x86 **1,158회**, x64 Release 경고/오류 0·CTest 내부 **137개·실패 0**을 확인했다. 누적 제한 입력은 **60,258개**다. 새 10.37 전체 3,711개 함수와 삭제 helper를 다시 디컴파일하고 새 독립 SHA 기록으로 검사했다. 전역 소진 복구·건물 부착·파생 삭제/참조 수명·raw GameWorld는 남았다. **최신 사용자 지시로 이번 PC에서는 원본/복사본 실행과 모든 창 검사를 금지한다. GUI 명령은 다른 PC 인수인계용이다.**
 

@@ -67,6 +67,8 @@ C++의 최신 복원: [로컬 예측 조각 정리](docs/exe/cpp-construction-cl
 
 ## 개발용 빌드와 실행
 
+AI가 게임 또는 클론/도구의 별도 창을 실행할 때는 [실행 전 사용자 확인 조건](docs/execution-confirmation.md)을 따른다(2026-10-12). 지정된 세 시스템에서는 **기존 게임 실행과 별도 창 작업 모두 확인 없이 가능**하다. 게임/창 없는 빌드·정적 분석·단위 테스트는 확인 대상이 아니다.
+
 ```sh
 dotnet restore dotnetpj/Netstorm.sln
 dotnet build dotnetpj/Netstorm.sln -c Release --no-restore

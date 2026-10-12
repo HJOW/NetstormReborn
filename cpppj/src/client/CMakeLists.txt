@@ -31,6 +31,7 @@ target_sources(netstorm PRIVATE
     GumpLifetime.cpp GumpLifetime.h
     GumpEvents.cpp GumpEvents.h
     GumpInput.cpp GumpInput.h
+    GumpFrame.cpp GumpFrame.h
     TileGroupCollection.cpp TileGroupCollection.h
     ObjectCollection.cpp ObjectCollection.h
     PreviewCollection.cpp PreviewCollection.h

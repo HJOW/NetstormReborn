@@ -23,8 +23,11 @@ internal static class Program
         YouTube 영상 분석(게임 실행 없음, 인터넷 사용):
               youtube_probe, youtube_list, youtube_frames, youtube_clip, youtube_note, youtube_videos
               예: call youtube_frames --json {"url":"https://youtu.be/CI3dCrUt4tY","times":"600, 30:00"}
-        AGENTS.md에 지정된 시스템, 또는 개발자가 수동 컨트롤 분석을 직접 요청한 작업 단계에서만 별도 확인 없이 게임을 실행할 수 있습니다.
-        그 밖의 경우에는 start_session 전에 목적과 필요성을 설명하고 개발자 확인을 받으세요.
+        확인 예외: 시스템 1 10.0.0.15/vm-debian-codex, 시스템 2 10.0.0.17/VM-W11-Codex, 시스템 3 192.168.0.94/HJOW-Athlon.
+        위 시스템에서는 기존 게임 실행과 별도 창 작업 모두 사용자 확인 없이 가능합니다(AGENTS.md 기준).
+        수동 컨트롤 또는 플레이 녹화 분석을 직접 요청한 단계에서는 실제 게임 구동 확인을 다시 받지 않습니다.
+        그 밖의 시스템에서는 게임 실행 또는 별도 창 작업 전에 목적·필요성을 설명하고 명시적인 확인을 받으세요.
+        게임/별도 창 없는 빌드·정적 분석·단위 테스트·기본 MCP 검사는 확인 대상이 아닙니다.
         guide는 이미 실행 중인 세션의 게임 옆에 안내 창을 열며 게임을 새로 실행하지 않습니다.
         record-play는 지침 없는 녹화 창을 열고 playingVideos/세션ID에 분할 저장합니다.
         분석·녹화는 기본 30FPS이며 --fps 60 또는 JSON/MCP의 fps=60으로 선택합니다.

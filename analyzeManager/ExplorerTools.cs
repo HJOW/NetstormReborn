@@ -24,7 +24,7 @@ public sealed class ExplorerTools
 
     /// <summary>격리된 원본 게임을 창 모드로 실행한다.</summary>
     [McpServerTool(Name = "start_session", OpenWorld = false, Destructive = false)]
-    [Description("실제 게임을 실행합니다. AGENTS.md에 지정된 시스템(IP 10.0.0.15·호스트명 vm-debian-codex, IP 192.168.0.94·호스트명 HJOW-Athlon)에서, 또는 개발자가 기존 게임 수동 컨트롤 방식의 분석을 직접 요청한 작업 단계에서는 개발자 확인 없이 호출할 수 있습니다. 그 밖의 시스템에서는 기존 실행 중단 지시의 재개가 필요하며, 호출 전에 개발자에게 목적과 필요성을 알리고 명시적인 확인을 받으세요. originals를 복사해 창 모드 1024x768로 실행하고 새 sessionId와 첫 화면을 반환합니다.")]
+    [Description("실제 게임을 실행합니다. AGENTS.md의 시스템 1(IP 10.0.0.15·호스트명 vm-debian-codex), 시스템 2(IP 10.0.0.17·호스트명 VM-W11-Codex), 시스템 3(IP 192.168.0.94·호스트명 HJOW-Athlon)에서는 기존 게임 실행과 별도 창 작업 모두 사용자 확인 없이 가능합니다. 개발자가 기존 게임 수동 컨트롤 방식 또는 기존 게임 플레이 녹화 분석 방식으로 진행을 직접 요청한 단계에서는 실제 게임 구동 확인을 다시 받지 않습니다. 그 밖의 시스템에서 게임을 실행하거나 별도 창을 띄울 때는 목적·필요성을 설명하고 명시적인 확인을 받으세요. 확인 상태는 허용한 작업 단계가 완료될 때까지 유지하며 별도 중단 지시는 해당 범위에서 준수합니다. originals를 복사해 창 모드 1024x768로 실행하고 새 sessionId와 첫 화면을 반환합니다.")]
     public Task<CallToolResult> StartSession([Description("분석 목적, 200자 이하")] string label = "",
         [Description("분석·연속 녹화 FPS: 30 또는 60. 생략하면 서버 설정을 사용하며 기본은 30입니다.")] int? fps = null,
         CancellationToken cancellation = default)
