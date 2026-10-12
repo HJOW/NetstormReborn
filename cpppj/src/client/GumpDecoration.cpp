@@ -36,7 +36,7 @@ GumpCreateNode& GumpDecoration::Base(std::uint32_t token) const {
 std::uint32_t GumpDecoration::Construct(std::uint32_t token,float width,float height) const {
     Node(token);factory_.Construct(token,width,height,kBackground,1,state_.backgroundType,state_.backgroundFrame);
     Node(token).vtable=create_.collection.edition==o::OriginalEdition::Patch1078 ? kVtable : kCdVtable;
-    Node(token).alignFlags=static_cast<std::uint32_t>(static_cast<std::int32_t>(state_.alignment));Node(token).cornerType=state_.cornerType;
+    Node(token).command=static_cast<std::uint32_t>(static_cast<std::int32_t>(state_.alignment));Node(token).cornerType=state_.cornerType;
     if (!hooks_.type) throw std::invalid_argument("장식 배경 모서리 타입 경계 필요");
     const auto type=hooks_.type(state_.cornerType);Node(token).cornerShape=type.shape;Node(token).cornerFrame=type.firstFrame;return token;
 }

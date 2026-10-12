@@ -7,15 +7,30 @@
 - [x] AGENTS.md는 편집하지 않고 사용자 변경본을 유지했다. 건물/유닛 타입 ID·원본 영어 description/파일·설정 키·게임 규칙/시계/수치와 보호 원본은 변경하지 않았다. **공통 마지막 디컴파일 PC: HJOW-Athlon, 2026-10-13**. 이번 명칭 작업의 새 디컴파일/원본 실행·커밋/푸시 없음.
 - [ ] cpppj 실제 한국어 표시는 기존 3차 목표에서 공유 명칭 표를 참고한다. cpppj 다음 복원과 dotnetpj 9-1 A/동작 검증은 각 최신 미완료 목록을 따른다.
 
-## 2026-10-13 최신 cpppj: 메뉴 정상 생성·장식/제목·controlled 시작·수명/Attach·모서리 픽셀 연결 (`HJOW-Athlon`)
+## 2026-10-13 공통/dotnetpj 후속: 초기 브리핑·안내 재개 프레임 구현 (`HJOW-Athlon`)
+
+- [x] 아래 cpppj 메뉴 작업을 완료한 뒤 사용자 요청으로 dotnetpj 초기 브리핑 10/안내 재개 7프레임을 실제 화면·같은 게임 시계·정지 소유권에 연결했다. 10.78 함수 7개 읽기 전용 내보내기, **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-13**. 게임/Assets/Core Release 경고 0·오류 0. 테스트·독립 실행 대조·GUI/게임 실행 없음. cpppj 구현과 보호 원본은 보존했다.
+- [ ] 세부 완료/한계와 다음 9-1 A 작업은 [dotnet 인수인계](LEFT_JOBS.dotnetpj.md) 및 [작업 기록](docs/dotnet-dialog-frames-20261013.md)을 따른다. 실제 동작 확인과 원본 전체 타이머 이행은 남았다.
+
+## 2026-10-13 최신 cpppj: 메뉴 Draw·선택/하위 입력·객체 부착·식별 필드 수정 (`HJOW-Athlon`)
+
+- [x] AGENTS.md·두 LEFT_JOBS 확인, 현재 PC/IP **HJOW-Athlon / 192.168.0.94**와 마지막 디컴파일 PC 일치. 두 PE 함수 **12/13개**를 읽기 전용으로 내보내 실제 Draw/Handle/Broadcast/AttachObject·닫기/가림/행 변경 영역/객체 helper 기계어를 판독했다. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-13.** [상세 기록](docs/exe/cpp-menu-gump-interaction.md).
+- [x] `MenuGumpInput`으로 실제 ScreenToLocal/메뉴 자식 가림·가로 절삭/세로 행 선택·disabled 제외·old/new 강조/행 요청·확장/release 필터·명령/음향·재귀 숨김/동적 Kill·가상 자식 요청/등록 ID/Push/Attach/깊이/확장·부모 Bubble·루트 팝업 Kill을 연결했다. Close는 선택 인덱스를 보존하며 콜백 뒤 현재 선택/항목/등록표를 다시 읽는다. CD unsigned float 비트 하한과 패치 ordered 하한을 유지한다.
+- [x] `MenuGumpDraw`로 실제 배경/글리프/StyleText/측정과 자체 클립·가로/세로/compact 선택 배경·두 구분선 pass·체크 SHP·plain/styled 글자·하위 ` >` 표시를 연결했다. 체크 프레임은 **타입 +154 I.count+2**이고 저장 스타일 override는 null이다. 기존 장식 픽셀 캐시/클립/투명도를 공유하고 패치 화면 rect bottom Y float32 저장/CD 정수 유지 차이를 반영했다.
+- [x] 메뉴 AttachObject의 **Form(type,2)/owner ID/가상 객체 연결 경계→flags 0x40/object/Form 인덱스→현재 가상 Attach**를 복원했다. object=0은 기존 연결을 유지하며 **전체 Form 풀/소유/객체 연결은 명시 경계/후속**이다. 가상 이벤트/캡처/프레임/Draw/controlled 객체 부착과 실제 SoundPlayer 이름 재생 연결기를 추가했다.
+- [x] 앞 단계 메뉴/장식 생성자의 식별값 **26/57** 쓰기를 **alignFlags(+8)→command(+20)**로 수정했다. 원본의 실제 두 생성자 store를 확인했으며 정렬 필드와 메뉴 부모/자식 식별을 구분한다.
+- [x] 라이브러리/`NetstormCpp` **Release 최종 빌드 경고 0·오류 0**. SOURCE_MAP 생성/내용 차이 없음. **새 테스트 추가/실행·전체 CTest·독립 원본/C++ 사건/콜백/영역/픽셀 대조·게임/GUI 실행 미수행**이다. 관찰 **523,634개**, 대조 **523,374개**, **854개 통과**는 앞 단계 기록이고 이번 추가 관찰/대조는 각각 **0개**다. 자료: `recovery-menuinteraction-evidence.json`, `tools/analyze_menuinteraction.py`, `extracted/menuinteraction/`. 보호 PE SHA 불변·AGENTS.md/보호 원본/dotnetpj/테스트 편집·커밋/푸시 없음.
+- [ ] **다음:** 메뉴 제목/머리 포맷·controlled 항목 래퍼·CD 자식 문맥 전달 → 전체 Form 풀/소유/객체 연결·현재 사건/팔레트/타입·명령 큐/변경 영역/allocator 공급 → OS 큐/폴링·overlay·자동 raw Client UI. 신규/기존 UI 전체 독립 동작/픽셀 대조·극단 x87·그림 색 표/회전 VFX/flag 2 재사용·생성 EH도 남았다. **Client/UberGump의 기존 메뉴 어댑터와 raw 자동 GUI/건설·미션 완주는 미완료다.**
+
+## 2026-10-13 앞 단계 cpppj: 메뉴 정상 생성·장식/제목·controlled 시작·수명/Attach·모서리 픽셀 연결 (`HJOW-Athlon`)
 
 - [x] AGENTS.md·두 LEFT_JOBS 확인, 현재 PC/IP **HJOW-Athlon / 192.168.0.94**와 마지막 디컴파일 PC 일치. 창/게임 실행 허용 반영. 두 PE 함수 **13/18개**를 읽기 전용으로 내보내고 실제 가상 표/정렬/여백·생성/소멸/부착 기계어를 판독했다. CD scalar의 실제 call에서 소멸 몸체 00451650/정상 보조 경로를 확인했다. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-13.** [상세 기록](docs/exe/cpp-menu-gump-widgets.md).
 - [x] `MenuGumpWidgets`로 배경/문맥/부분 필드 초기화·조건 검사 전 명령/인자 쓰기·조건부 문자열/이전 항목 자식 연결·최종 flags/한 번 Reflow/notify를 구현했다. 원본 varargs는 문자열/자식 variant와 조건부 DWORD 목록으로 표현한다. **생성 numItems <40·미작성 offsets/목표 크기 보존·선두 자식 부착**을 유지한다. 현재 선택/소멸 통지 토큰·현재 메뉴 개수를 같은 저장소에 추가했다.
 - [x] 장식 메뉴의 실제 new 0xc4 장식(1,1)/부착/secondaryDepth 1→new 0xd8 다중 줄 제목/기존 버퍼·Slider·overlay/16,16/secondaryDepth -1을 연결했다. `BindMenuTitleLayout`은 기존 Reflow 경계를 **RequestScroll(0)/FitContent(0,0)**에 공급한다. controlled 가로/장식/세로 0x140000/0xa80000/0x280000·0xb90 할당/현재 칸·선택 idle/세로 배경 flags OR를 실제 처리기로 연결했다.
 - [x] 메뉴 Attach의 root sticky 0x4000·parent 재사용·plain/fancy 화면 상한/장식 0 하한·DWORD 좌표 차·기본 Attach를 복원했다. 패치 min 요청의 float32 저장/CD 미저장·장식 Y 합 순서를 유지한다. 소멸은 **현재 개수 감소→선택 통지→40개 전체 스타일 역순 Clear→기본 scalar**, 자식은 기존 Destroy에서 먼저 삭제한다.
-- [x] `GumpDecoration`/`GumpDecorationPixelTarget`으로 현재 배경/SHP/I 첫 프레임 생성 캐시·실제 배경 뒤 TL/TR/BR/BL 현재 모서리 원색 출력·실제 SHP/투명도/클립·부모 visible/변경 영역을 연결했다. 변경 영역은 **x-1/y-1, 절삭(width+4)/절삭(height+4)**이며 두 PE ROM의 4.0을 확인했다. 생성/그리기/재그리기/소멸 분배에 같은 실제 저장소를 공급한다. **전체 Form 객체와 메뉴 실제 Draw/입력은 후속**이다.
+- [x] `GumpDecoration`/`GumpDecorationPixelTarget`으로 현재 배경/SHP/I 첫 프레임 생성 캐시·실제 배경 뒤 TL/TR/BR/BL 현재 모서리 원색 출력·실제 SHP/투명도/클립·부모 visible/변경 영역을 연결했다. 변경 영역은 **x-1/y-1, 절삭(width+4)/절삭(height+4)**이며 두 PE ROM의 4.0을 확인했다. 생성/그리기/재그리기/소멸 분배에 같은 실제 저장소를 공급한다. **메뉴 실제 Draw/입력은 위 후속에서 구현했다. 전체 Form 객체는 후속**이다.
 - [x] 라이브러리/`NetstormCpp` **Release 빌드 경고 0·오류 0**. SOURCE_MAP 생성/내용 차이 없음. **새 테스트 추가/실행·전체 CTest·독립 원본/C++ 생성/조건/카운터/부착/수명/모서리/변경 영역/픽셀 대조·게임/GUI 실행 미수행**이다. 관찰 **523,634개**, 대조 **523,374개**, **854개 통과**는 앞 단계 기록이고 이번 추가 관찰/대조는 각각 **0개**다. 자료: `recovery-menuwidgets-evidence.json`, `tools/analyze_menuwidgets.py`, `extracted/menuwidgets/`. 보호 PE SHA 불변·보호 원본/dotnetpj/테스트 변경·커밋/푸시 없음. AGENTS.md는 직접 편집하지 않았으며 작업 중 외부 변경(건물/유닛 한국어 명칭 규칙 추가)을 보존했다.
-- [ ] **다음:** **메뉴 실제 Draw/Handle/Broadcast/AttachObject·제목/머리 포맷·controlled 항목 래퍼** → 전체 Form 객체·그림 색 표/회전 VFX/flag 2 재사용·OS 큐/폴링·overlay·자동 raw Client UI. 이번 메뉴/장식/제목/생성/조건/수명/부착/픽셀과 앞선 다중 줄/파서/버퍼/Slider/선/VFX/메뉴·260개 레이아웃·돌 버튼/배경/도움말 전체 독립 원본/C++ 대조도 남았다. 현재 실제 전역/allocator/invalidate·커서 공급·생성 EH/극단 x87·원본 포인터/varargs alias는 상위 조립/대조 대상이다. **Client/UberGump 기존 메뉴 어댑터와 raw 자동 GUI/건설·미션 완주는 미완료다.**
+- [x] **메뉴 실제 Draw/Handle/Broadcast/AttachObject는 위 후속에서 구현했다.** 남은 제목/머리 포맷·controlled 항목 래퍼 → 전체 Form 객체·그림 색 표/회전 VFX/flag 2 재사용·OS 큐/폴링·overlay·자동 raw Client UI. 이번 메뉴/장식/제목/생성/조건/수명/부착/픽셀과 앞선 다중 줄/파서/버퍼/Slider/선/VFX/메뉴·260개 레이아웃·돌 버튼/배경/도움말 전체 독립 원본/C++ 대조도 남았다. 현재 실제 전역/allocator/invalidate·커서 공급·생성 EH/극단 x87·원본 포인터/varargs alias는 상위 조립/대조 대상이다. **Client/UberGump 기존 메뉴 어댑터와 raw 자동 GUI/건설·미션 완주는 미완료다.**
 
 ## 2026-10-13 최신 cpppj: 다중 줄 스타일 파서·CD W/패치 S·문자열/버퍼 교체·설정 복원 (`HJOW-Athlon`)
 

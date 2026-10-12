@@ -7,7 +7,7 @@
 namespace netstorm::client {
 // 원본 +b8 캐시 SHP/+bc 장식 타입/+c0 첫 모서리 프레임이다. 배경 타입/프레임과 독립적으로 보존한다.
 struct GumpDecorationNode: GumpBackgroundNode { std::uint32_t cornerShape{},cornerType{},cornerFrame{}; };
-// signed 정렬 BYTE는 두 PE 초기값 57이다. 타입/프레임은 실제 게임 초기화 결과를 공급해야 한다.
+// +20 식별 BYTE는 두 PE 초기값 57이다. 타입/프레임은 실제 게임 초기화 결과를 공급해야 한다.
 struct GumpDecorationState { std::int8_t alignment{57};std::uint32_t backgroundType{},backgroundFrame{},cornerType{}; };
 // 원본 타입 +dc SHP/+150(I 글자 첫 프레임)을 현재 자산 조회에서 공급한다.
 struct GumpDecorationType { std::uint32_t shape{},firstFrame{}; };

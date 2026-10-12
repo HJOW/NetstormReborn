@@ -14,8 +14,10 @@ struct MenuGumpConstructionEntry {
     std::variant<std::string,std::uint32_t> source;
     std::uint32_t flags{},command{},parameter{},condition{1};
 };
-// signed 정렬은 두 PE 초기값 26이다. 배경 타입/프레임·흰색/그림자 색은 실제 초기화 전역을 공급한다.
-struct MenuGumpWidgetState { std::int8_t alignment{26};std::uint32_t backgroundType{},backgroundFrame{},foreground{},shadow{}; };
+// +20 식별 BYTE의 두 PE 초기값은 26이다. 배경/색/객체 부착 Form 타입은 실제 초기화 전역을 공급한다.
+struct MenuGumpWidgetState { std::int8_t alignment{26};std::uint32_t backgroundType{},backgroundFrame{},foreground{},shadow{},objectFormType{}; };
+// 호스트 Form 토큰과 실제 Form 풀 인덱스다. 패치 0x32/CD 0x24 stride의 주소 나눗셈은 Form 공급기가 담당한다.
+struct MenuGumpObjectForm { std::uint32_t token{},index{}; };
 // 같은 메뉴/기본 객체·요청 크기별 호스트 할당·실제 가상 Attach와 소멸 선택 콜백의 경계다.
 struct MenuGumpWidgetHooks {
     std::function<MenuGumpNode*(std::uint32_t)> node;
@@ -23,8 +25,12 @@ struct MenuGumpWidgetHooks {
     std::function<std::uint32_t(std::size_t)> allocate;
     std::function<void(std::uint32_t,float,float,std::uint32_t,std::uint32_t)> attach;
     std::function<void(std::uint32_t,std::int32_t)> selectionNotice;
+    // 원본 Form(type,2) 생성→+12 Gump 등록 ID→가상 +74(object,0)의 명시 경계다. 전체 Form은 후속이다.
+    std::function<MenuGumpObjectForm(std::uint32_t,std::uint32_t)> objectForm;
+    std::function<void(std::uint32_t,std::uint32_t)> formOwner;
+    std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)> formObject;
 };
-// 원본 MenuGump 생성/수명과 화면 밖 부착 보정을 복원한다. 실제 메뉴 Draw/입력과 전체 Form 객체는 후속이다.
+// 원본 MenuGump 생성/수명/부착을 복원한다. 실제 출력/입력은 별도 메뉴 처리기이며 전체 Form 객체는 후속이다.
 class MenuGumpWidgets {
 public:
     // 모든 상태/기존 처리기와 저장소는 생성/부착/수명 분배보다 오래 살아야 한다.
@@ -44,6 +50,9 @@ public:
     // 00476be0/CD 004530d0: root 부착 비트·parent 0 재사용·일반/장식 전체 화면 보정→기존 기본 Attach다.
     // mode 1 또는 기본 0x20000이면 보정을 생략한다. 패치의 float32 중간 저장과 CD의 미저장을 유지한다.
     void Attach(std::uint32_t token,float x,float y,std::uint32_t parent,std::uint32_t mode) const;
+    // 00476dd0/CD 00453290: 기본 객체 연결 helper→현재 가상 Attach다. object 0은 기존 연결을 지우지 않는다.
+    // 004644e0/CD 00492f80의 Form 경계 뒤 +40 flags/+24 object/+28 풀 인덱스를 같은 기본 노드에 쓴다.
+    void AttachObject(std::uint32_t token,std::uint32_t object,float x,float y,std::uint32_t parent,std::uint32_t mode) const;
     // 00476ec0/00476f40/CD 00451650/004533a0: 파생 표/개수 감소→선택 통지→40개 조각 역순 Clear→기본 scalar다.
     // 자식 장식/제목 삭제는 기존 GumpLifetime::Destroy의 자식 우선 순서를 따른다.
     std::uint32_t DeleteScalar(std::uint32_t token,std::uint32_t flags) const;
@@ -79,4 +88,6 @@ void BindMenuTitleLayout(MenuGumpLayoutHooks& hooks,const ScrollingTextGump& tex
 // 메뉴 파생 Attach/scalar만 분배하며 기존 트리/장식/텍스트/버튼 처리를 보존한다.
 void BindMenuGumpWidgets(GumpTreeHooks& tree,GumpLifetimeHooks& lifetime,
     std::function<const MenuGumpWidgets*(std::uint32_t)> resolve);
+// controlled 객체 부착의 가상 +3c를 실제 메뉴 몸체에 연결하고 다른 타입의 기존 처리를 보존한다.
+void BindMenuGumpObjectAttach(MenuGumpHooks& hooks,std::function<const MenuGumpWidgets*(std::uint32_t)> resolve);
 }

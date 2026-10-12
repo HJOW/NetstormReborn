@@ -152,8 +152,9 @@ internal sealed partial class FortMapViewer : IDisposable
     /// <param name="seconds">지난 갱신 이후 경과 시간(초)</param>
     /// <param name="mouse">논리 화면 좌표로 바꾼 마우스 상태</param>
     /// <param name="edgeScroll">가장자리 스크롤이 이번 갱신에서 옮길 논리 픽셀 (양수 = 오른쪽·아래)</param>
+    /// <param name="externalDialogOpen">입력 처리 뒤에도 남은 외부 도움말/옵션 창. 브리핑/재개 프레임 판정에 사용한다.</param>
     public void Update(double seconds, MouseState mouse, Vector2 edgeScroll, int width, int height,
-        KeyboardState? input = null, bool inputBlocked = false)
+        KeyboardState? input = null, bool inputBlocked = false, bool externalDialogOpen = false)
     {
         SynchronizePauseReasons();
         try
@@ -162,7 +163,8 @@ internal sealed partial class FortMapViewer : IDisposable
         }
         finally
         {
-            // 안내/지식창·메뉴 등 조기 반환 경로도 이번 화면의 정지 소유권 변경을 반영한다.
+            // 안내/지식창·메뉴 등 조기 반환에서도 카운터는 화면당 한 번만 진행하고 소유권을 동기화한다.
+            UpdateMissionDialogFrame(externalDialogOpen);
             SynchronizePauseReasons();
         }
     }

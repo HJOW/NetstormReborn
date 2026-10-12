@@ -616,7 +616,8 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         // 같은 클릭이 도움말·옵션을 닫고 곧바로 뒤쪽 지도에도 적용되는 것을 막는다.
         popupOpen |= _helpWindow?.IsOpen == true || MissionOptionsOpen;
         _mapViewer?.Update(dt, mouse, EdgeScrollDelta(rawMouse, keyboard, dt),
-            _display.Layout.LogicalWidth, _display.Layout.LogicalHeight, keyboard, popupOpen);
+            _display.Layout.LogicalWidth, _display.Layout.LogicalHeight, keyboard, popupOpen,
+            externalDialogOpen: _helpWindow?.IsOpen == true || MissionOptionsOpen);
         // 대화상자·지도 밖은 화살표로 복구한다. 원본 커서는 논리 화면 확대 배율과 무관한 OS 커서다.
         bool inView = mouse.X >= 0 && mouse.Y >= 0 && mouse.X < _display.Layout.LogicalWidth && mouse.Y < _display.Layout.LogicalHeight;
         _cursor?.Set(!popupOpen && inView ? _mapViewer?.CursorAt(mouse.Position) ?? GameCursor.Arrow : GameCursor.Arrow);

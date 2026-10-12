@@ -41,7 +41,7 @@ struct MenuGumpHooks {
     std::function<void(std::uint32_t,std::uint32_t,float,float,std::uint32_t,std::uint32_t)> attachObject;
     std::function<void(std::uint32_t,bool)> redraw,baseRedraw;
 };
-// 원본 메뉴의 정상 프레임/스택 몸체다. 항목 레이아웃은 MenuGumpLayout이 담당하며 생성·입력 처리는 후속이다.
+// 원본 메뉴의 정상 프레임/스택 몸체다. 레이아웃/생성/출력/입력은 같은 저장소의 별도 메뉴 처리기가 담당한다.
 class MenuGump {
 public:
     // 같은 생성/수명/메뉴 상태와 안정된 노드 저장소가 처리기보다 오래 살아야 한다.

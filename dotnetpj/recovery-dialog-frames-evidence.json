@@ -1,0 +1,77 @@
+{
+  "last_decompile_host": "HJOW-Athlon",
+  "recorded_at": "2026-10-13T05:52:35.607826+09:00",
+  "edition": "10.78",
+  "method": "같은 PC Ghidra 읽기 전용 내보내기·PE 명령/전역 정적 판독·Release 게임/Assets/Core 빌드",
+  "functions": [
+    "004c2990",
+    "004c2a40",
+    "004c2a90",
+    "004c34c0",
+    "004c8e90",
+    "004c79a0",
+    "004641d0"
+  ],
+  "counter_commands": {
+    "004c2990": [
+      "004c2a1c  c786840000000a000000     mov dword ptr [esi + 0x84], 0xa",
+      "004c2a30  8986c8000000             mov dword ptr [esi + 0xc8], eax"
+    ],
+    "004c34c0": [
+      "004c34f8  39be84000000             cmp dword ptr [esi + 0x84], edi",
+      "004c3509  ff8e84000000             dec dword ptr [esi + 0x84]",
+      "004c3511  c786840000000a000000     mov dword ptr [esi + 0x84], 0xa",
+      "004c351b  39be84000000             cmp dword ptr [esi + 0x84], edi",
+      "004c3576  39be84000000             cmp dword ptr [esi + 0x84], edi",
+      "004c3599  8b8ec8000000             mov ecx, dword ptr [esi + 0xc8]",
+      "004c35a5  898ec8000000             mov dword ptr [esi + 0xc8], ecx",
+      "004c35c0  89bec8000000             mov dword ptr [esi + 0xc8], edi",
+      "004c360f  39be84000000             cmp dword ptr [esi + 0x84], edi"
+    ]
+  },
+  "original_fields": {
+    "stage_lock": "+84=10",
+    "pause_owned": "+b8",
+    "quiet_resume": "+c8, 7"
+  },
+  "original_predicates": {
+    "guide_count": "005cab2c > 0",
+    "dialog_pointer": "00565dd4 != 0",
+    "root_popup": "004641d0: 루트 직계 자식 flags 4000"
+  },
+  "implementation": {
+    "briefing": "UI 즉시 A. 열기/생성자의 초기 A. 이벤트를 10개 연속 실제 화면 프레임으로 대체·차단 다이얼로그에서 10 재설정·본문 없는 섹션도 한 번만 요청",
+    "resume": "열린 스크립트 안내의 소유권 유지·안내/외부 다이얼로그/팝업에서 연속 수 0·7번째 빈 화면 프레임에 자기 ScriptDialog만 해제",
+    "integration": "Update finally에서 한 번·현재 외부 창 상태와 inputBlocked 클릭 차단 이력 구분·기존 실제 중첩 시계 공유·초기 Tell 성공 뒤 메뉴/지식 팝업 닫기",
+    "tutorial": "기존 RunsTutorial과 별개 TutorialFrameLocked로 초기 잠금/실제 정지 동안 명령·규칙 틱의 단계 변경 보류·검사합 포함",
+    "diagnostics": "사용자 화면에 구현 값을 표시하지 않고 기존 자동 진단의 briefing-frames/resume-frames에만 추가"
+  },
+  "validation": "Release 빌드 경고 0·오류 0; 새 테스트 추가/실행·독립 PE/C# 실행 대조·GUI/게임 실행 미수행",
+  "new_original_observations": 0,
+  "new_comparisons": 0,
+  "boundaries": [
+    "실제 GUI 초기 10/재개 7·중첩/반복/미션 전환·영어/한국어 회귀와 독립 원본/C# 실행 대조",
+    "원본 전체 Gump 등록/삭제 수명·전체 창 flags와 클론 외부 도움말/옵션/Leave 대응의 독립 대조",
+    "후속 튜토리얼 단계 +78/+80(0.5f) 및 임시 +98 타이머·기존 단계/이동/전투/건설 등 실제 시각 이행",
+    "24Hz/8틱 상한·두 시각/새 경로 보간·FPS/Capture/OS 초기화·경고 창 정지 분류·실제 캠페인 완주"
+  ],
+  "files": {
+    "tools/analyze_dotnet_dialog_frames.py": "36d13a176f032d8dcb0e90f2fd237747fae1490448c0a2159adb9f2ab6e62443",
+    "tools/ghidra/dotnetdialogframes-functions.json": "ca6a02ec8da073170ce063fa0650505634c4208cae2a91891dc49970d29708b3",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/dotnetdialogframes/originals/creation.c": "c6aa49f4ba138d310acac6cbf2998618352552489d30235870b56784d284b374",
+    "extracted/dotnetdialogframes/originals/functions.tsv": "40b6c1f00dd70fb2c6687771f81be86b45a237301bd50295b0dd910c2f3248c6",
+    "extracted/dotnetdialogframes/originals/assembly.txt": "effdeea4fabff1cd901679388e90a2f408fecf4770d4016153c24468ef75724e",
+    "dotnetpj/src/Netstorm.Core/Simulation/MissionDialogFrameGate.cs": "fa1a0c1c7c665efa7fed1bd677c90ef0ef38ffa19d61172e52e4e7d2467d61e1",
+    "dotnetpj/src/Netstorm.Core/Simulation/BattleSession.cs": "ece54bc42f524de5c2a62a2ee40911501e15142f8f03d61d976f7b1466f9a3cc",
+    "dotnetpj/src/Netstorm.Core/Simulation/BattleSessionFrameClock.cs": "01a1795fb0b9733a1b494ee8a2429ef2a398c6db49a61350a7caa42ebc85edd8",
+    "dotnetpj/src/Netstorm.Core/Display/OriginalGameClock.cs": "d4776e96e175ea6ce46bd9cc2792e30c77a97dc5152f0e925f5ca02bdf63f8e4",
+    "dotnetpj/src/Netstorm.Game/FortMapViewer.cs": "9c3fd39a52c8f7a418e5679c163076c8aadd2c4e419b1996bea8b4e0dc9c4e60",
+    "dotnetpj/src/Netstorm.Game/FortMapViewer.Session.cs": "83961cc30a26555b76650301487c759b96454b74c27e2c55362a006a9321098d",
+    "dotnetpj/src/Netstorm.Game/FortMapViewer.TutorialDialog.cs": "3af9c75ce6bc2213cfbd52c4907bec9ad4b86109605a46d5b5dc7be0ab66fdbc",
+    "dotnetpj/src/Netstorm.Game/FortMapViewer.Units.cs": "2d051ec4b1131b4cc1c687f66e8dd13ee6507974169dd663fab21b1ef123bb8e",
+    "dotnetpj/src/Netstorm.Game/NetstormGame.cs": "3c689c04faf05b35ddf74fd49d67f96c84ece8c6c2334a127e71350f3756a9c7",
+    "dotnetpj/src/Netstorm.Assets/TutorialDialogScript.cs": "a60b5c4ab492da70fb486b4190e9af7455a22af97da7f41766fd654fccc546ea",
+    "extracted/dotnet-dialog-frame-20261013-build.log": "29708aa978f4cc173cb53197ba9841ef77f30f06432d8a703aa96f21d187b3d7"
+  }
+}

@@ -9,6 +9,8 @@ namespace {
 // 원본 두 가상 표와 정상 생성/입력/방향/장식 비트다. 주소는 호스트에서 실행하지 않는다.
 constexpr std::uint32_t kVtable=0x0050c6f0,kCdVtable=0x00501fa0,kBackground=0x03e00000;
 constexpr std::uint32_t kText=0x10000,kMenu=0x20000,kHorizontal=0x40000,kFancy=0x800000;
+// 객체 연결 helper의 기본 flags 비트와 Form 생성 인자다. 화면 투영 비트 0x2000과 구분한다.
+constexpr std::uint32_t kObjectBinding=0x40,kObjectFormMode=2;
 // 실제 세 파생 객체의 원본 할당 크기다. 호스트 클래스 sizeof와 혼용하지 않는다.
 constexpr std::size_t kMenuBytes=0xb90,kDecorationBytes=0xc4,kTitleBytes=0xd8;
 // 원본 _ftol의 64비트 절삭에서 하위 signed DWORD를 반환한다. 무효 정수 결과 하위값은 0이다.
@@ -97,7 +99,7 @@ std::uint32_t MenuGumpWidgets::Construct(std::uint32_t token,std::span<const Men
     Node(token);background_.Construct(token,0,0,kBackground,0x201,state_.backgroundType,state_.backgroundFrame);
     auto& node=Node(token);node.vtable=create_.collection.edition==o::OriginalEdition::Patch1078 ? kVtable : kCdVtable;
     node.fancy=0;node.title=0;node.selectionCallback=0;node.textContext[1]=0;
-    node.alignFlags=static_cast<std::uint32_t>(static_cast<std::int32_t>(state_.alignment));node.textContext[2]=state_.foreground;
+    node.command=static_cast<std::uint32_t>(static_cast<std::int32_t>(state_.alignment));node.textContext[2]=state_.foreground;
     node.textContext[7]=0;node.textContext[5]=state_.shadow;node.textContext[6]=1;node.textContext[0]|=2U;
     ++menus_.instances;node.expanding=0;node.itemWidth=0;node.menuFlags=0;node.itemCount=0;
     node.flags|=0x20U;node.depth=0xffffffc4U;node.selection=-1;node.heights.fill(0);node.items={};
@@ -157,6 +159,19 @@ std::uint32_t MenuGumpWidgets::DeleteScalar(std::uint32_t token,std::uint32_t fl
     for (std::size_t index=kMenuItemCapacity;index>0;--index) style_.Clear(Item(token,static_cast<std::uint32_t>(index-1)).styled);
     return lifetime_.DeleteScalar(token,flags);
 }
+// 객체 연결은 Form 생성/소유 등록/연결의 현재 경계를 거친 뒤 필드 쓰기와 실제 가상 Attach를 수행한다.
+void MenuGumpWidgets::AttachObject(std::uint32_t token,std::uint32_t object,float x,float y,std::uint32_t parent,std::uint32_t mode) const {
+    if (object) {
+        if (!hooks_.objectForm || !hooks_.formOwner || !hooks_.formObject) throw std::invalid_argument("메뉴 객체 부착 Form 경계 필요");
+        const auto form=hooks_.objectForm(state_.objectFormType,kObjectFormMode);
+        if (!form.token) throw std::runtime_error("메뉴 객체 부착 Form 생성 실패");
+        hooks_.formOwner(form.token,Base(token).id);hooks_.formObject(form.token,object,0);
+        if (create_.collection.edition==o::OriginalEdition::Patch1078) { Base(token).flags|=kObjectBinding;Base(token).object=object; }
+        else { Base(token).object=object;Base(token).flags|=kObjectBinding; }
+        Base(token).form=form.index;
+    }
+    if (!hooks_.attach) throw std::invalid_argument("메뉴 객체 가상 Attach 경계 필요");hooks_.attach(token,x,y,parent,mode);
+}
 // 기존 제목 Reflow 경계를 원본 RequestScroll/FitContent 몸체에 직접 연결한다.
 void BindMenuTitleLayout(MenuGumpLayoutHooks& hooks,const ScrollingTextGump& text) {
     hooks.titleFit=[&text](std::uint32_t token,std::uint32_t position) { text.RequestScroll(token,std::bit_cast<std::int32_t>(position)); };
@@ -175,6 +190,15 @@ void BindMenuGumpWidgets(GumpTreeHooks& tree,GumpLifetimeHooks& lifetime,std::fu
     lifetime.deletingDestructor=[resolve,previousDelete](std::uint32_t token,std::uint32_t flags) {
         if (const auto* menu=resolve(token)) menu->DeleteScalar(token,flags);
         else { if (!previousDelete) throw std::invalid_argument("메뉴 외 소멸 경계 필요");previousDelete(token,flags); }
+    };
+}
+// 객체 연결은 메뉴 토큰일 때만 새 몸체를 호출하며 실제 Form 공급과 가상 Attach는 동일 저장소를 사용한다.
+void BindMenuGumpObjectAttach(MenuGumpHooks& hooks,std::function<const MenuGumpWidgets*(std::uint32_t)> resolve) {
+    if (!resolve) throw std::invalid_argument("메뉴 객체 부착 분배 조회 필요");const auto previous=hooks.attachObject;
+    // 같은 controlled 메뉴의 가상 +3c 호출을 현재 분류 결과로 분배한다.
+    hooks.attachObject=[resolve,previous](std::uint32_t token,std::uint32_t object,float x,float y,std::uint32_t parent,std::uint32_t mode) {
+        if (const auto* menu=resolve(token)) menu->AttachObject(token,object,x,y,parent,mode);
+        else { if (!previous) throw std::invalid_argument("메뉴 외 객체 부착 경계 필요");previous(token,object,x,y,parent,mode); }
     };
 }
 }

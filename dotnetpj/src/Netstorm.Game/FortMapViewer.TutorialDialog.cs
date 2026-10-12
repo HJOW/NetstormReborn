@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Netstorm.Assets;
 using Netstorm.Core.Rules;
+using Netstorm.Core.Simulation;
 
 namespace Netstorm.Game;
 
@@ -29,6 +30,8 @@ internal sealed partial class FortMapViewer
     private static readonly Regex TutorialWords = new(@"\S+|\s+", RegexOptions.Compiled);
 
     private TutorialDialogScript? _tutorialDialog;
+    /// <summary>이 미션의 초기 10프레임과 안내 종료 후 7프레임 재개 잠금. 실제 화면 갱신에서만 진행한다.</summary>
+    private MissionDialogFrameGate? _missionDialogFrames;
     private TutorialDialogAction? _pendingTutorialAction;
     private int _tutorialScroll;
     /// <summary>안내 창 버튼의 누름·떼기 처리기. 번호는 버튼 순번이다 (원본 돌 버튼 규칙 — <see cref="ButtonGump"/>).</summary>
@@ -50,9 +53,8 @@ internal sealed partial class FortMapViewer
     /// <summary>
     /// 미션 스크립트와 설정 치환표를 안내 창에 연결한다. 튜토리얼뿐 아니라 캠페인 미션도 포함한다 —
     /// 원본은 캠페인 미션도 같은 "Tutorial" 미션 클래스라 시작하면 섹션 A.(초기 브리핑)를 Tell하고 시계를 멈춘다.
-    /// 세션이 튜토리얼 단계를 직접 처리하는 미션(튜토리얼 1·2)은 세션 이벤트가 A.를 열므로 여기서 열지 않는다.
-    /// 브리핑이 열려 있는 동안에는 Update 가 세션 틱을 건너뛰므로 브리핑을 닫기 전까지 게임 시간이 0 이다.
-    /// 원본은 미션 시작 뒤 다이얼로그 없이 10프레임이 지나야 브리핑이 뜨지만(그 사이 시계가 흐름), 클론은 즉시 연다.
+    /// 캠페인과 튜토리얼 모두 화면에서 다이얼로그 없는 연속 10프레임 뒤 A.를 요청한다.
+    /// 잠금 동안 게임 시계/월드 규칙은 진행하며 튜토리얼 단계 판정만 보류한다.
     /// </summary>
     private void InitializeTutorialDialog(MissionScript? script, ConfigStore? settings, MissionScript? commonScript = null,
         Action<string, string>? configChanged = null)
@@ -63,10 +65,8 @@ internal sealed partial class FortMapViewer
             var missionValues = new Dictionary<string, string> { ["title"] = _mission.Title ?? Name, ["fileName"] = Name };
             _tutorialDialog = new TutorialDialogScript(script, settings, commonScript, missionValues);
             _tutorialDialog.ConfigHandler = configChanged;
-            if (_session.Tutorial == null && _tutorialDialog.OpenBriefing())
-            {
-                ResetTutorialPage();
-            }
+            _missionDialogFrames = new MissionDialogFrameGate();
+            _session.TutorialFrameLocked = true;
         }
     }
 
@@ -77,12 +77,35 @@ internal sealed partial class FortMapViewer
         {
             return;
         }
+        // 세션 생성자의 초기 A. 이벤트는 화면의 10프레임 잠금이 요청할 때 한 번만 표시한다.
+        if (_missionDialogFrames?.BriefingPending == true && section.Equals("A.", StringComparison.OrdinalIgnoreCase)) return;
         bool stage = section.Length == 2 && char.IsAsciiLetter(section[0]) && section[1] == '.';
         bool opened = stage ? _tutorialDialog.OpenStage(section) : _tutorialDialog.OpenSection(section);
         if (opened)
         {
             ResetTutorialPage();
         }
+    }
+
+    /// <summary>
+    /// 이번 화면 입력/세션 처리 뒤 초기 브리핑과 재개 카운터를 한 번 진행한다.
+    /// 외부 도움말/옵션의 현재 상태는 클릭을 뒤 지도에 전달하지 않는 inputBlocked 이력과 구분한다.
+    /// </summary>
+    private void UpdateMissionDialogFrame(bool externalDialogOpen)
+    {
+        if (_missionDialogFrames == null) return;
+        bool dialogOpen = externalDialogOpen || _leaveMissionPrompt;
+        if (_missionDialogFrames.AdvanceBriefing(dialogOpen) && _tutorialDialog!.OpenBriefing())
+        {
+            // 원본 004c2a90은 초기 Tell 성공 뒤 루트 팝업을 닫는다. 지식 격자도 controlled 메뉴 팝업이다.
+            CloseContextMenu();
+            CloseMissionMenu();
+            CloseKnowledge();
+            ResetTutorialPage();
+        }
+        if (TutorialDialogOpen) _missionDialogFrames.CapturePause();
+        _missionDialogFrames.AdvanceResume(TutorialDialogOpen, dialogOpen,
+            KnowledgeOpen || ContextMenuOpen || MissionMenuOpen);
     }
 
     /// <summary>

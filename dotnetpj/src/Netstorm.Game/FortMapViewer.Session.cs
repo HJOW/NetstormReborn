@@ -64,17 +64,20 @@ internal sealed partial class FortMapViewer
 
     /// <summary>
     /// 수동 토글·스크립트 안내·비실행 개발 뷰어의 정지 소유권을 독립 비트로 동기화한다.
-    /// F6 지식창/일반 도움말·미션 메뉴는 게임 시간을 계속 진행하며, 뒤의 안내창이 있으면 그 정지는 유지된다.
+    /// F6 지식창/일반 도움말·미션 메뉴는 별도 정지를 잡지 않는다. 기존 안내 정지는 닫힌 뒤 7프레임까지 유지된다.
     /// </summary>
     /// <remarks>원본 정지 호출 004c2a56/004d82b5 및 docs/gameplay/dialog-pause.md.</remarks>
     private void SynchronizePauseReasons()
     {
         SessionPauseReason reasons = SessionPauseReason.None;
         if (_simulationPaused) reasons |= SessionPauseReason.Manual;
-        if (TutorialDialogOpen) reasons |= SessionPauseReason.ScriptDialog;
+        if (TutorialDialogOpen) _missionDialogFrames?.CapturePause();
+        if (_missionDialogFrames?.OwnsPause == true || _missionDialogFrames == null && TutorialDialogOpen)
+            reasons |= SessionPauseReason.ScriptDialog;
         if (_mission == null && !_placementMode && !_bridgeMode && !_session.CombatEnabled)
             reasons |= SessionPauseReason.ViewerIdle;
         _sessionFrameClock.SetPauseReasons(reasons, _readFrameMilliseconds());
+        _session.TutorialFrameLocked = _missionDialogFrames?.BriefingPending == true || _sessionFrameClock.IsPaused;
     }
 
     /// <summary>

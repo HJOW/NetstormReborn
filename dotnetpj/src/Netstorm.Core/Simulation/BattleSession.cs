@@ -85,6 +85,12 @@ public sealed partial class BattleSession
     public bool RunsTutorial { get; set; } = true;
 
     /// <summary>
+    /// 실제 화면의 초기 안내 잠금 또는 게임 시계 정지가 튜토리얼 단계 변경을 막는지.
+    /// 기존 RunsTutorial 설정과 독립적이며, 헤드리스 호출은 기본 false로 기존 명시적 진행을 유지한다.
+    /// </summary>
+    public bool TutorialFrameLocked { get; set; }
+
+    /// <summary>
     /// 회수 금지 (원본 전역 DAT_00595078). 미션 머리 denySalvage 로 시작하고, 켜져 있으면 회수 명령은 실행되지 않고
     /// 미션 스크립트의 "DenySalvage" 섹션을 알리는 것으로 끝난다 (Salvage 실행 함수 0044c420 · 메뉴 항목 0044ca00).
     /// 튜토리얼 2 는 1 로 시작해 단계 H 에서 0 으로 바꾼다.
@@ -338,7 +344,7 @@ public sealed partial class BattleSession
         if (_commands.Count == 0) return;
         int firstEvent = _events.Count;
         ExecuteQueuedCommands();
-        if (Tutorial != null && RunsTutorial)
+        if (Tutorial != null && RunsTutorial && !TutorialFrameLocked)
             Tutorial.Update(this, _events.Skip(firstEvent).ToArray());
         UpdateMissionEvents();
     }
@@ -379,7 +385,7 @@ public sealed partial class BattleSession
         CompleteConstructions();
         UpdateCombat();
         UpdateSacrifices();
-        if (Tutorial != null && RunsTutorial)
+        if (Tutorial != null && RunsTutorial && !TutorialFrameLocked)
         {
             // 이번 틱에 일어난 이벤트(명령 결과·완공)를 보고 단계를 처리한다
             Tutorial.Update(this, [.. _events.Where(e => e.Tick == Tick)]);
@@ -538,6 +544,8 @@ public sealed partial class BattleSession
         // 튜토리얼 단계와 타이머도 상태다
         hash.Add(Tutorial?.Stage ?? '\0');
         hash.Add(Tutorial?.TimerTick ?? 0);
+        // 화면의 초기 안내/정지 잠금도 다음 튜토리얼 단계 판정 가능 여부를 바꾸는 상태다.
+        hash.Add(TutorialFrameLocked ? 1 : 0);
         // 플레이어 상태: Storm Power, 다리 칸, 집은 조각, 재충전 예약(이름 순)
         foreach (PlayerState player in _players.Values)
         {
