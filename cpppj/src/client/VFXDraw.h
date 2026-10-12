@@ -41,6 +41,9 @@ public:
     std::span<const ShapeBlock> Blocks() const;
     // 일반 VFX 파일과 달리 _shapes.shp에 들어 있는 Squid의 추가 헤더를 읽는다.
     SquidFrameMetrics SquidMetrics(std::size_t block,std::size_t frame) const;
+    // VFX 프레임 앞의 원본 36바이트를 복사한다. Markup의 두 추가 WORD도 정규화 없이 보존한다.
+    // 추가 헤더가 없는 순수 VFX/글꼴 프레임은 기존 메타데이터 조회와 같은 범위 오류로 거부한다.
+    std::array<std::uint8_t,36> SquidHeader(std::size_t block,std::size_t frame) const;
     // RLE를 풀되 투명 픽셀과 팔레트 번호를 각각 보존한다.
     IndexedImage Decode(std::size_t block, std::size_t frame) const;
 private:

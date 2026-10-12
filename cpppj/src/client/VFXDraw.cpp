@@ -108,6 +108,17 @@ SquidFrameMetrics ShapeDatabase::SquidMetrics(std::size_t block,std::size_t fram
         std::bit_cast<float>(U32(bytes_,offset-prefix+8)),std::bit_cast<float>(U32(bytes_,offset-prefix+12))};
 }
 
+// 해석하지 않은 메타 필드도 그림 조각의 원본 헤더 조회에 공급한다.
+std::array<std::uint8_t,36> ShapeDatabase::SquidHeader(std::size_t block,std::size_t frame) const {
+    // 원본 Squid 메타데이터의 바이트 수다. VFX 프레임 헤더 크기와 구분한다.
+    constexpr std::size_t prefix=36;
+    const auto offset=blocks_.at(block).frames.at(frame).offset;
+    if (offset<headerEnd_ || offset-headerEnd_<prefix) throw std::runtime_error("Squid SHP 추가 헤더가 없습니다");
+    std::array<std::uint8_t,prefix> result;
+    std::copy_n(bytes_.begin()+offset-prefix,prefix,result.begin());
+    return result;
+}
+
 // 원본의 0=행 끝, 1=투명 건너뛰기, 홀수=직접 복사, 짝수=반복 복사를 구현한다.
 IndexedImage ShapeDatabase::Decode(std::size_t blockIndex, std::size_t frameIndex) const {
     const auto& frame = blocks_.at(blockIndex).frames.at(frameIndex);

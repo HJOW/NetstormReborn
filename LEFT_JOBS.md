@@ -1,5 +1,14 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-12 최신 cpppj: Markup 그림 조각·SHP·StyleText 체인 연결 구현 (`HJOW-Athlon`)
+
+- [x] AGENTS.md·두 LEFT_JOBS 확인, 현재 PC/IP **HJOW-Athlon / 192.168.0.94**와 같은 PC의 정밀 디컴파일 기록 확인. 두 정밀 프로젝트에서 함수 **14/15개**를 읽기 전용으로 내보냈다. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-12.** [상세 기록](docs/exe/cpp-markup-picture.md).
+- [x] `Markup`/그림 파생 저장소로 생성·현재 SHP/기준점 조회·하위 WORD 보정·색 BYTE·상자 맞춤·기준선/크기·원색/치환/16.16 배율 출력 요청·복제·Base 전환을 구현했다. 패치의 세로 비율 float32 저장과 CD의 unordered/NaN 저장·동률 축 선택 차이를 유지한다. 색 설치 후 현재 frame은 다시 읽으며 이미 계산한 위치/배율과 SHP는 보존한다.
+- [x] `RegisterStyleTextFragment`로 공통 등록을 공유하고 `BindMarkup`으로 기존 StyleText 측정/출력/scalar 반납에 그림을 연결했다. 문자열/그림 소멸 후 `Base`의 빈 메트릭/측정/출력과 파생 저장소 반납을 추가했다. 그림 복제는 배율/색 치환을 1/0으로 다시 만들며 SHP를 소유하지 않는다.
+- [x] `SquidHeader`로 원본 추가 헤더 36바이트를 보존하고 `MarkupAssets`로 실제 타입 수/논리 프레임/기준점/SHP를 공급했다. `MarkupPixelTarget`은 일반 원색/색 치환 그림을 기존 현재 클립/표면/공유 VFX 표에 연결한다. **확대/축소 픽셀 커널·그림 변환 표 공급·대괄호 파서는 명시 경계/후속**이다.
+- [x] 게임 라이브러리/`NetstormCpp` **Release 빌드 경고 0·오류 0**. SOURCE_MAP 생성 갱신. **새 테스트 추가/실행·전체 CTest·독립 원본 동작 대조·GUI 실행은 미수행**이다. 원본 관찰 **523,634개**, C++ 대조 **523,374개**, **854개 통과**는 앞 단계 기록이다. 자료: `recovery-markup-evidence.json`, `tools/analyze_markup.py`, `extracted/markup/`. 원본 SHA 불변, AGENTS.md/보호 원본/dotnetpj 변경·커밋/푸시 없음.
+- [ ] **다음:** 이번 그림/공통 소멸·StyleText/메뉴와 기존 260개 레이아웃 자료의 독립 동작 대조; 원본 그림 색 표 공급/확대·축소 VFX 커널·대괄호 옵션/그림 파서·다중 줄 버퍼/줄바꿈/스크롤·TextGump/Form·메뉴 생성/장식/제목/소멸·Attach 보정·입력/통지 → OS 큐/폴링·overlay·Client 자동 UI 프레임. 기존 돌 버튼/배경/도움말 전체 원본 대조도 남았다. **기존 Client/UberGump 메뉴 어댑터와 raw 자동 GUI/건설·미션 완주 미완료 상태는 그대로다.**
+
 ## 2026-10-12 최신 cpppj: StyleText 문자열 조각·짧은 명령·메뉴 측정/출력 연결 구현 (`HJOW-Athlon`)
 
 - [x] AGENTS.md·두 LEFT_JOBS 확인, 현재 PC/IP **HJOW-Athlon / 192.168.0.94**와 같은 PC의 마지막 정밀 디컴파일 기록 확인. 두 정밀 프로젝트에서 함수 **16/16개**를 읽기 전용으로 내보냈다. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-12.** [상세 기록](docs/exe/cpp-style-text-fragments.md).
@@ -7,7 +16,7 @@
 - [x] 원본 짧은 `~` 색/폰트/스타일·그림자·초기 문맥 복귀·리터럴 명령과 마지막 빈 조각을 구현했다. CD에는 없는 S/U·a/d/p/s/u 명령을 리터럴로 처리한다. `BindStyleTextPalette`는 기존 실제 색 표를 공급한다. **대괄호 옵션/그림 내부와 그림 파생 조각은 명시 외부 경계**다.
 - [x] 두 번 순회하는 기준선 정렬/폭·높이 측정/출력과 override 시 저장 font 유지, DWORD 감김·출력 겹침·패치/CD head/next 조회 순서를 정적으로 복원했다. `GumpText::Metrics`로 캐시 높이/상승/하강을 추가하고 `BindStyleTextFonts`로 실제 FontStore/글리프 출력을 연결했다. `BindMenuLayoutStyleText`는 같은 메뉴 항목 head의 Clear/Parse/전체 측정을 공급한다.
 - [x] 게임 라이브러리/`NetstormCpp` **Release 빌드 경고 0·오류 0**. SOURCE_MAP 생성 갱신. **새 테스트 추가/실행·전체 CTest·독립 PE 동작 대조·GUI 실행은 미수행**이다. 원본 관찰 **523,634개**, C++ 대조 **523,374개**, **854개 통과**는 앞 단계 기록이며 이번 변경의 검증 결과가 아니다. 자료: `recovery-styletext-evidence.json`, `tools/analyze_styletext.py`, `extracted/styletext/`. 원본 SHA 불변, AGENTS.md/보호 원본/dotnetpj 변경·커밋/푸시 없음.
-- [ ] **다음:** 이번 StyleText/메뉴 연결과 기존 260개 레이아웃 자료의 C++/독립 동작 대조; 대괄호 옵션/그림 조각·다중 줄 버퍼/줄바꿈/스크롤·TextGump/Form·MenuGump 가변 인자 생성/장식/제목/소멸·Attach 보정·입력/통지 → OS 큐/폴링·overlay·Client 자동 UI 프레임. 돌 버튼/배경/도움말 전체 원본 대조도 남았다. **기존 Client/UberGump 메뉴 어댑터, raw 메뉴 자동 GUI 연결·건설/미션 완주 미완료 상태는 그대로다.**
+- [x] **그림 조각/SHP/측정·출력 분배/소멸은 위 후속에서 구현했다.** 독립 동작 대조·확대/축소 픽셀/변환 표·대괄호 옵션·다중 줄·메뉴 생성/입력·자동 UI와 기존 돌 버튼/배경/도움말 원본 대조는 위 최신 미완료 목록을 따른다. **기존 Client/UberGump 메뉴 어댑터와 raw 메뉴 자동 GUI·건설/미션 완주 미완료 상태는 그대로다.**
 
 ## 2026-10-12 최신 cpppj: MenuGump 항목 작성·글자 측정·전체 레이아웃 구현 (`HJOW-Athlon`)
 

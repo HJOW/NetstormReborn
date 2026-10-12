@@ -39,6 +39,17 @@ constexpr std::array<NamedCommandColor,11> kNamedColors{{
 }};
 }
 
+// 외부 파생 조각도 문자열과 같은 소유 표에 등록한다. 반납한 토큰은 자동으로 재사용하지 않는다.
+std::uint32_t RegisterStyleTextFragment(StyleTextState& state,StyleTextFragment fragment) {
+    auto token=state.nextToken;
+    // 호출자가 먼저 등록한 토큰은 덮어쓰지 않고 다음 빈 토큰을 사용한다.
+    while (token && state.fragments.contains(token)) token=token==kDwordMaximum ? 0 : token+1;
+    if (!token) throw std::length_error("StyleText 자동 토큰 발급 소진");
+    state.fragments.emplace(token,std::move(fragment));
+    state.nextToken=token==kDwordMaximum ? 0 : token+1;
+    return token;
+}
+
 // 경계는 실제 도달 시 확인한다. 파싱/연결만 수행하는 처리기에는 글꼴/출력이 없어도 된다.
 StyleText::StyleText(StyleTextState& state,StyleTextHooks hooks,o::OriginalEdition edition)
     :state_(state),hooks_(std::move(hooks)),edition_(edition) {}
@@ -64,13 +75,7 @@ std::uint32_t StyleText::NewText(std::span<const char> text,const std::array<std
     fragment.context=context;
     fragment.text.assign(text.begin(),text.begin()+count);
     fragment.text.push_back('\0');
-    auto token=state_.nextToken;
-    // 외부 파생 조각이 먼저 등록한 토큰은 덮어쓰지 않고 다음 빈 토큰을 사용한다.
-    while (token && state_.fragments.contains(token)) token=token==kDwordMaximum ? 0 : token+1;
-    if (!token) throw std::length_error("StyleText 자동 토큰 발급 소진");
-    state_.fragments.emplace(token,std::move(fragment));
-    state_.nextToken=token==kDwordMaximum ? 0 : token+1;
-    return token;
+    return RegisterStyleTextFragment(state_,std::move(fragment));
 }
 
 // 원본 호출 인자 push 0→push [+8]을 유지한다. +8을 문자열 길이와 무관한 ID로 추정하지 않는다.
@@ -114,7 +119,8 @@ void StyleText::Destroy(std::uint32_t token,std::uint8_t flags) const {
     if (fragment.kind==StyleTextFragmentKind::Text) {
         std::vector<char>{}.swap(fragment.text);
         fragment.next=0;
-    } else {
+        fragment.kind=StyleTextFragmentKind::Base;
+    } else if (fragment.kind==StyleTextFragmentKind::External) {
         if (!hooks_.externalDestroy) throw std::invalid_argument("StyleText 파생 삭제 경계 필요");
         hooks_.externalDestroy(token,flags);
     }
@@ -141,6 +147,7 @@ void StyleText::Clear(std::uint32_t& head) const {
 // 첫 두 메트릭만 배치에 쓰고 하강 값은 원본 wrapper처럼 별도 임시 출력으로 버린다.
 std::array<std::int32_t,2> StyleText::Baseline(std::uint32_t token) const {
     const auto& fragment=Node(token);
+    if (fragment.kind==StyleTextFragmentKind::Base) return {};
     if (fragment.kind==StyleTextFragmentKind::External) {
         if (!hooks_.externalMetrics) throw std::invalid_argument("StyleText 파생 메트릭 경계 필요");
         return hooks_.externalMetrics(token);
@@ -153,6 +160,7 @@ std::array<std::int32_t,2> StyleText::Baseline(std::uint32_t token) const {
 // 측정은 저장 문맥을 사용한다. 출력 override 문맥으로 크기를 계산하지 않는다.
 std::array<std::int32_t,2> StyleText::MeasureFragment(std::uint32_t token) const {
     const auto& fragment=Node(token);
+    if (fragment.kind==StyleTextFragmentKind::Base) return {};
     if (fragment.kind==StyleTextFragmentKind::External) {
         if (!hooks_.externalMeasure) throw std::invalid_argument("StyleText 파생 측정 경계 필요");
         return hooks_.externalMeasure(token);
@@ -166,6 +174,7 @@ std::array<std::int32_t,2> StyleText::MeasureFragment(std::uint32_t token) const
 // override의 색/스타일/그림자 등은 사용하지만 폰트 슬롯은 원본 조각의 것을 유지한다.
 void StyleText::DrawFragment(std::uint32_t token,ScreenPoint position,const std::array<std::uint32_t,8>* overrideContext) const {
     const auto& fragment=Node(token);
+    if (fragment.kind==StyleTextFragmentKind::Base) return;
     if (fragment.kind==StyleTextFragmentKind::External) {
         if (!hooks_.externalDraw) throw std::invalid_argument("StyleText 파생 출력 경계 필요");
         hooks_.externalDraw(token,position,overrideContext);

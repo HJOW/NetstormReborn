@@ -7,8 +7,8 @@
 #include <vector>
 
 namespace netstorm::client {
-// Text는 이 처리기가 소유하는 0x30 문자열 조각이다. External은 그림 등 별도 파생 조각의 가상 경계다.
-enum class StyleTextFragmentKind { Text, External };
+// Text는 소유 문자열, External은 그림 등 파생 조각, Base는 소멸 후 기본 가상 표의 빈 동작이다.
+enum class StyleTextFragmentKind { Text, External, Base };
 // 원본 +4 next/+8 용도 미확정 DWORD/+c NUL 문자열/+10 문맥이다. 호스트 배치는 원본 주소와 무관하다.
 struct StyleTextFragment {
     StyleTextFragmentKind kind{StyleTextFragmentKind::Text};
@@ -22,6 +22,8 @@ struct StyleTextState {
     std::map<std::uint32_t,StyleTextFragment> fragments;
     std::uint32_t nextToken{1};
 };
+// 문자열/그림이 같은 자동 토큰과 안정된 조각 표를 사용하도록 등록한다. null 토큰과 덮어쓰기를 피한다.
+std::uint32_t RegisterStyleTextFragment(StyleTextState& state,StyleTextFragment fragment);
 // 문자열 경계는 입력 text/context를 변경하지 않는다. 파생 경계는 현재 head/next를 바꿀 수 있다.
 // metrics는 캐시 높이/상승/하강이고 measure는 signed 폭/높이다. release는 scalar 반납 직전 통지다.
 struct StyleTextHooks {
