@@ -38,7 +38,7 @@
 
 ## 스크롤과 출력
 
-`SetScroll`은 현재 내용 높이와 `max(baseHeight,0)`의 CRT 절삭 값으로 요청을 제한하고 scroll을 저장한다. 이어 slider의 **range(0,content) → page(viewport) → position(현재 scroll)**을 호출한다. 각 호출 직전에 현재 slider 토큰을 읽으며 마지막에도 현재 slider 위치를 다시 조회해 scroll에 쓴다. 이 세 실제 Slider 함수 몸체는 아직 복원하지 않았고 필수 공급 경계로 둔다.
+`SetScroll`은 현재 내용 높이와 `max(baseHeight,0)`의 CRT 절삭 값으로 요청을 제한하고 scroll을 저장한다. 이어 slider의 **range(0,content) → page(viewport) → position(현재 scroll)**을 호출한다. 각 호출 직전에 현재 slider 토큰을 읽으며 마지막에도 현재 slider 위치를 다시 조회해 scroll에 쓴다. 이 세 실제 Slider 몸체·자식 Attach/손잡이 입력과 `BindScrollingTextSlider` 공급 연결은 [2026-10-13 후속](cpp-scroll-gump-state.md)에서 구현했다. 전체 Slider 생성/Draw는 후속이다.
 
 절대/상대 요청과 맨 아래 요청은 재그리기를 통지하며 `Draw`의 `ProcessRequest`에서 적용한다. -1은 무동작, -2는 맨 아래다. 처리 콜백이 다른 요청을 써도 정상 반환 뒤 요청을 -1로 덮는다. **맨 아래 이동 함수는 extra 인자를 읽지 않는다.** 실제 명령은 전체 높이-기본 높이만 절삭한다. extra 필드의 저장과 전달은 유지한다. 맨 아래 판정은 **전체 높이-기본 높이-10 <= scroll**이며 두 판본 모두 NaN이면 false다.
 
@@ -58,6 +58,6 @@ viewport 비교는 정수를 float32로 좁히지 않는 실제 x87 FILD 결과�
 
 자료: `tools/ghidra/textgump-functions.json`, `tools/analyze_textgump.py`, `cpppj/recovery-textgump-evidence.json`, `extracted/textgump/`, `extracted/textgump-build.log`. 정적 보고서는 두 PE의 실제 함수/명령/가상 표/초기 정렬·ROM 상수와 현재 구현 해시를 저장한다.
 
-후속은 이번 텍스트 표시/스크롤/선택과 앞선 버퍼/파서/VFX/메뉴의 독립 원본/C++ 대조, 다중 줄 전체 생성/소멸·Slider·가상 Attach/Input·W 명령/전체 스타일 파서·메뉴/Form 생성/제목·자동 raw Client UI다. **Client/UberGump는 기존 메뉴 어댑터이며 raw 자동 GUI와 건설·미션 완주는 미완료다.** 일반 double 중간값 복원과 극단 x87 80비트 입력의 차이는 아직 독립 대조하지 않았다.
+후속은 이번 텍스트 표시/스크롤/선택과 앞선 버퍼/파서/VFX/메뉴의 독립 원본/C++ 대조, 다중 줄 전체 생성/소멸·Slider/화살표/손잡이 전체 생성/Draw·가상 Attach/Input·W 명령/전체 스타일 파서·메뉴/Form 생성/제목·자동 raw Client UI다. **Client/UberGump는 기존 메뉴 어댑터이며 raw 자동 GUI와 건설·미션 완주는 미완료다.** 일반 double 중간값 복원과 극단 x87 80비트 입력의 차이는 아직 독립 대조하지 않았다.
 
 두 보호 PE SHA는 기존 기록과 같다. AGENTS.md·보호 원본·dotnetpj 변경, 커밋/푸시 없음.

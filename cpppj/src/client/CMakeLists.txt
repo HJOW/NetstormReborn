@@ -46,6 +46,7 @@ target_sources(netstorm PRIVATE
     StyleTextMarkup.cpp StyleTextMarkup.h
     StyleTextBuffer.cpp StyleTextBuffer.h
     TextGump.cpp TextGump.h
+    ScrollGump.cpp ScrollGump.h
     Markup.cpp Markup.h
     TileGroupCollection.cpp TileGroupCollection.h
     ObjectCollection.cpp ObjectCollection.h
