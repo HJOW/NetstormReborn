@@ -24,6 +24,9 @@ public:
     // 비어 있는 슬롯/스타일 표는 폭 0이며, 범위 밖 슬롯이나 부족한 문자열 범위는 예외로 거부한다.
     void Measure(std::span<const char> bytes,const GumpTextContext& context,std::int32_t& width,
         std::int32_t& height,std::int32_t length=-1) const;
+    // 004a3ed0/CD 00426060: 선택 캐시의 높이/상승/하강 DWORD를 반환한다. 그림자 여백과 논리 슬롯 높이는 더하지 않는다.
+    // 잘못된 스타일은 normal 슬롯 0 메트릭을 사용하며 비어 있는 조합은 세 값이 0이다.
+    std::array<std::int32_t,3> Metrics(const GumpTextContext& context) const;
 private:
     FontStore& fonts_;
     o::OriginalEdition edition_;

@@ -60,6 +60,18 @@ void GumpText::Measure(std::span<const char> bytes,const GumpTextContext& contex
     }
     MeasureGumpText(bytes,widths,logicalHeight,context,width,height,length,edition_);
 }
+// 원본 캐시 메트릭은 첫 폭 표 측정의 논리 높이와 다르다. 불법 스타일의 기본 슬롯도 독립 선택한다.
+std::array<std::int32_t,3> GumpText::Metrics(const GumpTextContext& context) const {
+    const auto maximum=edition_==o::OriginalEdition::Patch1078 ? 4U : 2U;
+    const bool legal=context.style<=maximum;
+    const auto slot=legal ? std::bit_cast<std::int32_t>(context.font) : 0;
+    FontStore::LogicalHeight(slot);
+    const auto style=legal ? static_cast<FontStyle>(context.style) : FontStyle::Normal;
+    const bool cdEmpty=edition_!=o::OriginalEdition::Patch1078 && slot==6 && style==FontStyle::Bold;
+    if (!FontStore::Available(slot,style) || cdEmpty) return {};
+    const auto& font=fonts_.Get(slot,style);
+    return {font.Height(),font.Ascent(),font.Descent()};
+}
 // 기본 문맥을 명시 입력으로 전달하므로 저장된 정상/눌림/비활성 Draw 문맥과 혼동하지 않는다.
 void BindStoneButtonText(StoneButtonGumpHooks& hooks,const GumpText& text) {
     hooks.measure=[&text](std::uint32_t,const std::array<char,64>& label,const std::array<std::uint32_t,8>& context,

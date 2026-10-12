@@ -41,6 +41,7 @@ target_sources(netstorm PRIVATE
     GumpTextDraw.cpp GumpTextDraw.h
     MenuGump.cpp MenuGump.h
     MenuGumpLayout.cpp MenuGumpLayout.h
+    StyleText.cpp StyleText.h
     TileGroupCollection.cpp TileGroupCollection.h
     ObjectCollection.cpp ObjectCollection.h
     PreviewCollection.cpp PreviewCollection.h

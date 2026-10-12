@@ -1,5 +1,14 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-12 최신 cpppj: StyleText 문자열 조각·짧은 명령·메뉴 측정/출력 연결 구현 (`HJOW-Athlon`)
+
+- [x] AGENTS.md·두 LEFT_JOBS 확인, 현재 PC/IP **HJOW-Athlon / 192.168.0.94**와 같은 PC의 마지막 정밀 디컴파일 기록 확인. 두 정밀 프로젝트에서 함수 **16/16개**를 읽기 전용으로 내보냈다. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-12.** [상세 기록](docs/exe/cpp-style-text-fragments.md).
+- [x] `StyleTextState`/`StyleTextFragment`/`StyleText`로 NUL 문자열 복사·소멸/scalar 반납·원본 +8 DWORD를 길이로 넘기는 복제 호출·단일 Append/전체 Transfer/Clear를 구현했다. 삭제 전 next 저장, 콜백 후 현재 next/head 조회, 호스트 토큰/안정된 저장소와 원본 배열 범위 밖/순환/자기 이전 거부를 구분한다.
+- [x] 원본 짧은 `~` 색/폰트/스타일·그림자·초기 문맥 복귀·리터럴 명령과 마지막 빈 조각을 구현했다. CD에는 없는 S/U·a/d/p/s/u 명령을 리터럴로 처리한다. `BindStyleTextPalette`는 기존 실제 색 표를 공급한다. **대괄호 옵션/그림 내부와 그림 파생 조각은 명시 외부 경계**다.
+- [x] 두 번 순회하는 기준선 정렬/폭·높이 측정/출력과 override 시 저장 font 유지, DWORD 감김·출력 겹침·패치/CD head/next 조회 순서를 정적으로 복원했다. `GumpText::Metrics`로 캐시 높이/상승/하강을 추가하고 `BindStyleTextFonts`로 실제 FontStore/글리프 출력을 연결했다. `BindMenuLayoutStyleText`는 같은 메뉴 항목 head의 Clear/Parse/전체 측정을 공급한다.
+- [x] 게임 라이브러리/`NetstormCpp` **Release 빌드 경고 0·오류 0**. SOURCE_MAP 생성 갱신. **새 테스트 추가/실행·전체 CTest·독립 PE 동작 대조·GUI 실행은 미수행**이다. 원본 관찰 **523,634개**, C++ 대조 **523,374개**, **854개 통과**는 앞 단계 기록이며 이번 변경의 검증 결과가 아니다. 자료: `recovery-styletext-evidence.json`, `tools/analyze_styletext.py`, `extracted/styletext/`. 원본 SHA 불변, AGENTS.md/보호 원본/dotnetpj 변경·커밋/푸시 없음.
+- [ ] **다음:** 이번 StyleText/메뉴 연결과 기존 260개 레이아웃 자료의 C++/독립 동작 대조; 대괄호 옵션/그림 조각·다중 줄 버퍼/줄바꿈/스크롤·TextGump/Form·MenuGump 가변 인자 생성/장식/제목/소멸·Attach 보정·입력/통지 → OS 큐/폴링·overlay·Client 자동 UI 프레임. 돌 버튼/배경/도움말 전체 원본 대조도 남았다. **기존 Client/UberGump 메뉴 어댑터, raw 메뉴 자동 GUI 연결·건설/미션 완주 미완료 상태는 그대로다.**
+
 ## 2026-10-12 최신 cpppj: MenuGump 항목 작성·글자 측정·전체 레이아웃 구현 (`HJOW-Athlon`)
 
 - [x] AGENTS.md·두 LEFT_JOBS 확인, 현재 PC/IP **HJOW-Athlon / 192.168.0.94**와 같은 PC의 정밀 디컴파일 기록 확인. 두 정밀 프로젝트에서 함수 **9/9개**를 읽기 전용으로 내보냈다. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-12.** [상세 기록](docs/exe/cpp-menu-gump-layout.md).
@@ -7,7 +16,7 @@
 - [x] 세로 최대 폭/높이 합계·누적 offset, 가로 DWORD 감김 폭/공통 높이·offset 0, 제목 Push/Fit/Layout/Attach와 기존 `MenuGump` 크기를 연결했다. `BindMenuLayoutText`로 실제 `GumpText`/`FontStore`의 라벨/`" >"` 측정을 공급한다. StyleText 소유/파싱/측정과 제목 Fit/Layout 내부는 명시 외부 경계다.
 - [x] 두 원본 PE **각 130개·새 원본 관찰 260개**, 두 x87 정상 반환 **548회**를 분석 자료로 저장했다. 실제 메뉴/CRT/strncpy/기본 측정 위임을 격리 실행하고 전체 출력·콜백 당시 CRC/인자·ABI/허용 범위/입력 보호를 기록했다. 자료: `recovery-menulayout-observations.tsv`, `recovery-menulayout-evidence.json`, `tools/ghidra/menulayout-functions.json`, `extracted/menulayout/`.
 - [x] 게임 라이브러리/`NetstormCpp` **Release 빌드 경고 0·오류 0**. **이번 C++ 테스트 추가/실행·전체 CTest·GUI 실행은 미수행**이다. 원본 관찰 누적 **523,634개**; C++ 대조 누적 **523,374개**와 **854개 통과**는 앞 단계 기록이다. 원본 SHA 불변·AGENTS.md/보호 원본/dotnetpj 변경 및 커밋/푸시 없음.
-- [ ] **다음:** 이번 260개 원본 자료의 C++ 재생 대조; MenuGump/Form 가변 인자 생성·StyleText 내부/출력·장식/제목 생성·소멸자·가상 Attach 보정·입력/통지 처리기 → OS 큐/폴링·overlay·Client 자동 UI 프레임. 돌 버튼 전체 생성/부착/소멸자·배경 생성·기본 도움말 전체 독립 PE 대조도 남았다. **Client/UberGump의 기존 메뉴 어댑터, 새 raw 메뉴 자동 GUI 연결과 건설/미션 완주 미완료 상태는 그대로다.** 아래는 앞 단계 기록이다.
+- [x] **StyleText 문자열 조각/짧은 명령/측정·출력 연결은 위 후속에서 구현했다.** 대괄호 옵션/그림·다중 줄·메뉴 생성/입력·원본/C++ 동작 대조·자동 GUI 연결은 위 최신 미완료 목록을 따른다. **Client/UberGump의 기존 메뉴 어댑터, raw 메뉴 자동 GUI 연결·건설/미션 완주 미완료 상태는 그대로다.** 아래는 앞 단계 기록이다.
 
 ## 2026-10-12 최신 cpppj: MenuGump 크기·확장 idle·controlled 메뉴 스택 복원 완료 (`HJOW-Athlon`)
 
