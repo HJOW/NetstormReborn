@@ -6,7 +6,7 @@ namespace Netstorm.Game;
 /// 세션 사건과 화면 조작을 원본 효과음 이름으로 바꿔 모아 둔다. 실제 재생은 게임 본체의 <see cref="AudioPlayer"/> 가 한다.
 /// 사건 ↔ 파일 대응은 exe 의 효과음 호출 위치로 정했다 (docs/exe/music.md 7절):
 /// 다리 칸 제거 FUN_00422300 → bridgeFall.wav, 붕괴 구동 FUN_004227e0 → bridgeCrack.wav,
-/// TEST02 원본 녹음: 건물 완공은 타입의 buildDoneSound만 (템플 templeComplete.wav · 워크샵 workshopComplete.wav),
+/// TEST02 원본 녹음: 건물 완공은 타입의 buildDoneSound만 (신전 templeComplete.wav · 워크샾 workshopComplete.wav),
 /// 조각 회전 FUN_00446a70 → rotatePiece.wav, 조각 놓기(FUN_004473e0 등) → dropPiece.wav, 창 열기 → openGump.wav.
 /// 원본은 위치에 따라 좌우·크기를 바꾸는 효과음이 있으나 클론은 아직 화면 위치를 반영하지 않는다.
 /// </summary>
@@ -107,7 +107,7 @@ internal sealed partial class FortMapViewer
                 break;
             case SessionEventKind.SacrificeStarted:
             case SessionEventKind.SacrificeResumed:
-                // 내 제단 의식이 시작되거나 사제가 돌아와 재개되면 희생 음악을 요청한다 (같은 곡이 재생 중이면 무시된다).
+                // 내 알타 의식이 시작되거나 사제가 돌아와 재개되면 희생 음악을 요청한다 (같은 곡이 재생 중이면 무시된다).
                 // 2026-10-01 캠페인 1-2 녹화: 사제 복귀(18:28.2 priestMove3) 직후 18:28.8 에 thu22 를 끊고 sacrifice.mus 가 시작됐다.
                 if (sessionEvent.Player == TestPlayer)
                 {
@@ -136,19 +136,19 @@ internal sealed partial class FortMapViewer
                 QueueSound("priestFall.wav");
                 break;
             case SessionEventKind.PriestReleased:
-                // 운반체 내려놓기·판매, 제단 판매로 포로가 풀릴 때 (1-2 11:06.7·11:34.2·14:41.2·16:49.3)
+                // 운반체 내려놓기·판매, 알타 판매로 포로가 풀릴 때 (1-2 11:06.7·11:34.2·14:41.2·16:49.3)
                 QueueSound("priestFree.wav");
                 break;
             case SessionEventKind.PriestBound:
-                // 포로를 제단에 묶을 때 (1-2 15:16.3·17:36.5, 1-1 12:11.7)
+                // 포로를 알타에 묶을 때 (1-2 15:16.3·17:36.5, 1-1 12:11.7)
                 QueueSound("priestStruggleFade02-800.wav");
                 break;
             case SessionEventKind.Salvaged:
-                // 오브젝트를 판매(회수)할 때 해체 소리 (1-2 11:34.2 골렘·14:41.2·16:49.3 제단, exe FUN_0044b4b0)
+                // 오브젝트를 판매(회수)할 때 해체 소리 (1-2 11:34.2 골렘·14:41.2·16:49.3 알타, exe FUN_0044b4b0)
                 QueueSound("collapse.wav");
                 break;
             case SessionEventKind.WorkshopUpgraded:
-                // 워크샵 업그레이드 완료 (1-1 01:38.1, 1-2 01:44.4·08:39.2, exe FUN_004545e0)
+                // 워크샾 업그레이드 완료 (1-1 01:38.1, 1-2 01:44.4·08:39.2, exe FUN_004545e0)
                 QueueSound("upgradeComplete.wav");
                 break;
         }

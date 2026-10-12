@@ -2,15 +2,15 @@
 
 2026-10-09. **마지막 디컴파일 수행 PC: `HJOW-Athlon`, 2026-10-09.** AGENTS.md·두 인계 문서·cpppj 내부 문서를 읽고 현재/마지막 호스트 일치를 확인했다. 새 `canonpermission` 목록을 같은 PC에서 읽기 전용으로 내보냈다(10.78 3개·CD/추가 10.37 각각 2개). 원본 게임/복사본·클론 창·OS 호출은 실행하지 않았다.
 
-[`RawCanonPlacementPermission`](../../cpppj/src/o/RawCanonPlacementPermission.h)은 그래프 준비 상태·요청 소유자·현재 raw 소유 관계를 검사하고, 조건을 통과한 후보의 Player 작업장·그래프 조회 결과 DWORD를 그대로 돌려준다. **Player 조회 몸체는 필수 외부 경계이며 전체 MayPlace의 복원 완료를 뜻하지 않는다.**
+[`RawCanonPlacementPermission`](../../cpppj/src/o/RawCanonPlacementPermission.h)은 그래프 준비 상태·요청 소유자·현재 raw 소유 관계를 검사하고, 조건을 통과한 후보의 Player 워크샾·그래프 조회 결과 DWORD를 그대로 돌려준다. **Player 조회 몸체는 필수 외부 경계이며 전체 MayPlace의 복원 완료를 뜻하지 않는다.**
 
-후속 [Player 작업장·그래프 기준점 조회](cpp-player-anchor-reconstruction.md)에서 이 필수 경계를 실제 조회 몸체로 채웠다. 아래 내용과 검사 수는 후보 권한 단계 당시의 기록이며 주변 권한·최종 관계·전체 MayPlace는 계속 후속이다.
+후속 [Player 워크샾·그래프 기준점 조회](cpp-player-anchor-reconstruction.md)에서 이 필수 경계를 실제 조회 몸체로 채웠다. 아래 내용과 검사 수는 후보 권한 단계 당시의 기록이며 주변 권한·최종 관계·전체 MayPlace는 계속 후속이다.
 
 | 함수/전역 | 10.78 | CD·추가 10.37 |
 |---|---|---|
 | 후보 권한 helper | `00462cb0` | `0045bae0` |
 | 방향 소유 관계 helper | `004629e0` | 후보 몸체에 인라인 |
-| Player 작업장·그래프 조회(명시 대체) | `0048fdb0` | `00406f80` |
+| Player 워크샾·그래프 조회(명시 대체) | `0048fdb0` | `00406f80` |
 | 그래프 준비 상태 | `00540414` | `005207f8` |
 | 편집기 / 동맹 사용 / 다른 소유자 허용 | `005c85a4` / `00540cb0` / `0059ab28` | `00518904` / `0050f824` / `0051cbf8` |
 | 방향 관계 DWORD 표 | `00595200` | `0050f6e0` |
@@ -29,7 +29,7 @@ Player 경계에는 요청 소유자 DWORD·현재 raw 타입 BYTE·좌표 float
 
 [`decomp_canonpermission_oracle.py`](../../tools/decomp_canonpermission_oracle.py)는 실제 PE의 후보 함수 전체를 정상 반환까지 실행한다. 10.78은 후보 **5,520개**와 별도 관계 **330개**, CD/추가 10.37은 후보 각각 **5,520개**, 총 **16,890개**다. 두 x87 정밀도 `0x027f/0x037f`의 모든 관찰이 일치한다. 조기 반환·큰 SID/요청 owner·방향 관계·중립/다른 소유자 허용·raw 타입 82/83/255·소수/부호 있는 0/NaN/최대 float·조회 반환 0/1/50/`0xffffffff`·조회 중 raw/편집기 변화를 포함한다. 기대 반환/사건을 Python/C++의 권한 규칙으로 계산하지 않는다.
 
-**Player 조회 진입에서만 인자 네 DWORD를 관찰한 뒤 지정 반환/변화를 명시 대체한다.** 그 몸체의 그래프 조회·최대 40개 작업장/후보 목록·선택/할당은 실행하지 않는다. 후보 helper의 실제 조기 분기와 관계 표 읽기·정상 반환·cdecl ESP/보존 레지스터·x87 상태는 검사한다. 실제 관계 주소가 표 밖인 입력만 제외하고 조기 반환에서 읽히지 않는 큰 SID/owner는 유지한다.
+**Player 조회 진입에서만 인자 네 DWORD를 관찰한 뒤 지정 반환/변화를 명시 대체한다.** 그 몸체의 그래프 조회·최대 40개 워크샾/후보 목록·선택/할당은 실행하지 않는다. 후보 helper의 실제 조기 분기와 관계 표 읽기·정상 반환·cdecl ESP/보존 레지스터·x87 상태는 검사한다. 실제 관계 주소가 표 밖인 입력만 제외하고 조기 반환에서 읽히지 않는 큰 SID/owner는 유지한다.
 
 각 판본 후보 진입 **11,040회**, 명시 Player 대체 **3,768회**, 패치 별도 관계 진입 **660회**를 감사한다(두 정밀도의 합계). Player 몸체의 native 호출은 0회다. 허용 코드/쓰기·반환 DWORD·콜백 인자/횟수·raw 전체·편집기·관계 표 checksum·assert/OS 0회·SHA/행/실제 진입 수를 [근거 JSON](../../cpppj/recovery-canonpermission-evidence.json)에 기록했다. 누적 독립 fixture 입력은 **328,123개**다. 기존 fixture/감사 도구는 수정하지 않았다.
 
@@ -37,7 +37,7 @@ Player 경계에는 요청 소유자 DWORD·현재 raw 타입 BYTE·좌표 float
 
 ## 다음 단계와 재현
 
-다음 작은 작업은 **Player 작업장·그래프 조회 `0048fdb0`/CD `00406f80`**, 실제 주변 권한 finder, 최종 표면 소유 관계·특수 지역·거부 조건이다. 이어 사제 Pop·보호막 생성/회복 예약·Carrier 상태 검사, raw GUI·건설·경제·전투·승패를 진행한다. 장시간 실제 자산 전체 합성·변이 전수·창/픽셀·최대 지도 회귀는 인계한다.
+다음 작은 작업은 **Player 워크샾·그래프 조회 `0048fdb0`/CD `00406f80`**, 실제 주변 권한 finder, 최종 표면 소유 관계·특수 지역·거부 조건이다. 이어 사제 Pop·보호막 생성/회복 예약·Carrier 상태 검사, raw GUI·건설·경제·전투·승패를 진행한다. 장시간 실제 자산 전체 합성·변이 전수·창/픽셀·최대 지도 회귀는 인계한다.
 
 ```powershell
 tools/ghidra/export_functions.ps1 -Name canonpermission

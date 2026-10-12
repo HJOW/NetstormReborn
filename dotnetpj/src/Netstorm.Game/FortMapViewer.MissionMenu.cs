@@ -109,7 +109,7 @@ internal sealed partial class FortMapViewer
         [
             new(Ui("건물 숨기기", "Hide buildings"), "F2", true, _hideBuildings, () => _hideBuildings = !_hideBuildings),
             new(Ui("섬 테마 숨기기/보이기", "Hide/Show Island Themes"), "Shift F3", true, _hideIslandThemes, () => _hideIslandThemes = !_hideIslandThemes),
-            new(Ui("본거지 템플 보기", "View Home Temple"), "F4", true, null, ViewHomeTemple),
+            new(Ui("본거지 신전 보기", "View Home Temple"), "F4", true, null, ViewHomeTemple),
             new(Ui("내 사제 보기", "View Your Priest"), "F5", true, null, CenterOnPriest),
             new(Ui("NetStorm 지식 보기", "View Netstorm Knowledge"), "F6", true, null, OpenKnowledge),
             new(Ui("섬 소유 표시 숨기기", "Hide Island Ownership"), "F7", true, !_islandColors, () => _islandColors = !_islandColors),
@@ -127,7 +127,7 @@ internal sealed partial class FortMapViewer
         if (_tutorialDialog?.Review() == true) ResetTutorialPage();
     }
 
-    /// <summary>F4/H 처럼 내 템플로 화면을 옮기고 귀환 명령을 낸다.</summary>
+    /// <summary>F4/H 처럼 내 신전로 화면을 옮기고 귀환 명령을 낸다.</summary>
     private void ViewHomeTemple()
     {
         GameEntity? temple = _session.Entities.FirstOrDefault(e => e.Owner == TestPlayer && e.Kind == ObjectKind.Temple);

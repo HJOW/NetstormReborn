@@ -119,7 +119,7 @@ internal sealed partial class FortMapViewer
         }
         if (!_playUi && Pressed(keyboard, Keys.T) && mouse.Y >= HeaderHeight)
         {
-            // 커서 칸에 오브젝트가 있으면 선택하고, 없으면 선택을 푼다 (튜토리얼 단계 C·F 가 선택한 템플을 본다)
+            // 커서 칸에 오브젝트가 있으면 선택하고, 없으면 선택을 푼다 (튜토리얼 단계 C·F 가 선택한 신전을 본다)
             (int selectX, int selectY) = CellAt(new Vector2(mouse.X, mouse.Y));
             SubmitCommand(new SelectEntityCommand(TestPlayer, _session.EntityAt(selectX, selectY)?.Id ?? 0));
         }
@@ -172,11 +172,11 @@ internal sealed partial class FortMapViewer
     /// <summary>
     /// 검증용 명령 스크립트 (--script): ';' 로 나눈 명령을 차례로 실행하고, 명령마다 세션이 알린 일을 콘솔에 출력한다.
     /// <list type="bullet">
-    /// <item><description><c>construct 타입 x,y</c> — 사제가 건물을 짓기 시작 · <c>place 타입 x,y</c> — 유닛 배치 · <c>register 타입</c> — 워크샵에 지식 등록 · <c>salvage x,y</c> — 그 칸의 내 오브젝트 회수</description></item>
+    /// <item><description><c>construct 타입 x,y</c> — 사제가 건물을 짓기 시작 · <c>place 타입 x,y</c> — 유닛 배치 · <c>register 타입</c> — 워크샾에 지식 등록 · <c>salvage x,y</c> — 그 칸의 내 오브젝트 회수</description></item>
     /// <item><description><c>wait 초</c> — 게임 시간을 진행 · <c>rules 0|1</c> — 생산 규칙 끄기/켜기</description></item>
-    /// <item><description><c>select x,y</c> — 그 칸의 오브젝트 선택 (없으면 선택 해제) · <c>select none</c> — 선택 해제 (튜토리얼 단계 C·F 는 선택한 템플을 본다)</description></item>
+    /// <item><description><c>select x,y</c> — 그 칸의 오브젝트 선택 (없으면 선택 해제) · <c>select none</c> — 선택 해제 (튜토리얼 단계 C·F 는 선택한 신전을 본다)</description></item>
     /// <item><description><c>harvest x,y</c> — 그 칸의 가이저로 사제를 보내 결정을 반복 수확한다 · <c>home</c> — F4 화면 복귀</description></item>
-    /// <item><description><c>capture tx,ty px,py [ax,ay]</c> — 수송 유닛을 사제에게 보내고 선택적으로 제단까지 운반 · <c>deliver tx,ty ax,ay</c> — 운반 사제를 제단에 묶기 · <c>altar ax,ay</c> — 내 사제를 제단으로 이동 · <c>drop tx,ty x,y</c> — 지정 칸에 사제 내려놓기</description></item>
+    /// <item><description><c>capture tx,ty px,py [ax,ay]</c> — 수송 유닛을 사제에게 보내고 선택적으로 알타까지 운반 · <c>deliver tx,ty ax,ay</c> — 운반 사제를 알타에 묶기 · <c>altar ax,ay</c> — 내 사제를 알타으로 이동 · <c>drop tx,ty x,y</c> — 지정 칸에 사제 내려놓기</description></item>
     /// <item><description>단계 처리가 없는 미션에서 손으로 재현: <c>allow 타입</c>·<c>deny 타입</c> — 기술 허용 표 변경, <c>denysalvage 0|1</c> — 회수 금지 변경. 튜토리얼 2 는 세션의 단계 처리(<c>TutorialStages</c>)가 자동으로 바꾼다 (docs/exe/mission-header-flags.md)</description></item>
     /// </list>
     /// </summary>
@@ -234,7 +234,7 @@ internal sealed partial class FortMapViewer
                     if (words.Length > 3)
                     {
                         (int ax, int ay) = ParseCell(Word(3));
-                        altarId = _session.EntityAt(ax, ay)?.Id ?? throw new ArgumentException("capture 제단 좌표에 제단이 없습니다.");
+                        altarId = _session.EntityAt(ax, ay)?.Id ?? throw new ArgumentException("capture 알타 좌표에 알타이 없습니다.");
                     }
                     SubmitCommand(new CapturePriestCommand(TestPlayer, transport.Id, captive.Id, altarId));
                     break;
@@ -242,12 +242,12 @@ internal sealed partial class FortMapViewer
                     (int dtx, int dty) = ParseCell(Word(1));
                     (int dax, int day) = ParseCell(Word(2));
                     GameEntity delivering = _session.EntityAt(dtx, dty) ?? throw new ArgumentException("deliver 좌표에 수송 유닛이 없습니다.");
-                    GameEntity destinationAltar = _session.EntityAt(dax, day) ?? throw new ArgumentException("deliver 좌표에 제단이 없습니다.");
+                    GameEntity destinationAltar = _session.EntityAt(dax, day) ?? throw new ArgumentException("deliver 좌표에 알타이 없습니다.");
                     SubmitCommand(new DeliverPriestCommand(TestPlayer, delivering.Id, destinationAltar.Id));
                     break;
                 case "altar":
                     (int max, int may) = ParseCell(Word(1));
-                    GameEntity targetAltar = _session.EntityAt(max, may) ?? throw new ArgumentException("altar 좌표에 제단이 없습니다.");
+                    GameEntity targetAltar = _session.EntityAt(max, may) ?? throw new ArgumentException("altar 좌표에 알타이 없습니다.");
                     SubmitCommand(new MovePriestToAltarCommand(TestPlayer, targetAltar.Id));
                     break;
                 case "drop":
@@ -350,7 +350,7 @@ internal sealed partial class FortMapViewer
         _ => sessionEvent.Text,
     };
 
-    /// <summary>플레이어 생산 창(덱)을 요약한 문구: 다리 칸, 골렘, 워크샵별 등록 유닛과 재충전</summary>
+    /// <summary>플레이어 생산 창(덱)을 요약한 문구: 다리 칸, 골렘, 워크샾별 등록 유닛과 재충전</summary>
     private string DescribeDeck()
     {
         PlayerState player = _session.Player(TestPlayer);

@@ -1,5 +1,7 @@
 # cpppj 후속 복원 계획
 
+> 2026-10-13: [건물·유닛 한국어 명칭 규칙](korean-unit-names.md)을 적용한다. 사제·신전·다리·발사기 이외 이름은 영어 발음의 한글 표기를 사용하며 Workshop은 워크샾, Generator는 제네레이터다.
+
 2026-10-09 최신(`HJOW-Athlon`): **[일반 자산/패턴 배치의 모양 순회·finder 사각형](exe/cpp-canon-geometry-reconstruction.md)**을 복원했다. `RawCanonPlacementGeometry`가 타입 번호/패턴 번호를 구별하고 모든 유효 칸의 현재 발자국·원래/절삭 좌표와 정수 탐색 범위를 공급한다. 사제 geometry도 기존 종류 계약을 유지한 채 같은 순회에 연결했다. 후보/지형 거부 뒤의 후처리 생략과 0 발자국 일반 자산 `dude`도 보존한다. 새 독립 x86 **5,967개**, 누적 **269,113개**다. 실제 10.78 **116개 자산·512개 조합·2,132개 칸**, CD **101개 자산·497개 조합·2,117개 칸**이 원본 계산과 일치한다. Release 경고/오류 **0**, CTest 내부 **372개·실패 0**(114.35초), 감사 **53종 모두 통과**. **전체 MayPlace/일반 타입의 배치 접두·미리보기/충돌 정책·지형/관계 판정과 일반 사제 Pop·보호막/회복 예약·Carrier 검사는 후속**이며 비표면 raw GUI·건설·경제·전투·승패로 이어 간다. 최신 감사/인계는 [LEFT_JOBS.md](../LEFT_JOBS.md)를 따른다.
 
 2026-10-09 앞 단계(`HJOW-Athlon`): **[일반 자산과 특수 패턴의 픽셀 범위](exe/cpp-canon-shape-reconstruction.md)**를 완료했다. `RawCanonPixelShape`가 일반 타입과 영역·다리·섬·받침·공유 전투 패턴의 모든 유효 칸/SHP 범위를 합치며, 사제 배치는 기존 종류 계약을 유지한 채 공통 계산기로 위임한다. 판본별 float32 저장·동률·부호 있는 0·기준점 DWORD 차·빈 범위를 보존한다. 새 독립 x86 **5,950개**, 누적 **263,146개**다. 실제 10.78 자산 **116개·512개 조합**, CD **101개·497개 조합**이 원본 전체 getter와 일치한다. Release 경고/오류 **0**, CTest 내부 **366개·실패 0**(101.77초), 감사 **52종 모두 통과**. **다음은 일반 타입의 전체 MayPlace/지형·관계 연결과 일반 사제 Pop·보호막/회복 예약·Carrier 상태 검사**, 이어 비표면 raw GUI·건설·경제·전투·승패다. 최신 인계는 [LEFT_JOBS.md](../LEFT_JOBS.md)를 따른다.
@@ -48,7 +50,7 @@
 > 그 앞 후속(2026-10-07): [다리 이벤트 처리기와 끝 칸 변환](exe/cpp-bridgeevent-reconstruction.md)을 복원했다. 이벤트 `0x2691`(자기 destroy)·`0x2692`(지연 낙하 payload → 끝 칸 L·M·N·O 변환)와 방향 글자별 프레임 구간 표를 세 PE의 새 x86 4,653개로 대조했고 CTest 내부 205개·실패 0이다. 외부 효과는 훅으로 남겼으며 raw GameWorld·Kernel 프레임 연결·walker 낙하·파편은 남았다. 호스트 `HJOW-Athlon`에서 게임과 클론 창을 실행하지 않았다.
 > 그 앞 후속(2026-10-07): [객체 부착 프로세스(ProcessForm)·Kernel·Regular 지연/주기 이벤트](exe/cpp-process-reconstruction.md)를 복원해 공통 삭제의 종속 form 처리와 다리 지연 낙하 예약/조회에 연결했다. 새 독립 x86 시나리오 360개·연산 5,893개(보강 재생성)다. 보강 입력 재생성과 변이 확인은 `HJOW-Athlon`에서 마쳤다. 다른 파생 프로세스·AI 부착 통지·raw GameWorld는 남았다. 호스트 `DESKTOP-HJOW`에서 게임과 클론 창을 실행하지 않았다.
 > 그 앞 후속(2026-10-07): [삭제 보상(SP)·SP 저장소·샘 풀](exe/cpp-reward-reconstruction.md)을 판본별 x87 순서와 패치 SP 저장소의 난수 소비까지 복원해 삭제 장부에 연결했다. 새 독립 x86 7,200개·CTest 내부 191개·실패 0이다. 그 앞서 [공통 삭제 Graph 분할/Free·주변 표면 Add](exe/cpp-destroygraph-reconstruction.md)(x86 1,728개·CTest 182개)도 연결했다. AI 부착 통지·종속 파생 메서드·파편/소리/낙하·이벤트·raw GameWorld는 남았다. 호스트 `DESKTOP-HJOW`에서 게임과 클론 창을 실행하지 않았다.
-> 이전 후속: [공통 pre/postDestroy 장부](exe/cpp-destroylifecycle-reconstruction.md)의 선택/abstract 배치 복구·공급/작업장/소유자 목록 제거·현재 타입 수 감소·누적 생산 수 유지·unitLost 사건/좌표·판본별 비용 차감을 공통 destroy의 실제 Unpop/SID 반납에 연결했다. 새 독립 x86 1,728개·CTest 내부 175개·실패 0이며 공통 Graph 분할/Free·주변 표면 Add, 실제 보상/SP·AI 통지·종속 파생 메서드·파편/소리/낙하·이벤트·raw GameWorld는 남았다. 이번 호스트 `DESKTOP-HJOW`에서는 게임과 클론 창을 실행하지 않았다. 이전 창 검사 20개 상태는 이전 작업에만 적용된 허용의 이력이다.
+> 이전 후속: [공통 pre/postDestroy 장부](exe/cpp-destroylifecycle-reconstruction.md)의 선택/abstract 배치 복구·공급/워크샾/소유자 목록 제거·현재 타입 수 감소·누적 생산 수 유지·unitLost 사건/좌표·판본별 비용 차감을 공통 destroy의 실제 Unpop/SID 반납에 연결했다. 새 독립 x86 1,728개·CTest 내부 175개·실패 0이며 공통 Graph 분할/Free·주변 표면 Add, 실제 보상/SP·AI 통지·종속 파생 메서드·파편/소리/낙하·이벤트·raw GameWorld는 남았다. 이번 호스트 `DESKTOP-HJOW`에서는 게임과 클론 창을 실행하지 않았다. 이전 창 검사 20개 상태는 이전 작업에만 적용된 허용의 이력이다.
 > 현재까지의 복원을 기준으로 한 **향후 작업 계획**이다. 아래 체크되지 않은 단계는 아직 완료하지 않았다. 구현 근거는 [공용 계층 복원](exe/cpp-reconstruction.md)과 [타입·그래픽 복원](exe/cpp-assets-reconstruction.md), 작업 이력은 [LEFT_JOBS.md](../LEFT_JOBS.md)에 있다.
 
 ## 목표와 기준
@@ -165,7 +167,7 @@ cpppj는 원본 게임을 분석·디컴파일하여 **Windows 10/11에서 실�
 
 ### 5. 캠페인 1-1 전체 플레이
 
-- [ ] 다리 배치·유효 위치·연결·건설 상태, 자원 수집·Storm Power·덱·생산·워크샵 동작을 복원한다. [에너지 분석](exe/energy-requirements.md)과 [워크샵·덱](gameplay/workshop-deck.md)을 근거로 사용한다.
+- [ ] 다리 배치·유효 위치·연결·건설 상태, 자원 수집·Storm Power·덱·생산·워크샾 동작을 복원한다. [에너지 분석](exe/energy-requirements.md)과 [워크샾·덱](gameplay/workshop-deck.md)을 근거로 사용한다.
   - [x] 다리 26개 표·판본별 추첨·회전/프레임 반복·열린 방향·수명 비트 접두 계산. [실제 범위](exe/cpp-bridge-reconstruction.md).
   - [x] 표면의 양방향 연결·정수 발자국 이웃·붕괴 방문 목록 재귀. [범위·새 기계어 검사](exe/cpp-surface-reconstruction.md).
   - [x] SquidHash의 네 단계 초기화/주소·객체 단계와 유효 genus. [x87 상태·표면 배열의 관계·검사](exe/cpp-hash-reconstruction.md).
@@ -173,7 +175,7 @@ cpppj는 원본 게임을 분석·디컴파일하여 **Windows 10/11에서 실�
   - [x] raw SID의 표시 비활성 일반 Unpop·non-void Take·공통 firstPop 플래그. [3,618회 대조·CD 미발견 차이·남은 섬/다리/건물 효과](exe/cpp-unpop-reconstruction.md).
   - [x] raw 일반 Pop→실제 firstPop/비전투 Activate→억제된 공통 postPop→Unpop·반납. [4,600회·실제 체인·이번 PC GUI 검사와 제한](exe/cpp-pop-reconstruction.md).
   - [ ] 실제 표면 그래프·배치/연결/소유자 전파·전체 붕괴·생산 칸/커서/배치 UI를 월드에 연결.
-- [ ] Sun Cannon의 방향·사거리·발사·피격·피해·파괴·이펙트, 사제 이동·포획·제단·희생 동작을 필요한 순서로 연결한다.
+- [ ] Sun Cannon의 방향·사거리·발사·피격·피해·파괴·이펙트, 사제 이동·포획·알타·희생 동작을 필요한 순서로 연결한다.
 - [ ] 미션 브리핑·명령·AI·승패 조건·종료·완료 기록을 연결한다. 실제 확인된 캠페인 1-1 시나리오에서 필요한 유닛·조건을 목록으로 확정한다.
 - [ ] 원본 사운드·음악 자산의 재생 계층과 이벤트 연결을 추가한다. 반복·볼륨·중단·미션 전환 시점도 검사한다.
 
@@ -261,7 +263,7 @@ AGENTS.md와 `originals/`·`originalCD/`의 기존 파일은 수정·삭제하�
 - [x] **자산 파생 생성자:** 패치 82개/CD 71개 생성자·179개 타입 연결·섬 번호/플래그/anim HP·파생 void Take. [6,028회 대조와 남은 가상/공간 수명](exe/cpp-derived-reconstruction.md).
 - [x] **raw 일반 해제/수명:** SID 풀의 void·spot·해시 체인·non-void Take·공통 firstPop 플래그와 void 반납. [표시 비활성 3,618회 대조·별도 vtable 표 151행](exe/cpp-unpop-reconstruction.md).
 - [x] **raw 일반 등록/수명:** 같은 SID/해시/spot의 Pop·firstPop/비전투 Activate·억제된 공통 postPop을 연결하고 실제 등록으로 만든 3객체 체인의 해제를 대조했다. [4,600회 독립 대조와 GUI 회귀](exe/cpp-pop-reconstruction.md).
-- [x] **raw 공통 표시/후처리 일부:** 표시·Renderer 연결에 이어 postPop 비용 집계·공급/소유자별 작업장 목록·타입 통계·noGraph 리셋을 선택 연결했다. [984회 독립 대조·남은 그래프/AI/월드](exe/cpp-postpop-reconstruction.md).
+- [x] **raw 공통 표시/후처리 일부:** 표시·Renderer 연결에 이어 postPop 비용 집계·공급/소유자별 워크샾 목록·타입 통계·noGraph 리셋을 선택 연결했다. [984회 독립 대조·남은 그래프/AI/월드](exe/cpp-postpop-reconstruction.md).
 - [x] **정수 표면 Graph:** 표 관리·LIFO flood·최대 연결/동률 순서의 병합, 객체 단위 표면 수를 복원했다. [2,560회 대조·raw 미연결 범위](exe/cpp-graph-reconstruction.md).
 - [ ] **바로 다음:** 사제 postPop/preDestroy·회복 Regular/낙하/경로·보행 프레임 진행→비표면 raw 월드→실제 낙하/파편/소리→다리 칸/커서·배치 UI→Construct·덱·에너지·채집. [현재 계획 4단계](cpp-playable-plan.md).
 - [x] **일반 공간 탐색:** 네 단계 해시/next·소수 좌표 발자국·매몰/기본 필터·반환 뒤 동적 조회를 복원하여 raw 다리 pre/postDestroy에 연결했다. [1,776개 기계어 대조·남은 파생 필터/실제 효과](exe/cpp-rawfinder-reconstruction.md).

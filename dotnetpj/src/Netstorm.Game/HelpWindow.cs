@@ -373,7 +373,8 @@ internal sealed class HelpWindow : IDisposable
         }
         TypeDefinition d = type.Definition;
         Vector2 pos = new(pictureBox.Right + 8, panel.Y + 16);
-        OriginalUiSkin.Text(batch, _skin.Title, _resources.Settings.Expand(d.GetString("description") ?? type.Name), pos);
+        OriginalUiSkin.Text(batch, _skin.Title,
+            GameUnitNames.Format(_resources.Settings.Expand(d.GetString("description") ?? type.Name), _resources.Language), pos);
         pos.Y += 23;
         Element? theme = Elements.FromTheme(d.GetString("theme"));
         string cost = StormPower.TypeCost(d) > 0 ? StormPower.TypeCost(d).ToString() : "n/a";

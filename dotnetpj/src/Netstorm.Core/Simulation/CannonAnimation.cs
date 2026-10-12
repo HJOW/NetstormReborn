@@ -19,7 +19,7 @@ public static class CannonAnimation
     public const double IceBurstSeconds = 4;
     /// <summary>아이스 캐논이 연속 사격 사이에 쉬는 시간(원본 0x50b440).</summary>
     public const double IceRestSeconds = 6;
-    /// <summary>태양 캐논의 발사 그림 표시 시간(원본 FUN_00468490).</summary>
+    /// <summary>썬 캐논의 발사 그림 표시 시간(원본 FUN_00468490).</summary>
     public const double SunFireSeconds = 0.07;
 
     /// <summary>타입이 이번 분석의 네 방향 직선 캐논인지.</summary>

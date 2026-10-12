@@ -40,16 +40,16 @@ public sealed class TutorialStages
     /// <summary>튜토리얼 1에서 결정 하나를 전달한 뒤 넘어가는 Storm Power 기준(원본 0x510298).</summary>
     private const int FirstCrystalStormPowerTarget = 200;
 
-    /// <summary>단계 C: 템플을 선택한 채 이 시간(초)이 지나면 보정 안내를 띄운다 (exe 0x506590 의 double 값 2.0)</summary>
+    /// <summary>단계 C: 신전을 선택한 채 이 시간(초)이 지나면 보정 안내를 띄운다 (exe 0x506590 의 double 값 2.0)</summary>
     private const double NotVortexDelaySeconds = 2.0;
 
-    /// <summary>단계 F: 템플을 선택하고 이 시간(초)이 지나면 다음 단계로 간다 (exe 0x506588 의 double 값 4.0)</summary>
+    /// <summary>단계 F: 신전을 선택하고 이 시간(초)이 지나면 다음 단계로 간다 (exe 0x506588 의 double 값 4.0)</summary>
     private const double TempleViewDelaySeconds = 4.0;
 
     /// <summary>단계 H: 회수 명령을 내리고 이 시간(초)이 지나면 다음 단계로 간다 (exe 0x506590 의 double 값 2.0)</summary>
     private const double SalvageDelaySeconds = 2.0;
 
-    /// <summary>템플 타입의 플래그2 비트 (typeflags "vortex" = 0x200)</summary>
+    /// <summary>신전 타입의 플래그2 비트 (typeflags "vortex" = 0x200)</summary>
     private static readonly uint VortexFlag = TypeFlagBits.Flag2Words["vortex"];
 
     /// <summary>다리 타입의 플래그2 비트 (typeflags "bridge" = 0x4). 튜토리얼 1 단계 A·B·C 가 누적 제작 수의 합으로 읽는다</summary>
@@ -115,7 +115,7 @@ public sealed class TutorialStages
             case 'A':
                 // 전투 옵션을 덮어쓴다: Generator Range = Short(14칸), Unit Rate = Fast (프레임마다 다시 정하지만 값은 같다)
                 session.Map.Options.ApplyTutorialTwoOverrides();
-                // 템플(typeflags vortex)을 지은 개수가 0 보다 크면 다음 단계
+                // 신전(typeflags vortex)을 지은 개수가 0 보다 크면 다음 단계
                 if (player.MadeWithFlags(VortexFlag) > 0)
                 {
                     Advance(session);
@@ -124,7 +124,7 @@ public sealed class TutorialStages
             case 'B':
                 // 표에서 Sun Workshop(sunFactory)을 허용으로 바꾼다 (원본 FUN_004c23e0(sunFactory, 허용))
                 player.Tech.Set("sunFactory", true);
-                // 워크샵(typeflags factory)을 지은 개수가 0 보다 크면 다음 단계 (선택을 푼다)
+                // 워크샾(typeflags factory)을 지은 개수가 0 보다 크면 다음 단계 (선택을 푼다)
                 if (player.MadeWithFlags(TypeFlagBits.Factory) > 0)
                 {
                     Advance(session);
@@ -221,8 +221,8 @@ public sealed class TutorialStages
     }
 
     /// <summary>
-    /// 단계 C(생산): 템플을 선택한 채 2초가 지나면 "NotVortex" 안내를 띄우고 선택을 푼다 (워크샵을 우클릭하라는 보정).
-    /// 워크샵에 sunArcher 를 등록했으면 다음 단계.
+    /// 단계 C(생산): 신전을 선택한 채 2초가 지나면 "NotVortex" 안내를 띄우고 선택을 푼다 (워크샾을 우클릭하라는 보정).
+    /// 워크샾에 sunArcher 를 등록했으면 다음 단계.
     /// </summary>
     private void UpdateProduction(BattleSession session, PlayerState player)
     {
@@ -245,7 +245,7 @@ public sealed class TutorialStages
         }
     }
 
-    /// <summary>단계 F(에너지 표시): 템플을 선택하면 4초 타이머를 시작하고, 지나면 선택을 풀고 다음 단계로 간다.</summary>
+    /// <summary>단계 F(에너지 표시): 신전을 선택하면 4초 타이머를 시작하고, 지나면 선택을 풀고 다음 단계로 간다.</summary>
     private void UpdateEnergyDisplay(BattleSession session, PlayerState player)
     {
         if (TimerTick == 0)

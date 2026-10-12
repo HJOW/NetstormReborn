@@ -12,7 +12,7 @@ public sealed class EnergyRequirement
     /// <summary>원본이 요구 문자열을 저장하는 버퍼 한도 (0xfd 에서 자름). 이보다 긴 문자열은 잘라 쓴다.</summary>
     private const int MaxLetters = 0xFD;
 
-    /// <summary>필요 에너지가 없는 요구값 (신전·워크샵·알타·사제·기지가 만드는 비행체 등)</summary>
+    /// <summary>필요 에너지가 없는 요구값 (신전·워크샾·알타·사제·기지가 만드는 비행체 등)</summary>
     public static EnergyRequirement None { get; } = new("");
 
     /// <summary>원본 요구 문자열 (w·r·t·s 로만 구성, 소문자)</summary>

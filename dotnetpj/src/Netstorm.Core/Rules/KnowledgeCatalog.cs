@@ -18,7 +18,7 @@ public sealed record KnowledgeRow(Element Element, IReadOnlyList<KnowledgeCard> 
 /// 지식 창의 카드 격자 규칙 (docs/exe/show-technology.md, docs/videos/the-war-begins-record-play-20260930.md 3절 6번).
 /// <list type="bullet">
 /// <item>행은 SUN · WIND · RAIN · THUN. 순서다 (원본 화면).</item>
-/// <item>카드는 플레이어가 아는 타입 중 원소가 있는 생산 유닛(Generator·건물형·수송)이다. 템플이 공급하는 골렘(sunWalker)은 뺀다
+/// <item>카드는 플레이어가 아는 타입 중 원소가 있는 생산 유닛(Generator·건물형·수송)이다. 신전이 공급하는 골렘(sunWalker)은 뺀다
 /// (The War Begins! 의 .fort Technology 26개 중 sunWalker 만 격자에 없다 — exe 는 플래그 조건으로 거르며 정확한 비트 뜻은 미확인).</item>
 /// <item>행 안 순서는 .type group 순서 battery → cannon → archer → walker → blocker → fence → aviary → balloon (원본 화면 25장과 일치).
 /// 같은 group 이 둘 이상이면 타입 로딩 순서를 따른다(원본 예시 없음, 클론 규칙).</item>
@@ -32,7 +32,7 @@ public static class KnowledgeCatalog
     /// <summary>원본 화면의 행 안 group 순서</summary>
     public static readonly IReadOnlyList<string> GroupOrder = ["battery", "cannon", "archer", "walker", "blocker", "fence", "aviary", "balloon"];
 
-    /// <summary>템플이 공급하는 골렘 타입 이름 (지식 창에 나오지 않는다)</summary>
+    /// <summary>신전이 공급하는 골렘 타입 이름 (지식 창에 나오지 않는다)</summary>
     public const string GolemTypeName = "sunWalker";
 
     /// <summary>.fort Technology 목록 플래그 중 "지식 있음" 비트 (exe 0x4acac0(플레이어, 4, 타입) 과 같은 값)</summary>

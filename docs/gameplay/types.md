@@ -1,5 +1,7 @@
 # 오브젝트 수치표 (자동 생성)
 
+> 2026-10-13: [한국어 명칭 규칙과 공유 표](../korean-unit-names.md)을 적용한다. 사제·신전·다리·발사기 이외 이름은 영어 발음의 한글 표기를 사용하며 Workshop은 워크샾, Generator는 제네레이터다.
+
 > `python tools/typefile.py table` 로 생성. 직접 수정하지 말 것.
 > 출처: `netstorm.tarc` 의 `.type` 파일 (패치판 10.7x 기준). 속성 의미는 [type.md](../formats/type.md) 참고.
 

@@ -9,7 +9,7 @@ using Netstorm.Core.Simulation;
 namespace Netstorm.Game;
 
 /// <summary>
-/// 맵 뷰어의 다리 조각 시험 모드 (B): 게임 세션이 플레이어 1 의 다리 칸을 원본 규칙(템플이 있으면 1초마다, Bridge Slots 칸 수,
+/// 맵 뷰어의 다리 조각 시험 모드 (B): 게임 세션이 플레이어 1 의 다리 칸을 원본 규칙(신전이 있으면 1초마다, Bridge Slots 칸 수,
 /// 5번째마다 한 칸 조각)대로 채우고, 조각을 집어(1~6) 돌려(R) 놓는다(좌클릭). 집기·되돌리기·놓기는 모두 세션 명령이며
 /// 배치 판정과 붕괴는 세션의 BridgeGrid(섬·다른 다리와 겹침 불가, 섬 가장자리나 내 다리 열린 끝에 이어짐,
 /// 열린 끝이 있는 연결망은 10초마다 수명이 줄어 금 간 뒤 무너짐)가 한다 — docs/exe/bridge-pieces.md 8절.
@@ -234,7 +234,7 @@ internal sealed partial class FortMapViewer
             }
         }
         string held = (HeldPreview == null ? "없음" : HeldPreview.ToString()) + (_reverseRotation ? " | 반대 회전 켜짐" : "");
-        string head = $"다리 조각 시험 | 칸 {tray.Pieces.Count}/{tray.Capacity} | 추첨 {tray.DrawCount}회 | 템플 {(player.HasTemple ? "있음" : "없음 — 조각이 생기지 않음")} | 들고 있는 조각: {held}";
+        string head = $"다리 조각 시험 | 칸 {tray.Pieces.Count}/{tray.Capacity} | 추첨 {tray.DrawCount}회 | 신전 {(player.HasTemple ? "있음" : "없음 — 조각이 생기지 않음")} | 들고 있는 조각: {held}";
         string keys = "1~6: 조각 집기 · R: 회전(원본 우클릭) · C: 반대 회전 · Backspace: 되돌리기 · 좌클릭: 놓기 · Space: 정지 · B: 모드 끄기";
         if (_bridgeCheck != null)
         {

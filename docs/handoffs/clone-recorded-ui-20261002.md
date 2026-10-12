@@ -20,10 +20,10 @@
 | 음향 | Wind Noise 반복 재생과 Sound On·음량 연동, Speaker Swap L/R의 PCM 채널 교환, 이전 설정 파일의 기본값 유지 | `AudioPlayer.cs`, `Core/Audio/PcmChannels.cs`, `Core/Display/DisplaySettings.cs` |
 | 도움말 | 원본 전체 영문 본문, 앵커 별칭·첫 중복 정의·미션 조건문·내부 링크·인라인 그림 처리 | `Assets/HelpTopics.cs`, `Assets/HelpDocument.cs` |
 | 도움말 화면 | 공용 창, 고정 능력치 머리, 본문·스크롤바 드래그와 휠, Back의 위치 복원, OK, 지식 격자로 복귀 | `HelpWindow.cs`, `FortMapViewer.Knowledge.cs` |
-| 우클릭·생산 | 사제 건설·지식·About, 워크샵 Available/Current Production·등록·업그레이드·회수, 등록한 유닛만 생산 사이드바에 표시 | `FortMapViewer.ContextMenu.cs`, `FortMapViewer.PlayUi.cs` |
-| 규칙 | 워크샵 업그레이드 비용(Sun 800 SP, Wind·Rain·Thunder 각 1,000 SP) 표시·차감, 템플 공급 Golem의 워크샵 등록 제외 | `Core/Simulation/BattleSession.PlayerActions.cs`, `Core/Simulation/BattleSession.Commands.cs`, `Core/Rules/ProductionDeck.cs` |
+| 우클릭·생산 | 사제 건설·지식·About, 워크샾 Available/Current Production·등록·업그레이드·회수, 등록한 유닛만 생산 사이드바에 표시 | `FortMapViewer.ContextMenu.cs`, `FortMapViewer.PlayUi.cs` |
+| 규칙 | 워크샾 업그레이드 비용(Sun 800 SP, Wind·Rain·Thunder 각 1,000 SP) 표시·차감, 신전 공급 Golem의 워크샾 등록 제외 | `Core/Simulation/BattleSession.PlayerActions.cs`, `Core/Simulation/BattleSession.Commands.cs`, `Core/Rules/ProductionDeck.cs` |
 | 조작 | 주요 원본 키·카메라 저장/복원·Alt/중간 버튼 스크롤, 플레이 입력과 개발 입력 분리, 팝업의 지도 클릭·가장자리 스크롤 차단 | `FortMapViewer.InputControls.cs`, `FortMapViewer.Bridges.cs`, `FortMapViewer.Session.cs`, `DisplayManager.cs` |
-| 검사 도구 | 클론 내부 키·우클릭·드래그 입력, 상태 확인·PNG 저장, 메뉴/미션/워크샵 검사 모드 | `UiAutomation.cs`, `tools/clone_help_options_smoke.ps1`, `tools/clone_ui_smoke.ps1` |
+| 검사 도구 | 클론 내부 키·우클릭·드래그 입력, 상태 확인·PNG 저장, 메뉴/미션/워크샾 검사 모드 | `UiAutomation.cs`, `tools/clone_help_options_smoke.ps1`, `tools/clone_ui_smoke.ps1` |
 
 표의 `Assets/`·`Core/` 접두사는 각각 `dotnetpj/src/Netstorm.Assets/`·`dotnetpj/src/Netstorm.Core/`를 가리킨다.
 접두사가 없는 C# 파일은 `dotnetpj/src/Netstorm.Game/` 아래에 있다.
@@ -40,7 +40,7 @@ README와 [조작키 안내](../gameplay/input-controls.md), [캠페인 1-1 안�
 | `dotnetpj/tests/Netstorm.Core.Tests/GameRuleTests.cs` | Golem의 Available 제외·등록 거부·칸 유지, 기존 원소·중복·슬롯·파괴 후 재등록 규칙 |
 | `tools/clone_help_options_smoke.ps1 -Mode Menu` | F1·링크·Esc·드래그·Back/OK, 옵션 마크 확인용 캡처, 음량·Speaker Swap·Sound On 저장 값 확인 |
 | `tools/clone_help_options_smoke.ps1 -Mode Mission` | F2/F7, 사제 건설 팝업, 미션 도움말/옵션, F6 지식 상세창 복귀, Shift+F9 정지/재개 |
-| `tools/clone_help_options_smoke.ps1 -Mode Workshop` | 워크샵 완공, Rain Generator·Whirlibase 등록, Available/Current Production·생산 사이드바·Cost 메뉴의 상태 확인과 캡처 |
+| `tools/clone_help_options_smoke.ps1 -Mode Workshop` | 워크샾 완공, Rain Generator·Whirlibase 등록, Available/Current Production·생산 사이드바·Cost 메뉴의 상태 확인과 캡처 |
 | `tools/clone_ui_smoke.ps1` | 기존 1-1·1-2 진입, 브리핑·생산 커서·다리·떠나기, 해상도·전체화면·음량 저장 회귀 검사 |
 
 Mission 모드에는 PNG의 오른쪽 위 타이머 영역을 비교해 정지 중 픽셀 유지와 재개 후 변화를 자동 판정하는 코드를 추가했다.
@@ -57,7 +57,7 @@ GUI 스크립트는 메뉴 상태와 저장 값, 타이머를 검사하지만 �
 - 클론 Release 빌드 성공, 경고·오류 0. 테스트 빌드에서는 기존 `TextResourceTests.cs`의 CA2014 경고가 있었다.
 - Assets 197개·Core 246개, 합계 443개 통과·실패/건너뜀 0. 인라인 그림·공백 보완 뒤 도움말/음향 관련 9개도 다시 통과했다.
 - Golem 등록 제외와 새 단언을 추가한 뒤 Core 246개를 다시 실행해 통과했다. 이후 `TempleSupplied`를 enum 끝으로 옮겨 기존 값들을 보존한 변경은 단위 테스트를 다시 실행하지 않았다.
-- Menu 검사와 별도 입력 파일의 미션·워크샵 UI 흐름이 통과했다. 워크샵의 Available 3개에서 Rain Generator 등록 뒤 2개가 되었고, Whirlibase 등록 뒤 두 생산 항목이 표시됐다. 두 등록 동안 잔액은 2,200 SP였다.
+- Menu 검사와 별도 입력 파일의 미션·워크샾 UI 흐름이 통과했다. 워크샾의 Available 3개에서 Rain Generator 등록 뒤 2개가 되었고, Whirlibase 등록 뒤 두 생산 항목이 표시됐다. 두 등록 동안 잔액은 2,200 SP였다.
 - 별도 PNG 비교로 Shift+F9 정지 중 타이머 동일·재개 뒤 변경을 확인했다. 기존 캠페인·해상도·전체화면·음량 회귀 검사도 통과했다.
 
 **미실행:** 통합 스크립트에 추가한 `-Mode Mission`·`-Mode Workshop`과 마지막 타이머 자동 판정 코드.
@@ -90,8 +90,8 @@ powershell -File tools/clone_ui_smoke.ps1 -OutputDirectory extracted/screens/ui-
 | 옵션 켜짐/꺼짐·음량 목록 | 파란 원은 켜진 항목·선택 값에만 보이며 마우스 행 강조와 독립적이다. 선택 후 전체 메뉴가 닫히고 다시 열면 저장 값이 보인다. |
 | 도움말 링크·드래그 | 태그 경계의 단어가 붙지 않고 인라인 그림과 글자가 겹치지 않는다. 본문만 스크롤 영역에서 잘리고 능력치 머리는 고정된다. 드래그가 링크 클릭으로 오인되지 않고 Back은 스크롤을 복원한다. |
 | 지식 격자 | 카드 상세창의 Back은 격자로, OK는 지도까지 돌아온다. 같은 클릭이 뒤쪽 지도에 적용되지 않는다. |
-| 워크샵 | Golem은 Available에 없다. Rain Generator 등록 뒤 목록이 3→2개가 되고 Whirlibase까지 등록하면 현재 생산·사이드바에 두 항목이 보인다. 등록 자체는 SP를 차감하지 않는다. |
-| 워크샵 업그레이드 | 업그레이드 비용은 건설 비용과 같다. Sun Workshop은 메뉴 표시와 실제 잔액 감소가 800 SP이고, Wind·Rain·Thunder Workshop은 각각 1,000 SP다. 소유권 거부도 유지된다. |
+| 워크샾 | Golem은 Available에 없다. Rain Generator 등록 뒤 목록이 3→2개가 되고 Whirlibase까지 등록하면 현재 생산·사이드바에 두 항목이 보인다. 등록 자체는 SP를 차감하지 않는다. |
+| 워크샾 업그레이드 | 업그레이드 비용은 건설 비용과 같다. Sun Workshop은 메뉴 표시와 실제 잔액 감소가 800 SP이고, Wind·Rain·Thunder Workshop은 각각 1,000 SP다. 소유권 거부도 유지된다. |
 | 주요 단축키 | F2/F7 표시, P/R 사제 선택, F4/H 본거지, F5 사제 중심, Ctrl+F5/N 수송체 순환, D/E 직전 생산/다리, Tab 최근 배치, 숫자·Shift+숫자 카메라, Alt/중간 버튼 스크롤을 수동 확인한다. |
 | 팝업과 시간 | 도움말·옵션·우클릭 중 세션은 진행한다. 브리핑·승패 창의 기존 정지는 유지된다. 팝업 중 지도 클릭·가장자리 이동이 차단된다. Shift+F9/Pause의 정지·재개가 정상이다. |
 | 화면·언어 | 한국어/영어, 4:3·16:9·16:10, 창/전체화면에서 메뉴와 도움말이 잘리지 않는다. GUI 스크립트의 고정 좌표는 수동 해상도 검사에 그대로 재사용하지 않는다. |

@@ -4,8 +4,8 @@ namespace Netstorm.Core.Bridges;
 
 /// <summary>
 /// 플레이어 생산 창의 다리 조각 칸 (원본 Combatgump.cpp 매 프레임 처리 0043f2xx 부근).
-/// 템플이 있는 동안 1초마다 조각 칸이 빌 때 하나씩 새 조각을 추첨해 채운다.
-/// 템플이 없어지면 칸의 조각이 모두 사라진다 (사용자 확인 규칙 workshop-deck.md 와 exe 가 일치).
+/// 신전이 있는 동안 1초마다 조각 칸이 빌 때 하나씩 새 조각을 추첨해 채운다.
+/// 신전이 없어지면 칸의 조각이 모두 사라진다 (사용자 확인 규칙 workshop-deck.md 와 exe 가 일치).
 /// 칸은 자리가 고정된다: 조각을 집어도 그 칸에 어둡게 남아 칸 수를 차지하고, 놓은 뒤에야 칸이 비며
 /// 새 조각은 빈 칸에 들어온다. 다른 조각은 자리를 옮기지 않는다
 /// (2026-10-01 네 번째 녹화 01:11~01:20, 생산 창 조각 오브젝트가 집힌 동안 컨테이너에 남는 exe 처리와 일치).
@@ -35,7 +35,7 @@ public sealed class BridgeTray
     /// <summary>다음 조각을 넣을 수 있는 게임 시각(초)</summary>
     private double _nextRefillTime;
 
-    /// <summary>직전 갱신 때 템플이 있었는지 (원본 Combatgump +0xdc)</summary>
+    /// <summary>직전 갱신 때 신전이 있었는지 (원본 Combatgump +0xdc)</summary>
     private bool _hadTemple;
 
     /// <summary>조각 칸 수 (전투 옵션 Bridge Slots: 2·4·6)</summary>
@@ -72,16 +72,16 @@ public sealed class BridgeTray
 
     /// <summary>
     /// 한 프레임 갱신. 새 조각을 넣었으면 그 조각을 돌려준다.
-    /// 원본 순서: 템플이 사라진 순간 칸 비우기 → 템플이 있고 간격이 지났으면 다음 시각 예약 →
+    /// 원본 순서: 신전이 사라진 순간 칸 비우기 → 신전이 있고 간격이 지났으면 다음 시각 예약 →
     /// 칸이 남았으면 난수 추첨, 5번째 추첨마다(0, 5, 10…) 한 칸 조각이 없을 때 한 칸 조각으로 바꾼다.
     /// </summary>
     /// <param name="now">게임 시각(초)</param>
-    /// <param name="hasTemple">플레이어에게 템플이 있는지 (원본 플레이어 +0x7c. 편집기에서는 참으로 준다)</param>
+    /// <param name="hasTemple">플레이어에게 신전이 있는지 (원본 플레이어 +0x7c. 편집기에서는 참으로 준다)</param>
     public BridgePiece? Update(double now, bool hasTemple)
     {
         if (_hadTemple && !hasTemple)
         {
-            // 템플을 잃는 순간 칸에 있던 조각이 모두 사라진다.
+            // 신전을 잃는 순간 칸에 있던 조각이 모두 사라진다.
             Array.Clear(_slots);
             HeldSlot = null;
         }
@@ -144,7 +144,7 @@ public sealed class BridgeTray
 
     /// <summary>
     /// 집었던 조각을 칸에 되돌린다. 매뉴얼의 "ESC 로 들고 있는 다리 반환"에 대응한다.
-    /// 집은 칸이 남아 있으면 그 칸을 다시 밝게 하고, 템플을 잃어 칸이 비워진 뒤라면 첫 빈 칸에 넣는다. 빈 칸이 없으면 거부
+    /// 집은 칸이 남아 있으면 그 칸을 다시 밝게 하고, 신전을 잃어 칸이 비워진 뒤라면 첫 빈 칸에 넣는다. 빈 칸이 없으면 거부
     /// </summary>
     /// <param name="piece">되돌릴 조각</param>
     public bool Return(BridgePiece piece)

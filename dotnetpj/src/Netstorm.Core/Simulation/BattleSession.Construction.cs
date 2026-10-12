@@ -5,7 +5,7 @@ namespace Netstorm.Core.Simulation;
 
 /// <summary>
 /// 사제 Construct 메뉴가 건물 줄을 어둡게 하는, 자리와 무관한 이유.
-/// 원본 1-1 관찰: 이미 템플이 있으면 Temple 줄이, 지식이 없으면 다른 원소 워크샵 줄이 어둡게 표시된다
+/// 원본 1-1 관찰: 이미 신전이 있으면 Temple 줄이, 지식이 없으면 다른 원소 워크샾 줄이 어둡게 표시된다
 /// (docs/videos/auto-war-begins-20261003.md 4.5절). 웹 팬게임은 알타도 플레이어당 1기로 막는다.
 /// </summary>
 public enum BuildingRestriction
@@ -16,14 +16,14 @@ public enum BuildingRestriction
     /// <summary>기술 허용 표가 막은 타입</summary>
     TechDenied,
 
-    /// <summary>이미 템플이 있다 (건설 중인 템플 포함)</summary>
+    /// <summary>이미 신전이 있다 (건설 중인 신전 포함)</summary>
     TempleExists,
 
     /// <summary>이미 알타가 있다 (건설 중인 알타 포함)</summary>
     AltarExists,
 
     /// <summary>
-    /// 워크샵 원소의 지식이 없다 (발전기는 세지 않는다). 원본 1-1 관찰: Rain 발전기 지식이 있어도 Rain Workshop 줄은 어둡다.
+    /// 워크샾 원소의 지식이 없다 (제네레이터는 세지 않는다). 원본 1-1 관찰: Rain 제네레이터 지식이 있어도 Rain Workshop 줄은 어둡다.
     /// 이 조건은 원본처럼 Construct 메뉴에만 적용하고 건설 명령 판정(<see cref="BattleSession.CheckBuilding"/>)은 보지 않는다.
     /// </summary>
     NoKnowledge,
@@ -49,7 +49,7 @@ public sealed partial class BattleSession
     public bool HasBuilding(int player, ObjectKind kind) => _entities.Values.Any(e => e.Owner == player && e.Kind == kind);
 
     /// <summary>
-    /// 건물 타입을 지금 지을 수 있는 종류인지 (자리와 무관한 조건): 템플·알타는 플레이어당 1기, 기술 허용 표, 워크샵은 그 원소의 지식.
+    /// 건물 타입을 지금 지을 수 있는 종류인지 (자리와 무관한 조건): 신전·알타는 플레이어당 1기, 기술 허용 표, 워크샾은 그 원소의 지식.
     /// 우클릭 Construct 메뉴가 줄을 어둡게 할지 정하는 데 쓴다. 앞의 세 조건은 실제 판정(<see cref="CheckBuilding"/>)과 같고,
     /// 지식 조건은 원본처럼 메뉴에만 있다.
     /// </summary>
@@ -71,11 +71,11 @@ public sealed partial class BattleSession
     }
 
     /// <summary>
-    /// 플레이어가 그 원소의 지식(생산 유닛, 발전기 제외)을 하나라도 알고 있는지. 원본 Construct 메뉴가 지식 없는 원소의 워크샵 줄을
-    /// 어둡게 하는 조건이다 (웹 팬게임 fo: 같은 원소 · 발전기 아님).
+    /// 플레이어가 그 원소의 지식(생산 유닛, 제네레이터 제외)을 하나라도 알고 있는지. 원본 Construct 메뉴가 지식 없는 원소의 워크샾 줄을
+    /// 어둡게 하는 조건이다 (웹 팬게임 fo: 같은 원소 · 제네레이터 아님).
     /// </summary>
     /// <param name="state">플레이어 상태</param>
-    /// <param name="element">워크샵 원소</param>
+    /// <param name="element">워크샾 원소</param>
     private bool KnowsElement(PlayerState state, Element element) =>
         state.Deck.Knowledge.Any(name => _types.Find(name) is { } type
             && ProducibleUnit.FromType(type) is { IsGenerator: false } unit && unit.Element == element);

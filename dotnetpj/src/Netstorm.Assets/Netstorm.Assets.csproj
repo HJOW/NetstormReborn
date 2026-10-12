@@ -6,5 +6,7 @@
   <ItemGroup>
     <!-- 실행 파일에서 확인한 영역 청크 모양을 원본 exe 없이 사용할 수 있도록 내장한다. -->
     <EmbeddedResource Include="TerritoryPatterns.json" />
+    <!-- AGENTS.md의 한국어 명칭 규칙을 같은 공유 데이터로 표시하며 원본 타입/언어 파일은 수정하지 않는다. -->
+    <EmbeddedResource Include="../../../assets/unit-names.korean.json" LogicalName="Netstorm.Assets.UnitNames.Korean.json" />
   </ItemGroup>
 </Project>

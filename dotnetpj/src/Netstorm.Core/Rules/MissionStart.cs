@@ -9,7 +9,7 @@ namespace Netstorm.Core.Rules;
 /// 머리 값 해석 순서: ';' 로 나눈 토큰을 차례로 읽으며 "deny"·"allow" 는 현재 모드를 바꾸고, "all" 은 모든 타입에,
 /// 타입 이름은 그 타입에만 현재 모드를 적용한다 (Totalmade.cpp FUN_004c23c0·004c23e0, 조회는 FUN_004c2400).
 /// techAllowed 가 없으면 모든 타입이 허용된다.
-/// 원본이 이 표를 확인하는 곳은 메뉴·덱(사제 Construct 메뉴 항목, 생산 목록 메뉴, 덱 갱신, 템플의 골렘 항목)이다.
+/// 원본이 이 표를 확인하는 곳은 메뉴·덱(사제 Construct 메뉴 항목, 생산 목록 메뉴, 덱 갱신, 신전의 골렘 항목)이다.
 /// </summary>
 public sealed class TechPermissions
 {

@@ -1,5 +1,22 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-13 공통: AGENTS.md 한국어 건물·유닛 명칭 규칙 반영 완료 (`HJOW-Athlon`)
+
+- [x] 사용자 추가 항목을 [공통 명칭 규칙](docs/korean-unit-names.md)과 README·규칙/자산/언어·cpppj 로드맵/빌드·게임플레이/분석/녹화 문서·두 인수인계에 반영했다. 사제(Priest)·신전(Temple)·다리(Bridge)·발사기(Thrower)는 번역 가능하며, 다른 이름은 영어 발음 한글 표기다. **Workshop=워크샾, Generator=제네레이터**를 사용한다. 기존 관련 문서 **89개/치환 1,100회**를 정리했고 공통 참조/규칙 문서를 추가했다. 실제 링크 대상·인라인 식별자·명령/원본 자료 블록과 과거 검증 수는 유지한다.
+- [x] `assets/unit-names.korean.json`에 **55개** 명칭/별칭을 기록하고 dotnetpj `GameUnitNames`의 내장 자료로 연결했다. 실제 한국어 메뉴/카드/제목 표시 구현과 Release 빌드 경고/오류 0은 [dotnet 인수인계](LEFT_JOBS.dotnetpj.md)의 최신 항목을 따른다. **테스트·GUI/게임 실행은 미수행**이다. 앞선 cpppj 메뉴/장식 구현은 아래 그대로 보존했다.
+- [x] AGENTS.md는 편집하지 않고 사용자 변경본을 유지했다. 건물/유닛 타입 ID·원본 영어 description/파일·설정 키·게임 규칙/시계/수치와 보호 원본은 변경하지 않았다. **공통 마지막 디컴파일 PC: HJOW-Athlon, 2026-10-13**. 이번 명칭 작업의 새 디컴파일/원본 실행·커밋/푸시 없음.
+- [ ] cpppj 실제 한국어 표시는 기존 3차 목표에서 공유 명칭 표를 참고한다. cpppj 다음 복원과 dotnetpj 9-1 A/동작 검증은 각 최신 미완료 목록을 따른다.
+
+## 2026-10-13 최신 cpppj: 메뉴 정상 생성·장식/제목·controlled 시작·수명/Attach·모서리 픽셀 연결 (`HJOW-Athlon`)
+
+- [x] AGENTS.md·두 LEFT_JOBS 확인, 현재 PC/IP **HJOW-Athlon / 192.168.0.94**와 마지막 디컴파일 PC 일치. 창/게임 실행 허용 반영. 두 PE 함수 **13/18개**를 읽기 전용으로 내보내고 실제 가상 표/정렬/여백·생성/소멸/부착 기계어를 판독했다. CD scalar의 실제 call에서 소멸 몸체 00451650/정상 보조 경로를 확인했다. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-13.** [상세 기록](docs/exe/cpp-menu-gump-widgets.md).
+- [x] `MenuGumpWidgets`로 배경/문맥/부분 필드 초기화·조건 검사 전 명령/인자 쓰기·조건부 문자열/이전 항목 자식 연결·최종 flags/한 번 Reflow/notify를 구현했다. 원본 varargs는 문자열/자식 variant와 조건부 DWORD 목록으로 표현한다. **생성 numItems <40·미작성 offsets/목표 크기 보존·선두 자식 부착**을 유지한다. 현재 선택/소멸 통지 토큰·현재 메뉴 개수를 같은 저장소에 추가했다.
+- [x] 장식 메뉴의 실제 new 0xc4 장식(1,1)/부착/secondaryDepth 1→new 0xd8 다중 줄 제목/기존 버퍼·Slider·overlay/16,16/secondaryDepth -1을 연결했다. `BindMenuTitleLayout`은 기존 Reflow 경계를 **RequestScroll(0)/FitContent(0,0)**에 공급한다. controlled 가로/장식/세로 0x140000/0xa80000/0x280000·0xb90 할당/현재 칸·선택 idle/세로 배경 flags OR를 실제 처리기로 연결했다.
+- [x] 메뉴 Attach의 root sticky 0x4000·parent 재사용·plain/fancy 화면 상한/장식 0 하한·DWORD 좌표 차·기본 Attach를 복원했다. 패치 min 요청의 float32 저장/CD 미저장·장식 Y 합 순서를 유지한다. 소멸은 **현재 개수 감소→선택 통지→40개 전체 스타일 역순 Clear→기본 scalar**, 자식은 기존 Destroy에서 먼저 삭제한다.
+- [x] `GumpDecoration`/`GumpDecorationPixelTarget`으로 현재 배경/SHP/I 첫 프레임 생성 캐시·실제 배경 뒤 TL/TR/BR/BL 현재 모서리 원색 출력·실제 SHP/투명도/클립·부모 visible/변경 영역을 연결했다. 변경 영역은 **x-1/y-1, 절삭(width+4)/절삭(height+4)**이며 두 PE ROM의 4.0을 확인했다. 생성/그리기/재그리기/소멸 분배에 같은 실제 저장소를 공급한다. **전체 Form 객체와 메뉴 실제 Draw/입력은 후속**이다.
+- [x] 라이브러리/`NetstormCpp` **Release 빌드 경고 0·오류 0**. SOURCE_MAP 생성/내용 차이 없음. **새 테스트 추가/실행·전체 CTest·독립 원본/C++ 생성/조건/카운터/부착/수명/모서리/변경 영역/픽셀 대조·게임/GUI 실행 미수행**이다. 관찰 **523,634개**, 대조 **523,374개**, **854개 통과**는 앞 단계 기록이고 이번 추가 관찰/대조는 각각 **0개**다. 자료: `recovery-menuwidgets-evidence.json`, `tools/analyze_menuwidgets.py`, `extracted/menuwidgets/`. 보호 PE SHA 불변·보호 원본/dotnetpj/테스트 변경·커밋/푸시 없음. AGENTS.md는 직접 편집하지 않았으며 작업 중 외부 변경(건물/유닛 한국어 명칭 규칙 추가)을 보존했다.
+- [ ] **다음:** **메뉴 실제 Draw/Handle/Broadcast/AttachObject·제목/머리 포맷·controlled 항목 래퍼** → 전체 Form 객체·그림 색 표/회전 VFX/flag 2 재사용·OS 큐/폴링·overlay·자동 raw Client UI. 이번 메뉴/장식/제목/생성/조건/수명/부착/픽셀과 앞선 다중 줄/파서/버퍼/Slider/선/VFX/메뉴·260개 레이아웃·돌 버튼/배경/도움말 전체 독립 원본/C++ 대조도 남았다. 현재 실제 전역/allocator/invalidate·커서 공급·생성 EH/극단 x87·원본 포인터/varargs alias는 상위 조립/대조 대상이다. **Client/UberGump 기존 메뉴 어댑터와 raw 자동 GUI/건설·미션 완주는 미완료다.**
+
 ## 2026-10-13 최신 cpppj: 다중 줄 스타일 파서·CD W/패치 S·문자열/버퍼 교체·설정 복원 (`HJOW-Athlon`)
 
 - [x] AGENTS.md·두 LEFT_JOBS 확인, 현재 PC/IP **HJOW-Athlon / 192.168.0.94**와 마지막 디컴파일 PC 일치. 창/게임 실행 허용 반영. 두 PE 함수 **10/11개**를 읽기 전용 내보내고 파서/ROM 정규식/그림 맞춤·제한 높이/교체/설정 기계어를 판독했다. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-13.** [상세 기록](docs/exe/cpp-scrolling-text-gump-markup.md).
@@ -7,7 +24,7 @@
 - [x] 다중 줄 I의 *와 # 기본 프레임/소비 뒤 suffix # 맞춤·& 색 치환 없음·패치 숫자 타입 상한·count까지 클램프·현재 +d4 제한을 구현했다. 제한 모드의 패치 0/1/3/4 글꼴 명령 소비만 수행·CD 변경을 반영했다. 제한 그림은 **SHP +1a signed 높이 ≤16(패치)/≤12(CD)** 확인 뒤 99999×12 맞춤이다. stack 헤더 복사와 비교 오프셋을 기계어로 확인했으며 GameAssets의 실제 타입 수/헤더를 공급한다.
 - [x] `ScrollingTextGump::AppendPicture/ReplaceText`와 Widget `ReplaceBuffer/SetSelectable/SetSlider/SetWrap/SetScrollable`을 추가했다. 문자열 교체는 완료 줄만 제거하고 미완료 끝 줄/태그/스크롤은 보존한다. 소유 버퍼만 소멸/free/포인터 0 뒤 새 buffer/owns를 저장하며 dirty/Redraw 자동 초기화는 없다. 같은 소유 토큰 재설치의 소멸된 참조도 원본 계약대로 남긴다. 설정의 전체 0/비0·최하위 비트·slider/scroll 연동·현재 Push/Attach·noWrap 저장만 수행을 유지한다.
 - [x] 라이브러리/`NetstormCpp` **Release 최종 빌드 경고 0·오류 0**. SOURCE_MAP 생성/내용 차이 없음. **새 테스트 추가/실행·전체 CTest·독립 원본/C++ 파서/통지/소유/설정/픽셀 대조·게임/GUI 실행 미수행**이다. 관찰 **523,634개**, 대조 **523,374개**, **854개 통과**는 앞 단계 기록이며 이번 추가 관찰/대조는 각각 **0개**다. 자료: `recovery-scrollmarkup-evidence.json`, `tools/analyze_scrollmarkup.py`, `extracted/scrollmarkup/`. 원본 SHA 불변·AGENTS.md/보호 원본/dotnetpj/테스트 변경·커밋/푸시 없음.
-- [ ] **다음:** 그림 색 표/회전 VFX/flag 2 재사용·Form/메뉴 생성/장식/제목/소멸/Attach 보정 → OS 큐/폴링·overlay·자동 raw Client UI. 이번 다중 줄 파서/그림/통지/설정/버퍼 교체·앞선 생성/소유/입력/표시/Slider/선/VFX/메뉴·260개 레이아웃·돌 버튼/배경/도움말의 독립 원본/C++ 대조도 남았다. 실제 전역/할당/커서 공급·생성 EH/극단 x87·콜백의 입력 source 바이트 alias는 상위 조립/대조 대상이다. **Client/UberGump 기존 메뉴 어댑터와 raw 자동 GUI/건설·미션 완주는 미완료다.**
+- [x] **메뉴 정상 생성·장식/제목 자식·controlled 시작·소멸·가상 Attach 보정과 제목 Reflow 경계는 위 후속에서 구현했다.** 메뉴 실제 Draw/입력/AttachObject·제목 포맷·전체 Form 객체·그림 색 표·독립 대조·상위 조립/자동 raw UI·전역/할당/커서 공급·생성 EH/극단 x87·입력 source alias는 위 최신 목록을 따른다. **raw 자동 GUI/건설·미션 완주는 미완료다.**
 
 ## 2026-10-13 최신 cpppj: 다중 줄 TextGump 생성·버퍼 소유·부착/태그/드래그 입력 연결 (`HJOW-Athlon`)
 
@@ -243,9 +260,9 @@
 
 > **앞 단계 cpppj 갱신: 2026-10-11 (`HJOW-Athlon`) — 건설 프로세스 시작·진행·완료 복원 완료.** 건설 프로세스의 시작 `00443fe0`/CD `004d06a0`·생성자 `00443c40`/CD `004d0720`·진행 `004428c0`/CD `004d0ba0`·완료 `00443e20`/CD `004d09e0`·form 삭제 통지 `00444030`/CD `004d08e0`을 `RawConstructionProcess`로 복원했다. 표시 효과 뒤 현재 시각의 시작/끝(지속 0은 10초)·부착·1초 초과 진행음 → 프레임별 `절삭((현재-시작)/(끝-시작)×최대 HP)`의 0~최대 제한·quickbuild/quickvortex·abstract/권한 Kill → 진행음 삭제·완료음/준비 소리·Unpop/abstract 해제/재등록(9)/밀어내기 → HP 채움 순서를 보존했다. CD의 진행음 비트 비교·HP WORD 폭/부호·예측 경계 6000·밀어내기 세 인자를 대조했다. 실제 `SquidProcessHost`/Kernel에 붙는 `ConstructionProcess`와 보상 모듈 최대 HP·밀어내기·통지의 건설 시작·소리 계층 어댑터를 연결했다. 새 독립 원본 **2,868개**·누적 **483,330개**, 두 x87 정상 반환 **5,736회**. Release 경고/오류 **0**·CTest 내부 **635개·실패 0**(157.98초, 전체 158.07초), 근거 감사 **98종 모두 통과**. 새 변이 16개 **모두 검출**(`--focused`, 변이 전 사본은 전체 검사 통과). **끝 시각 재설정·전송용 상태 쓰기/읽기/수신·건설 표시 효과·contained 삭제·하위 경로/접근점/자원 정책/공간 Pop·건설 GUI는 후속이며 게임에서 건물을 지을 수는 아직 없다.** 마지막 디컴파일 수행 PC: **HJOW-Athlon, 2026-10-11**(`constructionprocess` 12/14/14개 읽기 전용 내보내기). [상세 기록](docs/exe/cpp-construction-process-reconstruction.md).
 
-> **앞 단계 cpppj 갱신: 2026-10-11 (`HJOW-Athlon`) — 건설용 객체 생성·이동과 공급원 소비 복원 완료.** 건설용 객체 생성·이동 `00443000`/CD `004d1120`와 공유 공급원 소비 `00473570`/CD `0048aaf0`을 `RawConstructionBuilder`로 복원했다. 작업장 기준점→최초 객체 생성/소유자/접근/Pop/경로→시각 조정→공급원 선택/정렬→운반 객체 생성/현재 타입 프레임/중심/Regular/경로→최초 경로 현재 시각 반환 순서를 보존했다. 5.0 조기 실패와 앞선 효과 유지·signed 개수/구멍/중복·개수 불변·CD 프레임 BYTE·할당 실패 후 이동·경계 뒤 현재 자료 재조회를 대조했다. 로컬/통지 이동 어댑터와 실제 작업장 조회/factory/일반 owner/Regular Form·Kernel 통합 검사를 연결했다. 새 독립 원본 **1,110개**·누적 **480,462개**, 두 x87 정상 반환 **2,220회**. Release 경고/오류 **0**·CTest 내부 **622개·실패 0**(139.41초, 전체 139.53초), 근거 감사 **97종 모두 통과**. 새 변이 10개 **모두 검출**(`--focused`, 변이 전 사본은 전체 검사 통과). **건설 시작/진행/완료·하위 경로/접근점/자원 정책/공간 Pop·소유 사제 contained·타입별 파생 효과·건설 GUI는 후속이며 게임에서 건물을 지을 수는 아직 없다.** 마지막 디컴파일 수행 PC: **HJOW-Athlon, 2026-10-11**(`constructionbuilder` 23/20/20개 읽기 전용 내보내기). [상세 기록](docs/exe/cpp-construction-builder-reconstruction.md).
+> **앞 단계 cpppj 갱신: 2026-10-11 (`HJOW-Athlon`) — 건설용 객체 생성·이동과 공급원 소비 복원 완료.** 건설용 객체 생성·이동 `00443000`/CD `004d1120`와 공유 공급원 소비 `00473570`/CD `0048aaf0`을 `RawConstructionBuilder`로 복원했다. 워크샾 기준점→최초 객체 생성/소유자/접근/Pop/경로→시각 조정→공급원 선택/정렬→운반 객체 생성/현재 타입 프레임/중심/Regular/경로→최초 경로 현재 시각 반환 순서를 보존했다. 5.0 조기 실패와 앞선 효과 유지·signed 개수/구멍/중복·개수 불변·CD 프레임 BYTE·할당 실패 후 이동·경계 뒤 현재 자료 재조회를 대조했다. 로컬/통지 이동 어댑터와 실제 워크샾 조회/factory/일반 owner/Regular Form·Kernel 통합 검사를 연결했다. 새 독립 원본 **1,110개**·누적 **480,462개**, 두 x87 정상 반환 **2,220회**. Release 경고/오류 **0**·CTest 내부 **622개·실패 0**(139.41초, 전체 139.53초), 근거 감사 **97종 모두 통과**. 새 변이 10개 **모두 검출**(`--focused`, 변이 전 사본은 전체 검사 통과). **건설 시작/진행/완료·하위 경로/접근점/자원 정책/공간 Pop·소유 사제 contained·타입별 파생 효과·건설 GUI는 후속이며 게임에서 건물을 지을 수는 아직 없다.** 마지막 디컴파일 수행 PC: **HJOW-Athlon, 2026-10-11**(`constructionbuilder` 23/20/20개 읽기 전용 내보내기). [상세 기록](docs/exe/cpp-construction-builder-reconstruction.md).
 
-> **앞 단계 cpppj 갱신: 2026-10-11 (`HJOW-Athlon`) — 건설 기준점 연결·소유 사제 조회 복원 완료.** 확정의 `0048fdb0`/CD `00406f80`은 작업장/그래프 기준점 조회여서 기존 `RawPlayerPlacementAnchor`를 연결했다. 배치 통지의 실제 소유 사제 조회 `004921f0`/CD `0040d940`을 `RawPriestLookup`으로 복원하고 공유 등록/삭제 목록에 연결했다. 현재 소유자 BYTE와 요청 DWORD 전체·dead bit 2·signed 개수·목록 순서/조기 종료를 보존했다. 실제 사제 factory/등록·소유자 지정/삭제 접두와 확정/factory→통지 통합 검사, 패치의 두 번째 조회와 첫 사제 보관을 대조했다. 새 독립 원본 **4,851개**·누적 **479,352개**, 두 x87 정상 반환 **9,702회**. Release 경고/오류 **0**·CTest 내부 **614개·실패 0**(153.60초, 전체 153.64초), 근거 감사 **96종 모두 통과**. 새 변이 8개 **모두 검출**(`--focused`, 변이 전 사본은 전체 검사 통과). **건설 사제 생성/이동·시작/진행/완료·접근점/contained·타입별 공간/파생 효과·건설 GUI는 후속이며 게임에서 건물을 지을 수는 아직 없다.** 마지막 디컴파일 수행 PC: **HJOW-Athlon, 2026-10-11**(`priestlookup` 1/1/1개 읽기 전용 내보내기). [상세 기록](docs/exe/cpp-construction-selection-reconstruction.md).
+> **앞 단계 cpppj 갱신: 2026-10-11 (`HJOW-Athlon`) — 건설 기준점 연결·소유 사제 조회 복원 완료.** 확정의 `0048fdb0`/CD `00406f80`은 워크샾/그래프 기준점 조회여서 기존 `RawPlayerPlacementAnchor`를 연결했다. 배치 통지의 실제 소유 사제 조회 `004921f0`/CD `0040d940`을 `RawPriestLookup`으로 복원하고 공유 등록/삭제 목록에 연결했다. 현재 소유자 BYTE와 요청 DWORD 전체·dead bit 2·signed 개수·목록 순서/조기 종료를 보존했다. 실제 사제 factory/등록·소유자 지정/삭제 접두와 확정/factory→통지 통합 검사, 패치의 두 번째 조회와 첫 사제 보관을 대조했다. 새 독립 원본 **4,851개**·누적 **479,352개**, 두 x87 정상 반환 **9,702회**. Release 경고/오류 **0**·CTest 내부 **614개·실패 0**(153.60초, 전체 153.64초), 근거 감사 **96종 모두 통과**. 새 변이 8개 **모두 검출**(`--focused`, 변이 전 사본은 전체 검사 통과). **건설 사제 생성/이동·시작/진행/완료·접근점/contained·타입별 공간/파생 효과·건설 GUI는 후속이며 게임에서 건물을 지을 수는 아직 없다.** 마지막 디컴파일 수행 PC: **HJOW-Athlon, 2026-10-11**(`priestlookup` 1/1/1개 읽기 전용 내보내기). [상세 기록](docs/exe/cpp-construction-selection-reconstruction.md).
 
 > **앞 단계 cpppj 갱신: 2026-10-11 (`HJOW-Athlon`) — 건설 밀어내기/섬 정리 복원 완료.** 건설 유닛 밀어내기(`00443800`/CD `004d2450`)와 섬 실패 정리(`0046e6c0`/CD `0048f960`)를 `RawConstructionEffects`로 복원했다. 판본별 세/두 칸 탐색·현재 genus·자리 선택 뒤 적대 거부·16.16 전파 좌표·추락/소리 억제·삭제 순서/플래그·9/1/1 조각 수 보고를 대조했다. 같은 풀의 서버 요청 어댑터와 실제 factory·SquidUnpop/공통 삭제·SID 반납 통합 검사를 연결했다. 새 독립 원본 **3,534개**·누적 **474,501개**, 두 x87 정상 반환 **7,068회**. Release 경고/오류 **0**·CTest 내부 **606개·실패 0**(158.44초, 전체 158.52초), 근거 감사 **95종 모두 통과**. 새 변이 12개 **모두 검출**(`--focused`, 변이 전 사본은 전체 검사 통과). **경로 contained/타입별 공간 이동·파생 삭제/추락/알림·사제 선택/이동/건설 진행·Form/입력/건설 GUI는 후속이며 게임에서 건물을 지을 수는 아직 없다.** 마지막 디컴파일 수행 PC: **HJOW-Athlon, 2026-10-11**(`constructioneffects` 30/26/26개 읽기 전용 내보내기). [상세 기록](docs/exe/cpp-construction-effects-reconstruction.md).
 
@@ -570,7 +587,7 @@
 ## 2026-10-11 ✅ 완료 / ⏭ 부분 인계: 건설 기준점 연결과 소유 사제 조회 (HJOW-Athlon)
 
 - [x] **착수/호스트:** AGENTS.md·두 LEFT_JOBS를 읽었다. 시작 트리 깨끗함, 현재/마지막 디컴파일 PC 일치. `priestlookup` **1/1/1개** 읽기 전용 내보내기. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-11.** 원본/복사본·analyzeManager·클론 창 실행 없음.
-- [x] **복원/연결:** 확정 `findBuilder`의 `0048fdb0`/CD `00406f80`은 기존 작업장/그래프 기준점 조회였다. `RawPlayerPlacementAnchor`를 확정에 연결하고 사제 자체를 고른다는 기존 표현을 보정했다. 통지의 실제 소유 사제 `004921f0`/CD `0040d940`은 `RawPriestLookup`으로 복원·연결했다. 두 어댑터는 같은 풀을 검사한다. [계약/명시 경계](docs/exe/cpp-construction-selection-reconstruction.md).
+- [x] **복원/연결:** 확정 `findBuilder`의 `0048fdb0`/CD `00406f80`은 기존 워크샾/그래프 기준점 조회였다. `RawPlayerPlacementAnchor`를 확정에 연결하고 사제 자체를 고른다는 기존 표현을 보정했다. 통지의 실제 소유 사제 `004921f0`/CD `0040d940`은 `RawPriestLookup`으로 복원·연결했다. 두 어댑터는 같은 풀을 검사한다. [계약/명시 경계](docs/exe/cpp-construction-selection-reconstruction.md).
 - [x] **공유 상태/통합:** 실제 사제 factory→postPop 등록/중복 억제→현재 소유자 지정→사망/삭제 접두 목록 압축을 조회가 즉시 본다. 확정은 그래프 불일치/빈 목록에서 SID를 만들지 않고 일치하면 실제 factory로 생성한다. 실제 확정/factory→통지에서 패치의 두 번째 조회/contained 제거는 변경된 소유자를 보고 이동은 첫 사제를 유지한다. CD 단일 조회와 사망 사제의 환불/삭제도 확인했다. 하위 회복/Carrier·정리/배치·이동/contained 효과는 검사 경계다.
 - [x] **독립 근거:** 새 저장 **4,851개**(1,617×3)·정상 반환 **9,702회**·누적 **479,352개**. 조회 전체 실제 명령·대체 함수 없음. signed 개수·소유자 DWORD 폭·dead bit 2만 제외·순서/중복/비활성 꼬리/예약 0. ABI/x87·허용 실행/쓰기·raw/목록 불변·SHA/진입/반환 감사, assert/게임/OS 0. 기존 기준점 원본 4,794개 재사용은 새 합계에 중복으로 세지 않았다.
 - [x] **검증:** 새 C++ **8개**. Release 경고/오류 **0**·CTest 내부 **614개·실패 0**(153.60초, 전체 153.64초), 근거 감사 **96종 모두 통과**. 새 변이 8개 **모두 검출**(`--focused`, 변이 전 사본은 전체 검사 통과).
@@ -787,7 +804,7 @@
 - [x] **스모크가 잡은 문제(고침):** 원본 `ReadInt`는 변수의 현재 값과 다를 때만 갱신하는데 0으로 시작해 읽어 설정 0(끄기)을 놓쳤다. 또 소리 스모크 시나리오 사이에 `options.cfg`가 새어 다음 시나리오가 달라졌다(시나리오마다 보관·복원).
 - [x] **검증:** 새 단위 검사 **3개**(`ClientAudio_*`: 음량 단계 표·`Preload` 적재 조건·장치 없는 장면 전환), 명시 검사 `netstorm_tests.exe --inspect-client-audio originals`(숨긴 창, 음소거, 2회 순환 통과), 창 스모크 `python tools/cpp_audio_smoke.py`(메뉴: 장치 열림·`ser22.mus` 활성·곡 길이 **203.947초**·버퍼 상태 5(재생+반복)·읽은 위치가 링 버퍼 176,000바이트를 여러 번 넘음; 전투: 원소 곡·천둥 곡에서만 효과음 횟수 증가; 옵션: 음악 끄기/켜기·소리 끄기(스레드 합류·장치 닫기)/켜기(재개)·음량 단계 4/1 → 음소거 중 예약 -500/-4000; 설정 `sound=0;music=0`은 곡 없음; 무음 환경 변수/`--no-audio`는 소리 묶음 없음; 원본 파일 **1,392개** 불변), 변경 후 창 스모크 4종 회귀 통과. Release 경고/오류 **0**, CTest 내부 **533개·실패 0**(146.06초), 근거 감사 **81종 모두 통과**(36초), 변이 확인 `audio-*`·`preload-*` **10개 모두 검출, 미검출 0**(저장소 밖 사본, 첫 실행 기준). 기록 `extracted/{baseline-window-smokes,after-window-smokes,clientaudio-mutation,clientaudio-audits}.log`·`extracted/cpp-audio-smoke-run{1..5}.log`·`extracted/cpp-audio-smoke/`.
 - [x] **앞 인계 해소:** 앞 절 "다음 싱글플레이" ②(클라이언트 부착: `MusicRuntime`·HWND/장치/종료 순서·`Frame()` 호출·전투/메뉴 `Start()`·소리/음악 옵션 GUI)와 ③ 중 **무음 `--inspect-sound-device` 미실행**을 끝냈다.
-- [ ] **다음 싱글플레이:** ① **실제 청취(사람)** — 모든 검사가 음소거라 소리 크기·음질·끊김·음악/효과음 균형은 미확인이다. `cpppj/build/bin/Release/NetstormCpp.exe --run originals --window`로 들어 볼 수 있다(원본 `d/options.cfg`가 갱신된다). 장치 소실·음질 하향·긴 재생(곡 반복)·창 포커스 변화 중 동작도 미검증. ② **경계의 실제 연결** — 희생 판정 `00449220`·대기실 판정 `0042cbd0`·화면 갱신 `0043dad0`·`ascendancyPalette` 조회/팔레트 적재 `00459c60`+`004a4850`·번개 `00470fa0`·날씨 색 표 `004a2820`·`SoundView`(화면 영역/카메라)·월드 난수(지금은 `ClientAudio`가 `timeGetTime()`으로 시드한 난수를 따로 둔다). ③ **남은 곡 요청** — 제단 희생 시작 `00494efb`, 결과 화면 `004b7053`·`004b709c`·`004b70fc`·`004b7453`, 대기실 `0042c4c6`, 결과 상태(`resultState`) 연결, 전투 이탈 두 단계(`004b2df0`·`004b7453`) 분리(지금은 `StartScene(false)` 하나). ④ **효과음 호출자** — `004a9550` 호출 지점(건설·전투·UI 클릭·사제 등)과 `SoundProcess` 사제 방어막/낙하 소리를 월드 프로세스에 연결. ⑤ raw 월드/GUI·저장 맵 비표면 객체/미션 목록 수명·건설·경제·전투·AI·승패. **미션 완주는 아직 불가능하다.** dotnet 인계의 cpppj 브리핑 본문 글꼴 슬롯(5 대 0)·소유자 없는 타입의 dump-world 기본값(`value_or(1)` 대 0, 네 미션에는 해당 오브젝트가 없어 차이가 드러나지 않음)은 별도 원본 판정 대상으로 남긴다. outpost/LAN 3차·한국어/D2Coding/화면 요구사항/MCP 4차 유지.
+- [ ] **다음 싱글플레이:** ① **실제 청취(사람)** — 모든 검사가 음소거라 소리 크기·음질·끊김·음악/효과음 균형은 미확인이다. `cpppj/build/bin/Release/NetstormCpp.exe --run originals --window`로 들어 볼 수 있다(원본 `d/options.cfg`가 갱신된다). 장치 소실·음질 하향·긴 재생(곡 반복)·창 포커스 변화 중 동작도 미검증. ② **경계의 실제 연결** — 희생 판정 `00449220`·대기실 판정 `0042cbd0`·화면 갱신 `0043dad0`·`ascendancyPalette` 조회/팔레트 적재 `00459c60`+`004a4850`·번개 `00470fa0`·날씨 색 표 `004a2820`·`SoundView`(화면 영역/카메라)·월드 난수(지금은 `ClientAudio`가 `timeGetTime()`으로 시드한 난수를 따로 둔다). ③ **남은 곡 요청** — 알타 희생 시작 `00494efb`, 결과 화면 `004b7053`·`004b709c`·`004b70fc`·`004b7453`, 대기실 `0042c4c6`, 결과 상태(`resultState`) 연결, 전투 이탈 두 단계(`004b2df0`·`004b7453`) 분리(지금은 `StartScene(false)` 하나). ④ **효과음 호출자** — `004a9550` 호출 지점(건설·전투·UI 클릭·사제 등)과 `SoundProcess` 사제 방어막/낙하 소리를 월드 프로세스에 연결. ⑤ raw 월드/GUI·저장 맵 비표면 객체/미션 목록 수명·건설·경제·전투·AI·승패. **미션 완주는 아직 불가능하다.** dotnet 인계의 cpppj 브리핑 본문 글꼴 슬롯(5 대 0)·소유자 없는 타입의 dump-world 기본값(`value_or(1)` 대 0, 네 미션에는 해당 오브젝트가 없어 차이가 드러나지 않음)은 별도 원본 판정 대상으로 남긴다. outpost/LAN 3차·한국어/D2Coding/화면 요구사항/MCP 4차 유지.
 
 ## 2026-10-10 ✅ 완료 / ⏭ 부분 인계: 장면별 음악 감독 — 곡 요청·다음 곡·프레임 확인·시작·날씨 효과 (HJOW-Athlon)
 
@@ -799,7 +816,7 @@
 - [x] **변이 확인:** `tools/cpp_mutation_check.py`에 장면 음악 변이 15개(`scene-*`)를 추가해 저장소 밖 사본(`extracted/mutation-work`)에서 실행했다. **15개 모두 검출, 미검출 0** — 단 처음 실행은 14개 검출·1개 미검출이었고 그 하나(`scene-thunder-any-late-song`, `== 2` → `>= 2`)는 색인 3의 효과음 칸이 비어 도달 가능한 색인에서 동작이 같은 **동등 변이**여서 `scene-thunder-inverted`(`!=`)로 교체해 다시 확인했다(검출). 변이 전 사본은 빌드·검사 통과. 기록 `extracted/scenemusic-mutation-first.log`·`scenemusic-mutation-thunder.log`. 저장소 소스는 변이하지 않았다.
 - [x] **최종 검증:** Release 경고/오류 **0**, CTest 내부 **530개·실패 0**(158.06초 — 변이 확인과 함께 돌아 평소보다 길다), 원본 근거 감사 **81종 모두 통과**. 기록 `extracted/scenemusic-{export,oracle,oracle-final,build,build-final,tests-direct,ctest-final,audits,mutation}.log`·`scenemusic-audits.json`. 주석 보강 뒤 대조 도구를 다시 전체 실행해 fixture와 근거 JSON이 바이트 단위로 같음을 확인했다. 처음 작성한 거부 검사가 `Start`의 색인 재설정을 놓치고 예외를 기대해 실패했고, 원본 동작(전투 밖 시작은 색인을 3으로 되돌림)에 맞게 검사를 고쳤다.
 - [x] **앞 인계 해소:** 앞 절 ①의 곡 요청/순환/희생 요청/날씨 효과/곡 길이 조회/실시간 시계 사용을 끝냈다. 메뉴/전투 곡 순환·결과 곡 잠금·대기실 곡도 포함한다.
-- [ ] **다음 싱글플레이:** ① **경계의 실제 연결** — 희생 판정 `00449220`(플레이어→제단→룬 단계, 월드 필요)·대기실 판정 `0042cbd0`·화면 갱신 `0043dad0`·설정 조회 `00441470`·팔레트 경로 조립 `00459c60`과 적재 `004a4850`(0x308/0x400바이트 파일)·번개 `00470fa0`·실시간 시계 `00460d70`(`GameClock::WallSeconds`)·날씨 색 표 `004a2820`. ② **클라이언트 부착(2026-10-10 완료 — 위 절, 남은 곡 요청·SoundView는 위 절 ②③)** — `MusicRuntime`(HWND/장치/종료 순서), `GameWorld` 프레임에서 `Frame()`, 전투 시작/메뉴 진입에서 `Start()`, 제단 희생 시작(`00494efb`)·결과 화면(`004b7053` 외)에서 `Request()`, 소리/음악 옵션의 GUI. ③ 기존 무음 `netstorm_tests.exe --inspect-sound-device originals`는 **2026-10-10 실행·통과**(위 절); 실제 청취/장치 소실/음질 하향은 여전히 미검증. ④ raw 월드/GUI·저장 맵 비표면 객체/미션 목록 수명·건설·경제·전투·AI·승패. **미션 완주는 아직 불가능하다.** dotnet 최신 인계가 전달한 cpppj 브리핑 본문 글꼴 슬롯(5 대 0)·소유자 없는 타입의 dump-world 기본값(1 대 0)은 별도 원본 판정 대상으로 남긴다. outpost/LAN 3차·한국어/D2Coding/화면 요구사항/MCP 4차 유지.
+- [ ] **다음 싱글플레이:** ① **경계의 실제 연결** — 희생 판정 `00449220`(플레이어→알타→룬 단계, 월드 필요)·대기실 판정 `0042cbd0`·화면 갱신 `0043dad0`·설정 조회 `00441470`·팔레트 경로 조립 `00459c60`과 적재 `004a4850`(0x308/0x400바이트 파일)·번개 `00470fa0`·실시간 시계 `00460d70`(`GameClock::WallSeconds`)·날씨 색 표 `004a2820`. ② **클라이언트 부착(2026-10-10 완료 — 위 절, 남은 곡 요청·SoundView는 위 절 ②③)** — `MusicRuntime`(HWND/장치/종료 순서), `GameWorld` 프레임에서 `Frame()`, 전투 시작/메뉴 진입에서 `Start()`, 알타 희생 시작(`00494efb`)·결과 화면(`004b7053` 외)에서 `Request()`, 소리/음악 옵션의 GUI. ③ 기존 무음 `netstorm_tests.exe --inspect-sound-device originals`는 **2026-10-10 실행·통과**(위 절); 실제 청취/장치 소실/음질 하향은 여전히 미검증. ④ raw 월드/GUI·저장 맵 비표면 객체/미션 목록 수명·건설·경제·전투·AI·승패. **미션 완주는 아직 불가능하다.** dotnet 최신 인계가 전달한 cpppj 브리핑 본문 글꼴 슬롯(5 대 0)·소유자 없는 타입의 dump-world 기본값(1 대 0)은 별도 원본 판정 대상으로 남긴다. outpost/LAN 3차·한국어/D2Coding/화면 요구사항/MCP 4차 유지.
 
 ## 2026-10-10 ✅ 완료 / ⏭ 부분 인계: 두 음악 채널·작업 스레드 초기화/종료 (HJOW-Athlon)
 
@@ -996,19 +1013,19 @@
 - [x] **독립 원본 관찰:** 세 PE 각각 832개·총 **2,496개**, 두 x87 정밀도 일치. 전체 wrapper·실제 lookup/finder/좌표/CRT·공통 owner는 정상 반환까지 원본 명령이며 생성/Pop·소리 할당/조회/프로세스·전역 소리·번역/창만 명시 대체한다. 각 PE 정상 반환/lookup 1,664회·실제 owner/생성/Pop/new 각각 1,280회·소리 조회/프로세스 640회·로컬 소리 224회, 패치 번역/창 각 224회(CD 없음). ABI/x87/SEH FS:[0]·허용 코드/쓰기·해시 불변·raw/전역/사건·assert/OS 0·SHA/입력/행/실제 진입 감사. 누적 인계 **347,962개**, 기존 fixture/감사 도구 미수정, 새 근거 UTF-8/LF.
 - [x] **최종 검사:** Release 경고/오류 **0**, CTest 내부 **435개·실패 0**(118.77초), 감사 **65종 모두 통과**. 새 C++ 검사 5개. 전체 빌드 완료 후 새 실행 파일로 검사했으며 조기 중단한 `priestshield-ctest.log`는 완료 근거로 사용하지 않는다. 최종 로그 `extracted/priestshield-export.log`·`priestshield-oracle.log`·`priestshield-build.log`·`priestshield-ctest-final.log`·`priestshield-audits.log`. 변경 24개 파일의 UTF-8/AST/JSON·신규 fixture/근거 LF·문서 링크·보호 경로·git diff 검사도 통과했다.
 - [x] **후속 완료:** 위 2026-10-10 전체 wrapper 조합에서 실제 Carrier/이동 불가·지면·프레임·낙하 경계/보호막 생성·삭제 요청 결합을 완료했다. **남은 구현:** 실제 낙하 몸체·Carrier +0xcc·일반 사제 Pop·보호막 자체 공간 수명/소리 프로세스. 이어 저장 맵/raw 객체·공간 장부/미션 수명·GUI 건설·경제·전투·승패. 생성 wrapper 복원을 전체 사제/보호막 플레이 완료로 해석하지 않는다.
-- [ ] **3차 목표로 연기:** outpost 전용 일반 Pop/삭제·별도 목록 수명과 TCP/IP LAN 멀티플레이. 공통 작업장/지역 처리는 싱글플레이에 필요한 범위에서만 이어 간다.
+- [ ] **3차 목표로 연기:** outpost 전용 일반 Pop/삭제·별도 목록 수명과 TCP/IP LAN 멀티플레이. 공통 워크샾/지역 처리는 싱글플레이에 필요한 범위에서만 이어 간다.
 - [ ] **장시간 검증:** 자산 전수·장시간 변이·최대 지도/SID 소진·창/픽셀 회귀·Windows 10/11 반복 실행은 계속 인계한다.
 
 ---
 
-## 2026-10-09 ✅ 완료 / ⏭ 부분 인계: outpost·작업장 지역 소유 투표 (HJOW-Athlon)
+## 2026-10-09 ✅ 완료 / ⏭ 부분 인계: outpost·워크샾 지역 소유 투표 (HJOW-Athlon)
 
 - [x] **지침/호스트:** AGENTS.md·두 인계·cpppj 문서를 읽고 현재 호스트/마지막 분석 호스트 일치와 깨끗한 기준선을 확인했다. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-09.** 새 `regionownership` 10/8/8개 읽기 전용 내보내기. 게임/창 실행·보호 파일/AGENTS.md/dotnetpj 변경·커밋/푸시는 없다.
-- [x] **투표 결정 복원:** [`RawRegionOwnership`](cpppj/src/o/RawRegionOwnership.h)이 현재 추가 outpost/작업장 목록과 raw 좌표/소유자·중복 SID·소유자 0~8 표·동률 중립을 처리한다. 패치 mode 0의 마지막 일치 작업장 테마/옵션·mode 10의 중복 영향 지역 누적 표/1단계 재귀·두 도장/revision DWORD 감김/dirty와 CD 단일 도장을 구별한다. [주소·계약·남은 경계](docs/exe/cpp-region-ownership-reconstruction.md).
-- [x] **실제 모듈 연결:** 원본 0.99999 float snap을 실제 `RawCanonPlacementTerrain::RegionAt`의 WORD SID/genus/다리 sentinel/빈 칸 127에 연결했다. 도장 좌표는 편향 없이 절삭한다. outpost 생성자→첫 등록→작업장과 동률/중립→실제 Damageable 삭제 준비→남은 작업장 소유자/테마 복귀를 두 판본에서 검사했다. 다른 풀/누락 경계/손상 입력도 검사한다. 일반 Pop 지원 가상 표는 바꾸지 않았다.
+- [x] **투표 결정 복원:** [`RawRegionOwnership`](cpppj/src/o/RawRegionOwnership.h)이 현재 추가 outpost/워크샾 목록과 raw 좌표/소유자·중복 SID·소유자 0~8 표·동률 중립을 처리한다. 패치 mode 0의 마지막 일치 워크샾 테마/옵션·mode 10의 중복 영향 지역 누적 표/1단계 재귀·두 도장/revision DWORD 감김/dirty와 CD 단일 도장을 구별한다. [주소·계약·남은 경계](docs/exe/cpp-region-ownership-reconstruction.md).
+- [x] **실제 모듈 연결:** 원본 0.99999 float snap을 실제 `RawCanonPlacementTerrain::RegionAt`의 WORD SID/genus/다리 sentinel/빈 칸 127에 연결했다. 도장 좌표는 편향 없이 절삭한다. outpost 생성자→첫 등록→워크샾과 동률/중립→실제 Damageable 삭제 준비→남은 워크샾 소유자/테마 복귀를 두 판본에서 검사했다. 다른 풀/누락 경계/손상 입력도 검사한다. 일반 Pop 지원 가상 표는 바꾸지 않았다.
 - [x] **독립 원본 관찰:** 세 PE 각각 440개·총 **1,320개**, 두 x87 정밀도 일치. 전체 wrapper/재귀·실제 getter/CRT/clear/drawer 생성자를 cdecl 정상 반환까지 실행하며 **지형 flood/도장과 theammode 조회만 명시 대체**한다. 각 PE 정상 반환 880회, 패치 실제 wrapper 1,168회(재귀 288)·도장 2,336회·옵션/테마 getter 984회·지역 getter 13,152회, CD/10.37 도장 880회·지역 getter 8,592회. assert/OS 0·ABI/x87·raw/목록 불변·순서/전역·SHA/입력/행/실제 진입 감사. 누적 fixture **345,466개**, 기존 fixture/감사 도구 미수정, 새 근거 LF 고정.
 - [x] **최종 검사:** Release 경고/오류 **0**, CTest 내부 **430개·실패 0**(120.90초), 감사 **64종 모두 통과**. 새 C++ 검사 5개. 로그 `extracted/regionownership-export.log`·`regionownership-oracle.log`·`regionownership-build.log`·`regionownership-ctest.log`·`regionownership-audits.log`. UTF-8·Python AST·JSON·LF·신규 문서 링크·보호 경로·git diff 검사도 통과했다.
-- [ ] **우선순위 변경 인계:** 지역 flood/도장 몸체·실제 타입 +0x98 테마/옵션 자료 연결·작업장 postPop/Regular·미션 목록 확보/해제·저장 맵/raw outpost 일반 Pop/삭제 연결. outpost 전용 Pop/삭제·목록 수명은 3차 목표로 연기한다. 공통 작업장/지역 처리는 싱글플레이에 필요한 범위에서 진행한다. 이어 사제 Pop·보호막 생성/회복 예약·Carrier와 GUI 건설·경제·전투·승패. wrapper 자체 revision만 복원했으며 도장 내부 증가/지형 변화·실제 플레이 완료를 주장하지 않는다.
+- [ ] **우선순위 변경 인계:** 지역 flood/도장 몸체·실제 타입 +0x98 테마/옵션 자료 연결·워크샾 postPop/Regular·미션 목록 확보/해제·저장 맵/raw outpost 일반 Pop/삭제 연결. outpost 전용 Pop/삭제·목록 수명은 3차 목표로 연기한다. 공통 워크샾/지역 처리는 싱글플레이에 필요한 범위에서 진행한다. 이어 사제 Pop·보호막 생성/회복 예약·Carrier와 GUI 건설·경제·전투·승패. wrapper 자체 revision만 복원했으며 도장 내부 증가/지형 변화·실제 플레이 완료를 주장하지 않는다.
 - [ ] **장시간 검증:** 여러 판본 자산 전수·장시간 변이·최대 지도/SID 소진·창/픽셀 회귀는 계속 인계한다.
 
 ---
@@ -1018,10 +1035,10 @@
 - [x] **지침/호스트:** AGENTS.md·두 인계·cpppj 문서를 읽고 호스트 일치/깨끗한 기준선을 확인했다. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-09.** 새 `outpostlifecycle` 4/2/2개 읽기 전용 내보내기. 게임/창 실행·보호 파일/AGENTS.md/dotnetpj 변경·커밋/푸시는 없다.
 - [x] **별도 목록 정체/접두 복원:** [`RawOutpostLifecycle`](cpppj/src/o/RawOutpostLifecycle.h)이 실제 타입 126 outpost의 postPop/preDestroy를 복원한다. 배치 추가 목록 `0055a70c`/CD `005670e0`와 별도 거리 후보 `0059a9d8`/CD `00565ae0`를 factories와 구분한다. 첫 Pop/extra 조건·용량/중복 없는 추가·모든 중복 제거/순서/비활성 꼬리·지역 통지 뒤 같은 flags의 부모 호출을 유지한다. [주소·계약·남은 경계](docs/exe/cpp-outpost-lifecycle-reconstruction.md).
 - [x] **실제 모듈 연결:** 등록/중복 등록/삭제/재등록에 따라 같은 additional 목록을 읽는 실제 Player 종속·그래프 기준점의 반환이 즉시 변한다. 실제 outpost 생성자 쓰기와 Damageable 붕괴·소리·공통 부모 호출을 합성 장면에서 연결했다. 다른 풀/필수 훅/손상 두 번째 목록/부모 사전 거부/조기 읽기 생략도 검사한다. 일반 Pop 가상 표 지원 범위는 바꾸지 않았다.
-- [x] **독립 원본 관찰:** 세 PE 각각 768개·총 **2,304개**, 두 x87 정밀도 일치. wrapper/실제 Array는 ret 4까지 실행하며 지역 소유 투표·작업장 postPop·Damageable 부모 진입만 명시 대체한다. 각 PE 정상 반환/부모 대체 1,536회·지역 대체 672회, 패치 실제 Array 추가 576회/제거 768회(CD 인라인). assert/OS 0·ABI/x87·목록 전체/꼬리/raw/사건·SHA/입력/행/실제 진입 감사. 누적 fixture **344,146개**, 기존 fixture/감사 도구 미수정, 새 근거 LF 고정.
+- [x] **독립 원본 관찰:** 세 PE 각각 768개·총 **2,304개**, 두 x87 정밀도 일치. wrapper/실제 Array는 ret 4까지 실행하며 지역 소유 투표·워크샾 postPop·Damageable 부모 진입만 명시 대체한다. 각 PE 정상 반환/부모 대체 1,536회·지역 대체 672회, 패치 실제 Array 추가 576회/제거 768회(CD 인라인). assert/OS 0·ABI/x87·목록 전체/꼬리/raw/사건·SHA/입력/행/실제 진입 감사. 누적 fixture **344,146개**, 기존 fixture/감사 도구 미수정, 새 근거 LF 고정.
 - [x] **최종 검사:** Release 경고/오류 **0**, CTest 내부 **425개·실패 0**(112.07초), 감사 **63종 모두 통과**. 새 C++ 검사 5개. 최초 검사에서는 테스트가 미할당 SID에 AllocatedBytes로 쓰려다 실패해 독립 raw 입력 어댑터로 바로잡았다. 원본 관찰값을 수정하지 않았다. 로그 `extracted/outpostlifecycle-export.log`·`outpostlifecycle-oracle-final.log`·`outpostlifecycle-build-final.log`·`outpostlifecycle-ctest-final.log`·`outpostlifecycle-audits-final.log`.
 - [x] **후속 부분 완료:** 지역 소유 투표 결정은 위 regionownership 단계에서 복원했다. 지형 도장 몸체는 후속이다.
-- [ ] **우선순위 변경 인계:** 지역 지형 flood/도장·작업장 postPop/Regular·미션 목록 확보/초기화/반납과 실제 저장 맵/raw 세계의 outpost 일반 Pop/삭제 연결. outpost 전용 Pop/삭제·목록 수명은 3차 목표로 연기한다. 공통 작업장/지역 처리는 싱글플레이에 필요한 범위에서 진행한다. 이어 사제 Pop·보호막 생성/회복 예약·Carrier 상태 검사와 GUI 건설·경제·전투·승패. 이번 목록 접두 완료를 전체 객체/공간 수명이나 실제 플레이 완료로 해석하지 않는다.
+- [ ] **우선순위 변경 인계:** 지역 지형 flood/도장·워크샾 postPop/Regular·미션 목록 확보/초기화/반납과 실제 저장 맵/raw 세계의 outpost 일반 Pop/삭제 연결. outpost 전용 Pop/삭제·목록 수명은 3차 목표로 연기한다. 공통 워크샾/지역 처리는 싱글플레이에 필요한 범위에서 진행한다. 이어 사제 Pop·보호막 생성/회복 예약·Carrier 상태 검사와 GUI 건설·경제·전투·승패. 이번 목록 접두 완료를 전체 객체/공간 수명이나 실제 플레이 완료로 해석하지 않는다.
 - [ ] **장시간 검증:** 여러 판본 자산 전수·장시간 변이·최대 지도/SID 소진·창/픽셀 회귀는 계속 인계한다.
 
 ---
@@ -1035,7 +1052,7 @@
 - [x] **최종 검사:** Release 경고/오류 **0**, CTest 내부 **420개·실패 0**(122.18초), 감사 **62종 모두 통과**. 새 C++ 검사 3개가 세 PE 전체 432행을 실제 파이프라인으로 재생한다. 로그 `extracted/canonmayplace-export.log`·`canonmayplace-oracle-final.log`·`canonmayplace-build-final.log`·`canonmayplace-ctest-final.log`·`canonmayplace-audits-final.log`·`canonmayplace-assets.log`·`cpp-canonmayplace-assets-report.json`.
 - [x] **후속 부분 완료:** 별도 Player 추가 목록의 outpost 등록/삭제 준비 접두는 위 outpostlifecycle 단계에서 복원했다.
 - [x] **후속 부분 완료:** 지역 소유 투표 결정은 위 regionownership 단계에서 복원했다.
-- [ ] **우선순위 변경 인계:** 지역 지형 flood/도장·작업장 postPop/Regular·미션 목록 확보/해제와 실제 맵/raw outpost 일반 Pop/삭제 연결, outpost 전용 Pop/삭제·목록 수명은 3차 목표로 연기한다. 공통 작업장/지역 처리는 싱글플레이에 필요한 범위에서 진행한다. 이어 사제 Pop·보호막/회복 예약·Carrier와 GUI 건설·경제·전투·승패. 전체 객체 수명·실제 플레이는 후속이다.
+- [ ] **우선순위 변경 인계:** 지역 지형 flood/도장·워크샾 postPop/Regular·미션 목록 확보/해제와 실제 맵/raw outpost 일반 Pop/삭제 연결, outpost 전용 Pop/삭제·목록 수명은 3차 목표로 연기한다. 공통 워크샾/지역 처리는 싱글플레이에 필요한 범위에서 진행한다. 이어 사제 Pop·보호막/회복 예약·Carrier와 GUI 건설·경제·전투·승패. 전체 객체 수명·실제 플레이는 후속이다.
 - [ ] **장시간 검증:** 여러 판본 실제 자산 전수·변이 전수·최대 지도·창/픽셀 회귀·0 발자국/비정상 입력 전수는 계속 인계한다.
 
 ---
@@ -1066,13 +1083,13 @@
 
 ---
 
-## 2026-10-09 ✅ 완료 / ⏭ 부분 인계: Player 작업장·그래프 배치 기준점 조회 (HJOW-Athlon)
+## 2026-10-09 ✅ 완료 / ⏭ 부분 인계: Player 워크샾·그래프 배치 기준점 조회 (HJOW-Athlon)
 
 - [x] **지침/호스트:** AGENTS.md·두 인계 문서·cpppj 내부 문서를 읽고 현재/마지막 호스트 일치를 확인했다. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-09.** 새 `playeranchor` 목록 14/15/15개를 읽기 전용으로 내보냈다. 원본 게임/복사본·클론 창·OS 실행, 보호 파일/AGENTS.md/dotnetpj 변경·커밋/푸시는 없다.
-- [x] **복원/연결:** [`RawPlayerPlacementAnchor`](cpppj/src/o/RawPlayerPlacementAnchor.h)은 `0048fdb0`/CD `00406f80`의 현재 작업장·별도 추가 목록·종속 조건·40개 순서/중복·하나/거리 선택, 좌표/SID 그래프를 복원한다. 공통 ownerFactories를 공유하고 별도 `0055a70c`/CD `005670e0` 목록은 factories와 구분한다. 실제 SquidOwner 등록/제거→Player 조회→후보 권한→지형에 연결했다. [주소/계약/한계](docs/exe/cpp-player-anchor-reconstruction.md).
+- [x] **복원/연결:** [`RawPlayerPlacementAnchor`](cpppj/src/o/RawPlayerPlacementAnchor.h)은 `0048fdb0`/CD `00406f80`의 현재 워크샾·별도 추가 목록·종속 조건·40개 순서/중복·하나/거리 선택, 좌표/SID 그래프를 복원한다. 공통 ownerFactories를 공유하고 별도 `0055a70c`/CD `005670e0` 목록은 factories와 구분한다. 실제 SquidOwner 등록/제거→Player 조회→후보 권한→지형에 연결했다. [주소/계약/한계](docs/exe/cpp-player-anchor-reconstruction.md).
 - [x] **원본 차이/회귀 수정:** 디컴파일에 생략된 0.9999 fadd를 지도 경계 fixture 실패로 찾아 원본 상수/명령대로 반영했다. sqrt(5) 동률의 뒤 후보 51 선택을 두 개의 추가 원본 입력으로 확인하여 float 최소값 저장을 검증한다. NaN은 패치 C0/C2가 제외하지만 CD C0만 검사하여 채택한다. CD fixture 실패를 원본 명령에 따라 수정했다. 초기 실패를 숨기거나 기존 기대값을 바꾸지 않았다.
 - [x] **독립 대조:** 새 [`decomp_playeranchor_oracle.py`](tools/decomp_playeranchor_oracle.py), 세 PE 각각 1,598개(collector 1,296·좌표 60·SID 180·거리 62), 총 **4,794개**·두 x87 정밀도 일치. Player/거리/그래프/contained 몸체와 CD 정리 래퍼는 정상 반환까지 실제 실행한다. **임시 160바이트 확보/반납 진입만 명시 대체**하며 메모리 부족/예외 전파는 검증하지 않는다. 반환/후보 목록·raw/지도 checksum·cdecl ESP/보존 레지스터·FS/x87·코드/쓰기·assert/OS 0·SHA/행/실제 진입/메모리 균형 감사. 누적 fixture **332,917개**, 기존 fixture/감사 도구는 미수정이다.
-- [x] **최종 C++ 검사/감사:** Release 경고/오류 **0**, CTest 내부 **406개·실패 0**(113.03초), 감사 **59종 모두 통과**. 새 검사 5개(세 PE 전체 재생·실제 작업장 장부/종속/후보 권한/지형 연결·자료/풀/조기 읽기/SID 보호)가 통과했다. 로그 `extracted/cpp-playeranchor-export.log`·`cpp-playeranchor-oracle-final.log`·`cpp-playeranchor-verify-final.log`·`cpp-playeranchor-build-final.log`·`cpp-playeranchor-ctest-final.log`·`cpp-playeranchor-audits-final.log`.
+- [x] **최종 C++ 검사/감사:** Release 경고/오류 **0**, CTest 내부 **406개·실패 0**(113.03초), 감사 **59종 모두 통과**. 새 검사 5개(세 PE 전체 재생·실제 워크샾 장부/종속/후보 권한/지형 연결·자료/풀/조기 읽기/SID 보호)가 통과했다. 로그 `extracted/cpp-playeranchor-export.log`·`cpp-playeranchor-oracle-final.log`·`cpp-playeranchor-verify-final.log`·`cpp-playeranchor-build-final.log`·`cpp-playeranchor-ctest-final.log`·`cpp-playeranchor-audits-final.log`.
 - [x] **후속 완료:** 모양 기반 flag 8 주변 finder/바깥 권한 관계는 위 후속 단계에서 복원했다.
 - [x] **후속 완료:** 최종 표면 소유 관계/특수 지역/거부 조건은 위 `canonrelations` 단계에서 복원했다.
 - [ ] **다음 작은 구현:** 전체 MayPlace 제한 대조/대표 자산 연결은 위 canonmayplace에서 완료. 후속은 실제 맵/공간 장부·별도 추가 목록의 생성/삭제/공간 수명. 이어 사제 Pop·보호막/회복 예약·Carrier 및 raw GUI·건설·경제·전투·승패다.
@@ -1084,10 +1101,10 @@
 
 - [x] **지침/호스트:** AGENTS.md·두 인계 문서·cpppj 내부 문서를 읽고 현재/마지막 호스트 일치를 확인했다. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-09.** 새 `canonpermission` 목록 3/2/2개를 읽기 전용으로 내보냈다. 원본 게임/복사본·클론 창·OS 실행, 보호 파일/AGENTS.md/dotnetpj 변경·커밋/푸시는 없다.
 - [x] **복원:** [`RawCanonPlacementPermission`](cpppj/src/o/RawCanonPlacementPermission.h)은 후보 helper `00462cb0`/CD `0045bae0`의 그래프 준비/요청 owner 0 조기 반환·현재 raw 소유자 BYTE·편집기/동일 owner/방향 동맹·중립/다른 owner 허용과 Player 조회 DWORD 반환을 보존한다. 별도 관계 `004629e0`은 방향 관계만 검사한다. DWORD 인덱스 감김을 유지하며 실제 표 밖 읽기를 진단한다. [주소/계약/한계](docs/exe/cpp-canon-permission-reconstruction.md).
-- [x] **필수 경계/지형 연결:** Player 작업장·그래프 locator `0048fdb0`/CD `00406f80` 몸체는 필수 조회 경계다. 현재 raw 타입/좌표 비트·요청 owner를 전달한다. `MakeCanonPermissionTerrainHooks`는 원래 요청 DWORD를 유지하고 helper owner만 하위 BYTE 부호 확장한다. 실제 두 판본 3×3 decoder/미리보기/finder/지형에서 첫 조회 0/두 번째 DWORD 허용 후 권한 유지·후속 조회 생략·비활성 그래프/모양별 주변 조회를 검사했다. 주변/최종 정책의 공급값을 원본 전체 MayPlace 결과로 해석하지 않는다.
+- [x] **필수 경계/지형 연결:** Player 워크샾·그래프 locator `0048fdb0`/CD `00406f80` 몸체는 필수 조회 경계다. 현재 raw 타입/좌표 비트·요청 owner를 전달한다. `MakeCanonPermissionTerrainHooks`는 원래 요청 DWORD를 유지하고 helper owner만 하위 BYTE 부호 확장한다. 실제 두 판본 3×3 decoder/미리보기/finder/지형에서 첫 조회 0/두 번째 DWORD 허용 후 권한 유지·후속 조회 생략·비활성 그래프/모양별 주변 조회를 검사했다. 주변/최종 정책의 공급값을 원본 전체 MayPlace 결과로 해석하지 않는다.
 - [x] **독립 대조:** 새 [`decomp_canonpermission_oracle.py`](tools/decomp_canonpermission_oracle.py), 10.78 후보 5,520개+방향 관계 330개·CD/추가 10.37 후보 각각 5,520개·총 **16,890개**, 두 x87 정밀도 일치. helper 전체 정상 반환/cdecl ABI/보존 레지스터·실제 조기 분기/방향 표 읽기·raw/전역/조회 인자를 대조한다. **Player 진입에서 반환/변화만 명시 대체하고 그 몸체는 실행하지 않는다.** 각 PE 실제 후보 11,040회/대체 3,768회, 패치 실제 관계 660회, assert/OS 0회·SHA/행/실제 진입 수 감사. 누적 fixture **328,123개**, 기존 fixture/감사 도구는 미수정이다.
-- [x] **C++ 검증/감사:** Release 경고/오류 **0**, CTest 내부 **401개·실패 0**(101.73초), 감사 **58종 모두 통과**. 새 검사 6개(세 PE 전체 재생·패턴 지형 합성·signed owner/현재 변화/조기 SID 생략·누락 경계/다른 풀/표 밖 주소)가 통과했다. 함수 목록 설명을 작업장·그래프 조회로 정확히 정리한 뒤 새 fixture/근거를 재생성하고 새 SHA 감사도 통과했다. 로그 `extracted/cpp-canonpermission-export.log`·`cpp-canonpermission-oracle.log`·`cpp-canonpermission-build.log`·`cpp-canonpermission-ctest.log`·`cpp-canonpermission-audits.log`.
-- [x] **후속 완료:** Player 작업장·그래프 조회/40개 목록/거리 선택은 위 후속 단계에서 복원하고 임시 메모리만 대체한 원본 실행과 대조했다.
+- [x] **C++ 검증/감사:** Release 경고/오류 **0**, CTest 내부 **401개·실패 0**(101.73초), 감사 **58종 모두 통과**. 새 검사 6개(세 PE 전체 재생·패턴 지형 합성·signed owner/현재 변화/조기 SID 생략·누락 경계/다른 풀/표 밖 주소)가 통과했다. 함수 목록 설명을 워크샾·그래프 조회로 정확히 정리한 뒤 새 fixture/근거를 재생성하고 새 SHA 감사도 통과했다. 로그 `extracted/cpp-canonpermission-export.log`·`cpp-canonpermission-oracle.log`·`cpp-canonpermission-build.log`·`cpp-canonpermission-ctest.log`·`cpp-canonpermission-audits.log`.
+- [x] **후속 완료:** Player 워크샾·그래프 조회/40개 목록/거리 선택은 위 후속 단계에서 복원하고 임시 메모리만 대체한 원본 실행과 대조했다.
 - [x] **후속 완료:** 실제 주변 표면 finder/권한 누적은 위 후속 단계에서 복원했다.
 - [ ] **남은 구현:** 최종 표면 관계/특수 지역/거부·별도 추가 목록 수명 연결. 이어 사제 Pop·보호막 생성/회복 예약·Carrier +0xcc/+0xc8 상태 검사/낙하·raw GUI·건설·경제·전투·승패다. 일반 타입/패턴 전체 MayPlace는 아직 완료되지 않았다.
 - [ ] **장시간 검증:** 여러 판본 실제 자산 전체 합성·변이 전수·창/픽셀·최대 지도/공간 회귀는 계속 인계한다. 이번 단계는 30분 범위의 정적/제한 기계어/콘솔 검증이다.
@@ -1549,7 +1566,7 @@
 - [x] **줄바꿈에 좌우되던 SHA 수정:** `decomp_bridgeeffects_oracle.py`·`decomp_rawfinder_oracle.py`가 `newline` 없이 써서 Windows에서 CRLF 파일의 SHA를 기록하던 것을 고쳤고, `.gitattributes`에 `tools/decomp_*.py`·`tools/ghidra/*.java`·`tools/ghidra/*-functions.json`·`cpppj/recovery-*.json`을 `eol=lf`, `*.ps1`을 `eol=crlf`로 고정했다(`decomp_rawgraph_oracle.py`의 CRLF 사본 SHA가 여러 증거에 기록돼 있었다).
 - [x] **이 PC의 오래된 사본 교체:** `extracted/sid/originalCD`·`extracted/creation/originalCD`가 예전 프로젝트 상태의 것이었다(잘못된 주소 한 줄·함수 하나 더). 새로 내보낸 파일이 다른 PC가 기록한 SHA와 일치한다(옛 사본은 `extracted/_stale/`에 보관).
 - [x] **증거 재기록:** 영향받는 11개 도구(`bridgeevent`·`bridgedecay`·`bridgeeffects`·`rawfinder`·`graphremove`·`graphlookup`·`graphrebuild`·`graphrecovery`·`destroy`·`destroylifecycle`·`destroygraph`)를 이 PC에서 다시 실행했다. **모든 fixture가 바이트 단위로 그대로였고**(증거 JSON의 SHA 항목만 바뀜) 원본 assert 0이다. 그 결과 **`--verify` 감사 25개가 모두 통과**한다(처음에는 24개 중 11개 실패). 로그 `extracted/regen/`.
-- [x] **소유자 지정 복원:** base Squid vtable +0x74(`004adf00`/CD `004aefa0`, 다리 vtable도 같은 함수). 범위 검사 → 요새/전투 모드이고 genus가 vortex·factory(`0x4200`)이면 이전 소유자의 작업장 목록에서 이 번호를 모두 제거 → 소유자 바이트 쓰기 → void·buried가 아니면 새 소유자의 목록 끝에 추가(가득 차면 생략). C++ [`SquidOwner`](cpppj/src/o/SquidOwner.h)는 범위 밖 번호(원본 assert)와 목록이 없는 9~39번을 쓰기 전에 거부한다. 새 도구 [`tools/decomp_owner_oracle.py`](tools/decomp_owner_oracle.py)·[`owner-x86.tsv`](cpppj/tests/fixtures/owner-x86.tsv)·[`recovery-owner-evidence.json`](cpppj/recovery-owner-evidence.json): 세 PE × 1,000 = **3,000개, 대체 함수 없음**, assert 0. C++는 첫 실행에서 전부 일치했다. [근거](docs/exe/cpp-owner-reconstruction.md).
+- [x] **소유자 지정 복원:** base Squid vtable +0x74(`004adf00`/CD `004aefa0`, 다리 vtable도 같은 함수). 범위 검사 → 요새/전투 모드이고 genus가 vortex·factory(`0x4200`)이면 이전 소유자의 워크샾 목록에서 이 번호를 모두 제거 → 소유자 바이트 쓰기 → void·buried가 아니면 새 소유자의 목록 끝에 추가(가득 차면 생략). C++ [`SquidOwner`](cpppj/src/o/SquidOwner.h)는 범위 밖 번호(원본 assert)와 목록이 없는 9~39번을 쓰기 전에 거부한다. 새 도구 [`tools/decomp_owner_oracle.py`](tools/decomp_owner_oracle.py)·[`owner-x86.tsv`](cpppj/tests/fixtures/owner-x86.tsv)·[`recovery-owner-evidence.json`](cpppj/recovery-owner-evidence.json): 세 PE × 1,000 = **3,000개, 대체 함수 없음**, assert 0. C++는 첫 실행에서 전부 일치했다. [근거](docs/exe/cpp-owner-reconstruction.md).
 - [x] **다리 이벤트 처리기 연결:** `MakeBridgeRegularHandler`가 부모 객체의 **가상 표 기록값**(다리 `005034c8`/CD `00501ab0`)으로 분배한다. 단위 검사 `bridge_event_runs_from_scheduled_fall_through_regular_process`가 지연 낙하 예약 → Kernel 프레임 → 분배 → 끝 칸 변환(소유자 지정은 실제 함수) → 권한 없을 때 예약 종료를 확인한다. 외부 효과(이웃·생성·삭제·Pop)는 여전히 기록 훅이다.
 - [x] **확인한 사실:** (1) 글자 표 함수 `0049b060`은 타입 후처리 `0049b0d0`가 모든 타입에 대해 부른다(`0049b4b8`, CD `0044519d`). (2) 실제 `bridge.type`은 프레임 60개·글자 16종이고 끝 프레임은 L 47·M 50·N 53·O 56(보통 프레임), J·K에서 교체가 막히는 것은 번호 20(0x40) 둘뿐이다. (3) "표면 알림" `004214a0`은 상태를 바꾸지 않는 디버그 검사(수명 > 7이면 assert)이고 CD `00448c10`은 슬롯 주소만 돌려준다 — 연결하지 않아도 게임 상태는 같다.
 - [x] **변이 확인 도구를 안전하게 고침:** `tools/cpp_mutation_check.py`가 저장소 소스를 직접 바꾸던 것을 **Git 제외 폴더 `extracted/mutation-work`의 사본**에서 별도 빌드로 하도록 바꿨다(변이 확인 중에 커밋해도 변이가 저장소에 들어가지 않는다). 변이 전 사본의 검사가 모두 통과해야 진행한다. 새 변이 5개(처리기 분배 1·소유자 지정 4)를 더해 정의는 18개다. 새 변이 5개는 **모두 검출**됐다(처리기 분배는 통합 단위 검사가, 소유자 지정 4개는 세 판본 fixture가 검출). 이번에는 앞선 13개를 다시 돌리지 않았다.
@@ -1634,7 +1651,7 @@
 
 - [x] **지침/기준:** AGENTS.md·최신 LEFT_JOBS.md와 이전 근거를 읽고 공통 삭제의 다음 장부 처리를 복원했다. 1차 기준 10.78·CD/추가 10.37 비교를 유지했다. AGENTS.md·C#·LEFT_JOBS.dotnetpj.md 변경/커밋은 없다. 이전 일회성 창 허용을 적용하지 않았다.
 - [x] **읽기 전용 재디컴파일:** 공통 pre/post·선택 복구·목록/타입 감소·AI null 래퍼·삭제 보상 경계를 새 `extracted/destroylifecycle/`에 내보냈다. 패치 14개·CD/10.37 각각 20개, 세 완료/read-only 로그 확인. 기존 내보내기·독립 도구·fixture는 보존했다.
-- [x] **C++ 장부/연결:** `SquidDestroyLifecycle`가 선택/abstract 배치 복구→소유자 작업장→보상 사건→현재 로컬/전역 타입 수 감소→unitLost 사건/좌표→공급→AI(null)→전역 작업장→깊이 감소, post ordinary 비용/깊이 감소를 복원했다. 생성과 같은 `SquidPostPopState`를 공유하고 실제 RawSquidDestroy/Unpop/SID Release에 연결했다. 중복 전부 제거·순서/inactive 꼬리·소유자 0 목록 보존·누적 made 유지·DWORD 감김·패치 silentType의 소리만 제외를 대조했다. post 비용은 장부 억제와 무관하며 패치 정수 비용/CD float 차감 뒤 절삭 차이를 유지한다.
+- [x] **C++ 장부/연결:** `SquidDestroyLifecycle`가 선택/abstract 배치 복구→소유자 워크샾→보상 사건→현재 로컬/전역 타입 수 감소→unitLost 사건/좌표→공급→AI(null)→전역 워크샾→깊이 감소, post ordinary 비용/깊이 감소를 복원했다. 생성과 같은 `SquidPostPopState`를 공유하고 실제 RawSquidDestroy/Unpop/SID Release에 연결했다. 중복 전부 제거·순서/inactive 꼬리·소유자 0 목록 보존·누적 made 유지·DWORD 감김·패치 silentType의 소리만 제외를 대조했다. post 비용은 장부 억제와 무관하며 패치 정수 비용/CD float 차감 뒤 절삭 차이를 유지한다.
 - [x] **의미/범위 정정:** 기존 “경로” 후보 `0044c2f0`/CD `004626d0`는 가상 비용·보상 비율·SP/수입 계산이다. 이번에는 sid/flags 16..19비트/마지막 0을 외부 보상 사건으로 전달하며 실제 SP를 갱신하지 않는다. AI 미부착·Graph 비활성·표시 억제·비전투 null 큐 범위다. 손상 목록/누락 효과·Graph/AI·비유한 비용·다른 풀/root는 해당 장부 쓰기 전에 거부하나 상위 Destroy의 dead·콜백/이후 오류까지 전체 롤백하지 않는다. raw GameWorld는 미연결이다.
 - [x] **원본 x86/콘솔:** 세 실제 PE×x87 53/64비트, 새 **1,728개**(직접 pre/post 쌍 1,152·실제 삭제/공간 해제/반납 576). 훅·목록 압축·선택 복구·통계/비용·AI null 래퍼·destroy/Unpop/Release/CRT 기록 이동은 실제 명령, 보상/SP·소리·선택 UI·전파/로그는 명시적 대체다. 직접 쌍의 깊이 DWORD underflow와 통합 삭제의 균형을 구별하며 건물 통합 입력은 이미 void라 건물 Unpop 완료로 세지 않는다. 각 PE 내부 Pre/Post 576·Destroy/Release 192·Unpop 104·owner 제거 232/provider 60/factory 58/AI wrapper 140, 원본 assert 0·정상 반환/ESP/x87 확인. 별도 FS 감사는 없다.
 - [x] **최종 검사/보호:** Release 경고/오류 0·CTest 실행 파일 1개 안의 내부 **175개·실패 0**(60.85초), 누적 제한 x86 **87,312개**. 생성→삭제 공유 장부·누적 made 유지·억제/비용·미지원 효과 보호와 기존 전체 회귀를 통과했다. 새/기존 공통 삭제·일반 탐색·다리 훅·붕괴 SHA/행 수/호출 감사 통과. 여섯 원본 디렉터리 **2,782개 파일 SHA/목록이 시작과 동일**하다. 게임/복사본·업데이터/설치·클론 창 실행 없음. 로그 `extracted/destroylifecycle/build.log`·`ctest.log`·`oracle.log`.
@@ -1654,7 +1671,7 @@
 - [x] **독립 x86/콘솔:** 세 실제 PE×x87 53/64비트, 새 **1,992개**(공통 Destroy 1,800·다리 중첩 192). 실제 common destroy/다리 훅/finder/Unpop/Release와 CRT 삭제 기록 이동이며 Pre/Post·종속·전파/선택·로그·파편/소리/낙하는 명시적 대체다. 슬롯 바이트·전체 풀/네 해시/spot/두 삭제 기록·목록/카운터·선택/깊이를 대조했다. 각 PE 내부 Destroy 712/Unpop 440/Release 600/BridgePre/Post 각각 48/Begin 96/Next 704, assert 0·정상 반환/ESP/x87 확인. 별도 FS 감사는 추가하지 않았다.
 - [x] **최종 검증/보호:** x64 Release 경고/오류 0·콘솔 CTest 실행 파일 1개 안의 내부 **169개·실패 0**(68.81초), 누적 제한 x86 **85,584개**. 재삭제·훅 완료 누락·권한/다른 풀·손상 종속을 검사했다. 최초 C++ 합성 입력의 판본 타입 개수/비종속 next를 수정했으며 독립 기계어 기대값은 보존했다. 새/기존 탐색·삭제 훅·붕괴 감사 통과. 로그 `extracted/destroy/build.log`·`ctest.log`. 여섯 원본 디렉터리 **2,782개 파일 SHA/목록이 시작과 동일**하다. 원본/복사본·업데이터/설치·클론 창 실행 없음.
 - [x] **문서:** [공통 삭제 복원](docs/exe/cpp-destroy-reconstruction.md), cpppj README·빌드/로드맵/실제 플레이 계획·앞선 훅/탐색 문서·한국어/영어 루트 README에 최신 범위와 파편 함수 정정을 반영했다. dotnetpj 인수인계는 보존했다.
-- [x] **후속 일부 완료(위 최신 장부 절):** 선택/abstract 배치 복구·공급/작업장/소유자 목록·현재/누적 통계·unitLost 사건/좌표·비용을 실제 공통 삭제에 연결했다. `0044c2f0`/CD `004626d0`는 삭제 보상/SP 경계로 정정했다. Graph 분할/Free·주변 Add·실제 보상/SP·AI·종속 파생 메서드·파편/낙하/소리·raw GameWorld는 최신 남은 작업을 따른다.
+- [x] **후속 일부 완료(위 최신 장부 절):** 선택/abstract 배치 복구·공급/워크샾/소유자 목록·현재/누적 통계·unitLost 사건/좌표·비용을 실제 공통 삭제에 연결했다. `0044c2f0`/CD `004626d0`는 삭제 보상/SP 경계로 정정했다. Graph 분할/Free·주변 Add·실제 보상/SP·AI·종속 파생 메서드·파편/낙하/소리·raw GameWorld는 최신 남은 작업을 따른다.
 - [ ] **창 검증 인계:** 호스트 **`DESKTOP-HJOW`의 기존 창 제한을 유지**한다. 다른 허용 PC에서 raw 월드 연결 후 다리 붕괴→Graph/공간/반납→파편/소리/낙하와 TEST01/1-1 생성·삭제·재진입을 검사한다. 원본 실행은 해당 AGENTS.md/사용자 지시를 확인한다.
 
 ---
@@ -1697,7 +1714,7 @@
 - [x] **분석으로 새로 확정한 것:** (1) 스캔 `00422bc0`의 프레임당 개수는 디컴파일에 없는 x87 식 `trunc(delta / 10.0f × (끝 − 시작))`이다(14ms에서 11개). 남은 시간이 0 이하인 프레임에 남은 번호를 한꺼번에 처리하고 커서를 되돌리며 다음 시각 = 그 프레임 시각 + 10이다. (2) 범위는 서버 SID 영역 + 예측 머리(패치 15000..23001, CD 6000..14000)다. (3) 수명 0에서 제거를 가르는 `00540bc0`은 "전투 모드"가 아니라 **서버 플래그**다(`ReduceLife` 인자 이름 정정, 값/기대값 불변). (4) 다리 vtable `005034c8`(CD `00501ab0`)의 +0x10은 destroy 재정의 `004220f0`이며 큰 그래프(표면 수 ≥ 5)의 단단한 다리는 destroy되지 않는다. (5) CD판은 한 칸 처리·열린 방향·금 간 프레임 전환이 스캔/수명 함수에 인라인돼 있다. (6) 그래프 254인 칸은 한 칸 처리가 NULL 레코드를 읽는다(스캔에 try/catch가 있다. 실행 검증 없음).
 - [x] **C++:** `Bridge::CrackedFrame`/`NormalFrame`/`Weaken`/`Restore`/`DestroyProceeds`/`ApplyLife`/`DecayCell`과 `BridgeDecayScan::Reset`/`Advance`/`Eligible`, `SurfaceFinder::Map`을 추가했다. `BridgeLifeChange`에 금·이동체 확인 조건을 넣었다. 실제 삭제·화면 갱신·소리·이동체 확인은 사건(`BridgeDecayEvent`)으로 돌려준다. 접합 고리·그래프 254·수명 7 초과 결과는 상태를 바꾸기 전에 구분/거부한다(원본에 없는 보호).
 - [x] **기계어/콘솔:** 세 실제 PE×x87 53/64비트. **x86 입력 14,524개**(한 칸 처리 4,241·수명 3,264·destroy 재정의 1,152·프레임 전환 1,914·스캔 초기화/프레임 3,953), 원본 assert 도달 0. 패치판은 직접 호출과 스캔 경유 결과가 같고, CD/10.37은 스캔 범위를 번호 하나로 좁혀 실제 스캔 함수로 실행한 결과가 패치판과 같다. 대체한 진입점은 할당/해제·소리·칸 위 이동체 탐색·기본 destroy(dead 표시만)·공통 화면 갱신 다섯 가지다. CD판 delta 0.3 한 프레임은 64비트 정밀도에서 개수가 달라(240/239) 제외·기록했다. 최종 Release 경고/오류 0·CTest 내부 **152개·실패 0**(64초). 목표 수명을 일부러 틀리게 바꾼 확인 실행에서 실패 1,004건이 나왔고 되돌린 뒤 0건이다. `--verify` 통과.
-- [x] **10.82 V12 후속(정적):** V10에서 검토한 Graph 함수 다섯 개의 V12 주소를 찾았다(모두 +0x500). **V12는 SID 슬롯 75바이트·graph +40/DWORD·타입 구조체 508바이트로 V10(77·+42·504)과도 다르다.** 그래프 한도 50,000은 같다. DevLog V11/V12 항목에 대응하는 새 문자열(요새 백업, Reset to Rank 1, Shift Z 템플·`defaultTemple`, `sendMoney1/2`, `disableFenceCheck`)을 확인했다. [표·근거](docs/exe/cpp-reference-versions.md).
+- [x] **10.82 V12 후속(정적):** V10에서 검토한 Graph 함수 다섯 개의 V12 주소를 찾았다(모두 +0x500). **V12는 SID 슬롯 75바이트·graph +40/DWORD·타입 구조체 508바이트로 V10(77·+42·504)과도 다르다.** 그래프 한도 50,000은 같다. DevLog V11/V12 항목에 대응하는 새 문자열(요새 백업, Reset to Rank 1, Shift Z 신전·`defaultTemple`, `sendMoney1/2`, `disableFenceCheck`)을 확인했다. [표·근거](docs/exe/cpp-reference-versions.md).
 - [x] **문서:** 새 [cpp-bridgedecay-reconstruction.md](docs/exe/cpp-bridgedecay-reconstruction.md), `bridge-pieces.md` 8.1(반올림→절삭·주기 끝 일괄 처리·서버 플래그 정정), `cpp-bridge-reconstruction.md`·`cpp-reference-versions.md`·`cpp-playable-plan.md`·`cpp-roadmap.md`·`cpp-build.md`·`cpppj/README.md`, `.gitattributes`(새 도구/기록 LF 고정), `LEFT_JOBS.dotnetpj.md`(스캔 항목 갱신).
 - [x] **후속 일부 완료(위 최신 절):** 다리 pre/postDestroy의 참조 판단·좌표/효과 순서와 지연 낙하 payload를 복원했다. 실제 일반 탐색·삭제/낙하/소리·이벤트 실행·raw 월드는 남았다.
 - [ ] **다음 작업:** (1) 붕괴 사건을 raw GameWorld에서 실제 효과로 소비 — destroy → 삭제 준비 분할·Unpop·SID 반납, 다리 postDestroy `00422300`(`bridgeFall.wav`·walker 낙하), preDestroy `004221b0`. (2) 칸 위 이동체 처리(`004202f0` → `00427de0`/`00426120`/`00427e00`)와 지연 낙하 `00421f90`/`00421530`. (3) 다리 배치 `0049b510`·소유자 전파 `00421240`/`004213b0`·Construction `00442c80`(다리 조각의 SID 할당 인자 확인 포함). (4) 이전 절의 SID 소진·form/process·건물 부착 등. (5) V12: `tools/compare_reference_versions.py`에 V12 추가, 편집기 128개 한도·새 기능의 코드 경로는 미확인.
@@ -1818,7 +1835,7 @@
 
 - [x] **진행 파악:** AGENTS.md/최신 LEFT_JOBS를 읽고 공통 후처리부터 이어 복원했다. 이번 PC의 창 허용을 유지하며 AGENTS.md/기존 원본 자료/C#은 수정하지 않았다. 원본/복사본 게임 프로세스 실행도 없다.
 - [x] **디컴파일:** 읽기 전용 Ghidra에서 패치 10개/CD 13개 공통 postPop·목록/통계·AI/선택 입구·그래프 리셋·비용 관련 함수를 내보내고 완료 로그를 확인했다. 출력은 `extracted/postpop/<판본>/creation.c`, `functions.tsv`다. 대응 2,496쌍·검토 앵커 24쌍은 유지했다.
-- [x] **C++:** 새 `SquidPostPop`/상태/용량 고정 목록과 `.type` float cost를 추가하고 `SquidPop`의 선택적인 다섯 번째 인자에 연결했다. 공급 중복 제거/작업장 중복 허용·full 목록 메모리 보존·알림 증가·소유자 0·타입 통계·depth를 보존한다. 공간 변경 전에 미지원 그래프/AI/배치 선택·손상 목록/비용을 거부한다. 그래프 리셋 byte는 패치 +30/CD +28이다.
+- [x] **C++:** 새 `SquidPostPop`/상태/용량 고정 목록과 `.type` float cost를 추가하고 `SquidPop`의 선택적인 다섯 번째 인자에 연결했다. 공급 중복 제거/워크샾 중복 허용·full 목록 메모리 보존·알림 증가·소유자 0·타입 통계·depth를 보존한다. 공간 변경 전에 미지원 그래프/AI/배치 선택·손상 목록/비용을 거부한다. 그래프 리셋 byte는 패치 +30/CD +28이다.
 - [x] **판본 차이:** 패치 비용은 `trunc(cost+type*23)-type*23`, CD는 이전 signed 집계에 float cost를 더한 뒤 절삭한다. 비용 -0.5/기존 집계 0은 패치 -1/CD 0이다. 전역 비용 집계이며 현재 SP 차감 복원이 아니다.
 - [x] **기계어:** 두 판본×x87 53/64비트 4시퀀스 **984회**(직접 postPop 768/Pop 144/Unpop 72), 대체 함수/assert 0. 전체 통계/목록 Adler-32, raw 슬롯 전체와 dirty 전 항목을 대조했다. 판본당 내부 postPop 456·firstPop 32회와 목록 함수 도달은 상위 호출에 포함되며 준비 Reset/Create 각 4회·패치 비용 인코딩 192회 접두 구간은 별도다. 원본/도구/부모 도구/fixture SHA와 호출 수 `--verify` 통과. [근거](cpppj/recovery-postpop-evidence.json).
 - [x] **검사:** x64 Release 경고/오류 0, CTest 내부 **124개·실패 0**. 비용 문법의 테스트 입력 오류를 수정한 뒤 전체 통과했다. 첫 등록/재등록·중복·미지원 그래프/AI/배치 선택·비유한 비용/손상 목록·다른 풀 연결을 확인했다. 이전 display/pop/unpop/derived/creation/SID의 SHA/호출 수도 재확인했다.
@@ -1836,7 +1853,7 @@
 - [x] **기계어:** 두 판본×x87 53/64비트 4시퀀스 **1,728회**(표시 400/경계 368/Pop 480/Unpop 480), 대체 함수/assert 0. 모든 dirty 항목 좌표/플래그와 raw 슬롯을 대조했다. 원본/도구/부모 도구/fixture SHA와 호출 수 `--verify` 통과. 준비 Reset/Create 각 4회와 내부 표시 호출은 상위 수치에 더하지 않는다. [근거](cpppj/recovery-display-evidence.json).
 - [x] **검사:** x64 Release 경고/오류 0, CTest 내부 **120개·실패 0**. raw→실제 Renderer의 이전/새 위치 부분 Draw/Present 픽셀, 추가 헤더 signed short/float와 순수 VFX 거부, 잘못된 표시 연결의 변경 전 거부를 확인했다. `--inspect-assets`에서 패치 3,783/CD 3,167개, 합계 **6,950개** 실제 SHP 표시 헤더 연결을 확인했다.
 - [x] **창 회귀:** `cpp_renderer_smoke.py`, `cpp_world_smoke.py`를 다시 실행했다. 기존 글꼴/커서/화면, 1-1/TEST01 선택·사제 이동·정지·카메라·재진입 회귀 통과. 설정 복구/원본 자료 해시 동일. 이 GUI는 기존 임시 GameWorld 검사이며 raw SID 월드 연결의 증명이 아니다. [재현·결과·제한](docs/exe/cpp-display-reconstruction.md).
-- [x] **후속 일부 완료:** 공통 postPop 비용/공급·소유자별 작업장 목록/통계와 noGraph 리셋을 위 최신 절에서 완료했다. 그래프/영역 통지·AI/배치 선택·생산 계산·dirty/grid·원본 월드 연결은 최신 남은 작업을 따른다.
+- [x] **후속 일부 완료:** 공통 postPop 비용/공급·소유자별 워크샾 목록/통계와 noGraph 리셋을 위 최신 절에서 완료했다. 그래프/영역 통지·AI/배치 선택·생산 계산·dirty/grid·원본 월드 연결은 최신 남은 작업을 따른다.
 - [ ] **raw 월드 연결 후 실행:** 다른 PC에서 TEST01/1-1의 원본 SID 생성·표시·선택·이동·해제·재진입을 검사한다. 원본 게임 실제 실행 단계는 AGENTS.md와 해당 단계의 사용자 허용을 따른다.
 
 ---
@@ -1969,7 +1986,7 @@
 - [x] **보호/기록:** 원본 두 폴더 1,819파일의 해시·존재 상태 유지. 원본 게임·복사본·클론 GUI를 실행하지 않았고 AGENTS.md·원본 자료·C# 소스를 수정하지 않았다. 새 소스/주석/문서는 UTF-8·한국어 규칙을 따른다. SOURCE_MAP의 파일 존재 표시는 27/136이며 전체 모듈 완료 수가 아니다. 커밋하지 않았다.
 - **변경 범위:** o/Bridge, CanonDecoder/생성 표, app 검사 명령·CMake, BridgeTests/기대값/검증 기록, decomp_bridge_oracle.py·cpp_bridge_smoke.py, 검토 대응 보강, ApplyBridgeTypes/recover_bridge_types, PowerShell 5의 Java stderr 경고 처리, 복원 문서·계획·README·SOURCE_MAP.
 - **후속 반영:** `004218b0` 방문 목록과 표면 이웃 계산은 위 최신 절에서 완료했다. 당시 `004215d0`를 배치로 적은 것은 폭발 끝 칸 변환의 오기이며 실제 배치는 `0049b510`이다. 실제 표면/SID·spot→배치/소유자 전파→전체 수명·붕괴/삭제→다리 UI의 최신 순서는 위 절을 따른다. 기존 bridge bool만으로 원본 연결 그래프를 대체하지 않는다.
-- [ ] **이어서:** 사제 Construct→템플/워크샵·덱·에너지→채집/SP→전투·AI·포획/희생·승패/결과·소리. 1-1 완주는 전체 복원의 중간 기준이다. 별도 분석 보강으로 CRT `_ftol`의 ST0 입력/EDX:EAX 반환 규약을 좁혀 typed C 식을 복구한다.
+- [ ] **이어서:** 사제 Construct→신전/워크샾·덱·에너지→채집/SP→전투·AI·포획/희생·승패/결과·소리. 1-1 완주는 전체 복원의 중간 기준이다. 별도 분석 보강으로 CRT `_ftol`의 ST0 입력/EDX:EAX 반환 규약을 좁혀 typed C 식을 복구한다.
 
 ---
 
@@ -1977,14 +1994,14 @@
 
 - [x] **요청:** "cpppj 다음 사항도 이어서 진행". 현재 계획 3단계의 기본 월드/조작을 연결했다. 메뉴의 정적 InspectView를 새 GameWorld로 교체하고, 원본 저장 Tutorial 미션의 초기 지형·객체/점유·플레이어 상태를 생성한다. 기본 실행은 메인 메뉴이며 `--mission TEST01`은 동일 State→Loading→Briefing→월드 검사 진입점이다. `--view` 독립 검사는 유지한다.
 - [x] **지형:** 원본 Terrainbuilder의 전체 통로→청크별 시드/목표량 성장→두 차례 빈틈 보정, 원소별 isle·AA 3×3 그림·fringe y+4칸, 완전한 noIsland 3×3 저장 받침의 island/islandStalag. 표시와 경로의 지지/점유 격자를 공유한다. 개별 변형/받침 소유 외관은 고정 시드·정적 어댑터다.
-- [x] **초기 상태:** 저장 좌표·프레임·수량·작업장 상태·내용물 보존, 소유자 정규화/중립 처리, 타입 최대 HP/속도, 미션 myStartMoney·시작 지식/허용 표·동맹·색. 1-1은 저장 Money 100000 대신 3000 SP, TEST01은 50000 SP다. 저장 기술/Deck은 별도로 보존하며 생산 덱/AI는 실행하지 않는다.
+- [x] **초기 상태:** 저장 좌표·프레임·수량·워크샾 상태·내용물 보존, 소유자 정규화/중립 처리, 타입 최대 HP/속도, 미션 myStartMoney·시작 지식/허용 표·동맹·색. 1-1은 저장 Money 100000 대신 3000 SP, TEST01은 50000 SP다. 저장 기술/Deck은 별도로 보존하며 생산 덱/AI는 실행하지 않는다.
 - [x] **입력/갱신:** 몸통 좌클릭 선택→땅 좌클릭 이동→선택 해제, 허공 거부, 우클릭 객체 메뉴, 원본 1.8칸/초 사제·A~H 걷기 프레임. 8방향 경로·대각선 모서리 제한, 화살표/Alt·가운데 버튼 카메라·F4/H 신전·F5 사제 보기·P/R 사제 선택. 메뉴/대화상자는 정지/재개한다. 미복원 Construct/About 항목은 비활성이다.
 - [x] **수명/표시:** Kernel이 월드를 소유하고 입력→커널 이동→현재 객체/지형 목록→Renderer 순으로 갱신한다. 입력 참조→커널 월드→미션 설정 해제와 재진입 초기화를 검사했다. 실제 조작 화면은 정적 SceneImage를 쓰지 않으며, SceneImage는 정지한 대화상자 배경에만 쓴다. 투명 선택 표시 수명도 Renderer에 연결했다.
 - [x] **검증:** Windows Release 빌드 경고·오류 0, CTest **69개 검사**(새 10개). 패치판 1-1/Save the Island!/tutorial1/TEST01 및 CD판 1-1/Save the Island! **6개 초기 자료 사례·393216마스크 바이트·2593객체**가 독립 Python 판독과 일치한다. 클론 창 **20개 조작 상태**에서 1-1 `(94,108)`→`(98,108)`, TEST01 `(171,202)`→`(174,202)`, 속도/정지/재개·우클릭/허공·카메라/홈·복귀 후 재생성을 확인했다. 새 월드 함수의 x86 대조는 추가하지 않았으며 기존 **5365개 기대값**을 유지한다.
 - [x] **회귀/보호:** 메뉴 **54개 상태**·GIF/배경·해상도/설정 재실행, Renderer **18글꼴/4608글리프/302480픽셀·실제 글꼴 창786432픽셀·커서 각18개·미변경4프레임**, 창/영역 **488요새/2119영역** 검사 통과. 설정/시작 표시를 성공·실패 모두 복구하며 두 원본 폴더의 전체 파일 해시·존재 상태를 대조했다. 새 NetstormCpp만 실행했고 AGENTS.md·원본 자료·C# 소스는 수정하지 않았다. 커밋하지 않았다.
 - **변경 범위:** 새 o/TerrainBuilder·Player·Squid 부분 구현, 새 client/GameWorld·부분 UserInput, UberGump/ClientMain/Renderer/진입점·CMake, WorldTests·cpp_world_smoke.py, 월드 복원 문서·계획·README·메뉴/빌드 문서·SOURCE_MAP. 원본 모듈 파일 존재 표시는 136개 중 26개이며 전체 모듈 완료 수가 아니다.
 - **3단계 미완료:** 원본 생성자/가상 함수·SID/세대/좌표 해시·파생 프로세스·내용물 객체화, Battle/Normal 재배치/옵션·생산 덱·튜토리얼 단계/동적 가이저, 동적/불완전 받침·소유자 전파·edgeFarm, 전체 zorder·그림자·상황별 커서·정지 객체 애니메이션/전역 난수, 원본 경로 알고리즘·재탐색/충돌/낙하/기절/비행/수확·출발 지연. 기본 HP는 타입 최대값이며 QA/QB의 타입별 실행 상태는 아직 해석하지 않는다. 카메라/선택 표시/HUD·프레임 주기는 임시 어댑터다.
-- [ ] **바로 다음(4단계 첫 부분):** 원본 다리 조각/배치·점유/연결/붕괴→사제 Construct 건설→템플/워크샵·생산 덱/에너지→가이저 채집/SP 갱신. 이어서 전투·AI·포획/운반/희생·승패/결과/재시작·소리를 붙여 1-1 완주로 진행한다. 전체 플레이 가능 상태라고 표시하지 않는다.
+- [ ] **바로 다음(4단계 첫 부분):** 원본 다리 조각/배치·점유/연결/붕괴→사제 Construct 건설→신전/워크샾·생산 덱/에너지→가이저 채집/SP 갱신. 이어서 전투·AI·포획/운반/희생·승패/결과/재시작·소리를 붙여 1-1 완주로 진행한다. 전체 플레이 가능 상태라고 표시하지 않는다.
 
 ---
 
@@ -2288,12 +2305,12 @@
 
 > **공통/이관 범위:** 원본 관찰·분석 도구는 두 프로젝트가 참고한다. [당시 C# 구현·검증·과제](LEFT_JOBS.dotnetpj.md#legacy-dotnet-039)는 dotnetpj 이력으로 이관했으며 cpppj 완료 기록이 아니다.
 
-- [x] **요청:** Edit 로 TEST02 불러오기 → 사제로 템플·워크샵 건설 후 종료. 섬 안 건설 한도, 사제 클릭·이동·건설 때 마우스 커서, 건설 효과음, 건설 명령 직후 사제 이동, 건물이 드러난 뒤 사제 이동. 디스크 약 19GB 허용.
-- [x] **결과(전부 [분석 노트](docs/videos/auto-test02-construct-20261004.md)):** ① TEST02는 Edit 목록(앞 50개)에 없어 **Create New Map 에 `TEST02` 입력**으로 연다 → Esc → Game → Test Battle → Go!(SP 500000). ② **템플 1기**(건설 중 공사장만 있어도 `Temple >` 줄이 어두워짐), 비용 5000. ③ **워크샵 개수 상한 없음** — 한 섬에 14채 거부 없이 지음, **7×8칸 발자국이 전부 땅 위·다른 건물과 안 겹칠 때만** 가능, 맞닿아도 됨, 설치 미리보기는 칸에 붙어 흰색=가능·붉은색=불가. ④ **커서 5종**(화살표·⊘·얇은 ×·안쪽 화살표 4개·굵은 ×)을 exe `RT_CURSOR` 리소스와 픽셀 대조로 확정. ⑤ **건설 명령 직후 사제 이동 = 취소+전액 환불**(그림자 0.2~0.9초 뒤 사라짐·환불 숫자 약 0.85초 뒤부터 굴러 오름). ⑥ **건물이 드러난 뒤 이동 = 건설 계속**(도착 후 정확히 10.0초, 템플·워크샵 모두). ⑦ 소리: 설치 `dropPiece-500`, 진행 `jimbuild` 1.14초 반복, 완공 `templeComplete`/`workshopComplete`, 메뉴 `openGump`/`openSubGump`, 선택 `select`, 이동 `priestmove1`/`priestMove3`, 취소·환불은 소리 없음.
+- [x] **요청:** Edit 로 TEST02 불러오기 → 사제로 신전·워크샾 건설 후 종료. 섬 안 건설 한도, 사제 클릭·이동·건설 때 마우스 커서, 건설 효과음, 건설 명령 직후 사제 이동, 건물이 드러난 뒤 사제 이동. 디스크 약 19GB 허용.
+- [x] **결과(전부 [분석 노트](docs/videos/auto-test02-construct-20261004.md)):** ① TEST02는 Edit 목록(앞 50개)에 없어 **Create New Map 에 `TEST02` 입력**으로 연다 → Esc → Game → Test Battle → Go!(SP 500000). ② **신전 1기**(건설 중 공사장만 있어도 `Temple >` 줄이 어두워짐), 비용 5000. ③ **워크샾 개수 상한 없음** — 한 섬에 14채 거부 없이 지음, **7×8칸 발자국이 전부 땅 위·다른 건물과 안 겹칠 때만** 가능, 맞닿아도 됨, 설치 미리보기는 칸에 붙어 흰색=가능·붉은색=불가. ④ **커서 5종**(화살표·⊘·얇은 ×·안쪽 화살표 4개·굵은 ×)을 exe `RT_CURSOR` 리소스와 픽셀 대조로 확정. ⑤ **건설 명령 직후 사제 이동 = 취소+전액 환불**(그림자 0.2~0.9초 뒤 사라짐·환불 숫자 약 0.85초 뒤부터 굴러 오름). ⑥ **건물이 드러난 뒤 이동 = 건설 계속**(도착 후 정확히 10.0초, 신전·워크샾 모두). ⑦ 소리: 설치 `dropPiece-500`, 진행 `jimbuild` 1.14초 반복, 완공 `templeComplete`/`workshopComplete`, 메뉴 `openGump`/`openSubGump`, 선택 `select`, 이동 `priestmove1`/`priestMove3`, 취소·환불은 소리 없음.
 - [x] **도구 추가(커밋 전):** `tools/ns_driver.py`(분석기 MCP 상시 호출 드라이버+커서 기록기), `tools/analyze_test02_construct.py`(전체 자동 시나리오), `tools/analyze_test02_pending.py`(추가 시험, 미완), `tools/preview_scan_from_video.py`(영상에서 설치 가능 칸 복원), `tools/cursor_catalog.py`(exe 커서 대조). 분석기 C# 코드는 수정하지 않았다. 사용법·함정은 [분석기 문서](docs/analyze-manager.md#파이썬-mcp-드라이버커서-기록기영상-판독-도구-2026-10-04).
 - [x] **문서 갱신:** [priest-construction-flow.md](docs/gameplay/priest-construction-flow.md)(원본 확인 반영), [input-controls.md](docs/gameplay/input-controls.md)(커서 표), [docs/videos/README.md](docs/videos/README.md).
 - **디스크:** 이번 작업 약 13GB 사용(시작 여유 21GB → 종료 9.8GB). 판독 끝난 세션 영상·소리는 삭제. 남은 증거(Git 제외): S1 `20261004T050106077Z-296fe46e5b50`(6.5GB, 영상·소리 보존), S4 `20261004T074554041Z-299bc952ee8c`(3.2GB, 영상·소리 보존), 나머지는 로그·PNG만. 필요 없으면 두 세션의 `recording/video-*.avi`·`audio-*.wav` 를 지워 약 9.5GB 확보 가능. 작업 폴더 `extracted/test02-construct-run*`, `extracted/test02-pending-run1`, `extracted/frames/test02`, `extracted/audio/test02-*`.
-- **중단된 시험(미완, 다음에 이어서):** `tools/analyze_test02_pending.py` — B. 템플 공사장이 대기 중일 때 다른 자리에 워크샵을 설치하면 앞선 공사장이 취소되는지 — **사용자가 "이전 건설 즉시 취소·환불"이라고 확인해 줘 규칙은 [노트 7.1절](docs/videos/auto-test02-construct-20261004.md)에 반영 완료**(내 영상은 설치 한 프레임 안만 있어 취소 지연은 미측정), C. 들고 있는 건물을 취소하는 방법(허공 좌/우클릭 등). 또 정지 키·다른 유닛 선택이 도착 전 공사장을 취소하는지도 미시험.
+- **중단된 시험(미완, 다음에 이어서):** `tools/analyze_test02_pending.py` — B. 신전 공사장이 대기 중일 때 다른 자리에 워크샾을 설치하면 앞선 공사장이 취소되는지 — **사용자가 "이전 건설 즉시 취소·환불"이라고 확인해 줘 규칙은 [노트 7.1절](docs/videos/auto-test02-construct-20261004.md)에 반영 완료**(내 영상은 설치 한 프레임 안만 있어 취소 지연은 미측정), C. 들고 있는 건물을 취소하는 방법(허공 좌/우클릭 등). 또 정지 키·다른 유닛 선택이 도착 전 공사장을 취소하는지도 미시험.
 - **주의(재현 시):** P 키를 이미 선택된 사제에게 또 누르면 카메라가 사제 위치로 이동한다. 선택된 사제를 우클릭하면 메뉴가 열리지 않는다(허공을 눌러 선택을 먼저 푼다). 시작 직후 약 10초 이상은 팁 창이 클릭을 받지 않는다. 자동 녹화 중 사람이 마우스를 움직이면 "다른 창이 가림"으로 녹화가 끊긴다(S5가 그랬다).
 - AGENTS.md·originals·originalCD는 수정하지 않았고 커밋은 하지 않았다.
 
@@ -2318,7 +2335,7 @@
 - [x] **원본 분석(analyzeManager 자동 녹화, 사용자 요청):** 메인 메뉴 돌 버튼의 호버·누름·오래 누르기·누른 채 바깥/이웃 버튼에서 떼기·나갔다 돌아와 떼기·우클릭/가운데·판정 경계, 팁 창·Credits 대화상자 버튼, Options 펼침 메뉴 행, Campaign 목록 행을 측정했다(세션 5개). 키보드는 사용자 설명(원본에 키보드 버튼 조작·Tab 포커스 없음)을 따랐다. 결과 표: [원본 공통 메뉴 버튼 동작 분석](docs/videos/menu-buttons-20261003.md).
 - [x] **도구:** analyzeManager `game_input drag`에 `viaX/viaY/holdViaMs/holdMs` 추가(`DragPlan`, 단위 테스트 포함 [analyze-manager.md](docs/analyze-manager.md#원본-버튼-누름-시험용-drag-옵션-2026-10-03)), `tools/audio_events.py`(입력 사건 앞뒤 소리 ↔ 원본 효과음), `tools/button_state.py`(버튼 평소/눌림 판정).
 - **원본 실행 이력:** 5회(정찰 1, 본 시험 4). 분석 PC는 RDP라 창이 가려지면 분석기 호출이 57~305초 멈췄고 45초를 넘으면 Auto-Demo가 시작됐다 → 시험 첫머리에 Auto-Demo를 끄고 승인 프롬프트 없는 단일 스크립트로 실행해 해결했다. 원본·AGENTS.md는 수정하지 않았고 커밋은 하지 않았다. 증거(영상·WAV·입력 로그)는 Git 제외 `extracted/analyzeManager/20261003T14*~T15*`.
-## 2026-10-03 (전투 후속, 원본 정적 분석·팬게임 대조, 원본 실행 없음) ✅ 완료: 석궁·방어 건물
+## 2026-10-03 (전투 후속, 원본 정적 분석·팬게임 대조, 원본 실행 없음) ✅ 완료: 크로스보우·방어 건물
 
 > **dotnetpj 이력 이관:** [C# 구현·검증·후속 기록](LEFT_JOBS.dotnetpj.md#legacy-dotnet-043)으로 이관했다. 당시 “클론”·Core/Assets/Game·MonoGame 검증은 dotnetpj에 해당하며 cpppj 완료 근거가 아니다.
 
@@ -2412,11 +2429,11 @@
 
 > **공통/이관 범위:** 원본 관찰·분석 도구는 두 프로젝트가 참고한다. [당시 C# 구현·검증·과제](LEFT_JOBS.dotnetpj.md#legacy-dotnet-053)는 dotnetpj 이력으로 이관했으며 cpppj 완료 기록이 아니다.
 
-- **요청:** 30FPS 자동 분석으로 튜토리얼이 아닌 스테이지 1 The War Begins!를 진행한다 — 사제 이동(마우스 조작·이동 애니메이션 관찰), 골렘 생산·이동, 사제로 워크샵 건설, 워크샵으로 덱 등록, ESC 메뉴로 미션 이탈·종료 — 하고 녹화를 문서화한다. 지정 시스템 예외로 실행 확인 없이 원본 복사본을 구동했다. AGENTS.md·원본 게임은 수정하지 않았다.
+- **요청:** 30FPS 자동 분석으로 튜토리얼이 아닌 스테이지 1 The War Begins!를 진행한다 — 사제 이동(마우스 조작·이동 애니메이션 관찰), 골렘 생산·이동, 사제로 워크샾 건설, 워크샾으로 덱 등록, ESC 메뉴로 미션 이탈·종료 — 하고 녹화를 문서화한다. 지정 시스템 예외로 실행 확인 없이 원본 복사본을 구동했다. AGENTS.md·원본 게임은 수정하지 않았다.
 - **결과 문서:** [원본 자동 분석 녹화 노트](docs/videos/auto-war-begins-20261003.md)(시각표·마우스 조작·이동 애니메이션 측정·건설·덱 등록·ESC 이탈). 요약은 [입력 조작 표](docs/gameplay/input-controls.md#자동-분석으로-확인한-유닛-조작-2026-10-03-캠페인-1-1)·[이동 관찰](docs/gameplay/movement-pathing.md#35-원본-이동-명령-관찰-2026-10-03)·[분석기 문서](docs/analyze-manager.md#2026-10-03-자동-녹화-일시-파일-충돌-재시도와-가림-중단-사례)에 반영했다.
 - **실행 이력:** 네 번 시도했다. ① `20261003T043823078Z-b4728e0c84f1` 자동 녹화 8.5초에서 `Access to the path is denied.`로 실패 ② `20261003T044417167Z-406ee9c80055` 시작 직후 같은 오류 → **분석기 수정** ③ `20261003T044645609Z-cc06bc935dad`(1차) 전 과정 수행, 그러나 녹화가 6분 48초에서 가림 오류로 중단 ④ **`20261003T052032571Z-e652ee405b0d`(2차) 승인 필요 없는 스크립트 한 개로 완주, 4,318프레임·236.9초 오류 없이 녹화.** 게임은 모두 `end_session`으로 종료했고 남은 프로세스는 없다.
 - **분석기 수정(코드):** Windows는 `FileShare.Delete`를 허용해도 열린 파일의 `File.Move` 덮어쓰기를 오류 5로 거부한다. `SessionStore.RetryTransient`(20번·25ms)를 `WriteSmallFile`·`Save`·`AppendPart`·`AutomaticRecording.SaveState`에 적용하고 녹화 루프의 진행 상태 저장 실패가 녹화를 끊지 않게 했다. 변경 파일: `analyzeManager/SessionStore.Files.cs`·`SessionStore.cs`·`AutomaticRecording.cs`·`tests/AnalysisFrameRateTests.cs`(테스트 1개 추가). 분석기 테스트 **103개 통과·기존 1개 건너뜀**, Release·portable 빌드 경고·오류 0. **커밋은 하지 않았다.**
-- **주요 관찰:** 이동 명령은 선택 → 땅 좌클릭 → 선택 해제, 허공은 거부, 출발 지연 0.4~0.8초, 직선 속도 사제 약 1.8·골렘 약 2.0칸/초. 골렘 배치 약 1.4초(에너지 방울 → 반투명 → 실체화), Sun Workshop 건설 약 10~11초(사제가 걸어가서 건설), 워크샵 우클릭 등록으로 덱에 Rain Generator·Sun Cannon 추가. 자세한 값과 영상 시각은 결과 문서.
+- **주요 관찰:** 이동 명령은 선택 → 땅 좌클릭 → 선택 해제, 허공은 거부, 출발 지연 0.4~0.8초, 직선 속도 사제 약 1.8·골렘 약 2.0칸/초. 골렘 배치 약 1.4초(에너지 방울 → 반투명 → 실체화), Sun Workshop 건설 약 10~11초(사제가 걸어가서 건설), 워크샾 우클릭 등록으로 덱에 Rain Generator·Sun Cannon 추가. 자세한 값과 영상 시각은 결과 문서.
 - **녹화 도구에서 알게 된 것:**
   - **자동 녹화 중 승인 프롬프트가 필요한 도구 호출을 하면 VS Code가 앞으로 나와 게임을 가리고 녹화가 영구 중단된다**(1차 사례, 입력 로그의 물리 클릭이 근거). 좌표가 확정된 절차는 스크립트 한 개로 실행하고 사용자는 그동안 조작하지 않는다.
   - 실제 FPS는 평균 **18.2**(요청 30). AVI 헤더는 30FPS라 그대로 재생하면 약 1.65배 빠르다. 시각은 `.frames.csv`·`sessionElapsedMs`로만 계산한다.
@@ -2425,7 +2442,7 @@
 - **사용자 결정을 기다리는 것:** 자동 녹화가 게임 창 가림 때 **영구 중단 대신 해당 프레임만 건너뛰고 이어서 녹화**하도록 바꿀지(다른 프로그램 화면을 저장하지 않는 원칙은 유지). 현재 문서·코드는 "가려지면 중단" 정책이다.
 - **남은 것:**
   - 이동 중 재명령, 길 막힘·우회, 대각선 경로 규칙, 세로 속도 정밀 측정(18FPS 영상으로는 짧은 지연의 분산이 흐림)
-  - 워크샵 설치 불가 원인(템플 남서쪽 평지가 세 번 모두 붉은색), `Production Slots Available` 숫자(화면 밖으로 잘림), Whirlibase 등록
+  - 워크샾 설치 불가 원인(신전 남서쪽 평지가 세 번 모두 붉은색), `Production Slots Available` 숫자(화면 밖으로 잘림), Whirlibase 등록
   - 명령 응답음·건설음·등록음의 효과음 파일 대응(`tools/audiomatch.py sfx`)
   - 30FPS 미달 원인 분리(캡처·JPEG 압축·게임 CPU 사용)와 60FPS 실제 달성률, `guide`·`record-play` 전환의 실제 시험
 - **자료 위치(Git 제외):** 2차 `extracted/analyzeManager/20261003T052032571Z-e652ee405b0d/`(`recording/`·`screens/`·`run-script.log`), 판독 접촉표 `extracted/record-auto-20261003/`. 1차 녹화 세션은 약 1.2GB·2차는 약 0.8GB이며 불필요하면 삭제해도 된다(삭제는 사용자 확인 후). 실행 스크립트 원본은 임시 폴더에만 있고 저장소에는 넣지 않았다.
@@ -2453,8 +2470,8 @@
 
 - **요청:** AGENTS.md·이 문서를 읽은 뒤 `playingVideos/`의 분석기 녹화를 모두 클론에 반영하고 녹화 자료를 지운다. 참고용 mp4 5개는 지우지 않는다. 원본 게임은 실행하지 않았고 클론만 실행했다. AGENTS.md는 수정하지 않았다.
 - **삭제 전 최종 판독:** [녹화 최종 판독](docs/videos/record-play-final-20261002.md).
-  - 룬 마크 = `jimbuild.wav` 반복 시작: 룬별 1.87~2.42초(음성 길이 + 약 0.1초). 마크 → 소멸 10.04초(14건 ±0.02), 소멸 → 다음 음성 2.77초. 제단 폭발은 완료 9.45초 뒤.
-  - 희생 음악은 포로가 묶인 제단으로 사제를 보내는 명령에서 요청한다(1-2 18:28.2 → 18:28.8, 곡 끝 아님). 곡 끝 재선택은 룬이 하나 이상 탔을 때만이다.
+  - 룬 마크 = `jimbuild.wav` 반복 시작: 룬별 1.87~2.42초(음성 길이 + 약 0.1초). 마크 → 소멸 10.04초(14건 ±0.02), 소멸 → 다음 음성 2.77초. 알타 폭발은 완료 9.45초 뒤.
+  - 희생 음악은 포로가 묶인 알타으로 사제를 보내는 명령에서 요청한다(1-2 18:28.2 → 18:28.8, 곡 끝 아님). 곡 끝 재선택은 룬이 하나 이상 탔을 때만이다.
   - SP 숫자는 exe `FUN_0043e530` 규칙(300 초과 100·30 초과 10·그 밖 1)으로 초당 약 60번 따라간다. 정지 중에는 즉시 맞추고, SP 부족 유닛 클릭 때는 0.15초 간격으로 10번 깜빡인다.
   - 낙하 궤적: 30px/초 + 109px/초², 유닛 약 1.8초·다리 조각 약 1초.
   - 효과음: `jimbuild` 1.14초 반복, `priestForceField` 반복, `priestFall`·`priestFree`·`collapse`·`upgradeComplete`·`priestStruggleFade02`. `unitLost`는 exe에서 내 오브젝트 제거 시 위치를 저장한다(U 키). 명령 응답음은 클릭 0.06~0.10초 뒤에 났다.
@@ -2500,7 +2517,7 @@
 - **요청·준비:** AGENTS.md·이 문서를 확인했다. 사용자가 기존 게임 플레이 녹화 분석을 직접 요청해 해당 작업 단계의 게임 실행이 허용된다. 입력 지연 대응 소스보다 최신인 Release 실행 파일(23:34 빌드)을 사용했다.
 - **실행·종료:** 세션 `20261001T145330210Z-425636a2e82c`의 복사본과 `record-play`로 10월 1일 23:54:36~23:58:53 KST 사용자 플레이를 기록했다. 사용자는 미션 완주 대신 UI·조작키 설명을 시연했다. 분석 중 게임·녹화 창이 이미 종료된 것을 확인했고 관찰 메모 후 `end_session force=false`가 `closed=true`를 반환했다. 분석을 위해 새 게임을 실행하지 않았다.
 - **저장·무결성:** `playingVideos/20261001T145330210Z-425636a2e82c/`에 AVI 5·CSV 5·WAV 2·음성 시작 시각 2·입력 JSONL 1·색인을 보존했다(**2026-10-02 원자료 삭제**, 맨 위 절). 2,563프레임·실제 영상 경과 256.149초, 입력 3,864건, `error=null`. JPEG 전체 디코딩·CSV 수·색인 크기·WAV 데이터 길이/조각 연속성·입력 순번/경계가 정상이다. 분석 산출물·원자료/PNG 해시는 `extracted/record-play-20261001-2354/`, 관리 세션은 `extracted/analyzeManager/20261001T145330210Z-425636a2e82c/`에 둔다. 삭제된 세 번째 녹화 폴더와 구분한다.
-- **분석·문서:** [녹화 관찰 노트](docs/videos/ui-controls-record-play-20261001.md), [원본 조작키 표](docs/gameplay/input-controls.md). Options·음량/해상도 목록, 사제/생산 창/작업장 우클릭, Rain Generator·Whirlibase 등록, Escape 상단 메뉴·Leave Mission→Main Menu, 도움말 링크·드래그 스크롤·Back·OK를 판독했다. 실제 키 로그는 Escape 누름/해제뿐이며 F1~F9·조합키·카메라 저장 등은 내장 도움말 기재로 구분했다. 영상 목록·워크샵·메인 메뉴·맵 뷰어·분석기 안내에 연결했다. 게임·분석기 코드와 AGENTS.md는 수정하지 않았다.
+- **분석·문서:** [녹화 관찰 노트](docs/videos/ui-controls-record-play-20261001.md), [원본 조작키 표](docs/gameplay/input-controls.md). Options·음량/해상도 목록, 사제/생산 창/워크샾 우클릭, Rain Generator·Whirlibase 등록, Escape 상단 메뉴·Leave Mission→Main Menu, 도움말 링크·드래그 스크롤·Back·OK를 판독했다. 실제 키 로그는 Escape 누름/해제뿐이며 F1~F9·조합키·카메라 저장 등은 내장 도움말 기재로 구분했다. 영상 목록·워크샾·메인 메뉴·맵 뷰어·분석기 안내에 연결했다. 게임·분석기 코드와 AGENTS.md는 수정하지 않았다.
 - **지연 대응 검증 범위:** 수정 후 실제 녹화가 오류 없이 종료됐다. 분별 상대 훅 도착 대기 중앙값 8.8~10.5 ms, 전체 최대 17.3 ms로 이전 녹화 후반의 큰 누적 대기는 없다. 최대 프레임 간격 약 296 ms, 수초 공백 없음. 훅 종료/게임 적용/화면 커서 지연을 직접 측정한 값은 아니다.
 - **별도 남은 확인:** 이번 시연에는 포획·의식이 없어 해당 구간의 체감 지연 개선과 실제 커서 이동/늦은 화면 반영의 구분은 아직 미확정이다. 이 녹화의 요청된 분석·문서화는 완료했다.
 - **문서 검증:** 수정·추가 문서 9개의 UTF-8과 상대 링크 대상, 영상 프레임 순번/시각 단조 증가, WAV 조각 시작 연속성을 확인했다. `git diff --check` 통과. 문서·로컬 분석 산출물만 변경해 게임 빌드나 새 실행은 필요하지 않았다.
@@ -2516,7 +2533,7 @@
 - **원자료 삭제 ✅ 완료(2026-10-01):** AI의 폴더·개별 파일 삭제 명령이 실행 정책에 거부된 뒤 사용자가 세 번째 녹화의 영상·사운드·입력 데이터를 직접 삭제했다. 위 `playingVideos/` 세션 폴더가 없는 것을 확인하고 관찰 노트·영상 목록·분석기 문서에 반영했다. 삭제 작업은 남아 있지 않다. 분석 문서·추출 이미지·통계 등 산출물은 유지한다. 기존 원자료를 이용한 추가 추출에는 보관본 복원 또는 새 녹화가 필요하다.
 - **입력 증상:** 사용자는 적 사제 포획부터 클릭 지연, 의식 중 커서가 마음대로 이동한 듯한 현상을 보고했고, 과거 움직임이 늦게 반영됐을 가능성도 제시했다. 09:00 이후 훅의 상대 도착 지연 중앙값 155.5 ms·최대 1,051.5 ms를 확인했다. 훅 내부 처리·게임 반영 지연은 이 측정에 포함되지 않아 포획 직후 증상까지 단일 원인으로 확정하지 않는다. 기록 중 분석기의 자동 입력 호출은 없었다. 원본 메인 루프의 `GetCursorPos → SetCursorPos`와 지연의 상호작용은 가능성으로만 기록했다.
 - **수정:** 공통 `GuidedRecorder`의 UI 스레드 저수준 훅을 전용 메시지 스레드로 옮겼다. 입력 훅에서 창 열거·제목 조회·동기 JSONL 저장을 제거했다. 새 `GuidedInputBuffer`는 4,096건 대기열·별도 저장 스레드로 순서·시각을 보존하며 포화·쓰기 실패는 녹화 오류로 전달한다. 정상 중단 시 수락한 입력을 비운 뒤 중단 경계를 기록한다. 좌표는 입력 당시, 제목은 최근 영상 샘플이다.
-- **판독·문서:** [새 관찰 노트](docs/videos/master-of-whirligigs-record-play-20261001-2311.md). **07:42.4 포획 이전** 작업장 비용·생산 슬롯·회수액, 다리 확장·전투·적 신전 폭발·지면 전환·사제 기절을 판독했다. 포획 이후 의식·조작 시각은 정상 게임 규칙 근거로 쓰지 않는다. 영상 목록·캠페인 1-2·분석기 안내에 링크와 입력 지연 대응을 반영했다. 클론 게임 규칙과 원본 바이너리를 바꾸지 않았다. AGENTS.md는 수정하지 않았다.
+- **판독·문서:** [새 관찰 노트](docs/videos/master-of-whirligigs-record-play-20261001-2311.md). **07:42.4 포획 이전** 워크샾 비용·생산 슬롯·회수액, 다리 확장·전투·적 신전 폭발·지면 전환·사제 기절을 판독했다. 포획 이후 의식·조작 시각은 정상 게임 규칙 근거로 쓰지 않는다. 영상 목록·캠페인 1-2·분석기 안내에 링크와 입력 지연 대응을 반영했다. 클론 게임 규칙과 원본 바이너리를 바꾸지 않았다. AGENTS.md는 수정하지 않았다.
 - **최종 검증:** 분석기 Release 빌드 경고·오류 0. 전체 테스트 **85개 통과·1개 기존 건너뜀**, 실패 0. 신규 `GuidedInputBufferTests` 4개는 느린 저장·순서/시각·포화·저장 실패를 검사했다. 게임 없는 MCP 기본 검사(도구 15개·EOF 종료) 통과. `git diff --check` 통과.
 - **남은 확인:** 수정 빌드에서 같은 포획·의식 구간을 사용자 직접 조작으로 재녹화해 입력 지연이 해소되는지 비교한다. 이 작업 당시에는 수정 후 실제 전역 훅·게임 녹화를 검증하지 않았다. 후속 네 번째 UI 녹화는 위 2026-10-02 완료 절처럼 정상 기록됐으나 포획·의식은 재현하지 않았다. 실제 좌표 이동과 지연 반영의 구분도 미확정이다.
 
@@ -2551,13 +2568,13 @@
   - 녹화 결과: 11,842프레임, AVI 29, WAV 9, 입력 1, `error=null`.
   - 분석 뒤 녹화 창을 닫고 관찰 메모를 남긴 다음 `end_session force=true`(`closed=true`)로 끝냈다. `Netstorm.exe`는 남아 있지 않다. `originals/`는 수정하지 않았다.
 - **판독:** [녹화 노트](docs/videos/master-of-whirligigs-record-play-20261001.md).
-  - 사용자 재현 항목: 실제 전투, 운반 골렘·내 사제가 서 있는 다리 붕괴, 의식 중 사제 이탈, 운반 골렘 판매·`Drop`, 의식 중 제단 판매.
+  - 사용자 재현 항목: 실제 전투, 운반 골렘·내 사제가 서 있는 다리 붕괴, 의식 중 사제 이탈, 운반 골렘 판매·`Drop`, 의식 중 알타 판매.
   - 사용자 보충 설명 두 가지를 반영했다.
     - Thunder 재음성은 **룬 마크가 나타나기 전에** 사제를 옮긴 경우다.
     - 의식 완료 보상은 **+5,000 SP**다(멀티플레이 보상 선택은 후속).
   - 판독 확정 사항:
     - 이탈 시 의식은 깨지지 않고 멈춘다(포로 유지). 마크 후 이탈이면 룬 완료, 마크 전 이탈이면 룬 취소·복귀 시 재음성. 마크는 음성 뒤 1.6~2.6초에 나타났다.
-    - 제단 판매 시 포로가 제단 자리에서 체력이 가득 찬 채 풀려나고, 다음 의식은 첫 룬부터 다시 한다.
+    - 알타 판매 시 포로가 알타 자리에서 체력이 가득 찬 채 풀려나고, 다음 의식은 첫 룬부터 다시 한다.
     - 골렘 판매(+100)·`Drop` 시 사제가 그 자리에서 기절 없이 풀려난다.
     - 운반 골렘이 낙하하면(약 1.8초 연출) 사제는 허공에서 기절한다(체력 가득). 다리를 재건하면 0.4~0.6초 안에 복귀한다.
     - 허공 사제는 계속 떠 있다.
@@ -2601,14 +2618,14 @@
 
 > **공통 분석·자료·도구:** 아래 남은 원본 근거는 두 프로젝트가 참고한다. [C# 구현·검증·후속 기록](LEFT_JOBS.dotnetpj.md#legacy-dotnet-071)으로 이관했다. 당시 “클론”·Core/Assets/Game·MonoGame 검증은 dotnetpj에 해당하며 cpppj 완료 근거가 아니다.
 
-- **요청:** (1) 이동·채집·사제 포획 중 지나갈 다리가 붕괴하거나 건물형 유닛이 파괴돼 길이 없어졌는데도 옛 경로로 가다 추락·파괴되는 원본 문제를, 클론에는 넣지 말고 **경로 재탐색**으로 처리할 것. 현재 소스를 확인해 수정이 필요한지 판단하고 **코드는 건드리지 말고 문서에만** 반영. (2) 유닛 생산 때 워크샵·템플에서 스톰 에너지 줄기가 출발해 배치 위치에 닿은 뒤 유닛이 나타나는 효과에도 경로 탐색이 있는데, 이쪽은 **이동이 불가능해져도 어떻게든 도달**해야 한다(예: 불가 시점부터 공중 이동). 이것도 문서화.
+- **요청:** (1) 이동·채집·사제 포획 중 지나갈 다리가 붕괴하거나 건물형 유닛이 파괴돼 길이 없어졌는데도 옛 경로로 가다 추락·파괴되는 원본 문제를, 클론에는 넣지 말고 **경로 재탐색**으로 처리할 것. 현재 소스를 확인해 수정이 필요한지 판단하고 **코드는 건드리지 말고 문서에만** 반영. (2) 유닛 생산 때 워크샾·신전에서 스톰 에너지 줄기가 출발해 배치 위치에 닿은 뒤 유닛이 나타나는 효과에도 경로 탐색이 있는데, 이쪽은 **이동이 불가능해져도 어떻게든 도달**해야 한다(예: 불가 시점부터 공중 이동). 이것도 문서화.
 ## 2026-10-01 (원본 실행 없음) ✅ 코드 점검 인수인계의 남은 의심 사항 2건 수정 (DropPriest 경로 재탐색·희생 사제 RemoveEntity 일원화)
 
 > **dotnetpj 이력 이관:** [C# 구현·검증·후속 기록](LEFT_JOBS.dotnetpj.md#legacy-dotnet-072)으로 이관했다. 당시 “클론”·Core/Assets/Game·MonoGame 검증은 dotnetpj에 해당하며 cpppj 완료 근거가 아니다.
 
 ---
 
-## 2026-10-01 (`vm-debian-codex`, 원본 실행 없음) ✅ 코드 점검·수정: 다른 AI 작업분(Linux 분석기·포획/제단/승패) 검토
+## 2026-10-01 (`vm-debian-codex`, 원본 실행 없음) ✅ 코드 점검·수정: 다른 AI 작업분(Linux 분석기·포획/알타/승패) 검토
 
 - **공통 분석 도구:** 당시 Linux portable/Windows 분석기 빌드는 경고·오류 0, mcp_smoke.py --youtube-only는 통과했다. 게임 Core 결함 수정·382개 테스트와 구분한다.
 
@@ -2629,7 +2646,7 @@
 - 검증: Linux portable 빌드 성공(경고·오류 0), 프레임 추출과 `youtube_note` 기록 확인. 이전 단계의 `mcp_smoke.py --youtube-only`와 Windows/Wine 기본 검사도 통과했다. 전체 솔루션 Release 빌드와 Core 테스트 결과는 이 절 끝의 최신 검증 요약을 따른다.
 - 남은 환경 회귀 확인: Windows 실기기에서 기존 GDI+ 관찰표 경로를 다시 확인한다. Linux 빌드만으로는 Windows 실제 화면 출력 회귀를 검증하지 않았다.
 
-### B. 완료 — 캠페인 1-5 YouTube 포획·제단 의식 분석
+### B. 완료 — 캠페인 1-5 YouTube 포획·알타 의식 분석
 
 - AGENTS.md에 적힌 13개 영상의 메타데이터·표본 관찰표를 만들었다. 방송 인트로·오버레이가 있는 영상은 색 비교에 주의한다. `8tcj3rI_YqE`·`b3VzVERd9CE`·`0p7VvzSxTAY`·`WDQSrGqZAH0`의 편집 요소 전수 확인은 후속 분석이다.
 - 캠페인 1-5 `adR1Kap60hw`에서 골렘의 기절 사제 포획, 알타 500 SP 건설, 약 14.5초 클릭-완공, 다섯 룬, 희생, 알타 소멸·성공 창까지 관찰했다. 효과음 상관값과 두 번째 미션에서 재확인한 시각은 [관찰 노트](docs/videos/youtube-sacrifice.md)에 기록했다.
@@ -2678,7 +2695,7 @@
 - **기존 녹화 재확인:** 캠페인 1-1 신전 파괴 전후 프레임에서 갈색/빨강 → 초록/주황 지면 전환을 직접 확인했다.
 ## 2026-10-01 (`DESKTOP-HJOW`, 원본 실행 없음) ✅: 녹화 소리·영상 추가 판독 + 음악·희생 의식 분석 + 오디오·지식 창 구현
 
-- **공통 후속:** 원본 음악/효과음 이벤트 대응, 제단 애니메이션 속도/외관, 볼륨·색상·오디오 자료의 미확인 조건은 추가 분석 대상이다. AudioPlayer/MusicDirector·지식 창 구현과 청취/GUI 검증은 dotnetpj 기록이다. 공용 새 도구는 tools/audiomatch.py다.
+- **공통 후속:** 원본 음악/효과음 이벤트 대응, 알타 애니메이션 속도/외관, 볼륨·색상·오디오 자료의 미확인 조건은 추가 분석 대상이다. AudioPlayer/MusicDirector·지식 창 구현과 청취/GUI 검증은 dotnetpj 기록이다. 공용 새 도구는 tools/audiomatch.py다.
 
 > **공통 분석·자료·도구:** 아래 남은 원본 근거는 두 프로젝트가 참고한다. [C# 구현·검증·후속 기록](LEFT_JOBS.dotnetpj.md#legacy-dotnet-078)으로 이관했다. 당시 “클론”·Core/Assets/Game·MonoGame 검증은 dotnetpj에 해당하며 cpppj 완료 근거가 아니다.
 
@@ -2686,9 +2703,9 @@
 - **새 도구 `tools/audiomatch.py`** (`level`·`music`·`sfx`): 녹음을 원본 `music/*.mus`·`sound/*.wav`와 FFT 정규화 상호상관으로 대조. 사용법 [videos/README.md](docs/videos/README.md#소리-판독-도구-toolsaudiomatchpy-2026-10-01).
 - **소리 판독 결과** ([music.md](docs/exe/music.md) 4절, [녹화 노트](docs/videos/the-war-begins-record-play-20260930.md) 5절):
   - 배경음악: 메뉴 `ser22` → 미션 `rain22`(00:09.1) → `thu22`(03:42.7, `thunderCrack.wav` 동반) → `sun22`(07:27.9) → `wind22`(11:20.8) — 앞 곡이 끝나자마자 0.5초 안에 다음 곡. **12:06.4 `sacrifice.mus`가 wind22 를 끊고 시작**, 성공 창(13:34)이 뜬 뒤에도 이어진다. `fanfare.mus` 없음.
-  - 희생 의식: 신전 파괴(10:58.5) → 적 사제 보호막(`priestForceField` 10:59.8~11:34.4) → 골렘이 사제를 집음(`golemPickUp` 11:35.9, 영상 확인) → 제단 도착(12:05.6) → **다섯 룬** 음성 `forWind2`·`forSun2`·`forRain2`·`forThunder2`·`forStorm2`(약 14.8초 간격, 룬마다 `altarBurnCollapse`) → `itIsDone2`(13:19.0) → 4.0초 뒤 `priestSacrifice2`(exe 상수와 일치) → 제단 소멸 → 성공 창.
+  - 희생 의식: 신전 파괴(10:58.5) → 적 사제 보호막(`priestForceField` 10:59.8~11:34.4) → 골렘이 사제를 집음(`golemPickUp` 11:35.9, 영상 확인) → 알타 도착(12:05.6) → **다섯 룬** 음성 `forWind2`·`forSun2`·`forRain2`·`forThunder2`·`forStorm2`(약 14.8초 간격, 룬마다 `altarBurnCollapse`) → `itIsDone2`(13:19.0) → 4.0초 뒤 `priestSacrifice2`(exe 상수와 일치) → 알타 소멸 → 성공 창.
 - **사용자 설명(2026-10-01) 기록·대조:** "의식 중 배경음악이 바뀌고(모든 스테이지 공통), 다른 적 사제가 남아 있으면 의식 뒤 본래 루프로 돌아오며, 적 사제가 없으면 승리 창이 떠서 게임이 일시정지된다" → 녹음·exe 와 모두 일치. exe 기준으로 원소 루프 복귀 시점은 **희생 음악 곡이 끝날 때**(실시간, 139.9초)이고 중단된 곡이 아니라 다음 곡부터다 — 이번 녹화도 의식이 끝난 뒤 성공 창까지 희생 음악이 이어졌다. 승리 창이 열린 동안 SP 는 그대로였다(정지). [music.md](docs/exe/music.md) 0·5절.
-- **exe 정적 분석(음악):** `FUN_00469fc0`(시작, 첫 곡 난수)·`FUN_00469f00`(다음 곡 wind→rain→thunder→sun, 희생 중이면 sacrifice)·`FUN_00469f60`(곡 끝 확인, 실시간 `timeGetTime`)·`FUN_00469db0`(요청, 30초 이하 곡은 180초 뒤 재확인, fanfare·defeat 잠금)·`FUN_00469c80`(천둥 곡 thunderCrack, `ascendancyPalette` 날씨 팔레트)·`FUN_00494eb0`(내 제단 의식 시작 → sacrifice). 제단 단계 `FUN_00449f40`·`FUN_00448080`. 효과음 호출 위치(다리 붕괴·금·건설 완료·조각 회전 등)는 [music.md](docs/exe/music.md) 7절.
+- **exe 정적 분석(음악):** `FUN_00469fc0`(시작, 첫 곡 난수)·`FUN_00469f00`(다음 곡 wind→rain→thunder→sun, 희생 중이면 sacrifice)·`FUN_00469f60`(곡 끝 확인, 실시간 `timeGetTime`)·`FUN_00469db0`(요청, 30초 이하 곡은 180초 뒤 재확인, fanfare·defeat 잠금)·`FUN_00469c80`(천둥 곡 thunderCrack, `ascendancyPalette` 날씨 팔레트)·`FUN_00494eb0`(내 알타 의식 시작 → sacrifice). 알타 단계 `FUN_00449f40`·`FUN_00448080`. 효과음 호출 위치(다리 붕괴·금·건설 완료·조각 회전 등)는 [music.md](docs/exe/music.md) 7절.
 - **영상 추가 판독:** (1) **F6 지식 창은 게임 시간을 멈추지 않는다**(열린 채 SP 3,450 → 3,650, 전투 소리 지속) — 이전 노트의 미확정 4번 해소. (2) **지식 격자의 어두운 카드 = 마우스 호버**(입력 로그와 대조). (3) 격자 25장 = `thewarbegins.fort` Technology 목록 플래그 4 타입 26개 − `sunWalker`, 행 안 순서 = `.type` group 순서. (4) 입력 로그: F6 4회 열고 닫음, 다리 칸 단축키 Q·W·A·S·Z·X 다수 사용. (5) `MissionAbort`: 인자 0 → `[ABORT]` 확인 창, 인자 ≠ 0 → 곧바로 LeaveBattle (exe `FUN_00463e40`).
 ## 2026-10-01 (사용자 플레이 녹화 분석) ✅: 캠페인 1-1 전체 플레이 관찰 노트
 
@@ -2696,7 +2713,7 @@
 
 - 관리 세션 `20260930T154921831Z-8bdcc06b6539`의 `record-play` 녹화 8,335프레임(13분 53.5초, AVI 27개, WAV 7개, 입력 로그 1개)을 분석했다. 녹화 오류는 없었다. 게임은 `The War Begins!` 브리핑에서 시작해 승리 후 `Master of Whirligigs` 브리핑을 거쳐 메인 메뉴로 돌아왔다. 분석 뒤 안내창과 원본 게임을 종료했고 `end_session` 응답은 `closed=true`다.
 - 원본 지식 창의 **SUN·WIND·RAIN·THUN. 4행 그림 카드 격자**, 개별 항목 상세창을 확인했다. 적 회오리 신전 파괴 직후 약 2초 안에 섬이 갈색 지면·빨간 테두리에서 초록 지면·주황 테두리로 바뀌었지만 성공 창은 약 2분 15초 뒤에 떴다. `Success!`의 `Leave Missions`·`Next Mission`과 다음 미션 브리핑도 확인했다.
-- [타임스탬프·증거·미확정 사항](docs/videos/the-war-begins-record-play-20260930.md)을 기록하고 [영상 목록](docs/videos/README.md), [지식 창 정적 분석](docs/exe/show-technology.md)을 갱신했다. 승리 직전 제단 모양 구조물이 사라지는 모습은 보이나 사제 포획·희생·승리 조건의 정확한 연결은 추가 분석이 필요하다. → ✅ 2026-10-01 소리 판독·exe·사용자 설명으로 확정(맨 위 절).
+- [타임스탬프·증거·미확정 사항](docs/videos/the-war-begins-record-play-20260930.md)을 기록하고 [영상 목록](docs/videos/README.md), [지식 창 정적 분석](docs/exe/show-technology.md)을 갱신했다. 승리 직전 알타 모양 구조물이 사라지는 모습은 보이나 사제 포획·희생·승리 조건의 정확한 연결은 추가 분석이 필요하다. → ✅ 2026-10-01 소리 판독·exe·사용자 설명으로 확정(맨 위 절).
 
 ---
 
@@ -2864,7 +2881,7 @@
 ## 2026-09-30 후속 분석 후보 — 공식 캠페인 1-1 The War Begins!
 
 - **공중 공격 기지 검증**: 미션 시작 지식에 `sunAviary`가 있고 Sun Workshop 등록 목록에 Whirlibase가 나타난다. 기지를 건설해 적이 사정거리 안에 들어왔을 때 공격체(Whirligig)가 생성·발진·이동·공격하는 조건과 종료 과정을 원본 캡처·타입·exe와 대조한다. 비행형 수송 유닛의 이륙·착륙과는 별개 경로인지 확인한다.
-- **적 사제 포획·Altar**: 적 High Priest의 체력 절반 기절·보호막 모습, 수송 유닛으로 **포획해 데려오는 절차**(Storm Power 환급용 `Salvage`와 다름), Altar 건설·사제 희생·지식 획득 및 중단 조건을 재현한다. 기존 `Playing 5`·`Playing 8` 캡처에 제단과 희생 중으로 보이는 장면이 있다. 상세 관찰 항목: [캠페인 1-1 분석 시나리오](docs/screens/the-war-begins-start.md#0-a-후속-분석-시나리오-공중-공격-기지와-사제-포획altar).
+- **적 사제 포획·Altar**: 적 High Priest의 체력 절반 기절·보호막 모습, 수송 유닛으로 **포획해 데려오는 절차**(Storm Power 환급용 `Salvage`와 다름), Altar 건설·사제 희생·지식 획득 및 중단 조건을 재현한다. 기존 `Playing 5`·`Playing 8` 캡처에 알타과 희생 중으로 보이는 장면이 있다. 상세 관찰 항목: [캠페인 1-1 분석 시나리오](docs/screens/the-war-begins-start.md#0-a-후속-분석-시나리오-공중-공격-기지와-사제-포획altar).
 - **실험 조건**: `thewarbegins.english`의 `aiStartMoney = 0`은 적의 **시작 자금**이며 `aiCollectors = 1`, `aiGeyserAttachments = 1`도 설정되어 있다. 따라서 이후에도 적 자금이 0으로 유지된다고 가정하지 않는다. `myStartMoney = 3000`, `myTech = "sunWalker;rainBattery;sunAviary;sunCannon"`과 이미 배치된 적 방어 유닛도 기록한다. 이번 항목은 향후 작업 문서화이며 게임 실행·구현은 하지 않았다.
 
 ## 2026-09-30 사용자 추가 규칙 — 비행형 이동·공중 공격 (문서·주석 반영 완료, 기능 구현은 후속)
@@ -2918,8 +2935,8 @@
 
 - **재디컴파일**(사용자 요청): 두 판본을 이 PC에서 다시 디컴파일했다 — 결과는 아래 3단계 절에 기록. 패치판은 기존 결과와 SHA-256 동일, CD판은 이 PC에 없어서 새로 생성.
 - **튜토리얼 2 `denySalvage = 1`·`techAllowed` 모순 원인 규명·문서화**(사용자 요청) → **[docs/exe/mission-header-flags.md](docs/exe/mission-header-flags.md)**
-  - 결론: 머리 값은 **시작 상태**이고 튜토리얼 단계 처리(`FUN_004c3bb0`)가 실행 중에 바꾼다. 단계 B에서 sunFactory 허용(`FUN_004c23e0(sunFactory, 1)`), 단계 H에서 회수 금지 해제(`DAT_00595078 = 0`). 사용자 관찰(템플 뒤 Sun Workshop 건설, 마지막에 유닛 회수 75 SP)과 일치한다.
-  - 기술 허용 표는 **메뉴·덱에서만** 확인한다(Construct 메뉴 항목 `FUN_00461cf0`, 생산 목록 `FUN_004752b0`, 덱 갱신, 템플의 골렘). 회수 금지는 Salvage 메뉴 명령·실행(`FUN_0044ca00`·`FUN_0044c420`)이 확인하고 스크립트 섹션 `[DenySalvage]`를 Tell하는데, 원본 스크립트에 그 섹션이 하나도 없다.
+  - 결론: 머리 값은 **시작 상태**이고 튜토리얼 단계 처리(`FUN_004c3bb0`)가 실행 중에 바꾼다. 단계 B에서 sunFactory 허용(`FUN_004c23e0(sunFactory, 1)`), 단계 H에서 회수 금지 해제(`DAT_00595078 = 0`). 사용자 관찰(신전 뒤 Sun Workshop 건설, 마지막에 유닛 회수 75 SP)과 일치한다.
+  - 기술 허용 표는 **메뉴·덱에서만** 확인한다(Construct 메뉴 항목 `FUN_00461cf0`, 생산 목록 `FUN_004752b0`, 덱 갱신, 신전의 골렘). 회수 금지는 Salvage 메뉴 명령·실행(`FUN_0044ca00`·`FUN_0044c420`)이 확인하고 스크립트 섹션 `[DenySalvage]`를 Tell하는데, 원본 스크립트에 그 섹션이 하나도 없다.
   - 이전 세션의 "`techAllowed` = 만들 수 있는 기술" 해석을 "시작 상태 + 실행 중 변경"으로 정정했다(`TechPermissions` 변경 가능화).
   - **Ghidra 전체 디컴파일에서 빠진 함수를 발견**: 이 값을 읽는 `0x484ab0`·`0x4c2b20`·`0x4c3290`이 `extracted/decomp/Netstorm.c`에 없다. INT3 패딩 뒤 함수 프롤로그 휴리스틱으로 **약 528개 후보**(실제 누락 수는 미검증). 새 도구 `tools/ghidra/decompile_at.ps1`(`DecompileAt.java`, 읽기 전용 프로젝트에서 주소를 함수로 만들어 디컴파일)를 추가했다 → [재현 방법](docs/exe/mission-header-flags.md#7-ghidra-전체-디컴파일에서-빠진-함수-재현-방법-포함), [추출 순서](docs/formats/README.md#추출-순서-처음-받은-사람용). **설정 키 문자열이 디컴파일 검색에서 안 나오면 누락 함수를 의심할 것.**
   - 튜토리얼 단계 A~I의 조건 표도 문서화했다(단계 C·F는 UI 선택·타이머 상수 의존이라 미확정).
@@ -2991,7 +3008,7 @@
 | 22:53~22:56 | 2. Original Credits | 20초 자동 넘김, 끝 흐름 |
 | 22:56~23:00 | 3. Edit | Create New Map, Test Battle (저장 없이 나감) |
 | 23:00~23:25 | 4. 튜토리얼 1 한 번 진행 | 다리 칸 채움 간격, 칸 조각 금 감→단단함 시간, 다리 배치(섬 가장자리·연결 표시), 연결 안 된 다리 붕괴 시간, 사제 결정 왕복·결정당 SP, 600 SP 결과 화면 |
-| 23:25~23:45 | 5. 튜토리얼 2 (Unit Rate Fast) | 템플·워크샵 건설 시간, 생산 등록, 유닛 배치 뒤 아이콘 복귀(1초 예상), Leave → Replay Mission |
+| 23:25~23:45 | 5. 튜토리얼 2 (Unit Rate Fast) | 신전·워크샾 건설 시간, 생산 등록, 유닛 배치 뒤 아이콘 복귀(1초 예상), Leave → Replay Mission |
 | 23:45~ | 6. 문서 반영 | |
 
 ### Windows 원본 동적 확인 (2026-09-29 저녁~밤, `HJOW-Athlon`) — ✅ 메인 메뉴 흐름 조사 완료
@@ -3376,13 +3393,13 @@ Netstorm/
 - [x] `git init`, `.gitignore` — 2026-09-27 완료. .NET 산출물(`bin/`, `obj/`, `publish/`, `TestResults/`)도 제외
 - [x] 개발 도구 점검·설치 스크립트 `PREPARE.ps1` — 2026-09-27 완료 (C# 기준으로 갱신)
   - 사용법: `powershell -ExecutionPolicy Bypass -File .\PREPARE.ps1` (항목 선택 후 점검·설치), `-CheckOnly`(점검만), `-All`(선택 화면 생략), `-ToolsDir`(Ghidra·vcpkg 설치 폴더, 기본 `C:\Tools`)
-  - 필수: Git, **.NET SDK 10**, Python 3 + 패키지(pillow·pefile·capstone), JDK 21+, Ghidra, x64dbg, Process Monitor, git safe.directory / 권장: MonoGame 템플릿, VS Code 확장(C# Dev Kit·C#·Python) / 선택: VS Build Tools(C++)·CMake·Ninja·vcpkg(C# 확정으로 불필요), yt-dlp, FFmpeg
+  - 필수: Git, **.NET SDK 10**, Python 3 + 패키지(pillow·pefile·capstone), JDK 21+, Ghidra, x64dbg, Process Monitor, git safe.directory / 권장: MonoGame 신전릿, VS Code 확장(C# Dev Kit·C#·Python) / 선택: VS Build Tools(C++)·CMake·Ninja·vcpkg(C# 확정으로 불필요), yt-dlp, FFmpeg
   - **2026-09-30 추가: "방화벽 예외 (TCP 6799)" 항목**(권장, 기본 선택 해제) — 원본 게임이 전투 시작 때 여는 6799 인바운드를 허용하는 규칙을 점검·등록한다. **관리자 권한이 필요하며 관리자 권한이 아니면 "사용 불가"로 표시**하고 건너뛴다. 사용자가 Windows에서 포트 허용 기능과 비관리자 선택 차단이 동작함을 확인했다. 규칙 세부값·반복 등록·되돌리기·실제 경고 억제 여부 등 남은 검증은 [network-ports.md 7.2](docs/exe/network-ports.md)에 기록했다.
-  - 2026-09-27 점검 결과: 필수 전부 설치됨 (.NET SDK 8.0.425 / 9.0.318 / 10.0.401 확인). MonoGame 템플릿은 미설치(프로젝트는 템플릿 없이 구성했으므로 필수 아님)
+  - 2026-09-27 점검 결과: 필수 전부 설치됨 (.NET SDK 8.0.425 / 9.0.318 / 10.0.401 확인). MonoGame 신전릿은 미설치(프로젝트는 신전릿 없이 구성했으므로 필수 아님)
 - [x] Linux 용 개발 도구 점검·설치 스크립트 `PREPARE.sh` — 2026-09-28 작성 (PREPARE.ps1 과 같은 항목 선택 → 점검 → 설치 → 재점검 흐름)
   - 사용법: `bash ./PREPARE.sh` (일반 사용자로 실행, 시스템 패키지는 스크립트가 sudo 호출), `--check-only`, `--all`, `--tools-dir DIR`(기본 `~/Tools`)
   - 패키지 관리자 apt / dnf / pacman / zypper 지원. .NET SDK 10 은 배포판 저장소 대신 `dotnet-install.sh` 로 `~/.dotnet` 에 설치하고 `~/.profile` 등에 PATH·DOTNET_ROOT 등록
-  - 필수: 기본 도구(curl·unzip·tar), Git, 빌드·실행 라이브러리(ICU·OpenSSL·OpenGL), .NET SDK 10, Python 3 + 패키지(배포판 패키지 우선, 실패 시 pip --user), JDK 21+(javac 로 확인), Ghidra, git safe.directory / 권장: MonoGame 템플릿, **Wine**(x64dbg·Process Monitor 대체: 원본 32bit exe 실행, winedbg, `WINEDEBUG=+file`), VS Code 확장 / 선택: C++ 빌드 도구·CMake·Ninja·vcpkg, yt-dlp(`~/.local/bin` 에 공식 최신 실행 파일), FFmpeg
+  - 필수: 기본 도구(curl·unzip·tar), Git, 빌드·실행 라이브러리(ICU·OpenSSL·OpenGL), .NET SDK 10, Python 3 + 패키지(배포판 패키지 우선, 실패 시 pip --user), JDK 21+(javac 로 확인), Ghidra, git safe.directory / 권장: MonoGame 신전릿, **Wine**(x64dbg·Process Monitor 대체: 원본 32bit exe 실행, winedbg, `WINEDEBUG=+file`), VS Code 확장 / 선택: C++ 빌드 도구·CMake·Ninja·vcpkg, yt-dlp(`~/.local/bin` 에 공식 최신 실행 파일), FFmpeg
   - `.gitattributes` 에 `*.sh text eol=lf` 추가 (Windows 체크아웃에서도 LF 유지)
   - 검증: Windows Git Bash 에서 문법 검사·`--check-only --all`·선택 화면 입력 처리만 확인. **실제 Linux 배포판에서의 설치 동작은 미검증** (아래 "Linux 에서 빌드·실행 확인" 때 함께 확인)
   - Ghidra 헤드리스 디컴파일 스크립트 `tools/ghidra/run_decomp.ps1` 은 아직 Windows 전용 (Linux 용 필요 시 `analyzeHeadless` 로 옮길 것)
@@ -3417,7 +3434,7 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
 - [x] **`.fort`** 컨테이너·오브젝트 레코드 — 2026-09-27 완료: [fort.md](docs/formats/fort.md), `tools/fort.py` (`dump`, `verify`)
   - 원본 463개(느슨한 파일 431 + 아카이브 32) 전부 섹션 끝까지 정확히 해석
   - 섹션 35개(Subscriber … Deck, Reserved2~4, Terr00~19), 타입 번호 변환(TypeNames 해시), 청크 레코드, 타입 플래그(typeflags 단어 → 비트, 파생 규칙) 해독
-    - 게임 의미(추정): 워크샵에서 등록하는 사이드바 "덱" — [workshop-deck.md](docs/gameplay/workshop-deck.md) 3절
+    - 게임 의미(추정): 워크샾에서 등록하는 사이드바 "덱" — [workshop-deck.md](docs/gameplay/workshop-deck.md) 3절
   - [ ] 남은 일: `State`·`Badges`·`CoreData`·`Mission` 섹션 내부 구조, `Territory` 외관·나머지 플래그, 회전된 영역 동적 검증, 내부 class 값에 따른 파생 플래그
 - [ ] **미션 스크립트** (`.english` 등): 문법 명세 — 섹션 종류와 발생 조건(이벤트), `[Header]` 키 전체 목록(`missionType`, `myTech`, `aiNName/Tech/StartMoney/Collectors/GeyserAttachments/color/BridgeDrawRate/Ability` …), `$` 명령과 인자, 인라인 HTML 태그, `{mission.filename}` 등 치환 변수. 전 파일 대상 키·명령 빈도 통계
   - [x] 문법 개요·빈도 통계·공식 캠페인 구성 — 2026-09-27 완료: [mission-script.md](docs/formats/mission-script.md)
@@ -3457,18 +3474,18 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
   - [x] 2026-09-28 부분 확인 ([animation-timing.md](docs/videos/animation-timing.md)): 화면 루프 상한 `maxFPS = 75`(`sleepPerLoop = 0`), 게임 시각 = `timeGetTime` 기반 초(`00460cd0`), 애니메이션은 고정 틱이 아니라 오브젝트별 "다음 시각 = 현재 시각 + 간격(0.04초·0.08초 등)" 타이머 → 루프 주기로 올림되어 실제 **24Hz·12Hz** (영상 측정과 일치)
   - [ ] 남은 일: 게임 로직(이동·전투·경제)의 갱신 방식(가변 시간 간격인지), 가이저·신전 등 타입별 간격 상수 위치, 난수 생성기
 - [ ] **좌표계·맵**: 아이소메트릭 투영, 타일 크기, 섬 형태, 높이/레이어, 그리기 순서(정렬 규칙)
-- [ ] **경제**: 가이저(geyser) → Storm Power(게임 내 재화) 수집 흐름, 수집 유닛(collector) 이동, 자원 운반, 제단(altar)·희생, 비용
-  - [x] 2026-09-29 도움말 근거 확보: 수송 유닛의 가이저→신전·전초기지 운반, 가이저 초기 2000, 적 파괴·건강한 유닛 회수 보상 25%, 제단 업그레이드·희생 절차. 실행 파일 판정은 남음 — [도움말의 게임 규칙](docs/gameplay/help-manual.md)
+- [ ] **경제**: 가이저(geyser) → Storm Power(게임 내 재화) 수집 흐름, 수집 유닛(collector) 이동, 자원 운반, 알타(altar)·희생, 비용
+  - [x] 2026-09-29 도움말 근거 확보: 수송 유닛의 가이저→신전·전초기지 운반, 가이저 초기 2000, 적 파괴·건강한 유닛 회수 보상 25%, 알타 업그레이드·희생 절차. 실행 파일 판정은 남음 — [도움말의 게임 규칙](docs/gameplay/help-manual.md)
 - [ ] **섬 소유권** — 규칙은 사용자 확인으로 정리됨 (2026-09-28): [docs/gameplay/island-ownership.md](docs/gameplay/island-ownership.md)
-  - 섬 테두리 색 = 소유 플레이어 색. **템플이 건설된 섬이 그 플레이어 소유**. 템플은 **플레이어당 동시에 1기(파괴되면 사제가 재건 가능), 빈 섬에만**, 원소 무관 **5000** Storm Power
-  - **템플이 있어야 다리 건설** 가능. 섬 상태는 내 섬 / 빈 섬(무소유) / 남의 섬
+  - 섬 테두리 색 = 소유 플레이어 색. **신전이 건설된 섬이 그 플레이어 소유**. 신전은 **플레이어당 동시에 1기(파괴되면 사제가 재건 가능), 빈 섬에만**, 원소 무관 **5000** Storm Power
+  - **신전이 있어야 다리 건설** 가능. 섬 상태는 내 섬 / 빈 섬(무소유) / 남의 섬
   - **남의 섬**: 건물·유닛 일체 건설 불가, 이동형 유닛은 이동 가능
-  - **빈 섬**: 워크샵·알타는 사제가 도달하면 건설 가능(다리 불필요, 내 섬도 가능), 건물형 유닛은 내 섬과 다리로 연결돼야 건설 가능. 연결은 건설 시점에만 필요하고, 다리가 끊겨도 지은 유닛은 계속 동작
-  - 용어: 템플·워크샵·알타는 "유닛"이 아니다 (사제 `Construct` 로 건설). 그 밖의 작은 건물·이동체가 유닛
+  - **빈 섬**: 워크샾·알타는 사제가 도달하면 건설 가능(다리 불필요, 내 섬도 가능), 건물형 유닛은 내 섬과 다리로 연결돼야 건설 가능. 연결은 건설 시점에만 필요하고, 다리가 끊겨도 지은 유닛은 계속 동작
+  - 용어: 신전·워크샾·알타는 "유닛"이 아니다 (사제 `Construct` 로 건설). 그 밖의 작은 건물·이동체가 유닛
   - 캡처 근거: The War Begins! 에서 적 신전이 없어지자 적 섬 테두리가 빨강 → 주황(소유자 없음), 지면도 초록으로 바뀜
-  - 남은 일: exe 판정 함수, 소유자 변경 시점, 템플이 파괴된 섬에 남은 건물·유닛·다리의 처리, Outpost(중립 섬 소유), 받침 섬·가이저 바위의 소유권
+  - 남은 일: exe 판정 함수, 소유자 변경 시점, 신전이 파괴된 섬에 남은 건물·유닛·다리의 처리, Outpost(중립 섬 소유), 받침 섬·가이저 바위의 소유권
 - [ ] **다리 건설**: 다리 조각 생성 규칙(모양 풀, 순서, `BridgeDrawRate`), 배치 판정, 연결·붕괴 조건 (다리는 소유한 섬에서만 시작 — 위 소유권 규칙)
-  - [x] 2026-09-29 조각 생성: 모양 표 26개(VA 0x52f998, 가중치 합 287)·누적 가중치 추첨·회전 표(0x531590)·프레임 선택, 생산 칸 채우기(템플이 있을 때 1초마다, Bridge Slots 칸까지, 5번째 추첨마다 한 칸 조각, 템플을 잃으면 비움), AI 는 4번째마다 한 칸 조각 → [bridge-pieces.md](docs/exe/bridge-pieces.md). `Deck.cpp` 는 다리와 무관(지식·생산 덱, Gem.cpp 가중 추첨)
+  - [x] 2026-09-29 조각 생성: 모양 표 26개(VA 0x52f998, 가중치 합 287)·누적 가중치 추첨·회전 표(0x531590)·프레임 선택, 생산 칸 채우기(신전이 있을 때 1초마다, Bridge Slots 칸까지, 5번째 추첨마다 한 칸 조각, 신전을 잃으면 비움), AI 는 4번째마다 한 칸 조각 → [bridge-pieces.md](docs/exe/bridge-pieces.md). `Deck.cpp` 는 다리와 무관(지식·생산 덱, Gem.cpp 가중 추첨)
   - [x] 2026-09-29 원본 실행(Windows `HJOW-Athlon`, Bridge the Gap!)으로 확인. 세부는 [bridge-pieces.md](docs/exe/bridge-pieces.md) 4절·[화면 목록 1.4절](docs/screens/README.md). 클론 `RotateByPlayer`·`BridgeCursor` 에 반영, 테스트 2개 추가.
     - 오른쪽 클릭 = 시계 방향 회전
     - C = 반대 회전 켜기/끄기(켜면 반시계)
@@ -3477,18 +3494,18 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
     - 사이드바는 조각을 절반 크기로 그림
   - [ ] 남은 일: 배치 판정·연결·소유권 전파·붕괴(`Bridge.cpp` 00421240~004227e0 — 튜토리얼 규칙: 섬 가장자리 또는 다른 다리의 열린 끝에 붙임, 아래에 막는 것이 있으면 불가, 초목이 늘어진 가장자리는 불가), 금 간·단단해지는 시점, 미션 `aiNBridgeDrawRate` 의 쓰임
 - [ ] **건물/유닛**: 배치 규칙(소유한 섬에만 배치 — 위 소유권 규칙), 건설 시간, 원소(Sun/Rain/Wind/Thunder) 별 기술 트리, 연구(기술 획득) 방식
-  - **생산 규칙 (사용자 확인, 2026-09-28)**: 유닛·건물을 생산·건설하려면 **해당 타입의 워크샵을 우클릭**해 `Put Knowledge into Production >` 로 그 유닛을 **왼쪽 사이드바 "덱"에 등록**해야 한다. 등록된 것만 사이드바에서 골라 배치할 수 있다 — [workshop-deck.md](docs/gameplay/workshop-deck.md)
-  - **덱의 출처 (사용자 확인, 2026-09-29)**: 화면 왼쪽 패널 = "덱" = 매뉴얼의 Production window. **워크샵이 파괴되면 그 워크샵으로 등록한 유닛이 덱에서 사라지고**, **템플은 다리 조각과 골렘을 덱에 넣으며 템플이 파괴되면 둘 다 사라진다**. **한 유닛은 한 워크샵에만 등록**(이미 등록된 유닛은 다른 워크샵 목록에 안 나옴), **파괴된 워크샵을 재건하면 우클릭으로 다시 등록해야 복구** — [workshop-deck.md](docs/gameplay/workshop-deck.md) "덱의 출처와 사라지는 조건"
+  - **생산 규칙 (사용자 확인, 2026-09-28)**: 유닛·건물을 생산·건설하려면 **해당 타입의 워크샾을 우클릭**해 `Put Knowledge into Production >` 로 그 유닛을 **왼쪽 사이드바 "덱"에 등록**해야 한다. 등록된 것만 사이드바에서 골라 배치할 수 있다 — [workshop-deck.md](docs/gameplay/workshop-deck.md)
+  - **덱의 출처 (사용자 확인, 2026-09-29)**: 화면 왼쪽 패널 = "덱" = 매뉴얼의 Production window. **워크샾이 파괴되면 그 워크샾으로 등록한 유닛이 덱에서 사라지고**, **신전은 다리 조각과 골렘을 덱에 넣으며 신전이 파괴되면 둘 다 사라진다**. **한 유닛은 한 워크샾에만 등록**(이미 등록된 유닛은 다른 워크샾 목록에 안 나옴), **파괴된 워크샾을 재건하면 우클릭으로 다시 등록해야 복구** — [workshop-deck.md](docs/gameplay/workshop-deck.md) "덱의 출처와 사라지는 조건"
   - 캡처 근거: Sun Workshop 목록(Rain Generator·Sun Cannon·Whirlibase) ↔ 이후 캡처 사이드바의 아이콘 3개. `.fort` `Deck` 섹션(타입·chance 가중 추첨)이 이 덱을 저장하는 것으로 추정
-  - **원소·에너지 규칙 (사용자 확인, 2026-09-28)** — [elements-energy.md](docs/gameplay/elements-energy.md): 원소는 Rain·Wind·Thunder 3종 + 공용 Sun. 워크샵은 자기 원소 유닛만 등록(Sun Workshop 은 예외로 다른 원소 Generator 도 등록). 템플·워크샵 외 작은 건물도 "유닛". 건물형 유닛은 소유 섬·소유 섬과 다리로 연결된 무인도·본인 다리 끝에 건설. 건설·생산에는 Storm Power + 필요 원소 에너지(예: Ice Cannon = Rain 1 + Sun 1)가 그 위치에 공급돼야 함. 공급원은 Temple·Generator(넓은 범위에 자기 원소 1개분), Sun 은 어느 원소로든 대체
-    - 데이터 대조: `.type` 의 `level` = 필요 에너지 개수 (사용자 확인), 발전기 `minUsage = maxUsage = -100`
+  - **원소·에너지 규칙 (사용자 확인, 2026-09-28)** — [elements-energy.md](docs/gameplay/elements-energy.md): 원소는 Rain·Wind·Thunder 3종 + 공용 Sun. 워크샾은 자기 원소 유닛만 등록(Sun Workshop 은 예외로 다른 원소 Generator 도 등록). 신전·워크샾 외 작은 건물도 "유닛". 건물형 유닛은 소유 섬·소유 섬과 다리로 연결된 무인도·본인 다리 끝에 건설. 건설·생산에는 Storm Power + 필요 원소 에너지(예: Ice Cannon = Rain 1 + Sun 1)가 그 위치에 공급돼야 함. 공급원은 Temple·Generator(넓은 범위에 자기 원소 1개분), Sun 은 어느 원소로든 대체
+    - 데이터 대조: `.type` 의 `level` = 필요 에너지 개수 (사용자 확인), 제네레이터 `minUsage = maxUsage = -100`
     - 신전 공급(B) 해결: Temple 도 Generator 와 같이 자기 원소 1개분·같은 범위. 우클릭 시 노란 별이 돌며 범위 표시 (사용자 확인). **튜토리얼에서는 신전 범위가 대폭 축소된 경우가 있었음** (사용자 확인)
-    - **공급 범위 측정 완료 (2026-09-28, 문서 6절)**: 공급 범위는 선택 시 **원소 모양 아이콘**(물방울·조개껍데기 등)으로 표시되고, 노란 별은 건물형 유닛의 **공격 범위** 표시 (사용자 확인). 아이콘이 칸 좌표 원 위에 놓임 → **일반 미션: 템플·Generator 모두 반지름 30칸(거리² ≤ 900)** (스크린샷 2장), **튜토리얼 2 Secret Workshop: 약 14칸**으로 축소 (튜토리얼 일부만). Dissolved Alliance 영상의 17.32칸 별 원은 공격 범위
+    - **공급 범위 측정 완료 (2026-09-28, 문서 6절)**: 공급 범위는 선택 시 **원소 모양 아이콘**(물방울·조개껍데기 등)으로 표시되고, 노란 별은 건물형 유닛의 **공격 범위** 표시 (사용자 확인). 아이콘이 칸 좌표 원 위에 놓임 → **일반 미션: 신전·Generator 모두 반지름 30칸(거리² ≤ 900)** (스크린샷 2장), **튜토리얼 2 Secret Workshop: 약 14칸**으로 축소 (튜토리얼 일부만). Dissolved Alliance 영상의 17.32칸 별 원은 공격 범위
     - **exe 확인 완료 (2026-09-29)** — [battle-options.md](docs/exe/battle-options.md): 반지름 = 전투 옵션 **Generator Range**. 표 `{14, 22, 30, 38}`(Short·Normal·Long·Very Long)에서 골라 **14~30칸으로 제한**(`004b4860`), 기본 Very Long → 30칸. **튜토리얼 2 처리 함수(`Totalmade.cpp` `004c3bb0`) 첫 단계만 Short = 14칸**으로 바꿈. 전투 옵션 21종 표(`0x52f5d0`)·저장 위치(`0x52f7e0 + 번호`)도 정리
     - 다음: 공격 범위(별)와 `.type` `range` 의 관계, 옵션 기본값이 적용되는 위치, `rangeDisplayProcessType`
     - **충족 판정 (사용자 확인)**: 필요 에너지 1개 = 서로 다른 공급원(Generator·Temple, 자기 또는 동맹 소유) 1개, 그 범위가 짓는 위치에서 모두 겹쳐야 함. Sun 은 아무 원소 공급원으로. 예: Vander Tower = Thunder 2 + Sun 1 → Thunder 공급원 2 + 아무 공급원 1. 구성은 **유닛마다 다르다**(2026-09-29 사용자 확인으로 정정 — 이전 일반식 `자기 원소 × (level − 1) + Sun × 1`은 폐기): 원소 유닛 L1 = 자기 원소 1(예: **Bulf = Thunder 1**, Thunder Generator 또는 Thunder Temple 필요), L2 = 자기 원소 1 + Sun 1, L3 = 자기 원소 2 + Sun 1, Sun 유닛 = Sun × 레벨, Generator·Outpost = 아무 1. 레벨은 패치판 `.type` 기준. 문서 4절에 전 유닛 필요 공급원 표, [PDF 유닛 핸드북 대조](docs/sources/pdf-manual.md#유닛별-건설-에너지-energy-to-build)
     - **소모 개념 아님**(같은 공급원 범위에 여러 유닛 가능), 조건은 **건설·생산 순간에만** 확인(공급원이 파괴돼도 유닛 유지), **이동 유닛도 생산 지점에 에너지 필요** — 질문 A~F 모두 확정 (문서 5절)
-  - 남은 일: exe 의 등록·추첨(`Deck.cpp`)·도움말의 워크샵 생산 칸(Level I 2개·II 3개·III 4개) 검증·업그레이드 비용/효과, 에너지 공급 범위·판정 함수, 등록 목록과 `myTech`·`techBit` 의 관계
+  - 남은 일: exe 의 등록·추첨(`Deck.cpp`)·도움말의 워크샾 생산 칸(Level I 2개·II 3개·III 4개) 검증·업그레이드 비용/효과, 에너지 공급 범위·판정 함수, 등록 목록과 `myTech`·`techBit` 의 관계
 - [ ] **전투**: 사거리·명중·피해 공식, 발사체 궤적, 특수 효과(`bomb*` 계열: 마비, 중력, 치유, 반역 등), 방어(차단벽·실드)
 - [ ] **승패 조건**: 프리스트(priest) 사망/포획, 신전(temple) 파괴, 미션 스크립트 이벤트 발생 지점
 - [ ] 미션 스크립트 인터프리터 동작(3단계 문법 명세와 교차 검증)
@@ -3522,7 +3539,7 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
 * 로컬 영상은 1024×768 풀스크린을 16:9 모니터에서 녹화해 **좌우 검은 여백**이 있다. 프레임을 뽑을 때(`ffmpeg`, 결과는 `extracted/videos/`) 가운데 4:3 영역을 잘라 1024×768 로 맞춘 뒤 스크린샷 분석과 같은 좌표계로 잰다.
   * 형식: **AV1 1920×1080 60fps** + AAC (4개 모두 확인). 게임 화면 = x 240~1679 의 1440×1080 (프레임 4장에서 측정, 계산값과 같음), 1.40625배 확대. 창 모드 스크린샷보다 밝고 채도가 높아(AGENTS.md: HDR 설정 문제로 밝게 촬영) 색 비교에는 쓰지 않는다
   * [x] 프레임 추출 도구 `tools/videoframes.py` (`probe`·`frame`·`range`, 게임 영역 잘라 1024×768 로 축소 또는 `--native`) — 2026-09-28, [사용법](docs/videos/README.md)
-  * 추출 예: `ffmpeg -ss 00:01:00 -i "<영상>" -frames:v 1 -vf "crop=1440:1080:240:0,scale=1024:768:flags=area" out.png` — 확대가 정수배가 아니라 축소해도 원본 픽셀과 정확히 같지는 않으므로, 정밀 측정(스프라이트 템플릿 매칭 등)은 스크린샷을 우선하고 영상은 **시간 측정**(애니메이션·건설·다리·이동 속도, 60fps → 약 16.7ms 단위)에 주로 쓴다
+  * 추출 예: `ffmpeg -ss 00:01:00 -i "<영상>" -frames:v 1 -vf "crop=1440:1080:240:0,scale=1024:768:flags=area" out.png` — 확대가 정수배가 아니라 축소해도 원본 픽셀과 정확히 같지는 않으므로, 정밀 측정(스프라이트 신전릿 매칭 등)은 스크린샷을 우선하고 영상은 **시간 측정**(애니메이션·건설·다리·이동 속도, 60fps → 약 16.7ms 단위)에 주로 쓴다
   * AV1 소프트웨어 디코딩은 느리므로 긴 구간 전체를 풀지 말고 `-ss`/`-t` 로 필요한 구간만 뽑는다
 * 방송 음성이 섞여 있으므로 소리 관련 관찰(효과음·음악 전환 시점)은 참고용으로만 쓴다.
 * 미션 이름 대응은 영상 파일 이름과 공식 캠페인 구성([mission-script.md](docs/formats/mission-script.md)) 기준. YouTube 2-x 의 미션 이름은 A Nation Rises 순서로 추정한 것이므로 영상 확인 시 검증한다.
@@ -3533,7 +3550,7 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
   - [x] 원본 캡처 2: 캠페인 1-1 "The War Begins!" 시작 직후 — 2026-09-28 완료: [docs/screens/the-war-begins-start.md](docs/screens/the-war-begins-start.md)
     (**좌표계 확정**: 위치 바이트 상위=x·하위=y, 청크 i → (i%16, i/16), 미니맵 1px = 2칸, 칸 = 16 × 약 11.25px(→ 캡처 3 에서 16 × 11 로 정정). noIsland = 가이저 받침 바위, 섬 지형 테마 = 신전 원소 추정)
   - [x] 원본 캡처 3: 캠페인 1-3 "Save the Island!" 시작 직후 (유닛·다리·바리케이드 배치) — 2026-09-28 완료: [docs/screens/save-the-island-start.md](docs/screens/save-the-island-start.md)
-    (**템플릿 매칭으로 정밀 확정**: 칸 = 정확히 16 × 11px, 모든 타입이 칸 좌표→화면 점에 스프라이트 기준점(0,0)을 그림, TerrNN 청크 = 영역 소속 청크를 y·x 순으로 훑은 것. Sun Barricade = 두 기둥 사이 광선, 미니맵은 다리도 소유자 색으로 표시)
+    (**신전릿 매칭으로 정밀 확정**: 칸 = 정확히 16 × 11px, 모든 타입이 칸 좌표→화면 점에 스프라이트 기준점(0,0)을 그림, TerrNN 청크 = 영역 소속 청크를 y·x 순으로 훑은 것. Sun Barricade = 두 기둥 사이 광선, 미니맵은 다리도 소유자 색으로 표시)
   - [x] 원본 캡처 4~42 목록·캡처별 관찰 정리 — 2026-09-28: [docs/screens/README.md](docs/screens/README.md)
     (메인 메뉴 계열 19장, The War Begins! 19장, Dissolved Alliance! 3장, 도움말 1장. 메인 메뉴 타이틀 그림 640×480 가운데 (192, 144), 도움말 = `help.english` `F1Help` 절(메뉴에서는 `<?{global.inMission}>` F8 줄 숨김 — 조건 평가 구현과 일치), Credits의 10.72는 제작진 명단 제목이며 exe 버전 증거가 아님, Storm Power 색 흰/노랑/빨강 실례, 정보 창·게임 메뉴·결과 창 구성)
   - [ ] 정밀 노트 작성(좌표·글꼴 측정): 메인 메뉴·대화상자(`docs/screens/main-menu.md`), 도움말 창, 미션 화면 정보 창·게임 메뉴 막대, 결과 창
@@ -3542,7 +3559,7 @@ exe 내부의 파일 로딩 함수를 Ghidra 로 함께 추적하면 빠르다(`
     - 섬 모양·다리·가이저·건물 위치 일치. **플레이어 1 = 가운데 바람 섬**, 왼쪽 눈 섬 = Duke of Rain(소유자 3), 오른쪽 돌 섬 = Prince of Thunder(소유자 2) (목록 문서의 "눈 섬 = 플레이어" 정정)
     - **원본 시작 카메라 규칙**: 플레이어 1 사제 칸 기준점이 클라이언트 약 (525, 393) (캡처 3장 공통 ±4px) → 맵 뷰어 시작 카메라에 반영, 원본 캡처와 ±6px 이내로 겹침
     - **거주지(Residence) 외관 = 섬 원소별 그림** 확인 → 뷰어가 영역 원소의 lit 그림을 고르도록 수정 (`MapSpriteFrames.BodyFrame(FortMapObject, theme)`, `FortTerrainPreview.TerritoryTheme`), 검사 9개 추가·전체 147개 통과
-    - 남은 일: `Playing 1`·`Playing 2`(시점 이동 캡처)의 카메라 위치를 템플릿 매칭으로 구해 섬별 대조, 소유자 3 이상의 플레이어 색, 원본의 거주지 원소 재선택 경로(exe), 섬 가장자리 풀 장식
+    - 남은 일: `Playing 1`·`Playing 2`(시점 이동 캡처)의 카메라 위치를 신전릿 매칭으로 구해 섬별 대조, 소유자 3 이상의 플레이어 색, 원본의 거주지 원소 재선택 경로(exe), 섬 가장자리 풀 장식
   - [ ] The War Begins! 진행 캡처로 **신전 원소 → 지면 테마**(비 → 눈·얼음, 바람 → 갈색 풀밭, 번개 → 어두운 돌, 신전 없음 → 초록 풀밭)와 소유권 변화 확인 (4단계 exe 분석으로 확정)
 - [ ] 메뉴 흐름도(타이틀 → 캠페인/멀티 → 브리핑 → 게임 → 결과)
   - [x] 2026-09-29 원본 실행으로 메인 메뉴 전 항목(멀티 제외)·데모·미션 진입/이탈·편집기 진입/이탈 흐름 확인 → [main-menu.md](docs/screens/main-menu.md) "메뉴 흐름도". 남은 일: 결과 화면 이후, Replay/Restart, 멀티플레이 화면

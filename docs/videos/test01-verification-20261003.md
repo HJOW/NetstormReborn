@@ -22,7 +22,7 @@
 
 실제 TEST01에서 아이스·썬더 캐논을 등록하려고 하니 `UnknownKnowledge`로 실패했다. `myTech=all`을 문자열 `all` 하나로 저장하고 개별 기술로 확장하지 않던 문제였다.
 
-원본 `Player.cpp` `004914e0`은 대소문자를 무시하고 `all`을 인식하며 로딩된 타입 중 `group != NO_GROUP(10)`을 순서대로 넣는다. `MissionStart.ExpandKnowledge`로 사람·AI 시작 지식에 같은 처리를 적용했다. 배포 타입에서는 27개이며 효과 그림·미사일·장식은 포함하지 않는다. 기존 `techAllowed` 필터와 중복 이름 제거를 유지했다. 실제 TEST01의 저장 워크샵에 두 캐논을 등록하는 명령도 테스트한다.
+원본 `Player.cpp` `004914e0`은 대소문자를 무시하고 `all`을 인식하며 로딩된 타입 중 `group != NO_GROUP(10)`을 순서대로 넣는다. `MissionStart.ExpandKnowledge`로 사람·AI 시작 지식에 같은 처리를 적용했다. 배포 타입에서는 27개이며 효과 그림·미사일·장식은 포함하지 않는다. 기존 `techAllowed` 필터와 중복 이름 제거를 유지했다. 실제 TEST01의 저장 워크샾에 두 캐논을 등록하는 명령도 테스트한다.
 
 ## 사용자 확인: 캐논 설치 방향
 
@@ -48,7 +48,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File tools/clone_test01_smoke.ps1
 
 - Release 빌드: 경고 0·오류 0. 단위 테스트 Assets 255 + Core 371 = **626건 통과**, 건너뜀 0.
 - 기존 UI 검사 26개 단언과 설정 저장 검사가 통과했다. 화면 전환·1-1/1-2 진입·전체화면 왕복을 확인했다. 도움말 Menu/Mission/Workshop 모두 통과했고 타이머 일시정지/재개도 확인했다. 사제 13개·골렘 9개 단언으로 그림 몸통 선택·배치·이동을 확인했다.
-- 새 TEST01 검사는 1280×960 영어, 1024×768 한국어, 1280×720 영어, 1280×800 한국어에서 논리 높이 768을 사용한다. 각 조합 **24개 단언, 총 96개가 통과**했다. 사제·풍선·Sail Skater·워크샵·신전 선택, 저장 워크샵 II/III, F7 중립 테두리, 미니맵 클릭/끌기, Shift+1 저장/1 복귀, 배치 허용/불가 그림, 두 고정 캐논의 배치 전 회전을 확인했다. 미니맵은 입력 전후 카메라 좌표 변경과 저장 좌표 복귀를 단언한다.
+- 새 TEST01 검사는 1280×960 영어, 1024×768 한국어, 1280×720 영어, 1280×800 한국어에서 논리 높이 768을 사용한다. 각 조합 **24개 단언, 총 96개가 통과**했다. 사제·풍선·Sail Skater·워크샾·신전 선택, 저장 워크샾 II/III, F7 중립 테두리, 미니맵 클릭/끌기, Shift+1 저장/1 복귀, 배치 허용/불가 그림, 두 고정 캐논의 배치 전 회전을 확인했다. 미니맵은 입력 전후 카메라 좌표 변경과 저장 좌표 복귀를 단언한다.
 - 로그·PNG는 Git 제외 `extracted/screens/test01-verify-20261003/`에 있다. 각 스크립트는 설정 폴더를 분리해 사용자 설정을 덮어쓰지 않는다.
 
 원본 프레임은 `playingVideos/20261003T074745758Z-adc787856962/`의 36.0·37.5·103.5·120.5초를 `tools/recordplay_frames.py`로 추출했다. 녹화는 1280×960, 논리 화면 대비 배율 1.25다. 시작 클론 캡처와 37.5초 프레임의 카메라·건물 배치·생산 창·미니맵을 대조하고 선택·배치 화면의 괄호·체력 막대·원소/비용 표시도 살폈다. 영상의 `recordingElapsedMs`를 기준으로 한다.
@@ -66,6 +66,6 @@ powershell -NoProfile -ExecutionPolicy Bypass -File tools/clone_test01_smoke.ps1
 
 ## 남아 있는 차이
 
-실행 검증 통과는 원본과 모든 픽셀이 일치한다는 의미가 아니다. 지면 타일과 가장자리 변형·그림자의 음영/그리기 순서·비례 글꼴·브리핑 크기, 에너지 방울과 반투명 배치 연출이 남아 있다. Crossbow의 V형 사거리, Wind/Rain 신전 애니메이션 간격, Sun 워크샵 창 점등, `CellCenterScreen` 위에 맞춘 방어선·탄 위치도 후속 과제다. 원본 시작 연결 창과 30/60/120FPS 설정, Linux GUI 검증은 이번 범위에서 구현하지 않았다.
+실행 검증 통과는 원본과 모든 픽셀이 일치한다는 의미가 아니다. 지면 타일과 가장자리 변형·그림자의 음영/그리기 순서·비례 글꼴·브리핑 크기, 에너지 방울과 반투명 배치 연출이 남아 있다. Crossbow의 V형 사거리, Wind/Rain 신전 애니메이션 간격, Sun 워크샾 창 점등, `CellCenterScreen` 위에 맞춘 방어선·탄 위치도 후속 과제다. 원본 시작 연결 창과 30/60/120FPS 설정, Linux GUI 검증은 이번 범위에서 구현하지 않았다.
 
 관련 구현: [색 변환](../../dotnetpj/src/Netstorm.Assets/ObjectColorRemap.cs), [시작 지식](../../dotnetpj/src/Netstorm.Core/Rules/MissionStart.cs), [캐논 회귀 검사](../../dotnetpj/tests/Netstorm.Core.Tests/RecordedCombatTests.cs), [TEST01 실행 검사](../../tools/clone_test01_smoke.ps1).

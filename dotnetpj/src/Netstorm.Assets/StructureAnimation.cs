@@ -18,7 +18,7 @@ public static class StructureAnimation
     /// <summary>신전 회오리·번개, 풍선 흔들림 한 프레임의 길이(초). 원본 0.08초 타이머 → 약 83.3ms.</summary>
     public const double SwirlFrameSeconds = 1.0 / 12;
 
-    /// <summary>Rain 워크샵의 겹침 조각이 바뀌는 간격(초). 녹화에서 0.5초마다 바뀌어 세 단계가 1.5초에 한 바퀴 돌았다.</summary>
+    /// <summary>Rain 워크샾의 겹침 조각이 바뀌는 간격(초). 녹화에서 0.5초마다 바뀌어 세 단계가 1.5초에 한 바퀴 돌았다.</summary>
     public const double WorkshopFrameSeconds = 0.5;
 
     /// <summary>
@@ -27,7 +27,7 @@ public static class StructureAnimation
     /// </summary>
     public const int GeyserSteamFrames = 17;
 
-    /// <summary>워크샵 레벨 1·2·3 의 방향 글자 (A·B·C). 녹화의 FactoryState 0·1·2 와 풍선 도움말 "Level III" 로 확인했다.</summary>
+    /// <summary>워크샾 레벨 1·2·3 의 방향 글자 (A·B·C). 녹화의 FactoryState 0·1·2 와 풍선 도움말 "Level III" 로 확인했다.</summary>
     private const string FactoryLevelSides = "ABC";
 
     /// <summary>
@@ -62,13 +62,13 @@ public static class StructureAnimation
     }
 
     /// <summary>
-    /// 워크샵의 지금 프레임. 방향 글자가 레벨(1 = A, 2 = B, 3 = C)이고 번호 01 이 건물 본체다.
+    /// 워크샾의 지금 프레임. 방향 글자가 레벨(1 = A, 2 = B, 3 = C)이고 번호 01 이 건물 본체다.
     /// 번호 02 이상은 본체 위에 겹치는 작은 조각(Rain: 물 반짝임, Sun: 불 켜진 창)이다.
-    /// Rain 워크샵만 "조각 없음 → 02 → 03" 을 0.5초마다 되풀이한다 (녹화에서 1.5초 주기).
-    /// Sun 워크샵의 창 조각은 녹화 내내 보이지 않았고 언제 켜지는지 확인하지 못해 그리지 않는다.
+    /// Rain 워크샾만 "조각 없음 → 02 → 03" 을 0.5초마다 되풀이한다 (녹화에서 1.5초 주기).
+    /// Sun 워크샾의 창 조각은 녹화 내내 보이지 않았고 언제 켜지는지 확인하지 못해 그리지 않는다.
     /// </summary>
-    /// <param name="type">워크샵 타입</param>
-    /// <param name="level">워크샵 레벨 (1~3, 범위 밖은 가까운 값으로 맞춘다)</param>
+    /// <param name="type">워크샾 타입</param>
+    /// <param name="level">워크샾 레벨 (1~3, 범위 밖은 가까운 값으로 맞춘다)</param>
     /// <param name="seconds">게임 경과 시간(초)</param>
     public static StructureFrames FactoryFrames(TypeDefinition type, int level, double seconds)
     {

@@ -81,7 +81,7 @@ public sealed partial class BattleSession
 
     /// <summary>
     /// 기술 허용 표 → 덱 등록 → 재충전을 차례로 검사한다. 원본도 덱 갱신에서 표를 확인한다
-    /// (Combatgump 생산 창 처리, 템플의 골렘 항목은 sunWalker 를 조회 — docs/exe/mission-header-flags.md).
+    /// (Combatgump 생산 창 처리, 신전의 골렘 항목은 sunWalker 를 조회 — docs/exe/mission-header-flags.md).
     /// </summary>
     private CommandFailure CheckProductionRules(PlayerState state, TypeInfo type)
     {
@@ -89,7 +89,7 @@ public sealed partial class BattleSession
         {
             return CommandFailure.TechDenied;
         }
-        // 덱에 등록된 유닛(워크샵 등록 또는 템플의 골렘)이어야 한다
+        // 덱에 등록된 유닛(워크샾 등록 또는 신전의 골렘)이어야 한다
         bool inDeck = state.Deck.Entries().Any(e => e.Kind != DeckEntryKind.Bridge
             && e.TypeName.Equals(type.Name, StringComparison.OrdinalIgnoreCase));
         if (!inDeck)
@@ -102,7 +102,7 @@ public sealed partial class BattleSession
     }
 
     /// <summary>
-    /// 건물(템플·워크샵·알타·아웃포스트)을 지을 수 있는지 판정한다: 기술 허용 표 → 위치(템플·알타 플레이어당 1기 포함) → 자리 →
+    /// 건물(신전·워크샾·알타·아웃포스트)을 지을 수 있는지 판정한다: 기술 허용 표 → 위치(신전·알타 플레이어당 1기 포함) → 자리 →
     /// Storm Power → 에너지 → (사제를 지정했으면) 사제가 그 자리까지 걸어갈 수 있는지 순서다.
     /// 원본은 허용되지 않은 타입을 사제의 Construct 메뉴에서 아예 빼 버린다 (FUN_00461cf0).
     /// 사제는 설치 뒤 현장까지 걸어가야 건설을 시작하므로 길이 없는 섬의 자리는 지을 수 없다 (웹 팬게임의 builderCannotReach).
@@ -127,7 +127,7 @@ public sealed partial class BattleSession
         {
             return new SessionPlacementCheck(CommandFailure.WrongKind, null);
         }
-        // 건설 중이거나 사제를 기다리는 템플·알타도 "이미 있음"으로 센다 (플레이어당 동시에 1기)
+        // 건설 중이거나 사제를 기다리는 신전·알타도 "이미 있음"으로 센다 (플레이어당 동시에 1기)
         // TEST02 원본은 사제가 서 있는 칸에는 건물을 놓을 수 있다. 다른 건물·집의 점유는 그대로 검사한다.
         Footprint[] priests = [.. _entities.Values.Where(e => e.Kind == ObjectKind.Priest && e.OccupiesGround).Select(e => e.Footprint)];
         PlacementCheck site = Map.CheckBuilding(type, x, y, player, state.StormPower,
@@ -254,7 +254,7 @@ public sealed partial class BattleSession
         return CommandResult.Ok();
     }
 
-    /// <summary>지식 등록: 워크샵의 원소·빈 칸·중복 규칙은 ProductionDeck 이 판정한다.</summary>
+    /// <summary>지식 등록: 워크샾의 원소·빈 칸·중복 규칙은 ProductionDeck 이 판정한다.</summary>
     private CommandResult ExecuteRegister(RegisterKnowledgeCommand command)
     {
         if (!_players.TryGetValue(command.Player, out PlayerState? player))
@@ -285,7 +285,7 @@ public sealed partial class BattleSession
         return CommandResult.Ok();
     }
 
-    /// <summary>워크샵 소유권·완공·최대 단계·비용을 확인하고 생산 칸을 늘린다. 시간은 추후 원본 대조 대상이다.</summary>
+    /// <summary>워크샾 소유권·완공·최대 단계·비용을 확인하고 생산 칸을 늘린다. 시간은 추후 원본 대조 대상이다.</summary>
     private CommandResult ExecuteUpgradeWorkshop(UpgradeWorkshopCommand command)
     {
         GameEntity? workshop = Entity(command.WorkshopId);
@@ -294,12 +294,12 @@ public sealed partial class BattleSession
         if (workshop.Kind != ObjectKind.Workshop) return new CommandResult(CommandFailure.WrongKind);
         if (!workshop.IsComplete) return new CommandResult(CommandFailure.NotComplete);
         PlayerState player = Player(command.Player);
-        if (player.Deck.WorkshopLevel(workshop.Id) >= ProductionDeck.MaxWorkshopLevel) return new CommandResult(CommandFailure.NotReady, "최대 단계 워크샵");
+        if (player.Deck.WorkshopLevel(workshop.Id) >= ProductionDeck.MaxWorkshopLevel) return new CommandResult(CommandFailure.NotReady, "최대 단계 워크샾");
         int cost = WorkshopUpgradeCostFor(workshop.Type.Definition);
-        if (player.StormPower < cost) return new CommandResult(CommandFailure.Placement, $"워크샵 업그레이드에 {cost:N0} SP 필요");
+        if (player.StormPower < cost) return new CommandResult(CommandFailure.Placement, $"워크샾 업그레이드에 {cost:N0} SP 필요");
         player.StormPower -= cost;
         player.Deck.UpgradeWorkshop(workshop.Id);
-        Emit(SessionEventKind.WorkshopUpgraded, player.Number, workshop.Id, $"워크샵 단계 {player.Deck.WorkshopLevel(workshop.Id)} (−{cost})");
+        Emit(SessionEventKind.WorkshopUpgraded, player.Number, workshop.Id, $"워크샾 단계 {player.Deck.WorkshopLevel(workshop.Id)} (−{cost})");
         return CommandResult.Ok();
     }
 

@@ -51,7 +51,7 @@ Sun Barricade 200sp · 1400 hits · Level 1(Sun 1), Whirligig hits 25, Dust Devi
 |---|---|
 | `HELP.EXE` | "Activision Help Utility" — 도움말 파일 이름을 받아 여는 작은 실행기 |
 | `*.GID` | WinHelp 가 만든 색인 캐시 (원본 자료 아님) |
-| `*.CNT` | 도움말 목차. `game.CNT` 제목 "The Book of Nimbus", 장 9개. `README.CNT` 에 "Information_for_Dark_Reign_Multi_play" 같은 다른 Activision 게임 템플릿 흔적 |
+| `*.CNT` | 도움말 목차. `game.CNT` 제목 "The Book of Nimbus", 장 9개. `README.CNT` 에 "Information_for_Dark_Reign_Multi_play" 같은 다른 Activision 게임 신전릿 흔적 |
 | `VENDOR.HLP` | 1997년 하드웨어 제조사 연락처 54개 — 클론과 무관 |
 | `VOCAB.HLP` | BIOS·CMOS·ISP·PCI·QEMM·RAM·URL·VESA·VLB 용어 풀이 — 무관 |
 | `HELP.HLP` | Windows 95 장치 문제 해결 34개 토픽. 참고할 점: 게임 글꼴이 Windows 글꼴 설정 영향을 받음, 16비트 오디오 필요, 레지스트리 키 |

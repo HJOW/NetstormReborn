@@ -4,23 +4,23 @@ namespace Netstorm.Core.Rules;
 
 /// <summary>
 /// 게임 규칙에서 쓰는 오브젝트 분류 (docs/gameplay/island-ownership.md "용어", docs/sources/game-manual.md 1절).
-/// 템플·워크샵·알타·아웃포스트는 "건물"이며 사제가 짓는다. 그 밖의 작은 건물과 이동체가 "유닛"이다.
+/// 신전·워크샾·알타·아웃포스트는 "건물"이며 사제가 짓는다. 그 밖의 작은 건물과 이동체가 "유닛"이다.
 /// </summary>
 public enum ObjectKind
 {
     /// <summary>분류하지 않는 오브젝트 (지형·장식·효과 등)</summary>
     Other,
 
-    /// <summary>템플(신전, vortex). 섬 소유·다리/골렘 공급·에너지 공급</summary>
+    /// <summary>신전(신전, vortex). 섬 소유·다리/골렘 공급·에너지 공급</summary>
     Temple,
 
-    /// <summary>워크샵(factory). 유닛을 덱에 등록한다</summary>
+    /// <summary>워크샾(factory). 유닛을 덱에 등록한다</summary>
     Workshop,
 
     /// <summary>아웃포스트 (멀티플레이 중립 섬 소유용 건물)</summary>
     Outpost,
 
-    /// <summary>알타(제단, altar·dais)</summary>
+    /// <summary>알타(알타, altar·dais)</summary>
     Altar,
 
     /// <summary>High Priest</summary>
@@ -84,17 +84,17 @@ public static class ObjectKinds
         return ObjectKind.Other;
     }
 
-    /// <summary>사제의 Construct 메뉴로 짓는 "건물"인지 (템플·워크샵·알타·아웃포스트)</summary>
+    /// <summary>사제의 Construct 메뉴로 짓는 "건물"인지 (신전·워크샾·알타·아웃포스트)</summary>
     /// <param name="kind">분류</param>
     public static bool IsBuilding(ObjectKind kind) =>
         kind is ObjectKind.Temple or ObjectKind.Workshop or ObjectKind.Altar or ObjectKind.Outpost;
 
-    /// <summary>워크샵에서 덱에 등록해 생산하는 "유닛"인지 (Generator·건물형 유닛·수송 유닛)</summary>
+    /// <summary>워크샾에서 덱에 등록해 생산하는 "유닛"인지 (Generator·건물형 유닛·수송 유닛)</summary>
     /// <param name="kind">분류</param>
     public static bool IsProducibleUnit(ObjectKind kind) =>
         kind is ObjectKind.Generator or ObjectKind.Emplacement or ObjectKind.Transport;
 
-    /// <summary>에너지 공급원인지 (템플·Generator)</summary>
+    /// <summary>에너지 공급원인지 (신전·Generator)</summary>
     /// <param name="kind">분류</param>
     public static bool IsEnergySource(ObjectKind kind) => kind is ObjectKind.Temple or ObjectKind.Generator;
 }

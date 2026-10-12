@@ -5,7 +5,7 @@ namespace Netstorm.Core.Simulation;
 
 /// <summary>
 /// 공개 캠페인(1-1·1-2)의 임시 방어 AI. 원본 전략의 디컴파일 결과가 아니며 docs/gameplay/campaign-one.md·campaign-two.md에 추정을 기록한다.
-/// 방어 유닛·발전기 종류는 미션의 aiTech 에서 고른다(1-1 Sun Disc Thrower, 1-2 Whirlibase + Rain Generator).
+/// 방어 유닛·제네레이터 종류는 미션의 aiTech 에서 고른다(1-1 Sun Disc Thrower, 1-2 Whirlibase + Rain Generator).
 /// </summary>
 public sealed partial class BattleSession
 {
@@ -79,8 +79,8 @@ public sealed partial class BattleSession
                 ExecuteRegister(new RegisterKnowledgeCommand(player.Number, workshop.Id, defense));
             (int X, int Y)? site = FindAiSite(temple, (x, y) => CheckUnit(player.Number, defense, x, y).Allowed);
             if (site != null) { ExecutePlaceUnit(new PlaceUnitCommand(player.Number, defense, site.Value.X, site.Value.Y)); continue; }
-            // 방어 유닛을 놓을 자리가 없는 이유가 에너지 부족일 때만 지식에 있는 발전기를 신전 주변에 하나 놓는다
-            // (돈·자리 부족으로 실패할 때 발전기만 계속 늘리지 않도록).
+            // 방어 유닛을 놓을 자리가 없는 이유가 에너지 부족일 때만 지식에 있는 제네레이터를 신전 주변에 하나 놓는다
+            // (돈·자리 부족으로 실패할 때 제네레이터만 계속 늘리지 않도록).
             bool energyShort = FindAiSite(temple, (x, y) => CheckUnit(player.Number, defense, x, y)
                 is { Failure: CommandFailure.Placement, Site.Problem: PlacementProblem.NotEnoughEnergy }) != null;
             if (!energyShort || AiKnowledgeOf(["battery"]) is not { } generator) continue;

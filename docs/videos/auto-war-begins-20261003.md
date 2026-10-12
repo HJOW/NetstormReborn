@@ -2,7 +2,7 @@
 
 > 시스템: `HJOW-Athlon`(192.168.0.94, Windows 10 Pro). AGENTS.md의 지정 시스템 예외로 실행 전 확인 없이 원본 복사본을 구동했다.
 > 방식: `analyzeManager` 자동 분석(CLI) 30FPS 설정, 세션 전체 자동 녹화. 사용자 요청: 튜토리얼이 아닌 **스테이지 1 The War Begins!**에서
-> 사제 이동 → 골렘 생산·이동 → 사제로 워크샵 건설 → 워크샵으로 덱에 유닛 등록 → ESC 메뉴로 미션 이탈 → 종료.
+> 사제 이동 → 골렘 생산·이동 → 사제로 워크샾 건설 → 워크샾으로 덱에 유닛 등록 → ESC 메뉴로 미션 이탈 → 종료.
 > 원본 게임·AGENTS.md는 수정하지 않았다. 녹화 원자료는 Git 제외 경로 `extracted/analyzeManager/<세션 ID>/recording/`에 있다.
 
 ## 1. 실행 두 번과 자료 위치
@@ -44,7 +44,7 @@
 | 61.0 / 62.7 | 사제 선택 / 목적지 (900,500) | 63.1초 출발(대각선 먼저, 약 66초부터 직선) → 약 70초 도착 |
 | 75.0 / 76.6 | 사제 선택 / **허공** (300,200) | **움직이지 않고 선택만 풀림** |
 | 81.5 | 덱의 골렘 아이콘(42,180) 좌클릭 | 골렘을 집음 |
-| 84.6 | 템플 근처 (520,385) 좌클릭 | SP 3000 → 2600, 약 1.4초 만에 골렘 실체화(약 86.0초) |
+| 84.6 | 신전 근처 (520,385) 좌클릭 | SP 3000 → 2600, 약 1.4초 만에 골렘 실체화(약 86.0초) |
 | 90.8 / 92.9 | 골렘 선택 / 목적지 (680,372) | 93.4초 출발 → 99.3초 도착 |
 | 102.5 / 104.4 | 골렘 선택 / 목적지 (880,372) | 104.8초 출발 → 111.1초 도착 |
 | 108.1 / 109.8 | 사제 선택 / 목적지 (600,388) | 먼 길을 걸어 돌아옴(약 117초 이후에도 이동 중) |
@@ -53,9 +53,9 @@
 | 147.7 | 동쪽 섬 (885,423) 좌클릭 | SP 2600 → 1800, 공사장 그림자 표시 |
 | 154.5~159 | 사제가 공사장 왼쪽 가장자리에서 보이기 시작해 따라 걸어 도착 | 사제 도착(약 158~159초) |
 | 160.3 → 170.8 → 178.9 | 건물이 아래에서 위로 차오름 → 외형 완성 → 창문 불 켜짐 | 건설 약 10~11초 |
-| 194.2 → 196.2 → 198.9 | 워크샵 우클릭 → Put Knowledge into Production > → Rain Generator | 덱에 결정 아이콘 추가(198.9초 다음 프레임) |
-| 201.8 → 203.7 → 205.7 | 워크샵 우클릭 → Put Knowledge > → Sun Cannon | 덱에 포대 아이콘 추가(약 206.5초) |
-| 209.2 → 211.7 | 워크샵 우클릭 → View Current Production > | Rain Generator·Sun Cannon·About |
+| 194.2 → 196.2 → 198.9 | 워크샾 우클릭 → Put Knowledge into Production > → Rain Generator | 덱에 결정 아이콘 추가(198.9초 다음 프레임) |
+| 201.8 → 203.7 → 205.7 | 워크샾 우클릭 → Put Knowledge > → Sun Cannon | 덱에 포대 아이콘 추가(약 206.5초) |
+| 209.2 → 211.7 | 워크샾 우클릭 → View Current Production > | Rain Generator·Sun Cannon·About |
 | 216.6 | 허공 좌클릭 | 메뉴 닫힘 |
 | 219.9 | ESC | 상단 메뉴 막대(Game·View·Options·Players·About) |
 | 222.6 → 225.4 → 227.9 | Game → Leave Mission → Main Menu | "Leave Mission?" 확인 창 → 메인 메뉴(`9a5aa24c`) |
@@ -91,9 +91,9 @@
 ### 4.3 골렘 생산(덱 → 배치)
 
 - 덱의 골렘 아이콘을 **왼쪽 클릭하면 집는다.** 집은 골렘 그림이 커서를 따라가며 **비용 400**(노란 글자 + Storm Power 보석)과 속성 아이콘(Sun 주황색)이 붙는다.
-- 1차 실행 화면 기준 배치 미리보기: 땅 위에서 템플 에너지 범위 안이면 **흰 사각 칸 표시**, 허공 위면 붉은 표시와 **"Only on Controlled Island"**, 에너지 범위(템플에서 약 30칸) 밖이면 **"Energy not satisfied"**가 뜬다(2차 스크립트는 호버 단계를 건너뛰어 영상에는 없다).
-- 배치 클릭(84.6초) 연출: ① "400"이 떠올랐다가 사라짐 ② 템플 쪽에서 **푸른 에너지 방울이 꼬리를 끌며 날아옴**(85.1초) ③ 골렘이 **반투명 상태**(85.4~85.8초)를 지나 불투명해짐(약 86.0초). 클릭에서 완성까지 약 1.4초다.
-- **SP 숫자는 굴러서 내려간다**: 3000 → 2680(85.0초) → 2601(85.4초) → 2600(85.9초). 숫자가 3000·2600은 흰색, 1800(워크샵 뒤)은 노란색이었다.
+- 1차 실행 화면 기준 배치 미리보기: 땅 위에서 신전 에너지 범위 안이면 **흰 사각 칸 표시**, 허공 위면 붉은 표시와 **"Only on Controlled Island"**, 에너지 범위(신전에서 약 30칸) 밖이면 **"Energy not satisfied"**가 뜬다(2차 스크립트는 호버 단계를 건너뛰어 영상에는 없다).
+- 배치 클릭(84.6초) 연출: ① "400"이 떠올랐다가 사라짐 ② 신전 쪽에서 **푸른 에너지 방울이 꼬리를 끌며 날아옴**(85.1초) ③ 골렘이 **반투명 상태**(85.4~85.8초)를 지나 불투명해짐(약 86.0초). 클릭에서 완성까지 약 1.4초다.
+- **SP 숫자는 굴러서 내려간다**: 3000 → 2680(85.0초) → 2601(85.4초) → 2600(85.9초). 숫자가 3000·2600은 흰색, 1800(워크샾 뒤)은 노란색이었다.
 - 골렘 아이콘은 배치 뒤에도 덱에 남아 있었다(2차 최종 화면 덱: 골렘·Rain Generator·Sun Cannon).
 
 ### 4.4 우클릭 메뉴(1차·2차 모두)
@@ -101,25 +101,25 @@
 - 유닛·건물을 **오른쪽 클릭**하면 클릭 위치에서 정보 메뉴가 뜬다(화면 가장자리에서는 안쪽으로 밀림).
 - 골렘: `Golem Level I / Owner: You / Alignment: Sun / Class: Ground Transport` + Salvage gains 100 / About / Player >.
 - 사제: `High Priest Level I / Owner: You / Alignment: None / Class: High Priest` + Construct > / View Netstorm Knowledge / About / Player >.
-- 워크샵: `Sun Workshop Level I / Owner: You / Alignment: Sun / Class: Production` + View Current Production > / Put Knowledge into Production > / Upgrade costs 800 / Salvage gains 200 / About / Player >.
+- 워크샾: `Sun Workshop Level I / Owner: You / Alignment: Sun / Class: Production` + View Current Production > / Put Knowledge into Production > / Upgrade costs 800 / Salvage gains 200 / About / Player >.
 - `>` 항목은 **왼쪽 클릭으로** 하위 창을 연다(Construct → Workshop 순서로 두 단계). 호버만으로 여는지는 시험하지 않았다.
 - 메뉴는 **허공을 왼쪽 클릭하면 닫힌다**. 이 클릭은 이동·배치 같은 다른 명령으로 이어지지 않았다.
 
-### 4.5 사제로 워크샵 건설
+### 4.5 사제로 워크샾 건설
 
 1. 사제 우클릭 → `Construct >` → `Construct Building` 창: **Temple >**(어둡게 표시), **Workshop >**, **Build Level 1 Altar for 500**.
 2. `Workshop >` → **Build Sun Workshop for 800**(활성), Build Wind Workshop for 1000·Build Rain Workshop for 1000·Build Thunder Workshop for 1000(어둡게 표시).
-3. 선택하면 **건물 그림이 커서에 붙고** 아래에 비용 "800"이 나온다. **발자국 사각형이 흰색이면 설치 가능, 반투명 붉은색이면 불가**였다. 동쪽 섬 (885,423)은 가능했고, 템플 남서쪽 평지는 위치를 세 번 옮겨도 모두 붉은색이었다(발자국이 땅 안에 들어가 보이는데도 불가). 이유(템플 근접 금지 칸·땅 칸 모양 등)는 확인하지 못했다.
+3. 선택하면 **건물 그림이 커서에 붙고** 아래에 비용 "800"이 나온다. **발자국 사각형이 흰색이면 설치 가능, 반투명 붉은색이면 불가**였다. 동쪽 섬 (885,423)은 가능했고, 신전 남서쪽 평지는 위치를 세 번 옮겨도 모두 붉은색이었다(발자국이 땅 안에 들어가 보이는데도 불가). 이유(신전 근접 금지 칸·땅 칸 모양 등)는 확인하지 못했다.
 4. 좌클릭으로 설치하면 SP가 800 줄고(2600 → 1800) **공사장 그림자**(어두운 실루엣 + 흩어진 나무 윤곽)가 나타난다.
 5. **사제가 직접 걸어가서** 건설한다. 2차에서는 (600,388) 부근에서 출발해 설치 약 7초 뒤(154.5초) 공사장 왼쪽 가장자리에서 보이기 시작했고 약 158~159초에 도착했다. 도착 뒤(약 160초) 건물이 **바닥의 나무·화단부터 위로 차올라** 약 170.8초에 외형이 완성되고, 약 8초 뒤(178.9초) **창문에 불이 켜졌다**. 설치 클릭에서 완성까지는 약 23초이며, 이 중 걷기를 뺀 건설은 약 10~11초다(기존 문서의 관찰값 10초와 맞음).
 
-### 4.6 워크샵으로 덱에 등록
+### 4.6 워크샾으로 덱에 등록
 
-1. 워크샵 우클릭 → `Put Knowledge into Production >` → **Knowledge Available / Production Slots Available:** 창에 Rain Generator·Sun Cannon·Whirlibase가 나온다(`Production Slots Available:` 뒤의 숫자는 두 번 모두 화면 오른쪽 밖으로 잘려 읽지 못했다).
+1. 워크샾 우클릭 → `Put Knowledge into Production >` → **Knowledge Available / Production Slots Available:** 창에 Rain Generator·Sun Cannon·Whirlibase가 나온다(`Production Slots Available:` 뒤의 숫자는 두 번 모두 화면 오른쪽 밖으로 잘려 읽지 못했다).
 2. 항목을 왼쪽 클릭하면 **그 항목이 목록에서 사라지고 덱에 아이콘이 생긴다**. Rain Generator는 클릭(198.9초) 다음 프레임에, Sun Cannon은 클릭(205.7초) 0.5~0.8초 뒤에 덱에 나타났다. 등록 비용은 없었다(SP 1800 유지).
 3. 두 번째 등록 때 목록은 Sun Cannon·Whirlibase 둘뿐이었다.
 4. `View Current Production >` 목록은 **Rain Generator·Sun Cannon·About**이었다.
-5. 덱에는 위에서부터 다리 조각, 골렘, Rain Generator(푸른 결정), Sun Cannon(검은 포대)이 순서대로 들어갔다. 이전 [워크샵 문서](../gameplay/workshop-deck.md) 해석(수정=Rain Generator, 포대=Sun Cannon, Whirlibase는 미등록이라 돔 아이콘 없음)과 일치한다.
+5. 덱에는 위에서부터 다리 조각, 골렘, Rain Generator(푸른 결정), Sun Cannon(검은 포대)이 순서대로 들어갔다. 이전 [워크샾 문서](../gameplay/workshop-deck.md) 해석(수정=Rain Generator, 포대=Sun Cannon, Whirlibase는 미등록이라 돔 아이콘 없음)과 일치한다.
 
 ### 4.7 ESC 메뉴로 나가기
 
@@ -133,13 +133,13 @@
 
 - 이동 명령 = 선택 → 땅 좌클릭 → 선택 해제. 허공은 거부. 출발 지연 0.4~0.8초, 직선 속도는 사제 약 1.8칸/초, 골렘 약 2.0칸/초.
 - 골렘 배치 연출(에너지 방울 → 반투명 → 불투명, 약 1.4초)과 SP 숫자가 굴러 내려가는 방식.
-- 워크샵 건설 흐름(공사장 그림자 → 사제 도착 → 아래에서 위로 건설 약 10~11초 → 창문 불), 덱 등록과 목록 갱신.
+- 워크샾 건설 흐름(공사장 그림자 → 사제 도착 → 아래에서 위로 건설 약 10~11초 → 창문 불), 덱 등록과 목록 갱신.
 
 **미확인·다음에 볼 것**
 
 - 이동 중인 유닛에 새 명령을 줄 때의 반응(경로 즉시 전환인지), 사제·골렘이 가로막힐 때 우회 방식.
 - 대각선 경로의 전체 규칙(8방향인지, 대각선 먼저인지 항상 같은지)과 세로 속도(1.5칸/초 추정)의 정확한 값.
-- 워크샵 설치 불가의 원인(템플 남서쪽 평지), `Production Slots Available` 숫자, Level I 슬롯이 2개인지.
+- 워크샾 설치 불가의 원인(신전 남서쪽 평지), `Production Slots Available` 숫자, Level I 슬롯이 2개인지.
 - 소리: 명령 응답음·건설음·등록음의 파일 대응(`tools/audiomatch.py sfx`로 판별 가능).
 - 이번 녹화의 FPS는 18.2였다. 짧은 사건(출발 지연 0.4~0.8초의 분산)은 더 높은 프레임률로 재측정해야 한다.
 

@@ -14,7 +14,7 @@ public sealed partial class BattleSession
     /// <summary>명시적 발사 간격이 없는 포대의 임시 간격(초). 원본 애니메이션 구동 간격은 후속 분석한다.</summary>
     private const double FallbackShotSeconds = 1;
 
-    /// <summary>원반·석궁의 원본 탄속(FUN_004680e0, VA 0x50b168)은 초당 35칸이다.</summary>
+    /// <summary>디스크 발사기·크로스보우의 원본 탄속(FUN_004680e0, VA 0x50b168)은 초당 35칸이다.</summary>
     private const double ArcherProjectileSpeed = 35;
 
     /// <summary>세 캐논의 원본 탄속(FUN_00468640, 0x501a54)은 초당 20칸이다.</summary>
@@ -27,7 +27,7 @@ public sealed partial class BattleSession
     private const double ShotTraceStep = 0.5;
 
     /// <summary>
-    /// 템플(타입 플래그 vortex)이 파괴될 때 주위 칸에 주는 고정 피해. exe FUN_0044b9e0: 타입 플래그2 0x200(vortex, Rifttype.cpp)이면 400.
+    /// 신전(타입 플래그 vortex)이 파괴될 때 주위 칸에 주는 고정 피해. exe FUN_0044b9e0: 타입 플래그2 0x200(vortex, Rifttype.cpp)이면 400.
     /// 골렘(50 HP)은 한 번에 파괴되고 사제(100 HP)는 바로 기절한다(사용자 설명 2026-10-01과 일치).
     /// </summary>
     public const double TempleExplosionDamage = 400;
@@ -183,7 +183,7 @@ public sealed partial class BattleSession
                 SunCannonAnimation.Fire(attacker, Tick, TicksPerSecond);
             attacker.NextAttackTick = Tick + TicksFor(attacker.Type.Name.Equals("thunderCannon", StringComparison.OrdinalIgnoreCase)
                 ? CannonAnimation.ThunderRecoverySeconds : interval);
-            // 석궁은 타입 주석처럼 장전 그림 자체가 발사 간격을 정한다. 별도의 1초 대기를 더하지 않는다.
+            // 크로스보우은 타입 주석처럼 장전 그림 자체가 발사 간격을 정한다. 별도의 1초 대기를 더하지 않는다.
             if (attacker.Type.Name.Equals("windArcher", StringComparison.OrdinalIgnoreCase)) attacker.NextAttackTick = Tick + 1;
             if (attacker.Type.Name.Equals("thunderCannon", StringComparison.OrdinalIgnoreCase)) attacker.AttackStartedTick = -1;
             Emit(SessionEventKind.ShotFired, attacker.Owner, attacker.Id, $"{attacker.DisplayName} → {target.DisplayName} 발사");
@@ -290,7 +290,7 @@ public sealed partial class BattleSession
     }
 
     /// <summary>
-    /// 파괴 시 폭발 피해량 (없으면 null). exe FUN_0044b9e0: group 이 archer(0)·cannon(1)이면 최대 체력/2+1, 템플(vortex)이면 400.
+    /// 파괴 시 폭발 피해량 (없으면 null). exe FUN_0044b9e0: group 이 archer(0)·cannon(1)이면 최대 체력/2+1, 신전(vortex)이면 400.
     /// group 번호는 exe 이름 표 VA 0x542468(archer, cannon, blocker, aviary, flyer, battery, fence, walker, balloon) 순서다.
     /// </summary>
     private static double? ExplosionDamageOf(GameEntity destroyed)
@@ -304,7 +304,7 @@ public sealed partial class BattleSession
     }
 
     /// <summary>
-    /// 전투로 파괴된 템플·포대가 발자국 주위 1칸의 지상 오브젝트에 피해를 준다(사용자 설명 2026-10-01, exe FUN_0044b9e0).
+    /// 전투로 파괴된 신전·포대가 발자국 주위 1칸의 지상 오브젝트에 피해를 준다(사용자 설명 2026-10-01, exe FUN_0044b9e0).
     /// 피해는 처치한 플레이어 이름으로 들어가 연쇄 파괴의 보상도 그 플레이어가 받는다. 소유자 구분 없이 범위 안 모두에 적용하며,
     /// 연쇄 폭발은 오브젝트 번호순으로 같은 틱에 처리한다. 판매·낙하는 이 경로를 거치지 않아 폭발하지 않는다.
     /// </summary>
@@ -333,7 +333,7 @@ public sealed partial class BattleSession
     /// <summary>회수·파괴 공통 정리: 점유·공급·소유권·생산·수집·선택을 함께 제거한다.</summary>
     private void RemoveEntity(GameEntity entity)
     {
-        // 운반 중이거나 제단에 묶인 사제를 먼저 풀어 준다 (도움말: 운반 유닛·제단이 파괴되면 사제가 풀려난다)
+        // 운반 중이거나 알타에 묶인 사제를 먼저 풀어 준다 (도움말: 운반 유닛·알타이 파괴되면 사제가 풀려난다)
         ReleaseCaptivesOf(entity);
         // 공중 공격체는 지상 점유를 등록하지 않으므로 아래 건물의 점유를 해제해서는 안 된다.
         if (entity.OccupiesGround) Map.RemoveOccupant(entity.Footprint);

@@ -20,11 +20,16 @@ struct MenuGumpNode : GumpBackgroundNode {
     std::array<float,4> margins{}; // +bc/+c0은 폭 여백, +c4/+c8은 높이 여백이다.
     std::array<float,kMenuItemCapacity> heights{}; // +d0: 현재 측정하거나 가로 메뉴에서 맞춘 항목 높이다.
     std::array<MenuGumpItem,kMenuItemCapacity> items{}; // +228: 40개 원본 항목의 저장소다.
+    // +cc 현재 선택/+21c 선택 소멸 통지 토큰이다. 실제 호스트 함수 호출은 생성/수명 처리기가 분배한다.
+    std::int32_t selection{-1};
+    std::uint32_t selectionCallback{};
 };
 // 원본 메뉴 표와 signed index의 DWORD 비트다. 생성/항목 작성은 별도 단계에서 이 표를 채운다.
 struct MenuGumpState {
     std::array<std::uint32_t,kControlledMenuCapacity> entries{};
     std::uint32_t index{};
+    // 10.78 00593024/CD 0051fc7c: 정상 메뉴 생성/소멸에서 DWORD로 증가/감소하는 현재 개수다.
+    std::uint32_t instances{};
 };
 // 가상 Push/Pop/Attach/Redraw와 기본 Gump 재그리기 요청의 명시 경계다.
 // 콜백은 현재 메뉴 필드/표/루트를 바꿀 수 있다. node/baseNode는 같은 안정된 저장소를 가리켜야 한다.

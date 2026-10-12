@@ -3,6 +3,8 @@ Netstorm - Reborn
 
 [한국어](README.md) | **English**
 
+Korean building and unit names follow the [shared naming policy](docs/korean-unit-names.md): Priest, Temple, Bridge and Thrower may be translated; other names use Korean phonetic spellings, including Workshop → 워크샾 and Generator → 제네레이터. The dotnetpj menus and unit titles use the shared 55-entry table.
+
 # Overview
 This project uses AI to revive
 Netstorm - Islands at War,

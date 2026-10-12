@@ -7,16 +7,16 @@ using Netstorm.Core.Simulation;
 
 namespace Netstorm.Game;
 
-/// <summary>맵 뷰어에서 수송 사제 포획·구출·제단 의식을 조작하고 상태를 표시한다.</summary>
+/// <summary>맵 뷰어에서 수송 사제 포획·구출·알타 의식을 조작하고 상태를 표시한다.</summary>
 internal sealed partial class FortMapViewer
 {
     /// <summary>D 키를 누른 뒤 빈 칸을 클릭해 수송 사제를 내려놓을지.</summary>
     private bool _dropPriestArmed;
 
-    /// <summary>내 제단 의식이 시작되어 음악 감독에 희생 음악을 요청해야 하는지.</summary>
+    /// <summary>내 알타 의식이 시작되어 음악 감독에 희생 음악을 요청해야 하는지.</summary>
     private bool _mySacrificeMusicRequested;
 
-    /// <summary>내 제단의 희생 의식 진행 상태를 배경음악 판단에 전달한다.</summary>
+    /// <summary>내 알타의 희생 의식 진행 상태를 배경음악 판단에 전달한다.</summary>
     public bool MySacrificeInProgress => _session.IsSacrificeInProgress(TestPlayer);
 
     /// <summary>의식 시작 음악 요청을 한 번 꺼내고 내부 신호를 비운다.</summary>
@@ -77,20 +77,20 @@ internal sealed partial class FortMapViewer
         }
     }
 
-    /// <summary>운반 중·제단에 묶인 사제와 진행 중인 룬 수를 월드 위에 표시한다.</summary>
+    /// <summary>운반 중·알타에 묶인 사제와 진행 중인 룬 수를 월드 위에 표시한다.</summary>
     private void DrawSacrificeStatus(SpriteBatch batch, SpriteFontBase font, Vector2 center)
     {
-        // 포획된 사제는 수송체 또는 제단의 논리 위치에 상태 표식을 띄운다.
+        // 포획된 사제는 수송체 또는 알타의 논리 위치에 상태 표식을 띄운다.
         foreach (GameEntity priest in _session.Entities.Where(entity => entity.Kind == ObjectKind.Priest
                      && entity.Captivity != PriestCaptivity.Free))
         {
             Vector2 anchor = EntityCenterScreen(priest, center);
-            string label = priest.Captivity == PriestCaptivity.Carried ? "운반 중" : "제단에 묶임";
+            string label = priest.Captivity == PriestCaptivity.Carried ? "운반 중" : "알타에 묶임";
             Color color = priest.Captivity == PriestCaptivity.Carried ? Color.LightSkyBlue : Color.Gold;
             batch.Draw(_pixel, new Rectangle((int)anchor.X - 25, (int)anchor.Y - 35, 50, 18), new Color(20, 24, 34) * 0.9f);
             batch.DrawString(font, label, new Vector2(anchor.X - 23, anchor.Y - 34), color);
         }
-        // 제단마다 다섯 룬의 대기·진행·소멸 상태를 번호 순으로 그린다.
+        // 알타마다 다섯 룬의 대기·진행·소멸 상태를 번호 순으로 그린다.
         foreach (AltarRitual ritual in _session.Rituals)
         {
             GameEntity? altar = _session.Entity(ritual.AltarId);

@@ -16,7 +16,7 @@ public sealed class GameEntity
     /// <summary>.type 타입 (로딩 목록의 항목)</summary>
     public TypeInfo Type { get; }
 
-    /// <summary>규칙상 분류 (템플·워크샵·유닛 종류 등)</summary>
+    /// <summary>규칙상 분류 (신전·워크샾·유닛 종류 등)</summary>
     public ObjectKind Kind { get; }
 
     /// <summary>소유 플레이어 번호 (없으면 0)</summary>
@@ -74,10 +74,10 @@ public sealed class GameEntity
     public bool OccupiesGround => Kind != ObjectKind.Flyer && !Type.Definition.HasFlag("balloon")
         && Captivity == PriestCaptivity.Free && !IsSuspended;
 
-    /// <summary>사제의 포획 상태 (자유 / 수송 유닛이 운반 중 / 제단에 묶임).</summary>
+    /// <summary>사제의 포획 상태 (자유 / 수송 유닛이 운반 중 / 알타에 묶임).</summary>
     public PriestCaptivity Captivity { get; internal set; }
 
-    /// <summary>포획된 사제를 잡고 있는 오브젝트 번호 (운반 중이면 수송 유닛, 묶였으면 제단). 자유면 0.</summary>
+    /// <summary>포획된 사제를 잡고 있는 오브젝트 번호 (운반 중이면 수송 유닛, 묶였으면 알타). 자유면 0.</summary>
     public int CaptorId { get; internal set; }
 
     /// <summary>수송 유닛이 운반 중인 사제 번호. 없으면 0.</summary>
@@ -98,19 +98,19 @@ public sealed class GameEntity
     /// <summary>마지막 발사 틱. -1이면 아직 발사하지 않았다. 발사 그림을 피해 예약과 맞춘다.</summary>
     public long LastShotTick { get; internal set; } = -1;
 
-    /// <summary>태양 캐논의 실제 접기·회전·발사 그림 번호. 조준 방위와 별도로 저장해 중간 자세를 유지한다.</summary>
+    /// <summary>썬 캐논의 실제 접기·회전·발사 그림 번호. 조준 방위와 별도로 저장해 중간 자세를 유지한다.</summary>
     public int SunCannonFrame { get; internal set; }
 
-    /// <summary>태양 캐논이 다음 회전·발사 그림으로 진행할 틱.</summary>
+    /// <summary>썬 캐논이 다음 회전·발사 그림으로 진행할 틱.</summary>
     public long NextSunAnimationTick { get; internal set; }
 
-    /// <summary>석궁의 현재 조준·장전 그림 번호. 설치 사격 방위와 별개로 목표를 따라 움직인다.</summary>
+    /// <summary>크로스보우의 현재 조준·장전 그림 번호. 설치 사격 방위와 별개로 목표를 따라 움직인다.</summary>
     public int CrossbowFrame { get; internal set; }
 
-    /// <summary>석궁이 장전 그림을 진행하며 발사를 준비 중인지.</summary>
+    /// <summary>크로스보우이 장전 그림을 진행하며 발사를 준비 중인지.</summary>
     public bool CrossbowFiring { get; internal set; }
 
-    /// <summary>석궁이 다음 조준·장전 그림으로 진행할 틱.</summary>
+    /// <summary>크로스보우이 다음 조준·장전 그림으로 진행할 틱.</summary>
     public long NextCrossbowAnimationTick { get; internal set; }
 
     /// <summary>파괴된 아이스 타워가 같은 받침에서 다시 자라는지.</summary>
@@ -195,6 +195,6 @@ public enum PriestCaptivity
     /// <summary>수송 유닛이 운반 중. 운반 유닛에게서 생명력을 얻어 풀려나면 완전히 회복한다.</summary>
     Carried,
 
-    /// <summary>제단의 희생의 원(Sacrificial Circle)에 묶임.</summary>
+    /// <summary>알타의 희생의 원(Sacrificial Circle)에 묶임.</summary>
     Bound,
 }

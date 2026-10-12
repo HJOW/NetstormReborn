@@ -1,6 +1,6 @@
 namespace Netstorm.Core.Simulation;
 
-/// <summary>원본 Gunanim.cpp의 석궁 조준 각도표와 회전·장전·발사 그림을 논리 틱으로 진행한다.</summary>
+/// <summary>원본 Gunanim.cpp의 크로스보우 조준 각도표와 회전·장전·발사 그림을 논리 틱으로 진행한다.</summary>
 public static class CrossbowAnimation
 {
     /// <summary>원본 VA 0x540940의 북쪽 기준 시계 방향 각도. 그림 간 각도는 균등하지 않다.</summary>

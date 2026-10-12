@@ -12,7 +12,7 @@ internal sealed partial class FortMapViewer
     /// <summary>사제가 오기 전 공사장에 남는 바닥·초목 띠의 높이. 정확한 원본 마스크는 미복원인 화면 근사다.</summary>
     private const int SiteGroundPixels = 20;
 
-    /// <summary>워크샵 완공 직전에 창문 조각을 켜는 진행률. 원본 관찰의 순서를 구현한 근사다.</summary>
+    /// <summary>워크샾 완공 직전에 창문 조각을 켜는 진행률. 원본 관찰의 순서를 구현한 근사다.</summary>
     private const double ConstructionLightsAt = 0.9;
 
     /// <summary>건물 그림자를 먼저 그리고 바닥부터 현재 진행률에 해당하는 높이만 드러낸다.</summary>
@@ -32,7 +32,7 @@ internal sealed partial class FortMapViewer
             0f, Vector2.Zero, _zoom, SpriteEffects.None, 0f);
         if (!waiting && site.Kind == ObjectKind.Workshop && progress >= ConstructionLightsAt)
         {
-            // Sun 워크샵의 창문 불은 본체와 별개인 원본 A02 클러스터다.
+            // Sun 워크샾의 창문 불은 본체와 별개인 원본 A02 클러스터다.
             int lights = type.Definition.Frames.Find('A', TypeFrameTable.DefaultVariant, 2);
             if (lights >= 0) DrawSprite(batch, type.LoadIndex, lights, anchor, _playerColors.GetValueOrDefault(site.Owner));
         }

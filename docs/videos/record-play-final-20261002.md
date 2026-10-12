@@ -27,9 +27,9 @@
 
 ## 룬 마크와 의식 시간
 
-룬 음성 뒤 제단에 마크가 생기면 원본은 그 룬이 탈 때까지 `jimbuild.wav`(1.14초)를 이어서 반복한다. 첫 `jimbuild` 시각을 마크 시각으로 썼다.
+룬 음성 뒤 알타에 마크가 생기면 원본은 그 룬이 탈 때까지 `jimbuild.wav`(1.14초)를 이어서 반복한다. 첫 `jimbuild` 시각을 마크 시각으로 썼다.
 
-| 룬 | 1-1 음성 → 마크 | 1-2 제단 2 | 1-2 제단 3 | 음성 파일 길이 | 마크 → 소멸 |
+| 룬 | 1-1 음성 → 마크 | 1-2 알타 2 | 1-2 알타 3 | 음성 파일 길이 | 마크 → 소멸 |
 |---|---:|---:|---:|---:|---:|
 | Wind | 1.97 | 1.98 | 1.98 | 1.91 | 10.03 / 10.04 / 10.03 |
 | Sun | 2.05 | 2.07 | 2.07 | 1.91 | 10.06 / 10.05 / 10.03 |
@@ -39,16 +39,16 @@
 
 - 마크는 **음성이 끝나는 직후**(파일 길이 + 0.04~0.17초)에 나타난다. 이전의 "1.6~2.6초 범위, 임시 2.0초"를 룬별 값으로 바꿨다.
 - 마크에서 소멸까지는 14건 모두 10.02~10.06초다. 소멸 → 다음 음성은 사제가 계속 있던 6건에서 2.39~3.15초(평균 2.77초)였다.
-- 1-2 제단 3의 첫 Thunder(18:34.6)는 마크 전에 사제가 떠나 `jimbuild`가 없었고, 복귀 뒤 18:42.2에 다시 음성이 나왔다(기존 판독과 같음).
-- 의식 완료(`itIsDone2`) → `priestSacrifice2`는 4.02·4.01초, → 제단 폭발(`explodeSlot`)은 9.47·9.44초다.
+- 1-2 알타 3의 첫 Thunder(18:34.6)는 마크 전에 사제가 떠나 `jimbuild`가 없었고, 복귀 뒤 18:42.2에 다시 음성이 나왔다(기존 판독과 같음).
+- 의식 완료(`itIsDone2`) → `priestSacrifice2`는 4.02·4.01초, → 알타 폭발(`explodeSlot`)은 9.47·9.44초다.
 
 클론: `SacrificeRuneMarkSeconds`(룬별)·`SacrificeRuneWardSeconds`(10.04)·`SacrificeRuneGapSeconds`(2.77)·`AltarConsumeDelaySeconds`(9.45), 새 사건 `SacrificeRuneMarked`. [희생 의식 계약](../gameplay/sacrifice.md#적용한-시간과-임시값).
 
 ## 희생 음악 재시작
 
-1-2의 18:28.8 `sacrifice.mus` 재시작은 `thu22`(225초) 곡 끝이 아니었다. 18:28.2의 왼쪽 클릭(사제를 제단으로 보내는 명령) 0.6초 뒤이고, 프레임에서 사제는 18:32 무렵 제단에 닿았다.
-1-1(12:05.5 → 12:06.4)과 1-2 제단 2(15:16.5 → 15:17.2)도 명령 직후 음악이 바뀌었다. 17:37.1에 희생 음악이 끝났을 때는 새 의식의 룬이 하나도 타지 않아 `thu22`로 넘어갔다.
-클론은 포로가 묶인 제단으로 사제를 보내는 명령·의식 시작·재개에 희생 음악을 요청하고, 곡 끝 재선택은 룬이 하나 이상 탔을 때만 한다. [음악 문서 5절](../exe/music.md#5-의식이-끝난-뒤-음악-사용자-설명-2).
+1-2의 18:28.8 `sacrifice.mus` 재시작은 `thu22`(225초) 곡 끝이 아니었다. 18:28.2의 왼쪽 클릭(사제를 알타으로 보내는 명령) 0.6초 뒤이고, 프레임에서 사제는 18:32 무렵 알타에 닿았다.
+1-1(12:05.5 → 12:06.4)과 1-2 알타 2(15:16.5 → 15:17.2)도 명령 직후 음악이 바뀌었다. 17:37.1에 희생 음악이 끝났을 때는 새 의식의 룬이 하나도 타지 않아 `thu22`로 넘어갔다.
+클론은 포로가 묶인 알타으로 사제를 보내는 명령·의식 시작·재개에 희생 음악을 요청하고, 곡 끝 재선택은 룬이 하나 이상 탔을 때만 한다. [음악 문서 5절](../exe/music.md#5-의식이-끝난-뒤-음악-사용자-설명-2).
 
 ## 생산 창 Storm Power 숫자
 
@@ -72,7 +72,7 @@
 | `jimbuild.wav` 1.14초 반복 | 1-2 00:16~00:23 건설, 룬마다 9번 | 화면 안 건설 중 오브젝트·룬 마크 동안 반복 |
 | `priestForceField.wav` 이어서 반복 | 1-2 08:27 이후 기절 동안 | 화면 안 기절 사제가 있는 동안 1.238초마다 |
 | `priestFall.wav` | 13:21.9, 14:02.0 | `PriestSuspended` |
-| `priestFree.wav` | 11:06.7 Drop, 11:34.2 골렘 판매, 14:41.2·16:49.3 제단 판매 | `PriestReleased` |
+| `priestFree.wav` | 11:06.7 Drop, 11:34.2 골렘 판매, 14:41.2·16:49.3 알타 판매 | `PriestReleased` |
 | `collapse.wav` | 11:34.2, 14:41.2, 16:49.3 (모두 판매) | `Salvaged` |
 | `upgradeComplete.wav` | 1-1 01:38.1, 1-2 01:44.4·08:39.2 | 새 사건 `WorkshopUpgraded` |
 | `priestStruggleFade02-800.wav` | 15:16.3·17:36.5 묶기 | `PriestBound` |
@@ -89,7 +89,7 @@
 | View 메뉴 | 1-1 04:50~05:08: Hide buildings - F2 … View Player List - F9, 키는 노란색, 켜진 항목 파란 마크 | 같은 8항목, Shift+F3 섬 테마 숨기기(모든 섬 초록 지면) 구현, F9는 비활성 |
 | Game 메뉴 | UI 01:31.5: 목표 다시 보기 / 재시작·떠나기 / 종료, 구분선 | 같은 순서·구분선 |
 | Help 버튼 | UI 01:41: General Help - F1 / Technical Help / Version | 같은 목록, Technical Help(외부 Windows 도움말)는 비활성, Version은 원본 [About] 문구 창 |
-| 우클릭 창 | 사제·워크샵·생산 항목·운반 골렘: 금색 모서리 창, 큰 제목, 노란 값, 밝은 안쪽 판·구분선, `Upgrade costs 800`·`Salvage gains 200` 뒤 SP 아이콘, `Carrying: High Priest`·`Drop High Priest`, `Player >` | 같은 구성. 하위 창 제목 `Construct Building`·`Knowledge Available`(+`Production Slots Available:`)·`Current Production`(+About). `Player >`는 비활성 |
+| 우클릭 창 | 사제·워크샾·생산 항목·운반 골렘: 금색 모서리 창, 큰 제목, 노란 값, 밝은 안쪽 판·구분선, `Upgrade costs 800`·`Salvage gains 200` 뒤 SP 아이콘, `Carrying: High Priest`·`Drop High Priest`, `Player >` | 같은 구성. 하위 창 제목 `Construct Building`·`Knowledge Available`(+`Production Slots Available:`)·`Current Production`(+About). `Player >`는 비활성 |
 | 도움말 | 본문 바탕 약 (52,49,51), 링크 연한 청록 약 (176,214,214), 위·아래 화살표 스크롤바, 능력치 값 노란색 | 같은 색·화살표 단추·값 색. `mana.8` 같은 그림 번호는 원본 그림 프레임 번호로 해석(이전에는 클론이 종료됨) |
 | Options | Auto-Demo·Tell Tips·Pass Server Diagnostic도 켜고 끔 | 세 항목을 켜고 끄며 저장. 자동 데모 재생·서버 진단 기능 자체는 없다 |
 | 생산 창 경고 | SP 부족 시 빨간 `Need more Storm Power to Build!` | 빨간 글자 |
@@ -97,7 +97,7 @@
 ## 원자료를 지운 뒤 더 확인할 수 없는 것
 
 - `unitLost.wav`의 정확한 제외 종류(exe의 genus 10·타입 `DAT_005412a4`)와 1-2에서 무엇을 잃었는지(화면 밖).
-- 다리 조각 낙하의 정확한 궤적(구역 안에서만 추적), 템플·대형 건물 낙하 모습(녹화에 없음).
+- 다리 조각 낙하의 정확한 궤적(구역 안에서만 추적), 신전·대형 건물 낙하 모습(녹화에 없음).
 - 생산 창 새 항목 깜빡임(`FUN_0043d690`) 조건, 다리 조각의 금 간 그림, 원본 Arial 계열 글꼴(클론은 AGENTS.md에 따라 D2Coding).
 - 자동 데모 재생, Technical Help, 멀티플레이 Player 하위 메뉴·플레이어 목록(F9).
 

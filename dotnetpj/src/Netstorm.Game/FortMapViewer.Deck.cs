@@ -9,7 +9,7 @@ namespace Netstorm.Game;
 
 /// <summary>
 /// 공개 캠페인의 왼쪽 생산 창(덱). 원본 Combatgump(FUN_0043e640)처럼 위에서부터 Storm Power, 다리 칸 2열,
-/// 유닛 칸 1열(골렘 → 워크샵에 등록한 유닛), 미니맵 순서다. 버튼 격자는 없고, 건물은 사제 우클릭 Construct 로 짓는다.
+/// 유닛 칸 1열(골렘 → 워크샾에 등록한 유닛), 미니맵 순서다. 버튼 격자는 없고, 건물은 사제 우클릭 Construct 로 짓는다.
 /// 항목 상태는 원본 그리기 모드를 따른다: 재충전 중·집은 다리 = 어둡게, Storm Power 부족 = 빨갛게
 /// (docs/screens/clone-deck.md, 2026-09-30·2026-10-01 녹화 대조).
 /// </summary>
@@ -77,8 +77,8 @@ internal sealed partial class FortMapViewer
     private int DeckUnitTop => DeckTrayTop + (_session.Player(TestPlayer).Tray.Capacity + TrayColumns - 1) / TrayColumns * DeckTrayRowHeight;
 
     /// <summary>
-    /// 지금 덱에 있는 유닛 칸. 0번은 템플이 공급하는 골렘 자리이고(기술 표가 골렘을 막으면 자리를 두지 않는다),
-    /// 그 뒤는 워크샵 번호·등록 순서다. 원본은 항목마다 칸 번호를 가지며 녹화의 순서(골렘 → Rain Generator → Sun Cannon → Whirlibase)와 같다.
+    /// 지금 덱에 있는 유닛 칸. 0번은 신전이 공급하는 골렘 자리이고(기술 표가 골렘을 막으면 자리를 두지 않는다),
+    /// 그 뒤는 워크샾 번호·등록 순서다. 원본은 항목마다 칸 번호를 가지며 녹화의 순서(골렘 → Rain Generator → Sun Cannon → Whirlibase)와 같다.
     /// </summary>
     private List<DeckUnit> DeckUnits()
     {

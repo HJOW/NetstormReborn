@@ -60,7 +60,7 @@ internal sealed partial class FortMapViewer
     /// <summary>하위 창이 부모의 안쪽 판 오른쪽 끝에서 왼쪽으로 겹치는 폭 (원본: 하위 창 왼쪽 = 부모 안쪽 판 오른쪽 끝 − 16)</summary>
     private const int ContextSubmenuOverlap = 16;
 
-    /// <summary>TEST02의 최종 건설 항목 줄 간격 (Sun·Wind·Rain·Thunder 워크샵은 21px 간격).</summary>
+    /// <summary>TEST02의 최종 건설 항목 줄 간격 (Sun·Wind·Rain·Thunder 워크샾은 21px 간격).</summary>
     private const int ConstructionRowHeight = 21;
 
     /// <summary>원본 건설 하위 창의 원소 순서.</summary>
@@ -166,7 +166,7 @@ internal sealed partial class FortMapViewer
     /// <summary>정보 행은 그대로 두고 선택한 명령에서만 상위·하위 메뉴를 함께 닫는다.</summary>
     private void CloseContextMenu() { _contextType = null; _contextEntity = null; _contextBridge = false; _contextSubmenu = null; }
 
-    /// <summary>우클릭 대상의 표시 레벨. 워크샵은 생산 덱의 단계, 사제는 1, 그 밖은 타입의 level이며 없으면 0이다.</summary>
+    /// <summary>우클릭 대상의 표시 레벨. 워크샾은 생산 덱의 단계, 사제는 1, 그 밖은 타입의 level이며 없으면 0이다.</summary>
     private int ContextLevel()
     {
         if (_contextEntity is not { } entity || _contextType == null) return _contextType?.Definition.GetInt("level") ?? 0;
@@ -185,9 +185,9 @@ internal sealed partial class FortMapViewer
     private void BuildContextRows(int width, int height)
     {
         _contextRows.Clear(); _contextPanels.Clear();
-        string title = _contextBridge ? "Bridge" : _contextType!.Definition.GetString("description") ?? _contextType.Name;
+        string title = _contextBridge ? GameUnitNames.Format("Bridge", Language) : UnitName(_contextType!);
         bool own = _contextEntity?.Owner == TestPlayer;
-        // 녹화 대조: 사제·워크샵·골렘 등은 제목 뒤에 "Level I"이 붙고 템플은 붙지 않는다.
+        // 녹화 대조: 사제·워크샾·골렘 등은 제목 뒤에 "Level I"이 붙고 신전은 붙지 않는다.
         if (!_contextBridge && ContextLevel() is int level and > 0) title += $" Level {RomanLevel(level)}";
         var infos = new List<ContextInfo>();
         var groups = new List<List<ContextCommand>>();
@@ -199,7 +199,7 @@ internal sealed partial class FortMapViewer
             infos.Add(new("Class: ", _contextType!.Definition.GetString("class") ?? ""));
             // 1-2 녹화 11:00: 사제를 든 골렘은 Carrying 줄과 Drop High Priest 명령이 붙는다
             if (_session.Entity(_contextEntity.CarriedPriestId) is { } carried)
-                infos.Add(new("Carrying: ", carried.Type.Definition.GetString("description") ?? "High Priest"));
+                infos.Add(new("Carrying: ", UnitName(carried.Type)));
         }
         else if (_contextType != null)
         {
@@ -219,7 +219,8 @@ internal sealed partial class FortMapViewer
         }
         if (own && _contextEntity is { Kind: ObjectKind.Transport } transport && transport.CarriedPriestId != 0)
         {
-            string carriedName = _session.Entity(transport.CarriedPriestId)?.Type.Definition.GetString("description") ?? "High Priest";
+            string carriedName = _session.Entity(transport.CarriedPriestId) is { } carried
+                ? UnitName(carried.Type) : GameUnitNames.Format("High Priest", Language);
             int dropX = transport.Footprint.AnchorX, dropY = transport.Footprint.AnchorY, transportId = transport.Id;
             groups.Add([new(Ui("내려놓기 ", "Drop "), () => { SubmitCommand(new DropPriestCommand(TestPlayer, transportId, dropX, dropY)); CloseContextMenu(); }, carriedName)]);
         }
@@ -256,17 +257,17 @@ internal sealed partial class FortMapViewer
         if (_contextSubmenu is "construct" or "temples" or "workshops")
         {
             childTitle = Ui("건물 건설", "Construct Building");
-            // 템플은 플레이어당 1기라 이미 있거나 짓는 중이면 Temple 줄이 어둡다 (원본 1-1 관찰: Temple > 어둡게, Workshop > 활성)
+            // 신전은 플레이어당 1기라 이미 있거나 짓는 중이면 Temple 줄이 어둡다 (원본 1-1 관찰: Temple > 어둡게, Workshop > 활성)
             bool templeAllowed = !_session.HasBuilding(TestPlayer, ObjectKind.Temple);
             var rows = new List<ContextCommand>
             {
-                new(Ui("템플", "Temple") + " >", () => OpenContextSubmenu("temples"), Enabled: templeAllowed),
-                new(Ui("워크샵", "Workshop") + " >", () => OpenContextSubmenu("workshops")),
+                new(Ui("신전", "Temple") + " >", () => OpenContextSubmenu("temples"), Enabled: templeAllowed),
+                new(Ui("워크샾", "Workshop") + " >", () => OpenContextSubmenu("workshops")),
             };
             TypeInfo? altar = _candidates.FirstOrDefault(t => t.Name.Equals("altar", StringComparison.OrdinalIgnoreCase));
             // 원본 문구는 로마 숫자가 아니라 "Build Level 1 Altar for 500" 이다 (screenShots/The War Begins! - High Priest Context Menu.png).
             string altarLevel = (altar?.Definition.GetInt("level") ?? 1).ToString(System.Globalization.CultureInfo.InvariantCulture);
-            if (altar != null) rows.Add(Construct(altar, Ui($"제단 Level {altarLevel} 건설: ", $"Build Level {altarLevel} Altar for ")));
+            if (altar != null) rows.Add(Construct(altar, Ui($"알타 Level {altarLevel} 건설: ", $"Build Level {altarLevel} Altar for ")));
             childGroups.Add(rows);
         }
         else if (_contextEntity is { Kind: ObjectKind.Workshop } workshop)
@@ -279,7 +280,7 @@ internal sealed partial class FortMapViewer
                 childInfos.Add(new(Ui("남은 생산 칸: ", "Production Slots Available: "), free.ToString()));
                 IEnumerable<ProducibleUnit> units = _candidates.OrderBy(type => Array.IndexOf(ProductionGroupOrder,
                     type.Definition.GetString("group")?.ToLowerInvariant())).Select(ProducibleUnit.FromType).OfType<ProducibleUnit>();
-                // 등록된 지식은 이 목록에서 빠지고 등록할 워크샵의 원소 조건을 적용한다.
+                // 등록된 지식은 이 목록에서 빠지고 등록할 워크샾의 원소 조건을 적용한다.
                 childGroups.Add([.. player.Deck.AvailableKnowledge(workshop.Id, units).Select(unit =>
                 {
                     string name = unit.Name;
@@ -289,7 +290,7 @@ internal sealed partial class FortMapViewer
             else
             {
                 childTitle = Ui("현재 생산", "Current Production");
-                // 이 워크샵에 등록된 생산 항목은 노란 글자로 보여 주고, 원본처럼 구분선 뒤에 About 을 붙인다.
+                // 이 워크샾에 등록된 생산 항목은 노란 글자로 보여 주고, 원본처럼 구분선 뒤에 About 을 붙인다.
                 childGroups.Add([.. player.Deck.RegisteredAt(workshop.Id).Select(name =>
                     new ContextCommand(ProductionLabel(name), () => { CloseContextMenu(); ChooseProduction(name); }, Accent: true))]);
                 childGroups.Add([new(Ui("정보", "About"), () => { CloseContextMenu(); HelpRequested?.Invoke(workshop.Type.Name + "Type"); })]);
@@ -297,7 +298,7 @@ internal sealed partial class FortMapViewer
         }
         if (childGroups.All(g => g.Count == 0)) childGroups = [[new(Ui("없음", "None"), null, Enabled: false)]];
         // 원본처럼 하위 창은 부모의 안쪽 판 오른쪽 끝에 16픽셀 겹쳐 열고(화면 끝이면 왼쪽), 하위 창의 첫 명령 줄이 연 줄과 같은 높이에 온다.
-        // (원본 캡처: 사제 Construct → 하위 창 위쪽 = 부모 위쪽 + 45, 워크샵 Put Knowledge → + 47. 둘 다 이 규칙과 맞는다.)
+        // (원본 캡처: 사제 Construct → 하위 창 위쪽 = 부모 위쪽 + 45, 워크샾 Put Knowledge → + 47. 둘 다 이 규칙과 맞는다.)
         string opener = _contextSubmenu is "temples" or "workshops" ? "construct" : _contextSubmenu;
         ContextRow? openerRow = _contextRows.FirstOrDefault(r => r.Panel == parent.Bounds && r.Command.Opens == opener);
         // 하위 창의 위쪽은 정보 줄 유무와 관계없이 간격 16 으로 계산한 자리다 (정보 줄이 없는 Construct Building 창은 그래서 첫 줄이 연 줄보다 1픽셀 위에 온다).
@@ -313,7 +314,7 @@ internal sealed partial class FortMapViewer
             [
                 [.. _candidates.Where(t => ObjectKinds.Of(t) == kind && IsBuildable(t))
                     .OrderBy(t => Array.IndexOf(ConstructionElementOrder, Elements.FromTheme(t.Definition.GetString("theme")) ?? Element.Sun))
-                    .Select(t => Construct(t, Ui($"{t.Definition.GetString("description")} 건설: ", $"Build {t.Definition.GetString("description")} for "), elementIcon: true))],
+                    .Select(t => Construct(t, Ui($"{UnitName(t)} 건설: ", $"Build {UnitName(t)} for "), elementIcon: true))],
             ];
             // TEST02의 첫 항목 중심: Temple은 우클릭점 아래 25px, Workshop은 아래 41px.
             Point finalAnchor = new(child.Inner.X + ContextRowHeight,
@@ -321,7 +322,7 @@ internal sealed partial class FortMapViewer
             LayoutContextPanel("", [], finalGroups, finalAnchor, width, height, child.Bounds, ConstructionRowHeight, compact: true);
         }
         // 선택한 건물을 배치 커서로 전환하는 명령 줄 (이름 뒤에 비용과 Storm Power 아이콘).
-        // 기술이 막혔거나 템플·알타가 이미 있거나 Storm Power 가 모자라면 줄을 어둡게 하고 고를 수 없게 한다 (원본: 지식 없는 워크샵 줄이 어둡다).
+        // 기술이 막혔거나 신전·알타가 이미 있거나 Storm Power 가 모자라면 줄을 어둡게 하고 고를 수 없게 한다 (원본: 지식 없는 워크샾 줄이 어둡다).
         // 고른 건물은 이 메뉴를 연 사제가 짓는다.
         ContextCommand Construct(TypeInfo type, string prefix, bool elementIcon = false)
         {

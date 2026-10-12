@@ -1,6 +1,6 @@
 namespace Netstorm.Core.Simulation;
 
-/// <summary>원본 0x540550 전이표로 태양 캐논의 접기·회전·펼치기를 진행한다. 팬게임의 표와 원본 바이너리를 대조했다.</summary>
+/// <summary>원본 0x540550 전이표로 썬 캐논의 접기·회전·펼치기를 진행한다. 팬게임의 표와 원본 바이너리를 대조했다.</summary>
 public static class SunCannonAnimation
 {
     /// <summary>원본 회전 프레임 간격(초). 발사 그림의 0.07초와 별개다.</summary>

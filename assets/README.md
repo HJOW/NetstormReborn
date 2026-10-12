@@ -1,12 +1,14 @@
 # 클론 게임 데이터
 
+> 2026-10-13: [건물·유닛 한국어 명칭 규칙](../docs/korean-unit-names.md)을 적용한다. 사제·신전·다리·발사기 이외 이름은 영어 발음의 한글 표기를 사용하며 Workshop은 워크샾, Generator는 제네레이터다.
+
 `game-data/`는 클론에서 직접 관리하는 실행 데이터 소스다. 분석 중인 Netstorm 10.78의 `originals/`에서 필요한 파일을 **일반 파일로 복사**해 분리했다. 원본을 가리키는 심볼릭 링크나 빌드 중 원본을 복사하는 단계는 없다. `originals/`는 원본 분석이 끝날 때까지 별도로 유지한다.
 
 | 경로 | 내용 |
 | --- | --- |
 | `game-data/netstorm.tarc` | 타입 정의·기본 지도·미션·언어표 246개를 담은 TAFF 데이터 아카이브 |
 | `game-data/d/` | 최초 1,102개 파일: 셰이프, 팔레트, 메뉴 GIF, 지도 432개, 영어·독일어 미션/도움말, 글리프 자료, 기본 설정. 원본 분석용 커스텀 맵 `TEST01`·`TEST02`의 `.fort`·`.english`(`originals/d/`의 복사본)를 더했다 — `--test-battle TEST01/TEST02`와 통합 테스트가 쓴다 |
-| `game-data/cursors/` | 원본 RT_CURSOR 단색 리소스 5개. 화살표·금지·사제 이동·템플·건물 배치의 그림/핫스폿([출처](game-data/cursors/README.md)) |
+| `game-data/cursors/` | 원본 RT_CURSOR 단색 리소스 5개. 화살표·금지·사제 이동·신전·건물 배치의 그림/핫스폿([출처](game-data/cursors/README.md)) |
 | `game-data/sound/` | 효과음 WAV 218개 |
 | `game-data/music/` | RIFF WAV 형식의 음악 MUS 9개 |
 | `migration-manifest.json` | 최초 이관한 1,327개 파일의 상대 경로·크기·SHA-256 |

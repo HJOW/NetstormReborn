@@ -16,7 +16,7 @@ public sealed partial class BattleSession
     /// <summary>도착 거리 오차 한계.</summary>
     private const double DeliveryEpsilon = 0.0000001;
 
-    /// <summary>덱에 저장한 실제 생산 기점을 찾는다. 가까운 다른 워크샵으로 바꾸지 않는다.</summary>
+    /// <summary>덱에 저장한 실제 생산 기점을 찾는다. 가까운 다른 워크샾으로 바꾸지 않는다.</summary>
     private GameEntity? ProductionSource(PlayerState player, string typeName)
     {
         DeckEntry? entry = player.Deck.Entries().FirstOrDefault(e => e.Kind != DeckEntryKind.Bridge

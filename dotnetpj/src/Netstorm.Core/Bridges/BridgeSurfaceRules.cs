@@ -54,7 +54,7 @@ public static class BridgeSurfaceRules
     /// <summary>원본 00441e40 의 타입 플래그 2 마스크: 다리·폭탄</summary>
     public const uint BridgeOrBombMask = TypeFlagBits.Bridge | TypeFlagBits.Bomb;
 
-    /// <summary>원본 00441e40 의 타입 플래그 2 마스크: 섬·신전·작업장·포대류·3×3 섬 받침</summary>
+    /// <summary>원본 00441e40 의 타입 플래그 2 마스크: 섬·신전·워크샾·포대류·3×3 섬 받침</summary>
     public const uint LandObjectMask = 0x1044202;
 
     /// <summary>접합 칸의 마지막 방향 글자: 'A'~'I' 는 갈래·모퉁이, 'J' 부터는 판자·끝 칸·빈 칸 (원본 비교 글자 &lt; 0x4a)</summary>

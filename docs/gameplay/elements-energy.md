@@ -1,4 +1,4 @@
-# 원소·원소 에너지·발전기
+# 원소·원소 에너지·제네레이터
 
 > 분석 상태: **사용자 설명(2026-09-28) + `.type` 데이터 + 패치판 exe 정적 분석(2026-09-29)**. 건설 에너지 요구 문자열과 배치 판정 경로를 확인했다 ([분석](../exe/energy-requirements.md)).
 > 공급 범위는 일반 30칸·튜토리얼 2 14칸 — 측정과 exe(전투 옵션 Generator Range) 모두 확인 (6절).
@@ -7,27 +7,27 @@
 ## 1. 원소 (사용자 확인)
 
 * 원소는 **Rain · Wind · Thunder** 세 가지다. `.type` 의 `theme` 값 `rain`·`wind`·`thunder`.
-* **Sun 은 "공용" 원소**다 (`theme = sun`). 신전·발전기가 없고, Sun 에너지는 다른 세 원소 중 어느 것의 에너지로도 대신 공급할 수 있다 (3절).
+* **Sun 은 "공용" 원소**다 (`theme = sun`). 신전·제네레이터가 없고, Sun 에너지는 다른 세 원소 중 어느 것의 에너지로도 대신 공급할 수 있다 (3절).
 * `fireVortex`(Fire Temple, `theme = Fire`) 는 로딩 목록 밖의 미사용 타입이다.
 
-## 2. 워크샵과 덱 등록 (사용자 확인)
+## 2. 워크샾과 덱 등록 (사용자 확인)
 
-* 원소마다 워크샵이 있다: Sun Workshop(`sunFactory`), Rain Workshop(`rainFactory`), Wind Workshop(`windFactory`), Thunder Workshop(`thunderFactory`).
-* 워크샵에서는 **그 원소의 유닛만** 사이드바 덱에 등록할 수 있다 ([workshop-deck.md](workshop-deck.md)).
-* **예외: Sun Workshop** 은 Sun 원소 발전기가 없으므로 **다른 원소들의 Generator 도 등록할 수 있다**.
-  The War Begins! 의 Sun Workshop 목록이 Rain Generator(비 원소 발전기) · Sun Cannon · Whirlibase 였던 이유다.
+* 원소마다 워크샾이 있다: Sun Workshop(`sunFactory`), Rain Workshop(`rainFactory`), Wind Workshop(`windFactory`), Thunder Workshop(`thunderFactory`).
+* 워크샾에서는 **그 원소의 유닛만** 사이드바 덱에 등록할 수 있다 ([workshop-deck.md](workshop-deck.md)).
+* **예외: Sun Workshop** 은 Sun 원소 제네레이터가 없으므로 **다른 원소들의 Generator 도 등록할 수 있다**.
+  The War Begins! 의 Sun Workshop 목록이 Rain Generator(레인 제네레이터) · Sun Cannon · Whirlibase 였던 이유다.
 
 ## 3. 유닛과 원소 에너지 (사용자 확인)
 
-* 이 게임에서는 **템플(신전)·워크샵·알타(Altar)를 제외한 작은 건물도 "유닛"** 이라 부른다 (포대·방벽·탑·발전기 등). 이동 유닛(골렘·게·비행선 등)도 유닛이다.
+* 이 게임에서는 **신전·워크샾·알타(Altar)를 제외한 작은 건물도 "유닛"** 이라 부른다 (포대·방벽·탑·제네레이터 등). 이동 유닛(골렘·크리스탈 크랩·에어 쉽 등)도 유닛이다.
 * 건물형 유닛을 지을 수 있는 곳 ([island-ownership.md](island-ownership.md) 규칙 6):
-  1. 내 섬 (내 템플이 있는 섬)
+  1. 내 섬 (내 신전이 있는 섬)
   2. 내 섬과 **다리로 연결된 빈 섬**(아무도 소유하지 않은 섬)
   3. **내 다리의 끝**
-  * 남의 섬(다른 플레이어 템플이 있는 섬)에는 일체 지을 수 없다.
+  * 남의 섬(다른 플레이어 신전이 있는 섬)에는 일체 지을 수 없다.
 * 유닛을 건설·생산할 때는 **Storm Power(돈)** 와 함께 그 유닛이 요구하는 **원소 에너지**가, 짓는 **위치에 공급되고 있어야** 한다.
   * 예: **Ice Cannon** 은 **Rain 1 + Sun 1 = 에너지 2개**가 필요하다.
-  * 예: **Sun Cannon** 은 **Sun 1** 이 필요하다. Sun 은 다른 원소로 대신할 수 있으므로 **Rain Generator 하나만 근처에 있어도** 지을 수 있다 (Wind·Thunder 발전기여도 된다).
+  * 예: **Sun Cannon** 은 **Sun 1** 이 필요하다. Sun 은 다른 원소로 대신할 수 있으므로 **Rain Generator 하나만 근처에 있어도** 지을 수 있다 (Wind·Thunder 제네레이터여도 된다).
   * 예: **Vander Tower**(Thunder) 는 **Thunder 2 + Sun 1** 이 필요하다 → 짓는 위치를 **Thunder 공급원 2개 + 아무 원소 공급원 1개, 모두 서로 다른 3개**가 함께 덮어야 한다.
   * 예: **Bulf**(Thunder, level 1) 는 **Thunder 1** 이 필요하다 → Rain·Wind 공급원만 있으면 지을 수 없고, **Thunder Generator 또는 Thunder Temple 이 하나 이상** 그 위치를 덮어야 한다 (사용자 확인, 2026-09-29).
   * **필요 에너지는 레벨만으로 정해지지 않는다** — 유닛마다 다르며 같은 레벨이라도 다를 수 있다 (사용자 확인). 예: level 1 인 Bulf(Thunder 1)·Thunder Generator(아무 1)·Sun Cannon(아무 1). 유닛별 값은 4절 표를 따른다.
@@ -44,8 +44,8 @@
 * 에너지 공급원은 **Temple 과 Generator** 다.
   * Generator 는 **꽤 넓은 범위** 안에 **자기 원소 에너지 1개분**을 공급한다.
   * Temple 은 원소별로 1종씩(Rain·Wind·Thunder Temple) 있고, **Generator 와 똑같이 자기 원소 에너지 1개분을 같은 범위에** 공급한다 (사용자 확인).
-  * 템플이나 Generator 를 선택하면 **그 원소 모양 아이콘**(비 = 물방울, 바람 = 조개껍데기 모양 등)이 둘레를 돌며 공급 범위를 보여 준다. **노란 별은 공급 범위가 아니라 건물형 유닛의 공격 범위** 표시다 (사용자 확인).
-  * **공급 범위 = 반지름 30칸 원 (칸 좌표 거리² ≤ 900)**. 일반 미션에서는 템플·Generator 모두 같다. 튜토리얼 2(Secret Workshop)만 14칸으로 축소된다. 반지름은 전투 옵션 Generator Range 값이다 (6절).
+  * 신전이나 Generator 를 선택하면 **그 원소 모양 아이콘**(비 = 물방울, 바람 = 조개껍데기 모양 등)이 둘레를 돌며 공급 범위를 보여 준다. **노란 별은 공급 범위가 아니라 건물형 유닛의 공격 범위** 표시다 (사용자 확인).
+  * **공급 범위 = 반지름 30칸 원 (칸 좌표 거리² ≤ 900)**. 일반 미션에서는 신전·Generator 모두 같다. 튜토리얼 2(Secret Workshop)만 14칸으로 축소된다. 반지름은 전투 옵션 Generator Range 값이다 (6절).
 
 ## 4. 유닛별 필요 에너지
 
@@ -90,10 +90,10 @@
 | thunder | Thunder Cannon `thundercannon` | 2 | 1200 | Thunder 1 + 아무 1 |
 | thunder | **Vander Tower** `thunderArcher` | 3 | 600 | Thunder 2 + 아무 1 |
 
-* 템플(5000)·워크샵(800~1000)·알타·가이저(2000)는 유닛이 아니며 level 이 없다.
+* 신전(5000)·워크샾(800~1000)·알타·가이저(2000)는 유닛이 아니며 level 이 없다.
 * 이동 유닛(Crab·Skater·Bulf·Balloon·Floater·Air Ship 등)도 **생산하려는 지점**에 같은 에너지가 필요하다 (사용자 확인).
 * 위 표의 에너지 구성은 패치판 exe의 타입 기본값 생성과 `.type`의 명시 `mana` 속성을 따른다. level 1 원소 유닛(Bulf·Arc Spire·Crystal Crab)이 **자기 원소 공급원을 반드시 요구**한다는 점은 사용자 확인으로 확정했다 (Bulf 로 확인, 같은 규칙).
-* 발전기 3종: `class = Source of Energy`, **`minUsage = maxUsage = -100`** (음수 = 공급으로 보임).
+* 제네레이터 3종: `class = Source of Energy`, **`minUsage = maxUsage = -100`** (음수 = 공급으로 보임).
 * 포대·방벽: `minUsage 20` / `maxUsage 200`(포대) 또는 `20`(방벽). 확인한 건설 에너지 판정은 `mana` 문자열을 사용한다. Usage 값의 다른 용도는 exe 확인 필요.
 * `techBit` 은 기술(지식) 번호로 보인다 (미션 헤더 `myTech` 와의 관계는 미확인).
 
@@ -107,7 +107,7 @@
 
 ## 5. 질문과 답 (사용자 확인, 2026-09-28)
 
-* **A. 섬 소유권 규칙과의 관계** → 배치 불가는 **남의 섬**(다른 플레이어 템플이 있는 섬). 빈 섬은 내 섬과 다리로 연결되면 건물형 유닛 건설 가능, 워크샵·알타는 사제가 도달하기만 하면 가능 — [island-ownership.md](island-ownership.md). 다리가 끊겨도 이미 지은 유닛은 계속 동작한다.
+* **A. 섬 소유권 규칙과의 관계** → 배치 불가는 **남의 섬**(다른 플레이어 신전이 있는 섬). 빈 섬은 내 섬과 다리로 연결되면 건물형 유닛 건설 가능, 워크샾·알타는 사제가 도달하기만 하면 가능 — [island-ownership.md](island-ownership.md). 다리가 끊겨도 이미 지은 유닛은 계속 동작한다.
 * **B. 신전의 공급량·범위** → Generator 와 같이 자기 원소 1개분, 같은 범위.
 * **C. 필요 에너지 구성** → 처음 정리한 식 `자기 원소 × (level − 1) + Sun × 1`은 level 1 원소 유닛에서 틀렸다. **유닛마다 다르며**(사용자 확인, 2026-09-29), 원소 유닛 L1 = 자기 원소 1 / L2 = 자기 원소 1 + Sun 1 / L3 = 자기 원소 2 + Sun 1, Sun 유닛 = Sun × 레벨, Generator·Outpost = 아무 1 (4절). 예: Bulf 는 Thunder 1 이 필요해 Thunder Generator 또는 Thunder Temple 이 있어야 한다.
 * **D. 공급 1개분의 의미** → 필요 에너지 1개 = 서로 다른 공급원 1개, 범위가 모두 겹쳐야 함. **소모 개념이 아니다** — 같은 공급원 범위 안에 유닛을 여러 개 지을 수 있다.
@@ -116,7 +116,7 @@
 
 ## 6. 공급 범위 측정 (스크린샷·영상, 2026-09-28)
 
-선택한 템플·Generator 둘레를 도는 원소 아이콘의 위치를 캡처에서 찾아, 칸 좌표(가로 16px, 세로 11px)의 원으로 맞췄다.
+선택한 신전·Generator 둘레를 도는 원소 아이콘의 위치를 캡처에서 찾아, 칸 좌표(가로 16px, 세로 11px)의 원으로 맞췄다.
 모든 장면에서 아이콘이 한 원 위에 놓인다 → **범위는 칸 좌표 기준 원(화면에서는 가로:세로 = 16:11 타원)** 이다.
 
 | 자료 | 대상 | 아이콘 | 개수 | 반지름 | 반지름² | 잔차(칸) |
@@ -126,7 +126,7 @@
 | Early Missions 영상 606초 (튜토리얼, 우클릭 메뉴 열림) | Wind Temple | 조개껍데기 | 4 | **30.0칸** | ≈ 902 | ≤ 0.01 |
 | `Tutorial - Temple - Generating Range.png` (튜토리얼 2 Secret Workshop) | Wind Temple (배치 중, 5000) | 조개껍데기 | 7 | **약 14칸** (exe: 14) | ≈ 198 | ≤ 0.23 |
 
-* **일반 공급 범위 = 30칸 (거리² ≤ 900)**. 사용자 설명대로 일반 미션에서는 템플·Generator 가 모두 같다.
+* **일반 공급 범위 = 30칸 (거리² ≤ 900)**. 사용자 설명대로 일반 미션에서는 신전·Generator 가 모두 같다.
 * **튜토리얼 2 만 축소**: Secret Workshop(튜토리얼 2) 의 Wind Temple 은 약 14칸 (exe 로 14칸 확정). 다른 튜토리얼은 일반 30칸이다 (Early Missions 영상 606초의 튜토리얼 장면도 30칸).
 * **exe 확인 (2026-09-29, [battle-options.md](../exe/battle-options.md))**: 반지름은 전투 옵션 **Generator Range** 로 정해진다.
   범위 표 `{14, 22, 30, 38}`칸(Short·Normal·Long·Very Long)에서 고른 뒤 **14~30칸으로 제한**하고 제곱값으로 비교한다.

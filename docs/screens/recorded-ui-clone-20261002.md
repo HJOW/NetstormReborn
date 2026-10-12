@@ -36,12 +36,12 @@ UI는 한국어·영어를 지원하고 D2Coding을 사용한다. 도움말 한�
 ## 우클릭과 생산
 
 - 사제: Construct → Temple / Workshop / Altar, 지식 보기, About. 건설 목록의 이름·비용은 실제 타입 정의를 읽는다.
-- 완공 워크샵: View Current Production, Put Knowledge into Production, Upgrade, Salvage, About.
+- 완공 워크샾: View Current Production, Put Knowledge into Production, Upgrade, Salvage, About.
 - Available은 원소 조건에 맞고 아직 등록하지 않은 지식이다. 등록하면 목록에서 빠지고 현재 생산·사이드바에 나타난다.
-- 템플이 공급하는 Golem은 워크샵 Available에서 제외하고 등록 명령도 거부한다. UI 검증에서 발견한 기존 규칙 누락을 함께 수정했다.
-- 등록은 해당 워크샵 ID로 명령을 보내며 기존 2/3/4칸·소유권·완공·중복·기술 허용 규칙을 따른다.
+- 신전이 공급하는 Golem은 워크샾 Available에서 제외하고 등록 명령도 거부한다. UI 검증에서 발견한 기존 규칙 누락을 함께 수정했다.
+- 등록은 해당 워크샾 ID로 명령을 보내며 기존 2/3/4칸·소유권·완공·중복·기술 허용 규칙을 따른다.
 - 생산 항목은 Cost·About을, 실제 내 유닛은 소유 정보·Salvage를 보여 준다. 들고 있지 않은 다리의 About은 Bridge 주제로 연결한다.
-- 워크샵 Upgrade 비용은 건설 비용과 같다. Sun Workshop은 표시·실제 차감을 800 SP로 맞췄고, Wind·Rain·Thunder Workshop은 각각 1,000 SP를 유지한다(워크샵 전체가 800 SP인 것이 아니다). 업그레이드 시간은 이번에 새로 확정하지 않았다.
+- 워크샾 Upgrade 비용은 건설 비용과 같다. Sun Workshop은 표시·실제 차감을 800 SP로 맞췄고, Wind·Rain·Thunder Workshop은 각각 1,000 SP를 유지한다(워크샾 전체가 800 SP인 것이 아니다). 업그레이드 시간은 이번에 새로 확정하지 않았다.
 
 공개 캠페인의 주요 키와 카메라 조작은 [조작키 문서의 클론 적용 절](../gameplay/input-controls.md#클론-적용-2026-10-02)을 따른다.
 팝업이 입력을 소비한 프레임에는 뒤쪽 지도까지 같은 클릭을 전달하지 않으며 가장자리 스크롤을 차단한다.
@@ -56,7 +56,7 @@ Sun Workshop 비용·등록·소유권을 검증했다. 테스트 빌드에는 �
 
 Windows에서 클론 자체 입력을 주입해 도움말 링크·Esc 무반응·본문 드래그·고정 머리·Back/OK,
 옵션 꺼짐·음량 선택·닫힘·저장, 사제 건설 메뉴, 미션 옵션, 지식 상세창의 격자 복귀를 확인했다.
-워크샵의 Available 3개 → Rain Generator 등록 뒤 2개 → Whirlibase 등록 뒤 두 생산 항목·사이드바 표시,
+워크샾의 Available 3개 → Rain Generator 등록 뒤 2개 → Whirlibase 등록 뒤 두 생산 항목·사이드바 표시,
 생산 아이콘의 Cost·About 메뉴도 확인했다. 두 등록 동안 SP는 2,200으로 유지됐다.
 F2/F7 표시 변화와 Shift+F9 정지 중 시계 고정·재개 뒤 시계 증가를 PNG로 대조했다.
 기존 1-1·1-2 메뉴 진입, 건설 커서·다리 집기·떠나기, 해상도·전체화면·음량 저장 검사도 통과했다.
@@ -64,7 +64,7 @@ F2/F7 표시 변화와 Shift+F9 정지 중 시계 고정·재개 뒤 시계 증�
 Git 제외 `extracted/screens/ui-analysis-20261002/`에 있다. 원본 게임은 실행하지 않았다.
 
 추후 재실행은 `powershell -File tools/clone_help_options_smoke.ps1`이며 `-Mode Mission` 또는 `-Mode Workshop`으로
-미션 팝업·정지 검사와 작업장 등록 검사를 선택한다. Workshop 모드는 클론의 검사 명령으로 `(98,98)`에
+미션 팝업·정지 검사와 워크샾 등록 검사를 선택한다. Workshop 모드는 클론의 검사 명령으로 `(98,98)`에
 Sun Workshop을 짓고 게임 시간 25초를 진행한 뒤 UI를 조작한다. 원본에 입력하지 않는다.
 새 Mission/Workshop 모드와 정지/재개 타이머 자동 비교 코드는 작성했으며 아직 실행하지 않았다.
 기존 별도 입력 파일의 UI 검증과 통합 스크립트의 최종 실행을 구분한다.
@@ -84,9 +84,9 @@ Auto-Demo·Tell Tips at Startup·Pass Server Diagnostic은 기존 미구현 상�
 | --- | --- | --- | --- |
 | 도움말 창 높이 | 목차와 능력치 머리 주제 모두 같은 높이(약 350) | 능력치 머리 주제만 470 | 350으로 통일, 본문 시작 높이 152·본문 약 154 |
 | 도움말 초상화 | 가로 약 156×세로 120 칸을 가득 채움 | 116칸에 축소, 위아래 녹색 띠 | 칸을 156×120으로, 채워 그림 |
-| 우클릭 메뉴 머리 | `<이름> Level I`, `Owner`, `Alignment`, `Class` | 이름 / Owner / Class | `Level`(사제 I, 워크샵은 덱 단계, 골렘 등은 타입 level, 템플은 없음)과 `Alignment`(사제 None) 추가 |
+| 우클릭 메뉴 머리 | `<이름> Level I`, `Owner`, `Alignment`, `Class` | 이름 / Owner / Class | `Level`(사제 I, 워크샾은 덱 단계, 골렘 등은 타입 level, 신전은 없음)과 `Alignment`(사제 None) 추가 |
 
-도움말 창 높이와 우클릭 행이 바뀌어 `tools/clone_help_options_smoke.ps1`의 클릭 좌표(Back 버튼, 드래그 시작점, 사제 `Construct`·워크샵 `Put Knowledge`·`View Current Production` 행)를 새 위치로 고쳤다. 고친 뒤 Menu·Mission·Workshop 입력 단언이 모두 통과했고, Assets 197·Core 246 테스트도 통과했다.
+도움말 창 높이와 우클릭 행이 바뀌어 `tools/clone_help_options_smoke.ps1`의 클릭 좌표(Back 버튼, 드래그 시작점, 사제 `Construct`·워크샾 `Put Knowledge`·`View Current Production` 행)를 새 위치로 고쳤다. 고친 뒤 Menu·Mission·Workshop 입력 단언이 모두 통과했고, Assets 197·Core 246 테스트도 통과했다.
 
 **남은 외관 차이 → 2026-10-02 대부분 반영** ([최종 판독](../videos/record-play-final-20261002.md#화면)): 우클릭 창의 돌 프레임·큰 제목·노란 값·구분선·`Current Production` 제목과 `About`·`Player >`, 도움말 본문 색·스크롤 화살표·능력치 값 색, 옵션 비활성 항목, 상단 줄·하단 상태줄 제거를 반영했다. 글꼴은 AGENTS.md에 따라 D2Coding을 유지한다. 아래는 반영 전 기록이다.
 

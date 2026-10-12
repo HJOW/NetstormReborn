@@ -22,7 +22,7 @@ public sealed record FortContent(TypeInfo Type, byte? QA, short? QB, IReadOnlyLi
 /// <param name="QA">추가 값 A (saveQA)</param>
 /// <param name="QB">추가 값 B (saveQB)</param>
 /// <param name="BridgeShape">각 칸의 다리 클러스터 번호 (bridge, 기존 속성명 유지)</param>
-/// <param name="FactoryState">작업장 상태 (factory)</param>
+/// <param name="FactoryState">워크샾 상태 (factory)</param>
 /// <param name="Owner">소유 플레이어 (저장된 경우)</param>
 /// <param name="Contents">내용물 (container)</param>
 public sealed record FortObject(

@@ -27,7 +27,7 @@ public static class StormPower
     /// <summary>Storm Crystal 1개의 가치 (매뉴얼·nugget.type cost 200)</summary>
     public const int CrystalValue = 200;
 
-    /// <summary>자기 유닛을 건강한 상태에서 회수할 때 돌려받는 비율(%) — 매뉴얼, 컨텍스트 메뉴 "Salvage gains"(템플 5000 → 1250, Sun Workshop 800 → 200)와 일치</summary>
+    /// <summary>자기 유닛을 건강한 상태에서 회수할 때 돌려받는 비율(%) — 매뉴얼, 컨텍스트 메뉴 "Salvage gains"(신전 5000 → 1250, Sun Workshop 800 → 200)와 일치</summary>
     public const int SalvagePercent = 25;
 
     /// <summary>cost 가 없는 타입의 기본 비용 단가(레벨당). exe 타입 로더 Rifttype.cpp: (level − 1 + 1) × 200.0 (VA 0x510298).</summary>

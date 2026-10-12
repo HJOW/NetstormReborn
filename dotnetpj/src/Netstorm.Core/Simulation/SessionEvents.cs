@@ -33,7 +33,7 @@ public enum CommandFailure
     /// <summary>위치 조건(섬·자리·Storm Power·에너지)을 만족하지 못함 — PlacementProblem 참고</summary>
     Placement,
 
-    /// <summary>워크샵 등록 실패 — RegisterResult 참고</summary>
+    /// <summary>워크샾 등록 실패 — RegisterResult 참고</summary>
     RegisterFailed,
 
     /// <summary>해당 번호의 오브젝트가 없음</summary>
@@ -81,7 +81,7 @@ public enum CommandFailure
     /// <summary>집을 수 없는 사제 (기절하지 않음·동맹·이미 포획됨, allowAnyCapture 미션 제외).</summary>
     NotCapturable,
 
-    /// <summary>제단에 이미 다른 사제가 묶여 있음.</summary>
+    /// <summary>알타에 이미 다른 사제가 묶여 있음.</summary>
     AltarOccupied,
 
     /// <summary>수송 유닛이 사제를 운반하고 있지 않음.</summary>
@@ -138,7 +138,7 @@ public enum SessionEventKind
     /// <summary>체력을 모두 잃어 오브젝트가 파괴됨.</summary>
     EntityDestroyed,
 
-    /// <summary>전투로 파괴된 템플·포대가 주위 1칸에 폭발 피해를 줌 (Player = 처치한 플레이어, EntityId = 파괴된 오브젝트).</summary>
+    /// <summary>전투로 파괴된 신전·포대가 주위 1칸에 폭발 피해를 줌 (Player = 처치한 플레이어, EntityId = 파괴된 오브젝트).</summary>
     EntityExploded,
 
     /// <summary>사제가 체력 절반에서 기절해 보호막을 얻음.</summary>
@@ -165,7 +165,7 @@ public enum SessionEventKind
     /// </summary>
     BuildingStarted,
 
-    /// <summary>건물 건설 완료 (템플이면 섬 소유·다리 공급 시작, 워크샵이면 덱에 등록 가능)</summary>
+    /// <summary>건물 건설 완료 (신전이면 섬 소유·다리 공급 시작, 워크샾이면 덱에 등록 가능)</summary>
     BuildingCompleted,
 
     /// <summary>사제가 가이저에서 Storm Crystal 하나를 가져옴.</summary>
@@ -180,7 +180,7 @@ public enum SessionEventKind
     /// <summary>튜토리얼의 F4 화면 복귀 입력.</summary>
     ReturnedHome,
 
-    /// <summary>워크샵에 지식을 등록함</summary>
+    /// <summary>워크샾에 지식을 등록함</summary>
     Registered,
 
     /// <summary>오브젝트를 회수함</summary>
@@ -228,13 +228,13 @@ public enum SessionEventKind
     /// <summary>수송 유닛이 도착했지만 사제가 회복해 포획에 저항함 (EntityId = 사제).</summary>
     PriestResisted,
 
-    /// <summary>운반한 사제를 제단의 희생의 원에 묶음 (EntityId = 사제).</summary>
+    /// <summary>운반한 사제를 알타의 희생의 원에 묶음 (EntityId = 사제).</summary>
     PriestBound,
 
-    /// <summary>포획된 사제가 풀려나 완전히 회복함 (내려놓음·운반 유닛 파괴·판매, 제단 파괴·판매, EntityId = 사제).</summary>
+    /// <summary>포획된 사제가 풀려나 완전히 회복함 (내려놓음·운반 유닛 파괴·판매, 알타 파괴·판매, EntityId = 사제).</summary>
     PriestReleased,
 
-    /// <summary>제단에서 희생 의식이 시작됨 (Player = 제단 소유자, EntityId = 제단). 원본은 이때 희생 음악을 튼다.</summary>
+    /// <summary>알타에서 희생 의식이 시작됨 (Player = 알타 소유자, EntityId = 알타). 원본은 이때 희생 음악을 튼다.</summary>
     SacrificeStarted,
 
     /// <summary>의식의 룬 하나를 지키기 시작함 (Text = 룬 이름 Wind/Sun/Rain/Thunder/Storm, 원본 forWind2.wav 등).</summary>
@@ -249,22 +249,22 @@ public enum SessionEventKind
     /// <summary>묶인 사제가 희생됨 (원본 priestSacrifice2.wav, EntityId = 희생된 사제).</summary>
     PriestSacrificed,
 
-    /// <summary>제단이 파괴·판매돼 의식이 깨지고 포로가 풀림 (EntityId = 제단). 의식 사제의 이탈·기절·포획은 깨지지 않고 멈춘다.</summary>
+    /// <summary>알타이 파괴·판매돼 의식이 깨지고 포로가 풀림 (EntityId = 알타). 의식 사제의 이탈·기절·포획은 깨지지 않고 멈춘다.</summary>
     SacrificeBroken,
 
-    /// <summary>의식 사제가 제단 옆을 떠나거나 기절·포획돼 의식이 멈춤 (EntityId = 제단). 포로는 묶인 채 남는다(2026-10-01 녹화·사용자 확인).</summary>
+    /// <summary>의식 사제가 알타 옆을 떠나거나 기절·포획돼 의식이 멈춤 (EntityId = 알타). 포로는 묶인 채 남는다(2026-10-01 녹화·사용자 확인).</summary>
     SacrificePaused,
 
-    /// <summary>마크가 나타나기 전에 사제가 떠나 그 룬이 취소됨 (Text = 룬 이름, EntityId = 제단). 복귀하면 음성부터 다시 한다.</summary>
+    /// <summary>마크가 나타나기 전에 사제가 떠나 그 룬이 취소됨 (Text = 룬 이름, EntityId = 알타). 복귀하면 음성부터 다시 한다.</summary>
     SacrificeRuneCancelled,
 
-    /// <summary>의식 사제가 움직일 수 있는 상태로 제단 옆에 돌아와 의식이 이어짐 (EntityId = 제단).</summary>
+    /// <summary>의식 사제가 움직일 수 있는 상태로 알타 옆에 돌아와 의식이 이어짐 (EntityId = 알타).</summary>
     SacrificeResumed,
 
-    /// <summary>적 사제를 의식으로 완전히 처리해 제단 주인이 스톰 파워 5,000을 받음 (EntityId = 희생된 사제).</summary>
+    /// <summary>적 사제를 의식으로 완전히 처리해 알타 주인이 스톰 파워 5,000을 받음 (EntityId = 희생된 사제).</summary>
     SacrificeRewarded,
 
-    /// <summary>의식이 끝난 제단이 소멸함 (EntityId = 제단).</summary>
+    /// <summary>의식이 끝난 알타이 소멸함 (EntityId = 알타).</summary>
     AltarConsumed,
 
     /// <summary>
@@ -286,12 +286,12 @@ public enum SessionEventKind
     MoveResumed,
 
     /// <summary>
-    /// 룬 음성이 끝나 제단에 그 룬의 마크가 나타났다 (Text = 룬 이름). 이 뒤에는 사제가 떠나도 룬이 탄다.
+    /// 룬 음성이 끝나 알타에 그 룬의 마크가 나타났다 (Text = 룬 이름). 이 뒤에는 사제가 떠나도 룬이 탄다.
     /// 원본은 이때부터 룬이 탈 때까지 jimbuild.wav 를 1.14초마다 반복한다(2026-10-02 녹음 판독).
     /// </summary>
     SacrificeRuneMarked,
 
-    /// <summary>워크샵을 한 단계 업그레이드했다 (원본 완료음 upgradeComplete.wav, exe FUN_004545e0).</summary>
+    /// <summary>워크샾을 한 단계 업그레이드했다 (원본 완료음 upgradeComplete.wav, exe FUN_004545e0).</summary>
     WorkshopUpgraded,
 
     /// <summary>아이스 타워가 깨져 같은 소유자·장소에서 재성장을 시작했다. 처치 보상은 없다.</summary>
@@ -340,7 +340,7 @@ public static class SessionText
         CommandFailure.NotInDeck => "생산 창에 등록되지 않은 유닛",
         CommandFailure.NotReady => "재충전 중",
         CommandFailure.Placement => "위치 조건 불만족",
-        CommandFailure.RegisterFailed => "워크샵에 등록할 수 없음",
+        CommandFailure.RegisterFailed => "워크샾에 등록할 수 없음",
         CommandFailure.NoSuchEntity => "없는 오브젝트",
         CommandFailure.NotOwner => "내 오브젝트가 아님",
         CommandFailure.NotComplete => "아직 건설 중",
@@ -356,7 +356,7 @@ public static class SessionText
         CommandFailure.GeyserEmpty => "가이저가 비어 있음",
         CommandFailure.NoRoute => "목적지까지 이어진 길이 없음",
         CommandFailure.NotCapturable => "집을 수 없는 사제 (기절하지 않았거나 동맹)",
-        CommandFailure.AltarOccupied => "제단에 이미 사제가 묶여 있음",
+        CommandFailure.AltarOccupied => "알타에 이미 사제가 묶여 있음",
         CommandFailure.NotCarrying => "운반 중인 사제가 없음",
         CommandFailure.AlreadyCarrying => "이미 사제를 운반 중",
         _ => failure.ToString(),

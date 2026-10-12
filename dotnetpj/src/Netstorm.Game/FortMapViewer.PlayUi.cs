@@ -16,8 +16,8 @@ internal sealed partial class FortMapViewer
     private const int PlaySidebarWidth = 84;
 
     /// <summary>
-    /// 워크샵 지식 목록의 group 순서. 원본 지식 창의 행 안 순서(battery → cannon → archer → walker → blocker → fence → aviary → balloon)를 따른다.
-    /// 골렘(walker)은 템플이 공급하므로 뺀다.
+    /// 워크샾 지식 목록의 group 순서. 원본 지식 창의 행 안 순서(battery → cannon → archer → walker → blocker → fence → aviary → balloon)를 따른다.
+    /// 골렘(walker)은 신전이 공급하므로 뺀다.
     /// </summary>
     private static readonly string[] ProductionGroupOrder = ["battery", "cannon", "archer", "blocker", "fence", "aviary", "balloon"];
 
@@ -49,24 +49,21 @@ internal sealed partial class FortMapViewer
         CenterOnPriest();
     }
 
-    /// <summary>생산 항목에 표시할 유닛 이름. 한국어는 group 별 짧은 이름, 영어는 원본 description.</summary>
+    /// <summary>생산 항목의 실제 유닛 이름을 공유 명칭 표로 표시한다. 같은 group도 서로 다른 원본 이름을 보존한다.</summary>
     private string ProductionLabel(string typeName)
     {
         TypeInfo? type = _candidates.FirstOrDefault(t => t.Name.Equals(typeName, StringComparison.OrdinalIgnoreCase));
-        string english = type?.Definition.GetString("description") ?? typeName;
-        string korean = type?.Definition.GetString("group")?.ToLowerInvariant() switch
-        {
-            "battery" => "발전기", "cannon" => "대포", "archer" => "원반 투척기", "aviary" => "비행 기지",
-            "blocker" => "방벽", "fence" => "울타리", "balloon" => "비행 수송", _ => english,
-        };
-        return Ui(korean, english);
+        return type == null ? GameUnitNames.Format(typeName, Language) : UnitName(type);
     }
+
+    /// <summary>메뉴·지식창·지도에서 같은 실제 타입과 선택 언어의 건물·유닛 이름을 사용한다.</summary>
+    private string UnitName(TypeInfo type) => GameUnitNames.ForType(type, Language);
 
     /// <summary>현재 UI 언어의 문구.</summary>
     private string Ui(string korean, string english) => Language == GameLanguage.Korean ? korean : english;
 
     /// <summary>
-    /// 생산 창 유닛이나 사제 Construct 의 건물을 배치 커서로 집는다. 원본처럼 유닛은 워크샵에 등록되어 덱에 있어야 하며
+    /// 생산 창 유닛이나 사제 Construct 의 건물을 배치 커서로 집는다. 원본처럼 유닛은 워크샾에 등록되어 덱에 있어야 하며
     /// 덱에 없으면 등록하지 않고 알린다(이전 클론의 자동 등록은 원본과 달라 없앴다).
     /// </summary>
     /// <param name="name">타입 이름</param>
@@ -78,7 +75,7 @@ internal sealed partial class FortMapViewer
         {
             if (!_session.Player(TestPlayer).Deck.Entries().Any(e => e.Kind != DeckEntryKind.Bridge && e.TypeName.Equals(name, StringComparison.OrdinalIgnoreCase)))
             {
-                _notice = Ui("워크샵에서 생산에 등록해야 합니다.", "Put this knowledge into production at a workshop first.");
+                _notice = Ui("워크샾에서 생산에 등록해야 합니다.", "Put this knowledge into production at a workshop first.");
                 return;
             }
             _lastProductionType = name;
@@ -143,7 +140,7 @@ internal sealed partial class FortMapViewer
     /// <summary>생산 창(사이드바)을 지도 배치·명령에서 제외한다. 원본은 상단 메뉴 막대·하단 상태줄이 없어 나머지는 모두 지도다.</summary>
     private bool IsPlayUiPoint(int x, int y) => x < PlaySidebarWidth;
 
-    /// <summary>내 오브젝트 클릭은 선택, 가이저·적 사제·제단·빈 칸 클릭은 선택한 이동체의 명령으로 해석한다.</summary>
+    /// <summary>내 오브젝트 클릭은 선택, 가이저·적 사제·알타·빈 칸 클릭은 선택한 이동체의 명령으로 해석한다.</summary>
     private void UpdatePlayOrders(MouseState mouse)
     {
         if (_placementMode || _bridgeMode || IsPlayUiPoint(mouse.X, mouse.Y)) return;
@@ -177,7 +174,7 @@ internal sealed partial class FortMapViewer
             {
                 SubmitCommand(new MovePriestToAltarCommand(TestPlayer, target.Id, selected.Id));
                 AcknowledgeOrder(selected);
-                // 원본은 포로가 묶인 제단으로 사제를 보내는 명령 때 희생 음악을 요청한다 (2026-10-01 캠페인 1-2 녹화: 명령 18:28.2 → 음악 18:28.8, 도착은 18:32 무렵)
+                // 원본은 포로가 묶인 알타으로 사제를 보내는 명령 때 희생 음악을 요청한다 (2026-10-01 캠페인 1-2 녹화: 명령 18:28.2 → 음악 18:28.8, 도착은 18:32 무렵)
                 if (_session.Entities.Any(e => e.Kind == ObjectKind.Priest && e.CaptorId == target.Id)) _mySacrificeMusicRequested = true;
             }
         }

@@ -70,7 +70,7 @@
 
 즉 **V12는 V10과도 raw 배치가 다르다.** 같은 10.82 안에서도 슬롯·타입 구조체가 바뀌므로 판본 표기만으로 배치를 가정하면 안 된다. 근거는 디컴파일 본문의 상수이며 x86 실행 대조는 하지 않았다.
 
-**DevLog V11/V12 항목에 대응하는 새 문자열**(V12 PE에만 있는 ASCII 문자열 205개 가운데): `.\d\backups`·`Making Battle Fort backups...`·`Backups complete.`·`disableFortBackup`(요새 백업), `Reset to Rank 1`, `Temple - ~iShift Z`·`defaultTemple`·`defaultTemple=0/1/2`(템플 단축키와 기본 템플 설정), `sendMoney1`·`sendMoney2`, `netstorm.tarc`. V10의 `enableFenceCheck`는 V12에서 `disableFenceCheck`로 바뀌었다(Fence check 기본 활성과 맞는다). 문자열이 있다는 것까지만 확인했고, 그 기능의 코드 경로는 읽지 않았다. 편집기 요새 128개 한도는 숫자 상수라 이 방법으로 확인하지 못했다.
+**DevLog V11/V12 항목에 대응하는 새 문자열**(V12 PE에만 있는 ASCII 문자열 205개 가운데): `.\d\backups`·`Making Battle Fort backups...`·`Backups complete.`·`disableFortBackup`(요새 백업), `Reset to Rank 1`, `Temple - ~iShift Z`·`defaultTemple`·`defaultTemple=0/1/2`(신전 단축키와 기본 신전 설정), `sendMoney1`·`sendMoney2`, `netstorm.tarc`. V10의 `enableFenceCheck`는 V12에서 `disableFenceCheck`로 바뀌었다(Fence check 기본 활성과 맞는다). 문자열이 있다는 것까지만 확인했고, 그 기능의 코드 경로는 읽지 않았다. 편집기 요새 128개 한도는 숫자 상수라 이 방법으로 확인하지 못했다.
 
 ```powershell
 & tools/ghidra/run_decomp.ps1 -Edition original1082v12

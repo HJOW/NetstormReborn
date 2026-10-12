@@ -12,10 +12,10 @@ public sealed class PlayerState
     /// <summary>현재 Storm Power</summary>
     public int StormPower { get; internal set; }
 
-    /// <summary>생산 창(덱): 템플이 공급하는 다리·골렘과 워크샵 등록 유닛, 획득한 지식</summary>
+    /// <summary>생산 창(덱): 신전이 공급하는 다리·골렘과 워크샾 등록 유닛, 획득한 지식</summary>
     public ProductionDeck Deck { get; } = new();
 
-    /// <summary>다리 조각 칸 (템플이 있는 동안 1초마다 채워진다)</summary>
+    /// <summary>다리 조각 칸 (신전이 있는 동안 1초마다 채워진다)</summary>
     public BridgeTray Tray { get; }
 
     /// <summary>커서로 집고 있는 다리 조각 (없으면 null). 회전은 화면이 관리하므로 모양만 의미가 있다.</summary>
@@ -40,14 +40,14 @@ public sealed class PlayerState
     /// </summary>
     private readonly SortedDictionary<string, MadeEntry> _made = new(StringComparer.Ordinal);
 
-    /// <summary>템플이 있는지 (다리 조각·골렘 공급 조건)</summary>
+    /// <summary>신전이 있는지 (다리 조각·골렘 공급 조건)</summary>
     public bool HasTemple => Deck.TempleId != null;
 
     /// <summary>타입 하나를 지은 누적 수 (원본 FUN_004c24c0, 없으면 0)</summary>
     /// <param name="typeName">.type 이름 (대소문자 무시)</param>
     public int Made(string typeName) => _made.TryGetValue(typeName.ToLowerInvariant(), out MadeEntry entry) ? entry.Count : 0;
 
-    /// <summary>플래그2 비트를 하나라도 가진 타입들의 누적 수 합 (원본 FUN_004c2500: 템플 = 0x200, 워크샵 = 0x4000)</summary>
+    /// <summary>플래그2 비트를 하나라도 가진 타입들의 누적 수 합 (원본 FUN_004c2500: 신전 = 0x200, 워크샾 = 0x4000)</summary>
     /// <param name="flags2">플래그2 비트 마스크</param>
     public int MadeWithFlags(uint flags2) => _made.Values.Where(e => (e.Flags2 & flags2) != 0).Sum(e => e.Count);
 

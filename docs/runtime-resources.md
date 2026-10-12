@@ -1,5 +1,7 @@
 # 실행 자산·설정·언어 연결
 
+> 2026-10-13: [건물·유닛 한국어 명칭 규칙과 공유 표](korean-unit-names.md)을 적용한다. 사제·신전·다리·발사기 이외 이름은 영어 발음의 한글 표기를 사용하며 Workshop은 워크샾, Generator는 제네레이터다.
+
 > 2026-09-28 · `GameResources`와 MonoGame 실행 프로젝트 연결
 
 게임 실행 코드는 `GameDataLocator`로 찾은 데이터 폴더를 `GameFileSystem`으로 열고,

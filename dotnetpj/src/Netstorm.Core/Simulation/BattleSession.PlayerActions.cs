@@ -7,11 +7,11 @@ namespace Netstorm.Core.Simulation;
 /// <summary>플레이 화면의 일반 이동·정지 명령.</summary>
 public sealed partial class BattleSession
 {
-    /// <summary>바람·비·번개 워크샵의 업그레이드 비용.</summary>
+    /// <summary>윈드·레인·썬더 워크샾의 업그레이드 비용.</summary>
     public const int WorkshopUpgradeCost = 1000;
     /// <summary>녹화의 Sun Workshop 메뉴에 표시된 업그레이드 비용.</summary>
     public const int SunWorkshopUpgradeCost = 800;
-    /// <summary>태양 워크샵의 800 SP 예외를 메뉴와 실제 명령 처리에 함께 적용한다.</summary>
+    /// <summary>썬 워크샾의 800 SP 예외를 메뉴와 실제 명령 처리에 함께 적용한다.</summary>
     public static int WorkshopUpgradeCostFor(TypeDefinition type) =>
         Elements.FromTheme(type.GetString("theme")) == Element.Sun ? SunWorkshopUpgradeCost : WorkshopUpgradeCost;
 

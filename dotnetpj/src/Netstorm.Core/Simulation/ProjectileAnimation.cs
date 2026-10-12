@@ -2,13 +2,13 @@ using Netstorm.Assets;
 
 namespace Netstorm.Core.Simulation;
 
-/// <summary>원반·석궁 탄과 착탄 그림을 원본 클러스터 순서에서 고른다. 그림 선택은 피해 판정과 독립적이다.</summary>
+/// <summary>디스크 발사기·크로스보우 탄과 착탄 그림을 원본 클러스터 순서에서 고른다. 그림 선택은 피해 판정과 독립적이다.</summary>
 public static class ProjectileAnimation
 {
     /// <summary>팬게임에서 확인한 원반 회전 간격(초). 원본 영상의 정확한 간격은 후속 측정한다.</summary>
     public const double DiscFrameSeconds = 0.05;
 
-    /// <summary>20방향 석궁 탄을 진행 방향에 맞추거나 원반의 B02·B03을 번갈아 고른다.</summary>
+    /// <summary>20방향 크로스보우 탄을 진행 방향에 맞추거나 원반의 B02·B03을 번갈아 고른다.</summary>
     public static int Frame(TypeDefinition type, CombatShot shot, double tick, int ticksPerSecond)
     {
         if (shot.AttackerType?.Equals("windArcher", StringComparison.OrdinalIgnoreCase) == true)

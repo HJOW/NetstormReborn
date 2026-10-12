@@ -27,7 +27,7 @@ internal sealed partial class FortMapViewer
     /// <summary>일반 도움말·About 창을 게임 본체에 요청한다.</summary>
     public Action<string>? HelpRequested { get; set; }
 
-    /// <summary>F4/H 홈 템플, P/R 사제 선택, T 시계, 숫자 카메라와 Alt/가운데 버튼 스크롤.</summary>
+    /// <summary>F4/H 홈 신전, P/R 사제 선택, T 시계, 숫자 카메라와 Alt/가운데 버튼 스크롤.</summary>
     private void UpdateOriginalControls(double seconds, KeyboardState keyboard, MouseState mouse)
     {
         bool shift = keyboard.IsKeyDown(Keys.LeftShift) || keyboard.IsKeyDown(Keys.RightShift);

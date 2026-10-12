@@ -46,7 +46,7 @@ public static class TypeFlagBits
     /// <summary>플래그2: 매장물 (파생 규칙으로 SaveQA 가 켜진다)</summary>
     public const uint Buried = 0x2000;
 
-    /// <summary>플래그2: 작업장</summary>
+    /// <summary>플래그2: 워크샾</summary>
     public const uint Factory = 0x4000;
 
     /// <summary>플래그2: 이 중 하나라도 있으면 파생 규칙으로 Container 가 켜진다 (vortex·factory·walker·balloon)</summary>
@@ -275,7 +275,7 @@ public sealed class TypeCatalog
             }
         }
         if (usage.Any(power => power != 0)) f1 |= 0x4000;
-        // 파생 규칙 (Rifttype.cpp 후처리): 이동체·신전·작업장은 내용물을 가진다
+        // 파생 규칙 (Rifttype.cpp 후처리): 이동체·신전·워크샾은 내용물을 가진다
         if ((f2 & TypeFlagBits.ContainerSources) != 0)
         {
             f1 |= TypeFlagBits.Container;

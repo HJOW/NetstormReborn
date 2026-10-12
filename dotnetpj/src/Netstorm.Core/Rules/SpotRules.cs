@@ -17,7 +17,7 @@ public static class SpotRules
 
     /// <summary>
     /// 안쪽 비트를 받는 건물군의 타입 플래그 2 마스크 (원본 005424b8):
-    /// 신전·작업장·포대류·제단 받침(dais)·가이저·거주지.
+    /// 신전·워크샾·포대류·알타 받침(dais)·가이저·거주지.
     /// </summary>
     public const uint InteriorGenusMask = 0x50444200;
 

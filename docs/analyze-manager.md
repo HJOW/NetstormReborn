@@ -386,7 +386,7 @@ analyzeManager/bin/Release/net10.0-windows/Netstorm.AnalyzeManager.exe record-pl
 |---|---|
 | [tools/ns_driver.py](../tools/ns_driver.py) | 분석기 MCP 서버를 한 번만 띄워 두고 `game_input`·`capture_state` 등을 반복 호출한다(CLI는 호출마다 시작 비용 2~4초, 이 경로는 입력 1건 약 0.2~0.9초). 명령 파일(`cmd/*.json`)을 받아 `out/*.json`에 결과를 쓰는 `serve` 모드와 다른 파이썬 스크립트가 불러 쓰는 `Driver` 클래스가 있다. **커서 기록기**가 별도 스레드에서 약 100Hz로 `GetCursorInfo`를 읽어 커서 핸들·표시 상태가 바뀔 때마다 `cursor_timeline.jsonl`에 한 줄(UTC 시각·화면 좌표)을 남기고, 처음 보는 핸들은 `cursors/<핸들>.png`(검은·흰 배경 두 장 나란히)와 핫스팟으로 저장한다. 입력 단계마다 `shots/<이름>.cur.png`에 시스템 커서를 합성한 화면도 만든다(화면 캡처에는 커서가 찍히지 않는다) |
 | [tools/cursor_catalog.py](../tools/cursor_catalog.py) | exe의 `RT_CURSOR` 리소스를 그림으로 풀고(`catalog`), 기록기가 찍은 커서 그림과 **픽셀 단위로 같은 리소스**를 찾아 그룹 번호를 붙인다(`match`). 이번 실행의 모든 게임 커서가 차이 0으로 맞았다 |
-| [tools/analyze_test02_construct.py](../tools/analyze_test02_construct.py) | TEST02 맵의 템플·워크샵 건설 분석 전체를 한 번에 실행하는 스크립트(좌표·메뉴 오프셋·판정 방식은 정찰에서 확정). 결과 해석은 [TEST02 건설 분석 노트](videos/auto-test02-construct-20261004.md) |
+| [tools/analyze_test02_construct.py](../tools/analyze_test02_construct.py) | TEST02 맵의 신전·워크샾 건설 분석 전체를 한 번에 실행하는 스크립트(좌표·메뉴 오프셋·판정 방식은 정찰에서 확정). 결과 해석은 [TEST02 건설 분석 노트](videos/auto-test02-construct-20261004.md) |
 | [tools/preview_scan_from_video.py](../tools/preview_scan_from_video.py) | 녹화 영상의 건물 설치 미리보기 테두리(흰색=가능·붉은색=불가)를 읽어 "어느 칸에 놓을 수 있었는지"를 복원한다. 실행 중 메모리에만 있던 훑기 결과를 영상에서 되살리는 데도 쓴다 |
 
 **쓰는 방법과 함정(이번 실행에서 확인):**

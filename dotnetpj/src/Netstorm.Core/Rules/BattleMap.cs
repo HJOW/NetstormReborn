@@ -24,7 +24,7 @@ public sealed record PlacementCheck(PlacementProblem Problem, Footprint Footprin
 /// </summary>
 public sealed class BattleMap
 {
-    /// <summary>에너지 공급원 (템플·Generator)</summary>
+    /// <summary>에너지 공급원 (신전·Generator)</summary>
     private readonly List<EnergySource> _sources = [];
 
     /// <summary>칸 → 영역 번호 (섬 칸이 아니면 없음)</summary>
@@ -58,7 +58,7 @@ public sealed class BattleMap
     public IReadOnlyList<(int Id, FortMapObject Item)> InitialObjects => _initialObjects;
 
     /// <summary>
-    /// 맵 오브젝트에서 템플 소유 영역과 공급원을 모은다.
+    /// 맵 오브젝트에서 신전 소유 영역과 공급원을 모은다.
     /// </summary>
     /// <param name="objects">월드 좌표가 정해진 오브젝트 (FortMap.Objects)</param>
     /// <param name="territoryAt">칸 → 영역 번호 (지면 미리보기의 섬 칸 등). 섬 칸이 아니면 null</param>
@@ -167,7 +167,7 @@ public sealed class BattleMap
         return id;
     }
 
-    /// <summary>공급원을 추가한다 (Generator·템플 건설 시)</summary>
+    /// <summary>공급원을 추가한다 (Generator·신전 건설 시)</summary>
     /// <param name="source">공급원</param>
     public void AddSource(EnergySource source) => _sources.Add(source);
 
@@ -186,7 +186,7 @@ public sealed class BattleMap
     public bool IsFriendly(int player, int owner) => _allied(player, owner);
 
     /// <summary>
-    /// 워크샵에서 생산하는 유닛을 기준점에 놓을 수 있는지 판정한다: 위치 → 빈 자리 → Storm Power → 에너지 순서.
+    /// 워크샾에서 생산하는 유닛을 기준점에 놓을 수 있는지 판정한다: 위치 → 빈 자리 → Storm Power → 에너지 순서.
     /// </summary>
     /// <param name="type">유닛 타입</param>
     /// <param name="anchorX">기준점(오른쪽 아래 칸) x</param>
@@ -205,8 +205,8 @@ public sealed class BattleMap
     }
 
     /// <summary>
-    /// 사제가 짓는 건물(템플·워크샵·알타·아웃포스트)을 기준점에 지을 수 있는지 판정한다.
-    /// 위치는 섬 소유 규칙(템플은 빈 섬에 플레이어당 1기, 알타도 1기, 남의 섬 불가, 섬 밖 불가), 이어서 빈 자리·Storm Power·에너지 순서다.
+    /// 사제가 짓는 건물(신전·워크샾·알타·아웃포스트)을 기준점에 지을 수 있는지 판정한다.
+    /// 위치는 섬 소유 규칙(신전은 빈 섬에 플레이어당 1기, 알타도 1기, 남의 섬 불가, 섬 밖 불가), 이어서 빈 자리·Storm Power·에너지 순서다.
     /// 사제가 그 자리까지 걸어갈 수 있는지는 맵이 아니라 세션(<c>BattleSession.CheckBuilding</c>)이 판정한다.
     /// </summary>
     /// <param name="type">건물 타입</param>
@@ -214,7 +214,7 @@ public sealed class BattleMap
     /// <param name="anchorY">기준점 y</param>
     /// <param name="player">플레이어</param>
     /// <param name="stormPower">플레이어의 현재 Storm Power</param>
-    /// <param name="playerHasTemple">플레이어에게 이미 템플이 있는지 (건설 중인 템플 포함)</param>
+    /// <param name="playerHasTemple">플레이어에게 이미 신전이 있는지 (건설 중인 신전 포함)</param>
     /// <param name="playerHasAltar">플레이어에게 이미 알타가 있는지 (건설 중인 알타 포함)</param>
     /// <param name="ignored">건물 설치를 막지 않는 사제 발자국.</param>
     public PlacementCheck CheckBuilding(TypeInfo type, int anchorX, int anchorY, int player, int stormPower, bool playerHasTemple,

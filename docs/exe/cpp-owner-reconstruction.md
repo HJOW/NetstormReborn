@@ -1,6 +1,6 @@
 # cpppj 소유자 지정(Squid vtable +0x74)
 
-2026-10-07. **1차 기준은 10.78**이다. [다리 끝 칸 변환](cpp-bridgeevent-reconstruction.md)이 새 객체에 대해 부르는 가상 함수 **소유자 지정**을 복원했다. 객체의 소유자 바이트를 바꾸고, 대상 타입이면 소유자별 작업장 목록을 고친다.
+2026-10-07. **1차 기준은 10.78**이다. [다리 끝 칸 변환](cpp-bridgeevent-reconstruction.md)이 새 객체에 대해 부르는 가상 함수 **소유자 지정**을 복원했다. 객체의 소유자 바이트를 바꾸고, 대상 타입이면 소유자별 워크샾 목록을 고친다.
 
 소스: [SquidOwner.h](../../cpppj/src/o/SquidOwner.h), [SquidOwner.cpp](../../cpppj/src/o/SquidOwner.cpp). 검사: [OwnerTests.cpp](../../cpppj/tests/OwnerTests.cpp). 독립 결과: [owner-x86.tsv](../../cpppj/tests/fixtures/owner-x86.tsv), [감사 기록](../../cpppj/recovery-owner-evidence.json), [실행 도구](../../tools/decomp_owner_oracle.py), [내보낸 함수 목록](../../tools/ghidra/owner-functions.json).
 
@@ -10,10 +10,10 @@
 |---|---|---|
 | 소유자 지정(base Squid vtable +0x74) | `004adf00` | `004aefa0` |
 | 타입 구조체 / genus 조회 | `0049a840` | `004abae0` |
-| 소유자 작업장 목록에 추가 | `00490050` | `004071f0` |
-| 소유자 작업장 목록에서 제거 | `004900a0` → `0040ea00` | `00407250`(배열 압축 인라인) |
+| 소유자 워크샾 목록에 추가 | `00490050` | `004071f0` |
+| 소유자 워크샾 목록에서 제거 | `004900a0` → `0040ea00` | `00407250`(배열 압축 인라인) |
 
-다리 vtable(`005034c8`/CD `00501ab0`)의 +0x74도 이 base 함수다. 작업장 목록은 Player 구조체(패치 0xb4바이트, CD 0xac바이트) 맨 앞의 배열 객체(포인터·용량·개수)이며 Player 배열 포인터는 `0059534c`/CD `0050f834`에 있다. [공통 postPop](cpp-postpop-reconstruction.md)의 추가와 [삭제 장부](cpp-destroylifecycle-reconstruction.md)의 제거가 쓰는 것과 같은 목록이다.
+다리 vtable(`005034c8`/CD `00501ab0`)의 +0x74도 이 base 함수다. 워크샾 목록은 Player 구조체(패치 0xb4바이트, CD 0xac바이트) 맨 앞의 배열 객체(포인터·용량·개수)이며 Player 배열 포인터는 `0059534c`/CD `0050f834`에 있다. [공통 postPop](cpp-postpop-reconstruction.md)의 추가와 [삭제 장부](cpp-destroylifecycle-reconstruction.md)의 제거가 쓰는 것과 같은 목록이다.
 
 ## 동작
 

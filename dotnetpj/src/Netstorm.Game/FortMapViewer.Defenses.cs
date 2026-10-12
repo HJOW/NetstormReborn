@@ -55,7 +55,7 @@ internal sealed partial class FortMapViewer
         }
     }
 
-    /// <summary>원반·석궁·고정 캐논의 원본 탄 그림과 태양 캐논의 긴 금색 꼬리를 표시한다.</summary>
+    /// <summary>디스크 발사기·크로스보우·고정 캐논의 원본 탄 그림과 썬 캐논의 긴 금색 꼬리를 표시한다.</summary>
     private bool DrawProjectile(SpriteBatch batch, CombatShot shot, Vector2 position, Vector2 from, Vector2 to)
     {
         if (shot.AttackerType?.Equals("sunCannon", StringComparison.OrdinalIgnoreCase) == true)

@@ -34,7 +34,7 @@ public static class EmplacementDirection
         return 0;
     }
 
-    /// <summary>석궁은 실제 각도표, 고정 캐논·Wind Tower는 L/M/N/O 기본 묶음으로 설치 그림을 고른다.</summary>
+    /// <summary>크로스보우은 실제 각도표, 고정 캐논·Wind Tower는 L/M/N/O 기본 묶음으로 설치 그림을 고른다.</summary>
     public static int PlacementFrame(TypeInfo type, int direction) =>
         type.Name.Equals("windArcher", StringComparison.OrdinalIgnoreCase) ? CrossbowAnimation.PlacementFrame(direction)
         : type.Definition.Frames.Find(CannonAnimation.Side(direction), TypeFrameTable.DefaultVariant, 0);

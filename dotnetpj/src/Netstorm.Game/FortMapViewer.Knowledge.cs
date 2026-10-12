@@ -288,7 +288,7 @@ internal sealed partial class FortMapViewer
                 Rectangle cell = KnowledgeCardCell(grid, row, column);
                 DrawKnowledgeBox(batch, cell, card == hovered);
                 DrawTypePicture(batch, card.Type, new Rectangle(cell.X + 3, cell.Y + 3, cell.Width - 6, KnowledgePictureHeight));
-                DrawCardTitle(batch, small, card.Title, cell);
+                DrawCardTitle(batch, small, UnitName(card.Type), cell);
             }
         }
     }
@@ -382,7 +382,7 @@ internal sealed partial class FortMapViewer
         TypeDefinition definition = card.Type.Definition;
         float x = picture.Right + 16;
         float y = panel.Y + 18;
-        DrawShadowed(batch, _uiSkin.Title, card.Title, new Vector2(x, y), Color.White);
+        DrawShadowed(batch, _uiSkin.Title, UnitName(card.Type), new Vector2(x, y), Color.White);
         y += font.MeasureString("Ag").Y + 2;
         float line = small.MeasureString("Ag").Y + 1;
         string range = definition.GetInt("range") is int r and > 0 ? r.ToString(System.Globalization.CultureInfo.InvariantCulture) : "n/a";

@@ -65,16 +65,16 @@ techAllowed = "deny;all;allow;windVortex;sunArcher"
   | 함수 | 하는 일 |
   |---|---|
   | `FUN_00461cf0` (`0x461cf0`) | 사제의 Construct 메뉴 항목 "Build %s%s"("Build Level %d …")를 만든다. **허용되지 않은 타입이면 항목을 만들지 않고 돌아간다** |
-  | `FUN_004752b0` (`0x4752b0`) | 워크샵의 "Current Production"·생산 목록 메뉴. 허용된 타입만 항목으로 넣는다 |
+  | `FUN_004752b0` (`0x4752b0`) | 워크샾의 "Current Production"·생산 목록 메뉴. 허용된 타입만 항목으로 넣는다 |
   | 생산 창 항목 처리 (Combatgump, 디컴파일 44,527행 부근) | 항목의 타입이 허용이면 다음 처리(수량·시간 비교)를 하고, **허용이 아니면 그 항목 객체의 가상 함수(+0x10)를 호출한다**(생산 창에서 지우는 것으로 추정, 세부 미확인) |
-  | 덱 재구성 (Deck.cpp, `FUN_0044f8xx`, 디컴파일 55,075행~) | 덱을 비우고 내 오브젝트를 훑는다. 템플이면 **`FUN_004c2400(sunWalker)`가 허용일 때만** 골렘 항목을 넣는다 → 튜토리얼에서 골렘이 없는 이유 |
+  | 덱 재구성 (Deck.cpp, `FUN_0044f8xx`, 디컴파일 55,075행~) | 덱을 비우고 내 오브젝트를 훑는다. 신전이면 **`FUN_004c2400(sunWalker)`가 허용일 때만** 골렘 항목을 넣는다 → 튜토리얼에서 골렘이 없는 이유 |
 
 ### 3.3 회수 금지 (`denySalvage`)
 
 `DAT_00595078`을 읽는 곳은 두 군데다.
 
 1. **Salvage 메뉴 항목**(`FUN_0044ca00`, `0x44ca00`): 내 오브젝트의 우클릭 메뉴에 "Salvage gains N" / "Salvage costs N" 항목을 만든다.
-   `DAT_00595078 != 0`이면 항목은 그대로 나오되 **명령이 `"DenySalvage"`로 바뀐다**(정상은 회수 명령, 템플은 `SalvageVortex`, 워크샵은 `SalvageInf`).
+   `DAT_00595078 != 0`이면 항목은 그대로 나오되 **명령이 `"DenySalvage"`로 바뀐다**(정상은 회수 명령, 신전은 `SalvageVortex`, 워크샾은 `SalvageInf`).
 2. **Salvage 실행**(`FUN_0044c420`, `0x44c4e9`): 내 오브젝트이고 `DAT_00595078 != 0`이며 타입이 `DAT_005412c0`(= 154, **nugget**)이 아니면
    회수를 하지 않고 `FUN_004cf960("DenySalvage")`(`0x507b94`의 문자열)로 끝난다. 이 함수는 미션 스크립트의 **섹션 이름을 알리는(Tell) 함수**다
    (`FUN_00482de0`도 같은 함수를 부른다). 정상 경로는 `FUN_004437c0(오브젝트, 0x200000)`으로 회수한다.
@@ -104,17 +104,17 @@ techAllowed = "deny;all;allow;windVortex;sunArcher"
     | `DAT_005c9cd0` | `FUN_004c2560` | `FUN_004c25b0`(출생 콜백, 모든 소유자) | `FUN_004c25a0`(소멸) | 현재 개수(전체) |
 
     튜토리얼 단계 A·B·D·E·G의 조건(`FUN_004c2500`·`FUN_004c24c0`)은 **누적 수**를 본다. 단계 G의 `> 3`은 회수·파괴와 상관없이 네 번째로 놓는 순간이다.
-  * 출생 콜백(`FUN_004b0d30`)이 건설 시작 때인지 완공 때인지는 코드로 확정하지 못했다. 단계 B의 안내 제목이 "Temple Complete"이고 본문이 "템플이 완공되자 섬 가장자리 색이 바뀐 것을 보셨을 겁니다"인 점,
-    단계 C 안내가 "워크샵을 우클릭하라"인 점으로 **완공 시점**으로 본다 (클론 구현도 완공에 센다).
+  * 출생 콜백(`FUN_004b0d30`)이 건설 시작 때인지 완공 때인지는 코드로 확정하지 못했다. 단계 B의 안내 제목이 "Temple Complete"이고 본문이 "신전이 완공되자 섬 가장자리 색이 바뀐 것을 보셨을 겁니다"인 점,
+    단계 C 안내가 "워크샾을 우클릭하라"인 점으로 **완공 시점**으로 본다 (클론 구현도 완공에 센다).
 
 | 단계 | 스크립트 | 매 프레임 하는 일 | 다음 단계로 가는 조건 |
 |---|---|---|---|
-| A | `[A.]` "Buildings", "Create a Temple" | 전투 옵션을 덮어쓴다: `DAT_0052f7e4 = 0`(Generator Range = Short), `DAT_0052f7e2 = 2`(Unit Rate = Fast), `FUN_004b4860`(반지름 재계산) ([battle-options.md](battle-options.md)) | vortex(템플)를 지은 개수 > 0 |
-| **B** | `[B.]` "Temple Complete", `[B1.]` "Create a Workshop" | **`FUN_004c23e0(sunFactory, 허용)`** — 표에서 Sun Workshop을 허용으로 바꾼다 | factory(워크샵) 개수 > 0 |
-| C | `[C.]` "Production" | 선택한 오브젝트(`DAT_005caea0`)가 템플(0x200)이면 타이머(+2.0초)를 걸고, 지나면 `[NotVortex]` 보정 안내를 띄운 뒤 선택을 푼다(`FUN_004d5c90`·`FUN_004d5c60`) | 워크샵에 sunArcher를 등록(`FUN_0044f970`: 내 생산 창 목록에 타입이 있는지) |
+| A | `[A.]` "Buildings", "Create a Temple" | 전투 옵션을 덮어쓴다: `DAT_0052f7e4 = 0`(Generator Range = Short), `DAT_0052f7e2 = 2`(Unit Rate = Fast), `FUN_004b4860`(반지름 재계산) ([battle-options.md](battle-options.md)) | vortex(신전)를 지은 개수 > 0 |
+| **B** | `[B.]` "Temple Complete", `[B1.]` "Create a Workshop" | **`FUN_004c23e0(sunFactory, 허용)`** — 표에서 Sun Workshop을 허용으로 바꾼다 | factory(워크샾) 개수 > 0 |
+| C | `[C.]` "Production" | 선택한 오브젝트(`DAT_005caea0`)가 신전(0x200)이면 타이머(+2.0초)를 걸고, 지나면 `[NotVortex]` 보정 안내를 띄운 뒤 선택을 푼다(`FUN_004d5c90`·`FUN_004d5c60`) | 워크샾에 sunArcher를 등록(`FUN_0044f970`: 내 생산 창 목록에 타입이 있는지) |
 | D | `[D.]`, `[D1.]` | — | sunArcher 개수 > 0 |
 | E | `[E.]` | — | sunArcher 개수 > 1 |
-| F | `[F.]`, `[F1.]` | 타이머가 없을 때 템플을 선택하면 타이머(+4.0초)를 시작한다 | 타이머가 지남 (선택을 푼다) |
+| F | `[F.]`, `[F1.]` | 타이머가 없을 때 신전을 선택하면 타이머(+4.0초)를 시작한다 | 타이머가 지남 (선택을 푼다) |
 | G | `[G.]` | — | sunArcher 개수 > 3 ("두 개 더") |
 | **H** | `[H.]`, `[H1.]` "Salvaging" | **`DAT_00595078 = 0`** — 회수 금지를 푼다(프레임마다) | 처리 중인 명령이 회수 명령(`DAT_0054286c`)이면 타이머(+2.0초)를 걸고, 지나면 다음 단계 |
 | I | `[I.]` "Mission Accomplished!" | — | 결과 창 |
@@ -132,10 +132,10 @@ techAllowed = "deny;all;allow;windVortex;sunArcher"
 
 | 관찰(사용자, 2026-09-30) | exe 규칙 |
 |---|---|
-| 템플을 지은 **뒤** Sun Workshop을 지을 수 있었다 | 템플 개수 > 0 → 단계 A→B → `FUN_004c23e0(sunFactory, 허용)` → Construct 메뉴에 Sun Workshop 항목이 생긴다 |
+| 신전을 지은 **뒤** Sun Workshop을 지을 수 있었다 | 신전 개수 > 0 → 단계 A→B → `FUN_004c23e0(sunFactory, 허용)` → Construct 메뉴에 Sun Workshop 항목이 생긴다 |
 | 튜토리얼 마지막에 유닛 하나를 회수(판매)할 수 있었다(75 SP = 원가 300의 25%) | 단계 H가 `DAT_00595078 = 0` → 정상 회수 경로(비용 25%) |
 
-아래는 exe 규칙에서 **유도한 예측**이며 게임에서 확인하지 않았다: 템플 건설 전(단계 A)에는 Construct 메뉴에 Sun Workshop 항목이 없어야 하고,
+아래는 exe 규칙에서 **유도한 예측**이며 게임에서 확인하지 않았다: 신전 건설 전(단계 A)에는 Construct 메뉴에 Sun Workshop 항목이 없어야 하고,
 단계 H 전(D~G)에 유닛을 회수하려 하면 회수되지 않아야 한다. 확인하려면 튜토리얼 2를 다시 조작해 봐야 한다.
 
 ## 5. 클론 구현 반영

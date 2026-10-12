@@ -64,7 +64,7 @@ AVI의 고정 재생 속도나 프레임 번호 ÷ 10으로 시각을 대체하�
 | 00:23~00:34 (`g230`, `g252`, `g305`, `g339`) | Music Volume / Sound Effect Volume | 각각 Volume 1~5. 음악 선택 점 2→3, 효과음 선택 점 3→4를 확인한다. 실제 음량의 선형 배율은 측정하지 않았다. |
 | 00:40~00:45 | Campaign → Struggle For Freedom → The War Begins! | 00:42에 여섯 미션 목록, 이후 캠페인 1-1 화면. 짧은 브리핑의 생략 여부는 이 표본만으로 판단하지 않는다. |
 | 00:54.847 (순번 977), 00:55.1 (`g552`) | 사제 `(471,380)` 우클릭 | High Priest Level I, Owner: You, Alignment: None, Class: High Priest. Construct / View Netstorm Knowledge / About / Player 메뉴. |
-| 00:56~00:58 (`g560`, `g570`, `g581`) | Construct → Workshop | 제단 Level 1 비용 500. Sun Workshop 800, Wind/Rain/Thunder Workshop 각 1000. Sun Workshop 선택 뒤 붉은 배치 영역과 비용 800이 표시된다. 붉은 미리보기는 아직 건설 완료 상태가 아니다. |
+| 00:56~00:58 (`g560`, `g570`, `g581`) | Construct → Workshop | 알타 Level 1 비용 500. Sun Workshop 800, Wind/Rain/Thunder Workshop 각 1000. Sun Workshop 선택 뒤 붉은 배치 영역과 비용 800이 표시된다. 붉은 미리보기는 아직 건설 완료 상태가 아니다. |
 | 01:01~01:04 | 생산 창 골렘 집기·배치 | 01:01.104 `(41,186)` 좌클릭, 01:02.967 지도 `(494,389)` 좌클릭. SP는 2200→1800으로 바뀌고 골렘이 나타난다(400 소비). |
 | 01:05.529 (순번 1206), 01:06 (`g660`) | 생산 창 골렘 아이콘 우클릭 | Golem Level I / Owner: You / Alignment: Sun / Class: Ground Transport / Cost: 400 / About. 지도상의 완성 골렘 메뉴와 구분한다. |
 | 01:08.598 (순번 1275), 01:10 (`g698`) | 생산 창 다리 우클릭 → About | Bridge 설명창. 그림·제목·본문·우측 스크롤·Back / OK가 보인다. 다리를 집은 상태의 우클릭 회전과 구분한다. |
@@ -77,11 +77,11 @@ AVI의 고정 재생 속도나 프레임 번호 ÷ 10으로 시각을 대체하�
 | 01:33.679 (순번 1685), 01:34 (`g940`) | Leave Mission | Main Menu / Replay Mission / Continue Mission 확인창. 01:35.071 `(424,445)` Main Menu 클릭 뒤 기본 메뉴 복귀. 미션을 실패·성공으로 완주한 장면이 아니다. |
 | 01:40.812~01:45 (`g1015`, `g1050`) | Help → General Help - F1 클릭 | 내장 NetStorm Instructions. F1을 누른 것이 아니라 메뉴 항목을 클릭한 기록이다. Technical Help / Version은 선택하지 않았다. |
 | 01:49~02:23 (`g1190`, `g1280`, `g1330`, `g1420`) | User Interface 도움말 | 조작키 목록을 위아래로 스크롤한다. 오른쪽 스크롤 영역의 누름→이동→해제와 본문 위치 변화가 일치한다. 휠 이벤트는 없다. |
-| 02:24~03:07 | World of Nimbus → Serenisphere, Three Furies | 링크 탐색·본문 스크롤. 원소 신전/작업장/발전기 그림을 포함한 긴 문서가 같은 창에서 표시된다. |
+| 02:24~03:07 | World of Nimbus → Serenisphere, Three Furies | 링크 탐색·본문 스크롤. 원소 신전/워크샾/제네레이터 그림을 포함한 긴 문서가 같은 창에서 표시된다. |
 | 03:11~03:27 (`g1940`, `g1990`) | High Priests | 고정 그림·능력치와 별도 본문 스크롤. F5 이동 / P 또는 R 선택 설명도 확인된다. |
 | 03:30~03:52 (`g2120`, `g2210`, `g2280`) | Unit Overview | Sun/Wind/Rain/Thunder 분류, 레벨·역할·파란 유닛 링크. 목록 읽기이며 실제 미션의 생산 허용 목록이 아니다. |
 | 03:55~03:58 (`g2360`) | The Priest's Powers of Construction | 사제 건설·이동 가능 위치·무력화 제한·수송·다리 위험 회피 설명. |
-| 04:00~04:11 (`g2405`, `g2450`) | How to Capture and Sacrifice | 포획·제단 운반·자기 사제 이동·희생 순서를 읽는다. 실제 포획·의식 장면으로 간주하지 않는다. |
+| 04:00~04:11 (`g2405`, `g2450`) | How to Capture and Sacrifice | 포획·알타 운반·자기 사제 이동·희생 순서를 읽는다. 실제 포획·의식 장면으로 간주하지 않는다. |
 | 04:10.759~04:13.180 | Back → Instructions → OK | Back은 목차로 돌아가고 OK는 도움말을 닫아 메인 메뉴로 복귀한다. |
 
 ## 도움말 UI의 형태

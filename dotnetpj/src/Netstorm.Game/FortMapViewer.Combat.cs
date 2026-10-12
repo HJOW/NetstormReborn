@@ -161,7 +161,7 @@ internal sealed partial class FortMapViewer
             }
             // 원본 플레이 화면은 선택한 오브젝트 옆에 이름·체력 글자를 쓰지 않는다 (맵 시험 화면에서만 표시).
             if (entity.Id == selected && !_playUi)
-                batch.DrawString(font, $"{entity.DisplayName} {entity.HitPoints:0}/{entity.MaxHitPoints:0}",
+                batch.DrawString(font, $"{UnitName(entity.Type)} {entity.HitPoints:0}/{entity.MaxHitPoints:0}",
                     anchor + new Vector2(0, 10), Color.White);
             if (entity.IsSuspended)
                 batch.DrawString(font, "허공에서 기절", anchor + new Vector2(-38, -43), Color.LightSkyBlue);

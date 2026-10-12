@@ -14,7 +14,7 @@ public enum GameCursor
     Arrow = 1,
     /// <summary>건물을 든 상태의 × (번호 2, 그룹 110).</summary>
     Place = 2,
-    /// <summary>선택한 사제의 내 완공 템플: 안쪽을 향한 화살표 네 개 (번호 3, 그룹 111).</summary>
+    /// <summary>선택한 사제의 내 완공 신전: 안쪽을 향한 화살표 네 개 (번호 3, 그룹 111).</summary>
     Temple = 3,
     /// <summary>좌우 양방향 화살표 (번호 4, 그룹 108). 쓰임 미확인.</summary>
     ArrowsHorizontal = 4,

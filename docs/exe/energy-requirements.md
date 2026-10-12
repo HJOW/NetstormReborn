@@ -12,7 +12,7 @@
 | 2 | `ss` | `rs` | `ws` | `ts` |
 | 3 | `sss` | `rrs` | `wws` | `tts` |
 
-`rainBattery`·`windBattery`·`thunderBattery`는 `level = 1`이어도 모두 **`mana = "s"`**를 명시한다. `outpost`에도 같은 속성이 있다. 로더가 먼저 이 값을 복사하므로 `FUN_0049b0d0`의 기본값 생성은 건너뛴다. 따라서 발전기는 자기 원소가 아닌 **아무 원소 공급원 한 개**를 요구한다.
+`rainBattery`·`windBattery`·`thunderBattery`는 `level = 1`이어도 모두 **`mana = "s"`**를 명시한다. `outpost`에도 같은 속성이 있다. 로더가 먼저 이 값을 복사하므로 `FUN_0049b0d0`의 기본값 생성은 건너뛴다. 따라서 제네레이터는 자기 원소가 아닌 **아무 원소 공급원 한 개**를 요구한다.
 
 패치판의 level 1 원소 유닛 중 `bulf`와 `thunderFence`는 `t`, `rainwalker`는 `r`이 된다. 원판 매뉴얼의 Bulf 설명(Thunder 1)과 공식 PDF 매뉴얼의 유닛별 "Energy to Build" 규칙이 이 생성 규칙과 일치한다([PDF 대조표](../sources/pdf-manual.md#유닛별-건설-에너지-energy-to-build)). **사용자도 Bulf는 Thunder 공급원이 반드시 필요하다고 확인했다(2026-09-29).** 이전 기록의 일반식 `자기 원소 × (level - 1) + Sun 1`은 폐기했다. 구현 기준은 보유 패치판 exe와 `.type`의 요구 문자열이다.
 

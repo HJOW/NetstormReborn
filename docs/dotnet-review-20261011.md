@@ -16,7 +16,7 @@
 | 대소문자만 다른 진행 키가 함께 있는 유효 JSON을 읽으면 시작 예외 발생 | `Load_ScriptKeysDifferingOnlyInCase_LastValueWins`가 `Dictionary` 생성 중 `ArgumentException`으로 실패 | `Normalize`에서 대소문자를 무시하고 입력의 마지막 값을 채택한다. 다른 진행값·해상도와 저장 후 재읽기를 검사한다. |
 | 공통 메뉴 스모크가 활성화된 Early Missions를 비활성으로 가정 | 첫 GUI 실행에서 `예상=campaigns, 실제=missions` | 무동작 검사는 구분선을 클릭하고, 미지원 미션 비활성 검사는 장 목록에서 수행한다. |
 | 한국어 목록에서 1-1 좌표로 1-2를 선택함 | `04-briefing.png`가 “휘리기그의 지배자”이고 뒤의 1-1 시작 좌표는 무효 | 한국어 행 중심을 1-1 `+38`, 1-2 `+56`, 비활성 1-3 `+74`로 갱신한다. `mission=…`도 단언한다. `recordplay_details`의 같은 옛 좌표도 수정했다. |
-| Workshop 검사 준비의 (98,98)이 섬 경계를 벗어남 | `ConstructionOrdered` 대신 `CommandRejected`가 기록되고 메뉴 검사 실패 | 7×8 발자국이 섬 안에 있는 (109,106)을 사용하고 완공 상태를 먼저 검사한다. 오른쪽 가장자리의 하위 창이 왼쪽에 열리는 실제 좌표를 적용했다. 발전기(`rainBattery`)와 캐논을 각각 등록하여 생산 커서도 검사한다. |
+| Workshop 검사 준비의 (98,98)이 섬 경계를 벗어남 | `ConstructionOrdered` 대신 `CommandRejected`가 기록되고 메뉴 검사 실패 | 7×8 발자국이 섬 안에 있는 (109,106)을 사용하고 완공 상태를 먼저 검사한다. 오른쪽 가장자리의 하위 창이 왼쪽에 열리는 실제 좌표를 적용했다. 제네레이터(`rainBattery`)와 캐논을 각각 등록하여 생산 커서도 검사한다. |
 | 전체화면 검사가 메뉴 상태·최종 설정만으로는 전환 성공을 보장하지 않음 | 기존 스크립트에는 실제 전체화면 상태 단언이 없음 | 자동 검사 세부값에 실제 그래픽 장치의 `fullscreen`·백버퍼 `display`·미션 이름을 추가했다. 일반 UI에는 표시하지 않는다. |
 
 설정 예외 재현 로그는 `extracted/dotnet-review-20261011-settings-before.log`, 최초 GUI 실패는 `…-ui.log`, 잘못 열린 브리핑은 `extracted/screens/dotnet-review-20261011/ui-final/04-briefing.png`, 기존 Workshop 실패는 `…-workshop-before.log`에 남겼다.

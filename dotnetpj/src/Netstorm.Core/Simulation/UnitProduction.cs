@@ -5,7 +5,7 @@ namespace Netstorm.Core.Simulation;
 /// <summary>생산 기점의 스톰 파워와 공급원의 원소 에너지를 기다리는 유닛 생산 상태.</summary>
 public sealed class UnitProduction(int sourceId, IReadOnlyList<ProductionDelivery> deliveries)
 {
-    /// <summary>덱 등록에 사용한 워크샵 번호. 골렘은 템플 번호다.</summary>
+    /// <summary>덱 등록에 사용한 워크샾 번호. 골렘은 신전 번호다.</summary>
     public int SourceId { get; } = sourceId;
     /// <summary>스톰 파워 한 줄기와 필요 원소 글자마다 하나씩의 운송.</summary>
     public IReadOnlyList<ProductionDelivery> Deliveries { get; } = deliveries;
@@ -16,7 +16,7 @@ public sealed class UnitProduction(int sourceId, IReadOnlyList<ProductionDeliver
 /// <summary>점유·충돌 없이 이동하는 생산 자원 하나. 출발 뒤에는 공급원 소멸과 무관하게 계속 이동한다.</summary>
 public sealed class ProductionDelivery
 {
-    /// <summary>출발한 워크샵·템플·제네레이터 번호.</summary>
+    /// <summary>출발한 워크샾·신전·제네레이터 번호.</summary>
     public int SourceId { get; internal init; }
     /// <summary>실제 공급 원소. null은 스톰 파워 줄기다('s' 요구도 실제 공급원 원소로 표시).</summary>
     public Element? Element { get; internal init; }

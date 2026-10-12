@@ -170,7 +170,7 @@ public sealed partial class BattleSession
             _players.Add(number, CreatePlayer(number, startStormPower));
         }
 
-        // 맵에 저장된 오브젝트를 엔티티로 만들고, 템플·워크샵은 소유자의 생산 창에 등록한다 (저장 다리는 다리 격자가 다룬다)
+        // 맵에 저장된 오브젝트를 엔티티로 만들고, 신전·워크샾은 소유자의 생산 창에 등록한다 (저장 다리는 다리 격자가 다룬다)
         foreach ((int id, FortMapObject item) in map.InitialObjects)
         {
             ObjectKind kind = ObjectKinds.Of(item.Object.Type);
@@ -459,8 +459,8 @@ public sealed partial class BattleSession
     }
 
     /// <summary>
-    /// 완성된 건물의 규칙 효과를 적용한다. 템플: 섬 소유·에너지 공급·다리/골렘 공급 시작.
-    /// 워크샵: 지식을 등록할 수 있게 됨 (재건한 워크샵은 등록이 빈 상태). 그 밖의 오브젝트는 효과 없음.
+    /// 완성된 건물의 규칙 효과를 적용한다. 신전: 섬 소유·에너지 공급·다리/골렘 공급 시작.
+    /// 워크샾: 지식을 등록할 수 있게 됨 (재건한 워크샾은 등록이 빈 상태). 그 밖의 오브젝트는 효과 없음.
     /// 맵에서 처음부터 있던 건물은 소유권·공급원을 BattleMap 이 이미 등록했으므로 덱 등록만 중복 없이 한다.
     /// </summary>
     private void RegisterCompletedBuilding(PlayerState player, GameEntity entity)
@@ -471,7 +471,7 @@ public sealed partial class BattleSession
             player.Deck.SetTemple(entity.Id);
             if (entity.Source == null)
             {
-                // 게임 중 새로 지은 템플만 여기서 섬 소유와 공급원을 등록한다
+                // 게임 중 새로 지은 신전만 여기서 섬 소유와 공급원을 등록한다
                 if (entity.Territory is int territory)
                 {
                     Map.Ownership.SetTemple(territory, entity.Owner);
@@ -484,8 +484,8 @@ public sealed partial class BattleSession
         }
         else if (entity.Kind == ObjectKind.Workshop)
         {
-            // 맵에 저장된 워크샵은 저장 상태(0·1·2)가 곧 레벨 I·II·III 이다
-            // (TEST01 녹화: factory=2 인 Sun 워크샵의 풍선 도움말이 "Sun Workshop Level III").
+            // 맵에 저장된 워크샾은 저장 상태(0·1·2)가 곧 레벨 I·II·III 이다
+            // (TEST01 녹화: factory=2 인 Sun 워크샾의 풍선 도움말이 "Sun Workshop Level III").
             player.Deck.AddWorkshop(entity.Id, element ?? Element.Sun, (entity.Source?.Object.FactoryState ?? 0) + 1);
         }
     }
@@ -499,7 +499,7 @@ public sealed partial class BattleSession
     /// <param name="section">섹션 이름 ("B." 또는 "NotVortex")</param>
     internal void EmitTutorialTell(int player, string section) => Emit(SessionEventKind.TutorialTell, player, 0, section);
 
-    /// <summary>플레이어가 지금 템플을 선택하고 있는지 (원본은 선택한 오브젝트 타입의 플래그2 에 vortex 비트가 있는지 본다)</summary>
+    /// <summary>플레이어가 지금 신전을 선택하고 있는지 (원본은 선택한 오브젝트 타입의 플래그2 에 vortex 비트가 있는지 본다)</summary>
     /// <param name="player">플레이어</param>
     internal bool IsVortexSelected(PlayerState player) =>
         Entity(player.SelectedEntityId) is { } selected && (selected.Type.Flags2 & TypeFlagBits.Flag2Words["vortex"]) != 0;
@@ -556,9 +556,9 @@ public sealed partial class BattleSession
             hash.Add(player.HeldPiece?.CuredAtDeciseconds ?? -1);
             hash.Add(player.SelectedEntityId);
             hash.Add(player.Deck.TempleId ?? 0);
-            // 지식·등록·워크샵 단계도 다음 생산 명령의 결과를 바꾼다.
+            // 지식·등록·워크샾 단계도 다음 생산 명령의 결과를 바꾼다.
             foreach (string knowledge in player.Deck.Knowledge.Order(StringComparer.OrdinalIgnoreCase)) hash.Add(knowledge.ToLowerInvariant());
-            // 워크샵 번호와 등록 순서대로 생산 상태를 검사합에 넣는다.
+            // 워크샾 번호와 등록 순서대로 생산 상태를 검사합에 넣는다.
             foreach (var workshop in player.Deck.WorkshopSnapshot())
             {
                 hash.Add(workshop.Id); hash.Add((int)workshop.Element); hash.Add(workshop.Level);

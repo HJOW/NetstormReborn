@@ -4,7 +4,7 @@ AI가 게임 또는 클론/도구의 별도 창을 실행할 때는 [실행 전 
 
 원본 10.78의 키 배정은 [사용자 녹화에서 읽은 조작키 표](gameplay/input-controls.md)에 별도로 정리했다(2026-10-02). 아래 클론의 F4 사제 이동·F7 화면 끝 스크롤 설정·Space 일시정지 등은 원본 키 배정과 다르며 이번 분석에서 변경하지 않았다.
 
-2026-10-01: 기본 실행은 **메인 메뉴와 캠페인 1-1 플레이**다. 1-1에는 마우스 생산·등록·워크샵 업그레이드·채집·이동·포획 버튼과 미니맵을 연결했고 개발용 규칙 변경은 차단했다. 아래의 P/[ ]/K 등은 `--map` 또는 다른 개발용 미션 조작 설명이다. [1-1 사용법·범위·추정·검증](gameplay/campaign-one.md). 2026-10-01: 1-2 Master of Whirligigs도 공개 — [1-2 문서](gameplay/campaign-two.md).
+2026-10-01: 기본 실행은 **메인 메뉴와 캠페인 1-1 플레이**다. 1-1에는 마우스 생산·등록·워크샾 업그레이드·채집·이동·포획 버튼과 미니맵을 연결했고 개발용 규칙 변경은 차단했다. 아래의 P/[ ]/K 등은 `--map` 또는 다른 개발용 미션 조작 설명이다. [1-1 사용법·범위·추정·검증](gameplay/campaign-one.md). 2026-10-01: 1-2 Master of Whirligigs도 공개 — [1-2 문서](gameplay/campaign-two.md).
 
 2026-10-01 **포대 전투** 추가: 미션에서는 브리핑을 닫은 뒤 자동 공격한다. 맵만 열었을 때는 **F3**으로
 전투와 세션 시간 진행을 켜고 끈다. 손상 체력 막대·선택(T) 체력 수치·탄·Vander Tower 번개·사제 기절 고리·포획/구속 상태·알타의 룬 진행을 표시한다.
@@ -32,7 +32,7 @@ dotnet run --project dotnetpj/src/Netstorm.Game -c Release -- --test-battle TEST
 ```
 
 * `--test-battle <맵>` 은 캠페인에 공개되지 않은 맵(`d/<맵>.fort` + `.english`)도 생산 창·미니맵이 있는 플레이 화면으로 연다. 원본처럼 AI 색 덮어쓰기(`aiNColor`)는 적용하지 않는다.
-* 플레이 화면에 반영한 원본 요소: 소유자 색 테두리(받침 포함), 화면을 따라 스크롤하는 미니맵(1px = 2칸, 누르기·끌기), 그림자, 가이저 증기·워크샵 레벨 그림·신전 회오리·풍선 흔들림, `hotFootRatio` 기준점, 원본 방식 배치 미리보기(흰 발자국 사각형·원소 아이콘·노란 비용·안내 글·고정 캐논 사거리 반짝임), 선택 괄호와 체력 막대, 브리핑의 글 사이 그림.
+* 플레이 화면에 반영한 원본 요소: 소유자 색 테두리(받침 포함), 화면을 따라 스크롤하는 미니맵(1px = 2칸, 누르기·끌기), 그림자, 가이저 증기·워크샾 레벨 그림·신전 회오리·풍선 흔들림, `hotFootRatio` 기준점, 원본 방식 배치 미리보기(흰 발자국 사각형·원소 아이콘·노란 비용·안내 글·고정 캐논 사거리 반짝임), 선택 괄호와 체력 막대, 브리핑의 글 사이 그림.
 * **커서와 칸**: 커서가 가리키는 칸은 화면에 보이는 그 칸이다(이전에는 한 칸 왼쪽·위였다). 들고 있는 유닛의 발자국은 원본처럼 오른쪽 아래 칸이 (커서 열, 커서 행 + 1 + 타입의 `height`) 에 온다 — 골렘은 커서 두 행 아래가 발밑이다.
 
 후속으로 [버튼 효과음·선택 사거리·Crossbow 방향](videos/record-play-details-20261003.md)을 연결했다. 공격 건물 선택과 배치에 같은 사거리 반짝임을 쓰고, Crossbow는 배치 전 우클릭으로 그림·60도 V 범위를 회전한다. 메인 메뉴·브리핑·도움말의 활성 일반 버튼은 원본 `button.wav`를 재생한다.
@@ -74,8 +74,8 @@ dotnet run --project dotnetpj/src/Netstorm.Game -c Release -- --test-battle TEST
 * **튜토리얼 1·2는 세션이 단계 처리를 한다**(`TutorialStages`, [core-rules.md](core-rules.md)). 튜토리얼 1은 F4/다리 배치 → 다리 8·19칸 → 가이저 연결 → 200·600 SP로 G까지 진행한다. 저장 맵에 없는 연습 가이저와 받침을 시작 시 생성한다(위치는 근사).
   가이저 위에 마우스를 두고 **H**를 누르면 사제가 반복해서 결정을 수확·전달한다. 전달당 200 SP다. 다리는 B 모드에서 놓는다. 다리 8·19칸 기준은 현재 살아 있는 내 다리 칸 수로 근사한다.
 * 튜토리얼 2에서 미션 머리의 `techAllowed`·`denySalvage`는 시작 값이고 원본은 튜토리얼이 진행 중에 바꾼다([mission-header-flags.md](exe/mission-header-flags.md)).
-  템플을 지으면 단계 B에서 Sun Workshop이 허용되고, 유닛 네 개를 놓으면 단계 H에서 회수 금지가 풀린다. 오른쪽 위 상자에 현재 단계와 선택한 오브젝트가 나오고, 단계가 넘어갈 때 해당 미션 스크립트의 안내 창이 열린다.
-  단계 C·F는 **선택한 템플**을 본다: `T` 키로 커서 칸의 오브젝트를 선택/해제한다(`--script`는 `select x,y`·`select none`).
+  신전을 지으면 단계 B에서 Sun Workshop이 허용되고, 유닛 네 개를 놓으면 단계 H에서 회수 금지가 풀린다. 오른쪽 위 상자에 현재 단계와 선택한 오브젝트가 나오고, 단계가 넘어갈 때 해당 미션 스크립트의 안내 창이 열린다.
+  단계 C·F는 **선택한 신전**을 본다: `T` 키로 커서 칸의 오브젝트를 선택/해제한다(`--script`는 `select x,y`·`select none`).
   튜토리얼 3~6의 단계 처리는 아직 없다.
 
 ### 튜토리얼 안내 창
@@ -116,15 +116,15 @@ dotnet run --project dotnetpj/src/Netstorm.Game -c Release -- --test-battle TEST
 
 | 명령 | 동작 |
 |---|---|
-| `construct 타입 x,y` | 사제가 건물(템플·워크샵·알타·아웃포스트)을 짓기 시작 |
+| `construct 타입 x,y` | 사제가 건물(신전·워크샾·알타·아웃포스트)을 짓기 시작 |
 | `harvest x,y` | 그 칸의 가이저에 사제를 보내 반복 수확 |
 | `home` | F4 화면 복귀와 같은 튜토리얼 1 신호 |
 | `combat 0 또는 1` | 자동 포대 전투 끄기/켜기. 시간 정지는 Space |
 | `place 타입 x,y` | 생산 창의 유닛을 배치 |
-| `register 타입` | 그 유닛을 받을 수 있는 첫 워크샵에 지식으로 등록 |
+| `register 타입` | 그 유닛을 받을 수 있는 첫 워크샾에 지식으로 등록 |
 | `salvage x,y` | 그 칸의 내 오브젝트를 회수 |
 | `wait 초` | 게임 시간을 진행 |
-| `select x,y` / `select none` | 그 칸의 오브젝트를 선택 / 선택 해제 (튜토리얼 2 단계 C·F가 선택한 템플을 본다) |
+| `select x,y` / `select none` | 그 칸의 오브젝트를 선택 / 선택 해제 (튜토리얼 2 단계 C·F가 선택한 신전을 본다) |
 | `allow 타입` / `deny 타입` | 기술 허용 표를 바꾼다 (단계 처리가 없는 미션에서 손으로 재현) |
 | `denysalvage 0\|1` | 회수 금지를 바꾼다 (같은 용도) |
 | `rules 0\|1` | 생산 규칙 끄기/켜기 |
@@ -133,7 +133,7 @@ dotnet run --project dotnetpj/src/Netstorm.Game -c Release -- --test-battle TEST
 | `altar ax,ay` | 내 사제를 알타 옆으로 이동 |
 | `drop tx,ty x,y` | 수송 유닛이 지정한 빈 칸에 운반 사제를 내려놓음 |
 
-튜토리얼 2 흐름 확인 (2026-09-30): 관찰한 Storm Power 10,000 → 5,000(템플) → 4,200(워크샵) → 유닛 300씩 → 회수 75와 같은 값이 나온다.
+튜토리얼 2 흐름 확인 (2026-09-30): 관찰한 Storm Power 10,000 → 5,000(신전) → 4,200(워크샾) → 유닛 300씩 → 회수 75와 같은 값이 나온다.
 
 ```powershell
 dotnet run --project dotnetpj/src/Netstorm.Game -- --mission tutorial2 --window 1024x768 --script "construct windVortex 40,32; wait 17; construct sunFactory 52,32; wait 11; register sunArcher; place sunArcher 43,32; wait 2; place sunArcher 38,35; wait 1; denysalvage 0; salvage 38,35" --screenshot extracted/screens/session-tutorial2.png --screenshot-frames 45
@@ -142,25 +142,25 @@ dotnet run --project dotnetpj/src/Netstorm.Game -- --mission tutorial2 --window 
 콘솔에는 `Wind Temple 완공`(17초), `Sun Workshop 완공`(28초), 등록, 배치(−300)×2, 회수(+75)가 차례로 나오고 화면의 Storm Power는 3,675다.
 (단계 처리가 생긴 뒤로 `allow sunFactory`는 필요 없다. 단계 H는 유닛 네 개를 놓아야 오므로 이 짧은 스크립트는 `denysalvage 0`으로 회수 금지를 손으로 풀었다.)
 
-단계 처리로 A→G까지 걷는 확인(2026-09-30, Linux): 템플 완공 → `TutorialTell B.` → 워크샵 완공 → `C.` → 템플을 2초 선택 → `NotVortex` → 등록 → `D.` → 첫 배치 `E.` → 둘째 `F.` → 템플 4초 선택 → `G.`.
+단계 처리로 A→G까지 걷는 확인(2026-09-30, Linux): 신전 완공 → `TutorialTell B.` → 워크샾 완공 → `C.` → 신전을 2초 선택 → `NotVortex` → 등록 → `D.` → 첫 배치 `E.` → 둘째 `F.` → 신전 4초 선택 → `G.`.
 단계 H 전에는 회수가 `회수 금지 상태`로 거부된다. 스크립트: `construct windVortex 40,32; wait 17; construct sunFactory 52,32; wait 11; select 40,32; wait 2.5; register sunArcher; place sunArcher 43,32; wait 2; place sunArcher 38,35; wait 2; select 40,32; wait 4.5; place sunArcher 41,36; wait 1; salvage 41,36`.
-좌표는 첫 번째로 유효한 칸이라 섬 가장자리에 붙는다. 건설 시간은 사제가 도착한 뒤 10초(워크샵 관찰값)다([ConstructionTimes](../dotnetpj/src/Netstorm.Core/Simulation/ConstructionTimes.cs)). 생산 규칙을 끈 배치 시험 모드는 사제 없이 곧바로 짓고, 규칙이 켜진 미션은 사제가 걸어가 도착해야 건설이 시작된다([건설 흐름](gameplay/priest-construction-flow.md)).
+좌표는 첫 번째로 유효한 칸이라 섬 가장자리에 붙는다. 건설 시간은 사제가 도착한 뒤 10초(워크샾 관찰값)다([ConstructionTimes](../dotnetpj/src/Netstorm.Core/Simulation/ConstructionTimes.cs)). 생산 규칙을 끈 배치 시험 모드는 사제 없이 곧바로 짓고, 규칙이 켜진 미션은 사제가 걸어가 도착해야 건설이 시작된다([건설 흐름](gameplay/priest-construction-flow.md)).
 
 ## 배치 시험 모드
 
-**P** 로 켜고 끈다. 플레이어 1 로 워크샵 생산 유닛을 놓고 사제가 짓는 건물을 지어 보며 게임 규칙 코어([core-rules.md](core-rules.md))의 판정을 확인한다.
+**P** 로 켜고 끈다. 플레이어 1 로 워크샾 생산 유닛을 놓고 사제가 짓는 건물을 지어 보며 게임 규칙 코어([core-rules.md](core-rules.md))의 판정을 확인한다.
 
 | 입력 | 동작 |
 |---|---|
-| `[` / `]` | 타입 선택 (유닛 27종 → 건물: 템플·워크샵·알타·아웃포스트, 원소·레벨 순) |
+| `[` / `]` | 타입 선택 (유닛 27종 → 건물: 신전·워크샾·알타·아웃포스트, 원소·레벨 순) |
 | 커서 | 커서 칸을 기준점(발자국 오른쪽 아래 칸)으로 판정 |
-| 좌클릭 | 판정이 통과하면 명령을 넣는다 — 유닛은 배치(자리 점유, Storm Power 차감, Generator 는 공급원), 건물은 건설 명령(비용 차감·공사장, 사제 도착 후 건설 시간 뒤 완성: 템플이면 섬 소유·다리 공급, 워크샵이면 등록 가능) |
-| `F` | 고른 유닛을 받을 수 있는 첫 워크샵에 지식으로 등록 ("Put Knowledge into Production") |
+| 좌클릭 | 판정이 통과하면 명령을 넣는다 — 유닛은 배치(자리 점유, Storm Power 차감, Generator 는 공급원), 건물은 건설 명령(비용 차감·공사장, 사제 도착 후 건설 시간 뒤 완성: 신전이면 섬 소유·다리 공급, 워크샾이면 등록 가능) |
+| `F` | 고른 유닛을 받을 수 있는 첫 워크샾에 지식으로 등록 ("Put Knowledge into Production") |
 | `Delete` | 커서 칸의 내 오브젝트 회수 (비용의 25%) |
 | `C` | 빈 섬이 내 섬과 다리로 연결되었다고 강제로 가정 (다리 연결 판정을 건너뛰고 싶을 때) |
 
 * 판정 순서: (미션이면 기술 허용 표·덱 등록·재충전) → 섬 위치(내 섬 / 다리로 연결된 빈 섬 / 내 다리 끝, 남의 섬 불가) → 빈 자리 → Storm Power → 에너지.
-* 아군 공급원(템플·Generator)의 공급 반지름을 원소 색 점선 원으로, 요구 에너지에 배정된 공급원을 선으로 보여 준다.
+* 아군 공급원(신전·Generator)의 공급 반지름을 원소 색 점선 원으로, 요구 에너지에 배정된 공급원을 선으로 보여 준다.
 * 아래에 선택한 타입·판정 결과·**덱 상태**(다리 칸, 골렘, 등록한 유닛과 재충전 남은 시간)·알림·조작 키가 5줄로 나온다. 건설 중인 건물은 반투명 그림과 진행 막대로 보인다.
 * **빈 섬 연결 판정(2026-09-30)**: 세션이 다리 격자에서 계산한다. 내 다리 연결망 하나가 내 섬과 그 빈 섬에 함께 닿으면 연결된 것으로 본다(근사, [BridgeReach](../dotnetpj/src/Netstorm.Core/Bridges/BridgeReach.cs)).
   다리 끝은 "발자국 둘레에 플레이어 다리 칸이 있는 섬 밖 위치"로 근사한다.
@@ -179,7 +179,7 @@ dotnet run --project dotnetpj/src/Netstorm.Game -- --map dissolvedalliance --pla
 **B** 로 켜고 끈다(배치 시험 P 와 동시에 켜지지 않는다). 게임 세션이 원본 규칙대로 플레이어 1 의 다리 칸(`BridgeTray`)을 채운다.
 집기·되돌리기·놓기는 모두 세션 명령이고(`PickBridgePieceCommand` 등), 조각의 회전은 화면이 관리해 놓을 때 값으로 보낸다.
 세션은 모든 플레이어의 다리 칸을 같은 전역 난수로 채우므로(원본도 난수 하나를 공유) 다른 플레이어가 있는 맵에서는 플레이어 1 의 조각 순서가 이전 뷰어와 다르다.
-규칙은 템플이 있을 때만 1초마다, 칸 수는 전투 옵션 Bridge Slots, 5번째 추첨마다 한 칸 조각이다([bridge-pieces.md](exe/bridge-pieces.md)).
+규칙은 신전이 있을 때만 1초마다, 칸 수는 전투 옵션 Bridge Slots, 5번째 추첨마다 한 칸 조각이다([bridge-pieces.md](exe/bridge-pieces.md)).
 왼쪽 패널에 칸이 2열로 표시되고, 조각은 원본 `bridge.type` 프레임으로 그린다.
 
 | 입력 | 동작 |
@@ -255,9 +255,9 @@ AGENTS.md는 **"새 클론 게임도 기존 게임 수준의 프레임으로 먼
 `--max-fps 75`(화면 루프 상한, 0 = 제한 없음), `--vsync`(수직 동기 켜기).
 성능 진단(2026-10-03): `--perf`는 1초마다 프레임 수·갱신/그리기 평균 시간과 구간별 시간(지면 `terrain`·오브젝트 `objects`·세계 `world`·UI `ui`·그리기 호출 제출 `batchEnd`)을 콘솔에 쓰고 화면 오른쪽 아래에 FPS를 띄운다. 수직 동기는 기본으로 꺼져 있다. 가변 루프에서는 `--vsync`의 표시 대기도 다음 실제 프레임 간격에 포함하며 갱신만 여러 번 따라잡지 않는다. `NETSTORM_NOVSYNC=1`은 수직 동기를 켠 설정에서도 끈다. UI 자동 검사에는 `assert-detail 값`(선택·이동 상태), `trace-detail`(실제 숫자 상태 기록), `stall 밀리초`(1~5000ms의 명시적인 지연 삽입)가 있다. 일반 실행에는 검사 지연을 넣지 않는다.
 
-TEST01 후속 검증: `powershell -NoProfile -ExecutionPolicy Bypass -File tools/clone_test01_smoke.ps1`은 4:3 두 크기·16:9·16:10에서 영어/한국어를 번갈아 검사한다. 선택·워크샵 레벨·미니맵 클릭/끌기·Shift+숫자 저장/숫자 복귀·배치·아이스/썬더 캐논의 배치 전 우클릭 회전을 확인하며 설정은 별도 폴더에 둔다. UI 명령 `move-center dx,dy`는 논리 화면 중심 기준으로 커서를 옮기고 `assert-detail-not 값`은 상태에 해당 문자열이 없음을 검사한다. 추가 상태는 `camera=x,y`, `workshops=타입:레벨,...`, `placement=allowed|실패명|none`, `cursor=타입|none`이다. [결과와 시각 차이](videos/test01-verification-20261003.md).
+TEST01 후속 검증: `powershell -NoProfile -ExecutionPolicy Bypass -File tools/clone_test01_smoke.ps1`은 4:3 두 크기·16:9·16:10에서 영어/한국어를 번갈아 검사한다. 선택·워크샾 레벨·미니맵 클릭/끌기·Shift+숫자 저장/숫자 복귀·배치·아이스/썬더 캐논의 배치 전 우클릭 회전을 확인하며 설정은 별도 폴더에 둔다. UI 명령 `move-center dx,dy`는 논리 화면 중심 기준으로 커서를 옮기고 `assert-detail-not 값`은 상태에 해당 문자열이 없음을 검사한다. 추가 상태는 `camera=x,y`, `workshops=타입:레벨,...`, `placement=allowed|실패명|none`, `cursor=타입|none`이다. [결과와 시각 차이](videos/test01-verification-20261003.md).
 
-생산 흐름 검사(2026-10-04): `tools/clone_production_smoke.ps1`은 골렘의 템플 기점과 캐논의 등록 워크샵 기점을 확인하고 운송·실체화·완료 PNG를 남긴다. 새 UI 명령 `wait-detail 값`은 상세 상태에 해당 문자열이 나타날 때까지 최대 30초(1800 × 1/60초) 기다린다(시간 초과는 검사 실패). 예: `wait-detail sunwalker:materializing`, `wait-detail productioncount=0`. 고정 프레임 수에 기대지 않고 실제 생산 단계를 검사하며 기존 Release 출력·격리 설정만 사용해 자산을 복사하지 않는다. [생산 계약·정책](gameplay/unit-production-flow.md).
+생산 흐름 검사(2026-10-04): `tools/clone_production_smoke.ps1`은 골렘의 신전 기점과 캐논의 등록 워크샾 기점을 확인하고 운송·실체화·완료 PNG를 남긴다. 새 UI 명령 `wait-detail 값`은 상세 상태에 해당 문자열이 나타날 때까지 최대 30초(1800 × 1/60초) 기다린다(시간 초과는 검사 실패). 예: `wait-detail sunwalker:materializing`, `wait-detail productioncount=0`. 고정 프레임 수에 기대지 않고 실제 생산 단계를 검사하며 기존 Release 출력·격리 설정만 사용해 자산을 복사하지 않는다. [생산 계약·정책](gameplay/unit-production-flow.md).
 시작 팁(2026-10-02): 메인 메뉴로 시작하면 Options "Tell Tips at Startup"이 켜져 있을 때 원본 "Did You Know?" 창을 연다. `--no-tips`는 이번 실행에서만 끄고, `--ui-script-file` 자동 검사는 `--tips`를 줄 때만 연다.
 
 **소리(2026-10-01)**: 원본 `sound/*.wav`·`music/*.mus`를 그대로 재생한다. 미션에서는 원소 곡 4개를 원본 순서(wind → rain → thunder → sun, 첫 곡 난수)로 돌리고 내 희생 의식 동안 `sacrifice.mus`를 요청한다. 메뉴는 `ser22.mus`다. 효과음은 다리 금·붕괴·놓기·회전, 건설 완료, 지식 창, 포획과 의식에 연결했다. 메인 메뉴 옵션의 효과음·음악 켜기/끄기·볼륨(1~5, 기본 3·2)을 현재 재생에도 즉시 적용한다. 소리 장치가 없으면 무음으로 계속 실행한다. 규칙: [music.md](exe/music.md).

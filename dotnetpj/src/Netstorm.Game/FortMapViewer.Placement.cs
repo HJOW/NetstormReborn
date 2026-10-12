@@ -50,7 +50,7 @@ internal sealed partial class FortMapViewer
         [Element.Thunder] = new Color(220, 140, 255),
     };
 
-    /// <summary>배치해 볼 수 있는 타입: 워크샵 생산 유닛(원소·레벨 순) 다음에 사제가 짓는 건물(템플·워크샵·알타·아웃포스트)</summary>
+    /// <summary>배치해 볼 수 있는 타입: 워크샾 생산 유닛(원소·레벨 순) 다음에 사제가 짓는 건물(신전·워크샾·알타·아웃포스트)</summary>
     private TypeInfo[] _candidates = [];
 
     /// <summary>배치 시험 모드가 켜졌는지</summary>
@@ -88,7 +88,7 @@ internal sealed partial class FortMapViewer
         int index = Array.FindIndex(_candidates, t => t.Name.Equals(typeName, StringComparison.OrdinalIgnoreCase));
         if (index < 0)
         {
-            throw new ArgumentException($"배치 시험 대상이 아닌 타입입니다: {typeName} (워크샵 생산 유닛과 건물만 가능)");
+            throw new ArgumentException($"배치 시험 대상이 아닌 타입입니다: {typeName} (워크샾 생산 유닛과 건물만 가능)");
         }
         _placementMode = true;
         _candidateIndex = index;
@@ -106,13 +106,13 @@ internal sealed partial class FortMapViewer
         TypeInfo[] units = [.. catalog.Types.Where(t => ProducibleUnit.FromType(t) != null)
             .OrderBy(t => Elements.FromTheme(t.Definition.GetString("theme")))
             .ThenBy(t => t.Definition.GetInt("level") ?? 0).ThenBy(t => t.Name, StringComparer.Ordinal)];
-        // 건물은 종류(템플·워크샵·아웃포스트·알타) 순, 원소가 없는 미사용 타입(예: fireVortex)은 뺀다
+        // 건물은 종류(신전·워크샾·아웃포스트·알타) 순, 원소가 없는 미사용 타입(예: fireVortex)은 뺀다
         TypeInfo[] buildings = [.. catalog.Types.Where(IsBuildable)
             .OrderBy(t => ObjectKinds.Of(t)).ThenBy(t => Elements.FromTheme(t.Definition.GetString("theme"))).ThenBy(t => t.Name, StringComparer.Ordinal)];
         _candidates = [.. units, .. buildings];
     }
 
-    /// <summary>사제가 짓는 건물 타입인지 (템플·워크샵은 원소가 있어야 하고, 비용이 없는 그림용 보조 타입은 제외한다)</summary>
+    /// <summary>사제가 짓는 건물 타입인지 (신전·워크샾은 원소가 있어야 하고, 비용이 없는 그림용 보조 타입은 제외한다)</summary>
     private static bool IsBuildable(TypeInfo type)
     {
         ObjectKind kind = ObjectKinds.Of(type);
@@ -206,7 +206,7 @@ internal sealed partial class FortMapViewer
     }
 
     /// <summary>
-    /// 고른 유닛을 받을 수 있는 첫 워크샵에 지식으로 등록한다 ("Put Knowledge into Production"). 워크샵의 원소·빈 칸·중복은
+    /// 고른 유닛을 받을 수 있는 첫 워크샾에 지식으로 등록한다 ("Put Knowledge into Production"). 워크샾의 원소·빈 칸·중복은
     /// 여기서 걸러 첫 후보에 명령을 넣고, 지식이 없거나 기술 허용 표가 막은 경우는 세션이 명령을 거부하며 이유를 알린다.
     /// </summary>
     private void RegisterSelectedUnit(TypeInfo type)
@@ -214,11 +214,11 @@ internal sealed partial class FortMapViewer
         ProducibleUnit? unit = ProducibleUnit.FromType(type);
         if (unit == null)
         {
-            _notice = "건물은 워크샵에 등록하지 않는다 (유닛을 고르세요)";
+            _notice = "건물은 워크샾에 등록하지 않는다 (유닛을 고르세요)";
             return;
         }
         PlayerState player = _session.Player(TestPlayer);
-        // 완공된 내 워크샵 가운데 이 유닛을 받을 수 있고 빈 칸이 있는 첫 워크샵을 찾는다
+        // 완공된 내 워크샾 가운데 이 유닛을 받을 수 있고 빈 칸이 있는 첫 워크샾을 찾는다
         foreach (GameEntity workshop in _session.Entities.Where(e => e.Owner == TestPlayer && e.Kind == ObjectKind.Workshop && e.IsComplete))
         {
             Element workshopElement = Elements.FromTheme(workshop.Type.Definition.GetString("theme")) ?? Element.Sun;
@@ -231,7 +231,7 @@ internal sealed partial class FortMapViewer
                 return;
             }
         }
-        _notice = "등록할 워크샵이 없음 (완공된 워크샵·맞는 원소·빈 칸 필요)";
+        _notice = "등록할 워크샾이 없음 (완공된 워크샾·맞는 원소·빈 칸 필요)";
     }
 
     /// <summary>커서 칸의 내 오브젝트를 회수한다 (비용의 25% 를 돌려받는다).</summary>
@@ -353,7 +353,7 @@ internal sealed partial class FortMapViewer
     {
         TypeInfo type = _candidates[_candidateIndex];
         EnergyRequirement requirement = EnergyRequirement.ForType(type.Definition);
-        string description = type.Definition.GetString("description") ?? type.Name;
+        string description = UnitName(type);
         string head;
         if (IsBuilding(type))
         {

@@ -20,7 +20,7 @@ public sealed record AudioCue(AudioCueKind Kind, string Name);
 /// <list type="bullet">
 /// <item>전투 밖(메뉴)은 <see cref="MenuTrack"/>.</item>
 /// <item>전투는 원소 곡 4개를 wind → rain → thunder → sun 순으로 한 곡씩 돌린다. 첫 곡은 난수 색인의 다음 곡이다. 천둥 곡은 thunderCrack.wav 를 함께 튼다.</item>
-/// <item>내 제단에서 희생 의식이 시작되면 곧바로 <see cref="SacrificeTrack"/>. 곡이 끝났을 때 의식이 계속 중이면 다시 희생 음악, 아니면 다음 원소 곡이다
+/// <item>내 알타에서 희생 의식이 시작되면 곧바로 <see cref="SacrificeTrack"/>. 곡이 끝났을 때 의식이 계속 중이면 다시 희생 음악, 아니면 다음 원소 곡이다
 /// (의식이 끝나도 곡 끝까지는 희생 음악이 이어진다 — 2026-09-30 녹화와 일치).</item>
 /// <item>곡 끝 시각은 실시간이다 (게임 정지와 무관). 30초 이하 곡은 180초 뒤에 다시 확인한다.</item>
 /// <item>결과 음악(fanfare·defeat)이 재생 중이면 끝날 때까지 다른 요청을 무시한다.</item>
@@ -116,7 +116,7 @@ public sealed class MusicDirector
 
     /// <summary>매 프레임 부른다. 곡 끝 시각이 지났으면 다음 곡을 정한다.</summary>
     /// <param name="now">실시간(초)</param>
-    /// <param name="mySacrificeInProgress">내 제단의 희생 의식이 진행 중인지</param>
+    /// <param name="mySacrificeInProgress">내 알타의 희생 의식이 진행 중인지</param>
     public void Update(double now, bool mySacrificeInProgress)
     {
         if (now < NextChangeAt)
@@ -138,7 +138,7 @@ public sealed class MusicDirector
         }
     }
 
-    /// <summary>내 제단의 희생 의식이 시작됐다 (exe FUN_00494eb0: 제단 소유자가 나일 때만)</summary>
+    /// <summary>내 알타의 희생 의식이 시작됐다 (exe FUN_00494eb0: 알타 소유자가 나일 때만)</summary>
     /// <param name="now">실시간(초)</param>
     public void OnMySacrificeStarted(double now) => Request(SacrificeTrack, now);
 

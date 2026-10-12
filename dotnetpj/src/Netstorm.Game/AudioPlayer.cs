@@ -105,7 +105,7 @@ internal sealed class AudioPlayer : IDisposable
     public void StartBattle() => Director.StartBattle(Now, Random.Shared.Next(MusicDirector.StartRandomRange));
 
     /// <summary>매 프레임: 곡 교체 확인, 쌓인 재생 요청 처리, 음악 스트리밍, 끝난 효과음 정리</summary>
-    /// <param name="mySacrificeInProgress">내 제단의 희생 의식이 진행 중인지</param>
+    /// <param name="mySacrificeInProgress">내 알타의 희생 의식이 진행 중인지</param>
     public void Update(bool mySacrificeInProgress)
     {
         Director.Update(Now, mySacrificeInProgress);

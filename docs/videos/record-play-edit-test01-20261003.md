@@ -152,7 +152,7 @@ Test Battle 클릭에서 브리핑 창까지 **약 0.56초**(연결 창 0.47초 
 | `title="TEST01"` | 브리핑 제목 `TEST01` |
 | `$Button=EQUIPMENT,ShowTechnology,55` · `$Button=Go!,DoNothing,0` | 브리핑 버튼 EQUIPMENT / Go! |
 | `myStartMoney=50000` | 시작 Storm Power 50000 |
-| `myTech="all"` | 워크샵 우클릭 메뉴의 Knowledge Available에 모든 항목(Rain·Thunder·Wind Generator, Sun Cannon, Sun Disc Thrower, Stone Tower, Sun Barricade, Whirlibase, Balloon) |
+| `myTech="all"` | 워크샾 우클릭 메뉴의 Knowledge Available에 모든 항목(Rain·Thunder·Wind Generator, Sun Cannon, Sun Disc Thrower, Stone Tower, Sun Barricade, Whirlibase, Balloon) |
 | `ai2Name="Luitenent of Wind"`(orange) · `ai3Name="Thunder Demon"`(red) | 미니맵의 빨간 섬 등과 일치(소유 색 대응은 추정). AI의 실제 행동은 이번에 분석하지 않았다 |
 
 이전 기록의 Battle1 시험 전투는 브리핑 버튼이 "Check out whatcha got" / "GO FOR IT!!!"이고 Storm Power 9000이었다([화면 목록 1.5절](../screens/README.md#15-시간-계획-분석-메뉴-타이머편집기튜토리얼-1-2026-09-29-밤-windows-hjow-athlon)). **시험 전투는 편집 중인 맵의 `.english`가 있으면 그 값을 쓴다**고 이번 대조로 확인했다(없으면 맵 쪽 기본 설정, 원인 파일 조회 순서는 확인하지 않음).
@@ -174,7 +174,7 @@ Test Battle 클릭에서 브리핑 창까지 **약 0.56초**(연결 창 0.47초 
 
 요청 범위가 아니었지만 시험 전투 36.8~445초에 사용자가 한 조작이다. 상세 판독은 하지 않았다.
 
-- **38~69초 워크샵 우클릭 → 덱 등록:** 본거지의 워크샵을 우클릭하면 "Sun Workshop Level III(해상도상 그렇게 읽힘) / Owner / Alignment / Class: Production / Knowledge Available / Production Slots Available" 창이 열리고 View·Put Knowledge into Production >·Upgrade·Salvage·About 항목이 보인다. 항목 오른쪽의 Knowledge 목록에서 하나를 좌클릭할 때마다 도구 막대(덱)에 아이콘이 추가되고 목록에서 줄어든다(39.2초 9개 → 43.0초 8개). [생산 창 기록](../gameplay/workshop-deck.md)과 같은 흐름이다.
+- **38~69초 워크샾 우클릭 → 덱 등록:** 본거지의 워크샾을 우클릭하면 "Sun Workshop Level III(해상도상 그렇게 읽힘) / Owner / Alignment / Class: Production / Knowledge Available / Production Slots Available" 창이 열리고 View·Put Knowledge into Production >·Upgrade·Salvage·About 항목이 보인다. 항목 오른쪽의 Knowledge 목록에서 하나를 좌클릭할 때마다 도구 막대(덱)에 아이콘이 추가되고 목록에서 줄어든다(39.2초 9개 → 43.0초 8개). [생산 창 기록](../gameplay/workshop-deck.md)과 같은 흐름이다.
 - **102~160초 유닛 배치:** 덱 아이콘 좌클릭 → 지도 우클릭/좌클릭. 비용 표시 550·600·1,200과 "Energy not satisfied" 알림(102.5초)이 보인다.
 - **325~441초 다리 연결:** Q·A·Z·X로 덱의 다리 조각을 집고 우클릭으로 회전해 놓는 패턴이다. 눈 덮인 섬 쪽으로 다리를 늘려 간다. Storm Power는 50000 → 약 66,800으로 늘었다(348초).
 - 단축키는 Q·A·Z·X 외에는 쓰지 않았고 F4/F5/H/U/숫자키는 쓰지 않았다.

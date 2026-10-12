@@ -7,7 +7,7 @@ using Netstorm.Core.Simulation;
 namespace Netstorm.Game;
 
 /// <summary>
-/// 오브젝트의 지금 그림 고르기(가이저 증기·워크샵 레벨·신전 회오리·풍선 흔들림)와 그림자 그리기.
+/// 오브젝트의 지금 그림 고르기(가이저 증기·워크샾 레벨·신전 회오리·풍선 흔들림)와 그림자 그리기.
 /// 프레임 규칙은 <see cref="StructureAnimation"/>, 근거는 2026-10-03 TEST01 녹화 대조(docs/videos/test01-visuals-20261003.md)다.
 /// </summary>
 internal sealed partial class FortMapViewer
@@ -109,7 +109,7 @@ internal sealed partial class FortMapViewer
     }
 
     /// <summary>
-    /// 오브젝트가 지금 그릴 타입·프레임과 기준점 이동량을 고른다. 전투 상태(캐논·재성장) → 가이저 증기 → 워크샵 레벨 →
+    /// 오브젝트가 지금 그릴 타입·프레임과 기준점 이동량을 고른다. 전투 상태(캐논·재성장) → 가이저 증기 → 워크샾 레벨 →
     /// 신전 회오리 → 풍선 → 걷는 유닛 → 저장 프레임·기본 프레임 순서로 본다. 이동량은 오브젝트 타입의 hotFootRatio 다.
     /// </summary>
     /// <param name="type">오브젝트 타입</param>
@@ -146,7 +146,7 @@ internal sealed partial class FortMapViewer
         return (type, new StructureFrames(rest), shift);
     }
 
-    /// <summary>워크샵의 레벨 (1~3). 세션의 생산 창 값이 있으면 그것, 없으면 맵 저장 상태(0·1·2) + 1.</summary>
+    /// <summary>워크샾의 레벨 (1~3). 세션의 생산 창 값이 있으면 그것, 없으면 맵 저장 상태(0·1·2) + 1.</summary>
     private int WorkshopLevel(GameEntity? live, FortMapObject? item)
     {
         int stored = (item?.Object.FactoryState ?? live?.Source?.Object.FactoryState ?? 0) + 1;

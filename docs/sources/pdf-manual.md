@@ -16,8 +16,8 @@ PDF의 목차(PDF 10~11쪽, 인쇄 9~10쪽)는 조작 입문 21쪽, 화면 설�
 | 화면 스크롤 | PDF 22~23쪽(인쇄 21~22), 94~95쪽(인쇄 95~96) | 전체화면 가장자리 스크롤, Alt(또는 휠 버튼)를 누른 채 커서 방향 스크롤, Shift를 더한 직선 스크롤. 창 모드의 직선 스크롤은 Alt+Shift로 설명한다. |
 | Esc와 위치·선택 키 | PDF 23쪽(인쇄 22), 95쪽(인쇄 96) | Esc는 상단 메뉴 표시 전환과 들고 있는 다리 반환에 쓰인다. Shift+숫자는 카메라 위치 저장, 숫자는 복귀, Tab은 최근 유닛 순환, F1~F9는 도움말·화면/대상 조회 등에 쓰인다. |
 | 건물 건설 | PDF 24쪽(인쇄 23) | 사제 우클릭 → Construct → Temple/Workshop 선택 → 섬 위의 유효 위치 좌클릭. |
-| 워크샵 생산 등록·유닛 배치 | PDF 25쪽(인쇄 24) | 워크샵 우클릭 → Put Knowledge Into Production → 생산 칸 등록 → 생산 창의 유닛 좌클릭 → 전투 화면 배치. 배치에는 생산 등록, 충분한 Storm Power, 위치의 에너지가 필요하다. |
-| 다리·발전기 | PDF 23쪽(인쇄 22), 26쪽(인쇄 25) | 다리는 연결 가능한 시작점에서 놓는다. Wind Generator도 최초 1기는 템플 에너지 범위 안에 지어야 하며, 이후 공급 범위를 연장할 수 있다. |
+| 워크샾 생산 등록·유닛 배치 | PDF 25쪽(인쇄 24) | 워크샾 우클릭 → Put Knowledge Into Production → 생산 칸 등록 → 생산 창의 유닛 좌클릭 → 전투 화면 배치. 배치에는 생산 등록, 충분한 Storm Power, 위치의 에너지가 필요하다. |
+| 다리·제네레이터 | PDF 23쪽(인쇄 22), 26쪽(인쇄 25) | 다리는 연결 가능한 시작점에서 놓는다. Wind Generator도 최초 1기는 신전 에너지 범위 안에 지어야 하며, 이후 공급 범위를 연장할 수 있다. |
 
 이 조작 설명은 [GAME.HLP 조작 요약](game-manual.md#4-조작-요약-행-404439)과 부합한다. 다만 `R`·`C` 회전/사제 선택, `D` 반복 배치, `Shift+F3` 섬 테마 등은 후대 패치에서 추가·변경됐다. 원판 키 표를 현재 패치판의 전체 키 계약으로 사용하지 않는다.
 
@@ -46,7 +46,7 @@ PDF의 규칙은 한결같다.
 - 원소 유닛: **L1 = 자기 원소 1**, **L2 = 자기 원소 1 + Sun 1**, **L3 = 자기 원소 2 + Sun 1**.
 - Sun 유닛: **Sun × 레벨**.
 - 예외: **Generator 3종·Outpost = Sun 1**(아무 원소).
-- 건물(템플·워크샵·알타)·사제·기지가 만드는 비행체(Whirligig·Dust Devil·Man o' War): None.
+- 건물(신전·워크샾·알타)·사제·기지가 만드는 비행체(Whirligig·Dust Devil·Man o' War): None.
 
 같은 레벨이라도 유닛에 따라 필요 에너지가 다르다. 예를 들어 L1 Bulf는 Thunder 1이고 L1 Thunder Generator는 Sun 1이다. 사용자도 Bulf는 Thunder 공급원(Thunder Generator 또는 Thunder Temple)이 반드시 있어야 한다고 확인했다.
 
@@ -82,13 +82,13 @@ PDF의 규칙은 한결같다.
 | Arc Spire | 81 (82) | **L2, Thunder 1 + Sun 1** | **1** | **Thunder 1** |
 | Outpost | 85 (86) | L1, Sun 1 | — | Sun 1 (`mana = "s"`) |
 
-굵은 글씨는 원판과 패치판의 레벨이 달라 에너지 구성도 달라진 유닛이다. 필요 에너지 판정(서로 다른 공급원, 범위 교집합, Sun = 아무 원소)은 [원소·에너지 규칙](../gameplay/elements-energy.md)에 있다. PDF 설명 문장에는 이 밖에도 "Workshop이 파괴되면 그 워크샵이 생산하던 것은 다시 지을 때까지 못 만든다", "Power Stream이 적절한 에너지와 합쳐지면 유닛이 즉시 생성된다"(워크샵 항목), "Temple은 자기 원소 에너지 1개를 자신을 중심으로 한 원에 공급한다"(템플 항목)가 있다. 모두 기존 규칙 문서와 일치한다.
+굵은 글씨는 원판과 패치판의 레벨이 달라 에너지 구성도 달라진 유닛이다. 필요 에너지 판정(서로 다른 공급원, 범위 교집합, Sun = 아무 원소)은 [원소·에너지 규칙](../gameplay/elements-energy.md)에 있다. PDF 설명 문장에는 이 밖에도 "Workshop이 파괴되면 그 워크샾이 생산하던 것은 다시 지을 때까지 못 만든다", "Power Stream이 적절한 에너지와 합쳐지면 유닛이 즉시 생성된다"(워크샾 항목), "Temple은 자기 원소 에너지 1개를 자신을 중심으로 한 원에 공급한다"(신전 항목)가 있다. 모두 기존 규칙 문서와 일치한다.
 
 ## 화면 그림과 판본별 메뉴 항목
 
 PDF 32쪽(인쇄 31)의 메인 메뉴 그림은 큰 NetStorm 제목과 그 아래 놓인 버튼이라는 기본 화면 구성이 보유 [패치판 메인 메뉴 캡처](../screens/main-menu.md)와 같다. PDF의 색상 손상은 스캔의 영향이며 해상도 차이도 있지만, 화면 자체는 같은 UI다(사용자 확인). PDF 설명의 기본 항목은 `Campaign`·`Multiplayer`·`Demo`·`Help`·`Credits`·`Options`·`Quit`의 **7개**다. `Intro`는 CD-ROM에 게임 CD가 있을 때만 나타난다고 별도로 적혀 있다. 보유 패치판 캡처에는 `Edit`가 추가된 **8개**가 보인다. PDF의 Campaign 네 묶음 설명과 패치판의 여섯 묶음도 판본별 항목 차이다.
 
-PDF 45쪽(인쇄 44)의 Thunder Workshop 컨텍스트 메뉴 그림은 제목·`Owner`·`Alignment`·`Class` 정보, 명령 목록, 비용 표시와 돌무늬 메뉴 창의 구성이 보유 [워크샵 우클릭 캡처](../gameplay/workshop-deck.md#1-우클릭-컨텍스트-메뉴-사용자-확인-2026-09-28)와 같다. 글꼴만 다르며 실제 UI의 형태와 맞는다(사용자 확인). 그림의 `Upgrade costs 1000sp`·`Salvage gains 250sp`는 해당 구버전 Thunder Workshop에 적힌 값이므로 현재 다른 워크샵의 비용으로 일반화하지 않는다.
+PDF 45쪽(인쇄 44)의 Thunder Workshop 컨텍스트 메뉴 그림은 제목·`Owner`·`Alignment`·`Class` 정보, 명령 목록, 비용 표시와 돌무늬 메뉴 창의 구성이 보유 [워크샾 우클릭 캡처](../gameplay/workshop-deck.md#1-우클릭-컨텍스트-메뉴-사용자-확인-2026-09-28)와 같다. 글꼴만 다르며 실제 UI의 형태와 맞는다(사용자 확인). 그림의 `Upgrade costs 1000sp`·`Salvage gains 250sp`는 해당 구버전 Thunder Workshop에 적힌 값이므로 현재 다른 워크샾의 비용으로 일반화하지 않는다.
 
 PDF 34~35쪽(인쇄 33~34)의 `Adjust Direct Draw`, `Cursor Snap to Grid` 같은 옵션은 현재 [Options 캡처](../screens/README.md#1-메인-메뉴-계열-창-제목-netstorm-main-menu)와 목록이 다르다. UI의 기본 형태를 읽을 때는 PDF도 근거로 쓰고, 현재 판본의 메뉴 항목·좌표·표시값은 보유 패치판 캡처를 우선한다.
 
