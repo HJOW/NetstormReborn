@@ -1,5 +1,6 @@
 // Gump는 클립을 복구하지만 VFX 색 문맥이나 하위 객체 상태를 되돌리지 않는다.
 #include "client/GumpDraw.h"
+#include "client/VFXTransform.h"
 #include <algorithm>
 #include <bit>
 #include <stdexcept>
@@ -73,6 +74,11 @@ void GumpPixelTarget::Lines(std::span<const GumpLine> lines) const {
 // 기존 실제 VFX 해제/투명 합성기를 같은 현재 클립에 연결한다.
 void GumpPixelTarget::Image(const IndexedImage& image,ScreenPoint position,const ColorMap* colors) const {
     DrawIndexedImage(pixels_,pitch_,height_,image,position.x,position.y,Clip(),colors);
+}
+// 원본 변환 커널의 직교 배율 분배도 일반 그림과 같은 현재 클립/대상 저장소를 사용한다.
+void GumpPixelTarget::ScaledImage(const IndexedImage& image,const ShapeFrame& frame,ScreenPoint position,
+    std::int32_t scaleX,std::int32_t scaleY,const ColorMap* colors) const {
+    DrawScaledVfxImage(pixels_,pitch_,height_,image,frame,position,scaleX,scaleY,Clip(),colors);
 }
 // 원본 004a2060/004a2180의 소프트웨어 픽셀 결과다. 빈/역전 영역은 호스트에서 쓰지 않는다.
 void GumpPixelTarget::Fill(ScreenRect rect,std::uint32_t color,bool checker) const {

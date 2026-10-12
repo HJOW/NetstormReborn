@@ -7,6 +7,7 @@ target_sources(netstorm PRIVATE
     ClientMain.cpp
     ClientMain.h
     VFXDraw.cpp VFXDraw.h
+    VFXTransform.cpp VFXTransform.h
     Screen.cpp Screen.h
     PaletteColors.cpp PaletteColors.h
     PaletteFlash.cpp PaletteFlash.h

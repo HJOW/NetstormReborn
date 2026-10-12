@@ -1,0 +1,619 @@
+{
+  "last_decompile_host": "HJOW-Athlon",
+  "recorded_at": "2026-10-12T22:28:21.924239+09:00",
+  "method": "두 실제 PE 정적 디컴파일·범위·명령·ROM 판독; 게임/에뮬레이터 실행 없음",
+  "cpp_comparison": "미수행: 새 테스트 추가/실행·독립 원본 픽셀 대조·GUI 실행 없음",
+  "new_original_observations": 0,
+  "new_cpp_comparisons": 0,
+  "implementation": {
+    "angle": 0,
+    "scratch_reuse": false,
+    "scale_format": "signed 16.16",
+    "source_coordinates": "signed WORD, width/height <= 32768",
+    "destination_coordinates": "signed WORD, x/y span <= 32767",
+    "sampling": "포함 끝점·IDIV 절삭 기울기·16.16 반 픽셀 시작·DWORD 누산",
+    "transparency": "일반 분기 opacity 유지; 비단위 배율은 색 치환 후 255도 건너뜀"
+  },
+  "boundaries": [
+    "회전 다각형 커널",
+    "임시 표면 재사용 flag 2",
+    "고정소수점 범위 밖 원본 버퍼 접근",
+    "원본 그림 색 표 공급",
+    "대괄호 그림/옵션 파서",
+    "클라이언트 자동 raw UI 연결"
+  ],
+  "editions": {
+    "originals": {
+      "binary": "originals/Netstorm.exe",
+      "requested_functions": [
+        "004daaf0",
+        "004dab40",
+        "004028cb",
+        "00406620",
+        "0040653e",
+        "004071f4",
+        "0040722a",
+        "0040498a",
+        "00401d92",
+        "0040229f",
+        "0040227e"
+      ],
+      "exported_functions": [
+        "004daaf0",
+        "004dab40",
+        "004028cb",
+        "00406620",
+        "0040653e",
+        "004071f4",
+        "0040722a",
+        "0040498a",
+        "00401d92",
+        "0040229f",
+        "0040227e"
+      ],
+      "functions": [
+        {
+          "entry": "004daaf0",
+          "body_bytes": 71,
+          "calls": [
+            {
+              "at": "004dab31",
+              "operand": "0x4028cb"
+            }
+          ],
+          "returns": [
+            {
+              "at": "004dab36",
+              "operand": ""
+            }
+          ]
+        },
+        {
+          "entry": "004dab40",
+          "body_bytes": 71,
+          "calls": [
+            {
+              "at": "004dab81",
+              "operand": "0x4028cb"
+            }
+          ],
+          "returns": [
+            {
+              "at": "004dab86",
+              "operand": ""
+            }
+          ]
+        },
+        {
+          "entry": "004028cb",
+          "body_bytes": 3154,
+          "calls": [
+            {
+              "at": "004028fd",
+              "operand": "0x4071f4"
+            },
+            {
+              "at": "00402980",
+              "operand": "0x40722a"
+            },
+            {
+              "at": "004029a7",
+              "operand": "0x40498a"
+            },
+            {
+              "at": "004029c5",
+              "operand": "0x40229f"
+            },
+            {
+              "at": "004029dc",
+              "operand": "0x401d92"
+            },
+            {
+              "at": "00402aef",
+              "operand": "0x406620"
+            },
+            {
+              "at": "00402b2f",
+              "operand": "0x406620"
+            },
+            {
+              "at": "00402b92",
+              "operand": "0x406620"
+            },
+            {
+              "at": "00402bd2",
+              "operand": "0x406620"
+            },
+            {
+              "at": "004034f7",
+              "operand": "0x40229f"
+            },
+            {
+              "at": "00403510",
+              "operand": "0x401d92"
+            }
+          ],
+          "returns": [
+            {
+              "at": "00402aa7",
+              "operand": "0x28"
+            },
+            {
+              "at": "00402ab4",
+              "operand": "0x28"
+            },
+            {
+              "at": "004032ec",
+              "operand": "0x28"
+            },
+            {
+              "at": "0040351a",
+              "operand": "0x28"
+            }
+          ]
+        },
+        {
+          "entry": "00406620",
+          "body_bytes": 198,
+          "calls": [
+            {
+              "at": "00406638",
+              "operand": "0x40653e"
+            }
+          ],
+          "returns": [
+            {
+              "at": "004066e3",
+              "operand": "0x18"
+            }
+          ]
+        },
+        {
+          "entry": "0040653e",
+          "body_bytes": 186,
+          "calls": [],
+          "returns": [
+            {
+              "at": "004065f5",
+              "operand": "0xc"
+            }
+          ]
+        },
+        {
+          "entry": "004071f4",
+          "body_bytes": 54,
+          "calls": [],
+          "returns": [
+            {
+              "at": "00407227",
+              "operand": "8"
+            }
+          ]
+        },
+        {
+          "entry": "0040722a",
+          "body_bytes": 44,
+          "calls": [],
+          "returns": [
+            {
+              "at": "00407253",
+              "operand": "8"
+            }
+          ]
+        },
+        {
+          "entry": "0040498a",
+          "body_bytes": 253,
+          "calls": [],
+          "returns": [
+            {
+              "at": "00404a25",
+              "operand": "8"
+            },
+            {
+              "at": "00404a32",
+              "operand": "8"
+            },
+            {
+              "at": "00404a84",
+              "operand": "8"
+            }
+          ]
+        },
+        {
+          "entry": "00401d92",
+          "body_bytes": 1048,
+          "calls": [
+            {
+              "at": "00401f1b",
+              "operand": "0x4021b5"
+            }
+          ],
+          "returns": [
+            {
+              "at": "00401e2d",
+              "operand": "0x14"
+            },
+            {
+              "at": "00401e3a",
+              "operand": "0x14"
+            },
+            {
+              "at": "00402198",
+              "operand": "0x14"
+            },
+            {
+              "at": "004021a5",
+              "operand": "0x14"
+            },
+            {
+              "at": "004021b2",
+              "operand": "0x14"
+            }
+          ]
+        },
+        {
+          "entry": "0040229f",
+          "body_bytes": 1260,
+          "calls": [
+            {
+              "at": "00402428",
+              "operand": "0x402796"
+            }
+          ],
+          "returns": [
+            {
+              "at": "0040233a",
+              "operand": "0x14"
+            },
+            {
+              "at": "00402347",
+              "operand": "0x14"
+            },
+            {
+              "at": "00402779",
+              "operand": "0x14"
+            },
+            {
+              "at": "00402786",
+              "operand": "0x14"
+            },
+            {
+              "at": "00402793",
+              "operand": "0x14"
+            }
+          ]
+        },
+        {
+          "entry": "0040227e",
+          "body_bytes": 33,
+          "calls": [],
+          "returns": [
+            {
+              "at": "0040229c",
+              "operand": "4"
+            }
+          ]
+        }
+      ],
+      "angle_zero_cosine": {
+        "address": "0040572a",
+        "bytes": "00000100",
+        "value": 65536
+      },
+      "angle_zero_sine": {
+        "address": "0040653a",
+        "bytes": "00000000",
+        "value": 0
+      }
+    },
+    "originalCD": {
+      "binary": "originalCD/NETSTORM.EXE",
+      "requested_functions": [
+        "004d6540",
+        "004d6590",
+        "004662ab",
+        "0046a000",
+        "00469f1e",
+        "0046abd4",
+        "0046ac0a",
+        "0046836a",
+        "00465772",
+        "00465c7f",
+        "00465c5e"
+      ],
+      "exported_functions": [
+        "004d6540",
+        "004d6590",
+        "004662ab",
+        "0046a000",
+        "00469f1e",
+        "0046abd4",
+        "0046ac0a",
+        "0046836a",
+        "00465772",
+        "00465c7f",
+        "00465c5e"
+      ],
+      "functions": [
+        {
+          "entry": "004d6540",
+          "body_bytes": 69,
+          "calls": [
+            {
+              "at": "004d657f",
+              "operand": "0x4662ab"
+            }
+          ],
+          "returns": [
+            {
+              "at": "004d6584",
+              "operand": ""
+            }
+          ]
+        },
+        {
+          "entry": "004d6590",
+          "body_bytes": 69,
+          "calls": [
+            {
+              "at": "004d65cf",
+              "operand": "0x4662ab"
+            }
+          ],
+          "returns": [
+            {
+              "at": "004d65d4",
+              "operand": ""
+            }
+          ]
+        },
+        {
+          "entry": "004662ab",
+          "body_bytes": 3154,
+          "calls": [
+            {
+              "at": "004662dd",
+              "operand": "0x46abd4"
+            },
+            {
+              "at": "00466360",
+              "operand": "0x46ac0a"
+            },
+            {
+              "at": "00466387",
+              "operand": "0x46836a"
+            },
+            {
+              "at": "004663a5",
+              "operand": "0x465c7f"
+            },
+            {
+              "at": "004663bc",
+              "operand": "0x465772"
+            },
+            {
+              "at": "004664cf",
+              "operand": "0x46a000"
+            },
+            {
+              "at": "0046650f",
+              "operand": "0x46a000"
+            },
+            {
+              "at": "00466572",
+              "operand": "0x46a000"
+            },
+            {
+              "at": "004665b2",
+              "operand": "0x46a000"
+            },
+            {
+              "at": "00466ed7",
+              "operand": "0x465c7f"
+            },
+            {
+              "at": "00466ef0",
+              "operand": "0x465772"
+            }
+          ],
+          "returns": [
+            {
+              "at": "00466487",
+              "operand": "0x28"
+            },
+            {
+              "at": "00466494",
+              "operand": "0x28"
+            },
+            {
+              "at": "00466ccc",
+              "operand": "0x28"
+            },
+            {
+              "at": "00466efa",
+              "operand": "0x28"
+            }
+          ]
+        },
+        {
+          "entry": "0046a000",
+          "body_bytes": 198,
+          "calls": [
+            {
+              "at": "0046a018",
+              "operand": "0x469f1e"
+            }
+          ],
+          "returns": [
+            {
+              "at": "0046a0c3",
+              "operand": "0x18"
+            }
+          ]
+        },
+        {
+          "entry": "00469f1e",
+          "body_bytes": 186,
+          "calls": [],
+          "returns": [
+            {
+              "at": "00469fd5",
+              "operand": "0xc"
+            }
+          ]
+        },
+        {
+          "entry": "0046abd4",
+          "body_bytes": 54,
+          "calls": [],
+          "returns": [
+            {
+              "at": "0046ac07",
+              "operand": "8"
+            }
+          ]
+        },
+        {
+          "entry": "0046ac0a",
+          "body_bytes": 44,
+          "calls": [],
+          "returns": [
+            {
+              "at": "0046ac33",
+              "operand": "8"
+            }
+          ]
+        },
+        {
+          "entry": "0046836a",
+          "body_bytes": 253,
+          "calls": [],
+          "returns": [
+            {
+              "at": "00468405",
+              "operand": "8"
+            },
+            {
+              "at": "00468412",
+              "operand": "8"
+            },
+            {
+              "at": "00468464",
+              "operand": "8"
+            }
+          ]
+        },
+        {
+          "entry": "00465772",
+          "body_bytes": 1048,
+          "calls": [
+            {
+              "at": "004658fb",
+              "operand": "0x465b95"
+            }
+          ],
+          "returns": [
+            {
+              "at": "0046580d",
+              "operand": "0x14"
+            },
+            {
+              "at": "0046581a",
+              "operand": "0x14"
+            },
+            {
+              "at": "00465b78",
+              "operand": "0x14"
+            },
+            {
+              "at": "00465b85",
+              "operand": "0x14"
+            },
+            {
+              "at": "00465b92",
+              "operand": "0x14"
+            }
+          ]
+        },
+        {
+          "entry": "00465c7f",
+          "body_bytes": 1260,
+          "calls": [
+            {
+              "at": "00465e08",
+              "operand": "0x466176"
+            }
+          ],
+          "returns": [
+            {
+              "at": "00465d1a",
+              "operand": "0x14"
+            },
+            {
+              "at": "00465d27",
+              "operand": "0x14"
+            },
+            {
+              "at": "00466159",
+              "operand": "0x14"
+            },
+            {
+              "at": "00466166",
+              "operand": "0x14"
+            },
+            {
+              "at": "00466173",
+              "operand": "0x14"
+            }
+          ]
+        },
+        {
+          "entry": "00465c5e",
+          "body_bytes": 33,
+          "calls": [],
+          "returns": [
+            {
+              "at": "00465c7c",
+              "operand": "4"
+            }
+          ]
+        }
+      ],
+      "angle_zero_cosine": {
+        "address": "0046910a",
+        "bytes": "00000100",
+        "value": 65536
+      },
+      "angle_zero_sine": {
+        "address": "00469f1a",
+        "bytes": "00000000",
+        "value": 0
+      }
+    }
+  },
+  "files": {
+    "tools/analyze_vfxscale.py": "989a4dd030bae0ee66f11f012f132358c9d38cf4c74ce5214f553f228f91be07",
+    "tools/analyze_styletext.py": "f9fbec159bb4ffe4fdf72883ef6a9ac2e417affd484a03e025e43dc98d422fda",
+    "tools/ghidra/vfxscale-functions.json": "08b74c9f5725cb521926b2a452c7ad9a116aa8709ce4a430a26abf3ee38615f0",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/vfxscale/originals/creation.c": "209341f1bd529b22ce0ea611efe6a6ff08de3f200ca9d5d34fb03a96dc329fda",
+    "extracted/vfxscale/originals/functions.tsv": "ee06868d76421d445d820dbf6f6e43df7259445fb56d9f606581e6c11b802595",
+    "extracted/vfxscale/originals/assembly.txt": "c2341a01710c0efc762ac4062d7df939249b0baa6e3182a2ab763787fdeaa46d",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "extracted/vfxscale/originalCD/creation.c": "827df41bd8abc5644331358b7e6925c926675cfc767885bb569bc07fcb8d078f",
+    "extracted/vfxscale/originalCD/functions.tsv": "b26d696a663c779a9679e823b8d9ded8a5be7a190a712647cea25a8da6debb2c",
+    "extracted/vfxscale/originalCD/assembly.txt": "1dc0361e1cff5f19fbdc5b09424c9bc5b9a9ff3c999d0cdfd712312b306b490c",
+    "cpppj/src/client/VFXTransform.cpp": "e75902e9b390d9022019bdcd4801e6e4f0c28c4c52392f7b2299031e56d8b7ee",
+    "cpppj/src/client/VFXTransform.h": "a9d3e20e2b2eab3bcf22dba9e24f89cf3ef3674d64e96acf4667c27169f22997",
+    "cpppj/src/client/GumpDraw.cpp": "e75fb587cd51e3bb800ec75dddebeaf374e896cc6554b31ac328fd33ce68b03a",
+    "cpppj/src/client/GumpDraw.h": "7e54811ba64fe7edf3322f584c02bc91cf08f1d213a3d7ed0cdf1e6a75168484",
+    "cpppj/src/client/Markup.cpp": "3ef98b57be34741fc0c7a11d233744636a83a34ba4457053e4d57b51f9fec6c0",
+    "cpppj/src/client/Markup.h": "8fec3e164ef546e3b81837d4063200addc0e4a474926c348ec04aac3716f0235",
+    "cpppj/src/client/VFXDraw.cpp": "d4c95ba9875659715bdb234b56baf7084d2abc6f5f4f879d1247cb309f0f5ad4",
+    "cpppj/src/client/VFXDraw.h": "3692cc45ce931aedcd4e7aaf0f80f1d6966aea70a3e8d648fe6e7810a477eebb",
+    "cpppj/src/client/Renderer.cpp": "7b0c0e21236ec3f40847276d64a4b6f392afa8498774751b1c2cacc5eeffefa9",
+    "cpppj/src/client/Renderer.h": "40b7ab272682a9bc57d49cc51abd238765e43bc8452e03662151494070165d7c",
+    "cpppj/src/client/CMakeLists.txt": "d0e2b7d02334a9f92f90684894e7676379fee983e21899c192c578dd39872350"
+  }
+}

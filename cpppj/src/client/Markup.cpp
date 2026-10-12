@@ -262,23 +262,23 @@ void BindMarkupAssets(MarkupState& state,MarkupHooks& hooks,const MarkupAssets& 
 MarkupPixelTarget::MarkupPixelTarget(const GumpPixelTarget& target,const MarkupAssets& assets,ColorMap& currentColors,const ColorMap& pictureColors)
     :target_(target),assets_(assets),colors_(currentColors),pictureColors_(pictureColors) {}
 
-// 일반 원색/색 치환은 현재 UI 표면에 연결하고 scaled 경계는 호출자가 공급한 원본 커널 분배를 보존한다.
+// 일반/직교 배율은 현재 UI 표면에 연결하고 회전 경계는 호출자가 공급한 분배를 보존한다.
 MarkupHooks MarkupPixelTarget::Hooks(MarkupHooks hooks) {
-    const auto scaled=hooks.shape;
+    const auto rotated=hooks.shape;
     // 그림에 지정된 원본 256바이트 변환 표를 현재 공유 VFX 표에 설치한다.
     hooks.color=[this] { colors_=pictureColors_; };
-    // 확대/축소의 픽셀 선택을 임의 보간으로 대체하지 않고 원본 요청을 기존 경계에 전달한다.
-    hooks.shape=[this,scaled](MarkupShapeRequest request) {
-        if (!request.scaled) Image(request);
+    // Markup의 angle=0 요청은 원본 16.16 표본으로 그린다. 외부 회전 요청의 분배는 유지한다.
+    hooks.shape=[this,rotated](MarkupShapeRequest request) {
+        if (!request.scaled || request.angle==0) Image(request);
         else {
-            if (!scaled) throw std::invalid_argument("Markup 확대/축소 VFX 커널 경계 필요");
-            scaled(request);
+            if (!rotated) throw std::invalid_argument("Markup 회전 VFX 커널 경계 필요");
+            rotated(request);
         }
     };
     return hooks;
 }
 
-// 보정된 표시 기준점 뒤에 실제 VFX 프레임의 상대 픽셀 좌표를 더한다.
+// 일반 출력은 상대 픽셀 좌표를 더하고 배율 출력은 같은 원본 기준점/프레임을 변환기에 넘긴다.
 void MarkupPixelTarget::Image(MarkupShapeRequest request) {
     const auto [database,block]=assets_.Shape(request.shape,request.frame);
     const auto& frame=database->Blocks()[block].frames[request.frame];
@@ -286,6 +286,8 @@ void MarkupPixelTarget::Image(MarkupShapeRequest request) {
     const auto key=std::make_tuple(database,block,static_cast<std::size_t>(request.frame));
     auto it=images_.find(key);
     if (it==images_.end()) it=images_.emplace(key,database->Decode(block,request.frame)).first;
-    target_.Image(it->second,{Add(request.position.x,frame.rect.left),Add(request.position.y,frame.rect.top)},request.mapped ? &colors_ : nullptr);
+    const auto* colors=request.mapped ? &colors_ : nullptr;
+    if (request.scaled) target_.ScaledImage(it->second,frame,request.position,request.scaleX,request.scaleY,colors);
+    else target_.Image(it->second,{Add(request.position.x,frame.rect.left),Add(request.position.y,frame.rect.top)},colors);
 }
 }

@@ -1,5 +1,13 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-12 최신 cpppj: VFX 그림의 회전 없는 16.16 배율 출력 구현 (`HJOW-Athlon`)
+
+- [x] AGENTS.md·두 LEFT_JOBS 확인, 현재 PC/IP **HJOW-Athlon / 192.168.0.94**와 같은 PC의 정밀 디컴파일 기록 확인. 두 정밀 프로젝트에서 관련 함수 **11/11개**를 읽기 전용으로 내보냈다. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-12.** [상세 기록](docs/exe/cpp-vfx-shape-scale.md).
+- [x] `DrawScaledVfxImage`로 angle=0/새 임시 표면 분기의 signed 16.16 배율·축 반전·원본 IMUL/ADD/ADC 꼭짓점·IDIV 기울기·포함 끝점·반 픽셀 텍스처 시작·클립 전진·DWORD 누산을 구현했다. 실제 압축 `rect`를 사용하며 y 붕괴 조기 반환/x 붕괴 동률 선택을 유지한다. 정상 WORD/간격 범위 밖 원본 버퍼 접근은 거부한다.
+- [x] 비단위 변환의 **색 치환 후 255 투명**과 정확히 배율 1의 **일반 opacity/불투명 255**를 구분했다. `GumpPixelTarget::ScaledImage`와 `MarkupPixelTarget`으로 같은 현재 표면/클립/SHP 해제 캐시/공유 변환 표에 연결했다. 회전 요청은 기존 shape 경계에 남긴다.
+- [x] 게임 라이브러리/`NetstormCpp` **Release 빌드 경고 0·오류 0**. SOURCE_MAP 생성/내용 차이 없음. **새 테스트 추가/실행·전체 CTest·독립 원본 픽셀 대조·게임/GUI 실행은 미수행**이다. 원본 관찰 **523,634개**, C++ 대조 **523,374개**, **854개 통과**는 앞 단계 기록이다. 자료: `recovery-vfxscale-evidence.json`, `tools/analyze_vfxscale.py`, `extracted/vfxscale/`. 원본 SHA 불변, AGENTS.md/보호 원본/dotnetpj 변경·커밋/푸시 없음.
+- [ ] **다음:** 이번 배율 픽셀/Markup·공통 소멸/StyleText/메뉴와 기존 260개 레이아웃 자료의 독립 동작 대조; 원본 그림 색 표 공급·회전 VFX/flag 2 재사용·대괄호 옵션/그림 파서·다중 줄/줄바꿈/스크롤·TextGump/Form·메뉴 생성/장식/제목/소멸·Attach 보정·입력/통지 → OS 큐/폴링·overlay·Client 자동 UI 프레임. 기존 돌 버튼/배경/도움말 전체 원본 대조도 남았다. **Client/UberGump 기존 메뉴 어댑터와 raw 자동 GUI/건설·미션 완주는 미완료다.**
+
 ## 2026-10-12 최신 cpppj: Markup 그림 조각·SHP·StyleText 체인 연결 구현 (`HJOW-Athlon`)
 
 - [x] AGENTS.md·두 LEFT_JOBS 확인, 현재 PC/IP **HJOW-Athlon / 192.168.0.94**와 같은 PC의 정밀 디컴파일 기록 확인. 두 정밀 프로젝트에서 함수 **14/15개**를 읽기 전용으로 내보냈다. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-12.** [상세 기록](docs/exe/cpp-markup-picture.md).
@@ -7,7 +15,7 @@
 - [x] `RegisterStyleTextFragment`로 공통 등록을 공유하고 `BindMarkup`으로 기존 StyleText 측정/출력/scalar 반납에 그림을 연결했다. 문자열/그림 소멸 후 `Base`의 빈 메트릭/측정/출력과 파생 저장소 반납을 추가했다. 그림 복제는 배율/색 치환을 1/0으로 다시 만들며 SHP를 소유하지 않는다.
 - [x] `SquidHeader`로 원본 추가 헤더 36바이트를 보존하고 `MarkupAssets`로 실제 타입 수/논리 프레임/기준점/SHP를 공급했다. `MarkupPixelTarget`은 일반 원색/색 치환 그림을 기존 현재 클립/표면/공유 VFX 표에 연결한다. **확대/축소 픽셀 커널·그림 변환 표 공급·대괄호 파서는 명시 경계/후속**이다.
 - [x] 게임 라이브러리/`NetstormCpp` **Release 빌드 경고 0·오류 0**. SOURCE_MAP 생성 갱신. **새 테스트 추가/실행·전체 CTest·독립 원본 동작 대조·GUI 실행은 미수행**이다. 원본 관찰 **523,634개**, C++ 대조 **523,374개**, **854개 통과**는 앞 단계 기록이다. 자료: `recovery-markup-evidence.json`, `tools/analyze_markup.py`, `extracted/markup/`. 원본 SHA 불변, AGENTS.md/보호 원본/dotnetpj 변경·커밋/푸시 없음.
-- [ ] **다음:** 이번 그림/공통 소멸·StyleText/메뉴와 기존 260개 레이아웃 자료의 독립 동작 대조; 원본 그림 색 표 공급/확대·축소 VFX 커널·대괄호 옵션/그림 파서·다중 줄 버퍼/줄바꿈/스크롤·TextGump/Form·메뉴 생성/장식/제목/소멸·Attach 보정·입력/통지 → OS 큐/폴링·overlay·Client 자동 UI 프레임. 기존 돌 버튼/배경/도움말 전체 원본 대조도 남았다. **기존 Client/UberGump 메뉴 어댑터와 raw 자동 GUI/건설·미션 완주 미완료 상태는 그대로다.**
+- [x] **회전 없는 확대/축소 VFX 픽셀 커널은 위 후속에서 구현했다.** 독립 원본/C++ 픽셀 대조·회전·색 표 공급·파서·다중 줄·메뉴 생성/입력·자동 UI와 기존 돌 버튼/배경/도움말 전체 원본 대조는 위 최신 미완료 목록을 따른다. **Client/UberGump 기존 메뉴 어댑터와 raw 자동 GUI/건설·미션 완주는 미완료다.**
 
 ## 2026-10-12 최신 cpppj: StyleText 문자열 조각·짧은 명령·메뉴 측정/출력 연결 구현 (`HJOW-Athlon`)
 

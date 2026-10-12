@@ -108,15 +108,15 @@ private:
 };
 // 원본 현재 타입 수와 두 자산 조회 경계를 같은 어댑터에 연결한다.
 void BindMarkupAssets(MarkupState& state,MarkupHooks& hooks,const MarkupAssets& assets);
-// 그림의 일반 원색/현재 변환 표 출력을 실제 GumpPixelTarget에 연결한다. 확대/축소 VFX 커널은 전달 경계다.
+// 그림의 원색/현재 변환 표 및 회전 없는 배율 출력을 실제 GumpPixelTarget에 연결한다.
 class MarkupPixelTarget {
 public:
     // pictureColors는 원본 그림 변환 표의 공급 값이고 currentColors는 글자/배경과 공유하는 현재 VFX 표다.
     MarkupPixelTarget(const GumpPixelTarget& target,const MarkupAssets& assets,ColorMap& currentColors,const ColorMap& pictureColors);
-    // 색 설치와 일반 그림 출력을 공급한다. scaled 요청은 기존 shape 경계로 넘기며 없으면 실제 도달 시 거부한다.
+    // 색 설치/직교 배율을 공급한다. 회전 요청은 기존 shape 경계로 넘기며 없으면 실제 도달 시 거부한다.
     MarkupHooks Hooks(MarkupHooks hooks);
 private:
-    // 현재 실제 프레임의 상대 픽셀 영역을 원본 기준점에 더하고 투명도/색 표를 보존한다.
+    // 현재 실제 프레임을 해제/캐시하고 원본 기준점·배율·투명/색 치환 규칙으로 출력한다.
     void Image(MarkupShapeRequest request);
     const GumpPixelTarget& target_;
     const MarkupAssets& assets_;
