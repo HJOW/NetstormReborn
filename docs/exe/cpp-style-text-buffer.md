@@ -80,6 +80,6 @@ buffer.Layout(viewWidth);
 
 자료: `cpppj/recovery-stylebuffer-evidence.json`, `tools/analyze_stylebuffer.py`, `tools/ghidra/stylebuffer-functions.json`, `extracted/stylebuffer/`, `extracted/stylebuffer-*-export.log`, `extracted/stylebuffer-build.log`. 정적 보고서는 실제 함수 범위/명령/문자열 분류·복제 가상 슬롯과 현재 구현 해시를 기록한다.
 
-후속은 이번 입력/표시 소유권·LF/공백/동률/빈 줄·그림 복제/수명과 앞선 파서/VFX/메뉴의 독립 원본/C++ 대조, TextGump/Gump 생성·재부착·표시/입력·스크롤·W 명령/전체 스타일 파서, Form/메뉴 생성·자동 UI 연결이다. **Client/UberGump는 기존 메뉴 어댑터이며 raw 자동 GUI와 건설·미션 완주는 미완료다.**
+한 줄 TextGump 생성/수명·다중 줄 표시/스크롤/선택은 [2026-10-13 후속](cpp-text-gump-display.md)에서 구현했다. 후속은 이번 입력/표시 소유권·LF/공백/동률/빈 줄·그림 복제/수명과 앞선 파서/VFX/메뉴의 독립 원본/C++ 대조, 다중 줄 전체 생성/소멸·Slider·재부착·입력·W 명령/전체 스타일 파서, Form/메뉴 생성·자동 UI 연결이다. **Client/UberGump는 기존 메뉴 어댑터이며 raw 자동 GUI와 건설·미션 완주는 미완료다.**
 
 원본 두 PE SHA는 기존 기록과 같다. AGENTS.md·보호 원본·dotnetpj 변경, 커밋/푸시 없음.

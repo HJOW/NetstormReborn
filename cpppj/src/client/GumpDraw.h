@@ -10,6 +10,20 @@ inline constexpr std::uint32_t kGumpDrawClip=0x00400000;
 struct GumpDrawState { ScreenRect clip,vfxClip; };
 // 004a1580/CD 00422e10처럼 두 전역을 함께 설정한다. right/bottom -1의 DWORD 감김도 유지한다.
 void SetGumpDrawClip(GumpDrawState& state,ScreenRect clip);
+// 기본 Gump와 텍스트 파생 Draw가 공유하는 원본 임시 ClipGump다. 복사는 복구 순서를 깨므로 금지한다.
+class GumpClipScope {
+public:
+    // 경계 조회 이후의 현재 클립을 저장하고 bounds와 교차한다. 빈 클립도 그대로 설정한다.
+    GumpClipScope(GumpDrawState& state,ScreenRect bounds);
+    // 정상/예외 반환에서 저장한 논리 영역과 VFX 끝점을 함께 복구한다.
+    ~GumpClipScope();
+    // 하나의 보호 객체만 해당 클립을 복구하도록 복사 생성/대입을 금지한다.
+    GumpClipScope(const GumpClipScope&)=delete;
+    GumpClipScope& operator=(const GumpClipScope&)=delete;
+private:
+    GumpDrawState& state_;
+    ScreenRect saved_;
+};
 // 각 Gump 가상 표 +0x24의 실제 처리기를 공급한다. 하위 버튼/배경/텍스트의 생성/분류는 호출자 책임이다.
 struct GumpDrawHooks { std::function<void(std::uint32_t)> draw; };
 // 00466310/CD 00492aa0의 전체 정상 분기와 C++ 예외 시 클립 보호다. 자식은 표시 목록에서 따로 그린다.

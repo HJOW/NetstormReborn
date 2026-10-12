@@ -9,24 +9,17 @@ namespace netstorm::client {
 namespace {
 // 원본 right/bottom -1은 signed overflow 없이 하위 DWORD를 보존한다.
 int Previous(int value) { return std::bit_cast<std::int32_t>(std::uint32_t(value)-1U); }
-// 실제 ClipGump 임시 객체처럼 논리 영역만 저장하고 정상/예외 반환에서 VFX 값까지 다시 설정한다.
-class ClipGuard {
-public:
-    // 경계 조회가 상태를 바꾼 뒤의 현재 클립을 저장한다. 네 좌표는 독립적으로 제한한다.
-    ClipGuard(GumpDrawState& state,ScreenRect bounds):state_(state),saved_(state.clip) {
-        SetGumpDrawClip(state_,ClipScreenRect(bounds,saved_));
-    }
-    // 가상 Draw가 바꾼 현재 클립 대신 저장한 논리 영역으로 복구한다.
-    ~ClipGuard() { SetGumpDrawClip(state_,saved_); }
-private:
-    GumpDrawState& state_;
-    ScreenRect saved_;
-};
 }
 // 화면 half-open 전역과 VFX inclusive 전역의 동시 쓰기다. 빈/역전 입력도 그대로 보존한다.
 void SetGumpDrawClip(GumpDrawState& state,ScreenRect clip) {
     state.clip=clip;state.vfxClip={clip.left,clip.top,Previous(clip.right),Previous(clip.bottom)};
 }
+// 실제 ClipGump 임시 객체처럼 논리 영역만 저장하고 독립적으로 제한한 네 좌표를 설정한다.
+GumpClipScope::GumpClipScope(GumpDrawState& state,ScreenRect bounds):state_(state),saved_(state.clip) {
+    SetGumpDrawClip(state_,ClipScreenRect(bounds,saved_));
+}
+// 가상 Draw가 바꾼 현재 클립 대신 저장한 논리 영역으로 복구한다.
+GumpClipScope::~GumpClipScope() { SetGumpDrawClip(state_,saved_); }
 // 없는 가상 처리기는 생성 시 거부해 일부 클립 쓰기 뒤 실패하는 일을 막는다.
 GumpDraw::GumpDraw(const GumpCollection& collection,GumpDrawState& state,GumpDrawHooks hooks)
     :collection_(collection),state_(state),hooks_(std::move(hooks)) {
@@ -35,7 +28,7 @@ GumpDraw::GumpDraw(const GumpCollection& collection,GumpDrawState& state,GumpDra
 // 플래그가 없는 Gump는 위치 캐시와 클립을 건드리지 않는다. 가상 처리기의 클립 변경도 그대로 남는다.
 void GumpDraw::Draw(std::uint32_t token) const {
     if (collection_.Flags(token)&kGumpDrawClip) {
-        const auto bounds=collection_.Bounds(token);const ClipGuard guard(state_,bounds);
+        const auto bounds=collection_.Bounds(token);const GumpClipScope guard(state_,bounds);
         hooks_.draw(token);return;
     }
     hooks_.draw(token);

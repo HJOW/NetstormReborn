@@ -1,12 +1,21 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-13 최신 cpppj: TextGump 한 줄 생성·다중 줄 출력/스크롤/선택 구현 (`HJOW-Athlon`)
+
+- [x] AGENTS.md·두 LEFT_JOBS 확인, 현재 PC/IP **HJOW-Athlon / 192.168.0.94**와 같은 PC의 정밀 디컴파일 기록 확인. 이 PC의 창/게임 실행 허용 지시 반영. 두 프로젝트에서 함수 **22/26개**를 읽기 전용으로 내보내고 실제 가상 표/ROM/CRT 입력/기준선 좌표/비교를 판독했다. 내보내기는 10월 12일 완료, 작업 기록/마무리는 13일이다. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-12.** [상세 기록](docs/exe/cpp-text-gump-display.md).
+- [x] `TextGump`로 한 줄 기본 등록 생성·signed 정렬 BYTE/부분 문맥·소유 head·길이 0 생략/명시 길이·정수 여백/저장 전 배율 크기·독립 내부 클립/현재 위치·Clear 두 번/기본 scalar 소멸을 같은 Gump/StyleText/수명 저장소에 연결했다.
+- [x] `ScrollingTextGump`로 dirty/slider 폭 차감·CD float32 중간 저장·강제 높이/전체 크기 맞춤·문맥 복사/Append/Redraw·현재 slider의 range/page/position/값 재조회·절대/상대/맨 아래 요청/소비를 구현했다. **Slider 실제 몸체·다중 줄 전체 생성/소멸은 필수 외부 경계/후속**이다. 원본 맨 아래 이동의 extra 미사용과 판정의 10픽셀 허용을 유지한다.
+- [x] 가시 줄 시작의 strict skip/이전 줄 높이 누적·ascent 두 번 조회/저장 측정 폭 전진·현재 next·CD NaN viewport 순회와 패치 제외·half-open 화면 경계/엄격한 조각 위 경계 선택을 복원했다. `GumpClipScope`를 공통/파생 Draw가 재사용하고 `BindTextGumpDraw`/`BindTextGumpLifetime`으로 기존 분배에 연결한다.
+- [x] 라이브러리/`NetstormCpp` **Release 최종 빌드 경고 0·오류 0**. SOURCE_MAP 생성기로 TextGump 파일 존재 상태/클라이언트 개수를 갱신했다. **새 테스트 추가/실행·전체 CTest·독립 원본/C++ 동작/픽셀 대조·게임/GUI 실행은 미수행**이다. 원본 관찰 **523,634개**, C++ 대조 **523,374개**, **854개 통과**는 앞 단계 기록이다. 자료: `recovery-textgump-evidence.json`, `tools/analyze_textgump.py`, `extracted/textgump/`. 원본 SHA 불변, AGENTS.md/보호 원본/dotnetpj 변경·커밋/푸시 없음.
+- [ ] **다음:** 이번 한 줄 생성/수명·다중 줄 표시/스크롤/선택과 앞선 버퍼/LF/공백/그림/파서/VFX/메뉴·기존 260개 레이아웃 자료의 독립 원본/C++ 대조; 다중 줄 전체 생성/소멸·Slider 실제 range/page/position·가상 Attach/Input/통지·W 명령/전체 스타일 파서·그림 색 표/회전 VFX/flag 2 재사용·Form·메뉴 생성/장식/제목/소멸/Attach 보정 → OS 큐/폴링·overlay·Client 자동 raw UI. 기존 돌 버튼/배경/도움말 전체 대조도 남았다. **Client/UberGump 기존 메뉴 어댑터와 raw 자동 GUI/건설·미션 완주는 미완료다.**
+
 ## 2026-10-12 최신 cpppj: StyleText 다중 줄 버퍼·원본 공백 줄바꿈 구현 (`HJOW-Athlon`)
 
 - [x] AGENTS.md·두 LEFT_JOBS 확인, 현재 PC/IP **HJOW-Athlon / 192.168.0.94**와 같은 PC의 정밀 디컴파일 기록 확인. 이 PC의 창/게임 실행 허용 지시 반영. 두 정밀 프로젝트에서 함수 **14/16개**를 읽기 전용으로 내보냈다. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-12.** [상세 기록](docs/exe/cpp-style-text-buffer.md).
 - [x] `StyleTextBuffer`로 생성·LF 완료 줄/미완료 끝 칸·문자열 통지/명시 길이/NUL·그림 Fit 추가·오래된 줄 삭제/전체 칸 이동·센티널 표시 줄 삽입/반납·최대 폭/전체 높이를 구현했다. 입력/표시 조각은 같은 StyleText/Markup 표의 별도 소유 체인이다. 폭 0 이하의 목록 유지, dirty 호출자 관리, 원본 소멸의 미완료 끝 칸 삭제 누락을 유지한다.
 - [x] 엄격한 폭 미만/동률 분할·space 경계/연속 공백·첫 단어 강제/빈 줄·space/NUL 포함 복사·실제 부분 조각 재측정·현재 문맥/T 태그·DWORD 감김을 복원했다. 비문자 높이의 이동 전 갱신과 가상 그림 복제의 배율 1/색 치환 0을 유지한다. 실제 GumpText/FontStore와 같은 Markup의 복제/삭제에 연결했다.
 - [x] 게임 라이브러리/`NetstormCpp` **Release 빌드 경고 0·오류 0**. SOURCE_MAP 생성/내용 차이 없음. **새 테스트 추가/실행·전체 CTest·독립 원본 줄/조각/픽셀 대조·게임/GUI 실행은 미수행**이다. 원본 관찰 **523,634개**, C++ 대조 **523,374개**, **854개 통과**는 앞 단계 기록이다. 자료: `recovery-stylebuffer-evidence.json`, `tools/analyze_stylebuffer.py`, `extracted/stylebuffer/`. 원본 SHA 불변, AGENTS.md/보호 원본/dotnetpj 변경·커밋/푸시 없음.
-- [ ] **다음:** 이번 버퍼/LF/공백/동률/빈 줄/그림 복제/수명·앞선 파서/VFX/StyleText/메뉴와 기존 260개 레이아웃 자료의 독립 동작 대조; TextGump/Gump 생성·재부착·표시/입력·스크롤·W 명령/전체 스타일 파서·원본 그림 색 표 공급·회전 VFX/flag 2 재사용·Form·메뉴 생성/장식/제목/소멸·Attach 보정·입력/통지 → OS 큐/폴링·overlay·Client 자동 UI 프레임. 기존 돌 버튼/배경/도움말 전체 원본 대조도 남았다. **Client/UberGump 기존 메뉴 어댑터와 raw 자동 GUI/건설·미션 완주는 미완료다.**
+- [x] **한 줄 TextGump 생성/수명·다중 줄 표시/스크롤/조각 선택은 위 후속에서 구현했다.** 독립 대조·다중 줄 전체 생성/소멸·Slider·가상 Attach/Input·전체 W 파서·메뉴/Form·자동 raw UI와 기존 돌 버튼/배경/도움말 전체 대조는 위 최신 미완료 목록을 따른다. **Client/UberGump 기존 메뉴 어댑터와 raw 자동 GUI/건설·미션 완주는 미완료다.**
 
 ## 2026-10-12 최신 cpppj: StyleText 대괄호 그림·태그·색·그림자·소리 연결 구현 (`HJOW-Athlon`)
 
