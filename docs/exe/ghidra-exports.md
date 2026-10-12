@@ -1,5 +1,7 @@
 # 기계어 대조 입력(Ghidra 내보내기) 준비
 
+2026-10-12 (`VM-W11-CODEX`) 최신: 새 `stonebuttongump-functions.json` **16/19/19개**를 읽기 전용으로 내보냈다. 돌 버튼 전체 생성/가상 부착·텍스트 측정 위임·배경 생성·소멸자 위임·기본 도움말 사건과 메뉴 helper다. [정적 복원 및 빌드 기록](cpp-stone-button-gump-reconstruction.md). **새 PE 실행 대조는 미수행**이며 기존 `buttongump` 근거 파일은 유지했다. **마지막 디컴파일 PC: VM-W11-CODEX, 2026-10-12.**
+
 2026-10-12 (`VM-W11-CODEX`) 최신: `buttongump` **25/22/22개** 읽기 전용 내보내기. 버튼의 실제 Gump 기반 생성/등록·캡처·idle·부모 전파·팝업 Kill/dialog·CRT와 예약 만료 helper를 추가했다. 새 독립 원본 742개·두 x87 정상 반환 1,640회·SHA/집계 감사 및 C++ 전체 827개 통과. [범위·연결·GUI·후속 기록](cpp-button-gump-validation.md). **마지막 디컴파일 PC: VM-W11-CODEX, 2026-10-12.** 아래의 16/13/13개 및 SHA는 앞 정적 단계 기록이다.
 
 2026-10-12 (`VM-W11-CODEX`) 최신: `buttongump-functions.json` **16/13/13개**를 읽기 전용으로 내보냈다. 실제 CD 입력 진입 `00440ce0`와 패치 기본 위임 꼬리 `00424c69`를 포함한다. 버튼 기본 생성/상태/입력/통지/idle·돌 버튼 상태·화면→로컬 좌표·팝업 Kill의 정적 구현 및 Release 컴파일을 완료했다. **새 독립 PE 실행 관찰·동작 검증은 미수행**이다. [주소/범위·SHA·후속 기록](cpp-button-gump-reconstruction.md). **마지막 디컴파일 PC: VM-W11-CODEX, 2026-10-12.** 아래는 앞 단계 검증 기록이다.

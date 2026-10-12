@@ -25,7 +25,7 @@ struct ButtonGumpState {
 };
 // 노드는 호출 중 안정된 주소로 살아 있어야 한다. backgroundFlags는 실제 배경 +b4 저장소를 반환한다.
 // now는 원본의 벽 시계 초, poll은 원본 왼쪽 버튼 폴링이다. redraw는 가상 +8(false), sound는 button.wav다.
-// baseEvent는 아직 별도 복원 대상인 기본 Gump 도움말 처리기다. 도달한 경계가 없으면 예외로 거부한다.
+// baseEvent는 GumpHelp로 연결할 수 있는 기본 도움말 처리기다. 도달한 경계가 없으면 예외로 거부한다.
 // 네 선택적 가상 훅이 없으면 이 클래스의 실제 기본/돌 버튼 상태 함수를 사용한다.
 struct ButtonGumpHooks {
     std::function<ButtonGumpNode*(std::uint32_t)> node;
@@ -38,7 +38,7 @@ struct ButtonGumpHooks {
     std::function<std::uint32_t(std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t)> baseEvent;
     std::function<void(std::uint32_t,std::uint32_t)> value,pressed,pulse,blink;
 };
-// 전체 UI 객체 생성/텍스트/Client 루프와 독립인 실제 버튼 처리기다. GumpEvents/입력/프레임의 가상 훅에 연결한다.
+// 돌 버튼 생성/텍스트/부착은 StoneButtonGump에 맡기는 상태 처리기다. GumpEvents/입력/프레임 훅에 연결한다.
 class ButtonGump {
 public:
     // 같은 생성·수명·입력·좌표 상태가 이 처리기보다 오래 살아야 한다. 버튼/기본 노드 조회는 필수다.
@@ -46,7 +46,7 @@ public:
         const GumpCollection& collection,const GumpEvents& events,const GumpInput& input,
         const GumpLifetime& lifetime,ButtonGumpHooks hooks);
     // 004253e0/CD 00440bb0: 기본 생성/등록 후 버튼 크기·플래그·상태·두 예약 시각을 준비한다.
-    // 돌 버튼 전체 생성자/텍스트/배경 생성은 별도다. 이력: 2026-10-12 기본 파생 생성 복원.
+    // 돌 버튼 전체 생성은 StoneButtonGump::Construct가 이 함수에 위임한다. 이력: 2026-10-12 기본 파생 생성 복원.
     std::uint32_t ConstructBase(std::uint32_t token,std::int32_t width,std::int32_t height,std::uint32_t flags) const;
     // 00424960/00424980과 돌 버튼 00425150/00425200: DWORD 값을 보존하고 redraw(false)를 호출한다.
     // 돌 버튼의 두 상태 OR가 바뀌면 현재 배경 kPressed를 갱신하고 배경에도 redraw(false)를 요청한다.

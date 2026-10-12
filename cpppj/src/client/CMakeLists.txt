@@ -33,6 +33,9 @@ target_sources(netstorm PRIVATE
     GumpInput.cpp GumpInput.h
     GumpFrame.cpp GumpFrame.h
     ButtonGump.cpp ButtonGump.h
+    StoneButtonGump.cpp StoneButtonGump.h
+    GumpBackgroundCreate.cpp GumpBackgroundCreate.h
+    GumpHelp.cpp GumpHelp.h
     TileGroupCollection.cpp TileGroupCollection.h
     ObjectCollection.cpp ObjectCollection.h
     PreviewCollection.cpp PreviewCollection.h
