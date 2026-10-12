@@ -67,7 +67,8 @@ TEST_CASE(TypeParser_PreservesCodesAndSpecialFrameOrder) {
     CHECK(type.FrameTable().FindNumber('A', 'A', 4) == 1);
     const auto defaults = netstorm::o::RiftTypeDefinition::Parse("typename Empty {} A00:default:\"a\"#0; B00:default:\"b\"#0;");
     CHECK(defaults.specialFrames.defaultFrame == 1); CHECK(defaults.specialFrames.helpFrame == 1);
-    CHECK(defaults.specialFrames.gumpFrame == 0); CHECK(defaults.specialFrames.baseFrame == -1);
+    // gumpframe 미지정은 원본 .type 로딩의 -1이며 그림 파서는 defaultFrame으로 복귀한다.
+    CHECK(defaults.specialFrames.gumpFrame == -1); CHECK(defaults.specialFrames.baseFrame == -1);
 }
 
 // 패치 전후의 로딩 순서 길이는 같지 않으며 앞부분만 공통이다.

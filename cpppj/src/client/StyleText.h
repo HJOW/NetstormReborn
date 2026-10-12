@@ -9,7 +9,7 @@
 namespace netstorm::client {
 // Text는 소유 문자열, External은 그림 등 파생 조각, Base는 소멸 후 기본 가상 표의 빈 동작이다.
 enum class StyleTextFragmentKind { Text, External, Base };
-// 원본 +4 next/+8 용도 미확정 DWORD/+c NUL 문자열/+10 문맥이다. 호스트 배치는 원본 주소와 무관하다.
+// 원본 +4 next/+8 공통 T 태그/+c NUL 문자열/+10 문맥이다. 호스트 배치는 원본 주소와 무관하다.
 struct StyleTextFragment {
     StyleTextFragmentKind kind{StyleTextFragmentKind::Text};
     std::uint32_t next{},metadata{};
@@ -24,6 +24,8 @@ struct StyleTextState {
 };
 // 문자열/그림이 같은 자동 토큰과 안정된 조각 표를 사용하도록 등록한다. null 토큰과 덮어쓰기를 피한다.
 std::uint32_t RegisterStyleTextFragment(StyleTextState& state,StyleTextFragment fragment);
+// 004756e0/CD 004505c0의 단일 조각 추가다. 문자열/대괄호 그림이 같은 꼬리 조회·next=0 순서를 공유한다.
+void AppendStyleTextFragment(StyleTextState& state,std::uint32_t& head,std::uint32_t fragment);
 // 문자열 경계는 입력 text/context를 변경하지 않는다. 파생 경계는 현재 head/next를 바꿀 수 있다.
 // metrics는 캐시 높이/상승/하강이고 measure는 signed 폭/높이다. release는 scalar 반납 직전 통지다.
 struct StyleTextHooks {
@@ -35,8 +37,8 @@ struct StyleTextHooks {
     std::function<void(std::uint32_t,ScreenPoint,const std::array<std::uint32_t,8>*)> externalDraw;
     std::function<void(std::uint32_t,std::uint8_t)> externalDestroy;
     std::function<std::uint32_t(char)> color;
-    // ~[...] 내부의 그림/옵션 처리는 명시 경계다. 필요한 문맥 변경과 조각 추가를 같은 head에 수행한다.
-    std::function<void(std::string_view,std::array<std::uint32_t,8>&,std::uint32_t&)> bracket;
+    // ~[...] 내부의 문맥/head/현재 공통 태그를 같은 저장소에서 갱신한다. StyleTextMarkup이 원본 명령을 공급한다.
+    std::function<void(std::string_view,std::array<std::uint32_t,8>&,std::uint32_t&,std::uint32_t&)> bracket;
 };
 // 같은 메뉴/텍스트 Gump에 head를 보관하고 조각의 소유권을 전달하는 원본 처리기다.
 // 자동 토큰은 호스트용 식별자이며 PE 메모리 주소나 Gump 등록 ID로 재해석하지 않는다.
@@ -72,7 +74,7 @@ public:
     // 첫 순회의 최대 캐시 높이를 반환한다. override는 배치 측정 문맥을 바꾸지 않는다.
     std::int32_t Draw(std::uint32_t head,ScreenPoint position,const std::array<std::uint32_t,8>* overrideContext=nullptr) const;
     // 004bb430/CD 004b7770: ~ 색/슬롯/스타일·그림자/초기 문맥 복귀·리터럴 ~~를 해석해 기존 head 뒤에 붙인다.
-    // 닫는 ]가 있는 대괄호 명령은 bracket 경계가 필요하다. 결과의 마지막 빈 조각도 유지한다.
+    // 닫는 ]가 있는 대괄호 명령은 bracket 경계가 필요하다. T 태그는 이후 모든 조각과 마지막 빈 조각에 남는다.
     void Parse(std::uint32_t& head,std::string_view text,const std::array<std::uint32_t,8>& context) const;
 private:
     // 실제 도달한 토큰의 안정된 저장소를 읽고 null/미등록 토큰을 거부한다.

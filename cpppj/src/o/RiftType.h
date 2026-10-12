@@ -63,7 +63,7 @@ struct TypeCluster {
     std::vector<TypeImageReference> images;
 };
 struct TypeSpecialFrames {
-    int defaultFrame{}, gumpFrame{}; // 원본의 0 초기값.
+    int defaultFrame{}, gumpFrame{}; // 빈 타입의 0 초기값. .type Parse는 gumpFrame을 -1로 먼저 쓴다.
     int helpFrame{-1}, baseFrame{-1}; // 원본의 -1 초기값.
 };
 

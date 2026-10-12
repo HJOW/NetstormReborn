@@ -131,6 +131,8 @@ FrameCode ReadFrameCode(std::string_view label, TypeLexer& lexer) {
 RiftTypeDefinition RiftTypeDefinition::Parse(std::string_view text) {
     TypeLexer lexer(text);
     RiftTypeDefinition type;
+    // .type 로딩은 +11c를 -1로 먼저 쓴다. gumpframe 미지정 시 StyleText의 특수 그림은 default로 복귀한다.
+    type.specialFrames.gumpFrame=-1;
     if (!Equal(lexer.Take(TokenKind::Word), "typename")) throw std::runtime_error("Missing typename");
     type.name = lexer.Take(TokenKind::Word);
     // constructor / client constructor 수식어와 선택적인 typeflags를 읽는다.

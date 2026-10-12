@@ -23,6 +23,23 @@ std::int32_t Subtract(std::int32_t first,std::int32_t second) {
 void Visit(std::unordered_set<std::uint32_t>& seen,std::uint32_t token) {
     if (!seen.insert(token).second) throw std::runtime_error("StyleText 순환 체인");
 }
+// 문자열 처리기와 그림 파서가 동일한 공통 토큰의 안정된 조각을 읽는다.
+StyleTextFragment& Fragment(StyleTextState& state,std::uint32_t token) {
+    const auto it=state.fragments.find(token);
+    if (!token || it==state.fragments.end()) throw std::out_of_range("StyleText 조각 저장소 없음");
+    return it->second;
+}
+// 공통 next만 순회해 꼬리를 찾고 무효 호스트 체인의 순환/미등록 토큰을 거부한다.
+std::uint32_t FragmentTail(StyleTextState& state,std::uint32_t head) {
+    std::unordered_set<std::uint32_t> seen;
+    // 각 방문에서 현재 next를 읽어 문자열과 그림에 같은 원본 순서를 적용한다.
+    while (true) {
+        Visit(seen,head);
+        const auto next=Fragment(state,head).next;
+        if (!next) return head;
+        head=next;
+    }
+}
 // 원본 단일 소문자 색 명령이다. CD판에는 a/d/p/s/u가 없다.
 constexpr std::string_view kCommonColors="bgijklmnoqrtwxy";
 constexpr std::string_view kPatchColors="adpsu";
@@ -50,15 +67,21 @@ std::uint32_t RegisterStyleTextFragment(StyleTextState& state,StyleTextFragment 
     return token;
 }
 
+// 체인 전체 이전과 구분한다. 새 조각의 기존 next는 꼬리 부착 뒤 0으로 바뀐다.
+void AppendStyleTextFragment(StyleTextState& state,std::uint32_t& head,std::uint32_t fragment) {
+    Fragment(state,fragment);
+    if (!head) head=fragment;
+    else Fragment(state,FragmentTail(state,head)).next=fragment;
+    Fragment(state,fragment).next=0;
+}
+
 // 경계는 실제 도달 시 확인한다. 파싱/연결만 수행하는 처리기에는 글꼴/출력이 없어도 된다.
 StyleText::StyleText(StyleTextState& state,StyleTextHooks hooks,o::OriginalEdition edition)
     :state_(state),hooks_(std::move(hooks)),edition_(edition) {}
 
 // map은 조각 삽입으로 기존 주소를 이동하지 않는다. 삭제된 토큰은 재사용하지 않는다.
 StyleTextFragment& StyleText::Node(std::uint32_t token) const {
-    const auto it=state_.fragments.find(token);
-    if (!token || it==state_.fragments.end()) throw std::out_of_range("StyleText 조각 저장소 없음");
-    return it->second;
+    return Fragment(state_,token);
 }
 
 // 명시 길이는 중간 NUL도 복사하지만 측정/출력은 원본처럼 첫 NUL에서 멈춘다.
@@ -87,22 +110,12 @@ std::uint32_t StyleText::CloneText(std::uint32_t token) const {
 
 // 현재 next를 읽어가며 마지막 조각을 반환한다.
 std::uint32_t StyleText::Tail(std::uint32_t head) const {
-    std::unordered_set<std::uint32_t> seen;
-    // 저장소 밖 조회와 무한 순회를 막으면서 원본 단방향 꼬리 순서를 유지한다.
-    while (true) {
-        Visit(seen,head);
-        const auto next=Node(head).next;
-        if (!next) return head;
-        head=next;
-    }
+    return FragmentTail(state_,head);
 }
 
 // Append는 단일 조각의 next를 0으로 만든다. 이미 연결된 체인을 이전하려면 Transfer를 사용한다.
 void StyleText::Append(std::uint32_t& head,std::uint32_t fragment) const {
-    Node(fragment);
-    if (!head) head=fragment;
-    else Node(Tail(head)).next=fragment;
-    Node(fragment).next=0;
+    AppendStyleTextFragment(state_,head,fragment);
 }
 
 // source 전체 체인을 이전하므로 source의 첫 next를 지우지 않는다.
@@ -261,15 +274,17 @@ void StyleText::Parse(std::uint32_t& head,std::string_view text,const std::array
     const auto original=initialContext;
     const bool patch=edition_==o::OriginalEdition::Patch1078;
     std::size_t position=0;
+    // 원본 T 명령의 파서 지역 태그다. 새 Parse마다 0이며 ~. 문맥 복귀로는 초기화하지 않는다.
+    std::uint32_t metadata=0;
     // ~ 앞 구간을 먼저 추가한 뒤 명령을 처리한다. 마지막 NUL 구간은 빈 경우에도 추가한다.
     while (true) {
         const auto mark=source.find('~',position);
         const auto remaining=std::span<const char>(source.c_str()+position,source.size()-position+1);
         if (mark==std::string::npos) {
-            Append(head,NewText(remaining,context));
+            Append(head,NewText(remaining,context,kDwordMaximum,metadata));
             return;
         }
-        if (mark>position) Append(head,NewText(remaining,context,static_cast<std::uint32_t>(mark-position)));
+        if (mark>position) Append(head,NewText(remaining,context,static_cast<std::uint32_t>(mark-position),metadata));
         const auto command=source[mark+1];
         auto next=mark+2;
         switch (command) {
@@ -286,14 +301,14 @@ void StyleText::Parse(std::uint32_t& head,std::string_view text,const std::array
         case '~': {
             // 리터럴 ~는 그 시점의 문맥을 보관한 별도 문자열 조각이다.
             constexpr std::array<char,2> literal{'~','\0'};
-            Append(head,NewText(literal,context));
+            Append(head,NewText(literal,context,kDwordMaximum,metadata));
             break;
         }
         case '[': {
             const auto close=source.find(']',next);
             if (close!=std::string::npos) {
                 if (!hooks_.bracket) throw std::invalid_argument("StyleText 대괄호 그림/옵션 경계 필요");
-                hooks_.bracket(std::string_view(source).substr(next,close-next),context,head);
+                hooks_.bracket(std::string_view(source).substr(next,close-next),context,head,metadata);
                 next=close+1;
             }
             break;
