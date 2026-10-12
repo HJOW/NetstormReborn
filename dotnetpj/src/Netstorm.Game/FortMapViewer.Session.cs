@@ -77,7 +77,7 @@ internal sealed partial class FortMapViewer
         if (_mission == null && !_placementMode && !_bridgeMode && !_session.CombatEnabled)
             reasons |= SessionPauseReason.ViewerIdle;
         _sessionFrameClock.SetPauseReasons(reasons, _readFrameMilliseconds());
-        _session.TutorialFrameLocked = _missionDialogFrames?.BriefingPending == true || _sessionFrameClock.IsPaused;
+        _session.TutorialFrameLocked = _missionDialogFrames?.StagePending == true || _sessionFrameClock.IsPaused;
     }
 
     /// <summary>

@@ -163,7 +163,7 @@ internal sealed partial class FortMapViewer : IDisposable
         }
         finally
         {
-            // 안내/지식창·메뉴 등 조기 반환에서도 카운터는 화면당 한 번만 진행하고 소유권을 동기화한다.
+            // 안내/지식창·메뉴의 조기 반환에서도 안내/재개/튜토리얼 판정은 화면당 한 번만 진행한다.
             UpdateMissionDialogFrame(externalDialogOpen);
             SynchronizePauseReasons();
         }

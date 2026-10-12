@@ -44,6 +44,7 @@ target_sources(netstorm PRIVATE
     MenuGumpLayout.cpp MenuGumpLayout.h
     GumpDecoration.cpp GumpDecoration.h
     MenuGumpWidgets.cpp MenuGumpWidgets.h
+    GumpFormBinding.cpp GumpFormBinding.h
     MenuGumpInput.cpp MenuGumpInput.h
     MenuGumpDraw.cpp MenuGumpDraw.h
     MenuGumpControls.cpp MenuGumpControls.h

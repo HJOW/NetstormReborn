@@ -30,7 +30,7 @@ internal sealed partial class FortMapViewer
     private static readonly Regex TutorialWords = new(@"\S+|\s+", RegexOptions.Compiled);
 
     private TutorialDialogScript? _tutorialDialog;
-    /// <summary>이 미션의 초기 10프레임과 안내 종료 후 7프레임 재개 잠금. 실제 화면 갱신에서만 진행한다.</summary>
+    /// <summary>초기/후속 단계 10프레임·0.5초 지연과 안내 종료 후 7프레임 재개 잠금. 실제 화면 갱신에서만 진행한다.</summary>
     private MissionDialogFrameGate? _missionDialogFrames;
     private TutorialDialogAction? _pendingTutorialAction;
     private int _tutorialScroll;
@@ -66,46 +66,67 @@ internal sealed partial class FortMapViewer
             _tutorialDialog = new TutorialDialogScript(script, settings, commonScript, missionValues);
             _tutorialDialog.ConfigHandler = configChanged;
             _missionDialogFrames = new MissionDialogFrameGate();
+            // 화면 보정 안내는 실제 Tell 성공 직후 정지를 잡고 원본처럼 루트 팝업을 닫는다.
+            _session.ConnectTutorialScreenFrames(_missionDialogFrames, section =>
+            {
+                if (!OpenTutorialTell(section)) return;
+                CloseContextMenu();
+                CloseMissionMenu();
+                CloseKnowledge();
+            });
             _session.TutorialFrameLocked = true;
         }
     }
 
-    /// <summary>세션의 단계 안내를 열되 보정 안내는 F8 복귀 지점으로 기록하지 않는다.</summary>
-    private void OpenTutorialTell(string section)
+    /// <summary>안내를 실제로 열고 정지 소유권을 즉시 반영한다. 보정 안내는 F8 복귀 지점으로 기록하지 않는다.</summary>
+    private bool OpenTutorialTell(string section)
     {
         if (_tutorialDialog == null)
         {
-            return;
+            return false;
         }
         // 세션 생성자의 초기 A. 이벤트는 화면의 10프레임 잠금이 요청할 때 한 번만 표시한다.
-        if (_missionDialogFrames?.BriefingPending == true && section.Equals("A.", StringComparison.OrdinalIgnoreCase)) return;
+        if (_missionDialogFrames?.BriefingPending == true && section.Equals("A.", StringComparison.OrdinalIgnoreCase)) return false;
         bool stage = section.Length == 2 && char.IsAsciiLetter(section[0]) && section[1] == '.';
         bool opened = stage ? _tutorialDialog.OpenStage(section) : _tutorialDialog.OpenSection(section);
         if (opened)
         {
             ResetTutorialPage();
+            SynchronizePauseReasons();
         }
+        return opened;
     }
 
     /// <summary>
-    /// 이번 화면 입력/세션 처리 뒤 초기 브리핑과 재개 카운터를 한 번 진행한다.
+    /// 이번 화면 입력/세션 처리 뒤 초기/후속 안내 잠금·재개·튜토리얼 판정을 각각 한 번 진행한다.
     /// 외부 도움말/옵션의 현재 상태는 클릭을 뒤 지도에 전달하지 않는 inputBlocked 이력과 구분한다.
     /// </summary>
     private void UpdateMissionDialogFrame(bool externalDialogOpen)
     {
         if (_missionDialogFrames == null) return;
-        bool dialogOpen = externalDialogOpen || _leaveMissionPrompt;
-        if (_missionDialogFrames.AdvanceBriefing(dialogOpen) && _tutorialDialog!.OpenBriefing())
+        double gameSeconds = _sessionFrameClock.RawGameSeconds;
+        bool initial = _missionDialogFrames.BriefingPending;
+        bool dialogOpen = externalDialogOpen || _leaveMissionPrompt || TutorialDialogOpen;
+        if (_missionDialogFrames.AdvanceStage(gameSeconds, GameClockPaused, dialogOpen))
         {
-            // 원본 004c2a90은 초기 Tell 성공 뒤 루트 팝업을 닫는다. 지식 격자도 controlled 메뉴 팝업이다.
-            CloseContextMenu();
-            CloseMissionMenu();
-            CloseKnowledge();
-            ResetTutorialPage();
+            bool opened = initial ? _tutorialDialog!.OpenBriefing()
+                : _tutorialDialog!.OpenStage(_session.Tutorial?.Section ?? "A.");
+            if (opened)
+            {
+                // 원본 004c2a90은 현재 단계 Tell 성공 뒤 루트 팝업을 닫는다. 지식 격자도 controlled 메뉴 팝업이다.
+                CloseContextMenu();
+                CloseMissionMenu();
+                CloseKnowledge();
+                ResetTutorialPage();
+            }
         }
         if (TutorialDialogOpen) _missionDialogFrames.CapturePause();
+        dialogOpen = externalDialogOpen || _leaveMissionPrompt || TutorialDialogOpen;
         _missionDialogFrames.AdvanceResume(TutorialDialogOpen, dialogOpen,
             KnowledgeOpen || ContextMenuOpen || MissionMenuOpen);
+        // 이번 프레임의 재개/안내 정지를 먼저 동기화해야 단계 판정도 같은 실제 정지 여부를 읽는다.
+        SynchronizePauseReasons();
+        _session.AdvanceTutorialScreenFrame(gameSeconds);
     }
 
     /// <summary>

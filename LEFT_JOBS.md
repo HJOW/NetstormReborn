@@ -1,5 +1,20 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-13 최신 cpppj: GumpForm SID 부착·소유 UI 알림·반납 연결 (`HJOW-Athlon`)
+
+- [x] AGENTS.md·두 LEFT_JOBS 확인, 현재 PC **HJOW-Athlon**과 마지막 디컴파일 PC 일치. 두 PE 함수 **20/20개** 읽기 전용 내보내기·GumpForm 타입 초기값/가상 표·필드 폭/종속 체인·등록 UI 알림/공통 삭제를 판독했다. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-13.** [상세 기록](docs/exe/cpp-gump-form.md).
+- [x] `SquidFactory::CreateGumpForm`/`GumpFormHost`로 타입 **3**을 기존 SID 풀에 생성하고 가상 표→타입만 쓰며 자산 owner/HP/zOrder를 생략한다. 메뉴 flags **2**의 client 영역·같은 FIFO/삭제 기록을 사용한다. 소유 ID는 **+12 DWORD 전체**, 부모/previous는 **+10/+0e WORD**다.
+- [x] 가상 +74의 부모/next/이전 머리 previous/head/자신 previous/contained/void 순서·이웃 Form/contained 자산 previous 위치 차이·process debug 조건 없는 부착을 구현했다. **패치 부모0 무동작/CD assert 후 실행 거부**를 구분한다. Unpop은 void 먼저/부모 free·dead의 링크·contained 유지/살아 있는 부모의 체인 정리다.
+- [x] 가상 +1c/+78의 소유 ID0 생략/현재 부모·현재 등록 ID→가상 +4→실제 자식 우선 Gump Kill을 연결했다. 기존 공통 destroy의 dead/pre/post 깊이·next 선저장/free 재조회·실제 Unpop/SID 반납을 사용한다. **Form 자체 삭제에는 UI 알림이 없으며**, 부모 삭제 알림의 중첩 Form 삭제/지연 UI 큐 순서를 유지한다.
+- [x] `GumpFormBinding`의 알림/기본 객체 삭제/메뉴 Form 공급/Gump 수명 연결기를 추가했다. 토큰/인덱스는 같은 SID이며 다른 타입 삭제 분배를 보존한다. **전체 월드 삭제에도 이 분배가 필요하고, 다른 파생 Gump +4/파생 내부 재분배는 호출자가 공급해야 한다.**
+- [x] 라이브러리/`NetstormCpp` **Release 최종 빌드 경고 0·오류 0**. SOURCE_MAP 생성/내용 차이 없음. **새 테스트 추가/실행·전체 CTest·독립 PE/C++ SID/필드/알림/중첩 삭제/반납 대조·게임/GUI 실행 미수행**이다. 관찰 **523,634개**, 대조 **523,374개**, **854개 통과**는 앞 단계 기록이며 이번 관찰/대조 추가는 각각 **0**이다. 자료: `recovery-gumpform-evidence.json`, `tools/analyze_gumpform.py`, `extracted/gumpform/`. 보호 PE SHA 불변·AGENTS.md/보호 원본/dotnetpj/테스트 변경·커밋/푸시 없음.
+- [ ] **다음:** 전체 Form 풀 재구성/지정 Take·DependForm/ContentForm 전체 수명·서버 Pop 전송·다른 파생 Gump 객체 삭제/내부 중첩 분배·실제 전체 Client/월드 연결 → 동적 메뉴/현재 전역/명령 큐/변경 영역/allocator → OS 큐/폴링·overlay·자동 raw Client UI. 새 Form/기존 전체 UI 독립 동작/픽셀 대조·공용 서식기/포인터 alias·그림 색 표/회전 VFX/flag 2 재사용·극단 x87/생성 EH도 남았다. **Client/UberGump 기존 메뉴 어댑터와 raw 자동 GUI/건설·미션 완주는 미완료다.**
+
+## 2026-10-13 공통/dotnetpj 후속: 튜토리얼 단계 프레임·절대 타이머 연결 (`HJOW-Athlon`)
+
+- [x] 위 cpppj GumpForm 작업을 마무리한 뒤 사용자 요청으로 dotnetpj 튜토리얼1/2의 후속0.5초/10프레임·2/4초·실제 화면 판정을 같은 원본 게임 시각과 정지 소유권에 연결했다. 10.78 함수 **13개** 읽기 전용 내보내기, **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-13**. 게임/Assets/Core Release 경고0·오류0. 새 테스트/독립 실행 대조·GUI/게임 실행 없음. 앞선 cpppj 코드/근거와 보호 원본을 보존했다.
+- [ ] 세부 완료/한계와 다음 9-1 A 작업은 [dotnet 인수인계](LEFT_JOBS.dotnetpj.md) 및 [작업 기록](docs/dotnet-stage-frames-20261013.md)을 따른다. 새 연결의 실제 동작 대조·가상+20 재지연/전체 미션 분배·나머지 타이머/24Hz 이행은 남았다.
+
 ## 2026-10-13 공통: AGENTS.md 한국어 건물·유닛 명칭 규칙 반영 완료 (`HJOW-Athlon`)
 
 - [x] 사용자 추가 항목을 [공통 명칭 규칙](docs/korean-unit-names.md)과 README·규칙/자산/언어·cpppj 로드맵/빌드·게임플레이/분석/녹화 문서·두 인수인계에 반영했다. 사제(Priest)·신전(Temple)·다리(Bridge)·발사기(Thrower)는 번역 가능하며, 다른 이름은 영어 발음 한글 표기다. **Workshop=워크샾, Generator=제네레이터**를 사용한다. 기존 관련 문서 **89개/치환 1,100회**를 정리했고 공통 참조/규칙 문서를 추가했다. 실제 링크 대상·인라인 식별자·명령/원본 자료 블록과 과거 검증 수는 유지한다.
@@ -12,14 +27,14 @@
 - [x] 아래 cpppj 메뉴 작업을 완료한 뒤 사용자 요청으로 dotnetpj 초기 브리핑 10/안내 재개 7프레임을 실제 화면·같은 게임 시계·정지 소유권에 연결했다. 10.78 함수 7개 읽기 전용 내보내기, **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-13**. 게임/Assets/Core Release 경고 0·오류 0. 테스트·독립 실행 대조·GUI/게임 실행 없음. cpppj 구현과 보호 원본은 보존했다.
 - [ ] 세부 완료/한계와 다음 9-1 A 작업은 [dotnet 인수인계](LEFT_JOBS.dotnetpj.md) 및 [작업 기록](docs/dotnet-dialog-frames-20261013.md)을 따른다. 실제 동작 확인과 원본 전체 타이머 이행은 남았다.
 
-## 2026-10-13 최신 cpppj: controlled 메뉴 항목·제목/머리·CD 자식 문맥 연결 (`HJOW-Athlon`)
+## 2026-10-13 앞 단계 cpppj: controlled 메뉴 항목·제목/머리·CD 자식 문맥 연결 (`HJOW-Athlon`)
 
 - [x] AGENTS.md·두 LEFT_JOBS 확인, 현재 PC **HJOW-Athlon**과 마지막 디컴파일 PC 일치. 두 PE 함수 **10/12개**를 읽기 전용으로 내보내 실제 문자열/체크/제목/머리/자식/구분선·메뉴 없음·CD 문맥/선택 helper와 서식/설정 참조를 판독했다. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-13.** [상세 기록](docs/exe/cpp-menu-gump-controls.md).
 - [x] `MenuGumpControls`로 controlled 일반/체크/자식·조건/비활성/명시 인자/선택 체크·실제 Append/Reflow·선두/연속/40개 구분선·실제 메뉴 개수==0을 연결했다. 패치의 선 assert/색 전경→배경 조회/현재 칸 재조회, CD null 칸 생략/색 조회 없는 원문/자식 tilde 판정을 구분한다. **패치 체크는 command 0에도 bit 1/필드 쓰기, CD는 command 0의 미작성 필드 보존**이다.
 - [x] 패치 MenuTitle/MenuHeader/~3~E/색과 CD 제목 ~3/머리 무인자 서식을 복원했다. fancy는 현재 title에 기존 실제 다중 줄 Parse만 호출하고 일반 메뉴는 disabled 항목으로 Append한다. 패치 일반 제목/머리는 Menu 색 접두도 붙인다. 첫 NUL·고정 %d/%s·무인자 literal/%%·256바이트 결과 한도를 유지하며 **번호 인자/임의 printf/전역 작업표·포인터 alias/원본 오버런은 후속/호스트 계약 밖**이다. 기존 ConfigInterface.ReadInt에 연결했다.
 - [x] CD 00452a00의 자식 0x20/현재 등록 ID·8DWORD 순서 복사/재귀와 004529b0의 강조 정리 후 첫 비영 등록/visible 자식 조기 반환을 추가했다. hidden/dead 필터·Redraw/Reflow·자신/StyleText 조각 문맥 변경을 추가하지 않으며 뒤 항목의 강조는 조기 반환 시 유지한다.
 - [x] 라이브러리/`NetstormCpp` **Release 최종 빌드 경고 0·오류 0**. SOURCE_MAP 생성/내용 차이 없음. **새 테스트 추가/실행·전체 CTest·독립 PE/C++ 항목/설정/콜백/태그/픽셀/문맥 대조·게임/GUI 실행 미수행**이다. 이전 관찰 **523,634개**, 대조 **523,374개**, **854개 통과**는 앞 단계 기록이고 이번 관찰/대조 추가는 각각 0이다. 자료: `recovery-menucontrols-evidence.json`, `tools/analyze_menucontrols.py`, `extracted/menucontrols/`. 보호 PE SHA 불변·AGENTS.md/보호 원본/dotnetpj/테스트 변경·커밋/푸시 없음.
-- [ ] **다음:** 전체 Form 풀/소유/객체 연결·동적 하위 메뉴·현재 전역/명령 큐/변경 영역/allocator 공급 → OS 큐/폴링·overlay·자동 raw Client UI. 새 래퍼/제목/CD 문맥 및 기존 전체 UI의 독립 동작/픽셀 대조·공용 서식기/포인터 alias·그림 색 표/회전 VFX/flag 2 재사용·극단 x87/생성 EH도 남았다. **Client/UberGump 기존 메뉴 어댑터와 raw 자동 GUI/건설·미션 완주는 미완료다.**
+- [x] **GumpForm의 클라이언트 SID 생성/소유·객체 부착/UI 알림/반납과 메뉴·Gump 수명 연결은 위 후속에서 구현했다.** 전체 Form 재구성/다른 Form 수명·실제 Client/월드 연결·독립 대조와 나머지 UI 작업은 위 최신 미완료 목록을 따른다. **Client/UberGump 기존 메뉴 어댑터와 raw 자동 GUI/건설·미션 완주는 미완료다.**
 
 ## 2026-10-13 앞 단계 cpppj: 메뉴 Draw·선택/하위 입력·객체 부착·식별 필드 수정 (`HJOW-Athlon`)
 

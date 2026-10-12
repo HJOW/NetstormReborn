@@ -1,0 +1,143 @@
+{
+  "last_decompile_host": "HJOW-Athlon",
+  "recorded_at": "2026-10-13T07:08:25.879056+09:00",
+  "recorded_date": "2026-10-13",
+  "edition": "10.78",
+  "method": "같은 PC Ghidra 읽기 전용 내보내기·실제 PE 필드/시간 명령/ROM 정적 판독·Release 게임/Assets/Core 빌드",
+  "functions": [
+    "004c2990",
+    "004c33f0",
+    "004c3170",
+    "004c34c0",
+    "004c2a90",
+    "004c3a20",
+    "004c3bb0",
+    "00460de0",
+    "004c8e90",
+    "004c79a0",
+    "004641d0",
+    "004cf120",
+    "00465d10"
+  ],
+  "timing_commands": {
+    "004c2990": [
+      "004c29b0  dd5e78                   fstp qword ptr [esi + 0x78]",
+      "004c29d0  dd9e98000000             fstp qword ptr [esi + 0x98]",
+      "004c2a12  c786800000000000003f     mov dword ptr [esi + 0x80], 0x3f000000",
+      "004c2a1c  c786840000000a000000     mov dword ptr [esi + 0x84], 0xa"
+    ],
+    "004c33f0": [
+      "004c33ff  8b8684000000             mov eax, dword ptr [esi + 0x84]",
+      "004c3419  c786840000000a000000     mov dword ptr [esi + 0x84], 0xa",
+      "004c3423  d98680000000             fld dword ptr [esi + 0x80]",
+      "004c3429  dc05d0b45500             fadd qword ptr [0x55b4d0]",
+      "004c3449  895678                   mov dword ptr [esi + 0x78], edx",
+      "004c3453  898e98000000             mov dword ptr [esi + 0x98], ecx"
+    ],
+    "004c3170": [
+      "004c3176  dd4178                   fld qword ptr [ecx + 0x78]",
+      "004c3182  d98180000000             fld dword ptr [ecx + 0x80]",
+      "004c3188  dc05d0b45500             fadd qword ptr [0x55b4d0]",
+      "004c318e  dd5978                   fstp qword ptr [ecx + 0x78]"
+    ],
+    "004c34c0": [
+      "004c34df  dd05d0b45500             fld qword ptr [0x55b4d0]",
+      "004c34e5  dc5e78                   fcomp qword ptr [esi + 0x78]",
+      "004c34f8  39be84000000             cmp dword ptr [esi + 0x84], edi",
+      "004c3509  ff8e84000000             dec dword ptr [esi + 0x84]",
+      "004c3511  c786840000000a000000     mov dword ptr [esi + 0x84], 0xa",
+      "004c351b  39be84000000             cmp dword ptr [esi + 0x84], edi",
+      "004c353f  dd05d0b45500             fld qword ptr [0x55b4d0]",
+      "004c3576  39be84000000             cmp dword ptr [esi + 0x84], edi",
+      "004c35e0  dd05d0b45500             fld qword ptr [0x55b4d0]",
+      "004c360f  39be84000000             cmp dword ptr [esi + 0x84], edi"
+    ],
+    "004c3bb0": [
+      "004c3c8a  dd8698000000             fld qword ptr [esi + 0x98]",
+      "004c3c92  dd05d0b45500             fld qword ptr [0x55b4d0]",
+      "004c3c9f  dc0590655000             fadd qword ptr [0x506590]",
+      "004c3ca5  dd9e98000000             fstp qword ptr [esi + 0x98]",
+      "004c3cad  dc9e98000000             fcomp qword ptr [esi + 0x98]",
+      "004c3d7e  dd8698000000             fld qword ptr [esi + 0x98]",
+      "004c3db9  dd05d0b45500             fld qword ptr [0x55b4d0]",
+      "004c3dc1  dc0588655000             fadd qword ptr [0x506588]",
+      "004c3dc7  dd9e98000000             fstp qword ptr [esi + 0x98]",
+      "004c3dd4  dd05d0b45500             fld qword ptr [0x55b4d0]",
+      "004c3dda  dc9e98000000             fcomp qword ptr [esi + 0x98]",
+      "004c3e55  898e98000000             mov dword ptr [esi + 0x98], ecx",
+      "004c3e7a  dd8698000000             fld qword ptr [esi + 0x98]",
+      "004c3e91  dd05d0b45500             fld qword ptr [0x55b4d0]",
+      "004c3e99  dc0590655000             fadd qword ptr [0x506590]",
+      "004c3e9f  dd9e98000000             fstp qword ptr [esi + 0x98]",
+      "004c3eac  dd05d0b45500             fld qword ptr [0x55b4d0]",
+      "004c3eb2  dc9e98000000             fcomp qword ptr [esi + 0x98]"
+    ]
+  },
+  "timer_rom": {
+    "none": {
+      "address": "00500460",
+      "value": 0.0
+    },
+    "not_vortex_and_salvage": {
+      "address": "00506590",
+      "value": 2.0
+    },
+    "energy_display": {
+      "address": "00506588",
+      "value": 4.0
+    }
+  },
+  "original_fields": {
+    "deadline": "+78 double",
+    "delay": "+80 float 0.5",
+    "lock": "+84 int 10",
+    "temporary_timer": "+98 double 0/현재 게임 시각+2 또는4",
+    "game_time": "0055b4d0 double"
+  },
+  "precision": "004c3423 fld DWORD [esi+80]→004c3429 fadd QWORD [0055b4d0]→fstp QWORD; 디컴파일 C의 현재 시각 float 변환은 적용하지 않음",
+  "implementation": {
+    "stage_gate": "현재 원본 게임 시각+0.5f 확장·정지/잠금에서 단계 예약 거부·시각 도달 또는정지 상태에서만 카운터 진행/다이얼로그10 재설정·초기 요청 구분·현재 단계 Tell",
+    "screen_frame": "Update finally에서 초기/후속 잠금→7프레임 재개→실제 정지 동기화→한 번 단계 판정·명령/따라잡기 틱 중복 판정 생략·0틱/정지 화면도 단계 함수 호출·정지 중 단계 증가 거부",
+    "temporary_timer": "튜토리얼2 C/F/H의 +98·같은 원본 RawGameSeconds+2/4·포함 경계·단계 변경에서0·C의 선택 해제/타이머 유지·F의 선택 변경 후 예약 유지",
+    "commands": "같은 화면의 F4/회수 성공 사건만 별도 보관·일반 Drain과 독립·차단/비실행 프레임 뒤 사건 제거·과거 틱 사건 재생 없음",
+    "tell": "NotVortex 실제 Tell 콜백 성공 직후 정지/팝업 정리·같은 단계 판정의 후속 진행 거부·단계 안내는 잠금 완료 뒤 실제 OpenStage/F8 기록",
+    "headless": "화면 연결 전의 기존 ProcessCommands/RunTicks·TimerTick·즉시 안내 이벤트 유지·실제 화면 전체 시간 모델의 검증 결과가 아님",
+    "state": "화면 연결 시에만 절대 타이머/잠금/시각/보관 사건 검사합 추가·기존 자동 진단에만 stage-at/tutorial-time/tutorial-timer 추가"
+  },
+  "build": {
+    "warnings": 0,
+    "errors": 0,
+    "configuration": "Release --no-restore"
+  },
+  "validation": "새 테스트 추가/실행·독립 PE/C# 타이머/순서/프레임 대조·GUI/게임 실행 미수행",
+  "new_original_observations": 0,
+  "new_comparisons": 0,
+  "boundaries": [
+    "0.5초/10/7프레임·포함 경계/정지/창 재등장/동시 보정 안내/단계 조건·영어/한국어 실제 실행 및 독립 PE/C# 대조",
+    "004c3170 가상+20 재지연의 상위 호출 연결·원본 전체 미션 이벤트 분배·튜토리얼3~6·실제 명령 ID/시점",
+    "Gump 등록/지연 삭제/모든 다이얼로그·팝업 대응·정지 중 단계 함수의 실제 실행 대조·경고 창 정지 분류",
+    "24Hz/8틱 상한·이동/전투/건설/생산/수확/의식/AI/애니메이션 타이머·두 시각/새 경로 보간·FPS/Capture/OS 초기화",
+    "GUI의 합성 RunTicks/미션 전환/감김 시각 회귀·실제 캠페인 완주/진행 저장·Failed/TryAgain 폭·Graph/표면 identity"
+  ],
+  "files": {
+    "tools/analyze_dotnet_stage_frames.py": "4e175ffeb660113d64a904851996c9da68c077c2110ab3590090c319bf88c5c1",
+    "tools/ghidra/dotnetstageframes-functions.json": "768ebcce8e114d385edc3c0250afe1a13e3928ff92347efde5db1c31a21d3510",
+    "tools/analyze_styletext.py": "f9fbec159bb4ffe4fdf72883ef6a9ac2e417affd484a03e025e43dc98d422fda",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/dotnetstageframes/originals/creation.c": "d6fc0f18c07a3bc0edff955b1fb4efca4f101ecaba0d862d58659cf8ad937689",
+    "extracted/dotnetstageframes/originals/functions.tsv": "17249f8a7c7a7520fff5bda094f47758a0242f185c5dbc4054ac78b7d753bae4",
+    "extracted/dotnetstageframes/originals/assembly.txt": "230054e9ddb1fda4ada3a79de514ed9ddd754a243a7bdd6740c6f21a323f2019",
+    "extracted/dotnet-stage-frame-20261013-build.log": "6882a85a163ca84649f38f969749d81dabddb731e3d9a63ae60ee7f8400170be",
+    "dotnetpj/src/Netstorm.Core/Simulation/MissionDialogFrameGate.cs": "f200920650487adae47ac5a49a2a0aaf9c50c6dc10f3ec323e14c8fbc07b93a7",
+    "dotnetpj/src/Netstorm.Core/Simulation/BattleSession.TutorialFrames.cs": "be9f03ecb43a06773f31dd76d0aae8e498a2b0ec3fa84a026a60d4fa13357975",
+    "dotnetpj/src/Netstorm.Core/Simulation/TutorialStages.cs": "947b5015a0408d06431439e8b657eaa20399e2dc3be167de2ebfaa800c694978",
+    "dotnetpj/src/Netstorm.Core/Simulation/BattleSession.cs": "f85873e06f5eb70cfea0738e63df79e643452b8a4e9cee3e56dc6f998d2f525b",
+    "dotnetpj/src/Netstorm.Core/Simulation/BattleSessionFrameClock.cs": "01a1795fb0b9733a1b494ee8a2429ef2a398c6db49a61350a7caa42ebc85edd8",
+    "dotnetpj/src/Netstorm.Core/Display/OriginalGameClock.cs": "d4776e96e175ea6ce46bd9cc2792e30c77a97dc5152f0e925f5ca02bdf63f8e4",
+    "dotnetpj/src/Netstorm.Game/FortMapViewer.cs": "3f9eee4eba6f83c4637a6487030a6a91e5cc69af27264944f94b6973f5a62451",
+    "dotnetpj/src/Netstorm.Game/FortMapViewer.TutorialDialog.cs": "dcd0b444d51afda3d63847903fb51fc41ca300af68222774422c8cc194f4bcc5",
+    "dotnetpj/src/Netstorm.Game/FortMapViewer.Session.cs": "aca3b851a15ad538c5dfe2bfe3f0b67fbeca9eaae015a2eb357a36a3e2bbc240",
+    "dotnetpj/src/Netstorm.Game/FortMapViewer.Units.cs": "12f6aa152cdc997169c699c457437cb4accd02c5c4cbaa67a0fc08f110efad91",
+    "dotnetpj/src/Netstorm.Assets/TutorialDialogScript.cs": "a60b5c4ab492da70fb486b4190e9af7455a22af97da7f41766fd654fccc546ea"
+  }
+}

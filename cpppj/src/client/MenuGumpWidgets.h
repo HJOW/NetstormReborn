@@ -16,7 +16,7 @@ struct MenuGumpConstructionEntry {
 };
 // +20 식별 BYTE의 두 PE 초기값은 26이다. 배경/색/객체 부착 Form 타입은 실제 초기화 전역을 공급한다.
 struct MenuGumpWidgetState { std::int8_t alignment{26};std::uint32_t backgroundType{},backgroundFrame{},foreground{},shadow{},objectFormType{}; };
-// 호스트 Form 토큰과 실제 Form 풀 인덱스다. 패치 0x32/CD 0x24 stride의 주소 나눗셈은 Form 공급기가 담당한다.
+// 호스트 Form 토큰과 실제 SID 풀 인덱스다. GumpFormBinding은 같은 SID를 양쪽에 공급하여 원본 stride 나눗셈과 맞춘다.
 struct MenuGumpObjectForm { std::uint32_t token{},index{}; };
 // 같은 메뉴/기본 객체·요청 크기별 호스트 할당·실제 가상 Attach와 소멸 선택 콜백의 경계다.
 struct MenuGumpWidgetHooks {
@@ -25,12 +25,12 @@ struct MenuGumpWidgetHooks {
     std::function<std::uint32_t(std::size_t)> allocate;
     std::function<void(std::uint32_t,float,float,std::uint32_t,std::uint32_t)> attach;
     std::function<void(std::uint32_t,std::int32_t)> selectionNotice;
-    // 원본 Form(type,2) 생성→+12 Gump 등록 ID→가상 +74(object,0)의 명시 경계다. 전체 Form은 후속이다.
+    // 원본 Form(type,2) 생성→+12 Gump 등록 ID→가상 +74(object,0)다. BindMenuGumpForms가 실제 공용 SID 풀에 연결한다.
     std::function<MenuGumpObjectForm(std::uint32_t,std::uint32_t)> objectForm;
     std::function<void(std::uint32_t,std::uint32_t)> formOwner;
     std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)> formObject;
 };
-// 원본 MenuGump 생성/수명/부착을 복원한다. 실제 출력/입력은 별도 메뉴 처리기이며 전체 Form 객체는 후속이다.
+// 원본 MenuGump 생성/수명/부착을 복원한다. 출력/입력은 별도 처리기, 객체 부착 Form은 GumpFormHost를 사용한다.
 class MenuGumpWidgets {
 public:
     // 모든 상태/기존 처리기와 저장소는 생성/부착/수명 분배보다 오래 살아야 한다.

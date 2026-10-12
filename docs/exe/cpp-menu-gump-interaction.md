@@ -2,6 +2,8 @@
 
 후속 [controlled 메뉴/제목/머리/CD 문맥](cpp-menu-gump-controls.md)에서 제목/머리 포맷·항목 래퍼·CD 자식 문맥 전달을 추가했다. 이 문서와 근거 해시는 출력/입력 구현 당시 상태를 나타낸다.
 
+후속 [GumpForm SID·소유 UI 알림·수명](cpp-gump-form.md)에서 메뉴 Form 공급과 Gump Kill을 실제 SID 풀/종속 체인/등록 알림/Unpop/반납에 연결했다. 아래의 전체 Form 경계는 당시 상태이며 전체 풀 재구성·다른 Form 수명·실제 Client/월드 연결은 후속 문서의 미완료 목록을 따른다.
+
 2026-10-13, **마지막 디컴파일 PC: HJOW-Athlon**. 현재 호스트/IP는 **HJOW-Athlon / 192.168.0.94**다. AGENTS.md와 두 인수인계를 읽고 같은 PC의 정밀 프로젝트에서 두 PE를 읽기 전용으로 분석했다.
 
 [메뉴 생성/장식/수명/부착](cpp-menu-gump-widgets.md)에 실제 메뉴 Draw/Handle/Broadcast/AttachObject를 추가했다. **Client/UberGump는 기존 메뉴 어댑터를 사용하며 자동 raw UI·건설·미션 완주는 미완료다.** 이번 단계는 정적 분석과 빌드로 진행했다.

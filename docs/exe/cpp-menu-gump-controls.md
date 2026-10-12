@@ -1,5 +1,7 @@
 # controlled 메뉴 항목·제목·머리글·CD 자식 문맥
 
+후속 [GumpForm SID·소유 UI 알림·수명](cpp-gump-form.md)에서 메뉴의 Form 공급과 Gump Kill을 실제 SID 풀/종속 체인/Unpop/반납에 연결했다. 이 문서와 근거 해시는 controlled 항목 구현 당시 상태이며 남은 전체 Form/Client 연결은 후속 기록을 따른다.
+
 2026-10-13, **마지막 디컴파일 PC: HJOW-Athlon**. 현재 호스트/IP는 **HJOW-Athlon / 192.168.0.94**다. AGENTS.md와 두 인수인계를 읽고 같은 PC의 정밀 프로젝트에서 두 PE를 읽기 전용으로 분석했다. 게임/GUI를 실행하지 않았다.
 
 [메뉴 생성/장식/수명](cpp-menu-gump-widgets.md), [메뉴 항목/레이아웃](cpp-menu-gump-layout.md), [메뉴 출력/입력/객체 부착](cpp-menu-gump-interaction.md)에 controlled 작성 래퍼를 추가했다. **Client/UberGump는 기존 메뉴 어댑터를 사용하며 자동 raw UI·건설·미션 완주는 미완료다.**

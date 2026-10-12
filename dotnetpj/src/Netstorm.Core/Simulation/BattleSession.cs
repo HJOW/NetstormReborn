@@ -9,7 +9,7 @@ namespace Netstorm.Core.Simulation;
 /// <list type="bullet">
 /// <item><description>명령은 <see cref="Advance"/> 또는 <see cref="ProcessCommands"/> 에서 넣은 순서대로 실행한다.
 /// 같은 프레임 시간열과 명령열은 같은 결과를 낸다 (<see cref="Checksum"/> 으로 확인).</description></item>
-/// <item><description>다리 붕괴는 FrameSeconds의 실제 프레임 시각을 사용한다. 나머지 타이머는 아직 정수 틱 ÷ 초당 틱 수를 사용한다.</description></item>
+/// <item><description>다리 붕괴는 FrameSeconds, 실제 화면 튜토리얼은 원본 게임 시각을 사용한다. 나머지 타이머는 아직 정수 틱 ÷ 초당 틱 수를 사용한다.</description></item>
 /// <item><description>화면은 <see cref="Advance"/> 에 흐른 실제 시간을 주고, <see cref="DrainEvents"/> 로 일어난 일을 받아 알림을 띄운다.</description></item>
 /// </list>
 /// 수집·수송·희생 의식·포대·공중 공격체와 캠페인 1-1의 임시 방어 AI를 처리한다. 원본 전략 복원은 후속이다.
@@ -81,7 +81,7 @@ public sealed partial class BattleSession
     /// </summary>
     public TutorialStages? Tutorial { get; }
 
-    /// <summary>튜토리얼 단계 처리를 틱마다 실행할지 (기본 켜짐). 끄면 단계는 그대로 멈춰 있다 (맵 뷰어의 규칙 시험용).</summary>
+    /// <summary>튜토리얼 단계 처리를 실행할지 (기본 켜짐). 실제 화면 연결에서는 화면마다, 헤드리스는 기존 명시적 틱에서 처리한다.</summary>
     public bool RunsTutorial { get; set; } = true;
 
     /// <summary>
@@ -337,14 +337,14 @@ public sealed partial class BattleSession
 
     /// <summary>
     /// 대기 명령을 게임 시각을 늘리지 않고 처리한다. 일시정지 중 선택·배치·회수에도 사용한다.
-    /// 튜토리얼에는 이번 호출의 명령 사건만 전달하여 같은 틱의 이전 사건을 다시 소비하지 않는다.
+    /// 헤드리스 튜토리얼에는 이번 호출의 명령 사건만 전달한다. 화면 연결은 사건을 보관하고 실제 화면에서 한 번 판정한다.
     /// </summary>
     public void ProcessCommands()
     {
         if (_commands.Count == 0) return;
         int firstEvent = _events.Count;
         ExecuteQueuedCommands();
-        if (Tutorial != null && RunsTutorial && !TutorialFrameLocked)
+        if (Tutorial != null && RunsTutorial && !TutorialFrameLocked && !TutorialUsesScreenFrames)
             Tutorial.Update(this, _events.Skip(firstEvent).ToArray());
         UpdateMissionEvents();
     }
@@ -385,7 +385,7 @@ public sealed partial class BattleSession
         CompleteConstructions();
         UpdateCombat();
         UpdateSacrifices();
-        if (Tutorial != null && RunsTutorial && !TutorialFrameLocked)
+        if (Tutorial != null && RunsTutorial && !TutorialFrameLocked && !TutorialUsesScreenFrames)
         {
             // 이번 틱에 일어난 이벤트(명령 결과·완공)를 보고 단계를 처리한다
             Tutorial.Update(this, [.. _events.Where(e => e.Tick == Tick)]);
@@ -426,9 +426,13 @@ public sealed partial class BattleSession
         }
     }
 
-    /// <summary>이벤트 하나를 기록한다.</summary>
-    private void Emit(SessionEventKind kind, int player, int entityId, string text, CommandFailure failure = CommandFailure.None) =>
-        _events.Add(new SessionEvent(Tick, kind, player, entityId, text, failure));
+    /// <summary>일반 이벤트를 기록하고, 실제 화면 튜토리얼에 필요한 명령 사건은 별도로 보관한다.</summary>
+    private void Emit(SessionEventKind kind, int player, int entityId, string text, CommandFailure failure = CommandFailure.None)
+    {
+        var sessionEvent = new SessionEvent(Tick, kind, player, entityId, text, failure);
+        _events.Add(sessionEvent);
+        CollectTutorialScreenEvent(sessionEvent);
+    }
 
     /// <summary>쌓인 명령을 넣은 순서대로 실행한다. 거부된 명령은 이벤트로 알린다.</summary>
     private void ExecuteQueuedCommands()
@@ -500,10 +504,15 @@ public sealed partial class BattleSession
     /// <param name="seconds">간격(초)</param>
     internal long TicksFor(double seconds) => _timestep.TicksFor(seconds);
 
-    /// <summary>튜토리얼 안내(스크립트 섹션 이름)를 이벤트로 알린다.</summary>
+    /// <summary>화면 보정 안내는 실제 Tell 콜백으로 즉시 열고, 연결 전 헤드리스 안내는 기존 이벤트로 알린다.</summary>
     /// <param name="player">플레이어</param>
     /// <param name="section">섹션 이름 ("B." 또는 "NotVortex")</param>
-    internal void EmitTutorialTell(int player, string section) => Emit(SessionEventKind.TutorialTell, player, 0, section);
+    internal void EmitTutorialTell(int player, string section)
+    {
+        // 실제 화면의 보정 Tell은 즉시 정지를 잡는다. 헤드리스는 기존 이벤트 알림을 유지한다.
+        if (TutorialUsesScreenFrames) _tutorialScreenTell!(section);
+        else Emit(SessionEventKind.TutorialTell, player, 0, section);
+    }
 
     /// <summary>플레이어가 지금 신전을 선택하고 있는지 (원본은 선택한 오브젝트 타입의 플래그2 에 vortex 비트가 있는지 본다)</summary>
     /// <param name="player">플레이어</param>
@@ -546,6 +555,7 @@ public sealed partial class BattleSession
         hash.Add(Tutorial?.TimerTick ?? 0);
         // 화면의 초기 안내/정지 잠금도 다음 튜토리얼 단계 판정 가능 여부를 바꾸는 상태다.
         hash.Add(TutorialFrameLocked ? 1 : 0);
+        HashTutorialScreenState(hash);
         // 플레이어 상태: Storm Power, 다리 칸, 집은 조각, 재충전 예약(이름 순)
         foreach (PlayerState player in _players.Values)
         {

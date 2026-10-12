@@ -13,6 +13,9 @@ public:
     // 생산 칸 contained Form(타입 6)의 전용 생성이다. 같은 SID 할당 뒤 판본별 가상 표/타입만 쓴다.
     // 004aea40 / CD 004afe00 생성자와 빈 postCreate를 복원하며 자산 owner/HP 초기화를 적용하지 않는다.
     Sid CreateContained(std::uint32_t flags=0);
+    // UI 객체 부착용 GumpForm(타입 3)을 같은 SID 풀에 만든다. 생성자는 가상 표만 쓰고 postCreate는 비어 있다.
+    // 004ae9f0 / CD 004afd60: 자산 owner/HP/zOrder를 쓰지 않으며 메뉴의 기본 할당 flags는 2다.
+    Sid CreateGumpForm(std::uint32_t flags=2);
     // 생성 효과 어댑터가 같은 실제 SID 풀을 연결하는지 확인한다.
     const SidPool& Pool() const;
     // 이미 확보된 슬롯에 생성자 쓰기만 적용한다. type/상태/풀 목록은 덮지 않는다.

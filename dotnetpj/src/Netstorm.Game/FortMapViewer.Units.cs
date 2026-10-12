@@ -56,6 +56,9 @@ internal sealed partial class FortMapViewer
         + $";simulation={(GameClockPaused ? "paused" : "running")};tick={_session.Tick};scan-cursor={_session.Bridges.ScanCursor}"
         + $";pause-depth={_sessionFrameClock.PauseDepth};pause-reasons={_sessionFrameClock.PauseReasons}"
         + $";briefing-frames={_missionDialogFrames?.RemainingBriefingFrames ?? 0};resume-frames={_missionDialogFrames?.ResumeQuietFrames ?? 0}"
+        + ";stage-at=" + (_missionDialogFrames?.NextStageSeconds ?? 0).ToString("R", System.Globalization.CultureInfo.InvariantCulture)
+        + ";tutorial-time=" + _session.TutorialFrameSeconds.ToString("R", System.Globalization.CultureInfo.InvariantCulture)
+        + ";tutorial-timer=" + (_session.Tutorial?.TimerSeconds ?? 0).ToString("R", System.Globalization.CultureInfo.InvariantCulture)
         + ";frame-seconds=" + _session.FrameSeconds.ToString("R", System.Globalization.CultureInfo.InvariantCulture)
         + $";preview-size={(_lastCheck?.Site is { } preview ? $"{preview.Footprint.Width}x{preview.Footprint.Height}" : "none")}";
 
