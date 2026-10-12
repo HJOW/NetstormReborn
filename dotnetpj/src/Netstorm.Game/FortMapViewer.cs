@@ -84,11 +84,18 @@ internal sealed partial class FortMapViewer : IDisposable
 
     /// <summary>오브젝트 위치를 계산하고 게임 세션을 만들며 카메라를 플레이어 사제에 맞춘다.</summary>
     /// <param name="mission">미션 시작 조건 (없으면 맵만 보는 시험 모드)</param>
+    /// <param name="gameClock">앱 화면 루프와 공유하는 원본 숫자 게임 시계.</param>
+    /// <param name="readFrameMilliseconds">앱이 이번 화면 시작에 고정한 단조 밀리초를 반환하는 공급자.</param>
     public FortMapViewer(GraphicsDevice device, ShapeDatabase shapes, Palette palette, FortFile fort, string name,
-        TypeCatalog catalog, string language, OriginalUiSkin uiSkin, MissionStart? mission = null,
+        TypeCatalog catalog, string language, OriginalUiSkin uiSkin, OriginalGameClock gameClock,
+        Func<long> readFrameMilliseconds, MissionStart? mission = null,
         MissionScript? tutorialScript = null, ConfigStore? tutorialSettings = null, HelpTopics? help = null,
         MissionScript? commonScript = null, Action<string, string>? scriptConfigChanged = null)
     {
+        ArgumentNullException.ThrowIfNull(gameClock);
+        ArgumentNullException.ThrowIfNull(readFrameMilliseconds);
+        _gameClock = gameClock;
+        _readFrameMilliseconds = readFrameMilliseconds;
         _device = device;
         _uiSkin = uiSkin;
         _shapes = shapes;
@@ -119,6 +126,7 @@ internal sealed partial class FortMapViewer : IDisposable
         // 첫 그리기에서 신전 테마로 지면을 다시 만드는 일(약 80ms)과 그 그림의 텍스처 만들기를 미션 로딩 중에 끝낸다.
         RefreshTerritoryAppearance();
         WarmTextures();
+        SynchronizePauseReasons();
     }
 
     /// <summary>
@@ -147,6 +155,22 @@ internal sealed partial class FortMapViewer : IDisposable
     public void Update(double seconds, MouseState mouse, Vector2 edgeScroll, int width, int height,
         KeyboardState? input = null, bool inputBlocked = false)
     {
+        SynchronizePauseReasons();
+        try
+        {
+            UpdateMap(seconds, mouse, edgeScroll, width, height, input, inputBlocked);
+        }
+        finally
+        {
+            // 안내/지식창·메뉴 등 조기 반환 경로도 이번 화면의 정지 소유권 변경을 반영한다.
+            SynchronizePauseReasons();
+        }
+    }
+
+    /// <summary>기존 지도 입력·표시 갱신 본체. 외부 Update가 진입/반환 시 정지 소유권을 동기화한다.</summary>
+    private void UpdateMap(double seconds, MouseState mouse, Vector2 edgeScroll, int width, int height,
+        KeyboardState? input, bool inputBlocked)
+    {
         if (width < 320 || height < 320) return;
         _viewSize = new Point(width, height);
         _lastCenter = new Vector2(width / 2f, (height + HeaderHeight) / 2f);
@@ -155,7 +179,7 @@ internal sealed partial class FortMapViewer : IDisposable
         KeyboardState keyboard = input ?? Keyboard.GetState();
         if (inputBlocked)
         {
-            if (!TutorialDialogOpen) UpdateSession(seconds, new KeyboardState(), mouse);
+            if (!TutorialDialogOpen) UpdateSession(new KeyboardState(), mouse);
             _previousKeyboard = keyboard; _previousMouse = mouse; return;
         }
         if (_knowledgeOpen)
@@ -175,13 +199,13 @@ internal sealed partial class FortMapViewer : IDisposable
         if (ContextMenuOpen)
         {
             UpdateContextMenu(mouse, width, height);
-            UpdateSession(seconds, new KeyboardState(), mouse);
+            UpdateSession(new KeyboardState(), mouse);
             _previousKeyboard = keyboard; _previousMouse = mouse; return;
         }
         if (UpdateMissionMenu(keyboard, mouse, width, height))
         {
             // 메뉴가 열린 동안에도 원본처럼 미션 시간은 흐르되 지도 조작은 받지 않는다.
-            UpdateSession(seconds, new KeyboardState(), mouse);
+            UpdateSession(new KeyboardState(), mouse);
             _previousKeyboard = keyboard;
             _previousMouse = mouse;
             return;
@@ -246,7 +270,7 @@ internal sealed partial class FortMapViewer : IDisposable
             UpdateBridges(keyboard, mouse, mapInput: !uiConsumed);
         }
         // 배치·다리 입력까지 모은 뒤 처리하여 그 프레임의 그리기에 명령 결과가 반영되게 한다.
-        UpdateSession(seconds, keyboard, mouse);
+        UpdateSession(keyboard, mouse);
         _previousKeyboard = keyboard;
         _previousMouse = mouse;
     }
@@ -379,9 +403,10 @@ internal sealed partial class FortMapViewer : IDisposable
         batch.Draw(_pixel, new Rectangle(rect.Right - 1, rect.Y, 1, rect.Height), color);
     }
 
-    /// <summary>맵 뷰어가 만든 모든 GPU 텍스처를 해제한다.</summary>
+    /// <summary>현재 뷰어가 소유한 게임 정지를 풀고 모든 GPU 텍스처를 해제한다.</summary>
     public void Dispose()
     {
+        _sessionFrameClock.ReleasePauseReasons(_readFrameMilliseconds());
         // 캐시된 텍스처를 각각 한 번씩 해제한다.
         foreach (var sprite in _textures.Values)
         {

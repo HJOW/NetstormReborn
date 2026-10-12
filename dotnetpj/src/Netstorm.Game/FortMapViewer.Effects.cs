@@ -144,7 +144,7 @@ internal sealed partial class FortMapViewer
     /// <param name="seconds">지난 갱신 이후 경과 시간(초)</param>
     private void UpdateEffects(double seconds)
     {
-        bool running = SimulationRunning && !TutorialDialogOpen;
+        bool running = !GameClockPaused;
         // 세션이 알린 낙하를 떨어지는 그림으로 바꾼다
         foreach (FallenObject fallen in _session.DrainFallen()) AddFalling(fallen);
         if (running)

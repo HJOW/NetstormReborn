@@ -39,7 +39,7 @@ struct TemporaryDirectory {
 // 돌 버튼은 누름/뗌이 같은 버튼에 있어야 한다. 밖으로 나갔다 돌아오는 캡처는 유지된다.
 TEST_CASE(Gump_StoneCaptureAndInputBoundaries) {
     using namespace netstorm::client;
-    GumpInput input; input.SetControls({{7,{10,20,85,40},false,true,false},{9,{90,20,165,40},false,false,false}});
+    GumpControlInput input; input.SetControls({{7,{10,20,85,40},false,true,false},{9,{90,20,165,40},false,false,false}});
     CHECK(!input.Event({InputCode::kRightButton,20,25})); CHECK(!input.Pressed());
     CHECK(!input.Event({InputCode::kLeftButton,20,25})); CHECK(input.Pressed() == 7);
     CHECK(input.Move({85,25})); CHECK(!input.Pressed());
@@ -54,7 +54,7 @@ TEST_CASE(Gump_StoneCaptureAndInputBoundaries) {
 }
 // 목록은 누름 즉시 실행하며 화면 변경 뒤 이전 캡처를 재사용하지 않는다.
 TEST_CASE(Gump_MenuRowsAndSceneChange) {
-    using namespace netstorm::client; GumpInput input;
+    using namespace netstorm::client; GumpControlInput input;
     input.SetControls({{2,{0,0,100,18},true,true,false}});
     CHECK(input.Event({InputCode::kLeftButton,99,17}) == 2);
     CHECK(!input.Event({InputCode::kLeftButton | InputCode::kRelease,99,17}));

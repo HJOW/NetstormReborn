@@ -48,6 +48,10 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     private readonly FrameLoopClock _frameLoop;
     /// <summary>Windows에서 원본 WINMM 시계를 읽고 다른 플랫폼에서는 단조 밀리초 시계를 공급한다.</summary>
     private readonly FrameWallClock _frameWallClock = new();
+    /// <summary>화면 제한과 실제 세션이 공유하는 원본 숫자 시계. 벽시계는 게임 정지 누계와 무관하다.</summary>
+    private readonly OriginalGameClock _originalClock;
+    /// <summary>이번 화면 갱신 시작에 한 번 읽은 펼친 밀리초. 모든 지도 입력/정지 전환이 같은 값을 쓴다.</summary>
+    private long _frameMilliseconds;
     /// <summary>원본 maxFPS의 그리기 제한 값. 게임 시계 정지 중에는 적용하지 않는다.</summary>
     private int _maxFps;
     /// <summary>직전 그리기 이후 실제 갱신 호출 수. 자동 검사에서 합성 따라잡기 갱신을 검출한다.</summary>
@@ -125,9 +129,11 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     public NetstormGame()
     {
         // 원본 숫자 시계의 시작 오프셋을 캡처한다. OS 우선순위/초 경계 바쁜 대기는 후속이다.
-        uint origin = unchecked((uint)_frameWallClock.ReadMilliseconds());
+        _frameMilliseconds = _frameWallClock.ReadMilliseconds();
+        uint origin = unchecked((uint)_frameMilliseconds);
         uint epoch = unchecked((uint)DateTimeOffset.UtcNow.ToUnixTimeSeconds() - OriginalGameClock.EpochReferenceSeconds);
-        _frameLoop = new FrameLoopClock(new OriginalGameClock(origin, epoch));
+        _originalClock = new OriginalGameClock(origin, epoch);
+        _frameLoop = new FrameLoopClock(_originalClock);
         _graphics = new GraphicsDeviceManager(this);
         string[] args = Environment.GetCommandLineArgs();
         string? uiScript = ParseValueArgument(args, "--ui-script-file");
@@ -460,8 +466,10 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
         MissionStart? mission = null, MissionScript? tutorialScript = null)
     {
         TypeCatalog catalog = resources.LoadTypes();
+        // 지도는 이 공급자로 앱이 이번 화면 시작에 고정한 눈금을 읽어 모든 정지 전환에 같은 시각을 쓴다.
         FortMapViewer nextViewer = new(GraphicsDevice, shapes, palette, resources.LoadFort(name, catalog), name,
-            catalog, resources.Language, _uiSkin!, mission, tutorialScript, resources.Settings, _help,
+            catalog, resources.Language, _uiSkin!, _originalClock, () => _frameMilliseconds,
+            mission, tutorialScript, resources.Settings, _help,
             mission != null ? resources.TryLoadMission("tell")?.Script : null, SaveScriptValue);
         _mapViewer?.Dispose();
         _mapViewer = nextViewer;
@@ -548,7 +556,8 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     protected override void Update(GameTime gameTime)
     {
         // MonoGame의 경과 시간은 긴 프레임에서 잘릴 수 있으므로 실제 단조 밀리초 시계를 한 번 고정한다.
-        double seconds = _frameLoop.BeginFrame(_frameWallClock.ReadMilliseconds());
+        _frameMilliseconds = _frameWallClock.ReadMilliseconds();
+        double seconds = _frameLoop.BeginFrame(_frameMilliseconds);
         _updatesSinceDraw++;
         long perfStart = Stopwatch.GetTimestamp();
         UpdateGame(gameTime, seconds);

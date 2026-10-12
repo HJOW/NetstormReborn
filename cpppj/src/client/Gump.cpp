@@ -3,11 +3,11 @@
 
 namespace netstorm::client {
 // 이전 화면에서 누른 상태가 새 화면의 같은 번호를 실행하지 않도록 초기화한다.
-void GumpInput::SetControls(std::vector<GumpControl> controls) { controls_ = std::move(controls); Cancel(); }
+void GumpControlInput::SetControls(std::vector<GumpControl> controls) { controls_ = std::move(controls); Cancel(); }
 // 원본 부동 소수점 비교와 같은 경계 규칙을 정수 화면 좌표에서 사용한다.
-bool GumpInput::Contains(ScreenRect rect, ScreenPoint point) { return point.x >= rect.left && point.x < rect.right && point.y >= rect.top && point.y < rect.bottom; }
+bool GumpControlInput::Contains(ScreenRect rect, ScreenPoint point) { return point.x >= rect.left && point.x < rect.right && point.y >= rect.top && point.y < rect.bottom; }
 // 돌 버튼의 캡처는 커서가 밖으로 나가도 유지되며 눌린 그림만 사라진다.
-std::optional<int> GumpInput::Event(InputEvent event) {
+std::optional<int> GumpControlInput::Event(InputEvent event) {
     if ((event.code & InputCode::kOutside) != 0) { Cancel(); return {}; }
     if ((event.code & 0x03ffffffu) != InputCode::kLeftButton) return {};
     Move({event.x, event.y});
@@ -23,7 +23,7 @@ std::optional<int> GumpInput::Event(InputEvent event) {
     return {};
 }
 // 활성 메뉴에는 호버가 있지만 돌 버튼은 누름 캡처 중에만 모습이 변한다.
-bool GumpInput::Move(ScreenPoint point, bool active) {
+bool GumpControlInput::Move(ScreenPoint point, bool active) {
     const auto oldPressed = pressed_, oldHovered = hovered_; point_ = point;
     pressed_.reset(); hovered_.reset();
     if (!active) { capture_.reset(); return oldPressed != pressed_ || oldHovered != hovered_; }
@@ -35,11 +35,11 @@ bool GumpInput::Move(ScreenPoint point, bool active) {
     return oldPressed != pressed_ || oldHovered != hovered_;
 }
 // 실제 돌 버튼 그리기에서 사용하는 번호.
-std::optional<int> GumpInput::Pressed() const { return pressed_; }
+std::optional<int> GumpControlInput::Pressed() const { return pressed_; }
 // 목록 강조 색을 적용할 번호.
-std::optional<int> GumpInput::HoveredMenu() const { return hovered_; }
+std::optional<int> GumpControlInput::HoveredMenu() const { return hovered_; }
 // 화면/포커스 변화 뒤 남은 캡처를 제거한다.
-void GumpInput::Cancel() { capture_.reset(); pressed_.reset(); hovered_.reset(); }
+void GumpControlInput::Cancel() { capture_.reset(); pressed_.reset(); hovered_.reset(); }
 // 메뉴 스모크도 사용자와 같은 좌표·입력 경로를 사용한다.
-std::span<const GumpControl> GumpInput::Controls() const { return controls_; }
+std::span<const GumpControl> GumpControlInput::Controls() const { return controls_; }
 }

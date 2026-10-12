@@ -31,8 +31,10 @@ public static class BattleSessionFactory
     /// <param name="humanPlayer">사람 플레이어 번호</param>
     /// <param name="startStormPower">미션 값이 없을 때 쓸 시작 Storm Power (없으면 전투 옵션의 시작 금액)</param>
     /// <param name="seed">전역 난수 시드</param>
+    /// <param name="initialFrameSeconds">다리 스캔 초기화에 쓸 절대 게임 시각. 기존 헤드리스 호출의 기본값은 0이다.</param>
     public static BattleSession Create(FortMap map, IEnumerable<FortTerrainCell> islandCells, IEnumerable<(int X, int Y)> edgeFarmCells,
-        TypeCatalog types, MissionStart? mission = null, int humanPlayer = 1, int? startStormPower = null, uint seed = 0)
+        TypeCatalog types, MissionStart? mission = null, int humanPlayer = 1, int? startStormPower = null, uint seed = 0,
+        double initialFrameSeconds = 0)
     {
         FortTerrainCell[] cells = [.. islandCells];
         var options = new BattleOptions();
@@ -101,7 +103,7 @@ public static class BattleSessionFactory
         {
             stored[item] = grid.AddStored(frames, item.Object.BridgeShape!.Value, item.X, item.Y, item.Object.LoadOwner, id);
         }
-        session = new BattleSession(battle, grid, types, mission, humanPlayer, startStormPower, seed, stored);
+        session = new BattleSession(battle, grid, types, mission, humanPlayer, startStormPower, seed, stored, initialFrameSeconds);
         return session;
     }
 }

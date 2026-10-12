@@ -86,14 +86,14 @@
 | `src/o/Xlat.cpp` | Xlat.cpp | xlat.cpp | 3 | 있음 |
 | `src/o/Ztrans.cpp` | Ztrans.cpp | ztrans.cpp | 12 |  |
 
-## `.\` (클라이언트) → `src/client/` (60개, 파일 있음 12개)
+## `.\` (클라이언트) → `src/client/` (60개, 파일 있음 13개)
 
 | cpppj 경로 | 패치판 표기 | CD판 표기 | 함수 수 | 상태 |
 |---|---|---|---|---|
 | `src/client/Animator3d.cpp` | Animator3d.cpp | animator3d.cpp | 6 |  |
 | `src/client/Build.cpp` | Build.cpp | build.cpp | 5 |  |
 | `src/client/Burning.cpp` | Burning.cpp | Burning.cpp | 4 |  |
-| `src/client/ButtonGump.cpp` | Buttongump.cpp | ButtonGump.cpp | 1 |  |
+| `src/client/ButtonGump.cpp` | Buttongump.cpp | ButtonGump.cpp | 1 | 있음 |
 | `src/client/Chat.cpp` | Chat.cpp | Chat.cpp | 7 |  |
 | `src/client/Chatgump.cpp` | Chatgump.cpp | chatgump.cpp | 3 |  |
 | `src/client/ClientBoard.cpp` | Clientboard.cpp | ClientBoard.cpp | 6 |  |

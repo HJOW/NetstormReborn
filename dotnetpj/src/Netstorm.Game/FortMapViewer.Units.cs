@@ -53,7 +53,8 @@ internal sealed partial class FortMapViewer
             .Select(e => $"{e.Type.Name.ToLowerInvariant()}:{(e.AwaitingBuilder ? "waiting" : "building")}"))
         + $";sp={_session.Player(TestPlayer).StormPower};shown-sp={_shownStormPower};refunds={_cancelledSites.Count};context-panels={_contextPanels.Count};productions={ProductionDetail}"
         + $";world-order={WorldOrderDetail}"
-        + $";simulation={(SimulationRunning && !TutorialDialogOpen ? "running" : "paused")};tick={_session.Tick};scan-cursor={_session.Bridges.ScanCursor}"
+        + $";simulation={(GameClockPaused ? "paused" : "running")};tick={_session.Tick};scan-cursor={_session.Bridges.ScanCursor}"
+        + $";pause-depth={_sessionFrameClock.PauseDepth};pause-reasons={_sessionFrameClock.PauseReasons}"
         + ";frame-seconds=" + _session.FrameSeconds.ToString("R", System.Globalization.CultureInfo.InvariantCulture)
         + $";preview-size={(_lastCheck?.Site is { } preview ? $"{preview.Footprint.Width}x{preview.Footprint.Height}" : "none")}";
 
@@ -90,7 +91,7 @@ internal sealed partial class FortMapViewer
     /// <param name="seconds">지난 갱신 이후 경과 시간(초)</param>
     private void UpdateWalkClock(double seconds)
     {
-        if (SimulationRunning && !TutorialDialogOpen) _walkClock += seconds;
+        if (!GameClockPaused) _walkClock += seconds;
     }
 
     /// <summary>사제·수송 유닛처럼 걸어 다니는 오브젝트인지 (비행 공격체는 제외).</summary>

@@ -291,11 +291,11 @@ void UberGump::Event(InputEvent event) {
         return;
     }
     if (!popup_.empty() && (event.code & 0x03ffffffu) == InputCode::kLeftButton &&
-        (event.code & InputCode::kRelease) == 0 && !GumpInput::Contains(popupRect_, {event.x, event.y})) {
+        (event.code & InputCode::kRelease) == 0 && !GumpControlInput::Contains(popupRect_, {event.x, event.y})) {
         state_.Post({"Menu", "close"}); return;
     }
     if (world_ && userInput_ && state_.phase==ClientPhase::Mission && popup_.empty()) {
-        const bool ui=std::any_of(input_.Controls().begin(),input_.Controls().end(),[&](const GumpControl& control) { return GumpInput::Contains(control.rect,{event.x,event.y}); });
+        const bool ui=std::any_of(input_.Controls().begin(),input_.Controls().end(),[&](const GumpControl& control) { return GumpControlInput::Contains(control.rect,{event.x,event.y}); });
         if (!ui) { if (const auto id=userInput_->Event(event)) { if (*id) state_.Post({"ObjectMenu",std::to_string(*id)}); else world_->Select(0); } return; }
     }
     const auto old = input_.Pressed(); const auto activated = input_.Event(event);

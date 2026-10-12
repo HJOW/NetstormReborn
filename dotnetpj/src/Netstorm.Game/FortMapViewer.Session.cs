@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input;
 using Netstorm.Assets;
 using Netstorm.Core.Rules;
 using Netstorm.Core.Simulation;
+using Netstorm.Core.Display;
 
 namespace Netstorm.Game;
 
@@ -27,6 +28,15 @@ internal sealed partial class FortMapViewer
     /// <summary>규칙 상태·틱 루프를 가진 게임 세션</summary>
     private BattleSession _session = null!;
 
+    /// <summary>앱 전체 숫자 게임 시계. 미션 전환 시 남은 정지 시간 누계를 이어받는다.</summary>
+    private readonly OriginalGameClock _gameClock;
+
+    /// <summary>현재 화면 시작에 고정한 펼친 밀리초 공급자. 입력·정지·세션 갱신이 같은 눈금을 쓴다.</summary>
+    private readonly Func<long> _readFrameMilliseconds;
+
+    /// <summary>세션의 절대 프레임 시각과 정지 소유권을 실제 숫자 시계에 연결한다.</summary>
+    private BattleSessionFrameClock _sessionFrameClock = null!;
+
     /// <summary>미션 시작 조건으로 연 경우의 미션 (맵만 연 경우 null)</summary>
     private MissionStart? _mission;
 
@@ -37,43 +47,66 @@ internal sealed partial class FortMapViewer
     private string _notice = "";
 
     /// <summary>
-    /// 일시정지를 켜거나 끈다 (Shift+F9·Pause 키와 같은 동작). 옵션 목록의 "Pause - Shift-F9" 행이 부른다.
-    /// 2026-10-10 추가: 원본 옵션 목록에 있는 Pause 행을 연결하기 위해.
+    /// 수동 정지를 켜거나 끄고 원본 시계의 자기 소유권을 즉시 갱신한다. 스크립트의 정지는 별도로 유지된다.
     /// </summary>
-    public void TogglePause() => _simulationPaused = !_simulationPaused;
+    /// <remarks>2026-10-12 수정: Shift-F9·옵션 Pause의 실제 중첩 게임 시계 연결.</remarks>
+    public void TogglePause()
+    {
+        _simulationPaused = !_simulationPaused;
+        SynchronizePauseReasons();
+    }
 
     /// <summary>세션 시간이 흐르고 있는지: 일시정지가 아니고, 미션 또는 배치·다리·전투 시험이 켜져 있다.</summary>
     private bool SimulationRunning => !_simulationPaused && (_mission != null || _placementMode || _bridgeMode || _session.CombatEnabled);
 
     /// <summary>실제 게임 시간이 멈추는 화면인지. 그리기 제한도 같은 정지 상태를 따른다.</summary>
-    public bool GameClockPaused => !SimulationRunning || TutorialDialogOpen || KnowledgeOpen;
+    public bool GameClockPaused => _sessionFrameClock.IsPaused;
 
     /// <summary>
-    /// 맵에서 게임 세션을 만든다. 미션이 있으면 시작 Storm Power·지식·전투 옵션이 미션 값이고 생산 규칙(기술 허용 표·덱·재충전·회수 금지)을
-    /// 켠다. 맵만 열면 시험 모드라 생산 규칙을 끄고 저장된 Money 로 시작한다.
+    /// 수동 토글·스크립트 안내·비실행 개발 뷰어의 정지 소유권을 독립 비트로 동기화한다.
+    /// F6 지식창/일반 도움말·미션 메뉴는 게임 시간을 계속 진행하며, 뒤의 안내창이 있으면 그 정지는 유지된다.
     /// </summary>
+    /// <remarks>원본 정지 호출 004c2a56/004d82b5 및 docs/gameplay/dialog-pause.md.</remarks>
+    private void SynchronizePauseReasons()
+    {
+        SessionPauseReason reasons = SessionPauseReason.None;
+        if (_simulationPaused) reasons |= SessionPauseReason.Manual;
+        if (TutorialDialogOpen) reasons |= SessionPauseReason.ScriptDialog;
+        if (_mission == null && !_placementMode && !_bridgeMode && !_session.CombatEnabled)
+            reasons |= SessionPauseReason.ViewerIdle;
+        _sessionFrameClock.SetPauseReasons(reasons, _readFrameMilliseconds());
+    }
+
+    /// <summary>
+    /// 맵에서 게임 세션을 만들고 현재 원본 게임 시각으로 다리 스캔·프레임 시계를 초기화한다.
+    /// 미션은 시작 SP·지식·전투 옵션과 생산 규칙을 적용하고, 맵만 열면 시험 모드의 저장 금액을 쓴다.
+    /// </summary>
+    /// <remarks>2026-10-12 수정: 절대 시각 주입과 실제 중첩 정지 소유권의 연결.</remarks>
     private void InitializeSession(FortFile fort, TypeCatalog catalog, MissionStart? mission)
     {
         _mission = mission;
         int? startStormPower = fort.Money is float money && money > 0 ? (int)money : FallbackStormPower;
-        _session = BattleSessionFactory.Create(_map, _terrain.IslandCells, _edgeFarmCells, catalog, mission, TestPlayer, startStormPower);
+        long milliseconds = _readFrameMilliseconds();
+        double initialSeconds = Math.Max(0, _gameClock.GameSeconds(unchecked((uint)milliseconds)));
+        _session = BattleSessionFactory.Create(_map, _terrain.IslandCells, _edgeFarmCells, catalog, mission, TestPlayer, startStormPower,
+            initialFrameSeconds: initialSeconds);
+        _sessionFrameClock = new BattleSessionFrameClock(_session, _gameClock, milliseconds);
         _session.EnforceProductionRules = mission != null;
         _session.CombatEnabled = mission != null;
     }
 
     /// <summary>
-    /// 세션 입력과 시간 진행: Space 일시정지, K 생산 규칙 켜기/끄기, T 커서 칸의 오브젝트 선택/해제,
-    /// 화면 프레임의 명령·다리 스캔과 남은 논리 틱을 진행하고 이벤트 알림을 갱신한다.
+    /// 세션 입력과 시간 진행: Pause/Shift-F9·개발 뷰어 Space 정지, 개발 뷰어 K 생산 규칙·T 선택/해제.
+    /// 현재 원본 게임 시각으로 명령·다리 스캔과 남은 논리 틱을 진행하고 이벤트 알림을 갱신한다.
     /// </summary>
-    /// <param name="seconds">지난 갱신 이후 경과 시간(초)</param>
     /// <param name="keyboard">현재 키 상태</param>
     /// <param name="mouse">현재 마우스 상태 (논리 화면 좌표)</param>
-    private void UpdateSession(double seconds, KeyboardState keyboard, MouseState mouse)
+    private void UpdateSession(KeyboardState keyboard, MouseState mouse)
     {
         bool shift = keyboard.IsKeyDown(Keys.LeftShift) || keyboard.IsKeyDown(Keys.RightShift);
         if (_playUi ? Pressed(keyboard, Keys.Pause) || shift && Pressed(keyboard, Keys.F9) : Pressed(keyboard, Keys.Space))
         {
-            _simulationPaused = !_simulationPaused;
+            TogglePause();
         }
         if (!_playUi && Pressed(keyboard, Keys.K))
         {
@@ -97,15 +130,8 @@ internal sealed partial class FortMapViewer
             SubmitCommand(new HarvestGeyserCommand(TestPlayer, _session.EntityAt(harvestX, harvestY)?.Id ?? 0));
         }
         if (!_playUi) UpdateSacrificeInput(keyboard, mouse);
-        if (SimulationRunning)
-        {
-            _session.Advance(seconds);
-        }
-        else
-        {
-            // 같은 프레임에서 정지로 바뀐 경우에도 이미 받은 명령은 시각을 진행하지 않고 처리한다.
-            _session.ProcessCommands();
-        }
+        SynchronizePauseReasons();
+        _sessionFrameClock.AdvanceFrame(_readFrameMilliseconds());
         // 세션이 알린 일을 알림 문구로 옮긴다 (1초마다 생기는 다리 조각 알림은 칸 패널에 보이므로 뺀다)
         foreach (SessionEvent sessionEvent in _session.DrainEvents())
         {

@@ -106,7 +106,7 @@ public sealed partial class BattleSession
     /// <summary>게임 시각(초). 틱 ÷ 초당 틱 수로 정수에서 곧바로 계산해 오차가 쌓이지 않는다.</summary>
     public double Seconds => Tick / (double)TicksPerSecond;
 
-    /// <summary>고정 틱 경계로 반올림하지 않은 게임 프레임 시각(초). 다리 스캔과 검증에서 사용한다.</summary>
+    /// <summary>고정 틱 경계로 반올림하지 않은 게임 프레임 시각. 실제 앱은 원본 숫자 시계의 절대 초를 주입한다.</summary>
     public double FrameSeconds => _frameSeconds;
 
     /// <summary>다음 논리 틱까지 흐른 비율. 화면 보간에만 사용하며 전투 판정·검사합에는 넣지 않는다.</summary>
@@ -300,7 +300,25 @@ public sealed partial class BattleSession
     {
         if (!double.IsFinite(elapsedSeconds) || elapsedSeconds < 0 || !double.IsFinite(_frameSeconds + elapsedSeconds))
             throw new ArgumentOutOfRangeException(nameof(elapsedSeconds));
-        _frameSeconds += elapsedSeconds;
+        return AdvanceFrame(_frameSeconds + elapsedSeconds, elapsedSeconds);
+    }
+
+    /// <summary>
+    /// 호출자가 고정한 절대 게임 시각으로 한 프레임 진행한다. 시간 차이를 다시 더해 원본 double 시각을 재계산하지 않는다.
+    /// 숫자 시계/정지 소유권은 BattleSessionFrameClock이 맡고 기존 상대 Advance API도 같은 처리 순서를 쓴다.
+    /// </summary>
+    /// <param name="gameSeconds">세션의 직전 프레임 이상인 유한 게임 시각(초).</param>
+    public int AdvanceTo(double gameSeconds)
+    {
+        if (!double.IsFinite(gameSeconds) || gameSeconds < _frameSeconds)
+            throw new ArgumentOutOfRangeException(nameof(gameSeconds));
+        return AdvanceFrame(gameSeconds, gameSeconds - _frameSeconds);
+    }
+
+    /// <summary>고정한 프레임 시각에서 명령·한 번의 다리 스캔·남은 규칙 틱·미션 이벤트 순서로 처리한다.</summary>
+    private int AdvanceFrame(double now, double elapsedSeconds)
+    {
+        _frameSeconds = now;
         ProcessCommands();
         UpdateBridgeFrame(_frameSeconds, elapsedSeconds);
         UpdateGroundSupport();

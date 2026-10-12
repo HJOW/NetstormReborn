@@ -8,7 +8,8 @@
 
 namespace netstorm::client {
 struct GumpControl { int id{}; ScreenRect rect{}; bool menu{}, enabled{true}, instant{}; };
-class GumpInput {
+// 현재 메뉴의 사각형 입력 어댑터다. 복원된 GumpInput 트리 처리기와 서로 다른 타입/저장소를 사용한다.
+class GumpControlInput {
 public:
     // 현재 화면의 판정 영역을 바꾸며 이전 화면의 누름 캡처를 해제한다.
     void SetControls(std::vector<GumpControl> controls);

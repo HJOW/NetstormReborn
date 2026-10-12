@@ -29,6 +29,10 @@ public:
     ScreenPoint Position(std::uint32_t token) const;
     // 정수 위치에 배율 적용 크기를 더해 절삭한다. 합산 직후 float으로 재반올림하지 않는다.
     ScreenRect Bounds(std::uint32_t token) const;
+    // 004650a0/CD 00493f20: 사건의 정수 화면 좌표를 로컬 float 좌표로 변환한다.
+    // 각 뺄셈 뒤 float32 저장, 루트 자신의 위치 생략, 월드 부착 부모 이후 일반 부모 생략을 유지한다.
+    // Position을 역산하지 않으며 위치 캐시도 갱신하지 않는다. 이력: 2026-10-12 버튼 입력 연결.
+    std::array<float,2> ScreenToLocal(std::uint32_t token,ScreenPoint point) const;
     // Draw 직전에 같은 저장소의 현재 raw 플래그를 읽는다. visible/dead 필터는 수집기가 담당한다.
     std::uint32_t Flags(std::uint32_t token) const;
     // 원본의 root.child/override 순서로 수집한다. limit은 각 최상위 노드에 같은 값으로 전달한다.

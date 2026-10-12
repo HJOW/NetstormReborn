@@ -249,7 +249,7 @@ internal sealed partial class FortMapViewer
         if (!TutorialDialogOpen)
         {
             // 게임 코드가 직접 여는 창은 시계를 멈추지 않는다 (docs/gameplay/dialog-pause.md, 녹화 확인).
-            UpdateSession(seconds, new KeyboardState(), mouse);
+            UpdateSession(new KeyboardState(), mouse);
         }
     }
 

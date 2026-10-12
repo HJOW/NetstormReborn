@@ -66,7 +66,7 @@ private:
     void ClearWorld();
     Client& client_;
     State state_;
-    GumpInput input_;
+    GumpControlInput input_;
     std::map<std::string, std::unique_ptr<o::Config>> scripts_;
     std::map<std::string, IndexedImage> decorations_;
     SquidFrameMetrics buttonTextureMetrics_{}; // 원본 A00의 signed short 폭/높이. 반복 주기는 각각 1을 뺀 값이다.

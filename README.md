@@ -10,6 +10,8 @@ AI 를 이용해 되살리는 프로젝트입니다.
 
 # 현재 개발 진행상황 관련
 
+2026-10-12 dotnetpj 후속: 원본 게임 시계를 실제 세션·중첩 정지에 연결했습니다. Release 빌드 경고/오류 0이며 이번 변경의 동작 테스트·GUI 검증은 아직 수행하지 않았습니다. [작업 기록과 남은 범위](docs/dotnet-session-clock-20261012.md).
+
 현재 **C# + MonoGame 빌드**에서는 **메인 메뉴 → 캠페인 → 자유를 위한 투쟁 → 1-1 전쟁의 시작!**과 **1-2 휘리기그의 지배자(Master of Whirligigs)**를 플레이할 수 있습니다.
 옵션에서 해상도·창/전체화면·소리·음량·바람 소리·스피커 좌우 교환을 바꿀 수 있습니다. 메인 메뉴의 도움말과 F1에서 원본 도움말 전체를 탐색할 수 있으며, 사제·워크샵·생산 항목의 우클릭 메뉴도 사용할 수 있습니다. [녹화 분석의 클론 적용 범위](docs/screens/recorded-ui-clone-20261002.md)를 참고하세요. 다른 미션과 미구현 메뉴는 잠금 표시합니다.
 `dotnet run --project dotnetpj/src/Netstorm.Game -c Release -- --language korean`으로 시작합니다(영어: `--language english`).

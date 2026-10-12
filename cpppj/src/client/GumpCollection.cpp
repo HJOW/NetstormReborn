@@ -67,6 +67,26 @@ ScreenRect GumpCollection::Bounds(std::uint32_t token) const {
     const auto point=Position(token);const auto& node=Node(token);
     return {point.x,point.y,Ftol(static_cast<double>(point.x)+node.width),Ftol(static_cast<double>(point.y)+node.height)};
 }
+// 부모가 있는 현재 노드의 위치만 빼며 월드 기준점을 만난 뒤 일반 부모의 로컬 위치는 사용하지 않는다.
+std::array<float,2> GumpCollection::ScreenToLocal(std::uint32_t token,ScreenPoint point) const {
+    std::array<float,2> local{static_cast<float>(point.x),static_cast<float>(point.y)};
+    bool anchored=false;std::unordered_set<std::uint32_t> seen;
+    // 루트 자신의 위치는 원본처럼 생략한다. 각 단계는 현재 부모/위치를 읽고 float32로 저장한다.
+    while (true) {
+        Enter(seen,token);const auto& node=Node(token);if (!node.parent) return local;
+        const auto& parent=Node(node.parent);
+        if (parent.flags&kWorldAttached) {
+            const auto anchor=Anchor(parent);
+            local[0]=static_cast<float>(static_cast<double>(local[0])-static_cast<double>(anchor.x));
+            local[1]=static_cast<float>(static_cast<double>(local[1])-static_cast<double>(anchor.y));
+            anchored=true;
+        } else if (!anchored) {
+            local[0]=static_cast<float>(static_cast<double>(local[0])-static_cast<double>(node.x));
+            local[1]=static_cast<float>(static_cast<double>(local[1])-static_cast<double>(node.y));
+        }
+        token=node.parent;
+    }
+}
 // 좌표/캐시를 갱신하지 않고 현재 플래그만 반환한다. 없는 토큰은 공통 저장소 계약으로 거부한다.
 std::uint32_t GumpCollection::Flags(std::uint32_t token) const { return Node(token).flags; }
 std::int32_t GumpCollection::CollectNode(std::uint32_t token,ScreenRect view,
