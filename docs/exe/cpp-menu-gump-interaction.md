@@ -1,5 +1,7 @@
 # 메뉴 출력·선택·하위 메뉴 입력·객체 부착
 
+후속 [controlled 메뉴/제목/머리/CD 문맥](cpp-menu-gump-controls.md)에서 제목/머리 포맷·항목 래퍼·CD 자식 문맥 전달을 추가했다. 이 문서와 근거 해시는 출력/입력 구현 당시 상태를 나타낸다.
+
 2026-10-13, **마지막 디컴파일 PC: HJOW-Athlon**. 현재 호스트/IP는 **HJOW-Athlon / 192.168.0.94**다. AGENTS.md와 두 인수인계를 읽고 같은 PC의 정밀 프로젝트에서 두 PE를 읽기 전용으로 분석했다.
 
 [메뉴 생성/장식/수명/부착](cpp-menu-gump-widgets.md)에 실제 메뉴 Draw/Handle/Broadcast/AttachObject를 추가했다. **Client/UberGump는 기존 메뉴 어댑터를 사용하며 자동 raw UI·건설·미션 완주는 미완료다.** 이번 단계는 정적 분석과 빌드로 진행했다.
@@ -69,6 +71,6 @@
 
 `netstorm`/`NetstormCpp` **Release 최종 빌드 경고 0·오류 0**. SOURCE_MAP 생성기로 존재 상태를 갱신했다. **새 테스트 추가/실행·전체 CTest·독립 원본/C++ 입력/콜백/픽셀 대조·게임/GUI 실행은 미수행**이다. 앞 단계 관찰 **523,634개**, C++ 대조 **523,374개**, CTest **854개 통과**는 이번 추가 코드의 검증 결과가 아니다.
 
-다음은 메뉴 제목/머리 포맷·controlled 항목 래퍼·CD 자식 문맥 전달, 전체 Form 풀/연결과 실제 전역/명령 큐/변경 영역 공급, 자동 raw Client UI/OS 큐/폴링/overlay다. 신규 UI와 기존 UI의 독립 동작/픽셀 대조·회전 VFX/그림 색 표/flag 2 재사용·건설/미션 완주도 남아 있다.
+메뉴 제목/머리·controlled 항목·CD 자식 문맥은 위 후속에서 구현했다. 남은 작업은 전체 Form 풀/연결과 실제 전역/명령 큐/변경 영역 공급, 자동 raw Client UI/OS 큐/폴링/overlay다. 신규 UI와 기존 UI의 독립 동작/픽셀 대조·회전 VFX/그림 색 표/flag 2 재사용·건설/미션 완주도 남아 있다.
 
 두 보호 PE SHA-256은 불변이다. AGENTS.md/보호 원본/dotnetpj/테스트를 편집하지 않았고 커밋/푸시를 수행하지 않았다.

@@ -46,6 +46,7 @@ target_sources(netstorm PRIVATE
     MenuGumpWidgets.cpp MenuGumpWidgets.h
     MenuGumpInput.cpp MenuGumpInput.h
     MenuGumpDraw.cpp MenuGumpDraw.h
+    MenuGumpControls.cpp MenuGumpControls.h
     StyleText.cpp StyleText.h
     StyleTextMarkup.cpp StyleTextMarkup.h
     StyleTextBuffer.cpp StyleTextBuffer.h
