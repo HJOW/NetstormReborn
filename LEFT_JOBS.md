@@ -1,5 +1,13 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-12 최신 cpppj: StyleText 다중 줄 버퍼·원본 공백 줄바꿈 구현 (`HJOW-Athlon`)
+
+- [x] AGENTS.md·두 LEFT_JOBS 확인, 현재 PC/IP **HJOW-Athlon / 192.168.0.94**와 같은 PC의 정밀 디컴파일 기록 확인. 이 PC의 창/게임 실행 허용 지시 반영. 두 정밀 프로젝트에서 함수 **14/16개**를 읽기 전용으로 내보냈다. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-12.** [상세 기록](docs/exe/cpp-style-text-buffer.md).
+- [x] `StyleTextBuffer`로 생성·LF 완료 줄/미완료 끝 칸·문자열 통지/명시 길이/NUL·그림 Fit 추가·오래된 줄 삭제/전체 칸 이동·센티널 표시 줄 삽입/반납·최대 폭/전체 높이를 구현했다. 입력/표시 조각은 같은 StyleText/Markup 표의 별도 소유 체인이다. 폭 0 이하의 목록 유지, dirty 호출자 관리, 원본 소멸의 미완료 끝 칸 삭제 누락을 유지한다.
+- [x] 엄격한 폭 미만/동률 분할·space 경계/연속 공백·첫 단어 강제/빈 줄·space/NUL 포함 복사·실제 부분 조각 재측정·현재 문맥/T 태그·DWORD 감김을 복원했다. 비문자 높이의 이동 전 갱신과 가상 그림 복제의 배율 1/색 치환 0을 유지한다. 실제 GumpText/FontStore와 같은 Markup의 복제/삭제에 연결했다.
+- [x] 게임 라이브러리/`NetstormCpp` **Release 빌드 경고 0·오류 0**. SOURCE_MAP 생성/내용 차이 없음. **새 테스트 추가/실행·전체 CTest·독립 원본 줄/조각/픽셀 대조·게임/GUI 실행은 미수행**이다. 원본 관찰 **523,634개**, C++ 대조 **523,374개**, **854개 통과**는 앞 단계 기록이다. 자료: `recovery-stylebuffer-evidence.json`, `tools/analyze_stylebuffer.py`, `extracted/stylebuffer/`. 원본 SHA 불변, AGENTS.md/보호 원본/dotnetpj 변경·커밋/푸시 없음.
+- [ ] **다음:** 이번 버퍼/LF/공백/동률/빈 줄/그림 복제/수명·앞선 파서/VFX/StyleText/메뉴와 기존 260개 레이아웃 자료의 독립 동작 대조; TextGump/Gump 생성·재부착·표시/입력·스크롤·W 명령/전체 스타일 파서·원본 그림 색 표 공급·회전 VFX/flag 2 재사용·Form·메뉴 생성/장식/제목/소멸·Attach 보정·입력/통지 → OS 큐/폴링·overlay·Client 자동 UI 프레임. 기존 돌 버튼/배경/도움말 전체 원본 대조도 남았다. **Client/UberGump 기존 메뉴 어댑터와 raw 자동 GUI/건설·미션 완주는 미완료다.**
+
 ## 2026-10-12 최신 cpppj: StyleText 대괄호 그림·태그·색·그림자·소리 연결 구현 (`HJOW-Athlon`)
 
 - [x] AGENTS.md·두 LEFT_JOBS 확인, 현재 PC/IP **HJOW-Athlon / 192.168.0.94**와 같은 PC의 정밀 디컴파일 기록 확인. 이 PC의 창/게임 실행 허용 지시 반영. 두 정밀 프로젝트에서 함수 **16/10개**를 읽기 전용으로 내보냈다. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-12.** [상세 기록](docs/exe/cpp-style-text-markup.md).
@@ -7,7 +15,7 @@
 - [x] 실제 타입 이름/번호·글자 구간/숫자·`*/#/&`·count 포함 클램프·색 치환/65×60 Fit·현재 공통 T 태그로 그림을 생성해 같은 체인에 추가했다. `AppendStyleTextFragment`를 문자열과 공유하며 이후 문자열/리터럴/마지막 빈 조각의 태그와 `~.` 뒤 태그 유지도 연결했다. 두 원본 근거대로 **.type 로더의 미지정 gumpFrame 0→-1**을 수정하고 기존 AssetTests 기대값 한 곳만 맞췄다.
 - [x] 원본 zone 옵션·현재 기본 검정·전경/그림자 색·한 축만 -4~4여도 적용하는 E 좌표와 기존 SoundPlayer 이름 재생 인자 모두 0을 연결했다. 실제 GameAssets의 논리 프레임/특수 프레임/A~P 첫 인덱스를 공급한다.
 - [x] 게임 라이브러리/`NetstormCpp` **Release 빌드 경고 0·오류 0**. SOURCE_MAP 생성/내용 차이 없음. **새 테스트 추가/실행·전체 CTest·독립 원본 동작 대조·게임/GUI 실행은 미수행**이다. 원본 관찰 **523,634개**, C++ 대조 **523,374개**, **854개 통과**는 앞 단계 기록이다. 자료: `recovery-stylemarkup-evidence.json`, `tools/analyze_stylemarkup.py`, `extracted/stylemarkup/`. 원본 SHA 불변, AGENTS.md/보호 원본/dotnetpj 변경·커밋/푸시 없음.
-- [ ] **다음:** 이번 명령/공통 태그/타입 초기값·직전 VFX 배율/Markup·StyleText/메뉴와 기존 260개 레이아웃 자료의 독립 동작 대조; 원본 그림 색 표 공급·회전 VFX/flag 2 재사용·TextGump W 명령/다중 줄/줄바꿈/스크롤·Form·메뉴 생성/장식/제목/소멸·Attach 보정·입력/통지 → OS 큐/폴링·overlay·Client 자동 UI 프레임. 기존 돌 버튼/배경/도움말 전체 원본 대조도 남았다. **Client/UberGump 기존 메뉴 어댑터와 raw 자동 GUI/건설·미션 완주는 미완료다.**
+- [x] **다중 줄 버퍼/공백 줄바꿈은 위 후속에서 구현했다.** 독립 동작 대조·TextGump 생성/표시/스크롤/W 명령·그림 색 표/회전·Form/메뉴 생성/입력·자동 UI와 기존 돌 버튼/배경/도움말 전체 원본 대조는 위 최신 미완료 목록을 따른다. **Client/UberGump 기존 메뉴 어댑터와 raw 자동 GUI/건설·미션 완주는 미완료다.**
 
 ## 2026-10-12 최신 cpppj: VFX 그림의 회전 없는 16.16 배율 출력 구현 (`HJOW-Athlon`)
 

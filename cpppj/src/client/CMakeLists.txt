@@ -44,6 +44,7 @@ target_sources(netstorm PRIVATE
     MenuGumpLayout.cpp MenuGumpLayout.h
     StyleText.cpp StyleText.h
     StyleTextMarkup.cpp StyleTextMarkup.h
+    StyleTextBuffer.cpp StyleTextBuffer.h
     Markup.cpp Markup.h
     TileGroupCollection.cpp TileGroupCollection.h
     ObjectCollection.cpp ObjectCollection.h
