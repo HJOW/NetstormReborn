@@ -35,6 +35,7 @@ target_sources(netstorm PRIVATE
     ButtonGump.cpp ButtonGump.h
     StoneButtonGump.cpp StoneButtonGump.h
     GumpBackgroundCreate.cpp GumpBackgroundCreate.h
+    GumpBackgroundDraw.cpp GumpBackgroundDraw.h
     GumpHelp.cpp GumpHelp.h
     GumpText.cpp GumpText.h
     GumpTextDraw.cpp GumpTextDraw.h

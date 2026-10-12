@@ -35,6 +35,8 @@ public:
     void Lines(std::span<const GumpLine> lines) const;
     // position은 해제한 이미지의 왼쪽 위다. 투명도/선택적 소스 색 치환을 유지한다.
     void Image(const IndexedImage& image,ScreenPoint position,const ColorMap* colors=nullptr) const;
+    // 현재 클립 안의 half-open 사각형을 채운다. checker는 화면 절대 좌표의 x/y 홀짝이 다른 픽셀만 쓴다.
+    void Fill(ScreenRect rect,std::uint32_t color,bool checker=false) const;
 private:
     // 현재 inclusive 전역을 표면과 교차한 half-open 영역으로 바꾼다. 극단 끝점은 64비트로 계산한다.
     ScreenRect Clip() const;

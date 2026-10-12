@@ -88,6 +88,7 @@ add_executable(netstorm_tests
     PaletteColorsTests.cpp
     GumpVisualTests.cpp
     GumpBackgroundTests.cpp
+    GumpBackgroundDrawTests.cpp
     TerritoryTests.cpp
     RendererTests.cpp
     MenuTests.cpp
@@ -528,3 +529,7 @@ set_source_files_properties(GumpTextTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 실제 세 PE의 글리프/색/로그 호출 관찰이다. 기본 CTest는 원본 게임/Python/창을 실행하지 않는다.
 set_source_files_properties(GumpGlyphTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_GUMPGLYPH_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gumpglyph-x86.tsv\"")
+
+# 전체 배경 Draw/CRT/소프트웨어 fill의 세 실제 PE 관찰이다. 기본 검사는 게임/원본/Python을 실행하지 않는다.
+set_source_files_properties(GumpBackgroundDrawTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_GUMPBACKGROUNDDRAW_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gumpbackgrounddraw-x86.tsv\"")

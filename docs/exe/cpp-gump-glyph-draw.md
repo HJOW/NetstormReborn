@@ -58,6 +58,6 @@ python -X utf8 tools/cpp_gumpvisual_smoke.py
 
 ## 다음 작업
 
-raw 배경의 실제 타입/SHP 저장소 공급·가상 Draw 분배, MenuGump/Form·OS 큐/폴링·overlay·Client 자동 UI 프레임이 남았다. 기존 돌 버튼 **전체 생성/부착/소멸자**·배경 생성·기본 도움말 전체 몸체의 독립 PE 대조도 미완료다. 글리프 VFX 래스터 전체 몸체의 임의 캐시 입력 독립 대조와 수정 가능한 콜백 입력 모델도 이번 완료 범위에 포함하지 않는다.
+raw 배경의 실제 타입/SHP 저장소 공급·가상 Draw 분배는 [같은 날 후속 완료](cpp-gump-background-draw.md)했다. MenuGump/Form·OS 큐/폴링·overlay·Client 자동 UI 프레임이 남았다. 기존 돌 버튼 **전체 생성/부착/소멸자**·배경 생성·기본 도움말 전체 몸체의 독립 PE 대조도 미완료다. 글리프 VFX 래스터 전체 몸체의 임의 캐시 입력 독립 대조와 수정 가능한 콜백 입력 모델도 이번 완료 범위에 포함하지 않는다.
 
 **새 raw 버튼의 Client 자동 GUI 연결과 게임 내 건설/미션 완주는 아직 불가능하다.** 원본/복사본 게임 프로세스와 소리 장치는 실행하지 않았다. 지정 예외 PC에서 클론 GUI만 검증했다. AGENTS.md·보호 원본·dotnetpj/인계는 수정하지 않았으며 커밋/푸시하지 않았다.

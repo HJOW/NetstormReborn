@@ -2,6 +2,8 @@
 #include "GumpRawSupport.h"
 #include "client/GumpText.h"
 #include "client/GumpTextDraw.h"
+#include "client/GumpBackgroundDraw.h"
+#include "GumpBackgroundTestAssets.h"
 #include "client/DrawSort.h"
 #include "client/StoneButtonGump.h"
 #include "client/GumpHelp.h"
@@ -96,9 +98,11 @@ struct StoneScene {
         if (token==kBackground) return &background;return nullptr;
     }
     // 순환 참조는 처리기 포인터를 실행 시 조회하여 생성 뒤 연결한다.
-    explicit StoneScene(const GumpText& text,netstorm::o::OriginalEdition edition=netstorm::o::OriginalEdition::Patch1078) {
+    explicit StoneScene(const GumpText& text,netstorm::o::OriginalEdition edition=netstorm::o::OriginalEdition::Patch1078,
+        const GumpBackgroundAssets* assets=nullptr) {
         create.screenWidth=640;create.screenHeight=480;create.collection.edition=edition;
         treeState.mapView={0,0,640,480};stoneState.color=-7;stoneState.palette={9,243,57};
+        if (assets) stoneState.backgroundType=82;
         const auto lookup=[this](auto token) { return Find(token); };
         GumpCreateHooks make;make.node=lookup;make.allocate=[](auto size) { CHECK(size==kGumpBaseSize);return kRoot; };
         factory=std::make_unique<GumpCreate>(create,make);factory->InitializeRoot();
@@ -118,9 +122,11 @@ struct StoneScene {
         GumpInputHooks i;i.node=lookup;
         input=std::make_unique<GumpInput>(create,lifeState,inputState,*collection,*events,i);
         ButtonGumpHooks b;b.node=[this](auto token) { return token==kStone ? &node : nullptr; };b.baseNode=lookup;
+        b.redraw=[](auto,bool) {};
         b.backgroundFlags=[this](auto token) { return token==kBackground ? &background.backgroundFlags : nullptr; };
         buttons=std::make_unique<ButtonGump>(create,buttonState,*factory,*collection,*events,*input,*lifetime,b);
         GumpBackgroundCreateHooks bg;bg.node=[this](auto token) { return token==kBackground ? &background : nullptr; };
+        if (assets) { GumpBackgroundDrawHooks draw;BindGumpBackgroundAssets(bg,draw,*assets); }
         backgrounds=std::make_unique<GumpBackgroundCreate>(create,*factory,backgroundColor,bg);
         StoneButtonGumpHooks s;s.node=[this](auto token) { return token==kStone ? &node : nullptr; };
         s.allocate=[this](auto size) { CHECK(size==0xb8);return failAllocation ? 0U : kBackground; };
@@ -309,4 +315,38 @@ TEST_CASE(StoneButtonText_DrawFailureRestoresClipAfterParentLines) {
     try { draw.Draw(kStone); } catch (const std::invalid_argument&) { caught=true; }
     CHECK(caught && state.clip.left==0 && state.clip.right==100 && state.vfxClip.right==99);
     CHECK(pixels[10*100+11]==57 && colors.vfxColors[100]==0);
+}
+
+// 자산 공급→배경 자식 생성/부착→수집/정렬/kind 2→현재 배경/글자 픽셀→실제 눌림→자식 우선 삭제를 연결한다.
+TEST_CASE(StoneButtonText_RawBackgroundAndGlyphsShareFullDispatchAndLifetime) {
+    const auto shapes=netstorm::test::gumpbackground::Shapes();const auto maps=netstorm::test::gumpbackground::Maps();
+    const GumpBackgroundAssetBinding binding{82,0,1,0};GumpBackgroundAssets assets(shapes,std::span(&binding,1));
+    // 동일한 실제 기본/파생 저장소 연결을 패치와 CD에서 각각 검사한다.
+    for (auto edition:{netstorm::o::OriginalEdition::Patch1078,netstorm::o::OriginalEdition::Cd1072}) {
+        FontFixture fixture;WriteStonePixelFont(fixture);GumpText measure(fixture.fonts,edition);StoneScene scene(measure,edition,&assets);
+        scene.stones->Construct(kStone,75,19,"A");scene.stones->SetLabel(kStone,"A");scene.tree->Move(kStone,10,10,kRoot);
+        CHECK(scene.background.type==82 && scene.background.shape==82 && scene.background.tileWidth==3 && scene.background.tileHeight==3);
+        GumpDrawState state;SetGumpDrawClip(state,{0,0,100,40});std::vector<std::uint8_t> guarded(4002,7);auto pixels=std::span(guarded).subspan(1,4000);
+        GumpPixelTarget target(pixels,100,40,state);GumpGlyphColorState colors;GumpTextDraw text(fixture.fonts,MakeGumpGlyphPixelHooks(target,colors),edition);
+        GumpBackgroundDrawState backgroundState;GumpBackgroundPixelTarget raster(target,assets,maps,colors.vfxColors);
+        GumpBackgroundDrawHooks backgrounds;backgrounds.node=[&](auto token) { return token==kBackground ? &scene.background : nullptr; };
+        GumpBackgroundCreateHooks create;BindGumpBackgroundAssets(create,backgrounds,assets);
+        GumpBackgroundDraw background(*scene.collection,state,backgroundState,raster.Hooks(state,backgrounds));
+        GumpDrawHooks hooks{[](auto) { CHECK(false); }};
+        BindStoneButtonDraw(hooks,*scene.collection,text,target,[&](auto token) { return token==kStone ? scene.stones.get() : nullptr; });
+        BindGumpBackgroundDraw(hooks,background,[](auto token) { return token==kBackground; });
+        GumpDraw draw(*scene.collection,state,hooks);DrawDispatchHooks dispatch;BindGumpDraw(dispatch,draw);DrawCollectionHooks collection;BindGumpCollection(collection,*scene.collection);
+        std::array<netstorm::o::RenderCollectionEntry,4> work{};DrawCollectionRequest request;request.screen={0,0,100,40};request.dirtyFlags=4;
+        const auto count=CollectDrawEntries(request,work,collection).count;CHECK(count==2);if (count!=2) continue;
+        auto entries=std::span(work).first(2);SortDrawEntries(entries,edition);DispatchDrawEntries(entries,{},dispatch);
+        CHECK(pixels[15*100+13]==4 && pixels[11*100+13]==14 && pixels[26*100+13]==22);
+        CHECK(pixels[12*100+47]==9 && pixels[13*100+48]==243 && pixels[10*100+11]==57 && colors.vfxColors[100]==9);
+        // 실제 SetPressed가 자식 플래그를 바꾸면 배경 명암과 부모 글자 위치가 같은 표시 목록에서 함께 바뀐다.
+        scene.buttons->SetPressed(kStone,1);CHECK(scene.background.backgroundFlags&GumpBackgroundFlags::kPressed);
+        std::fill(pixels.begin(),pixels.end(),std::uint8_t{7});DispatchDrawEntries(entries,{},dispatch);
+        CHECK(pixels[11*100+13]==24 && pixels[26*100+13]==12 && pixels[13*100+48]==9 && pixels[14*100+49]==243);
+        CHECK(state.clip.left==0 && state.clip.right==100 && guarded.front()==7 && guarded.back()==7);
+        scene.lifetime->Kill(kStone);scene.lifetime->Cleanup();CHECK((scene.released==std::vector<std::uint32_t>{kBackground,kStone}));
+        CHECK(CollectDrawEntries(request,work,collection).count==0 && scene.create.count==1);
+    }
 }

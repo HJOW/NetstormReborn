@@ -6,7 +6,9 @@
 
 namespace netstorm::client {
 namespace GumpBackgroundFlags {
-inline constexpr std::uint32_t kTexture=0x02000000; // 질감 경로 선택. 단색/체크 fill 경로는 이 API의 범위 밖이다.
+inline constexpr std::uint32_t kTexture=0x02000000; // 질감 경로 선택. PlanGumpBackground는 이 경로만 계획한다.
+inline constexpr std::uint32_t kSolid=0x04000000; // 단색 fill 경로다. texture보다 우선하며 낮은 BYTE가 색 번호다.
+inline constexpr std::uint32_t kChecker=0x08000000; // 체크 fill 경로다. solid/texture보다 우선한다.
 inline constexpr std::uint32_t kLeft=0x01000000; // 왼쪽 2픽셀 테두리를 그린다.
 inline constexpr std::uint32_t kTop=0x00800000; // 위쪽 2픽셀 테두리를 그린다.
 inline constexpr std::uint32_t kRight=0x00400000; // 오른쪽 2픽셀 테두리를 그린다.
@@ -24,6 +26,9 @@ struct GumpTexturePass {
     bool validTile{}; // SHP signed short 폭/높이가 각각 2 이상일 때만 clip/map/draw 호출을 한다.
     std::vector<ScreenPoint> origins;
 };
+// 전체 질감 반복 함수 한 번의 계획이다. 각 호출 시 현재 자산/클립을 따로 조회하는 raw 분배기에 사용한다.
+// 정상 순서 rect/clip만 받으며 타일 크기 1 이하는 출력 없는 조기 반환이다.
+GumpTexturePass PlanGumpTexture(ScreenRect rect,ScreenRect clip,std::int16_t width,std::int16_t height,std::uint32_t flags);
 // 00465880→00465690/CD 00494a20→00494720 질감 경로다. SHP 메타 폭/높이에서 1을 뺀 주기를 사용한다.
 // rect/clip은 순서가 정상인 사각형으로 전달한다. 음수 원점·빈 영역은 허용하고 원본 나눗셈은 0 방향으로 자른다.
 std::vector<GumpTexturePass> PlanGumpBackground(ScreenRect rect,ScreenRect clip,std::int16_t width,std::int16_t height,std::uint32_t flags);

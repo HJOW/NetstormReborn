@@ -39,6 +39,11 @@ GumpTexturePass TilePass(ScreenRect rect,ScreenRect clip,std::int16_t width,std:
     return result;
 }
 }
+// raw 배경은 각 pass에서 새로 조회한 프레임 메타데이터와 현재 클립을 공급한다.
+GumpTexturePass PlanGumpTexture(ScreenRect rect,ScreenRect clip,std::int16_t width,std::int16_t height,std::uint32_t flags) {
+    if (!Ordered(rect) || !Ordered(clip)) throw std::invalid_argument("배경 질감 경계 순서 오류");
+    return TilePass(rect,clip,width,height,flags);
+}
 // 바탕→왼쪽→오른쪽→위→아래 순서다. 들어온 명암 비트는 지우지 않고 원본처럼 OR한다.
 std::vector<GumpTexturePass> PlanGumpBackground(ScreenRect rect,ScreenRect clip,std::int16_t width,std::int16_t height,std::uint32_t flags) {
     if (!Ordered(rect) || !Ordered(clip) || (flags&0x0c000000)!=0 || (flags&GumpBackgroundFlags::kTexture)==0)

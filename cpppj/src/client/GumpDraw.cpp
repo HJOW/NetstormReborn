@@ -74,4 +74,18 @@ void GumpPixelTarget::Lines(std::span<const GumpLine> lines) const {
 void GumpPixelTarget::Image(const IndexedImage& image,ScreenPoint position,const ColorMap* colors) const {
     DrawIndexedImage(pixels_,pitch_,height_,image,position.x,position.y,Clip(),colors);
 }
+// 원본 004a2060/004a2180의 소프트웨어 픽셀 결과다. 빈/역전 영역은 호스트에서 쓰지 않는다.
+void GumpPixelTarget::Fill(ScreenRect rect,std::uint32_t color,bool checker) const {
+    const auto visible=ClipScreenRect(rect,Clip());const auto ink=static_cast<std::uint8_t>(color);
+    if (visible.left>=visible.right || visible.top>=visible.bottom) return;
+    // 실제 표면 범위 안의 행만 갱신하며 체크 위상은 잘린 좌표의 절대 홀짝을 따른다.
+    for (int y=visible.top;y<visible.bottom;++y) {
+        const auto row=static_cast<std::size_t>(y)*static_cast<std::size_t>(pitch_);
+        if (!checker) std::fill(pixels_.begin()+row+visible.left,pixels_.begin()+row+visible.right,ink);
+        else {
+            // 체크 fill의 (~y^left)&1과 같은 화면 위상이다. 오른/아래 경계는 제외한다.
+            for (int x=visible.left;x<visible.right;++x) if ((std::uint32_t(x)^std::uint32_t(y))&1U) pixels_[row+x]=ink;
+        }
+    }
+}
 }
