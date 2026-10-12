@@ -186,11 +186,20 @@ int BitmapFont::Ascent() const { return ascent_; }
 int BitmapFont::Descent() const { return descent_; }
 // 설정의 fontFaceName을 보존한다.
 FontStore::FontStore(const o::BaseFileSystem& files, std::string face) : files_(files), face_(face.empty() ? "Arial" : std::move(face)) {}
+// 캐시 내부의 tmHeight 대신 원본의 CreateFontA 요청 높이 전역을 읽는다.
+int FontStore::LogicalHeight(int slot) {
+    if (slot<0 || slot>=static_cast<int>(kHeights.size())) throw std::invalid_argument("Gump 글꼴 슬롯 범위 오류");
+    return kHeights[static_cast<std::size_t>(slot)];
+}
+// 원본이 만들지 않는 조합을 GDI fallback으로 채우지 않는다.
+bool FontStore::Available(int slot,FontStyle style) {
+    return slot>=0 && slot<7 && slot!=2 && static_cast<std::size_t>(style)<kStyles.size() &&
+        ((slot!=1 && slot!=3 && slot!=4) || style==FontStyle::Normal);
+}
 // 원본 슬롯·스타일 제한을 유지하고 생성 시 파일을 덮어쓰지 않는다.
 const BitmapFont& FontStore::Get(int slot, FontStyle style) {
     const auto index = static_cast<std::size_t>(style);
-    if (slot < 0 || slot >= 7 || slot == 2 || index >= kStyles.size() ||
-        ((slot == 1 || slot == 3 || slot == 4) && style != FontStyle::Normal)) throw std::invalid_argument("Unavailable font slot/style");
+    if (!Available(slot,style)) throw std::invalid_argument("Unavailable font slot/style");
     auto& font = fonts_[static_cast<std::size_t>(slot)][index];
     if (!font) {
         const std::string face = slot == 1 ? "Courier New" : face_;

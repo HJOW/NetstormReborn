@@ -40,6 +40,10 @@ public:
     FontStore(const o::BaseFileSystem& files, std::string face);
     // 슬롯과 스타일의 캐시를 읽고, 없거나 손상됐으면 같은 GDI 글꼴로 만든다.
     const BitmapFont& Get(int slot = 0, FontStyle style = FontStyle::Normal);
+    // 004a39f0가 별도 전역에 지정한 슬롯 높이다. 캐시 tmHeight와 구분하며 빈 슬롯 2는 0이다.
+    static int LogicalHeight(int slot);
+    // 10.78 초기화가 실제로 만드는 슬롯/스타일 조합인지 확인한다. 빈 조합은 Gump 측정에서 폭 0이다.
+    static bool Available(int slot,FontStyle style);
 private:
     const o::BaseFileSystem& files_;
     std::string face_;

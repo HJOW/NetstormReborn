@@ -16,6 +16,7 @@ add_executable(netstorm_tests
     GumpInputTests.cpp
     GumpFrameTests.cpp
     ButtonGumpTests.cpp
+    GumpTextTests.cpp
     DrawSubmissionTests.cpp
     DrawSortTests.cpp
     RenderCollectionTests.cpp
@@ -518,3 +519,7 @@ set_source_files_properties(GumpFrameTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 전체 버튼 노드/표/콜백과 실제 Gump 하위 몸체를 관찰한 세 PE의 전수 입력이다.
 set_source_files_properties(ButtonGumpTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_BUTTONGUMP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/buttongump-x86.tsv\";NETSTORM_BUTTONGUMP_PATCH_CASES=252;NETSTORM_BUTTONGUMP_CD_CASES=245")
+
+# 원본 폭 표/논리 높이와 직접/기본 Gump 위임의 독립 PE 출력이다. 게임/원본 자산은 실행하지 않는다.
+set_source_files_properties(GumpTextTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_GUMPTEXT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gumptext-x86.tsv\"")

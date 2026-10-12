@@ -1,0 +1,8 @@
+{
+  "description": "기본 Gump 글자 측정과 Screen의 슬롯/스타일 선택·폭·논리 높이·그림자 여백. 마지막 디컴파일 PC: VM-W11-CODEX, 2026-10-12.",
+  "editions": {
+    "originals": ["004a3df0", "00465020"],
+    "originalCD": ["00425f90", "00493ea0"],
+    "original1037": ["00425f90", "00493ea0"]
+  }
+}
