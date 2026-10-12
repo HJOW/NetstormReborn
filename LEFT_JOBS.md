@@ -1,5 +1,14 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-12 최신 cpppj: ButtonGump 독립 원본 대조·공유 저장소 연결 검증 완료 (`VM-W11-CODEX`)
+
+- [x] AGENTS.md·두 LEFT_JOBS 확인, 현재 PC/IP `VM-W11-CODEX`/`10.0.0.17`와 마지막 디컴파일 PC 일치. 사용자 창/기존 게임 실행 테스트 허용 반영. `buttongump` **25/22/22개** 읽기 전용 내보내기. **마지막 디컴파일 수행 PC: VM-W11-CODEX, 2026-10-12.** [상세 기록](docs/exe/cpp-button-gump-validation.md).
+- [x] 실제 세 PE의 전체 버튼 생성·상태·입력·통지·idle·화면→로컬 좌표와 실제 Gump 기반 생성/등록·캡처·idle 등록/해제·부모 전파·팝업 Kill/dialog·CRT/예약 helper를 격리 x86으로 관찰했다. 새 독립 원본 **742개**·cpppj 누적 **520,756개**, 두 x87 최상위 정상 반환 **1,640회**. 이번 입력의 모드 차이 0, 전체 노드/표/콜백·ABI/x87/SEH/범위/보호·SHA/집계 감사 통과.
+- [x] 새 `ButtonGumpTests` **8개** 통과. 실제 Bind→트리 전달/캡처→프레임 통지/idle→뗌/해제·출력 입력과 팝업 지연 삭제 큐를 같은 저장소에 연결했다. 현재 콜백 상태·루트/월드 부모·호스트 예외도 확인했다. 지난 게임 모듈 구현의 원본 불일치는 발견되지 않았다.
+- [x] Release 경고/오류 **0**, 전체 CTest 내부 **827개·실패 0**(90.47초). 실제 클론 메뉴 GUI **54개 상태**, 해상도 전환·전체화면 표식/설정 저장·재실행, 메뉴 배경 774,432화소와 두 판본 GIF 각 831,008화소 대조 통과. 원본/설정 전수 불변·복구 확인. **GUI는 기존 메뉴 어댑터 회귀이며 새 raw 버튼의 Client 자동 연결은 아니다.**
+- [x] 자료: `tools/decomp_buttongump_oracle.py`, `cpppj/recovery-buttongump-evidence.json`, 기본/대안 fixture, `ButtonGumpTests.cpp`, `extracted/buttongump-*`, `extracted/cpp-menu-smoke/`. AGENTS.md·보호 파일·dotnetpj/인계 변경 및 커밋/푸시 없음. 원본 게임 전체 프로세스는 실행하지 않았다.
+- [ ] **다음:** 돌 버튼 전체 생성/텍스트/배경 할당·부착/소멸자·기본 도움말 처리기 → 실제 Form/메뉴/OS 입력·overlay·Client 자동 UI 프레임. 현재 Client/UberGump는 메뉴 어댑터를 사용한다. 건설/미션 완주는 아직 불가능하다. 아래는 앞 단계의 기록이다.
+
 ## 2026-10-12 최신 cpppj: ButtonGump 상태·입력·통지·idle 정적 복원 (`VM-W11-CODEX`)
 
 - [x] AGENTS.md·두 LEFT_JOBS 확인, 현재 호스트/IP `VM-W11-CODEX`/`10.0.0.17`와 마지막 디컴파일 PC 일치 확인. `buttongump` **16/13/13개** 읽기 전용 내보내기. **마지막 디컴파일 수행 PC: VM-W11-CODEX, 2026-10-12.** [상세 기록](docs/exe/cpp-button-gump-reconstruction.md).
@@ -7,7 +16,7 @@
 - [x] 가상 함수 표로 CD 입력의 실제 시작 `00440ce0`를 확인했다(정밀 대응표의 `00440cfe`는 중간 조각). 패치 위임 꼬리 `00424c69`를 별도 범위로 내보냈다. 생략된 가상 인자를 PE 명령으로 보완했다.
 - [x] 서로 다른 두 `GumpInput` 정의의 ODR 충돌을 제거했다. 메뉴 사각형 어댑터를 `GumpControlInput`으로 변경하고 사용처/기존 검사 선언만 갱신했다. SOURCE_MAP을 생성 도구로 갱신했다.
 - [x] 최종 **Release 빌드 경고/오류 0**. **테스트 추가/실행·독립 PE 실행 대조·원본/클론 게임·GUI 실행 없음.** 새 독립 관찰 0개, 기존 누적 520,014개와 819개 통과 기록은 앞 단계 결과다. AGENTS.md·보호 파일·dotnetpj는 변경하지 않았고 커밋/푸시하지 않았다.
-- [ ] **새 버튼/좌표 함수의 동작 검증은 남아 있다.** 독립 PE 관찰·C++ 대조를 확보해야 원본 동일성을 확인할 수 있다. 돌 버튼 전체 생성/텍스트/배경 할당·부착/소멸자·기본 도움말 처리기, 실제 Form/메뉴/OS 입력·overlay·Client 자동 UI 프레임은 후속이다. **현재 Client/UberGump는 기존 메뉴 어댑터를 사용한다. 새 버튼의 자동 GUI 연결과 게임 내 건설/미션 완주는 아직 불가능하다.**
+- [x] **새 버튼/좌표 함수의 독립 PE·C++ 동작 검증은 같은 날 후속에서 완료했다.** 위 최신 절과 [검증 기록](docs/exe/cpp-button-gump-validation.md)을 따른다. 돌 버튼 전체 생성/텍스트/배경 할당·부착/소멸자·기본 도움말 처리기, 실제 Form/메뉴/OS 입력·overlay·Client 자동 UI 프레임은 후속이다. **현재 Client/UberGump는 기존 메뉴 어댑터를 사용한다. 새 버튼의 자동 GUI 연결과 게임 내 건설/미션 완주는 아직 불가능하다.**
 
 아래는 앞 단계의 완료·검증 기록이다.
 

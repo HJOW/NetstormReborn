@@ -15,6 +15,7 @@ add_executable(netstorm_tests
     GumpEventsTests.cpp
     GumpInputTests.cpp
     GumpFrameTests.cpp
+    ButtonGumpTests.cpp
     DrawSubmissionTests.cpp
     DrawSortTests.cpp
     RenderCollectionTests.cpp
@@ -513,3 +514,7 @@ set_source_files_properties(GumpInputTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 실제 세 PE의 통지/idle/재그리기 전체 몸체와 콜백 당시 전체 상태를 저장한 관찰이다.
 set_source_files_properties(GumpFrameTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_GUMPFRAME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gumpframe-x86.tsv\"")
+
+# 전체 버튼 노드/표/콜백과 실제 Gump 하위 몸체를 관찰한 세 PE의 전수 입력이다.
+set_source_files_properties(ButtonGumpTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_BUTTONGUMP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/buttongump-x86.tsv\";NETSTORM_BUTTONGUMP_PATCH_CASES=252;NETSTORM_BUTTONGUMP_CD_CASES=245")

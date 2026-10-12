@@ -1,5 +1,7 @@
 # cpppj ButtonGump 상태·입력·통지·idle 정적 복원
 
+> **같은 날 후속:** [독립 원본 대조·연결 검증](cpp-button-gump-validation.md)을 완료했다. 새 원본 742개·전체 단위 827개·기존 메뉴 GUI 54개 상태 통과. 현재 내보내기는 25/22/22개이며 아래 16/13/13개·SHA·“미수행”은 정적 구현 단계 당시 기록이다. 실제 Client 버튼 자동 연결은 후속이다.
+
 작업 PC: **VM-W11-CODEX**(`10.0.0.17`), 기록일: **2026-10-12**. AGENTS.md·두 LEFT_JOBS와 기존 Gump 인계를 읽고 현재 PC가 마지막 디컴파일 PC와 같은 것을 확인했다. `buttongump`을 **16/13/13개** 읽기 전용으로 내보냈다. **마지막 디컴파일 수행 PC: VM-W11-CODEX, 2026-10-12.**
 
 `ButtonGump`의 기본 생성·값/누름/활성/점멸 상태·입력·등록표 통지·idle 몸체를 C++로 옮겼다. 같은 `GumpCreate`·`GumpCollection`·`GumpEvents`·`GumpInput`·`GumpLifetime`을 참조한다. 돌 버튼의 값/누름 상태에 따른 배경 테두리 전환과 기존 `ButtonVisualState` 출력 입력도 연결할 수 있다.

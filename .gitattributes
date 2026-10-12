@@ -99,6 +99,8 @@ tools/decomp_*.py text eol=lf
 tools/ghidra/*.java text eol=lf
 tools/ghidra/*-functions.json text eol=lf
 cpppj/recovery-*.json text eol=lf
+cpppj/tests/fixtures/buttongump-x86.tsv text eol=lf
+cpppj/tests/fixtures/buttongump-x87-64.json text eol=lf
 # dotnet 숫자 시계의 독립 PE 관찰도 체크아웃 후 SHA가 같도록 LF를 보존한다.
 dotnetpj/recovery-*.json text eol=lf
 dotnetpj/tests/Netstorm.Core.Tests/Fixtures/clockkernel-x86.tsv text eol=lf

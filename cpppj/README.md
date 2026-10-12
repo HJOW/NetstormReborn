@@ -1,5 +1,7 @@
 # cpppj — NetStorm C++ 빌드
 
+2026-10-12 (`VM-W11-CODEX`) 최신: **[ButtonGump 원본 기계어 대조·연결 검증](../docs/exe/cpp-button-gump-validation.md)** 완료. 실제 세 PE 새 독립 원본 **742개**·누적 **520,756개**, 두 x87 정상 반환 1,640회·전체 상태/콜백/근거 감사 통과. 새 C++ 8개·Release 경고/오류 0·전체 단위 **827개** 및 기존 클론 메뉴 GUI **54개 상태** 통과. 돌 버튼 전체 생성/텍스트/소멸자·기본 도움말·실제 Client UI 연결은 후속이며 미션 완주는 아직 불가능하다. 마지막 디컴파일 PC: **VM-W11-CODEX, 2026-10-12**(25/22/22개). 아래는 앞 단계 기록이다.
+
 2026-10-12 (`VM-W11-CODEX`) 최신: **[ButtonGump 상태·입력·통지·idle 정적 복원](../docs/exe/cpp-button-gump-reconstruction.md)**. 기본 생성·일반/토글/즉시 버튼·벽 시계 반복·돌 버튼 눌림 배경과 화면→로컬 좌표를 구현하고 Gump 계층에 연결하는 API를 추가했다. 메뉴 어댑터의 중복 클래스명을 `GumpControlInput`으로 수정했다. 읽기 전용 내보내기 16/13/13개·최종 Release 경고/오류 0. **이번 변경의 동작 테스트/원본 실행 대조는 미수행이며 실제 Client 버튼 전환·텍스트/전체 UI 루프와 미션 완주는 후속이다.** 마지막 디컴파일 PC: **VM-W11-CODEX, 2026-10-12**. 아래 수치는 앞 단계 검증 기록이다.
 
 2026-10-12 (`VM-W11-CODEX`) 최신: **[Gump 등록표 통지·idle·재그리기 요청 복원](../docs/exe/cpp-gump-frame-reconstruction.md)** 완료. 같은 생성/트리/수명 저장소에서 실제 Attach·idle 등록·Kill/Push·기본/scalar Cleanup과 다음 idle을 연결했다. 새 독립 원본 810개·누적 520,014개, 최종 Release 경고/오류 0·전체 단위 819개 통과. 실제 파생 처리기·OS 사건 큐/overlay 갱신·Client 자동 UI 프레임과 게임 내 건설/미션 완주는 후속이다. 마지막 디컴파일 PC: **VM-W11-CODEX, 2026-10-12**. 아래는 앞 단계 기록이다.
