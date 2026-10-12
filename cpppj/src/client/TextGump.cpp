@@ -157,6 +157,20 @@ void ScrollingTextGump::AppendText(std::uint32_t token,std::span<const char> byt
 void ScrollingTextGump::AppendText(std::uint32_t token,std::span<const char> bytes,std::int32_t length,std::uint32_t metadata) const {
     const auto context=Node(token).textContext;AppendText(token,bytes,context,length,metadata);
 }
+// 그림은 버퍼 문자열 통지를 호출하지 않는다. 추가 후 현재 노드의 dirty와 가상 표시 요청만 갱신한다.
+void ScrollingTextGump::AppendPicture(std::uint32_t token,const Markup& pictures,std::uint32_t type,std::uint32_t frame,
+    std::uint32_t metadata,std::int32_t fitWidth,std::int32_t fitHeight) const {
+    Buffer(token).handler->AppendPicture(pictures,type,frame,metadata,fitWidth,fitHeight);
+    Node(token).textFlags|=kDirty;Redraw(token);
+}
+// 원본 교체는 완료 줄만 반복 삭제한다. 마지막 미완료 문자열도 지우는 Clear로 바꾸지 않는다.
+void ScrollingTextGump::ReplaceText(std::uint32_t token,std::span<const char> bytes,std::uint32_t metadata) const {
+    const auto context=Node(token).textContext;
+    const auto buffer=Buffer(token);
+    // 각 제거 직후 같은 버퍼의 현재 완료 개수를 다시 읽는다. 표시 복제는 다음 Layout까지 남는다.
+    while (buffer.state->lineCount!=0) buffer.handler->RemoveLine(0);
+    buffer.handler->AppendText(bytes,context,-1,metadata);Node(token).textFlags|=kDirty;Redraw(token);
+}
 // 저장한 내용/viewport는 세 콜백 동안 유지하고 slider 포인터/scroll은 각 호출 직전에 재조회한다.
 void ScrollingTextGump::SetScroll(std::uint32_t token,std::int32_t position) const {
     const auto height=Buffer(token).handler->TotalHeight();const double viewport=Node(token).baseHeight;

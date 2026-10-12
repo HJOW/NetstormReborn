@@ -50,6 +50,7 @@ target_sources(netstorm PRIVATE
     VFXLine.cpp VFXLine.h
     ScrollGumpWidgets.cpp ScrollGumpWidgets.h
     ScrollingTextGumpWidgets.cpp ScrollingTextGumpWidgets.h
+    ScrollingTextGumpMarkup.cpp ScrollingTextGumpMarkup.h
     Markup.cpp Markup.h
     TileGroupCollection.cpp TileGroupCollection.h
     ObjectCollection.cpp ObjectCollection.h

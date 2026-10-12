@@ -1,5 +1,14 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-13 최신 cpppj: 다중 줄 스타일 파서·CD W/패치 S·문자열/버퍼 교체·설정 복원 (`HJOW-Athlon`)
+
+- [x] AGENTS.md·두 LEFT_JOBS 확인, 현재 PC/IP **HJOW-Athlon / 192.168.0.94**와 마지막 디컴파일 PC 일치. 창/게임 실행 허용 반영. 두 PE 함수 **10/11개**를 읽기 전용 내보내고 파서/ROM 정규식/그림 맞춤·제한 높이/교체/설정 기계어를 판독했다. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-13.** [상세 기록](docs/exe/cpp-scrolling-text-gump-markup.md).
+- [x] `ScrollingTextGumpMarkup`와 공유 `StyleText::ApplyShortCommand`/`StyleTextMarkup::ApplyScrolling`으로 구간별 실제 버퍼 Append/dirty/Redraw·호출 간 +c8 태그 유지·~./~n 현재 기본 문맥 재조회·~~ 길이 1/마지막 빈 입력을 구현했다. 패치 I/S/T/C/B/E·CD I/W/T를 구분한다. **기존 W 인수인계는 CD의 두 캡처 소리 명령이며 패치에서는 S다.** CD W는 첫 캡처만 소리 이름으로 쓰고 zone 허용 옵션을 검사하지 않는다.
+- [x] 다중 줄 I의 *와 # 기본 프레임/소비 뒤 suffix # 맞춤·& 색 치환 없음·패치 숫자 타입 상한·count까지 클램프·현재 +d4 제한을 구현했다. 제한 모드의 패치 0/1/3/4 글꼴 명령 소비만 수행·CD 변경을 반영했다. 제한 그림은 **SHP +1a signed 높이 ≤16(패치)/≤12(CD)** 확인 뒤 99999×12 맞춤이다. stack 헤더 복사와 비교 오프셋을 기계어로 확인했으며 GameAssets의 실제 타입 수/헤더를 공급한다.
+- [x] `ScrollingTextGump::AppendPicture/ReplaceText`와 Widget `ReplaceBuffer/SetSelectable/SetSlider/SetWrap/SetScrollable`을 추가했다. 문자열 교체는 완료 줄만 제거하고 미완료 끝 줄/태그/스크롤은 보존한다. 소유 버퍼만 소멸/free/포인터 0 뒤 새 buffer/owns를 저장하며 dirty/Redraw 자동 초기화는 없다. 같은 소유 토큰 재설치의 소멸된 참조도 원본 계약대로 남긴다. 설정의 전체 0/비0·최하위 비트·slider/scroll 연동·현재 Push/Attach·noWrap 저장만 수행을 유지한다.
+- [x] 라이브러리/`NetstormCpp` **Release 최종 빌드 경고 0·오류 0**. SOURCE_MAP 생성/내용 차이 없음. **새 테스트 추가/실행·전체 CTest·독립 원본/C++ 파서/통지/소유/설정/픽셀 대조·게임/GUI 실행 미수행**이다. 관찰 **523,634개**, 대조 **523,374개**, **854개 통과**는 앞 단계 기록이며 이번 추가 관찰/대조는 각각 **0개**다. 자료: `recovery-scrollmarkup-evidence.json`, `tools/analyze_scrollmarkup.py`, `extracted/scrollmarkup/`. 원본 SHA 불변·AGENTS.md/보호 원본/dotnetpj/테스트 변경·커밋/푸시 없음.
+- [ ] **다음:** 그림 색 표/회전 VFX/flag 2 재사용·Form/메뉴 생성/장식/제목/소멸/Attach 보정 → OS 큐/폴링·overlay·자동 raw Client UI. 이번 다중 줄 파서/그림/통지/설정/버퍼 교체·앞선 생성/소유/입력/표시/Slider/선/VFX/메뉴·260개 레이아웃·돌 버튼/배경/도움말의 독립 원본/C++ 대조도 남았다. 실제 전역/할당/커서 공급·생성 EH/극단 x87·콜백의 입력 source 바이트 alias는 상위 조립/대조 대상이다. **Client/UberGump 기존 메뉴 어댑터와 raw 자동 GUI/건설·미션 완주는 미완료다.**
+
 ## 2026-10-13 최신 cpppj: 다중 줄 TextGump 생성·버퍼 소유·부착/태그/드래그 입력 연결 (`HJOW-Athlon`)
 
 - [x] AGENTS.md·두 LEFT_JOBS 확인, 현재 PC/IP **HJOW-Athlon / 192.168.0.94**와 마지막 디컴파일 PC 일치. 이 PC의 창/게임 실행 허용 반영. 두 PE 함수 **9/11개**를 읽기 전용으로 내보내고 가상 표/정렬/높이 CRT 입력/프레임/폭 비교를 판독했다. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-13.** [상세 기록](docs/exe/cpp-scrolling-text-gump-widgets.md).
@@ -7,7 +16,7 @@
 - [x] 기본 Attach→현재 Slider Push/높이/visible(2&4)/우측 mode 1→-1이면 현재 scroll 요청→폭 dirty를 복원했다. NaN 폭 비교에서 패치는 dirty/저장, CD는 두 갱신을 생략한다. Slider change/step ±5·±높이/refresh·T 태그 왼쪽/오른쪽 통지(오른쪽 태그 0 포함)·빈 영역 캡처/release·커서 1/15/16을 구현했다.
 - [x] 프레임 Broadcast는 **poll 없이 전달 y delta의 반대 요청**만 처리한다. 기존 Frame 필터/트리/이벤트 재귀/부모 Bubble/직접 캡처·overlay/scalar 분배와 버퍼 Core 표시/입력을 `BindScrollingTextGumpWidgets`/`BindScrollingTextBuffers`로 연결한다. 실제 사건 ID/타입 전역·allocator 토큰·Cursor 선택은 상위 공급 경계다.
 - [x] 라이브러리/`NetstormCpp` **Release 최종 빌드 경고 0·오류 0**. SOURCE_MAP 생성/내용 차이 없음. **새 테스트 추가/실행·전체 CTest·독립 원본/C++ 생성/소유/부착/태그/커서/드래그/픽셀 대조·게임/GUI 실행 미수행**이다. 원본 관찰 **523,634개**, C++ 대조 **523,374개**, **854개 통과**는 앞 단계 기록이다. 자료: `recovery-scrolltext-evidence.json`, `tools/analyze_scrolltext.py`, `extracted/scrolltext/`. 원본 SHA 불변·AGENTS.md/보호 원본/dotnetpj 변경·커밋/푸시 없음.
-- [ ] **다음:** W 명령/전체 다중 줄 스타일 파서·버퍼 교체/추가 설정·그림 색 표/회전 VFX/flag 2 재사용·Form/메뉴 생성/장식/제목/소멸/Attach 보정 → OS 큐/폴링·overlay·자동 raw Client UI. 이번 생성/소유/부착/태그/커서/드래그·앞선 Slider/선/화살표/손잡이/TextGump/버퍼/파서/VFX/메뉴·기존 260개 레이아웃·돌 버튼/배경/도움말 전체 독립 원본/C++ 대조도 남았다. 실제 전역/할당/커서 공급·생성 EH/극단 x87은 상위 조립/대조 대상이다. **Client/UberGump 기존 메뉴 어댑터와 raw 자동 GUI/건설·미션 완주는 미완료다.**
+- [x] **다중 줄 전체 스타일 파서·CD W/패치 S·문자열/버퍼 교체·선택/줄바꿈/스크롤바/스크롤 설정은 위 후속에서 구현했다.** 독립 원본/C++ 파서/설정/수명/픽셀 대조·Form/메뉴/상위 조립·자동 raw UI와 전역/할당/커서 공급·생성 EH/극단 x87은 위 최신 목록을 따른다. **raw 자동 GUI/건설·미션 완주는 미완료다.**
 
 ## 2026-10-13 최신 cpppj: Slider·화살표·손잡이 생성/Draw·일반 VFX 선 연결 구현 (`HJOW-Athlon`)
 

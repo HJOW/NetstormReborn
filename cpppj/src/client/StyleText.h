@@ -76,6 +76,10 @@ public:
     // 004bb430/CD 004b7770: ~ 색/슬롯/스타일·그림자/초기 문맥 복귀·리터럴 ~~를 해석해 기존 head 뒤에 붙인다.
     // 닫는 ]가 있는 대괄호 명령은 bracket 경계가 필요하다. T 태그는 이후 모든 조각과 마지막 빈 조각에 남는다.
     void Parse(std::uint32_t& head,std::string_view text,const std::array<std::uint32_t,8>& context) const;
+    // 한 줄/다중 줄이 공유하는 짧은 명령이다. 미인식/대괄호/~~는 false이며 호출자가 원본 소비를 결정한다.
+    // currentDefault는 호출 시점의 기본 문맥이다. restricted는 10.78 다중 줄의 0/1/3/4 글꼴 변경만 막는다.
+    bool ApplyShortCommand(char command,std::array<std::uint32_t,8>& context,
+        const std::array<std::uint32_t,8>& currentDefault,bool restricted=false) const;
 private:
     // 실제 도달한 토큰의 안정된 저장소를 읽고 null/미등록 토큰을 거부한다.
     StyleTextFragment& Node(std::uint32_t token) const;

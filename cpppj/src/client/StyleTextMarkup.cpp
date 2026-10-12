@@ -15,6 +15,11 @@ constexpr std::size_t kCaptureBytes=80;
 constexpr std::array<char,6> kCommandOrder{'I','S','T','C','B','E'};
 // 원본 E 좌표의 허용 범위다. 어느 한 축만 이 범위에 있어도 두 값을 함께 적용한다.
 constexpr std::int32_t kOffsetMinimum=-4,kOffsetMaximum=4;
+// CD 다중 줄은 W 두 캡처를 소리 이름 첫 캡처로 소비한다. 제한 그림은 너비 99999/높이 12에 맞춘다.
+constexpr std::array<char,3> kCdScrollingOrder{'I','W','T'};
+constexpr std::int32_t kRestrictedWidth=99999,kRestrictedHeight=12;
+// 원본 SHP +1a의 signed 높이 허용 상한이다. 두 판본은 같은 제한 맞춤에도 서로 다른 문턱을 사용한다.
+constexpr std::int16_t kPatchHeightLimit=16,kCdHeightLimit=12;
 
 // 두 캡처는 입력 버퍼를 참조한다. 단일 캡처 형식에서는 second를 사용하지 않는다.
 struct CommandMatch { std::string_view first,second; };
@@ -62,7 +67,7 @@ std::optional<CommandMatch> Match(std::string_view text,char command) {
             // T는 숫자 캡처만 허용한다. 부호/다른 글자는 뒤의 부분 검색 후보로 남긴다.
             while (end<text.size() && text[end]>='0' && text[end]<='9') ++end;
             if (end>begin) return CommandMatch{text.substr(begin,end-begin),{}};
-        } else if (command=='I' || command=='E') {
+        } else if (command=='I' || command=='E' || command=='W') {
             auto end=TokenEnd(text,begin);
             // 첫 캡처의 가장 긴 길이부터 두 번째 캡처가 성립하는 첫 조합을 선택한다.
             while (end>begin) {
@@ -145,39 +150,114 @@ void StyleTextMarkup::Picture(std::string_view typeExpression,std::string_view f
     AppendStyleTextFragment(fragments_,head,picture);
 }
 
+// 형식 일치 뒤 수행하는 태그/색/그림자/소리다. 비활성 옵션도 호출자는 이미 소비한 것으로 처리한다.
+void StyleTextMarkup::Option(char code,std::string_view first,std::string_view second,
+    std::array<std::uint32_t,8>& context,std::uint32_t& metadata,bool unconditionalSound) const {
+    switch (code) {
+    case 'S':
+        if (unconditionalSound || state_.allowSounds) {
+            if (!hooks_.sound) throw std::invalid_argument("StyleText 대괄호 소리 경계 필요");
+            hooks_.sound(Capture(first));
+        }
+        break;
+    case 'T': metadata=static_cast<std::uint32_t>(Number(first));break;
+    case 'C': if (state_.allowForegroundColor) context[2]=static_cast<std::uint32_t>(Number(first));break;
+    case 'B': if (state_.allowBackgroundColor) context[5]=static_cast<std::uint32_t>(Number(first));break;
+    case 'E':
+        if (state_.allowOffset) {
+            const auto x=Number(first),y=Number(second);
+            if ((x>=kOffsetMinimum && x<=kOffsetMaximum) || (y>=kOffsetMinimum && y<=kOffsetMaximum)) {
+                if (!hooks_.black) throw std::invalid_argument("StyleText 대괄호 검정색 경계 필요");
+                context[0]|=2U;context[5]=hooks_.black();
+                context[6]=static_cast<std::uint32_t>(x);context[7]=static_cast<std::uint32_t>(y);
+            }
+        }
+        break;
+    default: break;
+    }
+}
+
 // 닫는 대괄호 내부의 첫 NUL까지만 읽고 우선순위상 처음 성립한 형식을 처리한다.
 void StyleTextMarkup::Apply(std::string_view command,std::array<std::uint32_t,8>& context,
     std::uint32_t& head,std::uint32_t& metadata) const {
     command=command.substr(0,command.find('\0'));
     const bool patch=edition_==o::OriginalEdition::Patch1078;
-    // 형식이 성립하면 옵션이 비활성이라도 다음 형식을 시도하지 않고 소비한다.
+    // 형식이 성립하면 옵션이 비활성이어도 다음 형식을 시도하지 않고 소비한다.
     for (const auto code:kCommandOrder) {
         if (!patch && code!='I' && code!='T') continue;
         const auto match=Match(command,code);
         if (!match) continue;
-        switch (code) {
-        case 'I': Picture(match->first,match->second,head,metadata);break;
-        case 'S':
-            if (state_.allowSounds) {
-                if (!hooks_.sound) throw std::invalid_argument("StyleText 대괄호 소리 경계 필요");
-                hooks_.sound(Capture(match->first));
+        if (code=='I') Picture(match->first,match->second,head,metadata);
+        else Option(code,match->first,match->second,context,metadata);
+        return;
+    }
+}
+
+// 다중 줄의 프레임 식은 *와 #만 특수 처리한다. 소비한 접두 뒤의 #가 맞춤을 결정한다.
+void StyleTextMarkup::ScrollingPicture(std::string_view typeExpression,std::string_view frameExpression,
+    const std::function<bool()>& restricted,
+    const std::function<void(std::uint32_t,std::uint32_t,std::int32_t,std::int32_t)>& appendPicture) const {
+    const bool patch=edition_==o::OriginalEdition::Patch1078;
+    const auto name=Capture(typeExpression),expression=Capture(frameExpression);
+    if (expression.size()>=kCaptureBytes) throw std::length_error("다중 줄 그림 프레임 지역 배열 범위 초과");
+    auto type=Number(name);
+    if (!type) {
+        if (!hooks_.findType) throw std::invalid_argument("다중 줄 그림 타입 이름 경계 필요");
+        type=hooks_.findType(name);
+    } else if (patch) {
+        if (!hooks_.typeCount) throw std::invalid_argument("다중 줄 그림 현재 타입 수 경계 필요");
+        if (type>=hooks_.typeCount()) return;
+    }
+    if (type==-1) return;
+    std::int32_t frame=0;
+    auto suffix=expression;
+    if (expression.front()=='*' || expression.front()=='#') {
+        const auto gump=Type(type).gumpFrame;
+        frame=patch ? (gump==-1 ? Type(type).defaultFrame : Type(type).gumpFrame)
+                    : (gump==-1 ? Type(type).defaultFrame : gump);
+        suffix.remove_prefix(1);
+    } else {
+        const auto letter=std::bit_cast<std::int8_t>(static_cast<std::uint8_t>(expression.front()));
+        if (letter>='A') {
+            const auto view=Type(type);
+            if (view.letterKinds<0 || view.letterKinds>16) throw std::out_of_range("다중 줄 그림 글자 표 범위 초과");
+            if (letter<'A'+view.letterKinds) {
+                frame=patch ? Type(type).first[letter-'A'] : view.first[letter-'A'];suffix.remove_prefix(1);
             }
-            break;
-        case 'T': metadata=static_cast<std::uint32_t>(Number(match->first));break;
-        case 'C': if (state_.allowForegroundColor) context[2]=static_cast<std::uint32_t>(Number(match->first));break;
-        case 'B': if (state_.allowBackgroundColor) context[5]=static_cast<std::uint32_t>(Number(match->first));break;
-        case 'E':
-            if (state_.allowOffset) {
-                const auto x=Number(match->first),y=Number(match->second);
-                if ((x>=kOffsetMinimum && x<=kOffsetMaximum) || (y>=kOffsetMinimum && y<=kOffsetMaximum)) {
-                    if (!hooks_.black) throw std::invalid_argument("StyleText 대괄호 검정색 경계 필요");
-                    context[0]|=2U;context[5]=hooks_.black();
-                    context[6]=static_cast<std::uint32_t>(x);context[7]=static_cast<std::uint32_t>(y);
-                }
-            }
-            break;
-        default: break;
         }
+        frame=Add(frame,Number(suffix));
+    }
+    std::int32_t width=0,height=0;
+    if (!suffix.empty() && suffix.front()=='#') { width=state_.fitWidth;height=state_.fitHeight; }
+    const auto count=Type(type).frameCount;
+    if (std::min(frame,count)<0) frame=0;
+    else if (patch) { if (frame>=Type(type).frameCount) frame=Type(type).frameCount; }
+    else if (frame>=count) frame=count;
+    if (!restricted) throw std::invalid_argument("다중 줄 그림 현재 제한 필드 경계 필요");
+    if (restricted()) {
+        if (!hooks_.typeCount) throw std::invalid_argument("다중 줄 제한 그림 타입 수 경계 필요");
+        if (type<=0 || type>=hooks_.typeCount() || frame<0 || frame>=Type(type).frameCount) return;
+        if (!hooks_.frameHeight) throw std::invalid_argument("다중 줄 제한 그림 SHP 헤더 경계 필요");
+        const auto heightWord=hooks_.frameHeight(type,frame);
+        if (!heightWord || *heightWord>(patch ? kPatchHeightLimit : kCdHeightLimit)) return;
+        width=kRestrictedWidth;height=kRestrictedHeight;
+    }
+    if (!appendPicture) throw std::invalid_argument("다중 줄 그림 실제 버퍼 추가 경계 필요");
+    appendPicture(static_cast<std::uint32_t>(type),static_cast<std::uint32_t>(frame),width,height);
+}
+
+// CD W는 한 줄 파서에 없고 다중 줄에서만 두 캡처를 요구한다. 같은 I 그림 우선순위를 유지한다.
+void StyleTextMarkup::ApplyScrolling(std::string_view command,std::array<std::uint32_t,8>& context,
+    std::uint32_t& metadata,const std::function<bool()>& restricted,
+    const std::function<void(std::uint32_t,std::uint32_t,std::int32_t,std::int32_t)>& appendPicture) const {
+    command=command.substr(0,command.find('\0'));
+    const bool patch=edition_==o::OriginalEdition::Patch1078;
+    const auto order=patch ? std::span<const char>(kCommandOrder) : std::span<const char>(kCdScrollingOrder);
+    // 처음 성립한 명령은 무효 타입/그림 제한/옵션 비활성에서도 다음 형식으로 넘어가지 않는다.
+    for (const auto code:order) {
+        const auto match=Match(command,code);if (!match) continue;
+        if (code=='I') ScrollingPicture(match->first,match->second,restricted,appendPicture);
+        else Option(code=='W' ? 'S' : code,match->first,match->second,context,metadata,!patch);
         return;
     }
 }
@@ -192,6 +272,22 @@ StyleTextHooks StyleTextMarkup::Hooks(StyleTextHooks hooks) const {
 
 // 이름 표는 원본 C 문자열 이름을 사용하며 프레임은 물리 레이어가 아닌 논리 클러스터에서 공급한다.
 void BindStyleTextMarkupAssets(StyleTextMarkupHooks& hooks,const GameAssets& assets) {
+    // 타입 번호는 내장 무자산 슬롯도 포함한다. 원본 signed 상한 밖 로딩은 거부한다.
+    hooks.typeCount=[&assets] {
+        if (assets.TypeTable().Types().size()>static_cast<std::size_t>(std::numeric_limits<std::int32_t>::max()))
+            throw std::length_error("다중 줄 그림 실제 타입 수 범위 초과");
+        return static_cast<std::int32_t>(assets.TypeTable().Types().size());
+    };
+    // 제한 그림은 추가 헤더 +1a의 원본 signed 높이를 읽는다. 무자산 타입은 생성하지 않는다.
+    hooks.frameHeight=[&assets](std::int32_t type,std::int32_t frame) -> std::optional<std::int16_t> {
+        if (type<o::kFirstAssetTypeNumber || frame<0) return std::nullopt;
+        const auto index=static_cast<std::size_t>(type-o::kFirstAssetTypeNumber);
+        if (index>=assets.Types().size()) return std::nullopt;
+        const auto& asset=assets.Types()[index];
+        if (static_cast<std::size_t>(frame)>=asset.definition.clusters.size()) return std::nullopt;
+        const auto header=assets.Shapes().SquidHeader(asset.block,static_cast<std::size_t>(frame));
+        return std::bit_cast<std::int16_t>(static_cast<std::uint16_t>(header[0x1a] | (std::uint16_t(header[0x1b])<<8)));
+    };
     hooks.findType=[&assets](std::string_view name) { return assets.TypeTable().Find(name); };
     // 원본 내장 무자산 타입은 빈 프레임 선택 필드를 반환하고 잘못된 타입 번호는 거부한다.
     hooks.type=[&assets](std::int32_t type) {

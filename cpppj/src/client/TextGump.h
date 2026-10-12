@@ -89,6 +89,12 @@ public:
         std::int32_t length=-1,std::uint32_t metadata=0) const;
     // 004ba090: 현재 기본 32바이트 문맥의 복사본을 명시 문맥 입력에 넘긴다.
     void AppendText(std::uint32_t token,std::span<const char> bytes,std::int32_t length=-1,std::uint32_t metadata=0) const;
+    // 004ba130/CD 004b6140: 현재 버퍼에 그림을 추가하고 dirty 비트/Redraw(false)를 문자열과 같은 순서로 쓴다.
+    void AppendPicture(std::uint32_t token,const Markup& pictures,std::uint32_t type,std::uint32_t frame,
+        std::uint32_t metadata=0,std::int32_t fitWidth=0,std::int32_t fitHeight=0) const;
+    // 004bc250/CD 004b6050: 기본 문맥을 먼저 복사하고 완료 입력 줄만 제거한 뒤 일반 문자열을 추가한다.
+    // 미완료 끝 줄·기존 표시 복제·현재 태그/스크롤 요청은 보존하며 스타일 명령을 해석하지 않는다.
+    void ReplaceText(std::uint32_t token,std::span<const char> bytes,std::uint32_t metadata=0) const;
     // 004ba270/CD 004b6250: 현재 높이/내용으로 제한한 뒤 slider range→page→position→현재 값 재조회를 한다.
     void SetScroll(std::uint32_t token,std::int32_t position) const;
     // 004ba310/CD 004b62e0: 내용 높이-기본 높이를 CRT 절삭한다. 원본은 전달된 extra 인자를 읽지 않는다.

@@ -47,7 +47,7 @@ struct ScrollingTextGumpWidgetHooks {
     std::function<void(std::uint32_t,bool)> redraw;
     std::function<void(std::uint32_t)> cursor;
 };
-// 기존 다중 줄 표시/스크롤 처리기에 실제 생성/수명/입력을 연결한다. W 파서와 자동 Client 조립은 후속이다.
+// 기존 다중 줄 표시/스크롤 처리기에 실제 생성/수명/입력과 추가 설정을 연결한다. 자동 Client 조립은 후속이다.
 class ScrollingTextGumpWidgets {
 public:
     // 저장소/생성/트리/수명/통지/캡처/조각/표시/Slider의 수명은 이 처리기와 연결한 분배보다 길어야 한다.
@@ -64,6 +64,18 @@ public:
     std::uint32_t Handle(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second) const;
     // 004ba5e0/CD 004b6910: scroll 허용 bit 4와 전달 y delta만 사용해 반대 방향의 상대 요청을 한다. 폴링하지 않는다.
     void Broadcast(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second) const;
+    // 004ba180/CD 004b6180: 비0이면 기본 Gump의 입력 제외 0x200을 지우고 0이면 설치한다.
+    void SetSelectable(std::uint32_t token,std::int32_t value) const;
+    // 004ba1b0/CD 004b61a0: 값의 최하위 비트로 slider bit 2를 바꾸고 필요 시 scroll bit 4를 켠다.
+    // 기본 void bit 8이 없으면 현재 가상 Push→현재 x/y로 자신 Attach(parent 0,mode 0)를 호출한다.
+    void SetSlider(std::uint32_t token,std::uint32_t value) const;
+    // 004ba210/CD 004b6200: 현재 버퍼의 noWrap=(value==0)만 저장하며 dirty/Redraw는 호출하지 않는다.
+    void SetWrap(std::uint32_t token,std::int32_t value) const;
+    // 004ba230/CD 004b6220: 최하위 비트로 scroll bit 4를 바꾸며 끄면서 slider가 켜져 있으면 SetSlider(0)다.
+    void SetScrollable(std::uint32_t token,std::uint32_t value) const;
+    // 004bc3b0/CD 004b64f0: 현재 소유 버퍼를 Destroy/free/포인터 0 처리한 뒤 새 포인터/소유 DWORD만 쓴다.
+    // 원본처럼 dirty/Redraw/스크롤/태그를 갱신하지 않는다. 같은 소유 토큰 교체는 소멸된 참조를 남긴다.
+    void ReplaceBuffer(std::uint32_t token,std::uint32_t buffer,std::uint32_t owns) const;
     // 004bc890/004bc930/CD 004b5e70/004b7e70: 파생 표→현재 소유 버퍼 소멸/free/포인터 0→기본 scalar 소멸이다.
     // 빌린 버퍼는 포인터도 그대로 보존한다. 자식 Slider 삭제는 기존 자식 우선 Destroy가 맡는다.
     std::uint32_t DeleteScalar(std::uint32_t token,std::uint32_t flags) const;

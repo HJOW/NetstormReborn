@@ -266,13 +266,37 @@ std::uint32_t StyleText::Color(char command) const {
     return hooks_.color(command);
 }
 
+// 같은 원본 색/스타일 규칙을 사용하되 다중 줄의 제한 모드에서 작은 글꼴 명령을 소비만 한다.
+bool StyleText::ApplyShortCommand(char command,std::array<std::uint32_t,8>& context,
+    const std::array<std::uint32_t,8>& currentDefault,bool restricted) const {
+    const bool patch=edition_==o::OriginalEdition::Patch1078;
+    switch (command) {
+    case '*': context[0]=0;break;
+    case '.': context=currentDefault;break;
+    case '0': case '1': case '3': case '4':
+        if (!patch || !restricted) context[1]=command-'0';break;
+    case '5': case '6': context[1]=command-'0';break;
+    case 'B': context[3]=2;break;
+    case 'I': context[3]=1;break;
+    case 'N': context[0]&=~2U;context[3]=0;break;
+    case 'E': context[0]|=2U;context[5]=Color('k');context[6]=1;context[7]=1;break;
+    case 'S': if (!patch) return false;context[3]=3;break;
+    case 'U': if (!patch) return false;context[3]=4;break;
+    case 'n': context[2]=currentDefault[2];break;
+    default:
+        if (kCommonColors.find(command)==std::string_view::npos &&
+            (!patch || kPatchColors.find(command)==std::string_view::npos)) return false;
+        context[2]=Color(command);break;
+    }
+    return true;
+}
+
 // 기존 head를 Clear하지 않는다. 원본 파서는 매 구간의 문맥을 복사한 새 조각을 꼬리에 추가한다.
 void StyleText::Parse(std::uint32_t& head,std::string_view text,const std::array<std::uint32_t,8>& initialContext) const {
     if (text.size()>=kDwordMaximum) throw std::length_error("StyleText 원본 DWORD 문자열 길이 한도 초과");
     const std::string source(text.substr(0,text.find('\0')));
     auto context=initialContext;
     const auto original=initialContext;
-    const bool patch=edition_==o::OriginalEdition::Patch1078;
     std::size_t position=0;
     // 원본 T 명령의 파서 지역 태그다. 새 Parse마다 0이며 ~. 문맥 복귀로는 초기화하지 않는다.
     std::uint32_t metadata=0;
@@ -288,16 +312,6 @@ void StyleText::Parse(std::uint32_t& head,std::string_view text,const std::array
         const auto command=source[mark+1];
         auto next=mark+2;
         switch (command) {
-        case '*': context[0]=0;break;
-        case '.': context=original;break;
-        case '0': case '1': case '3': case '4': case '5': case '6': context[1]=command-'0';break;
-        case 'B': context[3]=2;break;
-        case 'I': context[3]=1;break;
-        case 'N': context[0]&=~2U;context[3]=0;break;
-        case 'E': context[0]|=2U;context[5]=Color('k');context[6]=1;context[7]=1;break;
-        case 'S': if (patch) context[3]=3;else next=mark+1;break;
-        case 'U': if (patch) context[3]=4;else next=mark+1;break;
-        case 'n': context[2]=original[2];break;
         case '~': {
             // 리터럴 ~는 그 시점의 문맥을 보관한 별도 문자열 조각이다.
             constexpr std::array<char,2> literal{'~','\0'};
@@ -314,9 +328,7 @@ void StyleText::Parse(std::uint32_t& head,std::string_view text,const std::array
             break;
         }
         default:
-            if (kCommonColors.find(command)!=std::string_view::npos ||
-                (patch && kPatchColors.find(command)!=std::string_view::npos)) context[2]=Color(command);
-            else next=mark+1;
+            if (!ApplyShortCommand(command,context,original)) next=mark+1;
             break;
         }
         // 끝의 명령은 NUL 다음을 읽는 대신 원본의 마지막 빈 조각으로 종료한다.

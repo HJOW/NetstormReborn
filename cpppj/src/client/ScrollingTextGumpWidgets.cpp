@@ -79,6 +79,36 @@ void ScrollingTextGumpWidgets::Push(std::uint32_t token) const {
 void ScrollingTextGumpWidgets::AttachSlider(std::uint32_t token,float x,std::uint32_t parent) const {
     Base(token);if (!hooks_.attach) throw std::invalid_argument("다중 줄 Widget Attach 경계 필요");hooks_.attach(token,x,0,parent,1);
 }
+// 비0은 원본 입력 제외 비트를 해제한다. 값의 최하위 비트가 아닌 전체 DWORD의 0/비0을 사용한다.
+void ScrollingTextGumpWidgets::SetSelectable(std::uint32_t token,std::int32_t value) const {
+    if (value) Node(token).flags&=~0x200U;else Node(token).flags|=0x200U;
+}
+// slider 설정 뒤 Push가 변경한 위치/필드를 현재 노드에서 읽어 같은 가상 Attach 경계에 전달한다.
+void ScrollingTextGumpWidgets::SetSlider(std::uint32_t token,std::uint32_t value) const {
+    auto& node=Node(token);node.textFlags=(node.textFlags&~2U)|((value&1U)<<1);
+    if ((node.textFlags&6U)==2U) node.textFlags|=4U;
+    if (!(Node(token).flags&8U)) {
+        Push(token);const auto x=Node(token).x,y=Node(token).y;
+        if (!hooks_.attach) throw std::invalid_argument("다중 줄 Widget 자기 Attach 경계 필요");
+        hooks_.attach(token,x,y,0,0);
+    }
+}
+// 줄바꿈 설정의 변경 플래그 누락도 유지한다. 현재 빌린 버퍼에도 같은 noWrap 필드를 쓴다.
+void ScrollingTextGumpWidgets::SetWrap(std::uint32_t token,std::int32_t value) const {
+    buffers_.Binding(Node(token).buffer).state->noWrap=value==0 ? 1U : 0U;
+}
+// scroll을 끄면 현재 slider도 원본 설정 함수로 꺼서 가상 재부착까지 이어간다.
+void ScrollingTextGumpWidgets::SetScrollable(std::uint32_t token,std::uint32_t value) const {
+    auto& node=Node(token);node.textFlags=(node.textFlags&~4U)|((value&1U)<<2);
+    if ((node.textFlags&6U)==2U) SetSlider(token,0);
+}
+// 새 버퍼는 null만 거부한다. 원본의 같은 포인터 재설치와 소유 DWORD 그대로 쓰기를 유지한다.
+void ScrollingTextGumpWidgets::ReplaceBuffer(std::uint32_t token,std::uint32_t buffer,std::uint32_t owns) const {
+    if (!buffer) throw std::invalid_argument("다중 줄 Widget 교체 버퍼는 null일 수 없음");
+    const auto old=Node(token).buffer;
+    if (old && Node(token).ownsBuffer) { buffers_.Destroy(old);Node(token).buffer=0; }
+    Node(token).buffer=buffer;Node(token).ownsBuffer=owns;
+}
 // 기본 등록 뒤 실제 128칸 버퍼와 Slider를 생성한다. +ac/dragY와 생성자 미작성 textFlags는 전체 초기화하지 않는다.
 std::uint32_t ScrollingTextGumpWidgets::Construct(std::uint32_t token,std::int32_t width,std::int32_t height,std::uint32_t font,std::uint32_t color) const {
     Node(token);factory_.Construct(token,0,0,0,1);auto& node=Node(token);
