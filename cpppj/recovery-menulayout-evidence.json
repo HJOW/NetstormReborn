@@ -1,0 +1,74 @@
+{
+  "last_decompile_host": "HJOW-Athlon",
+  "rows": 260,
+  "editions": {
+    "originals": {
+      "cases": 130,
+      "normal_returns": 274,
+      "entries": {
+        "00476f60": 220,
+        "00475f20": 170,
+        "00475fb0": 170,
+        "004e49c0": 6566,
+        "00465020": 754,
+        "00477450": 84,
+        "00475dd0": 72,
+        "004e51f0": 52,
+        "00475d70": 14
+      },
+      "boundaries": {
+        "push": 116,
+        "fit": 56,
+        "title_layout": 56,
+        "attach": 124,
+        "plain": 1656,
+        "styled": 776,
+        "marker": 754,
+        "clear": 20,
+        "parse": 20
+      }
+    },
+    "originalCD": {
+      "cases": 130,
+      "normal_returns": 274,
+      "entries": {
+        "00451f00": 220,
+        "00452260": 170,
+        "004522f0": 170,
+        "004f161c": 6566,
+        "00451430": 2432,
+        "00493ea0": 754,
+        "00451730": 84,
+        "00451500": 72,
+        "004f2440": 52
+      },
+      "boundaries": {
+        "push": 116,
+        "fit": 56,
+        "title_layout": 56,
+        "attach": 124,
+        "plain": 1656,
+        "styled": 776,
+        "marker": 754,
+        "clear": 20,
+        "parse": 20
+      }
+    }
+  },
+  "method": "실제 메뉴/CRT/strncpy/측정 위임 몸체; 텍스트/StyleText/제목/가상 부착은 명시 외부 경계",
+  "cpp_comparison": "미수행: 원본 분석 자료이며 C++ 재생 검사는 후속",
+  "files": {
+    "tools/decomp_menulayout_oracle.py": "d80c61a350869279ac001ebfc3fed669669795779f87c0b2b48d4b01143e7a26",
+    "tools/ghidra/menulayout-functions.json": "4d748c8e3b279abf485c308e6617801e33ece1f5ffd0d6ab92b06b0a9ed1b9b7",
+    "tools/decomp_menugump_oracle.py": "a8e5ce826982f2c5dab53e0d90cec46c12121342d888055d92f76045d69bb22d",
+    "tools/decomp_process_oracle.py": "c548fa37c3cb10edb030bba3b67c8970b7575207efca217fdf4ea0b51354cfd1",
+    "tools/decomp_drawsort_oracle.py": "ed92fd9cd8b7c069742cc9158226db6c5cfc75213816d56f40ffb562b5542bb7",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/menulayout/originals/creation.c": "d4aeefcd6034684aad6726c18770391b4a15ab1d48bc8d8663a5a96251644a40",
+    "extracted/menulayout/originals/functions.tsv": "d812e719bf689157da6148760f7e221ce7495dcd7a1589b0f2e8e0fb7e0d3df3",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "extracted/menulayout/originalCD/creation.c": "5a65ae3444c9b37851ac4a09a73ae0bda7ee5e04beb15d6894965e128c4fcb8a",
+    "extracted/menulayout/originalCD/functions.tsv": "f09d1faa4d0114ea770fc3180c96d309f423ebc03b9d00139be00c8f24d40b96",
+    "cpppj/recovery-menulayout-observations.tsv": "8efbd8aa472d74743ea89e442ebea030eb253e09b33c363ac20292f2a06c5082"
+  }
+}

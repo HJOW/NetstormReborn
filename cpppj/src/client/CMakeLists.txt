@@ -40,6 +40,7 @@ target_sources(netstorm PRIVATE
     GumpText.cpp GumpText.h
     GumpTextDraw.cpp GumpTextDraw.h
     MenuGump.cpp MenuGump.h
+    MenuGumpLayout.cpp MenuGumpLayout.h
     TileGroupCollection.cpp TileGroupCollection.h
     ObjectCollection.cpp ObjectCollection.h
     PreviewCollection.cpp PreviewCollection.h

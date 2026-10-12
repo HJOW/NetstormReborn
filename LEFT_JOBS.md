@@ -1,5 +1,14 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-12 최신 cpppj: MenuGump 항목 작성·글자 측정·전체 레이아웃 구현 (`HJOW-Athlon`)
+
+- [x] AGENTS.md·두 LEFT_JOBS 확인, 현재 PC/IP **HJOW-Athlon / 192.168.0.94**와 같은 PC의 정밀 디컴파일 기록 확인. 두 정밀 프로젝트에서 함수 **9/9개**를 읽기 전용으로 내보냈다. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-12.** [상세 기록](docs/exe/cpp-menu-gump-layout.md).
+- [x] `MenuGumpItem`/40칸 항목·높이·여백 저장소와 `MenuGumpLayout`의 항목 추가·plain 40바이트 복사·styled Clear→현재 disabled 접두→Parse·측정 위임·전체 레이아웃을 구현했다. 선두/연속 구분선 생략·40개 조기 반환·명령/인자 일부 쓰기·자식 ID/숨김/가상 부착과 콜백 후 현재 항목 수/문맥/플래그 재조회를 보존한다.
+- [x] 세로 최대 폭/높이 합계·누적 offset, 가로 DWORD 감김 폭/공통 높이·offset 0, 제목 Push/Fit/Layout/Attach와 기존 `MenuGump` 크기를 연결했다. `BindMenuLayoutText`로 실제 `GumpText`/`FontStore`의 라벨/`" >"` 측정을 공급한다. StyleText 소유/파싱/측정과 제목 Fit/Layout 내부는 명시 외부 경계다.
+- [x] 두 원본 PE **각 130개·새 원본 관찰 260개**, 두 x87 정상 반환 **548회**를 분석 자료로 저장했다. 실제 메뉴/CRT/strncpy/기본 측정 위임을 격리 실행하고 전체 출력·콜백 당시 CRC/인자·ABI/허용 범위/입력 보호를 기록했다. 자료: `recovery-menulayout-observations.tsv`, `recovery-menulayout-evidence.json`, `tools/ghidra/menulayout-functions.json`, `extracted/menulayout/`.
+- [x] 게임 라이브러리/`NetstormCpp` **Release 빌드 경고 0·오류 0**. **이번 C++ 테스트 추가/실행·전체 CTest·GUI 실행은 미수행**이다. 원본 관찰 누적 **523,634개**; C++ 대조 누적 **523,374개**와 **854개 통과**는 앞 단계 기록이다. 원본 SHA 불변·AGENTS.md/보호 원본/dotnetpj 변경 및 커밋/푸시 없음.
+- [ ] **다음:** 이번 260개 원본 자료의 C++ 재생 대조; MenuGump/Form 가변 인자 생성·StyleText 내부/출력·장식/제목 생성·소멸자·가상 Attach 보정·입력/통지 처리기 → OS 큐/폴링·overlay·Client 자동 UI 프레임. 돌 버튼 전체 생성/부착/소멸자·배경 생성·기본 도움말 전체 독립 PE 대조도 남았다. **Client/UberGump의 기존 메뉴 어댑터, 새 raw 메뉴 자동 GUI 연결과 건설/미션 완주 미완료 상태는 그대로다.** 아래는 앞 단계 기록이다.
+
 ## 2026-10-12 최신 cpppj: MenuGump 크기·확장 idle·controlled 메뉴 스택 복원 완료 (`HJOW-Athlon`)
 
 - [x] AGENTS.md·두 LEFT_JOBS 확인, 현재 PC/IP **HJOW-Athlon / 192.168.0.94**와 같은 PC의 정밀 디컴파일 재생성 기록 확인. 새 함수 **13/13개**를 정밀 Ghidra 프로젝트에서 읽기 전용으로 내보냈다. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-12.** [상세 기록](docs/exe/cpp-menu-gump-frame.md).
@@ -7,7 +16,7 @@
 - [x] controlled 20칸 메뉴 표의 조회/항목 수/꺼내기·부착·객체 SID 부착을 복원했다. 부착 콜백 후 현재 index의 칸을 제거하며 현재 등록표 루트를 객체 부착에 전달한다. `BindMenuGumpFrame`으로 실제 idle/재그리기 분배를 연결했고 같은 트리 Attach→UI 수집도 검사했다. 생성자/전체 레이아웃/원본 메뉴 Attach 보정/입력 몸체는 포함하지 않는다.
 - [x] 두 실제 PE **각 154개·새 독립 원본 308개**, cpppj 누적 **523,374개**. x87 **027f/037f 정상 반환 696회**·ABI/실행·쓰기 범위/객체 미선택 바이트/가상 표/idle 뒷칸/SHA/행 수 감사 통과. 가상 Push/Pop/Attach/객체 Attach/Redraw 및 기본 Gump Redraw만 명시 외부 경계다. 실제 CRT와 SetIdle 몸체를 실행했다.
 - [x] 새 C++ **5개** 통과. 최종 Release **경고/오류 0**, 전체 CTest 내부 **854개·실패 0**(130.73초, 전체 130.79초). SOURCE_MAP의 MenuGump 파일 존재 상태를 갱신했다. 자료: `recovery-menugump-evidence.json`, `menugump-x86.tsv`, `MenuGumpTests.cpp`, `extracted/menugump-*`. 원본/복사본 게임·클론 GUI·소리 장치 실행 없이 바이너리 SHA 불변 확인. AGENTS.md·보호 원본·dotnetpj 변경·커밋/푸시 없음.
-- [ ] **다음:** MenuGump/Form 가변 인자 생성·항목 작성/레이아웃·StyleText/fancy 생성·소멸자·가상 Attach 보정·입력/통지 처리기 → OS 큐/폴링·overlay·Client 자동 UI 프레임. 돌 버튼 전체 생성/부착/소멸자·배경 생성·기본 도움말 전체 몸체의 독립 PE 대조도 남았다. **실제 Client/UberGump 메뉴는 기존 어댑터이며 새 raw 메뉴의 자동 GUI 연결과 게임 내 건설/미션 완주는 미완료다.** 아래는 앞 단계 기록이다.
+- [x] **항목 작성/레이아웃 구현은 위 후속에서 완료했다.** C++ 전수 재생 대조와 MenuGump/Form 가변 인자 생성·StyleText/fancy 생성·소멸자·가상 Attach 보정·입력/통지 → OS 큐/폴링·overlay·Client 자동 UI 프레임, 돌 버튼/배경/도움말 전체 원본 대조는 위 최신 미완료 목록을 따른다. **실제 Client/UberGump 메뉴는 기존 어댑터이며 새 raw 메뉴의 자동 GUI 연결과 게임 내 건설/미션 완주는 미완료다.** 아래는 앞 단계 기록이다.
 
 ## 2026-10-12 최신 cpppj: raw 배경 실제 타입/SHP 공급·전체 가상 Draw 연결 검증 완료 (`VM-W11-CODEX`)
 

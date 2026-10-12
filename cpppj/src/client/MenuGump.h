@@ -6,12 +6,20 @@
 namespace netstorm::client {
 // 원본 메뉴 항목 한도와 controlled 메뉴 표 길이다. 스택 0번은 예약 칸이다.
 inline constexpr std::size_t kMenuItemCapacity=40,kControlledMenuCapacity=20;
-// 기본 배경 필드를 공유하며 메뉴 크기/프레임이 실제로 읽는 파생 필드만 보관한다.
+// 원본 항목 0x3c바이트다. 40바이트 라벨 뒤 +28 자식 등록 ID/+2c 명령/+30 인자/+34 StyleText 토큰/+38 flags다.
+struct MenuGumpItem {
+    std::array<char,40> label{};
+    std::uint32_t childId{},command{},parameter{},styled{},flags{};
+};
+// 기본 배경 필드를 공유하며 메뉴 크기/프레임/항목 레이아웃이 읽는 파생 필드를 보관한다.
 // offsets는 +17c, itemWidth/targetWidth/targetHeight는 +170/+174/+178이다.
 struct MenuGumpNode : GumpBackgroundNode {
     std::uint32_t expanding{},menuFlags{},itemCount{},fancy{},title{};
     float itemWidth{},targetWidth{},targetHeight{};
     std::array<float,kMenuItemCapacity> offsets{};
+    std::array<float,4> margins{}; // +bc/+c0은 폭 여백, +c4/+c8은 높이 여백이다.
+    std::array<float,kMenuItemCapacity> heights{}; // +d0: 현재 측정하거나 가로 메뉴에서 맞춘 항목 높이다.
+    std::array<MenuGumpItem,kMenuItemCapacity> items{}; // +228: 40개 원본 항목의 저장소다.
 };
 // 원본 메뉴 표와 signed index의 DWORD 비트다. 생성/항목 작성은 별도 단계에서 이 표를 채운다.
 struct MenuGumpState {
@@ -28,7 +36,7 @@ struct MenuGumpHooks {
     std::function<void(std::uint32_t,std::uint32_t,float,float,std::uint32_t,std::uint32_t)> attachObject;
     std::function<void(std::uint32_t,bool)> redraw,baseRedraw;
 };
-// 원본 메뉴의 정상 프레임/스택 몸체다. 가변 인자 생성·항목 레이아웃·입력 처리기는 후속이다.
+// 원본 메뉴의 정상 프레임/스택 몸체다. 항목 레이아웃은 MenuGumpLayout이 담당하며 생성·입력 처리는 후속이다.
 class MenuGump {
 public:
     // 같은 생성/수명/메뉴 상태와 안정된 노드 저장소가 처리기보다 오래 살아야 한다.
