@@ -1,5 +1,7 @@
 # C++ 빌드 (`cpppj/`)
 
+2026-10-12 최신(`HJOW-Athlon`): [MenuGump 크기·확장 idle·controlled 메뉴 스택](exe/cpp-menu-gump-frame.md)을 복원했다. 같은 Gump 배경/생성/수명/프레임 저장소에서 메뉴 크기·장식 재부착·확장 완료·현재 메뉴 제거/객체 부착을 처리한다. 두 PE 독립 원본 **308개**, 두 x87 정상 반환 **696회**, 누적 **523,374개**. Release 경고/오류 **0**, 새 C++ **5개**·전체 CTest 내부 **854개·실패 0**(130.73초). **메뉴 생성/항목 레이아웃/입력·Client 자동 raw GUI 연결과 건설/미션 완주는 후속**이다. 마지막 디컴파일 PC는 **HJOW-Athlon, 2026-10-12**다.
+
 현재의 게임 실행·별도 창 작업은 [2026-10-12 사용자 확인 조건](execution-confirmation.md)을 따른다. 아래 날짜별 기록의 “현재 PC” 금지는 당시 호스트·작업의 조건이며, 지금은 현재 호스트와 최신 예외 목록·별도 사용자 지시를 확인해 적용한다.
 
 > 2026-10-05 추가·갱신. **메뉴→캠페인→브리핑→지형/객체·선택/이동→복귀를 연결했다.** 건설·경제·전투·AI·승패·소리·MCP는 후속이다. **cpppj는 Windows 전용이다.** [공용 계층](exe/cpp-reconstruction.md), [자산](exe/cpp-assets-reconstruction.md), [설정](exe/cpp-config-reconstruction.md), [요새](exe/cpp-fort-reconstruction.md), [창](exe/cpp-screen-reconstruction.md), [표시 기반](exe/cpp-renderer-reconstruction.md), [메뉴](exe/cpp-menu-reconstruction.md), [월드/조작의 범위와 제한](exe/cpp-world-reconstruction.md).

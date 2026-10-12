@@ -1,5 +1,14 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-12 최신 cpppj: MenuGump 크기·확장 idle·controlled 메뉴 스택 복원 완료 (`HJOW-Athlon`)
+
+- [x] AGENTS.md·두 LEFT_JOBS 확인, 현재 PC/IP **HJOW-Athlon / 192.168.0.94**와 같은 PC의 정밀 디컴파일 재생성 기록 확인. 새 함수 **13/13개**를 정밀 Ghidra 프로젝트에서 읽기 전용으로 내보냈다. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-12.** [상세 기록](docs/exe/cpp-menu-gump-frame.md).
+- [x] `MenuGumpNode`를 기본 배경/생성 저장소에 연결하고 메뉴 폭·높이/장식 크기·CRT 절삭 재부착, 항목 위치, 장식→기본 재그리기 요청, 방향별 확장 시작과 실제 idle 등록·완료를 복원했다. Push 뒤 현재 장식/제목/목표 크기 재조회, float32 저장 전 배율 곱, 패치/CD의 NaN 축 갱신 차이를 유지한다.
+- [x] controlled 20칸 메뉴 표의 조회/항목 수/꺼내기·부착·객체 SID 부착을 복원했다. 부착 콜백 후 현재 index의 칸을 제거하며 현재 등록표 루트를 객체 부착에 전달한다. `BindMenuGumpFrame`으로 실제 idle/재그리기 분배를 연결했고 같은 트리 Attach→UI 수집도 검사했다. 생성자/전체 레이아웃/원본 메뉴 Attach 보정/입력 몸체는 포함하지 않는다.
+- [x] 두 실제 PE **각 154개·새 독립 원본 308개**, cpppj 누적 **523,374개**. x87 **027f/037f 정상 반환 696회**·ABI/실행·쓰기 범위/객체 미선택 바이트/가상 표/idle 뒷칸/SHA/행 수 감사 통과. 가상 Push/Pop/Attach/객체 Attach/Redraw 및 기본 Gump Redraw만 명시 외부 경계다. 실제 CRT와 SetIdle 몸체를 실행했다.
+- [x] 새 C++ **5개** 통과. 최종 Release **경고/오류 0**, 전체 CTest 내부 **854개·실패 0**(130.73초, 전체 130.79초). SOURCE_MAP의 MenuGump 파일 존재 상태를 갱신했다. 자료: `recovery-menugump-evidence.json`, `menugump-x86.tsv`, `MenuGumpTests.cpp`, `extracted/menugump-*`. 원본/복사본 게임·클론 GUI·소리 장치 실행 없이 바이너리 SHA 불변 확인. AGENTS.md·보호 원본·dotnetpj 변경·커밋/푸시 없음.
+- [ ] **다음:** MenuGump/Form 가변 인자 생성·항목 작성/레이아웃·StyleText/fancy 생성·소멸자·가상 Attach 보정·입력/통지 처리기 → OS 큐/폴링·overlay·Client 자동 UI 프레임. 돌 버튼 전체 생성/부착/소멸자·배경 생성·기본 도움말 전체 몸체의 독립 PE 대조도 남았다. **실제 Client/UberGump 메뉴는 기존 어댑터이며 새 raw 메뉴의 자동 GUI 연결과 게임 내 건설/미션 완주는 미완료다.** 아래는 앞 단계 기록이다.
+
 ## 2026-10-12 최신 cpppj: raw 배경 실제 타입/SHP 공급·전체 가상 Draw 연결 검증 완료 (`VM-W11-CODEX`)
 
 - [x] AGENTS.md·두 LEFT_JOBS 확인, 현재 PC/IP **VM-W11-Codex / 10.0.0.17**과 마지막 디컴파일 PC 일치. `gumpbackgrounddraw` 최종 **9/9/9개** 읽기 전용 내보내기. **마지막 디컴파일 수행 PC: VM-W11-CODEX, 2026-10-12.** [상세 기록](docs/exe/cpp-gump-background-draw.md).
@@ -75,7 +84,7 @@
 
 > **최신 cpppj 갱신: 2026-10-12 (`VM-W11-CODEX`) — Gump 등록표 통지·idle·재그리기 요청 복원 완료.** `GumpFrame`이 같은 생성/수명 저장소에서 현재 signed 개수의 등록표 통지, 패치 500/CD 80칸 idle, 단일/최상위 트리 재그리기 요청을 처리한다. 최상위 dead 제외와 하위 visible만 검사하는 차이, 콜백 전 저장한 루트 next/재귀 뒤 현재 자식 next, 콜백 뒤 전파 비트/표/개수 재조회를 복원했다. 실제 생성/트리 Attach→idle 등록→Kill/Push→기본/scalar Cleanup→다음 idle을 연결했다. 새 독립 원본 **810개**·누적 **520,014개**, 두 x87 정상 반환 **1,626회**. 새 C++ **9개**·최종 Release 경고/오류 **0**, 전체 CTest 내부 **819개·실패 0**(87.12초). 새 근거 감사 통과. **파생 Gump/실제 버튼·메뉴·idle 처리기·텍스트 Draw·OS 큐/overlay 갱신·Client 자동 UI 프레임과 건설/미션 완주는 후속이다.** [상세 기록](docs/exe/cpp-gump-frame-reconstruction.md). **마지막 디컴파일 수행 PC: VM-W11-CODEX, 2026-10-12**(`gumpframe` 4/4/4개 읽기 전용 내보내기). 아래 기록은 당시 상태로 보존한다.
 
-> **2026-10-12 디컴파일 환경 갱신 (`VM-W11-CODEX`) —** 마지막 디컴파일 PC가 `HJOW-Athlon`이어서 현재 지정 시스템에서 패치판 10.78·CD판 10.72 정밀 디컴파일 전체를 재생성했다. 판본 대응 2,496쌍. 최종 패치판 **5,549개 성공·실패 0**, CD판 **5,822개 성공·1개 실패**(`FUN_0049f99f`, Ghidra `Cannot properly adjust input varnodes`). Python cp949 출력 문제로 1차 분석 후 중단됐으나 저장된 프로젝트를 UTF-8 모드로 이어 처리해 재분석 없이 완료했다. 원본 바이너리 Git diff 없음·게임 실행 없음. 상세·재현 방법·SHA-256은 [디컴파일 기록](docs/exe/decompile-vmw11-20261012.md). **마지막 디컴파일 수행 PC: VM-W11-CODEX, 2026-10-12.**
+> 작업일: **2026-10-12**. 호스트는 **HJOW-Athlon**(192.168.0.94), 도구는 Ghidra 12.1.4, OpenJDK Zulu 25, Python 3.13.1이다. `LEFT_JOBS.md`의 마지막 디컴파일 PC가 `VM-W11-CODEX`였으므로 AGENTS.md 절차에 따라 현재 PC에서 패치판 10.78과 CD판 10.72를 다시 분석했다. 패치판 `originals/Netstorm.exe`: 최종 내보내기 **5,549개 성공, 실패 0개**. CD판 `originalCD/NETSTORM.EXE`: 최종 내보내기 **5,822개 성공, 실패 1개**. `FUN_0049f99f`에서 Ghidra가 `Low-level Error: Cannot properly adjust input varnodes`를 반환했다. 판본 간 대응 **2,496쌍**: strong 1,738, medium 707, weak 51. 호출 규약 일치 2,313/2,379 (97.2%), `ret N` 일치 2,339/2,389 (97.9%). [decompile-hjow-20261012.md](docs/exe/decompile-hjow-20261012.md).
 
 > **최신 cpppj 갱신: 2026-10-12 (`HJOW-Athlon`) —** **Gump 입력 캡처·dialog·overlay 전달 복원** 완료. `GumpInput`의 첫 캡처·단일 수집 override·dialog 등록·캡처/dialog/루트 우선 전달·overlay 입력을 복원했다. 같은 생성/트리/수명/위치/이벤트 저장소에서 실제 등록/제거·Push/삭제 요청·후속 전달/선택을 연결했다. 캡처 실패의 재전달 금지·성공 콜백 뒤 현재 캡처·한도/중복 순서·부모 visible·실제 전체 Pick·별도 사건 전역·첫 반환 0 종료를 원본과 대조했다. 새 독립 원본 **696개**·cpppj 누적 **519,204개**, 두 x87 최상위 정상 반환 **1,638회**. 새 C++ **9개**, Release 경고/오류 **0**·CTest 내부 **810개·실패 0**(163.59초, 전체 163.64초), 근거 감사 **121종**·새 변이 **14개 모두 검출**(`--focused`, 변이 전 사본 전체 검사 통과). 최종 미검출/건너뜀 **0개**, 사본 소스 바이트 복구를 확인했다. **파생 Gump/실제 버튼·메뉴 처리기·텍스트 Draw·OS 사건 큐/idle/전체 UI 프레임, 게임 조회/색 표/Kernel 공급·SP lazy·구름/장치·Client/GameWorld 자동 프레임·건설 GUI는 후속이며 게임 내 건설/미션 완주는 아직 불가능하다.** 마지막 디컴파일 수행 PC: **HJOW-Athlon, 2026-10-12**(`gumpinput` 5/6/6개 읽기 전용 내보내기). [상세 기록](docs/exe/cpp-gump-input-reconstruction.md). 아래 기록은 당시 상태로 보존한다.
 

@@ -1,0 +1,74 @@
+{
+  "last_decompile_host": "HJOW-Athlon",
+  "rows": 308,
+  "editions": {
+    "originals": {
+      "cases": 154,
+      "normal_returns": 348,
+      "entries": {
+        "00475f20": 112,
+        "004e49c0": 120,
+        "00475fb0": 112,
+        "00476050": 12,
+        "00476630": 16,
+        "00476700": 70,
+        "004767d0": 8,
+        "00465330": 8,
+        "00475c00": 6,
+        "00475c40": 6,
+        "00475c50": 6,
+        "00475ca0": 20,
+        "00475cf0": 20
+      },
+      "boundaries": {
+        "push": 150,
+        "attach": 140,
+        "base_redraw": 12,
+        "redraw": 6,
+        "pop": 30,
+        "object": 20
+      }
+    },
+    "originalCD": {
+      "cases": 154,
+      "normal_returns": 348,
+      "entries": {
+        "00452260": 116,
+        "004f161c": 122,
+        "004522f0": 112,
+        "00452380": 12,
+        "004528d0": 16,
+        "00452a70": 70,
+        "00452b00": 8,
+        "00494380": 8,
+        "00451070": 6,
+        "004510b0": 6,
+        "004510c0": 6,
+        "00451310": 20,
+        "00451360": 20
+      },
+      "boundaries": {
+        "push": 148,
+        "attach": 142,
+        "base_redraw": 12,
+        "redraw": 6,
+        "pop": 26,
+        "object": 20
+      }
+    }
+  },
+  "method": "실제 PE 격리 x86; 가상 Push/Pop/Attach/객체 Attach/Redraw 및 기본 Redraw만 명시 경계",
+  "files": {
+    "tools/decomp_menugump_oracle.py": "a8e5ce826982f2c5dab53e0d90cec46c12121342d888055d92f76045d69bb22d",
+    "tools/ghidra/menugump-functions.json": "02fa9773dd5d3c8f7622b64070a15ed7e3dab30949ff0aabec4736f86150b8ea",
+    "tools/decomp_process_oracle.py": "c548fa37c3cb10edb030bba3b67c8970b7575207efca217fdf4ea0b51354cfd1",
+    "tools/decomp_drawsort_oracle.py": "ed92fd9cd8b7c069742cc9158226db6c5cfc75213816d56f40ffb562b5542bb7",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/menugump/originals/creation.c": "93ef8bdc48a3c77a2ed24ad300570a7b91c5097cd92ec7f9269cab0c1f3b0926",
+    "extracted/menugump/originals/functions.tsv": "88f59a497522d1a8edc3d83652f81a72733b2574c37037a34fb7dc930f6a04ff",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "extracted/menugump/originalCD/creation.c": "229275d0b59a07da97c452e20e41f5544f12af58d7441c14c12b84d472043d59",
+    "extracted/menugump/originalCD/functions.tsv": "0d39b32a61ca8614e3d555d56742f4a25da2ff25e0fd3882c21b9196e24d1c70",
+    "cpppj/tests/fixtures/menugump-x86.tsv": "e1ec3c5aa10786003c1e1a5837a5653d5ce6821564a762d1e13ccdf738978ac6"
+  }
+}

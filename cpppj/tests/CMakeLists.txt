@@ -15,6 +15,7 @@ add_executable(netstorm_tests
     GumpEventsTests.cpp
     GumpInputTests.cpp
     GumpFrameTests.cpp
+    MenuGumpTests.cpp
     ButtonGumpTests.cpp
     GumpTextTests.cpp
     GumpGlyphTests.cpp
@@ -533,3 +534,7 @@ set_source_files_properties(GumpGlyphTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 전체 배경 Draw/CRT/소프트웨어 fill의 세 실제 PE 관찰이다. 기본 검사는 게임/원본/Python을 실행하지 않는다.
 set_source_files_properties(GumpBackgroundDrawTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_GUMPBACKGROUNDDRAW_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gumpbackgrounddraw-x86.tsv\"")
+
+# 실제 두 PE의 메뉴 크기/확장/스택 콜백 당시 상태를 이 검사 소스에서만 읽는다.
+set_source_files_properties(MenuGumpTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_MENUGUMP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/menugump-x86.tsv\"")

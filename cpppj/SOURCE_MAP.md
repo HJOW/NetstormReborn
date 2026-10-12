@@ -86,7 +86,7 @@
 | `src/o/Xlat.cpp` | Xlat.cpp | xlat.cpp | 3 | 있음 |
 | `src/o/Ztrans.cpp` | Ztrans.cpp | ztrans.cpp | 12 |  |
 
-## `.\` (클라이언트) → `src/client/` (60개, 파일 있음 13개)
+## `.\` (클라이언트) → `src/client/` (60개, 파일 있음 14개)
 
 | cpppj 경로 | 패치판 표기 | CD판 표기 | 함수 수 | 상태 |
 |---|---|---|---|---|
@@ -125,7 +125,7 @@
 | `src/client/Look.cpp` | — | look.cpp |  |  |
 | `src/client/ManaUser.cpp` | Manauser.cpp | ManaUser.cpp | 1 |  |
 | `src/client/Markup.cpp` | — | Markup.cpp |  |  |
-| `src/client/MenuGump.cpp` | Menugump.cpp | MenuGump.cpp | 16 |  |
+| `src/client/MenuGump.cpp` | Menugump.cpp | MenuGump.cpp | 16 | 있음 |
 | `src/client/MetaDisplay.cpp` | Metadisplay.cpp | metaDisplay.cpp | 14 |  |
 | `src/client/Minimap.cpp` | Minimap.cpp | minimap.cpp | 1 |  |
 | `src/client/Missile.cpp` | Missile.cpp | Missile.cpp | 2 |  |
