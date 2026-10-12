@@ -47,12 +47,17 @@ private:
     const StyleText& style_;
     TextGumpHooks hooks_;
 };
-// 원본 +a0 slider/+a4 buffer/+b8 scroll/+bc request/+cc 추가 여백/+d0 플래그의 표시용 필드다.
-// 전체 생성자/입력 필드는 후속이며 기존 생성 계층이 slider/buffer와 기본 크기를 먼저 공급해야 한다.
+// 원본 다중 줄 TextGump의 Slider/버퍼/소유·표시·입력 필드다. 생성/수명/입력은 ScrollingTextGumpWidgets가 맡는다.
 struct ScrollingTextGumpNode: GumpCreateNode {
     std::uint32_t slider{},buffer{};
     std::int32_t scroll{},scrollRequest{-1},bottomPadding{};
     std::uint32_t textFlags{};
+    // +a8 소유 여부/+ac 미작성/+b0..b4 보조/+c0 마지막 배치 폭/+c4 이전 drag y/+c8 태그/+d4 콜백 토큰이다.
+    std::uint32_t ownsBuffer{},unwritten{};
+    std::array<std::uint32_t,2> reserved{};
+    float layoutWidth{};
+    std::int32_t dragY{};
+    std::uint32_t metadata{},callback{};
 };
 // 같은 StyleTextBuffer 생성에 사용한 상태와 처리기를 묶는다. 소유권은 원래 생성 계층에 있다.
 struct TextGumpBufferBinding { StyleTextBufferState* state{};const StyleTextBuffer* handler{}; };

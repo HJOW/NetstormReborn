@@ -1,0 +1,7 @@
+{
+  "description": "다중 줄 TextGump 정상 생성·소멸·가상 Attach/Input/Broadcast와 overlay/태그 입력 경계. 마지막 디컴파일 PC: HJOW-Athlon, 2026-10-13.",
+  "editions": {
+    "originals": ["004bc060", "004bc890", "004bc930", "004bc6b0", "004bc450", "004ba5e0", "004653c0", "004bbe40", "004bbf20"],
+    "originalCD": ["004b5c30", "004b5e70", "004b7e70", "004b6bd0", "004b6560", "004b6910", "004b6310", "00494410", "004b50a0", "004b5190", "004b5ef4"]
+  }
+}

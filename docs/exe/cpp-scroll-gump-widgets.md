@@ -59,6 +59,6 @@ Slider는 기본 `(0,0,0,1)` 등록 생성 뒤 값/범위/페이지/방향/step/
 
 자료: `tools/ghidra/scrollwidgets-functions.json`, `tools/analyze_scrollwidgets.py`, `cpppj/recovery-scrollwidgets-evidence.json`, `extracted/scrollwidgets/`, `extracted/scrollwidgets-build.log`. 실제 함수/명령/가상 표/정렬/초기 전역/소멸 보조와 현재 연결·구현 해시를 저장한다.
 
-후속은 다중 줄 TextGump 전체 생성/소멸·가상 Attach/Input·W 파서·메뉴/Form·자동 raw UI와 이번 생성/수명/분수 선/화살표/손잡이·앞선 Slider/TextGump/버퍼/파서/VFX/메뉴의 독립 원본/C++ 대조다. **Client/UberGump는 기존 메뉴 어댑터이며 raw 자동 GUI와 건설·미션 완주는 미완료다.**
+다중 줄 TextGump 정상 생성/소멸·버퍼 소유·가상 Attach/태그/스크롤/커서/프레임 입력은 [2026-10-13 후속](cpp-scrolling-text-gump-widgets.md)에서 구현했다. 후속은 전체 W 파서·전역/할당/커서 공급·메뉴/Form·자동 raw UI와 이번 생성/수명/분수 선/화살표/손잡이·앞선 Slider/TextGump/버퍼/파서/VFX/메뉴의 독립 원본/C++ 대조다. **Client/UberGump는 기존 메뉴 어댑터이며 raw 자동 GUI와 건설·미션 완주는 미완료다.**
 
 두 보호 PE SHA 불변. AGENTS.md·보호 원본·dotnetpj 변경, 커밋/푸시 없음.
