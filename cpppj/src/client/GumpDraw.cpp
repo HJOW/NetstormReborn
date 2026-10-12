@@ -1,6 +1,7 @@
 // Gump는 클립을 복구하지만 VFX 색 문맥이나 하위 객체 상태를 되돌리지 않는다.
 #include "client/GumpDraw.h"
 #include "client/VFXTransform.h"
+#include "client/VFXLine.h"
 #include <algorithm>
 #include <bit>
 #include <stdexcept>
@@ -53,7 +54,9 @@ ScreenRect GumpPixelTarget::Clip() const {
 void GumpPixelTarget::Lines(std::span<const GumpLine> lines) const {
     // 입력 순서를 유지해 모서리와 겹친 선을 뒤 색이 덮게 한다.
     for (const auto& line:lines) {
-        if (line.first.x!=line.last.x && line.first.y!=line.last.y) throw std::invalid_argument("Gump 직교 선 필요");
+        if (line.first.x!=line.last.x && line.first.y!=line.last.y) {
+            DrawVfxLine(pixels_,pitch_,height_,Clip(),line.first,line.last,line.color);continue;
+        }
         const auto clip=Clip();
         const auto left=std::max<std::int64_t>(clip.left,std::min(line.first.x,line.last.x));
         const auto top=std::max<std::int64_t>(clip.top,std::min(line.first.y,line.last.y));

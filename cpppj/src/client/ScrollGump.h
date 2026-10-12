@@ -4,18 +4,24 @@
 #include "client/GumpInput.h"
 #include "client/GumpFrame.h"
 #include "client/InputEvent.h"
+#include "client/GumpBackgroundCreate.h"
 
 namespace netstorm::client {
 struct ScrollingTextGumpHooks;
 // 원본 +a0 min/+a4 max/+a8 position/+ac page/+b4 방향/+b8 step/+c8..d0 자식 토큰이다.
-// 기본 생성과 화살표/손잡이 할당은 원래 생성 계층이 먼저 수행한다. 이 저장소는 생성자를 대신하지 않는다.
+// 기본 생성과 화살표/손잡이 할당은 ScrollGumpWidgets가 수행한다. 별도 초기화 시에도 같은 저장소를 사용한다.
 struct ScrollGumpNode: GumpCreateNode {
     std::int32_t minimum{},maximum{},position{},page{},step{};
     std::uint32_t scrollFlags{},decrement{},increment{},thumb{};
+    // +b0은 생성 시 0, +bc는 미작성, +c0/+c4는 원본 생성자가 0으로 쓰는 보조 필드다.
+    std::uint32_t reservedB0{},reservedBC{};
+    std::array<std::uint32_t,2> reserved{};
 };
 // 손잡이 +c0..cc의 양 끝 포함 사각형과 +d0 이전 y/+d4 이전 x다. +d4는 패치에만 존재한다.
-// 실제 FrameGump 기본 필드/배경·화살표 픽셀 출력은 별도 복원 대상이다.
-struct ScrollGumpThumbNode: GumpCreateNode {
+// 기본 배경 필드/트리/캐시를 같은 객체에서 공유하며 생성자와 실제 출력은 ScrollGumpWidgets가 맡는다.
+struct ScrollGumpThumbNode: GumpBackgroundNode {
+    // +b8/+bc의 생성 인자 사본이다. 원본 손잡이 Draw는 이 값 대신 기본 배경의 type/frame을 사용한다.
+    std::uint32_t detailType{},detailFrame{};
     ScreenRect handle{};
     std::int32_t previousY{},previousX{};
 };
@@ -33,7 +39,7 @@ struct ScrollGumpHooks {
     std::function<void(std::uint32_t,bool)> redraw;
     std::function<InputEvent(std::uint32_t)> poll;
 };
-// ScrollGump.cpp의 Slider 값/부착/입력 처리기다. 전체 생성·화살표 파생 Draw는 후속이다.
+// ScrollGump.cpp의 Slider 값/부착/입력 처리기다. 생성/파생 Draw는 ScrollGumpWidgets에 분리한다.
 class ScrollGump {
 public:
     // 생성/방향/사건 전역과 실제 트리/좌표/부모 통지/캡처가 이 처리기보다 오래 살아야 한다.

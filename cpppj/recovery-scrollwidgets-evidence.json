@@ -1,0 +1,273 @@
+{
+  "last_decompile_host": "HJOW-Athlon",
+  "recorded_at": "2026-10-13T00:50:31.259689+09:00",
+  "method": "두 실제 PE 읽기 전용 정적 내보내기·가상 표/생성 상수/기계어 판독; 게임/에뮬레이터 실행 없음",
+  "cpp_comparison": "미수행: 새 테스트 추가/실행·독립 PE/C++ 생성/콜백/픽셀 대조·GUI/게임 실행 없음",
+  "new_original_observations": 0,
+  "new_cpp_comparisons": 0,
+  "implementation": {
+    "create": "기본 등록→부분 파생 초기화/0 축 40/방향·step→178 두 화살표/판본별 d8/d4 손잡이→세 가상 부착→0..100/10/50 값",
+    "arrow": "기존 빈 돌 버튼·명시 8슬롯 문맥·팝업 유지·signed 정렬/방향·실제 base Draw 뒤 3선/기본 색/절삭 중점",
+    "thumb": "실제 기본 배경 저장소 상속·기본 전역 타입/프레임·rect 0/이전 좌표 미작성·기본 Draw 뒤 현재 rect/type/frame",
+    "line": "mode 0 8비트·주축/방향·min/max 0.32 분수·반 픽셀 곱/시작-끝 역산 차이·원래 시작점 위상·ADD carry·포함 끝점",
+    "lifetime": "세 파생 scalar는 기본 소멸/flags bit 0 반납으로 위임·기존 자식 우선 Destroy/Cleanup",
+    "editions": "패치 생성 높이 float32 재조회/세로 폭 저장 전 절삭; CD 양 축 FILD 배율/세로 폭 float32 절삭·작은 손잡이 할당"
+  },
+  "boundaries": [
+    "독립 PE/C++ 생성/수명/콜백/선/화살표/손잡이 픽셀 대조",
+    "다중 줄 TextGump 전체 생성/소멸·가상 Attach/Input·W 파서·메뉴/Form·자동 raw Client UI·건설/미션 완주",
+    "VFX 선 색 치환/사용자 콜백 mode·signed 거리 INT_MAX 초과·DIV 몫 overflow·비정상 클립 수렴",
+    "극단 x87 80비트 값·CD Pentium FDIV 보정 경로·생성자 예외 시 원본 EH 정리 전체 대조"
+  ],
+  "editions": {
+    "originals": {
+      "binary": "originals/Netstorm.exe",
+      "requested_functions": [
+        "004a64b0",
+        "004a63b0",
+        "004a60e0",
+        "004a5920",
+        "004a5c40",
+        "004655d0",
+        "004254b0",
+        "004dade0",
+        "004011f1",
+        "004d4c40"
+      ],
+      "exported_functions": [
+        "004a64b0",
+        "004a63b0",
+        "004a60e0",
+        "004a5920",
+        "004a5c40",
+        "004655d0",
+        "004254b0",
+        "004dade0",
+        "004011f1",
+        "004d4c40"
+      ],
+      "virtual_tables": {
+        "slider": {
+          "address": "005116f8",
+          "slots": [
+            "004d4c40",
+            "00466740",
+            "00464a50",
+            "00464ab0",
+            "00464d10",
+            "00464d60",
+            "00464560",
+            "00419df0",
+            "004a5cd0",
+            "004437f0",
+            "004a61c0"
+          ],
+          "scalar_delete": "004d4c40",
+          "attach": "004a5cd0",
+          "draw": "004437f0"
+        },
+        "arrow": {
+          "address": "005116a8",
+          "slots": [
+            "004d4c40",
+            "00466740",
+            "00464a50",
+            "00464ab0",
+            "00464d10",
+            "00464d60",
+            "00464560",
+            "00419df0",
+            "00424f00",
+            "004a5920",
+            "004249a0"
+          ],
+          "scalar_delete": "004d4c40",
+          "attach": "00424f00",
+          "draw": "004a5920"
+        },
+        "thumb": {
+          "address": "00511668",
+          "slots": [
+            "004d4c40",
+            "00466740",
+            "00464a50",
+            "00464ab0",
+            "00464d10",
+            "00464d60",
+            "00464560",
+            "00419df0",
+            "00466750",
+            "004a5c40",
+            "004a5ae0"
+          ],
+          "scalar_delete": "004d4c40",
+          "attach": "00466750",
+          "draw": "004a5c40"
+        }
+      },
+      "initial_alignment": {
+        "slider": 39,
+        "arrow": 1,
+        "thumb": 51
+      },
+      "initial_default_type": 0,
+      "initial_default_frame": 1,
+      "scalar_helpers": {}
+    },
+    "originalCD": {
+      "binary": "originalCD/NETSTORM.EXE",
+      "requested_functions": [
+        "00417bd0",
+        "004178f0",
+        "004176f0",
+        "00417b50",
+        "00494640",
+        "00441310",
+        "004d6850",
+        "00464bd1",
+        "004188a0",
+        "004187f0",
+        "00418960"
+      ],
+      "exported_functions": [
+        "00417bd0",
+        "004178f0",
+        "004176f0",
+        "00417b50",
+        "00494640",
+        "00441310",
+        "004d6850",
+        "00464bd1",
+        "004188a0",
+        "004187f0",
+        "00418960"
+      ],
+      "virtual_tables": {
+        "slider": {
+          "address": "00500c78",
+          "slots": [
+            "00418960",
+            "00492ff0",
+            "004937e0",
+            "00493840",
+            "00493bb0",
+            "00493c00",
+            "00493000",
+            "00403900",
+            "00418170",
+            "004039a0",
+            "00418550"
+          ],
+          "scalar_delete": "00418960",
+          "attach": "00418170",
+          "draw": "004039a0"
+        },
+        "arrow": {
+          "address": "00500c28",
+          "slots": [
+            "004188a0",
+            "00492ff0",
+            "004937e0",
+            "00493840",
+            "00493bb0",
+            "00493c00",
+            "00493000",
+            "00403900",
+            "00441520",
+            "004176f0",
+            "00440ce0"
+          ],
+          "scalar_delete": "004188a0",
+          "attach": "00441520",
+          "draw": "004176f0"
+        },
+        "thumb": {
+          "address": "00500be8",
+          "slots": [
+            "004187f0",
+            "00492ff0",
+            "004937e0",
+            "00493840",
+            "00493bb0",
+            "00493c00",
+            "00493000",
+            "00403900",
+            "00493070",
+            "00417b50",
+            "004179c0"
+          ],
+          "scalar_delete": "004187f0",
+          "attach": "00493070",
+          "draw": "00417b50"
+        }
+      },
+      "initial_alignment": {
+        "slider": 39,
+        "arrow": 1,
+        "thumb": 51
+      },
+      "initial_default_type": 0,
+      "initial_default_frame": 1,
+      "scalar_helpers": {
+        "004188f9": [
+          "004188f9 8b4df0 mov ecx, dword ptr [ebp - 0x10]",
+          "004188fc e90f000000 jmp 0x418910"
+        ],
+        "00418951": [
+          "00418951 8b4df0 mov ecx, dword ptr [ebp - 0x10]",
+          "00418954 e907b3feff jmp 0x403c60"
+        ],
+        "00403ca1": [
+          "00403ca1 8b4df0 mov ecx, dword ptr [ebp - 0x10]",
+          "00403ca4 e947f20800 jmp 0x492ef0"
+        ],
+        "00418849": [
+          "00418849 8b4df0 mov ecx, dword ptr [ebp - 0x10]",
+          "0041884c e9afd4feff jmp 0x405d00"
+        ],
+        "00405d41": [
+          "00405d41 8b4df0 mov ecx, dword ptr [ebp - 0x10]",
+          "00405d44 e9a7d10800 jmp 0x492ef0"
+        ],
+        "004189b9": [
+          "004189b9 8b4df0 mov ecx, dword ptr [ebp - 0x10]",
+          "004189bc e92fa50700 jmp 0x492ef0"
+        ]
+      }
+    }
+  },
+  "files": {
+    "tools/analyze_scrollwidgets.py": "2b119697918f25e5dc6def2ef5057a4f7057a36f2aa47d0c97057e23ccf3ea83",
+    "tools/analyze_styletext.py": "f9fbec159bb4ffe4fdf72883ef6a9ac2e417affd484a03e025e43dc98d422fda",
+    "tools/ghidra/scrollwidgets-functions.json": "1964b42f85d7701acc75d8783157ddc93348c01cfb6157ed792da6cabcddf0c7",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/scrollwidgets/originals/creation.c": "98cdb93513883b18c545704ffc85e738efadaadb50a4d40edf6f1423625a9c35",
+    "extracted/scrollwidgets/originals/functions.tsv": "797624eb5e72f25dc707af9fd5b1e70288fdea122b6e87fe73d3039860925b11",
+    "extracted/scrollwidgets/originals/assembly.txt": "e8667b5e3f052776815a4b88cb25e42f461b1ff2b0fd3ae0acebe28c62a370c1",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "extracted/scrollwidgets/originalCD/creation.c": "b3f293c6c60a651a4f4a132ceeb07a514dd3f43b8893c7920e9e6b133779304a",
+    "extracted/scrollwidgets/originalCD/functions.tsv": "c501160bf2597cfed323e857125fe7b857ddc2c011b301898441f4d7eafc2871",
+    "extracted/scrollwidgets/originalCD/assembly.txt": "576a34cc30493e31c37c1b600ad33d994c6ebcba3504b6ad2a2eea8acfe09773",
+    "cpppj/src/client/ScrollGumpWidgets.h": "37f69cdaee1b34ce96d5834a73e2c788c08bab6bf3669dd66078dc0656404e43",
+    "cpppj/src/client/ScrollGumpWidgets.cpp": "6b84ae58ef54c1efbc18fa0b7c3d88cffc3586f568a5bc636f9117059ce2fd86",
+    "cpppj/src/client/ScrollGump.h": "baf897c0dfa001fd243722844f59ce251cb246d757f029066f2b9c30a07972b6",
+    "cpppj/src/client/ScrollGump.cpp": "05da98a2e5746f7eef106df724d72556beaecb394b5a0e627fde8c57f4be8d4c",
+    "cpppj/src/client/VFXLine.h": "63d8c7230d2fd0ed2447f5725cd195dc0b5436abe471128e2944bbb74214e5fd",
+    "cpppj/src/client/VFXLine.cpp": "1fa70da775f8129b7003e17c0c5abf32c8ce00116b30d1ed2cdef3ba78c9bf97",
+    "cpppj/src/client/GumpCreate.h": "253ea65d7c91385d5ebe66e44c627c4ccc3dc9fe7a9749e2d0697c45fb3efa14",
+    "cpppj/src/client/GumpCreate.cpp": "4eb77de7063d33238c6bee30b8a282c89506c38172be0c4131afc7b843c33cd9",
+    "cpppj/src/client/GumpDraw.h": "6f9949206c03e90f69dc5f079e2f61ff68c378361f0cfd0ad3957699ba8713a1",
+    "cpppj/src/client/GumpDraw.cpp": "70ccae30063bd903bd4b48c44eed4f7d28506b1253ebe33ca128cd739e765a44",
+    "cpppj/src/client/GumpBackgroundCreate.h": "1991a0782daa6cbdcbd93360b9e5c99c4490acbf636ee6fe961147b873bd0946",
+    "cpppj/src/client/GumpBackgroundCreate.cpp": "9be00e8a1ab1cbd14e8816d7e3aed6c314ab119c6750e1a12de9b8717ba2d981",
+    "cpppj/src/client/GumpBackgroundDraw.h": "4b44358dff357706cfbd311ff5e73c4fcc8a5a8b78f99533a5a83a64b326cbea",
+    "cpppj/src/client/GumpBackgroundDraw.cpp": "aedc250cf6911e61d01de083eea5ae7d5418b21fa1870af7c01f350373939b33",
+    "cpppj/src/client/StoneButtonGump.h": "4b0772a837018b7478f8ade818cc83793843827da7138ef38aabc697cf705da7",
+    "cpppj/src/client/StoneButtonGump.cpp": "bf178ab1f1460ed72cf1de450d9495fdd6b186d4819560fc6f52e914ed0c2d41",
+    "cpppj/src/client/ButtonGump.h": "8854608e877d9858e23576d7e3193e9ac14debd902ffa931b1c0b684efcb9fd4",
+    "cpppj/src/client/ButtonGump.cpp": "d567f7333db5a449af127e11641a1af593e55bd6092d5f5130c15c87a8a17a87",
+    "cpppj/src/client/GumpLifetime.h": "2f27d5772a112ef7d7e784e4b749ca45f91befff15a177f7111389ff0570920d",
+    "cpppj/src/client/GumpLifetime.cpp": "62cb2a456d30864bbf940a9256ae988ee1ae317b0e420704543d26dcb9eb3c7c",
+    "cpppj/src/client/CMakeLists.txt": "69eba081aa8fa90a2e6a963b9a6147204ebdbcf32360f1b9358cbe2c66c02524"
+  }
+}

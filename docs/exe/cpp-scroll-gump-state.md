@@ -67,6 +67,6 @@ Broadcast는 event/x와 폴링 반환 좌표를 읽지 않는다. 실제 왼쪽 
 
 자료: `tools/ghidra/scrollgump-functions.json`, `tools/analyze_scrollgump.py`, `cpppj/recovery-scrollgump-evidence.json`, `extracted/scrollgump/`, `extracted/scrollgump-build.log`. 보고서는 실제 함수 범위/명령/가상 슬롯과 구현·연결 파일 해시를 기록하고 8개 구현 몸체/3개 참고 함수를 구분한다.
 
-후속은 Slider/손잡이/화살표 전체 생성·FrameGump/화살표/손잡이 실제 Draw·다중 줄 TextGump 전체 생성/소멸·가상 Attach/Input·W 명령/전체 스타일 파서·메뉴/Form/자동 UI와 독립 PE/C++ 대조다. **Client/UberGump는 기존 메뉴 어댑터이며 raw 자동 GUI와 건설·미션 완주는 미완료다.**
+Slider/손잡이/화살표 정상 생성·기본 배경/화살표/손잡이 실제 Draw·일반 선과 scalar 수명은 [2026-10-13 후속](cpp-scroll-gump-widgets.md)에서 구현했다. 후속은 생성 EH 정리·독립 원본/C++ 대조·다중 줄 TextGump 전체 생성/소멸·가상 Attach/Input·W 명령/전체 스타일 파서·메뉴/Form/자동 UI다. **Client/UberGump는 기존 메뉴 어댑터이며 raw 자동 GUI와 건설·미션 완주는 미완료다.**
 
 원본 두 PE SHA 불변. AGENTS.md·보호 원본·dotnetpj 변경, 커밋/푸시 없음.

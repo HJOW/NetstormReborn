@@ -45,7 +45,7 @@ class GumpPixelTarget {
 public:
     // 저장소/상태는 표면보다 오래 살아야 한다. pitch는 픽셀 행의 실제 바이트 수다.
     GumpPixelTarget(std::span<std::uint8_t> pixels,int pitch,int height,const GumpDrawState& state);
-    // 양 끝 포함 직교 선을 순서대로 그리며 매 선에서 현재 클립을 읽는다.
+    // 양 끝 포함 직교/대각선 선을 순서대로 그리며 매 선에서 현재 클립을 읽는다. 대각선은 실제 VFX 분수/클립을 쓴다.
     void Lines(std::span<const GumpLine> lines) const;
     // position은 해제한 이미지의 왼쪽 위다. 투명도/선택적 소스 색 치환을 유지한다.
     void Image(const IndexedImage& image,ScreenPoint position,const ColorMap* colors=nullptr) const;
