@@ -1,6 +1,7 @@
 // 원본의 부분 문맥 초기화·63바이트 복사·배경 부착과 DWORD 크기 감김을 유지한다.
 #include "client/StoneButtonGump.h"
 #include "client/GumpBackground.h"
+#include "client/GumpTextDraw.h"
 #include <bit>
 #include <stdexcept>
 
@@ -115,6 +116,11 @@ ButtonDrawPlan StoneButtonGump::DrawPlan(std::uint32_t token) const {
     const auto& node=Node(token);
     return PlanButtonDraw(buttons_.VisualState(token,node.textWidth,node.textHeight),node.contexts,state_.palette.edge);
 }
+// 계획의 상대 글자 좌표는 부모의 실제 Position에 더한다. 기본 측정 문맥과 Draw 문맥을 구분한다.
+void StoneButtonGump::Draw(std::uint32_t token,const GumpCollection& collection,const GumpTextDraw& text,const GumpPixelTarget& target) const {
+    const auto plan=DrawPlan(token);target.Lines(plan.lines);const auto& node=Node(token);
+    text.DrawGump(collection,token,node.label,plan.textOffset,node.textContext,&plan.text);
+}
 // 처리기를 만든 뒤 resolve 포인터를 연결할 수 있도록 훅만 감싼다.
 void BindStoneButtonGump(GumpTreeHooks& tree,GumpLifetimeHooks& lifetime,
     std::function<const StoneButtonGump*(std::uint32_t)> resolve) {
@@ -129,6 +135,16 @@ void BindStoneButtonGump(GumpTreeHooks& tree,GumpLifetimeHooks& lifetime,
     lifetime.deletingDestructor=[resolve,destroy](std::uint32_t token,std::uint32_t flags) {
         if (const auto* stone=resolve(token)) stone->DeleteScalar(token,flags);
         else { if (!destroy) throw std::invalid_argument("돌 버튼 외 Gump 소멸자 분배기 필요");destroy(token,flags); }
+    };
+}
+// GumpDraw의 클립 보호 안에서 실제 부모 선/라벨 출력으로 위임하며 다른 파생 타입은 기존 경계를 사용한다.
+void BindStoneButtonDraw(GumpDrawHooks& hooks,const GumpCollection& collection,const GumpTextDraw& text,
+    const GumpPixelTarget& target,std::function<const StoneButtonGump*(std::uint32_t)> resolve) {
+    if (!resolve) throw std::invalid_argument("돌 버튼 Draw 분배 조회 필요");
+    const auto previous=hooks.draw;
+    hooks.draw=[&collection,&text,&target,resolve,previous](std::uint32_t token) {
+        if (const auto* stone=resolve(token)) stone->Draw(token,collection,text,target);
+        else { if (!previous) throw std::invalid_argument("돌 버튼 외 Gump Draw 분배기 필요");previous(token); }
     };
 }
 }

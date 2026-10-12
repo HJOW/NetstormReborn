@@ -1,6 +1,8 @@
 // 원본 측정 관찰을 실제 FontStore에서 재생하고 돌 버튼 생성/부착/수명의 같은 저장소 연결을 검사한다.
 #include "GumpRawSupport.h"
 #include "client/GumpText.h"
+#include "client/GumpTextDraw.h"
+#include "client/DrawSort.h"
 #include "client/StoneButtonGump.h"
 #include "client/GumpHelp.h"
 #include <chrono>
@@ -126,6 +128,20 @@ struct StoneScene {
         stones=std::make_unique<StoneButtonGump>(create,stoneState,*factory,*buttons,*backgrounds,*tree,*lifetime,s);
     }
 };
+// 기존 측정 fixture의 normal 캐시만 한 픽셀 A/전진 폭 2로 교체한다. 원본 파일에는 쓰지 않는다.
+void WriteStonePixelFont(const FontFixture& fixture) {
+    std::vector<std::uint8_t> cache(4132);
+    // 원본 16바이트 캐시 서명이며 마지막 NUL도 쓴다.
+    constexpr std::string_view signature{"BitmapFontData\x1a\0",16};
+    std::copy(signature.begin(),signature.end(),cache.begin());
+    Put(cache,16,1);Put(cache,20,14);Put(cache,24,11);Put(cache,28,3);Put(cache,32,256);
+    Put(cache,36+65*4,2);Put(cache,36+2048+65*4,2);Put(cache,36+3072+65*4,43);
+    std::vector<std::uint8_t> shape(40);Put(shape,0,0x30312e31);Put(shape,4,1);Put(shape,8,16);
+    shape.insert(shape.end(),{2,100,0});cache.insert(cache.end(),shape.begin(),shape.end());
+    std::ofstream output(fixture.directory/"d"/"!Arial.normal.14.700.chfnt",std::ios::binary);
+    output.write(reinterpret_cast<const char*>(cache.data()),static_cast<std::streamsize>(cache.size()));
+    if (!output) throw std::runtime_error("돌 버튼 픽셀 검사 캐시 저장 실패");
+}
 }
 
 // 실제 원본의 전체 슬롯/스타일·길이·정수 감김·출력 alias를 실제 FontStore 공급으로 대조한다.
@@ -242,4 +258,55 @@ TEST_CASE(GumpHelp_CurrentCallbacksAndEditionArgumentsKeepOrder) {
         node.alternateTextPointer=0;CHECK(help.Handle(1,InputCode::kRightButton,0,0)==0);
         CHECK(calls.size()==5);
     }
+}
+
+// 실제 생성/측정/부착→수집/정렬/kind 2→가상 돌 버튼 Draw→클립/색/픽셀을 같은 두 판본 저장소로 연결한다.
+TEST_CASE(StoneButtonText_DrawDispatchUsesCurrentStoredContextsAndPixels) {
+    // 두 판본은 같은 기본 트리/글꼴 저장소 연결을 사용하며 독립 위치/라벨/색을 유지한다.
+    for (auto edition:{netstorm::o::OriginalEdition::Patch1078,netstorm::o::OriginalEdition::Cd1072}) {
+        FontFixture fixture;WriteStonePixelFont(fixture);GumpText measure(fixture.fonts,edition);StoneScene scene(measure,edition);
+        scene.stones->Construct(kStone,75,19,"A");scene.stones->SetLabel(kStone,"A");scene.tree->Move(kStone,10,10,kRoot);
+        CHECK(scene.node.textWidth==2 && scene.node.textHeight==14 && scene.background.parent==kStone);
+        scene.node.flags|=kGumpDrawClip;scene.node.textContext[1]=2; // 측정 기본 문맥을 Draw 문맥으로 오인하면 글자가 사라진다.
+        GumpDrawState state;SetGumpDrawClip(state,{0,0,100,40});
+        std::vector<std::uint8_t> guarded(4002,7);auto pixels=std::span(guarded).subspan(1,4000);
+        GumpPixelTarget target(pixels,100,40,state);GumpGlyphColorState colors;
+        GumpTextDraw text(fixture.fonts,MakeGumpGlyphPixelHooks(target,colors),edition);
+        std::vector<std::uint32_t> fallback;GumpDrawHooks hooks{[&](auto token) { fallback.push_back(token); }};
+        BindStoneButtonDraw(hooks,*scene.collection,text,target,[&](auto token) { return token==kStone ? scene.stones.get() : nullptr; });
+        GumpDraw draw(*scene.collection,state,hooks);DrawCollectionHooks collect;BindGumpCollection(collect,*scene.collection);
+        DrawDispatchHooks dispatch;BindGumpDraw(dispatch,draw);std::array<netstorm::o::RenderCollectionEntry,4> work{};
+        DrawCollectionRequest request;request.screen={0,0,100,40};request.dirtyFlags=4;
+        const auto result=CollectDrawEntries(request,work,collect);CHECK(result.count==2);
+        if (result.count!=2) continue;
+        auto entries=std::span(work).first(2);SortDrawEntries(entries,edition);DispatchDrawEntries(entries,{},dispatch);
+        CHECK((fallback==std::vector<std::uint32_t>{kBackground}));
+        CHECK(pixels[12*100+47]==9 && pixels[13*100+48]==243 && pixels[10*100+11]==57);
+        CHECK(colors.vfxColors[100]==9 && state.clip.left==0 && state.clip.right==100 && state.vfxClip.right==99);
+        CHECK(guarded.front()==7 && guarded.back()==7);
+        // 현재 누름 상태에 따라 글자만 (1,1) 이동하고 같은 정상/눌림 문맥을 사용한다.
+        std::fill(pixels.begin(),pixels.end(),std::uint8_t{7});scene.node.pressed=1;dispatch.ui(kStone);
+        CHECK(pixels[13*100+48]==9 && pixels[14*100+49]==243 && pixels[12*100+47]==7);
+        // 비활성 문맥은 그림자가 없고 저장한 세 번째 문맥의 색을 쓴다.
+        std::fill(pixels.begin(),pixels.end(),std::uint8_t{7});scene.node.pressed=0;scene.node.buttonFlags|=1;dispatch.ui(kStone);
+        CHECK(pixels[12*100+47]==243 && pixels[13*100+48]==7 && colors.vfxColors[100]==243);
+        // 매 Draw의 현재 inclusive 클립을 따르며 부모 ClipGuard 뒤 색 표는 그대로 유지한다.
+        std::fill(pixels.begin(),pixels.end(),std::uint8_t{7});SetGumpDrawClip(state,{47,12,48,13});scene.node.buttonFlags=0;dispatch.ui(kStone);
+        CHECK(pixels[12*100+47]==9 && std::count(pixels.begin(),pixels.end(),9)==1);
+        CHECK(state.clip.left==47 && state.clip.right==48 && colors.vfxColors[100]==9);
+    }
+}
+
+// 라벨 범위 계약이 실패해도 공통 GumpDraw의 클립을 복구하고 이미 그린 선은 보존한다.
+TEST_CASE(StoneButtonText_DrawFailureRestoresClipAfterParentLines) {
+    FontFixture fixture;WriteStonePixelFont(fixture);GumpText measure(fixture.fonts);StoneScene scene(measure);
+    scene.stones->Construct(kStone,75,19,"A");scene.tree->Move(kStone,10,10,kRoot);scene.node.flags|=kGumpDrawClip;
+    scene.node.label.fill('A');GumpDrawState state;SetGumpDrawClip(state,{0,0,100,40});
+    std::vector<std::uint8_t> pixels(4000,7);GumpPixelTarget target(pixels,100,40,state);GumpGlyphColorState colors;
+    GumpTextDraw text(fixture.fonts,MakeGumpGlyphPixelHooks(target,colors));GumpDrawHooks hooks;
+    BindStoneButtonDraw(hooks,*scene.collection,text,target,[&](auto) { return scene.stones.get(); });
+    GumpDraw draw(*scene.collection,state,hooks);bool caught=false;
+    try { draw.Draw(kStone); } catch (const std::invalid_argument&) { caught=true; }
+    CHECK(caught && state.clip.left==0 && state.clip.right==100 && state.vfxClip.right==99);
+    CHECK(pixels[10*100+11]==57 && colors.vfxColors[100]==0);
 }

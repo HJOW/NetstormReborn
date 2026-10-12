@@ -5,6 +5,9 @@
 #include "client/GumpTree.h"
 
 namespace netstorm::client {
+class GumpTextDraw;
+class GumpPixelTarget;
+struct GumpDrawHooks;
 // 라벨 +c0..+ff, 글자 문맥 +104/+124/+144, 측정값 +164/+168이다. background는 기본 버튼 +100을 공유한다.
 struct StoneButtonGumpNode : ButtonGumpNode {
     std::array<char,64> label{};
@@ -55,6 +58,8 @@ public:
     std::uint32_t DeleteScalar(std::uint32_t token,std::uint32_t flags) const;
     // 실제 저장 문맥/측정값을 기존 버튼 Draw 계획에 전달한다. 미작성 문맥 필드도 보존한다.
     ButtonDrawPlan DrawPlan(std::uint32_t token) const;
+    // 원본 00424ff0/CD 00441660의 선→현재 Position→라벨 출력이다. 배경 자식은 별도 kind 2 항목으로 그린다.
+    void Draw(std::uint32_t token,const GumpCollection& collection,const GumpTextDraw& text,const GumpPixelTarget& target) const;
 private:
     // 기본 생성/표시 노드와 파생 저장소가 동일한 주소인지 호출 시 확인한다.
     StoneButtonGumpNode& Node(std::uint32_t token) const;
@@ -75,4 +80,7 @@ private:
 // resolve는 호출 때 현재 처리기를 반환하며 트리/수명 처리기 생성 뒤 순환 의존을 연결할 수 있다.
 void BindStoneButtonGump(GumpTreeHooks& tree,GumpLifetimeHooks& lifetime,
     std::function<const StoneButtonGump*(std::uint32_t)> resolve);
+// 돌 버튼 가상 Draw만 분배하고 나머지 기존 처리기를 보존한다. 모든 참조는 분배 훅보다 오래 살아야 한다.
+void BindStoneButtonDraw(GumpDrawHooks& hooks,const GumpCollection& collection,const GumpTextDraw& text,
+    const GumpPixelTarget& target,std::function<const StoneButtonGump*(std::uint32_t)> resolve);
 }

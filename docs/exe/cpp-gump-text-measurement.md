@@ -50,6 +50,6 @@ ctest --test-dir cpppj/build --build-config Release --output-on-failure
 
 ## 남은 범위
 
-실제 글리프 출력과 GumpDraw의 버튼 텍스트 분배, 타입/SHP 배경 공급, MenuGump/Form·OS 입력 큐/폴링·overlay·Client 자동 UI 프레임이 남았다. 최신 돌 버튼/배경/도움말 전체 몸체의 독립 PE 실행 대조도 계속 미완료다. Client/UberGump는 기존 메뉴 어댑터를 사용하며 **새 raw 버튼의 자동 GUI 연결과 게임 내 건설/미션 완주는 아직 불가능하다**.
+실제 글리프 출력과 GumpDraw의 돌 버튼 텍스트 분배는 [같은 날 후속 완료](cpp-gump-glyph-draw.md)했다. 타입/SHP 배경 공급, MenuGump/Form·OS 입력 큐/폴링·overlay·Client 자동 UI 프레임이 남았다. 최신 돌 버튼/배경/도움말 전체 몸체의 독립 PE 실행 대조도 계속 미완료다. Client/UberGump는 기존 메뉴 어댑터를 사용하며 **새 raw 버튼의 자동 GUI 연결과 게임 내 건설/미션 완주는 아직 불가능하다**.
 
 이번 단계에서 원본/복사본 게임 프로세스·클론 GUI·소리 장치를 실행하지 않았다. AGENTS.md·보호 원본 파일·dotnetpj/인계는 수정하지 않았으며 커밋/푸시하지 않았다.

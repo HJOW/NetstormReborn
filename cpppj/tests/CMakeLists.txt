@@ -17,6 +17,7 @@ add_executable(netstorm_tests
     GumpFrameTests.cpp
     ButtonGumpTests.cpp
     GumpTextTests.cpp
+    GumpGlyphTests.cpp
     DrawSubmissionTests.cpp
     DrawSortTests.cpp
     RenderCollectionTests.cpp
@@ -523,3 +524,7 @@ set_source_files_properties(ButtonGumpTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 원본 폭 표/논리 높이와 직접/기본 Gump 위임의 독립 PE 출력이다. 게임/원본 자산은 실행하지 않는다.
 set_source_files_properties(GumpTextTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_GUMPTEXT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gumptext-x86.tsv\"")
+
+# 실제 세 PE의 글리프/색/로그 호출 관찰이다. 기본 CTest는 원본 게임/Python/창을 실행하지 않는다.
+set_source_files_properties(GumpGlyphTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_GUMPGLYPH_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gumpglyph-x86.tsv\"")

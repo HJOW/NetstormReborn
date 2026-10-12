@@ -1,6 +1,7 @@
 // 원본 00497580·00497900·00499fe0. 외부 목록 수집/구름/카메라 복사는 원본 Squid·지형 복원 뒤 확장한다.
 #include "client/Renderer.h"
 #include "client/DrawSort.h"
+#include "client/GumpTextDraw.h"
 #include <algorithm>
 #include <cmath>
 #include <climits>
@@ -170,28 +171,22 @@ const IndexedImage& Renderer::Image(const ShapeDatabase& database, std::size_t b
     if (found == images_.end()) found = images_.emplace(key, database.Decode(block, frame)).first;
     return found->second;
 }
-// 004a3430은 ABC A를 좌표에 더하지 않고 세 번째 표의 B+C로 다음 글자로 진행한다.
+// 기존 메뉴도 raw Gump와 같은 실제 글리프 반복/출력 순서를 사용한다. 해제 이미지 캐시는 유지한다.
 void Renderer::Text(std::span<std::uint8_t> pixels, int pitch, ScreenRect clip, const RenderText& text) {
     if (!text.font) throw std::invalid_argument("Null bitmap font");
-    // 그림자·외곽선·본문을 한 번씩 그리는 공통 경로.
-    const auto draw = [&](int offsetX, int offsetY, std::uint8_t color) {
-        ColorMap map{}; map[100] = color;
-        int x = Position(text.x, offsetX);
-        // 코드 페이지 바이트열을 원본 글꼴 표의 폭으로 진행한다.
-        for (const unsigned char c : text.bytes) {
-            const auto& glyph = text.font->Glyph(c);
-            if (glyph.shape) {
-                const auto& frame = glyph.shape->Blocks()[0].frames[0];
-                if (!frame.IsSpecial()) DrawIndexedImage(pixels, pitch, height_, Image(*glyph.shape, 0, 0), Position(x, frame.rect.left), Position(Position(text.y, offsetY), frame.rect.top), clip, &map);
-                x = Position(x, glyph.drawAdvance);
-            }
-        }
+    if (text.bytes.size()>static_cast<std::size_t>(INT_MAX)) throw std::invalid_argument("Renderer 글자 길이 범위 오류");
+    ColorMap map{};GumpGlyphHooks hooks;
+    hooks.color=[&map](std::uint8_t color) { map[100]=color; };
+    // VFX 프레임의 상대 그림 영역과 원본 DWORD 감김을 유지하고 기존 압축 해제 캐시를 재사용한다.
+    hooks.glyph=[&](const BitmapFont& font,std::uint8_t code,ScreenPoint at) {
+        const auto& shape=*font.Glyph(code).shape;const auto& frame=shape.Blocks()[0].frames[0];
+        // 프레임 상대 좌표도 원본 x86 덧셈처럼 하위 DWORD로 만든다.
+        const auto add=[](int a,int b) { return std::bit_cast<std::int32_t>(std::uint32_t(a)+std::uint32_t(b)); };
+        if (!frame.IsSpecial()) DrawIndexedImage(pixels,pitch,height_,Image(shape,0,0),add(at.x,frame.rect.left),add(at.y,frame.rect.top),clip,&map);
     };
-    if (text.shadow) draw(text.shadowOffset.x, text.shadowOffset.y, text.shadowColor);
-    if (text.outline) {
-        draw(0, -1, text.shadowColor); draw(0, 1, text.shadowColor); draw(-1, 0, text.shadowColor); draw(1, 0, text.shadowColor);
-    }
-    draw(0, 0, text.color);
+    const GumpTextContext context{(text.shadow ? 2U : 0U)|(text.outline ? 4U : 0U),0,text.color,0,0,
+        text.shadowColor,text.shadowOffset.x,text.shadowOffset.y};
+    DrawBitmapGlyphText(text.bytes,text.font,{text.x,text.y},context,hooks,static_cast<std::int32_t>(text.bytes.size()));
 }
 // 변경 영역마다 배경→깊이 순 스프라이트→UI 글자 순으로 합성한다.
 std::span<const ScreenRect> Renderer::Draw(std::span<std::uint8_t> pixels, int pitch, std::uint8_t background) {

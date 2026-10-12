@@ -1,5 +1,14 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-12 최신 cpppj: 실제 글리프 출력·돌 버튼 가상 Draw 연결 검증 완료 (`VM-W11-CODEX`)
+
+- [x] AGENTS.md·두 LEFT_JOBS 확인, 현재 PC/IP **VM-W11-Codex / 10.0.0.17**과 마지막 디컴파일 PC 일치. `gumpglyph` **3/3/3개**, 기존 GUI 회귀용 누락 `gumpvisual` 패치판 **2개** 읽기 전용 내보내기. **마지막 디컴파일 수행 PC: VM-W11-CODEX, 2026-10-12.** [상세 기록](docs/exe/cpp-gump-glyph-draw.md).
+- [x] `GumpTextDraw`로 실제 FontStore의 글리프 포인터/세 번째 폭 표·특별 빈 공백/없는 포인터·NUL/명시 길이·그림자/원본 네 방향 외곽선/본문·스타일 로그/fallback·DWORD 감김·색 표 설치를 복원했다. 기존 Renderer도 같은 반복을 사용한다. `BindStoneButtonDraw`로 같은 생성/트리/수집/정렬/kind 2/클립/픽셀 저장소에서 돌 버튼의 실제 저장 Draw 문맥을 연결했다.
+- [x] 실제 세 PE **각 256개·새 독립 원본 768개**, cpppj 누적 **522,439개**. VFX 색 설치/셰이프 출력·Position·로그만 명시 외부 경계. 실제 길이/표 선택/포인터/전진/패스/위임 몸체·정상 반환/ABI·실행/쓰기 범위·읽기 전용/색 표 보호·SHA/행/호출 수 감사 통과. 정수 몸체로 x87 수 추가 없음.
+- [x] 새 C++ **8개** 통과. 실제 FontStore 캐시로 768개 전수 대조·독립 한 픽셀 출력·두 판본의 돌 버튼 생성/측정/부착→수집/정렬/Draw/현재 클립/색/정상·눌림·비활성·출력 실패 클립 복구를 확인했다. 기존 메뉴 GUI **54개 상태**, 추가 GUI **14개 상태·81개 버튼 계획·선/글자 32,220픽셀** 대조 통과. GUI는 기존 메뉴 어댑터 회귀이며 raw Client 자동 연결이 아니다.
+- [x] 최종 Release **경고/오류 0**, 전체 CTest 내부 **841개·실패 0**(150.84초, 전체 150.89초). SOURCE_MAP 생성 확인/내용 차이 없음. 자료: `recovery-gumpglyph-evidence.json`, `gumpglyph-x86.tsv`, `GumpGlyphTests.cpp`, `extracted/gumpglyph-*`. 보호 원본·설정 불변/복구 확인, 원본/복사본 게임·소리 장치 실행 없음. AGENTS.md·dotnetpj/인계 변경·커밋/푸시 없음.
+- [ ] **다음:** raw 배경의 실제 타입/SHP 저장소 공급·가상 Draw 분배 → MenuGump/Form·OS 큐/폴링·overlay·Client 자동 UI 프레임. 돌 버튼 전체 생성/부착/소멸자·배경 생성·기본 도움말 전체 몸체의 독립 PE 대조도 남았다. **새 raw 버튼의 Client 자동 GUI 연결과 게임 내 건설/미션 완주는 아직 불가능하다.** 아래는 앞 단계 기록이다.
+
 ## 2026-10-12 최신 cpppj: 기본 Gump 글자 측정·실제 FontStore·돌 버튼 연결 검증 완료 (`VM-W11-CODEX`)
 
 - [x] AGENTS.md·두 LEFT_JOBS 확인, 현재 PC/IP **VM-W11-Codex / 10.0.0.17**과 마지막 디컴파일 PC 일치. `gumptext` **2/2/2개** 읽기 전용 내보내기. **마지막 디컴파일 수행 PC: VM-W11-CODEX, 2026-10-12.** [상세 기록](docs/exe/cpp-gump-text-measurement.md).
@@ -7,7 +16,7 @@
 - [x] 실제 세 PE의 Screen 측정/기본 Gump 문맥 위임 **각 305개·새 독립 원본 915개**, cpppj 누적 **521,671개**. 함수/strlen 대체 0, 정상 반환/스택/callee-save·실행/쓰기 범위·캐시/문맥/노드/문자열 불변·출력 보호·SHA/행 수 감사 통과. 정수 몸체이므로 x87 관찰 수를 추가하지 않았다.
 - [x] 새 C++ **6개** 통과. 18개 입력 캐시를 실제 FontStore가 읽어 915개 원본 출력과 대조했다. 같은 생성/트리/수명 저장소의 돌 버튼 생성→측정→가상 배경 재부착→자식 깊이 재배치→Kill/Cleanup·자식 우선 scalar 삭제, 라벨 꼬리/부분 문맥/할당 실패, 도움말의 현재 콜백 상태/판본 인자를 확인했다. **돌 버튼/배경/도움말 전체 몸체의 독립 PE 대조 완료를 뜻하지 않는다.**
 - [x] 최종 Release **경고/오류 0**, 전체 CTest 내부 **833개·실패 0**(내부 86.89초, CTest 전체 86.92초). 근거 재감사 통과. SOURCE_MAP은 생성 도구로 확인했고 내용 차이 없음. 자료: `recovery-gumptext-evidence.json`, `gumptext-x86.tsv`, `GumpTextTests.cpp`, `extracted/gumptext-*`.
-- [ ] **다음:** 실제 글리프 출력·GumpDraw의 버튼 텍스트 분배·타입/SHP 배경 공급 → MenuGump/Form·OS 큐/폴링·overlay·Client 자동 UI 프레임. 기존 돌 버튼/배경/도움말 전체 몸체의 독립 PE 실행 대조도 남아 있다. 현재 Client/UberGump는 기존 메뉴 어댑터를 사용하며 **새 raw 버튼의 자동 GUI 연결과 게임 내 건설/미션 완주는 아직 불가능하다.**
+- [x] **실제 글리프 출력·GumpDraw의 돌 버튼 텍스트 분배는 같은 날 후속 완료:** 위 최신 절과 [출력/연결 기록](docs/exe/cpp-gump-glyph-draw.md)을 따른다. 타입/SHP 배경 공급 → MenuGump/Form·OS 큐/폴링·overlay·Client 자동 UI 프레임과 기존 돌 버튼/배경/도움말 전체 몸체의 독립 PE 대조는 남아 있다. 현재 Client/UberGump는 기존 메뉴 어댑터를 사용하며 **새 raw 버튼의 자동 GUI 연결과 게임 내 건설/미션 완주는 아직 불가능하다.**
 - [x] 이번 단계 원본/복사본 게임·클론 GUI·소리 장치 실행 없음. AGENTS.md·보호 원본·dotnetpj/인계 변경 및 커밋/푸시 없음. 아래는 앞 단계 기록이다.
 
 ## 2026-10-12 최신 cpppj: 돌 버튼 생성·배경·부착·수명 및 기본 도움말 정적 복원 (`VM-W11-CODEX`)
