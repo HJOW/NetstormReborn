@@ -48,6 +48,11 @@ target_sources(netstorm PRIVATE
     RawIslandBuilder.cpp RawIslandBuilder.h
     RawFortMoneyLoad.cpp RawFortMoneyLoad.h
     RawDudeNotice.cpp RawDudeNotice.h
+    RawDamageablePostDestroy.cpp RawDamageablePostDestroy.h
+    RawBurningVisual.cpp RawBurningVisual.h
+    RawFortMetaLoad.cpp RawFortMetaLoad.h
+    RawDudeTask.cpp RawDudeTask.h
+    RawDaisContentNotice.cpp RawDaisContentNotice.h
     BaseFile.cpp BaseFile.h
     Config.cpp Config.h
     ConfigInterface.cpp ConfigInterface.h

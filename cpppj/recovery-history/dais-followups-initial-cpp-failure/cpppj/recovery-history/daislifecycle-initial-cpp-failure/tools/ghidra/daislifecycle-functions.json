@@ -1,0 +1,7 @@
+{
+  "description": "실제 알터 최초Pop/파생pre/postDestroy와 다이스 최초Pop/player SID·개수등록/파생postDestroy를 복원한다. 보호원본 실제생성자 가상표에서 필수 후처리로 확인했으며 기존 공통Damageable·Factory·Frame·PostPop/Pre/PostDestroy를 재사용한다. 마지막 디컴파일 PC: HJOW-Athlon, 2026-10-14.",
+  "editions": {
+    "originals": ["0044a4d0", "00448ad0", "00448b60", "00449320", "00449580"],
+    "originalCD": ["004836b0", "004835c0", "00483660", "00481360", "00481620"]
+  }
+}

@@ -1,0 +1,334 @@
+{
+  "host": "HJOW-Athlon",
+  "decompile_date": "2026-10-14",
+  "baseline_commit": "5bdb5bedfbf38d455ad896cb9340cb510cf61531",
+  "lineage": {
+    "sources": {
+      "cpppj/src/o/SquidPostPop.h": {
+        "baseline_git_sha256": "f2bcd6a7088b964559bf4c3abf6172e717931057f343c544bbaf0b5acba9a6bb",
+        "baseline_work_sha256": "658f7b4f1cd0f2844395700f9173bb916f75e320c7d03c2304977ff8b499e113",
+        "current_sha256": "f6e3a41b4dbdf4618ff5643407d3c5e855d2f1ef46b86f09203eef955c00eebc",
+        "entire_existing_source_unchanged": true,
+        "entire_existing_token_sha256": "ceb0dedb1c1d7d0e284150a5653245f6d07a1616cdba5456f137293cd7ad265a"
+      },
+      "cpppj/src/o/SquidPostPop.cpp": {
+        "baseline_git_sha256": "899fc8cb214949db33a40275f47e82774acc647336e299a8baba9abbd1c11396",
+        "baseline_work_sha256": "9a88465d2b1d6e7cbdd1c7516fe051741012612805a28a8c848739763fccdcfb",
+        "current_sha256": "094e90c54c220d22bb663ab68105c2d30d83cc4b7c8e02002f804b2ae783f687",
+        "entire_existing_source_unchanged": true,
+        "entire_existing_token_sha256": "95aeee9015a052ce735757d006551f11b011885c1b56350f721f24faf6b165ec"
+      },
+      "cpppj/src/o/RawDaisLifecycle.h": {
+        "baseline_git_sha256": "1a994f4d6f0e7dfbf2e6b7232740cb94eb9a0f61ecd663b8262d2c36762d5c88",
+        "baseline_work_sha256": "1a994f4d6f0e7dfbf2e6b7232740cb94eb9a0f61ecd663b8262d2c36762d5c88",
+        "current_sha256": "3d6e48e336e01273730dcfd789d6aa622dce0dd12254aefb062d06e5b9b628eb",
+        "entire_existing_source_unchanged": true,
+        "entire_existing_token_sha256": "5aed2879c946a5ef29a59c2f6d8b43fc7a194a8985dd00dfd4c93606981cc25f"
+      },
+      "cpppj/src/o/RawDaisLifecycle.cpp": {
+        "baseline_git_sha256": "bb4289ac6ba5862e1daf0fa48c72f2abe621ec56a2734102f9f20567edf0c856",
+        "baseline_work_sha256": "bb4289ac6ba5862e1daf0fa48c72f2abe621ec56a2734102f9f20567edf0c856",
+        "current_sha256": "6ab1d6fb19058f4b241fe2dc61c943af299828ce24bf61242d9f109521ac2db7",
+        "entire_existing_source_unchanged": true,
+        "entire_existing_token_sha256": "a4a1f0c1490bb2f84732c1bf1870af263004e981c96c5c131fc907f38be31ad5"
+      }
+    },
+    "prior_reports": {
+      "cpppj/recovery-campaign-runtime11-evidence.json": {
+        "sha256": "a7a45c703b6c196f4ac4c5b18f0568d7e60a5ecff918109a4806c95e4837eaf3",
+        "new_native_inputs": 0
+      },
+      "cpppj/recovery-daisregular-core-evidence.json": {
+        "sha256": "29367488bf75b664adae511b201f696752c07bf677624442abddbab2f7ea48c2",
+        "new_native_inputs": 0
+      },
+      "cpppj/recovery-altarsacrifice-evidence.json": {
+        "sha256": "e0863f0a51f52b8f52746ec21f9fca11c259baa60b6e7e90e5b0bf8e2d91f6ef",
+        "new_native_inputs": 0
+      },
+      "cpppj/recovery-altarsacrifice-successor-evidence.json": {
+        "sha256": "a4573b40133a4ccc47565234019fc0d1304b56a8821378b0a6ea66967465e172",
+        "new_native_inputs": 0
+      },
+      "cpppj/recovery-postpop-evidence.json": {
+        "sha256": "1d945c7ac918714814ca98e779c000e10cf0d1eeddcebb2cad06770d96e0899b",
+        "new_native_inputs": 0
+      },
+      "cpppj/recovery-runepostpop-evidence.json": {
+        "sha256": "8abaa3863047d46b6ee632a3d23b90744f37658ecb5fc01ebcb2b39cc0fd0fcf",
+        "new_native_inputs": 0
+      },
+      "cpppj/recovery-priestpostpoptail-evidence.json": {
+        "sha256": "d241aa0f980b2883413554d40111e8de18f020cbd14106030427f70df57f06bf",
+        "new_native_inputs": 0
+      },
+      "cpppj/recovery-assetpostpop-evidence.json": {
+        "sha256": "b8322c2745edf1dae0088bceef0cf4f4b0931a92151c2b3d91e1255d2bbb5b32",
+        "new_native_inputs": 0
+      },
+      "cpppj/recovery-factorypostpop-evidence.json": {
+        "sha256": "57117455995a7a5dd1a413e8e1087fd2307b161f23514322424a674bc1d1d2f1",
+        "new_native_inputs": 0
+      }
+    },
+    "native1928": {
+      "total": 1928,
+      "new_native_inputs": 0,
+      "report_sha256": "17bbe53062b18286127fff39b1b43772efdd3ccd3535b8dd1ec6ec21c727933e",
+      "dependencies": {
+        "cpppj/src/o/RawDaisLifecycle.cpp": {
+          "reported_sha256": "bb4289ac6ba5862e1daf0fa48c72f2abe621ec56a2734102f9f20567edf0c856",
+          "current_or_preserved_path": "cpppj/recovery-history/dais-lifecycle-before-postpop/cpppj/src/o/RawDaisLifecycle.cpp"
+        },
+        "cpppj/src/o/RawDaisLifecycle.h": {
+          "reported_sha256": "1a994f4d6f0e7dfbf2e6b7232740cb94eb9a0f61ecd663b8262d2c36762d5c88",
+          "current_or_preserved_path": "cpppj/recovery-history/dais-lifecycle-before-postpop/cpppj/src/o/RawDaisLifecycle.h"
+        },
+        "cpppj/tests/DaisLifecycleTests.cpp": {
+          "reported_sha256": "2e7ff00aafcfed84d4c0e0d7712f941458dee8eddf7f82f57a47753c6f334973",
+          "current_or_preserved_path": "cpppj/recovery-history/dais-lifecycle-before-postpop/cpppj/tests/DaisLifecycleTests.cpp"
+        },
+        "cpppj/tests/fixtures/daislifecycle-x86.tsv": {
+          "reported_sha256": "0a3b6ddee8f50793f9ce540987ff1dec37cc8d2ea525da2c487aae72effdd9e0",
+          "current_or_preserved_path": "cpppj/recovery-history/dais-lifecycle-before-postpop/cpppj/tests/fixtures/daislifecycle-x86.tsv"
+        },
+        "extracted/altarsacrifice/originalCD/creation.c": {
+          "reported_sha256": "e5034176c7a40f40d247cd4fcf0a799b9df577bd383f2ce3e0bd0c18bedb6b08",
+          "current_or_preserved_path": "extracted/altarsacrifice/originalCD/creation.c"
+        },
+        "extracted/altarsacrifice/originalCD/functions.tsv": {
+          "reported_sha256": "6cf8241dbe95315404adaff317c75655a443a3139b5cef7670140f608edd4fc7",
+          "current_or_preserved_path": "extracted/altarsacrifice/originalCD/functions.tsv"
+        },
+        "extracted/altarsacrifice/originals/creation.c": {
+          "reported_sha256": "e302b50111e7433c86299f27430833bd63239bb6abd262dc1415017cdeb4a8ed",
+          "current_or_preserved_path": "extracted/altarsacrifice/originals/creation.c"
+        },
+        "extracted/altarsacrifice/originals/functions.tsv": {
+          "reported_sha256": "4e881fc1f5a3da160074a573fe1808c163c567927119e0aba4815c76b2c3f48b",
+          "current_or_preserved_path": "extracted/altarsacrifice/originals/functions.tsv"
+        },
+        "extracted/assetregular/originalCD/creation.c": {
+          "reported_sha256": "8be2b172ced3cd0cdb179abd5722e1f4c092cff0e639562d74b6c5a7d285add8",
+          "current_or_preserved_path": "extracted/assetregular/originalCD/creation.c"
+        },
+        "extracted/assetregular/originalCD/functions.tsv": {
+          "reported_sha256": "68225246756277c7fb51a6c2d5886959e33dc568eac4dd2e7dd61bd960a28f0f",
+          "current_or_preserved_path": "extracted/assetregular/originalCD/functions.tsv"
+        },
+        "extracted/assetregular/originals/creation.c": {
+          "reported_sha256": "d8d68fa2e637f1f3b622a45e0d1b4a638fd5a300e29cf5a6545feaff89a753b2",
+          "current_or_preserved_path": "extracted/assetregular/originals/creation.c"
+        },
+        "extracted/assetregular/originals/functions.tsv": {
+          "reported_sha256": "539f2f4a8ba3c925d40fbbb292e07ea5da3a595566966b772e18902a2180997d",
+          "current_or_preserved_path": "extracted/assetregular/originals/functions.tsv"
+        },
+        "extracted/daislifecycle/originalCD/creation.c": {
+          "reported_sha256": "1c185e1fff97bd077384add939e93f7591ba5c48ba243950a711a545b4cc0b40",
+          "current_or_preserved_path": "extracted/daislifecycle/originalCD/creation.c"
+        },
+        "extracted/daislifecycle/originalCD/functions.tsv": {
+          "reported_sha256": "9a33006fd27215506bd525d229c496e59109821d3466ed1b7269cf800230e34e",
+          "current_or_preserved_path": "extracted/daislifecycle/originalCD/functions.tsv"
+        },
+        "extracted/daislifecycle/originals/creation.c": {
+          "reported_sha256": "61c9966c88cd4b7873839c5a4780aedbf2645fd801023be4a037a6cbb24f4949",
+          "current_or_preserved_path": "extracted/daislifecycle/originals/creation.c"
+        },
+        "extracted/daislifecycle/originals/functions.tsv": {
+          "reported_sha256": "ca984f2c87c5fb93c174bcfdbc19b6900788cbbbd5c52e4feda6a1f1efc65065",
+          "current_or_preserved_path": "extracted/daislifecycle/originals/functions.tsv"
+        },
+        "extracted/daisregular/originalCD/creation.c": {
+          "reported_sha256": "f73a0f7e81f067279a197ff7b536afa673cf92e83bb0fbee15efecdac4cf8430",
+          "current_or_preserved_path": "extracted/daisregular/originalCD/creation.c"
+        },
+        "extracted/daisregular/originalCD/functions.tsv": {
+          "reported_sha256": "d7dd66957b4f092c1a3d6ee9e0817dd17d544a0de50e74918b1c77de65ba9742",
+          "current_or_preserved_path": "extracted/daisregular/originalCD/functions.tsv"
+        },
+        "extracted/daisregular/originals/creation.c": {
+          "reported_sha256": "cb59c50263c4f3cd28f68db1a3b580564aee4495727a8ae94cbff8eb4573cd81",
+          "current_or_preserved_path": "extracted/daisregular/originals/creation.c"
+        },
+        "extracted/daisregular/originals/functions.tsv": {
+          "reported_sha256": "474ce69fa7af15254a0a1d3e3c03db2864def83c98f02ab1eefdd122950938a4",
+          "current_or_preserved_path": "extracted/daisregular/originals/functions.tsv"
+        },
+        "extracted/frameadvance/originalCD/creation.c": {
+          "reported_sha256": "55c7cb1c0145ac15568eefa4aa2e413c5b737d7e25364e051f910c6bf6c7e8be",
+          "current_or_preserved_path": "extracted/frameadvance/originalCD/creation.c"
+        },
+        "extracted/frameadvance/originalCD/functions.tsv": {
+          "reported_sha256": "582b00b1a418904c2bf56501b504c55816650f08cc0391fbe16bdeb387d52023",
+          "current_or_preserved_path": "extracted/frameadvance/originalCD/functions.tsv"
+        },
+        "extracted/frameadvance/originals/creation.c": {
+          "reported_sha256": "845432595db34fadb63ce5e2bc7ca0e49c38e9d54adb2624b90a3261a22d93ad",
+          "current_or_preserved_path": "extracted/frameadvance/originals/creation.c"
+        },
+        "extracted/frameadvance/originals/functions.tsv": {
+          "reported_sha256": "7c8ef6db38057bddcb3d6db0c6172be80b23ea89f3cbc9fa423948e60a3144d6",
+          "current_or_preserved_path": "extracted/frameadvance/originals/functions.tsv"
+        },
+        "extracted/pathcleanup/originalCD/creation.c": {
+          "reported_sha256": "04f9971bb13ea3d8bcbdba18a473cdd9222188a083fdb4aba02745f30aaaa769",
+          "current_or_preserved_path": "extracted/pathcleanup/originalCD/creation.c"
+        },
+        "extracted/pathcleanup/originalCD/functions.tsv": {
+          "reported_sha256": "d033d69ba177638816190b60bbaeb57b327a49e8fad001a0c2899ad4d05d9c92",
+          "current_or_preserved_path": "extracted/pathcleanup/originalCD/functions.tsv"
+        },
+        "extracted/pathcleanup/originals/creation.c": {
+          "reported_sha256": "3d28d0a1811b6f925b6ca249ee98dd9283e16c1f633acc36a4da0ee2fa485804",
+          "current_or_preserved_path": "extracted/pathcleanup/originals/creation.c"
+        },
+        "extracted/pathcleanup/originals/functions.tsv": {
+          "reported_sha256": "3e4631f9435843ac3de880e668d2d7e4834662fcef7c3093a1fb271fd4831442",
+          "current_or_preserved_path": "extracted/pathcleanup/originals/functions.tsv"
+        },
+        "extracted/process/originalCD/creation.c": {
+          "reported_sha256": "c06b0142f8cd167c6f9043f596c82606f79a6f89814d57574f76116d09c976a4",
+          "current_or_preserved_path": "extracted/process/originalCD/creation.c"
+        },
+        "extracted/process/originalCD/functions.tsv": {
+          "reported_sha256": "66dc3e2da36a5a849a900c0b20fd2ef56951a9d0158acccf33ad0568cbaac1af",
+          "current_or_preserved_path": "extracted/process/originalCD/functions.tsv"
+        },
+        "extracted/process/originals/creation.c": {
+          "reported_sha256": "93a6d7ba1061a0bdd7d586a089108ead00a838ce06fc274c12f7649f3b583104",
+          "current_or_preserved_path": "extracted/process/originals/creation.c"
+        },
+        "extracted/process/originals/functions.tsv": {
+          "reported_sha256": "407f9321dfe05d98ff81c4368f097f5133067f2bcc0753b3b145064d6a9eb6d3",
+          "current_or_preserved_path": "extracted/process/originals/functions.tsv"
+        },
+        "extracted/refined/originalCD/functions.tsv": {
+          "reported_sha256": "453aa383c27baf8eefa00d97bf44051d18460150556511c2eb7a46f111e92def",
+          "current_or_preserved_path": "extracted/refined/originalCD/functions.tsv"
+        },
+        "extracted/refined/originalCD/Netstorm.c": {
+          "reported_sha256": "9306f621576571c85280f9e25f024e3ec8b7b68c5c8ec6731c1f109dc3f25ebb",
+          "current_or_preserved_path": "extracted/refined/originalCD/Netstorm.c"
+        },
+        "extracted/runepostpop/originalCD/creation.c": {
+          "reported_sha256": "a44e458e4ab94ae5fbc0fef4dfeb611101b7d31dfa8fbe1ad9a05a567664463a",
+          "current_or_preserved_path": "extracted/runepostpop/originalCD/creation.c"
+        },
+        "extracted/runepostpop/originalCD/functions.tsv": {
+          "reported_sha256": "a3fc096edc836e75f95a12e110000e120a1449b9c4befdcab2201926440f963a",
+          "current_or_preserved_path": "extracted/runepostpop/originalCD/functions.tsv"
+        },
+        "extracted/runepostpop/originals/creation.c": {
+          "reported_sha256": "680da9475eef978c696d5bb9baba47107d9292906957f3befd719105aca15473",
+          "current_or_preserved_path": "extracted/runepostpop/originals/creation.c"
+        },
+        "extracted/runepostpop/originals/functions.tsv": {
+          "reported_sha256": "d79ecd480a57aeaf2703838737af9f490b93db54965865e6f6963f9458c15e18",
+          "current_or_preserved_path": "extracted/runepostpop/originals/functions.tsv"
+        },
+        "extracted/templeritual/originalCD/creation.c": {
+          "reported_sha256": "1742cab4a792b7b886c4f8977bf006904f7d36686cb7eff74732ce47b17d5dea",
+          "current_or_preserved_path": "extracted/templeritual/originalCD/creation.c"
+        },
+        "extracted/templeritual/originalCD/functions.tsv": {
+          "reported_sha256": "69dc78ebcf8cf2f717003bdaa2905622a6b82bcef09a1eb772196acc311612ae",
+          "current_or_preserved_path": "extracted/templeritual/originalCD/functions.tsv"
+        },
+        "extracted/templeritual/originals/creation.c": {
+          "reported_sha256": "0478473400cbc1553868578292345c56045443e3e07db3e9bba17021039d9c89",
+          "current_or_preserved_path": "extracted/templeritual/originals/creation.c"
+        },
+        "extracted/templeritual/originals/functions.tsv": {
+          "reported_sha256": "4e7a6bb750bcd2232033641a3c457d577dc71ea0281dabce752c64679ef7453d",
+          "current_or_preserved_path": "extracted/templeritual/originals/functions.tsv"
+        },
+        "originalCD/NETSTORM.EXE": {
+          "reported_sha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+          "current_or_preserved_path": "originalCD/NETSTORM.EXE"
+        },
+        "originals/Netstorm.exe": {
+          "reported_sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+          "current_or_preserved_path": "originals/Netstorm.exe"
+        },
+        "tools/decomp_altarsacrifice_oracle.py": {
+          "reported_sha256": "c231e629d7e2716f53327d943cacd36e69c9da5fd1ae8b73777798876bd4468c",
+          "current_or_preserved_path": "tools/decomp_altarsacrifice_oracle.py"
+        },
+        "tools/decomp_bridgedecay_oracle.py": {
+          "reported_sha256": "55b660d1f73e054162230a98b0decc1149ed1084d68f1ae647c6d7689f86697d",
+          "current_or_preserved_path": "tools/decomp_bridgedecay_oracle.py"
+        },
+        "tools/decomp_bridgeeffects_oracle.py": {
+          "reported_sha256": "84fd8a1d474efc26a46533454aaf9204d2a68b74df0436b8265c06919f46577d",
+          "current_or_preserved_path": "tools/decomp_bridgeeffects_oracle.py"
+        },
+        "tools/decomp_daislifecycle_oracle.py": {
+          "reported_sha256": "dc0b85206f483eafecc382bb26215c9d95bba6ba7336ab6d746d529d95062e6c",
+          "current_or_preserved_path": "cpppj/recovery-history/dais-lifecycle-before-postpop/tools/decomp_daislifecycle_oracle.py"
+        },
+        "tools/decomp_daisregular_oracle.py": {
+          "reported_sha256": "acd25fc6ed35ac912879630bad2faee74682a39301fbfbd4d75991309c4b9dd7",
+          "current_or_preserved_path": "tools/decomp_daisregular_oracle.py"
+        },
+        "tools/decomp_rawfinder_oracle.py": {
+          "reported_sha256": "bfa95ab177d6ab3d0a38e312db7320b0aa14f57b526d9fba2645d9582185592b",
+          "current_or_preserved_path": "tools/decomp_rawfinder_oracle.py"
+        },
+        "tools/decomp_runepostpop_oracle.py": {
+          "reported_sha256": "d2b3be12771f35cab0f85abd77444eaa50fa21684dc263a85e9b553a69822d5c",
+          "current_or_preserved_path": "tools/decomp_runepostpop_oracle.py"
+        },
+        "tools/decomp_templeritual_oracle.py": {
+          "reported_sha256": "5ce5278ff2bcddb941e57387ef305648ad7c2a4b8b9ec6ee2c3f4d8ca14f7c59",
+          "current_or_preserved_path": "tools/decomp_templeritual_oracle.py"
+        },
+        "tools/ghidra/altarsacrifice-functions.json": {
+          "reported_sha256": "3661abbf58db099ea059ad2f8b2b5e795bddeb36abc9338304fa3eb7e820fa08",
+          "current_or_preserved_path": "tools/ghidra/altarsacrifice-functions.json"
+        },
+        "tools/ghidra/daislifecycle-functions.json": {
+          "reported_sha256": "71d8f56780eabdbde6851f85e669f436e0c6ac7829612e1688a151c65f50273d",
+          "current_or_preserved_path": "cpppj/recovery-history/dais-lifecycle-before-postpop/tools/ghidra/daislifecycle-functions.json"
+        },
+        "tools/ghidra/daisregular-functions.json": {
+          "reported_sha256": "cf2bd5bffaa291326f5bbf719ea04c52c477ef39e71a4d6e0867edbd6d415b28",
+          "current_or_preserved_path": "tools/ghidra/daisregular-functions.json"
+        },
+        "tools/ghidra/pathcleanup-functions.json": {
+          "reported_sha256": "e1189d20c535b1c03f32a1464ace5cb9543add7a1fa7656eabaacc2900323a45",
+          "current_or_preserved_path": "tools/ghidra/pathcleanup-functions.json"
+        },
+        "tools/ghidra/runepostpop-functions.json": {
+          "reported_sha256": "7c81be957505c039f275dfd2a94c6109454a2d3d42cbb90fc58708a62158662e",
+          "current_or_preserved_path": "tools/ghidra/runepostpop-functions.json"
+        },
+        "tools/ghidra/templeritual-functions.json": {
+          "reported_sha256": "2d8fabc0bcb8774371707aad07bc36dbe6011b0dcf5208a15f1c7cf745748cec",
+          "current_or_preserved_path": "tools/ghidra/templeritual-functions.json"
+        }
+      }
+    },
+    "history": {
+      "cpppj/recovery-history/dais-postpop-baseline/git/cpppj/src/o/RawDaisLifecycle.cpp": "bb4289ac6ba5862e1daf0fa48c72f2abe621ec56a2734102f9f20567edf0c856",
+      "cpppj/recovery-history/dais-postpop-baseline/git/cpppj/src/o/RawDaisLifecycle.h": "1a994f4d6f0e7dfbf2e6b7232740cb94eb9a0f61ecd663b8262d2c36762d5c88",
+      "cpppj/recovery-history/dais-postpop-baseline/git/cpppj/src/o/SquidPostPop.cpp": "899fc8cb214949db33a40275f47e82774acc647336e299a8baba9abbd1c11396",
+      "cpppj/recovery-history/dais-postpop-baseline/git/cpppj/src/o/SquidPostPop.h": "f2bcd6a7088b964559bf4c3abf6172e717931057f343c544bbaf0b5acba9a6bb",
+      "cpppj/recovery-history/dais-postpop-baseline/work/cpppj/src/o/RawDaisLifecycle.cpp": "bb4289ac6ba5862e1daf0fa48c72f2abe621ec56a2734102f9f20567edf0c856",
+      "cpppj/recovery-history/dais-postpop-baseline/work/cpppj/src/o/RawDaisLifecycle.h": "1a994f4d6f0e7dfbf2e6b7232740cb94eb9a0f61ecd663b8262d2c36762d5c88",
+      "cpppj/recovery-history/dais-postpop-baseline/work/cpppj/src/o/SquidPostPop.cpp": "9a88465d2b1d6e7cbdd1c7516fe051741012612805a28a8c848739763fccdcfb",
+      "cpppj/recovery-history/dais-postpop-baseline/work/cpppj/src/o/SquidPostPop.h": "658f7b4f1cd0f2844395700f9173bb916f75e320c7d03c2304977ff8b499e113",
+      "cpppj/recovery-history/dais-lifecycle-before-postpop/cpppj/recovery-daislifecycle-evidence.json": "17bbe53062b18286127fff39b1b43772efdd3ccd3535b8dd1ec6ec21c727933e",
+      "cpppj/recovery-history/dais-lifecycle-before-postpop/cpppj/src/o/RawDaisLifecycle.cpp": "bb4289ac6ba5862e1daf0fa48c72f2abe621ec56a2734102f9f20567edf0c856",
+      "cpppj/recovery-history/dais-lifecycle-before-postpop/cpppj/src/o/RawDaisLifecycle.h": "1a994f4d6f0e7dfbf2e6b7232740cb94eb9a0f61ecd663b8262d2c36762d5c88",
+      "cpppj/recovery-history/dais-lifecycle-before-postpop/cpppj/tests/DaisLifecycleTests.cpp": "2e7ff00aafcfed84d4c0e0d7712f941458dee8eddf7f82f57a47753c6f334973",
+      "cpppj/recovery-history/dais-lifecycle-before-postpop/cpppj/tests/fixtures/daislifecycle-x86.tsv": "0a3b6ddee8f50793f9ce540987ff1dec37cc8d2ea525da2c487aae72effdd9e0",
+      "cpppj/recovery-history/dais-lifecycle-before-postpop/tools/decomp_daislifecycle_oracle.py": "dc0b85206f483eafecc382bb26215c9d95bba6ba7336ab6d746d529d95062e6c",
+      "cpppj/recovery-history/dais-lifecycle-before-postpop/tools/ghidra/daislifecycle-functions.json": "71d8f56780eabdbde6851f85e669f436e0c6ac7829612e1688a151c65f50273d"
+    }
+  },
+  "tool_sha256": "9c921cc5c1604ad7d1b74ed7e7cd7b6b879c440664b389ffd01913cfd775a780",
+  "additional_unique_cases": 0,
+  "scope": "SquidPostPop의 같은Pool 등록·현재VT 분배/검사/실행과 RawDaisLifecycle의 새 prefix Validate만 추가. 기준11 전체 기존 본문·관찰 및 최초 수명1928의 당시 원문을 보존한다."
+}

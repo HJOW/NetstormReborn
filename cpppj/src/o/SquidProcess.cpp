@@ -42,6 +42,8 @@ std::uint32_t RegularProcess::Count() const { return count_; }
 double RegularProcess::Time() const { return time_; }
 // 패치00450670/CD004e8e70의 기존task Regular 직접쓰기에 대응하며 payload/Form/부착을 보존한다.
 void RegularProcess::ResetTask(std::uint32_t event,double time) { event_=event;count_=0;time_=time; }
+// 패치0044b9e0/CD00461b40의 생성 직후 count 직접쓰기를 같은 실제 Regular에 적용한다.
+void RegularProcess::SetInitialCount(std::uint32_t count) { count_=count; }
 
 SquidProcessHost::SquidProcessHost(SidPool& pool,std::span<const RiftTypeRecord> types,Kernel& kernel,RawSquidDestroy& destroy,
     SquidProcessState& state,RegularHandler handler,SquidDestroyHooks asset,ProcessFormTransmission transmit)

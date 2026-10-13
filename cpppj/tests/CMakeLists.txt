@@ -45,6 +45,16 @@ add_executable(netstorm_tests
     IslandBuilderTests.cpp
     FortMoneyLoadTests.cpp
     DudeNoticeTests.cpp
+    DaisLifecycleTests.cpp
+    DaisProgressTests.cpp
+    DamageablePostDestroyTests.cpp
+    BurningVisualTests.cpp
+    BurningParticleTests.cpp
+    DamageablePostDestroyHostTests.cpp
+    FortMetaLoadTests.cpp
+    DudeTaskTests.cpp
+    DaisContentNoticeTests.cpp
+    DaisRitualConsumerTests.cpp
     RawButtonControlsTests.cpp
     GumpResetTests.cpp
     MissionOutcomeTests.cpp
@@ -746,3 +756,23 @@ set_source_files_properties(FortMoneyLoadTests.cpp PROPERTIES COMPILE_DEFINITION
 # 실제피해반응/현재Regular 재설정·대피의414고유입력이다.
 set_source_files_properties(DudeNoticeTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_DUDENOTICE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/dudenotice-x86.tsv\"")
+
+# 실제 수명·상위 의식·피해 후처리·Burning 생성/입자의 별도 고유 원본 입력이다.
+set_source_files_properties(DaisLifecycleTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_DAISLIFECYCLE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/daislifecycle-current-x86.tsv\"")
+set_source_files_properties(DaisProgressTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_DAISPROGRESS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/daisprogress-x86.tsv\"")
+set_source_files_properties(DamageablePostDestroyTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_DAMAGEABLEPOSTDESTROY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/damageablepostdestroy-x86.tsv\"")
+set_source_files_properties(BurningVisualTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_BURNINGPROCESS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/burningprocess-constructor-x86.tsv\"")
+set_source_files_properties(BurningParticleTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_BURNINGPARTICLE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/burningparticle-x86.tsv\"")
+
+# 실제 작업 설정/저장 후처리와 포획부착의 독립 원본 및 같은 Host 소비자를 대조한다.
+set_source_files_properties(FortMetaLoadTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FORTMETA_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fortmeta-x86.tsv\"")
+set_source_files_properties(DudeTaskTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_DUDETASK_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/dudetask-x86.tsv\"")
+set_source_files_properties(DaisContentNoticeTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_DAISCONTENTNOTICE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/daiscontentnotice-x86.tsv\"")

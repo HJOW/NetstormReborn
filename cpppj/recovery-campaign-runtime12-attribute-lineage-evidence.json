@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "host": "HJOW-Athlon",
+  "decompile_date": "2026-10-14",
+  "new_native_inputs": 0,
+  "normal_cases": 12646,
+  "assertion_cases": 652,
+  "all_tests": 1056,
+  "exact_comment_inverse": true,
+  "production_tests_fixtures_and_counts_unchanged": true,
+  "tool_sha256": "c04df45bb6c054538f809dc7d2ffce51c7a314750958f54ecd146d00f2e90ef4",
+  "current_attribute_sha256": "a1a1f73304a7b518a4225b2cd98bd8c312df6f3bf13bdd9bb157d2c82a5d2c7d",
+  "current_final_report_sha256": "1102f0de883e8485550da7e95ad6ef1687761f9673695a7aeeb551c46e56b44a",
+  "history": {
+    "cpppj/recovery-history/campaign-runtime12-before-attribute-comment/.gitattributes": "77ed86f08dcb42044fe1e980ca63335cd45b7c79b905b5e38e87b71b6d8da933",
+    "cpppj/recovery-history/campaign-runtime12-before-attribute-comment/baseline.json": "1f933e188b3dc1200368d603046b55d1139d8ee792545f526c1b4365f030c148",
+    "cpppj/recovery-history/campaign-runtime12-before-attribute-comment/tools/analyze_campaign_runtime12.py": "e12fee45d6022f44d3f5dd85b8f527dace0355dd73aafe7ce5c1c6cd4acc82e7",
+    "cpppj/recovery-history/campaign-runtime12-before-attribute-comment/cpppj/recovery-campaign-runtime12-evidence.json": "08d59f0fa48a65c22fb3bec16287246a287b7041d3eb0b7c590acff2ca910432",
+    "cpppj/recovery-history/campaign-runtime12-before-attribute-comment/extracted/campaign-runtime12-final-evidence-generation.log": "ca5129d7ef540c05dd87b1365f4a43677ee9a1b0967b5c24bf101813396bcb03"
+  }
+}

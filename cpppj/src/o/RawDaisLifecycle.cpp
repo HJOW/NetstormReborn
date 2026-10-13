@@ -35,6 +35,14 @@ std::uint32_t RawDaisLifecycle::Owner(Sid sid) const { return pool_.Slot(sid)[po
 void RawDaisLifecycle::Player(std::uint32_t owner) const { if (owner>kPlayerCount) throw std::out_of_range("다이스 수명 현재Player범위"); }
 // 원본최종VT에없는파생수명은허용하지않는다.
 bool RawDaisLifecycle::Handles(Sid sid) const { const auto raw=pool_.Slot(sid);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;const auto vt=Read(raw,0);return (raw[10]==daisState_.rune.daisType && vt==(patch ? kPatchDaisVtable : kCdDaisVtable)) || (raw[10]==daisState_.rune.altarType && vt==(patch ? kPatchAltarVtable : kCdAltarVtable)); }
+// 실제 최초 Pop의 타입과 초기 Player 범위를 공간쓰기 전에 검사한다.
+void RawDaisLifecycle::Validate(Sid sid,std::uint32_t flags) const {
+    if (!Handles(sid)) throw std::invalid_argument("다이스/알터 Pop 검사 타입/가상표 오류");
+    if (pool_.Slot(sid)[10]!=daisState_.rune.daisType) return;
+    Player(Owner(sid));
+    if (!daisState_.rune.suppressDuration && state_.gameTime==0 && (flags&7) && daisState_.grantFlags[Owner(sid)]>=kNextFirst.size())
+        throw std::out_of_range("다이스 Pop 검사 초기개수첫번호 범위");
+}
 // 로딩초기화에서는setter표시를추가하지않고정확한원본폭만쓴다.
 void RawDaisLifecycle::WriteFrame(Sid sid,std::int32_t frame) const {
     auto raw=pool_.AllocatedBytes(sid);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;const auto bits=std::bit_cast<std::uint32_t>(frame);const std::size_t offset=patch ? 36 : 34,width=patch ? 4 : 1;

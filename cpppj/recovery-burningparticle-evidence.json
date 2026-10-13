@@ -1,0 +1,55 @@
+{
+  "schema": 1,
+  "host": "HJOW-Athlon",
+  "total": 564,
+  "editions": {
+    "originals": {
+      "returns": 282,
+      "instructions": 10242,
+      "assertions": 0,
+      "native_calls": {
+        "00423e80": 282,
+        "00487b40": 282
+      },
+      "boundaries": {}
+    },
+    "originalCD": {
+      "returns": 282,
+      "instructions": 9126,
+      "assertions": 0,
+      "native_calls": {
+        "004a60a0": 282,
+        "0045cc00": 282
+      },
+      "boundaries": {}
+    }
+  },
+  "files": {
+    "cpppj/recovery-burningprocess-constructor-evidence.json": "3d33c76d9f0eb9733353de5073010b11d2f67d45d552039cf1cdd9ea77719c06",
+    "cpppj/src/o/RawBurningVisual.cpp": "9521fe84204f87283fb4c9f2b5b3ebbccf8bca749b76a9bebf4691f563ade522",
+    "cpppj/src/o/RawBurningVisual.h": "54aa4dfa1f816c18685f3023c9e27d5193ff55b3f91e6c0426361db4fb240f69",
+    "cpppj/tests/BurningParticleTests.cpp": "f51e8c735beb07dfa86400cb6ce83e771a7e5f7c1a652cce58aa03ac4a177ed3",
+    "cpppj/tests/fixtures/burningparticle-x86.tsv": "2d157284340561db003a70b51697d7f2922a89e4b8d9df3871394179f5a795a3",
+    "extracted/burning-process/originalCD/creation.c": "ea0ffc80b3fee5d0e05d87610e3c3d490e26e0fb7c62d6d53acf762a2aa349d3",
+    "extracted/burning-process/originalCD/functions.tsv": "d8bf2f983c26ed0d4302b48873221f5386be77ecfaf66878da10648fdb17b837",
+    "extracted/burning-process/originals/creation.c": "06f8bb3cda6e46f46d1f23c803ec0575d4e9b64d55acff9260cb6e93d83e4a06",
+    "extracted/burning-process/originals/functions.tsv": "2ece477fa2b0e4b203b31c0678c2a2841ad928f08a3285e58de2afb4ac5094b8",
+    "extracted/burning-process-particle-helper/originalCD/creation.c": "763b8e5a9c4753883b9a55867e67751cf3aa1a90b33ed31fd76e43ae738de7d6",
+    "extracted/burning-process-particle-helper/originalCD/functions.tsv": "ec45ee195807b0a961c812f4f0baf242c7f089b5c26849cdb79fdfcadfb0f76b",
+    "extracted/owner/originalCD/creation.c": "115d3f4790315c3647e18c087579cf3aa08af06cdbaeca42adbac1e82725af62",
+    "extracted/owner/originalCD/functions.tsv": "4e184997f62c2622b26b3fa4f047a2580a609d2d919f0e414a75e8efd49d4439",
+    "extracted/owner/originals/creation.c": "f9919c046d5259526946f106b47b6259fe5e04971f743d6fa02d6a5361b9dc16",
+    "extracted/owner/originals/functions.tsv": "3ea66dace80a85999a8b2c2dbadb4d5f1bd18b0dcdb0768f9c41075206c7c72d",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_burningparticle_oracle.py": "f60c9918ff1042e914bbafd8b0c2a039763690300c69c9fd472e21bc48f8ec60",
+    "tools/decomp_burningprocess_oracle.py": "1475ac621e1f33eb216beaa13bb9abfa56b7b714c6ba3145efb39caa43278698",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e"
+  },
+  "os_calls": 0,
+  "limitations": [
+    "원본추가함수와공통Particle.New를외부경계없이실행한다. 원본생성자256과이새입자격자를구분한다.",
+    "입력particle수명/좌표/속도/source표식은명시입력이다. source는this+74또는null만관찰한다.",
+    "실제Sprite캡처/연소점선택/frame/화면표시/전체효과수명은이격자의완료가아니다."
+  ]
+}

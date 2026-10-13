@@ -1,0 +1,83 @@
+{
+  "host": "HJOW-Athlon",
+  "last_decompile_host": "HJOW-Athlon",
+  "last_decompile_date": "2026-10-14",
+  "total": 950,
+  "controls": [
+    639,
+    895
+  ],
+  "game_runs": 0,
+  "os_calls": 0,
+  "editions": {
+    "originals": {
+      "cases": 470,
+      "normal_cases": 192,
+      "assert_cases": 278,
+      "returns": 940,
+      "native_calls": {
+        "0047d800": 9332,
+        "004be8e0": 480,
+        "004beee0": 312
+      },
+      "boundaries": {
+        "004e0620": 652,
+        "0044ceb0": 792,
+        "0048fc60": 312,
+        "0042f540": 312,
+        "004bd800": 120,
+        "004bd130": 120,
+        "004e4354": 64
+      }
+    },
+    "originalCD": {
+      "cases": 480,
+      "normal_cases": 202,
+      "assert_cases": 278,
+      "returns": 960,
+      "native_calls": {
+        "00475660": 9332,
+        "00475560": 9352,
+        "00428fc0": 480,
+        "00429085": 480,
+        "00429f30": 792,
+        "004293d0": 312,
+        "00426fe0": 312,
+        "004294a2": 312,
+        "00426830": 120
+      },
+      "boundaries": {
+        "00490040": 652,
+        "0044c4e0": 792,
+        "00406d90": 312,
+        "004b2e70": 312,
+        "00427e00": 120,
+        "00426dd0": 120,
+        "004f1a50": 64
+      }
+    }
+  },
+  "files": {
+    "tools/decomp_fortmeta_oracle.py": "8c3c09f88b6569be1ae842312813170cad8450850ba3aa1fb8b0522e3854f616",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/decomp_priestgeometry_oracle.py": "c8d62204fcd8ec2fcb86cc9842ca46e0d3cdfba3c9afce3e90f9caec8fedc9bc",
+    "tools/decomp_damageablepredestroy_oracle.py": "b6bd591b17b886224e81b9d35dc863f12dea570c67aabf8a66280c7361785e75",
+    "tools/ghidra/fortmeta-functions.json": "331199f5039a05e0f6e9e5fafdbd3fbc9e89ef73443d4d02ce8b560bd85357e8",
+    "cpppj/src/o/RawFortMetaLoad.h": "f937da92ace23acc093569c87ddc1d2c3d05fbd5fb443a56e5df5426b5416478",
+    "cpppj/src/o/RawFortMetaLoad.cpp": "8e2b67f72f134a51c34001a9d815b81a2fb8d4111b2c0c3385421e9adf6adb14",
+    "cpppj/tests/FortMetaLoadTests.cpp": "8c66bbcf3887ebe47ceeedf074b0a6e1dc78aa2e7e6bcaae09611830d1f76e2f",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/fortmeta/originals/creation.c": "7c9121b875f57989b240a846fc6aedc7829919b9cc3d0cdcfad4ea8bfe1f7b3b",
+    "extracted/fortmeta/originals/functions.tsv": "a70c30ee34f093b3a2533505d058dbc5d76cf8097158eda781efab9d339909e5",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "extracted/fortmeta/originalCD/creation.c": "0f02970386c8b05fabb193ebfe8d3737dd8f640d032748025d33c11779a5e9ec",
+    "extracted/fortmeta/originalCD/functions.tsv": "515ad1db151db3628195c6572ef07e65ed0f611beb540b39b26418968df9d62b",
+    "cpppj/tests/fixtures/fortmeta-x86.tsv": "47c1ad6441ef2a9b62e010f32862171cb7ead5f174c4f7edbad81f037c2fe4a9"
+  },
+  "limitations": [
+    "Badges wrapper/setter와 CD linear lookup·Technology 상위 wrapper/SEH/depth/isMine/free gate는 실제 원본 명령이다.",
+    "파일 섹션 조회·현재 technology 부모 getter·TypeNames 변환표 준비·하위 Contents·free/UI/진단은 명시 외부 경계다.",
+    "기존 Contents/ContainedCreate의 실제 같은 풀 소비자 검사는 새 wrapper 연결 검사이며 기존 원본 입력을 신규 완료로 합산하지 않는다.",
+    "전체 Fort 부모/GameWorld 설치 및 TypeNames 전신의 복원 완료를 주장하지 않는다."
+  ]
+}

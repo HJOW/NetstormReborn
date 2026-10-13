@@ -42,6 +42,7 @@ public:
         const RawCarrierPostPop& postPop,const RawDamageablePreDestroy& preDestroy,
         DaisRegularState& daisState,AltarSacrificeState& altarState,DaisLifecycleState& state,DaisLifecycleHooks hooks);
     bool Handles(Sid sid) const; // 실제164/165최종VT의후처리만지원한다.
+    void Validate(Sid sid,std::uint32_t flags) const; // 공간쓰기 전 실제 VT/현재 Player·초기 개수 범위만 검사한다. 공통 Graph 검사는 분배기에 남긴다.
     void PostPop(Sid sid,std::uint32_t flags) const; // 실제Dais등록/Altar21예약→DamageablePostPop의순서다.
     void AltarPreDestroy(Sid altar,std::uint32_t flags) const; // 살아있는같은Dais가상삭제→주변추상Rune정리→Damageable이다.
     void PostDestroy(Sid sid,std::uint32_t flags) const; // DaisPlayer일치쌍정리/Altar직접위임→전체Damageable이다.
