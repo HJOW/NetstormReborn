@@ -34,10 +34,10 @@ void RawCarrierPreDestroy::PreDestroy(Sid sid,std::uint32_t flags) const {
     if (state_.boss && FindContained(sid,1,0,0).value) hooks_.dependentFound();
 }
 // 실제 contained finder는 전체 종속 중 전역 타입과 같은 BYTE만 기본 true 필터에 넘긴다.
-Sid RawCarrierPreDestroy::FindContained(Sid parent,std::uint32_t mask,std::uint32_t kind,std::uint32_t index) const {
+Sid RawCarrierPreDestroy::FindContained(Sid parent,std::uint32_t mask,std::uint32_t kind,std::uint32_t index,bool allowDead) const {
     RawContainedFinder finder(pool_,state_);
     // 공용 커서는 가장 최근 종속부터 진행하며 다음 링크를 먼저 저장한다.
-    for (Sid current=finder.Begin(parent);current.value;current=finder.Next()) {
+    for (Sid current=finder.Begin(parent,allowDead);current.value;current=finder.Next()) {
         const auto candidate=pool_.Slot(current);
         if ((!kind || Word(candidate,kKind)==kind)
             && (!mask || (Word(candidate,kMask)&mask))) {

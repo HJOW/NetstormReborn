@@ -39,6 +39,8 @@ target_sources(netstorm PRIVATE
     RawFortRandomPlacement.cpp RawFortRandomPlacement.h
     RawFarmCluster.cpp RawFarmCluster.h
     RawTerrainGrowth.cpp RawTerrainGrowth.h
+    RawGunImpact.cpp RawGunImpact.h
+    RawSquidDefense.cpp RawSquidDefense.h
     BaseFile.cpp BaseFile.h
     Config.cpp Config.h
     ConfigInterface.cpp ConfigInterface.h

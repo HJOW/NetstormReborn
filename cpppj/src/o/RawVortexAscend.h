@@ -4,6 +4,8 @@
 #include "o/SpStore.h"
 
 namespace netstorm::o {
+// 실제3204바이트 IslandList를 복사 없이 읽는 소비자용 전방 선언이다.
+class RawIslandRuntime;
 // 원본 IslandList의 존재 DWORD/+0xc owner만 공유한다. 섬 배치용 owner/territory 추정으로 대체하지 않는다.
 struct VortexAscendIsland {
     std::uint32_t exists{}; // 원본 IslandList의 현재 존재 DWORD다.
@@ -27,6 +29,10 @@ public:
     RawVortexAscend(SidPool& pool,const SquidHash& hash,std::span<const std::uint8_t> spots,
         std::span<const RiftTypeRecord> types,std::span<const VortexAscendIsland> islands,
         GameRandom& random,VortexAscendState& state,VortexAscendHooks hooks);
+    // 실제countDWORD/32바이트 기록을 참조한다. islands와 나머지 공유 자료는 이 객체보다 오래 살아야 한다.
+    RawVortexAscend(SidPool& pool,const SquidHash& hash,std::span<const std::uint8_t> spots,
+        std::span<const RiftTypeRecord> types,const RawIslandRuntime& islands,
+        GameRandom& random,VortexAscendState& state,VortexAscendHooks hooks);
     // 004db680/CD0044e230: 같은 섬·허용genus·spot/표면/flags1 조건·다른 owner를 확인한다.
     bool Candidate(Sid sid,std::int32_t island,std::uint32_t owner) const;
     // 004db8e0/CD0044ee30: count32 초과는64, 최대20개 후보 중 난수 하나를 삭제한다. 최종64/빈후보면 false다.
@@ -46,5 +52,6 @@ private:
     GameRandom& random_; // 삭제 후보 선택이 한 번 소비하는 게임 난수 전역이다.
     VortexAscendState& state_; // 현재 noIsland 타입 전역이다.
     VortexAscendHooks hooks_; // 실제 섬 조회/확보/해제/삭제 경계다.
+    const RawIslandRuntime* liveIslands_{}; // 실제 월드의 현재count/존재/owner를 읽는다. 기존 fixture 경로에서는null이다.
 };
 }

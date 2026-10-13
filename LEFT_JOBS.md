@@ -1,5 +1,18 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-14 완료 cpppj 단위10 (`20261014-02`): 충돌 효과·기본 방어·일반 지형 월드·현재 섬 집계 (`HJOW-Athlon`)
+
+- [x] 단위09의 상세 기록 갱신 뒤 **5b10ce8**(`20261014-01`)로 커밋했다. Release 경고/오류0·전체1010검사/실패0·새정상14649/assert3이다. 다음 작업 전에 AGENTS.md 전체와 두 LEFT를 다시 읽었다. 현재/마지막 디컴파일 PC는 **HJOW-Athlon, 2026-10-14**로 일치한다. 보호 원본/AGENTS·한국어/UTF-8·판본 차이 기록·푸시 금지를 유지한다.
+- [x] GunImpact **2274정상**과 새4검사, SquidDefense 기본몸체 **48정상**과 새4검사가 준비됐다. 초기 Clamp 교정은 전체 이전 소스/도구/fixture/report와 역변환 lineage를 보존한다. DudeNoticeAround는 아직 실제 하위몸체 복원 경계이며 애니메이션160의 실제 Factory/Pop/Frame/Kernel/삭제 소비자를 구분한다.
+- [x] 일반 지형 월드 연결 초안은 기존 Context/Growth/Stamp/Farm과 실제 mutable3204바이트 IslandList/같은풀을 공유한다. 새3소비자 검사·41개 기존 소스의 전체 lineage·원본helper2/4 주소 근거를 준비했다. 기존 원본 입력을 재사용하며 새native0이다. 첫 해시 기대값을 실제WORD+4체인의 포함 검사로, 합성121 flags1을 실제 nonsurface 배치 조건으로 교정했다. 두 교정 전 전체 자료/역변환을 각각 보존했다. 군도/전체부모/GameWorld 설치는 미완료다.
+- [x] Carrier contained조회의 기본false 선택인수 allowDead만 추가하고 Dais wrapper의 dead부모 허용 차이를 준비했다. 기준09 전체 이전 본문/관찰 보존 감사 통과·새native0이다. root Ascend의 실제 IslandList 참조 overload도 작성했으며 기존 Count40입력을 actual3204바이트 기록으로 재사용하는2검사를 준비했다. 새native로 합산하지 않는다.
+- [x] 첫 공유Release 두타깃 빌드는 종료0·경고/오류0이었다. 실제Ascend2검사/기존Vortex3/Carrier4/Context2/Stamp3/Growth2/Farm3/Island3 및 기본방어4가 성공했다. `TerrainWorldBinding_` substring은 Normal3개도 포함하므로5검사이며 기존2개는 성공했다. 최초 GunImpact에서 stoul 입력열/실제consumer복합CHECK 실패4개, NormalWorld에서 quartile 난수 입력 실패2개를 발견했다. 초기 로그/전체 교정 전 자료를 보존한 뒤 각 전담이 아래 최소교정을 완료했다. 당시 전체 최종 검사는 미수행이었다.
+- [x] GunImpact의 실제실패는 입력열10의 `False/True`를 stoul로 읽은 것과50.5/50.5 객체가640×480 viewport 밖이었던 검사 입력 문제였다. boolean을0/1로, viewport를 원작1024×768로 교정하고 최종복합CHECK를 장부/깊이/표시로 분리했다. 당시 전체6자료와Clamp교정 후9자료·실패로그/이전보고서·도구를 두history에 보존하고 schema2의 정확한 역변환/현재SHA를 감사했다. production/2274fixture/native도구와 새고유입력0은 그대로다.
+- [x] NormalWorld의 quartile 실패는 합성 방향별 후보1개가 원본 quarter 구간에 부족했기 때문이다. 물리256프레임/CD BYTE범위를 유지하며 같은방향의'A'후보16개로 초기화1행을 교정했다. 단일Place의 P/P→P/A도 후보16개가 되므로 실제RNG/frame 기대2행과 설명2행을 함께 교정했다. 이전전체3CPP/main보고서/두lineage/도구/문서/실패로그를 별도history에 보존하고5문자열의 역변환과 전체출처를 감사했다. production/기존원본 관찰0 변경이다.
+- [x] root Ascend의 두판본 실제Count40개 재사용과 현재Add/Delete/owner/signedcount/다른pool 거부가 통과했다. 기준09 전체이전 h/cpp/주석제외토큰/1496fixture·원본 보고서를 보존하며 전방선언/overload/참조멤버/Count분기만 역제거해 전체일치를 확인했다. 실제3204BYTE와 GameRandom 보존을 확인하며 새native0이다. Carrier 기본false 전달의 전체기존본문도 별도lineage로 보존했다.
+- [x] 최종 **Release 두타깃 경고/오류0·고유집중35검사/실패0·전체1023검사/실패0**. 새C++13개·새정상원본 **2322**(GunImpact2274+SquidDefense48)/assert0이다. TerrainWorldBinding 필터의Normal3개 중복·지형/섬 기존입력·같은입력 교정·sharedAPI는 새원본에 더하지 않는다. 9개전용감사와 `recovery-campaign-runtime10-evidence.json`/`analyze_campaign_runtime10.py --verify`의현재SHA가통과했다. 최종로그는 `extracted/campaign-runtime10-build-final.log`, `...all-final-tests.log`, 각 `...final-tests.log`, `...aggregate-final.log`이며 초기실패로그를보존한다. 전체검사 종료 전 통합감사를 먼저 호출한1회는 요약없음으로 종료1·근거파일생성없음이었다. 전체1023 성공종료 뒤 생성/감사0으로 완료했다. 이 상세 기록을 먼저 완료한 뒤 **20261014-02**로 커밋하며 푸시는하지않는다.
+- [ ] 후속11은 실제Dais/Altar 희생완료·ArcherType의 실제group0/35프레임/default32 및 회전생략·IslandBuilder 초기32바이트 기록·DudeNotice 반응을 복원한다. 초기Dais668 및 ArcherType42정상/parser접두2와Altar 초안자료는 이번단위에 합산하지 않는다. 현재PC에서 Altar8/7·ArcherType13/14+helper1/1·IslandBuilder20/20 좁은 읽기 전용 내보내기를 완료했다. 실제Fort 부모 순서는 builder→Territory→PlaceAll→일반지형→객체Terr/Chaff→**Money→Badges→Technology**→Graph다(과거 Technology/Deck 명칭 추정을 새감사에서 정정). Money는 저장금액 대입과 다르며 SP저장소의 게임난수 소비도 필요하다. 실제GameWorld/Fort 전체·경제/AI/생산/운반·시각/음향·승패/UI 및 캠페인1-1 완주동일성은 계속 미완료다. goal active·DirectDraw 전체화면 오류수정 제외를 유지한다.
+
 ## 2026-10-14 완료 cpppj 단위09 (`20261014-01`): 현재 섬 검색·일반 피해·edgeFarm 군집·초기 성장 (`HJOW-Athlon`)
 
 - [x] 앞08 상세 인수인계 갱신 후 **552656c**(`20261013-08`)로 커밋했다. 최종 Release 경고/오류0·전체998검사/실패0·새정상11736/assert834/접두2별도다. 다음 작업 전에 AGENTS.md 전체/두 LEFT를 재독했다. 보호 원본/AGENTS·한국어/UTF-8·CD10.72 차이 기록과 푸시 금지를 유지한다.
@@ -11,7 +24,7 @@
 - [x] 공유CMake에4새모듈/검사12개와기존Place를등록했다. 최초빌드의없는`Random`은`GameRandom` 한줄로, 둘째빌드의기본생성자가없는`RiftTypeFrames{}`는최초vectorCtor/assign2곳의명시빈생성으로교정했다. 이전전체test/tool/report·5846/208fixture와나머지전체소스를별도snapshot/역변환lineage에보존했다. `analyze_damageablehit_correction.py --verify`/`analyze_farmcluster_cpp_correction.py` 기본감사가현재SHA/추가native0을연결한다. 첫/둘째빌드실패로그는보존한다.
 - [x] 첫Damageable전수4검사에서8checks차이를발견했다. 패치warningTime을실제 **double현재시각+float30**으로, CD검사provider를같은native격자의실제`RawPathSurfaceAt`로교정했다. 원래CPP가무조건SID70을반환한입력오류와CPPtimer오류를구분한다. 기존5846 fixture/원본tool은전체불변이며 최초/compile교정후전체snapshot을두history에보존하고schema2역변환을감사했다(추가고유0). **기존CD alarm활성원본입력0**의한계를명시하며현재C++통과를새CD활성관찰로세지않는다.
 - [x] 최종 **Release두타깃경고/오류0·고유집중25검사/실패0·전체1010검사/실패0**. 새C++12개이며새정상원본 **14649**(8490+5846+205+108)/assert **3**는별도다. 공유API/Rune1920·기존Place/getter·Ctor·같은입력교정/x87는새관찰에더하지않는다. `recovery-campaign-runtime9-evidence.json`/`analyze_campaign_runtime9.py --verify`·6개전용lineage감사와모든현재SHA가통과했다. 최종로그 `extracted/campaign-runtime9-build-final.log`, `...all-final-tests.log`, 각 `...final-tests.log`이며초기오류로그는보존한다. 상세인수인계를완료한후 **20261014-01**로커밋한다. 푸시는하지않는다.
-- [ ] 후속 단위10(`20261014-02` 예정)은 실제Dais/Rune304·305/306/307 희생진행과GunImpact를묶는다. Dais의dead부모허용 contained조회 차이 때문에Carrier에기본false 선택인수1개를추가하는후속lineage가필요하며09빌드중기존파일은보존한다. 실제GameWorld/Fort 순서·경제/AI/생산/운반·시각/음향·승패/UI·캠페인1-1 완주동일성은계속미완료다. goal active이며 DirectDraw 전체화면 오류수정은제외한다.
+- [x] 후속단위10의 GunImpact/기본방어/일반지형/실제Ascend 및 Carrier 선택인수lineage는 위 완료절에서1023전체검사로 완료했다. Dais/Rune304·305/306/307와Altar 희생완료는11로 분리했다. 실제GameWorld/Fort·경제/AI/생산/운반·시각/음향·승패/UI·캠페인1-1 완주동일성의 미완료는 최신절을 따른다.
 
 ## 2026-10-13 완료 cpppj 단위08: 실제 지형 소비자·썬 디스크 애니메이션·mutable 섬 목록·신전/룬 (`HJOW-Athlon`)
 

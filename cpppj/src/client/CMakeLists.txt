@@ -72,6 +72,7 @@ target_sources(netstorm PRIVATE
     GameWorld.cpp GameWorld.h
     RawSurfaceWorld.cpp RawSurfaceWorld.h
     RawTerrainWorldBinding.cpp RawTerrainWorldBinding.h
+    RawNormalTerrainWorldBinding.cpp RawNormalTerrainWorldBinding.h
     RawPriestWorldBindings.cpp RawPriestWorldBindings.h
     UserInput.cpp UserInput.h
     Sound.cpp Sound.h

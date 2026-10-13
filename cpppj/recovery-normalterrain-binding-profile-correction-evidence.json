@@ -1,0 +1,41 @@
+{
+  "new_native_unique": 0,
+  "production_changes": 0,
+  "reason": "MayPlace ??? (other & island) && !(placing.flags1 & surface) ??? ????? ??121? ???surface??0x800? ????.",
+  "before_test": {
+    "path": "cpppj/recovery-history/normalterrainbinding-profile-correction/tests.cpp",
+    "sha256": "26d067757bafffff76e47e75c32b2c8588a39ef31d7c3e25d56958ad1f6e999a",
+    "bytes": 18651
+  },
+  "before_report": {
+    "path": "cpppj/recovery-history/normalterrainbinding-profile-correction/evidence.json",
+    "sha256": "c4aaa0d9c6b181b6716a60c261f53ae3ef1abc93459aeac0229ada6c1f3b4a5f",
+    "bytes": 692668
+  },
+  "before_hash_tool": {
+    "path": "cpppj/recovery-history/normalterrainbinding-profile-correction/hash-tool.py",
+    "sha256": "3f68244107bcbdfe6f210783a1773cb12fc22b2474edc29e8dd4033a72c24db6",
+    "bytes": 6601
+  },
+  "before_hash_evidence": {
+    "path": "cpppj/recovery-history/normalterrainbinding-profile-correction/hash-evidence.json",
+    "sha256": "4d937fee0962cb35993bbe6e9747e1d365bf2ed9a134de47311d103741f0a6bc",
+    "bytes": 1748
+  },
+  "after_test": {
+    "path": "cpppj/tests/NormalTerrainWorldBindingTests.cpp",
+    "sha256": "18e302bfa81bcbb531e0894f8d839841d3db8a44df361dc393d4c45b64553b29",
+    "bytes": 18651
+  },
+  "tool": {
+    "path": "tools/analyze_normalterrain_binding_profile_correction.py",
+    "sha256": "9c6465fe5fac0d2145d207b33b532d95ddbec9baa1122aa948bea5fdce1c4a31",
+    "bytes": 3635
+  },
+  "after_hash_tool": {
+    "path": "tools/analyze_normalterrain_binding_cpp_correction.py",
+    "sha256": "48a5a23776adabff9ffcfebecfbadb959ad5dc557ae94fe4105fcac57e0d3607",
+    "bytes": 7233
+  },
+  "frame_successor": "cpppj/recovery-normalterrain-binding-frame-correction-evidence.json"
+}

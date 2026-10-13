@@ -35,6 +35,10 @@ add_executable(netstorm_tests
     DamageableHitTests.cpp
     FarmClusterTests.cpp
     TerrainGrowthTests.cpp
+    GunImpactTests.cpp
+    SquidDefenseTests.cpp
+    NormalTerrainWorldBindingTests.cpp
+    VortexIslandBindingTests.cpp
     RawButtonControlsTests.cpp
     GumpResetTests.cpp
     MissionOutcomeTests.cpp
@@ -713,3 +717,11 @@ set_source_files_properties(FarmClusterTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_FARMCLUSTER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/farmcluster-x86.tsv\"")
 set_source_files_properties(TerrainGrowthTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_TERRAINGROWTH_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/terraingrowth-x86.tsv\"")
+
+# 실제 충돌/기본방어 입력과 기존Ascend Count40개의 live3204바이트 재사용 검사다.
+set_source_files_properties(GunImpactTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_GUNIMPACT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gunimpact-x86.tsv\"")
+set_source_files_properties(SquidDefenseTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_SQUIDDEFENSE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/squiddefense-x86.tsv\"")
+set_source_files_properties(VortexIslandBindingTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_VORTEXASCEND_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/vortexascend-x86.tsv\"")

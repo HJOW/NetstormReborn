@@ -1,5 +1,6 @@
 // Ascend 후보판정과 최대20개 선택·삭제·최종 빈 반경 판정을 실제 원본 순서로 실행한다.
 #include "o/RawVortexAscend.h"
+#include "o/RawIslandRuntime.h"
 #include <array>
 #include <bit>
 #include <cmath>
@@ -42,6 +43,14 @@ RawVortexAscend::RawVortexAscend(SidPool& pool,const SquidHash& hash,std::span<c
     if (spots.size()!=65536 || types.size()!=(pool.Edition()==OriginalEdition::Patch1078 ? 188U : 171U) ||
         !hooks_.islandNumber || !hooks_.reserveCandidateBuffer || !hooks_.releaseCandidateBuffer || !hooks_.destroy)
         throw std::invalid_argument("Ascend 공유 지도/타입 표/하위 효과 누락");
+}
+// 기존 후보/삭제 효과와 같은풀의 실제 IslandList를 공유한다. 8바이트 배열로 변환하지 않는다.
+RawVortexAscend::RawVortexAscend(SidPool& pool,const SquidHash& hash,std::span<const std::uint8_t> spots,
+    std::span<const RiftTypeRecord> types,const RawIslandRuntime& islands,GameRandom& random,
+    VortexAscendState& state,VortexAscendHooks hooks)
+    :RawVortexAscend(pool,hash,spots,types,std::span<const VortexAscendIsland>{},random,state,std::move(hooks)) {
+    if (&islands.Pool()!=&pool) throw std::invalid_argument("Ascend 섬 목록과 raw 풀 불일치");
+    liveIslands_=&islands;
 }
 // little endian 필드를 지정한 폭으로 읽는다.
 std::uint32_t RawVortexAscend::Read(Sid sid,std::size_t offset,std::size_t width) const {
@@ -95,6 +104,14 @@ bool RawVortexAscend::Tick(Sid temple,std::uint32_t count) const {
 }
 // 원본은 목록 길이를 현재 반복마다 다시 읽으며 존재/nonzero owner/다른 owner의 항목만 센다.
 std::uint32_t RawVortexAscend::CountForeignOwnedIslands(std::uint32_t owner) const {
+    if (liveIslands_) {
+        std::uint32_t currentCount=0; // 존재하며 다른nonzero owner인 실제 섬 수다.
+        // 원본 두판본처럼 반복마다 signed count와 현재32바이트기록을 조회한다.
+        for (std::int32_t index=0;index<std::bit_cast<std::int32_t>(liveIslands_->Count());++index) {
+            if (liveIslands_->Exists(index) && liveIslands_->Owner(index)!=owner && liveIslands_->Owner(index)!=0) ++currentCount;
+        }
+        return currentCount;
+    }
     std::uint32_t count=0;
     // 공유 IslandList 항목의 존재/소유자를 읽는다. 빈 번호는 개수에 더하지 않는다.
     for (const auto& island:islands_) if (island.exists && island.owner && island.owner!=owner) ++count;

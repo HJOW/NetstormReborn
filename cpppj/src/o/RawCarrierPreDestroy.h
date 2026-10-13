@@ -23,7 +23,8 @@ public:
     void PreDestroy(Sid sid,std::uint32_t flags) const;
     // 004ac9f0 / CD 004ac560: 타입 일치 종속의 +0x14 WORD & mask, +0x12 WORD == kind를 검사한다.
     // 0인 조건은 생략하고 index개의 일치를 건너뛴다. 후보 상태/extra는 추가로 거르지 않는다.
-    Sid FindContained(Sid parent,std::uint32_t mask,std::uint32_t kind,std::uint32_t index) const;
+    // allowDead=true는 Dais wrapper의 원본 dead-parent assert 허용이다. 기존 호출은 기본false로 같은 동작을 유지한다.
+    Sid FindContained(Sid parent,std::uint32_t mask,std::uint32_t kind,std::uint32_t index,bool allowDead=false) const;
     // 연결 어댑터가 같은 풀인지 확인한다.
     const SidPool& Pool() const;
 private:
