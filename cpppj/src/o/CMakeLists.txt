@@ -34,6 +34,11 @@ target_sources(netstorm PRIVATE
     RawRunePostPop.cpp RawRunePostPop.h
     RawTempleRitual.cpp RawTempleRitual.h
     RawTerrainContext.cpp RawTerrainContext.h
+    RawIslandQueries.cpp RawIslandQueries.h
+    RawDamageableHit.cpp RawDamageableHit.h
+    RawFortRandomPlacement.cpp RawFortRandomPlacement.h
+    RawFarmCluster.cpp RawFarmCluster.h
+    RawTerrainGrowth.cpp RawTerrainGrowth.h
     BaseFile.cpp BaseFile.h
     Config.cpp Config.h
     ConfigInterface.cpp ConfigInterface.h

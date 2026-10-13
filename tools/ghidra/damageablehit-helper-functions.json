@@ -1,0 +1,7 @@
+{
+  "description": "일반 Base/Damageable 피격의 실제HP보유/타입flags/공통HP저장/섬판정·번호/경고시각/사망context helper. HJOW-Athlon,2026-10-13. 기존victimdamage 주몸체는 보존한다.",
+  "editions": {
+    "originals": ["004adc60", "004adca0", "004ac200", "004ac1e0", "004acdf0", "004acda0", "004180a0", "00418070", "00460d70", "0040eaf0"],
+    "originalCD": ["004aecf0", "004aed20", "004abae0", "004abac0", "004acad0", "004acaa0", "004011b0", "004aaa20", "004aaa40", "004f161c"]
+  }
+}

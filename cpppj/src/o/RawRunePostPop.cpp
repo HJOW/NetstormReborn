@@ -47,11 +47,16 @@ Sid RawRunePostPop::FindOwnedDais(Sid rune) const {
     for (auto sid=finder.Begin({x-1,y-1,x+1,y+1});sid.value;sid=finder.Next()) if (pool_.Slot(sid)[10]==state_.daisType && Owner(sid)==Owner(rune)) return sid;
     return {};
 }
-// patch의char7/10/25와CD의int7/10/25를동일정수로반환한다.
-std::int32_t RawRunePostPop::ConstructionSeconds(Sid rune) const {
+// 기존 시간 helper의 typed altar 조회 본문을 같은 풀의 의식 소비자에 공개한다.
+Sid RawRunePostPop::AltarAt(Sid rune) const {
     const auto type=state_.altarType;if (type>=types_.size()) throw std::out_of_range("Rune 현재altar 타입범위");const auto point=Position(rune);const auto x=Cell(point[0]),y=Cell(point[1]);RawSquidFinder finder(pool_,hash_,types_);Sid altar;
     // 현재타입genus&6에따른시작단계와원본첫타입일치를재사용한다.
     for (auto sid=finder.Begin({x,y,x,y},(types_[type].flags2&6)==0 ? 1U : 0U);sid.value;sid=finder.Next()) if (pool_.Slot(sid)[10]==type) { altar=sid;break; }
+    return altar;
+}
+// patch의char7/10/25와CD의int7/10/25를동일정수로반환한다.
+std::int32_t RawRunePostPop::ConstructionSeconds(Sid rune) const {
+    const auto altar=AltarAt(rune);
     if (!altar.value) return 10;const auto originalOwner=Read(pool_.Slot(altar),12,2);if (!originalOwner || state_.suppressDuration) return 10;
     if (originalOwner>=state_.playerFlags.size()) throw std::out_of_range("Rune altar 원래ownerWORD/player범위");return (state_.playerFlags[originalOwner]&1) ? 25 : 7;
 }

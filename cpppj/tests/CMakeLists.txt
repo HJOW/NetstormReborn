@@ -31,6 +31,10 @@ add_executable(netstorm_tests
     TempleRitualTests.cpp
     TerrainContextTests.cpp
     RunePostPopTests.cpp
+    IslandQueriesTests.cpp
+    DamageableHitTests.cpp
+    FarmClusterTests.cpp
+    TerrainGrowthTests.cpp
     RawButtonControlsTests.cpp
     GumpResetTests.cpp
     MissionOutcomeTests.cpp
@@ -699,3 +703,13 @@ set_source_files_properties(TerrainContextTests.cpp PROPERTIES COMPILE_DEFINITIO
 # 실제Rune 파생Pop/건설시작과7/10/25초의정상출력은상위Temple 요청대조와별도입력이다.
 set_source_files_properties(RunePostPopTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_RUNEPOSTPOP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/runepostpop-x86.tsv\"")
+
+# 실제 현재 섬 검색·일반 피해·군집 단일배치·초기 성장의 고유 양판본 입력이다.
+set_source_files_properties(IslandQueriesTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_ISLANDQUERIES_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/islandqueries-x86.tsv\"")
+set_source_files_properties(DamageableHitTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_DAMAGEABLEHIT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/damageablehit-x86.tsv\"")
+set_source_files_properties(FarmClusterTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FARMCLUSTER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/farmcluster-x86.tsv\"")
+set_source_files_properties(TerrainGrowthTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_TERRAINGROWTH_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/terraingrowth-x86.tsv\"")

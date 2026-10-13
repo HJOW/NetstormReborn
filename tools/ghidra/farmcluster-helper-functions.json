@@ -1,0 +1,7 @@
+{
+  "description": "실제edgeFarm121 군집0040e560/CD0042cd80의 지역record seed·local PRNG·CD랜덤좌표와 실제벡터정리를 정밀 확인한다. 군집/단일배치 몸체는 현호스트 terrainworld10/10과 기존완료placement에서 재사용한다. 마지막 디컴파일 PC HJOW-Athlon, 2026-10-13.",
+  "editions": {
+    "originals": ["00432430", "00432180", "004bca20"],
+    "originalCD": ["004047c0", "00404090", "004bd4c0", "004bd480", "0042c010", "004a59d0", "004a59a0", "0042cf7b", "00407c50", "00407c91", "00407c40"]
+  }
+}

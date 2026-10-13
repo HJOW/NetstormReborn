@@ -9,6 +9,10 @@ namespace netstorm::o {
 std::uint32_t RawPathRuntime::Helper() const { return static_cast<std::uint32_t>(Read(layout_.helper)); }
 // 보조 객체를 예약했을 때 원본 필드 하나만 지운다.
 void RawPathRuntime::ClearHelper() { Write(layout_.helper,0); }
+// 실제 Moveaway getter00427d30/CD004e7660이 기존 Path 객체에서 읽는 signedDWORD다.
+std::int32_t RawPathRuntime::MoveAwayDepth() const { return std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(Read(layout_.helper+4))); }
+// 실제 BridgeCommand00449900/CD00481ab0이 마지막 Prepare 뒤 깊이+1을 저장한다.
+void RawPathRuntime::SetMoveAwayDepth(std::int32_t depth) { Write(layout_.helper+4,std::bit_cast<std::uint32_t>(depth)); }
 namespace {
 // 두 PE의 방향 배율/한 바퀴/늦은 시작 허용 간격은 각각 45도/360도/2초다.
 constexpr float kDirectionDegrees=45.0F,kFullTurn=360.0F;

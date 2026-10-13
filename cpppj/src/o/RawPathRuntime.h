@@ -74,6 +74,10 @@ public:
     std::uint32_t Helper() const;
     // SharedRegular 예약 시 helper 필드 하나만0으로 쓴다. 명령 꼬리·목적지·경로는 보존한다.
     void ClearHelper();
+    // Dais 다음 목표 이동이 읽는 signedDWORD 깊이다. helper+4(패치186d8/CD2f18)이며 명령 꼬리와 다르다.
+    std::int32_t MoveAwayDepth() const;
+    // 같은 필드 DWORD만 쓴다. 원본 BridgeCommand가 기존 깊이+1을 보관하며 다른 필드는 그대로다.
+    void SetMoveAwayDepth(std::int32_t depth);
     // ProcessForm 부착 뒤의 실제 번호를 이미지에 기록한다.
     void SetAttachment(Sid form,Sid parent);
 private:

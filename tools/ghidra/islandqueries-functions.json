@@ -1,0 +1,7 @@
+{
+  "description": "현재3204BYTE IslandList의 owner/territory 검색·territory 검색·현재owner 개수. 각 세 신규 몸체와 기존count/Exists/Owner getter 실제 호출을 두 판본에서 정밀 확인한다. 기존getter 실행은 독립관찰 증가로 합산하지 않는다. 마지막 디컴파일 PC HJOW-Athlon, 2026-10-13.",
+  "editions": {
+    "originals": ["0046f380", "0046f3f0", "0046f430", "0046ee50", "0046ee30", "0046f320"],
+    "originalCD": ["004bdaa0", "004bdb10", "004bdb60", "004bd4f0", "004bd4c0", "004bda70"]
+  }
+}

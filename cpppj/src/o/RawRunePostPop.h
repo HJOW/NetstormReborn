@@ -32,7 +32,9 @@ public:
     void PostPop(Sid rune,std::uint32_t flags) const;
     // 거의올림한Rune위치±1의일반finder에서현재같은owner의첫dais를읽는다.
     Sid FindOwnedDais(Sid rune) const;
-    // Rune기준점의첫altar원래ownerWORD/playerFlags와현재전역으로7/10/25초를읽는다.
+    // 전달한 객체 기준점의 첫 altar를 같은 typed finder에서 읽는다. Rune 시간/실제 Dais 의식이 공유한다.
+    Sid AltarAt(Sid sid) const;
+    // 전달한 객체 기준점의 첫 altar 원래ownerWORD/playerFlags와 현재 전역으로7/10/25초를 읽는다.
     std::int32_t ConstructionSeconds(Sid rune) const;
     // 실제Pop/Host/Construction어댑터의같은풀연결을확인한다.
     const SidPool& Pool() const;

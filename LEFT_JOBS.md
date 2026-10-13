@@ -1,5 +1,18 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-14 완료 cpppj 단위09 (`20261014-01`): 현재 섬 검색·일반 피해·edgeFarm 군집·초기 성장 (`HJOW-Athlon`)
+
+- [x] 앞08 상세 인수인계 갱신 후 **552656c**(`20261013-08`)로 커밋했다. 최종 Release 경고/오류0·전체998검사/실패0·새정상11736/assert834/접두2별도다. 다음 작업 전에 AGENTS.md 전체/두 LEFT를 재독했다. 보호 원본/AGENTS·한국어/UTF-8·CD10.72 차이 기록과 푸시 금지를 유지한다.
+- [x] 현재 PC는 **HJOW-Athlon**이며 마지막 정밀 디컴파일 PC도 일치한다. Dais 새18/21 함수의 읽기 전용 확대 내보내기를14일 종료0으로 완료했다. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-14.** 이전13일 전체/좁은 내보내기 보고서는 당시 출처로 보존한다.
+- [x] `RawIslandQueries`의 양판본 **8490정상**과 새3검사, `RawDamageableHit`의 **5846정상**과 새4검사를 준비했다. Query의pool128→기존24000 한줄/등록매크로3개 TEST→TEST_CASE 교정은 각각 이전전체test/report/fixture·pool successor 원문을 별도 근거에 보존하고 새native0으로 연결했다. 두 Query 교정 도구는 `--verify`가 아닌 **기본 실행이 감사**다. 실제 owner/territory/현재fort 차이 및 일반피해의 현재vtable/공통HP/Burning/Adjust를 분리한다.
+- [x] Farm최종 **208개(정상205/assert3)** 독립입력·두x87반환416과새3검사가모두통과했다. 패치104정상/CD101정상·assert3을구분한다. 기존실제 단일 `RawFortRandomPlacement`와 같은풀/해시/지역·로컬/공유난수를 실행하며해당cpp도처음공유CMake에등록했다. 실제edgeFarm121의기존vtableCtor몸체를추가4개소비자입력에서재사용했다. 처음204/읽기분류재생성/x87/기존Place/Ctor관찰은새208에더하지않는다. 합성randframe/조건0의basefallback과실제기본타입전체meta를구분하고 legalDrop/factory전체/가상공간·owner/CRT/assert 경계를명시했다.
+- [x] root `RawTerrainGrowth`의양판본 **108개정상/두x87반환216·새C++2검사**가모두통과했다. 실제일반 통로→청크별성장→2회빈틈보정을owned context에쓰며 각입력의전체 **65536BYTE code와region 두배열**을native RLE그대로대조한다. 같은배열/mapping/context·게임전역난수보존도검사했다. 첫smoke의빠진CD PRNG helper실패로그를보존했다. CD디컴파일은this를생략했지만실제ECX/로컬seed를확인해두판본모두로컬난수로복원했다. 초기Context224/Stamp1560·소수4개/같은입력재생성은이번108에더하지않는다. 전체wrapper/archipelago·실제초기GameWorld순서는아직아니다.
+- [x] Dais 준비의공유API만09에포함한다: `RawRunePostPop::AltarAt`는기존typed조회body를이동하고ConstructionSeconds가위임한다. `RawPathRuntime::MoveAwayDepth/SetMoveAwayDepth`는helper+4 DWORD만조회/쓰기한다. 기준552656c 전체기존소스/토큰과이전보고서/fixture를보존하는 `analyze_dais_shared_lineage.py --verify`가통과했다(새native0). 과거Runtime/Helpers/PathMath ignored export12개가현PC에없는제한을available:false로명시하며없는출처를감사성공으로세지않는다.
+- [x] 공유CMake에4새모듈/검사12개와기존Place를등록했다. 최초빌드의없는`Random`은`GameRandom` 한줄로, 둘째빌드의기본생성자가없는`RiftTypeFrames{}`는최초vectorCtor/assign2곳의명시빈생성으로교정했다. 이전전체test/tool/report·5846/208fixture와나머지전체소스를별도snapshot/역변환lineage에보존했다. `analyze_damageablehit_correction.py --verify`/`analyze_farmcluster_cpp_correction.py` 기본감사가현재SHA/추가native0을연결한다. 첫/둘째빌드실패로그는보존한다.
+- [x] 첫Damageable전수4검사에서8checks차이를발견했다. 패치warningTime을실제 **double현재시각+float30**으로, CD검사provider를같은native격자의실제`RawPathSurfaceAt`로교정했다. 원래CPP가무조건SID70을반환한입력오류와CPPtimer오류를구분한다. 기존5846 fixture/원본tool은전체불변이며 최초/compile교정후전체snapshot을두history에보존하고schema2역변환을감사했다(추가고유0). **기존CD alarm활성원본입력0**의한계를명시하며현재C++통과를새CD활성관찰로세지않는다.
+- [x] 최종 **Release두타깃경고/오류0·고유집중25검사/실패0·전체1010검사/실패0**. 새C++12개이며새정상원본 **14649**(8490+5846+205+108)/assert **3**는별도다. 공유API/Rune1920·기존Place/getter·Ctor·같은입력교정/x87는새관찰에더하지않는다. `recovery-campaign-runtime9-evidence.json`/`analyze_campaign_runtime9.py --verify`·6개전용lineage감사와모든현재SHA가통과했다. 최종로그 `extracted/campaign-runtime9-build-final.log`, `...all-final-tests.log`, 각 `...final-tests.log`이며초기오류로그는보존한다. 상세인수인계를완료한후 **20261014-01**로커밋한다. 푸시는하지않는다.
+- [ ] 후속 단위10(`20261014-02` 예정)은 실제Dais/Rune304·305/306/307 희생진행과GunImpact를묶는다. Dais의dead부모허용 contained조회 차이 때문에Carrier에기본false 선택인수1개를추가하는후속lineage가필요하며09빌드중기존파일은보존한다. 실제GameWorld/Fort 순서·경제/AI/생산/운반·시각/음향·승패/UI·캠페인1-1 완주동일성은계속미완료다. goal active이며 DirectDraw 전체화면 오류수정은제외한다.
+
 ## 2026-10-13 완료 cpppj 단위08: 실제 지형 소비자·썬 디스크 애니메이션·mutable 섬 목록·신전/룬 (`HJOW-Athlon`)
 
 - [x] 앞07 상세 기록을 갱신한 뒤 **b76adf9**(`20261013-07`)로 커밋했다. 최종 Release 경고/오류0·전체983개 검사/실패0이다. 현재/마지막 정밀 디컴파일 PC는 **HJOW-Athlon, 2026-10-13**이며 AGENTS/두 인수인계 재독과 보호 파일/한국어/UTF-8/CD10.72 기록·푸시 금지를 유지한다.
