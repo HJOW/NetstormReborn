@@ -24,6 +24,10 @@ target_sources(netstorm PRIVATE
     RawGeyserMined.cpp RawGeyserMined.h
     RawPriestDamage.cpp RawPriestDamage.h
     RawDamageableBurning.cpp RawDamageableBurning.h
+    RawPathCleanup.cpp RawPathCleanup.h
+    RawTerrainStamp.cpp RawTerrainStamp.h
+    RawSquidRegion.cpp RawSquidRegion.h
+    RawPriestRitualActions.cpp RawPriestRitualActions.h
     BaseFile.cpp BaseFile.h
     Config.cpp Config.h
     ConfigInterface.cpp ConfigInterface.h

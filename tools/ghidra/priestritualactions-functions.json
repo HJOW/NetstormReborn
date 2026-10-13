@@ -1,0 +1,7 @@
+{
+  "description": "신전 의식이 사용하는 실제 사제 프레임 선택과604 SharedRegular 예약 wrapper의 읽기 전용 내보내기. frame setter/SharedRegular는 기존 실제 소비자를 재사용한다. 마지막 디컴파일 PC: HJOW-Athlon, 2026-10-13.",
+  "editions": {
+    "originals": ["00491ca0", "00491cf0", "004ac550", "0049a840"],
+    "originalCD": ["0040cf10", "0040cf60", "004abf50"]
+  }
+}

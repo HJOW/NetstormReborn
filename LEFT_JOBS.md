@@ -1,5 +1,19 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-13 완료 cpppj 단위07: 경로 정리·초기 도장·사제 의식 동작·썬 디스크 투사체 (`HJOW-Athlon`)
+
+- [x] 앞06 커밋 **5c2d0a1**(`20261013-06`)·최종 Release/전체974개 성공을 완료했다. 다음 작업 전 AGENTS.md 전체와 두 인수인계를 다시 확인했으며 현재/마지막 정밀 PC는 **HJOW-Athlon, 2026-10-13**이다. CD10.72 차이 기록·한국어/UTF-8·보호 원본/AGENTS 보존과 이 goal에 한한 단위별 커밋/푸시 금지를 유지한다.
+- [x] `RawPathCleanup`은 정상1716/assert16, 양판본1732개 독립 원본 입력과 C++2개 검사 준비가 완료됐다. 패치의 TempleAt/contained nugget/동일owner·graph 삭제와 CD의 해당 분기 부재를 분리한다. 테스트의 RiftTypeFrames 초기값 한 줄 교정은 별도 lineage로 이전 native/test를 보존하고 새 관찰0개로 연결했다.
+- [x] `RawTerrainStamp`은 양판본 Frame600/Stamp180씩, 총 **1560개 정상** 독립 원본 입력·SHA 준비가 완료됐다. 초기 CRT99cache·공유 후보 선택·실제 지역setter를 같은 풀/두 난수에서 전수 대조하도록 준비했고 C++3개 검사를 등록했다. 반복 반환3120개는 신규 입력에 더하지 않는다.
+- [x] 실제 사제 의식 프레임/604 예약 wrapper는 패치4/CD3 readOnly 내보내기 종료0이며 **1752개 정상** native·C++2개 검사를 등록했다. 실제 `LetterRun→SquidFrame→동일 Host/Kernel`을 연결하되 전체 신전 의식 완료로 세지 않는다. 썬 디스크 발사기71의 별도 **1888개 정상** native·C++2개와 `RawMissile`의71 지원도 등록했다. 이전 썬 캐논296개와 독립 입력을 구분한다.
+- [x] 첫 빌드의 Factory include/없는 number 필드와 의식 client SID→실제Create(flags2)/server SID→Take 입력을 교정했다. cleanup 실제 소비자는 사제158 ctor→PriestPrefix→Carrier→공통PostPop→전체Tail과 같은 공간/Host/Kernel의 helper 예약을 연결했다. fullHP200/spot6에서 실제 Forcefield 조회0이 초기/재Pop 두 번 실행되고 depth0을 대조했다. 해당 소비자에서 낙하·보호막 생성/삭제·로딩 지면·표시/Graph는 실행하지 않았다. 두 원본 전수 검사/production/fixture 불변과 테스트 교정은 snapshot+제한 SourceSHA lineage로 연결했다.
+- [x] TerrainStamp 첫 행2의 프레임 −8 차이를 실제 PE **이웃bit {1,2,2,4,4,8,8,1}**로 교정했다. 직선과 대각선 bit를 같은 neighbor/2로 만들지 않는다. 원본1560개/두 x87 반환3120/fixture는 그대로이며 주석581토큰 보존→mask 몸체 제한 교정→현재C++ SHA 연결을 각각 감사했다. 이 교정의 추가 고유 입력0개다.
+- [x] Archer71 지원은 hotspot/ray 생략·group0 종점·패치 사거리+4와 두 판본 corner 차이를 복원했다. **10.78 group0 corner +32/+36 미초기화**, **10.72 corner endpoint는 표적 치수 중심**을 유지한다. CD는 exhausted에서도 nonzero impactSound를 요청하며 패치만 생략한다. 독립1888개와 이전 썬 캐논296개/실제Factory·공간·삭제 수명 회귀를 통과했다. 같은1888 재관찰 추가 고유0. **최초1888 전체 보고서 snapshot은 보존하지 못했으며**, root가 사전 읽은 fixture/source SHA와 두 ctor/한 sound 분기 역변환 SHA·초기 실패로그로 연결했다. 첫 report 전체 복원을 주장하지 않는다. 이후 ctor 교정 checkpoint는 별도 바이트 보존했다.
+- [x] **최종 Release 두 타깃 종료0·경고/오류0, 집중 고유13개와 전체983개 검사/실패0**이다. substring 집중 로그15회 중 Archer2개 재방문을 제외했다. 신규 정상 **6916 = cleanup1716 + terrain1560 + ritualActions1752 + archerMissile1888**, 별도 **assert16**, 기존 썬 캐논296 회귀를 구분한다. `recovery-campaign-runtime7-evidence.json`/`tools/analyze_campaign_runtime7.py --verify`와 `extracted/campaign-runtime7-build-final.log`/`campaign-runtime7-all-final-tests.log`에 최종 소스/fixture/바이너리/로그 SHA를 고정했다. 초기/교정 로그도 보존했다. **이 상세 인수인계 갱신 완료 이후 20261013-07 커밋**을 수행한다. 게임/GUI 실행·보호 원본/AGENTS/dotnetpj 변경·푸시 없음.
+- [x] root 상위 지형 연결 조사에서 `terrainworld` 패치10/CD10 readOnly 내보내기 종료0. 실제 constructor/bounds 대응·청크/칸 bounds 분리·x→=→Stamp→x 문자순서·도장 뒤 **edgeFarm121** 군집 배치를 기록했다. 가이저122와 구분한다. [월드 연결 기록](docs/exe/cpp-campaign-world-bindings-20261013.md). 이 준비 내보내기의 새 실행 관찰0개다.
+- [ ] 별도08 후속: root `RawTerrainWorldBinding`/소비자2검사와 `RawTerrainContext` 초기배열/bounds/문자변환 초안은 CMake 등록/공유 Core.bridgeState 참조 추가/초기context native 대조 전이다. ArcherAnimation은 정상1688/ctor접두2·C++4검사, IslandRuntime은 **정상1238/assert780**의 별도2018개·C++3검사 준비를 완료했으나 공유 C++ 대조 전이다. 실제 전체 TempleRitual은 패치41/CD36 readOnly 내보내기 종료0이며 새 초안/공유 일반HP 쓰기 추출을 준비 중이다. 이07 완료 관찰/커밋에 포함하지 않는다.
+- [ ] 실제 GameWorld/CoreData/Fort 순서·생산/경제/AI·운반/의식·미션 승패/UI·캠페인 완주 동일성은 계속 미완료다. goal active를 유지하고 DirectDraw 전체화면 오류 수정은 제외한다.
+
 ## 2026-10-13 완료 cpppj 단위06: 가이저 채집·사제 피격과 후보 선택 공유 (`HJOW-Athlon`)
 
 - [x] 앞 단위 **4e532fd**(`20261013-05`) 커밋·전체968개 검사 완료 뒤 이어간다. 보호 원본/AGENTS.md는 수정하지 않았으며 현재/마지막 정밀 디컴파일 PC는 **HJOW-Athlon, 2026-10-13**이다.

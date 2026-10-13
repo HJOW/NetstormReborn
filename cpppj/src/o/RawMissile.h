@@ -1,4 +1,4 @@
-// Missile.cpp의 실제 썬 캐논 투사체 생성·이동·표적 충돌을 같은 raw 자산/Kernel에 연결한다.
+// Missile.cpp의 실제 썬 캐논·썬 디스크 발사기 투사체 생성/이동을같은raw 자산/Kernel에연결한다.
 #pragma once
 #include "o/RawGunAnimation.h"
 #include "o/SquidFactory.h"
@@ -27,8 +27,8 @@ struct MissileTypeData {
 struct MissileState {
     // now: 정지 시 유지되는 현재 게임 시각이다.
     double now{};
-    // sunCannonType/sunDiscType: 원본 특수 포구/방향 프레임을 검사하는 자산 타입이다.
-    std::uint32_t sunCannonType{128},sunDiscType{83};
+    // sunCannonType/sunDiscType/sunArcherType: 캐논128·표시sunDisc83·발사기71의원본타입이다.
+    std::uint32_t sunCannonType{128},sunDiscType{83},sunArcherType{71};
     // processType: 실제 missileProcessType이며 원본 두 판본 모두28이다.
     std::uint32_t processType{28};
     // cornerImpactType: incomingCorner 충돌에 쓰는 공통 타입 사운드 번호다.
@@ -76,7 +76,7 @@ struct MissileHooks {
     // destroy: 표시 자산의 가상 Destroy(0)이며 부착한 Missile 프로세스도 같은 Host가 삭제한다.
     std::function<void(Sid,std::uint32_t)> destroy;
 };
-// 최초 썬 캐논 발사의 실제 숫자 필드와 표시 자산 수명/이동/충돌 사슬이다.
+// 최초썬캐논및SunArcher 발사의실제숫자필드와표시자산수명/이동/충돌사슬이다.
 class RawMissile {
 public:
     // 전체 판본 타입 표와 보충 사운드/방향 데이터를 같은 저장소로 연결한다.
@@ -84,8 +84,8 @@ public:
     // 실제 ctor의 숫자·좌표·예약을 쓴 뒤 표시 자산 생성/소유자/Pop/비행 효과까지 수행한다.
     // returned SID는 실제 Missile 표시 자산이다. 이어지는 Host 부착은 factory가 완료한다.
     Sid Construct(MissileFields& fields,const GunProjectileRequest& request) const;
-    // 썬 캐논 최초 incomingCorner 발사의 실제 이동·swept 표적 충돌·범위 종료를 처리한다.
-    // 반사/다른 총/원작 debug 좌표 이동 모드는 아직 명시 미복원 계약이다.
+    // 썬캐논/SunArcher 최초incomingCorner의실제이동·swept충돌·범위종료를처리한다.
+    // 반사/다른총/원작debug 좌표이동은아직명시미복원계약이다.
     void Frame(MissileFields& fields) const;
     // 동일한 월드인지 검증하는 adapter 자료다.
     const SidPool& Pool() const;

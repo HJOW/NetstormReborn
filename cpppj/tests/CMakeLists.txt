@@ -21,6 +21,10 @@ add_executable(netstorm_tests
     VortexAscendTests.cpp
     GeyserMinedTests.cpp
     PriestDamageTests.cpp
+    PathCleanupTests.cpp
+    TerrainStampTests.cpp
+    PriestRitualActionsTests.cpp
+    ArcherMissileTests.cpp
     RawButtonControlsTests.cpp
     GumpResetTests.cpp
     MissionOutcomeTests.cpp
@@ -659,3 +663,17 @@ set_source_files_properties(GeyserMinedTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_GEYSERMINED_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/geysermined-x86.tsv\"")
 set_source_files_properties(PriestDamageTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PRIESTDAMAGE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/priestdamage-x86.tsv\"")
+
+# 실제 경로 해제의 두 판본 차이와 초기 지형의 독립 CRT/공유 후보 선택을 대조한다.
+set_source_files_properties(PathCleanupTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PATHCLEANUP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/pathcleanup-x86.tsv\"")
+set_source_files_properties(TerrainStampTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_TERRAINSTAMP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/terrainstamp-x86.tsv\"")
+
+# 신전이 요청하는 실제 사제 K~P 첫 프레임과604 SharedRegular 예약 wrapper의 양판본 입력이다.
+set_source_files_properties(PriestRitualActionsTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PRIESTRITUALACTIONS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/priestritualactions-x86.tsv\"")
+
+# 썬 디스크 발사기71의 별도1888개 투사체 입력이며 이전 썬 캐논296개와 합치지 않는다.
+set_source_files_properties(ArcherMissileTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_ARCHERMISSILE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/archermissile-x86.tsv\"")

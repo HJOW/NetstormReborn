@@ -1,0 +1,7 @@
+{
+  "description": "초기 지형 월드의 실제 constructor/bounds·경계 문자 전환·도장 wrapper·섬별 후속 배치 사슬. 자동 대응표의 constructor/bounds 주소는 쓰지 않고 CD0049cdd0/0049cd50을 실제 wrapper에서 확인했다. 마지막 디컴파일 PC: HJOW-Athlon, 2026-10-13. 구현/독립 관찰은 별도 후속이다.",
+  "editions": {
+    "originals": ["004c0390", "004c02d0", "004c09a0", "004c0ad0", "004c1510", "0046da70", "0040e560", "004bfde0", "0040db90", "004c10a0"],
+    "originalCD": ["0049cdd0", "0049cd50", "0049d890", "0049d9a0", "0049e620", "00490530", "0042cd80", "0040b9d0", "0042c3d0", "0049e160"]
+  }
+}
