@@ -9,7 +9,7 @@
 namespace netstorm::o {
 class SquidFactory;
 class SquidUnpop;
-class SquidProcessHost;
+class SquidForms;
 // 암묵적인 런타임 SquidId 변환을 막는 원본 슬롯 번호다.
 struct Sid {
     std::uint16_t value{};
@@ -25,8 +25,9 @@ class SidPool {
 public:
     // 기존에 확보한 풀의 초기화 경로를 복원한다. CRT malloc의 포인터/실패 처리 자체는 복제하지 않는다.
     SidPool(OriginalEdition edition,std::uint32_t capacity,bool server=true);
-    // 004abb10 ↔ CD 004aaad0의 기존 풀 초기화다. 삭제 기록은 별도 계층이므로 유지한다.
-    void Reset();
+    // 004abb10 ↔ CD 004aaad0: capacity>0이면 풀 크기를 다시 확보하고, 0/음수면 기존 풀을 초기화한다.
+    // 삭제 기록은 유지한다. 호출자는 기존 프로세스/UI를 먼저 정리해야 하며 양수 재확보 뒤 빌린 span은 무효다.
+    void Reset(std::int32_t capacity=0);
     // 004af1d0 ↔ CD 004aae40. bit 1=예측, bit 2=클라이언트이며 예측이 우선한다.
     Sid Allocate(std::uint32_t flags=0);
     // 004abf60 ↔ CD 004ab250. void 객체만 반납하며 raw 슬롯을 지운 뒤 이전 타입 번호를 남긴다.
@@ -53,8 +54,8 @@ public:
 private:
     // Take는 free 슬롯도 받되 풀 목록/카운터를 고치지 않으므로 전용 어댑터만 raw 접근을 허용한다.
     friend class SquidFactory;
-    // 지정 서버 ProcessForm의 Take는 슬롯 일부만 쓰고 목록/카운터를 유지한다.
-    friend class SquidProcessHost;
+    // 지정 내장 Form의 Take는 슬롯 일부만 쓰고 목록/카운터를 유지한다.
+    friend class SquidForms;
     // 공간 해제는 raw next와 void만 갱신하고 풀 목록/반납은 별도로 유지한다.
     friend class SquidUnpop;
     // 원본 short next 필드를 little endian으로 읽거나 쓴다. serverHead는 0번 슬롯+14의 겹친 객체다.

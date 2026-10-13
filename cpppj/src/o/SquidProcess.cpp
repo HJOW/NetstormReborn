@@ -1,5 +1,6 @@
 // 객체 부착 프로세스의 form 생성/부착/해제와 Regular 이벤트 실행을 원본 쓰기 순서대로 복원한다.
 #include "o/SquidProcess.h"
+#include "o/SquidForms.h"
 #include <cmath>
 #include <stdexcept>
 #include <utility>
@@ -84,14 +85,6 @@ void SquidProcessHost::AttachForm(Sid form,Sid parent,std::uint32_t flags) {
     if (!(raw[kState]&kVoid)) throw std::logic_error("프로세스 form Pop은 void 상태여야 합니다");
     raw[kState]&=static_cast<std::uint8_t>(~kVoid);
 }
-// 지정 free form의 생성자는 가상 표만 덮는다. 원본 Take처럼 나머지 raw 바이트와 풀 메타데이터를 유지한다.
-std::span<std::uint8_t> SquidProcessHost::TakeForm(Sid form) {
-    auto raw=std::span(pool_.bytes_).subspan(pool_.Offset(form),pool_.layout_.stride);
-    raw[kState]&=0xfc;const auto vtable=FormVtable();
-    // 원본 ProcessForm 생성자의 DWORD 가상 표 기록값만 쓴다.
-    for (std::size_t i=0;i<4;++i) raw[i]=static_cast<std::uint8_t>(vtable>>(8*i));
-    raw[kType]=static_cast<std::uint8_t>(kProcessFormType);raw[kState]|=kVoid;return raw;
-}
 SquidProcess* SquidProcessHost::Attach(std::unique_ptr<SquidProcess> process,std::uint32_t processType,Sid parent,std::uint32_t flags,Sid form) {
     if (!process) throw std::invalid_argument("부착할 프로세스가 없습니다");
     if (processType<kFirstProcessType || processType>=ProcessTypeEnd()) throw std::invalid_argument("프로세스 타입 번호 오류");
@@ -121,18 +114,15 @@ SquidProcess* SquidProcessHost::Attach(std::unique_ptr<SquidProcess> process,std
     if (patch) state_.typeRotation=(state_.typeRotation+1)%static_cast<std::uint32_t>(types_.size());
     try {
         // 지정 번호에서는 Allocate를 부르지 않는다. Take의 postTake도 ProcessForm에서는 빈 함수다.
-        if (form.value) static_cast<void>(TakeForm(form));
-        else form=pool_.Allocate((flags&kClientForm) ? 2U : 0U);
+        SquidForms forms(pool_);
+        if (form.value) form=forms.Take(kProcessFormType,form);
+        else form=forms.Create(kProcessFormType,(flags&kClientForm) ? 2U : 0U);
     } catch (...) {
         // 번호 소진이면 등록을 되돌려 form 없는 프로세스가 남지 않게 한다.
         kernel_.Remove(pid);state_.typeRotation=rotation;
         throw;
     }
     auto raw=pool_.AllocatedBytes(form);
-    const auto vtable=FormVtable();
-    // 가상 표 기록값은 호스트에서 역참조하지 않는다.
-    for (std::size_t i=0;i<4;++i) raw[i]=static_cast<std::uint8_t>(vtable>>(8*i));
-    raw[kType]=static_cast<std::uint8_t>(kProcessFormType);
     // 004ae2e0: 타입 번호를 프로세스 타입으로 바꾸고 Kernel 번호를 기록한다.
     raw[kType]=static_cast<std::uint8_t>(processType);
     for (std::size_t i=0;i<4;++i) raw[kFormPid+i]=static_cast<std::uint8_t>(pid>>(8*i));
@@ -157,27 +147,7 @@ RegularProcess* SquidProcessHost::AddSharedRegular(Sid parent,std::uint32_t even
 // 실제 부착과 사제 낙하 연결이 같은 풀인지 검사할 때 사용한다.
 const SidPool& SquidProcessHost::Pool() const { return pool_; }
 void SquidProcessHost::UnpopForm(Sid form) {
-    const auto raw=pool_.Slot(form);
-    if (raw[kType]>kLastFormType || (raw[kState]&kVoid)) throw std::logic_error("프로세스 form Unpop 상태 오류");
-    pool_.AllocatedBytes(form)[kState]|=kVoid;
-    const Sid parent{Word(form,kFormParent)};
-    if (parent.value==0 || parent.value>=pool_.Capacity()) throw std::logic_error("프로세스 form 부모 번호 오류");
-    const auto parentState=pool_.Slot(parent)[kState];
-    if (parentState&kFree) return;
-    // 004ac6b0: 부모가 지워지는 중(dead)이면 체인을 고치지 않고 contained도 남긴다.
-    if (!(pool_.Slot(form)[kState]&kContained)) throw std::logic_error("프로세스 form이 contained가 아닙니다");
-    if (parentState&kDead) return;
-    const auto next=Word(form,kNext),previous=Word(form,kFormPrevious);
-    if (previous) {
-        if (next==previous) throw std::logic_error("프로세스 form 종속 체인 자기 참조");
-        PutWord(Sid{previous},kNext,next);
-    }
-    if (next) SetPrevious(Sid{next},previous);
-    if (Word(parent,kHead)==form.value) {
-        if (previous) throw std::logic_error("프로세스 form 머리의 이전 항목 오류");
-        PutWord(parent,kHead,next);
-    }
-    pool_.AllocatedBytes(form)[kState]&=static_cast<std::uint8_t>(~kContained);
+    SquidForms(pool_).Unpop(form);
 }
 void SquidProcessHost::FormPreDestroy(Sid form,std::uint32_t flags) {
     const auto raw=pool_.Slot(form);ProcessId pid=0;

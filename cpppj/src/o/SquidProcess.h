@@ -112,8 +112,6 @@ private:
     void FormParentDying(Sid form,Sid parent);
     // form 종속 체인에서 이전 항목 번호를 쓰는 가상 함수(vtable +0xc)다. form과 contained 자산의 필드 위치가 다르다.
     void SetPrevious(Sid sid,std::uint16_t previous);
-    // 004af610 / CD 004ab440의 free ProcessForm 전용 경로다. 가상 생성자/빈 postTake만 적용하고 자산 zOrder는 쓰지 않는다.
-    std::span<std::uint8_t> TakeForm(Sid form);
     // Regular 실행 몸체. 판본별 abstract 처리와 처리기 반환값 분기를 구별한다.
     void RunRegular(RegularProcess& process);
     template<class Predicate> RegularProcess* Find(Sid parent,Predicate match) const;

@@ -23,7 +23,14 @@ SidPool::SidPool(OriginalEdition edition,std::uint32_t capacity,bool server)
     Reset();
 }
 // 기존 메모리 전체를 지우고 세 영역을 잇는다. predictableHead 자체는 할당하지 않는다.
-void SidPool::Reset() {
+void SidPool::Reset(std::int32_t capacity) {
+    if (capacity>0) {
+        const auto requested=static_cast<std::uint32_t>(capacity);
+        if (requested<=layout_.predictableFirst+1 || requested>65535) throw std::invalid_argument("SID 풀 재확보 크기 오류");
+        // 확보 실패 시 기존 풀/목록/삭제 기록은 그대로 유지한다. 원본 malloc 실패의 잘못된 접근은 재현하지 않는다.
+        std::vector<std::uint8_t> replacement(static_cast<std::size_t>(requested)*layout_.stride);
+        bytes_.swap(replacement);capacity_=requested;
+    }
     std::fill(bytes_.begin(),bytes_.end(),std::uint8_t{0});
     // 원본에서 2번부터 free 비트가 켜진다. 0/1번은 초기 상태 0을 유지한다.
     for (std::uint32_t sid=2;sid<capacity_;++sid) bytes_[sid*layout_.stride+kState]=kFree;

@@ -1,5 +1,6 @@
 // 원본의 부착/해제 쓰기 순서와 부모 삭제 중 재진입을 유지하며 UI 포인터는 소유 등록 ID로만 연결한다.
 #include "o/GumpFormHost.h"
+#include "o/SquidForms.h"
 #include <stdexcept>
 #include <utility>
 
@@ -23,6 +24,8 @@ GumpFormHost::GumpFormHost(SidPool& pool,SquidFactory& factory,std::span<const R
 }
 // 별도 풀을 만들지 않고 기존 Form 생성 계약을 사용한다.
 Sid GumpFormHost::Create(std::uint32_t flags) const { return factory_.CreateGumpForm(flags); }
+// 같은 raw 풀의 지정 Take를 사용하여 부착된 Form의 링크 정리도 실제로 수행한다.
+Sid GumpFormHost::Take(Sid form) const { return SquidForms(pool_).Take(kGumpFormType,form); }
 // 메뉴/수명 연결기가 실제 판본과 풀을 확인할 수 있게 제공한다.
 const SidPool& GumpFormHost::Pool() const { return pool_; }
 // 타입 바이트는 반납 뒤에도 보존된다. dead 검사/중첩 삭제를 위해 free 여부는 여기서 제외한다.
@@ -96,26 +99,7 @@ void GumpFormHost::Attach(Sid form,Sid parent,std::uint32_t flags) const {
 }
 // 살아 있는 부모에서는 링크를 고치지만 부모 삭제 중에는 저장한 next로 계속 순회하게 체인을 유지한다.
 void GumpFormHost::Unpop(Sid form) const {
-    const auto state=Form(form)[kState];
-    if (state&kVoid) throw std::logic_error("void GumpForm Unpop 금지");
-    pool_.AllocatedBytes(form)[kState]|=kVoid;
-    const auto parent=Parent(form);
-    if (!parent.value || parent.value>=pool_.Capacity()) throw std::logic_error("GumpForm Unpop 부모 번호 오류");
-    const auto parentState=pool_.Slot(parent)[kState];
-    if (parentState&kFree) return;
-    if (!(pool_.Slot(form)[kState]&kContained)) throw std::logic_error("GumpForm Unpop contained 누락");
-    if (parentState&kDead) return;
-    const auto next=Word(form,kNext),previous=Word(form,kPrevious);
-    if (previous) {
-        if (previous==form.value || next==previous) throw std::logic_error("GumpForm 이전 종속 링크 오류");
-        Put(Sid{previous},kNext,next,2);
-    }
-    if (next) SetPrevious(Sid{next},previous);
-    if (Word(parent,kHead)==form.value) {
-        if (previous) throw std::logic_error("GumpForm 머리 이전 항목은 0이어야 합니다");
-        Put(parent,kHead,next,2);
-    }
-    pool_.AllocatedBytes(form)[kState]&=static_cast<std::uint8_t>(~kContained);
+    Form(form);SquidForms(pool_).Unpop(form);
 }
 // 부모 삭제 인자는 사용하지 않는다. UI 콜백 전 현재 소유 ID/부모를 모두 읽고 콜백 뒤 Form을 읽지 않는다.
 void GumpFormHost::Notify(Sid form) const {

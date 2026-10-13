@@ -2,6 +2,7 @@
 #include "ConstructionSupport.h"
 #include "client/GumpDraw.h"
 #include "client/DrawSort.h"
+#include <algorithm>
 #include <limits>
 
 namespace {
@@ -165,7 +166,18 @@ TEST_CASE(GumpDraw_PixelLinesAndExtremeClip) {
     SetGumpDrawClip(state,{6,6,2,2});const auto before=pixels;target.Lines(lines);CHECK(pixels==before);
 }
 
-// 잘못된 저장소/필수 처리기/표면/선/이미지는 C++ 경계에서 거부한다.
+// 지원 대각선은 양 끝을 포함하며 클립 변경 뒤에는 범위 안의 픽셀만 쓴다.
+// 이력: 기존 ScrollGump의 VFX 대각선 연결 뒤 남아 있던 예외 기대를 실제 픽셀 검사로 바꿨다.
+TEST_CASE(GumpDraw_DiagonalLinesUseCurrentClip) {
+    GumpDrawState state;SetGumpDrawClip(state,{0,0,8,8});std::array<std::uint8_t,64> pixels{};
+    GumpPixelTarget target(pixels,8,8,state);const GumpLine diagonal{{2,2},{3,3},1};
+    target.Lines(std::span(&diagonal,1));CHECK(pixels[18]==1 && pixels[27]==1);
+    CHECK(std::count(pixels.begin(),pixels.end(),std::uint8_t{1})==2);
+    pixels.fill(0);SetGumpDrawClip(state,{0,0,3,3});target.Lines(std::span(&diagonal,1));
+    CHECK(pixels[18]==1 && pixels[27]==0);CHECK(std::count(pixels.begin(),pixels.end(),std::uint8_t{1})==1);
+}
+
+// 잘못된 저장소/필수 처리기/표면/이미지는 C++ 경계에서 거부한다.
 TEST_CASE(GumpDraw_Contracts) {
     GumpScene scene;scene.collection.root=1;scene.nodes[1]={};scene.nodes[2]={kGumpDrawClip,0,999,0,0,0,4,4,2,3};
     SetGumpDrawClip(scene.draw,{0,0,8,8});GumpCollection collector(scene.collection,scene.Hooks());GumpDraw draw(collector,scene.draw,{[](auto) {}});
@@ -173,6 +185,5 @@ TEST_CASE(GumpDraw_Contracts) {
     CHECK(Throws([&] { draw.Draw(2); }));CHECK(Coordinates(scene.draw)=="0,0,8,8,0,0,7,7");
     std::array<std::uint8_t,64> pixels{};CHECK(Throws([&] { GumpPixelTarget bad(pixels,0,8,scene.draw); }));
     CHECK(Throws([&] { GumpPixelTarget bad(std::span(pixels).first(63),8,8,scene.draw); }));GumpPixelTarget target(pixels,8,8,scene.draw);
-    const GumpLine diagonal{{2,2},{3,3},1};CHECK(Throws([&] { target.Lines(std::span(&diagonal,1)); }));
     CHECK(Throws([&] { target.Image({2,2,{1},{255}},{0,0}); }));
 }

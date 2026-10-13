@@ -28,6 +28,7 @@ add_executable(netstorm_tests
     ConstructionVisualTests.cpp
     ContainedLookupTests.cpp
     ProcessFormTests.cpp
+    FormTakeTests.cpp
     ConstructionTimeTests.cpp
     ConstructionDataTests.cpp
     ConstructionProcessTests.cpp
@@ -435,6 +436,10 @@ set_source_files_properties(ConstructionDataTests.cpp PROPERTIES COMPILE_DEFINIT
 # 지정 free form/즉시 단일 분배의 저장 PE 관찰만 읽으며 실제 게임을 실행하지 않는다.
 set_source_files_properties(ProcessFormTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PROCESSFORM_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/processform-x86.tsv\"")
+
+# 내장 Form/공통 Unpop/풀 재확보의 두 실제 PE 600개 저장 관찰을 직접 대조한다.
+set_source_files_properties(FormTakeTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FORMTAKE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/formtake-x86.tsv\"")
 
 # 종속 조회/삭제의 저장 PE 관찰만 읽으며 실제 게임/Python은 실행하지 않는다.
 set_source_files_properties(ContainedLookupTests.cpp PROPERTIES COMPILE_DEFINITIONS

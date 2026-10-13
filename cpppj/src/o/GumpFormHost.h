@@ -18,6 +18,8 @@ public:
         RawSquidDestroy& destroy,GumpFormNotice notice={},SquidDestroyHooks fallback={});
     // 메뉴의 Form(type,2)을 실제 factory에 연결한다. 생성 자체는 부모/소유 ID를 쓰지 않는다.
     Sid Create(std::uint32_t flags=2) const;
+    // 서버/예측 번호를 수신한다. 기존 GumpForm이면 부모에서 해제한 뒤 소유 ID/payload를 유지한다.
+    Sid Take(Sid form) const;
     // 기존 처리기와 같은 풀/판본인지 연결 단계에서 확인할 수 있다.
     const SidPool& Pool() const;
     // 반납된 타입 기록도 포함해 번호가 GumpForm인지 판별한다. 이미 dead인 중첩 삭제를 원본처럼 건너뛰기 위해서다.

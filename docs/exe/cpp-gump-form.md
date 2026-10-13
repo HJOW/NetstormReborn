@@ -87,6 +87,6 @@ UI에서 먼저 Kill하면 Form 루트의 pre/post는 빈 깊이 감소뿐이므
 
 게임 라이브러리/`NetstormCpp` **Release 최종 빌드 경고 0·오류 0**. SOURCE_MAP 생성기를 실행해 현재 존재 상태를 갱신했다. **새 테스트 추가/실행·전체 CTest·독립 PE/C++ SID/필드/알림/중첩 삭제 대조·게임/GUI 실행은 미수행**이다. 관찰 **523,634개**, 대조 **523,374개**, **854개 통과**는 앞 단계 기록이며 이번 추가 관찰/대조는 각각 **0**이다.
 
-GumpForm의 클라이언트 생성/소유/부착/알림/Unpop/반납과 메뉴/수명 연결은 구현했다. 전체 Form 풀 재구성/지정 Take·DependForm/ContentForm 전체 가상 수명·서버 전송·다른 파생 Gump의 +4·파생 처리기 내부의 중첩 분배, 실제 전체 Client/월드 연결은 남았다. 동적 메뉴·현재 전역/명령 큐/변경 영역/allocator·OS 큐/폴링/overlay·자동 raw UI와 신규/기존 전체 UI의 독립 대조도 후속이다. **raw 자동 GUI/건설·미션 완주는 미완료다.**
+GumpForm의 클라이언트 생성/소유/부착/알림/Unpop/반납과 메뉴/수명 연결은 구현했다. **풀 양수 재확보·내장 지정 Take·공통 Unpop 및 Gump/Process 연결은 [2026-10-13 VM-W11-CODEX 후속](cpp-form-take.md)에서 완료했다.** 상위 초기화 전 UI/Kernel 정리·DependForm/ContentForm 전체 가상 수명·서버 전송·다른 파생 Gump의 +4·파생 처리기 내부의 중첩 분배, 실제 전체 Client/월드 연결은 남았다. 동적 메뉴·현재 전역/명령 큐/변경 영역/allocator·OS 큐/폴링/overlay·자동 raw UI와 신규/기존 전체 UI의 독립 대조도 후속이다. **raw 자동 GUI/건설·미션 완주는 미완료다.**
 
 두 보호 PE SHA-256은 불변이다. AGENTS.md/보호 원본/dotnetpj/테스트를 편집하지 않았고 커밋/푸시를 수행하지 않았다.
