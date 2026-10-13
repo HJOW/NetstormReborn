@@ -133,7 +133,7 @@ double RawConstructionBuilder::Move(std::uint32_t player,Sid target,std::uint32_
         const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
         Write(pool_.AllocatedBytes(carrier),patch ? kPatchFrame : kCdFrame,std::bit_cast<std::uint32_t>(meta.firstFrames[frameIndex]),patch ? 4 : 1);
         const auto position=Center(source);hooks_.pop(carrier,position.x,position.y,0);
-        if (hooks_.reserveTimer()) hooks_.addTimer(carrier,state_.timerEvent,0.0F);
+        if (hooks_.reserveTimer()) hooks_.addTimer(carrier,0,state_.timerPayload);
         (void)hooks_.move(carrier,destination.x,destination.y);++index;
     }
     return Arrival(*path);

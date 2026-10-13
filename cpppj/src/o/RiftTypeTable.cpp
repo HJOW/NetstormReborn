@@ -166,6 +166,11 @@ void ApplyDefinition(RiftTypeRecord& type, const RiftTypeDefinition& definition)
             if (!number) throw std::invalid_argument("cost는 숫자여야 합니다");
             type.cost=static_cast<float>(*number);
         }
+        else if (is("damageEffect")) {
+            // 실제 0049c3b0/CD Parse의 type +0xd4를 숫자 절삭으로 채운다. 누락된 속성은 초기 0이다.
+            if (!number) throw std::invalid_argument("damageEffect는 숫자여야 합니다");
+            type.damageEffect=ToInt(*number);
+        }
         else if (is("minUsage") && number) type.minUsage[0] = static_cast<float>(*number);
         else if ((is("maxUsage") || is("maxRainBattleUsage")) && number) type.maxUsage[0] = static_cast<float>(*number);
         else if (is("maxThunderBattleUsage") && number) type.maxUsage[1] = static_cast<float>(*number);

@@ -22,7 +22,7 @@ struct ConstructionBuilderState {
     std::uint32_t carrierType{}; // 005411fc / CD 0051cae8: 자원 운반 객체 타입. 호출자가 실제 전역을 공급한다.
     std::uint32_t bridgeType{82}; // 005411a0 / CD 0051ca8c: 단어 쓰기 helper가 읽는 현재 다리 타입이다.
     std::uint32_t approachMask{}; // 005424b8 / CD 005395cc: 기준점 genus와 겹치면 mask|1로 접근한다.
-    std::uint32_t timerEvent{}; // 00532750 / CD 0052da30: 운반 객체에 payload 0으로 예약할 Regular 이벤트다.
+    float timerPayload{0.05F}; // 00532750 / CD 0052da30: event0으로 예약하는 운반 객체 Regular의 현재 float payload다.
     double now{}; // 0055b4d0 / CD 005484a8: 속도 조정의 기준 게임 시각이다.
     SquidPostPopList sources; // 00592f4c/54 / CD 대응 전역: 선택/정렬 뒤 소비하는 공유 DWORD 목록이다.
 };

@@ -111,11 +111,16 @@ UberGump::UberGump(Client& client) : client_(client) {
         const auto frame = client_.Assets().FrameIndex(type, name, 0);
         decorations_.emplace(name, client_.Assets().Shapes().Decode(type.block, frame));
         if (std::string_view(name)=="A00") {
+            buttonTextureType_=static_cast<std::uint32_t>(o::kFirstAssetTypeNumber+type.block);
+            buttonTextureFrame_=static_cast<std::uint32_t>(frame);
             buttonTextureMetrics_=client_.Assets().Shapes().SquidMetrics(type.block,frame);
             const auto rect=client_.Assets().Shapes().Blocks()[type.block].frames[frame].rect;
             buttonTextureOffset_={rect.left,rect.top};
         }
     }
+    rawButtons_=std::make_unique<RawButtonControls>(client_.Assets().Edition(),RawButtonHooks{
+        [this] { return client_.WallSeconds(); },[this](auto code) { return client_.Poll(code); },
+        [this] { if (client_.Audio()) client_.Audio()->Sounds().PlayByName("button.wav",0,0,0,0,0); }});
     MainMenu(); Compose(); client_.ShowScene();
 }
 // 입력 참조를 먼저 없애고 커널이 소유한 월드를 이 구현 파일에서 제거한다.
@@ -296,10 +301,13 @@ void UberGump::Event(InputEvent event) {
     }
     if (world_ && userInput_ && state_.phase==ClientPhase::Mission && popup_.empty()) {
         const bool ui=std::any_of(input_.Controls().begin(),input_.Controls().end(),[&](const GumpControl& control) { return GumpControlInput::Contains(control.rect,{event.x,event.y}); });
-        if (!ui) { if (const auto id=userInput_->Event(event)) { if (*id) state_.Post({"ObjectMenu",std::to_string(*id)}); else world_->Select(0); } return; }
+        if (!ui && !rawButtons_->HasCapture()) { if (const auto id=userInput_->Event(event)) { if (*id) state_.Post({"ObjectMenu",std::to_string(*id)}); else world_->Select(0); } return; }
     }
-    const auto old = input_.Pressed(); const auto activated = input_.Event(event);
-    if (old != input_.Pressed()) rebuild_ = true;
+    const auto old=rawButtons_->Pressed();auto activated=rawButtons_->Event(event);
+    // 메뉴 행은 현재 어댑터에서 누름 즉시 실행한다. 돌 버튼 명령은 실제 부모 click 통지만 사용한다.
+    if (!activated && std::any_of(input_.Controls().begin(),input_.Controls().end(),[&](const GumpControl& control) {
+        return control.menu && GumpControlInput::Contains(control.rect,{event.x,event.y}); })) activated=input_.Event(event);
+    if (old!=rawButtons_->Pressed()) rebuild_=true;
     if (activated && *activated >= 0 && static_cast<std::size_t>(*activated) < actions_.size()) {
         // 원본 004cebf0은 메인 메뉴 버튼 사건을 받자마자 시작 표시를 지운다.
         if (state_.phase == ClientPhase::MainMenu && popup_.empty()) client_.ClearFullScreenState();
@@ -311,6 +319,7 @@ bool UberGump::Input() {
     // 사건 순서를 유지한다. 첫 상태 전환만 다음 프레임에 예약된다.
     while (!client_.Input().Empty()) Event(client_.Input().Pop(false));
     const auto mouse = client_.Poll(InputCode::kLeftButton);
+    if (rawButtons_->Poll(mouse)) rebuild_=true;
     if (input_.Move({mouse.x, mouse.y}, (mouse.code & InputCode::kOutside) == 0)) rebuild_ = true;
     if (userInput_ && state_.phase==ClientPhase::Mission && popup_.empty()) userInput_->Tick();
     else if (userInput_) userInput_->Cancel();
@@ -338,6 +347,7 @@ void UberGump::Refresh() { rebuild_=true;client_.GetRenderer().InvalidateAll(); 
 // 새 RGB를 월드에 공급한 뒤 UI의 장식·글자·선택 색도 다시 합성한다.
 void UberGump::PaletteChanged() {
     if (world_) world_->SetPalette(client_.GetScreen().Palette());
+    rawButtons_->SetPalette(ButtonColors(client_.GetScreen().Colors()));
     Refresh();
 }
 // 선택한 원본 명령의 작은 부분집합. 지원하지 않는 항목은 활성화하지 않는다.
@@ -402,7 +412,7 @@ void UberGump::Compose(bool controls) {
             canvas = std::make_shared<IndexedImage>(client_.GetRenderer().SceneImage());
         }
     }
-    if (controls) { labels_.clear(); actions_.clear(); input_.Cancel(); }
+    if (controls) { labels_.clear(); actions_.clear(); input_.Cancel();rawButtons_->Cancel(); }
     // 같은 순서의 영역/라벨/명령을 제출한다. 그림만 갱신할 때도 번호가 유지된다.
     const auto control = [&](const DialogItem& item, ScreenRect r) {
         const int id = static_cast<int>(regions.size()); regions.push_back({id, r, item.menu, item.enabled, item.instant});
@@ -411,15 +421,16 @@ void UberGump::Compose(bool controls) {
     };
     // 돌 버튼은 누르는 동안만 명암과 글자 위치를 바꾼다.
     const auto button = [&](const DialogItem& item, int x, int y, int w) {
-        const auto label = FontBytes(item.label);
         const int id = control(item, {x, y, x + w, y + kButtonHeight + 1});
-        const bool down = input_.Pressed() == id;
+        const bool drawRaw=!controls && popup_.empty(); // 펼침 메뉴 아래의 장식 버튼은 입력 트리에 등록하지 않는다.
+        const auto label=drawRaw ? rawButtons_->Label(id) : FontBytes(item.label);
         const ScreenRect r{x, y, x + w, y + kButtonHeight};
-        // 원본 배경 자식은 상대 (1,1), 폭 w-2/높이 17이다. 눌림은 테두리 명암 방향만 바꾼다.
-        const auto background=PlanGumpBackground({r.left+1,r.top+1,r.right-1,r.bottom-1},all,
-            buttonTextureMetrics_.width,buttonTextureMetrics_.height,GumpBackgroundFlags::kButton|(down ? GumpBackgroundFlags::kPressed : 0U));
+        // 실제 raw 자식의 상대 (1,1) 부착/크기/눌림을 사용한다. 첫 준비 합성은 다음 raw 합성으로 대체된다.
+        const auto background=!drawRaw ? PlanGumpBackground({r.left+1,r.top+1,r.right-1,r.bottom-1},all,
+            buttonTextureMetrics_.width,buttonTextureMetrics_.height,GumpBackgroundFlags::kButton) : rawButtons_->BackgroundPlan(id,all);
         DrawGumpBackground(*canvas,decorations_.at("A00"),buttonTextureOffset_,background,client_.GetScreen().ShadeMaps());
-        const auto plan=PlanButtonDraw({r,font.Measure(label),font.Height(),0,down ? 1 : 0,item.enabled ? 0U : 1U},buttonContexts,buttonColors.edge);
+        const auto plan=!drawRaw ? PlanButtonDraw({r,font.Measure(label),font.Height(),0,0,item.enabled ? 0U : 1U},buttonContexts,buttonColors.edge) :
+            rawButtons_->DrawPlan(id,font.Measure(label),font.Height());
         DrawGumpLines(*canvas,plan.lines);
         text.push_back({&font,label,x+plan.textOffset.x,y+plan.textOffset.y,static_cast<std::uint8_t>(plan.text.color),
             static_cast<std::uint8_t>(plan.text.shadowColor),{plan.text.shadowX,plan.text.shadowY},(plan.text.flags&2)!=0,(plan.text.flags&4)!=0});
@@ -510,7 +521,16 @@ void UberGump::Compose(bool controls) {
         }
         client_.GetRenderer().SetBackground(canvas); client_.GetRenderer().SetScene({}, std::move(text));
     }
-    if (controls) input_.SetControls(std::move(regions));
+    if (controls) {
+        std::vector<std::string> originalLabels;originalLabels.reserve(labels_.size());
+        // 원본 돌 버튼의 63바이트 라벨은 UTF-8가 아닌 기존 게임 글꼴 바이트를 사용한다.
+        for (const auto& label:labels_) originalLabels.push_back(FontBytes(label));
+        rawButtons_->SetControls(regions,originalLabels,width,height,{buttonTextureType_,buttonTextureFrame_,
+            static_cast<std::int16_t>(buttonTextureMetrics_.width),static_cast<std::int16_t>(buttonTextureMetrics_.height),buttonColors});
+        input_.SetControls(std::move(regions));
+        // 새 페이지는 같은 raw 노드로 한 번 다시 합성하며 중간 어댑터 그림은 화면에 제출하지 않는다.
+        Compose(false);return;
+    }
     if (world_) world_->TakeChanged();
     rebuild_ = false;
 }
@@ -529,6 +549,7 @@ std::string UberGump::Report() const {
     out << "size\t" << client_.GetScreen().Width() << '\t' << client_.GetScreen().Height() << "\n";
     out << "paused\t" << client_.Paused() << "\nsound\t" << client_.Configuration().GetInt("sound") << "\n";
     out << "thunder_processes\t" << client_.ThunderFlashCount() << '\n';
+    out<<rawButtons_->Report()<<'\n';
     out.precision(12); out<<"time\t"<<client_.Time().game<<'\t'<<client_.Time().wall<<"\n";
     out << "fullscreenMarker\t" << client_.Files().TryRead("fullscreenStateFile.dat").has_value() << "\n";
     out << "musicVolume\t" << client_.Configuration().GetInt("musicVolume") << "\nsoundVolume\t" << client_.Configuration().GetInt("soundVolume") << "\n";

@@ -10,6 +10,10 @@ AI 를 이용해 되살리는 프로젝트입니다.
 
 # 현재 개발 진행상황 관련
 
+2026-10-13 cpppj 후속: [건물 Pop/Unpop 공간](docs/exe/cpp-building-space.md), [자산 postPop](docs/exe/cpp-asset-postpop.md), [사제·보호막 월드 연결 모듈](docs/exe/cpp-raw-priest-world-bindings.md), [SP 회전](docs/exe/cpp-sp-rotation.md), [건설 운반 도착](docs/exe/cpp-construction-arrival.md)을 복원했습니다. Builder 타이머의 event/payload 반전도 실제 생성자에 맞춰 교정했습니다. 신규 원본/C++ 대조 **5,318개**, 전체 검사 **904개/실패0**, Release 경고/오류0입니다. **비표면 실제 미션 월드 이관·이동/건설/전투/운반·의식 연결과 캠페인 1-1 완주는 미완료**이며 [인수인계](LEFT_JOBS.md)에 다음 단위와 실패/최종 근거를 기록했습니다.
+
+2026-10-13 cpppj 후속: [실제 Client 돌 버튼](docs/exe/cpp-raw-button-controls.md)을 raw 생성·트리·캡처·프레임·수명에 연결했습니다. [지정 프로세스 재부착/Kernel 정리](docs/exe/cpp-process-retake.md), [UI 정리/루트 교체](docs/exe/cpp-ui-reset-analysis.md), [사제 상태/동맹 기반 승패](docs/exe/cpp-mission-outcome.md)를 복원하고 두 PE **1,358개** 독립 입력의 C++ 대조를 통과했습니다. 클론 메뉴·브리핑·옵션·복귀 54상태와 월드 release/재진입 10상태, 원본 함수·독립 자산 해독의 버튼/배경 픽셀 대조가 통과했습니다. **건설·전투·사제 운반/의식과 실제 승패 실행 연결·캠페인 1-1 완주는 미완료**입니다. 전체 회귀와 다음 작업은 [최신 인수인계](LEFT_JOBS.md)를 따릅니다.
+
 2026-10-13 dotnetpj 후속: 초기 브리핑의 10프레임·안내 종료 후 재개의 7프레임을 실제 화면과 중첩 게임 시계에 연결했습니다. Release 빌드 경고/오류 0이며 동작 테스트·게임 실행은 수행하지 않았습니다. [구현과 남은 범위](docs/dotnet-dialog-frames-20261013.md).
 
 2026-10-13 dotnetpj 후속: [한국어 건물·유닛 명칭 규칙](docs/korean-unit-names.md)을 문서와 게임 표시에 반영했습니다. 공유 이름표 55개를 생산 메뉴·건설 목록·지식창·정보 제목에 연결했으며 Release 빌드 경고/오류 0입니다. 새 테스트·GUI 실행은 수행하지 않았습니다.

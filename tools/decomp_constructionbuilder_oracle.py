@@ -221,10 +221,10 @@ def generate(smoke=False):
     FIXTURE.write_text('# 실제 건설 사제/운반 생성·이동 전체/기하/목록 소비. 경로/자원 정책/가상 효과는 명시 경계.\n'
         '# 판본 연산 입력('+ ' '.join(KEYS)+') 사건 반환 생성raw 최종sources\n'+
         '\n'.join('\t'.join(row) for row in rows)+'\n',encoding='utf-8',newline='\n')
-    REPORT.write_text(json.dumps(dict(total=len(rows),host='HJOW-Athlon',date='2026-10-11',controls=list(CONTROLS),os_calls=0,editions=editions,
+    REPORT.write_text(json.dumps(dict(total=len(rows),host='VM-W11-CODEX',date='2026-10-13',controls=list(CONTROLS),os_calls=0,editions=editions,
         files={p.relative_to(ROOT).as_posix():digest(p) for p in sorted(paths)},limits=[
             '실제 전체 루트·발자국/위 가운데/중심·반올림/CRT·genus/타입·단어 쓰기·공급원 소비',
-            '기준점/factory/가상 소유자/공간/경로/속도 적용·자원 선택/정렬·할당/Regular/표면 알림은 명시 경계',
+            '기준점/factory/가상 소유자/공간/경로/속도 적용·자원 선택/정렬·할당/Regular/표면 알림은 명시 경계; Regular 생성자의 실제 세 인자는 event,parent,payload이며 첫0/마지막00532750의 의미를 이전 문서에서 반대로 해석했던 것을 교정',
             '유한 합성 좌표/작은 발자국/시각·타입 100/83/84/85/134/105/106·0..3 공급원; CD Pentium FDIV 우회 전역 0',
             '원본 assert/게임/OS/예외 처리기 미실행, 정상 SEH/스택/보존 레지스터/x87·허용 실행/쓰기·SHA 감사']),
         ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')

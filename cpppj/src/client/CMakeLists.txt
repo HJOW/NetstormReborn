@@ -25,6 +25,7 @@ target_sources(netstorm PRIVATE
     GifImage.cpp GifImage.h
     DialogScript.cpp DialogScript.h
     Gump.cpp Gump.h
+    RawButtonControls.cpp RawButtonControls.h
     GumpCollection.cpp GumpCollection.h
     GumpDraw.cpp GumpDraw.h
     GumpCreate.cpp GumpCreate.h
@@ -70,6 +71,7 @@ target_sources(netstorm PRIVATE
     UberGump.cpp UberGump.h
     GameWorld.cpp GameWorld.h
     RawSurfaceWorld.cpp RawSurfaceWorld.h
+    RawPriestWorldBindings.cpp RawPriestWorldBindings.h
     UserInput.cpp UserInput.h
     Sound.cpp Sound.h
     SoundDevice.cpp SoundDevice.h

@@ -136,6 +136,7 @@ struct RiftTypeRecord {
     float cost{};                      // +0xc4: cost. postPop 비용 집계/후속 건설 비용 입력.
     std::int32_t maxHitPoints{};         // +0: maxHitPoints. 서버 base postCreate의 초기 HP 입력.
     std::int32_t zOrder{};               // +0x104: base Squid에는 하위 8비트만 복사한다.
+    std::int32_t damageEffect{};          // +0xd4: damageEffect 숫자를 CRT 절삭한 값. 0이면 회복/피해 뒤 burning 검사 없이 반환한다.
     std::uint32_t constructorAddress{};  // 패치 +0x1d0 / CD +0x1b0. 0이면 base, 지원 주소는 자산 파생 생성자.
     // +4(20바이트)를 C 문자열로 읽은 값. 내장 프로세스 타입은 20글자로 잘린다. .type 타입은 파일 이름이지만,
     // 20글자 이상이면 종료 문자가 없어 바로 뒤의 설명 필드까지 이어 읽힌다(fakeThreeByThreeSurface).

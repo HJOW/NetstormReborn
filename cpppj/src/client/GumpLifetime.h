@@ -36,6 +36,12 @@ public:
     void Kill(std::uint32_t token) const;
     // 비어 있지 않은 현재 큐 항목을 Destroy하고 그 직후 현재 개수로 반복 범위를 갱신한다.
     void Cleanup() const;
+    // 004666d0/CD 00492a60: 등록표 1~999를 끝까지 읽고 현재 타입(+20)이 제외 타입과 다른 비 dead 노드만 Kill한다.
+    // 제외 signed BYTE는 각 슬롯에서 다시 읽는다. count/visible/void/미등록 플래그로 추가 필터를 하지 않는다.
+    void KillExceptType(const std::int8_t& excludedType) const;
+    // 004666a0/CD 00492a20: 이전 루트가 있으면 Kill한 뒤 현재 삭제 큐를 Cleanup하고 새 루트/id 0을 쓴다.
+    // count/serial과 새 객체의 기존 등록 칸은 초기화하지 않는다. 상위 Uber 교체가 기존 등록 칸을 먼저 제거한다.
+    void ReplaceRoot(std::uint32_t token) const;
     // 자식 우선 등록 해제 후 dead를 지우고 destroying을 세워 가상 소멸자(1)를 호출한다.
     void Destroy(std::uint32_t token) const;
     // 기본 가상 표 복원→현재 텍스트 두 개 해제→overlay/idle/큐의 모든 일치 칸 제거다.

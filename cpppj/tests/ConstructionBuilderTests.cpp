@@ -54,7 +54,7 @@ struct BuilderScene {
     void Prepare(std::vector<std::uint32_t> values) {
         input=std::move(values);CHECK(input.size()==21);events.clear();born=0;path={0,{10.0,12.5}};
         state={};state.builderType=kBuilder;state.carrierType=kCarrier;state.bridgeType=input[Bridge];
-        state.approachMask=input[Mask];state.timerEvent=0x25b;state.now=Time(input[NowLow],input[NowHigh]);
+        state.approachMask=input[Mask];state.timerPayload=std::bit_cast<float>(0x25bU);state.now=Time(input[NowLow],input[NowHigh]);
         state.sources={SourceInput(input[Sources]),input[Count]};
         // helper가 조회할 모든 타입에 발자국/속도/프레임 입력을 준비한다.
         for (auto type:{100U,83U,84U,85U,kBuilder,kCarrier,kChangedCarrier}) {
@@ -119,9 +119,9 @@ struct BuilderScene {
         // 현재 타입이 현재 다리 전역과 같을 때만 실제 단어 helper가 호출하는 경계다.
         hooks.notifySurface=[this](Sid sid) { Event('N',{sid.value}); };
         // 할당 실패와 할당 중 이벤트 변경을 입력으로 공급한다.
-        hooks.reserveTimer=[this] { Event('L',{40});if (input[Mutate]==5) state.timerEvent=0x12345678;return input[Allocation]!=0; };
-        // 원본 생성자의 인자 순서(payload,parent,event)로 실제 호출을 기록한다.
-        hooks.addTimer=[this](Sid sid,std::uint32_t event,float payload) { Event('T',{Bits(payload),sid.value,event}); };
+        hooks.reserveTimer=[this] { Event('L',{40});if (input[Mutate]==5) state.timerPayload=std::bit_cast<float>(0x12345678U);return input[Allocation]!=0; };
+        // 원본 생성자의 실제 인자 순서(event,parent,payload)로 호출 비트를 기록한다.
+        hooks.addTimer=[this](Sid sid,std::uint32_t event,float payload) { Event('T',{event,sid.value,Bits(payload)}); };
         return hooks;
     }
     // 관찰 문자열을 구분자로 묶는다. 빈 관찰은 fixture의 '-'로 표시한다.
@@ -211,7 +211,7 @@ TEST_CASE(ConstructionBuilder_LocalAndNoticeAdaptersRunCompleteMove) {
 TEST_CASE(ConstructionBuilder_ActualAnchorFactoryOwnerAndRegularHost) {
     // 두 판본 모두 client 생성 영역과 실제 부착 이벤트를 확인한다.
     for (auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
-        BuilderScene scene(edition);scene.Prepare(DefaultInput());scene.types[100].flags2=4;scene.types[83].flags1=0x800;
+        BuilderScene scene(edition);scene.Prepare(DefaultInput());scene.state.timerPayload=0.05F;scene.types[100].flags2=4;scene.types[83].flags1=0x800;
         // 실제 생성자 표를 입력하고 가상 소유자에서 필요한 HP/소유 장부 조건을 공급한다.
         for (auto type:{kBuilder,kCarrier}) { scene.types[type].constructorAddress=TypeConstructorAddress(edition,type);scene.types[type].flags1=0;scene.types[type].flags2=0; }
         scene.pool.AllocatedBytes(Sid{60})[scene.patch ? 30 : 28]=7;
@@ -225,14 +225,26 @@ TEST_CASE(ConstructionBuilder_ActualAnchorFactoryOwnerAndRegularHost) {
         auto hooks=MakeConstructionBuilderHooks(scene.pool,anchor,factory,owner,scene.Hooks(),&process);
         // 실제 factory 반환을 관찰하고 최초 객체의 실제 경로 응답만 공급한다.
         const auto create=hooks.create;hooks.create=[&](std::uint32_t type,std::uint32_t flags) { const auto sid=create(type,flags);created.push_back(sid);return sid; };
+        // 공간 Pop은 명시 경계이므로 호출 기록 뒤 정상 Pop의 void 해제 결과를 공급한다.
+        const auto pop=hooks.pop;hooks.pop=[&](Sid sid,float x,float y,std::uint32_t flags) {
+            pop(sid,x,y,flags);scene.pool.AllocatedBytes(sid)[11]&=static_cast<std::uint8_t>(~4U);
+        };
         hooks.move=[&](Sid sid,float,float) -> ConstructionBuilderPath* { return !created.empty() && sid==created.front() ? &scene.path : nullptr; };
         RawConstructionBuilder builder(scene.pool,scene.types,scene.metadata,scene.state,hooks);CHECK(builder.Move(3,Sid{50},0,0)==10);CHECK(created.size()==4);
         // 생성 객체의 현재 소유자와 Regular 부착/현재 시각을 검사한다.
         for (std::size_t i=0;i<created.size();++i) {
             CHECK(created[i].value<scene.pool.Layout().serverFirst && scene.pool.Slot(created[i])[scene.OwnerOffset()]==3);
-            if (!i) continue;auto* timer=process.FindEvent(created[i],scene.state.timerEvent);CHECK(timer!=nullptr);
-            if (timer) CHECK(timer->Parent()==created[i] && timer->Payload()==0 && timer->Time()==2.5 && timer->Form().value!=0);
+            if (!i) continue;auto* timer=process.FindEvent(created[i],0);CHECK(timer!=nullptr);
+            if (timer) CHECK(timer->Parent()==created[i] && timer->Payload()==0.05F && timer->Time()==2.5 && timer->Form().value!=0);
         }
+        kernel.RunFrame();
+        // 부모 event 몸체는 payload 반환 경계다. 실제 Regular의 count/다음 시각 갱신을 검사한다.
+        for (std::size_t i=1;i<created.size();++i) {
+            auto* timer=process.FindEvent(created[i],0);CHECK(timer && timer->Count()==1 && timer->Payload()==0.05F);
+            if (timer) CHECK_NEAR(timer->Time(),2.5+static_cast<double>(0.05F),1e-12);
+        }
+        // host/몸체가 살아 있는 동안 실제 Kernel 소유권을 먼저 해제한다.
+        kernel.Clear();
     }
 }
 
@@ -242,4 +254,37 @@ TEST_CASE(ConstructionBuilder_AdaptersRejectForeignPools) {
     SidPool other(scene.pool.Edition(),kCapacity,false);
     CHECK(Throws([&] { MakeConstructionBuilderLocalHooks(other,builder,{}); }));
     CHECK(Throws([&] { MakeConstructionBuilderNoticeHooks(other,builder,SilentNoticeHooks()); }));
+}
+
+// 실제 원본 Builder→Regular 생성자의 event0/payload/current time/count를 같은 C++ Host 필드와 대조한다.
+TEST_CASE(ConstructionBuilder_ActualRegularConstructorFields) {
+    const auto rows=LoadFixture(NETSTORM_CONSTRUCTIONTIMER_FIXTURE).rows;CHECK(rows.size()==192);std::size_t count=0;
+    // 고유 입력마다 실제 ProcessForm/Kernel을 새로 구성하여 이전 수명/등록이 섞이지 않게 한다.
+    for (const auto& row:rows) {
+        CHECK(row.size()==7);BuilderScene scene(row[0]=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072);
+        scene.Prepare(Inputs(row[1]));scene.state.timerPayload=std::bit_cast<float>(static_cast<std::uint32_t>(std::stoul(row[2])));
+        SquidHash hash;std::vector<std::uint8_t> spots(65536);SquidUnpop unpop(scene.pool,hash,spots);RawSquidDestroy destroy(scene.pool,unpop,scene.types);
+        Kernel kernel;SquidProcessState processState;processState.now=scene.state.now;SquidProcessHost host(scene.pool,scene.types,kernel,destroy,processState);
+        auto hooks=scene.Hooks();
+        // native factory 경계의 패턴은 종속 머리까지 임의 값이다. 실제 Host 부착에는 새 객체의 빈 머리를 공급한다.
+        const auto create=hooks.create;hooks.create=[&](std::uint32_t type,std::uint32_t flags) {
+            const auto sid=create(type,flags);auto raw=scene.pool.AllocatedBytes(sid);raw[6]=0;raw[7]=0;return sid;
+        };
+        // native 생성자의 actual 필드 관찰과 같은 순서로 실제 Host가 소유하는 프로세스를 읽는다.
+        hooks.addTimer=[&](Sid sid,std::uint32_t event,float payload) {
+            scene.Event('T',{event,sid.value,Bits(payload)});auto* timer=host.AddRegular(sid,event,payload);CHECK(timer!=nullptr);
+            if (!timer) return;const auto time=std::bit_cast<std::uint64_t>(timer->Time());
+            scene.Event('J',{timer->Event(),Bits(timer->Payload()),timer->Parent().value,static_cast<std::uint32_t>(time),static_cast<std::uint32_t>(time>>32),timer->Count()});
+        };
+        RawConstructionBuilder builder(scene.pool,scene.types,scene.metadata,scene.state,hooks);
+        const auto value=builder.Move(scene.input[Input::Player],Sid{50},scene.input[TimeLow],scene.input[TimeHigh]);std::array<std::uint8_t,8> bytes{};
+        const auto result=std::bit_cast<std::uint64_t>(value);Put(bytes,0,static_cast<std::uint32_t>(result));Put(bytes,4,static_cast<std::uint32_t>(result>>32));
+        // actual Host는 parent의 종속 머리를 추가로 쓴다. native 부착 경계 밖인 그 링크는 raw 기록 대조에서 제외한다.
+        const bool same=scene.Events()==row[3] && Hex(bytes)==row[4] && scene.SourcesText()==row[6];
+        CHECK(same);if (!same) std::printf("건설 실제 Regular %s 행 %zu 불일치\n",row[0].c_str(),count);
+        // 다음 입력의 scope 정리 전에 host가 유효할 때 프로세스를 먼저 해제한다.
+        kernel.Clear();
+        ++count;
+    }
+    CHECK(count==192);
 }

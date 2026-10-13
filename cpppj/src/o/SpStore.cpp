@@ -1,5 +1,6 @@
 // 패치판 SP 저장소와 전역 난수의 비트 단위 복원. 원본 순서대로 난수를 소비한다.
 #include "o/SpStore.h"
+#include <bit>
 #include <stdexcept>
 #include <utility>
 
@@ -11,6 +12,8 @@ constexpr std::uint32_t kSeedReplacement=0x0bad0bad,kMultiplier=0x10003,kIncreme
 constexpr std::uint32_t kOffsetLimit=100,kBitLimit=32;
 // 한 칸마다 섞는 잡음 비트의 수(edi=5)다.
 constexpr int kNoisePerBit=5;
+// SP 비트 위치를 전진시키는 DWORD 증가량과 signed 비교 상한이다. 상한과 같을 때에는 빼지 않는다.
+constexpr std::uint32_t kRotateStep=3,kOffsetWrap=9600;
 }
 GameRandom::GameRandom(std::uint32_t state):state_(state) {}
 // 004558c0: 곱셈/덧셈은 32비트로 감기고 상위 16비트만 나머지 연산에 쓴다.
@@ -64,6 +67,14 @@ void ScrambledSpStore::Set(std::uint32_t owner,std::uint32_t bits) {
         // 잡음은 실제 비트를 제외한 위치에만 들어간다.
         for (int n=0;n<kNoisePerBit;++n) word|=(std::uint32_t{1}<<rng_.Next(kBitLimit))&~mask;
     }
+}
+// 00491680의 세 번 sign/shift/or는 ROL3이다. 전체 배열을 돌리고 offset을 같이 전진시켜 실제 값을 유지한다.
+void ScrambledSpStore::Rotate() {
+    if (!initialized_) Initialize();
+    const auto advanced=offset_+kRotateStep;
+    offset_=std::bit_cast<std::int32_t>(advanced)>static_cast<std::int32_t>(kOffsetWrap) ? advanced-kOffsetWrap : advanced;
+    // 초기화 뒤 순열은 항등이다. 실제 원본 순서인 배열0..31, 소유자0..8을 유지한다.
+    for (auto& word:pools_) word=std::rotl(word,static_cast<int>(kRotateStep));
 }
 std::uint32_t ScrambledSpStore::Offset() const { return offset_; }
 const std::array<std::uint32_t,ScrambledSpStore::kBits*ScrambledSpStore::kOwners>& ScrambledSpStore::Pools() const { return pools_; }

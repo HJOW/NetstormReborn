@@ -2,6 +2,10 @@
 # (첫 구성 때 인터넷에서 내려받을 것이 없다).
 # 테스트 파일을 만들면 아래 목록에 더한다. 파일 안의 TEST_CASE 는 자동으로 등록된다.
 add_executable(netstorm_tests
+    ProcessRetakeTests.cpp
+    RawButtonControlsTests.cpp
+    GumpResetTests.cpp
+    MissionOutcomeTests.cpp
     ContentLifetimeTests.cpp
     FormLifecycleTests.cpp
     TileGroupCollectionTests.cpp
@@ -98,6 +102,11 @@ add_executable(netstorm_tests
     MenuTests.cpp
     WorldTests.cpp
     RawSurfaceWorldTests.cpp
+    RawPriestWorldBindingsTests.cpp
+    SpRotateTests.cpp
+    AssetPostPopTests.cpp
+    BuildingSpaceTests.cpp
+    ConstructionArrivalTests.cpp
     BridgeTests.cpp
     BridgeDecayTests.cpp
     BridgeLifecycleTests.cpp
@@ -421,7 +430,7 @@ set_source_files_properties(PriestLookupTests.cpp PROPERTIES COMPILE_DEFINITIONS
 
 # 건설 생성/이동 전체와 공급원 소비의 독립 관찰은 해당 검사에만 지정한다.
 set_source_files_properties(ConstructionBuilderTests.cpp PROPERTIES COMPILE_DEFINITIONS
-    "NETSTORM_CONSTRUCTIONBUILDER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/constructionbuilder-x86.tsv\"")
+    "NETSTORM_CONSTRUCTIONBUILDER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/constructionbuilder-x86.tsv\";NETSTORM_CONSTRUCTIONTIMER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/constructiontimer-x86.tsv\"")
 
 # 건설 프로세스 시작/진행/완료의 독립 PE 관찰이다. CTest는 원본 게임/Python을 실행하지 않는다.
 set_source_files_properties(ConstructionProcessTests.cpp PROPERTIES COMPILE_DEFINITIONS
@@ -553,3 +562,33 @@ set_source_files_properties(FormLifecycleTests.cpp PROPERTIES COMPILE_DEFINITION
 # 실제 두 PE의 너겟 preDestroy/구조 연결·전체 상태 관찰이다. 기본 검사는 원본 게임/창을 실행하지 않는다.
 set_source_files_properties(ContentLifetimeTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CONTENTLIFETIME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/contentlifetime-x86.tsv\"")
+
+# 지정 ProcessForm 재수신의 실제 두 PE 관찰 입력이다.
+set_source_files_properties(ProcessRetakeTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PROCESSRETAKE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/processretake-x86.tsv\"")
+
+# UI 정리/루트 교체와 실제 사제 상태 기반 승패의 두 PE 관찰 입력이다.
+set_source_files_properties(GumpResetTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_UIRESET_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/uireset-x86.tsv\"")
+set_source_files_properties(MissionOutcomeTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_MISSIONOUTCOME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/missionoutcome-x86.tsv\"")
+set_source_files_properties(RawButtonControlsTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_RAWBUTTON_VISUAL_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gumpvisual-x86.tsv\"")
+
+# SP 저장 비트의 실제 회전과 lazy 초기화가 남긴 10.78 PE 독립 출력이다.
+set_source_files_properties(SpRotateTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_SPROTATE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/sprotate-x86.tsv\"")
+
+# 건물 가상 postPop과 일반 Pop/Unpop 옆면의 독립 원본 관찰이다.
+set_source_files_properties(AssetPostPopTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_ASSETPOSTPOP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/assetpostpop-x86.tsv\"")
+set_source_files_properties(BuildingSpaceTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_BUILDINGSPACE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/buildingspace-x86.tsv\"")
+
+# 사제 월드의 실제 타입별 이동 Process selector와 전역 입력의 독립 원본 관찰이다.
+set_source_files_properties(RawPriestWorldBindingsTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PRIESTWORLDEVENTS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/priestworldevents-x86.tsv\"")
+
+# 건설 운반 객체 도착의 실제 finder/시작/예측 대기/자기 삭제 두 PE 관찰이다.
+set_source_files_properties(ConstructionArrivalTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CONSTRUCTIONARRIVAL_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/constructionarrival-x86.tsv\"")

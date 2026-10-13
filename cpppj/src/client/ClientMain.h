@@ -125,6 +125,8 @@ public:
     std::size_t ThunderFlashCount() const;
     // 이번 프레임에 고정된 시각(원본 FUN_00460e90).
     const o::FrameTime& Time() const;
+    // 원본 00460d70처럼 호출 때마다 timeGetTime을 읽는다. 버튼 예약의 별도 조회를 프레임 값으로 합치지 않는다.
+    double WallSeconds() const;
     // 창이 활성인가(원본 DAT_0054dc50).
     bool Active() const;
     // 번역표로 글을 바꾼다(원본 FUN_004de9a0).

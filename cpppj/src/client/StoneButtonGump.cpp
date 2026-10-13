@@ -54,11 +54,11 @@ std::uint32_t StoneButtonGump::Construct(std::uint32_t token,std::int32_t width,
     // 세 문맥의 앞 네 DWORD만 초기화한다. extra와 disabled shadowX/shadowY는 원본처럼 보존한다.
     for (auto& text:node.contexts) { text.flags=0;text.font=0;text.color=0;text.style=0; }
     node.command=static_cast<std::uint32_t>(static_cast<std::int32_t>(state_.color));
-    node.contexts[2].color=state_.palette.white;
-    node.contexts[1].color=state_.palette.black;node.contexts[1].shadowColor=state_.palette.white;
+    node.contexts[2].color=state_.palette.black;
+    node.contexts[1].color=state_.palette.white;node.contexts[1].shadowColor=state_.palette.black;
     node.contexts[1].flags|=2;node.contexts[1].shadowX=1;node.contexts[1].shadowY=1;
-    node.contexts[0].color=state_.palette.black;node.contexts[0].flags|=2;
-    node.contexts[0].shadowX=1;node.contexts[0].shadowY=1;node.contexts[0].shadowColor=state_.palette.white;
+    node.contexts[0].color=state_.palette.white;node.contexts[0].flags|=2;
+    node.contexts[0].shadowX=1;node.contexts[0].shadowY=1;node.contexts[0].shadowColor=state_.palette.black;
     node.textContext=context ? *context : state_.defaultContext;CopyLabel(node,label);
     node.baseWidth=static_cast<float>(width);node.width=static_cast<float>(double(width)*node.scale);
     node.baseHeight=static_cast<float>(height);node.height=static_cast<float>(double(height)*node.scale);

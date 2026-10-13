@@ -287,19 +287,20 @@ TEST_CASE(StoneButtonText_DrawDispatchUsesCurrentStoredContextsAndPixels) {
         if (result.count!=2) continue;
         auto entries=std::span(work).first(2);SortDrawEntries(entries,edition);DispatchDrawEntries(entries,{},dispatch);
         CHECK((fallback==std::vector<std::uint32_t>{kBackground}));
-        CHECK(pixels[12*100+47]==9 && pixels[13*100+48]==243 && pixels[10*100+11]==57);
-        CHECK(colors.vfxColors[100]==9 && state.clip.left==0 && state.clip.right==100 && state.vfxClip.right==99);
+        // 원본 004254b0/CD 00441310은 활성 흰 잉크·검정 그림자를 복사한다. 이 입력 팔레트는 black=9/white=243이다.
+        CHECK(pixels[12*100+47]==243 && pixels[13*100+48]==9 && pixels[10*100+11]==57);
+        CHECK(colors.vfxColors[100]==243 && state.clip.left==0 && state.clip.right==100 && state.vfxClip.right==99);
         CHECK(guarded.front()==7 && guarded.back()==7);
         // 현재 누름 상태에 따라 글자만 (1,1) 이동하고 같은 정상/눌림 문맥을 사용한다.
         std::fill(pixels.begin(),pixels.end(),std::uint8_t{7});scene.node.pressed=1;dispatch.ui(kStone);
-        CHECK(pixels[13*100+48]==9 && pixels[14*100+49]==243 && pixels[12*100+47]==7);
+        CHECK(pixels[13*100+48]==243 && pixels[14*100+49]==9 && pixels[12*100+47]==7);
         // 비활성 문맥은 그림자가 없고 저장한 세 번째 문맥의 색을 쓴다.
         std::fill(pixels.begin(),pixels.end(),std::uint8_t{7});scene.node.pressed=0;scene.node.buttonFlags|=1;dispatch.ui(kStone);
-        CHECK(pixels[12*100+47]==243 && pixels[13*100+48]==7 && colors.vfxColors[100]==243);
+        CHECK(pixels[12*100+47]==9 && pixels[13*100+48]==7 && colors.vfxColors[100]==9);
         // 매 Draw의 현재 inclusive 클립을 따르며 부모 ClipGuard 뒤 색 표는 그대로 유지한다.
         std::fill(pixels.begin(),pixels.end(),std::uint8_t{7});SetGumpDrawClip(state,{47,12,48,13});scene.node.buttonFlags=0;dispatch.ui(kStone);
-        CHECK(pixels[12*100+47]==9 && std::count(pixels.begin(),pixels.end(),9)==1);
-        CHECK(state.clip.left==47 && state.clip.right==48 && colors.vfxColors[100]==9);
+        CHECK(pixels[12*100+47]==243 && std::count(pixels.begin(),pixels.end(),243)==1);
+        CHECK(state.clip.left==47 && state.clip.right==48 && colors.vfxColors[100]==243);
     }
 }
 
@@ -340,11 +341,12 @@ TEST_CASE(StoneButtonText_RawBackgroundAndGlyphsShareFullDispatchAndLifetime) {
         const auto count=CollectDrawEntries(request,work,collection).count;CHECK(count==2);if (count!=2) continue;
         auto entries=std::span(work).first(2);SortDrawEntries(entries,edition);DispatchDrawEntries(entries,{},dispatch);
         CHECK(pixels[15*100+13]==4 && pixels[11*100+13]==14 && pixels[26*100+13]==22);
-        CHECK(pixels[12*100+47]==9 && pixels[13*100+48]==243 && pixels[10*100+11]==57 && colors.vfxColors[100]==9);
+        // 배경을 먼저 그린 경우에도 원본 생성 문맥의 활성 잉크 243/그림자 9를 그대로 사용한다.
+        CHECK(pixels[12*100+47]==243 && pixels[13*100+48]==9 && pixels[10*100+11]==57 && colors.vfxColors[100]==243);
         // 실제 SetPressed가 자식 플래그를 바꾸면 배경 명암과 부모 글자 위치가 같은 표시 목록에서 함께 바뀐다.
         scene.buttons->SetPressed(kStone,1);CHECK(scene.background.backgroundFlags&GumpBackgroundFlags::kPressed);
         std::fill(pixels.begin(),pixels.end(),std::uint8_t{7});DispatchDrawEntries(entries,{},dispatch);
-        CHECK(pixels[11*100+13]==24 && pixels[26*100+13]==12 && pixels[13*100+48]==9 && pixels[14*100+49]==243);
+        CHECK(pixels[11*100+13]==24 && pixels[26*100+13]==12 && pixels[13*100+48]==243 && pixels[14*100+49]==9);
         CHECK(state.clip.left==0 && state.clip.right==100 && guarded.front()==7 && guarded.back()==7);
         scene.lifetime->Kill(kStone);scene.lifetime->Cleanup();CHECK((scene.released==std::vector<std::uint32_t>{kBackground,kStone}));
         CHECK(CollectDrawEntries(request,work,collection).count==0 && scene.create.count==1);

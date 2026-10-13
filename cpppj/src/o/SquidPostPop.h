@@ -9,6 +9,8 @@
 namespace netstorm::o {
 class RawPriestPostPopTail;
 class RawForcefieldPostPop;
+class RawCarrierPostPop;
+class RawAssetPostPop;
 struct SquidPostPopList {
     std::vector<std::uint32_t> entries; // 원본 미리 확보한 DWORD 배열. entries.size()가 capacity다.
     std::uint32_t count{};
@@ -54,6 +56,17 @@ public:
     void SetForcefieldPostPop(const RawForcefieldPostPop* postPop);
     // 실제 보호막 타입/가상 표이며 전용 접두가 등록돼 있는가.
     bool HandlesForcefield(Sid sid) const;
+    // 실제 +0x20이 Damageable/Carrier 몸체인 가상 표를 같은 풀의 완성한 몸체에 연결한다.
+    // 해당 몸체의 base 경계는 이 객체의 PostPopBase여야 하며 nullptr은 연결을 해제한다.
+    void SetCarrierPostPop(const RawCarrierPostPop* postPop);
+    // 가상 표가 직접 Carrier 후처리를 사용하며 그 전체 몸체가 연결됐는가.
+    bool HandlesCarrier(Sid sid) const;
+    // 가상 표가 직접 Damageable 후처리를 사용하며 그 전체 몸체가 연결됐는가.
+    bool HandlesDamageable(Sid sid) const;
+    // Gun/제네레이터/레지던스/배리케이드/가이저/신전의 실제 전용 몸체를 같은 풀에 연결한다.
+    void SetAssetPostPop(const RawAssetPostPop* postPop);
+    // 실제 가상 표의 전용 자산 후처리가 명시 등록돼 있는가.
+    bool HandlesAsset(Sid sid) const;
     // 이 인스턴스가 처리할 수 있는 파생 postPop인가. Pop이 공간 변경 전에 묻는다.
     bool HandlesDerived(Sid sid) const;
     // 공간 변경 전 연결된 그래프의 최종 Pop 상태·미복원 영역/AI/배치 효과·목록·비용을 확인한다.
@@ -84,5 +97,7 @@ private:
     std::function<void(Sid,std::uint32_t)> surfacePrefix_; // noIsland 최초 등록의 프레임/받침/소유자 효과.
     const RawPriestPostPopTail* priestPostPop_{}; // 전체 wrapper다. 접두처럼 공통 장부를 추가 호출하지 않는다.
     const RawForcefieldPostPop* forcefieldPostPop_{}; // 예약 접두 뒤 공통 후처리는 이 인스턴스가 한 번 호출한다.
+    const RawCarrierPostPop* carrierPostPop_{}; // 직접 Damageable/Carrier 가상 후처리다. 파생 재정의는 별도로 복원한다.
+    const RawAssetPostPop* assetPostPop_{}; // 초기 요새 건물의 전체 후처리다. 내부에서 공통 깊이를 한 번 줄인다.
 };
 }

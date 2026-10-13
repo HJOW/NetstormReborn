@@ -39,6 +39,10 @@ public:
     std::uint32_t Get(std::uint32_t owner);
     // 0040edb0: 초기화 전이면 먼저 초기화하고 값 비트를 쓴 뒤 칸마다 난수 잡음 5개를 섞는다.
     void Set(std::uint32_t owner,std::uint32_t bits);
+    // 00491680: 필요하면 초기화하고 실제 비트 위치 offset을 signed DWORD로 3 증가시킨다.
+    // 9600을 넘으면 한 번만 9600을 빼고 모든 32×9 DWORD를 왼쪽으로 3비트 순환한다.
+    // 저장된 SP 비트값과 게임 난수는 유지한다. 사제 회복 등의 호출자는 Offset을 추적 전역과 공유한다.
+    void Rotate();
     // 진단용 비트 위치 기준과 배열 내용이다. 배열 k의 owner번째 DWORD가 pools[k*9+owner]다.
     std::uint32_t Offset() const;
     const std::array<std::uint32_t,kBits*kOwners>& Pools() const;

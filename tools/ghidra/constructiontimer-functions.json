@@ -1,0 +1,7 @@
+{
+  "description": "건설 manaBolt에서 호출하는 실제 Regular 생성자(event,parent,payload)의 두 PE 읽기 전용 내보내기. 마지막 디컴파일 PC: VM-W11-CODEX, 2026-10-13.",
+  "editions": {
+    "originals": ["00496e80"],
+    "originalCD": ["0048efd0"]
+  }
+}

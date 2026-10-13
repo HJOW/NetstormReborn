@@ -784,6 +784,8 @@ std::pair<std::uint64_t, std::uint64_t> Client::RenderCounts() const {
 void Client::ShowScene() { sceneVisible_ = true; renderer_->InvalidateAll(); InvalidateRect(static_cast<HWND>(window_), nullptr, FALSE); }
 // 이번 프레임의 시각.
 const o::FrameTime& Client::Time() const { return time_; }
+// 정지와 무관한 실제 원본 벽 시계를 조회한다. 부착/idle의 여러 읽기도 각각 OS 눈금을 사용한다.
+double Client::WallSeconds() const { return clock_.WallSeconds(timeGetTime()); }
 // 창이 활성인가.
 bool Client::Active() const { return active_; }
 // 번역표가 없거나 영어면 원문 그대로다.

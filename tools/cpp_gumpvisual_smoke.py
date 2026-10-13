@@ -42,7 +42,7 @@ def glyph_pixels(font,label,x,y,color):
     return result
 
 
-def expected_pixels(oracle,font,controls,pressed,colors):
+def expected_pixels(oracle,font,controls,pressed,colors,raw_buttons=False):
     """실제 버튼 몸체의 선/위치를 관찰하고 독립 글리프로 덮는다. 질감/안쪽 명암은 완료 기준에서 제외한다."""
     border={};labels={};plans=0
     # 목록 행을 제외한 각 돌 버튼의 입력을 실제 10.78 몸체에 공급한다.
@@ -50,7 +50,8 @@ def expected_pixels(oracle,font,controls,pressed,colors):
         enabled,menu,left,top,right,bottom,_=control
         if menu:continue
         width=sum(font['glyphs'][c]['advance'] for c in label.encode('cp1252'))
-        case=(left,top,right,bottom-1,width,font['height'],0,int(label==pressed and enabled),int(not enabled),*colors)
+        # raw 호스트는 보고한 입력/표시 경계가 같은 노드다. 앞선 어댑터만 별도의 1행 입력 여유를 뺐다.
+        case=(left,top,right,bottom if raw_buttons else bottom-1,width,font['height'],0,int(label==pressed and enabled),int(not enabled),*colors)
         context_hex,x,y,selected,lines=oracle.run(case,CONTROLS[0]);plans+=1
         context=bytes.fromhex(context_hex)[selected*32:(selected+1)*32]
         flags=int.from_bytes(context[:4],'little');ink=int.from_bytes(context[8:12],'little')
@@ -89,7 +90,7 @@ def check(executable,root,name,disabled=False):
     observed=reports(report);pixels=plans=glyphs=0
     # 네 상태의 캡처를 원본 호출 결과/독립 글꼴과 대조한다.
     for _,label,pressed in stages:
-        state=observed[label];expected,count,text_count=expected_pixels(oracle,font,state['controls'],pressed,colors)
+        state=observed[label];expected,count,text_count=expected_pixels(oracle,font,state['controls'],pressed,colors,'RawButtons' in state)
         if disabled and label in ('dialog','disabled_ignored'):assert state['controls']['Disabled'][0]==0
         with Image.open(OUTPUT/f'{name}-{label}.bmp') as source:
             image=source.convert('RGB');actual=image.load()

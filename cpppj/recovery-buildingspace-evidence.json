@@ -1,0 +1,491 @@
+{
+  "schema": 1,
+  "classification": "actual-building-pop-unpop-side-effects",
+  "host": "VM-W11-CODEX",
+  "cases": {
+    "Pop": 128,
+    "Unpop": 123
+  },
+  "total_cases": 251,
+  "editions": {
+    "originals": {
+      "binary_sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "function_ranges": [
+        {
+          "entry": "004abb10",
+          "ranges": "004abb10-004abb66;004abb70-004abcac;004abcb0-004abdf1"
+        },
+        {
+          "entry": "004af1d0",
+          "ranges": "004af1d0-004af529"
+        },
+        {
+          "entry": "004abf60",
+          "ranges": "004abf60-004ac037"
+        },
+        {
+          "entry": "004abe00",
+          "ranges": "004abe00-004abe26;004abe30-004abf51"
+        },
+        {
+          "entry": "004aba70",
+          "ranges": "004aba70-004abab3"
+        },
+        {
+          "entry": "004952f0",
+          "ranges": "004952f0-0049532a"
+        },
+        {
+          "entry": "004e5b40",
+          "ranges": "004e5b40-004e5b9a;004e5b9c-004e5ba2;004e5bb0-004e5bd8;004e5bdc-004e5bfe;004e5c00-004e5c1c;004e5c40-004e5c89;004e5c9c-004e5ca2;004e5ca4-004e5cae;004e5cb0-004e5cc0;004e5cc4-004e5cda;004e5cdc-004e5d01;004e5d04-004e5d0c;004e5d10-004e5d2e;004e5d3c-004e5d5c;004e5d60-004e5d86;004e5d88-004e5db8;004e5ddc-004e5e25;004e5e38-004e5e3e;004e5e40-004e5e4c;004e5e50-004e5e62;004e5e64-004e5e7c"
+        },
+        {
+          "entry": "004af530",
+          "ranges": "004af530-004af600"
+        },
+        {
+          "entry": "004af610",
+          "ranges": "004af610-004af712"
+        },
+        {
+          "entry": "004b0c60",
+          "ranges": "004b0c60-004b0d2b"
+        },
+        {
+          "entry": "004ad4a0",
+          "ranges": "004ad4a0-004ad4f5"
+        },
+        {
+          "entry": "0049a840",
+          "ranges": "0049a840-0049a852"
+        },
+        {
+          "entry": "0049fce0",
+          "ranges": "0049fce0-0049fd6a"
+        },
+        {
+          "entry": "004afe50",
+          "ranges": "004afe50-004b01fc;004b0200-004b02c4"
+        },
+        {
+          "entry": "0049ebb0",
+          "ranges": "0049ebb0-0049fa87;0049fa90-0049fc80"
+        },
+        {
+          "entry": "004b02d0",
+          "ranges": "004b02d0-004b04d9;004b04e0-004b0831"
+        },
+        {
+          "entry": "004ac560",
+          "ranges": "004ac560-004ac6a2"
+        },
+        {
+          "entry": "004b0d30",
+          "ranges": "004b0d30-004b0fa5"
+        },
+        {
+          "entry": "004ad470",
+          "ranges": "004ad470-004ad498"
+        },
+        {
+          "entry": "004ad500",
+          "ranges": "004ad500-004ad662"
+        },
+        {
+          "entry": "004ad670",
+          "ranges": "004ad670-004ad677"
+        },
+        {
+          "entry": "004210a0",
+          "ranges": "004210a0-004210e4"
+        },
+        {
+          "entry": "004acd20",
+          "ranges": "004acd20-004acd99"
+        },
+        {
+          "entry": "004afd30",
+          "ranges": "004afd30-004afe4f"
+        },
+        {
+          "entry": "004ac1e0",
+          "ranges": "004ac1e0-004ac1f3"
+        },
+        {
+          "entry": "004aba70",
+          "ranges": "004aba70-004abab3"
+        },
+        {
+          "entry": "004b2a90",
+          "ranges": "004b2a90-004b2af1"
+        },
+        {
+          "entry": "0049a840",
+          "ranges": "0049a840-0049a852"
+        },
+        {
+          "entry": "00419850",
+          "ranges": "00419850-004198e2"
+        },
+        {
+          "entry": "0040e800",
+          "ranges": "0040e800-0040e84c"
+        },
+        {
+          "entry": "0040da00",
+          "ranges": "0040da00-0040da31"
+        },
+        {
+          "entry": "004ace40",
+          "ranges": "004ace40-004aceb8"
+        },
+        {
+          "entry": "0049a900",
+          "ranges": "0049a900-0049a939"
+        },
+        {
+          "entry": "0040eaf0",
+          "ranges": "0040eaf0-0040eb3c"
+        },
+        {
+          "entry": "00425df0",
+          "ranges": "00425df0-00425dfa"
+        },
+        {
+          "entry": "00498160",
+          "ranges": "00498119-00498137;00498160-00498172;004981ad-00498217"
+        },
+        {
+          "entry": "00498220",
+          "ranges": "00498220-00498e3c;00498e40-00498fe5"
+        },
+        {
+          "entry": "004990d0",
+          "ranges": "004990d0-0049923f"
+        },
+        {
+          "entry": "004e49c0",
+          "ranges": "004e49c0-004e4a34"
+        },
+        {
+          "entry": "4214a0",
+          "name": "FUN_004214a0",
+          "size": "88",
+          "ranges": "4214a0-4214f7",
+          "noreturn": "0",
+          "thunk": "0",
+          "cc": "__cdecl",
+          "call_refs": "21",
+          "data_refs": "0",
+          "jump_refs": "0",
+          "callers": "4216e1,421cb6,421df6,421e91,421ee1,4226ae,422b3b,442f79,45667b,467df3,4681f5,491829,4918a2,4918cd,49a434,49a558,4ac24d,4afaec,4b010b,4b0643,4d4e9a",
+          "data_ref_from": "",
+          "jump_ref_from": "",
+          "calls": "4e0620",
+          "has_ret": "1",
+          "indirect_jumps": "",
+          "param_count": "0",
+          "sig_source": "DEFAULT",
+          "signature": "undefined __cdecl FUN_004214a0()"
+        },
+        {
+          "entry": "46f680",
+          "name": "FUN_0046f680",
+          "size": "85",
+          "ranges": "46f680-46f6d4",
+          "noreturn": "0",
+          "thunk": "0",
+          "cc": "__stdcall",
+          "call_refs": "1",
+          "data_refs": "0",
+          "jump_refs": "0",
+          "callers": "46f6f9",
+          "data_ref_from": "",
+          "jump_ref_from": "",
+          "calls": "",
+          "has_ret": "1",
+          "indirect_jumps": "",
+          "param_count": "0",
+          "sig_source": "DEFAULT",
+          "signature": "undefined __stdcall FUN_0046f680()"
+        },
+        {
+          "entry": "46f6e0",
+          "name": "FUN_0046f6e0",
+          "size": "34",
+          "ranges": "46f6e0-46f701",
+          "noreturn": "0",
+          "thunk": "0",
+          "cc": "__thiscall",
+          "call_refs": "6",
+          "data_refs": "0",
+          "jump_refs": "0",
+          "callers": "426788,491e72,491ee2,4b05f6,4bd9e7,4bda1a",
+          "data_ref_from": "",
+          "jump_ref_from": "",
+          "calls": "46f680,4e49c0",
+          "has_ret": "1",
+          "indirect_jumps": "",
+          "param_count": "1",
+          "sig_source": "DEFAULT",
+          "signature": "undefined __thiscall FUN_0046f6e0(void * this)"
+        }
+      ],
+      "actual_calls": {
+        "Pop": 64,
+        "postPop": 59,
+        "Unpop": 59
+      },
+      "helper_calls": {
+        "0046f6e0": 54,
+        "0046f680": 54,
+        "004214a0": 144
+      },
+      "assert_reports": 0
+    },
+    "originalCD": {
+      "binary_sha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "function_ranges": [
+        {
+          "entry": "004aaad0",
+          "ranges": "004aaad0-004aad2f"
+        },
+        {
+          "entry": "004aae40",
+          "ranges": "004aae40-004ab243"
+        },
+        {
+          "entry": "004ab250",
+          "ranges": "004ab250-004ab380"
+        },
+        {
+          "entry": "004aad30",
+          "ranges": "004aad30-004aae34"
+        },
+        {
+          "entry": "004cff40",
+          "ranges": "004cff40-004cff7a"
+        },
+        {
+          "entry": "004f1a60",
+          "ranges": "004f1a60-004f1a96;004f1aa8-004f1aba;004f1abc-004f1ac8;004f1acc-004f1ad6;004f1ad8-004f1afc;004f1b00-004f1b08;004f1b0c-004f1b2f;004f1b40-004f1b55;004f1b58-004f1b75;004f1b78-004f1ba2;004f1ba4-004f1bad"
+        },
+        {
+          "entry": "004ab390",
+          "ranges": "004ab390-004ab435"
+        },
+        {
+          "entry": "004ab440",
+          "ranges": "004ab440-004ab57b"
+        },
+        {
+          "entry": "004ae040",
+          "ranges": "004ae040-004ae0e6"
+        },
+        {
+          "entry": "004ae120",
+          "ranges": "004ae120-004ae17e"
+        },
+        {
+          "entry": "00444720",
+          "ranges": "00444720-00444749"
+        },
+        {
+          "entry": "004aecf0",
+          "ranges": "004aecf0-004aed16"
+        },
+        {
+          "entry": "004aed20",
+          "ranges": "004aed20-004aed2a"
+        },
+        {
+          "entry": "004abac0",
+          "ranges": "004abac0-004abadd"
+        },
+        {
+          "entry": "004abae0",
+          "ranges": "004abae0-004abafd"
+        },
+        {
+          "entry": "004abf50",
+          "ranges": "004abf50-004abf68"
+        },
+        {
+          "entry": "004448e0",
+          "ranges": "004448e0-004448f2"
+        },
+        {
+          "entry": "004ad0b0",
+          "ranges": "004ad0b0-004ad489"
+        },
+        {
+          "entry": "004434d0",
+          "ranges": "004434d0-00444217"
+        },
+        {
+          "entry": "004ad490",
+          "ranges": "004ad490-004adad6"
+        },
+        {
+          "entry": "004abfb0",
+          "ranges": "004abfb0-004ac0f4"
+        },
+        {
+          "entry": "004ae180",
+          "ranges": "004ae180-004ae37f"
+        },
+        {
+          "entry": "004ae0f0",
+          "ranges": "004ae0f0-004ae118"
+        },
+        {
+          "entry": "004ae380",
+          "ranges": "004ae380-004ae3d2"
+        },
+        {
+          "entry": "004ae3e0",
+          "ranges": "004ae3e0-004ae3e7"
+        },
+        {
+          "entry": "004aca80",
+          "ranges": "004aca80-004aca9e"
+        },
+        {
+          "entry": "004acfc0",
+          "ranges": "004acfc0-004ad0a5"
+        },
+        {
+          "entry": "004abf50",
+          "ranges": "004abf50-004abf68"
+        },
+        {
+          "entry": "004abae0",
+          "ranges": "004abae0-004abafd"
+        },
+        {
+          "entry": "004abac0",
+          "ranges": "004abac0-004abadd"
+        },
+        {
+          "entry": "004acb00",
+          "ranges": "004acb00-004acb85"
+        },
+        {
+          "entry": "004ae480",
+          "ranges": "004ae480-004ae4ac"
+        },
+        {
+          "entry": "004442b0",
+          "ranges": "004442b0-004442e6"
+        },
+        {
+          "entry": "00479d20",
+          "ranges": "00479d20-00479d82"
+        },
+        {
+          "entry": "004f161c",
+          "ranges": "004f161c-004f1642"
+        },
+        {
+          "entry": "004abab0",
+          "ranges": "004abab0-004abab8"
+        },
+        {
+          "entry": "00456a00",
+          "ranges": "00456a00-00456c0f"
+        },
+        {
+          "entry": "448c10",
+          "name": "FUN_00448c10",
+          "size": "18",
+          "ranges": "448c10-448c21",
+          "noreturn": "0",
+          "thunk": "0",
+          "cc": "__cdecl",
+          "call_refs": "21",
+          "data_refs": "0",
+          "jump_refs": "0",
+          "callers": "401f7a,40be01,40be57,40becc,40beee,443290,448c72,448d08,448d97,449009,449bae,44a241,44a64c,44a76a,479122,4a2b96,4a3a36,4abb26,4ad347,4ad8c8,4d0e9c",
+          "data_ref_from": "",
+          "jump_ref_from": "",
+          "calls": "",
+          "has_ret": "1",
+          "indirect_jumps": "",
+          "param_count": "0",
+          "sig_source": "DEFAULT",
+          "signature": "undefined __cdecl FUN_00448c10()"
+        },
+        {
+          "entry": "4bdd20",
+          "name": "FUN_004bdd20",
+          "size": "93",
+          "ranges": "4bdd20-4bdd7c",
+          "noreturn": "0",
+          "thunk": "0",
+          "cc": "__stdcall",
+          "call_refs": "1",
+          "data_refs": "0",
+          "jump_refs": "0",
+          "callers": "4bdd99",
+          "data_ref_from": "",
+          "jump_ref_from": "",
+          "calls": "",
+          "has_ret": "1",
+          "indirect_jumps": "",
+          "param_count": "0",
+          "sig_source": "DEFAULT",
+          "signature": "undefined __stdcall FUN_004bdd20()"
+        },
+        {
+          "entry": "4bdd80",
+          "name": "FUN_004bdd80",
+          "size": "34",
+          "ranges": "4bdd80-4bdda1",
+          "noreturn": "0",
+          "thunk": "0",
+          "cc": "__thiscall",
+          "call_refs": "8",
+          "data_refs": "0",
+          "jump_refs": "0",
+          "callers": "40d0fd,40d15d,4167d5,42800c,428046,44ed1f,4ad893,4e42c4",
+          "data_ref_from": "",
+          "jump_ref_from": "",
+          "calls": "4bdd20,4f161c",
+          "has_ret": "1",
+          "indirect_jumps": "",
+          "param_count": "1",
+          "sig_source": "DEFAULT",
+          "signature": "undefined __thiscall FUN_004bdd80(void * this)"
+        }
+      ],
+      "actual_calls": {
+        "Pop": 64,
+        "postPop": 64,
+        "Unpop": 64
+      },
+      "helper_calls": {
+        "004bdd80": 54,
+        "004bdd20": 54,
+        "00448c10": 148
+      },
+      "assert_reports": 0
+    }
+  },
+  "artifact_sha256": {
+    "cpppj/tests/fixtures/buildingspace-x86.tsv": "fb3eca7ff07ac6dced7124ee41e6efc9ebc7b9be4fca2e9e69b01fa03691d465"
+  },
+  "source_sha256": {
+    "tools/decomp_buildingspace_oracle.py": "af7fa9c7f1c188f412368946b9b31502991bfce5a6f7c6dfbf38c2659a9cf2f5",
+    "tools/decomp_pop_oracle.py": "0120e5ebdc2183ac61a051ca2f4f79dbe0e9ffee864ca37ec04b5b49e70a1204",
+    "tools/decomp_creation_oracle.py": "a65b8e22a1116d5883745345d0c977d293fd61c3f919bf7ac4cc61ba4c052a38",
+    "tools/decomp_sid_oracle.py": "eea44b1b0fa8a57b1a49ee246962ea346dec64b280761b0bff0ccdd87631ddd6",
+    "tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originalCD/functions.tsv": "453aa383c27baf8eefa00d97bf44051d18460150556511c2eb7a46f111e92def"
+  },
+  "limits": [
+    "합성 타입/SHP/후보 raw/map 입력, 표시/postPop 억제 및 null dirty의 실제 함수 실행",
+    "전체 후보 앞192슬롯 바이트 직접 비교; 전체 풀/해시/spot은 Adler32",
+    "별도 원본 프로세스/GUI/OS/게임 진입점 실행 없음; 미션 완주와 건물별 파생 연결 증명 아님"
+  ]
+}

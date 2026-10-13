@@ -109,6 +109,20 @@ void GumpLifetime::Cleanup() const {
     }
     std::fill_n(lifetime_.kill.begin(),count,0U);lifetime_.killCount=0;
 }
+// 같은 슬롯을 재방문하지 않고 현재 등록 칸/제외 signed BYTE를 읽는다. Kill은 실제 지연 수명을 사용한다.
+void GumpLifetime::KillExceptType(const std::int8_t& excludedType) const {
+    // 원본은 현재 등록 개수와 무관하게 루트를 제외한 999칸 전체를 순회한다.
+    for (std::size_t index=1;index<state_.entries.size();++index) {
+        const auto token=state_.entries[index];if (!token) continue;
+        const auto excluded=static_cast<std::uint32_t>(static_cast<std::int32_t>(excludedType));
+        if (Node(token).command!=excluded && !(Node(token).flags&kDead)) Kill(token);
+    }
+}
+// 기존 루트가 없어도 이전 삭제 큐는 정리한다. 콜백 이후의 현재 표/개수를 그대로 이어서 사용한다.
+void GumpLifetime::ReplaceRoot(std::uint32_t token) const {
+    if (state_.entries[0]) Kill(state_.entries[0]);
+    Cleanup();state_.entries[0]=token;state_.collection.root=token;Node(token).id=0;
+}
 // 텍스트 해제 콜백 이후 각 포인터를 0으로 쓴다. 두 번째 포인터는 그 시점의 현재 값을 읽는다.
 void GumpLifetime::DestructBase(std::uint32_t token) const {
     auto& node=Node(token);node.vtable=state_.collection.edition==o::OriginalEdition::Patch1078 ? kPatchVtable : kCdVtable;

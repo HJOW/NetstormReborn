@@ -4,6 +4,7 @@
 #include "o/Squid.h"
 #include "o/SquidDisplay.h"
 #include "o/SquidPostPop.h"
+#include "o/RawBuildingSpace.h"
 #include <bit>
 #include <cmath>
 #include <stdexcept>
@@ -45,6 +46,11 @@ void SquidPop::ValidateFrameBinding(const SidPool& pool,const SquidDisplay& disp
     if (&pool!=&pool_ || &display!=display_) throw std::invalid_argument("프레임 Pop 풀/표시 연결 불일치");
     unpop.ValidateFrameBinding(pool,display,hash_,spots_);
 }
+// 옆면 조회가 원본 공간과 다른 지도에 기록되는 연결을 막는다.
+void SquidPop::SetBuildingSpace(const RawBuildingSpace* space) {
+    if (space) space->ValidateSpace(pool_,hash_);
+    building_=space;
+}
 // 실제 PE에서 공통 firstPop/postPop을 확인한 vtable만 허용한다.
 bool SquidPop::Supports(OriginalEdition edition,std::uint32_t vtable,std::uint32_t flags) {
     const auto values=edition==OriginalEdition::Patch1078 ? std::span<const std::uint32_t>(kPatchPopVtables) :
@@ -69,9 +75,9 @@ RawPopResult SquidPop::Pop(Sid sid,const RiftTypeRecord& type,float frameWidth,f
     if (x<=0 || y<=0 || x>=kWorldCells || y>=kWorldCells) x=y=10;
     const auto extraOffset=patch ? 40U : 35U,levelOffset=patch ? 33U : 31U;
     const auto extra=old[extraOffset]; const bool buried=(extra&kBuried)!=0;
-    // 비전투의 null dirty 큐에서 섬/다리 변경 알림은 자연 반환한다. 건물의 옆면 부착 효과는 후속이다.
-    if (!buried && (type.flags2&kBuildingMask))
-        throw std::logic_error("Pop 건물 부착 효과는 아직 지원하지 않습니다");
+    // 비전투 null dirty 경로와 별개로 건물 옆면은 실제 공유 표면 몸체를 요구한다.
+    if (!buried && (type.flags2&kBuildingMask) && !building_)
+        throw std::logic_error("Pop 건물 부착 공간이 연결되지 않았습니다");
     // 다리와 섬 받침은 전용 postPop의 접두 동작과 연결 효과를 공급한 경우에만 허용한다. 기존 공통 가상 표 목록은 바꾸지 않는다.
     if (!Supports(pool_.Edition(),Read(old,0),flags) &&
         !(postPop_ && postPop_->HandlesDerived(sid) && SquidUnpop::SupportsDisplay(pool_.Edition(),Read(old,0),flags)))
@@ -112,6 +118,9 @@ RawPopResult SquidPop::Pop(Sid sid,const RiftTypeRecord& type,float frameWidth,f
                     if (patch && (spot&genus)) return RawPopResult::Overlap;
                     spot=static_cast<std::uint8_t>(spot|genus);
                 }
+                // 겹침에서 앞서 반환한 칸은 통지하지 않는다. 양 옆면의 모서리는 제외한다.
+                if ((type.flags2&kBuildingMask) && (cx==left || cx==right) && cy!=top && cy!=bottom)
+                    building_->PopSide(cx,cy,x,y);
             }
         }
     }

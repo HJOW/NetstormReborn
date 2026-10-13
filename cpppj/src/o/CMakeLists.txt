@@ -2,6 +2,7 @@
 # 클라이언트와 서버가 함께 쓰던 코드로 보인다. 이 폴더의 코드는 client/ 와 platform/ 을 포함하지 않는다.
 # 다시 만든 파일을 아래 목록에 더한다. 파일 이름은 SOURCE_MAP.md 의 "cpppj 경로"를 따른다.
 target_sources(netstorm PRIVATE
+    RawMissionOutcome.cpp RawMissionOutcome.h
     BaseFile.cpp BaseFile.h
     Config.cpp Config.h
     ConfigInterface.cpp ConfigInterface.h
@@ -42,6 +43,7 @@ target_sources(netstorm PRIVATE
     SquidFormDispatch.cpp SquidFormDispatch.h
     SquidUnpop.cpp SquidUnpop.h UnpopVtables.inc
     SquidPop.cpp SquidPop.h PopVtables.inc
+    RawBuildingSpace.cpp RawBuildingSpace.h
     SquidDisplay.cpp SquidDisplay.h
     SquidFrame.cpp SquidFrame.h
     RawPathAnimation.cpp RawPathAnimation.h
@@ -52,6 +54,7 @@ target_sources(netstorm PRIVATE
     SquidOwner.cpp SquidOwner.h
     RawPriestOwner.cpp RawPriestOwner.h
     RawPriestPostPop.cpp RawPriestPostPop.h
+    RawAssetPostPop.cpp RawAssetPostPop.h
     RawPriestState.cpp RawPriestState.h
     RawPriestRegen.cpp RawPriestRegen.h
     RawPriestPreDestroy.cpp RawPriestPreDestroy.h
@@ -74,6 +77,7 @@ target_sources(netstorm PRIVATE
     RawConstructionConfirm.cpp RawConstructionConfirm.h
     RawConstructionBuilder.cpp RawConstructionBuilder.h
     RawConstructionProcess.cpp RawConstructionProcess.h
+    RawConstructionArrival.cpp RawConstructionArrival.h
     RawConstructionData.cpp RawConstructionData.h
     RawPacketDispatch.cpp RawPacketDispatch.h RawPacketLengths.h
     RawConstructionSelection.cpp RawConstructionSelection.h

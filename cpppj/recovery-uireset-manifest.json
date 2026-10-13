@@ -1,0 +1,63 @@
+{
+  "schema": 1,
+  "host": "VM-W11-Codex",
+  "last_decompile_host": "VM-W11-CODEX",
+  "date": "2026-10-13",
+  "target": "10.78",
+  "reference": "10.72",
+  "scope": "GumpLifetime 전체 Kill 요청·루트 교체와 상위 UI/Kernel reset 순서의 정적 감사",
+  "reviewed_pairs": [
+    {
+      "purge": 0,
+      "name": "KillExceptType",
+      "originals": "004666d0",
+      "originalCD": "00492a60",
+      "effects": "등록표1~999 전체/현재signed제외BYTE/타입DWORD/비dead/실제Kill"
+    },
+    {
+      "purge": 0,
+      "name": "ReplaceRoot",
+      "originals": "004666a0",
+      "originalCD": "00492a20",
+      "effects": "현재root Kill→현재Cleanup→root0쓰기→new.id0/count·serial유지"
+    }
+  ],
+  "evidence": "cpppj/recovery-uireset-evidence.json",
+  "fixture": "cpppj/tests/fixtures/uireset-x86.tsv",
+  "independent_cases": 242,
+  "native_cpp_tests": [
+    "GumpReset_PatchNative",
+    "GumpReset_CdNative"
+  ],
+  "integration_tests": [
+    "GumpReset_PatchTransferAndReuse",
+    "GumpReset_CdTransferAndReuse"
+  ],
+  "cpp_validation": "상위 최종 Release 종료0·경고/오류0 후 실제 GumpReset4개·GumpLifetime9개·GumpInput9개 실패0. 새 native C++242입력 일치·최종 oracle verify242개/496반환 통과",
+  "limits": [
+    "State/Uber파생/실제allocator·OS·게임/assert 실행 제외",
+    "가상Push/파생소멸자/Form/free는명시응답이며기본수명몸체는실제실행",
+    "캠페인1-1전체실행/원본동일성은미완료"
+  ],
+  "files": {
+    "cpppj/src/client/GumpLifetime.h": "34d0c9e8e25ead551760fd9c424acfa9acc65ac8bb2c9158f58c9105141c23fd",
+    "cpppj/src/client/GumpLifetime.cpp": "29989c46833f5fbbdd7999d4b8eebb80d044a23232f18004fe4aa92a26ae69e8",
+    "cpppj/tests/GumpResetTests.cpp": "182b373c84d371ec83f02395452e3633ea110ffeb34fc31ace5687196c6ccad3",
+    "tools/decomp_uireset_oracle.py": "c5459fd2f4c3f045d488bb2abb98cb8ceb569125236993479da50b7a8e840608",
+    "tools/ghidra/uireset-functions.json": "d47eccc3fa922ca731192c33dc03fc349aa1ac9ac1b73d8bfb246e03e0c44251",
+    "cpppj/recovery-uireset-evidence.json": "f219b73b7ef8b2e4a44869fe9518209e37e56e03717f0f468719d87814816256",
+    "cpppj/tests/fixtures/uireset-x86.tsv": "b1a48cbcd05a8bcc2a5fd38ce3dc2b63d79826a7fb8fd7f9a0d4b74e4dcc5348",
+    "docs/exe/cpp-ui-reset-analysis.md": "4446f3389c9b45f9cd9375beb0bbe5c10e18ff76d3f6916d35acb2dfc2740823",
+    "extracted/uireset-focused-final.log": "d5e38685535cdca0937bb62e8cd390569b0659472360f35be8ddec7143857121",
+    "extracted/uireset-lifetime-regression-final.log": "426a3d77cc906c9a8caf6fe5c6c0c0e191465767a352e340c63ff7a8804e8c6a",
+    "extracted/uireset-input-regression-final.log": "5cb6f3cb1b6bdd62ef1d41345d897757c626f075b9e5e9090ce843bb678c7b93",
+    "extracted/uireset-verify-final.log": "2d57b090623022a2895be7dbe40ba4092ec64bf24685a45ac81b8f24095a51d4"
+  },
+  "validation_logs": [
+    "extracted/uireset-focused-final.log",
+    "extracted/uireset-lifetime-regression-final.log",
+    "extracted/uireset-input-regression-final.log",
+    "extracted/uireset-verify-final.log"
+  ],
+  "validated_test_binary_sha256": "fcf6581ca1ffc7eb1911efa84a49be14fe55419d60255e53a5da8e1a493d8b08"
+}

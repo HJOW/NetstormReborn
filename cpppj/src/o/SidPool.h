@@ -58,6 +58,8 @@ private:
     friend class SquidForms;
     // 공간 해제는 raw next와 void만 갱신하고 풀 목록/반납은 별도로 유지한다.
     friend class SquidUnpop;
+    // 원본 건물 옆면은 유효 번호이면 free/비자산 후보의 WORD도 갱신한다.
+    friend class RawBuildingSpace;
     // 원본 short next 필드를 little endian으로 읽거나 쓴다. serverHead는 0번 슬롯+14의 겹친 객체다.
     std::uint16_t ReadNext(std::size_t offset) const;
     void WriteNext(std::size_t offset,std::uint16_t next);

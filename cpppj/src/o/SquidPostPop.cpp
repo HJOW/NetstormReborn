@@ -2,6 +2,8 @@
 #include "o/SquidPostPop.h"
 #include "o/RawPriestPostPopTail.h"
 #include "o/RawForcefieldLifecycle.h"
+#include "o/RawCarrierPostPop.h"
+#include "o/RawAssetPostPop.h"
 #include "o/SquidPop.h"
 #include "o/RawIslandPostPop.h"
 #include <algorithm>
@@ -21,6 +23,12 @@ constexpr std::uint32_t kNoGraph=0x2000000,kGraphChange=0x203,kDestroyGraph=0x80
 constexpr std::int64_t kCostBias=23;
 // 실제 다리 가상 표의 postPop은 공통 함수 앞에 연결 접두 처리를 수행한다.
 constexpr std::uint32_t kPatchBridgeVtable=0x005034c8,kCdBridgeVtable=0x00501ab0;
+// 원본 가상 표 +0x20이 직접 Carrier 00427720/CD 004e6360인 주소다.
+constexpr std::array<std::uint32_t,3> kPatchCarrierVtables{0x00503d80,0x00503e50,0x0050e568};
+constexpr std::array<std::uint32_t,2> kCdCarrierVtables{0x00503ee8,0x00506ea0};
+// 원본 가상 표 +0x20이 직접 Damageable 0044bf80/CD 004621c0인 주소다.
+constexpr std::array<std::uint32_t,2> kPatchDamageableVtables{0x0050a820,0x0050a8e8};
+constexpr std::array<std::uint32_t,2> kCdDamageableVtables{0x00500a58,0x00500b10};
 // raw 가상 주소를 호스트 포인터로 해석하지 않고 읽는다.
 std::uint32_t Vtable(std::span<const std::uint8_t> bytes) {
     std::uint32_t value=0;
@@ -62,7 +70,29 @@ bool SquidPostPop::HandlesIsland(Sid sid) const {
     return islandPrefix_ && Vtable(pool_.Slot(sid))==expected;
 }
 // 파생 표는 서로 다른 주소이므로 한 종류만 참이 된다.
-bool SquidPostPop::HandlesDerived(Sid sid) const { return HandlesBridge(sid) || HandlesIsland(sid) || HandlesSurface(sid) || HandlesPriest(sid) || HandlesForcefield(sid); }
+bool SquidPostPop::HandlesDerived(Sid sid) const { return HandlesBridge(sid) || HandlesIsland(sid) || HandlesSurface(sid) || HandlesPriest(sid) || HandlesForcefield(sid) || HandlesCarrier(sid) || HandlesDamageable(sid) || HandlesAsset(sid); }
+// 복원한 전용 자산 몸체를 같은 월드에 명시 등록한다. 일반 지원 주소 표는 변경하지 않는다.
+void SquidPostPop::SetAssetPostPop(const RawAssetPostPop* postPop) {
+    if (postPop && &postPop->Pool()!=&pool_) throw std::invalid_argument("자산 Pop/후처리 풀 불일치");
+    assetPostPop_=postPop;
+}
+// 전용 body의 PE 가상 표 조회를 사용한다. 등록된 객체의 Validate가 필요한 외부 효과도 검사한다.
+bool SquidPostPop::HandlesAsset(Sid sid) const { return assetPostPop_ && assetPostPop_->Handles(sid); }
+// 기존 직접 호출 몸체를 같은 월드의 가상 분배에 연결한다. 주소 표만으로 미연결 효과를 허용하지 않는다.
+void SquidPostPop::SetCarrierPostPop(const RawCarrierPostPop* postPop) {
+    if (postPop && &postPop->Pool()!=&pool_) throw std::invalid_argument("Carrier Pop/후처리 풀 불일치");
+    carrierPostPop_=postPop;
+}
+// 파생 Carrier 재정의는 포함하지 않으며 PE +0x20이 실제 직접 몸체인 표만 조회한다.
+bool SquidPostPop::HandlesCarrier(Sid sid) const {
+    const auto values=pool_.Edition()==OriginalEdition::Patch1078 ? std::span<const std::uint32_t>(kPatchCarrierVtables) : std::span<const std::uint32_t>(kCdCarrierVtables);
+    return carrierPostPop_ && std::ranges::find(values,Vtable(pool_.Slot(sid)))!=values.end();
+}
+// 타입 번호에 따른 추측 대신 두 PE의 직접 Damageable 가상 주소 표를 사용한다.
+bool SquidPostPop::HandlesDamageable(Sid sid) const {
+    const auto& values=pool_.Edition()==OriginalEdition::Patch1078 ? kPatchDamageableVtables : kCdDamageableVtables;
+    return carrierPostPop_ && std::ranges::find(values,Vtable(pool_.Slot(sid)))!=values.end();
+}
 // 공간이 바뀌기 전에 전체 예약 접두의 풀을 확인한다. 참조 대상은 연결보다 오래 살아야 한다.
 void SquidPostPop::SetForcefieldPostPop(const RawForcefieldPostPop* postPop) {
     if (postPop && &postPop->Pool()!=&pool_) throw std::invalid_argument("보호막 Pop/접두 풀 불일치");
@@ -123,6 +153,7 @@ void SquidPostPop::Validate(Sid sid,std::uint32_t flags,const RawGraphPop* pop) 
     if (!SquidPop::Supports(pool_.Edition(),Vtable(bytes),flags) && !HandlesDerived(sid)) throw std::logic_error("파생 postPop 미복원");
     if (HandlesPriest(sid)) priestPostPop_->Validate(sid);
     if (HandlesForcefield(sid)) forcefieldPostPop_->Validate(sid);
+    if (HandlesAsset(sid)) assetPostPop_->Validate(sid,flags,pop);
     ValidateBase(sid,flags,pop);
 }
 // 파생 몸체의 명시적 공통 호출용 검사다. 자동 가상 분배의 지원 검사는 Validate에 남긴다.
@@ -159,6 +190,19 @@ void SquidPostPop::Activate(Sid sid,std::uint32_t flags) {
     if (HandlesPriest(sid)) {
         priestPostPop_->PostPop(sid,flags);
         if (state_.depth!=before) throw std::logic_error("사제 Activate 공통 깊이 불일치");
+        return;
+    }
+    // 두 직접 몸체도 같은 flags의 공통 장부를 내부에서 한 번 호출한다.
+    if (HandlesCarrier(sid) || HandlesDamageable(sid)) {
+        if (HandlesCarrier(sid)) carrierPostPop_->PostPop(sid,flags);
+        else carrierPostPop_->DamageablePostPop(sid,flags);
+        if (state_.depth!=before) throw std::logic_error("Carrier/Damageable Activate 공통 깊이 불일치");
+        return;
+    }
+    // 자산 전용 재정의는 Damageable/base를 내부에서 실행하므로 접두처럼 다시 장부를 호출하지 않는다.
+    if (HandlesAsset(sid)) {
+        assetPostPop_->PostPop(sid,flags);
+        if (state_.depth!=before) throw std::logic_error("자산 Activate 공통 깊이 불일치");
         return;
     }
     if (HandlesBridge(sid)) BridgePrefix(pool_,sid,flags,bridgeConnector_);

@@ -9,6 +9,7 @@
 #include "o/SquidFrameBinding.h"
 #include "o/SquidOwner.h"
 #include "o/SquidFormDispatch.h"
+#include "o/RawBuildingSpace.h"
 #include <algorithm>
 #include <bit>
 #include <cmath>
@@ -43,11 +44,13 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
     o::BridgeConnectState links;std::uint32_t terrainType;o::SquidPostPopState bookkeeping;
     o::SquidDeletionState deletion;o::BridgeDecayMode mode;o::BridgeEventState eventState;
     o::IslandPostPopState loadState{1,false};o::SquidOwnerMode ownerMode;
+    o::BuildingSpaceState buildingState;
     o::SquidProcessState processState;o::FrameTime time{};bool changed{true},loaded{};
     SurfaceDisplayHooks displayHooks;std::size_t effectRequests{},walkerFalls{},deletionRequests{};
     std::unique_ptr<o::RawGraph> graph;std::unique_ptr<o::SquidDisplay> display;
     std::unique_ptr<o::SquidPostPop> postPop;std::unique_ptr<o::SquidUnpop> unpop;
     std::unique_ptr<o::SquidPop> pop;std::unique_ptr<o::SquidFactory> factory;
+    std::unique_ptr<o::RawBuildingSpace> building;
     std::unique_ptr<o::SquidFrame> frame;std::unique_ptr<o::SquidOwner> owner;
     std::unique_ptr<o::RawSquidNeighbors> neighbors;std::unique_ptr<o::RawBridgeConnect> connect;
     std::unique_ptr<o::RawIslandPostPop> surface;std::unique_ptr<o::RawSquidDestroy> baseDestroy;
@@ -73,6 +76,9 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
         postPop->SetIslandPrefix([this](o::Sid sid,std::uint32_t flags) { connect->IslandPostPopPrefix(sid,flags); });
         postPop->SetSurfacePrefix([this](o::Sid sid,std::uint32_t flags) { surface->Prefix(sid,flags); });
         unpop=std::make_unique<o::SquidUnpop>(pool,hash,spots,display.get());pop=std::make_unique<o::SquidPop>(pool,hash,spots,display.get(),postPop.get());
+        buildingState={terrainType,links.bridgeType,false};
+        building=std::make_unique<o::RawBuildingSpace>(pool,hash,types,buildingState);
+        pop->SetBuildingSpace(building.get());unpop->SetBuildingSpace(building.get());
         factory=std::make_unique<o::SquidFactory>(pool,types,false,unpop.get());
         frame=std::make_unique<o::SquidFrame>(pool,types,o::MakeSquidFrameHooks(pool,types,*display,*unpop,*pop));
         owner=std::make_unique<o::SquidOwner>(pool,types,bookkeeping,ownerMode);
@@ -83,7 +89,7 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
         objects.setOwner=o::MakeOwnerDispatch(pool,links,[this](o::Sid sid,std::uint32_t player) { owner->Set(sid,player);changed=true; });
         objects.pop=[this](o::Sid sid,float x,float y,std::uint32_t flags) { Pop(sid,x,y,flags); };
         objects.setFrame=[this](o::Sid sid,std::int32_t number,std::uint32_t flags) { frame->Set(sid,number,flags);changed=true; };
-        objects.notifySurface=[](o::Sid) {}; // 원본 다리 단어의 무상태 진단 경계다.
+        objects.notifySurface=[this](o::Sid sid) { building->NotifySurface(sid); }; // 실제 판본별 무상태 진단 몸체다.
         connect=std::make_unique<o::RawBridgeConnect>(pool,*neighbors,links,objects);
         surface=std::make_unique<o::RawIslandPostPop>(pool,hash.Entries(0),types,frames,links,loadState,o::IslandPostPopHooks{
             objects,[this](o::Sid sid) { connect->Connect(sid); },

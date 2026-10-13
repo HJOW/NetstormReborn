@@ -32,7 +32,7 @@ def texture_source(root,archive):
     return width,height,frame.rect,decode_frame(data,frame)
 
 
-def background_pixels(oracle,controls,pressed,size,texture,maps):
+def background_pixels(oracle,controls,pressed,size,texture,maps,raw_buttons=False):
     """실제 배경/반복 몸체가 호출한 clip/map/draw만 독립 SHP 픽셀로 합성한다. C++ 결과는 읽지 않는다."""
     result={};plans=0;width,height,rect,rows=texture
     # 목록 행을 제외하고 모든 돌 버튼에 같은 원본 배경 자식 계약을 적용한다.
@@ -40,7 +40,8 @@ def background_pixels(oracle,controls,pressed,size,texture,maps):
         enabled,menu,left,top,right,bottom,_=control
         if menu:continue
         flags=0x3e00000|(0x40000 if enabled and label==pressed else 0)
-        events=oracle.draw((left+1,top+1,right-1,bottom-2,0,0,*size,flags,width,height),CONTROLS[0]);plans+=1
+        # 실제 생성자 width/height-2와 자식 Attach(1,1)의 현재 경계를 원본 배경 몸체에 공급한다.
+        events=oracle.draw((left+1,top+1,right-1,bottom-1 if raw_buttons else bottom-2,0,0,*size,flags,width,height),CONTROLS[0]);plans+=1
         clip=(0,0,*size);shade=0
         # 원본 VFX 호출 순서를 유지하여 모서리의 마지막 테두리 색도 확인한다.
         for event in events.split('|'):
@@ -84,9 +85,9 @@ def check(executable,root,name,sizes,disabled=False):
         observed=reports(report)
         # 독립 질감 합성 위에 기존 전체 부모 함수의 선/글자를 덮고 모든 해당 픽셀을 비교한다.
         for _,label,pressed in stages:
-            state=observed[label];pixels,count=background_pixels(background,state['controls'],pressed,size,texture,maps)
+            state=observed[label];pixels,count=background_pixels(background,state['controls'],pressed,size,texture,maps,'RawButtons' in state)
             result['background_pixels']+=len(pixels);result['native_background_plans']+=count
-            foreground,count,_=expected_pixels(parent,font,state['controls'],pressed,colors);pixels.update(foreground);result['native_parent_plans']+=count
+            foreground,count,_=expected_pixels(parent,font,state['controls'],pressed,colors,'RawButtons' in state);pixels.update(foreground);result['native_parent_plans']+=count
             with Image.open(OUTPUT/f'{prefix}-{label}.bmp') as source:
                 image=source.convert('RGB');actual=image.load();assert image.size==size
                 # 투명 유지/자식이 덮지 않는 부모 모서리는 이 대조 영역에 포함하지 않는다.

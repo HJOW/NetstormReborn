@@ -1,6 +1,7 @@
 // 원본 Ubergump.cpp의 메인 메뉴·Tell·미션 진입을 현재 표시 기반과 연결한다.
 #pragma once
 #include "client/Gump.h"
+#include "client/RawButtonControls.h"
 #include "client/State.h"
 #include "client/Mission.h"
 #include "client/VFXDraw.h"
@@ -67,6 +68,8 @@ private:
     Client& client_;
     State state_;
     GumpControlInput input_;
+    std::unique_ptr<RawButtonControls> rawButtons_; // 돌 버튼은 실제 공유 트리/수명/캡처를 사용한다. input_은 메뉴 행/판정 보고용이다.
+    std::uint32_t buttonTextureType_{},buttonTextureFrame_{}; // 실제 A00 배경 생성자에 전달할 타입/프레임 번호다.
     std::map<std::string, std::unique_ptr<o::Config>> scripts_;
     std::map<std::string, IndexedImage> decorations_;
     SquidFrameMetrics buttonTextureMetrics_{}; // 원본 A00의 signed short 폭/높이. 반복 주기는 각각 1을 뺀 값이다.

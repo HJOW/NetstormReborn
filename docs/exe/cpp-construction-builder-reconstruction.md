@@ -1,5 +1,13 @@
 # 건설용 객체 생성·이동과 공급원 소비 복원
 
+2026-10-13 교정, **마지막 디컴파일 수행 PC VM-W11-CODEX**: 기존 Regular 경계의 인자 의미를 반대로 해석한 오류를 발견해 수정했다. 실제 `00496e80`/CD `0048efd0`은 `(event,parent,payload)`를 각각 +0x18/+8/+0x1c에 저장한다. Builder의 `(this,0,carrier,00532750)`는 **event0/payload0.05f**이며 `ConstructionBuilderState.timerPayload`의 현재 float를 전달한다. 기존의 timerEvent/출력 T의 `(payload,parent,event)` 해석은 잘못이었다. 이전 fixture는 이 생성자 몸체를 대체해 세 raw 인자 순서만 관찰했으므로 이 의미 오류를 검출하지 못했다.
+
+이번에는 실제 Builder 전체→실제 Regular 생성자→event/payload/parent/현재 double 시각/count 필드를 두 PE **96개씩·새192개** 입력으로 확인했다. ProcessForm/Kernel 부착만 native의 명시 경계이며 C++의 실제 Host/Kernel 필드를 같은 고유 fixture와 대조한다. 기존 세 PE **1,110개** 입력은 재실행·재라벨했고 새 관찰 수에 더하지 않는다. 실제 Host event0/.05 재예약 검사도 추가했다. native 근거 `recovery-constructiontimer-evidence.json`, fixture `constructiontimer-x86.tsv`, 도구 `decomp_constructiontimer_oracle.py`, 기록 `extracted/constructiontimer-*.log`다. 아래 수치/PC/검증은 최초 복원 당시 이력이다.
+
+첫 focused 실행에서 실제 factory/Host 검사의 명시 Pop 경계가 void를 지우지 않아 Regular 실행이 생략되었고, 새 ctor 검사는 native factory 경계의 임의 바이트 패턴을 종속 머리에도 공급해 미할당 SID 연결에서 거부되었다. `extracted/construction-unit-builder-focused.log`에 실패를 보존했다. C++ 통합 검사의 명시 Pop 경계에는 정상 void 해제 결과, 합성 새 객체에는 빈 종속 머리를 공급하도록 검사 장면을 교정했다. 원본 fixture/빌더/Host 몸체는 바꾸지 않았다. 추가한 실행 검사는 부모 event 몸체를 payload 반환으로 둔 **Regular의 재예약 검사**이며 manaBolt의 실제 event0 몸체까지 복원·대조했다는 뜻은 아니다. 현재 Builder 검사는 9개다.
+
+교정 뒤 공유 Release 증분 빌드 경고/오류 0에서 Builder **9개·실패 0**을 재실행했다(`extracted/construction-unit-builder-focused-final.log`). 기존 1,110개와 새 실제 Regular 생성자 192개의 필드 대조를 포함한다. SP 회전4개·건설 도착3개도 같은 최신 실행 파일에서 실패0이며 고유 `construction-unit-sp-focused-final.log`/`construction-unit-arrival-focused-final.log`에 보존했다. 네 native 근거 감사는 각61/306/1,110/192 입력에서 모두 통과했다. 전체 CTest 결과는 상위 공유 작업 기록을 따른다.
+
 2026-10-11, **HJOW-Athlon**. AGENTS.md·두 LEFT_JOBS를 읽고 [기준점/소유 사제 조회](cpp-construction-selection-reconstruction.md)의 다음 생성·이동 항목을 진행했다. 시작 트리는 깨끗했고 현재/마지막 디컴파일 PC가 같았다. `constructionbuilder` **23/20/20개**를 읽기 전용으로 내보냈다. **마지막 디컴파일 수행 PC: HJOW-Athlon, 2026-10-11.** 원본/복사본 게임·analyzeManager·클론 창 실행은 없었다.
 
 ## 주소와 복원 범위
@@ -14,7 +22,7 @@
 | 기준점 발자국 접근점 | `0041db70` | `00440400` |
 | 공급원 중심 / 단어 쓰기 | `004adea0` / `004ac220` | `004aef30` / `004abb00` |
 | 건설용 / 운반용 타입 전역 | `00541270` / `005411fc` | `0051cb5c` / `0051cae8` |
-| 접근 mask / 운반 이벤트 | `005424b8` / `00532750` | `005395cc` / `0052da30` |
+| 접근 mask / 운반 Regular payload | `005424b8` / `00532750` | `005395cc` / `0052da30` |
 | 공급원 배열 / 개수 | `00592f4c` / `00592f54` | `00567658` / `00567660` |
 | 경로 현재 단계 / 시각 배열 | +`0x10` / +`0x9c50` | +`0x10` / +`0x12d0` |
 
@@ -30,7 +38,7 @@
 4. 요청 시각이 0/-0이면 속도 조정을 건너뛴다. 나머지는 현재 경로 단계의 도착 시각·최초 객체 현재 타입 속도·현재 게임 시각을 읽어 속도를 계산하고 경로 가상 함수에 `(속도,0)`을 전달한다. 패치는 `((요청-현재)*속도)/(도착-현재)`, CD는 `((요청-현재)/(도착-현재))*속도` 순서다.
 5. 현재 목표 좌표/타입과 **기준점 현재 소유자 BYTE**로 자원 정책을 실행한다. 선택 경계 뒤 목표 좌표를 다시 읽어 정렬한다. 공유 목록은 매번 처음부터 스캔해 첫 0이 아닌 DWORD를 돌려주며 해당 칸만 0으로 바꾼다. **개수를 줄이지 않고 구멍/중복을 보존**한다. signed 개수 0 이하는 읽지 않는다.
 6. 공급원마다 현재 운반용 타입을 플래그 2로 생성한다. 순번의 낮은 WORD를 raw +12에 쓰고 현재 다리 타입이면 표면 알림을 부른다. 기준점의 현재 소유자로 지정하고, 공급원 현재 타입의 +`0x98` 인덱스로 새 객체 **현재 타입**의 첫 프레임 표를 읽는다. 프레임은 raw에 직접 쓰며 패치는 DWORD(+36), CD는 **BYTE(+34)**다. `SquidFrame::Set`의 표시 효과를 호출하지 않는다.
-7. 공급원 중심은 `x-폭/2, y-높이/2`다. 이 위치에 Pop 0으로 놓고 new(`0x28`) 성공 뒤 **할당 경계 이후의 현재 이벤트**로 payload 0 Regular를 만든다. **할당 실패해도 목적지 이동은 계속**하며 운반 경로 반환값은 버린다. 모든 공급원 처리가 끝난 뒤 최초 경로의 **현재 단계 도착 시각을 다시 읽어 반환**한다.
+7. 공급원 중심은 `x-폭/2, y-높이/2`다. 이 위치에 Pop 0으로 놓고 new(`0x28`) 성공 뒤 **event0과 할당 경계 이후의 현재 float payload**로 Regular를 만든다. 정상 payload는0.05f다. **할당 실패해도 목적지 이동은 계속**하며 운반 경로 반환값은 버린다. 모든 공급원 처리가 끝난 뒤 최초 경로의 **현재 단계 도착 시각을 다시 읽어 반환**한다.
 
 원본 경로 인자는 패치 8개, CD 7개이며 SID/목적지 뒤는 모두 0이다. C++ 이동 훅은 이 고정 0들을 생략해 SID/목적지만 받는다. 최초 경로 객체는 전체 Move 호출이 끝날 때까지 살아 있어야 한다. 접근 훅의 사각형 참조를 보관하려면 복사해야 한다.
 

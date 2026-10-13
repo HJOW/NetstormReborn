@@ -3,6 +3,7 @@
 #include "o/Squid.h"
 #include "o/SquidDisplay.h"
 #include "o/RawGraph.h"
+#include "o/RawBuildingSpace.h"
 #include <bit>
 #include <cmath>
 #include <stdexcept>
@@ -57,6 +58,11 @@ void SquidUnpop::ValidateFrameBinding(const SidPool& pool,const SquidDisplay& di
 }
 // 크기뿐 아니라 동일한 공간 인스턴스의 연결을 요구한다.
 void SquidUnpop::ValidateGraph(const RawGraph& graph) const { graph.ValidateSpace(hash_,spots_); }
+// 원본 표면 지도와 같은 해시/풀의 몸체만 등록한다.
+void SquidUnpop::SetBuildingSpace(const RawBuildingSpace* space) {
+    if (space) space->ValidateSpace(pool_,hash_);
+    building_=space;
+}
 // 일반 공간 경로의 상태·spot·체인 쓰기 뒤 선택 연결한 공통 표시를 원본 순서로 적용한다.
 void SquidUnpop::Unpop(Sid sid,const RiftTypeRecord& type,std::uint32_t flags) {
     auto bytes=Bytes(sid);
@@ -64,8 +70,8 @@ void SquidUnpop::Unpop(Sid sid,const RiftTypeRecord& type,std::uint32_t flags) {
         throw std::logic_error("Unpop 자산/SID 상태 오류");
     if ((bytes[kState]&(kFree|kVoid))!=0) return;
     const bool buried=(bytes[pool_.Edition()==OriginalEdition::Patch1078 ? 40 : 35]&kBuried)!=0;
-    if (!buried && (type.flags2&kBuildingMask))
-        throw std::logic_error("Unpop 건물 부착 표면 효과는 아직 지원하지 않습니다");
+    if (!buried && (type.flags2&kBuildingMask) && !building_)
+        throw std::logic_error("Unpop 건물 부착 공간이 연결되지 않았습니다");
     if (!SupportsDisplay(pool_.Edition(),Read(bytes,0,4),flags))
         throw std::logic_error("Unpop의 파생 표시 갱신 효과는 아직 지원하지 않습니다");
     const auto x=std::bit_cast<float>(Read(bytes,kX,4)),y=std::bit_cast<float>(Read(bytes,kY,4));
@@ -107,6 +113,9 @@ void SquidUnpop::Unpop(Sid sid,const RiftTypeRecord& type,std::uint32_t flags) {
             for (int cx=left;cx<=right;++cx) {
                 const auto genus=static_cast<std::uint8_t>(Squid::EffectiveGenus(type.flags2,x,y,type.footX,type.footY,cx,cy));
                 auto& spot=spots_[static_cast<std::size_t>(cy*kWorldCells+cx)]; spot=static_cast<std::uint8_t>(spot&~genus);
+                // Unpop은 Pop의 표면 플래그 검사 없이 옆면 SID의 BYTE 비트를 해제한다.
+                if ((type.flags2&kBuildingMask) && (cx==left || cx==right) && cy!=top && cy!=bottom)
+                    building_->UnpopSide(cx,cy);
             }
         }
     }
