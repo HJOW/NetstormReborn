@@ -1,0 +1,7 @@
+{
+  "description": "ContentForm 너겟 특수 preDestroy/커서 삭제 요청·부모 연결 검사/소리 중심 좌표의 두 PE 읽기 전용 내보내기. 마지막 디컴파일 PC: VM-W11-CODEX, 2026-10-13.",
+  "editions": {
+    "originals": ["004aeeb0", "00447390", "004ae080", "004adea0", "0049a900", "0040ea40", "004ac1b0", "004e49c0", "004ac200"],
+    "originalCD": ["004b0300", "0043d4c0", "004af1c0", "004aef30", "004442b0", "004abaa0", "004f161c"]
+  }
+}

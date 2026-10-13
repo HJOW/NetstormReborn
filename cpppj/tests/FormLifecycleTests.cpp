@@ -138,18 +138,18 @@ TEST_CASE(FormLifecycle_DependencyPairAndReentrantNotice) {
     }
 }
 
-// 기존 contained 생성기의 실제 타입6 생성→필드 저장→정렬 부착을 한 저장소에 연결한다.
-TEST_CASE(FormLifecycle_ContentCreateAndCurrentFillState) {
+// 기존 contained 생성기의 실제 타입6 생성→필드 저장→부착→사제 포획 알림을 한 저장소에 연결한다.
+TEST_CASE(FormLifecycle_ContentCreateAndCurrentCaptureState) {
     SidPool pool(OriginalEdition::Patch1078,kCapacity);std::vector<RiftTypeRecord> types(188);types[90].flags2=0x10000;types[80].flags2=0x200000;
-    SquidFactory factory(pool,types);const auto parent=factory.Create(90,2);ContentFormState state{true,true};std::vector<std::uint32_t> reasons;std::uint32_t filled=0;
+    SquidFactory factory(pool,types);const auto parent=factory.Create(90,2);ContentFormState state{true,true};std::vector<std::uint32_t> reasons;std::uint32_t captured=0;
     ContentFormHost content(pool,types,[&](Sid notifiedParent,Sid form,std::uint32_t reason) {
         CHECK(notifiedParent==parent);reasons.push_back(reason);if (reason==1) Put(pool,form,12,0xfe);
-    },{},&state,[&](Sid filledParent,std::uint32_t pattern) { CHECK(filledParent==parent);CHECK(pattern==0x7e);++filled; });
+    },{},&state,[&](Sid capturedParent,std::uint32_t previousOwner) { CHECK(capturedParent==parent);CHECK(previousOwner==0x7e);++captured; });
     ContainedCreateHooks hooks;hooks.notifySurface=[](Sid) {};
     ContainedCreateState createState;RawContainedCreate create(pool,createState,content.BindCreate(factory,hooks));
-    const auto form=create.Create(parent,80,7,0x20,0x10,3);CHECK(content.Robust(form));CHECK(filled==1);CHECK(reasons==std::vector<std::uint32_t>{1});
+    const auto form=create.Create(parent,80,7,0x20,0x10,3);CHECK(content.Robust(form));CHECK(captured==1);CHECK(reasons==std::vector<std::uint32_t>{1});
     CHECK(Read(pool,form,18)==80);CHECK(Read(pool,parent,6)==form.value);CHECK(pool.Slot(form)[30]==3);
-    CHECK(content.Damage(form,0,-3.5f)==-3.5f);CHECK(content.Damage(form,1,9)==0);CHECK(filled==2);
+    CHECK(content.Damage(form,0,-3.5f)==-3.5f);CHECK(content.Damage(form,1,9)==0);CHECK(captured==2);
     CHECK(reasons==std::vector<std::uint32_t>({1,2,1}));CHECK((Read(pool,form,20)&0x100)==0);
     content.Unpop(form);CHECK(reasons.back()==2);CHECK(Read(pool,parent,6)==0);
 }

@@ -66,6 +66,9 @@ public:
     // 패치 0040eec0/0041df80 및 CD 00414680: 소유자의 SP에 delta를 더하고 AI 지갑과 SP 표시를 갱신한다.
     // 음수 delta는 차감이다. SP 고정 모드에서는 delta 대신 고정값과의 차이가 쓰인다. (2026-10-10 건설 비용 차감 연결을 위해 공개했다.)
     void AddSp(std::uint32_t owner,float delta);
+    // 패치 00413bb0: SP를 바꾸기 전 너겟 내용물 삭제가 별도로 수행하는 AI 지갑 정수 가산이다.
+    // 기존 지갑 비활성/부착/최솟값·DWORD 감김 규칙을 사용하며 SP 표시/난수를 갱신하지 않는다.
+    void CreditWallet(std::uint32_t owner,std::int32_t amount);
 private:
     // vtable +0x80의 개수. 훅이 있으면 파생 구현이고 없으면 base의 상태 상위 3비트다.
     std::int32_t Count(Sid sid) const;

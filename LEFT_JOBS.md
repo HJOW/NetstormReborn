@@ -1,10 +1,20 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-13 최신 cpppj: ContentForm 너겟 삭제·사제 포획 경계·공유 분배 (`VM-W11-CODEX`)
+
+- [x] AGENTS.md·두 LEFT_JOBS·현재 작업 트리를 다시 확인했다. 앞선 Form 수명 구현/검증은 진행으로 분류하며 모든 미커밋 변경을 보존한다. 현재 PC `VM-W11-Codex`와 마지막 디컴파일 PC가 일치한다. DirectDraw 전체화면 수정은 제외한다.
+- [x] 원본 정밀 출력 확인: Content 특수 preDestroy의 `005412c0`은 **너겟(nugget,154)**이다. 전투 부착의 `004927f0/CD 0040df80`은 **사제 포획 알림**이며, `004ae080`은 부모 체인에 실제 포함되는지 검사한다. 앞선 생산 보충/캐리어 설명을 바로잡고 API를 `ContentPriestNotice(previousOwner)`로 교정했다.
+- [x] 작업 단위 1: 특수 삭제·커서 취소 요청·부모 연결 검사/소리 중심 좌표·CRT 절삭·genus 조회를 두 PE에서 **9/7개 함수** 읽기 전용 내보내기에 성공했다. 목록 `tools/ghidra/contentlifetime-functions.json`, 결과 `extracted/contentlifetime/`, 로그 `extracted/contentlifetime-export*.log`. 마지막 디컴파일 수행 PC: **VM-W11-CODEX, 2026-10-13**.
+- [x] 작업 단위 2: `ContentFormLifetime` 패치 너겟 삭제·현재 소유자/비용 재조회·지갑 선가산→SP→소리·CD 무지급·공통 삭제/Unpop 연결, `SquidReward::CreditWallet`의 기존 실제 지갑 몸체 연결을 구현했다. `ContentFormHost`의 사제 포획 알림은 현재 구조 `Linked`로 검사한다. `SquidFormDispatch`에 감시/Gump/Content/실제 프로세스 타입을 등록하는 공유 분배를 추가했고 **실제 RawSurfaceWorld의 프로세스/가상 자산 삭제**를 해당 분배기로 전환했다. 전체 Client UI·건물/사제 등 비표면 월드에 대한 등록은 후속이다.
+- [x] 작업 단위 3: 두 PE **198개씩·396개** 독립 관찰/C++ 대조·저장 SHA/사례 감사 통과. 사제/워커·전투·이전 소유자 low7 전달 부착을 포함한다. 실제 SP/지갑·공유 혼합 Form/현재 Form 삭제·구조 검사 4개/기존 Form 4개·표면 4개 통과. 첫 CD 경제 검사 입력/빌드 오류를 수정했고 최종 Release 경고/오류0. [작업 기록](docs/exe/cpp-content-lifetime.md). 초기 364개 입력의 전체 CTest 867개도 통과했다. 중복 재실행은 새 사례로 더하지 않는다.
+- [x] 작업 단위 4: 최종 전체 CTest **867개·실패0**(81.52초), 최종 빌드 경고/오류0·396개 독립 대조/근거 감사·UTF-8/diff 검사·SOURCE_MAP 내용 동일/원래 줄바꿈 보존·두 보호 PE SHA 불변 확인. 초기/실패/최종 로그를 모두 보존했다. 최종 로그 `extracted/contentlifetime-{build-validated-final,focused-validated,form-validated,oracle-validated,ctest-validated}.log`. 새 입력 누적은 원본 **525,542개**, C++ **525,282개**다. 원본 게임/GUI 실행·AGENTS.md/보호 원본/dotnetpj 변경·에이전트의 커밋/푸시 없음.
+- [ ] 다음: UI/Kernel의 초기화 전 실제 정리·전체 Client/비표면 월드 등록/공유 내부 재진입, 사용 중인 지정 ProcessForm 재등록, 실제 사제 포획/커서 취소·명령 큐·동적 메뉴·자동 raw UI. 건물/사제 등 비표면 객체의 실제 raw 공간/수명·명령·건설/경제/전투·미션 실행과 원본 캠페인 1-1 완주 대조는 미완료이며 목표를 계속 진행한다.
+
 ## 2026-10-13 최신 cpppj: DependForm 수명·ContentForm 정렬/피해 연결 (`VM-W11-CODEX`)
 
 - [x] AGENTS.md·두 LEFT_JOBS를 먼저 읽고 현재 호스트 `VM-W11-Codex`가 최신 정밀 디컴파일 PC와 일치함을 확인했다. 시작 시 Git 작업 트리는 깨끗했다. Windows 10/11 전체화면 DirectDraw 오류는 이번 목표에서 제외한다.
 - [x] 작업 단위 1: 두 PE의 감시 쌍/수명·Content 정렬/피해와 필요한 가상 thunk·finder 필터·공통 깊이 반납까지 **25/25개 함수**를 읽기 전용으로 내보냈다. 목록 `tools/ghidra/formlifecycle-functions.json`, 결과/로그 `extracted/formlifecycle/`. 마지막 디컴파일 수행 PC: **VM-W11-CODEX, 2026-10-13**. [작업 기록](docs/exe/cpp-form-lifecycle.md).
-- [x] 작업 단위 2: `DependFormHost`의 감시 쌍 생성/조회/중복 제거/중첩 삭제·부모 알림, `SquidForms` 기본 부착/서버 Pop 경계, `ContentFormHost` 정렬 부착/추가·제거 알림/Robust/피해 재부착·기존 contained 생성 연결을 구현했다. 생성은 원본 `watched→watcher` 인자 순서이며 ProcessForm/같은 부모를 허용한다. Content의 전투 보충은 현재 상태를 읽는 명시 경계, 특수 preDestroy는 후속이다.
+- [x] 작업 단위 2: `DependFormHost`의 감시 쌍 생성/조회/중복 제거/중첩 삭제·부모 알림, `SquidForms` 기본 부착/서버 Pop 경계, `ContentFormHost` 정렬 부착/추가·제거 알림/Robust/피해 재부착·기존 contained 생성 연결을 구현했다. 생성은 원본 `watched→watcher` 인자 순서이며 ProcessForm/같은 부모를 허용한다. 당시 전투 경계의 의미는 위 후속에서 사제 포획 알림/구조 검사로 교정했고 Content 너겟 preDestroy도 구현했다.
 - [x] 작업 단위 3: 두 실제 PE **456개씩·합계 912개** 독립 루트/C++ 대조, 새 Form 수명 검사 **4개·실패 0**, 최종 Release 라이브러리/게임/검사 빌드 경고·오류 **0**. 순서 공백·중복 감시를 포함한다. 준비 초기화·중복 재실행은 새 독립 관찰 수에 더하지 않는다. 이전 누적에 더한 원본 **525,146개**, C++ **524,886개**다.
 - [x] 작업 단위 4: 최종 PE/몸체/fixture SHA·사례/정상 명령 감사 통과, 최종 전체 CTest **863개·실패 0**(85.59초). SOURCE_MAP 재생성의 내용 차이 없음, 새 문서/코드 UTF-8·diff 공백 검사·두 보호 PE SHA 불변 확인. 로그 `extracted/formlifecycle-focused-final.log`, `formlifecycle-build-final.log`, `formlifecycle-oracle-final.log`, `formlifecycle-ctest-final.log`. 게임/GUI 실행·AGENTS.md/보호 원본/dotnetpj 변경·커밋/푸시 없음.
 - [ ] 이후: 전체 Client/월드 삭제 분배·UI/Kernel 정리 → 현재 UI 전역/명령 큐/입력·raw 자동 GUI → 캠페인 1-1 실제 진행/완주 및 원본 동일성 검증. 캠페인 목표는 계속 진행 중이다. 작업 단위가 끝날 때마다 이 항목을 갱신한다.
@@ -16,7 +26,7 @@
 - [x] `SquidFactory`의 Content/Gump 생성·`SquidProcessHost`의 일반 생성/지정 free Take·공통 Unpop과 `GumpFormHost::Take`/Unpop을 연결했다. 소유 DWORD와 기존 Kernel 등록/프로세스 타입/PID·Gump 삭제 분배를 유지한다. ContentForm의 부모 가상 +24 효과는 명시 callback이며 정렬 부착/전체 수명은 후속이다.
 - [x] 두 실제 PE **600개** 새 독립 관찰/같은 **600개 C++ 대조** 및 Form 검사 4개를 통과했다. 준비용 초기화와 malloc/부모 알림 경계는 관찰 수와 구분한다. 이전 누적에 더한 원본 **524,234개**, C++ **523,974개**다. Release 라이브러리/실행 파일/검사 빌드 경고·오류 **0**, 최종 전체 CTest **859개·실패 0**(83.98초). 앞선 VFX 대각선 지원 뒤 남아 있던 예외 기대를 실제 끝점/클립 검사로 수정했고 Gump Draw 11개도 통과했다. SOURCE_MAP 내용 차이 없음. 자료: `recovery-formtake-evidence.json`, `tools/decomp_formtake_oracle.py`, `formtake-x86.tsv`, `extracted/formtake-*.log`. 첫 전체 검사 1건 실패/수정/최종 통과 로그를 각각 보존했다.
 - [x] 원본 게임/GUI 실행·AGENTS.md/보호 원본/dotnetpj 변경·커밋/푸시 없음. 두 보호 PE SHA-256 불변이다.
-- [x] **DependForm 쌍/삭제·통지·조회/제거 및 ContentForm 정렬 부착·양수 피해 재부착은 위 후속에서 완료했다.** Content 특수 preDestroy/나머지 가상 수명·전투 생산 보충·초기화 전 UI/Kernel 정리·전체 Client/월드 공유 삭제/중첩 분배·사용 중인 지정 프로세스 재등록은 남았다. 동적 메뉴/현재 전역/명령 큐/변경 영역/allocator·OS 큐/폴링/overlay·자동 raw UI 및 기존 UI 독립 동작/픽셀 대조·공용 서식기/포인터 alias·그림 색 표/회전 VFX/flag 2 재사용·극단 x87/생성 EH도 최신 미완료 목록을 따른다. **raw 자동 GUI/건설·미션 완주는 미완료다.**
+- [x] **DependForm 쌍/삭제·통지·조회/제거와 ContentForm 정렬/피해·너겟 preDestroy/사제 포획 경계·공유 Form 분배는 위 후속에서 구현했다.** 초기화 전 UI/Kernel 정리·전체 Client/비표면 월드 등록·내부 공유 재진입·사용 중인 지정 프로세스 재등록·실제 커서/포획 UI 효과는 남았다. 동적 메뉴/현재 전역/명령 큐/변경 영역/allocator·OS 큐/폴링/overlay·자동 raw UI 및 기존 UI 독립 동작/픽셀 대조·공용 서식기/포인터 alias·그림 색 표/회전 VFX/flag 2 재사용·극단 x87/생성 EH도 최신 미완료 목록을 따른다. **raw 자동 GUI/건설·미션 완주는 미완료다.**
 
 ## 2026-10-13 cpppj 사전 정밀 디컴파일 재생성 (`VM-W11-CODEX`)
 

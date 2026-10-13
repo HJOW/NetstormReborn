@@ -1,6 +1,8 @@
 # cpppj — NetStorm C++ 빌드
 
-2026-10-13 (`VM-W11-CODEX`) 최신: **[감시 쌍·생산 목록 부착 복원](../docs/exe/cpp-form-lifecycle.md)**. `DependFormHost`의 실제 두 Form 생성/조회/중복 제거/중첩 삭제·부모 통지와 `ContentFormHost`의 순서 공백 부착/부모 알림/Robust/피해 재부착·기존 contained 생성 연결을 구현했다. 두 실제 PE 독립 입력/C++ 대조 **912개**, 새 검사 **4개·실패 0**, Release 경고/오류 **0**, 저장 근거 감사·최종 전체 CTest **863개·실패 0**. Content 특수 preDestroy·실제 전투 생산 보충·전체 Client/월드 분배·raw 자동 UI와 캠페인 완주는 후속이다. 마지막 디컴파일 PC: **VM-W11-CODEX, 2026-10-13**. 아래는 앞 단계 기록이다.
+2026-10-13 (`VM-W11-CODEX`) 최신: **[너겟 내용물 삭제·공유 Form 분배](../docs/exe/cpp-content-lifetime.md)**. 패치판 너겟의 AI 지갑 선가산/SP 가산/위치 소리와 CD 무지급 차이를 복원하고 기존 실제 SP 저장소에 연결했다. 전투 부착 경계를 사제 포획 알림으로 바로잡았으며 부모의 실제 연결 구조를 검사한다. 감시/Gump/Content/Process 혼합 삭제를 같은 분배기로 연결하고 실제 표면 월드의 프로세스 삭제를 전환했다. 두 PE/C++ **396개** 대조·새 검사 **4개**, Release 경고/오류 **0**·최종 전체 CTest **867개·실패0**. 전체 Client/비표면 월드·자동 raw UI/캠페인 완주는 후속이다. 마지막 디컴파일 PC: **VM-W11-CODEX, 2026-10-13**.
+
+2026-10-13 (`VM-W11-CODEX`) 앞 단계: **[감시 쌍·생산 목록 부착 복원](../docs/exe/cpp-form-lifecycle.md)**. `DependFormHost`의 실제 두 Form 생성/조회/중복 제거/중첩 삭제·부모 통지와 `ContentFormHost`의 순서 공백 부착/부모 알림/Robust/피해 재부착·기존 contained 생성 연결을 구현했다. 두 실제 PE/C++ **912개**, 새 검사 **4개**, Release 경고/오류 **0**·전체 CTest **863개** 통과. Content 특수 preDestroy와 사제 포획 경계/구조 검사 의미 교정·공유 분배는 위 후속에서 구현했다. 전체 Client/월드 등록·raw 자동 UI와 캠페인 완주는 남았다. 마지막 디컴파일 PC: **VM-W11-CODEX, 2026-10-13**.
 
 2026-10-13 (`VM-W11-CODEX`) 최신: **[Form 풀 재확보·지정 Take·공통 Unpop 복원](../docs/exe/cpp-form-take.md)** 완료. 네 내장 Form의 실제 생성/수신과 부모 체인 해제를 같은 SID 풀에 구현하고 GumpForm·ProcessForm에 연결했다. raw payload/풀 카운터·삭제 기록과 ContentForm의 제거 알림 시점을 유지한다. 두 실제 PE 새 독립 관찰/C++ 대조 **600개**, Release 경고/오류 **0**, 최종 전체 CTest **859개·실패 0**. 풀 초기화 전 UI/Kernel 정리·DependForm/ContentForm 전체 수명·실제 전체 Client/월드 연결은 후속이다. 마지막 디컴파일 PC: **VM-W11-CODEX, 2026-10-13**. 아래는 앞 단계 기록이다.
 

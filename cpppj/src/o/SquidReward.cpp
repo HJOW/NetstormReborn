@@ -166,6 +166,8 @@ void SquidReward::AddWallet(std::uint32_t owner,std::int32_t amount) {
     wallet=Wrap(static_cast<std::int64_t>(wallet)+amount);
     if (state_.walletClamp && wallet<=kWalletFloor) wallet=kWalletFloor;
 }
+// 상위 내용물 삭제가 요구하는 선가산을 기존 실제 지갑 몸체에 전달한다.
+void SquidReward::CreditWallet(std::uint32_t owner,std::int32_t amount) { AddWallet(owner,amount); }
 // 패치 0040eec0/0041df80 및 CD 00414680의 SP 가산과 AI 지갑 갱신, 표시 갱신이다.
 void SquidReward::AddSp(std::uint32_t owner,float delta) {
     const bool fixed=state_.fixedSpA || state_.fixedSpB;

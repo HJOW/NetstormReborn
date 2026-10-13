@@ -7,15 +7,16 @@ namespace netstorm::o {
 // 부모 가상 +0x24(form,reason)의 추가1/제거2 알림이다. 부모의 실제 생산/UI 효과를 연결한다.
 using ContentFormNotice=std::function<void(Sid parent,Sid form,std::uint32_t reason)>;
 // 실제 월드의 전투·강한 검사 전역이다. 부착 알림 뒤의 최신 값을 읽는다.
-struct ContentFormState { bool inBattle{},checkingRobust{}; };
-// 캐리어/신전·워크샾 조합의 전투 부착 후 원본 생산 보충 요청을 연결한다.
-using ContentFormFill=std::function<void(Sid parent,std::uint32_t pattern)>;
+struct ContentFormState { bool inBattle{},checkingLinks{}; };
+// 사제를 워커/벌룬에 담은 전투 부착 뒤 포획 알림(004927f0/CD 0040df80)을 요청한다.
+// 두 번째 인자는 내용물 +12의 하위7비트에 저장된 이전 사제 소유자다.
+using ContentPriestNotice=std::function<void(Sid parent,std::uint32_t previousOwner)>;
 // 유닛 목록의 정렬·그룹 플래그와 순서 BYTE를 관리한다. 특별한 생산/운반 삭제 효과는 월드 분배기의 책임이다.
 class ContentFormHost {
 public:
     // 풀·타입 입력·부모 알림의 수명은 연결기보다 길어야 한다. 타입 입력은 복사한다.
     ContentFormHost(SidPool& pool,std::span<const RiftTypeRecord> types,ContentFormNotice notice,
-        FormPopTransmit transmit={},const ContentFormState* state=nullptr,ContentFormFill fill={});
+        FormPopTransmit transmit={},const ContentFormState* state=nullptr,ContentPriestNotice captured={});
     // 내부 제거 callback이 자신의 주소를 사용하므로 처리기는 복사/이동하지 않고 같은 수명으로 연결한다.
     ContentFormHost(const ContentFormHost&)=delete;
     ContentFormHost& operator=(const ContentFormHost&)=delete;
@@ -26,6 +27,9 @@ public:
     void Unpop(Sid form) const;
     // 가상 +0x60: WORLD(0x80) 목록은 assert 경로이며 0x34 중 하나라도 있으면 true다.
     bool Robust(Sid form) const;
+    // 004ae080/CD 004af1c0: 부모 head에서 모든 next를 따라가 자기 SID 포함 여부를 검사한다.
+    // 목록 flags 검사인 가상 +0x60(Robust)와 다르며 부착 알림 뒤 실제 연결 상태를 다시 확인한다.
+    bool Linked(Sid form) const;
     // 가상 +0x5c: 양수 피해는 Unpop→0x100 플래그 해제→로컬 재부착 후 0을 반환한다.
     // 피해량이 0/음수이면 그대로 돌려준다. 재부착 부모 알림/원본 순서 BYTE를 함께 갱신한다.
     float Damage(Sid form,std::int32_t damage,float amount) const;
@@ -46,6 +50,6 @@ private:
     ContentFormNotice notice_;
     SquidForms forms_;
     const ContentFormState* state_{};
-    ContentFormFill fill_;
+    ContentPriestNotice captured_;
 };
 }

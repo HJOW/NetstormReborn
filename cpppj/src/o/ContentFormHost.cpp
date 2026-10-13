@@ -14,9 +14,9 @@ constexpr std::uint16_t kGroupMask=0xfcff,kWorld=0x80,kRobust=0x34,kChanged=0x10
 }
 // 부모 제거 통지도 같은 알림 경계에 연결하여 Take/Unpop과 부착을 한 계약으로 맞춘다.
 ContentFormHost::ContentFormHost(SidPool& pool,std::span<const RiftTypeRecord> types,ContentFormNotice notice,FormPopTransmit transmit,
-    const ContentFormState* state,ContentFormFill fill)
+    const ContentFormState* state,ContentPriestNotice captured)
     :pool_(pool),types_(types.begin(),types.end()),notice_(std::move(notice)),
-     forms_(pool,[this](Sid parent,Sid form) { notice_(parent,form,2); },std::move(transmit)),state_(state),fill_(std::move(fill)) {
+     forms_(pool,[this](Sid parent,Sid form) { notice_(parent,form,2); },std::move(transmit)),state_(state),captured_(std::move(captured)) {
     if (!notice_) throw std::invalid_argument("ContentForm 부모 알림 경계 필요");
     if (types_.size()!=(pool.Edition()==OriginalEdition::Patch1078 ? 188U : 171U)) throw std::invalid_argument("ContentForm 타입 판본/크기 오류");
 }
@@ -51,8 +51,8 @@ void ContentFormHost::Attach(Sid form,Sid parent,std::uint32_t flags) const {
     Form(form);forms_.ValidatePop(form,flags);
     const auto stored=Word(form,kContentType);if (stored>=types_.size()) throw std::logic_error("ContentForm 생산 타입 오류");
     if (state_ && state_->inBattle && (types_[stored].flags2&0x200000) &&
-        (types_.at(pool_.Slot(parent)[kType]).flags2&0x30000) && !fill_)
-        throw std::invalid_argument("ContentForm 전투 생산 보충 경계 필요");
+        (types_.at(pool_.Slot(parent)[kType]).flags2&0x30000) && !captured_)
+        throw std::invalid_argument("ContentForm 전투 사제 포획 알림 경계 필요");
     const auto listFlags=Word(form,kFlags);const auto orderOffset=pool_.Edition()==OriginalEdition::Patch1078 ? 23U : 22U;
     std::uint32_t order=0;Sid previous{},current{Word(parent,kHead)};bool inserted=false;std::unordered_set<std::uint16_t> visited;
     // 일치하는 그룹만 순서 카운터를 증가시키며 모든 항목은 tail 후보로 기억한다.
@@ -77,13 +77,13 @@ void ContentFormHost::Attach(Sid form,Sid parent,std::uint32_t flags) const {
     }
     pool_.AllocatedBytes(form)[orderOffset]=static_cast<std::uint8_t>(order);Put(form,kParent,parent.value);
     pool_.AllocatedBytes(form)[kState]|=kContained;forms_.Pop(form,flags|0x100);notice_(parent,form,1);
-    // 부모 알림/전송이 바꾼 현재 생산 타입·부모 genus·전투 상태를 다시 읽어 보충 조건을 평가한다.
+    // 부모 알림/전송이 바꾼 현재 내용물 타입·부모 genus·전투 상태를 다시 읽어 사제 포획 알림 조건을 평가한다.
     if (state_ && state_->inBattle && (types_.at(Word(form,kContentType)).flags2&0x200000) &&
         (types_.at(pool_.Slot(parent)[kType]).flags2&0x30000)) {
-        if (state_->checkingRobust && !Robust(form)) throw std::logic_error("ContentForm 전투 보충 Robust 오류");
-        if (Robust(form)) {
-            if (!fill_) throw std::invalid_argument("ContentForm 전투 생산 보충 경계 필요");
-            fill_(parent,pool_.Slot(form)[12]&0x7f);
+        if (state_->checkingLinks && !Linked(form)) throw std::logic_error("ContentForm 사제 포획 알림 연결 오류");
+        if (Linked(form)) {
+            if (!captured_) throw std::invalid_argument("ContentForm 전투 사제 포획 알림 경계 필요");
+            captured_(parent,pool_.Slot(form)[12]&0x7f);
         }
     }
 }
@@ -93,6 +93,20 @@ void ContentFormHost::Unpop(Sid form) const { Form(form);forms_.Unpop(form); }
 bool ContentFormHost::Robust(Sid form) const {
     Form(form);const auto flags=Word(form,kFlags);if (flags&kWorld) throw std::logic_error("WORLD ContentForm Robust 금지");
     return (flags&kRobust)!=0;
+}
+// 전체 체인을 검사해야 자기 번호 뒤의 무효 next가 있어도 false로 끝나는 원본 동작을 보존한다.
+bool ContentFormHost::Linked(Sid form) const {
+    Form(form);const Sid parent{Word(form,kParent)};
+    if (!parent.value || parent.value>=pool_.Capacity()) throw std::logic_error("ContentForm 연결 검사 부모 번호 오류");
+    Sid current{Word(parent,kHead)};bool found=false;std::unordered_set<std::uint16_t> visited;
+    // 상태/타입 필터를 추가하지 않고 부모 체인의 실제 next만 따라간다.
+    while (current.value) {
+        if (current.value>=pool_.Capacity()) return false;
+        if (!visited.insert(current.value).second) throw std::logic_error("ContentForm 연결 검사 체인 순환");
+        if (current==form) found=true;
+        current=Sid{Word(current,kNext)};
+    }
+    return found;
 }
 // 재부착은 현재 부모를 Unpop 전에 저장하며 제거 알림 뒤의 현재 플래그를 읽어 0x100만 끈다.
 float ContentFormHost::Damage(Sid form,std::int32_t damage,float amount) const {

@@ -8,6 +8,7 @@
 #include "o/SquidFactory.h"
 #include "o/SquidFrameBinding.h"
 #include "o/SquidOwner.h"
+#include "o/SquidFormDispatch.h"
 #include <algorithm>
 #include <bit>
 #include <cmath>
@@ -53,6 +54,7 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
     std::unique_ptr<o::RawSquidDestroyDispatch> virtualDestroy;std::unique_ptr<o::SquidDestroyLifecycle> common;
     std::unique_ptr<o::RawSurfaceLifecycle> lifecycle;std::unique_ptr<o::RawBridgeEvents> events;
     std::unique_ptr<o::SquidProcessHost> host;
+    std::unique_ptr<o::SquidFormDispatch> formDispatch;
     o::Kernel kernel; // 모듈/host보다 먼저 해제되어 예약 프로세스의 참조 수명을 보장한다.
     // 순환하는 콜백은 실제 호출 전에 모든 모듈을 구성한다. 생성 중에는 Pop하지 않는다.
     Impl(o::OriginalEdition selected,std::span<const o::RiftTypeRecord> inputTypes,std::span<const o::RiftTypeFrames> inputFrames,
@@ -106,7 +108,11 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
         eventHooks.destroy=[this](o::Sid sid,std::uint32_t flags) { Destroy(sid,flags); };
         eventHooks.setOwner=[setOwner=objects.setOwner](o::Sid sid,std::uint8_t player) { setOwner(sid,player); };eventHooks.pop=objects.pop;
         events=std::make_unique<o::RawBridgeEvents>(pool,eventState,o::MakeBridgeNeighborHooks(*neighbors,std::move(eventHooks)));
-        host=std::make_unique<o::SquidProcessHost>(pool,types,kernel,*baseDestroy,processState,o::MakeBridgeRegularHandler(pool,*events),lifecycle->Hooks());
+        // 표면 월드의 실제 자산 재정의/프로세스 삭제도 공유 Form 분배기를 사용한다.
+        formDispatch=std::make_unique<o::SquidFormDispatch>(pool,*baseDestroy,lifecycle->Hooks(),
+            [this](o::Sid sid,std::uint32_t flags,const o::SquidDestroyHooks& hooks) { return virtualDestroy->Destroy(sid,flags,hooks); });
+        host=std::make_unique<o::SquidProcessHost>(pool,types,kernel,*baseDestroy,processState,o::MakeBridgeRegularHandler(pool,*events),formDispatch->Hooks());
+        formDispatch->Bind(*host);
     }
     // 표시 억제는 현재 GUI 장치에서 조회한다. 콘솔에서는 변경 요청을 보존한다.
     bool Suppressed() const override { return displayHooks.suppressed && displayHooks.suppressed(); }
@@ -120,7 +126,7 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
         changed=true;
     }
     // 가상 삭제가 거부되면 changed를 새로 켜지 않는다.
-    bool Destroy(o::Sid sid,std::uint32_t flags) { const bool result=virtualDestroy->Destroy(sid,flags,host->Hooks());if (result) changed=true;return result; }
+    bool Destroy(o::Sid sid,std::uint32_t flags) { const bool result=formDispatch->Destroy(sid,flags);if (result) changed=true;return result; }
 };
 // 공개 객체는 내부 참조/콜백이 이동하지 않게 단일 구현 객체를 소유한다.
 RawSurfaceWorld::RawSurfaceWorld(o::OriginalEdition edition,std::span<const o::RiftTypeRecord> types,
