@@ -4,6 +4,7 @@
 #include "o/RawForcefieldLifecycle.h"
 #include "o/RawCarrierPostPop.h"
 #include "o/RawAssetPostPop.h"
+#include "o/RawFactoryPostPop.h"
 #include "o/SquidPop.h"
 #include "o/RawIslandPostPop.h"
 #include <algorithm>
@@ -70,7 +71,14 @@ bool SquidPostPop::HandlesIsland(Sid sid) const {
     return islandPrefix_ && Vtable(pool_.Slot(sid))==expected;
 }
 // 파생 표는 서로 다른 주소이므로 한 종류만 참이 된다.
-bool SquidPostPop::HandlesDerived(Sid sid) const { return HandlesBridge(sid) || HandlesIsland(sid) || HandlesSurface(sid) || HandlesPriest(sid) || HandlesForcefield(sid) || HandlesCarrier(sid) || HandlesDamageable(sid) || HandlesAsset(sid); }
+bool SquidPostPop::HandlesDerived(Sid sid) const { return HandlesBridge(sid) || HandlesIsland(sid) || HandlesSurface(sid) || HandlesPriest(sid) || HandlesForcefield(sid) || HandlesCarrier(sid) || HandlesDamageable(sid) || HandlesAsset(sid) || HandlesFactory(sid); }
+// 지원 주소만 늘리지 않고 실제 전체 몸체와 동일 풀을 확인한다.
+void SquidPostPop::SetFactoryPostPop(const RawFactoryPostPop* postPop) {
+    if (postPop && &postPop->Pool()!=&pool_) throw std::invalid_argument("Factory Pop/후처리 풀 불일치");
+    factoryPostPop_=postPop;
+}
+// 다른 타입의 기본 함수와 겹치지 않는 실제 가상 표로 분배한다.
+bool SquidPostPop::HandlesFactory(Sid sid) const { return factoryPostPop_ && factoryPostPop_->Handles(sid); }
 // 복원한 전용 자산 몸체를 같은 월드에 명시 등록한다. 일반 지원 주소 표는 변경하지 않는다.
 void SquidPostPop::SetAssetPostPop(const RawAssetPostPop* postPop) {
     if (postPop && &postPop->Pool()!=&pool_) throw std::invalid_argument("자산 Pop/후처리 풀 불일치");
@@ -154,6 +162,7 @@ void SquidPostPop::Validate(Sid sid,std::uint32_t flags,const RawGraphPop* pop) 
     if (HandlesPriest(sid)) priestPostPop_->Validate(sid);
     if (HandlesForcefield(sid)) forcefieldPostPop_->Validate(sid);
     if (HandlesAsset(sid)) assetPostPop_->Validate(sid,flags,pop);
+    if (HandlesFactory(sid)) factoryPostPop_->Validate(sid,flags,pop);
     ValidateBase(sid,flags,pop);
 }
 // 파생 몸체의 명시적 공통 호출용 검사다. 자동 가상 분배의 지원 검사는 Validate에 남긴다.
@@ -203,6 +212,12 @@ void SquidPostPop::Activate(Sid sid,std::uint32_t flags) {
     if (HandlesAsset(sid)) {
         assetPostPop_->PostPop(sid,flags);
         if (state_.depth!=before) throw std::logic_error("자산 Activate 공통 깊이 불일치");
+        return;
+    }
+    // Factory도 Damageable와 공통 장부를 내부에서 실행하므로 중복 호출하지 않는다.
+    if (HandlesFactory(sid)) {
+        factoryPostPop_->PostPop(sid,flags);
+        if (state_.depth!=before) throw std::logic_error("Factory Activate 공통 깊이 불일치");
         return;
     }
     if (HandlesBridge(sid)) BridgePrefix(pool_,sid,flags,bridgeConnector_);

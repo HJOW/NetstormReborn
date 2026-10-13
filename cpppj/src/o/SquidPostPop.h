@@ -11,6 +11,7 @@ class RawPriestPostPopTail;
 class RawForcefieldPostPop;
 class RawCarrierPostPop;
 class RawAssetPostPop;
+class RawFactoryPostPop;
 // 객체 후처리 Pop 등록한 대상과 그 개수를 보관하는 목록이다.
 struct SquidPostPopList {
     std::vector<std::uint32_t> entries; // 원본 미리 확보한 DWORD 배열. entries.size()가 capacity다.
@@ -77,6 +78,10 @@ public:
     void SetAssetPostPop(const RawAssetPostPop* postPop);
     // 실제 가상 표의 전용 자산 후처리가 명시 등록돼 있는가.
     bool HandlesAsset(Sid sid) const;
+    // 실제 Factory/썬 아비어리 전체 후처리를 같은 풀에 등록한다. nullptr은 연결을 해제한다.
+    void SetFactoryPostPop(const RawFactoryPostPop* postPop);
+    // 해당 가상 표의 몸체와 같은 월드 연결이 모두 준비돼 있는지 확인한다.
+    bool HandlesFactory(Sid sid) const;
     // 이 인스턴스가 처리할 수 있는 파생 postPop인가. Pop이 공간 변경 전에 묻는다.
     bool HandlesDerived(Sid sid) const;
     // 공간 변경 전 연결된 그래프의 최종 Pop 상태·미복원 영역/AI/배치 효과·목록·비용을 확인한다.
@@ -113,5 +118,6 @@ private:
     const RawForcefieldPostPop* forcefieldPostPop_{}; // 예약 접두 뒤 공통 후처리는 이 인스턴스가 한 번 호출한다.
     const RawCarrierPostPop* carrierPostPop_{}; // 직접 Damageable/Carrier 가상 후처리다. 파생 재정의는 별도로 복원한다.
     const RawAssetPostPop* assetPostPop_{}; // 초기 요새 건물의 전체 후처리다. 내부에서 공통 깊이를 한 번 줄인다.
+    const RawFactoryPostPop* factoryPostPop_{}; // 같은 해시/목록의 Factory wrapper를 실행하고 공통 깊이를 한 번 줄인다.
 };
 }

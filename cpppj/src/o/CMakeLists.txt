@@ -9,6 +9,7 @@ target_sources(netstorm PRIVATE
     RawPathRuntime.cpp RawPathRuntime.h
     RawPathProcess.cpp RawPathProcess.h
     RawPathSearch.cpp RawPathSearch.h
+    RawFactoryPostPop.cpp RawFactoryPostPop.h
     BaseFile.cpp BaseFile.h
     Config.cpp Config.h
     ConfigInterface.cpp ConfigInterface.h

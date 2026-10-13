@@ -36,6 +36,7 @@ struct AssetPostPopState {
     // temples: 신전.
     // geysers: 가이저.
     SquidPostPopList residences,temples,geysers;
+    SquidPostPopList aviaries; // DAT0055a70c/CD005670e0: 신전/아비어리의 섬 소유권 재계산에 쓰는 별도 목록이다.
 };
 // 외부 몸체를 생략하지 않고 호출 순서대로 연결하는 명시 경계다. 필요한 경계가 없으면 사전 검사에서 거부한다.
 struct AssetPostPopHooks {

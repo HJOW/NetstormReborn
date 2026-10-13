@@ -1,5 +1,13 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-13 진행 중 cpppj: Factory·썬 아비어리 후처리 (`VM-W11-CODEX`)
+
+- [x] 앞선 경로 단위를 `73ef4e6` (`20261013-01 실제 Path BFS와 초기화 연결 및 원본 대조 검증`)로 커밋했다. 사용자 목표 변경과 AGENTS.md의 명시적 커밋 예외를 다시 읽었으며 이후에도 작업 단위별 커밋을 수행한다. 사용자 AGENTS.md 수정과 미완료 placement 도구는 이 커밋에서 보존했다. push는 하지 않는다.
+- [x] 실제 vtable Factory 패치00509148/CD00503298, 아비어리 패치00509210/CD00503358을 확인하고 `RawFactoryPostPop` 전체 몸체와 `SquidPostPop` 가상 분배를 등록했다. wrapper 고유 목록→예약→직접 Damageable/공통 장부→상태별 프레임→실제 일반 finder/중복 워크샾 경고·삭제 순서다. CD에는 패치의 event5 예약이 없고 두 목록은 모두 **고유 추가**다. `MakeFactoryPostPopHooks`로 같은 풀의 실제 `SquidFrame::Set`도 연결했다.
+- [x] 패치8/CD9 정밀 내보내기, 고유 native/C++ **996개**(판본별498개)와 두 x87 정밀도 일치/정상 반환/assert0/SHA 감사 완료다. 입력에는 현재 상태/프레임 경계·빈 구간·타입126 생략·개별 확보 실패·목록 용량/중복 및 callback 뒤 타입/상태/다음 finder 후보 변경이 있다. native의 실제 일반 finder·상태 getter·목록·프레임 구간 판단은 실행했고 new/Regular·Damageable·Frame/아비어리 소유권/로그·삭제는 명시 관찰 경계다.
+- [x] 집중 **3개**(native 전체 재생·효과/다른 풀 거부·실제 프레임 지정/dirty) 통과, 최종 Release 경고·오류0, 전체 **936개/실패0**, CTest **87.72초** 통과다. [상세](docs/exe/cpp-factory-postpop.md), `recovery-factorypostpop-evidence.json`·`recovery-factory-world-evidence.json`, `extracted/factorypostpop-*-final.log`. 누적 원본 **540,310개**, C++ 대조 **540,050개**이며 정밀도 반복을 더하지 않았다. native 스모크의 잘못된 임시 주소/부모 검사기의 쓰기 허용표 재설정 오류는 교정 전 로그와 함께 보존했다. 보호 원본·AGENTS.md·dotnetpj 변경/게임·GUI 실행/push 없음. 작업 단위 커밋 대상이다.
+- [ ] 아비어리의 섬 소유권 재계산00455380/CD0047b3c0, 실제 Regular 본체·삭제·사제/건설/전투 연결 및 GameWorld 비표면 이관은 여전히 필수 후속이다. 초기 후처리의 효과를 noop로 채우지 않는다. 마지막 디컴파일 수행 PC **VM-W11-CODEX, 2026-10-13**.
+
 ## 2026-10-13 진행 중 cpppj: 실제 경로 검색·Init·월드 연결 (`VM-W11-CODEX`)
 
 - [x] 최신 AGENTS.md·두 인수인계·goal active·현재/마지막 디컴파일 PC 일치 및 Java/Python/CMake live0을 확인했다. 앞선 본체 단위는 928개/6388개 검증 완료의 진행이고 중단된 후속은 재실행하지 않았다. 주석 보완으로 기존 SHA가 달라진 것은 `extracted/comment-audit/`의 토큰 불변 대응표와 함께 보존한다.

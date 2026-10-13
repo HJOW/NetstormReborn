@@ -8,6 +8,7 @@ add_executable(netstorm_tests
     GunProcessTests.cpp
     RawPathRuntimeTests.cpp
     RawPathSearchTests.cpp
+    FactoryPostPopTests.cpp
     RawButtonControlsTests.cpp
     GumpResetTests.cpp
     MissionOutcomeTests.cpp
@@ -600,6 +601,9 @@ set_source_files_properties(SpRotateTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 건물 가상 postPop과 일반 Pop/Unpop 옆면의 독립 원본 관찰이다.
 set_source_files_properties(AssetPostPopTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_ASSETPOSTPOP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/assetpostpop-x86.tsv\"")
+# Factory/아비어리의 실제 일반 finder·프레임 구간·목록 등록 관찰이다.
+set_source_files_properties(FactoryPostPopTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FACTORYPOSTPOP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/factorypostpop-x86.tsv\"")
 set_source_files_properties(BuildingSpaceTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_BUILDINGSPACE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/buildingspace-x86.tsv\"")
 

@@ -10,7 +10,7 @@ AI 를 이용해 되살리는 프로젝트입니다.
 
 # 현재 개발 진행상황 관련
 
-2026-10-13 cpppj 후속: [실제 Fort 객체 로더](docs/exe/cpp-raw-fort-object-load.md)·[소유 레지던스 후처리](docs/exe/cpp-raw-fort-finish-owner.md), [GunProcess](docs/exe/cpp-gun-process.md), [Path 시간/단계/프레임/도착](docs/exe/cpp-raw-path-runtime.md) 및 [ProcessForm 서버 직렬화·공유 월드 연결](docs/exe/cpp-process-form-transmission.md)에 이어 [실제 BFS·Path Init](docs/exe/cpp-raw-path-search.md)을 같은 풀·공간에 연결했습니다. 이번 경로 단위 신규 원본/C++ 대조 **708개**, 전체 **933개/실패0**, Release 경고/오류0입니다. **GameWorld 비표면 객체의 실제 core 이관·표적/애니메이션·건설/전투/사제 운반·의식/승패 연결과 캠페인1-1 완주는 미완료**이며 [인수인계](LEFT_JOBS.md)에 검증 범위와 후속 작업을 구분했습니다. DirectDraw 전체화면 수정은 제외했습니다.
+2026-10-13 cpppj 후속: Fort/Gun/ProcessForm 공유 월드에 이어 [실제 BFS·Path Init](docs/exe/cpp-raw-path-search.md)과 [워크샾·썬 아비어리 후처리](docs/exe/cpp-factory-postpop.md)를 같은 풀·공간·목록에 연결했습니다. 두 후속 단위의 신규 원본/C++ 대조는 **708개/996개**, 최종 전체 **936개/실패0**, Release 경고/오류0입니다. **아비어리 섬 소유권 재계산·GameWorld 비표면 객체의 실제 core 이관·표적/애니메이션·건설/전투/사제 운반·의식/승패 연결과 캠페인1-1 완주는 미완료**이며 [인수인계](LEFT_JOBS.md)에 검증 범위와 후속 작업을 구분했습니다. DirectDraw 전체화면 수정은 제외했습니다.
 
 2026-10-13 cpppj 후속: [건물 Pop/Unpop 공간](docs/exe/cpp-building-space.md), [자산 postPop](docs/exe/cpp-asset-postpop.md), [사제·보호막 월드 연결 모듈](docs/exe/cpp-raw-priest-world-bindings.md), [SP 회전](docs/exe/cpp-sp-rotation.md), [건설 운반 도착](docs/exe/cpp-construction-arrival.md)을 복원했습니다. Builder 타이머의 event/payload 반전도 실제 생성자에 맞춰 교정했습니다. 신규 원본/C++ 대조 **5,318개**, 전체 검사 **904개/실패0**, Release 경고/오류0입니다. **비표면 실제 미션 월드 이관·이동/건설/전투/운반·의식 연결과 캠페인 1-1 완주는 미완료**이며 [인수인계](LEFT_JOBS.md)에 다음 단위와 실패/최종 근거를 기록했습니다.
 
