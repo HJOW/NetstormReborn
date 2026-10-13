@@ -1,0 +1,7 @@
+{
+  "description": "SunArcher 실제CRT fmod dispatch/fprem,CD 라디안→도 helper 및target0 방향getter. HJOW-Athlon,2026-10-13.",
+  "editions": {
+    "originals": ["004eded0", "004edf9a", "004ee1b7", "004e5e94", "004ee254", "004ad390", "0049a840", "004e49c0"],
+    "originalCD": ["004f7dc0", "004f7e8a", "004f8097", "004f2904", "004f8134", "004adbc0", "0043f4c0", "004f161c"]
+  }
+}

@@ -5,6 +5,7 @@
 #include "o/RawCarrierPostPop.h"
 #include "o/RawAssetPostPop.h"
 #include "o/RawFactoryPostPop.h"
+#include "o/RawRunePostPop.h"
 #include "o/SquidPop.h"
 #include "o/RawIslandPostPop.h"
 #include <algorithm>
@@ -71,7 +72,7 @@ bool SquidPostPop::HandlesIsland(Sid sid) const {
     return islandPrefix_ && Vtable(pool_.Slot(sid))==expected;
 }
 // 파생 표는 서로 다른 주소이므로 한 종류만 참이 된다.
-bool SquidPostPop::HandlesDerived(Sid sid) const { return HandlesBridge(sid) || HandlesIsland(sid) || HandlesSurface(sid) || HandlesPriest(sid) || HandlesForcefield(sid) || HandlesCarrier(sid) || HandlesDamageable(sid) || HandlesAsset(sid) || HandlesFactory(sid); }
+bool SquidPostPop::HandlesDerived(Sid sid) const { return HandlesBridge(sid) || HandlesIsland(sid) || HandlesSurface(sid) || HandlesPriest(sid) || HandlesForcefield(sid) || HandlesCarrier(sid) || HandlesDamageable(sid) || HandlesAsset(sid) || HandlesFactory(sid) || HandlesRune(sid); }
 // 지원 주소만 늘리지 않고 실제 전체 몸체와 동일 풀을 확인한다.
 void SquidPostPop::SetFactoryPostPop(const RawFactoryPostPop* postPop) {
     if (postPop && &postPop->Pool()!=&pool_) throw std::invalid_argument("Factory Pop/후처리 풀 불일치");
@@ -79,6 +80,13 @@ void SquidPostPop::SetFactoryPostPop(const RawFactoryPostPop* postPop) {
 }
 // 다른 타입의 기본 함수와 겹치지 않는 실제 가상 표로 분배한다.
 bool SquidPostPop::HandlesFactory(Sid sid) const { return factoryPostPop_ && factoryPostPop_->Handles(sid); }
+// 실제Rune후처리의같은풀을확인한경우만파생분배에등록한다.
+void SquidPostPop::SetRunePostPop(const RawRunePostPop* postPop) {
+    if (postPop && &postPop->Pool()!=&pool_) throw std::invalid_argument("Rune Pop/후처리 풀 불일치");
+    runePostPop_=postPop;
+}
+// 타입/가상표판단은등록된실제몸체에위임한다.
+bool SquidPostPop::HandlesRune(Sid sid) const { return runePostPop_ && runePostPop_->Handles(sid); }
 // 복원한 전용 자산 몸체를 같은 월드에 명시 등록한다. 일반 지원 주소 표는 변경하지 않는다.
 void SquidPostPop::SetAssetPostPop(const RawAssetPostPop* postPop) {
     if (postPop && &postPop->Pool()!=&pool_) throw std::invalid_argument("자산 Pop/후처리 풀 불일치");
@@ -160,6 +168,7 @@ void SquidPostPop::Validate(Sid sid,std::uint32_t flags,const RawGraphPop* pop) 
         throw std::logic_error("postPop raw 자산 상태 오류");
     if (!SquidPop::Supports(pool_.Edition(),Vtable(bytes),flags) && !HandlesDerived(sid)) throw std::logic_error("파생 postPop 미복원");
     if (HandlesPriest(sid)) priestPostPop_->Validate(sid);
+    if (HandlesRune(sid)) runePostPop_->Validate(sid,flags,pop);
     if (HandlesForcefield(sid)) forcefieldPostPop_->Validate(sid);
     if (HandlesAsset(sid)) assetPostPop_->Validate(sid,flags,pop);
     if (HandlesFactory(sid)) factoryPostPop_->Validate(sid,flags,pop);
@@ -196,6 +205,12 @@ void SquidPostPop::ValidateBase(Sid sid,std::uint32_t flags,const RawGraphPop* p
 // 성공한 공간 Pop의 flags로 가상 후처리를 분배한다. 전체 사제 wrapper는 자기 공통 깊이를 감소시킨다.
 void SquidPostPop::Activate(Sid sid,std::uint32_t flags) {
     Validate(sid,flags);const auto before=state_.depth; ++state_.depth;
+    // Rune은304예약/건설후공통몸체를자신의내부에서한번호출한다.
+    if (HandlesRune(sid)) {
+        runePostPop_->PostPop(sid,flags);
+        if (state_.depth!=before) throw std::logic_error("Rune Activate 공통 깊이 불일치");
+        return;
+    }
     if (HandlesPriest(sid)) {
         priestPostPop_->PostPop(sid,flags);
         if (state_.depth!=before) throw std::logic_error("사제 Activate 공통 깊이 불일치");

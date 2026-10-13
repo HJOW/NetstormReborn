@@ -28,6 +28,12 @@ target_sources(netstorm PRIVATE
     RawTerrainStamp.cpp RawTerrainStamp.h
     RawSquidRegion.cpp RawSquidRegion.h
     RawPriestRitualActions.cpp RawPriestRitualActions.h
+    RawArcherAnimation.cpp RawArcherAnimation.h
+    RawIslandRuntime.cpp RawIslandRuntime.h
+    RawSquidHitPoints.cpp RawSquidHitPoints.h
+    RawRunePostPop.cpp RawRunePostPop.h
+    RawTempleRitual.cpp RawTempleRitual.h
+    RawTerrainContext.cpp RawTerrainContext.h
     BaseFile.cpp BaseFile.h
     Config.cpp Config.h
     ConfigInterface.cpp ConfigInterface.h

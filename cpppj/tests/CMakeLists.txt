@@ -25,6 +25,12 @@ add_executable(netstorm_tests
     TerrainStampTests.cpp
     PriestRitualActionsTests.cpp
     ArcherMissileTests.cpp
+    ArcherAnimationTests.cpp
+    IslandRuntimeTests.cpp
+    TerrainWorldBindingTests.cpp
+    TempleRitualTests.cpp
+    TerrainContextTests.cpp
+    RunePostPopTests.cpp
     RawButtonControlsTests.cpp
     GumpResetTests.cpp
     MissionOutcomeTests.cpp
@@ -677,3 +683,19 @@ set_source_files_properties(PriestRitualActionsTests.cpp PROPERTIES COMPILE_DEFI
 # 썬 디스크 발사기71의 별도1888개 투사체 입력이며 이전 썬 캐논296개와 합치지 않는다.
 set_source_files_properties(ArcherMissileTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_ARCHERMISSILE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/archermissile-x86.tsv\"")
+
+# 실제 썬 디스크 발사기 애니메이션과 mutable100개 섬 레코드의 양판본 독립 입력이다.
+set_source_files_properties(ArcherAnimationTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_GUNARCHER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gunarcher-x86.tsv\"")
+set_source_files_properties(IslandRuntimeTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_ISLANDRUNTIME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/islandruntime-x86.tsv\"")
+
+# 실제 신전 의식 상위와 초기 지형 constructor/경계문자의 정상·assert 결과다.
+set_source_files_properties(TempleRitualTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_TEMPLERITUAL_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/templeritual-x86.tsv\"")
+set_source_files_properties(TerrainContextTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_TERRAINCONTEXT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/terraincontext-x86.tsv\"")
+
+# 실제Rune 파생Pop/건설시작과7/10/25초의정상출력은상위Temple 요청대조와별도입력이다.
+set_source_files_properties(RunePostPopTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_RUNEPOSTPOP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/runepostpop-x86.tsv\"")

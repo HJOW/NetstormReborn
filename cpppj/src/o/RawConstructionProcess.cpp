@@ -1,6 +1,7 @@
 // 건설 프로세스의 원본 읽기/쓰기 순서와 경계 뒤의 현재 자료 재조회를 보존한다.
 // 이력: 2026-10-11 추가.
 #include "o/RawConstructionProcess.h"
+#include "o/RawSquidHitPoints.h"
 #include <bit>
 #include <cmath>
 #include <memory>
@@ -63,9 +64,7 @@ std::int32_t RawConstructionProcess::HitPoints(Sid sid) const {
 }
 // 판본의 폭만큼만 쓴다. CD판은 값의 하위 WORD만 남는다.
 void RawConstructionProcess::SetHitPoints(Sid sid,std::int32_t value) const {
-    auto raw=pool_.AllocatedBytes(sid);const std::size_t width=pool_.Edition()==OriginalEdition::Patch1078 ? 4 : 2;
-    // 낮은 바이트부터 판본의 HP 폭까지만 쓴다.
-    for (std::size_t i=0;i<width;++i) raw[kHp+i]=static_cast<std::uint8_t>(std::bit_cast<std::uint32_t>(value)>>(8*i));
+    SetRawSquidHitPoints(pool_,sid,value);
 }
 // 원본 조건 `번호 < 5 || 번호 >= 15000(CD 6000)`이다.
 bool RawConstructionProcess::Confirmed(Sid sid) const { return sid.value<kFirstSid || sid.value>=pool_.Layout().serverFirst; }

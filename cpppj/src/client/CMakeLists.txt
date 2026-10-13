@@ -71,6 +71,7 @@ target_sources(netstorm PRIVATE
     UberGump.cpp UberGump.h
     GameWorld.cpp GameWorld.h
     RawSurfaceWorld.cpp RawSurfaceWorld.h
+    RawTerrainWorldBinding.cpp RawTerrainWorldBinding.h
     RawPriestWorldBindings.cpp RawPriestWorldBindings.h
     UserInput.cpp UserInput.h
     Sound.cpp Sound.h

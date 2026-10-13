@@ -85,6 +85,8 @@ struct RawWorldCore {
     o::SquidProcessState& processState;
     // kernel: 프로세스 등록과 프레임 실행을 담당하는 커널.
     o::Kernel& kernel;
+    // bridgeState: 같은 월드의 실제 표면 소유자 분배·연결이 읽는 현재 mutable 전역이다.
+    o::BridgeConnectState& bridgeState;
 };
 // 표면의 기존 훅을 합성한 미션 runtime 경계다. 새 월드 생성 후 첫 객체 생성/Load 전에 한 번 연결한다.
 struct RawWorldRuntimeHooks {
