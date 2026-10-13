@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Factory/아비어리 전체 분배·실제 프레임 연결의 성공 로그와 SHA를 보존한다."""
+"""Factory/아웃포스트 전체 분배·실제 프레임 연결의 성공 로그와 SHA를 보존한다."""
 import argparse
 import hashlib
 import json
@@ -55,9 +55,9 @@ def main():
         tests=dict(cases=int(result[1]),failed_checks=int(result[2])),native_cases=996,gui_executions=0,
         campaign_completed=False,directdraw_fullscreen_changed=False,sha256={name:sha(name) for name in dict.fromkeys(files)},limits=[
             'native는 실제 일반 finder·상태 getter·목록·프레임 구간 판단·후처리 몸체를 두 x87 정밀도로 실행한다.',
-            '예약 할당/Regular·Damageable·SquidFrame 효과·아비어리 소유권/경고/삭제는 native 명시 관찰 경계다.',
+            '예약 할당/Regular·Damageable·SquidFrame 효과·아웃포스트 소유권/경고/삭제는 native 명시 관찰 경계다.',
             'C++ 직접 Damageable→공통 장부와 실제 SquidFrame의 dirty/프레임 쓰기 연결을 추가 검사한다.',
-            '아비어리 섬 소유권 재계산·실제 Regular/건물 삭제·GameWorld 비표면 이관은 후속이며 캠페인1-1은 미완료다.'])
+            '아웃포스트 섬 소유권 재계산·실제 Regular/건물 삭제·GameWorld 비표면 이관은 후속이며 캠페인1-1은 미완료다.'])
     REPORT.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
     print(json.dumps({'tests':report['tests'],'native_cases':996,'campaign_completed':False},ensure_ascii=False))
 

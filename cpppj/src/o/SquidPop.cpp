@@ -1,5 +1,6 @@
 // 공간 쓰기 순서와 판본별 좌표/충돌 차이를 보존한다. 미복원 효과는 호출하지 않는다.
 #include "o/SquidPop.h"
+#include "o/RawMetadisplayDirty.h"
 #include "o/SquidUnpop.h"
 #include "o/Squid.h"
 #include "o/SquidDisplay.h"
@@ -10,6 +11,11 @@
 #include <stdexcept>
 
 namespace netstorm::o {
+// 다른 월드의 SID 풀을 사용하는 큐는 구성 단계에서 거부한다.
+void SquidPop::SetMetadisplayDirty(const RawMetadisplayDirty* dirty) {
+    if (dirty && &dirty->Pool()!=&pool_) throw std::invalid_argument("Pop/미니맵 큐 SID 풀 불일치");
+    metadisplay_=dirty;
+}
 namespace {
 // 정렬되지 않은 raw 필드의 원본 위치다.
 constexpr std::size_t kNext=4,kIsland=8,kType=10,kState=11,kX=14,kY=18,kScreenX=22,kScreenY=24;
@@ -107,6 +113,8 @@ RawPopResult SquidPop::Pop(Sid sid,const RiftTypeRecord& type,float frameWidth,f
     Put(bytes,kX,std::bit_cast<std::uint32_t>(x),4); Put(bytes,kY,std::bit_cast<std::uint32_t>(y),4);
     Put(bytes,kScreenX,static_cast<std::uint32_t>(static_cast<double>(x)*kScaleX+kBias),2);
     Put(bytes,kScreenY,static_cast<std::uint32_t>(static_cast<double>(y)*kScaleY+kBias),2);
+    // 원본 00481510/CD00442f30은 spot 겹침으로 반환하기 전의 새 좌표도 고유 큐에 남긴다.
+    if (!buried && (type.flags2&6) && metadisplay_) metadisplay_->Enqueue(sid);
     if (writesSpots) {
         // 패치 overlap의 조기 반환 앞에 기록한 좌표와 앞선 칸은 되돌리지 않는다.
         for (int cy=top;cy<=bottom;++cy) {

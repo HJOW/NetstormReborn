@@ -9,6 +9,9 @@ add_executable(netstorm_tests
     RawPathRuntimeTests.cpp
     RawPathSearchTests.cpp
     FactoryPostPopTests.cpp
+    MetadisplayDirtyTests.cpp
+    RawPathDataTests.cpp
+    GunTargetTests.cpp
     RawButtonControlsTests.cpp
     GumpResetTests.cpp
     MissionOutcomeTests.cpp
@@ -604,6 +607,15 @@ set_source_files_properties(AssetPostPopTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # Factory/아비어리의 실제 일반 finder·프레임 구간·목록 등록 관찰이다.
 set_source_files_properties(FactoryPostPopTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_FACTORYPOSTPOP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/factorypostpop-x86.tsv\"")
+# 미니맵 큐의 고유 등록·카메라 비교·전체/부분 갱신 실제 PE 관찰이다.
+set_source_files_properties(MetadisplayDirtyTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_METADISPLAYDIRTY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/metadisplaydirty-x86.tsv\"")
+# 실제 서버 Path 공유 버퍼와 두 판본 Prepare 속도 전달 관찰이다.
+set_source_files_properties(RawPathDataTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PATHDATA_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/pathdata-x86.tsv\";NETSTORM_PATHPREPARE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/pathprepare-x86.tsv\"")
+# 실제 Gun 표적 finder·각도·MayShoot 두 판본 관찰이다.
+set_source_files_properties(GunTargetTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_GUNTARGET_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/guntarget-x86.tsv\"")
 set_source_files_properties(BuildingSpaceTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_BUILDINGSPACE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/buildingspace-x86.tsv\"")
 

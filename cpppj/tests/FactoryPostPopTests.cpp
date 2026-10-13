@@ -1,4 +1,4 @@
-// 두 PE의 Factory/아비어리·실제 finder·프레임/목록/현재 상태를 재생한다.
+// 두 PE의 Factory/아웃포스트·실제 finder·프레임/목록/현재 상태를 재생한다.
 #include "RawSceneSupport.h"
 #include "o/RawFactoryPostPop.h"
 #include "o/SquidFrame.h"
@@ -50,7 +50,7 @@ struct FactoryScene {
         }
         Put(pool.AllocatedBytes(kSource),FrameOffset(),input[6],patch ? 4U : 1U);
         // 중복 번호나 꽉 찬 capacity를 그대로 입력한다.
-        for (auto* list:{&state.aviaries,&state.residences}) { list->entries={input[9] ? 50U : 7U,8,9,10};list->count=input[8]; }
+        for (auto* list:{&state.outposts,&state.residences}) { list->entries={input[9] ? 50U : 7U,8,9,10};list->count=input[8]; }
     }
     // 직접 Damageable가 실제 공통 장부를 호출하고 native 경계와 같은 사건을 남긴다.
     CarrierPostPopHooks DamageableHooks(SquidPostPop& base) {
@@ -76,7 +76,7 @@ struct FactoryScene {
             events.push_back("F:"+std::to_string(static_cast<std::uint32_t>(frame))+':'+std::to_string(flags));
             Put(pool.AllocatedBytes(sid),FrameOffset(),static_cast<std::uint32_t>(frame),patch ? 4U : 1U);
         };
-        hooks.aviaryOwnership=[this](float x,float y) {
+        hooks.regionOwnership=[this](float x,float y) {
             events.push_back("C:"+std::to_string(std::bit_cast<std::uint32_t>(x))+':'+std::to_string(std::bit_cast<std::uint32_t>(y)));
             if (mutation==3) pool.AllocatedBytes(kSource)[10]=87;
         };
@@ -93,7 +93,7 @@ struct FactoryScene {
         // 효과의 순서를 한 번에 대조한다.
         for (const auto& event:events) { if (!actions.empty()) actions+=';';actions+=event; }
         // capacity 전체의 stale 항목도 보존됐는지 확인한다.
-        for (const auto* list:{&state.aviaries,&state.residences}) {
+        for (const auto* list:{&state.outposts,&state.residences}) {
             if (!lists.empty()) lists+='|';lists+=std::to_string(list->count)+':';
             // 활성 count 밖의 기존 항목도 기록한다.
             for (std::size_t i=0;i<list->entries.size();++i) { if (i) lists+=',';lists+=std::to_string(list->entries[i]); }
@@ -141,7 +141,7 @@ TEST_CASE(factoryPostPop_requires_effects_and_same_pool) {
     FactoryScene scene(true);const std::array<std::uint32_t,11> input{1,85,1,0,1,0,7,7,0,0,0};scene.Prepare(input);
     SquidPostPop base(scene.pool,scene.types,scene.baseState);
     RawCarrierPostPop damageable(scene.pool,scene.types,scene.carrierState,scene.DamageableHooks(base));
-    auto hooks=scene.Hooks();hooks.aviaryOwnership={};
+    auto hooks=scene.Hooks();hooks.regionOwnership={};
     RawFactoryPostPop factory(scene.pool,scene.hash,scene.types,scene.frames,base,damageable,scene.state,hooks);
     base.SetFactoryPostPop(&factory);const auto before=Hex(scene.pool.Slot(kSource));bool rejected=false;
     try { base.Activate(kSource,1); } catch (const std::invalid_argument&) { rejected=true; }

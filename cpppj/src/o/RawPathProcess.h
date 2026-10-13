@@ -42,7 +42,7 @@ public:
     ~RawPathProcess() override;
     // 실제 Init +0x20은 시작 표면이 있을 때만 void Pop→검색→current=0을 실행한다. flags1은 직선 방향만 축약한다.
     void InitializePath(Sid parent,RawPathPoint destination,RawPathPoint start,std::uint32_t flags=0);
-    // +0x30의 현재 speed/turningSpeed 입력을 받는다. override=0이면 현재 타입 속도를 사용한다.
+    // +0x30의 현재 speed/turningSpeed 입력이다. 패치만 nonzero override를 사용하고 CD는 항상 타입 속도를 쓴다.
     void Prepare(float speedOverride,float speed,float turningSpeed);
     // type23 0048a950/CD0047efb0 및 type54 0048bb40/CD004805d0의 실제 실행 분기다.
     void RunFrame() override;
@@ -55,6 +55,8 @@ public:
     // 실제 탐색/건설 시각 조정과 네트워크 어댑터가 같은 경로 저장소를 사용한다.
     RawPathRuntime& Runtime();
     const RawPathRuntime& Runtime() const;
+    // 서버 직렬화 어댑터가 보호된 Host를 노출하지 않고 동일 raw 풀을 확인한다.
+    const SidPool& Pool() const;
     // 원본 priest Attach는 부모 타입을 현재 priestType 전역과 검증한 뒤 실제 Host에 등록한다.
     static RawPathProcess* Attach(SquidProcessHost& host,std::unique_ptr<RawPathProcess> process,Sid parent,std::uint32_t flags=0,Sid form={});
 private:

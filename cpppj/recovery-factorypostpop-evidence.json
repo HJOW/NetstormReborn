@@ -17,7 +17,7 @@
         "Begin": 368,
         "Next": 980,
         "004557c0": 498,
-        "Aviary": 498,
+        "Outpost": 498,
         "00414450": 548
       },
       "external": {
@@ -47,7 +47,7 @@
         "Begin": 368,
         "Next": 980,
         "0047b680": 498,
-        "Aviary": 498
+        "Outpost": 498
       },
       "external": {
         "factory_004621c0": 996,
@@ -62,15 +62,15 @@
   },
   "os_calls": 0,
   "files": {
-    "tools/decomp_factorypostpop_oracle.py": "7ed2609f42258a3d31f1727e3e444f8f55042d4014049a34d3c00956cf7e6bb8",
+    "tools/decomp_factorypostpop_oracle.py": "544589abc617c23a6a544e97e589ea6d59bda29539e66bc8eef3c2e4228889f8",
     "cpppj/tests/fixtures/factorypostpop-x86.tsv": "3c03af2bf6a224449a789e86d6dbe88cb93d84bf56b85ee1e900af540f271b06",
-    "tools/ghidra/factorypostpop-functions.json": "b6e8be1d608fb626f6011d56fa0a430018428d5164828c42864235619aae3fe7",
+    "tools/ghidra/factorypostpop-functions.json": "72d9871cc0f299df06b617ac558375aa0c8472e91b010b92562a243e3b88d35f",
     "tools/decomp_rawfinder_oracle.py": "bfa95ab177d6ab3d0a38e312db7320b0aa14f57b526d9fba2645d9582185592b",
     "tools/decomp_bridgeeffects_oracle.py": "84fd8a1d474efc26a46533454aaf9204d2a68b74df0436b8265c06919f46577d",
     "tools/decomp_bridgedecay_oracle.py": "55b660d1f73e054162230a98b0decc1149ed1084d68f1ae647c6d7689f86697d",
-    "cpppj/src/o/RawFactoryPostPop.h": "bbf66db3087b3bc8091c4caadee08ac1f7c345ba778026d43f01cbecffd13fb0",
-    "cpppj/src/o/RawFactoryPostPop.cpp": "e34ab54a1f5b9926db0438798a97bf4687bd3197c6733437febb53b6428ba8ba",
-    "cpppj/tests/FactoryPostPopTests.cpp": "6426f693b677e2a2d3c2a2ba04ffd440b58770658671109a6b502fe08a3c43aa",
+    "cpppj/src/o/RawFactoryPostPop.h": "28f918f02f18b9c393fc1a5cf28e8bfeb462c82bf5b480b07e278dc4d5d8c508",
+    "cpppj/src/o/RawFactoryPostPop.cpp": "e909e7d9a8d5b4dcec95cf6fbbea9799c2702adfa367479955c56a93ab62bbf3",
+    "cpppj/tests/FactoryPostPopTests.cpp": "c5f1395723216df70b3a62cf70e5d52e7e3d76648c190ed64d2bd5eee0d0ee89",
     "extracted/bridgeeffects/originals/creation.c": "ac1856212fbd285650dc4ec999fa996a306ba536a3e42d605fba4ab26178fdbc",
     "extracted/bridgeeffects/originals/functions.tsv": "485cd05093884690ffc94c433c4e040282cd6ca26eb7da469732f74e1c983cec",
     "extracted/finder/originals/creation.c": "2f6baf5e3cf77598e067963196c8fcd5c7d15ee09db54f3f68e8071191ea9070",
@@ -87,8 +87,8 @@
     "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
   },
   "limits": [
-    "예약 할당/Regular·Damageable·SquidFrame 가상 효과·아비어리 소유권 재계산·경고/삭제는 명시 관찰 경계다.",
-    "상태 getter·프레임 구간 판단·일반 finder/CRT·고유 목록·Factory/아비어리 body는 실제 명령이다.",
+    "예약 할당/Regular·Damageable·SquidFrame 가상 효과·아웃포스트 소유권 재계산·경고/삭제는 명시 관찰 경계다.",
+    "상태 getter·프레임 구간 판단·일반 finder/CRT·고유 목록·Factory/아웃포스트 body는 실제 명령이다.",
     "C++은 실제 일반 finder와 직접 Damageable→공통 장부를 조합하며 미션/GUI 완주를 입증하지 않는다."
   ]
 }

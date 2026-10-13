@@ -8,6 +8,8 @@
 #include <utility>
 
 namespace netstorm::o {
+// 부착 전/중의 공유 버퍼 작성도 생성 당시의 같은 SID 풀만 사용한다.
+const SidPool& RawPathProcess::Pool() const { return pool_; }
 namespace {
 // 원본 좌표 거의 올림 배율과 사제 프레임의 각도 주기다.
 constexpr float kCellBias=0.9999F;
@@ -66,7 +68,9 @@ void RawPathProcess::InitializePath(Sid parent,RawPathPoint destination,RawPathP
 // 외부 타입 속도는 mutable 원본 속성을 매 호출에서 읽어 공급해야 한다.
 void RawPathProcess::Prepare(float speedOverride,float speed,float turningSpeed) {
     if (speed==0 || turningSpeed==0) throw std::invalid_argument("경로 타입 속도0");
-    runtime_.Prepare(state_.clock.now,state_.clock.now,speedOverride==0 ? speed : speedOverride,turningSpeed,runtime_.Direction(0));
+    // 패치0048a200만 nonzero override를 사용하며 CD0047e710은 항상 현재 타입 속도를 사용한다.
+    const auto effective=pool_.Edition()==OriginalEdition::Patch1078 && speedOverride!=0 ? speedOverride : speed;
+    runtime_.Prepare(state_.clock.now,state_.clock.now,effective,turningSpeed,runtime_.Direction(0));
 }
 // 클라이언트 범위는 현재 풀 판본의 실제 serverFirst다.
 bool RawPathProcess::MayMutate() const { return state_.clock.boss || (Form().value>4 && Form().value<pool_.Layout().serverFirst); }

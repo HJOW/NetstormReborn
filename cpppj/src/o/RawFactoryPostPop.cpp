@@ -61,8 +61,8 @@ void RawFactoryPostPop::Validate(Sid sid,std::uint32_t flags,const RawGraphPop* 
     if (!hooks_.setFrame) throw std::invalid_argument("Factory 실제 프레임 설정 경계 누락");
     if (state_.boss && (!hooks_.destroy || !hooks_.warnDuplicate)) throw std::invalid_argument("Factory 중복 삭제/경고 경계 누락");
     if (kind==2) {
-        static_cast<void>(state_.aviaries.Items());static_cast<void>(state_.residences.Items());
-        if (!hooks_.aviaryOwnership) throw std::invalid_argument("아비어리 실제 섬 소유권 경계 누락");
+        static_cast<void>(state_.outposts.Items());static_cast<void>(state_.residences.Items());
+        if (!hooks_.regionOwnership) throw std::invalid_argument("아웃포스트 실제 섬 소유권 경계 누락");
     }
 }
 // raw currentType/state/frame을 효과 후 다시 읽고 원본 signed DWORD 덧셈 감김을 유지한다.
@@ -84,11 +84,11 @@ void RawFactoryPostPop::PostPop(Sid sid,std::uint32_t flags) const {
     Validate(sid,flags);
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;const auto extra=patch ? 40U : 35U;
     if (Kind(sid)==2 && (flags&1) && !(pool_.Slot(sid)[extra]&9)) {
-        AddUnique(state_.aviaries,sid);AddUnique(state_.residences,sid);
-        hooks_.aviaryOwnership(Position(pool_.Slot(sid),14),Position(pool_.Slot(sid),18));
+        AddUnique(state_.outposts,sid);AddUnique(state_.residences,sid);
+        hooks_.regionOwnership(Position(pool_.Slot(sid),14),Position(pool_.Slot(sid),18));
     }
     if (flags&1) {
-        if (pool_.Slot(sid)[10]==numbers_.aviary) Regular(sid,2,8.0f);
+        if (pool_.Slot(sid)[10]==numbers_.firstTimerFactory) Regular(sid,2,8.0f);
         if (pool_.Slot(sid)[10]==numbers_.secondTimer) Regular(sid,1,0.5f);
         if (patch) Regular(sid,5,0.5f);
     }

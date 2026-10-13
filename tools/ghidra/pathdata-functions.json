@@ -1,0 +1,7 @@
+{
+  "description": "서버 Path WriteData와 공통 패킷 헤더·payload 및 실제 생성/Init/Prepare 전달을 정밀 판독한다. 마지막 디컴파일 PC: VM-W11-CODEX, 2026-10-13.",
+  "editions": {
+    "originals": ["004895b0", "004df590", "0040a6a0", "0048a200", "0048a660", "0048be40", "0048bf60"],
+    "originalCD": ["0047d630", "00418b60", "0040a240", "0047e710", "0047ec60", "0047f310", "0047fcf0"]
+  }
+}

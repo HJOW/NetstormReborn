@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""실제 Factory/아비어리·상태 getter·프레임 구간·일반 finder·고유 목록을 두 PE에서 실행한다."""
+"""실제 Factory/아웃포스트·상태 getter·프레임 구간·일반 finder·고유 목록을 두 PE에서 실행한다."""
 import argparse
 import collections
 import csv
@@ -66,7 +66,7 @@ class FactoryOracle(FinderOracle):
         for head in self.factory['lists']:
             self.write_ranges.append((head,head+12))
         self.returns=0 # 실제 최상위 정상 반환 수이며 내부 호출 수와 구별한다.
-        self.spec=dict(self.spec,entries=dict(self.spec['entries'],Factory=self.factory['entries'][0],Aviary=self.factory['entries'][1]))
+        self.spec=dict(self.spec,entries=dict(self.spec['entries'],Factory=self.factory['entries'][0],Outpost=self.factory['entries'][1]))
 
     def read(self,address,width=4):
         """정렬되지 않은 raw 값을 지정한 폭대로 읽는다."""
@@ -140,7 +140,7 @@ class FactoryOracle(FinderOracle):
         for index,head in enumerate(p['lists']):
             values=[50 if present else 7,8,9,10];storage=LISTS+index*0x100
             self.mu.mem_write(storage,struct.pack('<4I',*values));self.mu.mem_write(head,struct.pack('<III',storage,4,length))
-        self.call('Aviary' if kind else 'Factory',[flags],self.slot(50),4,control)
+        self.call('Outpost' if kind else 'Factory',[flags],self.slot(50),4,control)
         self.returns+=1
         output=bytearray(self.mu.mem_read(self.slot(50),self.stride));struct.pack_into('<I',output,0,p['tables'][kind])
         lists='|'.join(str(self.read(head+8))+':'+','.join(str(self.read(LISTS+i*0x100+4*j)) for j in range(4)) for i,head in enumerate(p['lists']))
@@ -167,8 +167,8 @@ def generate(smoke=False):
                        '\n'.join('\t'.join(map(str,row)) for row in rows)+'\n',encoding='utf-8',newline='\n')
     REPORT.write_text(json.dumps(dict(total=len(rows),host='VM-W11-CODEX',editions=editions,os_calls=0,
         files={path.relative_to(ROOT).as_posix():sha(path) for path in dict.fromkeys(files)},limits=[
-            '예약 할당/Regular·Damageable·SquidFrame 가상 효과·아비어리 소유권 재계산·경고/삭제는 명시 관찰 경계다.',
-            '상태 getter·프레임 구간 판단·일반 finder/CRT·고유 목록·Factory/아비어리 body는 실제 명령이다.',
+            '예약 할당/Regular·Damageable·SquidFrame 가상 효과·아웃포스트 소유권 재계산·경고/삭제는 명시 관찰 경계다.',
+            '상태 getter·프레임 구간 판단·일반 finder/CRT·고유 목록·Factory/아웃포스트 body는 실제 명령이다.',
             'C++은 실제 일반 finder와 직접 Damageable→공통 장부를 조합하며 미션/GUI 완주를 입증하지 않는다.']),ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
     print(json.dumps({'total':len(rows),'editions':{k:v['cases'] for k,v in editions.items()}},ensure_ascii=False))
 
@@ -185,7 +185,7 @@ def verify():
         assert [row[1] for row in chosen]==[','.join(map(str,case)) for case in inputs()]
         assert item['returns']==len(chosen)*2 and item['assertions']==0
         assert not any(key in item['external'] for key in ('begin','next'))
-    print(f'Factory/아비어리 {len(rows)}개 실제 finder·입력·SHA 감사 통과')
+    print(f'Factory/아웃포스트 {len(rows)}개 실제 finder·입력·SHA 감사 통과')
 
 
 # 명시 실행에서만 별도 결과를 생성하거나 감사한다.

@@ -1,5 +1,6 @@
 // 원본 next/상태/좌표를 직접 사용하며 잘못된 체인·미복원 효과는 변경 전에 거부한다.
 #include "o/SquidUnpop.h"
+#include "o/RawMetadisplayDirty.h"
 #include "o/Squid.h"
 #include "o/SquidDisplay.h"
 #include "o/RawGraph.h"
@@ -9,6 +10,11 @@
 #include <stdexcept>
 
 namespace netstorm::o {
+// 삭제/프레임 갱신도 같은 월드의 미니맵 큐만 사용할 수 있다.
+void SquidUnpop::SetMetadisplayDirty(const RawMetadisplayDirty* dirty) {
+    if (dirty && &dirty->Pool()!=&pool_) throw std::invalid_argument("Unpop/미니맵 큐 SID 풀 불일치");
+    metadisplay_=dirty;
+}
 namespace {
 // raw 위치와 상태/매몰 비트. dead는 Unpop을 막지 않는다.
 constexpr std::size_t kNext=4,kType=10,kState=11,kX=14,kY=18;
@@ -106,6 +112,8 @@ void SquidUnpop::Unpop(Sid sid,const RiftTypeRecord& type,std::uint32_t flags) {
     if (!found && pool_.Edition()==OriginalEdition::Patch1078) throw std::logic_error("Unpop 해시에서 SID를 찾지 못했습니다");
     if (display_) display_->Validate(pool_.Edition(),bytes,flags);
     bytes[kState]|=kVoid;
+    // 원본은 void 전환 뒤 spot/해시를 제거하기 전에 이전 칸을 미니맵에 통지한다.
+    if (!buried && (type.flags2&6) && metadisplay_) metadisplay_->Enqueue(sid);
     if (writesSpots) {
         // 원본 y/x 순서로 low byte만 해제하고 다른 spot 비트는 보존한다.
         for (int cy=top;cy<=bottom;++cy) {

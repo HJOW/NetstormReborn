@@ -7,13 +7,14 @@ namespace netstorm::o {
 class RawGraph;
 class SquidDisplay;
 class RawBuildingSpace;
+class RawMetadisplayDirty;
 // 객체를 공간 해시와 점유 지도에서 해제하는 Unpop 처리기이다.
 class SquidUnpop {
 public:
     // 기존 SID 풀·네 단계 해시·spot을 함께 갱신한다. nullptr 표시 대상은 기존 억제 경로다.
     SquidUnpop(SidPool& pool,SquidHash& hash,std::span<std::uint8_t> spots,SquidDisplay* display=nullptr);
     // 004afe50 ↔ CD 004ad0b0. 일반 자산/매몰 객체의 spot·머리/이전 next를 직접 해제한다.
-    // 일반 섬/다리 통지 큐는 비전투 null 경로다. 미연결 건물 옆면/화면 override는 거부한다.
+    // 일반 섬/다리 통지는 같은 풀의 미니맵 큐에 선택 연결한다. 미연결 건물 옆면/화면 override는 거부한다.
     void Unpop(Sid sid,const RiftTypeRecord& type,std::uint32_t flags=0);
     // 원본 vtable의 공통 update88/update8c 경로인지 확인한다. 호스트 포인터로 역참조하지 않는다.
     static bool SupportsDisplay(OriginalEdition edition,std::uint32_t vtable,std::uint32_t flags);
@@ -26,6 +27,8 @@ public:
     void ValidateGraph(const RawGraph& graph) const;
     // Pop과 같은 건물 옆면 몸체를 등록하며 서로 다른 풀/해시는 즉시 거부한다.
     void SetBuildingSpace(const RawBuildingSpace* space);
+    // void 비트를 쓴 직후 기존 좌표를 원본 미니맵 큐에 통지한다. nullptr은 표시 객체가 없는 경로다.
+    void SetMetadisplayDirty(const RawMetadisplayDirty* dirty);
 private:
     // 원본 unaligned raw 필드를 호스트 포인터 산술로 해석하지 않는다.
     std::span<std::uint8_t> Bytes(Sid sid);
@@ -37,5 +40,6 @@ private:
     std::span<std::uint8_t> spots_;
     SquidDisplay* display_{}; // 제거 전 위치의 변경 표를 공통 표시 경로로 전달한다.
     const RawBuildingSpace* building_{}; // 건물 옆면의 실제 BYTE 해제/진단 몸체다.
+    const RawMetadisplayDirty* metadisplay_{}; // spot/체인 제거 전에 같은 raw 좌표를 등록하는 미니맵 큐다.
 };
 }

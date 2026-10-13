@@ -1,12 +1,24 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
-## 2026-10-13 진행 중 cpppj: Factory·썬 아비어리 후처리 (`VM-W11-CODEX`)
+## 2026-10-13 cpppj: 표적·서버 Path·미니맵 통지 연결 (`VM-W11-CODEX`)
+
+- [x] 중단 뒤 AGENTS.md·두 LEFT_JOBS·goal active·실제 깨끗한 트리와 현재/마지막 디컴파일 PC 일치를 재확인했다. 앞선 턴은 경로/Factory 두 완료 커밋과936개 검증의 **진행**이다. Factory 단위 커밋은 `1a6c408` (`20261013-02 워크샾과 썬 아비어리 후처리 복원 및 원본 대조`)다. CMake/Python/Java/단위 실행은 없고 남은 MSBuild는 `/nodemode:1 /nodeReuse:true`의 재사용 프로세스다.
+- [ ] root: 기존 `RawRegionOwnership`의 실제 투표 결정과 도장 요청은 이미 복원돼 있음을 확인했다. 이를 중복 구현하지 않고 **00470900/CD004bd2d0의 실제 flood/지형 프레임 도장**과 같은 `outposts`/`temples` 목록·Factory 연결을 복원한다. 도장 단계가 남아 있으므로 기존 투표 1320개를 새 관찰로 더하지 않는다. `regionpaint` 정밀 내보내기 **패치11/CD4**는 종료0이며 **도장 C++ 몸체는 아직 미작성/대조0**이다.
+- [x] 타입표 교정: 앞선 Factory 문서에서004557c0/CD0047b680을 썬 아비어리 wrapper로 적은 것은 명칭 오류다. 실제 **아웃포스트126**이며 **85는 썬 팩토리, 87은 레인 팩토리**, 썬 아비어리는 **72/별도00509930**이다. 실제 복원 주소·분기는 바뀌지 않았고 코드 API/공유 목록을 `firstTimerFactory`/`regionOwnership`/`outposts`로 교정했다. 기존996개를 현재 SHA로 재생성했으며 신규 관찰로 다시 더하지 않는다. 1a6c408의 커밋 제목은 당시 표기로 보존하고 이 절에서 교정한다. 실제 썬 아비어리 body/Regular는 계속 미완료다.
+- [x] `RawGunTarget`의 실제 Cannon/Archer finder·각도·MayFire와 `RawGunProcess` 소비자를 연결했다. `RawPathData`는 공유 버퍼/실제 base Form·Parent 번호로 서버 flags0 WriteData를 작성하며 `RawPathProcess::Prepare`의 CD override 무시도 반영한다. `RawMetadisplayDirty`는 실제 큐/Refresh와 같은 풀의 Pop 좌표 쓰기 직후·Unpop void 지정 직후 통지 순서를 연결했다. 실제 셀 그림/표시 재생성과 비표면 GameWorld 이관은 남아 있다. 미니맵 큐를 전투 시뮬레이션 처리로 해석하지 않는다.
+- [x] 현재 연결 단위의 Release 최종 빌드 종료0·경고/오류0, 집중 GunTarget3·Metadisplay4·PathData3·Factory3 통과다. 새 native 고유 입력은 GunTarget3454+Metadisplay1040+PathData768+Prepare48 = **5310개**이며 각 현재 SHA 감사 통과다. Factory996개 명칭 교정 재생은 신규 합산하지 않는다. Prepare는 원본 게임 x87 53비트 결과이며 64비트에서16개 입력의1ULP 차이를 별도 보존한다.
+- [x] 최종 전체 **946개/실패0**, CTest **93.17초**, Release 경고/오류0 및 새 통합 SHA 감사 통과다. 누적 원본 **545,620개 / C++545,360개**이며 정밀도 반복/Factory996 재사용을 더하지 않았다. 로그/새 통합 근거는 **`campaign-target-path-*` / `recovery-campaign-target-path-evidence.json`**, 검사기는 `tools/analyze_campaign_target_path.py --verify`다. 앞선883개 UI/승패 단위의 `analyze_campaign_runtime.py`·보고서·최종 로그는 그대로 보존했다. 첫 컴파일/예약 꼬리/서버 SID·삭제 관찰/사정선 반환·incoming corner 해석의 실패 로그도 보존했다. 작업 단위 커밋 메시지: `20261013-03 표적 탐색과 서버 Path 및 미니맵 통지 연결 검증`.
+- [x] [캠페인1-1 실데이터 감사](docs/exe/cpp-campaign-1-1-runtime-audit.md): 초기 공간 저장 객체는 **172개(Chaff145+Terr0 4+Terr1 23)**이며 신전 내용물/기술/다리 덱은 별도다. sunAviary72/Factory85/Outpost126/내 sunCannon128은 초기0이며 이후 건설 대상은 초기 로드 선행조건과 구분한다. missionTypeTutorial·missionNumber1을 tutorialNumber1로 대체하면 안 된다. Regular ctor의 float는 최초 지연이 아닌 payload이고 최초 time은 현재 게임 시각이다.
+- [ ] 후속 독립 작업: PathStart는 실제 생성→flags0 Init wrapper→기존 경로/명령 필드→Prepare→서버 부착→사제 nugget 조회/이벤트 취소를 복원한다. GunAnimation은 실제 회전/발사/투사체와 완료통지 사슬, RawAssetRegular는 초기 레지던스·가이저·신전 Handle를 진행한다. root는 같은 core의 초기 로더·비표면 상태 조립을 진행한다. 현재 검증/커밋 완료 파일은 이 두 후속에서 동결한다.
+- [ ] 캠페인 실제 월드 이관·건설/전투·사제 운반/의식/승패·완주와 GUI 대조는 남아 있다. DirectDraw 전체화면 수정 제외, 보호 원본·AGENTS.md·dotnetpj 및 push는 변경하지 않는다. 마지막 디컴파일 수행 PC **VM-W11-CODEX, 2026-10-13**.
+
+## 2026-10-13 cpppj: Factory·아웃포스트 후처리 (`VM-W11-CODEX`)
 
 - [x] 앞선 경로 단위를 `73ef4e6` (`20261013-01 실제 Path BFS와 초기화 연결 및 원본 대조 검증`)로 커밋했다. 사용자 목표 변경과 AGENTS.md의 명시적 커밋 예외를 다시 읽었으며 이후에도 작업 단위별 커밋을 수행한다. 사용자 AGENTS.md 수정과 미완료 placement 도구는 이 커밋에서 보존했다. push는 하지 않는다.
-- [x] 실제 vtable Factory 패치00509148/CD00503298, 아비어리 패치00509210/CD00503358을 확인하고 `RawFactoryPostPop` 전체 몸체와 `SquidPostPop` 가상 분배를 등록했다. wrapper 고유 목록→예약→직접 Damageable/공통 장부→상태별 프레임→실제 일반 finder/중복 워크샾 경고·삭제 순서다. CD에는 패치의 event5 예약이 없고 두 목록은 모두 **고유 추가**다. `MakeFactoryPostPopHooks`로 같은 풀의 실제 `SquidFrame::Set`도 연결했다.
-- [x] 패치8/CD9 정밀 내보내기, 고유 native/C++ **996개**(판본별498개)와 두 x87 정밀도 일치/정상 반환/assert0/SHA 감사 완료다. 입력에는 현재 상태/프레임 경계·빈 구간·타입126 생략·개별 확보 실패·목록 용량/중복 및 callback 뒤 타입/상태/다음 finder 후보 변경이 있다. native의 실제 일반 finder·상태 getter·목록·프레임 구간 판단은 실행했고 new/Regular·Damageable·Frame/아비어리 소유권/로그·삭제는 명시 관찰 경계다.
+- [x] 실제 vtable Factory 패치00509148/CD00503298, 아웃포스트 패치00509210/CD00503358을 확인하고 `RawFactoryPostPop` 전체 몸체와 `SquidPostPop` 가상 분배를 등록했다. wrapper 고유 목록→예약→직접 Damageable/공통 장부→상태별 프레임→실제 일반 finder/중복 워크샾 경고·삭제 순서다. CD에는 패치의 event5 예약이 없고 두 목록은 모두 **고유 추가**다. `MakeFactoryPostPopHooks`로 같은 풀의 실제 `SquidFrame::Set`도 연결했다.
+- [x] 패치8/CD9 정밀 내보내기, 고유 native/C++ **996개**(판본별498개)와 두 x87 정밀도 일치/정상 반환/assert0/SHA 감사 완료다. 입력에는 현재 상태/프레임 경계·빈 구간·타입126 생략·개별 확보 실패·목록 용량/중복 및 callback 뒤 타입/상태/다음 finder 후보 변경이 있다. native의 실제 일반 finder·상태 getter·목록·프레임 구간 판단은 실행했고 new/Regular·Damageable·Frame/아웃포스트 소유권/로그·삭제는 명시 관찰 경계다.
 - [x] 집중 **3개**(native 전체 재생·효과/다른 풀 거부·실제 프레임 지정/dirty) 통과, 최종 Release 경고·오류0, 전체 **936개/실패0**, CTest **87.72초** 통과다. [상세](docs/exe/cpp-factory-postpop.md), `recovery-factorypostpop-evidence.json`·`recovery-factory-world-evidence.json`, `extracted/factorypostpop-*-final.log`. 누적 원본 **540,310개**, C++ 대조 **540,050개**이며 정밀도 반복을 더하지 않았다. native 스모크의 잘못된 임시 주소/부모 검사기의 쓰기 허용표 재설정 오류는 교정 전 로그와 함께 보존했다. 보호 원본·AGENTS.md·dotnetpj 변경/게임·GUI 실행/push 없음. 작업 단위 커밋 대상이다.
-- [ ] 아비어리의 섬 소유권 재계산00455380/CD0047b3c0, 실제 Regular 본체·삭제·사제/건설/전투 연결 및 GameWorld 비표면 이관은 여전히 필수 후속이다. 초기 후처리의 효과를 noop로 채우지 않는다. 마지막 디컴파일 수행 PC **VM-W11-CODEX, 2026-10-13**.
+- [ ] 아웃포스트/신전의 섬 소유권 재계산00455380/CD0047b3c0의 실제 지형 도장, 실제 썬 아비어리 및 Regular 본체·삭제·사제/건설/전투 연결과 GameWorld 비표면 이관은 여전히 필수 후속이다. 초기 후처리의 효과를 noop로 채우지 않는다. 마지막 디컴파일 수행 PC **VM-W11-CODEX, 2026-10-13**.
 
 ## 2026-10-13 진행 중 cpppj: 실제 경로 검색·Init·월드 연결 (`VM-W11-CODEX`)
 

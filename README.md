@@ -10,7 +10,7 @@ AI 를 이용해 되살리는 프로젝트입니다.
 
 # 현재 개발 진행상황 관련
 
-2026-10-13 cpppj 후속: Fort/Gun/ProcessForm 공유 월드에 이어 [실제 BFS·Path Init](docs/exe/cpp-raw-path-search.md)과 [워크샾·썬 아비어리 후처리](docs/exe/cpp-factory-postpop.md)를 같은 풀·공간·목록에 연결했습니다. 두 후속 단위의 신규 원본/C++ 대조는 **708개/996개**, 최종 전체 **936개/실패0**, Release 경고/오류0입니다. **아비어리 섬 소유권 재계산·GameWorld 비표면 객체의 실제 core 이관·표적/애니메이션·건설/전투/사제 운반·의식/승패 연결과 캠페인1-1 완주는 미완료**이며 [인수인계](LEFT_JOBS.md)에 검증 범위와 후속 작업을 구분했습니다. DirectDraw 전체화면 수정은 제외했습니다.
+2026-10-13 cpppj 후속: [실제 BFS·Path Init](docs/exe/cpp-raw-path-search.md)과 [워크샾·아웃포스트 후처리](docs/exe/cpp-factory-postpop.md)에 이어 [Cannon/Archer 표적 탐색](docs/exe/cpp-gun-target.md), [서버 Path 전송·시각 준비](docs/exe/cpp-raw-path-data.md), [미니맵 dirty 통지](docs/exe/cpp-metadisplay-dirty.md)를 연결했습니다. 이번 신규 원본/C++ 대조는 **5,310개**, 최종 전체 **946개/실패0**, Release 경고/오류0입니다. 실제 썬 아비어리는 타입72이며 앞선 Factory wrapper는 아웃포스트126으로 명칭을 교정했습니다. [실제 1-1 초기 데이터와 실행 사슬](docs/exe/cpp-campaign-1-1-runtime-audit.md)을 기준으로 **GameWorld 비표면 이관·초기 자산 Handle·이동 명령·발사 애니메이션/투사체·건설/전투/사제 운반·의식/승패와 캠페인 완주**를 계속 진행합니다. 검증 범위는 [인수인계](LEFT_JOBS.md)에 기록했으며 DirectDraw 전체화면 수정은 제외했습니다.
 
 2026-10-13 cpppj 후속: [건물 Pop/Unpop 공간](docs/exe/cpp-building-space.md), [자산 postPop](docs/exe/cpp-asset-postpop.md), [사제·보호막 월드 연결 모듈](docs/exe/cpp-raw-priest-world-bindings.md), [SP 회전](docs/exe/cpp-sp-rotation.md), [건설 운반 도착](docs/exe/cpp-construction-arrival.md)을 복원했습니다. Builder 타이머의 event/payload 반전도 실제 생성자에 맞춰 교정했습니다. 신규 원본/C++ 대조 **5,318개**, 전체 검사 **904개/실패0**, Release 경고/오류0입니다. **비표면 실제 미션 월드 이관·이동/건설/전투/운반·의식 연결과 캠페인 1-1 완주는 미완료**이며 [인수인계](LEFT_JOBS.md)에 다음 단위와 실패/최종 근거를 기록했습니다.
 
