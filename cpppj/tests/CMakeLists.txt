@@ -2,6 +2,7 @@
 # (첫 구성 때 인터넷에서 내려받을 것이 없다).
 # 테스트 파일을 만들면 아래 목록에 더한다. 파일 안의 TEST_CASE 는 자동으로 등록된다.
 add_executable(netstorm_tests
+    FormLifecycleTests.cpp
     TileGroupCollectionTests.cpp
     ObjectCollectionTests.cpp
     PreviewCollectionTests.cpp
@@ -543,3 +544,7 @@ set_source_files_properties(GumpBackgroundDrawTests.cpp PROPERTIES COMPILE_DEFIN
 # 실제 두 PE의 메뉴 크기/확장/스택 콜백 당시 상태를 이 검사 소스에서만 읽는다.
 set_source_files_properties(MenuGumpTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_MENUGUMP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/menugump-x86.tsv\"")
+
+# 감시 중첩 삭제/Content 정렬·피해의 두 PE 독립 출력이며 기본 CTest는 게임/원본/창을 실행하지 않는다.
+set_source_files_properties(FormLifecycleTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FORMLIFECYCLE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/formlifecycle-x86.tsv\";NETSTORM_FORMLIFECYCLE_CASES=456")

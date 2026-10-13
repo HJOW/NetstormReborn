@@ -1,5 +1,7 @@
 # cpppj — NetStorm C++ 빌드
 
+2026-10-13 (`VM-W11-CODEX`) 최신: **[감시 쌍·생산 목록 부착 복원](../docs/exe/cpp-form-lifecycle.md)**. `DependFormHost`의 실제 두 Form 생성/조회/중복 제거/중첩 삭제·부모 통지와 `ContentFormHost`의 순서 공백 부착/부모 알림/Robust/피해 재부착·기존 contained 생성 연결을 구현했다. 두 실제 PE 독립 입력/C++ 대조 **912개**, 새 검사 **4개·실패 0**, Release 경고/오류 **0**, 저장 근거 감사·최종 전체 CTest **863개·실패 0**. Content 특수 preDestroy·실제 전투 생산 보충·전체 Client/월드 분배·raw 자동 UI와 캠페인 완주는 후속이다. 마지막 디컴파일 PC: **VM-W11-CODEX, 2026-10-13**. 아래는 앞 단계 기록이다.
+
 2026-10-13 (`VM-W11-CODEX`) 최신: **[Form 풀 재확보·지정 Take·공통 Unpop 복원](../docs/exe/cpp-form-take.md)** 완료. 네 내장 Form의 실제 생성/수신과 부모 체인 해제를 같은 SID 풀에 구현하고 GumpForm·ProcessForm에 연결했다. raw payload/풀 카운터·삭제 기록과 ContentForm의 제거 알림 시점을 유지한다. 두 실제 PE 새 독립 관찰/C++ 대조 **600개**, Release 경고/오류 **0**, 최종 전체 CTest **859개·실패 0**. 풀 초기화 전 UI/Kernel 정리·DependForm/ContentForm 전체 수명·실제 전체 Client/월드 연결은 후속이다. 마지막 디컴파일 PC: **VM-W11-CODEX, 2026-10-13**. 아래는 앞 단계 기록이다.
 
 2026-10-12 (`VM-W11-CODEX`) 최신: **[raw 배경의 실제 타입/SHP 공급·전체 가상 Draw 연결](../docs/exe/cpp-gump-background-draw.md)** 완료. 현재 자산 조회·질감/단색/체크/무배경·debug·클립/색을 복원하고 같은 수집/정렬/kind 2 저장소에서 배경·돌 버튼 선/글자·눌림·자식 우선 삭제를 연결했다. 새 독립 원본 **627개·누적 523,066개**, 두 x87 정상 반환 **1,254회**, 새 C++ **8개**, Release 경고/오류 **0**·전체 CTest 내부 **849개** 통과. 실제 두 판본 **217개 타입·5,089개 헤더·8개 흐름·6,144픽셀** 콘솔 대조 통과. MenuGump/Form·Client 자동 UI 연결과 게임 내 건설/미션 완주는 후속이다. 마지막 디컴파일 PC: **VM-W11-CODEX, 2026-10-12**. 아래는 앞 단계 기록이다.

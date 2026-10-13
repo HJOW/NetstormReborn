@@ -17,7 +17,8 @@ constexpr std::uint8_t kFree=1,kDead=2,kVoid=4,kContained=8;
 constexpr std::uint32_t kProcessForm=2,kContentForm=6,kProcessFirst=10,kPatchProcessEnd=63,kCdProcessEnd=62;
 }
 // 알림을 보관하되 다른 객체 수명이나 풀 초기화 효과는 숨기지 않는다.
-SquidForms::SquidForms(SidPool& pool,FormRemovalNotice notice):pool_(pool),notice_(std::move(notice)) {}
+SquidForms::SquidForms(SidPool& pool,FormRemovalNotice notice,FormPopTransmit transmit)
+    :pool_(pool),notice_(std::move(notice)),transmit_(std::move(transmit)) {}
 // 타입 검사는 Allocate/Take로 슬롯을 바꾸기 전에 끝낸다.
 std::uint32_t SquidForms::Vtable(std::uint32_t type) const {
     // 고정된 네 타입 외의 생성자 fallback은 자산 factory의 책임이다.
@@ -79,6 +80,47 @@ Sid SquidForms::Take(std::uint32_t type,Sid sid) const {
     Raw(sid)[kState]|=kVoid;
     if (!patch) Raw(sid)[kType]=static_cast<std::uint8_t>(type);
     return sid;
+}
+// client 번호/현재 권한에 따라 서버·로컬 플래그를 보완한다. 원본 assert 경로는 상태 변경 전에 거부한다.
+std::uint32_t SquidForms::ValidatePop(Sid form,std::uint32_t flags) const {
+    const auto state=Form(form)[kState];
+    if (!(state&kVoid) || (state&(kDead|0x10))) throw std::logic_error("Form Pop 상태 오류");
+    if (pool_.IsServer()) {
+        if (form.value<pool_.Layout().serverFirst) {
+            if (flags&8) throw std::logic_error("client Form 서버 Pop 금지");
+            flags|=0x10;
+        } else if (!(flags&0x10)) flags|=8;
+        if (!(flags&0x50) && !transmit_) throw std::invalid_argument("Form 서버 Pop 전송 경계 필요");
+    } else if (!(flags&8)) flags|=0x10;
+    return flags;
+}
+// 004ac560/CD 004abfb0: void 해제→필요한 서버 전송→빈 Form postPop 순서를 유지한다.
+void SquidForms::Pop(Sid form,std::uint32_t flags) const {
+    flags=ValidatePop(form,flags);Raw(form)[kState]&=static_cast<std::uint8_t>(~kVoid);
+    if (pool_.IsServer() && !(flags&0x50)) {
+        if (flags&7) Raw(form)[kState]|=0x10;
+        transmit_(form,flags);
+        Raw(form)[kState]&=static_cast<std::uint8_t>(~0x10);
+    }
+}
+// 기본 Form은 정렬 없이 부모의 첫 종속 항목으로 부착한다. 부모0의 패치 조기 반환을 보존한다.
+void SquidForms::Attach(Sid form,Sid parent,std::uint32_t flags) const {
+    if (!parent.value) {
+        if (pool_.Edition()==OriginalEdition::Patch1078) return;
+        throw std::logic_error("CD Form 부모0 부착 금지");
+    }
+    const auto raw=Form(form);
+    if (raw[kType]==kContentForm) throw std::logic_error("ContentForm 정렬 부착기 필요");
+    if (parent.value<5 || parent.value>=pool_.Capacity() || parent==form || (pool_.Slot(parent)[kState]&(kFree|kDead)))
+        throw std::logic_error("Form 부착 부모 상태 오류");
+    ValidatePop(form,flags);
+    const auto head=static_cast<std::uint16_t>(Read(parent,kHead,2));
+    if (head==form.value || head>=pool_.Capacity() || (head && (pool_.Slot(Sid{head})[kState]&kFree)))
+        throw std::logic_error("Form 부착 종속 머리 오류");
+    Put(form,kParent,parent.value,2);Put(form,kNext,head,2);
+    if (head) SetPrevious(Sid{head},form.value);
+    Put(parent,kHead,form.value,2);Put(form,kPrevious,0,2);Raw(form)[kState]|=kContained;
+    Pop(form,flags|0x100);
 }
 // 가상 setPrev는 이웃의 현재 타입에 따라 Form/자산의 서로 다른 위치를 쓴다.
 void SquidForms::SetPrevious(Sid sid,std::uint16_t previous) const {

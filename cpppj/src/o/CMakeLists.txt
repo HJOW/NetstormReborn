@@ -36,6 +36,8 @@ target_sources(netstorm PRIVATE
     SquidForms.cpp SquidForms.h
     SquidFactory.cpp SquidFactory.h TypeConstructors.inc DerivedConstructors.inc
     GumpFormHost.cpp GumpFormHost.h
+    DependFormHost.cpp DependFormHost.h
+    ContentFormHost.cpp ContentFormHost.h
     SquidUnpop.cpp SquidUnpop.h UnpopVtables.inc
     SquidPop.cpp SquidPop.h PopVtables.inc
     SquidDisplay.cpp SquidDisplay.h
