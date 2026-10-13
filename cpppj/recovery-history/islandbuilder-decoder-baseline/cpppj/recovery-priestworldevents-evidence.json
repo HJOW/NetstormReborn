@@ -1,0 +1,57 @@
+{
+  "host": "VM-W11-CODEX",
+  "date": "2026-10-13",
+  "cases": 2872,
+  "edition_cases": {
+    "originals": 1504,
+    "originalCD": 1368
+  },
+  "entries": {
+    "00488fe0": 1504,
+    "0049a840": 1504,
+    "0047d020": 1368
+  },
+  "type_defaults": [
+    133,
+    187,
+    137,
+    156,
+    134,
+    135,
+    70,
+    158,
+    105
+  ],
+  "process_defaults": [
+    40,
+    38,
+    42,
+    23,
+    41,
+    24,
+    54,
+    39
+  ],
+  "fixture_sha256": "4556993d777756bfe17a4c0c0eae30311d1f6ffbdcafc9101be0b2cf5ed6df54",
+  "files": {
+    "tools/decomp_priestworldevents_oracle.py": "94bb7ea4215f658dddecf55b6ffda78557ee3f7d78e6e8cd8180cc98c3f39212",
+    "tools/decomp_reward_oracle.py": "7933a5f61e794b9e9d7e872a949890901bb28d486d7e2d4eb845b867488e1ce5",
+    "tools/ghidra/priestworldevents-functions.json": "3ff6cc42b5999dacf69db6e0a6ddd3580b3e828fd3b51b04f118bfaf999156cc",
+    "cpppj/src/client/RawPriestWorldBindings.h": "2486df64b44cef2f14f92e0c7e7818487fdb3f9fed0a4515b51be300872adbe0",
+    "cpppj/src/client/RawPriestWorldBindings.cpp": "5fff294f243fb939efb4fb3e81719c498024b904c35c1901484cdff0beebffa6",
+    "cpppj/src/o/RiftType.h": "ebe108ebc40c67f3c51ff382cef139be6a614d6e689f38b3931d9f1c6ca3ead6",
+    "cpppj/src/o/RiftTypeTable.cpp": "0538c5ce37cf4ec97399494510aa8a58152fa1d2322b8520a6254ada61110a16",
+    "cpppj/tests/RawPriestWorldBindingsTests.cpp": "4fd7171ed00a1e64bed24662dcbbf052bc8c3eed9da48f023655e1e7506e0b95",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/priestworldevents/originals/creation.c": "a41d8a5fc012c39c1aa3900077b2fcad717e13dc21b987779caacdf813d45fa1",
+    "extracted/priestworldevents/originals/functions.tsv": "b285f7dee79c537fcdbc7cc06961911697333067f8959bca1946bca28e904a56",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "extracted/priestworldevents/originalCD/creation.c": "bcdae584e0a2519526c7cc0d28e4da4dc35c01c826626e75d117bc495b6d820b",
+    "extracted/priestworldevents/originalCD/functions.tsv": "1338f1683bee5ce3f976291729ff71af0b0e446f2fce7c0f5a29efb83e70d5b6"
+  },
+  "limits": [
+    "CD 미지원 타입의 진단 보고만 대체; C++는 동일 경로를 명시 예외로 진단",
+    "게임/GUI 실행 없음",
+    "종속 조회는 기존 독립 containedlookup 근거를 재사용"
+  ]
+}

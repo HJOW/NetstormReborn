@@ -39,6 +39,12 @@ add_executable(netstorm_tests
     SquidDefenseTests.cpp
     NormalTerrainWorldBindingTests.cpp
     VortexIslandBindingTests.cpp
+    ArcherTypeDataTests.cpp
+    DaisRegularTests.cpp
+    AltarSacrificeTests.cpp
+    IslandBuilderTests.cpp
+    FortMoneyLoadTests.cpp
+    DudeNoticeTests.cpp
     RawButtonControlsTests.cpp
     GumpResetTests.cpp
     MissionOutcomeTests.cpp
@@ -725,3 +731,18 @@ set_source_files_properties(SquidDefenseTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_SQUIDDEFENSE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/squiddefense-x86.tsv\"")
 set_source_files_properties(VortexIslandBindingTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_VORTEXASCEND_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/vortexascend-x86.tsv\"")
+
+# 실제썬디스크TYPE/좁은의식·Altar후속/초기섬배치·SP전수입력의단위11 검사다.
+set_source_files_properties(ArcherTypeDataTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_ARCHERTYPE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/archertype-x86.tsv\"")
+set_source_files_properties(DaisRegularTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_DAISREGULAR_CORE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/daisregular-core-x86.tsv\"")
+set_source_files_properties(AltarSacrificeTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_ALTARSACRIFICE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/altarsacrifice-x86.tsv\"")
+set_source_files_properties(IslandBuilderTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_ISLANDBUILDER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/islandbuilder-x86.tsv\"")
+set_source_files_properties(FortMoneyLoadTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FORTMONEY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fortmoney-x86.tsv\"")
+# 실제피해반응/현재Regular 재설정·대피의414고유입력이다.
+set_source_files_properties(DudeNoticeTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_DUDENOTICE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/dudenotice-x86.tsv\"")

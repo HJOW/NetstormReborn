@@ -18,6 +18,6 @@
 
 독립 `decomp_squiddefense_oracle.py`는 양판본 **48개 정상 고유 반환**, 각24개를 실제5바이트 몸체로 실행한다. 유효 victim/다양한 공격 SID, 반환0·RET4/스택·전체raw불변을 직접 관찰했다. 실행/쓰기 허용 범위 밖 주소와 OS 호출은 없으며 actual vtable/PE/source/fixture SHA도 기록한다. current-vtable guard 자체는 새 C++ 소비자이며 원본이 raw5바이트 안에서 그 guard를 수행한다고 주장하지 않는다.
 
-현재4개 C++ 검사는 두 원본 반환 전수, 실제 Factory의71/128/158/160 생성 가상 표와 fallback 보존, 미복원 다른 파생/누락 표/SID 거부를 확인했다. **공유 Release 경고/오류0, SquidDefense4검사/실패0, 양판본48개 전수통과**다. 기본 방어로 실제 HP 피해·사망/효과 완료를 대신하지 않는다. 앞 단위09의 일반 Hit나08 보고서는 수정하지 않았다. 단위10 고유집중35검사는 성공했으며 전체1023검사는 진행 중이다.
+현재4개 C++ 검사는 두 원본 반환 전수, 실제 Factory의71/128/158/160 생성 가상 표와 fallback 보존, 미복원 다른 파생/누락 표/SID 거부를 확인했다. **공유 Release 경고/오류0, SquidDefense4검사/실패0, 양판본48개 전수통과**다. 기본 방어로 실제 HP 피해·사망/효과 완료를 대신하지 않는다. 앞 단위09의 일반 Hit나08 보고서는 수정하지 않았다. 단위10 **a349e63**의 고유집중35·전체1023검사/실패0이다.
 
 등록 대상은 `RawSquidDefense.cpp`, `SquidDefenseTests.cpp`, fixture macro `NETSTORM_SQUIDDEFENSE_FIXTURE`다. 감사 명령은 `python -X utf8 tools/decomp_squiddefense_oracle.py --verify`이며 보존된 실제 생성자 recipe와 현재 원본 가상 표를 소비한다. 캠페인1-1 월드 이관과 완주 동일성은 계속 미완료다.

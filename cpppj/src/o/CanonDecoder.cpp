@@ -7,6 +7,7 @@
 #include <string_view>
 #include <cmath>
 #include <limits>
+#include <utility>
 
 namespace netstorm::o {
 namespace {
@@ -48,8 +49,10 @@ std::size_t SelectBridgePattern(std::int32_t random, OriginalEdition edition) {
 }
 
 // 원본은 회전이 홀수면 폭과 높이를 바꿔 센다. 시작 패턴 좌표는 회전별 표에서 정한다.
-CanonDecoder::CanonDecoder(const RiftTypeFrames& frames, const CanonPattern& pattern, int direction, float x, float y)
-    : frames_(&frames), pattern_(&pattern), rotation_(direction / 2), originX_(x), originY_(y) {
+CanonDecoder::CanonDecoder(const RiftTypeFrames& frames, const CanonPattern& pattern, int direction, float x, float y,
+    std::function<void()> missingFrameDiagnostic)
+    : frames_(&frames), pattern_(&pattern), missingFrameDiagnostic_(std::move(missingFrameDiagnostic)),
+      rotation_(direction / 2), originX_(x), originY_(y) {
     if (rotation_ < 0 || rotation_ > 3) throw std::out_of_range("CanonDecoder rotation");
     const int width = pattern.width, height = pattern.height;
     outerCount_ = (rotation_ & 1) != 0 ? width : height;
@@ -112,6 +115,8 @@ void CanonDecoder::Advance() {
                 const auto side = static_cast<std::uint8_t>(kRotatedSides[rotation][static_cast<std::size_t>(orientation - kFirstOrientation)]);
                 const auto variant = static_cast<std::uint8_t>(kRotatedSides[rotation][kVariantColumn]);
                 frame_ = frames_->FindNumber(side, variant, static_cast<std::uint8_t>(variation));
+                // 원본 assert lookup은 보고한 뒤 -1을 반환하며 동일 Advance가 그 칸을 계속 건너뛴다.
+                if (frame_ == -1 && missingFrameDiagnostic_) missingFrameDiagnostic_();
             }
         }
         x_ = static_cast<float>(step_ * inner_) + originX_;

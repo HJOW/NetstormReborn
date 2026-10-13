@@ -1,0 +1,281 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-14",
+  "new_native_unique": 0,
+  "previous_unique": 1156,
+  "current_unique": 1156,
+  "reobserved_total": 1156,
+  "changed_profile_rows": 24,
+  "unchanged_whole_rows": 1132,
+  "before_report": {
+    "path": "cpppj/recovery-history/islandbuilder-partial-profile-initial/cpppj/recovery-islandbuilder-evidence.json",
+    "sha256": "7e82065162d5e81084d1750d3be6f05d15184d6ceeda951830baf1469614236c",
+    "bytes": 5530
+  },
+  "before_source_files": [
+    {
+      "original_path": "cpppj/recovery-islandbuilder-decoder-lineage-evidence.json",
+      "saved": {
+        "path": "cpppj/recovery-islandbuilder-decoder-lineage-evidence.json",
+        "sha256": "2e85174248e98c8f5af37efde017773d6b0d51cf4bf4f2e1c6899060d3d7215c",
+        "bytes": 48201
+      }
+    },
+    {
+      "original_path": "cpppj/src/o/CanonDecoder.cpp",
+      "saved": {
+        "path": "cpppj/src/o/CanonDecoder.cpp",
+        "sha256": "ae3553973ff29257ed2b723b160503f6fc729919a97f082f16132e919dd69eaa",
+        "bytes": 8864
+      }
+    },
+    {
+      "original_path": "cpppj/src/o/CanonDecoder.h",
+      "saved": {
+        "path": "cpppj/src/o/CanonDecoder.h",
+        "sha256": "4de94611aa28b10eee3ab1a201cc8d07fc10d9a081ad237c17b909a21b3f87a7",
+        "bytes": 5172
+      }
+    },
+    {
+      "original_path": "cpppj/src/o/CanonDecoderTables.inc",
+      "saved": {
+        "path": "cpppj/src/o/CanonDecoderTables.inc",
+        "sha256": "2cdc2b33b12e0cb001efd1a78737e3247d19a0afd145ee9f3aa675c3f4959c94",
+        "bytes": 46283
+      }
+    },
+    {
+      "original_path": "cpppj/src/o/ChunkMap.cpp",
+      "saved": {
+        "path": "cpppj/src/o/ChunkMap.cpp",
+        "sha256": "553cdd299f98874b56b1e379d352ee3fd9e24f6e81c14d1c69f641d98a1f621c",
+        "bytes": 2927
+      }
+    },
+    {
+      "original_path": "cpppj/src/o/ChunkMap.h",
+      "saved": {
+        "path": "cpppj/src/o/ChunkMap.h",
+        "sha256": "06fead290fb6ad6686b8158d36b5fc4357cfa0ba6995fbc9c5933b51ef324a23",
+        "bytes": 3381
+      }
+    },
+    {
+      "original_path": "cpppj/src/o/RawIslandBuilder.cpp",
+      "saved": {
+        "path": "cpppj/recovery-history/islandbuilder-partial-profile-initial/cpppj/src/o/RawIslandBuilder.cpp",
+        "sha256": "06e62e2833b504b85634f0f47bf1292c6d006f9553f0aa1457ff2634e33f0582",
+        "bytes": 6070
+      }
+    },
+    {
+      "original_path": "cpppj/src/o/RawIslandBuilder.h",
+      "saved": {
+        "path": "cpppj/recovery-history/islandbuilder-partial-profile-initial/cpppj/src/o/RawIslandBuilder.h",
+        "sha256": "569e95e4070f166d014f7a97777a6d03677347ee3c799052a1b5e66e086688b2",
+        "bytes": 3757
+      }
+    },
+    {
+      "original_path": "cpppj/src/o/RawIslandRuntime.cpp",
+      "saved": {
+        "path": "cpppj/src/o/RawIslandRuntime.cpp",
+        "sha256": "3be93556f2b32efc641442ed1e21654fbd0504be1643085b82ab1e80f71acd12",
+        "bytes": 10362
+      }
+    },
+    {
+      "original_path": "cpppj/src/o/RawIslandRuntime.h",
+      "saved": {
+        "path": "cpppj/src/o/RawIslandRuntime.h",
+        "sha256": "6205b879664770b0a3047ed1066f2ae7dd243c3ec2bbd13689fef1da77298fa4",
+        "bytes": 6283
+      }
+    },
+    {
+      "original_path": "cpppj/src/o/RiftType.cpp",
+      "saved": {
+        "path": "cpppj/src/o/RiftType.cpp",
+        "sha256": "795554df3a4538ba475a2095a1b87a6bf9ddf4ba5ff904b469cef1f7128dc895",
+        "bytes": 3726
+      }
+    },
+    {
+      "original_path": "cpppj/src/o/RiftType.h",
+      "saved": {
+        "path": "cpppj/src/o/RiftType.h",
+        "sha256": "e1c78cd6c0ac3f9a1135345b4288d07796785cfac20e93465548726cac3ddfdf",
+        "bytes": 13861
+      }
+    },
+    {
+      "original_path": "cpppj/tests/fixtures/islandbuilder-x86.tsv",
+      "saved": {
+        "path": "cpppj/recovery-history/islandbuilder-partial-profile-initial/cpppj/tests/fixtures/islandbuilder-x86.tsv",
+        "sha256": "ea0fd4fb26ba3acf960cbe857ad50bc5fa2ea86d7273a35705e68771d6896aa8",
+        "bytes": 558026
+      }
+    },
+    {
+      "original_path": "cpppj/tests/IslandBuilderTests.cpp",
+      "saved": {
+        "path": "cpppj/recovery-history/islandbuilder-partial-profile-initial/cpppj/tests/IslandBuilderTests.cpp",
+        "sha256": "37d712982d791ef20fd1743f55b14af2e51df7dbd4e5f5b706309d1108edafc4",
+        "bytes": 14078
+      }
+    },
+    {
+      "original_path": "extracted/island-runtime/originalCD/creation.c",
+      "saved": {
+        "path": "extracted/island-runtime/originalCD/creation.c",
+        "sha256": "e4f5b3782a53e30af16bed2cb16517cd3841cf9972938446a30c80b4c3cc91ee",
+        "bytes": 6857
+      }
+    },
+    {
+      "original_path": "extracted/island-runtime/originalCD/functions.tsv",
+      "saved": {
+        "path": "extracted/island-runtime/originalCD/functions.tsv",
+        "sha256": "c2a545e7c7022987bc079c987787f95596422b10129fdb46558a8c41fb490e4d",
+        "bytes": 406
+      }
+    },
+    {
+      "original_path": "extracted/islandbuilder/originalCD/creation.c",
+      "saved": {
+        "path": "extracted/islandbuilder/originalCD/creation.c",
+        "sha256": "dd088ba75d501c4d1143ebdf928d1d8f4e8d9a2bc9000599cd0ff14f397703e4",
+        "bytes": 16731
+      }
+    },
+    {
+      "original_path": "extracted/islandbuilder/originalCD/functions.tsv",
+      "saved": {
+        "path": "extracted/islandbuilder/originalCD/functions.tsv",
+        "sha256": "57e69b351e242f6500d9eea8b3efbf31cca328643f26349d35171f2c52aea5cb",
+        "bytes": 574
+      }
+    },
+    {
+      "original_path": "extracted/islandbuilder/originals/creation.c",
+      "saved": {
+        "path": "extracted/islandbuilder/originals/creation.c",
+        "sha256": "768061c394c182c30a168db085f580670f6b3c840a8b15e4fbb0035939280eb6",
+        "bytes": 18534
+      }
+    },
+    {
+      "original_path": "extracted/islandbuilder/originals/functions.tsv",
+      "saved": {
+        "path": "extracted/islandbuilder/originals/functions.tsv",
+        "sha256": "d4fbc65991702edd6a5a97a4e8ea5333127828af44c2182a0f06206da8e0c41f",
+        "bytes": 574
+      }
+    },
+    {
+      "original_path": "originalCD/NETSTORM.EXE",
+      "saved": {
+        "path": "originalCD/NETSTORM.EXE",
+        "sha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+        "bytes": 1647616
+      }
+    },
+    {
+      "original_path": "originals/Netstorm.exe",
+      "saved": {
+        "path": "originals/Netstorm.exe",
+        "sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "bytes": 1552384
+      }
+    },
+    {
+      "original_path": "tools/analyze_islandbuilder_decoder_lineage.py",
+      "saved": {
+        "path": "tools/analyze_islandbuilder_decoder_lineage.py",
+        "sha256": "cc16d51cc4a1c9f10c48338a9f10b3858735c7b24206bbbd2f629c66cbf32cc0",
+        "bytes": 9890
+      }
+    },
+    {
+      "original_path": "tools/decomp_canontype_oracle.py",
+      "saved": {
+        "path": "tools/decomp_canontype_oracle.py",
+        "sha256": "d04aabe29f5c9d5129431182836883356dec1a0669e2435eb253482c7c754a9f",
+        "bytes": 11076
+      }
+    },
+    {
+      "original_path": "tools/decomp_damageablepredestroy_oracle.py",
+      "saved": {
+        "path": "tools/decomp_damageablepredestroy_oracle.py",
+        "sha256": "b6bd591b17b886224e81b9d35dc863f12dea570c67aabf8a66280c7361785e75",
+        "bytes": 16663
+      }
+    },
+    {
+      "original_path": "tools/decomp_islandbuilder_oracle.py",
+      "saved": {
+        "path": "cpppj/recovery-history/islandbuilder-partial-profile-initial/tools/decomp_islandbuilder_oracle.py",
+        "sha256": "76638c23ef7d83497d5fcaf71f23214c45d3381656e52821d3d7a3059f0587ee",
+        "bytes": 18010
+      }
+    },
+    {
+      "original_path": "tools/decomp_owner_oracle.py",
+      "saved": {
+        "path": "tools/decomp_owner_oracle.py",
+        "sha256": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+        "bytes": 15141
+      }
+    },
+    {
+      "original_path": "tools/decomp_priestgeometry_oracle.py",
+      "saved": {
+        "path": "tools/decomp_priestgeometry_oracle.py",
+        "sha256": "c8d62204fcd8ec2fcb86cc9842ca46e0d3cdfba3c9afce3e90f9caec8fedc9bc",
+        "bytes": 13336
+      }
+    },
+    {
+      "original_path": "tools/ghidra/islandbuilder-functions.json",
+      "saved": {
+        "path": "tools/ghidra/islandbuilder-functions.json",
+        "sha256": "17917f3a0184a1a5c5dba376bf99542c91f9fff5494c067bc0b9dd481a571673",
+        "bytes": 975
+      }
+    }
+  ],
+  "current_source_files": [
+    {
+      "path": "cpppj/recovery-islandbuilder-evidence.json",
+      "sha256": "4ce5f341018774a118421a3e63726367b6235eff0211ff6d8c48905db708e95d",
+      "bytes": 5530
+    },
+    {
+      "path": "cpppj/tests/fixtures/islandbuilder-x86.tsv",
+      "sha256": "8048e92b263b026d17d02ccf7ddf8b0a3fefa0240970c8581cf5a3ea2b6c60a4",
+      "bytes": 557818
+    },
+    {
+      "path": "tools/decomp_islandbuilder_oracle.py",
+      "sha256": "df0819c89b3ed9474c0d282e0696b54aba7f7bc7fd62d861a1a148ba6b07d636",
+      "bytes": 18010
+    },
+    {
+      "path": "cpppj/tests/IslandBuilderTests.cpp",
+      "sha256": "20336f4ea96df7f422887878194d39c56cb41781f75849c68bf6343a533c1fc5",
+      "bytes": 14078
+    }
+  ],
+  "tool": {
+    "path": "tools/analyze_islandbuilder_partial_profile_lineage.py",
+    "sha256": "15c99c6be33baeef8011d98cdcfe9b70e2c6b81faa3da3fa0627cf3a679cde44",
+    "bytes": 5851
+  },
+  "limits": [
+    "A제거입력은패턴3의실제O/G/N칸을누락시키지못했으므로G제거입력으로교정했다.",
+    "전체이전1156관찰/PE/nativeexport/toolSHA를보존한다. 재관찰1156을새고유수에중복합산하지않는다.",
+    "profile3만24행변경이며나머지1132행은원본전체행이동일하다. productionBuilder와공유decoder는변경0."
+  ]
+}

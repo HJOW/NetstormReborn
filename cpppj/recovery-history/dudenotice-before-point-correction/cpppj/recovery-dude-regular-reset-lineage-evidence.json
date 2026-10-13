@@ -1,0 +1,118 @@
+{
+  "schema": 1,
+  "host": "HJOW-Athlon",
+  "baseline_commit": "a349e63",
+  "new_native": 0,
+  "new_unique": 0,
+  "baseline_files": {
+    "cpppj/src/o/SquidProcess.cpp": {
+      "git_sha256": "d04840464726146b575b99a5a67eaa02254b5d2dd5b4196ad32480bbc3a34a2b",
+      "work_sha256": "15f0790f5ca0fd999d7d3761fce535ad9691b916f0f9c15c2007baece3f8d203",
+      "git_bytes": 22897,
+      "work_bytes": 23226
+    },
+    "cpppj/src/o/SquidProcess.h": {
+      "git_sha256": "cc40c0a99ddba4c411de74e21f2b18b85616383f114d5c798cf45900596bbe82",
+      "work_sha256": "07c4ab4f81dd2f7dd8c3ea894bad7d8958350b7eaf1b30dc103500d4ebcee978",
+      "git_bytes": 12068,
+      "work_bytes": 12234
+    },
+    "cpppj/recovery-process-evidence.json": {
+      "git_sha256": "690ec88bdc7cd5c73f81c45ac019a2f81613cd6ca7e631b7945976de366ac338",
+      "work_sha256": "690ec88bdc7cd5c73f81c45ac019a2f81613cd6ca7e631b7945976de366ac338",
+      "git_bytes": 6707,
+      "work_bytes": 6707
+    },
+    "cpppj/tests/fixtures/process-x86.tsv": {
+      "git_sha256": "34be38ab8e39ff846142cf51aa453c60c9ab0620b40e92646d5dafe9f8ebc553",
+      "work_sha256": "34be38ab8e39ff846142cf51aa453c60c9ab0620b40e92646d5dafe9f8ebc553",
+      "git_bytes": 819581,
+      "work_bytes": 819581
+    },
+    "cpppj/recovery-processform-evidence.json": {
+      "git_sha256": "25a2598455371f22e0c1ba4cd773b59b77fb70b95357b5607badc53e06f11ccf",
+      "work_sha256": "25a2598455371f22e0c1ba4cd773b59b77fb70b95357b5607badc53e06f11ccf",
+      "git_bytes": 6250,
+      "work_bytes": 6250
+    },
+    "cpppj/tests/fixtures/processform-x86.tsv": {
+      "git_sha256": "32b67fe92fe59e484ea2b8c32599a7bac63c13145a56f3b3481398a21ac8b5ef",
+      "work_sha256": "32b67fe92fe59e484ea2b8c32599a7bac63c13145a56f3b3481398a21ac8b5ef",
+      "git_bytes": 518003,
+      "work_bytes": 518003
+    },
+    "cpppj/recovery-processretake-evidence.json": {
+      "git_sha256": "8a2540b21bfaf15ec4e55f11f52af8023381225a9564740917a79fbc252b5062",
+      "work_sha256": "8a2540b21bfaf15ec4e55f11f52af8023381225a9564740917a79fbc252b5062",
+      "git_bytes": 4288,
+      "work_bytes": 4288
+    },
+    "cpppj/tests/fixtures/processretake-x86.tsv": {
+      "git_sha256": "705276d822488e0177fc743d09d394d5f7dcbb3e796a7a77238044b7b88a09c8",
+      "work_sha256": "705276d822488e0177fc743d09d394d5f7dcbb3e796a7a77238044b7b88a09c8",
+      "git_bytes": 141552,
+      "work_bytes": 141552
+    },
+    "cpppj/recovery-processtransmit-evidence.json": {
+      "git_sha256": "38dad2fbe8b4b48cd0decbf0ec708099f75d3d62019fd830e8f4e3980e3bb7e9",
+      "work_sha256": "38dad2fbe8b4b48cd0decbf0ec708099f75d3d62019fd830e8f4e3980e3bb7e9",
+      "git_bytes": 4118,
+      "work_bytes": 4118
+    },
+    "cpppj/tests/fixtures/processtransmit-x86.tsv": {
+      "git_sha256": "5ae6f79b52b4eeb888a858e16cecea9e332b4538a34cafe52a8ce74d7abbcfe1",
+      "work_sha256": "5ae6f79b52b4eeb888a858e16cecea9e332b4538a34cafe52a8ce74d7abbcfe1",
+      "git_bytes": 159901,
+      "work_bytes": 159901
+    },
+    "cpppj/recovery-gunprocess-evidence.json": {
+      "git_sha256": "fe339f3bc67e247b5f7ada1843c2003495b06569ea53d5403c945dc21fb5bd97",
+      "work_sha256": "fe339f3bc67e247b5f7ada1843c2003495b06569ea53d5403c945dc21fb5bd97",
+      "git_bytes": 4729,
+      "work_bytes": 4729
+    },
+    "cpppj/tests/fixtures/gunprocess-x86.tsv": {
+      "git_sha256": "d13077033f5e3154e9109a93e7350ce4cbf33b365d03b297db95fa7159c058e7",
+      "work_sha256": "d13077033f5e3154e9109a93e7350ce4cbf33b365d03b297db95fa7159c058e7",
+      "git_bytes": 1093605,
+      "work_bytes": 1093605
+    }
+  },
+  "history_files": {
+    "cpppj/recovery-history/dude-regular-reset-baseline/work/cpppj/recovery-process-evidence.json": "690ec88bdc7cd5c73f81c45ac019a2f81613cd6ca7e631b7945976de366ac338",
+    "cpppj/recovery-history/dude-regular-reset-baseline/work/cpppj/recovery-processform-evidence.json": "25a2598455371f22e0c1ba4cd773b59b77fb70b95357b5607badc53e06f11ccf",
+    "cpppj/recovery-history/dude-regular-reset-baseline/work/cpppj/recovery-processretake-evidence.json": "8a2540b21bfaf15ec4e55f11f52af8023381225a9564740917a79fbc252b5062",
+    "cpppj/recovery-history/dude-regular-reset-baseline/work/cpppj/recovery-processtransmit-evidence.json": "38dad2fbe8b4b48cd0decbf0ec708099f75d3d62019fd830e8f4e3980e3bb7e9",
+    "cpppj/recovery-history/dude-regular-reset-baseline/work/cpppj/recovery-gunprocess-evidence.json": "fe339f3bc67e247b5f7ada1843c2003495b06569ea53d5403c945dc21fb5bd97",
+    "cpppj/recovery-history/dude-regular-reset-baseline/work/cpppj/tests/fixtures/process-x86.tsv": "34be38ab8e39ff846142cf51aa453c60c9ab0620b40e92646d5dafe9f8ebc553",
+    "cpppj/recovery-history/dude-regular-reset-baseline/work/cpppj/tests/fixtures/processform-x86.tsv": "32b67fe92fe59e484ea2b8c32599a7bac63c13145a56f3b3481398a21ac8b5ef",
+    "cpppj/recovery-history/dude-regular-reset-baseline/work/cpppj/tests/fixtures/processretake-x86.tsv": "705276d822488e0177fc743d09d394d5f7dcbb3e796a7a77238044b7b88a09c8",
+    "cpppj/recovery-history/dude-regular-reset-baseline/work/cpppj/tests/fixtures/processtransmit-x86.tsv": "5ae6f79b52b4eeb888a858e16cecea9e332b4538a34cafe52a8ce74d7abbcfe1",
+    "cpppj/recovery-history/dude-regular-reset-baseline/work/cpppj/tests/fixtures/gunprocess-x86.tsv": "d13077033f5e3154e9109a93e7350ce4cbf33b365d03b297db95fa7159c058e7",
+    "cpppj/recovery-history/dude-regular-reset-baseline/work/cpppj/src/o/SquidProcess.cpp": "15f0790f5ca0fd999d7d3761fce535ad9691b916f0f9c15c2007baece3f8d203",
+    "cpppj/recovery-history/dude-regular-reset-baseline/work/cpppj/src/o/SquidProcess.h": "07c4ab4f81dd2f7dd8c3ea894bad7d8958350b7eaf1b30dc103500d4ebcee978",
+    "cpppj/recovery-history/dude-regular-reset-baseline/git/cpppj/recovery-process-evidence.json": "690ec88bdc7cd5c73f81c45ac019a2f81613cd6ca7e631b7945976de366ac338",
+    "cpppj/recovery-history/dude-regular-reset-baseline/git/cpppj/recovery-processform-evidence.json": "25a2598455371f22e0c1ba4cd773b59b77fb70b95357b5607badc53e06f11ccf",
+    "cpppj/recovery-history/dude-regular-reset-baseline/git/cpppj/recovery-processretake-evidence.json": "8a2540b21bfaf15ec4e55f11f52af8023381225a9564740917a79fbc252b5062",
+    "cpppj/recovery-history/dude-regular-reset-baseline/git/cpppj/recovery-processtransmit-evidence.json": "38dad2fbe8b4b48cd0decbf0ec708099f75d3d62019fd830e8f4e3980e3bb7e9",
+    "cpppj/recovery-history/dude-regular-reset-baseline/git/cpppj/recovery-gunprocess-evidence.json": "fe339f3bc67e247b5f7ada1843c2003495b06569ea53d5403c945dc21fb5bd97",
+    "cpppj/recovery-history/dude-regular-reset-baseline/git/cpppj/tests/fixtures/process-x86.tsv": "34be38ab8e39ff846142cf51aa453c60c9ab0620b40e92646d5dafe9f8ebc553",
+    "cpppj/recovery-history/dude-regular-reset-baseline/git/cpppj/tests/fixtures/processform-x86.tsv": "32b67fe92fe59e484ea2b8c32599a7bac63c13145a56f3b3481398a21ac8b5ef",
+    "cpppj/recovery-history/dude-regular-reset-baseline/git/cpppj/tests/fixtures/processretake-x86.tsv": "705276d822488e0177fc743d09d394d5f7dcbb3e796a7a77238044b7b88a09c8",
+    "cpppj/recovery-history/dude-regular-reset-baseline/git/cpppj/tests/fixtures/processtransmit-x86.tsv": "5ae6f79b52b4eeb888a858e16cecea9e332b4538a34cafe52a8ce74d7abbcfe1",
+    "cpppj/recovery-history/dude-regular-reset-baseline/git/cpppj/tests/fixtures/gunprocess-x86.tsv": "d13077033f5e3154e9109a93e7350ce4cbf33b365d03b297db95fa7159c058e7",
+    "cpppj/recovery-history/dude-regular-reset-baseline/git/cpppj/src/o/SquidProcess.cpp": "d04840464726146b575b99a5a67eaa02254b5d2dd5b4196ad32480bbc3a34a2b",
+    "cpppj/recovery-history/dude-regular-reset-baseline/git/cpppj/src/o/SquidProcess.h": "cc40c0a99ddba4c411de74e21f2b18b85616383f114d5c798cf45900596bbe82"
+  },
+  "current_sources": {
+    "cpppj/src/o/SquidProcess.cpp": "188376ba728d8544d0bfafb92cc6f66403aea92434a81fa98efe894ed9f042e5",
+    "cpppj/src/o/SquidProcess.h": "96f0b2275393d53307b01d36732f51fc8bcb8c341b2d15339d3f5a37cb702bcd"
+  },
+  "tool_sha256": "20bac4b639720e6f813e3c1651ba662bd0e5152397ebbd2ea5e4a37bc4b36c4b",
+  "change": "RegularProcess에 event/count0/time 직접쓰기 공개메서드와설명만추가. 기존생성/실행/부착/송신/조회/삭제 몸체와5보고서/fixture 전체불변.",
+  "limitations": [
+    "기존5보고서의당시전체바이트/관찰을보존하지만missing ignored export의새현재실행감사로세지않는다.",
+    "C++의이름있는event/count/time상태를갱신하며32bit원본객체물리배치로주장하지않는다.",
+    "DudeNotice원본fixture/같은Host소비자는별도단위에서추가한다."
+  ]
+}

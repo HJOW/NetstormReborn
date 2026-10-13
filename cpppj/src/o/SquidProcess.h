@@ -48,6 +48,8 @@ public:
     float Payload() const;
     std::uint32_t Count() const;
     double Time() const;
+    // Dude task 변경의 event/count0/다음double시각 직접쓰기를 같은 기존 Regular 객체에 적용한다.
+    void ResetTask(std::uint32_t event,double time);
 private:
     friend class SquidProcessHost;
     // time_: 시각.

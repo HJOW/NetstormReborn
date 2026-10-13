@@ -39,7 +39,7 @@ Factory/heap/Pop/부착/Dude/가상 삭제·표시 요청은 명시 관찰 경�
 
 두 판본 보호 `d/anim.type`는 A35/B23/C8/D22 총88클러스터다. 첫 번호는 A0/B35/C58/D66이며 원본 번호B09/D09의 공백도 실제 물리 목록 순서로 처리한다. `GunImpact_ActualAssetsFactoryPopRegularAndDeletion`은 같은 `GameAssets`/실제 SHP에서 구간을 읽고 D의22프레임을 처리하도록 작성했다.
 
-이 검사는 같은 풀의 Factory→실제 SquidPop/표시/공통 postPop 장부→Host.AddRegular→현재 Kernel 틱→실제 SetFrame/Unpop/Repop→RawSquidDestroy/실제 SquidDestroyLifecycle/종속 Form 삭제를 연결한다. 실제 전역 타입 개수 증가/감소, Kernel 제거, 해시 해제, 깊이0, 같은 원본 프레임 수를 확인했다. 화면 영역 변경 요청과 삭제 보상/알림은 관찰 경계이며 창·오디오 출력이나 전체 UI 완료로 세지 않는다. 교정 후 같은 두 판본의 장부/비용/깊이/dirty 개별 단언이 모두 통과했다. 단위10 고유집중35검사는 성공했으며 전체1023검사는 진행 중이다.
+이 검사는 같은 풀의 Factory→실제 SquidPop/표시/공통 postPop 장부→Host.AddRegular→현재 Kernel 틱→실제 SetFrame/Unpop/Repop→RawSquidDestroy/실제 SquidDestroyLifecycle/종속 Form 삭제를 연결한다. 실제 전역 타입 개수 증가/감소, Kernel 제거, 해시 해제, 깊이0, 같은 원본 프레임 수를 확인했다. 화면 영역 변경 요청과 삭제 보상/알림은 관찰 경계이며 창·오디오 출력이나 전체 UI 완료로 세지 않는다. 교정 후 같은 두 판본의 장부/비용/깊이/dirty 개별 단언이 모두 통과했다. 단위10 **a349e63**의 고유집중35·전체1023검사/실패0이며 실제캠페인 월드 조립/완주 완료는 아니다.
 
 ## 후속
 

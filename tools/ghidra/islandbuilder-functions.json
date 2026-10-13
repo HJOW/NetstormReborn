@@ -1,0 +1,7 @@
+{
+  "description": "실제 IslandBuilder Place/PlaceAll을 현재3204BYTE Runtime.Add/Bounds와 같은ChunkMap/CanonDecoder에 연결하기 위한 전체 좁은 내보내기다. 새 독립 관찰은 Place/PlaceAll의 고유 입력만 세고 기존 Runtime/ChunkMap/CanonDecoder helper 관찰은 신규합산0이다. 기존 vector IslandList 구현은 수정하지 않는다. 현재/마지막 디컴파일 PC HJOW-Athlon, 2026-10-14.",
+  "editions": {
+    "originals": ["0046d9b0", "0046da20", "0046dba0", "0046dd70", "00431fc0", "00432180", "00432210", "0040d900", "0046ee30", "0046ee60", "0046f190", "00425c20", "00425860", "00425830", "0049a840", "00425700", "0049a940", "0049a900", "004e49c0", "00425c00"],
+    "originalCD": ["00490430", "004904d0", "00490520", "00490750", "00490980", "00403d20", "00404090", "004040d0", "004bd480", "004bd4c0", "004bd500", "004bd900", "0041fcf0", "0041feb0", "0041fcc0", "0041fbb0", "004442f0", "004442b0", "004f161c", "00420370"]
+  }
+}

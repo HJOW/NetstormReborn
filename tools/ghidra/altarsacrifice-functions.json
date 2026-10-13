@@ -1,0 +1,7 @@
+{
+  "description": "일반 포획사제의 Dais Progress→Altar24/20·21·22·23, 이탈 프레임/해방과 Dais 가상 preDestroy400000→FinishSacrifice의 실제 소비자 사슬을 읽기 전용으로 내보낸다. 기존 Dais/FrameAdvance/typed finder/공통 Carrier·Damageable/Process Host를 재사용한다. 마지막 디컴파일 PC: HJOW-Athlon, 2026-10-14.",
+  "editions": {
+    "originals": ["0044a5e0", "004486d0", "00448bb0", "00448bd0", "00448500", "0044afd0", "0044a480", "004b26f0", "004adea0"],
+    "originalCD": ["00483800", "00483040", "00482ec0", "004821e0", "00483670", "004eb260", "00483120", "004aef30"]
+  }
+}

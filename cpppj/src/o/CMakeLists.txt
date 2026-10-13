@@ -41,6 +41,13 @@ target_sources(netstorm PRIVATE
     RawTerrainGrowth.cpp RawTerrainGrowth.h
     RawGunImpact.cpp RawGunImpact.h
     RawSquidDefense.cpp RawSquidDefense.h
+    RawArcherTypeData.cpp RawArcherTypeData.h
+    RawDaisRegular.cpp RawDaisRegular.h
+    RawAltarSacrifice.cpp RawAltarSacrifice.h
+    RawDaisLifecycle.cpp RawDaisLifecycle.h
+    RawIslandBuilder.cpp RawIslandBuilder.h
+    RawFortMoneyLoad.cpp RawFortMoneyLoad.h
+    RawDudeNotice.cpp RawDudeNotice.h
     BaseFile.cpp BaseFile.h
     Config.cpp Config.h
     ConfigInterface.cpp ConfigInterface.h

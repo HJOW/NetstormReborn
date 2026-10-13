@@ -5,6 +5,7 @@
 #include "o/RiftType.h"
 #include <array>
 #include <cstdint>
+#include <functional>
 #include <span>
 
 namespace netstorm::o {
@@ -30,7 +31,8 @@ class CanonDecoder {
 public:
     // 원본 FUN_00425c20 ↔ CD 0041fcf0의 영역·다리 패턴 경로. direction은 방향 값이며 회전은 direction / 2다.
     // frames는 그 타입의 프레임 코드 표다. (x, y)는 첫 칸의 좌표다.
-    CanonDecoder(const RiftTypeFrames& frames, const CanonPattern& pattern, int direction, float x, float y);
+    CanonDecoder(const RiftTypeFrames& frames, const CanonPattern& pattern, int direction, float x, float y,
+        std::function<void()> missingFrameDiagnostic={});
     // 패턴 없는 타입은 한 칸이고 방향의 크기/부호는 출력에 영향을 주지 않는다. 기본 프레임 또는 명시 프레임을 선택하며 CD는 홀수를 assert한다.
     CanonDecoder(const RiftTypeFrames& frames,int defaultFrame,int argument,int direction,float x,float y,
         bool explicitFrame=false,OriginalEdition edition=OriginalEdition::Patch1078);
@@ -54,6 +56,8 @@ private:
     const RiftTypeFrames* frames_;
     // pattern_: 칸별 방향·변형·라벨을 펼칠 Canon 패턴 자료.
     const CanonPattern* pattern_;
+    // missingFrameDiagnostic_: 실제 FindNumber 실패의 보고 후 계속 진행을 요청한다. 빈 값은 기존 호출 동작이다.
+    std::function<void()> missingFrameDiagnostic_;
     // rotation_: 패턴을 회전할 방향 값.
     int rotation_{};        // +8
     bool mirrored_{};       // +0xc (영역 패턴에서는 항상 거짓)
