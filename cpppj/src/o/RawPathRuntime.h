@@ -66,6 +66,10 @@ public:
     std::uint32_t TargetA() const;
     std::uint32_t TargetB() const;
     void SetTargets(std::uint32_t first,std::uint32_t second);
+    // 시작 상위 몸체의 명령 DWORD 세 개와 패치 전용 목적지 두 float를 실제 끝 필드에 쓴다.
+    void SetCommandFields(std::uint32_t helper,std::uint32_t tailWord,std::uint32_t tailByte,RawPathPoint destination);
+    // 시작의 연속 꼭짓점 좌표만 덮어쓴다. 시각·방향·개수는 그대로 보존한다.
+    void ReplacePoint(std::int32_t index,RawPathPoint point);
     // ProcessForm 부착 뒤의 실제 번호를 이미지에 기록한다.
     void SetAttachment(Sid form,Sid parent);
 private:

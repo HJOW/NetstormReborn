@@ -19,6 +19,9 @@ struct RawMovementProcessTypes {
     std::uint32_t wormProcess{40},walkerProcess{38},balloonProcess{42},teleportProcess{23},bulfProcess{41},
         dudeProcess{24},priestProcess{54},flyProcess{39};
 };
+// 00488fe0/CD0047d020의 기존 몸체를 공유한다. PathStart 훅과 사제 월드 바인딩이 같은 mutable 선택 상태를 읽는다.
+std::uint32_t SelectMovementProcessType(o::OriginalEdition edition,std::span<const o::RiftTypeRecord> types,
+    const RawMovementProcessTypes& selection,std::uint32_t type);
 // 다른 자산도 사용하는 단일 월드 자료다. 모든 참조는 연결 객체보다 오래 살아야 한다.
 struct RawPriestWorldCore {
     // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.

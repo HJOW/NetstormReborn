@@ -12,6 +12,10 @@ add_executable(netstorm_tests
     MetadisplayDirtyTests.cpp
     RawPathDataTests.cpp
     GunTargetTests.cpp
+    RawPathStartTests.cpp
+    GunAnimationTests.cpp
+    AssetRegularTests.cpp
+    RegionPaintTests.cpp
     RawButtonControlsTests.cpp
     GumpResetTests.cpp
     MissionOutcomeTests.cpp
@@ -626,3 +630,13 @@ set_source_files_properties(RawPriestWorldBindingsTests.cpp PROPERTIES COMPILE_D
 # 건설 운반 객체 도착의 실제 finder/시작/예측 대기/자기 삭제 두 PE 관찰이다.
 set_source_files_properties(ConstructionArrivalTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CONSTRUCTIONARRIVAL_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/constructionarrival-x86.tsv\"")
+
+# 실제 사제 경로 시작/프로세스 종류 선택과 Gun 애니메이션 및 자산 Handle의 독립 PE 관찰이다.
+set_source_files_properties(RawPathStartTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PATHSTART_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/pathstart-x86.tsv\";NETSTORM_PATHPROCESSTYPE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/pathprocesstype-x86.tsv\"")
+set_source_files_properties(GunAnimationTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_GUNANIMATION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gunanimation-x86.tsv\"")
+set_source_files_properties(AssetRegularTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_ASSETREGULAR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/assetregular-x86.tsv\"")
+set_source_files_properties(RegionPaintTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_REGIONPAINT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/regionpaint-x86.tsv\"")

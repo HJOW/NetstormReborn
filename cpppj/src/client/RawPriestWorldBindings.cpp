@@ -5,6 +5,24 @@
 #include <utility>
 
 namespace netstorm::client {
+// 기존 이동 선택 몸체의 타입 조회 시점·우선순위·CD assert 분기를 그대로 공유한다.
+std::uint32_t SelectMovementProcessType(o::OriginalEdition edition,std::span<const o::RiftTypeRecord> types,
+    const RawMovementProcessTypes& selection,std::uint32_t type) {
+    const bool patch=edition==o::OriginalEdition::Patch1078;
+    // CD의 worm 특수 반환은 타입 표를 조회하기 전이며 패치는 먼저 조회한다.
+    if (!patch && type==selection.sunWalker) return selection.wormProcess;
+    if (type>=types.size()) throw std::out_of_range("이동 프로세스 선택 타입 범위 오류");
+    if (patch && (type==selection.sunWalker || type==selection.empty)) return selection.wormProcess;
+    if (type==selection.windWalker || type==selection.rainWalker) return selection.walkerProcess;
+    if (types[type].flags2&o::TypeFlag2::kBalloon) return selection.balloonProcess;
+    if (type==selection.teleport) return selection.teleportProcess;
+    if (type==selection.bulf) return selection.bulfProcess;
+    if (type==selection.dude) return selection.dudeProcess;
+    if (type==selection.priest) return selection.priestProcess;
+    if (type==selection.manaBolt) return selection.flyProcess;
+    if (patch) return selection.wormProcess;
+    throw std::invalid_argument("CD 이동 프로세스 미지원 타입(원본 assert)");
+}
 namespace {
 // 판본 공통 vtable 기록값을 호스트 주소로 실행하지 않고 little endian으로 읽는다.
 std::uint32_t Vtable(std::span<const std::uint8_t> raw) {
@@ -152,21 +170,7 @@ struct RawPriestWorldBindings::Impl {
     }
     // 00488fe0/CD 0047d020는 모양 번호가 아니라 이동 ProcessForm 타입 번호를 선택한다.
     std::uint32_t MovementProcessType(std::uint32_t type) const {
-        const auto& selection=state.movement;
-        const bool patch=core.pool.Edition()==o::OriginalEdition::Patch1078;
-        // CD의 worm 특수 반환은 타입 표를 조회하기 전이며 패치는 먼저 조회한다.
-        if (!patch && type==selection.sunWalker) return selection.wormProcess;
-        if (type>=core.types.size()) throw std::out_of_range("이동 프로세스 선택 타입 범위 오류");
-        if (patch && (type==selection.sunWalker || type==selection.empty)) return selection.wormProcess;
-        if (type==selection.windWalker || type==selection.rainWalker) return selection.walkerProcess;
-        if (core.types[type].flags2&o::TypeFlag2::kBalloon) return selection.balloonProcess;
-        if (type==selection.teleport) return selection.teleportProcess;
-        if (type==selection.bulf) return selection.bulfProcess;
-        if (type==selection.dude) return selection.dudeProcess;
-        if (type==selection.priest) return selection.priestProcess;
-        if (type==selection.manaBolt) return selection.flyProcess;
-        if (patch) return selection.wormProcess;
-        throw std::invalid_argument("CD 이동 프로세스 미지원 타입(원본 assert)");
+        return SelectMovementProcessType(core.pool.Edition(),core.types,state.movement,type);
     }
     // type +0xd4는 burning 모양 포인터가 아니라 numeric damageEffect다. 0이면 후속 조회/효과가 없다.
     void DamageableRefresh(o::Sid sid) const {

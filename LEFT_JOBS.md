@@ -1,5 +1,16 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-13 cpppj: 실제 경로 시작·Gun 애니메이션·자산 Handle·지형 도장 검증 (`HJOW-Athlon`)
+
+- [x] AGENTS.md와 두 LEFT_JOBS를 다시 읽고 goal active, 실제 시작 트리 clean, 최신 디컴파일 PC와 현재 `HJOW-Athlon` 일치를 확인했다. 앞선 준비 턴은 정밀 결과 생성과 기록을 완료한 진행이며 현재 HEAD는 사용자 커밋 `b84e4ee`다. 이번 목표의 작업 단위 커밋 권한을 적용하며 다음 메시지 번호는 `20261013-04`부터다.
+- [x] `RawPathStart`의 실제 시작/재시도·사제 **가이저(type122)** 조회·예약604/605 취소를 교정하고 Runtime의 명령/좌표 API와 CMake에 등록했다. 기존 client 이동 종류 mapper를 공유 함수로 노출해 중복 O 구현을 제거했다. **신규 Start512개** 전수 C++ 대조 통과. 종류718개는 기존2872개 부분집합 회귀이며 신규 관찰0개다. 기존 Runtime360개와 mapper의 전체 소스/토큰 lineage 및 현재 SourceSHA 감사도 통과했다. [경로 기록](docs/exe/cpp-raw-path-start.md).
+- [x] `RawGunAnimation`의 회전·발사·원위치와 같은 Host/Kernel 완료 통지·Form 삭제를 복원했다. **정상 반환2510개**와 **Missile ctor 진입 직전 접두50개** 모두 C++ 대조했다. 접두를 실제 투사체 생성/충돌 완료로 더하지 않는다. CD 정밀 내보내기19/77 실패와 실제 PE 가상 thunk 범위 대조의 구분은 [기록](docs/exe/cpp-gun-animation-20261013.md)에 있다.
+- [x] `RawAssetRegular`의 레지던스·가이저·신전·공통 Damageable Handle를 복원하고 **1976개** 전수 C++ 대조했다. `RawRegionPaint`의 소유자 flood·직접 프레임 쓰기·경계 후보/영향 지역·캐시/난수는 패치386/CD98, **484개**가 원본과 같았다. 기존 소유권 투표·받침 소유권 몸체는 재사용한다. [자산 기록](docs/exe/cpp-asset-regular-20261013.md), [도장 기록](docs/exe/cpp-region-paint-20261013.md).
+- [x] 최종 Release 두 타깃 빌드 종료0·경고/오류0, **전체958개 검사/실패0**(신규12개와 기존946개), 집중 새12개/기존14개 회귀도 통과했다. 신규 완료 원본 입력 합계는 **5482개**다. `recovery-campaign-runtime4-evidence.json`/`tools/analyze_campaign_runtime4.py --verify`가 하위 SHA·fixtures·최종 검사 로그·두 EXE를 고정한다. 실제 실행 로그는 `extracted/campaign-runtime4-build-final.log`, `extracted/campaign-runtime4-all-final-tests.log`다.
+- [x] 초기 Scene 이름 충돌, 합성 프레임 표의 원소+98 덮어쓰기, CD NaN의 cap 비교, 검사 행의 free 슬롯 재초기화, 실제 client Form cleanup flags0x10 기대를 교정했다. 최초 실패/중간 로그는 보존했고 최종 성공만 완료 근거로 쓴다. Ghidra export는 현재 정밀 프로젝트를 readOnly로 열며 `export_functions.ps1 -Refined` 전달을 추가했다. 보호 원본 SHA 불변·게임/GUI 실행·DirectDraw 오류 수정·푸시 없음. 이번 단위 커밋 메시지: `20261013-04 경로 시작과 썬 캐논 애니메이션 자산 주기 및 지형 도장 복원 검증`.
+- [ ] 후속 `RawMissile`/`RawGunHit`/`RawVortexAscend` 초안은 이 단위의 완료 관찰과 커밋 범위에서 제외한다. 별도 CMake 등록·독립 원본/전수 C++·실제 Host 수명 대조 후 다음 단위로 커밋한다. 실제 가상피해/시각·비행 효과/가이저 채집 및 사제 도착/운반/의식/cleanup·AI/경제·미션승패/UI도 이어 복원한다.
+- [ ] **캠페인 전체 원본 동일성은 미달성이다.** 기존 GameWorld의 비표면 관찰 이동/Chaff 우선 저장 초기화/고정 지형 난수는 실제 raw 미션 로더/경로로 이관해야 한다. `0044bd20/CD00461f00`은 `RawIslandPostPop::SetSupportOwner`로 이미 구현돼 있어 재사용한다. 지형 초기 stamp는 실제 `004c04b0/004c0640` 및 CD`0049cf20/0049d2c0`를 확인했다. 자동 대응표의 CD`0049d690`은 실제 성장 helper이므로 stamp로 쓰지 않는다. goal은 계속 active다. 마지막 디컴파일 수행 PC: **HJOW-Athlon, 2026-10-13**.
+
 ## 2026-10-13 cpppj 준비: 패치판·CD판 정밀 디컴파일 재생성 (`HJOW-Athlon`)
 
 - [x] `AGENTS.md`, `LEFT_JOBS.md`, `LEFT_JOBS.dotnetpj.md`를 확인했다. 최신 기록의 마지막 디컴파일 PC는 `VM-W11-CODEX`였고 현재 호스트 `HJOW-Athlon`과 달라 정밀 디컴파일을 다시 수행했다.

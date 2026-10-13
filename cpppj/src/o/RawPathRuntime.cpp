@@ -143,6 +143,17 @@ std::uint32_t RawPathRuntime::TargetA() const { return static_cast<std::uint32_t
 std::uint32_t RawPathRuntime::TargetB() const { return static_cast<std::uint32_t>(Read(layout_.targetB)); }
 // 두 번호를 원본 DWORD로 저장한다.
 void RawPathRuntime::SetTargets(std::uint32_t first,std::uint32_t second) { Write(layout_.targetA,first);Write(layout_.targetB,second); }
+// 원본 상위 시작 함수는 tailByte라는 인자도 실제로 DWORD 전체를 기록한다.
+void RawPathRuntime::SetCommandFields(std::uint32_t helper,std::uint32_t tailWord,std::uint32_t tailByte,RawPathPoint destination) {
+    Write(layout_.helper,helper);
+    const auto tail=edition_==OriginalEdition::Patch1078 ? 0x186e4U : 0x2f1cU;
+    Write(tail,tailWord);Write(tail+4,tailByte);
+    if (edition_==OriginalEdition::Patch1078) { Write(0x186dc,Bits(destination.x));Write(0x186e0,Bits(destination.y)); }
+}
+// 원본이 비교한 연속 시작 꼭짓점의 좌표 쌍만 실제 배열에 기록한다.
+void RawPathRuntime::ReplacePoint(std::int32_t index,RawPathPoint point) {
+    Check(index);Write(0x14+index*8,Bits(point.x));Write(0x18+index*8,Bits(point.y));
+}
 // 원본 base +4/+8은 Form/부모 DWORD다.
 void RawPathRuntime::SetAttachment(Sid form,Sid parent) { Write(4,form.value);Write(8,parent.value); }
 }

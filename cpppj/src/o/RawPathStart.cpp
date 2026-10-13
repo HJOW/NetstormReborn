@@ -34,12 +34,13 @@ RawPathPoint RawPathStart::CeilPoint(RawPathPoint point) {
     if (!std::isfinite(point.x) || !std::isfinite(point.y)) throw std::out_of_range("Path 시작 비정상 좌표");
     return {static_cast<float>(std::trunc(static_cast<double>(point.x)+kCellBias)),static_cast<float>(std::trunc(static_cast<double>(point.y)+kCellBias))};
 }
-// 원본004ade70의 현재 타입 발자국을1..255로 자르고 일반 finder의 정수 입력으로 절삭한다.
+// 원본004ade70→finder 생성자는 발자국 왼쪽/위는 절삭하고 오른쪽/아래는 거의 올림한다.
 SquidSearchArea RawPathStart::Footprint(Sid sid) const {
     const auto point=Position(sid);const auto type=pool_.Slot(sid)[10];const auto& record=types_[type];
     if (!std::isfinite(point.x) || !std::isfinite(point.y) || record.footX<1 || record.footY<1) throw std::out_of_range("Path 시작 부모 발자국");
     const float left=std::clamp(point.x-static_cast<float>(record.footX-1),1.0F,255.0F),top=std::clamp(point.y-static_cast<float>(record.footY-1),1.0F,255.0F);
-    return {static_cast<int>(left),static_cast<int>(top),static_cast<int>(point.x),static_cast<int>(point.y)};
+    const auto end=CeilPoint(point);
+    return {static_cast<int>(left),static_cast<int>(top),static_cast<int>(end.x),static_cast<int>(end.y)};
 }
 // 목적지 clamp→기존 경로/시작 보정→생성/Init→명령 필드→유효 검사→Prepare/Attach→부모통지다.
 RawPathProcess* RawPathStart::Start(RawPathStartRequest request) {
@@ -58,8 +59,8 @@ RawPathProcess* RawPathStart::Start(RawPathStartRequest request) {
             auto* old=dynamic_cast<RawPathProcess*>(host_.FromForm(oldForm));
             if (!old || &old->Pool()!=&pool_) throw std::logic_error("기존 다른 파생 Path 수명 미복원 경계");
             if (pool_.Edition()==OriginalEdition::Patch1078) {
-                if (start.x<request.destination.x) start.x-=kHalfCell;
-                if (start.y<request.destination.y) start.y-=kHalfCell;
+                if (start.x<=request.destination.x) start.x-=kHalfCell;
+                if (start.y<=request.destination.y) start.y-=kHalfCell;
             }
             first=old->Runtime().TargetA();second=old->Runtime().TargetB();host_.Kill(*old,0);
         }
@@ -93,7 +94,7 @@ RawPathProcess* RawPathStart::Start(RawPathStartRequest request) {
         const auto current=Position(request.parent),rounded=CeilPoint(current);
         // 시작의 연속 동일 꼭짓점만 현재 부모 좌표로 교체하고 시간/방향은 보존한다.
         for (std::int32_t i=0;i<runtime.Count();++i) {
-            const auto point=runtime.Point(i);if (point.x!=rounded.x || point.y!=rounded.y) break;runtime.ReplacePoint(i,current);
+            const auto point=runtime.Point(i);if (point.x!=rounded.x || point.y!=rounded.y) break;runtime.ReplacePoint(i,start);
         }
     }
     const auto meta=hooks_.metadata(request.parent);owned->Prepare(0,meta.speed,meta.turningSpeed);
@@ -107,8 +108,8 @@ void RawPathStart::NotifyStarted(Sid parent,RawPathPoint destination,RawPathProc
     if (type==state_.teleportType) return; // 양쪽 부모 가상+44/+40은 실제 빈 ret 몸체다.
     if (type!=state_.priestType) throw std::logic_error("다른 부모 이동 통지 미복원 경계");
     const int x=static_cast<int>(destination.x),y=static_cast<int>(destination.y);RawSquidFinder finder(pool_,hash_,types_);auto candidate=finder.Begin({x,y,x,y},1);
-    // 원본은 첫 일치에서 멈추지 않고 마지막 nugget을targetA에 기록한다.
-    while (candidate.value) { if (pool_.Slot(candidate)[10]==state_.nuggetType) process.Runtime().SetTargets(candidate.value,process.Runtime().TargetB());candidate=finder.Next(); }
+    // 원본은 첫 일치에서 멈추지 않고 마지막 가이저를targetA에 기록한다.
+    while (candidate.value) { if (pool_.Slot(candidate)[10]==state_.geyserType) process.Runtime().SetTargets(candidate.value,process.Runtime().TargetB());candidate=finder.Next(); }
     // 두 사건 각각을 처음부터 다시 검색하므로 삭제 callback이 추가한 같은 사건도 원본처럼 처리한다.
     for (const auto event:{0x25cU,0x25dU}) {
         while (auto* regular=host_.FindEvent(parent,event)) host_.Kill(*regular,0);

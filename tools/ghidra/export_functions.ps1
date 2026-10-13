@@ -22,6 +22,8 @@ param(
     [switch]$All,
     # 지정한 판본만 내보낸다(생략하면 목록에 있는 모든 판본).
     [string[]]$Edition = @(),
+    # 현재 호스트에서 재생성한 정밀 프로젝트를 사용한다. 기본 프로젝트의 예전 내보내기가 필요하면 생략한다.
+    [switch]$Refined,
     # 출력 기준 폴더(프로젝트 루트 기준). 기존 결과와 비교하려고 다른 폴더에 내보낼 때만 바꾼다.
     [string]$OutputBase = 'extracted'
 )
@@ -74,7 +76,7 @@ try {
                 $Out = "$OutputBase/$Item/$Target$Suffix"
                 $Log = "$OutputBase/$Item/$Target$LogSuffix-ghidra.log"
                 New-Item -ItemType Directory -Force (Join-Path $Root "$OutputBase/$Item") | Out-Null
-                & (Join-Path $PSScriptRoot 'run_script.ps1') -Edition $Source -Script $Script -ScriptArgs (@($Out) + $Addresses) *> $Log
+                & (Join-Path $PSScriptRoot 'run_script.ps1') -Edition $Source -Refined:$Refined -Script $Script -ScriptArgs (@($Out) + $Addresses) *> $Log
                 $Code = $LASTEXITCODE
                 # 머리말 한 줄을 뺀 줄 수가 내보낸 함수 수다
                 $Table = Join-Path $Root "$Out/functions.tsv"

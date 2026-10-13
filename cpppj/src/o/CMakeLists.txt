@@ -13,6 +13,10 @@ target_sources(netstorm PRIVATE
     RawMetadisplayDirty.cpp RawMetadisplayDirty.h
     RawGunTarget.cpp RawGunTarget.h
     RawPathData.cpp RawPathData.h
+    RawPathStart.cpp RawPathStart.h
+    RawGunAnimation.cpp RawGunAnimation.h
+    RawAssetRegular.cpp RawAssetRegular.h
+    RawRegionPaint.cpp RawRegionPaint.h
     BaseFile.cpp BaseFile.h
     Config.cpp Config.h
     ConfigInterface.cpp ConfigInterface.h
