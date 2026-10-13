@@ -1,0 +1,95 @@
+{
+  "scope": "실제 Path 시작 상위 몸체의 정적 ABI/가상 순서/명령 필드 판독; 전체 몸체 미복원",
+  "implemented": false,
+  "native_cases": 0,
+  "cpp_comparisons": 0,
+  "game_gui_runs": 0,
+  "last_decompile_host": "VM-W11-CODEX",
+  "last_decompile_date": "2026-10-13",
+  "results": {
+    "originals": {
+      "entry": "00489080",
+      "vtables": [
+        {
+          "address": "0050e284",
+          "init": "0048bb10",
+          "attach": "0048b680",
+          "prepare": "0048a200"
+        },
+        {
+          "address": "0050e458",
+          "init": "0048bb10",
+          "attach": "0048bd30",
+          "prepare": "0048a200"
+        }
+      ],
+      "stores": {
+        "0048929a": "[esi + 0x186d0]",
+        "004892a7": "[esi + 0x186e4]",
+        "004892ad": "[esi + 0x186c8]",
+        "004892b7": "[esi + 0x186cc]",
+        "004892bd": "[esi + 0x186d4]",
+        "004892c3": "[esi + 0x186e8]",
+        "004892cd": "[esi + 0x186dc]",
+        "004892da": "[esi + 0x186e0]"
+      },
+      "calls": {
+        "00489285": "[edx + 0x20]",
+        "00489385": "[ebx + 0x30]",
+        "00489398": "[edx + 0x2c]",
+        "004893ad": "[edx + 0x44]",
+        "004893b4": "[edx + 0x40]"
+      },
+      "abi_argument_count": 8
+    },
+    "originalCD": {
+      "entry": "0047d150",
+      "vtables": [
+        {
+          "address": "00503d60",
+          "init": "0047feb0",
+          "attach": "0047fe90",
+          "prepare": "0047e710"
+        },
+        {
+          "address": "00503eb0",
+          "init": "00480910",
+          "attach": "004808b0",
+          "prepare": "0047e710"
+        }
+      ],
+      "stores": {
+        "0047d308": "[ebp + 0x2f08]",
+        "0047d30e": "[ebp + 0x2f0c]",
+        "0047d314": "[ebp + 0x2f10]",
+        "0047d322": "[ebp + 0x2f14]",
+        "0047d328": "[ebp + 0x2f1c]",
+        "0047d32e": "[ebp + 0x2f20]"
+      },
+      "calls": {
+        "0047d2f9": "[eax + 0x20]",
+        "0047d3b1": "[eax + 0x30]",
+        "0047d3c5": "[ebx + 0x2c]",
+        "0047d3d7": "[eax + 0x44]",
+        "0047d3e2": "[eax + 0x40]"
+      },
+      "abi_argument_count": 8
+    }
+  },
+  "sources": {
+    "tools/analyze_pathstart.py": "19fbd411625575f92387d0e8f5c0fabd6dd103ed16a896491c5dad89e58aea0e",
+    "tools/ghidra/pathstart-functions.json": "7e871c0053d3c8c019446bcf15435373a9d85829410c79bb2a1d922ba4ddaab1",
+    "docs/exe/cpp-raw-path-start-pending.md": "2cb24c83fc29659229a296521617ee6e71392e3f2d0c4040572255e907fc8bff"
+  },
+  "exports": {
+    "extracted/pathstart/originals/creation.c": "34bf41c680b020cc86c6e9290bf65c39491fbc33d3c9e5a030e86810b5b3ca83",
+    "extracted/pathstart/originals/functions.tsv": "b723edb5ec502247e34673d07a58f15a3f233813d89f7d8a21c241cd8f07727d",
+    "extracted/pathstart/originalCD/creation.c": "a28cbd531f7881a7eb4b7126597c16f086dc9fce86a6ac617b32ffcc44f3d41e",
+    "extracted/pathstart/originalCD/functions.tsv": "1902d6eb70e5e247351bdf926415ad73193c8b95af0331d0fb70c7c0f24064a3"
+  },
+  "protected_pe": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+  },
+  "disassembly": "8c30f74234d160d873e161cc2be0745115263b719a95ce195b455edfb4537a43"
+}
