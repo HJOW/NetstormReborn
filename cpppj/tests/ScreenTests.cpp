@@ -16,6 +16,7 @@ using namespace netstorm::client;
 TEST_CASE(ScreenPalette_ReplacementsAndDestructionReleaseGdiObjects) {
     // 검사 참조 DC만 소유하는 도우미다. Screen이 먼저 사라지고 마지막에 참조 DC를 해제한다.
     struct ReferenceDc {
+        // handle: 네이티브 자원이나 등록 대상을 찾는 핸들. 입력 구성 또는 실행 결과 대조에 사용한다.
         HDC handle{};
         // 화면과 호환되는 메모리 DC를 만든다. 바탕 화면이나 창의 선택 객체를 건드리지 않는다.
         ReferenceDc():handle(CreateCompatibleDC(nullptr)) {}

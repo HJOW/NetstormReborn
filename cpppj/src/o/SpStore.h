@@ -20,6 +20,7 @@ public:
     // 시각 기반 재시드(004559d0)가 만든 새 상태를 주입한다.
     void SetState(std::uint32_t state);
 private:
+    // state_: 다음 난수 계산에 소비·갱신하는 32비트 생성기 상태.
     std::uint32_t state_;
 };
 
@@ -49,11 +50,17 @@ public:
 private:
     // 호출마다 같은 오류 문구로 소유자 범위를 거부한다.
     static void CheckOwner(std::uint32_t owner);
+    // rng_: 원본 FUN_004558c0: 상태 0이면 0x0bad0bad로 바꾼 뒤 상태*0x10003+3의 상위 16비트를 limit로 나눈 나머지를 쓴다 (GameRandom).
     GameRandom& rng_;
+    // reseed_: 시각 기반 난수 재시드 값을 공급하는 콜백.
     std::function<std::uint32_t()> reseed_;
+    // fill_: 초기화 전 힙 내용을 재현할 DWORD 채움값.
     std::uint32_t fill_{};
+    // initialized_: 초기화가 완료되어 저장소를 사용할 수 있는지.
     bool initialized_{};
+    // offset_: 각 플레이어의 SP 비트를 저장한 위치의 회전 기준값.
     std::uint32_t offset_{};
+    // pools_: 플레이어별 SP 비트를 분산해 저장하는 32×9 DWORD 배열.
     std::array<std::uint32_t,kBits*kOwners> pools_{};
 };
 }

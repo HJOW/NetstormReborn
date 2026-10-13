@@ -26,6 +26,7 @@ public sealed class Palette
     /// <summary>게임 기본 팔레트 파일 이름 (setup.cfg: fortPal = "gifcloud")</summary>
     public const string GameCol = "GIFCLOUD.COL";
 
+    /// <summary>_colors: 팔레트 인덱스로 조회할 RGB 색 배열.</summary>
     private readonly Rgb[] _colors;
 
     /// <summary>인덱스로 색을 얻는다</summary>

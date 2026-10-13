@@ -13,14 +13,23 @@ constexpr std::size_t kPatchRows=558,kCdRows=446;
 const auto& Fixture() { static const auto rows=LoadFixture(NETSTORM_CONSTRUCTIONLOCAL_FIXTURE).rows;return rows; }
 // 비교에 필요한 입력과 명시 경계만 갖는 장면이다.
 struct LocalScene {
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
     SidPool pool;
+    // types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeRecord> types;
+    // frames: 타입별 프레임 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<PriestPlainCanonType> frames;
+    // spots: 칸별 점유·통행 비트를 읽는 spot 지도. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::uint8_t> spots;
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
     ConstructionLocalState state;
+    // patch: 10.78 패치판의 상태 또는 패치판 검사용 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     bool patch;
+    // input: 처리할 입력 또는 입력 분배기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::uint32_t> input;
+    // events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::string events;
+    // born: 생성시각. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::uint16_t born{};
     // 행마다 자료 주소는 유지하고 내용만 다시 채운다.
     explicit LocalScene(OriginalEdition edition):pool(edition,kCapacity,false),types(edition==OriginalEdition::Patch1078 ? 188 : 171),

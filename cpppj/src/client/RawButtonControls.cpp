@@ -18,18 +18,31 @@ constexpr std::uint32_t kInstant=4;
 }
 // 기본·돌 버튼·배경은 같은 기본 노드 주소로 조회되며 저장소 이동은 하지 않는다.
 struct RawButtonControls::Impl {
-    GumpCreateState create;GumpLifetimeState life;GumpTreeState treeState;GumpEventState eventState;GumpInputState inputState;
+    // create: 등록 표 +0이 실제 루트다. 외부에서 표를 바꿀 때 collection.root도 같은 토큰으로 맞춰야 한다 (GumpCreateState).
+    GumpCreateState create;/* life: 원본의 고정 크기 idle/overlay/삭제/dialog 표와 현재 삭제 전역이다 (GumpLifetimeState). */ GumpLifetimeState life;/* treeState: 원본 지도 화면 영역과 패치판의 밀어내기 링크 진단 전역이다 (GumpTreeState). */ GumpTreeState treeState;/* eventState: 원본 전체 트리 커서 선택의 현재 좌표/필터/최소 signed 깊이/선택 토큰 전역이다 (GumpEventState). */ GumpEventState eventState;/* inputState: overlay 처리기는 호출자의 사건 대신 원본의 별도 사건 코드 전역을 사용한다 (GumpInputState). */ GumpInputState inputState;
+    // buttonState: 실행 중 문자열 ID 전역 네 개와 기본 버튼 색 BYTE다. 사건 ID는 호출자가 실제 초기화 값을 공급한다 (ButtonGumpState).
     ButtonGumpState buttonState{kValueEvent,kClickEvent,kRightEvent,kRepeatEvent,kButtonType};
-    StoneButtonGumpState stoneState;std::int8_t backgroundColor{kBackgroundType};RawButtonAssets assets;RawButtonHooks hooks;
+    // stoneState: 생성 시 읽는 색 BYTE·기본 글자 문맥·팔레트와 현재 배경 타입/프레임 전역이다 (StoneButtonGumpState).
+    StoneButtonGumpState stoneState;/* backgroundColor: 배경 색. */ std::int8_t backgroundColor{kBackgroundType};/* assets: 타입·셰이프·팔레트 자산 또는 해당 자산의 처리 경계. */ RawButtonAssets assets;/* hooks: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (RawButtonHooks). */ RawButtonHooks hooks;
+    // bases: 기본노드.
     std::map<std::uint32_t,std::unique_ptr<GumpCreateNode>> bases;
+    // stones: 돌버튼.
     std::map<std::uint32_t,std::unique_ptr<StoneButtonGumpNode>> stones;
+    // backgrounds: 배경.
     std::map<std::uint32_t,std::unique_ptr<GumpBackgroundNode>> backgrounds;
-    std::map<int,std::uint32_t> controls;std::uint32_t nextToken{},root{};InputEvent currentPoll{InputCode::kRelease,0,0};
-    std::optional<int> activated;bool changed{};
-    GumpBackgroundType backgroundAsset;GumpBackgroundFrame backgroundFrame;
-    std::unique_ptr<GumpCreate> factory;std::unique_ptr<GumpCollection> collection;std::unique_ptr<GumpTree> tree;
-    std::unique_ptr<GumpLifetime> lifetime;std::unique_ptr<GumpEvents> events;std::unique_ptr<GumpInput> input;
-    std::unique_ptr<GumpFrame> frame;std::unique_ptr<ButtonGump> buttons;std::unique_ptr<GumpBackgroundCreate> backgroundCreate;
+    // controls: 입력 대상인 UI 컨트롤의 목록.
+    std::map<int,std::uint32_t> controls;/* nextToken: 새 등록 대상에 부여할 다음 토큰. */ /* root: 현재 UI 트리의 루트 토큰. */ std::uint32_t nextToken{},root{};/* currentPoll: 사건 하나: 코드와 화면 좌표(창 테두리를 뺀 커서 위치) (InputEvent). */ InputEvent currentPoll{InputCode::kRelease,0,0};
+    // activated: 활성화.
+    std::optional<int> activated;/* changed: 상태 변경으로 후속 갱신이 필요한지. */ bool changed{};
+    // backgroundAsset: 실제 타입 저장소의 주소 토큰과 +dc SHP 포인터다. frame 조회 중에도 주소가 안정되어야 한다 (GumpBackgroundType).
+    GumpBackgroundType backgroundAsset;/* backgroundFrame: 실제 SHP 프레임 헤더 +18/+1a의 signed WORD를 부호 확장하기 전 값이다 (GumpBackgroundFrame). */ GumpBackgroundFrame backgroundFrame;
+    // factory: 타입에 맞는 객체를 생성하는 처리기.
+    std::unique_ptr<GumpCreate> factory;/* collection: 화면 밖 자식 통과, 최상위 삭제 필터, 원본의 루트별 제한 개수를 보존하는 UI 수집기다 (std::unique_ptr<GumpCollection>). */ std::unique_ptr<GumpCollection> collection;/* tree: 00466750/CD 00493070의 머리 삽입과 원본의 후속 정렬/현재 자식 재배치를 담당한다 (std::unique_ptr<GumpTree>). */ std::unique_ptr<GumpTree> tree;
+    // lifetime: 등록된 객체의 삭제·해제를 처리하는 수명 관리자.
+    std::unique_ptr<GumpLifetime> lifetime;/* events: 발생한 이벤트 또는 이벤트 처리기. */ std::unique_ptr<GumpEvents> events;/* input: 처리할 입력 또는 입력 분배기. */ std::unique_ptr<GumpInput> input;
+    // frame: 사용할 그림 프레임 또는 프레임 처리 자료.
+    std::unique_ptr<GumpFrame> frame;/* buttons: 돌 버튼 생성/텍스트/부착은 StoneButtonGump에 맡기는 상태 처리기다. GumpEvents/입력/프레임 훅에 연결한다 (std::unique_ptr<ButtonGump>). */ std::unique_ptr<ButtonGump> buttons;/* backgroundCreate: 기본 생성/등록은 GumpCreate, 부착/파괴는 같은 저장소의 GumpTree/GumpLifetime이 맡는다 (std::unique_ptr<GumpBackgroundCreate>). */ std::unique_ptr<GumpBackgroundCreate> backgroundCreate;
+    // stone: 같은 ButtonGump/GumpCreate/GumpTree/GumpLifetime을 사용한다. 자동 Client 연결은 별도 계층이 맡는다 (std::unique_ptr<StoneButtonGump>).
     std::unique_ptr<StoneButtonGump> stone;
     // 모든 분배 훅은 실제 호출 때 현재 노드와 처리기를 조회하여 순환 의존을 연결한다.
     Impl(o::OriginalEdition edition,RawButtonHooks supplied):hooks(std::move(supplied)) {

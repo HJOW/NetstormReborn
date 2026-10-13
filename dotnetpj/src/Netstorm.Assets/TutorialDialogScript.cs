@@ -43,12 +43,22 @@ public enum TutorialTextBreak
 }
 
 /// <summary>화면에 표시할 본문 한 구간.</summary>
+/// <param name="Text">이 구간에 출력할 텍스트.</param>
+/// <param name="Style">글꼴·색·정렬에 적용할 텍스트 스타일.</param>
+/// <param name="BreakBefore">구간 앞에 적용할 줄바꿈 종류.</param>
 public sealed record TutorialTextRun(string Text, TutorialTextStyle Style, TutorialTextBreak BreakBefore);
 
 /// <summary>미션 스크립트의 $Button 명령으로 만든 버튼.</summary>
+/// <param name="Label">표시 문구 또는 패턴 라벨.</param>
+/// <param name="Action">버튼이 실행할 스크립트 동작 이름.</param>
+/// <param name="Argument">동작에 전달할 인자 문자열.</param>
 public sealed record TutorialDialogButton(string Label, string Action, string Argument);
 
 /// <summary>한 안내 섹션의 표시 내용과 버튼.</summary>
+/// <param name="Section">안내가 속한 미션 섹션 이름.</param>
+/// <param name="Title">안내 창에 표시할 제목.</param>
+/// <param name="Runs">출력 순서대로 배치할 텍스트 구간.</param>
+/// <param name="Buttons">안내 창에 표시할 버튼과 동작 목록.</param>
 public sealed record TutorialDialogContent(string Section, string Title, IReadOnlyList<TutorialTextRun> Runs,
     IReadOnlyList<TutorialDialogButton> Buttons)
 {
@@ -84,6 +94,8 @@ public enum TutorialDialogActionKind
 }
 
 /// <summary>튜토리얼 버튼 결과. Argument는 MissionBegin의 미션 이름 또는 오류 설명이다.</summary>
+/// <param name="Kind">안내 동작의 종류.</param>
+/// <param name="Argument">동작에 전달할 인자 문자열.</param>
 public sealed record TutorialDialogAction(TutorialDialogActionKind Kind, string Argument = "");
 
 /// <summary>
@@ -150,7 +162,9 @@ public sealed class TutorialDialogScript
         ? ControlMark.Replace(source.Replace("~~", TildePlaceholder.ToString()), "").Replace(TildePlaceholder, '~')
         : source;
 
+    /// <summary>_script: 섹션과 명령을 읽을 미션 스크립트.</summary>
     private readonly MissionScript _script;
+    /// <summary>_settings: 스크립트의 설정·치환 값을 조회할 저장소.</summary>
     private readonly ConfigStore _settings;
 
     /// <summary>미션 스크립트에 없는 섹션(실패 창 Continue 의 TryAgain 등)을 찾을 공용 메뉴 스크립트 (tell.english, 없으면 null)</summary>
@@ -159,6 +173,7 @@ public sealed class TutorialDialogScript
     /// <summary>{mission.title}·{mission.fileName} 처럼 현재 미션을 가리키는 치환 값 (없으면 null)</summary>
     private readonly IReadOnlyDictionary<string, string>? _missionValues;
 
+    /// <summary>_reviewSection: 복습 동작으로 다시 열 안내 섹션 이름. 없으면 null.</summary>
     private string? _reviewSection;
 
     /// <summary>현재 열린 안내. null이면 닫혀 있다.</summary>

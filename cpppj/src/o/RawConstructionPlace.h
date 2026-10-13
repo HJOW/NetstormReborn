@@ -40,12 +40,21 @@ struct ConstructionPlaceRequest {
 };
 // 메시지 0x6c(11바이트)의 본문: 플레이어에게 보내는 SP 통지다. 원본은 번호 바이트 둘과 1, 정수 금액을 싣는다.
 struct ConstructionMoneyNotice {
+    // player: 플레이어.
+    // source: 원천.
+    // kind: 자료나 동작의 종류를 구별하는 값.
     std::uint8_t player{},source{},kind{1};
+    // amount: 양.
     std::int32_t amount{};
 };
 // 메시지 0x2f(15바이트)의 본문: 배치 취소 통지다. 좌표 비트와 타입·인자·방향의 하위 바이트를 싣는다.
 struct ConstructionRejectNotice {
+    // x: X 좌표.
+    // y: Y 좌표.
     float x{},y{};
+    // type: 타입 표에서 객체 종류를 찾는 번호.
+    // argument: 타입·패턴·명령에 별도로 전달하는 첫 인자.
+    // direction: 방향이나 회전을 선택하는 값.
     std::uint8_t type{},argument{},direction{};
 };
 // 이 모듈 밖의 효과다. 아래 넷(take~pop)과 sendMoney는 두 판본 공통이고 나머지는 패치판에서만 불린다.
@@ -108,11 +117,17 @@ private:
     void ChargeForPlacement(const ConstructionPlaceRequest& request);
     // 004ac220 / CD 004abb00: +0xc 단어를 쓰고 객체 타입이 다리 타입이면 표면 알림을 부른다.
     void SetWord(Sid sid,std::uint16_t word);
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
+    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::span<const RiftTypeRecord> types_;
+    // frames_: 타입별 프레임 자료.
     std::span<const PriestPlainCanonType> frames_;
+    // state_: 건설 배치가 읽고 쓰는 전역과 Player 필드다. 주소는 패치 / CD 순서이며 하나만 있으면 패치판 전용이다 (ConstructionPlaceState).
     ConstructionPlaceState& state_;
+    // reward_: HP·SP·지갑 보상을 실제 장부에 적용하는 처리기.
     const SquidReward& reward_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (ConstructionPlaceHooks).
     ConstructionPlaceHooks hooks_;
 };
 // 수신·소유자 지정·SP 읽기/가산을 같은 풀의 실제 모듈로 바꾼다. Pop·표면 알림·문구·메시지 경계는 받은 그대로 둔다.

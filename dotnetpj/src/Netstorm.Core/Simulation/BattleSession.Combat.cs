@@ -4,6 +4,19 @@ using Netstorm.Core.Rules;
 namespace Netstorm.Core.Simulation;
 
 /// <summary>발사 시 정한 탄 경로와 피해. 캐논은 착탄점에서 충돌을 검사하며 방어선에 흡수된 탄은 목표 번호가 0이다.</summary>
+/// <param name="AttackerId">발사한 엔티티 번호.</param>
+/// <param name="Owner">소유 플레이어 번호.</param>
+/// <param name="TargetId">피해를 받을 목표 엔티티 번호.</param>
+/// <param name="Damage">적중 때 적용할 피해량.</param>
+/// <param name="StartX">시작점의 월드 X 좌표.</param>
+/// <param name="StartY">시작점의 월드 Y 좌표.</param>
+/// <param name="EndX">끝점의 월드 X 좌표.</param>
+/// <param name="EndY">끝점의 월드 Y 좌표.</param>
+/// <param name="FiredTick">발사한 논리 틱.</param>
+/// <param name="ImpactTick">적중 판정을 예약한 논리 틱.</param>
+/// <param name="IsBeam">광선 형태의 즉시 공격인지.</param>
+/// <param name="AttackerType">발사 효과를 고르는 공격자 타입 이름. 없으면 null.</param>
+/// <param name="BlockedByFenceId">발사를 막은 펜스 엔티티 번호. 0은 차단 없음.</param>
 public sealed record CombatShot(int AttackerId, int Owner, int TargetId, double Damage,
     double StartX, double StartY, double EndX, double EndY, long FiredTick, long ImpactTick, bool IsBeam = false,
     string? AttackerType = null, int BlockedByFenceId = 0);

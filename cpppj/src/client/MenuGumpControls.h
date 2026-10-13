@@ -8,8 +8,11 @@ namespace netstorm::client {
 // 같은 기본/메뉴 객체와 원본 ReadInt(key,&value) 경계다. 반환값은 쓰지 않으며 누락 설정은 전달 초기값 0을 유지한다.
 // 설정 조회는 현재 controlled 칸을 바꿀 수 있으므로 실제 Append 직전에 칸을 다시 읽는다.
 struct MenuGumpControlHooks {
+    // node: 토큰에 대응하는 저장 노드를 조회하는 콜백.
     std::function<MenuGumpNode*(std::uint32_t)> node;
+    // base: 파생 처리에서 공통 동작을 위임하는 기본 객체를 조회하는 콜백.
     std::function<GumpCreateNode*(std::uint32_t)> base;
+    // readInt: 설정이나 상태의 정수 값을 조회하는 콜백.
     std::function<void(std::string_view,std::int32_t&)> readInt;
 };
 // 원본 controlled 래퍼의 정상 몸체다. 기존 제목 파서/항목 Append를 공유하며 자동 Client 조립은 후속이다.
@@ -60,11 +63,17 @@ private:
     void Heading(std::string_view text,bool title) const;
     // 문맥 입력을 참조로 유지하고 현재 next/항목 수를 읽는다. 실제 재귀 경로의 순환만 거부한다.
     void CopyChildren(std::uint32_t token,const std::array<std::uint32_t,8>& context,std::vector<std::uint32_t>& active) const;
+    // create_: 등록 표 +0이 실제 루트다. 외부에서 표를 바꿀 때 collection.root도 같은 토큰으로 맞춰야 한다 (GumpCreateState).
     GumpCreateState& create_;
+    // state_: 원본 메뉴 표와 signed index의 DWORD 비트다. 생성/항목 작성은 별도 단계에서 이 표를 채운다 (MenuGumpState).
     const MenuGumpState& state_;
+    // menu_: 원본 메뉴의 정상 프레임/스택 몸체다. 레이아웃/생성/출력/입력은 같은 저장소의 별도 메뉴 처리기가 담당한다 (MenuGump).
     const MenuGump& menu_;
+    // layout_: 좌표 배치 계산 또는 판본별 필드 위치 정보.
     const MenuGumpLayout& layout_;
+    // title_: 화면에 표시할 제목 또는 제목 Gump의 토큰.
     const ScrollingTextGumpMarkup& title_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (MenuGumpControlHooks).
     MenuGumpControlHooks hooks_;
 };
 // 원본 전역 설정 ReadInt 경계를 기존 ConfigInterface에 연결한다. 원본 설정 파일을 쓰지 않는다.

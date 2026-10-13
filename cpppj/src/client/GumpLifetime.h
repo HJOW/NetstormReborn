@@ -6,19 +6,33 @@ namespace netstorm::client {
 // 원본의 고정 크기 idle/overlay/삭제/dialog 표와 현재 삭제 전역이다.
 // CD의 idle 표는 앞 80칸만 사용한다. override 포인터는 collection.overrideHead와 공유한다.
 struct GumpLifetimeState {
+    // idle: 매 프레임 Idle을 호출할 UI 노드 목록.
     std::array<std::uint32_t,500> idle{};
+    // overlay: 화면 위 계층의 출력·입력 대상.
     std::array<std::uint32_t,100> overlay{};
+    // kill: 삭제 요청을 받아 대기 중인 UI 노드 목록.
     std::array<std::uint32_t,1000> kill{};
+    // dialogs: 현재 등록된 다이얼로그 목록.
     std::array<std::uint32_t,16> dialogs{};
+    // killCount: 삭제대기 개수.
+    // dialogCount: 다이얼로그 개수.
+    // focus: 키 입력과 도움말을 전달할 현재 UI 토큰.
+    // currentDialog: 현재 활성 다이얼로그 토큰.
+    // diagnostics: 원본 assert 경계를 대조할 진단 기록.
     std::uint32_t killCount{},dialogCount{},focus{},currentDialog{},diagnostics{};
 };
 // 가상 Push/삭제 소멸자·Form 삭제·CRT free의 명시 경계다. 콜백은 현재 상태를 바꿀 수 있다.
 // node는 실행 중 안정된 주소를 공급하며 가상 deletingDestructor/release만 실제 저장소를 해제한다.
 struct GumpLifetimeHooks {
+    // node: 토큰에 대응하는 저장 노드를 조회하는 콜백.
     std::function<GumpCreateNode*(std::uint32_t)> node;
+    // push: 현재 대상을 처리 목록에 넣는 콜백.
     std::function<void(std::uint32_t)> push;
+    // deleteForm: 부착된 Form을 삭제하는 콜백.
     std::function<void(std::uint32_t,std::uint32_t)> deleteForm;
+    // deletingDestructor: 대상의 삭제 소멸자를 호출하는 콜백.
     std::function<void(std::uint32_t,std::uint32_t)> deletingDestructor;
+    // release: 대상 저장소나 핸들을 해제하는 콜백.
     std::function<void(std::uint32_t)> release;
 };
 // Kill은 자식 우선 요청만 쌓고 Cleanup이 등록 해제 및 가상 소멸자를 실행한다.
@@ -54,8 +68,11 @@ private:
     std::size_t IdleSize() const;
     // 링크 순환을 거부하면서 next를 호출 전에 보관하는 자식 우선 재귀를 유지한다.
     void Recurse(std::uint32_t token,bool destroy,std::vector<std::uint32_t>& active) const;
+    // state_: 등록 표 +0이 실제 루트다. 외부에서 표를 바꿀 때 collection.root도 같은 토큰으로 맞춰야 한다 (GumpCreateState).
     GumpCreateState& state_;
+    // lifetime_: 등록된 객체의 삭제·해제를 처리하는 수명 관리자.
     GumpLifetimeState& lifetime_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (GumpLifetimeHooks).
     GumpLifetimeHooks hooks_;
 };
 }

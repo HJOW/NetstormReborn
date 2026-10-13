@@ -6,17 +6,22 @@
 
 namespace netstorm::client {
 // 원본 +b8 캐시 SHP/+bc 장식 타입/+c0 첫 모서리 프레임이다. 배경 타입/프레임과 독립적으로 보존한다.
-struct GumpDecorationNode: GumpBackgroundNode { std::uint32_t cornerShape{},cornerType{},cornerFrame{}; };
+struct GumpDecorationNode: GumpBackgroundNode { /* cornerShape: 모서리 장식에 사용하는 셰이프 식별자. */ /* cornerType: 모서리 장식의 타입 번호. */ /* cornerFrame: 모서리 장식의 프레임 번호. */ std::uint32_t cornerShape{},cornerType{},cornerFrame{}; };
 // +20 식별 BYTE는 두 PE 초기값 57이다. 타입/프레임은 실제 게임 초기화 결과를 공급해야 한다.
-struct GumpDecorationState { std::int8_t alignment{57};std::uint32_t backgroundType{},backgroundFrame{},cornerType{}; };
+struct GumpDecorationState { /* alignment: 항목의 좌우·상하 정렬을 선택하는 값. */ std::int8_t alignment{57};/* backgroundType: 배경을 출력할 타입 번호. */ /* backgroundFrame: 배경을 출력할 프레임 번호. */ /* cornerType: 모서리 장식의 타입 번호. */ std::uint32_t backgroundType{},backgroundFrame{},cornerType{}; };
 // 원본 타입 +dc SHP/+150(I 글자 첫 프레임)을 현재 자산 조회에서 공급한다.
-struct GumpDecorationType { std::uint32_t shape{},firstFrame{}; };
+struct GumpDecorationType { /* shape: 프레임 그림을 찾는 셰이프 식별자 또는 셰이프 자료. */ /* firstFrame: 프레임 구간의 시작 번호. */ std::uint32_t shape{},firstFrame{}; };
 // 같은 기본/파생 객체·현재 타입·캐시 SHP 원색 출력·half-open 변경 영역 요청의 실제 경계다.
 struct GumpDecorationHooks {
+    // node: 토큰에 대응하는 저장 노드를 조회하는 콜백.
     std::function<GumpDecorationNode*(std::uint32_t)> node;
+    // base: 파생 처리에서 공통 동작을 위임하는 기본 객체를 조회하는 콜백.
     std::function<GumpCreateNode*(std::uint32_t)> base;
+    // type: 타입 표에서 객체 종류를 찾는 번호를 조회하는 콜백.
     std::function<GumpDecorationType(std::uint32_t)> type;
+    // shape: 요청한 셰이프 그림을 조회하거나 출력하는 콜백.
     std::function<void(std::uint32_t,std::uint32_t,ScreenPoint)> shape;
+    // invalidate: 변경한 영역의 재그리기를 요청하는 콜백.
     std::function<void(ScreenRect)> invalidate;
 };
 // 원본의 0xc4 장식 배경 파생 몸체다. Form 객체 전체와 이 장식 배경은 서로 다른 복원 대상이다.
@@ -40,12 +45,19 @@ private:
     GumpCreateNode& Base(std::uint32_t token) const;
     // 모서리 호출마다 현재 캐시 SHP/첫 프레임을 재조회한다. 위치는 Draw가 저장한 값이다.
     void Corner(std::uint32_t token,std::uint32_t offset,ScreenPoint position) const;
+    // create_: 등록 표 +0이 실제 루트다. 외부에서 표를 바꿀 때 collection.root도 같은 토큰으로 맞춰야 한다 (GumpCreateState).
     GumpCreateState& create_;
+    // state_: +20 식별 BYTE는 두 PE 초기값 57이다. 타입/프레임은 실제 게임 초기화 결과를 공급해야 한다 (GumpDecorationState).
     GumpDecorationState& state_;
+    // factory_: 타입에 맞는 객체를 생성하는 처리기.
     const GumpBackgroundCreate& factory_;
+    // background_: 배경 출력 자료 또는 배경 Gump 토큰.
     const GumpBackgroundDraw& background_;
+    // collection_: 화면 밖 자식 통과, 최상위 삭제 필터, 원본의 루트별 제한 개수를 보존하는 UI 수집기다 (GumpCollection).
     const GumpCollection& collection_;
+    // lifetime_: 등록된 객체의 삭제·해제를 처리하는 수명 관리자.
     const GumpLifetime& lifetime_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (GumpDecorationHooks).
     GumpDecorationHooks hooks_;
 };
 // 실제 GameAssets의 타입 번호/현재 SHP와 I 첫 인덱스를 생성 경계에 공급한다.
@@ -60,8 +72,11 @@ public:
 private:
     // 캐시 SHP의 물리 프레임을 해제하고 상대 VFX 좌표를 더해 같은 현재 클립 안에 합성한다.
     void Shape(std::uint32_t shape,std::uint32_t frame,ScreenPoint position);
+    // target_: 버튼 선과 압축 해제한 배경/SHP 그림을 현재 VFX 클립으로 8비트 표면에 합성한다 (GumpPixelTarget).
     const GumpPixelTarget& target_;
+    // assets_: 타입·셰이프·팔레트 자산 또는 해당 자산의 처리 경계.
     const GameAssets& assets_;
+    // images_: 프레임이나 커서 번호별로 읽어 둔 그림 자료.
     std::map<std::pair<std::uint32_t,std::uint32_t>,IndexedImage> images_;
 };
 // 장식의 Draw/Redraw/scalar만 실제 분배에 연결하고 다른 기존 파생 타입 처리를 보존한다.

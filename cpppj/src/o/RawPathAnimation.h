@@ -4,10 +4,14 @@
 #include <functional>
 
 namespace netstorm::o {
+// 경로 애니메이션 외부 동작과 저장소 조회를 연결하는 콜백 묶음이다.
 struct PathAnimationHooks {
+    // unpop: 대상을 공간 등록에서 해제하는 Unpop 콜백.
     std::function<void(Sid,std::uint32_t)> unpop;
+    // repop: 변경한 대상을 공간에 다시 반영하는 Repop 콜백.
     std::function<void(Sid,std::uint32_t)> repop;
 };
+// 보행 프로세스의 도착 프레임 접두(0048bd90 / CD 00480580)와 Squid 방향 조회를 복원한다.
 class RawPathAnimation {
 public:
     // 동일 raw 풀의 프레임 표와 가상 Unpop/현재 위치 Pop을 연결한다.
@@ -23,8 +27,11 @@ public:
 private:
     // 패치 DWORD/CD BYTE의 현재 프레임을 읽고 자산/배열 범위를 확인한다.
     std::int32_t Current(Sid sid) const;
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
+    // frames_: 타입별 프레임 자료.
     std::vector<RiftTypeFrames> frames_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (PathAnimationHooks).
     PathAnimationHooks hooks_;
 };
 }

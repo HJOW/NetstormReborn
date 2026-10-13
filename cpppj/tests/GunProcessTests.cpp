@@ -12,14 +12,26 @@ std::uint64_t Wide(const std::string& value) { return std::stoull(value); }
 const std::vector<std::vector<std::string>>& Rows() { static const auto rows=LoadFixture(NETSTORM_GUNPROCESS_FIXTURE).rows;return rows; }
 // 실제 효과 대신 oracle과 같은 명시 외부 경계를 제공하는 검사 장면이다.
 struct GunScene {
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
     SidPool pool;
+    // types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeRecord> types;
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
     GunProcessState state;
+    // fields: 원본 프로세스의 직접 읽기·쓰기 필드 이미지. 입력 구성 또는 실행 결과 대조에 사용한다.
     GunProcessFields fields;
+    // packet: 패킷. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::array<std::uint8_t,64> packet{};
+    // events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::string> events;
+    // patch: 10.78 패치판의 상태 또는 패치판 검사용 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // exists: 존재 여부. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // shotResult: 발사 결과 여부. 입력 구성 또는 실행 결과 대조에 사용한다.
     bool patch{},exists{},shotResult{};
+    // animation: 암묵적인 런타임 SquidId 변환을 막는 원본 슬롯 번호다 (Sid).
+    // found: 암묵적인 런타임 SquidId 변환을 막는 원본 슬롯 번호다 (Sid).
     Sid animation{},found{};
+    // random: 난수 선택에 사용하는 생성기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::uint32_t random{};
     // native에 등장하는 raw SID만 확보하며 전체 풀 최소 크기는 원본 레이아웃을 따른다.
     explicit GunScene(OriginalEdition edition):pool(edition,kCapacity,false),types(edition==OriginalEdition::Patch1078 ? 188 : 171),patch(edition==OriginalEdition::Patch1078) {

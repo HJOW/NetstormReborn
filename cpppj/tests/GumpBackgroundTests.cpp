@@ -37,6 +37,7 @@ std::string Events(std::span<const GumpTexturePass> passes,ScreenRect clip) {
 }
 // 실제 창 없이 Screen 팔레트 상태만 검사하는 참조 DC다.
 struct ReferenceDc {
+    // value: 읽기·쓰기·통지에 전달하는 값. 입력 구성 또는 실행 결과 대조에 사용한다.
     HDC value{CreateCompatibleDC(nullptr)};
     // 화면보다 오래 살아 있는 참조 DC를 마지막에 해제한다.
     ~ReferenceDc() { if (value) DeleteDC(value); }

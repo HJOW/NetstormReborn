@@ -11,14 +11,22 @@
 namespace netstorm::client {
 // 실제 fortGump A00 헤더와 현재 팔레트다. 픽셀 출력과 raw 배경 생성은 같은 자산을 사용한다.
 struct RawButtonAssets {
+    // type: 타입 표에서 객체 종류를 찾는 번호.
+    // frame: 타입에서 사용할 그림 프레임 번호.
     std::uint32_t type{},frame{};
+    // width: 가로 크기.
+    // height: 세로 크기.
     std::int16_t width{},height{};
+    // palette: 그림의 색 인덱스를 실제 출력 색으로 바꿀 팔레트.
     ButtonPalette palette;
 };
 // 벽 시계/Win32 폴링/효과음은 실제 Client가 공급한다. 비어 있으면 독립 콘솔 관찰 상태를 사용한다.
 struct RawButtonHooks {
+    // now: 현재 시각을 초 단위로 공급하는 콜백.
     std::function<double()> now;
+    // poll: 요청한 키·마우스 버튼의 현재 입력을 폴링하는 콜백.
     std::function<InputEvent(std::uint32_t)> poll;
+    // sound: 해당 동작의 소리를 재생하는 콜백.
     std::function<void()> sound;
 };
 // 안정된 파생 저장소와 실제 원본 UI 처리기를 소유한다. 메뉴 행은 기존 메뉴 어댑터가 처리한다.
@@ -55,6 +63,7 @@ public:
     std::string Report() const;
 private:
     struct Impl;
+    // impl_: 공개 인터페이스 뒤의 구현 상태와 연결 객체.
     std::unique_ptr<Impl> impl_;
 };
 }

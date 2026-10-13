@@ -16,19 +16,33 @@ inline constexpr double ThunderDuration(bool fullScreen) { return fullScreen ? 0
 
 // 원본 +0xc/+0x40c의 원래 색/변경 색과 +0x810 이후 진행 상태다. 색 배열은 부분 팔레트를 앞에서부터 담는다.
 struct PaletteFlashState {
+    // original: 원래.
+    // current: 현재 처리 위치 또는 현재 선택 상태.
     std::array<ScreenColor,256> original{},current{};
+    // interval: 반복 갱신의 시간 간격.
+    // last: 구간 또는 연결 목록의 마지막 항목.
+    // duration: 효과나 재생을 유지할 시간.
     double interval{},last{},duration{};
+    // start: 현재 처리 구간의 시작 위치 또는 시작 시각.
+    // count: 현재 항목 또는 실행 횟수.
     unsigned start{kThunderFirstColor},count{kThunderColorCount};
+    // offset: 배열·파일·좌표 계산에 더할 기준 오프셋.
     std::int32_t offset{64};
     ScreenColor solid{}; // offset 0인 일반 색 전환 경로의 목표 색(+0x82c).
+    // steps: 효과를 진행할 단계 목록 또는 단계 수.
     int steps{};
+    // initialized: 초기화가 완료되어 저장소를 사용할 수 있는지.
     bool initialized{};
 };
 // 시각은 게임 정지와 무관한 프레임 실시간이다. 화면 모드는 생성 시 수명 결정 뒤에도 매 프레임 다시 읽는다.
 struct PaletteFlashHooks {
+    // wallSeconds: 게임 정지와 독립적인 벽 시계 초를 공급하는 콜백.
     std::function<double()> wallSeconds;
+    // fullScreen: 현재 화면 장치가 전체화면인지 조회하는 콜백.
     std::function<bool()> fullScreen;
+    // readPalette: 화면 장치의 현재 팔레트를 읽는 콜백.
     std::function<void(unsigned start,unsigned count,ScreenColor* destination)> readPalette;
+    // applyPalette: 화면 장치에 계산한 팔레트를 적용하는 콜백.
     std::function<void(unsigned start,unsigned count,ScreenColor* colors)> applyPalette;
     std::function<void()> restorePalette; // 당시의 저장 팔레트 전체를 복구한다. 생성 때 읽은 부분 배열을 복구하는 것이 아니다.
 };
@@ -46,7 +60,9 @@ public:
     // 원본 00471820 / CD 004b15d0: 초기화된 전체화면 효과를 중단할 때 저장 팔레트를 복구한다. 중복 취소는 무시한다.
     void Cancel();
 private:
+    // state_: 원본 +0xc/+0x40c의 원래 색/변경 색과 +0x810 이후 진행 상태다. 색 배열은 부분 팔레트를 앞에서부터 담는다 (PaletteFlashState).
     PaletteFlashState& state_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (PaletteFlashHooks).
     PaletteFlashHooks hooks_;
 };
 }

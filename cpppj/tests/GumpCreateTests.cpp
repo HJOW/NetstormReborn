@@ -38,7 +38,9 @@ std::string Encode(const std::array<std::uint32_t,kGumpRegistryCapacity>& entrie
 std::string Globals(const GumpCreateState& s) { return std::to_string(s.count)+","+std::to_string(s.serial)+","+std::to_string(s.screenWidth)+","+std::to_string(s.screenHeight); }
 // 안정된 호스트 저장소와 현재 생성 전역이다.
 struct GumpScene {
+    // nodes: 노드. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::map<std::uint32_t,GumpCreateNode> nodes;
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
     GumpCreateState state;
     // 현재 토큰의 같은 기본/파생 표시 저장소를 반환한다.
     GumpCreateHooks Hooks() { return {[this](auto token)->GumpCreateNode* { const auto it=nodes.find(token);return it==nodes.end() ? nullptr : &it->second; },{}}; }

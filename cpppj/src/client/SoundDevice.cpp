@@ -23,6 +23,7 @@ constexpr DWORD kEffectFlags=0xe2;
 constexpr FOURCC kWave=mmioFOURCC('W','A','V','E'),kFormat=mmioFOURCC('f','m','t',' '),kData=mmioFOURCC('d','a','t','a');
 // mmio 파일을 모든 반환/예외 경로에서 닫는 지역 소유자다. 실제 오디오 장치와 무관하다.
 struct WaveFile {
+    // handle: 네이티브 자원이나 등록 대상을 찾는 핸들.
     HMMIO handle{};
     // 확보한 읽기 파일을 닫는다.
     ~WaveFile() { if (handle) mmioClose(handle,0); }
@@ -115,9 +116,12 @@ std::int32_t SoundFileAttenuation(std::string_view path) {
 struct SoundDevice::Impl {
     // worker의 음악 COM과 주 스레드의 효과음 COM이 토큰 표를 동시에 조회/수정하지 않게 한다.
     std::recursive_mutex mutex;
-    SoundList& list;SoundState& state;SoundFileResolver resolver;std::string language,directory;SoundAssertReport report;
-    HMODULE module{};LPDIRECTSOUND device{};LPDIRECTSOUNDBUFFER primary{};
-    std::map<SoundBuffer,LPDIRECTSOUNDBUFFER> buffers;SoundBuffer next{1};
+    // list: 소리 파일 이름을 항목으로 바꾸는 이름 표다. 원본 bigSoundList와 같은 0x8000바이트 배치를 그대로 쓴다 (SoundList).
+    SoundList& list;/* state: 재생 계층이 읽고 쓰는 원본 전역이다. 값은 클라이언트가 소유한다 (SoundState). */ SoundState& state;/* resolver: 조회함수. */ SoundFileResolver resolver;/* language: 언어. */ /* directory: 디렉터리. */ std::string language,directory;/* report: 보고서. */ SoundAssertReport report;
+    // module: 모듈.
+    HMODULE module{};/* device: 장치. */ LPDIRECTSOUND device{};/* primary: 기본. */ LPDIRECTSOUNDBUFFER primary{};
+    // buffers: 버퍼.
+    std::map<SoundBuffer,LPDIRECTSOUNDBUFFER> buffers;/* next: 다음 항목의 번호 또는 다음 처리 위치. */ SoundBuffer next{1};
     // 클라이언트가 소유한 표/상태와 파일 경계를 보관한다. OS 자원은 확보하지 않는다.
     Impl(SoundList& sounds,SoundState& current,SoundFileResolver find,std::string lang,std::string dir,SoundAssertReport diagnostic)
         :list(sounds),state(current),resolver(std::move(find)),language(std::move(lang)),directory(std::move(dir)),report(std::move(diagnostic)) {}

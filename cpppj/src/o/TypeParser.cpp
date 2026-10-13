@@ -11,7 +11,8 @@ namespace netstorm::o {
 namespace {
 // 자산 문법의 식별자·문자열·숫자·구분자·파일 끝을 구분한다.
 enum class TokenKind { Word, String, Number, Punctuation, End };
-struct Token { TokenKind kind{}; std::string text; double number{}; };
+// 타입 정의 해석에 사용하는 토큰의 종류·문자열·숫자 값이다.
+struct Token { /* kind: 자료나 동작의 종류를 구별하는 값. */ TokenKind kind{}; /* text: 표시하거나 해석할 본문 문자열. */ std::string text; /* number: 번호. */ double number{}; };
 
 // 원본 식별자·플래그 비교에서 쓰는 ASCII 대소문자 규칙.
 bool Equal(std::string_view left, std::string_view right) {
@@ -99,8 +100,11 @@ private:
     }
     // 오류 위치를 붙여 손상된 정의 파일을 찾기 쉽게 한다.
     [[noreturn]] void Fail() const { throw std::runtime_error("Invalid .type syntax near byte " + std::to_string(position_)); }
+    // text_: 표시하거나 해석할 본문 문자열.
     std::string_view text_;
+    // position_: 현재 좌표 또는 저장소의 읽기 위치.
     std::size_t position_{};
+    // token_: 저장소나 분배기에서 대상을 구별하는 토큰.
     Token token_;
 };
 

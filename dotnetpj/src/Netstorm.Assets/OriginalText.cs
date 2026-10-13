@@ -9,6 +9,7 @@ namespace Netstorm.Assets;
 public static class OriginalText
 {
     /// <summary>UTF-8 BOM</summary>
+    /// <summary>Utf8Bom: UTF-8 BOM을 검출할 세 바이트 EF BB BF.</summary>
     private static ReadOnlySpan<byte> Utf8Bom => [0xEF, 0xBB, 0xBF];
 
     /// <summary>잘못된 바이트가 있으면 예외를 던지는 엄격한 UTF-8 디코더 (UTF-8 여부 판별용)</summary>

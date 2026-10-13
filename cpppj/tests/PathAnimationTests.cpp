@@ -12,8 +12,11 @@ namespace {
 // 원본 실행기에 입력한 위치와 판본마다 저장된 관찰 행 수다.
 constexpr float kX=20.75f,kY=21.9f;
 constexpr std::size_t kReadRows=608,kStopRows=1408;
+// PathAnimation 검사에서 같은 풀·상태·처리기를 조립해 입력과 결과를 대조하는 자료형이다.
 struct FixtureData {
+    // codes: 코드. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::map<int,RiftTypeFrames> codes;
+    // rows: 행. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::vector<std::string>> rows;
 };
 // PE/Python 없이 저장한 프레임 표와 독립 관찰 행을 읽는다.
@@ -41,10 +44,15 @@ const FixtureData& Fixture() {
         return result;
     }();return data;
 }
+// PathAnimation 검사에서 같은 풀·상태·처리기를 조립해 입력과 결과를 대조하는 자료형이다.
 struct AnimationScene {
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
     SidPool pool;
+    // frames: 타입별 프레임 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeFrames> frames;
+    // events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::string> events;
+    // patch: 10.78 패치판의 상태 또는 패치판 검사용 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     bool patch;
     // 실행기의 객체 번호 50까지 client 슬롯을 확보한다.
     explicit AnimationScene(OriginalEdition edition):pool(edition,kCapacity,false),

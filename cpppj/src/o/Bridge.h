@@ -20,10 +20,15 @@ inline constexpr int kBridgeCarrierLife = 5;
 inline constexpr int kBridgeMinimumGraphSurfaces = 5;
 // 프레임 코드 플래그: 금 간 프레임과 단단한 프레임.
 inline constexpr std::uint8_t kBridgeCrackedFrame = 0x20, kBridgeHardFrame = 0x40;
+// 다리 수명 변경의 이전 값·남은 값·제거 요청이다.
 struct BridgeLifeChange {
     std::uint16_t word{}; // 제거 경로에서는 원본과 같이 이전 단어를 그대로 둔다.
+    // previous: 임시 작업 뒤 복원할 이전 상태 또는 이전 핸들.
+    // remaining: 남은 수량 또는 남은 수명.
     int previous{}, remaining{};
+    // remove: 제거 여부.
     bool remove{};
+    // removalFlags: 제거 플래그.
     std::uint32_t removalFlags{};
     bool crack{}; // 제거가 아니고 이전 수명 ≥ 5, 새 수명 < 5: 금 간 프레임 전환(00421b60)을 시도한다.
     bool carriers{}; // 제거가 아니고 새 수명 ≤ 5: 칸 위 이동체 확인(004202f0 이후)을 한다.
@@ -38,6 +43,7 @@ struct BridgeDecayMode {
 };
 // 한 칸 처리에서 읽고 바꾸는 다리 객체의 상태다.
 struct BridgeDecayState {
+    // id: 대상을 구별하는 식별 번호.
     std::uint16_t id{};
     std::uint16_t word{}; // Squid +0xc. 수명 비트 외의 비트는 보존한다.
     int frame{}; // 다리 타입 프레임 번호(패치 +36 DWORD, CD +34 byte).
@@ -53,9 +59,13 @@ enum class BridgeDecayEventKind {
     Carriers, // 그 칸 위의 이동체 확인.
     CrackSound, // 시작 칸 위치에서 bridgeCrack.wav.
 };
+// 다리 붕괴 처리에서 발생한 대상·이벤트 종류·플래그이다.
 struct BridgeDecayEvent {
+    // kind: 자료나 동작의 종류를 구별하는 값.
     BridgeDecayEventKind kind{};
+    // id: 대상을 구별하는 식별 번호.
     std::uint16_t id{};
+    // flags: 동작을 선택하는 플래그 비트.
     std::uint32_t flags{};
 };
 enum class BridgeDecayOutcome {
@@ -69,7 +79,9 @@ enum class BridgeDecayOutcome {
     Incomplete, // 접합 고리 등으로 방문 목록이 불완전하다(새 코드의 안전 중단). 상태를 바꾸지 않는다.
     Faulted, // 제거할 칸의 그래프가 254: 원본 예외 지점에서 중단한다(실행 검증 없음).
 };
+// 한 다리 칸의 연결·수명·붕괴 판정 결과이다.
 struct BridgeDecayCell {
+    // outcome: 결과.
     BridgeDecayOutcome outcome{};
     int lowest{}, target{}; // Decayed에서만 뜻이 있다. 0이 아닌 수명이 없으면 lowest는 0이다.
     std::vector<BridgeDecayEvent> events; // 원본 호출 순서.
@@ -77,25 +89,37 @@ struct BridgeDecayCell {
 };
 // 프레임 전환 보조 결과. changed가 거짓이면 프레임은 그대로다.
 struct BridgeFrameChange {
+    // word: 단어.
     std::uint16_t word{};
+    // frame: 타입에서 사용할 그림 프레임 번호.
     int frame{};
+    // changed: 상태 변경으로 후속 갱신이 필요한지.
     bool changed{};
 };
 // 00422490/00422bc0 ↔ CD 00449200/00449250의 스캔 상태. first..last는 양 끝을 포함한다.
 struct BridgeDecayScanState {
+    // first: 구간 또는 연결 목록의 첫 항목.
+    // last: 구간 또는 연결 목록의 마지막 항목.
+    // cursor: 커서.
     std::int32_t first{}, last{}, cursor{};
     double next{}; // 다음 주기가 시작되는 게임 시각.
 };
 // 이번 프레임에 훑는 번호 구간 [begin, end).
 struct BridgeDecayScanStep {
+    // begin: 시작.
+    // end: 현재 처리 구간의 끝 위치 또는 종료 시각.
     std::int32_t begin{}, end{};
 };
 // 004218b0가 남기는 방문 목록과 두 전역 플래그. 실제 수명/그림/삭제는 별도 처리다.
 struct BridgeDecayWalk {
+    // visited: 방문.
     std::vector<std::uint16_t> visited;
+    // shortJunction: 짧은 접합 여부.
+    // canDecay: 가능 붕괴 여부.
     bool shortJunction{}, canDecay{};
     bool complete{true}; // 원본이 무한 재귀할 접합 고리/과도한 깊이는 새 코드에서 중단한다.
 };
+// 다리 연결 상태와 붕괴 수명 계산을 제공하는 처리기이다.
 class Bridge {
 public:
     // 원본 00441e40 ↔ CD 004d2e00: 짝수 방향은 side, 홀수는 variant의 연결을 양쪽에서 검사한다.

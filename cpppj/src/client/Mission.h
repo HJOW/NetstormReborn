@@ -7,6 +7,7 @@
 #include <string_view>
 
 namespace netstorm::client {
+// 미션 이름에 맞는 스크립트를 읽고 섹션을 선택하는 처리기이다.
 class MissionScript {
 public:
     // `mission` 이름의 설정 객체를 만들어 추가 설정 글(원본의 두 번째 인자)과 `missionSpec` 경로의 스크립트를 읽는다.
@@ -29,9 +30,13 @@ public:
     // 미션 파일의 원본 브리핑 본문을 설정 치환 전 상태로 읽는다.
     std::optional<std::string> Section(std::string_view name) const;
 private:
+    // configuration_: 현재 언어와 실행 설정을 조회하는 인터페이스.
     o::ConfigInterface& configuration_;
+    // name_: 이름으로 조회·표시할 때 사용하는 문자열.
     std::string name_;
+    // scriptPath_: 스크립트 경로.
     std::string scriptPath_;
+    // script_: 안내·명령·섹션을 조회할 미션 스크립트.
     o::Config script_;
 };
 }

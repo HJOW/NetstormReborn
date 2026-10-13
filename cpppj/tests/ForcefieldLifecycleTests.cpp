@@ -18,7 +18,8 @@ const std::vector<std::vector<std::string>>& Fixture() {
 }
 // 실제 일반 finder와 동일한 합성 raw/해시를 준비하는 장면이다.
 struct ForcefieldScene {
-    SidPool pool;SquidHash hash;std::vector<RiftTypeRecord> types;bool patch;std::vector<std::string> events;
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
+    SidPool pool;/* hash: 좌표별 객체 후보를 찾는 공간 해시. 입력 구성 또는 실행 결과 대조에 사용한다. */ SquidHash hash;/* types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<RiftTypeRecord> types;/* patch: 10.78 패치판의 상태 또는 패치판 검사용 자료. 입력 구성 또는 실행 결과 대조에 사용한다. */ bool patch;/* events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<std::string> events;
     // 목표/후보 SID를 실제 client 할당 정책으로 확보한다.
     explicit ForcefieldScene(OriginalEdition edition):pool(edition,kCapacity,false),types(edition==OriginalEdition::Patch1078 ? 188 : 171),patch(edition==OriginalEdition::Patch1078) {
         // 입력 후보 61까지 실제 할당을 유지한다.
@@ -81,6 +82,7 @@ void Replay(const char* edition) {
 }
 // 실제 표시 계산기의 콘솔 대상이다. 프레임 변화의 무효화를 관찰한다.
 struct ForcefieldSink final:SquidDisplaySink {
+    // changes: 변경. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::size_t changes{};
     // 창 없이 표시 계산을 수행한다.
     bool Suppressed() const override { return false; }

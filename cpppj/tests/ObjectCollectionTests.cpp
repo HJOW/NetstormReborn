@@ -74,7 +74,9 @@ void ReplayObjects(const std::string& edition) {
 }
 // 계약과 실제 공통 제출 검사용 최소 타입/프레임 저장소다.
 struct ObjectScene {
-    SidPool pool;SquidHash hash;std::vector<RiftTypeRecord> types=std::vector<RiftTypeRecord>(2);
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
+    SidPool pool;/* hash: 좌표별 객체 후보를 찾는 공간 해시. 입력 구성 또는 실행 결과 대조에 사용한다. */ SquidHash hash;/* types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<RiftTypeRecord> types=std::vector<RiftTypeRecord>(2);
+    // shapes: 프레임의 크기·그림 데이터를 조회하는 셰이프 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<SquidDisplayShape> shapes=std::vector<SquidDisplayShape>(2);
     // 판본별 슬롯 폭만 다르게 하며 논리 2/물리 4프레임을 준비한다.
     explicit ObjectScene(OriginalEdition edition=OriginalEdition::Patch1078):pool(edition,24000,false) {

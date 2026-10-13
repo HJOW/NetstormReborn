@@ -24,8 +24,10 @@ public:
     bool Suppressed() const override { return target_.Suppressed(); }
     // 픽셀 영역은 바꾸지 않고 실제 변경 표로 전달한다.
     void Invalidate(o::SquidDisplayRect rect,std::uint32_t flags) override { ++count;target_.Invalidate(rect,flags); }
+    // count: 현재 항목 또는 실행 횟수.
     std::size_t count{};
 private:
+    // target_: Squid 표시 요청을 클라이언트의 렌더러에 전달하는 출력 대상 (client::SquidRenderer).
     client::SquidRenderer target_;
 };
 }

@@ -7,21 +7,28 @@
 #include <vector>
 
 namespace netstorm::o {
-struct SquidDisplayRect { int left{},top{},right{},bottom{}; }; // right/bottom 제외.
+// Squid 출력 요청에서 사용하는 사각형 경계이다.
+struct SquidDisplayRect { /* left: 사각형의 왼쪽 경계. */ /* top: 사각형의 위쪽 경계. */ /* right: 사각형의 오른쪽 경계. */ /* bottom: 사각형의 아래쪽 경계. */ int left{},top{},right{},bottom{}; }; // right/bottom 제외.
+// Squid 표시 프레임의 크기·핫스폿·부가 좌표이다.
 struct SquidDisplayFrame {
     std::int16_t width{},height{},hotspotX{},hotspotY{}; // SHP 프레임 앞 12바이트의 signed short.
     float cellWidth{},cellHeight{}; // 같은 프레임 앞 36바이트의 float. 픽셀 크기와 별도로 해시 단계에 쓴다.
     float cellHotspotX{},cellHotspotY{}; // 월드 수집에서 폭/높이와 같은 float 추가 헤더의 기준점을 사용한다.
 };
+// Squid 표시용 셰이프와 프레임 치수 목록이다.
 struct SquidDisplayShape {
     int frameCount{}; // 타입 +0x114의 클러스터 수. 그림자/abstract 레이어를 포함하지 않는다.
     bool loaded{}; // 원본 타입 +0xdc의 null 여부를 빈 배열과 구별한다.
+    // frames: 타입별 프레임 자료.
     std::vector<SquidDisplayFrame> frames;
 };
+// Squid 출력 좌표를 투영할 화면 영역과 카메라이다.
 struct SquidDisplayView {
     int cameraX{},cameraY{},zoom{65536}; // 원본 카메라 픽셀과 Q16 배율.
+    // viewport: 월드 그림을 투영하고 자를 화면 사각형.
     SquidDisplayRect viewport;
 };
+// Squid 출력 요청을 실제 렌더러에 연결하는 인터페이스이다.
 class SquidDisplaySink {
 public:
     // Renderer 또는 독립 변경 표의 수명을 호출자가 관리한다.
@@ -31,6 +38,7 @@ public:
     // 원본 순서대로 main·shadow 영역과 플래그를 전달한다.
     virtual void Invalidate(SquidDisplayRect rect,std::uint32_t flags)=0;
 };
+// 타입·프레임 자료와 카메라에서 객체 출력 요청을 만드는 처리기이다.
 class SquidDisplay {
 public:
     // 타입 번호와 같은 인덱스의 SHP 목록을 받는다. 두 목록과 sink는 이 객체보다 오래 살아야 한다.
@@ -51,10 +59,15 @@ public:
 private:
     // 패치의 frameCheck(false) 경로에서 invalid frame/null/해제 흔적이면 갱신하지 않는다.
     bool PatchFrameValid(std::size_t type,int frame) const;
+    // edition_: 판본별 필드 배치와 동작을 선택하는 원본 버전.
     OriginalEdition edition_;
+    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::span<const RiftTypeRecord> types_;
+    // shapes_: 프레임의 크기·그림 데이터를 조회하는 셰이프 자료.
     std::span<const SquidDisplayShape> shapes_;
+    // sink_: 계산한 그림 요청을 실제 출력에 전달하는 대상.
     SquidDisplaySink& sink_;
+    // view_: 출력 범위·원점·카메라를 공유하는 뷰.
     SquidDisplayView view_;
 };
 }

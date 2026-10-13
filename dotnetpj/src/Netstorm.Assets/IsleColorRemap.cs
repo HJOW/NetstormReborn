@@ -30,6 +30,7 @@ public sealed class IsleColorRemap
         3, 0xb1, 200, 0xcb, 0xe0, 0xdc, 0xdd, 0xde, 0xdf, 0x72, 0xc9, 0xe2
     ];
 
+    /// <summary>_tables: 소유자색별 isle 팔레트 인덱스 변환표 캐시.</summary>
     private readonly byte[][] _tables = new byte[TargetColors.Length + 1][];
 
     /// <summary>게임 팔레트의 HSL 명도를 기준으로 소유자 색상별 변환표를 만든다.</summary>

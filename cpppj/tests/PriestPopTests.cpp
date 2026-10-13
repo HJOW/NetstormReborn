@@ -19,9 +19,12 @@ const std::vector<std::vector<std::string>>& Fixture() {
 }
 // fixture와 같은 입력/경계를 가지며 일반 Pop은 실제 모듈로 실행하는 장면이다.
 struct PriestPopScene {
-    SidPool pool;GameRandom random;ScrambledSpStore store;SquidPostPopState book;SquidRewardState hpMode;
-    std::vector<RiftTypeRecord> types;std::vector<RiftTypeFrames> frames;std::vector<std::uint8_t> spots;
-    PriestPostPopState priests;SquidHash hash;bool patch;std::vector<std::string> events;
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
+    SidPool pool;/* random: 원본 FUN_004558c0: 상태 0이면 0x0bad0bad로 바꾼 뒤 상태*0x10003+3의 상위 16비트를 limit로 나눈 나머지를 쓴다 (GameRandom). */ GameRandom random;/* store: 패치판이 플레이어별 SP를 32개의 9칸 DWORD 배열에 흩뿌려 보관하는 방식이다 (ScrambledSpStore). */ ScrambledSpStore store;/* book: 등록 목록과 개수의 장부. 입력 구성 또는 실행 결과 대조에 사용한다. */ SquidPostPopState book;/* hpMode: 보상 계산이 읽거나 갱신하는 판본별 전역과 AI 지갑이다. 패치 주소/CD 주소는 괄호에 둔다 (SquidRewardState). */ SquidRewardState hpMode;
+    // types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다.
+    std::vector<RiftTypeRecord> types;/* frames: 타입별 프레임 자료. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<RiftTypeFrames> frames;/* spots: 칸별 점유·통행 비트를 읽는 spot 지도. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<std::uint8_t> spots;
+    // priests: 사제. 입력 구성 또는 실행 결과 대조에 사용한다.
+    PriestPostPopState priests;/* hash: 좌표별 객체 후보를 찾는 공간 해시. 입력 구성 또는 실행 결과 대조에 사용한다. */ SquidHash hash;/* patch: 10.78 패치판의 상태 또는 패치판 검사용 자료. 입력 구성 또는 실행 결과 대조에 사용한다. */ bool patch;/* events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<std::string> events;
     // 원본 client SID와 사제 타입/HP/비용 입력을 준비한다.
     explicit PriestPopScene(OriginalEdition edition):pool(edition,kCapacity,false),store(random,[] { return 1U; }),
         types(edition==OriginalEdition::Patch1078 ? 188 : 171),frames(types.size(),RiftTypeFrames({})),spots(65536),patch(edition==OriginalEdition::Patch1078) {
@@ -91,6 +94,7 @@ void Replay(const char* edition) {
 }
 // 현재 raw 프레임을 읽는 실제 표시 계산기의 콘솔 출력 대상이다.
 struct Sink final:SquidDisplaySink {
+    // changes: 변경. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::size_t changes{};
     // 프레임마다 old/new 영역을 실제 계산한다.
     bool Suppressed() const override { return false; }

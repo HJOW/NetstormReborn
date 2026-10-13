@@ -29,10 +29,13 @@ internal sealed partial class FortMapViewer
     /// <summary>단어와 공백을 분리해 인라인 강조를 유지하며 줄을 감는다.</summary>
     private static readonly Regex TutorialWords = new(@"\S+|\s+", RegexOptions.Compiled);
 
+    /// <summary>_tutorialDialog: 현재 튜토리얼 안내의 텍스트와 동작을 제공하는 스크립트.</summary>
     private TutorialDialogScript? _tutorialDialog;
     /// <summary>초기/후속 단계 10프레임·0.5초 지연과 안내 종료 후 7프레임 재개 잠금. 실제 화면 갱신에서만 진행한다.</summary>
     private MissionDialogFrameGate? _missionDialogFrames;
+    /// <summary>_pendingTutorialAction: 현재 입력 처리 뒤 실행할 튜토리얼 안내 동작.</summary>
     private TutorialDialogAction? _pendingTutorialAction;
+    /// <summary>_tutorialScroll: 튜토리얼 안내 본문을 위로 이동한 스크롤 양.</summary>
     private int _tutorialScroll;
     /// <summary>안내 창 버튼의 누름·떼기 처리기. 번호는 버튼 순번이다 (원본 돌 버튼 규칙 — <see cref="ButtonGump"/>).</summary>
     private readonly ButtonGump _tutorialGump = new();
@@ -464,6 +467,9 @@ internal sealed partial class FortMapViewer
     }
 
     /// <summary>한 화면 줄의 스타일 구간. 글 사이 그림이면 Picture 에 그릴 텍스처가 들어 있고 Text 는 비어 있다.</summary>
+    /// <param name="Text">이 구간에 출력할 텍스트.</param>
+    /// <param name="Style">글꼴·색·정렬에 적용할 텍스트 스타일.</param>
+    /// <param name="Picture">텍스트 대신 출력할 그림. 없으면 null.</param>
     private sealed record TutorialVisualSpan(string Text, TutorialTextStyle Style, Texture2D? Picture = null);
 
     /// <summary>한 화면 줄과 그 줄이 차지하는 높이.</summary>

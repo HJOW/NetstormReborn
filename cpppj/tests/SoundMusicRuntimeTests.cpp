@@ -34,10 +34,18 @@ SoundDeviceHooks UnusedEffects() {
 }
 // IO/COM 입력과 사건을 제공한다. 상태 전이·채우기·실패 정리는 실제 MusicChannel이 수행한다.
 struct RuntimeBoundary {
-    std::vector<std::uint8_t> file;std::array<std::uint8_t,128> output;std::vector<std::string> events;
-    std::size_t position=5;bool opened=true,locked=false,readThrows=false,badRegions=false;
-    int cap=-2,seekFailure{},failed{},split=-1,lockDepth{};std::uint32_t status{},cursor{};
-    std::int32_t createResult{};bool createWrites=true;
+    // file: 읽기·재생에 사용할 파일 이름 또는 열린 파일 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
+    std::vector<std::uint8_t> file;/* output: 처리 결과를 담는 출력 값이나 버퍼. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::array<std::uint8_t,128> output;/* events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<std::string> events;
+    // position: 현재 좌표 또는 저장소의 읽기 위치. 입력 구성 또는 실행 결과 대조에 사용한다.
+    std::size_t position=5;/* opened: 열린 여부. 입력 구성 또는 실행 결과 대조에 사용한다. */ /* locked: 자원 또는 출력 표면이 잠겨 있는지. 입력 구성 또는 실행 결과 대조에 사용한다. */ /* readThrows: 읽기 예외 여부. 입력 구성 또는 실행 결과 대조에 사용한다. */ /* badRegions: 불가 지역 여부. 입력 구성 또는 실행 결과 대조에 사용한다. */ bool opened=true,locked=false,readThrows=false,badRegions=false;
+    // cap: 상한. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // seekFailure: 탐색 실패. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // failed: 실패한. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // split: 분할. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // lockDepth: 중첩된 잠금 요청의 수. 입력 구성 또는 실행 결과 대조에 사용한다.
+    int cap=-2,seekFailure{},failed{},split=-1,lockDepth{};/* status: 상태. 입력 구성 또는 실행 결과 대조에 사용한다. */ /* cursor: 커서. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::uint32_t status{},cursor{};
+    // createResult: 생성 결과. 입력 구성 또는 실행 결과 대조에 사용한다.
+    std::int32_t createResult{};/* createWrites: 생성 쓰기 여부. 입력 구성 또는 실행 결과 대조에 사용한다. */ bool createWrites=true;
     // 출력 전역은 원본 실행기와 같은 감시 바이트로 시작한다.
     RuntimeBoundary() { output.fill(0xa7); }
     // 파일 입력 바이트와 시작 위치다. 실제 디스크는 쓰지 않는다.
@@ -112,7 +120,9 @@ void Seed(MusicChannelState& state,RuntimeBoundary& mock) {
 }
 // 커널 응답만 공급하고 Runtime 정책의 결정은 구현에서 얻는다. worker는 Native W 입력에서 직접 실행한다.
 struct KernelBoundary {
-    RuntimeBoundary& io;bool eventResult=true,threadResult=true,signalResult=true;std::vector<std::uint32_t> waits;std::size_t next{};
+    // io: IO/COM 입력과 사건을 제공한다. 상태 전이·채우기·실패 정리는 실제 MusicChannel이 수행한다 (RuntimeBoundary).
+    RuntimeBoundary& io;/* eventResult: 이벤트 결과 여부. 입력 구성 또는 실행 결과 대조에 사용한다. */ /* threadResult: 스레드 결과 여부. 입력 구성 또는 실행 결과 대조에 사용한다. */ /* signalResult: 신호 결과 여부. 입력 구성 또는 실행 결과 대조에 사용한다. */ bool eventResult=true,threadResult=true,signalResult=true;/* waits: 대기. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<std::uint32_t> waits;/* next: 다음 항목의 번호 또는 다음 처리 위치. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::size_t next{};
+    // worker: 워커에 사용하는 외부 콜백.
     std::function<std::uint32_t()> worker;
     // 같은 사건 목록에 커널/채널 순서를 모은다.
     explicit KernelBoundary(RuntimeBoundary& boundary):io(boundary) {}
@@ -169,7 +179,9 @@ void Replay(const char* edition) {
 }
 // 저장소 밖에 실제 읽기 전용 검사 파일을 만든다. 원본 경로는 수정하지 않는다.
 struct TemporaryFile {
-    std::filesystem::path directory,path;std::vector<std::uint8_t> bytes;
+    // directory: 디렉터리. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // path: 경로. 입력 구성 또는 실행 결과 대조에 사용한다.
+    std::filesystem::path directory,path;/* bytes: 필드 접근이나 파일 읽기에 사용하는 원시 바이트. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<std::uint8_t> bytes;
     // 한 링 버퍼보다 긴 stereo16/22050 Hz WAVE를 만든다.
     TemporaryFile():directory(std::filesystem::temp_directory_path()/("NetstormCppMusicRuntime-"+std::to_string(std::chrono::steady_clock::now().time_since_epoch().count()))),path(directory/"track.mus"),bytes(46+kMusicBufferBytes+32) {
         std::filesystem::create_directories(directory);std::copy_n("RIFF",4,bytes.begin());Put(bytes,4,static_cast<std::uint32_t>(bytes.size()-8));std::copy_n("WAVEfmt ",8,bytes.begin()+8);
@@ -183,8 +195,11 @@ struct TemporaryFile {
 };
 // 실제 파일·스레드를 사용하고 COM만 메모리 버퍼로 공급한다. worker 안에서는 검사 전역을 수정하지 않는다.
 struct LiveBoundary {
-    MusicFileStore files;std::vector<std::uint8_t> buffer=std::vector<std::uint8_t>(kMusicBufferBytes);
-    std::atomic<unsigned> plays{0},releases{0};std::uint32_t status{};std::mutex notifyMutex;std::condition_variable notify;bool locked=false,throwStatus=false;
+    // files: Winmm 파일 핸들은 호스트 객체가 소유하고 raw 채널에는 재사용하지 않는 32비트 토큰만 저장한다 (MusicFileStore).
+    MusicFileStore files;/* buffer: 읽기·쓰기·출력에 재사용하는 버퍼. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<std::uint8_t> buffer=std::vector<std::uint8_t>(kMusicBufferBytes);
+    // plays: 재생. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // releases: 해제. 입력 구성 또는 실행 결과 대조에 사용한다.
+    std::atomic<unsigned> plays{0},releases{0};/* status: 상태. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::uint32_t status{};/* notifyMutex: 통지 뮤텍스. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::mutex notifyMutex;/* notify: 통지. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::condition_variable notify;/* locked: 자원 또는 출력 표면이 잠겨 있는지. 입력 구성 또는 실행 결과 대조에 사용한다. */ /* throwStatus: 발사 상태 여부. 입력 구성 또는 실행 결과 대조에 사용한다. */ bool locked=false,throwStatus=false;
     // 실제 파일 IO와 의미 있는 COM 수명만 연결한다.
     MusicChannelHooks ChannelHooks() {
         MusicChannelHooks h;h.setVolume=[](SoundBuffer,std::int32_t) { return 0; }; // 음량 변경/worker는 같은 명령 잠금 아래 호출한다.

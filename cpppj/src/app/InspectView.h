@@ -7,6 +7,7 @@
 #include <vector>
 
 namespace netstorm::app {
+// 타입·프레임을 지도에 놓아 출력과 입력을 확인하는 검사 화면이다.
 class InspectView {
 public:
     // 보여 줄 내용: "types"는 타입 기본 프레임 표, 그 밖의 값은 미션 이름으로 보고 요새의 오브젝트를 놓는다.
@@ -18,15 +19,23 @@ public:
 private:
     // 월드에 놓은 오브젝트 하나: 월드 칸 좌표, 타입(로딩 순서), 그릴 프레임.
     struct Placed {
+        // cellX: 격자의 X 칸 좌표.
+        // cellY: 격자의 Y 칸 좌표.
         int cellX{}, cellY{};
+        // asset: 출력할 타입 정의와 셰이프 블록을 연결한 자산.
         std::size_t asset{};
+        // frame: 타입에서 사용할 그림 프레임 번호.
         std::size_t frame{};
     };
     // 프레임마다: 입력 큐를 비우고 Esc면 참(종료)을 돌려준다. 화살표 키로 화면을 옮긴다.
     bool Input(netstorm::client::Client& client);
 
+    // view_: 출력 범위·원점·카메라를 공유하는 뷰.
     std::string view_;
+    // placed_: 검사 화면의 칸 좌표에 놓은 타입·프레임 목록.
     std::vector<Placed> placed_;
+    // scrollX_: 카메라 스크롤의 X 원점.
+    // scrollY_: 카메라 스크롤의 Y 원점.
     int scrollX_{}, scrollY_{};
 };
 }

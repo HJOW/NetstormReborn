@@ -40,7 +40,8 @@ std::string DoubleBits(double value) {
 double ParseDouble(const std::string& hex) { return std::bit_cast<double>(static_cast<std::uint64_t>(std::stoull(hex,nullptr,16))); }
 // 소비하는 입력 목록이다. 끝나면 마지막 값을 반복하고 비어 있으면 기본값을 쓴다.
 struct Feed {
-    std::vector<std::string> values;std::size_t used{};
+    // values: 값. 입력 구성 또는 실행 결과 대조에 사용한다.
+    std::vector<std::string> values;/* used: 사용한. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::size_t used{};
     // 하나를 꺼낸다.
     std::string Take(const std::string& fallback) {
         const auto value=values.empty() ? fallback : values[std::min(used,values.size()-1)];++used;return value;
@@ -48,8 +49,10 @@ struct Feed {
 };
 // 원본 실행기의 대체 경계와 같은 사건을 만드는 시험 월드다. 시계/선택 결과/판정은 입력 목록이 정한다.
 struct SceneWorld {
-    SceneMusicState state;GameRandom random;MusicSelectionState names;MusicChannelState primary;
-    std::vector<std::string> events;Feed clock,durations,sacrifice,waiting,option;
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
+    SceneMusicState state;/* random: 원본 FUN_004558c0: 상태 0이면 0x0bad0bad로 바꾼 뒤 상태*0x10003+3의 상위 16비트를 limit로 나눈 나머지를 쓴다 (GameRandom). */ GameRandom random;/* names: 원본 현재 곡 이름의 256바이트 저장 공간이다. strncpy는 첫 255바이트만 쓰고 마지막 바이트를 보존한다 (MusicSelectionState). */ MusicSelectionState names;/* primary: 원본 채널 배치의 상태다. 버퍼/파일은 장치 경계의 32비트 토큰이고, 남은 바이트는 수정하지 않은 원본 필드를 보존한다 (MusicChannelState). */ MusicChannelState primary;
+    // events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
+    std::vector<std::string> events;/* clock: 프레임 판정에 현재 게임 시각을 공급하는 시계. 입력 구성 또는 실행 결과 대조에 사용한다. */ /* durations: 소비하는 입력 목록이다. 끝나면 마지막 값을 반복하고 비어 있으면 기본값을 쓴다 (Feed). */ /* sacrifice: 소비하는 입력 목록이다. 끝나면 마지막 값을 반복하고 비어 있으면 기본값을 쓴다 (Feed). */ /* waiting: 소비하는 입력 목록이다. 끝나면 마지막 값을 반복하고 비어 있으면 기본값을 쓴다 (Feed). */ /* option: 소비하는 입력 목록이다. 끝나면 마지막 값을 반복하고 비어 있으면 기본값을 쓴다 (Feed). */ Feed clock,durations,sacrifice,waiting,option;
     // 원본 초기값과 시험 색 표로 시작한다.
     SceneWorld() { state.tints=kTints; }
     // 곡 길이를 기본 채널 +0x18에 설치한다(곡을 열면 채널이 쓰는 값).
@@ -163,9 +166,13 @@ TEST_CASE(SceneMusic_ReplaysExtra1037) { Replay("original1037"); }
 namespace {
 // 실제 곡 선택·기본 채널·효과음 재생 계층에 이은 시험 스택이다. 파일 열기/버퍼 생성/장치 호출만 모의한다.
 struct RealStack {
-    SceneMusicState state;GameRandom random;MusicSelectionState names;MusicChannelState primary;SoundState sound;SoundList list{OriginalEdition::Patch1078};
-    SoundDeviceHooks device;SoundPlayer player;MusicChannel channel;SoundMusic music;MusicSelection selection;
-    std::vector<std::string> opened,sounds;std::set<std::string> missing;double wall=1000.0;std::uint32_t token=0,live=0;bool thunder=false;
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
+    SceneMusicState state;/* random: 원본 FUN_004558c0: 상태 0이면 0x0bad0bad로 바꾼 뒤 상태*0x10003+3의 상위 16비트를 limit로 나눈 나머지를 쓴다 (GameRandom). */ GameRandom random;/* names: 원본 현재 곡 이름의 256바이트 저장 공간이다. strncpy는 첫 255바이트만 쓰고 마지막 바이트를 보존한다 (MusicSelectionState). */ MusicSelectionState names;/* primary: 원본 채널 배치의 상태다. 버퍼/파일은 장치 경계의 32비트 토큰이고, 남은 바이트는 수정하지 않은 원본 필드를 보존한다 (MusicChannelState). */ MusicChannelState primary;/* sound: 재생 계층이 읽고 쓰는 원본 전역이다. 값은 클라이언트가 소유한다 (SoundState). */ SoundState sound;/* list: 소리 파일 이름을 항목으로 바꾸는 이름 표다. 원본 bigSoundList와 같은 0x8000바이트 배치를 그대로 쓴다 (SoundList). */ SoundList list{OriginalEdition::Patch1078};
+    // device: 재생 계층의 장치 경계다. 원본은 이 자리에서 DirectSound 버퍼의 COM 메서드를 직접 부른다. log를 뺀 여덟 개는 모두 연결해야 한다 (SoundDeviceHooks).
+    SoundDeviceHooks device;/* player: 소리 항목의 재생·정지·재생 여부를 맡는 재생 계층이다 (SoundPlayer). */ SoundPlayer player;/* channel: 한 음악 채널의 제어다. 원본 CRITICAL_SECTION과 같은 재귀 잠금으로 파일/버퍼 상태를 보호한다 (MusicChannel). */ MusicChannel channel;/* music: 효과음과 음악의 공통 음소거 제어다. 최초 PushMute에서 음량을 예약하고 마지막 PopMute에서 최신 예약값을 복원한다 (SoundMusic). */ SoundMusic music;/* selection: 원본 00435200→00435160 / CD 00484aa0→00484a10의 음악 선택 계층이다 (MusicSelection). */ MusicSelection selection;
+    // opened: 열린. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // sounds: 소리. 입력 구성 또는 실행 결과 대조에 사용한다.
+    std::vector<std::string> opened,sounds;/* missing: 누락. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::set<std::string> missing;/* wall: 벽시계. 입력 구성 또는 실행 결과 대조에 사용한다. */ double wall=1000.0;/* token: 저장소나 분배기에서 대상을 구별하는 토큰. 입력 구성 또는 실행 결과 대조에 사용한다. */ /* live: 생존. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::uint32_t token=0,live=0;/* thunder: 썬더 여부. 입력 구성 또는 실행 결과 대조에 사용한다. */ bool thunder=false;
     // 곡 길이를 정하는 파일 길이다: 22050Hz 16비트 스테레오에서 214초에 가까운 바이트 수.
     static constexpr std::uint32_t kLength=18874800;
     // 장치 경계와 모의 파일을 연결해 한 스택을 만든다.

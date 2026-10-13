@@ -6,9 +6,11 @@
 #include <vector>
 
 namespace netstorm::client {
+// 셰이프 그림의 사각형 경계이다.
 struct ShapeRect {
     std::int32_t left{}, top{}, right{}, bottom{}; // 원본의 양 끝을 포함하는 좌표.
 };
+// 셰이프 프레임의 위치·크기와 픽셀 데이터 정보이다.
 struct ShapeFrame {
     std::array<std::uint16_t, 2> bounds{}; // 원본 헤더 순서: 그림 상자 높이·폭.
     std::array<std::uint16_t, 2> origin{}; // 원본 헤더 순서: 그림 상자 안의 기준점 y·x.
@@ -18,21 +20,28 @@ struct ShapeFrame {
     // 좌표 대신 메타데이터가 들어 있는 레코드인지 검사한다. 바이트는 그대로 보존한다.
     bool IsSpecial() const;
 };
+// 같은 셰이프에 속한 프레임과 부가 정보의 묶음이다.
 struct ShapeBlock {
     std::size_t offset{}; // 프레임 주소의 기준이 되는 "1.10" 헤더 위치.
+    // frames: 타입별 프레임 자료.
     std::vector<ShapeFrame> frames;
 };
+// 객체 발자국·출력 크기·핫스폿을 계산할 프레임 치수이다.
 struct SquidFrameMetrics {
     float cellWidth{},cellHeight{}; // SHP의 VFX 앞 36바이트: Pop의 hash level 입력.
     std::int16_t width{},height{},hotspotX{},hotspotY{}; // VFX 앞 12바이트: Renderer 경계 입력.
     float cellHotspotX{},cellHotspotY{}; // VFX 앞 28/24바이트: 월드 표시 수집의 float 기준점.
 };
+// 팔레트 인덱스 픽셀로 구성한 그림이다.
 struct IndexedImage {
+    // width: 가로 크기.
+    // height: 세로 크기.
     std::size_t width{}, height{};
     std::vector<std::uint8_t> indices; // 0과 255도 유효한 불투명 색이다.
     std::vector<std::uint8_t> opacity; // 투명 건너뛰기는 색 번호와 분리하여 0/255로 저장한다.
 };
 
+// 셰이프 블록과 프레임을 읽어 그림으로 변환하는 저장소이다.
 class ShapeDatabase {
 public:
     // 블록 상대 오프셋과 공유 프레임을 해석하고 파일 경계를 검증한다.
@@ -47,7 +56,9 @@ public:
     // RLE를 풀되 투명 픽셀과 팔레트 번호를 각각 보존한다.
     IndexedImage Decode(std::size_t block, std::size_t frame) const;
 private:
+    // bytes_: 필드 접근이나 파일 읽기에 사용하는 원시 바이트.
     std::vector<std::uint8_t> bytes_;
+    // blocks_: 블록.
     std::vector<ShapeBlock> blocks_;
     std::size_t headerEnd_{}; // 추가 헤더가 블록 테이블을 읽는 일을 막는 경계다.
 };

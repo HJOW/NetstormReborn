@@ -16,29 +16,53 @@ std::uint32_t Vtable(std::span<const std::uint8_t> raw) {
 }
 // 콜백이 참조하는 모듈의 주소를 고정하고 순환 참조는 첫 실제 호출 전에 Bind로 해결한다.
 struct RawPriestWorldBindings::Impl {
+    // core: 다른 자산도 사용하는 단일 월드 자료다. 모든 참조는 연결 객체보다 오래 살아야 한다 (RawPriestWorldCore).
     RawPriestWorldCore core;
+    // state: 실제 전역을 보관하는 공유 상태다. 사제 목록 저장소 크기는 월드 초기화에서 명시 설정한다 (RawPriestWorldState).
     RawPriestWorldState& state;
+    // effects: 공간 효과는 월드의 실제 가상 Pop/Unpop/Destroy를 받는다. 계산을 임의 기본값으로 대체하지 않는다 (RawPriestWorldEffects).
     RawPriestWorldEffects effects;
+    // host: Form이나 프로세스의 등록·통지·수명을 연결하는 호스트.
     o::SquidProcessHost* host{};
+    // damageable: 피해 가능한 객체의 HP·삭제·후처리 연결.
     const o::RawDamageablePreDestroy* damageable{};
+    // placement: 최종 배치 허용 여부를 판정하는 처리기 또는 상태.
     const o::RawPriestPlacement* placement{};
+    // fallFrames: 추락 프레임.
     std::vector<o::PriestFallFrames> fallFrames;
+    // lookup: 조건에 맞는 현재 객체를 찾는 조회 처리기.
     std::unique_ptr<o::RawPriestForcefield> lookup;
+    // priest: 사제 상태를 조회·변경하는 처리기 또는 사제 경로 여부.
     std::unique_ptr<o::RawPriestState> priest;
+    // owner: 소유 플레이어 번호 또는 소유권 처리 자료.
     std::unique_ptr<o::RawPriestOwner> owner;
+    // shield: 사제 보호막의 생성·통지·상태 처리 자료.
     std::unique_ptr<o::RawPriestShield> shield;
+    // advance: 글자를 그린 뒤 다음 글자 기준점으로 이동할 폭.
     std::unique_ptr<o::RawFrameAdvance> advance;
+    // fall: 객체 추락 상태와 프레임 진행 처리 자료.
     std::unique_ptr<o::RawPriestFall> fall;
+    // check: 타입/지면이 허용할 때만 walker 낙하를 요청하는 조회 객체다. 상태/HP는 자체 조건이 아니다 (std::unique_ptr<o::RawCarrierCheck>).
     std::unique_ptr<o::RawCarrierCheck> check;
+    // carrierPost: Carrier 확인→Damageable 지면 처리→공통 장부를 직접 호출한다. 파생 가상 지원은 별도다 (std::unique_ptr<o::RawCarrierPostPop>).
     std::unique_ptr<o::RawCarrierPostPop> carrierPost;
+    // prefix: 사제 목록/회복 예약 접두를 실행한다. 전체 postPop 조합에서도 이 접두를 재사용한다 (std::unique_ptr<o::RawPriestPostPop>).
     std::unique_ptr<o::RawPriestPostPop> prefix;
+    // tail: 목록/회복 접두→Carrier→현재 지면/프레임→낙하/보호막을 같은 풀에서 실행한다 (std::unique_ptr<o::RawPriestPostPopTail>).
     std::unique_ptr<o::RawPriestPostPopTail> tail;
+    // carrierPre: 캐리어 전처리.
     std::unique_ptr<o::RawCarrierPreDestroy> carrierPre;
+    // priestPre: 사제 전처리.
     std::unique_ptr<o::RawPriestPreDestroy> priestPre;
+    // fieldPost: 사용: 같은 풀의 실제 예약 훅을 구성한 뒤 SquidPostPop::SetForcefieldPostPop에 등록한다 (std::unique_ptr<o::RawForcefieldPostPop>).
     std::unique_ptr<o::RawForcefieldPostPop> fieldPost;
+    // fieldRegular: 사용: Handle을 Regular 처리기에 연결하고 advance/destroy를 같은 월드의 실제 모듈로 공급한다 (std::unique_ptr<o::RawForcefieldRegular>).
     std::unique_ptr<o::RawForcefieldRegular> fieldRegular;
+    // regen: 사제 HP 회복과 SP 갱신을 처리하는 자료.
     std::unique_ptr<o::RawPriestRegen> regen;
+    // spawn: 사제의 생성·배치·등록 처리 자료.
     std::unique_ptr<o::RawPriestSpawn> spawn;
+    // contained: 객체 내용물의 생성·검색·등록 처리 자료.
     std::unique_ptr<o::RawContainedLookup> contained;
     // 필수 경계는 부분 등록 전에 확인한다. 생성/소유자/프레임은 실제 core 모듈만 사용한다.
     Impl(RawPriestWorldCore input,RawPriestWorldState& globals,RawPriestWorldEffects hooks)

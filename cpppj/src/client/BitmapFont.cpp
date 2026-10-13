@@ -36,9 +36,14 @@ void Put(std::vector<std::uint8_t>& bytes, std::size_t offset, std::uint32_t val
 }
 // GDI 생성 도중 예외가 나도 선택 객체·DC·비트맵·글꼴을 정리한다.
 struct FontGdi {
+    // dc: GDI 출력에 사용하는 장치 컨텍스트.
     HDC dc{};
+    // font: 문자 출력에 사용할 글꼴 또는 글꼴 핸들.
     HFONT font{};
+    // bitmap: GDI 출력에 사용하는 비트맵 핸들.
     HBITMAP bitmap{};
+    // oldFont: GDI 작업 뒤 장치 컨텍스트에 다시 선택할 이전 글꼴.
+    // oldBitmap: GDI 작업 뒤 장치 컨텍스트에 다시 선택할 이전 비트맵.
     HGDIOBJ oldFont{}, oldBitmap{};
     // 선택했던 객체를 복구한 뒤 이 생성 경로에서 소유한 객체만 지운다.
     ~FontGdi() {
@@ -127,7 +132,7 @@ std::unique_ptr<BitmapFont> BitmapFont::Generate(std::string_view face, int heig
         FF_SWISS, std::string(face).c_str());
     if (!gdi.dc || !gdi.font) throw std::runtime_error("Unable to create bitmap font GDI objects");
     // 8비트 DIB의 색 표를 실제 팔레트 번호와 일대일로 만든다.
-    struct FontBitmapInfo { BITMAPINFOHEADER header; RGBQUAD colors[256]; } info{};
+    struct FontBitmapInfo { /* header: Win32 비트맵의 크기·형식을 지정하는 헤더. */ BITMAPINFOHEADER header; /* colors: 팔레트 색 또는 색 인덱스 변환 자료. */ RGBQUAD colors[256]; } info{};
     info.header.biSize = sizeof(BITMAPINFOHEADER); info.header.biWidth = canvasWidth; info.header.biHeight = -canvasHeight;
     info.header.biPlanes = 1; info.header.biBitCount = 8; info.header.biCompression = BI_RGB;
     // 색 번호가 GDI의 PALETTEINDEX 지정과 동일하게 되도록 회색조 표를 채운다.

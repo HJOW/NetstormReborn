@@ -14,13 +14,21 @@ std::vector<RiftTypeRecord> Types(OriginalEdition edition) {
 }
 // 실제 번호 할당과 공통 삭제를 공유하며 장치 경계는 출력/반납을 관찰한다.
 struct World {
-    bool patch;SidPool pool;SquidHash hash;std::vector<std::uint8_t> spots=std::vector<std::uint8_t>(65536);
-    std::vector<RiftTypeRecord> types;SquidUnpop unpop;RawSquidDestroy destroy;Kernel kernel;SquidProcessState clock;
-    SquidProcessHost host;GameRandom random;ConstructionVisualState visualState;ConstructionFrameState frameState;
-    std::array<std::uint32_t,12> colors{0,1,2,3,4,5,6,7,8,9,10,11};ConstructionFramePalette palette{71,11,colors};
-    std::vector<ConstructionRelease> released;std::vector<std::uint32_t> allocations;
-    std::vector<ConstructionFrameRect> dirty;std::vector<std::pair<std::int32_t,std::int32_t>> draws;
-    std::size_t captures{},maximumCalls{};Sid parent{};std::unique_ptr<ConstructionVisualSystem> system;
+    // patch: 10.78 패치판의 상태 또는 패치판 검사용 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
+    bool patch;/* pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다. */ SidPool pool;/* hash: 좌표별 객체 후보를 찾는 공간 해시. 입력 구성 또는 실행 결과 대조에 사용한다. */ SquidHash hash;/* spots: 칸별 점유·통행 비트를 읽는 spot 지도. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<std::uint8_t> spots=std::vector<std::uint8_t>(65536);
+    // types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다.
+    std::vector<RiftTypeRecord> types;/* unpop: 객체의 공간 등록을 해제하는 Unpop 처리기. 입력 구성 또는 실행 결과 대조에 사용한다. */ SquidUnpop unpop;/* destroy: 객체 삭제의 전처리·공간 해제·후처리를 실행하는 처리기. 입력 구성 또는 실행 결과 대조에 사용한다. */ RawSquidDestroy destroy;/* kernel: 프로세스 등록과 프레임 실행을 담당하는 커널. 입력 구성 또는 실행 결과 대조에 사용한다. */ Kernel kernel;/* clock: 프레임 판정에 현재 게임 시각을 공급하는 시계. 입력 구성 또는 실행 결과 대조에 사용한다. */ SquidProcessState clock;
+    // host: Form이나 프로세스의 등록·통지·수명을 연결하는 호스트. 입력 구성 또는 실행 결과 대조에 사용한다.
+    SquidProcessHost host;/* random: 원본 FUN_004558c0: 상태 0이면 0x0bad0bad로 바꾼 뒤 상태*0x10003+3의 상위 16비트를 limit로 나눈 나머지를 쓴다 (GameRandom). */ GameRandom random;/* visualState: 표시 생성이 공유하는 전역이다. 실제 월드/클라이언트가 소유하며 경계 뒤 현재 값을 다시 읽는다 (ConstructionVisualState). */ ConstructionVisualState visualState;/* frameState: 현재 프레임 변경과 관련 통지에 사용하는 상태. 입력 구성 또는 실행 결과 대조에 사용한다. */ ConstructionFrameState frameState;
+    // colors: 팔레트 색 또는 색 인덱스 변환 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
+    std::array<std::uint32_t,12> colors{0,1,2,3,4,5,6,7,8,9,10,11};/* palette: 그림의 색 인덱스를 실제 출력 색으로 바꿀 팔레트. 입력 구성 또는 실행 결과 대조에 사용한다. */ ConstructionFramePalette palette{71,11,colors};
+    // released: 해제된. 입력 구성 또는 실행 결과 대조에 사용한다.
+    std::vector<ConstructionRelease> released;/* allocations: 할당. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<std::uint32_t> allocations;
+    // dirty: 갱신요청. 입력 구성 또는 실행 결과 대조에 사용한다.
+    std::vector<ConstructionFrameRect> dirty;/* draws: 그리기. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<std::pair<std::int32_t,std::int32_t>> draws;
+    // captures: 캡처. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // maximumCalls: 최댓값 호출. 입력 구성 또는 실행 결과 대조에 사용한다.
+    std::size_t captures{},maximumCalls{};/* parent: 부착·통지 대상인 부모 객체 또는 부모 SID. 입력 구성 또는 실행 결과 대조에 사용한다. */ Sid parent{};/* system: 원본 복원 몸체를 묶는 호스트 어댑터다. 장치 출력/클라이언트 깊이 정렬은 외부 단계다 (std::unique_ptr<ConstructionVisualSystem>). */ std::unique_ptr<ConstructionVisualSystem> system;
     // 부모와 form은 각각 서버/client 번호에서 실제로 할당한다. 삭제 장면의 자산 효과는 완료 통지만 처리한다.
     explicit World(OriginalEdition edition):patch(edition==OriginalEdition::Patch1078),pool(edition,kCapacity,true),types(Types(edition)),
         unpop(pool,hash,spots),destroy(pool,unpop,types),host(pool,types,kernel,destroy,clock,{},AssetHooks()) {

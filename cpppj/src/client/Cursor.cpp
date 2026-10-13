@@ -13,9 +13,13 @@ constexpr int kCursorSide = 32;
 constexpr std::uint8_t kCursorBackground = 103;
 // 실패 경로에서도 임시 DIB·DC·아이콘 정보를 정리한다.
 struct CursorGdi {
+    // dc: GDI 출력에 사용하는 장치 컨텍스트.
     HDC dc{};
+    // bitmap: GDI 출력에 사용하는 비트맵 핸들.
     HBITMAP bitmap{};
+    // previous: 임시 작업 뒤 복원할 이전 상태 또는 이전 핸들.
     HGDIOBJ previous{};
+    // icon: 생성한 Win32 커서·아이콘 핸들.
     ICONINFO icon{};
     // 임시로 소유한 GDI 자원만 해제한다.
     ~CursorGdi() {
@@ -49,7 +53,8 @@ void Cursor::BuildSoftware(std::span<const ScreenColor> palette) {
         const HCURSOR cursor = resources_ ? LoadCursorA(static_cast<HINSTANCE>(resources_), MAKEINTRESOURCEA(kCursorResources[i])) : LoadCursorA(nullptr, IDC_ARROW);
         if (!cursor || !GetIconInfo(cursor, &gdi.icon)) throw std::runtime_error("Unable to read cursor hotspot");
         gdi.dc = CreateCompatibleDC(nullptr);
-        struct CursorBitmapInfo { BITMAPINFOHEADER header; RGBQUAD colors[256]; } info{};
+        // 커서 비트맵을 만들 Win32 헤더와 256색 팔레트이다.
+        struct CursorBitmapInfo { /* header: Win32 비트맵의 크기·형식을 지정하는 헤더. */ BITMAPINFOHEADER header; /* colors: 팔레트 색 또는 색 인덱스 변환 자료. */ RGBQUAD colors[256]; } info{};
         info.header.biSize = sizeof(BITMAPINFOHEADER); info.header.biWidth = kCursorSide; info.header.biHeight = -kCursorSide;
         info.header.biPlanes = 1; info.header.biBitCount = 8; info.header.biCompression = BI_RGB;
         // 화면 팔레트의 BGRX 순서를 GDI 색 표에 그대로 옮긴다.

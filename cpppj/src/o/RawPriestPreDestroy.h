@@ -3,12 +3,14 @@
 #include "o/RawPriestPostPop.h"
 
 namespace netstorm::o {
+// 사제 전처리 삭제 외부 동작과 저장소 조회를 연결하는 콜백 묶음이다.
 struct PriestPreDestroyHooks {
     std::function<Sid(Sid)> findForcefield; // 동일 소유자/위치의 보호막 조회다. MakePriestForcefieldHooks로 실제 finder에 연결한다.
     std::function<void(Sid,std::uint32_t)> destroyForcefield; // 반환 SID가 풀 범위 안이면 가상 destroy(flags=0)를 요청한다.
     std::function<void(Sid,std::uint32_t)> validateCarrier; // 순수 사전 검사다. raw/목록을 바꾸지 않고 미연결 하위 효과를 거부한다.
     std::function<void(Sid,std::uint32_t)> carrierPre; // Carrier→Damageable의 전체 삭제 준비는 명시적인 외부 경계다.
 };
+// 사제 preDestroy의 목록 제거·보호막 삭제 요청·Carrier 호출 순서를 복원한다.
 class RawPriestPreDestroy {
 public:
     // postPop과 같은 사제 목록을 받는다. 상태/훅의 참조 대상은 이 객체보다 오래 살아야 한다.
@@ -20,8 +22,11 @@ public:
     const SidPool& Pool() const;
     bool Handles(Sid sid) const;
 private:
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
+    // state_: 처리 중 조회·갱신하는 상태 (PriestPostPopState).
     PriestPostPopState& state_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (PriestPreDestroyHooks).
     PriestPreDestroyHooks hooks_;
 };
 // 사제 PreDestroy만 새 몸체로 분배하고 다른 삭제 사건/선택/form 훅은 fallback으로 넘긴다.

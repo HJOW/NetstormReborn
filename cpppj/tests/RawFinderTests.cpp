@@ -57,10 +57,15 @@ std::string Snapshot(const RawSquidFinder& finder) {
 }
 // 합성 슬롯을 유지하고 장면마다 체인/좌표/타입/상태를 다시 입력한다.
 struct Scene {
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
     SidPool pool;
+    // hash: 좌표별 객체 후보를 찾는 공간 해시. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidHash hash;
+    // slots: 등록 대상의 저장 슬롯 목록. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::array<std::span<std::uint8_t>,65> slots{};
+    // types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeRecord> types{256};
+    // heights: 높이. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<int> heights=std::vector<int>(256);
     // 이미 할당한 슬롯에 free 비트 입력도 가능하게 한다. 풀 자체의 할당 검증과 구분한다.
     explicit Scene(OriginalEdition edition):pool(edition,kCapacity,false) {

@@ -10,16 +10,27 @@ namespace netstorm::client {
 // clearStyle은 기존 소유 내용을 해제하고 items[index].styled를 비운다. parseStyle은 새 결과 토큰을 같은 필드에 저장한다.
 // push/attach는 MenuGump의 크기 훅과 같은 가상 분배를 공급한다. plain/styled/marker는 항목 문자열을 측정한다.
 struct MenuGumpLayoutHooks {
+    // node: 토큰에 대응하는 저장 노드를 조회하는 콜백.
     std::function<MenuGumpNode*(std::uint32_t)> node;
+    // baseNode: 파생 노드와 공유하는 기본 Gump 노드를 조회하는 콜백.
     std::function<GumpCreateNode*(std::uint32_t)> baseNode;
+    // plain: 일반 텍스트 항목의 출력 크기를 측정하는 콜백.
     std::function<std::array<std::int32_t,2>(std::uint32_t,std::size_t,const std::array<std::uint32_t,8>&)> plain;
+    // styled: 스타일 텍스트 항목의 출력 크기를 측정하는 콜백.
     std::function<std::array<std::int32_t,2>(std::uint32_t,std::size_t)> styled;
+    // marker: 선택·체크 표식을 지정 위치에 그리는 콜백.
     std::function<std::array<std::int32_t,2>(std::uint32_t,const std::array<std::uint32_t,8>&)> marker;
+    // clearStyle: 항목의 이전 스타일 텍스트 자료를 비우는 콜백.
     std::function<void(std::uint32_t,std::size_t)> clearStyle;
+    // parseStyle: 문자열과 출력 문맥으로 스타일 텍스트를 해석하는 콜백.
     std::function<void(std::uint32_t,std::size_t,std::string_view,const std::array<std::uint32_t,8>&)> parseStyle;
+    // push: 현재 대상을 처리 목록에 넣는 콜백.
     std::function<void(std::uint32_t)> push;
+    // titleFit: 메뉴 너비에 맞춰 제목 크기를 조정하는 콜백.
     std::function<void(std::uint32_t,std::uint32_t)> titleFit;
+    // titleLayout: 메뉴 제목의 실제 배치를 적용하는 콜백.
     std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)> titleLayout;
+    // attach: 대상을 부모 또는 처리 목록에 부착하는 콜백.
     std::function<void(std::uint32_t,float,float,std::uint32_t,std::uint32_t)> attach;
 };
 // 같은 메뉴 프레임/기본 저장소를 사용하며 문자열 처리 뒤 실제 전체 크기를 다시 계산한다.
@@ -43,8 +54,11 @@ private:
     MenuGumpNode& Node(std::uint32_t token) const;
     GumpCreateNode& BaseNode(std::uint32_t token) const;
     MenuGumpItem& Item(std::uint32_t token,std::size_t index) const;
+    // create_: 등록 표 +0이 실제 루트다. 외부에서 표를 바꿀 때 collection.root도 같은 토큰으로 맞춰야 한다 (GumpCreateState).
     GumpCreateState& create_;
+    // menu_: 원본 메뉴의 정상 프레임/스택 몸체다. 레이아웃/생성/출력/입력은 같은 저장소의 별도 메뉴 처리기가 담당한다 (MenuGump).
     const MenuGump& menu_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (MenuGumpLayoutHooks).
     MenuGumpLayoutHooks hooks_;
 };
 // 원본 항목의 60바이트를 직렬화한다. NUL이 없는 40바이트 라벨도 뒤 DWORD의 바이트까지 측정할 수 있다.

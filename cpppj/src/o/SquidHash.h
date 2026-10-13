@@ -5,6 +5,7 @@
 #include "o/TerrainBuilder.h"
 
 namespace netstorm::o {
+// 월드 좌표와 높이 단계에 따라 객체의 SID 연결 목록을 관리하는 공간 해시이다.
 class SquidHash {
 public:
     // 패치 005424f8 / CD 0052d598: 각 해시 버킷이 담당하는 월드 칸 한 변이다.
@@ -36,7 +37,9 @@ public:
 private:
     // 배열 밖/잘못된 단계를 원본 포인터 산술로 진행하지 않고 오류로 보고한다.
     static std::size_t Index(int level,int x,int y);
+    // heads_: 머리.
     std::array<std::vector<std::uint16_t>,4> heads_;
+    // selected_: 현재 선택한 객체·컨트롤의 번호 또는 토큰.
     int selected_{};
 };
 }

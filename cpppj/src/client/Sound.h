@@ -132,11 +132,17 @@ private:
     void Put(std::uint32_t offset,std::uint32_t value);
     // 보고 함수가 연결돼 있으면 원본 assert 보고를 전달한다.
     void Report(std::string_view expression,int line) const;
+    // edition_: 판본별 필드 배치와 동작을 선택하는 원본 버전.
     o::OriginalEdition edition_;
+    // report_: 보고서.
     SoundAssertReport report_;
+    // raw_: 원시.
     std::vector<std::uint8_t> raw_;
+    // firstFree_: 자유 슬롯 목록의 머리 번호.
     std::uint32_t firstFree_{};
+    // fallback_: 대체처리.
     SoundHandle fallback_{};
+    // initialized_: 초기화가 완료되어 저장소를 사용할 수 있는지.
     bool initialized_{};
 };
 
@@ -144,10 +150,10 @@ private:
 // 사용: 클라이언트가 화면 크기나 카메라가 바뀔 때 갱신한다. right − left가 2 이상이어야 한다(아니면 계산 함수가 std::domain_error를 던진다).
 // 원본: 카메라 원점 DAT_0059a91c/0059a920 (CD 00565c34/00565c38), 화면 영역 DAT_005ca9cc~005ca9d8 (CD 00583e20~00583e2c).
 // 이력: 2026-10-10 추가.
-struct SoundView { std::int32_t cameraX{},cameraY{},left{},top{},right{640},bottom{480}; };
+struct SoundView { /* cameraX: 월드에서 화면에 투영할 카메라 X 원점. */ /* cameraY: 월드에서 화면에 투영할 카메라 Y 원점. */ /* left: 사각형의 왼쪽 경계. */ /* top: 사각형의 위쪽 경계. */ /* right: 사각형의 오른쪽 경계. */ /* bottom: 사각형의 아래쪽 경계. */ std::int32_t cameraX{},cameraY{},left{},top{},right{640},bottom{480}; };
 // 화면 픽셀 좌표의 한 점이다.
 // 이력: 2026-10-10 추가.
-struct SoundPoint { std::int32_t x{},y{}; };
+struct SoundPoint { /* x: X 좌표. */ /* y: Y 좌표. */ std::int32_t x{},y{}; };
 // 월드 좌표(칸 단위)를 화면 픽셀로 바꾼다: x × 16 + 0.5, y × 11 + 0.5를 0쪽으로 절삭해 카메라 원점을 뺀다.
 // 절삭은 원본 CRT처럼 64비트로 한 뒤 하위 32비트를 쓴다(범위를 넘거나 NaN이면 0).
 // 원본: 00497220 / CD 00455c90 (소속 미확인 — Sound.cpp가 아니라 좌표 도우미다).
@@ -199,7 +205,7 @@ struct SoundState {
 // attenuation은 파일 이름의 "-숫자"에서 읽은 감쇠다(없으면 0). buffer가 0이면 attenuation은 쓰이지 않는다.
 // 원본: 004a9170 / CD 00438000이 항목의 +0과 +0xc에 쓰는 값.
 // 이력: 2026-10-10 추가.
-struct SoundLoad { SoundBuffer buffer{};std::int32_t attenuation{}; };
+struct SoundLoad { /* buffer: 읽기·쓰기·출력에 재사용하는 버퍼. */ SoundBuffer buffer{};/* attenuation: 감쇠. */ std::int32_t attenuation{}; };
 // 재생 계층의 장치 경계다. 원본은 이 자리에서 DirectSound 버퍼의 COM 메서드를 직접 부른다. log를 뺀 여덟 개는 모두 연결해야 한다.
 // 사용: 장치 계층(또는 검사용 상태표)을 넣어 SoundPlayer에 넘긴다. 반환값은 원본 HRESULT 그대로다(음수 = 실패).
 // 이력: 2026-10-10 추가.
@@ -209,10 +215,14 @@ struct SoundDeviceHooks {
     // Play(+0x30)의 flags(1 = 반복). 앞의 두 인자는 원본에서 항상 0이다.
     std::function<void(SoundBuffer,std::uint32_t)> play;
     // SetCurrentPosition(+0x34).
+    // setPosition: 소리 버퍼의 현재 재생 위치를 설정하는 콜백.
     std::function<void(SoundBuffer,std::uint32_t)> setPosition;
     // SetVolume(+0x3c), SetPan(+0x40).
+    // setVolume: 소리 버퍼의 감쇠 음량을 설정하는 콜백.
+    // setPan: 소리 버퍼의 좌우 팬 값을 설정하는 콜백.
     std::function<std::int32_t(SoundBuffer,std::int32_t)> setVolume,setPan;
     // Stop(+0x48).
+    // stop: 소리 버퍼의 재생을 중지하는 콜백.
     std::function<void(SoundBuffer)> stop;
     // IDirectSound::DuplicateSoundBuffer(+0x14): 성공하면 copy에 새 버퍼를 쓴다.
     std::function<std::int32_t(SoundBuffer original,SoundBuffer& copy)> duplicate;
@@ -311,9 +321,13 @@ private:
     void Log(std::uint32_t channel,const std::string& text) const;
     // 보고 경계가 연결돼 있으면 (조건식, 줄)을 전달한다. 돌아온 뒤 호출자가 실행을 계속한다.
     void Report(std::string_view expression,int line) const;
+    // list_: 소리 파일 이름을 항목으로 바꾸는 이름 표다. 원본 bigSoundList와 같은 0x8000바이트 배치를 그대로 쓴다 (SoundList).
     SoundList& list_;
+    // state_: 재생 계층이 읽고 쓰는 원본 전역이다. 값은 클라이언트가 소유한다 (SoundState).
     SoundState& state_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (SoundDeviceHooks).
     SoundDeviceHooks hooks_;
+    // report_: 보고서.
     SoundAssertReport report_;
 };
 }

@@ -38,6 +38,14 @@ public enum BuildingRestriction
 public sealed partial class BattleSession
 {
     /// <summary>한 번 계산한 사제 도달 판정의 열쇠 (같은 자리에서 미리보기가 매 프레임 길 탐색을 되풀이하지 않게 한다)</summary>
+    /// <param name="BuilderId">경로를 검사할 건설 유닛 번호.</param>
+    /// <param name="FromX">경로 시작 칸의 X 좌표.</param>
+    /// <param name="FromY">경로 시작 칸의 Y 좌표.</param>
+    /// <param name="Left">검사 영역의 왼쪽 칸 경계.</param>
+    /// <param name="Top">검사 영역의 위쪽 칸 경계.</param>
+    /// <param name="Right">검사 영역의 오른쪽 칸 경계.</param>
+    /// <param name="Bottom">검사 영역의 아래쪽 칸 경계.</param>
+    /// <param name="BridgeVersion">경로 캐시가 계산된 다리 격자 버전.</param>
     private readonly record struct RouteProbe(int BuilderId, int FromX, int FromY, int Left, int Top, int Right, int Bottom, int BridgeVersion);
 
     /// <summary>가장 최근 사제 도달 판정 (규칙·검사합과 무관한 캐시)</summary>

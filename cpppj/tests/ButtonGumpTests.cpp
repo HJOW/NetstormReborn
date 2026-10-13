@@ -42,9 +42,13 @@ void ReadTable(const std::string& text,std::span<std::uint32_t> output) {
 }
 // 전체 raw 미사용 바이트와 의미별 버튼 상태를 함께 보관한다. 배경 +b4는 별도 의미별 저장소다.
 struct ButtonRecord {
+    // node: 기본 0xa0 필드는 기존 저장소와 공유한다. 아래 필드는 +a0/+a4/+a8/+ac/+b0/+b8/+100에 대응한다 (ButtonGumpNode).
     ButtonGumpNode node;
+    // original: 원래. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::uint8_t> original;
+    // backgroundFlags: 배경 타일·누름 표시의 출력 플래그. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::uint32_t backgroundFlags{};
+    // background: 배경 출력 자료 또는 배경 Gump 토큰. 입력 구성 또는 실행 결과 대조에 사용한다.
     bool background{};
     // 전체 원본 바이트를 의미별 노드로 읽고 파생 분배 종류는 보존한다.
     void Read(std::vector<std::uint8_t> raw) {
@@ -66,23 +70,41 @@ struct ButtonRecord {
 };
 // 안정된 노드/공통 표와 명시 응답·벽시계·투영을 보관하며 콜백 당시 전체 상태를 기록한다.
 struct ButtonScene {
+    // create: 등록 표 +0이 실제 루트다. 외부에서 표를 바꿀 때 collection.root도 같은 토큰으로 맞춰야 한다 (GumpCreateState).
     GumpCreateState create;
+    // lifetime: 등록된 객체의 삭제·해제를 처리하는 수명 관리자. 입력 구성 또는 실행 결과 대조에 사용한다.
     GumpLifetimeState lifetime;
+    // event: 대상 처리기에 전달할 이벤트 ID. 입력 구성 또는 실행 결과 대조에 사용한다.
     GumpEventState event;
+    // input: 처리할 입력 또는 입력 분배기. 입력 구성 또는 실행 결과 대조에 사용한다.
     GumpInputState input;
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
     ButtonGumpState state{0x12345,0x12346,0x12347,0x12348,56};
+    // records: 기록. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::map<std::uint32_t,ButtonRecord> records;
+    // responses: 응답. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::map<std::string,std::vector<std::array<std::uint32_t,3>>> responses;
+    // anchors: 앵커. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::map<std::uint32_t,ScreenPoint> anchors;
+    // times: 시각. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::uint64_t> times;
+    // poll: 사건 하나: 코드와 화면 좌표(창 테두리를 뺀 커서 위치) (InputEvent).
     InputEvent poll{0x10000,999,888};
+    // parentReturns: 부모 반환. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::array<std::uint32_t,6> parentReturns{1,1,1,1,1,1};
+    // baseReturn: 기본 반환. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::uint32_t baseReturn{0x81234567};
+    // timeIndex: 시각 인덱스. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::size_t timeIndex{};
+    // calls: 호출 횟수 또는 호출 인자를 대조하는 기록. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::string calls;
+    // eventHooks: 실제 가상 +0x34 이벤트 필터와 +0x28 처리기를 공급한다. 콜백은 현재 링크/전역을 바꿀 수 있다 (GumpEventHooks).
     GumpEventHooks eventHooks;
+    // inputHooks: 가상 +0x28과 dialog 한도 로그의 경계다. 콜백은 현재 캡처/표/노드를 바꿀 수 있다 (GumpInputHooks).
     GumpInputHooks inputHooks;
+    // frameHooks: node는 처리 동안 안정된 노드를 제공한다. 세 가상 콜백은 같은 표/링크/플래그를 변경할 수 있다 (GumpFrameHooks).
     GumpFrameHooks frameHooks;
+    // dispatch: 돌 버튼 생성/텍스트/부착은 StoneButtonGump에 맡기는 상태 처리기다. GumpEvents/입력/프레임 훅에 연결한다 (ButtonGump).
     const ButtonGump* dispatch{};
     // CD는 idle 앞 80칸만 활성이다.
     std::size_t IdleSize() const { return create.collection.edition==netstorm::o::OriginalEdition::Patch1078 ? 500U : 80U; }
@@ -176,13 +198,21 @@ struct ButtonScene {
 };
 // 모든 모듈이 같은 저장소를 참조하고 실제 캡처/idle/부모 전달/기본 생성/팝업 Kill을 사용한다.
 struct ButtonRig {
+    // scene: 안정된 노드/공통 표와 명시 응답·벽시계·투영을 보관하며 콜백 당시 전체 상태를 기록한다 (ButtonScene).
     ButtonScene& scene;
+    // factory: 타입에 맞는 객체를 생성하는 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     GumpCreate factory;
+    // lifetime: 등록된 객체의 삭제·해제를 처리하는 수명 관리자. 입력 구성 또는 실행 결과 대조에 사용한다.
     GumpLifetime lifetime;
+    // collection: 화면 밖 자식 통과, 최상위 삭제 필터, 원본의 루트별 제한 개수를 보존하는 UI 수집기다 (GumpCollection).
     GumpCollection collection;
+    // events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     GumpEvents events;
+    // input: 처리할 입력 또는 입력 분배기. 입력 구성 또는 실행 결과 대조에 사용한다.
     GumpInput input;
+    // button: 돌 버튼 생성/텍스트/부착은 StoneButtonGump에 맡기는 상태 처리기다. GumpEvents/입력/프레임 훅에 연결한다 (ButtonGump).
     ButtonGump button;
+    // frame: 사용할 그림 프레임 또는 프레임 처리 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     GumpFrame frame;
     // 처리기 생성 순서와 공통 상태를 유지하며 순환 가상 분배 포인터는 마지막에 연결한다.
     explicit ButtonRig(ButtonScene& s):scene(s),factory(s.create,{[&s](auto token) { return s.Find(token); },{}}),

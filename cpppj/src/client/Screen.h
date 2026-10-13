@@ -11,7 +11,9 @@
 #include <span>
 
 namespace netstorm::client {
-struct PaletteColor { std::uint8_t red{}, green{}, blue{}; };
+// 팔레트 색 하나의 RGB 성분이다.
+struct PaletteColor { /* red: RGB 색의 빨강 성분(0~255). */ /* green: RGB 색의 초록 성분(0~255). */ /* blue: RGB 색의 파랑 성분(0~255). */ std::uint8_t red{}, green{}, blue{}; };
+// 256색 팔레트와 Win32 출력용 색 변환표이다.
 class GamePalette {
 public:
     // 004a4850 ↔ CD 00424760: 0x308바이트 COL 또는 0x400바이트 BGRX 파일을 읽는다.
@@ -21,8 +23,10 @@ public:
     // BGRX 파일은 네 번째 바이트를 반환한다. RGB COL은 예약 바이트를 쓰지 않으므로 빈 값을 반환하여 이전 저장값을 보존하게 한다.
     std::optional<std::uint8_t> Reserved(std::uint8_t index) const;
 private:
+    // colors_: 팔레트 색 또는 색 인덱스 변환 자료.
     std::array<PaletteColor, 256> colors_{};
     std::array<std::uint8_t,256> reserved_{}; // BGRX 파일의 원본 예약 바이트. 색 거리/표시 RGB에는 쓰지 않는다.
+    // bgrx_: Win32 출력에 사용할 BGRX 형식 색상 표.
     bool bgrx_{};
 };
 
@@ -44,18 +48,18 @@ inline constexpr std::uint32_t kFallbackWindowed = kBackBufferDib | kClouds;
 bool ScreenModeIsLegal(std::uint32_t flags, bool directDrawInstalled);
 
 // Windows RGBQUAD와 같은 순서의 색(파랑·초록·빨강·예약).
-struct ScreenColor { std::uint8_t blue{}, green{}, red{}, reserved{}; };
+struct ScreenColor { /* blue: RGB 색의 파랑 성분(0~255). */ /* green: RGB 색의 초록 성분(0~255). */ /* red: RGB 색의 빨강 성분(0~255). */ /* reserved: 예약영역. */ std::uint8_t blue{}, green{}, red{}, reserved{}; };
 // 원본 004a2820 / CD 004246e0: 논리 팔레트(R·G·B·플래그 DWORD 256개)에서 RGB 제곱 거리가 가장 작은 색 번호를 찾는다.
 // 사용: byte 범위 RGB의 동률은 먼저 나온 번호를 유지한다. 좌표 차·곱·합은 32비트로 감고, 비교는 signed 거리와 float32 최솟값으로 한다.
 // 범위 밖 RGB에서는 저장 반올림으로 정수 거리가 같아도 뒤 번호가 선택될 수 있다. 원본의 비교/저장 순서를 유지한다.
 std::uint32_t FindPaletteColor(std::span<const std::uint32_t,256> logical,std::int32_t red,std::int32_t green,std::int32_t blue);
 // 화면 좌표의 사각형. right·bottom은 포함하지 않는다(원본 004a1800의 인자).
-struct ScreenRect { int left{}, top{}, right{}, bottom{}; };
+struct ScreenRect { /* left: 사각형의 왼쪽 경계. */ /* top: 사각형의 위쪽 경계. */ /* right: 사각형의 오른쪽 경계. */ /* bottom: 사각형의 아래쪽 경계. */ int left{}, top{}, right{}, bottom{}; };
 // 원본 FUN_00445290: 사각형을 경계 안으로 자른다.
 ScreenRect ClipScreenRect(ScreenRect rect, ScreenRect bounds);
 // 원본 004a4fe0의 창 위치 계산(설정 `initWindowPos`): 1 왼쪽 위, 2 오른쪽 위, 3 오른쪽 아래, 4 왼쪽 아래, 5 가운데.
 // 그 밖의 값이면 지금 위치를 그대로 둔다.
-struct ScreenPoint { int x{}, y{}; };
+struct ScreenPoint { /* x: X 좌표. */ /* y: Y 좌표. */ int x{}, y{}; };
 ScreenPoint InitialWindowPosition(int initWindowPos, int desktopWidth, int desktopHeight,
     int windowWidth, int windowHeight, ScreenPoint current);
 
@@ -85,11 +89,18 @@ public:
     int Height() const;
     int Pitch() const;
 private:
+    // kind_: 자료나 동작의 종류를 구별하는 값.
     Kind kind_;
+    // width_: 가로 크기.
+    // height_: 세로 크기.
     int width_{}, height_{};
+    // dc_: GDI 출력에 사용하는 장치 컨텍스트.
     NativeHandle dc_{};
+    // bitmap_: GDI 출력에 사용하는 비트맵 핸들.
     NativeHandle bitmap_{};       // +0x84
+    // bits_: 비트.
     std::uint8_t* bits_{};        // +0x88
+    // locked_: 자원 또는 출력 표면이 잠겨 있는지.
     std::uint8_t* locked_{};      // +0x74
 };
 
@@ -151,29 +162,50 @@ public:
     // 창의 장치 문맥.
     NativeHandle WindowDc() const;
 private:
+    // window_: 게임 출력이나 장치 협조 수준에 사용하는 Win32 창 핸들.
     NativeHandle window_{};
+    // windowDc_: Win32 창으로 그림을 전송할 장치 컨텍스트.
     NativeHandle windowDc_{};
+    // width_: 가로 크기.
+    // height_: 세로 크기.
     int width_{}, height_{};
+    // memoryDc_: 메모리 비트맵을 선택해 그릴 GDI 장치 컨텍스트.
     NativeHandle memoryDc_{};                     // DAT_005c7928
+    // palette_: 그림의 색 인덱스를 실제 출력 색으로 바꿀 팔레트.
     NativeHandle palette_{};                      // DAT_005c795c
+    // previousPalette_: 이전 팔레트.
     NativeHandle previousPalette_{};              // DAT_005c7960 / DAT_005c7964
     NativeHandle previousMemoryPalette_{};        // 메모리 DC의 이전 팔레트. 교체/종료 전에 복원하여 선택된 GDI 객체의 삭제 실패를 막는다.
+    // menu_: 메뉴.
     NativeHandle menu_{};                         // DAT_005c78e8
+    // windowSurface_: 원본 표면 객체(0x8c바이트, 생성 004a05a0). 종류 1 = DIB 섹션, 2 = 이미 있는 장치 문맥(창) (std::unique_ptr<ScreenSurface>).
     std::unique_ptr<ScreenSurface> windowSurface_; // DAT_005c792c
+    // dibSurface_: 원본 표면 객체(0x8c바이트, 생성 004a05a0). 종류 1 = DIB 섹션, 2 = 이미 있는 장치 문맥(창) (std::unique_ptr<ScreenSurface>).
     std::unique_ptr<ScreenSurface> dibSurface_;    // DAT_005c7930
+    // drawSurface_: 원본 표면 객체(0x8c바이트, 생성 004a05a0). 종류 1 = DIB 섹션, 2 = 이미 있는 장치 문맥(창) (ScreenSurface).
     ScreenSurface* drawSurface_{};                 // DAT_005c7948
+    // primarySurface_: 원본 표면 객체(0x8c바이트, 생성 004a05a0). 종류 1 = DIB 섹션, 2 = 이미 있는 장치 문맥(창) (ScreenSurface).
     ScreenSurface* primarySurface_{};              // DAT_005c794c
+    // current_: 현재 처리 위치 또는 현재 선택 상태.
     std::array<ScreenColor, 256> current_{};       // DAT_0059afe0
+    // saved_: 보존한.
     std::array<ScreenColor, 256> saved_{};         // DAT_005acd28
     std::array<std::uint32_t, 256> logical_{};     // DAT_005c7954: PALETTEENTRY(빨강·초록·파랑·플래그) 256개
     PaletteColorTable colors_;                   // 파일 팔레트 로더가 다시 계산하는 원본 기본/표시/날씨 색 표.
     GumpShadeMaps shadeMaps_;                    // 돌 배경 소스 번호를 변환하는 파일 팔레트 명암 표.
+    // flags_: 동작을 선택하는 플래그 비트.
     std::uint32_t flags_{};                        // DAT_005c78d4
+    // lockDepth_: 중첩된 잠금 요청의 수.
     int lockDepth_{};                              // DAT_005c7920
+    // buffer_: 읽기·쓰기·출력에 재사용하는 버퍼.
     std::uint8_t* buffer_{};                       // DAT_0059af88 / DAT_005c78f8
+    // clip_: 출력을 제한하는 클리핑 영역 또는 상태.
     ScreenRect clip_{};                            // DAT_005c7a44~50
+    // border_: 화면 가장자리의 출력·좌표 보정 정보.
     ScreenPoint border_{};                         // DAT_005c7904, DAT_005c7908
+    // position_: 현재 좌표 또는 저장소의 읽기 위치.
     ScreenPoint position_{};                       // DAT_005c78d8, DAT_005c78dc
+    // cursorHidden_: Win32 커서 숨김 상태를 복원할 때 사용하는 표식.
     int cursorHidden_{};                           // DAT_005c7a3c
 };
 }

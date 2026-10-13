@@ -49,10 +49,15 @@ public:
     // 원본처럼 종료 판정 뒤 즉시 자신을 제거한다. 삭제 뒤에는 멤버에 접근하지 않는다.
     void RunFrame() override { if (!flash_.Frame()) client_.GetKernel().Remove(id_); }
 private:
+    // client_: 원본 전역 변수로 흩어져 있던 클라이언트 상태를 객체 하나로 묶는다. 한 프로세스에 하나만 만든다 (Client).
     Client& client_;
+    // destroyed_: 프로세스가 삭제됐음을 호스트에 전달하는 콜백.
     std::function<void(o::ProcessId)> destroyed_;
+    // state_: 원본 +0xc/+0x40c의 원래 색/변경 색과 +0x810 이후 진행 상태다. 색 배열은 부분 팔레트를 앞에서부터 담는다 (PaletteFlashState).
     PaletteFlashState state_;
+    // flash_: 실제 팔레트 계산과 종료 판정을 맡는다. 소유자는 Init 뒤 Frame을 호출하고 중단/파괴 전에 Cancel을 호출한다 (PaletteFlash).
     PaletteFlash flash_;
+    // id_: 대상을 구별하는 식별 번호.
     o::ProcessId id_{};
 };
 // 원본 창 클래스 스타일 0x23: CS_VREDRAW | CS_HREDRAW | CS_OWNDC.

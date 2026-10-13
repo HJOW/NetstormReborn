@@ -3,11 +3,13 @@
 #include "o/SquidPostPop.h"
 
 namespace netstorm::o {
+// 캐리어 후처리 Pop 처리 중 조회·갱신하는 상태 묶음이다.
 struct CarrierPostPopState {
     bool boss{true}; // 00540bc4 / CD 00540a2c: 권한이 없을 때만 비최초 carrier 확인을 부른다.
     std::uint32_t loadingDepth{}; // 005c89b8 / CD 005178d4: 요새 로딩의 중첩 횟수다.
     std::uint32_t geyserType{122}; // 00541240 / CD 0051cb2c: 로딩 중 지면 소유자 갱신에서 제외한다.
 };
+// 캐리어 후처리 Pop 외부 동작과 저장소 조회를 연결하는 콜백 묶음이다.
 struct CarrierPostPopHooks {
     std::function<void(Sid)> carrierCheck; // vtable +0xcc. 원본은 반환값을 사용하지 않는다.
     std::function<void(float,float,std::uint8_t)> claimGround; // 0044bd20 / CD 00461f00: 지면/받침 소유자 갱신 경계다.
@@ -31,9 +33,13 @@ private:
     void Validate(Sid sid,std::uint32_t flags) const;
     // carrier 가상 확인 이후의 현재 raw 값으로 로딩 조건을 평가한다.
     void RunDamageable(Sid sid,std::uint32_t flags) const;
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
+    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::vector<RiftTypeRecord> types_;
+    // state_: 처리 중 조회·갱신하는 상태 (const CarrierPostPopState).
     const CarrierPostPopState& state_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (CarrierPostPopHooks).
     CarrierPostPopHooks hooks_;
 };
 // 같은 풀의 실제 공통 장부에 연결한다. +0xcc와 지면 효과는 해당 파생/월드가 공급한다.

@@ -110,6 +110,7 @@ internal sealed partial class FortMapViewer
     private readonly List<CancelledSiteVisual> _cancelledSites = [];
 
     /// <summary>이미 환불된 공사장의 화면용 기록. 경제·점유·검사합에는 넣지 않는다.</summary>
+    /// <param name="Site">취소된 건설 효과의 위치·타입을 제공하는 엔티티.</param>
     private sealed record CancelledSiteVisual(GameEntity Site)
     {
         /// <summary>취소 뒤 지난 게임 시간(초).</summary>

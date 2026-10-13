@@ -16,10 +16,13 @@ internal sealed class DisplayManager : IDisposable
     /// <summary>알림 문구를 화면에 보여 주는 시간(초)</summary>
     private const double NoticeSeconds = 2.5;
 
+    /// <summary>_game: 창·활성 상태를 조회하는 MonoGame 게임 인스턴스.</summary>
     private readonly Microsoft.Xna.Framework.Game _game;
+    /// <summary>_graphics: 출력 장치와 화면 모드 변경을 적용하는 그래픽 관리자.</summary>
     private readonly GraphicsDeviceManager _graphics;
     /// <summary>설정 저장 경로. null 이면 저장하지 않는다 (명령줄로 덮어쓴 실행·스크린샷 실행).</summary>
     private readonly string? _settingsPath;
+    /// <summary>_target: 게임의 논리 해상도로 그리는 렌더 타깃. 생성 전에는 null.</summary>
     private RenderTarget2D? _target;
     /// <summary>직전에 배치를 계산한 백버퍼 폭</summary>
     private int _lastWidth;
@@ -27,7 +30,9 @@ internal sealed class DisplayManager : IDisposable
     private int _lastHeight;
     /// <summary>설정(와이드 모드·해상도 높이)이 바뀌어 배치를 다시 계산해야 하는지</summary>
     private bool _layoutDirty = true;
+    /// <summary>_notice: 화면 모드 변경 뒤 잠시 표시할 안내 문자열.</summary>
     private string _notice = "";
+    /// <summary>_noticeRemaining: 화면 안내를 표시할 남은 시간(초).</summary>
     private double _noticeRemaining;
 
     /// <summary>현재 표시 설정</summary>

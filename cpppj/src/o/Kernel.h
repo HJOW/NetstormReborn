@@ -45,6 +45,7 @@ private:
     std::vector<BaseProcess*> processes_; // 원본처럼 소멸자 실행이 끝날 때까지 슬롯 포인터가 남는다.
     std::vector<std::unique_ptr<BaseProcess>> owned_; // 같은 포인터를 재등록해도 소유권은 한 슬롯에만 둔다.
     std::uint32_t capacity_{}; // 기본은 10.78의 39999, CD 비교는 3999다.
+    // count_: 현재 항목 또는 실행 횟수.
     std::size_t count_{};
 };
 }

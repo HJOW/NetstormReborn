@@ -33,30 +33,57 @@ std::vector<RiftTypeRecord> ProcessTypes(OriginalEdition edition) {
 }
 // 부모의 외부 가상 이벤트는 native 입력 스크립트다. 실제 공간/Kernel/Form 수명은 복원된 모듈들을 사용한다.
 struct PathScene {
+    // edition: 판본별 필드 배치와 동작을 선택하는 원본 버전. 입력 구성 또는 실행 결과 대조에 사용한다.
     OriginalEdition edition;
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
     SidPool pool;
+    // hash: 좌표별 객체 후보를 찾는 공간 해시. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidHash hash;
+    // types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeRecord> types;
+    // frames: 타입별 프레임 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeFrames> frames;
+    // shapes: 프레임의 크기·그림 데이터를 조회하는 셰이프 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<SquidDisplayShape> shapes;
+    // spots: 칸별 점유·통행 비트를 읽는 spot 지도. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::uint8_t> spots=std::vector<std::uint8_t>(65536,6);
+    // book: 등록 목록과 개수의 장부. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidPostPopState book;
+    // postPop: 객체 Pop 이후 목록·공간 후처리를 수행하는 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidPostPop postPop;
+    // unpop: 객체의 공간 등록을 해제하는 Unpop 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidUnpop unpop;
+    // pop: 객체를 공간 지도에 등록하는 Pop 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidPop pop;
+    // destroy: 객체 삭제의 전처리·공간 해제·후처리를 실행하는 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     RawSquidDestroy destroy;
+    // kernel: 프로세스 등록과 프레임 실행을 담당하는 커널. 입력 구성 또는 실행 결과 대조에 사용한다.
     Kernel kernel;
+    // clock: 프레임 판정에 현재 게임 시각을 공급하는 시계. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidProcessState clock;
+    // host: Form이나 프로세스의 등록·통지·수명을 연결하는 호스트. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidProcessHost host;
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
     RawPathProcessState state;
+    // factory: 타입에 맞는 객체를 생성하는 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidFactory factory;
+    // parent: 부착·통지 대상인 부모 객체 또는 부모 SID. 입력 구성 또는 실행 결과 대조에 사용한다.
     Sid parent;
+    // process: same pool/hash/spot/Kernel 위에서 원본 이동 프로세스를 실행한다. 별도 좌표/공간 복사본을 만들지 않는다 (RawPathProcess).
     RawPathProcess* process{};
+    // pid: 커널의 프로세스 등록 번호. 입력 구성 또는 실행 결과 대조에 사용한다.
     ProcessId pid{};
+    // returnCode: 반환 코드. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // haltCode: 중단 코드. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::uint32_t returnCode{1002},haltCode{10};
+    // willDelete: 예정 삭제 여부. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // deleted: 삭제된 여부. 입력 구성 또는 실행 결과 대조에 사용한다.
     bool willDelete{},deleted{};
+    // finalImage: 최종 이미지. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::uint8_t> finalImage;
+    // events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::string> events;
+    // externalDeletion: 외부 삭제. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<SquidDestroyEvent> externalDeletion;
     // native 입력의 parent5/Form7은 client 번호다. 합성 local flags0x10 부착이며 actual 서버 Path flags0와 구별한다.
     PathScene(OriginalEdition chosen,bool priest):edition(chosen),pool(chosen,32768,false),types(ProcessTypes(chosen)),

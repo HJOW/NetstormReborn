@@ -20,10 +20,14 @@ inline constexpr std::uint32_t kButton=0x03e00000; // 부모 버튼 생성자가
 }
 // 하나의 실제 질감 함수 호출: 요청 영역/플래그, 일시 클립과 화면 기준 SHP 기준점 목록이다.
 struct GumpTexturePass {
+    // rect: 출력·적중·배치 검사에 사용할 사각형.
+    // clip: 출력을 제한하는 클리핑 영역 또는 상태.
     ScreenRect rect,clip;
+    // flags: 동작을 선택하는 플래그 비트.
     std::uint32_t flags{};
     unsigned shade{}; // 0 원래 색, 1 밝은 표, 2 어두운 표.
     bool validTile{}; // SHP signed short 폭/높이가 각각 2 이상일 때만 clip/map/draw 호출을 한다.
+    // origins: 반복 타일을 출력할 시작 좌표 목록.
     std::vector<ScreenPoint> origins;
 };
 // 전체 질감 반복 함수 한 번의 계획이다. 각 호출 시 현재 자산/클립을 따로 조회하는 raw 분배기에 사용한다.

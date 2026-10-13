@@ -32,11 +32,17 @@ void ReadTable(std::string_view input,std::span<std::uint32_t> values) {
 }
 // 안정된 노드와 실제 공유 상태·signed 제외 BYTE를 현재 콜백 당시 기록과 연결한다.
 struct ResetScene {
+    // nodes: 노드. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::map<std::uint32_t,GumpCreateNode> nodes;
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
     GumpCreateState state;
+    // life: 원본의 고정 크기 idle/overlay/삭제/dialog 표와 현재 삭제 전역이다 (GumpLifetimeState).
     GumpLifetimeState life;
+    // excluded: 제외된. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::int8_t excluded{11};
+    // responses: 응답. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::map<std::string,std::vector<std::array<std::uint32_t,3>>> responses;
+    // calls: 호출 횟수 또는 호출 인자를 대조하는 기록. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::string calls;
     // 토큰에 대응하는 안정된 기본/파생 저장소를 현재 시점에 조회한다.
     GumpCreateNode* Find(std::uint32_t token) { const auto found=nodes.find(token);return found==nodes.end() ? nullptr : &found->second; }

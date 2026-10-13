@@ -29,11 +29,17 @@ std::string Coordinates(ScreenRect r) { return std::to_string(r.left)+","+std::t
 std::string Coordinates(const GumpDrawState& s) { return Coordinates(s.clip)+","+Coordinates(s.vfxClip); }
 // 하나의 안정된 노드 저장소를 수집/Draw에 함께 공급한다.
 struct GumpScene {
+    // nodes: 노드. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::map<std::uint32_t,GumpCollectionNode> nodes;
+    // anchors: 앵커. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::map<std::uint32_t,ScreenPoint> anchors;
+    // collection: 루트와 임시 수집 머리 전역이다. overrideHead가 0이면 root.child부터 수집한다 (GumpCollectionState).
     GumpCollectionState collection;
+    // draw: 원본 half-open 화면 전역과 양 끝 포함 VFX 전역이다. Draw/투영 경계가 현재 값을 바꿀 수 있다 (GumpDrawState).
     GumpDrawState draw;
+    // projectClip: 투영 클리핑. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::optional<ScreenRect> projectClip;
+    // projected: 투영된. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::string projected;
     // 완성 입력 raw 필드를 호스트 노드로 읽으며 초기 캐시도 독립 입력으로 남긴다.
     void Load(const std::string& text) {

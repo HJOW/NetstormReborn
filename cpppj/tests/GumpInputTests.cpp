@@ -9,13 +9,17 @@ using namespace netstorm::test::gumpraw;
 // 기계어가 기록한 완성 관찰만 기준으로 읽는다. 기대 UI 상태를 계산하지 않는다.
 const auto& Fixture() { static const auto rows=LoadFixture(NETSTORM_GUMPINPUT_FIXTURE).rows;return rows; }
 // 반환 DWORD와 명시 전역/표/노드 쓰기는 독립 입력이다.
-struct Response { std::uint32_t value{};std::vector<std::array<std::uint32_t,3>> patches; };
+struct Response { /* value: 읽기·쓰기·통지에 전달하는 값. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::uint32_t value{};/* patches: 패치. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<std::array<std::uint32_t,3>> patches; };
 // 같은 노드/등록/dialog/캡처/overlay/커서 전역을 사용하는 검사 저장소다.
 struct InputScene {
+    // nodes: 노드. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::map<std::uint32_t,GumpCreateNode> nodes;
-    GumpCreateState create;GumpLifetimeState lifetime;GumpEventState event;GumpInputState input;
-    GumpTreeState treeState;std::unique_ptr<GumpTree> tree;
-    std::map<std::string,Response> responses;std::map<std::uint32_t,ScreenPoint> anchors;std::string calls;
+    // create: 등록 표 +0이 실제 루트다. 외부에서 표를 바꿀 때 collection.root도 같은 토큰으로 맞춰야 한다 (GumpCreateState).
+    GumpCreateState create;/* lifetime: 등록된 객체의 삭제·해제를 처리하는 수명 관리자. 입력 구성 또는 실행 결과 대조에 사용한다. */ GumpLifetimeState lifetime;/* event: 대상 처리기에 전달할 이벤트 ID. 입력 구성 또는 실행 결과 대조에 사용한다. */ GumpEventState event;/* input: 처리할 입력 또는 입력 분배기. 입력 구성 또는 실행 결과 대조에 사용한다. */ GumpInputState input;
+    // treeState: 원본 지도 화면 영역과 패치판의 밀어내기 링크 진단 전역이다 (GumpTreeState).
+    GumpTreeState treeState;/* tree: 00466750/CD 00493070의 머리 삽입과 원본의 후속 정렬/현재 자식 재배치를 담당한다 (std::unique_ptr<GumpTree>). */ std::unique_ptr<GumpTree> tree;
+    // responses: 응답. 입력 구성 또는 실행 결과 대조에 사용한다.
+    std::map<std::string,Response> responses;/* anchors: 앵커. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::map<std::uint32_t,ScreenPoint> anchors;/* calls: 호출 횟수 또는 호출 인자를 대조하는 기록. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::string calls;
     // 호출 중 주소가 안정된 현재 생성 노드를 공급한다.
     GumpCreateNode* Find(std::uint32_t token) { const auto found=nodes.find(token);return found==nodes.end() ? nullptr : &found->second; }
     // 원본 순서의 일곱 선택 전역과 캡처/override/dialog 개수/overlay 사건이다.

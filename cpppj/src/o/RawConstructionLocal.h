@@ -10,16 +10,27 @@ struct ConstructionLocalState {
 };
 // 미리보기 SID와 원본 다섯 인자다. 타입·조각 반환 플래그·품질은 미리보기의 raw 필드에서 읽는다.
 struct ConstructionLocalRequest {
+    // preview: 실제 배치 전의 미리보기 판정·출력 처리기 또는 상태.
     Sid preview;
+    // x: X 좌표.
+    // y: Y 좌표.
     float x{},y{};
+    // argument: 타입·패턴·명령에 별도로 전달하는 첫 인자.
+    // direction: 방향이나 회전을 선택하는 값.
     std::uint32_t argument{},direction{};
 };
 // 서버 건설 요청 메시지의 논리 본문이다. 양 판본 모두 타입 BYTE, 좌표 float 둘, 인자 WORD, 방향/품질 BYTE다.
 // wire 순서는 필드별로 직렬화해야 하며 호스트 구조체의 패딩을 전송하지 않는다.
 struct ConstructionLocalMessage {
+    // type: 타입 표에서 객체 종류를 찾는 번호.
     std::uint8_t type{};
+    // x: X 좌표.
+    // y: Y 좌표.
     float x{},y{};
+    // argument: 타입·패턴·명령에 별도로 전달하는 첫 인자.
     std::uint16_t argument{};
+    // direction: 방향이나 회전을 선택하는 값.
+    // quality: 품질.
     std::uint8_t direction{},quality{};
     std::uint32_t timeLow{},timeHigh{}; // 메시지 생성자가 0으로 초기화하는 시각 자리. 로컬 배치는 덮어쓰지 않는다.
 };
@@ -46,11 +57,17 @@ public:
 private:
     // 타입/인자/방향/좌표로 decoder를 만들어 유효 칸마다 클라이언트 SID를 확보한다.
     std::vector<std::uint16_t> Allocate(std::uint32_t type,float x,float y,std::uint32_t argument,std::uint32_t direction) const;
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     const SidPool& pool_;
+    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::span<const RiftTypeRecord> types_;
+    // frames_: 타입별 프레임 자료.
     std::span<const PriestPlainCanonType> frames_;
+    // spots_: 칸별 점유·통행 비트를 읽는 spot 지도.
     std::span<const std::uint8_t> spots_;
+    // state_: 로컬 배치가 읽는 플레이어와 CanonDecoder 타입 전역이다. 비용 차감은 상위 커서 내려놓기의 책임이다 (ConstructionLocalState).
     const ConstructionLocalState& state_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (ConstructionLocalHooks).
     ConstructionLocalHooks hooks_;
 };
 // 같은 풀의 실제 factory와 건설 배치를 연결한다. 나머지 Form/이동/전송 경계는 받은 그대로 유지한다.

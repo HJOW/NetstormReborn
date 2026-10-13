@@ -48,7 +48,7 @@ constexpr std::array<std::pair<char,std::size_t>,7> kBasicColors{{
     {'k',0},{'r',1},{'g',2},{'b',3},{'m',4},{'y',5},{'o',6}
 }};
 // 기본색 외 색 전역별 목표 RGB다. 중복 RGB의 별도 전역은 여기서 사용하지 않는다.
-struct NamedCommandColor { char command;std::uint8_t red,green,blue; };
+struct NamedCommandColor { /* command: 선택·클릭할 때 실행할 명령 이름 또는 명령 ID. */ char command;/* red: RGB 색의 빨강 성분(0~255). */ /* green: RGB 색의 초록 성분(0~255). */ /* blue: RGB 색의 파랑 성분(0~255). */ std::uint8_t red,green,blue; };
 constexpr std::array<NamedCommandColor,11> kNamedColors{{
     {'a',255,153,0},{'d',0,255,102},{'i',249,233,145},{'j',233,214,186},
     {'l',151,215,210},{'p',255,102,204},{'q',200,175,144},{'s',99,66,255},

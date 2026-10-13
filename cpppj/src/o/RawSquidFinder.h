@@ -7,14 +7,27 @@
 
 namespace netstorm::o {
 // 원본 Begin의 정수 사각형이다. 오른쪽/아래 -1은 보드 끝이며 경계 접촉을 포함한다.
-struct SquidSearchArea { int left{},top{},right{-1},bottom{-1}; };
+struct SquidSearchArea { /* left: 사각형의 왼쪽 경계. */ /* top: 사각형의 위쪽 경계. */ /* right: 사각형의 오른쪽 경계. */ /* bottom: 사각형의 아래쪽 경계. */ int left{},top{},right{-1},bottom{-1}; };
 // 원본 finder +4..+60의 상태를 호스트 주소 없이 보존한다.
 struct SquidSearchState {
+    // area: 후보를 찾거나 검사할 사각형 영역.
     SquidSearchArea area;
+    // firstX: 검색 사각형의 첫 X 칸.
+    // firstY: 검색 사각형의 첫 Y 칸.
+    // lastX: 검색 사각형의 마지막 X 칸.
+    // lastY: 검색 사각형의 마지막 Y 칸.
+    // level: 공간 해시에서 조회할 높이 단계.
+    // x: X 좌표.
+    // y: Y 좌표.
     int firstX{},firstY{},lastX{},lastY{},level{},x{},y{};
+    // next: 다음 항목의 번호 또는 다음 처리 위치.
+    // current: 현재 처리 위치 또는 현재 선택 상태.
     Sid next{},current{};
+    // skipSurface: 생략 표면 여부.
+    // extendedHeight: 확장된 높이 여부.
     bool skipSurface{},extendedHeight{};
 };
+// 원본 일반 사각형 탐색기의 4단계 해시/동적 raw 체인을 복원한다. flag 8 표면 이웃 탐색과 별개다.
 class RawSquidFinder {
 public:
     // 풀/해시/타입은 탐색기보다 오래 살아야 한다. 높이 확장은 원본 type +1e4(CD +1c4)의 명시적 입력이다.
@@ -35,13 +48,20 @@ private:
     bool AdvanceBucket();
     // 현재 후보의 소수 좌표를 절삭한 정수 발자국과 원본 OR 교차 조건을 검사한다.
     bool Intersects(Sid sid) const;
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     const SidPool& pool_;
+    // hash_: 좌표별 객체 후보를 찾는 공간 해시.
     const SquidHash& hash_;
+    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::span<const RiftTypeRecord> types_;
+    // heightExtensions_: 높이 확장.
     std::span<const int> heightExtensions_;
+    // state_: 원본 finder +4..+60의 상태를 호스트 주소 없이 보존한다 (SquidSearchState).
     SquidSearchState state_;
+    // filter_: 현재 후보가 검사 조건을 만족하는지 판정하는 콜백.
     std::function<bool(Sid)> filter_;
     std::unordered_set<std::uint16_t> chain_; // 같은 버킷의 순환만 거부한다. 다른 버킷의 중복은 원본처럼 허용한다.
+    // started_: 대상 순회를 시작해 현재 항목을 읽을 수 있는지.
     bool started_{};
 };
 }

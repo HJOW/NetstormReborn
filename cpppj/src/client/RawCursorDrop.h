@@ -6,9 +6,25 @@
 namespace netstorm::client {
 // 원본 커서 전역의 논리 상태다. GUI/기록 핸들은 호스트 포인터가 아닌 호출자가 관리하는 식별값이다.
 struct CursorDropState {
+    // lockDepth: 중첩된 잠금 요청의 수.
+    // legal: 배치가능.
+    // type: 타입 표에서 객체 종류를 찾는 번호.
+    // argument: 타입·패턴·명령에 별도로 전달하는 첫 인자.
+    // direction: 방향이나 회전을 선택하는 값.
+    // inputFlags: 입력 플래그.
+    // costFlags: 비용 플래그.
     std::uint32_t lockDepth{},legal{},type{},argument{},direction{},inputFlags{},costFlags{};
     o::Sid preview{}; // 조회 뒤에 캡처한 미리보기 번호는 prepare 효과가 전역 번호를 바꿔도 유지한다.
+    // x: X 좌표.
+    // y: Y 좌표.
     float x{},y{};
+    // legalGump: 배치가능 Gump.
+    // cursorGump: 커서 Gump.
+    // recording: 녹화.
+    // recorder: 기록기.
+    // battle: 전투.
+    // blocked: 공간·소유권 조건으로 진행이 차단됐는지.
+    // localPlayer: 로컬 플레이어.
     std::uint32_t legalGump{},cursorGump{},recording{},recorder{},battle{},blocked{},localPlayer{};
     std::int32_t screenX{},screenY{},cursorWidth{}; // SP 표시 위치: screenX - footX*16/2 - cursorWidth/2.
 };
@@ -20,19 +36,27 @@ struct CursorDropHooks {
     std::function<std::uint32_t(o::Sid)> previewSource; // Form 가상 +0. GUI 경로에서는 두 번 조회한다.
     std::function<void(o::Sid,std::uint32_t)> destroy; // 가상 +0x10, 삭제 플래그는 0.
     std::function<void(o::Sid,float,float,std::uint32_t)> pop; // 가상 +0x90: 기존 연관 조각을 좌표에 놓는다.
+    // record: 현재 입력이나 명령을 기록하는 콜백.
     std::function<void(std::uint32_t,std::string_view,float,float,std::uint32_t,std::uint32_t)> record;
+    // placeLocal: 로컬 건설 요청을 실제 배치 처리기에 전달하는 콜백.
     std::function<void(const o::ConstructionLocalRequest&)> placeLocal;
+    // addLocalSp: 로컬 플레이어의 SP 변경을 적용하는 콜백.
     std::function<void(float)> addLocalSp;
     std::function<void(std::int32_t,std::int32_t,std::int32_t,std::uint32_t)> showSp; // 절삭 비용·화면 x/y·0.
+    // battleRefresh: 전투 상태의 후속 갱신을 요청하는 콜백.
+    // invalidGui: 배치 불가 상태의 UI 피드백을 실행하는 콜백.
     std::function<void()> battleRefresh,invalidGui;
     std::function<std::uint32_t(std::uint32_t)> guiFlags; // Gump +0x28: 전체 DWORD 반환으로 겹침을 검사한다.
     std::function<std::uint32_t(std::uint32_t)> guiParent; // Gump +36 부모 SID. 0이면 원본 assert 계약 위반이다.
+    // detach: 대상의 부착 관계를 해제하는 콜백.
     std::function<void(o::Sid,std::uint32_t)> detach; // Form +0x48(0).
     std::function<void(o::Sid,std::uint32_t,std::uint32_t)> attach; // Form +0x50(부모,0x10).
     std::function<void(std::uint32_t,o::Sid)> guiReceive; // Gump +0x28: 내려놓은 미리보기 SID를 통지한다.
     std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)> returnPiece; // 기존 WORD 플래그·두 번째 연관 번호·품질.
     std::function<void(std::uint32_t)> activatePreview,selectCursor; // 00445aa0 / CD 0043cf40 및 하드웨어 커서 선택.
+    // refresh: 변경한 대상의 현재 상태를 갱신하는 콜백.
     std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)> refresh;
+    // closeGump: 연결된 Gump를 닫는 콜백.
     std::function<void(std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t)> closeGump; // Gump +0x1c(3,0,0).
 };
 // raw Form 필드와 현재 커서 전역을 사용한다. 실제 입력/GUI 루프 연결은 이 몸체와 별도다.
@@ -55,9 +79,13 @@ private:
     void Lock();
     // 월드 분기에서만 비용을 차감하고 절삭 비용을 화면 위치에 표시한다.
     void Charge();
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     o::SidPool& pool_;
+    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::span<const o::RiftTypeRecord> types_;
+    // state_: 원본 커서 전역의 논리 상태다. GUI/기록 핸들은 호스트 포인터가 아닌 호출자가 관리하는 식별값이다 (CursorDropState).
     CursorDropState& state_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (CursorDropHooks).
     CursorDropHooks hooks_;
 };
 // 같은 풀의 실제 로컬 배치·SP 보상·소리 재생을 연결한다. 나머지 Form/Gump 경계는 유지한다.

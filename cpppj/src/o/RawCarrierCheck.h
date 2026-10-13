@@ -16,9 +16,13 @@ public:
     // 실제 postPop/생성 연결에서 다른 월드의 풀 혼합을 거부한다.
     const SidPool& Pool() const;
 private:
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     const SidPool& pool_;
+    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::span<const RiftTypeRecord> types_;
+    // spots_: 칸별 점유·통행 비트를 읽는 spot 지도.
     std::span<const std::uint8_t> spots_;
+    // fallWalker_: 통행 조건을 잃은 이동 유닛의 추락 처리를 호출하는 콜백.
     std::function<bool(Sid)> fallWalker_;
 };
 // postPop의 +0xcc만 실제 조회로 바꾸며 지면 소유/공통 장부 경계는 유지한다.

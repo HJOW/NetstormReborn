@@ -703,6 +703,9 @@ public sealed class BridgeGrid
     }
 
     /// <summary>다리 칸의 이웃 하나: 이웃 칸 좌표와 다리 칸 (섬 칸이면 null)</summary>
+    /// <param name="X">월드 X 좌표.</param>
+    /// <param name="Y">월드 Y 좌표.</param>
+    /// <param name="Bridge">이웃 칸의 다리 상태. 다리가 없으면 null.</param>
     private readonly record struct Neighbor(int X, int Y, BridgeCellState? Bridge);
 
     /// <summary>

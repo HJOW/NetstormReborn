@@ -23,6 +23,7 @@ internal sealed partial class FortMapViewer
     private bool _islandColors = true;
     /// <summary>Shift+F3 섬 테마 숨기기 (View 메뉴 "Hide/Show Island Themes - Shift F3"). 켜면 모든 섬을 기본 초록 지면으로 그린다.</summary>
     private bool _hideIslandThemes;
+    /// <summary>_recentPlaced: 최근 배치한 엔티티 번호. 후속 선택·입력 처리에 사용한다.</summary>
     private readonly List<int> _recentPlaced = [];
     /// <summary>일반 도움말·About 창을 게임 본체에 요청한다.</summary>
     public Action<string>? HelpRequested { get; set; }

@@ -80,8 +80,10 @@ void ReplaySpriteDraw(const std::string& edition) {
 }
 // 출력과 계약을 검사하는 최소 실제 raw/SHP 상태다.
 struct SpriteScene {
-    SidPool pool{OriginalEdition::Patch1078,24000,false};std::vector<RiftTypeRecord> types=std::vector<RiftTypeRecord>(71);
-    std::vector<SpriteTypeView> views=std::vector<SpriteTypeView>(71);SpriteDrawState s;
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
+    SidPool pool{OriginalEdition::Patch1078,24000,false};/* types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<RiftTypeRecord> types=std::vector<RiftTypeRecord>(71);
+    // views: 타입에서 프레임·셰이프 블록을 찾는 조회 정보 목록. 입력 구성 또는 실행 결과 대조에 사용한다.
+    std::vector<SpriteTypeView> views=std::vector<SpriteTypeView>(71);/* s: Draw가 읽는 원본 전역을 외부에서 현재 값으로 공급한다. 선택 SID/그림자 alias만 쓰기 대상이다 (SpriteDrawState). */ SpriteDrawState s;
     // raw 좌표는 x*16/y*11+0.5를 절삭한 화면 WORD다.
     SpriteScene() {
         auto raw=InputRaw(pool,{5});std::fill(raw.begin(),raw.end(),std::uint8_t{});raw[10]=70;Put(raw,14,std::bit_cast<std::uint32_t>(.25F));Put(raw,18,std::bit_cast<std::uint32_t>(.25F));Put(raw,22,4,2);Put(raw,24,3,2);

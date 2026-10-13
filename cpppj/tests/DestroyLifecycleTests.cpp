@@ -84,16 +84,27 @@ void ListInput(SquidPostPopList& list,int pattern,std::uint32_t base) {
 }
 // 실제 raw 삭제 및 새 장부 훅을 같은 풀/상태에 연결한 재생 장면이다.
 struct Scene {
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
     SidPool pool;
+    // hash: 좌표별 객체 후보를 찾는 공간 해시. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidHash hash;
+    // types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeRecord> types;
+    // spots: 칸별 점유·통행 비트를 읽는 spot 지도. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::uint8_t> spots=std::vector<std::uint8_t>(65536);
+    // unpop: 객체의 공간 등록을 해제하는 Unpop 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidUnpop unpop;
+    // destroy: 객체 삭제의 전처리·공간 해제·후처리를 실행하는 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     RawSquidDestroy destroy;
+    // bookkeeping: 객체 종류·소유자별 등록 목록과 개수를 관리하는 장부. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidPostPopState bookkeeping;
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
     SquidDeletionState state;
+    // lifecycle: 수명. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::unique_ptr<SquidDestroyLifecycle> lifecycle;
+    // events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::string> events;
+    // flags: 동작을 선택하는 플래그 비트. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::uint32_t flags{};
     // 19개 값은 fixture 생성기의 합성 입력이다. 결과 fixture만 기대값으로 쓴다.
     Scene(OriginalEdition edition,const std::vector<std::string>& input)

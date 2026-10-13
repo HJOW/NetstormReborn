@@ -15,7 +15,7 @@ constexpr std::size_t kStack=30;
 // 원본의 signed 바이트 거리 비교가 넘치지 않는 16바이트 항목 수 상한이다.
 constexpr std::size_t kMaxEntries=static_cast<std::size_t>(std::numeric_limits<std::int32_t>::max())/16;
 // 두 포인터 대신 안전한 항목 인덱스로 원본의 양 끝 포함 구간을 표현한다.
-struct Range { std::ptrdiff_t low{},high{}; };
+struct Range { /* low: 현재 구간의 시작 인덱스. */ /* high: 현재 구간의 끝 인덱스. */ std::ptrdiff_t low{},high{}; };
 // 원본 비교 함수의 signed WORD와 float 차이를 사용하며 동률을 0으로 바꾸지 않는다.
 int Compare(std::span<o::RenderCollectionEntry> entries,std::ptrdiff_t a,std::ptrdiff_t b) {
     const auto& x=entries[static_cast<std::size_t>(a)];const auto& y=entries[static_cast<std::size_t>(b)];

@@ -20,8 +20,10 @@ const std::vector<std::vector<std::string>>& Fixture() {
 // 원본 실행기의 대체 장치와 같은 규칙의 상태표다: 재생하면 재생 중(반복이면 반복 비트), 정지하면 두 비트를 끈다.
 // 호출 사실과 인자는 실행기와 같은 사건 문자열로 적는다. 적재/복제/설정의 결과는 입력으로 정한다.
 struct DeviceMock {
-    std::vector<std::uint32_t> status;std::vector<std::string> events;
-    char loadKind='b';std::int32_t loadAttenuation{},copyResult{},gainResult{},balanceResult{};
+    // status: 상태. 입력 구성 또는 실행 결과 대조에 사용한다.
+    std::vector<std::uint32_t> status;/* events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<std::string> events;
+    // loadKind: 로딩 종류. 입력 구성 또는 실행 결과 대조에 사용한다.
+    char loadKind='b';/* loadAttenuation: 로딩 감쇠. 입력 구성 또는 실행 결과 대조에 사용한다. */ /* copyResult: 복사 결과. 입력 구성 또는 실행 결과 대조에 사용한다. */ /* gainResult: 증가 결과. 입력 구성 또는 실행 결과 대조에 사용한다. */ /* balanceResult: 잔액 결과. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::int32_t loadAttenuation{},copyResult{},gainResult{},balanceResult{};
     // 새 가짜 버퍼를 만든다. 처음 상태는 멈춤이다.
     SoundBuffer Create() { status.push_back(0);return kBufferBase+16U*static_cast<SoundBuffer>(status.size()-1); }
     // 버퍼 값의 순번이다. 만든 적 없는 값이면 예외다(원본 실행기도 거부한다).

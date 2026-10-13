@@ -16,7 +16,9 @@ using TestFunction = void (*)();
 
 // 등록된 테스트 하나 (이름과 함수)
 struct TestCase {
+    // name: 이름으로 조회·표시할 때 사용하는 문자열. 입력 구성 또는 실행 결과 대조에 사용한다.
     const char* name;
+    // function: 함수. 입력 구성 또는 실행 결과 대조에 사용한다.
     TestFunction function;
 };
 

@@ -112,6 +112,7 @@ public sealed class FortFile
         .. Enumerable.Range(0, TerritoryCount).Select(i => $"Terr{i:00}"),
     ];
 
+    /// <summary>_sections: 섹션 이름으로 원시 .fort 데이터를 찾는 대소문자 무시 사전.</summary>
     private readonly Dictionary<string, byte[]> _sections = new(StringComparer.OrdinalIgnoreCase);
 
     /// <summary>둘째 바이트가 0xFE 인지</summary>
@@ -413,6 +414,7 @@ public sealed class FortFile
     /// <summary>바이트 스팬 순차 읽기 (범위를 넘으면 예외)</summary>
     private ref struct SpanReader
     {
+        /// <summary>_data: 범위 검사를 거쳐 순차 읽을 입력 바이트 뷰.</summary>
         private readonly ReadOnlySpan<byte> _data;
 
         /// <summary>현재 위치</summary>

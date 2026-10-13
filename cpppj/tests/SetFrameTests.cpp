@@ -48,11 +48,14 @@ std::string Hex(std::span<const std::uint8_t> bytes) {
     return text;
 }
 // 타입 종류 한 줄: flags1, flags2, 프레임 수 필드.
-struct Kind { std::uint32_t flags1{},flags2{};int count{}; };
+struct Kind { /* flags1: 타입의 첫 번째 플래그 단어. 입력 구성 또는 실행 결과 대조에 사용한다. */ /* flags2: 타입의 두 번째 플래그 단어. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::uint32_t flags1{},flags2{};/* count: 현재 항목 또는 실행 횟수. 입력 구성 또는 실행 결과 대조에 사용한다. */ int count{}; };
 // 저장된 독립 기계어 출력: 프레임 크기 표, 타입 종류, 관찰 행이다. 원본 PE/Python 없이 읽는다.
 struct FixtureData {
+    // sizes: 크기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::array<float,2>> sizes;
+    // kinds: 종류. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<Kind> kinds;
+    // rows: 행. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::vector<std::string>> rows;
 };
 const FixtureData& Fixture() {
@@ -82,11 +85,17 @@ const FixtureData& Fixture() {
 }
 // 명시적인 보호 경로를 확인한다.
 template<class F> bool Throws(F operation) { try { operation(); } catch (const std::exception&) { return true; } return false; }
+// SetFrame 검사에서 같은 풀·상태·처리기를 조립해 입력과 결과를 대조하는 자료형이다.
 struct Scene {
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
     SidPool pool;
+    // types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeRecord> types;
+    // events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::string> events;
+    // patch: 10.78 패치판의 상태 또는 패치판 검사용 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     bool patch{};
+    // kind: 자료나 동작의 종류를 구별하는 값. 입력 구성 또는 실행 결과 대조에 사용한다.
     Kind kind;
     // 실행기와 같은 풀 번호 5~74를 확보한다.
     explicit Scene(OriginalEdition edition):pool(edition,kCapacity,false),types(edition==OriginalEdition::Patch1078 ? 188 : 171),

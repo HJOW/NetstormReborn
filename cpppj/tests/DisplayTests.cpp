@@ -47,7 +47,8 @@ std::string Hex(std::span<const std::uint8_t> bytes) {
 }
 // 원본 표시 억제와 Renderer의 100항목 넘침을 독립 변경 표에 연결한다.
 struct Sink final:o::SquidDisplaySink {
-    client::DirtyRegions dirty; bool forced{};
+    // dirty: 부분 갱신 사각형을 수집하고 화면 경계로 제한하는 관리자 (client::DirtyRegions).
+    client::DirtyRegions dirty; /* forced: 강제 여부. 입력 구성 또는 실행 결과 대조에 사용한다. */ bool forced{};
     // 첫 화면 표시 억제도 fixture의 full 전역으로 표현한다.
     Sink(int w,int h,bool suppressed):dirty(w,h),forced(suppressed) {}
     // 표 넘침 뒤 후속 표시 호출은 생략한다.

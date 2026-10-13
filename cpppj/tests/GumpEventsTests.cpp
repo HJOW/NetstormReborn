@@ -8,15 +8,22 @@ using namespace netstorm::test::gumpraw;
 // 선택/전달 기대값은 실제 세 PE의 전체 몸체 관찰만 읽는다.
 const auto& Fixture() { static const auto rows=LoadFixture(NETSTORM_GUMPEVENTS_FIXTURE).rows;return rows; }
 // 콜백의 반환 DWORD와 명시 raw 쓰기 입력이다. 기대 상태 계산은 포함하지 않는다.
-struct Response { std::uint32_t value{};std::vector<std::array<std::uint32_t,3>> patches; };
+struct Response { /* value: 읽기·쓰기·통지에 전달하는 값. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::uint32_t value{};/* patches: 패치. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<std::array<std::uint32_t,3>> patches; };
 // 생성·위치 수집·수명·선택이 같은 현재 노드를 사용하는 검사 저장소다.
 struct EventScene {
+    // nodes: 노드. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::map<std::uint32_t,GumpCreateNode> nodes;
+    // create: 등록 표 +0이 실제 루트다. 외부에서 표를 바꿀 때 collection.root도 같은 토큰으로 맞춰야 한다 (GumpCreateState).
     GumpCreateState create;
+    // lifetime: 등록된 객체의 삭제·해제를 처리하는 수명 관리자. 입력 구성 또는 실행 결과 대조에 사용한다.
     GumpLifetimeState lifetime;
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
     GumpEventState state;
+    // responses: 응답. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::map<std::string,Response> responses;
+    // anchors: 앵커. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::map<std::uint32_t,ScreenPoint> anchors;
+    // calls: 호출 횟수 또는 호출 인자를 대조하는 기록. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::string calls;
     // 처리 중 주소가 안정된 현재 노드만 공급한다.
     GumpCreateNode* Find(std::uint32_t token) { const auto found=nodes.find(token);return found==nodes.end() ? nullptr : &found->second; }

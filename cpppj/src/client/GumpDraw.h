@@ -7,7 +7,7 @@ namespace netstorm::client {
 // Gump flags +4의 이 비트만 임시 클립을 만든다. 배경 자식의 별도 비트와 구분한다.
 inline constexpr std::uint32_t kGumpDrawClip=0x00400000;
 // 원본 half-open 화면 전역과 양 끝 포함 VFX 전역이다. Draw/투영 경계가 현재 값을 바꿀 수 있다.
-struct GumpDrawState { ScreenRect clip,vfxClip; };
+struct GumpDrawState { /* clip: 출력을 제한하는 클리핑 영역 또는 상태. */ /* vfxClip: 화면 좌표의 사각형. right·bottom은 포함하지 않는다(원본 004a1800의 인자) (ScreenRect). */ ScreenRect clip,vfxClip; };
 // 004a1580/CD 00422e10처럼 두 전역을 함께 설정한다. right/bottom -1의 DWORD 감김도 유지한다.
 void SetGumpDrawClip(GumpDrawState& state,ScreenRect clip);
 // 기본 Gump와 텍스트 파생 Draw가 공유하는 원본 임시 ClipGump다. 복사는 복구 순서를 깨므로 금지한다.
@@ -21,11 +21,13 @@ public:
     GumpClipScope(const GumpClipScope&)=delete;
     GumpClipScope& operator=(const GumpClipScope&)=delete;
 private:
+    // state_: 원본 half-open 화면 전역과 양 끝 포함 VFX 전역이다. Draw/투영 경계가 현재 값을 바꿀 수 있다 (GumpDrawState).
     GumpDrawState& state_;
+    // saved_: 화면 좌표의 사각형. right·bottom은 포함하지 않는다(원본 004a1800의 인자) (ScreenRect).
     ScreenRect saved_;
 };
 // 각 Gump 가상 표 +0x24의 실제 처리기를 공급한다. 하위 버튼/배경/텍스트의 생성/분류는 호출자 책임이다.
-struct GumpDrawHooks { std::function<void(std::uint32_t)> draw; };
+struct GumpDrawHooks { /* draw: 지정 Gump나 출력 요청을 실제 그리기에 전달하는 콜백. */ std::function<void(std::uint32_t)> draw; };
 // 00466310/CD 00492aa0의 전체 정상 분기와 C++ 예외 시 클립 보호다. 자식은 표시 목록에서 따로 그린다.
 class GumpDraw {
 public:
@@ -34,8 +36,11 @@ public:
     // 현재 플래그를 읽고 필요할 때만 경계/캐시를 조회한다. 빈 클립에서도 가상 Draw를 호출한다.
     void Draw(std::uint32_t token) const;
 private:
+    // collection_: 화면 밖 자식 통과, 최상위 삭제 필터, 원본의 루트별 제한 개수를 보존하는 UI 수집기다 (GumpCollection).
     const GumpCollection& collection_;
+    // state_: 원본 half-open 화면 전역과 양 끝 포함 VFX 전역이다. Draw/투영 경계가 현재 값을 바꿀 수 있다 (GumpDrawState).
     GumpDrawState& state_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (GumpDrawHooks).
     GumpDrawHooks hooks_;
 };
 // 공통 kind 2 제출이 수집기와 같은 Gump의 실제 클립 보호 경로를 사용하게 한다.
@@ -57,8 +62,12 @@ public:
 private:
     // 현재 inclusive 전역을 표면과 교차한 half-open 영역으로 바꾼다. 극단 끝점은 64비트로 계산한다.
     ScreenRect Clip() const;
+    // pixels_: 팔레트 인덱스나 색을 직접 쓰는 출력 픽셀 버퍼.
     std::span<std::uint8_t> pixels_;
+    // pitch_: 출력 버퍼에서 한 행을 이동할 바이트 간격.
+    // height_: 세로 크기.
     int pitch_,height_;
+    // state_: 원본 half-open 화면 전역과 양 끝 포함 VFX 전역이다. Draw/투영 경계가 현재 값을 바꿀 수 있다 (GumpDrawState).
     const GumpDrawState& state_;
 };
 }

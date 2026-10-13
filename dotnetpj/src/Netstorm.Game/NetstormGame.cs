@@ -41,8 +41,11 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     /// <summary>배경색 (원본 하늘색 계열)</summary>
     private static readonly Color BackgroundColor = new(28, 36, 60);
 
+    /// <summary>_graphics: 출력 장치와 화면 모드 변경을 적용하는 그래픽 관리자.</summary>
     private readonly GraphicsDeviceManager _graphics;
+    /// <summary>_display: 해상도·전체화면·출력 배율을 관리하는 화면 관리자.</summary>
     private readonly DisplayManager _display;
+    /// <summary>_edgeScroll: 화면 가장자리의 마우스 위치로 카메라 이동량을 계산하는 처리기.</summary>
     private readonly EdgeScrollController _edgeScroll = new();
     /// <summary>합성 화면 갱신·시간 상한 없이 실제 밀리초 시각을 전달하는 루프 시계.</summary>
     private readonly FrameLoopClock _frameLoop;
@@ -58,6 +61,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     private int _updatesSinceDraw;
     /// <summary>직전 그리기와 짝지은 갱신 수. MonoGame의 초기 준비 갱신 이후에는 1이어야 한다.</summary>
     private int _lastUpdatesPerDraw;
+    /// <summary>_screenshotPath: 명령줄에서 지정한 화면 캡처 저장 경로. 없으면 null.</summary>
     private readonly string? _screenshotPath;
     /// <summary>스크린샷을 저장하기 전에 기다릴 시간, 1/60초 단위 (--screenshot-frames, 기본 ScreenshotDelayFrames)</summary>
     private readonly int _screenshotFrames;
@@ -65,6 +69,7 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     private double _elapsedSeconds;
     /// <summary>스크린샷을 이미 저장했는지 (종료 요청 뒤에 한 번 더 그려져도 다시 저장하지 않는다)</summary>
     private bool _screenshotSaved;
+    /// <summary>_mapName: 명령줄에서 지정한 지도 이름. 없으면 기본 메뉴로 진입한다.</summary>
     private readonly string? _mapName;
     /// <summary>--mission 으로 지정한 미션 이름 (맵과 시작 조건을 미션 스크립트에서 읽는다)</summary>
     private readonly string? _missionName;
@@ -79,12 +84,19 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
     private string? _currentMissionName;
     /// <summary>--script 로 지정한 검증용 명령 스크립트 (맵 뷰어에서 시작할 때 실행)</summary>
     private readonly string? _scriptText;
+    /// <summary>_spriteName: 스프라이트 탐색기에 표시할 타입 이름.</summary>
     private readonly string? _spriteName;
+    /// <summary>_languageName: 자원 조회와 UI 표시에 요청한 언어 이름.</summary>
     private readonly string? _languageName;
+    /// <summary>_spriteFrame: 스프라이트 탐색기의 초기 프레임 지정 문자열.</summary>
     private readonly string? _spriteFrame;
+    /// <summary>_spritePalette: 스프라이트 탐색기의 초기 팔레트 이름.</summary>
     private readonly string? _spritePalette;
+    /// <summary>_spritePlay: 스프라이트 탐색기에서 애니메이션 재생을 시작할지.</summary>
     private readonly bool _spritePlay;
+    /// <summary>_spriteProperties: 스프라이트 탐색기에서 타입 속성을 표시할지.</summary>
     private readonly bool _spriteProperties;
+    /// <summary>_mapViewer: 현재 열린 지도·플레이 화면. 생성 전이나 메뉴에서는 null.</summary>
     private FortMapViewer? _mapViewer;
     /// <summary>기본 실행 화면과 미션 종료 후 복귀하는 메뉴.</summary>
     private MainMenuView? _mainMenu;
@@ -101,26 +113,36 @@ internal sealed class NetstormGame : Microsoft.Xna.Framework.Game
 
     /// <summary>도움말 앵커 절 (지식 상세창 본문)</summary>
     private HelpTopics? _help;
+    /// <summary>_helpWindow: 현재 열린 도움말 창. 닫힌 상태는 null.</summary>
     private HelpWindow? _helpWindow;
     /// <summary>메인 메뉴와 미션 메뉴가 공유하는 옵션 목록이 지도 위에 열려 있는지.</summary>
     private bool MissionOptionsOpen => _mapViewer != null && _mainMenu?.OptionsOnly == true && _mainMenu.Page == "options";
     /// <summary>튜토리얼 버튼으로 다음 미션을 열 때 다시 사용할 원본 자산.</summary>
     private GameResources? _resources;
+    /// <summary>_shapes: 타입 프레임의 크기와 픽셀을 조회하는 셰이프 DB.</summary>
     private ShapeDatabase? _shapes;
+    /// <summary>_palette: 스프라이트 인덱스를 실제 색으로 바꿀 현재 팔레트.</summary>
     private Palette? _palette;
     /// <summary>명령줄 시험 옵션을 처음 열린 맵에만 적용했는지.</summary>
     private bool _startupOptionsApplied;
+    /// <summary>_spriteBrowser: 현재 열린 타입·프레임 탐색 화면.</summary>
     private SpriteBrowser? _spriteBrowser;
+    /// <summary>_batch: 텍스처와 글자를 모아 출력할 SpriteBatch.</summary>
     private SpriteBatch? _batch;
+    /// <summary>_fonts: 영어·한국어 UI 글꼴을 제공하는 글꼴 시스템.</summary>
     private FontSystem? _fonts;
     /// <summary>메뉴와 미션 창에서 공유하는 원본 돌 질감·장식·글꼴.</summary>
     private OriginalUiSkin? _uiSkin;
 
     /// <summary>언어가 영어일 때 UI 가 쓰는 원본 비트맵 글꼴 (한국어이거나 캐시가 없으면 null).</summary>
     private OriginalFonts? _originalFonts;
+    /// <summary>_animations: 현재 화면에 출력할 스프라이트 애니메이션 목록.</summary>
     private readonly List<SpriteAnimation> _animations = [];
+    /// <summary>_statusLines: 개발용 상태 표시 영역에 출력할 문자열 목록.</summary>
     private readonly List<string> _statusLines = [];
+    /// <summary>_frameCount: 지금까지 처리한 화면 프레임 수.</summary>
     private int _frameCount;
+    /// <summary>_previousKeyboard: 새 키 입력과 눌림 유지를 구별할 이전 프레임 키보드 상태.</summary>
     private KeyboardState _previousKeyboard;
     /// <summary>모드별 창 제목 (화면 상태 문구를 뒤에 붙인다)</summary>
     private string _baseTitle = "NetStorm 클론 — 개발 환경 확인";

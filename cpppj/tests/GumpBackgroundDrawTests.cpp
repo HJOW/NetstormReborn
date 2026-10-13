@@ -17,10 +17,15 @@ std::string Event(char kind,std::initializer_list<std::uint32_t> values) {
 }
 // 위치/측정/배경의 기본·파생 노드가 실제 같은 저장소를 사용하는 작은 장면이다.
 struct BackgroundScene {
+    // create: 등록 표 +0이 실제 루트다. 외부에서 표를 바꿀 때 collection.root도 같은 토큰으로 맞춰야 한다 (GumpCreateState).
     GumpCreateState create;
+    // root: 같은 객체의 표시 필드를 상속하므로 수집/Draw의 캐시 쓰기가 생성 저장소에 바로 반영된다 (GumpCreateNode).
     GumpCreateNode root;
+    // node: +a0/+a4/+a8/+ac/+b0/+b4의 SHP·타일 크기·타입·프레임·배경 플래그다 (GumpBackgroundNode).
     GumpBackgroundNode node;
+    // factory: 타입에 맞는 객체를 생성하는 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     GumpCreate factory;
+    // collection: 화면 밖 자식 통과, 최상위 삭제 필터, 원본의 루트별 제한 개수를 보존하는 UI 수집기다 (GumpCollection).
     GumpCollection collection;
     // 생성과 표시 조회의 같은 주소를 반환한다.
     GumpCreateNode* Find(std::uint32_t token) { return token==1 ? &root : token==2 ? &node : nullptr; }

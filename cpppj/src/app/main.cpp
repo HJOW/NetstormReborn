@@ -539,7 +539,7 @@ int RunFortCommand(const std::string& command, std::vector<std::string> argument
 }
 
 // 새 검사 도구의 한 단계. 탭 뒤의 라벨은 공백을 보존한다.
-struct UiStep { std::uint64_t frame{}; std::string operation, argument; };
+struct UiStep { /* frame: 타입에서 사용할 그림 프레임 번호. */ std::uint64_t frame{}; /* operation: 자동 UI 프레임에서 실행할 작업 이름. */ /* argument: 타입·패턴·명령에 별도로 전달하는 첫 인자. */ std::string operation, argument; };
 // 검사용 TSV를 읽는다. 프레임 번호/동작/라벨 또는 캡처 경로 순이다.
 std::vector<UiStep> ReadUiSteps(const std::filesystem::path& path) {
     std::ifstream file(path, std::ios::binary); if (!file) throw std::runtime_error("Unable to read UI script");

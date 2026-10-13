@@ -12,15 +12,17 @@ class SquidUnpop;
 class SquidForms;
 // 암묵적인 런타임 SquidId 변환을 막는 원본 슬롯 번호다.
 struct Sid {
+    // value: 읽기·쓰기·통지에 전달하는 값.
     std::uint16_t value{};
     // 원본 슬롯 번호끼리만 비교한다.
     bool operator==(const Sid&) const = default;
 };
 // 판본별 raw 슬롯 크기와 서버/예측 영역의 시작 번호다.
-struct SidLayout { std::uint32_t stride{},serverFirst{},predictableFirst{}; };
+struct SidLayout { /* stride: 원본 객체 슬롯 하나의 바이트 크기. */ /* serverFirst: 서버 슬롯 영역의 첫 번호. */ /* predictableFirst: 예측 슬롯 영역의 첫 번호. */ std::uint32_t stride{},serverFirst{},predictableFirst{}; };
 // 원본이 반납 직전에 보존하는 최근 삭제 기록 한 항목이다.
-struct SidDeletion { std::uint32_t sid{},type{}; };
+struct SidDeletion { /* sid: 원본 풀에서 객체를 찾는 SID 번호. */ /* type: 타입 표에서 객체 종류를 찾는 번호. */ std::uint32_t sid{},type{}; };
 
+// 원본 SID 영역별 자유 슬롯과 예측 슬롯을 할당·반납하는 저장소이다.
 class SidPool {
 public:
     // 기존에 확보한 풀의 초기화 경로를 복원한다. CRT malloc의 포인터/실패 처리 자체는 복제하지 않는다.
@@ -67,11 +69,19 @@ private:
     std::size_t Offset(Sid sid) const;
     // 반납 기록의 20항목 이동을 복원하며 마지막 항목은 버린다.
     void Record(Sid sid,std::uint8_t type);
+    // layout_: 좌표 배치 계산 또는 판본별 필드 위치 정보.
     SidLayout layout_;
+    // capacity_: 확보한 저장소의 최대 항목 수.
+    // freeCount_: 반납 상태인 슬롯의 개수.
+    // predictableCursor_: 다음 예측 슬롯 할당을 시작할 번호.
     std::uint32_t capacity_{},freeCount_{},predictableCursor_{};
+    // server_: 서버 전용 초기화와 동작을 적용할지.
     bool server_{};
+    // bytes_: 필드 접근이나 파일 읽기에 사용하는 원시 바이트.
     std::vector<std::uint8_t> bytes_;
+    // tails_: 할당 영역별 자유 슬롯 연결 목록의 꼬리 번호.
     std::array<std::uint16_t,2> tails_{};
+    // deletions_: 최근 삭제한 객체의 번호·타입 기록.
     std::array<std::array<SidDeletion,20>,2> deletions_{};
 };
 }

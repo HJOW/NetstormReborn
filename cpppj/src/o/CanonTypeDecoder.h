@@ -3,6 +3,7 @@
 #include "o/CanonDecoder.h"
 
 namespace netstorm::o {
+// 타입별 Canon 패턴·방향·초기 좌표를 고르는 입력 값이다.
 struct CanonTypeQuery {
     std::uint32_t type{}; // 현재 타입 번호다. 패턴 번호와 구별한다.
     int argument{},direction{}; // 패턴 번호 또는 명시 프레임과 방향 값이다.

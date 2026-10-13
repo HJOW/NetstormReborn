@@ -5,6 +5,7 @@
 #include <unordered_map>
 
 namespace netstorm::o {
+// 언어별 용어 키에 대응하는 번역 문자열을 조회하는 표이다.
 class XlatTable {
 public:
     // UTF-8 텍스트에서 첫 글자가 '*', '-', '='인 구분 줄을 파싱한다.
@@ -14,6 +15,7 @@ public:
     // 중복 원문을 제외한 실제 번역 키 개수.
     std::size_t Size() const;
 private:
+    // translations_: 용어 키를 언어별 표시 문자열로 바꾸는 번역표.
     std::unordered_map<std::string, std::string> translations_;
 };
 }

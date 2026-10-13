@@ -20,52 +20,88 @@
 
 namespace netstorm::client {
 // 저장/지형 어댑터에서 넘기는 초기 위치다. 등록 뒤 현재 값은 raw 슬롯만 읽는다.
-struct SurfaceSeed { std::uint32_t type{},owner{};std::int32_t frame{};float x{},y{}; };
-struct SurfaceSnapshot { o::Sid sid{};SurfaceSeed object; };
+struct SurfaceSeed { /* type: 타입 표에서 객체 종류를 찾는 번호. */ /* owner: 객체나 지역을 소유한 플레이어 번호. */ std::uint32_t type{},owner{};/* frame: 타입에서 사용할 그림 프레임 번호. */ std::int32_t frame{};/* x: X 좌표. */ /* y: Y 좌표. */ float x{},y{}; };
+// 표면 객체의 현재 SID와 직렬화할 배치 정보이다.
+struct SurfaceSnapshot { /* sid: 원본 풀에서 객체를 찾는 SID 번호. */ o::Sid sid{};/* object: 해당 SID나 출력 항목에 대응하는 객체 자료. */ SurfaceSeed object; };
 // 해상도 변경으로 Renderer가 교체되어도 현재 장치에 전달할 수 있는 표시 콜백이다.
 struct SurfaceDisplayHooks {
+    // suppressed: 현재 표시나 후처리를 억제하는 전역 상태를 조회하는 콜백.
     std::function<bool()> suppressed;
+    // invalidate: 변경한 영역의 재그리기를 요청하는 콜백.
     std::function<void(o::SquidDisplayRect,std::uint32_t)> invalidate;
 };
 // 비표면 runtime이 참조하는 실제 월드 자료다. span은 원본 배열이며 풀/해시/장부의 사본을 만들지 않는다.
 // 이 참조는 월드보다 오래 살 수 없고 연결 모듈 해제 전 ClearProcesses를 호출해야 한다.
 struct RawWorldCore {
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     o::SidPool& pool;
+    // hash: 좌표별 객체 후보를 찾는 공간 해시.
     o::SquidHash& hash;
+    // spots: 칸별 점유·통행 비트를 읽는 spot 지도.
     std::span<std::uint8_t> spots;
+    // types: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::span<const o::RiftTypeRecord> types;
+    // frames: 타입별 프레임 자료.
     std::span<const o::RiftTypeFrames> frames;
+    // shapes: 프레임의 크기·그림 데이터를 조회하는 셰이프 자료.
     std::span<const o::SquidDisplayShape> shapes;
+    // bookkeeping: 객체 종류·소유자별 등록 목록과 개수를 관리하는 장부.
     o::SquidPostPopState& bookkeeping;
+    // ownerMode: 판본·서버·로딩 상태에 따른 소유권 처리 정책.
     o::SquidOwnerMode& ownerMode;
+    // factory: 타입에 맞는 객체를 생성하는 처리기.
     o::SquidFactory& factory;
+    // owner: 소유 플레이어 변경을 객체 필드와 장부에 반영하는 처리기.
     o::SquidOwner& owner;
+    // frame: 프레임 변경을 물리 프레임·통지·갱신 요청에 반영하는 처리기.
     o::SquidFrame& frame;
+    // pop: 객체를 공간 지도에 등록하는 Pop 처리기.
     o::SquidPop& pop;
+    // unpop: 객체의 공간 등록을 해제하는 Unpop 처리기.
     o::SquidUnpop& unpop;
+    // postPop: 객체 Pop 이후 목록·공간 후처리를 수행하는 처리기.
     o::SquidPostPop& postPop;
+    // display: 객체·프레임에서 실제 화면 출력 요청을 만드는 처리기.
     o::SquidDisplay& display;
+    // building: 일반 건물의 공간 등록·해제를 반영하는 처리기 또는 상태.
     o::RawBuildingSpace& building;
+    // graph: 서로 연결된 표면의 Graph 소속을 관리하는 처리기.
     o::RawGraph& graph;
+    // neighbors: 발자국에 인접한 표면·객체를 조회하는 검색기.
     o::RawSquidNeighbors& neighbors;
+    // destroy: 객체 삭제의 전처리·공간 해제·후처리를 실행하는 처리기.
     o::RawSquidDestroy& destroy;
+    // virtualDestroy: 타입별 가상 삭제 경로를 선택하는 분배기.
     o::RawSquidDestroyDispatch& virtualDestroy;
+    // surfaces: 표면 객체의 공간·연결·수명 처리 자료.
     o::RawSurfaceLifecycle& surfaces;
+    // bridgeEvents: 다리의 연결·붕괴 변화에 따른 이벤트 처리기.
     o::RawBridgeEvents& bridgeEvents;
+    // forms: 객체에 부착된 Form의 생성·통지·수명 처리기.
     o::SquidFormDispatch& forms;
+    // processes: 공유 커널에 연결한 객체 프로세스 호스트.
     o::SquidProcessHost& processes;
+    // processState: 프로세스 실행·부착·이벤트 분배에 사용하는 상태.
     o::SquidProcessState& processState;
+    // kernel: 프로세스 등록과 프레임 실행을 담당하는 커널.
     o::Kernel& kernel;
 };
 // 표면의 기존 훅을 합성한 미션 runtime 경계다. 새 월드 생성 후 첫 객체 생성/Load 전에 한 번 연결한다.
 struct RawWorldRuntimeHooks {
+    // assets: 타입·셰이프·팔레트 자산 또는 해당 자산의 처리 경계.
     o::SquidDestroyHooks assets;
+    // destroy: 객체 삭제의 전처리·공간 해제·후처리를 실행하는 처리기.
     o::SquidAssetDestroy destroy;
+    // regular: 주기 동작을 수행하는 Regular 프로세스 연결.
     o::RegularHandler regular;
+    // transmit: Form 데이터 작성과 송신을 연결하는 전송 경계.
     o::ProcessFormTransmission transmit;
+    // walkerFall: 지정 이동 유닛의 추락 처리를 실행하는 콜백.
     std::function<bool(o::Sid)> walkerFall;
+    // loadingDepth: 현재 로딩 중첩 깊이를 외부 상태에 전달하는 콜백.
     std::function<void(std::uint32_t)> loadingDepth;
 };
+// 같은 SID 풀·공간 지도에서 표면 객체의 생성·등록·수명·표시를 관리하는 월드이다.
 class RawSurfaceWorld {
 public:
     // 프레임/타입/SHP를 소유하여 GUI 참조와 raw 조회가 같은 판본을 사용하게 한다.
@@ -112,6 +148,7 @@ public:
     std::string Report() const;
 private:
     struct Impl;
+    // impl_: 공개 인터페이스 뒤의 구현 상태와 연결 객체.
     std::unique_ptr<Impl> impl_;
 };
 }

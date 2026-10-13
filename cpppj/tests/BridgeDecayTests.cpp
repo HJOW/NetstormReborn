@@ -68,11 +68,24 @@ RiftTypeFrames Frames(const std::string& table) {
 }
 // 입력 객체 한 개: 번호, 기준점, 발자국, 타입 플래그, 종류(0 다리/1 섬), 프레임, state, extra, 그래프 번호, 수명 단어.
 struct Input {
+    // id: 대상을 구별하는 식별 번호. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::uint16_t id{};
+    // x: X 좌표. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // y: Y 좌표. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // width: 가로 크기. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // height: 세로 크기. 입력 구성 또는 실행 결과 대조에 사용한다.
     int x{}, y{}, width{}, height{};
+    // flags1: 타입의 첫 번째 플래그 단어. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // flags2: 타입의 두 번째 플래그 단어. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::uint32_t flags1{}, flags2{};
+    // kind: 자료나 동작의 종류를 구별하는 값. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // frame: 타입에서 사용할 그림 프레임 번호. 입력 구성 또는 실행 결과 대조에 사용한다.
     int kind{}, frame{};
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
+    // extra: 원본 출력·상태 문맥의 추가 인자 값. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // graph: 서로 연결된 표면의 Graph 소속을 관리하는 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::uint8_t state{}, extra{}, graph{};
+    // word: 단어. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::uint16_t word{};
 };
 // "a,b,c;d,e,f" 형식의 정수 묶음을 읽는다. '-'는 빈 목록이다.
@@ -165,8 +178,11 @@ std::string AfterText(const std::vector<Input>& inputs, const std::vector<Bridge
 }
 // 표면 탐색기 입력(객체 목록, 번호 지도, spot 지도)을 만든다. 결과는 계산하지 않는다.
 struct Scene {
+    // objects: 현재 월드 또는 수집 단계의 객체 목록. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<SurfaceObject> objects;
+    // map: 지도. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::uint16_t> map = std::vector<std::uint16_t>(kWorldCells * kWorldCells);
+    // spots: 칸별 점유·통행 비트를 읽는 spot 지도. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::uint8_t> spots = std::vector<std::uint8_t>(kWorldCells * kWorldCells);
     Scene(const std::vector<Input>& inputs, const RiftTypeFrames& frames, const std::string& spotText) {
         const auto codes = frames.Codes();

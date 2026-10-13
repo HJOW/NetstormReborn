@@ -49,6 +49,7 @@ std::uint32_t QuantizedFrameMilliseconds(int maxFps);
 // 원본 WinMain의 인자와, 원본에 없는 검사용 옵션.
 struct ClientOptions {
     std::filesystem::path gameDirectory;   // 원본은 명령줄 또는 실행 파일 위치에서 정한다(FUN_00435cd0).
+    // edition: 판본별 필드 배치와 동작을 선택하는 원본 버전.
     o::OriginalEdition edition{o::OriginalEdition::Patch1078};
     bool forceWindow{};                    // 원본 명령줄 "window": 전체화면 설정을 무시한다.
     std::string settings;                  // 원본 명령줄의 설정 글(`키=값;키=값`).
@@ -157,46 +158,84 @@ private:
     // 읽지 못한 키는 원본 setup.cfg·options.cfg의 기본값을 유지한다(원본 FUN_00441270의 ReadInt와 같다).
     ClientAudioOptions ReadAudioOptions();
 
+    // options_: 원본 WinMain의 인자와, 원본에 없는 검사용 옵션 (ClientOptions).
     ClientOptions options_;
+    // files_: 디스크·보조 디렉터리·아카이브 순서로 게임 파일을 찾는 파일 시스템 (o::BaseFileSystem).
     o::BaseFileSystem files_;
+    // configuration_: 현재 언어와 실행 설정을 조회하는 인터페이스.
     o::ConfigInterface configuration_;
+    // translations_: 용어 키를 언어별 표시 문자열로 바꾸는 번역표.
     std::optional<o::XlatTable> translations_;
+    // languageNumber_: 현재 언어를 언어 표에서 찾는 번호.
     int languageNumber_{1};
+    // instance_: 현재 Win32 프로그램 인스턴스 핸들.
     NativeHandle instance_{};          // DAT_0054dbf8
     NativeHandle resources_{};         // 원본 실행 파일을 자료로 연 모듈(아이콘·커서·로딩 그림). 없으면 널.
+    // window_: 게임 출력이나 장치 협조 수준에 사용하는 Win32 창 핸들.
     NativeHandle window_{};            // DAT_0054dbf4
+    // windowDc_: Win32 창으로 그림을 전송할 장치 컨텍스트.
     NativeHandle windowDc_{};          // DAT_0054d960
+    // loadingBitmap_: 초기 로딩 화면에 그릴 GDI 비트맵 핸들.
     NativeHandle loadingBitmap_{};     // DAT_0054de70
+    // loadingFont_: 초기 로딩 화면의 문자를 그릴 GDI 글꼴 핸들.
     NativeHandle loadingFont_{};       // DAT_0054de74
+    // screen_: 원본 Screen.cpp의 전역 변수 묶음을 객체 하나로 둔다. 창과 창의 장치 문맥은 ClientMain이 만든다 (std::unique_ptr<Screen>).
     std::unique_ptr<Screen> screen_;
+    // assets_: 타입·셰이프·팔레트 자산 또는 해당 자산의 처리 경계.
     std::unique_ptr<GameAssets> assets_;
+    // renderer_: 수집한 그림·텍스트를 화면에 그리는 렌더러.
     std::unique_ptr<Renderer> renderer_;
+    // fonts_: 이름·크기로 찾아 재사용하는 글꼴 저장소.
     std::unique_ptr<FontStore> fonts_;
+    // cursor_: 원본 커서 그림과 핫스폿을 Win32 커서로 만들어 선택하는 관리자 (std::unique_ptr<Cursor>).
     std::unique_ptr<Cursor> cursor_;
+    // menu_: 메뉴·브리핑·미션 페이지와 해당 UI 동작을 관리하는 처리기 (std::unique_ptr<UberGump>).
     std::unique_ptr<UberGump> menu_;
     std::unique_ptr<ClientAudio> audio_; // 원본 "init sound"가 만드는 소리·음악 묶음. 화면보다 먼저 닫는다.
+    // sceneVisible_: 장면 표시 여부.
     bool sceneVisible_{};
+    // input_: 처리할 입력 또는 입력 분배기.
     InputQueue input_;
+    // clock_: 프레임 판정에 현재 게임 시각을 공급하는 시계.
     o::GameClock clock_;
+    // time_: 프레임의 게임 시각과 벽 시각 및 시간 차 (o::FrameTime).
     o::FrameTime time_{};
+    // kernel_: 프로세스 등록과 프레임 실행을 담당하는 커널.
     o::Kernel kernel_;
     std::vector<o::ProcessId> thunderProcesses_; // 커널이 소유한 번개 번호. 파괴 콜백에서 제거하므로 재사용된 슬롯을 지우지 않는다.
+    // screenWidth_: 게임 화면의 픽셀 너비.
     int screenWidth_{kDefaultScreenWidth};   // DAT_00531860
+    // screenHeight_: 게임 화면의 픽셀 높이.
     int screenHeight_{kDefaultScreenHeight}; // DAT_00531864
+    // windowWidth_: Win32 창의 너비.
     int windowWidth_{-1};              // DAT_00542390
+    // windowHeight_: Win32 창의 높이.
     int windowHeight_{-1};             // DAT_00542394
+    // clientWidth_: Win32 클라이언트 영역의 너비.
     int clientWidth_{};                // DAT_005c78fc
+    // clientHeight_: Win32 클라이언트 영역의 높이.
     int clientHeight_{};               // DAT_005c7900
+    // initWindowPos_: 초기화 창 위치.
     std::int32_t initWindowPos_{};     // DAT_0054db40
+    // maxFps_: 화면 갱신의 초당 최대 프레임 수.
     std::int32_t maxFps_{kDefaultMaxFps}; // DAT_005318d8
+    // frameInterval_: 화면 프레임 갱신의 최소 간격(초).
     double frameInterval_{};           // DAT_005318e0
+    // sleepPerLoop_: 프레임 루프가 반복할 때 적용하는 대기 시간.
     std::int32_t sleepPerLoop_{};      // DAT_0054db0c
+    // highPriority_: 실행 우선순위를 높이는 설정을 적용할지.
     std::int32_t highPriority_{};      // DAT_0054db2c
+    // lastDraw_: 직전 화면 그리기의 벽 시계 시각(초).
     double lastDraw_{};                // DAT_0054de80
+    // active_: 현재 입력·실행 대상이 활성 상태인지.
     bool active_{};                    // DAT_0054dc50
+    // activatedByClick_: 활성화 조회기준 클릭 여부.
     bool activatedByClick_{};          // DAT_0054dee4
+    // nonClientClick_: 비 클라이언트 클릭 여부.
     bool nonClientClick_{};            // DAT_0054dee0
+    // closing_: 창 또는 프로세스 종료 처리를 진행 중인지.
     bool closing_{};                   // DAT_0054dee8
+    // frames_: 타입별 프레임 자료.
     std::uint64_t frames_{};
 };
 

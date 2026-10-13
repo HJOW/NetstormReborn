@@ -61,19 +61,33 @@ std::vector<RiftTypeRecord> SceneTypes(bool patch) {
 }
 // 기계어 생성기의 연산을 같은 순서로 실행하고 같은 형식의 관찰 문자열을 만든다.
 struct Scene {
+    // patch: 10.78 패치판의 상태 또는 패치판 검사용 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     bool patch;
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
     SidPool pool;
+    // hash: 좌표별 객체 후보를 찾는 공간 해시. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidHash hash;
+    // types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeRecord> types;
+    // spots: 칸별 점유·통행 비트를 읽는 spot 지도. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::uint8_t> spots=std::vector<std::uint8_t>(65536);
+    // unpop: 객체의 공간 등록을 해제하는 Unpop 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidUnpop unpop;
+    // destroy: 객체 삭제의 전처리·공간 해제·후처리를 실행하는 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     RawSquidDestroy destroy;
+    // kernel: 프로세스 등록과 프레임 실행을 담당하는 커널. 입력 구성 또는 실행 결과 대조에 사용한다.
     Kernel kernel;
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
     SquidProcessState state;
+    // events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::string> events;
+    // script: 안내·명령·섹션을 조회할 미션 스크립트. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<float> script;
+    // cursor: 커서. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::size_t cursor{};
+    // host: Form이나 프로세스의 등록·통지·수명을 연결하는 호스트. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidProcessHost host;
+    // parents: 부모. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<Sid> parents;
     std::vector<RegularProcess*> created;      // 생성 순서의 포인터. 살아 있는 동안만 쓴다.
     std::map<ProcessId,std::uint32_t> slotIndex; // Kernel 슬롯 → 생성 순서 번호.

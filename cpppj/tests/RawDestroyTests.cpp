@@ -84,21 +84,38 @@ std::uint32_t LogAdler(const SidPool& pool) {
 }
 // 외부 효과만 명시적으로 대체한 동일 입력이다. 실제 Unpop/반납은 C++ 구현을 호출한다.
 struct Scene {
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
     SidPool pool;
+    // hash: 좌표별 객체 후보를 찾는 공간 해시. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidHash hash;
+    // types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeRecord> types;
+    // spots: 칸별 점유·통행 비트를 읽는 spot 지도. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::uint8_t> spots=std::vector<std::uint8_t>(65536);
+    // unpop: 객체의 공간 등록을 해제하는 Unpop 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidUnpop unpop;
+    // destroy: 객체 삭제의 전처리·공간 해제·후처리를 실행하는 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     RawSquidDestroy destroy;
+    // bridge: 다리. 입력 구성 또는 실행 결과 대조에 사용한다.
     RawBridgeLifecycle bridge;
+    // finder: 검색기. 입력 구성 또는 실행 결과 대조에 사용한다.
     RawSquidFinder finder;
+    // slots: 등록 대상의 저장 슬롯 목록. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::map<std::uint16_t,std::span<std::uint8_t>> slots;
+    // active: 현재 입력·실행 대상이 활성 상태인지. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<Sid> active;
+    // events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::string> events;
+    // root: 암묵적인 런타임 SquidId 변환을 막는 원본 슬롯 번호다 (Sid).
+    // selected: 현재 선택한 객체·컨트롤의 번호 또는 토큰. 입력 구성 또는 실행 결과 대조에 사용한다.
     Sid root{},selected{};
+    // bridgeMode: 다리 모드 여부. 입력 구성 또는 실행 결과 대조에 사용한다.
     bool bridgeMode{};
+    // scenario: 시나리오. 입력 구성 또는 실행 결과 대조에 사용한다.
     int scenario{};
+    // hooks: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (SquidDestroyHooks). 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidDestroyHooks hooks;
+    // bridgeHooks: 탐색기는 begin의 첫 번호와 next의 후속 번호를 내준다. 0은 끝이며 순서/동적 필터는 호출자 계약이다 (BridgeLifecycleHooks).
     BridgeLifecycleHooks bridgeHooks;
     // Reset/Create 뒤 덮어쓰는 입력은 vtable 기본값과 풀 목록 외에 생성자 효과가 없다.
     Scene(OriginalEdition edition,bool server,int role,int inputCase,bool isBridge)

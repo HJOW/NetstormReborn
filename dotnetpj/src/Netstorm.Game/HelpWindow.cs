@@ -39,32 +39,54 @@ internal sealed class HelpWindow : IDisposable
     private static readonly Color StatValueColor = OriginalUiSkin.ValueColor;
     /// <summary>스크롤바 홈 색 (녹화 표본 약 48,48,48)</summary>
     private static readonly Color TrackColor = new(48, 48, 48);
+    /// <summary>_device: 텍스처 생성과 화면 출력을 수행할 그래픽 장치.</summary>
     private readonly GraphicsDevice _device;
+    /// <summary>_skin: 원본 UI 프레임·버튼·배경을 그리는 공통 외관 자료.</summary>
     private readonly OriginalUiSkin _skin;
+    /// <summary>_resources: 언어·미션·설정·게임 자산을 조회하는 공통 자원.</summary>
     private readonly GameResources _resources;
+    /// <summary>_topics: 도움말 주제 이름과 문서 위치를 연결하는 목록.</summary>
     private readonly HelpTopics _topics;
+    /// <summary>_navigation: 도움말 앵커 이동과 뒤로 가기를 관리하는 탐색 상태.</summary>
     private readonly HelpNavigation _navigation;
+    /// <summary>_shapes: 타입 프레임의 크기와 픽셀을 조회하는 셰이프 DB.</summary>
     private readonly ShapeDatabase _shapes;
+    /// <summary>_palette: 스프라이트 인덱스를 실제 색으로 바꿀 현재 팔레트.</summary>
     private readonly Palette _palette;
+    /// <summary>_types: 타입 이름·해시와 프레임 속성을 조회하는 카탈로그.</summary>
     private readonly TypeCatalog _types;
+    /// <summary>_pixel: 사각형·선·단색 배경을 그릴 때 늘려 쓰는 1×1 텍스처.</summary>
     private readonly Texture2D _pixel;
+    /// <summary>_clip: 본문 영역 밖의 픽셀을 자르도록 Scissor 검사를 켠 래스터 상태.</summary>
     private readonly RasterizerState _clip = new() { ScissorTestEnable = true };
+    /// <summary>_pictures: 도움말 그림 이름별 텍스처 캐시. 읽지 못한 그림은 null로 저장한다.</summary>
     private readonly Dictionary<string, Texture2D?> _pictures = new(StringComparer.OrdinalIgnoreCase);
+    /// <summary>_fragments: 도움말 본문을 배치한 텍스트·그림·링크 조각.</summary>
     private readonly List<Fragment> _fragments = [];
+    /// <summary>_previousMouse: 클릭·해제·휠 변화를 검출할 이전 프레임 마우스 상태.</summary>
     private MouseState _previousMouse;
     /// <summary>Back(0)·OK(1) 버튼의 누름·떼기 처리기 (원본 돌 버튼 규칙).</summary>
     private readonly ButtonGump _gump = new();
 
     /// <summary>지금 눌린 모양인 버튼의 글자 (없으면 null). 자동 UI 검사가 읽는다.</summary>
     public string? PressedLabel => _gump.Held is int held && _gump.IsPressed(held) ? (held == 0 ? "Back" : "OK") : null;
+    /// <summary>_inMission: 도움말 창을 미션 안에서 열었는지.</summary>
     private bool _inMission;
+    /// <summary>_dragBody: 본문을 잡고 스크롤하는 중인지.</summary>
     private bool _dragBody;
+    /// <summary>_dragBar: 스크롤바를 잡고 이동하는 중인지.</summary>
     private bool _dragBar;
+    /// <summary>_dragStartY: 드래그가 시작된 마우스 Y 좌표.</summary>
     private int _dragStartY;
+    /// <summary>_dragStartX: 드래그가 시작된 마우스 X 좌표.</summary>
     private int _dragStartX;
+    /// <summary>_dragStartScroll: 드래그 시작 시 본문의 스크롤 위치.</summary>
     private int _dragStartScroll;
+    /// <summary>_contentHeight: 줄 배치 뒤 계산한 본문 전체 높이.</summary>
     private int _contentHeight;
+    /// <summary>_layoutAnchor: 현재 줄 배치를 계산한 도움말 앵커.</summary>
     private string? _layoutAnchor;
+    /// <summary>_layoutWidth: 현재 줄 배치를 계산한 본문 너비.</summary>
     private int _layoutWidth;
     /// <summary>클론 입력·가장자리 스크롤을 막아야 하는지.</summary>
     public bool IsOpen => _navigation.Anchor != null;
@@ -405,6 +427,12 @@ internal sealed class HelpWindow : IDisposable
     }
 
     /// <summary>그리기와 링크 클릭 판정이 공유하는 본문 조각.</summary>
+    /// <param name="Bounds">본문 조각의 화면 영역. 출력과 링크 적중 판정에 사용한다.</param>
+    /// <param name="Text">이 구간에 출력할 텍스트.</param>
+    /// <param name="Style">글꼴·색·정렬에 적용할 텍스트 스타일.</param>
+    /// <param name="Link">클릭하면 이동할 도움말 앵커. 없으면 null.</param>
+    /// <param name="Picture">텍스트 대신 출력할 그림. 없으면 null.</param>
+    /// <param name="Bold">굵은 글씨 효과를 적용할지.</param>
     private sealed record Fragment(Rectangle Bounds, string Text, TutorialTextStyle Style, string? Link, string? Picture, bool Bold);
     /// <summary>본문 그림 캐시와 전용 그리기 자원을 해제한다.</summary>
     public void Dispose()

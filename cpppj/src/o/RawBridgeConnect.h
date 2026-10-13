@@ -55,6 +55,7 @@ void SetIslandOwner(SidPool& pool, const BridgeConnectState& state, Sid sid, std
 // pool·state는 반환한 함수보다 오래 살아야 한다.
 std::function<void(Sid, std::uint32_t)> MakeOwnerDispatch(SidPool& pool, const BridgeConnectState& state,
     std::function<void(Sid, std::uint32_t)> base);
+// 다리/섬 연결(004213b0), 연결 객체 생성(004210f0), 소유자 전파(00421240)를 raw SID 풀 위에서 복원한다.
 class RawBridgeConnect {
 public:
     // 풀·이웃 탐색기·상태는 이 객체보다 오래 살아야 한다. neighbors는 같은 풀을 읽어야 하고 훅은 모두 연결돼 있어야 한다.
@@ -83,9 +84,13 @@ private:
     void SetFrameField(Sid sid, std::int32_t frame) const;
     // 004ac200 ↔ CD 004abae0: 객체 타입의 genus(flags2)다.
     std::uint32_t Genus(Sid sid) const;
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
+    // neighbors_: 발자국에 인접한 표면·객체를 조회하는 검색기.
     const RawSquidNeighbors& neighbors_;
+    // state_: 연결 함수들이 읽는 원본 전역이다. 패치 주소 / CD 주소를 주석에 둔다 (BridgeConnectState).
     const BridgeConnectState& state_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (BridgeConnectHooks).
     BridgeConnectHooks hooks_;
 };
 }

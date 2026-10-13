@@ -17,8 +17,11 @@ public:
     // 직접 프레임 지정과 진행이 같은 효과 경로를 사용하는지 확인한다.
     const SquidFrame& Setter() const;
 private:
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
+    // frames_: 타입별 프레임 자료.
     std::span<const RiftTypeFrames> frames_;
+    // setter_: 객체 프레임 변경을 물리 프레임·통지·갱신 요청에 반영하는 처리기 (SquidFrame).
     const SquidFrame& setter_;
 };
 }

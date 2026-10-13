@@ -12,7 +12,7 @@
 namespace netstorm::client {
 namespace {
 // CreateThread에 넘기는 callback은 원본의 사라지는 지역 변수 주소 대신 힙에서 소유한다.
-struct WorkerEntry { std::function<std::uint32_t()> callback; };
+struct WorkerEntry { /* callback: 외부 음악 콜백의 처리 결과를 받는 함수. */ std::function<std::uint32_t()> callback; };
 // 실제 Windows stdcall 진입점이다. callback/예외를 프로세스 밖으로 내보내지 않는다.
 DWORD WINAPI WorkerMain(void* parameter) {
     std::unique_ptr<WorkerEntry> entry(static_cast<WorkerEntry*>(parameter));
@@ -20,7 +20,9 @@ DWORD WINAPI WorkerMain(void* parameter) {
 }
 // 한 Runtime의 실제 이벤트/스레드다. 핸들 닫기는 Runtime 수명 정책에서만 수행한다.
 struct Win32Worker {
-    HANDLE event{},thread{};std::atomic<bool> stopping{false};
+    // event: 대상 처리기에 전달할 이벤트 ID.
+    // thread: 음악 처리를 수행하는 스레드.
+    HANDLE event{},thread{};/* stopping: 정지중. */ std::atomic<bool> stopping{false};
 };
 }
 // 원본 API 인자/반환을 Windows에 연결하되 TerminateThread 대신 정상 종료 요청/합류를 사용한다.

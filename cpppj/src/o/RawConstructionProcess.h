@@ -68,6 +68,7 @@ struct ConstructionProcessHooks {
     std::function<void(std::uint32_t)> play;
     // 부모의 가상 Unpop(vtable +0x48, flags 0)과 현재 위치 재등록(vtable +0x4c, flags 9)이다. Unpop은 void를 켜야 한다.
     std::function<void(Sid,std::uint32_t)> unpop;
+    // repop: 변경한 대상을 공간에 다시 반영하는 Repop 콜백.
     std::function<void(Sid,std::uint32_t)> repop;
     // 완성된 발자국의 유닛을 밀어낸다(x, y, 타입, 소유자). CD판 원본은 소유자를 넘기지 않는다. 00443800 / CD 004d2450.
     std::function<void(float,float,std::uint32_t,std::uint32_t)> push;

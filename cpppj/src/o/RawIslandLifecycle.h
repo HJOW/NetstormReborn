@@ -20,6 +20,7 @@ struct IslandLifecycleHooks {
     // 공통 postDestroy(004b0840 / CD 004adbe0).
     std::function<void(Sid sid, std::uint32_t flags)> basePostDestroy;
 };
+// 섬 받침의 preDestroy 재정의(00442240)와 noIsland의 postDestroy 재정의(00442640)를 raw SID 풀 위에서 복원한다.
 class RawIslandLifecycle {
 public:
     // 풀과 이웃 탐색기는 이 객체보다 오래 살아야 하고 같은 풀을 읽어야 한다. 훅은 모두 연결돼 있어야 한다.
@@ -34,8 +35,11 @@ public:
 private:
     // 004ac200 ↔ CD 004abae0: 객체 타입의 genus(flags2)다.
     std::uint32_t Genus(Sid sid) const;
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     const SidPool& pool_;
+    // neighbors_: 발자국에 인접한 표면·객체를 조회하는 검색기.
     const RawSquidNeighbors& neighbors_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (IslandLifecycleHooks).
     IslandLifecycleHooks hooks_;
 };
 }

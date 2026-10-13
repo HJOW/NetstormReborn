@@ -18,7 +18,9 @@ struct RawPathSearchState {
 };
 // 원본 signed WORD 거리표와 두 BYTE 큐의 미사용 흔적까지 보존한다.
 struct RawPathSearchWork {
+    // distance: 256×256 칸의 원본 signed WORD BFS 거리표.
     std::array<std::int16_t,65536> distance{};
+    // queue: BFS 방문 순서대로 X·Y BYTE 좌표를 담는 16,384항목 큐.
     std::array<std::array<std::uint8_t,2>,16384> queue{};
 };
 // 같은 실제 pool/hash0/spot/현재 타입·프레임에서만 경로를 계산한다.
@@ -47,11 +49,17 @@ private:
     FrameCode Frame(Sid sid) const;
     // 경로 배열에 raw append하고 최대 길이 assert를 진단한다.
     void Append(std::vector<RawPathPoint>& points,std::vector<std::int32_t>& directions,RawPathPoint point,std::int32_t direction,const RawPathRuntime& output) const;
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     const SidPool& pool_;
+    // hash_: 좌표별 객체 후보를 찾는 공간 해시.
     const SquidHash& hash_;
+    // spots_: 칸별 점유·통행 비트를 읽는 spot 지도.
     std::span<const std::uint8_t> spots_;
+    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::span<const RiftTypeRecord> types_;
+    // frames_: 타입별 프레임 자료.
     std::span<const RiftTypeFrames> frames_;
+    // state_: Path.cpp가 직접 읽고 바꾸는 전역이다. 명령을 만든 부모의 owner를 별도 이동 허가 정책으로 바꾸지 않는다 (RawPathSearchState).
     RawPathSearchState& state_;
     std::unique_ptr<RawPathSearchWork> work_; // 원본 lazy heap의 큰 배열을 호스트 stack에 두지 않는다.
 };

@@ -3,6 +3,13 @@ using System.Text.Json;
 namespace Netstorm.Assets;
 
 /// <summary>Territory의 6바이트 레코드. 미확정 필드는 원본 값을 보존한다.</summary>
+/// <param name="Index">목록에서 항목을 구별하는 번호.</param>
+/// <param name="ShapeAndRotation">영역 모양 번호와 회전을 함께 담은 저장 바이트.</param>
+/// <param name="Flags">영역의 저장 플래그 비트.</param>
+/// <param name="ChunkPosition">영역의 청크 기준 위치를 담은 저장 바이트.</param>
+/// <param name="Appearance">영역 외형 선택의 저장 값.</param>
+/// <param name="ReservedA">해석하지 않고 보존하는 첫 번째 예약 바이트.</param>
+/// <param name="ReservedB">해석하지 않고 보존하는 두 번째 예약 바이트.</param>
 public sealed record FortTerritory(int Index, byte ShapeAndRotation, byte Flags, byte ChunkPosition,
     byte Appearance, byte ReservedA, byte ReservedB)
 {
@@ -21,9 +28,16 @@ public sealed record FortTerritory(int Index, byte ShapeAndRotation, byte Flags,
 }
 
 /// <summary>월드 좌표가 결정된 오브젝트. 영역 번호는 소유자와 별개이며 Chaff는 null이다.</summary>
+/// <param name="X">월드 X 좌표.</param>
+/// <param name="Y">월드 Y 좌표.</param>
+/// <param name="Territory">배치된 영역 번호. Chaff 소속은 null.</param>
+/// <param name="Object">맵에 저장된 객체의 타입·프레임·내용물 정보.</param>
 public sealed record FortMapObject(int X, int Y, int? Territory, FortObject Object);
 
 /// <summary>영역에 속하는 월드 청크와 원본 패턴의 연결 방향 문자.</summary>
+/// <param name="X">월드 X 좌표.</param>
+/// <param name="Y">월드 Y 좌표.</param>
+/// <param name="Orientation">청크 패턴의 방향 글자.</param>
 public sealed record FortTerrainChunk(int X, int Y, char Orientation);
 
 /// <summary>화면에서 확인한 16×11 픽셀 좌표계와 영역 청크 배치를 제공한다.</summary>
@@ -40,6 +54,7 @@ public sealed class FortMap
     /// <summary>저장 위치를 사용하는 미션에서 기준 사각형의 시작 청크.</summary>
     public const int MissionChunkOrigin = 1;
 
+    /// <summary>Patterns: 영역 모양을 칸별로 펼칠 때 사용하는 패턴 정의 배열.</summary>
     private static readonly Pattern[] Patterns = LoadPatterns();
 
     /// <summary>표 전체 68개 영역의 변형·번호까지 보존한 원본 패턴. 파일의 Shape는 하위 6비트만 사용한다.</summary>
@@ -171,5 +186,10 @@ public sealed class FortMap
     }
 
     /// <summary>패턴 원본의 폭·높이와 행 우선 셀 문자 ('.'은 빈 칸).</summary>
+    /// <param name="Width">가로 크기.</param>
+    /// <param name="Height">세로 크기.</param>
+    /// <param name="Cells">패턴을 구성하는 칸 데이터.</param>
+    /// <param name="Variations">칸별 변형 번호.</param>
+    /// <param name="Labels">칸별 라벨 번호.</param>
     private sealed record Pattern(int Width, int Height, string Cells, int[] Variations, int[] Labels);
 }

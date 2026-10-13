@@ -27,10 +27,15 @@ RiftTypeFrames ActualBridgeFrames() {
     }
     throw std::runtime_error("실제 다리 프레임 fixture 없음");
 }
+// RawSurfaceWorld 검사에서 같은 풀·상태·처리기를 조립해 입력과 결과를 대조하는 자료형이다.
 struct Inputs {
+    // types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeRecord> types;
+    // frames: 타입별 프레임 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeFrames> frames;
+    // shapes: 프레임의 크기·그림 데이터를 조회하는 셰이프 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<SquidDisplayShape> shapes;
+    // links: 연결 함수들이 읽는 원본 전역이다. 패치 주소 / CD 주소를 주석에 둔다 (BridgeConnectState).
     BridgeConnectState links;
     // 실제 생성자/플래그와 작은 합성 SHP를 사용한다. 실제 SHP는 GUI 스모크에서 별도 확인한다.
     explicit Inputs(OriginalEdition edition):types(edition==OriginalEdition::Patch1078 ? 188 : 171),

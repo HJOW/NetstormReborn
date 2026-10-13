@@ -6,12 +6,14 @@
 
 namespace netstorm::client {
 // 원본 TextGump +a0의 소유 체인이다. 기본 생성/표시/수명 저장소와 같은 객체여야 한다.
-struct TextGumpNode: GumpCreateNode { std::uint32_t head{}; };
+struct TextGumpNode: GumpCreateNode { /* head: 연결 목록에서 순회를 시작할 머리 번호. */ std::uint32_t head{}; };
 // 실제 생성자가 signed로 확장하는 정렬 BYTE 전역이다. 기본값은 두 배포 PE의 초기값이며 호출자가 변경할 수 있다.
-struct TextGumpState { std::int8_t alignment{45}; };
+struct TextGumpState { /* alignment: 항목의 좌우·상하 정렬을 선택하는 값. */ std::int8_t alignment{45}; };
 // 파생 노드와 기본 노드는 같은 주소를 반환해야 한다. 실제 저장소의 반납은 GumpLifetime이 맡는다.
 struct TextGumpHooks {
+    // node: 토큰에 대응하는 저장 노드를 조회하는 콜백.
     std::function<TextGumpNode*(std::uint32_t)> node;
+    // baseNode: 파생 노드와 공유하는 기본 Gump 노드를 조회하는 콜백.
     std::function<GumpCreateNode*(std::uint32_t)> baseNode;
 };
 // 메뉴 제목 등에 사용하는 원본 한 줄 클래스다. StyleText 조각/폰트/그림과 실제 Gump 클립을 공유한다.
@@ -38,38 +40,65 @@ public:
 private:
     // null/미등록/서로 다른 기본·파생 저장소를 호스트 오류로 거부한다.
     TextGumpNode& Node(std::uint32_t token) const;
+    // create_: 등록 표 +0이 실제 루트다. 외부에서 표를 바꿀 때 collection.root도 같은 토큰으로 맞춰야 한다 (GumpCreateState).
     GumpCreateState& create_;
+    // state_: 실제 생성자가 signed로 확장하는 정렬 BYTE 전역이다. 기본값은 두 배포 PE의 초기값이며 호출자가 변경할 수 있다 (TextGumpState).
     TextGumpState& state_;
+    // factory_: 타입에 맞는 객체를 생성하는 처리기.
     const GumpCreate& factory_;
+    // lifetime_: 등록된 객체의 삭제·해제를 처리하는 수명 관리자.
     const GumpLifetime& lifetime_;
+    // collection_: 화면 밖 자식 통과, 최상위 삭제 필터, 원본의 루트별 제한 개수를 보존하는 UI 수집기다 (GumpCollection).
     const GumpCollection& collection_;
+    // clip_: 출력을 제한하는 클리핑 영역 또는 상태.
     GumpDrawState& clip_;
+    // style_: 글꼴·색·정렬을 선택하는 텍스트 출력 문맥.
     const StyleText& style_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (TextGumpHooks).
     TextGumpHooks hooks_;
 };
 // 원본 다중 줄 TextGump의 Slider/버퍼/소유·표시·입력 필드다. 생성/수명/입력은 ScrollingTextGumpWidgets가 맡는다.
 struct ScrollingTextGumpNode: GumpCreateNode {
+    // slider: 스크롤바.
+    // buffer: 읽기·쓰기·출력에 재사용하는 버퍼.
     std::uint32_t slider{},buffer{};
+    // scroll: 스크롤.
+    // scrollRequest: 스크롤 요청.
+    // bottomPadding: 아래 여백.
     std::int32_t scroll{},scrollRequest{-1},bottomPadding{};
+    // textFlags: 텍스트 플래그.
     std::uint32_t textFlags{};
     // +a8 소유 여부/+ac 미작성/+b0..b4 보조/+c0 마지막 배치 폭/+c4 이전 drag y/+c8 태그/+d4 콜백 토큰이다.
     std::uint32_t ownsBuffer{},unwritten{};
+    // reserved: 예약영역.
     std::array<std::uint32_t,2> reserved{};
+    // layoutWidth: 배치 너비.
     float layoutWidth{};
+    // dragY: 드래그 Y.
     std::int32_t dragY{};
+    // metadata: 메타정보.
+    // callback: 콜백.
     std::uint32_t metadata{},callback{};
 };
 // 같은 StyleTextBuffer 생성에 사용한 상태와 처리기를 묶는다. 소유권은 원래 생성 계층에 있다.
-struct TextGumpBufferBinding { StyleTextBufferState* state{};const StyleTextBuffer* handler{}; };
+struct TextGumpBufferBinding { /* state: +0 max/+4 완료 줄 수/+8 전체 칸/+c 센티널/+24 표시 줄 수/+28 미사용/+2c 변경/+30 줄바꿈 금지다 (StyleTextBufferState). */ StyleTextBufferState* state{};/* handler: 외부 이벤트·프로세스 동작을 실제 코드에 전달하는 처리기. */ const StyleTextBuffer* handler{}; };
 // 스크롤바의 range/page/position 가상 경계다. position 쓰기 뒤 현재 slider를 다시 읽어 값을 얻는다.
 // 조회는 안정된 저장소를 반환해야 하며 출력 도중 현재 표시 줄/조각을 반납하거나 buffer를 교체하면 안 된다.
 struct ScrollingTextGumpHooks {
+    // node: 토큰에 대응하는 저장 노드를 조회하는 콜백.
     std::function<ScrollingTextGumpNode*(std::uint32_t)> node;
+    // baseNode: 파생 노드와 공유하는 기본 Gump 노드를 조회하는 콜백.
     std::function<GumpCreateNode*(std::uint32_t)> baseNode;
+    // buffer: 토큰에 연결된 텍스트 버퍼와 상태를 조회하는 콜백.
     std::function<TextGumpBufferBinding(std::uint32_t)> buffer;
+    // sliderRange: 스크롤바의 최소·최대 범위를 설정하는 콜백.
     std::function<void(std::uint32_t,std::int32_t,std::int32_t)> sliderRange;
+    // sliderPage: 스크롤바의 페이지 크기를 설정하는 콜백.
+    // sliderSetPosition: 스크롤바의 현재 위치를 설정하는 콜백.
     std::function<void(std::uint32_t,std::int32_t)> sliderPage,sliderSetPosition;
+    // sliderPosition: 스크롤바의 현재 위치를 조회하는 콜백.
     std::function<std::int32_t(std::uint32_t)> sliderPosition;
+    // redraw: 대상의 화면 갱신을 요청하는 콜백.
     std::function<void(std::uint32_t,bool)> redraw;
 };
 // 다중 줄 TextGump 표시/스크롤 처리기다. 이름은 호스트 구분이며 원본 클래스 이름을 확정한 것은 아니다.
@@ -130,11 +159,17 @@ private:
     StyleTextFragment& Fragment(std::uint32_t fragment) const;
     // y+height가 scroll보다 작은 줄만 건너뛴다. 센티널/순환으로 끝나지 않는 잘못된 목록은 거부한다.
     std::uint32_t FirstVisible(std::uint32_t token,StyleTextBufferState& storage) const;
+    // create_: 등록 표 +0이 실제 루트다. 외부에서 표를 바꿀 때 collection.root도 같은 토큰으로 맞춰야 한다 (GumpCreateState).
     GumpCreateState& create_;
+    // collection_: 화면 밖 자식 통과, 최상위 삭제 필터, 원본의 루트별 제한 개수를 보존하는 UI 수집기다 (GumpCollection).
     const GumpCollection& collection_;
+    // clip_: 출력을 제한하는 클리핑 영역 또는 상태.
     GumpDrawState& clip_;
+    // fragments_: 0은 null이며 map의 주소는 삽입 후에도 안정된다. nextToken=0은 자동 토큰 발급 소진 상태다 (StyleTextState).
     StyleTextState& fragments_;
+    // style_: 글꼴·색·정렬을 선택하는 텍스트 출력 문맥.
     const StyleText& style_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (ScrollingTextGumpHooks).
     ScrollingTextGumpHooks hooks_;
 };
 // 같은 kind 2 가상 Draw에 한 줄/다중 줄 처리를 연결한다. 나머지는 이전 분배기를 호출한다.

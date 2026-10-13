@@ -1,6 +1,11 @@
 namespace Netstorm.Assets;
 
 /// <summary>원본 지면 타일로 구성한 미리보기 셀. 테마와 변형 선택은 시각 검증 전의 근사다.</summary>
+/// <param name="X">월드 X 좌표.</param>
+/// <param name="Y">월드 Y 좌표.</param>
+/// <param name="Region">소속 지역 번호.</param>
+/// <param name="Theme">지면을 표시할 원소 테마 이름.</param>
+/// <param name="Cluster">표시할 타입 프레임 클러스터 번호.</param>
 public sealed record FortTerrainTile(int X, int Y, int Region, string Theme, int Cluster)
 {
     /// <summary>해당 지면 영역을 만든 신전 또는 받침의 소유자. 중립 지면은 0이다.</summary>
@@ -8,6 +13,9 @@ public sealed record FortTerrainTile(int X, int Y, int Region, string Theme, int
 }
 
 /// <summary>타일 외관과 작은 받침을 붙이기 전의 본섬 지면 칸.</summary>
+/// <param name="X">월드 X 좌표.</param>
+/// <param name="Y">월드 Y 좌표.</param>
+/// <param name="Region">소속 지역 번호.</param>
 public sealed record FortTerrainCell(int X, int Y, int Region);
 
 /// <summary>Terrainbuilder의 연결 통로·시드 성장·빈 틈 메우기를 옮긴 개발용 지면 미리보기.</summary>
@@ -48,10 +56,15 @@ public sealed class FortTerrainPreview
     /// <summary>북부터 시계 방향으로 나열한 여덟 이웃 좌표 (VA 0x52f83c/0x52f85c).</summary>
     private static readonly (int X, int Y)[] Neighbors = [(0, -1), (1, -1), (1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1)];
 
+    /// <summary>_land: 월드 칸별 소속 지역 번호. 초기 -1은 지면 없음.</summary>
     private readonly int[] _land = Enumerable.Repeat(-1, WorldSize * WorldSize).ToArray();
+    /// <summary>_chunks: 청크 좌표에서 지역 번호를 찾는 사전.</summary>
     private readonly Dictionary<(int X, int Y), int> _chunks = [];
+    /// <summary>_themes: 지역별 지면 원소 테마.</summary>
     private readonly Dictionary<int, string> _themes = [];
+    /// <summary>_owners: 지역별 소유 플레이어 번호.</summary>
     private readonly Dictionary<int, int> _owners = [];
+    /// <summary>_targets: 지역별 각 청크의 지면 성장 목표 칸 수 배열.</summary>
     private readonly Dictionary<int, int[]> _targets = [];
 
     /// <summary>생성된 타일 목록. 원본과 같은 전투 지형으로 확정한 데이터는 아니다.</summary>

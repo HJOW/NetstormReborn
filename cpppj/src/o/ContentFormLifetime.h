@@ -45,13 +45,21 @@ private:
     float Cost() const;
     // 타입의 footX/footY 절반을 현재 좌표에서 빼서 원본 중심 float 저장 순서를 보존한다.
     std::array<float,2> Center(Sid parent) const;
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
+    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::span<const RiftTypeRecord> types_;
+    // forms_: 객체에 부착된 Form의 생성·통지·수명 처리기.
     ContentFormHost& forms_;
+    // destroy_: 객체 삭제의 전처리·공간 해제·후처리를 실행하는 처리기.
     RawSquidDestroy& destroy_;
+    // state_: 삭제 중 효과가 갱신할 수 있는 원본 전역이다. 매 분기/요청에서 최신 값을 읽는다 (ContentLifetimeState).
     const ContentLifetimeState& state_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (ContentLifetimeHooks).
     ContentLifetimeHooks hooks_;
+    // fallback_: emit은 같은 풀을 바꿀 수 있다. 종속 next는 ReleaseDependent 전에 저장한다 (SquidDestroyHooks).
     SquidDestroyHooks fallback_;
+    // reward_: HP·SP·지갑 보상을 실제 장부에 적용하는 처리기.
     SquidReward* reward_{};
 };
 }

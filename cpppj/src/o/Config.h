@@ -26,6 +26,7 @@ std::optional<std::size_t> ConfigFindKey(std::string_view text, std::string_view
 // 원본 FUN_00440150 ↔ CD 0042ab70: 따옴표 제거, 따옴표 밖 주석 제거한 원시 값.
 std::optional<std::string> ConfigGetRaw(std::string_view text, std::string_view key);
 
+// 설정 문자열에서 키·값 항목을 읽는 처리기이다.
 class ConfigText {
 public:
     // UTF-8 설정 버퍼를 받아 원본 줄 순서를 그대로 유지한다.
@@ -41,6 +42,7 @@ public:
     // 복원·검증 도구가 읽은 버퍼를 확인할 수 있게 한다.
     const std::string& Text() const;
 private:
+    // text_: 표시하거나 해석할 본문 문자열.
     std::string text_;
 };
 
@@ -69,6 +71,7 @@ private:
     void Register(Config* config);
     // 원본 FUN_0043fab0 ↔ CD 0042a050: 같은 포인터를 모두 빼고 순서를 유지한다.
     void Unregister(Config* config);
+    // objects_: 현재 월드 또는 수집 단계의 객체 목록.
     std::vector<Config*> objects_;
 };
 
@@ -131,8 +134,10 @@ private:
     // 원본 FUN_00440760 ↔ CD 0042a6b0: 키를 찾아 치환한 값을 dest 끝에 쓴다.
     bool Lookup(std::string key, std::string_view fallback, std::string& dest, bool reportMissing, int depth);
 
+    // registry_: 설정 객체나 등록 대상을 조회하는 등록부.
     ConfigRegistry& registry_;
     std::optional<std::string> text_; // 비어 있음 = 원본의 널 버퍼.
+    // prefix_: 접두.
     std::string prefix_;
 };
 

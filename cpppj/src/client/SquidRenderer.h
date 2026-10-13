@@ -5,6 +5,7 @@
 #include "client/Renderer.h"
 
 namespace netstorm::client {
+// Squid 표시 요청을 클라이언트의 렌더러에 전달하는 출력 대상이다.
 class SquidRenderer final : public o::SquidDisplaySink {
 public:
     // Renderer는 이 어댑터와 표시 계산기보다 오래 살아야 한다.
@@ -16,6 +17,7 @@ public:
     // 원본 로딩 순서의 .type 클러스터 수와 SHP 추가 헤더를 raw 타입 번호에 대응시킨다.
     static std::vector<o::SquidDisplayShape> Shapes(const GameAssets& assets,o::OriginalEdition edition);
 private:
+    // renderer_: 수집한 그림·텍스트를 화면에 그리는 렌더러.
     Renderer& renderer_;
 };
 }

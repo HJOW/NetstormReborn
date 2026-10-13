@@ -38,12 +38,19 @@ void ReadTable(const std::string& text,std::span<std::uint32_t> output) {
 using Patch=std::array<std::uint32_t,3>;
 // 안정된 노드·공유 생성/수명 상태와 실제 콜백 당시 상태 기록을 보관한다.
 struct FrameScene {
+    // create: 등록 표 +0이 실제 루트다. 외부에서 표를 바꿀 때 collection.root도 같은 토큰으로 맞춰야 한다 (GumpCreateState).
     GumpCreateState create;
+    // lifetime: 등록된 객체의 삭제·해제를 처리하는 수명 관리자. 입력 구성 또는 실행 결과 대조에 사용한다.
     GumpLifetimeState lifetime;
+    // nodes: 노드. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::map<std::uint32_t,GumpCreateNode> nodes;
+    // responses: 응답. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::map<std::string,std::vector<Patch>> responses;
+    // calls: 호출 횟수 또는 호출 인자를 대조하는 기록. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::string calls;
+    // treeState: 원본 지도 화면 영역과 패치판의 밀어내기 링크 진단 전역이다 (GumpTreeState).
     GumpTreeState treeState;
+    // tree: 00466750/CD 00493070의 머리 삽입과 원본의 후속 정렬/현재 자식 재배치를 담당한다 (std::unique_ptr<GumpTree>).
     std::unique_ptr<GumpTree> tree;
     // 현재 저장소에서 토큰을 조회한다. 없는 토큰은 실제 도달 시 처리기가 거부한다.
     GumpCreateNode* Find(std::uint32_t token) {

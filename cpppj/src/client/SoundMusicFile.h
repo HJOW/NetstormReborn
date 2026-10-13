@@ -32,6 +32,7 @@ public:
 private:
     // Winmm 핸들 표와 다음 토큰/진단을 cpp 구현에 숨긴다.
     struct Impl;
+    // impl_: 공개 인터페이스 뒤의 구현 상태와 연결 객체.
     std::unique_ptr<Impl> impl_;
 };
 }

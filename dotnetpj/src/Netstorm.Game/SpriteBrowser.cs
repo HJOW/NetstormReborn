@@ -40,21 +40,37 @@ internal sealed class SpriteBrowser : IDisposable
     /// <summary>속성 목록의 열 수.</summary>
     private const int PropertyColumns = 2;
 
+    /// <summary>_device: 텍스처 생성과 화면 출력을 수행할 그래픽 장치.</summary>
     private readonly GraphicsDevice _device;
+    /// <summary>_shapes: 타입 프레임의 크기와 픽셀을 조회하는 셰이프 DB.</summary>
     private readonly ShapeDatabase _shapes;
+    /// <summary>_catalog: 스프라이트 탐색기의 타입 목록.</summary>
     private readonly TypeCatalog _catalog;
+    /// <summary>_paletteNames: 선택 가능한 팔레트 이름 목록.</summary>
     private readonly IReadOnlyList<string> _paletteNames;
+    /// <summary>_loadPalette: 선택한 이름의 팔레트를 읽어 주는 콜백.</summary>
     private readonly Func<string, Palette> _loadPalette;
+    /// <summary>_pixel: 사각형·선·단색 배경을 그릴 때 늘려 쓰는 1×1 텍스처.</summary>
     private readonly Texture2D _pixel;
+    /// <summary>_textures: 프레임 번호별로 생성해 재사용하는 텍스처 캐시.</summary>
     private readonly Dictionary<int, Texture2D> _textures = [];
+    /// <summary>_palette: 스프라이트 인덱스를 실제 색으로 바꿀 현재 팔레트.</summary>
     private Palette _palette;
+    /// <summary>_paletteIndex: 현재 선택한 팔레트의 목록 인덱스.</summary>
     private int _paletteIndex;
+    /// <summary>_paletteError: 팔레트 로딩 실패를 알릴 문자열.</summary>
     private string? _paletteError;
+    /// <summary>_previousKeyboard: 새 키 입력과 눌림 유지를 구별할 이전 프레임 키보드 상태.</summary>
     private KeyboardState _previousKeyboard;
+    /// <summary>_previousMouse: 클릭·해제·휠 변화를 검출할 이전 프레임 마우스 상태.</summary>
     private MouseState _previousMouse;
+    /// <summary>_typeIndex: 현재 선택한 타입의 목록 인덱스.</summary>
     private int _typeIndex;
+    /// <summary>_frameIndex: 현재 표시할 프레임 번호.</summary>
     private int _frameIndex;
+    /// <summary>_framesPerSecond: 스프라이트 탐색기 애니메이션의 초당 프레임 수.</summary>
     private int _framesPerSecond = DefaultFramesPerSecond;
+    /// <summary>_elapsed: 다음 프레임 전환까지 누적한 경과 시간(초).</summary>
     private double _elapsed;
 
     /// <summary>타입 이름을 확인하고 첫 프레임을 선택한다.</summary>

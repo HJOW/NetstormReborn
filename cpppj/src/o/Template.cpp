@@ -56,8 +56,11 @@ public:
 private:
     // 읽을 만큼 남았는지 확인한다.
     void Require(std::size_t count) const { if (Remaining() < count) Fail("pos<=end"); }
+    // bytes_: 필드 접근이나 파일 읽기에 사용하는 원시 바이트.
     std::span<const std::uint8_t> bytes_;
+    // name_: 이름으로 조회·표시할 때 사용하는 문자열.
     std::string_view name_;
+    // position_: 현재 좌표 또는 저장소의 읽기 위치.
     std::size_t position_{};
 };
 

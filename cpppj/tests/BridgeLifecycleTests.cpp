@@ -52,12 +52,19 @@ void Write(std::span<std::uint8_t> raw,std::size_t offset,std::uint32_t value,st
 }
 // 같은 풀의 할당 슬롯을 보존한다. 참조 대상의 free 비트 조합도 원본처럼 읽을 수 있게 한다.
 struct Scene {
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
     SidPool pool;
+    // slots: 등록 대상의 저장 슬롯 목록. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::array<std::span<std::uint8_t>,65> slots{};
+    // types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeRecord> types{256};
+    // selected: 현재 선택한 객체·컨트롤의 번호 또는 토큰. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<Sid> selected;
+    // cursor: 커서. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::size_t cursor{};
+    // events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::string> events;
+    // dynamic: 동적 여부. 입력 구성 또는 실행 결과 대조에 사용한다.
     bool dynamic{};
     // 입력 슬롯은 이미 할당되어 있고 파생 vtable은 실행하지 않는다.
     explicit Scene(OriginalEdition edition):pool(edition,kCapacity,false) {

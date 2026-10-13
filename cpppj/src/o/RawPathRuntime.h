@@ -5,16 +5,31 @@
 
 namespace netstorm::o {
 // 경로에 저장되는 두 float 좌표다. 런타임의 double 좌표와 섞지 않는다.
-struct RawPathPoint { float x{},y{}; };
+struct RawPathPoint { /* x: X 좌표. */ /* y: Y 좌표. */ float x{},y{}; };
 // 원본 PathProcess의 배열/끝 필드 위치다. 판본마다 최대 길이와 마지막 필드 수가 다르다.
 struct RawPathLayout {
+    // capacity: 판본에서 허용하는 경로 꼭짓점의 최대 개수.
+    // size: 원본 경로 프로세스의 전체 이미지 바이트 크기.
+    // times: 꼭짓점 도착 시각 배열이 시작되는 바이트 오프셋.
+    // directions: 꼭짓점 방향 배열이 시작되는 바이트 오프셋.
+    // nextFrame: 다음 프레임 예약 필드의 바이트 오프셋.
+    // current: 현재 경로 단계 필드의 바이트 오프셋.
+    // angle: 현재 회전 각도 필드의 바이트 오프셋.
+    // finished: 경로 완료 플래그 필드의 바이트 오프셋.
+    // targetA: 도착 가상 함수에 넘길 첫 번째 대상 필드의 바이트 오프셋.
+    // targetB: 도착 가상 함수에 넘길 두 번째 대상 필드의 바이트 오프셋.
+    // helper: 보조 객체 필드의 바이트 오프셋.
+    // deadFlag: 프로세스 사망 플래그 필드의 바이트 오프셋.
     std::size_t capacity{},size{},times{},directions{},nextFrame{},current{},angle{},finished{},targetA{},targetB{},helper{},deadFlag{};
+    // baseVtable: 기본 경로 프로세스의 원본 가상 함수 표 주소.
+    // teleportVtable: 텔레포트 경로 프로세스의 원본 가상 함수 표 주소.
+    // priestVtable: 사제 경로 프로세스의 원본 가상 함수 표 주소.
     std::uint32_t baseVtable{},teleportVtable{},priestVtable{};
 };
 // Step이 반환한 좌표·각도·끝 도착 여부다. 끝에 도달해도 현재 각도 필드를 새로 쓰지 않는 분기를 보존한다.
-struct RawPathSample { RawPathPoint position; float angle{}; bool finished{}; };
+struct RawPathSample { /* position: 현재 좌표 또는 저장소의 읽기 위치. */ RawPathPoint position; /* angle: 방향 또는 회전에 사용하는 각도. */ float angle{}; /* finished: 현재 경로 또는 동작이 끝에 도달했는지. */ bool finished{}; };
 // 실행 관찰 전역이다. 원본 Step은 활성화 비트와 관찰 시계를 쓴다.
-struct RawPathObservation { std::uint32_t flags{}; std::uint64_t stamp{}; };
+struct RawPathObservation { /* flags: 동작을 선택하는 플래그 비트. */ std::uint32_t flags{}; /* stamp: 관찰 시점에 저장한 원본 시계 비트 값. */ std::uint64_t stamp{}; };
 // 원본 메모리 이미지의 뜻 있는 필드를 보존한다. 호스트 포인터와 원본 vtable 주소를 혼동하지 않는다.
 class RawPathRuntime {
 public:
@@ -59,8 +74,11 @@ private:
     void Write(std::size_t offset,std::uint64_t value,std::size_t width=4);
     // 꼭짓점 조회의 원본 assert 범위를 호스트 예외로 진단한다.
     void Check(std::int32_t index) const;
+    // edition_: 판본별 필드 배치와 동작을 선택하는 원본 버전.
     OriginalEdition edition_;
+    // layout_: 좌표 배치 계산 또는 판본별 필드 위치 정보.
     RawPathLayout layout_;
+    // bytes_: 필드 접근이나 파일 읽기에 사용하는 원시 바이트.
     std::vector<std::uint8_t> bytes_;
 };
 }

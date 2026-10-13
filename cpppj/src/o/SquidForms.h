@@ -45,8 +45,11 @@ private:
     void Put(Sid sid,std::size_t offset,std::uint32_t value,std::size_t width) const;
     // 이웃의 Form +0xe와 contained 자산 +0x10 이전 링크를 구분한다.
     void SetPrevious(Sid sid,std::uint16_t previous) const;
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
+    // notice_: 통지.
     FormRemovalNotice notice_;
+    // transmit_: Form 데이터 작성과 송신을 연결하는 전송 경계.
     FormPopTransmit transmit_;
 };
 }

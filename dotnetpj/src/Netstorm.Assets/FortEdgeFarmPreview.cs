@@ -1,6 +1,11 @@
 namespace Netstorm.Assets;
 
 /// <summary>원본에서 지면 프레임을 이어받아 흰 가장자리 장식으로 바뀐 칸.</summary>
+/// <param name="X">월드 X 좌표.</param>
+/// <param name="Y">월드 Y 좌표.</param>
+/// <param name="Region">소속 지역 번호.</param>
+/// <param name="Cluster">표시할 타입 프레임 클러스터 번호.</param>
+/// <param name="Owner">소유 플레이어 번호.</param>
 public sealed record FortEdgeFarmTile(int X, int Y, int Region, int Cluster, int Owner);
 
 /// <summary>Islandbuilder의 edgeFarm 배치를 개발용 맵 뷰어에서 재현한다.</summary>

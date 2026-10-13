@@ -41,33 +41,52 @@ internal sealed partial class FortMapViewer : IDisposable
     /// 미션 머리 값 aiNColor 가 덮어쓴다 (<see cref="PlayerColors"/>). 섬 테두리·받침·미니맵·선택 괄호 색을 고른다.
     /// </summary>
     private readonly IReadOnlyDictionary<int, int> _playerColors;
+    /// <summary>_map: 뷰어가 표시하고 세션을 구성할 .fort 지도.</summary>
     private readonly FortMap _map;
+    /// <summary>_shapes: 타입 프레임의 크기와 픽셀을 조회하는 셰이프 DB.</summary>
     private readonly ShapeDatabase _shapes;
+    /// <summary>_palette: 스프라이트 인덱스를 실제 색으로 바꿀 현재 팔레트.</summary>
     private readonly Palette _palette;
     /// <summary>타입별 지면·유닛·건물의 소유자 색 변환표.</summary>
     private readonly ObjectColorRemap _objectColors;
+    /// <summary>_device: 텍스처 생성과 화면 출력을 수행할 그래픽 장치.</summary>
     private readonly GraphicsDevice _device;
+    /// <summary>_pixel: 사각형·선·단색 배경을 그릴 때 늘려 쓰는 1×1 텍스처.</summary>
     private readonly Texture2D _pixel;
     /// <summary>메인 메뉴와 같은 원본 UI 질감·장식을 쓰는 공유 그리기 도구.</summary>
     private readonly OriginalUiSkin _uiSkin;
     /// <summary>타입마다 색 변환 대상이 다르므로 타입·프레임 위치·소유자색을 함께 캐시한다.</summary>
     private readonly Dictionary<(int Type, int Frame, int Color), (Texture2D Texture, Point Offset)> _textures = [];
+    /// <summary>_terrain: 지도 지형을 펼쳐 만든 타일과 지역 정보.</summary>
     private FortTerrainPreview _terrain;
+    /// <summary>_terrainType: 지면 프레임을 조회할 isle 타입.</summary>
     private readonly TypeInfo _terrainType;
+    /// <summary>_edgeFarmType: 가장자리 장식을 그릴 edgeFarm 타입.</summary>
     private readonly TypeInfo _edgeFarmType;
+    /// <summary>_fringeType: 절벽 장식을 그릴 fringe 타입.</summary>
     private readonly TypeInfo _fringeType;
+    /// <summary>_supportTopType: 섬 받침 윗부분을 그릴 타입.</summary>
     private readonly TypeInfo _supportTopType;
 
     /// <summary>다 쓴 가이저를 그릴 원본 emptyGeyser 타입 (없으면 원래 가이저 그림을 유지).</summary>
     private readonly TypeInfo? _emptyGeyserType;
+    /// <summary>_supportBottomType: 섬 받침 아랫부분을 그릴 타입.</summary>
     private readonly TypeInfo _supportBottomType;
+    /// <summary>_fringes: 지도에서 계산한 절벽 장식의 출력 목록.</summary>
     private IReadOnlyList<FortTerrainFringeSprite> _fringes;
+    /// <summary>_edgeFarms: 지도 가장자리에 배치한 edgeFarm 타일 목록.</summary>
     private IReadOnlyList<FortEdgeFarmTile> _edgeFarms;
+    /// <summary>_edgeFarmCells: edgeFarm 출력 위치가 중복되지 않도록 기록한 칸 좌표.</summary>
     private readonly HashSet<(int X, int Y)> _edgeFarmCells;
+    /// <summary>_showChunks: 청크 경계의 개발용 표시를 켤지.</summary>
     private bool _showChunks;
+    /// <summary>_camera: 월드에서 화면 좌상단에 놓을 카메라 좌표.</summary>
     private Vector2 _camera;
+    /// <summary>_zoom: 월드 좌표를 화면 픽셀로 바꾸는 확대 배율.</summary>
     private float _zoom = DefaultZoom;
+    /// <summary>_previousKeyboard: 새 키 입력과 눌림 유지를 구별할 이전 프레임 키보드 상태.</summary>
     private KeyboardState _previousKeyboard;
+    /// <summary>_previousMouse: 클릭·해제·휠 변화를 검출할 이전 프레임 마우스 상태.</summary>
     private MouseState _previousMouse;
 
     /// <summary>미션으로 연 뷰어의 시작 조건 (맵 시험 모드면 null).</summary>

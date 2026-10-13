@@ -7,13 +7,15 @@ namespace netstorm::o {
 // 전역 재구성은 전체 표면/풀 계약을 보장한 입력에서만 선택한다.
 enum class GraphRecovery { Reject,FullPool };
 // 원본 그래프 레코드의 6바이트 WORD 세 개다. 전체 초기화만 0번 reserved의 low byte를 바꾼다.
-struct GraphRecord { std::int16_t surfaces{},inUse{},reserved{}; };
+struct GraphRecord { /* surfaces: 표면 객체의 공간·연결·수명 처리 자료. */ /* inUse: 내부 사용. */ /* reserved: 예약영역. */ std::int16_t surfaces{},inUse{},reserved{}; };
 // 실제 raw 슬롯의 그래프 byte와 state를 표면 스냅샷 번호에 연결한 입력이다.
-struct GraphMembership { std::uint16_t id{}; std::uint8_t graph{254},state{}; };
+struct GraphMembership { /* id: 대상을 구별하는 식별 번호. */ std::uint16_t id{}; /* graph: 서로 연결된 표면의 Graph 소속을 관리하는 처리기. */ /* state: 처리 중 조회·갱신하는 상태 (std::uint8_t graph{254},). */ std::uint8_t graph{254},state{}; };
+// 서로 연결된 표면의 Graph 번호와 소속 목록을 관리하는 처리기이다.
 class Graph {
 public:
     // 원본 정상 그래프 수·무효 번호·전체 표 폭·flood 스택 크기다.
     static constexpr std::size_t kCount=251,kTableSize=255,kFloodSize=4096;
+    // kInvalid: 기준 무효.
     static constexpr std::uint8_t kInvalid=254;
     // 표면 탐색기 수명은 Graph보다 길어야 한다. 기존 표/스택을 이어 받고 생략한 표는 빈 표와 sentinel로 만든다.
     Graph(const SurfaceFinder& surfaces,std::span<const GraphMembership> members,std::span<const GraphRecord> records={},
@@ -66,9 +68,13 @@ private:
     // 실패 시 기존 표/번호/스택을 보존하도록 복사본에서 삭제 준비를 처리한다.
     void DetachImpl(std::uint16_t id,std::uint8_t graph,std::span<const std::uint16_t> connections,bool rebuild,
         std::uint8_t removedSurfaces,GraphRecovery recovery,std::optional<std::uint32_t> sourceFlags2);
+    // surfaces_: 표면 객체의 공간·연결·수명 처리 자료.
     const SurfaceFinder& surfaces_;
+    // records_: 기록.
     std::array<GraphRecord,kTableSize> records_{};
+    // stack_: 스택.
     std::array<std::uint32_t,kFloodSize> stack_{};
+    // members_: 멤버.
     std::map<std::uint16_t,GraphMembership> members_;
 };
 }

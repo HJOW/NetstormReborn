@@ -59,8 +59,11 @@ TEST_CASE(ConfigSave_MatchesBothOriginalX86Editions) {
 
 // 한 입력의 설정 객체 묶음. 등록 순서가 기대값의 객체 순서다.
 struct Stack {
+    // registry: 설정 객체나 등록 대상을 조회하는 등록부. 입력 구성 또는 실행 결과 대조에 사용한다.
     ConfigRegistry registry;
+    // objects: 현재 월드 또는 수집 단계의 객체 목록. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::unique_ptr<Config>> objects;
+    // hadText: 기존 텍스트. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<bool> hadText;
 };
 

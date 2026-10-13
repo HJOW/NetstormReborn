@@ -19,6 +19,7 @@ struct SquidRewardTypes {
 };
 // 보상 계산이 읽거나 갱신하는 판본별 전역과 AI 지갑이다. 패치 주소/CD 주소는 괄호에 둔다.
 struct SquidRewardState {
+    // types: 타입 번호로 속성·플래그를 조회하는 타입 표.
     SquidRewardTypes types;
     std::uint32_t percent{25};           // 삭제 보상 비율(DAT_005424bc / CD 005395d0). 전투 초기화가 25로 정한다.
     std::int32_t geyserPool{};           // 보상하지 않은 가치의 누적(DAT_00595088 / CD 00512110). 샘 생성 비교에 쓰인다.
@@ -31,15 +32,18 @@ struct SquidRewardState {
     std::array<std::int32_t,kPlayerCount+1> aiWallet{}; // AI 객체 +0x2d8. AI가 부착된 소유자만 갱신한다.
     float cdLocalSp{};                   // CD판 로컬 SP 전역(005120d4). 패치판은 ScrambledSpStore를 쓴다.
 };
+// 객체 보상 외부 동작과 저장소 조회를 연결하는 콜백 묶음이다.
 struct SquidRewardHooks {
     std::function<std::int32_t(Sid)> virtualCount; // 파생 객체의 vtable +0x80. 비어 있으면 base(상태 상위 3비트)를 쓴다.
     std::function<void()> refreshSp;               // SP 표시 갱신(0043dad0 / CD 004ee9d0). 표시 효과이므로 비어 있어도 된다.
 };
 // 한 번의 보상 계산 결과다. applied가 거짓이면 아무 상태도 바뀌지 않았다.
 struct SquidRewardResult {
+    // applied: 요청한 보상이나 상태 변경이 적용됐는지.
     bool applied{};
     std::int32_t cost{},refund{}; // 정수 비용과 지급액. 지급액은 소유자가 0이면 0이다.
 };
+// HP·SP·지갑 변경을 공유 객체 상태와 장부에 반영하는 처리기이다.
 class SquidReward {
 public:
     // 풀/타입/장부는 호출자가 소유한다. 패치판은 SP 저장소가 필요하고 CD판은 필요 없다.
@@ -81,12 +85,19 @@ private:
     // AI가 부착된 소유자의 지갑(AI 객체 +0x2d8)에 정수 금액을 더한다. SP 가산이 함께 부른다.
     void AddWallet(std::uint32_t owner,std::int32_t amount);
     std::span<const std::uint8_t> Raw(Sid sid) const;
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
+    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::vector<RiftTypeRecord> types_;
+    // bookkeeping_: 객체 종류·소유자별 등록 목록과 개수를 관리하는 장부.
     SquidPostPopState& bookkeeping_;
+    // state_: 보상 계산이 읽거나 갱신하는 판본별 전역과 AI 지갑이다. 패치 주소/CD 주소는 괄호에 둔다 (SquidRewardState).
     SquidRewardState& state_;
+    // store_: 패치판이 플레이어별 SP를 32개의 9칸 DWORD 배열에 흩뿌려 보관하는 방식이다 (ScrambledSpStore).
     ScrambledSpStore* store_{};
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (SquidRewardHooks).
     SquidRewardHooks hooks_;
+    // virtualCalls_: 가상 호출.
     mutable std::uint32_t virtualCalls_{};
 };
 }

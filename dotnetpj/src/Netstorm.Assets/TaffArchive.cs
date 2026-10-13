@@ -32,8 +32,11 @@ public sealed class TaffArchive
     /// <summary>원본 이름은 Windows-1252 이지만 경로에는 ASCII 만 쓰이므로 Latin-1 로 읽는다</summary>
     private static readonly Encoding NameEncoding = Encoding.Latin1;
 
+    /// <summary>_raw: 파일에서 읽은 원시 바이트. 레코드 오프셋으로 데이터를 조회한다.</summary>
     private readonly byte[] _raw;
+    /// <summary>_dataOffset: TAFF 항목의 오프셋에 더할 아카이브 데이터 시작 위치.</summary>
     private readonly int _dataOffset;
+    /// <summary>_byName: 이름으로 항목을 찾는 조회 사전.</summary>
     private readonly Dictionary<string, TaffEntry> _byName;
 
     /// <summary>매직 문자열에서 읽은 버전 표기 (예: "TAFF v0.2")</summary>

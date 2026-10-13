@@ -2,6 +2,7 @@
 #pragma once
 
 namespace netstorm::o {
+// 커널이 프레임 실행과 수명 처리를 호출하는 프로세스의 공통 인터페이스이다.
 class BaseProcess {
 public:
     // Kernel의 제거 함수가 원본 가상 소멸자 슬롯 0을 호출하던 동작을 재현한다.

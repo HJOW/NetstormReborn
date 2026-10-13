@@ -7,7 +7,7 @@ namespace netstorm::o {
 // 부모 가상 +0x24(form,reason)의 추가1/제거2 알림이다. 부모의 실제 생산/UI 효과를 연결한다.
 using ContentFormNotice=std::function<void(Sid parent,Sid form,std::uint32_t reason)>;
 // 실제 월드의 전투·강한 검사 전역이다. 부착 알림 뒤의 최신 값을 읽는다.
-struct ContentFormState { bool inBattle{},checkingLinks{}; };
+struct ContentFormState { /* inBattle: 내부 전투 여부. */ /* checkingLinks: 검사 연결 여부. */ bool inBattle{},checkingLinks{}; };
 // 사제를 워커/벌룬에 담은 전투 부착 뒤 포획 알림(004927f0/CD 0040df80)을 요청한다.
 // 두 번째 인자는 내용물 +12의 하위7비트에 저장된 이전 사제 소유자다.
 using ContentPriestNotice=std::function<void(Sid parent,std::uint32_t previousOwner)>;
@@ -45,11 +45,17 @@ private:
     // Form/contained 자산이 섞인 체인의 가상 previous getter/setter 위치를 구분한다.
     std::uint16_t Previous(Sid sid) const;
     void SetPrevious(Sid sid,std::uint16_t previous) const;
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
+    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::vector<RiftTypeRecord> types_;
+    // notice_: 통지.
     ContentFormNotice notice_;
+    // forms_: 객체에 부착된 Form의 생성·통지·수명 처리기.
     SquidForms forms_;
+    // state_: 실제 월드의 전투·강한 검사 전역이다. 부착 알림 뒤의 최신 값을 읽는다 (ContentFormState).
     const ContentFormState* state_{};
+    // captured_: 포획된 사제 또는 현재 포획 상태 자료.
     ContentPriestNotice captured_;
 };
 }

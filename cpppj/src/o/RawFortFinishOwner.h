@@ -11,10 +11,11 @@ struct FortFinishOwnerState {
     std::uint32_t residenceType{89}; // 005411bc/CD0051caa8의 실제 레지던스 타입 초기값이다.
 };
 // 지역 사각형은 원본 네 float의 저장 순서를 그대로 보관한다.
-struct FortRandomRectangle { float left{},top{},right{},bottom{}; };
+struct FortRandomRectangle { /* left: 사각형의 왼쪽 경계. */ /* top: 사각형의 위쪽 경계. */ /* right: 사각형의 오른쪽 경계. */ /* bottom: 사각형의 아래쪽 경계. */ float left{},top{},right{},bottom{}; };
 // 실제0040db90/CD0042c3d0 가상 배치 경계의 입력이다. 원본 region/type/두 고정 인자와 단정도 좌표다.
 struct FortRandomPlaceRequest {
-    std::uint32_t type{};float x{},y{};std::int32_t region{};std::uint32_t mode{},force{};
+    // type: 타입 표에서 객체 종류를 찾는 번호.
+    std::uint32_t type{};/* x: X 좌표. */ /* y: Y 좌표. */ float x{},y{};/* region: 지역. */ std::int32_t region{};/* mode: 동작 분기를 선택하는 모드. */ /* force: 강제. */ std::uint32_t mode{},force{};
 };
 // 외부 결과를 생략하지 않는다. place가 성공하면 실제 Pop/postPop이 같은 residences 목록에 등록해야 한다.
 struct FortFinishOwnerHooks {
@@ -39,8 +40,10 @@ public:
     // loader hook과 같은 pool인지 검사하는 참조다.
     const SidPool& Pool() const;
 private:
-    const SidPool& pool_;std::span<const RiftTypeRecord> types_;SquidPostPopList& residences_;
-    FortFinishOwnerState& state_;FortFinishOwnerHooks hooks_;
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
+    const SidPool& pool_;/* types_: 타입 번호로 속성·플래그를 조회하는 타입 표. */ std::span<const RiftTypeRecord> types_;/* residences_: 거주건물. */ SquidPostPopList& residences_;
+    // state_: 최초 진입만 읽는 모드/기본 지역과 반복 생성 때마다 읽는 현재 타입 전역이다 (FortFinishOwnerState).
+    FortFinishOwnerState& state_;/* hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (FortFinishOwnerHooks). */ FortFinishOwnerHooks hooks_;
 };
 // 같은 월드의 Finish 몸체를 Fort loader의 필수 owner 후처리에 연결한다.
 FortObjectLoadHooks MakeFortFinishOwnerHooks(const SidPool& pool,const RawFortFinishOwner& finish,FortObjectLoadHooks hooks);

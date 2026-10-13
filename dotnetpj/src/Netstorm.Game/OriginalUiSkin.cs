@@ -71,7 +71,9 @@ internal sealed class OriginalUiSkin : IDisposable
     private static readonly Color MenuLight = new(199, 185, 165);
     /// <summary>테두리·구분선의 어두운 선. 바탕 질감을 약 0.61배로 어둡게 한다 (원본 캡처: 창 103 → 65, 메뉴 131 → 80).</summary>
     private static readonly Color FrameDark = Color.Black * 0.39f;
+    /// <summary>_pixel: 사각형·선·단색 배경을 그릴 때 늘려 쓰는 1×1 텍스처.</summary>
     private readonly Texture2D _pixel;
+    /// <summary>_frames: 재사용할 UI 또는 애니메이션 프레임 자료.</summary>
     private readonly Dictionary<string, Texture2D> _frames = new(StringComparer.OrdinalIgnoreCase);
     /// <summary>D2Coding(한국어 화면)으로 그릴 때의 본문 줄 높이.</summary>
     private const int FallbackLineHeight = 16;

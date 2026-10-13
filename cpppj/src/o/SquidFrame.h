@@ -23,6 +23,7 @@ struct SquidFrameHooks {
     // 가상 표 +0x4c(0041c0d0 ↔ CD 00401c60)가 부르는 가상 Pop(+0x90): 현재 위치에 flags로 다시 등록한다.
     std::function<void(Sid sid,float x,float y,std::uint32_t flags)> pop;
 };
+// 객체 프레임 변경을 물리 프레임·통지·갱신 요청에 반영하는 처리기이다.
 class SquidFrame {
 public:
     // 풀은 이 객체보다 오래 살아야 한다. 타입 표는 복사하고 훅은 모두 연결돼 있어야 한다.
@@ -39,8 +40,11 @@ public:
 private:
     // 판본별 프레임 번호 필드를 읽는다. 패치는 +0x24 DWORD, CD는 +0x22 바이트다.
     std::int32_t Frame(Sid sid) const;
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
+    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::vector<RiftTypeRecord> types_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (SquidFrameHooks).
     SquidFrameHooks hooks_;
 };
 }

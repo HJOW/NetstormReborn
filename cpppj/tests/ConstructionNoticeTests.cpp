@@ -11,13 +11,22 @@ constexpr std::uint32_t kPriestType=158;
 const auto& Fixture() { static const auto rows=LoadFixture(NETSTORM_CONSTRUCTIONNOTICE_FIXTURE).rows;return rows; }
 // raw 풀·타입 표·전역과 효과 관찰을 행마다 새 입력으로 준비하는 장면이다.
 struct NoticeScene {
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
     SidPool pool;
+    // types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeRecord> types;
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
     ConstructionNoticeState state;
+    // values: 값. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::uint32_t> values;
+    // notice: 메시지 0x3f의 본문: 배치 통지다. 원본 위치는 +4 타입, +5 x, +9 y, +0xd 인자, +0xe 방향, +0xf 플레이어, (ConstructionNotice).
     ConstructionNotice notice;
+    // patch: 10.78 패치판의 상태 또는 패치판 검사용 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     bool patch;
+    // events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::string events;
+    // priestCalls: 사제 호출. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // moveCalls: 이동 호출. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::size_t priestCalls{},moveCalls{};
     // raw 입력은 실행기와 같은 번호에 놓되 실제 풀 할당 없이 공급한다.
     explicit NoticeScene(OriginalEdition edition):pool(edition,kCapacity,false),types(edition==OriginalEdition::Patch1078 ? 188 : 171),patch(edition==OriginalEdition::Patch1078) {}

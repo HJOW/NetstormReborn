@@ -7,6 +7,7 @@ namespace netstorm::o {
 class RawGraph;
 class SquidDisplay;
 class RawBuildingSpace;
+// 객체를 공간 해시와 점유 지도에서 해제하는 Unpop 처리기이다.
 class SquidUnpop {
 public:
     // 기존 SID 풀·네 단계 해시·spot을 함께 갱신한다. nullptr 표시 대상은 기존 억제 경로다.
@@ -28,8 +29,11 @@ public:
 private:
     // 원본 unaligned raw 필드를 호스트 포인터 산술로 해석하지 않는다.
     std::span<std::uint8_t> Bytes(Sid sid);
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
+    // hash_: 좌표별 객체 후보를 찾는 공간 해시.
     SquidHash& hash_;
+    // spots_: 칸별 점유·통행 비트를 읽는 spot 지도.
     std::span<std::uint8_t> spots_;
     SquidDisplay* display_{}; // 제거 전 위치의 변경 표를 공통 표시 경로로 전달한다.
     const RawBuildingSpace* building_{}; // 건물 옆면의 실제 BYTE 해제/진단 몸체다.

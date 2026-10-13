@@ -88,13 +88,21 @@ void Write(std::span<std::uint8_t> raw, std::size_t offset, std::uint32_t value,
 std::string ResultText(float value) { return std::isnan(value) ? "nan" : std::to_string(std::bit_cast<std::uint32_t>(value)); }
 // 분석 도구의 EventOracle 입력/대체 효과를 같은 계약으로 재현한다.
 struct Scene {
+    // edition: 판본별 필드 배치와 동작을 선택하는 원본 버전. 입력 구성 또는 실행 결과 대조에 사용한다.
     OriginalEdition edition;
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
     SidPool pool;
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
     BridgeEventState state;
+    // variants: 변형. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::map<std::uint32_t, RiftTypeFrames> variants;
+    // variant: 변형. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::uint32_t variant{};
+    // neighbor: 이웃. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::uint32_t neighbor{};
+    // events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::string> events;
+    // bridge: 다리. 입력 구성 또는 실행 결과 대조에 사용한다.
     RawBridgeEvents bridge;
     // 풀 슬롯 5~70을 미리 할당해 합성 번호 50·60·70을 준비한다. 복사/이동하면 훅이 가리키는 주소가 바뀐다.
     Scene(OriginalEdition which, const std::map<std::uint32_t, std::vector<std::uint8_t>>& frameBytes)

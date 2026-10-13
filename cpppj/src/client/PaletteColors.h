@@ -11,13 +11,19 @@ inline constexpr std::size_t kPatchPaletteColorCount=58;
 inline constexpr std::size_t kCdPaletteColorCount=50;
 // 원본 색 표의 한 항목이다. 같은 RGB를 서로 다른 전역에 적는 호출도 원본 순서대로 별도 항목으로 남긴다.
 struct NamedPaletteColor {
+    // red: RGB 색의 빨강 성분(0~255).
+    // green: RGB 색의 초록 성분(0~255).
+    // blue: RGB 색의 파랑 성분(0~255).
     std::uint8_t red{},green{},blue{};
+    // index: 목록이나 표에서 현재 항목을 찾는 인덱스.
     std::uint32_t index{};
 };
 // 기본 9색(검정/빨강/초록/파랑/자홍/노랑/주황/흰색/회색)과 날씨 4색의 별칭, 전체 호출 순서의 색 표다.
 struct PaletteColorTable {
+    // basic: 기본.
     std::array<std::uint32_t,9> basic{};
     std::array<std::uint32_t,4> weather{}; // 바람/비/천둥/해: 기본 노랑/파랑/빨강과 갈색 항목을 그대로 복사한다.
+    // named: 이름있는.
     std::vector<NamedPaletteColor> named;
 };
 // 실제 논리 팔레트의 검색 함수로 원본 전체 색 표를 계산한다. 기본색/날씨 별칭은 새 검색 없이 계산된 번호를 복사한다.

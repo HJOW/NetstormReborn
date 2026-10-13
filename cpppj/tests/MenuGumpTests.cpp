@@ -36,16 +36,24 @@ MenuGumpNode ReadRaw(std::span<const std::uint8_t> raw) {
     node.menuFlags=Get(raw,544);node.itemCount=Get(raw,548);node.fancy=Get(raw,2952);node.title=Get(raw,2956);return node;
 }
 // 콜백 응답의 종류/토큰/목표/offset/DWORD를 그대로 보관한다.
-struct Response { std::string kind;std::uint32_t token{},target{},offset{},value{}; };
+struct Response { /* kind: 자료나 동작의 종류를 구별하는 값. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::string kind;/* token: 저장소나 분배기에서 대상을 구별하는 토큰. 입력 구성 또는 실행 결과 대조에 사용한다. */ /* target: 대상. 입력 구성 또는 실행 결과 대조에 사용한다. */ /* offset: 배열·파일·좌표 계산에 더할 기준 오프셋. 입력 구성 또는 실행 결과 대조에 사용한다. */ /* value: 읽기·쓰기·통지에 전달하는 값. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::uint32_t token{},target{},offset{},value{}; };
 // 공유 노드/메뉴 표/idle 표를 가지고 모든 명시 가상 콜백 당시 상태를 기록한다.
 struct MenuScene {
+    // create: 등록 표 +0이 실제 루트다. 외부에서 표를 바꿀 때 collection.root도 같은 토큰으로 맞춰야 한다 (GumpCreateState).
     GumpCreateState create;
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
     MenuGumpState state;
+    // lifetimeState: 원본의 고정 크기 idle/overlay/삭제/dialog 표와 현재 삭제 전역이다 (GumpLifetimeState).
     GumpLifetimeState lifetimeState;
+    // nodes: 노드. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::map<std::uint32_t,MenuGumpNode> nodes;
+    // responses: 응답. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<Response> responses;
+    // calls: 호출 횟수 또는 호출 인자를 대조하는 기록. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::string calls;
+    // lifetime: 등록된 객체의 삭제·해제를 처리하는 수명 관리자. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::unique_ptr<GumpLifetime> lifetime;
+    // menu: 원본 메뉴의 정상 프레임/스택 몸체다. 레이아웃/생성/출력/입력은 같은 저장소의 별도 메뉴 처리기가 담당한다 (std::unique_ptr<MenuGump>).
     std::unique_ptr<MenuGump> menu;
     // 같은 파생 저장소의 안정된 주소를 기본 Gump 처리기에도 제공한다.
     MenuGumpNode* Find(std::uint32_t token) { const auto it=nodes.find(token);return it==nodes.end() ? nullptr : &it->second; }

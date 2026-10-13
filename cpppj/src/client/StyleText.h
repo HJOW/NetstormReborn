@@ -11,15 +11,22 @@ namespace netstorm::client {
 enum class StyleTextFragmentKind { Text, External, Base };
 // 원본 +4 next/+8 공통 T 태그/+c NUL 문자열/+10 문맥이다. 호스트 배치는 원본 주소와 무관하다.
 struct StyleTextFragment {
+    // kind: 자료나 동작의 종류를 구별하는 값.
     StyleTextFragmentKind kind{StyleTextFragmentKind::Text};
+    // next: 다음 항목의 번호 또는 다음 처리 위치.
+    // metadata: 메타정보.
     std::uint32_t next{},metadata{};
+    // text: 표시하거나 해석할 본문 문자열.
     std::vector<char> text;
+    // context: 문맥.
     std::array<std::uint32_t,8> context{};
 };
 // 0은 null이며 map의 주소는 삽입 후에도 안정된다. nextToken=0은 자동 토큰 발급 소진 상태다.
 // 체인의 head는 메뉴 항목의 styled 필드 등 실제 소유 필드에 보관하고 이 표에서는 중복 소유하지 않는다.
 struct StyleTextState {
+    // fragments: 본문조각.
     std::map<std::uint32_t,StyleTextFragment> fragments;
+    // nextToken: 새 등록 대상에 부여할 다음 토큰.
     std::uint32_t nextToken{1};
 };
 // 문자열/그림이 같은 자동 토큰과 안정된 조각 표를 사용하도록 등록한다. null 토큰과 덮어쓰기를 피한다.
@@ -29,13 +36,22 @@ void AppendStyleTextFragment(StyleTextState& state,std::uint32_t& head,std::uint
 // 문자열 경계는 입력 text/context를 변경하지 않는다. 파생 경계는 현재 head/next를 바꿀 수 있다.
 // metrics는 캐시 높이/상승/하강이고 measure는 signed 폭/높이다. release는 scalar 반납 직전 통지다.
 struct StyleTextHooks {
+    // textMetrics: 글꼴 문맥의 높이·행간·기준점 치수를 조회하는 콜백.
     std::function<std::array<std::int32_t,3>(const std::array<std::uint32_t,8>&)> textMetrics;
+    // textMeasure: 문자 구간의 출력 너비·높이를 측정하는 콜백.
     std::function<void(std::span<const char>,const std::array<std::uint32_t,8>&,std::int32_t&,std::int32_t&)> textMeasure;
+    // textDraw: 문자 구간을 지정 위치와 문맥으로 출력하는 콜백.
     std::function<void(std::span<const char>,ScreenPoint,const std::array<std::uint32_t,8>&)> textDraw;
+    // release: 대상 저장소나 핸들을 해제하는 콜백.
     std::function<void(std::uint32_t)> release;
+    // externalMetrics: 외부 텍스트 항목의 기본 치수를 조회하는 콜백.
+    // externalMeasure: 외부 텍스트 항목의 출력 크기를 측정하는 콜백.
     std::function<std::array<std::int32_t,2>(std::uint32_t)> externalMetrics,externalMeasure;
+    // externalDraw: 외부 텍스트 항목을 지정 위치에 출력하는 콜백.
     std::function<void(std::uint32_t,ScreenPoint,const std::array<std::uint32_t,8>*)> externalDraw;
+    // externalDestroy: 외부 텍스트 항목의 수명을 해제하는 콜백.
     std::function<void(std::uint32_t,std::uint8_t)> externalDestroy;
+    // color: 출력 색 또는 색 변환표를 선택하는 콜백.
     std::function<std::uint32_t(char)> color;
     // ~[...] 내부의 문맥/head/현재 공통 태그를 같은 저장소에서 갱신한다. StyleTextMarkup이 원본 명령을 공급한다.
     std::function<void(std::string_view,std::array<std::uint32_t,8>&,std::uint32_t&,std::uint32_t&)> bracket;
@@ -87,8 +103,11 @@ private:
     std::uint32_t Tail(std::uint32_t head) const;
     // 원본 색 전역을 읽는 경계는 실제 색 명령을 만났을 때만 요구한다.
     std::uint32_t Color(char command) const;
+    // state_: 0은 null이며 map의 주소는 삽입 후에도 안정된다. nextToken=0은 자동 토큰 발급 소진 상태다 (StyleTextState).
     StyleTextState& state_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (StyleTextHooks).
     StyleTextHooks hooks_;
+    // edition_: 판본별 필드 배치와 동작을 선택하는 원본 버전.
     o::OriginalEdition edition_;
 };
 // 기존 FontStore의 캐시 메트릭·첫 폭 표 측정·실제 글리프 출력을 문자열 조각에 공급한다.

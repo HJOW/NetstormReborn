@@ -29,12 +29,19 @@ public:
     // 명시적인 가상 분배 연결에서 다른 월드의 후처리를 섞지 않게 한다.
     const SidPool& Pool() const;
 private:
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
+    // prefix_: 사제 목록/회복 예약 접두를 실행한다. 전체 postPop 조합에서도 이 접두를 재사용한다 (RawPriestPostPop).
     const RawPriestPostPop& prefix_;
+    // carrier_: 캐리어의 내용물·통행·수명 처리 자료.
     const RawCarrierPostPop& carrier_;
+    // state_: 처리 중 조회·갱신하는 상태 (const RawPriestState).
     const RawPriestState& state_;
+    // frames_: 타입별 프레임 자료.
     std::vector<RiftTypeFrames> frames_;
+    // spots_: 칸별 점유·통행 비트를 읽는 spot 지도.
     std::span<const std::uint8_t> spots_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (PriestPostPopTailHooks).
     PriestPostPopTailHooks hooks_;
 };
 // 같은 풀의 실제 보호막 생성/조회에 연결한다. destroy는 가상 +0x10(flags 0), fall은 전체 낙하 경계다.

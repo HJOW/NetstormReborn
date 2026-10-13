@@ -15,15 +15,21 @@ inline constexpr std::uint32_t kMusicBufferFlags=0xe2,kMusicBufferBytes=0x2af80;
 enum class MusicField : std::uint32_t { Buffer=0,BufferBytes=4,Flags=8,File=0xc,Length=0x10,
     Duration=0x18,ReadOffset=0x20,WriteOffset=0x24,Format=0x28,DataOffset=0x3c,StopDepth=0x40 };
 // null 경로와 빈 문자열 경로를 구별한다. 원본은 경로가 있으면 끝에 역슬래시를 무조건 붙인다.
-struct MusicDirectories { std::optional<std::string> primary,secondary; };
+struct MusicDirectories { /* primary: 기본. */ /* secondary: 보조. */ std::optional<std::string> primary,secondary; };
 // 파일 열기의 입출력이다. 실패해도 파일 토큰/읽은 format만 바뀔 수 있으므로 기존 값으로 시작한다.
 struct MusicFileHeader {
+    // file: 읽기·재생에 사용할 파일 이름 또는 열린 파일 자료.
+    // length: 바이트·항목·문자 구간의 길이.
+    // dataOffset: 파일에서 실제 데이터가 시작되는 바이트 위치.
     std::uint32_t file{},length{},dataOffset{};
+    // format: 오디오 샘플 형식과 채널·주파수 정보.
     std::array<std::uint8_t,18> format{};
 };
 // 경로 탐색·열린 파일 헤더와 상위 옵션의 demo.mus 선택 경계다. 파일 탐색에는 효과음의 언어/와일드카드 규칙을 적용하지 않는다.
 struct MusicOpenHooks {
+    // find: 요청한 이름의 실제 파일 경로를 찾는 콜백.
     std::function<std::optional<std::string>(std::string_view)> find;
+    // open: 음악 파일을 열고 헤더를 읽는 콜백.
     std::function<bool(std::string_view,MusicFileHeader&)> open;
     // 원본 상위 음악 옵션/현재 이름 관리자가 demo.mus를 선택한다. 콜백 뒤 활성 비트가 공개 Play의 실패 반환값이다.
     std::function<void(std::string_view)> fallback;
@@ -52,6 +58,7 @@ private:
 struct MusicChannelHooks {
     // 기존 효과음 버퍼와 같은 음량/정지 COM 호출이다. 반환 음량 HRESULT가 음수면 원본 문장을 기록한다.
     std::function<std::int32_t(SoundBuffer,std::int32_t)> setVolume;
+    // stop: 소리 버퍼의 재생을 중지하는 콜백.
     std::function<void(SoundBuffer)> stop;
     // 버퍼 COM 참조를 해제하고 토큰 매핑에서 제거한다. 보통 반환값은 남은 참조 수다.
     std::function<std::int32_t(SoundBuffer)> release;
@@ -63,11 +70,13 @@ struct MusicChannelHooks {
     std::function<void(std::uint32_t)> close;
     // 선택 기록/보고 경계와 재귀 잠금 관찰자다. lockEvent는 예외를 던지지 않아야 하며 실제 잠금은 채널이 소유한다.
     std::function<void(std::uint32_t,std::string_view)> log;
+    // report: 보고서.
     SoundAssertReport report;
+    // lockEvent: 음악 작업의 잠금 진입·이탈을 관찰하는 콜백.
     std::function<void(bool entering)> lockEvent;
 };
 // DirectSound Lock의 두 쓰기 구간이다. Unlock까지 유효하며 첫 구간 뒤에 링 버퍼 시작 구간이 이어질 수 있다.
-struct MusicBufferRegions { std::span<std::uint8_t> first,second; };
+struct MusicBufferRegions { /* first: 구간 또는 연결 목록의 첫 항목. */ /* second: 두번째. */ std::span<std::uint8_t> first,second; };
 // 음악 버퍼의 생성/갱신 COM 경계다. HRESULT는 음수일 때 실패하며 status/cursor/lock 출력은 성공 시 유효하다.
 // 사용: create는 원본 형식 18바이트와 기능 비트/크기를 받고 버퍼 토큰을 쓴다. lock의 두 span 합은 요청 길이여야 한다.
 struct MusicBufferHooks {
@@ -121,6 +130,7 @@ private:
     friend class MusicRuntime;
     // 범위 전체를 잠금/해제로 감싸며 예외 경로도 잠금을 풀어 준다.
     struct Guard {
+        // channel: 한 음악 채널의 제어다. 원본 CRITICAL_SECTION과 같은 재귀 잠금으로 파일/버퍼 상태를 보호한다 (MusicChannel).
         MusicChannel& channel;
         // 재귀 잠금을 획득한다.
         explicit Guard(MusicChannel& owner);
@@ -132,7 +142,7 @@ private:
     // 선택 기록 경계에 채널 9의 원본 오류 문장을 전달한다.
     void Log(std::string_view text);
     // 상태 참조·경계·판본과 재귀 잠금이다. raw의 +0x44 잠금 바이트와 호스트 mutex를 분리한다.
-    o::OriginalEdition edition_;MusicChannelState& state_;MusicChannelHooks hooks_;mutable std::recursive_mutex mutex_;
+    o::OriginalEdition edition_;/* state_: 원본 채널 배치의 상태다. 버퍼/파일은 장치 경계의 32비트 토큰이고, 남은 바이트는 수정하지 않은 원본 필드를 보존한다 (MusicChannelState). */ MusicChannelState& state_;/* hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (MusicChannelHooks). */ MusicChannelHooks hooks_;/* mutex_: 공유 소리·스레드 상태에 접근할 때 사용하는 잠금. */ mutable std::recursive_mutex mutex_;
 };
 // 효과음과 음악의 공통 음소거 제어다. 최초 PushMute에서 음량을 예약하고 마지막 PopMute에서 최신 예약값을 복원한다.
 // 사용: 모두 같은 SoundState를 쓰는 effects/channel을 넘긴다. 음악 준비 전에도 전역 음량은 저장한다.
@@ -157,8 +167,8 @@ private:
     // Runtime은 같은 명령 잠금으로 초기화/종료 상태와 worker를 연결한다.
     friend class MusicRuntime;
     // 판본별 음소거 해제 분기와 공유 전역, 실제 두 제어 계층을 참조한다.
-    o::OriginalEdition edition_;SoundState& state_;SoundPlayer& effects_;MusicChannel& channel_;
+    o::OriginalEdition edition_;/* state_: 재생 계층이 읽고 쓰는 원본 전역이다. 값은 클라이언트가 소유한다 (SoundState). */ SoundState& state_;/* effects_: 소리 항목의 재생·정지·재생 여부를 맡는 재생 계층이다 (SoundPlayer). */ SoundPlayer& effects_;/* channel_: 한 음악 채널의 제어다. 원본 CRITICAL_SECTION과 같은 재귀 잠금으로 파일/버퍼 상태를 보호한다 (MusicChannel). */ MusicChannel& channel_;
     // worker의 Update와 공개 Play/Stop/음량/음소거를 직렬화한다. 종료 중 새 시작은 받아들이지 않는다.
-    std::recursive_mutex mutex_;bool stopping_=false;
+    std::recursive_mutex mutex_;/* stopping_: 정지중 여부. */ bool stopping_=false;
 };
 }

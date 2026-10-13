@@ -15,18 +15,33 @@ const std::vector<std::vector<std::string>>& Fixture() {
 }
 // 원본에 공급한 raw 사제·타입·지면·프레임·외부 효과만 준비하는 콘솔 장면이다.
 struct TailScene {
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
     SidPool pool;
+    // random: 원본 FUN_004558c0: 상태 0이면 0x0bad0bad로 바꾼 뒤 상태*0x10003+3의 상위 16비트를 limit로 나눈 나머지를 쓴다 (GameRandom).
     GameRandom random;
+    // store: 패치판이 플레이어별 SP를 32개의 9칸 DWORD 배열에 흩뿌려 보관하는 방식이다 (ScrambledSpStore).
     ScrambledSpStore store;
+    // book: 등록 목록과 개수의 장부. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidPostPopState book;
+    // hpMode: 보상 계산이 읽거나 갱신하는 판본별 전역과 AI 지갑이다. 패치 주소/CD 주소는 괄호에 둔다 (SquidRewardState).
     SquidRewardState hpMode;
+    // priests: 사제. 입력 구성 또는 실행 결과 대조에 사용한다.
     PriestPostPopState priests;
+    // types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeRecord> types;
+    // frames: 타입별 프레임 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeFrames> frames;
+    // spots: 칸별 점유·통행 비트를 읽는 spot 지도. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::uint8_t> spots;
+    // hp: 객체의 HP를 조회·변경하는 처리기 또는 HP 값. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::unique_ptr<SquidReward> hp;
+    // events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::string> events;
+    // patch: 10.78 패치판의 상태 또는 패치판 검사용 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // found: 찾은 여부. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // allocated: 할당된 여부. 입력 구성 또는 실행 결과 대조에 사용한다.
     bool patch{},found{},allocated{};
+    // change: 변경. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::uint32_t change{};
     // 같은 클라이언트 풀의 입력 SID 50까지 확보하고 고정 크기 표를 만든다.
     explicit TailScene(OriginalEdition edition):pool(edition,kCapacity,false),store(random,[] { return 1U; }),

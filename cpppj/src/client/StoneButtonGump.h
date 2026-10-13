@@ -10,26 +10,40 @@ class GumpPixelTarget;
 struct GumpDrawHooks;
 // 라벨 +c0..+ff, 글자 문맥 +104/+124/+144, 측정값 +164/+168이다. background는 기본 버튼 +100을 공유한다.
 struct StoneButtonGumpNode : ButtonGumpNode {
+    // label: 화면에 표시할 항목 문구 또는 패턴 번호.
     std::array<char,64> label{};
+    // contexts: 문맥.
     std::array<GumpTextContext,3> contexts{};
+    // textWidth: 출력 문자열의 픽셀 너비.
+    // textHeight: 출력 문자열의 픽셀 높이.
     std::int32_t textWidth{},textHeight{};
 };
 // 생성 시 읽는 색 BYTE·기본 글자 문맥·팔레트와 현재 배경 타입/프레임 전역이다.
 // palette는 일시 번개 팔레트가 아닌 기존 ButtonColors 결과를 공급한다.
 struct StoneButtonGumpState {
+    // color: 그림·글자 출력에 사용할 팔레트 색 인덱스 또는 색 상태.
     std::int8_t color{};
+    // defaultContext: 기본 문맥.
     std::array<std::uint32_t,8> defaultContext{};
+    // palette: 그림의 색 인덱스를 실제 출력 색으로 바꿀 팔레트.
     ButtonPalette palette;
+    // backgroundType: 배경을 출력할 타입 번호.
+    // backgroundFrame: 배경을 출력할 프레임 번호.
     std::uint32_t backgroundType{},backgroundFrame{};
 };
 // allocate(0xb8)는 배경 저장소 토큰이다. push/attach는 배경의 가상 +18/+20을 실제 GumpTree에 분배한다.
 // measure는 원본 글자 측정 경계이며 입력 64바이트와 현재 기본 문맥, 출력 참조, 최대 길이 DWORD를 받는다.
 // 측정 콜백은 같은 노드의 폭/높이/scale도 바꿀 수 있다. 원본 폰트/장치 연결은 호출자가 공급한다.
 struct StoneButtonGumpHooks {
+    // node: 토큰에 대응하는 저장 노드를 조회하는 콜백.
     std::function<StoneButtonGumpNode*(std::uint32_t)> node;
+    // allocate: 새 대상의 저장소를 확보하는 콜백.
     std::function<std::uint32_t(std::size_t)> allocate;
+    // push: 현재 대상을 처리 목록에 넣는 콜백.
     std::function<void(std::uint32_t)> push;
+    // attach: 대상을 부모 또는 처리 목록에 부착하는 콜백.
     std::function<void(std::uint32_t,float,float,std::uint32_t,std::uint32_t)> attach;
+    // measure: 지정 글꼴 문맥에서 텍스트의 출력 크기를 측정하는 콜백.
     std::function<void(std::uint32_t,const std::array<char,64>&,const std::array<std::uint32_t,8>&,
         std::int32_t&,std::int32_t&,std::uint32_t)> measure;
 };
@@ -67,13 +81,21 @@ private:
     // null 허용 여부는 공개 메서드에서 정하며 복사/측정은 실제 도달 시에만 수행한다.
     void CopyLabel(StoneButtonGumpNode& node,const char* label) const;
     void Measure(std::uint32_t token) const;
+    // create_: 등록 표 +0이 실제 루트다. 외부에서 표를 바꿀 때 collection.root도 같은 토큰으로 맞춰야 한다 (GumpCreateState).
     GumpCreateState& create_;
+    // state_: 생성 시 읽는 색 BYTE·기본 글자 문맥·팔레트와 현재 배경 타입/프레임 전역이다 (StoneButtonGumpState).
     StoneButtonGumpState& state_;
+    // factory_: 타입에 맞는 객체를 생성하는 처리기.
     const GumpCreate& factory_;
+    // buttons_: 돌 버튼 생성/텍스트/부착은 StoneButtonGump에 맡기는 상태 처리기다. GumpEvents/입력/프레임 훅에 연결한다 (ButtonGump).
     const ButtonGump& buttons_;
+    // backgrounds_: 기본 생성/등록은 GumpCreate, 부착/파괴는 같은 저장소의 GumpTree/GumpLifetime이 맡는다 (GumpBackgroundCreate).
     const GumpBackgroundCreate& backgrounds_;
+    // tree_: 00466750/CD 00493070의 머리 삽입과 원본의 후속 정렬/현재 자식 재배치를 담당한다 (GumpTree).
     const GumpTree& tree_;
+    // lifetime_: 등록된 객체의 삭제·해제를 처리하는 수명 관리자.
     const GumpLifetime& lifetime_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (StoneButtonGumpHooks).
     StoneButtonGumpHooks hooks_;
 };
 // 돌 버튼만 파생 Attach/scalar 소멸자를 사용한다. 나머지는 기존 분배기를 보존한다.

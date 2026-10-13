@@ -16,8 +16,10 @@ template<class T> std::string Bytes(const T& value) {
 }
 // 실제 raw 풀/등록 목록에 완성된 객체 입력을 공급한다. 기대 환산이나 가시 여부는 계산하지 않는다.
 struct CollectionScene {
-    SidPool pool;ConstructionVisualState state;std::vector<RenderProcessFields> fields;
-    std::unique_ptr<RawRenderRegistry> registry;std::vector<std::uint32_t> input;
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
+    SidPool pool;/* state: 검사 입력과 실행 뒤 결과를 보관할 상태. */ ConstructionVisualState state;/* fields: 원본 프로세스의 직접 읽기·쓰기 필드 이미지. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<RenderProcessFields> fields;
+    // registry: 설정 객체나 등록 대상을 조회하는 등록부. 입력 구성 또는 실행 결과 대조에 사용한다.
+    std::unique_ptr<RawRenderRegistry> registry;/* input: 처리할 입력 또는 입력 분배기. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<std::uint32_t> input;
     // 판본에 따라 raw 슬롯의 폭만 바뀐다.
     explicit CollectionScene(OriginalEdition edition):pool(edition,kCapacity,false) {}
     // 등록/해제는 이 관찰에서 실행하지 않으므로 외부 효과를 요청하면 실패한다.

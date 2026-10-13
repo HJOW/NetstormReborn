@@ -46,12 +46,19 @@ private:
     bool NoSurface(const PriestPlacementRect& rectangle) const;
     // 표면 조회는 +0.9999 뒤 절삭한다. 범위 밖 좌표에서는 예약 슬롯 0을 사용한다.
     Sid Surface(float x,float y) const;
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     const SidPool& pool_;
+    // hash_: 좌표별 객체 후보를 찾는 공간 해시.
     const SquidHash& hash_;
+    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::span<const RiftTypeRecord> types_;
+    // frames_: 타입별 프레임 자료.
     std::span<const PriestPlainCanonType> frames_;
+    // spots_: 칸별 점유·통행 비트를 읽는 spot 지도.
     std::span<const std::uint8_t> spots_;
+    // state_: 요청이 읽는 전역이다. 공통 배치 모듈의 editor/localPlayer/패턴 번호와 같은 값을 공급한다 (ConstructionRequestState).
     const ConstructionRequestState& state_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (ConstructionRequestHooks).
     ConstructionRequestHooks hooks_;
 };
 // 전체 MayPlace 파이프라인과 실제 서버 확정을 같은 풀로 연결한다. 밀어내기/실패 정리/진단은 받은 경계를 둔다.

@@ -12,7 +12,9 @@ inline constexpr std::uint32_t kPatchForcefieldVtable=0x00507770,kCdForcefieldVt
 inline constexpr std::uint32_t kForcefieldFrameEvent=1,kForcefieldCheckEvent=2;
 // 두 번의 원본 new(0x28)을 각각 관찰한다. 실패해도 다음 확보와 공통 후처리를 계속한다.
 struct ForcefieldPostPopHooks {
+    // reserveRegular: 후속 Regular 프로세스 등록을 예약하는 콜백.
     std::function<bool()> reserveRegular;
+    // addRegular: 대상에 Regular 프로세스를 추가하는 콜백.
     std::function<void(Sid,std::uint32_t,float)> addRegular;
 };
 // 사용: 같은 풀의 실제 예약 훅을 구성한 뒤 SquidPostPop::SetForcefieldPostPop에 등록한다.
@@ -28,14 +30,18 @@ public:
     // 다른 월드의 일반 Pop에 등록되지 않도록 구성 단계에서 확인한다.
     const SidPool& Pool() const;
 private:
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     const SidPool& pool_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (ForcefieldPostPopHooks).
     ForcefieldPostPopHooks hooks_;
 };
 // 사제 타입 DWORD는 매 검사 때 읽는다. 소유자는 존재 검사의 조건이 아니다.
-struct ForcefieldRegularState { std::uint32_t priestType{kPriestType};bool debug{}; };
+struct ForcefieldRegularState { /* priestType: 사제 자산을 타입 표에서 찾는 번호. */ std::uint32_t priestType{kPriestType};/* debug: 원본 assert 경계와 진단 출력을 검사할지. */ bool debug{}; };
 // 프레임 진행/가상 삭제만 외부 효과이며 위치의 일반 finder는 실제 모듈을 사용한다.
 struct ForcefieldRegularHooks {
+    // advance: 대상의 프레임 진행과 후속 변경을 실행하는 콜백.
     std::function<void(Sid,std::int32_t,std::uint32_t)> advance;
+    // destroy: 대상의 실제 삭제 경로를 실행하는 콜백.
     std::function<void(Sid,std::uint32_t)> destroy;
 };
 // 사용: Handle을 Regular 처리기에 연결하고 advance/destroy를 같은 월드의 실제 모듈로 공급한다.
@@ -52,10 +58,15 @@ public:
 private:
     // 현재 좌표를 0방향 절삭해 원본 기본 finder 순서의 첫 타입 일치를 반환한다.
     Sid FindPriest(Sid sid) const;
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     const SidPool& pool_;
+    // hash_: 좌표별 객체 후보를 찾는 공간 해시.
     const SquidHash& hash_;
+    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::span<const RiftTypeRecord> types_;
+    // state_: 사제 타입 DWORD는 매 검사 때 읽는다. 소유자는 존재 검사의 조건이 아니다 (ForcefieldRegularState).
     const ForcefieldRegularState& state_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (ForcefieldRegularHooks).
     ForcefieldRegularHooks hooks_;
 };
 // 확보 경계는 보존하고 실제 Regular/form/Kernel 생성으로 예약을 연결한다.

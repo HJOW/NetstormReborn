@@ -24,10 +24,15 @@ private:
     static int Cell(float coordinate,int level);
     // float 저장 위치와 판본별 NaN 조건을 보존해 월드 프레임의 포함 교차를 판정한다.
     bool Visible(o::RenderWorldRect view,float x,float y,const o::SquidDisplayFrame& frame) const;
+    // hash_: 좌표별 객체 후보를 찾는 공간 해시.
     o::SquidHash& hash_;
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     const o::SidPool& pool_;
+    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::span<const o::RiftTypeRecord> types_;
+    // shapes_: 프레임의 크기·그림 데이터를 조회하는 셰이프 자료.
     std::span<const o::SquidDisplayShape> shapes_;
+    // tokenBase_: 토큰 기본.
     std::uint32_t tokenBase_{};
 };
 // 공통 일반 자산/효과 슬롯을 실제 수집기에 연결한다. collector 수명은 호출자가 유지해야 한다.

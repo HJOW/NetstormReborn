@@ -15,9 +15,16 @@ public enum RangeShape
 }
 
 /// <summary>표시할 사거리(칸), 모양, 북·동·남·서 방향(0~3), range 타입의 그림 묶음.</summary>
+/// <param name="Distance">사정거리의 길이(월드 칸).</param>
+/// <param name="Shape">사정거리 표시의 도형 종류.</param>
+/// <param name="Direction">사정거리 표시의 방향 번호.</param>
+/// <param name="FrameSide">사정거리와 대응할 프레임 방향 글자.</param>
 public sealed record RangeDisplay(double Distance, RangeShape Shape, int Direction, char FrameSide);
 
 /// <summary>발자국 중심에서 반짝임까지의 칸 단위 변위와 그림 위상을 구분하는 번호.</summary>
+/// <param name="X">월드 X 좌표.</param>
+/// <param name="Y">월드 Y 좌표.</param>
+/// <param name="Index">목록에서 항목을 구별하는 번호.</param>
 public readonly record struct RangePoint(double X, double Y, int Index);
 
 /// <summary>원본 00474240·00474520·00474c30·00474ed0에서 확인한 사거리 표시 규칙. 공격 판정과 분리한다.</summary>

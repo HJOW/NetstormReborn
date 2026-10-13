@@ -6,11 +6,13 @@
 namespace netstorm::o {
 // Carrier와 Damageable이 같은 권한/contained 타입 전역을 공유한다.
 using CarrierPreDestroyState=ContainedFinderState;
+// 캐리어 전처리 삭제 외부 동작과 저장소 조회를 연결하는 콜백 묶음이다.
 struct CarrierPreDestroyHooks {
     std::function<void(Sid,std::uint32_t)> validateDamageable; // 효과 전 하위 경계의 순수 사전 검사다.
     std::function<void(Sid,std::uint32_t)> damageablePre; // 0044b4b0 / CD 004615e0의 하위 효과 경계다.
     std::function<void()> dependentFound; // 00485e40 / CD 004151d0: 인자 없는 전역 후처리 경계다.
 };
+// Carrier 삭제 준비와 contained finder의 타입·WORD 조건 조회를 복원한다.
 class RawCarrierPreDestroy {
 public:
     // 가상 지원 범위를 넓히지 않는 직접 호출용 몸체다. 풀·상태·훅 대상은 더 오래 살아야 한다.
@@ -25,8 +27,11 @@ public:
     // 연결 어댑터가 같은 풀인지 확인한다.
     const SidPool& Pool() const;
 private:
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
+    // state_: 처리 중 조회·갱신하는 상태 (const CarrierPreDestroyState).
     const CarrierPreDestroyState& state_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (CarrierPreDestroyHooks).
     CarrierPreDestroyHooks hooks_;
 };
 // 사제의 Carrier 경계를 같은 풀의 실제 몸체에 연결하고 보호막 훅을 보존한다.

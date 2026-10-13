@@ -16,16 +16,23 @@ struct PriestFallFrames {
     std::int32_t landed{}; // 타입 +0x140의 지면 도착 프레임이다.
 };
 // 낙하 요청이 권한 효과 직전에 다시 읽는 전역이다.
-struct PriestFallState { bool authority{true}; }; // 00540bc4 / CD 00540a2c.
+struct PriestFallState { /* authority: 서버 권한이 있는 추락 처리 경로를 실행할지. */ bool authority{true}; }; // 00540bc4 / CD 00540a2c.
 // 미복원 공간/소리 효과와 실제 프로세스/보호막을 연결하는 호출 경계다.
 struct PriestFallHooks {
+    // ensureShield: 사제에게 필요한 보호막을 확보하는 콜백.
     std::function<void(Sid)> ensureShield;
     std::function<bool()> reserveRegular; // new(0x28)의 실패를 공급할 수 있다.
+    // addSharedRegular: 공유 커널에 Regular 프로세스를 등록하는 콜백.
     std::function<void(Sid,std::uint32_t,float)> addSharedRegular;
+    // unpop: 대상을 공간 등록에서 해제하는 Unpop 콜백.
+    // repop: 변경한 대상을 공간에 다시 반영하는 Repop 콜백.
     std::function<void(Sid,std::uint32_t)> unpop,repop;
     std::function<void(Sid,float,float)> sound; // 현재 좌표의 priestFall.wav, flags 0이다.
+    // setFrame: 대상의 프레임 번호를 변경하는 콜백.
     std::function<void(Sid,std::int32_t,std::uint32_t)> setFrame; // 004acee0 / CD 004acbc0.
+    // advanceFrame: 대상의 애니메이션 프레임을 진행하는 콜백.
     std::function<void(Sid,std::uint32_t,std::uint32_t)> advanceFrame; // 004afc90 / CD 004acce0.
+    // clearShield: 사제의 보호막 연결을 해제하는 콜백.
     std::function<void(Sid)> clearShield;
 };
 // 같은 월드에서 낙하 요청과 주기 이벤트를 실행한다. 일반 사제 Pop 지원을 바꾸지 않는다.
@@ -48,12 +55,19 @@ public:
 private:
     // 원본의 거의 올림 좌표를 유지한다. 지도 밖은 지면 없음이며 비유한 입력은 진단한다.
     bool SurfaceAt(Sid sid) const;
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
+    // priest_: 사제 상태를 조회·변경하는 처리기 또는 사제 경로 여부.
     const RawPriestState& priest_;
+    // frames_: 타입별 프레임 자료.
     std::span<const RiftTypeFrames> frames_;
+    // choices_: 사제 추락에 사용할 방향별 프레임 선택표.
     std::span<const PriestFallFrames> choices_;
+    // surfaces_: 표면 객체의 공간·연결·수명 처리 자료.
     std::span<const std::uint16_t> surfaces_;
+    // state_: 낙하 요청이 권한 효과 직전에 다시 읽는 전역이다 (PriestFallState).
     PriestFallState& state_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (PriestFallHooks).
     PriestFallHooks hooks_;
 };
 // 실제 사제 vtable의 0x25b를 처리하고 다른 사건은 명시 fallback에 넘긴다.

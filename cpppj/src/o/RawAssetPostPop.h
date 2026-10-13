@@ -6,15 +6,35 @@
 namespace netstorm::o {
 // 원본 Player의 신전 네 필드를 유지한다. 복사본을 읽지 않도록 실행 월드가 이 저장소를 공유한다.
 struct AssetPostPopPlayer {
+    // initialTemple: 초기 신전.
+    // initialTempleCopy: 초기 신전 복사.
+    // newTemple: 새 신전.
+    // newTempleCopy: 새 신전 복사.
     std::uint32_t initialTemple{},initialTempleCopy{},newTemple{},newTempleCopy{};
 };
 // Gun/Residence/Geyser/Vortex 재정의가 사용하는 전역과 목록이다.
 struct AssetPostPopState {
+    // inBattle: 내부 전투 여부.
+    // boss: boss 여부.
+    // fortMode: Fort 모드 여부.
+    // checkingForms: 검사 Form 여부.
+    // residenceAnimation: 거주건물 애니메이션 여부.
     bool inBattle{},boss{true},fortMode{},checkingForms{},residenceAnimation{};
+    // loadingDepth: 로딩 깊이.
+    // templeCount: 신전 개수.
+    // selected: 현재 선택한 객체·컨트롤의 번호 또는 토큰.
     std::uint32_t loadingDepth{},templeCount{},selected{};
+    // localOwner: 로컬 소유자.
     std::uint8_t localOwner{1};
+    // islandType: island 자산을 타입 표에서 찾는 번호.
+    // stalagType: islandStalag 받침 자산을 타입 표에서 찾는 번호.
+    // slotType: slot 자산을 타입 표에서 찾는 번호.
     std::uint32_t islandType{94},stalagType{95},slotType{133};
+    // players: 플레이어.
     std::array<AssetPostPopPlayer,kPlayerCount+1> players{};
+    // residences: 거주건물.
+    // temples: 신전.
+    // geysers: 가이저.
     SquidPostPopList residences,temples,geysers;
 };
 // 외부 몸체를 생략하지 않고 호출 순서대로 연결하는 명시 경계다. 필요한 경계가 없으면 사전 검사에서 거부한다.
@@ -76,11 +96,17 @@ private:
     void Vortex(Sid sid,std::uint32_t flags,std::uint32_t kind) const;
     // Damageable 뒤 Player·목록·영역·다른 신전 삭제·slot 생성을 처리한다.
     void VortexBase(Sid sid,std::uint32_t flags) const;
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
+    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::vector<RiftTypeRecord> types_;
+    // base_: 파생 처리에서 공통 동작을 위임하는 기본 객체.
     SquidPostPop& base_;
+    // damageable_: 피해 가능한 객체의 HP·삭제·후처리 연결.
     const RawCarrierPostPop& damageable_;
+    // state_: Gun/Residence/Geyser/Vortex 재정의가 사용하는 전역과 목록이다 (AssetPostPopState).
     AssetPostPopState& state_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (AssetPostPopHooks).
     AssetPostPopHooks hooks_;
 };
 }

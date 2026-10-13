@@ -19,32 +19,54 @@ public:
     void Destroy(std::uint32_t token);
 private:
     // handler는 같은 record.state를 참조하므로 레코드 주소를 이동하거나 상태 복사본을 만들지 않는다.
-    struct Record { StyleTextBufferState state;std::unique_ptr<StyleTextBuffer> handler; };
+    struct Record { /* state: +0 max/+4 완료 줄 수/+8 전체 칸/+c 센티널/+24 표시 줄 수/+28 미사용/+2c 변경/+30 줄바꿈 금지다 (StyleTextBufferState). */ StyleTextBufferState state;/* handler: 외부 이벤트·프로세스 동작을 실제 코드에 전달하는 처리기. */ std::unique_ptr<StyleTextBuffer> handler; };
     // 안정된 현재 레코드를 실제 도달 시 읽는다. release 콜백은 현재 버퍼를 재귀 반납하면 안 된다.
     Record& Entry(std::uint32_t token) const;
+    // fragments_: 0은 null이며 map의 주소는 삽입 후에도 안정된다. nextToken=0은 자동 토큰 발급 소진 상태다 (StyleTextState).
     StyleTextState& fragments_;
+    // style_: 글꼴·색·정렬을 선택하는 텍스트 출력 문맥.
     const StyleText& style_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (StyleTextBufferHooks).
     StyleTextBufferHooks hooks_;
+    // release_: 대상 저장소나 핸들을 해제하는 콜백.
     std::function<void(std::uint32_t)> release_;
+    // records_: 기록.
     std::map<std::uint32_t,std::unique_ptr<Record>> records_;
 };
 // 현재 signed 정렬과 Slider 배경 인자·실제 문자열 사건 ID 전역이다. 사건 ID는 원본 초기화 결과를 공급한다.
 // 초기 정렬은 46, 나머지 ID/type은 실행 초기화 후 값이며 PE의 미초기화 0으로 대체하면 안 된다.
 struct ScrollingTextGumpWidgetState {
+    // alignment: 항목의 좌우·상하 정렬을 선택하는 값.
     std::int8_t alignment{46};
+    // sliderType: 스크롤바 타입.
+    // sliderFrame: 스크롤바 프레임.
     std::uint32_t sliderType{},sliderFrame{};
+    // changeEvent: 값이 변경됐음을 알리는 이벤트 ID.
+    // stepEvent: 스크롤 이동을 요청하는 이벤트 ID.
+    // refreshEvent: 갱신 이벤트.
+    // cursorEvent: 커서 이벤트.
+    // leftTagEvent: 왼쪽 태그 이벤트.
+    // rightTagEvent: 오른쪽 태그 이벤트.
     std::uint32_t changeEvent{},stepEvent{},refreshEvent{},cursorEvent{},leftTagEvent{},rightTagEvent{};
 };
 // 같은 노드·Slider 조회와 new(0x38 버퍼/0xd8 Slider)·현재 가상 Push/Attach/Redraw·커서 선택 경계다.
 // 두 allocate 크기의 반환 저장소 종류는 이 생성 계층의 문맥에 맞춰 준비한다. 모든 노드는 콜백 동안 안정돼야 한다.
 struct ScrollingTextGumpWidgetHooks {
+    // node: 토큰에 대응하는 저장 노드를 조회하는 콜백.
     std::function<ScrollingTextGumpNode*(std::uint32_t)> node;
+    // slider: 토큰에 대응하는 스크롤바 저장 노드를 조회하는 콜백.
     std::function<ScrollGumpNode*(std::uint32_t)> slider;
+    // base: 파생 처리에서 공통 동작을 위임하는 기본 객체를 조회하는 콜백.
     std::function<GumpCreateNode*(std::uint32_t)> base;
+    // allocate: 새 대상의 저장소를 확보하는 콜백.
     std::function<std::uint32_t(std::size_t)> allocate;
+    // push: 현재 대상을 처리 목록에 넣는 콜백.
     std::function<void(std::uint32_t)> push;
+    // attach: 대상을 부모 또는 처리 목록에 부착하는 콜백.
     std::function<void(std::uint32_t,float,float,std::uint32_t,std::uint32_t)> attach;
+    // redraw: 대상의 화면 갱신을 요청하는 콜백.
     std::function<void(std::uint32_t,bool)> redraw;
+    // cursor: 텍스트 입력 커서 상태를 갱신하는 콜백.
     std::function<void(std::uint32_t)> cursor;
 };
 // 기존 다중 줄 표시/스크롤 처리기에 실제 생성/수명/입력과 추가 설정을 연결한다. 자동 Client 조립은 후속이다.
@@ -92,17 +114,29 @@ private:
     std::uint32_t Tag(std::uint32_t fragment) const;
     // 원본 화면 좌표의 하위 DWORD를 signed로 해석해 기존 조각 선택 함수에 전달한다.
     std::uint32_t Hit(std::uint32_t token,std::uint32_t x,std::uint32_t y) const;
+    // create_: 등록 표 +0이 실제 루트다. 외부에서 표를 바꿀 때 collection.root도 같은 토큰으로 맞춰야 한다 (GumpCreateState).
     GumpCreateState& create_;
+    // state_: 현재 signed 정렬과 Slider 배경 인자·실제 문자열 사건 ID 전역이다. 사건 ID는 원본 초기화 결과를 공급한다 (ScrollingTextGumpWidgetState).
     ScrollingTextGumpWidgetState& state_;
+    // factory_: 타입에 맞는 객체를 생성하는 처리기.
     const GumpCreate& factory_;
+    // tree_: 00466750/CD 00493070의 머리 삽입과 원본의 후속 정렬/현재 자식 재배치를 담당한다 (GumpTree).
     const GumpTree& tree_;
+    // lifetime_: 등록된 객체의 삭제·해제를 처리하는 수명 관리자.
     const GumpLifetime& lifetime_;
+    // events_: 발생한 이벤트 또는 이벤트 처리기.
     const GumpEvents& events_;
+    // input_: 처리할 입력 또는 입력 분배기.
     const GumpInput& input_;
+    // fragments_: 0은 null이며 map의 주소는 삽입 후에도 안정된다. nextToken=0은 자동 토큰 발급 소진 상태다 (StyleTextState).
     StyleTextState& fragments_;
+    // buffers_: 버퍼는 Gump 등록 표에 넣지 않는 별도 소유 객체다. 동일 조각/글꼴/그림 처리기와 안정된 상태를 유지한다 (StyleTextBufferStore).
     StyleTextBufferStore& buffers_;
+    // text_: 표시하거나 해석할 본문 문자열.
     const ScrollingTextGump& text_;
+    // sliderWidgets_: 원본 생성·출력을 기존 기본 Gump/돌 버튼/배경/Slider에 위임한다. 자동 Client 조립은 상위 계층 책임이다 (ScrollGumpWidgets).
     const ScrollGumpWidgets& sliderWidgets_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (ScrollingTextGumpWidgetHooks).
     ScrollingTextGumpWidgetHooks hooks_;
 };
 // 128칸 생성 저장소와 기존 다중 줄 표시/입력이 같은 실제 버퍼를 조회하게 한다.

@@ -19,11 +19,15 @@ const std::vector<std::vector<std::string>>& Fixture() { static const auto data=
 std::int32_t Whole(const std::string& text) { return static_cast<std::int32_t>(Number(text)); }
 // 독립 메모리 파일/버퍼/잠금 대체다. 상태 전이를 예상하지 않고 실제 모듈이 요청한 IO와 사건을 기록한다.
 struct MusicMock {
-    std::vector<std::string> events;std::vector<std::uint8_t> file;
-    std::size_t position=5;bool opened=true;int cap=-2,seekResult{},releaseResult{},gainResult{},lockDepth{};
+    // events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
+    std::vector<std::string> events;/* file: 읽기·재생에 사용할 파일 이름 또는 열린 파일 자료. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<std::uint8_t> file;
+    // position: 현재 좌표 또는 저장소의 읽기 위치. 입력 구성 또는 실행 결과 대조에 사용한다.
+    std::size_t position=5;/* opened: 열린 여부. 입력 구성 또는 실행 결과 대조에 사용한다. */ bool opened=true;/* cap: 상한. 입력 구성 또는 실행 결과 대조에 사용한다. */ /* seekResult: 탐색 결과. 입력 구성 또는 실행 결과 대조에 사용한다. */ /* releaseResult: 해제 결과. 입력 구성 또는 실행 결과 대조에 사용한다. */ /* gainResult: 증가 결과. 입력 구성 또는 실행 결과 대조에 사용한다. */ /* lockDepth: 중첩된 잠금 요청의 수. 입력 구성 또는 실행 결과 대조에 사용한다. */ int cap=-2,seekResult{},releaseResult{},gainResult{},lockDepth{};
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
     SoundState* state{};
     // 한 번의 COM 호출 재진입으로 공유 깊이/예약 음악을 바꿀 입력이다.
-    struct Callback { bool music;std::uint32_t depth,pending; };
+    struct Callback { /* music: 음악 여부. 입력 구성 또는 실행 결과 대조에 사용한다. */ bool music;/* depth: 출력이나 이벤트 후보의 깊이 값. 입력 구성 또는 실행 결과 대조에 사용한다. */ /* pending: 후속 처리 전까지 보류하는 요청이나 상태. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::uint32_t depth,pending; };
+    // callback: 콜백. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::optional<Callback> callback;
     // 버퍼의 사건 표기를 원본 실행기처럼 만든다.
     std::string Ordinal(SoundBuffer buffer) const { return "#"+std::to_string((buffer-kBufferBase)/16U); }

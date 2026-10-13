@@ -49,6 +49,12 @@ public sealed record ShapeBlock(int Index, int Offset, IReadOnlyList<ShapeFrame>
 public sealed record IndexedImage(int Width, int Height, byte[] Indices, bool[] Opaque);
 
 /// <summary>VFX 바로 앞의 원본 Squid 전용 헤더. 표시 치수와 hotspot은 부호 있는 16비트다.</summary>
+/// <param name="CellWidth">객체 발자국의 가로 칸 수.</param>
+/// <param name="CellHeight">객체 발자국의 세로 칸 수.</param>
+/// <param name="DisplayWidth">프레임 그림의 픽셀 너비.</param>
+/// <param name="DisplayHeight">프레임 그림의 픽셀 높이.</param>
+/// <param name="HotspotX">그림 기준점의 X 픽셀 오프셋.</param>
+/// <param name="HotspotY">그림 기준점의 Y 픽셀 오프셋.</param>
 public readonly record struct SquidFrameMetrics(float CellWidth, float CellHeight, short DisplayWidth, short DisplayHeight, short HotspotX, short HotspotY);
 
 /// <summary>
@@ -74,6 +80,7 @@ public sealed class ShapeDatabase
     /// <summary>원본 파일 이름</summary>
     public const string FileName = "_shapes.shp";
 
+    /// <summary>_raw: 파일에서 읽은 원시 바이트. 레코드 오프셋으로 데이터를 조회한다.</summary>
     private readonly byte[] _raw;
 
     /// <summary>연속 블록 표의 끝. 순수 VFX 파일의 앞부분을 Squid 헤더로 읽지 않도록 검사한다.</summary>

@@ -16,6 +16,8 @@ public sealed record MissionSection(IReadOnlyList<string> Names, int HeaderLine,
 public sealed record MissionCommand(string Name, string Arguments, IReadOnlyList<string> Fields, int Line);
 
 /// <summary>변수 치환·조건 평가를 마친 본문과 줄 명령. HTML·인라인 명령의 실행은 포함하지 않는다.</summary>
+/// <param name="Body">조건·치환을 처리한 미션 섹션 본문.</param>
+/// <param name="Commands">본문과 함께 실행할 미션 명령 목록.</param>
 public sealed record PreparedMissionSection(string Body, IReadOnlyList<MissionCommand> Commands);
 
 /// <summary>

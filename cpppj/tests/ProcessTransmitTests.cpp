@@ -17,20 +17,32 @@ public:
     // WriteData/송신/부모 체인 Pop 뒤 한 번 호출되는 실제 가상 통지다.
     void OnAttached() override { events_.push_back("N:"+std::to_string(Form().value)+':'+std::to_string(Parent().value)); }
 private:
+    // events_: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::string>& events_;
 };
 // 같은 SID/Kernel에서 지정 슬롯과 신규 슬롯을 대조하는 장면이다.
 struct TransmitScene {
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
     SidPool pool;
+    // types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeRecord> types;
+    // hash: 좌표별 객체 후보를 찾는 공간 해시. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidHash hash;
+    // spots: 칸별 점유·통행 비트를 읽는 spot 지도. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::uint8_t> spots=std::vector<std::uint8_t>(65536);
+    // unpop: 객체의 공간 등록을 해제하는 Unpop 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidUnpop unpop;
+    // destroy: 객체 삭제의 전처리·공간 해제·후처리를 실행하는 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     RawSquidDestroy destroy;
+    // events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::string> events;
+    // kernel: 프로세스 등록과 프레임 실행을 담당하는 커널. 입력 구성 또는 실행 결과 대조에 사용한다.
     Kernel kernel;
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
     SquidProcessState state;
+    // host: Form이나 프로세스의 등록·통지·수명을 연결하는 호스트. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidProcessHost host;
+    // size: 현재 자료의 크기 또는 저장 필드 위치. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::int32_t size{};
     // 모든 전송 경계는 raw 쓰기 전 현재 필드를 읽는다. 기대 출력은 fixture만 제공한다.
     TransmitScene(OriginalEdition edition,bool server,std::int32_t length):pool(edition,kTransmitCapacity,server),

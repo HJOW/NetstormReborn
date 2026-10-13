@@ -6,6 +6,7 @@ namespace netstorm::client {
 // node는 처리 동안 안정된 노드를 제공한다. 세 가상 콜백은 같은 표/링크/플래그를 변경할 수 있다.
 // redraw는 가상 +8의 재그리기 요청이며 실제 픽셀 Draw와 별개다. 객체 해제는 지연 삭제 단계에서 수행한다.
 struct GumpFrameHooks {
+    // node: 토큰에 대응하는 저장 노드를 조회하는 콜백.
     std::function<GumpCreateNode*(std::uint32_t)> node;
     std::function<void(std::uint32_t)> idle; // 가상 +0x30, 인자 없음.
     std::function<void(std::uint32_t,bool)> redraw; // 가상 +8, 원본 프레임 요청 인자는 항상 false다.
@@ -37,8 +38,11 @@ private:
     GumpCreateNode& Node(std::uint32_t token) const;
     // 현재 경로의 재귀 순환과 형제 순환을 거부하며 원본 콜백 뒤 필드 재조회 순서를 유지한다.
     void Redraw(std::uint32_t token,std::vector<std::uint32_t>& active) const;
+    // create_: 등록 표 +0이 실제 루트다. 외부에서 표를 바꿀 때 collection.root도 같은 토큰으로 맞춰야 한다 (GumpCreateState).
     GumpCreateState& create_;
+    // lifetime_: 등록된 객체의 삭제·해제를 처리하는 수명 관리자.
     GumpLifetimeState& lifetime_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (GumpFrameHooks).
     GumpFrameHooks hooks_;
 };
 }

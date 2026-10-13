@@ -8,6 +8,9 @@ inline constexpr std::size_t kGumpRegistryCapacity=1000,kGumpBaseSize=0xa0;
 // 같은 객체의 표시 필드를 상속하므로 수집/Draw의 캐시 쓰기가 생성 저장소에 바로 반영된다.
 struct GumpCreateNode: GumpCollectionNode {
     std::uint32_t vtable{},alignFlags{},previous{},id{},command{},form{},serial{},secondaryDepth{}; // +0x28 form은 기본 생성자가 쓰지 않는다.
+    // scale: 좌표와 그림 크기에 적용하는 배율.
+    // baseWidth: 배율 적용 전 UI 기본 너비.
+    // baseHeight: 배율 적용 전 UI 기본 높이.
     float scale{},baseWidth{},baseHeight{};
     std::array<std::uint32_t,6> positioning{}; // +0x54~0x68의 좌표/속도 입력 비트다.
     std::uint32_t untouched{},textPointer{},alternateTextPointer{}; // +0x74는 기본 생성자가 쓰지 않는다.
@@ -15,15 +18,23 @@ struct GumpCreateNode: GumpCollectionNode {
 };
 // 등록 표 +0이 실제 루트다. 외부에서 표를 바꿀 때 collection.root도 같은 토큰으로 맞춰야 한다.
 struct GumpCreateState {
+    // entries: 현재 등록하거나 읽은 항목 목록.
     std::array<std::uint32_t,kGumpRegistryCapacity> entries{};
+    // count: 현재 항목 또는 실행 횟수.
+    // serial: 등록 대상을 구별하는 일련번호.
     std::uint32_t count{},serial{};
+    // screenWidth: 게임 화면의 픽셀 너비.
+    // screenHeight: 게임 화면의 픽셀 높이.
     int screenWidth{},screenHeight{};
+    // collection: 루트와 임시 수집 머리 전역이다. overrideHead가 0이면 root.child부터 수집한다 (GumpCollectionState).
     GumpCollectionState collection;
 };
 // node는 안정된 기본/파생 저장소, allocate는 요청 크기에 대응하는 새 저장소 토큰을 제공한다.
 // allocate는 현재 전역을 바꿀 수 있다. 0은 원본 new 실패이며 생성자/카운터 갱신을 생략한다.
 struct GumpCreateHooks {
+    // node: 토큰에 대응하는 저장 노드를 조회하는 콜백.
     std::function<GumpCreateNode*(std::uint32_t)> node;
+    // allocate: 새 대상의 저장소를 확보하는 콜백.
     std::function<std::uint32_t(std::size_t)> allocate;
 };
 // 004642c0/CD 00492da0과 004663d0/CD 00492b30이다. 부모/자식 부착·파생 생성/삭제는 후속이다.
@@ -41,7 +52,9 @@ public:
     // 현재 기본/파생 노드를 같은 표시 저장소로 공급한다. 투영은 별도 현재 게임 경계다.
     GumpCollectionHooks CollectionHooks(std::function<ScreenPoint(std::uint32_t)> project={}) const;
 private:
+    // state_: 등록 표 +0이 실제 루트다. 외부에서 표를 바꿀 때 collection.root도 같은 토큰으로 맞춰야 한다 (GumpCreateState).
     GumpCreateState& state_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (GumpCreateHooks).
     GumpCreateHooks hooks_;
 };
 }

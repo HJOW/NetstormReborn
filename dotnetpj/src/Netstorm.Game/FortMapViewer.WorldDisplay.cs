@@ -12,6 +12,10 @@ namespace Netstorm.Game;
 internal sealed partial class FortMapViewer
 {
     /// <summary>한 프레임의 월드 그림. Order는 원본 깊이·좌표, Paint는 실제 그리기, Entity와 Stored는 선택·진단 대상이다.</summary>
+    /// <param name="Order">월드 출력의 깊이·동률 순서를 비교할 정렬 키.</param>
+    /// <param name="Paint">정렬된 순서에 따라 SpriteBatch에 출력하는 콜백.</param>
+    /// <param name="Entity">이 출력 항목과 대응하는 엔티티. 없으면 null.</param>
+    /// <param name="Stored">이 출력 항목과 대응하는 저장 맵 객체. 없으면 null.</param>
     private sealed record WorldDisplayItem(DrawOrder Order, Action<SpriteBatch> Paint,
         GameEntity? Entity = null, FortMapObject? Stored = null);
 

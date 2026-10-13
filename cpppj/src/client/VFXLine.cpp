@@ -15,9 +15,16 @@ constexpr unsigned kClipIterations=32;
 std::int32_t Add(std::int32_t a,std::uint32_t b) { return std::bit_cast<std::int32_t>(std::uint32_t(a)+b); }
 // 제한한 단색 선의 현재 두 끝점과 원래 기준점/기울기다. pixel phase는 별도 순회에서 계산한다.
 struct LineClip {
+    // first: 구간 또는 연결 목록의 첫 항목.
+    // last: 구간 또는 연결 목록의 마지막 항목.
+    // origin: 좌표 또는 시각 계산의 기준 원점.
     ScreenPoint first,last,origin;
+    // bounds: 화면 좌표의 사각형. right·bottom은 포함하지 않는다(원본 004a1800의 인자) (ScreenRect).
     ScreenRect bounds;
+    // slope: 기울기.
     std::uint32_t slope{};
+    // majorX: 주 X 여부.
+    // negativeSlope: 음의 기울기 여부.
     bool majorX{},negativeSlope{};
 };
 // 반 평면 비교는 현재 inclusive 경계를 사용한다. 겹치는 비트가 있으면 선 전체를 버릴 수 있다.

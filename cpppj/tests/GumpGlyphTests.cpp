@@ -32,10 +32,15 @@ std::vector<std::uint8_t> Cache(std::span<const std::uint8_t> advances,std::span
 }
 // 검사 입력 캐시를 실제 FontStore에 공급하고 정상 종료/생성 실패 때 소유 파일을 정리한다.
 struct GlyphFixture {
+    // directory: 디렉터리. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::filesystem::path directory;
+    // files: 디스크·보조 디렉터리·아카이브 순서로 게임 파일을 찾는 파일 시스템 (netstorm::o::BaseFileSystem).
     netstorm::o::BaseFileSystem files;
+    // fonts: 이름·크기로 찾아 재사용하는 글꼴 저장소. 입력 구성 또는 실행 결과 대조에 사용한다.
     FontStore fonts;
+    // cases: 사례. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::vector<std::string>> cases;
+    // identities: 식별정보. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::map<const BitmapFont*,std::pair<std::uint32_t,std::uint32_t>> identities;
     // 기존 경로와 충돌하면 소유권을 얻지 않고 실패한다.
     static std::filesystem::path MakeDirectory() {

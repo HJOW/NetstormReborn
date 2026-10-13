@@ -21,7 +21,7 @@ struct ChunkEntry {
 };
 
 // 청크 좌표의 사각형. right·bottom은 포함하지 않는다.
-struct ChunkRect { int left{}, top{}, right{}, bottom{}; };
+struct ChunkRect { /* left: 사각형의 왼쪽 경계. */ /* top: 사각형의 위쪽 경계. */ /* right: 사각형의 오른쪽 경계. */ /* bottom: 사각형의 아래쪽 경계. */ int left{}, top{}, right{}, bottom{}; };
 // 원본 FUN_00431fc0: 영역을 놓을 수 있는 범위의 기본값 (1,1)~(15,15).
 ChunkRect DefaultChunkRect();
 
@@ -30,6 +30,7 @@ struct IslandInfo {
     int owner{};        // +0xc, +0x11: 소유 플레이어.
     int territory{};    // +0x10: 영역 번호(0~19).
 };
+// 청크 배치에 사용하는 섬의 소유자·영역 목록이다.
 class IslandList {
 public:
     // 원본 FUN_0046ee60: 끝에 더하고 그 번호를 돌려준다.
@@ -40,9 +41,11 @@ public:
     bool Matches(int island, int owner, int territory) const;
     const std::vector<IslandInfo>& Islands() const;
 private:
+    // islands_: 현재 섬의 배치·소유권 자료.
     std::vector<IslandInfo> islands_;
 };
 
+// 월드를 청크 격자로 나누어 섬·영역 소속을 조회하는 지도이다.
 class ChunkMap {
 public:
     // 가로·세로 청크 수(원본 +4, +8). 미션 맵은 16 × 16이다.
@@ -57,7 +60,10 @@ public:
     int XLength() const;
     int YLength() const;
 private:
+    // xLength_: X 길이.
+    // yLength_: Y 길이.
     int xLength_{}, yLength_{};
+    // entries_: 현재 등록하거나 읽은 항목 목록.
     std::array<ChunkEntry, kChunkMapSide * kChunkMapSide> entries_{};
 };
 }

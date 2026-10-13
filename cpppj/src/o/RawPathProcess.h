@@ -9,7 +9,9 @@
 namespace netstorm::o {
 // 현재 원본 전역을 읽는 경로 상태다. clock은 같은 ProcessHost가 사용하는 상태여야 한다.
 struct RawPathProcessState {
+    // clock: 프레임 판정에 현재 게임 시각을 공급하는 시계.
     SquidProcessState& clock;
+    // observation: 경로 진행 중 활성화 비트와 관찰 시각을 보관하는 상태.
     RawPathObservation observation;
     std::uint32_t teleportProcess{23},priestProcess{54},priestType{158}; // 원본 mutable 프로세스/자산 번호다.
     std::array<std::uint32_t,5> groundTypes{158,137,156,135,187}; // 00427da0의 허용 타입이며 CD는 마지막 empty를 제외한다.
@@ -70,15 +72,25 @@ private:
     bool Robust() const;
     // 원본 권한 또는 로컬 form 번호 범위다.
     bool MayMutate() const;
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
+    // hash_: 좌표별 객체 후보를 찾는 공간 해시.
     const SquidHash& hash_;
+    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::span<const RiftTypeRecord> types_;
+    // frames_: 타입별 프레임 자료.
     std::span<const RiftTypeFrames> frames_;
+    // shapes_: 프레임의 크기·그림 데이터를 조회하는 셰이프 자료.
     std::span<const SquidDisplayShape> shapes_;
+    // spots_: 칸별 점유·통행 비트를 읽는 spot 지도.
     std::span<const std::uint8_t> spots_;
+    // state_: 현재 원본 전역을 읽는 경로 상태다. clock은 같은 ProcessHost가 사용하는 상태여야 한다 (RawPathProcessState).
     RawPathProcessState& state_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (RawPathProcessHooks).
     RawPathProcessHooks hooks_;
+    // priest_: 사제 상태를 조회·변경하는 처리기 또는 사제 경로 여부.
     bool priest_{};
+    // runtime_: 원본 필드 배치를 사용하는 실행 중 상태.
     RawPathRuntime runtime_;
     std::shared_ptr<bool> alive_=std::make_shared<bool>(true); // 원본 destructor의 stack deadFlag 대체이며 게임 상태를 대체하지 않는다.
 };

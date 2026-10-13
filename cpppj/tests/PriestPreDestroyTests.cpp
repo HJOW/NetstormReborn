@@ -16,12 +16,20 @@ constexpr std::size_t kRowsPerEdition=2184;
 constexpr std::uint8_t kForcefieldType=167;
 // 독립 fixture는 입력과 기대 출력을 분리해 그대로 읽는다.
 const auto& Fixture() { static const auto data=LoadFixture(NETSTORM_PRIESTDESTROY_FIXTURE);return data.rows; }
+// PriestPreDestroy 검사에서 같은 풀·상태·처리기를 조립해 입력과 결과를 대조하는 자료형이다.
 struct PriestScene {
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
     SidPool pool;
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
     PriestPostPopState state;
+    // events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // after: 후속. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::string events,after;
+    // found: 암묵적인 런타임 SquidId 변환을 막는 원본 슬롯 번호다 (Sid).
     Sid found{};
+    // patch: 10.78 패치판의 상태 또는 패치판 검사용 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     bool patch;
+    // validations: 검증. 입력 구성 또는 실행 결과 대조에 사용한다.
     int validations{};
     // 실제 client 할당으로 관찰 대상 번호를 확보한다.
     explicit PriestScene(OriginalEdition edition):pool(edition,kCapacity,false),patch(edition==OriginalEdition::Patch1078) {

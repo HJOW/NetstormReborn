@@ -47,7 +47,7 @@ constexpr std::array<std::string_view, 53> kProcessTypeNames{
 constexpr std::size_t kCdProcessTypeCount = 52;
 
 // 후처리(0049b0d0)가 이름을 채우는 내장 타입: 번호와 이름(패치 DAT_00541074~88, CD DAT_0051c964~78). 두 판본이 같다.
-struct BuiltinName { std::size_t number; std::string_view name; };
+struct BuiltinName { /* number: 번호. */ std::size_t number; /* name: 이름으로 조회·표시할 때 사용하는 문자열. */ std::string_view name; };
 constexpr std::array<BuiltinName, 5> kBuiltinNames{{
     {1, "DependForm"}, {2, "ProcessForm"}, {3, "GumpForm"}, {4, "PlayerSquid"}, {6, "ContentForm"}}};
 
@@ -56,7 +56,7 @@ constexpr std::array<std::string_view, 10> kGroupNames{
     "archer", "cannon", "blocker", "aviary", "flyer", "battery", "fence", "walker", "balloon", "misc"};
 
 // 플래그 단어 하나가 켜는 비트. kind가 참이면 단어를 종류 필드(+0xf0)에 복사한다.
-struct FlagWord { std::string_view word; std::uint32_t flags1; std::uint32_t flags2; bool kind; };
+struct FlagWord { /* word: 단어. */ std::string_view word; /* flags1: 타입의 첫 번째 플래그 단어. */ std::uint32_t flags1; /* flags2: 타입의 두 번째 플래그 단어. */ std::uint32_t flags2; /* kind: 자료나 동작의 종류를 구별하는 값. */ bool kind; };
 // 원본 0049c3b0의 단어 비교 순서 그대로다. 앞 20개는 서로 독립이고 뒤는 if-else 사슬이지만 단어가 겹치지 않는다.
 constexpr std::array<FlagWord, 48> kFlagWords{{
     {"carribleInVehicle", 0x10000, 0, false}, {"container", 0x20000, 0, false},
@@ -91,7 +91,7 @@ std::int32_t ToInt(double value) {
 }
 
 // 패치 00540d10 / CD 0051c630의 23개 깊이 이름/값은 두 PE에서 같다.
-struct ZOrderName { std::string_view name; std::int32_t value; };
+struct ZOrderName { /* name: 이름으로 조회·표시할 때 사용하는 문자열. */ std::string_view name; /* value: 읽기·쓰기·통지에 전달하는 값. */ std::int32_t value; };
 constexpr std::array<ZOrderName,23> kZOrders{{
     {"zoNONE",-127},{"zoFALLING",30},{"zoSTALAG",20},{"zoCHALRING",20},{"zoBATTLE",10},
     {"zoEDGEFARM",0},{"zoISLAND",0},{"zoBRIDGE",0},{"zoBRIDGE_CONNECTOR",-10},{"zoARTIFACTS",-15},

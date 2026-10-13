@@ -96,7 +96,7 @@ TEST_CASE(PaletteFlash_PausedGameAndModeChangesUseWallClock) {
 // 초기 RGB 부분 배열 대신 당시의 저장 팔레트를 복구한다. 별도 GDI 메모리 DC에서 실제 부분 적용/복구를 확인한다.
 TEST_CASE(PaletteFlash_CancelRestoresLatestSavedScreenPalette) {
     // 창 없는 참조 DC를 소유한다. Screen이 먼저 사라지고 DC를 마지막에 해제한다.
-    struct ReferenceDc { HDC value{CreateCompatibleDC(nullptr)};~ReferenceDc() { DeleteDC(value); } } dc;
+    struct ReferenceDc { /* value: 읽기·쓰기·통지에 전달하는 값. 입력 구성 또는 실행 결과 대조에 사용한다. */ HDC value{CreateCompatibleDC(nullptr)};~ReferenceDc() { DeleteDC(value); } } dc;
     Screen screen(nullptr,dc.value,640,480);screen.Init();
     std::array<std::uint8_t,1024> bytes{};std::fill(bytes.begin(),bytes.end(),std::uint8_t{20});screen.LoadPalette(GamePalette(bytes));
     PaletteFlashState state;state.duration=0.5;double wall=0;int restores=0;

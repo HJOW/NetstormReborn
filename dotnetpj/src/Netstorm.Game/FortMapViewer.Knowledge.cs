@@ -62,6 +62,7 @@ internal sealed partial class FortMapViewer
     /// <summary>카드 테두리 색</summary>
     private static readonly Color KnowledgeCardBorder = new(78, 70, 58);
 
+    /// <summary>_knowledgeOpen: 지식 창이 열려 입력을 받는 상태인지.</summary>
     private bool _knowledgeOpen;
 
     /// <summary>상세창으로 연 카드 (없으면 격자)</summary>

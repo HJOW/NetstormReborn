@@ -24,7 +24,9 @@ struct FortContent {
 };
 // 내용물 목록 전체. complete가 거짓이면 변환한 타입이 0인 항목에서 읽기가 끊긴 것이다(원본 반환값 0).
 struct FortContentList {
+    // items: 읽거나 생성한 항목의 순서 있는 목록.
     std::vector<FortContent> items;
+    // complete: 완료 여부.
     bool complete{true};
 };
 // 청크 안의 오브젝트 레코드(원본 FUN_004bdc60 ↔ CD 00428320).
@@ -51,28 +53,36 @@ struct FortObject {
 };
 // 청크 레코드: 'c' + 오브젝트 수 + 오브젝트(원본 FUN_004be160 ↔ CD 004288a0).
 struct FortChunk {
+    // objects: 현재 월드 또는 수집 단계의 객체 목록.
     std::vector<FortObject> objects;
 };
 // `Chaff`·`TerrNN` 섹션: 버전 1바이트 + 청크 레코드들.
 struct FortChunkSection {
     bool present{};              // 섹션에 버전 바이트 말고도 내용이 있는가.
     std::uint8_t version{};      // 원본 파일은 2(구버전 1도 있다).
+    // chunks: 청크.
     std::vector<FortChunk> chunks;
 };
 // `Deck` 항목(원본 FUN_004bf190 ↔ CD 00429670).
 struct FortDeckEntry {
+    // storedType: 덱 항목에 저장된 타입 바이트.
     std::uint8_t storedType{};
     int type{};                  // 0이면 원본은 덱에 넣지 않는다.
+    // chance: 추첨에서 사용하는 선택 가중치.
     std::uint8_t chance{};
+    // power: 덱 항목에 저장된 파워 값.
     std::int8_t power{};
+    // remaining: 남은 수량 또는 남은 수명.
     std::uint8_t remaining{};
 };
 // `Subscriber` 섹션(원본 FUN_004bd450): 소유자 ID와 요새 이름.
 struct FortSubscriber {
+    // id: 대상을 구별하는 식별 번호.
     std::uint32_t id{};
     std::string name;            // 원본 바이트 그대로(Windows-1252). 화면에 쓸 때 변환한다.
 };
 
+// .fort 파일의 저장 객체·지형·플레이어 자료이다.
 class FortTemplate {
 public:
     // 실행 파일의 섹션 이름 목록(패치 005146b0 + Terr00~Terr19) 길이.
@@ -96,16 +106,21 @@ public:
     std::uint8_t flag{};                          // 파일 둘째 바이트(0 또는 0xfe).
     std::vector<std::vector<std::uint8_t>> sections; // 읽은 원시 섹션(최대 35개, 이름 순서).
     std::size_t trailingBytes{};                  // 마지막으로 읽은 섹션 뒤에 남은 바이트 수.
+    // subscriber: 맵에 저장된 구독자 정보. 해당 섹션이 없으면 빈 값.
     std::optional<FortSubscriber> subscriber;
+    // money: 플레이어별 시작 SP.
     std::optional<float> money;                   // `Money`: Storm Power.
     std::vector<std::uint32_t> typeHashes;        // `TypeNames`의 해시(파일의 타입 번호 순서).
     bool hasTypeConversion{};                     // `TypeNames`가 비어 있지 않은가.
     std::array<std::uint8_t, 255> typeConversion{}; // 파일 타입 번호 → 현재 타입 번호(없으면 0).
     FortContentList technology;                   // `Technology`: 타입별 저장 상태.
     std::size_t technologyTrailingBytes{};        // 목록 뒤에 남은 바이트(원본은 읽지 않는다).
+    // deck: 저장된 다리 조각 덱 항목 목록.
     std::vector<FortDeckEntry> deck;
     std::vector<std::uint8_t> territory;          // `Territory` 120바이트(6바이트 × 20) 원시 값.
+    // chaff: 특정 영역에 속하지 않는 저장 청크 목록.
     FortChunkSection chaff;
+    // territories: 영역 번호별 저장 청크와 객체 자료.
     std::array<FortChunkSection, kTerritoryCount> territories;
 };
 }

@@ -14,6 +14,7 @@ namespace netstorm::client {
 class Client;
 class GameWorld;
 class UserInput;
+// 메뉴·브리핑·미션 페이지와 해당 UI 동작을 관리하는 처리기이다.
 class UberGump {
 public:
     // 초기화 뒤 원본 타이틀·구름·메뉴 자료를 읽고 기본 메뉴를 연다.
@@ -65,29 +66,52 @@ private:
     void OpenObjectMenu(o::SquidId id);
     // 커널이 소유한 월드와 입력 참조를 안전한 순서로 제거한다.
     void ClearWorld();
+    // client_: 원본 전역 변수로 흩어져 있던 클라이언트 상태를 객체 하나로 묶는다. 한 프로세스에 하나만 만든다 (Client).
     Client& client_;
+    // state_: 처리 중 조회·갱신하는 상태 (State).
     State state_;
+    // input_: 처리할 입력 또는 입력 분배기.
     GumpControlInput input_;
     std::unique_ptr<RawButtonControls> rawButtons_; // 돌 버튼은 실제 공유 트리/수명/캡처를 사용한다. input_은 메뉴 행/판정 보고용이다.
     std::uint32_t buttonTextureType_{},buttonTextureFrame_{}; // 실제 A00 배경 생성자에 전달할 타입/프레임 번호다.
+    // scripts_: 스크립트.
     std::map<std::string, std::unique_ptr<o::Config>> scripts_;
+    // decorations_: 장식.
     std::map<std::string, IndexedImage> decorations_;
     SquidFrameMetrics buttonTextureMetrics_{}; // 원본 A00의 signed short 폭/높이. 반복 주기는 각각 1을 뺀 값이다.
     ScreenPoint buttonTextureOffset_{}; // A00 VFX 픽셀 영역의 기준점 상대 위치.
+    // title_: 화면에 표시할 제목 또는 제목 Gump의 토큰.
+    // clouds_: 팔레트 인덱스 픽셀로 구성한 그림 (IndexedImage).
     IndexedImage title_, clouds_;
+    // page_: 표시할 페이지 또는 스크롤 페이지 크기.
     DialogPage page_;
+    // labels_: 라벨.
     std::vector<std::string> labels_;
+    // actions_: 동작.
     std::vector<DialogAction> actions_;
+    // mission_: 미션 이름에 맞는 스크립트를 읽고 섹션을 선택하는 처리기 (std::unique_ptr<MissionScript>).
     std::unique_ptr<MissionScript> mission_;
+    // world_: 미션 지도와 객체 상태를 갱신하고 월드 그림을 수집하는 프로세스 (GameWorld).
     GameWorld* world_{};
+    // worldProcess_: 월드 프로세스.
     o::ProcessId worldProcess_{};
+    // userInput_: 플레이 입력을 선택·카메라·명령 동작으로 전달하는 처리기 (std::unique_ptr<UserInput>).
     std::unique_ptr<UserInput> userInput_;
+    // fortObjects_: Fort 객체.
     std::size_t fortObjects_{};
+    // briefingSections_: 브리핑 섹션.
     std::vector<std::string> briefingSections_;
+    // briefingIndex_: 브리핑 인덱스.
     std::size_t briefingIndex_{};
+    // pageName_: 페이지 이름.
+    // popup_: 팝업.
     std::string pageName_{"main"}, popup_;
+    // popupRect_: 화면 좌표의 사각형. right·bottom은 포함하지 않는다(원본 004a1800의 인자) (ScreenRect).
     ScreenRect popupRect_{};
+    // opened_: 열린.
     double opened_{};
+    // quit_: 종료 여부.
+    // rebuild_: 재구성 여부.
     bool quit_{}, rebuild_{true};
 };
 }

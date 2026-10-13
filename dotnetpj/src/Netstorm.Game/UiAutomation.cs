@@ -24,21 +24,31 @@ internal sealed class UiAutomation
     private int? _stallMilliseconds;
     /// <summary>조건 대기에 남은 시간(초).</summary>
     private double _waitDetailSeconds;
+    /// <summary>_commands: 자동 UI 입력을 실행할 순서대로 보관한 명령 큐.</summary>
     private readonly Queue<string> _commands;
     /// <summary>정지 검사 등에서 비교할 세부 상태 항목의 이전 값. remember-detail로 저장하고 assert-unchanged-detail로 비교한다.</summary>
     private readonly Dictionary<string, string> _rememberedDetails = new(StringComparer.OrdinalIgnoreCase);
+    /// <summary>_mouse: 자동 UI 입력이 제공할 현재 마우스 상태.</summary>
     private MouseState _mouse;
     /// <summary>mission-section 명령이 게임 본체에 넘길 미션 스크립트 섹션 이름.</summary>
     private string? _missionSection;
     /// <summary>다음 명령을 실행하기 전에 남은 대기 시간(초).</summary>
     private double _waitSeconds = Seconds(StartWaitFrames);
+    /// <summary>_release: 다음 자동 입력에서 마우스 버튼을 해제할지.</summary>
     private bool _release;
+    /// <summary>_releaseKey: 다음 자동 입력에서 키 입력을 해제할지.</summary>
     private bool _releaseKey;
+    /// <summary>_dragFrames: 자동 드래그에 배정한 전체 프레임 수.</summary>
     private int _dragFrames;
+    /// <summary>_dragStep: 자동 드래그에서 현재 진행한 프레임 번호.</summary>
     private int _dragStep;
+    /// <summary>_dragFromX: 자동 드래그 시작점의 X 좌표.</summary>
     private int _dragFromX;
+    /// <summary>_dragFromY: 자동 드래그 시작점의 Y 좌표.</summary>
     private int _dragFromY;
+    /// <summary>_dragToX: 자동 드래그 도착점의 X 좌표.</summary>
     private int _dragToX;
+    /// <summary>_dragToY: 자동 드래그 도착점의 Y 좌표.</summary>
     private int _dragToY;
     /// <summary>클론 안에서만 사용할 검증용 키 상태.</summary>
     public KeyboardState Keyboard { get; private set; }

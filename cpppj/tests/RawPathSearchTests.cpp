@@ -16,14 +16,24 @@ std::uint32_t SearchFnv(std::span<const std::uint8_t> bytes) {
 }
 // native 입력 장면의 현재 type/frame/Graph/owner/spot를 same hash0 배열에 넣는다.
 struct SearchScene {
+    // patch: 10.78 패치판의 상태 또는 패치판 검사용 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     bool patch;
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
     SidPool pool;
+    // hash: 좌표별 객체 후보를 찾는 공간 해시. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidHash hash;
+    // types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeRecord> types;
+    // frames: 타입별 프레임 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeFrames> frames;
+    // spots: 칸별 점유·통행 비트를 읽는 spot 지도. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::uint8_t> spots=std::vector<std::uint8_t>(65536);
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
     RawPathSearchState state;
+    // path: 원본 메모리 이미지의 뜻 있는 필드를 보존한다. 호스트 포인터와 원본 vtable 주소를 혼동하지 않는다 (RawPathRuntime).
     RawPathRuntime path;
+    // start: 현재 처리 구간의 시작 위치 또는 시작 시각. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // destination: 경로에 저장되는 두 float 좌표다. 런타임의 double 좌표와 섞지 않는다 (RawPathPoint).
     RawPathPoint start,destination;
     // 원본 관찰의 parent5/surface6..30을 명시 client 입력으로 확보한다.
     explicit SearchScene(bool chosen):patch(chosen),pool(chosen ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072,32768,false),types(chosen ? 188 : 171),

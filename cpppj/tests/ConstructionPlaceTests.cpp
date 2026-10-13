@@ -25,15 +25,25 @@ std::uint32_t PlayerFlags(std::uint32_t player,bool flagged) { return (player%2 
 const auto& Fixture() { static const auto rows=LoadFixture(NETSTORM_CONSTRUCTIONPLACE_FIXTURE).rows;return rows; }
 // 타입·프레임·전역·경계를 행마다 다시 준비하는 재생 장면이다.
 struct PlaceScene {
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
     SidPool pool;
+    // types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeRecord> types;
+    // frames: 타입별 프레임 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<PriestPlainCanonType> frames;
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
     ConstructionPlaceState state;
+    // books: 장부. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidPostPopState books;
+    // rewardState: 보상 계산이 읽거나 갱신하는 판본별 전역과 AI 지갑이다. 패치 주소/CD 주소는 괄호에 둔다 (SquidRewardState).
     SquidRewardState rewardState;
+    // rng: 원본 FUN_004558c0: 상태 0이면 0x0bad0bad로 바꾼 뒤 상태*0x10003+3의 상위 16비트를 limit로 나눈 나머지를 쓴다 (GameRandom).
     GameRandom rng;
+    // store: 패치판이 플레이어별 SP를 32개의 9칸 DWORD 배열에 흩뿌려 보관하는 방식이다 (ScrambledSpStore).
     ScrambledSpStore store;
+    // patch: 10.78 패치판의 상태 또는 패치판 검사용 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     bool patch;
+    // events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::string events;
     std::uint32_t money{}; // SP 저장소 읽기 경계가 돌려줄 잔액 비트 입력이다.
     // 풀 객체의 주소는 행 사이에 바뀌지 않는다. SP 저장소는 보상 모듈 생성 조건만 채우며 재생에서는 읽지 않는다.
@@ -134,16 +144,27 @@ void Replay(std::string_view edition) {
 }
 // 실제 factory/소유자/보상/SP 저장소를 연결한 통합 장면이다. Pop·표면 알림·문구·메시지는 기록 경계다.
 struct LiveScene {
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
     SidPool pool;
+    // types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeRecord> types;
+    // frames: 타입별 프레임 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<PriestPlainCanonType> frames;
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
     ConstructionPlaceState state;
+    // books: 장부. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidPostPopState books;
+    // mode: 소유자 지정이 읽는 원본 모드 전역이다. 패치 주소 / CD 주소를 괄호에 둔다 (SquidOwnerMode).
     SquidOwnerMode mode;
+    // rewardState: 보상 계산이 읽거나 갱신하는 판본별 전역과 AI 지갑이다. 패치 주소/CD 주소는 괄호에 둔다 (SquidRewardState).
     SquidRewardState rewardState;
+    // rng: 원본 FUN_004558c0: 상태 0이면 0x0bad0bad로 바꾼 뒤 상태*0x10003+3의 상위 16비트를 limit로 나눈 나머지를 쓴다 (GameRandom).
     GameRandom rng;
+    // store: 패치판이 플레이어별 SP를 32개의 9칸 DWORD 배열에 흩뿌려 보관하는 방식이다 (ScrambledSpStore).
     ScrambledSpStore store;
+    // patch: 10.78 패치판의 상태 또는 패치판 검사용 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     bool patch;
+    // log: 로그. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::string> log;
     // 한 칸 타입 하나(비용 250, 최대 HP 120, 기본 프레임 3)를 등록한다. 서버 풀이므로 SID를 직접 쓴다.
     explicit LiveScene(OriginalEdition edition):pool(edition,kCapacity,true),types(edition==OriginalEdition::Patch1078 ? 188 : 171),

@@ -8,19 +8,29 @@
 
 namespace netstorm::client {
 // +20 command의 signed 메뉴 식별 바이트와 동적 하위 메뉴 요청/닫힘 사건 전역이다. 실제 초기화 값을 공급한다.
-struct MenuGumpInputState { std::int8_t alignment{26};std::uint32_t requestEvent{},closedEvent{}; };
+struct MenuGumpInputState { /* alignment: 항목의 좌우·상하 정렬을 선택하는 값. */ std::int8_t alignment{26};/* requestEvent: 메뉴 동작을 요청하는 이벤트 ID. */ /* closedEvent: 창이 닫혔음을 알리는 이벤트 ID. */ std::uint32_t requestEvent{},closedEvent{}; };
 // 가상 통지/입력/Push/Attach/Redraw와 명령 큐·이름별 소리·변경 영역의 경계다.
 // 콜백은 현재 선택/항목/등록표를 바꿀 수 있다. node/base는 같은 안정된 객체를 공급해야 한다.
 struct MenuGumpInputHooks {
+    // node: 토큰에 대응하는 저장 노드를 조회하는 콜백.
     std::function<MenuGumpNode*(std::uint32_t)> node;
+    // base: 파생 처리에서 공통 동작을 위임하는 기본 객체를 조회하는 콜백.
     std::function<GumpCreateNode*(std::uint32_t)> base;
+    // broadcast: 대상의 이벤트를 관련 노드에 일괄 전달하는 콜백.
     std::function<void(std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t)> broadcast;
+    // handle: 대상의 이벤트 처리기를 호출하는 콜백.
     std::function<std::uint32_t(std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t)> handle;
+    // push: 현재 대상을 처리 목록에 넣는 콜백.
     std::function<void(std::uint32_t)> push;
+    // attach: 대상을 부모 또는 처리 목록에 부착하는 콜백.
     std::function<void(std::uint32_t,float,float,std::uint32_t,std::uint32_t)> attach;
+    // redraw: 대상의 화면 갱신을 요청하는 콜백.
     std::function<void(std::uint32_t,bool)> redraw;
+    // command: 메뉴 항목의 명령을 부모 처리기에 전달하는 콜백.
     std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)> command;
+    // sound: 해당 동작의 소리를 재생하는 콜백.
     std::function<void(std::string_view)> sound;
+    // invalidate: 변경한 영역의 재그리기를 요청하는 콜백.
     std::function<void(ScreenRect)> invalidate;
 };
 // 복원 메뉴의 실제 가상 입력 몸체다. OS 입력 큐와 메뉴 객체를 만드는 상위 Client는 별도 연결 대상이다.
@@ -57,13 +67,21 @@ private:
     void Redraw(std::uint32_t token) const;
     std::uint32_t Parameter(std::uint32_t token,std::int32_t index,std::uint32_t flags) const;
     void Sound(std::string_view name) const;
+    // create_: 등록 표 +0이 실제 루트다. 외부에서 표를 바꿀 때 collection.root도 같은 토큰으로 맞춰야 한다 (GumpCreateState).
     GumpCreateState& create_;
+    // state_: +20 command의 signed 메뉴 식별 바이트와 동적 하위 메뉴 요청/닫힘 사건 전역이다. 실제 초기화 값을 공급한다 (MenuGumpInputState).
     MenuGumpInputState& state_;
+    // menu_: 원본 메뉴의 정상 프레임/스택 몸체다. 레이아웃/생성/출력/입력은 같은 저장소의 별도 메뉴 처리기가 담당한다 (MenuGump).
     const MenuGump& menu_;
+    // collection_: 화면 밖 자식 통과, 최상위 삭제 필터, 원본의 루트별 제한 개수를 보존하는 UI 수집기다 (GumpCollection).
     const GumpCollection& collection_;
+    // events_: 발생한 이벤트 또는 이벤트 처리기.
     const GumpEvents& events_;
+    // lifetime_: 등록된 객체의 삭제·해제를 처리하는 수명 관리자.
     const GumpLifetime& lifetime_;
+    // tree_: 00466750/CD 00493070의 머리 삽입과 원본의 후속 정렬/현재 자식 재배치를 담당한다 (GumpTree).
     const GumpTree& tree_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (MenuGumpInputHooks).
     MenuGumpInputHooks hooks_;
 };
 // 이벤트 선택/캡처/프레임 통지에서 현재 메뉴만 분배하고 기존 다른 파생 처리기를 보존한다.

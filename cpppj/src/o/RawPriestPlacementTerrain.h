@@ -3,11 +3,18 @@
 #include "o/RawPriestPlacementGeometry.h"
 
 namespace netstorm::o {
+// 사제 배치 검사 지형 처리 중 조회·갱신하는 상태 묶음이다.
 struct PriestPlacementTerrainState {
     std::array<std::uint8_t,144> regions{}; // 원본 열 간격 12, 후보 쓰기 범위는 8×8이다.
     std::uint32_t emptyRegion{127},noIslandType{}; // 현재 지역 sentinel DWORD와 noIsland 타입 전역이다.
+    // bridgeOverlap: 다리 겹침 여부.
+    // noIslandOnly: 없음 섬 전용 여부.
+    // groundComplete: 지면 완료 여부.
+    // permission: 소유권·지역 관계에 따른 배치 허용 판정.
+    // canPlaceGround: 가능 배치 지면 여부.
     bool bridgeOverlap{},noIslandOnly{true},groundComplete{true},permission{true},canPlaceGround{};
 };
+// 일반 사제 배치의 후보별 다리·섬·지역 배열과 모양 종료 효과를 복원한다.
 class RawPriestPlacementTerrain {
 public:
     // 지형 SID 지도는 미리보기의 표면 SID 지도와 구분하여 256×256으로 제공한다.
@@ -32,13 +39,24 @@ private:
     const RiftTypeRecord& Placing(const PriestPlacementQuery& query) const;
     // 순회 시작 및 모양 시작 순서를 확인한다.
     void Require(const PriestPlacementQuery& query,bool shape) const;
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     const SidPool& pool_;
+    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::span<const RiftTypeRecord> types_;
+    // frames_: 타입별 프레임 자료.
     std::span<const PriestPlainCanonType> frames_;
+    // islands_: 현재 섬의 배치·소유권 자료.
     std::span<const std::uint16_t> islands_;
+    // state_: 처리 중 조회·갱신하는 상태 (PriestPlacementTerrainState).
     PriestPlacementTerrainState& state_;
+    // originX_: 좌표 계산의 기준 X 원점.
+    // originY_: 좌표 계산의 기준 Y 원점.
     std::int64_t originX_{},originY_{};
+    // groundMask_: 검사할 지면 칸을 고르는 비트 마스크.
+    // activeType_: 활성 타입.
     std::uint32_t groundMask_{},activeType_{};
+    // active_: 현재 입력·실행 대상이 활성 상태인지.
+    // shape_: 프레임 그림을 찾는 셰이프 식별자 또는 셰이프 자료.
     bool active_{},shape_{};
 };
 // 실제 지역 초기화/모양 시작/모양 종료/최종 계산을 geometry에 연결한다.

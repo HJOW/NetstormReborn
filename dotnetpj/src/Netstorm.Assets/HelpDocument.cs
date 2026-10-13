@@ -4,6 +4,12 @@ using System.Text.RegularExpressions;
 namespace Netstorm.Assets;
 
 /// <summary>도움말의 본문 조각. 링크·삽화와 색을 유지하며 중첩 굵은 태그는 Bold로 별도 보존한다.</summary>
+/// <param name="Text">이 구간에 출력할 텍스트.</param>
+/// <param name="Style">글꼴·색·정렬에 적용할 텍스트 스타일.</param>
+/// <param name="BreakBefore">구간 앞에 적용할 줄바꿈 종류.</param>
+/// <param name="Link">클릭하면 이동할 도움말 앵커. 없으면 null.</param>
+/// <param name="Picture">텍스트 대신 출력할 그림. 없으면 null.</param>
+/// <param name="Bold">굵은 글씨 효과를 적용할지.</param>
 public sealed record HelpTextRun(string Text, TutorialTextStyle Style, TutorialTextBreak BreakBefore,
     string? Link = null, string? Picture = null, bool Bold = false);
 
@@ -98,6 +104,7 @@ public static partial class HelpDocument
 /// <summary>도움말의 내부 링크와 방문 기록. 외부 주소·게임 명령은 내부 앵커로 실행하지 않는다.</summary>
 public sealed class HelpNavigation(HelpTopics topics)
 {
+    /// <summary>_history: 뒤로 이동할 때 복원할 도움말 앵커와 스크롤 위치의 스택.</summary>
     private readonly Stack<(string Anchor, int Scroll)> _history = new();
     /// <summary>현재 앵커. null이면 창이 닫혀 있다.</summary>
     public string? Anchor { get; private set; }

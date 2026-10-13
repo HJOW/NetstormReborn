@@ -3,6 +3,13 @@ using Netstorm.Core.Rules;
 namespace Netstorm.Core.Simulation;
 
 /// <summary>동맹인 썬 바리케이트 기둥 사이의 직선 방어선. 좌표는 논리 칸 중심이다.</summary>
+/// <param name="FirstId">포스필드의 첫 번째 끝점 엔티티 번호.</param>
+/// <param name="SecondId">포스필드의 두 번째 끝점 엔티티 번호.</param>
+/// <param name="Owner">소유 플레이어 번호.</param>
+/// <param name="StartX">시작점의 월드 X 좌표.</param>
+/// <param name="StartY">시작점의 월드 Y 좌표.</param>
+/// <param name="EndX">끝점의 월드 X 좌표.</param>
+/// <param name="EndY">끝점의 월드 Y 좌표.</param>
 public sealed record SunForceField(int FirstId, int SecondId, int Owner, double StartX, double StartY, double EndX, double EndY);
 
 /// <summary>아이스 타워 재성장과 썬 바리케이트의 연결·탄 흡수 규칙.</summary>

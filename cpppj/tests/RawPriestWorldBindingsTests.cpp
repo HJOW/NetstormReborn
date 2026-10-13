@@ -16,6 +16,7 @@ constexpr std::uint32_t kWorldCapacity=32768;
 constexpr std::uint32_t kSupportType=100;
 // 외부 표시 요청을 기록하되 실제 표시/공간 계산은 SquidDisplay에 맡긴다.
 struct DisplaySink final:SquidDisplaySink {
+    // updates: 갱신. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::size_t updates{};
     // 콘솔에서도 표시 계산을 실행한다.
     bool Suppressed() const override { return false; }
@@ -24,44 +25,92 @@ struct DisplaySink final:SquidDisplaySink {
 };
 // 신규 바인딩 자체의 계산을 복제하지 않고 원본 복원 모듈들을 실제로 조합한다.
 struct PriestWorld {
+    // edition: 판본별 필드 배치와 동작을 선택하는 원본 버전. 입력 구성 또는 실행 결과 대조에 사용한다.
     OriginalEdition edition;
+    // patch: 10.78 패치판의 상태 또는 패치판 검사용 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     bool patch;
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
     SidPool pool;
+    // hash: 좌표별 객체 후보를 찾는 공간 해시. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidHash hash;
+    // types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeRecord> types;
+    // frames: 타입별 프레임 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeFrames> frames;
+    // shapes: 프레임의 크기·그림 데이터를 조회하는 셰이프 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<SquidDisplayShape> shapes;
+    // spots: 칸별 점유·통행 비트를 읽는 spot 지도. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::uint8_t> spots=std::vector<std::uint8_t>(65536);
+    // random: 원본 FUN_004558c0: 상태 0이면 0x0bad0bad로 바꾼 뒤 상태*0x10003+3의 상위 16비트를 limit로 나눈 나머지를 쓴다 (GameRandom).
     GameRandom random;
+    // store: 패치판이 플레이어별 SP를 32개의 9칸 DWORD 배열에 흩뿌려 보관하는 방식이다 (ScrambledSpStore).
     ScrambledSpStore store;
+    // book: 등록 목록과 개수의 장부. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidPostPopState book;
+    // rewardState: 보상 계산이 읽거나 갱신하는 판본별 전역과 AI 지갑이다. 패치 주소/CD 주소는 괄호에 둔다 (SquidRewardState).
     SquidRewardState rewardState;
+    // ownerMode: 판본·서버·로딩 상태에 따른 소유권 처리 정책. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidOwnerMode ownerMode;
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
     RawPriestWorldState state;
+    // deletion: 삭제. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidDeletionState deletion;
+    // clock: 프레임 판정에 현재 게임 시각을 공급하는 시계. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidProcessState clock;
+    // damageableState: 피해가능객체 상태. 입력 구성 또는 실행 결과 대조에 사용한다.
     DamageablePreDestroyState damageableState;
+    // releaseState: 해제 상태. 입력 구성 또는 실행 결과 대조에 사용한다.
     DamageableReleaseState releaseState;
+    // placementState: 배치 상태. 입력 구성 또는 실행 결과 대조에 사용한다.
     PriestPlacementState placementState;
+    // effectInput: 공간 효과는 월드의 실제 가상 Pop/Unpop/Destroy를 받는다. 계산을 임의 기본값으로 대체하지 않는다 (RawPriestWorldEffects).
     RawPriestWorldEffects effectInput;
+    // sink: 계산한 그림 요청을 실제 출력에 전달하는 대상. 입력 구성 또는 실행 결과 대조에 사용한다.
     DisplaySink sink;
+    // ownerNotices: 소유자 통지. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // claims: 점유. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // soundLoads: 소리 로딩. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // soundAttachments: 소리 부착. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // notices: 통지. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // falls: 추락. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // audits: 감사. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // damageRequests: 피해 요청. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // healthRequests: 체력 요청. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // fallbackEvents: 대체처리 이벤트. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::size_t ownerNotices{},claims{},soundLoads{},soundAttachments{},notices{},falls{},audits{},damageRequests{},healthRequests{},fallbackEvents{};
+    // reward: HP·SP·지갑 보상을 실제 장부에 적용하는 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::unique_ptr<SquidReward> reward;
+    // display: 객체·프레임에서 실제 화면 출력 요청을 만드는 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::unique_ptr<SquidDisplay> display;
+    // postPop: 객체 Pop 이후 목록·공간 후처리를 수행하는 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::unique_ptr<SquidPostPop> postPop;
+    // unpop: 객체의 공간 등록을 해제하는 Unpop 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::unique_ptr<SquidUnpop> unpop;
+    // pop: 객체를 공간 지도에 등록하는 Pop 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::unique_ptr<SquidPop> pop;
+    // factory: 타입에 맞는 객체를 생성하는 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::unique_ptr<SquidFactory> factory;
+    // owner: 소유 플레이어 번호 또는 소유권 처리 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::unique_ptr<SquidOwner> owner;
+    // frame: 사용할 그림 프레임 또는 프레임 처리 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::unique_ptr<SquidFrame> frame;
+    // destroy: 객체 삭제의 전처리·공간 해제·후처리를 실행하는 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::unique_ptr<RawSquidDestroy> destroy;
+    // common: 파생 타입 사이에 공유하는 기본 처리기 또는 상태. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::unique_ptr<SquidDestroyLifecycle> common;
+    // bindings: 사용 순서: 생성→ProcessHost(RegularHandler/DestroyHooks) 생성→BindProcesses→후속 모듈 Bind다 (std::unique_ptr<RawPriestWorldBindings>).
     std::unique_ptr<RawPriestWorldBindings> bindings;
+    // release: 해제. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::unique_ptr<RawDamageableRelease> release;
+    // damageable: 피해 가능한 객체의 HP·삭제·후처리 연결. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::unique_ptr<RawDamageablePreDestroy> damageable;
+    // placement: 최종 배치 허용 여부를 판정하는 처리기 또는 상태. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::unique_ptr<RawPriestPlacement> placement;
+    // dispatch: 타입별 서로 다른 fallback 사슬을 같은 분배기로 모아 혼합 종속 체인의 중첩 삭제를 지원한다 (std::unique_ptr<SquidFormDispatch>).
     std::unique_ptr<SquidFormDispatch> dispatch;
+    // host: Form이나 프로세스의 등록·통지·수명을 연결하는 호스트. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::unique_ptr<SquidProcessHost> host;
+    // kernel: 프로세스 등록과 프레임 실행을 담당하는 커널. 입력 구성 또는 실행 결과 대조에 사용한다.
     Kernel kernel;
     // 두 판본의 실제 생성자/타입 분류와 작은 SHP 입력을 사용한다.
     explicit PriestWorld(OriginalEdition chosen):edition(chosen),patch(chosen==OriginalEdition::Patch1078),pool(chosen,kWorldCapacity,true),

@@ -44,7 +44,9 @@ public:
     // 상대 부모 release 중 현재 프로세스만 중첩 삭제한다. 부모가 선저장한 다음 종속은 지우지 않는다.
     void OnParentDying(Sid) override { const auto form=Form();++counts_[0];dispatch_.Destroy(form,0x10); }
 private:
+    // dispatch_: 타입별 서로 다른 fallback 사슬을 같은 분배기로 모아 혼합 종속 체인의 중첩 삭제를 지원한다 (SquidFormDispatch).
     SquidFormDispatch& dispatch_;
+    // counts_: 개수. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::array<std::uint32_t,3>& counts_;
 };
 }

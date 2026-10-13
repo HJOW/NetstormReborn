@@ -15,6 +15,7 @@ using namespace netstorm::client;
 namespace {
 // 검사 중 참조 메모리 DC를 소유한다. Screen보다 오래 살아 있어 선택 객체를 정상 해제하게 한다.
 struct ReferenceDc {
+    // value: 읽기·쓰기·통지에 전달하는 값. 입력 구성 또는 실행 결과 대조에 사용한다.
     HDC value{CreateCompatibleDC(nullptr)};
     // 참조 DC만 해제한다. 검사 화면의 팔레트/DC는 Screen이 먼저 정리한다.
     ~ReferenceDc() { if (value) DeleteDC(value); }

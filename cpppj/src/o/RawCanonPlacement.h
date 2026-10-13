@@ -4,17 +4,20 @@
 
 namespace netstorm::o {
 class RawCanonPixelShape;
+// 일반 타입·패턴 배치 검사에 전달하는 입력 값이다.
 struct CanonPlacementQuery {
     std::uint32_t type{},argument{}; // 타입 번호와 패턴 번호/첫 모양 인자를 별도로 보존한다.
     float x{},y{}; // 원본 스택으로 전달되는 지도 좌표다.
     std::uint32_t flags{},owner{},mode{}; // 방향·부호 BYTE 소유자·충돌 모드를 원본 값으로 전달한다.
 };
+// 일반 타입·패턴 배치 외부 동작과 저장소 조회를 연결하는 콜백 묶음이다.
 struct CanonPlacementHooks {
     // 픽셀 getter의 (타입 번호, 별도 첫 인자, 방향)을 받는다. 명시 프레임은 항상 꺼진다.
     std::function<PriestPlacementRect(std::uint32_t,std::uint32_t,std::uint32_t)> shape;
     // 미리보기/충돌/지형/관계 전체는 별도 경계다. 접두의 성공만으로 배치를 허용하지 않는다.
     std::function<bool(const CanonPlacementQuery&,bool)> inspectGeometry;
 };
+// 일반 타입/패턴 배치의 초기화·즉시 허용·픽셀 여백·지도 경계 접두를 복원한다.
 class RawCanonPlacement {
 public:
     // 모든 유효 자산 타입의 접두를 공유한다. 자료/상태/경계의 수명은 호출자가 보장한다.
@@ -25,9 +28,13 @@ public:
     // 같은 풀에 실제 픽셀 getter를 연결하는지 검사한다.
     const SidPool& Pool() const;
 private:
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     const SidPool& pool_;
+    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::span<const RiftTypeRecord> types_;
+    // state_: 처리 중 조회·갱신하는 상태 (PriestPlacementState).
     PriestPlacementState& state_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (CanonPlacementHooks).
     CanonPlacementHooks hooks_;
 };
 // 공통 모양 경계만 실제 전체 픽셀 getter로 교체한다. 후반 정책은 호출자가 공급해야 한다.

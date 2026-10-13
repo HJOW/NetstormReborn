@@ -16,7 +16,7 @@ constexpr std::uint8_t kFree=1,kVoid=4,kContained=8,kBuried=8;
 // 원본 건물군/spot 마스크다. 일반 섬/다리 통지 helper는 비전투 null 큐에서 자연 반환한다.
 constexpr std::uint32_t kBuildingMask=0x50444200,kSpotMask=kBuildingMask|0x400ff;
 // 선택한 가상 경로의 지원 비트. update8c가 update88로 꼬리 호출하는 것까지 확인했다.
-struct DisplayVtable { std::uint32_t vtable; std::uint8_t mask; };
+struct DisplayVtable { /* vtable: 원본 객체의 가상 함수 표 주소. */ std::uint32_t vtable; /* mask: 대상 비트 또는 투명 영역을 선택하는 마스크. */ std::uint8_t mask; };
 #include "UnpopVtables.inc"
 // 정렬되지 않은 little endian raw 값을 읽는다.
 std::uint32_t Read(std::span<const std::uint8_t> bytes,std::size_t offset,std::size_t width) {

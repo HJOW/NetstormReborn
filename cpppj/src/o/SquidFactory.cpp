@@ -19,10 +19,15 @@ constexpr std::uint32_t kContainedType=6;
 constexpr std::uint32_t kGumpFormType=3;
 #include "TypeConstructors.inc"
 // 순서 있는 생성자 쓰기의 위치·폭·OR 여부와 기록값이다. 최대 다섯 쓰기를 보관한다.
-struct ConstructorWrite { std::uint8_t offset,width; bool orBits; std::uint32_t value; };
+struct ConstructorWrite { /* offset: 배열·파일·좌표 계산에 더할 기준 오프셋. */ /* width: 가로 크기. */ std::uint8_t offset,width; /* orBits: 비트OR 비트 여부. */ bool orBits; /* value: 읽기·쓰기·통지에 전달하는 값. */ std::uint32_t value; };
+// 원본 타입 생성자의 주소·가상함수표·필드 쓰기 목록이다.
 struct ConstructorRecipe {
+    // address: 원본 실행 파일 안의 함수 시작 주소.
+    // vtable: 원본 객체의 가상 함수 표 주소.
     std::uint32_t address,vtable;
+    // count: 현재 항목 또는 실행 횟수.
     std::uint8_t count;
+    // writes: 쓰기.
     std::array<ConstructorWrite,5> writes;
 };
 #include "DerivedConstructors.inc"

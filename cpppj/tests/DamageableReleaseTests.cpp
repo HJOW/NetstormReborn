@@ -14,17 +14,31 @@ constexpr std::array<Sid,4> kNewIds{{{100},{101},{102},{103}}};
 constexpr std::uint32_t kReleaseVtable=0x20000100;
 // 원본 PE나 Python 실행 없이 저장된 기계어 출력을 읽는다.
 const auto& Fixture() { static const auto data=LoadFixture(NETSTORM_DAMAGEABLERELEASE_FIXTURE);return data.rows; }
+// DamageableRelease 검사에서 같은 풀·상태·처리기를 조립해 입력과 결과를 대조하는 자료형이다.
 struct ReleaseScene {
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
     SidPool pool;
+    // finderState: 검색기 상태. 입력 구성 또는 실행 결과 대조에 사용한다.
     ContainedFinderState finderState;
+    // preState: 전처리 상태. 입력 구성 또는 실행 결과 대조에 사용한다.
     DamageablePreDestroyState preState;
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
     DamageableReleaseState state;
+    // spots: 칸별 점유·통행 비트를 읽는 spot 지도. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::uint8_t> spots=std::vector<std::uint8_t>(65536);
+    // types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeRecord> types;
+    // slots: 등록 대상의 저장 슬롯 목록. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::array<std::span<std::uint8_t>,5> slots;
+    // newSlots: 새 슬롯. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::array<std::span<std::uint8_t>,4> newSlots;
+    // events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::string events;
+    // change: 변경. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // born: 생성시각. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::uint32_t change{},born{};
+    // changed: 상태 변경으로 후속 갱신이 필요한지. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // patch: 10.78 패치판의 상태 또는 패치판 검사용 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     bool changed{},patch{};
     // 준비 때 할당 span을 보관하여 합성 free 후보를 재설정할 수 있게 한다.
     explicit ReleaseScene(OriginalEdition edition):pool(edition,kCapacity,false),types(edition==OriginalEdition::Patch1078 ? 188 : 171),patch(edition==OriginalEdition::Patch1078) {

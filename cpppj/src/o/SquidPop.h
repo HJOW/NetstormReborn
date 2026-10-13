@@ -10,6 +10,7 @@ class SquidUnpop;
 class RawBuildingSpace;
 // 패치판 overlap은 좌표와 앞선 spot 쓰기를 남기고 활성화하지 않는다.
 enum class RawPopResult { Unchanged,Registered,Overlap };
+// 객체를 공간 해시와 점유 지도에 등록하는 Pop 처리기이다.
 class SquidPop {
 public:
     // Unpop과 같은 풀/해시/spot을 받는다. 공통 표시·비용/목록/통계 후처리를 선택 연결한다.
@@ -25,8 +26,11 @@ public:
     // 건물 옆면 효과를 같은 실제 공간에 연결한다. nullptr은 미연결 건물의 기존 거부 경로다.
     void SetBuildingSpace(const RawBuildingSpace* space);
 private:
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
+    // hash_: 좌표별 객체 후보를 찾는 공간 해시.
     SquidHash& hash_;
+    // spots_: 칸별 점유·통행 비트를 읽는 spot 지도.
     std::span<std::uint8_t> spots_;
     SquidDisplay* display_{}; // 선택한 공통 표시 효과. nullptr은 기존 표시 억제 계약이다.
     SquidPostPop* postPop_{}; // 선택한 공통 비용/목록/통계 효과. nullptr이면 이전 억제 경로다.

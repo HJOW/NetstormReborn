@@ -33,16 +33,27 @@ internal sealed class MainMenuView : IDisposable
     private const int TipButtonPitch = 100;
     /// <summary>펼침 목록의 단축키 글자색 (녹화 "General Help - F1" 의 노란 F1)</summary>
     private static readonly Color MenuKeyColor = OriginalUiSkin.ValueColor;
+    /// <summary>_pixel: 사각형·선·단색 배경을 그릴 때 늘려 쓰는 1×1 텍스처.</summary>
     private readonly Texture2D _pixel;
+    /// <summary>_background: 메뉴 뒤에 그릴 배경 텍스처.</summary>
     private readonly Texture2D? _background;
+    /// <summary>_clouds: 메뉴 배경 위에 움직여 그릴 구름 텍스처.</summary>
     private readonly Texture2D? _clouds;
+    /// <summary>_skin: 원본 UI 프레임·버튼·배경을 그리는 공통 외관 자료.</summary>
     private readonly OriginalUiSkin _skin;
+    /// <summary>_display: 해상도·전체화면·출력 배율을 관리하는 화면 관리자.</summary>
     private readonly DisplayManager _display;
+    /// <summary>_audio: 메뉴 소리·장면 음악 요청을 처리하는 오디오 관리자.</summary>
     private readonly AudioPlayer? _audio;
+    /// <summary>_resources: 언어·미션·설정·게임 자산을 조회하는 공통 자원.</summary>
     private readonly GameResources _resources;
+    /// <summary>_korean: 메뉴에 한국어 문구와 글꼴을 적용할지.</summary>
     private readonly bool _korean;
+    /// <summary>_play: 선택한 미션 이름으로 게임을 시작하는 콜백.</summary>
     private readonly Action<string> _play;
+    /// <summary>_quit: 게임 종료를 요청하는 콜백.</summary>
     private readonly Action _quit;
+    /// <summary>_help: 지정한 주제의 도움말 창을 여는 콜백.</summary>
     private readonly Action<string> _help;
     /// <summary>원본 tell.english [TipList] 의 시작 팁 (없으면 팁 창을 열지 않는다)</summary>
     private readonly StartupTips? _tips;
@@ -50,11 +61,17 @@ internal sealed class MainMenuView : IDisposable
     private int _tipShown;
     /// <summary>메뉴 위에 떠 있는 작은 창 ("tips" = 시작 팁, "version" = 버전 정보, null = 없음)</summary>
     private string? _modal;
+    /// <summary>_buttons: 현재 메뉴의 버튼 영역·문구·실행 동작 목록.</summary>
     private readonly List<MenuButton> _buttons = [];
+    /// <summary>_lists: 현재 메뉴에 그릴 목록 패널의 사각형 영역.</summary>
     private readonly List<Rectangle> _lists = [];
+    /// <summary>_separators: 메뉴 항목 사이에 그릴 구분선의 Y 좌표.</summary>
     private readonly List<int> _separators = [];
+    /// <summary>_previousMouse: 클릭·해제·휠 변화를 검출할 이전 프레임 마우스 상태.</summary>
     private MouseState _previousMouse;
+    /// <summary>_previousKeyboard: 새 키 입력과 눌림 유지를 구별할 이전 프레임 키보드 상태.</summary>
     private KeyboardState _previousKeyboard;
+    /// <summary>_page: 현재 표시할 메뉴 페이지 이름.</summary>
     private string _page = "main";
     /// <summary>현재 표시 중인 스크립트 기반 캠페인 페이지.</summary>
     private CampaignPage? _campaignPage;
@@ -62,7 +79,9 @@ internal sealed class MainMenuView : IDisposable
     private string _campaignTarget = "offical3.overview";
     /// <summary>캠페인 창의 본문·목록·뒤로 버튼에 공유하는 좌표 계산 결과.</summary>
     private CampaignLayout? _campaignLayout;
+    /// <summary>_submenu: 현재 펼친 메뉴 하위 페이지. 없으면 null.</summary>
     private string? _submenu;
+    /// <summary>_error: 메뉴에서 표시할 미션 로딩 오류 문자열.</summary>
     private string _error = "";
     /// <summary>돌 버튼(메인 메뉴 버튼·Back)의 누름·떼기 처리기. 번호는 <see cref="_buttons"/> 안의 순번이다.</summary>
     private readonly ButtonGump _gump = new();
@@ -489,6 +508,15 @@ internal sealed class MainMenuView : IDisposable
     }
 
     /// <summary>캠페인 창을 화면에 그릴 때 공유하는 배치 값.</summary>
+    /// <param name="Page">배치할 캠페인 페이지 자료.</param>
+    /// <param name="Panel">캠페인 내용 패널의 화면 영역.</param>
+    /// <param name="List">미션 목록의 화면 영역.</param>
+    /// <param name="BodyLines">줄바꿈을 적용한 페이지 본문.</param>
+    /// <param name="BodyInset">본문의 가로 안쪽 여백.</param>
+    /// <param name="BodyTop">본문 첫 줄의 Y 위치.</param>
+    /// <param name="RowOffsets">목록 행별 Y 오프셋.</param>
+    /// <param name="Separators">미션 목록 구분선의 Y 위치.</param>
+    /// <param name="Back">뒤로 버튼의 화면 영역.</param>
     private sealed record CampaignLayout(CampaignPage Page, Rectangle Panel, Rectangle List, IReadOnlyList<string> BodyLines,
         int BodyInset, int BodyTop, IReadOnlyList<int> RowOffsets, IReadOnlyList<int> Separators, Rectangle Back);
 

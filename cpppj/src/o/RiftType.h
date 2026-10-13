@@ -10,6 +10,7 @@
 #include <vector>
 
 namespace netstorm::o {
+// 프레임의 방향·변형·라벨 코드이다.
 struct FrameCode {
     std::uint8_t side{}; // 원본 코드 +0, 방향 문자.
     std::uint8_t variant{}; // 원본 코드 +1, 변형 문자.
@@ -19,6 +20,7 @@ struct FrameCode {
 // 원본 배열 원소는 정확히 4바이트다. 게임 객체 자체의 32비트 포인터 배치는 복제하지 않는다.
 static_assert(sizeof(FrameCode) == 4);
 
+// 타입 프레임의 코드와 방향별 번호 구간을 조회하는 표이다.
 class RiftTypeFrames {
 public:
     // 원본 type +0x114(개수), +0x124(코드 포인터)를 소유권 있는 배열로 바꾼다.
@@ -33,12 +35,13 @@ public:
     std::span<const FrameCode> Codes() const;
     // 방향 글자 하나('A'~'P' 16개)가 차지하는 프레임: 첫 프레임 번호(없으면 -1)와 그 글자를 가진 프레임 수.
     // 원본 타입 +0x130(첫 번호)·+0x170(개수) 표를 만드는 0049b060 ↔ CD 00444da0의 결과다.
-    struct LetterRun { int first{-1}; int count{}; };
+    struct LetterRun { /* first: 구간 또는 연결 목록의 첫 항목. */ int first{-1}; /* count: 현재 항목 또는 실행 횟수. */ int count{}; };
     // 'A'~'P' 밖의 글자는 원본 표에 없으므로 거부한다.
     LetterRun Run(std::uint8_t letter) const;
     // 구간이 하나라도 있는 글자 수(원본 타입 +0x12c).
     int LetterKinds() const;
 private:
+    // frames_: 타입별 프레임 자료.
     std::vector<FrameCode> frames_;
 };
 
@@ -49,19 +52,28 @@ std::span<const std::string_view> TypeLoadOrder(OriginalEdition edition);
 // 타입 초기화의 실제 대입 구간에서 복원한 생성자 주소다. 호스트 함수 포인터로 사용하지 않는다.
 std::uint32_t TypeConstructorAddress(OriginalEdition edition,std::size_t number);
 
+// 타입 속성의 이름과 해석된 값이다.
 struct TypeProperty {
+    // name: 이름으로 조회·표시할 때 사용하는 문자열.
     std::string name;
     std::variant<double, std::string> value; // 숫자와 따옴표 문자열을 구분하여 보존한다.
 };
+// 타입 프레임이 참조하는 이미지 파일과 번호이다.
 struct TypeImageReference {
+    // file: 읽기·재생에 사용할 파일 이름 또는 열린 파일 자료.
     std::string file;
     double number{}; // GIF 번호는 빌드용 참조이며 런타임 SHP 선택에는 쓰지 않는다.
 };
+// 같은 타입의 프레임 클러스터 이름·코드·이미지 목록이다.
 struct TypeCluster {
+    // name: 이름으로 조회·표시할 때 사용하는 문자열.
     std::string name;
+    // code: 입력·패턴·프레임의 종류를 구별하는 코드.
     FrameCode code{};
+    // images: 프레임이나 커서 번호별로 읽어 둔 그림 자료.
     std::vector<TypeImageReference> images;
 };
+// 특수 용도로 선택되는 타입 프레임 번호이다.
 struct TypeSpecialFrames {
     int defaultFrame{}, gumpFrame{}; // 빈 타입의 0 초기값. .type Parse는 gumpFrame을 -1로 먼저 쓴다.
     int helpFrame{-1}, baseFrame{-1}; // 원본의 -1 초기값.
@@ -83,10 +95,16 @@ public:
     // 원본 후처리 0049b0d0의 foot_y=6 → 8을 반영한 배치 폭·높이.
     std::array<int, 2> Footprint() const;
 
+    // name: 이름으로 조회·표시할 때 사용하는 문자열.
+    // constructor: 타입의 원본 생성자 이름.
     std::string name, constructor;
+    // flags: 동작을 선택하는 플래그 비트.
     std::vector<std::string> flags;
+    // properties: 타입 정의에서 읽은 속성 이름·값 목록.
     std::vector<TypeProperty> properties;
+    // clusters: 이름·방향 코드별 프레임 클러스터 목록.
     std::vector<TypeCluster> clusters;
+    // specialFrames: 특수 동작에서 선택할 프레임 번호 묶음.
     TypeSpecialFrames specialFrames;
 };
 
@@ -143,11 +161,15 @@ struct RiftTypeRecord {
     std::string name;
     std::string description;            // +0x18(40바이트): `description` 속성.
     std::string assetName;              // 새 필드: .type 파일 이름(로딩 순서의 이름). 표시·도구용이다.
+    // minUsage: 원소별 최소 에너지 사용량.
     std::array<float, 3> minUsage{};    // +0x54: minUsage
+    // maxUsage: 원소별 최대 에너지 사용량.
     std::array<float, 3> maxUsage{};    // +0x60: maxUsage·maxRainBattleUsage, maxThunderBattleUsage, maxWindBattleUsage
     std::int32_t level{};               // +0x94: `level` 속성 - 1
     std::int32_t group{kTypeNoGroup};   // +0x9c: `group` 속성의 이름 표 번호
+    // flags1: 타입의 첫 번째 플래그 단어.
     std::uint32_t flags1{};             // +0xe8
+    // flags2: 타입의 두 번째 플래그 단어.
     std::uint32_t flags2{};             // +0xec
     std::string kind;                   // +0xf0: 마지막으로 나온 종류 단어(최대 8글자, 원본 strncpy 그대로)
     std::uint32_t containerListFlags{}; // +0xfc: 이 타입이 그릇일 때 내용물의 목록 플래그(0이면 파일에서 읽는다)
@@ -183,7 +205,10 @@ public:
     int BridgeType() const;
     int IslandType() const;
 private:
+    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::vector<RiftTypeRecord> types_;
+    // bridge_: 다리.
+    // island_: 섬.
     int bridge_{-1}, island_{-1};
 };
 }

@@ -6,7 +6,10 @@
 namespace netstorm::o {
 // 원본 타입 전역과 현재 debug 전역이다. 섬 확인은 영역 번호나 소유자를 조회하지 않는다.
 struct BuildingSpaceState {
+    // islandType: island 자산을 타입 표에서 찾는 번호.
+    // bridgeType: 다리 자산을 타입 표에서 찾는 번호.
     std::uint32_t islandType{},bridgeType{};
+    // debug: 원본 assert 경계와 진단 출력을 검사할지.
     bool debug{};
 };
 // 표면 WORD 지도는 실제 해시 0단계 배열이다. 복사 지도는 사용하지 않는다.
@@ -29,9 +32,13 @@ public:
 private:
     // 원본 유효 번호 후보는 free 상태라도 쓰므로 일반 AllocatedBytes 필터를 적용하지 않는다.
     std::span<std::uint8_t> Bytes(Sid sid) const;
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
+    // hash_: 좌표별 객체 후보를 찾는 공간 해시.
     const SquidHash& hash_;
+    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::span<const RiftTypeRecord> types_;
+    // state_: 원본 타입 전역과 현재 debug 전역이다. 섬 확인은 영역 번호나 소유자를 조회하지 않는다 (BuildingSpaceState).
     BuildingSpaceState& state_;
 };
 }

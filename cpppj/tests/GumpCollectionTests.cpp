@@ -22,9 +22,13 @@ std::string Coordinates(ScreenPoint p) { return std::to_string(p.x)+","+std::to_
 std::string Coordinates(ScreenRect r) { return std::to_string(r.left)+","+std::to_string(r.top)+","+std::to_string(r.right)+","+std::to_string(r.bottom); }
 // 입력 노드와 명시 월드 투영 응답을 가진 호스트 저장소다.
 struct GumpScene {
+    // nodes: 노드. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::map<std::uint32_t,GumpCollectionNode> nodes;
+    // anchors: 앵커. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::map<std::uint32_t,std::vector<std::int64_t>> anchors;
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
     GumpCollectionState state;
+    // projected: 투영된. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::string projected;
     // C++ 필드에 원본 128바이트 입력을 그대로 공급한다.
     void Load(const std::string& input) {

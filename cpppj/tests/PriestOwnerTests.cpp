@@ -13,14 +13,23 @@ constexpr std::size_t kPatchRows=3528,kCdRows=1944;
 const std::vector<std::vector<std::string>>& Fixture() {
     static const auto data=LoadFixture(NETSTORM_PRIESTOWNER_FIXTURE);return data.rows;
 }
+// PriestOwner 검사에서 같은 풀·상태·처리기를 조립해 입력과 결과를 대조하는 자료형이다.
 struct PriestScene {
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
     SidPool pool;
+    // mode: 소유자 지정이 읽는 원본 모드 전역이다. 패치 주소 / CD 주소를 괄호에 둔다 (SquidOwnerMode).
     SquidOwnerMode mode;
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
     PriestOwnerState state;
+    // bookkeeping: 객체 종류·소유자별 등록 목록과 개수를 관리하는 장부. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidPostPopState bookkeeping;
+    // types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeRecord> types;
+    // base: 파생 처리에서 공통 동작을 위임하는 기본 객체. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::unique_ptr<SquidOwner> base;
+    // events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::string> events;
+    // patch: 10.78 패치판의 상태 또는 패치판 검사용 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     bool patch;
     // 관찰 SID 50을 준비하고 실제 공통 소유자 지정에 사제 genus를 공급한다.
     explicit PriestScene(OriginalEdition edition):pool(edition,kCapacity,false),types(edition==OriginalEdition::Patch1078 ? 188 : 171),

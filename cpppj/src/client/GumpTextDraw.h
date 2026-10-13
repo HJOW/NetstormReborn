@@ -7,7 +7,9 @@ namespace netstorm::client {
 // color는 매 출력 패스의 VFX 색 표 설치, glyph는 실제 포인터가 있는 글리프의 출력 경계다.
 // 콜백 실행 중 문자열/문맥/글꼴 입력은 바꾸지 않는다. 특별 빈 프레임도 glyph 호출과 폭 전진을 수행한다.
 struct GumpGlyphHooks {
+    // color: 출력 색 또는 색 변환표를 선택하는 콜백.
     std::function<void(std::uint8_t)> color;
+    // glyph: 한 글자의 그림을 출력하는 콜백.
     std::function<void(const BitmapFont&,std::uint8_t,ScreenPoint)> glyph;
     std::function<void()> illegalStyle; // 원본의 잘못된 스타일 로그 경계다. 생략해도 normal 슬롯 0으로 대체한다.
 };
@@ -28,12 +30,15 @@ public:
     void DrawGump(const GumpCollection& collection,std::uint32_t token,std::span<const char> bytes,ScreenPoint offset,
         const std::array<std::uint32_t,8>& defaultContext,const GumpTextContext* context=nullptr) const;
 private:
+    // fonts_: 이름·크기로 찾아 재사용하는 글꼴 저장소.
     FontStore& fonts_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (GumpGlyphHooks).
     GumpGlyphHooks hooks_;
+    // edition_: 판본별 필드 배치와 동작을 선택하는 원본 버전.
     o::OriginalEdition edition_;
 };
 // 원본 글꼴 전용 256색 표와 VFX에 마지막으로 설치한 표다. 클립 복구 후에도 본문 색을 유지한다.
-struct GumpGlyphColorState { ColorMap fontColors{},vfxColors{}; };
+struct GumpGlyphColorState { /* fontColors: 글꼴 인덱스를 출력 색으로 바꾸는 변환표. */ /* vfxColors: VFX 출력의 팔레트 인덱스 변환표. */ ColorMap fontColors{},vfxColors{}; };
 // 글리프 해제/투명 합성을 현재 GumpPixelTarget 클립에 연결한다. 표면/색 상태는 훅보다 오래 살아야 한다.
 GumpGlyphHooks MakeGumpGlyphPixelHooks(const GumpPixelTarget& target,GumpGlyphColorState& state);
 }

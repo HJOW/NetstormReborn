@@ -4,11 +4,14 @@
 
 namespace netstorm::client {
 // overlay 처리기는 호출자의 사건 대신 원본의 별도 사건 코드 전역을 사용한다.
-struct GumpInputState { std::uint32_t overlayEvent{}; };
+struct GumpInputState { /* overlayEvent: 오버레이 이벤트. */ std::uint32_t overlayEvent{}; };
 // 가상 +0x28과 dialog 한도 로그의 경계다. 콜백은 현재 캡처/표/노드를 바꿀 수 있다.
 struct GumpInputHooks {
+    // node: 토큰에 대응하는 저장 노드를 조회하는 콜백.
     std::function<GumpCreateNode*(std::uint32_t)> node;
+    // handle: 대상의 이벤트 처리기를 호출하는 콜백.
     std::function<std::uint32_t(std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t)> handle;
+    // overflow: 입력 처리의 넘침 또는 실패를 후속 경계에 알리는 콜백.
     std::function<void(std::uint32_t)> overflow;
 };
 // OS 입력 큐 앞의 원본 UI 전달 계층이다. 기본 선택/필터/재귀 전달은 실제 GumpEvents를 호출한다.
@@ -35,11 +38,17 @@ private:
     std::uint32_t Handle(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second) const;
     // 자신부터 모든 부모의 visible만 검사한다. 부모의 dead/void는 여기서 제외하지 않는다.
     bool ParentsVisible(std::uint32_t token) const;
+    // create_: 등록 표 +0이 실제 루트다. 외부에서 표를 바꿀 때 collection.root도 같은 토큰으로 맞춰야 한다 (GumpCreateState).
     GumpCreateState& create_;
+    // lifetime_: 등록된 객체의 삭제·해제를 처리하는 수명 관리자.
     GumpLifetimeState& lifetime_;
+    // state_: overlay 처리기는 호출자의 사건 대신 원본의 별도 사건 코드 전역을 사용한다 (GumpInputState).
     GumpInputState& state_;
+    // collection_: 화면 밖 자식 통과, 최상위 삭제 필터, 원본의 루트별 제한 개수를 보존하는 UI 수집기다 (GumpCollection).
     const GumpCollection& collection_;
+    // events_: 발생한 이벤트 또는 이벤트 처리기.
     const GumpEvents& events_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (GumpInputHooks).
     GumpInputHooks hooks_;
 };
 }

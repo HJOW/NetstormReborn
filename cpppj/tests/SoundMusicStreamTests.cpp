@@ -27,10 +27,18 @@ SoundDeviceHooks UnusedEffects() {
 }
 // IO/COM 입력과 사건을 제공한다. 상태 전이·채우기·실패 정리는 실제 MusicChannel이 수행한다.
 struct StreamMock {
-    std::vector<std::uint8_t> file;std::array<std::uint8_t,128> output;std::vector<std::string> events;
-    std::size_t position=5;bool opened=true,locked=false,readThrows=false,badRegions=false;
-    int cap=-2,seekFailure{},failed{},split=-1,lockDepth{};std::uint32_t status{},cursor{};
-    std::int32_t createResult{};bool createWrites=true;
+    // file: 읽기·재생에 사용할 파일 이름 또는 열린 파일 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
+    std::vector<std::uint8_t> file;/* output: 처리 결과를 담는 출력 값이나 버퍼. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::array<std::uint8_t,128> output;/* events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<std::string> events;
+    // position: 현재 좌표 또는 저장소의 읽기 위치. 입력 구성 또는 실행 결과 대조에 사용한다.
+    std::size_t position=5;/* opened: 열린 여부. 입력 구성 또는 실행 결과 대조에 사용한다. */ /* locked: 자원 또는 출력 표면이 잠겨 있는지. 입력 구성 또는 실행 결과 대조에 사용한다. */ /* readThrows: 읽기 예외 여부. 입력 구성 또는 실행 결과 대조에 사용한다. */ /* badRegions: 불가 지역 여부. 입력 구성 또는 실행 결과 대조에 사용한다. */ bool opened=true,locked=false,readThrows=false,badRegions=false;
+    // cap: 상한. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // seekFailure: 탐색 실패. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // failed: 실패한. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // split: 분할. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // lockDepth: 중첩된 잠금 요청의 수. 입력 구성 또는 실행 결과 대조에 사용한다.
+    int cap=-2,seekFailure{},failed{},split=-1,lockDepth{};/* status: 상태. 입력 구성 또는 실행 결과 대조에 사용한다. */ /* cursor: 커서. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::uint32_t status{},cursor{};
+    // createResult: 생성 결과. 입력 구성 또는 실행 결과 대조에 사용한다.
+    std::int32_t createResult{};/* createWrites: 생성 쓰기 여부. 입력 구성 또는 실행 결과 대조에 사용한다. */ bool createWrites=true;
     // 출력 전역은 원본 실행기와 같은 감시 바이트로 시작한다.
     StreamMock() { output.fill(0xa7); }
     // 파일 입력 바이트와 시작 위치다. 실제 디스크는 쓰지 않는다.

@@ -114,25 +114,39 @@ private:
 
     // 효과음 이름 표와 재생 전역, 장치(동적 dsound.dll), 재생 계층이다. 선언 순서가 곧 생성 순서이며 소멸은 반대로 한다.
     SoundList list_;
+    // state_: 재생 계층이 읽고 쓰는 원본 전역이다. 값은 클라이언트가 소유한다 (SoundState).
     SoundState state_;
+    // device_: 동적 dsound.dll·주 버퍼·효과음/음악 버퍼를 소유하는 Windows 장치다. 원본 COM 순서와 장치 경계를 연결한다 (SoundDevice).
     SoundDevice device_;
+    // player_: 소리 항목의 재생·정지·재생 여부를 맡는 재생 계층이다 (SoundPlayer).
     SoundPlayer player_;
     // 음악 파일 소유자와 두 채널(기본·보조), 음악 제어, 음악 스레드의 상태와 실행기다.
     MusicFileStore files_;
+    // primaryState_: 원본 채널 배치의 상태다. 버퍼/파일은 장치 경계의 32비트 토큰이고, 남은 바이트는 수정하지 않은 원본 필드를 보존한다 (MusicChannelState).
+    // secondaryState_: 원본 채널 배치의 상태다. 버퍼/파일은 장치 경계의 32비트 토큰이고, 남은 바이트는 수정하지 않은 원본 필드를 보존한다 (MusicChannelState).
     MusicChannelState primaryState_,secondaryState_;
+    // primary_: 한 음악 채널의 제어다. 원본 CRITICAL_SECTION과 같은 재귀 잠금으로 파일/버퍼 상태를 보호한다 (MusicChannel).
+    // secondary_: 한 음악 채널의 제어다. 원본 CRITICAL_SECTION과 같은 재귀 잠금으로 파일/버퍼 상태를 보호한다 (MusicChannel).
     MusicChannel primary_,secondary_;
+    // music_: 효과음과 음악의 공통 음소거 제어다. 최초 PushMute에서 음량을 예약하고 마지막 PopMute에서 최신 예약값을 복원한다 (SoundMusic).
     SoundMusic music_;
+    // runtimeState_: 원본 스레드/수동 리셋 종료 이벤트/스레드 번호 전역이다. 초기 배치 외에는 Runtime이 관리한다 (MusicRuntimeState).
     MusicRuntimeState runtimeState_;
+    // runtime_: 원본 필드 배치를 사용하는 실행 중 상태.
     MusicRuntime runtime_;
     // 현재 곡 이름·음악 옵션, 곡 선택 계층이다.
     MusicSelectionState selected_;
+    // selection_: 원본 00435200→00435160 / CD 00484aa0→00484a10의 음악 선택 계층이다 (MusicSelection).
     MusicSelection selection_;
     // 장면 음악의 난수·상태·감독이다.
     o::GameRandom random_;
+    // scene_: 장면별 음악 감독이 읽고 쓰는 원본 전역이다. 값은 클라이언트가 소유하고 감독이 살아 있는 동안 유지해야 한다 (SceneMusicState).
     SceneMusicState scene_;
+    // sceneMusic_: 사용: state·random·hooks 대상은 이 객체보다 오래 살아야 한다. 주 스레드에서만 부른다 (SceneMusic).
     SceneMusic sceneMusic_;
     // 음악 스레드를 시작했는지(Shutdown 전까지 참)와 마지막으로 적용한 옵션이다.
     bool runtimeRunning_{};
+    // options_: Interpret Options가 읽는 소리 관련 설정을 한곳에 모은 값이다. 기본값은 원본 setup.cfg·options.cfg의 기본값이다 (ClientAudioOptions).
     ClientAudioOptions options_;
 };
 }

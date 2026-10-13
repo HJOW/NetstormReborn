@@ -21,11 +21,17 @@ internal sealed partial class FortMapViewer
     /// <summary>표시 하나의 수명·중심·규격. 선택을 바꾼 뒤 원형 표시가 줄어드는 동안 유지한다.</summary>
     private sealed class RangeVisual(string key, RangeDisplay display, Footprint footprint)
     {
+        /// <summary>Key: 같은 사정거리 표시를 찾고 갱신하는 조회 키.</summary>
         public string Key { get; } = key;
+        /// <summary>Display: 사정거리의 모양·방향·거리 정의.</summary>
         public RangeDisplay Display { get; } = display;
+        /// <summary>Footprint: 사정거리 표시를 붙일 대상의 발자국 영역.</summary>
         public Footprint Footprint { get; set; } = footprint;
+        /// <summary>Age: 사정거리 표시가 열린 뒤 흐른 시간(초).</summary>
         public double Age { get; set; }
+        /// <summary>Radius: 열기·닫기 애니메이션에서 현재 그릴 사정거리 반지름.</summary>
         public double Radius { get; set; }
+        /// <summary>Closing: 사정거리 표시를 닫는 애니메이션 중인지.</summary>
         public bool Closing { get; set; }
     }
 

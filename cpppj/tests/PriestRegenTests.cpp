@@ -9,22 +9,42 @@ using namespace netstorm::test::rawscene;
 namespace {
 // 원본/Python/Ghidra 없이 읽는 독립 기계어 관찰이다.
 const auto& Fixture() { static const auto data=LoadFixture(NETSTORM_PRIESTREGEN_FIXTURE);return data.rows; }
+// PriestRegen 검사에서 같은 풀·상태·처리기를 조립해 입력과 결과를 대조하는 자료형이다.
 struct RegenScene {
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
     SidPool pool;
+    // random: 원본 FUN_004558c0: 상태 0이면 0x0bad0bad로 바꾼 뒤 상태*0x10003+3의 상위 16비트를 limit로 나눈 나머지를 쓴다 (GameRandom).
     GameRandom random;
+    // store: 패치판이 플레이어별 SP를 32개의 9칸 DWORD 배열에 흩뿌려 보관하는 방식이다 (ScrambledSpStore).
     ScrambledSpStore store;
+    // book: 등록 목록과 개수의 장부. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidPostPopState book;
+    // hpMode: 보상 계산이 읽거나 갱신하는 판본별 전역과 AI 지갑이다. 패치 주소/CD 주소는 괄호에 둔다 (SquidRewardState).
     SquidRewardState hpMode;
+    // types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeRecord> types;
+    // spots: 칸별 점유·통행 비트를 읽는 spot 지도. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::uint8_t> spots=std::vector<std::uint8_t>(65536);
+    // hp: 객체의 HP를 조회·변경하는 처리기 또는 HP 값. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::unique_ptr<SquidReward> hp;
+    // priest: 사제 상태를 조회·변경하는 처리기 또는 사제 경로 여부. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::unique_ptr<RawPriestState> priest;
+    // regen: 사제 HP 회복과 SP 갱신을 처리하는 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::unique_ptr<RawPriestRegen> regen;
+    // mode: 동작 분기를 선택하는 모드. 입력 구성 또는 실행 결과 대조에 사용한다.
     PriestHitPointMode mode;
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
     PriestRegenState state;
+    // patch: 10.78 패치판의 상태 또는 패치판 검사용 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // occupied: 점유 여부. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // auditChange: 감사 변경 여부. 입력 구성 또는 실행 결과 대조에 사용한다.
     bool patch,occupied{},auditChange{};
+    // events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // after: 후속. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::string events,after;
+    // afterOwner: 후속 소유자. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::uint8_t afterOwner{};
+    // measurement: 측정. 입력 구성 또는 실행 결과 대조에 사용한다.
     double measurement{};
     // 관찰의 client SID를 실제 풀에서 할당한다.
     explicit RegenScene(OriginalEdition edition):pool(edition,kCapacity,false),store(random,[] { return 1U; }),

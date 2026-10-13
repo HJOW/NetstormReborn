@@ -59,7 +59,8 @@ int TerrainBuilder::Fill(int left,int top,int right,int bottom,std::uint8_t terr
 // 저장 영역의 연결 모양과 시드로 본섬 마스크를 생성한다.
 TerrainBuilder::TerrainBuilder(const ChunkMap& map,const IslandList& islands) {
     land_.fill(kEmptyTerrain);
-    struct Work { int x,y,island,index,count,target; std::uint8_t territory,seed; int connections; };
+    // 지형 생성 중 현재 위치·섬·진행량·연결 정보를 보관하는 작업 항목이다.
+    struct Work { /* x: X 좌표. */ /* y: Y 좌표. */ /* island: 섬. */ /* index: 목록이나 표에서 현재 항목을 찾는 인덱스. */ /* count: 현재 항목 또는 실행 횟수. */ /* target: 대상. */ int x,y,island,index,count,target; /* territory: 객체가 속한 맵 영역 번호. */ /* seed: 지형 성장 또는 난수 선택의 초기 시드. */ std::uint8_t territory,seed; /* connections: 현재 패턴 칸에서 연결할 방향의 비트. */ int connections; };
     std::vector<Work> work; std::array<int,128> counts{}, indices{};
     // 통로와 성장에 쓸 영역별 청크 수를 먼저 계산한다.
     for (int y=0;y<map.YLength();++y)

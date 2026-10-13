@@ -4,6 +4,7 @@
 
 namespace netstorm::o {
 struct CanonPlacementGeometryHooks;
+// 일반 타입·패턴 배치 충돌 처리 중 조회·갱신하는 상태 묶음이다.
 struct CanonPlacementCollisionState {
     std::uint32_t clientMode{}; // 00540bc0 / CD 00540a28: 예측 가능한 클라이언트 SID를 충돌에서 제외한다.
     std::uint32_t ignoredGenus{}; // 005325b4 / CD 0053fc28: 배치 타입과 겹칠 때 후보 마스크를 반환하는 전역이다.
@@ -11,6 +12,7 @@ struct CanonPlacementCollisionState {
 // 0049ade0 / CD 00444900: 임의 타입의 원본 무시 함수다. 반환 비트값을 bool로 축소하지 않는다.
 std::uint32_t PlacementIgnoreValue(OriginalEdition edition,const RiftTypeRecord& placing,
     const RiftTypeRecord& candidate,std::uint32_t mode,std::uint32_t ignoredGenus);
+// 일반 타입·패턴 배치 충돌 외부 동작과 저장소 조회를 연결하는 콜백 묶음이다.
 struct CanonPlacementCollisionHooks {
     // CanonDecoder 모양 순회·지형/지역/관계 경계다. 각 모양의 충돌 검사는 scan으로 요청한다.
     // scan이 false이면 즉시 중단해야 한다. true 이후에도 이 경계가 모양별 지형 결과와 최종 결과를 처리한다.
@@ -18,6 +20,7 @@ struct CanonPlacementCollisionHooks {
     // 0049bb1a / CD 004457f7 이후 후보별 지형/지역 효과 경계다. 충돌을 무시한 후보도 호출한 뒤 Next로 진행한다.
     std::function<void(const CanonPlacementQuery&,Sid)> inspectCandidateTerrain;
 };
+// 일반 타입 배치의 후보 무시·로컬 발자국 표시·충돌 거부를 실제 사각형 탐색기에 연결한다.
 class RawCanonPlacementCollision {
 public:
     // 실제 탐색기는 같은 풀/해시/현재 타입 표로 이 객체 내부에서 구성한다.
@@ -34,11 +37,17 @@ public:
 private:
     // 유효 타입 및 안전한 raw/발자국 입력 계약을 검사한다.
     const RiftTypeRecord& Placing(const CanonPlacementQuery& query) const;
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     const SidPool& pool_;
+    // hash_: 좌표별 객체 후보를 찾는 공간 해시.
     const SquidHash& hash_;
+    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::span<const RiftTypeRecord> types_;
+    // state_: 처리 중 조회·갱신하는 상태 (CanonPlacementCollisionState).
     CanonPlacementCollisionState& state_;
+    // preview_: 실제 배치 전의 미리보기 판정·출력 처리기 또는 상태.
     CanonPlacementPreviewState& preview_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (CanonPlacementCollisionHooks).
     CanonPlacementCollisionHooks hooks_;
 };
 // 미리보기의 inspectCollisions만 실제 후보 검사/탐색기로 연결한다. 모양/지형 경계는 호출자가 제공한다.

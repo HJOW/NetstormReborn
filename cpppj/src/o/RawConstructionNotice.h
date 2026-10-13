@@ -7,7 +7,7 @@
 
 namespace netstorm::o {
 // 배치 이력과 사제 접근 지점의 단정도 좌표다. 이력은 좌표 비트를 그대로 보존한다.
-struct ConstructionNoticePoint { float x{},y{}; };
+struct ConstructionNoticePoint { /* x: X 좌표. */ /* y: Y 좌표. */ float x{},y{}; };
 // 통지 처리기가 읽는 전역이다. 주소는 패치 / CD 순서다.
 struct ConstructionNoticeState {
     std::uint32_t localPlayer{}; // 00540c70 / 0050f6c8: 통지의 플레이어 바이트와 DWORD로 비교한다.
@@ -63,9 +63,13 @@ private:
     std::uint32_t Genus(Sid sid) const;
     // 현재 사제 좌표로 접근점을 구해 거의 올림한 다음 이동을 시도한다.
     bool Approach(Sid priest,Sid object,std::uint32_t flags) const;
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     const SidPool& pool_;
+    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::span<const RiftTypeRecord> types_;
+    // state_: 통지 처리기가 읽는 전역이다. 주소는 패치 / CD 순서다 (ConstructionNoticeState).
     ConstructionNoticeState& state_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (ConstructionNoticeHooks).
     ConstructionNoticeHooks hooks_;
 };
 // 정리·배치·환불을 같은 풀의 실제 모듈로 연결한다. priest가 있으면 이동 불가 조회도 실제 모듈로 연결한다.

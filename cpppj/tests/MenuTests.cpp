@@ -29,6 +29,7 @@ std::vector<std::uint8_t> Gif(bool interlaced, bool transparent) {
 }
 // 단위 테스트 전용 임시 디렉터리. 예외에도 이 테스트가 만든 폴더만 정리한다.
 struct TemporaryDirectory {
+    // path: 경로. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::filesystem::path path;
     // 서로 다른 실행이 같은 이름을 쓰지 않도록 현재 시계값을 붙인다.
     TemporaryDirectory() : path(std::filesystem::temp_directory_path() / ("netstorm-menu-test-" + std::to_string(std::chrono::steady_clock::now().time_since_epoch().count()))) { std::filesystem::create_directory(path); }

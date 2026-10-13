@@ -137,7 +137,9 @@ public sealed class TypeCatalog
         ("zoUBERGUMP", -40), ("zoMENUGUMP", -60), ("zoDIALOGGUMP", -80), ("zoLOOKGUMP", -100), ("zoRISING", -31),
     ];
 
+    /// <summary>_byName: 이름으로 항목을 찾는 조회 사전.</summary>
     private readonly Dictionary<string, TypeInfo> _byName = new(StringComparer.OrdinalIgnoreCase);
+    /// <summary>_byHash: 원본 이름 해시로 타입을 찾는 조회 사전.</summary>
     private readonly Dictionary<uint, TypeInfo> _byHash = [];
 
     /// <summary>로딩 순서대로 나열한 타입</summary>

@@ -7,25 +7,44 @@ namespace netstorm::client {
 class Markup;
 // 원본 24바이트 표시 줄의 소유 head·높이·폭·세로 위치·양방향 링크다. 0 링크는 센티널을 뜻한다.
 struct StyleTextBufferLine {
+    // head: 연결 목록에서 순회를 시작할 머리 번호.
     std::uint32_t head{};
+    // height: 세로 크기.
+    // width: 가로 크기.
+    // y: Y 좌표.
     std::int32_t height{},width{},y{};
+    // next: 다음 항목의 번호 또는 다음 처리 위치.
+    // previous: 임시 작업 뒤 복원할 이전 상태 또는 이전 핸들.
     std::uint32_t next{},previous{};
 };
 // +0 max/+4 완료 줄 수/+8 전체 칸/+c 센티널/+24 표시 줄 수/+28 미사용/+2c 변경/+30 줄바꿈 금지다.
 // hardLines[lineCount]는 아직 개행하지 않은 끝 줄이며 완료 줄 수에 포함되지 않는다.
 struct StyleTextBufferState {
+    // maxLines: 최대 행.
+    // lineCount: 선 개수.
+    // softCount: 자동줄바꿈 개수.
     std::int32_t maxLines{},lineCount{},softCount{};
+    // hardLines: 명시적줄바꿈 행.
     std::vector<std::uint32_t> hardLines;
+    // sentinel: 목록 끝이나 미설정 상태를 나타내는 센티널.
     StyleTextBufferLine sentinel;
+    // softLines: 자동줄바꿈 행.
     std::map<std::uint32_t,StyleTextBufferLine> softLines;
+    // reserved: 예약영역.
+    // dirty: 갱신요청.
+    // noWrap: 없음 줄바꿈.
+    // nextSoftToken: 다음 자동줄바꿈 토큰.
     std::uint32_t reserved{},dirty{},noWrap{},nextSoftToken{1};
+    // initialized: 초기화가 완료되어 저장소를 사용할 수 있는지.
     bool initialized{};
     // 원본 +34 통지는 문자열 추가 직전에 입력을 받는다. 그림 추가에서는 호출하지 않는다.
     std::function<void(std::span<const char>)> onAppend;
 };
 // 문자열 전체/명시 길이는 실제 Screen 측정에, 비문자 조각 복제는 원본 가상 +10에 연결한다.
 struct StyleTextBufferHooks {
+    // measureText: 본문 폭 제한과 출력 문맥으로 텍스트 크기를 계산하는 콜백.
     std::function<std::array<std::int32_t,2>(std::span<const char>,const std::array<std::uint32_t,8>&,std::int32_t)> measureText;
+    // cloneExternal: 복사할 외부 텍스트 항목을 새 토큰으로 복제하는 콜백.
     std::function<std::uint32_t(std::uint32_t)> cloneExternal;
 };
 // TextGump 계열이 사용하는 원본 다중 줄 버퍼다. 입력 줄과 표시 복제 조각은 서로 다른 소유권을 가진다.
@@ -72,9 +91,13 @@ private:
     std::span<const char> TextBytes(std::uint32_t token) const;
     // 원본 공백 단위 분할을 반복하며 첫 단어 강제 배치/빈 표시 줄/마지막 NUL 복사도 유지한다.
     void SplitText(std::uint32_t token,std::uint32_t& line,std::int32_t width) const;
+    // state_: +0 max/+4 완료 줄 수/+8 전체 칸/+c 센티널/+24 표시 줄 수/+28 미사용/+2c 변경/+30 줄바꿈 금지다 (StyleTextBufferState).
     StyleTextBufferState& state_;
+    // fragments_: 0은 null이며 map의 주소는 삽입 후에도 안정된다. nextToken=0은 자동 토큰 발급 소진 상태다 (StyleTextState).
     StyleTextState& fragments_;
+    // style_: 글꼴·색·정렬을 선택하는 텍스트 출력 문맥.
     const StyleText& style_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (StyleTextBufferHooks).
     StyleTextBufferHooks hooks_;
 };
 // 전체/명시 길이의 원본 글자 폭·논리 슬롯 높이를 실제 FontStore/GumpText에서 공급한다.

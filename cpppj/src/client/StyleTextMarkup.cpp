@@ -22,7 +22,7 @@ constexpr std::int32_t kRestrictedWidth=99999,kRestrictedHeight=12;
 constexpr std::int16_t kPatchHeightLimit=16,kCdHeightLimit=12;
 
 // 두 캡처는 입력 버퍼를 참조한다. 단일 캡처 형식에서는 second를 사용하지 않는다.
-struct CommandMatch { std::string_view first,second; };
+struct CommandMatch { /* first: 구간 또는 연결 목록의 첫 항목. */ /* second: 두번째. */ std::string_view first,second; };
 
 // 원본 [^.\r\n ]+에 들어갈 수 있는 BYTE다. 탭은 캡처에 포함되며 첫 NUL은 호출자가 미리 자른다.
 bool IsToken(char value) { return value!='.' && value!='\r' && value!='\n' && value!=' '; }

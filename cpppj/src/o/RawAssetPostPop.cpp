@@ -13,7 +13,7 @@ namespace {
 constexpr std::uint32_t kGenerator=1,kGunAngle=2,kGunFirst=3,kGunSun=4,kGunArcher=5,kGunDecoration=6,
     kResidence=7,kBlocker=8,kGeyser=9,kVortexRain=10,kVortexWind=11,kVortexThunder=12;
 // 복원한 PE 가상 표와 +0x20의 몸체 부류를 대응한다.
-struct PostPopTable { std::uint32_t vtable,kind; };
+struct PostPopTable { /* vtable: 원본 객체의 가상 함수 표 주소. */ /* kind: 자료나 동작의 종류를 구별하는 값. */ std::uint32_t vtable,kind; };
 // 패치10.78의 실제 +0x20 주소마다 분배한다. 캐논과 빈 패치타입186도 같은 VortexWind 몸체다.
 constexpr std::array<PostPopTable,16> kPatchTables{{
     {0x501ea0,kGenerator},{0x50b6e8,kGunAngle},{0x50b7c0,kGunFirst},{0x50b9b8,kGunSun},{0x50bad0,kGunSun},

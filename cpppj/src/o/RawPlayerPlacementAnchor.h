@@ -5,14 +5,17 @@
 #include "o/SquidPostPop.h"
 
 namespace netstorm::o {
+// 플레이어 배치 앵커 처리 중 조회·갱신하는 상태 묶음이다.
 struct PlayerPlacementAnchorState {
     std::uint32_t graphReady{},invalidGraph{254},ignoreRestrictions{}; // 실제 그래프 활성·무효 번호·종속 조건 우회 전역이다.
     std::uint32_t fenceType{},windArcherType{}; // 패치 raw graph getter가 surface 이외에도 허용하는 두 현재 타입 번호다.
 };
+// 플레이어 앵커 선택한 대상과 배치 기준 정보이다.
 struct PlayerAnchorSelection {
     std::uint32_t sid{}; // 후보가 하나면 그대로, 여러 개면 소유자/거리 선택의 원본 반환이다.
     std::vector<std::uint32_t> candidates; // 순서·중복·40개 상한을 유지한 함수 내부 임시 목록의 관찰이다.
 };
+// Player 배치 기준점의 현재 작업장/추가 목록·그래프·종속 조건과 거리 선택을 복원한다.
 class RawPlayerPlacementAnchor {
 public:
     // 원본 별도 추가 목록을 공통 factories와 구분한다. 모든 자료는 이 객체보다 오래 살아야 한다.
@@ -38,12 +41,19 @@ private:
     std::uint32_t RawGraphByte(std::uint32_t sid) const;
     // 기존 실제 contained 커서의 타입·mask 0x10·요청 kind 조건을 사용한다.
     bool HasContained(std::uint32_t parent,std::uint32_t kind) const;
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     const SidPool& pool_;
+    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::span<const RiftTypeRecord> types_;
+    // surfaces_: 표면 객체의 공간·연결·수명 처리 자료.
     std::span<const std::uint16_t> surfaces_;
+    // bookkeeping_: 객체 종류·소유자별 등록 목록과 개수를 관리하는 장부.
     const SquidPostPopState& bookkeeping_;
+    // additional_: 추가.
     const SquidPostPopList& additional_;
+    // contained_: 객체 내용물의 생성·검색·등록 처리 자료.
     const ContainedFinderState& contained_;
+    // state_: 처리 중 조회·갱신하는 상태 (const PlayerPlacementAnchorState).
     const PlayerPlacementAnchorState& state_;
 };
 // 같은 풀의 실제 Player 조회를 후보 권한의 필수 경계에 연결한다.

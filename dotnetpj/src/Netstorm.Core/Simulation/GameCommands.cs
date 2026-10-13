@@ -68,15 +68,24 @@ public sealed record SelectEntityCommand(int Player, int EntityId) : GameCommand
 public sealed record HarvestGeyserCommand(int Player, int GeyserId, int CollectorId = 0) : GameCommand(Player);
 
 /// <summary>내 사제·수송 유닛을 지정한 칸으로 이동한다. 진행 중인 수확을 취소한다.</summary>
+/// <param name="Player">명령을 보낸 플레이어 번호.</param>
+/// <param name="EntityId">명령 대상 엔티티 번호.</param>
+/// <param name="X">월드 X 좌표.</param>
+/// <param name="Y">월드 Y 좌표.</param>
 public sealed record MoveEntityCommand(int Player, int EntityId, int X, int Y) : GameCommand(Player);
 
 /// <summary>내 사제·수송 유닛의 이동·수확을 중지한다. 운반 중인 결정·사제는 유지한다.</summary>
+/// <param name="Player">명령을 보낸 플레이어 번호.</param>
+/// <param name="EntityId">명령 대상 엔티티 번호.</param>
 public sealed record StopEntityCommand(int Player, int EntityId) : GameCommand(Player);
 
 /// <summary>완공된 내 워크샾을 1,000 SP로 한 단계 올려 생산 칸을 늘린다.</summary>
+/// <param name="Player">명령을 보낸 플레이어 번호.</param>
+/// <param name="WorkshopId">승급할 워크샾 엔티티 번호.</param>
 public sealed record UpgradeWorkshopCommand(int Player, int WorkshopId) : GameCommand(Player);
 
 /// <summary>튜토리얼 1에서 F4로 자기 섬 화면에 복귀했음을 규칙 세션에 알린다.</summary>
+/// <param name="Player">명령을 보낸 플레이어 번호.</param>
 public sealed record ReturnHomeCommand(int Player) : GameCommand(Player);
 
 /// <summary>

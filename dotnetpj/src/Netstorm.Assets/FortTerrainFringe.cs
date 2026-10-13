@@ -1,6 +1,9 @@
 namespace Netstorm.Assets;
 
 /// <summary>지면과 별도로 그리는 절벽 스프라이트의 월드 기준점과 클러스터.</summary>
+/// <param name="X">월드 X 좌표.</param>
+/// <param name="Y">월드 Y 좌표.</param>
+/// <param name="Cluster">표시할 타입 프레임 클러스터 번호.</param>
 public sealed record FortTerrainFringeSprite(int X, int Y, int Cluster);
 
 /// <summary>Terrainbuilder 004bfe50의 fringe 생성 조건·방향·위치·조명 필터를 적용한다.</summary>

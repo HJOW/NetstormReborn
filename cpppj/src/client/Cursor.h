@@ -7,6 +7,7 @@
 namespace netstorm::client {
 // 원본 005423a8/CD 00516c60의 19항목 표. 0은 아직 모양을 정하지 않은 상태다.
 inline constexpr std::array<std::uint16_t, 19> kCursorResources{0, 113, 110, 111, 108, 107, 109, 115, 116, 131, 117, 130, 129, 132, 133, 134, 136, 141, 148};
+// 원본 커서 그림과 핫스폿을 Win32 커서로 만들어 선택하는 관리자이다.
 class Cursor {
 public:
     // 원본 실행 파일을 자료로 연 모듈과 게임 창을 사용한다. 두 핸들을 소유하지 않는다.
@@ -24,9 +25,15 @@ public:
     // 현재 원본 커서 번호(1~18).
     int Index() const;
 private:
+    // resources_: 게임 그림·설정·파일을 읽는 공통 자원 조회 객체.
+    // window_: 게임 출력이나 장치 협조 수준에 사용하는 Win32 창 핸들.
+    // handle_: 네이티브 자원이나 등록 대상을 찾는 핸들.
     NativeHandle resources_, window_, handle_{};
+    // index_: 목록이나 표에서 현재 항목을 찾는 인덱스.
     int index_{1};
+    // images_: 프레임이나 커서 번호별로 읽어 둔 그림 자료.
     std::array<std::optional<IndexedImage>, 19> images_{};
+    // hotspots_: 프레임 기준점을 찾는 타입별 핫스폿 자료.
     std::array<ScreenPoint, 19> hotspots_{};
 };
 }

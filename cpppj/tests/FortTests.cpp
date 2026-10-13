@@ -35,7 +35,9 @@ const std::map<std::string, std::string> kDefinitions = {
 
 // 판본의 로딩 순서대로 정의를 만들어 타입 표를 구성한다.
 struct TestTypes {
+    // definitions: 타입 정의를 이름이나 번호로 조회할 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeDefinition> definitions;
+    // sources: 원천. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeSource> sources;
     // 정의가 옮겨지지 않도록 먼저 모두 만든 뒤 주소를 넘긴다.
     explicit TestTypes(OriginalEdition edition) {

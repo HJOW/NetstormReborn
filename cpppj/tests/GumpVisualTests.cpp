@@ -33,6 +33,7 @@ std::string Lines(const std::vector<GumpLine>& lines) {
 }
 // 검사 화면보다 오래 살아 있는 참조 메모리 DC다.
 struct ReferenceDc {
+    // value: 읽기·쓰기·통지에 전달하는 값. 입력 구성 또는 실행 결과 대조에 사용한다.
     HDC value{CreateCompatibleDC(nullptr)};
     // 실제 창 없이 만든 참조 DC만 해제한다.
     ~ReferenceDc() { if (value) DeleteDC(value); }

@@ -37,27 +37,48 @@ void Write(std::span<std::uint8_t> bytes,std::size_t offset,std::uint32_t value,
     for (std::size_t i=0;i<width;++i) bytes[offset+i]=static_cast<std::uint8_t>(value>>(8*i));
 }
 }
+// RawSurfaceWorld의 공유 저장소와 처리기 연결을 소유하는 구현 객체다.
 struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
-    o::OriginalEdition edition;std::vector<o::RiftTypeRecord> types;std::vector<o::RiftTypeFrames> frames;
-    std::vector<o::SquidDisplayShape> shapes;std::vector<std::vector<o::FrameCode>> codes;
-    o::SidPool pool;o::SquidHash hash;std::vector<std::uint8_t> spots=std::vector<std::uint8_t>(kCells);
-    o::BridgeConnectState links;std::uint32_t terrainType;o::SquidPostPopState bookkeeping;
-    o::SquidDeletionState deletion;o::BridgeDecayMode mode;o::BridgeEventState eventState;
-    o::IslandPostPopState loadState{1,false};o::SquidOwnerMode ownerMode;
+    // edition: 판본별 필드 배치와 동작을 선택하는 원본 버전.
+    o::OriginalEdition edition;/* types: 타입 번호로 속성·플래그를 조회하는 타입 표. */ std::vector<o::RiftTypeRecord> types;/* frames: 타입별 프레임 자료. */ std::vector<o::RiftTypeFrames> frames;
+    // shapes: 프레임의 크기·그림 데이터를 조회하는 셰이프 자료.
+    std::vector<o::SquidDisplayShape> shapes;/* codes: 코드. */ std::vector<std::vector<o::FrameCode>> codes;
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
+    o::SidPool pool;/* hash: 좌표별 객체 후보를 찾는 공간 해시. */ o::SquidHash hash;/* spots: 칸별 점유·통행 비트를 읽는 spot 지도. */ std::vector<std::uint8_t> spots=std::vector<std::uint8_t>(kCells);
+    // links: 연결 함수들이 읽는 원본 전역이다. 패치 주소 / CD 주소를 주석에 둔다 (o::BridgeConnectState).
+    o::BridgeConnectState links;/* terrainType: isle 지면 자산을 타입 표에서 찾는 번호. */ std::uint32_t terrainType;/* bookkeeping: 객체 종류·소유자별 등록 목록과 개수를 관리하는 장부. */ o::SquidPostPopState bookkeeping;
+    // deletion: 삭제.
+    o::SquidDeletionState deletion;/* mode: 원본 실행 상태 전역. 기본값은 싱글 플레이(로컬이 서버) 전투 화면이다 (o::BridgeDecayMode). */ o::BridgeDecayMode mode;/* eventState: 처리기가 읽는 원본 전역이다. 패치 주소 / CD 주소를 괄호에 둔다 (o::BridgeEventState). */ o::BridgeEventState eventState;
+    // loadState: 로딩 상태.
+    o::IslandPostPopState loadState{1,false};/* ownerMode: 판본·서버·로딩 상태에 따른 소유권 처리 정책. */ o::SquidOwnerMode ownerMode;
+    // buildingState: 원본 타입 전역과 현재 debug 전역이다. 섬 확인은 영역 번호나 소유자를 조회하지 않는다 (o::BuildingSpaceState).
     o::BuildingSpaceState buildingState;
-    o::SquidProcessState processState;o::FrameTime time{};bool changed{true},loaded{},loading{},runtimeBound{};
+    // processState: 프로세스 실행·부착·이벤트 분배에 사용하는 상태.
+    o::SquidProcessState processState;/* time: 프레임의 게임 시각과 벽 시각 및 시간 차 (o::FrameTime). */ o::FrameTime time{};/* changed: 상태 변경으로 후속 갱신이 필요한지. */ /* loaded: 현재 자료의 로딩이 완료됐는지. */ /* loading: 현재 로딩 작업 중인지. */ /* runtimeBound: 실행 연결된 여부. */ bool changed{true},loaded{},loading{},runtimeBound{};
     RawWorldRuntimeHooks runtime; // 외부 미션 모듈의 참조는 첫 객체 생성 전에만 설치한다.
-    SurfaceDisplayHooks displayHooks;std::size_t effectRequests{},walkerFalls{},deletionRequests{};
-    std::unique_ptr<o::RawGraph> graph;std::unique_ptr<o::SquidDisplay> display;
-    std::unique_ptr<o::SquidPostPop> postPop;std::unique_ptr<o::SquidUnpop> unpop;
-    std::unique_ptr<o::SquidPop> pop;std::unique_ptr<o::SquidFactory> factory;
+    // displayHooks: 해상도 변경으로 Renderer가 교체되어도 현재 장치에 전달할 수 있는 표시 콜백이다 (SurfaceDisplayHooks).
+    SurfaceDisplayHooks displayHooks;/* effectRequests: 효과 요청. */ /* walkerFalls: 이동유닛 추락. */ /* deletionRequests: 삭제 요청. */ std::size_t effectRequests{},walkerFalls{},deletionRequests{};
+    // graph: 서로 연결된 표면의 Graph 소속을 관리하는 처리기.
+    std::unique_ptr<o::RawGraph> graph;/* display: 객체·프레임에서 실제 화면 출력 요청을 만드는 처리기. */ std::unique_ptr<o::SquidDisplay> display;
+    // postPop: 객체 Pop 이후 목록·공간 후처리를 수행하는 처리기.
+    std::unique_ptr<o::SquidPostPop> postPop;/* unpop: 객체의 공간 등록을 해제하는 Unpop 처리기. */ std::unique_ptr<o::SquidUnpop> unpop;
+    // pop: 객체를 공간 지도에 등록하는 Pop 처리기.
+    std::unique_ptr<o::SquidPop> pop;/* factory: 타입에 맞는 객체를 생성하는 처리기. */ std::unique_ptr<o::SquidFactory> factory;
+    // building: 일반 건물의 공간 등록·해제를 반영하는 처리기 또는 상태.
     std::unique_ptr<o::RawBuildingSpace> building;
-    std::unique_ptr<o::SquidFrame> frame;std::unique_ptr<o::SquidOwner> owner;
-    std::unique_ptr<o::RawSquidNeighbors> neighbors;std::unique_ptr<o::RawBridgeConnect> connect;
-    std::unique_ptr<o::RawIslandPostPop> surface;std::unique_ptr<o::RawSquidDestroy> baseDestroy;
-    std::unique_ptr<o::RawSquidDestroyDispatch> virtualDestroy;std::unique_ptr<o::SquidDestroyLifecycle> common;
-    std::unique_ptr<o::RawSurfaceLifecycle> lifecycle;std::unique_ptr<o::RawBridgeEvents> events;
+    // frame: 사용할 그림 프레임 또는 프레임 처리 자료.
+    std::unique_ptr<o::SquidFrame> frame;/* owner: 소유 플레이어 번호 또는 소유권 처리 자료. */ std::unique_ptr<o::SquidOwner> owner;
+    // neighbors: 발자국에 인접한 표면·객체를 조회하는 검색기.
+    std::unique_ptr<o::RawSquidNeighbors> neighbors;/* connect: 연결. */ std::unique_ptr<o::RawBridgeConnect> connect;
+    // surface: 표면.
+    std::unique_ptr<o::RawIslandPostPop> surface;/* baseDestroy: 기본 삭제. */ std::unique_ptr<o::RawSquidDestroy> baseDestroy;
+    // virtualDestroy: 타입별 가상 삭제 경로를 선택하는 분배기.
+    std::unique_ptr<o::RawSquidDestroyDispatch> virtualDestroy;/* common: 파생 타입 사이에 공유하는 기본 처리기 또는 상태. */ std::unique_ptr<o::SquidDestroyLifecycle> common;
+    // lifecycle: 수명.
+    std::unique_ptr<o::RawSurfaceLifecycle> lifecycle;/* events: 발생한 이벤트 또는 이벤트 처리기. */ std::unique_ptr<o::RawBridgeEvents> events;
+    // host: Form이나 프로세스의 등록·통지·수명을 연결하는 호스트.
     std::unique_ptr<o::SquidProcessHost> host;
+    // formDispatch: 타입별 서로 다른 fallback 사슬을 같은 분배기로 모아 혼합 종속 체인의 중첩 삭제를 지원한다 (std::unique_ptr<o::SquidFormDispatch>).
     std::unique_ptr<o::SquidFormDispatch> formDispatch;
     o::Kernel kernel; // 모듈/host보다 먼저 해제되어 예약 프로세스의 참조 수명을 보장한다.
     // 순환하는 콜백은 실제 호출 전에 모든 모듈을 구성한다. 생성 중에는 Pop하지 않는다.

@@ -6,7 +6,8 @@
 
 namespace netstorm::o {
 // 공간 쓰기 전 Pop이 검사할 최종 좌표·해시 단계·타입이다. 타입 포인터는 검사 동안만 사용한다.
-struct RawGraphPop { float x{},y{}; int level{}; const RiftTypeRecord* type{}; };
+struct RawGraphPop { /* x: X 좌표. */ /* y: Y 좌표. */ float x{},y{}; /* level: 공간 해시에서 조회할 높이 단계. */ int level{}; /* type: 객체 종류를 구별하는 타입 자료. */ const RiftTypeRecord* type{}; };
+// 실제 SID·프레임 코드·4단계 해시·spot을 정수 Graph/영역 계산에 연결한다.
 class RawGraph {
 public:
     // RiftType의 실제 FrameCode 표를 복사한다. 풀·해시·spot의 수명은 RawGraph보다 길어야 한다.
@@ -57,9 +58,13 @@ public:
 private:
     // 예외가 생겨도 기존 raw 슬롯·표·스택을 보존하는 계산 결과다.
     struct Plan {
+        // records: 기록.
         std::array<GraphRecord,Graph::kTableSize> records;
+        // stack: 스택.
         std::array<std::uint32_t,Graph::kFloodSize> stack;
+        // numbers: 번호.
         std::vector<std::pair<Sid,std::uint8_t>> numbers;
+        // changed: 상태 변경으로 후속 갱신이 필요한지.
         std::uint32_t changed{};
     };
     // Add/Flood 외에 영역 단독·영역 후 Add를 구별한다. 원본 순서를 한 계획에 보존한다.
@@ -74,12 +79,19 @@ private:
     std::vector<std::uint16_t> DetachConnections(const SurfaceObject& source,const SurfaceFinder& finder) const;
     // 검사한 슬롯의 graph 필드 외에는 쓰지 않는다.
     void Commit(const Plan& plan);
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
+    // hash_: 좌표별 객체 후보를 찾는 공간 해시.
     SquidHash& hash_;
+    // spots_: 칸별 점유·통행 비트를 읽는 spot 지도.
     std::span<const std::uint8_t> spots_;
+    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::vector<RiftTypeRecord> types_;
+    // frames_: 타입별 프레임 자료.
     std::vector<std::vector<FrameCode>> frames_;
+    // records_: 기록.
     std::array<GraphRecord,Graph::kTableSize> records_{};
+    // stack_: 스택.
     std::array<std::uint32_t,Graph::kFloodSize> stack_{};
     // 전체 원본 자산 풀 계약을 선택한 경우 Add/Detach/Pop의 내부 번호 소진도 복구한다.
     GraphRecovery recovery_{GraphRecovery::Reject};

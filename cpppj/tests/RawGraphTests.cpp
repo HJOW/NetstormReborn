@@ -87,6 +87,7 @@ std::array<std::uint32_t,o::Graph::kFloodSize> Stack(const std::string& hex) {
 }
 // 실제 Renderer의 dirty 순서·플래그·합침을 공유한다.
 struct Sink final:o::SquidDisplaySink {
+    // dirty: 부분 갱신 사각형을 수집하고 화면 경계로 제한하는 관리자 (client::DirtyRegions).
     client::DirtyRegions dirty{640,480};
     // 전체 표시 억제 상태도 원본 출력에 포함한다.
     bool Suppressed() const override { return dirty.FullRedraw(); }

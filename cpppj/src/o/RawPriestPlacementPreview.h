@@ -5,12 +5,14 @@
 namespace netstorm::o {
 // 두 경로는 원본의 같은 배열/관계 전역을 공유한다.
 using PriestPlacementPreviewState=CanonPlacementPreviewState;
+// 사제 배치 검사 미리보기 외부 동작과 저장소 조회를 연결하는 콜백 묶음이다.
 struct PriestPlacementPreviewHooks {
     // 기존 사제 비패턴 decoder의 범위 조회 경계다.
     std::function<SquidSearchArea(const PriestPlacementQuery&)> bounds;
     // 아직 복원하지 않은 충돌/지역 판정은 필수 경계로 유지한다.
     std::function<bool(const PriestPlacementQuery&,bool)> inspectCollisions;
 };
+// 사제 배치의 기존 요청 계약을 일반 타입 미리보기에 연결한다.
 class RawPriestPlacementPreview {
 public:
     // 자료 수명과 지도/타입/판본 계약은 공통 미리보기에서 검사한다.
@@ -22,6 +24,7 @@ public:
     // 연결 시 같은 SID 풀인지 확인한다.
     const SidPool& Pool() const;
 private:
+    // preview_: 실제 배치 전의 미리보기 판정·출력 처리기 또는 상태.
     RawCanonPlacementPreview preview_;
 };
 // 사제 접두의 후반 경계만 바꾸고 기존 모양 조회는 유지한다.

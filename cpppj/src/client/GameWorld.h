@@ -12,15 +12,18 @@
 #include <map>
 
 namespace netstorm::client {
+// 미션 지도와 객체 상태를 갱신하고 월드 그림을 수집하는 프로세스이다.
 class GameWorld : public o::BaseProcess {
 public:
     // 저장 위치를 쓰는 Tutorial 미션의 초기 월드를 만든다. Battle 재배치는 아직 지원하지 않는다.
     GameWorld(const GameAssets& assets,const o::FortTemplate& fort,o::MissionPlayers players);
     // Kernel에서 호출할 실제 게임 시간과 정지 상태의 공급자를 연결한다.
     std::function<double()> elapsed;
+    // paused: 현재 게임 시계가 정지했는지 조회하는 콜백.
     std::function<bool()> paused;
     // 클라이언트 GameClock이 고정한 절대 게임 시각/프레임 번호를 raw Kernel과 공유한다.
     std::function<o::FrameTime()> frameTime;
+    // surfaceDisplay: 해상도 변경으로 Renderer가 교체되어도 현재 장치에 전달할 수 있는 표시 콜백이다 (SurfaceDisplayHooks).
     SurfaceDisplayHooks surfaceDisplay;
     // 현재 카메라와 실제 월드 표시 영역을 위치 효과음에 전달한다. Resize·Scroll 및 raw 프레임 처리 전에 호출한다.
     // 수신 객체는 월드보다 오래 살아야 한다. 비어 있으면 소리 없이 같은 월드 경로를 사용한다.
@@ -63,7 +66,8 @@ public:
     // 검사/후속 게임 명령이 사용하는 실제 raw 표면 월드다. 표시도 같은 슬롯을 읽는다.
     RawSurfaceWorld& Surfaces();
 private:
-    struct Tile { const TypeAsset* type{}; std::size_t frame{}; int x{},y{},owner{}; std::int16_t depth{}; };
+    // 월드 지형 타일의 타입·프레임·좌표·소유자·깊이이다.
+    struct Tile { /* type: 객체 종류를 구별하는 타입 자료. */ const TypeAsset* type{}; /* frame: 타입에서 사용할 그림 프레임 번호. */ std::size_t frame{}; /* x: X 좌표. */ /* y: Y 좌표. */ /* owner: 객체나 지역을 소유한 플레이어 번호. */ int x{},y{},owner{}; /* depth: 출력이나 이벤트 후보의 깊이 값. */ std::int16_t depth{}; };
     // 청크 순서의 저장 객체를 월드 좌표에 생성한다.
     void Place(const o::FortChunkSection& section,std::span<const o::ChunkCoordinate> chunks,int territory);
     // 지면·받침·절벽 프레임과 정지 점유 격자를 만든다.
@@ -86,24 +90,48 @@ private:
     std::uint8_t Color(int r,int g,int b) const;
     // 원본 기본 색 띠 및 지면 명도 표 중 연결한 타입의 변환표.
     std::optional<ColorMap> Remap(const TypeAsset& type,int owner) const;
+    // assets_: 타입·셰이프·팔레트 자산 또는 해당 자산의 처리 경계.
     const GameAssets& assets_;
+    // chunks_: 월드를 청크 격자로 나누어 섬·영역 소속을 조회하는 지도 (o::ChunkMap).
     o::ChunkMap chunks_;
+    // islands_: 청크 배치에 사용하는 섬의 소유자·영역 목록 (o::IslandList).
     o::IslandList islands_;
+    // terrain_: 영역과 청크 패턴을 월드 지면 타일로 펼치는 처리기 (std::unique_ptr<o::TerrainBuilder>).
     std::unique_ptr<o::TerrainBuilder> terrain_;
+    // ground_: 통행·점유·소유권을 조회하는 지면 격자.
     std::unique_ptr<o::GroundGrid> ground_;
+    // players_: 미션 플레이어 목록과 기술·회수·승급·AI 허용 상태 (o::MissionPlayers).
     o::MissionPlayers players_;
+    // objects_: 현재 월드 또는 수집 단계의 객체 목록.
     std::vector<o::Squid> objects_;
+    // tiles_: 지형 생성 결과를 표시할 타일 목록.
     std::vector<Tile> tiles_;
+    // surfaces_: 표면 객체의 공간·연결·수명 처리 자료.
     std::unique_ptr<RawSurfaceWorld> surfaces_;
+    // surfaceTime_: 표면 프레임 갱신에 누적한 게임 시각(초).
     o::FrameTime surfaceTime_{};
+    // surfaceCells_: 월드 칸별 표면 객체 등록 정보.
     std::vector<o::CellPoint> surfaceCells_;
+    // bridgeType_: 다리 자산을 타입 표에서 찾는 번호.
+    // noIslandType_: noIsland 자산을 타입 표에서 찾는 번호.
     std::uint32_t bridgeType_{},noIslandType_{};
+    // regionOwners_: 지역 번호별 현재 소유 플레이어 표.
+    // regionThemes_: 지역 번호별 현재 지면 원소 테마 표.
     std::array<int,o::kTerritoryCount> regionOwners_{},regionThemes_{};
+    // coreVariants_: 본섬 지면 프레임의 변형 선택 자료.
     std::array<int,99> coreVariants_{};
+    // palette_: 그림의 색 인덱스를 실제 출력 색으로 바꿀 팔레트.
     std::array<PaletteColor,256> palette_{};
+    // remaps_: 소유자·타입별 출력 색 변환표 캐시.
     mutable std::map<std::pair<std::size_t,int>,ColorMap> remaps_;
+    // width_: 가로 크기.
+    // height_: 세로 크기.
+    // scrollX_: 카메라 스크롤의 X 원점.
+    // scrollY_: 카메라 스크롤의 Y 원점.
     int width_{},height_{},scrollX_{},scrollY_{};
+    // selected_: 현재 선택한 객체·컨트롤의 번호 또는 토큰.
     o::SquidId selected_{};
+    // changed_: 상태 변경으로 후속 갱신이 필요한지.
     bool changed_{true};
 };
 }

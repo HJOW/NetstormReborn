@@ -77,7 +77,9 @@ void ReplayPreviews(const std::string& edition) {
 }
 // 실제 host 연결/보호 검사용 최소 커서 목록·타입·raw 슬롯이다.
 struct PreviewScene {
-    SidPool pool;std::vector<RiftTypeRecord> types=std::vector<RiftTypeRecord>(2);std::vector<std::uint8_t> spots=std::vector<std::uint8_t>(65536);
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
+    SidPool pool;/* types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<RiftTypeRecord> types=std::vector<RiftTypeRecord>(2);/* spots: 칸별 점유·통행 비트를 읽는 spot 지도. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<std::uint8_t> spots=std::vector<std::uint8_t>(65536);
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
     PreviewCollectionState state;
     // 미리보기와 raw 타입을 분리하고 기본 한 조각을 준비한다.
     explicit PreviewScene(OriginalEdition edition=OriginalEdition::Patch1078):pool(edition,24000,false) {

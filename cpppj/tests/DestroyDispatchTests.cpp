@@ -13,12 +13,18 @@ constexpr std::uint32_t kBridge=82;
 constexpr std::uint8_t kFree=1;
 // 가상 판정을 검사하며 공통 pre/post 깊이만 완료하는 최소 삭제 장면이다.
 struct DispatchScene {
-    SidPool pool;SquidHash hash;std::vector<std::uint8_t> spots=std::vector<std::uint8_t>(65536);
-    std::vector<RiftTypeRecord> types;std::vector<RiftTypeFrames> frames;std::vector<std::vector<FrameCode>> codes;
-    std::array<GraphRecord,Graph::kTableSize> records{};BridgeDecayMode mode;
-    std::unique_ptr<SquidUnpop> unpop;std::unique_ptr<RawSquidDestroy> base;
-    std::unique_ptr<RawSquidNeighbors> neighbors;std::unique_ptr<RawGraph> graph;
-    std::unique_ptr<RawSquidDestroyDispatch> dispatch;SquidDestroyHooks hooks;Sid source{};int calls{};
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
+    SidPool pool;/* hash: 좌표별 객체 후보를 찾는 공간 해시. 입력 구성 또는 실행 결과 대조에 사용한다. */ SquidHash hash;/* spots: 칸별 점유·통행 비트를 읽는 spot 지도. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<std::uint8_t> spots=std::vector<std::uint8_t>(65536);
+    // types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다.
+    std::vector<RiftTypeRecord> types;/* frames: 타입별 프레임 자료. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<RiftTypeFrames> frames;/* codes: 코드. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<std::vector<FrameCode>> codes;
+    // records: 기록. 입력 구성 또는 실행 결과 대조에 사용한다.
+    std::array<GraphRecord,Graph::kTableSize> records{};/* mode: 원본 실행 상태 전역. 기본값은 싱글 플레이(로컬이 서버) 전투 화면이다 (BridgeDecayMode). */ BridgeDecayMode mode;
+    // unpop: 객체의 공간 등록을 해제하는 Unpop 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
+    std::unique_ptr<SquidUnpop> unpop;/* base: 파생 처리에서 공통 동작을 위임하는 기본 객체. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::unique_ptr<RawSquidDestroy> base;
+    // neighbors: 발자국에 인접한 표면·객체를 조회하는 검색기. 입력 구성 또는 실행 결과 대조에 사용한다.
+    std::unique_ptr<RawSquidNeighbors> neighbors;/* graph: 서로 연결된 표면의 Graph 소속을 관리하는 처리기. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::unique_ptr<RawGraph> graph;
+    // dispatch: 분배. 입력 구성 또는 실행 결과 대조에 사용한다.
+    std::unique_ptr<RawSquidDestroyDispatch> dispatch;/* hooks: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (SquidDestroyHooks). 입력 구성 또는 실행 결과 대조에 사용한다. */ SquidDestroyHooks hooks;/* source: 암묵적인 런타임 SquidId 변환을 막는 원본 슬롯 번호다 (Sid). */ Sid source{};/* calls: 호출 횟수 또는 호출 인자를 대조하는 기록. 입력 구성 또는 실행 결과 대조에 사용한다. */ int calls{};
     // 유효 그래프 0의 signed WORD 수와 현재 프레임을 입력한다. 공간 등록은 판정과 별도다.
     DispatchScene(OriginalEdition edition,std::int16_t surfaces,bool hard,bool graphEnabled=true)
         :pool(edition,32768,true),types(edition==OriginalEdition::Patch1078 ? 188 : 171),frames(types.size(),RiftTypeFrames({})),codes(types.size()) {

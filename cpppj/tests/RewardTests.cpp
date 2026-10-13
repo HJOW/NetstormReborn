@@ -179,19 +179,33 @@ std::vector<RiftTypeRecord> SceneTypes() {
 }
 // 삭제 장부와 보상이 같은 풀/장부를 쓰는 최소 장면이다. 실제 공간 해제는 하지 않고 직접 pre/post만 실행한다.
 struct LifecycleScene {
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
     SidPool pool;
+    // hash: 좌표별 객체 후보를 찾는 공간 해시. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidHash hash;
+    // types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeRecord> types;
+    // spots: 칸별 점유·통행 비트를 읽는 spot 지도. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::uint8_t> spots=std::vector<std::uint8_t>(65536);
+    // unpop: 객체의 공간 등록을 해제하는 Unpop 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidUnpop unpop;
+    // destroy: 객체 삭제의 전처리·공간 해제·후처리를 실행하는 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     RawSquidDestroy destroy;
+    // bookkeeping: 객체 종류·소유자별 등록 목록과 개수를 관리하는 장부. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidPostPopState bookkeeping;
+    // deletion: 삭제. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidDeletionState deletion;
+    // rewardState: 보상 계산이 읽거나 갱신하는 판본별 전역과 AI 지갑이다. 패치 주소/CD 주소는 괄호에 둔다 (SquidRewardState).
     SquidRewardState rewardState;
+    // rng: 원본 FUN_004558c0: 상태 0이면 0x0bad0bad로 바꾼 뒤 상태*0x10003+3의 상위 16비트를 limit로 나눈 나머지를 쓴다 (GameRandom).
     GameRandom rng;
+    // store: 패치판이 플레이어별 SP를 32개의 9칸 DWORD 배열에 흩뿌려 보관하는 방식이다 (ScrambledSpStore).
     ScrambledSpStore store;
+    // uiCalls: UI 호출. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::uint32_t uiCalls{};
+    // reward: HP·SP·지갑 보상을 실제 장부에 적용하는 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidReward reward;
+    // lifecycle: 수명. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidDestroyLifecycle lifecycle;
     // 소유자 1의 보통 객체(타입 82, 개수 2)와 소유자 0의 SP 0, 소유자 3의 SP 1000을 준비한다.
     LifecycleScene()

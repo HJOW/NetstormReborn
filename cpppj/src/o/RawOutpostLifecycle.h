@@ -4,6 +4,7 @@
 
 namespace netstorm::o {
 class RawDamageablePreDestroy;
+// 아웃포스트 수명 외부 동작과 저장소 조회를 연결하는 콜백 묶음이다.
 struct OutpostLifecycleHooks {
     // 지역 소유 투표/갱신(00455380 / CD 0047b3c0)이다. 패치의 세 번째 인자는 항상 0이다.
     std::function<void(float,float)> regionChanged;
@@ -12,6 +13,7 @@ struct OutpostLifecycleHooks {
     // Damageable preDestroy를 같은 raw 풀의 실제 모듈에 연결할 수 있다.
     std::function<void(Sid,std::uint32_t)> validatePreDestroy,preDestroy;
 };
+// outpost의 배치 추가 목록/거리 후보 목록 등록과 삭제 준비 접두를 복원한다.
 class RawOutpostLifecycle {
 public:
     // 두 목록은 factories와 다른 전역이며 호출자/훅 대상은 이 객체보다 오래 살아야 한다.
@@ -25,9 +27,13 @@ public:
 private:
     // free/contained 또는 자산이 아닌 슬롯을 효과 전에 거부한다.
     std::span<const std::uint8_t> Object(Sid sid) const;
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
+    // additional_: 추가.
     SquidPostPopList& additional_;
+    // nearest_: 가까운 대상을 찾는 검색 목록.
     SquidPostPopList& nearest_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (OutpostLifecycleHooks).
     OutpostLifecycleHooks hooks_;
 };
 // outpost의 부모 삭제 경계를 같은 풀의 실제 Damageable 접두/공통 호출로 교체한다.

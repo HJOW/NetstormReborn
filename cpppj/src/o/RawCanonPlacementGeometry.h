@@ -4,12 +4,14 @@
 #include "o/RawPriestPlacementGeometry.h"
 
 namespace netstorm::o {
+// 일반 타입·패턴 배치 검사할 격자 칸의 정보이다.
 struct CanonPlacementCell {
     int frame{},label{}; // 현재 decoder 프레임과 패턴의 셀 라벨이다.
     std::uint8_t side{}; // 조회 가능한 실제 프레임 코드의 방향 문자다. 메타 코드가 없으면 0이다.
     float x{},y{},snappedX{},snappedY{}; // 원래 좌표와 지형 원점에 쓰는 절삭한 float 좌표다.
     SquidSearchArea area; // 현재 타입 발자국으로 계산한 finder의 네 정수 인자다.
 };
+// 일반 타입·패턴 배치 기하판정 외부 동작과 저장소 조회를 연결하는 콜백 묶음이다.
 struct CanonPlacementGeometryHooks {
     // decoder 생성/첫 프레임 선택 뒤 한 번 호출하는 지역 초기화 경계다.
     std::function<void(const CanonTypeQuery&)> beginRegions;
@@ -20,6 +22,7 @@ struct CanonPlacementGeometryHooks {
     // 모든 유효 칸이 끝났을 때의 최종 지역/관계 판정이다. 빈 decoder에도 호출한다.
     std::function<bool(const CanonTypeQuery&)> finishRegions;
 };
+// 일반 타입과 특수 패턴의 배치 모양 순회/실제 finder 사각형을 공유한다.
 class RawCanonPlacementGeometry {
 public:
     // 패턴 전역/프레임/타입 자료의 수명은 호출자가 보장한다. 지형 정책은 Inspect에 명시한다.
@@ -37,9 +40,13 @@ public:
 private:
     // 현재 타입/메타 자료와 타입 전역의 우선순위로 decoder를 구성한다.
     CanonDecoder Decode(CanonTypeQuery query) const;
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     const SidPool& pool_;
+    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::span<const RiftTypeRecord> types_;
+    // frames_: 타입별 프레임 자료.
     std::span<const PriestPlainCanonType> frames_;
+    // state_: 처리 중 조회·갱신하는 상태 (PriestPlacementGeometryState).
     PriestPlacementGeometryState& state_;
 };
 }

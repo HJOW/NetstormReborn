@@ -10,9 +10,13 @@ namespace Netstorm.Game;
 /// </summary>
 internal sealed class SpriteAnimation : IDisposable
 {
+    /// <summary>_frames: 재사용할 UI 또는 애니메이션 프레임 자료.</summary>
     private readonly List<(Texture2D Texture, Point Offset)> _frames = [];
+    /// <summary>_secondsPerFrame: 애니메이션 프레임 하나를 유지할 시간(초).</summary>
     private readonly double _secondsPerFrame;
+    /// <summary>_elapsed: 다음 프레임 전환까지 누적한 경과 시간(초).</summary>
     private double _elapsed;
+    /// <summary>_current: 현재 재생 중인 애니메이션 프레임 번호.</summary>
     private int _current;
 
     /// <summary>표시용 이름</summary>

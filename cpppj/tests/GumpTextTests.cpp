@@ -20,9 +20,13 @@ constexpr std::array<const char*,5> kStyles{"normal","italic","bold","strikeout"
 constexpr std::uint32_t kRoot=1,kStone=2,kBackground=3;
 // 임시 캐시 파일을 만들고 해당 범위만 정리한다. fixture는 입력 폭 표/관찰 결과만 제공한다.
 struct FontFixture {
+    // directory: 디렉터리. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::filesystem::path directory;
+    // files: 디스크·보조 디렉터리·아카이브 순서로 게임 파일을 찾는 파일 시스템 (netstorm::o::BaseFileSystem).
     netstorm::o::BaseFileSystem files;
+    // fonts: 이름·크기로 찾아 재사용하는 글꼴 저장소. 입력 구성 또는 실행 결과 대조에 사용한다.
     FontStore fonts;
+    // cases: 사례. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::vector<std::string>> cases;
     // 소유한 임시 디렉터리를 만들며 생성 실패 시 기존 경로를 사용하거나 지우지 않는다.
     static std::filesystem::path MakeDirectory() {
@@ -70,27 +74,49 @@ struct FontFixture {
 };
 // 실제 기본 생성·트리·수명·버튼과 글꼴 측정이 모두 같은 기본/파생 노드를 사용한다.
 struct StoneScene {
+    // create: 등록 표 +0이 실제 루트다. 외부에서 표를 바꿀 때 collection.root도 같은 토큰으로 맞춰야 한다 (GumpCreateState).
     GumpCreateState create;
+    // treeState: 원본 지도 화면 영역과 패치판의 밀어내기 링크 진단 전역이다 (GumpTreeState).
     GumpTreeState treeState;
+    // lifeState: 원본의 고정 크기 idle/overlay/삭제/dialog 표와 현재 삭제 전역이다 (GumpLifetimeState).
     GumpLifetimeState lifeState;
+    // eventState: 원본 전체 트리 커서 선택의 현재 좌표/필터/최소 signed 깊이/선택 토큰 전역이다 (GumpEventState).
     GumpEventState eventState;
+    // inputState: overlay 처리기는 호출자의 사건 대신 원본의 별도 사건 코드 전역을 사용한다 (GumpInputState).
     GumpInputState inputState;
+    // buttonState: 실행 중 문자열 ID 전역 네 개와 기본 버튼 색 BYTE다. 사건 ID는 호출자가 실제 초기화 값을 공급한다 (ButtonGumpState).
     ButtonGumpState buttonState;
+    // stoneState: 생성 시 읽는 색 BYTE·기본 글자 문맥·팔레트와 현재 배경 타입/프레임 전역이다 (StoneButtonGumpState).
     StoneButtonGumpState stoneState;
+    // root: 같은 객체의 표시 필드를 상속하므로 수집/Draw의 캐시 쓰기가 생성 저장소에 바로 반영된다 (GumpCreateNode).
     GumpCreateNode root;
+    // node: 라벨 +c0..+ff, 글자 문맥 +104/+124/+144, 측정값 +164/+168이다. background는 기본 버튼 +100을 공유한다 (StoneButtonGumpNode).
     StoneButtonGumpNode node;
+    // background: 배경 출력 자료 또는 배경 Gump 토큰. 입력 구성 또는 실행 결과 대조에 사용한다.
     GumpBackgroundNode background;
+    // backgroundColor: 배경 색. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::int8_t backgroundColor{-4};
+    // failAllocation: 실패 할당 여부. 입력 구성 또는 실행 결과 대조에 사용한다.
     bool failAllocation{};
+    // released: 해제된. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::uint32_t> released;
+    // factory: 타입에 맞는 객체를 생성하는 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::unique_ptr<GumpCreate> factory;
+    // collection: 화면 밖 자식 통과, 최상위 삭제 필터, 원본의 루트별 제한 개수를 보존하는 UI 수집기다 (std::unique_ptr<GumpCollection>).
     std::unique_ptr<GumpCollection> collection;
+    // tree: 00466750/CD 00493070의 머리 삽입과 원본의 후속 정렬/현재 자식 재배치를 담당한다 (std::unique_ptr<GumpTree>).
     std::unique_ptr<GumpTree> tree;
+    // lifetime: 등록된 객체의 삭제·해제를 처리하는 수명 관리자. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::unique_ptr<GumpLifetime> lifetime;
+    // events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::unique_ptr<GumpEvents> events;
+    // input: 처리할 입력 또는 입력 분배기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::unique_ptr<GumpInput> input;
+    // buttons: 돌 버튼 생성/텍스트/부착은 StoneButtonGump에 맡기는 상태 처리기다. GumpEvents/입력/프레임 훅에 연결한다 (std::unique_ptr<ButtonGump>).
     std::unique_ptr<ButtonGump> buttons;
+    // backgrounds: 기본 생성/등록은 GumpCreate, 부착/파괴는 같은 저장소의 GumpTree/GumpLifetime이 맡는다 (std::unique_ptr<GumpBackgroundCreate>).
     std::unique_ptr<GumpBackgroundCreate> backgrounds;
+    // stones: 같은 ButtonGump/GumpCreate/GumpTree/GumpLifetime을 사용한다. 자동 Client 연결은 별도 계층이 맡는다 (std::unique_ptr<StoneButtonGump>).
     std::unique_ptr<StoneButtonGump> stones;
     // 모든 기본/파생 저장소의 안정된 기본 주소를 반환한다.
     GumpCreateNode* Find(std::uint32_t token) {

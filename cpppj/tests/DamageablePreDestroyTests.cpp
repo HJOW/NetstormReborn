@@ -10,15 +10,27 @@ constexpr std::size_t kRowsPerEdition=1632;
 constexpr std::array<Sid,5> kIds{{{50},{60},{61},{62},{63}}};
 // 원본/Python 없이 독립 관찰을 읽는다.
 const auto& Fixture() { static const auto data=LoadFixture(NETSTORM_DAMAGEABLEPREDESTROY_FIXTURE);return data.rows; }
+// DamageablePreDestroy 검사에서 같은 풀·상태·처리기를 조립해 입력과 결과를 대조하는 자료형이다.
 struct DamageableScene {
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
     SidPool pool;
+    // finderState: 검색기 상태. 입력 구성 또는 실행 결과 대조에 사용한다.
     ContainedFinderState finderState;
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
     DamageablePreDestroyState state;
+    // spots: 칸별 점유·통행 비트를 읽는 spot 지도. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::uint8_t> spots=std::vector<std::uint8_t>(65536);
+    // slots: 등록 대상의 저장 슬롯 목록. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::array<std::span<std::uint8_t>,5> slots;
+    // events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::string events;
+    // style: 글꼴·색·정렬을 선택하는 텍스트 출력 문맥. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // initialBoss: 초기 boss. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // freeCount: 반납 상태인 슬롯의 개수. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::uint32_t style{},initialBoss{},freeCount{};
+    // patch: 10.78 패치판의 상태 또는 패치판 검사용 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     bool patch;
+    // validations: 검증. 입력 구성 또는 실행 결과 대조에 사용한다.
     int validations{};
     // 합성 free 후보를 쓸 수 있도록 준비 단계의 할당 범위를 저장한다.
     explicit DamageableScene(OriginalEdition edition):pool(edition,kCapacity,false),patch(edition==OriginalEdition::Patch1078) {

@@ -24,7 +24,9 @@ internal sealed class OriginalCursor : IDisposable
     private readonly Dictionary<GameCursor, nint> _handles = [];
     /// <summary>커서를 지정·해제·확인할 함수.</summary>
     private readonly CursorAction _set;
+    /// <summary>_free: 생성한 SDL 커서 핸들을 해제하는 함수.</summary>
     private readonly CursorAction _free;
+    /// <summary>_get: SDL이 현재 사용하는 커서 핸들을 조회하는 함수.</summary>
     private readonly GetCursor _get;
     /// <summary>종료 때 복구할 시스템 커서 (소유하지 않는다).</summary>
     private readonly nint _previous;

@@ -23,7 +23,10 @@ inline constexpr unsigned kVirtualKeyShift = 16;
 
 // 사건 하나: 코드와 화면 좌표(창 테두리를 뺀 커서 위치).
 struct InputEvent {
+    // code: 입력·패턴·프레임의 종류를 구별하는 코드.
     std::uint32_t code{};
+    // x: X 좌표.
+    // y: Y 좌표.
     std::int32_t x{}, y{};
 };
 
@@ -42,8 +45,11 @@ public:
     // 꺼낼 사건이 없는가.
     bool Empty() const;
 private:
+    // events_: 발생한 이벤트 또는 이벤트 처리기.
     std::array<InputEvent, kCapacity> events_{};
+    // read_: 입력 큐에서 다음에 읽을 항목의 인덱스.
     std::size_t read_{};
+    // write_: 입력 큐에서 다음에 쓸 항목의 인덱스.
     std::size_t write_{};
 };
 }

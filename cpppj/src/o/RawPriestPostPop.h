@@ -7,10 +7,12 @@
 namespace netstorm::o {
 // 회복 Regular의 실제 이벤트 번호다(004950f0 / CD 0040c110).
 inline constexpr std::uint32_t kPriestRegenEvent=0x25a;
+// 사제 후처리 Pop 처리 중 조회·갱신하는 상태 묶음이다.
 struct PriestPostPopState {
     SquidPostPopList priests; // 005954c4 / CD 00549188: 중복 없이 등록하는 사제 목록이다.
     std::array<std::uint32_t,kPlayerCount+1> ownerState{}; // 00595428 / CD 005119a0. 칸 0은 건드리지 않는다.
 };
+// 사제 후처리 Pop 외부 동작과 저장소 조회를 연결하는 콜백 묶음이다.
 struct PriestPostPopHooks {
     std::function<bool(Sid,std::uint32_t)> findRegular; // 실제 종속 체인에서 이미 예약된 회복을 찾는다.
     std::function<bool()> reserveRegular; // 원본 new(0x28)의 성공 여부. 실패하면 HP 조회/생성을 생략한다.
@@ -29,9 +31,13 @@ public:
     // 전체 postPop 조합이 같은 풀의 접두를 연결하는지 확인한다.
     const SidPool& Pool() const;
 private:
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
+    // hp_: 객체의 HP를 조회·변경하는 처리기 또는 HP 값.
     const SquidReward& hp_;
+    // state_: 처리 중 조회·갱신하는 상태 (PriestPostPopState).
     PriestPostPopState& state_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (PriestPostPopHooks).
     PriestPostPopHooks hooks_;
 };
 // 기존 ProcessHost의 실제 찾기/부착에 연결한다. 호스트 메모리 부족은 C++ 예외로 전파한다.

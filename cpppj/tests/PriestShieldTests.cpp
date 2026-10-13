@@ -16,12 +16,19 @@ std::span<std::uint8_t> InputRaw(SidPool& pool,Sid sid) {
 }
 // Python/원본 파일 없이 기대 출력만 한 번 읽는다.
 const auto& Fixture() { static const auto rows=LoadFixture(NETSTORM_PRIESTSHIELD_FIXTURE).rows;return rows; }
+// PriestShield 검사에서 같은 풀·상태·처리기를 조립해 입력과 결과를 대조하는 자료형이다.
 struct ShieldScene {
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
     SidPool pool;
+    // hash: 좌표별 객체 후보를 찾는 공간 해시. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidHash hash;
+    // types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeRecord> types;
+    // forcefield: 포스필드. 입력 구성 또는 실행 결과 대조에 사용한다.
     PriestForcefieldState forcefield;
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
     PriestShieldState state;
+    // patch: 10.78 패치판의 상태 또는 패치판 검사용 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     bool patch;
     // 타입과 해시/현재 전역은 행마다 바꾸되 풀 객체 자체는 안정된 주소를 유지한다.
     explicit ShieldScene(OriginalEdition edition):pool(edition,kCapacity,false),types(edition==OriginalEdition::Patch1078 ? 188 : 171),patch(edition==OriginalEdition::Patch1078) {}

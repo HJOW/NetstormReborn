@@ -54,7 +54,8 @@ std::vector<RiftTypeFrames> FrameTable(std::size_t count) {
 enum class Scenario { Replace,Isolated,Hard,Keep };
 // 표시 변경 영역을 실제 Renderer에 전달한다. 원본 SHP 검사에서도 같은 경로를 쓴다.
 struct DisplaySink final:SquidDisplaySink {
-    netstorm::client::Renderer renderer{640,480};netstorm::client::SquidRenderer target{renderer};std::size_t notices{};
+    // renderer: 수집한 그림·텍스트를 화면에 그리는 렌더러. 입력 구성 또는 실행 결과 대조에 사용한다.
+    netstorm::client::Renderer renderer{640,480};/* target: Squid 표시 요청을 클라이언트의 렌더러에 전달하는 출력 대상 (netstorm::client::SquidRenderer). */ netstorm::client::SquidRenderer target{renderer};/* notices: 통지. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::size_t notices{};
     // 실제 전체 갱신 상태를 따른다.
     bool Suppressed() const override { return target.Suppressed(); }
     // 픽셀 경계/flags를 바꾸지 않고 변경 표에 전달한다.

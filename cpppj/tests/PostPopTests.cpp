@@ -72,6 +72,7 @@ std::vector<o::RiftTypeRecord> Types(o::OriginalEdition edition) {
 }
 // 실제 Renderer와 같은 dirty 병합/100항목 full 상태를 공유한다.
 struct Sink final:o::SquidDisplaySink {
+    // dirty: 부분 갱신 사각형을 수집하고 화면 경계로 제한하는 관리자 (client::DirtyRegions).
     client::DirtyRegions dirty{640,480};
     // 전체 갱신이면 후속 표시는 생략한다.
     bool Suppressed() const override { return dirty.FullRedraw(); }

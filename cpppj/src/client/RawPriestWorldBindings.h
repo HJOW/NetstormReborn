@@ -21,48 +21,85 @@ struct RawMovementProcessTypes {
 };
 // 다른 자산도 사용하는 단일 월드 자료다. 모든 참조는 연결 객체보다 오래 살아야 한다.
 struct RawPriestWorldCore {
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     o::SidPool& pool;
+    // hash: 좌표별 객체 후보를 찾는 공간 해시.
     const o::SquidHash& hash;
+    // types: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::span<const o::RiftTypeRecord> types;
+    // frames: 타입별 프레임 자료.
     std::span<const o::RiftTypeFrames> frames;
+    // spots: 칸별 점유·통행 비트를 읽는 spot 지도.
     std::span<const std::uint8_t> spots;
     std::span<const std::uint16_t> surfaces; // 반드시 hash.Entries(0) 자체다. 지도 사본은 생성 시 거부한다.
+    // reward: HP·SP·지갑 보상을 실제 장부에 적용하는 처리기.
     const o::SquidReward& reward;
+    // random: 원본 FUN_004558c0: 상태 0이면 0x0bad0bad로 바꾼 뒤 상태*0x10003+3의 상위 16비트를 limit로 나눈 나머지를 쓴다 (o::GameRandom).
     o::GameRandom& random;
+    // factory: 타입에 맞는 객체를 생성하는 처리기.
     o::SquidFactory& factory;
+    // owner: 소유 플레이어 변경을 객체 필드와 장부에 반영하는 처리기.
     o::SquidOwner& owner;
+    // ownerMode: 판본·서버·로딩 상태에 따른 소유권 처리 정책.
     const o::SquidOwnerMode& ownerMode;
+    // postPop: 객체 Pop 이후 목록·공간 후처리를 수행하는 처리기.
     o::SquidPostPop& postPop;
+    // frame: 프레임 변경을 물리 프레임·통지·갱신 요청에 반영하는 처리기.
     const o::SquidFrame& frame;
 };
 // 실제 전역을 보관하는 공유 상태다. 사제 목록 저장소 크기는 월드 초기화에서 명시 설정한다.
 // MissionOutcome/조회도 priests를 직접 공유하며 별도 사제 복사 목록을 만들지 않는다.
 struct RawPriestWorldState {
+    // priests: 사제.
     o::PriestPostPopState priests;
+    // owner: 소유 플레이어 번호 또는 소유권 처리 자료.
     o::PriestOwnerState owner;
+    // hitPoints: 현재 HP 또는 HP 처리 자료.
     o::PriestHitPointMode hitPoints;
+    // shield: 사제 보호막의 생성·통지·상태 처리 자료.
     o::PriestShieldState shield;
+    // regen: 사제 HP 회복과 SP 갱신을 처리하는 자료.
     o::PriestRegenState regen;
+    // fall: 객체 추락 상태와 프레임 진행 처리 자료.
     o::PriestFallState fall;
+    // forcefield: 포스필드.
     o::PriestForcefieldState forcefield;
+    // spawn: 사제의 생성·배치·등록 처리 자료.
     o::PriestSpawnState spawn;
+    // carrier: 캐리어의 내용물·통행·수명 처리 자료.
     o::CarrierPostPopState carrier;
+    // contained: 객체 내용물의 생성·검색·등록 처리 자료.
     o::CarrierPreDestroyState contained;
+    // forcefieldRegular: 사제 타입 DWORD는 매 검사 때 읽는다. 소유자는 존재 검사의 조건이 아니다 (o::ForcefieldRegularState).
     o::ForcefieldRegularState forcefieldRegular;
+    // movement: 00488fe0/CD 0047d020의 현재 타입/프로세스 전역이다. 초기 번호는 두 보호 PE의 DWORD와 같다 (RawMovementProcessTypes).
     RawMovementProcessTypes movement;
 };
 // 공간 효과는 월드의 실제 가상 Pop/Unpop/Destroy를 받는다. 계산을 임의 기본값으로 대체하지 않는다.
 // 소리·안내 및 아직 별도 복원이 필요한 regen 하위 효과는 호출자가 명시적으로 공급한다.
 struct RawPriestWorldEffects {
+    // pop: 대상을 지정 위치의 공간에 등록하는 Pop 콜백.
     std::function<void(o::Sid,float,float,std::uint32_t)> pop;
+    // unpop: 대상을 공간 등록에서 해제하는 Unpop 콜백.
+    // repop: 변경한 대상을 공간에 다시 반영하는 Repop 콜백.
+    // destroy: 대상의 실제 삭제 경로를 실행하는 콜백.
     std::function<void(o::Sid,std::uint32_t)> unpop,repop,destroy;
+    // claimGround: 대상의 지면 소유권 변경을 실행하는 콜백.
     std::function<void(float,float,std::uint8_t)> claimGround;
+    // ownerNotice: 소유자 변경을 실제 통지 경로에 전달하는 콜백.
+    // notifySurface: 표면 객체에 변경을 통지하는 콜백.
     std::function<void(o::Sid)> ownerNotice,notifySurface;
+    // dependentFound: 찾은 종속 객체를 실제 처리 경로에 전달하는 콜백.
     std::function<void()> dependentFound;
+    // reserveRegular: 후속 Regular 프로세스 등록을 예약하는 콜백.
     std::function<bool()> reserveRegular;
+    // shield: 사제 보호막의 생성·통지·상태 처리 자료.
     o::PriestShieldHooks shield;
+    // fallSound: 추락 위치에서 해당 소리를 재생하는 콜백.
     std::function<void(o::Sid,float,float)> fallSound;
+    // regen: 사제 HP 회복과 SP 갱신을 처리하는 자료.
     o::PriestRegenHooks regen;
+    // otherWalkerFall: 사제 이외 이동 유닛의 실제 추락 경로를 호출하는 콜백.
     std::function<bool(o::Sid)> otherWalkerFall;
 };
 // 사용 순서: 생성→ProcessHost(RegularHandler/DestroyHooks) 생성→BindProcesses→후속 모듈 Bind다.
@@ -112,6 +149,7 @@ public:
     o::PriestPostPopState& Priests() const;
 private:
     struct Impl;
+    // impl_: 공개 인터페이스 뒤의 구현 상태와 연결 객체.
     std::unique_ptr<Impl> impl_;
 };
 }

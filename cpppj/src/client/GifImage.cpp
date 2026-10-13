@@ -31,7 +31,9 @@ public:
         return result;
     }
 private:
+    // bytes_: 필드 접근이나 파일 읽기에 사용하는 원시 바이트.
     std::span<const std::uint8_t> bytes_;
+    // position_: 현재 좌표 또는 저장소의 읽기 위치.
     std::size_t position_{};
 };
 // LSB부터 읽는 GIF LZW. 사전 재설정·코드 폭 증가·자기 참조 코드를 처리한다.

@@ -58,9 +58,12 @@ private:
     std::int32_t RandomFrame(Sid sid) const;
     // 한 섹션의 청크 선택과 실제 적용이다. 저장 청크 수가 부족하면 남은 정상 효과 뒤 예외로 거부한다.
     void Section(const FortChunkSection& section,std::uint32_t owner,std::int32_t territory) const;
-    SidPool& pool_;const SquidHash& hash_;
-    std::span<const RiftTypeRecord> types_;std::span<const RiftTypeFrames> frames_;
-    GameRandom& random_;FortObjectLoadState& state_;FortObjectLoadHooks hooks_;
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
+    SidPool& pool_;/* hash_: 좌표별 객체 후보를 찾는 공간 해시. */ const SquidHash& hash_;
+    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
+    std::span<const RiftTypeRecord> types_;/* frames_: 타입별 프레임 자료. */ std::span<const RiftTypeFrames> frames_;
+    // random_: 원본 FUN_004558c0: 상태 0이면 0x0bad0bad로 바꾼 뒤 상태*0x10003+3의 상위 16비트를 limit로 나눈 나머지를 쓴다 (GameRandom).
+    GameRandom& random_;/* state_: 객체/상위 로더가 매 분기에서 다시 읽는 원본 전역이다. 미션 기본 소유자는 Load의 Template 칸으로 전달한다 (FortObjectLoadState). */ FortObjectLoadState& state_;/* hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (FortObjectLoadHooks). */ FortObjectLoadHooks hooks_;
 };
 // 실제 factory/HP 조회/contained Form 생성만 연결한다. 사제 소유자·가상 상태/Pop/삭제는 월드 분배 경계를 유지한다.
 FortObjectLoadHooks MakeFortObjectLoadHooks(const SidPool& pool,SquidFactory& factory,const SquidReward& hp,

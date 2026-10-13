@@ -7,7 +7,7 @@ namespace netstorm::o {
 // watched 부모가 삭제될 때 watcher 부모의 가상 +0x34(watched,form)를 호출하는 경계다.
 using DependFormNotice=std::function<void(Sid watcher,Sid watched,Sid form)>;
 // 두 Form이 서로를 참조하는 방향을 명시한다. watchedForm은 watched, watcherForm은 watcher 안에 붙는다.
-struct DependFormPair { Sid watchedForm{},watcherForm{}; };
+struct DependFormPair { /* watchedForm: 암묵적인 런타임 SquidId 변환을 막는 원본 슬롯 번호다 (Sid). */ /* watcherForm: 암묵적인 런타임 SquidId 변환을 막는 원본 슬롯 번호다 (Sid). */ Sid watchedForm{},watcherForm{}; };
 // watcher/watched 쌍 생성·조회·제거·가상 preDestroy와 부모 통지를 복원한다.
 class DependFormHost {
 public:
@@ -39,10 +39,15 @@ private:
     void Put(Sid sid,std::size_t offset,Sid value) const;
     // watcher/watched 유효 번호와 원본의 금지 타입·같은 객체 조건을 확인한다.
     void Parents(Sid watcher,Sid watched) const;
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
+    // destroy_: 객체 삭제의 전처리·공간 해제·후처리를 실행하는 처리기.
     RawSquidDestroy& destroy_;
+    // notice_: 통지.
     DependFormNotice notice_;
+    // fallback_: emit은 같은 풀을 바꿀 수 있다. 종속 next는 ReleaseDependent 전에 저장한다 (SquidDestroyHooks).
     SquidDestroyHooks fallback_;
+    // forms_: 객체에 부착된 Form의 생성·통지·수명 처리기.
     SquidForms forms_;
 };
 }

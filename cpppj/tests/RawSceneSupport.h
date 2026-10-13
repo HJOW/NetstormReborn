@@ -20,7 +20,8 @@ inline constexpr std::uint16_t kFirstBorn=100,kBornCount=12,kLastSid=127;
 inline constexpr std::uint32_t kVtable=0x11010000,kCapacity=24000;
 // 기계어 실행기가 쓰는 합성 타입 번호. 플래그·발자국은 실제 10.78 타입 표의 값이다.
 inline constexpr std::uint32_t kBridgeType=82,kConnectorType=90,kIslandType=91,kStalagType=92,kNoIslandType=93;
-struct TypeInput { std::uint32_t number,flags1,flags2; int footX,footY; };
+// RawSceneSupport 검사에서 같은 풀·상태·처리기를 조립해 입력과 결과를 대조하는 자료형이다.
+struct TypeInput { /* number: 번호. 입력 구성 또는 실행 결과 대조에 사용한다. */ /* flags1: 타입의 첫 번째 플래그 단어. 입력 구성 또는 실행 결과 대조에 사용한다. */ /* flags2: 타입의 두 번째 플래그 단어. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::uint32_t number,flags1,flags2; /* footX: 객체 발자국의 가로 칸 수. 입력 구성 또는 실행 결과 대조에 사용한다. */ /* footY: 객체 발자국의 세로 칸 수. 입력 구성 또는 실행 결과 대조에 사용한다. */ int footX,footY; };
 // bridge, isle, isleBig, priest(비표면 walker), bridgeConnector, island, islandStalag, noIsland 순서다.
 inline constexpr std::array<TypeInput,8> kTypeInputs{{{82,0x00000802,0x00000004,1,1},{83,0x28000803,0x00000002,1,1},
     {84,0x08000803,0x01000002,3,3},{85,0x00069012,0x00210000,1,1},{90,0x28000002,0x02000000,1,1},
@@ -78,7 +79,9 @@ inline RiftTypeFrames Frames(int variant) {
 }
 // 저장된 독립 기계어 출력: 장면 입력(번호 → 칸)과 관찰 행이다. 원본 PE/Python 없이 읽는다.
 struct FixtureData {
+    // scenes: 장면. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::map<std::string,std::vector<std::string>> scenes;
+    // rows: 행. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::vector<std::string>> rows;
 };
 // 주석을 제외하고 탭으로 입력/관찰 칸을 나눈다. 장면 행은 번호로 찾을 수 있게 따로 둔다.
@@ -98,16 +101,27 @@ inline FixtureData LoadFixture(const char* path) {
 }
 // 명시적인 보호 경로를 확인한다.
 template<class F> bool Throws(F operation) { try { operation(); } catch (const std::exception&) { return true; } return false; }
+// RawSceneSupport 검사에서 같은 풀·상태·처리기를 조립해 입력과 결과를 대조하는 자료형이다.
 struct Scene {
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
     SidPool pool;
+    // hash: 좌표별 객체 후보를 찾는 공간 해시. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidHash hash;
+    // spots: 칸별 점유·통행 비트를 읽는 spot 지도. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::uint8_t> spots=std::vector<std::uint8_t>(65536);
+    // types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeRecord> types;
+    // frames: 타입별 프레임 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeFrames> frames;
+    // neighbors: 발자국에 인접한 표면·객체를 조회하는 검색기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::unique_ptr<RawSquidNeighbors> neighbors;
+    // state: 연결 함수들이 읽는 원본 전역이다. 패치 주소 / CD 주소를 주석에 둔다 (BridgeConnectState).
     BridgeConnectState state;
+    // events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::string> events;
+    // born: 생성시각. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::uint16_t born{};
+    // patch: 10.78 패치판의 상태 또는 패치판 검사용 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     bool patch{};
     // 실행기와 같은 풀 번호 5~127을 확보한다. 타입/프레임 입력은 행별로 준비한다.
     explicit Scene(OriginalEdition edition):pool(edition,kCapacity,false),types(edition==OriginalEdition::Patch1078 ? 188 : 171),

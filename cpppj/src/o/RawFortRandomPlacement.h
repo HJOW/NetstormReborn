@@ -50,9 +50,12 @@ private:
     // 직접 초기 프레임/HP 쓰기의 판본 폭과 실제 타입 HP 조회 순서다.
     void Frame(Sid sid,std::uint32_t value) const;
     void HitPoints(Sid sid) const;
-    SidPool& pool_;const SquidHash& hash_;std::span<const std::uint8_t> spots_; // 현재 공간 배열을 사본 없이 읽는다.
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
+    SidPool& pool_;/* hash_: 좌표별 객체 후보를 찾는 공간 해시. */ const SquidHash& hash_;std::span<const std::uint8_t> spots_; // 현재 공간 배열을 사본 없이 읽는다.
+    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::span<const RiftTypeRecord> types_;std::span<const RiftTypeFrames> frames_; // 실제 로딩 자료다.
-    GameRandom& random_;FortRandomPlacementState& state_;FortRandomPlacementHooks hooks_; // 현재 전역/실제 가상 경계다.
+    // random_: 원본 FUN_004558c0: 상태 0이면 0x0bad0bad로 바꾼 뒤 상태*0x10003+3의 상위 16비트를 limit로 나눈 나머지를 쓴다 (GameRandom).
+    GameRandom& random_;/* state_: 매 실제 분기에서 읽는 원본 타입/편집 소유자 전역이다 (FortRandomPlacementState). */ FortRandomPlacementState& state_;FortRandomPlacementHooks hooks_; // 현재 전역/실제 가상 경계다.
 };
 // 같은 pool의 완전한 배치 pipeline/factory/타입 HP를 연결한다. 가상 공간·지역·owner는 필수로 남긴다.
 FortRandomPlacementHooks MakeFortRandomPlacementHooks(const SidPool& pool,RawCanonPlacementPipeline& placement,

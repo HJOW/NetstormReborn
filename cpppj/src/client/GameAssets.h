@@ -9,11 +9,15 @@
 #include <vector>
 
 namespace netstorm::client {
+// 타입 정의와 그 타입이 사용하는 셰이프 블록이다.
 struct TypeAsset {
     std::string assetName; // .type 파일 이름. typename과 다를 수 있다(dude → Man).
+    // definition: RiftType의 자산 정의 부분. 모든 게임 플래그·생성자 함수 포인터를 복원한 구조체는 아니다 (o::RiftTypeDefinition).
     o::RiftTypeDefinition definition;
+    // block: 셰이프 DB에서 그림을 찾는 블록 번호.
     std::size_t block{};
 };
+// 게임 실행에 필요한 타입·셰이프·팔레트 자산 저장소이다.
 class GameAssets {
 public:
     // setup.cfg의 `battlePal = "gifcloud"`와 `GamePalSpec`이 가리키는 기본 팔레트 경로.
@@ -37,9 +41,13 @@ public:
     // raw 풀/프레임 필드가 자산을 읽은 판본과 같은 배치를 사용하도록 제공한다.
     o::OriginalEdition Edition() const;
 private:
+    // edition_: 판본별 필드 배치와 동작을 선택하는 원본 버전.
     o::OriginalEdition edition_;
+    // shapes_: 프레임의 크기·그림 데이터를 조회하는 셰이프 자료.
     ShapeDatabase shapes_;
+    // palette_: 그림의 색 인덱스를 실제 출력 색으로 바꿀 팔레트.
     GamePalette palette_;
+    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::vector<TypeAsset> types_;
     std::optional<o::RiftTypeTable> typeTable_; // 타입을 모두 읽은 뒤에 만든다.
 };

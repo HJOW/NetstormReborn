@@ -22,7 +22,9 @@ public:
     // 출력 경계가 실패해도 같은 현재 저장소의 half-open/VFX 클립을 복구한다.
     ~TextureClipGuard() { set_(saved_); }
 private:
+    // set_: 현재 클리핑 영역을 출력 대상에 적용하는 콜백.
     const std::function<void(ScreenRect)>& set_;
+    // saved_: 화면 좌표의 사각형. right·bottom은 포함하지 않는다(원본 004a1800의 인자) (ScreenRect).
     ScreenRect saved_;
 };
 }

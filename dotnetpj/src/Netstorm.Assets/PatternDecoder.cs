@@ -1,12 +1,23 @@
 namespace Netstorm.Assets;
 
 /// <summary>원본 CanonDecoder 패턴의 한 칸. Label은 원본 번호 바이트에서 'a'를 뺀 값이다.</summary>
+/// <param name="Side">칸 또는 프레임의 방향 글자.</param>
+/// <param name="Variation">같은 방향 안에서 선택할 프레임 변형 번호.</param>
+/// <param name="Label">표시 문구 또는 패턴 라벨.</param>
 public readonly record struct PatternCell(char Side, int Variation, int Label = -97);
 
 /// <summary>원본 패턴의 폭·높이와 행 우선 셀 목록. '.'은 빈 칸이다.</summary>
+/// <param name="Width">가로 크기.</param>
+/// <param name="Height">세로 크기.</param>
+/// <param name="Cells">패턴을 구성하는 칸 데이터.</param>
 public sealed record CanonicalPattern(int Width, int Height, IReadOnlyList<PatternCell> Cells);
 
 /// <summary>원본 반복자가 돌려주는 유효 프레임·단정밀도 좌표·번호·방향.</summary>
+/// <param name="Frame">타입에서 사용할 프레임 번호.</param>
+/// <param name="X">월드 X 좌표.</param>
+/// <param name="Y">월드 Y 좌표.</param>
+/// <param name="Label">표시 문구 또는 패턴 라벨.</param>
+/// <param name="Side">칸 또는 프레임의 방향 글자.</param>
 public readonly record struct DecodedPatternCell(int Frame, float X, float Y, int Label, char Side);
 
 /// <summary>10.78 CanonDecoder 00425c20/00425860의 회전·누락 프레임·순회를 제공한다.</summary>

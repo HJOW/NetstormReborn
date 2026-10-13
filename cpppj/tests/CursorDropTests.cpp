@@ -16,11 +16,18 @@ enum Column : std::size_t { Lock,Legal,X,Y,InputFlags,CostFlags,LegalGump,Cursor
 const auto& Fixture() { static const auto rows=LoadFixture(NETSTORM_CURSORDROP_FIXTURE).rows;return rows; }
 // 원본 실행기의 명시 경계를 그대로 공급하는 장면이다.
 struct DropScene {
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
     SidPool pool;
+    // types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeRecord> types;
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
     CursorDropState state;
+    // input: 처리할 입력 또는 입력 분배기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::uint32_t> input;
+    // events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::string events;
+    // prepared: 전처리한. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // sources: 원천. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::uint32_t prepared{},sources{};
     // 타입/풀 주소를 행 사이에서 유지한다.
     explicit DropScene(OriginalEdition edition):pool(edition,kCapacity,false),types(edition==OriginalEdition::Patch1078 ? 188 : 171) {}

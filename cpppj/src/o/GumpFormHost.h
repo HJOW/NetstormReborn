@@ -52,11 +52,17 @@ private:
     void SetPrevious(Sid sid,std::uint16_t previous) const;
     // 원본 Pop의 서버/client flags를 계산하고 미복원 전송을 부착 쓰기 전에 거부한다.
     void ValidatePop(Sid form,std::uint32_t flags) const;
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
+    // factory_: 타입에 맞는 객체를 생성하는 처리기.
     SquidFactory& factory_;
+    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::vector<RiftTypeRecord> types_;
+    // destroy_: 객체 삭제의 전처리·공간 해제·후처리를 실행하는 처리기.
     RawSquidDestroy& destroy_;
+    // notice_: 통지.
     GumpFormNotice notice_;
+    // fallback_: emit은 같은 풀을 바꿀 수 있다. 종속 next는 ReleaseDependent 전에 저장한다 (SquidDestroyHooks).
     SquidDestroyHooks fallback_;
 };
 }

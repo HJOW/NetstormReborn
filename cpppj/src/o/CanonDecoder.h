@@ -11,7 +11,9 @@ namespace netstorm::o {
 // 패턴 레코드(원본 72바이트): 정수 셋과 4바이트 셀 15개. 셀은 줄 우선으로 폭 × 높이만큼 쓴다.
 struct CanonPattern {
     std::int32_t first{};   // 다리의 추첨 가중치. 영역 패턴은 모두 1.
+    // width: 가로 크기.
     std::int32_t width{};   // +4
+    // height: 세로 크기.
     std::int32_t height{};  // +8
     // 셀: [0] 변형 숫자 글자('1'), [1] 방향 글자('A'~'P', 빈 칸은 '.'), [2] 미확정, [3] 번호 글자('a'~, 없으면 0).
     std::array<std::array<std::uint8_t, 4>, 15> cells{};
@@ -48,21 +50,38 @@ public:
     // 원본 FUN_00425c00: 현재 프레임 코드의 방향 글자.
     char Side() const;
 private:
+    // frames_: 타입 프레임의 코드와 방향별 번호 구간을 조회하는 표 (RiftTypeFrames).
     const RiftTypeFrames* frames_;
+    // pattern_: 칸별 방향·변형·라벨을 펼칠 Canon 패턴 자료.
     const CanonPattern* pattern_;
+    // rotation_: 패턴을 회전할 방향 값.
     int rotation_{};        // +8
     bool mirrored_{};       // +0xc (영역 패턴에서는 항상 거짓)
+    // frame_: 타입에서 사용할 그림 프레임 번호.
     int frame_{-1};         // +0x10
+    // valid_: 현재 자료나 순회 항목을 읽을 수 있는지.
     bool valid_{true};      // +0x14
+    // label_: 화면에 표시할 항목 문구 또는 패턴 번호.
     int label_{};           // +0x18
+    // step_: 단계.
     int step_{1};           // +0x1c
+    // x_: X 좌표.
+    // y_: Y 좌표.
     float x_{}, y_{};       // +0x20, +0x24
+    // originX_: 좌표 계산의 기준 X 원점.
+    // originY_: 좌표 계산의 기준 Y 원점.
     float originX_{}, originY_{}; // +0x2c, +0x30
+    // outerCount_: 패턴 바깥 반복의 칸 개수.
     int outerCount_{};      // +0x38
+    // innerCount_: 패턴 안쪽 반복의 칸 개수.
     int innerCount_{};      // +0x3c
+    // patternX_: 현재 Canon 패턴의 X 인덱스.
     int patternX_{};        // +0x40
+    // patternY_: 현재 Canon 패턴의 Y 인덱스.
     int patternY_{};        // +0x44
+    // outer_: 현재 패턴 바깥 반복 인덱스.
     int outer_{};           // +0x48
+    // inner_: 현재 패턴 안쪽 반복 인덱스.
     int inner_{};           // +0x4c
     int defaultFrame_{},argument_{}; // 패턴 없는 타입의 기본 프레임과 원본 첫 인자다.
     bool explicitFrame_{}; // +0x50: 첫 인자를 프레임 번호로 사용할지 결정한다.

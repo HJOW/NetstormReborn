@@ -29,9 +29,12 @@ std::uint64_t Field(const std::string& hex,std::size_t offset,std::size_t width=
 std::string Bits(float value) { return std::to_string(std::bit_cast<std::uint32_t>(value)); }
 // 실제 프로세스 host/Kernel/공통 삭제 위에 소리 프로세스를 올리고 장치 효과만 기록하는 장면이다.
 struct SoundScene {
-    bool patch;SidPool pool;SquidHash hash;std::vector<std::uint8_t> spots=std::vector<std::uint8_t>(65536);std::vector<RiftTypeRecord> types;
-    SquidUnpop unpop;RawSquidDestroy destroy;Kernel kernel;SquidProcessState clock;SquidProcessHost host;
-    SoundProcessState state;std::vector<std::string> events;std::uint32_t reply{};double now{};SoundProcessSystem system;
+    // patch: 10.78 패치판의 상태 또는 패치판 검사용 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
+    bool patch;/* pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다. */ SidPool pool;/* hash: 좌표별 객체 후보를 찾는 공간 해시. 입력 구성 또는 실행 결과 대조에 사용한다. */ SquidHash hash;/* spots: 칸별 점유·통행 비트를 읽는 spot 지도. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<std::uint8_t> spots=std::vector<std::uint8_t>(65536);/* types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<RiftTypeRecord> types;
+    // unpop: 객체의 공간 등록을 해제하는 Unpop 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
+    SquidUnpop unpop;/* destroy: 객체 삭제의 전처리·공간 해제·후처리를 실행하는 처리기. 입력 구성 또는 실행 결과 대조에 사용한다. */ RawSquidDestroy destroy;/* kernel: 프로세스 등록과 프레임 실행을 담당하는 커널. 입력 구성 또는 실행 결과 대조에 사용한다. */ Kernel kernel;/* clock: 프레임 판정에 현재 게임 시각을 공급하는 시계. 입력 구성 또는 실행 결과 대조에 사용한다. */ SquidProcessState clock;/* host: Form이나 프로세스의 등록·통지·수명을 연결하는 호스트. 입력 구성 또는 실행 결과 대조에 사용한다. */ SquidProcessHost host;
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
+    SoundProcessState state;/* events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<std::string> events;/* reply: 응답. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::uint32_t reply{};/* now: 현재 판정에 사용하는 시각(초). 입력 구성 또는 실행 결과 대조에 사용한다. */ double now{};/* system: 소리 프로세스들이 함께 쓰는 전역과 외부 효과를 묶고, 프로세스를 만들어 부모 객체에 붙인다 (SoundProcessSystem). */ SoundProcessSystem system;
     // 실행기 풀과 같은 번호 5~127을 client 번호로 확보한다. form은 그 뒤 번호를 받는다.
     explicit SoundScene(OriginalEdition edition):patch(edition==OriginalEdition::Patch1078),pool(edition,kCapacity,false),types(patch ? 188 : 171),
         unpop(pool,hash,spots),destroy(pool,unpop,types),host(pool,types,kernel,destroy,clock),system(host,state,Hooks()) {

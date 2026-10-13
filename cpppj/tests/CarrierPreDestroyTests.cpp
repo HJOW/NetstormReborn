@@ -10,11 +10,18 @@ constexpr std::size_t kRowsPerEdition=960;
 constexpr std::array<Sid,5> kIds{{{50},{60},{61},{62},{63}}};
 // 원본/Python 없이 저장된 독립 기대 출력을 읽는다.
 const auto& Fixture() { static const auto data=LoadFixture(NETSTORM_CARRIERPREDESTROY_FIXTURE);return data.rows; }
+// CarrierPreDestroy 검사에서 같은 풀·상태·처리기를 조립해 입력과 결과를 대조하는 자료형이다.
 struct CarrierScene {
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
     SidPool pool;
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
     CarrierPreDestroyState state;
+    // slots: 등록 대상의 저장 슬롯 목록. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::array<std::span<std::uint8_t>,5> slots;
+    // events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // after: 후속. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::string events,after;
+    // validations: 검증. 입력 구성 또는 실행 결과 대조에 사용한다.
     int validations{};
     // free 상태 후보도 관찰하므로 준비 때 확보한 raw 범위를 이후 입력에 재사용한다.
     explicit CarrierScene(OriginalEdition edition):pool(edition,kCapacity,false) {

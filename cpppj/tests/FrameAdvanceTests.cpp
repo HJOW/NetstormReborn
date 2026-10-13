@@ -77,7 +77,8 @@ void Replay(const char* edition) {
 }
 // 원본 변경 영역과 그 시점의 프레임을 관찰하는 콘솔 표시 대상이다.
 struct Sink final:SquidDisplaySink {
-    SidPool& pool;Sid object{};std::vector<std::uint32_t> frames;std::vector<SquidDisplayRect> rects;
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
+    SidPool& pool;/* object: 해당 SID나 출력 항목에 대응하는 객체 자료. 입력 구성 또는 실행 결과 대조에 사용한다. */ Sid object{};/* frames: 타입별 프레임 자료. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<std::uint32_t> frames;/* rects: 사각형. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<SquidDisplayRect> rects;
     // 표시 대상은 프레임 지정기와 같은 풀을 읽는다.
     explicit Sink(SidPool& input):pool(input) {}
     // 이 검사는 매 프레임 변경 영역을 관찰한다.

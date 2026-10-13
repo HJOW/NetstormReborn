@@ -11,14 +11,23 @@ constexpr std::size_t kRowsPerEdition=2976;
 constexpr std::array<Sid,7> kIds{{{50},{60},{61},{62},{63},{64},{65}}};
 // Python/원본 없이 저장된 독립 출력만 읽는다.
 const auto& Fixture() { static const auto data=LoadFixture(NETSTORM_PRIESTFORCEFIELD_FIXTURE);return data; }
+// PriestForcefield 검사에서 같은 풀·상태·처리기를 조립해 입력과 결과를 대조하는 자료형이다.
 struct ForcefieldScene {
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
     SidPool pool;
+    // hash: 좌표별 객체 후보를 찾는 공간 해시. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidHash hash;
+    // types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeRecord> types;
+    // slots: 등록 대상의 저장 슬롯 목록. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::array<std::span<std::uint8_t>,66> slots{};
+    // forcefield: 포스필드. 입력 구성 또는 실행 결과 대조에 사용한다.
     PriestForcefieldState forcefield;
+    // priests: 사제. 입력 구성 또는 실행 결과 대조에 사용한다.
     PriestPostPopState priests;
+    // events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::string events;
+    // patch: 10.78 패치판의 상태 또는 패치판 검사용 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     bool patch;
     // 모든 입력 슬롯을 미리 확보하고 free 상태 표본은 이 원래 메모리 범위에서 준비한다.
     explicit ForcefieldScene(OriginalEdition edition):pool(edition,kCapacity,false),types(edition==OriginalEdition::Patch1078 ? 188 : 171),patch(edition==OriginalEdition::Patch1078) {

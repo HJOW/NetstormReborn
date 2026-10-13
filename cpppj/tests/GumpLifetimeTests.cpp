@@ -31,10 +31,15 @@ void ReadTable(std::string_view input,std::span<std::uint32_t> values) {
 }
 // 생성기와 같은 노드/등록 표 및 수명 전역을 보유하는 관찰 장면이다.
 struct LifetimeScene {
+    // nodes: 노드. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::map<std::uint32_t,GumpCreateNode> nodes;
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
     GumpCreateState state;
+    // life: 원본의 고정 크기 idle/overlay/삭제/dialog 표와 현재 삭제 전역이다 (GumpLifetimeState).
     GumpLifetimeState life;
+    // responses: 응답. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::map<std::string,std::vector<std::array<std::uint32_t,3>>> responses;
+    // calls: 호출 횟수 또는 호출 인자를 대조하는 기록. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::string calls;
     // 안정된 주소로 현재 노드를 공급한다.
     GumpCreateNode* Find(std::uint32_t token) { const auto found=nodes.find(token);return found==nodes.end() ? nullptr : &found->second; }

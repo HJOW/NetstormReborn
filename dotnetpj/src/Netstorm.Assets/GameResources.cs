@@ -3,6 +3,9 @@ using System.Globalization;
 namespace Netstorm.Assets;
 
 /// <summary>언어 대체 결과를 포함하는 미션 스크립트. Path는 가상 파일 시스템 경로다.</summary>
+/// <param name="Path">읽어 온 미션 파일 경로.</param>
+/// <param name="Language">미션 스크립트에서 실제 선택한 언어 이름.</param>
+/// <param name="Script">읽어 온 미션 스크립트.</param>
 public sealed record LoadedMission(string Path, string Language, MissionScript Script);
 
 /// <summary>실행 시 사용할 파일 시스템·설정·번역·미션 조회를 한 곳에 구성한다.</summary>

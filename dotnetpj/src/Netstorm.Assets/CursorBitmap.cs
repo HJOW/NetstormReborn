@@ -3,6 +3,12 @@ using System.Buffers.Binary;
 namespace Netstorm.Assets;
 
 /// <summary>원본 RT_CURSOR의 단색 비트맵. SDL의 색·마스크 비트로 투명·배경 반전을 그대로 보존한다.</summary>
+/// <param name="Width">가로 크기.</param>
+/// <param name="Height">세로 크기.</param>
+/// <param name="HotX">커서 클릭 기준점의 X 픽셀 오프셋.</param>
+/// <param name="HotY">커서 클릭 기준점의 Y 픽셀 오프셋.</param>
+/// <param name="Data">SDL 단색 커서의 색·반전 판정에 사용할 1비트 데이터 배열.</param>
+/// <param name="Mask">SDL 단색 커서의 투명·반전 판정에 사용할 1비트 마스크 배열.</param>
 public sealed record CursorBitmap(int Width, int Height, int HotX, int HotY, byte[] Data, byte[] Mask)
 {
     /// <summary>핫스팟 4바이트, BITMAPINFOHEADER, 흑백 팔레트, 아래부터 저장된 XOR·AND 비트맵을 읽는다.</summary>

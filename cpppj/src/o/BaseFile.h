@@ -18,12 +18,15 @@ std::vector<std::uint8_t> ReadFileBytes(const std::filesystem::path& path);
 // 사용자 경로 표기를 원본 아카이브 경로로 정규화한다. '/'와 선행 구분자 허용은 새 확장이다.
 std::string NormalizeGamePath(std::string_view name);
 
+// TAFF 아카이브 안의 파일 이름·위치·크기 기록이다.
 struct TaffEntry {
+    // name: 이름으로 조회·표시할 때 사용하는 문자열.
     std::string name;
     std::uint32_t offset{}; // 데이터 영역 기준 오프셋, 원본 레코드 +0.
     std::uint32_t size{}; // 원본 레코드 +4.
 };
 
+// TAFF 아카이브를 읽고 파일 항목을 조회하는 저장소이다.
 class TaffArchive {
 public:
     // 원본 헤더·이름 인덱스·레코드를 리틀 엔디언으로 읽는다. 잘린 파일은 예외로 거부한다.
@@ -37,12 +40,16 @@ public:
     // 이름으로 찾아 플래그 bit 1이 켜진 아카이브만 복호화한다.
     std::vector<std::uint8_t> Read(std::string_view name) const;
 private:
+    // bytes_: 필드 접근이나 파일 읽기에 사용하는 원시 바이트.
     std::vector<std::uint8_t> bytes_;
+    // entries_: 현재 등록하거나 읽은 항목 목록.
     std::vector<TaffEntry> entries_;
+    // dataOffset_: 파일에서 실제 데이터가 시작되는 바이트 위치.
     std::uint32_t dataOffset_{};
     std::uint32_t flags_{}; // 헤더 +0x18. bit 1 = XOR.
 };
 
+// 디스크·보조 디렉터리·아카이브 순서로 게임 파일을 찾는 파일 시스템이다.
 class BaseFileSystem {
 public:
     // 기본 경로·보조 경로를 설정한다. 등록 순서는 호출자가 원본 순서에 맞춰 지정한다.
@@ -56,9 +63,13 @@ public:
     // 캠페인 목록의 와일드카드: 디스크/TAFF/보조 경로를 합쳐 중복을 제거하고 이름순으로 반환한다.
     std::vector<std::string> Match(std::string_view pattern) const;
 private:
+    // base_: 파생 처리에서 공통 동작을 위임하는 기본 객체.
     std::filesystem::path base_;
+    // secondary_: 보조.
     std::filesystem::path secondary_;
+    // archiveNames_: 검색 대상으로 등록한 TAFF 아카이브 이름 목록.
     std::vector<std::string> archiveNames_;
+    // archives_: 읽기 위해 열린 TAFF 아카이브 목록.
     std::vector<TaffArchive> archives_;
 };
 }

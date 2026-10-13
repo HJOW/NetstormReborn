@@ -9,7 +9,7 @@ inline constexpr std::uint32_t kMusicUpdateMilliseconds=500,kMusicShutdownMillis
 // OS 핸들은 호스트 포인터 폭으로 보관하며 x86 채널 raw에는 넣지 않는다.
 using MusicRuntimeHandle=std::uintptr_t;
 // 원본 스레드/수동 리셋 종료 이벤트/스레드 번호 전역이다. 초기 배치 외에는 Runtime이 관리한다.
-struct MusicRuntimeState { MusicRuntimeHandle thread{},shutdown{};std::uint32_t threadId{}; };
+struct MusicRuntimeState { /* thread: 음악 처리를 수행하는 스레드. */ /* shutdown: 종료. */ MusicRuntimeHandle thread{},shutdown{};/* threadId: 스레드 번호. */ std::uint32_t threadId{}; };
 // 원본 커널 경계다. 상태 전이는 Runtime이 수행하며 생성/대기/신호/중단/닫기/section/log는 예외를 던지지 않아야 한다. report의 호스트 진단 예외는 자원 정리 후 전달한다.
 // 사용: createThread는 callback을 보관해 별도 스레드에서 실행한다. 실패 시 0이며 같은 스레드에서 실행하면 안 된다.
 struct MusicRuntimeHooks {
@@ -29,6 +29,7 @@ struct MusicRuntimeHooks {
     std::function<void(MusicRuntimeHandle)> close;
     // 원본 채널 9의 진단과 실패 assert를 기록한다. assert 보고 후 초기화를 계속하는 원본 동작을 보존한다.
     std::function<void(std::uint32_t,std::string_view)> log;
+    // report: 보고서.
     SoundAssertReport report;
 };
 // 실제 Windows 이벤트/스레드 경계다. 아직 장치/창은 열지 않으며 Initialize가 스레드를 만든다.
@@ -60,9 +61,10 @@ private:
     // 원본 진단을 채널 9에 전달한다.
     void Log(std::string_view text);
     // 참조/콜백 수명과 초기화/종료 직렬화다. 음악 명령 잠금은 SoundMusic과 공유하고 wait 동안 잡지 않는다.
-    SoundState& sound_;MusicRuntimeState& state_;MusicChannel& primary_;MusicChannel& secondary_;SoundMusic& music_;
-    MusicBufferHooks buffers_;MusicRuntimeHooks hooks_;std::recursive_mutex lifecycleMutex_;
+    SoundState& sound_;/* state_: 원본 스레드/수동 리셋 종료 이벤트/스레드 번호 전역이다. 초기 배치 외에는 Runtime이 관리한다 (MusicRuntimeState). */ MusicRuntimeState& state_;/* primary_: 한 음악 채널의 제어다. 원본 CRITICAL_SECTION과 같은 재귀 잠금으로 파일/버퍼 상태를 보호한다 (MusicChannel). */ MusicChannel& primary_;/* secondary_: 한 음악 채널의 제어다. 원본 CRITICAL_SECTION과 같은 재귀 잠금으로 파일/버퍼 상태를 보호한다 (MusicChannel). */ MusicChannel& secondary_;/* music_: 효과음과 음악의 공통 음소거 제어다. 최초 PushMute에서 음량을 예약하고 마지막 PopMute에서 최신 예약값을 복원한다 (SoundMusic). */ SoundMusic& music_;
+    // buffers_: 음악 버퍼의 생성/갱신 COM 경계다. HRESULT는 음수일 때 실패하며 status/cursor/lock 출력은 성공 시 유효하다 (MusicBufferHooks).
+    MusicBufferHooks buffers_;/* hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (MusicRuntimeHooks). */ MusicRuntimeHooks hooks_;/* lifecycleMutex_: 수명 뮤텍스. */ std::recursive_mutex lifecycleMutex_;
     // worker 예외만 별도 잠금으로 보호해 종료 대기와 충돌하지 않게 한다.
-    mutable std::mutex failureMutex_;std::exception_ptr failure_;
+    mutable std::mutex failureMutex_;/* failure_: 실패. */ std::exception_ptr failure_;
 };
 }

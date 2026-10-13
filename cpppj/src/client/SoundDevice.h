@@ -11,8 +11,11 @@ namespace netstorm::client {
 // 원본 mmio가 읽은 WAVEFORMATEX 18바이트, data 청크 위치와 표본이다. PCM 짧은 fmt의 bits/cbSize는 원본처럼 보정한다.
 // 사용: ReadSoundWave의 결과를 버퍼 만들기에 전달한다. 장치와 무관하여 파일 검사에서도 쓸 수 있다.
 struct SoundWave {
+    // format: 오디오 샘플 형식과 채널·주파수 정보.
     std::array<std::uint8_t,18> format{};
+    // dataOffset: 파일에서 실제 데이터가 시작되는 바이트 위치.
     std::uint32_t dataOffset{};
+    // samples: 읽거나 재생할 PCM 샘플 자료.
     std::vector<std::uint8_t> samples;
 };
 // WAV를 읽기 전용 mmio로 열어 WAVE→fmt→data 순서로 읽는다. 누락/불완전 fmt/빈 data는 빈 값을 반환한다.
@@ -69,6 +72,7 @@ public:
 private:
     // Windows COM 포인터와 DLL 핸들을 숨기는 소유 구조체다.
     struct Impl;
+    // impl_: 공개 인터페이스 뒤의 구현 상태와 연결 객체.
     std::unique_ptr<Impl> impl_;
 };
 }

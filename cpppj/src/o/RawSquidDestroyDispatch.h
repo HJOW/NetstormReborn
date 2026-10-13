@@ -5,6 +5,7 @@
 #include "o/RawSquidNeighbors.h"
 
 namespace netstorm::o {
+// 원본 vtable +0x10의 다리 삭제 재정의를 공통 destroy 앞에 연결한다.
 class RawSquidDestroyDispatch {
 public:
     // 풀·공간·프레임·모드를 공유한다. Graph가 없으면 비활성 표의 표면 수 0으로 처리한다.
@@ -15,9 +16,13 @@ public:
     // 원본이 공통 destroy를 직접 부르는 지점은 RawSquidDestroy::Destroy를 사용한다.
     bool Destroy(Sid sid,std::uint32_t flags,const SquidDestroyHooks& hooks) const;
 private:
+    // base_: 파생 처리에서 공통 동작을 위임하는 기본 객체.
     RawSquidDestroy& base_;
+    // neighbors_: 발자국에 인접한 표면·객체를 조회하는 검색기.
     const RawSquidNeighbors& neighbors_;
+    // mode_: 원본 실행 상태 전역. 기본값은 싱글 플레이(로컬이 서버) 전투 화면이다 (BridgeDecayMode).
     const BridgeDecayMode& mode_;
+    // graph_: 서로 연결된 표면의 Graph 소속을 관리하는 처리기.
     const RawGraph* graph_{};
 };
 }

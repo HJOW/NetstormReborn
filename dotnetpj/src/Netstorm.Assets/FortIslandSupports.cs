@@ -1,6 +1,9 @@
 namespace Netstorm.Assets;
 
 /// <summary>저장된 noIsland 3×3 묶음으로 확인한 작은 받침. 기준점은 오른쪽 아래 칸이다.</summary>
+/// <param name="X">월드 X 좌표.</param>
+/// <param name="Y">월드 Y 좌표.</param>
+/// <param name="Owner">소유 플레이어 번호.</param>
 public sealed record FortIslandSupport(int X, int Y, int Owner);
 
 /// <summary>원본 작은 받침의 논리 칸 묶음을 찾아 island·islandStalag 표시용으로 복원한다.</summary>

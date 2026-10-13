@@ -10,6 +10,7 @@ struct SquidOwnerMode {
     bool battle{};    // 00594fbc / CD 00540a20: 전투 모드. 둘 중 하나가 켜져 있어야 작업장 목록을 고친다.
     bool challenge{}; // 00594fc8 / CD 00540a24: 켜져 있으면 유효한 소유자 번호가 1~39로 바뀐다(원본 CL_NUM_CHAL_PLAYERS).
 };
+// 소유 플레이어 변경을 객체 필드와 장부에 반영하는 처리기이다.
 class SquidOwner {
 public:
     // 풀·장부·모드는 이 객체보다 오래 살아야 한다. 타입 표는 복사한다.
@@ -21,9 +22,13 @@ public:
     // 가상 효과 어댑터가 같은 실제 풀의 소유자를 변경하는지 확인한다.
     const SidPool& Pool() const;
 private:
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
+    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::vector<RiftTypeRecord> types_;
+    // bookkeeping_: 객체 종류·소유자별 등록 목록과 개수를 관리하는 장부.
     SquidPostPopState& bookkeeping_;
+    // mode_: 소유자 지정이 읽는 원본 모드 전역이다. 패치 주소 / CD 주소를 괄호에 둔다 (SquidOwnerMode).
     const SquidOwnerMode& mode_;
 };
 }

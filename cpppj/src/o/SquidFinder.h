@@ -7,12 +7,19 @@
 namespace netstorm::o {
 // 원본 Squid/Type에서 읽는 표면 필드만 이름 있는 정수 발자국 스냅샷으로 받는다.
 struct SurfaceObject {
+    // id: 대상을 구별하는 식별 번호.
     std::uint16_t id{};
     int x{},y{},width{1},height{1}; // 기준점은 발자국의 오른쪽 아래 칸이다.
+    // flags1: 타입의 첫 번째 플래그 단어.
+    // flags2: 타입의 두 번째 플래그 단어.
     std::uint32_t flags1{},flags2{};
+    // frame: 사용할 그림 프레임 또는 프레임 처리 자료.
     FrameCode frame{};
+    // dead: 사망 여부.
+    // buried: 매몰 여부.
     bool dead{},buried{};
 };
+// 표면 지도와 점유 비트로 검색 조건에 맞는 객체를 찾는 검색기이다.
 class SurfaceFinder {
 public:
     // 원본 표면 오브젝트 번호 지도와 spot 바이트를 복사한다. 모두 256×256이며 원본 SID 형식은 별도다.
@@ -32,8 +39,11 @@ public:
 private:
     // 원본 004ab880 ↔ CD 00487810: 각 좌표를 1..255로 자르고 사각형의 모든 spot 비트를 AND한다.
     bool Interior(const SurfaceObject& object) const;
+    // objects_: 현재 월드 또는 수집 단계의 객체 목록.
     std::unordered_map<std::uint16_t,SurfaceObject> objects_;
+    // map_: 지도.
     std::vector<std::uint16_t> map_;
+    // spots_: 칸별 점유·통행 비트를 읽는 spot 지도.
     std::vector<std::uint8_t> spots_;
 };
 }

@@ -7,6 +7,7 @@
 namespace netstorm::o {
 // 원본 new(0x38)의 미초기화 padding도 독립 대조에서 보존하도록 raw 필드를 소유한다.
 struct GunProcessFields {
+    // bytes: 필드 접근이나 파일 읽기에 사용하는 원시 바이트.
     std::array<std::uint8_t,0x38> bytes{};
     // 실제 +8 dirty·+0x10 다음 시각·+0x18 WORD 표적·+0x1c 단계·+0x20 group을 읽는다.
     std::uint8_t Dirty() const;
@@ -20,9 +21,22 @@ struct GunProcessFields {
 };
 // 원본 전역을 실행 월드가 같은 시점에 공급한다. 동맹 표는 0~8 두 소유자 번호로 접근한다.
 struct GunProcessState {
+    // now: 현재 판정에 사용하는 시각(초).
     double now{};
+    // boss: boss 여부.
+    // server: 서버 전용 초기화와 동작을 적용할지.
+    // fortMode: Fort 모드 여부.
+    // fixedMode: 고정 모드 여부.
+    // disabled: 비활성 출력 색 또는 동작 차단 상태.
+    // friendlyFire: 아군 발사 여부.
+    // checking: 검사 여부.
     bool boss{true},server{true},fortMode{},fixedMode{},disabled{},friendlyFire{},checking{};
+    // processType: 프로세스 타입.
+    // windArcherType: 윈드 아처 자산을 타입 표에서 찾는 번호.
+    // thunderCannonType: 썬더 캐논 자산을 타입 표에서 찾는 번호.
+    // rainCannonType: 레인 캐논 자산을 타입 표에서 찾는 번호.
     std::uint32_t processType{34},windArcherType{140},thunderCannonType{131},rainCannonType{129};
+    // allies: 동맹.
     std::array<std::array<bool,kPlayerCount+1>,kPlayerCount+1> allies{};
 };
 // 명시 외부 경계다. 실제 원본 몸체가 아직 없으면 호출자가 예외를 유지하며 noop로 성공시키지 않는다.
@@ -81,9 +95,13 @@ private:
     std::span<const std::uint8_t> Parent(const GunProcessFields& fields) const;
     // 현재 AnimationForm을 반복 조회하는 원본 호출 순서를 보존하며 진단한다.
     void CheckNoAnimation(GunProcessFields& fields) const;
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
+    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::vector<RiftTypeRecord> types_;
+    // state_: 원본 전역을 실행 월드가 같은 시점에 공급한다. 동맹 표는 0~8 두 소유자 번호로 접근한다 (GunProcessState).
     GunProcessState& state_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (GunProcessHooks).
     GunProcessHooks hooks_;
 };
 // 실제 Kernel의 inner Baseprocess를 C++ 수명/가상 메서드로 표현한다.
@@ -103,7 +121,9 @@ public:
     // AttachForm은 OnAttached 전 writer를 부르므로 현재 base Form/Parent를 먼저 동기화한다.
     std::uint16_t WritePacket(std::span<std::uint8_t> packet,bool parentChanged,bool force=false,std::uint8_t protocol=1,std::uint8_t message=0x3a);
 private:
+    // logic_: 원본 GunProcess 몸체를 raw 필드와 같은 풀의 자산 상태로 실행한다 (RawGunProcess).
     const RawGunProcess& logic_;
+    // fields_: 원본 프로세스의 직접 읽기·쓰기 필드 이미지.
     GunProcessFields fields_;
 };
 // 원본 flags0를 유지한 실제 Kernel factory다. 필요한 서버 전송을 host가 연결하지 않았으면 기존 예외를 유지한다.

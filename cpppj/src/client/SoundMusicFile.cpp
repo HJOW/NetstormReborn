@@ -17,7 +17,8 @@ namespace netstorm::client {
 struct MusicFileStore::Impl {
     // 파일 표와 토큰/같은 Winmm 위치를 한 IO 호출 동안 보호한다. Open의 실패 정리는 Close로 재진입한다.
     mutable std::recursive_mutex mutex;
-    std::map<std::uint32_t,HMMIO> files;std::uint32_t next=1;SoundAssertReport report;
+    // files: 파일.
+    std::map<std::uint32_t,HMMIO> files;/* next: 다음 항목의 번호 또는 다음 처리 위치. */ std::uint32_t next=1;/* report: 보고서. */ SoundAssertReport report;
     // 파일을 열지 않고 진단 콜백만 보관한다.
     explicit Impl(SoundAssertReport diagnostic):report(std::move(diagnostic)) {}
     // 알려진 토큰의 핸들 또는 null을 조회한다. 만료된 토큰은 IO 실패로 처리한다.
@@ -41,7 +42,8 @@ bool MusicFileStore::Open(const std::filesystem::path& path,MusicFileHeader& hea
     try { impl_->files.emplace(header.file,handle); } catch (...) { mmioClose(handle,0);throw; }
     // 헤더 실패와 예외에서 닫되 성공하면 열린 파일을 채널에 넘기는 범위 소유자다.
     struct Opening {
-        MusicFileStore& files;std::uint32_t token;bool keep=false;
+        // files: Winmm 파일 핸들은 호스트 객체가 소유하고 raw 채널에는 재사용하지 않는 32비트 토큰만 저장한다 (MusicFileStore).
+        MusicFileStore& files;/* token: 저장소나 분배기에서 대상을 구별하는 토큰. */ std::uint32_t token;/* keep: 유지 여부. */ bool keep=false;
         // 성공 표시가 없는 반환/예외는 닫는다. raw 토큰 값은 지우지 않는다.
         ~Opening() { if (!keep) files.Close(token); }
     } opening{*this,header.file};

@@ -32,7 +32,7 @@ std::string Rectangle(ScreenRect r) { return std::to_string(r.left)+","+std::to_
 // 문자열 관찰은 비어 있는 순서를 '-'로 표시한다.
 void Add(std::string& text,const std::string& event) { if (!text.empty()) text+=';';text+=event; }
 // 원본 묶음은 헤더/개수/항목 배열을 별도로 소유한다. count 주소는 전체 호출 동안 고정한다.
-struct GroupStorage { std::uint32_t token{};std::int32_t count{};std::vector<RenderCollectionEntry> entries; };
+struct GroupStorage { /* token: 저장소나 분배기에서 대상을 구별하는 토큰. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::uint32_t token{};/* count: 현재 항목 또는 실행 횟수. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::int32_t count{};/* entries: 현재 등록하거나 읽은 항목 목록. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<RenderCollectionEntry> entries; };
 // 한 판본의 모든 옵션 조합을 원본이 결정한 배열/호출 순서와 대조한다.
 void Replay(std::string_view edition) {
     std::size_t replayed=0;

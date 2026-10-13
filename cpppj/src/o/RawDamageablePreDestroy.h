@@ -4,13 +4,17 @@
 
 namespace netstorm::o {
 enum class DamageableSound { Collapse,Explosion,PriestFree };
+// 피해가능객체 소리 발생한 동작의 대상과 인자를 기록하는 이벤트이다.
 struct DamageableSoundEvent {
+    // sound: 소리.
     DamageableSound sound{};
     float x{},y{}; // Collapse/Explosion은 현재 raw 좌표다. PriestFree는 전역 소리의 0 인자다.
 };
+// 피해가능객체 전처리 삭제 처리 중 조회·갱신하는 상태 묶음이다.
 struct DamageablePreDestroyState {
     std::uint32_t priestType{158}; // 005412d0 / CD 0051cbbc: 종속 kind WORD와 비교하는 DWORD다.
 };
+// 피해가능객체 전처리 삭제 외부 동작과 저장소 조회를 연결하는 콜백 묶음이다.
 struct DamageablePreDestroyHooks {
     std::function<void(Sid)> collapse; // 004605f0 / CD 00454800: 붕괴 효과의 하위 몸체다.
     std::function<void(Sid)> explosion; // 004605d0 / CD 004547d0: 폭발 효과의 하위 몸체다.
@@ -19,6 +23,7 @@ struct DamageablePreDestroyHooks {
     std::function<void(Sid,std::uint32_t)> validateBase; // 공통 장부/깊이/후속 공간 효과의 순수 사전 검사다.
     std::function<void(Sid,std::uint32_t)> base; // 004b0950 / CD 004add20: 같은 flags의 공통 preDestroy다.
 };
+// Damageable의 붕괴/폭발·해방 소리 접두와 공통 삭제 호출을 복원한다.
 class RawDamageablePreDestroy {
 public:
     // 공간 자료는 256×256 바이트다. 풀·전역·공간·훅 대상은 더 오래 살아야 한다.
@@ -35,10 +40,15 @@ private:
     std::uint8_t Spot(Sid sid) const;
     // 각 효과 뒤 현재 좌표 비트를 다시 읽어 위치 소리 요청을 만든다.
     void SoundAt(Sid sid,DamageableSound sound) const;
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
+    // spots_: 칸별 점유·통행 비트를 읽는 spot 지도.
     std::span<const std::uint8_t> spots_;
+    // finderState_: 검색기 상태.
     const ContainedFinderState& finderState_;
+    // state_: 처리 중 조회·갱신하는 상태 (const DamageablePreDestroyState).
     const DamageablePreDestroyState& state_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (DamageablePreDestroyHooks).
     DamageablePreDestroyHooks hooks_;
 };
 // Carrier의 Damageable 경계만 같은 풀의 실제 접두/공통 호출로 교체한다.

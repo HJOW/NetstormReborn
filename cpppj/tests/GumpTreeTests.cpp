@@ -10,11 +10,17 @@ using namespace netstorm::test::gumpraw;
 const auto& Fixture() { static const auto rows=LoadFixture(NETSTORM_GUMPTREE_FIXTURE).rows;return rows; }
 // 안정된 생성/트리 저장소와 명시 응답·관찰 기록이다.
 struct TreeScene {
+    // nodes: 노드. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::map<std::uint32_t,GumpCreateNode> nodes;
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
     GumpCreateState state;
+    // tree: 원본 지도 화면 영역과 패치판의 밀어내기 링크 진단 전역이다 (GumpTreeState).
     GumpTreeState tree;
+    // responses: 응답. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::map<std::string,std::vector<std::array<std::uint32_t,3>>> responses;
+    // anchors: 앵커. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::map<std::uint32_t,ScreenPoint> anchors;
+    // calls: 호출 횟수 또는 호출 인자를 대조하는 기록. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::string calls;
     // 현재 토큰의 같은 객체 주소를 공급한다.
     GumpCreateNode* Find(std::uint32_t token) { const auto found=nodes.find(token);return found==nodes.end() ? nullptr : &found->second; }

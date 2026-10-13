@@ -14,12 +14,19 @@ struct MissionOutcomePlayer {
 };
 // 플레이어마다 유지하는 원본 DWORD 사건 잠금이다. 참이 된 조건을 처리하면 1을 쓰며 자동 초기화하지 않는다.
 struct MissionPlayerOutcomeLatches {
+    // templeDead: 신전 파괴 사건을 이미 처리했는지 나타내는 DWORD 잠금.
+    // templeHalfDead: 신전 HP 절반 사건을 이미 처리했는지 나타내는 DWORD 잠금.
+    // priestDead: 사제 사망 사건을 이미 처리했는지 나타내는 DWORD 잠금.
+    // priestCaptured: 사제 포획 사건을 이미 처리했는지 나타내는 DWORD 잠금.
+    // priestSaved: 사제 구출 사건을 이미 처리했는지 나타내는 DWORD 잠금.
     std::uint32_t templeDead{},templeHalfDead{},priestDead{},priestCaptured{},priestSaved{};
 };
 // 미션의 현재 입력과 사건 잠금이다. 콜백이 바꾼 값은 원본의 다음 조회 시점에 다시 읽는다.
 struct MissionOutcomeState {
+    // players: 플레이어.
     std::array<MissionOutcomePlayer,kPlayerCount+1> players{};
     std::array<std::array<std::uint32_t,kPlayerCount+1>,kPlayerCount+1> allies{}; // 두 방향이 모두 비제로여야 같은 팀이다.
+    // latches: 한 번 처리한 승패·사제 사건을 다시 발생시키지 않는 플레이어별 표식.
     std::array<MissionPlayerOutcomeLatches,kPlayerCount+1> latches{};
     std::uint32_t goodTeamDead{},badTeamDead{},failed{}; // 미션 +0x180/+0x184/+0x188.
     std::uint32_t localPlayer{1}; // 패치 00540c70/CD 0050f6c8. DWORD 입력이다.
@@ -63,10 +70,15 @@ private:
     bool TempleDead(std::uint32_t player) const;
     // 현재 사제 목록에서 찾은 좌표의 영역 소유자와 callback 직전에 저장한 로컬 번호를 비교한다.
     bool PriestSaved(std::uint32_t player) const;
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     const SidPool& pool_;
+    // priests_: 사제.
     const PriestPostPopState& priests_;
+    // state_: 미션의 현재 입력과 사건 잠금이다. 콜백이 바꾼 값은 원본의 다음 조회 시점에 다시 읽는다 (MissionOutcomeState).
     MissionOutcomeState& state_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (MissionOutcomeHooks).
     MissionOutcomeHooks hooks_;
+    // lookup_: 조건에 맞는 현재 객체를 찾는 조회 처리기.
     RawPriestLookup lookup_;
 };
 // 최대 HP만 같은 풀의 실제 모듈로 연결한다. UI/스크립트/영역 효과는 호출자가 채운 그대로 둔다.

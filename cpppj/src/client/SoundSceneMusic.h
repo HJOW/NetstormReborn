@@ -64,6 +64,7 @@ struct SceneMusicState {
     // 지금 적용 중인 날씨 색(DAT_00540cdc / CD 005203a0, 처음 167)과 원소 곡별 색 표(DAT_005b5da8 / CD 00549b40)다.
     // 색 표는 팔레트에서 가장 가까운 색 번호로 초기화 때 채워진다.
     std::uint32_t tint=167;
+    // tints: 색조.
     std::array<std::uint32_t,4> tints{};
     // 팔레트가 바뀌어 화면을 다시 그려야 함을 알리는 카운터다(DAT_0059a8b0 / CD 0052039c). 날씨 팔레트를 적용하면 1을 쓴다.
     std::uint32_t paletteDirty{};
@@ -138,7 +139,8 @@ public:
     // 원본: 00469c80 / CD 00436960.
     void ApplyWeather();
 private:
-    SceneMusicState& state_;o::GameRandom& random_;SceneMusicHooks hooks_;
+    // state_: 장면별 음악 감독이 읽고 쓰는 원본 전역이다. 값은 클라이언트가 소유하고 감독이 살아 있는 동안 유지해야 한다 (SceneMusicState).
+    SceneMusicState& state_;/* random_: 원본 FUN_004558c0: 상태 0이면 0x0bad0bad로 바꾼 뒤 상태*0x10003+3의 상위 16비트를 limit로 나눈 나머지를 쓴다 (o::GameRandom). */ o::GameRandom& random_;/* hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (SceneMusicHooks). */ SceneMusicHooks hooks_;
 };
 
 // 실제 음악 선택·기본 채널·효과음 재생 계층에 잇는 경계를 채운다. currentName·select·duration·weatherSound는 이 함수가 만들고

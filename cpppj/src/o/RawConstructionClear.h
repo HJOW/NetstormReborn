@@ -47,11 +47,17 @@ public:
     // 호출자가 같은 풀을 쓰는지 확인하는 데 쓴다.
     const SidPool& Pool() const;
 private:
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     const SidPool& pool_;
+    // hash_: 좌표별 객체 후보를 찾는 공간 해시.
     const SquidHash& hash_;
+    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::span<const RiftTypeRecord> types_;
+    // frames_: 타입별 프레임 자료.
     std::span<const PriestPlainCanonType> frames_;
+    // state_: 정리가 읽는 전역이다. 주소는 패치 / CD 순서다 (ConstructionClearState).
     const ConstructionClearState& state_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (ConstructionClearHooks).
     ConstructionClearHooks hooks_;
 };
 }

@@ -36,6 +36,9 @@ std::vector<std::uint8_t> Wave() {
 }
 // 저장소 밖의 검사 전용 RIFF 파일을 소유한다. 원본 경로는 수정하지 않는다.
 struct TemporaryFiles {
+    // path: 경로. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // valid: 현재 자료나 순회 항목을 읽을 수 있는지. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // invalid: 무효. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::filesystem::path path,valid,invalid;
     // 충돌하지 않는 디렉터리와 유효/청크 누락 입력을 만든다.
     TemporaryFiles():path(std::filesystem::temp_directory_path()/("NetstormCppMusicSelection-"+std::to_string(std::chrono::steady_clock::now().time_since_epoch().count()))) {
@@ -63,8 +66,13 @@ SoundDeviceHooks UnusedEffects() {
 }
 // 파일은 실제 열린 Winmm 소유자다. 조회/COM/실패 응답만 원본 입력으로 공급하며 fallback 본체는 대체하지 않는다.
 struct SelectionBoundary {
-    MusicFileStore files;const TemporaryFiles& temporary;std::vector<std::string> events;std::set<std::uint32_t> liveFiles;
-    int findMode=1,fileMode=0,seekFailure=0,lockDepth=0;std::int32_t createResult=0;
+    // files: Winmm 파일 핸들은 호스트 객체가 소유하고 raw 채널에는 재사용하지 않는 32비트 토큰만 저장한다 (MusicFileStore).
+    MusicFileStore files;/* temporary: 검사 전용 임시 디렉터리를 소유하며 원본/저장소 파일을 수정하지 않는다 (TemporaryFiles). */ const TemporaryFiles& temporary;/* events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<std::string> events;/* liveFiles: 생존 파일. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::set<std::uint32_t> liveFiles;
+    // findMode: 검색 모드. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // fileMode: 소리 파일 읽기 경로를 선택하는 모드. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // seekFailure: 탐색 실패. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // lockDepth: 중첩된 잠금 요청의 수. 입력 구성 또는 실행 결과 대조에 사용한다.
+    int findMode=1,fileMode=0,seekFailure=0,lockDepth=0;/* createResult: 생성 결과. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::int32_t createResult=0;
     // 검사 파일의 수명은 이 객체보다 길어야 한다.
     explicit SelectionBoundary(const TemporaryFiles& source):temporary(source) {}
     // 실제 파일 IO와 버퍼 정지/해제·로그·재귀 잠금을 관찰한다.

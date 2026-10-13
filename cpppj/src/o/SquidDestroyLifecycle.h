@@ -7,12 +7,17 @@
 namespace netstorm::o {
 // UI 전체·삭제 보상/SP·실제 소리 출력은 명시적인 외부 효과로 연결한다.
 enum class SquidDeletionEffect { ClearSelection,Refund,UnitLostSound };
+// 객체 삭제 발생한 동작의 대상과 인자를 기록하는 이벤트이다.
 struct SquidDeletionEvent {
+    // effect: 효과.
     SquidDeletionEffect effect{};
+    // sid: 원본 풀에서 객체를 찾는 SID 번호.
     Sid sid{};
     std::uint32_t recipient{}; // Refund의 flags 16..19비트. 원본 보상 함수의 마지막 인자는 0이다.
 };
+// 객체 삭제 처리 중 조회·갱신하는 상태 묶음이다.
 struct SquidDeletionState {
+    // selected: 현재 선택한 객체·컨트롤의 번호 또는 토큰.
     Sid selected{};
     std::uint32_t placementType{}; // abstract/buried 선택 객체가 남기는 배치 타입. 0이면 없음.
     float placementX{},placementY{},lostX{},lostY{}; // 원본 좌표 비트를 그대로 보존한다.
@@ -22,10 +27,13 @@ struct SquidDeletionState {
     bool rebuildGraph{}; // 원본 삭제 분할 정책 전역. GraphRecovery의 소진 복구와 구별한다.
     std::uint8_t specialSurfaceType{157},specialSurfaceReplacementType{162},largeSurfaceType{162}; // 특수 H 치환·9 감소 타입 전역.
 };
+// 객체 삭제 외부 동작과 저장소 조회를 연결하는 콜백 묶음이다.
 struct SquidDeletionHooks {
+    // emit: 관찰한 이벤트를 외부 처리기에 전달하는 콜백.
     std::function<void(const SquidDeletionEvent&)> emit;
     std::function<void(const SquidDestroyEvent&)> forward; // 종속 가상 메서드/전파를 별도로 연결한다.
 };
+// 공통 pre/postDestroy의 비전투 선택·공급/작업장 목록·타입 통계·비용 장부를 복원한다.
 class SquidDestroyLifecycle {
 public:
     // Pop과 같은 장부/풀을 사용한다. 풀·원본 삭제 어댑터·상태의 수명은 이 객체보다 길어야 한다.
@@ -55,11 +63,17 @@ private:
     void PreGraph(Sid sid,std::uint32_t flags,bool validate) const;
     // post의 주변 표면 Add는 비용 차감보다 먼저 실행된다.
     bool NeedsPostGraph(Sid sid,std::uint32_t flags) const;
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
+    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::vector<RiftTypeRecord> types_;
+    // bookkeeping_: 객체 종류·소유자별 등록 목록과 개수를 관리하는 장부.
     SquidPostPopState& bookkeeping_;
+    // state_: 처리 중 조회·갱신하는 상태 (SquidDeletionState).
     SquidDeletionState& state_;
+    // destroy_: 객체 삭제의 전처리·공간 해제·후처리를 실행하는 처리기.
     RawSquidDestroy& destroy_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (SquidDeletionHooks).
     SquidDeletionHooks hooks_;
     RawGraph* graph_{}; // 풀/타입/공간을 생성 시 확인하며 연결 객체는 더 오래 살아야 한다.
     SquidReward* reward_{}; // 있으면 보상 사건을 외부로 내보내지 않고 실제 SP/지갑/샘 풀 계산을 수행한다. 풀과 장부가 같아야 한다.

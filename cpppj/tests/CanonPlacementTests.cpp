@@ -11,13 +11,22 @@ namespace {
 constexpr std::size_t kRows=1120,kTotalRows=3*kRows;
 // 실행기 없는 회귀에서도 저장된 원본 관찰만 읽는다.
 const auto& Fixture() { static const auto data=LoadFixture(NETSTORM_CANONPLACEMENT_FIXTURE);return data.rows; }
+// CanonPlacement 검사에서 같은 풀·상태·처리기를 조립해 입력과 결과를 대조하는 자료형이다.
 struct PlacementScene {
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
     SidPool pool;
+    // types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeRecord> types;
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
     PriestPlacementState state;
+    // rect: 출력·적중·배치 검사에 사용할 사각형. 입력 구성 또는 실행 결과 대조에 사용한다.
     PriestPlacementRect rect;
+    // query: 조회. 입력 구성 또는 실행 결과 대조에 사용한다.
     CanonPlacementQuery query;
+    // lower: 하위. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // change: 변경. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::uint32_t lower{},change{};
+    // events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::string events;
     // 자료 참조와 판본을 실제 구현의 수명 동안 유지한다.
     explicit PlacementScene(OriginalEdition edition):pool(edition,kCapacity,false),types(edition==OriginalEdition::Patch1078 ? 188 : 171) {}

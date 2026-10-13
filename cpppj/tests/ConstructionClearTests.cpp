@@ -14,12 +14,19 @@ constexpr std::uint32_t kOtherType=102;
 const auto& Fixture() { static const auto rows=LoadFixture(NETSTORM_CONSTRUCTIONCLEAR_FIXTURE).rows;return rows; }
 // 풀·해시·타입·프레임과 후보 등록을 행마다 다시 준비하는 장면이다.
 struct ClearScene {
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
     SidPool pool;
+    // hash: 좌표별 객체 후보를 찾는 공간 해시. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidHash hash;
+    // types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeRecord> types;
+    // frames: 타입별 프레임 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<PriestPlainCanonType> frames;
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
     ConstructionClearState state;
+    // patch: 10.78 패치판의 상태 또는 패치판 검사용 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     bool patch;
+    // events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::string events;
     // 풀 객체의 주소는 행 사이에 바뀌지 않는다.
     explicit ClearScene(OriginalEdition edition):pool(edition,kCapacity,false),types(edition==OriginalEdition::Patch1078 ? 188 : 171),

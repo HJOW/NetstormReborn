@@ -14,14 +14,25 @@ constexpr Sid kSpawned{100};
 constexpr std::uint32_t kSpawnVtable=0x20000100;
 // 원본/Python 없는 검사에서도 저장된 관찰만 읽는다.
 const auto& Fixture() { static const auto data=LoadFixture(NETSTORM_PRIESTSPAWN_FIXTURE);return data.rows; }
+// PriestSpawn 검사에서 같은 풀·상태·처리기를 조립해 입력과 결과를 대조하는 자료형이다.
 struct SpawnScene {
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
     SidPool pool;
+    // types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeRecord> types;
+    // spots: 칸별 점유·통행 비트를 읽는 spot 지도. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::uint8_t> spots=std::vector<std::uint8_t>(65536);
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
     PriestSpawnState state;
+    // raw: 원시. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::span<std::uint8_t> raw;
+    // events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::string events;
+    // pattern: 칸별 방향·변형·라벨을 펼칠 Canon 패턴 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::int64_t pattern{};
+    // queries: 조회. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // change: 변경. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // afterGenus: 후속 genus. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::uint32_t queries{},change{},afterGenus{};
     // 후속 fixture의 합성 free 바이트도 직접 초기화할 수 있게 span을 보관한다.
     explicit SpawnScene(OriginalEdition edition):pool(edition,kCapacity,false),types(edition==OriginalEdition::Patch1078 ? 188 : 171) {

@@ -18,6 +18,7 @@ std::string ConfigListItem(std::string_view list, int index);
 // SaveText가 정한 평문을 Windows-1252로 되돌려 XOR한다. 서명·BOM을 추가하지 않는다.
 std::vector<std::uint8_t> EncodeConfigFile(std::string_view text);
 
+// 언어·프로그램 설정 조회를 공통 저장소에 연결하는 인터페이스이다.
 class ConfigInterface {
 public:
     // 게임 경로 표기(`d\options.cfg`, `\D\config.english`)의 파일을 읽는다. 없으면 빈 값.
@@ -28,7 +29,9 @@ public:
     // 시작 순서(원본 FUN_00441790 ↔ CD 004a8b10의 설정 부분)에 필요한 값.
     struct StartupOptions {
         std::string commandLine;      // 실행 인자(원본 param_2). `키=값;키=값` 꼴.
+        // majorVersion: 주 버전.
         int majorVersion{};           // MAJOR_VERSION
+        // minorVersion: 부 버전.
         int minorVersion{};           // MINOR_VERSION
         std::string dataPrefix{"d\\"}; // 설정 파일이 있는 폴더(원본은 setup.cfg를 찾은 위치로 정한다).
         std::string identity;         // 환경 변수 IDENTITY 또는 USER. 비어 있으면 그 파일은 건너뛴다.
@@ -86,9 +89,13 @@ private:
     // 파일이 있으면 읽어 설정 객체에 더한다(원본 FUN_00440380).
     void LoadFile(Config& config, std::string_view path);
 
+    // registry_: 설정 객체나 등록 대상을 조회하는 등록부.
     ConfigRegistry registry_;
+    // reader_: 설정·파일 내용을 읽는 공급자.
     FileReader reader_;
+    // language_: 원본 설정 객체(0x18바이트): +0 버퍼, +8 환경 변수 허용, +0xc "이름.", +0x10 이름 길이, +0x14 변경 표시 (Config).
     Config language_;
+    // configuration_: 현재 언어와 실행 설정을 조회하는 인터페이스.
     Config configuration_;
 };
 }

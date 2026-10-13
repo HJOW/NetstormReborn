@@ -27,8 +27,12 @@ protected:
     ProcessId Pid() const;
 private:
     friend class SquidProcessHost;
+    // form_: 커널 프로세스와 연결된 객체 Form의 SID.
+    // parent_: 부착·통지 대상인 부모 객체 또는 부모 SID.
     Sid form_{},parent_{};
+    // pid_: 커널의 프로세스 등록 번호.
     ProcessId pid_{};
+    // host_: Form이나 프로세스의 등록·통지·수명을 연결하는 호스트.
     SquidProcessHost* host_{};
 };
 // 정해진 시각에 부모의 이벤트 처리기를 부르고 반환값으로 다음 시각을 정한다.
@@ -46,9 +50,13 @@ public:
     double Time() const;
 private:
     friend class SquidProcessHost;
+    // time_: 시각.
     double time_{};
+    // event_: 대상 처리기에 전달할 이벤트 ID.
     std::uint32_t event_{};
+    // payload_: 예약 이벤트와 함께 전달할 실수 인자.
     float payload_{};
+    // count_: 현재 항목 또는 실행 횟수.
     std::uint32_t count_{};
 };
 // 프로세스 계층이 읽거나 바꾸는 원본 전역이다. 패치 주소/CD 주소는 괄호에 둔다.
@@ -62,10 +70,13 @@ struct SquidProcessState {
 using RegularHandler=std::function<float(Sid parent,std::uint32_t event,std::uint32_t count,float payload)>;
 // 004b1440/CD 004af380의 파생 WriteData→공유 버퍼 송신 경계다. 버퍼 자체는 직렬화기가 소유한다.
 struct ProcessFormTransmission {
+    // writeData: 전송할 Form 데이터를 버퍼에 작성하는 콜백.
     std::function<std::int32_t(SquidProcess&,bool parentChanged)> writeData;
+    // transmit: 작성한 패킷이나 Form 데이터를 송신하는 콜백.
     std::function<void(std::int32_t length)> transmit;
 };
 
+// 객체 Form과 커널 프로세스의 부착·통지·수명을 연결하는 호스트이다.
 class SquidProcessHost {
 public:
     // 풀/Kernel/공통 삭제/상태는 호출자가 소유하며 host보다 오래 살아야 한다. asset은 form이 아닌 객체의 삭제 훅이다.
@@ -132,12 +143,19 @@ private:
     // Regular 실행 몸체. 판본별 abstract 처리와 처리기 반환값 분기를 구별한다.
     void RunRegular(RegularProcess& process);
     template<class Predicate> RegularProcess* Find(Sid parent,Predicate match) const;
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
+    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::vector<RiftTypeRecord> types_;
+    // kernel_: 프로세스 등록과 프레임 실행을 담당하는 커널.
     Kernel& kernel_;
+    // destroy_: 객체 삭제의 전처리·공간 해제·후처리를 실행하는 처리기.
     RawSquidDestroy& destroy_;
+    // state_: 프로세스 계층이 읽거나 바꾸는 원본 전역이다. 패치 주소/CD 주소는 괄호에 둔다 (SquidProcessState).
     SquidProcessState& state_;
+    // handler_: 외부 이벤트·프로세스 동작을 실제 코드에 전달하는 처리기.
     RegularHandler handler_;
+    // asset_: 출력할 타입 정의와 셰이프 블록을 연결한 자산.
     SquidDestroyHooks asset_;
     ProcessFormTransmission transmit_; // 실제 서버 부착의 파생 WriteData/공유 버퍼 송신 경계다.
 };

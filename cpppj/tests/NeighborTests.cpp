@@ -72,14 +72,23 @@ const std::vector<std::vector<std::string>>& Fixture() {
 }
 // 명시적인 보호 경로를 확인한다.
 template<class F> bool Throws(F operation) { try { operation(); } catch (const std::exception&) { return true; } return false; }
+// Neighbor 검사에서 같은 풀·상태·처리기를 조립해 입력과 결과를 대조하는 자료형이다.
 struct Scene {
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
     SidPool pool;
+    // hash: 좌표별 객체 후보를 찾는 공간 해시. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidHash hash;
+    // spots: 칸별 점유·통행 비트를 읽는 spot 지도. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::uint8_t> spots=std::vector<std::uint8_t>(65536);
+    // types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeRecord> types;
+    // frames: 타입별 프레임 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeFrames> frames;
+    // neighbors: 발자국에 인접한 표면·객체를 조회하는 검색기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::unique_ptr<RawSquidNeighbors> neighbors;
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
     BridgeEventState state;
+    // events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::string> events;
     // 동일한 풀 번호 5~74를 확보하며 원본 타입/프레임 입력은 행별로 준비한다.
     explicit Scene(OriginalEdition edition):pool(edition,kCapacity,false),types(edition==OriginalEdition::Patch1078 ? 188 : 171),frames(types.size(),RiftTypeFrames({})) {

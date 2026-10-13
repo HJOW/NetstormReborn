@@ -11,10 +11,20 @@ struct ScrollingTextGumpHooks;
 // 원본 +a0 min/+a4 max/+a8 position/+ac page/+b4 방향/+b8 step/+c8..d0 자식 토큰이다.
 // 기본 생성과 화살표/손잡이 할당은 ScrollGumpWidgets가 수행한다. 별도 초기화 시에도 같은 저장소를 사용한다.
 struct ScrollGumpNode: GumpCreateNode {
+    // minimum: 스크롤 가능한 최소 위치.
+    // maximum: 스크롤 가능한 최대 위치.
+    // position: 현재 좌표 또는 저장소의 읽기 위치.
+    // page: 표시할 페이지 또는 스크롤 페이지 크기.
+    // step: 단계.
     std::int32_t minimum{},maximum{},position{},page{},step{};
+    // scrollFlags: 스크롤바 방향·입력 동작을 선택하는 플래그.
+    // decrement: 위치 감소 버튼의 Gump 토큰.
+    // increment: 위치 증가 버튼의 Gump 토큰.
+    // thumb: 스크롤 손잡이의 Gump 토큰.
     std::uint32_t scrollFlags{},decrement{},increment{},thumb{};
     // +b0은 생성 시 0, +bc는 미작성, +c0/+c4는 원본 생성자가 0으로 쓰는 보조 필드다.
     std::uint32_t reservedB0{},reservedBC{};
+    // reserved: 예약영역.
     std::array<std::uint32_t,2> reserved{};
 };
 // 손잡이 +c0..cc의 양 끝 포함 사각형과 +d0 이전 y/+d4 이전 x다. +d4는 패치에만 존재한다.
@@ -22,21 +32,31 @@ struct ScrollGumpNode: GumpCreateNode {
 struct ScrollGumpThumbNode: GumpBackgroundNode {
     // +b8/+bc의 생성 인자 사본이다. 원본 손잡이 Draw는 이 값 대신 기본 배경의 type/frame을 사용한다.
     std::uint32_t detailType{},detailFrame{};
+    // handle: 네이티브 자원이나 등록 대상을 찾는 핸들.
     ScreenRect handle{};
+    // previousY: 이전 Y.
+    // previousX: 이전 X.
     std::int32_t previousY{},previousX{};
 };
 // 초기 문자열 ID의 현재 전역이다. click/repeat는 ButtonGumpState와 같은 실제 ID를 공급한다.
 // 패치 click/repeat/step/change: 005427a8/005427b4/005427b0/005427d0, CD: 00512930/3c/38/58.
-struct ScrollGumpState { std::uint32_t clickEvent{},repeatEvent{},stepEvent{},changeEvent{}; };
+struct ScrollGumpState { /* clickEvent: 왼쪽 클릭 동작의 이벤트 ID. */ /* repeatEvent: 누름 유지로 반복 발생하는 이벤트 ID. */ /* stepEvent: 스크롤 이동을 요청하는 이벤트 ID. */ /* changeEvent: 값이 변경됐음을 알리는 이벤트 ID. */ std::uint32_t clickEvent{},repeatEvent{},stepEvent{},changeEvent{}; };
 // 동일 기본/파생 노드 조회와 자식 가상 Push/Attach·현재 가상 Redraw·왼쪽 버튼 폴링 경계다.
 // node/baseNode/thumbNode는 안정된 같은 저장소를 공급하며 콜백 뒤에는 현재 토큰/필드를 다시 읽는다.
 struct ScrollGumpHooks {
+    // node: 토큰에 대응하는 저장 노드를 조회하는 콜백.
     std::function<ScrollGumpNode*(std::uint32_t)> node;
+    // thumbNode: 스크롤손잡이 노드를 조회하는 콜백.
     std::function<ScrollGumpThumbNode*(std::uint32_t)> thumbNode;
+    // baseNode: 파생 노드와 공유하는 기본 Gump 노드를 조회하는 콜백.
     std::function<GumpCreateNode*(std::uint32_t)> baseNode;
+    // push: 현재 대상을 처리 목록에 넣는 콜백.
     std::function<void(std::uint32_t)> push;
+    // attach: 대상을 부모 또는 처리 목록에 부착하는 콜백.
     std::function<void(std::uint32_t,float,float,std::uint32_t,std::uint32_t)> attach;
+    // redraw: 대상의 화면 갱신을 요청하는 콜백.
     std::function<void(std::uint32_t,bool)> redraw;
+    // poll: 요청한 키·마우스 버튼의 현재 입력을 폴링하는 콜백.
     std::function<InputEvent(std::uint32_t)> poll;
 };
 // ScrollGump.cpp의 Slider 값/부착/입력 처리기다. 생성/파생 Draw는 ScrollGumpWidgets에 분리한다.
@@ -78,12 +98,19 @@ private:
     void SetSize(std::uint32_t token,double size,bool width) const;
     // 변화 통지는 현재 사건 전역/serial을 부모 체인에 보낸다. 값은 항상 0이다.
     void NotifyChange(std::uint32_t token) const;
+    // create_: 등록 표 +0이 실제 루트다. 외부에서 표를 바꿀 때 collection.root도 같은 토큰으로 맞춰야 한다 (GumpCreateState).
     GumpCreateState& create_;
+    // state_: 초기 문자열 ID의 현재 전역이다. click/repeat는 ButtonGumpState와 같은 실제 ID를 공급한다 (ScrollGumpState).
     ScrollGumpState& state_;
+    // tree_: 00466750/CD 00493070의 머리 삽입과 원본의 후속 정렬/현재 자식 재배치를 담당한다 (GumpTree).
     const GumpTree& tree_;
+    // collection_: 화면 밖 자식 통과, 최상위 삭제 필터, 원본의 루트별 제한 개수를 보존하는 UI 수집기다 (GumpCollection).
     const GumpCollection& collection_;
+    // events_: 발생한 이벤트 또는 이벤트 처리기.
     const GumpEvents& events_;
+    // input_: 처리할 입력 또는 입력 분배기.
     const GumpInput& input_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (ScrollGumpHooks).
     ScrollGumpHooks hooks_;
 };
 // Slider 가상 Attach/Handle과 손잡이 Handle/Broadcast를 같은 트리/입력/프레임에 연결한다.

@@ -1,6 +1,10 @@
 namespace Netstorm.Core.Simulation;
 
 /// <summary>피해와 분리된 착탄·파괴 그림 기록. 이미 제거된 목표에도 위치와 시작 틱을 보존한다.</summary>
+/// <param name="X">월드 X 좌표.</param>
+/// <param name="Y">월드 Y 좌표.</param>
+/// <param name="Tick">효과를 기록한 논리 틱.</param>
+/// <param name="Group">충돌 효과를 선택할 타입 그룹 글자.</param>
 public sealed record CombatImpact(double X, double Y, long Tick, char Group);
 
 /// <summary>원본 anim 클러스터를 세션 시계로 표시한다. 이 목록은 피해·난수·검사합에 영향을 주지 않는다.</summary>

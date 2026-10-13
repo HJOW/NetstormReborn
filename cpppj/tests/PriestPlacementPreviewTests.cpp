@@ -10,11 +10,12 @@ namespace {
 // 사각형 12종·지도 5종·전역/소유자 9종·조회 중 변화 3종의 독립 입력 수다.
 constexpr std::size_t kRows=1620,kTotalRows=3*kRows,kCells=65536;
 // 실제 실행기에 넣은 네 표면 SID/타입/genus/소유자 값이다.
-struct PreviewSurface { Sid sid;std::uint32_t type,genus;std::uint8_t owner; };
+struct PreviewSurface { /* sid: 원본 풀에서 객체를 찾는 SID 번호. 입력 구성 또는 실행 결과 대조에 사용한다. */ Sid sid;/* type: 타입 표에서 객체 종류를 찾는 번호. 입력 구성 또는 실행 결과 대조에 사용한다. */ /* genus: genus. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::uint32_t type,genus;/* owner: 객체나 지역을 소유한 플레이어 번호. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::uint8_t owner; };
 constexpr std::array<PreviewSurface,4> kSurfaces{{{{50},83,2,1},{{51},84,2,2},{{52},85,4,0},{{53},86,2,8}}};
 // 원본/Python 없는 검사에서도 저장 관찰만 읽는다.
 const auto& Fixture() { static const auto data=LoadFixture(NETSTORM_PRIESTPREVIEW_FIXTURE);return data.rows; }
-struct MapInput { std::vector<std::uint8_t> spots;std::vector<std::uint16_t> surface; };
+// 배치 미리보기 검사에 입력할 spot 지도와 표면 SID 배열이다.
+struct MapInput { /* spots: 칸별 점유·통행 비트를 읽는 spot 지도. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<std::uint8_t> spots;/* surface: 표면. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<std::uint16_t> surface; };
 // 지도 입력만 구성한다. 기대 차단/허용 결과는 계산하지 않는다.
 const auto& Maps() {
     static const auto inputs=[] {
@@ -34,18 +35,32 @@ const auto& Maps() {
         return result;
     }();return inputs;
 }
+// PriestPlacementPreview 검사에서 같은 풀·상태·처리기를 조립해 입력과 결과를 대조하는 자료형이다.
 struct PreviewScene {
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
     SidPool pool;
+    // types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeRecord> types;
+    // spots: 칸별 점유·통행 비트를 읽는 spot 지도. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::uint8_t> spots=std::vector<std::uint8_t>(kCells);
+    // surfaceMap: 표면 지도. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::uint16_t> surfaceMap=std::vector<std::uint16_t>(kCells);
+    // raw: 원시. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::array<std::span<std::uint8_t>,4> raw;
+    // placementState: 배치 상태. 입력 구성 또는 실행 결과 대조에 사용한다.
     PriestPlacementState placementState;
+    // previewState: 미리보기 상태. 입력 구성 또는 실행 결과 대조에 사용한다.
     PriestPlacementPreviewState previewState;
+    // query: 조회. 입력 구성 또는 실행 결과 대조에 사용한다.
     PriestPlacementQuery query;
+    // shape: 프레임 그림을 찾는 셰이프 식별자 또는 셰이프 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     PriestPlacementRect shape;
+    // bounds: 원본 Begin의 정수 사각형이다. 오른쪽/아래 -1은 보드 끝이며 경계 접촉을 포함한다 (SquidSearchArea).
     SquidSearchArea bounds;
+    // lower: 하위. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // mutation: 변경. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::uint32_t lower{},mutation{};
+    // events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::string events;
     // 표면 raw 참조를 확보한 뒤 free/void/dead 비트를 입력으로 자유롭게 구성한다.
     explicit PreviewScene(OriginalEdition edition):pool(edition,kCapacity,false),types(edition==OriginalEdition::Patch1078 ? 188 : 171) {

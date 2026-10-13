@@ -16,15 +16,25 @@ constexpr Sid kSurface{80};
 const auto& Fixture() { static const auto rows=LoadFixture(NETSTORM_CONSTRUCTIONREQUEST_FIXTURE).rows;return rows; }
 // 같은 저장소를 유지하며 각 행의 타입·프레임·후보·spot과 기록 경계를 다시 공급한다.
 struct RequestScene {
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
     SidPool pool;
+    // hash: 좌표별 객체 후보를 찾는 공간 해시. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidHash hash;
+    // types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeRecord> types;
+    // frames: 타입별 프레임 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<PriestPlainCanonType> frames;
+    // spots: 칸별 점유·통행 비트를 읽는 spot 지도. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::uint8_t> spots;
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
     ConstructionRequestState state;
+    // patch: 10.78 패치판의 상태 또는 패치판 검사용 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     bool patch;
+    // input: 처리할 입력 또는 입력 분배기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::uint32_t> input;
+    // events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::string events;
+    // confirmIndex: 확정 인덱스. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::size_t confirmIndex{};
     // 자료의 주소는 행 사이에 바뀌지 않는다.
     explicit RequestScene(OriginalEdition edition):pool(edition,kCapacity,false),types(edition==OriginalEdition::Patch1078 ? 188 : 171),

@@ -8,7 +8,10 @@ namespace netstorm::client {
 // 원본 포인터의 호스트 독립 토큰 기준이다. 객체는 base+SID*stride, 묶음은 base+행번호*8이다.
 // 두 영역은 호출자가 겹치지 않게 정한다. 높이는 10.78의 행 개수 assert 상한 계산에 쓰인다.
 struct TileGroupCollectionState {
+    // screenHeight: 게임 화면의 픽셀 높이.
     std::int32_t screenHeight{768};
+    // objectTokenBase: 객체 토큰 기본.
+    // groupTokenBase: 그룹 토큰 기본.
     std::uint32_t objectTokenBase{},groupTokenBase{0x80000000U};
 };
 // 반환 목록은 다음 Collect/소멸까지 유효하다. 같은 객체의 재진입 수집은 허용하지 않는다.
@@ -30,11 +33,17 @@ public:
 private:
     // float+0.5→원본 CRT 64비트 정수의 하위 DWORD로 확장 전 셀 좌표를 만든다.
     static std::int32_t Cell(float coordinate);
+    // hash_: 좌표별 객체 후보를 찾는 공간 해시.
     o::SquidHash& hash_;
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     const o::SidPool& pool_;
+    // state_: 원본 포인터의 호스트 독립 토큰 기준이다. 객체는 base+SID*stride, 묶음은 base+행번호*8이다 (TileGroupCollectionState).
     TileGroupCollectionState state_;
+    // entries_: 현재 등록하거나 읽은 항목 목록.
     std::vector<o::RenderCollectionEntry> entries_;
+    // groups_: 그룹.
     std::vector<DrawGroupView> groups_;
+    // counts_: 개수.
     std::array<std::int32_t,o::kWorldCells> counts_{};
 };
 // 공통 수집과 종류 분배의 묶음 슬롯을 같은 실제 수집기에 연결한다. collector 수명을 유지해야 한다.

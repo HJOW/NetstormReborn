@@ -28,7 +28,9 @@ public:
     // 잘못된 스타일은 normal 슬롯 0 메트릭을 사용하며 비어 있는 조합은 세 값이 0이다.
     std::array<std::int32_t,3> Metrics(const GumpTextContext& context) const;
 private:
+    // fonts_: 이름·크기로 찾아 재사용하는 글꼴 저장소.
     FontStore& fonts_;
+    // edition_: 판본별 필드 배치와 동작을 선택하는 원본 버전.
     o::OriginalEdition edition_;
 };
 // 실제 FontStore 측정기를 돌 버튼의 FitToText/SetLabel 경계에 연결한다. 측정기는 훅보다 오래 살아야 한다.

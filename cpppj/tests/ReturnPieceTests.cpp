@@ -14,11 +14,17 @@ enum Column : std::size_t { Type,Flags,Quality,Keep,Fort,Index,Seed,Argument,Att
 const auto& Fixture() { static const auto rows=LoadFixture(NETSTORM_RETURNPIECE_FIXTURE).rows;return rows; }
 // 원본 명시 효과와 현재 전역 변경을 그대로 공급하는 장면이다.
 struct ReturnScene {
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
     SidPool pool;
+    // containedState: 원본 contained/bridge 타입 전역이다. 외부 효과가 바꾼 값은 사용 시점에 다시 읽는다 (ContainedCreateState).
     ContainedCreateState containedState;
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
     CursorReturnPieceState state;
+    // random: 원본 FUN_004558c0: 상태 0이면 0x0bad0bad로 바꾼 뒤 상태*0x10003+3의 상위 16비트를 limit로 나눈 나머지를 쓴다 (GameRandom).
     GameRandom random;
+    // input: 처리할 입력 또는 입력 분배기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::uint32_t> input;
+    // events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::string events;
     // 실제 모듈 참조는 행 사이에 유지한다.
     explicit ReturnScene(OriginalEdition edition):pool(edition,kCapacity,true) {}

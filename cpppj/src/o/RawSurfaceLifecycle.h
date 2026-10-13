@@ -12,6 +12,7 @@ struct SurfaceLifecycleHooks {
     std::function<void(Sid)> fallWalker; // 섬 표면과 다리의 가상 walker 낙하를 공유한다.
     std::function<void(const BridgeLifecycleEvent&)> bridgeEffect; // 파편 생성 요청과 낙하 소리만 전달한다.
 };
+// 복원된 섬·다리·noIsland 삭제 훅을 공통 삭제와 연결한다. 원본에 새 게임 규칙을 더하지 않는 호스트 분배기다.
 class RawSurfaceLifecycle {
 public:
     // 풀·이웃 탐색기·공통 훅의 대상은 더 오래 살아야 한다. 같은 풀/타입으로 내부 삭제 탐색기를 만든다.
@@ -30,13 +31,21 @@ private:
     void Emit(const SquidDestroyEvent& event);
     // 연결 객체는 실제 삭제, Base는 공통 훅, walker는 낙하 훅, 파편/소리는 외부 효과로 연결한다.
     void EmitBridge(const BridgeLifecycleEvent& event);
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     const SidPool& pool_;
+    // connectorType_: 연결부 타입.
     std::uint32_t connectorType_;
+    // common_: 파생 타입 사이에 공유하는 기본 처리기 또는 상태.
     SquidDestroyHooks common_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (SurfaceLifecycleHooks).
     SurfaceLifecycleHooks hooks_;
+    // finder_: 검색기.
     RawSquidFinder finder_;
+    // bridge_: 다리.
     RawBridgeLifecycle bridge_;
+    // island_: 섬.
     RawIslandLifecycle island_;
+    // bridgeHooks_: 탐색기는 begin의 첫 번호와 next의 후속 번호를 내준다. 0은 끝이며 순서/동적 필터는 호출자 계약이다 (BridgeLifecycleHooks).
     BridgeLifecycleHooks bridgeHooks_;
 };
 }

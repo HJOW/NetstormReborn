@@ -14,13 +14,24 @@ constexpr std::size_t kRowsPerEdition=2448;
 const std::vector<std::vector<std::string>>& Fixture() {
     static const auto fixture=LoadFixture(NETSTORM_CARRIERPOSTPOP_FIXTURE);return fixture.rows;
 }
+// CarrierPostPop 검사에서 같은 풀·상태·처리기를 조립해 입력과 결과를 대조하는 자료형이다.
 struct CarrierScene {
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
     SidPool pool;
+    // types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeRecord> types;
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
     CarrierPostPopState state;
+    // events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::string> events;
+    // afterType: 후속 타입. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // afterExtra: 후속 추가. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // afterOwner: 후속 소유자. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // groundOwner: 지면 소유자. 입력 구성 또는 실행 결과 대조에 사용한다.
     int afterType{},afterExtra{},afterOwner{},groundOwner{};
+    // validations: 검증. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::uint32_t validations{};
+    // patch: 10.78 패치판의 상태 또는 패치판 검사용 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     bool patch{};
     // 관찰 SID 50을 확보한다. 실제 client 번호 영역을 사용한다.
     explicit CarrierScene(OriginalEdition edition):pool(edition,kCapacity,false),

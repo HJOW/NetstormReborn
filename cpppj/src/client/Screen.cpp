@@ -20,7 +20,9 @@ namespace {
 constexpr DWORD kCopyRasterOperation = SRCCOPY;
 // 원본이 만드는 DIB 머리 정보: BITMAPINFOHEADER + 16비트 팔레트 번호 256개(DIB_PAL_COLORS).
 struct DibHeader {
+    // header: Win32 비트맵의 크기·형식을 지정하는 헤더.
     BITMAPINFOHEADER header;
+    // paletteIndex: 팔레트 인덱스.
     WORD paletteIndex[256];
 };
 // 논리 팔레트 항목의 플래그(원본이 쓰는 4 = PC_NOCOLLAPSE).
@@ -169,7 +171,8 @@ void Screen::Init() {
     windowSurface_ = std::make_unique<ScreenSurface>(ScreenSurface::Kind::DeviceContext, width_, height_, windowDc_, nullptr);
     memoryDc_ = CreateCompatibleDC(static_cast<HDC>(windowDc_));
     logical_.fill(0);
-    struct { WORD version; WORD count; PALETTEENTRY entries[256]; } logical{};
+    // Win32 팔레트를 만들 때 전달하는 버전·색 개수·색 항목의 가변 길이 자료다.
+    struct { /* version: 버전. */ WORD version; /* count: 현재 항목 또는 실행 횟수. */ WORD count; /* entries: 현재 등록하거나 읽은 항목 목록. */ PALETTEENTRY entries[256]; } logical{};
     logical.version = kLogicalPaletteVersion;
     logical.count = kPaletteSize;
     palette_ = CreatePalette(reinterpret_cast<LOGPALETTE*>(&logical));
@@ -254,7 +257,8 @@ void Screen::SetPalette(unsigned start, unsigned count, ScreenColor* colors, boo
         if (previousMemoryPalette_) SelectPalette(static_cast<HDC>(memoryDc_),static_cast<HPALETTE>(previousMemoryPalette_),FALSE);
         DeleteObject(static_cast<HPALETTE>(palette_));
     }
-    struct { WORD version; WORD count; PALETTEENTRY entries[256]; } logical{};
+    // Win32 팔레트를 만들 때 전달하는 버전·색 개수·색 항목의 가변 길이 자료다.
+    struct { /* version: 버전. */ WORD version; /* count: 현재 항목 또는 실행 횟수. */ WORD count; /* entries: 현재 등록하거나 읽은 항목 목록. */ PALETTEENTRY entries[256]; } logical{};
     logical.version = kLogicalPaletteVersion;
     logical.count = kPaletteSize;
     // 항목은 메모리 배치가 PALETTEENTRY와 같다.

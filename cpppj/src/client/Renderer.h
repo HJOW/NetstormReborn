@@ -10,10 +10,12 @@ namespace netstorm::client {
 // VFX 색 변환표. 소스 색 치환과 그림자의 대상 화면 색 치환에 각각 사용한다.
 using ColorMap = std::array<std::uint8_t, 256>;
 // 원본 16바이트 draw entry의 x·y·signed short 깊이(나머지는 객체 포인터와 종류).
-struct DrawOrder { float x{}, y{}; std::int16_t depth{}; };
+struct DrawOrder { /* x: X 좌표. */ /* y: Y 좌표. */ float x{}, y{}; /* depth: 출력이나 이벤트 후보의 깊이 값. */ std::int16_t depth{}; };
 // 00497900 ↔ CD 00458240: 깊이 내림차순, y·x 오름차순. 같은 좌표도 원본은 1을 반환한다.
 int CompareDrawOrder(DrawOrder a, DrawOrder b);
-struct DirtyRegion { ScreenRect rect; std::uint32_t flags{}; };
+// 다시 그릴 화면 영역과 그 영역의 출력 플래그이다.
+struct DirtyRegion { /* rect: 출력·적중·배치 검사에 사용할 사각형. */ ScreenRect rect; /* flags: 동작을 선택하는 플래그 비트. */ std::uint32_t flags{}; };
+// 부분 갱신 사각형을 수집하고 화면 경계로 제한하는 관리자이다.
 class DirtyRegions {
 public:
     // 원본 화면 경계와 변경 사각형 표를 초기화한다.
@@ -29,29 +31,52 @@ public:
     // 전체 화면 변화나 100항목 넘침이 등록됐는지 읽는다.
     bool FullRedraw() const;
 private:
+    // width_: 가로 크기.
+    // height_: 세로 크기.
     int width_, height_;
+    // full_: 전체 여부.
     bool full_{};
+    // entries_: 현재 등록하거나 읽은 항목 목록.
     std::vector<DirtyRegion> entries_;
 };
+// 출력할 스프라이트 프레임·좌표·클립·정렬·색 변환 정보이다.
 struct RenderSprite {
     // 자산과 글꼴·커서 이미지는 Renderer보다 오래 살아야 한다.
     const ShapeDatabase* database{};
+    // block: 셰이프 DB에서 그림을 찾는 블록 번호.
+    // frame: 타입에서 사용할 그림 프레임 번호.
     std::size_t block{}, frame{};
+    // x: X 좌표.
+    // y: Y 좌표.
     int x{}, y{};
+    // clip: 출력을 제한하는 클리핑 영역 또는 상태.
     ScreenRect clip{};
+    // order: 출력 순서를 비교하는 깊이·좌표 키.
     DrawOrder order{};
+    // colors: 팔레트 색 또는 색 인덱스 변환 자료.
     std::optional<ColorMap> colors;
+    // shadow: 그림자 여부.
     bool shadow{};
 };
 // 004a3f70의 글자 색·그림자·네 방향 외곽선 문맥. 문자열은 원본 코드 페이지 바이트다.
 struct RenderText {
+    // font: 문자 출력에 사용할 글꼴 또는 글꼴 핸들.
     const BitmapFont* font{};
+    // bytes: 필드 접근이나 파일 읽기에 사용하는 원시 바이트.
     std::string bytes;
+    // x: X 좌표.
+    // y: Y 좌표.
     int x{}, y{};
+    // color: 그림·글자 출력에 사용할 팔레트 색 인덱스 또는 색 상태.
+    // shadowColor: 그림자에 적용할 팔레트 색 인덱스.
     std::uint8_t color{255}, shadowColor{};
+    // shadowOffset: 본문 위치에서 그림자를 이동할 픽셀 오프셋.
     ScreenPoint shadowOffset{};
+    // shadow: 그림자 여부.
+    // outline: 윤곽 여부.
     bool shadow{}, outline{};
 };
+// 수집한 스프라이트·텍스트·배경을 갱신 영역에 그리는 출력 관리자이다.
 class Renderer {
 public:
     // 원본 창 모드의 8비트 화면 크기/정렬 판본으로 만들고 첫 화면을 전체 갱신한다. 기본은 10.78이다.
@@ -86,18 +111,32 @@ private:
     ScreenRect Bounds(const RenderSprite& sprite) const;
     // 현재 변경 영역 안에 바이트 글자를 원본 전진 폭으로 그린다.
     void Text(std::span<std::uint8_t> pixels, int pitch, ScreenRect clip, const RenderText& text);
+    // width_: 가로 크기.
+    // height_: 세로 크기.
     int width_, height_;
     o::OriginalEdition edition_; // 실제 PE마다 다른 CRT 표시 목록 정렬을 선택한다.
+    // dirty_: 부분 갱신 사각형을 수집하고 화면 경계로 제한하는 관리자 (DirtyRegions).
     DirtyRegions dirty_;
+    // sprites_: 스프라이트.
     std::vector<RenderSprite> sprites_;
+    // text_: 표시하거나 해석할 본문 문자열.
     std::vector<RenderText> text_;
+    // background_: 배경 출력 자료 또는 배경 Gump 토큰.
     std::shared_ptr<const IndexedImage> background_;
+    // overlay_: 화면 위 계층의 출력·입력 대상.
     std::shared_ptr<const IndexedImage> overlay_;
+    // painted_: 출력된.
     std::vector<ScreenRect> painted_;
+    // paintFlags_: 출력 플래그.
     std::vector<std::uint32_t> paintFlags_;
+    // cursor_: 팔레트 인덱스 픽셀로 구성한 그림 (IndexedImage).
     const IndexedImage* cursor_{};
+    // cursorPosition_: 원본 004a4fe0의 창 위치 계산(설정 `initWindowPos`): 1 왼쪽 위, 2 오른쪽 위, 3 오른쪽 아래, 4 왼쪽 아래, 5 가운데 (ScreenPoint).
     ScreenPoint cursorPosition_{};
+    // images_: 프레임이나 커서 번호별로 읽어 둔 그림 자료.
     std::map<std::tuple<const ShapeDatabase*, std::size_t, std::size_t>, IndexedImage> images_;
+    // draws_: 그리기.
+    // presents_: 화면전송.
     std::uint64_t draws_{}, presents_{};
 };
 // 압축 해제한 이미지의 불투명 픽셀만 합성한다. 그림자는 소스 색 대신 대상 화면 색을 변환한다.

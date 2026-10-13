@@ -34,8 +34,10 @@ void Write(std::span<std::uint8_t> raw,std::size_t offset,std::uint32_t value,st
 template<class F> bool Throws(F action) { try { action();return false; } catch (const std::exception&) { return true; } }
 // 같은 풀의 client/server 슬롯을 미리 확보하고 현재 raw/해시를 합성 입력으로 만든다.
 struct ArrivalScene {
-    SidPool pool;SquidHash hash;std::vector<RiftTypeRecord> types;ConstructionArrivalState state;
-    std::map<std::uint16_t,std::span<std::uint8_t>> slots;std::string events;std::uint32_t mutation{};bool mutated{};
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
+    SidPool pool;/* hash: 좌표별 객체 후보를 찾는 공간 해시. 입력 구성 또는 실행 결과 대조에 사용한다. */ SquidHash hash;/* types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<RiftTypeRecord> types;/* state: 검사 입력과 실행 뒤 결과를 보관할 상태. */ ConstructionArrivalState state;
+    // slots: 등록 대상의 저장 슬롯 목록. 입력 구성 또는 실행 결과 대조에 사용한다.
+    std::map<std::uint16_t,std::span<std::uint8_t>> slots;/* events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::string events;/* mutation: 변경. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::uint32_t mutation{};/* mutated: 변경된 여부. 입력 구성 또는 실행 결과 대조에 사용한다. */ bool mutated{};
     // 실제 SID 서버 경계 앞/뒤 입력을 지원한다. captured span은 free 상태 입력도 쓰게 한다.
     explicit ArrivalScene(OriginalEdition edition):pool(edition,32768,true),types(edition==OriginalEdition::Patch1078 ? 188 : 171) {
         const auto first=pool.Layout().serverFirst;

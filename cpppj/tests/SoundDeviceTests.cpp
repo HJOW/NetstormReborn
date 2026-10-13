@@ -16,6 +16,7 @@ using namespace netstorm::client;
 using netstorm::o::OriginalEdition;
 // 검사 전용 임시 디렉터리를 소유하며 원본/저장소 파일을 수정하지 않는다.
 struct TemporaryFiles {
+    // path: 경로. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::filesystem::path path;
     // 프로세스 작업과 독립인 새 임시 디렉터리를 만든다.
     TemporaryFiles():path(std::filesystem::temp_directory_path()/("NetstormCppSoundDevice-"+std::to_string(std::chrono::steady_clock::now().time_since_epoch().count()))) {
@@ -184,6 +185,7 @@ void InspectSoundFiles(const std::filesystem::path& root) {
 void InspectSoundDevice(const std::filesystem::path& root) {
     // DirectSound 협조 수준에 필요한 숨긴 창을 소유한다. ShowWindow/포커스 변경은 하지 않는다.
     struct CooperativeWindow {
+        // handle: 네이티브 자원이나 등록 대상을 찾는 핸들. 입력 구성 또는 실행 결과 대조에 사용한다.
         HWND handle{};
         // 시스템 STATIC 클래스를 사용하므로 별도 클래스 등록/메시지 루프는 필요 없다.
         CooperativeWindow():handle(CreateWindowExW(0,L"STATIC",L"NetstormCpp sound inspection",WS_POPUP,0,0,1,1,nullptr,nullptr,GetModuleHandleW(nullptr),nullptr)) {

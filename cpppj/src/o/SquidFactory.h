@@ -4,6 +4,7 @@
 
 namespace netstorm::o {
 class SquidUnpop;
+// SID 슬롯을 할당하고 타입별 생성자 필드를 초기화하는 팩토리이다.
 class SquidFactory {
 public:
     // 타입 입력은 복사하여 호출자 수명과 분리한다. 약화 mana 옵션은 원본 HP /4 분기다.
@@ -39,9 +40,13 @@ private:
     std::uint32_t ConstructorVtable(const RiftTypeRecord& type) const;
     // 원본 32비트 vtable 값은 기록할 뿐 호스트에서 역참조하지 않는다.
     std::uint32_t BaseVtable() const;
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
+    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::vector<RiftTypeRecord> types_;
+    // weakenedMana_: 약화된 마나 여부.
     bool weakenedMana_{};
+    // unpop_: 객체의 공간 등록을 해제하는 Unpop 처리기.
     SquidUnpop* unpop_{};
 };
 }

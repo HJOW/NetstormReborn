@@ -13,13 +13,23 @@ constexpr std::array<std::uint32_t,12> kCdAssetTables{0x5022f8,0x5011e8,0x5012b0
 const std::vector<std::vector<std::string>>& Rows() { static const auto rows=LoadFixture(NETSTORM_ASSETPOSTPOP_FIXTURE).rows;return rows; }
 // 실제 C++ body와 같은 외부 효과를 합성하는 검사 월드다. 판단은 fixture의 native 결과가 정한다.
 struct AssetScene {
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
     SidPool pool;
+    // types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<RiftTypeRecord> types;
+    // baseState: 기본 상태. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidPostPopState baseState;
+    // carrierState: 캐리어 상태. 입력 구성 또는 실행 결과 대조에 사용한다.
     CarrierPostPopState carrierState;
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
     AssetPostPopState state;
+    // events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::string> events;
+    // patch: 10.78 패치판의 상태 또는 패치판 검사용 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
     bool patch{};
+    // allocated: 할당된. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // reserveMask: 예약 마스크. 입력 구성 또는 실행 결과 대조에 사용한다.
+    // contentExists: 내용 존재. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::uint32_t allocated{},reserveMask{},contentExists{};
     // 기계어의 대상/지면/종유석/선택 form 번호를 client 구역에 확보한다.
     explicit AssetScene(OriginalEdition edition):pool(edition,kCapacity,false),types(edition==OriginalEdition::Patch1078 ? 188 : 171),patch(edition==OriginalEdition::Patch1078) {

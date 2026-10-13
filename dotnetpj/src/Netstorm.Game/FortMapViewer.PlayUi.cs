@@ -32,9 +32,13 @@ internal sealed partial class FortMapViewer
 
     /// <summary>생산 창에서 마지막으로 집은 유닛 (D 키로 다시 집는다, 원본 DAT_00557d6c)</summary>
     private string? _lastProductionType;
+    /// <summary>_playUi: 게임 플레이용 화면 배치를 표시할지.</summary>
     private bool _playUi;
+    /// <summary>_playWidth: 게임 플레이 화면의 논리 너비.</summary>
     private int _playWidth;
+    /// <summary>_playHeight: 게임 플레이 화면의 논리 높이.</summary>
     private int _playHeight;
+    /// <summary>_sky: 월드 뒤에 그릴 하늘 배경 텍스처.</summary>
     private Texture2D? _sky;
     /// <summary>자동 입력 검사가 확인할 플레이 화면 상태.</summary>
     public string UiState => _leaveMissionPrompt ? "leave" : KnowledgeOpen ? "knowledge" : TutorialDialogOpen ? "briefing" : ContextMenuOpen ? "context:" + (_contextSubmenu ?? "main") : _missionMenuVisible ? "mission-menu"

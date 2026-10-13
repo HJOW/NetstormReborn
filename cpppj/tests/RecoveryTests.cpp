@@ -48,6 +48,7 @@ public:
     // 원본 파생 프로세스 실행 메서드에 해당하는 콜백을 호출한다.
     void RunFrame() override { callback_(); }
 private:
+    // callback_: 외부 음악 콜백의 처리 결과를 받는 함수.
     std::function<void()> callback_;
 };
 }

@@ -43,6 +43,7 @@ struct BridgeEventHooks {
 // 같은 raw 타입 표의 프레임 조회와 실제 flag 0 첫 이웃을 연결한다. 나머지 효과는 호출자가 공급한다.
 // neighbors는 반환한 콜백보다 오래 살아야 하며 조회 중 바뀐 raw 프레임을 그때 읽는다.
 BridgeEventHooks MakeBridgeNeighborHooks(const RawSquidNeighbors& neighbors,BridgeEventHooks effects);
+// 다리 이벤트 처리기(다리 vtable +0x5c)와 끝 칸 변환(004215d0)을 raw SID 풀 위에서 복원한다.
 class RawBridgeEvents {
 public:
     // 풀·상태·훅은 이 객체보다 오래 살아야 한다. 훅은 모두 연결돼 있어야 한다.
@@ -60,8 +61,11 @@ private:
     void SetFrame(Sid sid, std::uint32_t frame) const;
     // 004ac220 ↔ CD 004abb00: +0xc 단어를 쓰고 다리 타입이면 표면 알림을 부른다.
     void SetWord(Sid sid, std::uint16_t word) const;
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
+    // state_: 처리기가 읽는 원본 전역이다. 패치 주소 / CD 주소를 괄호에 둔다 (BridgeEventState).
     const BridgeEventState& state_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (BridgeEventHooks).
     BridgeEventHooks hooks_;
 };
 // Regular 프로세스가 부르는 부모 이벤트 처리기(vtable +0x5c)를 객체의 가상 표로 분배한다.

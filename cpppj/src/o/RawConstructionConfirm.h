@@ -29,9 +29,19 @@ struct ConstructionConfirmRequest {
 // 메시지 0x3f의 본문: 배치 통지다. 원본 위치는 +4 타입, +5 x, +9 y, +0xd 인자, +0xe 방향, +0xf 플레이어,
 // +0x10 플래그, +0x11 품질, +0x12 시각, +0x1a SID 개수, +0x1b부터 SID 목록이다.
 struct ConstructionNotice {
+    // type: 타입 표에서 객체 종류를 찾는 번호.
     std::uint8_t type{};
+    // x: X 좌표.
+    // y: Y 좌표.
     float x{},y{};
+    // argument: 타입·패턴·명령에 별도로 전달하는 첫 인자.
+    // direction: 방향이나 회전을 선택하는 값.
+    // player: 플레이어.
+    // flags: 동작을 선택하는 플래그 비트.
+    // quality: 품질.
     std::uint8_t argument{},direction{},player{},flags{},quality{};
+    // timeLow: 전송할 시각 비트 표현의 하위 DWORD.
+    // timeHigh: 전송할 시각 비트 표현의 상위 DWORD.
     std::uint32_t timeLow{},timeHigh{};
     std::vector<std::uint16_t> sids; // 조각 순서의 SID. 원본 상한은 19개다.
 };
@@ -63,10 +73,15 @@ public:
     // 어댑터가 같은 실제 풀을 연결하는지 확인하는 데 쓴다.
     const SidPool& Pool() const;
 private:
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     const SidPool& pool_;
+    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::span<const RiftTypeRecord> types_;
+    // frames_: 타입별 프레임 자료.
     std::span<const PriestPlainCanonType> frames_;
+    // state_: 확정이 읽는 전역이다. 주소는 패치 / CD 순서다 (ConstructionConfirmState).
     const ConstructionConfirmState& state_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (ConstructionConfirmHooks).
     ConstructionConfirmHooks hooks_;
 };
 // SID 생성만 같은 풀의 실제 factory로 바꾼다. 기준점 조회·통지·기록기 경계는 받은 그대로 둔다.

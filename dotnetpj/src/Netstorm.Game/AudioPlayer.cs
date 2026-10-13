@@ -38,7 +38,9 @@ internal sealed class AudioPlayer : IDisposable
 
     /// <summary>음악 스트리밍 출력 (곡마다 새로 만든다)</summary>
     private DynamicSoundEffectInstance? _music;
+    /// <summary>_wind: 바람 배경음을 반복 재생하는 사운드 인스턴스.</summary>
     private SoundEffectInstance? _wind;
+    /// <summary>_speakerSwap: 좌우 스피커 교환 설정을 팬 계산에 적용할지.</summary>
     private bool _speakerSwap;
     /// <summary>원본 바람 배경음을 독립적으로 끌 수 있다.</summary>
     public bool WindNoise { get; set; } = true;

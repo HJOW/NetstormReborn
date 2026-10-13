@@ -36,6 +36,6 @@ public:
     void Select(const char* name,std::int32_t enabled);
 private:
     // 외부 상태·공개 음악과 경계를 같은 수명 안에 보관한다. 상위 fallback은 files_에서 재귀 Select로 연결된다.
-    MusicSelectionState& state_;SoundMusic& music_;MusicDirectories directories_;MusicOpenHooks files_;MusicBufferHooks buffers_;
+    MusicSelectionState& state_;/* music_: 효과음과 음악의 공통 음소거 제어다. 최초 PushMute에서 음량을 예약하고 마지막 PopMute에서 최신 예약값을 복원한다 (SoundMusic). */ SoundMusic& music_;/* directories_: 게임 자산을 검색할 디렉터리 목록. */ MusicDirectories directories_;/* files_: 경로 탐색·열린 파일 헤더와 상위 옵션의 demo.mus 선택 경계다. 파일 탐색에는 효과음의 언어/와일드카드 규칙을 적용하지 않는다 (MusicOpenHooks). */ MusicOpenHooks files_;/* buffers_: 음악 버퍼의 생성/갱신 COM 경계다. HRESULT는 음수일 때 실패하며 status/cursor/lock 출력은 성공 시 유효하다 (MusicBufferHooks). */ MusicBufferHooks buffers_;
 };
 }

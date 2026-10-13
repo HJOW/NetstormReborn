@@ -31,11 +31,17 @@ private:
     const SquidDestroyHooks& Route(Sid sid) const;
     // 서로 다른 풀을 연결하지 않고 동일 타입 호스트의 재등록도 명시적으로 거부한다.
     void Register(const SidPool& pool,std::uint32_t type,SquidDestroyHooks hooks);
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
+    // destroy_: 객체 삭제의 전처리·공간 해제·후처리를 실행하는 처리기.
     RawSquidDestroy& destroy_;
+    // assets_: 타입·셰이프·팔레트 자산 또는 해당 자산의 처리 경계.
     SquidDestroyHooks assets_;
+    // assetDestroy_: 자산 삭제.
     SquidAssetDestroy assetDestroy_;
+    // routes_: 타입 번호별로 선택할 삭제·통지 처리 경로.
     std::array<SquidDestroyHooks,kFirstAssetTypeNumber> routes_;
+    // bound_: 타입 번호별 분배 경계가 연결됐는지.
     std::array<bool,kFirstAssetTypeNumber> bound_{};
 };
 }

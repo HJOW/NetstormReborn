@@ -59,8 +59,10 @@ void ReplayPreviewDraw(const std::string& edition) {
 }
 // 실제 수집과 픽셀/계약 검사를 위한 작은 원본 상태다.
 struct PreviewDrawScene {
-    SidPool pool{OriginalEdition::Patch1078,24000,false};std::vector<RiftTypeRecord> types=std::vector<RiftTypeRecord>(74);
-    PreviewCollectionState c;PreviewDrawState s;
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
+    SidPool pool{OriginalEdition::Patch1078,24000,false};/* types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<RiftTypeRecord> types=std::vector<RiftTypeRecord>(74);
+    // c: 원본 전역의 현재 목록/선택 타입/부모와 배치 칸, 패치 전용 표시 상태다 (PreviewCollectionState).
+    PreviewCollectionState c;/* s: 준비한 실제 커서 전역과 격자/글자 표다. legal/parent/플레이어는 수집 상태를 공유한다 (PreviewDrawState). */ PreviewDrawState s;
     // SID 5의 raw 화면 WORD/프레임과 원본 타입 깊이/footprint를 준비한다.
     PreviewDrawScene() {
         c.legal=1;c.pieceCount=1;c.pieces={{5}};c.type=70;c.localPlayer=2;

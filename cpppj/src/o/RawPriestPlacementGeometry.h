@@ -4,14 +4,17 @@
 #include "o/RawPriestPlacementCollision.h"
 
 namespace netstorm::o {
+// 사제의 비패턴 Canon 순회에 필요한 프레임 표와 기본 프레임 번호이다.
 struct PriestPlainCanonType {
     RiftTypeFrames frames{std::vector<FrameCode>{}}; // 타입 +0x114/+0x124의 실제 프레임 코드 표다.
     int defaultFrame{}; // 타입 +0x118: -1이면 유효 칸을 찾지 못한다.
 };
+// 사제 배치 검사 기하판정 처리 중 조회·갱신하는 상태 묶음이다.
 struct PriestPlacementGeometryState {
     // CanonDecoder 생성에서 패턴으로 분기하는 네 특수 타입과 네 추가 타입의 현재 번호다.
     std::array<std::uint32_t,8> patternTypes{};
 };
+// 사제 배치 검사 기하판정 외부 동작과 저장소 조회를 연결하는 콜백 묶음이다.
 struct PriestPlacementGeometryHooks {
     // decoder 생성 뒤의 지역 판정 초기화 경계다. 실제 후보/지형 전역의 수명은 호출자가 연결한다.
     std::function<void(const PriestPlacementQuery&)> beginRegions;
@@ -22,6 +25,7 @@ struct PriestPlacementGeometryHooks {
     // finder 탐색 직전 모양별 지역 배열/발자국 원점을 준비한다. 기존 외부 경계에는 선택 사항이다.
     std::function<void(const PriestPlacementQuery&,int,float,float)> beginShape;
 };
+// 패턴 없는 사제 CanonDecoder의 실제 한 칸 순회/미리보기 범위/충돌 사각형을 연결한다.
 class RawPriestPlacementGeometry {
 public:
     // 사제 genus·현재 패턴 타입 전역·프레임 메타 자료로 지원하는 비패턴 경로를 확인한다.
@@ -38,10 +42,15 @@ public:
 private:
     // 공통 계산기로 위임하기 전에 현재 사제 genus/비패턴 계약을 검사한다.
     void CheckQuery(const PriestPlacementQuery& query) const;
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     const SidPool& pool_;
+    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::span<const RiftTypeRecord> types_;
+    // frames_: 타입별 프레임 자료.
     std::span<const PriestPlainCanonType> frames_;
+    // state_: 처리 중 조회·갱신하는 상태 (PriestPlacementGeometryState).
     PriestPlacementGeometryState& state_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (PriestPlacementGeometryHooks).
     PriestPlacementGeometryHooks hooks_;
 };
 // 미리보기 bounds만 실제 비패턴 decoder에 연결하고 후보 충돌 경계는 유지한다.

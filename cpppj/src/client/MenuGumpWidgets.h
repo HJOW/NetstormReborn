@@ -11,23 +11,35 @@ namespace netstorm::client {
 // 원본 varargs의 문자열/자식 포인터와 조건부 DWORD 입력을 호스트 값으로 표현한다.
 // flags의 1/80/100이 command/parameter/condition을 소비하며 조건 false에서도 명령/인자 쓰기는 수행한다.
 struct MenuGumpConstructionEntry {
+    // source: 원천.
     std::variant<std::string,std::uint32_t> source;
+    // flags: 동작을 선택하는 플래그 비트.
+    // command: 선택·클릭할 때 실행할 명령 이름 또는 명령 ID.
+    // parameter: 항목 명령에 전달할 매개변수 값.
+    // condition: 항목을 포함·활성화할지 선택하는 조건.
     std::uint32_t flags{},command{},parameter{},condition{1};
 };
 // +20 식별 BYTE의 두 PE 초기값은 26이다. 배경/색/객체 부착 Form 타입은 실제 초기화 전역을 공급한다.
-struct MenuGumpWidgetState { std::int8_t alignment{26};std::uint32_t backgroundType{},backgroundFrame{},foreground{},shadow{},objectFormType{}; };
+struct MenuGumpWidgetState { /* alignment: 항목의 좌우·상하 정렬을 선택하는 값. */ std::int8_t alignment{26};/* backgroundType: 배경을 출력할 타입 번호. */ /* backgroundFrame: 배경을 출력할 프레임 번호. */ /* foreground: 본문 출력의 팔레트 색 인덱스. */ /* shadow: 그림자. */ /* objectFormType: 객체 Form 타입. */ std::uint32_t backgroundType{},backgroundFrame{},foreground{},shadow{},objectFormType{}; };
 // 호스트 Form 토큰과 실제 SID 풀 인덱스다. GumpFormBinding은 같은 SID를 양쪽에 공급하여 원본 stride 나눗셈과 맞춘다.
-struct MenuGumpObjectForm { std::uint32_t token{},index{}; };
+struct MenuGumpObjectForm { /* token: 저장소나 분배기에서 대상을 구별하는 토큰. */ /* index: 목록이나 표에서 현재 항목을 찾는 인덱스. */ std::uint32_t token{},index{}; };
 // 같은 메뉴/기본 객체·요청 크기별 호스트 할당·실제 가상 Attach와 소멸 선택 콜백의 경계다.
 struct MenuGumpWidgetHooks {
+    // node: 토큰에 대응하는 저장 노드를 조회하는 콜백.
     std::function<MenuGumpNode*(std::uint32_t)> node;
+    // base: 파생 처리에서 공통 동작을 위임하는 기본 객체를 조회하는 콜백.
     std::function<GumpCreateNode*(std::uint32_t)> base;
+    // allocate: 새 대상의 저장소를 확보하는 콜백.
     std::function<std::uint32_t(std::size_t)> allocate;
+    // attach: 대상을 부모 또는 처리 목록에 부착하는 콜백.
     std::function<void(std::uint32_t,float,float,std::uint32_t,std::uint32_t)> attach;
+    // selectionNotice: 선택 항목의 변경을 실제 통지 경로에 전달하는 콜백.
     std::function<void(std::uint32_t,std::int32_t)> selectionNotice;
     // 원본 Form(type,2) 생성→+12 Gump 등록 ID→가상 +74(object,0)다. BindMenuGumpForms가 실제 공용 SID 풀에 연결한다.
     std::function<MenuGumpObjectForm(std::uint32_t,std::uint32_t)> objectForm;
+    // formOwner: 객체 Form의 소유자를 설정하는 콜백.
     std::function<void(std::uint32_t,std::uint32_t)> formOwner;
+    // formObject: 객체 Form에 실제 객체와 인덱스를 연결하는 콜백.
     std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)> formObject;
 };
 // 원본 MenuGump 생성/수명/부착을 복원한다. 출력/입력은 별도 처리기, 객체 부착 Form은 GumpFormHost를 사용한다.
@@ -70,17 +82,29 @@ private:
     std::uint32_t Begin(std::uint32_t flags,bool idle,bool extra,std::uint32_t backgroundFlags) const;
     // 현재 가상 Attach 경계는 장식/제목/입력 자식이 도달할 때만 요구한다.
     void AttachChild(std::uint32_t token,float x,float y,std::uint32_t parent) const;
+    // create_: 등록 표 +0이 실제 루트다. 외부에서 표를 바꿀 때 collection.root도 같은 토큰으로 맞춰야 한다 (GumpCreateState).
     GumpCreateState& create_;
+    // menus_: 원본 메뉴 표와 signed index의 DWORD 비트다. 생성/항목 작성은 별도 단계에서 이 표를 채운다 (MenuGumpState).
     MenuGumpState& menus_;
+    // state_: +20 식별 BYTE의 두 PE 초기값은 26이다. 배경/색/객체 부착 Form 타입은 실제 초기화 전역을 공급한다 (MenuGumpWidgetState).
     MenuGumpWidgetState& state_;
+    // background_: 배경 출력 자료 또는 배경 Gump 토큰.
     const GumpBackgroundCreate& background_;
+    // decoration_: 원본의 0xc4 장식 배경 파생 몸체다. Form 객체 전체와 이 장식 배경은 서로 다른 복원 대상이다 (GumpDecoration).
     const GumpDecoration& decoration_;
+    // title_: 화면에 표시할 제목 또는 제목 Gump의 토큰.
     const ScrollingTextGumpWidgets& title_;
+    // layout_: 좌표 배치 계산 또는 판본별 필드 위치 정보.
     const MenuGumpLayout& layout_;
+    // style_: 글꼴·색·정렬을 선택하는 텍스트 출력 문맥.
     const StyleText& style_;
+    // lifetime_: 등록된 객체의 삭제·해제를 처리하는 수명 관리자.
     const GumpLifetime& lifetime_;
+    // collection_: 화면 밖 자식 통과, 최상위 삭제 필터, 원본의 루트별 제한 개수를 보존하는 UI 수집기다 (GumpCollection).
     const GumpCollection& collection_;
+    // tree_: 00466750/CD 00493070의 머리 삽입과 원본의 후속 정렬/현재 자식 재배치를 담당한다 (GumpTree).
     const GumpTree& tree_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (MenuGumpWidgetHooks).
     MenuGumpWidgetHooks hooks_;
 };
 // 메뉴 제목 Reflow의 기존 titleFit은 실제 RequestScroll, titleLayout은 실제 FitContent에 연결한다.

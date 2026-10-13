@@ -19,6 +19,7 @@ struct ConstructionEffectsHooks {
     std::function<void(Sid,std::uint32_t)> clearPath;
     // vtable +0x48/+0x90: Unpop(0) 후 찾은 정수 위치에 Pop(x,y,0)한다.
     std::function<void(Sid,std::uint32_t)> unpop;
+    // pop: 대상을 지정 위치의 공간에 등록하는 Pop 콜백.
     std::function<void(Sid,float,float,std::uint32_t)> pop;
     // 00460600 / CD 00454810: 섬 조각을 떨어뜨리는 표시 효과다.
     std::function<void(Sid)> fall;
@@ -53,11 +54,17 @@ private:
     std::uint32_t Genus(Sid sid) const;
     // spot bit 0x10이 없고 bit 2/4 중 하나가 있는 칸이면 이동 가능하다. 지도 밖은 C++ 계약으로 거부한다.
     bool Open(std::int64_t x,std::int64_t y) const;
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     const SidPool& pool_;
+    // hash_: 좌표별 객체 후보를 찾는 공간 해시.
     const SquidHash& hash_;
+    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::span<const RiftTypeRecord> types_;
+    // spots_: 칸별 점유·통행 비트를 읽는 spot 지도.
     std::span<const std::uint8_t> spots_;
+    // state_: 원본 관계 표와 섬 타입/모드 전역이다. 요청 모듈과 같은 풀·전역 상태를 공급한다 (ConstructionEffectsState).
     const ConstructionEffectsState& state_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (ConstructionEffectsHooks).
     ConstructionEffectsHooks hooks_;
 };
 // 건설 요청의 세 효과를 실제 밀어내기/섬 정리 몸체에 연결한다. MayPlace/확정/진단은 받은 값을 보존한다.

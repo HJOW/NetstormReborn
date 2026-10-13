@@ -10,10 +10,12 @@ using namespace netstorm::test::rawscene;
 namespace {
 // 공통 가상 표시/Pop을 쓰는 원본 연결 객체 타입 번호다.
 constexpr std::uint32_t kType=155;
-struct Notice { SquidDisplayRect rect;std::uint32_t flags,frame; };
+// FrameDisplay 검사에서 같은 풀·상태·처리기를 조립해 입력과 결과를 대조하는 자료형이다.
+struct Notice { /* rect: 출력·적중·배치 검사에 사용할 사각형. 입력 구성 또는 실행 결과 대조에 사용한다. */ SquidDisplayRect rect;/* flags: 동작을 선택하는 플래그 비트. 입력 구성 또는 실행 결과 대조에 사용한다. */ /* frame: 타입에서 사용할 그림 프레임 번호. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::uint32_t flags,frame; };
 // 실제 Renderer 어댑터 앞에서 전달 순서와 그 시점의 raw 프레임만 관찰한다.
 struct Sink final:SquidDisplaySink {
-    client::Renderer renderer{640,480};client::SquidRenderer target{renderer};SidPool& pool;Sid object{};std::vector<Notice> notices;
+    // renderer: 수집한 그림·텍스트를 화면에 그리는 렌더러. 입력 구성 또는 실행 결과 대조에 사용한다.
+    client::Renderer renderer{640,480};/* target: Squid 표시 요청을 클라이언트의 렌더러에 전달하는 출력 대상 (client::SquidRenderer). */ client::SquidRenderer target{renderer};/* pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다. */ SidPool& pool;/* object: 해당 SID나 출력 항목에 대응하는 객체 자료. 입력 구성 또는 실행 결과 대조에 사용한다. */ Sid object{};/* notices: 통지. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<Notice> notices;
     // raw 관찰은 같은 풀을 참조한다.
     explicit Sink(SidPool& source):pool(source) {}
     // 실제 전체 갱신 상태를 그대로 사용한다.

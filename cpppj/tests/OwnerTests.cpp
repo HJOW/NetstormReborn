@@ -56,10 +56,15 @@ std::uint32_t Adler(std::span<const std::uint8_t> bytes) {
 }
 // 판본마다 풀과 장부를 한 번 만들고, genus 값마다 타입 표가 다른 SquidOwner를 만들어 둔다.
 struct Scene {
+    // edition: 판본별 필드 배치와 동작을 선택하는 원본 버전. 입력 구성 또는 실행 결과 대조에 사용한다.
     OriginalEdition edition;
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
     SidPool pool;
+    // bookkeeping: 객체 종류·소유자별 등록 목록과 개수를 관리하는 장부. 입력 구성 또는 실행 결과 대조에 사용한다.
     SquidPostPopState bookkeeping;
+    // mode: 소유자 지정이 읽는 원본 모드 전역이다. 패치 주소 / CD 주소를 괄호에 둔다 (SquidOwnerMode).
     SquidOwnerMode mode;
+    // owners: 소유자. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::map<std::uint32_t, std::unique_ptr<SquidOwner>> owners;
     explicit Scene(OriginalEdition which) : edition(which), pool(which, kCapacity, false) {
         // 클라이언트 영역의 앞 슬롯들을 할당해 합성 번호 50을 준비한다.

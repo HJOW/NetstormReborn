@@ -7,6 +7,8 @@
 namespace netstorm::client {
 // 0043c010/CD 00496530의 두 RGB 명암 표다. 소스 팔레트 번호를 목표 팔레트 번호로 변환한다.
 struct GumpShadeMaps {
+    // bright: 밝은.
+    // dark: 어두운.
     std::array<std::uint8_t,256> bright{},dark{};
 };
 // R/G/B/flags 순서 논리 팔레트의 RGB를 정규화하고 원본 거리 비교·float32 최솟값 저장으로 표를 만든다.

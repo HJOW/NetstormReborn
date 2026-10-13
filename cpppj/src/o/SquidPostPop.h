@@ -11,22 +11,32 @@ class RawPriestPostPopTail;
 class RawForcefieldPostPop;
 class RawCarrierPostPop;
 class RawAssetPostPop;
+// 객체 후처리 Pop 등록한 대상과 그 개수를 보관하는 목록이다.
 struct SquidPostPopList {
     std::vector<std::uint32_t> entries; // 원본 미리 확보한 DWORD 배열. entries.size()가 capacity다.
+    // count: 현재 항목 또는 실행 횟수.
     std::uint32_t count{};
     // 활성 항목만 읽으며 손상된 count는 거부한다.
     std::span<const std::uint32_t> Items() const;
 };
+// 객체 후처리 Pop 처리 중 조회·갱신하는 상태 묶음이다.
 struct SquidPostPopState {
+    // suppressed: 표시·등록 후처리를 억제할지.
+    // graphsEnabled: Graph 활성 여부.
+    // pendingPlacement: 보류 배치 여부.
     bool suppressed{},graphsEnabled{},pendingPlacement{};
     std::uint8_t localOwner{},invalidGraph{254}; // 원본 invalidGraphNum의 두 판본 초기값.
     std::array<bool,kPlayerCount+1> aiAttached{}; // AI 부착 경로는 아직 복원하지 않았다.
     std::int32_t totalCost{}; // 전역 비용 집계. Player의 현재 SP 차감과 구별한다.
     std::uint32_t productionDirty{},depth{}; // 공급/작업장 재계산 알림과 Activate/postPop 깊이.
     std::array<std::uint32_t,256> localCounts{},localSecondaryCounts{},globalCounts{}; // Totalmade의 로컬 두 표·전역 한 표. 모두 타입 번호로 접근한다.
+    // providers: 공급원.
+    // factories: 팩토리.
     SquidPostPopList providers,factories;
+    // ownerFactories: 소유자 팩토리.
     std::array<SquidPostPopList,kPlayerCount+1> ownerFactories;
 };
+// Pop 이후 타입별 등록 목록과 표면 연결 상태를 갱신하는 처리기이다.
 class SquidPostPop {
 public:
     // 같은 판본의 풀·상태·선택적인 raw Graph를 받는다. 타입을 복사하며 상태/Graph 수명은 더 길어야 한다.
@@ -88,9 +98,13 @@ public:
 private:
     // 패치 encoded cost와 CD float cost의 누적 절삭·DWORD 감김을 계산한다.
     std::int32_t TotalCost(std::size_t type) const;
+    // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
+    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::vector<RiftTypeRecord> types_;
+    // state_: 처리 중 조회·갱신하는 상태 (SquidPostPopState).
     SquidPostPopState& state_;
+    // graph_: 서로 연결된 표면의 Graph 소속을 관리하는 처리기.
     RawGraph* graph_{};
     std::function<void(Sid)> bridgeConnector_; // 연결 객체 생성/소유자 전파(004213b0). RawBridgeConnect::Connect를 잇는다.
     std::function<void(Sid,std::uint32_t)> islandPrefix_; // 섬 받침 postPop의 접두. RawBridgeConnect::IslandPostPopPrefix를 잇는다.

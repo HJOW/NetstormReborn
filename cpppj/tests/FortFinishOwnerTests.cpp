@@ -15,7 +15,7 @@ FortRandomRectangle FinishRectangle(std::uint32_t profile) {
         {20,21,20,21},{20,21,19,19},{1,2,255,254}}}.at(profile);
 }
 // 원본 residence 목록의 타입/상태/소유자/genus 자료만 공급한다.
-struct FinishNode { std::uint16_t sid;std::uint8_t type,state,owner;std::uint32_t genus; };
+struct FinishNode { /* sid: 원본 풀에서 객체를 찾는 SID 번호. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::uint16_t sid;/* type: 타입 표에서 객체 종류를 찾는 번호. 입력 구성 또는 실행 결과 대조에 사용한다. */ /* state: 검사 입력과 실행 뒤 결과를 보관할 상태. */ /* owner: 객체나 지역을 소유한 플레이어 번호. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::uint8_t type,state,owner;/* genus: genus. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::uint32_t genus; };
 // 원본과 동일한 중복/후행/틀린 소유자/flags/free·dead·void 입력이다.
 std::vector<FinishNode> FinishNodes(std::uint32_t profile,std::uint8_t owner) {
     const auto other=static_cast<std::uint8_t>((owner+1)%9);
@@ -25,8 +25,10 @@ std::vector<FinishNode> FinishNodes(std::uint32_t profile,std::uint8_t owner) {
 }
 // 현재 타입/목록·모드·호출별 시각·배치 정책 응답을 같은 actual pool에 공급하는 장면이다.
 struct FortFinishScene {
-    SidPool pool;std::vector<RiftTypeRecord> types;SquidPostPopList residences;FortFinishOwnerState state;
-    std::vector<std::uint32_t> values;std::vector<std::string> events;std::uint32_t attempts{},rounds{},lastSeed{};bool added{},patch;
+    // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
+    SidPool pool;/* types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<RiftTypeRecord> types;/* residences: 거주건물. 입력 구성 또는 실행 결과 대조에 사용한다. */ SquidPostPopList residences;/* state: 검사 입력과 실행 뒤 결과를 보관할 상태. */ FortFinishOwnerState state;
+    // values: 값. 입력 구성 또는 실행 결과 대조에 사용한다.
+    std::vector<std::uint32_t> values;/* events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<std::string> events;/* attempts: 시도. 입력 구성 또는 실행 결과 대조에 사용한다. */ /* rounds: 회차. 입력 구성 또는 실행 결과 대조에 사용한다. */ /* lastSeed: 마지막 시드. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::uint32_t attempts{},rounds{},lastSeed{};/* added: 추가된 여부. 입력 구성 또는 실행 결과 대조에 사용한다. */ /* patch: 10.78 패치판의 상태 또는 패치판 검사용 자료. 입력 구성 또는 실행 결과 대조에 사용한다. */ bool added{},patch;
     // 가상 배치 경계가 반환한 성공의 실제 목록 변경을 관찰할 번호를 미리 확보한다.
     FortFinishScene(OriginalEdition edition,std::vector<std::uint32_t> input):pool(edition,kCapacity,true),types(edition==OriginalEdition::Patch1078 ? 188 : 171),
         values(std::move(input)),patch(edition==OriginalEdition::Patch1078) {

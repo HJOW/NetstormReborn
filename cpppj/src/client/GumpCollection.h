@@ -11,13 +11,17 @@ struct GumpCollectionNode {
 };
 // 루트와 임시 수집 머리 전역이다. overrideHead가 0이면 root.child부터 수집한다.
 struct GumpCollectionState {
+    // root: 현재 UI 트리의 루트 토큰.
+    // overrideHead: 공통 UI 순회에 우선 사용할 머리 노드.
     std::uint32_t root{},overrideHead{};
     o::OriginalEdition edition{o::OriginalEdition::Patch1078}; // CD는 월드 부착 부모의 정수 위치를 먼저 float으로 저장한다.
 };
 // node는 현재 링크/필드를 읽고 캐시를 갱신할 저장소를 반환한다. 노드는 호출 동안 살아 있어야 한다.
 // project는 object SID의 원본 월드→화면 투영 결과를 공급한다. 투영 자체와 SID 해석은 별도 복원 범위다.
 struct GumpCollectionHooks {
+    // node: 토큰에 대응하는 저장 노드를 조회하는 콜백.
     std::function<GumpCollectionNode*(std::uint32_t)> node;
+    // project: 로컬 좌표를 출력 좌표로 투영하는 콜백.
     std::function<ScreenPoint(std::uint32_t)> project;
 };
 // 화면 밖 자식 통과, 최상위 삭제 필터, 원본의 루트별 제한 개수를 보존하는 UI 수집기다.

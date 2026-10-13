@@ -87,12 +87,19 @@ internal sealed partial class FortMapViewer
     /// <summary>쓸 수 없는 명령의 흐린 글자색</summary>
     private static readonly Color ContextDisabledColor = new(185, 180, 166);
 
+    /// <summary>_contextType: 우클릭 메뉴에서 정보를 표시할 타입.</summary>
     private TypeInfo? _contextType;
+    /// <summary>_contextEntity: 우클릭 메뉴의 명령 대상 엔티티.</summary>
     private GameEntity? _contextEntity;
+    /// <summary>_contextBridge: 우클릭 대상이 저장 다리 칸인지.</summary>
     private bool _contextBridge;
+    /// <summary>_contextPoint: 우클릭 메뉴가 열린 화면 좌표.</summary>
     private Point _contextPoint;
+    /// <summary>_contextSubmenu: 현재 펼친 우클릭 하위 메뉴의 이름.</summary>
     private string? _contextSubmenu;
+    /// <summary>_contextRows: 우클릭 메뉴의 표시 행과 명령 목록.</summary>
     private readonly List<ContextRow> _contextRows = [];
+    /// <summary>_contextPanels: 우클릭 메뉴 패널의 화면 영역과 내용.</summary>
     private readonly List<ContextPanel> _contextPanels = [];
     /// <summary>지도 입력·가장자리 스크롤을 차단하는 우클릭 목록 상태.</summary>
     public bool ContextMenuOpen => _contextType != null || _contextBridge;

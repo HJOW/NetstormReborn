@@ -179,10 +179,14 @@ std::vector<RiftTypeRecord> RealTypes(bool patch) {
 }
 // 실제 프로세스 host/Kernel/공통 삭제/보상 모듈 위에 건설 프로세스를 올리고 나머지 효과만 기록하는 장면이다.
 struct RealScene {
-    bool patch;SidPool pool;SquidHash hash;std::vector<std::uint8_t> spots=std::vector<std::uint8_t>(65536);std::vector<RiftTypeRecord> types;
-    SquidUnpop unpop;RawSquidDestroy destroy;Kernel kernel;SquidProcessState clock;SquidProcessHost host;
-    SquidPostPopState books;SquidRewardState rewardState;GameRandom rng;ScrambledSpStore store;SquidReward reward;
-    ConstructionProcessState state;std::vector<std::string> events;Sid parent{};
+    // patch: 10.78 패치판의 상태 또는 패치판 검사용 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
+    bool patch;/* pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다. */ SidPool pool;/* hash: 좌표별 객체 후보를 찾는 공간 해시. 입력 구성 또는 실행 결과 대조에 사용한다. */ SquidHash hash;/* spots: 칸별 점유·통행 비트를 읽는 spot 지도. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<std::uint8_t> spots=std::vector<std::uint8_t>(65536);/* types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<RiftTypeRecord> types;
+    // unpop: 객체의 공간 등록을 해제하는 Unpop 처리기. 입력 구성 또는 실행 결과 대조에 사용한다.
+    SquidUnpop unpop;/* destroy: 객체 삭제의 전처리·공간 해제·후처리를 실행하는 처리기. 입력 구성 또는 실행 결과 대조에 사용한다. */ RawSquidDestroy destroy;/* kernel: 프로세스 등록과 프레임 실행을 담당하는 커널. 입력 구성 또는 실행 결과 대조에 사용한다. */ Kernel kernel;/* clock: 프레임 판정에 현재 게임 시각을 공급하는 시계. 입력 구성 또는 실행 결과 대조에 사용한다. */ SquidProcessState clock;/* host: Form이나 프로세스의 등록·통지·수명을 연결하는 호스트. 입력 구성 또는 실행 결과 대조에 사용한다. */ SquidProcessHost host;
+    // books: 장부. 입력 구성 또는 실행 결과 대조에 사용한다.
+    SquidPostPopState books;/* rewardState: 보상 계산이 읽거나 갱신하는 판본별 전역과 AI 지갑이다. 패치 주소/CD 주소는 괄호에 둔다 (SquidRewardState). */ SquidRewardState rewardState;/* rng: 원본 FUN_004558c0: 상태 0이면 0x0bad0bad로 바꾼 뒤 상태*0x10003+3의 상위 16비트를 limit로 나눈 나머지를 쓴다 (GameRandom). */ GameRandom rng;/* store: 패치판이 플레이어별 SP를 32개의 9칸 DWORD 배열에 흩뿌려 보관하는 방식이다 (ScrambledSpStore). */ ScrambledSpStore store;/* reward: HP·SP·지갑 보상을 실제 장부에 적용하는 처리기. 입력 구성 또는 실행 결과 대조에 사용한다. */ SquidReward reward;
+    // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
+    ConstructionProcessState state;/* events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<std::string> events;/* parent: 부착·통지 대상인 부모 객체 또는 부모 SID. 입력 구성 또는 실행 결과 대조에 사용한다. */ Sid parent{};
     // 서버 권한 풀에서 부모를 서버 번호로 확보한다. SP 저장소는 보상 모듈 생성 조건만 채운다.
     explicit RealScene(OriginalEdition edition):patch(edition==OriginalEdition::Patch1078),pool(edition,kCapacity,true),types(RealTypes(patch)),
         unpop(pool,hash,spots),destroy(pool,unpop,types),host(pool,types,kernel,destroy,clock),store(rng,[] { return 1U; }),reward(pool,types,books,rewardState,patch ? &store : nullptr) {

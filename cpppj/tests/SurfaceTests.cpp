@@ -45,9 +45,13 @@ const std::vector<std::vector<std::string>>& Fixture() {
     }();
     return rows;
 }
+// Surface 검사에서 같은 풀·상태·처리기를 조립해 입력과 결과를 대조하는 자료형이다.
 struct Scene {
+    // objects: 현재 월드 또는 수집 단계의 객체 목록. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<SurfaceObject> objects;
+    // map: 지도. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::uint16_t> map=std::vector<std::uint16_t>(kWorldCells*kWorldCells);
+    // spots: 칸별 점유·통행 비트를 읽는 spot 지도. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::vector<std::uint8_t> spots=std::vector<std::uint8_t>(kWorldCells*kWorldCells);
     // 입력 발자국을 지도에 적는 도우미이며 연결/붕괴 결과를 계산하지 않는다.
     void Add(SurfaceObject object) {

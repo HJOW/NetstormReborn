@@ -105,9 +105,15 @@ private:
     void MarkTypeFrame();
     // 보고 함수가 연결돼 있으면 원본 assert 보고를 전달한다.
     void Report(std::string_view expression,int line) const;
+    // system_: 소리 프로세스들이 함께 쓰는 전역과 외부 효과를 묶고, 프로세스를 만들어 부모 객체에 붙인다 (SoundProcessSystem).
     SoundProcessSystem& system_;
+    // current_: 현재 처리 위치 또는 현재 선택 상태.
+    // sound_: 소리.
+    // alternate_: 대체.
     SoundHandle current_{},sound_{},alternate_{};
+    // flags_: 동작을 선택하는 플래그 비트.
     std::uint32_t flags_{};
+    // startTime_: 시작 시각.
     double startTime_{};
 };
 
@@ -129,8 +135,11 @@ public:
     const o::SidPool& Pool() const;
 private:
     friend class SoundProcess;
+    // host_: Form이나 프로세스의 등록·통지·수명을 연결하는 호스트.
     o::SquidProcessHost& host_;
+    // state_: 소리 프로세스가 읽고 쓰는 원본 전역이다. 값은 호출자(클라이언트)가 소유하고 프레임마다 갱신한다 (SoundProcessState).
     SoundProcessState& state_;
+    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (SoundProcessHooks).
     SoundProcessHooks hooks_;
 };
 
