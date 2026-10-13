@@ -44,6 +44,7 @@ public:
     void Drops(Sid sid,std::uint32_t genus,bool random) const;
     // 실제 Dais/Altar 어댑터가 같은 풀인지 확인한다.
     const SidPool& Pool() const;
+    Sid GenusAt(float x,float y,std::uint32_t genus) const; // plain 절삭한 한 칸의 첫 일반 finder 후보를 조회한다.
 private:
     // 현재 유효 SID·타입을 읽고 free/dead를 임의 필터로 추가하지 않는다.
     std::span<const std::uint8_t> Slot(Sid sid) const;
@@ -51,7 +52,6 @@ private:
     std::uint32_t Genus(Sid sid) const; // 현재 TYPE+ec이다.
     bool Ordinary(Sid sid) const; // 원본 extra&9가0인지 확인한다.
     std::array<float,2> Position(Sid sid) const; // 현재 raw float 좌표의 비트다.
-    Sid GenusAt(float x,float y,std::uint32_t genus) const; // plain 절삭한 한 칸의 첫 일반 finder 후보를 조회한다.
     SquidSearchArea Area(Sid sid,std::int32_t radius) const; // 현재 발자국 중심의 거의올림→inclusive 정수 반경이다.
     std::uint8_t FrameFlags(Sid sid) const; // 현재 raw DWORD/BYTE 프레임의 코드 flags다.
     void Weaken(Sid sid) const; // 실제 life WORD→공간통지→기존검색→frame/표시쓰기 순서다.

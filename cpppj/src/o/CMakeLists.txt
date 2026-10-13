@@ -54,6 +54,12 @@ target_sources(netstorm PRIVATE
     RawFortWorldLoad.cpp RawFortWorldLoad.h
     RawDudeSpawn.cpp RawDudeSpawn.h
     RawDudeDrop.cpp RawDudeDrop.h
+    RawBurningSources.cpp RawBurningSources.h
+    RawGeyserAiRegistration.cpp RawGeyserAiRegistration.h
+    RawPlayerWorld.cpp RawPlayerWorld.h
+    RawPriestHalt.cpp RawPriestHalt.h
+    RawCarrierArrival.cpp RawCarrierArrival.h
+    RawPriestArrival.cpp RawPriestArrival.h
     RawDudeTask.cpp RawDudeTask.h
     RawDaisContentNotice.cpp RawDaisContentNotice.h
     BaseFile.cpp BaseFile.h

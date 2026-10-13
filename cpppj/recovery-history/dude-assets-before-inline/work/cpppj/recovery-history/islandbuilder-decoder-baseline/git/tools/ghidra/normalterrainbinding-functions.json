@@ -1,0 +1,7 @@
+{
+  "description": "일반 지형의 같은 월드 소비자 연결을 위한 보조 함수 읽기 전용 감사다. 기존 terrainworld/terraincontext/growth/stamp/farm/islandruntime 몸체와 원본 관찰은 새 완료 수에 합산하지 않는다. 10.78 상위 0046da70와 10.72 상위 00490530의 섬별 Bounds/패턴수/군집 순서, CD 정상 후처리 및 군도 진입 거부 조건을 확인한다. 마지막 디컴파일 PC는 HJOW-Athlon이며 구현의 독립 native 입력 추가는 0이다.",
+  "editions": {
+    "originals": ["0040d900", "00432210"],
+    "originalCD": ["0049e4c0", "0049e5e0", "00490520", "004040d0"]
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "description": "단위15의 existing State28 getter가 선택하는 실제 Datamanager lookup/pos0 및 최소길이확인 몸체를 별도 읽기전용 내보낸다. 기존 player-regular4/6원문을덮지않으며 State없음/shortState의힙초기화·파일저장은명시미복원경계다. 현재PC HJOW-Athlon,2026-10-14. 이름검색은현재State명과현재current pointer/pos/end를보존한다.",
+  "editions": {
+    "originals": ["0044ce60", "0044ceb0", "0044d290"],
+    "originalCD": ["0044c4a0", "0044c4e0", "0044c600"]
+  }
+}

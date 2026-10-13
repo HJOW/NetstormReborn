@@ -1,0 +1,75 @@
+msbuild 버전 18.10.1-1.26427.6+3cd27c13e(.NET Framework용)
+
+  RawPriestArrival.cpp
+  netstorm.vcxproj -> H:\T5Workspace\NetstormReborn\cpppj\build\lib\Release\netstorm.lib
+  FortObjectLoadTests.cpp
+  FortFinishOwnerTests.cpp
+  RawPathRuntimeTests.cpp
+  FactoryPostPopTests.cpp
+  RawPathDataTests.cpp
+  RawPathStartTests.cpp
+  AssetRegularTests.cpp
+  RegionPaintTests.cpp
+  MissileTests.cpp
+  VortexAscendTests.cpp
+  VortexIslandBindingTests.cpp
+  GeyserMinedTests.cpp
+  PriestDamageTests.cpp
+  PathCleanupTests.cpp
+  ArcherMissileTests.cpp
+  IslandRuntimeTests.cpp
+  TerrainWorldBindingTests.cpp
+  NormalTerrainWorldBindingTests.cpp
+  DamageablePostDestroyHostTests.cpp
+  DaisRitualConsumerTests.cpp
+  PriestPathArrivalHostTests.cpp
+  CanonPlacementPreviewTests.cpp
+H:\T5Workspace\NetstormReborn\cpppj\tests\PriestPathArrivalHostTests.cpp(22,228): error C2065: 'RawContainedLookup': 선언되지 않은 식별자입니다. [H:\T5Workspace\NetstormReborn\cpppj\build\tests\netstorm_tests.vcxproj]
+H:\T5Workspace\NetstormReborn\cpppj\tests\PriestPathArrivalHostTests.cpp(22,247): error C2146: 구문 오류: ';'이(가) 'lookup' 식별자 앞에 없습니다. [H:\T5Workspace\NetstormReborn\cpppj\build\tests\netstorm_tests.vcxproj]
+H:\T5Workspace\NetstormReborn\cpppj\tests\PriestPathArrivalHostTests.cpp(22,247): error C3861: 'lookup': 식별자를 찾을 수 없습니다. [H:\T5Workspace\NetstormReborn\cpppj\build\tests\netstorm_tests.vcxproj]
+H:\T5Workspace\NetstormReborn\cpppj\tests\PriestPathArrivalHostTests.cpp(26,160): error C2065: 'lookup': 선언되지 않은 식별자입니다. [H:\T5Workspace\NetstormReborn\cpppj\build\tests\netstorm_tests.vcxproj]
+H:\T5Workspace\NetstormReborn\cpppj\tests\PriestPathArrivalHostTests.cpp(26,155): error C2737: 'form': const 개체를 초기화해야 합니다 [H:\T5Workspace\NetstormReborn\cpppj\build\tests\netstorm_tests.vcxproj]
+H:\T5Workspace\NetstormReborn\cpppj\tests\PriestPathArrivalHostTests.cpp(26,194): error C3536: 'form': 초기화되기 전에 사용할 수 없습니다. [H:\T5Workspace\NetstormReborn\cpppj\build\tests\netstorm_tests.vcxproj]
+H:\T5Workspace\NetstormReborn\cpppj\tests\PriestPathArrivalHostTests.cpp(26,207): error C2681: '<오류>': dynamic_cast에 대한 식 형식이 잘못되었습니다. [H:\T5Workspace\NetstormReborn\cpppj\build\tests\netstorm_tests.vcxproj]
+H:\T5Workspace\NetstormReborn\cpppj\tests\PriestPathArrivalHostTests.cpp(26,275): error C3536: 'process': 초기화되기 전에 사용할 수 없습니다. [H:\T5Workspace\NetstormReborn\cpppj\build\tests\netstorm_tests.vcxproj]
+H:\T5Workspace\NetstormReborn\cpppj\tests\PriestPathArrivalHostTests.cpp(32,169): error C2664: 'void netstorm::o::RawPathRuntime::SetPath(std::span<const netstorm::o::RawPathPoint,18446744073709551615>,std::span<const int,18446744073709551615>,std::span<const double,18446744073709551615>)': 인수 1을(를) 'initializer list'에서 'std::span<const netstorm::o::RawPathPoint,18446744073709551615>'(으)로 변환할 수 없습니다. [H:\T5Workspace\NetstormReborn\cpppj\build\tests\netstorm_tests.vcxproj]
+      H:\T5Workspace\NetstormReborn\cpppj\tests\PriestPathArrivalHostTests.cpp(32,177):
+      'std::span<const netstorm::o::RawPathPoint,18446744073709551615>::span': 함수는 2개의 인수를 사용하지 않습니다.
+          C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\span(355,5):
+          'std::span<const netstorm::o::RawPathPoint,18446744073709551615>::span(const std::span<_OtherTy,_OtherExtent> &) noexcept'일 수 있습니다.
+          C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\span(342,5):
+          또는       'std::span<const netstorm::o::RawPathPoint,18446744073709551615>::span(_Rng &&)'
+          C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\span(339,5):
+          또는       'std::span<const netstorm::o::RawPathPoint,18446744073709551615>::span(const std::array<_OtherTy,_Size> &) noexcept'
+          C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\span(334,5):
+          또는       'std::span<const netstorm::o::RawPathPoint,18446744073709551615>::span(std::array<_OtherTy,_Size> &) noexcept'
+          C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\span(330,5):
+          또는       'std::span<const netstorm::o::RawPathPoint,18446744073709551615>::span(const netstorm::o::RawPathPoint (&)[_Size]) noexcept'
+          C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\span(316,5):
+          또는       'std::span<const netstorm::o::RawPathPoint,18446744073709551615>::span(_It,_Sentinel) noexcept(<expr>)'
+          C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\span(305,5):
+          또는       'std::span<const netstorm::o::RawPathPoint,18446744073709551615>::span(_It,std::span<const netstorm::o::RawPathPoint,18446744073709551615>::size_type) noexcept'
+          H:\T5Workspace\NetstormReborn\cpppj\tests\PriestPathArrivalHostTests.cpp(32,177):
+          인수 목록 '(initializer list, initializer list)'을(를) 일치시키는 동안
+      H:\T5Workspace\NetstormReborn\cpppj\src\o\RawPathRuntime.h(43,10):
+      'netstorm::o::RawPathRuntime::SetPath' 선언을 참조하십시오.
+      H:\T5Workspace\NetstormReborn\cpppj\tests\PriestPathArrivalHostTests.cpp(32,169):
+      인수 목록 '(initializer list, initializer list, initializer list)'을(를) 일치시키는 동안
+  
+H:\T5Workspace\NetstormReborn\cpppj\tests\PriestPathArrivalHostTests.cpp(33,384): error C2065: 'lookup': 선언되지 않은 식별자입니다. [H:\T5Workspace\NetstormReborn\cpppj\build\tests\netstorm_tests.vcxproj]
+  RawSurfaceWorldTests.cpp
+  BridgeEventTests.cpp
+  BridgeConnectTests.cpp
+  IslandPostPopTests.cpp
+  SurfaceLifecycleTests.cpp
+  OwnerTests.cpp
+  PriestOwnerTests.cpp
+  PriestPostPopTests.cpp
+  CarrierPostPopTests.cpp
+  PriestStateTests.cpp
+  NeighborTests.cpp
+  DestroyLifecycleTests.cpp
+  DestroyGraphTests.cpp
+  RewardTests.cpp
+  PostPopTests.cpp
+  RawGraphTests.cpp

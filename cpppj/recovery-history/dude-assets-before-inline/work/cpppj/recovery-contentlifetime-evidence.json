@@ -1,0 +1,533 @@
+{
+  "last_decompile_host": "VM-W11-Codex",
+  "recorded_date": "2026-10-13",
+  "method": "실제 두 PE의 Content 특수 삭제/커서 조건/공통 삭제/Unpop/반납/실제 중심·CRT/구조 검사. C++ 호출 없음.",
+  "boundaries": [
+    "커서 취소 전체 몸체·UI/패킷 생성/송신·AI 지갑/SP·소리. 실제 원본 소켓/소리/장치는 실행하지 않는다."
+  ],
+  "fixture_sha256": "ee370eb8e5c92be1236856dc213c26566c23b1365344c4cc56d909984df313be",
+  "editions": {
+    "originals": {
+      "sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "cases": 198,
+      "operations": {
+        "Destroy": 158,
+        "Attach": 16,
+        "Linked": 24
+      },
+      "assertions": 0,
+      "native": {
+        "Destroy": 158,
+        "ContentPre": 158,
+        "Attach": 16,
+        "Linked": 26
+      },
+      "boundaries": {
+        "log": 158,
+        "selected": 158,
+        "content": 106,
+        "cancel": 68,
+        "local": 44,
+        "wallet": 42,
+        "local_sp": 28,
+        "sound": 42,
+        "remote_sp": 14,
+        "packet": 8,
+        "remote": 8,
+        "capture": 2
+      },
+      "functions": [
+        {
+          "entry": "004abb10",
+          "ranges": "004abb10-004abb66;004abb70-004abcac;004abcb0-004abdf1"
+        },
+        {
+          "entry": "004af1d0",
+          "ranges": "004af1d0-004af529"
+        },
+        {
+          "entry": "004abf60",
+          "ranges": "004abf60-004ac037"
+        },
+        {
+          "entry": "004abe00",
+          "ranges": "004abe00-004abe26;004abe30-004abf51"
+        },
+        {
+          "entry": "004aba70",
+          "ranges": "004aba70-004abab3"
+        },
+        {
+          "entry": "004952f0",
+          "ranges": "004952f0-0049532a"
+        },
+        {
+          "entry": "004e5b40",
+          "ranges": "004e5b40-004e5b9a;004e5b9c-004e5ba2;004e5bb0-004e5bd8;004e5bdc-004e5bfe;004e5c00-004e5c1c;004e5c40-004e5c89;004e5c9c-004e5ca2;004e5ca4-004e5cae;004e5cb0-004e5cc0;004e5cc4-004e5cda;004e5cdc-004e5d01;004e5d04-004e5d0c;004e5d10-004e5d2e;004e5d3c-004e5d5c;004e5d60-004e5d86;004e5d88-004e5db8;004e5ddc-004e5e25;004e5e38-004e5e3e;004e5e40-004e5e4c;004e5e50-004e5e62;004e5e64-004e5e7c"
+        },
+        {
+          "entry": "004abb10",
+          "ranges": "004abb10-004abb66;004abb70-004abcac;004abcb0-004abdf1"
+        },
+        {
+          "entry": "004af530",
+          "ranges": "004af530-004af600"
+        },
+        {
+          "entry": "004af610",
+          "ranges": "004af610-004af712"
+        },
+        {
+          "entry": "0049a840",
+          "ranges": "0049a840-0049a852"
+        },
+        {
+          "entry": "0049fce0",
+          "ranges": "0049fce0-0049fd6a"
+        },
+        {
+          "entry": "004ae760",
+          "ranges": "004ae760-004ae77a"
+        },
+        {
+          "entry": "004ae3d0",
+          "ranges": "004ae3d0-004ae3ea"
+        },
+        {
+          "entry": "004ae9f0",
+          "ranges": "004ae9f0-004aea0a"
+        },
+        {
+          "entry": "004aea40",
+          "ranges": "004aea40-004aea5a"
+        },
+        {
+          "entry": "004ae140",
+          "ranges": "004ae140-004ae1d3"
+        },
+        {
+          "entry": "004ac6b0",
+          "ranges": "004ac6b0-004ac7fd"
+        },
+        {
+          "entry": "004ad010",
+          "ranges": "004ad010-004ad014"
+        },
+        {
+          "entry": "004abac0",
+          "ranges": "004abac0-004abac4"
+        },
+        {
+          "entry": "004abad0",
+          "ranges": "004abad0-004abadb"
+        },
+        {
+          "entry": "004abae0",
+          "ranges": "004abae0-004abaeb"
+        },
+        {
+          "entry": "004ad040",
+          "ranges": "004ad040-004ad057"
+        },
+        {
+          "entry": "004437f0",
+          "ranges": "004437f0-004437f0"
+        },
+        {
+          "entry": "004b1510",
+          "ranges": "004b1510-004b15e1"
+        },
+        {
+          "entry": "004ae410",
+          "ranges": "004ae410-004ae4af"
+        },
+        {
+          "entry": "004ae4b0",
+          "ranges": "004ae4b0-004ae500"
+        },
+        {
+          "entry": "004ae510",
+          "ranges": "004ae510-004ae52c"
+        },
+        {
+          "entry": "004ae780",
+          "ranges": "004ae780-004ae8f3"
+        },
+        {
+          "entry": "004ae900",
+          "ranges": "004ae900-004ae97d"
+        },
+        {
+          "entry": "004aec10",
+          "ranges": "004aec10-004aecb4;004aecc0-004aeeab"
+        },
+        {
+          "entry": "004aea60",
+          "ranges": "004aea60-004aea8d"
+        },
+        {
+          "entry": "004af070",
+          "ranges": "004af070-004af0ab"
+        },
+        {
+          "entry": "004ac800",
+          "ranges": "004ac800-004ac942"
+        },
+        {
+          "entry": "004ac560",
+          "ranges": "004ac560-004ac6a2"
+        },
+        {
+          "entry": "004b1b80",
+          "ranges": "004b1b80-004b1bce"
+        },
+        {
+          "entry": "004b1bd0",
+          "ranges": "004b1bd0-004b1bec"
+        },
+        {
+          "entry": "004b22d0",
+          "ranges": "004b22d0-004b2332"
+        },
+        {
+          "entry": "004b2390",
+          "ranges": "004b2390-004b23d8"
+        },
+        {
+          "entry": "004aba70",
+          "ranges": "004aba70-004abab3"
+        },
+        {
+          "entry": "004af780",
+          "ranges": "004af780-004af8a9;004af8b0-004afa63"
+        },
+        {
+          "entry": "004ac1b0",
+          "ranges": "004ac1b0-004ac1b8"
+        },
+        {
+          "entry": "004ac1d0",
+          "ranges": "004ac1d0-004ac1d8"
+        },
+        {
+          "entry": "004ad010",
+          "ranges": "004ad010-004ad014"
+        },
+        {
+          "entry": "00441fa0",
+          "ranges": "00441fa0-00441fcb"
+        },
+        {
+          "entry": "0040b380",
+          "ranges": "0040b380-0040b382"
+        },
+        {
+          "entry": "004af160",
+          "ranges": "004af160-004af164"
+        },
+        {
+          "entry": "0044daa0",
+          "ranges": "0044daa0-0044daa7"
+        },
+        {
+          "entry": "00453740",
+          "ranges": "00453740-00453747"
+        },
+        {
+          "entry": "004aeeb0",
+          "ranges": "004aeeb0-004af00e"
+        },
+        {
+          "entry": "00447390",
+          "ranges": "00447390-004473d6"
+        },
+        {
+          "entry": "004ae080",
+          "ranges": "004ae080-004ae0bc;004ae0c0-004ae135"
+        },
+        {
+          "entry": "004adea0",
+          "ranges": "004adea0-004adeff"
+        },
+        {
+          "entry": "0049a900",
+          "ranges": "0049a900-0049a939"
+        },
+        {
+          "entry": "0040ea40",
+          "ranges": "0040ea40-0040ea63"
+        },
+        {
+          "entry": "004ac1b0",
+          "ranges": "004ac1b0-004ac1b8"
+        },
+        {
+          "entry": "004e49c0",
+          "ranges": "004e49c0-004e4a34"
+        },
+        {
+          "entry": "004ac200",
+          "ranges": "004ac200-004ac213"
+        }
+      ],
+      "body_sha256": {
+        "creation.c": "bccb334126d775058a87ac2c6f77fc11eac06d181d0c2e55d710565ea1eb2efa",
+        "functions.tsv": "c0ec69d8b4c4263720b70bd3fd88d629cc5125097b868b9d6a03da887375312d"
+      }
+    },
+    "originalCD": {
+      "sha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "cases": 198,
+      "operations": {
+        "Destroy": 158,
+        "Attach": 16,
+        "Linked": 24
+      },
+      "assertions": 0,
+      "native": {
+        "Destroy": 158,
+        "ContentPre": 158,
+        "Attach": 16,
+        "Linked": 26
+      },
+      "boundaries": {
+        "label": 158,
+        "log": 158,
+        "selected": 158,
+        "content": 108,
+        "cancel": 68,
+        "capture": 2
+      },
+      "functions": [
+        {
+          "entry": "004aaad0",
+          "ranges": "004aaad0-004aad2f"
+        },
+        {
+          "entry": "004aae40",
+          "ranges": "004aae40-004ab243"
+        },
+        {
+          "entry": "004ab250",
+          "ranges": "004ab250-004ab380"
+        },
+        {
+          "entry": "004aad30",
+          "ranges": "004aad30-004aae34"
+        },
+        {
+          "entry": "004cff40",
+          "ranges": "004cff40-004cff7a"
+        },
+        {
+          "entry": "004f1a60",
+          "ranges": "004f1a60-004f1a96;004f1aa8-004f1aba;004f1abc-004f1ac8;004f1acc-004f1ad6;004f1ad8-004f1afc;004f1b00-004f1b08;004f1b0c-004f1b2f;004f1b40-004f1b55;004f1b58-004f1b75;004f1b78-004f1ba2;004f1ba4-004f1bad"
+        },
+        {
+          "entry": "004aaad0",
+          "ranges": "004aaad0-004aad2f"
+        },
+        {
+          "entry": "004ab390",
+          "ranges": "004ab390-004ab435"
+        },
+        {
+          "entry": "004ab440",
+          "ranges": "004ab440-004ab57b"
+        },
+        {
+          "entry": "00444720",
+          "ranges": "00444720-00444749"
+        },
+        {
+          "entry": "004448e0",
+          "ranges": "004448e0-004448f2"
+        },
+        {
+          "entry": "004af920",
+          "ranges": "004af920-004af93c"
+        },
+        {
+          "entry": "004af5c0",
+          "ranges": "004af5c0-004af5d9"
+        },
+        {
+          "entry": "004afd60",
+          "ranges": "004afd60-004afd7c"
+        },
+        {
+          "entry": "004afe00",
+          "ranges": "004afe00-004afe1c"
+        },
+        {
+          "entry": "004af270",
+          "ranges": "004af270-004af309"
+        },
+        {
+          "entry": "004ac160",
+          "ranges": "004ac160-004ac2dd"
+        },
+        {
+          "entry": "004b04a0",
+          "ranges": "004b04a0-004b04a6"
+        },
+        {
+          "entry": "004b04b0",
+          "ranges": "004b04b0-004b04b6"
+        },
+        {
+          "entry": "004b04c0",
+          "ranges": "004b04c0-004b04ca"
+        },
+        {
+          "entry": "004b04d0",
+          "ranges": "004b04d0-004b04da"
+        },
+        {
+          "entry": "004accc0",
+          "ranges": "004accc0-004accd9"
+        },
+        {
+          "entry": "004b0470",
+          "ranges": "004b0470-004b0470"
+        },
+        {
+          "entry": "004b0480",
+          "ranges": "004b0480-004b0480"
+        },
+        {
+          "entry": "004af940",
+          "ranges": "004af940-004afa01"
+        },
+        {
+          "entry": "004af600",
+          "ranges": "004af600-004af691"
+        },
+        {
+          "entry": "004af6a0",
+          "ranges": "004af6a0-004af6fb"
+        },
+        {
+          "entry": "004af700",
+          "ranges": "004af700-004af71e"
+        },
+        {
+          "entry": "004afa50",
+          "ranges": "004afa50-004afbb7"
+        },
+        {
+          "entry": "004afbc0",
+          "ranges": "004afbc0-004afc20"
+        },
+        {
+          "entry": "004afff0",
+          "ranges": "004afff0-004b02f0"
+        },
+        {
+          "entry": "004afe20",
+          "ranges": "004afe20-004afe50"
+        },
+        {
+          "entry": "004b0350",
+          "ranges": "004b0350-004b038d"
+        },
+        {
+          "entry": "004ac2e0",
+          "ranges": "004ac2e0-004ac416"
+        },
+        {
+          "entry": "004abfb0",
+          "ranges": "004abfb0-004ac0f4"
+        },
+        {
+          "entry": "004eb990",
+          "ranges": "004eb990-004eb9e8"
+        },
+        {
+          "entry": "004eba70",
+          "ranges": "004eba70-004eba91"
+        },
+        {
+          "entry": "004eb960",
+          "ranges": "004eb960-004eb982"
+        },
+        {
+          "entry": "004eba30",
+          "ranges": "004eba30-004eba6a"
+        },
+        {
+          "entry": "004ab7e0",
+          "ranges": "004ab7e0-004aba80"
+        },
+        {
+          "entry": "004aba90",
+          "ranges": "004aba90-004aba98"
+        },
+        {
+          "entry": "004abab0",
+          "ranges": "004abab0-004abab8"
+        },
+        {
+          "entry": "004b04a0",
+          "ranges": "004b04a0-004b04a6"
+        },
+        {
+          "entry": "004afe60",
+          "ranges": "004afe60-004afe62"
+        },
+        {
+          "entry": "004b04e0",
+          "ranges": "004b04e0-004b04f1"
+        },
+        {
+          "entry": "004abae0",
+          "ranges": "004abae0-004abafd"
+        },
+        {
+          "entry": "004abaa0",
+          "ranges": "004abaa0-004abaa8"
+        },
+        {
+          "entry": "0040f190",
+          "ranges": "0040f190-0040f197"
+        },
+        {
+          "entry": "004554a0",
+          "ranges": "004554a0-004554a7"
+        },
+        {
+          "entry": "004b0300",
+          "ranges": "004b0300-004b032b"
+        },
+        {
+          "entry": "0043d4c0",
+          "ranges": "0043d4c0-0043d500"
+        },
+        {
+          "entry": "004af1c0",
+          "ranges": "004af1c0-004af26a"
+        },
+        {
+          "entry": "004aef30",
+          "ranges": "004aef30-004aef91"
+        },
+        {
+          "entry": "004442b0",
+          "ranges": "004442b0-004442e6"
+        },
+        {
+          "entry": "004abaa0",
+          "ranges": "004abaa0-004abaa8"
+        },
+        {
+          "entry": "004f161c",
+          "ranges": "004f161c-004f1642"
+        }
+      ],
+      "body_sha256": {
+        "creation.c": "1b5e40a56cdcee6c62bddcd2610b14c7c2d46d7865784b07993ec277c58c7558",
+        "functions.tsv": "405c64242c8c97cfb14ef45d1ed9f1b6809de347aea52ff8fad4b2fc3af4a696"
+      }
+    }
+  }
+}

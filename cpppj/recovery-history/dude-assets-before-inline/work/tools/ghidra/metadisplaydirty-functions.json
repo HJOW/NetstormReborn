@@ -1,0 +1,7 @@
+{
+  "description": "Sky Overview 미니맵 dirty 고유 셀 등록·프레임 갱신·카메라/사각형 비교·실제 ftol. bitmap/render/cell은 독립 관찰 경계다.",
+  "editions": {
+    "originals": ["00481510", "00481320", "0040e850", "00480180", "004e49c0"],
+    "originalCD": ["00442f30", "00442d10", "004f161c"]
+  }
+}

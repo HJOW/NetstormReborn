@@ -1,0 +1,62 @@
+{
+  "schema": 1,
+  "host": "HJOW-Athlon",
+  "decompile_date": "2026-10-14",
+  "total": 64,
+  "normal_total": 64,
+  "assert_total": 0,
+  "game_runs": 0,
+  "external_boundaries": 0,
+  "editions": {
+    "originals": {
+      "normal_cases": 32,
+      "returns": 64,
+      "assertions": 0,
+      "actual_calls": {
+        "Rebuild": 64,
+        "Allocate": 128,
+        "Flood": 64
+      },
+      "capacity": 32768
+    },
+    "originalCD": {
+      "normal_cases": 32,
+      "returns": 64,
+      "assertions": 0,
+      "actual_calls": {
+        "Rebuild": 64,
+        "Allocate": 128,
+        "Flood": 64
+      },
+      "capacity": 32768
+    }
+  },
+  "files": {
+    "tools/decomp_graphforms_oracle.py": "2fb2e1dd977346151d4e91981c64a797e48db8c10fe334a65bf918c8a649ab84",
+    "cpppj/tests/fixtures/graphforms-x86.tsv": "58e1c638f532f84efd3a36b052eea5ea5bfff5e94cc2ea1c2f78b0eda056e24d",
+    "cpppj/src/o/RawGraph.cpp": "66e35f497c8e19340bccff7949d3f2bb5a7f7abdb3da59a970f203b5f277b95a",
+    "tools/decomp_graphrebuild_oracle.py": "c946e3c09d26404f0ba3fd9e9c981836e356049636699d43772168a9dd767c1e",
+    "cpppj/recovery-graphrebuild-evidence.json": "8aa0b443206d6046313071cac9ee295e308c3488209ebdd2c06bf71cbd64e9a5",
+    "tools/decomp_graphremove_oracle.py": "9c6241fb8c2e3a2d1378dafa590709bf8e856e234d116d73a02357d102274e40",
+    "tools/decomp_bridge_oracle.py": "c212538f7059cd0c9efac87cb205c71561fcc1f8d97df7830bc57d89a03f01fe",
+    "tools/decomp_rawgraph_oracle.py": "6fafcc58b514eb7be01a144973155953c425305d054a81e6fc3f0395a7b548f1",
+    "tools/decomp_graph_oracle.py": "47d2565b9d36a2654d4e60e20111995df889c383bad702a4ce6694e77dfadca5",
+    "tools/decomp_creation_oracle.py": "a65b8e22a1116d5883745345d0c977d293fd61c3f919bf7ac4cc61ba4c052a38",
+    "tools/decomp_sid_oracle.py": "eea44b1b0fa8a57b1a49ee246962ea346dec64b280761b0bff0ccdd87631ddd6",
+    "tools/decomp_pop_oracle.py": "0120e5ebdc2183ac61a051ca2f4f79dbe0e9ffee864ca37ec04b5b49e70a1204",
+    "tools/decomp_display_oracle.py": "147ccd4c899d97810a025334ac99200df665df657807af4f529c2dd05178c012",
+    "tools/decomp_postpop_oracle.py": "85a507a48a4f37996e24b16e2766f6773502052199631fd163018a82e2d5a644",
+    "tools/decomp_surface_oracle.py": "9b1711c22db7267bfcc4c9a870ee42c193f2041eee8a4f70b552e462c103b5ec",
+    "tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/graphrebuild/originals/creation.c": "ecdd66d340dc36689d51ed85f190e79d6d6ee7d48cc8fcdbe3b85324322002db",
+    "extracted/graphrebuild/originals/functions.tsv": "609ddee409a7bfaa0344b5ad8d0ac30cd4eff4b90f346411144af139ba67ffdb",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "extracted/graphrebuild/originalCD/creation.c": "c7dc196839b0d179529ba2e93b09415ae7b39f2a49780650e2bfe2a421efea1c",
+    "extracted/graphrebuild/originalCD/functions.tsv": "77f583343a5cfc0117dc52f4e4361abdc8634f23c6dcdce518f196885968b28b"
+  },
+  "limitations": [
+    "내부Form raw 입력/타입flag0과 비공간 상태의 전체순회만 대조한다. 실제Form 생성/등록 완료 근거로 확대하지 않는다.",
+    "표면1과 내부Form6·정수표면/합성FrameCode·32768전체풀·비전투 null 큐이며 실제 캠페인 월드 전체는 후속이다."
+  ]
+}

@@ -8,6 +8,7 @@
 #include "o/RawRunePostPop.h"
 #include "o/RawDaisLifecycle.h"
 #include "o/RawDudeSpawn.h"
+#include "o/RawPlayerWorld.h"
 #include "o/SquidPop.h"
 #include "o/RawIslandPostPop.h"
 #include <algorithm>
@@ -74,7 +75,7 @@ bool SquidPostPop::HandlesIsland(Sid sid) const {
     return islandPrefix_ && Vtable(pool_.Slot(sid))==expected;
 }
 // 파생 표는 서로 다른 주소이므로 한 종류만 참이 된다.
-bool SquidPostPop::HandlesDerived(Sid sid) const { return HandlesBridge(sid) || HandlesIsland(sid) || HandlesSurface(sid) || HandlesPriest(sid) || HandlesForcefield(sid) || HandlesCarrier(sid) || HandlesDamageable(sid) || HandlesAsset(sid) || HandlesFactory(sid) || HandlesRune(sid) || HandlesDais(sid) || HandlesDude(sid); }
+bool SquidPostPop::HandlesDerived(Sid sid) const { return HandlesBridge(sid) || HandlesIsland(sid) || HandlesSurface(sid) || HandlesPriest(sid) || HandlesForcefield(sid) || HandlesCarrier(sid) || HandlesDamageable(sid) || HandlesAsset(sid) || HandlesFactory(sid) || HandlesRune(sid) || HandlesDais(sid) || HandlesDude(sid) || HandlesPlayer(sid); }
 // 지원 주소만 늘리지 않고 실제 전체 몸체와 동일 풀을 확인한다.
 void SquidPostPop::SetFactoryPostPop(const RawFactoryPostPop* postPop) {
     if (postPop && &postPop->Pool()!=&pool_) throw std::invalid_argument("Factory Pop/후처리 풀 불일치");
@@ -103,6 +104,13 @@ void SquidPostPop::SetDudePostPop(const RawDudePostPop* postPop) {
 }
 // 현재 타입과 생성자 가상 표의 판단은 등록된 실제 몸체를 재사용한다.
 bool SquidPostPop::HandlesDude(Sid sid) const { return dudePostPop_ && dudePostPop_->Handles(sid); }
+// 실제 Player 최초 기록/예약 몸체를 같은 풀에만 명시 등록한다.
+void SquidPostPop::SetPlayerPostPop(const RawPlayerWorld* postPop) {
+    if (postPop && &postPop->Pool()!=&pool_) throw std::invalid_argument("Player Pop/후처리 풀 불일치");
+    playerPostPop_=postPop;
+}
+// 실제 생성자의 가상 표 판단은 등록된 Player 몸체를 재사용한다.
+bool SquidPostPop::HandlesPlayer(Sid sid) const { return playerPostPop_ && playerPostPop_->Handles(sid); }
 // 복원한 전용 자산 몸체를 같은 월드에 명시 등록한다. 일반 지원 주소 표는 변경하지 않는다.
 void SquidPostPop::SetAssetPostPop(const RawAssetPostPop* postPop) {
     if (postPop && &postPop->Pool()!=&pool_) throw std::invalid_argument("자산 Pop/후처리 풀 불일치");
@@ -187,6 +195,7 @@ void SquidPostPop::Validate(Sid sid,std::uint32_t flags,const RawGraphPop* pop) 
     if (HandlesRune(sid)) runePostPop_->Validate(sid,flags,pop);
     if (HandlesDais(sid)) daisPostPop_->Validate(sid,flags);
     if (HandlesDude(sid)) dudePostPop_->Validate(sid,flags);
+    if (HandlesPlayer(sid)) playerPostPop_->Validate(sid,flags,pop);
     if (HandlesForcefield(sid)) forcefieldPostPop_->Validate(sid);
     if (HandlesAsset(sid)) assetPostPop_->Validate(sid,flags,pop);
     if (HandlesFactory(sid)) factoryPostPop_->Validate(sid,flags,pop);
@@ -223,6 +232,12 @@ void SquidPostPop::ValidateBase(Sid sid,std::uint32_t flags,const RawGraphPop* p
 // 성공한 공간 Pop의 flags로 가상 후처리를 분배한다. 전체 사제 wrapper는 자기 공통 깊이를 감소시킨다.
 void SquidPostPop::Activate(Sid sid,std::uint32_t flags) {
     Validate(sid,flags);const auto before=state_.depth; ++state_.depth;
+    // Player는 현재9기록/SID와 조건부예약 뒤 자기 몸체에서 공통 장부를 한 번 호출한다.
+    if (HandlesPlayer(sid)) {
+        playerPostPop_->PostPop(sid,flags);
+        if (state_.depth!=before) throw std::logic_error("Player Activate 공통 깊이 불일치");
+        return;
+    }
     // Dude는 idle/population/I 프레임 뒤 자기 전체 몸체에서 공통 장부를 한 번 호출한다.
     if (HandlesDude(sid)) {
         dudePostPop_->PostPop(sid,flags);

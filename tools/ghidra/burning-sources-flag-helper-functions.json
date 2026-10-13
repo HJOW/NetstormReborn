@@ -1,0 +1,6 @@
+{
+  "description": "CD Burning 연소점 helper의 실제 HasHP가 읽는 TYPE flags1 getter. 먼저 내보낸 8/7 전체 자료는 보존한다. 마지막 디컴파일 PC HJOW-Athlon, 2026-10-14.",
+  "editions": {
+    "originalCD": ["004abac0"]
+  }
+}

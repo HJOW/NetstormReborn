@@ -1,0 +1,31 @@
+{
+  "originals": {
+    "gif_pixels": 831008,
+    "observed_states": 54,
+    "mission_objects": 172,
+    "tutorial_objects": 3,
+    "native_window_navigation": true,
+    "resolution_changes": [
+      [
+        800,
+        600
+      ],
+      [
+        640,
+        480
+      ],
+      [
+        1024,
+        768
+      ]
+    ],
+    "fullscreen_marker_event": true,
+    "options_persist_after_restart": true,
+    "menu_background_pixels": 774432,
+    "original_files_unchanged": true
+  },
+  "originalCD": {
+    "gif_pixels": 831008,
+    "original_files_unchanged": true
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "host": "HJOW-Athlon",
+  "decompile_date": "2026-10-14",
+  "normal_inputs": 2964,
+  "new_native_inputs": 0,
+  "game_runs": 0,
+  "scope": "원본 보고서/fixture/생산 전체 원문 불변과 새 전용 C++ 검사 SHA의 연결. C++ 실행 결과는 공유 검사 로그로 별도 기록하며 의식 전체 소비자 완료로 표시하지 않는다.",
+  "files": {
+    "cpppj/recovery-daisprogress-evidence.json": "4a1764d3e50c3d5808fe4587f09bf942f29a562f499a8da5e56e768ece93c963",
+    "cpppj/src/o/RawAltarSacrifice.cpp": "c45c6083846aa97aec3d1dc0cd2dda2d0beab45fcd7addb07c755d1e2482f464",
+    "cpppj/src/o/RawAltarSacrifice.h": "1df83640935f495e4b6687c41ac5d181a8947f2bc6f349659870acea225b89c3",
+    "cpppj/src/o/RawDaisRegular.cpp": "c1a167728b02f382cbae23454e4aba1046c91a7284dbe4c6e206e856ccc4c433",
+    "cpppj/src/o/RawDaisRegular.h": "fdc080a0ae1ff54909a1cf59a6b9be626e7a7d96c5103072c9325d13efb88ed3",
+    "cpppj/tests/DaisProgressTests.cpp": "ebee30ef7651d0bf54b1720597b4cfd0e59ed4341d2a41c2d8adfbe93e94241c",
+    "cpppj/tests/fixtures/daisprogress-x86.tsv": "20f5ddd2486a3b592db3a4f77a8f18200a9ec4f46cec5f43355d86cf1f215cea",
+    "tools/analyze_daisprogress_cpp_binding.py": "e7ca4ff15e8333aefa60250ee367e2108827a1db46aa1c103e12936f7d268309",
+    "tools/decomp_daisprogress_oracle.py": "c18dfd2811324ac389e3aa06cfefad00224a4567be245b8dc8e148da51f57bf3"
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "host": "HJOW-Athlon",
+  "total": 224,
+  "editions": {
+    "originals": {
+      "normal_cases": 58,
+      "assertion_cases": 54,
+      "returns": 112,
+      "native": {
+        "004c0390": 112,
+        "004c02d0": 112,
+        "004c09a0": 20,
+        "004c0ad0": 20
+      },
+      "external": {
+        "assert": 72
+      }
+    },
+    "originalCD": {
+      "normal_cases": 112,
+      "assertion_cases": 0,
+      "returns": 112,
+      "native": {
+        "0049cdd0": 112,
+        "0049cd50": 112,
+        "0049d890": 20,
+        "0049d9a0": 20
+      },
+      "external": {}
+    }
+  },
+  "normal_total": 170,
+  "assertion_total": 54,
+  "game_runs": 0,
+  "files": {
+    "cpppj/src/o/RawTerrainContext.cpp": "203547106def3802bcd2070c916bfdc62e714586885c6f7f4df7b1a5ce18f3f1",
+    "cpppj/src/o/RawTerrainContext.h": "debce2664dc50d88797b25cdfaf02318bdffc6b9bcd38a012930599bc3c13e40",
+    "cpppj/tests/fixtures/terraincontext-x86.tsv": "4f2a00ade0e29273a76824b96ea3184a78d51022a0758b79deceaf322fa7696d",
+    "extracted/refined/originalCD/functions.tsv": "453aa383c27baf8eefa00d97bf44051d18460150556511c2eb7a46f111e92def",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/regionpaint/originalCD/creation.c": "7b1d592f8f5d713fafd286c2ab735ead63fe32bc7fd388ed2346de15938f0fca",
+    "extracted/regionpaint/originalCD/functions.tsv": "1d9ba069c7b593820b857ea19f823315a96686d22dad1afa076a53c5b46ccc94",
+    "extracted/regionpaint/originals/creation.c": "54191908282833173cdd2181b46ac549e8cb494fe1ec2e58973968cc6745479f",
+    "extracted/regionpaint/originals/functions.tsv": "156b9522eaadd07fd128619913803d6c6efad29d57efd82ff5dfc823835326d9",
+    "extracted/terraincontext-helper/originalCD/creation.c": "b2764b5f860486652ca7eb88d85790c7b90886eeb7151b69aec90ed572128f80",
+    "extracted/terraincontext-helper/originalCD/functions.tsv": "ed38f977037fe5be35d166eb0680d6c4b36b5afc7ce1342ca139a741702cdfdd",
+    "extracted/terrainstamp/originalCD/creation.c": "686c69c671986a3dff1211b6f87f4172108ad5e8cdbd8178e87738e6227d1a54",
+    "extracted/terrainstamp/originalCD/functions.tsv": "9d63fa53ad9c7d7bf16ffcad006892d42f5c81de028830287aec4fd395cfaf3c",
+    "extracted/terrainstamp/originals/creation.c": "5dc19a2ad0b921f1f2d864d788e6aaa0714e3a36156d32803ec035861c97d77d",
+    "extracted/terrainstamp/originals/functions.tsv": "6ec6c91172449b3598017d4f3b595fb404fc4450f4016b86e661ec628d2fadee",
+    "extracted/terrainworld/originalCD/creation.c": "189722ccbf6f59c6d0d1b45122af07c60c598d06afda96ca988aa8af2e036bcf",
+    "extracted/terrainworld/originalCD/functions.tsv": "ea3c9bd17db0110ea334ac1880ac01c8d11a078ada27d539d971a292c5d263cf",
+    "extracted/terrainworld/originals/creation.c": "57bf989105d4d35350a090fd9eb4586057203634a839ff115ac81bb0c004d012",
+    "extracted/terrainworld/originals/functions.tsv": "d168a0841c140139874488b4e4cefe64ab03e51b0dc0fc47199eb354fd5a2250",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_terraincontext_oracle.py": "79e45e6b63cb71d99603adfe418f752747841269a22e2c18a73f009ace4612f7",
+    "tools/decomp_terrainstamp_oracle.py": "58198732b39ebe039b98c7739eee2540c3d5cd6e08fb7088623379a3df61a383",
+    "tools/ghidra/terraincontext-helper-functions.json": "97d71b53a524252ebe6beffdb21edb2555a8f807270fd121404ca02af0b43f50",
+    "tools/ghidra/terrainworld-functions.json": "7eebb52feca6b23f7b2ab258c78aa6ba6d6825b9342390c989e69400b49ca9a1",
+    "cpppj/tests/TerrainContextTests.cpp": "687b7f4312c456934e38b38661f63368eb10206dd52c5a6d1ead84a0823746d5",
+    "cpppj/src/o/RawTerrainStamp.h": "a0147b2acd24ee05520b4d2446c90f738436ff231ee8515a3df36d056227d953",
+    "cpppj/tests/RawSceneSupport.h": "87b79d463f38e142b1aa768384af28a08b404a276a6b989e90dd53b393642919",
+    "tools/analyze_terraincontext_cpp_binding.py": "4e491007bcc5a8bdba168cc47f850ac9946f673e2c1b3d01db56e18bfb9d7b95"
+  },
+  "limits": [
+    "원본 ChunkMap 포인터 주소·복사 metadata는 C++ 게임데이터 출력에 합산하지 않는다.",
+    "실제 성장/군집 배치/wrapper 및 GUI/캠페인 완주 근거가 아니다."
+  ],
+  "native_source_files": {
+    "cpppj/src/o/RawTerrainContext.cpp": "203547106def3802bcd2070c916bfdc62e714586885c6f7f4df7b1a5ce18f3f1",
+    "cpppj/src/o/RawTerrainContext.h": "debce2664dc50d88797b25cdfaf02318bdffc6b9bcd38a012930599bc3c13e40",
+    "cpppj/tests/fixtures/terraincontext-x86.tsv": "4f2a00ade0e29273a76824b96ea3184a78d51022a0758b79deceaf322fa7696d",
+    "extracted/refined/originalCD/functions.tsv": "453aa383c27baf8eefa00d97bf44051d18460150556511c2eb7a46f111e92def",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/regionpaint/originalCD/creation.c": "7b1d592f8f5d713fafd286c2ab735ead63fe32bc7fd388ed2346de15938f0fca",
+    "extracted/regionpaint/originalCD/functions.tsv": "1d9ba069c7b593820b857ea19f823315a96686d22dad1afa076a53c5b46ccc94",
+    "extracted/regionpaint/originals/creation.c": "54191908282833173cdd2181b46ac549e8cb494fe1ec2e58973968cc6745479f",
+    "extracted/regionpaint/originals/functions.tsv": "156b9522eaadd07fd128619913803d6c6efad29d57efd82ff5dfc823835326d9",
+    "extracted/terraincontext-helper/originalCD/creation.c": "b2764b5f860486652ca7eb88d85790c7b90886eeb7151b69aec90ed572128f80",
+    "extracted/terraincontext-helper/originalCD/functions.tsv": "ed38f977037fe5be35d166eb0680d6c4b36b5afc7ce1342ca139a741702cdfdd",
+    "extracted/terrainstamp/originalCD/creation.c": "686c69c671986a3dff1211b6f87f4172108ad5e8cdbd8178e87738e6227d1a54",
+    "extracted/terrainstamp/originalCD/functions.tsv": "9d63fa53ad9c7d7bf16ffcad006892d42f5c81de028830287aec4fd395cfaf3c",
+    "extracted/terrainstamp/originals/creation.c": "5dc19a2ad0b921f1f2d864d788e6aaa0714e3a36156d32803ec035861c97d77d",
+    "extracted/terrainstamp/originals/functions.tsv": "6ec6c91172449b3598017d4f3b595fb404fc4450f4016b86e661ec628d2fadee",
+    "extracted/terrainworld/originalCD/creation.c": "189722ccbf6f59c6d0d1b45122af07c60c598d06afda96ca988aa8af2e036bcf",
+    "extracted/terrainworld/originalCD/functions.tsv": "ea3c9bd17db0110ea334ac1880ac01c8d11a078ada27d539d971a292c5d263cf",
+    "extracted/terrainworld/originals/creation.c": "57bf989105d4d35350a090fd9eb4586057203634a839ff115ac81bb0c004d012",
+    "extracted/terrainworld/originals/functions.tsv": "d168a0841c140139874488b4e4cefe64ab03e51b0dc0fc47199eb354fd5a2250",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_terraincontext_oracle.py": "79e45e6b63cb71d99603adfe418f752747841269a22e2c18a73f009ace4612f7",
+    "tools/decomp_terrainstamp_oracle.py": "58198732b39ebe039b98c7739eee2540c3d5cd6e08fb7088623379a3df61a383",
+    "tools/ghidra/terraincontext-helper-functions.json": "97d71b53a524252ebe6beffdb21edb2555a8f807270fd121404ca02af0b43f50",
+    "tools/ghidra/terrainworld-functions.json": "7eebb52feca6b23f7b2ab258c78aa6ba6d6825b9342390c989e69400b49ca9a1"
+  },
+  "cpp_source_files": {
+    "cpppj/tests/TerrainContextTests.cpp": "687b7f4312c456934e38b38661f63368eb10206dd52c5a6d1ead84a0823746d5",
+    "cpppj/src/o/RawTerrainStamp.h": "a0147b2acd24ee05520b4d2446c90f738436ff231ee8515a3df36d056227d953",
+    "cpppj/tests/RawSceneSupport.h": "87b79d463f38e142b1aa768384af28a08b404a276a6b989e90dd53b393642919",
+    "tools/analyze_terraincontext_cpp_binding.py": "4e491007bcc5a8bdba168cc47f850ac9946f673e2c1b3d01db56e18bfb9d7b95"
+  },
+  "cpp_binding_new_native_cases": 0
+}

@@ -1,0 +1,6 @@
+{
+  "description": "CD 10.72 Burning particle 생성자가 호출하는 실제 위치 초기화 보조 함수. 이전 18/19 함수 내보내기는 보존한다. 마지막 디컴파일 PC HJOW-Athlon, 2026-10-14.",
+  "editions": {
+    "originalCD": ["0045d410"]
+  }
+}

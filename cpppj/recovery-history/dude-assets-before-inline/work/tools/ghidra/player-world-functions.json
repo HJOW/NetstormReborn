@@ -1,0 +1,7 @@
+{
+  "description": "실제 Player152 생성 wrapper·가상PostPop 및 Technology SID getter 둘을 읽기 전용으로 내보낸다. 기존152 파생 생성자/Factory/Owner/Pop/공통Post/Regular/Host 몸체는 재사용한다. 현재 PlayerKnown·battle localOwner·Template owner 및9기록 BYTE 공유를 보존한다. CD wrapper의 생략된y/가상Pop 인자순서는 실제 기계어로 확인한다. 현재/마지막 디컴파일 PC HJOW-Athlon, 2026-10-14.",
+  "editions": {
+    "originals": ["00490250", "004905d0", "0048fc60", "0048fc90"],
+    "originalCD": ["00407400", "00407cc0", "00406d90", "00406dc0"]
+  }
+}

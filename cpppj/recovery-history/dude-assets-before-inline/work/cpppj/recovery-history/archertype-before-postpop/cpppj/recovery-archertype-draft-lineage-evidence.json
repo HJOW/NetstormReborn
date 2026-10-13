@@ -1,0 +1,42 @@
+{
+  "schema": 3,
+  "host": "HJOW-Athlon",
+  "normal_preserved": 42,
+  "prefix_preserved": 2,
+  "new_native": 0,
+  "new_unique": 0,
+  "history_files": {
+    "cpppj/recovery-history/archertype-initial/RawArcherTypeData.cpp": "90f36d816e709324b83ad07762c466ecc17658bb7d7081eede13d16af9dc0f3f",
+    "cpppj/recovery-history/archertype-initial/RawArcherTypeData.h": "0b300a29c6d19ab77f8a7d8ce47715b6679ff5571389484b61e9fd1d1d45b47b",
+    "cpppj/recovery-history/archertype-initial/ArcherTypeDataTests.cpp": "6b0c7c47ae22f546922f2b479c8e43312c29711b3d7d4e6837568b159ee93607",
+    "cpppj/recovery-history/archertype-initial/decomp_archertype_oracle.py": "805eae79909c9c1cf6bdd63e5d5e06376a0499ed262bd071803a2d7700847cc4",
+    "cpppj/recovery-history/archertype-initial/archertype-x86.tsv": "c892b554dc1f9baa161d3ca72fc1c3f891daef4e04eea44172b050c6c0e0580f",
+    "cpppj/recovery-history/archertype-initial/recovery-archertype-evidence.json": "87d87e61c5bc45310316ce125ddbee4f00813369749862106763e7df34377de1",
+    "cpppj/recovery-history/archertype-before-regular-reset/RawArcherTypeData.cpp": "8f637aea87127777b76480a23dedf2f6c920634eb06d6d6e3efc1d95bb8a3f4f",
+    "cpppj/recovery-history/archertype-before-regular-reset/RawArcherTypeData.h": "0b300a29c6d19ab77f8a7d8ce47715b6679ff5571389484b61e9fd1d1d45b47b",
+    "cpppj/recovery-history/archertype-before-regular-reset/ArcherTypeDataTests.cpp": "1c2c6d601f75f6b1058ccbbfb3d5ab2c3de44facb91ce28a9a566fbc5fddb731",
+    "cpppj/recovery-history/archertype-before-regular-reset/decomp_archertype_oracle.py": "805eae79909c9c1cf6bdd63e5d5e06376a0499ed262bd071803a2d7700847cc4",
+    "cpppj/recovery-history/archertype-before-regular-reset/archertype-x86.tsv": "c892b554dc1f9baa161d3ca72fc1c3f891daef4e04eea44172b050c6c0e0580f",
+    "cpppj/recovery-history/archertype-before-regular-reset/recovery-archertype-evidence.json": "ac5145f2967d19944786be2a2ebaae2dff97c05bfd89dde9be5f2dc201bad31a",
+    "cpppj/recovery-history/archertype-before-regular-reset/analyze_archertype_draft_lineage.py": "bb75af5dd3a214f86e256cd1e89bd8dfc25cf6b1533787360a5118a92bae4474",
+    "cpppj/recovery-history/archertype-before-regular-reset/recovery-archertype-draft-lineage-evidence.json": "08ea54c6d514f95e7511af6da79698a4452c474270c839724a428280475f362b",
+    "cpppj/recovery-history/archertype-before-viewport/RawArcherTypeData.cpp": "8f637aea87127777b76480a23dedf2f6c920634eb06d6d6e3efc1d95bb8a3f4f",
+    "cpppj/recovery-history/archertype-before-viewport/RawArcherTypeData.h": "0b300a29c6d19ab77f8a7d8ce47715b6679ff5571389484b61e9fd1d1d45b47b",
+    "cpppj/recovery-history/archertype-before-viewport/ArcherTypeDataTests.cpp": "1c2c6d601f75f6b1058ccbbfb3d5ab2c3de44facb91ce28a9a566fbc5fddb731",
+    "cpppj/recovery-history/archertype-before-viewport/decomp_archertype_oracle.py": "805eae79909c9c1cf6bdd63e5d5e06376a0499ed262bd071803a2d7700847cc4",
+    "cpppj/recovery-history/archertype-before-viewport/archertype-x86.tsv": "c892b554dc1f9baa161d3ca72fc1c3f891daef4e04eea44172b050c6c0e0580f",
+    "cpppj/recovery-history/archertype-before-viewport/recovery-archertype-evidence.json": "d14de54a51b6c4da28dd2e199e3bc1e321c05f9b5c8d1c135c8535329074d323",
+    "cpppj/recovery-history/archertype-before-viewport/analyze_archertype_draft_lineage.py": "a7d77aea5722d469d90b6ca30cfa1c72e83a642557b2412a86149dfda283e638",
+    "cpppj/recovery-history/archertype-before-viewport/recovery-archertype-draft-lineage-evidence.json": "34de8bfdc7afbae2b8acf78488de2bac4867812eb07a80e58b4a5315cfd8bafe"
+  },
+  "current_files": {
+    "cpppj/src/o/RawArcherTypeData.cpp": "8f637aea87127777b76480a23dedf2f6c920634eb06d6d6e3efc1d95bb8a3f4f",
+    "cpppj/src/o/RawArcherTypeData.h": "0b300a29c6d19ab77f8a7d8ce47715b6679ff5571389484b61e9fd1d1d45b47b",
+    "cpppj/tests/ArcherTypeDataTests.cpp": "f50dec63a7acf5ef93e087a263e70594be505542d7b7d92d9d20b212cf89b0ca",
+    "tools/decomp_archertype_oracle.py": "805eae79909c9c1cf6bdd63e5d5e06376a0499ed262bd071803a2d7700847cc4",
+    "cpppj/tests/fixtures/archertype-x86.tsv": "c892b554dc1f9baa161d3ca72fc1c3f891daef4e04eea44172b050c6c0e0580f",
+    "cpppj/recovery-archertype-evidence.json": "3e795bc1a2a8df6ac77d6cb056d71da13ea9fc3aa959b41fbcc38e5c86f9a5c7"
+  },
+  "tool_sha256": "9e81cb1ef6c0d31ccecca36995e923836f77811f99b71c75914d4377a94d3cab",
+  "regular_reset_report_sha256": "389eef948737919c3e3f13c22937529271b32830929388b0dbedcec33949eb49"
+}

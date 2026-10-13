@@ -1,0 +1,7 @@
+[ OK ] SquidPostPop_X86_CostListsTotalsAndActiveLifecycle
+[ OK ] SquidPostPop_FirstRegistrationAndProviderDuplicate_PreserveOriginalCounters
+[ OK ] SquidPostPop_UnsupportedEffectsAndCorruptList_RejectBeforeSpaceWrites
+[ OK ] SquidPostPop_BridgePrefix_X86_FlagsAndExtra
+[ OK ] SquidPostPop_BridgeRequiresConnectorAndRunsBeforeSuppressedCommon
+[ OK ] SquidPostPop_TypeCost_LoadsFloatAndRejectsString
+6 test(s), 0 failed check(s)

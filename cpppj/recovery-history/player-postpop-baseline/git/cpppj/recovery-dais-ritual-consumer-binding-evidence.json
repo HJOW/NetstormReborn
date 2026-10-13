@@ -1,0 +1,108 @@
+{
+  "host": "HJOW-Athlon",
+  "decompile_date": "2026-10-14",
+  "new_native_inputs": 0,
+  "entire_previous_test_restored_exactly": true,
+  "previous_test_sha256": "9223b7c68f6ed18a00f0fee8d0f7fee81840bb4c3f8b08b36ce05f1ca5900cfc",
+  "correction": "CD0048153f/48154e의fadd0.9999→__ftol에맞춰CD도같은RawPathSurfaceAt/hash0를호출한다. plain조회삼항식하나외전체새검사는정확히불변이다.",
+  "scope": "실제최초Pop/포획Notice/Altar24/전체pre/post/Content/Process분배/같은Pool반납의새C++소비자. 비전투·HP16·genus0·flags300000없음으로Dude/주변피해/다리/섬정리분기는자연생략. 장치/UI·전체Progress음향/Bridge·사제해방전체Pop는미완료경계이며C++실행결과는별도공유로그다.",
+  "prior_reports": {
+    "recovery-daislifecycle-current-evidence.json": {
+      "sha256": "bfd66b36f1735a1840b8eadcc6b9ea828f0d84fae57f2e12b9578c2c38d019d6",
+      "normal_inputs": 1928,
+      "additional_unique_cases": 0
+    },
+    "recovery-daislifecycle-current-successor-evidence.json": {
+      "sha256": "eca10cd849735a6b06173109077d08cd82c6042a9712b6839aa95f6bdbb6c057",
+      "normal_inputs": 1928,
+      "additional_unique_cases": 0
+    },
+    "recovery-daiscontentnotice-evidence.json": {
+      "sha256": "80e8e94edd3ad153362339db9bbed9b8d9d210defaeb6e98449a8523f33ffa11",
+      "normal_inputs": 1444,
+      "additional_unique_cases": 0
+    },
+    "recovery-daiscontentnotice-successor-evidence.json": {
+      "sha256": "722d58e0e3338cf5c2db0ee03270c1b318250ee7bc68a5d815be96a3f9467ad3",
+      "normal_inputs": 1444,
+      "additional_unique_cases": 0
+    },
+    "recovery-daisprogress-evidence.json": {
+      "sha256": "4a1764d3e50c3d5808fe4587f09bf942f29a562f499a8da5e56e768ece93c963",
+      "normal_inputs": 2964,
+      "additional_unique_cases": 0
+    },
+    "recovery-dais-postpop-lineage-evidence.json": {
+      "sha256": "55a55a0b5922dbf87388ed807567949bb496f34babab84de00aeb61dff64cb46",
+      "normal_inputs": null,
+      "additional_unique_cases": 0
+    },
+    "recovery-damageablepostdestroy-evidence.json": {
+      "sha256": "10575fd6275f434365fb5a1d0fb7d7991b4879ef2248cfd181aa70d16e096bef",
+      "normal_inputs": 4412,
+      "additional_unique_cases": 0
+    },
+    "recovery-damageablepostdestroy-lineage-evidence.json": {
+      "sha256": "b9f0eddc0bf6552c391781c0cebb33603db8993294be2ff13bfada9a9c4b57c4",
+      "normal_inputs": null,
+      "additional_unique_cases": 0
+    }
+  },
+  "files": {
+    "cpppj/recovery-dais-postpop-lineage-evidence.json": "55a55a0b5922dbf87388ed807567949bb496f34babab84de00aeb61dff64cb46",
+    "cpppj/recovery-daiscontentnotice-evidence.json": "80e8e94edd3ad153362339db9bbed9b8d9d210defaeb6e98449a8523f33ffa11",
+    "cpppj/recovery-daiscontentnotice-successor-evidence.json": "722d58e0e3338cf5c2db0ee03270c1b318250ee7bc68a5d815be96a3f9467ad3",
+    "cpppj/recovery-daislifecycle-current-evidence.json": "bfd66b36f1735a1840b8eadcc6b9ea828f0d84fae57f2e12b9578c2c38d019d6",
+    "cpppj/recovery-daislifecycle-current-successor-evidence.json": "eca10cd849735a6b06173109077d08cd82c6042a9712b6839aa95f6bdbb6c057",
+    "cpppj/recovery-daisprogress-evidence.json": "4a1764d3e50c3d5808fe4587f09bf942f29a562f499a8da5e56e768ece93c963",
+    "cpppj/recovery-damageablepostdestroy-evidence.json": "10575fd6275f434365fb5a1d0fb7d7991b4879ef2248cfd181aa70d16e096bef",
+    "cpppj/recovery-damageablepostdestroy-lineage-evidence.json": "b9f0eddc0bf6552c391781c0cebb33603db8993294be2ff13bfada9a9c4b57c4",
+    "cpppj/recovery-history/dais-ritual-consumer-before-cd-surface/cpppj/tests/DaisRitualConsumerTests.cpp": "9223b7c68f6ed18a00f0fee8d0f7fee81840bb4c3f8b08b36ce05f1ca5900cfc",
+    "cpppj/src/o/ContentFormHost.cpp": "5b6c7689e7c2a9aa4803583f9486d22d3004311c9766ee426c4ee8adc0b60890",
+    "cpppj/src/o/ContentFormHost.h": "fec4ff5c6bdd65fde79350f506fee99cec8a3ff3802a7cdae155fd00a2e62a3f",
+    "cpppj/src/o/ContentFormLifetime.cpp": "96b479579643004765faf1552b102689ea2403c5918c963bd02f14d7f86387a7",
+    "cpppj/src/o/ContentFormLifetime.h": "34a27c1f8dbdd72f660dc7c75d8d897848a34cae19c1680ffd7f7ba3794d7395",
+    "cpppj/src/o/RawAltarSacrifice.cpp": "c45c6083846aa97aec3d1dc0cd2dda2d0beab45fcd7addb07c755d1e2482f464",
+    "cpppj/src/o/RawAltarSacrifice.h": "1df83640935f495e4b6687c41ac5d181a8947f2bc6f349659870acea225b89c3",
+    "cpppj/src/o/RawCarrierPostPop.cpp": "8603cb70101e6472fa36b25d0b2ecb1cc438b4658c1d2264b47ff8a17d95b780",
+    "cpppj/src/o/RawCarrierPostPop.h": "80d77d36bb14ed16231ed20024111a77290c4e557fe55b988c16f0e7a433dc18",
+    "cpppj/src/o/RawCarrierPreDestroy.cpp": "42f6891929dff560c88eec1dddf021ac45e29d1a29fe3d74e15b87d65cbddddb",
+    "cpppj/src/o/RawCarrierPreDestroy.h": "bee50008bc4a1ebafb7c7cfd81d36a75753c718c26818d00831101e2c330dd7a",
+    "cpppj/src/o/RawDaisContentNotice.cpp": "1e6dfbaed79d003429c07de2481fca0b9a562f8b8d450a80b6a384f89b7808cb",
+    "cpppj/src/o/RawDaisContentNotice.h": "4ac7b652ac317d4216bb633794b1c754e8361bf1bc90409bc73ef15ccd395428",
+    "cpppj/src/o/RawDaisLifecycle.cpp": "6ab1d6fb19058f4b241fe2dc61c943af299828ce24bf61242d9f109521ac2db7",
+    "cpppj/src/o/RawDaisLifecycle.h": "3d6e48e336e01273730dcfd789d6aa622dce0dd12254aefb062d06e5b9b628eb",
+    "cpppj/src/o/RawDaisRegular.cpp": "c1a167728b02f382cbae23454e4aba1046c91a7284dbe4c6e206e856ccc4c433",
+    "cpppj/src/o/RawDaisRegular.h": "fdc080a0ae1ff54909a1cf59a6b9be626e7a7d96c5103072c9325d13efb88ed3",
+    "cpppj/src/o/RawDamageablePostDestroy.cpp": "c70069e2dc850b8f1496aee07008c03ffb1655ff5943365334a4938ead99fb18",
+    "cpppj/src/o/RawDamageablePostDestroy.h": "16404ca3857f952ab7809ed370d68b36158e2c834290d76eb4bbc85b2b3fdf03",
+    "cpppj/src/o/RawDamageablePreDestroy.cpp": "9090ded5973c22c6cb75d45dc04be75fe7996cd6449fb10cc875759fdde36a11",
+    "cpppj/src/o/RawDamageablePreDestroy.h": "5800fafa2f85176b3b492872d3d0f4cee5dcdaf71674ea8565ad0541af635d4c",
+    "cpppj/src/o/RawDamageableRelease.cpp": "555de8ac874f910f769432ebd6f044443b07d7be1f3d4d074d254ddac14b2c8d",
+    "cpppj/src/o/RawDamageableRelease.h": "1a418c23dbbe381bd4f59b36c16d782393ff453af6b07b5469b7da79a29b319f",
+    "cpppj/src/o/RawPathSearch.cpp": "09d5e57d46312785431500a0debab20e799db3844a03491edeb265c54417123c",
+    "cpppj/src/o/RawPathSearch.h": "69e69c720f8af7e5961e58ae7db0d29197d79fed1d5030b468790dd9822b8464",
+    "cpppj/src/o/SquidDestroyLifecycle.cpp": "97bff6c700cefbdc30e3516c975d395d3c1c845cec95d715b90a2d39f9c7d935",
+    "cpppj/src/o/SquidDestroyLifecycle.h": "c9a2b3dc20316bd7abaffb2e17ebd33e3fa5d8f614476271984502b67649f6e9",
+    "cpppj/src/o/SquidFactory.cpp": "9773bb2d4f5b7dd0114fbb9406a95080e6f919a1106efe5b6a15ef8ed68e39e0",
+    "cpppj/src/o/SquidFactory.h": "70394e3a27fd8c768c851445b0c03a8b321914eea66fb530bd004d094ba0f5d4",
+    "cpppj/src/o/SquidFormDispatch.cpp": "75bc8b1224afd5f8a8338e986aef177d919a92153b88b355ed24b146c9b10fec",
+    "cpppj/src/o/SquidFormDispatch.h": "6bbb5f86316d8ef91bdf4f48c0e26e7c49795411f439fe30e161a71c0b55f935",
+    "cpppj/src/o/SquidFrame.cpp": "d38aa3f5fbb191aaeadf4f808a7fc51e2ee5a558b9605c9dd8660224435d1e62",
+    "cpppj/src/o/SquidFrame.h": "faab1f3ac968b01bb727f374c1cc8b6bdc6b7e3123052e7ed4ae1849f0285b8b",
+    "cpppj/src/o/SquidOwner.cpp": "297ef63bb582823627a61427e530b7ea95f6ac2e81c86b268264b4ecad7ca0aa",
+    "cpppj/src/o/SquidOwner.h": "9813ca1e1cd6d503a7947c832008f7e71ed20eefde6c723f50c12ef19b30e2db",
+    "cpppj/src/o/SquidPop.cpp": "e69942ca111f72c79ba4da05a42b5446e84013ef2ee0b9044381cf64a9e80ec9",
+    "cpppj/src/o/SquidPop.h": "8816c246917f01c63e612b9f4387982484636b0360f8d1a225c7c5296d801255",
+    "cpppj/src/o/SquidPostPop.cpp": "094e90c54c220d22bb663ab68105c2d30d83cc4b7c8e02002f804b2ae783f687",
+    "cpppj/src/o/SquidPostPop.h": "f6e3a41b4dbdf4618ff5643407d3c5e855d2f1ef46b86f09203eef955c00eebc",
+    "cpppj/src/o/SquidProcess.cpp": "2b78ac83db1bbb474f224845ae288d696b30d996a489ee292ac09a1af16986ad",
+    "cpppj/src/o/SquidProcess.h": "827a9789c2a6b66ac7b98181e49e8c0fa19713755bb62fccababb7ae2a0d0589",
+    "cpppj/src/o/SquidReward.cpp": "a29c11afe56a477c470956b1ed0a0678d059340806537ce08b43bf6b6aa1375d",
+    "cpppj/src/o/SquidReward.h": "221e142133a1e3a73f65ff6979d73859b7701912ab84cde9dc6a9fe565ccd2e7",
+    "cpppj/src/o/SquidUnpop.cpp": "c090a5c43f22ec5c59f6885bde124889b1fc3004260c271ea4556879e6263a41",
+    "cpppj/src/o/SquidUnpop.h": "36635a51668570c7ae1df71e507f1f7d6d4fd1b141ccf0529165428034e5aad9",
+    "cpppj/tests/DaisRitualConsumerTests.cpp": "bb48d9fd71bb551b9f6ee91009eafe963c350d81a4b9e7d905250a3d5f0f72d0",
+    "tools/analyze_dais_ritual_consumer_binding.py": "1e893d4d4eeede76c48563cad82289845515e5a9155db3c7cc042507b9ec96bf"
+  }
+}

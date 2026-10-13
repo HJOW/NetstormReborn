@@ -1,0 +1,8 @@
+{
+  "description": "Squid 프레임 지정(004acee0 / CD 004acbc0)과 가상 표 +0x4c(현재 위치에 다시 Pop)·+0x8c(+0x88로 넘김) 넘김 함수의 읽기 전용 함수 몸체. 해시 단계 계산(004ace40 / CD 004acb00)과 프레임 헤더 조회(00419850)는 graphremove 내보내기를 재사용한다.",
+  "editions": {
+    "originals": ["004acee0", "0041c0d0", "004ad670"],
+    "originalCD": ["004acbc0", "00401c60", "004ae3e0"],
+    "original1037": ["004acbc0", "00401c60", "004ae3e0"]
+  }
+}

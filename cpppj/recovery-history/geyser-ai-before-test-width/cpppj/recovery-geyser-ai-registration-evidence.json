@@ -1,0 +1,54 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-14",
+  "total": 604,
+  "normal_total": 168,
+  "unrestored_boundary_total": 436,
+  "assert_total": 0,
+  "controls": [
+    639,
+    895
+  ],
+  "editions": {
+    "originals": {
+      "unique": 302,
+      "normal_unique": 84,
+      "unrestored_boundary_unique": 218,
+      "assert_unique": 0,
+      "normal_returns": 168,
+      "boundary_stops": 436
+    },
+    "originalCD": {
+      "unique": 302,
+      "normal_unique": 84,
+      "unrestored_boundary_unique": 218,
+      "assert_unique": 0,
+      "normal_returns": 168,
+      "boundary_stops": 436
+    }
+  },
+  "game_runs": 0,
+  "os_calls": 0,
+  "files": {
+    "cpppj/src/o/RawGeyserAiRegistration.cpp": "8469ef44e9c1e93c04800afa70deb47a16a0c9968849e71bbb5427ee03688acc",
+    "cpppj/src/o/RawGeyserAiRegistration.h": "3282b52b26061b23d5e760382f4dfeb37821aae7feae500183b42c6e46be6f19",
+    "cpppj/tests/fixtures/geyser-ai-registration-x86.tsv": "d7b6d2a738a8c84fe5b9ec8ebe92776bb7a9d69bd0e55684aff0e58304e89850",
+    "cpppj/tests/GeyserAiRegistrationTests.cpp": "1009890fc40e31897ab8165a037919ad103da267c3110db2a4c86914836c1898",
+    "extracted/geyser-ai-registration/originalCD/creation.c": "328e52dc19ecdaa77ef39019f583368abb4a59d16f87a4147bd45524b51feef9",
+    "extracted/geyser-ai-registration/originalCD/functions.tsv": "9e7946de92bf84ab5b058c2d2b1e6c7ed2c942223161585d52ec471402d31eee",
+    "extracted/geyser-ai-registration/originals/creation.c": "6278e69c6171f0ef02b84aa51c49d594a3adcb10ff0b7ee3f57ae1650941fc89",
+    "extracted/geyser-ai-registration/originals/functions.tsv": "55cf6a8669396a86e9874d20ee7e8c26f8d0183b6147a61136f470bcd91b4847",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_geyser_ai_registration_oracle.py": "a29c4397ae3708e0d329c0a3f3f82b1fa718acd45a473d58c52a096ccbdb9a81",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/ghidra/geyser-ai-registration-functions.json": "be5001beeacf9662abd7c0842eaf00bc8532a5116afdfb744d6b652144af9757"
+  },
+  "limitations": [
+    "원본 null AI 등록 순회만 정상 완료 범위다. nonnull 첫 요청은 원본 하위 실행 전 중단하고 C++도 명시 거부한다.",
+    "미복원 AI 하위 거부 입력은 정상/assert 또는 전체 AI·전체 PostPop 완료 수에 합산하지 않는다.",
+    "Player 저장소는 유효한 nonnull 원본 base와 9개 실제 기록이라는 입력 계약이다. base 주소 감김/해방 저장소는 관찰 범위 밖이다.",
+    "PATCH callback4153c0은 의미 감사용으로만 내보냈다. CD callback은 등록 부모 안에 inlined되어 있다.",
+    "미션 상위 순서의 정적 감사는 이 작은 PE 호출의 실제 미션/GUI 실행 근거가 아니다."
+  ]
+}

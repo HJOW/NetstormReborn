@@ -1,0 +1,86 @@
+{
+  "schema": 1,
+  "host": "HJOW-Athlon",
+  "last_decompile_host": "HJOW-Athlon",
+  "last_decompile_date": "2026-10-14",
+  "stop_requested_by_user": true,
+  "cmake_registered": false,
+  "cpp_built": false,
+  "cpp_tests_executed": 0,
+  "draft_tests": 7,
+  "not_counted_as_unit14_inputs": true,
+  "native_modules": {
+    "campaign-worldload": {
+      "total": 130,
+      "normal": 94,
+      "assert": 36,
+      "unsupported": 0
+    },
+    "player-regular": {
+      "total": 658,
+      "normal": 566,
+      "assert": 68,
+      "unsupported": 24
+    },
+    "burningframe": {
+      "total": 426,
+      "normal": 426,
+      "assert": 0,
+      "unsupported": 0
+    }
+  },
+  "audits": {
+    "campaign-worldload": "current --verify PASS",
+    "player-regular": "analyze_player_regular_native default PASS",
+    "burningframe": "current draft lineage --verify PASS",
+    "campaign-path-bindings": "original before-factory-input Host read view PASS; current standalone pending cleanup successor"
+  },
+  "missing_dependencies": [
+    "RawAssetPostPop::BindPlayerRecords API",
+    "RawSurfaceWorld owner callback and finalization preserving single Graph(false)",
+    "Path binding successor after Host cleanup changes",
+    "actual 172-object campaign install and GameWorld composition",
+    "Ready/login/AI/script stage3 and gameplay/render/audio/input equivalence"
+  ],
+  "raw_campaign_world_runtime_created": false,
+  "files": {
+    "cpppj/recovery-burningframe-draft-lineage-evidence.json": "ea7c006276fd12fcaf4e49ae05545d17ddc2d4b23541cc2eb40f1a679b98203a",
+    "cpppj/recovery-burningframe-evidence.json": "d652307d8cf5ec2053b08243d095b3a292ad3947da0dd65298476c36402a1362",
+    "cpppj/recovery-campaign-path-bindings-evidence.json": "55b3b09f5df137fd1884dbb29b3a3b11d479d638503cfc89456a6b50b16a8150",
+    "cpppj/recovery-campaign-worldload-evidence.json": "0d125f204d0c1f91e68bf266a9f8b2da533d337ba01ef4974d1cb1f131b48625",
+    "cpppj/recovery-player-regular-evidence.json": "0c19ebd343c5b64e0f6082ac582a758dc38509a6215bbbe64bec3f427ac81651",
+    "cpppj/src/client/BurningFrameCapture.cpp": "dabfe21f7aed591ac6586f5757bf158e181cf0bb2199046c82740589cd746637",
+    "cpppj/src/client/BurningFrameCapture.h": "536fecc436d79053f6d78b67bf0b381567ca2588cdc51bd33e69bfa76033cdc0",
+    "cpppj/src/client/RawCampaignAssetBindings.cpp": "7747a030b9916bd58e4c7fb9d04e7a39a0814ca4b11111436999b831fe14f8bf",
+    "cpppj/src/client/RawCampaignAssetBindings.h": "eb33fc606d131e561811a82540acb10d5cd33817894ad34ea90b23bb9763edb4",
+    "cpppj/src/client/RawCampaignPathBindings.cpp": "3cb584c6ff3797d7de01f1c18e83074323a2883ba5e852a5f598b91ebf3ac993",
+    "cpppj/src/client/RawCampaignPathBindings.h": "60ba6fdb85793117685d888b73e4dfb1f9dad7cb74d50dde63ac47c504bc2463",
+    "cpppj/src/o/RawBurningFrame.cpp": "abfe7fbc7e69d8116baa83b4663c9ccfb874dc3ac1a15e671aea61fbe479a27d",
+    "cpppj/src/o/RawBurningFrame.h": "a8eb3aefeb0a1fb6afbe4aadc31cdbf0fdab5345355a661ed1e01699d23c56c7",
+    "cpppj/src/o/RawCampaignWorldLoad.cpp": "89e879705ca786d6f3b06b5d5e7f89af2723991768ad11cca61be5394886b7a6",
+    "cpppj/src/o/RawCampaignWorldLoad.h": "0b08303977f130b0a3c6f651f2fe0fd69e1754ebc80e771cc92b7b89590dbbd5",
+    "cpppj/src/o/RawPlayerRegular.cpp": "73fda5e8031e6566e380e725523ead1e7705b3d0edec7132056cf49795ea9570",
+    "cpppj/src/o/RawPlayerRegular.h": "a34c451c07dec3690e6c8f045b05b49398ef1e09a649527932fcbf4d18e6b03c",
+    "cpppj/src/o/RawPlayerTemplateState.cpp": "b45911b191f1cd3112ec89d4fca7acab880fcace40b4102b336abfca7420d833",
+    "cpppj/src/o/RawPlayerTemplateState.h": "80d949ec5135e5c3869fe4a2939871c6138bb1b759bc5da9ffbdada93487bd7f",
+    "cpppj/tests/BurningFrameTests.cpp": "b6123ffbc1b83f7d4c6e765b40ad956f7184effded30504b71a501cc879669af",
+    "cpppj/tests/CampaignWorldLoadTests.cpp": "3f104339ae0ff4ef53e366b50c801427e7a268d8991731a67677e73fbac68326",
+    "cpppj/tests/PlayerRegularTests.cpp": "fa333323553975a7df45976c02822186b45a0479165bc0247bfc492dc1c950b0",
+    "cpppj/tests/fixtures/burningframe-x86.tsv": "8b09c3d54803039df92c36374537ff316fbd8062ffbaa02913e89dc0d4fdbcc6",
+    "cpppj/tests/fixtures/campaign-worldload-x86.tsv": "ec9694d823a973eca65c0ad137545a08bad39b4ba032471973f8ab720cf7b441",
+    "cpppj/tests/fixtures/player-regular-x86.tsv": "e3ef582f5da9c62f3235eb16f30bd76b97f9db1a5bff0728070f7ac83ccea932",
+    "docs/exe/cpp-burning-frame-20261014.md": "09a6afdf3bd295d5d51b1453ed7e7068b9fc78b8924e33ad8dd52f7ec1df5185",
+    "docs/exe/cpp-campaign-asset-bindings-20261014.md": "74e82ad4df969618702f3e5d641397e888db08495e8596247d4997fb39ab12f1",
+    "docs/exe/cpp-campaign-path-bindings-20261014.md": "06582d27f1c93d939b1dabe887b99c4a6540f4f6deaafd0864e75276f2038a4d",
+    "docs/exe/cpp-campaign-priest-runtime-audit-20261014.md": "654cdf683cbae0d664f7dafd6ee34e4db325c746a51f2aaa0efa71c1d4b50829",
+    "docs/exe/cpp-campaign-worldload-20261014.md": "36885b69f067c09d4b787e7397fe70059bc2cb303160ddec0032591b54fcf5ef",
+    "docs/exe/cpp-initial-gun-runtime-audit-20261014.md": "23344d5528d884a27e8ba948805b3ee9459a5a1ad833236b2f0205061294e03b",
+    "docs/exe/cpp-player-regular-20261014.md": "2893106e5312bc765c71de4fd183d4a8ade6eb13da1b0f1277285a8227357ec3",
+    "tools/analyze_burningframe_draft_lineage.py": "ec4f3b496cc00cc321ddc0120686952077e58be682501c82917e575fc560a2a5",
+    "tools/analyze_campaign_path_bindings.py": "bc66879b1b3bd0c2c4ea49c9f9c3181cfaa62e3ef52ac1ff6856d55177a9ef4a",
+    "tools/analyze_player_regular_native.py": "1a8624e0b6db995d372a4d6a72517f8c6520efae22415dcb30b25bc4eea01009",
+    "tools/decomp_burningframe_oracle.py": "0e5fc5a3ef5ad8f3fb868fe33bdf68e313408165ff500b18c53334cca29597d9",
+    "tools/decomp_campaign_worldload_oracle.py": "aed5a121a5ca1a2f28bcf6869e0322dcc963ee3c539ce78ada64c9176bc7cdc3",
+    "tools/decomp_player_regular_oracle.py": "6769f5d03437d137a0786f441099c43f03cbb5da5460b9e8674fe18b727e2d9d"
+  }
+}

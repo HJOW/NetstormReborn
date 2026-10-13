@@ -1,0 +1,7 @@
+{
+  "description": "실제 Player152 VT+5c Handle(event1/2/count/payload)와 State getter/Notify의 좁은 readOnly 몸체를 내보낸다. 최초count0 payload5 자연반환, 이후event1의 실제Regular2(payload60/currenttime), event2의현재Template State BYTE|4 및매child현재TemplateOwner재조회를분리한다. 같은 완료Regular/Host를재사용하며protectedFort의existingState28과parent가쓴Template+8=1 Notify자연반환을우선관찰한다. State없는새생성/Datamanager저장/로그출력은필수명시하위경계이며기본성공으로닫지않는다. 현재/마지막PC HJOW-Athlon,2026-10-14. 기존14생산/자료를편집하지않는단위15신규범위다.",
+  "editions": {
+    "originals": ["00490810", "004bd550", "004bd540", "004bd360"],
+    "originalCD": ["00407ef0", "00427920", "00427910", "004275d0", "00427a47", "00429f30"]
+  }
+}

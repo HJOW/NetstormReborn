@@ -1,0 +1,13 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-14",
+  "purpose": "actualRegular ctor/명시FormAttach 초기1680 정상1452/assert228의전체이전출처",
+  "files": {
+    "tools/decomp_player_world_oracle.py": "841ee2b08d29e01dfccabfa8cc8dafda5f5156834aadbce5641c0d51bcf2f751",
+    "tools/ghidra/player-world-functions.json": "90bc2aa81ecdf0319bd68fcfaa3c20f1a8237505436e013c1e06c43580f8af63",
+    "cpppj/src/o/RawPlayerWorld.h": "3566f2ff59b7775d47293516cb5e492e776a64c92e66dba77e0f8da5a1e67aff",
+    "cpppj/src/o/RawPlayerWorld.cpp": "bee77b8e1d25393fce7b54638ac1c7a76179055da5796c2b767f7ed4e360f7b5",
+    "cpppj/recovery-player-world-evidence.json": "82a43cb869830087e1f28b3740ddabe8d2a75b9ed7c3bcae7633b7e86ce7f3ed",
+    "cpppj/tests/fixtures/player-world-x86.tsv": "9986455501d3732f45a6fbf547e7ad176183db49530b3eeeade3b9234e572946"
+  }
+}

@@ -1,0 +1,8 @@
+[ OK ] RawPriestWorldBindings_LoadsFullHealthAndRunsActualRegular
+[ OK ] RawPriestWorldBindings_ShieldFallAndDestructionShareWorld
+[ OK ] RawPriestWorldBindings_RejectsWrongBindingAndUnknownPriestEvent
+[ OK ] RawPriestWorldBindings_SpawnUsesOriginalOwnerWordAndActualFactory
+[ OK ] RawPriestWorldBindings_ReplaysActualMovementSelection
+[ OK ] RawPriestWorldBindings_HealingCrossesHalfHealthAndZeroDamageEffectReturns
+[ OK ] RawPriestWorldBindings_DamageEffectMetadataPreservesNumericProperty
+7 test(s), 0 failed check(s)

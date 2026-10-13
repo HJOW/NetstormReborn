@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "host": "HJOW-Athlon",
+  "new_native_inputs": 0,
+  "cpp_tests_completed": 0,
+  "files": {
+    "cpppj/src/client/RawCampaignAssetBindings.h": "eb33fc606d131e561811a82540acb10d5cd33817894ad34ea90b23bb9763edb4",
+    "cpppj/src/client/RawCampaignAssetBindings.cpp": "82e3dd88d637f6dacb1c7f5a24dc40424bb009811d1f1650c6734ee8d53f296b",
+    "docs/exe/cpp-campaign-asset-bindings-20261014.md": "0b7a15efd1f6c798ee5d8bcbd359a4d2b69171ed75ab58afcb493bb7d07b7abc"
+  }
+}

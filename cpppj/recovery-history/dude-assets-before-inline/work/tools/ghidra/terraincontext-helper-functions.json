@@ -1,0 +1,4 @@
+{
+  "description": "CD 초기 지형 경계 문자 변환이 실제 호출하는 code/region BYTE 지정 함수. 패치에는 인라인되어 별도 없음. 마지막 디컴파일 PC HJOW-Athlon, 2026-10-13.",
+  "editions": { "originalCD": ["0049d580"] }
+}

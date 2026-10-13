@@ -1,0 +1,83 @@
+{
+  "host": "HJOW-Athlon",
+  "decompile_date": "2026-10-14",
+  "total": 20,
+  "smoke": true,
+  "game_runs": 0,
+  "editions": {
+    "originals": {
+      "returns": 20,
+      "normal_inputs": 10,
+      "native_calls": {
+        "00491bb0": 14,
+        "Halt": 14,
+        "0042ab70": 10,
+        "0042a5f0": 16,
+        "Common": 16,
+        "00426fc0": 16,
+        "004ac200": 16,
+        "0049a840": 20,
+        "0041d770": 16,
+        "004e49c0": 92,
+        "004b16d0": 16,
+        "004b1810": 16,
+        "004ac990": 16,
+        "004adcb0": 2,
+        "0049fce0": 2,
+        "0041d7a0": 4
+      },
+      "external_calls": {
+        "U": 4,
+        "P": 4
+      }
+    },
+    "originalCD": {
+      "returns": 20,
+      "normal_inputs": 10,
+      "native_calls": {
+        "0040c950": 14,
+        "Halt": 14,
+        "004e7910": 10,
+        "004e45c0": 16,
+        "Common": 16,
+        "004e50d0": 16,
+        "004abae0": 18,
+        "00440a50": 16,
+        "004f161c": 92,
+        "004eae20": 16,
+        "004eafe0": 16,
+        "004ac460": 16,
+        "0040c3b0": 2,
+        "004aed30": 2,
+        "00444720": 2,
+        "00440a80": 4
+      },
+      "external_calls": {
+        "U": 4,
+        "P": 4
+      }
+    }
+  },
+  "files": {
+    "cpppj/src/o/RawPriestHalt.cpp": "374346e3ef06b04c59c544b5f6298cbf82c935f8c6f2f292d8e4bf2144f65742",
+    "cpppj/src/o/RawPriestHalt.h": "bab52be7833b12dd3bca34bc27920f9eaedb263802c8099e34eef3b313e89751",
+    "cpppj/tests/fixtures/priesthalt-x86.tsv": "910d101bbe19f22524cc03a03aad5be4579aaf1ac186a2e88eef68cad42e6065",
+    "extracted/bridgeeffects/originalCD/creation.c": "76acd15962cfadb844dd6689014a8a67ee0fc744d16c5a32528d4cafdb7fb911",
+    "extracted/bridgeeffects/originalCD/functions.tsv": "b99e5f65a90d402a49be3353263e66080fbf1d3825b19685d7a49edd2e4c4abd",
+    "extracted/bridgeeffects/originals/creation.c": "ac1856212fbd285650dc4ec999fa996a306ba536a3e42d605fba4ab26178fdbc",
+    "extracted/bridgeeffects/originals/functions.tsv": "485cd05093884690ffc94c433c4e040282cd6ca26eb7da469732f74e1c983cec",
+    "extracted/carrierarrival/originalCD/creation.c": "fb9a86f3fd22584c8f657c7889300397d09e8273f59b4eda9da748b374f60796",
+    "extracted/carrierarrival/originalCD/functions.tsv": "bbcfdb93789f86983b0b369957315f43f7a6665e6475385fd73082ee7054dd92",
+    "extracted/carrierarrival/originals/creation.c": "5ea441372660a45af4a79ccf4201a1ce2decdc6c7e2f71f8baf0a683037cfc02",
+    "extracted/carrierarrival/originals/functions.tsv": "cea1cec8a18a1efcdb8ed0f3f7c7889f1372a1b87ed07031c679381fe713d4d3",
+    "extracted/finder/originalCD/creation.c": "822eece37b0a0edde482232eacb0710ae8cf11c759417bc3108fa5ecc0585972",
+    "extracted/finder/originalCD/functions.tsv": "60cf1f9e4a7832ebe882a869af2bd2cd69e549e761fb03d7d4d64bb5fb3c5935",
+    "extracted/finder/originals/creation.c": "2f6baf5e3cf77598e067963196c8fcd5c7d15ee09db54f3f68e8071191ea9070",
+    "extracted/finder/originals/functions.tsv": "7ee781ffc6200c8f6b231381c4dae7ce88e5c0158f4b8effb222090bf8345704",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_priesthalt_oracle.py": "f806ba918210234bea6b833633f3b9b49b3182b8fd9d447430054eaf627ce9aa",
+    "tools/ghidra/carrierarrival-functions.json": "7eac4c5bb71e91e4ef467297ecb95ec72a1298e89efb3dc2215efd41e2a9ecea"
+  },
+  "scope": "사제+38/공통Halt와 실제+cc/MaxHP/finder. 가상Unpop/Pop/낙하 및 큰 포획·전달helper의 반환은 명시 외부 입력이다. 전체 포획/RPC/실제 사제 공간·걷기/Arrival는 후속이며 기존CarrierCheck/HP 관찰은 재합산0."
+}

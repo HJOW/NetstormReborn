@@ -1,0 +1,4 @@
+H:\T5Workspace\NetstormReborn\cpppj\tests\PriestPathArrivalHostTests.cpp(33): CHECK failed: parent==Sid{50} && flags==0
+H:\T5Workspace\NetstormReborn\cpppj\tests\TestMain.cpp(62): CHECK failed: Carrier 도착의 미선택 큰 하위 효과
+[FAIL] rawPriestArrival_real_path_step_parent_halt_arrival_cleanup_same_host
+1 test(s), 2 failed check(s)

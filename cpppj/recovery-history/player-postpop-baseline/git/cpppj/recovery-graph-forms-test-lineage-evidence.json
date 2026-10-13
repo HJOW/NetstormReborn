@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "host": "HJOW-Athlon",
+  "decompile_date": "2026-10-14",
+  "new_native_inputs": 0,
+  "original_normal_inputs": 64,
+  "production_and_native_fixture_unchanged": true,
+  "whole_previous_test_inverse": true,
+  "current_test_sha256": "8914857113123d5ab6ae23ddb2abadae80774a82f2914f4a24c274039ca63a04",
+  "tool_sha256": "24f68de9b50b75a65d5b66448c4b510085843dfba95d61975001630babf133b5",
+  "history": {
+    "cpppj/recovery-history/graph-forms-before-test-scope/baseline.json": "814a7f0df121ce6de89cf36f84d2427a4a83f6c823cc1e605ff6ffef43659374",
+    "cpppj/recovery-history/graph-forms-before-test-scope/cpppj/recovery-graph-forms-lineage-evidence.json": "20fc277656d1544caa06c6ff04e0d61d7d1590ff542c542b29c3b3f7886ccf62",
+    "cpppj/recovery-history/graph-forms-before-test-scope/cpppj/recovery-graphforms-evidence.json": "fd9c461e8aba0383d40aad0af9e2fa3cc9d30c2b6b7bf277e0765db36d3e51c1",
+    "cpppj/recovery-history/graph-forms-before-test-scope/tools/analyze_graph_forms_lineage.py": "3992ca720e693a9fe6cfcd406a5a75c6713b521a43dc6d3210f00ded2bd62028",
+    "cpppj/recovery-history/graph-forms-before-test-scope/tools/decomp_graphforms_oracle.py": "2fb2e1dd977346151d4e91981c64a797e48db8c10fe334a65bf918c8a649ab84",
+    "cpppj/recovery-history/graph-forms-before-test-scope/extracted/campaign-runtime13-build-initial.log": "9a8c9fcfa019f5edd5f2ecdd61cf50743ee5e3f8ac38110b308d9bfb95801c44",
+    "cpppj/recovery-history/graph-forms-before-test-scope/extracted/campaign-runtime13-RawGraph_initial-tests.log": "1701040f97801564cb7e93bb80e5ec5873e5d07754cb396826d4a86d194a037e",
+    "cpppj/recovery-history/graph-forms-before-test-scope/cpppj/tests/RawGraphTests.cpp": "ece8bb8488e8e15a5cc690ec110c47be56aa91bcacdfa2dbf0f1b5a2dbc66183",
+    "cpppj/recovery-history/graph-forms-before-test-scope/cpppj/src/o/RawGraph.cpp": "66e35f497c8e19340bccff7949d3f2bb5a7f7abdb3da59a970f203b5f277b95a",
+    "cpppj/recovery-history/graph-forms-before-test-scope/cpppj/tests/fixtures/graphforms-x86.tsv": "58e1c638f532f84efd3a36b052eea5ea5bfff5e94cc2ea1c2f78b0eda056e24d"
+  },
+  "change": "기존 내부타입5 미복원 거부 입력은 범위 밖 타입255로 바꾼다. 손상프레임/범위밖타입의 실패 전 전체쓰기 보호 검사는 유지한다."
+}

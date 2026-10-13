@@ -1,0 +1,69 @@
+{
+  "schema": 1,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-13",
+  "unit": "20261013-06",
+  "new_normal_cases": 5728,
+  "new_assertion_cases": 8,
+  "modules": {
+    "geysermined": {
+      "normal_cases": 2304,
+      "assertion_cases": 8,
+      "fixture_rows": 2312
+    },
+    "priestdamage": {
+      "normal_cases": 3424,
+      "assertion_cases": 0,
+      "fixture_rows": 3424
+    }
+  },
+  "prior_regionpaint_regression_cases_not_added": 484,
+  "shared_choose_new_cases": 0,
+  "focused_tests": {
+    "GeyserMined_": 2,
+    "PriestDamage_": 4,
+    "RegionPaint_": 2
+  },
+  "all_tests": 974,
+  "build_warnings": 0,
+  "files": {
+    "tools/analyze_campaign_runtime6.py": "d89a6c84e88ab1e1d9d8e4e44e28826e651168799b0d4f47cd4b5f1f43cbe67a",
+    "tools/analyze_campaign_runtime4.py": "eb0810235509ec2252158d9dcb5737e6aa5829301408c2c3fc9dd343e6a6a9f2",
+    "cpppj/recovery-geysermined-evidence.json": "4b828a7c167e2fd9e7fa0b87c90bcb31c6c3f922b7357efdb4f1f4b9b33c693b",
+    "cpppj/tests/fixtures/geysermined-x86.tsv": "29abf72063278eecebd954401b6af4a2e67fe8ad236e51bb60ce3db141bfd5aa",
+    "cpppj/recovery-priestdamage-evidence.json": "68fa69ceaa7028168a5243ffd7d87d79b7c7124afa7fad54747e66182fd8564f",
+    "cpppj/tests/fixtures/priestdamage-x86.tsv": "68004b70e556920ec30490ccb1145d5e0cc7ff2708ac3031b648886e9d602a0b",
+    "cpppj/recovery-framechoose-lineage-evidence.json": "07dc15e18ded6600c60df6db02f7bfe6be5b395345059a40c52c79eee495325d",
+    "tools/analyze_framechoose_lineage.py": "ee1f15e5efa675a65e730da14b33488e70174268856f5ae92a38cf415aae3a91",
+    "tools/analyze_geysermined_shadow_lineage.py": "152511fe89baf5d49a5dbb41bfdcb0e20509362f2a18b400aaa13920646497fb",
+    "extracted/campaign-runtime6-GeyserMined_-final-tests.log": "d14eadbf5db64368f9dc50aec9172462ce1aed5ec81b911b87e0ad4ac65951bc",
+    "extracted/campaign-runtime6-PriestDamage_-final-tests.log": "e85a7f7ef90aa1a535649ca8fe0d60fa0e44454309e9db45c4edc1e3b93ef554",
+    "extracted/campaign-runtime6-RegionPaint_-final-tests.log": "aea33691253b92919889b9f651b42a6ba092f72a6396508c55d6eb9bd90eb6f6",
+    "extracted/campaign-runtime6-all-final-tests.log": "c8767c728020b054bf837e355a36e72c75dff31bc08bad066395b831eab056d2",
+    "extracted/campaign-runtime6-build-final.log": "657f2faabd0a0c73c75d79e1da33ee394a6bc9084d8d2700780f90976f4c7588",
+    "cpppj/recovery-campaign-runtime5-evidence.json": "f02c0fbc39683b68916656af44a134fec6f5256ba3855fbb9fe4afd3176d81c6",
+    "cpppj/src/o/RawFrameChoose.cpp": "153ebec3c49993006dcd24ee6cd19c33d19f21b49e96de5b486a8297103478ad",
+    "cpppj/src/o/RawFrameChoose.h": "76b17d1fa1c65f9f9c7f8bc59e0a544708a01cd172009af3ed130784d58252b8",
+    "cpppj/src/o/RawRegionPaint.cpp": "8242ef06c28ce36784e2d79a9b34cc751654f32567953152431df83e9d736178",
+    "cpppj/src/o/RawRegionPaint.h": "7d6d77f708b38cd333ee28b1f86cf2e8aec72daca9a0b6e44f679a5b5d24cb23",
+    "cpppj/src/o/RawGeyserMined.cpp": "5e1d052c77b31a14636e8eececa9ae0338f2d9fda8b8a884495c91694af1a114",
+    "cpppj/src/o/RawGeyserMined.h": "660f638122c0b9a7eab444631ca72bdbc095753a28329580437bb7334e22ef13",
+    "cpppj/src/o/RawPriestDamage.cpp": "fde7209a3e9e3727ce8a1e2b02e74e967c0a1c0dbaa287cd271596876b0f7c4c",
+    "cpppj/src/o/RawPriestDamage.h": "3488f9c6b6fa8e8de2a65429c8afbd1901b1f3a56b47ed92f374c97e1713845a",
+    "cpppj/src/o/RawDamageableBurning.cpp": "70f763107dd0a8ec1934fc15d61f2b76d21513cd9931c39beea5a455665e30a6",
+    "cpppj/src/o/RawDamageableBurning.h": "aaa63da16cc567245c04044c2d112c04999e485b81566e6dae6a4ed4a8d164f9",
+    "cpppj/tests/GeyserMinedTests.cpp": "571f3fef4bd3e113cd260cac129ecfef3936e0043ffe5adfd229f1f852f7167d",
+    "cpppj/tests/PriestDamageTests.cpp": "f5436f409d52aa05cbcbda9b8507b305373994571b6dc346688cefbeaf743fce",
+    "cpppj/tests/RegionPaintTests.cpp": "3b45525f557739561adb2e3f0ad9ffa43dd5855bd08b5b153f317ac44771e206",
+    "cpppj/build/bin/Release/netstorm_tests.exe": "b77eec405633bc3f43cc6d8aafef70cbc2e71ff2fa52059b54a6e7e33a9e5f8e",
+    "cpppj/build/bin/Release/NetstormCpp.exe": "6a1a828f29e24d8a0735804ea20acd0ca301ff6a3ed17a32a471cf27805da70d",
+    "cpppj/src/o/CMakeLists.txt": "004a2d08df1140a127ef932008c9d5c5134a28f9c3291a0ff76ca4c70ca3b443",
+    "cpppj/tests/CMakeLists.txt": "4316951a2c89e24348074e777933954fdfe4b600ae58bc605556469eac7ec48b"
+  },
+  "limitations": [
+    "GameWorld·GUI·실제 캠페인 완주 근거가 아니다.",
+    "nonzero burning 생성/애니메이션과 일반 표적 피해는 별도 미완료다.",
+    "가이저 상위 CarrierArrival·채굴 통지 작성/송신·실제 음향 재생은 미연결이다.",
+    "이전 지형 후보484개는 기존 몸체 공유의 회귀이며 신규 입력으로 더하지 않는다."
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "description": "Dais165의 실제 vtable+24 포획 내용물 알림. 최초 Attach reason1의 typedAltar→가상Unpop0→현재Altar O첫프레임 직접쓰기→포획원래ownerWORD&127→가상Repop0→로컬cue 정지를 복원한다. reason2 제거는 자연반환이다. 기존 Rune typed/타입조회/WORD쓰기 몸체를 재사용한다. 마지막 디컴파일 PC: HJOW-Athlon, 2026-10-14.",
+  "editions": {
+    "originals": ["00449660"],
+    "originalCD": ["004816c0"]
+  }
+}

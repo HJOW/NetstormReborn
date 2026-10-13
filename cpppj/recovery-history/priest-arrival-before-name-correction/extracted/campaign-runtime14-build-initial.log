@@ -1,0 +1,132 @@
+msbuild 버전 18.10.1-1.26427.6+3cd27c13e(.NET Framework용)
+
+  RawMissionOutcome.cpp
+  RawFortObjectLoad.cpp
+  RawFortFinishOwner.cpp
+  RawFactoryPostPop.cpp
+  RawAssetRegular.cpp
+  RawRegionPaint.cpp
+  RawVortexAscend.cpp
+  RawGeyserMined.cpp
+  RawPriestDamage.cpp
+  RawDamageableBurning.cpp
+  RawPathCleanup.cpp
+  RawIslandRuntime.cpp
+  RawRunePostPop.cpp
+  RawTempleRitual.cpp
+  RawIslandQueries.cpp
+  RawDamageableHit.cpp
+  RawFortRandomPlacement.cpp
+  RawFarmCluster.cpp
+  RawGunImpact.cpp
+  RawSquidDefense.cpp
+  코드를 생성하고 있습니다...
+  컴파일하고 있습니다...
+  RawDaisRegular.cpp
+  RawAltarSacrifice.cpp
+  RawDaisLifecycle.cpp
+  RawIslandBuilder.cpp
+  RawFortMoneyLoad.cpp
+  RawDudeNotice.cpp
+  RawDamageablePostDestroy.cpp
+  RawFortMetaLoad.cpp
+  RawFortWorldLoad.cpp
+  RawDudeSpawn.cpp
+  RawDudeDrop.cpp
+  RawBurningSources.cpp
+  RawGeyserAiRegistration.cpp
+  RawPlayerWorld.cpp
+  RawPriestHalt.cpp
+  RawCarrierArrival.cpp
+  RawPriestArrival.cpp
+  RawDaisContentNotice.cpp
+H:\T5Workspace\NetstormReborn\cpppj\src\o\RawPriestArrival.cpp(41,82): error C2872: 'kNoIsland': 모호한 기호입니다. [H:\T5Workspace\NetstormReborn\cpppj\build\src\netstorm.vcxproj]
+      H:\T5Workspace\NetstormReborn\cpppj\src\o\ChunkMap.h(10,31):
+      'const uint8_t netstorm::o::kNoIsland'일 수 있습니다.
+      H:\T5Workspace\NetstormReborn\cpppj\src\o\RawPriestArrival.cpp(10,56):
+      또는       'const uint32_t netstorm::o::`anonymous-namespace'::kNoIsland'
+  
+  SquidDestroyLifecycle.cpp
+  ContentFormLifetime.cpp
+  코드를 생성하고 있습니다...
+  컴파일하고 있습니다...
+  SquidFormDispatch.cpp
+  SquidPop.cpp
+  SquidPostPop.cpp
+  SquidReward.cpp
+  SquidOwner.cpp
+  RawPriestOwner.cpp
+  RawPriestPostPop.cpp
+  RawAssetPostPop.cpp
+  RawPriestState.cpp
+  RawPriestRegen.cpp
+  RawPriestPreDestroy.cpp
+  RawPriestForcefield.cpp
+  RawPriestShield.cpp
+  RawPriestPostPopTail.cpp
+  RawPriestSpawn.cpp
+  RawCanonPlacement.cpp
+  RawCanonPlacementPreview.cpp
+  RawCanonPlacementCollision.cpp
+  RawCanonPlacementTerrain.cpp
+  RawCanonPlacementPermission.cpp
+  코드를 생성하고 있습니다...
+  컴파일하고 있습니다...
+  RawPlayerPlacementAnchor.cpp
+  RawCanonPlacementSurrounding.cpp
+  RawCanonPlacementRelations.cpp
+  RawCanonPlacementPipeline.cpp
+  RawOutpostLifecycle.cpp
+  RawRegionOwnership.cpp
+  RawConstructionPlace.cpp
+  RawConstructionConfirm.cpp
+  RawConstructionBuilder.cpp
+  RawConstructionProcess.cpp
+  RawConstructionArrival.cpp
+  RawConstructionData.cpp
+  RawPacketDispatch.cpp
+  RawConstructionSelection.cpp
+  RawPriestLookup.cpp
+  RawConstructionClear.cpp
+  RawConstructionNotice.cpp
+  RawConstructionRequest.cpp
+  RawConstructionEffects.cpp
+  RawConstructionLocal.cpp
+  코드를 생성하고 있습니다...
+  컴파일하고 있습니다...
+  RawPriestPlacement.cpp
+  RawPriestPlacementPreview.cpp
+  RawPriestPlacementCollision.cpp
+  RawPriestPlacementGeometry.cpp
+  RawCanonPlacementGeometry.cpp
+  RawPriestPlacementShape.cpp
+  RawCanonPixelShape.cpp
+  RawPriestPlacementTerrain.cpp
+  RawCarrierPostPop.cpp
+  RawCarrierPreDestroy.cpp
+  RawContainedLookup.cpp
+  RawConstructionVisual.cpp
+  ConstructionVisualSystem.cpp
+  RawDamageablePreDestroy.cpp
+  RawDamageableRelease.cpp
+  RawPriestFall.cpp
+  RawForcefieldLifecycle.cpp
+  RawCarrierCheck.cpp
+  PriestPlacementAssets.cpp
+  UberGump.cpp
+  코드를 생성하고 있습니다...
+  컴파일하고 있습니다...
+  GameWorld.cpp
+  RawSurfaceWorld.cpp
+  RawTerrainWorldBinding.cpp
+  RawNormalTerrainWorldBinding.cpp
+  RawFortWorldLoadBinding.cpp
+  RawShapeToBuffer.cpp
+  RawPriestWorldBindings.cpp
+  UserInput.cpp
+  SoundProcess.cpp
+  RawCursorDrop.cpp
+  RawCursorReturnPiece.cpp
+  FrameBindingInspect.cpp
+  CanonMayPlaceInspect.cpp
+  코드를 생성하고 있습니다...

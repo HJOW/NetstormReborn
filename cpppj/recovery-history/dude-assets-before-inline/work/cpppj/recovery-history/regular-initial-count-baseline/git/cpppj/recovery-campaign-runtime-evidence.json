@@ -1,0 +1,164 @@
+{
+  "host": "VM-W11-Codex",
+  "last_decompile_host": "VM-W11-CODEX",
+  "date": "2026-10-13",
+  "campaign_completed": false,
+  "directdraw_fullscreen_changed": false,
+  "native_cases": 1358,
+  "tests": {
+    "cases": 883,
+    "failed_checks": 0
+  },
+  "native_units": {
+    "processretake": 388,
+    "uireset": 242,
+    "missionoutcome": 728
+  },
+  "gui": {
+    "menu": {
+      "originals": {
+        "gif_pixels": 831008,
+        "observed_states": 54,
+        "mission_objects": 172,
+        "tutorial_objects": 3,
+        "native_window_navigation": true,
+        "resolution_changes": [
+          [
+            800,
+            600
+          ],
+          [
+            640,
+            480
+          ],
+          [
+            1024,
+            768
+          ]
+        ],
+        "fullscreen_marker_event": true,
+        "options_persist_after_restart": true,
+        "menu_background_pixels": 774432,
+        "original_files_unchanged": true
+      },
+      "originalCD": {
+        "gif_pixels": 831008,
+        "original_files_unchanged": true
+      }
+    },
+    "rawbuttons": {
+      "states": 10,
+      "world_release_checks": 2,
+      "campaign_reentry": true,
+      "raw_registry_lifetime": true,
+      "original_files_unchanged": 1394,
+      "campaign_completed": false
+    },
+    "gumpvisual": {
+      "originals": {
+        "states": 4,
+        "native_button_plans": 25,
+        "compared_pixels": 10112,
+        "text_pixels": 5612,
+        "edge_index": 15,
+        "disabled_ignored": false
+      },
+      "probe37": {
+        "states": 5,
+        "native_button_plans": 28,
+        "compared_pixels": 11135,
+        "text_pixels": 6095,
+        "edge_index": 37,
+        "disabled_ignored": true
+      },
+      "probe73": {
+        "states": 5,
+        "native_button_plans": 28,
+        "compared_pixels": 11135,
+        "text_pixels": 6095,
+        "edge_index": 73,
+        "disabled_ignored": true
+      },
+      "original_files_unchanged": 1394
+    },
+    "gumpbackground": {
+      "originals": {
+        "states": 8,
+        "native_background_plans": 50,
+        "native_parent_plans": 50,
+        "compared_pixels": 71050,
+        "background_pixels": 65700,
+        "edge_index": 15,
+        "texture_metrics": [
+          200,
+          146
+        ]
+      },
+      "probe37": {
+        "states": 5,
+        "native_background_plans": 28,
+        "native_parent_plans": 28,
+        "compared_pixels": 39788,
+        "background_pixels": 36792,
+        "edge_index": 37,
+        "texture_metrics": [
+          200,
+          146
+        ]
+      },
+      "probe73": {
+        "states": 5,
+        "native_background_plans": 28,
+        "native_parent_plans": 28,
+        "compared_pixels": 39788,
+        "background_pixels": 36792,
+        "edge_index": 73,
+        "texture_metrics": [
+          200,
+          146
+        ]
+      },
+      "original_files_unchanged": 1394
+    }
+  },
+  "sha256": {
+    "cpppj/src/client/RawButtonControls.h": "e7c028acbc75266ed4e8f698655d9e3d5af0a54db6bbb0b6fa600244b6f5c335",
+    "cpppj/src/client/RawButtonControls.cpp": "df8bf5e1b9f12ca832fb7e13c6b497c00549683f15362435ba16ab1d3538ff7b",
+    "cpppj/src/client/UberGump.h": "b6198c6a763e359c21566413c452e7ce29c1e19e88811c8bc58a4eb5486a9cde",
+    "cpppj/src/client/UberGump.cpp": "73c0653e9f4eb62111fd75c122af2eef11036453da01dae534dffc70399a67cf",
+    "cpppj/src/client/ClientMain.h": "f0f132ada92f89ec9ddd1b6b14bd34733f42cacff2170f3ecc4199c8ef9f3046",
+    "cpppj/src/client/ClientMain.cpp": "132a049e7c025776ba7235cf5320d7c8bfda452e2e4631b4c54a84ff21b2d0ca",
+    "cpppj/src/client/StoneButtonGump.cpp": "a6737cdc2d87a37276d7eb93e82a345e31517cc66aa943dc83ee2d4fdb176c4f",
+    "cpppj/src/client/GumpLifetime.h": "34d0c9e8e25ead551760fd9c424acfa9acc65ac8bb2c9158f58c9105141c23fd",
+    "cpppj/src/client/GumpLifetime.cpp": "29989c46833f5fbbdd7999d4b8eebb80d044a23232f18004fe4aa92a26ae69e8",
+    "cpppj/src/o/Kernel.h": "89da82dfce333e16a87539251b9ac4c954b326e49ac7efd2f389263c5cdbc7dd",
+    "cpppj/src/o/Kernel.cpp": "3fece4276cf1ffc2950910642964be63f9db271446d15068c6cedd0ca7240a04",
+    "cpppj/src/o/SquidProcess.h": "3c650fb9f53e2e303559971f022b99191dd6b7eacdb4118e5236ce90762ec5f8",
+    "cpppj/src/o/SquidProcess.cpp": "fe1ed93b3ae2f9e86d4d163500c0e1818ab77fef527500f59f92bd1a904273ac",
+    "cpppj/src/o/RawMissionOutcome.h": "ce79f66e08ef8913ff790767de76f5202644180d97b104055ba5192f7f7cc531",
+    "cpppj/src/o/RawMissionOutcome.cpp": "a0d97883d050048d0cdebb31558234210e5a6be71590150c8fdf9bdab273568c",
+    "cpppj/tests/RawButtonControlsTests.cpp": "8fbe4445024c4653fdd17a69109ee5b091504a44b27d77e7466226e9a3c753f5",
+    "cpppj/tests/GumpTextTests.cpp": "70c998522ad6501fca06158a22576e5f665aa92bfdbb9b06a455a265e81fcb16",
+    "cpppj/tests/ProcessRetakeTests.cpp": "63cd3352a1071d125a3545427d3b7d23bb51dfae364b03c743264b1290eacad7",
+    "cpppj/tests/GumpResetTests.cpp": "182b373c84d371ec83f02395452e3633ea110ffeb34fc31ace5687196c6ccad3",
+    "cpppj/tests/MissionOutcomeTests.cpp": "904ae3b944db099f6e7cc674b3a24bf24566aec275be6f342f63b9592a88dd17",
+    "tools/cpp_rawbuttons_smoke.py": "16921a950990897431ba95840b658a66194f89c34445d1a389fc6f5c00aad639",
+    "tools/cpp_gumpvisual_smoke.py": "ef4338de9246a118e6d37ed60e19bc35758ea20c735f9e9b1110cd9313854a99",
+    "tools/cpp_gumpbackground_smoke.py": "2efdbd588cf74d578281dc9509653277414b3b967745c8b8e0bf1474e05fab76",
+    "tools/analyze_campaign_runtime.py": "25959e7728f2288800d7d6aa45c36f594eeed1da2bc495c30455bbd135e1d1e2",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "extracted/campaign-runtime-ctest-final.log": "8d9fdbe532beefdf79c2098018da30a657dce23feb6baa2b1f6840c3fe8f6e6c",
+    "extracted/campaign-runtime-build-final-pixel-expectations.log": "c721ce032039ac1115361ae09f7e6de27313cd29eb3fdf2183210d2fd11bdfba",
+    "cpppj/recovery-processretake-evidence.json": "8a2540b21bfaf15ec4e55f11f52af8023381225a9564740917a79fbc252b5062",
+    "cpppj/tests/fixtures/processretake-x86.tsv": "705276d822488e0177fc743d09d394d5f7dcbb3e796a7a77238044b7b88a09c8",
+    "cpppj/recovery-uireset-evidence.json": "f219b73b7ef8b2e4a44869fe9518209e37e56e03717f0f468719d87814816256",
+    "cpppj/tests/fixtures/uireset-x86.tsv": "b1a48cbcd05a8bcc2a5fd38ce3dc2b63d79826a7fb8fd7f9a0d4b74e4dcc5348",
+    "cpppj/recovery-missionoutcome-evidence.json": "ac2dc3fe2d0b62d4fa17ff526e39cee8f80d835928d34a19bd9940716d85afbf",
+    "cpppj/tests/fixtures/missionoutcome-x86.tsv": "3059eb7c9ee92f98eec042032d608707e5d1db506d0a6e3e08b175909b1aab16",
+    "extracted/cpp-menu-smoke/report.json": "dbe280a4e69f9f798387c9fddfa6409e25c228d7773f48bd5f495edb04dfcbb4",
+    "extracted/cpp-rawbuttons-smoke/report.json": "b011cb97b95a2e1adb0a53ea35feeb4d86093820eb05cc1cfd4409db7a675a4c",
+    "extracted/cpp-gumpvisual-smoke/report.json": "0e56dbee1bc27e46ba546513a486d0b84d8356bc78a6656044e65af02897d3dc",
+    "extracted/cpp-gumpbackground-smoke/report.json": "9f135a25f9ac1177b03d2040d786ccc7d5af9760ddd1ff3d4512e75c96a75e7a"
+  }
+}

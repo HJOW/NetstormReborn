@@ -1,0 +1,4 @@
+[ OK ] DudeTask_PatchNativeSetterAndFallAssert
+[ OK ] DudeTask_CdNativeSetterAndFallRetention
+[ OK ] DudeTask_MissingCreationAndSurfaceRejected
+3 test(s), 0 failed check(s)

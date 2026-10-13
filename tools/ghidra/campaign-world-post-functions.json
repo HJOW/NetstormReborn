@@ -1,0 +1,7 @@
+{
+  "description": "미션 저장맵 부모의 실제 사제 준비 helper PATCH004923e0/CD0040daf0을 별도 내보낸다. 현재 inMission fa4/CD52e170==1에서는 두 원본 큰 분기를 모두 자연히 건너뛰며, 최초 부모2/2 내보내기를 덮어쓰지 않는다. 비미션의 Technology/사제생성 전체 완료나 GUI/네트워크 완료로 합산하지 않는다. 현재/마지막 디컴파일 PC HJOW-Athlon, 2026-10-14.",
+  "editions": {
+    "originals": ["004923e0"],
+    "originalCD": ["0040daf0"]
+  }
+}

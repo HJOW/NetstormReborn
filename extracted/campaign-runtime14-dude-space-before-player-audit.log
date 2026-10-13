@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "H:\T5Workspace\NetstormReborn\tools\analyze_dude_space_predicate_scope.py", line 69, in <module>
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--verify',action='store_true');args=parser.parse_args();main(args.verify)
+                                                                                                                                     ~~~~^^^^^^^^^^^^^
+  File "H:\T5Workspace\NetstormReborn\tools\analyze_dude_space_predicate_scope.py", line 60, in main
+    data=dict(schema=2,host='HJOW-Athlon',total=48,unique_native_inputs=36,duplicate_executions=12,new_native_inputs=0,cpp_tests_completed=0,requires_shared_unpop_change=False,lineage=observe(),tool_sha256=sha(Path(__file__).read_bytes()),scope='실제 Dude70의 flags2=02000400은 spot504442ff와 교집합0이고 flags1=28040010의 surface800도0이다. 따라서 Unpop은 해시/상태/표시를 실제 실행하되 foot크기 guard/spot순회에는 들어가지 않는다. 최초48 보고서의 pending_shared_foot0=true는 당시 잘못된 초안이며 이 successor의 false가 현재 소비자 경계다. 정상실행48 중 Unpop-only의 목적지label만 다른12반복은 PE에 공급되지 않아 새고유로 세지 않으며 실제고유는36이다. 기존 보고서/tool/fixture/source 전체 원문은 불변이고 sharedUnpop 수정0이다. 이 자료를 실제 zero-foot spot분기 실행 근거로 세지 않는다.')
+                                                                                                                                                                                        ~~~~~~~^^
+  File "H:\T5Workspace\NetstormReborn\tools\analyze_dude_space_predicate_scope.py", line 30, in observe
+    if sha(old)!=value or (ROOT/name).read_bytes()!=old:raise RuntimeError('Dude 공간 최초 전체 원문 변경 '+name)
+                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: Dude 공간 최초 전체 원문 변경 cpppj/src/o/SquidPostPop.cpp

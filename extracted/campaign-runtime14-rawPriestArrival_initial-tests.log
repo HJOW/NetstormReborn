@@ -1,0 +1,4 @@
+H:\T5Workspace\NetstormReborn\cpppj\tests\PriestPathArrivalHostTests.cpp(27): CHECK failed: pop.Pop(Sid{50},scene.types[158],1,1,20.75F,21.9F,0)==RawPopResult::Registered
+H:\T5Workspace\NetstormReborn\cpppj\tests\TestMain.cpp(62): CHECK failed: Unpop 해시에서 SID를 찾지 못했습니다
+[FAIL] rawPriestArrival_real_path_step_parent_halt_arrival_cleanup_same_host
+1 test(s), 2 failed check(s)

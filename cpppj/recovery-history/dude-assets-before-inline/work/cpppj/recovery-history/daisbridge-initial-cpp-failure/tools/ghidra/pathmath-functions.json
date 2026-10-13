@@ -1,0 +1,7 @@
+{
+  "description": "Path RunFrame의 실제 CRT fmod dispatch·fprem 정상 몸체를 읽기 전용으로 내보낸다. 마지막 디컴파일 PC VM-W11-CODEX, 2026-10-13.",
+  "editions": {
+    "originals": ["004eded0", "004edf9a", "004ee1b7", "004e5e94", "004ee254"],
+    "originalCD": ["004f7dc0", "004f7e8a", "004f8097", "004f2904", "004f8134"]
+  }
+}

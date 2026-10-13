@@ -1,0 +1,91 @@
+# 원본 클라이언트 폴더(assert 문자열의 ".\")의 모듈
+# (ClientMain·UserInput·Gump 계열·Screen·Renderer·Sound·State·Mission 등)
+# 다시 만든 파일을 아래 목록에 더한다. 파일 이름은 SOURCE_MAP.md 의 "cpppj 경로"를 따른다.
+target_sources(netstorm PRIVATE
+    ClientAudio.cpp
+    ClientAudio.h
+    ClientMain.cpp
+    ClientMain.h
+    VFXDraw.cpp VFXDraw.h
+    VFXTransform.cpp VFXTransform.h
+    Screen.cpp Screen.h
+    PaletteColors.cpp PaletteColors.h
+    PaletteFlash.cpp PaletteFlash.h
+    GameAssets.cpp GameAssets.h
+    PriestPlacementAssets.cpp PriestPlacementAssets.h
+    Mission.cpp Mission.h
+    InputEvent.cpp InputEvent.h
+    Renderer.cpp Renderer.h
+    DrawSort.cpp DrawSort.h
+    DrawSubmission.cpp DrawSubmission.h
+    SquidRenderer.cpp SquidRenderer.h
+    ConstructionVisualRenderer.cpp ConstructionVisualRenderer.h
+    BitmapFont.cpp BitmapFont.h
+    Cursor.cpp Cursor.h
+    GifImage.cpp GifImage.h
+    DialogScript.cpp DialogScript.h
+    Gump.cpp Gump.h
+    RawButtonControls.cpp RawButtonControls.h
+    GumpCollection.cpp GumpCollection.h
+    GumpDraw.cpp GumpDraw.h
+    GumpCreate.cpp GumpCreate.h
+    GumpTree.cpp GumpTree.h
+    GumpLifetime.cpp GumpLifetime.h
+    GumpEvents.cpp GumpEvents.h
+    GumpInput.cpp GumpInput.h
+    GumpFrame.cpp GumpFrame.h
+    ButtonGump.cpp ButtonGump.h
+    StoneButtonGump.cpp StoneButtonGump.h
+    GumpBackgroundCreate.cpp GumpBackgroundCreate.h
+    GumpBackgroundDraw.cpp GumpBackgroundDraw.h
+    GumpHelp.cpp GumpHelp.h
+    GumpText.cpp GumpText.h
+    GumpTextDraw.cpp GumpTextDraw.h
+    MenuGump.cpp MenuGump.h
+    MenuGumpLayout.cpp MenuGumpLayout.h
+    GumpDecoration.cpp GumpDecoration.h
+    MenuGumpWidgets.cpp MenuGumpWidgets.h
+    GumpFormBinding.cpp GumpFormBinding.h
+    MenuGumpInput.cpp MenuGumpInput.h
+    MenuGumpDraw.cpp MenuGumpDraw.h
+    MenuGumpControls.cpp MenuGumpControls.h
+    StyleText.cpp StyleText.h
+    StyleTextMarkup.cpp StyleTextMarkup.h
+    StyleTextBuffer.cpp StyleTextBuffer.h
+    TextGump.cpp TextGump.h
+    ScrollGump.cpp ScrollGump.h
+    VFXLine.cpp VFXLine.h
+    ScrollGumpWidgets.cpp ScrollGumpWidgets.h
+    ScrollingTextGumpWidgets.cpp ScrollingTextGumpWidgets.h
+    ScrollingTextGumpMarkup.cpp ScrollingTextGumpMarkup.h
+    Markup.cpp Markup.h
+    TileGroupCollection.cpp TileGroupCollection.h
+    ObjectCollection.cpp ObjectCollection.h
+    PreviewCollection.cpp PreviewCollection.h
+    PreviewDraw.cpp PreviewDraw.h
+    SpriteDraw.cpp SpriteDraw.h
+    GumpVisual.cpp GumpVisual.h
+    GumpBackground.cpp GumpBackground.h
+    PaletteShade.cpp PaletteShade.h
+    State.cpp State.h
+    UberGump.cpp UberGump.h
+    GameWorld.cpp GameWorld.h
+    RawSurfaceWorld.cpp RawSurfaceWorld.h
+    RawTerrainWorldBinding.cpp RawTerrainWorldBinding.h
+    RawNormalTerrainWorldBinding.cpp RawNormalTerrainWorldBinding.h
+    RawFortWorldLoadBinding.cpp RawFortWorldLoadBinding.h
+    RawPriestWorldBindings.cpp RawPriestWorldBindings.h
+    UserInput.cpp UserInput.h
+    Sound.cpp Sound.h
+    SoundDevice.cpp SoundDevice.h
+    SoundMusic.cpp SoundMusic.h
+    SoundMusicFile.cpp SoundMusicFile.h
+    SoundMusicSelection.cpp SoundMusicSelection.h
+    SoundMusicRuntime.cpp SoundMusicRuntime.h
+    SoundSceneMusic.cpp SoundSceneMusic.h
+    SoundProcess.cpp SoundProcess.h
+    RawCursorDrop.cpp RawCursorDrop.h
+    RawCursorReturnPiece.cpp RawCursorReturnPiece.h
+)
+# 원본처럼 Win32 GDI·멀티미디어 타이머를 직접 쓴다(Screen·ClientMain).
+target_link_libraries(netstorm PUBLIC user32 gdi32 winmm)

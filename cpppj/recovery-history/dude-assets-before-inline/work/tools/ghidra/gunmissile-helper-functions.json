@@ -1,0 +1,7 @@
+{
+  "description": "Missile 실제 CRT float 절삭과 incomingCorner rectangle 점 추가. HJOW-Athlon, 2026-10-13.",
+  "editions": {
+    "originals": ["004e49c0", "00431f90"],
+    "originalCD": ["004f161c"]
+  }
+}

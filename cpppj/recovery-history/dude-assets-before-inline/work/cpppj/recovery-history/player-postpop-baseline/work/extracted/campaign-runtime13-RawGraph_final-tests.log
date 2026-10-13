@@ -1,0 +1,15 @@
+[ OK ] RawGraph_X86_AllocatedSidPostPopAndProjectedPop
+[ OK ] RawGraph_X86_DetachGeneralIslandBridgeUnpopAndRelease
+[ OK ] RawGraph_X86_DetachUsesPositionHeadGraphAndSourceFrame
+[ OK ] RawGraph_X86_GlobalRebuildAndExhaustedAllocation
+[ OK ] RawGraph_X86_RecoveryInsideAddDetachPopAndPostPop
+[ OK ] RawGraph_RecoveryPreflightRejectsOtherVoidAndOutOfRangeTypeBeforePop
+[ OK ] RawGraph_RebuildRejectsDamageAndFastAllocateDoesNotReadPool
+[ OK ] RawGraph_PositionHeadEarlyReturnAndPreflightPreserveSource
+[ OK ] RawGraph_RegionX86_ThreeBinariesAndNormalBridgeIslandPop
+[ OK ] RawGraph_ProjectedPopRejectsExhaustionAndFractionalBeforeMutation
+[ OK ] RawGraph_RegionThenAddExhaustionRejectsBeforeAnyPopMutation
+[ OK ] RawGraph_RefreshesFramesMapAndRawMembershipBetweenCalls
+[ OK ] RawGraph_DetachPreflightRejectsBeforePoolSpaceOrGraphMutation
+[ OK ] RawGraph_CorruptCandidatesAndMismatchedConnectionsRejectBeforeMutation
+14 test(s), 0 failed check(s)

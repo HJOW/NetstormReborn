@@ -1,0 +1,3 @@
+[ OK ] ShapeToBuffer_PatchNativePlainPixels
+[ OK ] ShapeToBuffer_CdNativePlainPixelsAndFallback
+2 test(s), 0 failed check(s)

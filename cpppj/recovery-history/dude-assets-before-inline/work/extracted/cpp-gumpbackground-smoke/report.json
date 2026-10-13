@@ -1,0 +1,39 @@
+{
+  "originals": {
+    "states": 8,
+    "native_background_plans": 50,
+    "native_parent_plans": 50,
+    "compared_pixels": 67300,
+    "background_pixels": 62050,
+    "edge_index": 15,
+    "texture_metrics": [
+      200,
+      146
+    ]
+  },
+  "probe37": {
+    "states": 5,
+    "native_background_plans": 28,
+    "native_parent_plans": 28,
+    "compared_pixels": 37688,
+    "background_pixels": 34748,
+    "edge_index": 37,
+    "texture_metrics": [
+      200,
+      146
+    ]
+  },
+  "probe73": {
+    "states": 5,
+    "native_background_plans": 28,
+    "native_parent_plans": 28,
+    "compared_pixels": 37688,
+    "background_pixels": 34748,
+    "edge_index": 73,
+    "texture_metrics": [
+      200,
+      146
+    ]
+  },
+  "original_files_unchanged": 1394
+}

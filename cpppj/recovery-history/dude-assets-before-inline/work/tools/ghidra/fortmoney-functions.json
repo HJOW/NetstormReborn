@@ -1,0 +1,7 @@
+{
+  "description": "실제 Fort Money wrapper/스트림4바이트소비·모드별SP/기본시작SP·현재플레이어SP 지정 및 기존분산저장소/난수 body. HJOW-Athlon, 2026-10-14. Badges/Technology 전체부모는 별도로 복원한다.",
+  "editions": {
+    "originals": ["004bf340", "00483300", "0041c7d0", "00447810", "0040edb0", "0040eba0", "004558c0", "0040ec50"],
+    "originalCD": ["004297f0", "00414720", "00429872", "00429f30"]
+  }
+}

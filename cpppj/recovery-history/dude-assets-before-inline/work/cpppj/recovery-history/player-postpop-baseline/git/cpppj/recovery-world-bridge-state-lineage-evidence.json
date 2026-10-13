@@ -1,0 +1,21 @@
+{
+  "host": "HJOW-Athlon",
+  "baseline_commit": "b76adf95c02c2837b2a6fbe3b5559ef8c91e9247",
+  "baseline_source_blob_sha256": {
+    "cpppj/src/client/RawSurfaceWorld.h": "f75c710ac96b58ab5545ab56d6a92dd50da1e0ab4599010ff7a76f02594260f1",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "1fb8e151cb403830b187605651f3374fb01e9d4ac9313aa33e83281cbc689478"
+  },
+  "current_source_sha256": {
+    "cpppj/src/client/RawSurfaceWorld.h": "8b7bfbe2c539bb3e79a728670cb1311b103a70daa680cc06d02283c8c6d5176d",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "e58d0b3daa6d12fffd075d3326de5ced82bd8ca8e4b921649405f4750574f0cb"
+  },
+  "all_remaining_header_and_implementation_identical": true,
+  "new_native_cases": 0,
+  "prior_all_tests_not_added": 983,
+  "files": {
+    "tools/analyze_world_bridge_state_lineage.py": "a7d38adb4c367cae3d253c2b53f94f45261e33203733526db8694c1c3ec1eaf9",
+    "cpppj/recovery-campaign-runtime7-evidence.json": "efc3eee80b2f579e64f67bc85cffe3f7ddcb222709e8b2a3718ff0d68be31acd",
+    "extracted/campaign-runtime7-build-final.log": "9a2d201ff6b95eb21f46099689663307a6da9660e2fd0512c41c5a9ce4c0c0c1",
+    "extracted/campaign-runtime7-all-final-tests.log": "581bc5a95a7441ec5a597d2a15feac49b39b9cb85e006dcc3f1538e43dd5a09c"
+  }
+}

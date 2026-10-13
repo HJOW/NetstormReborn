@@ -1,0 +1,17 @@
+{
+  "description": "새 BurningFrame helper9/7의 직접 하위: 실제 viewport 겹침/표시 dirty와 ShapeToBuffer의 TYPE·레이어0 lookup·소프트웨어 RLE/owner 색표. 현재 buffer 문맥은 메모리 대상이며 DirectDraw/창 실행을 하지 않는다. HJOW-Athlon,2026-10-14.",
+  "groups": {
+    "frame": {
+      "originals": ["004c6b80", "00499310"],
+      "originalCD": ["004cdf30", "00456d10"]
+    },
+    "capture": {
+      "originals": ["004ac550", "00419850", "004daa70", "004daab0", "004dabe0"],
+      "originalCD": ["004abf50", "004d64e0", "004d6510", "004d6630"]
+    }
+  },
+  "editions": {
+    "originals": ["004c6b80", "00499310", "004ac550", "00419850", "004daa70", "004daab0", "004dabe0"],
+    "originalCD": ["004cdf30", "00456d10", "004abf50", "004d64e0", "004d6510", "004d6630"]
+  }
+}

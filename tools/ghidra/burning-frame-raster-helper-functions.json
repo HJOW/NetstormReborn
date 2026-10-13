@@ -1,0 +1,17 @@
+{
+  "description": "ShapeToBuffer의 VFX 소프트웨어 RLE/색표 직접몸체와 Frame viewport/dirty의 추가 하위. burning-frame-paint-helper 실제 directcall에서 확인했다. HJOW-Athlon,2026-10-14. 기존 모든 원본관찰/export 자료는 유지한다.",
+  "groups": {
+    "capture": {
+      "originals": ["00401d92", "0040229f", "0040227e"],
+      "originalCD": ["00465772", "00465c7f", "00465c5e"]
+    },
+    "frame": {
+      "originals": ["00463f80", "00445290", "00497580"],
+      "originalCD": ["00457320"]
+    }
+  },
+  "editions": {
+    "originals": ["00401d92", "0040229f", "0040227e", "00463f80", "00445290", "00497580"],
+    "originalCD": ["00465772", "00465c7f", "00465c5e", "00457320"]
+  }
+}

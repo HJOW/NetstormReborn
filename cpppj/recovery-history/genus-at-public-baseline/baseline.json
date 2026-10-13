@@ -1,0 +1,73 @@
+{
+  "commit": "860030e",
+  "files": {
+    "cpppj/recovery-campaign-runtime12-evidence.json": {
+      "work_sha256": "1102f0de883e8485550da7e95ad6ef1687761f9673695a7aeeb551c46e56b44a",
+      "git_sha256": "1102f0de883e8485550da7e95ad6ef1687761f9673695a7aeeb551c46e56b44a"
+    },
+    "cpppj/recovery-dais-ritual-consumer-binding-evidence.json": {
+      "work_sha256": "6cb62c0f0cbf6a2891493ebe58059f38d97ef0541e11c88909cd999b0fa18129",
+      "git_sha256": "6cb62c0f0cbf6a2891493ebe58059f38d97ef0541e11c88909cd999b0fa18129"
+    },
+    "cpppj/recovery-dais-ritual-consumer-cpp-correction-evidence.json": {
+      "work_sha256": "684e63cbc1a7a9ab1b7e56f4723f2217e7d7d12f55849e9037869c3b5f2fc25e",
+      "git_sha256": "684e63cbc1a7a9ab1b7e56f4723f2217e7d7d12f55849e9037869c3b5f2fc25e"
+    },
+    "cpppj/recovery-daiscontentnotice-cpp-correction-evidence.json": {
+      "work_sha256": "d9b640f60d1900a9375a38d35549903993120a979133c200d8074be71ef4329b",
+      "git_sha256": "d9b640f60d1900a9375a38d35549903993120a979133c200d8074be71ef4329b"
+    },
+    "cpppj/recovery-damageablepost-host-binding-evidence.json": {
+      "work_sha256": "44e34414b3ce74b16f93439b5026ddd9e233722f45d98788a308798aed75e6b7",
+      "git_sha256": "44e34414b3ce74b16f93439b5026ddd9e233722f45d98788a308798aed75e6b7"
+    },
+    "cpppj/recovery-damageablepost-host-group-lineage-evidence.json": {
+      "work_sha256": "dbbbdc6b26f248b0c7a65897e9bfa43de42e8e3fe9a4770fed3b521e39af17c3",
+      "git_sha256": "dbbbdc6b26f248b0c7a65897e9bfa43de42e8e3fe9a4770fed3b521e39af17c3"
+    },
+    "cpppj/recovery-damageablepostdestroy-evidence.json": {
+      "work_sha256": "10575fd6275f434365fb5a1d0fb7d7991b4879ef2248cfd181aa70d16e096bef",
+      "git_sha256": "10575fd6275f434365fb5a1d0fb7d7991b4879ef2248cfd181aa70d16e096bef"
+    },
+    "cpppj/recovery-damageablepostdestroy-lineage-evidence.json": {
+      "work_sha256": "b9f0eddc0bf6552c391781c0cebb33603db8993294be2ff13bfada9a9c4b57c4",
+      "git_sha256": "b9f0eddc0bf6552c391781c0cebb33603db8993294be2ff13bfada9a9c4b57c4"
+    },
+    "cpppj/src/o/RawDamageablePostDestroy.cpp": {
+      "work_sha256": "c70069e2dc850b8f1496aee07008c03ffb1655ff5943365334a4938ead99fb18",
+      "git_sha256": "c70069e2dc850b8f1496aee07008c03ffb1655ff5943365334a4938ead99fb18"
+    },
+    "cpppj/src/o/RawDamageablePostDestroy.h": {
+      "work_sha256": "16404ca3857f952ab7809ed370d68b36158e2c834290d76eb4bbc85b2b3fdf03",
+      "git_sha256": "16404ca3857f952ab7809ed370d68b36158e2c834290d76eb4bbc85b2b3fdf03"
+    },
+    "cpppj/tests/DamageablePostDestroyHostTests.cpp": {
+      "work_sha256": "a5150f05dd64d094aeaf4cb0f5204c8fe16c5da13709f5b41aaf0f204a366871",
+      "git_sha256": "a5150f05dd64d094aeaf4cb0f5204c8fe16c5da13709f5b41aaf0f204a366871"
+    },
+    "cpppj/tests/DamageablePostDestroyTests.cpp": {
+      "work_sha256": "80f00aac6a93ead2befddeec89c43537819f22ea5062d2b15a91b31057b26faa",
+      "git_sha256": "80f00aac6a93ead2befddeec89c43537819f22ea5062d2b15a91b31057b26faa"
+    },
+    "cpppj/tests/fixtures/damageablepostdestroy-x86.tsv": {
+      "work_sha256": "7cbf0b93162674cd8d1cf353068ad96b4e717f1167782c0b8fe98908b98a4c6b",
+      "git_sha256": "7cbf0b93162674cd8d1cf353068ad96b4e717f1167782c0b8fe98908b98a4c6b"
+    },
+    "tools/analyze_damageablepost_host_binding.py": {
+      "work_sha256": "0587de934ed1bfd6ed900b9ba46f6fbb7c5b00143687b831b047ef5442385dc5",
+      "git_sha256": "0587de934ed1bfd6ed900b9ba46f6fbb7c5b00143687b831b047ef5442385dc5"
+    },
+    "tools/analyze_damageablepost_host_group_lineage.py": {
+      "work_sha256": "610fbb511acef38007d61026f3ff86fe86cbe49c48e8f9e2c2d4e74f9c1ee713",
+      "git_sha256": "610fbb511acef38007d61026f3ff86fe86cbe49c48e8f9e2c2d4e74f9c1ee713"
+    },
+    "tools/analyze_damageablepostdestroy.py": {
+      "work_sha256": "2ee43ff1e1ea6c788d4ec8ef42a4c383b5d6ae53fb1f8acce491be3dfad141d1",
+      "git_sha256": "2ee43ff1e1ea6c788d4ec8ef42a4c383b5d6ae53fb1f8acce491be3dfad141d1"
+    },
+    "tools/decomp_damageablepostdestroy_oracle.py": {
+      "work_sha256": "aaf668737fdc1f0a0045db5404b6a197466bac067de3e14b4d3e55b79e1bcf82",
+      "git_sha256": "aaf668737fdc1f0a0045db5404b6a197466bac067de3e14b4d3e55b79e1bcf82"
+    }
+  }
+}

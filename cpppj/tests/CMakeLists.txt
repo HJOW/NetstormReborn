@@ -62,6 +62,14 @@ add_executable(netstorm_tests
     FortWorldLoadBindingTests.cpp
     GraphFormsTests.cpp
     DaisBridgeTests.cpp
+    BurningSourcesTests.cpp
+    ShapeToBufferTests.cpp
+    DudeSpaceTests.cpp DudeSpaceSupport.h
+    GeyserAiRegistrationTests.cpp
+    PriestHaltTests.cpp
+    CarrierArrivalTests.cpp CarrierArrivalSupport.h
+    PriestPathArrivalHostTests.cpp
+    PlayerWorldTests.cpp
     RawButtonControlsTests.cpp
     GumpResetTests.cpp
     MissionOutcomeTests.cpp
@@ -799,3 +807,19 @@ set_source_files_properties(DaisBridgeTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 실제 Dude 드롭 부모와 같은 생성/Host/Task 연결의 독립308행이다.
 set_source_files_properties(DudeDropTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_DUDEDROP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/dudedrop-x86.tsv\"")
+
+# 실제 Player와 도착 처리·픽셀 캡처의 단위14 원본 자료를 각 검사에만 공급한다.
+set_source_files_properties(BurningSourcesTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_BURNINGSOURCES_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/burningsources-x86.tsv\"")
+set_source_files_properties(ShapeToBufferTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_SHAPETOBUFFER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/shape-to-buffer-x86.tsv\"")
+set_source_files_properties(DudeSpaceTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_DUDESPACE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/dude-space-x86.tsv\"")
+set_source_files_properties(GeyserAiRegistrationTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_GEYSER_AI_REGISTRATION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/geyser-ai-registration-x86.tsv\"")
+set_source_files_properties(PriestHaltTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PRIESTHALT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/priesthalt-x86.tsv\"")
+set_source_files_properties(CarrierArrivalTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CARRIERARRIVAL_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrierarrival-x86.tsv\"")
+set_source_files_properties(PlayerWorldTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PLAYER_WORLD_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/player-world-x86.tsv\"")

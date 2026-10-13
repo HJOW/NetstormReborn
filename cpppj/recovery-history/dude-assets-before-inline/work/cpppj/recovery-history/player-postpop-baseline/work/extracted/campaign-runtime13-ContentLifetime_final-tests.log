@@ -1,0 +1,5 @@
+[ OK ] ContentLifetime_IndependentPeFixture
+[ OK ] ContentLifetime_ActualSpAndWalletIntegration
+[ OK ] ContentLifetime_PriestNoticeUsesCurrentStructuralLinks
+[ OK ] ContentLifetime_SharedMixedFormDispatch
+4 test(s), 0 failed check(s)

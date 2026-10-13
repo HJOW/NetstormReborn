@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "host": "VM-W11-CODEX",
+  "editions": {
+    "originals": {
+      "inner_vtable": "0x50b648",
+      "slots": [
+        "0x46a080",
+        "0x4437f0",
+        "0x46a090",
+        "0x40b380",
+        "0x40b380",
+        "0x4690f0",
+        "0x46b830",
+        "0x46a340"
+      ],
+      "pre_destroy_empty": true,
+      "parent_dying_empty": true,
+      "base_poison_form_parent": -12345,
+      "cleanup_in_gun_destructor": false
+    },
+    "originalCD": {
+      "inner_vtable": "0x5010f8",
+      "slots": [
+        "0x436dc0",
+        "0x4139f0",
+        "0x436d90",
+        "0x434a60",
+        "0x413a10",
+        "0x434cb0",
+        "0x4342f0",
+        "0x434900"
+      ],
+      "pre_destroy_empty": true,
+      "parent_dying_empty": true,
+      "base_poison_form_parent": -12345,
+      "cleanup_in_gun_destructor": false
+    }
+  },
+  "native_observations": 0,
+  "os_calls": 0,
+  "files": {
+    "tools/analyze_gun_lifetime.py": "31ad21e7a99cc64e39b4142356179f614b8b7b1e8153f554be1ca6d81d22b7cc",
+    "tools/ghidra/gunlifetimeaudit-functions.json": "ced40bdf6e667e040eb4dddc131fdc2c153b7781cdfc925c627fa564efaade17",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/gunlifetimeaudit/originals/creation.c": "13ba6f369e0f323569f224b3144b4b0db0318861cb3f318de0854988c5e4f480",
+    "extracted/gunlifetimeaudit/originals/functions.tsv": "815a5e3ab314d945439f8aab96a8b8b56dcacad4ea3019e7784223f79637480d",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "extracted/gunlifetimeaudit/originalCD/creation.c": "54a524bde067b397d0d6f7f78f82ffcd9172f531994b0ce6723860fecefda9af",
+    "extracted/gunlifetimeaudit/originalCD/functions.tsv": "520e1c8b67edcaabba7b2f2507cca222fa970e0c6eefb9fcd09cc5e1d2458c66"
+  },
+  "limitations": [
+    "정적 vtable/삭제 몸체 감사만 수행하며 Gun native2996에 관찰을 추가하지 않는다.",
+    "C++ Host Kill 검사는 실제 Form/Kernel 소유수명이다. native destructor poison 및 표적 감시/animation 전체 수명 대조로 확대하지 않는다."
+  ]
+}

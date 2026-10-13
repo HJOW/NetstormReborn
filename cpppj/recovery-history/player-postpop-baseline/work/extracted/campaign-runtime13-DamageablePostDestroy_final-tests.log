@@ -1,0 +1,4 @@
+[ OK ] DamageablePostDestroy_ReplaysBothNativeFullEffects
+[ OK ] DamageablePostDestroy_PackedCountAndRequiredCreationBoundary
+[ OK ] DamageablePostDestroy_ActualHostInitialCountAndFirstKernelCall
+3 test(s), 0 failed check(s)

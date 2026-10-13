@@ -1,0 +1,7 @@
+{
+  "description": "실제 Missile 표적/배리어 impact의 anim160 생성·Pop·Regular 예약과 anim Handle의 프레임/삭제, ground-hit의 Dude통지·공유난수100. HJOW-Athlon,2026-10-13.",
+  "editions": {
+    "originals": ["00470ac0", "0045a750", "0045a6e0", "0045ae00", "00451470", "004558c0", "00471ab0", "00496e80", "0041d0d0"],
+    "originalCD": ["00455b40", "0047c8a0", "0047c810", "0047c880", "004e8e70", "0048cbd0", "004ed650", "0048efd0", "0043f950"]
+  }
+}

@@ -1,0 +1,6 @@
+[ OK ] CarrierCheck_ReplaysOriginals
+[ OK ] CarrierCheck_ReplaysCd
+[ OK ] CarrierCheck_ReplaysExtra1037
+[ OK ] CarrierCheck_ComposesSurfaceFallAndProcessScheduling
+[ OK ] CarrierCheck_RejectsInvalidBindingsAndReadsCurrentTables
+5 test(s), 0 failed check(s)

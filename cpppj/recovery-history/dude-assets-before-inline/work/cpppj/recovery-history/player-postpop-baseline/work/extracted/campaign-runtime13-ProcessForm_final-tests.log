@@ -1,0 +1,5 @@
+[ OK ] ProcessForm_ReplaysOriginals
+[ OK ] ProcessForm_ReplaysCd
+[ OK ] ProcessForm_ReplaysExtra1037
+[ OK ] ProcessForm_RejectsInvalidNamedFormsBeforeRegistration
+4 test(s), 0 failed check(s)

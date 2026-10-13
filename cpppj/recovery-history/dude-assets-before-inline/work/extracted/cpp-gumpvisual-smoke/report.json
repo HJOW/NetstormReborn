@@ -1,0 +1,27 @@
+{
+  "originals": {
+    "states": 4,
+    "native_button_plans": 25,
+    "compared_pixels": 10062,
+    "text_pixels": 5612,
+    "edge_index": 15,
+    "disabled_ignored": false
+  },
+  "probe37": {
+    "states": 5,
+    "native_button_plans": 28,
+    "compared_pixels": 11079,
+    "text_pixels": 6095,
+    "edge_index": 37,
+    "disabled_ignored": true
+  },
+  "probe73": {
+    "states": 5,
+    "native_button_plans": 28,
+    "compared_pixels": 11079,
+    "text_pixels": 6095,
+    "edge_index": 73,
+    "disabled_ignored": true
+  },
+  "original_files_unchanged": 1394
+}

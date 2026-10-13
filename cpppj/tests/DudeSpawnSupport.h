@@ -31,7 +31,7 @@ struct DudeAssets {
     const BaseFileSystem& Register() { files.RegisterArchive(root/"netstorm.tarc");return files; }
 };
 // 판본마다 보호 자산을 한 번 읽으며 반복 행에서 원본 입력으로 재사용한다.
-const DudeAssets& Assets(OriginalEdition edition) { static const DudeAssets patch(OriginalEdition::Patch1078),cd(OriginalEdition::Cd1072);return edition==OriginalEdition::Patch1078 ? patch : cd; }
+inline const DudeAssets& Assets(OriginalEdition edition) { static const DudeAssets patch(OriginalEdition::Patch1078),cd(OriginalEdition::Cd1072);return edition==OriginalEdition::Patch1078 ? patch : cd; }
 // 원본 표시 변경 표와 같은 병합/전체 갱신 상태를 보관한다.
 struct DudeSink final:SquidDisplaySink {
     netstorm::client::DirtyRegions dirty{1024,768}; // 원본 viewport의 실제 변경 영역 저장소다.

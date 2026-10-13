@@ -1,0 +1,7 @@
+{
+  "description": "실제 새 미션 Packet0x27 login의 inMission 분기에서 호출되는 저장맵 설치 부모 PATCH004b5300/CD004322e0을 복원한다. Player152생성→Builder ctor/attach→zero120/Territory→PlaceAll→Generate→Objects0..20→Graph(false)→사제후처리/Camera→Player이름 쓰기 순서이며 Money/Badges/Technology를 호출하지 않는다. Packet0x27의 whole handler는 선택/Ready 감사용으로만 내보내고 실행 완료로 합산하지 않는다. 현재/마지막 디컴파일 PC HJOW-Athlon, 2026-10-14.",
+  "editions": {
+    "originals": ["004b5300", "004a7800"],
+    "originalCD": ["004322e0", "004c1a20"]
+  }
+}

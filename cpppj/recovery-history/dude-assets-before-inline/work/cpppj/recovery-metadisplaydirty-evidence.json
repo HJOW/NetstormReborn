@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "total": 1040,
+  "editions": {
+    "originals": {
+      "cases": 520,
+      "returns": 1040,
+      "native": {
+        "00481510": 768,
+        "004e49c0": 384,
+        "00481320": 272,
+        "0040e850": 154,
+        "00480180": 74
+      },
+      "external": {
+        "004e4391": 48,
+        "00480270": 162,
+        "004808d0": 139490
+      },
+      "pe_sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "assertions": 0
+    },
+    "originalCD": {
+      "cases": 520,
+      "returns": 1040,
+      "native": {
+        "00442f30": 768,
+        "004f161c": 384,
+        "00442d10": 272
+      },
+      "external": {
+        "004f1650": 48,
+        "004420d0": 138,
+        "00442680": 139490,
+        "004f1560": 144
+      },
+      "pe_sha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "assertions": 0
+    }
+  },
+  "os_calls": 0,
+  "gui_calls": 0,
+  "x87_controls": [
+    "0x27f",
+    "0x37f"
+  ],
+  "files": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/metadisplaydirty/originals/creation.c": "8f28b9ba6283680942e8b78adde3d5209399544ec9b5b08e3f681c082e3ff7c5",
+    "extracted/metadisplaydirty/originals/functions.tsv": "66385ce0f1bb191eb80f52f0c975c9c434d8af1a9b7fb30713090cca96203fc8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "extracted/metadisplaydirty/originalCD/creation.c": "d2f582333587db537f25b283e9ac5b831684860d7fb31bc17ce4f09cfa07d855",
+    "extracted/metadisplaydirty/originalCD/functions.tsv": "5dc5ee9db4cb87eb69cb8b14c4abc4aa0462d3748462959e45e2b3f3007b8b10",
+    "tools/decomp_metadisplaydirty_oracle.py": "929ba7578b57dad129852aca2d68775bbb22dcea10c6f1fa10c9f61a21a631e3",
+    "cpppj/tests/fixtures/metadisplaydirty-x86.tsv": "7d35f10062f11a39a1609f1b7ea0b605eb3233f5570deda1e7ef99675b2408a0",
+    "tools/ghidra/metadisplaydirty-functions.json": "7795090ccd789b7d5e584f2ccee124d69bf011f95522da4454dc367974c8c589",
+    "cpppj/src/o/RawMetadisplayDirty.h": "dc985bd7adf108f50cf37b4752127e4aba5a4f20e81ee6978df434eb31dbf9b9",
+    "cpppj/src/o/RawMetadisplayDirty.cpp": "ac6035e88d02430e2dc3ff1f4531a2bcd07b72286f6e15bf3e95b3f6770cbae4",
+    "cpppj/tests/MetadisplayDirtyTests.cpp": "f6ff674bd6ffa8ae8c4c730dfd6797ab72865d7b3898d37e19418225f926cbbd"
+  },
+  "limits": [
+    "미니맵 bitmap/표시 포인터의 확보·표시 rebuild·실제 셀 그림·CD atexit은 명시 관찰 경계다.",
+    "queue/refresh·bitmap 0 채움·현재 view 비교·실제 ftol·전체/부분 순서·callback 뒤 현재 count/full 재조회는 원본 명령이다.",
+    "queue의 세 번째 DWORD는 미초기화 스택 잔여값이며 두 실제 셀 몸체가 읽지 않는다. C++은 새 항목에서0으로 정규화한다.",
+    "게임/GUI/실제 미니맵 그림·Pop/Unpop 전체 연결·캠페인 완주를 검증하지 않는다."
+  ]
+}

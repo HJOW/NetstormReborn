@@ -1,0 +1,21 @@
+{"verified": true, "total": 652, "cpp_completed": false, "boundaries": 0}
+{"verified": true, "total": 164, "cpp_completed": false}
+{"verified": true, "total": 48, "unique_native_inputs": 36, "duplicate_executions": 12, "new_native_inputs": 0, "requires_shared_unpop_change": false, "cpp_completed": false}
+Dude 공간 Player 분배 연결: 기존고유36/반복12·전체역변환·추가0 감사 통과
+가이저 AI 등록 정상168/하위명시거부436 및 전체 출처 SHA 감사 통과
+GeyserAI Test폭: literal1곳정확역변환/Native604불변/추가원본0 감사통과
+사제 Halt 지면분리: 전체35파일/정확역변환/동일864입력·raw/효과120·반환50교정/현재SHA
+Carrier 도착 현재SHA: 406
+사제 cleanup: clientflags0x10/실제FindContained/전체검사역변환/생산·Native1270불변/이전전체근거재현
+GenusAt 공개 이동: 기준13 전체 Git/작업/선언정확역이동/Cpp·기존4412불변/새관찰0
+PlayerWorld 전체 source/native/정상·assert 감사 통과
+Player actualAttach:1680 동일입력·1600행불변·80행부모WORD6·생산접근자역변환 감사 통과
+{"verified": true, "previous_all_tests": 1066, "preserved_files": 1029, "prior_reports": 25, "new_native_inputs": 0}
+PlayerWorld 전체 source/native/정상·assert 감사 통과
+Player actualAttach:1680 동일입력·1600행불변·80행부모WORD6·생산접근자역변환 감사 통과
+{"verified": true, "previous_all_tests": 1066, "preserved_files": 1029, "prior_reports": 25, "new_native_inputs": 0}
+{"verified": true, "baseline_commit": "db9b626c0a9c6b9440c6b181dfc401506a07d3e4", "native_inputs": 288, "new_native_inputs": 0, "preserved_files": 261, "prior_reports": 27, "cpp_completed": false}
+{"verified": true, "total": 288, "new_native": 0, "history_files": 6, "cpp_completed": false}
+{"verified": true, "total": 308, "normal": 306, "assertions": 2, "new_native_inputs": 0, "cpp_completed": false}
+{"verified": true, "previous_all_tests": 1066, "new_native_inputs": 0, "changed_tokens": 1, "cpp_build_completed": false}
+단위14 새정상3742/assert228·미복원436·반복12·새15·전체1081 근거 생성

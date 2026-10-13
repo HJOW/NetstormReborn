@@ -1,0 +1,5 @@
+[ OK ] rawPathRuntime_native_constructor
+[ OK ] rawPathRuntime_native_prepare
+[ OK ] rawPathRuntime_native_step
+[ OK ] rawPathRuntime_reject_invalid
+4 test(s), 0 failed check(s)

@@ -1,0 +1,77 @@
+{
+  "schema": 1,
+  "host": "HJOW-Athlon",
+  "primary_target": "10.78",
+  "cd_target": "10.72",
+  "total": 780,
+  "normal": 684,
+  "assertions": 96,
+  "editions": {
+    "originals": {
+      "returns": 288,
+      "assertions": 96,
+      "instructions": 24112,
+      "native_calls": {
+        "00450670": 384,
+        "00496e80": 144,
+        "004ac220": 288
+      },
+      "boundaries": {
+        "004afbe0": 288,
+        "004e4391": 144,
+        "0041bd20": 144,
+        "004214a0": 144
+      }
+    },
+    "originalCD": {
+      "returns": 396,
+      "assertions": 0,
+      "instructions": 38674,
+      "native_calls": {
+        "004e8ba0": 396,
+        "0048efd0": 192,
+        "004abb00": 384
+      },
+      "boundaries": {
+        "004ac9c0": 384,
+        "004f1650": 192,
+        "0048f590": 192,
+        "00448c10": 192
+      }
+    }
+  },
+  "files": {
+    "cpppj/recovery-dude-regular-reset-lineage-evidence.json": "389eef948737919c3e3f13c22937529271b32830929388b0dbedcec33949eb49",
+    "cpppj/recovery-regular-initial-count-lineage-evidence.json": "cf875afd036e46447d1f3f4705daed54f7e8b5c36eed387c7eacad3d8350b561",
+    "cpppj/src/o/RawDudeTask.cpp": "ab8117c744b165a41c4edffa0aa7434e6ac42d65235048d8270ed8c153a748b3",
+    "cpppj/src/o/RawDudeTask.h": "b721bee7afaead194c6dd82d2610ca263788d506e220e63bdf73f0f97908afe8",
+    "cpppj/src/o/SquidProcess.cpp": "2b78ac83db1bbb474f224845ae288d696b30d996a489ee292ac09a1af16986ad",
+    "cpppj/src/o/SquidProcess.h": "827a9789c2a6b66ac7b98181e49e8c0fa19713755bb62fccababb7ae2a0d0589",
+    "cpppj/tests/DudeTaskTests.cpp": "2e046efc1b54a5e626ef3e293115e10ab624231e0ae0c39af5c8af7c7285460e",
+    "cpppj/tests/fixtures/dudetask-x86.tsv": "410236dd4d7cc59ecbcb3d58bdeffb7f19490ed7a1353efaf276127e49a3faab",
+    "extracted/dude-task/originalCD/creation.c": "2c81f41a6425ef7f9682051e4a9c91fa38409fc42c19c59b1dcf8f36fc565bbe",
+    "extracted/dude-task/originalCD/functions.tsv": "0a26faad7811606cb73f936537f398ead9eeaa105f0ea2f8902de0ce6b971c47",
+    "extracted/dude-task/originals/creation.c": "8d00ffb72b5ee7104476b4421a21bc4746f0db867516b9012cf46e20dc6534e0",
+    "extracted/dude-task/originals/functions.tsv": "0bef5a4f5ac77c5330aaa6af88acb5e20f164e5b47816521b8b3e0fd0374cf88",
+    "extracted/owner/originalCD/creation.c": "115d3f4790315c3647e18c087579cf3aa08af06cdbaeca42adbac1e82725af62",
+    "extracted/owner/originalCD/functions.tsv": "4e184997f62c2622b26b3fa4f047a2580a609d2d919f0e414a75e8efd49d4439",
+    "extracted/owner/originals/creation.c": "f9919c046d5259526946f106b47b6259fe5e04971f743d6fa02d6a5361b9dc16",
+    "extracted/owner/originals/functions.tsv": "3ea66dace80a85999a8b2c2dbadb4d5f1bd18b0dcdb0768f9c41075206c7c72d",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_dudetask_oracle.py": "2589822810725e9bd97a250d08565f1caeb9e6f055d0cfb9233a7e327b98b2f1",
+    "tools/decomp_owner_oracle.py": "6ade0301748b25b28da7656f229a5b10ae04f26d2258f014e5d4b422fd142d9e",
+    "tools/ghidra/dude-task-functions.json": "927e72e67a901da514a4af0b80b63b767a334eec0ab5d8a9e34f44b44747afeb"
+  },
+  "cpp_tests_completed": 0,
+  "os_calls": 0,
+  "new_dude_factories_completed": 0,
+  "limitations": [
+    "실제 setter/Regular ctor/task WORD 쓰기와 현재 time/event/count/payload는 원본 몸체다.",
+    "현재 Regular 조회·힙·Form부착·다리 표면 요청은 명시 관찰 경계이며 C++는 같은 실제 Host 조회/생성을 소비한다.",
+    "패치 FALL 교체는 원본 assert에서 멈추며 정상 반환이나 전체 예외 처리 완료로 세지 않는다.",
+    "패치 SID0/free/예약 머리의 미정의 쓰기와 비유한 시각/힙 실패는 지원 입력에 포함하지 않는다.",
+    "CD SID0/free/dead 자연반환과 FALL 강제 유지, 양판본 DWORD event/하위 WORD 쓰기·분수float 지연+정밀double now를 포함한다.",
+    "실제 Dude 생성/Pop/Path24와 전체 드롭 소비자는 별도 후속이다."
+  ]
+}

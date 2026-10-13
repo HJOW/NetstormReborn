@@ -1,0 +1,428 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-14",
+  "native_unique": 534,
+  "normal_unique": 252,
+  "assert_unique": 282,
+  "new_binding_native": 0,
+  "preserved_native_report": {
+    "path": "cpppj/recovery-fortworldload-evidence.json",
+    "bytes": 6656,
+    "sha256": "20aa1b0b012d760ea6ae16680b7dd39de7df5ccf148827a471e641cf436571ed"
+  },
+  "source": [
+    {
+      "path": "cpppj/src/o/RawFortWorldLoad.h",
+      "bytes": 4897,
+      "sha256": "1cbe18c4c9fe64b3a656f93c9875c6e9578146853b0d5df00a10ed36bab97704"
+    },
+    {
+      "path": "cpppj/src/o/RawFortWorldLoad.cpp",
+      "bytes": 4568,
+      "sha256": "9b2512fb2fb05cf14d4cc2440538cc127c478d86807a2ffdfab274088ccd3de6"
+    },
+    {
+      "path": "cpppj/src/client/RawFortWorldLoadBinding.h",
+      "bytes": 1088,
+      "sha256": "3e679135ad814a019c7eefb6708f45072a0037ebbd0199a621e7bf2231c02211"
+    },
+    {
+      "path": "cpppj/src/client/RawFortWorldLoadBinding.cpp",
+      "bytes": 1576,
+      "sha256": "0e0b00b42fc839745a8992348d94f0763586355f3fc12f4dfa6c171931094eed"
+    },
+    {
+      "path": "cpppj/tests/FortWorldLoadTests.cpp",
+      "bytes": 11946,
+      "sha256": "46ea58ff0fe9c74f534d88c4c2cd14757d8d7607d560407554cecb92e5824703"
+    },
+    {
+      "path": "cpppj/tests/FortWorldLoadBindingTests.cpp",
+      "bytes": 12090,
+      "sha256": "87f1d41e0d57e2509384e4c93ace2b5f4de1dd97c110d19b508c50ef576169f7"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "cpppj/src/o/RawIslandBuilder.h",
+      "bytes": 3757,
+      "sha256": "569e95e4070f166d014f7a97777a6d03677347ee3c799052a1b5e66e086688b2"
+    },
+    {
+      "path": "cpppj/src/o/RawIslandBuilder.cpp",
+      "bytes": 6070,
+      "sha256": "06e62e2833b504b85634f0f47bf1292c6d006f9553f0aa1457ff2634e33f0582"
+    },
+    {
+      "path": "cpppj/src/o/RawIslandRuntime.h",
+      "bytes": 6283,
+      "sha256": "6205b879664770b0a3047ed1066f2ae7dd243c3ec2bbd13689fef1da77298fa4"
+    },
+    {
+      "path": "cpppj/src/o/RawIslandRuntime.cpp",
+      "bytes": 10362,
+      "sha256": "3be93556f2b32efc641442ed1e21654fbd0504be1643085b82ab1e80f71acd12"
+    },
+    {
+      "path": "cpppj/src/o/ChunkMap.h",
+      "bytes": 3381,
+      "sha256": "06fead290fb6ad6686b8158d36b5fc4357cfa0ba6995fbc9c5933b51ef324a23"
+    },
+    {
+      "path": "cpppj/src/o/ChunkMap.cpp",
+      "bytes": 2927,
+      "sha256": "553cdd299f98874b56b1e379d352ee3fd9e24f6e81c14d1c69f641d98a1f621c"
+    },
+    {
+      "path": "cpppj/src/o/CanonDecoder.h",
+      "bytes": 5172,
+      "sha256": "4de94611aa28b10eee3ab1a201cc8d07fc10d9a081ad237c17b909a21b3f87a7"
+    },
+    {
+      "path": "cpppj/src/o/CanonDecoder.cpp",
+      "bytes": 8864,
+      "sha256": "ae3553973ff29257ed2b723b160503f6fc729919a97f082f16132e919dd69eaa"
+    },
+    {
+      "path": "cpppj/src/o/RiftType.h",
+      "bytes": 13861,
+      "sha256": "e1c78cd6c0ac3f9a1135345b4288d07796785cfac20e93465548726cac3ddfdf"
+    },
+    {
+      "path": "cpppj/src/o/RiftType.cpp",
+      "bytes": 3726,
+      "sha256": "795554df3a4538ba475a2095a1b87a6bf9ddf4ba5ff904b469cef1f7128dc895"
+    },
+    {
+      "path": "cpppj/src/o/RawTerrainContext.h",
+      "bytes": 4272,
+      "sha256": "debce2664dc50d88797b25cdfaf02318bdffc6b9bcd38a012930599bc3c13e40"
+    },
+    {
+      "path": "cpppj/src/o/RawTerrainContext.cpp",
+      "bytes": 5179,
+      "sha256": "203547106def3802bcd2070c916bfdc62e714586885c6f7f4df7b1a5ce18f3f1"
+    },
+    {
+      "path": "cpppj/src/o/RawTerrainGrowth.h",
+      "bytes": 2639,
+      "sha256": "3de94a1bd18277c8b59ed4c90f88616f3a96bd032526513aa246ead600e78c98"
+    },
+    {
+      "path": "cpppj/src/o/RawTerrainGrowth.cpp",
+      "bytes": 7911,
+      "sha256": "0d65e9156726ea90be2db07f61812a6d92113913509c481893e8b08a8f749952"
+    },
+    {
+      "path": "cpppj/src/o/RawTerrainStamp.h",
+      "bytes": 6799,
+      "sha256": "a0147b2acd24ee05520b4d2446c90f738436ff231ee8515a3df36d056227d953"
+    },
+    {
+      "path": "cpppj/src/o/RawTerrainStamp.cpp",
+      "bytes": 9465,
+      "sha256": "cffd1cb3b40c0053c527957c0bd589daa4227aa04bf9744cf70b6f660ee15be0"
+    },
+    {
+      "path": "cpppj/src/o/RawFortRandomPlacement.h",
+      "bytes": 5365,
+      "sha256": "79bba31820344fbe9e29da1c1aeb2e4100cf5d83365b1466d61eb3be6966104e"
+    },
+    {
+      "path": "cpppj/src/o/RawFortRandomPlacement.cpp",
+      "bytes": 10657,
+      "sha256": "88f7d4b28ef28c9f28c627152509a1d62bc58b6e75d0bda03e6c093d9d227e52"
+    },
+    {
+      "path": "cpppj/src/o/RawFarmCluster.h",
+      "bytes": 3162,
+      "sha256": "18e66ab315a1b4965486b9e07a6965360c31f12471325e273b96304457a21364"
+    },
+    {
+      "path": "cpppj/src/o/RawFarmCluster.cpp",
+      "bytes": 5263,
+      "sha256": "1afa96ee9218d36f2b87ca0b7c4cb09beea90e8c2a6abf4600f442d9674786b7"
+    },
+    {
+      "path": "cpppj/src/o/RawFortObjectLoad.h",
+      "bytes": 6536,
+      "sha256": "5768661283aa0f8cdbc229882fb3bdb1f203bbc2e01460cefa5fb93311aefdb5"
+    },
+    {
+      "path": "cpppj/src/o/RawFortObjectLoad.cpp",
+      "bytes": 14512,
+      "sha256": "4dd7e2d9e307269b2a4f68bc4238cd2b8ea913965887b403db08f55a5103b38b"
+    },
+    {
+      "path": "cpppj/src/o/RawFortFinishOwner.h",
+      "bytes": 4288,
+      "sha256": "4f52676b745a69f7be492ed36d1e8e515ece90e80c9b104a2713c90560663c16"
+    },
+    {
+      "path": "cpppj/src/o/RawFortFinishOwner.cpp",
+      "bytes": 5770,
+      "sha256": "9ba73e890b4eb689e6b281c974a811e3edaf6bac7ad6c5bafcbb46920c4cc941"
+    },
+    {
+      "path": "cpppj/src/o/RawFortMoneyLoad.h",
+      "bytes": 4020,
+      "sha256": "8d06cdd57737603e47d89c0732da727bf647eeea3b0188ab3b16628dfd4f6ce2"
+    },
+    {
+      "path": "cpppj/src/o/RawFortMoneyLoad.cpp",
+      "bytes": 5039,
+      "sha256": "8aca16d919c3a4a7b57b1342a663f2b359d2e14b24b3a945eafa3cc3b2163f13"
+    },
+    {
+      "path": "cpppj/src/o/RawFortMetaLoad.h",
+      "bytes": 4914,
+      "sha256": "f937da92ace23acc093569c87ddc1d2c3d05fbd5fb443a56e5df5426b5416478"
+    },
+    {
+      "path": "cpppj/src/o/RawFortMetaLoad.cpp",
+      "bytes": 6046,
+      "sha256": "3c2bd74c58489f08f24cbe3bff8b28295bf584a9922c01b34790c0355f676ab7"
+    },
+    {
+      "path": "cpppj/src/o/RawGraph.h",
+      "bytes": 7149,
+      "sha256": "52a1fced12f690415d904bc7c54384b1d4cf6a85cfe292984b17d71b51ee2cce"
+    },
+    {
+      "path": "cpppj/src/o/RawGraph.cpp",
+      "bytes": 30813,
+      "sha256": "0e5b23c82cd5ab9d9fda3700cca17563a6b1415837c80094fa28c831ec0725ad"
+    },
+    {
+      "path": "cpppj/src/o/Graph.h",
+      "bytes": 6061,
+      "sha256": "4a9233f095649891bee88c780c716ab418d243773d61655ddbe799bf92f9ef7e"
+    },
+    {
+      "path": "cpppj/src/o/Graph.cpp",
+      "bytes": 12390,
+      "sha256": "03a4be0aa9399bb46b6e0c94d904ee8f44db34951a436b9f40a3651cff526356"
+    },
+    {
+      "path": "cpppj/src/o/SidPool.h",
+      "bytes": 5283,
+      "sha256": "dede45b0aed7bcbc896b8da80d72540c266d9e5a56b99878efbf4f2abad6448d"
+    },
+    {
+      "path": "cpppj/src/o/SidPool.cpp",
+      "bytes": 10030,
+      "sha256": "0f72cb4540e5d28ff63e5ce9078d8591b733f192c8ee6c8c5bf486b93cfd16f0"
+    },
+    {
+      "path": "cpppj/src/o/SquidHash.h",
+      "bytes": 2764,
+      "sha256": "ee3c9fbc61c659e8a62b0d9675f028ca3ca1b29cc364abc49680bdb1a5e50ac7"
+    },
+    {
+      "path": "cpppj/src/o/SquidHash.cpp",
+      "bytes": 4305,
+      "sha256": "68d635362a376fcfa158f517a6bec0d6049be9ea1eacfbb8784b456481eacdea"
+    },
+    {
+      "path": "cpppj/src/o/SquidFactory.h",
+      "bytes": 3444,
+      "sha256": "70394e3a27fd8c768c851445b0c03a8b321914eea66fb530bd004d094ba0f5d4"
+    },
+    {
+      "path": "cpppj/src/o/SquidFactory.cpp",
+      "bytes": 11463,
+      "sha256": "9773bb2d4f5b7dd0114fbb9406a95080e6f919a1106efe5b6a15ef8ed68e39e0"
+    },
+    {
+      "path": "cpppj/src/o/SquidReward.h",
+      "bytes": 8117,
+      "sha256": "221e142133a1e3a73f65ff6979d73859b7701912ab84cde9dc6a9fe565ccd2e7"
+    },
+    {
+      "path": "cpppj/src/o/SquidReward.cpp",
+      "bytes": 13359,
+      "sha256": "a29c11afe56a477c470956b1ed0a0678d059340806537ce08b43bf6b6aa1375d"
+    },
+    {
+      "path": "cpppj/src/o/SpStore.h",
+      "bytes": 4064,
+      "sha256": "10e25c2956dc7e917de784865a38341a045a0ed76b49785aaaf67b9f674c4797"
+    },
+    {
+      "path": "cpppj/src/o/SpStore.cpp",
+      "bytes": 4577,
+      "sha256": "61723355bccecc352ff415d79434767fec6bfb776ba411cb096bb8b2046fd37a"
+    },
+    {
+      "path": "cpppj/src/o/RawCarrierPostPop.h",
+      "bytes": 3304,
+      "sha256": "80d77d36bb14ed16231ed20024111a77290c4e557fe55b988c16f0e7a433dc18"
+    },
+    {
+      "path": "cpppj/src/o/RawCarrierPostPop.cpp",
+      "bytes": 3811,
+      "sha256": "8603cb70101e6472fa36b25d0b2ecb1cc438b4658c1d2264b47ff8a17d95b780"
+    },
+    {
+      "path": "cpppj/src/o/RawCanonPlacementPipeline.h",
+      "bytes": 4950,
+      "sha256": "4b650565a778a98d53e41444756dc606a5bd8f91cbd52770e8bbc7194b419531"
+    },
+    {
+      "path": "cpppj/src/o/RawCanonPlacementPipeline.cpp",
+      "bytes": 2559,
+      "sha256": "c65178b9ed2baeaabaae08e607c9a8c2ff8683141a39dc9b23b3852e6d7db6d4"
+    },
+    {
+      "path": "cpppj/src/client/RawSurfaceWorld.h",
+      "bytes": 9666,
+      "sha256": "8b7bfbe2c539bb3e79a728670cb1311b103a70daa680cc06d02283c8c6d5176d"
+    },
+    {
+      "path": "cpppj/src/client/RawSurfaceWorld.cpp",
+      "bytes": 24877,
+      "sha256": "e58d0b3daa6d12fffd075d3326de5ced82bd8ca8e4b921649405f4750574f0cb"
+    },
+    {
+      "path": "cpppj/src/client/RawNormalTerrainWorldBinding.h",
+      "bytes": 6805,
+      "sha256": "c0052ba35c287378f83e4735d6c028356c78cef84cd0ba7499243c3b3f700090"
+    },
+    {
+      "path": "cpppj/src/client/RawNormalTerrainWorldBinding.cpp",
+      "bytes": 9034,
+      "sha256": "7bb469667968612c46207e7fe4d52bd6a1094847d333c86080820dad25e02cad"
+    },
+    {
+      "path": "cpppj/src/client/RawTerrainWorldBinding.h",
+      "bytes": 690,
+      "sha256": "74561f4a97ae17899b7b9de853c3eec5224290111199909386c4537d36e84d45"
+    },
+    {
+      "path": "cpppj/src/client/RawTerrainWorldBinding.cpp",
+      "bytes": 1548,
+      "sha256": "fe7f6dbaf547d1347d9bdc485f40ef7ac666a1de5f8bc496bb667b1390685cd2"
+    }
+  ],
+  "linked_previous_reports": [
+    {
+      "path": "cpppj/recovery-fortmeta-evidence.json",
+      "bytes": 3497,
+      "sha256": "48edd82ee4fe8d42489219a7ab102257a35f73ecb5959463b241336b0de3b2dc"
+    },
+    {
+      "path": "cpppj/recovery-fortmeta-cpp-binding-evidence.json",
+      "bytes": 10520,
+      "sha256": "f7565d104145ecb54998f750c5c26aa914225c0ac2a1b00c07b3eeb74811c076"
+    },
+    {
+      "path": "cpppj/recovery-fortmeta-namespace-lineage-evidence.json",
+      "bytes": 4138,
+      "sha256": "51917e860ec04654ad1628cc1f6eac0e4a56d18b24a4c5628c5438eb0870f164"
+    },
+    {
+      "path": "cpppj/recovery-fortmoney-evidence.json",
+      "bytes": 2779,
+      "sha256": "93731dffa04d6bfa77a407e66e25cb841f9572e56323f61fd369d18023fe1591"
+    },
+    {
+      "path": "cpppj/recovery-fortmoney-cpp-correction-evidence.json",
+      "bytes": 2713,
+      "sha256": "4ef1a9f0fb2e115ab9253818c0ddf291c37782a7b929ecd3f42355dda8de4be6"
+    },
+    {
+      "path": "cpppj/recovery-islandbuilder-evidence.json",
+      "bytes": 5530,
+      "sha256": "fdb47e354e6f4a6f2aa36d7900bea9bd3ed7904be79d96284a99c239425bb26c"
+    },
+    {
+      "path": "cpppj/recovery-islandbuilder-comment-lineage-evidence.json",
+      "bytes": 2735,
+      "sha256": "b85fc0f90b4b513be9cd3759c88ec168e3d1c7f31bd55c8794480d026b6b94d0"
+    },
+    {
+      "path": "cpppj/recovery-graphrebuild-evidence.json",
+      "bytes": 5370,
+      "sha256": "8aa0b443206d6046313071cac9ee295e308c3488209ebdd2c06bf71cbd64e9a5"
+    }
+  ],
+  "old_files": [
+    {
+      "path": "cpppj/recovery-history/fortworldload-before-static-namespace/cpppj/recovery-fortworldload-evidence.json",
+      "bytes": 6656,
+      "sha256": "20aa1b0b012d760ea6ae16680b7dd39de7df5ccf148827a471e641cf436571ed"
+    },
+    {
+      "path": "cpppj/recovery-history/fortworldload-before-static-namespace/cpppj/src/client/RawFortWorldLoadBinding.cpp",
+      "bytes": 1574,
+      "sha256": "22d4c1f53dcdd6c7183c8825198a65c5946a364724a6070a666e523e37065d52"
+    },
+    {
+      "path": "cpppj/recovery-history/fortworldload-before-static-namespace/cpppj/src/client/RawFortWorldLoadBinding.h",
+      "bytes": 1088,
+      "sha256": "3e679135ad814a019c7eefb6708f45072a0037ebbd0199a621e7bf2231c02211"
+    },
+    {
+      "path": "cpppj/recovery-history/fortworldload-before-static-namespace/cpppj/src/o/RawFortWorldLoad.cpp",
+      "bytes": 4566,
+      "sha256": "c612248ed9a8c77ba05f2757778ca4f6c96414c1396f1bf8ff44eb08ffed132d"
+    },
+    {
+      "path": "cpppj/recovery-history/fortworldload-before-static-namespace/cpppj/src/o/RawFortWorldLoad.h",
+      "bytes": 4897,
+      "sha256": "1cbe18c4c9fe64b3a656f93c9875c6e9578146853b0d5df00a10ed36bab97704"
+    },
+    {
+      "path": "cpppj/recovery-history/fortworldload-before-static-namespace/cpppj/tests/fixtures/fortworldload-x86.tsv",
+      "bytes": 307558,
+      "sha256": "18d9946e08d189c92388e11e5163802b54299d2cc7b9c08f68579c11e4a9d59f"
+    },
+    {
+      "path": "cpppj/recovery-history/fortworldload-before-static-namespace/cpppj/tests/FortWorldLoadBindingTests.cpp",
+      "bytes": 12090,
+      "sha256": "87f1d41e0d57e2509384e4c93ace2b5f4de1dd97c110d19b508c50ef576169f7"
+    },
+    {
+      "path": "cpppj/recovery-history/fortworldload-before-static-namespace/cpppj/tests/FortWorldLoadTests.cpp",
+      "bytes": 11946,
+      "sha256": "46ea58ff0fe9c74f534d88c4c2cd14757d8d7607d560407554cecb92e5824703"
+    },
+    {
+      "path": "cpppj/recovery-history/fortworldload-before-static-namespace/extracted/fortworldload-smoke-initial-tool.py",
+      "bytes": 15164,
+      "sha256": "a02c59380e8517b7fde320effd8a35300ac3ee04446444428ca4d092315026de"
+    },
+    {
+      "path": "cpppj/recovery-history/fortworldload-before-static-namespace/tools/decomp_fortworldload_oracle.py",
+      "bytes": 15674,
+      "sha256": "c35d4500cf1d786b09e05b3d20d3cd8e59df33d7dcb6611a9f49d536ce310956"
+    },
+    {
+      "path": "cpppj/recovery-history/fortworldload-before-static-namespace/tools/ghidra/fortworldload-functions.json",
+      "bytes": 494,
+      "sha256": "dc0303ae7db5991a9acf4e67c281c01a63717f3aafd164d4aa8b4bc1817467e0"
+    }
+  ],
+  "tool": {
+    "path": "tools/analyze_fortworldload_binding.py",
+    "bytes": 5903,
+    "sha256": "5f1179014329ab1ecca241eb5d6ac9dc3639c8616999fd7cdbeccf1162c030a4"
+  },
+  "static_namespace_fix": {
+    "files": [
+      "cpppj/src/o/RawFortWorldLoad.cpp",
+      "cpppj/src/client/RawFortWorldLoadBinding.cpp"
+    ],
+    "added_each_hex": "7d0a"
+  },
+  "cpp_tests": 3,
+  "cpp_test_result": "새13공유등록/실행대기",
+  "limitations": [
+    "부모oracle에서새부모/Territory/zero120과기존Builder/Runtime를실제실행한다. 상위순서관찰의child경계를전체하위완료로세지않는다.",
+    "현재childbinding은정상지형/객체/Money/Meta/Graph0의완료body를참조한다. 같은풀과현재Template선택효과를필수로받는다.",
+    "선택실제소비자는Form없는빈저장객체/빈Technology와loadingDepth1이다. 부모getter/UI는명시관찰경계이고TypeNames/Populate/군도는미복원요청을거부한다.",
+    "현재RawGraph의Form<70전체풀거부는보존하며실제Technology/ProcessForm이있는저장월드전체완료를주장하지않는다.",
+    "첫smoke의missingTemplate 복구는호출중ECX가아닌진입때의Template this를사용하도록교정했다. 이전whole도구를보존하며표본/실패를534에더하지않는다.",
+    "native최초보고서의CPP namespace닫힘누락은EOF brace2BYTE만추가하고전체역변환으로연결한다. native원문/534행/도구 변경0이다."
+  ]
+}

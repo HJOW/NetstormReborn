@@ -1,0 +1,7 @@
+{
+  "description": "GunProcess 가상 소멸자·Baseprocess poison 및 실제 empty preDestroy/parentDying를 정적 검토한다. native 행 수를 늘리지 않는다. 마지막 PC VM-W11-CODEX, 2026-10-13.",
+  "editions": {
+    "originals": ["0046a080", "00443c00", "00443c20", "0041bd00", "0040b380"],
+    "originalCD": ["00436dc0", "00436e1f", "0048f570", "00434a60", "00413a10"]
+  }
+}
