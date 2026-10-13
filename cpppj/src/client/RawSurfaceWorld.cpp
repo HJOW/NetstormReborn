@@ -45,7 +45,8 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
     o::SquidDeletionState deletion;o::BridgeDecayMode mode;o::BridgeEventState eventState;
     o::IslandPostPopState loadState{1,false};o::SquidOwnerMode ownerMode;
     o::BuildingSpaceState buildingState;
-    o::SquidProcessState processState;o::FrameTime time{};bool changed{true},loaded{};
+    o::SquidProcessState processState;o::FrameTime time{};bool changed{true},loaded{},loading{},runtimeBound{};
+    RawWorldRuntimeHooks runtime; // 외부 미션 모듈의 참조는 첫 객체 생성 전에만 설치한다.
     SurfaceDisplayHooks displayHooks;std::size_t effectRequests{},walkerFalls{},deletionRequests{};
     std::unique_ptr<o::RawGraph> graph;std::unique_ptr<o::SquidDisplay> display;
     std::unique_ptr<o::SquidPostPop> postPop;std::unique_ptr<o::SquidUnpop> unpop;
@@ -106,7 +107,7 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
         lifecycle=std::make_unique<o::RawSurfaceLifecycle>(pool,*neighbors,links.connectorType,common->Hooks(),o::SurfaceLifecycleHooks{
             [this](o::Sid sid,float x,float y) { o::ScheduleBridgeFall(*host,sid,x,y); },
             [this](o::Sid sid,std::uint32_t flags) { Destroy(sid,flags); },
-            [this](o::Sid) { ++walkerFalls; },
+            [this](o::Sid sid) { if (runtimeBound) { if (!runtime.walkerFall(sid)) throw std::logic_error("월드 낙하 처리 실패"); }else ++walkerFalls; },
             [this](const o::BridgeLifecycleEvent&) { ++effectRequests; }});
         o::BridgeEventHooks eventHooks;
         // 실제 사건의 삭제/재등록도 같은 가상 경로와 SHP 공급을 사용한다.
@@ -140,6 +141,53 @@ RawSurfaceWorld::RawSurfaceWorld(o::OriginalEdition edition,std::span<const o::R
     :impl_(std::make_unique<Impl>(edition,types,frames,shapes,links,terrainType)) {}
 // 프로세스와 raw 데이터는 같은 월드 수명으로 해제된다. GUI의 전역 Kernel에는 form을 등록하지 않는다.
 RawSurfaceWorld::~RawSurfaceWorld()=default;
+// 이 뷰는 내부 모듈의 현재 참조만 돌려주며 새 배열/풀을 만들지 않는다.
+RawWorldCore RawSurfaceWorld::Core() {
+    auto& s=*impl_;return {s.pool,s.hash,s.spots,s.types,s.frames,s.shapes,s.bookkeeping,s.ownerMode,
+        *s.factory,*s.owner,*s.frame,*s.pop,*s.unpop,*s.postPop,*s.display,*s.building,*s.graph,*s.neighbors,
+        *s.baseDestroy,*s.virtualDestroy,*s.lifecycle,*s.events,*s.formDispatch,*s.host,s.processState,s.kernel};
+}
+// 완성된 실제 파생 훅을 설치할 때 Form/Regular의 기존 callback도 현재 경계를 읽게 한다.
+void RawSurfaceWorld::BindRuntime(RawWorldRuntimeHooks hooks) {
+    auto& s=*impl_;
+    if (s.runtimeBound || s.loading || s.loaded || s.kernel.Size() || s.pool.FreeCount()!=s.pool.Capacity()-5)
+        throw std::logic_error("월드 runtime은 초기 객체 생성 전에 한 번 연결해야 합니다");
+    // 지정 Take는 freeCount를 보존하므로 실제 슬롯도 확인하여 기존 객체가 있는 늦은 설치를 거부한다.
+    for (std::uint32_t id=5;id<s.pool.Capacity();++id)
+        if (!(s.pool.Slot(o::Sid{static_cast<std::uint16_t>(id)})[11]&1)) throw std::logic_error("월드 runtime 설치 전 객체가 존재합니다");
+    if (!hooks.assets.emit || !hooks.assets.selected || !hooks.destroy || !hooks.regular || !hooks.transmit.writeData ||
+        !hooks.transmit.transmit || !hooks.walkerFall || !hooks.loadingDepth) throw std::invalid_argument("월드 runtime 필수 경계 누락");
+    s.formDispatch->SetAssets(hooks.assets,hooks.destroy);s.host->SetRegularHandler(hooks.regular);s.host->SetFormTransmit(hooks.transmit);
+    s.runtime=std::move(hooks);s.runtimeBound=true;s.runtime.loadingDepth(s.loadState.loadingDepth);
+}
+// Fort의 원본 객체 순서를 보존하는 외부 로더는 이 경계 사이에서 Create/Pop을 직접 호출한다.
+void RawSurfaceWorld::BeginLoad() {
+    auto& s=*impl_;if (s.loaded || s.loading) throw std::logic_error("raw 월드 중복 로드 시작");
+    s.loading=true;SetLoadingDepth(1);
+}
+// 모든 실제 객체를 등록한 뒤 원본 Graph/장부를 활성화한다.
+void RawSurfaceWorld::FinishLoad() {
+    auto& s=*impl_;if (!s.loading || s.loaded) throw std::logic_error("raw 월드 로드 종료 순서 오류");
+    s.graph->Rebuild(true);s.bookkeeping.graphsEnabled=true;SetLoadingDepth(0);s.loading=false;s.loaded=true;s.changed=true;
+}
+// 복원된 타입 생성자를 같은 풀에서 실행한다.
+o::Sid RawSurfaceWorld::Create(std::uint32_t type,std::uint32_t flags) { impl_->changed=true;return impl_->factory->Create(type,flags); }
+// 현재 raw 프레임의 실제 SHP 크기가 공간 등록에 쓰인다.
+void RawSurfaceWorld::Pop(o::Sid sid,float x,float y,std::uint32_t flags) { impl_->Pop(sid,x,y,flags); }
+// 현재 raw 타입의 실제 공간/표시 해제 몸체를 호출한다.
+void RawSurfaceWorld::Unpop(o::Sid sid,std::uint32_t flags) {
+    auto& s=*impl_;s.unpop->Unpop(sid,s.types.at(s.pool.Slot(sid)[10]),flags);s.changed=true;
+}
+// Unpop 뒤 현재 raw 좌표를 읽어 같은 공간에 다시 Pop한다. 원본 호출자가 해제 순서를 정한다.
+void RawSurfaceWorld::Repop(o::Sid sid,std::uint32_t flags) {
+    const auto raw=impl_->pool.Slot(sid);impl_->Pop(sid,std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18)),flags);
+}
+// 예약 프로세스를 연결 모듈보다 먼저 해제해 가상 소멸자의 참조 수명을 보장한다.
+void RawSurfaceWorld::ClearProcesses() { impl_->kernel.Clear(); }
+// 중첩 로딩의 표면/사제/자산 후처리가 같은 값을 읽게 한다.
+void RawSurfaceWorld::SetLoadingDepth(std::uint32_t depth) {
+    impl_->loadState.loadingDepth=depth;if (impl_->runtimeBound) impl_->runtime.loadingDepth(depth);
+}
 // 저장 객체의 순서와 부착 생성 순서는 구별한다. Graph는 전체 초기 등록을 마친 뒤 한 번 재구성한다.
 void RawSurfaceWorld::Load(std::span<const SurfaceSeed> seeds) {
     auto& state=*impl_;if (state.loaded) throw std::logic_error("raw 표면 월드 중복 로드");
@@ -158,13 +206,14 @@ void RawSurfaceWorld::Load(std::span<const SurfaceSeed> seeds) {
         if (rank(first.type)!=rank(second.type)) return rank(first.type)<rank(second.type);
         return first.y==second.y ? first.x<second.x : first.y<second.y;
     });
+    BeginLoad();
     // 실제 생성자·가상 소유자·Pop을 사용하며 아직 Graph를 변경하지 않는다.
     for (const auto& seed:sorted) {
         const auto sid=state.factory->Create(seed.type);state.owner->Set(sid,seed.owner);
         Write(state.pool.AllocatedBytes(sid),state.edition==o::OriginalEdition::Patch1078 ? 36 : 34,static_cast<std::uint32_t>(seed.frame),state.edition==o::OriginalEdition::Patch1078 ? 4 : 1);
         state.Pop(sid,seed.x,seed.y,0);
     }
-    state.graph->Rebuild(true);state.bookkeeping.graphsEnabled=true;state.loadState.loadingDepth=0;state.loaded=true;state.changed=true;
+    FinishLoad();
 }
 // GUI가 고정한 한 프레임의 시각을 모든 raw 프로세스가 공유한다.
 void RawSurfaceWorld::RunFrame(o::FrameTime time,bool paused) {

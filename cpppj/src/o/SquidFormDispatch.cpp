@@ -37,6 +37,11 @@ void SquidFormDispatch::Bind(SquidProcessHost& processes) {
     // 실제 Kernel의 순환 타입 번호 모두에 같은 ProcessForm 가상 몸체를 연결한다.
     for (std::uint32_t type=kProcessFirst;type<end;++type) Register(processes.Pool(),type,hooks);
 }
+// 전체 Form 경로가 합성한 현재 자산 훅/가상 삭제 경계를 공유하게 한다.
+void SquidFormDispatch::SetAssets(SquidDestroyHooks assets,SquidAssetDestroy assetDestroy) {
+    if (!assets.emit || !assets.selected || !assetDestroy) throw std::invalid_argument("Form 분배 현재 자산 경계 필요");
+    assets_=std::move(assets);assetDestroy_=std::move(assetDestroy);
+}
 // 콜백 뒤 다음 효과는 현재 raw 타입으로 다시 선택한다.
 const SquidDestroyHooks& SquidFormDispatch::Route(Sid sid) const {
     const auto type=pool_.Slot(sid)[10];
@@ -49,7 +54,7 @@ bool SquidFormDispatch::Destroy(Sid sid,std::uint32_t flags) const {
 }
 // 공유 분배기는 파생 호스트가 전달한 공통 효과도 같은 최상위 자산 경계로 바로 보낸다.
 SquidDestroyHooks SquidFormDispatch::Hooks() const {
-    SquidDestroyHooks hooks;hooks.selected=assets_.selected;
+    SquidDestroyHooks hooks;hooks.selected=[this] { return assets_.selected(); };
     // 파생 Unpop도 현재 타입별 실제 호스트가 처리한다.
     hooks.unpopForm=[this](Sid sid) { Route(sid).unpopForm(sid); };
     // 종속 삭제는 루트 재진입으로 처리해 가상 자산 재정의를 보존하며 각 pre/post/release는 해당 호스트에 전달한다.

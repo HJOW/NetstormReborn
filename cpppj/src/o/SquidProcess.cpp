@@ -42,9 +42,9 @@ std::uint32_t RegularProcess::Count() const { return count_; }
 double RegularProcess::Time() const { return time_; }
 
 SquidProcessHost::SquidProcessHost(SidPool& pool,std::span<const RiftTypeRecord> types,Kernel& kernel,RawSquidDestroy& destroy,
-    SquidProcessState& state,RegularHandler handler,SquidDestroyHooks asset)
+    SquidProcessState& state,RegularHandler handler,SquidDestroyHooks asset,ProcessFormTransmission transmit)
     :pool_(pool),types_(types.begin(),types.end()),kernel_(kernel),destroy_(destroy),state_(state),
-     handler_(std::move(handler)),asset_(std::move(asset)) {
+     handler_(std::move(handler)),asset_(std::move(asset)),transmit_(std::move(transmit)) {
     if (types.size()!=(pool.Edition()==OriginalEdition::Patch1078 ? 188U : 171U)) throw std::invalid_argument("프로세스 타입 판본/크기 오류");
     if (&destroy.Pool()!=&pool) throw std::invalid_argument("프로세스/삭제 SID 풀이 다릅니다");
 }
@@ -71,6 +71,17 @@ void SquidProcessHost::AttachForm(Sid form,Sid parent,std::uint32_t flags) {
     // 004b1440: 부모가 바뀌는 부착은 프로세스 디버그 flag가 있어야 한다. 새 form의 부모 필드는 0이다.
     if (Word(form,kFormParent)!=parent.value && !(flags&kProcessDebug)) throw std::logic_error("프로세스 form 부모 변경 flag 누락");
     if (types_.at(pool_.Slot(form)[kType]).flags2&kNoContainerGenus) throw std::logic_error("프로세스 form genus 오류");
+    // 서버는 부모/체인을 쓰기 전에 파생 WriteData를 호출한다. 양수 버퍼만 송신하고 공통 Form Pop 전송은 억제한다.
+    if (pool_.IsServer()) {
+        if (!(flags&kLocalMask)) {
+            if (!transmit_.writeData || !transmit_.transmit) throw std::logic_error("프로세스 Form 직렬화/송신 경계 필요");
+            auto* process=FromForm(form);if (!process) throw std::logic_error("프로세스 Form 직렬화 PID 오류");
+            const auto size=transmit_.writeData(*process,Word(form,kFormParent)!=parent.value);
+            if (!size || size>0x7ff) throw std::logic_error("프로세스 Form 직렬화 크기 오류");
+            if (size>0) transmit_.transmit(size);
+        }
+        flags|=0x40;
+    }
     // 004ac800: 부모 기록 → 기존 머리 앞에 연결 → 머리 교체 → 이전 항목 0 → contained.
     PutWord(form,kFormParent,parent.value);
     const auto head=Word(parent,kHead);
@@ -81,9 +92,8 @@ void SquidProcessHost::AttachForm(Sid form,Sid parent,std::uint32_t flags) {
     PutWord(form,kFormPrevious,0);
     auto raw=pool_.AllocatedBytes(form);
     raw[kState]|=kContained;
-    // 004ac560: void를 끈다. 전송은 로컬 flags로 건너뛰고 postPop 깊이는 form의 postPop이 바로 되돌린다.
-    if (!(raw[kState]&kVoid)) throw std::logic_error("프로세스 form Pop은 void 상태여야 합니다");
-    raw[kState]&=static_cast<std::uint8_t>(~kVoid);
+    // 서버의 위 경계가 전송을 완료했으므로 공통 Form Pop은 void 해제/flags 정규화만 수행한다.
+    SquidForms(pool_).Pop(form,flags|0x100);
 }
 SquidProcess* SquidProcessHost::Attach(std::unique_ptr<SquidProcess> process,std::uint32_t processType,Sid parent,std::uint32_t flags,Sid form) {
     if (!process) throw std::invalid_argument("부착할 프로세스가 없습니다");
@@ -97,8 +107,8 @@ SquidProcess* SquidProcessHost::Attach(std::unique_ptr<SquidProcess> process,std
         if (patch) return nullptr;
         throw std::logic_error("CD판의 free/dead 부모 부착은 지원하지 않습니다");
     }
-    // 서버는 로컬 flags가 없으면 프로세스를 직렬화해 전송한다. 그 경로는 복원하지 않았다.
-    if (pool_.IsServer() && !(flags&kLocalMask)) throw std::logic_error("프로세스 전송 직렬화는 복원하지 않았습니다");
+    // Gun/Path의 flags0은 서버 Form을 만든다. 연결하지 않은 전송기를 로컬 flags로 우회하지 않는다.
+    if (pool_.IsServer() && !(flags&kLocalMask) && (!transmit_.writeData || !transmit_.transmit)) throw std::logic_error("프로세스 Form 서버 전송 경계가 필요합니다");
     if (form.value) {
         if (form.value<pool_.Layout().serverFirst || form.value>=pool_.Capacity() || form.value==pool_.Layout().predictableFirst)
             throw std::out_of_range("지정 프로세스 form은 예약 머리를 제외한 서버 번호여야 합니다");
@@ -151,7 +161,7 @@ SquidProcess* SquidProcessHost::Reattach(SquidProcess& process,std::uint32_t pro
     if (free) {
         if (form.value<pool_.Layout().serverFirst || form.value==pool_.Layout().predictableFirst)
             throw std::out_of_range("free 재수신 form은 예약 머리를 제외한 서버 번호여야 합니다");
-        if (pool_.IsServer() && !(flags&kLocalMask)) throw std::logic_error("프로세스 전송 직렬화는 복원하지 않았습니다");
+        if (pool_.IsServer() && !(flags&kLocalMask) && (!transmit_.writeData || !transmit_.transmit)) throw std::logic_error("프로세스 Form 서버 전송 경계가 필요합니다");
         if (types_.at(processType).flags2&kNoContainerGenus) throw std::logic_error("재수신 form genus 오류");
         const auto head=Word(parent,kHead);
         if (head==form.value || head>=pool_.Capacity() || (head && (head<5 || head==pool_.Layout().predictableFirst || (pool_.Slot(Sid{head})[kState]&kFree))))
@@ -188,6 +198,20 @@ RegularProcess* SquidProcessHost::AddSharedRegular(Sid parent,std::uint32_t even
 }
 // 실제 부착과 사제 낙하 연결이 같은 풀인지 검사할 때 사용한다.
 const SidPool& SquidProcessHost::Pool() const { return pool_; }
+// 현재 사건 표를 교체해 이미 생성된 Regular와 새 Regular가 같은 파생 월드 처리기를 사용하게 한다.
+void SquidProcessHost::SetRegularHandler(RegularHandler handler) { handler_=std::move(handler); }
+// 전송 정책을 우회하는 flags 변경 없이 현재 미션 직렬화 경계만 갱신한다.
+void SquidProcessHost::SetFormTransmit(ProcessFormTransmission transmit) { transmit_=std::move(transmit); }
+// 현재 raw 부모를 다시 읽어 프로세스의 오래된 parent 복사값으로 재부착하지 않는다.
+void SquidProcessHost::RefreshForm(SquidProcess& process) {
+    if (process.host_!=this || !IsRegistered(process.pid_,&process)) throw std::logic_error("Form 갱신 프로세스 소유권 오류");
+    const auto form=process.Form();const auto parent=SquidForms(pool_).Parent(form);
+    if (!parent.value || parent.value>=pool_.Capacity() || (pool_.Slot(parent)[kState]&(kFree|kDead)))
+        throw std::logic_error("Form 갱신 부모 상태 오류");
+    if (pool_.IsServer() && (!transmit_.writeData || !transmit_.transmit))
+        throw std::logic_error("Form 갱신 서버 전송 경계가 필요합니다");
+    UnpopForm(form);AttachForm(form,parent,0);
+}
 void SquidProcessHost::UnpopForm(Sid form) {
     SquidForms(pool_).Unpop(form);
 }

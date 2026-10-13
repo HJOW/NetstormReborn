@@ -3,6 +3,7 @@
 #include "o/Kernel.h"
 #include "o/RawBridgeLifecycle.h"
 #include "o/RawSquidDestroy.h"
+#include "o/SquidForms.h"
 #include <functional>
 #include <memory>
 
@@ -59,12 +60,17 @@ struct SquidProcessState {
 };
 // 부모 객체의 이벤트 처리기(vtable +0x5c)다. 원본 base(00496e70)는 payload를 그대로 돌려준다.
 using RegularHandler=std::function<float(Sid parent,std::uint32_t event,std::uint32_t count,float payload)>;
+// 004b1440/CD 004af380의 파생 WriteData→공유 버퍼 송신 경계다. 버퍼 자체는 직렬화기가 소유한다.
+struct ProcessFormTransmission {
+    std::function<std::int32_t(SquidProcess&,bool parentChanged)> writeData;
+    std::function<void(std::int32_t length)> transmit;
+};
 
 class SquidProcessHost {
 public:
     // 풀/Kernel/공통 삭제/상태는 호출자가 소유하며 host보다 오래 살아야 한다. asset은 form이 아닌 객체의 삭제 훅이다.
     SquidProcessHost(SidPool& pool,std::span<const RiftTypeRecord> types,Kernel& kernel,RawSquidDestroy& destroy,
-        SquidProcessState& state,RegularHandler handler={},SquidDestroyHooks asset={});
+        SquidProcessState& state,RegularHandler handler={},SquidDestroyHooks asset={},ProcessFormTransmission transmit={});
     // 0041bd20 ↔ CD 0048f590: Kernel 등록 → ProcessForm 생성/지정 슬롯 Take → 타입/pid 기록 → 부모 부착 → OnAttached.
     // 패치판은 부모가 free/dead이면 등록하지 않고 null을 반환한다. CD판의 그 경로(assert 뒤 계속)는 지원하지 않는다.
     // form=0은 기존 번호 할당이다. 신규 포인터의 지정 form은 free 서버 번호를 받고 raw payload·풀 목록/카운터를 보존한다.
@@ -82,6 +88,13 @@ public:
     RegularProcess* AddSharedRegular(Sid parent,std::uint32_t event,float payload);
     // 모듈을 연결할 때 다른 월드의 풀을 섞지 않도록 참조를 제공한다.
     const SidPool& Pool() const;
+    // 월드 파생 사건을 등록할 때 기존 fallback을 합성한 실제 처리기를 교체한다. 다음 Regular 호출은 현재 처리기를 읽는다.
+    void SetRegularHandler(RegularHandler handler);
+    // 미션 runtime의 실제 직렬화기를 연결한다. 기존 프로세스도 다음 Pop에서 이 경계를 읽는다.
+    void SetFormTransmit(ProcessFormTransmission transmit);
+    // 0041c010/CD 0048f8d0: 현재 부모를 읽고 live Form Unpop(0)→같은 부모 Attach(flags0)을 수행한다.
+    // 파생 OnAttached를 다시 부르지 않으며 서버 전송이 필요한 경우 현재 전송 경계를 사용한다.
+    void RefreshForm(SquidProcess& process);
     // 0041bf10 ↔ CD 0048f7b0: 권한 조건이 맞으면 form을 공통 destroy로 지운다. 프로세스는 form의 preDestroy에서 소멸한다.
     void Kill(SquidProcess& process,std::uint32_t flags);
     // 그 번호의 Kernel 슬롯에 지금도 이 프로세스가 등록돼 있는지 본다. 주소만 비교하고 객체를 읽지 않으므로
@@ -126,6 +139,7 @@ private:
     SquidProcessState& state_;
     RegularHandler handler_;
     SquidDestroyHooks asset_;
+    ProcessFormTransmission transmit_; // 실제 서버 부착의 파생 WriteData/공유 버퍼 송신 경계다.
 };
 // 00421530 ↔ CD 004490b0: 다리 칸에 지연 낙하 이벤트(0x2692)를 예약한다. payload는 좌표를 포장한 값이다.
 RegularProcess* ScheduleBridgeFall(SquidProcessHost& host,Sid bridge,float x,float y);

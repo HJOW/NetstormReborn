@@ -3,6 +3,10 @@
 # 테스트 파일을 만들면 아래 목록에 더한다. 파일 안의 TEST_CASE 는 자동으로 등록된다.
 add_executable(netstorm_tests
     ProcessRetakeTests.cpp
+    FortObjectLoadTests.cpp
+    FortFinishOwnerTests.cpp
+    GunProcessTests.cpp
+    RawPathRuntimeTests.cpp
     RawButtonControlsTests.cpp
     GumpResetTests.cpp
     MissionOutcomeTests.cpp
@@ -34,6 +38,7 @@ add_executable(netstorm_tests
     ConstructionVisualTests.cpp
     ContainedLookupTests.cpp
     ProcessFormTests.cpp
+    ProcessTransmitTests.cpp
     FormTakeTests.cpp
     ConstructionTimeTests.cpp
     ConstructionDataTests.cpp
@@ -447,6 +452,16 @@ set_source_files_properties(ConstructionDataTests.cpp PROPERTIES COMPILE_DEFINIT
 # 지정 free form/즉시 단일 분배의 저장 PE 관찰만 읽으며 실제 게임을 실행하지 않는다.
 set_source_files_properties(ProcessFormTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PROCESSFORM_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/processform-x86.tsv\"")
+set_source_files_properties(ProcessTransmitTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PROCESSTRANSMIT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/processtransmit-x86.tsv\"")
+set_source_files_properties(FortObjectLoadTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FORTOBJECTLOAD_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fortobjectload-x86.tsv\"")
+set_source_files_properties(FortFinishOwnerTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FORTFINISHOWNER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fortfinishowner-x86.tsv\"")
+set_source_files_properties(GunProcessTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_GUNPROCESS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gunprocess-x86.tsv\"")
+set_source_files_properties(RawPathRuntimeTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PATHRUNTIME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/pathruntime-x86.tsv\"")
 
 # 내장 Form/공통 Unpop/풀 재확보의 두 실제 PE 600개 저장 관찰을 직접 대조한다.
 set_source_files_properties(FormTakeTests.cpp PROPERTIES COMPILE_DEFINITIONS

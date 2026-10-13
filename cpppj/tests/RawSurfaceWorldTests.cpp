@@ -133,3 +133,37 @@ TEST_CASE(RawSurfaceWorld_InvalidLoadRejectedBeforeAllocation) {
     seeds=Seeds();seeds.back().owner=9;CHECK(Throws([&] { world->Load(seeds); }) && world->Report()==before);
     world->Load(Seeds());const auto loaded=world->Report();CHECK(Throws([&] { world->Load(Seeds()); }) && world->Report()==loaded);
 }
+// 외부 미션 모듈의 같은 풀/전송/현재 Form 분배를 실제 Kernel·공간·삭제에 연결한다.
+TEST_CASE(RawSurfaceWorld_RuntimeSharesStorageAndCurrentDispatch) {
+    // 두 판본의 raw stride와 서버 Form 번호를 실제 모듈에 그대로 적용한다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
+        Inputs input(edition);constexpr std::uint32_t type=100; // 합성 타입은 원본 base 생성자/가상 몸체를 사용한다.
+        input.types[type].flags1=0x10;input.types[type].footX=input.types[type].footY=1;
+        input.frames[type]=RiftTypeFrames({FrameCode{'A','A',0,0}});
+        input.shapes[type]={1,true,{SquidDisplayFrame{20,16,8,12,1,1}}};
+        auto world=input.Make(edition);auto core=world->Core();const auto originalHooks=core.forms.Hooks();Sid selected{};
+        std::vector<std::uint32_t> depths;std::uint32_t writes=0,sends=0,regulars=0;
+        RawWorldRuntimeHooks hooks;hooks.assets=core.surfaces.Hooks();hooks.assets.selected=[&] { return selected; };
+        hooks.destroy=[&](Sid sid,std::uint32_t flags,const SquidDestroyHooks& effects) { return core.virtualDestroy.Destroy(sid,flags,effects); };
+        hooks.regular=[&](Sid,std::uint32_t event,std::uint32_t count,float payload) { CHECK(event==77 && count==0 && payload==0.25F);++regulars;return 0.0F; };
+        hooks.transmit={[&](SquidProcess& process,bool changed) { CHECK(changed && core.pool.Slot(process.Form())[11]&4);++writes;return 8; },
+            [&](std::int32_t length) { CHECK(length==8);++sends; }};
+        hooks.walkerFall=[](Sid)->bool { throw std::logic_error("이번 검사는 낙하를 만들지 않습니다"); };
+        hooks.loadingDepth=[&](std::uint32_t depth) { depths.push_back(depth); };
+        world->BindRuntime(std::move(hooks));CHECK(core.hash.Entries(0).data()==world->Core().hash.Entries(0).data());
+        world->BeginLoad();const auto object=world->Create(type);core.owner.Set(object,1);world->Pop(object,25,25,9);world->FinishLoad();
+        CHECK(world->Objects().size()==1 && world->Objects()[0].sid==object && world->Objects()[0].object.x==25);
+        CHECK(depths==std::vector<std::uint32_t>({1,1,0}) && core.bookkeeping.depth==0);
+        selected=object;CHECK(originalHooks.selected()==object);selected={};
+        auto* timer=core.processes.AddRegular(object,77,0.25F,0);CHECK(timer && writes==1 && sends==1 && core.kernel.Size()==1);
+        world->RunFrame({1,1,1,1},false);CHECK(regulars==1 && core.kernel.Size()==0);
+        world->Unpop(object,0);CHECK(world->Objects().empty());world->Repop(object,0x40);CHECK(world->Objects().size()==1);
+        CHECK(world->Destroy(object) && world->Objects().empty());world->ClearProcesses();
+    }
+}
+// 필수 경계 누락/늦은 설치는 이미 존재하는 공간/객체/예약을 바꾸지 않는다.
+TEST_CASE(RawSurfaceWorld_RuntimeRejectsIncompleteOrLateBinding) {
+    auto world=Inputs(OriginalEdition::Patch1078).Make(OriginalEdition::Patch1078);const auto before=world->Report();
+    CHECK(Throws([&] { world->BindRuntime({}); }) && world->Report()==before);
+    world->Load(Seeds());const auto loaded=world->Report();CHECK(Throws([&] { world->BindRuntime({}); }) && world->Report()==loaded);
+}

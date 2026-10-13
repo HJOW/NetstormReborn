@@ -18,6 +18,8 @@ public:
     void Bind(GumpFormHost& forms);
     void Bind(ContentFormLifetime& forms);
     void Bind(SquidProcessHost& processes);
+    // 비표면 runtime을 같은 풀에 구성한 뒤 자산 경계를 교체한다. 등록된 Form 훅은 그대로 현재 경계를 읽는다.
+    void SetAssets(SquidDestroyHooks assets,SquidAssetDestroy assetDestroy);
     // 현재 타입별 가상 루트 삭제다. 자산의 별도 재정의는 assetDestroy를 사용하고 Form은 공통 몸체에 들어간다.
     bool Destroy(Sid sid,std::uint32_t flags=0) const;
     // 모든 Form 효과/Unpop은 현재 타입에 따라 분배하며 전송·선택 해제는 공통 자산 경계로 곧바로 전달한다.

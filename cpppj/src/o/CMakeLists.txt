@@ -3,6 +3,11 @@
 # 다시 만든 파일을 아래 목록에 더한다. 파일 이름은 SOURCE_MAP.md 의 "cpppj 경로"를 따른다.
 target_sources(netstorm PRIVATE
     RawMissionOutcome.cpp RawMissionOutcome.h
+    RawFortObjectLoad.cpp RawFortObjectLoad.h
+    RawFortFinishOwner.cpp RawFortFinishOwner.h
+    RawGunProcess.cpp RawGunProcess.h
+    RawPathRuntime.cpp RawPathRuntime.h
+    RawPathProcess.cpp RawPathProcess.h
     BaseFile.cpp BaseFile.h
     Config.cpp Config.h
     ConfigInterface.cpp ConfigInterface.h

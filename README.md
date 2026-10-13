@@ -10,6 +10,8 @@ AI 를 이용해 되살리는 프로젝트입니다.
 
 # 현재 개발 진행상황 관련
 
+2026-10-13 cpppj 후속: [실제 Fort 객체 로더](docs/exe/cpp-raw-fort-object-load.md)·[소유 레지던스 후처리](docs/exe/cpp-raw-fort-finish-owner.md), [GunProcess](docs/exe/cpp-gun-process.md), [Path 시간/단계/프레임/도착](docs/exe/cpp-raw-path-runtime.md) 및 [ProcessForm 서버 직렬화·공유 월드 연결](docs/exe/cpp-process-form-transmission.md)을 복원/검증했습니다. 신규 원본/C++ 대조 **6,388개**, 전체 **928개/실패0**, Release 경고/오류0입니다. **GameWorld 비표면 객체의 실제 core 이관·원본 경로 검색/표적/애니메이션·건설/전투/사제 운반·의식/승패 연결과 캠페인1-1 완주는 미완료**이며 [인수인계](LEFT_JOBS.md)에 검증 범위와 후속 작업을 구분했습니다. DirectDraw 전체화면 수정은 제외했습니다.
+
 2026-10-13 cpppj 후속: [건물 Pop/Unpop 공간](docs/exe/cpp-building-space.md), [자산 postPop](docs/exe/cpp-asset-postpop.md), [사제·보호막 월드 연결 모듈](docs/exe/cpp-raw-priest-world-bindings.md), [SP 회전](docs/exe/cpp-sp-rotation.md), [건설 운반 도착](docs/exe/cpp-construction-arrival.md)을 복원했습니다. Builder 타이머의 event/payload 반전도 실제 생성자에 맞춰 교정했습니다. 신규 원본/C++ 대조 **5,318개**, 전체 검사 **904개/실패0**, Release 경고/오류0입니다. **비표면 실제 미션 월드 이관·이동/건설/전투/운반·의식 연결과 캠페인 1-1 완주는 미완료**이며 [인수인계](LEFT_JOBS.md)에 다음 단위와 실패/최종 근거를 기록했습니다.
 
 2026-10-13 cpppj 후속: [실제 Client 돌 버튼](docs/exe/cpp-raw-button-controls.md)을 raw 생성·트리·캡처·프레임·수명에 연결했습니다. [지정 프로세스 재부착/Kernel 정리](docs/exe/cpp-process-retake.md), [UI 정리/루트 교체](docs/exe/cpp-ui-reset-analysis.md), [사제 상태/동맹 기반 승패](docs/exe/cpp-mission-outcome.md)를 복원하고 두 PE **1,358개** 독립 입력의 C++ 대조를 통과했습니다. 클론 메뉴·브리핑·옵션·복귀 54상태와 월드 release/재진입 10상태, 원본 함수·독립 자산 해독의 버튼/배경 픽셀 대조가 통과했습니다. **건설·전투·사제 운반/의식과 실제 승패 실행 연결·캠페인 1-1 완주는 미완료**입니다. 전체 회귀와 다음 작업은 [최신 인수인계](LEFT_JOBS.md)를 따릅니다.
