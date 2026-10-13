@@ -2,6 +2,10 @@
 # (첫 구성 때 인터넷에서 내려받을 것이 없다).
 # 테스트 파일을 만들면 아래 목록에 더한다. 파일 안의 TEST_CASE 는 자동으로 등록된다.
 add_executable(netstorm_tests
+    # 준비된 원본 관찰과 실제 캠페인 부모·Player 예약·Burning 프레임을 대조한다.
+    CampaignWorldLoadTests.cpp
+    PlayerRegularTests.cpp
+    BurningFrameTests.cpp
     ProcessRetakeTests.cpp
     FortObjectLoadTests.cpp
     FortFinishOwnerTests.cpp
@@ -823,3 +827,10 @@ set_source_files_properties(CarrierArrivalTests.cpp PROPERTIES COMPILE_DEFINITIO
     "NETSTORM_CARRIERARRIVAL_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrierarrival-x86.tsv\"")
 set_source_files_properties(PlayerWorldTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PLAYER_WORLD_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/player-world-x86.tsv\"")
+# 각 새 검사에서 독립 원본 fixture를 읽도록 해당 번역단위에만 경로를 지정한다.
+set_source_files_properties(CampaignWorldLoadTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CAMPAIGN_WORLDLOAD_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/campaign-worldload-x86.tsv\"")
+set_source_files_properties(PlayerRegularTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PLAYER_REGULAR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/player-regular-x86.tsv\"")
+set_source_files_properties(BurningFrameTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_BURNINGFRAME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/burningframe-x86.tsv\"")

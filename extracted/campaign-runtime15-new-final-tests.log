@@ -1,0 +1,10 @@
+[ OK ] CampaignWorldLoad_PatchNativeParentRequestsAndFullCurrentBytes
+[ OK ] CampaignWorldLoad_CdNativeParentRequestsAndFullCurrentBytes
+2 test(s), 0 failed check(s)
+[ OK ] PlayerRegular_PatchNativeStateAndActualHost
+[ OK ] PlayerRegular_CdNativeStateAndActualHost
+[ OK ] PlayerRegular_SameWorldInitialFiveAndSixtySecondChain
+3 test(s), 0 failed check(s)
+[ OK ] BurningFrame_PatchNativeCaptureSourcesParticlesAndDirty
+[ OK ] BurningFrame_CdNativeCaptureSourcesParticlesAndDirty
+2 test(s), 0 failed check(s)

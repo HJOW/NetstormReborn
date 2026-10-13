@@ -13,7 +13,7 @@ constexpr double kTickScale=10.0,kRandomUnit=1.0/65536.0;
 constexpr std::int32_t kInset=100,kRowsDivisor=5;
 constexpr float kEmitMaximum=1.4f,kLifeMinimum=4,kLifeMaximum=9,kRise=-2;
 // 원본 ftol의 정상 유한 범위를 확인한 뒤0 방향으로 정수화한다.
-std::int32_t FrameInteger(float value) {
+std::int32_t FrameInteger(double value) {
     if (!std::isfinite(value) || value<-2147483648.0 || value>=2147483648.0)
         throw std::out_of_range("Burning frame 원본 정수화 범위 오류");
     return static_cast<std::int32_t>(value);
@@ -85,11 +85,18 @@ bool RawBurningFrame::Visible(const RenderProcessFields& registration) const {
     const auto viewRight=static_cast<std::int64_t>(view.right)-margin,viewBottom=static_cast<std::int64_t>(view.bottom)-margin;
     return viewLeft<=viewRight && viewTop<=viewBottom && left<=right && top<=bottom && viewLeft<right && left<viewRight && viewTop<bottom && top<viewBottom;
 }
-// SetRect의 dirty wrapper는 camera를 빼지 않고 현재 viewport로 양끝을 제한한다.
+// SetRect는 양끝을1픽셀 확장하고 카메라를 뺀 넓은 값을 정수화한 뒤 viewport로 제한한다.
 void RawBurningFrame::Invalidate(float left,float top,float right,float bottom) const {
     const auto& view=state_.viewport;
-    SquidDisplayRect rect{std::clamp(FrameInteger(left),view.left,view.right),std::clamp(FrameInteger(top),view.top,view.bottom),
-        std::clamp(FrameInteger(right),view.left,view.right),std::clamp(FrameInteger(bottom),view.top,view.bottom)};
+    const bool patch=pool_.Edition()==OriginalEdition::Patch1078; // 패치와CD의x87 감산 순서를 구별한다.
+    // 패치는 여백→카메라, CD는 카메라→여백 순서로 넓은 좌표를 계산한다.
+    const auto coordinate=[patch](float value,float camera,double edge) {
+        return FrameInteger(patch ? (static_cast<double>(value)+edge)-camera : (static_cast<double>(value)-camera)+edge);
+    };
+    SquidDisplayRect rect{std::clamp(coordinate(left,state_.cameraX,-1),view.left,view.right),
+        std::clamp(coordinate(top,state_.cameraY,-1),view.top,view.bottom),
+        std::clamp(coordinate(right,state_.cameraX,1),view.left,view.right),
+        std::clamp(coordinate(bottom,state_.cameraY,1),view.top,view.bottom)};
     if (rect.left<rect.right && rect.top<rect.bottom) sink_.Invalidate(rect,0);
 }
 // capacity0・초기캡처・첫좌표・visible timer・source와 모든capacity입자의 실제 순서다.

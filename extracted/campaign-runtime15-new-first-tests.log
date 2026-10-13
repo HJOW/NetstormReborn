@@ -1,0 +1,33 @@
+﻿[ OK ] CampaignWorldLoad_PatchNativeParentRequestsAndFullCurrentBytes
+[ OK ] CampaignWorldLoad_CdNativeParentRequestsAndFullCurrentBytes
+2 test(s), 0 failed check(s)
+H:\T5Workspace\NetstormReborn\cpppj\tests\TestMain.cpp(62): CHECK failed: 표면 삭제 연결 객체 타입 범위 오류
+[ OK ] PlayerRegular_PatchNativeStateAndActualHost
+[ OK ] PlayerRegular_CdNativeStateAndActualHost
+[FAIL] PlayerRegular_SameWorldInitialFiveAndSixtySecondChain
+3 test(s), 1 failed check(s)
+H:\T5Workspace\NetstormReborn\cpppj\tests\BurningFrameTests.cpp(81): CHECK failed: same
+H:\T5Workspace\NetstormReborn\cpppj\tests\BurningFrameTests.cpp(81): CHECK failed: same
+H:\T5Workspace\NetstormReborn\cpppj\tests\BurningFrameTests.cpp(81): CHECK failed: same
+H:\T5Workspace\NetstormReborn\cpppj\tests\BurningFrameTests.cpp(81): CHECK failed: same
+H:\T5Workspace\NetstormReborn\cpppj\tests\BurningFrameTests.cpp(81): CHECK failed: same
+H:\T5Workspace\NetstormReborn\cpppj\tests\BurningFrameTests.cpp(89): CHECK failed: !failures && count==expectedCount
+H:\T5Workspace\NetstormReborn\cpppj\tests\BurningFrameTests.cpp(81): CHECK failed: same
+H:\T5Workspace\NetstormReborn\cpppj\tests\BurningFrameTests.cpp(81): CHECK failed: same
+H:\T5Workspace\NetstormReborn\cpppj\tests\BurningFrameTests.cpp(81): CHECK failed: same
+H:\T5Workspace\NetstormReborn\cpppj\tests\BurningFrameTests.cpp(81): CHECK failed: same
+H:\T5Workspace\NetstormReborn\cpppj\tests\BurningFrameTests.cpp(81): CHECK failed: same
+H:\T5Workspace\NetstormReborn\cpppj\tests\BurningFrameTests.cpp(89): CHECK failed: !failures && count==expectedCount
+originals BurningFrame 행67 결과13 기대4,12,31,36,0 / 실제12,13,30,35,0;5,19,22,22,0
+originals BurningFrame 행68 결과13 기대4,12,31,36,0 / 실제12,13,30,35,0;5,19,22,22,0
+originals BurningFrame 행69 결과13 기대4,3,31,36,0 / 실제5,5,30,35,0
+originals BurningFrame 행70 결과13 기대4,3,31,36,0 / 실제5,5,30,35,0
+originals BurningFrame 행71 결과13 기대4,0,31,36,0 / 실제5,1,30,35,0
+[FAIL] BurningFrame_PatchNativeCaptureSourcesParticlesAndDirty
+originalCD BurningFrame 행67 결과13 기대4,12,31,36,0 / 실제12,13,30,35,0;5,19,22,22,0
+originalCD BurningFrame 행68 결과13 기대4,12,31,36,0 / 실제12,13,30,35,0;5,19,22,22,0
+originalCD BurningFrame 행69 결과13 기대4,3,31,36,0 / 실제5,5,30,35,0
+originalCD BurningFrame 행70 결과13 기대4,3,31,36,0 / 실제5,5,30,35,0
+originalCD BurningFrame 행71 결과13 기대4,0,31,36,0 / 실제5,1,30,35,0
+[FAIL] BurningFrame_CdNativeCaptureSourcesParticlesAndDirty
+2 test(s), 12 failed check(s)

@@ -75,6 +75,8 @@ target_sources(netstorm PRIVATE
     RawNormalTerrainWorldBinding.cpp RawNormalTerrainWorldBinding.h
     RawFortWorldLoadBinding.cpp RawFortWorldLoadBinding.h
     RawShapeToBuffer.cpp RawShapeToBuffer.h
+    # 같은 raw 피해객체와 실제 SHP에서 Burning 프레임의 최초 이미지를 얻는다.
+    BurningFrameCapture.cpp BurningFrameCapture.h
     RawPriestWorldBindings.cpp RawPriestWorldBindings.h
     UserInput.cpp UserInput.h
     Sound.cpp Sound.h

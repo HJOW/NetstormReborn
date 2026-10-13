@@ -136,7 +136,8 @@ TEST_CASE(PlayerRegular_CdNativeStateAndActualHost) { ReplayPlayerRegular("origi
 TEST_CASE(PlayerRegular_SameWorldInitialFiveAndSixtySecondChain) {
     // 두판본은현재보호Player자료와현재State28을각각소유한다.
     for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
-        const auto& assets=Assets(edition);netstorm::client::RawSurfaceWorld world(edition,assets.types,assets.frames,assets.shapes,{},97);auto core=world.Core();core.ownerMode.battle=true;
+        const auto& assets=Assets(edition);BridgeConnectState bridge;bridge.bridgeType=82;bridge.islandType=94;bridge.stalagType=95;bridge.connectorType=155;bridge.noIslandType=157;bridge.battle=true;bridge.mission=true;
+        netstorm::client::RawSurfaceWorld world(edition,assets.types,assets.frames,assets.shapes,bridge,97);auto core=world.Core();core.ownerMode.battle=true;
         PlayerWorldState state{1,1,2,152,false,false};std::vector<std::uint8_t> players(9*(edition==OriginalEdition::Patch1078 ? 0xb4U : 0xacU));std::array<std::uint8_t,180> headers{};
         std::array<std::vector<std::uint8_t>,9> data;std::array<PlayerTemplateStateStream,9> streams;std::array<std::string,9> names;std::uint32_t depth=1,diagnostics=0,changed=0;bool mission=true;core.processState.now=17.25;
         const auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());const auto stored=fort.Section("State");CHECK(stored.size()==28 && stored[0]==0x70);

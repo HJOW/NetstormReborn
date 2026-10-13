@@ -546,3 +546,7 @@ extracted/campaign-runtime14-rawPathRuntime_final-tests.log -text whitespace=cr-
 extracted/campaign-runtime14-rawPathStart_final-tests.log -text whitespace=cr-at-eol
 extracted/campaign-runtime14-RawPriestWorldBindings_final-tests.log -text whitespace=cr-at-eol
 extracted/campaign-runtime14-SquidPostPop_final-tests.log -text whitespace=cr-at-eol
+# 단위15의 현재 감사 도구와 최초실패/최종검사 로그의 원문 바이트를 유지한다.
+tools/analyze_campaign_runtime15.py text eol=lf
+tools/analyze_campaign_runtime15_corrections.py text eol=lf
+extracted/campaign-runtime15*.log -text whitespace=cr-at-eol

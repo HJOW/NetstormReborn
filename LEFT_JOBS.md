@@ -1,5 +1,14 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-14 목표 재개: 단위15 완료 및 경로 길이 정리 요청 (`HJOW-Athlon`)
+
+- [x] 사용자 재개 목표에 따라 AGENTS.md 전체와 양 LEFT의 최신 인수인계를 다시 읽었다. 이전 중단 요청은 이번 재개 지시로 해제된다. 현재/마지막 디컴파일 PC **HJOW-Athlon, 2026-10-14**로 일치한다. 작업 트리는 기준 `6d9589b`에서 깨끗했다. 기존 목표가 active이므로 새 목표를 중복 생성하지 않는다.
+- [x] 단위14 전체 SHA, 사제 cleanup, actual 캠페인 부모, PlayerRegular, BurningFrame 준비 lineage의 읽기 감사 통과. 단위14와 준비15의 전체144파일을 `cpppj/recovery-history/campaign-runtime15-baseline`에 보존했다. 기존 history는 재귀복사하지 않는다. 기존 보고서의 SHA를 변경하지 않는다.
+- [x] 단위15 캠페인 부모2/PlayerRegular3/BurningFrame2를 등록·검증했다. 최종 **Release 경고0/오류0, 새집중7/전체1088 실패0**, 전체SHA/교정감사 통과. 최초13체크 실패의 전체로그와 소스를 보존하고 Player 실제TYPE설정 및 Burning SetRect의원본계산만 교정했다. 기존원본 관찰1214입력(정상1086/assert104/미복원24)을 새 관찰로합산하지 않는다. 상세: [단위15](docs/exe/cpp-campaign-runtime15-20261014.md). `20261014-07` 로컬커밋 단위다.
+- [ ] 사용자 추가지시: 긴 파일/디렉토리 이름을 줄이고 레퍼런스를 수정하며 재발방지 기준을 문서화한다. 최초 Git추적 조사에서 절대경로240초과55개/200초과200개, 최장280자다. 최장경로는 보존history의중첩복사에서 발생했다. 단위15 커밋후 경로정리부터 진행하고 원래캠페인 목표를 계속한다. AGENTS.md/보호원본은 수정하지 않는다.
+- [ ] 후속: 동일9 Player 원문/현재battleOwner를 읽는 AssetPostPop API → PathBindings 최신 cleanup successor → 부모 Graph(false)를 중복하지 않는 로딩 최종화 → 실제172개 월드 설치 → GameWorld 입력/렌더링·경제/생산/전투/운반/AI/Guide/UI/음향·Early Missions/캠페인1-1~1-2 완주 동일성.
+- [ ] 전체화면 DirectDraw 오류 수정은 이번 목표에서 제외한다. AGENTS/보호 원본/dotnetpj 변경·push 금지. 이번 목표의 로컬 작업 단위 커밋만 사용자 지시에 따라 허용한다.
+
 ## 2026-10-14 사용자 요청에 따른 중단·재개 안내
 
 - [x] 사용자가 «현재 검사와 서브 에이전트 작업을 끝낸 뒤 인수인계 작성·git 커밋·작업 중단»을 명시적으로 요청했다. 서브 에이전트3명은 편집/실행을 종료했고 준비자료를 동결했다. 다음 단위 구현을 시작하지 않는다. 상세 기록: [단위14 검사 및 중단 인수인계](docs/exe/cpp-campaign-runtime14-20261014.md).
