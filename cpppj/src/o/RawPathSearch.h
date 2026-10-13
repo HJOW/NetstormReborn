@@ -6,6 +6,10 @@
 #include <memory>
 
 namespace netstorm::o {
+// 기존 Path의 가상 효과 묶음을 검색 어댑터 선언에서 참조한다. 본체는 RawPathProcess.h에 있다.
+struct RawPathProcessHooks;
+// 0040eaf0/CD0045b670의 실제 표면 번호를 같은 hash0에서 조회하며 큰 BFS 작업 배열은 확보하지 않는다.
+Sid RawPathSurfaceAt(const SquidHash& hash,RawPathPoint position);
 // Path.cpp가 직접 읽고 바꾸는 전역이다. 명령을 만든 부모의 owner를 별도 이동 허가 정책으로 바꾸지 않는다.
 struct RawPathSearchState {
     bool graphsEnabled{true}; // 00540414/CD005207f8: GraphAt 조회 허용 전역이며 번호254는 Graph 없음이다.
@@ -63,4 +67,6 @@ private:
     RawPathSearchState& state_;
     std::unique_ptr<RawPathSearchWork> work_; // 원본 lazy heap의 큰 배열을 호스트 stack에 두지 않는다.
 };
+// 같은 SID 풀의 BFS를 Path 검색 경계에 연결하고 기존 이동·도착·삭제 효과는 호출자의 실제 구현을 유지한다.
+RawPathProcessHooks MakePathSearchHooks(const SidPool& pool,RawPathSearch& search,RawPathProcessHooks hooks);
 }

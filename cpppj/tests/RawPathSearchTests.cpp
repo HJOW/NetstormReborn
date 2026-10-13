@@ -1,6 +1,9 @@
 // 두 원본 PE의 BFS/Graph/접합/전체 작업 배열을 같은 실제 raw 입력으로 대조한다.
 #include "RawSceneSupport.h"
 #include "o/RawPathSearch.h"
+#include "o/RawPathProcess.h"
+#include "o/SquidPop.h"
+#include "o/SquidUnpop.h"
 
 using namespace netstorm::o;
 using namespace netstorm::test::rawscene;
@@ -89,6 +92,26 @@ void CheckWork(const RawPathSearchWork& work,const std::vector<std::string>& row
     for (const auto& point:work.queue) { queue.push_back(point[0]);queue.push_back(point[1]); }
     CHECK(SearchFnv(distance)==Number(row[11]));CHECK(SearchFnv(queue)==Number(row[12]));
 }
+// 검색→Pop→Kernel 프레임→도착을 같은 raw 저장소에 연결한다. 부모의 가상 도착/음향만 명시 관찰 경계다.
+RawPathProcessHooks SearchProcessEffects(SearchScene& scene,SquidPop& pop,SquidUnpop& unpop,std::vector<std::string>& events) {
+    RawPathProcessHooks hooks;
+    hooks.unpop=[&](Sid sid,std::uint32_t flags) { events.push_back("unpop");unpop.Unpop(sid,scene.types[scene.pool.Slot(sid)[10]],flags); };
+    hooks.pop=[&](Sid sid,RawPathPoint point,std::uint32_t flags) {
+        events.push_back("pop");CHECK(pop.Pop(sid,scene.types[scene.pool.Slot(sid)[10]],1,1,point.x,point.y,flags)==RawPopResult::Registered);
+    };
+    hooks.repop=[&](Sid sid,std::uint32_t flags) {
+        const auto raw=scene.pool.Slot(sid);events.push_back("repop");
+        CHECK(pop.Pop(sid,scene.types[raw[10]],1,1,std::bit_cast<float>(Get(raw,14)),std::bit_cast<float>(Get(raw,18)),flags)==RawPopResult::Registered);
+    };
+    // 도착·계속·효과 요청은 입력 경계의 응답과 순서를 기록하며 게임 부모 몸체 복원으로 세지 않는다.
+    hooks.halt=[](Sid) { return 10U; };
+    hooks.arrival=[&](Sid,std::uint32_t,std::uint32_t) { events.push_back("arrival");return 1000U; };
+    hooks.stepSound=[&](Sid,float,float,std::uint32_t sound) { CHECK(sound==0);events.push_back("sound"); };
+    hooks.soundId=[](Sid) { return 0U; };
+    hooks.clearBlocked=[](Sid,RawPathPoint,std::uint32_t,std::uint32_t) { throw std::logic_error("이번 경로 입력은 겹침을 만들지 않습니다"); };
+    hooks.cleanup=[&](RawPathRuntime&,Sid,std::uint32_t) { events.push_back("cleanup"); };
+    return hooks;
+}
 }
 // type/frame/Graph/거리/queue 전체 원본 입력을 실행한다.
 TEST_CASE(rawPathSearch_native_bfs_and_compression) {
@@ -109,4 +132,77 @@ TEST_CASE(rawPathSearch_current_surface_alias) {
     CHECK(search.SurfaceAt(scene.start)==Sid{6});CHECK(search.GraphAt(scene.start)==std::uint8_t{3});
     scene.hash.Cell(0,10,10)=0;CHECK(search.SurfaceAt(scene.start)==Sid{});CHECK(!search.GraphAt(scene.start));CHECK(!search.Search(scene.path,Sid{5},scene.start,scene.destination,0));
     CHECK(scene.path.Count()==0);
+}
+// 시작 표면0의 자연 반환은 누락 검색 경계보다 앞서며, 표면이 있으면 실제 BFS/flags/current에 연결한다.
+TEST_CASE(rawPathSearch_init_uses_current_surface_before_search) {
+    SearchScene scene(true);scene.Setup(0,1,true,6,false,0);const Sid parent{5};
+    Put(scene.pool.AllocatedBytes(parent),0,0x501dd0);SquidPop pop(scene.pool,scene.hash,scene.spots);SquidUnpop unpop(scene.pool,scene.hash,scene.spots);
+    SquidProcessState clock;RawPathProcessState state{clock};std::vector<SquidDisplayShape> shapes(scene.types.size());std::vector<std::string> events;
+    auto hooks=SearchProcessEffects(scene,pop,unpop,events);
+    RawPathProcess missing(scene.pool,scene.hash,scene.types,scene.frames,shapes,scene.spots,state,hooks,false);
+    const std::array<RawPathPoint,1> previous{{{9,9}}};const std::array<std::int32_t,1> direction{0};
+    missing.Runtime().SetPath(previous,direction);missing.Runtime().RestoreStep(1,45);
+    const auto surface=scene.hash.Cell(0,10,10);scene.hash.Cell(0,10,10)=0;
+    missing.InitializePath(parent,scene.destination,scene.start);CHECK(events.empty() && missing.Runtime().Current()==1 && missing.Runtime().Count()==1);
+    scene.hash.Cell(0,10,10)=surface;CHECK(Throws([&] { missing.InitializePath(parent,scene.destination,scene.start); }));CHECK(events.empty());
+    RawPathSearch search(scene.pool,scene.hash,scene.spots,scene.types,scene.frames,scene.state);
+    RawPathProcess process(scene.pool,scene.hash,scene.types,scene.frames,shapes,scene.spots,state,MakePathSearchHooks(scene.pool,search,hooks),false);
+    process.Runtime().SetPath(previous,direction);process.Runtime().RestoreStep(1,45);process.InitializePath(parent,scene.destination,scene.start,1);
+    CHECK(process.Runtime().Current()==0 && process.Runtime().Count()>2 && events==std::vector<std::string>{"pop"});
+    CHECK(!(scene.pool.Slot(parent)[11]&4) && scene.hash.Cell(1,4,4)==parent.value);
+    SidPool foreign(OriginalEdition::Patch1078,32768,false);CHECK(Throws([&] { MakePathSearchHooks(foreign,search,hooks); }));
+}
+// 원본 검색 꼭짓점을 실제 Kernel에서 한 단계씩 진행해 공간 갱신·1000 도착의 Form 삭제까지 같은 저장소를 사용한다.
+TEST_CASE(rawPathSearch_kernel_moves_and_arrives_in_same_space) {
+    // 두 판본의 stride·Form·시각 계산을 같은 조립 순서로 사용한다.
+    for (const bool patch:{true,false}) {
+        SearchScene scene(patch);scene.Setup(0,1,true,6,false,0);const Sid parent{5};
+        Put(scene.pool.AllocatedBytes(parent),0,patch ? 0x501dd0U : 0x5058d8U);
+        SquidPop pop(scene.pool,scene.hash,scene.spots);SquidUnpop unpop(scene.pool,scene.hash,scene.spots);
+        RawSquidDestroy destroy(scene.pool,unpop,scene.types);Kernel kernel(32);SquidProcessState clock;RawPathProcessState state{clock};
+        SquidProcessHost host(scene.pool,scene.types,kernel,destroy,clock);std::vector<std::string> events;
+        std::vector<SquidDisplayShape> shapes(scene.types.size());RawPathSearch search(scene.pool,scene.hash,scene.spots,scene.types,scene.frames,scene.state);
+        auto process=std::make_unique<RawPathProcess>(scene.pool,scene.hash,scene.types,scene.frames,shapes,scene.spots,state,
+            MakePathSearchHooks(scene.pool,search,SearchProcessEffects(scene,pop,unpop,events)),false);
+        auto* path=RawPathProcess::Attach(host,std::move(process),parent,0x10);CHECK(path && kernel.Size()==1);
+        path->InitializePath(parent,scene.destination,scene.start);path->Prepare(0,1,90);
+        const auto form=path->Form();const auto count=path->Runtime().Count();CHECK(count>=2);const auto destination=path->Runtime().Point(count-1);
+        // 한 호출에 한 꼭짓점만 넘는 실제 Step을 도착까지 필요한 횟수 안에서 호출한다.
+        for (int step=0;step<count+3 && kernel.Size();++step) { clock.now=100;kernel.RunFrame(); }
+        CHECK(kernel.Size()==0 && (scene.pool.Slot(form)[11]&1) && !(scene.pool.Slot(parent)[11]&4));
+        CHECK(std::bit_cast<float>(Get(scene.pool.Slot(parent),14))==destination.x && std::bit_cast<float>(Get(scene.pool.Slot(parent),18))==destination.y);
+        CHECK(std::find(events.begin(),events.end(),"arrival")!=events.end() && events.back()=="cleanup");
+    }
+}
+// 실제 Init의 표면0/존재·void/live·Graph·flags·기존 경로64개 출력을 가상 Pop 인자까지 대조한다.
+TEST_CASE(rawPathSearch_native_initialization_pipeline) {
+    const auto fixture=LoadFixture(NETSTORM_PATHINIT_FIXTURE);std::size_t count=0;
+    // 기대값은 실제 PE의 Init→표면 조회→BFS 관찰만 사용한다.
+    for (const auto& row:fixture.rows) {
+        const auto input=Split(row[1],',');CHECK(row.size()==12 && input.size()==5);const bool patch=row[0]=="originals";
+        SearchScene scene(patch);const auto profile=Number(input[0]),flags=Number(input[1]);const bool surface=Number(input[2])!=0,voidParent=Number(input[3])!=0,legacy=Number(input[4])!=0;
+        scene.Setup(static_cast<int>(profile),1,true,6,legacy,0);const Sid parent{5};auto raw=scene.pool.AllocatedBytes(parent);
+        Put(raw,0,patch ? 0x501dd0U : 0x5058d8U);raw[11]=voidParent ? 4 : 0;
+        Put(raw,14,std::bit_cast<std::uint32_t>(scene.start.x));Put(raw,18,std::bit_cast<std::uint32_t>(scene.start.y));
+        if (!surface) scene.hash.Cell(0,10,10)=0;
+        SquidPop pop(scene.pool,scene.hash,scene.spots);SquidUnpop unpop(scene.pool,scene.hash,scene.spots);
+        SquidProcessState clock;RawPathProcessState state{clock};std::vector<SquidDisplayShape> shapes(scene.types.size());std::vector<std::string> events;
+        RawPathSearch search(scene.pool,scene.hash,scene.spots,scene.types,scene.frames,scene.state);
+        auto hooks=SearchProcessEffects(scene,pop,unpop,events);const auto actualPop=hooks.pop;std::string popEvent="-";
+        // 명시 관찰 경계도 실제 공간 등록을 수행하며 원본이 넘긴 좌표/flags를 그대로 기록한다.
+        hooks.pop=[&,actualPop](Sid sid,RawPathPoint point,std::uint32_t value) {
+            popEvent="pop,"+std::to_string(std::bit_cast<std::uint32_t>(point.x))+','+
+                std::to_string(std::bit_cast<std::uint32_t>(point.y))+','+std::to_string(value);actualPop(sid,point,value);
+        };
+        RawPathProcess process(scene.pool,scene.hash,scene.types,scene.frames,shapes,scene.spots,state,MakePathSearchHooks(scene.pool,search,hooks),false);
+        process.Runtime()=scene.path;process.Runtime().RestoreStep(legacy ? 1 : 0,0);
+        process.InitializePath(parent,scene.destination,scene.start,flags);scene.path=process.Runtime();
+        CHECK(popEvent==row[2] && scene.path.Current()==static_cast<std::int32_t>(Number(row[3])) &&
+            scene.path.Count()==static_cast<std::int32_t>(Number(row[4])) && raw[11]==Number(row[5]) &&
+            Get(raw,14)==Number(row[6]) && Get(raw,18)==Number(row[7]) && scene.Points()==row[8]);
+        // 검색하지 않은 작업 배열도0이며, 검색한 배열의 전체 바이트는 native FNV와 같아야 한다.
+        const std::vector<std::string> workRow{row[0],"0","0","0","0","0","0","0","0","0","-",row[9],row[10],row[11]};
+        CheckWork(search.Work(),workRow);CHECK(scene.state.directionPrerequisite[3]==Number(row[11]));++count;
+    }
+    CHECK(count==64);
 }

@@ -40,8 +40,8 @@ public:
         RawPathProcessState& state,RawPathProcessHooks hooks,bool priest);
     // 원본 destructor는 deadFlag를 켠다. shared watch는 부모 callback이 this를 지운 뒤의 역참조를 막는다.
     ~RawPathProcess() override;
-    // 실제 Init +0x20은 void 시작 Pop→실제 경로 탐색→current=0 순서이며 자동 직선 경로는 없다.
-    void InitializePath(Sid parent,RawPathPoint destination,RawPathPoint start);
+    // 실제 Init +0x20은 시작 표면이 있을 때만 void Pop→검색→current=0을 실행한다. flags1은 직선 방향만 축약한다.
+    void InitializePath(Sid parent,RawPathPoint destination,RawPathPoint start,std::uint32_t flags=0);
     // +0x30의 현재 speed/turningSpeed 입력을 받는다. override=0이면 현재 타입 속도를 사용한다.
     void Prepare(float speedOverride,float speed,float turningSpeed);
     // type23 0048a950/CD0047efb0 및 type54 0048bb40/CD004805d0의 실제 실행 분기다.

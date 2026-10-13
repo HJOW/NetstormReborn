@@ -1,5 +1,13 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-13 진행 중 cpppj: 실제 경로 검색·Init·월드 연결 (`VM-W11-CODEX`)
+
+- [x] 최신 AGENTS.md·두 인수인계·goal active·현재/마지막 디컴파일 PC 일치 및 Java/Python/CMake live0을 확인했다. 앞선 본체 단위는 928개/6388개 검증 완료의 진행이고 중단된 후속은 재실행하지 않았다. 주석 보완으로 기존 SHA가 달라진 것은 `extracted/comment-audit/`의 토큰 불변 대응표와 함께 보존한다.
+- [x] `RawPathSearch`의 native **644개**를 현재 SHA로 재생성/감사하고 CMake·검사에 등록했다. 실제 hash0 `SurfaceAt`·같은 풀의 검색 어댑터를 `RawPathProcess`에 연결했다. Init은 실제 표면0이면 Pop·검색·current 쓰기를 모두 건너뛰고 표면이 있으면 flags를 전달한다. Init 실제 PE **64개**와 C++ 재생을 추가해 이번 신규 대조는 **708개**다. 기존 시간/단계 **360개**는 현재 SHA로 재감사했으며 합계에 다시 더하지 않는다.
+- [x] 새 집중 **5개**: native BFS/Init 재생, 표면 alias, 표면0/기존 경로 보존/다른 풀 거부, 실제 같은 풀의 Pop/Unpop·hash/spot·BFS·Kernel·도착1000/Form 삭제가 통과했다. native Init Pop과 C++ 합성 부모 Halt/Arrival·효과음·cleanup은 명시 관찰 경계이며 서버 Path/실제 사제 효과를 복원했다는 근거가 아니다. 최종 Release 경고·오류0, 전체 **933개/실패0**, CTest **96.63초** 통과. [상세 근거](docs/exe/cpp-raw-path-search.md), `recovery-campaign-pathsearch-evidence.json` 및 `extracted/campaign-pathsearch-*-final.log`. 원본 누적 **539,314개**, C++ 대조 누적 **539,054개**. 게임/GUI 실행0, 보호 파일·AGENTS.md·dotnetpj·커밋/푸시 변경0이다.
+- [x] 사용자 목표 수정에 따라 AGENTS.md·두 인수인계를 다시 읽었다. **이번 목표에 한하여 작업 단위별 커밋을 수행**하며 메시지는 `YYYYMMDD-NN 한줄요약`으로 쓴다. 커밋 실패 시에도 작업을 계속한다. 사용자 변경 AGENTS.md와 미완료 `decomp_fortrandomplacement_oracle.py`는 이번 경로 단위에 포함하지 않는다. 원격 push는 허용되지 않았다.
+- [ ] 다음 실제 미션 연결: 비표면 객체를 같은 raw pool/hash/spot에 이관할 때 남는 Factory/썬 아비어리 최초 후처리와 저장 로더/Regular/서버 Path 직렬화·명령/사제 운반·의식/승패를 실제 몸체로 닫는다. `GameWorld`의 기존 관찰 이동을 완료된 원본 이동으로 세지 않는다. DirectDraw 전체화면 수정은 제외하며 보호 파일·AGENTS.md·dotnetpj는 변경하지 않는다.
+
 ## 2026-10-13 완료: 구조체·멤버변수 한국어 주석 보완 (`VM-W11-Codex`)
 
 - [x] 사용자 요청에 따라 AGENTS.md와 두 LEFT_JOBS의 지침·현재 인수인계를 확인했다. 구조체·멤버변수를 추가한 주석 기준을 두 프로젝트의 직접 작성 소스·테스트에 소급 적용했다. 현재 PC는 cpppj의 마지막 디컴파일 PC와 일치한다. 새 디컴파일은 없으며 마지막 cpppj 디컴파일 수행 PC **VM-W11-CODEX, 2026-10-13** 기록을 유지한다.

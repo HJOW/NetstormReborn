@@ -7,6 +7,7 @@ add_executable(netstorm_tests
     FortFinishOwnerTests.cpp
     GunProcessTests.cpp
     RawPathRuntimeTests.cpp
+    RawPathSearchTests.cpp
     RawButtonControlsTests.cpp
     GumpResetTests.cpp
     MissionOutcomeTests.cpp
@@ -462,6 +463,8 @@ set_source_files_properties(GunProcessTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_GUNPROCESS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gunprocess-x86.tsv\"")
 set_source_files_properties(RawPathRuntimeTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PATHRUNTIME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/pathruntime-x86.tsv\"")
+set_source_files_properties(RawPathSearchTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PATHSEARCH_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/pathsearch-x86.tsv\";NETSTORM_PATHINIT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/pathinit-x86.tsv\"")
 
 # 내장 Form/공통 Unpop/풀 재확보의 두 실제 PE 600개 저장 관찰을 직접 대조한다.
 set_source_files_properties(FormTakeTests.cpp PROPERTIES COMPILE_DEFINITIONS

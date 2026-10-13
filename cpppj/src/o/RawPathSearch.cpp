@@ -1,5 +1,6 @@
 // BFS의 원본 방문 순서/거리/동률 비용/방향 전환 중복 꼭짓점을 보존한다.
 #include "o/RawPathSearch.h"
+#include "o/RawPathProcess.h"
 #include <algorithm>
 #include <bit>
 #include <cmath>
@@ -39,8 +40,12 @@ RawPathSearch::RawPathSearch(const SidPool& pool,const SquidHash& hash,std::span
 }
 // 표면 SID는 같은 실제 hash0 배열에서 조회한다.
 Sid RawPathSearch::SurfaceAt(RawPathPoint position) const {
+    return RawPathSurfaceAt(hash_,position);
+}
+// 거의 올림 좌표의 실제 지도 WORD만 읽어 Init의 자연 반환 앞에 힙 할당을 추가하지 않는다.
+Sid RawPathSurfaceAt(const SquidHash& hash,RawPathPoint position) {
     const int x=Cell(position.x),y=Cell(position.y);if (!Inside(x,y)) return {};
-    return Sid{hash_.Cell(0,x,y)};
+    return Sid{hash.Cell(0,x,y)};
 }
 // Graph 포인터의 동일성은 같은 표면 Graph BYTE의 동일성과 같다. 실제 inUse/cost/owner는 여기서 읽지 않는다.
 std::optional<std::uint8_t> RawPathSearch::GraphAt(RawPathPoint position) const {
@@ -71,7 +76,7 @@ void RawPathSearch::Append(std::vector<RawPathPoint>& points,std::vector<std::in
 // 미사용 queue byte는 다시 초기화하지 않는다. 원본은 거리표만 매 호출에서 전체 지운다.
 bool RawPathSearch::SearchCells(RawPathRuntime& output,int sx,int sy,int dx,int dy,bool cardinalOnly) {
     if (!Inside(sx,sy) || !Inside(dx,dy)) throw std::out_of_range("BFS 시작/끝 칸");
-    std::fill(work_->distance.begin(),work_->distance.end(),0);
+    std::fill(work_->distance.begin(),work_->distance.end(),std::int16_t{});
     if (pool_.Edition()==OriginalEdition::Patch1078 && state_.policySelector==5) state_.directionPrerequisite[3]=5;
     work_->queue[0]={static_cast<std::uint8_t>(sx),static_cast<std::uint8_t>(sy)};work_->distance[sy*256+sx]=1;
     std::uint32_t tail=1,head=0,layerEnd=1;std::int16_t distance=2;
@@ -140,4 +145,12 @@ bool RawPathSearch::Search(RawPathRuntime& output,Sid parent,RawPathPoint start,
 const RawPathSearchWork& RawPathSearch::Work() const { return *work_; }
 // 실제 PathProcess/월드 연결의 풀 일치를 검사한다.
 const SidPool& RawPathSearch::Pool() const { return pool_; }
+// 명령의 현재 시작·목적·flags를 그대로 원본 검색기에 전달한다. 성공 여부로 대체 경로를 만들지 않는다.
+RawPathProcessHooks MakePathSearchHooks(const SidPool& pool,RawPathSearch& search,RawPathProcessHooks hooks) {
+    if (&pool!=&search.Pool()) throw std::invalid_argument("Path 검색/프로세스 SID 풀 불일치");
+    hooks.search=[&search](RawPathRuntime& output,Sid parent,RawPathPoint start,RawPathPoint destination,std::uint32_t flags) {
+        static_cast<void>(search.Search(output,parent,start,destination,flags));
+    };
+    return hooks;
+}
 }

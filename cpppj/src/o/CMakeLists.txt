@@ -8,6 +8,7 @@ target_sources(netstorm PRIVATE
     RawGunProcess.cpp RawGunProcess.h
     RawPathRuntime.cpp RawPathRuntime.h
     RawPathProcess.cpp RawPathProcess.h
+    RawPathSearch.cpp RawPathSearch.h
     BaseFile.cpp BaseFile.h
     Config.cpp Config.h
     ConfigInterface.cpp ConfigInterface.h

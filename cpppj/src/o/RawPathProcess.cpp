@@ -1,5 +1,6 @@
 // 이동/도착은 실제 raw 공간 효과를 호출하고, 자기 삭제 뒤에는 shared watch만 읽는다.
 #include "o/RawPathProcess.h"
+#include "o/RawPathSearch.h"
 #include <algorithm>
 #include <bit>
 #include <cmath>
@@ -55,12 +56,12 @@ void RawPathProcess::SetFrame(Sid sid,std::int32_t frame) {
     // 패치 frame은 네 바이트 전체다.
     for (std::size_t i=0;i<4;++i) raw[36+i]=static_cast<std::uint8_t>(value>>(8*i));
 }
-// 원본 start 좌표가 보드 밖이면 경로/단계를 바꾸지 않는다.
-void RawPathProcess::InitializePath(Sid parent,RawPathPoint destination,RawPathPoint start) {
+// 원본은 좌표 범위만 검사하지 않고 실제 표면 번호가0이면 Pop/검색/current 쓰기를 모두 건너뛴다.
+void RawPathProcess::InitializePath(Sid parent,RawPathPoint destination,RawPathPoint start,std::uint32_t flags) {
+    if (!RawPathSurfaceAt(hash_,start).value) return;
     if (!hooks_.search) throw std::logic_error("실제 Path BFS 미복원 경계");
-    if (!(std::isfinite(start.x) && std::isfinite(start.y) && start.x>0 && start.y>0 && start.x<256 && start.y<256)) return;
     if ((pool_.Slot(parent)[11]&4)!=0) hooks_.pop(parent,start,0);
-    hooks_.search(runtime_,parent,start,destination,0);runtime_.ResetCurrent();
+    hooks_.search(runtime_,parent,start,destination,flags);runtime_.ResetCurrent();
 }
 // 외부 타입 속도는 mutable 원본 속성을 매 호출에서 읽어 공급해야 한다.
 void RawPathProcess::Prepare(float speedOverride,float speed,float turningSpeed) {

@@ -230,6 +230,8 @@ TEST_CASE(rawPathProcess_native_arrival) {
 // 실제 경로 탐색을 연결하지 않으면 Init은 명시적으로 멈춘다. 타입/풀 혼용도 부착 전에 거부한다.
 TEST_CASE(rawPathProcess_missing_search_and_pool) {
     PathScene scene(OriginalEdition::Patch1078,true);
+    // Init은 실제 표면 번호가 있을 때만 검색 경계를 요구한다. 이 검사는 해당 WORD 입력을 명시 공급한다.
+    const auto surface=scene.factory.Create(83,2);scene.hash.Cell(0,10,20)=surface.value;
     CHECK(Throws([&] { scene.process->InitializePath(scene.parent,{15,20},{10,20}); }));
     CHECK(scene.kernel.Size()==1);CHECK(scene.process->Runtime().Current()==0);
     scene.types[158].flags2|=0x10000;auto* freeze=scene.host.AddRegular(scene.parent,0x5105,100);
