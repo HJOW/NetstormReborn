@@ -1,5 +1,13 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-13 cpppj 준비: 패치판·CD판 정밀 디컴파일 재생성 (`HJOW-Athlon`)
+
+- [x] `AGENTS.md`, `LEFT_JOBS.md`, `LEFT_JOBS.dotnetpj.md`를 확인했다. 최신 기록의 마지막 디컴파일 PC는 `VM-W11-CODEX`였고 현재 호스트 `HJOW-Athlon`과 달라 정밀 디컴파일을 다시 수행했다.
+- [x] Ghidra 12.1.4로 `originals/Netstorm.exe`와 `originalCD/NETSTORM.EXE`를 정밀 분석했다. 최종 패치판은 **5,549개 성공·실패 0개**, CD판은 **5,822개 성공·실패 1개**다. CD판 실패는 `FUN_0049f99f`의 `Low-level Error: Cannot properly adjust input varnodes`이며 기존 기록과 같다.
+- [x] 최종 판본 대응은 **2,496쌍**(강 1,738·중 707·약 51), 호출 규약 일치 **2,313/2,379 (97.2%)**, `ret N` 일치 **2,339/2,389 (97.9%)**다. 결과·원본 SHA·인코딩 오류 복구 내역은 [재생성 기록](docs/exe/decompile-hjow-20261013.md)에 있다.
+- [x] 첫 실행은 Windows 기본 CP949에서 대조 요약을 출력하다 인코딩 오류로 끝났다. `PYTHONUTF8=1`과 `-SkipStage1`로 후속 단계를 마쳤고, 최종 `python tools/decomp_refine.py` 재계산은 종료 코드 0이었다. 생성물은 Git 제외 `extracted/refined/`에만 기록했다.
+- [x] 원본 두 EXE는 읽기만 했고 SHA-256 불변이다. 게임/GUI 실행, 빌드, 테스트, cpppj 소스 변경은 없었다. 마지막 디컴파일 수행 PC: **HJOW-Athlon, 2026-10-13**. 다음 cpppj 소스 분석은 이제 이 호스트의 정밀 결과를 사용한다.
+
 ## 2026-10-13 cpppj: 표적·서버 Path·미니맵 통지 연결 (`VM-W11-CODEX`)
 
 - [x] 중단 뒤 AGENTS.md·두 LEFT_JOBS·goal active·실제 깨끗한 트리와 현재/마지막 디컴파일 PC 일치를 재확인했다. 앞선 턴은 경로/Factory 두 완료 커밋과936개 검증의 **진행**이다. Factory 단위 커밋은 `1a6c408` (`20261013-02 워크샾과 썬 아비어리 후처리 복원 및 원본 대조`)다. CMake/Python/Java/단위 실행은 없고 남은 MSBuild는 `/nodemode:1 /nodeReuse:true`의 재사용 프로세스다.
