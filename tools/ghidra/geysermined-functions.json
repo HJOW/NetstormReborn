@@ -1,0 +1,7 @@
+{
+  "description": "실제 가이저 채집 handler·수량WORD setter·난수·현재isle 조회를 복원한다. 마지막 디컴파일 PC: HJOW-Athlon, 2026-10-13.",
+  "editions": {
+    "originals": ["004266c0", "004ac220", "004558f0", "0046f6e0", "0046f680", "004214a0", "0049a840", "004e49c0"],
+    "originalCD": ["004e41e0", "004abb00", "0048cc10", "004bdd80", "004bdd20", "00448c10", "004f161c"]
+  }
+}

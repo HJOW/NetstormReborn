@@ -1,5 +1,6 @@
 // 원본 flood의 소유자 방문 표시·직접 프레임 쓰기와 패치 경계 누적 순서를 보존한다.
 #include "o/RawRegionPaint.h"
+#include "o/RawFrameChoose.h"
 #include <algorithm>
 #include <bit>
 #include <cmath>
@@ -63,35 +64,11 @@ void RawRegionPaint::Initialize(std::optional<std::array<std::int32_t,99>>& valu
         (*values)[i]=value;
     }
 }
-// 원본 최대256개 후보와 실패 -1을 유지한다.
-std::int32_t RawRegionPaint::Choose(const RiftTypeFrames& frames,FrameCode code,std::int32_t theme) {
-    std::vector<std::int32_t> candidates;
-    // 각 검색은 프레임 코드 저장 순서대로 최대256개를 채운다.
-    const auto collect=[&](std::uint8_t side,std::optional<std::uint8_t> variant) {
-        candidates.clear();const auto codes=frames.Codes();
-        // 후보 수가 한계에 도달해도 원본 코드 배열 순회 의미는 동일하다.
-        for (std::size_t i=0;i<codes.size();++i)
-            if (codes[i].side==side && (!variant || codes[i].variant==*variant) && candidates.size()<256)
-                candidates.push_back(static_cast<std::int32_t>(i));
-    };
-    collect(code.side,code.variant);
-    if (candidates.empty()) { const auto normalized=TerrainBuilder::Normalize(static_cast<char>(code.side),static_cast<char>(code.variant));collect(static_cast<std::uint8_t>(normalized.first),static_cast<std::uint8_t>(normalized.second)); }
-    if (candidates.empty()) collect(code.side,static_cast<std::uint8_t>('A'));
-    if (candidates.empty()) collect(code.side,{});
-    if (candidates.empty()) return -1;
-    if (theme==-1) return candidates[random_.Next(static_cast<std::uint32_t>(candidates.size()))];
-    const auto quarter=static_cast<std::int32_t>(candidates.size()/4);
-    const auto low=quarter*theme+1,high=quarter*(theme+1);
-    if (high<=low) throw std::out_of_range("지역 프레임 quartile 난수 범위 오류");
-    const auto index=low+static_cast<std::int32_t>(random_.Next(static_cast<std::uint32_t>(high-low)));
-    if (index<0 || static_cast<std::size_t>(index)>=candidates.size()) throw std::out_of_range("지역 프레임 후보 범위 오류");
-    return candidates[static_cast<std::size_t>(index)];
-}
 // 기계어에서 두 cache 좌표 항은 요청 x/y이며 픽셀 residue는 현재 raw 좌표를 절삭한다.
 std::int32_t RawRegionPaint::Select(Sid sid,int x,int y,bool boundary) {
     const auto code=Code(sid);auto& cache=boundary ? state_.boundaryVariants : state_.coreVariants;Initialize(cache);
     const auto type=pool_.Slot(sid)[10];if (type>=frames_.size()) throw std::out_of_range("지역 도장 타입 번호 오류");
-    if (code.side!='A' || code.variant!='A') return Choose(frames_[type],code,state_.theme);
+    if (code.side!='A' || code.variant!='A') return ChooseTerrainFrame(frames_[type],code,state_.theme,random_);
     const auto raw=pool_.Slot(sid);const int px=Coordinate(raw,kX),py=Coordinate(raw,kY);
     const auto bx=(x/3)%99,by=(y/3)%99;
     if (bx<0 || by<0) throw std::out_of_range("지역 도장 변형 캐시 좌표 오류");

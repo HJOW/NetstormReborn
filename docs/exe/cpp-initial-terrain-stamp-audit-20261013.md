@@ -44,6 +44,6 @@ islandgenus이면 저장 지역127의 현재 chunk조회 분기/원본 assert와
 
 ## 권장 복원 경계와 검사 계획
 
-독립 `RawTerrainStamp`는 원본 code/지역/타입mapping/alias/bounds/context와 별도 CRTstate/전역99cache를 참조하고 `RawRegionPaint::Choose`의 실제 frame검색만 공유하는 형태가 맞는다. 같은 raw pool의 factory·owner·Pop·region setter를 필수효과로 연결하고 마지막에 동일 SID에 fringe도 생성한다. 기존 렌더 tiles나 GroundGrid를 또 다른 게임 상태로 만들면 현재 목표의 월드 이관이 완료되지 않는다.
+독립 `RawTerrainStamp`는 원본 code/지역/타입mapping/alias/bounds/context와 별도 CRTstate/전역99cache를 참조하고 `RawRegionPaint::Choose`의 실제 frame검색만 공유하는 형태가 맞는다. 같은 raw pool의 factory·owner·Pop·region setter를 필수효과로 연결하고 추가 fringe도 같은 풀의 **새 SID**로 생성한다. 기존 렌더 tiles나 GroundGrid를 또 다른 게임 상태로 만들면 현재 목표의 월드 이관이 완료되지 않는다.
 
 독립 검사는 AA/다른code·첫/재사용cache·CRT0/임의state·두 이웃mask·지역 같음/다름·bounds접촉·빈mapping·실패−1·최대 후보·초기theme0/CD전체후보·fringe제외/retry·실제 생성순서와 게임/CRT난수의 각 소비를 두 보호PE에서 대조해야 한다. `004bfe50`/CDstamp의 인자와 frameBYTE는 실제 PE명령에서 확인하고, 현재 복원된 Shape/Pop/PostPop을 같은 SID에 연결한 C++검사를 별도로 수행한다. 이번 감사는 이 구현/검사가 완료됐다는 보고가 아니다.

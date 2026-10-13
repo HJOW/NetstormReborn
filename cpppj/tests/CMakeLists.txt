@@ -19,6 +19,8 @@ add_executable(netstorm_tests
     MissileTests.cpp
     GunHitTests.cpp
     VortexAscendTests.cpp
+    GeyserMinedTests.cpp
+    PriestDamageTests.cpp
     RawButtonControlsTests.cpp
     GumpResetTests.cpp
     MissionOutcomeTests.cpp
@@ -651,3 +653,9 @@ set_source_files_properties(GunHitTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_GUNHIT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gunhit-x86.tsv\"")
 set_source_files_properties(VortexAscendTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_VORTEXASCEND_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/vortexascend-x86.tsv\"")
+
+# 실제 채집 패킷·사제 피격과 기존 HP 전환/피해 효과 판정의 양판본 원본 입력이다.
+set_source_files_properties(GeyserMinedTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_GEYSERMINED_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/geysermined-x86.tsv\"")
+set_source_files_properties(PriestDamageTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PRIESTDAMAGE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/priestdamage-x86.tsv\"")

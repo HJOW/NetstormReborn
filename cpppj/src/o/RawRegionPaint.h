@@ -59,8 +59,6 @@ private:
     static void Initialize(std::optional<std::array<std::int32_t,99>>& values);
     // AA는 원본 좌표/99캐시/36프레임 원소 구간을 쓰고 다른 코드는 실제 후보 검색을 사용한다.
     std::int32_t Select(Sid sid,int x,int y,bool boundary);
-    // 0049aa90의 최대256 후보·정규화/방향 폴백·quartile 선택이다.
-    std::int32_t Choose(const RiftTypeFrames& frames,FrameCode code,std::int32_t theme);
     // pool_: 소유자와 직접 프레임 대입의 실제 raw 슬롯 저장소다.
     SidPool& pool_;
     // frames_: 현재 타입별 코드·J 시작 번호의 조회 표다.

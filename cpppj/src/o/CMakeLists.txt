@@ -20,6 +20,10 @@ target_sources(netstorm PRIVATE
     RawMissile.cpp RawMissile.h
     RawGunHit.cpp RawGunHit.h
     RawVortexAscend.cpp RawVortexAscend.h
+    RawFrameChoose.cpp RawFrameChoose.h
+    RawGeyserMined.cpp RawGeyserMined.h
+    RawPriestDamage.cpp RawPriestDamage.h
+    RawDamageableBurning.cpp RawDamageableBurning.h
     BaseFile.cpp BaseFile.h
     Config.cpp Config.h
     ConfigInterface.cpp ConfigInterface.h

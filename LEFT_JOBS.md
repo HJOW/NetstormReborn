@@ -1,5 +1,16 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-13 완료 cpppj 단위06: 가이저 채집·사제 피격과 후보 선택 공유 (`HJOW-Athlon`)
+
+- [x] 앞 단위 **4e532fd**(`20261013-05`) 커밋·전체968개 검사 완료 뒤 이어간다. 보호 원본/AGENTS.md는 수정하지 않았으며 현재/마지막 정밀 디컴파일 PC는 **HJOW-Athlon, 2026-10-13**이다.
+- [x] `RawGeyserMined` 실제Packet0x5b→수량/공유 난수→고갈 삭제/emptyGeyser·같은 Factory/공간은 **정상2304/assert8**, 총2312개 전수 C++ 대조와2개 검사 통과했다. test 변수 이름 숨김2경고는 token rename lineage/이전 report·fixture 보존으로 교정했고 현재 SHA 감사도 통과했다.
+- [x] `RawPriestDamage`/`RawDamageableBurning`은 양판본 실제레벨보정·피격·기존HPsetter·burning판정 **3424개 정상** 전수 C++ 대조 및 실제Regular/Kernel/Depend 수명4개 검사 통과했다. 실제 factory 검사 입력에 타입158 constructorAddress를 공급해 교정했다. nonzero burning 생성자·시각/음향·일반 표적 피해는 별도 미완료다.
+- [x] `RawFrameChoose::ChooseTerrainFrame` 자유 함수가 기존 RawRegionPaint 후보 선택 몸체를 그대로 공유한다. 기준4e532fd의 본문 토큰·나머지 헤더/구현 전체·이전484개 PE/export/oracle/fixture 근거 보존 lineage 감사 및 RegionPaint484개 C++ 회귀 통과. 신규 원본 입력0개이며 이전 완료 보고서는 수정하지 않았다.
+- [x] 사용자 요청에 따라 **다음 작업 전 AGENTS.md 전체와 두 인수인계를 다시 읽었다.** 현재/마지막 정밀 PC 일치·CD10.72 차이 문서화·한국어/UTF-8·보호 원본/AGENTS 보존을 확인했다. 이번 goal에 한한 작업 단위별 커밋 지시를 적용하며 푸시는 금지한다.
+- [x] 06 최종 Release 두 타깃 종료0·경고/오류0, 집중8개 및 **전체974개 검사/실패0**, 통합 SHA/자료 감사 통과. **정상 신규5728개와 별도assert8개**, 기존 RegionPaint484개 회귀/공유 새 입력0개를 구분한다. `recovery-campaign-runtime6-evidence.json`과 `tools/analyze_campaign_runtime6.py --verify`에 최종 바이트를 고정했다. 초기/교정/최종 로그는 `extracted/campaign-runtime6-*`에 있다. 이 단위의 커밋 메시지 번호는 **20261013-06**이다.
+- [ ] 다음07 `RawPathCleanup` 초안은 정상1716/assert16,1732개 원본 근거 및 C++2개 검사 준비가 완료됐다. `RawTerrainStamp` 초안/3개 검사와 **원본1560개 정상 대조 자료 생성·SHA 감사가 완료**됐으며 current shared Choose/실제 SetSquidRegion을 호출한다. **공유 CMake 등록/첫 C++ 대조는 아직 전**이다. 썬 디스크 발사기(sunArcher71)의 실제 애니메이션/Missile 분기·burning 하위 몸체도 후속이다. 이06 완료 관찰/커밋에 포함하지 않는다.
+- [ ] 실제 GameWorld/CoreData 이관·원본 로딩/섬 목록·생산/경제/AI·운반/의식·미션 승패/UI/캠페인 완주 검증은 계속 미완료이며 goal은 active다. DirectDraw 전체화면 오류 수정 제외·푸시 금지 유지.
+
 ## 2026-10-13 cpppj: 실제 투사체·직접 피해 시각·신전 Ascend 검증 (`HJOW-Athlon`)
 
 - [x] 앞 단위 커밋 **8abd00a**(`20261013-04`)·Release/전체958개 성공을 완료했고 이어간다. 작업 중 사용자가 AGENTS.md의0f02dd6에서 추가한 **CD10.72 관련 내용도 문서화** 지침을 확인했다. AGENTS.md 자체는 수정하지 않았다.
