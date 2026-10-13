@@ -16,7 +16,7 @@ SPECS = {'originals': {'ctor': 0x4c0390, 'bounds': 0x4c02d0, 'edge': 0x4c09a0, '
          'originalCD': {'ctor': 0x49cdd0, 'bounds': 0x49cd50, 'edge': 0x49d890, 'normalize': 0x49d9a0, 'battle': 0x540a20}}
 # 초기 지도와 큰 주소 metadata는 fixture 결과에서 분리하고 실제 게임 데이터만 비교한다.
 FIXTURE = ROOT / 'cpppj/tests/fixtures/terraincontext-x86.tsv'
-REPORT = ROOT / 'cpppj/recovery-terraincontext-evidence.json'
+REPORT = ROOT / 'cpppj/terraincontext.json'
 
 
 def inputs():

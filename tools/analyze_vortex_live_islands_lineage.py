@@ -9,9 +9,9 @@ import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent  # 같은 저장소의 절대 기준 경로다.
-REPORT = ROOT / 'cpppj/recovery-vortex-live-islands-lineage-evidence.json'  # 이전 원본 보고서를 보존하는 별도 연결 근거다.
+REPORT = ROOT / 'cpppj/vortex-live-islands-lineage.json'  # 이전 원본 보고서를 보존하는 별도 연결 근거다.
 SOURCES = ('cpppj/src/o/RawVortexAscend.h', 'cpppj/src/o/RawVortexAscend.cpp')  # 참조 overload와 실제목록 분기를 추가한 두 파일이다.
-PRIOR = ('cpppj/recovery-vortexascend-evidence.json', 'cpppj/recovery-campaign-runtime9-evidence.json')  # 당시 전체 보고서 원문을 연결하며 관찰을 합산하지 않는다.
+PRIOR = ('cpppj/vortexascend.json', 'cpppj/run9.json')  # 당시 전체 보고서 원문을 연결하며 관찰을 합산하지 않는다.
 TEST = 'cpppj/tests/VortexIslandBindingTests.cpp'  # 기존Count40개와 현재목록의 실제 소비자 검사다.
 
 
@@ -84,7 +84,7 @@ def observe(commit):
             assert actual == expected, file
             dependencies[file] = dict(reported_sha256=expected, current_sha256=actual, available=True)
         prior[name] = dict(sha256=sha(path.read_bytes()), total=data.get('total'), dependencies=dependencies)
-        if name.endswith('recovery-campaign-runtime9-evidence.json'):
+        if name.endswith('run9.json'):
             prior[name]['dependencies'] = {}  # 09의전체 당시SHA는원문만보존하며 개별수정은전용lineage로연결한다.
     fixture = ROOT / 'cpppj/tests/fixtures/vortexascend-x86.tsv'
     rows = [line.split('\t') for line in fixture.read_text(encoding='utf-8').splitlines() if line and not line.startswith('#')]

@@ -2,7 +2,7 @@
 
 2026-10-07. **1차 기준은 10.78**이다. [다리 삭제 전후 훅](cpp-bridgeeffects-reconstruction.md)의 다음 항목이었던 일반 사각형 탐색 Begin/Next를 복원하고 `MakeBridgeLifecycleHooks`로 연결했다. 호스트 **`DESKTOP-HJOW`에서 게임·업데이터·설치 도구·클론 창을 실행하지 않았다.**
 
-소스: [RawSquidFinder.h](../../cpppj/src/o/RawSquidFinder.h), [RawSquidFinder.cpp](../../cpppj/src/o/RawSquidFinder.cpp), [RawBridgeLifecycle.cpp](../../cpppj/src/o/RawBridgeLifecycle.cpp). 검사: [RawFinderTests.cpp](../../cpppj/tests/RawFinderTests.cpp). 독립 출력: [rawfinder-x86.tsv](../../cpppj/tests/fixtures/rawfinder-x86.tsv), [근거 기록](../../cpppj/recovery-rawfinder-evidence.json), [생성/감사 도구](../../tools/decomp_rawfinder_oracle.py).
+소스: [RawSquidFinder.h](../../cpppj/src/o/RawSquidFinder.h), [RawSquidFinder.cpp](../../cpppj/src/o/RawSquidFinder.cpp), [RawBridgeLifecycle.cpp](../../cpppj/src/o/RawBridgeLifecycle.cpp). 검사: [RawFinderTests.cpp](../../cpppj/tests/RawFinderTests.cpp). 독립 출력: [rawfinder-x86.tsv](../../cpppj/tests/fixtures/rawfinder-x86.tsv), [근거 기록](../../cpppj/rawfinder.json), [생성/감사 도구](../../tools/decomp_rawfinder_oracle.py).
 
 **2026-10-07 후속:** [공통 destroy](cpp-destroy-reconstruction.md)의 실제 Unpop/SID 반납·종속 체인·전파/선택과 다리 훅 내부 링크 삭제를 새 x86 1,992개로 대조했다. 공통 Pre/Post의 Graph/목록/통계·종속 파생 메서드·파편/낙하/소리·raw GameWorld는 남았다. 아래 1,776개/163개와 외부 삭제 효과 대체 범위는 당시 기록이며 기존 fixture는 보존했다. 이어 [공통 장부 훅](cpp-destroylifecycle-reconstruction.md)의 선택·목록·통계·비용을 복원했으며 해당 최신 범위/남은 Graph·보상/SP·AI를 따른다.
 

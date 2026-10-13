@@ -47,7 +47,7 @@ Carrier 전체 몸체·실제 genus/CRT·사제 +0xc8/방향·CD J helper·기�
 
 새 [C++ 검사](../../cpppj/tests/CarrierCheckTests.cpp) 5개는 세 PE 전체 관찰 재생과 두 raw 배치의 실제 표면 삭제/finder→가상 사제 낙하→공유 form 예약/첫 Kernel 실행→J 상태 재시작 생략을 검사한다. 이어 비권한 postPop→실제 조회→공통 장부/깊이와 실제 나선 생성의 genus 래퍼→조회, 표의 현재 값 재조회와 같은 풀/미복원 분배 계약을 검사한다. 생성/소유자/Pop 및 프레임/공간/보호막/소리 효과는 명시 입력 경계다.
 
-새 [fixture](../../cpppj/tests/fixtures/carriercheck-x86.tsv)·[근거 JSON](../../cpppj/recovery-carriercheck-evidence.json)은 UTF-8/LF다. 기존 fixture/감사 도구는 수정하지 않았다. 누적 인계 **355,474 + 2,028 = 357,502개**다.
+새 [fixture](../../cpppj/tests/fixtures/carriercheck-x86.tsv)·[근거 JSON](../../cpppj/carriercheck.json)은 UTF-8/LF다. 기존 fixture/감사 도구는 수정하지 않았다. 누적 인계 **355,474 + 2,028 = 357,502개**다.
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools/ghidra/export_functions.ps1 -Name carriercheck

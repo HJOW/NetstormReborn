@@ -24,14 +24,14 @@ PE 실행에서 힙·기존 경로 조회/삭제·사건 조회/삭제·Host 부
 
 실제 이동 생성 지원은 type23 teleport와 type54 사제다. 다른 이동 파생 종류·부모 통지는 실행 가능한 빈 구현으로 채우지 않는다. `clearBlocked` 실제 겹침 정리 하위 몸체, 이전 Path의 운반/예약/의식 cleanup, 실제 사제 도착 운반/의식, GameWorld 명령 연결, 표시/소리 및 캠페인1-1 실제 완주/GUI 대조는 필수 후속이다. DirectDraw 전체화면 오류 수정은 목표에서 제외한다.
 
-검사 등록 파일은 `RawPathStartTests.cpp`, fixture는 `pathstart-x86.tsv`와 `pathprocesstype-x86.tsv`, 근거는 `recovery-pathstart-evidence.json`이다. 초기 허용 범위/입력 오류와 교정 로그는 `extracted/pathstart-smoke-*.log`에 보존한다.
+검사 등록 파일은 `RawPathStartTests.cpp`, fixture는 `pathstart-x86.tsv`와 `pathprocesstype-x86.tsv`, 근거는 `pathstart.json`이다. 초기 허용 범위/입력 오류와 교정 로그는 `extracted/pathstart-smoke-*.log`에 보존한다.
 
-공유 Release의 최신 증분 빌드 뒤 `rawPathStart` 집중2개가 모두 통과했다. 실제 서버 flags0/공유 버퍼·같은 종속 체인/예약/Frame 대조도 이 검사에 포함한다. 기존 `RawPriestWorldBindings`7개, `rawPathRuntime`4개, `rawPathProcess`3개 회귀도 root가 통과를 확인했다. 첫2회 실패는 native Kill 요청flags0을 실제 client Form cleanup flags0으로 기대한 검사 오류였다. 공통 destroy가0x10을 더해 cleanup에 전달한다는 실제 경로에 맞춰 기대를 교정했으며, 시작/경로 body는 바꾸지 않았다. 첫 실패 로그 두 개와 `campaign-runtime4-rawPathStart-final-tests.log`를 보존한다.
+공유 Release의 최신 증분 빌드 뒤 `rawPathStart` 집중2개가 모두 통과했다. 실제 서버 flags0/공유 버퍼·같은 종속 체인/예약/Frame 대조도 이 검사에 포함한다. 기존 `RawPriestWorldBindings`7개, `rawPathRuntime`4개, `rawPathProcess`3개 회귀도 root가 통과를 확인했다. 첫2회 실패는 native Kill 요청flags0을 실제 client Form cleanup flags0으로 기대한 검사 오류였다. 공통 destroy가0x10을 더해 cleanup에 전달한다는 실제 경로에 맞춰 기대를 교정했으며, 시작/경로 body는 바꾸지 않았다. 첫 실패 로그 두 개와 `run4-rawPathStart-final.log`를 보존한다.
 
 ## 기존 PathRuntime 근거의 연결
 
-새 두 메서드를 추가했으므로 이전 `recovery-pathruntime-evidence.json`의 소스 전체 SHA와 현재 파일 SHA는 다르다. `tools/analyze_pathruntime_lineage.py` 및 `recovery-pathruntime-lineage-evidence.json`은 기준 git commit을 고정하고, 새 `SetCommandFields`/`ReplacePoint` 선언·정의 및 해당 설명 주석만 제외한 **기존 전체 소스와 모든 코드 토큰**이 기준 commit과 같음을 확인한다. 기존 native 기록의 두 source SHA도 기준 git blob의 LF/CRLF 바이트와 직접 대응한다.
+새 두 메서드를 추가했으므로 이전 `pathruntime.json`의 소스 전체 SHA와 현재 파일 SHA는 다르다. `tools/analyze_pathruntime_lineage.py` 및 `pathruntime-lineage.json`은 기준 git commit을 고정하고, 새 `SetCommandFields`/`ReplacePoint` 선언·정의 및 해당 설명 주석만 제외한 **기존 전체 소스와 모든 코드 토큰**이 기준 commit과 같음을 확인한다. 기존 native 기록의 두 source SHA도 기준 git blob의 LF/CRLF 바이트와 직접 대응한다.
 
 이는 기존 ctor/Layout/배열 접근/Prepare/Step/대상/부착 몸체를 수정하지 않았다는 근거다. 이전360개 원본 입력은 신규 관찰로 다시 합산하지 않는다. 새 상위 흐름은 현재 전체 소스 SHA와 독립512개 신규 근거로 감사하고, 기존360개 C++ 재생은 통합 검사에서 다시 확인한다.
 
-`tools/analyze_movement_mapper_lineage.py` 및 `recovery-movement-mapper-lineage-evidence.json`은 이전2872개 근거의 실제 원본 source SHA를 git commit `a5afdaf`의 파일 바이트와 연결한다. 주석 보완 뒤 기준 commit까지 코드 토큰이 같고, 새 공유 함수는 기존 몸체의 참조 세 개를 인자로 받도록 옮긴 뒤 같은 코드 토큰을 유지한다. 기존 Impl은 같은 pool edition/types span/movement 참조를 넘겨 반환한다. 나머지 두 파일 전체 소스의 보존과718개 회귀 결과가 이전2872개 부분집합과 같은 것도 감사한다. 새 종류 선택 관찰 수는0이다.
+`tools/analyze_movement_mapper_lineage.py` 및 `movement-mapper-lineage.json`은 이전2872개 근거의 실제 원본 source SHA를 git commit `a5afdaf`의 파일 바이트와 연결한다. 주석 보완 뒤 기준 commit까지 코드 토큰이 같고, 새 공유 함수는 기존 몸체의 참조 세 개를 인자로 받도록 옮긴 뒤 같은 코드 토큰을 유지한다. 기존 Impl은 같은 pool edition/types span/movement 참조를 넘겨 반환한다. 나머지 두 파일 전체 소스의 보존과718개 회귀 결과가 이전2872개 부분집합과 같은 것도 감사한다. 새 종류 선택 관찰 수는0이다.

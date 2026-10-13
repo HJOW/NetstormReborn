@@ -25,7 +25,7 @@ BODY['original1037']=dict(BODY['originalCD'])
 IMPORTS=dict(mmioOpenA=3,mmioDescend=4,mmioAscend=3,mmioRead=3,mmioSeek=3,mmioClose=2)
 FILE=1
 FIXTURE=ROOT/'cpppj/tests/fixtures/musicopen-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-musicopen-evidence.json'
+REPORT=ROOT/'cpppj/musicopen.json'
 
 
 def wave(channels=2,rate=22050,bits=16,length=53,size=18,junk=0):

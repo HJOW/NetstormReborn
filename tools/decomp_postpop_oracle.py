@@ -198,13 +198,13 @@ def generate():
         limitations=['합성 타입/SHP·기존 확보 풀; graph flood/AI/배치 선택/건설·SP 차감/게임 완주 미복원',
           '패치 cost 인코딩은 loader의 접두 구간 실행이며 전체 로더 호출로 세지 않는다',
           '전체 표·목록은 Adler-32, raw 슬롯과 dirty 표는 모든 바이트/항목을 대조한다'])
-    (ROOT/'cpppj/recovery-postpop-evidence.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
+    (ROOT/'cpppj/postpop.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
     print(f'postPop x86 fixture: {sum(counts.values())}회 {dict(counts)}')
 
 
 def verify():
     """원본 PE/도구/부모 도구/fixture SHA와 공개 호출 수를 실행 없이 확인한다."""
-    r=json.loads((ROOT/'cpppj/recovery-postpop-evidence.json').read_text(encoding='utf-8'))
+    r=json.loads((ROOT/'cpppj/postpop.json').read_text(encoding='utf-8'))
     assert r['tool_sha256']==hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
     # 원본 파일은 읽기만 한다.
     for ed,data in r['editions'].items():

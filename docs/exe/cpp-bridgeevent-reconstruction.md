@@ -2,7 +2,7 @@
 
 2026-10-07. **1차 기준은 10.78**이다. [객체 부착 프로세스](cpp-process-reconstruction.md)가 남겨 둔 "다리 이벤트 `0x2692`의 처리기 몸체"를 복원했다. 다리 객체의 이벤트 처리기(vtable +0x5c)와, 그 안에서 불리는 **끝 칸 변환**(패치 `004215d0`)을 raw SID 풀 위에서 구현하고 세 실제 PE의 제한 x86 기대값으로 검사한다.
 
-소스: [RawBridgeEvents.h](../../cpppj/src/o/RawBridgeEvents.h), [RawBridgeEvents.cpp](../../cpppj/src/o/RawBridgeEvents.cpp), 글자별 프레임 구간은 [RiftType.h](../../cpppj/src/o/RiftType.h)의 `RiftTypeFrames::Run`. 검사: [BridgeEventTests.cpp](../../cpppj/tests/BridgeEventTests.cpp). 독립 결과: [bridgeevent-x86.tsv](../../cpppj/tests/fixtures/bridgeevent-x86.tsv), [감사 기록](../../cpppj/recovery-bridgeevent-evidence.json), [실행 도구](../../tools/decomp_bridgeevent_oracle.py), [내보낸 함수 목록](../../tools/ghidra/bridgeevent-functions.json).
+소스: [RawBridgeEvents.h](../../cpppj/src/o/RawBridgeEvents.h), [RawBridgeEvents.cpp](../../cpppj/src/o/RawBridgeEvents.cpp), 글자별 프레임 구간은 [RiftType.h](../../cpppj/src/o/RiftType.h)의 `RiftTypeFrames::Run`. 검사: [BridgeEventTests.cpp](../../cpppj/tests/BridgeEventTests.cpp). 독립 결과: [bridgeevent-x86.tsv](../../cpppj/tests/fixtures/bridgeevent-x86.tsv), [감사 기록](../../cpppj/bridgeevent.json), [실행 도구](../../tools/decomp_bridgeevent_oracle.py), [내보낸 함수 목록](../../tools/ghidra/bridgeevent-functions.json).
 
 **실제 다리 변환/낙하의 완료를 뜻하지 않는다.** 아래 초기 검사는 이웃 탐색·생성·삭제·소유자·Pop을 외부 효과로 대체한다. 2026-10-08 [flag 0 첫 이웃 복원과 raw 통합](cpp-neighbor-reconstruction.md)을 더해 실제 모듈 연결을 콘솔에서 확인했다. Kernel 프레임을 게임 루프에 잇는 일과 GUI raw GameWorld 연결은 남아 있다.
 

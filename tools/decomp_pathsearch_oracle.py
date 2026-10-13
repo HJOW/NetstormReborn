@@ -23,7 +23,7 @@ SPEC={
 TYPE_INPUTS={82:4,83:2,84:0x40000}
 FRAME_INPUTS=[('A','A'),('A','P'),('M','A'),('P','P'),('K','A'),('N','A')]
 FIXTURE=ROOT/'cpppj/tests/fixtures/pathsearch-x86.tsv'
-EVIDENCE=ROOT/'cpppj/recovery-pathsearch-evidence.json'
+EVIDENCE=ROOT/'cpppj/pathsearch.json'
 SOURCES=['tools/decomp_pathsearch_oracle.py','tools/decomp_pathruntime_oracle.py','tools/decomp_reward_oracle.py','tools/ghidra/pathsearch-functions.json',
  'cpppj/src/o/RawPathSearch.h','cpppj/src/o/RawPathSearch.cpp','cpppj/src/o/Bridge.cpp','cpppj/tests/RawPathSearchTests.cpp']
 

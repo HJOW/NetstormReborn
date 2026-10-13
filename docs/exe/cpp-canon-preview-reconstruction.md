@@ -34,7 +34,7 @@
 
 두 정밀도 합계로 각 PE의 실제 배치 진입은 3,240회, CRT는 2,780회다. 패치 표면 조회 34,588회·genus/래퍼 22,924회·관계 14,114회, CD/10.37 genus는 각 25,506회다. 모양 진입 대체는 각 2,780회, decoder/범위 진입 대체는 각 2,432회다. 후반 충돌 구간 대체는 패치 2,172회·CD/10.37 각 2,780회다.
 
-반환·144바이트 배열 전체·현재 전역/genus·표면 raw 전체·두 지도 Adler·외부 호출 인자/순서를 관찰값으로 재생한다. 기대값을 C++/Python 규칙으로 재계산하지 않는다. thiscall 스택/보존 레지스터/x87·허용 코드/쓰기·assert/OS 0회·SHA·실제/대체 호출 수도 감사했다. 새 근거는 [`recovery-canonpreview-evidence.json`](../../cpppj/recovery-canonpreview-evidence.json)이다.
+반환·144바이트 배열 전체·현재 전역/genus·표면 raw 전체·두 지도 Adler·외부 호출 인자/순서를 관찰값으로 재생한다. 기대값을 C++/Python 규칙으로 재계산하지 않는다. thiscall 스택/보존 레지스터/x87·허용 코드/쓰기·assert/OS 0회·SHA·실제/대체 호출 수도 감사했다. 새 근거는 [`canonpreview.json`](../../cpppj/canonpreview.json)이다.
 
 ## 검증과 다음 작업
 

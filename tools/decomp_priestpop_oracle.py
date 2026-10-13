@@ -33,7 +33,7 @@ SPACE['original1037'] = SPACE['originalCD']
 # 최초/재등록, 추상/매몰/강제 이동 불가와 원본 flags를 교차한다.
 KEYS = ('extra', 'flags', 'hp', 'ground', 'side', 'found', 'allocated')
 FIXTURE = ROOT / 'cpppj/tests/fixtures/priestpop-x86.tsv'
-REPORT = ROOT / 'cpppj/recovery-priestpop-evidence.json'
+REPORT = ROOT / 'cpppj/priestpop.json'
 
 
 def inputs():

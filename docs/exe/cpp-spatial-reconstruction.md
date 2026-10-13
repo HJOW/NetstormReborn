@@ -53,7 +53,7 @@ Unpop은 free/void 객체에서는 아무것도 바꾸지 않는다. dead=2는 �
 
 **의존성 대체를 포함하는 조건부 통합 검증**이다. 가상 `0x88/0x8c`는 사건 기록, `0x30`은 입력 firstPop flags 반환, `0x20`은 전달 flags 기록과 원본 curPostPop 감소 계약만 수행한다. 영역 조회 `0046f6e0`/CD `004bdd80`는 입력 bool을 반환하고, 표면 알림 `004214a0`/CD `00448c10`은 SID만 기록한다. 실제 영역/소유자·부착 프레임·화면/파생 효과는 실행하지 않았다. dirty 큐와 Battle 복제는 비활성이고 별도 grid 조회 지도는 비어 있다.
 
-따라서 이 Pop/Unpop 쌍을 **전체 함수 검토 앵커에 추가하지 않았다**. 전체 대응은 기존 **2,496쌍·검토 24쌍**을 유지한다. 검증 기록 [recovery-spatial-evidence.json](../../cpppj/recovery-spatial-evidence.json)은 제한·대체 의존성과 바이너리/fixture/생성 도구 SHA-256을 포함한다. `--verify`는 기록과 입력 파일의 해시·행 수·판본 차이 수를 검사한다.
+따라서 이 Pop/Unpop 쌍을 **전체 함수 검토 앵커에 추가하지 않았다**. 전체 대응은 기존 **2,496쌍·검토 24쌍**을 유지한다. 검증 기록 [spatial.json](../../cpppj/spatial.json)은 제한·대체 의존성과 바이너리/fixture/생성 도구 SHA-256을 포함한다. `--verify`는 기록과 입력 파일의 해시·행 수·판본 차이 수를 검사한다.
 
 [SpatialTests.cpp](../../cpppj/tests/SpatialTests.cpp)의 6개 검사는 저장된 [spatial-x86.tsv](../../cpppj/tests/fixtures/spatial-x86.tsv)의 두 결과 열을 C++와 각각 비교하고, 실제 등록→표면 이웃 탐색/해제→스냅샷 수명·충돌의 부분 변경·범위 보호·firstPop 한 번 호출을 추가로 검사한다. Windows Release 빌드 경고·오류 0, **CTest 내부 93개 검사** 통과. 기존 31,500개와 합쳐 **32,378개 제한 x86 입력 사례**이며, 새 878개는 위 대체 조건을 포함한다. 수명 480개는 접두 구간, 해시 초기화 4개는 할당 없는 경로다. 게임 완성도나 전체 함수 의미 검증 수치로 세지 않는다.
 

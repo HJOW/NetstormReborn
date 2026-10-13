@@ -33,7 +33,7 @@ FILE, OUTPUT, OUT_BYTES, CHANNEL_BYTES = 0x17001000, 0x17100000, 128, 0x60
 # 허용한 잠금/Winmm stdcall 경계의 인자 개수다. 그 밖의 API는 대체하지 않는다.
 IMPORTS = dict(EnterCriticalSection=1, LeaveCriticalSection=1, mmioRead=3, mmioSeek=3, mmioClose=2)
 FIXTURE = ROOT / 'cpppj/tests/fixtures/musiccontrol-x86.tsv'
-REPORT = ROOT / 'cpppj/recovery-musiccontrol-evidence.json'
+REPORT = ROOT / 'cpppj/musiccontrol.json'
 
 
 def inputs(edition):

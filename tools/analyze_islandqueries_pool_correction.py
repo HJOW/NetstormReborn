@@ -7,8 +7,8 @@ from pathlib import Path
 # 기존native보고서와오직한검사소스의교정범위다.
 ROOT=Path(__file__).resolve().parent.parent
 TEST=ROOT/'cpppj/tests/IslandQueriesTests.cpp'
-NATIVE=ROOT/'cpppj/recovery-islandqueries-evidence.json'
-LINEAGE=ROOT/'cpppj/recovery-islandqueries-pool-correction-evidence.json'
+NATIVE=ROOT/'cpppj/islandqueries.json'
+LINEAGE=ROOT/'cpppj/islandqueries-pool-correction.json'
 OLD=':pool(edition,128,false),runtime('
 NEW=':pool(edition,kCapacity,false),runtime('
 
@@ -24,7 +24,7 @@ def apply():
     if before.count(OLD.encode())!=1:raise RuntimeError('Query capacity 교정원문개수오류')
     if digest(before)!=report['files'][TEST.relative_to(ROOT).as_posix()]:raise RuntimeError('Query 교정전검사SHA불일치')
     (ROOT/'extracted/islandqueries-before-pool-correction-tests.cpp').write_bytes(before)
-    (ROOT/'extracted/islandqueries-before-pool-correction-evidence.json').write_bytes(old_report)
+    (ROOT/'extracted/islandqueries-before-pool-correction-79681.json').write_bytes(old_report)
     after=before.replace(OLD.encode(),NEW.encode());TEST.write_bytes(after)
     evidence=dict(host='HJOW-Athlon',new_native_observations=0,fixture_cases=report['total'],before_test_text=before.decode('utf-8'),before_test_sha=digest(before),after_test_sha=digest(after),
         inverse_from=NEW,inverse_to=OLD,previous_report_sha=digest(old_report),previous_report_text=old_report.decode('utf-8'),tool_sha=digest(Path(__file__).read_bytes()))

@@ -30,7 +30,7 @@
 
 `tools/decomp_gunprocess_oracle.py`의 최종 독립 관찰은 **2,996개 = 각 판본1,498개**, 정상 반환2,996개·원본 assert0·SHA/입력 격자 감사 통과다. 생성자·모든 프레임 단계·boss/server/fort/friendly·차단·무효/동맹 표적·시간/NaN·해제/교체·Notify·Fire·Attached·observer·모든 dirty 하위5비트/force/include/부모 여부·padding/stale packet을 비교한다. raw 타입 입력이 head 준비 중 덮이던 초기 oracle 오류를 실제 group getter로 발견하고 head WORD만 기록하도록 교정했다. 초기2,348개와 smoke/재실행을 최종 관찰에 중복 합산하지 않는다. 초기 실패 로그는 보존한다.
 
-`GunProcessTests.cpp`의 native 판본별2검사, 미연결 효과/짧은 buffer 검사, 외부 호출 없는 Clear의42개 기존 native 입력을 빈 경계로 비교하는 검사, 실제 Host flags0/OnAttached 이전 writer/Kernel Frame/Refresh 단계 보존/Kill 수명 검사 **총5개가 FP 교정 후 모두 통과**했다. root 최종 공유 Release는 경고/오류0, 전체 CTest는 **928개·실패0·88.83초**다. 근거 파일은 `cpppj/recovery-gunprocess-evidence.json`, fixture는 `cpppj/tests/fixtures/gunprocess-x86.tsv`, 최초/교정 집중 로그는 `extracted/campaign-process-focused-GunProcess*.log`다. 자연 분기42개는 기존2,996 관찰의 재사용이며 추가 native로 합산하지 않는다.
+`GunProcessTests.cpp`의 native 판본별2검사, 미연결 효과/짧은 buffer 검사, 외부 호출 없는 Clear의42개 기존 native 입력을 빈 경계로 비교하는 검사, 실제 Host flags0/OnAttached 이전 writer/Kernel Frame/Refresh 단계 보존/Kill 수명 검사 **총5개가 FP 교정 후 모두 통과**했다. root 최종 공유 Release는 경고/오류0, 전체 CTest는 **928개·실패0·88.83초**다. 근거 파일은 `cpppj/gunprocess.json`, fixture는 `cpppj/tests/fixtures/gunprocess-x86.tsv`, 최초/교정 집중 로그는 `extracted/campaign-process-focused-GunProcess*.log`다. 자연 분기42개는 기존2,996 관찰의 재사용이며 추가 native로 합산하지 않는다.
 
 ## 삭제 몸체의 정적 감사와 수명 검사 한계
 

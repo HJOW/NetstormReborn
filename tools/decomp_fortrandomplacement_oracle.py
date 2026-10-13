@@ -9,7 +9,7 @@ from unicorn.x86_const import *
 
 # 고유 fixture/증거와 실제 원본 주소다. 모든 실행 메모리는 에뮬레이터에만 존재한다.
 FIXTURE=ROOT/'cpppj/tests/fixtures/fortrandomplacement-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-fortrandomplacement-evidence.json'
+REPORT=ROOT/'cpppj/fortrandomplacement.json'
 SPOTS=DATA
 LOCAL=DATA+0x39000
 KEYS=('type','x','y','flags1','flags2','spot','legal','region','chunk','owner','override','mode','force','frames','seed','terrain','edge','neighbors','mutation','hp','quarter','foot')

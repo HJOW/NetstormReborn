@@ -23,7 +23,7 @@ VTABLE = HEAP+0x8000
 DESTROY,FALL = STOP+0x100,STOP+0x110
 # 새 결과 파일은 이전 붕괴 기록/fixture와 분리한다.
 FIXTURE = ROOT/'cpppj/tests/fixtures/bridgeeffects-x86.tsv'
-REPORT = ROOT/'cpppj/recovery-bridgeeffects-evidence.json'
+REPORT = ROOT/'cpppj/bridgeeffects.json'
 # 첫 번째 참조가 dead인 연결 객체, 이를 참조하는 다음 연결 객체, 다른 타입 객체의 번호다.
 BRIDGE,LINK,FIRST,SECOND,FOLLOW,OTHER = 50,60,61,62,63,64
 # 판본별 실제 함수와 대체 진입점. CD의 연결 검사와 좌표 처리는 호출자에 인라인되어 있다.

@@ -1,0 +1,161 @@
+{
+  "baseline_commit": "5bdb5bedfbf38d455ad896cb9340cb510cf61531",
+  "files": {
+    "cpppj/archertype-draft-lineage.json": {
+      "work_sha256": "ff401e95d396e3cabb0c636b13bdbbfb150aafe26fc98c30c480cc2c1ba847ab",
+      "git_sha256": "ff401e95d396e3cabb0c636b13bdbbfb150aafe26fc98c30c480cc2c1ba847ab"
+    },
+    "cpppj/archertype.json": {
+      "work_sha256": "4fd1f3460d513dca292caa8eac7555cbd0485803294b70b2fc7b7bcec3e8ae82",
+      "git_sha256": "4fd1f3460d513dca292caa8eac7555cbd0485803294b70b2fc7b7bcec3e8ae82"
+    },
+    "cpppj/archertype-pop-lineage.json": {
+      "work_sha256": "b26d29bb0230539b316c68aac35a51c0b935694549677bc6929748a5fefd225d",
+      "git_sha256": "b26d29bb0230539b316c68aac35a51c0b935694549677bc6929748a5fefd225d"
+    },
+    "cpppj/campaign-process.json": {
+      "work_sha256": "12702bd0685c03d6d7f5e641626d3f465ba8773fb9223afc46c3cd28e37f4225",
+      "git_sha256": "12702bd0685c03d6d7f5e641626d3f465ba8773fb9223afc46c3cd28e37f4225"
+    },
+    "cpppj/run.json": {
+      "work_sha256": "207970604dd04a351bdb103d4210a3df0d5529b4b73846a59611895fe0efe8f9",
+      "git_sha256": "207970604dd04a351bdb103d4210a3df0d5529b4b73846a59611895fe0efe8f9"
+    },
+    "cpppj/run11.json": {
+      "work_sha256": "ccf40cf8f4fcad8747ee840a118d7a9fc373b631db8c6501a95d4fd0d2d795eb",
+      "git_sha256": "ccf40cf8f4fcad8747ee840a118d7a9fc373b631db8c6501a95d4fd0d2d795eb"
+    },
+    "cpppj/dude-regular-reset-lineage.json": {
+      "work_sha256": "b317d0b5e99232e48ea82497ef19a64f7b0f46228aa6a469990db3fd5e833eb6",
+      "git_sha256": "b317d0b5e99232e48ea82497ef19a64f7b0f46228aa6a469990db3fd5e833eb6"
+    },
+    "cpppj/dudenotice-draft-lineage.json": {
+      "work_sha256": "80114f3277243faeb39e7d3bf41a8dba07de9ff80a24fed885be40e0384ea371",
+      "git_sha256": "80114f3277243faeb39e7d3bf41a8dba07de9ff80a24fed885be40e0384ea371"
+    },
+    "cpppj/dudenotice.json": {
+      "work_sha256": "60f84851d663c7da1e1f3bd6a311e23a9ffe11af142e16517e173bcaa93f64c9",
+      "git_sha256": "60f84851d663c7da1e1f3bd6a311e23a9ffe11af142e16517e173bcaa93f64c9"
+    },
+    "cpppj/dudenotice-point-lineage.json": {
+      "work_sha256": "b637e319569454ad26402fef4aa6afd23c118a01e1ddf0be84e9c0ee29b6e1be",
+      "git_sha256": "b637e319569454ad26402fef4aa6afd23c118a01e1ddf0be84e9c0ee29b6e1be"
+    },
+    "cpppj/formtake.json": {
+      "work_sha256": "7582a02c4c5f48bda49e28569fdc2ea8026267e383ee1c5ad58e9353847e4d00",
+      "git_sha256": "7582a02c4c5f48bda49e28569fdc2ea8026267e383ee1c5ad58e9353847e4d00"
+    },
+    "cpppj/gumpform.json": {
+      "work_sha256": "b161a20d9a2b1286d6bc022cec632f3a155ecbeadb277d8d8dd4e85f2991e8fd",
+      "git_sha256": "b161a20d9a2b1286d6bc022cec632f3a155ecbeadb277d8d8dd4e85f2991e8fd"
+    },
+    "cpppj/gunimpact.json": {
+      "work_sha256": "3d14869770db18161c71f5d8ffe9a0eb2d977805286a0abe05f541755c68ea14",
+      "git_sha256": "6952df9f64f236a11752acd9c725b358ce385687f27c231974810ff03e2e492c"
+    },
+    "cpppj/hist/archertype-b-e9d47/cpppj/archertype.json": {
+      "work_sha256": "dab4abaa4505f522bdb3f1cc43d52f7191807252c0576ffae31c183073daea9d",
+      "git_sha256": "dab4abaa4505f522bdb3f1cc43d52f7191807252c0576ffae31c183073daea9d"
+    },
+    "cpppj/hist/archertype-b-e9d47/cpppj/dude-regular-reset-lineage.json": {
+      "work_sha256": "b317d0b5e99232e48ea82497ef19a64f7b0f46228aa6a469990db3fd5e833eb6",
+      "git_sha256": "b317d0b5e99232e48ea82497ef19a64f7b0f46228aa6a469990db3fd5e833eb6"
+    },
+    "cpppj/hist/archertype-b-e9d47/cpppj/hist/archertype-b-2578b/archertype.json": {
+      "work_sha256": "af0a88fada48c9a3d5a25060aade52ab212ec448069c3906118c04e0d4c25a42",
+      "git_sha256": "af0a88fada48c9a3d5a25060aade52ab212ec448069c3906118c04e0d4c25a42"
+    },
+    "cpppj/hist/archertype-b-e9d47/cpppj/hist/archertype-b-d5269/archertype.json": {
+      "work_sha256": "d606e8968dee1ea68c80d3368454b9846530770805c825f82fcb646a65bd86be",
+      "git_sha256": "d606e8968dee1ea68c80d3368454b9846530770805c825f82fcb646a65bd86be"
+    },
+    "cpppj/hist/archertype-b-e9d47/cpppj/hist/archertype-initial/archertype.json": {
+      "work_sha256": "be662edcc713cac0d8ed08ebc5fa3aa31166a5268c8764b01a1e71afce4b6030",
+      "git_sha256": "be662edcc713cac0d8ed08ebc5fa3aa31166a5268c8764b01a1e71afce4b6030"
+    },
+    "cpppj/hist/archertype-b-2578b/archertype.json": {
+      "work_sha256": "af0a88fada48c9a3d5a25060aade52ab212ec448069c3906118c04e0d4c25a42",
+      "git_sha256": "af0a88fada48c9a3d5a25060aade52ab212ec448069c3906118c04e0d4c25a42"
+    },
+    "cpppj/hist/archertype-b-d5269/archertype.json": {
+      "work_sha256": "d606e8968dee1ea68c80d3368454b9846530770805c825f82fcb646a65bd86be",
+      "git_sha256": "d606e8968dee1ea68c80d3368454b9846530770805c825f82fcb646a65bd86be"
+    },
+    "cpppj/hist/archertype-initial/archertype.json": {
+      "work_sha256": "be662edcc713cac0d8ed08ebc5fa3aa31166a5268c8764b01a1e71afce4b6030",
+      "git_sha256": "be662edcc713cac0d8ed08ebc5fa3aa31166a5268c8764b01a1e71afce4b6030"
+    },
+    "cpppj/hist/dudenotice-b-7ab49/cpppj/dude-regular-reset-lineage.json": {
+      "work_sha256": "b317d0b5e99232e48ea82497ef19a64f7b0f46228aa6a469990db3fd5e833eb6",
+      "git_sha256": "b317d0b5e99232e48ea82497ef19a64f7b0f46228aa6a469990db3fd5e833eb6"
+    },
+    "cpppj/hist/dudenotice-b-7ab49/cpppj/dudenotice.json": {
+      "work_sha256": "afd903fae53c13f518a0ee7a26ed87ed12b400db37cf2503b377af4180fcb7f2",
+      "git_sha256": "afd903fae53c13f518a0ee7a26ed87ed12b400db37cf2503b377af4180fcb7f2"
+    },
+    "cpppj/hist/dudenotice-b-7ab49/cpppj/hist/dudenotice-initial/dudenotice.json": {
+      "work_sha256": "e4a3239e28c6e4455fe81c1f39133bec3029d95c106e64408f0593fabc8485f4",
+      "git_sha256": "e4a3239e28c6e4455fe81c1f39133bec3029d95c106e64408f0593fabc8485f4"
+    },
+    "cpppj/hist/dudenotice-initial/dudenotice.json": {
+      "work_sha256": "e4a3239e28c6e4455fe81c1f39133bec3029d95c106e64408f0593fabc8485f4",
+      "git_sha256": "e4a3239e28c6e4455fe81c1f39133bec3029d95c106e64408f0593fabc8485f4"
+    },
+    "cpppj/hist/gunimpact-be-be7bd/gunimpact.json": {
+      "work_sha256": "1b607e34e9e7ba6aceaf3a50d91875e6c6e46c0f4f14a2a49b07138108e0b6ed",
+      "git_sha256": "b96b1b53df37203ce40a2fa1219ea9cadded6df230b70eb765bf3d2a099c2f50"
+    },
+    "cpppj/hist/gunimpact-initial/gunimpact.json": {
+      "work_sha256": "9a5666c4194fc9922d48b074d4c0668c72b3b65a236df537011dcbc8206d3353",
+      "git_sha256": "5029442f7a0fe510c02241cd724d08a2db5ee29365165b92649ced393c079b73"
+    },
+    "cpppj/hist/islandbuilde-b0a1c/cpppj/gunimpact.json": {
+      "work_sha256": "3d14869770db18161c71f5d8ffe9a0eb2d977805286a0abe05f541755c68ea14",
+      "git_sha256": "3d14869770db18161c71f5d8ffe9a0eb2d977805286a0abe05f541755c68ea14"
+    },
+    "cpppj/hist/islandbuilde-b0a1c/cpppj/priestritualactions.json": {
+      "work_sha256": "46715e61ceaccc36206adcbe911cb712aa1a3df17144b8602d078436190797c3",
+      "git_sha256": "46715e61ceaccc36206adcbe911cb712aa1a3df17144b8602d078436190797c3"
+    },
+    "cpppj/hist/islandbuilde-b0a1c/git/cpppj/gunimpact.json": {
+      "work_sha256": "6952df9f64f236a11752acd9c725b358ce385687f27c231974810ff03e2e492c",
+      "git_sha256": "6952df9f64f236a11752acd9c725b358ce385687f27c231974810ff03e2e492c"
+    },
+    "cpppj/hist/islandbuilde-b0a1c/git/cpppj/priestritualactions.json": {
+      "work_sha256": "46715e61ceaccc36206adcbe911cb712aa1a3df17144b8602d078436190797c3",
+      "git_sha256": "46715e61ceaccc36206adcbe911cb712aa1a3df17144b8602d078436190797c3"
+    },
+    "cpppj/priestritualactions.json": {
+      "work_sha256": "46715e61ceaccc36206adcbe911cb712aa1a3df17144b8602d078436190797c3",
+      "git_sha256": "46715e61ceaccc36206adcbe911cb712aa1a3df17144b8602d078436190797c3"
+    },
+    "cpppj/src/o/SquidProcess.cpp": {
+      "work_sha256": "188376ba728d8544d0bfafb92cc6f66403aea92434a81fa98efe894ed9f042e5",
+      "git_sha256": "188376ba728d8544d0bfafb92cc6f66403aea92434a81fa98efe894ed9f042e5"
+    },
+    "cpppj/src/o/SquidProcess.h": {
+      "work_sha256": "96f0b2275393d53307b01d36732f51fc8bcb8c341b2d15339d3f5a37cb702bcd",
+      "git_sha256": "96f0b2275393d53307b01d36732f51fc8bcb8c341b2d15339d3f5a37cb702bcd"
+    },
+    "cpppj/tests/fixtures/gunprocess-x86.tsv": {
+      "work_sha256": "d13077033f5e3154e9109a93e7350ce4cbf33b365d03b297db95fa7159c058e7",
+      "git_sha256": "d13077033f5e3154e9109a93e7350ce4cbf33b365d03b297db95fa7159c058e7"
+    },
+    "cpppj/tests/fixtures/process-x86.tsv": {
+      "work_sha256": "34be38ab8e39ff846142cf51aa453c60c9ab0620b40e92646d5dafe9f8ebc553",
+      "git_sha256": "34be38ab8e39ff846142cf51aa453c60c9ab0620b40e92646d5dafe9f8ebc553"
+    },
+    "cpppj/tests/fixtures/processform-x86.tsv": {
+      "work_sha256": "32b67fe92fe59e484ea2b8c32599a7bac63c13145a56f3b3481398a21ac8b5ef",
+      "git_sha256": "32b67fe92fe59e484ea2b8c32599a7bac63c13145a56f3b3481398a21ac8b5ef"
+    },
+    "cpppj/tests/fixtures/processretake-x86.tsv": {
+      "work_sha256": "705276d822488e0177fc743d09d394d5f7dcbb3e796a7a77238044b7b88a09c8",
+      "git_sha256": "705276d822488e0177fc743d09d394d5f7dcbb3e796a7a77238044b7b88a09c8"
+    },
+    "cpppj/tests/fixtures/processtransmit-x86.tsv": {
+      "work_sha256": "5ae6f79b52b4eeb888a858e16cecea9e332b4538a34cafe52a8ce74d7abbcfe1",
+      "git_sha256": "5ae6f79b52b4eeb888a858e16cecea9e332b4538a34cafe52a8ce74d7abbcfe1"
+    }
+  }
+}

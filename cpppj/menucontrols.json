@@ -1,0 +1,127 @@
+{
+  "last_decompile_host": "HJOW-Athlon",
+  "recorded_at": "2026-10-13T06:33:17.544480+09:00",
+  "recorded_date": "2026-10-13",
+  "method": "두 PE/Ghidra/ROM 키·서식/flags/등록표·문맥 복사 정적 판독과 Release 빌드",
+  "cpp_comparison": "미수행: 새 테스트 추가/실행·독립 PE/C++ 항목/태그/콜백/픽셀 대조·게임/GUI 실행 없음",
+  "new_original_observations": 0,
+  "new_cpp_comparisons": 0,
+  "implementation": {
+    "text_checked": "같은 현재 controlled 칸과 실제 Append/Reflow·include/enabled·명령/명시 인자/체크·패치 선 assert/색 조회·CD null 칸 생략/원문 전달·패치 체크 명령0에도 bit1",
+    "title_header": "패치 MenuTitle/MenuHeader 색/~3~E·일반 추가 Menu 색/disabled; CD 제목 ~3%s~./머리 무인자 서식·fancy 실제 다중 줄 Parse만 호출",
+    "submenu_separator": "패치 MenuSub 색/항상 styled·CD 첫 NUL 앞 tilde로 styled 결정·실제 자식 Attach/flags·빈 구분선/선두·연속·40개 한도/미작성 필드 유지",
+    "format": "고정 %d/%s 접두는 signed 숫자/원문 삽입; 실제 무인자 경로는 literal/%%만 처리·첫 NUL/256 결과 한도·원본의 인자 없는 변환/메모리 초과는 호스트 거부",
+    "cd_context": "0x20 자식의 현재 등록 ID·8DWORD 순서 복사·재귀·자신/StyleText/hidden/dead/Redraw/Reflow는 변경/필터하지 않음",
+    "cd_selection": "현재 항목 강조를 먼저 지우고 첫 비영 등록/visible 자식에서 조기 반환·뒤 항목 유지",
+    "no_menus": "실제 생성/소멸 개수==0이며 controlled 칸/visible/dead·지연 Kill과 구분",
+    "binding": "실제 ConfigInterface.ReadInt·MenuGumpLayout.Append·ScrollingTextGumpMarkup.Parse를 사용"
+  },
+  "boundaries": [
+    "독립 PE/C++ 항목/설정/순서/태그/클립/픽셀/문맥/수명 대조와 기존 UI 전체 대조",
+    "공용 번호 인자/임의 printf 서식기와 전역 작업표/호스트 포인터 alias·256바이트 원본 오버런",
+    "전체 Form 풀/소유/객체 연결·동적 하위 메뉴·실제 전역/명령 큐/변경 영역/allocator 공급",
+    "OS 큐/폴링/overlay·자동 raw Client UI/건설/미션 완주·그림 색 표/회전 VFX/flag 2 재사용·극단 x87/생성 EH"
+  ],
+  "editions": {
+    "originals": {
+      "binary": "originals/Netstorm.exe",
+      "functions": [
+        "00477cb0",
+        "00477dd0",
+        "00477ee0",
+        "00478020",
+        "00478160",
+        "00478260",
+        "00475ef0",
+        "004a89c0",
+        "004de490",
+        "00441270"
+      ],
+      "globals": {
+        "stack": "00592fd0",
+        "index": "00593020",
+        "instances": "00593024",
+        "registry": "00563e38"
+      },
+      "rom_keys_and_formats": {
+        "0050c7c8": "MenuColor",
+        "0050c7bc": "MenuBGColor",
+        "0050c7a8": "~[C.%d]~[B.%d]~E%s",
+        "0050c7e8": "MenuCheckedColor",
+        "0050c7d4": "MenuCheckedBGColor",
+        "0050c828": "MenuTitleColor",
+        "0050c814": "MenuTitleBGColor",
+        "0050c7fc": "~3~E~[C.%d]~[B.%d]%s~.",
+        "0050c864": "MenuHeaderColor",
+        "0050c850": "MenuHeaderBGColor",
+        "0050c838": "~E~[C.%d]~[B.%d]%s~.",
+        "0050c884": "MenuSubColor",
+        "0050c874": "MenuSubBGColor"
+      },
+      "separator": {
+        "address": "00503c8b",
+        "text": ""
+      }
+    },
+    "originalCD": {
+      "binary": "originalCD/NETSTORM.EXE",
+      "functions": [
+        "00451100",
+        "00451150",
+        "004511b0",
+        "00451210",
+        "00451270",
+        "004512e0",
+        "00451620",
+        "004516f0",
+        "004529b0",
+        "00452a00",
+        "00420560",
+        "004bcd80"
+      ],
+      "globals": {
+        "stack": "0051fc28",
+        "index": "0051fc78",
+        "instances": "0051fc7c",
+        "registry": "0056b748"
+      },
+      "rom_keys_and_formats": {
+        "0051fdd4": "~3%s~.",
+        "0051fe7c": "MenuGump.cpp"
+      },
+      "separator": {
+        "address": "0051fddc",
+        "text": ""
+      }
+    }
+  },
+  "files": {
+    "tools/analyze_menucontrols.py": "5aeae9c6d67c9a3e3b2e3455680f954b4ba2a5969da771dece591f29e3599c3d",
+    "tools/ghidra/menucontrols-functions.json": "e951245d1e7f67af17524bb36c0f51d9859971a8cac7d48172ac60f23333a8f3",
+    "tools/analyze_styletext.py": "a69336b3064208e08e5fcea4e84f8427eeaa35512673c64f273c39b4b91877b1",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/menucontrols/originals/creation.c": "95a3e283e9131a74c5b7fde426b35f1f9975bcfebd7f66fb93fe619af5736f80",
+    "extracted/menucontrols/originals/functions.tsv": "0ba0908da84d364c26788584d7f220b7983e68de951ea7cfef6e9b283634d7f6",
+    "extracted/menucontrols/originals/assembly.txt": "9fdb2e9e570eb57c182e4b8eda41ae07e7107bbc51441a18e6beaf8ec58ba88f",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "extracted/menucontrols/originalCD/creation.c": "3612a7b7cfd0b0749b7f8aef72f4d25c97d9376fe31444ca53afdf4cc8a6dbeb",
+    "extracted/menucontrols/originalCD/functions.tsv": "c3509e81be595a614676d7dd31921a58d4ad1a08b3b6b33878ba41e11d94c574",
+    "extracted/menucontrols/originalCD/assembly.txt": "470adc34091b9831cc729201508c4311a5025ce0371091c4de8e67a418a49f26",
+    "cpppj/src/client/MenuGumpControls.h": "543b7d99c7a40c38ad2f6cd4d4aa87e7a8b1d6ee0f005b34dbab2fa03eb166dd",
+    "cpppj/src/client/MenuGumpControls.cpp": "ca1017cf31843d3de16929ef71a0f1fff9d177b3d33154d820674d366af5dc16",
+    "cpppj/src/client/MenuGump.h": "e7b0cb669bddd5fa95fba4e076465dd325362d39fb9555de3f844d68c5a217bd",
+    "cpppj/src/client/MenuGump.cpp": "9738a69d18151ca3b4d10d91e99622addcf0a89af12f66cc082ff5bb432631a4",
+    "cpppj/src/client/MenuGumpLayout.h": "095595eb5ed9285791bc20b6ac7c72d303241d89db91b018c58a0350d8dac0e0",
+    "cpppj/src/client/MenuGumpLayout.cpp": "91ba4522f21152e99d3c242a0de62636a0d6260958b259cd8dcd0d7bfced2c5e",
+    "cpppj/src/client/ScrollingTextGumpMarkup.h": "155c89619e568af6b243c324f2bc048c7bdc278d102cc886da8f6b64c8c2b1fe",
+    "cpppj/src/client/ScrollingTextGumpMarkup.cpp": "3088e4533c4a1aebffb040701c4cd6ec7a34cbfa7379a7782e97572d6840cddc",
+    "cpppj/src/client/StyleTextMarkup.h": "c66adae8b57e21854c7a8774a6276de235347d7116af30259f72465c94fdcbe7",
+    "cpppj/src/client/StyleTextMarkup.cpp": "19d4588f8c2e78de50ef74190c34469518c40928aaf9ddbb59b4e4d82cf28a0d",
+    "cpppj/src/client/StyleText.h": "f8b442df8607910d8d1e0b74e4f0ffb7a573e1a85b82e8606dcb2f7b0a84b115",
+    "cpppj/src/client/StyleText.cpp": "c58a68b7a873769871552dc57431c7c0bd0ab2a02149cb21f909e5f0c5b66c64",
+    "cpppj/src/o/ConfigInterface.h": "6ff87733660259f514fd017393f34678ad11bcd0a1ac70a2b35d44d9de089fdb",
+    "cpppj/src/o/ConfigInterface.cpp": "7a0917cdbe9cb19e3bf8aa111ebb7d4557bdf41ccb729fca567ed9e9366c95a0",
+    "cpppj/src/client/CMakeLists.txt": "88b80e3fd7a62dcce14f3aba63c2440713b689bf8f74ee32299e1a0d00781525",
+    "extracted/menucontrols-build.log": "efafb6773f6b879e98932f0762400e51407e478b3bc3d8bfc2ccb8eef7a14863"
+  }
+}

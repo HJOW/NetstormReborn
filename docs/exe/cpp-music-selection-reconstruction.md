@@ -37,7 +37,7 @@
 
 이전/새 이름·대소문자·빈 이름·옵션/전역 옵션 차이·준비/장치/활성·기존 버퍼·기본/보조 null·빈/후행 경로·파일 존재/열기/청크 누락·demo 성공/실패·생성 HRESULT·seek 실패·255바이트 절단/패딩을 교차한다. 파일 조회·COM·Winmm 파일/청크·잠금/기록·패치 CRT 로캘·초기 채널/파일/이름 배치만 명시 대체한다. **상위 선택/존재/strncpy·공개 Play/Stop·헤더/길이/버퍼 확보/되감기/시작은 실제 원본 명령**이다. 게임이나 실제 OS API를 실행하지 않는다.
 
-[fixture](../../cpppj/tests/fixtures/musicselection-x86.tsv)는 사건 순서·전체 raw96·현재 이름 raw256·현재 파일 위치·남은 열린 파일 수를 저장한다. 원본이 새 File 토큰으로 덮어써 이전 파일을 남기는 경우도 초기 열린 파일과 함께 관찰한다. C++ `MusicFileStore`의 소멸자는 남은 파일을 모두 반납한다. [근거](../../cpppj/recovery-musicselection-evidence.json)는 정확한 입력/행·진입/반환·허용 명령/쓰기·ABI/스택/보존 레지스터/SEH/x87·잠금 균형·OS/예기치 않은 assert 0·SHA와 **상위 fallback 대체 제거**를 감사한다. 기존 도구/fixture는 수정하지 않았다. 누적 독립 관찰 **439,669개**다.
+[fixture](../../cpppj/tests/fixtures/musicselection-x86.tsv)는 사건 순서·전체 raw96·현재 이름 raw256·현재 파일 위치·남은 열린 파일 수를 저장한다. 원본이 새 File 토큰으로 덮어써 이전 파일을 남기는 경우도 초기 열린 파일과 함께 관찰한다. C++ `MusicFileStore`의 소멸자는 남은 파일을 모두 반납한다. [근거](../../cpppj/musicselection.json)는 정확한 입력/행·진입/반환·허용 명령/쓰기·ABI/스택/보존 레지스터/SEH/x87·잠금 균형·OS/예기치 않은 assert 0·SHA와 **상위 fallback 대체 제거**를 감사한다. 기존 도구/fixture는 수정하지 않았다. 누적 독립 관찰 **439,669개**다.
 
 [SoundMusicSelectionTests.cpp](../../cpppj/tests/SoundMusicSelectionTests.cpp)의 새 검사 **7개**는 실제 Winmm 임시 파일로 native 행 전체를 대조한다. 연속 곡 교체/대소문자 보존·한 번 재생·없는 파일의 기존 곡 유지·옵션 끄기·실제 demo 재진입/전역 옵션 차이·보조 디스크 경로·이름 저장/호스트 방어도 확인한다. 기본 CTest는 원본 자산/PE/Python/오디오 장치를 요구하지 않는다.
 

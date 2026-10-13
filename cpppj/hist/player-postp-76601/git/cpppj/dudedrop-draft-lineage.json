@@ -1,0 +1,393 @@
+{
+  "schema": 1,
+  "host": "HJOW-Athlon",
+  "total": 308,
+  "normal": 306,
+  "assertions": 2,
+  "new_native_inputs": 0,
+  "cpp_tests_completed": 0,
+  "lineage": {
+    "history": {
+      "cpppj/hist/dudedrop-bef-bac65/cpppj/dude-postpop-binding-lineage.json": "521b991c5c1a18abba0cb4c42c4db50093b6d501181fe17e268da4e28c0776a5",
+      "cpppj/hist/dudedrop-bef-bac65/cpppj/dudedrop.json": "39acf8b78089f8dffd3fcb713b592a22258db4012596ef78779e9a86423624cd",
+      "cpppj/hist/dudedrop-bef-bac65/cpppj/dudespawn.json": "15bb6d720a90524485ff293a1b17a6f1158f5bf4a3a7494c6dcc62b148f2dffa",
+      "cpppj/hist/dudedrop-bef-bac65/cpppj/dudetask.json": "f2ebbb3c1345b8f7c2fddd623302a19d97726d206a9d2d1e310ef03b86ab8eeb",
+      "cpppj/hist/dudedrop-bef-bac65/cpppj/src/o/RawDudeDrop.cpp": "9b395be29bc0c441c466b8dc79064c10da4cb0974c5c75f3d802691509f7cef6",
+      "cpppj/hist/dudedrop-bef-bac65/cpppj/src/o/RawDudeDrop.h": "e60f63be4c46a8e2ff3ed0c9ef43d2ff6730c250b4dca024bc331247e7165811",
+      "cpppj/hist/dudedrop-bef-bac65/cpppj/src/o/RawDudeNotice.cpp": "338e8bd6321fee6514f0beb8a469dc1661fff682f57145c5d81326f7a409c182",
+      "cpppj/hist/dudedrop-bef-bac65/cpppj/src/o/RawDudeSpawn.cpp": "a0f02ae44824ae62de94f2e4e4314c6b613b330fc6efb3d0be8d57f67cb98c77",
+      "cpppj/hist/dudedrop-bef-bac65/cpppj/src/o/RawDudeTask.cpp": "ab8117c744b165a41c4edffa0aa7434e6ac42d65235048d8270ed8c153a748b3",
+      "cpppj/hist/dudedrop-bef-bac65/cpppj/src/o/SquidPop.cpp": "dc45a23ebe2078f6f27cd481028247553b566898ca445fb2e227a2f44b3743bd",
+      "cpppj/hist/dudedrop-bef-bac65/cpppj/src/o/SquidPostPop.cpp": "7725741e3e8c1d087b79c3a0ce2c67837fd78bd39b348c37cf3548eff8d2b1a8",
+      "cpppj/hist/dudedrop-bef-bac65/cpppj/tests/DudeDropTests.cpp": "428ca4c551e3332109f9209d4159e5d54cc7e743b66974bc341b5e70f226e5db",
+      "cpppj/hist/dudedrop-bef-bac65/cpppj/tests/DudeSpawnSupport.h": "29dfb2a1983ecb20bd3699d2ef05aea17bc0d9f02b61e66dbacfd363bce0eec1",
+      "cpppj/hist/dudedrop-bef-bac65/cpppj/tests/fixtures/dudedrop-x86.tsv": "7675d8bc62a229d27aa046e2f05f06b3cca19483c96bbba5b52c4cc6fd3269d7",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/burning-sources-helper/originalCD/creation.c": "267184efaf3560eca96eeb4714329bcfdda221fefc64433aa55344bd5ec096c3",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/burning-sources-helper/originalCD/functions.tsv": "838d75d2395a01f55ccd9524a98da526c9d42c04db05dfe6e6c2a4500d126297",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/burning-sources-helper/originals/creation.c": "b525c4c2bd446b6ca2ff9a82321d3b355d9b5b7a059e085f5e5ad94ca9d30450",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/burning-sources-helper/originals/functions.tsv": "ff4b67f27f1897b5c71c663eba8e0ec54d85e5f73406d3fad304d9d12ce2ddae",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/creation/originalCD/creation.c": "6968a5c10a81f60f270671e24c163202da11b99bdf64578d038c3eb54cff49ac",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/creation/originalCD/functions.tsv": "4853e93e88fd741083d3cc6d5ef2429e652e8fa13b3a2315dba6e36585ff3f3d",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/creation/originals/creation.c": "426ae0f7c99bece695fc93cd81c3b291ae3cb8303c9dcb7c6223e330e3fa81ae",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/creation/originals/functions.tsv": "42b14fee0b262fd92c833ec51db3cf772e92fd56b6ccbdc1c589955eb347ccb7",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/display/originalCD/creation.c": "8837fa51d12af2683383cde158b69d783494039f11ec7e0904429d8bcbb794b0",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/display/originalCD/functions.tsv": "623cf19b2a6f23ab67026daff3770fb3f894f0a35f0b5d3c988a8ab7a8496d1a",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/display/originals/creation.c": "bccd673912ada7da70332cd898646b18c109a85a9663cf5134e944a97f590804",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/display/originals/functions.tsv": "408c4530becac3e2ce5112b436e23b32437a729b36ec6b0ebae5b2da81eb51b4",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/dude-spawn/originalCD/creation.c": "3d5d942241d258aeffdef4901347c8b1871e2aacf576814d44bad5a846b4aef4",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/dude-spawn/originalCD/functions.tsv": "b3aae52d49b352a1f397bea06e716ccf9b38faf6075160806ff3f21a170af777",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/dude-spawn/originals/creation.c": "fb498e44e72eab9c4a4aa7496af2c91262a543688188d9a4c4cf1a49b852fcd0",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/dude-spawn/originals/functions.tsv": "0df48f73f6418b0aae9cd8c4058998866e245ac632d76513c1a16f57eda670ea",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/dude-task/originalCD/creation.c": "2c81f41a6425ef7f9682051e4a9c91fa38409fc42c19c59b1dcf8f36fc565bbe",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/dude-task/originalCD/functions.tsv": "0a26faad7811606cb73f936537f398ead9eeaa105f0ea2f8902de0ce6b971c47",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/dude-task/originals/creation.c": "8d00ffb72b5ee7104476b4421a21bc4746f0db867516b9012cf46e20dc6534e0",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/dude-task/originals/functions.tsv": "0bef5a4f5ac77c5330aaa6af88acb5e20f164e5b47816521b8b3e0fd0374cf88",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/gunimpact-dude-helper/originalCD/creation.c": "4124fe6c7cb88c06da915c167d5868db31710ed80db78155a7b250d9d2f5b017",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/gunimpact-dude-helper/originalCD/functions.tsv": "78cafc4b3298b588e84b7f01505fdf794ebd868aea167a76f8de69f06deb8b47",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/gunimpact-dude-helper/originals/creation.c": "14485df483b1a63e9d7cb80d9e512c3798f6b2e31e919bffe58f4af3ef327e90",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/gunimpact-dude-helper/originals/functions.tsv": "335ff1bfcd00021245a16a7f297b346954e4fb99c71a5744746b01fde662bef3",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/owner/originalCD/creation.c": "115d3f4790315c3647e18c087579cf3aa08af06cdbaeca42adbac1e82725af62",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/owner/originalCD/functions.tsv": "4e184997f62c2622b26b3fa4f047a2580a609d2d919f0e414a75e8efd49d4439",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/owner/originals/creation.c": "f9919c046d5259526946f106b47b6259fe5e04971f743d6fa02d6a5361b9dc16",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/owner/originals/functions.tsv": "3ea66dace80a85999a8b2c2dbadb4d5f1bd18b0dcdb0768f9c41075206c7c72d",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/pop/helpers-originals/creation.c": "33272b9b553227ac3ec295bb3807a6e458cecb6cb885f984baa06aeb98d2fab9",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/pop/helpers-originals/functions.tsv": "fc21935402ba4781899da2002c5f844061e53150d0bddeeaa597f29b81d58cb8",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/pop/originalCD/creation.c": "9e6e6e59bcbb02227a72b91b063d0cce00fb9160d22c2f6afd49af3804ddbefb",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/pop/originalCD/functions.tsv": "bad0cad125741fee06381b4c781914f2abec210cd381967a30ce02aaf185284c",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/pop/originals/creation.c": "e59b6c12246f8b9a21a2f1d128cc623a2d04bdf1c9fbe7b5f9989d11413f76b7",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/pop/originals/functions.tsv": "5b3241e336bcc1dea4c188121e3c458d3aef3414c5b6e9c4590db8c126414568",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/postpop/originalCD/creation.c": "739929556c82c7394c9055f92bb3e00098f05ae649aef7c9973b6aa27f97e95a",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/postpop/originalCD/functions.tsv": "f540a3ec002e21f58950dfcedc66c85682a42ec749ac7caa103ae329794c0669",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/postpop/originals/creation.c": "a0df44a01f4e690d255c3d4721ef2b37f4c7452980c8d91bb334be8df89d5f79",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/postpop/originals/functions.tsv": "99dcfa55557ba03e55321146ccb750816cdebd8242c18b4d95e2e1a353a32021",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/setframe/originalCD/creation.c": "62bb22d0ef37cecddcc1927f7ccf219ac6ce7ed7122856500e3d96844217ef6f",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/setframe/originalCD/functions.tsv": "674200974a1a54c0b7ad8dd9e4a596b3926f6a1b08678cb8f7f7ea0e14f19c27",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/setframe/originals/creation.c": "ac6f886701b50c2ee25ef5fb5411fbba8c97dfacd866220c3df6c50a70777b31",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/setframe/originals/functions.tsv": "31422114edd78937f1d285df1480190ad4ceb87b5436e6e1d407e335f621425e",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/sid/originalCD/functions.tsv": "a54643de18c5c9480a91e9e2c67abbc3455506d2cd92934d1882eb3710f57de9",
+      "cpppj/hist/dudedrop-bef-bac65/extracted/sid/originals/functions.tsv": "3034dd0d393ebdfd77f2e9fafe8a5b252d5437f1e71ab94541cc229e8ef8694b",
+      "cpppj/hist/dudedrop-bef-bac65/tools/analyze_dude_postpop_binding_lineage.py": "bd96fed4ae77311e335e6e5d58138f7d1ef464a36932b10b000a666f0f86a528",
+      "cpppj/hist/dudedrop-bef-bac65/tools/decomp_creation_oracle.py": "646adc1ca6c9eaeac08a9c700324ae05ba1727416bc62070e0a066afc07dc053",
+      "cpppj/hist/dudedrop-bef-bac65/tools/decomp_display_oracle.py": "bd9a42431cdef96d3fb13accf78d5a0d6a3155243b1bbc0362d58e79f662f7a4",
+      "cpppj/hist/dudedrop-bef-bac65/tools/decomp_dudedrop_oracle.py": "ce484cdf4a877d84aeb80585409b09f4822b3595985bb4f55bcf2fdc3840c606",
+      "cpppj/hist/dudedrop-bef-bac65/tools/decomp_dudespawn_oracle.py": "294095ff1336d290d8d7e0e465df95d5514ceb4ff87d4bac8c282cdcec2eb786",
+      "cpppj/hist/dudedrop-bef-bac65/tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+      "cpppj/hist/dudedrop-bef-bac65/tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
+      "cpppj/hist/dudedrop-bef-bac65/tools/decomp_postpop_oracle.py": "43dd9adffc6e2b3a1bd4a1fb06563f848518d8082014f2346613243183535129",
+      "cpppj/hist/dudedrop-bef-bac65/tools/decomp_sid_oracle.py": "7bfd7b95b26724b1793d407a4ad6654972b2aaa3bf04e4c206cc357670b68dff",
+      "cpppj/hist/dudedrop-bef-bac65/tools/ghidra/dude-spawn-functions.json": "6fd3a099b040d1c505e148f4fd06579f8ee05ab94650d4c9bf54f519210a3dd0",
+      "cpppj/hist/dudedrop-bef-bac65/tools/ghidra/dude-task-functions.json": "927e72e67a901da514a4af0b80b63b767a334eec0ab5d8a9e34f44b44747afeb",
+      "cpppj/hist/dudedrop-bef-bac65/capture.json": "3825fc19cd106be4e10e7f000d2b8c53155d29d4b9eea80effe7567fb153d67b"
+    },
+    "dependencies": {
+      "cpppj/dude-postpop-binding-lineage.json": {
+        "reported_sha256": "521b991c5c1a18abba0cb4c42c4db50093b6d501181fe17e268da4e28c0776a5",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/cpppj/dude-postpop-binding-lineage.json"
+      },
+      "cpppj/dudespawn.json": {
+        "reported_sha256": "15bb6d720a90524485ff293a1b17a6f1158f5bf4a3a7494c6dcc62b148f2dffa",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/cpppj/dudespawn.json"
+      },
+      "cpppj/dudetask.json": {
+        "reported_sha256": "f2ebbb3c1345b8f7c2fddd623302a19d97726d206a9d2d1e310ef03b86ab8eeb",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/cpppj/dudetask.json"
+      },
+      "cpppj/src/o/RawDudeDrop.cpp": {
+        "reported_sha256": "9b395be29bc0c441c466b8dc79064c10da4cb0974c5c75f3d802691509f7cef6",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/cpppj/src/o/RawDudeDrop.cpp"
+      },
+      "cpppj/src/o/RawDudeDrop.h": {
+        "reported_sha256": "e60f63be4c46a8e2ff3ed0c9ef43d2ff6730c250b4dca024bc331247e7165811",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/cpppj/src/o/RawDudeDrop.h"
+      },
+      "cpppj/src/o/RawDudeNotice.cpp": {
+        "reported_sha256": "338e8bd6321fee6514f0beb8a469dc1661fff682f57145c5d81326f7a409c182",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/cpppj/src/o/RawDudeNotice.cpp"
+      },
+      "cpppj/src/o/RawDudeSpawn.cpp": {
+        "reported_sha256": "a0f02ae44824ae62de94f2e4e4314c6b613b330fc6efb3d0be8d57f67cb98c77",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/cpppj/src/o/RawDudeSpawn.cpp"
+      },
+      "cpppj/src/o/RawDudeTask.cpp": {
+        "reported_sha256": "ab8117c744b165a41c4edffa0aa7434e6ac42d65235048d8270ed8c153a748b3",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/cpppj/src/o/RawDudeTask.cpp"
+      },
+      "cpppj/src/o/SquidPop.cpp": {
+        "reported_sha256": "dc45a23ebe2078f6f27cd481028247553b566898ca445fb2e227a2f44b3743bd",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/cpppj/src/o/SquidPop.cpp"
+      },
+      "cpppj/src/o/SquidPostPop.cpp": {
+        "reported_sha256": "7725741e3e8c1d087b79c3a0ce2c67837fd78bd39b348c37cf3548eff8d2b1a8",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/cpppj/src/o/SquidPostPop.cpp"
+      },
+      "cpppj/tests/DudeDropTests.cpp": {
+        "reported_sha256": "428ca4c551e3332109f9209d4159e5d54cc7e743b66974bc341b5e70f226e5db",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/cpppj/tests/DudeDropTests.cpp"
+      },
+      "cpppj/tests/DudeSpawnSupport.h": {
+        "reported_sha256": "29dfb2a1983ecb20bd3699d2ef05aea17bc0d9f02b61e66dbacfd363bce0eec1",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/cpppj/tests/DudeSpawnSupport.h"
+      },
+      "cpppj/tests/fixtures/dudedrop-x86.tsv": {
+        "reported_sha256": "7675d8bc62a229d27aa046e2f05f06b3cca19483c96bbba5b52c4cc6fd3269d7",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/cpppj/tests/fixtures/dudedrop-x86.tsv"
+      },
+      "extracted/burning-sources-helper/originalCD/creation.c": {
+        "reported_sha256": "267184efaf3560eca96eeb4714329bcfdda221fefc64433aa55344bd5ec096c3",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/burning-sources-helper/originalCD/creation.c"
+      },
+      "extracted/burning-sources-helper/originalCD/functions.tsv": {
+        "reported_sha256": "838d75d2395a01f55ccd9524a98da526c9d42c04db05dfe6e6c2a4500d126297",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/burning-sources-helper/originalCD/functions.tsv"
+      },
+      "extracted/burning-sources-helper/originals/creation.c": {
+        "reported_sha256": "b525c4c2bd446b6ca2ff9a82321d3b355d9b5b7a059e085f5e5ad94ca9d30450",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/burning-sources-helper/originals/creation.c"
+      },
+      "extracted/burning-sources-helper/originals/functions.tsv": {
+        "reported_sha256": "ff4b67f27f1897b5c71c663eba8e0ec54d85e5f73406d3fad304d9d12ce2ddae",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/burning-sources-helper/originals/functions.tsv"
+      },
+      "extracted/creation/originalCD/creation.c": {
+        "reported_sha256": "6968a5c10a81f60f270671e24c163202da11b99bdf64578d038c3eb54cff49ac",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/creation/originalCD/creation.c"
+      },
+      "extracted/creation/originalCD/functions.tsv": {
+        "reported_sha256": "4853e93e88fd741083d3cc6d5ef2429e652e8fa13b3a2315dba6e36585ff3f3d",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/creation/originalCD/functions.tsv"
+      },
+      "extracted/creation/originals/creation.c": {
+        "reported_sha256": "426ae0f7c99bece695fc93cd81c3b291ae3cb8303c9dcb7c6223e330e3fa81ae",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/creation/originals/creation.c"
+      },
+      "extracted/creation/originals/functions.tsv": {
+        "reported_sha256": "42b14fee0b262fd92c833ec51db3cf772e92fd56b6ccbdc1c589955eb347ccb7",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/creation/originals/functions.tsv"
+      },
+      "extracted/display/originalCD/creation.c": {
+        "reported_sha256": "8837fa51d12af2683383cde158b69d783494039f11ec7e0904429d8bcbb794b0",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/display/originalCD/creation.c"
+      },
+      "extracted/display/originalCD/functions.tsv": {
+        "reported_sha256": "623cf19b2a6f23ab67026daff3770fb3f894f0a35f0b5d3c988a8ab7a8496d1a",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/display/originalCD/functions.tsv"
+      },
+      "extracted/display/originals/creation.c": {
+        "reported_sha256": "bccd673912ada7da70332cd898646b18c109a85a9663cf5134e944a97f590804",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/display/originals/creation.c"
+      },
+      "extracted/display/originals/functions.tsv": {
+        "reported_sha256": "408c4530becac3e2ce5112b436e23b32437a729b36ec6b0ebae5b2da81eb51b4",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/display/originals/functions.tsv"
+      },
+      "extracted/dude-spawn/originalCD/creation.c": {
+        "reported_sha256": "3d5d942241d258aeffdef4901347c8b1871e2aacf576814d44bad5a846b4aef4",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/dude-spawn/originalCD/creation.c"
+      },
+      "extracted/dude-spawn/originalCD/functions.tsv": {
+        "reported_sha256": "b3aae52d49b352a1f397bea06e716ccf9b38faf6075160806ff3f21a170af777",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/dude-spawn/originalCD/functions.tsv"
+      },
+      "extracted/dude-spawn/originals/creation.c": {
+        "reported_sha256": "fb498e44e72eab9c4a4aa7496af2c91262a543688188d9a4c4cf1a49b852fcd0",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/dude-spawn/originals/creation.c"
+      },
+      "extracted/dude-spawn/originals/functions.tsv": {
+        "reported_sha256": "0df48f73f6418b0aae9cd8c4058998866e245ac632d76513c1a16f57eda670ea",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/dude-spawn/originals/functions.tsv"
+      },
+      "extracted/dude-task/originalCD/creation.c": {
+        "reported_sha256": "2c81f41a6425ef7f9682051e4a9c91fa38409fc42c19c59b1dcf8f36fc565bbe",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/dude-task/originalCD/creation.c"
+      },
+      "extracted/dude-task/originalCD/functions.tsv": {
+        "reported_sha256": "0a26faad7811606cb73f936537f398ead9eeaa105f0ea2f8902de0ce6b971c47",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/dude-task/originalCD/functions.tsv"
+      },
+      "extracted/dude-task/originals/creation.c": {
+        "reported_sha256": "8d00ffb72b5ee7104476b4421a21bc4746f0db867516b9012cf46e20dc6534e0",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/dude-task/originals/creation.c"
+      },
+      "extracted/dude-task/originals/functions.tsv": {
+        "reported_sha256": "0bef5a4f5ac77c5330aaa6af88acb5e20f164e5b47816521b8b3e0fd0374cf88",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/dude-task/originals/functions.tsv"
+      },
+      "extracted/gunimpact-dude-helper/originalCD/creation.c": {
+        "reported_sha256": "4124fe6c7cb88c06da915c167d5868db31710ed80db78155a7b250d9d2f5b017",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/gunimpact-dude-helper/originalCD/creation.c"
+      },
+      "extracted/gunimpact-dude-helper/originalCD/functions.tsv": {
+        "reported_sha256": "78cafc4b3298b588e84b7f01505fdf794ebd868aea167a76f8de69f06deb8b47",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/gunimpact-dude-helper/originalCD/functions.tsv"
+      },
+      "extracted/gunimpact-dude-helper/originals/creation.c": {
+        "reported_sha256": "14485df483b1a63e9d7cb80d9e512c3798f6b2e31e919bffe58f4af3ef327e90",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/gunimpact-dude-helper/originals/creation.c"
+      },
+      "extracted/gunimpact-dude-helper/originals/functions.tsv": {
+        "reported_sha256": "335ff1bfcd00021245a16a7f297b346954e4fb99c71a5744746b01fde662bef3",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/gunimpact-dude-helper/originals/functions.tsv"
+      },
+      "extracted/owner/originalCD/creation.c": {
+        "reported_sha256": "115d3f4790315c3647e18c087579cf3aa08af06cdbaeca42adbac1e82725af62",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/owner/originalCD/creation.c"
+      },
+      "extracted/owner/originalCD/functions.tsv": {
+        "reported_sha256": "4e184997f62c2622b26b3fa4f047a2580a609d2d919f0e414a75e8efd49d4439",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/owner/originalCD/functions.tsv"
+      },
+      "extracted/owner/originals/creation.c": {
+        "reported_sha256": "f9919c046d5259526946f106b47b6259fe5e04971f743d6fa02d6a5361b9dc16",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/owner/originals/creation.c"
+      },
+      "extracted/owner/originals/functions.tsv": {
+        "reported_sha256": "3ea66dace80a85999a8b2c2dbadb4d5f1bd18b0dcdb0768f9c41075206c7c72d",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/owner/originals/functions.tsv"
+      },
+      "extracted/pop/helpers-originals/creation.c": {
+        "reported_sha256": "33272b9b553227ac3ec295bb3807a6e458cecb6cb885f984baa06aeb98d2fab9",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/pop/helpers-originals/creation.c"
+      },
+      "extracted/pop/helpers-originals/functions.tsv": {
+        "reported_sha256": "fc21935402ba4781899da2002c5f844061e53150d0bddeeaa597f29b81d58cb8",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/pop/helpers-originals/functions.tsv"
+      },
+      "extracted/pop/originalCD/creation.c": {
+        "reported_sha256": "9e6e6e59bcbb02227a72b91b063d0cce00fb9160d22c2f6afd49af3804ddbefb",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/pop/originalCD/creation.c"
+      },
+      "extracted/pop/originalCD/functions.tsv": {
+        "reported_sha256": "bad0cad125741fee06381b4c781914f2abec210cd381967a30ce02aaf185284c",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/pop/originalCD/functions.tsv"
+      },
+      "extracted/pop/originals/creation.c": {
+        "reported_sha256": "e59b6c12246f8b9a21a2f1d128cc623a2d04bdf1c9fbe7b5f9989d11413f76b7",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/pop/originals/creation.c"
+      },
+      "extracted/pop/originals/functions.tsv": {
+        "reported_sha256": "5b3241e336bcc1dea4c188121e3c458d3aef3414c5b6e9c4590db8c126414568",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/pop/originals/functions.tsv"
+      },
+      "extracted/postpop/originalCD/creation.c": {
+        "reported_sha256": "739929556c82c7394c9055f92bb3e00098f05ae649aef7c9973b6aa27f97e95a",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/postpop/originalCD/creation.c"
+      },
+      "extracted/postpop/originalCD/functions.tsv": {
+        "reported_sha256": "f540a3ec002e21f58950dfcedc66c85682a42ec749ac7caa103ae329794c0669",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/postpop/originalCD/functions.tsv"
+      },
+      "extracted/postpop/originals/creation.c": {
+        "reported_sha256": "a0df44a01f4e690d255c3d4721ef2b37f4c7452980c8d91bb334be8df89d5f79",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/postpop/originals/creation.c"
+      },
+      "extracted/postpop/originals/functions.tsv": {
+        "reported_sha256": "99dcfa55557ba03e55321146ccb750816cdebd8242c18b4d95e2e1a353a32021",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/postpop/originals/functions.tsv"
+      },
+      "extracted/setframe/originalCD/creation.c": {
+        "reported_sha256": "62bb22d0ef37cecddcc1927f7ccf219ac6ce7ed7122856500e3d96844217ef6f",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/setframe/originalCD/creation.c"
+      },
+      "extracted/setframe/originalCD/functions.tsv": {
+        "reported_sha256": "674200974a1a54c0b7ad8dd9e4a596b3926f6a1b08678cb8f7f7ea0e14f19c27",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/setframe/originalCD/functions.tsv"
+      },
+      "extracted/setframe/originals/creation.c": {
+        "reported_sha256": "ac6f886701b50c2ee25ef5fb5411fbba8c97dfacd866220c3df6c50a70777b31",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/setframe/originals/creation.c"
+      },
+      "extracted/setframe/originals/functions.tsv": {
+        "reported_sha256": "31422114edd78937f1d285df1480190ad4ceb87b5436e6e1d407e335f621425e",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/setframe/originals/functions.tsv"
+      },
+      "extracted/sid/originalCD/functions.tsv": {
+        "reported_sha256": "a54643de18c5c9480a91e9e2c67abbc3455506d2cd92934d1882eb3710f57de9",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/sid/originalCD/functions.tsv"
+      },
+      "extracted/sid/originals/functions.tsv": {
+        "reported_sha256": "3034dd0d393ebdfd77f2e9fafe8a5b252d5437f1e71ab94541cc229e8ef8694b",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/extracted/sid/originals/functions.tsv"
+      },
+      "originalCD/d/_shapes.shp": {
+        "reported_sha256": "5bcd5b14ad30a22a28861bbbb91397879d933c474c1f5319e7bc42f563407f59",
+        "preserved_or_current_path": "originalCD/d/_shapes.shp"
+      },
+      "originalCD/NETSTORM.EXE": {
+        "reported_sha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+        "preserved_or_current_path": "originalCD/NETSTORM.EXE"
+      },
+      "originalCD/netstorm.tarc": {
+        "reported_sha256": "e7e8868553ec2ef40cc1cd97ea452c37454e9a147f21a67a1298945de9b637ff",
+        "preserved_or_current_path": "originalCD/netstorm.tarc"
+      },
+      "originals/d/_shapes.shp": {
+        "reported_sha256": "c878353c8054208deef832e34c514b30fe670e175505b129333a5728ba70f68e",
+        "preserved_or_current_path": "originals/d/_shapes.shp"
+      },
+      "originals/Netstorm.exe": {
+        "reported_sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "preserved_or_current_path": "originals/Netstorm.exe"
+      },
+      "originals/netstorm.tarc": {
+        "reported_sha256": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+        "preserved_or_current_path": "originals/netstorm.tarc"
+      },
+      "tools/analyze_dude_postpop_binding_lineage.py": {
+        "reported_sha256": "bd96fed4ae77311e335e6e5d58138f7d1ef464a36932b10b000a666f0f86a528",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/tools/analyze_dude_postpop_binding_lineage.py"
+      },
+      "tools/decomp_creation_oracle.py": {
+        "reported_sha256": "646adc1ca6c9eaeac08a9c700324ae05ba1727416bc62070e0a066afc07dc053",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/tools/decomp_creation_oracle.py"
+      },
+      "tools/decomp_display_oracle.py": {
+        "reported_sha256": "bd9a42431cdef96d3fb13accf78d5a0d6a3155243b1bbc0362d58e79f662f7a4",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/tools/decomp_display_oracle.py"
+      },
+      "tools/decomp_dudedrop_oracle.py": {
+        "reported_sha256": "ce484cdf4a877d84aeb80585409b09f4822b3595985bb4f55bcf2fdc3840c606",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/tools/decomp_dudedrop_oracle.py"
+      },
+      "tools/decomp_dudespawn_oracle.py": {
+        "reported_sha256": "294095ff1336d290d8d7e0e465df95d5514ceb4ff87d4bac8c282cdcec2eb786",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/tools/decomp_dudespawn_oracle.py"
+      },
+      "tools/decomp_oracle.py": {
+        "reported_sha256": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/tools/decomp_oracle.py"
+      },
+      "tools/decomp_owner_oracle.py": {
+        "reported_sha256": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/tools/decomp_owner_oracle.py"
+      },
+      "tools/decomp_postpop_oracle.py": {
+        "reported_sha256": "43dd9adffc6e2b3a1bd4a1fb06563f848518d8082014f2346613243183535129",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/tools/decomp_postpop_oracle.py"
+      },
+      "tools/decomp_sid_oracle.py": {
+        "reported_sha256": "7bfd7b95b26724b1793d407a4ad6654972b2aaa3bf04e4c206cc357670b68dff",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/tools/decomp_sid_oracle.py"
+      },
+      "tools/ghidra/dude-spawn-functions.json": {
+        "reported_sha256": "6fd3a099b040d1c505e148f4fd06579f8ee05ab94650d4c9bf54f519210a3dd0",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/tools/ghidra/dude-spawn-functions.json"
+      },
+      "tools/ghidra/dude-task-functions.json": {
+        "reported_sha256": "927e72e67a901da514a4af0b80b63b767a334eec0ab5d8a9e34f44b44747afeb",
+        "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/tools/ghidra/dude-task-functions.json"
+      }
+    },
+    "files": {
+      "cpppj/dudedrop.json": "39acf8b78089f8dffd3fcb713b592a22258db4012596ef78779e9a86423624cd",
+      "cpppj/tests/DudeDropTests.cpp": "d710fc602cdfad2f186acf25bb2beffe28d542ccaca61bb502b1e08b890fb506",
+      "cpppj/tests/fixtures/dudedrop-x86.tsv": "7675d8bc62a229d27aa046e2f05f06b3cca19483c96bbba5b52c4cc6fd3269d7",
+      "cpppj/src/o/RawDudeDrop.h": "e60f63be4c46a8e2ff3ed0c9ef43d2ff6730c250b4dca024bc331247e7165811",
+      "cpppj/src/o/RawDudeDrop.cpp": "9b395be29bc0c441c466b8dc79064c10da4cb0974c5c75f3d802691509f7cef6",
+      "tools/decomp_dudedrop_oracle.py": "ce484cdf4a877d84aeb80585409b09f4822b3595985bb4f55bcf2fdc3840c606",
+      "cpppj/tests/DudeSpawnSupport.h": "29dfb2a1983ecb20bd3699d2ef05aea17bc0d9f02b61e66dbacfd363bce0eec1"
+    },
+    "whole_old_test_inverse": true
+  },
+  "tool_sha256": "aad566645038bc4338e7317b6dfd4c111c44471af8a47ac19f5750bcb9dfde0c",
+  "scope": "미공유 컴파일 test의 sourceSID0 진단 줄을 실제 random 부모452/진입점 부모469로 관찰한 값에 맞춘다. 실제 현재 입력의 부모 선택만 사용하며 최초 전체 원문/308 fixture/도구/production은 보존한다."
+}

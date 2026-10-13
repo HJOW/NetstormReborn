@@ -28,13 +28,13 @@ Progress의 최종 단계는 두 지연 소리를 독립 확보한다. 포획 Da
 
 `decomp_daisregular_oracle.py`의 첫 범위는 **Stop604/Collapse/StartSacrifice/169의 비wrap Advance/305/CanBridge**, 정상668개/assert0개다. 두 x87 정밀도에서 같은 출력으로 반환하며 `daisregular-core-x86.tsv`와 현재 source SHA를 보존한다. 최초 smoke40개와 재실행은668에 더하지 않는다. 첫 smoke의 CD altar helper 누락은 기존 Rune 내보내기 몸체를 읽기만 재사용해 해결했고, 첫 전수의 Kill ABI는 thiscall/인수0/ret4로 교정했다. 최초 로그는 보존한다.
 
-프레임 setter/new/Shared/위치 음향/Host FindEvent·Kill은 명시 요청 경계다. 단위11 첫집중 C++ 검사에서 **668전수1검사/실패0**을 확인했다(`campaign-runtime11-rawDaisRegular_initial-tests.log`). 그 Stop604는 같은실제Host/Kernel 삭제를 소비한다. 전체 Progress·Bridge/Rune304의 원본대조·실제소비자는 미수행이다. Altar후속의2866은별도독립몸체이며기존668에겹쳐합산하지않는다. 새범위의게임 의식완주로표시하지않는다.
+프레임 setter/new/Shared/위치 음향/Host FindEvent·Kill은 명시 요청 경계다. 단위11 첫집중 C++ 검사에서 **668전수1검사/실패0**을 확인했다(`run11-rawDaisRegular_first.log`). 그 Stop604는 같은실제Host/Kernel 삭제를 소비한다. 전체 Progress·Bridge/Rune304의 원본대조·실제소비자는 미수행이다. Altar후속의2866은별도독립몸체이며기존668에겹쳐합산하지않는다. 새범위의게임 의식완주로표시하지않는다.
 
 단위11 최종 Release도 경고0/오류0이며 다이스1·알터1을 포함한 새15검사와 전체1038검사/실패0을 확인했다. 현재668 자료·생산/검사 전체 SHA는 최종 종합 감사와 일치한다. 후속 단위의 자료는 이 완료 입력수에 합산하지 않는다.
 
 ## 공통 helper 보존
 
-AltarAt/MoveAwayDepth 공개는 기준08`552656c` 전체 기존 문자/토큰과 별도 `recovery-dais-shared-lineage-evidence.json`으로 연결하고09`5b10ce8` 준비 부분에 포함했다. 기존 Rune2/Runtime4/Process3/Start2/Cleanup2의13 회귀 검사는 성공했으며 이전 native 수치를 새 Dais에 합산하지 않는다.
+AltarAt/MoveAwayDepth 공개는 기준08`552656c` 전체 기존 문자/토큰과 별도 `dais-shared-lineage.json`으로 연결하고09`5b10ce8` 준비 부분에 포함했다. 기존 Rune2/Runtime4/Process3/Start2/Cleanup2의13 회귀 검사는 성공했으며 이전 native 수치를 새 Dais에 합산하지 않는다.
 
 Carrier의 선택인수`allowDead=false`와 Begin 전달만 추가했다. Dais wrapper`00448170/CD00482430`은true,CanBridge는false다. `analyze_dais_contained_lineage.py`는 기준09`5b10ce8`의 전체 h/cpp 문자/토큰과 기존 Carrier/contained/09 원문·출처 보존을 증명한다. 이 API 준비의 추가 고유 입력은0이다. 기존 shared/Carrier 파일은 다음 공유 빌드 전 현재 상태로 동결한다.
 
@@ -42,4 +42,4 @@ Carrier의 선택인수`allowDead=false`와 Begin 전달만 추가했다. Dais w
 
 stage4에서 포획 Dais가 없는 일반 사제는 **AltarEscape→altar event24**로 진행한다. altar164의 실제 Handle`0044a5e0/CD00483800`은24에서 Dais 이탈 프레임 helper`004486d0/CD00483040`, FrameAdvance, 포획 사제 삭제/폭발과 Dais 가상삭제flags0x400000을 실행한다. Dais 실제 preDestroy`0044afd0/CD004821e0`은 altar의 현재24 Regular를 찾아 FinishSacrifice를 호출한다. 따라서 Dais306만으로 일반 희생 완료를 주장하지 않는다.
 
-현재 별도 `altarsacrifice-functions.json`은 실제중심helper를포함한 **패치9/CD8**이며같은PC/날짜에서읽기전용내보내기종료0이다. altar20/21/22/23/24, Dais 이탈/해방 및 preDestroy·원본Finish 사슬의독립2866과C++1검사/실패0을별도기록했다. 처음8/7·30smoke/중단전수와초기Frame입력교정전원문은 `recovery-history`의두전용경로에보존한다. CD 해방은 현재 로컬 owner일 때`enemyPriestEsacping.wav`도 추가 재생하고 패치 altar21의 동맹에 따른 자동 해방 분기는 CD에 없다. 실제 전체DamageablePostDestroy/파생Pop등록/player/UI/삭제/음향/호스트·GameWorld 연결과 캠페인1-1 의식 완주는 후속이다.
+현재 별도 `altarsacrifice-functions.json`은 실제중심helper를포함한 **패치9/CD8**이며같은PC/날짜에서읽기전용내보내기종료0이다. altar20/21/22/23/24, Dais 이탈/해방 및 preDestroy·원본Finish 사슬의독립2866과C++1검사/실패0을별도기록했다. 처음8/7·30smoke/중단전수와초기Frame입력교정전원문은 `hist`의두전용경로에보존한다. CD 해방은 현재 로컬 owner일 때`enemyPriestEsacping.wav`도 추가 재생하고 패치 altar21의 동맹에 따른 자동 해방 분기는 CD에 없다. 실제 전체DamageablePostDestroy/파생Pop등록/player/UI/삭제/음향/호스트·GameWorld 연결과 캠페인1-1 의식 완주는 후속이다.

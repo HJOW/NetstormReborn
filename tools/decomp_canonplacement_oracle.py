@@ -28,7 +28,7 @@ PLACEMENT={
 PLACEMENT['original1037']=dict(PLACEMENT['originalCD'])
 # 저장 관찰과 SHA 근거는 기존 사제 생성 감사와 분리한다.
 FIXTURE=ROOT/'cpppj/tests/fixtures/canonplacement-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-canonplacement-evidence.json'
+REPORT=ROOT/'cpppj/canonplacement.json'
 # 입력/TSV의 고정 순서다. 기대 여백이나 허용 여부는 입력 생성기에서 계산하지 않는다.
 KEYS=('type','argument','x','y','owner','flags','mode','genus','force','local','left','top','right','bottom','lower','change')
 

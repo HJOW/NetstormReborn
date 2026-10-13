@@ -15,7 +15,7 @@
 | WAVE 열기·헤더 | `004a8b50` | `004375c0` | 실제 Winmm의 WAVE→fmt→data 순서 |
 | 표본 읽기 / 닫기 | `004a8cf0` / `004a8d30` | `00437790` / `00437800` | 정확한 읽기 크기·모든 경로의 파일 해제 |
 
-`sounddevice` 목록을 **7/7/7개**, 같은 PC에서 읽기 전용으로 내보냈다. [목록](../../tools/ghidra/sounddevice-functions.json)·[독립 대조 실행기](../../tools/decomp_sounddevice_oracle.py)·[근거 기록](../../cpppj/recovery-sounddevice-evidence.json).
+`sounddevice` 목록을 **7/7/7개**, 같은 PC에서 읽기 전용으로 내보냈다. [목록](../../tools/ghidra/sounddevice-functions.json)·[독립 대조 실행기](../../tools/decomp_sounddevice_oracle.py)·[근거 기록](../../cpppj/sounddevice.json).
 
 ## 호출과 수명
 

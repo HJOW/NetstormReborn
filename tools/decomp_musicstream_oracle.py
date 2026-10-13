@@ -23,7 +23,7 @@ BODY['original1037']=dict(BODY['originalCD'])
 METHODS=(('musicstatus',0x24,8),('restore',0x50,4),('cursor',0x10,12),('lock',0x2c,32),('unlock',0x4c,20),('musicplay',0x30,16))
 FAIL=0x80004005
 FIXTURE=ROOT/'cpppj/tests/fixtures/musicstream-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-musicstream-evidence.json'
+REPORT=ROOT/'cpppj/musicstream.json'
 
 
 def inputs(edition):

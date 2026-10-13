@@ -9,9 +9,9 @@ from pathlib import Path
 # 모두 새 소비자 단위의 파일이며 기존 완료 소스/fixture/원본은 변경하지 않는다.
 ROOT = Path(__file__).resolve().parents[1]
 TEST = ROOT / "cpppj/tests/NormalTerrainWorldBindingTests.cpp"
-REPORT = ROOT / "cpppj/recovery-normalterrain-world-binding-evidence.json"
-HISTORY = ROOT / "cpppj/recovery-history/normalterrainbinding-initial"
-EVIDENCE = ROOT / "cpppj/recovery-normalterrain-binding-cpp-correction-evidence.json"
+REPORT = ROOT / "cpppj/normalterrain-world-binding.json"
+HISTORY = ROOT / "cpppj/hist/normalterrai-4f241"
+EVIDENCE = ROOT / "cpppj/normalterrain-binding-cpp-correction.json"
 TOOL = "tools/analyze_normalterrain_binding_cpp_correction.py"
 # 처음 검사와 교정 검사의 정확한 문자열이다. production 몸체와 예상 난수 계산은 그대로 둔다.
 BEFORE = "            CHECK(core.hash.Bucket(level,object.object.x,object.object.y)==object.sid);\n"
@@ -50,8 +50,8 @@ def apply():
     TEST.write_bytes(text.replace(BEFORE, AFTER).encode("utf-8"))
     proof = {"new_native_unique": 0, "production_changes": 0,
              "reason": "단계3 일반 해시는 같은16칸 버킷의 여러SID를 실제+4 WORD 체인으로 연결한다.",
-             "before_test": pin("cpppj/recovery-history/normalterrainbinding-initial/NormalTerrainWorldBindingTests.cpp"),
-             "before_report": pin("cpppj/recovery-history/normalterrainbinding-initial/evidence.json"),
+             "before_test": pin("cpppj/hist/normalterrai-4f241/NormalTerrainWorldBindingTests.cpp"),
+             "before_report": pin("cpppj/hist/normalterrai-4f241/evidence.json"),
              "after_test": pin("cpppj/tests/NormalTerrainWorldBindingTests.cpp"), "tool": pin(TOOL)}
     EVIDENCE.write_text(json.dumps(proof, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     report = json.loads(before_report)
@@ -59,8 +59,8 @@ def apply():
     for item in report["cpp_source_files"]:
         if item["path"] == proof["after_test"]["path"]:
             item.update(proof["after_test"])
-    report["exports"] += [pin(TOOL), pin("cpppj/recovery-normalterrain-binding-cpp-correction-evidence.json")]
-    report["cpp_correction"] = {"evidence": "cpppj/recovery-normalterrain-binding-cpp-correction-evidence.json",
+    report["exports"] += [pin(TOOL), pin("cpppj/normalterrain-binding-cpp-correction.json")]
+    report["cpp_correction"] = {"evidence": "cpppj/normalterrain-binding-cpp-correction.json",
                                 "new_native_unique": 0, "production_changes": 0}
     REPORT.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 

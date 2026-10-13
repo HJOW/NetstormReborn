@@ -34,7 +34,7 @@ SPEC={
 OBJECT,ALLOC,VTABLE,NOTIFY,UNPOP,REPOP=0x11318000,0x11319000,0x1131a000,STOP+0x100,STOP+0x110,STOP+0x120
 KEYS=('kind','frame','direction','rest','targetstate','hp','due','dirty')
 FIXTURE=ROOT/'cpppj/tests/fixtures/gunanimation-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-gunanimation-evidence.json'
+REPORT=ROOT/'cpppj/gunanimation.json'
 
 
 def bits(value):

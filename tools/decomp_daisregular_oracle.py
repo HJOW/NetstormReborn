@@ -21,7 +21,7 @@ CALLER=HEAP+0xa000 # 실제 float10 반환을 caller의 원본 fstp float 저장
 TEMP=HEAP+0xa100 # 위 caller가 쓰는 단정도 반환 비트 저장소다.
 PROCESS=HEAP+0xd000 # 명시 FindEvent 경계가 반환하는 opaque 프로세스다.
 FIXTURE=ROOT/'cpppj/tests/fixtures/daisregular-core-x86.tsv' # 첫 하위 몸체 관찰을 전체 희생 결과와 구분한다.
-REPORT=ROOT/'cpppj/recovery-daisregular-core-evidence.json' # 현재 단계의 범위/반환/출처만 기록한다.
+REPORT=ROOT/'cpppj/daisregular-core.json' # 현재 단계의 범위/반환/출처만 기록한다.
 
 
 def inputs():
@@ -129,7 +129,7 @@ def generate(smoke=False):
             except Exception as error:raise RuntimeError(f'{edition} #{index} {case}: {error}') from error
             rows.append([edition,','.join(map(str,case)),*result])
         editions[edition]=dict(cases=len(cases),returns=oracle.calls,entries=dict(oracle.hits),boundaries=dict(oracle.stub_calls),asserts=oracle.assertions);files.update(oracle.paths);files.add(ROOT/('originals/Netstorm.exe' if edition=='originals' else 'originalCD/NETSTORM.EXE'))
-    FIXTURE.write_text('# edition mode,frame,side,priestFrame,eventExists,reserve,altar,captured,genus,owner,alliance returnBits effects slots5,6,7,10\n'+'\n'.join('\t'.join(row) for row in rows)+'\n',encoding='utf-8',newline='\n');files.update(ROOT/name for name in ('cpppj/src/o/RawDaisRegular.h','cpppj/src/o/RawDaisRegular.cpp','cpppj/recovery-dais-shared-lineage-evidence.json','cpppj/recovery-dais-contained-lineage-evidence.json','tools/decomp_templeritual_oracle.py','tools/decomp_runepostpop_oracle.py','tools/decomp_rawfinder_oracle.py','tools/decomp_bridgeeffects_oracle.py','tools/decomp_bridgedecay_oracle.py'))
+    FIXTURE.write_text('# edition mode,frame,side,priestFrame,eventExists,reserve,altar,captured,genus,owner,alliance returnBits effects slots5,6,7,10\n'+'\n'.join('\t'.join(row) for row in rows)+'\n',encoding='utf-8',newline='\n');files.update(ROOT/name for name in ('cpppj/src/o/RawDaisRegular.h','cpppj/src/o/RawDaisRegular.cpp','cpppj/dais-shared-lineage.json','cpppj/dais-contained-lineage.json','tools/decomp_templeritual_oracle.py','tools/decomp_runepostpop_oracle.py','tools/decomp_rawfinder_oracle.py','tools/decomp_bridgeeffects_oracle.py','tools/decomp_bridgedecay_oracle.py'))
     REPORT.write_text(json.dumps(dict(host='HJOW-Athlon',decompile_date='2026-10-14',total=len(rows),editions=editions,files={path.relative_to(ROOT).as_posix():sha(path) for path in sorted(files)},smoke=smoke,game_runs=0,scope='초기 Stop604/Collapse/StartSacrifice/169의비wrapAdvance/305/CanBridge만. 전체Progress/Finish/Bridge/Rune304/Altar24/실제소비자/C++대조는미수행.'),ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n');print('Dais 초기 하위 native 입력:',len(rows))
 
 

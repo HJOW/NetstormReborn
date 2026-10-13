@@ -33,7 +33,7 @@ FIND = {
 FIND['original1037']=dict(FIND['originalCD'])
 # 새 독립 입력/근거는 앞 단계 fixture를 바꾸지 않는다.
 FIXTURE=ROOT/'cpppj/tests/fixtures/priestforcefield-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-priestforcefield-evidence.json'
+REPORT=ROOT/'cpppj/priestforcefield.json'
 
 
 def bits(value):

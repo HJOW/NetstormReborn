@@ -2,7 +2,7 @@
 
 2026-10-07. **1차 기준은 10.78**이다. [다리 끝 칸 변환](cpp-bridgeevent-reconstruction.md)이 새 객체에 대해 부르는 가상 함수 **소유자 지정**을 복원했다. 객체의 소유자 바이트를 바꾸고, 대상 타입이면 소유자별 워크샾 목록을 고친다.
 
-소스: [SquidOwner.h](../../cpppj/src/o/SquidOwner.h), [SquidOwner.cpp](../../cpppj/src/o/SquidOwner.cpp). 검사: [OwnerTests.cpp](../../cpppj/tests/OwnerTests.cpp). 독립 결과: [owner-x86.tsv](../../cpppj/tests/fixtures/owner-x86.tsv), [감사 기록](../../cpppj/recovery-owner-evidence.json), [실행 도구](../../tools/decomp_owner_oracle.py), [내보낸 함수 목록](../../tools/ghidra/owner-functions.json).
+소스: [SquidOwner.h](../../cpppj/src/o/SquidOwner.h), [SquidOwner.cpp](../../cpppj/src/o/SquidOwner.cpp). 검사: [OwnerTests.cpp](../../cpppj/tests/OwnerTests.cpp). 독립 결과: [owner-x86.tsv](../../cpppj/tests/fixtures/owner-x86.tsv), [감사 기록](../../cpppj/owner.json), [실행 도구](../../tools/decomp_owner_oracle.py), [내보낸 함수 목록](../../tools/ghidra/owner-functions.json).
 
 ## 원본 함수
 

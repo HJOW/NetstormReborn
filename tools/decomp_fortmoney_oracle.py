@@ -13,7 +13,7 @@ from unicorn.x86_const import UC_X86_REG_EAX, UC_X86_REG_ESP, UC_X86_REG_EIP
 
 TEMPLATE, STREAM = ARENA + 0x30000, ARENA + 0x30020  # 에뮬레이터 내부의Template/실제3DWORD MemStream 입력이다.
 FIXTURE = ROOT / 'cpppj/tests/fixtures/fortmoney-x86.tsv'  # 원본기대값을재계산하지않는전수입력/출력이다.
-REPORT = ROOT / 'cpppj/recovery-fortmoney-evidence.json'  # 현재PC·정상/assert·전체SP배열 출처를고정한다.
+REPORT = ROOT / 'cpppj/fortmoney.json'  # 현재PC·정상/assert·전체SP배열 출처를고정한다.
 KEYS = ('kind','fort','mission','guard','client','special','local','difficulty','cdBase','excluded','depth','position','end','present','seed','fill','initial','owner','amount')  # 원본에공급하는독립입력필드순서다.
 PLAN = {
     'originals': dict(load=0x4bf340, body=0x483300, setplayer=0x447810, lookup=0x44ceb0, assertion=0x4e0620,

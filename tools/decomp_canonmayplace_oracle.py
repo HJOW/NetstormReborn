@@ -29,7 +29,7 @@ CAPACITY=24000
 SCALES=(1,2,4,16)
 PATTERNS=(107,82,94,157,131,129,140,142)
 FIXTURE=ROOT/'cpppj/tests/fixtures/canonmayplace-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-canonmayplace-evidence.json'
+REPORT=ROOT/'cpppj/canonmayplace.json'
 KEYS=('pattern','argument','direction','x','y','genus','flags','scene','owner','local','ready','editor','allies','relation','bypass','restricted','mode','force')
 
 

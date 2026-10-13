@@ -12,7 +12,7 @@
 
 계획은 `tools/ghidra/menuinteraction-functions.json`, 내보내기는 `extracted/menuinteraction/{originals,originalCD}/creation.c`, 범위는 `functions.tsv`, 기계어는 `assembly.txt`다. 패치 **12개**, CD **13개** 함수를 내보냈다. CD 자식 문맥 전달 함수 00452a00은 참고 자료이며 이번 구현에 포함하지 않았다.
 
-`tools/analyze_menuinteraction.py`는 두 보호 PE의 실제 슬롯/식별 BYTE/전역 주소/상수·Form stride·현재 소스/빌드 로그 해시를 `cpppj/recovery-menuinteraction-evidence.json`에 기록한다. 실행 관찰/독립 C++ 비교 수는 증가시키지 않는다.
+`tools/analyze_menuinteraction.py`는 두 보호 PE의 실제 슬롯/식별 BYTE/전역 주소/상수·Form stride·현재 소스/빌드 로그 해시를 `cpppj/menuinteraction.json`에 기록한다. 실행 관찰/독립 C++ 비교 수는 증가시키지 않는다.
 
 | 기능 | 10.78 | CD 10.72 |
 | --- | --- | --- |

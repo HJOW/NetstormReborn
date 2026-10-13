@@ -42,7 +42,7 @@
 
 활성/준비 0·1, status 0~7, 재생/내부 쓰기 커서의 같음/앞/뒤, 일곱 COM 실패 위치, 구간 분할 없음/첫 구간 0/첫 구간 5, 파일 길이 0/1/8/16/64와 파일 안/끝·정확한 EOF, 한 번/반복 재생, 부분 읽기/IO/되감기 실패를 교차했다. status·복구·커서·Lock/Unlock·Play·생성의 **COM 결과와 파일 IO/잠금/기록만 명시 대체**한다. 채우기/Read/Stop/중첩 정리와 패치/구판의 실제 helper는 원본 명령이다.
 
-[musicstream-x86.tsv](../../cpppj/tests/fixtures/musicstream-x86.tsv)는 사건 순서/패치 반환, 전체 raw96·두 출력 구간을 포함한 output128·파일 위치/열림을 기록한다. [근거](../../cpppj/recovery-musicstream-evidence.json)는 원본/실행기/내보내기/관찰 SHA, 전체 입력/행, 몸체 진입/정상 반환, ABI·스택/보존 레지스터/SEH/x87·허용 쓰기·잠금 균형·예기치 않은 assert/OS 0을 감사한다. 기존 fixture/감사 도구는 수정하지 않았다.
+[musicstream-x86.tsv](../../cpppj/tests/fixtures/musicstream-x86.tsv)는 사건 순서/패치 반환, 전체 raw96·두 출력 구간을 포함한 output128·파일 위치/열림을 기록한다. [근거](../../cpppj/musicstream.json)는 원본/실행기/내보내기/관찰 SHA, 전체 입력/행, 몸체 진입/정상 반환, ABI·스택/보존 레지스터/SEH/x87·허용 쓰기·잠금 균형·예기치 않은 assert/OS 0을 감사한다. 기존 fixture/감사 도구는 수정하지 않았다.
 
 [SoundMusicStreamTests.cpp](../../cpppj/tests/SoundMusicStreamTests.cpp)의 새 7개 검사는 모든 판본 관찰과 실제 시작→전체 채우기/Play→부분 갱신→링 끝의 두 구간→짧은 읽기→Unlock/Stop, 호스트 IO 예외/잘못된 구간의 해제, 미준비/비활성/기존 버퍼 보존, 미초기화 장치 경계의 생성 실패·파일 경계 보존을 확인한다. 일반 CTest와 이번 선택 검사는 실제 오디오 장치/파일/작업 스레드를 열지 않는다.
 

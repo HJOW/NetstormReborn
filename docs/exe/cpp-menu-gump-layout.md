@@ -46,7 +46,7 @@
 
 두 실제 PE **각 130개, 합계 260개**의 원본 입력을 기록했다. 방향·여백·장식·항목 수 0/1/3/40·음수/큰 signed 측정값·구분선·자식·문자열 길이 0/1/39/40/50·비활성 스타일·콜백 뒤 상태 변경을 포함한다. 각 입력을 x87 제어 워드 027f/037f에서 실행해 전체 출력과 콜백 당시 상태 기록이 같았다. 최상위 정상 반환은 **548회**다. ABI·x87 제어/TOP·허용 코드/쓰기 범위·입력 문자열/문맥/가상 표 보호를 분석 도구에서 확인한다.
 
-관찰 파일은 `cpppj/recovery-menulayout-observations.tsv`, 메타데이터/해시는 `cpppj/recovery-menulayout-evidence.json`에 있다. 최종 상태는 메뉴 전체 0xb90바이트와 자식 둘의 기본 160바이트씩을 기록하고, 콜백 직전에는 전체 저장소 CRC32와 인자를 기록한다. 근거를 재생성하려면 `tools/ghidra/menulayout-functions.json`의 판본별 함수 목록을 정밀 프로젝트의 `ExportCreation.java`에 넘긴 다음 아래 원본 분석 명령을 사용한다.
+관찰 파일은 `cpppj/recovery-menulayout-observations.tsv`, 메타데이터/해시는 `cpppj/menulayout.json`에 있다. 최종 상태는 메뉴 전체 0xb90바이트와 자식 둘의 기본 160바이트씩을 기록하고, 콜백 직전에는 전체 저장소 CRC32와 인자를 기록한다. 근거를 재생성하려면 `tools/ghidra/menulayout-functions.json`의 판본별 함수 목록을 정밀 프로젝트의 `ExportCreation.java`에 넘긴 다음 아래 원본 분석 명령을 사용한다.
 
 ```powershell
 python -X utf8 tools/decomp_menulayout_oracle.py

@@ -8,7 +8,7 @@
 
 두 PE 각각32, 총 **64개 정상 고유 입력/assert0/외부효과 대체0**이다. 각 입력은 x87 53/64비트 정밀도에서 동일 정상 반환했고 반복 반환128회를 고유 입력에 다시 더하지 않았다. 별도 초기 smoke4도 새64에 합산하지 않는다. 전체 일곱 raw 슬롯·255 그래프 레코드·4096 flood DWORD를 직접 저장했다.
 
-자료는 `decomp_graphforms_oracle.py`, `graphforms-x86.tsv`, `recovery-graphforms-evidence.json`이다. 현재 전체 SHA 감사가 통과했다. 기존 Graph 재구성288의 결과/도구/보고서는 변경하지 않았다.
+자료는 `decomp_graphforms_oracle.py`, `graphforms-x86.tsv`, `graphforms.json`이다. 현재 전체 SHA 감사가 통과했다. 기존 Graph 재구성288의 결과/도구/보고서는 변경하지 않았다.
 
 ## 최소 C++ 확장
 
@@ -26,6 +26,6 @@
 
 첫13 Release는 경고0/오류0이고 새 GraphForms2검사/원본64 전수는 모두 통과했다. 기존 RawGraph14 중 과거 미복원 내부 타입5를 거부하도록 요구한 검사는5체크가 실패했다. 내부 Form을 복원한 현재 범위에서 해당 입력은 손상 타입이 아니다.
 
-첫 생산/검사/Native64/보고서/도구/빌드/실패로그 전체9파일을 `graph-forms-before-test-scope`에 보존했다. 기존 검사에서는 손상 프레임 전제를 그대로 유지하고 둘째 입력만 범위 밖 타입255로 바꿨다. 설명/검사명도 현재 보호 범위로 교정했다. 모든 검사 조건과 계산 몸체/64 원본 결과는 그대로이며 `analyze_graph_forms_test_lineage.py`가 전체 검사 역변환과 옛 Graph lineage의 당시 검사 source view를 감사했다. 새 원본 추가0이다. 현재 기존14 재실행은 두 번째 빌드를 기다린다.
+첫 생산/검사/Native64/보고서/도구/빌드/실패로그 전체9파일을 `graph-forms-dbad6`에 보존했다. 기존 검사에서는 손상 프레임 전제를 그대로 유지하고 둘째 입력만 범위 밖 타입255로 바꿨다. 설명/검사명도 현재 보호 범위로 교정했다. 모든 검사 조건과 계산 몸체/64 원본 결과는 그대로이며 `analyze_graph_forms_test_lineage.py`가 전체 검사 역변환과 옛 Graph lineage의 당시 검사 source view를 감사했다. 새 원본 추가0이다. 현재 기존14 재실행은 두 번째 빌드를 기다린다.
 
 최종13 Release 경고0/오류0·새Graph2/64전수·기존Graph14·고유집중59·전체1066/실패0 확인. Native64/기존fixture·생산계산 추가변경0이며 캠페인전체설치는후속이다.

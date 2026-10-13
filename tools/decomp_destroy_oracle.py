@@ -38,7 +38,7 @@ VTABLE=ARENA+0x9000
 PRE,POST,RELEASE_CHILD,DESTROY_CHILD,FALL=(STOP+0x100+i*0x10 for i in range(5))
 # 저장 결과와 별도 감사 기록의 위치다. 기존 독립 기록은 덮어쓰지 않는다.
 FIXTURE=ROOT/'cpppj/tests/fixtures/destroy-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-destroy-evidence.json'
+REPORT=ROOT/'cpppj/destroy.json'
 # x87 53/64비트 정밀도와 고정 상위 입력/내부 원본 호출 수다.
 CONTROLS=(0x027f,0x037f)
 EXPECTED_CASES={'Destroy':1800,'Bridge':192}

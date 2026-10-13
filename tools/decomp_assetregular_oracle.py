@@ -36,7 +36,7 @@ SPEC = {
 # 합성 caller는 원본 x87 반환값을 float로 저장할 뿐 기대값을 계산하지 않는다.
 TEMP, CALLER, UPDATE, DAMAGE = HEAP+0xf000, STOP+0x300, STOP+0x320, STOP+0x330
 FIXTURE=ROOT/'cpppj/tests/fixtures/assetregular-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-assetregular-evidence.json'
+REPORT=ROOT/'cpppj/assetregular.json'
 KEYS=('kind','event','count','payload','word','frame','cost','rng','fort','boss','suppress','checking',
       'owner','theme','element','support','maxscan','scene','ascend_active','dead','hit','genus','extra','attached','mutation')
 

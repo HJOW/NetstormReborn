@@ -33,7 +33,7 @@ SPECS = {
 SPECS['original1037'] = dict(SPECS['originalCD'])
 # 저장한 fixture는 원본 파일/Python 없이 C++ 검사에서 읽는다.
 FIXTURE = ROOT / 'cpppj/tests/fixtures/gumptext-x86.tsv'
-REPORT = ROOT / 'cpppj/recovery-gumptext-evidence.json'
+REPORT = ROOT / 'cpppj/gumptext.json'
 
 
 def available(slot, style):

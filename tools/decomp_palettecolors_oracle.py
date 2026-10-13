@@ -31,7 +31,7 @@ LOGICAL, BASIC, FILENAME = TYPES + 0x10000, TYPES + 0x11000, TYPES + 0x12000
 # 입력 시드·두 x87 정밀도·표본 수 및 출력 위치다. 기대값은 실제 명령이 결정한다.
 SEED, CONTROLS, SAMPLES = 0x4a4850, (0x027f, 0x037f), 8
 FIXTURE = ROOT / 'cpppj/tests/fixtures/palettecolors-x86.tsv'
-REPORT = ROOT / 'cpppj/recovery-palettecolors-evidence.json'
+REPORT = ROOT / 'cpppj/palettecolors.json'
 
 
 def inputs():

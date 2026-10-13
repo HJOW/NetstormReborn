@@ -14,7 +14,7 @@ from decomp_bridgedecay_oracle import TYPES,SPOTS,FPU_CONTROLS,UC_X86_REG_EAX,UC
 UNPOP,POP,FALL=HEAP+0xe100,HEAP+0xe110,HEAP+0xe120 # 격리된 가상 공간/낙하 효과의 명시 입력 경계다.
 HALT_SPOTS=0x11850000 # 기존 Finder hash1과 겹치지 않는 독립 지면 입력 주소다.
 FIXTURE=ROOT/'cpppj/tests/fixtures/priesthalt-x86.tsv' # 기존 CarrierCheck/HP 관찰을 재합산하지 않는 새 상위 입력이다.
-REPORT=ROOT/'cpppj/recovery-priesthalt-evidence.json' # 원본 몸체/외부 효과/전체 raw/정밀도 결과의 별도 보고서다.
+REPORT=ROOT/'cpppj/priesthalt.json' # 원본 몸체/외부 효과/전체 raw/정밀도 결과의 별도 보고서다.
 SPEC={
     'originals':dict(halt=0x491bb0,common=0x42a5f0,check=0x426fc0,pickup=0x429ed0,transfer=0x42a0d0,battle=0x594fbc,boss=0x540bc4,quarter=0x5ca8f0,carrier=0x5412c8,other=0x541344),
     'originalCD':dict(halt=0x40c950,common=0x4e45c0,check=0x4e50d0,pickup=0x4e7980,transfer=None,battle=0x540a20,boss=0x540a2c,quarter=0x511c90,carrier=0x51cbb4,other=None),

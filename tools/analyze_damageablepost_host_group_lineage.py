@@ -9,9 +9,9 @@ from pathlib import Path
 
 # 생산부모/4412원본/기존2검사는불변이며새consumer입력만교정한다.
 ROOT=Path(__file__).resolve().parent.parent
-HISTORY='cpppj/recovery-history/damageablepost-host-before-group-fix'
+HISTORY='cpppj/hist/damageablepo-fa8db'
 TEST='cpppj/tests/DamageablePostDestroyHostTests.cpp'
-REPORT=ROOT/'cpppj/recovery-damageablepost-host-group-lineage-evidence.json'
+REPORT=ROOT/'cpppj/damageablepost-host-group-lineage.json'
 REPLACEMENTS=[
  ('residence.footX=residence.footY=3;','residence.footX=residence.footY=3;residence.group=0; // native와같은합성group0이주변피해Regular분기를선택한다.'),
  ('std::uint32_t>(60,6699,expected,0)','std::uint32_t>(std::uint16_t{60},6699U,expected,0U)')]
@@ -36,7 +36,7 @@ def record():
     if REPORT.exists():raise RuntimeError('Post Host group successor 덮어쓰기 금지')
     previous();proof=dict(host='HJOW-Athlon',date='2026-10-14',new_native_unique=0,preserved_native_unique=4412,normal_unique=4412,assert_unique=0,
        old_files=[pin(path.relative_to(ROOT).as_posix()) for path in sorted((ROOT/HISTORY).rglob('*')) if path.is_file()],current_test=pin(TEST),
-       previous_binding=pin('cpppj/recovery-damageablepost-host-binding-evidence.json'),tool=pin('tools/analyze_damageablepost_host_group_lineage.py'),
+       previous_binding=pin('cpppj/damageablepost-host-binding.json'),tool=pin('tools/analyze_damageablepost_host_group_lineage.py'),
        replacements=REPLACEMENTS,production_changed=False,cpp_test_result='공유재빌드/실제Host1검사대기',
        limits=['초기types[89].group는기본NO_GROUP(-1)이었고원본조건group0/1 또는vortex를충족하지않아Regular를만들지않았다.',
        '입력에합성group0을명시해기존4412원본격자의주변피해분기를선택한다. 실제레지던스의원래metadata가group0이라고주장하지않는다.',

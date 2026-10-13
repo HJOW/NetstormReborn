@@ -32,7 +32,7 @@ OBJECT,VTABLE,HEADER=0x11318000,0x11319000,0x1131a000
 MUZZLE,OWNER,POP,UNPOP,DESTROY,EFFECT=STOP+0x100,STOP+0x110,STOP+0x120,STOP+0x130,STOP+0x140,STOP+0x150
 KEYS=('kind','x','y','hotx','hoty','typehotx','typehoty','endx','endy','fraction','targetstate','previous','corner')
 FIXTURE=ROOT/'cpppj/tests/fixtures/gunmissile-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-gunmissile-evidence.json'
+REPORT=ROOT/'cpppj/gunmissile.json'
 
 
 def bits(value):

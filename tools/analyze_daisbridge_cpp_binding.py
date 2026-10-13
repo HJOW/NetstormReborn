@@ -7,8 +7,8 @@ from pathlib import Path
 from decomp_daisbridge_oracle import ROOT,REPORT as NATIVE,FIXTURE,sha,verify as native_verify
 
 TEST=ROOT/'cpppj/tests/DaisBridgeTests.cpp' # 현재640 전수의 실제 Path/Host/packet/Frame/cleanup 소비자다.
-HISTORY=ROOT/'cpppj/recovery-history/daisbridge-initial-smoke' # hash1/spot 초기 충돌의 전체14smoke를 보존한다.
-REPORT=ROOT/'cpppj/recovery-daisbridge-cpp-binding-evidence.json' # 새관찰을 합산하지 않는 현재 C++ 연결 근거다.
+HISTORY=ROOT/'cpppj/hist/daisbridge-i-00c54' # hash1/spot 초기 충돌의 전체14smoke를 보존한다.
+REPORT=ROOT/'cpppj/daisbridge-cpp-binding.json' # 새관찰을 합산하지 않는 현재 C++ 연결 근거다.
 
 def expected():
     """현재640 출처와 초기 전체 원문/두 정밀도 차이·실제 C++ 연결을 감사한다."""
@@ -36,7 +36,7 @@ def expected():
                 key=f'{item["edition"]}:{difference}'
                 time_changes[key]=time_changes.get(key,0)+1
     assert len(native['precision_differences'])==18 and time_changes=={'originals:-1':14,'originals:1':12}
-    old=json.loads((HISTORY/'cpppj/recovery-daisbridge-evidence.json').read_text(encoding='utf-8'))
+    old=json.loads((HISTORY/'cpppj/daisbridge.json').read_text(encoding='utf-8'))
     assert old['total']==14 and old['smoke'] and old['game_runs']==0
     assert sha(HISTORY/'tools/decomp_daisbridge_oracle.py')==old['files']['tools/decomp_daisbridge_oracle.py']
     assert sha(HISTORY/'cpppj/tests/fixtures/daisbridge-x86.tsv')==old['files']['cpppj/tests/fixtures/daisbridge-x86.tsv']

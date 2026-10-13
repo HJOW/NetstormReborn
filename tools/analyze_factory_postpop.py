@@ -10,7 +10,7 @@ from pathlib import Path
 
 # 다른 작업 단위의 역사적 SHA를 덮어쓰지 않는 현재 단위 근거다.
 ROOT = Path(__file__).resolve().parent.parent
-REPORT = ROOT/'cpppj/recovery-factory-world-evidence.json'
+REPORT = ROOT/'cpppj/factory-world.json'
 BUILD = 'extracted/factorypostpop-build-final.log'
 CTEST = 'extracted/factorypostpop-ctest-final.log'
 TESTS = 'extracted/factorypostpop-tests-final.log'
@@ -47,7 +47,7 @@ def main():
     assert 'netstorm_tests.vcxproj ->' in read(BUILD) and not re.search(r'\b(?:error|warning)\s+[A-Z]+\d+:',read(BUILD))
     assert '100% tests passed' in read(CTEST) and '3 test(s), 0 failed check(s)' in read(FOCUSED)
     result=re.search(r'(\d+) test\(s\), (\d+) failed check\(s\)',read(TESTS));assert result and int(result[1])==936 and int(result[2])==0
-    native='cpppj/recovery-factorypostpop-evidence.json';evidence=json.loads(read(native));assert evidence['total']==996
+    native='cpppj/factorypostpop.json';evidence=json.loads(read(native));assert evidence['total']==996
     files=SOURCES+[BUILD,CTEST,TESTS,FOCUSED,native]
     # 독립 PE 실제 실행의 source/body/fixture SHA를 함께 확인한다.
     for name,digest in evidence['files'].items():assert sha(name)==digest,name;files.append(name)

@@ -17,7 +17,7 @@ from analyze_styletext import ROOT, digest, read_ranges
 
 # 두 보호 PE는 읽기만 하고 계획·기계어/근거 기록은 저장소 안에 만든다.
 PLAN = ROOT / 'tools/ghidra/menucontrols-functions.json'
-REPORT = ROOT / 'cpppj/recovery-menucontrols-evidence.json'
+REPORT = ROOT / 'cpppj/menucontrols.json'
 # 같은 controlled 표/현재 index/메뉴 개수/등록 표와 실제 빈 구분선 문자열 주소다.
 EDITIONS = {
     'originals': {'binary': 'originals/Netstorm.exe', 'stack': 0x592fd0, 'index': 0x593020,

@@ -10,7 +10,7 @@ from pathlib import Path
 from analyze_campaign_runtime4 import ROOT, digest, test_count
 from analyze_campaign_runtime6 import read_log, audit_files
 
-REPORT = ROOT / 'cpppj/recovery-campaign-runtime14-evidence.json'  # 실제 최종 소스/바이너리/성공 로그의 출처다.
+REPORT = ROOT / 'cpppj/run14.json'  # 실제 최종 소스/바이너리/성공 로그의 출처다.
 MODULES = {
     'burningsources': (652, 0, 0, 0),
     'shape-to-buffer': (164, 0, 0, 0),
@@ -32,7 +32,7 @@ AUDITS = (
     'decomp_burningsources_oracle', 'decomp_shape_to_buffer_oracle',
     'analyze_dude_space_player_successor', 'analyze_geyser_ai_test_width_lineage',
     'analyze_priesthalt_spots_successor', 'decomp_carrierarrival_oracle',
-    'analyze_priest_arrival_cleanup_binding_lineage', 'analyze_genus_at_public_lineage',
+    'check_arrival_cleanup_ln', 'analyze_genus_at_public_lineage',
     'decomp_player_world_oracle', 'analyze_player_world_attach_lineage',
     'analyze_player_postpop_binding_lineage', 'analyze_dude_assets_inline_lineage',
 )  # 원본 전수와 현재 공유/소비자 연결의 전용 감사 계약이다.
@@ -48,7 +48,7 @@ def generate():
     modules, focused, names = {}, {}, set()
     # 각 부모의 고유 입력은 한 번만 세고 정밀도 반복/재실행/기존 하위 호출은 더하지 않는다.
     for name, (normal, assertions, unsupported, repeats) in MODULES.items():
-        report = ROOT / f'cpppj/recovery-{name}-evidence.json'
+        report = ROOT / f'cpppj/{name}.json'
         data = json.loads(report.read_text(encoding='utf-8'))
         fixture = ROOT / f'cpppj/tests/fixtures/{name}-x86.tsv'
         rows = [line for line in fixture.read_text(encoding='utf-8').splitlines() if line and not line.startswith('#')]
@@ -69,22 +69,22 @@ def generate():
         subprocess.run([sys.executable, str(tool), *arguments], cwd=ROOT, check=True)
         paths.append(tool)
     for name in LINEAGES:
-        paths.append(ROOT / f'cpppj/recovery-{name}-evidence.json')
+        paths.append(ROOT / f'cpppj/{name}.json')
     # 각각 실행한 집중 로그의 실제 성공 수와 고유 검사명을 확인한다.
     for name, expected in FILTERS.items():
-        log = ROOT / f'extracted/campaign-runtime14-{name}final-tests.log'
+        log = ROOT / f'extracted/run14-{name}final.log'
         assert test_count(log) == expected, name
         names.update(re.findall(r'\[ OK \] ([^\r\n]+)', read_log(log)))
         focused[name] = expected
         paths.append(log)
     assert len(names) == sum(FILTERS.values())
-    whole = ROOT / 'extracted/campaign-runtime14-all-final-tests.log'
+    whole = ROOT / 'extracted/run14-all-final.log'
     assert test_count(whole) == 1081
-    build = ROOT / 'extracted/campaign-runtime14-build-final.log'
+    build = ROOT / 'extracted/run14-build-final.log'
     content = read_log(build)
     assert not re.search(r'\b(?:warning|error)\s+[A-Z]+\d+\s*:', content, re.I)
     assert 'netstorm_tests.exe' in content and 'NetstormCpp.exe' in content
-    paths.extend((whole, build, ROOT / 'cpppj/recovery-campaign-runtime13-evidence.json'))
+    paths.extend((whole, build, ROOT / 'cpppj/run13.json'))
     # 공유 분배/재사용 API 및 등록한 현재 실제 모듈의 전체 원문을 고정한다.
     for name in ('SquidPostPop', 'RawDamageablePostDestroy', 'RawBurningSources',
                  'RawGeyserAiRegistration', 'RawPlayerWorld', 'RawPriestHalt',
@@ -130,7 +130,7 @@ def verify():
     """현재 고정한 파일의 전체 SHA와 실제 전체 성공 수를 확인한다."""
     data = json.loads(REPORT.read_text(encoding='utf-8'))
     audit_files(data)
-    assert test_count(ROOT / 'extracted/campaign-runtime14-all-final-tests.log') == data['all_tests']
+    assert test_count(ROOT / 'extracted/run14-all-final.log') == data['all_tests']
     print('단위14 최종 전체 SHA/검사 수 감사 통과')
 
 

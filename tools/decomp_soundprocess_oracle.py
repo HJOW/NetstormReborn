@@ -48,7 +48,7 @@ BODY = {
 BODY['original1037'] = dict(BODY['originalCD'])
 # 결과 fixture/근거는 앞 단계 파일과 분리한다.
 FIXTURE = ROOT / 'cpppj/tests/fixtures/soundprocess-x86.tsv'
-REPORT = ROOT / 'cpppj/recovery-soundprocess-evidence.json'
+REPORT = ROOT / 'cpppj/soundprocess.json'
 # 소리 장치 초기화가 표에 처음 넣는 이름이다(004aa600 / CD 00437820).
 FALLBACK_NAME = 'nonexistant.wav'
 

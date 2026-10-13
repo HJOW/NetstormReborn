@@ -7,7 +7,7 @@ from pathlib import Path
 from analyze_campaign_runtime4 import ROOT, digest, test_count
 
 # 이전 완료 단위의 관찰은 별도 값으로 유지하며 이번3850개와 중복 합산하지 않는다.
-REPORT=ROOT/'cpppj/recovery-campaign-runtime5-evidence.json'
+REPORT=ROOT/'cpppj/run5.json'
 MODULES={'gunmissile':296,'gunhit':2058,'vortexascend':1496}
 # 실제 등록된 집중 검사와 같은 이름을 사용한다.
 FILTERS={'Missile_':4,'GunHit_':3,'VortexAscend_':3}
@@ -17,7 +17,7 @@ def generate():
     paths=[Path(__file__).resolve(),ROOT/'tools/analyze_campaign_runtime4.py'];focused={}
     # 동일 고유 입력 재생성과 x87 반복을 관찰 수에 다시 더하지 않는다.
     for name,count in MODULES.items():
-        path=ROOT/f'cpppj/recovery-{name}-evidence.json';data=json.loads(path.read_text(encoding='utf-8'))
+        path=ROOT/f'cpppj/{name}.json';data=json.loads(path.read_text(encoding='utf-8'))
         if data['total']!=count or data.get('host')!='HJOW-Athlon':raise RuntimeError(f'원본 입력/PC 오류: {name}')
         # 원본 PE/export·oracle·fixture·현재 production SHA가 모두 같은 근거인지 확인한다.
         for filename,expected in data['files'].items():
@@ -25,19 +25,19 @@ def generate():
         paths.append(path)
     # 집중 검사의 마지막 성공 요약과 실제 검사 수를 읽는다.
     for name,count in FILTERS.items():
-        path=ROOT/f'extracted/campaign-runtime5-{name}-final-tests.log';actual=test_count(path)
+        path=ROOT/f'extracted/run5-{name}-final.log';actual=test_count(path)
         if actual!=count:raise RuntimeError(f'집중 검사 수 오류: {name}')
         focused[name]=actual;paths.append(path)
-    whole=ROOT/'extracted/campaign-runtime5-all-final-tests.log';total=test_count(whole);paths.append(whole)
+    whole=ROOT/'extracted/run5-all-final.log';total=test_count(whole);paths.append(whole)
     # 이번 단위가 포함한 실제 수명 검사 소스와 빌드 출력도 같은 스냅샷에 고정한다.
     for name in ('MissileTests','GunHitTests','VortexAscendTests'):
         paths.append(ROOT/f'cpppj/tests/{name}.cpp')
     for name in ('netstorm_tests.exe','NetstormCpp.exe'):
         paths.append(ROOT/f'cpppj/build/bin/Release/{name}')
-    paths.extend([ROOT/'extracted/campaign-runtime5-build-final.log',ROOT/'cpppj/recovery-campaign-runtime4-evidence.json'])
+    paths.extend([ROOT/'extracted/run5-build-final.log',ROOT/'cpppj/run4.json'])
     # 최종 바이너리에 포함된 후속 helper 접근 준비도 이전 전체 몸체 보존 lineage와 함께 고정한다.
     paths.extend([ROOT/'cpppj/src/o/RawPathRuntime.h',ROOT/'cpppj/src/o/RawPathRuntime.cpp',
-                  ROOT/'tools/analyze_pathcleanup_runtime_lineage.py',ROOT/'cpppj/recovery-pathcleanup-runtime-lineage-evidence.json'])
+                  ROOT/'tools/analyze_pathcleanup_runtime_lineage.py',ROOT/'cpppj/pathcleanup-runtime-lineage.json'])
     data={'schema':1,'host':'HJOW-Athlon','date':'2026-10-13','unit':'20261013-05','new_normal_cases':sum(MODULES.values()),
           'modules':MODULES,'focused_tests':focused,'all_tests':total,'prior_unit_new_normal_cases':5482,
           'preparatory_runtime_apis_no_new_observation':['Helper','ClearHelper'],
@@ -54,7 +54,7 @@ def verify():
     data=json.loads(REPORT.read_text(encoding='utf-8'))
     for name,expected in data['files'].items():
         if digest(ROOT/name)!=expected:raise RuntimeError(f'후속 단위 SHA 불일치: {name}')
-    if test_count(ROOT/'extracted/campaign-runtime5-all-final-tests.log')!=data['all_tests']:raise RuntimeError('전체 검사 수 오류')
+    if test_count(ROOT/'extracted/run5-all-final.log')!=data['all_tests']:raise RuntimeError('전체 검사 수 오류')
     print('투사체·직접 피해 시각·Ascend 최종 SHA/검사 감사 통과')
 
 def main():

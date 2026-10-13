@@ -27,7 +27,7 @@
 
 출력은 전체 사각형/깊이/total, double 시각·elapsed와 두 float, 단계, 캡처 메타데이터와 전체 픽셀, 모든 행 표식/selected/off, 용량 전체24바이트 입자, 난수 상태, 전체 dirty 표/flags와 full 전역, heap 요청크기다. 원본 actual_calls는 경로 증거로 별도 저장하며 C++는 나머지15개 의미 필드를 대조한다. Source 포인터0/this+74만0/1로 정규화한다. 기존 독립 Capture164/Sources652/Append564 관찰을 새426에 더하지 않는다.
 
-최초426의 전체 보고서/source/test/tool/fixture 및 관련 실행기·정밀 내보내기와 실패 smoke까지 **91파일**을 `recovery-history/burningframe-before-extra-offset`에 보존했다. 초안의 Dais extra 위치를 정확히 교정하고, 미컴파일 검사에 기존 생성자 계약의 reserve 훅을 준비했다. 최초 보고서와 fixture/원본 출력/Native 도구는 불변이다. 첫 draft successor 도구/보고서/test 원문도 별도 보존했다. 현재 source/test는 `tools/analyze_burningframe_draft_lineage.py`의 **schema2**, 전체 이전 production/test 정확 역변환과 SHA로 연결한다. **새 원본 입력0**이다.
+최초426의 전체 보고서/source/test/tool/fixture 및 관련 실행기·정밀 내보내기와 실패 smoke까지 **91파일**을 `hist/burningframe-d5cb6`에 보존했다. 초안의 Dais extra 위치를 정확히 교정하고, 미컴파일 검사에 기존 생성자 계약의 reserve 훅을 준비했다. 최초 보고서와 fixture/원본 출력/Native 도구는 불변이다. 첫 draft successor 도구/보고서/test 원문도 별도 보존했다. 현재 source/test는 `tools/analyze_burningframe_draft_lineage.py`의 **schema2**, 전체 이전 production/test 정확 역변환과 SHA로 연결한다. **새 원본 입력0**이다.
 
 ```text
 python -X utf8 tools/analyze_burningframe_draft_lineage.py --verify

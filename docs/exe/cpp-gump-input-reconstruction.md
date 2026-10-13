@@ -43,7 +43,7 @@ ABI/보존 레지스터/스택/x87/SEH/허용 불연속 실행·쓰기/노드 �
 
 새 C++ **9개**, Release 경고/오류 **0**·CTest 내부 **810개·실패 0**(163.59초, 전체 163.64초), 근거 감사 **121종**·새 변이 **14개 모두 검출**(`--focused`, 변이 전 사본 전체 검사 통과). 최종 미검출/건너뜀 **0개**, 사본 소스 바이트 복구를 확인했다. 캡처 교체/override/미사용 dialog/현재 dialog/한도·이전 캡처/실패 해제/성공 유지/dialog 무시/강제 전달 누락·부모 dead/실제 Pick 생략/호출자 사건/반환 0 이후 계속 전달의 변이를 검출했다.
 
-자료: `cpppj/recovery-gumpinput-evidence.json`, `cpppj/tests/fixtures/gumpinput-x86.tsv`, `extracted/gumpinput/{originals,originalCD,original1037}/`, `extracted/gumpinput-{export,smoke,oracle,build,focused,ctest,audits,mutations}.log`.
+자료: `cpppj/gumpinput.json`, `cpppj/tests/fixtures/gumpinput-x86.tsv`, `extracted/gumpinput/{originals,originalCD,original1037}/`, `extracted/gumpinput-{export,smoke,oracle,build,focused,ctest,audits,mutations}.log`.
 
 ```powershell
 powershell -File tools/ghidra/export_functions.ps1 -Name gumpinput

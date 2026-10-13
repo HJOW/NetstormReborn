@@ -34,7 +34,7 @@ SPEC['original1037']=dict(SPEC['originalCD'])
 # 기록기 객체의 입력 주소, 새 SID가 서버 영역 첫 번호에서 떨어진 거리, 타입 flags1의 "사제가 지어야 함" 비트다.
 RECORDER,BORN,NEEDS_BUILDER=0x1234abcd,8,0x8000
 FIXTURE=ROOT/'cpppj/tests/fixtures/constructionconfirm-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-constructionconfirm-evidence.json'
+REPORT=ROOT/'cpppj/constructionconfirm.json'
 # 입력 칸 순서다. count는 실제 decoder가 센 조각 수이며 비교용 정보다(확정 함수의 인자가 아니다).
 KEYS=('type','x','y','player','argument','direction','flags','timeLow','timeHigh','quality','flags1','skip','builder',
     'enabled','active','frames','default','count')

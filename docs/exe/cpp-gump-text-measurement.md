@@ -38,7 +38,7 @@
 
 새 C++ 검사는 **6개**다. 측정 전수 대조·바이트 범위 계약·돌 버튼 측정/트리/자식 우선 삭제·라벨 변경·할당 실패·도움말 콜백 순서를 포함한다. 최종 Release **경고/오류 0**, 전체 CTest 내부 **833개·실패 0**(내부 86.89초, CTest 전체 86.92초), 근거 재감사 통과다. 기본 Gump 측정 및 도움말 검사는 두 판본을 포함하며 돌 버튼 트리/수명 연결 검사는 10.78 상태다.
 
-자료는 `cpppj/recovery-gumptext-evidence.json`, `cpppj/tests/fixtures/gumptext-x86.tsv`, `extracted/gumptext/`, `extracted/gumptext-build-final.log`, `extracted/gumptext-ctest.log`에 있다. SOURCE_MAP은 생성 도구로 확인했으며 내용 차이는 없다.
+자료는 `cpppj/gumptext.json`, `cpppj/tests/fixtures/gumptext-x86.tsv`, `extracted/gumptext/`, `extracted/gumptext-build-final.log`, `extracted/gumptext-ctest.log`에 있다. SOURCE_MAP은 생성 도구로 확인했으며 내용 차이는 없다.
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File tools/ghidra/export_functions.ps1 -Name gumptext

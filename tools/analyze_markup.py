@@ -17,7 +17,7 @@ from analyze_styletext import ROOT,digest,read_ranges
 
 # 근거 경로는 저장소 안에서만 사용한다. 보호 원본은 읽기 전용이다.
 PLAN=ROOT/'tools/ghidra/markup-functions.json'
-REPORT=ROOT/'cpppj/recovery-markup-evidence.json'
+REPORT=ROOT/'cpppj/markup.json'
 # 판본별 그림/기본 가상 표, 비교 배율 1 및 16.16 배율 상수의 실제 주소다.
 EDITIONS={
     'originals':('originals/Netstorm.exe',0x50c5d8,0x50c5c0,0x5012d0,0x501ad0),

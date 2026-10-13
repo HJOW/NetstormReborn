@@ -16,7 +16,7 @@ SPEC={
  'originalCD':dict(entry=0x4aed90,tables=(0x5058d8,0x5014f8,0x501120,0x5003e0,0x503b30)),
 }
 FIXTURE=ROOT/'cpppj/tests/fixtures/squiddefense-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-squiddefense-evidence.json'
+REPORT=ROOT/'cpppj/squiddefense.json'
 
 
 def observe(edition):

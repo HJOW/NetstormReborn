@@ -8,9 +8,9 @@ import json
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1] # 현재 저장소의 전체 원문을 읽는 기준이다.
-HISTORY=ROOT/'cpppj/recovery-history/daisbridge-before-surface-input' # 두 번째 실패와 첫 successor의 전체110파일을 보존한다.
+HISTORY=ROOT/'cpppj/hist/daisbridge-b-6acfc' # 두 번째 실패와 첫 successor의 전체110파일을 보존한다.
 TEST='cpppj/tests/DaisBridgeTests.cpp' # 원본 최종 AP 코드로 실제 BFS 경로/시각을 비교하는 검사다.
-REPORT=ROOT/'cpppj/recovery-daisbridge-surface-input-successor-evidence.json' # 현재 검사와 원본640의 별도 successor다.
+REPORT=ROOT/'cpppj/daisbridge-surface-input-successor.json' # 현재 검사와 원본640의 별도 successor다.
 COMMENT='    // 원본 입력의 surface83/사제158 코드 포인터가 공유되어 최종 표면 코드도 AP가 된다.\n' # 결과를 바꾸는 입력 코드 공유를 설명한다.
 DIAGNOSTIC='if (static_cast<std::uint32_t>(current->Runtime().Count())!=Number(row[3]) || BridgePoints(current->Runtime())!=row[5]) std::cerr<<"Bridge 경로 진단 "<<row[0]<<\' \'<<row[1]<<" actual="<<current->Runtime().Count()<<\':\'<<BridgePoints(current->Runtime())<<" expected="<<row[3]<<\':\'<<row[5]<<\'\\n\';' # 이전 실패의 전체 비트 출력 문장이다.
 
@@ -50,7 +50,7 @@ def expected():
         assert json.loads(old.REPORT.read_text(encoding='utf-8'))==old.expected()
     finally:
         Path.read_bytes=original
-    native_name='cpppj/recovery-daisbridge-evidence.json';native=json.loads((ROOT/native_name).read_text(encoding='utf-8'))
+    native_name='cpppj/daisbridge.json';native=json.loads((ROOT/native_name).read_text(encoding='utf-8'))
     assert native['total']==640 and len(native['precision_differences'])==18
     source='tools/decomp_daisbridge_oracle.py';text=(ROOT/source).read_text(encoding='utf-8')
     assert "codes=CODES+(typ-158)*0x1000" in text and "self.table(158,'AEKLMNOP'+'P'*24)" in text

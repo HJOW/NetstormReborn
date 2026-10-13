@@ -1,4 +1,4 @@
-// 원본 SquidFinder의 표면 지도 탐색. recovery-surface-evidence.json의 정상 반환 기대값으로 검증한다.
+// 원본 SquidFinder의 표면 지도 탐색. surface.json의 정상 반환 기대값으로 검증한다.
 #include "o/SquidFinder.h"
 #include "o/Bridge.h"
 #include <algorithm>

@@ -32,7 +32,7 @@ flood는 4,096 DWORD 스택을 사용한다. 현재 객체의 그래프가 목�
 
 ## 검증과 재현
 
-[독립 실행 기록](../../cpppj/recovery-graph-evidence.json), [기대값](../../cpppj/tests/fixtures/graph-x86.tsv), [실행 도구](../../tools/decomp_graph_oracle.py), [C++ 검사](../../cpppj/tests/GraphTests.cpp).
+[독립 실행 기록](../../cpppj/graph.json), [기대값](../../cpppj/tests/fixtures/graph-x86.tsv), [실행 도구](../../tools/decomp_graph_oracle.py), [C++ 검사](../../cpppj/tests/GraphTests.cpp).
 
 기존 [표면 탐색의 내보내기](cpp-surface-reconstruction.md)와 위 Graph 함수의 새 `ExportCreation.java` 내보내기를 준비한 뒤 실행한다.
 

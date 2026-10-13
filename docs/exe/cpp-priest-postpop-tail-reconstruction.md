@@ -39,7 +39,7 @@
 
 각 PE 정상 반환/실제 wrapper/Carrier 경계 **4,096회**, 실제 이동 불가 wrapper **1,696회**, 실제 지면/HP 상태 조회 **864회**, 실제 방향 조회 **400회**다. 낙하 경계 **264회**, 보호막 생성 **1,440회**, 보호막 삭제 **256회**, Regular 검색 **832회**, new **416회**, Regular 생성 **224회**다. 패치 거의 올림 spot helper는 **720회**이며 CD는 inline이다. ESP·EBX/ESI/EDI/EBP·x87 제어/TOP·SEH FS:[0] 정상 복구, 허용 코드/쓰기·원본 this/flags·raw 전체/목록/소유자 칸·assert/OS 0·SHA/행/입력 순서·실제/대체 진입 수를 감사한다. 예외 SEH 해제나 원본 할당 실패 처리 전체는 재현하지 않는다.
 
-새 [fixture](../../cpppj/tests/fixtures/priestpostpoptail-x86.tsv)·[근거 JSON](../../cpppj/recovery-priestpostpoptail-evidence.json)은 UTF-8/LF다. 기존 fixture/감사 도구는 수정하지 않았다. 누적 인계 **347,962 + 6,144 = 354,106개**다.
+새 [fixture](../../cpppj/tests/fixtures/priestpostpoptail-x86.tsv)·[근거 JSON](../../cpppj/priestpostpoptail.json)은 UTF-8/LF다. 기존 fixture/감사 도구는 수정하지 않았다. 누적 인계 **347,962 + 6,144 = 354,106개**다.
 
 ## C++ 연결과 남은 범위
 

@@ -7,10 +7,10 @@ import json
 from pathlib import Path
 from decomp_priesthalt_oracle import ROOT,FIXTURE,REPORT as NATIVE,sha
 
-HISTORY=ROOT/'cpppj/recovery-history/priesthalt-before-spots-isolation' # 지면/hash1 충돌 발견 전 전체35파일과 바이트 manifest다.
-REPORT=ROOT/'cpppj/recovery-priesthalt-spots-successor-evidence.json' # 최종 Native864와 변경 없는 C++ 검사·생산의 현재 successor다.
+HISTORY=ROOT/'cpppj/hist/priesthalt-b-f9d20' # 지면/hash1 충돌 발견 전 전체35파일과 바이트 manifest다.
+REPORT=ROOT/'cpppj/priesthalt-spots-successor.json' # 최종 Native864와 변경 없는 C++ 검사·생산의 현재 successor다.
 SOURCE='tools/decomp_priesthalt_oracle.py' # 지면 주소만 격리하는 현재 제한 실행기다.
-PREVIOUS='cpppj/recovery-priesthalt-cpp-binding-evidence.json' # 초기 C++ 연결과 CD48 입력 교정의 당시 보고서다.
+PREVIOUS='cpppj/priesthalt-cpp-binding.json' # 초기 C++ 연결과 CD48 입력 교정의 당시 보고서다.
 
 def rows(path):
     """주석 외 입력/반환/사건/전체 부모 raw를 그대로 읽는다."""
@@ -19,7 +19,7 @@ def rows(path):
 def expected():
     """최소 주소 교정과 이전 전체 보고서·검사의 정확 재현을 감사한다."""
     baseline=json.loads((HISTORY/'baseline.json').read_text(encoding='utf-8'));assert len(baseline)==35
-    changed_names={SOURCE,'cpppj/recovery-priesthalt-evidence.json','cpppj/tests/fixtures/priesthalt-x86.tsv'}
+    changed_names={SOURCE,'cpppj/priesthalt.json','cpppj/tests/fixtures/priesthalt-x86.tsv'}
     # 원본 PE는 읽기 전용 위치에 유지하고 이전 전체 C++/생산/도구/보고서/본문은 이력에서 감사한다.
     for name,value in baseline.items():
         assert sha(HISTORY/name)==value,name

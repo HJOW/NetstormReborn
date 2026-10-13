@@ -15,7 +15,7 @@ from decomp_process_oracle import (ProcessOracle,ROOT,BINARIES,CONTROLS,STACK,ST
 DATA,ENTRY,RAW,TYPES,TOPO,VTABLE,PROCS,AUX,SHAPES=0x16000000,0x16000100,0x16001000,0x16010000,0x16030000,0x16070000,0x16071000,0x16073000,0x17000000
 VFRAME,VDRAW=0x13000500,0x13000520
 FIXTURE=ROOT/'cpppj/tests/fixtures/spritedraw-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-spritedraw-evidence.json'
+REPORT=ROOT/'cpppj/spritedraw.json'
 SEED=0x49822012
 # 입력은 기대 좌표/막대를 계산하지 않고 raw 필드·전역·타입·현재 조회 결과만 담는다.
 FIELDS=('tail','extra','frame','world_x','world_y','camera_x','camera_y','hot_x','hot_y','foot_x','foot_y','loaded','frame_count',

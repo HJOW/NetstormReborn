@@ -33,7 +33,7 @@
 
 ## 최초 전체 자료와 현재 test 연결
 
-최초308 native report/fixture/tool/production/test/support 및 모든 비보호 출처 **69파일 전체**를 `recovery-history/dudedrop-before-assert-lines`에 보존했다. 미컴파일 test의 임시 진단 출력0을 실제 두 부모의452/469로 바꾼 한 조각만 정확 역변환한다. `analyze_dudedrop_draft_lineage.py`와 별도 보고서가 최초 native SHA/원문 불변 및 현재 test SHA를 연결한다. 새 native 입력은0이고 C++ 성공을 의미하지 않는다. 최초 native 보고서의 `cpp_tests_completed=0`과 당시 test SHA는 그대로 보존한다.
+최초308 native report/fixture/tool/production/test/support 및 모든 비보호 출처 **69파일 전체**를 `hist/dudedrop-bef-bac65`에 보존했다. 미컴파일 test의 임시 진단 출력0을 실제 두 부모의452/469로 바꾼 한 조각만 정확 역변환한다. `analyze_dudedrop_draft_lineage.py`와 별도 보고서가 최초 native SHA/원문 불변 및 현재 test SHA를 연결한다. 새 native 입력은0이고 C++ 성공을 의미하지 않는다. 최초 native 보고서의 `cpp_tests_completed=0`과 당시 test SHA는 그대로 보존한다.
 
 ```text
 python -X utf8 tools/analyze_dudedrop_draft_lineage.py --verify

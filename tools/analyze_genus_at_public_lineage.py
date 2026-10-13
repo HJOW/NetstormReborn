@@ -9,10 +9,10 @@ from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1] # 현재 공유 workspace와 Git 원문을 읽는 기준이다.
 BASELINE='860030e' # 단위13 최종1066 성공 뒤 커밋된 기준이다.
-HISTORY=ROOT/'cpppj/recovery-history/genus-at-public-baseline' # 기존 전체 Git/LF와 작업 바이트를 별도 보존한다.
+HISTORY=ROOT/'cpppj/hist/genus-at-pub-4fe2a' # 기존 전체 Git/LF와 작업 바이트를 별도 보존한다.
 HEADER='cpppj/src/o/RawDamageablePostDestroy.h' # private→public 선언 위치만 바뀌는 기존 헤더다.
 CPP='cpppj/src/o/RawDamageablePostDestroy.cpp' # 실제 getter/드롭/HP/다리/공통post 몸체는 변경하지 않는다.
-REPORT=ROOT/'cpppj/recovery-genus-at-public-lineage-evidence.json' # 새관찰0과 동일 기존4412를 current header와 연결한다.
+REPORT=ROOT/'cpppj/genus-at-public-lineage.json' # 새관찰0과 동일 기존4412를 current header와 연결한다.
 DECLARATION='    Sid GenusAt(float x,float y,std::uint32_t genus) const; // plain 절삭한 한 칸의 첫 일반 finder 후보를 조회한다.\n' # 기존 선언/설명을 전체 그대로 이동한다.
 
 def sha(path):
@@ -53,7 +53,7 @@ def expected():
         assert sha(work)==item['work_sha256'] and sha(git)==item['git_sha256'],name
         assert git.read_bytes()==subprocess.check_output(['git','show',BASELINE+':'+name],cwd=ROOT),name
         assert (inverse if name==HEADER else (ROOT/name).read_bytes())==work.read_bytes(),name
-    native=json.loads((ROOT/'cpppj/recovery-damageablepostdestroy-evidence.json').read_text(encoding='utf-8'));assert native['total']==4412 and native['normal_total']==4412 and native['assertion_total']==0
+    native=json.loads((ROOT/'cpppj/damageablepostdestroy.json').read_text(encoding='utf-8'));assert native['total']==4412 and native['normal_total']==4412 and native['assertion_total']==0
     return dict(schema=1,host='HJOW-Athlon',decompile_date='2026-10-14',baseline_commit=BASELINE,new_native_inputs=0,preserved_normal_inputs=4412,preserved_assert_inputs=0,
                 declaration_exact_inverse=True,all_cpp_bodies_unchanged=True,existing_reports_and_fixtures_unchanged=True,baseline_files=baseline['files'],
                 current_sources={name:sha(ROOT/name) for name in (HEADER,CPP)},tool_sha256=sha(Path(__file__)),history={path.relative_to(ROOT).as_posix():sha(path) for path in sorted(HISTORY.rglob('*')) if path.is_file()},

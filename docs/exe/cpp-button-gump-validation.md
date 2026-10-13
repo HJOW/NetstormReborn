@@ -66,7 +66,7 @@
 
 - `cpppj/tests/fixtures/buttongump-x86.tsv`: 기본 53비트 전수 관찰, LF/UTF-8.
 - `cpppj/tests/fixtures/buttongump-x87-64.json`: 대안 모드 차이 자료(이번 결과는 빈 배열).
-- `cpppj/recovery-buttongump-evidence.json`: 원본/내보내기/도구/fixture SHA와 호스트·집계.
+- `cpppj/buttongump.json`: 원본/내보내기/도구/fixture SHA와 호스트·집계.
 - `extracted/buttongump/{originals,originalCD,original1037}/`: 현재 25/22/22개 내보내기.
 - `extracted/buttongump-{oracle,oracle-final,validation-build,focused,ctest,menu-smoke}.log`, `extracted/cpp-menu-smoke/report.json`·BMP: 실제 실행 결과. 로그는 UTF-8로 정리했다.
 

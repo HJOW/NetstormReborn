@@ -19,6 +19,6 @@ Init은 시작 좌표의 실제 표면 SID가 0이면 Pop·검색·current 초�
 
 통합 검사는 같은 raw 풀에서 실제 Pop/Unpop·hash/spot 등록·BFS·Kernel 갱신·도착 반환 1000의 Form 삭제를 실행한다. 두 PE 각각의 client Form을 사용한다. 외부 부모의 Halt/Arrival·효과음·cleanup은 명시 관찰 경계이며 실제 사제나 건설 부모의 전체 구현으로 세지 않는다. native Init의 부모 가상 Pop도 명시 좌표/void 경계다. BFS의 프로파일링 시계는 0 입력으로 대체한다.
 
-표면0 반환과 기존 경로 보존, flags1의 직선 검색, 다른 풀의 어댑터 거부, 표면 alias 및 실제 Kernel 이동을 포함한 집중 검사 **5개**가 통과했다. 최종 전체 검증 결과와 현재 SHA는 `cpppj/recovery-campaign-pathsearch-evidence.json`에 기록한다. 성공 로그 없이 완료 보고서를 만들 수 없도록 `tools/analyze_campaign_pathsearch.py`가 확인한다.
+표면0 반환과 기존 경로 보존, flags1의 직선 검색, 다른 풀의 어댑터 거부, 표면 alias 및 실제 Kernel 이동을 포함한 집중 검사 **5개**가 통과했다. 최종 전체 검증 결과와 현재 SHA는 `cpppj/campaign-pathsearch.json`에 기록한다. 성공 로그 없이 완료 보고서를 만들 수 없도록 `tools/analyze_campaign_pathsearch.py`가 확인한다.
 
 GameWorld 비표면 객체의 실제 풀 이관, Factory/썬 아비어리 후처리, 서버 Path 직렬화, 실제 사제 운반·의식·도착, 건설·전투·승패와 캠페인 1-1 완주는 남아 있다. 원본의 큐 읽기 넘침과 손상 포인터는 정상 입력의 호스트 계약에 포함하지 않는다. 전체화면 DirectDraw는 이번 범위에서 변경하지 않았다.

@@ -50,7 +50,7 @@ BODY = {
 }
 BODY['original1037'] = dict(BODY['originalCD'])
 FIXTURE = ROOT / 'cpppj/tests/fixtures/scenemusic-x86.tsv'
-REPORT = ROOT / 'cpppj/recovery-scenemusic-evidence.json'
+REPORT = ROOT / 'cpppj/scenemusic.json'
 # 호출 연산과 그 연산이 실제로 진입하는 원본 몸체의 키다.
 CALLS = {'lock': 'lock', 'req': 'request', 'next': 'next', 'frame': 'frame', 'start': 'start', 'weather': 'weather'}
 

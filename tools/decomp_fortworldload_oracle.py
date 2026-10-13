@@ -18,7 +18,7 @@ from unicorn.x86_const import UC_X86_REG_EAX,UC_X86_REG_ECX,UC_X86_REG_ESP,UC_X8
 # 포인터/스트림/원본120BYTE/단독getter출력을보관하는분석메모리다.
 ARENA,MANAGER,STREAM,DATA,OUTPUT=0x11a00000,0x11a00100,0x11a00200,0x11a01000,0x11a02000
 FIXTURE=ROOT/'cpppj/tests/fixtures/fortworldload-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-fortworldload-evidence.json'
+REPORT=ROOT/'cpppj/fortworldload.json'
 # 부모/실제Territory getter와현재Template/원본전역·명시child주소다.
 PLAN={
  'originals':dict(parent=0x4b5f70,territory=0x4bd660,lookup=0x44ceb0,generate=0x46da70,objects=0x4be610,

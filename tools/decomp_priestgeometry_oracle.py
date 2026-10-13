@@ -20,7 +20,7 @@ from unicorn.x86_const import (UC_X86_REG_EAX,UC_X86_REG_EBX,UC_X86_REG_ECX,UC_X
 # 분석 전용 decoder/출력/프레임 코드 주소와 새 관찰 파일이다.
 DEC,OUT,CODES=0x14200000,0x14300000,0x14400000
 FIXTURE=ROOT/'cpppj/tests/fixtures/priestgeometry-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-priestgeometry-evidence.json'
+REPORT=ROOT/'cpppj/priestgeometry.json'
 # 실제 진입점·한 모양 중간 구간·현재 패턴 전역이다.
 GEOMETRY={
  'originals':dict(begin=0x425c20,next=0x425860,bounds=0x425b90,area=0x49b8c0,finder=0x4b16d0,

@@ -19,7 +19,7 @@ import pefile
 # 경로는 저장소 안에서만 사용하며 원본 파일은 읽기만 한다.
 ROOT=Path(__file__).resolve().parent.parent
 PLAN=ROOT/'tools/ghidra/styletext-functions.json'
-REPORT=ROOT/'cpppj/recovery-styletext-evidence.json'
+REPORT=ROOT/'cpppj/styletext.json'
 # 실제 문자열 조각의 가상 표와 짧은 명령 파서다. 표의 다섯 DWORD는 삭제/메트릭/측정/출력/복제다.
 EDITIONS={
     'originals':('originals/Netstorm.exe',0x5143cc,0x4bb430),

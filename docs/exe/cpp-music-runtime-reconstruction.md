@@ -47,7 +47,7 @@ worker의 호스트 예외는 프로세스 밖으로 나가지 않고 `WorkerFai
 
 커널 API·COM·메모리 파일/잠금·기록/assert/패치 CRT 로캘·초기 배치만 명시 대체한다. **초기화/종료/worker·공개 Stop/FillBuffer·Read/Rewind/helper는 실제 원본 명령**이다. 두 번째 채널 raw96와 기본 채널 raw96, 출력128·준비/핸들/ID·메모리 파일 위치/열림·사건 순서·worker 반환을 [fixture](../../cpppj/tests/fixtures/musicruntime-x86.tsv)에 보존했다. 초기화로 잊힌 입력 파일을 0/다른 토큰의 닫기로 반납했다고 처리하지 않는다. 실제 스레드 스케줄링/Win32 구조체 배치는 Native fixture의 동치 주장 범위 밖이다.
 
-[근거](../../cpppj/recovery-musicruntime-evidence.json)는 정확한 전체 입력/행·직접 반환/정책 진입·ABI/스택/보존 레지스터/SEH/x87·허용 명령/쓰기·잠금 균형·명시 실패 보고/예기치 않은 assert 0·OS 0·SHA를 감사한다. 기존 fixture/도구는 수정하지 않았다. 누적 독립 관찰 **444,469개**다.
+[근거](../../cpppj/musicruntime.json)는 정확한 전체 입력/행·직접 반환/정책 진입·ABI/스택/보존 레지스터/SEH/x87·허용 명령/쓰기·잠금 균형·명시 실패 보고/예기치 않은 assert 0·OS 0·SHA를 감사한다. 기존 fixture/도구는 수정하지 않았다. 누적 독립 관찰 **444,469개**다.
 
 [SoundMusicRuntimeTests.cpp](../../cpppj/tests/SoundMusicRuntimeTests.cpp)의 새 검사 **8개**는 원본 관찰 전수 비교, **실제 Windows worker·이벤트·Winmm 파일의 3회 시작/첫 채우기/종료/재시작**, worker 예외의 진단/합류·파일 닫기, 종료 대기 중 새 Play 거부/잠금 반납, 두 읽기 스레드의 **400회 파일 수명·토큰 미재사용**, 연결 누락/초기화 진단 예외 정리를 확인한다. 테스트 검사 전역을 실제 worker에서 수정하지 않는다. 기본 CTest에 원본 자산/PE/Python/오디오 장치/창은 필요 없다.
 

@@ -42,4 +42,4 @@ client/서버/혼합 번호, 서버 권한에 따른 통지 생략, 양방향 �
 
 ContentForm 특수 preDestroy/너겟 지급과 공유 Form 삭제 분배·실제 표면 월드 프로세스 연결은 위 후속에서 구현했다. 초기화 앞 UI/Kernel 정리·전체 Client/비표면 월드 등록·사용 중인 지정 프로세스 재등록, 실제 사제 포획 경고/커서 효과·동적 메뉴/현재 UI 전역/명령 큐/변경 영역·OS 입력/overlay·자동 raw UI·건설 GUI·캠페인 완주는 계속 남았다.
 
-게임/GUI는 실행하지 않았고 보호 PE 두 파일의 SHA-256은 기존 기록과 같다. AGENTS.md·보호 원본·dotnetpj 변경, Git 커밋/푸시는 없다. 근거 보고서는 `cpppj/recovery-formlifecycle-evidence.json`, fixture는 `cpppj/tests/fixtures/formlifecycle-x86.tsv`, 로그는 `extracted/formlifecycle-*.log`다.
+게임/GUI는 실행하지 않았고 보호 PE 두 파일의 SHA-256은 기존 기록과 같다. AGENTS.md·보호 원본·dotnetpj 변경, Git 커밋/푸시는 없다. 근거 보고서는 `cpppj/formlifecycle.json`, fixture는 `cpppj/tests/fixtures/formlifecycle-x86.tsv`, 로그는 `extracted/formlifecycle-*.log`다.

@@ -74,4 +74,4 @@ cmake --build cpppj/build --config Release
 ctest --test-dir cpppj/build -C Release --output-on-failure
 ```
 
-기본 검사는 [fixture](../../cpppj/tests/fixtures/constructioneffects-x86.tsv)를 읽고 게임/Python을 실행하지 않는다. [근거 JSON](../../cpppj/recovery-constructioneffects-evidence.json)·문서·새 소스는 UTF-8이다. 내보내기는 Git 제외 `extracted/constructioneffects/`, 로그는 `extracted/constructioneffects-*.log`다. 보호 원본·AGENTS.md·dotnetpj 변경, 커밋/푸시는 없다.
+기본 검사는 [fixture](../../cpppj/tests/fixtures/constructioneffects-x86.tsv)를 읽고 게임/Python을 실행하지 않는다. [근거 JSON](../../cpppj/constructioneffects.json)·문서·새 소스는 UTF-8이다. 내보내기는 Git 제외 `extracted/constructioneffects/`, 로그는 `extracted/constructioneffects-*.log`다. 보호 원본·AGENTS.md·dotnetpj 변경, 커밋/푸시는 없다.

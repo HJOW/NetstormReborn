@@ -31,7 +31,7 @@ SPECS={
 SPECS['original1037']=dict(SPECS['originalCD'])
 # 독립 원본 관찰과 SHA/입력/호출 감사 보고서의 저장 경로다.
 FIXTURE=ROOT/'cpppj/tests/fixtures/gumpevents-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-gumpevents-evidence.json'
+REPORT=ROOT/'cpppj/gumpevents.json'
 
 
 def changed(raw,**fields):

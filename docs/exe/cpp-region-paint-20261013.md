@@ -31,9 +31,9 @@ AA 프레임은 내부·경계의 독립된 99개 캐시를 사용한다. 각 �
 
 CRT 메모리 확보/복사·벡터 삽입, 가상 소유자 효과, edgeFarm finder는 명시 경계다. 실제 flood·프레임 선택·PRNG·방향 정규화·좌표/지역 중복 제거·형 변환은 원본 몸체를 실행한다. C++ 재생은 같은 원본 입력과 기존 `RawCanonPlacementTerrain::RegionAt`을 사용해 소유자·프레임·효과 호출 순서·좌표 후보·영향 지역 비트·drawer·revision·난수를 비교한다.
 
-근거는 `cpppj/recovery-regionpaint-evidence.json`과 `cpppj/tests/fixtures/regionpaint-x86.tsv`다. 감사 명령 `python tools/decomp_regionpaint_oracle.py --verify`는 보호 PE·도구·소스·현호스트 내보내기·fixture SHA와 판본별 고유 입력/정상 반환 수를 확인한다. 최종 원본 실행 로그는 `extracted/regionpaint-native-final.log`다.
+근거는 `cpppj/regionpaint.json`과 `cpppj/tests/fixtures/regionpaint-x86.tsv`다. 감사 명령 `python tools/decomp_regionpaint_oracle.py --verify`는 보호 PE·도구·소스·현호스트 내보내기·fixture SHA와 판본별 고유 입력/정상 반환 수를 확인한다. 최종 원본 실행 로그는 `extracted/regionpaint-native-final.log`다.
 
-최종 Release의 두 집중 검사에서484개가 모두 C++ 결과와 같았으며 전체958개 검사도 통과했다. 최초 C++ 검사 입력의 타입 표 크기를 원본188/171개로 교정했으며 production 도장 몸체의 변경은 없었다. 최종 로그는 `extracted/campaign-runtime4-RegionPaint_-final-tests.log`다.
+최종 Release의 두 집중 검사에서484개가 모두 C++ 결과와 같았으며 전체958개 검사도 통과했다. 최초 C++ 검사 입력의 타입 표 크기를 원본188/171개로 교정했으며 production 도장 몸체의 변경은 없었다. 최종 로그는 `extracted/run4-RegionPaint_-final.log`다.
 
 ## 한계와 후속 연결
 

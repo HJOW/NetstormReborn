@@ -47,7 +47,7 @@
 
 요새/전투 네 조합, 읽기 중첩 0/1/3, 원래 소유자 0/1/2/5/8/127와 표식·high byte, 요청 0/1/3/8/9/127/128/`0x80000000`/`0xffffffff`, 두 로컬 번호·현재 소유자·state/extra를 포함한다. 입력 격자에서 원본 assert 경로를 제외했으므로 판본별 행 수가 다르다. 함수는 정수 필드만 계산한다.
 
-[`priestowner-x86.tsv`](../../cpppj/tests/fixtures/priestowner-x86.tsv)의 **사건 순서·인자·호출 시점 WORD/소유자·슬롯 전체**가 C++과 일치한다. [`recovery-priestowner-evidence.json`](../../cpppj/recovery-priestowner-evidence.json)은 PE/기존·새 내보내기/생성 도구/입력 목록/fixture SHA, 실제 진입/명령 수와 assert/대체/OS 호출 0을 기록한다. 일반 CTest는 원본 파일/Python/Ghidra 없이 저장 fixture만 사용한다.
+[`priestowner-x86.tsv`](../../cpppj/tests/fixtures/priestowner-x86.tsv)의 **사건 순서·인자·호출 시점 WORD/소유자·슬롯 전체**가 C++과 일치한다. [`priestowner.json`](../../cpppj/priestowner.json)은 PE/기존·새 내보내기/생성 도구/입력 목록/fixture SHA, 실제 진입/명령 수와 assert/대체/OS 호출 0을 기록한다. 일반 CTest는 원본 파일/Python/Ghidra 없이 저장 fixture만 사용한다.
 
 ## 실제 raw 모듈 통합·검증
 

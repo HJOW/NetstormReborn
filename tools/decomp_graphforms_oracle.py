@@ -14,7 +14,7 @@ from decomp_oracle import ROOT
 from decomp_graphremove_oracle import digest
 
 FIXTURE=ROOT/'cpppj/tests/fixtures/graphforms-x86.tsv'  # 전체 raw 슬롯/표/스택을 직접 대조할 독립 결과다.
-REPORT=ROOT/'cpppj/recovery-graphforms-evidence.json'  # 양판본의 고유 입력과 두 정밀도 정상 반환을 분리한다.
+REPORT=ROOT/'cpppj/graphforms.json'  # 양판본의 고유 입력과 두 정밀도 정상 반환을 분리한다.
 FORM_TYPES=(6,14,24,46)  # 내용물/Burning/Path/Process의 내부 타입 번호를 합성 비표면 자료로 준비한다.
 STATES=(0,2,4,8)  # live/dead/void/contained 상태를 각각 전체순회에 넣는다.
 EDITIONS=('originals','originalCD')  # 각 실제 PE를 서로 독립 실행한다.
@@ -85,7 +85,7 @@ def generate(smoke):
     assert len(rows)==64
     FIXTURE.write_text('# 실제 전체풀 Rebuild: 표면1/비표면 내부Form6, 두x87 동일반환, 대체효과0.\n'+'\n'.join(rows)+'\n',encoding='utf-8',newline='\n')
     paths=[Path(__file__).resolve(),FIXTURE,ROOT/'cpppj/src/o/RawGraph.cpp',ROOT/'tools/decomp_graphrebuild_oracle.py',
-           ROOT/'cpppj/recovery-graphrebuild-evidence.json',*[ROOT/'tools'/name for name in PARENTS]]
+           ROOT/'cpppj/graphrebuild.json',*[ROOT/'tools'/name for name in PARENTS]]
     # 원본 PE와 실제 실행한 재구성 범위는 현재 전체 바이트에 고정한다.
     for edition in EDITIONS:
         paths.append(ROOT/('originals/Netstorm.exe' if edition=='originals' else 'originalCD/NETSTORM.EXE'))

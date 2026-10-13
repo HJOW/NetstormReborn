@@ -30,7 +30,7 @@ SPEC={
 SPEC['original1037']=dict(SPEC['originalCD'])
 # fixture에는 입력과 실제 출력만 저장하며 Python 판정 함수는 두지 않는다.
 FIXTURE=ROOT/'cpppj/tests/fixtures/priestterrain-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-priestterrain-evidence.json'
+REPORT=ROOT/'cpppj/priestterrain.json'
 KEYS=('kind','flags','other','frameFlag','cx','cy','wx','wy','ox','oy','extra','noIsland','regionValue','mapped','seed','sentinel','initialGround')
 
 

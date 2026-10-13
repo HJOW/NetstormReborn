@@ -43,7 +43,7 @@ EXTRA['original1037'] = EXTRA['originalCD']
 HANDLED = ('fall_this', 'fall_cdecl', 'basepre', 'basepost_destroy', 'walker')
 # 새 결과 파일은 이전 기록/fixture와 분리한다.
 FIXTURE = ROOT / 'cpppj/tests/fixtures/islandlifecycle-x86.tsv'
-REPORT = ROOT / 'cpppj/recovery-islandlifecycle-evidence.json'
+REPORT = ROOT / 'cpppj/islandlifecycle.json'
 
 
 class IslandOracle(ConnectOracle):

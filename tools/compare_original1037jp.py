@@ -21,7 +21,7 @@ import pefile
 BINARIES = {'original1037JP': 'original1037JP/NetStorm.exe', 'originalCD': 'originalCD/NETSTORM.EXE',
             'original1037': 'original1037/netstorm.exe'}
 # 읽기 전용 비교 결과의 저장 경로다.
-REPORT = ROOT / 'cpppj/recovery-original1037jp-evidence.json'
+REPORT = ROOT / 'cpppj/original1037jp.json'
 # 일본판 디컴파일 산출물 경로 (Git 제외).
 DECOMP = ROOT / 'extracted/original1037JP/decomp'
 

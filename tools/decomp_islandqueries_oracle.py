@@ -24,7 +24,7 @@ SPECS={
     entries=dict(FindOwnerTerritory=0x4bdaa0,FindTerritory=0x4bdb10,CountOwned=0x4bdb60),helpers=(0x4bd4f0,0x4bd4c0,0x4bda70,0x4bd480))
 }
 FIXTURE=ROOT/'cpppj/tests/fixtures/islandqueries-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-islandqueries-evidence.json'
+REPORT=ROOT/'cpppj/islandqueries.json'
 
 
 def inputs():
@@ -143,7 +143,7 @@ def generate(smoke=False):
     if smoke:return
     FIXTURE.write_text('# edition kind input result rawAdler modes\n'+'\n'.join('\t'.join(map(str,row)) for row in rows)+'\n',encoding='utf-8',newline='\n')
     files.extend(ROOT/name for name in ('tools/decomp_regionpaint_oracle.py','cpppj/src/o/RawIslandQueries.h','cpppj/src/o/RawIslandQueries.cpp','cpppj/tests/IslandQueriesTests.cpp',
-        'cpppj/src/o/RawIslandRuntime.h','cpppj/src/o/RawIslandRuntime.cpp','cpppj/recovery-islandruntime-evidence.json') if (ROOT/name).exists())
+        'cpppj/src/o/RawIslandRuntime.h','cpppj/src/o/RawIslandRuntime.cpp','cpppj/islandruntime.json') if (ROOT/name).exists())
     REPORT.write_text(json.dumps(dict(total=len(rows),host='HJOW-Athlon',editions=editions,os_calls=0,external_calls=0,new_existing_getter_observations=0,
         readonly_full_bytes_checked=True,files={path.relative_to(ROOT).as_posix():digest(path) for path in dict.fromkeys(files)},limits=[
         '실제3204BYTE/currentCount/Exists/현재ownerDWORD·원래owner와territory signedBYTE의세검색몸체를실행한다.',

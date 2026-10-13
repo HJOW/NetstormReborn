@@ -12,7 +12,7 @@ from decomp_oracle import ROOT
 
 # 기존 SHA 기록/fixture를 고치지 않고 새 기대값과 기록을 만든다.
 FIXTURE = ROOT / 'cpppj/tests/fixtures/graphlookup-x86.tsv'
-REPORT = ROOT / 'cpppj/recovery-graphlookup-evidence.json'
+REPORT = ROOT / 'cpppj/graphlookup.json'
 PARENTS = ('decomp_graphremove_oracle.py',) + DEPENDENCIES
 
 

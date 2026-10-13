@@ -27,13 +27,13 @@
 
 독립 고유 입력은 **1680=정상1452/assert228**, 각판본840=정상726/assert114이다. wrapper/Create192·직접Post576·두getter72를 판본마다 실행하며 owner0/1/8·두owner·PlayerKnown·Fort/special·힙성공/실패·flags·유한currenttime을 교차한다. 두x87 반복3360 반환을 추가 고유수에 더하지 않는다.
 
-최초 관찰은 실제 Factory/152ctor/Owner/Pop/표시/공통Post/Regularctor를 실행하고 FormAttach만 명시 하위경계였다. 최초 tool/spec/hcpp/report/1680fixture 전체6파일과 manifest를 `cpppj/recovery-history/player-world-before-real-attach`에 보존했다.
+최초 관찰은 실제 Factory/152ctor/Owner/Pop/표시/공통Post/Regularctor를 실행하고 FormAttach만 명시 하위경계였다. 최초 tool/spec/hcpp/report/1680fixture 전체6파일과 manifest를 `cpppj/hist/player-world-f6101`에 보존했다.
 
 같은1680 입력의 후속 관찰은 **실제 BaseProcess/Kernel/FormFactory/부모부착/FormPop**까지 실행한다. 1600개 비부착 행의 기존 전체 출력이 불변이며 부착80행에서는 기존 Player/공간/장부/시각/event/payload/count/진단이 불변이고 부모WORD6만 실제 Form6으로 바뀐다. 현재 fixture는 Form SID/전체raw·Kernel PID·패치rotation을 추가 보존한다. 기존 관찰/재실행·smoke·중단된 미완료 실행을 신규 고유수에 합산하지 않는다.
 
 힙 new40과 assert 보고가 명시 외부경계다. actual attach를 빈 콜백으로 공급하지 않는다. 불변 PE의 반복(addr,size) 범위판정만 캐시해 실제Kernel 순회의 검사를 빠르게 했고 처음 범위검사·CRT/assert·쓰기보호를 유지한다.
 
-원본 자료는 `decomp_player_world_oracle.py`/`recovery-player-world-evidence.json`/`player-world-x86.tsv`다. 최초 전체 출처/동일입력/1600행/80행/Records·State 정확 역변환은 `analyze_player_world_attach_lineage.py`의 별도 successor로 연결한다. **최종 재관찰1680/전체출처SHA/정확역변환 감사가 통과**했으며 현재자료는동결했다. fixture SHA는 `c53c5f89f6734cbc89535199a69d0348f5f051192ce9e7c339c55565caa5c53b`다.
+원본 자료는 `decomp_player_world_oracle.py`/`player-world.json`/`player-world-x86.tsv`다. 최초 전체 출처/동일입력/1600행/80행/Records·State 정확 역변환은 `analyze_player_world_attach_lineage.py`의 별도 successor로 연결한다. **최종 재관찰1680/전체출처SHA/정확역변환 감사가 통과**했으며 현재자료는동결했다. fixture SHA는 `c53c5f89f6734cbc89535199a69d0348f5f051192ce9e7c339c55565caa5c53b`다.
 
 ## C++ 검사와 남은 경계
 

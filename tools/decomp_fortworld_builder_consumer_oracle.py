@@ -15,7 +15,7 @@ from unicorn.x86_const import UC_X86_REG_ECX
 
 # 새 부모534와 분리한 기존 Builder 소비자 골든의 파일과 실제 Reset 주소다.
 FIXTURE=ROOT/'cpppj/tests/fixtures/fortworldload-builder-consumer-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-fortworldload-builder-consumer-evidence.json'
+REPORT=ROOT/'cpppj/fortworldload-builder-consumer.json'
 RESETS={'originals':0x46edf0,'originalCD':0x4bd450}
 # C++ 선택 소비자가 공급하는 물리 Territory120BYTE와 같은 puzzlePiece 코드 입력이다.
 TERRITORY=bytes((3,1,0x11,7,0xaa,0xbb))+bytes(114)

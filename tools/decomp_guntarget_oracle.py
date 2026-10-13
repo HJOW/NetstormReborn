@@ -13,7 +13,7 @@ from decomp_bridgedecay_oracle import TYPES, FPU_CONTROLS, UC_X86_REG_EAX, UC_X8
 
 # 실제 게임/OS를 실행하지 않는 별도 자료와 입력 스키마다.
 FIXTURE=ROOT/'cpppj/tests/fixtures/guntarget-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-guntarget-evidence.json'
+REPORT=ROOT/'cpppj/guntarget.json'
 KEYS=('kind','type','direction','theme','range','tx','ty','extra','flags1','flags2','quantity','owner','allied','friendly','frame','scene','show','sid')
 # 판본별 최상위 몸체·전역과 출력 주소다. CRT fmod도 기존 정밀 내보내기로 실제 실행한다.
 SPEC={

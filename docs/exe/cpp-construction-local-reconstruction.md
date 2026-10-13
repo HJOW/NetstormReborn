@@ -37,7 +37,7 @@ C++는 짧은 지도/필수 경계 누락, 예약/풀 밖 미리보기, 없는 �
 
 [`decomp_constructionlocal_oracle.py`](../../tools/decomp_constructionlocal_oracle.py)는 로컬 전체·decoder/프레임 검색·좌표 절삭·요청 초기화/길이 쓰기·CD 0시각 생성을 실제 명령으로 실행한다. **가상 Form 조회/삭제·생산 칸 반환·SID 생성·예측 배치·사제 이동·전송만 대체**한다. 저장 입력은 **1,450개**(558/446/446), 두 x87 정상 반환 **2,900회**, 누적 **467,010개**(465,560 + 1,450). 조회에서 raw 플래그/품질을 바꾸고 삭제에서 raw를 지우며 본 배치에서 타입 플래그를 바꾸는 입력도 포함한다.
 
-저장 [fixture](../../cpppj/tests/fixtures/constructionlocal-x86.tsv)와 [근거 JSON](../../cpppj/recovery-constructionlocal-evidence.json)은 전체 사건 순서/인자/실제 SID 목록과 메시지 본문을 담는다. 실제 진입/정상 반환·경계 사건 수·cdecl/thiscall 스택·보존 레지스터·x87·실행/쓰기 범위·SHA를 감사하며 원본 assert/게임/OS 호출은 0이다. 원본 기대값을 C++나 Python의 별도 분기 계산으로 만들지 않는다.
+저장 [fixture](../../cpppj/tests/fixtures/constructionlocal-x86.tsv)와 [근거 JSON](../../cpppj/constructionlocal.json)은 전체 사건 순서/인자/실제 SID 목록과 메시지 본문을 담는다. 실제 진입/정상 반환·경계 사건 수·cdecl/thiscall 스택·보존 레지스터·x87·실행/쓰기 범위·SHA를 감사하며 원본 assert/게임/OS 호출은 0이다. 원본 기대값을 C++나 Python의 별도 분기 계산으로 만들지 않는다.
 
 새 C++ 검사 **6개**는 세 PE 전체 재생, 입력/자료 거부, Form 캡처와 현재 타입 플래그, 실제 factory/받침/품질 연결을 확인한다. 기존 요청 통합 검사도 앞의 로컬 흐름까지 확장했다. Release 경고/오류 **0**·CTest 내부 **589개·실패 0**(142.96초), 근거 감사 **92종 모두 통과**. 새 변이 11개 **모두 검출**(`--focused`, 변이 전 사본은 전체 검사 통과).
 

@@ -1,0 +1,10 @@
+{
+  "schema": 1,
+  "host": "HJOW-Athlon",
+  "new_native_inputs": 0,
+  "files": {
+    "tools/analyze_burningframe_draft_lineage.py": "ff6c49b1f41f4464476d011dae1a78b5d45dec3f8e24e63c5db3a7acc8f00be9",
+    "cpppj/burningframe-draft-lineage.json": "af65d34c94f0d332cb343bcd437cafc648f88a92fe39ff15b8f281568b37c8a4",
+    "cpppj/tests/BurningFrameTests.cpp": "b0f18bd9e691ae73ed8a4de12fab30bed2f96ae7d46e72872fdadc74fa7ba4d7"
+  }
+}

@@ -9,18 +9,18 @@ from pathlib import Path
 
 # 새13만고정하며기존12/공통body의변경은하지않는다.
 ROOT=Path(__file__).resolve().parent.parent
-HISTORY='cpppj/recovery-history/fortworldload-before-static-namespace'
-NATIVE='cpppj/recovery-fortworldload-evidence.json'
-REPORT=ROOT/'cpppj/recovery-fortworldload-binding-evidence.json'
+HISTORY='cpppj/hist/fortworldloa-b241d'
+NATIVE='cpppj/fortworldload.json'
+REPORT=ROOT/'cpppj/fortworldload-binding.json'
 FIXED=['cpppj/src/o/RawFortWorldLoad.cpp','cpppj/src/client/RawFortWorldLoadBinding.cpp']
 SOURCE=['cpppj/src/o/RawFortWorldLoad.h',FIXED[0],'cpppj/src/client/RawFortWorldLoadBinding.h',FIXED[1],'cpppj/tests/FortWorldLoadTests.cpp','cpppj/tests/FortWorldLoadBindingTests.cpp']
 # 같은실제생성/지역/게임난수/CRT/장부/Graph와완료child의현재전체파일이다.
 DEPENDENCIES=[f'cpppj/src/o/{name}.{extension}' for name in ('RawIslandBuilder','RawIslandRuntime','ChunkMap','CanonDecoder','RiftType','RawTerrainContext','RawTerrainGrowth','RawTerrainStamp',
  'RawFortRandomPlacement','RawFarmCluster','RawFortObjectLoad','RawFortFinishOwner','RawFortMoneyLoad','RawFortMetaLoad','RawGraph','Graph','SidPool','SquidHash','SquidFactory','SquidReward','SpStore','RawCarrierPostPop','RawCanonPlacementPipeline') for extension in ('h','cpp')]
 DEPENDENCIES += [f'cpppj/src/client/{name}.{extension}' for name in ('RawSurfaceWorld','RawNormalTerrainWorldBinding','RawTerrainWorldBinding') for extension in ('h','cpp')]
-LINKS=['cpppj/recovery-fortmeta-evidence.json','cpppj/recovery-fortmeta-cpp-binding-evidence.json','cpppj/recovery-fortmeta-namespace-lineage-evidence.json',
- 'cpppj/recovery-fortmoney-evidence.json','cpppj/recovery-fortmoney-cpp-correction-evidence.json','cpppj/recovery-islandbuilder-evidence.json',
- 'cpppj/recovery-islandbuilder-comment-lineage-evidence.json','cpppj/recovery-graphrebuild-evidence.json']
+LINKS=['cpppj/fortmeta.json','cpppj/fortmeta-cpp-binding.json','cpppj/fortmeta-namespace-lineage.json',
+ 'cpppj/fortmoney.json','cpppj/fortmoney-cpp-correction.json','cpppj/islandbuilder.json',
+ 'cpppj/islandbuilder-comment-lineage.json','cpppj/graphrebuild.json']
 
 
 def pin(name):

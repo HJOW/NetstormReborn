@@ -1,0 +1,86 @@
+{
+  "schema": 1,
+  "host": "HJOW-Athlon",
+  "total": 48,
+  "editions": {
+    "originals": {
+      "body": "33c0c20400",
+      "catalog": [
+        {
+          "vtable": "00501dd0",
+          "address": "0043d9b0"
+        },
+        {
+          "vtable": "0050b888",
+          "address": "0043d9b0"
+        },
+        {
+          "vtable": "0050b9b8",
+          "address": "0043d9b0"
+        },
+        {
+          "vtable": "0050f210",
+          "address": "0043d9b0"
+        },
+        {
+          "vtable": "00509758",
+          "address": "0043d9b0"
+        }
+      ],
+      "returns": 24,
+      "native_calls": {
+        "0043d9b0": 24
+      },
+      "instructions": 48,
+      "assertions": 0
+    },
+    "originalCD": {
+      "body": "33c0c20400",
+      "catalog": [
+        {
+          "vtable": "005058d8",
+          "address": "004aed90"
+        },
+        {
+          "vtable": "005014f8",
+          "address": "004aed90"
+        },
+        {
+          "vtable": "00501120",
+          "address": "004aed90"
+        },
+        {
+          "vtable": "005003e0",
+          "address": "004aed90"
+        },
+        {
+          "vtable": "00503b30",
+          "address": "004aed90"
+        }
+      ],
+      "returns": 24,
+      "native_calls": {
+        "004aed90": 24
+      },
+      "instructions": 48,
+      "assertions": 0
+    }
+  },
+  "files": {
+    "cpppj/src/o/DerivedConstructors.inc": "fac1a032778ba7e6745476904a13446c36b79625e38c40120195bc009a798b00",
+    "cpppj/src/o/RawSquidDefense.cpp": "d5a7d98d19f292b69fd6fd18f19872afbc381f21f567ddbce1e16ad5913096a8",
+    "cpppj/src/o/RawSquidDefense.h": "3e80151362018e43e663516bbb57e16c95cb5242d983cb68319ab63d2df12571",
+    "cpppj/src/o/TypeConstructors.inc": "bfac943af8c22cf91a0c267200f3e94133b021f2fe0e02507544978a7e08bd27",
+    "cpppj/tests/fixtures/squiddefense-x86.tsv": "28a04960b853dfcd558e7dfb69d8a38190020768c79b6d0a55c4ff8453b1cb67",
+    "cpppj/tests/SquidDefenseTests.cpp": "6ed40fe360bb526e19858eaa6664b36c717b1f3db12d6d370cff15bc70363c6f",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
+    "tools/decomp_squiddefense_oracle.py": "81e278df3f16157ab4fb7961511ef0c50f5c18c91e14fc718c2d042b5dea5943"
+  },
+  "os_calls": 0,
+  "limitations": [
+    "5바이트 기본 false 몸체만 복원했으며 다른 파생 방어는 strict fallback이다.",
+    "기존 일반 피해/사제/08 보고서와 원본 파일을 변경하지 않는다."
+  ]
+}

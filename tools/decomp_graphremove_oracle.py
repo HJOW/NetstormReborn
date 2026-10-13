@@ -195,13 +195,13 @@ def generate():
                                '위치 조회는 해시 객체 +12의 0단계 머리; 실제 grid 갱신/상위 삭제/파생 destructor/raw GameWorld는 미연결',
                                'rebuild 분할 정책만 검증; 전역 소진 복구/할당/OS 실행 없음',
                                '7개 슬롯/dirty 항목 직접 비교, 전체 풀/해시/spot/표/스택/통계는 Adler-32'])
-    (ROOT/'cpppj/recovery-graphremove-evidence.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
+    (ROOT/'cpppj/graphremove.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
     print(f'삭제 준비 x86 fixture {report["total_calls"]}회: {dict(counts)}')
 
 
 def verify():
     """기계어를 실행하지 않고 원본/도구/새 내보내기/fixture SHA와 공개 호출 수를 확인한다."""
-    r = json.loads((ROOT/'cpppj/recovery-graphremove-evidence.json').read_text(encoding='utf-8'))
+    r = json.loads((ROOT/'cpppj/graphremove.json').read_text(encoding='utf-8'))
     assert r['tool_sha256']==digest(Path(__file__)) and r['stubbed']==[]
     # 이번 전체 디컴파일의 바이트와 구버전 실행 파일의 유일한 분기 차이를 다시 확인한다.
     for name,sha in r['original1037_full_decompile']['exports'].items():

@@ -10,7 +10,7 @@ import pefile
 from capstone import Cs, CS_ARCH_X86, CS_MODE_32
 from analyze_campaign_runtime15 import ROOT, HISTORY, audit_history
 
-REPORT = ROOT / 'cpppj/recovery-campaign-runtime15-corrections-evidence.json'  # 원본 격자를 변경하지 않은 후속 교정 자료다.
+REPORT = ROOT / 'cpppj/run15-corrections.json'  # 원본 격자를 변경하지 않은 후속 교정 자료다.
 SOURCE = 'cpppj/src/o/RawBurningFrame.cpp'  # SetRect 카메라·1픽셀 여백의 실제 원본 계산을 복원한다.
 TEST = 'cpppj/tests/PlayerRegularTests.cpp'  # 잘못된 기본 연결번호0을 보호 TYPE의 실제 번호로 교체한다.
 OLD_RECT = '''// SetRect의 dirty wrapper는 camera를 빼지 않고 현재 viewport로 양끝을 제한한다.
@@ -108,8 +108,8 @@ def expected():
     inverse(TEST, ((NEW_WORLD, OLD_WORLD),))
     historical_audits()
     names = (SOURCE, TEST, 'cpppj/tests/fixtures/burningframe-x86.tsv', 'cpppj/tests/fixtures/player-regular-x86.tsv',
-             'cpppj/recovery-burningframe-evidence.json', 'cpppj/recovery-player-regular-evidence.json',
-             'extracted/campaign-runtime15-new-first-tests.log', 'extracted/campaign-runtime15-all-first-tests.log')
+             'cpppj/burningframe.json', 'cpppj/player-regular.json',
+             'extracted/run15-new-first-tests.log', 'extracted/run15-all-first-tests.log')
     return dict(schema=1, host='HJOW-Athlon', last_decompile_host='HJOW-Athlon', date='2026-10-14',
                 new_native_inputs=0, whole_previous_source_inverse=True, whole_previous_test_inverse=True,
                 native_setrect=native_setrect(), files={name: sha(ROOT / name) for name in names}, tool_sha256=sha(Path(__file__)),

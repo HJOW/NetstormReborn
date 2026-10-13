@@ -16,7 +16,7 @@ from decomp_process_oracle import (ProcessOracle, ROOT, BINARIES, CONTROLS, STAC
 DATA, FRAME, ARRAY, GROUPS, MEMBERS = 0x15000000, 0x15000000, 0x15001000, 0x15018000, 0x15019000
 CAPACITY, STRIDE, SEED = 5000, 16, 0x994b031b
 FIXTURE = ROOT / 'cpppj/tests/fixtures/drawsubmission-x86.tsv'
-REPORT = ROOT / 'cpppj/recovery-drawsubmission-evidence.json'
+REPORT = ROOT / 'cpppj/drawsubmission.json'
 # 명시 응답 경계의 주소다. 좌표/클립/CRT/묶음 순회/분배의 실제 명령은 대체하지 않는다.
 SPECS = {
     'originals': dict(root=0x4994b0, flags=0x5c78d4, previous=0x59a9cc, full=0x59a8b0,

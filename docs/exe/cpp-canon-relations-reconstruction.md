@@ -38,7 +38,7 @@
 
 ## 독립 원본 관찰과 C++ 연결 검사
 
-새 [생성기](../../tools/decomp_canonrelations_oracle.py)·[근거 JSON](../../cpppj/recovery-canonrelations-evidence.json)·[fixture](../../cpppj/tests/fixtures/canonrelations-x86.tsv)는 세 PE 각각 **2,307개, 총 6,921개**다. 판본별 입력은 지면/권한 768개, 소유자/편집기/활성·비활성 동맹/이전 거부 1,296개, 좌표/번호 경계 192개, signed 지역/sentinel 42개, 최종 조기 반환 9개다. 관계 표 한 방향 칸만 채워 전치 방향과 다른 표면 owner 읽기를 구별한다. 누적 독립 fixture는 **341,410개**다.
+새 [생성기](../../tools/decomp_canonrelations_oracle.py)·[근거 JSON](../../cpppj/canonrelations.json)·[fixture](../../cpppj/tests/fixtures/canonrelations-x86.tsv)는 세 PE 각각 **2,307개, 총 6,921개**다. 판본별 입력은 지면/권한 768개, 소유자/편집기/활성·비활성 동맹/이전 거부 1,296개, 좌표/번호 경계 192개, signed 지역/sentinel 42개, 최종 조기 반환 9개다. 관계 표 한 방향 칸만 채워 전치 방향과 다른 표면 owner 읽기를 구별한다. 누적 독립 fixture는 **341,410개**다.
 
 원본 앞부분의 누적 지역 변수만 공급하고 최종 구간에서 성공·실패 에필로그를 거쳐 실제 `ret 24`로 반환한다. 패치 표면/유효성/방향 관계/특수 지역 helper와 CRT는 전체 원본 몸체를 실행한다. CD 표면/관계 인라인도 실제 명령이다. **함수 대체 0, OS 호출 0**이며 decoder/finder/Player/전체 MayPlace는 이 생성기에서 실행하지 않는다.
 

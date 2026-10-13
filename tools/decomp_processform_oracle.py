@@ -26,7 +26,7 @@ DATA={
     terminate=0x419400,format=0x4a6c80,close=0x419880,free=0x4f1a50)}
 DATA['original1037']=DATA['originalCD']
 FIXTURE=ROOT/'cpppj/tests/fixtures/processform-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-processform-evidence.json'
+REPORT=ROOT/'cpppj/processform.json'
 # 복원 길이 표는 PE의 WORD 배열과 직접 대조하는 별도 자료다.
 LENGTHS=ROOT/'cpppj/src/o/RawPacketLengths.h'
 # 판본 독립인 입력 열이다. 형식/시각/소리의 기대 출력은 만들지 않는다.

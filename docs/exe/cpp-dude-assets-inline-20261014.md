@@ -4,9 +4,9 @@
 
 교정은 해당 함수 앞에 **`inline` 한 토큰**을 넣는 것뿐이다. 함수 본문·주석·원본 자산·서버 Native·모든 fixture는 바꾸지 않았다. 같은 함수의 지역 static 자산을 여러 TU에서 사용할 수 있도록 정의를 연결한다. 새 검사/원본 입력은0이다.
 
-교정 전에 현재 Support 전체·기준13 aggregate/Spawn/Drop 보고서와 draft lineage·현재 Player Native/실제Attach/공유lineage/검사·세번째 완성 빌드 로그 및 참조 whole자료를 `recovery-history/dude-assets-before-inline`에 보존했다. 보고서 참조를 재귀 추적한 보존기가 parent의 최소 범위 지침 도착 전에 이미 끝나 **작업 whole3954 + 기준13 Git1 + capture1**이 남았다. 이후 역사 재귀복사는 추가하지 않았다. 기존 보고서는 덮지 않았다.
+교정 전에 현재 Support 전체·기준13 aggregate/Spawn/Drop 보고서와 draft lineage·현재 Player Native/실제Attach/공유lineage/검사·세번째 완성 빌드 로그 및 참조 whole자료를 `hist/dude-assets-e44e0`에 보존했다. 보고서 참조를 재귀 추적한 보존기가 parent의 최소 범위 지침 도착 전에 이미 끝나 **작업 whole3954 + 기준13 Git1 + capture1**이 남았다. 이후 역사 재귀복사는 추가하지 않았다. 기존 보고서는 덮지 않았다.
 
-현재 별도 successor는 `recovery-dude-assets-inline-lineage-evidence.json`이다. 감사 도구 `tools/analyze_dude_assets_inline_lineage.py`가 다음을 확인한다.
+현재 별도 successor는 `dude-assets-inline-lineage.json`이다. 감사 도구 `tools/analyze_dude_assets_inline_lineage.py`가 다음을 확인한다.
 
 - 현재 inline 한 토큰을 제거하면 이전 작업 **전체 바이트**로 정확히 돌아간다. 기준13 Git LF와 작업 개행 원문도 따로 검증한다.
 - 이전 단위13 전체 **1066** 근거는 당시 Player 등록 전 source/binary/log view로 확인한다. 현재14 바이너리로 바꾸어 검증하지 않는다.

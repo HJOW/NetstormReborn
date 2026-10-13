@@ -32,7 +32,7 @@ SPAWN={
 SPAWN['original1037']=dict(SPAWN['originalCD'])
 # 기존 fixture/감사와 분리한 새 관찰 경로다.
 FIXTURE=ROOT/'cpppj/tests/fixtures/priestspawn-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-priestspawn-evidence.json'
+REPORT=ROOT/'cpppj/priestspawn.json'
 
 
 def inputs():

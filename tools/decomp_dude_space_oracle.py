@@ -15,7 +15,7 @@ from decomp_owner_oracle import ROOT,digest
 # 현재 생성/제거/재등록 입력이며 좌표는 원본 float 저장비트다.
 KEYS=('x','y','owner','targetX','targetY','repop')
 FIXTURE=ROOT/'cpppj/tests/fixtures/dude-space-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-dude-space-evidence.json'
+REPORT=ROOT/'cpppj/dude-space.json'
 
 
 def inputs():
@@ -50,7 +50,7 @@ def generate(smoke):
         editions[edition]=dict(returns=len(cases),assertions=oracle.assertions,births=oracle.births,actual_unpop=len(cases),actual_repop=sum(case['repop'] for case in cases),actual_calls=dict(oracle.calls),external_replaced=0);files.update(oracle.exports);files.add(oracle.shapeFile);files.add(ROOT/edition/('Netstorm.exe' if edition=='originals' else 'NETSTORM.EXE'));files.add(ROOT/edition/'netstorm.tarc');print(edition,editions[edition],flush=True)
     if smoke:return
     # 공유 Unpop의 현재 미연결 크기검사와 실제 새 소비자의 원문을 당시 SHA로 남긴다.
-    for name in ('cpppj/src/o/SquidUnpop.cpp','cpppj/src/o/SquidPop.cpp','cpppj/src/o/SquidPostPop.cpp','cpppj/src/o/RawDudeSpawn.cpp','cpppj/tests/DudeSpaceTests.cpp','cpppj/tests/DudeSpaceSupport.h','tools/decomp_postpop_oracle.py','tools/decomp_display_oracle.py','tools/decomp_creation_oracle.py','tools/decomp_sid_oracle.py','tools/decomp_oracle.py','tools/decomp_owner_oracle.py','cpppj/recovery-dudespawn-evidence.json','cpppj/recovery-dude-postpop-binding-lineage-evidence.json'):files.add(ROOT/name)
+    for name in ('cpppj/src/o/SquidUnpop.cpp','cpppj/src/o/SquidPop.cpp','cpppj/src/o/SquidPostPop.cpp','cpppj/src/o/RawDudeSpawn.cpp','cpppj/tests/DudeSpaceTests.cpp','cpppj/tests/DudeSpaceSupport.h','tools/decomp_postpop_oracle.py','tools/decomp_display_oracle.py','tools/decomp_creation_oracle.py','tools/decomp_sid_oracle.py','tools/decomp_oracle.py','tools/decomp_owner_oracle.py','cpppj/dudespawn.json','cpppj/dude-postpop-binding-lineage.json'):files.add(ROOT/name)
     FIXTURE.write_text('# 실제 Dude Birth→foot0 Unpop→선택 실제Repop50. 전체raw/해시/spot/장부/표시, 하위대체0.\n'+'\n'.join('\t'.join(map(str,row)) for row in rows)+'\n',encoding='utf-8');files.add(FIXTURE)
     REPORT.write_text(json.dumps(dict(schema=1,host='HJOW-Athlon',primary_target='10.78',cd_target='10.72',total=len(rows),editions=editions,files={path.relative_to(ROOT).as_posix():digest(path) for path in sorted(files)},cpp_tests_completed=0,pending_shared_foot0=True,os_calls=0,limitations=['실제Dude 생성/owner/I최초등록 뒤 발자국0의 실제Unpop/일부Repop50을 실행했다.','Unpop만 반환한 raw와 최종 전체hash/spot/표시/장부를 각각 관찰한다.','모든 하위몸체는 실제원본이며 외부대체0이다. 기존Spawn288/Notice414와 중복 합산하지않는다.','현재sharedUnpop은foot0를거부하므로기준13전체보존/정확역변환successor연결뒤C++대조해야한다.','실제DudePath24·연속이동/삭제부모/전체Host수명과캠페인월드는후속이다.'],),ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 

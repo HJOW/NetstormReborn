@@ -55,7 +55,7 @@ C++ `ReadTerritory`의 지원범위는 현재pos부터120BYTE가있는물리메�
 
 fixture SHA256은 **18d9946e08d189c92388e11e5163802b54299d2cc7b9c08f68579c11e4a9d59f**다. 정상/assert는행마지막진단횟수로분리한다. smoke/실패·x87 반복·기존1156 Builder/2018 Runtime/Graph 입력은534에더하지않는다.
 
-첫smoke의CD missingTemplate 복구가실행중ECX를this로오인해중단됐다. 진입시Template this를보관해해당pointer만복구하도록교정했고처음whole도구를보존했다. 최종30×두판본smoke와전체534가성공했다. 생성후C++의namespace닫힘누락도정적확인해등록전에두CPP EOF에 **각`}`와LF 2BYTE만**추가했다. 당시새CPP/test/native/tool/spec/첫smoke도구 **whole11파일**을 `fortworldload-before-static-namespace`에보존했다. 최초원본보고서/도구/534행의source SHA를덮어쓰지않는다.
+첫smoke의CD missingTemplate 복구가실행중ECX를this로오인해중단됐다. 진입시Template this를보관해해당pointer만복구하도록교정했고처음whole도구를보존했다. 최종30×두판본smoke와전체534가성공했다. 생성후C++의namespace닫힘누락도정적확인해등록전에두CPP EOF에 **각`}`와LF 2BYTE만**추가했다. 당시새CPP/test/native/tool/spec/첫smoke도구 **whole11파일**을 `fortworldloa-b241d`에보존했다. 최초원본보고서/도구/534행의source SHA를덮어쓰지않는다.
 
 현재완료출처감사는 **`python tools/analyze_fortworldload_binding.py`**다. 초기native의producer CPP 한파일은보존된whole snapshot으로명시연결하고현재source6파일·기존생산의존성52파일·이전원본/교정보고서8개·전체역사의현재SHA를엄격히연결한다. 정확한EOF역변환이며 **추가binding native0**이다.
 
@@ -69,7 +69,7 @@ fixture SHA256은 **18d9946e08d189c92388e11e5163802b54299d2cc7b9c08f68579c11e4a9
 
 초안의 `farms==20`은 record3의 유효 칸 수를 누락한 잘못된 예상이었다. 기존 원본 PatternCount는 **3칸**, Farm 목표는 **3×20=60**이다. 또한 실제 단일 Place는 MayReplace가 허용하지 않을 때 **return1**로 quota를 소비하면서 지면을 Retype하지 않는다. 그러므로 최종 실제121 개수가 목표60과 같다고 단정할 수 없다. 소비자의 `farms>0 && farms<=60`은 연결 검사이며, 원본 Farm 전체 최종 Retype 횟수의 동일성 검증을 완료한 것으로 세지 않는다.
 
-이 교정 전의 source6/native534/fixture/보고서/두 도구/spec/문서와 이전 namespace history 전체를 **24파일**로 `fortworldload-before-consumer-golden`에 보존했다. 생산/부모534 결과를 변경하지 않고 새 소비자 검사 한파일에 입력/출력 골든 대조와 위 범위 조건을 추가했다. 현재 successor **`python tools/analyze_fortworldload_consumer_lineage.py`**는 전체 byte 차이의 정확 역변환과 이전 감사기의 역사 TEST view를 통해 당시 전체 근거를 연결한다. 기존 binding 보고서의 현재 검사 SHA를 새 값으로 덮어쓰지 않는다.
+이 교정 전의 source6/native534/fixture/보고서/두 도구/spec/문서와 이전 namespace history 전체를 **24파일**로 `fortworldloa-075e2`에 보존했다. 생산/부모534 결과를 변경하지 않고 새 소비자 검사 한파일에 입력/출력 골든 대조와 위 범위 조건을 추가했다. 현재 successor **`python tools/analyze_fortworldload_consumer_lineage.py`**는 전체 byte 차이의 정확 역변환과 이전 감사기의 역사 TEST view를 통해 당시 전체 근거를 연결한다. 기존 binding 보고서의 현재 검사 SHA를 새 값으로 덮어쓰지 않는다.
 
 별도 **`decomp_fortworld_builder_consumer_oracle.py`**는 선택 소비자와 같은 zero 초기3204BYTE에 실제 Runtime Reset을 실행하고 기본 ChunkMap 입력, 같은 물리 puzzlePiece176코드와 Territory120BYTE에서 실제 Builder ctor/attach/PlaceAll/Add/Bounds를 실행했다. 패치/CD 각1입력, **정상2/assert0**, 각 판본 두 x87의 Reset/ctor/attach/PlaceAll 최상위 복귀8회다. 두 판본 모두 **Place1회·Add1회·Bounds1회**, 결과 count1, 청크 **(2,2,'O',0)/(3,2,'G',1)/(3,3,'N',2)**를 관찰했다.
 

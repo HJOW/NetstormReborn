@@ -420,7 +420,7 @@ def main():
     """두 판본의 기계어 결과가 같을 때만 기대값과 실행 근거를 저장한다."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, default=ROOT / 'cpppj/tests/fixtures/config-x86.tsv')
-    parser.add_argument('--report', type=Path, default=ROOT / 'cpppj/recovery-config-evidence.json')
+    parser.add_argument('--report', type=Path, default=ROOT / 'cpppj/config.json')
     args = parser.parse_args()
     patch, cd = ConfigOracle('originals'), ConfigOracle('originalCD')
     rows = ['# 원본 x86 기계어에서 생성. 두 판본 동일 결과만 기록. 칸: \'-\' 빈 문자열, \'~\' 없음, \'@n\' Def 줄의 버퍼.']

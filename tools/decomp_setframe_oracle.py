@@ -40,7 +40,7 @@ KINDS = ((0x00000802, 0x00000004, 8), (0x28000803, 0x00000002, 8), (0x28000003, 
 POSITION = (20.75, 21.9)
 # 새 결과 파일은 이전 기록/fixture와 분리한다.
 FIXTURE = ROOT / 'cpppj/tests/fixtures/setframe-x86.tsv'
-REPORT = ROOT / 'cpppj/recovery-setframe-evidence.json'
+REPORT = ROOT / 'cpppj/setframe.json'
 
 
 class FrameOracle(NeighborOracle):

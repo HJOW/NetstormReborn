@@ -20,7 +20,7 @@ BODY={'originals':dict(wrapper=0x435200,select=0x435160,current=0x54dd60,option=
 BODY['original1037']=dict(BODY['originalCD'])
 # 새 저장 fixture와 근거 기록이다. 기존 자료는 수정하지 않는다.
 FIXTURE=ROOT/'cpppj/tests/fixtures/musicselection-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-musicselection-evidence.json'
+REPORT=ROOT/'cpppj/musicselection.json'
 
 
 def inputs():

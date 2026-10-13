@@ -1,0 +1,41 @@
+{
+  "new_native_unique": 0,
+  "production_changes": 0,
+  "reason": "MayPlace ??? (other & island) && !(placing.flags1 & surface) ??? ????? ??121? ???surface??0x800? ????.",
+  "before_test": {
+    "path": "cpppj/hist/normalterrai-6a80b/tests.cpp",
+    "sha256": "26d067757bafffff76e47e75c32b2c8588a39ef31d7c3e25d56958ad1f6e999a",
+    "bytes": 18651
+  },
+  "before_report": {
+    "path": "cpppj/hist/normalterrai-6a80b/evidence.json",
+    "sha256": "81377e99338d9d04cde6870d82d5a29f1c95631f25f702b92ff0be34f22ed203",
+    "bytes": 692668
+  },
+  "before_hash_tool": {
+    "path": "cpppj/hist/normalterrai-6a80b/hash-tool.py",
+    "sha256": "f2545a94b9e9db3766602fe990a76043a91c31a5d1bc7a7e229ebeb2655a7087",
+    "bytes": 6601
+  },
+  "before_hash_evidence": {
+    "path": "cpppj/hist/normalterrai-6a80b/hash-evidence.json",
+    "sha256": "9f46adce61c6d84a9ed0a5e76daf3120de59494a46c1ace106f11b9ade55f807",
+    "bytes": 1748
+  },
+  "after_test": {
+    "path": "cpppj/tests/NormalTerrainWorldBindingTests.cpp",
+    "sha256": "18e302bfa81bcbb531e0894f8d839841d3db8a44df361dc393d4c45b64553b29",
+    "bytes": 18651
+  },
+  "tool": {
+    "path": "tools/check_terrain_profile_fix.py",
+    "sha256": "792d795f9f4286ea88c4078d66ff5187455dbf2b404c0002e166b757a94480f1",
+    "bytes": 3635
+  },
+  "after_hash_tool": {
+    "path": "tools/analyze_normalterrain_binding_cpp_correction.py",
+    "sha256": "2121d046422bb4ad6223cae0887e33b75b65af92a0c28d1f9f246c1a5e03a3f6",
+    "bytes": 7233
+  },
+  "frame_successor": "cpppj/normalterrain-binding-frame-correction.json"
+}

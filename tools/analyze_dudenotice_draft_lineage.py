@@ -8,13 +8,13 @@ from pathlib import Path
 from decomp_owner_oracle import ROOT,digest
 
 # 처음 정상반환한 자료와 현재 source/도구/fixture의 전체 바이트를 연결한다.
-HISTORY=ROOT/'cpppj/recovery-history/dudenotice-initial'
-REPORT=ROOT/'cpppj/recovery-dudenotice-evidence.json'
-LINEAGE=ROOT/'cpppj/recovery-dudenotice-draft-lineage-evidence.json'
+HISTORY=ROOT/'cpppj/hist/dudenotice-initial'
+REPORT=ROOT/'cpppj/dudenotice.json'
+LINEAGE=ROOT/'cpppj/dudenotice-draft-lineage.json'
 # 최초공유C++ 차이를고치기전의전체자료는이름교정후현재몸체와분리한다.
-POINT_BEFORE=ROOT/'cpppj/recovery-history/dudenotice-before-point-correction'
+POINT_BEFORE=ROOT/'cpppj/hist/dudenotice-b-7ab49'
 PATHS=('cpppj/src/o/RawDudeNotice.cpp','cpppj/src/o/RawDudeNotice.h','cpppj/tests/DudeNoticeTests.cpp',
-       'tools/decomp_dudenotice_oracle.py','cpppj/tests/fixtures/dudenotice-x86.tsv','cpppj/recovery-dudenotice-evidence.json')
+       'tools/decomp_dudenotice_oracle.py','cpppj/tests/fixtures/dudenotice-x86.tsv','cpppj/dudenotice.json')
 # 실제 호출 주소/숫자/행 순서는 그대로 두고 잘못 붙인 작업자 이름만 바꾼다.
 CHANGES={
  PATHS[0]:(('dudeProcessType','burningProcessType'),('createDudeProcess','createBurning'),('DudeProcess','Burning')),

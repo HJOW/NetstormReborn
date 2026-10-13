@@ -143,7 +143,7 @@ def bits(value):
 
 def generate():
     """두 판본의 체인 머리/중간/꼬리·4단계·Take·반납·firstPop 비트를 검증한다."""
-    original=json.loads((ROOT/'cpppj/recovery-derived-evidence.json').read_text(encoding='utf-8'))
+    original=json.loads((ROOT/'cpppj/derived.json').read_text(encoding='utf-8'))
     catalog=collections.defaultdict(dict)
     # 검증된 주소 표를 읽기만 하며 이 도구의 실제 PE vtable 판독과 대조한다.
     for line in (ROOT/'cpppj/tests/fixtures/constructors-x86.tsv').read_text(encoding='utf-8').splitlines():
@@ -254,13 +254,13 @@ def generate():
                   '표시/debug 비활성; dirty/화면·파생 삭제/의존 객체·네트워크/참조 수명 미복원',
                   '정상 x87 두 정밀도; 전체 슬롯 직접 비교·전체 풀/기록/해시/spot Adler-32',
                   '게임 진입점/원본 프로세스/GUI/OS API 미실행']}
-    (ROOT/'cpppj/recovery-unpop-evidence.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
+    (ROOT/'cpppj/unpop.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
     print(json.dumps({'cases':dict(counts),'total_cases':report['total_cases'],'begins':begins}),flush=True)
 
 
 def verify():
     """원본·도구·fixture/주소 표 SHA-256과 실제 호출 행 수를 확인한다."""
-    report=json.loads((ROOT/'cpppj/recovery-unpop-evidence.json').read_text(encoding='utf-8'))
+    report=json.loads((ROOT/'cpppj/unpop.json').read_text(encoding='utf-8'))
     for group in ('artifact_sha256','source_sha256'):
         for name,sha in report[group].items(): assert hashlib.sha256((ROOT/name).read_bytes()).hexdigest()==sha,name
     for edition,item in report['editions'].items():

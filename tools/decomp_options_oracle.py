@@ -202,7 +202,7 @@ def main():
                 'original_machine_code': 'Save → Section → BaseFile::Write(XOR 포함)',
                 'stubs': STUBS, 'static_facts': static_facts(),
                 'limits': '파일 이름 객체·열기·닫기·tell·write·strncmp는 대체; 실제 OS I/O 검증은 별도 스모크'}
-    (ROOT / 'cpppj/recovery-options-evidence.json').write_text(
+    (ROOT / 'cpppj/options.json').write_text(
         json.dumps(evidence, ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')
     print(json.dumps({'cases': len(cases), 'real_files': comparisons}, ensure_ascii=False, indent=2))
 

@@ -75,7 +75,7 @@ styleText.Append(head, pictures.NewPicture(type, frame));
 
 게임 라이브러리/`NetstormCpp` **Release 빌드 경고 0·오류 0**. SOURCE_MAP은 생성 도구로 갱신해 Markup 파일 존재를 표시했다. **새 테스트 추가/실행·전체 CTest·독립 원본 동작 대조·GUI 실행은 미수행**이다. 원본 관찰 **523,634개**, C++ 대조 **523,374개**, CTest **854개 통과**는 앞 단계의 수치이며 이번 변경을 검증한 수치가 아니다.
 
-자료: `cpppj/recovery-markup-evidence.json`, `tools/analyze_markup.py`, `tools/ghidra/markup-functions.json`, `extracted/markup/`, `extracted/markup-*-export.log`, `extracted/markup-build.log`. 정적 기록에는 실제 가상 표/상수/함수 범위/명령과 현재 구현 SHA가 있다. 앞 단계 StyleText 근거는 당시 구현 기록이며 이번 공통 조각 변경의 해시는 새 Markup 근거를 따른다.
+자료: `cpppj/markup.json`, `tools/analyze_markup.py`, `tools/ghidra/markup-functions.json`, `extracted/markup/`, `extracted/markup-*-export.log`, `extracted/markup-build.log`. 정적 기록에는 실제 가상 표/상수/함수 범위/명령과 현재 구현 SHA가 있다. 앞 단계 StyleText 근거는 당시 구현 기록이며 이번 공통 조각 변경의 해시는 새 Markup 근거를 따른다.
 
 ```powershell
 python -X utf8 tools/analyze_markup.py

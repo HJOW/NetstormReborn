@@ -7,7 +7,7 @@ from pathlib import Path
 
 # 재관찰없이현재동결Native자료만읽는다.
 ROOT=Path(__file__).resolve().parent.parent
-REPORT=ROOT/'cpppj/recovery-player-regular-evidence.json'
+REPORT=ROOT/'cpppj/player-regular.json'
 FIXTURE=ROOT/'cpppj/tests/fixtures/player-regular-x86.tsv'
 
 

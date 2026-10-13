@@ -34,7 +34,7 @@
 
 ## 검증과 재현
 
-[독립 실행 기록](../../cpppj/recovery-postpop-evidence.json), [기대값](../../cpppj/tests/fixtures/postpop-x86.tsv), [실행 도구](../../tools/decomp_postpop_oracle.py), [C++ 검사](../../cpppj/tests/PostPopTests.cpp).
+[독립 실행 기록](../../cpppj/postpop.json), [기대값](../../cpppj/tests/fixtures/postpop-x86.tsv), [실행 도구](../../tools/decomp_postpop_oracle.py), [C++ 검사](../../cpppj/tests/PostPopTests.cpp).
 
 이전 [raw Pop](cpp-pop-reconstruction.md)·[공통 표시](cpp-display-reconstruction.md)의 내보내기와 새 postPop 함수 범위를 준비한 뒤 실행한다.
 

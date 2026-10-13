@@ -33,9 +33,9 @@ TYPE/HP/캡처 마스크·기존 source 좌표/rowTaken/입자는 현재 입력�
 
 `RawBurningSources`는 같은 `RawBurningVisual::Append`, 현재 SID 풀/타입과 `GameRandom`을 소비한다. 기존 생성자/Append/그 원본 보고서를 수정하지 않았다. 프레임이 실제 캡처를 수행한 뒤 이 선택기를 호출하는 사슬은 아직 후속이다. 진단전역이0인 정상 입력·유한 source좌표·양수최대HP·정상 마스크 범위를 대조한다. 비유한 좌표·잘못된 버퍼/0나눗셈은 C++ 보호 경계이며 이 격자의 정상 완료에 포함하지 않는다.
 
-현재 RawBurningVisual의 실제 Warm 생성자256와 Append564는 단위12 첫 공유 대조에서 통과했다. 새652/양판본2검사는 단위14의 현재 공유 C++ 전수 대조에서 모두 통과했다(`campaign-runtime14-BurningSources_initial-tests.log`). 단위14 전체 검사는 아직 진행 중이며 이 개별 성공과 구분한다. cache0 ColorSort/gradient/buildPalette와 실제 Source 캡처·전체 Step/Draw·같은 Host factory/삭제·GameWorld 및 캠페인1-1 완주는 미완료다. 새 실제 Frame426은 단위15의 별도 준비 자료다.
+현재 RawBurningVisual의 실제 Warm 생성자256와 Append564는 단위12 첫 공유 대조에서 통과했다. 새652/양판본2검사는 단위14의 현재 공유 C++ 전수 대조에서 모두 통과했다(`run14-BurningSources_first.log`). 단위14 전체 검사는 아직 진행 중이며 이 개별 성공과 구분한다. cache0 ColorSort/gradient/buildPalette와 실제 Source 캡처·전체 Step/Draw·같은 Host factory/삭제·GameWorld 및 캠페인1-1 완주는 미완료다. 새 실제 Frame426은 단위15의 별도 준비 자료다.
 
-자료는 `RawBurningSources.h/.cpp`, `BurningSourcesTests.cpp`, 매크로 `NETSTORM_BURNINGSOURCES_FIXTURE`, `burningsources-x86.tsv`, `recovery-burningsources-evidence.json`이다.
+자료는 `RawBurningSources.h/.cpp`, `BurningSourcesTests.cpp`, 매크로 `NETSTORM_BURNINGSOURCES_FIXTURE`, `burningsources-x86.tsv`, `burningsources.json`이다.
 
 ```text
 python -X utf8 tools/decomp_burningsources_oracle.py --verify

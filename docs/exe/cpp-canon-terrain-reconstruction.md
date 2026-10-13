@@ -33,7 +33,7 @@
 
 초기화·후보·모양 종료·최종 지면 누적은 **MayPlace 중간 구간에 필요한 지역 변수/레지스터를 공급한 관찰**이다. 후보 permission=true를 공급하여 권한 helper를 우회하고 모양 종료도 주변 권한 진입 전에 종료한다. 최종 지면 누적은 소유 관계 분기 직전에 종료한다. fixture의 result는 지역 조회 행에서만 원본 반환값이고 나머지는 미관찰 값 0이다. canGround도 최종 지면 누적 행에서만 관찰한다. 이를 일반 배치 성공/최종 반환/전체 MayPlace ABI 검증으로 해석하지 않는다.
 
-지역 조회는 실제 helper 전체를 정상 반환시켜 스택·보존 레지스터를 확인한다. 모든 관찰에서 허용 코드/쓰기·raw/144바이트 배열·ESP/x87·assert/OS 0회·SHA/행/구간/실제 호출 수를 감사한다. 각 PE의 두 정밀도 합계는 초기화 56회·후보 6,400회·모양 종료 288회·지역 조회 256회·최종 지면 누적 480회다. 실제 좌표 절삭 3,200회·지역 함수 1,856회·raw 지역 getter 784회다. [새 근거 JSON](../../cpppj/recovery-canonterrain-evidence.json)에 기록했으며 기존 fixture/감사 도구는 수정하지 않았다.
+지역 조회는 실제 helper 전체를 정상 반환시켜 스택·보존 레지스터를 확인한다. 모든 관찰에서 허용 코드/쓰기·raw/144바이트 배열·ESP/x87·assert/OS 0회·SHA/행/구간/실제 호출 수를 감사한다. 각 PE의 두 정밀도 합계는 초기화 56회·후보 6,400회·모양 종료 288회·지역 조회 256회·최종 지면 누적 480회다. 실제 좌표 절삭 3,200회·지역 함수 1,856회·raw 지역 getter 784회다. [새 근거 JSON](../../cpppj/canonterrain.json)에 기록했으며 기존 fixture/감사 도구는 수정하지 않았다.
 
 합성 검사는 실제 3×3 받침 decoder→미리보기→finder→지역 지도로 아홉 모양을 진행한다. 첫 섬의 권한을 이후 후보/모양에 유지하고, 지면 불일치의 후보 권한 조회 생략·모양별 주변 조회·필수 최종 정책의 거부와 충돌 이후 효과 생략을 확인한다. 빈 decoder의 배열 유지·주변 모양 라벨·별도 argument/owner/mode·빈 발자국/자료/풀 계약도 확인한다. 초기 픽셀 shape와 권한/최종 관계는 공급 경계이며 이 합성을 원본 전체 MayPlace 실행으로 해석하지 않는다.
 
@@ -41,4 +41,4 @@
 
 Release 경고/오류 **0**, CTest 내부 **395개·실패 0**(106.75초), 감사 **57종 모두 통과**했다. 로그는 `extracted/cpp-canonterrain-export.log`, `cpp-canonterrain-oracle.log`, `cpp-canonterrain-build-final.log`, `cpp-canonterrain-ctest-final.log`에 있다. 완료 범위와 후속은 [LEFT_JOBS.md](../../LEFT_JOBS.md)를 따른다.
 
-최근 일본 유통판 지원 추가로 기존 destroygraph 근거의 `run_script.ps1` SHA가 달랐다. 세 PE/두 x87 정밀도로 기존 1,728개를 다시 실행하고 fixture 바이트·실제 호출 수·관찰/한계 전부 동일함을 확인했다. [`recovery-destroygraph-evidence.json`](../../cpppj/recovery-destroygraph-evidence.json)의 해당 SHA 하나만 갱신했다. 기존 입력을 누적 수에 다시 더하지 않는다. 감사/재생 로그는 `extracted/cpp-canonterrain-audits-final.log`, `cpp-canonterrain-destroygraph-refresh.log`, `cpp-canonterrain-destroygraph-verify.log`다.
+최근 일본 유통판 지원 추가로 기존 destroygraph 근거의 `run_script.ps1` SHA가 달랐다. 세 PE/두 x87 정밀도로 기존 1,728개를 다시 실행하고 fixture 바이트·실제 호출 수·관찰/한계 전부 동일함을 확인했다. [`destroygraph.json`](../../cpppj/destroygraph.json)의 해당 SHA 하나만 갱신했다. 기존 입력을 누적 수에 다시 더하지 않는다. 감사/재생 로그는 `extracted/cpp-canonterrain-audits-final.log`, `cpp-canonterrain-destroygraph-refresh.log`, `cpp-canonterrain-destroygraph-verify.log`다.

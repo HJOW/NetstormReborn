@@ -29,7 +29,7 @@ MEMORY=LISTS+0x1000
 SOUND=0x12345678
 MESSAGE=b'notice-token\0'
 FIXTURE=ROOT/'cpppj/tests/fixtures/priestshield-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-priestshield-evidence.json'
+REPORT=ROOT/'cpppj/priestshield.json'
 KEYS=('scene','owner','allocated','clock','loading','local','change')
 # +0/-0·정상 시각·NaN의 실제 double 비트 입력이다.
 CLOCKS=(0,0x8000000000000000,0x3ff0000000000000,0x7ff8000000001234)

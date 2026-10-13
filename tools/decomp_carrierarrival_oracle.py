@@ -10,7 +10,7 @@ from decomp_priesthalt_oracle import HaltOracle,ROOT,POOL,HEAP,TYPES,HALT_SPOTS,
 
 PATH=0x11870000 # lookup 경계가 돌려주는 별도 실제 레이아웃 경로 입력이다.
 FIXTURE=ROOT/'cpppj/tests/fixtures/carrierarrival-x86.tsv' # 이전Halt/BFS/Bridge 관찰을 다시 합산하지 않는 새 상위 입력이다.
-REPORT=ROOT/'cpppj/recovery-carrierarrival-evidence.json' # 현재 원본/큰 외부 효과 경계와 반환/전체부모raw를 기록한다.
+REPORT=ROOT/'cpppj/carrierarrival.json' # 현재 원본/큰 외부 효과 경계와 반환/전체부모raw를 기록한다.
 SPEC={
     'originals':dict(arrival=0x429800,path=0x427ce0,escape=0x429010,players=0x59534c,playerStride=0xb4,depth=0x186d8,helper=0x186d4,allow=0x5453e4,controlledOffset=0xb0),
     'originalCD':dict(arrival=0x4e66a0,path=0x4e7610,escape=0x4e5c10,players=0x50f834,playerStride=0xac,depth=0x2f18,helper=0x2f14,allow=0x541578,controlledOffset=0xa8,setting=0x4a9400),

@@ -7,18 +7,18 @@ from pathlib import Path
 from decomp_owner_oracle import ROOT,digest
 
 # 최초 native 자료와 현재 source/fixture/report의 실제 전체 바이트를 연결한다.
-HISTORY=ROOT/'cpppj/recovery-history/archertype-initial'
-REPORT=ROOT/'cpppj/recovery-archertype-evidence.json'
-LINEAGE=ROOT/'cpppj/recovery-archertype-draft-lineage-evidence.json'
+HISTORY=ROOT/'cpppj/hist/archertype-initial'
+REPORT=ROOT/'cpppj/archertype.json'
+LINEAGE=ROOT/'cpppj/archertype-draft-lineage.json'
 # 좁은 Regular Reset API 추가 직전의 전체현재자료와당시 draft 도구/보고서다.
-REGULAR_BEFORE=ROOT/'cpppj/recovery-history/archertype-before-regular-reset'
-REGULAR_REPORT=ROOT/'cpppj/recovery-dude-regular-reset-lineage-evidence.json'
+REGULAR_BEFORE=ROOT/'cpppj/hist/archertype-b-2578b'
+REGULAR_REPORT=ROOT/'cpppj/dude-regular-reset-lineage.json'
 # 실제50.5좌표/첫Fire 프레임이보이는1024x768 viewport 공급직전 전체자료다.
-VIEWPORT_BEFORE=ROOT/'cpppj/recovery-history/archertype-before-viewport'
+VIEWPORT_BEFORE=ROOT/'cpppj/hist/archertype-b-d5269'
 # 첫 실제 Pop 실패의 전체자료는 새로운기존후처리 소비자추가 앞에서 별도 보존한다.
-POP_BEFORE=ROOT/'cpppj/recovery-history/archertype-before-postpop'
+POP_BEFORE=ROOT/'cpppj/hist/archertype-b-e9d47'
 PATHS=('cpppj/src/o/RawArcherTypeData.cpp','cpppj/src/o/RawArcherTypeData.h','cpppj/tests/ArcherTypeDataTests.cpp',
-       'tools/decomp_archertype_oracle.py','cpppj/tests/fixtures/archertype-x86.tsv','cpppj/recovery-archertype-evidence.json')
+       'tools/decomp_archertype_oracle.py','cpppj/tests/fixtures/archertype-x86.tsv','cpppj/archertype.json')
 # 숫자 이외의 명시 directions를 누락 속성0으로 받아들이지 않는 정상 계약이다.
 PRODUCTION_ADD='''    // 원본은 orientations가 명시된 경우 숫자 AST만 허용한다.
     if (definition.Property("orientations") && !definition.Number("orientations"))

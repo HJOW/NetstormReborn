@@ -9,11 +9,11 @@ from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1] # 현재 workspace에서 전체 바이트를 읽는 기준이다.
 SOURCE='cpppj/src/o/RawPriestArrival.cpp' # ChunkMap의 전역 kNoIsland와 충돌한 로컬 선언/사용만 교정한다.
-HISTORY=ROOT/'cpppj/recovery-history/priest-arrival-before-name-correction' # 최초 생산/보고서/fixture/검사/도구/로그 전체를 보존한다.
-REPORT=ROOT/'cpppj/recovery-priest-arrival-name-lineage-evidence.json' # 기존 Carrier binding을 덮지 않는 현재 successor다.
-BINDING='cpppj/recovery-carrierarrival-cpp-binding-evidence.json' # 원본406과 같은 Host 소비자의 최초 전체 출처다.
-NATIVE='cpppj/recovery-carrierarrival-evidence.json' # 원본406의 입력/출력/몸체/도구를 그대로 유지한다.
-HALT='cpppj/recovery-priesthalt-spots-successor-evidence.json' # 별도 원본864의 입력 공간 교정 출처도 보존한다.
+HISTORY=ROOT/'cpppj/hist/priest-arriv-ac97b' # 최초 생산/보고서/fixture/검사/도구/로그 전체를 보존한다.
+REPORT=ROOT/'cpppj/priest-arrival-name-lineage.json' # 기존 Carrier binding을 덮지 않는 현재 successor다.
+BINDING='cpppj/carrierarrival-cpp-binding.json' # 원본406과 같은 Host 소비자의 최초 전체 출처다.
+NATIVE='cpppj/carrierarrival.json' # 원본406의 입력/출력/몸체/도구를 그대로 유지한다.
+HALT='cpppj/priesthalt-spots-successor.json' # 별도 원본864의 입력 공간 교정 출처도 보존한다.
 OLD=b'kNoIsland' # 이전 전체 cpp에 정확 두 번 나타나는 로컬 이름이다.
 NEW=b'kPriestNoIsland' # 공통 ChunkMap 전역과 구별한 사제 전용 이름이다.
 
@@ -28,9 +28,9 @@ def capture(logs):
     prior=importlib.import_module('analyze_carrierarrival_cpp_binding')
     assert json.loads((ROOT/BINDING).read_text(encoding='utf-8'))==prior.expected()
     names={BINDING,NATIVE,HALT,'tools/analyze_carrierarrival_cpp_binding.py',
-           'tools/analyze_genus_at_public_lineage.py','cpppj/recovery-genus-at-public-lineage-evidence.json',
+           'tools/analyze_genus_at_public_lineage.py','cpppj/genus-at-public-lineage.json',
            'tools/analyze_priesthalt_spots_successor.py','tools/analyze_priesthalt_cpp_binding.py',
-           'cpppj/recovery-priesthalt-cpp-binding-evidence.json','cpppj/recovery-priesthalt-evidence.json',
+           'cpppj/priesthalt-cpp-binding.json','cpppj/priesthalt.json',
            'cpppj/tests/PriestHaltTests.cpp','docs/exe/cpp-priest-halt-20261014.md',
            'docs/exe/cpp-carrier-arrival-audit-20261014.md'}
     protected={}
@@ -63,7 +63,7 @@ def expected():
     for name,digest in baseline['files'].items():
         assert sha(HISTORY/name)==digest,name
         if name==SOURCE:assert hashlib.sha256(inverse).hexdigest()==digest
-        elif not name.startswith(('docs/','extracted/campaign-runtime14-')):assert sha(ROOT/name)==digest,name
+        elif not name.startswith(('docs/','extracted/run14-')):assert sha(ROOT/name)==digest,name
     for name,digest in baseline['protected'].items():assert sha(ROOT/name)==digest,name
     prior=importlib.import_module('analyze_carrierarrival_cpp_binding');read_bytes=Path.read_bytes
     def historical(path):
@@ -73,13 +73,13 @@ def expected():
     try:assert json.loads(prior.REPORT.read_text(encoding='utf-8'))==prior.expected()
     finally:Path.read_bytes=read_bytes
     native=json.loads((ROOT/NATIVE).read_text(encoding='utf-8'));assert native['total']==406 and native['game_runs']==0
-    halt=json.loads((ROOT/'cpppj/recovery-priesthalt-evidence.json').read_text(encoding='utf-8'));assert halt['total']==864
+    halt=json.loads((ROOT/'cpppj/priesthalt.json').read_text(encoding='utf-8'));assert halt['total']==864
     return dict(schema=1,host='HJOW-Athlon',decompile_date='2026-10-14',new_native_inputs=0,
                 preserved_carrier_normal_inputs=406,preserved_halt_normal_inputs=864,existing_genus_normal_recount=0,
                 exact_token_rename_count=2,whole_cpp_exact_inverse=True,all_native_fixture_test_body_bytes_unchanged=True,
                 historical_binding_reproduced=True,prior_binding_sha256=sha(ROOT/BINDING),original_native_sha256=sha(ROOT/NATIVE),
                 old_source_sha256=sha(HISTORY/SOURCE),current_source_sha256=sha(ROOT/SOURCE),tool_sha256=sha(Path(__file__)),
-                files={name:sha(ROOT/name) for name in baseline['files'] if not name.startswith(('docs/','extracted/campaign-runtime14-'))},
+                files={name:sha(ROOT/name) for name in baseline['files'] if not name.startswith(('docs/','extracted/run14-'))},
                 history={path.relative_to(ROOT).as_posix():sha(path) for path in sorted(HISTORY.rglob('*')) if path.is_file()},
                 scope='ChunkMap의 uint8 전역 kNoIsland와 충돌하는 사제 Arrival uint32 로컬 상수 이름 두 토큰만 kPriestNoIsland로 변경한다. 값127/쓰기폭/조건/호출/계산/기존Native406·Halt864/fixture/전수검사/같은Host소비자는 불변이며 새원본입력0이다. 최초 빌드 실패 로그와 전체 원문을 보존하고 기존 Carrier binding 원문은 당시 cpp read view에서 재현한다.')
 

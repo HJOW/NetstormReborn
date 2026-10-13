@@ -1,0 +1,120 @@
+{
+  "schema": 1,
+  "total": 1888,
+  "host": "HJOW-Athlon",
+  "editions": {
+    "originals": {
+      "returns": 944,
+      "native_calls": {
+        "00481a50": 48,
+        "0040e800": 2160,
+        "0041d0d0": 1216,
+        "0041cfc0": 1392,
+        "00482340": 896,
+        "00431f90": 112,
+        "0040e880": 560,
+        "0040e8f0": 560,
+        "00468cc0": 448
+      },
+      "boundaries": {
+        "20000100": 48,
+        "004ac550": 496,
+        "0049a840": 424,
+        "0049a900": 48,
+        "004ac950": 1000,
+        "004af530": 48,
+        "20000110": 48,
+        "20000120": 944,
+        "0041bd20": 48,
+        "004a9c30": 92,
+        "20000130": 896,
+        "00436d00": 112,
+        "0049af10": 112,
+        "004adea0": 1344,
+        "00470ac0": 56,
+        "004d4f00": 56,
+        "20000140": 504,
+        "0045a750": 56,
+        "004d5000": 448
+      },
+      "assertions": 0,
+      "instructions": 346952
+    },
+    "originalCD": {
+      "returns": 944,
+      "native_calls": {
+        "0044ac70": 48,
+        "0043f950": 1216,
+        "0043f750": 1392,
+        "0044b260": 896
+      },
+      "boundaries": {
+        "20000100": 48,
+        "004abf50": 496,
+        "004442b0": 48,
+        "004ac420": 552,
+        "004ab390": 48,
+        "20000110": 48,
+        "20000120": 944,
+        "0048f590": 48,
+        "00438ae0": 108,
+        "20000130": 896,
+        "00444b50": 112,
+        "004aef30": 1344,
+        "00455b40": 56,
+        "004432f0": 56,
+        "20000140": 504,
+        "0047c8a0": 56,
+        "004433e0": 448
+      },
+      "assertions": 0,
+      "instructions": 293008
+    }
+  },
+  "files": {
+    "cpppj/src/o/RawMissile.cpp": "e817c8c22828dc6ae0ab7fca297d6162bb5da16d5ac7416da4c636a52bab218a",
+    "cpppj/src/o/RawMissile.h": "a48c2833f5463df9fdaf25634c440805f5edce224e30b3725cea142fa21b3487",
+    "cpppj/tests/ArcherMissileTests.cpp": "08840d3289ef7b3c2de0ea65a189b790bc95e2375bb15eeeafad151d6b5375e4",
+    "cpppj/tests/fixtures/archermissile-x86.tsv": "dca76f0dfcaf30463522d79931c57a8ef77712d6cc03428bffcbe033572d9b7b",
+    "extracted/gunmissile/originalCD/creation.c": "effe518f78de163fe5ee5b7e4cd6982d316710823d1d7f0d12e8d960684e9906",
+    "extracted/gunmissile/originalCD/functions.tsv": "a37bcf90565fa613f072d328ab26ee9463d483f43d46768eec8053ed6016c824",
+    "extracted/gunmissile/originals/creation.c": "970a4c4026b7353b9945882d1d1b5d8d41a0a008c93e34e979aeebe301033130",
+    "extracted/gunmissile/originals/functions.tsv": "777c1d95bf9b73beed37185e58fa3c96ecbcb8a18bedfdeb67d4597df42e8115",
+    "extracted/gunmissile-helper/originalCD/creation.c": "4d6566edf298df6cc8cb70c1abad584c2d4b03802edfc6a5ba1b78220136f674",
+    "extracted/gunmissile-helper/originalCD/functions.tsv": "f468615f4c74b563b8d470796d21ec0086969a7bbc2e679bca3025449ff81f4d",
+    "extracted/gunmissile-helper/originals/creation.c": "dac07b16872c165c6a74f8e766bade1eb61de93943124fff7853c780638dd8bf",
+    "extracted/gunmissile-helper/originals/functions.tsv": "5a8c53e572aee194b9c66e8d8a6c00df1c0f32d46cffc2120f9560488aaee7fa",
+    "extracted/owner/originalCD/creation.c": "115d3f4790315c3647e18c087579cf3aa08af06cdbaeca42adbac1e82725af62",
+    "extracted/owner/originalCD/functions.tsv": "4e184997f62c2622b26b3fa4f047a2580a609d2d919f0e414a75e8efd49d4439",
+    "extracted/owner/originals/creation.c": "f9919c046d5259526946f106b47b6259fe5e04971f743d6fa02d6a5361b9dc16",
+    "extracted/owner/originals/functions.tsv": "3ea66dace80a85999a8b2c2dbadb4d5f1bd18b0dcdb0768f9c41075206c7c72d",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_archermissile_oracle.py": "73a314f1d48cb5168d3375637fde4d8282774a30624adb3a34e80b0d51cf16ff",
+    "tools/decomp_gunmissile_oracle.py": "4671a0a69ee91d6e0280a6c4af73d38e6ca6b096ee04161aeaef8d2d3e5c0fd1",
+    "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
+    "tools/ghidra/gunmissile-functions.json": "95064438029313d2bbd11a3f2c960ff24173b28ade724c3329ffaf7d2cc36609",
+    "tools/ghidra/gunmissile-helper-functions.json": "9d39ab1525d8b6fc9e829a8b1d3fd319f9875584453e5b9b14bdf5de99f791b1"
+  },
+  "baseline": {
+    "commit": "4e532fd",
+    "sha256": {
+      "cpppj/src/o/RawMissile.cpp": "9545759cb67226d71b6342ca5fefb7bede988ac2652ef829cc7e5673741b7c5d",
+      "cpppj/src/o/RawMissile.h": "6174b99462d9472646dafee379816a88092aacc11ca2822f34c2cd74ad5cb7b8",
+      "cpppj/tests/fixtures/gunmissile-x86.tsv": "3bf00d1918ac56c7cdfeab8ae9d1247f99f459e56d8be7aa53f75e0b778c2b67"
+    }
+  },
+  "metadata": {
+    "firingType": 71,
+    "displayType": 83,
+    "speed": 35,
+    "effectType": 0,
+    "displayDirections": 1
+  },
+  "os_calls": 0,
+  "limitations": [
+    "05 썬캐논296관찰을변경하거나새누적으로중복계산하지않는다.",
+    "실제SunArcher Missile 숫자몸체와명시query/자산/공간/사운드/피해/삭제경계를대조한다.",
+    "실제Archer 발사각애니메이션과시각충돌효과/표적피해하위는별도단위다."
+  ]
+}

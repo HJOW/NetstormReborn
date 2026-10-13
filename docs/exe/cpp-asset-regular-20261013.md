@@ -41,6 +41,6 @@ event6699의 좌표 효과`00470ac0`/CD`00455b40`은 snap→Dude 사건`00451470
 
 `AssetRegularTests.cpp`의 두 전수 재생은 같은 raw pool/hash와 실제 Frame/Finder/Advance에서 native1976개를 비교한다. 실제 Kernel/ProcessHost 검사는 시각17.25에서 event1 payload0.08의 최초 즉시 호출→17.25+0.08f 예약→그전 재호출 억제→두 번째 프레임을 확인한다. 누락 효과/부모·다른 풀 지정기 거부 검사도 포함한다.
 
-**최신 Release의 집중4개 검사와 원본1976개 전수 C++ 대조 및 최종 SHA 감사가 통과했다.** 로그는 `extracted/campaign-runtime4-AssetRegular_-final-tests.log`이며 전체 통합 검사958개도 통과했다. 최초 실패에서 원소+98을 덮던 합성 프레임 입력을 교정했고, CD unordered NaN 비교의 cap0.03 선택을 원본대로 복원했다. 독립 행의 free 슬롯 재초기화는 검사 전용 입력 접근에서만 허용한다. 초기 실패 로그는 그대로 보존했다.
+**최신 Release의 집중4개 검사와 원본1976개 전수 C++ 대조 및 최종 SHA 감사가 통과했다.** 로그는 `extracted/run4-AssetRegular_-final.log`이며 전체 통합 검사958개도 통과했다. 최초 실패에서 원소+98을 덮던 합성 프레임 입력을 교정했고, CD unordered NaN 비교의 cap0.03 선택을 원본대로 복원했다. 독립 행의 free 슬롯 재초기화는 검사 전용 입력 접근에서만 허용한다. 초기 실패 로그는 그대로 보존했다.
 
 실제 월드 postPop/소유자/삭제/생산/건설/피해·GUI/캠페인 종단 완주는 이번 단위의 완료 근거가 아니다. DirectDraw 전체화면 오류 수정은 이번 목표에서 제외한다.

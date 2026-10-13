@@ -38,7 +38,7 @@ Detach는 **처음 위치 조회로 선택한 레코드와 원래 연결 목록*
 | Pop | `004b02d0` | `004ad490` |
 | postPop | `004b0d30` | `004ae180` |
 
-[독립 도구](../../tools/decomp_graphrecovery_oracle.py), [fixture](../../cpppj/tests/fixtures/graphrecovery-x86.tsv), [SHA·호출 기록](../../cpppj/recovery-graphrecovery-evidence.json). 세 실제 PE × 두 x87 정밀도 × 8입력 × 네 상위 경로 = **192회**다. 각 공개 호출에서 실제 **32768슬롯 전체 재구성을 한 번씩** 수행했음을 관찰한다. 준비 Reset/Create와 내부 Allocate/Flood/postPop 도달은 공개 호출 수에 더하지 않는다. CD/추가 10.37의 코드 배치는 같으며 새 시대 규칙으로 세지 않는다.
+[독립 도구](../../tools/decomp_graphrecovery_oracle.py), [fixture](../../cpppj/tests/fixtures/graphrecovery-x86.tsv), [SHA·호출 기록](../../cpppj/graphrecovery.json). 세 실제 PE × 두 x87 정밀도 × 8입력 × 네 상위 경로 = **192회**다. 각 공개 호출에서 실제 **32768슬롯 전체 재구성을 한 번씩** 수행했음을 관찰한다. 준비 Reset/Create와 내부 Allocate/Flood/postPop 도달은 공개 호출 수에 더하지 않는다. CD/추가 10.37의 코드 배치는 같으며 새 시대 규칙으로 세지 않는다.
 
 7개 raw 슬롯·255개 Graph 레코드·dirty 항목 전체는 직접 비교한다. 전체 풀/네 단계 hash/spot/4096 DWORD 스택/비용·깊이·통계를 기존 독립 관찰기로 대조한다. 검토한 Ghidra 몸체 밖 실행과 쓰기를 거부하고 OS/대체 함수는 사용하지 않는다. 생성 준비에서 전 시퀀스의 특수 9 감소 타입이 생성 금지 타입으로 남은 문제는 다음 실제 Create 전에 합성 입력을 초기화하여 해결했다. 원본 assert 몸체는 실행하지 않는다.
 

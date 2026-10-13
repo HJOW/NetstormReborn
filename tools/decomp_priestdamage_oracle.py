@@ -31,7 +31,7 @@ DESTROY=STOP+0x180
 KEYS=('kind','current','damage','arank','vrank','attackerOwner','victimOwner','disabled','nodamage',
       'boss','regen','direction','effect','existing','created','checking','type','maximum')
 FIXTURE=ROOT/'cpppj/tests/fixtures/priestdamage-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-priestdamage-evidence.json'
+REPORT=ROOT/'cpppj/priestdamage.json'
 
 
 def case(**values):

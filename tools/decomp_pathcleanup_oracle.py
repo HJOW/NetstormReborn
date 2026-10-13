@@ -16,7 +16,7 @@ PATH=0x11400000
 MEMORY=HEAP+0x6000
 UNPOP,REPOP,DESTROY=HEAP+0xf000,HEAP+0xf010,HEAP+0xf020
 FIXTURE=ROOT/'cpppj/tests/fixtures/pathcleanup-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-pathcleanup-evidence.json'
+REPORT=ROOT/'cpppj/pathcleanup.json'
 SPEC={
  'originals':dict(main=0x48aa00,returnPlace=0x4263a0,nearby=0x4b21d0,helper=0x186d4,size=0x186f0,new=0x4e4391,shared=0x496f00,ritual=0x447e40,refund=0x442a40,boss=0x540bc4,checking=0x5e4794,priest=0x5412d0,dais=0x5412ec,outpost=0x541250,nugget=0x5412c0,event=0x5326c4,contained=0x541088,graphReady=0x540414,graphInvalid=0x540410),
  'originalCD':dict(main=0x47f0a0,returnPlace=0x4e3d70,nearby=0x4eb7b0,helper=0x2f14,size=0x2f28,new=0x4f1650,shared=0x48f1d0,ritual=0x481fc0,refund=0x4d1bc0,boss=0x540a2c,checking=None,priest=0x51cbbc,dais=0x51cbd8,outpost=0x51cb3c,nugget=0x51cbac,event=0x520fe0,contained=0x51c978),
@@ -161,7 +161,7 @@ def generate(smoke=False):
         editions[edition]=dict(cases=len(cases)+len(queries),cleanup_cases=len(cases),query_cases=len(queries),normal_cases=len(cases)+len(queries)-assertion_cases,assertion_cases=assertion_cases,returns=oracle.returns,query_returns=oracle.query_returns,entries=dict(oracle.entry_hits),boundaries=dict(oracle.stub_calls),asserts=oracle.assertions)
         files.update((oracle.manifest,oracle.table,oracle.source,ROOT/('originals/Netstorm.exe' if edition=='originals' else 'originalCD/NETSTORM.EXE')))
     FIXTURE.write_text('# edition profile,boss,dead,priest,reserve,checking,mutation,coordinate spatial afterEffects helper boss slots5..11\n'+'\n'.join('\t'.join(map(str,row)) for row in rows)+'\n',encoding='utf-8',newline='\n')
-    files.update(ROOT/name for name in ('cpppj/src/o/RawPathCleanup.h','cpppj/src/o/RawPathCleanup.cpp','cpppj/tests/PathCleanupTests.cpp','cpppj/src/o/RawPathRuntime.h','cpppj/src/o/RawPathRuntime.cpp','cpppj/recovery-pathcleanup-runtime-lineage-evidence.json','cpppj/src/o/RawSquidFinder.h','cpppj/src/o/RawSquidFinder.cpp','cpppj/src/o/RawCarrierPreDestroy.h','cpppj/src/o/RawCarrierPreDestroy.cpp','cpppj/src/o/RawPlayerPlacementAnchor.h','cpppj/src/o/RawPlayerPlacementAnchor.cpp','tools/decomp_rawfinder_oracle.py','tools/decomp_bridgeeffects_oracle.py','tools/decomp_bridgedecay_oracle.py'))
+    files.update(ROOT/name for name in ('cpppj/src/o/RawPathCleanup.h','cpppj/src/o/RawPathCleanup.cpp','cpppj/tests/PathCleanupTests.cpp','cpppj/src/o/RawPathRuntime.h','cpppj/src/o/RawPathRuntime.cpp','cpppj/pathcleanup-runtime-lineage.json','cpppj/src/o/RawSquidFinder.h','cpppj/src/o/RawSquidFinder.cpp','cpppj/src/o/RawCarrierPreDestroy.h','cpppj/src/o/RawCarrierPreDestroy.cpp','cpppj/src/o/RawPlayerPlacementAnchor.h','cpppj/src/o/RawPlayerPlacementAnchor.cpp','tools/decomp_rawfinder_oracle.py','tools/decomp_bridgeeffects_oracle.py','tools/decomp_bridgedecay_oracle.py'))
     REPORT.write_text(json.dumps(dict(host='HJOW-Athlon',total=len(rows),normal_total=sum(e['normal_cases'] for e in editions.values()),assertion_total=sum(e['assertion_cases'] for e in editions.values()),editions=editions,files={p.relative_to(ROOT).as_posix():sha(p) for p in sorted(files) if p.exists()},game_runs=0,limits=['공간 접두는 원본 호출 요청을 별도 기록하고 기존 RawPathProcess가 재사용한다. 새 C++ 몸체는 그 뒤부터다.','malloc·SharedRegular ctor·ritual·Refund·가상삭제는 명시 관찰 경계다. 기존 Host/Refund/contained/Graph는 별도 실제 소비자로 재사용하며 신전 ritual 하위는 미완료다.','캠페인 실제 raw 월드/사제·골렘 CarrierArrival/GUI/완주 완료로 세지 않는다.']),ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
     print('Path cleanup native 고유 입력:',len(rows))
 

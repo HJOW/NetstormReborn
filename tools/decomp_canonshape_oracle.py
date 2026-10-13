@@ -15,7 +15,7 @@ from unicorn.x86_const import UC_X86_REG_ECX
 
 # 새 독립 관찰의 출력 경로와 입력 열 순서다.
 FIXTURE=ROOT/'cpppj/tests/fixtures/canonshape-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-canonshape-evidence.json'
+REPORT=ROOT/'cpppj/canonshape.json'
 KEYS=('kind','argument','direction','profile','explicit','alias','default','metric','scaleX','scaleY','hotX','hotY')
 
 

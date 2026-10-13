@@ -16,7 +16,7 @@ from unicorn.x86_const import UC_X86_REG_EAX,UC_X86_REG_EBX,UC_X86_REG_ECX,UC_X8
 ISLANDS,PLAYERS,OUTPUT=0x1b000000,0x1c000000,0x1d000000
 BYTES,CONTROLS=3204,(0x027f,0x037f)
 FIXTURE=ROOT/'cpppj/tests/fixtures/islandruntime-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-islandruntime-evidence.json'
+REPORT=ROOT/'cpppj/islandruntime.json'
 # 두 판본의 실제entry/전역/고정Playerstride와 기존표면 helper 경로다.
 SPECS={
  'originals':dict(entries=dict(Reset=0x46edf0,Exists=0x46ee30,Count=0x46ee50,Add=0x46ee60,Delete=0x46ee90,OwnerSet=0x46ef10,GetBounds=0x46f130,SetBounds=0x46f190,Match=0x46f200,TempleGet=0x46f260,TempleSet=0x46f2c0,OwnerGet=0x46f320),

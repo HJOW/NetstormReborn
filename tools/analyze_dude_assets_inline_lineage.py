@@ -16,8 +16,8 @@ from analyze_campaign_runtime6 import read_log
 
 # 현재공유헤더와변경전전체원문·기존보고서의별도successor경로다.
 ROOT=Path(__file__).resolve().parent.parent
-HISTORY=ROOT/'cpppj/recovery-history/dude-assets-before-inline'
-REPORT=ROOT/'cpppj/recovery-dude-assets-inline-lineage-evidence.json'
+HISTORY=ROOT/'cpppj/hist/dude-assets-e44e0'
+REPORT=ROOT/'cpppj/dude-assets-inline-lineage.json'
 SUPPORT='cpppj/tests/DudeSpawnSupport.h'
 COMMIT='860030e73e9e11599c89334b2e6ab4b0c6e1702d'
 OLD=b'const DudeAssets& Assets(OriginalEdition edition)'
@@ -45,12 +45,12 @@ def observe():
         preserved[saved.relative_to(ROOT).as_posix()]=item['work_sha256']
     preserved[(HISTORY/'git'/SUPPORT).relative_to(ROOT).as_posix()]=sha(git_old);preserved[(HISTORY/'capture.json').relative_to(ROOT).as_posix()]=sha((HISTORY/'capture.json').read_bytes())
     # 기존보고서는당시SHA를덮지않으며현재JSON/fixture/Native생산/도구도불변이어야한다.
-    unchanged=set(capture['reports'])|{SUPPORT,'cpppj/tests/DudeDropTests.cpp','cpppj/tests/DudeSpawnTests.cpp','cpppj/tests/PlayerWorldTests.cpp','cpppj/tests/fixtures/dudespawn-x86.tsv','cpppj/tests/fixtures/dudedrop-x86.tsv','cpppj/tests/fixtures/player-world-x86.tsv','cpppj/src/o/RawDudeSpawn.h','cpppj/src/o/RawDudeSpawn.cpp','cpppj/src/o/RawDudeDrop.h','cpppj/src/o/RawDudeDrop.cpp','cpppj/src/o/RawPlayerWorld.h','cpppj/src/o/RawPlayerWorld.cpp','tools/decomp_dudespawn_oracle.py','tools/decomp_dudedrop_oracle.py','tools/decomp_player_world_oracle.py','tools/analyze_dude_postpop_binding_lineage.py','tools/analyze_dudespawn_draft_lineage.py','tools/analyze_dudedrop_draft_lineage.py','tools/analyze_player_world_attach_lineage.py','tools/analyze_player_postpop_binding_lineage.py','extracted/campaign-runtime14-build-third.log'}
+    unchanged=set(capture['reports'])|{SUPPORT,'cpppj/tests/DudeDropTests.cpp','cpppj/tests/DudeSpawnTests.cpp','cpppj/tests/PlayerWorldTests.cpp','cpppj/tests/fixtures/dudespawn-x86.tsv','cpppj/tests/fixtures/dudedrop-x86.tsv','cpppj/tests/fixtures/player-world-x86.tsv','cpppj/src/o/RawDudeSpawn.h','cpppj/src/o/RawDudeSpawn.cpp','cpppj/src/o/RawDudeDrop.h','cpppj/src/o/RawDudeDrop.cpp','cpppj/src/o/RawPlayerWorld.h','cpppj/src/o/RawPlayerWorld.cpp','tools/decomp_dudespawn_oracle.py','tools/decomp_dudedrop_oracle.py','tools/decomp_player_world_oracle.py','tools/analyze_dude_postpop_binding_lineage.py','tools/analyze_dudespawn_draft_lineage.py','tools/analyze_dudedrop_draft_lineage.py','tools/analyze_player_world_attach_lineage.py','tools/analyze_player_postpop_binding_lineage.py','extracted/run14-build-third.log'}
     for name in unchanged-{SUPPORT}:
         if (ROOT/name).read_bytes()!=(HISTORY/'work'/name).read_bytes():raise RuntimeError('Dude Assets 기존report/Native/body/fixture 변경 '+name)
-    log=read_log(ROOT/'extracted/campaign-runtime14-build-third.log')
+    log=read_log(ROOT/'extracted/run14-build-third.log')
     if 'LNK2005' not in log or 'PlayerWorldTests' not in log or 'DudeDropTests' not in log:raise RuntimeError('Dude Assets 완료third-build 중복정의근거 오류')
-    unit13=json.loads((ROOT/'cpppj/recovery-campaign-runtime13-evidence.json').read_text(encoding='utf-8'));previous_dependencies={}
+    unit13=json.loads((ROOT/'cpppj/run13.json').read_text(encoding='utf-8'));previous_dependencies={}
     # 단위13최종전체파일은당시Player등록전보존view에서검증한다. 현재14바이너리로대체하지않는다.
     for name,value in unit13['files'].items():
         saved=player.HISTORY/'work'/name;path=saved if saved.is_file() else ROOT/name

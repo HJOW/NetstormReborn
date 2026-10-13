@@ -1,6 +1,6 @@
 # 10.37 일본 유통 CD(original1037JP) 디컴파일과 CD/10.37 비교
 
-2026-10-09, 호스트 `HJOW-Athlon`. 사용자가 제공한 `original1037JP`(일본에서 유통된 10.37 CD)를 [10.37 추가 자료](original1037-comparison.md)와 같은 방식으로 읽기 전용 분석했다. [비교 근거](../../cpppj/recovery-original1037jp-evidence.json)와 [재현 도구](../../tools/compare_original1037jp.py)에 SHA, 파일 목록, PE 섹션, 디컴파일 산출물 SHA를 기록했다.
+2026-10-09, 호스트 `HJOW-Athlon`. 사용자가 제공한 `original1037JP`(일본에서 유통된 10.37 CD)를 [10.37 추가 자료](original1037-comparison.md)와 같은 방식으로 읽기 전용 분석했다. [비교 근거](../../cpppj/original1037jp.json)와 [재현 도구](../../tools/compare_original1037jp.py)에 SHA, 파일 목록, PE 섹션, 디컴파일 산출물 SHA를 기록했다.
 
 ## 판본 성격 (사용자 판단, 2026-10-09)
 

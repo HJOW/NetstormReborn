@@ -15,7 +15,7 @@ SPEC={
 DESTROY,UNPOP,REPOP,OWNER,POP=tuple(HEAP+0xf200+index*16 for index in range(5)) # 명시 파생 가상 요청 진입점이다.
 PLAYER_STORAGE=HEAP+0x2000 # 원본Player 전역은배열주소포인터이며이격리입력의9개기록을가리킨다.
 FIXTURE=ROOT/'cpppj/tests/fixtures/altarsacrifice-x86.tsv' # 독립 PE 입력/반환/효과/raw/RNG/player 기록이다.
-REPORT=ROOT/'cpppj/recovery-altarsacrifice-evidence.json' # 새 상위 관찰과 기존 helper 재사용 범위를 구분한다.
+REPORT=ROOT/'cpppj/altarsacrifice.json' # 새 상위 관찰과 기존 helper 재사용 범위를 구분한다.
 
 def inputs():
     """순서/분기 입력만 교차하며 반환/필드/난수 결과를 계산하지 않는다."""

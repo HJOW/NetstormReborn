@@ -33,7 +33,7 @@
 
 [`decomp_canontype_oracle.py`](../../tools/decomp_canontype_oracle.py)는 생성/전체 Advance·셀 해석·실제 프레임 검색·방향 getter·타입/발자국 조회·Bounds/CRT를 **대체 없이 정상 반환까지** 실행한다. 입력은 각 PE의 실제 패턴 바이트와 정상 프레임 표/역순·중복 표다. 선택한 실제 패턴 포인터·각 유효 칸의 프레임/라벨/좌표/방향·끝 상태/범위를 기록한다. 전역 별칭의 우선순위, 모든 패턴 번호/유효 회전, 음수/소수/2^24 좌표, 서로 다른 발자국, 패턴 explicit 모드 무시, 비패턴 기본/명시/빈 경로를 포함한다.
 
-10.78 **2,079개**, CD/추가 10.37 각 **924개**, 총 **3,927개**가 두 x87 정밀도에서 일치한다. 모든 실제 호출의 ESP/보존 레지스터/x87 균형과 허용 몸체/decoder·출력·스택 쓰기, assert/OS 0회, PE/내보내기/도구/표/fixture SHA를 검사한다. 새 [`근거 기록`](../../cpppj/recovery-canontype-evidence.json), [`fixture`](../../cpppj/tests/fixtures/canontype-x86.tsv), [`C++ 검사`](../../cpppj/tests/CanonTypeDecoderTests.cpp)는 이전 감사 자료와 분리되어 있다. 누적 독립 fixture 입력은 **257,196개**다.
+10.78 **2,079개**, CD/추가 10.37 각 **924개**, 총 **3,927개**가 두 x87 정밀도에서 일치한다. 모든 실제 호출의 ESP/보존 레지스터/x87 균형과 허용 몸체/decoder·출력·스택 쓰기, assert/OS 0회, PE/내보내기/도구/표/fixture SHA를 검사한다. 새 [`근거 기록`](../../cpppj/canontype.json), [`fixture`](../../cpppj/tests/fixtures/canontype-x86.tsv), [`C++ 검사`](../../cpppj/tests/CanonTypeDecoderTests.cpp)는 이전 감사 자료와 분리되어 있다. 누적 독립 fixture 입력은 **257,196개**다.
 
 프레임이 없는 패턴 검색은 원본 `0049a940` / CD `004442f0`의 assert 보고 경로다. 새 독립 대조에서는 필요한 프레임을 모두 공급하여 assert를 대체하지 않는다. C++의 누락 프레임 -1/건너뛰기 검사는 별도로 두고, 원본 assert 보고를 명시 대체한 과거 `bridge` fixture를 기존 근거로 유지한다. 원본 생성 초기값의 미러 0/진행 간격 1과 프레임 디버그 전역 0 범위이며, 사용자 지정 미러/간격이나 모든 잘못된 입력의 원본 assert 동작을 복원한 근거는 아니다.
 

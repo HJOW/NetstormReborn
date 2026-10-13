@@ -40,7 +40,7 @@ Take는 free list를 떼거나 카운터를 조정하는 Allocate와 다르다. 
 
 서버/클라이언트의 **4시퀀스·964회 호출**: Create 192, postCreate 304, postTake 304, Take 164. 합성 타입 필드·오염된 payload·상태 상위 비트·HP 16/32비트 경계와 음수·dais abstract·약화 mana·예측 flags·free 서버/예측 머리/최종 슬롯·반복 Take를 포함한다. 준비 Reset 4회와 생성자 대입 구간은 이 호출 수에 더하지 않았다.
 
-[CreationTests.cpp](../../cpppj/tests/CreationTests.cpp)는 대상 raw 슬롯의 **모든 바이트를 직접 비교**하고 풀 전체의 Adler-32와 카운터·머리/꼬리를 대조한다. 생성자 주소 표는 0을 포함한 359행을 따로 비교한다. CTest의 새 5개 검사에는 지원하지 않는 입력의 변경 전 거부와 실제 타입 로더→SID HP/깊이 연결도 포함된다. 원본/도구/fixture/생성 주소 표의 SHA-256은 [검증 기록](../../cpppj/recovery-creation-evidence.json)과 `--verify`로 확인한다.
+[CreationTests.cpp](../../cpppj/tests/CreationTests.cpp)는 대상 raw 슬롯의 **모든 바이트를 직접 비교**하고 풀 전체의 Adler-32와 카운터·머리/꼬리를 대조한다. 생성자 주소 표는 0을 포함한 359행을 따로 비교한다. CTest의 새 5개 검사에는 지원하지 않는 입력의 변경 전 거부와 실제 타입 로더→SID HP/깊이 연결도 포함된다. 원본/도구/fixture/생성 주소 표의 SHA-256은 [검증 기록](../../cpppj/creation.json)과 `--verify`로 확인한다.
 
 Release 빌드는 경고/오류 없이 통과했고 CTest 한 실행 파일의 **104개 내부 검사**가 통과했다. 타입 로더 변경의 실제 자료 회귀도 창 없는 `cpp_fort_smoke.py`로 확인했다. 두 판본 합계 **488요새·320,634객체·326,169줄**의 구조/타입/해시/미션 값이 기존 Python 판독기와 같고 원본 아카이브/낱개 요새의 전후 해시가 같다. 보고서는 `extracted/cpp-fort-smoke/report.json`이다. 이 자료 대조는 새 HP/깊이 원본 파서 전체나 생성/월드 동작의 독립 검증을 대신하지 않는다.
 

@@ -1,0 +1,221 @@
+{
+  "last_decompile_host": "HJOW-Athlon",
+  "recorded_at": "2026-10-12T23:03:25.945784+09:00",
+  "method": "두 실제 PE 정적 디컴파일·원본 정규식/전역/명령 판독; 게임/에뮬레이터 실행 없음",
+  "cpp_comparison": "미수행: 새 테스트 추가/실행·독립 원본 동작 대조·GUI 실행 없음; 기존 AssetTests 기대값 한 곳 수정",
+  "new_original_observations": 0,
+  "new_cpp_comparisons": 0,
+  "implementation": {
+    "patch_order": [
+      "I",
+      "S",
+      "T",
+      "C",
+      "B",
+      "E"
+    ],
+    "cd_order": [
+      "I",
+      "T"
+    ],
+    "tag": "Parse마다 0, T 이후 문자열/그림/리터럴/마지막 빈 조각에 전달, ~.로 초기화하지 않음",
+    "patterns": "부분 검색/대소문자 구분/greedy 캡처/ASCII space/점 wildcard/탭 캡처 유지",
+    "picture": "이름 또는 번호·글자 구간·*/#/&·count 포함 상한·현재 태그·색 치환/상자 맞춤",
+    "gump_frame_default": "두 원본 .type 로딩의 -1 초기값 반영, 미지정은 default로 복귀"
+  },
+  "boundaries": [
+    "전체 Regexp 모듈",
+    "TextGump W 명령/다중 줄/줄바꿈/스크롤",
+    "원본 그림 변환 표 공급",
+    "자동 raw 메뉴/Form·입력/클라이언트 UI 연결",
+    "독립 원본/C++ 동작 대조"
+  ],
+  "editions": {
+    "originals": {
+      "binary": "originals/Netstorm.exe",
+      "requested_functions": [
+        "004bb430",
+        "004fed30",
+        "004fed50",
+        "004fed70",
+        "004fed90",
+        "004fedb0",
+        "004fedd0",
+        "00496c90",
+        "004964e0",
+        "004963d0",
+        "00496270",
+        "00495a10",
+        "0049a840",
+        "0049a860",
+        "004e66de",
+        "0049c3b0"
+      ],
+      "exported_functions": [
+        "004bb430",
+        "004fed30",
+        "004fed50",
+        "004fed70",
+        "004fed90",
+        "004fedb0",
+        "004fedd0",
+        "00496c90",
+        "004964e0",
+        "004963d0",
+        "00496270",
+        "00495a10",
+        "0049a840",
+        "0049a860",
+        "004e66de",
+        "0049c3b0"
+      ],
+      "patterns": {
+        "I": {
+          "address": "00514588",
+          "bytes": "49202a285b5e2e0d0a205d2b29202a2e202a285b5e2e0d0a205d2b29202a",
+          "text": "I *([^.\r\n ]+) *. *([^.\r\n ]+) *"
+        },
+        "S": {
+          "address": "005145a8",
+          "bytes": "53202a2e202a285b5e2e0d0a205d2b29202a",
+          "text": "S *. *([^.\r\n ]+) *"
+        },
+        "C": {
+          "address": "005145bc",
+          "bytes": "43202a2e202a285b5e2e0d0a205d2b29202a",
+          "text": "C *. *([^.\r\n ]+) *"
+        },
+        "B": {
+          "address": "005145d0",
+          "bytes": "42202a2e202a285b5e2e0d0a205d2b29202a",
+          "text": "B *. *([^.\r\n ]+) *"
+        },
+        "E": {
+          "address": "005145e4",
+          "bytes": "45202a2e202a285b5e2e0d0a205d2b29202a2e202a285b5e2e0d0a205d2b29202a",
+          "text": "E *. *([^.\r\n ]+) *. *([^.\r\n ]+) *"
+        },
+        "T": {
+          "address": "00514608",
+          "bytes": "54202a285b302d395d2b29202a",
+          "text": "T *([0-9]+) *"
+        }
+      },
+      "fit": {
+        "width": {
+          "address": "00540cbc",
+          "bytes": "41000000",
+          "value": 65
+        },
+        "height": {
+          "address": "00540cc0",
+          "bytes": "3c000000",
+          "value": 60
+        }
+      },
+      "option_defaults": {
+        "allowzonesounds": {
+          "address": "0053186c",
+          "bytes": "01000000",
+          "value": 1
+        },
+        "zonebgcolor": {
+          "address": "00531870",
+          "bytes": "01000000",
+          "value": 1
+        },
+        "zonefgcolor": {
+          "address": "00531874",
+          "bytes": "01000000",
+          "value": 1
+        },
+        "zoneoffset": {
+          "address": "0053187c",
+          "bytes": "01000000",
+          "value": 1
+        }
+      }
+    },
+    "originalCD": {
+      "binary": "originalCD/NETSTORM.EXE",
+      "requested_functions": [
+        "004b7770",
+        "004b4cc0",
+        "004b4d40",
+        "00463650",
+        "00463680",
+        "00464340",
+        "004636b0",
+        "00443410",
+        "004f1ea0",
+        "004460f0"
+      ],
+      "exported_functions": [
+        "004b7770",
+        "004b4cc0",
+        "004b4d40",
+        "00463650",
+        "00463680",
+        "00464340",
+        "004636b0",
+        "00443410",
+        "004f1ea0",
+        "004460f0"
+      ],
+      "patterns": {
+        "I": {
+          "address": "0053c3e8",
+          "bytes": "49202a285b5e2e0d0a205d2b29202a2e202a285b5e2e0d0a205d2b29202a",
+          "text": "I *([^.\r\n ]+) *. *([^.\r\n ]+) *"
+        },
+        "T": {
+          "address": "0053c428",
+          "bytes": "54202a285b302d395d2b29202a",
+          "text": "T *([0-9]+) *"
+        },
+        "W_TextGump": {
+          "address": "0053c408",
+          "bytes": "57202a285b5e2e0d0a205d2b29202a2e202a285b5e2e0d0a205d2b29202a",
+          "text": "W *([^.\r\n ]+) *. *([^.\r\n ]+) *"
+        }
+      },
+      "fit": {
+        "width": {
+          "address": "005119c4",
+          "bytes": "41000000",
+          "value": 65
+        },
+        "height": {
+          "address": "005119c8",
+          "bytes": "3c000000",
+          "value": 60
+        }
+      },
+      "option_defaults": {}
+    }
+  },
+  "files": {
+    "tools/analyze_stylemarkup.py": "0ed8a010a4534cbc6e4ff1f802d1c77284d66f1ce8c0fbe6973573eba571ea64",
+    "tools/analyze_styletext.py": "a69336b3064208e08e5fcea4e84f8427eeaa35512673c64f273c39b4b91877b1",
+    "tools/ghidra/stylemarkup-functions.json": "a394ac193931063c7988958dddea81ca011a18439213855633998c58f38edf5a",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/stylemarkup/originals/creation.c": "89cf610e1a9d485291d6126f3e5878cfc3851ed01e094b6c2e7e0898f9f7477d",
+    "extracted/stylemarkup/originals/functions.tsv": "67a41f3d70f8feaa8624bec0eebc5066d8013a845dc51c83e37ff5ef4d50e958",
+    "extracted/stylemarkup/originals/assembly.txt": "a22b8682053a28ef39872bb95b76268f52413178ebf50ec6d6ddf29753ebc060",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "extracted/stylemarkup/originalCD/creation.c": "11f32d1ff372018000cacd04ded81664794104cb2e07559268fbb45eee8094bb",
+    "extracted/stylemarkup/originalCD/functions.tsv": "c29823f44b62fcc4b2ca06e6291d39900a8e1182cbf297e3432ec7c280dd0e7f",
+    "extracted/stylemarkup/originalCD/assembly.txt": "387fd4793e0c41ee27cb4ce39554cfa2f8dd418180dce01f7ada75cd3cd5644f",
+    "cpppj/src/client/StyleTextMarkup.cpp": "6acd523ee7210a6a8271582e172b2a0e73a811f1b6eb92b8bb77ed8575406a0e",
+    "cpppj/src/client/StyleTextMarkup.h": "68a22dcdf8b7d2da7c57985e5e355de45201014594e83deee70fbf09380e87c9",
+    "cpppj/src/client/StyleText.cpp": "fe2c920a676ebd7c13ae5815f76d1b9050eeaef8321e881f83f20f4615458a6f",
+    "cpppj/src/client/StyleText.h": "5cbf6d490dcfc4dd2a89c8f10edd49f6ba93557abba0eb8d2d0ce836ca14032d",
+    "cpppj/src/client/Markup.cpp": "3ef98b57be34741fc0c7a11d233744636a83a34ba4457053e4d57b51f9fec6c0",
+    "cpppj/src/client/Markup.h": "8fec3e164ef546e3b81837d4063200addc0e4a474926c348ec04aac3716f0235",
+    "cpppj/src/client/CMakeLists.txt": "c21b622e37f96facb5333a2eb0f29015bdef951e4d7386da3352680a31f80120",
+    "cpppj/src/o/TypeParser.cpp": "dd25f0d3c9c2c21f3b907c3d06674c59c2076145c3fe4af8d9366b189ebdb3f4",
+    "cpppj/src/o/RiftType.h": "928ba1ddd1539a9ab7eb52a38542cad7efa39c999dd2355aae109bf460139b94",
+    "cpppj/src/o/ConfigInterface.cpp": "7a0917cdbe9cb19e3bf8aa111ebb7d4557bdf41ccb729fca567ed9e9366c95a0",
+    "cpppj/tests/AssetTests.cpp": "109d52a1d349f4cd514a20f75479e672d1f54738bc4ff49319106b8412f89c7e"
+  }
+}

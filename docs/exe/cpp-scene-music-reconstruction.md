@@ -75,7 +75,7 @@
 
 ## 독립 원본 관찰
 
-[`decomp_scenemusic_oracle.py`](../../tools/decomp_scenemusic_oracle.py)는 세 실제 PE에서 위 여섯 함수와 곡 길이·시계 가산·난수·ASCII 비교를 정상 반환까지 실행한다. 각 PE **3,113개**, 세 판본 **9,339개**이며 두 x87 제어 워드(`0x027f`/`0x037f`)의 관찰이 같은 입력만 저장했다. [fixture](../../cpppj/tests/fixtures/scenemusic-x86.tsv), [근거 JSON](../../cpppj/recovery-scenemusic-evidence.json).
+[`decomp_scenemusic_oracle.py`](../../tools/decomp_scenemusic_oracle.py)는 세 실제 PE에서 위 여섯 함수와 곡 길이·시계 가산·난수·ASCII 비교를 정상 반환까지 실행한다. 각 PE **3,113개**, 세 판본 **9,339개**이며 두 x87 제어 워드(`0x027f`/`0x037f`)의 관찰이 같은 입력만 저장했다. [fixture](../../cpppj/tests/fixtures/scenemusic-x86.tsv), [근거 JSON](../../cpppj/scenemusic.json).
 
 | 묶음 | 판본별 입력 | 교차 |
 |---|---|---|

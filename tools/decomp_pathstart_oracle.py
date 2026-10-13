@@ -18,7 +18,7 @@ PATH, OLD, DISTANCE, QUEUE = 0x11400000, 0x11420000, 0x11440000, 0x11468000
 ATTACH, DISPOSE, POP = HEAP+0xf000, HEAP+0xf010, HEAP+0xf020
 FIXTURE = ROOT/'cpppj/tests/fixtures/pathstart-x86.tsv'
 TYPE_FIXTURE = ROOT/'cpppj/tests/fixtures/pathprocesstype-x86.tsv' # 각 타입/genus의 실제 종류 선택과 CD assert 관찰이다.
-REPORT = ROOT/'cpppj/recovery-pathstart-evidence.json'
+REPORT = ROOT/'cpppj/pathstart.json'
 # 원본 mutable 전역·가상 사제 통지·상위 몸체와 명시 효과 경계다.
 SPEC = {
  'originals':dict(start=0x489080,choose=0x488fe0,notify=0x427750,finish=0x493f20,lookup=0x4b1a90,fromform=0x4ae2d0,event=0x4afb40,frame=0x4acee0,clear=0x443800,

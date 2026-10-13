@@ -12,9 +12,9 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parent.parent
 CPP='cpppj/src/o/RawTerrainStamp.cpp'
 BEFORE_CPP=ROOT/'extracted/terrainstamp-before-mask-correction.cpp'
-BEFORE_REPORT=ROOT/'extracted/terrainstamp-before-mask-correction-evidence.json'
-CURRENT_REPORT=ROOT/'cpppj/recovery-terrainstamp-evidence.json'
-REPORT=ROOT/'cpppj/recovery-terrainstamp-mask-correction-evidence.json'
+BEFORE_REPORT=ROOT/'extracted/terrainstamp-before-mask-correction-e-d13ca.json'
+CURRENT_REPORT=ROOT/'cpppj/terrainstamp.json'
+REPORT=ROOT/'cpppj/terrainstamp-mask-correction.json'
 BIT_TABLE=(1,2,2,4,4,8,8,1)
 
 

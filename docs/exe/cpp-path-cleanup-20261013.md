@@ -33,7 +33,7 @@
 
 `tools/decomp_pathcleanup_oracle.py`는 두 보호 PE를 메모리에 읽어 실제 cleanup, 두 새 finder 조회, contained/Graph/CRT 몸체를 실행한다. 공간 접두 요청은 별도 필드로 관찰하고 C++ 새 본문과 섞지 않는다. malloc/SharedRegular ctor/ritual/Refund/가상 삭제/assert 보고는 이름과 규약을 명시한 관찰 경계다.
 
-고유 입력은 **1732개 = 정상1716 + 패치 assert16**이다. 각 판본은 **cleanup704 + 독립 query162**를 수행한다. 두 x87 정밀도 반복과 같은 입력 재실행은 합산하지 않는다. helper의 부류/위치/abstract/free/buried, 부모 dead/권한/종류, 확보 실패, 현재 owner/Graph, callback 뒤 권한 변경, snap 편향 경계와 CD 귀환 조회를 포함한다. 근거는 `cpppj/recovery-pathcleanup-evidence.json`, fixture는 `cpppj/tests/fixtures/pathcleanup-x86.tsv`다.
+고유 입력은 **1732개 = 정상1716 + 패치 assert16**이다. 각 판본은 **cleanup704 + 독립 query162**를 수행한다. 두 x87 정밀도 반복과 같은 입력 재실행은 합산하지 않는다. helper의 부류/위치/abstract/free/buried, 부모 dead/권한/종류, 확보 실패, 현재 owner/Graph, callback 뒤 권한 변경, snap 편향 경계와 CD 귀환 조회를 포함한다. 근거는 `cpppj/pathcleanup.json`, fixture는 `cpppj/tests/fixtures/pathcleanup-x86.tsv`다.
 
 `PathCleanupTests.cpp`의 전수 검사는 원본 이후 효과/현재 helper·boss·일곱 raw 슬롯 전체와 경로의 helper 이외 바이트 불변을 대조한다. 두 번째 검사는 **기존 실제 RawPathProcess 공간 접두 → 새 cleanup → 같은 Host/Kernel의 실제 SharedRegular**를 연결하여 공유 이벤트/부모/시각과 helper0을 확인한다. 별도 C++ 빌드/대조 결과는 root 통합 뒤 기록한다.
 
@@ -54,6 +54,6 @@ python -X utf8 tools/analyze_pathcleanup_runtime_lineage.py --verify
 
 ## 남은 범위
 
-최종 단위07 Release 두 타깃 종료0·경고/오류0, 집중2개 및 **전체983개 검사/실패0**이다. 통합 SHA/관찰 분류는 `recovery-campaign-runtime7-evidence.json`, 초기/교정/최종 로그는 `extracted/campaign-runtime7-*`를 따른다.
+최종 단위07 Release 두 타깃 종료0·경고/오류0, 집중2개 및 **전체983개 검사/실패0**이다. 통합 SHA/관찰 분류는 `run7.json`, 초기/교정/최종 로그는 `extracted/run7-*`를 따른다.
 
 신전 의식 본문/하위 프레임·소리·예약, 사제/골렘의 실제 CarrierArrival과 운반/채굴 예약·명령, type40 경로 처리, 실제 raw GameWorld 소비자 연결과 UI·완주 대조는 남아 있다. 현재 신전 의식 요청 관찰을 의식 완료로 세지 않는다. 기존 건설 운반 ConstructionArrival과 CarrierCheck는 재사용한다.

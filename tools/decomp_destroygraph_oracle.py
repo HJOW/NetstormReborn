@@ -33,7 +33,7 @@ EXPECTED_LIFECYCLE={'Pre':384,'Post':384,'ai':168}
 EXPECTED_GRAPH={'Detach':220,'Begin':480,'Next':1280,'Footprint':2238,'Allocate':504,'Flood':512,'Free':20,'Add':360}
 EXPECTED_SUBSTITUTIONS={'selected':576,'clear':192,'log':1064}
 FIXTURE=ROOT/'cpppj/tests/fixtures/destroygraph-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-destroygraph-evidence.json'
+REPORT=ROOT/'cpppj/destroygraph.json'
 
 
 def case_input(case,kind):

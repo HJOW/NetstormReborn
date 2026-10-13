@@ -61,7 +61,7 @@ SPECS = {
 SPECS['original1037'] = dict(SPECS['originalCD'], binary='original1037/netstorm.exe')
 # 새 결과 파일은 이전 기록/fixture와 분리한다.
 FIXTURE = ROOT / 'cpppj/tests/fixtures/owner-x86.tsv'
-REPORT = ROOT / 'cpppj/recovery-owner-evidence.json'
+REPORT = ROOT / 'cpppj/owner.json'
 
 
 def digest(path):

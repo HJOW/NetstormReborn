@@ -1,6 +1,6 @@
 # cpppj 삭제 준비 분할과 일반 다리/섬 Unpop
 
-2026-10-07. [영역/일반 Pop](cpp-regiongraph-reconstruction.md)에 이어 삭제 준비 Graph 분할과 일반 다리/섬의 비전투 공간 해제를 복원했다. [Graph](../../cpppj/src/o/Graph.cpp), [raw 연결](../../cpppj/src/o/RawGraph.cpp), [Unpop](../../cpppj/src/o/SquidUnpop.cpp), [콘솔 검사](../../cpppj/tests/RawGraphTests.cpp), [독립 x86 기록](../../cpppj/recovery-graphremove-evidence.json), [실행 도구](../../tools/decomp_graphremove_oracle.py).
+2026-10-07. [영역/일반 Pop](cpp-regiongraph-reconstruction.md)에 이어 삭제 준비 Graph 분할과 일반 다리/섬의 비전투 공간 해제를 복원했다. [Graph](../../cpppj/src/o/Graph.cpp), [raw 연결](../../cpppj/src/o/RawGraph.cpp), [Unpop](../../cpppj/src/o/SquidUnpop.cpp), [콘솔 검사](../../cpppj/tests/RawGraphTests.cpp), [독립 x86 기록](../../cpppj/graphremove.json), [실행 도구](../../tools/decomp_graphremove_oracle.py).
 
 이번 사용자 지시에 따라 원본/복사본 게임 프로세스와 클론 창을 실행하지 않았다. Ghidra 헤드리스·읽기 전용 분석, 허용한 함수의 격리 에뮬레이션, Release 빌드와 콘솔 CTest만 사용했다. 창 검사는 raw GameWorld 연결 후 다른 PC에 인계한다.
 

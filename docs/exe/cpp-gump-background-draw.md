@@ -62,7 +62,7 @@ debug는 현재 Bounds에 체크 fill만 호출한다. 이전 debugColor를 인�
 
 새 C++ 검사 **8개**가 통과했다. 원본 전수 대조 외에 독립 3×3 질감/투명 레이어·특별 레이어 프레임 계약·두 판본 생성 연결·현재 클립/선 색/디버그 콜백·질감 출력 실패 복구·돌 버튼 배경/글자/눌림/삭제 연결을 확인했다. 최종 Release **경고/오류 0**, 전체 CTest 내부 **849개·실패 0**(82.85초, 전체 82.92초)다. SOURCE_MAP 생성 확인 후 내용 차이는 없다.
 
-자료는 `cpppj/recovery-gumpbackgrounddraw-evidence.json`, `cpppj/tests/fixtures/gumpbackgrounddraw-x86.tsv`, `GumpBackgroundDrawTests.cpp`, `GumpBackgroundTestAssets.h`, `GumpTextTests.cpp`, `extracted/gumpbackgrounddraw/`, `extracted/gumpbackgrounddraw-*.log`, `extracted/gumpbackgrounddraw-assets/report.json`에 있다.
+자료는 `cpppj/gumpbackgrounddraw.json`, `cpppj/tests/fixtures/gumpbackgrounddraw-x86.tsv`, `GumpBackgroundDrawTests.cpp`, `GumpBackgroundTestAssets.h`, `GumpTextTests.cpp`, `extracted/gumpbackgrounddraw/`, `extracted/gumpbackgrounddraw-*.log`, `extracted/gumpbackgrounddraw-assets/report.json`에 있다.
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File tools/ghidra/export_functions.ps1 -Name gumpbackgrounddraw

@@ -35,7 +35,7 @@ SPEC['original1037']=dict(SPEC['originalCD'])
 KEYS=('type','flags','quality','keep','fort','index','seed','argument','attachFlags','rawType',
     'allocation','factoryChange','notifyChange','attachChange','allocateChange')
 FIXTURE=ROOT/'cpppj/tests/fixtures/returnpiece-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-returnpiece-evidence.json'
+REPORT=ROOT/'cpppj/returnpiece.json'
 
 
 def case(**changes):

@@ -23,7 +23,7 @@
 
 - 원본 실행기: `tools/decomp_terraincontext_oracle.py`
 - 출처 연결: `tools/analyze_terraincontext_cpp_binding.py`
-- 보고서: `cpppj/recovery-terraincontext-evidence.json`
+- 보고서: `cpppj/terraincontext.json`
 - 첫 C++ 집중 검사: **2개 통과, 실패0**
 - 최종 공유 빌드/전체 검사: 단위08 종합 보고서에 기록한다.
 

@@ -1,0 +1,30 @@
+{
+  "host": "HJOW-Athlon",
+  "last_decompile_host": "HJOW-Athlon",
+  "last_decompile_date": "2026-10-14",
+  "normal_cases": 388,
+  "assertion_cases": 20,
+  "fixture_cases": 408,
+  "new_cpp_tests": 3,
+  "new_native_binding_cases": 0,
+  "reused_sp_native_not_added": true,
+  "game_runs": 0,
+  "files": {
+    "cpppj/fortmoney.json": "61ef8b7f84dc999e823b44f06176c5a5cbd3345d7d76dba590be26cdd4f3e3b5",
+    "cpppj/tests/fixtures/fortmoney-x86.tsv": "a87c4ae0d66d93196238cbe8c6f2568140e203808e703bda7fb9ad79847efc35",
+    "cpppj/src/o/RawFortMoneyLoad.h": "8d06cdd57737603e47d89c0732da727bf647eeea3b0188ab3b16628dfd4f6ce2",
+    "cpppj/src/o/RawFortMoneyLoad.cpp": "8aca16d919c3a4a7b57b1342a663f2b359d2e14b24b3a945eafa3cc3b2163f13",
+    "cpppj/tests/FortMoneyLoadTests.cpp": "756e55785b50b0e8f4c51a28c3147121ca37c940d04398fbe32b0313728c0210",
+    "cpppj/src/client/RawSurfaceWorld.h": "ee59c85ea6a642c5fb82f9eb8387ee6d5f170d16b3a848339914dbec9420b6c2",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "230fe40222dddc780fc88e63cd7f252a1f285086e2b5ee7ac75b614488ccfd19",
+    "cpppj/src/o/SpStore.h": "5bb676a1593e7583a69ef45238f7045009b1cf0fff751649e40833226e80b817",
+    "cpppj/src/o/SpStore.cpp": "010b2c3c0b60d089d10a059bb63618d029eec3d3ea341f1bacf7426e71a85ba9",
+    "tools/decomp_fortmoney_oracle.py": "bffdeaf9744052a746fe0e3f154b77678fa4426819f9533dfe35a69fcda1d264",
+    "tools/analyze_fortmoney_cpp_binding.py": "ab66439166dfe78228f89be88c97c2bd5b7e900e96926b143f08ac57e6d73426"
+  },
+  "scope": "실제같은WorldCore.bookkeeping의현재localOwner·같은분산SP/게임난수를3검사에서참조한다. native408의기대값을재계산하지않는다.",
+  "limitations": [
+    "Badges/Technology/전체저장부모와실제GameWorld설치·캠페인완주는미완료다.",
+    "World소비자의미사용타입/프레임/SHP는합성입력이며실제새자산관찰이아니다."
+  ]
+}

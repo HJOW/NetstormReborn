@@ -29,7 +29,7 @@ COUNTS = (0, 1, 2, 7, 8, 9, 15, 16, 17, 31, 32, 33, 63, 64, 65, 127, 256)
 REGISTERS = {UC_X86_REG_EBX: 0x13572468, UC_X86_REG_ESI: 0x24681357,
     UC_X86_REG_EDI: 0x31415926, UC_X86_REG_EBP: 0x27182818}
 FIXTURE = ROOT / 'cpppj/tests/fixtures/drawsort-x86.tsv'
-REPORT = ROOT / 'cpppj/recovery-drawsort-evidence.json'
+REPORT = ROOT / 'cpppj/drawsort.json'
 
 
 def bits(value):

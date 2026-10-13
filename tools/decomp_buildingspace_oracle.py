@@ -129,13 +129,13 @@ def generate():
         limits=['합성 타입/SHP/후보 raw/map 입력, 표시/postPop 억제 및 null dirty의 실제 함수 실행',
             '전체 후보 앞192슬롯 바이트 직접 비교; 전체 풀/해시/spot은 Adler32',
             '별도 원본 프로세스/GUI/OS/게임 진입점 실행 없음; 미션 완주와 건물별 파생 연결 증명 아님'])
-    (ROOT/'cpppj/recovery-buildingspace-evidence.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
+    (ROOT/'cpppj/buildingspace.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
     print(json.dumps(dict(cases=dict(counts),total_cases=report['total_cases'])),flush=True)
 
 
 def verify():
     """입력/기록/원본 바이트와 실제 호출 개수를 재확인한다."""
-    report=json.loads((ROOT/'cpppj/recovery-buildingspace-evidence.json').read_text(encoding='utf-8'))
+    report=json.loads((ROOT/'cpppj/buildingspace.json').read_text(encoding='utf-8'))
     # 생성 당시 모든 도구/범위/fixture를 SHA로 확인한다.
     for group in ('artifact_sha256','source_sha256'):
         # 항목을 빠뜨리지 않고 현재 바이트와 비교한다.

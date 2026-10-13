@@ -30,7 +30,7 @@ SPEC['original1037']=dict(SPEC['originalCD'])
 KEYS=('player','anchor','owner','mask','genus','x','y','footX','footY','timeLow','timeHigh','nowLow','nowHigh',
     'path','speed','sources','allocation','frame','mutate','bridge','count')
 FIXTURE=ROOT/'cpppj/tests/fixtures/constructionbuilder-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-constructionbuilder-evidence.json'
+REPORT=ROOT/'cpppj/constructionbuilder.json'
 
 
 def double_words(value):

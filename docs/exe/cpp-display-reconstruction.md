@@ -29,7 +29,7 @@ main 경계는 viewport의 각 모서리로 먼저 clamp한다. extra bit 4가 �
 
 ## 검증과 재현
 
-[독립 실행 기록](../../cpppj/recovery-display-evidence.json), [기대값](../../cpppj/tests/fixtures/display-x86.tsv), [실행 도구](../../tools/decomp_display_oracle.py), [C++ 검사](../../cpppj/tests/DisplayTests.cpp).
+[독립 실행 기록](../../cpppj/display.json), [기대값](../../cpppj/tests/fixtures/display-x86.tsv), [실행 도구](../../tools/decomp_display_oracle.py), [C++ 검사](../../cpppj/tests/DisplayTests.cpp).
 
 ```powershell
 python -X utf8 tools/decomp_display_oracle.py

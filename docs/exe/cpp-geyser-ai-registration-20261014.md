@@ -30,10 +30,10 @@ nonnull AI를 처음 발견하면 `GeyserAiRegistrationBoundary`에 **owner/AI p
 | CD10.72 | 84 | 218 | 0 | 168 | 436 |
 | 합계 | **168** | **436** | **0** | 336 | 872 |
 
-총604행에서 정상168과 미복원 하위 경계436을 분리한다. 거부436을 정상/assert 또는 전체 AI·전체 PostPop 완료 관찰 수에 더하지 않는다. 두 x87 정밀도의 반복도 고유 입력에 더하지 않는다. fixture SHA는 `d7b6d2a738a8c84fe5b9ec8ebe92776bb7a9d69bd0e55684aff0e58304e89850`이다. `cpppj/recovery-geyser-ai-registration-evidence.json`에 현재 생산 h/cpp·Test·tool·spec·PE·정밀 export·fixture 전체 SHA를 고정했다.
+총604행에서 정상168과 미복원 하위 경계436을 분리한다. 거부436을 정상/assert 또는 전체 AI·전체 PostPop 완료 관찰 수에 더하지 않는다. 두 x87 정밀도의 반복도 고유 입력에 더하지 않는다. fixture SHA는 `d7b6d2a738a8c84fe5b9ec8ebe92776bb7a9d69bd0e55684aff0e58304e89850`이다. `cpppj/geyser-ai-registration.json`에 현재 생산 h/cpp·Test·tool·spec·PE·정밀 export·fixture 전체 SHA를 고정했다.
 
 새 C++3개 검사 `GeyserAiRegistration_ReplaysPatch`, `...ReplaysCd`, `...ReadsSharedCurrentPlayersAndRejectsMissingStorage`를 준비했다. **현재 CMake 등록/공유 C++ 빌드·대조 전**이다. root 등록에는 `NETSTORM_GEYSER_AI_REGISTRATION_FIXTURE`가 필요하다. 원본 전수 생성과 `--verify` 감사는 통과했다.
 
 ## 미션 상위 전제
 
-정상 새 미션의 reset은 기존 AI를 삭제하고 Player 기록을 전체0으로 다시 만든다. 미션 stage3에서 이미 로드된 사제의 존재를 확인한 뒤 AI를 부착한다. 그러나 실제 War Begins의 Battle/packet 저장맵 설치 caller 전체는 별도 조사 중이다. 이 작은 등록의 성공을 실제 캠페인172개 설치·미션 초기화·AI 전체 성공으로 확대하지 않는다. 상위 주소·Ready 전제·owner/depth 분리는 [설치 경계 감사](cpp-raw-fort-install-boundaries-audit-20261014.md)를 따른다.
+정상 새 미션의 reset은 기존 AI를 삭제하고 Player 기록을 전체0으로 다시 만든다. 미션 stage3에서 이미 로드된 사제의 존재를 확인한 뒤 AI를 부착한다. 그러나 실제 War Begins의 Battle/packet 저장맵 설치 caller 전체는 별도 조사 중이다. 이 작은 등록의 성공을 실제 캠페인172개 설치·미션 초기화·AI 전체 성공으로 확대하지 않는다. 상위 주소·Ready 전제·owner/depth 분리는 [설치 경계 감사](cpp-raw-fort-install-boundaries-audit-2-72d4d.md)를 따른다.

@@ -9,8 +9,8 @@ import subprocess
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]  # 같은 저장소의 전체 원문을 읽는 기준이다.
-HISTORY=ROOT/'cpppj/recovery-history/graph-forms-baseline'  # 기준12 Git와 당시 작업 원문 및 부모 준비 자료다.
-REPORT=ROOT/'cpppj/recovery-graph-forms-lineage-evidence.json'  # 좁은 전체순회 확장의 현재 출처다.
+HISTORY=ROOT/'cpppj/hist/graph-forms-24ec7'  # 기준12 Git와 당시 작업 원문 및 부모 준비 자료다.
+REPORT=ROOT/'cpppj/graph-forms-lineage.json'  # 좁은 전체순회 확장의 현재 출처다.
 SOURCE='cpppj/src/o/RawGraph.cpp'  # 전체 계산/부분 검증 몸체를 보존할 공유 파일이다.
 BEFORE='''        if (bytes[10]<kFirstAssetTypeNumber || bytes[10]>=types_.size()) {
             if (required[id] || fullPool) throw std::logic_error("raw 그래프 후보 타입 오류");
@@ -48,7 +48,7 @@ def capture():
         if name.startswith('cpppj/tests/') and 'graph' in name.lower() and name.endswith(('.cpp','.tsv')):
             names.add(name)
     # 아직 미등록인 부모 준비 자료도 이전 SHA를 덮어쓰지 않고 별도 전체 스냅샷으로 저장한다.
-    for pattern in ('cpppj/recovery-fortworldload*-evidence.json','tools/*fortworld*.py',
+    for pattern in ('cpppj/fortworldload*.json','tools/*fortworld*.py',
                     'cpppj/tests/FortWorldLoad*.cpp','cpppj/tests/fixtures/fortworldload*.tsv'):
         names.update(path.relative_to(ROOT).as_posix() for path in ROOT.glob(pattern))
     values={}

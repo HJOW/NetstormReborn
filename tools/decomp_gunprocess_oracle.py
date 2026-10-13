@@ -33,7 +33,7 @@ SPEC={
 OBJECT,PACKET,THUNK,VALUE=0x11318000,0x11319000,STOP+0x100,STOP+0x180
 KEYS=('kind','stage','target','dirty','group','type','extra','parentstate','targetstate','boss','server','fort','fixed','disabled','friendly','allied','time','now','found','random','anim','exists','shoot','restart','event','value','force','include','parentarg')
 FIXTURE=ROOT/'cpppj/tests/fixtures/gunprocess-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-gunprocess-evidence.json'
+REPORT=ROOT/'cpppj/gunprocess.json'
 
 
 def bits(value):

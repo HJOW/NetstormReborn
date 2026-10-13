@@ -1,0 +1,25 @@
+{
+  "new_native_unique": 0,
+  "production_changes": 0,
+  "reason": "단계3 일반 해시는 같은16칸 버킷의 여러SID를 실제+4 WORD 체인으로 연결한다.",
+  "before_test": {
+    "path": "cpppj/hist/normalterrai-4f241/NormalTerrainWorldBindingTests.cpp",
+    "sha256": "52b4fba0fd2817a512cd425f083e4624a7f450390b02f3506bc97fe2f778cdab",
+    "bytes": 18150
+  },
+  "before_report": {
+    "path": "cpppj/hist/normalterrai-4f241/evidence.json",
+    "sha256": "2b7bf5e8de872dc48c633e6d70aa07b51fa8d166665af30e23f319510cdb8671",
+    "bytes": 692697
+  },
+  "after_test": {
+    "path": "cpppj/tests/NormalTerrainWorldBindingTests.cpp",
+    "sha256": "26d067757bafffff76e47e75c32b2c8588a39ef31d7c3e25d56958ad1f6e999a",
+    "bytes": 18862
+  },
+  "tool": {
+    "path": "tools/analyze_normalterrain_binding_cpp_correction.py",
+    "sha256": "8fbf78a7e8e345b5b88137ef108c9eca7ed679e1c1e68f711879488a5f645208",
+    "bytes": 5759
+  }
+}

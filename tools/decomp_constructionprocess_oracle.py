@@ -43,7 +43,7 @@ SPEC['original1037']=dict(SPEC['originalCD'])
 KEYS=('parent','duration','nowLow','nowHigh','allocation','mutate','type','state','extra','hp','owner','x','y','genus','ready','max',
     'startLow','startHigh','endLow','endHigh','local','boss','pushGenus','dais','finishAll','finishGenus','processType','soundType','flags')
 FIXTURE=ROOT/'cpppj/tests/fixtures/constructionprocess-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-constructionprocess-evidence.json'
+REPORT=ROOT/'cpppj/constructionprocess.json'
 
 
 def double_words(value):

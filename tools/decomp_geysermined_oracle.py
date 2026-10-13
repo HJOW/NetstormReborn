@@ -16,7 +16,7 @@ PACKET=ARENA+0x1f000
 MAP=ARENA+0x40000
 DESTROY,POP=0x13000800,0x13000810
 FIXTURE=ROOT/'cpppj/tests/fixtures/geysermined-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-geysermined-evidence.json'
+REPORT=ROOT/'cpppj/geysermined.json'
 SPEC={
  'originals':dict(entry=0x4266c0,sound=0x4a9d70,format=0x4a89c0,create=0x4af530,rng=0x532710,boss=0x540bc4,quantity=0x4ac220,map=0x5c84bc,nugget=0x5412c0,isle=0x5411dc,empty=0x5411a8),
  'originalCD':dict(entry=0x4e41e0,sound=0x438c00,format=0x420560,create=0x4ab390,rng=0x5308ec,boss=0x540a2c,quantity=0x4abb00,map=0x52d590,nugget=0x51cbac,isle=0x51cac8,empty=0x51ca94),

@@ -42,7 +42,7 @@ C++ 보호 계약은 지도 안 **1 이상·256 미만의 유한 좌표**, 양�
 
 입력은 J/K·hard 플래그 변형·정수/소수 좌표·지도 가장자리·네 해시 단계·큰 발자국·dead/buried/비표면/내부·등록 순서·권한 없음이다. 원본 assert 도달과 두 x87 정밀도의 관찰 차이는 0이다. 입력 상태는 합성이고 일반 Pop의 실제 등록을 이 x86 묶음에서 실행하지 않는다. 이벤트의 생성·삭제·소유자·Pop·표면 알림도 기존 외부 효과 대체를 유지한다.
 
-[neighbor-x86.tsv](../../cpppj/tests/fixtures/neighbor-x86.tsv), [근거 JSON](../../cpppj/recovery-neighbor-evidence.json)에 원본 PE·도구·내보내기·결과 SHA와 대체 호출 수를 보존했다. `--verify`는 저장된 SHA/행 수/탐색 대체 없음의 감사이며 기계어 재실행은 아니다.
+[neighbor-x86.tsv](../../cpppj/tests/fixtures/neighbor-x86.tsv), [근거 JSON](../../cpppj/neighbor.json)에 원본 PE·도구·내보내기·결과 SHA와 대체 호출 수를 보존했다. `--verify`는 저장된 SHA/행 수/탐색 대체 없음의 감사이며 기계어 재실행은 아니다.
 
 ## 다리 전용 postPop의 접두
 
@@ -50,7 +50,7 @@ C++ 보호 계약은 지도 안 **1 이상·256 미만의 유한 좌표**, 양�
 
 연결 함수 **`004213b0`/CD `00448b00`의 flag 4 이웃 순회·연결 객체 생성(`004210f0`)·소유자 전파(`00421240`)는 아직 콜백 경계**다. 명시적인 연결 콜백과 정확한 다리 가상 표가 있는 인스턴스만 Pop을 허용한다. 콜백이 없거나 다른 파생 표이면 좌표/해시/spot 쓰기 전에 거부한다. 이 변경으로 다른 미복원 파생 후처리를 허용하지 않는다.
 
-[decomp_bridgepostpop_oracle.py](../../tools/decomp_bridgepostpop_oracle.py)는 세 실제 PE × flags 10종 × extra 8종 = **240개** 접두 관찰을 x87 53/64비트에서 얻었다. 접두 몸체는 실제 명령이며 연결 함수와 공통 후처리는 호출 순서/인자를 기록하는 대체다. assert 0이며 접두의 extra 한 바이트 밖 쓰기는 거부한다. [fixture](../../cpppj/tests/fixtures/bridgepostpop-x86.tsv)와 [근거 JSON](../../cpppj/recovery-bridgepostpop-evidence.json)에 이 경계를 기록했다. 공통 postPop 자체의 독립 근거는 [기존 복원](cpp-postpop-reconstruction.md)을 따른다. 새 C++ 검사는 연결 호출 때 extra가 이미 갱신됐는지와 전체 슬롯 보존, 콜백 누락/다른 표 거부 및 공통 통계 억제 순서를 확인한다.
+[decomp_bridgepostpop_oracle.py](../../tools/decomp_bridgepostpop_oracle.py)는 세 실제 PE × flags 10종 × extra 8종 = **240개** 접두 관찰을 x87 53/64비트에서 얻었다. 접두 몸체는 실제 명령이며 연결 함수와 공통 후처리는 호출 순서/인자를 기록하는 대체다. assert 0이며 접두의 extra 한 바이트 밖 쓰기는 거부한다. [fixture](../../cpppj/tests/fixtures/bridgepostpop-x86.tsv)와 [근거 JSON](../../cpppj/bridgepostpop.json)에 이 경계를 기록했다. 공통 postPop 자체의 독립 근거는 [기존 복원](cpp-postpop-reconstruction.md)을 따른다. 새 C++ 검사는 연결 호출 때 extra가 이미 갱신됐는지와 전체 슬롯 보존, 콜백 누락/다른 표 거부 및 공통 통계 억제 순서를 확인한다.
 
 ```powershell
 # 입력 내보내기가 없는 PC에서 먼저 실행한다.

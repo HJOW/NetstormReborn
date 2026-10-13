@@ -7,10 +7,10 @@ from pathlib import Path
 from decomp_damageablepostdestroy_oracle import ROOT,CONTROLS,inputs
 
 # 첫원본전체관찰은현재완료수에중복합산하지않는다.
-NATIVE="cpppj/recovery-damageablepostdestroy-evidence.json"
+NATIVE="cpppj/damageablepostdestroy.json"
 FIXTURE="cpppj/tests/fixtures/damageablepostdestroy-x86.tsv"
-HISTORY="cpppj/recovery-history/damageablepost-before-owner-mutation"
-REPORT=ROOT/"cpppj/recovery-damageablepostdestroy-lineage-evidence.json"
+HISTORY="cpppj/hist/damageablepo-7d76b"
+REPORT=ROOT/"cpppj/damageablepostdestroy-lineage.json"
 CPP=["cpppj/src/o/RawDamageablePostDestroy.h","cpppj/src/o/RawDamageablePostDestroy.cpp","cpppj/tests/DamageablePostDestroyTests.cpp"]
 # 부모몸체는보존하고effectprofile6만실제ownerBYTE변경으로연결하는입력추가다.
 INSERT='            if c["mutation"]==6:self.put(self.slot(SOURCE)+s["owner"],3,1)\n'

@@ -36,7 +36,7 @@
 
 [`decomp_typehotspot_oracle.py`](../../tools/decomp_typehotspot_oracle.py)는 숫자 속성 구간과 CRT ftol을 **대체 없이** 실행한다. 각 PE 468개, 총 **1,404개**이며 두 x87 정밀도가 일치한다. 0과 음수·정수 경계의 인접 float32·2^24 부근·X/Y 순서·중복 덮어쓰기·다른 축의 기존 값 보존을 포함한다. 실제 ftol은 각 PE 1,872회, 총 5,616회다. 허용된 명령/기준점 8바이트 쓰기·지역 스택·기준 레지스터·x87 균형·assert/OS 0회·PE/내보내기/도구/fixture SHA를 검사한다.
 
-[`TypeHotspotTests`](../../cpppj/tests/TypeHotspotTests.cpp)는 저장된 독립 출력 두 정수를 대조하고, 실제 타입 표의 초기값/대소문자/중복/AST float32/고정 배율과 잘못된 속성 진단을 검사한다. 새 [`근거 기록`](../../cpppj/recovery-typehotspot-evidence.json)과 fixture는 이전 감사 자료와 분리되어 있다. 누적 독립 fixture 입력은 **253,269개**다.
+[`TypeHotspotTests`](../../cpppj/tests/TypeHotspotTests.cpp)는 저장된 독립 출력 두 정수를 대조하고, 실제 타입 표의 초기값/대소문자/중복/AST float32/고정 배율과 잘못된 속성 진단을 검사한다. 새 [`근거 기록`](../../cpppj/typehotspot.json)과 fixture는 이전 감사 자료와 분리되어 있다. 누적 독립 fixture 입력은 **253,269개**다.
 
 [`cpp_priestassets_smoke.py`](../../tools/cpp_priestassets_smoke.py)는 두 판본의 실제 .type·SHP를 기존 독립 Python parser로 읽어 C++ 자료를 비교한다. 기준점의 기대값은 실제 숫자 속성 구간에서 얻는다. 일반 사제의 모든 실제 물리 헤더/코드/defaultFrame/패턴 전역을 별도 분석 주소에 공급한 뒤 원본 **전체 픽셀 getter/decoder/SHP helper를 정상 반환까지** 실행하여 C++의 여섯 float 비트와 비교한다. SHP 주소는 분석 메모리에 재배치하며 픽셀 데이터는 getter에서 사용하지 않는다. 이 실제 자산 검사는 고정 합성 fixture의 누적 개수와 별도로 기록한다.
 

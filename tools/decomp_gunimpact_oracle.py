@@ -29,7 +29,7 @@ SPEC={
 OBJECT,POINT=0x11250000,0x11250100
 KEYS=('kind','x','y','event','count','payload','frame','level','suppressedTime','suppressed','rng','processes')
 FIXTURE=ROOT/'cpppj/tests/fixtures/gunimpact-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-gunimpact-evidence.json'
+REPORT=ROOT/'cpppj/gunimpact.json'
 
 
 def wide(value):

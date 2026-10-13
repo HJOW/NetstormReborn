@@ -8,11 +8,11 @@ from pathlib import Path
 from decomp_owner_oracle import ROOT,digest
 
 # 최초 공유 C++ 실패 때 실제 읽은 전체 source/test/tool/report/기존lineage 자료다.
-HISTORY=ROOT/'cpppj/recovery-history/archertype-before-postpop'
+HISTORY=ROOT/'cpppj/hist/archertype-b-e9d47'
 TEST='cpppj/tests/ArcherTypeDataTests.cpp'
-REPORT=ROOT/'cpppj/recovery-archertype-evidence.json'
-DRAFT=ROOT/'cpppj/recovery-archertype-draft-lineage-evidence.json'
-LINEAGE=ROOT/'cpppj/recovery-archertype-pop-lineage-evidence.json'
+REPORT=ROOT/'cpppj/archertype.json'
+DRAFT=ROOT/'cpppj/archertype-draft-lineage.json'
+LINEAGE=ROOT/'cpppj/archertype-pop-lineage.json'
 # 현재 기존 몸체를 소비하므로 전체 출처를 현재 native 보고서에도 기록한다.
 NEW_FILES=tuple(f'cpppj/src/o/{name}.{extension}' for name in ('SquidPostPop','RawCarrierPostPop','RawAssetPostPop') for extension in ('cpp','h'))+('cpppj/src/o/PopVtables.inc','tools/analyze_archertype_pop_lineage.py')
 # 검사만 실제비전투 후처리를 연결한다. 실행하지 않는 전투/로딩 경계는 명시 예외다.

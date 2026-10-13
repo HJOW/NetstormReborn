@@ -22,7 +22,7 @@ SPEC['original1037']=dict(SPEC['originalCD'])
 # 입력 DWORD의 순서와 저장 관찰 경로다. double 입력은 산술 없이 비트로 공급한다.
 KEYS=('dirty','form','parent','force','includeParent','startLow','startHigh','endLow','endHigh','additional','protocol','message','free','pid','present','mutate','processType','pattern')
 FIXTURE=ROOT/'cpppj/tests/fixtures/constructiondata-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-constructiondata-evidence.json'
+REPORT=ROOT/'cpppj/constructiondata.json'
 
 
 def case(**changes):

@@ -17,7 +17,7 @@ from decomp_process_oracle import (ProcessOracle,ROOT,BINARIES,CONTROLS,STACK,ST
 DATA,SIZE,STRIDE,CAPACITY,SEED=0x16000000,160,192,1000,0x4642c01c
 TOKENS=tuple(DATA+16+i*STRIDE for i in range(4))
 FIXTURE=ROOT/'cpppj/tests/fixtures/gumpcreate-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-gumpcreate-evidence.json'
+REPORT=ROOT/'cpppj/gumpcreate.json'
 # 실제 기본/루트 생성 함수, 등록/개수/식별 번호/화면 크기 전역과 new 경계다.
 SPECS={
     'originals':dict(Construct=0x4642c0,Root=0x4663d0,table=0x563e38,count=0x565dc8,serial=0x540418,screen=0x5c78f0,new=0x4e4391),

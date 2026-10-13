@@ -17,7 +17,7 @@ from analyze_styletext import ROOT,digest,read_ranges
 
 # 정적 분석 계획/보고서 경로다. 보호 원본은 읽고 생성 자료는 프로젝트 안에 쓴다.
 PLAN=ROOT/'tools/ghidra/textgump-functions.json'
-REPORT=ROOT/'cpppj/recovery-textgump-evidence.json'
+REPORT=ROOT/'cpppj/textgump.json'
 # 한 줄/다중 줄 실제 가상 표·정렬 BYTE·스크롤 허용 폭/임시 배치 폭의 ROM 주소다.
 EDITIONS={
     'originals':('originals/Netstorm.exe',{'single':0x5144d4,'scrolling':0x51454c},0x540448,0x500fc8,0x514480),

@@ -35,9 +35,9 @@ Fire 관찰은 실제 launch 몸체도 실행한다. 이어지는 Missile ctor�
 
 포구/현재 중심·타입 query·공간·사운드/format·난수·부착·출력 통지·완료·Missile 생성은 명시 관찰 경계다. 정상 반환과 인자/순서/raw는 그 경계의 실제 UI/음향/월드 몸체 완료와 구분한다. 첫 공유 Release의4개 검사에서 missing 경계는 통과했고 두 판본 전수와 ActualHost에 총13checks 차이가 있었다. 이 단위는08에 등록됐으며07 투사체 완료 수와 합치지 않는다.
 
-첫 C++ 대조의 target0 차이를 실제 계수 `0050afd8/CD00505354=90`으로 교정했다. 초안의45도 계수는 원본이 아니었다. 실제 Host 검사의 입력에 type71.group0도 공급했다. 수정 전 source/h/test/oracle/전체1,690행/전체보고서를 `recovery-history/gunarcher-initial`에 실제 바이트로 보존했다.
+첫 C++ 대조의 target0 차이를 실제 계수 `0050afd8/CD00505354=90`으로 교정했다. 초안의45도 계수는 원본이 아니었다. 실제 Host 검사의 입력에 type71.group0도 공급했다. 수정 전 source/h/test/oracle/전체1,690행/전체보고서를 `hist/gunarcher-initial`에 실제 바이트로 보존했다.
 
-두 번째 공유 대조는 target0 차이를 통과한 뒤 Fire의 프레임1/19를0/18로 계산하는 차이와 실제 서버 SID 할당 예외로13checks 실패했다. 두 번째 교정 전에 당시 전체 source/h/test/oracle/fixture/report와 첫 교정 도구/보고서 및 실패 로그를 `recovery-history/gunarcher-aim-corrected`에 실제 바이트로 보존했다. PE의 `0043fa50/CD0048ee10`은 float 입력을 읽고 `00500ee4/CD00504654`의 실제0.5f를 더한 뒤 `__ftol`로 절삭한다. C++ FireFrame에도 float 저장 후 이 가산/절삭을 적용했다. 현재 원본 fixture 전체는 두 snapshot 모두와 동일하고 신규 고유 입력은0이다. `analyze_gunarcher_correction.py`의 schema2 보고서는 각 명시 수정의 역변환, 두 당시 전체보고서의 SHA, 실제 helper15바이트와0.5f 상수를 검사해 현재 SHA를 연결한다. 두 번째 교정 후 최종 공유 Release 빌드71712 종료0, ArcherAnimation의4검사/실패0으로 두 판본1,690행 전수·누락 생성 거부·실제 Host 송신과 수명이 모두 통과했다. 초기 로그는 `campaign-runtime8-ArcherAnimation_-initial-tests.log`, 두 번째 로그는 `campaign-runtime8-ArcherAnimation_repaired-tests.log`, 최종 로그는 `campaign-runtime8-ArcherAnimation_final-tests.log`다. 단위08 전체 검사는 별도로 관리한다.
+두 번째 공유 대조는 target0 차이를 통과한 뒤 Fire의 프레임1/19를0/18로 계산하는 차이와 실제 서버 SID 할당 예외로13checks 실패했다. 두 번째 교정 전에 당시 전체 source/h/test/oracle/fixture/report와 첫 교정 도구/보고서 및 실패 로그를 `hist/gunarcher-ai-fdb97`에 실제 바이트로 보존했다. PE의 `0043fa50/CD0048ee10`은 float 입력을 읽고 `00500ee4/CD00504654`의 실제0.5f를 더한 뒤 `__ftol`로 절삭한다. C++ FireFrame에도 float 저장 후 이 가산/절삭을 적용했다. 현재 원본 fixture 전체는 두 snapshot 모두와 동일하고 신규 고유 입력은0이다. `analyze_gunarcher_correction.py`의 schema2 보고서는 각 명시 수정의 역변환, 두 당시 전체보고서의 SHA, 실제 helper15바이트와0.5f 상수를 검사해 현재 SHA를 연결한다. 두 번째 교정 후 최종 공유 Release 빌드71712 종료0, ArcherAnimation의4검사/실패0으로 두 판본1,690행 전수·누락 생성 거부·실제 Host 송신과 수명이 모두 통과했다. 초기 로그는 `run8-ArcherAnimation_-first.log`, 두 번째 로그는 `run8-ArcherAnimation_fixed.log`, 최종 로그는 `run8-ArcherAnimation_final.log`다. 단위08 전체 검사는 별도로 관리한다.
 
 ## 실제 프레임 자료와 후속 연결
 

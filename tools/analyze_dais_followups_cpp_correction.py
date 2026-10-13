@@ -7,10 +7,10 @@ import json
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1] # 현재 저장소 루트이며 보호 원본은 읽기만 한다.
-HISTORY=ROOT/'cpppj/recovery-history/dais-followups-initial-cpp-failure' # 첫 후속 C++ 실패와 관련 전체126파일이다.
+HISTORY=ROOT/'cpppj/hist/dais-followu-aeb72' # 첫 후속 C++ 실패와 관련 전체126파일이다.
 NOTICE='cpppj/tests/DaisContentNoticeTests.cpp' # 원본 사제 후보의 1×1 발자국을 준비하는 전수 검사다.
 CONSUMER='cpppj/tests/DaisRitualConsumerTests.cpp' # 같은 풀의 void 프레임 단계와 최초 Pop 순서를 준비하는 검사다.
-REPORTS={NOTICE:'cpppj/recovery-daiscontentnotice-cpp-correction-evidence.json',CONSUMER:'cpppj/recovery-dais-ritual-consumer-cpp-correction-evidence.json'} # 두 검사 교정의 현재 출처를 각각 기록한다.
+REPORTS={NOTICE:'cpppj/daiscontentnotice-cpp-correction.json',CONSUMER:'cpppj/dais-ritual-consumer-cpp-correction.json'} # 두 검사 교정의 현재 출처를 각각 기록한다.
 
 def sha(path):
     """파일 전체 바이트의 SHA256을 계산한다."""
@@ -34,7 +34,7 @@ def expected():
     """수정 전 원본 관찰과 전체 이력/생산을 보존하고 두 현재 검사만 연결한다."""
     history={path.relative_to(ROOT).as_posix():sha(path) for path in sorted(HISTORY.rglob('*')) if path.is_file()}
     assert len(history)==126
-    native_name='cpppj/recovery-daiscontentnotice-evidence.json'
+    native_name='cpppj/daiscontentnotice.json'
     native=json.loads((HISTORY/native_name).read_text(encoding='utf-8'))
     assert (ROOT/native_name).read_bytes()==(HISTORY/native_name).read_bytes() and native['total']==1444 and not native['smoke'] and native['game_runs']==0
     fixture='cpppj/tests/fixtures/daiscontentnotice-x86.tsv'
@@ -51,7 +51,7 @@ def expected():
         assert sha(path)==value,name
         if name!=NOTICE: assert sha(ROOT/name)==value,name
         original_files[name]={'sha256':value,'preserved_path':path.relative_to(ROOT).as_posix()}
-    binding='cpppj/recovery-dais-ritual-consumer-binding-evidence.json'
+    binding='cpppj/dais-ritual-consumer-binding.json'
     old_binding=json.loads((HISTORY/binding).read_text(encoding='utf-8'))
     assert (ROOT/binding).read_bytes()==(HISTORY/binding).read_bytes()
     # 같은 풀 소비자에 연결한 기존 전체 생산/선행 보고서/도구의 당시 SHA는 변경하지 않는다.
@@ -63,7 +63,7 @@ def expected():
     # 두 전수 검사 원문만 정확 역변환하고 이전 successor/binding/전체 history는 덮어쓰지 않는다.
     for test in REPORTS:
         restored(test)
-        prior_names=(native_name,'cpppj/recovery-daiscontentnotice-successor-evidence.json') if test==NOTICE else (binding,)
+        prior_names=(native_name,'cpppj/daiscontentnotice-successor.json') if test==NOTICE else (binding,)
         prior={}
         for name in prior_names:
             assert (ROOT/name).read_bytes()==(HISTORY/name).read_bytes()

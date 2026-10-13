@@ -30,7 +30,7 @@ VTABLE = DATA + 0x9000
 VIRTUAL = {STUBS + 0xa00: ('Idle', 0), STUBS + 0xa20: ('Redraw', 1), STUBS + 0xa40: ('Broadcast', 3)}
 # 실제 실행 관찰과 근거 해시 보고서를 저장한다. C++ 구현은 이 도구에서 읽거나 호출하지 않는다.
 FIXTURE = ROOT / 'cpppj/tests/fixtures/gumpframe-x86.tsv'
-REPORT = ROOT / 'cpppj/recovery-gumpframe-evidence.json'
+REPORT = ROOT / 'cpppj/gumpframe.json'
 
 
 def nodes():

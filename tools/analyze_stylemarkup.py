@@ -17,7 +17,7 @@ from analyze_styletext import ROOT,digest,read_ranges
 
 # 경로는 저장소 안에서만 사용하며 원본 PE는 읽기 전용이다.
 PLAN=ROOT/'tools/ghidra/stylemarkup-functions.json'
-REPORT=ROOT/'cpppj/recovery-stylemarkup-evidence.json'
+REPORT=ROOT/'cpppj/stylemarkup.json'
 # 판본별 실제 형식 문자열과 맞춤 전역 주소다. CD의 W는 TextGump용이며 StyleText에서 사용하지 않는다.
 EDITIONS={
     'originals':{

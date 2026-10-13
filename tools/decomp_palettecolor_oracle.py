@@ -21,7 +21,7 @@ CONTROLS=(0x027f,0x037f)
 PALETTE=TYPES+0x10000
 # 앞 단계 fixture/근거와 분리한 새 관찰 파일이다.
 FIXTURE=ROOT/'cpppj/tests/fixtures/palettecolor-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-palettecolor-evidence.json'
+REPORT=ROOT/'cpppj/palettecolor.json'
 
 
 def inputs():

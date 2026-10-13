@@ -1,0 +1,379 @@
+{
+  "host": "HJOW-Athlon",
+  "decompile_date": "2026-10-14",
+  "normal_inputs": 0,
+  "new_native_inputs": 0,
+  "entire_previous_test_restored_exactly": true,
+  "previous_test_sha256": "bb48d9fd71bb551b9f6ee91009eafe963c350d81a4b9e7d905250a3d5f0f72d0",
+  "current_test_sha256": "081e8982a791a0606eadca7e516e8fc8618ad274ff6eaeb05d2d066910baffd4",
+  "production_and_native_fixture_unchanged": true,
+  "prior_reports": {
+    "cpppj/dais-ritual-consumer-binding.json": "434af01c390b23fb1c732929031c91f006553d6d140c81991417513227eb38c1"
+  },
+  "original_native_files": {
+    "cpppj/src/o/RawDaisContentNotice.cpp": {
+      "sha256": "1e6dfbaed79d003429c07de2481fca0b9a562f8b8d450a80b6a384f89b7808cb",
+      "preserved_path": "cpppj/hist/dais-followu-aeb72/cpppj/src/o/RawDaisContentNotice.cpp"
+    },
+    "cpppj/src/o/RawDaisContentNotice.h": {
+      "sha256": "4ac7b652ac317d4216bb633794b1c754e8361bf1bc90409bc73ef15ccd395428",
+      "preserved_path": "cpppj/hist/dais-followu-aeb72/cpppj/src/o/RawDaisContentNotice.h"
+    },
+    "cpppj/tests/DaisContentNoticeTests.cpp": {
+      "sha256": "f1ad9d66d7dd27ee991cdaa6bc73c760a1b58b7f8f23606e2318199608ac87a5",
+      "preserved_path": "cpppj/hist/dais-followu-aeb72/cpppj/tests/DaisContentNoticeTests.cpp"
+    },
+    "cpppj/tests/fixtures/daiscontentnotice-x86.tsv": {
+      "sha256": "abc3bd27d30a92d17db9e42f57ba97fba2c92503ac4691a0febc8d22474b8eb9",
+      "preserved_path": "cpppj/hist/dais-followu-aeb72/cpppj/tests/fixtures/daiscontentnotice-x86.tsv"
+    },
+    "extracted/altarsacrifice/originalCD/creation.c": {
+      "sha256": "e5034176c7a40f40d247cd4fcf0a799b9df577bd383f2ce3e0bd0c18bedb6b08",
+      "preserved_path": "extracted/altarsacrifice/originalCD/creation.c"
+    },
+    "extracted/altarsacrifice/originalCD/functions.tsv": {
+      "sha256": "6cf8241dbe95315404adaff317c75655a443a3139b5cef7670140f608edd4fc7",
+      "preserved_path": "extracted/altarsacrifice/originalCD/functions.tsv"
+    },
+    "extracted/altarsacrifice/originals/creation.c": {
+      "sha256": "e302b50111e7433c86299f27430833bd63239bb6abd262dc1415017cdeb4a8ed",
+      "preserved_path": "extracted/altarsacrifice/originals/creation.c"
+    },
+    "extracted/altarsacrifice/originals/functions.tsv": {
+      "sha256": "4e881fc1f5a3da160074a573fe1808c163c567927119e0aba4815c76b2c3f48b",
+      "preserved_path": "extracted/altarsacrifice/originals/functions.tsv"
+    },
+    "extracted/assetregular/originalCD/creation.c": {
+      "sha256": "8be2b172ced3cd0cdb179abd5722e1f4c092cff0e639562d74b6c5a7d285add8",
+      "preserved_path": "extracted/assetregular/originalCD/creation.c"
+    },
+    "extracted/assetregular/originalCD/functions.tsv": {
+      "sha256": "68225246756277c7fb51a6c2d5886959e33dc568eac4dd2e7dd61bd960a28f0f",
+      "preserved_path": "extracted/assetregular/originalCD/functions.tsv"
+    },
+    "extracted/assetregular/originals/creation.c": {
+      "sha256": "d8d68fa2e637f1f3b622a45e0d1b4a638fd5a300e29cf5a6545feaff89a753b2",
+      "preserved_path": "extracted/assetregular/originals/creation.c"
+    },
+    "extracted/assetregular/originals/functions.tsv": {
+      "sha256": "539f2f4a8ba3c925d40fbbb292e07ea5da3a595566966b772e18902a2180997d",
+      "preserved_path": "extracted/assetregular/originals/functions.tsv"
+    },
+    "extracted/daiscontentnotice/originalCD/creation.c": {
+      "sha256": "0a80cba98432cfaf0515c49dcdf7ee536db7bec6c70cabceb28f48805564f2c4",
+      "preserved_path": "extracted/daiscontentnotice/originalCD/creation.c"
+    },
+    "extracted/daiscontentnotice/originalCD/functions.tsv": {
+      "sha256": "f7a890f1f641389e078f1659d2a6666ff39f50b3dc10dbfdda208f4b103c6d9d",
+      "preserved_path": "extracted/daiscontentnotice/originalCD/functions.tsv"
+    },
+    "extracted/daiscontentnotice/originals/creation.c": {
+      "sha256": "4c60e16021cf15c41b32e7a3f00e5c43896f0d6555c0d29946c360c32c9ff569",
+      "preserved_path": "extracted/daiscontentnotice/originals/creation.c"
+    },
+    "extracted/daiscontentnotice/originals/functions.tsv": {
+      "sha256": "b3c27b520c6c471619fc16e602c2bc3a314c7ea5bdd576f13d64d0bff15600c9",
+      "preserved_path": "extracted/daiscontentnotice/originals/functions.tsv"
+    },
+    "extracted/daisregular/originalCD/creation.c": {
+      "sha256": "f73a0f7e81f067279a197ff7b536afa673cf92e83bb0fbee15efecdac4cf8430",
+      "preserved_path": "extracted/daisregular/originalCD/creation.c"
+    },
+    "extracted/daisregular/originalCD/functions.tsv": {
+      "sha256": "d7dd66957b4f092c1a3d6ee9e0817dd17d544a0de50e74918b1c77de65ba9742",
+      "preserved_path": "extracted/daisregular/originalCD/functions.tsv"
+    },
+    "extracted/daisregular/originals/creation.c": {
+      "sha256": "cb59c50263c4f3cd28f68db1a3b580564aee4495727a8ae94cbff8eb4573cd81",
+      "preserved_path": "extracted/daisregular/originals/creation.c"
+    },
+    "extracted/daisregular/originals/functions.tsv": {
+      "sha256": "474ce69fa7af15254a0a1d3e3c03db2864def83c98f02ab1eefdd122950938a4",
+      "preserved_path": "extracted/daisregular/originals/functions.tsv"
+    },
+    "extracted/frameadvance/originalCD/creation.c": {
+      "sha256": "55c7cb1c0145ac15568eefa4aa2e413c5b737d7e25364e051f910c6bf6c7e8be",
+      "preserved_path": "extracted/frameadvance/originalCD/creation.c"
+    },
+    "extracted/frameadvance/originalCD/functions.tsv": {
+      "sha256": "582b00b1a418904c2bf56501b504c55816650f08cc0391fbe16bdeb387d52023",
+      "preserved_path": "extracted/frameadvance/originalCD/functions.tsv"
+    },
+    "extracted/frameadvance/originals/creation.c": {
+      "sha256": "845432595db34fadb63ce5e2bc7ca0e49c38e9d54adb2624b90a3261a22d93ad",
+      "preserved_path": "extracted/frameadvance/originals/creation.c"
+    },
+    "extracted/frameadvance/originals/functions.tsv": {
+      "sha256": "7c8ef6db38057bddcb3d6db0c6172be80b23ea89f3cbc9fa423948e60a3144d6",
+      "preserved_path": "extracted/frameadvance/originals/functions.tsv"
+    },
+    "extracted/pathcleanup/originalCD/creation.c": {
+      "sha256": "04f9971bb13ea3d8bcbdba18a473cdd9222188a083fdb4aba02745f30aaaa769",
+      "preserved_path": "extracted/pathcleanup/originalCD/creation.c"
+    },
+    "extracted/pathcleanup/originalCD/functions.tsv": {
+      "sha256": "d033d69ba177638816190b60bbaeb57b327a49e8fad001a0c2899ad4d05d9c92",
+      "preserved_path": "extracted/pathcleanup/originalCD/functions.tsv"
+    },
+    "extracted/pathcleanup/originals/creation.c": {
+      "sha256": "3d28d0a1811b6f925b6ca249ee98dd9283e16c1f633acc36a4da0ee2fa485804",
+      "preserved_path": "extracted/pathcleanup/originals/creation.c"
+    },
+    "extracted/pathcleanup/originals/functions.tsv": {
+      "sha256": "3e4631f9435843ac3de880e668d2d7e4834662fcef7c3093a1fb271fd4831442",
+      "preserved_path": "extracted/pathcleanup/originals/functions.tsv"
+    },
+    "extracted/process/originalCD/creation.c": {
+      "sha256": "c06b0142f8cd167c6f9043f596c82606f79a6f89814d57574f76116d09c976a4",
+      "preserved_path": "extracted/process/originalCD/creation.c"
+    },
+    "extracted/process/originalCD/functions.tsv": {
+      "sha256": "66dc3e2da36a5a849a900c0b20fd2ef56951a9d0158acccf33ad0568cbaac1af",
+      "preserved_path": "extracted/process/originalCD/functions.tsv"
+    },
+    "extracted/process/originals/creation.c": {
+      "sha256": "93a6d7ba1061a0bdd7d586a089108ead00a838ce06fc274c12f7649f3b583104",
+      "preserved_path": "extracted/process/originals/creation.c"
+    },
+    "extracted/process/originals/functions.tsv": {
+      "sha256": "407f9321dfe05d98ff81c4368f097f5133067f2bcc0753b3b145064d6a9eb6d3",
+      "preserved_path": "extracted/process/originals/functions.tsv"
+    },
+    "extracted/refined/originalCD/functions.tsv": {
+      "sha256": "453aa383c27baf8eefa00d97bf44051d18460150556511c2eb7a46f111e92def",
+      "preserved_path": "extracted/refined/originalCD/functions.tsv"
+    },
+    "extracted/refined/originalCD/Netstorm.c": {
+      "sha256": "9306f621576571c85280f9e25f024e3ec8b7b68c5c8ec6731c1f109dc3f25ebb",
+      "preserved_path": "extracted/refined/originalCD/Netstorm.c"
+    },
+    "extracted/runepostpop/originalCD/creation.c": {
+      "sha256": "a44e458e4ab94ae5fbc0fef4dfeb611101b7d31dfa8fbe1ad9a05a567664463a",
+      "preserved_path": "extracted/runepostpop/originalCD/creation.c"
+    },
+    "extracted/runepostpop/originalCD/functions.tsv": {
+      "sha256": "a3fc096edc836e75f95a12e110000e120a1449b9c4befdcab2201926440f963a",
+      "preserved_path": "extracted/runepostpop/originalCD/functions.tsv"
+    },
+    "extracted/runepostpop/originals/creation.c": {
+      "sha256": "680da9475eef978c696d5bb9baba47107d9292906957f3befd719105aca15473",
+      "preserved_path": "extracted/runepostpop/originals/creation.c"
+    },
+    "extracted/runepostpop/originals/functions.tsv": {
+      "sha256": "d79ecd480a57aeaf2703838737af9f490b93db54965865e6f6963f9458c15e18",
+      "preserved_path": "extracted/runepostpop/originals/functions.tsv"
+    },
+    "extracted/templeritual/originalCD/creation.c": {
+      "sha256": "1742cab4a792b7b886c4f8977bf006904f7d36686cb7eff74732ce47b17d5dea",
+      "preserved_path": "extracted/templeritual/originalCD/creation.c"
+    },
+    "extracted/templeritual/originalCD/functions.tsv": {
+      "sha256": "69dc78ebcf8cf2f717003bdaa2905622a6b82bcef09a1eb772196acc311612ae",
+      "preserved_path": "extracted/templeritual/originalCD/functions.tsv"
+    },
+    "extracted/templeritual/originals/creation.c": {
+      "sha256": "0478473400cbc1553868578292345c56045443e3e07db3e9bba17021039d9c89",
+      "preserved_path": "extracted/templeritual/originals/creation.c"
+    },
+    "extracted/templeritual/originals/functions.tsv": {
+      "sha256": "4e7a6bb750bcd2232033641a3c457d577dc71ea0281dabce752c64679ef7453d",
+      "preserved_path": "extracted/templeritual/originals/functions.tsv"
+    },
+    "originalCD/NETSTORM.EXE": {
+      "sha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "preserved_path": "originalCD/NETSTORM.EXE"
+    },
+    "originals/Netstorm.exe": {
+      "sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "preserved_path": "originals/Netstorm.exe"
+    },
+    "tools/decomp_altarsacrifice_oracle.py": {
+      "sha256": "8eaa4b8a06f651d841ab8c0749c5b5437c4868a26c864188416eb896549f7eae",
+      "preserved_path": "cpppj/hist/dais-followu-aeb72/tools/decomp_altarsacrifice_oracle.py"
+    },
+    "tools/decomp_bridgedecay_oracle.py": {
+      "sha256": "887979f3b82cd56a93a4620d473b8048a579807e72022dfa8dddcf873c81641f",
+      "preserved_path": "cpppj/hist/dais-followu-aeb72/tools/decomp_bridgedecay_oracle.py"
+    },
+    "tools/decomp_bridgeeffects_oracle.py": {
+      "sha256": "ed8e76931f972ffec24be024a17e65ddf3224eb487f215764f60b8abfbbaf462",
+      "preserved_path": "cpppj/hist/dais-followu-aeb72/tools/decomp_bridgeeffects_oracle.py"
+    },
+    "tools/decomp_daiscontentnotice_oracle.py": {
+      "sha256": "405061b1e36d38b810b04e1d3a91a06bf0bf6720f0ad43de0ef126b2f08540c3",
+      "preserved_path": "cpppj/hist/dais-followu-aeb72/tools/decomp_daiscontentnotice_oracle.py"
+    },
+    "tools/decomp_daisregular_oracle.py": {
+      "sha256": "70160d59fe9f11736026df8df99e830bd4da7929040f39828c0afe24816e8ead",
+      "preserved_path": "cpppj/hist/dais-followu-aeb72/tools/decomp_daisregular_oracle.py"
+    },
+    "tools/decomp_rawfinder_oracle.py": {
+      "sha256": "08914eaa23cce0b3e1540799003c71c64062bad64f37383bdd647ede5ab2e2a7",
+      "preserved_path": "cpppj/hist/dais-followu-aeb72/tools/decomp_rawfinder_oracle.py"
+    },
+    "tools/decomp_runepostpop_oracle.py": {
+      "sha256": "6f93c4f620efd8e47e196301c9e6a7015df1063abfd1acaa0c338aa60fbf3c1f",
+      "preserved_path": "cpppj/hist/dais-followu-aeb72/tools/decomp_runepostpop_oracle.py"
+    },
+    "tools/decomp_templeritual_oracle.py": {
+      "sha256": "99f5f22320714015df6c8de147584c55f5da2c90b8b20a17af321c9fb94fba4c",
+      "preserved_path": "cpppj/hist/dais-followu-aeb72/tools/decomp_templeritual_oracle.py"
+    },
+    "tools/ghidra/altarsacrifice-functions.json": {
+      "sha256": "3661abbf58db099ea059ad2f8b2b5e795bddeb36abc9338304fa3eb7e820fa08",
+      "preserved_path": "cpppj/hist/dais-followu-aeb72/tools/ghidra/altarsacrifice-functions.json"
+    },
+    "tools/ghidra/daiscontentnotice-functions.json": {
+      "sha256": "adf42491c3d1e1c7ffe329c0e617301085947a47e4806883bbaa65600ea12933",
+      "preserved_path": "cpppj/hist/dais-followu-aeb72/tools/ghidra/daiscontentnotice-functions.json"
+    },
+    "tools/ghidra/daisregular-functions.json": {
+      "sha256": "cf2bd5bffaa291326f5bbf719ea04c52c477ef39e71a4d6e0867edbd6d415b28",
+      "preserved_path": "cpppj/hist/dais-followu-aeb72/tools/ghidra/daisregular-functions.json"
+    },
+    "tools/ghidra/pathcleanup-functions.json": {
+      "sha256": "e1189d20c535b1c03f32a1464ace5cb9543add7a1fa7656eabaacc2900323a45",
+      "preserved_path": "cpppj/hist/dais-followu-aeb72/tools/ghidra/pathcleanup-functions.json"
+    },
+    "tools/ghidra/runepostpop-functions.json": {
+      "sha256": "7c81be957505c039f275dfd2a94c6109454a2d3d42cbb90fc58708a62158662e",
+      "preserved_path": "cpppj/hist/dais-followu-aeb72/tools/ghidra/runepostpop-functions.json"
+    },
+    "tools/ghidra/templeritual-functions.json": {
+      "sha256": "2d8fabc0bcb8774371707aad07bc36dbe6011b0dcf5208a15f1c7cf745748cec",
+      "preserved_path": "cpppj/hist/dais-followu-aeb72/tools/ghidra/templeritual-functions.json"
+    }
+  },
+  "previous_consumer_binding_sha256": "434af01c390b23fb1c732929031c91f006553d6d140c81991417513227eb38c1",
+  "tool_sha256": "a52e478f3aaa67a1ef9a8d3a44455f3cb3ba8086e0dd5d5db843dce82b4e5385",
+  "history": {
+    "cpppj/hist/dais-followu-aeb72/cpppj/dais-postpop-lineage.json": "45791d708c8938da9cb14acb56bb35a16d0095f157cd91539eb293b8178a21c8",
+    "cpppj/hist/dais-followu-aeb72/cpppj/dais-ritual-consumer-binding.json": "434af01c390b23fb1c732929031c91f006553d6d140c81991417513227eb38c1",
+    "cpppj/hist/dais-followu-aeb72/cpppj/daiscontentnotice.json": "f6c2df2b4f9e3fc922e94dceabcc82e3339e3011f0c667a383f212c59ac4973b",
+    "cpppj/hist/dais-followu-aeb72/cpppj/daiscontentnotice-successor.json": "1cc5fb93b17c7cac79f7273be392086e7bd251a05fdb1a0660066b417ebf6000",
+    "cpppj/hist/dais-followu-aeb72/cpppj/daislifecycle-current.json": "98fd9dd8e01f5b87e2cc69feda8c0aaa877e04f2faec08520047ce32193c8326",
+    "cpppj/hist/dais-followu-aeb72/cpppj/daislifecycle-current-successor.json": "548f7632bbca10faffb799b24d775300f85c4fe4b818b1631a0d2633b1c2617c",
+    "cpppj/hist/dais-followu-aeb72/cpppj/daisprogress.json": "217a63a2642d7041970746229779de9cafc9d7d11c4375cd896ed3b600375c3c",
+    "cpppj/hist/dais-followu-aeb72/cpppj/damageablepostdestroy.json": "83ee40686f3029ba90e93a1b027bd1b5113eb8625847d3e361c630005818c616",
+    "cpppj/hist/dais-followu-aeb72/cpppj/damageablepostdestroy-lineage.json": "b904c726e2f4a288f2ef9c4bf45f0f488863cb7f3aaa5551d43e3d078b2925de",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/dais-lifecyc-dd023/cpppj/daislifecycle.json": "a681e4610f02530c0a2d2ecbb14341dd598c554361b3e20b39db5b3bd29a170b",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/dais-lifecyc-dd023/cpppj/src/o/RawDaisLifecycle.cpp": "bb4289ac6ba5862e1daf0fa48c72f2abe621ec56a2734102f9f20567edf0c856",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/dais-lifecyc-dd023/cpppj/src/o/RawDaisLifecycle.h": "1a994f4d6f0e7dfbf2e6b7232740cb94eb9a0f61ecd663b8262d2c36762d5c88",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/dais-lifecyc-dd023/cpppj/tests/DaisLifecycleTests.cpp": "2e7ff00aafcfed84d4c0e0d7712f941458dee8eddf7f82f57a47753c6f334973",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/dais-lifecyc-dd023/cpppj/tests/fixtures/daislifecycle-x86.tsv": "0a3b6ddee8f50793f9ce540987ff1dec37cc8d2ea525da2c487aae72effdd9e0",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/dais-lifecyc-dd023/tools/decomp_daislifecycle_oracle.py": "5444566279bdcea5aee819a7bfa6ebfd2aa5d96a9b1fe06d5070719be01995b2",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/dais-lifecyc-dd023/tools/ghidra/daislifecycle-functions.json": "71d8f56780eabdbde6851f85e669f436e0c6ac7829612e1688a151c65f50273d",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/dais-postpop-a6aad/git/cpppj/src/o/RawDaisLifecycle.cpp": "bb4289ac6ba5862e1daf0fa48c72f2abe621ec56a2734102f9f20567edf0c856",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/dais-postpop-a6aad/git/cpppj/src/o/RawDaisLifecycle.h": "1a994f4d6f0e7dfbf2e6b7232740cb94eb9a0f61ecd663b8262d2c36762d5c88",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/dais-postpop-a6aad/git/cpppj/src/o/SquidPostPop.cpp": "899fc8cb214949db33a40275f47e82774acc647336e299a8baba9abbd1c11396",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/dais-postpop-a6aad/git/cpppj/src/o/SquidPostPop.h": "f2bcd6a7088b964559bf4c3abf6172e717931057f343c544bbaf0b5acba9a6bb",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/dais-postpop-a6aad/work/cpppj/src/o/RawDaisLifecycle.cpp": "bb4289ac6ba5862e1daf0fa48c72f2abe621ec56a2734102f9f20567edf0c856",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/dais-postpop-a6aad/work/cpppj/src/o/RawDaisLifecycle.h": "1a994f4d6f0e7dfbf2e6b7232740cb94eb9a0f61ecd663b8262d2c36762d5c88",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/dais-postpop-a6aad/work/cpppj/src/o/SquidPostPop.cpp": "9a88465d2b1d6e7cbdd1c7516fe051741012612805a28a8c848739763fccdcfb",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/dais-postpop-a6aad/work/cpppj/src/o/SquidPostPop.h": "658f7b4f1cd0f2844395700f9173bb916f75e320c7d03c2304977ff8b499e113",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/dais-ritual-47665/cpppj/tests/DaisRitualConsumerTests.cpp": "9223b7c68f6ed18a00f0fee8d0f7fee81840bb4c3f8b08b36ce05f1ca5900cfc",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/daiscontentn-b4878/cpppj/daiscontentnotice.json": "f2102a27a41a0e74751da836224ccdfc9f549c5158ba014b55002381e7de7d4b",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/daiscontentn-b4878/cpppj/src/o/RawDaisContentNotice.cpp": "1e6dfbaed79d003429c07de2481fca0b9a562f8b8d450a80b6a384f89b7808cb",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/daiscontentn-b4878/cpppj/src/o/RawDaisContentNotice.h": "4ac7b652ac317d4216bb633794b1c754e8361bf1bc90409bc73ef15ccd395428",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/daiscontentn-b4878/cpppj/tests/DaisContentNoticeTests.cpp": "e9fa18686300d91a1615af31a33f0d5fbc7eadb936ee5b56c19df6145a6532ca",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/daiscontentn-b4878/cpppj/tests/fixtures/daiscontentnotice-x86.tsv": "abc3bd27d30a92d17db9e42f57ba97fba2c92503ac4691a0febc8d22474b8eb9",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/daiscontentn-b4878/tools/decomp_daiscontentnotice_oracle.py": "405061b1e36d38b810b04e1d3a91a06bf0bf6720f0ad43de0ef126b2f08540c3",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/daiscontentn-b4878/tools/ghidra/daiscontentnotice-functions.json": "adf42491c3d1e1c7ffe329c0e617301085947a47e4806883bbaa65600ea12933",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/daislifecycl-4443d/cpppj/dais-postpop-lineage.json": "45791d708c8938da9cb14acb56bb35a16d0095f157cd91539eb293b8178a21c8",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/daislifecycl-4443d/cpppj/daislifecycle.json": "a681e4610f02530c0a2d2ecbb14341dd598c554361b3e20b39db5b3bd29a170b",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/daislifecycl-4443d/cpppj/src/o/RawDaisLifecycle.cpp": "6ab1d6fb19058f4b241fe2dc61c943af299828ce24bf61242d9f109521ac2db7",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/daislifecycl-4443d/cpppj/src/o/RawDaisLifecycle.h": "3d6e48e336e01273730dcfd789d6aa622dce0dd12254aefb062d06e5b9b628eb",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/daislifecycl-4443d/cpppj/src/o/SquidPostPop.cpp": "094e90c54c220d22bb663ab68105c2d30d83cc4b7c8e02002f804b2ae783f687",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/daislifecycl-4443d/cpppj/src/o/SquidPostPop.h": "f6e3a41b4dbdf4618ff5643407d3c5e855d2f1ef46b86f09203eef955c00eebc",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/daislifecycl-4443d/cpppj/tests/DaisLifecycleTests.cpp": "2e7ff00aafcfed84d4c0e0d7712f941458dee8eddf7f82f57a47753c6f334973",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/daislifecycl-4443d/cpppj/tests/fixtures/daislifecycle-x86.tsv": "0a3b6ddee8f50793f9ce540987ff1dec37cc8d2ea525da2c487aae72effdd9e0",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/daislifecycl-4443d/extracted/run12-rawDaisLifecycle_first.log": "3a4e76077e0efe884144c11303ede3eec858b6385bb040419d6852db415e3ca3",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/daislifecycl-4443d/extracted/daislifecycle/originalCD/creation.c": "1c185e1fff97bd077384add939e93f7591ba5c48ba243950a711a545b4cc0b40",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/daislifecycl-4443d/extracted/daislifecycle/originalCD/functions.tsv": "9a33006fd27215506bd525d229c496e59109821d3466ed1b7269cf800230e34e",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/daislifecycl-4443d/extracted/daislifecycle/originals/creation.c": "61c9966c88cd4b7873839c5a4780aedbf2645fd801023be4a037a6cbb24f4949",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/daislifecycl-4443d/extracted/daislifecycle/originals/functions.tsv": "ca984f2c87c5fb93c174bcfdbc19b6900788cbbbd5c52e4feda6a1f1efc65065",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/daislifecycl-4443d/tools/analyze_dais_postpop_lineage.py": "cfb510bd400288fbaf5fd74a90e53e04cf6d33654d3ef5aa1778e71f02081983",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/daislifecycl-4443d/tools/decomp_daislifecycle_oracle.py": "5444566279bdcea5aee819a7bfa6ebfd2aa5d96a9b1fe06d5070719be01995b2",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/daislifecycl-4443d/tools/ghidra/daislifecycle-functions.json": "71d8f56780eabdbde6851f85e669f436e0c6ac7829612e1688a151c65f50273d",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/daisprogress-05259/cpppj/daisprogress-cpp-binding.json": "7f12d67ce01e1e47a5e8a6fb5dfba30edd43fc9690b7aaf540e3c1b018a079a8",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/daisprogress-05259/cpppj/daisprogress.json": "217a63a2642d7041970746229779de9cafc9d7d11c4375cd896ed3b600375c3c",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/daisprogress-05259/cpppj/tests/DaisProgressTests.cpp": "ebee30ef7651d0bf54b1720597b4cfd0e59ed4341d2a41c2d8adfbe93e94241c",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/daisprogress-05259/cpppj/tests/fixtures/daisprogress-x86.tsv": "20f5ddd2486a3b592db3a4f77a8f18200a9ec4f46cec5f43355d86cf1f215cea",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/daisprogress-05259/tools/analyze_daisprogress_cpp_binding.py": "2b6ee1366c507ef7dfccef88dd1b88fce165b09cd601e4b7adbe31c18b9d2281",
+    "cpppj/hist/dais-followu-aeb72/cpppj/hist/daisprogress-05259/tools/decomp_daisprogress_oracle.py": "e52ae7f83b8c3332a6b29412821380cf94717cce37faadebd1f60a04e762e1fe",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/ContentFormHost.cpp": "cb21effe599b73f6ca85d826c6f85f0e3f6f41e956fbc80cf344a06674d20cb4",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/ContentFormHost.h": "8653814bdfbe2c0b82957014ca65f7c17381bf428dc3671a7254ec14324c441f",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/ContentFormLifetime.cpp": "3d8495e7eb7c7e20c4f9d36c015feecf27798e2269c8454bdd5f2d7a5f67c32d",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/ContentFormLifetime.h": "e7ac3f4a17817d550306e7308554d398d716791085ff5fbdc627881abc85af26",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/RawAltarSacrifice.cpp": "c45c6083846aa97aec3d1dc0cd2dda2d0beab45fcd7addb07c755d1e2482f464",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/RawAltarSacrifice.h": "1df83640935f495e4b6687c41ac5d181a8947f2bc6f349659870acea225b89c3",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/RawCarrierPostPop.cpp": "606eb9914b4a961aa2573e4699f3dbeef615d087deb0b0e3f2a53a0678240544",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/RawCarrierPostPop.h": "472a1c7d60d4fa9b3514027455b6983018c2f862554b2944eeb653042e9f4282",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/RawCarrierPreDestroy.cpp": "18a4daeff34834590cfbc4d1b73f64475a009b4815a88ac98aa76f5b1e618c95",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/RawCarrierPreDestroy.h": "d1f5903fc44c51dc7c6985ff073851b31f46f3f6fdd1a972cb568440cf7d173a",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/RawDaisContentNotice.cpp": "1e6dfbaed79d003429c07de2481fca0b9a562f8b8d450a80b6a384f89b7808cb",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/RawDaisContentNotice.h": "4ac7b652ac317d4216bb633794b1c754e8361bf1bc90409bc73ef15ccd395428",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/RawDaisLifecycle.cpp": "6ab1d6fb19058f4b241fe2dc61c943af299828ce24bf61242d9f109521ac2db7",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/RawDaisLifecycle.h": "3d6e48e336e01273730dcfd789d6aa622dce0dd12254aefb062d06e5b9b628eb",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/RawDaisRegular.cpp": "c1a167728b02f382cbae23454e4aba1046c91a7284dbe4c6e206e856ccc4c433",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/RawDaisRegular.h": "fdc080a0ae1ff54909a1cf59a6b9be626e7a7d96c5103072c9325d13efb88ed3",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/RawDamageablePostDestroy.cpp": "c70069e2dc850b8f1496aee07008c03ffb1655ff5943365334a4938ead99fb18",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/RawDamageablePostDestroy.h": "16404ca3857f952ab7809ed370d68b36158e2c834290d76eb4bbc85b2b3fdf03",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/RawDamageablePreDestroy.cpp": "9090ded5973c22c6cb75d45dc04be75fe7996cd6449fb10cc875759fdde36a11",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/RawDamageablePreDestroy.h": "fa423d166d58e6cc05d529dc3008e04b5306f6220e6635506a772d30d0fdd0dc",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/RawDamageableRelease.cpp": "555de8ac874f910f769432ebd6f044443b07d7be1f3d4d074d254ddac14b2c8d",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/RawDamageableRelease.h": "7177857b829a8da639c5dde9a07e893378d72a847e9460f25bf893df6027491d",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/RawPathSearch.cpp": "a7597d758972707a48ab25260af4ba877798c9c91ed01e0471d84819005d2858",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/RawPathSearch.h": "471c37aaeff1f5b7e157f52bfb20984c55e993fa59f7c33696fb42772107a7ac",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/SquidDestroyLifecycle.cpp": "75a6d698b2e800acc38ef008f3f32da2efc665286a7995a2e20d499bd40215fd",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/SquidDestroyLifecycle.h": "f1352b9e3a55bf413538fa53995db646ce29f288f23477baf81b5cefa0b7cea4",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/SquidFactory.cpp": "6221de3262944b7105ae57dacc67ee8cee3e237b62240d5d3a2fd777a5706aed",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/SquidFactory.h": "9a2b50ead267868364024a9fb0306e6fbf224486b87479a79c531ad2f3607708",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/SquidFormDispatch.cpp": "7b99db01715582f8994e5a72cac470c155171a861e0da0ed91f70759f218f23a",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/SquidFormDispatch.h": "d9b7bc33e82003ade3beeaf4c8c741c513e7bfdb5b3816a539edde34318d526c",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/SquidFrame.cpp": "739652a22b5cbf9abb96f71e5e368772624eb53a8a3957be728e1d6b8fbe27e6",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/SquidFrame.h": "a37bc603b77ea161eef8234839146764a517b22a85a2d218d567c627a3eba46f",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/SquidOwner.cpp": "297ef63bb582823627a61427e530b7ea95f6ac2e81c86b268264b4ecad7ca0aa",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/SquidOwner.h": "38c073fbd59ce2595021b694d5c91f464f07e1158f843d6debf05f5860d43446",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/SquidPop.cpp": "e69942ca111f72c79ba4da05a42b5446e84013ef2ee0b9044381cf64a9e80ec9",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/SquidPop.h": "337933973c05c0204a035a48e737b6b0fd5c385170b81e5c47b2bf4bad622e8b",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/SquidPostPop.cpp": "094e90c54c220d22bb663ab68105c2d30d83cc4b7c8e02002f804b2ae783f687",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/SquidPostPop.h": "f6e3a41b4dbdf4618ff5643407d3c5e855d2f1ef46b86f09203eef955c00eebc",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/SquidProcess.cpp": "2b78ac83db1bbb474f224845ae288d696b30d996a489ee292ac09a1af16986ad",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/SquidProcess.h": "827a9789c2a6b66ac7b98181e49e8c0fa19713755bb62fccababb7ae2a0d0589",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/SquidReward.cpp": "9a1f1a1d4c0f0b0255357b1f3ec9255cea2bb234ed351da70fb30dd1ed859f9c",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/SquidReward.h": "33df23ab3590c965b68fef4c14a55cf38de55281c08430d22a26e6dc12b6aee6",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/SquidUnpop.cpp": "d82a8c1b8df6005e86894613ed33fca1eb4e6f2837c9c8adb8ceee29e00f7768",
+    "cpppj/hist/dais-followu-aeb72/cpppj/src/o/SquidUnpop.h": "b05e4dc0ac5f66065ddff9ca8f451bc5344ad0ce3f9ceb08ad4857d9ed2b51b3",
+    "cpppj/hist/dais-followu-aeb72/cpppj/tests/DaisContentNoticeTests.cpp": "f1ad9d66d7dd27ee991cdaa6bc73c760a1b58b7f8f23606e2318199608ac87a5",
+    "cpppj/hist/dais-followu-aeb72/cpppj/tests/DaisRitualConsumerTests.cpp": "bb48d9fd71bb551b9f6ee91009eafe963c350d81a4b9e7d905250a3d5f0f72d0",
+    "cpppj/hist/dais-followu-aeb72/cpppj/tests/fixtures/daiscontentnotice-x86.tsv": "abc3bd27d30a92d17db9e42f57ba97fba2c92503ac4691a0febc8d22474b8eb9",
+    "cpppj/hist/dais-followu-aeb72/cpppj/tests/fixtures/daislifecycle-current-x86.tsv": "916cbbdf0648018009729bb9e0d9ca1738880725498a52b5ebf3544a9f04b9e7",
+    "cpppj/hist/dais-followu-aeb72/cpppj/tests/fixtures/daisprogress-x86.tsv": "20f5ddd2486a3b592db3a4f77a8f18200a9ec4f46cec5f43355d86cf1f215cea",
+    "cpppj/hist/dais-followu-aeb72/extracted/run12-build-third.log": "5127e098a80eeeabdf38bf1c12e197e21fd31b248161bf09e5c8405677395458",
+    "cpppj/hist/dais-followu-aeb72/extracted/run12-rawDaisContentNotice_fixed.log": "14d67bec6b61115a8a959cc26b0875d1f11716c2d6493c1a7db0694128ef2380",
+    "cpppj/hist/dais-followu-aeb72/extracted/run12-rawDaisRitual_fixed.log": "29ea3d080a24010131d7992aa7cd3a368ea7ec795148e9ee89e7c14d3d363207",
+    "cpppj/hist/dais-followu-aeb72/tools/analyze_dais_postpop_lineage.py": "cfb510bd400288fbaf5fd74a90e53e04cf6d33654d3ef5aa1778e71f02081983",
+    "cpppj/hist/dais-followu-aeb72/tools/analyze_dais_ritual_consumer_binding.py": "dde6ffb97f463e87b0a5f7ac88fd58483fe1396777846b606d7a20fde8e343f3",
+    "cpppj/hist/dais-followu-aeb72/tools/analyze_daiscontentnotice_successor.py": "cdb07ef3135a768cc29d0725183b55d45f2948295495f50891a48553f3665f4a",
+    "cpppj/hist/dais-followu-aeb72/tools/analyze_daislifecycle_current_successor.py": "6a70de4675a72e5dc1571f28a62567d65dc9e06c413887544762dfb5ecf4ccf7",
+    "cpppj/hist/dais-followu-aeb72/tools/analyze_daisprogress_cpp_correction.py": "23a2a6e1da99b1fd3ca2a84fb2c7975a884dc17d729f2b51caf4fc566e57cca0",
+    "cpppj/hist/dais-followu-aeb72/tools/decomp_altarsacrifice_oracle.py": "8eaa4b8a06f651d841ab8c0749c5b5437c4868a26c864188416eb896549f7eae",
+    "cpppj/hist/dais-followu-aeb72/tools/decomp_bridgedecay_oracle.py": "887979f3b82cd56a93a4620d473b8048a579807e72022dfa8dddcf873c81641f",
+    "cpppj/hist/dais-followu-aeb72/tools/decomp_bridgeeffects_oracle.py": "ed8e76931f972ffec24be024a17e65ddf3224eb487f215764f60b8abfbbaf462",
+    "cpppj/hist/dais-followu-aeb72/tools/decomp_daiscontentnotice_oracle.py": "405061b1e36d38b810b04e1d3a91a06bf0bf6720f0ad43de0ef126b2f08540c3",
+    "cpppj/hist/dais-followu-aeb72/tools/decomp_daislifecycle_current_oracle.py": "62e8d0378c8e26e4e52f6f67bc44d4f9a6b7c3951ca56fd84d909440436f8a8a",
+    "cpppj/hist/dais-followu-aeb72/tools/decomp_daisregular_oracle.py": "70160d59fe9f11736026df8df99e830bd4da7929040f39828c0afe24816e8ead",
+    "cpppj/hist/dais-followu-aeb72/tools/decomp_rawfinder_oracle.py": "08914eaa23cce0b3e1540799003c71c64062bad64f37383bdd647ede5ab2e2a7",
+    "cpppj/hist/dais-followu-aeb72/tools/decomp_runepostpop_oracle.py": "6f93c4f620efd8e47e196301c9e6a7015df1063abfd1acaa0c338aa60fbf3c1f",
+    "cpppj/hist/dais-followu-aeb72/tools/decomp_templeritual_oracle.py": "99f5f22320714015df6c8de147584c55f5da2c90b8b20a17af321c9fb94fba4c",
+    "cpppj/hist/dais-followu-aeb72/tools/ghidra/altarsacrifice-functions.json": "3661abbf58db099ea059ad2f8b2b5e795bddeb36abc9338304fa3eb7e820fa08",
+    "cpppj/hist/dais-followu-aeb72/tools/ghidra/daiscontentnotice-functions.json": "adf42491c3d1e1c7ffe329c0e617301085947a47e4806883bbaa65600ea12933",
+    "cpppj/hist/dais-followu-aeb72/tools/ghidra/daisregular-functions.json": "cf2bd5bffaa291326f5bbf719ea04c52c477ef39e71a4d6e0867edbd6d415b28",
+    "cpppj/hist/dais-followu-aeb72/tools/ghidra/pathcleanup-functions.json": "e1189d20c535b1c03f32a1464ace5cb9543add7a1fa7656eabaacc2900323a45",
+    "cpppj/hist/dais-followu-aeb72/tools/ghidra/runepostpop-functions.json": "7c81be957505c039f275dfd2a94c6109454a2d3d42cbb90fc58708a62158662e",
+    "cpppj/hist/dais-followu-aeb72/tools/ghidra/templeritual-functions.json": "2d8fabc0bcb8774371707aad07bc36dbe6011b0dcf5208a15f1c7cf745748cec"
+  },
+  "correction": "void 생성 객체에 실제 StoreLevel을 먼저 실행해 Set의 단계변경 Repop가 최초 Pop 전에 호출되는 구성 오류를 교정한다.",
+  "scope": "새 관찰0. 기존 Notice1444/currentLifecycle1928/Progress2964/이전 관찰 보고서는 당시 SHA와 입력/효과/raw를 유지한다. 실제 소비자는 비전투·HP16·genus0 합성 입력의 같은 풀 삭제/반납 사슬이며 전체 캠페인 자산의 드롭/주변 피해/다리/섬정리·전체 Progress/Bridge/사제해방을 주장하지 않는다."
+}

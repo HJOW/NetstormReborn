@@ -32,7 +32,7 @@ PLAN={
        mission=0x52e16c,fort=0x540a1c,blocked=0x52e8a8,quarter=0x511c90,priest=0x51cbbc,altar=0x51cbd4,dais=0x51cbd8,
        rng=0x5308ec,chaffMode=0x52e170,width=0x5484c4,height=0x5484c8))}
 FIXTURE=ROOT/'cpppj/tests/fixtures/fortobjectload-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-fortobjectload-evidence.json'
+REPORT=ROOT/'cpppj/fortobjectload.json'
 
 
 def case(**changes):

@@ -20,7 +20,7 @@ SOURCE=50
 IDS=(50,60,61,62,63,64,65)
 SCALES=(1,2,4,16)
 FIXTURE=ROOT/"cpppj/tests/fixtures/damageablepostdestroy-x86.tsv"
-REPORT=ROOT/"cpppj/recovery-damageablepostdestroy-evidence.json"
+REPORT=ROOT/"cpppj/damageablepostdestroy.json"
 # 현재 전체 부모/선행helper와 명시 생성·공통post·표시 경계의 실제 주소다.
 SPECS={
  "originals":dict(post=0x44b9e0,drops=0x44b830,stride=50,extra=40,owner=34,frame=36,frame_width=4,

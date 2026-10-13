@@ -36,11 +36,11 @@ SquidPostPop의 새 API는 `SetRunePostPop`/`HandlesRune`이며 실제 타입166
 
 첫 C++ 검사는 실제 조회/시간/요청 순서와 후보6/7/Rune8 raw 전체(vtable 주입 DWORD 제외), 확보/Regular callback 뒤 현재 전역·owner를 대조한다. 공통 장부의 실제 depth0도 확인한다.
 
-08 첫 공유 대조는 실제 Pop/Construction 소비자에 성공했고 전수 대조의26개 check가 실패했다. 모두 Dais가 두 칸 떨어진 입력에서 시간 helper에 Rune을 전달한 C++ 오류였다. `ConstructionSeconds(rune)` 한곳을 `ConstructionSeconds(dais)`로 교정했다. 원본 fixture1920개는 전체 바이트가 그대로이며 같은1920개를 전량 재관찰해 현재 SourceSHA를 연결한다. 수정 전 production/test/tool/fixture/report는 `cpppj/recovery-history/temple-rune-initial`에 원경로로 보존했다. `analyze_temple_rune_runtime8_lineage.py`는 이 인수 교정/설명 한줄 외 전체 소스·검사·등록 근거의 불변을 확인한다. 새 고유 입력은0개이며 이전1920개를 더하지 않는다. 임시 진단 출력은 제거했다.
+08 첫 공유 대조는 실제 Pop/Construction 소비자에 성공했고 전수 대조의26개 check가 실패했다. 모두 Dais가 두 칸 떨어진 입력에서 시간 helper에 Rune을 전달한 C++ 오류였다. `ConstructionSeconds(rune)` 한곳을 `ConstructionSeconds(dais)`로 교정했다. 원본 fixture1920개는 전체 바이트가 그대로이며 같은1920개를 전량 재관찰해 현재 SourceSHA를 연결한다. 수정 전 production/test/tool/fixture/report는 `cpppj/hist/temple-rune-afcc3`에 원경로로 보존했다. `analyze_temple_rune_runtime8_lineage.py`는 이 인수 교정/설명 한줄 외 전체 소스·검사·등록 근거의 불변을 확인한다. 새 고유 입력은0개이며 이전1920개를 더하지 않는다. 임시 진단 출력은 제거했다.
 
 두 번째 검사는 실제 Rune 생성자/owner/공통HP0→abstract **SquidPop**→같은 Host의 실제 ConstructionProcess(7초)→quickBuild 진행/HP/실제표시→실제 Unpop→abstract 해제→실제 Repop(flags9)→같은 Host의 **304 localRegular**, 비용/통계/공통 depth0을 실행한다. 초기 dais/altar hash는 명시 합성 입력이다. 진행음 확보 실패와 readySound0을 공급하며 실제 contained finder로 소리 프로세스 부재를 읽는다. 위치 음향/건설 시각 효과는 요청과 횟수로 관찰한다. Rune304 사건 자체는 실행하지 않는다. C++ 공유 빌드/집중 결과는 root가 통합 후 기록한다.
 
-교정 후 공유 Release빌드71712가 종료0이며 **RunePostPop의2검사,1920개 전수+실제 건설/304 예약 소비자 모두 실패0**이다. 집중 로그는 `extracted/campaign-runtime8-rawRunePostPop_final-tests.log`이다. 이 성공은304의 예약까지이며 사건 몸체 실행/전체 월드·캠페인 완주를 포함하지 않는다.
+교정 후 공유 Release빌드71712가 종료0이며 **RunePostPop의2검사,1920개 전수+실제 건설/304 예약 소비자 모두 실패0**이다. 집중 로그는 `extracted/run8-rawRunePostPop_final.log`이다. 이 성공은304의 예약까지이며 사건 몸체 실행/전체 월드·캠페인 완주를 포함하지 않는다.
 
 ```text
 python -X utf8 tools/decomp_runepostpop_oracle.py --verify

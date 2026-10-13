@@ -11,7 +11,7 @@ from analyze_campaign_runtime4 import ROOT, digest, test_count
 from analyze_campaign_runtime6 import read_log, audit_files
 
 # 정상/assert/constructor 중단 접두를 서로 다른 완료 범위로 보관한다.
-REPORT = ROOT / 'cpppj/recovery-campaign-runtime8-evidence.json'
+REPORT = ROOT / 'cpppj/run8.json'
 MODULES = {'gunarcher': (1688, 0, 2), 'islandruntime': (1238, 780, 0),
            'terraincontext': (170, 54, 0), 'templeritual': (6720, 0, 0),
            'runepostpop': (1920, 0, 0)}
@@ -52,7 +52,7 @@ def generate():
     names = set()
     # 모든 원본 입력의 현재 출처와 고유 fixture 행 수를 분리해 확인한다.
     for name, expected in MODULES.items():
-        path = ROOT / f'cpppj/recovery-{name}-evidence.json'
+        path = ROOT / f'cpppj/{name}.json'
         data = json.loads(path.read_text(encoding='utf-8'))
         if data.get('host') != 'HJOW-Athlon' or native_counts(name, data) != expected:
             raise RuntimeError(f'원본 PC/고유 입력 수 오류: {name}')
@@ -67,7 +67,7 @@ def generate():
         paths.extend([path, fixture])
     # 이전 단위 출처는 당시의 바이트를 유지하고 별도 연결 보고서를 고정한다.
     for name in LINEAGES:
-        path = ROOT / f'cpppj/recovery-{name}-evidence.json'
+        path = ROOT / f'cpppj/{name}.json'
         lineage = json.loads(path.read_text(encoding='utf-8'))
         if 'files' in lineage:
             audit_files(lineage)
@@ -79,7 +79,7 @@ def generate():
         paths.append(tool)
     # 실제 성공 로그의 이름과 등록 수를 확인하며 빈 필터/첫 실패는 완료로 세지 않는다.
     for name, expected in FILTERS.items():
-        path = ROOT / f'extracted/campaign-runtime8-{name}final-tests.log'
+        path = ROOT / f'extracted/run8-{name}final.log'
         actual = test_count(path)
         if actual != expected:
             raise RuntimeError(f'집중 검사 수 오류: {name}')
@@ -88,17 +88,17 @@ def generate():
         paths.append(path)
     if len(names) != 33:
         raise RuntimeError('집중 검사 고유 이름 수 오류')
-    whole = ROOT / 'extracted/campaign-runtime8-all-final-tests.log'
+    whole = ROOT / 'extracted/run8-all-final.log'
     total = test_count(whole)
     if total != 998:
         raise RuntimeError('최종 전체 검사 수 오류')
-    build = ROOT / 'extracted/campaign-runtime8-build-final.log'
+    build = ROOT / 'extracted/run8-build-final.log'
     content = read_log(build)
     if re.search(r'\b(?:warning|error)\s+[A-Z]+\d+\s*:', content, re.I):
         raise RuntimeError('최종 빌드 경고/오류 존재')
     if 'netstorm_tests.exe' not in content or 'NetstormCpp.exe' not in content:
         raise RuntimeError('두 Release 타깃 빌드 요약 없음')
-    paths.extend([whole, build, ROOT / 'cpppj/recovery-campaign-runtime7-evidence.json',
+    paths.extend([whole, build, ROOT / 'cpppj/run7.json',
                   ROOT / 'cpppj/src/o/CMakeLists.txt', ROOT / 'cpppj/src/client/CMakeLists.txt',
                   ROOT / 'cpppj/tests/CMakeLists.txt'])
     # 이번 신규 모듈과 변경한 기존 공통 경로의 전체 소스를 실제 바이너리와 연결한다.
@@ -141,7 +141,7 @@ def verify():
     """저장한 최종 스냅샷의 전체 출처 SHA와 실제 성공 검사 수를 감사한다."""
     data = json.loads(REPORT.read_text(encoding='utf-8'))
     audit_files(data)
-    if test_count(ROOT / 'extracted/campaign-runtime8-all-final-tests.log') != data['all_tests']:
+    if test_count(ROOT / 'extracted/run8-all-final.log') != data['all_tests']:
         raise RuntimeError('최종 전체 검사 수 오류')
     print('단위08 최종 SHA/전체 검사 감사 통과')
 

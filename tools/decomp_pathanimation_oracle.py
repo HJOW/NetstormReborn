@@ -27,7 +27,7 @@ BOUNDARIES = dict(originals=0x48bdd0, originalCD=0x47e220, original1037=0x47e220
 # 부모 SID를 담는 합성 프로세스와 출력 경로다.
 PROCESS = CODES + 0x20000
 FIXTURE = ROOT / 'cpppj/tests/fixtures/pathanimation-x86.tsv'
-REPORT = ROOT / 'cpppj/recovery-pathanimation-evidence.json'
+REPORT = ROOT / 'cpppj/pathanimation.json'
 
 
 def profiles():

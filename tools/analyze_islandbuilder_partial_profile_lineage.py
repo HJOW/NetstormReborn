@@ -7,10 +7,10 @@ from pathlib import Path
 
 # 첫1156관찰과현재1156관찰은최종고유수에한번만계수한다.
 ROOT=Path(__file__).resolve().parents[1]
-HISTORY="cpppj/recovery-history/islandbuilder-partial-profile-initial"
-NATIVE="cpppj/recovery-islandbuilder-evidence.json"
+HISTORY="cpppj/hist/islandbuilde-f0b4f"
+NATIVE="cpppj/islandbuilder.json"
 FIXTURE="cpppj/tests/fixtures/islandbuilder-x86.tsv"
-REPORT=ROOT/"cpppj/recovery-islandbuilder-partial-profile-lineage-evidence.json"
+REPORT=ROOT/"cpppj/islandbuilder-partial-profile-lineage.json"
 # profile3의입력은동일하고그프레임표에서원본패턴3이실제로쓰는G방향을제거한다.
 CHANGES={
     "tools/decomp_islandbuilder_oracle.py":[("부분누락은명시입력A방향만빼며","부분누락은명시입력G방향만빼며"),

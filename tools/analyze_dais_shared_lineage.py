@@ -9,9 +9,9 @@ import subprocess
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parent.parent # 공유 저장소의 절대 기준이다.
-REPORT=ROOT/'cpppj/recovery-dais-shared-lineage-evidence.json' # 기존08/원본 보고서를 수정하지 않는 새 API 연결 근거다.
+REPORT=ROOT/'cpppj/dais-shared-lineage.json' # 기존08/원본 보고서를 수정하지 않는 새 API 연결 근거다.
 SOURCES=('cpppj/src/o/RawRunePostPop.h','cpppj/src/o/RawRunePostPop.cpp','cpppj/src/o/RawPathRuntime.h','cpppj/src/o/RawPathRuntime.cpp') # 승인된 네 기존 파일만 비교한다.
-PRIOR=('cpppj/recovery-campaign-runtime8-evidence.json','cpppj/recovery-runepostpop-evidence.json','cpppj/recovery-runepostpop-lineage-evidence.json','cpppj/recovery-temple-rune-runtime8-lineage-evidence.json','cpppj/recovery-pathruntime-evidence.json','cpppj/recovery-pathstart-evidence.json','cpppj/recovery-pathcleanup-evidence.json') # 이전 정상/회귀/교정 관찰은 새 입력에 합산하지 않는다.
+PRIOR=('cpppj/run8.json','cpppj/runepostpop.json','cpppj/runepostpop-lineage.json','cpppj/temple-rune-runtime8-lineage.json','cpppj/pathruntime.json','cpppj/pathstart.json','cpppj/pathcleanup.json') # 이전 정상/회귀/교정 관찰은 새 입력에 합산하지 않는다.
 
 
 def sha(data):
@@ -65,7 +65,7 @@ def observe(commit):
         if not path.exists():continue
         assert path.read_bytes()==git('show',commit+':'+name),name;data=json.loads(path.read_text(encoding='utf-8'));prior[name]=dict(sha256=sha(path.read_bytes()),total=data.get('total'),additional_unique_cases=0,dependencies={})
         # 다른 전담 모듈의 후속 관찰은 root가 연결한다. 이번 API는08 통합 보고서 원문 SHA를 보존한다.
-        if name.endswith('recovery-campaign-runtime8-evidence.json'):continue
+        if name.endswith('run8.json'):continue
         for file,value in data.get('files',{}).items():
             if '/src/' in file or '/tests/' in file and '/fixtures/' not in file:continue
             if not (file.startswith('tools/') or '/fixtures/' in file or file.startswith(('originals/','originalCD/')) or file.endswith(('creation.c','functions.tsv'))):continue

@@ -8,7 +8,7 @@
 
 ## 정적 근거
 
-계획은 `tools/ghidra/menuwidgets-functions.json`, 읽기 전용 내보내기는 `extracted/menuwidgets/{originals,originalCD}/creation.c`, 함수 범위는 `functions.tsv`, 실제 PE 명령은 `assembly.txt`다. `tools/analyze_menuwidgets.py`가 `cpppj/recovery-menuwidgets-evidence.json`에 가상 표/정렬/여백/전역 주소와 현재 구현 해시를 기록한다. 패치 **13개**, CD **18개** 함수를 내보냈다. CD에는 정상 소멸 경로의 작은 보조 함수가 여러 개 있다.
+계획은 `tools/ghidra/menuwidgets-functions.json`, 읽기 전용 내보내기는 `extracted/menuwidgets/{originals,originalCD}/creation.c`, 함수 범위는 `functions.tsv`, 실제 PE 명령은 `assembly.txt`다. `tools/analyze_menuwidgets.py`가 `cpppj/menuwidgets.json`에 가상 표/정렬/여백/전역 주소와 현재 구현 해시를 기록한다. 패치 **13개**, CD **18개** 함수를 내보냈다. CD에는 정상 소멸 경로의 작은 보조 함수가 여러 개 있다.
 
 | 기능 | 10.78 | CD 10.72 |
 | --- | --- | --- |

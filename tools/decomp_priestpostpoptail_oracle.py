@@ -28,7 +28,7 @@ TAIL['original1037'] = TAIL['originalCD']
 CODES = LISTS + 0x2000
 CONTROLS = (0x027f, 0x037f)
 FIXTURE = ROOT / 'cpppj/tests/fixtures/priestpostpoptail-x86.tsv'
-REPORT = ROOT / 'cpppj/recovery-priestpostpoptail-evidence.json'
+REPORT = ROOT / 'cpppj/priestpostpoptail.json'
 KEYS = ('flags', 'extra', 'hp', 'floor', 'ceil', 'side', 'found', 'allocated', 'change')
 
 

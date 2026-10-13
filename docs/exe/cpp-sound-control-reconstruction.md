@@ -37,7 +37,7 @@ CD는 재계산과 전체 음량 순회에서 버퍼를 거르기 전에 모든 
 
 재계산·반복 정지는 상태 비트 0~7과 세 복제 버퍼, 옵션/초기화, 미적재/소리 없음 항목을 교차했다. 이름 제어는 on=0/1/8/-1, 기존 재생/자연 종료/복제/소리 없음, null과 새 이름을 포함한다. 전체 음량은 보류 0/1/2/-1, 감쇠·signed 경계·실패 HRESULT·멈춘 버퍼를 포함한다. `sq:버퍼순번:상태,상태,...`는 연속 조회 사이의 상태 변화를 입력해 정지 순서와 재생 실패 시 반환을 검증한다.
 
-저장 관찰: [soundcontrol-x86.tsv](../../cpppj/tests/fixtures/soundcontrol-x86.tsv). [근거 기록](../../cpppj/recovery-soundcontrol-evidence.json)은 PE/실행기/함수 구간/관찰의 SHA와 전체 입력 순서, 실제 진입, 정상 반환, 보존 레지스터·cdecl 스택·SEH·x87, 허용 쓰기와 OS 0을 감사한다. 보고 후 계속하는 예정된 진단은 사건으로 대조하며 예기치 않은 assert는 0이다. 기존 fixture와 감사 도구는 수정하지 않았다.
+저장 관찰: [soundcontrol-x86.tsv](../../cpppj/tests/fixtures/soundcontrol-x86.tsv). [근거 기록](../../cpppj/soundcontrol.json)은 PE/실행기/함수 구간/관찰의 SHA와 전체 입력 순서, 실제 진입, 정상 반환, 보존 레지스터·cdecl 스택·SEH·x87, 허용 쓰기와 OS 0을 감사한다. 보고 후 계속하는 예정된 진단은 사건으로 대조하며 예기치 않은 assert는 0이다. 기존 fixture와 감사 도구는 수정하지 않았다.
 
 [SoundControlTests.cpp](../../cpppj/tests/SoundControlTests.cpp)의 새 검사 6개가 판본별 관찰과 실제 계층의 자연 종료→한도 회복, 옵션 꺼짐→반복만 정지, 복제 유지, on 반환, 보류/범위 미보정/재진입 음량 갱신을 확인한다. 전체 표 바이트 보존도 검사한다. 일반 CTest는 원본 PE/Python/소리 장치를 실행하지 않는다.
 

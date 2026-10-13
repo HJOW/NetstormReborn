@@ -29,11 +29,11 @@ Factory/heap/Pop/부착/Dude/가상 삭제·표시 요청은 명시 관찰 경�
 
 초안에는 예약 slot0까지 채운 마지막 capacity 입력1개/판본이 있어2,276행이었다. 실제 Kernel 계약인 slot0=0과 마지막 유효 등록 번호39,999/CD3,999로 교정해 현재2,274개에 포함하지 않는다. 이를 신규 관찰로 합산하지 않는다.
 
-최초2,274행 대조에서 초안 Clamp 하한0.5와 NaN 비교의 오류를 발견했다. 실제 PE의 하한은 `005012d0/CD00501764`의 **float1**이다. 패치는 unordered 비교에서 NaN을 보존하고 CD는 최종 상한255를 선택한다. 생산 코드·검사·oracle·fixture·전체보고서를 `recovery-history/gunimpact-initial`에 실제 바이트로 보존하고 이 명시 교정만 적용했다. `analyze_gunimpact_correction.py`는 역변환과 당시 전체 SHA·같은2,274fixture·실제 상수를 감사한다. 동일 입력 재방문이며 신규 고유 입력은0이다.
+최초2,274행 대조에서 초안 Clamp 하한0.5와 NaN 비교의 오류를 발견했다. 실제 PE의 하한은 `005012d0/CD00501764`의 **float1**이다. 패치는 unordered 비교에서 NaN을 보존하고 CD는 최종 상한255를 선택한다. 생산 코드·검사·oracle·fixture·전체보고서를 `hist/gunimpact-initial`에 실제 바이트로 보존하고 이 명시 교정만 적용했다. `analyze_gunimpact_correction.py`는 역변환과 당시 전체 SHA·같은2,274fixture·실제 상수를 감사한다. 동일 입력 재방문이며 신규 고유 입력은0이다.
 
 첫 공유 Release는 경고/오류0으로 빌드됐으나4검사 중3검사에서4checks가 실패했다. 두 전수 검사는 fixture의 suppressed 열10에 저장된 실제 문자열 **True/False**를 `stoul`로 읽어 예외가 났다. 이 입력 해석만 숫자1/0으로 교정하며 기존 suppressedTime 열9의 double raw64는 이미`stoull`로 읽는다. 실제 소비자는50.5/50.5의808/555픽셀이640×480 viewport 밖이었다. 원본1024×768 viewport를 공급하고 최종 장부/비용/깊이/dirty 단언을 각각 분리했다. 생산 코드·원본tool·2,274fixture는 불변이다. **교정 후 공유 Release 경고/오류0, GunImpact4검사/실패0**으로 양판본2,274전수와 실제 소비자가 통과했다.
 
-첫 C++ 실패 직전의 전체source/header/test/oracle/fixture/report·당시 Clamp 도구/보고서와 실패로그9개를 `recovery-history/gunimpact-before-cpp-correction`에 보존했다. 현재 교정 도구의 schema2는 두 단계의 전체 역변환과 당시/현재 모든 SHA·원본 관찰 불변을 연결한다. 추가native/고유입력은0이다. 최초 실패로그는 `extracted/campaign-runtime10-GunImpact_initial-tests.log`다.
+첫 C++ 실패 직전의 전체source/header/test/oracle/fixture/report·당시 Clamp 도구/보고서와 실패로그9개를 `hist/gunimpact-be-be7bd`에 보존했다. 현재 교정 도구의 schema2는 두 단계의 전체 역변환과 당시/현재 모든 SHA·원본 관찰 불변을 연결한다. 추가native/고유입력은0이다. 최초 실패로그는 `extracted/run10-GunImpact_first.log`다.
 
 ## 실제88프레임 소비자
 

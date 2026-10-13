@@ -109,7 +109,7 @@ CD판은 3번에서 전역 재생 함수를 그대로 호출한다. 패치판은
 
 ## 독립 원본 관찰
 
-[`decomp_soundplay_oracle.py`](../../tools/decomp_soundplay_oracle.py)는 세 실제 PE에서 위 표의 몸체를 정상 반환까지 실행한다. 각 PE **4,824개**, 세 판본 **14,472개**, 두 x87 제어 워드의 관찰이 같은 입력만 저장했다. [fixture](../../cpppj/tests/fixtures/soundplay-x86.tsv), [근거 JSON](../../cpppj/recovery-soundplay-evidence.json).
+[`decomp_soundplay_oracle.py`](../../tools/decomp_soundplay_oracle.py)는 세 실제 PE에서 위 표의 몸체를 정상 반환까지 실행한다. 각 PE **4,824개**, 세 판본 **14,472개**, 두 x87 제어 워드의 관찰이 같은 입력만 저장했다. [fixture](../../cpppj/tests/fixtures/soundplay-x86.tsv), [근거 JSON](../../cpppj/soundplay.json).
 
 | 종류 | 판본별 입력 | 내용 |
 |---|---|---|

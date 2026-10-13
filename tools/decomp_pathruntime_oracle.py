@@ -24,7 +24,7 @@ SPEC={
    now=0x5484a8,observe=(0x567438,0x567430),sound=0x438ae0,malloc=0x4f1650,assertion=0x490040,typeptr=0x51c960,clock=0x4f1560,kill=0x48f7b0,freeze=0x4e46b0,boss=0x540a2c,capacityGlobal=0x5395f4,spots=0x52fe48),
 }
 FIXTURE=ROOT/'cpppj/tests/fixtures/pathruntime-x86.tsv'
-EVIDENCE=ROOT/'cpppj/recovery-pathruntime-evidence.json'
+EVIDENCE=ROOT/'cpppj/pathruntime.json'
 # 독립 코드/설계/검사와 정밀 내보내기 SHA를 함께 보존한다.
 SOURCES=['tools/decomp_pathruntime_oracle.py','tools/decomp_reward_oracle.py','tools/ghidra/pathruntime-functions.json','tools/ghidra/pathruntimehelpers-functions.json','tools/ghidra/pathmath-functions.json',
  'cpppj/src/o/RawPathRuntime.h','cpppj/src/o/RawPathRuntime.cpp','cpppj/src/o/RawPathProcess.h','cpppj/src/o/RawPathProcess.cpp','cpppj/tests/RawPathRuntimeTests.cpp']

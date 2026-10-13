@@ -22,7 +22,7 @@ SPEC = {
 }
 # 별도 fixture·근거·목록 저장소이며 기존 독립 finder/자산 관찰을 변경하지 않는다.
 FIXTURE = ROOT/'cpppj/tests/fixtures/factorypostpop-x86.tsv'
-REPORT = ROOT/'cpppj/recovery-factorypostpop-evidence.json'
+REPORT = ROOT/'cpppj/factorypostpop.json'
 LISTS, ALLOCATION = HEAP+0x9000, HEAP+0xa000
 KEYS = ('kind','type','flags','extra','boss','count','frame','reserve','list_count','present','mutation')
 

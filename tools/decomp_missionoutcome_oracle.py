@@ -30,7 +30,7 @@ POOL, TYPES, PLAYERS, LIST, MISSION, VTABLE = 0x11000000, 0x11100000, 0x11200000
 STOP, CALLBACK, NAME, STACK_BASE, STACK = 0x20000000, 0x20000100, 0x20000200, 0x30000000, 0x3003f000
 CAPACITY = 128
 FIXTURE = ROOT / 'cpppj/tests/fixtures/missionoutcome-x86.tsv'
-REPORT = ROOT / 'cpppj/recovery-missionoutcome-evidence.json'
+REPORT = ROOT / 'cpppj/missionoutcome.json'
 SPEC = {
     'originals': dict(binary='originals/Netstorm.exe', stride=50, type_stride=500, player_stride=180, temple=124,
         check=0x4c36c0, edge=0x4c3940, dead=0x4922e0, captured=0x492340, lookup=0x4921f0, hp=0x4adcb0,

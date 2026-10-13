@@ -8,8 +8,8 @@ import subprocess
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parent.parent  # 현재 저장소의 절대 기준이다.
-HISTORY=ROOT/'cpppj/recovery-history/regular-initial-count-baseline'  # 직전 커밋의 전체 작업/Git 바이트를 보존한다.
-REPORT=ROOT/'cpppj/recovery-regular-initial-count-lineage-evidence.json'  # 좁은 API 추가와 기존 자료 보존의 별도 근거다.
+HISTORY=ROOT/'cpppj/hist/regular-init-48bf5'  # 직전 커밋의 전체 작업/Git 바이트를 보존한다.
+REPORT=ROOT/'cpppj/regular-initial-count-lineage.json'  # 좁은 API 추가와 기존 자료 보존의 별도 근거다.
 SHARED=('cpppj/src/o/SquidProcess.h','cpppj/src/o/SquidProcess.cpp')  # 기존 생성/실행/부착 전체를 보존할 두 파일이다.
 FIXTURES=('process','processform','processretake','processtransmit','gunprocess')  # 기존 다섯 원본 관찰 입력을 그대로 보존한다.
 ADDITIONS={
@@ -27,7 +27,7 @@ def capture():
     """API 추가 전에 현재 커밋의 전체 공유 소스/기존 관찰 보고서와 fixture를 보존한다."""
     if HISTORY.exists():raise RuntimeError('초기 count 기준 자료는 이미 존재하므로 덮어쓰지 않습니다.')
     baseline=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
-    candidates=subprocess.check_output(['git','ls-files','cpppj/recovery-*-evidence.json'],cwd=ROOT,text=True).splitlines()
+    candidates=subprocess.check_output(['git','ls-files','cpppj/*.json'],cwd=ROOT,text=True).splitlines()
     names=[name for name in candidates if any(shared in (ROOT/name).read_text(encoding='utf-8') for shared in SHARED)]
     paths=sorted(set((*SHARED,*names,*(f'cpppj/tests/fixtures/{name}-x86.tsv' for name in FIXTURES))))
     saved={}

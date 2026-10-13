@@ -1,0 +1,125 @@
+{
+  "schema": 1,
+  "host": "HJOW-Athlon",
+  "decompile_date": "2026-10-14",
+  "baseline_commit": "860030e",
+  "new_native_inputs": 0,
+  "preserved_normal_inputs": 4412,
+  "preserved_assert_inputs": 0,
+  "declaration_exact_inverse": true,
+  "all_cpp_bodies_unchanged": true,
+  "existing_reports_and_fixtures_unchanged": true,
+  "baseline_files": {
+    "cpppj/run12.json": {
+      "work_sha256": "b85ba385a9d50ff60d3dfe68b98fe64bace43ee94976200e1efb42a65dad100d",
+      "git_sha256": "b85ba385a9d50ff60d3dfe68b98fe64bace43ee94976200e1efb42a65dad100d"
+    },
+    "cpppj/dais-ritual-consumer-binding.json": {
+      "work_sha256": "434af01c390b23fb1c732929031c91f006553d6d140c81991417513227eb38c1",
+      "git_sha256": "434af01c390b23fb1c732929031c91f006553d6d140c81991417513227eb38c1"
+    },
+    "cpppj/dais-ritual-consumer-cpp-correction.json": {
+      "work_sha256": "3649e0785d640781b03e4f01b053f5a1bb9bb02c34305ed2647a5b48d3c4a574",
+      "git_sha256": "3649e0785d640781b03e4f01b053f5a1bb9bb02c34305ed2647a5b48d3c4a574"
+    },
+    "cpppj/daiscontentnotice-cpp-correction.json": {
+      "work_sha256": "9cb93b488d21c1932f2ac4b7aa56ec0f8e7a7c28fcc5936d83c7ea1acfdfd8dc",
+      "git_sha256": "9cb93b488d21c1932f2ac4b7aa56ec0f8e7a7c28fcc5936d83c7ea1acfdfd8dc"
+    },
+    "cpppj/damageablepost-host-binding.json": {
+      "work_sha256": "68a00ad3c2bd95e3a1bdcbe1d7dd2a6822120a814bff08c11b36406ea7ad0fc1",
+      "git_sha256": "68a00ad3c2bd95e3a1bdcbe1d7dd2a6822120a814bff08c11b36406ea7ad0fc1"
+    },
+    "cpppj/damageablepost-host-group-lineage.json": {
+      "work_sha256": "b6f1f8e0901c3874b8164a5b620cfb63ddecf9a922914161077c74de7096c696",
+      "git_sha256": "b6f1f8e0901c3874b8164a5b620cfb63ddecf9a922914161077c74de7096c696"
+    },
+    "cpppj/damageablepostdestroy.json": {
+      "work_sha256": "83ee40686f3029ba90e93a1b027bd1b5113eb8625847d3e361c630005818c616",
+      "git_sha256": "83ee40686f3029ba90e93a1b027bd1b5113eb8625847d3e361c630005818c616"
+    },
+    "cpppj/damageablepostdestroy-lineage.json": {
+      "work_sha256": "b904c726e2f4a288f2ef9c4bf45f0f488863cb7f3aaa5551d43e3d078b2925de",
+      "git_sha256": "b904c726e2f4a288f2ef9c4bf45f0f488863cb7f3aaa5551d43e3d078b2925de"
+    },
+    "cpppj/src/o/RawDamageablePostDestroy.cpp": {
+      "work_sha256": "c70069e2dc850b8f1496aee07008c03ffb1655ff5943365334a4938ead99fb18",
+      "git_sha256": "c70069e2dc850b8f1496aee07008c03ffb1655ff5943365334a4938ead99fb18"
+    },
+    "cpppj/src/o/RawDamageablePostDestroy.h": {
+      "work_sha256": "16404ca3857f952ab7809ed370d68b36158e2c834290d76eb4bbc85b2b3fdf03",
+      "git_sha256": "16404ca3857f952ab7809ed370d68b36158e2c834290d76eb4bbc85b2b3fdf03"
+    },
+    "cpppj/tests/DamageablePostDestroyHostTests.cpp": {
+      "work_sha256": "a5150f05dd64d094aeaf4cb0f5204c8fe16c5da13709f5b41aaf0f204a366871",
+      "git_sha256": "a5150f05dd64d094aeaf4cb0f5204c8fe16c5da13709f5b41aaf0f204a366871"
+    },
+    "cpppj/tests/DamageablePostDestroyTests.cpp": {
+      "work_sha256": "80f00aac6a93ead2befddeec89c43537819f22ea5062d2b15a91b31057b26faa",
+      "git_sha256": "80f00aac6a93ead2befddeec89c43537819f22ea5062d2b15a91b31057b26faa"
+    },
+    "cpppj/tests/fixtures/damageablepostdestroy-x86.tsv": {
+      "work_sha256": "7cbf0b93162674cd8d1cf353068ad96b4e717f1167782c0b8fe98908b98a4c6b",
+      "git_sha256": "7cbf0b93162674cd8d1cf353068ad96b4e717f1167782c0b8fe98908b98a4c6b"
+    },
+    "tools/analyze_damageablepost_host_binding.py": {
+      "work_sha256": "3c8e0c949702d5f32516551de44c01c21ea16c3a821a7c71a4766de4f8fd6165",
+      "git_sha256": "3c8e0c949702d5f32516551de44c01c21ea16c3a821a7c71a4766de4f8fd6165"
+    },
+    "tools/analyze_damageablepost_host_group_lineage.py": {
+      "work_sha256": "e0529e0e9cf84cfdc43144b1aef4a3e0562ecf09a9a9ac7224a58c43dc0d5c91",
+      "git_sha256": "e0529e0e9cf84cfdc43144b1aef4a3e0562ecf09a9a9ac7224a58c43dc0d5c91"
+    },
+    "tools/analyze_damageablepostdestroy.py": {
+      "work_sha256": "d7dff7e29877740040cd9a15b63c5b850b6f7322d2059ec62ebc3226d88c4445",
+      "git_sha256": "d7dff7e29877740040cd9a15b63c5b850b6f7322d2059ec62ebc3226d88c4445"
+    },
+    "tools/decomp_damageablepostdestroy_oracle.py": {
+      "work_sha256": "0cdcb6d3f29cd23e67a1e7b4769c82354d5bb9b8051f09c8e190892da390b31a",
+      "git_sha256": "0cdcb6d3f29cd23e67a1e7b4769c82354d5bb9b8051f09c8e190892da390b31a"
+    }
+  },
+  "current_sources": {
+    "cpppj/src/o/RawDamageablePostDestroy.h": "ac84261d44784477f05224ec38ae16375c9130172fa75b008ef6b7fc61a28237",
+    "cpppj/src/o/RawDamageablePostDestroy.cpp": "c70069e2dc850b8f1496aee07008c03ffb1655ff5943365334a4938ead99fb18"
+  },
+  "tool_sha256": "2244e7071fb8fe1fefb2c676076dcad94748c1800d1a169e6d624b380c9a2a7c",
+  "history": {
+    "cpppj/hist/genus-at-pub-4fe2a/baseline.json": "7b6061d9e66f707c5a48f5d414d25f19625f8fd65c7726c04b461f1861ec557c",
+    "cpppj/hist/genus-at-pub-4fe2a/git/cpppj/run12.json": "b85ba385a9d50ff60d3dfe68b98fe64bace43ee94976200e1efb42a65dad100d",
+    "cpppj/hist/genus-at-pub-4fe2a/git/cpppj/dais-ritual-consumer-binding.json": "434af01c390b23fb1c732929031c91f006553d6d140c81991417513227eb38c1",
+    "cpppj/hist/genus-at-pub-4fe2a/git/cpppj/dais-ritual-consumer-cpp-correction.json": "3649e0785d640781b03e4f01b053f5a1bb9bb02c34305ed2647a5b48d3c4a574",
+    "cpppj/hist/genus-at-pub-4fe2a/git/cpppj/daiscontentnotice-cpp-correction.json": "9cb93b488d21c1932f2ac4b7aa56ec0f8e7a7c28fcc5936d83c7ea1acfdfd8dc",
+    "cpppj/hist/genus-at-pub-4fe2a/git/cpppj/damageablepost-host-binding.json": "68a00ad3c2bd95e3a1bdcbe1d7dd2a6822120a814bff08c11b36406ea7ad0fc1",
+    "cpppj/hist/genus-at-pub-4fe2a/git/cpppj/damageablepost-host-group-lineage.json": "b6f1f8e0901c3874b8164a5b620cfb63ddecf9a922914161077c74de7096c696",
+    "cpppj/hist/genus-at-pub-4fe2a/git/cpppj/damageablepostdestroy.json": "83ee40686f3029ba90e93a1b027bd1b5113eb8625847d3e361c630005818c616",
+    "cpppj/hist/genus-at-pub-4fe2a/git/cpppj/damageablepostdestroy-lineage.json": "b904c726e2f4a288f2ef9c4bf45f0f488863cb7f3aaa5551d43e3d078b2925de",
+    "cpppj/hist/genus-at-pub-4fe2a/git/cpppj/src/o/RawDamageablePostDestroy.cpp": "c70069e2dc850b8f1496aee07008c03ffb1655ff5943365334a4938ead99fb18",
+    "cpppj/hist/genus-at-pub-4fe2a/git/cpppj/src/o/RawDamageablePostDestroy.h": "16404ca3857f952ab7809ed370d68b36158e2c834290d76eb4bbc85b2b3fdf03",
+    "cpppj/hist/genus-at-pub-4fe2a/git/cpppj/tests/DamageablePostDestroyHostTests.cpp": "a5150f05dd64d094aeaf4cb0f5204c8fe16c5da13709f5b41aaf0f204a366871",
+    "cpppj/hist/genus-at-pub-4fe2a/git/cpppj/tests/DamageablePostDestroyTests.cpp": "80f00aac6a93ead2befddeec89c43537819f22ea5062d2b15a91b31057b26faa",
+    "cpppj/hist/genus-at-pub-4fe2a/git/cpppj/tests/fixtures/damageablepostdestroy-x86.tsv": "7cbf0b93162674cd8d1cf353068ad96b4e717f1167782c0b8fe98908b98a4c6b",
+    "cpppj/hist/genus-at-pub-4fe2a/git/tools/analyze_damageablepost_host_binding.py": "3c8e0c949702d5f32516551de44c01c21ea16c3a821a7c71a4766de4f8fd6165",
+    "cpppj/hist/genus-at-pub-4fe2a/git/tools/analyze_damageablepost_host_group_lineage.py": "e0529e0e9cf84cfdc43144b1aef4a3e0562ecf09a9a9ac7224a58c43dc0d5c91",
+    "cpppj/hist/genus-at-pub-4fe2a/git/tools/analyze_damageablepostdestroy.py": "d7dff7e29877740040cd9a15b63c5b850b6f7322d2059ec62ebc3226d88c4445",
+    "cpppj/hist/genus-at-pub-4fe2a/git/tools/decomp_damageablepostdestroy_oracle.py": "0cdcb6d3f29cd23e67a1e7b4769c82354d5bb9b8051f09c8e190892da390b31a",
+    "cpppj/hist/genus-at-pub-4fe2a/work/cpppj/run12.json": "b85ba385a9d50ff60d3dfe68b98fe64bace43ee94976200e1efb42a65dad100d",
+    "cpppj/hist/genus-at-pub-4fe2a/work/cpppj/dais-ritual-consumer-binding.json": "434af01c390b23fb1c732929031c91f006553d6d140c81991417513227eb38c1",
+    "cpppj/hist/genus-at-pub-4fe2a/work/cpppj/dais-ritual-consumer-cpp-correction.json": "3649e0785d640781b03e4f01b053f5a1bb9bb02c34305ed2647a5b48d3c4a574",
+    "cpppj/hist/genus-at-pub-4fe2a/work/cpppj/daiscontentnotice-cpp-correction.json": "9cb93b488d21c1932f2ac4b7aa56ec0f8e7a7c28fcc5936d83c7ea1acfdfd8dc",
+    "cpppj/hist/genus-at-pub-4fe2a/work/cpppj/damageablepost-host-binding.json": "68a00ad3c2bd95e3a1bdcbe1d7dd2a6822120a814bff08c11b36406ea7ad0fc1",
+    "cpppj/hist/genus-at-pub-4fe2a/work/cpppj/damageablepost-host-group-lineage.json": "b6f1f8e0901c3874b8164a5b620cfb63ddecf9a922914161077c74de7096c696",
+    "cpppj/hist/genus-at-pub-4fe2a/work/cpppj/damageablepostdestroy.json": "83ee40686f3029ba90e93a1b027bd1b5113eb8625847d3e361c630005818c616",
+    "cpppj/hist/genus-at-pub-4fe2a/work/cpppj/damageablepostdestroy-lineage.json": "b904c726e2f4a288f2ef9c4bf45f0f488863cb7f3aaa5551d43e3d078b2925de",
+    "cpppj/hist/genus-at-pub-4fe2a/work/cpppj/src/o/RawDamageablePostDestroy.cpp": "c70069e2dc850b8f1496aee07008c03ffb1655ff5943365334a4938ead99fb18",
+    "cpppj/hist/genus-at-pub-4fe2a/work/cpppj/src/o/RawDamageablePostDestroy.h": "16404ca3857f952ab7809ed370d68b36158e2c834290d76eb4bbc85b2b3fdf03",
+    "cpppj/hist/genus-at-pub-4fe2a/work/cpppj/tests/DamageablePostDestroyHostTests.cpp": "a5150f05dd64d094aeaf4cb0f5204c8fe16c5da13709f5b41aaf0f204a366871",
+    "cpppj/hist/genus-at-pub-4fe2a/work/cpppj/tests/DamageablePostDestroyTests.cpp": "80f00aac6a93ead2befddeec89c43537819f22ea5062d2b15a91b31057b26faa",
+    "cpppj/hist/genus-at-pub-4fe2a/work/cpppj/tests/fixtures/damageablepostdestroy-x86.tsv": "7cbf0b93162674cd8d1cf353068ad96b4e717f1167782c0b8fe98908b98a4c6b",
+    "cpppj/hist/genus-at-pub-4fe2a/work/tools/analyze_damageablepost_host_binding.py": "3c8e0c949702d5f32516551de44c01c21ea16c3a821a7c71a4766de4f8fd6165",
+    "cpppj/hist/genus-at-pub-4fe2a/work/tools/analyze_damageablepost_host_group_lineage.py": "e0529e0e9cf84cfdc43144b1aef4a3e0562ecf09a9a9ac7224a58c43dc0d5c91",
+    "cpppj/hist/genus-at-pub-4fe2a/work/tools/analyze_damageablepostdestroy.py": "d7dff7e29877740040cd9a15b63c5b850b6f7322d2059ec62ebc3226d88c4445",
+    "cpppj/hist/genus-at-pub-4fe2a/work/tools/decomp_damageablepostdestroy_oracle.py": "0cdcb6d3f29cd23e67a1e7b4769c82354d5bb9b8051f09c8e190892da390b31a"
+  },
+  "scope": "기존 GenusAt 선언/설명 한 줄을 private에서 public으로 이동한다. 기존 전체 getter/드롭/섬정리/주변HP/다리/공통post 계산/포인터/필드/조건은 불변이며4412/Host/관련관찰을 재합산하지 않는다. 새 CarrierArrival의 같은 getter 소비자 연결은 별도 Native406/CPP 근거로 검증한다."
+}

@@ -9,9 +9,9 @@ from pathlib import Path
 from analyze_campaign_runtime6 import read_log
 
 ROOT = Path(__file__).resolve().parents[1]  # 동일 작업 트리의 원문을 읽는 기준 경로다.
-HISTORY = ROOT / 'cpppj/recovery-history/campaign-runtime15-baseline'  # 이전 전체 파일을 재귀 복사 없이 보존한다.
-PRIOR = ROOT / 'cpppj/recovery-campaign-runtime14-evidence.json'  # 이미 완료한 단위14 원문은 덮어쓰지 않는다.
-REPORT = ROOT / 'cpppj/recovery-campaign-runtime15-evidence.json'  # 등록한 준비7 검사의 결과를 별도로 기록한다.
+HISTORY = ROOT / 'cpppj/hist/campaign-run-092de'  # 이전 전체 파일을 재귀 복사 없이 보존한다.
+PRIOR = ROOT / 'cpppj/run14.json'  # 이미 완료한 단위14 원문은 덮어쓰지 않는다.
+REPORT = ROOT / 'cpppj/run15.json'  # 등록한 준비7 검사의 결과를 별도로 기록한다.
 
 
 def sha(path):
@@ -23,7 +23,7 @@ def capture():
     """등록 전 단위14 전체 근거와 준비15 전체 파일을 그대로 보존한다."""
     assert not HISTORY.exists()
     previous = json.loads(PRIOR.read_text(encoding='utf-8'))
-    prepared = ROOT / 'cpppj/recovery-campaign-runtime15-preparation-handoff-evidence.json'
+    prepared = ROOT / 'cpppj/run15-preparation-handoff.json'
     draft = json.loads(prepared.read_text(encoding='utf-8'))
     names = set(previous['files']) | set(draft['files']) | {PRIOR.relative_to(ROOT).as_posix(), prepared.relative_to(ROOT).as_posix()}
     saved = {}
@@ -31,7 +31,7 @@ def capture():
     for name in sorted(names):
         source = ROOT / name
         target = HISTORY / name
-        assert not name.startswith('cpppj/recovery-history/')
+        assert not name.startswith('cpppj/hist/')
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes(source.read_bytes())
         saved[name] = sha(target)
@@ -61,19 +61,19 @@ def generate():
     """등록7 검사의 실제 성공 로그와 현재 전체 소스·빌드를 고정한다."""
     audit_history()
     names = {Path(__file__).relative_to(ROOT).as_posix(), '.gitattributes'}
-    prepared = json.loads((HISTORY / 'cpppj/recovery-campaign-runtime15-preparation-handoff-evidence.json').read_text(encoding='utf-8'))
+    prepared = json.loads((HISTORY / 'cpppj/run15-preparation-handoff.json').read_text(encoding='utf-8'))
     names.update(prepared['files'])
     # 실제 등록·실행한 자료와 이전 전체 보존 manifest를 함께 기록한다.
     names.update({'cpppj/src/o/CMakeLists.txt', 'cpppj/src/client/CMakeLists.txt', 'cpppj/tests/CMakeLists.txt',
                   'cpppj/build/bin/Release/netstorm_tests.exe', 'cpppj/build/bin/Release/NetstormCpp.exe',
-                  'extracted/campaign-runtime15-build-final.log', 'extracted/campaign-runtime15-new-final-tests.log',
-                  'extracted/campaign-runtime15-all-final-tests.log', (HISTORY / 'capture.json').relative_to(ROOT).as_posix(),
-                  'tools/analyze_campaign_runtime15_corrections.py', 'cpppj/recovery-campaign-runtime15-corrections-evidence.json',
-                  'extracted/campaign-runtime15-new-first-tests.log', 'extracted/campaign-runtime15-all-first-tests.log',
-                  'extracted/campaign-runtime15-build-first.log'})
-    focused = read_log(ROOT / 'extracted/campaign-runtime15-new-final-tests.log')
-    whole = read_log(ROOT / 'extracted/campaign-runtime15-all-final-tests.log')
-    build = read_log(ROOT / 'extracted/campaign-runtime15-build-final.log')
+                  'extracted/run15-build-final.log', 'extracted/run15-new-final.log',
+                  'extracted/run15-all-final.log', (HISTORY / 'capture.json').relative_to(ROOT).as_posix(),
+                  'tools/analyze_campaign_runtime15_corrections.py', 'cpppj/run15-corrections.json',
+                  'extracted/run15-new-first-tests.log', 'extracted/run15-all-first-tests.log',
+                  'extracted/run15-build-first.log'})
+    focused = read_log(ROOT / 'extracted/run15-new-final.log')
+    whole = read_log(ROOT / 'extracted/run15-all-final.log')
+    build = read_log(ROOT / 'extracted/run15-build-final.log')
     assert len(re.findall(r'\[ OK \]', focused)) == 7
     assert len(re.findall(r'\[ OK \]', whole)) == 1088
     assert 'FAIL' not in focused and 'FAIL' not in whole

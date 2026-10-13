@@ -19,7 +19,7 @@ SPEC={'originals':dict(X=0x49d6f9,Y=0x49d758,stop=0x49d090,hot=0x1dc,ftol='004e4
 SPEC['original1037']=SPEC['originalCD']
 # 기존 fixture/감사 기록과 분리한다.
 FIXTURE=ROOT/'cpppj/tests/fixtures/typehotspot-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-typehotspot-evidence.json'
+REPORT=ROOT/'cpppj/typehotspot.json'
 
 
 def bits(value):

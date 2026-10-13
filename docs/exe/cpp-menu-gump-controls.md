@@ -10,7 +10,7 @@
 
 계획은 `tools/ghidra/menucontrols-functions.json`이며 패치 **10개**, CD **12개** 함수를 읽기 전용으로 내보냈다. `extracted/menucontrols/{originals,originalCD}/creation.c` / `functions.tsv` / `assembly.txt`에 본문·범위·명령을 보관한다. 공용 서식/설정 함수는 참조 자료이며 전체 공용 서식기 복원 완료를 뜻하지 않는다.
 
-`tools/analyze_menucontrols.py`는 두 실제 PE의 명령에서 직접 참조한 ROM 색 키/서식·controlled 표/개수/등록표·빈 구분선 문자열과 현재 소스/빌드 해시를 `cpppj/recovery-menucontrols-evidence.json`에 기록한다.
+`tools/analyze_menucontrols.py`는 두 실제 PE의 명령에서 직접 참조한 ROM 색 키/서식·controlled 표/개수/등록표·빈 구분선 문자열과 현재 소스/빌드 해시를 `cpppj/menucontrols.json`에 기록한다.
 
 | 기능 | 10.78 | CD 10.72 |
 | --- | --- | --- |

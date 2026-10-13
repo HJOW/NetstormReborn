@@ -36,4 +36,4 @@
 
 실제 Dude70 생성 `00450a20/CD004e8b30`, 원본 factory/owner 가상 쓰기/Pop과 Path24, 드롭5103/5104의 부모 호출은 아직 별도 복원 대상이다. 이 task 모듈만으로 Damageable PostDestroy의 전체 드롭이나 캠페인1-1 피해 반응을 완료했다고 표시하지 않는다. 비유한 시각·힙 실패의 미정의 접근·전체 원본 진단창/예외 처리도 현재 관찰 범위 밖이다.
 
-등록 파일은 `RawDudeTask.cpp`, `DudeTaskTests.cpp`이며 fixture 매크로는 `NETSTORM_DUDETASK_FIXTURE`다. 근거는 `recovery-dudetask-evidence.json`과 `dudetask-x86.tsv`, 검증 명령은 `python -X utf8 tools/decomp_dudetask_oracle.py --verify`다.
+등록 파일은 `RawDudeTask.cpp`, `DudeTaskTests.cpp`이며 fixture 매크로는 `NETSTORM_DUDETASK_FIXTURE`다. 근거는 `dudetask.json`과 `dudetask-x86.tsv`, 검증 명령은 `python -X utf8 tools/decomp_dudetask_oracle.py --verify`다.

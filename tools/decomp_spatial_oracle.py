@@ -236,7 +236,7 @@ def scenarios():
 
 def verify():
     """게임/기계어를 다시 실행하지 않고 검증 기록과 fixture·원본·도구의 일관성을 검사한다."""
-    report=json.loads((ROOT/'cpppj/recovery-spatial-evidence.json').read_text(encoding='utf-8'))
+    report=json.loads((ROOT/'cpppj/spatial.json').read_text(encoding='utf-8'))
     assert report['schema']==1 and report['functions']==PAIRS and report['reviewed_pairs']==[]
     assert report['classification']=='scoped-integration' and report['helpers']==HELPERS
     assert report['x87_checked_control_words']==[hex(c) for c in CONTROLS]
@@ -329,7 +329,7 @@ def main():
                 'Pop/Unpop 정상 반환 확인은 위 의존성 대체 조건부이며 전체 함수 검토 앵커로 추가하지 않음',
                 '유효 발자국·비 contained 객체만; overlap 조기 반환의 부분 spot 변경도 보존',
                 '실제 게임/원본 복사본/GUI 실행 없음']}
-    (ROOT/'cpppj/recovery-spatial-evidence.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
+    (ROOT/'cpppj/spatial.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
     print(json.dumps({'cases':dict(counts),'edition_differences':differences,'assert_reports':report['assert_reports']}),flush=True)
 
 

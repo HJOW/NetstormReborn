@@ -19,7 +19,7 @@ PARENT=50
 # 입력 열의 순서와 관찰/근거 저장 경로다.
 KEYS=('server','pattern','type','ordinal','remove','mutate')
 FIXTURE=ROOT/'cpppj/tests/fixtures/contained-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-contained-evidence.json'
+REPORT=ROOT/'cpppj/contained.json'
 
 
 def plan():

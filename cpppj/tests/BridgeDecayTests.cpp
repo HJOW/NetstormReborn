@@ -15,7 +15,7 @@
 
 using namespace netstorm::o;
 namespace {
-// 기대값 파일의 행 종류별 개수(recovery-bridgedecay-evidence.json의 cases와 같다). 파일이 잘리면 검사가 실패한다.
+// 기대값 파일의 행 종류별 개수(bridgedecay.json의 cases와 같다). 파일이 잘리면 검사가 실패한다.
 constexpr std::size_t kCellRows = 4241, kLifeRows = 3264, kDestroyRows = 1152, kCrackRows = 348, kNormalRows = 174,
     kWeakenRows = 696, kInitRows = 12, kScanRows = 3941;
 // Life 행 가운데 결과 수명이 7을 넘는 입력 수. 원본은 4비트로 쓰고 새 코드는 거부한다.

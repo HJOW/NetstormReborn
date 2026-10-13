@@ -21,7 +21,7 @@ SPEC={
 REGULAR=0x11318000
 KEYS=('sid','state','task','event','regular','type','delay','now')
 FIXTURE=ROOT/'cpppj/tests/fixtures/dudetask-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-dudetask-evidence.json'
+REPORT=ROOT/'cpppj/dudetask.json'
 
 
 def bits(value):
@@ -119,7 +119,7 @@ def generate(smoke):
         editions[edition]=dict(returns=oracle.returns,assertions=oracle.taskAssertions,instructions=oracle.instructions,native_calls=dict(oracle.native_calls),boundaries=dict(oracle.boundaries));files.update(oracle.exports);files.add(ROOT/oracle.spec['binary']);print(edition,editions[edition],flush=True)
     if smoke:return
     # 같은 Host/Regular의 전체 출처와 현재 API lineage를 함께 기록한다.
-    for path in ('cpppj/src/o/RawDudeTask.h','cpppj/src/o/RawDudeTask.cpp','cpppj/tests/DudeTaskTests.cpp','cpppj/src/o/SquidProcess.h','cpppj/src/o/SquidProcess.cpp','cpppj/recovery-dude-regular-reset-lineage-evidence.json','cpppj/recovery-regular-initial-count-lineage-evidence.json'):files.add(ROOT/path)
+    for path in ('cpppj/src/o/RawDudeTask.h','cpppj/src/o/RawDudeTask.cpp','cpppj/tests/DudeTaskTests.cpp','cpppj/src/o/SquidProcess.h','cpppj/src/o/SquidProcess.cpp','cpppj/dude-regular-reset-lineage.json','cpppj/regular-initial-count-lineage.json'):files.add(ROOT/path)
     FIXTURE.write_text('# 일반 Dude task setter의 실제 PE 출력. 조회/힙/부착/표면은 명시 관찰 경계이고 낙하 교체 assert는 정상 반환과 별도다.\n'+'\n'.join('\t'.join(map(str,row)) for row in rows)+'\n',encoding='utf-8');files.add(FIXTURE)
     REPORT.write_text(json.dumps(dict(schema=1,host='HJOW-Athlon',primary_target='10.78',cd_target='10.72',total=len(rows),normal=sum(item['returns'] for item in editions.values()),assertions=sum(item['assertions'] for item in editions.values()),editions=editions,files={path.relative_to(ROOT).as_posix():digest(path) for path in sorted(files)},cpp_tests_completed=0,os_calls=0,new_dude_factories_completed=0,limitations=['실제 setter/Regular ctor/task WORD 쓰기와 현재 time/event/count/payload는 원본 몸체다.','현재 Regular 조회·힙·Form부착·다리 표면 요청은 명시 관찰 경계이며 C++는 같은 실제 Host 조회/생성을 소비한다.','패치 FALL 교체는 원본 assert에서 멈추며 정상 반환이나 전체 예외 처리 완료로 세지 않는다.','패치 SID0/free/예약 머리의 미정의 쓰기와 비유한 시각/힙 실패는 지원 입력에 포함하지 않는다.','CD SID0/free/dead 자연반환과 FALL 강제 유지, 양판본 DWORD event/하위 WORD 쓰기·분수float 지연+정밀double now를 포함한다.','실제 Dude 생성/Pop/Path24와 전체 드롭 소비자는 별도 후속이다.'],),ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 

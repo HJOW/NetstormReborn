@@ -36,7 +36,7 @@ MAP,KILL,SCALES,OTHER=0x14000000,STOP+0x400,(1,2,4,16),102
 # 후보 입력을 만드는 고정 시드다. 기대 결과는 원본 기계어가 정한다.
 SEED=0x441fd0
 FIXTURE=ROOT/'cpppj/tests/fixtures/constructionclear-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-constructionclear-evidence.json'
+REPORT=ROOT/'cpppj/constructionclear.json'
 # 입력 칸 순서다. 후보 칸은 따로 적는다(번호,타입,extra,x,y,소유자,프레임,해시 단계).
 KEYS=('type','argument','direction','x','y','player','authority','footX','footY','frames','default','otherFootX','otherFootY')
 

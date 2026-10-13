@@ -46,7 +46,7 @@ Vortex는 Damageable를 먼저 호출한 다음 Player의 초기 신전·새 신
 
 현재 독립 관찰은 **1,636개(판본마다818)**이고 정상 반환1,636회/assert0이다. 네 body 전투/로딩, 최초/abstract/buried, 개별 확보 실패, 가득 찬 목록, 현재 내용물/선택 취소, boss iterator/가상 삭제, 레지던스 signed /2 및 6/12/18·INT_MIN/MAX, 캐논 0x1000 유무, 가이저 비용 2^31/2^32를 포함한다. 실제 패치 iterator 시작12회/다음1,524회, 두 PE의 다른 신전 삭제 경계는 각각6회이다. 초기 잘못된 호출 규약/합성 메모리 실험 실패 로그를 보존하고 실제 기계어 스택 인자로 교정했다. 최종 공유 Release 빌드가 경고/오류0으로 완료됐으며 `--filter AssetPostPop_`의 새4개 검사/실패0을 확인했다. 두 C++ 재생 검사는 1,636개 원본 입력의 사건·raw·목록·Player 결과를 전부 대조했다. 직접 Carrier/Damageable 등록과 외부 효과 누락의 변경 전 거부도 통과했다. 집중 로그는 `extracted/assetpostpop-focused-initial.log`이다. 전체 회귀 및 상위 raw 월드 연결은 root의 후속 검사를 따른다.
 
-자료: `cpppj/tests/fixtures/assetpostpop-x86.tsv`, `cpppj/recovery-assetpostpop-evidence.json`, `AssetPostPopTests.cpp`. 재감사 명령은 `python -X utf8 tools/decomp_assetpostpop_oracle.py --verify`이다.
+자료: `cpppj/tests/fixtures/assetpostpop-x86.tsv`, `cpppj/assetpostpop.json`, `AssetPostPopTests.cpp`. 재감사 명령은 `python -X utf8 tools/decomp_assetpostpop_oracle.py --verify`이다.
 
 ## 실제 월드 연결의 남은 경계
 

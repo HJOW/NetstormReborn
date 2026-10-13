@@ -7,10 +7,10 @@ import json
 from decomp_owner_oracle import ROOT,digest
 
 # 최초 실제C++대조 직전/실패 때 전체source·414fixture·report·tool·기존lineage·로그다.
-HISTORY=ROOT/'cpppj/recovery-history/dudenotice-before-point-correction'
-REPORT=ROOT/'cpppj/recovery-dudenotice-evidence.json'
-DRAFT=ROOT/'cpppj/recovery-dudenotice-draft-lineage-evidence.json'
-LINEAGE=ROOT/'cpppj/recovery-dudenotice-point-lineage-evidence.json'
+HISTORY=ROOT/'cpppj/hist/dudenotice-b-7ab49'
+REPORT=ROOT/'cpppj/dudenotice.json'
+DRAFT=ROOT/'cpppj/dudenotice-draft-lineage.json'
+LINEAGE=ROOT/'cpppj/dudenotice-point-lineage.json'
 CPP='cpppj/src/o/RawDudeNotice.cpp'
 TEST='cpppj/tests/DudeNoticeTests.cpp'
 # decompiler가누락한fild footX→fmul0.5→fsubr x→ftol을그대로반영한다.

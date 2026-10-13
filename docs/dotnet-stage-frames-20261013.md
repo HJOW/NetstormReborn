@@ -6,7 +6,7 @@
 
 ## 원본 근거
 
-같은 PC의 정밀 Ghidra 프로젝트에서 `tools/ghidra/dotnetstageframes-functions.json`의 **10.78 함수 13개**를 읽기 전용으로 내보냈다. `extracted/dotnetstageframes/originals/{creation.c,functions.tsv,assembly.txt}`와 `tools/analyze_dotnet_stage_frames.py` / `dotnetpj/recovery-stage-frames-evidence.json`에 실제 PE 명령/ROM·C# 연결/빌드 해시를 기록했다. 원본 함수를 실행해 얻은 관찰/비교 자료는 생성하지 않았다.
+같은 PC의 정밀 Ghidra 프로젝트에서 `tools/ghidra/dotnetstageframes-functions.json`의 **10.78 함수 13개**를 읽기 전용으로 내보냈다. `extracted/dotnetstageframes/originals/{creation.c,functions.tsv,assembly.txt}`와 `tools/analyze_dotnet_stage_frames.py` / `dotnetpj/stage-frames.json`에 실제 PE 명령/ROM·C# 연결/빌드 해시를 기록했다. 원본 함수를 실행해 얻은 관찰/비교 자료는 생성하지 않았다.
 
 | 기능 | 원본 주소/필드 |
 | --- | --- |

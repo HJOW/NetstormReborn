@@ -31,7 +31,7 @@ BODY={
 BODY['original1037']=dict(BODY['originalCD'])
 # 결과 fixture/근거는 앞 단계 파일과 분리한다.
 FIXTURE=ROOT/'cpppj/tests/fixtures/forcefieldpostpop-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-forcefieldpostpop-evidence.json'
+REPORT=ROOT/'cpppj/forcefieldpostpop.json'
 KEYS=('kind','flags','first','second','event','count','payload','x','y','priestType','layout','extra')
 
 

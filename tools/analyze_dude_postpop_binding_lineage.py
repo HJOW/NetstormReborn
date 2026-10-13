@@ -11,11 +11,11 @@ from pathlib import Path
 
 # 공유 저장소와 기준12의 Git/작업 바이트 및 새 연결 보고서 경로다.
 ROOT=Path(__file__).resolve().parent.parent
-HISTORY=ROOT/'cpppj/recovery-history/dude-postpop-baseline'
-REPORT=ROOT/'cpppj/recovery-dude-postpop-binding-lineage-evidence.json'
+HISTORY=ROOT/'cpppj/hist/dude-postpop-aa53f'
+REPORT=ROOT/'cpppj/dude-postpop-binding-lineage.json'
 COMMIT='db9b626c0a9c6b9440c6b181dfc401506a07d3e4'
-NATIVE='cpppj/recovery-dudespawn-evidence.json'
-DRAFT='cpppj/recovery-dudespawn-draft-lineage-evidence.json'
+NATIVE='cpppj/dudespawn.json'
+DRAFT='cpppj/dudespawn-draft-lineage.json'
 # 기존 공통 몸체에 추가한 선언/분배/빈 순회 검사만 정확히 되돌린다.
 HEADER_LINES=(
     'class RawDudePostPop; // Dude70의 실제 idle/population/I 프레임·공통후처리를 연결한다.\n',
@@ -110,7 +110,7 @@ def observe():
         if (ROOT/name).read_bytes()!=old:raise RuntimeError('Dude 기존 보고서 변경 '+name)
         prior[name]=dict(sha256=sha(old),new_native_inputs=0)
     for name,item in capture['captured'].items():
-        if 'fixtures/' in name and not name.startswith('cpppj/recovery-history/') and sha((ROOT/name).read_bytes())!=item['work_sha256']:raise RuntimeError('Dude 기존 fixture 변경 '+name)
+        if 'fixtures/' in name and not name.startswith('cpppj/hist/') and sha((ROOT/name).read_bytes())!=item['work_sha256']:raise RuntimeError('Dude 기존 fixture 변경 '+name)
     native=json.loads((HISTORY/'work'/NATIVE).read_text(encoding='utf-8'))
     if native['total']!=288 or native['boundaries'] or native['os_calls']:raise RuntimeError('Dude 이전 정상/효과 경계 오류')
     # 최초288보고서가 참조한 소스는 당시 보존 원문으로, 보호 PE/TAFF/SHP는 현재 동일 바이트로 검증한다.

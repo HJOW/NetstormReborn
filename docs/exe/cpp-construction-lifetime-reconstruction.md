@@ -51,7 +51,7 @@ ABI·보존 레지스터·x87·SEH, 실제 함수 범위/쓰기 허용 목록, P
 
 새 C++ 검사는 **6개**다. Release 경고/오류 **0**, CTest 내부 **680개·실패 0**(164.59초, 전체 164.64초), 저장 근거 감사 **105종 모두 통과**. 별도 사본의 새 변이 **8개 모두 검출**(`--focused`, 변이 전 사본 전체 검사 통과): 40칸 확장·첫 빈 칸 재사용·signed 깊이·부착 뒤 진입 부모 재조회·base -12345 표식·버퍼 반납 순서·scalar bit 0·부착 flags. 사본 소스는 원래 바이트로 복구했다. UTF-8/BOM·보호 경로와 변경 목록을 확인했다. 로그: `extracted/constructionlifetime-{build,oracle,ctest,audits,mutations}.log`.
 
-관련 파일: `cpppj/src/o/RawConstructionLifetime.{h,cpp}`, `cpppj/tests/ConstructionLifetimeTests.cpp`, `cpppj/tests/fixtures/constructionlifetime-x86.tsv`, `cpppj/recovery-constructionlifetime-evidence.json`, `tools/decomp_constructionlifetime_oracle.py`, `tools/ghidra/constructionlifetime-functions.json`.
+관련 파일: `cpppj/src/o/RawConstructionLifetime.{h,cpp}`, `cpppj/tests/ConstructionLifetimeTests.cpp`, `cpppj/tests/fixtures/constructionlifetime-x86.tsv`, `cpppj/constructionlifetime.json`, `tools/decomp_constructionlifetime_oracle.py`, `tools/ghidra/constructionlifetime-functions.json`.
 
 재검사: `python -X utf8 tools/decomp_constructionlifetime_oracle.py --verify`, `cpppj/build/bin/Release/netstorm_tests.exe --filter ConstructionLifetime_`, `ctest --test-dir cpppj/build -C Release --output-on-failure`. 내보내기: `powershell -ExecutionPolicy Bypass -File tools/ghidra/export_functions.ps1 -Name constructionlifetime`.
 

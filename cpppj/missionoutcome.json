@@ -1,0 +1,143 @@
+{
+  "total": 728,
+  "host": "VM-W11-CODEX",
+  "date": "2026-10-13",
+  "os_calls": 0,
+  "editions": {
+    "originals": {
+      "cases": 364,
+      "returns": 364,
+      "native": {
+        "dead": 1150,
+        "captured": 529,
+        "edge": 2793,
+        "check": 172,
+        "hp": 322,
+        "lookup": 449
+      },
+      "boundaries": {
+        "assert": 96,
+        "section": 656,
+        "close": 618,
+        "stop": 618,
+        "format": 2245,
+        "region": 322
+      },
+      "functions": [
+        {
+          "entry": "004c36c0",
+          "ranges": "004c36c0-004c3933"
+        },
+        {
+          "entry": "004c3940",
+          "ranges": "004c3940-004c3a12"
+        },
+        {
+          "entry": "004922e0",
+          "ranges": "004922e0-0049233a"
+        },
+        {
+          "entry": "00492340",
+          "ranges": "00492340-0049239a"
+        },
+        {
+          "entry": "004921f0",
+          "ranges": "004921f0-0049223a"
+        },
+        {
+          "entry": "004adcb0",
+          "ranges": "004adcb0-004add03"
+        },
+        {
+          "entry": "0049fce0",
+          "ranges": "0049fce0-0049fd6a"
+        },
+        {
+          "entry": "0049a840",
+          "ranges": "0049a840-0049a852"
+        },
+        {
+          "entry": "004c8e90",
+          "ranges": "004c8e90-004c8e9d"
+        }
+      ]
+    },
+    "originalCD": {
+      "cases": 364,
+      "returns": 364,
+      "native": {
+        "dead": 1150,
+        "captured": 529,
+        "edge": 376,
+        "check": 172,
+        "hp": 322,
+        "lookup": 449
+      },
+      "boundaries": {
+        "section": 656,
+        "close": 618,
+        "stop": 618,
+        "format": 2245,
+        "region": 322
+      },
+      "functions": [
+        {
+          "entry": "00410380",
+          "ranges": "00410380-00410a82"
+        },
+        {
+          "entry": "00410a90",
+          "ranges": "00410a90-00410b81"
+        },
+        {
+          "entry": "004102d0",
+          "ranges": "004102d0-004102f6"
+        },
+        {
+          "entry": "0040da20",
+          "ranges": "0040da20-0040da62"
+        },
+        {
+          "entry": "0040da70",
+          "ranges": "0040da70-0040daad"
+        },
+        {
+          "entry": "0040d940",
+          "ranges": "0040d940-0040d995"
+        },
+        {
+          "entry": "004aed30",
+          "ranges": "004aed30-004aed84"
+        },
+        {
+          "entry": "00444720",
+          "ranges": "00444720-00444749"
+        },
+        {
+          "entry": "004abae0",
+          "ranges": "004abae0-004abafd"
+        },
+        {
+          "entry": "004c3940",
+          "ranges": "004c3940-004c394b"
+        }
+      ]
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/missionoutcome-x86.tsv": "3059eb7c9ee92f98eec042032d608707e5d1db506d0a6e3e08b175909b1aab16",
+    "extracted/missionoutcome/originalCD/creation.c": "9c6eae26fd3ecfef9b48a4c299a85af794c55640638b225441d29f6cf9cae55a",
+    "extracted/missionoutcome/originalCD/functions.tsv": "29978d650051a12bd25f3c364c156eac32d09957f9a98895aa7d7792e844d449",
+    "extracted/missionoutcome/originals/creation.c": "288f12f67d5651875a78ccea51f1f87d7d01b78cd5091232e49fd1a4a2b35bee",
+    "extracted/missionoutcome/originals/functions.tsv": "df5cc57fb79c20db4098fd24b7cd68942d69b458fce52d105537773c05bdbdd8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_missionoutcome_oracle.py": "7dc34f5b3697ea22d4b40bdf71e9ecb7832fb256294daf7423ad80838cc8113f",
+    "tools/ghidra/missionoutcome-functions.json": "4a1bf822975fea6b1d1bbfd34454ba804e9ecd3af6948b391cd07389ca3c8766"
+  },
+  "limits": [
+    "서식·영역 소유자·스크립트/UI·패치 범위 assert는 명시 외부 경계다. 전체 게임 실행 대조가 아니다.",
+    "승패 조건/사제 현재 목록/ownerState/최대HP/gate/잠금·정상 반환·보존 레지스터·허용 쓰기는 실제 PE다.",
+    "합성 callback mutation이 후속 재조회 및 latch 최종 쓰기를 검사한다. 실제 GUI/공간/전체 월드 연결은 별도다."
+  ]
+}

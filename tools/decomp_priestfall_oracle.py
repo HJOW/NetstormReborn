@@ -28,7 +28,7 @@ FALL['original1037'] = FALL['originalCD']
 # 가상 코드 표/WORD 지도/반환 관찰 메모리와 저장 경로다.
 CODES, SURFACES, TEMP, CALLER = LISTS + 0x2000, 0x13020000, 0x13010000, STOP + 0x100
 FIXTURE = ROOT / 'cpppj/tests/fixtures/priestfall-x86.tsv'
-REPORT = ROOT / 'cpppj/recovery-priestfall-evidence.json'
+REPORT = ROOT / 'cpppj/priestfall.json'
 KEYS = ('kind', 'authority', 'allocated', 'extra', 'hp', 'spot', 'side', 'surface', 'change', 'x', 'y')
 # 좌표는 입력만 만들며 어느 칸인지/반환값은 원본 기계어가 결정한다.
 COORDS = ((20.75,21.9),(20.000099182128906,21.000099182128906),(-2.0,21.0),

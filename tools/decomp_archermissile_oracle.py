@@ -15,7 +15,7 @@ from decomp_owner_oracle import ROOT,TYPES,STACK,digest
 KEYS=(*BASE_KEYS,'range','firingSound','impactSound')
 BASELINE='4e532fd'
 FIXTURE=ROOT/'cpppj/tests/fixtures/archermissile-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-archermissile-evidence.json'
+REPORT=ROOT/'cpppj/archermissile.json'
 
 
 def inputs():

@@ -17,7 +17,7 @@ from unicorn.x86_const import UC_X86_REG_EAX,UC_X86_REG_ECX,UC_X86_REG_ESP,UC_X8
 # 에뮬레이터 내부의 MemStream/저장 자료/변환표 주소이며 호스트 포인터가 아니다.
 ARENA,STREAM,DATA,CONVERSION=0x11000000,0x11000100,0x11001000,0x11002000
 FIXTURE=ROOT/'cpppj/tests/fixtures/fortmeta-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-fortmeta-evidence.json'
+REPORT=ROOT/'cpppj/fortmeta.json'
 # 부모/장부 몸체와 명시 섹션·내용물·변환·UI·진단 경계의 실제 주소다.
 PLAN={
  'originals':dict(badges=0x4be8e0,setter=0x47d800,technology=0x4beee0,lookup=0x44ceb0,

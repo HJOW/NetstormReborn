@@ -21,7 +21,7 @@ ENTRIES={'originals':(0x422150,0x4213b0,0x4b0d30),'originalCD':(0x449890,0x448b0
 ENTRIES['original1037']=ENTRIES['originalCD']
 # 새 결과는 기존 postpop/bridgeevent fixture와 분리한다.
 FIXTURE=ROOT/'cpppj/tests/fixtures/bridgepostpop-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-bridgepostpop-evidence.json'
+REPORT=ROOT/'cpppj/bridgepostpop.json'
 # 최초/재등록·매몰 활성화·무관한 비트와 abstract/buried/기존 접두 비트 입력이다.
 FLAGS=(0,1,2,3,4,5,6,7,0x20001,0x20004)
 EXTRAS=(0,1,2,4,8,0x10,0xff,0x81)

@@ -42,7 +42,7 @@
 
 기존 메뉴 GUI **54개 상태**와 해상도 전환·전체화면 표식/설정 저장·재실행, 메뉴 배경 **774,432픽셀**, 두 판본 GIF **각 831,008픽셀** 대조를 통과했다. 원본 버튼 몸체와 독립 `.chfnt` 해독에 의한 추가 GUI **14개 상태·81개 버튼 계획·선/글자 32,220픽셀**도 통과했다. 이 GUI는 기존 메뉴 어댑터 회귀다. 보호 원본·설정/존재 상태 불변과 복구를 확인했으며 돌 버튼 GUI 검사에는 원본 **1,394개 파일**이 포함된다.
 
-자료: `cpppj/recovery-gumpglyph-evidence.json`, `cpppj/tests/fixtures/gumpglyph-x86.tsv`, `GumpGlyphTests.cpp`, `GumpTextTests.cpp`, `extracted/gumpglyph/`, `extracted/gumpglyph-*.log`, `extracted/cpp-menu-smoke/`, `extracted/cpp-gumpvisual-smoke/`. SOURCE_MAP은 생성 도구로 확인했고 내용 차이는 없다.
+자료: `cpppj/gumpglyph.json`, `cpppj/tests/fixtures/gumpglyph-x86.tsv`, `GumpGlyphTests.cpp`, `GumpTextTests.cpp`, `extracted/gumpglyph/`, `extracted/gumpglyph-*.log`, `extracted/cpp-menu-smoke/`, `extracted/cpp-gumpvisual-smoke/`. SOURCE_MAP은 생성 도구로 확인했고 내용 차이는 없다.
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File tools/ghidra/export_functions.ps1 -Name gumpglyph

@@ -222,13 +222,13 @@ def generate():
             '생성자 표는 파일 로딩/프로세스 이름 복사를 제외한 대입 두 구간만 실제 실행',
             '가상 초기화 결과 슬롯은 모든 바이트 직접 비교; 풀 전체는 Adler-32',
             '파생 생성자/공간 해제/네트워크 패킷/GUI/게임 진입점 미실행']}
-    (ROOT/'cpppj/recovery-creation-evidence.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
+    (ROOT/'cpppj/creation.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
     print(json.dumps({'cases':dict(counts),'total_cases':report['total_cases'],'catalog_rows':359}),flush=True)
 
 
 def verify():
     """저장된 원본/도구/fixture/주소 표 해시와 실제 호출 행 수를 확인한다."""
-    report=json.loads((ROOT/'cpppj/recovery-creation-evidence.json').read_text(encoding='utf-8'))
+    report=json.loads((ROOT/'cpppj/creation.json').read_text(encoding='utf-8'))
     for group in ('artifact_sha256','source_sha256'):
         for path,sha in report[group].items():
             assert hashlib.sha256((ROOT/path).read_bytes()).hexdigest()==sha,path

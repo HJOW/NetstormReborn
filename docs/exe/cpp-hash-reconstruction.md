@@ -55,7 +55,7 @@ Unicorn의 초기 x87 제어 워드는 0이었다. 이를 그대로 쓰면 소�
 
 [HashTests.cpp](../../cpppj/tests/HashTests.cpp)의 새 6개 검사가 저장된 [hash-x86.tsv](../../cpppj/tests/fixtures/hash-x86.tsv)와 C++를 대조한다. Windows Release 빌드 경고·오류 0, **CTest 내부 87개 검사** 통과. 기존 26,868개와 합쳐 **31,500개 제한 x86 입력 사례**다. 이 중 수명 480개는 접두 구간, 이번 초기화 4개는 할당 없는 경로이며 게임 전체 일치/완성도 수치가 아니다.
 
-[recovery-hash-evidence.json](../../cpppj/recovery-hash-evidence.json)에 바이너리·기대값·생성/공통 도구 SHA-256, 제어 워드·실행 범위·함수 대응을 저장했다. [decomp_refine.py](../../tools/decomp_refine.py)는 이 해시·x87 상태·assert 0·함수 존재/`ret N`을 확인한 뒤 **5개** 검토 앵커를 적용한다. 초기화는 malloc 분기 제외 때문에 검토 앵커에서 제외했다. 현재 전체 대응 **2,496쌍·검토 24쌍**, strong 1,738/medium 707/weak 51이다.
+[hash.json](../../cpppj/hash.json)에 바이너리·기대값·생성/공통 도구 SHA-256, 제어 워드·실행 범위·함수 대응을 저장했다. [decomp_refine.py](../../tools/decomp_refine.py)는 이 해시·x87 상태·assert 0·함수 존재/`ret N`을 확인한 뒤 **5개** 검토 앵커를 적용한다. 초기화는 malloc 분기 제외 때문에 검토 앵커에서 제외했다. 현재 전체 대응 **2,496쌍·검토 24쌍**, strong 1,738/medium 707/weak 51이다.
 
 ```powershell
 python tools/decomp_hash_oracle.py

@@ -1,0 +1,123 @@
+{
+  "schema": 1,
+  "total": 3424,
+  "host": "HJOW-Athlon",
+  "editions": {
+    "originals": {
+      "returns": 1712,
+      "native_calls": {
+        "0044bfe0": 1488,
+        "0041c5b0": 2472,
+        "00494380": 1152,
+        "004ad710": 960,
+        "0049a840": 7992,
+        "004942b0": 1152,
+        "004adcb0": 2484,
+        "0049fce0": 2596,
+        "004adca0": 1242,
+        "0044c060": 1376,
+        "004ac550": 2064,
+        "004b22d0": 234,
+        "004b1b80": 234,
+        "0041d7a0": 90,
+        "004e49c0": 180
+      },
+      "boundaries": {
+        "004afb40": 1152,
+        "00416760": 1152,
+        "00491ac0": 1152,
+        "004acee0": 576,
+        "004b1a90": 168,
+        "00424090": 24,
+        "004a9d70": 12,
+        "20000180": 32
+      },
+      "space": {
+        "U": 90,
+        "R": 90
+      },
+      "assertions": 0,
+      "instructions": 424229
+    },
+    "originalCD": {
+      "returns": 1712,
+      "native_calls": {
+        "00462280": 1488,
+        "0040cb10": 1152,
+        "0040c800": 960,
+        "004ae4b0": 960,
+        "004abf50": 3024,
+        "0040ca40": 1152,
+        "0040c3b0": 2394,
+        "004aed30": 2484,
+        "004abae0": 2484,
+        "00444720": 2596,
+        "004aed20": 1242,
+        "00462480": 1376,
+        "004eb960": 228,
+        "004eb990": 228,
+        "00440a80": 90,
+        "004f161c": 180
+      },
+      "boundaries": {
+        "0040c5a0": 1152,
+        "004d89b0": 1152,
+        "0040c570": 1152,
+        "004acbc0": 576,
+        "004eb310": 112,
+        "004a6720": 32,
+        "00438c00": 16,
+        "20000180": 24
+      },
+      "space": {
+        "U": 90,
+        "R": 90
+      },
+      "assertions": 0,
+      "instructions": 342028
+    }
+  },
+  "files": {
+    "cpppj/src/o/RawDamageableBurning.cpp": "70f763107dd0a8ec1934fc15d61f2b76d21513cd9931c39beea5a455665e30a6",
+    "cpppj/src/o/RawDamageableBurning.h": "aaa63da16cc567245c04044c2d112c04999e485b81566e6dae6a4ed4a8d164f9",
+    "cpppj/src/o/RawPriestDamage.cpp": "fde7209a3e9e3727ce8a1e2b02e74e967c0a1c0dbaa287cd271596876b0f7c4c",
+    "cpppj/src/o/RawPriestDamage.h": "3488f9c6b6fa8e8de2a65429c8afbd1901b1f3a56b47ed92f374c97e1713845a",
+    "cpppj/tests/fixtures/priestdamage-x86.tsv": "40b8047e40fe0d1f0f8d9523f0516b8e201c9b4aeaca02698e73b2792c1ddbd0",
+    "cpppj/tests/PriestDamageTests.cpp": "f5436f409d52aa05cbcbda9b8507b305373994571b6dc346688cefbeaf743fce",
+    "extracted/assetregular/originalCD/creation.c": "8be2b172ced3cd0cdb179abd5722e1f4c092cff0e639562d74b6c5a7d285add8",
+    "extracted/assetregular/originalCD/functions.tsv": "68225246756277c7fb51a6c2d5886959e33dc568eac4dd2e7dd61bd960a28f0f",
+    "extracted/assetregular/originals/creation.c": "d8d68fa2e637f1f3b622a45e0d1b4a638fd5a300e29cf5a6545feaff89a753b2",
+    "extracted/assetregular/originals/functions.tsv": "539f2f4a8ba3c925d40fbbb292e07ea5da3a595566966b772e18902a2180997d",
+    "extracted/owner/originalCD/creation.c": "115d3f4790315c3647e18c087579cf3aa08af06cdbaeca42adbac1e82725af62",
+    "extracted/owner/originalCD/functions.tsv": "4e184997f62c2622b26b3fa4f047a2580a609d2d919f0e414a75e8efd49d4439",
+    "extracted/owner/originals/creation.c": "f9919c046d5259526946f106b47b6259fe5e04971f743d6fa02d6a5361b9dc16",
+    "extracted/owner/originals/functions.tsv": "3ea66dace80a85999a8b2c2dbadb4d5f1bd18b0dcdb0768f9c41075206c7c72d",
+    "extracted/prieststate/originalCD/creation.c": "4f4984e042fff39cc51d6e4ca8c47260f1a3b768aaa2e6df9ffebc48e82647a4",
+    "extracted/prieststate/originalCD/functions.tsv": "76489befe38ba5501a8559e245e0bbc0c4fa945f2c345ad806965538fe7bf4f5",
+    "extracted/prieststate/originals/creation.c": "2b223e27e39e3fe1fb6faf3bd44553f0c8b97dea73435a8914944b376003459b",
+    "extracted/prieststate/originals/functions.tsv": "9e2df28e61030ead366119eadbbbca11b2f944ae64720370b75f1d455ba3f084",
+    "extracted/victimdamage/originalCD/creation.c": "af48906e3bbd706758dc8c702bab786c36c5baeb0e1cca80b498c658ffc1065b",
+    "extracted/victimdamage/originalCD/functions.tsv": "3033fd096ec7f3ea26b1ebc5ecba5f37ea13548037f2945b904397e4e98540ec",
+    "extracted/victimdamage/originals/creation.c": "921d79ac3b265f7579265d381220e491cdac9ca1aaf8c33435f39ac04eb6fddb",
+    "extracted/victimdamage/originals/functions.tsv": "06345c1784f189620663b7c2abc8629dd7b0b6f1470a871696a7fdf95fe13ad9",
+    "extracted/victimdamage-helper/originalCD/creation.c": "947024f055978cee13c2a22f542a67294d2c09ca2481c83b0f8bee63897b224d",
+    "extracted/victimdamage-helper/originalCD/functions.tsv": "5c43367fc5a5ba73f250adf0ecb70bfb55dde8bc6a49f06c3d5865cd91ec8c07",
+    "extracted/victimdamage-helper/originals/creation.c": "10cff40ec0d259c95dddf8d0fad46bc82cdffb5779b7b6248d61e47c4603b8dd",
+    "extracted/victimdamage-helper/originals/functions.tsv": "e90598949981cc713fa4da32da92027111bcd5520f1c40e8d971b2489db622e4",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
+    "tools/decomp_priestdamage_oracle.py": "09c6d9dde6a6d9fd3c359d1ab85c624f0665c22d811517d0b7ad06e080e24b4b",
+    "tools/decomp_prieststate_oracle.py": "318f2f0f67ae946cec0325413da74eb6d0ab0be439b4d9d88baa070a266b1997",
+    "tools/ghidra/victimdamage-functions.json": "1118fba414e88a413d633039d1887710008a47cb5ce4a330414f3b5d8a35dbf7",
+    "tools/ghidra/victimdamage-helper-functions.json": "037cffdef46bbb142e897bd4d254b38f4940d4952b30f7886003ace0dedfb42b"
+  },
+  "os_calls": 0,
+  "limitations": [
+    "live 사제의실제Hit/HPsetter/rank와Damageable burning 판정몸체를실행한다.",
+    "회복조회/취소,frame setter,소유자/가상공간통지,burning find/create/destroy/sound는명시관찰경계다.",
+    "HP1 사제의빈감시체인은실제FormFinder로실행하며nonempty 실제의존삭제는C++연결검사및기존모듈근거다.",
+    "nonzero burning의실제파생생성/애니메이션몸체는후속이며이경계의성공을완료로세지않는다."
+  ],
+  "normal_return": true
+}

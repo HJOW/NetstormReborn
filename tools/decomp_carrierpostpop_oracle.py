@@ -23,7 +23,7 @@ POST = {
 POST['original1037'] = POST['originalCD']
 # 새 독립 관찰/근거 출력 경로다.
 FIXTURE = ROOT / 'cpppj/tests/fixtures/carrierpostpop-x86.tsv'
-REPORT = ROOT / 'cpppj/recovery-carrierpostpop-evidence.json'
+REPORT = ROOT / 'cpppj/carrierpostpop.json'
 
 
 def inputs():

@@ -23,6 +23,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: 경로 길이 검사
+        run: python tools/path_audit.py
+        working-directory: .
+
       # global.json 의 SDK 버전(10.0.x)을 설치
       - uses: actions/setup-dotnet@v4
         with:
@@ -42,6 +46,9 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: 경로 길이 검사
+        run: python tools/path_audit.py
 
       - name: 구성
         run: cmake -S cpppj -B cpppj/build -DCMAKE_BUILD_TYPE=Release

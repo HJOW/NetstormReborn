@@ -35,7 +35,7 @@ SPECS = {
 }
 # 생성 결과와 바이트 근거는 다른 작업의 fixture와 분리한다.
 FIXTURE = ROOT/'cpppj/tests/fixtures/regionpaint-x86.tsv'
-REPORT = ROOT/'cpppj/recovery-regionpaint-evidence.json'
+REPORT = ROOT/'cpppj/regionpaint.json'
 
 def digest(path):
     """원본/도구/기록의 SHA-256을 반환한다."""

@@ -64,7 +64,7 @@
 
 처음 집중 실행은7개 중5개 실패/2개 통과였으며 `extracted/priestworldbindings-focused-before-surface-alias.log`를 보존했다. 사제 shadow 플래그에 대한 합성 SHP 물리 프레임을 main 개수만 제공한 입력 오류를 바로잡았다. 동시에 독립 검토에서 발견한 별도 surface 지도 사본을 제거하고 실제 base 자산의 Pop으로 hash0/spot을 같이 등록했다. 이후 같은 hash0의 제거/복구 변이를 낙하가 다음 사건에서 읽는지와 동일 내용 사본의 생성 거부를 검사한다. 수정 뒤 빌드/집중 실행 결과는 아래 최종 기록으로 갱신한다.
 
-이동 선택은 독립 `decomp_priestworldevents_oracle.py`가 보호 PE의 실제 body/getter를 실행한 **2,872개** 입력(패치1,504/CD1,368)을 재생한다. 전체 유효 타입·balloon genus·프로세스 전역 변경·사제/windWalker 전역 충돌을 포함한다. CD 진단 보고만 명시 대체하며 결과 선택은 실제 원본이 계산한다. 재생성은 새로운 관찰 수에 중복 합산하지 않는다. `recovery-priestworldevents-evidence.json`의 SHA/입력/실제 실행 목록 감사로 확인한다.
+이동 선택은 독립 `decomp_priestworldevents_oracle.py`가 보호 PE의 실제 body/getter를 실행한 **2,872개** 입력(패치1,504/CD1,368)을 재생한다. 전체 유효 타입·balloon genus·프로세스 전역 변경·사제/windWalker 전역 충돌을 포함한다. CD 진단 보고만 명시 대체하며 결과 선택은 실제 원본이 계산한다. 재생성은 새로운 관찰 수에 중복 합산하지 않는다. `priestworldevents.json`의 SHA/입력/실제 실행 목록 감사로 확인한다.
 
 기존 fixture로 복원한 종속 조회/SP/HP/낙하/다른 모듈의 재사용에는 새 관찰 수를 더하지 않는다. 신규 관찰은 위 이동 선택2,872개뿐이며 배치 forcePlacement 분기는 명시 입력으로 사용한다. 사제 중립 하위 몸체와 실제 소리 장치는 이 콘솔 검사의 범위 밖이다. 캠페인 1-1 로딩/건설/전투/운반/의식/완주 및 전체 원본 동일성은 root의 실제 월드 연결과 후속 실행 대조로 검증해야 한다.
 

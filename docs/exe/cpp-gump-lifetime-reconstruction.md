@@ -53,7 +53,7 @@ ABI/보존 레지스터/스택/x87/SEH/허용 불연속 실행·쓰기/인접 �
 
 overlay 후보 입력은 등록 직후 표를 관찰한다. 등록/해제 왕복의 최종 상태에서는 선택 위치가 사라지므로, 여러 빈 칸의 등록 결과를 별도 기록했다. 초기 변이 기록은 `extracted/gumplifetime-mutations-initial.log`, 최종 519행 입력의 13개 재검사는 `extracted/gumplifetime-mutations.log`에 보존했다.
 
-자료: `cpppj/recovery-gumplifetime-evidence.json`, `cpppj/tests/fixtures/gumplifetime-x86.tsv`, `extracted/gumplifetime/{originals,originalCD,original1037}/`, `extracted/gumplifetime-{build,focused,ctest,audits,mutations}.log`.
+자료: `cpppj/gumplifetime.json`, `cpppj/tests/fixtures/gumplifetime-x86.tsv`, `extracted/gumplifetime/{originals,originalCD,original1037}/`, `extracted/gumplifetime-{build,focused,ctest,audits,mutations}.log`.
 
 새 코드·도구·fixture·문서는 UTF-8이고 주석은 한국어다. AGENTS.md·보호 원본·dotnetpj/인계 변경·커밋/푸시는 없다.
 

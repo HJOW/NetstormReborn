@@ -13,7 +13,7 @@ from unicorn.x86_const import (UC_X86_REG_EAX,UC_X86_REG_EBX,UC_X86_REG_ECX,UC_X
 # 실제 Process 가상 Prepare이며 경로 배열의 하위 Prepare와 구분한다.
 PREPARE={'originals':0x48a200,'originalCD':0x47e710}
 FIXTURE=ROOT/'cpppj/tests/fixtures/pathprepare-x86.tsv' # 독립 원본 시각 배열 관찰이다.
-REPORT=ROOT/'cpppj/recovery-pathprepare-evidence.json' # 실제 범위·소스·PE SHA와 반환/정밀도 근거다.
+REPORT=ROOT/'cpppj/pathprepare.json' # 실제 범위·소스·PE SHA와 반환/정밀도 근거다.
 POINTS=[(10,20),(13.1,24.7),(15.2,19.8),(23.9,27.6)] # 원본 float 배열에 공급할 합성 입력 좌표다.
 DIRECTIONS=[7,0,4,6] # 원본 가상 함수가 첫 방향을 직접 읽도록 준비한 입력이다.
 SOURCE_PATHS=SOURCES+['tools/decomp_pathprepare_oracle.py','cpppj/src/o/RawPathProcess.cpp'] # 소스 감사 대상이다.
@@ -52,7 +52,7 @@ def generate():
         print(edition,'가상 Prepare24개 정상 반환')
     with FIXTURE.open('w',encoding='utf-8',newline='') as stream:
         stream.write('# 실제 Process 가상+0x30의 타입/override 판본 차이. 원본 게임 설정인 x87 53비트 결과이며64비트 차이는 보고서에 별도 보존한다.\n');csv.writer(stream,delimiter='\t',lineterminator='\n').writerows(rows)
-    data_report=json.loads((ROOT/'cpppj/recovery-pathdata-evidence.json').read_text(encoding='utf-8'))
+    data_report=json.loads((ROOT/'cpppj/pathdata.json').read_text(encoding='utf-8'))
     report=dict(cases=len(rows),scope='실제 Process 가상 Prepare와 하위 Path 시각 함수; 명시 타입 포인터 입력',observations=observations,
       sources={path:digest(ROOT/path) for path in SOURCE_PATHS},exports=data_report['exports'],protected_pe=data_report['protected_pe'],fixture=digest(FIXTURE),
       last_decompile_host='VM-W11-CODEX',last_decompile_date='2026-10-13',game_gui_runs=0,fixture_control_word='0x027f',precision_differences=precision_differences)

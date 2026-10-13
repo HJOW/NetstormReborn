@@ -7,8 +7,8 @@ from pathlib import Path
 from decomp_carrierarrival_oracle import ROOT,FIXTURE,REPORT as NATIVE,sha
 import analyze_genus_at_public_lineage as genus
 
-REPORT=ROOT/'cpppj/recovery-carrierarrival-cpp-binding-evidence.json' # 현재 새도착 전수/같은Host 사제 소비자의 별도 C++ 근거다.
-HISTORY=ROOT/'cpppj/recovery-history/carrierarrival-initial-smoke' # 초기10smoke는 새전수406에 다시 합산하지 않는다.
+REPORT=ROOT/'cpppj/carrierarrival-cpp-binding.json' # 현재 새도착 전수/같은Host 사제 소비자의 별도 C++ 근거다.
+HISTORY=ROOT/'cpppj/hist/carrierarriv-91d3e' # 초기10smoke는 새전수406에 다시 합산하지 않는다.
 TESTS=('cpppj/tests/CarrierArrivalTests.cpp','cpppj/tests/PriestPathArrivalHostTests.cpp') # 실제 전수와 같은Host 걷기/도착/삭제를 각각 구분한다.
 
 def expected():
@@ -20,7 +20,7 @@ def expected():
     assert len(rows)==406 and len({(row[0],row[1]) for row in rows})==406
     assert all(item['normal_inputs']==203 and item['returns']==406 for item in native['editions'].values())
     assert json.loads(genus.REPORT.read_text(encoding='utf-8'))==genus.expected()
-    initial=json.loads((HISTORY/'cpppj/recovery-carrierarrival-evidence.json').read_text(encoding='utf-8'));assert initial['total']==10 and initial['smoke']
+    initial=json.loads((HISTORY/'cpppj/carrierarrival.json').read_text(encoding='utf-8'));assert initial['total']==10 and initial['smoke']
     history={path.relative_to(ROOT).as_posix():sha(path) for path in sorted(HISTORY.rglob('*')) if path.is_file()};assert len(history)==5
     files={Path(__file__),NATIVE,FIXTURE,genus.REPORT,ROOT/'cpppj/tests/CarrierArrivalSupport.h',*(ROOT/name for name in TESTS)}
     # 실제 같은 풀에서 소비하는 기존/신규 HP/공간/경로/내용물/섬/부모몸체 전체를 현재SHA로 연결한다.

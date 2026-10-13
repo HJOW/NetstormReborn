@@ -18,7 +18,7 @@ from unicorn.x86_const import UC_X86_REG_EAX, UC_X86_REG_ECX, UC_X86_REG_ESP, UC
 BUILDER, CUSTOM, RECORDS, CODES = 0x11600000, 0x11700000, 0x11800000, 0x11900000
 CHUNK_BYTES, ISLAND_BYTES = 12 + 256 * 12, 4 + 100 * 32
 FIXTURE = ROOT / "cpppj/tests/fixtures/islandbuilder-x86.tsv"
-REPORT = ROOT / "cpppj/recovery-islandbuilder-evidence.json"
+REPORT = ROOT / "cpppj/islandbuilder.json"
 # 실제primary/helper 주소와 원본global inline 지도/목록을 판본별로 분리한다.
 SPECS = {
     "originals": dict(place=0x46dba0, all=0x46dd70, constructor=0x46d9b0, attach=0x46da20,
@@ -192,7 +192,7 @@ def generate(smoke=False):
                ROOT/"cpppj/src/o/CanonDecoder.h",ROOT/"cpppj/src/o/CanonDecoder.cpp",ROOT/"cpppj/src/o/CanonDecoderTables.inc",
                ROOT/"cpppj/src/o/RiftType.h",ROOT/"cpppj/src/o/RiftType.cpp",ROOT/"cpppj/src/o/ChunkMap.h",ROOT/"cpppj/src/o/ChunkMap.cpp",
                ROOT/"cpppj/src/o/RawIslandRuntime.h",ROOT/"cpppj/src/o/RawIslandRuntime.cpp",
-               ROOT/"cpppj/recovery-islandbuilder-decoder-lineage-evidence.json",ROOT/"tools/analyze_islandbuilder_decoder_lineage.py"}
+               ROOT/"cpppj/islandbuilder-decoder-lineage.json",ROOT/"tools/analyze_islandbuilder_decoder_lineage.py"}
     cases = inputs()
     if smoke:
         cases = cases[:8]+cases[512:520]+cases[-8:]

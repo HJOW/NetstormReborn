@@ -13,7 +13,7 @@ SPEC={
 }
 SURFACE_STORAGE=HEAP+0x10000 # CD의 직접 표면조회가 읽는256x256 WORD 입력의 전용별도영역이다.
 FIXTURE=ROOT/'cpppj/tests/fixtures/daislifecycle-current-x86.tsv' # 각실제입력의요청/raw/Player필드다.
-REPORT=ROOT/'cpppj/recovery-daislifecycle-current-evidence.json' # 마지막전체Damageable경계를분리한현재근거다.
+REPORT=ROOT/'cpppj/daislifecycle-current.json' # 마지막전체Damageable경계를분리한현재근거다.
 
 def inputs():
     """새5/5 entry의실제각게이트·현재owner·SID일치/비일치만구성한다."""

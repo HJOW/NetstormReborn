@@ -51,7 +51,7 @@ count와 들어온 payload는 이 분기에서 읽지 않는다. 기존 Regular 
 
 새 [C++ 검사](../../cpppj/tests/PriestFallTests.cpp)는 세 PE 관찰 재생과 **실제 factory/owner/보호막 조회→공유 form 타입 61 부착→Kernel 첫 실행/재예약→이른 시각 생략→지면 도착/보호막 삭제 요청→실제 form 삭제/Kernel 제거**를 두 raw 배치에서 검사한다. 실제 보호막 Pop/destroy와 프레임 효과 경계는 공간 등록/해제·현재 상태 변경 입력을 공급한다. 회복/낙하 분배 합성과 미복원 사건/잘못된 연결도 검사한다.
 
-새 [fixture](../../cpppj/tests/fixtures/priestfall-x86.tsv)·[근거 JSON](../../cpppj/recovery-priestfall-evidence.json)은 UTF-8/LF다. 기존 fixture/감사 도구는 수정하지 않았다. 누적 인계 **354,106 + 1,368 = 355,474개**다.
+새 [fixture](../../cpppj/tests/fixtures/priestfall-x86.tsv)·[근거 JSON](../../cpppj/priestfall.json)은 UTF-8/LF다. 기존 fixture/감사 도구는 수정하지 않았다. 누적 인계 **354,106 + 1,368 = 355,474개**다.
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools/ghidra/export_functions.ps1 -Name priestfall

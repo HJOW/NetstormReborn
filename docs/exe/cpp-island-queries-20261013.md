@@ -46,13 +46,13 @@ CD의 실제 기존callee 호출은 x87반복 포함 Exists/validId각18912회�
 
 - `cpppj/src/o/RawIslandQueries.h/.cpp`, `cpppj/tests/IslandQueriesTests.cpp`.
 - `tools/decomp_islandqueries_oracle.py`, `tools/ghidra/islandqueries-functions.json`.
-- `cpppj/recovery-islandqueries-evidence.json`, `cpppj/tests/fixtures/islandqueries-x86.tsv`.
+- `cpppj/islandqueries.json`, `cpppj/tests/fixtures/islandqueries-x86.tsv`.
 - `extracted/islandqueries-oracle-final.log`, `extracted/islandqueries/{originals,originalCD}/{creation.c,functions.tsv}`.
 
-fixture SHA는 `9a95feaf0093fe87a35d095f4d9233a8a560aff5e225e649e6bd4e8e8e359ebb`, 실행기 SHA는 `8d245aba52c11454f91ff7a86e36db01dd2cd23c43b11c3f5a52ca95b324eb1e`다. PE/내보내기/현재신규source와 기존Runtime파일 SHA는 보고서에 함께 고정했다.
+fixture SHA는 `9a95feaf0093fe87a35d095f4d9233a8a560aff5e225e649e6bd4e8e8e359ebb`, 실행기 SHA는 `39f222b4638e064684f50f18c13c9eb4a865bc5c252b6020fff6b531e7c6cfc0`다. PE/내보내기/현재신규source와 기존Runtime파일 SHA는 보고서에 함께 고정했다.
 
-C++ **3개 집중검사**는 양판본 전수와 실제 Add/Delete/Reset·현재fort/liveDWORD 변경·물리overflow를 대상으로 준비했다. 2026-10-14 단위09의교정후공통Release는경고/오류0이며 `extracted/campaign-runtime9-IslandQueries_initial-tests.log`에서 **3tests/실패0·양판본8490개전수**가통과했다. 09 전체검사는다른단위교정뒤별도후속이며 아직전체09완료로세지않는다. 독립 검색복원은 초기섬 생성·실제 Player선택/승패·UI/캠페인1-1 완주 검증을 대체하지 않는다.
+C++ **3개 집중검사**는 양판본 전수와 실제 Add/Delete/Reset·현재fort/liveDWORD 변경·물리overflow를 대상으로 준비했다. 2026-10-14 단위09의교정후공통Release는경고/오류0이며 `extracted/run9-IslandQueries_first.log`에서 **3tests/실패0·양판본8490개전수**가통과했다. 09 전체검사는다른단위교정뒤별도후속이며 아직전체09완료로세지않는다. 독립 검색복원은 초기섬 생성·실제 Player선택/승패·UI/캠페인1-1 완주 검증을 대체하지 않는다.
 
-공통 등록 전에 정적검토로 검사장면의 `SidPool(edition,128,false)`가 원본 predictable SID영역보다 작아 생성 시 거부되는 결함을 발견했다. root 승인으로 해당 한 줄만 기존 검사상수 **kCapacity24000**으로 교정했다. production/원본실행기/fixture8490/PE/export와 이전 모든 나머지 소스는 그대로다. 교정전 전체검사/전체native보고서와 SHA는 `recovery-islandqueries-pool-correction-evidence.json`에 내장했고 `analyze_islandqueries_pool_correction.py`가 한줄 역변환과 이전 전체출처 불변을 감사한다. current native보고서는 이 lineage/current검사SHA를 연결한다. **새native0**이며 교정당시C++실행전상태와최종09집중통과를구분한다.
+공통 등록 전에 정적검토로 검사장면의 `SidPool(edition,128,false)`가 원본 predictable SID영역보다 작아 생성 시 거부되는 결함을 발견했다. root 승인으로 해당 한 줄만 기존 검사상수 **kCapacity24000**으로 교정했다. production/원본실행기/fixture8490/PE/export와 이전 모든 나머지 소스는 그대로다. 교정전 전체검사/전체native보고서와 SHA는 `islandqueries-pool-correction.json`에 내장했고 `analyze_islandqueries_pool_correction.py`가 한줄 역변환과 이전 전체출처 불변을 감사한다. current native보고서는 이 lineage/current검사SHA를 연결한다. **새native0**이며 교정당시C++실행전상태와최종09집중통과를구분한다.
 
-2026-10-14 root의 등록전 검토로 실제 TestSupport 등록매크로가 `TEST_CASE`임을 확인했고 새3개 등록의 `TEST` 식별자만 교정했다. `recovery-islandqueries-macro-correction-evidence.json`은 직전 전체검사/native보고서/pool근거/pool실행기 원문과 SHA를 내장한다. 새매크로실행기가세identifier 역변환·이전전체나머지소스/fixture8490·새native0을 감사하며, pool근거는 `macro_successor`로 현재검사와 옛pool 교정전/후를 연결한다. native/macro/pool 세 감사가 모두 통과했다. 정적등록교정뒤실제3검사/8490 CPP대조를완료했고현재source/fixture/report는동결한다.
+2026-10-14 root의 등록전 검토로 실제 TestSupport 등록매크로가 `TEST_CASE`임을 확인했고 새3개 등록의 `TEST` 식별자만 교정했다. `islandqueries-macro-correction.json`은 직전 전체검사/native보고서/pool근거/pool실행기 원문과 SHA를 내장한다. 새매크로실행기가세identifier 역변환·이전전체나머지소스/fixture8490·새native0을 감사하며, pool근거는 `macro_successor`로 현재검사와 옛pool 교정전/후를 연결한다. native/macro/pool 세 감사가 모두 통과했다. 정적등록교정뒤실제3검사/8490 CPP대조를완료했고현재source/fixture/report는동결한다.

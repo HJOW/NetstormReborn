@@ -50,6 +50,6 @@ Exists는 true로 정규화하지 않고 현재 존재DWORD 자체를 반환한�
 
 원본실행기는 현재`island-runtime` 정밀범위 **패치12/CD14**와 보호PE를 실행한다. patch의작은Point유효/표면helper 범위는 현호스트 전체정밀 metadata에서 읽고 SHA를 고정했다. 실제기록/owner/범위/표면WORD/Player쓰기는 native 명령이고 **가상레지던스owner와 assertion만 관찰경계**다. 양판본smoke17개씩과 전수2018개 생성, 현재SHA/고유입력/정상·진단분리/두정밀도복귀 감사가 통과했다. OS/게임/GUI진입은0이다.
 
-자료는 `tools/decomp_islandruntime_oracle.py`, `tools/ghidra/island-runtime-functions.json`, `cpppj/recovery-islandruntime-evidence.json`, `cpppj/tests/fixtures/islandruntime-x86.tsv`, `extracted/islandruntime-oracle-final.log`다. 공통08의 `extracted/campaign-runtime8-IslandRuntime_-initial-tests.log`에서 **C++3 tests와 양판본2018개 전수대조(정상1238/assert780)** 및 missing/물리100기록경계 거부가 모두 통과했다. 08 전체검사/최종단위 완료는 아직 별도 진행중이다.
+자료는 `tools/decomp_islandruntime_oracle.py`, `tools/ghidra/island-runtime-functions.json`, `cpppj/islandruntime.json`, `cpppj/tests/fixtures/islandruntime-x86.tsv`, `extracted/islandruntime-oracle-final.log`다. 공통08의 `extracted/run8-IslandRuntime_-first.log`에서 **C++3 tests와 양판본2018개 전수대조(정상1238/assert780)** 및 missing/물리100기록경계 거부가 모두 통과했다. 08 전체검사/최종단위 완료는 아직 별도 진행중이다.
 
 원본의 물리100기록밖Add/GetBounds는 메모리경계오류 입력으로 구분하며 정상반환을 꾸미지 않는다. C++은 해당범위를 진단한다. 전체실제섬생성/맵배치/WorldData이관·가상파생owner·GUI/캠페인플레이/완주를 검증한 보고서는 아니다.

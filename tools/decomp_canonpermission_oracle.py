@@ -27,7 +27,7 @@ SPEC={
 SPEC['original1037']=dict(SPEC['originalCD'])
 # 독립 기대값·근거 파일과 고정 입력 순서다. 기대 판정 함수는 없다.
 FIXTURE=ROOT/'cpppj/tests/fixtures/canonpermission-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-canonpermission-evidence.json'
+REPORT=ROOT/'cpppj/canonpermission.json'
 KEYS=('kind','ready','editor','allies','anyOwner','current','owner','forward','reverse','selected','sid','type','x','y','mutation')
 
 

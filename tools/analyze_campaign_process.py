@@ -10,7 +10,7 @@ from pathlib import Path
 
 # 이번 단위의 현재 구현은 앞선 공간/사제 단위 기록과 별도로 저장한다.
 ROOT=Path(__file__).resolve().parent.parent
-REPORT=ROOT/'cpppj/recovery-campaign-process-evidence.json'
+REPORT=ROOT/'cpppj/campaign-process.json'
 UNITS={'fortobjectload':'total','fortfinishowner':'total','gunprocess':'total','pathruntime':'cases','processtransmit':'total'}
 # 집중 성공 로그는 최초 실패/교정 전 로그와 구별한다.
 FOCUSED={
@@ -79,7 +79,7 @@ def main():
     report['focused']=FOCUSED
     # 각 단위의 고유 입력 행 수만 더하며 재실행·정밀도 반복·setup 내부 호출수는 더하지 않는다.
     for name,key in UNITS.items():
-        evidence=f'cpppj/recovery-{name}-evidence.json';data=json.loads((ROOT/evidence).read_text(encoding='utf-8'))
+        evidence=f'cpppj/{name}.json';data=json.loads((ROOT/evidence).read_text(encoding='utf-8'))
         count=data[key];assert isinstance(count,int) and count>0;report['native_units'][name]=count
         files.extend((evidence,f'cpppj/tests/fixtures/{name}-x86.tsv',f'tools/decomp_{name}_oracle.py'))
     report['native_cases']=sum(report['native_units'].values())

@@ -50,7 +50,7 @@ factory 생성 뒤 `+18 WORD`에 표시 타입을, `+12 WORD`에 패턴을 쓴�
 - 새 관찰 **1,899개**: 판본마다 Return 528 + Create 101 + Factory 4 = 633개. 세 실제 PE × 두 x87 제어값 639/895에서 정상 루트 반환 **3,798회**, 누적 관찰 **470,967개**.
 - Return/Create의 factory·표면 알림·가상 부착·할당·Regular 생성은 명시 경계다. Factory 직접 검사는 factory·contained 생성자·빈 postCreate를 실제 명령으로 실행하고 SID 할당만 경계로 공급한다. 기존 SID 모듈의 독립 원본 검사는 그대로 유지한다.
 - 명령/쓰기 범위·스택·보존 레지스터·x87·SEH 머리 복구·사건/슬롯 주변 바이트·현재 전역·난수 상태·SHA/행 수/진입/정상 반환 집계를 감사한다. 원본 assert/게임/OS 호출 0.
-- fixture: [returnpiece-x86.tsv](../../cpppj/tests/fixtures/returnpiece-x86.tsv). 근거: [recovery-returnpiece-evidence.json](../../cpppj/recovery-returnpiece-evidence.json). 실행기: [decomp_returnpiece_oracle.py](../../tools/decomp_returnpiece_oracle.py).
+- fixture: [returnpiece-x86.tsv](../../cpppj/tests/fixtures/returnpiece-x86.tsv). 근거: [returnpiece.json](../../cpppj/returnpiece.json). 실행기: [decomp_returnpiece_oracle.py](../../tools/decomp_returnpiece_oracle.py).
 - Release 경고/오류 **0**·CTest 내부 **600개·실패 0**(147.79초, 전체 147.88초), 근거 감사 **94종 모두 통과**. 새 변이 12개 **모두 검출**(`--focused`, 변이 전 사본은 전체 검사 통과).
 
 재현 명령:

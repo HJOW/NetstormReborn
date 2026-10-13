@@ -27,7 +27,7 @@ SPECS = {
 # 완성 입력 재현 시드와 실제 관찰을 저장하는 독립 fixture/근거 파일이다.
 SEED = 0x4666d078
 FIXTURE = ROOT / 'cpppj/tests/fixtures/uireset-x86.tsv'
-REPORT = ROOT / 'cpppj/recovery-uireset-evidence.json'
+REPORT = ROOT / 'cpppj/uireset.json'
 PLAN = ROOT / 'tools/ghidra/uireset-functions.json'
 
 

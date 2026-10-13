@@ -46,7 +46,7 @@ SPECS = {
 SPECS['original1037'] = SPECS['originalCD']
 # 독립 관찰 fixture와 SHA/호출 경계 보고서 경로.
 FIXTURE = ROOT / 'dotnetpj/tests/Netstorm.Core.Tests/Fixtures/clockkernel-x86.tsv'
-REPORT = ROOT / 'dotnetpj/recovery-clockkernel-evidence.json'
+REPORT = ROOT / 'dotnetpj/clockkernel.json'
 
 
 def digest(path):

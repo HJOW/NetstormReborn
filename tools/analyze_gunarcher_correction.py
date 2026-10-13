@@ -8,9 +8,9 @@ from pathlib import Path
 from decomp_owner_oracle import ROOT, digest
 
 # 최초1690행/전체 보고서·source/test/oracle를 수정 전에 보존한 경로다.
-BEFORE=ROOT/'cpppj/recovery-history/gunarcher-initial'
-CHECKPOINT=ROOT/'cpppj/recovery-history/gunarcher-aim-corrected'
-REPORT=ROOT/'cpppj/recovery-gunarcher-correction-evidence.json'
+BEFORE=ROOT/'cpppj/hist/gunarcher-initial'
+CHECKPOINT=ROOT/'cpppj/hist/gunarcher-ai-fdb97'
+REPORT=ROOT/'cpppj/gunarcher-correction.json'
 CPP=ROOT/'cpppj/src/o/RawArcherAnimation.cpp'
 TEST=ROOT/'cpppj/tests/ArcherAnimationTests.cpp'
 # 검증 가능한 현재 source 두 수정 및 설명과 입력 수정의 역변환이다.
@@ -68,7 +68,7 @@ def audit():
     """이전 전체 SHA를 실제 snapshot 또는 불변 파일과 검사하고 명시 수정만 허용한다."""
     # 두 실제 전체 보고서의 당시 source/test/oracle/fixture SHA를 각각 검사한다.
     for snapshot in (BEFORE,CHECKPOINT):
-        previous=json.loads((snapshot/'recovery-gunarcher-evidence.json').read_text(encoding='utf-8'))
+        previous=json.loads((snapshot/'gunarcher.json').read_text(encoding='utf-8'))
         for name,expected in previous['files'].items():
             saved=snapshot/Path(name).name;path=saved if saved.exists() else ROOT/name
             if digest(path)!=expected:raise RuntimeError('Archer 이전 근거 SHA 불일치 '+name)
@@ -86,7 +86,7 @@ def audit():
 
 def generate():
     """현재 source/report/로그와 전체 초기 snapshot을 새 관찰0 교정 근거로 저장한다."""
-    native= audit();paths=[Path(__file__),CPP,TEST,ROOT/'cpppj/recovery-gunarcher-evidence.json',ROOT/'cpppj/tests/fixtures/gunarcher-x86.tsv',ROOT/'extracted/campaign-runtime8-ArcherAnimation_-initial-tests.log',ROOT/'extracted/campaign-runtime8-ArcherAnimation_repaired-tests.log',*[path for snapshot in (BEFORE,CHECKPOINT) for path in snapshot.iterdir() if path.is_file()]]
+    native= audit();paths=[Path(__file__),CPP,TEST,ROOT/'cpppj/gunarcher.json',ROOT/'cpppj/tests/fixtures/gunarcher-x86.tsv',ROOT/'extracted/run8-ArcherAnimation_-first.log',ROOT/'extracted/run8-ArcherAnimation_fixed.log',*[path for snapshot in (BEFORE,CHECKPOINT) for path in snapshot.iterdir() if path.is_file()]]
     REPORT.write_text(json.dumps(dict(schema=2,host='HJOW-Athlon',native_rows=1690,normal=1688,prefix=2,new_unique_rows=0,changes=['실제 target0 방향 계수90을 적용(초안45 교정)','실제Host 검사 입력 type71.group=0 공급','실제 helper float0.5 가산 후 절삭 적용','실제 Host 서버 풀 및 GunProcess.WritePacket 송신 연결'],initial_full_snapshot=True,aim_corrected_full_snapshot=True,rounding_pe=native,files={path.relative_to(ROOT).as_posix():digest(path) for path in sorted(paths)}),ensure_ascii=False,indent=2)+'\n',encoding='utf-8');print(json.dumps(dict(verified=True,native_rows=1690,new_unique_rows=0),ensure_ascii=False))
 
 

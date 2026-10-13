@@ -1,0 +1,13 @@
+{
+  "files": {
+    "tools/analyze_dude_space_predicate_scope.py": "1cceeaee920dce66cbcbf80cd9eee77e04cfd77514139bc9ae4903a74a7c6688",
+    "cpppj/dude-space-predicate-scope.json": "e83eefd801f16fe24790459da63cad8eb5b54000764309c6ab833bda8b05fad2",
+    "cpppj/dude-space.json": "4542f389876c8ab43da265e736a829fca3012ef088f4150d603ad74fc679623d",
+    "tools/decomp_dude_space_oracle.py": "12d5ec853070ee5f39da0e28fead3918141138d146f803ed1b1266e645a5541e",
+    "cpppj/tests/DudeSpaceTests.cpp": "d4ad98bc757b744b18836ec5bb19d2c0c0973005fd4f6ec1d0edda52f564b624",
+    "cpppj/tests/DudeSpaceSupport.h": "e77396ff164bf83e577f2c1694e967b57da9a67f8f9a0bea42d4182fcc182242",
+    "cpppj/tests/fixtures/dude-space-x86.tsv": "1c931c029fe455c96325aecc37245d83dc78d94ba285b686783cfd9dd154600e",
+    "docs/exe/cpp-dude-space-20261014.md": "0c62a3d5bc746a97801a2c516f9f7c58c1890b36cb26cf03b92fdeb6666ae021"
+  },
+  "new_native_inputs": 0
+}

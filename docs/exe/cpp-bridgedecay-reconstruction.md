@@ -2,7 +2,7 @@
 
 2026-10-07. **1차 기준은 10.78**이다. [다리 계산](cpp-bridge-reconstruction.md)과 [표면 이웃·방문 목록](cpp-surface-reconstruction.md)에서 따로 복원해 둔 조각을 묶는 상위 함수 — 붕괴 스캔, 스캔이 다리 한 칸에 하는 처리, 수명 감소의 뒤쪽 절반, 금 간/보통 프레임 전환, 다리 destroy 재정의 — 를 옮기고 세 실제 PE의 기계어와 대조했다. 호스트 `DESKTOP-HJOW`에서 작업했으며 원본/복사본 게임·업데이터·클론 창은 실행하지 않았다. Ghidra 읽기 전용 헤드리스, 제한된 Unicorn 함수 실행, 콘솔 빌드/CTest만 사용했다.
 
-소스는 [Bridge.h](../../cpppj/src/o/Bridge.h)·[Bridge.cpp](../../cpppj/src/o/Bridge.cpp), 검사는 [BridgeDecayTests.cpp](../../cpppj/tests/BridgeDecayTests.cpp), 기대값은 [bridgedecay-x86.tsv](../../cpppj/tests/fixtures/bridgedecay-x86.tsv), 실행 도구는 [decomp_bridgedecay_oracle.py](../../tools/decomp_bridgedecay_oracle.py), 실행 기록은 [recovery-bridgedecay-evidence.json](../../cpppj/recovery-bridgedecay-evidence.json)이다.
+소스는 [Bridge.h](../../cpppj/src/o/Bridge.h)·[Bridge.cpp](../../cpppj/src/o/Bridge.cpp), 검사는 [BridgeDecayTests.cpp](../../cpppj/tests/BridgeDecayTests.cpp), 기대값은 [bridgedecay-x86.tsv](../../cpppj/tests/fixtures/bridgedecay-x86.tsv), 실행 도구는 [decomp_bridgedecay_oracle.py](../../tools/decomp_bridgedecay_oracle.py), 실행 기록은 [bridgedecay.json](../../cpppj/bridgedecay.json)이다.
 
 **이 단계의 결과물은 계산 계층이다.** 실제 객체 삭제(Unpop·그래프 분할·SID 반납), 낙하, 소리, 화면 갱신은 "사건"으로 돌려주며 수행하지 않는다. raw GameWorld에 연결하지 않았으므로 미션에서 다리가 무너지는 것은 아직 아니다.
 

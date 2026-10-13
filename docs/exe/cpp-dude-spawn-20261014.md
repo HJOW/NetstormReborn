@@ -45,9 +45,9 @@
 
 현재288의 최초 I 프레임 지정은 저장된 해시 단계와 현재 단계가 같아 Unpop을 호출하지 않는다. 이후 별도 실제Birth→Unpop0→Repop50의 정상48실행/고유36입력은 같은 해시/상태/표시를 관찰했다. 이 Dude 경로에서도 spot 크기 검사에는 들어가지 않아 공유 SquidUnpop의 추가 변경이 필요하지 않다. 실제 연속 이동/삭제 부모 및 전체 수명은 후속이다.
 
-기준12 **`db9b626c0a9c6b9440c6b181dfc401506a07d3e4`**의 전체 Git/작업 자료를 `recovery-history/dude-postpop-baseline`에 보존했다. 작업156파일·Git104파일·기존27보고서·39 fixture를 저장했으며 최초288 native/draft 보고서는 당시 SHA를 그대로 유지한다. `analyze_dude_postpop_binding_lineage.py`/별도 보고서는 공유세파일의 새 선언/분배/크기 검사만 정확 역변환해 이전 전체 본문·작업 바이트를 확인하고 현재 소비자 SHA를 별도로 연결한다. 새 native 입력은0이며 C++ 공유 결과는 후속 종합 보고서에서 기록한다. 옛 native 도구의 직접 `--verify`는 당시 공유 소스 SHA를 검사하므로 현재 분배 변경은 이 새 binding 감사로 확인한다.
+기준12 **`db9b626c0a9c6b9440c6b181dfc401506a07d3e4`**의 전체 Git/작업 자료를 `hist/dude-postpop-aa53f`에 보존했다. 작업156파일·Git104파일·기존27보고서·39 fixture를 저장했으며 최초288 native/draft 보고서는 당시 SHA를 그대로 유지한다. `analyze_dude_postpop_binding_lineage.py`/별도 보고서는 공유세파일의 새 선언/분배/크기 검사만 정확 역변환해 이전 전체 본문·작업 바이트를 확인하고 현재 소비자 SHA를 별도로 연결한다. 새 native 입력은0이며 C++ 공유 결과는 후속 종합 보고서에서 기록한다. 옛 native 도구의 직접 `--verify`는 당시 공유 소스 SHA를 검사하므로 현재 분배 변경은 이 새 binding 감사로 확인한다.
 
-최초 미컴파일 C++ 초안에 없던 `BaseFileSystem::Root()` 접근이 있어 명시 판본 경로 멤버로 옮겼다. 당시 production2/test/tool/fixture/report **전체6파일**을 `recovery-history/dudespawn-initial`에 보존했다. 정확 세 변화 역변환과 fixture288·원본도구·production 불변은 `analyze_dudespawn_draft_lineage.py`/별도 보고서로 감사하며 새native0이다. 이것은 빌드 성공이나 새로운 원본 입력을 의미하지 않는다.
+최초 미컴파일 C++ 초안에 없던 `BaseFileSystem::Root()` 접근이 있어 명시 판본 경로 멤버로 옮겼다. 당시 production2/test/tool/fixture/report **전체6파일**을 `hist/dudespawn-initial`에 보존했다. 정확 세 변화 역변환과 fixture288·원본도구·production 불변은 `analyze_dudespawn_draft_lineage.py`/별도 보고서로 감사하며 새native0이다. 이것은 빌드 성공이나 새로운 원본 입력을 의미하지 않는다.
 
 실제 task5103/5104의 부모 드롭·DudePath24 생성/이동·피해/삭제와 GameWorld 설치·캠페인1-1 완주는 아직 후속이다. 빈 effect로 전체 드롭 완료를 표시하지 않는다.
 

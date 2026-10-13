@@ -1,0 +1,236 @@
+{
+  "last_decompile_host": "HJOW-Athlon",
+  "recorded_at": "2026-10-13T00:22:47.978767+09:00",
+  "method": "두 실제 PE 읽기 전용 정적 내보내기·가상 표/기계어 판독; 게임/에뮬레이터 실행 없음",
+  "cpp_comparison": "미수행: 새 테스트 추가/실행·독립 PE/C++ 동작·GUI/게임 실행 없음",
+  "new_original_observations": 0,
+  "new_cpp_comparisons": 0,
+  "implementation": {
+    "values": "signed 범위 정렬/동률 +1·page 상한만 제한·위치 제한·범위 변경에서 위치 두 번 적용·DWORD 감김",
+    "callbacks": "값 저장 후 현재 void·Push 뒤 현재 x/y→Attach 또는 Redraw(false)·다음 적용의 현재 position",
+    "attach": "기본 Attach→현재 세 자식 Push→화살표/트랙 크기/부착→양 끝 포함 손잡이 rect·절삭 두께/저장 전 배율",
+    "geometry": "page/position×가용 길이÷범위; position-minimum 보정 없음·CD 두 번째 화살표 두께의 float32 좁힘",
+    "notifications": "click/repeat→step 2/1 부모 통지→미소비 시 step 증감→change; 손잡이 step 전달·항상 0 반환",
+    "thumb": "포함 rect/캡처·page 방향 4/3·release 통지 플래그 해제·poll release/전달 y·세로 DWORD 곱/절삭·NaN 세로 분기",
+    "editions": "패치 가로 캡처/이전 x 저장·CD 가로 무동작; 두 판본 세로만 위치 변환·min 보정 없음",
+    "binding": "같은 트리/이벤트/직접 캡처/프레임에 분배·TextGump 네 slider 경계를 실제 처리기로 연결"
+  },
+  "boundaries": [
+    "Slider/손잡이/화살표 전체 생성·파생 FrameGump/화살표/손잡이 실제 픽셀 Draw",
+    "다중 줄 TextGump 전체 생성/소멸·가상 Attach/Input·W 명령/전체 스타일 파서",
+    "자동 raw Client UI·메뉴/Form·건설/미션 완주",
+    "극단 x87 80비트 중간값·CD Pentium FDIV 보정 경로·독립 PE/C++ 동작 대조"
+  ],
+  "editions": {
+    "originals": {
+      "binary": "originals/Netstorm.exe",
+      "requested_functions": [
+        "004a6050",
+        "004a6320",
+        "004a6350",
+        "004a5cd0",
+        "004a6170",
+        "004a61c0",
+        "004a5ae0",
+        "004a6430",
+        "004a5c40",
+        "004a64b0",
+        "004a60e0"
+      ],
+      "exported_functions": [
+        "004a6050",
+        "004a6320",
+        "004a6350",
+        "004a5cd0",
+        "004a6170",
+        "004a61c0",
+        "004a5ae0",
+        "004a6430",
+        "004a5c40",
+        "004a64b0",
+        "004a60e0"
+      ],
+      "virtual_tables": {
+        "slider": {
+          "address": "005116f8",
+          "slots": [
+            "004d4c40",
+            "00466740",
+            "00464a50",
+            "00464ab0",
+            "00464d10",
+            "00464d60",
+            "00464560",
+            "00419df0",
+            "004a5cd0",
+            "004437f0",
+            "004a61c0",
+            "004665a0"
+          ],
+          "push": "00464560",
+          "attach": "004a5cd0",
+          "draw": "004437f0",
+          "input": "004a61c0",
+          "broadcast": "004665a0"
+        },
+        "thumb": {
+          "address": "00511668",
+          "slots": [
+            "004d4c40",
+            "00466740",
+            "00464a50",
+            "00464ab0",
+            "00464d10",
+            "00464d60",
+            "00464560",
+            "00419df0",
+            "00466750",
+            "004a5c40",
+            "004a5ae0",
+            "004a6430"
+          ],
+          "push": "00464560",
+          "attach": "00466750",
+          "draw": "004a5c40",
+          "input": "004a5ae0",
+          "broadcast": "004a6430"
+        }
+      },
+      "implemented_functions": [
+        "004a6050",
+        "004a6320",
+        "004a6350",
+        "004a5cd0",
+        "004a6170",
+        "004a61c0",
+        "004a5ae0",
+        "004a6430"
+      ],
+      "reference_only_functions": [
+        "004a5c40",
+        "004a64b0",
+        "004a60e0"
+      ]
+    },
+    "originalCD": {
+      "binary": "originalCD/NETSTORM.EXE",
+      "requested_functions": [
+        "00418700",
+        "004186d0",
+        "004187a0",
+        "00418170",
+        "004184e0",
+        "00418550",
+        "004179c0",
+        "00417ad0",
+        "00417b50",
+        "00417bd0",
+        "004178f0"
+      ],
+      "exported_functions": [
+        "00418700",
+        "004186d0",
+        "004187a0",
+        "00418170",
+        "004184e0",
+        "00418550",
+        "004179c0",
+        "00417ad0",
+        "00417b50",
+        "00417bd0",
+        "004178f0"
+      ],
+      "virtual_tables": {
+        "slider": {
+          "address": "00500c78",
+          "slots": [
+            "00418960",
+            "00492ff0",
+            "004937e0",
+            "00493840",
+            "00493bb0",
+            "00493c00",
+            "00493000",
+            "00403900",
+            "00418170",
+            "004039a0",
+            "00418550",
+            "00494260"
+          ],
+          "push": "00493000",
+          "attach": "00418170",
+          "draw": "004039a0",
+          "input": "00418550",
+          "broadcast": "00494260"
+        },
+        "thumb": {
+          "address": "00500be8",
+          "slots": [
+            "004187f0",
+            "00492ff0",
+            "004937e0",
+            "00493840",
+            "00493bb0",
+            "00493c00",
+            "00493000",
+            "00403900",
+            "00493070",
+            "00417b50",
+            "004179c0",
+            "00417ad0"
+          ],
+          "push": "00493000",
+          "attach": "00493070",
+          "draw": "00417b50",
+          "input": "004179c0",
+          "broadcast": "00417ad0"
+        }
+      },
+      "implemented_functions": [
+        "00418700",
+        "004186d0",
+        "004187a0",
+        "00418170",
+        "004184e0",
+        "00418550",
+        "004179c0",
+        "00417ad0"
+      ],
+      "reference_only_functions": [
+        "00417b50",
+        "00417bd0",
+        "004178f0"
+      ]
+    }
+  },
+  "files": {
+    "tools/analyze_scrollgump.py": "ec853f919df610836885bd963b3ba9bdcfeb8a448a7d792d47677891ae48f701",
+    "tools/analyze_styletext.py": "a69336b3064208e08e5fcea4e84f8427eeaa35512673c64f273c39b4b91877b1",
+    "tools/ghidra/scrollgump-functions.json": "e4b35b795f40e5aec3795bfdcf153c799c4d623d3b9b5dfe0c16fd6d963578fe",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/scrollgump/originals/creation.c": "32a73c9252a4f9a6a25af9c300d44752f13b121a72c2d3f7525e8b87d1a8274c",
+    "extracted/scrollgump/originals/functions.tsv": "7bdb4464f9d370460b96a809d55ab9588260a1ada16d79f93c18ea34e78f5da4",
+    "extracted/scrollgump/originals/assembly.txt": "092b296b4308ad0f385f9b3cef99420d047021190c11bdfb8149af7aedeb7909",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "extracted/scrollgump/originalCD/creation.c": "d5c8834a5741cf45a07e8bd0872abb43b2af070cfdf7be30ae7a7b1508695b56",
+    "extracted/scrollgump/originalCD/functions.tsv": "0bac3ae62b73bce236a948ff54dc9a5a2ce9d7121e95f22775b614f30b4750ae",
+    "extracted/scrollgump/originalCD/assembly.txt": "553137241fe11f04adad760a920026f9240af64f2bc1936fe9c146dd71d57205",
+    "cpppj/src/client/ScrollGump.h": "af8c66b537dd9b39f3c67064541896283b74fee5574f4b0d4416d74381b8db8d",
+    "cpppj/src/client/ScrollGump.cpp": "05da98a2e5746f7eef106df724d72556beaecb394b5a0e627fde8c57f4be8d4c",
+    "cpppj/src/client/TextGump.h": "c56cbfd1fd27369b4ff15b9c64fdb41ee6e277c46e0d79ae3a74b9501d892f7c",
+    "cpppj/src/client/TextGump.cpp": "6a78e6868367034b62b25588c77622a997c9752c8943c5d56fc893e8f9796c2a",
+    "cpppj/src/client/GumpTree.h": "998ea4788eac87aca2abc1077c320dfb547e6041f5f6818630afd375e6b8e71c",
+    "cpppj/src/client/GumpTree.cpp": "b623d624f056ef2117dea2393334e1d8b30666b2d8243e49dc53e5e56b633c56",
+    "cpppj/src/client/GumpCreate.h": "253ea65d7c91385d5ebe66e44c627c4ccc3dc9fe7a9749e2d0697c45fb3efa14",
+    "cpppj/src/client/GumpCreate.cpp": "4eb77de7063d33238c6bee30b8a282c89506c38172be0c4131afc7b843c33cd9",
+    "cpppj/src/client/GumpEvents.h": "0532493002f436fd2dc60a2c61c84981e75f9ebd10b56ca5b3de682d06bb830c",
+    "cpppj/src/client/GumpEvents.cpp": "d90edc0bf0342a1136f69225be6a0bc88a0ed8fabd94a460c05c05535761d3dd",
+    "cpppj/src/client/GumpInput.h": "9c582ff7e291434feff349bbe5a08859b0f168df15e404b390219f92734ba5c2",
+    "cpppj/src/client/GumpInput.cpp": "37f593093712024d5edadada70d6fe3d00470da109877f770b805ceb7cf06df0",
+    "cpppj/src/client/GumpFrame.h": "503708eff4865bd53189917287d72239135a398806673947bb50fc9de1e28353",
+    "cpppj/src/client/GumpFrame.cpp": "8b11b43508eb63675acd1d29d39974814575dcf437089a2c76632deec7b19871",
+    "cpppj/src/client/GumpCollection.h": "05073bcd17a7b1789dceb154f0c5ac7236d3baf06314456a34e180fef8cb2528",
+    "cpppj/src/client/GumpCollection.cpp": "d913b1ad8a6c786bfbae8820e0db09a7ec900b2674c8c49ba92541b475ea259b",
+    "cpppj/src/client/CMakeLists.txt": "b61a1ae63c6483aee0fdf0e911d059d0b321d446a00e03ff5f2786724d81e277"
+  }
+}

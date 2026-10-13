@@ -274,7 +274,7 @@ def main():
         'native_write_addresses_sizes':{'originals':len(a.writes),'originalCD':len(b.writes)},
         'limitations':['정수 기준점·정상 발자국과 flag 8 이웃 경로만','실제 함수 정상 반환까지 검증, assert 보고만 대체',
             '접합 고리·일반 공간 해시·실제 삭제/수명/그림/소유자 전파/배치 UI 미검증']}
-    (ROOT/'cpppj/recovery-surface-evidence.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
+    (ROOT/'cpppj/surface.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
     print(json.dumps({'cases':dict(counts),'assertions':report['assert_reports']}))
 
 

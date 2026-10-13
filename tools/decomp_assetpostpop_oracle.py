@@ -40,7 +40,7 @@ SPEC = {
 # 입력 칸과 독립 기대값 경로다.
 KEYS=('kind','flags','extra','battle','load','boss','reserve','animation','word','f1','cost','selected','has','list_count')
 FIXTURE=ROOT/'cpppj/tests/fixtures/assetpostpop-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-assetpostpop-evidence.json'
+REPORT=ROOT/'cpppj/assetpostpop.json'
 # 임시 new 반환·목록·지역 byte의 가상 주소다. 호스트 저장소와 무관하다.
 SCRATCH=0x11318000
 LIST_BASE=0x11319000

@@ -9,8 +9,8 @@ from pathlib import Path
 # 완료 단위10의 기준 커밋과 이번 공유 확장 출처다.
 ROOT = Path(__file__).resolve().parents[1]
 BASELINE = "a349e63"
-REPORT = ROOT / "cpppj/recovery-islandbuilder-decoder-lineage-evidence.json"
-HISTORY = ROOT / "cpppj/recovery-history/islandbuilder-decoder-baseline"
+REPORT = ROOT / "cpppj/islandbuilder-decoder-lineage.json"
+HISTORY = ROOT / "cpppj/hist/islandbuilde-b0a1c"
 # 기존 lookup 몸체를 재작성하지 않고 해당 실패 직후의 원본 보고만 선택적으로 요청한다.
 CHANGES = {
     "cpppj/src/o/CanonDecoder.h": [
@@ -84,9 +84,9 @@ def record():
     reports = []
     # 이번 수정의 이전 출처를 가진 완료 보고서만 선택하며 다른 진행 단위는 읽지 않는다.
     for path in tracked:
-        if path.startswith("cpppj/recovery-") and path.endswith("evidence.json") and "/recovery-history/" not in path:
+        if path.startswith("cpppj/recovery-") and path.endswith("evidence.json") and "/hist/" not in path:
             data = git_bytes(path)
-            if any(name.encode() in data for name in ["CanonDecoder.h", "CanonDecoder.cpp", "RiftType.h", "RiftType.cpp"]) or path == "cpppj/recovery-canontype-evidence.json":
+            if any(name.encode() in data for name in ["CanonDecoder.h", "CanonDecoder.cpp", "RiftType.h", "RiftType.cpp"]) or path == "cpppj/canontype.json":
                 reports.append(path)
     paths = set(CHANGES) | set(UNCHANGED) | set(reports)
     # 기존 관찰 보고서의 도구/fixture 전체와 각 보고서 자체를 기준 커밋에서 보존한다.

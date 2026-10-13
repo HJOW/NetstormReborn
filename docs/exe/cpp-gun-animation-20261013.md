@@ -27,7 +27,7 @@
 
 CD 정밀 내보내기는 `004a2cb0`에서 기존 잘못 소유된 함수 정의 때문에 19/77개로 끝났다. 원본 PE에서 `004a2cb0`은 assert fallback 가상 함수의 정상 시작이다. 큰 containing 함수를 삭제하지 않았다. 사용한 CD 짧은 가상 thunk/시간 setter는 Capstone으로 실제 RET 명령까지 범위를 따로 확인하고 그 코드 bytes를 근거 JSON에 저장했다. 실제 frame의 가상 표와 내보낸 본체는 계속 직접 대조한다. 단순 판본 대응표만 신뢰하지 않고 **썬 캐논 회전 CD `00505520`, 발사 CD `00505480`**의 실제 가상 표를 확인했다.
 
-관찰 및 SHA 자료는 `cpppj/tests/fixtures/gunanimation-x86.tsv`와 `cpppj/recovery-gunanimation-evidence.json`이다. 감사 명령은 `python -X utf8 tools/decomp_gunanimation_oracle.py --verify`다. C++ fixture 대조 두 항목, 미연결 Missile 거부, 실제 Host 완료 통지/Kernel/Form 삭제 항목은 `GunAnimationTests.cpp`에 있다.
+관찰 및 SHA 자료는 `cpppj/tests/fixtures/gunanimation-x86.tsv`와 `cpppj/gunanimation.json`이다. 감사 명령은 `python -X utf8 tools/decomp_gunanimation_oracle.py --verify`다. C++ fixture 대조 두 항목, 미연결 Missile 거부, 실제 Host 완료 통지/Kernel/Form 삭제 항목은 `GunAnimationTests.cpp`에 있다.
 
 ## 남은 범위
 

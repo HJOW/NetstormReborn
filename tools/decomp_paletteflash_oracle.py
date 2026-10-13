@@ -28,7 +28,7 @@ OBJECT=TYPES+0x10000
 SEED=0x471650
 CONTROLS=(0x027f,0x037f)
 FIXTURE=ROOT/'cpppj/tests/fixtures/paletteflash-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-paletteflash-evidence.json'
+REPORT=ROOT/'cpppj/paletteflash.json'
 
 
 def bits(value):

@@ -34,7 +34,7 @@
 
 `tools/decomp_geysermined_oracle.py`는 두 보호 PE를 Unicorn 메모리에 읽고 새 manifest의 실제 handler·난수·수량 setter·isle 판단·CRT 몸체만 실행한다. 서식정리/음향/가상 삭제·생성·Pop과 assert 보고는 이름과 호출 규약을 명시한 관찰 경계다. 외부 게임이나 OS 함수는 실행하지 않는다.
 
-고유 입력은 **양판본 합계2312개(각1156개)**이며 **정상2304개와 패치 assert8개**를 구분한다. 수량0/199/200/201/400/2000/65535, 분수/음수/큰 cost, free/권한/표면, 음향 뒤 수량·비용·권한·좌표 변경, 삭제 뒤 표면 변경, 좌표 절삭 특수값, Bridge checking/매장 차이를 포함한다. 각 입력의 x87 53/64비트 반복은 같은 출력인지 검사하며 고유 입력 합계에 다시 더하지 않는다. 근거/SHA는 `cpppj/recovery-geysermined-evidence.json`, fixture는 `cpppj/tests/fixtures/geysermined-x86.tsv`다.
+고유 입력은 **양판본 합계2312개(각1156개)**이며 **정상2304개와 패치 assert8개**를 구분한다. 수량0/199/200/201/400/2000/65535, 분수/음수/큰 cost, free/권한/표면, 음향 뒤 수량·비용·권한·좌표 변경, 삭제 뒤 표면 변경, 좌표 절삭 특수값, Bridge checking/매장 차이를 포함한다. 각 입력의 x87 53/64비트 반복은 같은 출력인지 검사하며 고유 입력 합계에 다시 더하지 않는다. 근거/SHA는 `cpppj/geysermined.json`, fixture는 `cpppj/tests/fixtures/geysermined-x86.tsv`다.
 
 `GeyserMinedTests.cpp`의 첫 검사는 PE의 난수·효과 순서와 가상 표 주입 주소를 제외한 두 raw 슬롯 전체를 C++와 비교한다. 두 번째 검사는 **원본 등록 → 실제 단일 PacketDispatch → 같은 SidPool의 채굴 handler → 기존 SquidFactory/공통 RawSquidDestroy/SquidPop/Unpop**를 연결한다. 수신 시각/기록/중첩 깊이, client 가이저 반납, server emptyGeyser 생성과 현재 hash 등록을 확인한다. 해당 검사의 기반 자산 생성/공통 삭제 범위를 파생 가이저/emptyGeyser 전체 수명 완료로 세지 않는다.
 
@@ -44,7 +44,7 @@
 python -X utf8 tools/decomp_geysermined_oracle.py --verify
 ```
 
-C++ 집중 **2개 검사 통과**: 전수2312개 대조(정상2304/assert8)와 실제 Packet/Factory/공간 연결이 성공했다. 초기06 빌드의 C4457 두 경고는 callback 안의 좌표 이름을 cellX/cellY로 바꾸어 교정했다. `tools/analyze_geysermined_shadow_lineage.py`가 이름 변경을 제거한 전체 테스트 소스와 이전 native 보고서/fixture의 불변을 증명하며 새 관찰0개로 현재 SourceSHA를 연결한다. **최종 Release 두 타깃 종료0·경고/오류0, 전체974개 검사/실패0**이다. 통합 스냅샷은 `recovery-campaign-runtime6-evidence.json`이며 최종 로그는 `extracted/campaign-runtime6-*`에 보존했다. 새 수신 처리기를 작성한 것만으로 실제 GameWorld가 연결되었다고 표시하지 않는다.
+C++ 집중 **2개 검사 통과**: 전수2312개 대조(정상2304/assert8)와 실제 Packet/Factory/공간 연결이 성공했다. 초기06 빌드의 C4457 두 경고는 callback 안의 좌표 이름을 cellX/cellY로 바꾸어 교정했다. `tools/analyze_geysermined_shadow_lineage.py`가 이름 변경을 제거한 전체 테스트 소스와 이전 native 보고서/fixture의 불변을 증명하며 새 관찰0개로 현재 SourceSHA를 연결한다. **최종 Release 두 타깃 종료0·경고/오류0, 전체974개 검사/실패0**이다. 통합 스냅샷은 `run6.json`이며 최종 로그는 `extracted/run6-*`에 보존했다. 새 수신 처리기를 작성한 것만으로 실제 GameWorld가 연결되었다고 표시하지 않는다.
 
 ## 남은 실제 경계
 

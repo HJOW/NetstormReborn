@@ -1,0 +1,119 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-14",
+  "consumer_unique": 2,
+  "normal_unique": 2,
+  "assert_unique": 0,
+  "new_body_completion_unique": 0,
+  "parent_native_unique_unchanged": 534,
+  "game_runs": 0,
+  "os_calls": 0,
+  "editions": {
+    "originals": {
+      "consumer_unique": 1,
+      "normal_unique": 1,
+      "assert_unique": 0,
+      "controls": [
+        639,
+        895
+      ],
+      "top_level_returns": 8,
+      "native_calls": {
+        "0046edf0": 1,
+        "0046d9b0": 1,
+        "0046da20": 1,
+        "00431fc0": 1,
+        "0046dd70": 1,
+        "0046dba0": 1,
+        "0046ee60": 1,
+        "00425c20": 1,
+        "0049a840": 4,
+        "00425860": 4,
+        "00425700": 4,
+        "0049a940": 3,
+        "004e49c0": 6,
+        "00432180": 259,
+        "00425c00": 3,
+        "00432210": 1,
+        "0046ee30": 1,
+        "0040d900": 1,
+        "0046f190": 1
+      },
+      "reset_ranges": {
+        "0046edf0": "0046edf0-0046ee26"
+      }
+    },
+    "originalCD": {
+      "consumer_unique": 1,
+      "normal_unique": 1,
+      "assert_unique": 0,
+      "controls": [
+        639,
+        895
+      ],
+      "top_level_returns": 8,
+      "native_calls": {
+        "004bd450": 1,
+        "004bd3f0": 100,
+        "00490430": 1,
+        "004904d0": 1,
+        "00403d20": 1,
+        "00490980": 1,
+        "00490750": 1,
+        "00490520": 2,
+        "004bd500": 1,
+        "004bd4f0": 1,
+        "0041fcf0": 1,
+        "0041feb0": 4,
+        "0041fbb0": 4,
+        "004442f0": 3,
+        "004f161c": 6,
+        "00404090": 259,
+        "00420370": 3,
+        "004040d0": 1,
+        "004bd4c0": 2,
+        "004bd480": 2,
+        "004bd900": 1
+      },
+      "reset_ranges": {
+        "004bd3f0": "004bd3f0-004bd412",
+        "004bd450": "004bd450-004bd473"
+      }
+    }
+  },
+  "files": {
+    "cpppj/src/o/CanonDecoder.cpp": "ae3553973ff29257ed2b723b160503f6fc729919a97f082f16132e919dd69eaa",
+    "cpppj/src/o/CanonDecoder.h": "4de94611aa28b10eee3ab1a201cc8d07fc10d9a081ad237c17b909a21b3f87a7",
+    "cpppj/src/o/CanonDecoderTables.inc": "2cdc2b33b12e0cb001efd1a78737e3247d19a0afd145ee9f3aa675c3f4959c94",
+    "cpppj/src/o/ChunkMap.cpp": "553cdd299f98874b56b1e379d352ee3fd9e24f6e81c14d1c69f641d98a1f621c",
+    "cpppj/src/o/ChunkMap.h": "4348e1ca3ca14088b4fe0b4dc88577bea90789f265cf567abd664716e5f02492",
+    "cpppj/src/o/RawIslandBuilder.cpp": "06e62e2833b504b85634f0f47bf1292c6d006f9553f0aa1457ff2634e33f0582",
+    "cpppj/src/o/RawIslandBuilder.h": "569e95e4070f166d014f7a97777a6d03677347ee3c799052a1b5e66e086688b2",
+    "cpppj/src/o/RawIslandRuntime.cpp": "3be93556f2b32efc641442ed1e21654fbd0504be1643085b82ab1e80f71acd12",
+    "cpppj/src/o/RawIslandRuntime.h": "6205b879664770b0a3047ed1066f2ae7dd243c3ec2bbd13689fef1da77298fa4",
+    "cpppj/src/o/RiftType.cpp": "795554df3a4538ba475a2095a1b87a6bf9ddf4ba5ff904b469cef1f7128dc895",
+    "cpppj/src/o/RiftType.h": "6861baebea2e47f0ac175fdabd7ff7aa09fd53bb978bbdf6b0ffd4ca70455f5a",
+    "cpppj/tests/fixtures/fortworldload-builder-consumer-x86.tsv": "0c45ea192ba5eea755e3c5705a22c67e61dddbae3bf8a10af057bd326fa7d252",
+    "extracted/island-runtime/originalCD/creation.c": "e4f5b3782a53e30af16bed2cb16517cd3841cf9972938446a30c80b4c3cc91ee",
+    "extracted/island-runtime/originalCD/functions.tsv": "c2a545e7c7022987bc079c987787f95596422b10129fdb46558a8c41fb490e4d",
+    "extracted/island-runtime/originals/creation.c": "c60d6e8fc2d95eb678cf2d3e7003bae1719d90b1bde0072f2ef73641525305ff",
+    "extracted/island-runtime/originals/functions.tsv": "7db4a222ff212fe6b7a01bc596a77e39912d36c8bc36c88b8fa9f8b41514b7e0",
+    "extracted/islandbuilder/originalCD/creation.c": "dd088ba75d501c4d1143ebdf928d1d8f4e8d9a2bc9000599cd0ff14f397703e4",
+    "extracted/islandbuilder/originalCD/functions.tsv": "57e69b351e242f6500d9eea8b3efbf31cca328643f26349d35171f2c52aea5cb",
+    "extracted/islandbuilder/originals/creation.c": "768061c394c182c30a168db085f580670f6b3c840a8b15e4fbb0035939280eb6",
+    "extracted/islandbuilder/originals/functions.tsv": "d4fbc65991702edd6a5a97a4e8ea5333127828af44c2182a0f06206da8e0c41f",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_canontype_oracle.py": "1509f5b903242cac8a64ced514b092ecdf63d7eb527fa6fe20c5b5830e39d052",
+    "tools/decomp_damageablepredestroy_oracle.py": "6f260fca831f979df7361fb783b38de9ccadf93bced292e55a04e090c46a748b",
+    "tools/decomp_fortworld_builder_consumer_oracle.py": "5736b5f67b185787bc9eb24af7921ec770fcbdbc282a2df56c843e7aeb9590df",
+    "tools/decomp_islandbuilder_oracle.py": "4413a5737d165f2ec20b87d2493efbc386819644dd951f11e49d74b48ad4cfd7",
+    "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
+    "tools/decomp_priestgeometry_oracle.py": "a2e100450c4e22d4f7de0bc4f725c766b7836ab3f7270a6ebb72df7b92e33dc1"
+  },
+  "limitations": [
+    "같은 선택 입력의 기존 Reset/Builder ctor/attach/PlaceAll/Add/Bounds/CanonDecoder만 실제 실행한다. 기존1156/2018 완료를 다시 합산하지 않는다.",
+    "이 두 골든은 부모534와 별도이며 Generate/Stamp/Farm/Objects/Money/Meta/Graph의 원본 실행 결과가 아니다.",
+    "Farm 목표60과 실제 Retype 횟수는 다르다. MayReplace의 return1도 목표를 소비하므로 범위 검사는 연결 확인이며 Farm 전체 동일성 완료 근거가 아니다."
+  ]
+}

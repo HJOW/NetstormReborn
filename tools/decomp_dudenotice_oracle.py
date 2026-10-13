@@ -22,7 +22,7 @@ REGULAR,PATH,DUMMY,CODES,POINT,LIST,MAP=0x11318000,0x11319000,0x1131a000,0x1131b
 SCALES=(1,2,4,16)
 KEYS=('kind','dead','task','regular','burning','targetmode','path','made','speed','frame','now')
 FIXTURE=ROOT/'cpppj/tests/fixtures/dudenotice-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-dudenotice-evidence.json'
+REPORT=ROOT/'cpppj/dudenotice.json'
 
 
 def bits(value):
@@ -146,7 +146,7 @@ def generate(smoke):
             rows.append([edition,*[case[key] for key in KEYS],*result])
         editions[edition]=dict(returns=oracle.returns,instructions=oracle.instructions,assertions=oracle.assertions,native_calls=dict(oracle.native_calls),boundaries=dict(oracle.boundaries));files.update(oracle.exports);files.add(ROOT/oracle.spec['binary']);print(edition,oracle.returns,flush=True)
     if smoke:return
-    for path in ('cpppj/src/o/RawDudeNotice.cpp','cpppj/src/o/RawDudeNotice.h','cpppj/tests/DudeNoticeTests.cpp','cpppj/src/o/SquidProcess.cpp','cpppj/src/o/SquidProcess.h','cpppj/src/o/RawSquidFinder.cpp','cpppj/src/o/SquidPostPop.cpp','cpppj/recovery-dude-regular-reset-lineage-evidence.json'):files.add(ROOT/path)
+    for path in ('cpppj/src/o/RawDudeNotice.cpp','cpppj/src/o/RawDudeNotice.h','cpppj/tests/DudeNoticeTests.cpp','cpppj/src/o/SquidProcess.cpp','cpppj/src/o/SquidProcess.h','cpppj/src/o/RawSquidFinder.cpp','cpppj/src/o/SquidPostPop.cpp','cpppj/dude-regular-reset-lineage.json'):files.add(ROOT/path)
     FIXTURE.write_text('# 실제Dude around/notice·Regular상태·거주지/대피요청. Burning14(mode0)/Path24 ctor와frame 효과는관찰경계다.\n'+'\n'.join('\t'.join(map(str,row)) for row in rows)+'\n',encoding='utf-8');files.add(FIXTURE)
     REPORT.write_text(json.dumps(dict(schema=1,host='HJOW-Athlon',total=len(rows),editions=editions,files={p.relative_to(ROOT).as_posix():digest(p) for p in sorted(files)},new_burning_constructors_completed=0,new_path_constructors_completed=0,os_calls=0,limitations=['일반finder/현재task/Regular숫자쓰기/거주지선택/속도2배와절삭복원·현재단계조회는원본몸체다.','힙/기존Regular조회/부착·Burning14(mode0) ctor/Path24 생성/기존경로객체조회/SetFrame은명시관찰경계다.','현저한분수speed/정밀double now를공급하며C++Fixture는같은실제Host Regular와좁은ResetTask를소비한다.','기존type14/24 Form과거주지배열은명시입력이며실제Burning 효과/전체경로이동을완료로세지않는다.']),ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 

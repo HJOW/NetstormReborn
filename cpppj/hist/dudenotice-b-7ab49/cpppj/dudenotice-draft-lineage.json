@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "host": "HJOW-Athlon",
+  "normal_preserved": 414,
+  "new_native": 0,
+  "new_unique": 0,
+  "history_files": {
+    "cpppj/hist/dudenotice-initial/RawDudeNotice.cpp": "25ffb03bdbb88b38ab1f9df5d7d65bdef16b92256fdb7385127306774b941bdc",
+    "cpppj/hist/dudenotice-initial/RawDudeNotice.h": "f22c88634d8c6c33f74d0094421cc23b882133234d26215af0eafb969a79640f",
+    "cpppj/hist/dudenotice-initial/DudeNoticeTests.cpp": "640b0ba1157ca4106aaef25a610a4b8236ea009205a995ed78f4a595e8803c05",
+    "cpppj/hist/dudenotice-initial/decomp_dudenotice_oracle.py": "3219fc3511fbabc8195cc73fcd739f6a451f8eebe902302570b240832cab6de0",
+    "cpppj/hist/dudenotice-initial/dudenotice-x86.tsv": "401789a64ebaed9455b90be58506aaabcd49b9292f48f774919a231fa0436a7e",
+    "cpppj/hist/dudenotice-initial/dudenotice.json": "e4a3239e28c6e4455fe81c1f39133bec3029d95c106e64408f0593fabc8485f4"
+  },
+  "current_files": {
+    "cpppj/src/o/RawDudeNotice.cpp": "f99a8da51ea2f67eae249369ad0fa95052ea865cb7696928e2a7e3d38c81be2a",
+    "cpppj/src/o/RawDudeNotice.h": "043871673a6bb3708d5bd66066b1d82d830aecf1abd0d1ec79d5f7ae89d4e548",
+    "cpppj/tests/DudeNoticeTests.cpp": "fd52d65c410f656b9cbf975097ddd81a6155d1651d26f8bae4945b4fbb8a72a5",
+    "tools/decomp_dudenotice_oracle.py": "15f4578b9f89c61f3545046f38ab25c0957a340da5aba915d0fc37c063affa09",
+    "cpppj/tests/fixtures/dudenotice-x86.tsv": "2b8f9e950743140662d0487cef5f49a5e11f94d9fc9d009a5021baf9c395e314",
+    "cpppj/dudenotice.json": "afd903fae53c13f518a0ee7a26ed87ed12b400db37cf2503b377af4180fcb7f2"
+  },
+  "tool_sha256": "c79f41d4488b723989301c937ab967d1294b5ba6d57058ed7b46dc64d8fed554"
+}

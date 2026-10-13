@@ -54,7 +54,7 @@ BODY['original1037'] = dict(BODY['originalCD'])
 # 장치 대체: (이름, 가상 표 오프셋, stdcall이 정리하는 인자 바이트).
 METHODS = (('status', 0x24, 8), ('start', 0x30, 16), ('seek', 0x34, 8), ('gain', 0x3c, 8), ('balance', 0x40, 8), ('halt', 0x48, 4))
 FIXTURE = ROOT / 'cpppj/tests/fixtures/soundplay-x86.tsv'
-REPORT = ROOT / 'cpppj/recovery-soundplay-evidence.json'
+REPORT = ROOT / 'cpppj/soundplay.json'
 # 실패/성공 반환값(HRESULT)과 스크립트가 시작할 때의 전역 기본값(원본 초기값 + 장치 준비 전 상태)이다.
 FAIL, ODD = 0x80004005, 1
 DEFAULTS = dict(initialized=0, device=0, enabled=0, max=8, playing=0, master=0, serial=0, swap=0, left=0, top=0, right=640, bottom=480, camx=0, camy=0)

@@ -24,7 +24,7 @@ SPEC={
 OBJECT,ROWS,PARTICLES=ARENA+0xb000,ARENA+0xc000,ARENA+0xd000
 KEYS=('capacity','stage','off','visible','pattern','seed','now','wind','depth','frame','zoom','pixelScale','victim')
 FIXTURE=ROOT/'cpppj/tests/fixtures/burningframe-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-burningframe-evidence.json'
+REPORT=ROOT/'cpppj/burningframe.json'
 
 
 def fbits(value):

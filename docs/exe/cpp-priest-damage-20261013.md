@@ -37,7 +37,7 @@ CD는 Player `+0x68` BYTE를 그대로 레벨로 사용한다. 보정 기준은2
 
 회복 query/취소·frame setter·소유자 통지·가상 공간 Unpop/Repop·burning find/create/destroy/sound는 명시 관찰 경계다. native 격자는 각 몸체와 경계 인자/순서·전체 raw 쓰기를 증명하며, 이 효과들의 실제 게임 구현 완료를 증명하지 않는다. C++ 추가 연결 검사는 실제 Regular 취소/Kernel 제거와 HP1 사제의 두 nonempty 의존 쌍 통지/삭제를 같은 풀에서 수행한다. 공간/frame/GUI는 그 검사에서도 관찰 경계다.
 
-저장물은 `cpppj/tests/fixtures/priestdamage-x86.tsv`, `cpppj/recovery-priestdamage-evidence.json`, `PriestDamageTests.cpp`다. manifest에는 새 C++/테스트 소스, 두 PE, 실행기, 정밀 export와 fixture SHA를 포함한다. 감사 명령은 `python -X utf8 tools/decomp_priestdamage_oracle.py --verify`이며3424개로 통과했다. CMake 등록 후 **집중4개 검사·전체974개 검사/실패0, 최종 Release 두 타깃 종료0·경고/오류0**으로 대조했다. 실제 소비자 검사 입력에는 원본 타입158의 constructorAddress를 공급했다. 통합 근거는 `recovery-campaign-runtime6-evidence.json`, 최종/초기/교정 로그는 `extracted/campaign-runtime6-*`다.
+저장물은 `cpppj/tests/fixtures/priestdamage-x86.tsv`, `cpppj/priestdamage.json`, `PriestDamageTests.cpp`다. manifest에는 새 C++/테스트 소스, 두 PE, 실행기, 정밀 export와 fixture SHA를 포함한다. 감사 명령은 `python -X utf8 tools/decomp_priestdamage_oracle.py --verify`이며3424개로 통과했다. CMake 등록 후 **집중4개 검사·전체974개 검사/실패0, 최종 Release 두 타깃 종료0·경고/오류0**으로 대조했다. 실제 소비자 검사 입력에는 원본 타입158의 constructorAddress를 공급했다. 통합 근거는 `run6.json`, 최종/초기/교정 로그는 `extracted/run6-*`다.
 
 ## 남은 실제 월드 연결
 

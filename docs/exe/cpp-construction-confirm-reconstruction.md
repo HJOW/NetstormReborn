@@ -45,7 +45,7 @@
 
 입력은 타입 비트 × 호출 플래그 × 생략 전역 × 사제 조회 결과, 바이트로 잘리는 인자(플레이어·decoder 인자·품질의 상위 비트)와 좌표/시각 비트, 조각 수(없음·한 칸·island·noIsland 9칸·다리 패턴 26개 × 방향), 기록기 켜짐 × 활성을 교차한다. 사건 순서와 통지 필드 전체, 반환값을 저장한다. 확정 몸체와 decoder·스택 확보·항목 주소 계산은 원본 명령이고 위 표의 경계만 인자를 기록하고 반환한다. 스택·보존 레지스터·x87·허용 실행 범위·쓰기(스택 밖 쓰기 없음)·입력 순서·진입/반환 수·경계 사건 수·SHA를 감사한다. 원본 assert와 게임/OS 호출은 0이다. 조각이 없으면서 기록기가 켜진 조합은 위 이유로 입력에서 뺐다.
 
-[`ConstructionConfirmTests.cpp`](../../cpppj/tests/ConstructionConfirmTests.cpp)의 새 검사 **5개**: 세 PE 관찰 전체 재생, 실제 factory가 만든 서버 SID 아홉 개가 통지에 담기고 처리기 자리에 둔 배치 실행이 그 SID에 noIsland를 놓는 통합 검사(사제를 못 찾으면 SID를 만들지 않음 포함), 누락 경계·다른 풀·범위 밖 타입·잘못된 생성 결과 거부와 기록기 인자. 통합 검사의 처리기는 abstract 0으로 배치 실행만 부르며 **실제 처리기 `004441b0`의 abstract 판정·예측 정리·사제 이동은 복원 전**이다. [fixture](../../cpppj/tests/fixtures/constructionconfirm-x86.tsv)와 [근거 JSON](../../cpppj/recovery-constructionconfirm-evidence.json)은 UTF-8/LF다.
+[`ConstructionConfirmTests.cpp`](../../cpppj/tests/ConstructionConfirmTests.cpp)의 새 검사 **5개**: 세 PE 관찰 전체 재생, 실제 factory가 만든 서버 SID 아홉 개가 통지에 담기고 처리기 자리에 둔 배치 실행이 그 SID에 noIsland를 놓는 통합 검사(사제를 못 찾으면 SID를 만들지 않음 포함), 누락 경계·다른 풀·범위 밖 타입·잘못된 생성 결과 거부와 기록기 인자. 통합 검사의 처리기는 abstract 0으로 배치 실행만 부르며 **실제 처리기 `004441b0`의 abstract 판정·예측 정리·사제 이동은 복원 전**이다. [fixture](../../cpppj/tests/fixtures/constructionconfirm-x86.tsv)와 [근거 JSON](../../cpppj/constructionconfirm.json)은 UTF-8/LF다.
 
 Release 경고/오류 **0**, CTest 내부 **566개·실패 0**(144.12초), 원본 근거 감사 **88종 모두 통과**. 새 변이 7개 **모두 검출**(기대 검사만 돌리는 `--focused` 실행. 변이 전 사본은 전체 검사 통과). 원본 보호 파일·AGENTS.md·dotnetpj는 바꾸지 않았다. 로그는 Git 제외 `extracted/constructionconfirm-*.log`에 있다.
 

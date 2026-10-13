@@ -41,7 +41,7 @@ CD는 최종 소유자로 **한 번** 도장을 요청하며 테마·영향 지�
 
 12개 목록 장면 × 소유자/테마 변형 3종 × mode 3종 × 옵션 2종 × 도장 후 기록 공급 2종의 432개에 경계 좌표 8개를 더한다. 빈 목록·중복 SID·중립·동률·지역 밖 워크샾 테마·기본/잘못된 테마 값·다리 sentinel 31/127·0.99999 경계·지도 밖을 포함한다. 기대 투표나 테마 결과를 Python/C++에서 만들지 않고 원본의 getter/옵션/도장 호출 순서와 최종 영향 지역/revision/dirty를 저장한다.
 
-각 PE 정상 반환 **880회**다. 패치 wrapper 진입 **1,168회**(재귀 288회), 도장 대체 **2,336회**, 옵션 대체/실제 테마 getter 각각 **984회**, 실제 지역 getter **13,152회**다. CD/10.37 각각 도장 **880회**, 지역 getter **8,592회**, 옵션 0회다. ESP·EBX/ESI/EDI/EBP·x87 제어 워드/TOP·drawer 포인터/초기값·옵션 key/초기값·허용 코드/쓰기·raw/두 목록 불변·assert/OS 0·SHA/입력/행/실제 진입/대체 수를 확인한다. [fixture](../../cpppj/tests/fixtures/regionownership-x86.tsv), [근거 JSON](../../cpppj/recovery-regionownership-evidence.json)은 LF다. 앞 인계의 누적 344,146개에 이번 1,320개를 더한 인계 집계는 **345,466개**다.
+각 PE 정상 반환 **880회**다. 패치 wrapper 진입 **1,168회**(재귀 288회), 도장 대체 **2,336회**, 옵션 대체/실제 테마 getter 각각 **984회**, 실제 지역 getter **13,152회**다. CD/10.37 각각 도장 **880회**, 지역 getter **8,592회**, 옵션 0회다. ESP·EBX/ESI/EDI/EBP·x87 제어 워드/TOP·drawer 포인터/초기값·옵션 key/초기값·허용 코드/쓰기·raw/두 목록 불변·assert/OS 0·SHA/입력/행/실제 진입/대체 수를 확인한다. [fixture](../../cpppj/tests/fixtures/regionownership-x86.tsv), [근거 JSON](../../cpppj/regionownership.json)은 LF다. 앞 인계의 누적 344,146개에 이번 1,320개를 더한 인계 집계는 **345,466개**다.
 
 새 [C++ 검사](../../cpppj/tests/RegionOwnershipTests.cpp) 5개는 세 PE 전체 관찰 재생, 실제 지역 getter와 outpost 생성자→등록→동률/중립→Damageable 삭제 준비→남은 워크샾 소유자/테마 복귀, 빠진 경계/다른 풀/손상 입력을 검사한다. 지형 도장과 워크샾 postPop 전체는 외부 경계로 유지한다. 최종 빌드/전체 검사/감사 결과는 [LEFT_JOBS.md](../../LEFT_JOBS.md)의 이번 완료 항목을 따른다.
 

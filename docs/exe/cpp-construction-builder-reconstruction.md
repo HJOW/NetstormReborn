@@ -2,7 +2,7 @@
 
 2026-10-13 교정, **마지막 디컴파일 수행 PC VM-W11-CODEX**: 기존 Regular 경계의 인자 의미를 반대로 해석한 오류를 발견해 수정했다. 실제 `00496e80`/CD `0048efd0`은 `(event,parent,payload)`를 각각 +0x18/+8/+0x1c에 저장한다. Builder의 `(this,0,carrier,00532750)`는 **event0/payload0.05f**이며 `ConstructionBuilderState.timerPayload`의 현재 float를 전달한다. 기존의 timerEvent/출력 T의 `(payload,parent,event)` 해석은 잘못이었다. 이전 fixture는 이 생성자 몸체를 대체해 세 raw 인자 순서만 관찰했으므로 이 의미 오류를 검출하지 못했다.
 
-이번에는 실제 Builder 전체→실제 Regular 생성자→event/payload/parent/현재 double 시각/count 필드를 두 PE **96개씩·새192개** 입력으로 확인했다. ProcessForm/Kernel 부착만 native의 명시 경계이며 C++의 실제 Host/Kernel 필드를 같은 고유 fixture와 대조한다. 기존 세 PE **1,110개** 입력은 재실행·재라벨했고 새 관찰 수에 더하지 않는다. 실제 Host event0/.05 재예약 검사도 추가했다. native 근거 `recovery-constructiontimer-evidence.json`, fixture `constructiontimer-x86.tsv`, 도구 `decomp_constructiontimer_oracle.py`, 기록 `extracted/constructiontimer-*.log`다. 아래 수치/PC/검증은 최초 복원 당시 이력이다.
+이번에는 실제 Builder 전체→실제 Regular 생성자→event/payload/parent/현재 double 시각/count 필드를 두 PE **96개씩·새192개** 입력으로 확인했다. ProcessForm/Kernel 부착만 native의 명시 경계이며 C++의 실제 Host/Kernel 필드를 같은 고유 fixture와 대조한다. 기존 세 PE **1,110개** 입력은 재실행·재라벨했고 새 관찰 수에 더하지 않는다. 실제 Host event0/.05 재예약 검사도 추가했다. native 근거 `constructiontimer.json`, fixture `constructiontimer-x86.tsv`, 도구 `decomp_constructiontimer_oracle.py`, 기록 `extracted/constructiontimer-*.log`다. 아래 수치/PC/검증은 최초 복원 당시 이력이다.
 
 첫 focused 실행에서 실제 factory/Host 검사의 명시 Pop 경계가 void를 지우지 않아 Regular 실행이 생략되었고, 새 ctor 검사는 native factory 경계의 임의 바이트 패턴을 종속 머리에도 공급해 미할당 SID 연결에서 거부되었다. `extracted/construction-unit-builder-focused.log`에 실패를 보존했다. C++ 통합 검사의 명시 Pop 경계에는 정상 void 해제 결과, 합성 새 객체에는 빈 종속 머리를 공급하도록 검사 장면을 교정했다. 원본 fixture/빌더/Host 몸체는 바꾸지 않았다. 추가한 실행 검사는 부모 event 몸체를 payload 반환으로 둔 **Regular의 재예약 검사**이며 manaBolt의 실제 event0 몸체까지 복원·대조했다는 뜻은 아니다. 현재 Builder 검사는 9개다.
 
@@ -56,7 +56,7 @@ C++은 실제 읽을 DWORD SID가 풀 밖인 경우 WORD로 자르기 전에 거
 
 유효/지도 밖 좌표, 여러 발자국, 요청 player DWORD 폭, genus/mask, 0/-0·앞/뒤 시각·속도, 빈/단일/구멍/중복 공급원, 프레임 폭, 할당 실패를 교차했다. 경계 중 목표 좌표/기준점 소유자/운반 타입/공급원 순서·좌표/이벤트/최초 경로 단계가 바뀌는 입력도 포함한다. 각 PE **370개**(Move 342, 소비 직접 호출 28), 새 저장 **1,110개**, 두 x87 정밀도의 최상위 정상 반환 **2,220회**, 누적 저장 **480,462개**(479,352 + 1,110)다. 루트 내부의 소비/helper 호출 수는 최상위 반환 수와 구분한다.
 
-[fixture](../../cpppj/tests/fixtures/constructionbuilder-x86.tsv)와 [근거 JSON](../../cpppj/recovery-constructionbuilder-evidence.json)의 SHA·입력/출력 폭·진입/반환/경계 수를 감사한다. 두 x87 제어값 639/895에서 관찰이 같았고 SEH 머리·스택·보존 레지스터·x87 균형·허용 실행/쓰기를 확인했다. assert·게임·OS 호출은 0이다. 합성 유한 시각/좌표 범위의 대조이며 모든 IEEE 특수값/극단 시각의 x87 정밀도 동등성을 증명하지 않는다. CD의 Pentium FDIV 우회 전역은 0으로 공급했다.
+[fixture](../../cpppj/tests/fixtures/constructionbuilder-x86.tsv)와 [근거 JSON](../../cpppj/constructionbuilder.json)의 SHA·입력/출력 폭·진입/반환/경계 수를 감사한다. 두 x87 제어값 639/895에서 관찰이 같았고 SEH 머리·스택·보존 레지스터·x87 균형·허용 실행/쓰기를 확인했다. assert·게임·OS 호출은 0이다. 합성 유한 시각/좌표 범위의 대조이며 모든 IEEE 특수값/극단 시각의 x87 정밀도 동등성을 증명하지 않는다. CD의 Pentium FDIV 우회 전역은 0으로 공급했다.
 
 Release 경고/오류 **0**·CTest 내부 **622개·실패 0**(139.41초, 전체 139.53초), 근거 감사 **97종 모두 통과**. 새 변이 10개 **모두 검출**(`--focused`, 변이 전 사본은 전체 검사 통과).
 

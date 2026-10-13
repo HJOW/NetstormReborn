@@ -16,7 +16,7 @@ from decomp_process_oracle import (ProcessOracle, ROOT, BINARIES, CONTROLS, STAC
 DATA, ARRAY, RESULT, POOL = 0x15000000, 0x15001000, 0x15002000, 0x15003000
 NODE_SIZE, CAPACITY, SEED = 128, 32, 0x46607020
 FIXTURE = ROOT / 'cpppj/tests/fixtures/gumpcollection-x86.tsv'
-REPORT = ROOT / 'cpppj/recovery-gumpcollection-evidence.json'
+REPORT = ROOT / 'cpppj/gumpcollection.json'
 # 함수/전역과 월드 투영의 실제 경계 주소다. 나머지 호출은 모두 원본 명령으로 실행한다.
 SPECS = {
     'originals': dict(Collect=0x466070, Node=0x464b30, Position=0x464740, Bounds=0x4648e0,

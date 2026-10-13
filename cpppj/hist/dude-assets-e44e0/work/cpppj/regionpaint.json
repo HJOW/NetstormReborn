@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-13",
+  "cases": {
+    "originals": {
+      "cases": 386,
+      "normal_returns": 772,
+      "calls": {
+        "vector_clear": 772,
+        "virtual_owner": 842,
+        "allocate": 826,
+        "allocation_check": 526,
+        "vector_copy": 1622,
+        "edge_finder": 1464,
+        "affected_append": 170,
+        "free": 300
+      }
+    },
+    "originalCD": {
+      "cases": 98,
+      "normal_returns": 196,
+      "calls": {
+        "virtual_owner": 188
+      }
+    }
+  },
+  "total": 484,
+  "files": {
+    "tools/decomp_regionpaint_oracle.py": "6d65f83505c101ffef5e4c278b22425391e8717e7f31c77383f3a3aafb061d5a",
+    "cpppj/tests/fixtures/regionpaint-x86.tsv": "f17d9eafaf09cc9b4e3971c2b62be3987728e1e061f2d0a08f2427654742197a",
+    "tools/ghidra/regionpaint-functions.json": "250ce3cac5a8ea0f2fc16e59bca78f4f02649ed9123e9b1abd49018994eb1b0f",
+    "cpppj/src/o/RawRegionPaint.h": "c8b42c88b61f6b11a0995f0b5673add11aa6518edabeb2eaaa94337b3704a1aa",
+    "cpppj/src/o/RawRegionPaint.cpp": "d57d05c03f0dafab97981ccde395dfc0354f4c1f4656f093f04227ead8a40979",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/regionpaint/originals/creation.c": "54191908282833173cdd2181b46ac549e8cb494fe1ec2e58973968cc6745479f",
+    "extracted/regionpaint/originals/functions.tsv": "156b9522eaadd07fd128619913803d6c6efad29d57efd82ff5dfc823835326d9",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "extracted/regionpaint/originalCD/creation.c": "7b1d592f8f5d713fafd286c2ab735ead63fe32bc7fd388ed2346de15938f0fca",
+    "extracted/regionpaint/originalCD/functions.tsv": "1d9ba069c7b593820b857ea19f823315a96686d22dad1afa076a53c5b46ccc94"
+  },
+  "limitations": [
+    "virtual owner side effects supplied as explicit callback; byte write observed",
+    "CRT allocation/vector copy and edgeFarm finder are declared boundaries; actual flood/PRNG/selection/deduplication execute",
+    "synthetic terrain/code/map inputs; no GameWorld or original game/GUI execution"
+  ]
+}

@@ -5,9 +5,9 @@ import argparse,hashlib,json
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1] # 현재작업저장소다.
-INITIAL=ROOT/'cpppj/recovery-history/altarsacrifice-initial' # 8/7·최초30행의당시원문이다.
-FRAME=ROOT/'cpppj/recovery-history/altarsacrifice-before-frame-input' # 중심확대후첫전수2866의당시원문이다.
-REPORT=ROOT/'cpppj/recovery-altarsacrifice-successor-evidence.json' # 추가합산없는현재source/동일입력근거다.
+INITIAL=ROOT/'cpppj/hist/altarsacrifi-af04e' # 8/7·최초30행의당시원문이다.
+FRAME=ROOT/'cpppj/hist/altarsacrifi-6e4d0' # 중심확대후첫전수2866의당시원문이다.
+REPORT=ROOT/'cpppj/altarsacrifice-successor.json' # 추가합산없는현재source/동일입력근거다.
 BODY=('cpppj/src/o/RawAltarSacrifice.h','cpppj/src/o/RawAltarSacrifice.cpp') # 처음부터동작본문이불변인새전용모듈이다.
 
 def sha(path):
@@ -31,9 +31,9 @@ def restore_levels(row):
 
 def build():
     """두역사원문과현재native자료의실제동일입력/불변production을감사한다."""
-    current=ROOT/'cpppj/recovery-altarsacrifice-evidence.json';data=json.loads(current.read_text(encoding='utf-8'));assert data['total']==2866 and not data['smoke'];currentRows=rows(ROOT/'cpppj/tests/fixtures/altarsacrifice-x86.tsv');records=[];files={Path(__file__),current,ROOT/'tools/decomp_altarsacrifice_oracle.py',ROOT/'cpppj/tests/fixtures/altarsacrifice-x86.tsv'}
+    current=ROOT/'cpppj/altarsacrifice.json';data=json.loads(current.read_text(encoding='utf-8'));assert data['total']==2866 and not data['smoke'];currentRows=rows(ROOT/'cpppj/tests/fixtures/altarsacrifice-x86.tsv');records=[];files={Path(__file__),current,ROOT/'tools/decomp_altarsacrifice_oracle.py',ROOT/'cpppj/tests/fixtures/altarsacrifice-x86.tsv'}
     for history in (INITIAL,FRAME):
-        oldReport=history/'cpppj/recovery-altarsacrifice-evidence.json';old=json.loads(oldReport.read_text(encoding='utf-8'));oldFixture=history/'cpppj/tests/fixtures/altarsacrifice-x86.tsv';oldRows=rows(oldFixture);assert len(oldRows)==old['total'];preserved={}
+        oldReport=history/'cpppj/altarsacrifice.json';old=json.loads(oldReport.read_text(encoding='utf-8'));oldFixture=history/'cpppj/tests/fixtures/altarsacrifice-x86.tsv';oldRows=rows(oldFixture);assert len(oldRows)==old['total'];preserved={}
         # 당시저장한파일은모두당시report SHA와일치해야한다. 당시외부helper파일은원본수치재합산대상이아니다.
         for name,value in old['files'].items():
             saved=history/name

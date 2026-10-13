@@ -17,7 +17,7 @@ from analyze_styletext import ROOT, digest, read_ranges
 
 # 보호 PE는 읽기만 하고 계획·기록·기계어 자료는 작업 공간에 저장한다.
 PLAN = ROOT / 'tools/ghidra/dotnetdialogframes-functions.json'
-REPORT = ROOT / 'dotnetpj/recovery-dialog-frames-evidence.json'
+REPORT = ROOT / 'dotnetpj/dialog-frames.json'
 BINARY = ROOT / 'originals/Netstorm.exe'
 FOLDER = ROOT / 'extracted/dotnetdialogframes/originals'
 

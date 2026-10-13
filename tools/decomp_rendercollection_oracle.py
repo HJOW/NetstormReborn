@@ -29,7 +29,7 @@ SPECS['original1037'] = dict(SPECS['originalCD'])
 KEYS = ('sx', 'sy', 'left', 'top', 'right', 'bottom', 'vleft', 'vtop', 'vright', 'vbottom',
         'slots', 'pattern', 'limit', 'z', 'x', 'y', 'flags')
 FIXTURE = ROOT / 'cpppj/tests/fixtures/rendercollection-x86.tsv'
-REPORT = ROOT / 'cpppj/recovery-rendercollection-evidence.json'
+REPORT = ROOT / 'cpppj/rendercollection.json'
 # 부모 상태 비트와 무관한 수집, 깊이 WORD 절삭, 현재 좌표와 y 보정을 검사할 입력 시드다.
 SEED = 0x487f1045
 REGISTERS = {UC_X86_REG_EBX: 0x13572468, UC_X86_REG_ESI: 0x24681357,

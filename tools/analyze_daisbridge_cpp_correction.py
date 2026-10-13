@@ -8,11 +8,11 @@ import json
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1] # 현재 저장소 전체 바이트를 읽는 기준이다.
-HISTORY=ROOT/'cpppj/recovery-history/daisbridge-initial-cpp-failure' # 첫 실행의 원본640/검사/생산/실패 로그 전체106파일이다.
+HISTORY=ROOT/'cpppj/hist/daisbridge-i-42bda' # 첫 실행의 원본640/검사/생산/실패 로그 전체106파일이다.
 TEST='cpppj/tests/DaisBridgeTests.cpp' # 실제 PathStart/Prepare/Host/cleanup을 정확 비트로 비교하는 소비자 검사다.
-BINDING='cpppj/recovery-daisbridge-cpp-binding-evidence.json' # 첫 실행 당시 검사 SHA를 보존하는 연결 보고서다.
-NATIVE='cpppj/recovery-daisbridge-evidence.json' # 원본640과 두 x87 결과 전체를 보존하는 보고서다.
-REPORT=ROOT/'cpppj/recovery-daisbridge-cpp-correction-evidence.json' # 첫 최소 구성 교정/진단의 독립 successor다.
+BINDING='cpppj/daisbridge-cpp-binding.json' # 첫 실행 당시 검사 SHA를 보존하는 연결 보고서다.
+NATIVE='cpppj/daisbridge.json' # 원본640과 두 x87 결과 전체를 보존하는 보고서다.
+REPORT=ROOT/'cpppj/daisbridge-cpp-correction.json' # 첫 최소 구성 교정/진단의 독립 successor다.
 COMMENT='        // Native 합성 VT는 C++ 표시 분배에서 판본별 일반 VT로 준비하고 실제 Dais VT는 아래에서 유지한다.\n' # 일반 사제 합성 표시 입력의 범위를 설명한다.
 
 def sha(path):

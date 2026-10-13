@@ -26,7 +26,7 @@ STATE['original1037']=STATE['originalCD']
 SPOTS=0x13000000
 CONTROLS=(0x027f,0x037f)
 FIXTURE=ROOT/'cpppj/tests/fixtures/prieststate-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-prieststate-evidence.json'
+REPORT=ROOT/'cpppj/prieststate.json'
 # 경계 근처·정수/소수 좌표다. 거의 올림의 float 재저장 오류를 구별하는 20.000099도 넣는다.
 COORDS=((20.75,21.9),(20.0,21.0),(20.000099182128906,21.000099182128906),(0.0,0.0),(254.0,254.0))
 

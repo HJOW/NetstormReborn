@@ -17,7 +17,7 @@ from unicorn.x86_const import UC_X86_REG_EAX
 
 # 기존 독립 도구/fixture는 수정하지 않고 새 결과와 SHA를 기록한다.
 FIXTURE = ROOT / 'cpppj/tests/fixtures/graphrebuild-x86.tsv'
-REPORT = ROOT / 'cpppj/recovery-graphrebuild-evidence.json'
+REPORT = ROOT / 'cpppj/graphrebuild.json'
 PARENTS = ('decomp_graphremove_oracle.py', 'decomp_bridge_oracle.py') + DEPENDENCIES
 REBUILD = {'originals': 0x463110, 'originalCD': 0x45bd60}
 # 실제 전체 풀 순회 비용을 포함한 16가지 입력을 각 세 경로/판본/정밀도에서 실행한다.

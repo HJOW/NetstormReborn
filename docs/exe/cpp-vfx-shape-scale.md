@@ -62,7 +62,7 @@ C++는 같은 결과를 해제 이미지의 opacity/팔레트 번호에서 직�
 
 원본 관찰 **523,634개**, C++ 대조 **523,374개**, CTest **854개 통과**는 앞 단계 기록이다. 이번 분석에서 이 수치를 늘리지 않았다.
 
-자료: `cpppj/recovery-vfxscale-evidence.json`, `tools/analyze_vfxscale.py`, `tools/ghidra/vfxscale-functions.json`, `extracted/vfxscale/`, `extracted/vfxscale-originals-export.log`, `extracted/vfxscale-originalCD-retry-export.log`, `extracted/vfxscale-build.log`. 초기 CD 내보내기는 Ghidra 스크립트 번들 로드 오류로 실패했고 이후 다시 내보내 **11개 모두 완료**했다. 정적 보고서는 실제 함수 범위/명령/호출·반환/ROM과 현재 코드 SHA를 기록한다. 앞 단계 Markup 보고서는 당시 연결 코드 기록이며 이번 변경은 새 VFX 보고서를 따른다.
+자료: `cpppj/vfxscale.json`, `tools/analyze_vfxscale.py`, `tools/ghidra/vfxscale-functions.json`, `extracted/vfxscale/`, `extracted/vfxscale-originals-export.log`, `extracted/vfxscale-originalCD-retry-export.log`, `extracted/vfxscale-build.log`. 초기 CD 내보내기는 Ghidra 스크립트 번들 로드 오류로 실패했고 이후 다시 내보내 **11개 모두 완료**했다. 정적 보고서는 실제 함수 범위/명령/호출·반환/ROM과 현재 코드 SHA를 기록한다. 앞 단계 Markup 보고서는 당시 연결 코드 기록이며 이번 변경은 새 VFX 보고서를 따른다.
 
 ```powershell
 python -X utf8 tools/analyze_vfxscale.py

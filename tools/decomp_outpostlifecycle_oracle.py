@@ -23,7 +23,7 @@ SPEC['original1037']=dict(SPEC['originalCD'])
 CAPACITY=8
 FILL=0xabababab
 FIXTURE=ROOT/'cpppj/tests/fixtures/outpostlifecycle-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-outpostlifecycle-evidence.json'
+REPORT=ROOT/'cpppj/outpostlifecycle.json'
 KEYS=('mode','extra','flags','scene','mutate','x','y')
 
 

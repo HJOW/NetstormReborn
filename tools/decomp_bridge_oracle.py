@@ -302,7 +302,7 @@ def main():
             'Life는 정상 ret까지 실행하지 않으며 금/그림/낙하 효과 이전의 실제 비트 저장·삭제 인자만 검증',
             'OpenDirection 전체는 패치판 기계어만 검증; CD판 별도 함수 쌍을 만들지 않음',
             '정상 A~P·유한 float·정상 수명 입력. 누락 프레임 assert 보고만 대체']}
-    (ROOT/'cpppj/recovery-bridge-evidence.json').write_text(json.dumps(report, ensure_ascii=False, indent=2)+'\n', encoding='utf-8', newline='\n')
+    (ROOT/'cpppj/bridge.json').write_text(json.dumps(report, ensure_ascii=False, indent=2)+'\n', encoding='utf-8', newline='\n')
     print(json.dumps({'cases':dict(counts), 'different_draws':differences, 'total':sum(counts.values())}))
 
 

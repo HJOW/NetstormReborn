@@ -45,7 +45,7 @@ Pop 뒤 소리 프로세스용 `new(0x28)` 성공 여부를 읽는다. 성공하
 
 각 PE wrapper/실제 lookup/정상 반환 **1,664회**, 실제 소유자 지정 **1,280회**, 생성/Pop/소리 확보 대체 각각 **1,280회**, 소리 조회/프로세스 각각 **640회**, 로컬 안내 소리 **224회**다. 패치 번역/창은 각각 **224회**, CD/10.37은 0회다. ESP·EBX/ESI/EDI/EBP·x87 제어/TOP·FS:[0] 정상 SEH 복구·허용 코드/쓰기·해시 불변·원본 this/인자·raw 전체/전역·assert/OS 0·SHA/입력/행·실제 진입/대체 수를 확인한다. C++ 예외에서 원본 SEH의 예외 해제 몸체를 재현한 것은 아니다.
 
-새 [C++ 검사](../../cpppj/tests/PriestShieldTests.cpp) 5개는 세 PE 전체 관찰 재생과 실제 factory/owner→보호막 조회→중복 생성 방지→사제 삭제 준비의 보호막 조회/삭제 요청→재생성, 소리 확보 실패/성공, 잘못된 경계/풀/생성 SID를 검사한다. 통합의 Pop/가상 destroy 경계가 해시 등록/해제 입력을 공급하며 **전체 보호막 Pop/destroy의 원본 몸체는 미복원**이다. [fixture](../../cpppj/tests/fixtures/priestshield-x86.tsv), [근거 JSON](../../cpppj/recovery-priestshield-evidence.json)은 UTF-8/LF다. 앞 인계 345,466개에 이번 2,496개를 더한 누적 인계 집계는 **347,962개**다.
+새 [C++ 검사](../../cpppj/tests/PriestShieldTests.cpp) 5개는 세 PE 전체 관찰 재생과 실제 factory/owner→보호막 조회→중복 생성 방지→사제 삭제 준비의 보호막 조회/삭제 요청→재생성, 소리 확보 실패/성공, 잘못된 경계/풀/생성 SID를 검사한다. 통합의 Pop/가상 destroy 경계가 해시 등록/해제 입력을 공급하며 **전체 보호막 Pop/destroy의 원본 몸체는 미복원**이다. [fixture](../../cpppj/tests/fixtures/priestshield-x86.tsv), [근거 JSON](../../cpppj/priestshield.json)은 UTF-8/LF다. 앞 인계 345,466개에 이번 2,496개를 더한 누적 인계 집계는 **347,962개**다.
 
 Release **경고/오류 0**, CTest 내부 **435개·실패 0**(118.77초), 원본 근거 감사 **65종 모두 통과**. 검사용 생성 흐름과 실제 GUI/오디오의 완료를 구별한다.
 

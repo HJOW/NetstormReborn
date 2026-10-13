@@ -93,7 +93,7 @@ MenuGumpLayout layout(createState, menu, std::move(menuHooks));
 
 **이번 단계는 정적 복원이며 새 테스트 추가/실행·전체 CTest·독립 PE 동작 대조·GUI 실행은 미수행**이다. 앞 단계의 원본 관찰 누적 **523,634개**, C++ 대조 누적 **523,374개**, **854개 통과** 수치는 이번 변경을 검증한 수치가 아니다.
 
-자료: `cpppj/recovery-styletext-evidence.json`, `tools/analyze_styletext.py`, `tools/ghidra/styletext-functions.json`, `extracted/styletext/`, `extracted/styletext-*-export.log`, `extracted/styletext-build.log`. 분석 기록에는 두 바이너리·내보내기·실제 가상 표·파서 case·현재 구현의 SHA가 있다. 원본 게임/에뮬레이터/창을 실행하지 않고 다음 명령으로 정적 자료와 빌드를 재현한다.
+자료: `cpppj/styletext.json`, `tools/analyze_styletext.py`, `tools/ghidra/styletext-functions.json`, `extracted/styletext/`, `extracted/styletext-*-export.log`, `extracted/styletext-build.log`. 분석 기록에는 두 바이너리·내보내기·실제 가상 표·파서 case·현재 구현의 SHA가 있다. 원본 게임/에뮬레이터/창을 실행하지 않고 다음 명령으로 정적 자료와 빌드를 재현한다.
 
 ```powershell
 python -X utf8 tools/analyze_styletext.py

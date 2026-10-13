@@ -9,14 +9,14 @@ from pathlib import Path
 
 # 최초 관찰/컴파일 실패 입력은 별도 snapshot으로 보존한다. production/fixture는 그대로다.
 ROOT=Path(__file__).resolve().parent.parent
-REPORT=ROOT/'cpppj/recovery-priestritualactions-evidence.json'
-PRIOR=ROOT/'extracted/priestritualactions-before-factory-include-evidence.json'
-BEFORE=ROOT/'extracted/priestritualactions-before-factory-include-tests.cpp'
+REPORT=ROOT/'cpppj/priestritualactions.json'
+PRIOR=ROOT/'extracted/priestritualactions-before-factory-in-5e7a2.json'
+BEFORE=ROOT/'extracted/priestritualactions-before-factory-inc-de463.cpp'
 TEST='cpppj/tests/PriestRitualActionsTests.cpp'
-INTERMEDIATE=ROOT/'extracted/priestritualactions-before-number-correction-evidence.json' # 없는 number를 추가한 중간 실패 근거를 별도로 보존한다.
-INTERMEDIATE_TEST=ROOT/'extracted/priestritualactions-before-number-correction-tests.cpp' # 타입 정의 오독으로 실패한 테스트의 정확한 바이트를 보존한다.
-TAKE_REPORT=ROOT/'extracted/priestritualactions-before-take-correction-evidence.json' # client SID에 서버 전용 Take를 호출한 실패 전 근거다.
-TAKE_TEST=ROOT/'extracted/priestritualactions-before-take-correction-tests.cpp' # 서버/client 입력 교정 직전 전체 테스트 바이트다.
+INTERMEDIATE=ROOT/'extracted/priestritualactions-before-number-cor-47722.json' # 없는 number를 추가한 중간 실패 근거를 별도로 보존한다.
+INTERMEDIATE_TEST=ROOT/'extracted/priestritualactions-before-number-corr-53f2b.cpp' # 타입 정의 오독으로 실패한 테스트의 정확한 바이트를 보존한다.
+TAKE_REPORT=ROOT/'extracted/priestritualactions-before-take-corre-ac0ec.json' # client SID에 서버 전용 Take를 호출한 실패 전 근거다.
+TAKE_TEST=ROOT/'extracted/priestritualactions-before-take-correc-70d0e.cpp' # 서버/client 입력 교정 직전 전체 테스트 바이트다.
 
 
 def digest(path):

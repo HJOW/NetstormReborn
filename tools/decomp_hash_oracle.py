@@ -223,7 +223,7 @@ def main():
         'limits':['Init은 기존 배열 초기화만; malloc/실제 게임 미실행',
             '정상 비음수 좌표/크기; 공간 체인 삽입·제거와 일반 탐색은 후속',
             'Level/Genus는 판본별 기대값을 별도 저장한다']}
-    (ROOT/'cpppj/recovery-hash-evidence.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
+    (ROOT/'cpppj/hash.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
     print(json.dumps({'cases':dict(counts),'assert_reports':report['assert_reports']}),flush=True)
 
 

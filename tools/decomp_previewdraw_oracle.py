@@ -15,7 +15,7 @@ from decomp_process_oracle import (ProcessOracle,ROOT,BINARIES,CONTROLS,STACK,ST
 # 격리 작업 항목·raw 슬롯·타입 표·반환 문자열 주소다.
 DATA,ENTRY,RAW,TYPES,STRINGS=0x16000000,0x16000100,0x16000200,0x16001000,0x16030000
 FIXTURE=ROOT/'cpppj/tests/fixtures/previewdraw-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-previewdraw-evidence.json'
+REPORT=ROOT/'cpppj/previewdraw.json'
 SEED=0x44627032
 # 첫 29개 상태는 두 판본의 실제 전역 입력이다. 이하 타입/슬롯/격자 입력은 별도다.
 FIELDS=('parent','legal','type','destroy_type','no_outline','overlay_trigger','overlay_type','label_type','owner','camera_x','camera_y',

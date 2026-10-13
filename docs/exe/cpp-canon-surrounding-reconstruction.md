@@ -33,7 +33,7 @@
 
 ## 독립 기계어 대조와 연결
 
-새 [기대값 생성기](../../tools/decomp_canonsurrounding_oracle.py)와 [근거 JSON](../../cpppj/recovery-canonsurrounding-evidence.json)은 **세 PE 각각 524개(전체 finder 140·주변 구간 384), 총 1,572개**를 기록한다. 두 x87 제어 워드 `0x027f`/`0x037f`의 관찰이 같다. 누적 독립 fixture는 **334,489개**다.
+새 [기대값 생성기](../../tools/decomp_canonsurrounding_oracle.py)와 [근거 JSON](../../cpppj/canonsurrounding.json)은 **세 PE 각각 524개(전체 finder 140·주변 구간 384), 총 1,572개**를 기록한다. 두 x87 제어 워드 `0x027f`/`0x037f`의 관찰이 같다. 누적 독립 fixture는 **334,489개**다.
 
 finder 생성/가상 필터/순회/기하/접합/CRT는 전체 원본 몸체를 정상 반환까지 실행한다. ABI의 ESP/ret N·보존 레지스터·x87를 검사한다. 주변 권한은 MayPlace의 위 중간 구간만 실행하고 다음 decoder Advance 진입 전에 종료한다. 그 구간의 원본 바깥 관계/후보 helper/반복은 실제 명령이다. **Player locator 진입만 인자/횟수 관찰 후 지정 반환과 미래 입력 변경으로 명시 대체**한다. 이전 단계에서 복원한 Player 전체 실행과는 별도 근거다.
 

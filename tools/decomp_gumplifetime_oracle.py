@@ -20,7 +20,7 @@ TOKENS=tuple(DATA+16+i*STRIDE for i in range(COUNT))
 VTABLE=DATA+0x9000
 VIRTUAL={STUBS+0xa00:'Push',STUBS+0xa20:'Destructor',STUBS+0xa40:'Form'}
 FIXTURE=ROOT/'cpppj/tests/fixtures/gumplifetime-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-gumplifetime-evidence.json'
+REPORT=ROOT/'cpppj/gumplifetime.json'
 # 실제 함수/표/스칼라 전역과 CRT free 경계다. CRT 복사는 원본 몸체로 실행한다.
 SPECS={
     'originals':dict(Kill=0x466480,Cleanup=0x4662b0,Destroy=0x464c80,Base=0x464420,Scalar=0x466460,

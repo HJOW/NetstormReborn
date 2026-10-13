@@ -1,0 +1,95 @@
+{
+  "primary_target": "10.78",
+  "total": 810,
+  "host": "VM-W11-Codex",
+  "date": "2026-10-12",
+  "controls": [
+    639,
+    895
+  ],
+  "os_calls": 0,
+  "assertions": 0,
+  "editions": {
+    "originals": {
+      "cases": 270,
+      "entries": {
+        "00464170": 98,
+        "00464100": 138,
+        "00464c20": 410,
+        "004660f0": 150
+      },
+      "returns": {
+        "00464170": 98,
+        "00464100": 138,
+        "00464c20": 156,
+        "004660f0": 150
+      },
+      "boundaries": {
+        "Idle": 328,
+        "Broadcast": 88,
+        "Redraw": 484
+      }
+    },
+    "originalCD": {
+      "cases": 270,
+      "entries": {
+        "00492990": 98,
+        "00492940": 138,
+        "004939e0": 610,
+        "004927c0": 150
+      },
+      "returns": {
+        "00492990": 98,
+        "00492940": 138,
+        "004939e0": 156,
+        "004927c0": 150
+      },
+      "boundaries": {
+        "Idle": 320,
+        "Broadcast": 96,
+        "Redraw": 472
+      }
+    },
+    "original1037": {
+      "cases": 270,
+      "entries": {
+        "00492990": 98,
+        "00492940": 138,
+        "004939e0": 610,
+        "004927c0": 150
+      },
+      "returns": {
+        "00492990": 98,
+        "00492940": 138,
+        "004939e0": 156,
+        "004927c0": 150
+      },
+      "boundaries": {
+        "Idle": 320,
+        "Broadcast": 96,
+        "Redraw": 472
+      }
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/gumpframe-x86.tsv": "d3d9b8a83c5404d4e14f17967ae1ea5b3b6ffe3936b18b0c62ecd1b37af17f00",
+    "extracted/gumpframe/original1037/creation.c": "328429b6f28871918bab134cfb3639207fc2a89077af6499171b9beba2883d28",
+    "extracted/gumpframe/original1037/functions.tsv": "bac5dfe6e1e31cf3df1cff5cad9f6c73f03b617a2ccee894da571bd785800e1a",
+    "extracted/gumpframe/originalCD/creation.c": "328429b6f28871918bab134cfb3639207fc2a89077af6499171b9beba2883d28",
+    "extracted/gumpframe/originalCD/functions.tsv": "bac5dfe6e1e31cf3df1cff5cad9f6c73f03b617a2ccee894da571bd785800e1a",
+    "extracted/gumpframe/originals/creation.c": "08ffebc68628354dfef6440e2459b512cda1c65b5c0f5275347090091970fc79",
+    "extracted/gumpframe/originals/functions.tsv": "2766b92b725cfc64064ee19249ca39d78459386b59c2e8d530627260e61f50d0",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_drawsort_oracle.py": "f570a38034934d7202359f8727f3bb648d53e39979635d22f38fc9717c683ac4",
+    "tools/decomp_gumpframe_oracle.py": "1fea54e97013880d8e211a0612a9bb014286cfbe85321c792dac1523f110ebcc",
+    "tools/decomp_process_oracle.py": "40f209d140cc02af68136873d64f78414fd6515ee8156cf13803070e27737e3f",
+    "tools/ghidra/gumpframe-functions.json": "0737ecdd986a8b564c32cbbf751b12ab1019396fecbf3739934f8f0651924f9c"
+  },
+  "limits": [
+    "등록표 통지/idle 순회/자식·루트 재그리기 요청의 전체 정상 함수와 실제 재귀",
+    "가상 +0x2c/+0x30/+8만 명시 응답; 파생 함수/픽셀 출력/OS/실제 게임 프레임 제외",
+    "전체 노드/표/개수/콜백 직전 상태·인자, ABI/x87/SEH/허용 실행·쓰기/보호/읽기 전용/SHA 감사"
+  ]
+}

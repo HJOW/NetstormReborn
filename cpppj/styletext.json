@@ -1,0 +1,390 @@
+{
+  "last_decompile_host": "HJOW-Athlon",
+  "recorded_at": "2026-10-12T21:37:03.705737+09:00",
+  "method": "두 실제 PE의 정적 디컴파일·가상 표·기계어 판독; 원본 게임/에뮬레이터 실행 없음",
+  "cpp_comparison": "미수행: 새 테스트 추가/실행·독립 원본 동작 대조·GUI 검사는 후속",
+  "boundaries": [
+    "대괄호 옵션/그림 파싱",
+    "그림 등 파생 조각의 메트릭/측정/출력/삭제",
+    "클라이언트 자동 UI 연결"
+  ],
+  "editions": {
+    "originals": {
+      "binary": "originals/Netstorm.exe",
+      "exported_functions": [
+        "004755c0",
+        "004755e0",
+        "004756b0",
+        "004756e0",
+        "00475720",
+        "00475760",
+        "004b93c0",
+        "004b9490",
+        "004bbe20",
+        "004b94f0",
+        "004b9510",
+        "004b9530",
+        "004bbda0",
+        "004bb430",
+        "004a3ed0",
+        "004e63e0"
+      ],
+      "requested_functions": [
+        "004755c0",
+        "004755e0",
+        "004756b0",
+        "004756e0",
+        "00475720",
+        "00475760",
+        "004b93c0",
+        "004b9490",
+        "004bbe20",
+        "004b94f0",
+        "004b9510",
+        "004b9530",
+        "004bbda0",
+        "004bb430",
+        "004a3ed0",
+        "004e63e0"
+      ],
+      "text_vtable": "005143cc",
+      "text_virtual_slots": [
+        "004bbe20",
+        "004b94f0",
+        "004b9510",
+        "004b9530",
+        "004bbda0"
+      ],
+      "parser": "004bb430",
+      "parser_cases": [
+        {
+          "byte": 42,
+          "character": "*"
+        },
+        {
+          "byte": 46,
+          "character": "."
+        },
+        {
+          "byte": 48,
+          "character": "0"
+        },
+        {
+          "byte": 49,
+          "character": "1"
+        },
+        {
+          "byte": 51,
+          "character": "3"
+        },
+        {
+          "byte": 52,
+          "character": "4"
+        },
+        {
+          "byte": 53,
+          "character": "5"
+        },
+        {
+          "byte": 54,
+          "character": "6"
+        },
+        {
+          "byte": 66,
+          "character": "B"
+        },
+        {
+          "byte": 69,
+          "character": "E"
+        },
+        {
+          "byte": 73,
+          "character": "I"
+        },
+        {
+          "byte": 78,
+          "character": "N"
+        },
+        {
+          "byte": 83,
+          "character": "S"
+        },
+        {
+          "byte": 85,
+          "character": "U"
+        },
+        {
+          "byte": 91,
+          "character": "["
+        },
+        {
+          "byte": 97,
+          "character": "a"
+        },
+        {
+          "byte": 98,
+          "character": "b"
+        },
+        {
+          "byte": 100,
+          "character": "d"
+        },
+        {
+          "byte": 103,
+          "character": "g"
+        },
+        {
+          "byte": 105,
+          "character": "i"
+        },
+        {
+          "byte": 106,
+          "character": "j"
+        },
+        {
+          "byte": 107,
+          "character": "k"
+        },
+        {
+          "byte": 108,
+          "character": "l"
+        },
+        {
+          "byte": 109,
+          "character": "m"
+        },
+        {
+          "byte": 110,
+          "character": "n"
+        },
+        {
+          "byte": 111,
+          "character": "o"
+        },
+        {
+          "byte": 112,
+          "character": "p"
+        },
+        {
+          "byte": 113,
+          "character": "q"
+        },
+        {
+          "byte": 114,
+          "character": "r"
+        },
+        {
+          "byte": 115,
+          "character": "s"
+        },
+        {
+          "byte": 116,
+          "character": "t"
+        },
+        {
+          "byte": 117,
+          "character": "u"
+        },
+        {
+          "byte": 119,
+          "character": "w"
+        },
+        {
+          "byte": 120,
+          "character": "x"
+        },
+        {
+          "byte": 121,
+          "character": "y"
+        },
+        {
+          "byte": 126,
+          "character": "~"
+        }
+      ]
+    },
+    "originalCD": {
+      "binary": "originalCD/NETSTORM.EXE",
+      "exported_functions": [
+        "004504a0",
+        "004504c0",
+        "00450590",
+        "004505c0",
+        "00450600",
+        "00450640",
+        "004b4de0",
+        "004b4ed0",
+        "004b7e50",
+        "004b4f50",
+        "004b4f80",
+        "004b4fa0",
+        "004b7dc0",
+        "004b7770",
+        "00426060",
+        "004f1bb0"
+      ],
+      "requested_functions": [
+        "004504a0",
+        "004504c0",
+        "00450590",
+        "004505c0",
+        "00450600",
+        "00450640",
+        "004b4de0",
+        "004b4ed0",
+        "004b7e50",
+        "004b4f50",
+        "004b4f80",
+        "004b4fa0",
+        "004b7dc0",
+        "004b7770",
+        "00426060",
+        "004f1bb0"
+      ],
+      "text_vtable": "00505d48",
+      "text_virtual_slots": [
+        "004b7e50",
+        "004b4f50",
+        "004b4f80",
+        "004b4fa0",
+        "004b7dc0"
+      ],
+      "parser": "004b7770",
+      "parser_cases": [
+        {
+          "byte": 42,
+          "character": "*"
+        },
+        {
+          "byte": 46,
+          "character": "."
+        },
+        {
+          "byte": 48,
+          "character": "0"
+        },
+        {
+          "byte": 49,
+          "character": "1"
+        },
+        {
+          "byte": 51,
+          "character": "3"
+        },
+        {
+          "byte": 52,
+          "character": "4"
+        },
+        {
+          "byte": 53,
+          "character": "5"
+        },
+        {
+          "byte": 54,
+          "character": "6"
+        },
+        {
+          "byte": 66,
+          "character": "B"
+        },
+        {
+          "byte": 69,
+          "character": "E"
+        },
+        {
+          "byte": 73,
+          "character": "I"
+        },
+        {
+          "byte": 78,
+          "character": "N"
+        },
+        {
+          "byte": 91,
+          "character": "["
+        },
+        {
+          "byte": 98,
+          "character": "b"
+        },
+        {
+          "byte": 103,
+          "character": "g"
+        },
+        {
+          "byte": 105,
+          "character": "i"
+        },
+        {
+          "byte": 106,
+          "character": "j"
+        },
+        {
+          "byte": 107,
+          "character": "k"
+        },
+        {
+          "byte": 108,
+          "character": "l"
+        },
+        {
+          "byte": 109,
+          "character": "m"
+        },
+        {
+          "byte": 110,
+          "character": "n"
+        },
+        {
+          "byte": 111,
+          "character": "o"
+        },
+        {
+          "byte": 113,
+          "character": "q"
+        },
+        {
+          "byte": 114,
+          "character": "r"
+        },
+        {
+          "byte": 116,
+          "character": "t"
+        },
+        {
+          "byte": 119,
+          "character": "w"
+        },
+        {
+          "byte": 120,
+          "character": "x"
+        },
+        {
+          "byte": 121,
+          "character": "y"
+        },
+        {
+          "byte": 126,
+          "character": "~"
+        }
+      ]
+    }
+  },
+  "files": {
+    "tools/analyze_styletext.py": "a69336b3064208e08e5fcea4e84f8427eeaa35512673c64f273c39b4b91877b1",
+    "tools/ghidra/styletext-functions.json": "00e5605b8826e9ff27cda3253f6a982db3f03aee00037a8ee7c0f5f2bd7f3903",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/styletext/originals/creation.c": "a56c4d3289e8569323ef20bc90fe805c3b31cc72c021e14dc7d5c7214ff62e95",
+    "extracted/styletext/originals/functions.tsv": "087ca23ef5bbe74e950e23406e6ee95daa8ba9c2bb42792bdf722443fc177da4",
+    "extracted/styletext/originals/assembly.txt": "1dcd9980c0625036f1b4ea3de5784a2ea0148b9acf77e683c42f64adebb7c5f3",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "extracted/styletext/originalCD/creation.c": "9b50909548fc15adca326037ac23027da3e2765101f64ef9c3e018d213c2d770",
+    "extracted/styletext/originalCD/functions.tsv": "7cdc18b8048b4e2d2d196054da69f4bcbde01cb77e32074406c3b1a13d6a5812",
+    "extracted/styletext/originalCD/assembly.txt": "baa61a7fa797c9796fd7a076e2a79752fbfcdb0380f2ded42211391a833e2b0a",
+    "cpppj/src/client/StyleText.h": "9b45296d68f4ae21f4d8a07b749fc5ff7899d265ca1372aa7c968bde9564e959",
+    "cpppj/src/client/StyleText.cpp": "3ed0154bd1c9a6cae832ff31d779b4755b097cd7fd805e18db67ed1eb53d7a3e",
+    "cpppj/src/client/GumpText.h": "66ae40d7ba7bb50dd02480517be4abee41da88e73011053b8739f0df53d11340",
+    "cpppj/src/client/GumpText.cpp": "bb6924f6131ac6d3df3cca683260d0b41b46d71706874b672bf79a927fa61856",
+    "cpppj/src/client/CMakeLists.txt": "cc38d027b78770ed40d2910fd4d70833996fcab99f4b538551b5304b6e84d0b4"
+  }
+}

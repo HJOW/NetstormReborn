@@ -59,7 +59,7 @@ Broadcast는 **폴링하지 않으며 event/x도 읽지 않는다.** bit 4가 �
 
 라이브러리/`NetstormCpp` **Release 최종 빌드 경고 0·오류 0**. SOURCE_MAP 생성/내용 차이 없음. **새 테스트 추가/실행·전체 CTest·독립 PE/C++ 생성/소유/부착/태그/커서/드래그/픽셀 대조·게임/GUI 실행은 미수행**이다. 원본 관찰 **523,634개**, C++ 대조 **523,374개**, CTest **854개 통과**는 앞 단계 기록이며 이번 변경의 검증 수치가 아니다.
 
-자료: `tools/ghidra/scrolltext-functions.json`, `tools/analyze_scrolltext.py`, `cpppj/recovery-scrolltext-evidence.json`, `extracted/scrolltext/`, `extracted/scrolltext-build.log`. 실제 함수/명령/가상 슬롯/정렬/사건 전역 주소와 현재 생성·소유·표시·입력 연결 해시를 저장한다.
+자료: `tools/ghidra/scrolltext-functions.json`, `tools/analyze_scrolltext.py`, `cpppj/scrolltext.json`, `extracted/scrolltext/`, `extracted/scrolltext-build.log`. 실제 함수/명령/가상 슬롯/정렬/사건 전역 주소와 현재 생성·소유·표시·입력 연결 해시를 저장한다.
 
 후속은 W 명령/전체 다중 줄 스타일 파서·버퍼 교체/추가 설정·메뉴/Form/자동 raw UI와 이번 생성/소유/태그/드래그·앞선 텍스트/버퍼/Slider/픽셀/파서의 독립 원본/C++ 대조다. 실제 ID/타입 전역·allocator 토큰·커서 공급은 상위 조립 계층 책임이다. 생성자 EH 정리·극단 x87 80비트 값의 전체 대조도 남았다. **Client/UberGump는 기존 메뉴 어댑터이며 raw 자동 GUI와 건설·미션 완주는 미완료다.**
 

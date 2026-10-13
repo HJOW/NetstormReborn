@@ -12,7 +12,7 @@ from unicorn.x86_const import UC_X86_REG_EAX,UC_X86_REG_ECX,UC_X86_REG_ESP,UC_X8
 # 원본 가상 Pop 대신 인자/현재 raw 상태를 관찰하는 격리 주소다. 게임/OS 주소를 실행하지 않는다.
 TABLE,POP=ARENA+0xcd000,ARENA+0xcff00
 FIXTURE=ROOT/'cpppj/tests/fixtures/pathinit-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-pathinit-evidence.json'
+REPORT=ROOT/'cpppj/pathinit.json'
 
 
 def cases():

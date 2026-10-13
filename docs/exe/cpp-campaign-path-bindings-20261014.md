@@ -50,6 +50,6 @@ Transmission의 `other`는 다른 프로세스의 WriteData fallback이다. 송�
 
 사용자의 현재 검사 마감 뒤 인수인계·커밋·중단 지시에 따라 이 준비 소스는 **미등록/미빌드/새CPP0** 상태로 동결한다. h/cpp는 준비 보고서를 만들던 전체 SHA와 같다. 단위14 Host 검사의 Factory 입력과 cleanup 연결이 이후 교정됐으므로 이전 준비 보고서의 문법 successor 참조는 당시 Host 검사 view에서 재현한다. 직접 `analyze_campaign_path_bindings.py --verify`를 현재 Host 입력으로 실행하면 이전 문법 검사 SHA가 달라 거부하는 것이 맞다. 보고서를 덮지 말고 재개 시 최신 cleanup successor와 root의 실제 공유API 변경을 별도 새 successor로 연결한다.
 
-당시 준비 근거는 `priest-arrival-before-factory-input/cpppj/tests/PriestPathArrivalHostTests.cpp`의 전체 바이트를 current Test read view로 공급하면 원래 `expected()`와 보고서가 다시 일치한다. 이 역사 view 감사는 성공했으며 준비 source h/cpp 변경0이다. 현재 단위14의 최신 검증 CLI는 `analyze_priest_arrival_cleanup_binding_lineage.py --verify`다.
+당시 준비 근거는 `priest-arriv-dbe45/cpppj/tests/PriestPathArrivalHostTests.cpp`의 전체 바이트를 current Test read view로 공급하면 원래 `expected()`와 보고서가 다시 일치한다. 이 역사 view 감사는 성공했으며 준비 source h/cpp 변경0이다. 현재 단위14의 최신 검증 CLI는 `check_arrival_cleanup_ln.py --verify`다.
 
 재개 시 root의 `RawCampaignWorldRuntime`이 장기 사제/Halt/Arrival/cleanup/lookup/StartState/ProcessState/SearchState를 소유한다. 표면 월드의 사제 가상 소유자 callback, 로딩 깊이/현재 Player 구분, 실제 metadata/stepSound/겹침 정리/큰 retarget, 같은 패킷 버퍼의 Gun·Regular·Path writer를 공급해야 한다. 중립 귀환/포획/큰 운반과 PathStart bias 경계는 아직 별도 미완료다. 같은172 설치와 실제 사제 명령 소비자 검사가 끝나기 전 전체 캠페인 연결 완료로 기록하지 않는다.

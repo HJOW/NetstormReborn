@@ -19,7 +19,7 @@ SPEC={
 PLAYERS=0x11500000 # 원래ownerWORD로조회하는격리player배열이다.
 MEMORY=HEAP+0x6000 # 관찰new0x28이반환하는메모리다.
 FIXTURE=ROOT/'cpppj/tests/fixtures/runepostpop-x86.tsv' # 고유입력과원본후처리출력이다.
-REPORT=ROOT/'cpppj/recovery-runepostpop-evidence.json' # 기존모듈근거와분리한새Rune원본관찰이다.
+REPORT=ROOT/'cpppj/runepostpop.json' # 기존모듈근거와분리한새Rune원본관찰이다.
 
 
 def inputs():
@@ -79,7 +79,7 @@ def generate(smoke=False):
             except Exception as error:raise RuntimeError(f'{edition} #{index} {case}: {error}') from error
             rows.append([edition,','.join(map(str,case)),*result])
         editions[edition]=dict(cases=len(cases),returns=oracle.rune_returns,entries=dict(oracle.hits),boundaries=dict(oracle.stub_calls),asserts=oracle.assertions);files.update(oracle.paths);files.add(ROOT/('originals/Netstorm.exe' if edition=='originals' else 'originalCD/NETSTORM.EXE'))
-    FIXTURE.write_text('# edition flags,profile,reserve,ownerWord,playerFlag,suppress,mutation,extra seconds near effects slots6,7,8 suppress\n'+'\n'.join('\t'.join(row) for row in rows)+'\n',encoding='utf-8',newline='\n');files.update(ROOT/name for name in ('cpppj/src/o/RawRunePostPop.h','cpppj/src/o/RawRunePostPop.cpp','cpppj/tests/RunePostPopTests.cpp','cpppj/recovery-runepostpop-lineage-evidence.json','tools/decomp_templeritual_oracle.py','tools/decomp_rawfinder_oracle.py','tools/decomp_bridgeeffects_oracle.py','tools/decomp_bridgedecay_oracle.py'))
+    FIXTURE.write_text('# edition flags,profile,reserve,ownerWord,playerFlag,suppress,mutation,extra seconds near effects slots6,7,8 suppress\n'+'\n'.join('\t'.join(row) for row in rows)+'\n',encoding='utf-8',newline='\n');files.update(ROOT/name for name in ('cpppj/src/o/RawRunePostPop.h','cpppj/src/o/RawRunePostPop.cpp','cpppj/tests/RunePostPopTests.cpp','cpppj/runepostpop-lineage.json','tools/decomp_templeritual_oracle.py','tools/decomp_rawfinder_oracle.py','tools/decomp_bridgeeffects_oracle.py','tools/decomp_bridgedecay_oracle.py'))
     REPORT.write_text(json.dumps(dict(host='HJOW-Athlon',total=len(rows),editions=editions,files={p.relative_to(ROOT).as_posix():sha(p) for p in sorted(files)},game_runs=0,smoke=smoke,limits=['실제Rune postPop/근처같은owner신전/altar원래ownerWORD/player시간조회몸체는실제PE다.','new/localRegular/ConstructionStart/공통PostPop은명시요청경계이며실제C++소비자는기존Host/Construction/Base를재사용한다.','기존공통/건설2868관찰은새Rune고유입력에합산하지않는다. 실제게임/GUI/완주검사아님.']),ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n');print('Rune postPop native 고유 입력:',len(rows))
 
 

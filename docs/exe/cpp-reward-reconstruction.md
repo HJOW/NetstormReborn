@@ -2,7 +2,7 @@
 
 2026-10-07. **1차 기준은 10.78**이다. [공통 삭제 장부](cpp-destroylifecycle-reconstruction.md)가 사건으로만 내보내던 보상을 실제 계산으로 복원했다. 호스트 **DESKTOP-HJOW에서 원본/복사본 게임·업데이터/설치 도구·클론 창을 실행하지 않았다.** CD/추가 10.37은 비교 판본이다.
 
-소스: [SquidReward](../../cpppj/src/o/SquidReward.cpp), [SpStore](../../cpppj/src/o/SpStore.cpp), 연결: [SquidDestroyLifecycle](../../cpppj/src/o/SquidDestroyLifecycle.cpp). 검사: [RewardTests.cpp](../../cpppj/tests/RewardTests.cpp). 독립 원본 출력: [reward-x86.tsv](../../cpppj/tests/fixtures/reward-x86.tsv), [근거 기록](../../cpppj/recovery-reward-evidence.json), [생성/감사 도구](../../tools/decomp_reward_oracle.py).
+소스: [SquidReward](../../cpppj/src/o/SquidReward.cpp), [SpStore](../../cpppj/src/o/SpStore.cpp), 연결: [SquidDestroyLifecycle](../../cpppj/src/o/SquidDestroyLifecycle.cpp). 검사: [RewardTests.cpp](../../cpppj/tests/RewardTests.cpp). 독립 원본 출력: [reward-x86.tsv](../../cpppj/tests/fixtures/reward-x86.tsv), [근거 기록](../../cpppj/reward.json), [생성/감사 도구](../../tools/decomp_reward_oracle.py).
 
 ## 원본 주소와 읽기 전용 내보내기
 
@@ -58,7 +58,7 @@
 
 비교하는 관찰값은 **샘 풀·소유자 0..8의 AI 지갑 DWORD·SP(패치는 실제 읽기 함수로 소유자 0..8, CD는 전역 float)·전역 난수 상태·32개 SP 배열 전체의 Adler-32·offset·UI 갱신 횟수·가상 개수 질의 횟수**다. 패치판은 같은 재시드/채움 입력으로 소유자 0..8의 초기 SP를 쓰는 실제 `0040edb0` 구간의 난수 상태와 배열 체크섬도 C++와 따로 대조한다(초기화 + 아홉 번의 쓰기가 같은 난수 소비를 한다).
 
-각 PE의 정밀도별 실제 내부 도달은 보상 2,400회, 패치 기준 비용 곡선 2,397·해체 환불 500·로컬 가산 909·소유자 가산 708·AI 지갑 1,617·샘 풀 1,617·SP 쓰기 23,217·SP 읽기 23,217·난수 3,793,920회이며 CD/10.37은 보상 2,400·비용 곡선 2,394·환불 599·지갑 가산 1,779·로컬 가산 991이다([기록](../../cpppj/recovery-reward-evidence.json)의 `native_hits`는 두 정밀도를 합한 값이다). 분기 도달은 패치 기준 적용 1,617, 해체 500, SP 고정 1,200, 절반 HP 해체 238, 지갑 하한 도달 68, 수신자 0 지급 178이다. 최대 HP 0은 기계어로 확인한 결과 두 판본 모두 환불 0이다(x87 무한대/NaN → 절삭 변환의 하위 DWORD 0). 원본 assert 도달 0·정상 반환/ESP/x87 제어 워드/TOP·허용 밖 쓰기 0을 확인했다.
+각 PE의 정밀도별 실제 내부 도달은 보상 2,400회, 패치 기준 비용 곡선 2,397·해체 환불 500·로컬 가산 909·소유자 가산 708·AI 지갑 1,617·샘 풀 1,617·SP 쓰기 23,217·SP 읽기 23,217·난수 3,793,920회이며 CD/10.37은 보상 2,400·비용 곡선 2,394·환불 599·지갑 가산 1,779·로컬 가산 991이다([기록](../../cpppj/reward.json)의 `native_hits`는 두 정밀도를 합한 값이다). 분기 도달은 패치 기준 적용 1,617, 해체 500, SP 고정 1,200, 절반 HP 해체 238, 지갑 하한 도달 68, 수신자 0 지급 178이다. 최대 HP 0은 기계어로 확인한 결과 두 판본 모두 환불 0이다(x87 무한대/NaN → 절삭 변환의 하위 DWORD 0). 원본 assert 도달 0·정상 반환/ESP/x87 제어 워드/TOP·허용 밖 쓰기 0을 확인했다.
 
 **명시적 대체**는 SP 표시 갱신(`0043dad0`/CD `004ee9d0`, 호출만 센다), 시각 기반 재시드(`004559d0`, 입력 상태 주입), 0x24바이트 힙 할당(`004e4391`, 입력 채움값), 패치 assert 보고, 파생 vtable +0x80의 개수(base가 아닌 입력은 호출 순서대로 값을 돌려주는 스텁)뿐이다. 나머지 보상/비용/환불/SP 저장소/지갑/샘 풀/난수는 원본 명령이다. 정수 비용 표는 실제 로더의 `ftol(cost+번호×23)` 접두 구간(`0049c338`~)을 실행해 채웠다.
 

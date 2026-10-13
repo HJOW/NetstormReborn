@@ -28,7 +28,7 @@ event2/count!=0은 Battle이면 현재Template owner의 State getter→State 첫
 
 없는State 생성, end1/27의new60힙확장, 실제파일저장 `0044d8d0/CD0044cc40`은미복원진입에서중단한다. 이24행은 `status=boundary, returnbits=-`이며정상반환/assert와합치지않는다. 원본새State의미초기stack BYTE와파일저장/OS 효과를가짜0으로초기화하지않는다. 일반DataManager/파일초기화전체완료근거가아니다.
 
-출처는 `decomp_player_regular_oracle.py`, `recovery-player-regular-evidence.json`, `player-regular-x86.tsv`, 분리한두spec/정밀export다. **`python -X utf8 tools/analyze_player_regular_native.py`가전체SHA/658입력/세분류/반환누락을읽기감사하며통과**했다. 원본producer에는`--verify`가없다. 기본producer는재관찰/fixture생성이므로감사목적에다시실행하지않는다.
+출처는 `decomp_player_regular_oracle.py`, `player-regular.json`, `player-regular-x86.tsv`, 분리한두spec/정밀export다. **`python -X utf8 tools/analyze_player_regular_native.py`가전체SHA/658입력/세분류/반환누락을읽기감사하며통과**했다. 원본producer에는`--verify`가없다. 기본producer는재관찰/fixture생성이므로감사목적에다시실행하지않는다.
 
 ## C++ 현재 준비와 인수인계
 

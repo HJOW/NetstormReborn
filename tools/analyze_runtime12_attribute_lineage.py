@@ -7,10 +7,10 @@ import json
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]  # 저장소 전체 자료의 절대 기준이다.
-HISTORY=ROOT/'cpppj/recovery-history/campaign-runtime12-before-attribute-comment'  # 첫 성공 근거의 전체 원문이다.
-REPORT=ROOT/'cpppj/recovery-campaign-runtime12-attribute-lineage-evidence.json'  # 설명만 바뀐 현재 속성의 별도 출처다.
-SAVED=('.gitattributes','tools/analyze_campaign_runtime12.py','cpppj/recovery-campaign-runtime12-evidence.json',
-       'extracted/campaign-runtime12-final-evidence-generation.log')  # 교정 직전 속성/도구/성공 근거/로그를 모두 보존한다.
+HISTORY=ROOT/'cpppj/hist/campaign-run-6e53a'  # 첫 성공 근거의 전체 원문이다.
+REPORT=ROOT/'cpppj/run12-attribute-lineage.json'  # 설명만 바뀐 현재 속성의 별도 출처다.
+SAVED=('.gitattributes','tools/analyze_campaign_runtime12.py','cpppj/run12.json',
+       'extracted/run12-final-evidence-generation.log')  # 교정 직전 속성/도구/성공 근거/로그를 모두 보존한다.
 COMMENT='# 단위12의 전체 소스 및 원본 대조 자료 바이트를 Git에서도 그대로 보존한다.'  # 속성 동작을 한국어로 설명한다.
 
 

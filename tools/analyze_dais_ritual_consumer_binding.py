@@ -6,8 +6,8 @@ from pathlib import Path
 from decomp_daiscontentnotice_oracle import ROOT,sha
 
 TEST='cpppj/tests/DaisRitualConsumerTests.cpp' # 실제같은Pool/Host/Kernel 삭제사슬의새검사다.
-HISTORY=ROOT/'cpppj/recovery-history/dais-ritual-consumer-before-cd-surface' # 원본fadd확인전의전체새검사를보존한다.
-REPORT=ROOT/'cpppj/recovery-dais-ritual-consumer-binding-evidence.json' # 새원본관찰을추가하지않는현재소비자연결근거다.
+HISTORY=ROOT/'cpppj/hist/dais-ritual-47665' # 원본fadd확인전의전체새검사를보존한다.
+REPORT=ROOT/'cpppj/dais-ritual-consumer-binding.json' # 새원본관찰을추가하지않는현재소비자연결근거다.
 
 def expected():
     """전체옛검사역변환과실제몸체/선행독립근거현재SHA를연결한다."""
@@ -19,7 +19,7 @@ def expected():
         for suffix in ('.h','.cpp'):files.add(ROOT/f'cpppj/src/o/{name}{suffix}')
     # 정밀원본부모몸체와새API/12입력셀교정은각자당시관찰수로보존한다.
     prior={}
-    for name in ('recovery-daislifecycle-current-evidence.json','recovery-daislifecycle-current-successor-evidence.json','recovery-daiscontentnotice-evidence.json','recovery-daiscontentnotice-successor-evidence.json','recovery-daisprogress-evidence.json','recovery-dais-postpop-lineage-evidence.json','recovery-damageablepostdestroy-evidence.json','recovery-damageablepostdestroy-lineage-evidence.json'):
+    for name in ('daislifecycle-current.json','daislifecycle-current-successor.json','daiscontentnotice.json','daiscontentnotice-successor.json','daisprogress.json','dais-postpop-lineage.json','damageablepostdestroy.json','damageablepostdestroy-lineage.json'):
         path=ROOT/'cpppj'/name;data=json.loads(path.read_text(encoding='utf-8'));files.add(path);prior[name]=dict(sha256=sha(path),normal_inputs=data.get('total',data.get('normal_inputs')),additional_unique_cases=0)
     return dict(host='HJOW-Athlon',decompile_date='2026-10-14',new_native_inputs=0,entire_previous_test_restored_exactly=True,previous_test_sha256=sha(HISTORY/TEST),
         correction='CD0048153f/48154e의fadd0.9999→__ftol에맞춰CD도같은RawPathSurfaceAt/hash0를호출한다. plain조회삼항식하나외전체새검사는정확히불변이다.',

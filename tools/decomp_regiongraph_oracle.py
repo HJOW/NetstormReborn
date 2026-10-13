@@ -155,13 +155,13 @@ def generate():
                                '7개 raw 슬롯과 모든 dirty 항목 직접 비교; 전체 풀/해시/spot/표/스택/통계는 Adler-32',
                                '일반 다리/섬 Unpop, 건물 부착, 삭제 분할/전역 복구와 raw GameWorld는 미복원',
                                '준비 Reset/Create/비용 인코딩 접두 구간과 내부 호출은 공개 호출 수에 더하지 않음'])
-    (ROOT / 'cpppj/recovery-regiongraph-evidence.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')
+    (ROOT / 'cpppj/regiongraph.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')
     print(f'영역 그래프 x86 fixture: {report["total_calls"]}회 {dict(counts)}')
 
 
 def verify():
     """게임/기계어 실행 없이 PE/도구/내보내기/fixture SHA와 호출 수를 확인한다."""
-    r = json.loads((ROOT / 'cpppj/recovery-regiongraph-evidence.json').read_text(encoding='utf-8'))
+    r = json.loads((ROOT / 'cpppj/regiongraph.json').read_text(encoding='utf-8'))
     assert r['tool_sha256'] == digest(Path(__file__)) and r['stubbed'] == []
     # 실제 원본과 각 새 Ghidra 내보내기가 기록과 일치해야 한다.
     for binary, data in r['editions'].items():

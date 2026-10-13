@@ -24,7 +24,7 @@ SPEC={
 BUFFER,DESTROY=HEAP+0xe000,STOP+0x340
 SPOTS=0x11400000 # 네 단계 해시와 겹치지 않는 별도 spot 입력 지도다.
 FIXTURE=ROOT/'cpppj/tests/fixtures/vortexascend-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-vortexascend-evidence.json'
+REPORT=ROOT/'cpppj/vortexascend.json'
 PREVIOUS_REPORT=ROOT/'extracted/vortexascend-before-cd-repair-evidence.json' # CD 경계 교정 전 전체 출처 기록이다.
 PREVIOUS_FIXTURE=ROOT/'extracted/vortexascend-before-cd-repair-x86.tsv' # 같은 교정 전 패치 행의 바이트 출처다.
 

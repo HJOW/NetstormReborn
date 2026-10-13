@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "host": "HJOW-Athlon",
+  "observed_before": {
+    "cpppj/tests/fixtures/archermissile-x86.tsv": "dca76f0dfcaf30463522d79931c57a8ef77712d6cc03428bffcbe033572d9b7b",
+    "cpppj/src/o/RawMissile.cpp": "176436c391308b86ddbe9d9595501da16cd21eb8825515d3836c49031a8d0427",
+    "cpppj/src/o/RawMissile.h": "a48c2833f5463df9fdaf25634c440805f5edce224e30b3725cea142fa21b3487"
+  },
+  "observed_before_source": "root가 첫 C++ 대조 전에 읽은 실제 report의 tool 출력",
+  "changes": [
+    "10.78 group0 corner의 +32/+36 기존 raw 바이트 보존",
+    "10.72 group0 corner의 endpoint는 표적 치수 중심 보존",
+    "10.72는 충돌/사거리 종료가 겹쳐도 nonzero impactSound 요청"
+  ],
+  "native_rows": 1888,
+  "new_unique_rows": 0,
+  "previous_report_snapshot": false,
+  "previous_fixture_sha_verified": true,
+  "reconstructed_previous_cpp_sha_verified": true,
+  "files": {
+    "tools/analyze_archermissile_correction.py": "7a138aa46b978841d3a0d74a69f9cbcb4fb64e3f7c38c60b8bf09e1a10f11a0e",
+    "cpppj/hist/archermissil-d6700/RawMissile-before-correction.cpp": "176436c391308b86ddbe9d9595501da16cd21eb8825515d3836c49031a8d0427",
+    "cpppj/src/o/RawMissile.cpp": "e817c8c22828dc6ae0ab7fca297d6162bb5da16d5ac7416da4c636a52bab218a",
+    "cpppj/src/o/RawMissile.h": "a48c2833f5463df9fdaf25634c440805f5edce224e30b3725cea142fa21b3487",
+    "cpppj/tests/fixtures/archermissile-x86.tsv": "dca76f0dfcaf30463522d79931c57a8ef77712d6cc03428bffcbe033572d9b7b",
+    "cpppj/archermissile.json": "2f1ba0dcf67071e5cf07d833f037020d2f20f63dec285920bcfcc49b70bd9517",
+    "extracted/run7-ArcherMissile_-first.log": "8e7533ac21f7d061e6955db835f59c1d6b7063e3642dbf4d830c8ea79373bcb0"
+  },
+  "limitations": [
+    "이전1888행 전체 report/fixture의 독립 바이트 snapshot은 보존하지 못했다.",
+    "사전 실제 tool 출력의 SHA와 현재 fixture의 동일성 및 명시 ctor/사운드 분기의 역변환 SHA를 감사한다.",
+    "05 baseline/296행 근거는 별도 보고서와 git commit blob으로 보존한다."
+  ]
+}

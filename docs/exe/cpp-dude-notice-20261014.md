@@ -42,12 +42,12 @@ C++ fixture 장면은 같은 실제 Kernel/Host의 Regular를 사용한다. 기�
 
 - 구현: `cpppj/src/o/RawDudeNotice.h`, `.cpp`.
 - 새 C++3검사: 두 판본 전수 재생과 `DudeNotice_MissingBurningAndPathFactoriesRejected`. 등록 macro는 `NETSTORM_DUDENOTICE_FIXTURE`다.
-- native 도구: `tools/decomp_dudenotice_oracle.py`; fixture `cpppj/tests/fixtures/dudenotice-x86.tsv`; 보고서 `cpppj/recovery-dudenotice-evidence.json`.
+- native 도구: `tools/decomp_dudenotice_oracle.py`; fixture `cpppj/tests/fixtures/dudenotice-x86.tsv`; 보고서 `cpppj/dudenotice.json`.
 - 현재 SHA·정상반환·고유입력 감사는 `python -X utf8 tools/decomp_dudenotice_oracle.py --verify`다.
-- 최초6전체 자료는 `cpppj/recovery-history/dudenotice-initial`에 보존했다. 처음 붙인 잘못된 Dude 작업자 명칭을 Burning으로 교정했고 fixture 주석 외 **414개 입력/출력행 전부 동일**이다. 전체 fixture 원문 SHA와 관찰행 불변을 각각 구분한다.
-- `tools/analyze_dudenotice_draft_lineage.py`와 `cpppj/recovery-dudenotice-draft-lineage-evidence.json`이 정확한 이름 교정·현재 전체 SHA·이전 전체보고서 연결을 감사한다. 이 교정의 새 native/고유입력은 **0**이다.
-- 첫 전수 실패에서 원본23.5와C++24.5의 차이를 확인했다. decompiler가 생략한 실제 `fild footX→fmul0.5→fsubr x→ftol`(패치004505e2/CD004e8a75)을 복원하고 검사 tuple 입력의 uint16/uint8 폭만 명시해 MSVC C4244를 제거했다. 변경 전 전체 source/test/414fixture/report/tool·모든 기존 lineage·빌드/실패 로그를 **50파일**로 `dudenotice-before-point-correction`에 보존했다. 원본414행/도구는 전부 불변이다.
-- `tools/analyze_dudenotice_point_lineage.py`와 `recovery-dudenotice-point-lineage-evidence.json`은 두 최소교정의 정확한 역변환·전체 이전보고서/본문/현재SHA를 감사한다. 현재 draft schema2가 초기 이름교정과 이 교정을 함께 연결하며 새 native/고유입력은 **0**이다.
-- 공유 ResetTask는 기준 `a349e63`의 Git LF 및 작업 CRLF 원문·기존 관찰을 별도 보존한 `recovery-dude-regular-reset-lineage-evidence.json`에 연결한다. 기존 완료 Regular/총/효과 보고서는 덮어쓰지 않았다.
+- 최초6전체 자료는 `cpppj/hist/dudenotice-initial`에 보존했다. 처음 붙인 잘못된 Dude 작업자 명칭을 Burning으로 교정했고 fixture 주석 외 **414개 입력/출력행 전부 동일**이다. 전체 fixture 원문 SHA와 관찰행 불변을 각각 구분한다.
+- `tools/analyze_dudenotice_draft_lineage.py`와 `cpppj/dudenotice-draft-lineage.json`이 정확한 이름 교정·현재 전체 SHA·이전 전체보고서 연결을 감사한다. 이 교정의 새 native/고유입력은 **0**이다.
+- 첫 전수 실패에서 원본23.5와C++24.5의 차이를 확인했다. decompiler가 생략한 실제 `fild footX→fmul0.5→fsubr x→ftol`(패치004505e2/CD004e8a75)을 복원하고 검사 tuple 입력의 uint16/uint8 폭만 명시해 MSVC C4244를 제거했다. 변경 전 전체 source/test/414fixture/report/tool·모든 기존 lineage·빌드/실패 로그를 **50파일**로 `dudenotice-b-7ab49`에 보존했다. 원본414행/도구는 전부 불변이다.
+- `tools/analyze_dudenotice_point_lineage.py`와 `dudenotice-point-lineage.json`은 두 최소교정의 정확한 역변환·전체 이전보고서/본문/현재SHA를 감사한다. 현재 draft schema2가 초기 이름교정과 이 교정을 함께 연결하며 새 native/고유입력은 **0**이다.
+- 공유 ResetTask는 기준 `a349e63`의 Git LF 및 작업 CRLF 원문·기존 관찰을 별도 보존한 `dude-regular-reset-lineage.json`에 연결한다. 기존 완료 Regular/총/효과 보고서는 덮어쓰지 않았다.
 
 현재 전체 native414와 두 SHA 감사는 성공했다. 최초12checks 차이를 위처럼 수정한 뒤 C++3검사 전부 성공했고, 단위11 전체15감사/공통현재SHA 감사도 통과했다. 최종 공유 Release 경고/오류0·집중고유34·전체1,038검사 실패0이며 상세LEFT 갱신 뒤 root가 커밋한다. 같은endpoint 자연반환·Burning 실제생성·type24 이동·캠페인 전체 완료는 이성공의 범위가 아니다.

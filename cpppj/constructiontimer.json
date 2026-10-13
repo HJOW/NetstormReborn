@@ -1,0 +1,104 @@
+{
+  "host": "VM-W11-CODEX",
+  "date": "2026-10-13",
+  "total": 192,
+  "editions": {
+    "originals": {
+      "cases": 96,
+      "native": {
+        "00443000": 192,
+        "004ade70": 384,
+        "0049a840": 1440,
+        "0049ae80": 384,
+        "0040e880": 384,
+        "0041d0d0": 768,
+        "0040e800": 768,
+        "0040e8f0": 384,
+        "0041d400": 192,
+        "0043fa60": 384,
+        "004e62a0": 384,
+        "004ec4c1": 768,
+        "004f5bac": 384,
+        "004ac200": 192,
+        "00473010": 192,
+        "00473570": 480,
+        "004ac220": 288,
+        "004ac970": 288,
+        "004ac550": 288,
+        "004adea0": 288,
+        "0049a900": 288,
+        "00496e80": 144
+      },
+      "boundaries": {
+        "A": 192,
+        "C": 480,
+        "O": 480,
+        "P": 192,
+        "B": 480,
+        "M": 480,
+        "Q": 192,
+        "S": 192,
+        "L": 288,
+        "attach": 144
+      }
+    },
+    "originalCD": {
+      "cases": 96,
+      "native": {
+        "004d1120": 192,
+        "004aeec0": 384,
+        "004abf50": 960,
+        "004449d0": 384,
+        "004442b0": 672,
+        "0043f950": 768,
+        "004402d0": 192,
+        "00440210": 192,
+        "0048ee20": 384,
+        "004f3540": 384,
+        "004f9d30": 768,
+        "004fa180": 384,
+        "004abae0": 192,
+        "0048a430": 192,
+        "0048aaf0": 480,
+        "004abb00": 288,
+        "004ac440": 288,
+        "004aef30": 288,
+        "0048efd0": 144
+      },
+      "boundaries": {
+        "A": 192,
+        "C": 480,
+        "O": 480,
+        "P": 192,
+        "B": 480,
+        "M": 480,
+        "Q": 192,
+        "S": 192,
+        "L": 288,
+        "attach": 144
+      }
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/constructiontimer-x86.tsv": "dd86e75ded7220354551aac29fb2481a938c286c1026917434864432d48d7cc6",
+    "extracted/constructionbuilder/originalCD/creation.c": "45d04f641abd7285857fb7cf2f83c96e427557c9370117f8ea26d5878414927a",
+    "extracted/constructionbuilder/originalCD/functions.tsv": "2af24d6f2e7e41523d80349244e4d772e0952b5aeef6a49500780328d84450c0",
+    "extracted/constructionbuilder/originals/creation.c": "805e7fb2d11338149641387d82db6efbc01215a6b6abeb98221ad6b7193a5420",
+    "extracted/constructionbuilder/originals/functions.tsv": "99dfa43a3981f86f35437a0c24082bff2b49e697dbe1b70fe06df7d3ba7395a2",
+    "extracted/constructiontimer/originalCD/creation.c": "a7739f51a4de41021539050098821ce22b89d9735845df3ae476b8d9bb99b703",
+    "extracted/constructiontimer/originalCD/functions.tsv": "42fd51ef8ba2c8b9ea8514ae8510fcebfeb3a7e415a88194e1c179f8db7d12aa",
+    "extracted/constructiontimer/originals/creation.c": "2fc2270d6eeb2a7d4ce984a05aeb5d3ed64e750651cbe60971f8f2bb2956a342",
+    "extracted/constructiontimer/originals/functions.tsv": "3541a48d203a46ab4791b94d9a3fee6506ba378f0671fa3f45ef4924117bf4dd",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_constructionbuilder_oracle.py": "15bf1a77e6c3d7d00b661b9ad63e3c6da0aaac6991f1042a231710113e4d16f5",
+    "tools/decomp_constructiontimer_oracle.py": "e0d46e052222698a843c8c5d0d8a9122be9d15961c302c2243bbcb8706ecb158",
+    "tools/ghidra/constructiontimer-functions.json": "53ca1e41a882c72caff5a524f503b8aa3c229bc489af5efba197d412efc35b3d"
+  },
+  "limits": [
+    "실제 Builder전체와 Regular생성자의 event/payload/time/count·정상ret12 실행",
+    "실제 ProcessForm/Kernel 부착은 명시 경계, C++ 통합에서 확인",
+    "기존1110 builder입력 재실행과별개의새192개입력",
+    "게임/GUI실행없음"
+  ]
+}

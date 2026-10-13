@@ -43,7 +43,7 @@
 
 실제 non-void Unpop은 **각 판본 384회**, 합계 768회다(Take 내부 호출 포함). 각 판본의 실제 공통 update88 384회/update8c 64회, assert 도달 0회다. CD 체인 미발견 16개 활성 입력도 실제로 실행했다. 준비 Reset 18회와 가상 주소 표 151행은 3,618회에 더하지 않는다. 기존 생성자 표 359행도 별도다.
 
-[UnpopTests.cpp](../../cpppj/tests/UnpopTests.cpp)는 대상 raw 슬롯의 모든 바이트를 직접 대조하고 전체 풀·삭제 기록·네 단계 **86,272머리**·**65,536 spot**의 Adler-32를 비교한다. 추가 보호 검사는 변경 전 거부·어댑터 풀 혼용 방지·CD 미발견 차이를 확인한다. Release 빌드 경고/오류 0, CTest 한 실행 파일 내부 **112개 검사 통과**. 누적 제한 x86 입력은 **46,156행**이다. 새 기록과 기존 derived/creation/SID의 원본/도구/fixture SHA-256·행 수 검사도 통과했다. [검증 기록](../../cpppj/recovery-unpop-evidence.json).
+[UnpopTests.cpp](../../cpppj/tests/UnpopTests.cpp)는 대상 raw 슬롯의 모든 바이트를 직접 대조하고 전체 풀·삭제 기록·네 단계 **86,272머리**·**65,536 spot**의 Adler-32를 비교한다. 추가 보호 검사는 변경 전 거부·어댑터 풀 혼용 방지·CD 미발견 차이를 확인한다. Release 빌드 경고/오류 0, CTest 한 실행 파일 내부 **112개 검사 통과**. 누적 제한 x86 입력은 **46,156행**이다. 새 기록과 기존 derived/creation/SID의 원본/도구/fixture SHA-256·행 수 검사도 통과했다. [검증 기록](../../cpppj/unpop.json).
 
 **남은 범위:** 표시가 켜진 dirty/그리기·별도 grid/표면 알림·섬/다리/부착 건물 효과·파생 Unpop/삭제·의존 객체·실제 참조/수신 수명·SID 소진 복구·firstPop의 실제 Pop 연결·postPop/Activate·원본 배치·GameWorld 연결. 단순 void 슬롯 반납 검증을 파생 destructor 전체나 미션 완주로 세지 않는다. 기존 공간 등록 878회는 계속 의존성 계약 대체를 포함한 별도 검증이다.
 

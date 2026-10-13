@@ -20,7 +20,7 @@ SPEC={
 PARTICLES,IMAGE,ROWS=0x11350000,0x11360000,0x11361000
 KEYS=('width','height','hp','maximum','kind','selected','mask','seed','capacity','pattern','weak','sid')
 FIXTURE=ROOT/'cpppj/tests/fixtures/burningsources-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-burningsources-evidence.json'
+REPORT=ROOT/'cpppj/burningsources.json'
 
 
 def sample(**kwargs):
@@ -124,7 +124,7 @@ def generate(smoke):
             rows.append([edition,*[case[key] for key in KEYS],*result])
         editions[edition]=dict(returns=oracle.sourceReturns,assertions=oracle.sourceAssertions,instructions=oracle.instructions,native_calls=dict(oracle.native_calls),boundaries=dict(oracle.boundaries));files.update(oracle.exports);files.add(ROOT/oracle.spec['binary']);print(edition,editions[edition],flush=True)
     if smoke:return
-    for path in ('cpppj/src/o/RawBurningSources.h','cpppj/src/o/RawBurningSources.cpp','cpppj/tests/BurningSourcesTests.cpp','cpppj/src/o/RawBurningVisual.h','cpppj/src/o/RawBurningVisual.cpp','cpppj/src/o/SpStore.h','cpppj/src/o/SpStore.cpp','cpppj/recovery-burningparticle-evidence.json','cpppj/recovery-burningprocess-constructor-evidence.json'):files.add(ROOT/path)
+    for path in ('cpppj/src/o/RawBurningSources.h','cpppj/src/o/RawBurningSources.cpp','cpppj/tests/BurningSourcesTests.cpp','cpppj/src/o/RawBurningVisual.h','cpppj/src/o/RawBurningVisual.cpp','cpppj/src/o/SpStore.h','cpppj/src/o/SpStore.cpp','cpppj/burningparticle.json','cpppj/burningprocess-constructor.json'):files.add(ROOT/path)
     FIXTURE.write_text('# 실제 Burning source행 선택/HP/게임정수난수/기존source 제거. 캡처는현재픽셀입력, 외부관찰경계0.\n'+'\n'.join('\t'.join(map(str,row)) for row in rows)+'\n',encoding='utf-8');files.add(FIXTURE)
     REPORT.write_text(json.dumps(dict(schema=1,host='HJOW-Athlon',primary_target='10.78',cd_target='10.72',total=len(rows),editions=editions,files={path.relative_to(ROOT).as_posix():digest(path) for path in sorted(files)},cpp_tests_completed=0,os_calls=0,limitations=['새source몸체/현재HP/최대HP옵션/게임정수난수/Append/행제거는실제코드다.','현재캡처마스크/행표식/기존입자는명시입력이며 실제프레임캡처를새완료로세지않는다.','source반환EAX는원본caller가무시하므로뜻없는포인터/이전레지스터값을C++반환값으로복원하지않는다.','진단전역0/유한좌표/양수최대HP/정상마스크와구분한SID0/65535반환을포함한다.','전체Step/Draw/첫cache0색표/효과factory/실제Host삭제와캠페인월드는별도후속이다.'],),ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 

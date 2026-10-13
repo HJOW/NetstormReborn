@@ -38,7 +38,7 @@ EXTRA = {
 EXTRA['original1037'] = EXTRA['originalCD']
 # 독립 기대값과 SHA 감사 기록의 출력 위치다.
 FIXTURE = ROOT / 'cpppj/tests/fixtures/islandpostpop-x86.tsv'
-REPORT = ROOT / 'cpppj/recovery-islandpostpop-evidence.json'
+REPORT = ROOT / 'cpppj/islandpostpop.json'
 
 
 class SurfaceOracle(ConnectOracle):

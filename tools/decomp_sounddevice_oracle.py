@@ -25,7 +25,7 @@ BODY['original1037'] = BODY['originalCD']
 IMPORTS = {'mmioOpenA':3,'mmioDescend':4,'mmioRead':3,'mmioAscend':3,'mmioClose':2}
 # fixture와 근거 기록은 기존 감사 파일과 분리한다.
 FIXTURE = ROOT/'cpppj/tests/fixtures/sounddevice-x86.tsv'
-REPORT = ROOT/'cpppj/recovery-sounddevice-evidence.json'
+REPORT = ROOT/'cpppj/sounddevice.json'
 
 
 def chunk(name, data):

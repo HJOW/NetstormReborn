@@ -41,7 +41,7 @@ Ghidra의 10.78 출력에는 중간 float 캐스트가 있지만 실제 명령�
 
 [실행기](../../tools/decomp_musicopen_oracle.py)의 독립 입력은 **세 판본 각각 624개, 총 1,872개**다. 두 제어값에서 공개 시작 **3,744회**, 실제 헤더 **3,234회**, 초기 실제 Lookup까지 root **11,232회**가 정상 반환했다. 기본/보조 null·빈/후행 구분자·조회 실패·demo 비교·준비/장치/활성·PCM fmt 16/18·홀수 청크·단/다중 채널·일반/높은 unsigned 샘플률·bits·data 길이·헤더/생성 HRESULT/출력/seek 실패·기존 버퍼·loop를 교차했다.
 
-파일 조회/상위 옵션 callback·COM·Winmm 파일/청크·잠금/기록·패치 CRT 로캘·초기 배치만 명시 대체한다. 경로 문자열 구성/헤더/길이/공개 시작과 기존 생성/되감기/helper는 실제 원본 명령이다. **앞 단계에서 정적 대조만 했던 CD 버퍼 생성과 시작도 이번 공개 시작 입력에서 실제로 실행했다.** [fixture](../../cpppj/tests/fixtures/musicopen-x86.tsv)는 사건/반환·53/64비트 raw96·파일 위치/열림을 기록한다. [근거](../../cpppj/recovery-musicopen-evidence.json)는 SHA/정확한 전체 입력·행·진입/반환·ABI/스택/보존 레지스터/SEH/x87·허용 쓰기·잠금 균형·OS/예기치 않은 assert 0을 감사한다. 기존 fixture/감사 도구는 수정하지 않았다.
+파일 조회/상위 옵션 callback·COM·Winmm 파일/청크·잠금/기록·패치 CRT 로캘·초기 배치만 명시 대체한다. 경로 문자열 구성/헤더/길이/공개 시작과 기존 생성/되감기/helper는 실제 원본 명령이다. **앞 단계에서 정적 대조만 했던 CD 버퍼 생성과 시작도 이번 공개 시작 입력에서 실제로 실행했다.** [fixture](../../cpppj/tests/fixtures/musicopen-x86.tsv)는 사건/반환·53/64비트 raw96·파일 위치/열림을 기록한다. [근거](../../cpppj/musicopen.json)는 SHA/정확한 전체 입력·행·진입/반환·ABI/스택/보존 레지스터/SEH/x87·허용 쓰기·잠금 균형·OS/예기치 않은 assert 0을 감사한다. 기존 fixture/감사 도구는 수정하지 않았다.
 
 [SoundMusicOpenTests.cpp](../../cpppj/tests/SoundMusicOpenTests.cpp)의 새 검사 7개는 실제 Winmm 임시 파일로 모든 native 행을 대조한다. 공개 Play→실제 파일→첫 링 채우기→파일 끝 반복/한 번 재생 EOF→Unlock/Stop, 헤더 부분 출력·만료 토큰 재닫기·호스트 방어·UTF-8 경로/파일 콜백 보존도 확인한다. 일반 CTest에는 원본 자산/PE/Python/오디오 장치가 필요 없다.
 

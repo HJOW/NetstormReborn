@@ -1,0 +1,117 @@
+{
+  "total": 1899,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-11",
+  "decompile_date": "2026-10-11",
+  "controls": [
+    639,
+    895
+  ],
+  "os_calls": 0,
+  "editions": {
+    "originals": {
+      "cases": 633,
+      "returns": {
+        "004468b0": 1056,
+        "004afa70": 202,
+        "004af530": 8
+      },
+      "native_calls": {
+        "004468b0": 1056,
+        "004afa70": 1258,
+        "004558f0": 152,
+        "004257c0": 152,
+        "004af530": 8,
+        "0049a840": 8,
+        "004aea40": 8,
+        "004437f0": 8
+      },
+      "substitutions": {
+        "C": 1258,
+        "J": 1258,
+        "A": 452,
+        "T": 388,
+        "N": 238,
+        "S": 8
+      },
+      "assertions": 0
+    },
+    "originalCD": {
+      "cases": 633,
+      "returns": {
+        "0043e930": 1056,
+        "004ac4d0": 202,
+        "004ab390": 8
+      },
+      "native_calls": {
+        "0043e930": 1056,
+        "004ac4d0": 1258,
+        "004abb00": 1258,
+        "0048cc10": 152,
+        "0041fc70": 152,
+        "004ab390": 8,
+        "004afe00": 8,
+        "004b0470": 8
+      },
+      "substitutions": {
+        "C": 1258,
+        "J": 1258,
+        "A": 452,
+        "T": 388,
+        "N": 238,
+        "S": 8
+      },
+      "assertions": 0
+    },
+    "original1037": {
+      "cases": 633,
+      "returns": {
+        "0043e930": 1056,
+        "004ac4d0": 202,
+        "004ab390": 8
+      },
+      "native_calls": {
+        "0043e930": 1056,
+        "004ac4d0": 1258,
+        "004abb00": 1258,
+        "0048cc10": 152,
+        "0041fc70": 152,
+        "004ab390": 8,
+        "004afe00": 8,
+        "004b0470": 8
+      },
+      "substitutions": {
+        "C": 1258,
+        "J": 1258,
+        "A": 452,
+        "T": 388,
+        "N": 238,
+        "S": 8
+      },
+      "assertions": 0
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/returnpiece-x86.tsv": "675c8e23013dd8d09b5b9943b58aa3f278d9da6d18f7c29eebd13ff6688defcd",
+    "extracted/returnpiece/original1037/creation.c": "56cf7feb4d82de2d06eae3621a6bc9faed0e75679bb2a5fc0981494fe750b86a",
+    "extracted/returnpiece/original1037/functions.tsv": "255d2c58bd52cb7f278afaf2792619ead63cea5b65f6b98923d0c7dd766f3b10",
+    "extracted/returnpiece/originalCD/creation.c": "56cf7feb4d82de2d06eae3621a6bc9faed0e75679bb2a5fc0981494fe750b86a",
+    "extracted/returnpiece/originalCD/functions.tsv": "255d2c58bd52cb7f278afaf2792619ead63cea5b65f6b98923d0c7dd766f3b10",
+    "extracted/returnpiece/originals/creation.c": "81a442f8c67fcf65072b42cb2b3ae11a40e6139f6021a9c7e1ea3eb0b4f5db38",
+    "extracted/returnpiece/originals/functions.tsv": "d1593d8ec60b2831eebf05dcb8e4475229ef57c36275b634d6db9a7bba6f2737",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_damageablepredestroy_oracle.py": "6f260fca831f979df7361fb783b38de9ccadf93bced292e55a04e090c46a748b",
+    "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
+    "tools/decomp_priestgeometry_oracle.py": "a2e100450c4e22d4f7de0bc4f725c766b7836ab3f7270a6ebb72df7b92e33dc1",
+    "tools/decomp_returnpiece_oracle.py": "d33219b1aa75ca0c5f0560915596648cfc9fa0f22df79b30d895c7b9397fac82",
+    "tools/ghidra/returnpiece-functions.json": "173f73e2e0c90ef20d01c16df41535ffd5b9b7142ad227035d3492ea4c283f12"
+  },
+  "scope": [
+    "전체 반환/contained/난수/추첨/CD 단어 쓰기는 실제 명령; 정상 SEH 경로만 실행",
+    "Return/Create의 factory/파생 Form 생성·표면 알림·가상 부착·operator_new·Regular 생성은 명시 경계",
+    "Factory 직접 연산은 타입 6 factory/생성자/빈 postCreate 실제 명령, SID 할당만 명시 경계",
+    "원본 assert/게임/OS/예외 처리기 미실행, 유효 부모 77/생성 SID 100·시간 번호 0..2 입력"
+  ]
+}

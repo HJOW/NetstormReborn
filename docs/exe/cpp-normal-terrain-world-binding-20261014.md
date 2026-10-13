@@ -72,9 +72,9 @@ CD 로컬 PRNG의 디컴파일 prototype이 this를 생략한 것은 원본에�
 
 공유 빌드 전 정적 감사와 첫 실행에서 다음 검사 입력/기대를 교정했고 production/native는 변경하지 않았다.
 
-- 일반 해시의 머리가 모든 대상SID라는 첫 기대를 실제 raw `+4 WORD` 체인 포함 검사로 교정했다. 이전 전체test/report는 `recovery-history/normalterrainbinding-initial`에 보존한다. 최초 도구의 Windows 기본 CRLF 쓰기/역변환 실패도 전체 도구·출력으로 보존했고 최종 UTF-8 바이트 쓰기는 원래 LF를 유지한다. `analyze_normalterrain_binding_cpp_correction.py` 기본 실행이 한 검사 역변환을 감사한다.
-- 합성121 flags1에 잘못 추가한 surface `0x800`을 제거했다. 원본 MayPlace의 island 후보 무시 조건은 `other island && placing nonsurface`이므로 정상 terrain-frame `0x200012`/random-frame `0x100012`를 사용한다. 이전 전체test/report/hash-lineage는 `recovery-history/normalterrainbinding-profile-correction`에 보존한다. `analyze_normalterrain_binding_profile_correction.py` 기본 실행이 입력 한 행의 역변환과 이전 해시 교정 출처를 감사한다.
-- 첫 공유 실행의 `지역 프레임 quartile 난수 범위 오류`는 side/variant별 후보1개인 합성 입력 때문이었다. 원본 `quarter=floor(n/4)`, `low=quarter*theme+1`, `high=quarter*(theme+1)`은 최소8후보가 필요하다. production Choose/Stamp는 그대로 보존하고 물리256프레임 안에서 방향별A후보16개를 공급했다. 실제 단일 Place의P/P→P/A 검색도 후보16개이므로 기대난수 `Next(16)`와 프레임 `240+선택값`을 함께 교정했다. 전체3CPP/report/기존두lineage/도구/문서/최초실패 로그는 `recovery-history/normalterrainbinding-frame-correction`에 보존한다. `analyze_normalterrain_binding_frame_correction.py` 기본 감사가 입력/기대3행·설명2행의 정확 역변환과 이전 전체 report 연결을 확인한다.
+- 일반 해시의 머리가 모든 대상SID라는 첫 기대를 실제 raw `+4 WORD` 체인 포함 검사로 교정했다. 이전 전체test/report는 `hist/normalterrai-4f241`에 보존한다. 최초 도구의 Windows 기본 CRLF 쓰기/역변환 실패도 전체 도구·출력으로 보존했고 최종 UTF-8 바이트 쓰기는 원래 LF를 유지한다. `analyze_normalterrain_binding_cpp_correction.py` 기본 실행이 한 검사 역변환을 감사한다.
+- 합성121 flags1에 잘못 추가한 surface `0x800`을 제거했다. 원본 MayPlace의 island 후보 무시 조건은 `other island && placing nonsurface`이므로 정상 terrain-frame `0x200012`/random-frame `0x100012`를 사용한다. 이전 전체test/report/hash-lineage는 `hist/normalterrai-6a80b`에 보존한다. `check_terrain_profile_fix.py` 기본 실행이 입력 한 행의 역변환과 이전 해시 교정 출처를 감사한다.
+- 첫 공유 실행의 `지역 프레임 quartile 난수 범위 오류`는 side/variant별 후보1개인 합성 입력 때문이었다. 원본 `quarter=floor(n/4)`, `low=quarter*theme+1`, `high=quarter*(theme+1)`은 최소8후보가 필요하다. production Choose/Stamp는 그대로 보존하고 물리256프레임 안에서 방향별A후보16개를 공급했다. 실제 단일 Place의P/P→P/A 검색도 후보16개이므로 기대난수 `Next(16)`와 프레임 `240+선택값`을 함께 교정했다. 전체3CPP/report/기존두lineage/도구/문서/최초실패 로그는 `hist/normalterrai-e6929`에 보존한다. `check_terrain_frame_fix.py` 기본 감사가 입력/기대3행·설명2행의 정확 역변환과 이전 전체 report 연결을 확인한다.
 
 네 감사기는 모두 현재 출처에 통과했다. 새 소비자 SourceSHA는 이전 전체 원문과 교정 연결을 통해 보존하며 원본 관찰 도구/fixture를 현재 C++ SHA만으로 덮어쓰지 않는다.
 

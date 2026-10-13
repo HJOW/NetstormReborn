@@ -34,7 +34,7 @@ PRIEST_TYPE, EVENT = 158, 0x25a
 CONTROLS = (0x027f, 0x037f)
 SEED, MEMORY = 0x4950f0, LISTS + 0x1000
 FIXTURE = ROOT / 'cpppj/tests/fixtures/priestpostpop-x86.tsv'
-REPORT = ROOT / 'cpppj/recovery-priestpostpop-evidence.json'
+REPORT = ROOT / 'cpppj/priestpostpop.json'
 
 
 def inputs():

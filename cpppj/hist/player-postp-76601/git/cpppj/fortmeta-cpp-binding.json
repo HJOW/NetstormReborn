@@ -1,0 +1,247 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-14",
+  "baseline_commit": "5bdb5be",
+  "native_report": {
+    "path": "cpppj/fortmeta.json",
+    "bytes": 3497,
+    "sha256": "6d829e2f37c37005c93c0f2de1ae79d06d26ecd9aa36029e0354a566dcf7e4e5"
+  },
+  "native_unique": 950,
+  "normal_unique": 394,
+  "assert_unique": 556,
+  "binding_new_native": 0,
+  "existing_observations_recounted": 0,
+  "existing_production_changed": false,
+  "current_cpp": [
+    {
+      "path": "cpppj/src/o/RawFortMetaLoad.h",
+      "bytes": 4914,
+      "sha256": "f937da92ace23acc093569c87ddc1d2c3d05fbd5fb443a56e5df5426b5416478"
+    },
+    {
+      "path": "cpppj/src/o/RawFortMetaLoad.cpp",
+      "bytes": 6044,
+      "sha256": "8e2b67f72f134a51c34001a9d815b81a2fb8d4111b2c0c3385421e9adf6adb14"
+    },
+    {
+      "path": "cpppj/tests/FortMetaLoadTests.cpp",
+      "bytes": 13331,
+      "sha256": "8c66bbcf3887ebe47ceeedf074b0a6e1dc78aa2e7e6bcaae09611830d1f76e2f"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "cpppj/src/o/RawFortObjectLoad.h",
+      "bytes": 6536,
+      "sha256": "fcd6e8e6ca698706c27aec7622e399612c13a0823158ac1b7da8142e7ffa41ea",
+      "git_blob_sha256": "fcd6e8e6ca698706c27aec7622e399612c13a0823158ac1b7da8142e7ffa41ea"
+    },
+    {
+      "path": "cpppj/src/o/RawFortObjectLoad.cpp",
+      "bytes": 14512,
+      "sha256": "6fdd110dd0498416bf9bff90479291d3bed2a17fa1fe77b2f83c20e1379be971",
+      "git_blob_sha256": "6fdd110dd0498416bf9bff90479291d3bed2a17fa1fe77b2f83c20e1379be971"
+    },
+    {
+      "path": "cpppj/src/o/RawContainedCreate.h",
+      "bytes": 2560,
+      "sha256": "f095756ee7515a66808967d2d42ce07879dc215b24a3451f27bb6d45653a8ed9",
+      "git_blob_sha256": "f095756ee7515a66808967d2d42ce07879dc215b24a3451f27bb6d45653a8ed9"
+    },
+    {
+      "path": "cpppj/src/o/RawContainedCreate.cpp",
+      "bytes": 2664,
+      "sha256": "54ac5f440300896af9fc25bfc98315ae5efe3e99b393fce348f006e09c3cbf97",
+      "git_blob_sha256": "54ac5f440300896af9fc25bfc98315ae5efe3e99b393fce348f006e09c3cbf97"
+    },
+    {
+      "path": "cpppj/src/o/ContentFormHost.h",
+      "bytes": 4373,
+      "sha256": "8653814bdfbe2c0b82957014ca65f7c17381bf428dc3671a7254ec14324c441f",
+      "git_blob_sha256": "8653814bdfbe2c0b82957014ca65f7c17381bf428dc3671a7254ec14324c441f"
+    },
+    {
+      "path": "cpppj/src/o/ContentFormHost.cpp",
+      "bytes": 8471,
+      "sha256": "cb21effe599b73f6ca85d826c6f85f0e3f6f41e956fbc80cf344a06674d20cb4",
+      "git_blob_sha256": "cb21effe599b73f6ca85d826c6f85f0e3f6f41e956fbc80cf344a06674d20cb4"
+    },
+    {
+      "path": "cpppj/src/o/SquidForms.h",
+      "bytes": 3917,
+      "sha256": "6937069c3482802ad622c7845041c0f3ccfc02d8ab67b6c08d35c3cf34c37683",
+      "git_blob_sha256": "6937069c3482802ad622c7845041c0f3ccfc02d8ab67b6c08d35c3cf34c37683"
+    },
+    {
+      "path": "cpppj/src/o/SquidForms.cpp",
+      "bytes": 9994,
+      "sha256": "013e35f13121c1447cee1b00014e2bcdd453c0ab29207af05e2fe1345d574080",
+      "git_blob_sha256": "013e35f13121c1447cee1b00014e2bcdd453c0ab29207af05e2fe1345d574080"
+    },
+    {
+      "path": "cpppj/src/o/SquidFactory.h",
+      "bytes": 3444,
+      "sha256": "9a2b50ead267868364024a9fb0306e6fbf224486b87479a79c531ad2f3607708",
+      "git_blob_sha256": "9a2b50ead267868364024a9fb0306e6fbf224486b87479a79c531ad2f3607708"
+    },
+    {
+      "path": "cpppj/src/o/SquidFactory.cpp",
+      "bytes": 11463,
+      "sha256": "6221de3262944b7105ae57dacc67ee8cee3e237b62240d5d3a2fd777a5706aed",
+      "git_blob_sha256": "6221de3262944b7105ae57dacc67ee8cee3e237b62240d5d3a2fd777a5706aed"
+    },
+    {
+      "path": "cpppj/src/o/SidPool.h",
+      "bytes": 5283,
+      "sha256": "f56b3fd3b8c4cc0697afadb0d97ef4b7c62808103283c856c46bf68b59f0f35a",
+      "git_blob_sha256": "f56b3fd3b8c4cc0697afadb0d97ef4b7c62808103283c856c46bf68b59f0f35a"
+    },
+    {
+      "path": "cpppj/src/o/SidPool.cpp",
+      "bytes": 10030,
+      "sha256": "7bc612330f3b631cf8141be5e7a9ae51cefe8caee3ea3eb68be38252d68a6887",
+      "git_blob_sha256": "7bc612330f3b631cf8141be5e7a9ae51cefe8caee3ea3eb68be38252d68a6887"
+    },
+    {
+      "path": "cpppj/src/o/SquidHash.h",
+      "bytes": 2764,
+      "sha256": "f8c0993b5e666fbd369ef876f4684c8b67e38cc81a3ad026cdc52b2d3de80d1d",
+      "git_blob_sha256": "f8c0993b5e666fbd369ef876f4684c8b67e38cc81a3ad026cdc52b2d3de80d1d"
+    },
+    {
+      "path": "cpppj/src/o/SquidHash.cpp",
+      "bytes": 4305,
+      "sha256": "e275a8239016e45237a57a85c43c22a9767351bfdaeedc728423c3bb42a3e5e4",
+      "git_blob_sha256": "e275a8239016e45237a57a85c43c22a9767351bfdaeedc728423c3bb42a3e5e4"
+    },
+    {
+      "path": "cpppj/src/o/RawSquidFinder.h",
+      "bytes": 4023,
+      "sha256": "e84bf53e772117ecfbc913eabbf460e86f1e687d79cb3f48f2f9c7db8893ed63",
+      "git_blob_sha256": "e84bf53e772117ecfbc913eabbf460e86f1e687d79cb3f48f2f9c7db8893ed63"
+    },
+    {
+      "path": "cpppj/src/o/RawSquidFinder.cpp",
+      "bytes": 5905,
+      "sha256": "f7947c488c45aa7632d0a705a863c0fe5262c3ea1c29c17ea23c56ed4249e4e2",
+      "git_blob_sha256": "f7947c488c45aa7632d0a705a863c0fe5262c3ea1c29c17ea23c56ed4249e4e2"
+    },
+    {
+      "path": "cpppj/src/o/SquidReward.h",
+      "bytes": 8117,
+      "sha256": "33df23ab3590c965b68fef4c14a55cf38de55281c08430d22a26e6dc12b6aee6",
+      "git_blob_sha256": "33df23ab3590c965b68fef4c14a55cf38de55281c08430d22a26e6dc12b6aee6"
+    },
+    {
+      "path": "cpppj/src/o/SquidReward.cpp",
+      "bytes": 13359,
+      "sha256": "9a1f1a1d4c0f0b0255357b1f3ec9255cea2bb234ed351da70fb30dd1ed859f9c",
+      "git_blob_sha256": "9a1f1a1d4c0f0b0255357b1f3ec9255cea2bb234ed351da70fb30dd1ed859f9c"
+    },
+    {
+      "path": "cpppj/src/o/SpStore.h",
+      "bytes": 4064,
+      "sha256": "5bb676a1593e7583a69ef45238f7045009b1cf0fff751649e40833226e80b817",
+      "git_blob_sha256": "5bb676a1593e7583a69ef45238f7045009b1cf0fff751649e40833226e80b817"
+    },
+    {
+      "path": "cpppj/src/o/SpStore.cpp",
+      "bytes": 4577,
+      "sha256": "010b2c3c0b60d089d10a059bb63618d029eec3d3ea341f1bacf7426e71a85ba9",
+      "git_blob_sha256": "010b2c3c0b60d089d10a059bb63618d029eec3d3ea341f1bacf7426e71a85ba9"
+    },
+    {
+      "path": "cpppj/src/o/RiftType.h",
+      "bytes": 13861,
+      "sha256": "6861baebea2e47f0ac175fdabd7ff7aa09fd53bb978bbdf6b0ffd4ca70455f5a",
+      "git_blob_sha256": "6861baebea2e47f0ac175fdabd7ff7aa09fd53bb978bbdf6b0ffd4ca70455f5a"
+    },
+    {
+      "path": "cpppj/src/o/RiftType.cpp",
+      "bytes": 3726,
+      "sha256": "795554df3a4538ba475a2095a1b87a6bf9ddf4ba5ff904b469cef1f7128dc895",
+      "git_blob_sha256": "795554df3a4538ba475a2095a1b87a6bf9ddf4ba5ff904b469cef1f7128dc895"
+    },
+    {
+      "path": "cpppj/src/o/Template.h",
+      "bytes": 7420,
+      "sha256": "9c74dcdf92da6b4435ceb88634690662cf437cf7c0f3cb7222faeeaa64695f7a",
+      "git_blob_sha256": "9c74dcdf92da6b4435ceb88634690662cf437cf7c0f3cb7222faeeaa64695f7a"
+    },
+    {
+      "path": "cpppj/src/o/Template.cpp",
+      "bytes": 14516,
+      "sha256": "36d9075d458e587abe19f054d9afcfad409710eab75ad30c399454a121108641",
+      "git_blob_sha256": "36d9075d458e587abe19f054d9afcfad409710eab75ad30c399454a121108641"
+    },
+    {
+      "path": "cpppj/src/o/TypeConstructors.inc",
+      "bytes": 4963,
+      "sha256": "bfac943af8c22cf91a0c267200f3e94133b021f2fe0e02507544978a7e08bd27",
+      "git_blob_sha256": "bfac943af8c22cf91a0c267200f3e94133b021f2fe0e02507544978a7e08bd27"
+    },
+    {
+      "path": "cpppj/src/o/DerivedConstructors.inc",
+      "bytes": 10838,
+      "sha256": "fac1a032778ba7e6745476904a13446c36b79625e38c40120195bc009a798b00",
+      "git_blob_sha256": "fac1a032778ba7e6745476904a13446c36b79625e38c40120195bc009a798b00"
+    },
+    {
+      "path": "cpppj/tests/RawSceneSupport.h",
+      "bytes": 15993,
+      "sha256": "7ef30acb24babc688384ab50f57573a87d004b68b8baa0d0a64c897baad23a4f",
+      "git_blob_sha256": "7ef30acb24babc688384ab50f57573a87d004b68b8baa0d0a64c897baad23a4f"
+    },
+    {
+      "path": "cpppj/tests/TestSupport.h",
+      "bytes": 2752,
+      "sha256": "099eb5d48b6afecf5cfa37d034841fbd2fa323f83d3ec4884a67212dbd24231f",
+      "git_blob_sha256": "099eb5d48b6afecf5cfa37d034841fbd2fa323f83d3ec4884a67212dbd24231f"
+    },
+    {
+      "path": "cpppj/fortobjectload.json",
+      "bytes": 4517,
+      "sha256": "d1706628fd636df15602985296965df2a4e03c52fb027fada3c3e2578879992e",
+      "git_blob_sha256": "d1706628fd636df15602985296965df2a4e03c52fb027fada3c3e2578879992e"
+    },
+    {
+      "path": "cpppj/contained.json",
+      "bytes": 3468,
+      "sha256": "66c861db0b8de0de35cf7cffb964d01d68bfffd4b7741361c3ce84108496c0f9",
+      "git_blob_sha256": "66c861db0b8de0de35cf7cffb964d01d68bfffd4b7741361c3ce84108496c0f9"
+    },
+    {
+      "path": "cpppj/contentlifetime.json",
+      "bytes": 13364,
+      "sha256": "9ac7cf056499a7cfee983304f9022e8f7406ef57376d3327dfa68dbf6a6cc569",
+      "git_blob_sha256": "9ac7cf056499a7cfee983304f9022e8f7406ef57376d3327dfa68dbf6a6cc569"
+    },
+    {
+      "path": "cpppj/formlifecycle.json",
+      "bytes": 12041,
+      "sha256": "f877f83e14ad030cd3a5acc090dabe51e84cd8ec9cca479efbcdf6e20a8b71b7",
+      "git_blob_sha256": "f877f83e14ad030cd3a5acc090dabe51e84cd8ec9cca479efbcdf6e20a8b71b7"
+    },
+    {
+      "path": "cpppj/factory-world.json",
+      "bytes": 4813,
+      "sha256": "79d6d30ac4c1c96fba6b1ae55523ee92f547e8192310cab98746c9ac3a8e6f38",
+      "git_blob_sha256": "79d6d30ac4c1c96fba6b1ae55523ee92f547e8192310cab98746c9ac3a8e6f38"
+    }
+  ],
+  "tool": {
+    "path": "tools/analyze_fortmeta_cpp_binding.py",
+    "bytes": 4976,
+    "sha256": "3bd9617446254ef4b92f9dc0b310e8fe9388b17c7d9ec0919858f0a88de2f5be"
+  },
+  "cpp_tests": 3,
+  "cpp_test_result": "공유등록/실행대기",
+  "limitations": [
+    "신규950는장부/상위wrapper관찰이며이binding은새원본0이다. 기존완료1218/Contained/Form원본수를다시더하지않는다.",
+    "Technology fourth arg1은mapped type0 debug assert를생략하는relaxedConversion이다. 초기화모드가아니다.",
+    "현재parsed Technology목록과그원본section identity를확인한뒤기존Contents를호출한다. consumedpos는기존parser자료이며stream.end는보존한다.",
+    "현재TypeNames준비/해제·technology부모getter·UI는필수명시경계다. 전체TypeNames/상위Fort/GameWorld완료를주장하지않는다.",
+    "실제선택소비자는같은Factory/Pool/ContainedCreate/ContentForm으로두개를생성하며요청되지않은HP/Frame/Pop/Owner등은명시거부한다."
+  ]
+}

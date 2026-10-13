@@ -26,7 +26,7 @@ DATA['original1037']=dict(DATA['originalCD'])
 KEYS=('instant','width','height','pattern','random','cold','mutate','z','x','y','scaleX','scaleY','selected','old')
 OFFSETS=(0,8,0x20,0xc,0x10,0x14,0x18,0x48,0x54,0x58,0x5c,0x60,0x64,0x6c,0x70,0x74,0x78,0x7c,0x80,0x24,0x28)
 FIXTURE=ROOT/'cpppj/tests/fixtures/constructionvisual-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-constructionvisual-evidence.json'
+REPORT=ROOT/'cpppj/constructionvisual.json'
 
 
 def case(**changes):

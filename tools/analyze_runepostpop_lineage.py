@@ -9,9 +9,9 @@ import subprocess
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parent.parent # 고정된공유저장소다.
-REPORT=ROOT/'cpppj/recovery-runepostpop-lineage-evidence.json' # 기존완료보고서와분리한새등록lineage다.
+REPORT=ROOT/'cpppj/runepostpop-lineage.json' # 기존완료보고서와분리한새등록lineage다.
 SOURCES=('cpppj/src/o/SquidPostPop.h','cpppj/src/o/SquidPostPop.cpp') # 새Rune등록/검사/분배만추가하는기존두파일이다.
-PRIOR=('cpppj/recovery-postpop-evidence.json','cpppj/recovery-pop-evidence.json','cpppj/recovery-priestpostpoptail-evidence.json','cpppj/recovery-constructionprocess-evidence.json') # 기존공통/공간/사제/건설원본관찰을다시합산하지않는다.
+PRIOR=('cpppj/postpop.json','cpppj/pop.json','cpppj/priestpostpoptail.json','cpppj/constructionprocess.json') # 기존공통/공간/사제/건설원본관찰을다시합산하지않는다.
 
 
 def sha(data):

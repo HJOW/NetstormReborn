@@ -36,4 +36,4 @@ CD의 후보 버퍼 free는 몸체의`0044efc2` 조각→벡터 소멸자`00407c
 
 선택 재생성의 `native_reuse.originals`는 이전 전체 보고서/fixture SHA, 패치748개 행 SHA, 이전 실행기 SHA, 현재 실행기 SHA와 보호PE·패치 함수 범위·부모 실행기 SHA를 함께 기록한다. `previous_sources`는 이전 전체 출처 표를 남기고 `preserved_sources`는 이번에도 동일함을 확인한 패치 근거다. 실제 native의 판본 교정은 **CDfree 경계와 CD helper 허용 범위**이며 선택 생성·출처 연결·재감사는 기록 워크플로 변경이다. 따라서 현재 도구 SHA로 이전 패치 관찰의 실행기 출처를 덮어쓰지 않는다. 교정 전 전체 자료는 `extracted/vortexascend-before-cd-repair-{evidence.json,x86.tsv}`, 신규 CD 관찰은 `extracted/vortexascend-oracle-cd-repaired.log`에 보존한다.
 
-자료는 `tools/decomp_vortexascend_oracle.py`, `tools/ghidra/vortexascend-functions.json`, `cpppj/recovery-vortexascend-evidence.json`, `cpppj/tests/fixtures/vortexascend-x86.tsv`에 있다. 최신 공통 Release에서 **VortexAscend_3 tests와 패치748/CD748 전수재생1496개가 모두 통과**했으며 CDfree의F1도 대조했다. 실제 GUI/생산/피해·전체 Ascend 송신/종료 또는 캠페인 완주를 검증한 보고서는 아니다.
+자료는 `tools/decomp_vortexascend_oracle.py`, `tools/ghidra/vortexascend-functions.json`, `cpppj/vortexascend.json`, `cpppj/tests/fixtures/vortexascend-x86.tsv`에 있다. 최신 공통 Release에서 **VortexAscend_3 tests와 패치748/CD748 전수재생1496개가 모두 통과**했으며 CDfree의F1도 대조했다. 실제 GUI/생산/피해·전체 Ascend 송신/종료 또는 캠페인 완주를 검증한 보고서는 아니다.

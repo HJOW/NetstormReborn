@@ -27,7 +27,7 @@ SPECS={
 TEXT, CONTEXT, STYLE_BASE = DATA+0x8000,DATA+0x8200,0x19000000
 NODE_SIZES=(SIZE,160,160)
 OBSERVATIONS=ROOT/'cpppj/recovery-menulayout-observations.tsv'
-REPORT=ROOT/'cpppj/recovery-menulayout-evidence.json'
+REPORT=ROOT/'cpppj/menulayout.json'
 
 
 def snapshot(nodes):

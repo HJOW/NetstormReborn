@@ -1,0 +1,480 @@
+{
+  "schema": 2,
+  "host": "HJOW-Athlon",
+  "primary_target": "10.78",
+  "cd_target": "10.72",
+  "total": 426,
+  "normal": 426,
+  "assertions": 0,
+  "new_native_inputs": 0,
+  "cpp_tests_completed": 0,
+  "lineage": {
+    "history": {
+      "cpppj/hist/burningframe-d5cb6/cpppj/burningframe.json": "bd846f05f9d147e32f78c1f1a9eb1c4ec1aa9e11b55b00c08308eaf3abd3ca42",
+      "cpppj/hist/burningframe-d5cb6/cpppj/src/client/BurningFrameCapture.cpp": "dabfe21f7aed591ac6586f5757bf158e181cf0bb2199046c82740589cd746637",
+      "cpppj/hist/burningframe-d5cb6/cpppj/src/client/BurningFrameCapture.h": "536fecc436d79053f6d78b67bf0b381567ca2588cdc51bd33e69bfa76033cdc0",
+      "cpppj/hist/burningframe-d5cb6/cpppj/src/client/RawShapeToBuffer.cpp": "a25daa6a79c7edbfee525ed6a64156cb71d2b1ceee996c7d0a4a002af0ced3d4",
+      "cpppj/hist/burningframe-d5cb6/cpppj/src/client/RawShapeToBuffer.h": "0d957cb5d99e2042ff04dbea766bb05e79560b390ffe82976388692ae5b259bb",
+      "cpppj/hist/burningframe-d5cb6/cpppj/src/client/Renderer.cpp": "2b7f456faca5262b066bb46c999da2e5644e7b006beabe9893df30f19d62bd9d",
+      "cpppj/hist/burningframe-d5cb6/cpppj/src/client/VFXDraw.cpp": "d4c95ba9875659715bdb234b56baf7084d2abc6f5f4f879d1247cb309f0f5ad4",
+      "cpppj/hist/burningframe-d5cb6/cpppj/src/o/RawBurningFrame.cpp": "955cf341a2cd4e14a8249939455f799b997f796d17e724d72719925c52322b8e",
+      "cpppj/hist/burningframe-d5cb6/cpppj/src/o/RawBurningFrame.h": "a8eb3aefeb0a1fb6afbe4aadc31cdbf0fdab5345355a661ed1e01699d23c56c7",
+      "cpppj/hist/burningframe-d5cb6/cpppj/src/o/RawBurningSources.cpp": "66a175d6f74156a8c7e92cf705add0601767595b845890568843f85d1450afc6",
+      "cpppj/hist/burningframe-d5cb6/cpppj/src/o/RawBurningSources.h": "ce80a8babc7b28a2176ebd425e34aba1269cbffb1c1c8b66f39cbc487e2ac800",
+      "cpppj/hist/burningframe-d5cb6/cpppj/src/o/RawBurningVisual.cpp": "9521fe84204f87283fb4c9f2b5b3ebbccf8bca749b76a9bebf4691f563ade522",
+      "cpppj/hist/burningframe-d5cb6/cpppj/src/o/RawBurningVisual.h": "54aa4dfa1f816c18685f3023c9e27d5193ff55b3f91e6c0426361db4fb240f69",
+      "cpppj/hist/burningframe-d5cb6/cpppj/tests/BurningFrameTests.cpp": "b0f18bd9e691ae73ed8a4de12fab30bed2f96ae7d46e72872fdadc74fa7ba4d7",
+      "cpppj/hist/burningframe-d5cb6/cpppj/tests/fixtures/burningframe-x86.tsv": "8b09c3d54803039df92c36374537ff316fbd8062ffbaa02913e89dc0d4fdbcc6",
+      "cpppj/hist/burningframe-d5cb6/docs/exe/cpp-initial-gun-runtime-audit-20261014.md": "23344d5528d884a27e8ba948805b3ee9459a5a1ad833236b2f0205061294e03b",
+      "cpppj/hist/burningframe-d5cb6/extracted/burning-frame-helper/originalCD/creation.c": "79332ff09557a261e3148a25cf776e09fff3d59ef0bb435867f7bec8c80ea9ab",
+      "cpppj/hist/burningframe-d5cb6/extracted/burning-frame-helper/originalCD/functions.tsv": "fe7c50de077cff91478186174818f54286502c8420581b1da66ef9acc88ff685",
+      "cpppj/hist/burningframe-d5cb6/extracted/burning-frame-helper/originals/creation.c": "a61efc5fe47da67c8ef639024a9bed67b231e7886727e544d414c9a83062c5cf",
+      "cpppj/hist/burningframe-d5cb6/extracted/burning-frame-helper/originals/functions.tsv": "1ab906703d20e352aece5c1839dc16c08c74c8edd7b86856f649295a27356154",
+      "cpppj/hist/burningframe-d5cb6/extracted/burning-frame-paint-helper/originalCD/creation.c": "a719b9189d2fa112f788a743c231f1622ce9b0d98cd76c7e6cd5dbe2b0dbcaf5",
+      "cpppj/hist/burningframe-d5cb6/extracted/burning-frame-paint-helper/originalCD/functions.tsv": "f2d796eee878f3063055be6290d65d368de50b1fde2bb6765e65861e0b6c583a",
+      "cpppj/hist/burningframe-d5cb6/extracted/burning-frame-paint-helper/originals/creation.c": "c6ed005f927e5cbecc971704171572d8385216c6c9319a905d865d889693cb05",
+      "cpppj/hist/burningframe-d5cb6/extracted/burning-frame-paint-helper/originals/functions.tsv": "9fe2585e0d90fbecc96ef35a9c1a14516ac6d19e8145eae49b9ae9c523bfb6a9",
+      "cpppj/hist/burningframe-d5cb6/extracted/burning-frame-raster-helper/originalCD/creation.c": "95ec314b235f9549e5659606147b686ea92b443900b8cc6a2774895f2760f71b",
+      "cpppj/hist/burningframe-d5cb6/extracted/burning-frame-raster-helper/originalCD/functions.tsv": "7b9b0fba6059d76197d9740687d2d92d1950e5b1b8a667bad0286f3d53dd1a5a",
+      "cpppj/hist/burningframe-d5cb6/extracted/burning-frame-raster-helper/originals/creation.c": "221f3d06b23aab4802703c7a1f2603ac7de39bacb338a44b5b7e24100e69ddf5",
+      "cpppj/hist/burningframe-d5cb6/extracted/burning-frame-raster-helper/originals/functions.tsv": "609d5d460cc2c10cc784e29635119d6544937bf25bb04f859972f00a399d6633",
+      "cpppj/hist/burningframe-d5cb6/extracted/burning-process-particle-helper/originalCD/creation.c": "763b8e5a9c4753883b9a55867e67751cf3aa1a90b33ed31fd76e43ae738de7d6",
+      "cpppj/hist/burningframe-d5cb6/extracted/burning-process-particle-helper/originalCD/functions.tsv": "ec45ee195807b0a961c812f4f0baf242c7f089b5c26849cdb79fdfcadfb0f76b",
+      "cpppj/hist/burningframe-d5cb6/extracted/burning-process/originalCD/creation.c": "ea0ffc80b3fee5d0e05d87610e3c3d490e26e0fb7c62d6d53acf762a2aa349d3",
+      "cpppj/hist/burningframe-d5cb6/extracted/burning-process/originalCD/functions.tsv": "d8bf2f983c26ed0d4302b48873221f5386be77ecfaf66878da10648fdb17b837",
+      "cpppj/hist/burningframe-d5cb6/extracted/burning-process/originals/creation.c": "06f8bb3cda6e46f46d1f23c803ec0575d4e9b64d55acff9260cb6e93d83e4a06",
+      "cpppj/hist/burningframe-d5cb6/extracted/burning-process/originals/functions.tsv": "2ece477fa2b0e4b203b31c0678c2a2841ad928f08a3285e58de2afb4ac5094b8",
+      "cpppj/hist/burningframe-d5cb6/extracted/burning-sources-flag-helper/originalCD/creation.c": "520bfbe4a7ec34dd5ba878cc5d7046db6754c34239b14a7f2475aa3b97234a2b",
+      "cpppj/hist/burningframe-d5cb6/extracted/burning-sources-flag-helper/originalCD/functions.tsv": "d4abb5aa7fbc4ae495b1575330d80487307675d400ea382dbd12c2dbc9298a8c",
+      "cpppj/hist/burningframe-d5cb6/extracted/burning-sources-helper/originalCD/creation.c": "267184efaf3560eca96eeb4714329bcfdda221fefc64433aa55344bd5ec096c3",
+      "cpppj/hist/burningframe-d5cb6/extracted/burning-sources-helper/originalCD/functions.tsv": "838d75d2395a01f55ccd9524a98da526c9d42c04db05dfe6e6c2a4500d126297",
+      "cpppj/hist/burningframe-d5cb6/extracted/burning-sources-helper/originals/creation.c": "b525c4c2bd446b6ca2ff9a82321d3b355d9b5b7a059e085f5e5ad94ca9d30450",
+      "cpppj/hist/burningframe-d5cb6/extracted/burning-sources-helper/originals/functions.tsv": "ff4b67f27f1897b5c71c663eba8e0ec54d85e5f73406d3fad304d9d12ce2ddae",
+      "cpppj/hist/burningframe-d5cb6/extracted/burning-sources-maxhp-helper/originalCD/creation.c": "b063f513b7597752192cc6c07612b7f347f1a7c02412bb5387d4af8d90d8b97c",
+      "cpppj/hist/burningframe-d5cb6/extracted/burning-sources-maxhp-helper/originalCD/functions.tsv": "de4f3404ca137063e4bed9ee5c42f20a0f6d4aed28640ed2025be75de10a476b",
+      "cpppj/hist/burningframe-d5cb6/extracted/burningframe-native-20261014.log": "2c4e395bcba4ba73a2c9023da0446d98029457100f2f0ed4ad13f8f153e93c55",
+      "cpppj/hist/burningframe-d5cb6/extracted/burningframe-smoke-setup-name-failure.log": "28dd0416928804418d05c3a939c0cc5f2491fb99ffb7b09537a77fe3dfd40e1a",
+      "cpppj/hist/burningframe-d5cb6/extracted/creation/originalCD/creation.c": "6968a5c10a81f60f270671e24c163202da11b99bdf64578d038c3eb54cff49ac",
+      "cpppj/hist/burningframe-d5cb6/extracted/creation/originalCD/functions.tsv": "4853e93e88fd741083d3cc6d5ef2429e652e8fa13b3a2315dba6e36585ff3f3d",
+      "cpppj/hist/burningframe-d5cb6/extracted/creation/originals/creation.c": "426ae0f7c99bece695fc93cd81c3b291ae3cb8303c9dcb7c6223e330e3fa81ae",
+      "cpppj/hist/burningframe-d5cb6/extracted/creation/originals/functions.tsv": "42b14fee0b262fd92c833ec51db3cf772e92fd56b6ccbdc1c589955eb347ccb7",
+      "cpppj/hist/burningframe-d5cb6/extracted/display/originalCD/creation.c": "8837fa51d12af2683383cde158b69d783494039f11ec7e0904429d8bcbb794b0",
+      "cpppj/hist/burningframe-d5cb6/extracted/display/originalCD/functions.tsv": "623cf19b2a6f23ab67026daff3770fb3f894f0a35f0b5d3c988a8ab7a8496d1a",
+      "cpppj/hist/burningframe-d5cb6/extracted/display/originals/creation.c": "bccd673912ada7da70332cd898646b18c109a85a9663cf5134e944a97f590804",
+      "cpppj/hist/burningframe-d5cb6/extracted/display/originals/functions.tsv": "408c4530becac3e2ce5112b436e23b32437a729b36ec6b0ebae5b2da81eb51b4",
+      "cpppj/hist/burningframe-d5cb6/extracted/dude-spawn/originalCD/creation.c": "3d5d942241d258aeffdef4901347c8b1871e2aacf576814d44bad5a846b4aef4",
+      "cpppj/hist/burningframe-d5cb6/extracted/dude-spawn/originalCD/functions.tsv": "b3aae52d49b352a1f397bea06e716ccf9b38faf6075160806ff3f21a170af777",
+      "cpppj/hist/burningframe-d5cb6/extracted/dude-spawn/originals/creation.c": "fb498e44e72eab9c4a4aa7496af2c91262a543688188d9a4c4cf1a49b852fcd0",
+      "cpppj/hist/burningframe-d5cb6/extracted/dude-spawn/originals/functions.tsv": "0df48f73f6418b0aae9cd8c4058998866e245ac632d76513c1a16f57eda670ea",
+      "cpppj/hist/burningframe-d5cb6/extracted/owner/originalCD/creation.c": "115d3f4790315c3647e18c087579cf3aa08af06cdbaeca42adbac1e82725af62",
+      "cpppj/hist/burningframe-d5cb6/extracted/owner/originalCD/functions.tsv": "4e184997f62c2622b26b3fa4f047a2580a609d2d919f0e414a75e8efd49d4439",
+      "cpppj/hist/burningframe-d5cb6/extracted/owner/originals/creation.c": "f9919c046d5259526946f106b47b6259fe5e04971f743d6fa02d6a5361b9dc16",
+      "cpppj/hist/burningframe-d5cb6/extracted/owner/originals/functions.tsv": "3ea66dace80a85999a8b2c2dbadb4d5f1bd18b0dcdb0768f9c41075206c7c72d",
+      "cpppj/hist/burningframe-d5cb6/extracted/pop/helpers-originals/creation.c": "33272b9b553227ac3ec295bb3807a6e458cecb6cb885f984baa06aeb98d2fab9",
+      "cpppj/hist/burningframe-d5cb6/extracted/pop/helpers-originals/functions.tsv": "fc21935402ba4781899da2002c5f844061e53150d0bddeeaa597f29b81d58cb8",
+      "cpppj/hist/burningframe-d5cb6/extracted/pop/originalCD/creation.c": "9e6e6e59bcbb02227a72b91b063d0cce00fb9160d22c2f6afd49af3804ddbefb",
+      "cpppj/hist/burningframe-d5cb6/extracted/pop/originalCD/functions.tsv": "bad0cad125741fee06381b4c781914f2abec210cd381967a30ce02aaf185284c",
+      "cpppj/hist/burningframe-d5cb6/extracted/pop/originals/creation.c": "e59b6c12246f8b9a21a2f1d128cc623a2d04bdf1c9fbe7b5f9989d11413f76b7",
+      "cpppj/hist/burningframe-d5cb6/extracted/pop/originals/functions.tsv": "5b3241e336bcc1dea4c188121e3c458d3aef3414c5b6e9c4590db8c126414568",
+      "cpppj/hist/burningframe-d5cb6/extracted/postpop/originalCD/creation.c": "739929556c82c7394c9055f92bb3e00098f05ae649aef7c9973b6aa27f97e95a",
+      "cpppj/hist/burningframe-d5cb6/extracted/postpop/originalCD/functions.tsv": "f540a3ec002e21f58950dfcedc66c85682a42ec749ac7caa103ae329794c0669",
+      "cpppj/hist/burningframe-d5cb6/extracted/postpop/originals/creation.c": "a0df44a01f4e690d255c3d4721ef2b37f4c7452980c8d91bb334be8df89d5f79",
+      "cpppj/hist/burningframe-d5cb6/extracted/postpop/originals/functions.tsv": "99dcfa55557ba03e55321146ccb750816cdebd8242c18b4d95e2e1a353a32021",
+      "cpppj/hist/burningframe-d5cb6/extracted/setframe/originalCD/creation.c": "62bb22d0ef37cecddcc1927f7ccf219ac6ce7ed7122856500e3d96844217ef6f",
+      "cpppj/hist/burningframe-d5cb6/extracted/setframe/originalCD/functions.tsv": "674200974a1a54c0b7ad8dd9e4a596b3926f6a1b08678cb8f7f7ea0e14f19c27",
+      "cpppj/hist/burningframe-d5cb6/extracted/setframe/originals/creation.c": "ac6f886701b50c2ee25ef5fb5411fbba8c97dfacd866220c3df6c50a70777b31",
+      "cpppj/hist/burningframe-d5cb6/extracted/setframe/originals/functions.tsv": "31422114edd78937f1d285df1480190ad4ceb87b5436e6e1d407e335f621425e",
+      "cpppj/hist/burningframe-d5cb6/extracted/sid/originalCD/functions.tsv": "a54643de18c5c9480a91e9e2c67abbc3455506d2cd92934d1882eb3710f57de9",
+      "cpppj/hist/burningframe-d5cb6/extracted/sid/originals/functions.tsv": "3034dd0d393ebdfd77f2e9fafe8a5b252d5437f1e71ab94541cc229e8ef8694b",
+      "cpppj/hist/burningframe-d5cb6/tools/decomp_burningframe_oracle.py": "2eaae6038e10e2a46fdeb7173ddecc5a5bf32848f3f03d4e17803e58b1e77698",
+      "cpppj/hist/burningframe-d5cb6/tools/decomp_creation_oracle.py": "646adc1ca6c9eaeac08a9c700324ae05ba1727416bc62070e0a066afc07dc053",
+      "cpppj/hist/burningframe-d5cb6/tools/decomp_display_oracle.py": "bd9a42431cdef96d3fb13accf78d5a0d6a3155243b1bbc0362d58e79f662f7a4",
+      "cpppj/hist/burningframe-d5cb6/tools/decomp_dudespawn_oracle.py": "294095ff1336d290d8d7e0e465df95d5514ceb4ff87d4bac8c282cdcec2eb786",
+      "cpppj/hist/burningframe-d5cb6/tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+      "cpppj/hist/burningframe-d5cb6/tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
+      "cpppj/hist/burningframe-d5cb6/tools/decomp_pop_oracle.py": "2a50f34e6b229d5ea4611f7073877ca1e165e0bf841f32c83f17d300b6113bb6",
+      "cpppj/hist/burningframe-d5cb6/tools/decomp_postpop_oracle.py": "43dd9adffc6e2b3a1bd4a1fb06563f848518d8082014f2346613243183535129",
+      "cpppj/hist/burningframe-d5cb6/tools/decomp_shape_to_buffer_oracle.py": "3499edbde033d4fb5102bfb855a988adc30c8b17aae219d917d81346eea71eec",
+      "cpppj/hist/burningframe-d5cb6/tools/decomp_sid_oracle.py": "7bfd7b95b26724b1793d407a4ad6654972b2aaa3bf04e4c206cc357670b68dff",
+      "cpppj/hist/burningframe-d5cb6/cpppj/hist/burningframe-77634/tools/decomp_burningframe_oracle.py": "13a563d1c0ac6d9bdfc9e26519fcb7af0d3207347639c0da30d0a4c975e4b7bf",
+      "cpppj/hist/burningframe-d5cb6/cpppj/hist/burningframe-77634/cpppj/src/o/RawBurningFrame.h": "a8eb3aefeb0a1fb6afbe4aadc31cdbf0fdab5345355a661ed1e01699d23c56c7",
+      "cpppj/hist/burningframe-d5cb6/cpppj/hist/burningframe-77634/cpppj/src/o/RawBurningFrame.cpp": "955cf341a2cd4e14a8249939455f799b997f796d17e724d72719925c52322b8e",
+      "cpppj/hist/burningframe-d5cb6/cpppj/hist/burningframe-77634/cpppj/src/client/BurningFrameCapture.h": "536fecc436d79053f6d78b67bf0b381567ca2588cdc51bd33e69bfa76033cdc0",
+      "cpppj/hist/burningframe-d5cb6/cpppj/hist/burningframe-77634/cpppj/src/client/BurningFrameCapture.cpp": "dabfe21f7aed591ac6586f5757bf158e181cf0bb2199046c82740589cd746637",
+      "cpppj/hist/burningframe-d5cb6/capture.json": "12d0d7f27a481a3a629458ff3e79cbc19011d597993c0749311aec3412a3d17a",
+      "cpppj/hist/burningframe-99a53/tools/analyze_burningframe_draft_lineage.py": "ff6c49b1f41f4464476d011dae1a78b5d45dec3f8e24e63c5db3a7acc8f00be9",
+      "cpppj/hist/burningframe-99a53/cpppj/burningframe-draft-lineage.json": "af65d34c94f0d332cb343bcd437cafc648f88a92fe39ff15b8f281568b37c8a4",
+      "cpppj/hist/burningframe-99a53/cpppj/tests/BurningFrameTests.cpp": "b0f18bd9e691ae73ed8a4de12fab30bed2f96ae7d46e72872fdadc74fa7ba4d7",
+      "cpppj/hist/burningframe-99a53/capture.json": "babc6e2c126c7ed80dce5f4782ad3fd6f38b4fa3ba5111fafcaa5d3f76f7ced2"
+    },
+    "dependencies": {
+      "cpppj/src/client/BurningFrameCapture.cpp": {
+        "reported_sha256": "dabfe21f7aed591ac6586f5757bf158e181cf0bb2199046c82740589cd746637",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/cpppj/src/client/BurningFrameCapture.cpp"
+      },
+      "cpppj/src/client/BurningFrameCapture.h": {
+        "reported_sha256": "536fecc436d79053f6d78b67bf0b381567ca2588cdc51bd33e69bfa76033cdc0",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/cpppj/src/client/BurningFrameCapture.h"
+      },
+      "cpppj/src/client/RawShapeToBuffer.cpp": {
+        "reported_sha256": "a25daa6a79c7edbfee525ed6a64156cb71d2b1ceee996c7d0a4a002af0ced3d4",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/cpppj/src/client/RawShapeToBuffer.cpp"
+      },
+      "cpppj/src/client/RawShapeToBuffer.h": {
+        "reported_sha256": "0d957cb5d99e2042ff04dbea766bb05e79560b390ffe82976388692ae5b259bb",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/cpppj/src/client/RawShapeToBuffer.h"
+      },
+      "cpppj/src/client/Renderer.cpp": {
+        "reported_sha256": "2b7f456faca5262b066bb46c999da2e5644e7b006beabe9893df30f19d62bd9d",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/cpppj/src/client/Renderer.cpp"
+      },
+      "cpppj/src/client/VFXDraw.cpp": {
+        "reported_sha256": "d4c95ba9875659715bdb234b56baf7084d2abc6f5f4f879d1247cb309f0f5ad4",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/cpppj/src/client/VFXDraw.cpp"
+      },
+      "cpppj/src/o/RawBurningFrame.cpp": {
+        "reported_sha256": "955cf341a2cd4e14a8249939455f799b997f796d17e724d72719925c52322b8e",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/cpppj/src/o/RawBurningFrame.cpp"
+      },
+      "cpppj/src/o/RawBurningFrame.h": {
+        "reported_sha256": "a8eb3aefeb0a1fb6afbe4aadc31cdbf0fdab5345355a661ed1e01699d23c56c7",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/cpppj/src/o/RawBurningFrame.h"
+      },
+      "cpppj/src/o/RawBurningSources.cpp": {
+        "reported_sha256": "66a175d6f74156a8c7e92cf705add0601767595b845890568843f85d1450afc6",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/cpppj/src/o/RawBurningSources.cpp"
+      },
+      "cpppj/src/o/RawBurningSources.h": {
+        "reported_sha256": "ce80a8babc7b28a2176ebd425e34aba1269cbffb1c1c8b66f39cbc487e2ac800",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/cpppj/src/o/RawBurningSources.h"
+      },
+      "cpppj/src/o/RawBurningVisual.cpp": {
+        "reported_sha256": "9521fe84204f87283fb4c9f2b5b3ebbccf8bca749b76a9bebf4691f563ade522",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/cpppj/src/o/RawBurningVisual.cpp"
+      },
+      "cpppj/src/o/RawBurningVisual.h": {
+        "reported_sha256": "54aa4dfa1f816c18685f3023c9e27d5193ff55b3f91e6c0426361db4fb240f69",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/cpppj/src/o/RawBurningVisual.h"
+      },
+      "cpppj/tests/BurningFrameTests.cpp": {
+        "reported_sha256": "b0f18bd9e691ae73ed8a4de12fab30bed2f96ae7d46e72872fdadc74fa7ba4d7",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/cpppj/tests/BurningFrameTests.cpp"
+      },
+      "cpppj/tests/fixtures/burningframe-x86.tsv": {
+        "reported_sha256": "8b09c3d54803039df92c36374537ff316fbd8062ffbaa02913e89dc0d4fdbcc6",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/cpppj/tests/fixtures/burningframe-x86.tsv"
+      },
+      "extracted/burning-frame-helper/originalCD/creation.c": {
+        "reported_sha256": "79332ff09557a261e3148a25cf776e09fff3d59ef0bb435867f7bec8c80ea9ab",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/burning-frame-helper/originalCD/creation.c"
+      },
+      "extracted/burning-frame-helper/originalCD/functions.tsv": {
+        "reported_sha256": "fe7c50de077cff91478186174818f54286502c8420581b1da66ef9acc88ff685",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/burning-frame-helper/originalCD/functions.tsv"
+      },
+      "extracted/burning-frame-helper/originals/creation.c": {
+        "reported_sha256": "a61efc5fe47da67c8ef639024a9bed67b231e7886727e544d414c9a83062c5cf",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/burning-frame-helper/originals/creation.c"
+      },
+      "extracted/burning-frame-helper/originals/functions.tsv": {
+        "reported_sha256": "1ab906703d20e352aece5c1839dc16c08c74c8edd7b86856f649295a27356154",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/burning-frame-helper/originals/functions.tsv"
+      },
+      "extracted/burning-frame-paint-helper/originalCD/creation.c": {
+        "reported_sha256": "a719b9189d2fa112f788a743c231f1622ce9b0d98cd76c7e6cd5dbe2b0dbcaf5",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/burning-frame-paint-helper/originalCD/creation.c"
+      },
+      "extracted/burning-frame-paint-helper/originalCD/functions.tsv": {
+        "reported_sha256": "f2d796eee878f3063055be6290d65d368de50b1fde2bb6765e65861e0b6c583a",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/burning-frame-paint-helper/originalCD/functions.tsv"
+      },
+      "extracted/burning-frame-paint-helper/originals/creation.c": {
+        "reported_sha256": "c6ed005f927e5cbecc971704171572d8385216c6c9319a905d865d889693cb05",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/burning-frame-paint-helper/originals/creation.c"
+      },
+      "extracted/burning-frame-paint-helper/originals/functions.tsv": {
+        "reported_sha256": "9fe2585e0d90fbecc96ef35a9c1a14516ac6d19e8145eae49b9ae9c523bfb6a9",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/burning-frame-paint-helper/originals/functions.tsv"
+      },
+      "extracted/burning-frame-raster-helper/originalCD/creation.c": {
+        "reported_sha256": "95ec314b235f9549e5659606147b686ea92b443900b8cc6a2774895f2760f71b",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/burning-frame-raster-helper/originalCD/creation.c"
+      },
+      "extracted/burning-frame-raster-helper/originalCD/functions.tsv": {
+        "reported_sha256": "7b9b0fba6059d76197d9740687d2d92d1950e5b1b8a667bad0286f3d53dd1a5a",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/burning-frame-raster-helper/originalCD/functions.tsv"
+      },
+      "extracted/burning-frame-raster-helper/originals/creation.c": {
+        "reported_sha256": "221f3d06b23aab4802703c7a1f2603ac7de39bacb338a44b5b7e24100e69ddf5",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/burning-frame-raster-helper/originals/creation.c"
+      },
+      "extracted/burning-frame-raster-helper/originals/functions.tsv": {
+        "reported_sha256": "609d5d460cc2c10cc784e29635119d6544937bf25bb04f859972f00a399d6633",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/burning-frame-raster-helper/originals/functions.tsv"
+      },
+      "extracted/burning-process/originalCD/creation.c": {
+        "reported_sha256": "ea0ffc80b3fee5d0e05d87610e3c3d490e26e0fb7c62d6d53acf762a2aa349d3",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/burning-process/originalCD/creation.c"
+      },
+      "extracted/burning-process/originalCD/functions.tsv": {
+        "reported_sha256": "d8bf2f983c26ed0d4302b48873221f5386be77ecfaf66878da10648fdb17b837",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/burning-process/originalCD/functions.tsv"
+      },
+      "extracted/burning-process/originals/creation.c": {
+        "reported_sha256": "06f8bb3cda6e46f46d1f23c803ec0575d4e9b64d55acff9260cb6e93d83e4a06",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/burning-process/originals/creation.c"
+      },
+      "extracted/burning-process/originals/functions.tsv": {
+        "reported_sha256": "2ece477fa2b0e4b203b31c0678c2a2841ad928f08a3285e58de2afb4ac5094b8",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/burning-process/originals/functions.tsv"
+      },
+      "extracted/burning-process-particle-helper/originalCD/creation.c": {
+        "reported_sha256": "763b8e5a9c4753883b9a55867e67751cf3aa1a90b33ed31fd76e43ae738de7d6",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/burning-process-particle-helper/originalCD/creation.c"
+      },
+      "extracted/burning-process-particle-helper/originalCD/functions.tsv": {
+        "reported_sha256": "ec45ee195807b0a961c812f4f0baf242c7f089b5c26849cdb79fdfcadfb0f76b",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/burning-process-particle-helper/originalCD/functions.tsv"
+      },
+      "extracted/burning-sources-flag-helper/originalCD/creation.c": {
+        "reported_sha256": "520bfbe4a7ec34dd5ba878cc5d7046db6754c34239b14a7f2475aa3b97234a2b",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/burning-sources-flag-helper/originalCD/creation.c"
+      },
+      "extracted/burning-sources-flag-helper/originalCD/functions.tsv": {
+        "reported_sha256": "d4abb5aa7fbc4ae495b1575330d80487307675d400ea382dbd12c2dbc9298a8c",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/burning-sources-flag-helper/originalCD/functions.tsv"
+      },
+      "extracted/burning-sources-helper/originalCD/creation.c": {
+        "reported_sha256": "267184efaf3560eca96eeb4714329bcfdda221fefc64433aa55344bd5ec096c3",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/burning-sources-helper/originalCD/creation.c"
+      },
+      "extracted/burning-sources-helper/originalCD/functions.tsv": {
+        "reported_sha256": "838d75d2395a01f55ccd9524a98da526c9d42c04db05dfe6e6c2a4500d126297",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/burning-sources-helper/originalCD/functions.tsv"
+      },
+      "extracted/burning-sources-helper/originals/creation.c": {
+        "reported_sha256": "b525c4c2bd446b6ca2ff9a82321d3b355d9b5b7a059e085f5e5ad94ca9d30450",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/burning-sources-helper/originals/creation.c"
+      },
+      "extracted/burning-sources-helper/originals/functions.tsv": {
+        "reported_sha256": "ff4b67f27f1897b5c71c663eba8e0ec54d85e5f73406d3fad304d9d12ce2ddae",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/burning-sources-helper/originals/functions.tsv"
+      },
+      "extracted/burning-sources-maxhp-helper/originalCD/creation.c": {
+        "reported_sha256": "b063f513b7597752192cc6c07612b7f347f1a7c02412bb5387d4af8d90d8b97c",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/burning-sources-maxhp-helper/originalCD/creation.c"
+      },
+      "extracted/burning-sources-maxhp-helper/originalCD/functions.tsv": {
+        "reported_sha256": "de4f3404ca137063e4bed9ee5c42f20a0f6d4aed28640ed2025be75de10a476b",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/burning-sources-maxhp-helper/originalCD/functions.tsv"
+      },
+      "extracted/creation/originalCD/creation.c": {
+        "reported_sha256": "6968a5c10a81f60f270671e24c163202da11b99bdf64578d038c3eb54cff49ac",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/creation/originalCD/creation.c"
+      },
+      "extracted/creation/originalCD/functions.tsv": {
+        "reported_sha256": "4853e93e88fd741083d3cc6d5ef2429e652e8fa13b3a2315dba6e36585ff3f3d",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/creation/originalCD/functions.tsv"
+      },
+      "extracted/creation/originals/creation.c": {
+        "reported_sha256": "426ae0f7c99bece695fc93cd81c3b291ae3cb8303c9dcb7c6223e330e3fa81ae",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/creation/originals/creation.c"
+      },
+      "extracted/creation/originals/functions.tsv": {
+        "reported_sha256": "42b14fee0b262fd92c833ec51db3cf772e92fd56b6ccbdc1c589955eb347ccb7",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/creation/originals/functions.tsv"
+      },
+      "extracted/display/originalCD/creation.c": {
+        "reported_sha256": "8837fa51d12af2683383cde158b69d783494039f11ec7e0904429d8bcbb794b0",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/display/originalCD/creation.c"
+      },
+      "extracted/display/originalCD/functions.tsv": {
+        "reported_sha256": "623cf19b2a6f23ab67026daff3770fb3f894f0a35f0b5d3c988a8ab7a8496d1a",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/display/originalCD/functions.tsv"
+      },
+      "extracted/display/originals/creation.c": {
+        "reported_sha256": "bccd673912ada7da70332cd898646b18c109a85a9663cf5134e944a97f590804",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/display/originals/creation.c"
+      },
+      "extracted/display/originals/functions.tsv": {
+        "reported_sha256": "408c4530becac3e2ce5112b436e23b32437a729b36ec6b0ebae5b2da81eb51b4",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/display/originals/functions.tsv"
+      },
+      "extracted/dude-spawn/originalCD/creation.c": {
+        "reported_sha256": "3d5d942241d258aeffdef4901347c8b1871e2aacf576814d44bad5a846b4aef4",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/dude-spawn/originalCD/creation.c"
+      },
+      "extracted/dude-spawn/originalCD/functions.tsv": {
+        "reported_sha256": "b3aae52d49b352a1f397bea06e716ccf9b38faf6075160806ff3f21a170af777",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/dude-spawn/originalCD/functions.tsv"
+      },
+      "extracted/dude-spawn/originals/creation.c": {
+        "reported_sha256": "fb498e44e72eab9c4a4aa7496af2c91262a543688188d9a4c4cf1a49b852fcd0",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/dude-spawn/originals/creation.c"
+      },
+      "extracted/dude-spawn/originals/functions.tsv": {
+        "reported_sha256": "0df48f73f6418b0aae9cd8c4058998866e245ac632d76513c1a16f57eda670ea",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/dude-spawn/originals/functions.tsv"
+      },
+      "extracted/owner/originalCD/creation.c": {
+        "reported_sha256": "115d3f4790315c3647e18c087579cf3aa08af06cdbaeca42adbac1e82725af62",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/owner/originalCD/creation.c"
+      },
+      "extracted/owner/originalCD/functions.tsv": {
+        "reported_sha256": "4e184997f62c2622b26b3fa4f047a2580a609d2d919f0e414a75e8efd49d4439",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/owner/originalCD/functions.tsv"
+      },
+      "extracted/owner/originals/creation.c": {
+        "reported_sha256": "f9919c046d5259526946f106b47b6259fe5e04971f743d6fa02d6a5361b9dc16",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/owner/originals/creation.c"
+      },
+      "extracted/owner/originals/functions.tsv": {
+        "reported_sha256": "3ea66dace80a85999a8b2c2dbadb4d5f1bd18b0dcdb0768f9c41075206c7c72d",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/owner/originals/functions.tsv"
+      },
+      "extracted/pop/helpers-originals/creation.c": {
+        "reported_sha256": "33272b9b553227ac3ec295bb3807a6e458cecb6cb885f984baa06aeb98d2fab9",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/pop/helpers-originals/creation.c"
+      },
+      "extracted/pop/helpers-originals/functions.tsv": {
+        "reported_sha256": "fc21935402ba4781899da2002c5f844061e53150d0bddeeaa597f29b81d58cb8",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/pop/helpers-originals/functions.tsv"
+      },
+      "extracted/pop/originalCD/creation.c": {
+        "reported_sha256": "9e6e6e59bcbb02227a72b91b063d0cce00fb9160d22c2f6afd49af3804ddbefb",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/pop/originalCD/creation.c"
+      },
+      "extracted/pop/originalCD/functions.tsv": {
+        "reported_sha256": "bad0cad125741fee06381b4c781914f2abec210cd381967a30ce02aaf185284c",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/pop/originalCD/functions.tsv"
+      },
+      "extracted/pop/originals/creation.c": {
+        "reported_sha256": "e59b6c12246f8b9a21a2f1d128cc623a2d04bdf1c9fbe7b5f9989d11413f76b7",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/pop/originals/creation.c"
+      },
+      "extracted/pop/originals/functions.tsv": {
+        "reported_sha256": "5b3241e336bcc1dea4c188121e3c458d3aef3414c5b6e9c4590db8c126414568",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/pop/originals/functions.tsv"
+      },
+      "extracted/postpop/originalCD/creation.c": {
+        "reported_sha256": "739929556c82c7394c9055f92bb3e00098f05ae649aef7c9973b6aa27f97e95a",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/postpop/originalCD/creation.c"
+      },
+      "extracted/postpop/originalCD/functions.tsv": {
+        "reported_sha256": "f540a3ec002e21f58950dfcedc66c85682a42ec749ac7caa103ae329794c0669",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/postpop/originalCD/functions.tsv"
+      },
+      "extracted/postpop/originals/creation.c": {
+        "reported_sha256": "a0df44a01f4e690d255c3d4721ef2b37f4c7452980c8d91bb334be8df89d5f79",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/postpop/originals/creation.c"
+      },
+      "extracted/postpop/originals/functions.tsv": {
+        "reported_sha256": "99dcfa55557ba03e55321146ccb750816cdebd8242c18b4d95e2e1a353a32021",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/postpop/originals/functions.tsv"
+      },
+      "extracted/setframe/originalCD/creation.c": {
+        "reported_sha256": "62bb22d0ef37cecddcc1927f7ccf219ac6ce7ed7122856500e3d96844217ef6f",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/setframe/originalCD/creation.c"
+      },
+      "extracted/setframe/originalCD/functions.tsv": {
+        "reported_sha256": "674200974a1a54c0b7ad8dd9e4a596b3926f6a1b08678cb8f7f7ea0e14f19c27",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/setframe/originalCD/functions.tsv"
+      },
+      "extracted/setframe/originals/creation.c": {
+        "reported_sha256": "ac6f886701b50c2ee25ef5fb5411fbba8c97dfacd866220c3df6c50a70777b31",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/setframe/originals/creation.c"
+      },
+      "extracted/setframe/originals/functions.tsv": {
+        "reported_sha256": "31422114edd78937f1d285df1480190ad4ceb87b5436e6e1d407e335f621425e",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/setframe/originals/functions.tsv"
+      },
+      "extracted/sid/originalCD/functions.tsv": {
+        "reported_sha256": "a54643de18c5c9480a91e9e2c67abbc3455506d2cd92934d1882eb3710f57de9",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/sid/originalCD/functions.tsv"
+      },
+      "extracted/sid/originals/functions.tsv": {
+        "reported_sha256": "3034dd0d393ebdfd77f2e9fafe8a5b252d5437f1e71ab94541cc229e8ef8694b",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/extracted/sid/originals/functions.tsv"
+      },
+      "originalCD/d/_shapes.shp": {
+        "reported_sha256": "5bcd5b14ad30a22a28861bbbb91397879d933c474c1f5319e7bc42f563407f59",
+        "preserved_or_current_path": "originalCD/d/_shapes.shp"
+      },
+      "originalCD/NETSTORM.EXE": {
+        "reported_sha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+        "preserved_or_current_path": "originalCD/NETSTORM.EXE"
+      },
+      "originalCD/netstorm.tarc": {
+        "reported_sha256": "e7e8868553ec2ef40cc1cd97ea452c37454e9a147f21a67a1298945de9b637ff",
+        "preserved_or_current_path": "originalCD/netstorm.tarc"
+      },
+      "originals/d/_shapes.shp": {
+        "reported_sha256": "c878353c8054208deef832e34c514b30fe670e175505b129333a5728ba70f68e",
+        "preserved_or_current_path": "originals/d/_shapes.shp"
+      },
+      "originals/Netstorm.exe": {
+        "reported_sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "preserved_or_current_path": "originals/Netstorm.exe"
+      },
+      "originals/netstorm.tarc": {
+        "reported_sha256": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+        "preserved_or_current_path": "originals/netstorm.tarc"
+      },
+      "tools/decomp_burningframe_oracle.py": {
+        "reported_sha256": "2eaae6038e10e2a46fdeb7173ddecc5a5bf32848f3f03d4e17803e58b1e77698",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/tools/decomp_burningframe_oracle.py"
+      },
+      "tools/decomp_creation_oracle.py": {
+        "reported_sha256": "646adc1ca6c9eaeac08a9c700324ae05ba1727416bc62070e0a066afc07dc053",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/tools/decomp_creation_oracle.py"
+      },
+      "tools/decomp_display_oracle.py": {
+        "reported_sha256": "bd9a42431cdef96d3fb13accf78d5a0d6a3155243b1bbc0362d58e79f662f7a4",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/tools/decomp_display_oracle.py"
+      },
+      "tools/decomp_dudespawn_oracle.py": {
+        "reported_sha256": "294095ff1336d290d8d7e0e465df95d5514ceb4ff87d4bac8c282cdcec2eb786",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/tools/decomp_dudespawn_oracle.py"
+      },
+      "tools/decomp_oracle.py": {
+        "reported_sha256": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/tools/decomp_oracle.py"
+      },
+      "tools/decomp_owner_oracle.py": {
+        "reported_sha256": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/tools/decomp_owner_oracle.py"
+      },
+      "tools/decomp_pop_oracle.py": {
+        "reported_sha256": "2a50f34e6b229d5ea4611f7073877ca1e165e0bf841f32c83f17d300b6113bb6",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/tools/decomp_pop_oracle.py"
+      },
+      "tools/decomp_postpop_oracle.py": {
+        "reported_sha256": "43dd9adffc6e2b3a1bd4a1fb06563f848518d8082014f2346613243183535129",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/tools/decomp_postpop_oracle.py"
+      },
+      "tools/decomp_shape_to_buffer_oracle.py": {
+        "reported_sha256": "3499edbde033d4fb5102bfb855a988adc30c8b17aae219d917d81346eea71eec",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/tools/decomp_shape_to_buffer_oracle.py"
+      },
+      "tools/decomp_sid_oracle.py": {
+        "reported_sha256": "7bfd7b95b26724b1793d407a4ad6654972b2aaa3bf04e4c206cc357670b68dff",
+        "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/tools/decomp_sid_oracle.py"
+      }
+    },
+    "files": {
+      "cpppj/src/o/RawBurningFrame.cpp": "abfe7fbc7e69d8116baa83b4663c9ccfb874dc3ac1a15e671aea61fbe479a27d",
+      "cpppj/burningframe.json": "bd846f05f9d147e32f78c1f1a9eb1c4ec1aa9e11b55b00c08308eaf3abd3ca42",
+      "cpppj/src/o/RawBurningFrame.h": "a8eb3aefeb0a1fb6afbe4aadc31cdbf0fdab5345355a661ed1e01699d23c56c7",
+      "cpppj/src/client/BurningFrameCapture.h": "536fecc436d79053f6d78b67bf0b381567ca2588cdc51bd33e69bfa76033cdc0",
+      "cpppj/src/client/BurningFrameCapture.cpp": "dabfe21f7aed591ac6586f5757bf158e181cf0bb2199046c82740589cd746637",
+      "cpppj/tests/BurningFrameTests.cpp": "b6123ffbc1b83f7d4c6e765b40ad956f7184effded30504b71a501cc879669af",
+      "cpppj/tests/fixtures/burningframe-x86.tsv": "8b09c3d54803039df92c36374537ff316fbd8062ffbaa02913e89dc0d4fdbcc6",
+      "tools/decomp_burningframe_oracle.py": "2eaae6038e10e2a46fdeb7173ddecc5a5bf32848f3f03d4e17803e58b1e77698"
+    },
+    "whole_old_production_inverse": true,
+    "whole_old_test_inverse": true,
+    "previous_draft_preserved": true
+  },
+  "tool_sha256": "4cc7dcca4d3cc262d1328ecbcdeed1f6b562d659f34dde2d0ddda1576ef39193",
+  "scope": "Dais extra bit1은ownerBYTE34/32가아닌실제extraBYTE40/35다. 기존RawBurningSources와같은HasHP몸체로초안의두offset숫자만교정한다. 최초426은실제Dude70이라이분기를관찰하지않았으며fixture/Native출력/도구/보고서전체를그대로보존한다. Dais분기를새실행한것으로세지않는다. 미컴파일test의RawBurningVisual에는실제생성자계약이요구하는reserve훅을설치하되기존명시미관찰reserve거부callback을재사용한다. 실제Frame중reserve호출은없다. 첫successor전체도별도보존한다."
+}

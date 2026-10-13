@@ -38,11 +38,11 @@ owner 색표가 필요한 mapped RLE와 추가 가상 그림은 현재 C++에서
 - production: `cpppj/src/client/RawShapeToBuffer.h/.cpp`.
 - test: `cpppj/tests/ShapeToBufferTests.cpp`의 양판본2검사.
 - fixture: `shape-to-buffer-x86.tsv`, 매크로 **`NETSTORM_SHAPETOBUFFER_FIXTURE`**.
-- oracle/report: `tools/decomp_shape_to_buffer_oracle.py`, `cpppj/recovery-shape-to-buffer-evidence.json`.
+- oracle/report: `tools/decomp_shape_to_buffer_oracle.py`, `cpppj/shape-to-buffer.json`.
 - readOnly helper: `burning-frame-helper`9/7, `burning-frame-paint-helper`7/6, `burning-frame-raster-helper`6/4. 기존18/19·Sources8/7 및 별도 CD1/1 자료를 덮어쓰지 않았다.
 
 ```text
 python -X utf8 tools/decomp_shape_to_buffer_oracle.py --verify
 ```
 
-위164고유입력/전체픽셀/현재 SHA 감사는 성공했다. 단위14에서 등록한 양판본2검사가 현재 공유 C++ 전수 대조에서 모두 통과했다(`campaign-runtime14-ShapeToBuffer_initial-tests.log`). 단위14 전체 결과는 아직 진행 중이며 이 개별 성공을 전체 완료로 표시하지 않는다. 실제 BurningFrame426의 새로운 소비자 대조는 단위15 범위다.
+위164고유입력/전체픽셀/현재 SHA 감사는 성공했다. 단위14에서 등록한 양판본2검사가 현재 공유 C++ 전수 대조에서 모두 통과했다(`run14-ShapeToBuffer_first.log`). 단위14 전체 결과는 아직 진행 중이며 이 개별 성공을 전체 완료로 표시하지 않는다. 실제 BurningFrame426의 새로운 소비자 대조는 단위15 범위다.

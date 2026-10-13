@@ -97,7 +97,7 @@
 
 C++은 첫 실행에서 색 표 밖 번호를 다루는 검사 코드의 조건 하나만 고쳤고, 복원 본체는 수정 없이 모든 행과 일치했다.
 
-[bridgeconnect-x86.tsv](../../cpppj/tests/fixtures/bridgeconnect-x86.tsv), [근거 JSON](../../cpppj/recovery-bridgeconnect-evidence.json)에 원본 PE·도구·내보내기·결과 SHA와 대체 호출 수를 보존했다. `--verify`는 저장된 SHA/행 수/assert 0/실제 몸체 실행의 감사이며 기계어 재실행은 아니다.
+[bridgeconnect-x86.tsv](../../cpppj/tests/fixtures/bridgeconnect-x86.tsv), [근거 JSON](../../cpppj/bridgeconnect.json)에 원본 PE·도구·내보내기·결과 SHA와 대체 호출 수를 보존했다. `--verify`는 저장된 SHA/행 수/assert 0/실제 몸체 실행의 감사이며 기계어 재실행은 아니다.
 
 ### 변이 확인
 

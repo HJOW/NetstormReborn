@@ -45,7 +45,7 @@ ABI/보존 레지스터/스택/x87/SEH/허용 불연속 실행·쓰기/노드 �
 
 새 C++ **8개**, Release 경고/오류 **0**·CTest 내부 **801개·실패 0**(160.71초, 전체 160.74초), 공통 숫자 시계를 포함한 근거 감사 **120종**·새 변이 **14개 모두 검출**(`--focused`, 변이 전 사본 전체 검사 통과). 최종 미검출/건너뜀 **0개**, 사본 소스 바이트 복구를 확인했다. 경계/사건 마스크·직계 void/unsigned 깊이·동률/초기 한도·후보 마스크·숨은 직계 경계·전달 dead/필터/반환/현재 next·부모 시작점/전체 DWORD의 차이를 검출했다.
 
-자료: `cpppj/recovery-gumpevents-evidence.json`, `cpppj/tests/fixtures/gumpevents-x86.tsv`, `extracted/gumpevents/{originals,originalCD,original1037}/`.
+자료: `cpppj/gumpevents.json`, `cpppj/tests/fixtures/gumpevents-x86.tsv`, `extracted/gumpevents/{originals,originalCD,original1037}/`.
 
 직계 선택과 전체 선택을 연속 호출한 초기 입력에서는, 첫 호출이 숨은 객체의 경계를 생략해도 두 번째 호출이 캐시를 다시 계산해 최종 상태가 같아졌다. 변이 검사가 이를 드러냈다. 숨은/죽은 객체를 포함하는 **직계 선택만의 입력 두 개**를 추가해 첫 호출 직후의 실제 캐시를 관찰한다. 이 보완은 복원 코드를 바꾸지 않고 독립 입력과 검사를 강화한 것이다. 초기 변이 기록은 `extracted/gumpevents-mutations-initial.log`, 최종 771행의 변이 14개 재검사는 `extracted/gumpevents-mutations.log`에 보존한다. 회귀 검사도 보완한 입력으로 다시 통과했다. 최종 로그는 `extracted/gumpevents-{build,focused,ctest,audits,mutations}.log`다.
 

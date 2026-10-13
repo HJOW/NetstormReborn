@@ -70,7 +70,7 @@ EXTRA['original1037'] = EXTRA['originalCD']
 HANDLED = ('create', 'owner', 'setframe', 'baseowner', 'basepost')
 # 새 결과 파일은 이전 기록/fixture와 분리한다.
 FIXTURE = ROOT / 'cpppj/tests/fixtures/bridgeconnect-x86.tsv'
-REPORT = ROOT / 'cpppj/recovery-bridgeconnect-evidence.json'
+REPORT = ROOT / 'cpppj/bridgeconnect.json'
 
 
 class ConnectOracle(NeighborOracle):

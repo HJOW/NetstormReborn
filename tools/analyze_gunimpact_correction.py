@@ -8,11 +8,11 @@ from pathlib import Path
 from decomp_owner_oracle import ROOT,digest
 
 # 최초 정상2274 source/test/oracle/fixture/전체보고서의 실제 수정 전 바이트다.
-BEFORE=ROOT/'cpppj/recovery-history/gunimpact-initial'
-NATIVE=ROOT/'cpppj/recovery-gunimpact-evidence.json'
-REPORT=ROOT/'cpppj/recovery-gunimpact-correction-evidence.json'
+BEFORE=ROOT/'cpppj/hist/gunimpact-initial'
+NATIVE=ROOT/'cpppj/gunimpact.json'
+REPORT=ROOT/'cpppj/gunimpact-correction.json'
 # 첫 C++ 전수 실패 직전의 전체 현재자료와 당시 Clamp 도구/보고서다.
-CPP_BEFORE=ROOT/'cpppj/recovery-history/gunimpact-before-cpp-correction'
+CPP_BEFORE=ROOT/'cpppj/hist/gunimpact-be-be7bd'
 # fixture 문자열 해석/실제 표시 viewport/복합 단언 분리만 이전 검사로 역변환한다.
 CPP_CHANGES=(
  ('state.suppressed=value[10]=="True" ? 1U : (value[10]=="False" ? 0U : Number(value[10]));','state.suppressed=Number(value[10]);'),
@@ -62,7 +62,7 @@ def audit():
     prior_clamp=json.loads((CPP_BEFORE/REPORT.name).read_text(encoding='utf-8'))
     for name,expected in prior_clamp['files'].items():
         saved=CPP_BEFORE/Path(name).name
-        path=ROOT/name if name.startswith('cpppj/recovery-history/') or not saved.exists() else saved
+        path=ROOT/name if name.startswith('cpppj/hist/') or not saved.exists() else saved
         if digest(path)!=expected:raise RuntimeError('충돌 이전 Clamp 전체보고서 출처 오류 '+name)
     # 현재 native의 정상2274 출력/원본도구는 두 번째 검사 교정으로 변경하지 않는다.
     current_native=json.loads(NATIVE.read_text(encoding='utf-8'));current_native.pop('cpp_input_correction',None)

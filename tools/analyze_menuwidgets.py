@@ -17,7 +17,7 @@ from analyze_styletext import ROOT,digest,read_ranges
 
 # 계획과 기록은 저장소 안에 생성한다. 두 보호 PE와 디컴파일 결과는 읽기만 한다.
 PLAN=ROOT/'tools/ghidra/menuwidgets-functions.json'
-REPORT=ROOT/'cpppj/recovery-menuwidgets-evidence.json'
+REPORT=ROOT/'cpppj/menuwidgets.json'
 # 두 실제 메뉴/장식 가상 표·signed 정렬·변경 영역 여백과 생성/스택 전역의 주소다.
 EDITIONS={
     'originals':{

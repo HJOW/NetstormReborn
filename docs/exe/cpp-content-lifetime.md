@@ -38,7 +38,7 @@ kind/paid/부모 dead/소유자/boss/커서 전체 조합, 콜백이 바꾼 kind
 
 **최종 Release 라이브러리/게임/검사 빌드 경고·오류0**, 새 수명 검사 **4개**, 기존 Form 검사 **4개**, 표면 월드 검사 **4개** 통과, **396개 PE/C++ 대조·저장 SHA/사례 감사 통과**, 최종 전체 CTest **867개·실패0**(81.52초)다. 첫 전체 검사도 통과했으며 최종 사제 포획 부착 확장 뒤 다시 검증했다. 첫 빌드의 auto 형식/테스트 macro 오류와 CD 경제 검사 입력 오류를 수정한 뒤 통과했다. 실패 로그는 보존했다. SOURCE_MAP 내용은 동일하고 원래 줄바꿈을 유지했다. 이전 누적에 더한 새 원본 입력 **525,542개**, C++ 대조 **525,282개**이며 중복 재실행을 새 입력으로 세지 않는다.
 
-자료는 `cpppj/recovery-contentlifetime-evidence.json`, `cpppj/tests/fixtures/contentlifetime-x86.tsv`, `extracted/contentlifetime/`와 `extracted/contentlifetime-*.log`다. 보호 두 PE의 SHA는 기존 기록과 같고 원본 게임/GUI·AGENTS.md/보호 원본/dotnetpj 변경·에이전트의 커밋/푸시는 없다.
+자료는 `cpppj/contentlifetime.json`, `cpppj/tests/fixtures/contentlifetime-x86.tsv`, `extracted/contentlifetime/`와 `extracted/contentlifetime-*.log`다. 보호 두 PE의 SHA는 기존 기록과 같고 원본 게임/GUI·AGENTS.md/보호 원본/dotnetpj 변경·에이전트의 커밋/푸시는 없다.
 
 ## 다음 작업
 

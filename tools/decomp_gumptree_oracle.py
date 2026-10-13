@@ -18,7 +18,7 @@ TOKENS=tuple(DATA+16+i*STRIDE for i in range(COUNT))
 RESULT,VTABLE=DATA+0x7000,DATA+0x9000
 VIRTUAL={STUBS+0x900:'Redraw',STUBS+0x920:'Push',STUBS+0x940:'Attach'}
 FIXTURE=ROOT/'cpppj/tests/fixtures/gumptree-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-gumptree-evidence.json'
+REPORT=ROOT/'cpppj/gumptree.json'
 # 실제 실행 함수/전역/응답 경계다. CD의 진단 모드는 미사용 격리 입력이다.
 SPECS={
     'originals':dict(Attach=0x466750,Push=0x464560,Align=0x464600,AddDepth=0x4652b0,SetDepth=0x4652f0,

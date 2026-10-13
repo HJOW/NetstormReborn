@@ -38,7 +38,7 @@
 
 판본마다 **6,752개**, 총 **20,256개**다(지면 조회 **8,160**, wrapper **8,160**, setter **3,936**). 두 x87 정밀도 `0x027f`/`0x037f`의 결과가 같아야 하며 사례 수에는 두 실행을 중복 집계하지 않는다. HP/2와 1/4 모드·음수/홀수 최대 HP·DWORD/WORD 부호 경계·genus·extra·spot·거의 정수인 좌표·권한/회복 허용·소유자 0/8·외부 HP/좌표 변경을 대조한다. 체커보드 spot 입력은 절삭/거의 올림과 한 축의 잘못된 칸 조회를 구별한다.
 
-[`PriestStateTests.cpp`](../../cpppj/tests/PriestStateTests.cpp)는 저장된 [`prieststate-x86.tsv`](../../cpppj/tests/fixtures/prieststate-x86.tsv)의 반환값·호출 순서/인자·호출 시점 HP/좌표·raw 슬롯 전체를 C++과 비교한다. 원본/Python/Ghidra 없이 CTest에서 재생 가능하다. 별도 보호 검사는 사용하지 않는 좌표의 short circuit, 필요한 지면 조회의 범위 거부, 누락된 훅/소유자/가상 표의 쓰기 전 거부를 확인한다. [`recovery-prieststate-evidence.json`](../../cpppj/recovery-prieststate-evidence.json)에 호스트·PE/도구/목록/내보내기/fixture SHA와 실제/대체 진입 수를 남겼다.
+[`PriestStateTests.cpp`](../../cpppj/tests/PriestStateTests.cpp)는 저장된 [`prieststate-x86.tsv`](../../cpppj/tests/fixtures/prieststate-x86.tsv)의 반환값·호출 순서/인자·호출 시점 HP/좌표·raw 슬롯 전체를 C++과 비교한다. 원본/Python/Ghidra 없이 CTest에서 재생 가능하다. 별도 보호 검사는 사용하지 않는 좌표의 short circuit, 필요한 지면 조회의 범위 거부, 누락된 훅/소유자/가상 표의 쓰기 전 거부를 확인한다. [`prieststate.json`](../../cpppj/prieststate.json)에 호스트·PE/도구/목록/내보내기/fixture SHA와 실제/대체 진입 수를 남겼다.
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools/ghidra/export_functions.ps1 -Name prieststate

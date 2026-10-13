@@ -24,7 +24,7 @@ SPEC={
 REGULAR=ARENA+0x9000
 KEYS=('random','index','width','height','genus','owner','state','sid','seed','capacity','count','blocked','now')
 FIXTURE=ROOT/'cpppj/tests/fixtures/dudedrop-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-dudedrop-evidence.json'
+REPORT=ROOT/'cpppj/dudedrop.json'
 
 
 def bits(value):
@@ -109,7 +109,7 @@ def generate(smoke):
             rows.append([edition,*[case[key] for key in KEYS],*result])
         editions[edition]=dict(returns=oracle.dropReturns,assertions=oracle.dropAssertions,actual_calls=dict(oracle.calls),boundaries=dict(oracle.boundaries));files.update(oracle.exports);files.add(ROOT/edition/('Netstorm.exe' if edition=='originals' else 'NETSTORM.EXE'));files.add(oracle.shapeFile);files.add(ROOT/edition/'netstorm.tarc');print(edition,editions[edition],flush=True)
     if smoke:return
-    for path in ('cpppj/src/o/RawDudeDrop.h','cpppj/src/o/RawDudeDrop.cpp','cpppj/tests/DudeDropTests.cpp','cpppj/tests/DudeSpawnSupport.h','cpppj/src/o/RawDudeSpawn.cpp','cpppj/src/o/RawDudeTask.cpp','cpppj/src/o/RawDudeNotice.cpp','cpppj/src/o/SquidPop.cpp','cpppj/src/o/SquidPostPop.cpp','cpppj/recovery-dudespawn-evidence.json','cpppj/recovery-dudetask-evidence.json','cpppj/recovery-dude-postpop-binding-lineage-evidence.json','tools/analyze_dude_postpop_binding_lineage.py','tools/decomp_owner_oracle.py','tools/decomp_postpop_oracle.py','tools/decomp_display_oracle.py','tools/decomp_creation_oracle.py','tools/decomp_sid_oracle.py','tools/decomp_oracle.py'):files.add(ROOT/path)
+    for path in ('cpppj/src/o/RawDudeDrop.h','cpppj/src/o/RawDudeDrop.cpp','cpppj/tests/DudeDropTests.cpp','cpppj/tests/DudeSpawnSupport.h','cpppj/src/o/RawDudeSpawn.cpp','cpppj/src/o/RawDudeTask.cpp','cpppj/src/o/RawDudeNotice.cpp','cpppj/src/o/SquidPop.cpp','cpppj/src/o/SquidPostPop.cpp','cpppj/dudespawn.json','cpppj/dudetask.json','cpppj/dude-postpop-binding-lineage.json','tools/analyze_dude_postpop_binding_lineage.py','tools/decomp_owner_oracle.py','tools/decomp_postpop_oracle.py','tools/decomp_display_oracle.py','tools/decomp_creation_oracle.py','tools/decomp_sid_oracle.py','tools/decomp_oracle.py'):files.add(ROOT/path)
     FIXTURE.write_text('# 실제Dude드롭부모/난수/진입점/factory/Pop/task. Regular조회/힙/부착만명시경계다.\n'+'\n'.join('\t'.join(map(str,row)) for row in rows)+'\n',encoding='utf-8');files.add(FIXTURE)
     REPORT.write_text(json.dumps(dict(schema=1,host='HJOW-Athlon',primary_target='10.78',cd_target='10.72',total=len(rows),editions=editions,files={path.relative_to(ROOT).as_posix():digest(path) for path in sorted(files)},cpp_tests_completed=0,os_calls=0,limitations=['드롭부모/게임float난수/진입점·Dudefactory/ctor/owner/Pop/Frame/초기장부와task/Regularctor/time은원본몸체다.','현재Regular조회/40바이트힙/ProcessForm부착은명시관찰경계다. C++동일Host등록은후속이다.','source의현재raw/foot/genus/owner는명시입력이고전체원본source파괴를이번몸체로완료했다고세지않는다.','DudePath24/실제task이후이동/부모Damageable PostDestroy의전체실제삭제와캠페인월드는후속이다.'],),ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 

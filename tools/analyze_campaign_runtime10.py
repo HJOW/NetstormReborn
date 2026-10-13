@@ -10,15 +10,15 @@ from pathlib import Path
 from analyze_campaign_runtime4 import ROOT, digest, test_count
 from analyze_campaign_runtime6 import read_log, audit_files
 
-REPORT = ROOT / 'cpppj/recovery-campaign-runtime10-evidence.json'  # 이번 단위의 실제 최종 바이트/실행 결과다.
+REPORT = ROOT / 'cpppj/run10.json'  # 이번 단위의 실제 최종 바이트/실행 결과다.
 MODULES = {'gunimpact': 2274, 'squiddefense': 48}  # 새 정상 원본 입력이며 재사용 지형/Count를 더하지 않는다.
 FILTERS = {'GunImpact_': 4, 'SquidDefense_': 4, 'NormalTerrainWorldBinding_': 3, 'VortexIslandBinding_': 2,
            'VortexAscend_': 3, 'carrier_predestroy_': 4, 'TerrainStamp_': 3, 'TerrainContext_': 2,
            'TerrainWorldBinding_': 5, 'TerrainGrowth_': 2, 'FarmCluster_': 3, 'IslandRuntime_': 3}  # 이substring은Normal3개도 포함한다. 고유집중은35개다.
 AUDITS = {'decomp_gunimpact_oracle': ['--verify'], 'decomp_squiddefense_oracle': ['--verify'],
           'analyze_gunimpact_correction': ['--verify'], 'analyze_normalterrain_world_binding': ['--verify'],
-          'analyze_normalterrain_binding_cpp_correction': [], 'analyze_normalterrain_binding_profile_correction': [],
-          'analyze_normalterrain_binding_frame_correction': [],
+          'analyze_normalterrain_binding_cpp_correction': [], 'check_terrain_profile_fix': [],
+          'check_terrain_frame_fix': [],
           'analyze_dais_contained_lineage': ['--verify'], 'analyze_vortex_live_islands_lineage': ['--verify']}  # 기본감사/명시감사 계약을 따른다.
 LINEAGES = ('gunimpact-correction', 'normalterrain-world-binding', 'normalterrain-binding-cpp-correction',
             'normalterrain-binding-profile-correction', 'normalterrain-binding-frame-correction',
@@ -31,7 +31,7 @@ def generate():
     modules, focused, names = {}, {}, set()
     # 각 판본의 실제 정상 반환과 고유fixture 행 수를 함께 확인한다.
     for name, expected in MODULES.items():
-        report = ROOT / f'cpppj/recovery-{name}-evidence.json'
+        report = ROOT / f'cpppj/{name}.json'
         data = json.loads(report.read_text(encoding='utf-8'))
         audit_files(data)
         assert data['host'] == 'HJOW-Athlon' and data['total'] == expected
@@ -49,22 +49,22 @@ def generate():
         paths.append(tool)
     # 역사적 보고서를 보존하며 별도 대응표 전체 바이트를 고정한다.
     for name in LINEAGES:
-        paths.append(ROOT / f'cpppj/recovery-{name}-evidence.json')
+        paths.append(ROOT / f'cpppj/{name}.json')
     # 빈필터와 최초실패 로그를 제외하고 실제 성공한 고유검사 이름을 기록한다.
     for name, expected in FILTERS.items():
-        log = ROOT / f'extracted/campaign-runtime10-{name}final-tests.log'
+        log = ROOT / f'extracted/run10-{name}final.log'
         assert test_count(log) == expected, name
         names.update(re.findall(r'\[ OK \] ([^\r\n]+)', read_log(log)))
         focused[name] = expected
         paths.append(log)
     assert len(names) == 35
-    whole = ROOT / 'extracted/campaign-runtime10-all-final-tests.log'
+    whole = ROOT / 'extracted/run10-all-final.log'
     assert test_count(whole) == 1023
-    build = ROOT / 'extracted/campaign-runtime10-build-final.log'
+    build = ROOT / 'extracted/run10-build-final.log'
     content = read_log(build)
     assert not re.search(r'\b(?:warning|error)\s+[A-Z]+\d+\s*:', content, re.I)
     assert 'netstorm_tests.exe' in content and 'NetstormCpp.exe' in content
-    paths.extend([whole, build, ROOT / 'cpppj/recovery-campaign-runtime9-evidence.json',
+    paths.extend([whole, build, ROOT / 'cpppj/run9.json',
                   ROOT / 'cpppj/src/o/CMakeLists.txt', ROOT / 'cpppj/src/client/CMakeLists.txt', ROOT / 'cpppj/tests/CMakeLists.txt'])
     # 새구현과 공유API의 전체소스를 이번 Release에 연결한다.
     for name in ('RawGunImpact', 'RawSquidDefense', 'RawCarrierPreDestroy', 'RawVortexAscend'):
@@ -95,7 +95,7 @@ def verify():
     """기록한 최종SHA와 전체 성공검사 수를 확인한다."""
     data = json.loads(REPORT.read_text(encoding='utf-8'))
     audit_files(data)
-    assert test_count(ROOT / 'extracted/campaign-runtime10-all-final-tests.log') == data['all_tests']
+    assert test_count(ROOT / 'extracted/run10-all-final.log') == data['all_tests']
     print('단위10 최종SHA/전체검사 감사 통과')
 
 

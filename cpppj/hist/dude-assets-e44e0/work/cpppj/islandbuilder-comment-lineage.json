@@ -1,0 +1,66 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-14",
+  "new_native_unique": 0,
+  "new_game_runs": 0,
+  "native_unique_preserved": 1156,
+  "normal_preserved": 814,
+  "assertion_preserved": 342,
+  "before_files": [
+    {
+      "original_path": "cpppj/tests/IslandBuilderTests.cpp",
+      "saved": {
+        "path": "cpppj/hist/islandbuilde-a876e/cpppj/tests/IslandBuilderTests.cpp",
+        "bytes": 14078,
+        "sha256": "0f44efb21c9c57d0aed58c69086906df356993e3498b57611278434307cd42e8"
+      }
+    },
+    {
+      "original_path": "cpppj/islandbuilder.json",
+      "saved": {
+        "path": "cpppj/hist/islandbuilde-a876e/cpppj/islandbuilder.json",
+        "bytes": 5530,
+        "sha256": "46f166f435128fcd490f7986fca049142dd7997e72ffbc6bf305818e369cce84"
+      }
+    },
+    {
+      "original_path": "cpppj/islandbuilder-partial-profile-lineage.json",
+      "saved": {
+        "path": "cpppj/hist/islandbuilde-a876e/cpppj/islandbuilder-partial-profile-lineage.json",
+        "bytes": 11413,
+        "sha256": "e7d3a7b3091f0052a541124f36d348e44fc1ac87f343558e12a25278783a5211"
+      }
+    },
+    {
+      "original_path": "tools/decomp_islandbuilder_oracle.py",
+      "saved": {
+        "path": "cpppj/hist/islandbuilde-a876e/tools/decomp_islandbuilder_oracle.py",
+        "bytes": 18010,
+        "sha256": "4413a5737d165f2ec20b87d2493efbc386819644dd951f11e49d74b48ad4cfd7"
+      }
+    },
+    {
+      "original_path": "tools/analyze_islandbuilder_partial_profile_lineage.py",
+      "saved": {
+        "path": "cpppj/hist/islandbuilde-a876e/tools/analyze_islandbuilder_partial_profile_lineage.py",
+        "bytes": 6587,
+        "sha256": "742af4bffe7c91ffb0df6524b7260047ab2d52e863afda288cea15833c082f22"
+      }
+    }
+  ],
+  "current_test": {
+    "path": "cpppj/tests/IslandBuilderTests.cpp",
+    "bytes": 14071,
+    "sha256": "c135950964f41eeb553ecf1f9daa5e358b0f952a010221d777b1c0c8fc9a66da"
+  },
+  "tool": {
+    "path": "tools/analyze_islandbuilder_comment_lineage.py",
+    "bytes": 5821,
+    "sha256": "5182e4b689d87d515a4e9ea63d78160ee6c6fb217772eaf59c499edd999089c1"
+  },
+  "limits": [
+    "한국어 용도 주석 한 줄만 변경하며 생산/검사 C++ 토큰·원본 입력·전체 fixture 변경0.",
+    "기존 native report/tool/부분프레임 lineage는 당시 SHA 그대로 유지한다. 현재 CPP SHA는 이 successor에 명시한다.",
+    "이전 두 감사기의 TEST 한 파일만 교정전 전체 snapshot으로 연결하여 이전 관찰을 감사한다. 다른 현재 파일은 SHA 검사를 그대로 받는다."
+  ]
+}

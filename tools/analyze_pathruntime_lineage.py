@@ -10,8 +10,8 @@ from pathlib import Path
 
 # 저장소와 새 lineage 기록이다. 보호 PE/이전 native 근거를 수정하지 않는다.
 ROOT=Path(__file__).resolve().parent.parent
-REPORT=ROOT/'cpppj/recovery-pathruntime-lineage-evidence.json'
-NATIVE=ROOT/'cpppj/recovery-pathruntime-evidence.json'
+REPORT=ROOT/'cpppj/pathruntime-lineage.json'
+NATIVE=ROOT/'cpppj/pathruntime.json'
 SOURCES=('cpppj/src/o/RawPathRuntime.h','cpppj/src/o/RawPathRuntime.cpp')
 
 

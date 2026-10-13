@@ -17,7 +17,7 @@ SPEC={
 }
 MEMORY=HEAP+0x6000 # 명시 예약 확보가 반환하는 격리 new0x28 메모리다.
 FIXTURE=ROOT/'cpppj/tests/fixtures/priestritualactions-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-priestritualactions-evidence.json'
+REPORT=ROOT/'cpppj/priestritualactions.json'
 
 
 def inputs():

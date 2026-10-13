@@ -217,7 +217,7 @@ def generate():
     report = {'last_decompile_host': socket.gethostname(), 'recorded_date': '2026-10-13',
         'method': '실제 두 PE의 Form/공통 Unpop/SID 명령을 정상 반환까지 실행. C++를 호출하지 않고 600개 입력 저장.',
         'fixture_sha256': hashlib.sha256(fixture.read_bytes()).hexdigest(), 'editions': reports}
-    (ROOT / 'cpppj/recovery-formtake-evidence.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    (ROOT / 'cpppj/formtake.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     print('Form 원본 관찰 완료:', {edition: report['cases'] for edition, report in reports.items()})
 
 

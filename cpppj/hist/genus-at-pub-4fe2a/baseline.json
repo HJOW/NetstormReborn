@@ -1,0 +1,73 @@
+{
+  "commit": "860030e",
+  "files": {
+    "cpppj/run12.json": {
+      "work_sha256": "b85ba385a9d50ff60d3dfe68b98fe64bace43ee94976200e1efb42a65dad100d",
+      "git_sha256": "b85ba385a9d50ff60d3dfe68b98fe64bace43ee94976200e1efb42a65dad100d"
+    },
+    "cpppj/dais-ritual-consumer-binding.json": {
+      "work_sha256": "434af01c390b23fb1c732929031c91f006553d6d140c81991417513227eb38c1",
+      "git_sha256": "434af01c390b23fb1c732929031c91f006553d6d140c81991417513227eb38c1"
+    },
+    "cpppj/dais-ritual-consumer-cpp-correction.json": {
+      "work_sha256": "3649e0785d640781b03e4f01b053f5a1bb9bb02c34305ed2647a5b48d3c4a574",
+      "git_sha256": "3649e0785d640781b03e4f01b053f5a1bb9bb02c34305ed2647a5b48d3c4a574"
+    },
+    "cpppj/daiscontentnotice-cpp-correction.json": {
+      "work_sha256": "9cb93b488d21c1932f2ac4b7aa56ec0f8e7a7c28fcc5936d83c7ea1acfdfd8dc",
+      "git_sha256": "9cb93b488d21c1932f2ac4b7aa56ec0f8e7a7c28fcc5936d83c7ea1acfdfd8dc"
+    },
+    "cpppj/damageablepost-host-binding.json": {
+      "work_sha256": "68a00ad3c2bd95e3a1bdcbe1d7dd2a6822120a814bff08c11b36406ea7ad0fc1",
+      "git_sha256": "68a00ad3c2bd95e3a1bdcbe1d7dd2a6822120a814bff08c11b36406ea7ad0fc1"
+    },
+    "cpppj/damageablepost-host-group-lineage.json": {
+      "work_sha256": "b6f1f8e0901c3874b8164a5b620cfb63ddecf9a922914161077c74de7096c696",
+      "git_sha256": "b6f1f8e0901c3874b8164a5b620cfb63ddecf9a922914161077c74de7096c696"
+    },
+    "cpppj/damageablepostdestroy.json": {
+      "work_sha256": "83ee40686f3029ba90e93a1b027bd1b5113eb8625847d3e361c630005818c616",
+      "git_sha256": "83ee40686f3029ba90e93a1b027bd1b5113eb8625847d3e361c630005818c616"
+    },
+    "cpppj/damageablepostdestroy-lineage.json": {
+      "work_sha256": "b904c726e2f4a288f2ef9c4bf45f0f488863cb7f3aaa5551d43e3d078b2925de",
+      "git_sha256": "b904c726e2f4a288f2ef9c4bf45f0f488863cb7f3aaa5551d43e3d078b2925de"
+    },
+    "cpppj/src/o/RawDamageablePostDestroy.cpp": {
+      "work_sha256": "c70069e2dc850b8f1496aee07008c03ffb1655ff5943365334a4938ead99fb18",
+      "git_sha256": "c70069e2dc850b8f1496aee07008c03ffb1655ff5943365334a4938ead99fb18"
+    },
+    "cpppj/src/o/RawDamageablePostDestroy.h": {
+      "work_sha256": "16404ca3857f952ab7809ed370d68b36158e2c834290d76eb4bbc85b2b3fdf03",
+      "git_sha256": "16404ca3857f952ab7809ed370d68b36158e2c834290d76eb4bbc85b2b3fdf03"
+    },
+    "cpppj/tests/DamageablePostDestroyHostTests.cpp": {
+      "work_sha256": "a5150f05dd64d094aeaf4cb0f5204c8fe16c5da13709f5b41aaf0f204a366871",
+      "git_sha256": "a5150f05dd64d094aeaf4cb0f5204c8fe16c5da13709f5b41aaf0f204a366871"
+    },
+    "cpppj/tests/DamageablePostDestroyTests.cpp": {
+      "work_sha256": "80f00aac6a93ead2befddeec89c43537819f22ea5062d2b15a91b31057b26faa",
+      "git_sha256": "80f00aac6a93ead2befddeec89c43537819f22ea5062d2b15a91b31057b26faa"
+    },
+    "cpppj/tests/fixtures/damageablepostdestroy-x86.tsv": {
+      "work_sha256": "7cbf0b93162674cd8d1cf353068ad96b4e717f1167782c0b8fe98908b98a4c6b",
+      "git_sha256": "7cbf0b93162674cd8d1cf353068ad96b4e717f1167782c0b8fe98908b98a4c6b"
+    },
+    "tools/analyze_damageablepost_host_binding.py": {
+      "work_sha256": "3c8e0c949702d5f32516551de44c01c21ea16c3a821a7c71a4766de4f8fd6165",
+      "git_sha256": "3c8e0c949702d5f32516551de44c01c21ea16c3a821a7c71a4766de4f8fd6165"
+    },
+    "tools/analyze_damageablepost_host_group_lineage.py": {
+      "work_sha256": "e0529e0e9cf84cfdc43144b1aef4a3e0562ecf09a9a9ac7224a58c43dc0d5c91",
+      "git_sha256": "e0529e0e9cf84cfdc43144b1aef4a3e0562ecf09a9a9ac7224a58c43dc0d5c91"
+    },
+    "tools/analyze_damageablepostdestroy.py": {
+      "work_sha256": "d7dff7e29877740040cd9a15b63c5b850b6f7322d2059ec62ebc3226d88c4445",
+      "git_sha256": "d7dff7e29877740040cd9a15b63c5b850b6f7322d2059ec62ebc3226d88c4445"
+    },
+    "tools/decomp_damageablepostdestroy_oracle.py": {
+      "work_sha256": "0cdcb6d3f29cd23e67a1e7b4769c82354d5bb9b8051f09c8e190892da390b31a",
+      "git_sha256": "0cdcb6d3f29cd23e67a1e7b4769c82354d5bb9b8051f09c8e190892da390b31a"
+    }
+  }
+}

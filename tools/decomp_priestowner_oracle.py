@@ -29,7 +29,7 @@ PRIEST['original1037'] = PRIEST['originalCD']
 # 실제 두 판본 사제 타입과 출력 파일이다.
 PRIEST_TYPE = 158
 FIXTURE = ROOT / 'cpppj/tests/fixtures/priestowner-x86.tsv'
-REPORT = ROOT / 'cpppj/recovery-priestowner-evidence.json'
+REPORT = ROOT / 'cpppj/priestowner.json'
 
 
 def inputs(edition):

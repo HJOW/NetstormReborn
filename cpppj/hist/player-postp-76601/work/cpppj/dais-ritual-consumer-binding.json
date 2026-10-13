@@ -1,0 +1,108 @@
+{
+  "host": "HJOW-Athlon",
+  "decompile_date": "2026-10-14",
+  "new_native_inputs": 0,
+  "entire_previous_test_restored_exactly": true,
+  "previous_test_sha256": "9223b7c68f6ed18a00f0fee8d0f7fee81840bb4c3f8b08b36ce05f1ca5900cfc",
+  "correction": "CD0048153f/48154e의fadd0.9999→__ftol에맞춰CD도같은RawPathSurfaceAt/hash0를호출한다. plain조회삼항식하나외전체새검사는정확히불변이다.",
+  "scope": "실제최초Pop/포획Notice/Altar24/전체pre/post/Content/Process분배/같은Pool반납의새C++소비자. 비전투·HP16·genus0·flags300000없음으로Dude/주변피해/다리/섬정리분기는자연생략. 장치/UI·전체Progress음향/Bridge·사제해방전체Pop는미완료경계이며C++실행결과는별도공유로그다.",
+  "prior_reports": {
+    "daislifecycle-current.json": {
+      "sha256": "98fd9dd8e01f5b87e2cc69feda8c0aaa877e04f2faec08520047ce32193c8326",
+      "normal_inputs": 1928,
+      "additional_unique_cases": 0
+    },
+    "daislifecycle-current-successor.json": {
+      "sha256": "548f7632bbca10faffb799b24d775300f85c4fe4b818b1631a0d2633b1c2617c",
+      "normal_inputs": 1928,
+      "additional_unique_cases": 0
+    },
+    "daiscontentnotice.json": {
+      "sha256": "f6c2df2b4f9e3fc922e94dceabcc82e3339e3011f0c667a383f212c59ac4973b",
+      "normal_inputs": 1444,
+      "additional_unique_cases": 0
+    },
+    "daiscontentnotice-successor.json": {
+      "sha256": "1cc5fb93b17c7cac79f7273be392086e7bd251a05fdb1a0660066b417ebf6000",
+      "normal_inputs": 1444,
+      "additional_unique_cases": 0
+    },
+    "daisprogress.json": {
+      "sha256": "217a63a2642d7041970746229779de9cafc9d7d11c4375cd896ed3b600375c3c",
+      "normal_inputs": 2964,
+      "additional_unique_cases": 0
+    },
+    "dais-postpop-lineage.json": {
+      "sha256": "45791d708c8938da9cb14acb56bb35a16d0095f157cd91539eb293b8178a21c8",
+      "normal_inputs": null,
+      "additional_unique_cases": 0
+    },
+    "damageablepostdestroy.json": {
+      "sha256": "83ee40686f3029ba90e93a1b027bd1b5113eb8625847d3e361c630005818c616",
+      "normal_inputs": 4412,
+      "additional_unique_cases": 0
+    },
+    "damageablepostdestroy-lineage.json": {
+      "sha256": "b904c726e2f4a288f2ef9c4bf45f0f488863cb7f3aaa5551d43e3d078b2925de",
+      "normal_inputs": null,
+      "additional_unique_cases": 0
+    }
+  },
+  "files": {
+    "cpppj/dais-postpop-lineage.json": "45791d708c8938da9cb14acb56bb35a16d0095f157cd91539eb293b8178a21c8",
+    "cpppj/daiscontentnotice.json": "f6c2df2b4f9e3fc922e94dceabcc82e3339e3011f0c667a383f212c59ac4973b",
+    "cpppj/daiscontentnotice-successor.json": "1cc5fb93b17c7cac79f7273be392086e7bd251a05fdb1a0660066b417ebf6000",
+    "cpppj/daislifecycle-current.json": "98fd9dd8e01f5b87e2cc69feda8c0aaa877e04f2faec08520047ce32193c8326",
+    "cpppj/daislifecycle-current-successor.json": "548f7632bbca10faffb799b24d775300f85c4fe4b818b1631a0d2633b1c2617c",
+    "cpppj/daisprogress.json": "217a63a2642d7041970746229779de9cafc9d7d11c4375cd896ed3b600375c3c",
+    "cpppj/damageablepostdestroy.json": "83ee40686f3029ba90e93a1b027bd1b5113eb8625847d3e361c630005818c616",
+    "cpppj/damageablepostdestroy-lineage.json": "b904c726e2f4a288f2ef9c4bf45f0f488863cb7f3aaa5551d43e3d078b2925de",
+    "cpppj/hist/dais-ritual-47665/cpppj/tests/DaisRitualConsumerTests.cpp": "9223b7c68f6ed18a00f0fee8d0f7fee81840bb4c3f8b08b36ce05f1ca5900cfc",
+    "cpppj/src/o/ContentFormHost.cpp": "cb21effe599b73f6ca85d826c6f85f0e3f6f41e956fbc80cf344a06674d20cb4",
+    "cpppj/src/o/ContentFormHost.h": "8653814bdfbe2c0b82957014ca65f7c17381bf428dc3671a7254ec14324c441f",
+    "cpppj/src/o/ContentFormLifetime.cpp": "3d8495e7eb7c7e20c4f9d36c015feecf27798e2269c8454bdd5f2d7a5f67c32d",
+    "cpppj/src/o/ContentFormLifetime.h": "e7ac3f4a17817d550306e7308554d398d716791085ff5fbdc627881abc85af26",
+    "cpppj/src/o/RawAltarSacrifice.cpp": "c45c6083846aa97aec3d1dc0cd2dda2d0beab45fcd7addb07c755d1e2482f464",
+    "cpppj/src/o/RawAltarSacrifice.h": "1df83640935f495e4b6687c41ac5d181a8947f2bc6f349659870acea225b89c3",
+    "cpppj/src/o/RawCarrierPostPop.cpp": "606eb9914b4a961aa2573e4699f3dbeef615d087deb0b0e3f2a53a0678240544",
+    "cpppj/src/o/RawCarrierPostPop.h": "472a1c7d60d4fa9b3514027455b6983018c2f862554b2944eeb653042e9f4282",
+    "cpppj/src/o/RawCarrierPreDestroy.cpp": "18a4daeff34834590cfbc4d1b73f64475a009b4815a88ac98aa76f5b1e618c95",
+    "cpppj/src/o/RawCarrierPreDestroy.h": "d1f5903fc44c51dc7c6985ff073851b31f46f3f6fdd1a972cb568440cf7d173a",
+    "cpppj/src/o/RawDaisContentNotice.cpp": "1e6dfbaed79d003429c07de2481fca0b9a562f8b8d450a80b6a384f89b7808cb",
+    "cpppj/src/o/RawDaisContentNotice.h": "4ac7b652ac317d4216bb633794b1c754e8361bf1bc90409bc73ef15ccd395428",
+    "cpppj/src/o/RawDaisLifecycle.cpp": "6ab1d6fb19058f4b241fe2dc61c943af299828ce24bf61242d9f109521ac2db7",
+    "cpppj/src/o/RawDaisLifecycle.h": "3d6e48e336e01273730dcfd789d6aa622dce0dd12254aefb062d06e5b9b628eb",
+    "cpppj/src/o/RawDaisRegular.cpp": "c1a167728b02f382cbae23454e4aba1046c91a7284dbe4c6e206e856ccc4c433",
+    "cpppj/src/o/RawDaisRegular.h": "fdc080a0ae1ff54909a1cf59a6b9be626e7a7d96c5103072c9325d13efb88ed3",
+    "cpppj/src/o/RawDamageablePostDestroy.cpp": "c70069e2dc850b8f1496aee07008c03ffb1655ff5943365334a4938ead99fb18",
+    "cpppj/src/o/RawDamageablePostDestroy.h": "16404ca3857f952ab7809ed370d68b36158e2c834290d76eb4bbc85b2b3fdf03",
+    "cpppj/src/o/RawDamageablePreDestroy.cpp": "9090ded5973c22c6cb75d45dc04be75fe7996cd6449fb10cc875759fdde36a11",
+    "cpppj/src/o/RawDamageablePreDestroy.h": "fa423d166d58e6cc05d529dc3008e04b5306f6220e6635506a772d30d0fdd0dc",
+    "cpppj/src/o/RawDamageableRelease.cpp": "555de8ac874f910f769432ebd6f044443b07d7be1f3d4d074d254ddac14b2c8d",
+    "cpppj/src/o/RawDamageableRelease.h": "7177857b829a8da639c5dde9a07e893378d72a847e9460f25bf893df6027491d",
+    "cpppj/src/o/RawPathSearch.cpp": "a7597d758972707a48ab25260af4ba877798c9c91ed01e0471d84819005d2858",
+    "cpppj/src/o/RawPathSearch.h": "471c37aaeff1f5b7e157f52bfb20984c55e993fa59f7c33696fb42772107a7ac",
+    "cpppj/src/o/SquidDestroyLifecycle.cpp": "75a6d698b2e800acc38ef008f3f32da2efc665286a7995a2e20d499bd40215fd",
+    "cpppj/src/o/SquidDestroyLifecycle.h": "f1352b9e3a55bf413538fa53995db646ce29f288f23477baf81b5cefa0b7cea4",
+    "cpppj/src/o/SquidFactory.cpp": "6221de3262944b7105ae57dacc67ee8cee3e237b62240d5d3a2fd777a5706aed",
+    "cpppj/src/o/SquidFactory.h": "9a2b50ead267868364024a9fb0306e6fbf224486b87479a79c531ad2f3607708",
+    "cpppj/src/o/SquidFormDispatch.cpp": "7b99db01715582f8994e5a72cac470c155171a861e0da0ed91f70759f218f23a",
+    "cpppj/src/o/SquidFormDispatch.h": "d9b7bc33e82003ade3beeaf4c8c741c513e7bfdb5b3816a539edde34318d526c",
+    "cpppj/src/o/SquidFrame.cpp": "739652a22b5cbf9abb96f71e5e368772624eb53a8a3957be728e1d6b8fbe27e6",
+    "cpppj/src/o/SquidFrame.h": "a37bc603b77ea161eef8234839146764a517b22a85a2d218d567c627a3eba46f",
+    "cpppj/src/o/SquidOwner.cpp": "297ef63bb582823627a61427e530b7ea95f6ac2e81c86b268264b4ecad7ca0aa",
+    "cpppj/src/o/SquidOwner.h": "38c073fbd59ce2595021b694d5c91f464f07e1158f843d6debf05f5860d43446",
+    "cpppj/src/o/SquidPop.cpp": "e69942ca111f72c79ba4da05a42b5446e84013ef2ee0b9044381cf64a9e80ec9",
+    "cpppj/src/o/SquidPop.h": "337933973c05c0204a035a48e737b6b0fd5c385170b81e5c47b2bf4bad622e8b",
+    "cpppj/src/o/SquidPostPop.cpp": "094e90c54c220d22bb663ab68105c2d30d83cc4b7c8e02002f804b2ae783f687",
+    "cpppj/src/o/SquidPostPop.h": "f6e3a41b4dbdf4618ff5643407d3c5e855d2f1ef46b86f09203eef955c00eebc",
+    "cpppj/src/o/SquidProcess.cpp": "2b78ac83db1bbb474f224845ae288d696b30d996a489ee292ac09a1af16986ad",
+    "cpppj/src/o/SquidProcess.h": "827a9789c2a6b66ac7b98181e49e8c0fa19713755bb62fccababb7ae2a0d0589",
+    "cpppj/src/o/SquidReward.cpp": "9a1f1a1d4c0f0b0255357b1f3ec9255cea2bb234ed351da70fb30dd1ed859f9c",
+    "cpppj/src/o/SquidReward.h": "33df23ab3590c965b68fef4c14a55cf38de55281c08430d22a26e6dc12b6aee6",
+    "cpppj/src/o/SquidUnpop.cpp": "d82a8c1b8df6005e86894613ed33fca1eb4e6f2837c9c8adb8ceee29e00f7768",
+    "cpppj/src/o/SquidUnpop.h": "b05e4dc0ac5f66065ddff9ca8f451bc5344ad0ce3f9ceb08ad4857d9ed2b51b3",
+    "cpppj/tests/DaisRitualConsumerTests.cpp": "bb48d9fd71bb551b9f6ee91009eafe963c350d81a4b9e7d905250a3d5f0f72d0",
+    "tools/analyze_dais_ritual_consumer_binding.py": "dde6ffb97f463e87b0a5f7ac88fd58483fe1396777846b606d7a20fde8e343f3"
+  }
+}

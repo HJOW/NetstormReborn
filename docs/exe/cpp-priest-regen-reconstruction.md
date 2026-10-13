@@ -55,7 +55,7 @@ payload의 float 비트는 그대로 반환하고 count는 읽지 않는다. 따
 
 판본마다 **1,513개**, 총 **4,539개**다(기본 HP/폭/권한/소유자 격자 1,440 + 표시 뒤 변경 9 + 중립 조건 독립 교차 64). 두 x87 정밀도의 결과가 같으며 실행 횟수를 사례 수에 중복 집계하지 않는다. HP 폭·1/4 모드·최대 HP/6·절반 경계·signed ADD 감기·가득 찬 HP·비권한/회복 거부·중립 차단/점유·외부 HP/소유자/추적 변경·난수 0 시드·추적 순환/감기·WORD sentinel·측정 경계/NaN·payload 비트를 대조한다. 모든 판본에서 공간 자료/점유/중립 동작 진입이 실제로 관찰되어야 감사가 통과한다.
 
-[`priestregen-x86.tsv`](../../cpppj/tests/fixtures/priestregen-x86.tsv)의 반환 비트·사건 순서/인자/호출 시점 HP/소유자/좌표·추적 전역·최종 난수·raw 슬롯 전체를 C++과 비교한다. [`recovery-priestregen-evidence.json`](../../cpppj/recovery-priestregen-evidence.json)에 호스트·PE/도구/목록/내보내기/fixture SHA, 정상 반환/thiscall 스택/x87 복구와 assert/OS 호출 0을 기록했다.
+[`priestregen-x86.tsv`](../../cpppj/tests/fixtures/priestregen-x86.tsv)의 반환 비트·사건 순서/인자/호출 시점 HP/소유자/좌표·추적 전역·최종 난수·raw 슬롯 전체를 C++과 비교한다. [`priestregen.json`](../../cpppj/priestregen.json)에 호스트·PE/도구/목록/내보내기/fixture SHA, 정상 반환/thiscall 스택/x87 복구와 assert/OS 호출 0을 기록했다.
 
 [`PriestRegenTests.cpp`](../../cpppj/tests/PriestRegenTests.cpp)는 저장 관찰 재생 외에 두 판본 server/client **실제 사제 생성자 → postPop prefix의 회복 예약 → ProcessForm/Kernel → 실제 HP setter**를 검사한다. HP 80→113→146→179→200, 첫 절반 경계의 Unpop/Repop 요청, 원래 payload 8.25의 재예약, 가득 찬 뒤 예약 유지, form 삭제/해제를 확인한다. 공간 효과는 여기서도 기록 훅이며 실제 공간 Pop/GUI를 실행한 검사는 아니다.
 

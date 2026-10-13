@@ -9,8 +9,8 @@ import sys
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parent.parent  # 공유저장소의절대기준경로다.
-REPORT=ROOT/'cpppj/recovery-fortmoney-cpp-binding-evidence.json'  # native보고서를수정하지않는C++연결근거다.
-FILES=('cpppj/recovery-fortmoney-evidence.json','cpppj/tests/fixtures/fortmoney-x86.tsv',
+REPORT=ROOT/'cpppj/fortmoney-cpp-binding.json'  # native보고서를수정하지않는C++연결근거다.
+FILES=('cpppj/fortmoney.json','cpppj/tests/fixtures/fortmoney-x86.tsv',
        'cpppj/src/o/RawFortMoneyLoad.h','cpppj/src/o/RawFortMoneyLoad.cpp','cpppj/tests/FortMoneyLoadTests.cpp',
        'cpppj/src/client/RawSurfaceWorld.h','cpppj/src/client/RawSurfaceWorld.cpp',
        'cpppj/src/o/SpStore.h','cpppj/src/o/SpStore.cpp','tools/decomp_fortmoney_oracle.py',
@@ -25,7 +25,7 @@ def sha(path):
 def generate():
     """원본408의정상/assert 분리와현C++12열 대조의현재출처를고정한다."""
     subprocess.run([sys.executable,str(ROOT/'tools/decomp_fortmoney_oracle.py'),'--verify'],cwd=ROOT,check=True)
-    native=json.loads((ROOT/'cpppj/recovery-fortmoney-evidence.json').read_text(encoding='utf-8'))
+    native=json.loads((ROOT/'cpppj/fortmoney.json').read_text(encoding='utf-8'))
     assert native['total']==408
     normal=sum(item['normal_cases'] for item in native['editions'].values())
     assertions=sum(item['assert_cases'] for item in native['editions'].values())

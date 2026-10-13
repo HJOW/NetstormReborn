@@ -1,6 +1,6 @@
 # 10.37 추가 자료와 CD 실행 파일 비교
 
-2026-10-07. 사용자 제공 `original1037`를 읽기 전용으로 분석했다. [비교 근거](../../cpppj/recovery-original1037-evidence.json)와 [재현 도구](../../tools/compare_original1037.py)에 원본 SHA, 전체 자료 목록, PE 섹션, 검토 함수 바이트 해시와 디컴파일 산출물 SHA를 기록했다.
+2026-10-07. 사용자 제공 `original1037`를 읽기 전용으로 분석했다. [비교 근거](../../cpppj/original1037.json)와 [재현 도구](../../tools/compare_original1037.py)에 원본 SHA, 전체 자료 목록, PE 섹션, 검토 함수 바이트 해시와 디컴파일 산출물 SHA를 기록했다.
 
 ## 전체 디컴파일
 
@@ -36,6 +36,6 @@ python -X utf8 tools/compare_original1037.py --verify
 
 ## 삭제 준비 후속의 이번 재검증
 
-2026-10-07 이번 요청에서도 새 10.37을 전체 재디컴파일해 **3,711개 함수·실패 0**을 확인했다. 전체 C/함수 표 SHA는 앞선 기록과 동일하다. 삭제 준비/일반 Unpop·Graph·공통 표시/postPop helper를 새 경로에 읽기 전용 내보내기하고 세 PE의 실제 함수로 새 **1,158회**를 대조했다. [이번 독립 기록](../../cpppj/recovery-graphremove-evidence.json), [내보내기·범위·재현](cpp-graphremove-reconstruction.md).
+2026-10-07 이번 요청에서도 새 10.37을 전체 재디컴파일해 **3,711개 함수·실패 0**을 확인했다. 전체 C/함수 표 SHA는 앞선 기록과 동일하다. 삭제 준비/일반 Unpop·Graph·공통 표시/postPop helper를 새 경로에 읽기 전용 내보내기하고 세 PE의 실제 함수로 새 **1,158회**를 대조했다. [이번 독립 기록](../../cpppj/graphremove.json), [내보내기·범위·재현](cpp-graphremove-reconstruction.md).
 
 전체 실행 파일의 유일한 한 바이트 차이와 이번 전체 산출물 SHA는 새 `decomp_graphremove_oracle.py --verify`에서 확인한다. 현재 PC에는 과거 `extracted/regiongraph/` 일부 추출물이 없어 과거 `compare_original1037.py --verify`의 전체 통과를 새로 주장하지 않는다. 과거 기록은 변경하지 않았다. 원본 세 폴더 전체 **1,394/425/261개**의 파일 SHA가 작업 시작과 동일하며 AGENTS.md·기존 원본/C# 변경과 원본/복사본/클론 창 실행은 없다. 이후 창 검사는 사용자 지시대로 다른 PC에 인계한다.

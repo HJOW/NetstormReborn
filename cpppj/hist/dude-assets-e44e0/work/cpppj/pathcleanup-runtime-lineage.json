@@ -1,0 +1,36 @@
+{
+  "host": "HJOW-Athlon",
+  "baseline_commit": "8abd00ac3c1a28f10eb15ee5a84200281f545b1f",
+  "additions": [
+    "Helper",
+    "ClearHelper"
+  ],
+  "files": {
+    "cpppj/src/o/RawPathRuntime.h": {
+      "baseline_blob_sha256": "da171be811d06fedeb9c86a73672ed9029f271aa0477ba4f61a5555a9d2c3970",
+      "prior_pathstart_sha256": "3aa49155494dabd4b173fca09abf09b5c8131a91881d244c084e6e6ae83a02ab",
+      "prior_line_endings": "crlf",
+      "current_sha256": "58bcd94fc894425ed8a4fd4d4ace1220f6f3b0c8cb118808f7402bbee96051ea",
+      "existing_normalized_sha256": "da171be811d06fedeb9c86a73672ed9029f271aa0477ba4f61a5555a9d2c3970",
+      "existing_token_sha256": "a5f5eba843f4d26363970b831dab874423241bd06eb1623166ce12503602d503",
+      "unchanged_existing_source": true
+    },
+    "cpppj/src/o/RawPathRuntime.cpp": {
+      "baseline_blob_sha256": "020f1c289fc38c8915dabe9e9eeb3ba27a8657d4aa7e0af452bd66f6609ecf0c",
+      "prior_pathstart_sha256": "e9cd97a76dbe1f2b9fc88d2c14a70f901f83e9b41210e7019050522be5ea1046",
+      "prior_line_endings": "crlf",
+      "current_sha256": "d2469e6ab4ac8fd655078cf4bf8d2be024b921f4db92ef5ce966a52009fb0688",
+      "existing_normalized_sha256": "020f1c289fc38c8915dabe9e9eeb3ba27a8657d4aa7e0af452bd66f6609ecf0c",
+      "existing_token_sha256": "1f20987246c96be949aada9075b68048fa16c8a75c3b11bc2d026627f82d733c",
+      "unchanged_existing_source": true
+    }
+  },
+  "prior_reports": {
+    "cpppj/pathruntime.json": "85996e1fdd1495ef9a5816479deaf3f4ca812a343c6209611300679fc70997c7",
+    "cpppj/pathruntime-lineage.json": "76aca478397d14764eead7725d8db2047e5d0f4cc0c7eb1567e651d9499e4572",
+    "cpppj/pathstart.json": "c7c4327ec5c82c590c906652b4f52466260f3ab6c45ac14f019bc2fcd392d2af"
+  },
+  "tool_sha256": "46b436f59d9743a2dabe7963a1208e48393538b7664809b16daf24e9ffe2f0b0",
+  "new_unique_cases": 0,
+  "scope": "새 helper 조회/0쓰기 API와 설명만 제거하면 8abd00a 전체 소스/토큰과 일치한다. 이전 Runtime360/Start512를 새 관찰에 더하지 않는다."
+}

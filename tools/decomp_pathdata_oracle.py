@@ -20,7 +20,7 @@ SPEC={
 PACKET=ARENA+0x58000 # 실제 공유 버퍼를 모사하는 격리 메모리이며 원본 파일에는 기록하지 않는다.
 PACKET_SIZE=2048 # Host가 허용하는 최대 송신 크기보다1바이트 큰 관찰 버퍼다.
 FIXTURE=ROOT/'cpppj/tests/fixtures/pathdata-x86.tsv' # 원본 관찰 결과를 담는 UTF-8 독립 fixture다.
-REPORT=ROOT/'cpppj/recovery-pathdata-evidence.json' # 코드·원본·범위·관찰 SHA 및 실행 경계 기록이다.
+REPORT=ROOT/'cpppj/pathdata.json' # 코드·원본·범위·관찰 SHA 및 실행 경계 기록이다.
 SOURCES=['tools/decomp_pathdata_oracle.py','tools/decomp_pathruntime_oracle.py','tools/decomp_reward_oracle.py',
  'tools/ghidra/pathdata-functions.json','tools/ghidra/pathdatahelpers-functions.json',
  'cpppj/src/o/RawPathData.h','cpppj/src/o/RawPathData.cpp','cpppj/tests/RawPathDataTests.cpp']

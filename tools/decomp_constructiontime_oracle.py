@@ -19,7 +19,7 @@ SPEC['original1037']=dict(SPEC['originalCD'])
 # 입력 열 순서와 새 관찰 경로다. 모든 시각은 double의 두 DWORD 비트다.
 KEYS=('nowLow','nowHigh','startLow','startHigh','endLow','endHigh','maximum','damage','dirty','mutate','parent')
 FIXTURE=ROOT/'cpppj/tests/fixtures/constructiontime-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-constructiontime-evidence.json'
+REPORT=ROOT/'cpppj/constructiontime.json'
 # 실제 host 통합 검사와 같은 합성 form과 Kernel 번호다.
 TIME_FORM,TIME_PID=5,7
 

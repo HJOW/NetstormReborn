@@ -10,10 +10,10 @@ import sys
 
 # 최초 정상48의 source/report/fixture 전체와 현재 별도 분기 범위 보고서다.
 ROOT=Path(__file__).resolve().parent.parent
-HISTORY=ROOT/'cpppj/recovery-history/dude-space-before-predicate-scope'
-REPORT=ROOT/'cpppj/recovery-dude-space-predicate-scope-evidence.json'
-NATIVE='cpppj/recovery-dude-space-evidence.json'
-COUNT_HISTORY=ROOT/'cpppj/recovery-history/dude-space-predicate-before-effective-count' # 앞 분기 보고서/도구/48전체와 잘못된 고유수 문서를 보존한다.
+HISTORY=ROOT/'cpppj/hist/dude-space-b-02312'
+REPORT=ROOT/'cpppj/dude-space-predicate-scope.json'
+NATIVE='cpppj/dude-space.json'
+COUNT_HISTORY=ROOT/'cpppj/hist/dude-space-p-48125' # 앞 분기 보고서/도구/48전체와 잘못된 고유수 문서를 보존한다.
 
 
 def sha(body):

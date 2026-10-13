@@ -7,9 +7,9 @@ import json
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parent.parent  # 같은저장소의절대기준이다.
-HISTORY=ROOT/'cpppj/recovery-history/fortmoney-before-cpp-correction'  # 최초전체11자료의바이트를보존한다.
-REPORT=ROOT/'cpppj/recovery-fortmoney-cpp-correction-evidence.json'  # 기존408원본관찰과현재교정의별도근거다.
-NATIVE='cpppj/recovery-fortmoney-evidence.json'  # 원본결과는전체불변이며현재Cpp SHA만연결한다.
+HISTORY=ROOT/'cpppj/hist/fortmoney-be-e2121'  # 최초전체11자료의바이트를보존한다.
+REPORT=ROOT/'cpppj/fortmoney-cpp-correction.json'  # 기존408원본관찰과현재교정의별도근거다.
+NATIVE='cpppj/fortmoney.json'  # 원본결과는전체불변이며현재Cpp SHA만연결한다.
 CHANGES={
  'cpppj/src/o/RawFortMoneyLoad.h':[
   ('    // 패치00447810: 로컬이면현재special 고정SP와표시를적용하고1..8의비로컬은분산SP만지정한다.',
@@ -62,7 +62,7 @@ def record():
     generate()
     saved={path.relative_to(HISTORY).as_posix():sha(path) for path in HISTORY.rglob('*') if path.is_file()}
     data=dict(host='HJOW-Athlon',normal_preserved=388,assert_preserved=20,new_native=0,new_unique=0,sources=sources,
-              saved_files=saved,current_native_report_sha256=sha(ROOT/NATIVE),current_binding_sha256=sha(ROOT/'cpppj/recovery-fortmoney-cpp-binding-evidence.json'),
+              saved_files=saved,current_native_report_sha256=sha(ROOT/NATIVE),current_binding_sha256=sha(ROOT/'cpppj/fortmoney-cpp-binding.json'),
               tool_sha256=sha(Path(__file__)),reason='실제447861~447880의비로컬special분기와패치483d9c80=194162/CD100000차이를교정했다. BYTE소유자명시변환/실제bridge타입으로world입력도교정했다.')
     REPORT.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
     verify()
@@ -82,7 +82,7 @@ def verify():
     for name in CHANGES:
         if name in projection['files']:projection['files'][name]=old['files'][name]
     assert projection==old and sha(ROOT/NATIVE)==data['current_native_report_sha256']
-    assert sha(ROOT/'cpppj/recovery-fortmoney-cpp-binding-evidence.json')==data['current_binding_sha256']
+    assert sha(ROOT/'cpppj/fortmoney-cpp-binding.json')==data['current_binding_sha256']
     assert data['new_native']==data['new_unique']==0
     print('Money 첫CPP교정: 전체이전본문/408원본입력 보존·새고유0')
 

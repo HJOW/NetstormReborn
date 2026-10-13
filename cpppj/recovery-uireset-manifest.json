@@ -22,7 +22,7 @@
       "effects": "현재root Kill→현재Cleanup→root0쓰기→new.id0/count·serial유지"
     }
   ],
-  "evidence": "cpppj/recovery-uireset-evidence.json",
+  "evidence": "cpppj/uireset.json",
   "fixture": "cpppj/tests/fixtures/uireset-x86.tsv",
   "independent_cases": 242,
   "native_cpp_tests": [
@@ -41,11 +41,11 @@
   ],
   "files": {
     "cpppj/src/client/GumpLifetime.h": "34d0c9e8e25ead551760fd9c424acfa9acc65ac8bb2c9158f58c9105141c23fd",
-    "cpppj/src/client/GumpLifetime.cpp": "29989c46833f5fbbdd7999d4b8eebb80d044a23232f18004fe4aa92a26ae69e8",
+    "cpppj/src/client/GumpLifetime.cpp": "c0b7bacd2f1ed87a2b5e9c0854d2f89200574f1408d7ac738cec891a185ca57a",
     "cpppj/tests/GumpResetTests.cpp": "182b373c84d371ec83f02395452e3633ea110ffeb34fc31ace5687196c6ccad3",
-    "tools/decomp_uireset_oracle.py": "c5459fd2f4c3f045d488bb2abb98cb8ceb569125236993479da50b7a8e840608",
+    "tools/decomp_uireset_oracle.py": "74112a1d2602ccb9a4e0b44509c6617c2352c053136b13a14fbaa6da0a4dc914",
     "tools/ghidra/uireset-functions.json": "d47eccc3fa922ca731192c33dc03fc349aa1ac9ac1b73d8bfb246e03e0c44251",
-    "cpppj/recovery-uireset-evidence.json": "f219b73b7ef8b2e4a44869fe9518209e37e56e03717f0f468719d87814816256",
+    "cpppj/uireset.json": "253fa2cefd81d2d723cc88ca3f6e492ea9d8d13e7efa41907cc5ec9baff26691",
     "cpppj/tests/fixtures/uireset-x86.tsv": "b1a48cbcd05a8bcc2a5fd38ce3dc2b63d79826a7fb8fd7f9a0d4b74e4dcc5348",
     "docs/exe/cpp-ui-reset-analysis.md": "4446f3389c9b45f9cd9375beb0bbe5c10e18ff76d3f6916d35acb2dfc2740823",
     "extracted/uireset-focused-final.log": "d5e38685535cdca0937bb62e8cd390569b0659472360f35be8ddec7143857121",

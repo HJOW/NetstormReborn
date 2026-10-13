@@ -187,7 +187,7 @@ def generate():
         limitations=['합성 타입/SHP와 기존 확보 풀; 실제 자산/Win32/월드 플레이 검증은 별도',
             '공통 update88/update8c만 지원; debug assert/파생 표시/공통 postPop 영역·소유자 효과 미복원',
             '유한 float·정상 viewport; CD 손상된 물리 프레임 접근은 C++ 보호 경로로 거부'])
-    (ROOT/'cpppj/recovery-display-evidence.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
+    (ROOT/'cpppj/display.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
     print(f'표시 x86 fixture: {sum(counts.values())}회, {dict(counts)}',flush=True)
 
 
@@ -198,7 +198,7 @@ def __file_bytes():
 
 def verify():
     """원본 PE·도구·의존성·fixture와 보고서 호출 수를 게임 실행 없이 재검사한다."""
-    report=json.loads((ROOT/'cpppj/recovery-display-evidence.json').read_text(encoding='utf-8'))
+    report=json.loads((ROOT/'cpppj/display.json').read_text(encoding='utf-8'))
     assert report['tool_sha256']==hashlib.sha256(__file_bytes()).hexdigest()
     # 원본 파일은 읽기만 하며 판본별 해시를 확인한다.
     for edition,data in report['editions'].items():

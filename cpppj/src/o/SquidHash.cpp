@@ -1,4 +1,4 @@
-// recovery-hash-evidence.json의 실제 두 판본 반환 주소·초기화·해시 단계로 검증한다.
+// hash.json의 실제 두 판본 반환 주소·초기화·해시 단계로 검증한다.
 #include "o/SquidHash.h"
 #include <algorithm>
 #include <cmath>

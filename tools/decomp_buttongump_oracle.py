@@ -26,7 +26,7 @@ VTABLE, POOL, RESULT = DATA + 0x8000, DATA + 0xa000, DATA + 0xc000
 SEED = 0x4249a078
 FIXTURE = ROOT / 'cpppj/tests/fixtures/buttongump-x86.tsv'
 ALTERNATE = ROOT / 'cpppj/tests/fixtures/buttongump-x87-64.json'
-REPORT = ROOT / 'cpppj/recovery-buttongump-evidence.json'
+REPORT = ROOT / 'cpppj/buttongump.json'
 VIRTUAL = {STUBS + 0xa00: ('Redraw', 1), STUBS + 0xa20: ('Parent', 3), STUBS + 0xa40: ('Push', 0)}
 # 실제 함수/전역. 호출 규약과 인자는 각 실제 entry의 ret/call 명령에 맞춘다.
 SPECS = {

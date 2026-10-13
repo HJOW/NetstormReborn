@@ -36,7 +36,7 @@ runningGame = seconds(gameDWORD) - pausedTotal
 
 기본 **0x027f(53비트)** 결과 **4,464개**를 C#에서 모두 재생해 일치했다(10.78 1,584개, CD/10.37 각 1,440개). dotnetpj 원본 대조 누적은 **53,471개**다. 대안 **0x037f(64비트)**도 별도 보존하여 두 모드 최상위 정상 반환 **8,928회**를 확인했다. 모드 간 반환/상태 차이 **388개**를 제외하거나 같은 결과라고 처리하지 않았다. C#의 비트 일치 판정은 기본 53비트 모드에 한정한다.
 
-fixture는 `dotnetpj/tests/Netstorm.Core.Tests/Fixtures/clockkernel-x86.tsv`, SHA/범위 기록은 `dotnetpj/recovery-clockkernel-evidence.json`이다. `.gitattributes`에 LF를 지정해 다른 Windows 체크아웃에서도 SHA를 유지한다. 공통 기존 근거 도구를 수정하지 않았다.
+fixture는 `dotnetpj/tests/Netstorm.Core.Tests/Fixtures/clockkernel-x86.tsv`, SHA/범위 기록은 `dotnetpj/clockkernel.json`이다. `.gitattributes`에 LF를 지정해 다른 Windows 체크아웃에서도 SHA를 유지한다. 공통 기존 근거 도구를 수정하지 않았다.
 
 ## 검증
 

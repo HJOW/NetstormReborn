@@ -9,7 +9,7 @@ from pathlib import Path
 
 # 이전 보고서/테스트는 별도 읽기 전용 snapshot으로 보존한다. native fixture는 다시 생성하지 않는다.
 ROOT=Path(__file__).resolve().parent.parent
-REPORT=ROOT/'cpppj/recovery-geysermined-evidence.json'
+REPORT=ROOT/'cpppj/geysermined.json'
 OLD_REPORT=ROOT/'extracted/geysermined-before-shadow-rename-evidence.json'
 OLD_TEST=ROOT/'extracted/geysermined-before-shadow-rename-tests.cpp'
 TEST='cpppj/tests/GeyserMinedTests.cpp'

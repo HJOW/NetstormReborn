@@ -1,0 +1,323 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-14",
+  "baseline_commit": "5bdb5be",
+  "new_native_unique": 0,
+  "preserved_native_unique": 4412,
+  "preserved_normal_unique": 4412,
+  "preserved_assert_unique": 0,
+  "production_parent_changed": false,
+  "actual_host_test_count": 1,
+  "frozen_files": [
+    {
+      "current": {
+        "path": "cpppj/src/o/RawDamageablePostDestroy.h",
+        "bytes": 5497,
+        "sha256": "16404ca3857f952ab7809ed370d68b36158e2c834290d76eb4bbc85b2b3fdf03"
+      },
+      "saved": {
+        "path": "cpppj/hist/damageablepo-a3bd8/cpppj/src/o/RawDamageablePostDestroy.h",
+        "bytes": 5497,
+        "sha256": "16404ca3857f952ab7809ed370d68b36158e2c834290d76eb4bbc85b2b3fdf03"
+      }
+    },
+    {
+      "current": {
+        "path": "cpppj/src/o/RawDamageablePostDestroy.cpp",
+        "bytes": 10157,
+        "sha256": "c70069e2dc850b8f1496aee07008c03ffb1655ff5943365334a4938ead99fb18"
+      },
+      "saved": {
+        "path": "cpppj/hist/damageablepo-a3bd8/cpppj/src/o/RawDamageablePostDestroy.cpp",
+        "bytes": 10157,
+        "sha256": "c70069e2dc850b8f1496aee07008c03ffb1655ff5943365334a4938ead99fb18"
+      }
+    },
+    {
+      "current": {
+        "path": "cpppj/tests/DamageablePostDestroyTests.cpp",
+        "bytes": 11461,
+        "sha256": "80f00aac6a93ead2befddeec89c43537819f22ea5062d2b15a91b31057b26faa"
+      },
+      "saved": {
+        "path": "cpppj/hist/damageablepo-a3bd8/cpppj/tests/DamageablePostDestroyTests.cpp",
+        "bytes": 11461,
+        "sha256": "80f00aac6a93ead2befddeec89c43537819f22ea5062d2b15a91b31057b26faa"
+      }
+    },
+    {
+      "current": {
+        "path": "cpppj/damageablepostdestroy.json",
+        "bytes": 4597,
+        "sha256": "83ee40686f3029ba90e93a1b027bd1b5113eb8625847d3e361c630005818c616"
+      },
+      "saved": {
+        "path": "cpppj/hist/damageablepo-a3bd8/cpppj/damageablepostdestroy.json",
+        "bytes": 4597,
+        "sha256": "83ee40686f3029ba90e93a1b027bd1b5113eb8625847d3e361c630005818c616"
+      }
+    },
+    {
+      "current": {
+        "path": "cpppj/damageablepostdestroy-lineage.json",
+        "bytes": 6084,
+        "sha256": "b904c726e2f4a288f2ef9c4bf45f0f488863cb7f3aaa5551d43e3d078b2925de"
+      },
+      "saved": {
+        "path": "cpppj/hist/damageablepo-a3bd8/cpppj/damageablepostdestroy-lineage.json",
+        "bytes": 6084,
+        "sha256": "b904c726e2f4a288f2ef9c4bf45f0f488863cb7f3aaa5551d43e3d078b2925de"
+      }
+    },
+    {
+      "current": {
+        "path": "tools/decomp_damageablepostdestroy_oracle.py",
+        "bytes": 16200,
+        "sha256": "0cdcb6d3f29cd23e67a1e7b4769c82354d5bb9b8051f09c8e190892da390b31a"
+      },
+      "saved": {
+        "path": "cpppj/hist/damageablepo-a3bd8/tools/decomp_damageablepostdestroy_oracle.py",
+        "bytes": 16200,
+        "sha256": "0cdcb6d3f29cd23e67a1e7b4769c82354d5bb9b8051f09c8e190892da390b31a"
+      }
+    },
+    {
+      "current": {
+        "path": "tools/analyze_damageablepostdestroy.py",
+        "bytes": 6453,
+        "sha256": "d7dff7e29877740040cd9a15b63c5b850b6f7322d2059ec62ebc3226d88c4445"
+      },
+      "saved": {
+        "path": "cpppj/hist/damageablepo-a3bd8/tools/analyze_damageablepostdestroy.py",
+        "bytes": 6453,
+        "sha256": "d7dff7e29877740040cd9a15b63c5b850b6f7322d2059ec62ebc3226d88c4445"
+      }
+    },
+    {
+      "current": {
+        "path": "cpppj/tests/fixtures/damageablepostdestroy-x86.tsv",
+        "bytes": 3253663,
+        "sha256": "7cbf0b93162674cd8d1cf353068ad96b4e717f1167782c0b8fe98908b98a4c6b"
+      },
+      "saved": {
+        "path": "cpppj/hist/damageablepo-a3bd8/cpppj/tests/fixtures/damageablepostdestroy-x86.tsv",
+        "bytes": 3253663,
+        "sha256": "7cbf0b93162674cd8d1cf353068ad96b4e717f1167782c0b8fe98908b98a4c6b"
+      }
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "cpppj/src/o/SidPool.h",
+      "bytes": 5283,
+      "sha256": "f56b3fd3b8c4cc0697afadb0d97ef4b7c62808103283c856c46bf68b59f0f35a",
+      "baseline_git_blob_sha256": "f56b3fd3b8c4cc0697afadb0d97ef4b7c62808103283c856c46bf68b59f0f35a"
+    },
+    {
+      "path": "cpppj/src/o/SidPool.cpp",
+      "bytes": 10030,
+      "sha256": "7bc612330f3b631cf8141be5e7a9ae51cefe8caee3ea3eb68be38252d68a6887",
+      "baseline_git_blob_sha256": "7bc612330f3b631cf8141be5e7a9ae51cefe8caee3ea3eb68be38252d68a6887"
+    },
+    {
+      "path": "cpppj/src/o/SquidFactory.h",
+      "bytes": 3444,
+      "sha256": "9a2b50ead267868364024a9fb0306e6fbf224486b87479a79c531ad2f3607708",
+      "baseline_git_blob_sha256": "9a2b50ead267868364024a9fb0306e6fbf224486b87479a79c531ad2f3607708"
+    },
+    {
+      "path": "cpppj/src/o/SquidFactory.cpp",
+      "bytes": 11463,
+      "sha256": "6221de3262944b7105ae57dacc67ee8cee3e237b62240d5d3a2fd777a5706aed",
+      "baseline_git_blob_sha256": "6221de3262944b7105ae57dacc67ee8cee3e237b62240d5d3a2fd777a5706aed"
+    },
+    {
+      "path": "cpppj/src/o/SquidForms.h",
+      "bytes": 3917,
+      "sha256": "6937069c3482802ad622c7845041c0f3ccfc02d8ab67b6c08d35c3cf34c37683",
+      "baseline_git_blob_sha256": "6937069c3482802ad622c7845041c0f3ccfc02d8ab67b6c08d35c3cf34c37683"
+    },
+    {
+      "path": "cpppj/src/o/SquidForms.cpp",
+      "bytes": 9994,
+      "sha256": "013e35f13121c1447cee1b00014e2bcdd453c0ab29207af05e2fe1345d574080",
+      "baseline_git_blob_sha256": "013e35f13121c1447cee1b00014e2bcdd453c0ab29207af05e2fe1345d574080"
+    },
+    {
+      "path": "cpppj/src/o/ContentFormHost.h",
+      "bytes": 4373,
+      "sha256": "8653814bdfbe2c0b82957014ca65f7c17381bf428dc3671a7254ec14324c441f",
+      "baseline_git_blob_sha256": "8653814bdfbe2c0b82957014ca65f7c17381bf428dc3671a7254ec14324c441f"
+    },
+    {
+      "path": "cpppj/src/o/ContentFormHost.cpp",
+      "bytes": 8471,
+      "sha256": "cb21effe599b73f6ca85d826c6f85f0e3f6f41e956fbc80cf344a06674d20cb4",
+      "baseline_git_blob_sha256": "cb21effe599b73f6ca85d826c6f85f0e3f6f41e956fbc80cf344a06674d20cb4"
+    },
+    {
+      "path": "cpppj/src/o/Kernel.h",
+      "bytes": 3226,
+      "sha256": "3c1bd7ac3ddcb7b60a1e7fef539633d9ca1b014d94759d2aa9a34128991e6f5b",
+      "baseline_git_blob_sha256": "3c1bd7ac3ddcb7b60a1e7fef539633d9ca1b014d94759d2aa9a34128991e6f5b"
+    },
+    {
+      "path": "cpppj/src/o/Kernel.cpp",
+      "bytes": 4050,
+      "sha256": "aebc153f596928d8f81cb89c824000a3486986f115505a544c6480b9e5655dc3",
+      "baseline_git_blob_sha256": "aebc153f596928d8f81cb89c824000a3486986f115505a544c6480b9e5655dc3"
+    },
+    {
+      "path": "cpppj/src/o/BaseProcess.h",
+      "bytes": 585,
+      "sha256": "b88b6ca5734f6d10869eae742ddf1b906c572cbb5143ec162226fbae4010dfc7",
+      "baseline_git_blob_sha256": "b88b6ca5734f6d10869eae742ddf1b906c572cbb5143ec162226fbae4010dfc7"
+    },
+    {
+      "path": "cpppj/src/o/BaseProcess.cpp",
+      "bytes": 272,
+      "sha256": "df4f89c5040ae8df6753a2d3e17e13120b37c60413860ba7998d572d1c84d7d8",
+      "baseline_git_blob_sha256": "df4f89c5040ae8df6753a2d3e17e13120b37c60413860ba7998d572d1c84d7d8"
+    },
+    {
+      "path": "cpppj/src/o/SquidProcess.h",
+      "bytes": 12581,
+      "sha256": "827a9789c2a6b66ac7b98181e49e8c0fa19713755bb62fccababb7ae2a0d0589"
+    },
+    {
+      "path": "cpppj/src/o/SquidProcess.cpp",
+      "bytes": 23632,
+      "sha256": "2b78ac83db1bbb474f224845ae288d696b30d996a489ee292ac09a1af16986ad"
+    },
+    {
+      "path": "cpppj/src/o/RawSquidDestroy.h",
+      "bytes": 3829,
+      "sha256": "7788396ec513d3bb1c90ba2a5f284ff9f76738bb25eb63494394615fcc115757",
+      "baseline_git_blob_sha256": "7788396ec513d3bb1c90ba2a5f284ff9f76738bb25eb63494394615fcc115757"
+    },
+    {
+      "path": "cpppj/src/o/RawSquidDestroy.cpp",
+      "bytes": 5749,
+      "sha256": "64ac08fb4032848dd1b2f7b0e3a3a53bbf1feac4e28313d2f66c0493eb258045",
+      "baseline_git_blob_sha256": "64ac08fb4032848dd1b2f7b0e3a3a53bbf1feac4e28313d2f66c0493eb258045"
+    },
+    {
+      "path": "cpppj/src/o/SquidUnpop.h",
+      "bytes": 2908,
+      "sha256": "b05e4dc0ac5f66065ddff9ca8f451bc5344ad0ce3f9ceb08ad4857d9ed2b51b3",
+      "baseline_git_blob_sha256": "b05e4dc0ac5f66065ddff9ca8f451bc5344ad0ce3f9ceb08ad4857d9ed2b51b3"
+    },
+    {
+      "path": "cpppj/src/o/SquidUnpop.cpp",
+      "bytes": 8771,
+      "sha256": "d82a8c1b8df6005e86894613ed33fca1eb4e6f2837c9c8adb8ceee29e00f7768",
+      "baseline_git_blob_sha256": "d82a8c1b8df6005e86894613ed33fca1eb4e6f2837c9c8adb8ceee29e00f7768"
+    },
+    {
+      "path": "cpppj/src/o/SquidHash.h",
+      "bytes": 2764,
+      "sha256": "f8c0993b5e666fbd369ef876f4684c8b67e38cc81a3ad026cdc52b2d3de80d1d",
+      "baseline_git_blob_sha256": "f8c0993b5e666fbd369ef876f4684c8b67e38cc81a3ad026cdc52b2d3de80d1d"
+    },
+    {
+      "path": "cpppj/src/o/SquidHash.cpp",
+      "bytes": 4305,
+      "sha256": "e275a8239016e45237a57a85c43c22a9767351bfdaeedc728423c3bb42a3e5e4",
+      "baseline_git_blob_sha256": "e275a8239016e45237a57a85c43c22a9767351bfdaeedc728423c3bb42a3e5e4"
+    },
+    {
+      "path": "cpppj/src/o/SquidReward.h",
+      "bytes": 8117,
+      "sha256": "33df23ab3590c965b68fef4c14a55cf38de55281c08430d22a26e6dc12b6aee6",
+      "baseline_git_blob_sha256": "33df23ab3590c965b68fef4c14a55cf38de55281c08430d22a26e6dc12b6aee6"
+    },
+    {
+      "path": "cpppj/src/o/SquidReward.cpp",
+      "bytes": 13359,
+      "sha256": "9a1f1a1d4c0f0b0255357b1f3ec9255cea2bb234ed351da70fb30dd1ed859f9c",
+      "baseline_git_blob_sha256": "9a1f1a1d4c0f0b0255357b1f3ec9255cea2bb234ed351da70fb30dd1ed859f9c"
+    },
+    {
+      "path": "cpppj/src/o/RawSquidFinder.h",
+      "bytes": 4023,
+      "sha256": "e84bf53e772117ecfbc913eabbf460e86f1e687d79cb3f48f2f9c7db8893ed63",
+      "baseline_git_blob_sha256": "e84bf53e772117ecfbc913eabbf460e86f1e687d79cb3f48f2f9c7db8893ed63"
+    },
+    {
+      "path": "cpppj/src/o/RawSquidFinder.cpp",
+      "bytes": 5905,
+      "sha256": "f7947c488c45aa7632d0a705a863c0fe5262c3ea1c29c17ea23c56ed4249e4e2",
+      "baseline_git_blob_sha256": "f7947c488c45aa7632d0a705a863c0fe5262c3ea1c29c17ea23c56ed4249e4e2"
+    },
+    {
+      "path": "cpppj/src/o/RawSquidNeighbors.h",
+      "bytes": 5855,
+      "sha256": "1d223e803abd49e59dc45fb41e68cc65227af2d6e31b3d6904d99b4d00849dbc",
+      "baseline_git_blob_sha256": "1d223e803abd49e59dc45fb41e68cc65227af2d6e31b3d6904d99b4d00849dbc"
+    },
+    {
+      "path": "cpppj/src/o/RawSquidNeighbors.cpp",
+      "bytes": 9810,
+      "sha256": "189febb21e1a29b605ccdf95e56ac88b2b2ee40dac68874df501fe5a37c24d02",
+      "baseline_git_blob_sha256": "189febb21e1a29b605ccdf95e56ac88b2b2ee40dac68874df501fe5a37c24d02"
+    },
+    {
+      "path": "cpppj/src/o/Bridge.h",
+      "bytes": 12974,
+      "sha256": "b43c78d837ee7b8d5d9a2e857152f3b07eb9102c04a65e6cf788e00250367ed7",
+      "baseline_git_blob_sha256": "b43c78d837ee7b8d5d9a2e857152f3b07eb9102c04a65e6cf788e00250367ed7"
+    },
+    {
+      "path": "cpppj/src/o/Bridge.cpp",
+      "bytes": 21032,
+      "sha256": "f23f37afadbf944c5c83539d9e8c16cbda2baf26985770a90e3f174699929c50",
+      "baseline_git_blob_sha256": "a3f4652275e96d4653d8f34c87d1cbeda025cc4ba6f12190944eaa29e926e54f"
+    },
+    {
+      "path": "cpppj/src/o/RiftType.h",
+      "bytes": 13861,
+      "sha256": "6861baebea2e47f0ac175fdabd7ff7aa09fd53bb978bbdf6b0ffd4ca70455f5a",
+      "baseline_git_blob_sha256": "6861baebea2e47f0ac175fdabd7ff7aa09fd53bb978bbdf6b0ffd4ca70455f5a"
+    },
+    {
+      "path": "cpppj/src/o/RiftType.cpp",
+      "bytes": 3726,
+      "sha256": "795554df3a4538ba475a2095a1b87a6bf9ddf4ba5ff904b469cef1f7128dc895",
+      "baseline_git_blob_sha256": "795554df3a4538ba475a2095a1b87a6bf9ddf4ba5ff904b469cef1f7128dc895"
+    },
+    {
+      "path": "cpppj/src/o/SpStore.h",
+      "bytes": 4064,
+      "sha256": "5bb676a1593e7583a69ef45238f7045009b1cf0fff751649e40833226e80b817",
+      "baseline_git_blob_sha256": "5bb676a1593e7583a69ef45238f7045009b1cf0fff751649e40833226e80b817"
+    },
+    {
+      "path": "cpppj/src/o/SpStore.cpp",
+      "bytes": 4577,
+      "sha256": "010b2c3c0b60d089d10a059bb63618d029eec3d3ea341f1bacf7426e71a85ba9",
+      "baseline_git_blob_sha256": "010b2c3c0b60d089d10a059bb63618d029eec3d3ea341f1bacf7426e71a85ba9"
+    }
+  ],
+  "root_count_lineage": {
+    "path": "cpppj/regular-initial-count-lineage.json",
+    "bytes": 26942,
+    "sha256": "50a56cd9adcedcb5e57938994fb695d6c97b63c5836ca16abc5e16b8ca1646ae"
+  },
+  "consumer": {
+    "path": "cpppj/tests/DamageablePostDestroyHostTests.cpp",
+    "bytes": 5684,
+    "sha256": "55e8ead3a90ec996385b6c6829c1ceb097c182b61b4dc3f7b4301479a57e837c"
+  },
+  "tool": {
+    "path": "tools/analyze_damageablepost_host_binding.py",
+    "bytes": 5296,
+    "sha256": "3c8e0c949702d5f32516551de44c01c21ea16c3a821a7c71a4766de4f8fd6165"
+  },
+  "cpp_test_result": "공유등록/실행대기",
+  "limitations": [
+    "새consumer는원본packed count/event0x1a2b/payload0→실제Host Form/Kernel/초기double시각→첫handler인자를확인한다.",
+    "최대HP100/131073과두판본의같은실제Factory/풀을사용하며+20 count를SetInitialCount로직접쓴다.",
+    "handler는명시관찰후0반환으로실제ProcessForm정리를검사한다. 실제DamageableHandle/지면피해/가상HP전체를완료로세지않는다.",
+    "Dude생성/DropIsland/전체공통post/다리출력은선택범위밖이다. 요청되는미복원효과는명시거부한다."
+  ]
+}

@@ -1,9 +1,0 @@
-{
-  "files": {
-    ".gitattributes": "77ed86f08dcb42044fe1e980ca63335cd45b7c79b905b5e38e87b71b6d8da933",
-    "tools/analyze_campaign_runtime12.py": "e12fee45d6022f44d3f5dd85b8f527dace0355dd73aafe7ce5c1c6cd4acc82e7",
-    "cpppj/recovery-campaign-runtime12-evidence.json": "08d59f0fa48a65c22fb3bec16287246a287b7041d3eb0b7c590acff2ca910432",
-    "extracted/campaign-runtime12-final-evidence-generation.log": "ca5129d7ef540c05dd87b1365f4a43677ee9a1b0967b5c24bf101813396bcb03"
-  },
-  "previous_comment_hex": "23203f3f31323f203f3f203f3f203f203f3f203f3f203f3f203f3f3f3f204769743f3f3f203f3f3f203f3f3f3f2e0a"
-}

@@ -9,9 +9,9 @@ import subprocess
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parent.parent # 같은 공유 저장소의 절대 기준이다.
-REPORT=ROOT/'cpppj/recovery-dais-contained-lineage-evidence.json' # 기존 Carrier/09 보고서를 수정하지 않는 별도 연결 근거다.
+REPORT=ROOT/'cpppj/dais-contained-lineage.json' # 기존 Carrier/09 보고서를 수정하지 않는 별도 연결 근거다.
 SOURCES=('cpppj/src/o/RawCarrierPreDestroy.h','cpppj/src/o/RawCarrierPreDestroy.cpp') # 승인된 선택인수/Begin 전달만 바꾸는 두 파일이다.
-PRIOR=('cpppj/recovery-campaign-runtime9-evidence.json','cpppj/recovery-carrierpredestroy-evidence.json','cpppj/recovery-contained-evidence.json') # 기존 정상/회귀/09 원본 입력은 새 Dais에 합산하지 않는다.
+PRIOR=('cpppj/run9.json','cpppj/carrierpredestroy.json','cpppj/contained.json') # 기존 정상/회귀/09 원본 입력은 새 Dais에 합산하지 않는다.
 COMMENT='    // allowDead=true는 Dais wrapper의 원본 dead-parent assert 허용이다. 기존 호출은 기본false로 같은 동작을 유지한다.\n' # 새 설명 한줄을 역제거할 때 사용한다.
 
 
@@ -52,7 +52,7 @@ def observe(commit):
         path=ROOT/name
         if not path.exists():continue
         assert path.read_bytes()==git('show',commit+':'+name);data=json.loads(path.read_text(encoding='utf-8'));prior[name]=dict(sha256=sha(path.read_bytes()),total=data.get('total'),additional_unique_cases=0,dependencies={})
-        if name.endswith('recovery-campaign-runtime9-evidence.json'):continue
+        if name.endswith('run9.json'):continue
         # 원본 PE/export/도구/fixture만 감사하고 의도된 현재 h/cpp 변경은 위 전체 본문 lineage로 연결한다.
         for file,value in data.get('files',{}).items():
             if not (file.startswith(('tools/','originals/','originalCD/')) or '/fixtures/' in file or file.endswith(('creation.c','functions.tsv'))):continue

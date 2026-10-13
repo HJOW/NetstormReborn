@@ -17,7 +17,7 @@ from analyze_styletext import ROOT,digest,read_ranges
 
 # 정적 자료는 저장소 안에 생성한다. 두 보호 PE는 읽기만 한다.
 PLAN=ROOT/'tools/ghidra/scrolltext-functions.json'
-REPORT=ROOT/'cpppj/recovery-scrolltext-evidence.json'
+REPORT=ROOT/'cpppj/scrolltext.json'
 # 실제 다중 줄 가상 표·signed 정렬 BYTE와 입력 사건 전역의 판본별 주소다.
 EDITIONS={
     'originals':('originals/Netstorm.exe',0x51454c,0x540449,

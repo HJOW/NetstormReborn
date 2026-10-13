@@ -55,7 +55,7 @@
 
 COM 음량/정지/참조 해제, Winmm read/seek/close, 잠금 관찰, 기록/예정 assert/패치 CRT 로캘, 초기 표/채널/파일/버퍼 배치와 명시 COM 재진입만 대체한다. 파일 읽기 출력은 독립 메모리 파일을 실제 원본 요청에 따라 공급하며 음악 상태 전이를 Python으로 계산하지 않는다. 원본 잠금 호출은 사건/중첩/균형으로 검사한다. 실제 OS 호출은 0이다.
 
-[musiccontrol-x86.tsv](../../cpppj/tests/fixtures/musiccontrol-x86.tsv)는 호출별 사건/반환, 전체 채널 96바이트와 출력 128바이트, 효과음 표 Adler-32, 파일 위치/열림 상태와 공유 음량/깊이 전역을 보관한다. [근거 기록](../../cpppj/recovery-musiccontrol-evidence.json)은 PE/실행기/내보내기/관찰 SHA, 전체 입력/행, 직접 정상 반환/실제 몸체 진입, 허용 쓰기·스택/보존 레지스터/SEH/x87·예기치 않은 assert/OS 0·잠금 균형을 감사한다. 기존 fixture/감사 도구는 수정하지 않았다.
+[musiccontrol-x86.tsv](../../cpppj/tests/fixtures/musiccontrol-x86.tsv)는 호출별 사건/반환, 전체 채널 96바이트와 출력 128바이트, 효과음 표 Adler-32, 파일 위치/열림 상태와 공유 음량/깊이 전역을 보관한다. [근거 기록](../../cpppj/musiccontrol.json)은 PE/실행기/내보내기/관찰 SHA, 전체 입력/행, 직접 정상 반환/실제 몸체 진입, 허용 쓰기·스택/보존 레지스터/SEH/x87·예기치 않은 assert/OS 0·잠금 균형을 감사한다. 기존 fixture/감사 도구는 수정하지 않았다.
 
 [SoundMusicTests.cpp](../../cpppj/tests/SoundMusicTests.cpp)의 새 검사 6개는 판본별 모든 관찰과 실제 시작→파일 끝 통과→부분 IO 실패→정지, 중첩 음소거 중 예약 음량 갱신→마지막 복원, 잘못된 길이/경계 누락 및 IO 예외 뒤 잠금 해제를 확인한다. 일반 CTest는 원본 PE/Python/장치/실제 파일/작업 스레드를 실행하지 않는다.
 

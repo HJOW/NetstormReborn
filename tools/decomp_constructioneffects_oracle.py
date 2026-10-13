@@ -33,7 +33,7 @@ SPOTS,UNPOP,NOTIFY=0x14500000,STOP+0x500,STOP+0x600
 PATH_TYPE=0x12345678
 KEYS=('type','x','y','footX','footY','player','flags','blocked','server','spot','genus','owner','alliance','profile','mutate')
 FIXTURE=ROOT/'cpppj/tests/fixtures/constructioneffects-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-constructioneffects-evidence.json'
+REPORT=ROOT/'cpppj/constructioneffects.json'
 
 
 def case(**changes):

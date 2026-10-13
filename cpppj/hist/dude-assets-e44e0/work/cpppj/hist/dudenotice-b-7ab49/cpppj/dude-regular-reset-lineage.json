@@ -1,0 +1,118 @@
+{
+  "schema": 1,
+  "host": "HJOW-Athlon",
+  "baseline_commit": "a349e63",
+  "new_native": 0,
+  "new_unique": 0,
+  "baseline_files": {
+    "cpppj/src/o/SquidProcess.cpp": {
+      "git_sha256": "d04840464726146b575b99a5a67eaa02254b5d2dd5b4196ad32480bbc3a34a2b",
+      "work_sha256": "15f0790f5ca0fd999d7d3761fce535ad9691b916f0f9c15c2007baece3f8d203",
+      "git_bytes": 22897,
+      "work_bytes": 23226
+    },
+    "cpppj/src/o/SquidProcess.h": {
+      "git_sha256": "cc40c0a99ddba4c411de74e21f2b18b85616383f114d5c798cf45900596bbe82",
+      "work_sha256": "07c4ab4f81dd2f7dd8c3ea894bad7d8958350b7eaf1b30dc103500d4ebcee978",
+      "git_bytes": 12068,
+      "work_bytes": 12234
+    },
+    "cpppj/process.json": {
+      "git_sha256": "0195a6ef36146bb56b8d0ab7b1d46292f69d99e28d6d95cb8fb23ebe608a4f1f",
+      "work_sha256": "0195a6ef36146bb56b8d0ab7b1d46292f69d99e28d6d95cb8fb23ebe608a4f1f",
+      "git_bytes": 6707,
+      "work_bytes": 6707
+    },
+    "cpppj/tests/fixtures/process-x86.tsv": {
+      "git_sha256": "34be38ab8e39ff846142cf51aa453c60c9ab0620b40e92646d5dafe9f8ebc553",
+      "work_sha256": "34be38ab8e39ff846142cf51aa453c60c9ab0620b40e92646d5dafe9f8ebc553",
+      "git_bytes": 819581,
+      "work_bytes": 819581
+    },
+    "cpppj/processform.json": {
+      "git_sha256": "580d64a92173e4bbea67b006005aff60261a96991546285571440e220ff92f2c",
+      "work_sha256": "580d64a92173e4bbea67b006005aff60261a96991546285571440e220ff92f2c",
+      "git_bytes": 6250,
+      "work_bytes": 6250
+    },
+    "cpppj/tests/fixtures/processform-x86.tsv": {
+      "git_sha256": "32b67fe92fe59e484ea2b8c32599a7bac63c13145a56f3b3481398a21ac8b5ef",
+      "work_sha256": "32b67fe92fe59e484ea2b8c32599a7bac63c13145a56f3b3481398a21ac8b5ef",
+      "git_bytes": 518003,
+      "work_bytes": 518003
+    },
+    "cpppj/processretake.json": {
+      "git_sha256": "ea220f5f18e757701926f905dfc78c819e15989d4c439509f9a4e78a0296c437",
+      "work_sha256": "ea220f5f18e757701926f905dfc78c819e15989d4c439509f9a4e78a0296c437",
+      "git_bytes": 4288,
+      "work_bytes": 4288
+    },
+    "cpppj/tests/fixtures/processretake-x86.tsv": {
+      "git_sha256": "705276d822488e0177fc743d09d394d5f7dcbb3e796a7a77238044b7b88a09c8",
+      "work_sha256": "705276d822488e0177fc743d09d394d5f7dcbb3e796a7a77238044b7b88a09c8",
+      "git_bytes": 141552,
+      "work_bytes": 141552
+    },
+    "cpppj/processtransmit.json": {
+      "git_sha256": "1eac6bc688b4dcac166f538a00184fc32858321bce13255acfa0497b49754e71",
+      "work_sha256": "1eac6bc688b4dcac166f538a00184fc32858321bce13255acfa0497b49754e71",
+      "git_bytes": 4118,
+      "work_bytes": 4118
+    },
+    "cpppj/tests/fixtures/processtransmit-x86.tsv": {
+      "git_sha256": "5ae6f79b52b4eeb888a858e16cecea9e332b4538a34cafe52a8ce74d7abbcfe1",
+      "work_sha256": "5ae6f79b52b4eeb888a858e16cecea9e332b4538a34cafe52a8ce74d7abbcfe1",
+      "git_bytes": 159901,
+      "work_bytes": 159901
+    },
+    "cpppj/gunprocess.json": {
+      "git_sha256": "29acdab429e365b576f2de9fc3fbebceaae13be80e6938ddf8c6ea078ce39440",
+      "work_sha256": "29acdab429e365b576f2de9fc3fbebceaae13be80e6938ddf8c6ea078ce39440",
+      "git_bytes": 4729,
+      "work_bytes": 4729
+    },
+    "cpppj/tests/fixtures/gunprocess-x86.tsv": {
+      "git_sha256": "d13077033f5e3154e9109a93e7350ce4cbf33b365d03b297db95fa7159c058e7",
+      "work_sha256": "d13077033f5e3154e9109a93e7350ce4cbf33b365d03b297db95fa7159c058e7",
+      "git_bytes": 1093605,
+      "work_bytes": 1093605
+    }
+  },
+  "history_files": {
+    "cpppj/hist/dude-regular-dc7b9/work/cpppj/process.json": "0195a6ef36146bb56b8d0ab7b1d46292f69d99e28d6d95cb8fb23ebe608a4f1f",
+    "cpppj/hist/dude-regular-dc7b9/work/cpppj/processform.json": "580d64a92173e4bbea67b006005aff60261a96991546285571440e220ff92f2c",
+    "cpppj/hist/dude-regular-dc7b9/work/cpppj/processretake.json": "ea220f5f18e757701926f905dfc78c819e15989d4c439509f9a4e78a0296c437",
+    "cpppj/hist/dude-regular-dc7b9/work/cpppj/processtransmit.json": "1eac6bc688b4dcac166f538a00184fc32858321bce13255acfa0497b49754e71",
+    "cpppj/hist/dude-regular-dc7b9/work/cpppj/gunprocess.json": "29acdab429e365b576f2de9fc3fbebceaae13be80e6938ddf8c6ea078ce39440",
+    "cpppj/hist/dude-regular-dc7b9/work/cpppj/tests/fixtures/process-x86.tsv": "34be38ab8e39ff846142cf51aa453c60c9ab0620b40e92646d5dafe9f8ebc553",
+    "cpppj/hist/dude-regular-dc7b9/work/cpppj/tests/fixtures/processform-x86.tsv": "32b67fe92fe59e484ea2b8c32599a7bac63c13145a56f3b3481398a21ac8b5ef",
+    "cpppj/hist/dude-regular-dc7b9/work/cpppj/tests/fixtures/processretake-x86.tsv": "705276d822488e0177fc743d09d394d5f7dcbb3e796a7a77238044b7b88a09c8",
+    "cpppj/hist/dude-regular-dc7b9/work/cpppj/tests/fixtures/processtransmit-x86.tsv": "5ae6f79b52b4eeb888a858e16cecea9e332b4538a34cafe52a8ce74d7abbcfe1",
+    "cpppj/hist/dude-regular-dc7b9/work/cpppj/tests/fixtures/gunprocess-x86.tsv": "d13077033f5e3154e9109a93e7350ce4cbf33b365d03b297db95fa7159c058e7",
+    "cpppj/hist/dude-regular-dc7b9/work/cpppj/src/o/SquidProcess.cpp": "15f0790f5ca0fd999d7d3761fce535ad9691b916f0f9c15c2007baece3f8d203",
+    "cpppj/hist/dude-regular-dc7b9/work/cpppj/src/o/SquidProcess.h": "07c4ab4f81dd2f7dd8c3ea894bad7d8958350b7eaf1b30dc103500d4ebcee978",
+    "cpppj/hist/dude-regular-dc7b9/git/cpppj/process.json": "0195a6ef36146bb56b8d0ab7b1d46292f69d99e28d6d95cb8fb23ebe608a4f1f",
+    "cpppj/hist/dude-regular-dc7b9/git/cpppj/processform.json": "580d64a92173e4bbea67b006005aff60261a96991546285571440e220ff92f2c",
+    "cpppj/hist/dude-regular-dc7b9/git/cpppj/processretake.json": "ea220f5f18e757701926f905dfc78c819e15989d4c439509f9a4e78a0296c437",
+    "cpppj/hist/dude-regular-dc7b9/git/cpppj/processtransmit.json": "1eac6bc688b4dcac166f538a00184fc32858321bce13255acfa0497b49754e71",
+    "cpppj/hist/dude-regular-dc7b9/git/cpppj/gunprocess.json": "29acdab429e365b576f2de9fc3fbebceaae13be80e6938ddf8c6ea078ce39440",
+    "cpppj/hist/dude-regular-dc7b9/git/cpppj/tests/fixtures/process-x86.tsv": "34be38ab8e39ff846142cf51aa453c60c9ab0620b40e92646d5dafe9f8ebc553",
+    "cpppj/hist/dude-regular-dc7b9/git/cpppj/tests/fixtures/processform-x86.tsv": "32b67fe92fe59e484ea2b8c32599a7bac63c13145a56f3b3481398a21ac8b5ef",
+    "cpppj/hist/dude-regular-dc7b9/git/cpppj/tests/fixtures/processretake-x86.tsv": "705276d822488e0177fc743d09d394d5f7dcbb3e796a7a77238044b7b88a09c8",
+    "cpppj/hist/dude-regular-dc7b9/git/cpppj/tests/fixtures/processtransmit-x86.tsv": "5ae6f79b52b4eeb888a858e16cecea9e332b4538a34cafe52a8ce74d7abbcfe1",
+    "cpppj/hist/dude-regular-dc7b9/git/cpppj/tests/fixtures/gunprocess-x86.tsv": "d13077033f5e3154e9109a93e7350ce4cbf33b365d03b297db95fa7159c058e7",
+    "cpppj/hist/dude-regular-dc7b9/git/cpppj/src/o/SquidProcess.cpp": "d04840464726146b575b99a5a67eaa02254b5d2dd5b4196ad32480bbc3a34a2b",
+    "cpppj/hist/dude-regular-dc7b9/git/cpppj/src/o/SquidProcess.h": "cc40c0a99ddba4c411de74e21f2b18b85616383f114d5c798cf45900596bbe82"
+  },
+  "current_sources": {
+    "cpppj/src/o/SquidProcess.cpp": "188376ba728d8544d0bfafb92cc6f66403aea92434a81fa98efe894ed9f042e5",
+    "cpppj/src/o/SquidProcess.h": "96f0b2275393d53307b01d36732f51fc8bcb8c341b2d15339d3f5a37cb702bcd"
+  },
+  "tool_sha256": "c5dea09870c605552b8ca6626465328c96141476224319beeee977c75b383bee",
+  "change": "RegularProcess에 event/count0/time 직접쓰기 공개메서드와설명만추가. 기존생성/실행/부착/송신/조회/삭제 몸체와5보고서/fixture 전체불변.",
+  "limitations": [
+    "기존5보고서의당시전체바이트/관찰을보존하지만missing ignored export의새현재실행감사로세지않는다.",
+    "C++의이름있는event/count/time상태를갱신하며32bit원본객체물리배치로주장하지않는다.",
+    "DudeNotice원본fixture/같은Host소비자는별도단위에서추가한다."
+  ]
+}

@@ -25,7 +25,7 @@ source는 원본 this+74인 고정연소점 또는null만 공급한다. 전체24
 
 - 기존 생성자/입자추가 구현: `cpppj/src/o/RawBurningVisual.h/.cpp`.
 - 새 `cpppj/tests/BurningParticleTests.cpp`2검사, macro `NETSTORM_BURNINGPARTICLE_FIXTURE`.
-- `tools/decomp_burningparticle_oracle.py`, `cpppj/tests/fixtures/burningparticle-x86.tsv`, `cpppj/recovery-burningparticle-evidence.json`.
+- `tools/decomp_burningparticle_oracle.py`, `cpppj/tests/fixtures/burningparticle-x86.tsv`, `cpppj/burningparticle.json`.
 - `python -X utf8 tools/decomp_burningparticle_oracle.py --verify`의564행/현재전체SHA/고유입력/실제RET/외부경계0 감사는 성공했다.
 - 부모 생성자자료의 `decomp_burningprocess_oracle.py --verify`도 기존256행 그대로 성공했다. 두 fixture의 입력/출력·source와 실제export/PE SHA를 각각 보존한다.
 

@@ -34,7 +34,7 @@ NaN 비교는 판본마다 다르다. 패치는 x87 C0/C2를 함께 검사해 un
 
 [`decomp_playeranchor_oracle.py`](../../tools/decomp_playeranchor_oracle.py)는 세 실제 PE 각각 **1,598개**, 총 **4,794개**를 두 x87 정밀도 `0x027f/0x037f`로 실행했다. 판본별 collector 1,296개·좌표 그래프 60개·SID 그래프 180개·거리 선택 62개다. 반환 DWORD·원본 임시 목록의 순서/중복/상한·raw 전체/surface 지도 checksum을 대조한다. 기대 반환/후보 목록을 Python/C++의 배치 규칙으로 계산하지 않는다.
 
-Player·거리 선택/실제 sqrt helper·그래프·현재 타입 flags·contained Begin/Next/기본 true 필터는 **전체 실제 몸체를 정상 반환까지 실행**한다. 세 판본/두 정밀도의 관찰은 모두 일치한다. 정상 cdecl ESP·보존 레지스터·FS 예외 체인 원상 복구·x87 깊이/제어·허용 코드/쓰기·원본 입력 보존·assert/OS 0회·SHA/행/실제 진입과 임시 메모리 확보/반납 균형을 감사한다. [근거 JSON](../../cpppj/recovery-playeranchor-evidence.json)에 기록했다. 누적 독립 fixture 입력은 **332,917개**다.
+Player·거리 선택/실제 sqrt helper·그래프·현재 타입 flags·contained Begin/Next/기본 true 필터는 **전체 실제 몸체를 정상 반환까지 실행**한다. 세 판본/두 정밀도의 관찰은 모두 일치한다. 정상 cdecl ESP·보존 레지스터·FS 예외 체인 원상 복구·x87 깊이/제어·허용 코드/쓰기·원본 입력 보존·assert/OS 0회·SHA/행/실제 진입과 임시 메모리 확보/반납 균형을 감사한다. [근거 JSON](../../cpppj/playeranchor.json)에 기록했다. 누적 독립 fixture 입력은 **332,917개**다.
 
 **대체 경계는 임시 160바이트 배열의 정상 메모리 확보/반납뿐**이다. 패치는 CRT 확보 `004e4391`/반납 `004e4354`, CD는 확보 `004f1650`/배열 소멸 진입 `00407c50`에서 대체한다. CD의 실제 정리 래퍼 `004071d0`/`004071d8`는 실행한다. 원본 CRT 메모리 부족·예외 전파·게임/GUI/OS 동작은 검사하지 않는다. 원본 함수에 읽기 자료와 정상 확보를 공급한 검증이며 전체 MayPlace 실행 근거는 아니다.
 

@@ -84,7 +84,7 @@ C++의 `SoundHandle`은 `kSoundListBase(0x15000000) + 표 안 오프셋`이다. 
 
 ## 독립 원본 관찰
 
-[`decomp_soundprocess_oracle.py`](../../tools/decomp_soundprocess_oracle.py)는 세 실제 PE에서 위 "원본 대응" 표의 몸체를 정상 반환까지 실행한다. 각 PE **6,127개**, 세 판본 **18,381개**이며 두 x87 제어 워드(`0x027f`/`0x037f`)의 관찰이 같은 입력만 저장했다. [fixture](../../cpppj/tests/fixtures/soundprocess-x86.tsv), [근거 JSON](../../cpppj/recovery-soundprocess-evidence.json).
+[`decomp_soundprocess_oracle.py`](../../tools/decomp_soundprocess_oracle.py)는 세 실제 PE에서 위 "원본 대응" 표의 몸체를 정상 반환까지 실행한다. 각 PE **6,127개**, 세 판본 **18,381개**이며 두 x87 제어 워드(`0x027f`/`0x037f`)의 관찰이 같은 입력만 저장했다. [fixture](../../cpppj/tests/fixtures/soundprocess-x86.tsv), [근거 JSON](../../cpppj/soundprocess.json).
 
 | 종류 | 판본별 입력 | 입력의 교차 | 관찰 |
 |---|---|---|---|

@@ -10,7 +10,7 @@
 
 ## 전체 기존 본문과 이전 관찰 보존
 
-`tools/analyze_dais_shared_lineage.py`와 `cpppj/recovery-dais-shared-lineage-evidence.json`은 신규 Runtime 선언/정의4줄씩을 역제거하고 Rune의 새 선언/설명·위임을 되돌리면 **네 기존 파일 전체 문자/토큰이552656c와 같음**을 증명한다. 옮긴 typed 조회 prefix도 정확히 같다.
+`tools/analyze_dais_shared_lineage.py`와 `cpppj/dais-shared-lineage.json`은 신규 Runtime 선언/정의4줄씩을 역제거하고 Rune의 새 선언/설명·위임을 되돌리면 **네 기존 파일 전체 문자/토큰이552656c와 같음**을 증명한다. 옮긴 typed 조회 prefix도 정확히 같다.
 
 기존 Rune1920/경로 Runtime·PathStart·Cleanup/08통합·등록/교정 보고서의 바이트를 당시 git 객체와 비교한다. 현재 존재하는 PE/export/tool/fixture는 기준08 및 당시 보고서 SHA를 함께 기록한다. `extracted/pathruntime/*/creation.c/functions.tsv` 등 과거 별도 ignored 내보내기 일부는 현재 호스트에 없으므로 보고서에`available:false`를 명시한다. 그 파일의 현재 바이트를 검증했다고 주장하지 않는다. 원보고서와 현재 fixture/기존 전체 본문 lineage를 보존하며 새 Dais 관찰에 이전 수치를 합산하지 않는다.
 

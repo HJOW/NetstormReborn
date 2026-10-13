@@ -17,7 +17,7 @@ from analyze_styletext import ROOT,digest,read_ranges
 
 # 분석 근거는 저장소 안에 생성한다. 보호 원본은 읽기만 한다.
 PLAN=ROOT/'tools/ghidra/stylebuffer-functions.json'
-REPORT=ROOT/'cpppj/recovery-stylebuffer-evidence.json'
+REPORT=ROOT/'cpppj/stylebuffer.json'
 # 문자열/그림/기본 조각의 실제 가상 표다. 여섯째 슬롯이 문자열 여부를 반환한다.
 EDITIONS={
     'originals':('originals/Netstorm.exe',{'text':0x5143cc,'picture':0x50c5d8,'base':0x50c5c0}),

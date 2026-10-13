@@ -9,8 +9,8 @@ import analyze_dude_space_predicate_scope as previous
 import analyze_player_postpop_binding_lineage as player
 
 ROOT = Path(__file__).resolve().parent.parent  # 현재 공유 저장소의 읽기 기준이다.
-REPORT = ROOT / 'cpppj/recovery-dude-space-player-successor-evidence.json'  # Player 분배 후 현재 Dude 소비자의 별도 출처다.
-HISTORY = ROOT / 'cpppj/recovery-history/dude-space-before-player-binding'  # 이전 감사/전체 fixture/실패 로그를 보관한다.
+REPORT = ROOT / 'cpppj/dude-space-player-successor.json'  # Player 분배 후 현재 Dude 소비자의 별도 출처다.
+HISTORY = ROOT / 'cpppj/hist/dude-space-b-04edd'  # 이전 감사/전체 fixture/실패 로그를 보관한다.
 SHARED = ('cpppj/src/o/SquidPostPop.h', 'cpppj/src/o/SquidPostPop.cpp')  # 전체 역변환이 필요한 두 공유 파일이다.
 
 

@@ -52,13 +52,13 @@ GunProcess stage2는 `(group!=0 || type==windArcher)`이고 rain/thunder Cannon�
 
 `decomp_archertype_oracle.py`는 양판본 **정상42개와 parser접두2개**를 별도 기록한다. 정상마다 callback+후처리 두 top body가 반환하므로 정상 top 호출은84회다. 실제 무orientations/원래 순서2개와 숫자속성·역순·help 제거 대조40개를 구분한다. 각 정상 입력에서 directions/count/특수4인덱스/letterKinds·실제SHPcount와4바이트 코드 전체·16개 first/count 배열을 기록한다. assertion/OS 호출은0이다. smoke와 같은 입력 재생성은 신규 고유 관찰에 더하지 않는다.
 
-최초42/접두2의 전체 source/header/test/oracle/fixture/report6자료는 `cpppj/recovery-history/archertype-initial`에 실제 바이트로 보존했다. 등록 전 숫자AST 거부·직접 SquidPop include와 C++ 오류계약 검사만 추가했으며 `analyze_archertype_draft_lineage.py --verify`가 역변환과 전체 이전/현재SHA·같은fixture를 감사한다. 추가native/고유 입력은0이다.
+최초42/접두2의 전체 source/header/test/oracle/fixture/report6자료는 `cpppj/hist/archertype-initial`에 실제 바이트로 보존했다. 등록 전 숫자AST 거부·직접 SquidPop include와 C++ 오류계약 검사만 추가했으며 `analyze_archertype_draft_lineage.py --verify`가 역변환과 전체 이전/현재SHA·같은fixture를 감사한다. 추가native/고유 입력은0이다.
 
 단위10 **a349e63** 뒤 좁은 `RegularProcess::ResetTask`를 공유파일에 추가했다. 기준커밋의 전체 기존2소스/5보고서/5fixture는 Git LF와 당시 작업원문 바이트를 각각24자료로 보존했고 `analyze_dude_regular_reset_lineage.py`가 기존본문 불변을 감사한다. ArcherType는 이 API 추가 전 전체8자료도 별도 보존하여 같은42/접두2 보고서의 현재공유소스 SHA를 연결한다. 같은50.5좌표의808/555픽셀이 보이는1024×768 viewport 입력을 공급할 때도 직전전체8자료를 보존했다.
 
-첫 공유 Release에서 전수/오류계약3검사가 성공했으나 실제 소비자는 `Pop 파생 가상 후처리는 아직 지원하지 않습니다`로 실패했다. 현재 native 근거에 연결된 전체 source/test/tool/report와 당시 모든 draft history·Reset lineage·실패 로그 등을 **66파일**로 `archertype-before-postpop`에 보존한 뒤 위 실제 자산 후처리만 검사에 연결했다. production·같은42/접두2 fixture·native 도구는 불변이며 새native/고유입력은0이다. `analyze_archertype_pop_lineage.py`의 정확한 검사 역변환과 현재 draftlineage **schema4**가 네 단계의 이전 전체보고서/본문/현재SHA를 연결한다.
+첫 공유 Release에서 전수/오류계약3검사가 성공했으나 실제 소비자는 `Pop 파생 가상 후처리는 아직 지원하지 않습니다`로 실패했다. 현재 native 근거에 연결된 전체 source/test/tool/report와 당시 모든 draft history·Reset lineage·실패 로그 등을 **66파일**로 `archertype-b-e9d47`에 보존한 뒤 위 실제 자산 후처리만 검사에 연결했다. production·같은42/접두2 fixture·native 도구는 불변이며 새native/고유입력은0이다. `analyze_archertype_pop_lineage.py`의 정확한 검사 역변환과 현재 draftlineage **schema4**가 네 단계의 이전 전체보고서/본문/현재SHA를 연결한다.
 
-현재 native/두lineage SHA 감사는 통과했다. **교정 뒤 공유 Release에서 C++4검사 전부 성공**했다(`extracted/campaign-runtime11-ArcherTypeData_repaired-tests.log`). 양판본42/접두2와 실제비전투 Pop→같은 Host Gun→방향0 Fire 소비자를 확인했다. 단위11 최종 Release 경고/오류0·집중고유34·전체1,038검사 실패0과15감사/현재SHA 감사도 성공했다. 상세LEFT 갱신 후 root가 커밋한다. 등록 대상은 `RawArcherTypeData.cpp`, `ArcherTypeDataTests.cpp`, `NETSTORM_ARCHERTYPE_FIXTURE`이며 감사 명령은 다음과 같다.
+현재 native/두lineage SHA 감사는 통과했다. **교정 뒤 공유 Release에서 C++4검사 전부 성공**했다(`extracted/run11-ArcherTypeData_fixed.log`). 양판본42/접두2와 실제비전투 Pop→같은 Host Gun→방향0 Fire 소비자를 확인했다. 단위11 최종 Release 경고/오류0·집중고유34·전체1,038검사 실패0과15감사/현재SHA 감사도 성공했다. 상세LEFT 갱신 후 root가 커밋한다. 등록 대상은 `RawArcherTypeData.cpp`, `ArcherTypeDataTests.cpp`, `NETSTORM_ARCHERTYPE_FIXTURE`이며 감사 명령은 다음과 같다.
 
 ```powershell
 python -X utf8 tools/decomp_archertype_oracle.py --verify

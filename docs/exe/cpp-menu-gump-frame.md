@@ -32,7 +32,7 @@ controlled 메뉴 표는 20칸이며 0번을 예약한다. 부착 콜백 후 현
 
 C++는 원본 fixture의 입력·콜백 당시 상태·최종 55 DWORD×세 노드·전체 메뉴 표·idle 칸·루트·반환값을 전수 재생한다. 폭/배율/장식 조합, 큰 float32 폭, 가로/세로 항목 위치, 확장 방향·미확장·완료·NaN, 장식 포인터와 플래그의 불일치, Push 뒤 크기/장식/제목 변경, 부착 뒤 index 변경을 포함한다. 새 독립 원본 누적은 **523,066 + 308 = 523,374개**다.
 
-자료: `cpppj/recovery-menugump-evidence.json`, `cpppj/tests/fixtures/menugump-x86.tsv`, `MenuGumpTests.cpp`, `tools/ghidra/menugump-functions.json`, `extracted/menugump/`, `extracted/menugump-*-export.log`, `extracted/menugump-build.log`.
+자료: `cpppj/menugump.json`, `cpppj/tests/fixtures/menugump-x86.tsv`, `MenuGumpTests.cpp`, `tools/ghidra/menugump-functions.json`, `extracted/menugump/`, `extracted/menugump-*-export.log`, `extracted/menugump-build.log`.
 
 새 C++ 검사 **5개**가 모두 통과했다. 최종 Release **경고/오류 0**, 전체 CTest 내부 **854개·실패 0**(130.73초, CTest 전체 130.79초)이다. 결과 로그는 `extracted/menugump-focused.log`, `extracted/menugump-ctest.log`에 있다. SOURCE_MAP의 MenuGump 파일 존재 상태를 갱신했다.
 

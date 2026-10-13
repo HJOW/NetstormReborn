@@ -32,7 +32,7 @@ LETTERS = ('AAABBJJJ', 'JAJBAPJP')
 DELTAS = (-2147483648, -257, -9, -3, -1, 0, 1, 2, 3, 9, 257, 2147483647)
 # 이전 fixture/근거를 수정하지 않고 새 독립 입력을 저장한다.
 FIXTURE = ROOT / 'cpppj/tests/fixtures/frameadvance-x86.tsv'
-REPORT = ROOT / 'cpppj/recovery-frameadvance-evidence.json'
+REPORT = ROOT / 'cpppj/frameadvance.json'
 # 보존 레지스터에 서로 다른 비영 값을 넣어 실제 정상 반환 때 같은지 검사한다.
 SAVED = {UC_X86_REG_EBX: 0x12345678, UC_X86_REG_ESI: 0x23456789,
          UC_X86_REG_EDI: 0x3456789a, UC_X86_REG_EBP: 0x456789ab}

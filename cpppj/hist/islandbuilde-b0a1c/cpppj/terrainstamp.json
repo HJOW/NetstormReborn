@@ -1,0 +1,132 @@
+{
+  "total": 1560,
+  "host": "HJOW-Athlon",
+  "editions": {
+    "originals": {
+      "cases": 780,
+      "returns": 1560,
+      "native": {
+        "004c04b0": 2208,
+        "004437f0": 1000,
+        "004e64ab": 99000,
+        "0049aa90": 3366,
+        "004c0640": 360,
+        "004acd20": 1008
+      },
+      "external": {
+        "allocate": 4366,
+        "crt_thread": 99000,
+        "free": 3366,
+        "factory": 1680,
+        "owner": 1008,
+        "pop": 1680
+      }
+    },
+    "originalCD": {
+      "cases": 780,
+      "returns": 1560,
+      "native": {
+        "0049cf20": 2208,
+        "0048ef00": 1000,
+        "004f23b0": 99000,
+        "004444c0": 3366,
+        "0049d2c0": 360,
+        "004aca80": 1008
+      },
+      "external": {
+        "allocate": 4366,
+        "crt_thread": 99000,
+        "free": 3366,
+        "factory": 1680,
+        "owner": 1008,
+        "pop": 1680
+      }
+    }
+  },
+  "files": {
+    "tools/decomp_terrainstamp_oracle.py": "c60bc7ea2acd1f71d980b3c1d8d9b996bf1af5917dbc324be52fa0e6bafdae96",
+    "tools/ghidra/terrainstamp-functions.json": "02eaea7d9b0a1805a1a1c69118509099b6dc0b6065b0c9ea916f12a13c2125c3",
+    "cpppj/tests/fixtures/terrainstamp-x86.tsv": "cf6848c4c51c0af2aecf5ed020637c3798011425ca2cb929a3870ebadb7495c6",
+    "extracted/regionpaint/originals/creation.c": "54191908282833173cdd2181b46ac549e8cb494fe1ec2e58973968cc6745479f",
+    "extracted/regionpaint/originals/functions.tsv": "156b9522eaadd07fd128619913803d6c6efad29d57efd82ff5dfc823835326d9",
+    "extracted/terrainstamp/originals/creation.c": "5dc19a2ad0b921f1f2d864d788e6aaa0714e3a36156d32803ec035861c97d77d",
+    "extracted/terrainstamp/originals/functions.tsv": "6ec6c91172449b3598017d4f3b595fb404fc4450f4016b86e661ec628d2fadee",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/regionpaint/originalCD/creation.c": "7b1d592f8f5d713fafd286c2ab735ead63fe32bc7fd388ed2346de15938f0fca",
+    "extracted/regionpaint/originalCD/functions.tsv": "1d9ba069c7b593820b857ea19f823315a96686d22dad1afa076a53c5b46ccc94",
+    "extracted/terrainstamp/originalCD/creation.c": "686c69c671986a3dff1211b6f87f4172108ad5e8cdbd8178e87738e6227d1a54",
+    "extracted/terrainstamp/originalCD/functions.tsv": "9d63fa53ad9c7d7bf16ffcad006892d42f5c81de028830287aec4fd395cfaf3c",
+    "extracted/refined/originalCD/functions.tsv": "453aa383c27baf8eefa00d97bf44051d18460150556511c2eb7a46f111e92def",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "tools/decomp_regionpaint_oracle.py": "6d65f83505c101ffef5e4c278b22425391e8717e7f31c77383f3a3aafb061d5a",
+    "cpppj/src/o/RawTerrainStamp.h": "a0147b2acd24ee05520b4d2446c90f738436ff231ee8515a3df36d056227d953",
+    "cpppj/src/o/RawTerrainStamp.cpp": "cffd1cb3b40c0053c527957c0bd589daa4227aa04bf9744cf70b6f660ee15be0",
+    "cpppj/tests/TerrainStampTests.cpp": "f74a080dabac3369080943b37209e51427ca256705c9ce70d6400d0d3182260a",
+    "cpppj/tests/RawSceneSupport.h": "7ef30acb24babc688384ab50f57573a87d004b68b8baa0d0a64c897baad23a4f",
+    "cpppj/src/o/RawFrameChoose.h": "76b17d1fa1c65f9f9c7f8bc59e0a544708a01cd172009af3ed130784d58252b8",
+    "cpppj/src/o/RawFrameChoose.cpp": "153ebec3c49993006dcd24ee6cd19c33d19f21b49e96de5b486a8297103478ad",
+    "cpppj/src/o/RawSquidRegion.h": "46017cfdf318d897f360d816064a4168d3d8946be581e51853bb592bf11ef90b",
+    "cpppj/src/o/RawSquidRegion.cpp": "145faef2b42bebdac217052884719e38a5530400a5b15141d75fe514490fe675",
+    "cpppj/src/o/SpStore.h": "5bb676a1593e7583a69ef45238f7045009b1cf0fff751649e40833226e80b817",
+    "cpppj/src/o/SpStore.cpp": "010b2c3c0b60d089d10a059bb63618d029eec3d3ea341f1bacf7426e71a85ba9",
+    "cpppj/src/o/RiftType.h": "6861baebea2e47f0ac175fdabd7ff7aa09fd53bb978bbdf6b0ffd4ca70455f5a",
+    "cpppj/src/o/RiftType.cpp": "795554df3a4538ba475a2095a1b87a6bf9ddf4ba5ff904b469cef1f7128dc895",
+    "cpppj/src/o/TerrainBuilder.h": "ba2f603989457afe90570cbfa20f1c60483bb9f3d9b25f8e189106d26cbf381b",
+    "cpppj/src/o/TerrainBuilder.cpp": "61702bee641fa060c0f6af330e0423121d1acf1ee73b3837b242321dd01c104d",
+    "cpppj/framechoose-lineage.json": "7caaf70ea373d026b3d09b281286be4df258ecdf5b2e5f8323cdb21610b49345",
+    "tools/analyze_framechoose_lineage.py": "a05241129f49884eff18d17d3831aef75ab1a89cfe0f3348cc73906cb1a68504",
+    "tools/analyze_terrainstamp_cpp_binding.py": "c9bc489b851c7d60155082170d61448878f9aa0a0c62e959d568235da270fe8c"
+  },
+  "os_calls": 0,
+  "limits": [
+    "현재 두 보호PE의 초기프레임/mask/99CRTcache/stamp/Choose/region setter를 실제 실행한다.",
+    "CRT thread 주소·할당/free·factory·가상 owner/Pop·region127 chunk 조회는 격리된 외부 경계다.",
+    "생성자/Pop/PostPop 전체 월드 결합이나 GUI/캠페인 완주 검증이 아니다."
+  ],
+  "native_source_files": {
+    "tools/decomp_terrainstamp_oracle.py": "c60bc7ea2acd1f71d980b3c1d8d9b996bf1af5917dbc324be52fa0e6bafdae96",
+    "tools/ghidra/terrainstamp-functions.json": "02eaea7d9b0a1805a1a1c69118509099b6dc0b6065b0c9ea916f12a13c2125c3",
+    "cpppj/tests/fixtures/terrainstamp-x86.tsv": "cf6848c4c51c0af2aecf5ed020637c3798011425ca2cb929a3870ebadb7495c6",
+    "extracted/regionpaint/originals/creation.c": "54191908282833173cdd2181b46ac549e8cb494fe1ec2e58973968cc6745479f",
+    "extracted/regionpaint/originals/functions.tsv": "156b9522eaadd07fd128619913803d6c6efad29d57efd82ff5dfc823835326d9",
+    "extracted/terrainstamp/originals/creation.c": "5dc19a2ad0b921f1f2d864d788e6aaa0714e3a36156d32803ec035861c97d77d",
+    "extracted/terrainstamp/originals/functions.tsv": "6ec6c91172449b3598017d4f3b595fb404fc4450f4016b86e661ec628d2fadee",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/regionpaint/originalCD/creation.c": "7b1d592f8f5d713fafd286c2ab735ead63fe32bc7fd388ed2346de15938f0fca",
+    "extracted/regionpaint/originalCD/functions.tsv": "1d9ba069c7b593820b857ea19f823315a96686d22dad1afa076a53c5b46ccc94",
+    "extracted/terrainstamp/originalCD/creation.c": "686c69c671986a3dff1211b6f87f4172108ad5e8cdbd8178e87738e6227d1a54",
+    "extracted/terrainstamp/originalCD/functions.tsv": "9d63fa53ad9c7d7bf16ffcad006892d42f5c81de028830287aec4fd395cfaf3c",
+    "extracted/refined/originalCD/functions.tsv": "453aa383c27baf8eefa00d97bf44051d18460150556511c2eb7a46f111e92def",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "tools/decomp_regionpaint_oracle.py": "6d65f83505c101ffef5e4c278b22425391e8717e7f31c77383f3a3aafb061d5a"
+  },
+  "cpp_source_files": {
+    "cpppj/src/o/RawTerrainStamp.h": "a0147b2acd24ee05520b4d2446c90f738436ff231ee8515a3df36d056227d953",
+    "cpppj/src/o/RawTerrainStamp.cpp": "cffd1cb3b40c0053c527957c0bd589daa4227aa04bf9744cf70b6f660ee15be0",
+    "cpppj/tests/TerrainStampTests.cpp": "f74a080dabac3369080943b37209e51427ca256705c9ce70d6400d0d3182260a",
+    "cpppj/tests/RawSceneSupport.h": "7ef30acb24babc688384ab50f57573a87d004b68b8baa0d0a64c897baad23a4f",
+    "cpppj/src/o/RawFrameChoose.h": "76b17d1fa1c65f9f9c7f8bc59e0a544708a01cd172009af3ed130784d58252b8",
+    "cpppj/src/o/RawFrameChoose.cpp": "153ebec3c49993006dcd24ee6cd19c33d19f21b49e96de5b486a8297103478ad",
+    "cpppj/src/o/RawSquidRegion.h": "46017cfdf318d897f360d816064a4168d3d8946be581e51853bb592bf11ef90b",
+    "cpppj/src/o/RawSquidRegion.cpp": "145faef2b42bebdac217052884719e38a5530400a5b15141d75fe514490fe675",
+    "cpppj/src/o/SpStore.h": "5bb676a1593e7583a69ef45238f7045009b1cf0fff751649e40833226e80b817",
+    "cpppj/src/o/SpStore.cpp": "010b2c3c0b60d089d10a059bb63618d029eec3d3ea341f1bacf7426e71a85ba9",
+    "cpppj/src/o/RiftType.h": "6861baebea2e47f0ac175fdabd7ff7aa09fd53bb978bbdf6b0ffd4ca70455f5a",
+    "cpppj/src/o/RiftType.cpp": "795554df3a4538ba475a2095a1b87a6bf9ddf4ba5ff904b469cef1f7128dc895",
+    "cpppj/src/o/TerrainBuilder.h": "ba2f603989457afe90570cbfa20f1c60483bb9f3d9b25f8e189106d26cbf381b",
+    "cpppj/src/o/TerrainBuilder.cpp": "61702bee641fa060c0f6af330e0423121d1acf1ee73b3837b242321dd01c104d",
+    "cpppj/framechoose-lineage.json": "7caaf70ea373d026b3d09b281286be4df258ecdf5b2e5f8323cdb21610b49345",
+    "tools/analyze_framechoose_lineage.py": "a05241129f49884eff18d17d3831aef75ab1a89cfe0f3348cc73906cb1a68504",
+    "tools/analyze_terrainstamp_cpp_binding.py": "c9bc489b851c7d60155082170d61448878f9aa0a0c62e959d568235da270fe8c"
+  },
+  "cpp_binding": {
+    "native_cases": 1560,
+    "added_native_cases": 0,
+    "scope": "두 판본 FrameAt/Stamp와 공유 ChooseTerrainFrame/CRT99cache를 같은 pool/두 난수에서 비교한다.",
+    "shared_choose_lineage": "4e532fd의 RawRegionPaint::Choose 원래 토큰과484개 관찰을 framechoose-lineage.json에서 연결한다.",
+    "external_cpp_boundaries": "factory/가상 owner/Pop/region setter/region127 chunk 조회/assert는 필수 hooks다. 검사에서는 명시 원본 인자/슬롯 효과를 관찰하며 월드 production 결합 완료로 세지 않는다.",
+    "allocator_scope": "native의 실제 allocation/free는 external 계수에 기록한다. C++ std배열/후보vector의 호스트 allocator 호출순서는 게임 효과 대조 항목이 아니다."
+  }
+}

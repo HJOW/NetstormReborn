@@ -27,7 +27,7 @@ SPEC={
 SPEC['original1037']=dict(SPEC['originalCD'])
 # 새 관찰 파일과 고정 입력 열 순서다. 기대 결과는 실제 명령만 계산한다.
 FIXTURE=ROOT/'cpppj/tests/fixtures/priestcollision-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-priestcollision-evidence.json'
+REPORT=ROOT/'cpppj/priestcollision.json'
 KEYS=('kind','own','ownFlags','other','mode','globalMask','client','sid','local','qx','qy','cx','cy','wx','wy','ox','oy','extra','seed')
 
 

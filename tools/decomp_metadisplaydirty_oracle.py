@@ -17,7 +17,7 @@ import pefile
 
 # 독립 fixture·출처 보고서는 기존 Pop/Unpop oracle의 비활성 큐 근거와 구별한다.
 FIXTURE=ROOT/'cpppj/tests/fixtures/metadisplaydirty-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-metadisplaydirty-evidence.json'
+REPORT=ROOT/'cpppj/metadisplaydirty.json'
 # bitmap·표시 객체는 호스트와 분리한 에뮬레이터 메모리에만 둔다.
 BITMAP,DISPLAY=SCRATCH+0x1000,SCRATCH+0x6000
 # x87 두 정밀도 반복은 고유 입력 개수에 더하지 않는다.

@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "host": "HJOW-Athlon",
+  "total": 288,
+  "new_native": 0,
+  "cpp_build_attempts": 0,
+  "history": {
+    "cpppj/hist/dudespawn-initial/cpppj/dudespawn.json": "90b9ba249b7888394a16591517a789a8eb6aa29cd3058d16b3a90ea29268e202",
+    "cpppj/hist/dudespawn-initial/cpppj/src/o/RawDudeSpawn.cpp": "a0f02ae44824ae62de94f2e4e4314c6b613b330fc6efb3d0be8d57f67cb98c77",
+    "cpppj/hist/dudespawn-initial/cpppj/src/o/RawDudeSpawn.h": "e4cebe47dfbedcba002500b667d01ac3c1d5f72fb2a8d1528219913bee387aec",
+    "cpppj/hist/dudespawn-initial/cpppj/tests/DudeSpawnTests.cpp": "9c19ccffab23cf51de5489151dda2d2c6c16a889152828a27dfbdfe119ac5ed7",
+    "cpppj/hist/dudespawn-initial/cpppj/tests/fixtures/dudespawn-x86.tsv": "c365fb07b0f887b399119d77cb2b71b654439efcd677442cd2fc1b155ba70041",
+    "cpppj/hist/dudespawn-initial/tools/decomp_dudespawn_oracle.py": "294095ff1336d290d8d7e0e465df95d5514ceb4ff87d4bac8c282cdcec2eb786"
+  },
+  "files": {
+    "cpppj/tests/DudeSpawnTests.cpp": "5a65c66a742fafc1d9afcafa6fb060a27b2219528358376fbb19ff8b01b75458",
+    "cpppj/src/o/RawDudeSpawn.h": "e4cebe47dfbedcba002500b667d01ac3c1d5f72fb2a8d1528219913bee387aec",
+    "cpppj/src/o/RawDudeSpawn.cpp": "a0f02ae44824ae62de94f2e4e4314c6b613b330fc6efb3d0be8d57f67cb98c77",
+    "tools/decomp_dudespawn_oracle.py": "294095ff1336d290d8d7e0e465df95d5514ceb4ff87d4bac8c282cdcec2eb786",
+    "cpppj/tests/fixtures/dudespawn-x86.tsv": "c365fb07b0f887b399119d77cb2b71b654439efcd677442cd2fc1b155ba70041",
+    "tools/analyze_dudespawn_draft_lineage.py": "bd1f8f12a2aabd1112dd6be7314ca0fe2b4253144823a19a180eba6274c17bfd"
+  },
+  "reason": "미공유 컴파일 초안의 BaseFileSystem에 없는 Root() 접근을 이미 같은 입력인 판본 root 경로 멤버로 옮긴다. 최초 전체6자료/288원본과 미완료 shared Pop 분배 경계를 보존한다."
+}

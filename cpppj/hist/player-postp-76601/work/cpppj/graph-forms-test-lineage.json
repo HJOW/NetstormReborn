@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "host": "HJOW-Athlon",
+  "decompile_date": "2026-10-14",
+  "new_native_inputs": 0,
+  "original_normal_inputs": 64,
+  "production_and_native_fixture_unchanged": true,
+  "whole_previous_test_inverse": true,
+  "current_test_sha256": "8914857113123d5ab6ae23ddb2abadae80774a82f2914f4a24c274039ca63a04",
+  "tool_sha256": "a14ae41636c537f927790bf5e418a14407f9e2c5c47c1f295142d55fbce59353",
+  "history": {
+    "cpppj/hist/graph-forms-dbad6/baseline.json": "68e18e639c6a6113af6b6376e481ba8434e44f32accdf1267fdc8da6ee89c7c3",
+    "cpppj/hist/graph-forms-dbad6/cpppj/graph-forms-lineage.json": "798d6d09e107d6931daecec96071ffcb24ca352b4650d002d5dffb3d25c202a1",
+    "cpppj/hist/graph-forms-dbad6/cpppj/graphforms.json": "bba9ef627b52bd7db88b0f1ec0438d7035614d86f2416171fd3589dfba6fac18",
+    "cpppj/hist/graph-forms-dbad6/tools/analyze_graph_forms_lineage.py": "7e1f0edee42cce47bf9e7f21e14d0914b1ead3ff4cd7524fbfe5f50b74e8b02a",
+    "cpppj/hist/graph-forms-dbad6/tools/decomp_graphforms_oracle.py": "ac2f87cc4ab1f1ffcc38d74536ec04a539189242349b5c350f10b1efa0713fbb",
+    "cpppj/hist/graph-forms-dbad6/extracted/run13-build-initial.log": "9a8c9fcfa019f5edd5f2ecdd61cf50743ee5e3f8ac38110b308d9bfb95801c44",
+    "cpppj/hist/graph-forms-dbad6/extracted/run13-RawGraph_first.log": "1701040f97801564cb7e93bb80e5ec5873e5d07754cb396826d4a86d194a037e",
+    "cpppj/hist/graph-forms-dbad6/cpppj/tests/RawGraphTests.cpp": "ece8bb8488e8e15a5cc690ec110c47be56aa91bcacdfa2dbf0f1b5a2dbc66183",
+    "cpppj/hist/graph-forms-dbad6/cpppj/src/o/RawGraph.cpp": "66e35f497c8e19340bccff7949d3f2bb5a7f7abdb3da59a970f203b5f277b95a",
+    "cpppj/hist/graph-forms-dbad6/cpppj/tests/fixtures/graphforms-x86.tsv": "58e1c638f532f84efd3a36b052eea5ea5bfff5e94cc2ea1c2f78b0eda056e24d"
+  },
+  "change": "기존 내부타입5 미복원 거부 입력은 범위 밖 타입255로 바꾼다. 손상프레임/범위밖타입의 실패 전 전체쓰기 보호 검사는 유지한다."
+}

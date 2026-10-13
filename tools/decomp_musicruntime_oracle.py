@@ -25,7 +25,7 @@ BODY['original1037']=dict(BODY['originalCD'])
 IMPORTS=dict(InitializeCriticalSection=1,DeleteCriticalSection=1,CreateEventA=4,CreateThread=6,WaitForSingleObject=2,SetEvent=1,TerminateThread=2,CloseHandle=1)
 EVENT,THREAD=0x18001000,0x18002000
 FIXTURE=ROOT/'cpppj/tests/fixtures/musicruntime-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-musicruntime-evidence.json'
+REPORT=ROOT/'cpppj/musicruntime.json'
 
 
 def inputs():

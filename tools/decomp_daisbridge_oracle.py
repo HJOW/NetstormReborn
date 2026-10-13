@@ -14,7 +14,7 @@ from decomp_templeritual_oracle import SPEC as TEMPLE
 SHP=0x11800000 # Path 배열과 겹치지 않는 합성 SHP 프레임/핫스폿 입력이다.
 BRIDGE_SPOTS=SHP+0x20000 # hash1과 겹치지 않는 실제 지면 입력의 독립 주소다.
 FIXTURE=ROOT/'cpppj/tests/fixtures/daisbridge-x86.tsv' # 실제 상위 명령과 Path 전체 결과의 새 입력 자료다.
-REPORT=ROOT/'cpppj/recovery-daisbridge-evidence.json' # 기존 관찰 수와 합산하지 않는 별도 근거다.
+REPORT=ROOT/'cpppj/daisbridge.json' # 기존 관찰 수와 합산하지 않는 별도 근거다.
 SPEC={'originals':dict(bridge=0x449900,altar=0x5412e8,contained=0x541088,alliances=0x595200,depth=0x186d8),
       'originalCD':dict(bridge=0x481ab0,altar=0x51cbd4,contained=0x51c978,alliances=0x50f6e0,depth=0x2f18)} # 상위 명령/현재 전역과 기존 깊이 필드다.
 

@@ -41,7 +41,7 @@ SPECS = {
 SPECS['original1037'] = dict(SPECS['originalCD'])
 # fixture는 CTest가 실제 게임/원본/Python 없이 읽을 입력과 원본 출력이다.
 FIXTURE = ROOT / 'cpppj/tests/fixtures/gumpbackgrounddraw-x86.tsv'
-REPORT = ROOT / 'cpppj/recovery-gumpbackgrounddraw-evidence.json'
+REPORT = ROOT / 'cpppj/gumpbackgrounddraw.json'
 
 
 def signed(value):

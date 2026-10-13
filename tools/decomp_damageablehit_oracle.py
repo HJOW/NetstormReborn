@@ -22,7 +22,7 @@ BLOCK,DIE,UNREALIZE=STOP+0x500,STOP+0x520,STOP+0x540
 GROUND=0x11500000
 KEYS=('kind','current','damage','arank','vrank','attackerOwner','victimOwner','disabled','nodamage','server','state','extra','reject','hasHP','dais','attackerGenus','effect','existing','created','checking','localOwner','islandGenus','islandId','primary','clock','warning')
 FIXTURE=ROOT/'cpppj/tests/fixtures/damageablehit-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-damageablehit-evidence.json'
+REPORT=ROOT/'cpppj/damageablehit.json'
 
 
 def double_bits(value):
@@ -119,7 +119,7 @@ def generate(smoke):
             rows.append([edition,*[case[key] for key in KEYS],*out])
         editions[edition]=dict(returns=oracle.returns,native_calls=dict(oracle.native_calls),boundaries=dict(oracle.boundaries),assertions=oracle.assertions,instructions=oracle.instructions);files.update(oracle.exports);files.add(ROOT/oracle.spec['binary']);print(edition,oracle.returns,flush=True)
     if smoke:return
-    for name in ('cpppj/src/o/RawDamageableHit.cpp','cpppj/src/o/RawDamageableHit.h','cpppj/src/o/RawSquidHitPoints.cpp','cpppj/src/o/RawSquidHitPoints.h','cpppj/src/o/RawPriestDamage.cpp','cpppj/src/o/RawPriestDamage.h','cpppj/src/o/RawDamageableBurning.cpp','cpppj/src/o/RawDamageableBurning.h','cpppj/src/o/SquidReward.cpp','cpppj/src/o/SquidReward.h','cpppj/tests/DamageableHitTests.cpp','cpppj/recovery-priestdamage-evidence.json'):files.add(ROOT/name)
+    for name in ('cpppj/src/o/RawDamageableHit.cpp','cpppj/src/o/RawDamageableHit.h','cpppj/src/o/RawSquidHitPoints.cpp','cpppj/src/o/RawSquidHitPoints.h','cpppj/src/o/RawPriestDamage.cpp','cpppj/src/o/RawPriestDamage.h','cpppj/src/o/RawDamageableBurning.cpp','cpppj/src/o/RawDamageableBurning.h','cpppj/src/o/SquidReward.cpp','cpppj/src/o/SquidReward.h','cpppj/tests/DamageableHitTests.cpp','cpppj/priestdamage.json'):files.add(ROOT/name)
     FIXTURE.write_text('# 실제 두 PE Base/Damageable 피격. 가상방어/삭제/UI/시계/burning 생성·삭제는 명시 관찰 경계.\n'+'\n'.join('\t'.join(map(str,row)) for row in rows)+'\n',encoding='utf-8');REPORT.write_text(json.dumps(dict(schema=1,total=len(rows),host='HJOW-Athlon',editions=editions,files={path.relative_to(ROOT).as_posix():digest(path) for path in sorted(files)},os_calls=0,limitations=['실제 Base/Damageable Hit와 레벨/HP저장/HP보유/섬genus·번호/경고마감/사망context 몸체를 실행한다.','가상 방어·삭제·unrealize/소유자·UI·wall clock·burning 생성/삭제는 명시 관찰 경계다.','서버 사망의 실제 corpse/효과/월드 삭제 하위와 다른 파생 virtual Hit는 별도 경계다.']),ensure_ascii=False,indent=2)+'\n',encoding='utf-8');print(json.dumps(dict(total=len(rows)),ensure_ascii=False))
 
 

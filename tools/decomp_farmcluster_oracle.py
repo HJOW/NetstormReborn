@@ -18,7 +18,7 @@ SPECS={
 # 실제지면범위와SID는에뮬레이터/fixture의명시입력이며다른모듈과관찰을합산하지않는다.
 GROUND_FIRST,GROUND_LAST,GROUND_SID,BORN=60,132,200,10000
 FIXTURE=ROOT/'cpppj/tests/fixtures/farmcluster-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-farmcluster-evidence.json'
+REPORT=ROOT/'cpppj/farmcluster.json'
 # 수량/지역/seed BYTE/군도/span/지면프레임또는합성랜덤타입/공간허용/owner/프레임난수입력이다.
 KEYS=('quantity','region','seed','arch','span','profile','legal','owner','global','record','exists','constructor')
 

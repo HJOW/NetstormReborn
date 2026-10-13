@@ -27,7 +27,7 @@ KEYS=('instant','pattern','random','capacity','total','active','selected','hp','
     'rate','x','y','sx','sy','cx','cy','pixel','life','colors','mutate','free','parent','source','maxlife')
 OFFSETS=(0xc,0x10,0x14,0x18,0x40,0x44,0x74,0x78,0x7c,0x80,0x24,0x28)
 FIXTURE=ROOT/'cpppj/tests/fixtures/constructionframe-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-constructionframe-evidence.json'
+REPORT=ROOT/'cpppj/constructionframe.json'
 
 
 def case(**changes):

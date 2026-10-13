@@ -29,7 +29,7 @@ PRE['original1037']=dict(PRE['originalCD'])
 IDS=(50,60,61,62,63)
 SEED=0x426890
 FIXTURE=ROOT/'cpppj/tests/fixtures/carrierpredestroy-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-carrierpredestroy-evidence.json'
+REPORT=ROOT/'cpppj/carrierpredestroy.json'
 
 
 def inputs():

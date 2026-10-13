@@ -11,10 +11,10 @@ from pathlib import Path
 # 고정11 commit의완료몸체와새12 최소직접count API를연결한다.
 ROOT=Path(__file__).resolve().parent.parent
 BASELINE='5bdb5be'
-HISTORY='cpppj/recovery-history/damageablepost-host-baseline'
-REPORT=ROOT/'cpppj/recovery-damageablepost-host-binding-evidence.json'
+HISTORY='cpppj/hist/damageablepo-a3bd8'
+REPORT=ROOT/'cpppj/damageablepost-host-binding.json'
 FROZEN=['cpppj/src/o/RawDamageablePostDestroy.h','cpppj/src/o/RawDamageablePostDestroy.cpp','cpppj/tests/DamageablePostDestroyTests.cpp',
- 'cpppj/recovery-damageablepostdestroy-evidence.json','cpppj/recovery-damageablepostdestroy-lineage-evidence.json','tools/decomp_damageablepostdestroy_oracle.py',
+ 'cpppj/damageablepostdestroy.json','cpppj/damageablepostdestroy-lineage.json','tools/decomp_damageablepostdestroy_oracle.py',
  'tools/analyze_damageablepostdestroy.py','cpppj/tests/fixtures/damageablepostdestroy-x86.tsv']
 # 실제consumer가재사용한단일풀/Kernel/Factory/Regular/HasHP/중심/해시/삭제몸체의전체파일이다.
 DEPENDENCIES=[f'cpppj/src/o/{name}.{extension}' for name in ('SidPool','SquidFactory','SquidForms','ContentFormHost','Kernel','BaseProcess','SquidProcess',
@@ -49,7 +49,7 @@ def record():
         dependencies.append(value)
     proof=dict(host='HJOW-Athlon',date='2026-10-14',baseline_commit=BASELINE,new_native_unique=0,preserved_native_unique=4412,
       preserved_normal_unique=4412,preserved_assert_unique=0,production_parent_changed=False,actual_host_test_count=1,
-      frozen_files=snapshots,dependencies=dependencies,root_count_lineage=pin('cpppj/recovery-regular-initial-count-lineage-evidence.json'),
+      frozen_files=snapshots,dependencies=dependencies,root_count_lineage=pin('cpppj/regular-initial-count-lineage.json'),
       consumer=pin('cpppj/tests/DamageablePostDestroyHostTests.cpp'),tool=pin('tools/analyze_damageablepost_host_binding.py'),
       cpp_test_result='공유등록/실행대기',limitations=['새consumer는원본packed count/event0x1a2b/payload0→실제Host Form/Kernel/초기double시각→첫handler인자를확인한다.',
       '최대HP100/131073과두판본의같은실제Factory/풀을사용하며+20 count를SetInitialCount로직접쓴다.',

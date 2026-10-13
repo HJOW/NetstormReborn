@@ -205,13 +205,13 @@ def generate():
             'raw 풀 전체/삭제 기록 전체는 Adler-32와 주요 카운터/머리/꼬리로 대조',
             '파생 생성자/공간 등록/삭제 효과·네트워크 Take·GameWorld 연결 미실행',
             '게임 진입점/OS API/원본·복사본·클론 GUI 실행 없음']}
-    (ROOT/'cpppj/recovery-sid-evidence.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
+    (ROOT/'cpppj/sid.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
     print(json.dumps({'cases':dict(counts),'total_cases':report['total_cases']}),flush=True)
 
 
 def verify():
     """저장된 기록·원본·도구·fixture 해시와 호출 행 수를 검사한다."""
-    report=json.loads((ROOT/'cpppj/recovery-sid-evidence.json').read_text(encoding='utf-8'))
+    report=json.loads((ROOT/'cpppj/sid.json').read_text(encoding='utf-8'))
     fixture=ROOT/'cpppj/tests/fixtures/sid-x86.tsv'
     assert hashlib.sha256(fixture.read_bytes()).hexdigest()==report['fixture_sha256']
     # 바이너리와 도구는 기록 이후 변하지 않았는지 확인한다.

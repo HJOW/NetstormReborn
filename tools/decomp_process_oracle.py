@@ -499,14 +499,14 @@ def generate(trace):
                              'CD의 free/dead 부모 부착과 프로세스 전송 직렬화는 범위 밖', 'Kernel 슬롯은 앞 %d개만 직접 비교' % WATCH_SLOTS]
     fixture = ROOT / 'cpppj/tests/fixtures/process-x86.tsv'
     fixture.write_text(payload, encoding='utf-8', newline='\n')
-    (ROOT / 'cpppj/recovery-process-evidence.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n',
+    (ROOT / 'cpppj/process.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n',
                                                                encoding='utf-8', newline='\n')
     print(f'프로세스 x86 fixture 시나리오 {total_scenarios}개·연산 {total_ops}개 → {fixture}')
 
 
 def verify():
     """기계어를 다시 실행하지 않고 원본/도구/내보내기/fixture SHA와 행 수를 감사한다."""
-    report = json.loads((ROOT / 'cpppj/recovery-process-evidence.json').read_text(encoding='utf-8'))
+    report = json.loads((ROOT / 'cpppj/process.json').read_text(encoding='utf-8'))
     assert report['tool_sha256'] == digest(Path(__file__)), '도구 SHA 불일치'
     for binary, data in report['editions'].items():
         assert data['binary_sha256'] == digest(ROOT / BINARIES[binary]), f'원본 SHA 불일치: {binary}'

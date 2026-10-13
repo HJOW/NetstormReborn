@@ -1,0 +1,88 @@
+{
+  "total": 6720,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-09",
+  "controls": [
+    639,
+    895
+  ],
+  "os_calls": 0,
+  "editions": {
+    "originals": {
+      "cases": 2240,
+      "boundaries": {
+        "C": 3840,
+        "E": 288,
+        "R": 256,
+        "F": 96
+      },
+      "native_calls": {
+        "004ac550": 3840,
+        "0049a840": 4336,
+        "004e49c0": 1920,
+        "0046f4e0": 1216,
+        "004acda0": 496
+      },
+      "assertions": 0
+    },
+    "originalCD": {
+      "cases": 2240,
+      "boundaries": {
+        "C": 3840,
+        "E": 288,
+        "R": 256,
+        "F": 96
+      },
+      "native_calls": {
+        "004abf50": 3840,
+        "004448e0": 1920,
+        "004f161c": 1920,
+        "004bdbf0": 1216,
+        "004acaa0": 496,
+        "004abae0": 496
+      },
+      "assertions": 0
+    },
+    "original1037": {
+      "cases": 2240,
+      "boundaries": {
+        "C": 3840,
+        "E": 288,
+        "R": 256,
+        "F": 96
+      },
+      "native_calls": {
+        "004abf50": 3840,
+        "004448e0": 1920,
+        "004f161c": 1920,
+        "004bdbf0": 1216,
+        "004acaa0": 496,
+        "004abae0": 496
+      },
+      "assertions": 0
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/priestterrain-x86.tsv": "e660c8d523db5d7d8b6594557b0488d49eada37e05a7eb9164aae5ecce2c2283",
+    "extracted/priestterrain/original1037/creation.c": "594565f1adffed404c7d8c010e450137392cc4f4444f8cdb248b0e168d4e950d",
+    "extracted/priestterrain/original1037/functions.tsv": "d2992b781fd87b81c98442be01e8db9d453423bf364d6c465550ab2436fe780d",
+    "extracted/priestterrain/originalCD/creation.c": "594565f1adffed404c7d8c010e450137392cc4f4444f8cdb248b0e168d4e950d",
+    "extracted/priestterrain/originalCD/functions.tsv": "d2992b781fd87b81c98442be01e8db9d453423bf364d6c465550ab2436fe780d",
+    "extracted/priestterrain/originals/creation.c": "264953a954b17a7cdb0044a15349f895ab0d0e4900cf77e1b866cb3e5d7867a2",
+    "extracted/priestterrain/originals/functions.tsv": "845c844e5667316c8bb2ab63afc777ff00be06840433a8f95f4ebe4c5c6a3519",
+    "original1037/netstorm.exe": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_damageablepredestroy_oracle.py": "6f260fca831f979df7361fb783b38de9ccadf93bced292e55a04e090c46a748b",
+    "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
+    "tools/decomp_priestcollision_oracle.py": "55dfd11864e2f8b3dab3efd71ddff14998618994e97ed91fa60d5990c75043d2",
+    "tools/decomp_priestterrain_oracle.py": "d96df6c7f70ba2555bc033a0895a74fa63f76ea0541318478390d9b70e08aeb6",
+    "tools/ghidra/priestterrain-functions.json": "8271627acf4b459ee10a160413a900bec04e91dd86b783458d603b505fa65306"
+  },
+  "limits": [
+    "후보/모양 종료는 중간 구간 지역 변수 입력, finder Next/주변 관계 진입 직전 종료",
+    "지역 조회는 실제 thiscall 정상 반환/ABI/보존 레지스터",
+    "최종 구간은 실제 사제 우회/반환값 설정 뒤 종료, 전체 MayPlace ABI 검증 아님",
+    "일반 사제의 초기 permission=true 범위, 전체 MayPlace/패턴/일반 자산 검증 아님"
+  ]
+}

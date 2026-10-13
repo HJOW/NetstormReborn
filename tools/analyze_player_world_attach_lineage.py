@@ -9,9 +9,9 @@ from pathlib import Path
 
 # 최초 실제 Player4몸체/Regularctor와 명시 attach 경계의 전체 출처를 보존한 경로다.
 ROOT=Path(__file__).resolve().parent.parent
-HISTORY='cpppj/recovery-history/player-world-before-real-attach'
-REPORT=ROOT/'cpppj/recovery-player-world-attach-lineage-evidence.json'
-NATIVE='cpppj/recovery-player-world-evidence.json'
+HISTORY='cpppj/hist/player-world-f6101'
+REPORT=ROOT/'cpppj/player-world-attach-lineage.json'
+NATIVE='cpppj/player-world.json'
 FIXTURE='cpppj/tests/fixtures/player-world-x86.tsv'
 TOOL='tools/decomp_player_world_oracle.py'
 

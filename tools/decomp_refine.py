@@ -341,7 +341,7 @@ class Matcher:
                 raise ValueError(f'검토된 ret N과 덤프가 다릅니다: {pair["name"]}')
             added += self.accept(x, y, 'reviewed', 1.0)
         # 다리 검증은 별도 기대값으로 확인했다. 수명 함수의 부분 실행은 강한 앵커에서 제외되어 있다.
-        bridge_path = ROOT / 'cpppj/recovery-bridge-evidence.json'
+        bridge_path = ROOT / 'cpppj/bridge.json'
         if bridge_path.exists():
             bridge = json.loads(bridge_path.read_text(encoding='utf-8'))
             fixture = ROOT / 'cpppj/tests/fixtures/bridge-x86.tsv'
@@ -364,7 +364,7 @@ class Matcher:
                     raise ValueError(f'다리 검토 함수의 존재/ret N 불일치: {pair["name"]}')
                 added += self.accept(x,y,'reviewed',1.0)
         # 표면 이웃/재귀 검증도 실제 입력·도구·판본이 그대로일 때만 강한 대응으로 적용한다.
-        surface_path = ROOT / 'cpppj/recovery-surface-evidence.json'
+        surface_path = ROOT / 'cpppj/surface.json'
         if surface_path.exists():
             surface = json.loads(surface_path.read_text(encoding='utf-8'))
             fixture = ROOT / 'cpppj/tests/fixtures/surface-x86.tsv'
@@ -389,7 +389,7 @@ class Matcher:
                     raise ValueError(f'표면 검토 함수의 존재/ret N 불일치: {pair["name"]}')
                 added += self.accept(x,y,'reviewed',1.0)
         # 공간 해시 앵커는 x87 상태까지 명시한 정상 반환 검증 결과만 사용한다.
-        hash_path = ROOT / 'cpppj/recovery-hash-evidence.json'
+        hash_path = ROOT / 'cpppj/hash.json'
         if hash_path.exists():
             evidence = json.loads(hash_path.read_text(encoding='utf-8'))
             if evidence['x87_checked_control_words'] != ['0x27f','0x37f'] or any(evidence['assert_reports'].values()):

@@ -25,7 +25,7 @@ BUFFER=ARENA+0x6000
 OUT=ARENA+0x9000
 GDT=ARENA+0xa000 # VFX의 실제 push ds/pop es 뒤에도32비트 평면 스택을 유지하는 격리 descriptor다.
 FIXTURE=ROOT/'cpppj/tests/fixtures/shape-to-buffer-x86.tsv' # 전체 실제 픽셀과 메타데이터를 저장한다.
-REPORT=ROOT/'cpppj/recovery-shape-to-buffer-evidence.json' # 기존 생성/입자/Sources 격자와 별도 출처다.
+REPORT=ROOT/'cpppj/shape-to-buffer.json' # 기존 생성/입자/Sources 격자와 별도 출처다.
 
 
 class ShapeToBufferOracle(DudeSpawnOracle):

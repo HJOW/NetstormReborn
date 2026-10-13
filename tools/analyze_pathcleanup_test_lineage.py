@@ -10,7 +10,7 @@ from pathlib import Path
 
 # 최초 원본 관찰/컴파일 전 테스트를 별도로 보존하고 fixture·production은 바꾸지 않는다.
 ROOT=Path(__file__).resolve().parent.parent
-REPORT=ROOT/'cpppj/recovery-pathcleanup-evidence.json'
+REPORT=ROOT/'cpppj/pathcleanup.json'
 PRIOR=ROOT/'extracted/pathcleanup-before-default-ctor-evidence.json'
 BEFORE=ROOT/'extracted/pathcleanup-before-default-ctor-tests.cpp'
 TEST='cpppj/tests/PathCleanupTests.cpp'

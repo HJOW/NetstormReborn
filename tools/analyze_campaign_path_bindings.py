@@ -8,7 +8,7 @@ from pathlib import Path
 import analyze_priest_arrival_test_syntax_lineage as prior
 
 ROOT=Path(__file__).resolve().parents[1] # 같은 workspace의 준비 소스/보고서 바이트를 읽는다.
-REPORT=ROOT/'cpppj/recovery-campaign-path-bindings-evidence.json' # 새 원본0/CPP미실행의 준비 연결 자료다.
+REPORT=ROOT/'cpppj/campaign-path-bindings.json' # 새 원본0/CPP미실행의 준비 연결 자료다.
 
 def sha(path):
     """파일 전체 SHA256을 계산하며 토큰 일부만으로 현재 출처를 대신하지 않는다."""

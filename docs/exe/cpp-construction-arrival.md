@@ -48,4 +48,4 @@
 
 두 PE **153개씩, 306개** 입력은 예측/서버 경계 포함·모든 일반 state·abstract/buried·needsBuilder 필터, 네 해시 단계·좌표/발자국·무대상·여러 서버/예측 후보·debug 대기, callback 뒤 후행 abstract/flags/좌표·저장된 next/현재 duration 변경을 다룬다. 두 x87 제어 워드의 결과/ret8/스택/top을 확인하며 정밀도 재실행은 새 독립 입력으로 더하지 않는다.
 
-fixture `constructionarrival-x86.tsv`, 근거 `recovery-constructionarrival-evidence.json`, 로그 `extracted/constructionarrival-oracle-initial.log`·`constructionarrival-verify.log`다. C++ 검사는 원본/디컴파일/Python 없이 fixture의 전체 반환/효과 순서를 실제 finder를 통해 재생한다. 원본 관찰에는 Begin 정수 범위도 저장되어 있으며 C++ 종단 비교는 반환/효과를 비교한다. 실제 하위 Start/공통 자기 삭제 및 캠페인 진행은 월드 통합 검사 범위다.
+fixture `constructionarrival-x86.tsv`, 근거 `constructionarrival.json`, 로그 `extracted/constructionarrival-oracle-initial.log`·`constructionarrival-verify.log`다. C++ 검사는 원본/디컴파일/Python 없이 fixture의 전체 반환/효과 순서를 실제 finder를 통해 재생한다. 원본 관찰에는 Begin 정수 범위도 저장되어 있으며 C++ 종단 비교는 반환/효과를 비교한다. 실제 하위 Start/공통 자기 삭제 및 캠페인 진행은 월드 통합 검사 범위다.

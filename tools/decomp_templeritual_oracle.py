@@ -22,7 +22,7 @@ OUT=HEAP+0x8000 # 원본포인터반환의좌표2개저장소다.
 OWNER,POP=HEAP+0xf000,HEAP+0xf010 # 명시가상owner/Pop관찰진입점이다.
 MEMORY=HEAP+0x6000 # 원본new0x28이반환하는격리메모리다.
 FIXTURE=ROOT/'cpppj/tests/fixtures/templeritual-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-templeritual-evidence.json'
+REPORT=ROOT/'cpppj/templeritual.json'
 
 
 def inputs():
@@ -139,7 +139,7 @@ def generate(smoke=False):
     # C++은기존탭fixture읽기와동일한명시입력/원본출력만사용한다.
     for row in rows:
         q=row['queries'];columns.append([row['edition'],','.join(map(str,row['input'])),','.join(map(str,row['position'])),','.join(map(str,[q['count'],q['stage'],*q['anchor'],*q['point'],q['rune'],q['strong'],q['abstract']])),row['effects'],';'.join(row['raw']),str(row['boss'])])
-    FIXTURE.write_text('# edition mode,frame,side,profile,boss,reserve,spot,position,mutation priestXY,runeXY_bits queries effects slots5,6,7,8 boss\n'+'\n'.join('\t'.join(row) for row in columns)+'\n',encoding='utf-8',newline='\n');files.update(ROOT/name for name in ('cpppj/src/o/RawTempleRitual.h','cpppj/src/o/RawTempleRitual.cpp','cpppj/src/o/RawSquidHitPoints.h','cpppj/src/o/RawSquidHitPoints.cpp','cpppj/tests/TempleRitualTests.cpp','cpppj/recovery-squidhitpoints-lineage-evidence.json','tools/decomp_rawfinder_oracle.py','tools/decomp_bridgeeffects_oracle.py','tools/decomp_bridgedecay_oracle.py'))
+    FIXTURE.write_text('# edition mode,frame,side,profile,boss,reserve,spot,position,mutation priestXY,runeXY_bits queries effects slots5,6,7,8 boss\n'+'\n'.join('\t'.join(row) for row in columns)+'\n',encoding='utf-8',newline='\n');files.update(ROOT/name for name in ('cpppj/src/o/RawTempleRitual.h','cpppj/src/o/RawTempleRitual.cpp','cpppj/src/o/RawSquidHitPoints.h','cpppj/src/o/RawSquidHitPoints.cpp','cpppj/tests/TempleRitualTests.cpp','cpppj/squidhitpoints-lineage.json','tools/decomp_rawfinder_oracle.py','tools/decomp_bridgeeffects_oracle.py','tools/decomp_bridgedecay_oracle.py'))
     REPORT.write_text(json.dumps(dict(host='HJOW-Athlon',total=len(rows),editions=editions,files={p.relative_to(ROOT).as_posix():sha(p) for p in sorted(files)},game_runs=0,smoke=smoke,limits=['실제Ritual/단계/count/SHP/좌표/사제·룬finder/공통HPsetter는원본몸체다.','frame setter/new/Shared/create/sound/가상owner/Pop은명시관찰경계다.','Rune 실제postPop304/건설시작,신전305/306/307전체consumer·GameWorld/UI는후속이다.']),ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n');print('신전 의식 native 고유 입력:',len(rows))
 
 

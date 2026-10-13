@@ -10,11 +10,11 @@ from pathlib import Path
 
 # 부모/생산/534 결과는 그대로 두고 선택 소비자 검사만 교정한다.
 ROOT=Path(__file__).resolve().parent.parent
-HISTORY='cpppj/recovery-history/fortworldload-before-consumer-golden'
+HISTORY='cpppj/hist/fortworldloa-075e2'
 TEST='cpppj/tests/FortWorldLoadBindingTests.cpp'
-REPORT=ROOT/'cpppj/recovery-fortworldload-consumer-lineage-evidence.json'
-PREVIOUS='cpppj/recovery-fortworldload-binding-evidence.json'
-GOLDEN='cpppj/recovery-fortworldload-builder-consumer-evidence.json'
+REPORT=ROOT/'cpppj/fortworldload-consumer-lineage.json'
+PREVIOUS='cpppj/fortworldload-binding.json'
+GOLDEN='cpppj/fortworldload-builder-consumer.json'
 
 
 def pin(name):

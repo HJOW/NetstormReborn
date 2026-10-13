@@ -52,7 +52,7 @@ float payload = float(numerator / 객체 최대 HP)
 
 각 판본 **2,392개**, 총 **7,176개**다. 두 x87 정밀도 `0x027f`/`0x037f`에서 flags/extra/state·소유자/원래 WORD·목록 중복/포화·기존 회복·확보 실패·HP 1/4·큰 값/음수 HP를 관찰한다. [`priestpostpop-x86.tsv`](../../cpppj/tests/fixtures/priestpostpop-x86.tsv)의 목록 저장소·모든 소유자 칸·호출 순서/인자·payload 비트·raw 슬롯 전체를 C++과 비교한다. 유효 최대 HP 0, CD의 Pentium FDIV 보정 경로, 사제 전용 이벤트 처리기는 이번 격자에 포함하지 않는다.
 
-[`recovery-priestpostpop-evidence.json`](../../cpppj/recovery-priestpostpop-evidence.json)은 PE/내보내기/도구/입력 목록/fixture SHA와 실제/대체 진입 수, 중단 수 및 assert/OS 호출 0을 기록한다. 실제 최대 HP 진입 수가 예약 수와 같고 타입 HP 진입 수가 그 두 배인지 감사한다. 일반 CTest는 원본/Python/Ghidra 없이 저장 fixture만 읽는다.
+[`priestpostpop.json`](../../cpppj/priestpostpop.json)은 PE/내보내기/도구/입력 목록/fixture SHA와 실제/대체 진입 수, 중단 수 및 assert/OS 호출 0을 기록한다. 실제 최대 HP 진입 수가 예약 수와 같고 타입 HP 진입 수가 그 두 배인지 감사한다. 일반 CTest는 원본/Python/Ghidra 없이 저장 fixture만 읽는다.
 
 ## 통합·검증 범위
 

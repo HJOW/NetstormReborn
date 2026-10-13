@@ -25,7 +25,7 @@ OUTPUT,STORE_FLOAT,PARENT_QUERY=0x1131b000,STOP+0x800,STOP+0x180
 KEYS=('kind','frame','delta','position','velocity','acceleration','fired','sprung','targetstate',
       'launch','due','aim','tx','ty','directions','frames','hp')
 FIXTURE=ROOT/'cpppj/tests/fixtures/gunarcher-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-gunarcher-evidence.json'
+REPORT=ROOT/'cpppj/gunarcher.json'
 
 
 def wide(value):

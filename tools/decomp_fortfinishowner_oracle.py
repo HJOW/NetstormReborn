@@ -9,7 +9,7 @@ from unicorn.x86_const import *
 
 # 고유 fixture/근거와 격리 메모리의 목록·Player·local seed 주소다.
 FIXTURE=ROOT/'cpppj/tests/fixtures/fortfinishowner-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-fortfinishowner-evidence.json'
+REPORT=ROOT/'cpppj/fortfinishowner.json'
 LIST=DATA+0x37000
 PLAYERS=DATA+0x38000
 LOCAL=DATA+0x36f00

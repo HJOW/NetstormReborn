@@ -61,4 +61,4 @@ cmake --build cpppj/build --config Release
 ctest --test-dir cpppj/build -C Release --output-on-failure
 ```
 
-기본 CTest는 저장한 [fixture](../../cpppj/tests/fixtures/constructionrequest-x86.tsv)를 읽고 원본 게임/Python을 실행하지 않는다. [근거 JSON](../../cpppj/recovery-constructionrequest-evidence.json)·도구·새 문서는 UTF-8이다. 새 내보내기는 Git 제외 `extracted/constructionrequest/`, 로그는 `extracted/constructionrequest-*.log`에 있다.
+기본 CTest는 저장한 [fixture](../../cpppj/tests/fixtures/constructionrequest-x86.tsv)를 읽고 원본 게임/Python을 실행하지 않는다. [근거 JSON](../../cpppj/constructionrequest.json)·도구·새 문서는 UTF-8이다. 새 내보내기는 Git 제외 `extracted/constructionrequest/`, 로그는 `extracted/constructionrequest-*.log`에 있다.

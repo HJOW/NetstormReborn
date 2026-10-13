@@ -29,7 +29,7 @@
 
 [`decomp_priestpop_oracle.py`](../../tools/decomp_priestpop_oracle.py)는 원본 PE의 공통 Pop 진입부터 실제 firstPop/Activate/사제 wrapper의 정상 반환까지 실행한다. 세 판본 **각 1,280개·총 3,840개**, 두 x87 제어 워드 `0x027f`/`0x037f`에서 같은 관찰을 저장했다. 각 PE Pop/Activate/사제 wrapper **2,560회**, firstPop **1,280회**이며 총 정상 Pop 반환 **7,680회**다.
 
-입력은 extra 0/1/8/9/128/129/136/160, flags 0/8/0x50/0x800/0x2000, HP 20/150, 지면 0/6, 방향 A/J, 기존 회복/확보 성공 여부다. 첫 등록·재등록의 정규화 flags, raw 슬롯 전체, 해시 머리, stale 칸을 포함한 사제 목록과 소유자 표, 효과 순서를 대조한다. 스택/비영 EBX·ESI·EDI·EBP/SEH/x87 제어·TOP, 공통 깊이, 허용 코드/쓰기, assert/OS 0, SHA/행/입력 누락·중복과 실제 진입을 감사한다. [fixture](../../cpppj/tests/fixtures/priestpop-x86.tsv), [근거 JSON](../../cpppj/recovery-priestpop-evidence.json).
+입력은 extra 0/1/8/9/128/129/136/160, flags 0/8/0x50/0x800/0x2000, HP 20/150, 지면 0/6, 방향 A/J, 기존 회복/확보 성공 여부다. 첫 등록·재등록의 정규화 flags, raw 슬롯 전체, 해시 머리, stale 칸을 포함한 사제 목록과 소유자 표, 효과 순서를 대조한다. 스택/비영 EBX·ESI·EDI·EBP/SEH/x87 제어·TOP, 공통 깊이, 허용 코드/쓰기, assert/OS 0, SHA/행/입력 누락·중복과 실제 진입을 감사한다. [fixture](../../cpppj/tests/fixtures/priestpop-x86.tsv), [근거 JSON](../../cpppj/priestpop.json).
 
 **원본 실행의 경계:** Carrier 몸체는 정규화 flags 기록과 base 깊이 감소로 대체한다. Regular 검색/new/생성, 낙하, 보호막 생성/삭제도 명시 경계다. 타입/프레임/SHP/지면은 합성 입력이고 비멀티플레이·표시 억제 경로다. Carrier/공통 장부·사제 회복/낙하 몸체는 앞 단계 독립 근거와 이번 C++ 합성 검사로 연결한다. 전체 원본 게임/오디오/GUI 실행 검사는 아니다.
 

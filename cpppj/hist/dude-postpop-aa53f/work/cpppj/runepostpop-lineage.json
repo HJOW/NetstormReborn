@@ -1,0 +1,45 @@
+{
+  "host": "HJOW-Athlon",
+  "baseline_commit": "b76adf95c02c2837b2a6fbe3b5559ef8c91e9247",
+  "lineage": {
+    "files": {
+      "cpppj/src/o/SquidPostPop.h": {
+        "baseline_normalized_sha256": "3d25d437086308444cd20cb86ba39723d5427318fd28374733c0f1cffd65c8e5",
+        "current_sha256": "658f7b4f1cd0f2844395700f9173bb916f75e320c7d03c2304977ff8b499e113",
+        "existing_token_sha256": "359e4c47d8998f0ca7ffc9199161cdc97de957fd5fcdc1549feefbd15baafc5b",
+        "all_existing_source_unchanged": true
+      },
+      "cpppj/src/o/SquidPostPop.cpp": {
+        "baseline_normalized_sha256": "311ca58318b268ed969274ad1f4d058fbec6fee1d3e6777ea7b44b74acaf8bfc",
+        "current_sha256": "9a88465d2b1d6e7cbdd1c7516fe051741012612805a28a8c848739763fccdcfb",
+        "existing_token_sha256": "4c6c910dc261467f18e1eb811f9111efdf9e79425bf58c4653c648da6e8d7c6a",
+        "all_existing_source_unchanged": true
+      }
+    },
+    "prior_reports": {
+      "cpppj/postpop.json": {
+        "sha256": "73da14c11b5d4bd1c51e65f512895aca3ef1c9434eb34eb2f79087d022d97604",
+        "total": null,
+        "new_unique_cases": 0
+      },
+      "cpppj/pop.json": {
+        "sha256": "5b87b320324c1549cf4ce9e48589a55a409aef40b2d24516f906374429a18b80",
+        "total": null,
+        "new_unique_cases": 0
+      },
+      "cpppj/priestpostpoptail.json": {
+        "sha256": "25d4b46d120f0d9e2bad808216452aa8a42b1eaa973fc4130afdedf5a7ab6029",
+        "total": 6144,
+        "new_unique_cases": 0
+      },
+      "cpppj/constructionprocess.json": {
+        "sha256": "bb345e759dbac70e97b6f4a40829efd1b1bd69d39f0734cd817c5b3dc89f946f",
+        "total": 2868,
+        "new_unique_cases": 0
+      }
+    }
+  },
+  "tool_sha256": "01d980d4d774bd66422dbe62d2f6d30014fcaa5616a800488cb29680f1f224ca",
+  "new_unique_cases": 0,
+  "scope": "새Rune등록/Validate/Activate분기만역제거하면기존전체소스/토큰동일. 기존공통/Pop/사제/건설native는새관찰에합산하지않는다."
+}

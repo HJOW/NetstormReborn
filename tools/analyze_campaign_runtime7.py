@@ -9,7 +9,7 @@ from analyze_campaign_runtime4 import ROOT, digest, test_count
 from analyze_campaign_runtime6 import read_log, audit_files
 
 # 이전 입력/반복 재생성은 합산하지 않으며 정상과 assert 입력을 분리한다.
-REPORT = ROOT / 'cpppj/recovery-campaign-runtime7-evidence.json'
+REPORT = ROOT / 'cpppj/run7.json'
 MODULES = {'pathcleanup': (1716, 16), 'terrainstamp': (1560, 0),
            'priestritualactions': (1752, 0), 'archermissile': (1888, 0)}
 # substring 필터는 일부 Archer 검사를 다시 포함하므로 실제 검사 이름 집합으로 중복을 제거한다.
@@ -29,7 +29,7 @@ def generate():
     names = set()
     # 각 모듈의 실제 고유 입력/정상과 assert 및 현재 모든 출처 바이트를 확인한다.
     for name, (normal, assertions) in MODULES.items():
-        path = ROOT / f'cpppj/recovery-{name}-evidence.json'
+        path = ROOT / f'cpppj/{name}.json'
         data = json.loads(path.read_text(encoding='utf-8'))
         if data.get('host') != 'HJOW-Athlon' or data['total'] != normal + assertions:
             raise RuntimeError(f'원본 PC/행 수 오류: {name}')
@@ -44,7 +44,7 @@ def generate():
         paths.extend([path, fixture])
     # 교정된 구현과 보존된 원본 입력의 연결도 최종 스냅샷에 고정한다.
     for name in LINEAGES:
-        path = ROOT / f'cpppj/recovery-{name}-evidence.json'
+        path = ROOT / f'cpppj/{name}.json'
         data = json.loads(path.read_text(encoding='utf-8'))
         # 주석 교정의 당시 cpp SHA는 mask_successor가 보존하므로 전용 감사기의 과거/현재 연결을 사용한다.
         if 'files' in data and name != 'terrainstamp-enum-comments':
@@ -58,7 +58,7 @@ def generate():
                   ROOT / 'tools/analyze_archermissile_correction.py'])
     # 각 성공 로그를 확인한 뒤 등록 검사 이름의 집합으로 반복된 substring 실행을 제거한다.
     for name, expected in FILTERS.items():
-        path = ROOT / f'extracted/campaign-runtime7-{name}-final-tests.log'
+        path = ROOT / f'extracted/run7-{name}-final.log'
         actual = test_count(path)
         if actual != expected:
             raise RuntimeError(f'집중 검사 수 오류: {name}')
@@ -67,17 +67,17 @@ def generate():
         paths.append(path)
     if len(names) != 13:
         raise RuntimeError('집중 검사 고유 이름 수 오류')
-    whole = ROOT / 'extracted/campaign-runtime7-all-final-tests.log'
+    whole = ROOT / 'extracted/run7-all-final.log'
     total = test_count(whole)
     if total != 983:
         raise RuntimeError('최종 전체 검사 수 오류')
-    build = ROOT / 'extracted/campaign-runtime7-build-final.log'
+    build = ROOT / 'extracted/run7-build-final.log'
     content = read_log(build)
     if re.search(r'\b(?:warning|error)\s+[A-Z]+\d+\s*:', content, re.I):
         raise RuntimeError('최종 빌드 경고/오류 존재')
     if 'netstorm_tests.exe' not in content or 'NetstormCpp.exe' not in content:
         raise RuntimeError('두 Release 타깃 빌드 요약 없음')
-    paths.extend([whole, build, ROOT / 'cpppj/recovery-campaign-runtime6-evidence.json',
+    paths.extend([whole, build, ROOT / 'cpppj/run6.json',
                   ROOT / 'cpppj/src/o/CMakeLists.txt', ROOT / 'cpppj/tests/CMakeLists.txt'])
     # 신규 구현·기존 Missile 변경 및 실제 소비자 검사 소스를 현재 바이너리와 함께 고정한다.
     for name in ('RawPathCleanup', 'RawTerrainStamp', 'RawSquidRegion', 'RawPriestRitualActions', 'RawMissile'):
@@ -106,7 +106,7 @@ def verify():
     """저장한 최종 파일 바이트와 실제 전체 검사 성공 요약을 감사한다."""
     data = json.loads(REPORT.read_text(encoding='utf-8'))
     audit_files(data)
-    if test_count(ROOT / 'extracted/campaign-runtime7-all-final-tests.log') != data['all_tests']:
+    if test_count(ROOT / 'extracted/run7-all-final.log') != data['all_tests']:
         raise RuntimeError('최종 전체 검사 수 오류')
     print('경로 정리·초기 도장·사제 의식 동작·투사체 최종 SHA/검사 감사 통과')
 

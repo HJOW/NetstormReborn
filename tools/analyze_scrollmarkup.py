@@ -17,7 +17,7 @@ from analyze_stylemarkup import string,number
 
 # 계획/기록은 저장소 안에서 생성하며 두 보호 PE는 읽기만 한다.
 PLAN=ROOT/'tools/ghidra/scrollmarkup-functions.json'
-REPORT=ROOT/'cpppj/recovery-scrollmarkup-evidence.json'
+REPORT=ROOT/'cpppj/scrollmarkup.json'
 # 실제 파서/정규식·맞춤 전역과 복사된 36바이트 SHP 헤더의 높이 비교 명령이다.
 EDITIONS={
     'originals':{

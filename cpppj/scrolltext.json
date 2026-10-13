@@ -1,0 +1,182 @@
+{
+  "last_decompile_host": "HJOW-Athlon",
+  "recorded_at": "2026-10-13T01:17:12.136844+09:00",
+  "method": "두 실제 PE 읽기 전용 정적 내보내기·가상 표/기계어/초기 정렬 판독; 게임/에뮬레이터 실행 없음",
+  "cpp_comparison": "미수행: 새 테스트 추가/실행·독립 원본/C++ 생성/소유/부착/태그/드래그/픽셀 대조·GUI/게임 실행 없음",
+  "new_original_observations": 0,
+  "new_cpp_comparisons": 0,
+  "implementation": {
+    "store": "0x38 별도 토큰의 실제 128칸 버퍼·안정된 같은 state/handler·소멸/free 순서·Gump 등록 제외·원본 미완료 끝 칸 누락 유지",
+    "create": "기본 등록/partial fields·문맥/저장 전 배율·overlay→현재 전역 Slider 9×100/숨김/우측 mode 1→Bottom 요청→18 비트",
+    "lifetime": "현재 owned buffer만 소멸/free/포인터 0→기본 scalar·borrowed 포인터 유지·자식 우선 Slider 삭제",
+    "attach": "기본 Attach→현재 Slider Push/높이/visible(2&4)→우측 mode 1→-1일 때 기존 scroll 요청→폭 dirty",
+    "input": "Slider change 발신 검사/현재 position·±5/±높이·refresh·태그 왼쪽/오른쪽·빈 영역 캡처/release·커서 1/15/16",
+    "frame": "event/x 무시·poll 없음·bit 4·전달 y-이전 y의 반대 상대 요청·현재 scroll 기준",
+    "editions": "폭 비교 unordered: 패치 dirty/저장, CD 생략; 반환/요청/현재 next·필드 조회는 기존 처리기 재사용",
+    "binding": "같은 버퍼/Core 표시·트리/재귀/부모 Bubble/직접 캡처/프레임/수명 분배에 연결"
+  },
+  "boundaries": [
+    "독립 PE/C++ 생성/소유/대기 요청/현재 Slider/태그/커서/캡처/드래그/픽셀 대조",
+    "W 명령/전체 다중 줄 스타일 파서·버퍼 교체/추가 설정·메뉴/Form·자동 raw Client UI·건설/미션 완주",
+    "현재 실제 Cursor 선택/문자열 ID·타입 전역/allocator 토큰 공급",
+    "생성자 예외/EH 정리·극단 x87 80비트 값·콜백 도중 현재 표시 줄/조각 반납 또는 버퍼 교체"
+  ],
+  "editions": {
+    "originals": {
+      "binary": "originals/Netstorm.exe",
+      "requested_functions": [
+        "004bc060",
+        "004bc890",
+        "004bc930",
+        "004bc6b0",
+        "004bc450",
+        "004ba5e0",
+        "004653c0",
+        "004bbe40",
+        "004bbf20"
+      ],
+      "exported_functions": [
+        "004bc060",
+        "004bc890",
+        "004bc930",
+        "004bc6b0",
+        "004bc450",
+        "004ba5e0",
+        "004653c0",
+        "004bbe40",
+        "004bbf20"
+      ],
+      "virtual_table": {
+        "address": "0051454c",
+        "slots": [
+          "004bc930",
+          "00466740",
+          "00464a50",
+          "00464ab0",
+          "00464d10",
+          "00464d60",
+          "00464560",
+          "00419df0",
+          "004bc6b0",
+          "004ba6f0",
+          "004bc450",
+          "004ba5e0"
+        ],
+        "scalar_delete": "004bc930",
+        "attach": "004bc6b0",
+        "draw": "004ba6f0",
+        "handle": "004bc450",
+        "broadcast": "004ba5e0"
+      },
+      "initial_alignment": 46,
+      "event_globals": {
+        "change": "005427d0",
+        "step": "005427b0",
+        "refresh": "00542764",
+        "cursor": "005427e4",
+        "left_tag": "0054278c",
+        "right_tag": "00542790"
+      },
+      "event_values": "사건 ID는 런타임 문자열 초기화 뒤 공급; PE 초기 0을 실제 ID로 사용하지 않음"
+    },
+    "originalCD": {
+      "binary": "originalCD/NETSTORM.EXE",
+      "requested_functions": [
+        "004b5c30",
+        "004b5e70",
+        "004b7e70",
+        "004b6bd0",
+        "004b6560",
+        "004b6910",
+        "004b6310",
+        "00494410",
+        "004b50a0",
+        "004b5190",
+        "004b5ef4"
+      ],
+      "exported_functions": [
+        "004b5c30",
+        "004b5e70",
+        "004b7e70",
+        "004b6bd0",
+        "004b6560",
+        "004b6910",
+        "004b6310",
+        "00494410",
+        "004b50a0",
+        "004b5190",
+        "004b5ef4"
+      ],
+      "virtual_table": {
+        "address": "00505d80",
+        "slots": [
+          "004b7e70",
+          "00492ff0",
+          "004937e0",
+          "00493840",
+          "00493bb0",
+          "00493c00",
+          "00493000",
+          "00403900",
+          "004b6bd0",
+          "004b69e0",
+          "004b6560",
+          "004b6910"
+        ],
+        "scalar_delete": "004b7e70",
+        "attach": "004b6bd0",
+        "draw": "004b69e0",
+        "handle": "004b6560",
+        "broadcast": "004b6910"
+      },
+      "initial_alignment": 46,
+      "event_globals": {
+        "change": "00512958",
+        "step": "00512938",
+        "refresh": "005128ec",
+        "cursor": "0051296c",
+        "left_tag": "00512914",
+        "right_tag": "00512918"
+      },
+      "event_values": "사건 ID는 런타임 문자열 초기화 뒤 공급; PE 초기 0을 실제 ID로 사용하지 않음"
+    }
+  },
+  "files": {
+    "tools/analyze_scrolltext.py": "e3be0b444f4ef12e69fe963e31442f08dec76a4c7fdfd78b92ad3a67100222e9",
+    "tools/analyze_styletext.py": "a69336b3064208e08e5fcea4e84f8427eeaa35512673c64f273c39b4b91877b1",
+    "tools/ghidra/scrolltext-functions.json": "033e7206bf7f3294e6a9cb01fbf2be08a68a496792989693c7a95949ce22599b",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/scrolltext/originals/creation.c": "192593d4dcc4bbffb5c7445c0ed2baa8f380c7df07386d10fadd967e9d3be12c",
+    "extracted/scrolltext/originals/functions.tsv": "3a3b76e4728045ccc8891f9baa49a5f7da05e3b68a664e9bd318a1341e21d76e",
+    "extracted/scrolltext/originals/assembly.txt": "c741e1695a35064b04184338b87a983c665df05fa1ba86e8445d8894da638759",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "extracted/scrolltext/originalCD/creation.c": "6fccf8ae5094f6802c19254a435ff3342b2594df8818dd9b02d516b86a3f4e41",
+    "extracted/scrolltext/originalCD/functions.tsv": "7bd9340f153e13d3ab27b989b1b6b818024217f810405543c0873268c0ed19f8",
+    "extracted/scrolltext/originalCD/assembly.txt": "aaab856bf93feed6893ccf91a381257fbc36cb8fe39171166c1c343617970596",
+    "cpppj/src/client/ScrollingTextGumpWidgets.h": "af2aa0767b114fc43eca7c0190b678e382b133dd55c10207a5189503dd16632e",
+    "cpppj/src/client/ScrollingTextGumpWidgets.cpp": "cb6895cf3764626bd921cfee1ab60b459d91209fe4196745f782b963f39c9a84",
+    "cpppj/src/client/TextGump.h": "5d4afb0258b909fa687c2181b7847846b98f27156b0c0b84707456071ecb1791",
+    "cpppj/src/client/TextGump.cpp": "6a78e6868367034b62b25588c77622a997c9752c8943c5d56fc893e8f9796c2a",
+    "cpppj/src/client/StyleTextBuffer.h": "ee595397e0cf2059cbf6d8c3df24987b6ce0c856f8296179f8cd8f67b3cbcb3e",
+    "cpppj/src/client/StyleTextBuffer.cpp": "2aa0f6983c460aa3d5a960085a8b1ed86f153cb0916246329878f6d1b77f8ea2",
+    "cpppj/src/client/StyleText.h": "5cbf6d490dcfc4dd2a89c8f10edd49f6ba93557abba0eb8d2d0ce836ca14032d",
+    "cpppj/src/client/StyleText.cpp": "fe2c920a676ebd7c13ae5815f76d1b9050eeaef8321e881f83f20f4615458a6f",
+    "cpppj/src/client/ScrollGumpWidgets.h": "37f69cdaee1b34ce96d5834a73e2c788c08bab6bf3669dd66078dc0656404e43",
+    "cpppj/src/client/ScrollGumpWidgets.cpp": "6b84ae58ef54c1efbc18fa0b7c3d88cffc3586f568a5bc636f9117059ce2fd86",
+    "cpppj/src/client/ScrollGump.h": "baf897c0dfa001fd243722844f59ce251cb246d757f029066f2b9c30a07972b6",
+    "cpppj/src/client/ScrollGump.cpp": "05da98a2e5746f7eef106df724d72556beaecb394b5a0e627fde8c57f4be8d4c",
+    "cpppj/src/client/GumpCreate.h": "253ea65d7c91385d5ebe66e44c627c4ccc3dc9fe7a9749e2d0697c45fb3efa14",
+    "cpppj/src/client/GumpCreate.cpp": "4eb77de7063d33238c6bee30b8a282c89506c38172be0c4131afc7b843c33cd9",
+    "cpppj/src/client/GumpTree.h": "998ea4788eac87aca2abc1077c320dfb547e6041f5f6818630afd375e6b8e71c",
+    "cpppj/src/client/GumpTree.cpp": "b623d624f056ef2117dea2393334e1d8b30666b2d8243e49dc53e5e56b633c56",
+    "cpppj/src/client/GumpLifetime.h": "2f27d5772a112ef7d7e784e4b749ca45f91befff15a177f7111389ff0570920d",
+    "cpppj/src/client/GumpLifetime.cpp": "62cb2a456d30864bbf940a9256ae988ee1ae317b0e420704543d26dcb9eb3c7c",
+    "cpppj/src/client/GumpEvents.h": "0532493002f436fd2dc60a2c61c84981e75f9ebd10b56ca5b3de682d06bb830c",
+    "cpppj/src/client/GumpEvents.cpp": "d90edc0bf0342a1136f69225be6a0bc88a0ed8fabd94a460c05c05535761d3dd",
+    "cpppj/src/client/GumpInput.h": "9c582ff7e291434feff349bbe5a08859b0f168df15e404b390219f92734ba5c2",
+    "cpppj/src/client/GumpInput.cpp": "37f593093712024d5edadada70d6fe3d00470da109877f770b805ceb7cf06df0",
+    "cpppj/src/client/GumpFrame.h": "503708eff4865bd53189917287d72239135a398806673947bb50fc9de1e28353",
+    "cpppj/src/client/GumpFrame.cpp": "8b11b43508eb63675acd1d29d39974814575dcf437089a2c76632deec7b19871",
+    "cpppj/src/client/CMakeLists.txt": "e052ad7f824b0384c26ff8a68665c9cea31868e4e1fbabb197dc8c2451d830c1"
+  }
+}

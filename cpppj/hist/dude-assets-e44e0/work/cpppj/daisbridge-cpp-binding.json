@@ -1,0 +1,80 @@
+{
+  "host": "HJOW-Athlon",
+  "decompile_date": "2026-10-14",
+  "normal_inputs": 640,
+  "assert_inputs": 0,
+  "new_native_inputs": 0,
+  "initial_smoke_inputs_not_added": 14,
+  "editions": {
+    "originals": {
+      "normal_inputs": 320,
+      "path_created": 64
+    },
+    "originalCD": {
+      "normal_inputs": 320,
+      "path_created": 64
+    }
+  },
+  "x87_different_inputs": 18,
+  "x87_different_time_words": 26,
+  "x87_time_word_deltas": {
+    "originals:1": 12,
+    "originals:-1": 14
+  },
+  "test_count": 1,
+  "test_prefix": "rawDaisBridge_",
+  "fixture_macro": "NETSTORM_DAISBRIDGE_FIXTURE",
+  "history": {
+    "cpppj/hist/daisbridge-i-00c54/cpppj/daisbridge.json": "aa724e3dc46eca749e494ecfa78e16e517ca6b20ebf060ea8f50d1b92682e9e8",
+    "cpppj/hist/daisbridge-i-00c54/cpppj/tests/fixtures/daisbridge-x86.tsv": "9d0d9f670fbcda662b19916b55e24a991ec664b58541ee96bcdeecd46a37d04e",
+    "cpppj/hist/daisbridge-i-00c54/extracted/daisbridge-native-initial-smoke.log": "beb01a7734b5adad996937a5027df995df826dcea68405f3bbf40d3e933c9e3e",
+    "cpppj/hist/daisbridge-i-00c54/extracted/daisbridge-native-smoke-with-rune-helper.log": "a4e2854d858000b523d82d7c2a43b14efc1246a23e48de7623f5f01273c4e2b1",
+    "cpppj/hist/daisbridge-i-00c54/tools/decomp_daisbridge_oracle.py": "714192215b5bb6b6a499d2bb97e33b8c543aa32c74e5d86afaac6a5f60f52223"
+  },
+  "files": {
+    "cpppj/daisbridge.json": "979ed6a1e51dbe7273a3646ba02b3451d6da09cf78a2f8b499cbc7a4d3f9b561",
+    "cpppj/src/client/RawPriestWorldBindings.cpp": "8c0c047440a53acf76f1233cb7f322b31b927a44e3052c828858f345f78aede0",
+    "cpppj/src/client/RawPriestWorldBindings.h": "d0f36f7e7484c797d7361575fe32e0c37d6f7f1f2bf19e2bc96f87c93983acc9",
+    "cpppj/src/o/RawCarrierPreDestroy.cpp": "18a4daeff34834590cfbc4d1b73f64475a009b4815a88ac98aa76f5b1e618c95",
+    "cpppj/src/o/RawCarrierPreDestroy.h": "d1f5903fc44c51dc7c6985ff073851b31f46f3f6fdd1a972cb568440cf7d173a",
+    "cpppj/src/o/RawContainedLookup.cpp": "418921ae7f41be8c059293e1201c2539716da9e2c01808373c233e8f3d48437e",
+    "cpppj/src/o/RawContainedLookup.h": "6b61feb38ffcb4a4ef021dcc39cbc759274e91b8d476f2caa14f0cf771b74410",
+    "cpppj/src/o/RawDaisRegular.cpp": "c1a167728b02f382cbae23454e4aba1046c91a7284dbe4c6e206e856ccc4c433",
+    "cpppj/src/o/RawDaisRegular.h": "fdc080a0ae1ff54909a1cf59a6b9be626e7a7d96c5103072c9325d13efb88ed3",
+    "cpppj/src/o/RawPathCleanup.cpp": "3c8de01449f2773d859b31dd3485480d5cc6fbfdb9a82dae5effc4b0d9491da8",
+    "cpppj/src/o/RawPathCleanup.h": "ae5012944517d2ca56cd1c19629d50c64ff65d9ee3d43f0d87b1bbe5ba0fa8d0",
+    "cpppj/src/o/RawPathData.cpp": "ad7b25e89d79c84faa576aa50fb1efb1e9c71e6d96abc439527b798870a2d345",
+    "cpppj/src/o/RawPathData.h": "13e0bf03c18aa2936c623c0b57d03e3fdb641375dc669daa77bfaae9b5f6e370",
+    "cpppj/src/o/RawPathProcess.cpp": "af93061c5b7da70235c476e250bd462a81dd3243ea7fc3b8823229c11831c4f1",
+    "cpppj/src/o/RawPathProcess.h": "b158c671cac9f88eaf9897ad9c11ba024142874297a31f6068f4f2eadb260656",
+    "cpppj/src/o/RawPathRuntime.cpp": "eb5f55911d1447a6133f494131412337e116847122111349a369cc7d94e61829",
+    "cpppj/src/o/RawPathRuntime.h": "37c7cd34a4f9ea159f87364179d0909d1bd8ef694dba7c14e0f9a9e3f45798b2",
+    "cpppj/src/o/RawPathSearch.cpp": "a7597d758972707a48ab25260af4ba877798c9c91ed01e0471d84819005d2858",
+    "cpppj/src/o/RawPathSearch.h": "471c37aaeff1f5b7e157f52bfb20984c55e993fa59f7c33696fb42772107a7ac",
+    "cpppj/src/o/RawPathStart.cpp": "289908568a07c6da645f13b4d5a4bd2c97d8eafa184a1609dc121deef15f4501",
+    "cpppj/src/o/RawPathStart.h": "40417a5eaad905be22e72716968f268b78deeafe4dfcf1a744de85433b75d674",
+    "cpppj/src/o/RawPriestRitualActions.cpp": "b26565b1f79e08785bca766c6c6d34632b552df3c697da6b0a10c6c5d9d486ae",
+    "cpppj/src/o/RawPriestRitualActions.h": "ccc14f6b619803f544dd377d578927af5942c5c99d50429f4540ed0261b981bd",
+    "cpppj/src/o/RawRunePostPop.cpp": "ca10766ced498c5aab0c92fbcca0d0d4ad39c5d9e5c91ce7865dd0523b2f6ab0",
+    "cpppj/src/o/RawRunePostPop.h": "057c813ed8dcb33eab75554f9368645e77d4b85b61df76a22e64f52dcc82d5ee",
+    "cpppj/src/o/RawSquidNeighbors.cpp": "189febb21e1a29b605ccdf95e56ac88b2b2ee40dac68874df501fe5a37c24d02",
+    "cpppj/src/o/RawSquidNeighbors.h": "1d223e803abd49e59dc45fb41e68cc65227af2d6e31b3d6904d99b4d00849dbc",
+    "cpppj/src/o/RawTempleRitual.cpp": "fee9b37873c162ea621595d819b05db4bdea5c28fb62a3b44908aca064530595",
+    "cpppj/src/o/RawTempleRitual.h": "d1f5ab197e92539a0c4904a5f73c0aba60392c587e20cc9a6fbfc54a881acf73",
+    "cpppj/src/o/SquidFrame.cpp": "739652a22b5cbf9abb96f71e5e368772624eb53a8a3957be728e1d6b8fbe27e6",
+    "cpppj/src/o/SquidFrame.h": "a37bc603b77ea161eef8234839146764a517b22a85a2d218d567c627a3eba46f",
+    "cpppj/src/o/SquidPop.cpp": "dc45a23ebe2078f6f27cd481028247553b566898ca445fb2e227a2f44b3743bd",
+    "cpppj/src/o/SquidPop.h": "337933973c05c0204a035a48e737b6b0fd5c385170b81e5c47b2bf4bad622e8b",
+    "cpppj/src/o/SquidProcess.cpp": "2b78ac83db1bbb474f224845ae288d696b30d996a489ee292ac09a1af16986ad",
+    "cpppj/src/o/SquidProcess.h": "827a9789c2a6b66ac7b98181e49e8c0fa19713755bb62fccababb7ae2a0d0589",
+    "cpppj/src/o/SquidReward.cpp": "9a1f1a1d4c0f0b0255357b1f3ec9255cea2bb234ed351da70fb30dd1ed859f9c",
+    "cpppj/src/o/SquidReward.h": "33df23ab3590c965b68fef4c14a55cf38de55281c08430d22a26e6dc12b6aee6",
+    "cpppj/src/o/SquidUnpop.cpp": "d82a8c1b8df6005e86894613ed33fca1eb4e6f2837c9c8adb8ceee29e00f7768",
+    "cpppj/src/o/SquidUnpop.h": "b05e4dc0ac5f66065ddff9ca8f451bc5344ad0ce3f9ceb08ad4857d9ed2b51b3",
+    "cpppj/tests/DaisBridgeTests.cpp": "9e6e7e5b121b935336687e38923b74d72667139515a3bef98b707afe2389693f",
+    "cpppj/tests/fixtures/daisbridge-x86.tsv": "f2ccd4f6499e54356a1f6dd6e68d9ceab02f30aa388b7f86ed79e584216f0b17",
+    "tools/analyze_daisbridge_cpp_binding.py": "fbfc7af3c11ab0bd262bc1e3fb61948aabf689bc407cb8c0c4c2140b737b2ce1",
+    "tools/decomp_daisbridge_oracle.py": "fd47a9ff7f61b056744ea7d5c42a5c274dce36335dac139efe5520c81c5d3b4f"
+  },
+  "scope": "새 상위640은 원본보고서에서 한 번만 합산한다. C++ 현재 검사 SHA를 같은 실제 PathStart/BFS/Frame/Host/서버 PathData/구 경로 Kill/공간 접두/RawPathCleanup/Temple.Ritual에 연결한다. generic사제 VT·1×1 표시 합성 입력이며 전체걷기·가상도착·의식307/룬304·실제캠페인 metadata·UI/음향은 후속이다. 최초14smoke/기존512/668/2964는 새원본에 합산하지 않는다."
+}

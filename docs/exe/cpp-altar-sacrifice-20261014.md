@@ -32,15 +32,15 @@ event24의 다이스K+권한 경로는 실제 가상삭제flags`0x400000`이다.
 
 프레임 setter/new/가상공간·삭제/음향/UI/FromForm·Type/마지막 Damageable는 명시 효과 경계다. 원본 FrameAdvance·범위 난수·typed/contained/process walker·Altar/DaisPre/Finish 판단은 실행했다. CD의 SP Get/Set은 실제 원본 몸체를 실행하고 마지막 표시만 격리했다. O 계층이 client 헤더를 포함하지 않는다.
 
-`AltarSacrificeTests`는 같은 실제 풀과 Host/Kernel의24를 만들고 기존 FrameAdvance→SquidFrame을 사용한다. Native의FromForm 관찰Q는 실제 Host 조회·Regular 이벤트/완료 횟수와 별도로 대조한다. preDestroy 입력은 Native의 마지막 Damageable 호출 진입에서 raw/효과/player를 관찰하고 전용 예외로 중단한다. **그 검사로 전체 파괴가 완료됐다고 주장하지 않는다.** root의 단위11 첫집중검사에서2866 전수1검사/실패0을 확인했다(`campaign-runtime11-rawAltarSacrifice_initial-tests.log`). Dais 초기668도별도1검사/실패0이며 Altar2866에합산하지않는다.
+`AltarSacrificeTests`는 같은 실제 풀과 Host/Kernel의24를 만들고 기존 FrameAdvance→SquidFrame을 사용한다. Native의FromForm 관찰Q는 실제 Host 조회·Regular 이벤트/완료 횟수와 별도로 대조한다. preDestroy 입력은 Native의 마지막 Damageable 호출 진입에서 raw/효과/player를 관찰하고 전용 예외로 중단한다. **그 검사로 전체 파괴가 완료됐다고 주장하지 않는다.** root의 단위11 첫집중검사에서2866 전수1검사/실패0을 확인했다(`run11-rawAltarSacrifice_first.log`). Dais 초기668도별도1검사/실패0이며 Altar2866에합산하지않는다.
 
 단위11 최종 Release에서 경고0/오류0, 알터1·다이스1을 포함한 새15검사와 전체1038검사/실패0을 확인했다. 현재2866 자료/검사/생산 전체 SHA와 successor 감사도 최종 종합 감사에서 통과했다. 수명1928과 후속 상위 관찰은 이번2866에 더하지 않는다.
 
 ## 초기 관찰의 보존과 같은입력 재관찰
 
-- 최초8/7 내보내기·30행 smoke·당시 production/oracle/spec/fixture/report는 `cpppj/recovery-history/altarsacrifice-initial`에 당시 SHA 그대로 보존했다. 전수1056번째의 미허용 중심helper 중단은 정상전수로 합산하지 않는다. 가상표 초기화와 원본Player 전역의 실제 배열포인터 해석 교정 중의 진단 실패도 별도 로그로 유지한다.
-- 중심9/8의 첫전수2866·당시 전체tool/fixture/report/production은 `cpppj/recovery-history/altarsacrifice-before-frame-input`에 보존했다. 실제1칸SHP와 이미1단계버킷에 있는 slots5/6/7의 초기 levelBYTE를0→1로 맞춰 같은2866 입력을 다시 관찰했다.
-- `analyze_altarsacrifice_successor.py --verify`와 `recovery-altarsacrifice-successor-evidence.json`은 production 전체바이트 불변, 역사파일의 당시SHA, 같은입력키와 모든 반환/효과/RNG/player 결과 불변을 증명한다. raw 차이는 위 초기BYTE3개뿐이다. 최초30/실패시도/재실행은 더하지 않고 현재 정상2866만 유지한다. 기존 Dais668 및 기존 helper 관찰도2866에 합산하지 않는다.
+- 최초8/7 내보내기·30행 smoke·당시 production/oracle/spec/fixture/report는 `cpppj/hist/altarsacrifi-af04e`에 당시 SHA 그대로 보존했다. 전수1056번째의 미허용 중심helper 중단은 정상전수로 합산하지 않는다. 가상표 초기화와 원본Player 전역의 실제 배열포인터 해석 교정 중의 진단 실패도 별도 로그로 유지한다.
+- 중심9/8의 첫전수2866·당시 전체tool/fixture/report/production은 `cpppj/hist/altarsacrifi-6e4d0`에 보존했다. 실제1칸SHP와 이미1단계버킷에 있는 slots5/6/7의 초기 levelBYTE를0→1로 맞춰 같은2866 입력을 다시 관찰했다.
+- `analyze_altarsacrifice_successor.py --verify`와 `altarsacrifice-successor.json`은 production 전체바이트 불변, 역사파일의 당시SHA, 같은입력키와 모든 반환/효과/RNG/player 결과 불변을 증명한다. raw 차이는 위 초기BYTE3개뿐이다. 최초30/실패시도/재실행은 더하지 않고 현재 정상2866만 유지한다. 기존 Dais668 및 기존 helper 관찰도2866에 합산하지 않는다.
 
 ## 남은 실제 소비자
 

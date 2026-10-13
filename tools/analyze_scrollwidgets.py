@@ -17,7 +17,7 @@ from analyze_styletext import ROOT,digest,read_ranges
 
 # 생성 자료는 프로젝트 안에 보관한다. 두 보호 바이너리는 읽기만 한다.
 PLAN=ROOT/'tools/ghidra/scrollwidgets-functions.json'
-REPORT=ROOT/'cpppj/recovery-scrollwidgets-evidence.json'
+REPORT=ROOT/'cpppj/scrollwidgets.json'
 # 실제 세 파생 가상 표·signed 정렬 BYTE·기본 배경 타입/프레임 전역 주소다.
 EDITIONS={
     'originals':('originals/Netstorm.exe',{'slider':0x5116f8,'arrow':0x5116a8,'thumb':0x511668},[0x540442,0x54041c,0x54044e],0x5ca920,0x542664),

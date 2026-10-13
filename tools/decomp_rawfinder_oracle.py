@@ -22,7 +22,7 @@ SPECS['original1037']=SPECS['originalCD']
 # 분석 전용 finder 공간과 출력 경로. 기존 삭제/붕괴 fixture와 분리한다.
 FINDER=HEAP+0x4000
 FIXTURE=ROOT/'cpppj/tests/fixtures/rawfinder-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-rawfinder-evidence.json'
+REPORT=ROOT/'cpppj/rawfinder.json'
 IDS=(BRIDGE,LINK,FIRST,SECOND,FOLLOW,OTHER)
 SCALES=(1,2,4,16)
 

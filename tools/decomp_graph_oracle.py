@@ -116,13 +116,13 @@ def generate():
                 sources={n:hashlib.sha256((ROOT/'tools'/n).read_bytes()).hexdigest() for n in deps},
                 limitations=['기존 표/스택·정수 표면 스냅샷·소진 전; graph 복구/삭제 분할/영역 통지/postPop/raw 월드 연결 미검증',
                              '표/전체 스택은 Adler-32, membership graph/state는 모든 항목 직접 비교'])
-    (ROOT/'cpppj/recovery-graph-evidence.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
+    (ROOT/'cpppj/graph.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
     print(f'graph x86 fixture: {report["total_calls"]}회 {dict(counts)}')
 
 
 def verify():
     """게임 실행 없이 원본/도구/기대값 SHA와 호출 수를 확인한다."""
-    r=json.loads((ROOT/'cpppj/recovery-graph-evidence.json').read_text(encoding='utf-8'))
+    r=json.loads((ROOT/'cpppj/graph.json').read_text(encoding='utf-8'))
     for ed,data in r['editions'].items():
         p=ROOT/('originals/Netstorm.exe' if ed=='originals' else 'originalCD/NETSTORM.EXE')
         assert data['binary_sha256']==hashlib.sha256(p.read_bytes()).hexdigest() and data['assert_calls']==0

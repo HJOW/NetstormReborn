@@ -50,7 +50,7 @@ HAS_HP,DAIS_KIND=0x10,0x400000
 TOKEN=b'cheat-token\0'
 PAYLOAD={'money':7,'reject':11}
 FIXTURE=ROOT/'cpppj/tests/fixtures/constructionplace-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-constructionplace-evidence.json'
+REPORT=ROOT/'cpppj/constructionplace.json'
 # 연산별 입력 칸 순서다. count는 실제 decoder가 센 조각 수이며 배치의 SID 개수 인자로 공급한다.
 PLACE_KEYS=('type','argument','direction','x','y','player','local','blocked','cost','money','server','authority','shown',
     'flagged','abstract','quality','sids','slots','frames','flags1','flags2','maxHp','altarHp','default','life','count')

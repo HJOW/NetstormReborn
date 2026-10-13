@@ -54,7 +54,7 @@
 
 [SurfaceTests.cpp](../../cpppj/tests/SurfaceTests.cpp)의 세 x86 검사와 스냅샷 수명·접합 고리·입력 오류 검사 세 개를 추가했다. Windows Release 빌드 경고·오류 0, **CTest 내부 81개 검사** 통과. 기존 23,418개와 합쳐 **26,868개 x86 기대값 입력 사례**이며 기존 수명 480개는 접두 구간 검사다. 게임 전체의 완성도나 전체 붕괴/실제 플레이 검사 수로 해석하지 않는다.
 
-[recovery-surface-evidence.json](../../cpppj/recovery-surface-evidence.json)에 원본 두 판본·기대값·생성/공통 실행 도구의 SHA-256, 실제 쓰기 대상 주소/크기 수, 적용/거부한 함수 대응과 한계를 기록했다. [decomp_refine.py](../../tools/decomp_refine.py)는 이 해시와 두 판본의 함수 존재/`ret N`을 확인한 뒤 7개 검토 대응을 적용한다. 새로 확인한 필터·표면 순회 함수도 포함한다. 재생성한 전체 대응은 2,496쌍·검토 19쌍(strong 1,735/medium 710/weak 51)이다.
+[surface.json](../../cpppj/surface.json)에 원본 두 판본·기대값·생성/공통 실행 도구의 SHA-256, 실제 쓰기 대상 주소/크기 수, 적용/거부한 함수 대응과 한계를 기록했다. [decomp_refine.py](../../tools/decomp_refine.py)는 이 해시와 두 판본의 함수 존재/`ret N`을 확인한 뒤 7개 검토 대응을 적용한다. 새로 확인한 필터·표면 순회 함수도 포함한다. 재생성한 전체 대응은 2,496쌍·검토 19쌍(strong 1,735/medium 710/weak 51)이다.
 
 추가 오대응 `004b1810`↔CD `004eae20`을 금지했다. 전자는 일반 공간 해시의 다음 함수(`ret 0`), 후자는 생성자(`ret 16`)다. 일반 공간 해시 경로의 동작은 이번에 검증하지 않았으므로 새로운 완전 함수 대응으로 추정해 넣지 않았다.
 

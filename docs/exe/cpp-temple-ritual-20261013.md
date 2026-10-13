@@ -42,11 +42,11 @@ SpawnRune은 생성 후 HP0을 쓰고 현재 신전 단계를 다시 읽어 Rune
 
 `TempleRitualTests.cpp`의 전수 검사는 실제 조회/의식 요청 순서, raw5/6/7/8의 vtable 주입 DWORD를 제외한 모든 바이트, callback 뒤 현재 권한을 비교한다. 실제 mode0 소비자 검사는 기존 Factory/Owner/공통HP/SquidFrame와 같은 Host/Kernel의0x307 payload/부모/시각을 연결한다. 이 검사는 Rune Pop을 실행하지 않는다.
 
-08 첫 공유 대조는 실제 mode0 소비자에 성공했고 전수 대조에서1330개 check가 실패했다. 진단 결과 기존 검사기의 네 해시 배열(`0x11300000~0x1132a200`)과 상속 지면 주소(`0x11320000`)가 겹쳐 `setup`이 지면 입력을 지웠음을 확인했다. 새 Temple 전용 지면 주소`0x11600000`을 원본의 현재 지면 포인터에 연결했다. production/test는 전체 문자/토큰이 그대로다. 같은 입력 식별자6720개를 재관찰하며 실제 목표점 좌표도 fixture 입력으로 다시 보존한다. 수정 전 도구/fixture/보고서/소스는 `cpppj/recovery-history/temple-rune-initial`에 원경로로 보존한다. 이전6720개를 현재6720개에 더하지 않는다.
+08 첫 공유 대조는 실제 mode0 소비자에 성공했고 전수 대조에서1330개 check가 실패했다. 진단 결과 기존 검사기의 네 해시 배열(`0x11300000~0x1132a200`)과 상속 지면 주소(`0x11320000`)가 겹쳐 `setup`이 지면 입력을 지웠음을 확인했다. 새 Temple 전용 지면 주소`0x11600000`을 원본의 현재 지면 포인터에 연결했다. production/test는 전체 문자/토큰이 그대로다. 같은 입력 식별자6720개를 재관찰하며 실제 목표점 좌표도 fixture 입력으로 다시 보존한다. 수정 전 도구/fixture/보고서/소스는 `cpppj/hist/temple-rune-afcc3`에 원경로로 보존한다. 이전6720개를 현재6720개에 더하지 않는다.
 
-별도 `tools/analyze_temple_rune_runtime8_lineage.py`와 `cpppj/recovery-temple-rune-runtime8-lineage-evidence.json`은 위 메모리 연결만 되돌리면 도구 전체가 이전과 같고, 기존 Temple production/test와 Rune의 명시 교정 외 본문·검사·공통 근거가 보존됨을 증명한다. 임시 진단 출력은 최종 소스에서 제거했다. 재관찰/새 집중 C++ 결과는 root가 통합한다.
+별도 `tools/analyze_temple_rune_runtime8_lineage.py`와 `cpppj/temple-rune-runtime8-lineage.json`은 위 메모리 연결만 되돌리면 도구 전체가 이전과 같고, 기존 Temple production/test와 Rune의 명시 교정 외 본문·검사·공통 근거가 보존됨을 증명한다. 임시 진단 출력은 최종 소스에서 제거했다. 재관찰/새 집중 C++ 결과는 root가 통합한다.
 
-교정 후 **6720개 정상/assert0개 전량 재관찰과 현재 SHA 감사에 성공**했다.972개 행의 입력 좌표나 출력이 지면 교정에 따라 바뀌었으며 같은6720개 식별자를 유지하고 추가 고유 입력은0개다. 공유 Release빌드71712 종료0 후 **TempleRitual의2검사,6720개 전수+실제 Frame/Host307 소비자 모두 실패0**이다. 집중 로그는 `extracted/campaign-runtime8-rawTempleRitual_final-tests.log`이다. 전체 캠페인의 의식 완주 성공을 뜻하지 않는다.
+교정 후 **6720개 정상/assert0개 전량 재관찰과 현재 SHA 감사에 성공**했다.972개 행의 입력 좌표나 출력이 지면 교정에 따라 바뀌었으며 같은6720개 식별자를 유지하고 추가 고유 입력은0개다. 공유 Release빌드71712 종료0 후 **TempleRitual의2검사,6720개 전수+실제 Frame/Host307 소비자 모두 실패0**이다. 집중 로그는 `extracted/run8-rawTempleRitual_final.log`이다. 전체 캠페인의 의식 완주 성공을 뜻하지 않는다.
 
 ## 남은 필수 흐름
 

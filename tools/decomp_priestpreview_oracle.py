@@ -34,7 +34,7 @@ PREVIEW={
 PREVIEW['original1037']=dict(PREVIEW['originalCD'])
 # 기존 접두/나선 생성 근거를 바꾸지 않는 새 파일과 입력 열 순서다.
 FIXTURE=ROOT/'cpppj/tests/fixtures/priestpreview-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-priestpreview-evidence.json'
+REPORT=ROOT/'cpppj/priestpreview.json'
 EXTRA_KEYS=('bx','by','br','bb','mapVariant','editor','allies','forward','mutation')
 KEYS=PREFIX_KEYS+EXTRA_KEYS
 

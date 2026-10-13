@@ -1,6 +1,6 @@
 # cpppj 주변 영역 그래프 무효화와 일반 다리/섬 Pop
 
-2026-10-07. [기존 raw Graph 연결](cpp-rawgraph-reconstruction.md)에 원본 영역 helper `00462d40` ↔ CD/10.37 `0045c210`을 연결했다. [구현](../../cpppj/src/o/RawGraph.cpp), [검사](../../cpppj/tests/RawGraphTests.cpp), [x86 도구](../../tools/decomp_regiongraph_oracle.py), [근거](../../cpppj/recovery-regiongraph-evidence.json).
+2026-10-07. [기존 raw Graph 연결](cpp-rawgraph-reconstruction.md)에 원본 영역 helper `00462d40` ↔ CD/10.37 `0045c210`을 연결했다. [구현](../../cpppj/src/o/RawGraph.cpp), [검사](../../cpppj/tests/RawGraphTests.cpp), [x86 도구](../../tools/decomp_regiongraph_oracle.py), [근거](../../cpppj/regiongraph.json).
 
 ## 원본 동작과 C++ 연결
 

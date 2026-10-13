@@ -1,0 +1,68 @@
+{
+  "host": "VM-W11-CODEX",
+  "date": "2026-10-13",
+  "cases": 644,
+  "edition_cases": {
+    "originals": 322,
+    "originalCD": 322
+  },
+  "entries": {
+    "00488af0": 322,
+    "004ac550": 12354,
+    "0049a840": 13253,
+    "00462c30": 900,
+    "0040eaf0": 899,
+    "004e49c0": 3854,
+    "004ad390": 899,
+    "0041d7a0": 514,
+    "00488370": 256,
+    "00441f20": 6464,
+    "00441e40": 6016,
+    "00402100": 322,
+    "004abf50": 12354,
+    "0045b750": 900,
+    "0045b670": 900,
+    "004f161c": 3854,
+    "004adbc0": 899,
+    "00440a80": 514,
+    "00402750": 256,
+    "004d2ef0": 6464,
+    "004d2e00": 6016
+  },
+  "external": {
+    "profiling_clock": 1024
+  },
+  "fixture_sha256": "26c697920661be2020f8e43aafb07fecd6099bd67962c94f1d16a367314b9f42",
+  "files": {
+    "tools/decomp_pathsearch_oracle.py": "d1616fbfdb2b7239be97eb8cf94b74a90f45bfc9edbdb981a8e4b6eff45dcde7",
+    "tools/decomp_pathruntime_oracle.py": "776fca22fee4ea48ab1e5fc843378a655fd6388be8672c1262a7285deef2b282",
+    "tools/decomp_reward_oracle.py": "ca25b2b1befd0f4626759c17dde1af5eb080e86e4137f7a2b384d97f25a7a143",
+    "tools/ghidra/pathsearch-functions.json": "54a1e92fd2c110e10e41eda7c844f658d0dac8380ca7a0d8ec96ba6ef5caf21d",
+    "cpppj/src/o/RawPathSearch.h": "471c37aaeff1f5b7e157f52bfb20984c55e993fa59f7c33696fb42772107a7ac",
+    "cpppj/src/o/RawPathSearch.cpp": "a7597d758972707a48ab25260af4ba877798c9c91ed01e0471d84819005d2858",
+    "cpppj/src/o/Bridge.cpp": "f23f37afadbf944c5c83539d9e8c16cbda2baf26985770a90e3f174699929c50",
+    "cpppj/tests/RawPathSearchTests.cpp": "a450f1078562a38fbc77e04f2d2c434ecf00e4633af28e8fb6e7431e7fc56a03",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/pathsearch/originals/creation.c": "de38924b5378bd1c97beb27bb7933cf17784fefb28b1bd52ecf1262ebf7db499",
+    "extracted/pathsearch/originals/functions.tsv": "9df7796fb7f7665b379b05e8ae3fb035330870b9d03217178602c26b0e952cb0",
+    "extracted/pathruntime/originals/creation.c": "96db0d462b7b23fc8217f07973354b963e1ba80370e02a5c2b7b78d524786161",
+    "extracted/pathruntime/originals/functions.tsv": "0a90142ded4a8cc18b414810ab64dff5aeb6203ac586332e0fa9fc76d299c1ec",
+    "extracted/pathruntimehelpers/originals/creation.c": "4e6e56415129022c4b5afaefad8bc1a4f010696ce54a2230be9e654f55c5c222",
+    "extracted/pathruntimehelpers/originals/functions.tsv": "2442c6bfd56eb6d0deffe63d1d5e3267f102781ccdbe6889216e8670b406c1b6",
+    "extracted/pathmath/originals/creation.c": "4bf2a6ffc863fa08e2f6d892cc3e8510b11d2061c34d0828795df88eca4ee764",
+    "extracted/pathmath/originals/functions.tsv": "10ed5fad6da555f758365810d9326202d2536710f5a58c0ba965d8b1da6f3586",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "extracted/pathsearch/originalCD/creation.c": "db5b007ab456b89fa03b5528b7bd37f7d79ac3a95e3d5b0e571e28c97912d371",
+    "extracted/pathsearch/originalCD/functions.tsv": "35faaad03aa83adff2b1f205d3be5f53545f388efbf71bf04f4f87949cc731f1",
+    "extracted/pathruntime/originalCD/creation.c": "f739cc27bccd46c8c60c514af134ce8a53936b2c5058603fe1bbd23c0219cc11",
+    "extracted/pathruntime/originalCD/functions.tsv": "944ea413483c6cbfe1b555046c3d802c90fc2c4707f0d74fcd887956370f400a",
+    "extracted/pathruntimehelpers/originalCD/creation.c": "da4c0df3dc8786f1fb1cb4e4443414e738149e1ecec2614a514db9940297096f",
+    "extracted/pathruntimehelpers/originalCD/functions.tsv": "08a63037b676ef4dee6ee63016e016d2ac014ba052ad612394fb08884d35cc8f",
+    "extracted/pathmath/originalCD/creation.c": "2b3ff603aa32bffa924b1ef3dc462b5bb5c0bccb189db40bebb7f4f8e0a3e16b",
+    "extracted/pathmath/originalCD/functions.tsv": "7b4a31d520525e560cde7a2aefec8116e76d821c5dd7c56d0a368bc426437028"
+  },
+  "limits": [
+    "실제 BFS/표면 Graph getter/접합/거리/비용/축약을 실행한다. 프로파일링 시계만 대체한다.",
+    "보드 가장자리의 원본 손상 포인터/queue 읽기 넘침은 정상 입력에 포함하지 않는다."
+  ]
+}

@@ -8,8 +8,8 @@ import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent  # 현재 공유 저장소의 파일 읽기 기준이다.
-HISTORY = ROOT / 'cpppj/recovery-history/player-postpop-baseline'  # 변경 전 전체 Git/작업 바이트를 보관한다.
-REPORT = ROOT / 'cpppj/recovery-player-postpop-binding-lineage-evidence.json'  # 새 분배의 별도 현재 근거다.
+HISTORY = ROOT / 'cpppj/hist/player-postp-76601'  # 변경 전 전체 Git/작업 바이트를 보관한다.
+REPORT = ROOT / 'cpppj/player-postpop-binding-lineage.json'  # 새 분배의 별도 현재 근거다.
 COMMIT = '860030e73e9e11599c89334b2e6ab4b0c6e1702d'  # 단위13 완료 기준이며 기존 근거를 덮어쓰지 않는다.
 HEADER_LINES = (
     'class RawPlayerWorld; // Player152의 실제 최초 기록·예약·공통후처리를 연결한다.\n',
@@ -100,7 +100,7 @@ def observe():
         assert (ROOT / name).read_bytes() == previous, name
         reports[name] = dict(sha256=sha(previous), new_native_inputs=0)
     # 단위13 완료 보고서의 전체 파일을 당시 저장한 view로 확인한다. 현재 파일은 쓰지 않는다.
-    prior = json.loads((HISTORY / 'work/cpppj/recovery-campaign-runtime13-evidence.json').read_text(encoding='utf-8'))
+    prior = json.loads((HISTORY / 'work/cpppj/run13.json').read_text(encoding='utf-8'))
     for name, expected in prior['files'].items():
         saved = HISTORY / 'work' / name
         target = saved if saved.is_file() else ROOT / name
@@ -108,7 +108,7 @@ def observe():
         dependencies[name] = dict(reported_sha256=expected, verified_path=target.relative_to(ROOT).as_posix())
     names = (*manifest['shared'], 'cpppj/src/o/RawPlayerWorld.h', 'cpppj/src/o/RawPlayerWorld.cpp',
              'cpppj/tests/PlayerWorldTests.cpp', 'tools/decomp_player_world_oracle.py',
-             'cpppj/recovery-player-world-evidence.json', 'cpppj/tests/fixtures/player-world-x86.tsv')
+             'cpppj/player-world.json', 'cpppj/tests/fixtures/player-world-x86.tsv')
     current_files = {name: sha((ROOT / name).read_bytes()) for name in names}
     return dict(sources=sources, history=history, prior_reports=reports,
                 previous_unit13=dict(all_tests=prior['all_tests'], new_native_inputs=0, dependencies=dependencies), files=current_files)

@@ -1,6 +1,6 @@
 // 원본: Bridge.cpp 00421770/004217f0/00421c30. CD 00449e30/00449250의 인라인 판단/0044a1c0.
-// 검증: recovery-bridge-evidence.json의 한 방향 검사·패치 열린 끝·수명 함수 접두 구간 기대값.
-// 추가: 00441e40 ↔ CD 004d2e00 연결 계산, 004218b0 ↔ CD 00449f10 방문 목록은 recovery-surface-evidence.json.
+// 검증: bridge.json의 한 방향 검사·패치 열린 끝·수명 함수 접두 구간 기대값.
+// 추가: 00441e40 ↔ CD 004d2e00 연결 계산, 004218b0 ↔ CD 00449f10 방문 목록은 surface.json.
 #include "o/Bridge.h"
 #include "o/TerrainBuilder.h"
 #include "o/SquidFinder.h"

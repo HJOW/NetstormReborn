@@ -28,7 +28,7 @@
 - 세 PE 합계 **6,048개** = 조회 **1,824** + 접두 **4,224**. x87 53/64비트 정밀도 두 실행에서 같은 관찰만 저장한다.
 - A~P 물리 프레임 전체, 비연속 코드/variant, 이미 정지 프레임, owner 0~8, extra 0/1/16/255, signed side 0~255, CD BYTE 넘침을 포함한다.
 - 넘침 입력의 새 물리 번호 256은 **Pop 대체 상태에서 필드 쓰기만 관찰**한다. 실제 SHP가 그 프레임을 지원한다는 뜻이 아니다.
-- [`pathanimation-x86.tsv`](../../cpppj/tests/fixtures/pathanimation-x86.tsv)의 사건·슬롯 전체를 C++에서 비교한다. [`recovery-pathanimation-evidence.json`](../../cpppj/recovery-pathanimation-evidence.json)은 PE/내보내기/도구/입력 목록/fixture SHA와 진입·경계 도달 횟수를 기록한다.
+- [`pathanimation-x86.tsv`](../../cpppj/tests/fixtures/pathanimation-x86.tsv)의 사건·슬롯 전체를 C++에서 비교한다. [`pathanimation.json`](../../cpppj/pathanimation.json)은 PE/내보내기/도구/입력 목록/fixture SHA와 진입·경계 도달 횟수를 기록한다.
 
 ## 실제 연결·검증
 

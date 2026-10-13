@@ -10,9 +10,9 @@ from pathlib import Path
 
 # 앞 단위 원본/소스 근거는 그대로 읽으며 별도 새 lineage만 기록한다.
 ROOT=Path(__file__).resolve().parent.parent
-REPORT=ROOT/'cpppj/recovery-pathcleanup-runtime-lineage-evidence.json'
+REPORT=ROOT/'cpppj/pathcleanup-runtime-lineage.json'
 SOURCES=('cpppj/src/o/RawPathRuntime.h','cpppj/src/o/RawPathRuntime.cpp')
-PRIOR=('cpppj/recovery-pathruntime-evidence.json','cpppj/recovery-pathruntime-lineage-evidence.json','cpppj/recovery-pathstart-evidence.json')
+PRIOR=('cpppj/pathruntime.json','cpppj/pathruntime-lineage.json','cpppj/pathstart.json')
 
 
 def sha(data):

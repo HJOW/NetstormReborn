@@ -63,7 +63,7 @@ PlaceAll은 `[start,end)`의 실제120BYTE/20레코드를 파일 순서대로 �
 
 기존 RiftTypeFrames 검색은 실패 시−1을 반환하며 C++ CanonDecoder가 이를 건너뛰는 동작은 이미 있었다. 실제 assert FindNumber의 보고가 노출되지 않았으므로 부모와 협의해 패턴 생성자에 선택적 `std::function<void()> missingFrameDiagnostic={}`를 추가했다. 검색 직후 frame이−1이면 보고하고 기존 Advance를 계속한다. 기존 lookup/회전/셀/좌표/순회 몸체를 다시 작성하지 않는다. RiftType.h/.cpp 변경은0이다.
 
-`recovery-history/islandbuilder-decoder-baseline`은 기준 a349e63의 전체 **78파일**을 보존한다. 기존 CanonDecoder/RiftType·패턴/타입 디코더·검사·관련 전체 보고서/fixture/tool과 Git LF/작업 CRLF를 분리했다. `analyze_islandbuilder_decoder_lineage.py` 기본 실행은 두 공유 파일의 지정3부분씩을 정확히 역변환하고 이전 전체 원문을 확인한다. 이 공유 확장의 새 native 합산은0이다.
+`hist/islandbuilde-b0a1c`은 기준 a349e63의 전체 **78파일**을 보존한다. 기존 CanonDecoder/RiftType·패턴/타입 디코더·검사·관련 전체 보고서/fixture/tool과 Git LF/작업 CRLF를 분리했다. `analyze_islandbuilder_decoder_lineage.py` 기본 실행은 두 공유 파일의 지정3부분씩을 정확히 역변환하고 이전 전체 원문을 확인한다. 이 공유 확장의 새 native 합산은0이다.
 
 기존 NormalTerrainWorldBinding/TerrainStamp 등의 보고서는 당시 SHA를 그대로 보존한다. 기존 감사기의 현재 파일 동일성 확인에서 이 두 공유 파일의 차이가 드러나므로, 현재 연결은 **이 successor의 전체 역변환 감사와 함께** 읽는다. 이전 관찰의 출처를 새 현재 SHA만 적어 지우지 않는다.
 
@@ -78,7 +78,7 @@ PlaceAll은 `[start,end)`의 실제120BYTE/20레코드를 파일 순서대로 �
 
 첫 표본에서 CD validId의 기존 Count helper 누락을 발견해 전체 helper 범위를 읽기 재사용했다. 첫 전체 실행은 미분류 FindNumber 진단 line299에서 중단됐고 전체 당시 tool/CPP와 실패 로그를 `extracted/islandbuilder-initial-full-failure`에 보존했다. 중단/표본 실행은 신규 완료 수에 더하지 않는다.
 
-첫1156격자의 부분누락 profile3은 A방향을 제거했으나 패턴3의 실제 방향은 O/G/N이었다. G방향 제거 입력으로 교정해 실제 중간 누락의 진단과 나머지 유효 청크 쓰기를 함께 관찰했다. 이전 전체 CPP/tool/report/fixture는 `recovery-history/islandbuilder-partial-profile-initial`에 보존했다. 첫 역변환 감사에서 방향 코드만 바뀌고 A설명이 남은 것을 발견해 설명도 교정했으며 당시 전체 감사 보고서와 바이트 SHA가 일치하는 소스를 별도로 보존했다. 최종 재관찰의 **profile3만24행 변경**, 나머지 **1132행은 원본 전체 행 동일**다. 재관찰1156을 신규1156에 중복 합산하지 않는다.
+첫1156격자의 부분누락 profile3은 A방향을 제거했으나 패턴3의 실제 방향은 O/G/N이었다. G방향 제거 입력으로 교정해 실제 중간 누락의 진단과 나머지 유효 청크 쓰기를 함께 관찰했다. 이전 전체 CPP/tool/report/fixture는 `hist/islandbuilde-f0b4f`에 보존했다. 첫 역변환 감사에서 방향 코드만 바뀌고 A설명이 남은 것을 발견해 설명도 교정했으며 당시 전체 감사 보고서와 바이트 SHA가 일치하는 소스를 별도로 보존했다. 최종 재관찰의 **profile3만24행 변경**, 나머지 **1132행은 원본 전체 행 동일**다. 재관찰1156을 신규1156에 중복 합산하지 않는다.
 
 ## 최종 원본 계수와 검사 상태
 
@@ -90,9 +90,9 @@ PlaceAll은 `[start,end)`의 실제120BYTE/20레코드를 파일 순서대로 �
 
 assert 입력은 각 fixture 행의 **마지막 실제 진단 횟수가0이 아닌지**로 구분한다. PlaceAll에서 호출한 Place의 반복 진입은 별도 신규 입력이 아니다. 판본별 실제 primary 진입은 Place1176/PlaceAll60이며 그 합을1156 고유 입력에 추가하지 않는다.
 
-최종 fixture SHA-256은 `8048e92b263b026d17d02ccf7ddf8b0a3fefa0240970c8581cf5a3ea2b6c60a4`, native 보고서 SHA-256은 `fdb47e354e6f4a6f2aa36d7900bea9bd3ed7904be79d96284a99c239425bb26c`다. 관찰 당시 source/tool/export/PE와 전체 fixture SHA는 `recovery-islandbuilder-evidence.json`에 고정했다.
+최종 fixture SHA-256은 `8048e92b263b026d17d02ccf7ddf8b0a3fefa0240970c8581cf5a3ea2b6c60a4`, native 보고서 SHA-256은 `f2aac0dd53686578620f2c21e39ff4e69cd7d97a3d84211267e875873d18ac53`다. 관찰 당시 source/tool/export/PE와 전체 fixture SHA는 `islandbuilder.json`에 고정했다.
 
-최종 주석 감사에서 검사 scene의 주소 동일성을 설명한 한 줄에 혼합 문자가 남은 것을 발견해 한국어로 교정했다. `recovery-history/islandbuilder-comment-initial`에는 이전 전체 test/native report/부분프레임 lineage/두 도구를 보존한다. `analyze_islandbuilder_comment_lineage.py`가 한 주석의 정확 역변환으로 C++ 토큰 불변을 확인하고 현재 test SHA를 별도 successor에 고정한다. 생산·원본 입력·fixture 변경은0이다. 이전 두 감사기의 **TEST 한 파일만 교정전 전체 snapshot으로 연결**하고 나머지 현재 SHA 검사는 그대로 실행하므로 관찰 당시 소스를 현재 주석 SHA로 덮어쓰지 않는다.
+최종 주석 감사에서 검사 scene의 주소 동일성을 설명한 한 줄에 혼합 문자가 남은 것을 발견해 한국어로 교정했다. `hist/islandbuilde-a876e`에는 이전 전체 test/native report/부분프레임 lineage/두 도구를 보존한다. `analyze_islandbuilder_comment_lineage.py`가 한 주석의 정확 역변환으로 C++ 토큰 불변을 확인하고 현재 test SHA를 별도 successor에 고정한다. 생산·원본 입력·fixture 변경은0이다. 이전 두 감사기의 **TEST 한 파일만 교정전 전체 snapshot으로 연결**하고 나머지 현재 SHA 검사는 그대로 실행하므로 관찰 당시 소스를 현재 주석 SHA로 덮어쓰지 않는다.
 
 현재 다음 출처 감사가 통과했다. comment 감사에는 기존 native/부분프레임 감사도 포함된다. Root의 단위11 최종 **Release 경고/오류0·새15검사/실패0·전체1038검사/실패0·고유집중34검사 성공**을 확인했다. 원본1156행 전체 재생/현재 섬·청크·일반 성장 소비자/필수 자료 거부의새Builder3검사는성공이다. `IslandBuilder_` substring필터는기존2검사도포함하므로총5실행이며이를새5검사로세지않는다. 최초집중32집계의교정전전체tool/log도root가보존했다. 최종통합로그와전체계수는root의단위11기록을따른다.
 

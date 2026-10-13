@@ -1,0 +1,57 @@
+{
+  "host": "HJOW-Athlon",
+  "decompile_date": "2026-10-14",
+  "normal_inputs": 2964,
+  "new_native_inputs": 0,
+  "production_unchanged": true,
+  "entire_test_restored_exactly": true,
+  "prior_binding": {
+    "cpppj/daisprogress.json": {
+      "sha256": "217a63a2642d7041970746229779de9cafc9d7d11c4375cd896ed3b600375c3c",
+      "preserved_or_current": "cpppj/hist/daisprogress-05259/cpppj/daisprogress.json"
+    },
+    "cpppj/src/o/RawAltarSacrifice.cpp": {
+      "sha256": "c45c6083846aa97aec3d1dc0cd2dda2d0beab45fcd7addb07c755d1e2482f464",
+      "preserved_or_current": "cpppj/src/o/RawAltarSacrifice.cpp"
+    },
+    "cpppj/src/o/RawAltarSacrifice.h": {
+      "sha256": "1df83640935f495e4b6687c41ac5d181a8947f2bc6f349659870acea225b89c3",
+      "preserved_or_current": "cpppj/src/o/RawAltarSacrifice.h"
+    },
+    "cpppj/src/o/RawDaisRegular.cpp": {
+      "sha256": "c1a167728b02f382cbae23454e4aba1046c91a7284dbe4c6e206e856ccc4c433",
+      "preserved_or_current": "cpppj/src/o/RawDaisRegular.cpp"
+    },
+    "cpppj/src/o/RawDaisRegular.h": {
+      "sha256": "fdc080a0ae1ff54909a1cf59a6b9be626e7a7d96c5103072c9325d13efb88ed3",
+      "preserved_or_current": "cpppj/src/o/RawDaisRegular.h"
+    },
+    "cpppj/tests/DaisProgressTests.cpp": {
+      "sha256": "ebee30ef7651d0bf54b1720597b4cfd0e59ed4341d2a41c2d8adfbe93e94241c",
+      "preserved_or_current": "cpppj/hist/daisprogress-05259/cpppj/tests/DaisProgressTests.cpp"
+    },
+    "cpppj/tests/fixtures/daisprogress-x86.tsv": {
+      "sha256": "20f5ddd2486a3b592db3a4f77a8f18200a9ec4f46cec5f43355d86cf1f215cea",
+      "preserved_or_current": "cpppj/hist/daisprogress-05259/cpppj/tests/fixtures/daisprogress-x86.tsv"
+    },
+    "tools/analyze_daisprogress_cpp_binding.py": {
+      "sha256": "2b6ee1366c507ef7dfccef88dd1b88fce165b09cd601e4b7adbe31c18b9d2281",
+      "preserved_or_current": "cpppj/hist/daisprogress-05259/tools/analyze_daisprogress_cpp_binding.py"
+    },
+    "tools/decomp_daisprogress_oracle.py": {
+      "sha256": "e52ae7f83b8c3332a6b29412821380cf94717cce37faadebd1f60a04e762e1fe",
+      "preserved_or_current": "cpppj/hist/daisprogress-05259/tools/decomp_daisprogress_oracle.py"
+    }
+  },
+  "files": {
+    "cpppj/hist/daisprogress-05259/cpppj/daisprogress-cpp-binding.json": "7f12d67ce01e1e47a5e8a6fb5dfba30edd43fc9690b7aaf540e3c1b018a079a8",
+    "cpppj/hist/daisprogress-05259/cpppj/daisprogress.json": "217a63a2642d7041970746229779de9cafc9d7d11c4375cd896ed3b600375c3c",
+    "cpppj/hist/daisprogress-05259/cpppj/tests/DaisProgressTests.cpp": "ebee30ef7651d0bf54b1720597b4cfd0e59ed4341d2a41c2d8adfbe93e94241c",
+    "cpppj/hist/daisprogress-05259/cpppj/tests/fixtures/daisprogress-x86.tsv": "20f5ddd2486a3b592db3a4f77a8f18200a9ec4f46cec5f43355d86cf1f215cea",
+    "cpppj/hist/daisprogress-05259/tools/analyze_daisprogress_cpp_binding.py": "2b6ee1366c507ef7dfccef88dd1b88fce165b09cd601e4b7adbe31c18b9d2281",
+    "cpppj/hist/daisprogress-05259/tools/decomp_daisprogress_oracle.py": "e52ae7f83b8c3332a6b29412821380cf94717cce37faadebd1f60a04e762e1fe",
+    "cpppj/tests/DaisProgressTests.cpp": "5bfc1a37fe2d93d90c37e86bce74f6ff5b51146f46efe1f25f7296a18f270afa",
+    "tools/analyze_daisprogress_cpp_correction.py": "23a2a6e1da99b1fd3ca2a84fb2c7975a884dc17d729f2b51caf4fc566e57cca0"
+  },
+  "scope": "현재 전용 검사에서 중복 results 선언 하나만 삭제. 생산/독립원본2964/tool/fixture/이전 연결 보고서 전체 원문은 불변이다. 공유 C++ 대조는 별도 실행한다."
+}

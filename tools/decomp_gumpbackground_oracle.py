@@ -32,7 +32,7 @@ LOGICAL,SORT,SHAPE,METADATA=TYPES+0x10000,TYPES+0x11000,TYPES+0x18000,TYPES+0x18
 # 재현 가능한 입력 시드와 새 근거/fixture 경로다.
 SEED=0x465880
 FIXTURE=ROOT/'cpppj/tests/fixtures/gumpbackground-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-gumpbackground-evidence.json'
+REPORT=ROOT/'cpppj/gumpbackground.json'
 
 
 def palette_inputs():

@@ -247,13 +247,13 @@ def generate():
                 '표시/postPop 효과 억제·비전투·빈 grid/dirty; 영역/부착/파생 효과·소유자/생산 효과는 후속',
                 'SID/풀/공간 지도 직접 연동; GameWorld 연결과 미션 완주 증명은 아님',
                 '슬롯 모든 바이트 직접 대조; 전체 풀/머리/spot은 Adler-32; 게임/OS/GUI 진입점 없음'])
-    (ROOT/'cpppj/recovery-pop-evidence.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
+    (ROOT/'cpppj/pop.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
     print(json.dumps(dict(cases=report['cases'],total_cases=report['total_cases'],begins=begins)),flush=True)
 
 
 def verify():
     """기록의 원본/도구/주소 표/fixture 해시와 호출 행 수를 검사한다."""
-    report=json.loads((ROOT/'cpppj/recovery-pop-evidence.json').read_text(encoding='utf-8'))
+    report=json.loads((ROOT/'cpppj/pop.json').read_text(encoding='utf-8'))
     # 각 기록 그룹에 들어 있는 원본 도구/산출물을 빠짐없이 대조한다.
     for group in ('source_sha256','artifact_sha256'):
         # 상대 경로의 파일 바이트가 생성 당시 SHA-256과 같은지 확인한다.

@@ -44,7 +44,7 @@
 
 [`decomp_constructiondata_oracle.py`](../../tools/decomp_constructiondata_oracle.py)는 세 PE의 쓰기·읽기·수신 생성자/분기·가상 래퍼를 전체 정상 반환까지 실행한다. **객체 할당·Kernel 응답·지정 form 부착만 명시 경계**다. OS/게임은 실행하지 않는다. 입력별 두 x87 제어값 **639/895**로 실행해 ABI/스택/보존 레지스터/x87 균형·SEH 복구·실행/쓰기 허용 범위·주변 form 불변을 확인했다.
 
-각 PE **1,780개**는 쓰기 1,034개, 래퍼 40개, 읽기 512개, null 읽기 32개, 기존 수신 144개, 새 수신 18개다. 모든 256개 mask·부모 DWORD·force/래퍼 조건·임의 payload/NaN 비트·추가 BYTE·변경된 헤더 전역·DWORD Kernel 번호·할당 중 타입/패킷 변경을 포함한다. 새 저장 **5,340개**, 두 정밀도 정상 루트 반환 **10,680회**, 누적 **489,939개**(484,599 + 5,340)다. 원본 assert/게임/OS 호출은 0이다. [fixture](../../cpppj/tests/fixtures/constructiondata-x86.tsv)와 [근거 JSON](../../cpppj/recovery-constructiondata-evidence.json)의 SHA·행 폭·입력 순서·실제 진입/반환/경계 집계도 감사한다.
+각 PE **1,780개**는 쓰기 1,034개, 래퍼 40개, 읽기 512개, null 읽기 32개, 기존 수신 144개, 새 수신 18개다. 모든 256개 mask·부모 DWORD·force/래퍼 조건·임의 payload/NaN 비트·추가 BYTE·변경된 헤더 전역·DWORD Kernel 번호·할당 중 타입/패킷 변경을 포함한다. 새 저장 **5,340개**, 두 정밀도 정상 루트 반환 **10,680회**, 누적 **489,939개**(484,599 + 5,340)다. 원본 assert/게임/OS 호출은 0이다. [fixture](../../cpppj/tests/fixtures/constructiondata-x86.tsv)와 [근거 JSON](../../cpppj/constructiondata.json)의 SHA·행 폭·입력 순서·실제 진입/반환/경계 집계도 감사한다.
 
 [`ConstructionDataTests.cpp`](../../cpppj/tests/ConstructionDataTests.cpp)의 새 **7개**는 원본 출력 필드·부모 출력·사건 순서·패킷 앞뒤 전체 64바이트·주변 form을 비교한다. 래퍼는 실제 host에 붙은 form 5/6을 사용한다. 통합 검사는 실제 Start → 전체 전송 → ResetEnd → 끝 시각 부분 전송 → 기존 form 수신 → 원래 완료 시각에는 Kernel 유지/HP 53 → 새 완료 시각에는 form 삭제/HP 100/abstract 해제까지 연결한다. 표시·음향·부모 Unpop/재등록은 명시 경계이며 GUI 플레이 검사가 아니다. 모든 최대 패킷 부족 길이, 불명확한 선언 길이, 무효 form/다른 종류/오래된 연결·상위 비트 Kernel 번호도 검사한다.
 

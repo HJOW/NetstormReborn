@@ -34,7 +34,7 @@ SPEC['original1037']=dict(SPEC['originalCD'])
 MAP=0x14000000
 CAPACITY,ISLANDS=24000,128
 FIXTURE=ROOT/'cpppj/tests/fixtures/canonrelations-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-canonrelations-evidence.json'
+REPORT=ROOT/'cpppj/canonrelations.json'
 KEYS=('genus','flags','ground','only','bridge','permission','bypass','current','owner','editor','allies','relation','sid','x','y','region','sentinel','restricted','blocked','prior')
 
 

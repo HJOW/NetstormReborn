@@ -51,7 +51,7 @@ Damageable은 `flags & 1`이면 genus `& 0x130000`을 조회하지만 결과를 
 
 판본마다 **2,448개**, 총 **7,344개**다. Carrier 1,968개(조건 격자 1,920 + 필드 변경 48), 직접 Damageable 480개다. 최초/비최초 flags·boss·로딩·geyser 제외·extra·flags1·상태/소유자·좌표 비트·외부 효과 뒤 재조회를 교차한다. 좌표에는 음의 0과 quiet NaN 비트도 포함하며 이 몸체는 좌표를 계산하거나 정수로 변환하지 않는다. 실제 공간 지면 함수가 비유한 좌표를 처리할 수 있다는 의미는 아니다.
 
-[`carrierpostpop-x86.tsv`](../../cpppj/tests/fixtures/carrierpostpop-x86.tsv)의 사건 순서/좌표 비트/인자와 raw 슬롯 전체가 C++과 일치해야 한다. [`recovery-carrierpostpop-evidence.json`](../../cpppj/recovery-carrierpostpop-evidence.json)은 PE/도구/내보내기/입력 목록/fixture SHA, 실제/대체 진입 수, 정상 반환 및 assert/OS 호출 0을 기록한다. 일반 CTest는 원본 파일/Python/Ghidra 없이 저장 fixture만 읽는다.
+[`carrierpostpop-x86.tsv`](../../cpppj/tests/fixtures/carrierpostpop-x86.tsv)의 사건 순서/좌표 비트/인자와 raw 슬롯 전체가 C++과 일치해야 한다. [`carrierpostpop.json`](../../cpppj/carrierpostpop.json)은 PE/도구/내보내기/입력 목록/fixture SHA, 실제/대체 진입 수, 정상 반환 및 assert/OS 호출 0을 기록한다. 일반 CTest는 원본 파일/Python/Ghidra 없이 저장 fixture만 읽는다.
 
 [`CarrierPostPopTests.cpp`](../../cpppj/tests/CarrierPostPopTests.cpp)는 독립 재생 외에 다음을 검사한다.
 

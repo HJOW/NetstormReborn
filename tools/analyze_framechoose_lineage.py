@@ -11,8 +11,8 @@ from pathlib import Path
 # 후보 공유 직전의 완료 commit과484개 원본 근거를 고정한다.
 ROOT=Path(__file__).resolve().parent.parent
 BASELINE='4e532fd'
-PRIOR=ROOT/'cpppj/recovery-regionpaint-evidence.json'
-REPORT=ROOT/'cpppj/recovery-framechoose-lineage-evidence.json'
+PRIOR=ROOT/'cpppj/regionpaint.json'
+REPORT=ROOT/'cpppj/framechoose-lineage.json'
 
 def digest(data):
     """원본 파일 또는 정규화된 코드 문자열의 SHA-256을 계산한다."""
@@ -52,7 +52,7 @@ def audit():
         if name.startswith('cpppj/src/o/RawRegionPaint'):continue
         if digest((ROOT/name).read_bytes())!=expected:raise RuntimeError(f'기존 원본 출처 차이: {name}')
     files=['tools/analyze_framechoose_lineage.py','cpppj/src/o/RawFrameChoose.cpp','cpppj/src/o/RawFrameChoose.h',
-           'cpppj/src/o/RawRegionPaint.cpp','cpppj/src/o/RawRegionPaint.h','cpppj/recovery-regionpaint-evidence.json']
+           'cpppj/src/o/RawRegionPaint.cpp','cpppj/src/o/RawRegionPaint.h','cpppj/regionpaint.json']
     return {'host':'HJOW-Athlon','baseline_commit':subprocess.check_output(['git','rev-parse',BASELINE],cwd=ROOT,text=True).strip(),
             'prior_unique_cases':484,'new_unique_cases':0,'moved_body_token_sha256':digest(json.dumps(tokens(body),ensure_ascii=False).encode('utf-8')),
             'remaining_header_and_implementation_identical':True,'files':{name:digest((ROOT/name).read_bytes()) for name in files}}

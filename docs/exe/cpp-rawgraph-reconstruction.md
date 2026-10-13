@@ -22,7 +22,7 @@ Pop의 사전 검사는 최종 좌표, void 해제, 0단계 머리 등록, 발�
 
 ## 실제 x86 대조
 
-[근거](../../cpppj/recovery-rawgraph-evidence.json), [기대값](../../cpppj/tests/fixtures/rawgraph-x86.tsv), [도구](../../tools/decomp_rawgraph_oracle.py), [C++ 검사](../../cpppj/tests/RawGraphTests.cpp).
+[근거](../../cpppj/rawgraph.json), [기대값](../../cpppj/tests/fixtures/rawgraph-x86.tsv), [도구](../../tools/decomp_rawgraph_oracle.py), [C++ 검사](../../cpppj/tests/RawGraphTests.cpp).
 
 기존 읽기 전용 Ghidra의 SID/생성/Pop/표시/postPop/Graph/표면 내보내기를 재사용한다. 새 함수 대응을 추가하지 않았으며 기존 2,496쌍/검토 앵커 24쌍을 유지한다. 도구는 검토한 함수 몸체·쓰기 범위만 허용하고 실제 Reset/Create로 7개 SID를 확보한다. 게임 진입점·OS·원본/복사본 게임 프로세스를 실행하지 않는다.
 

@@ -15,7 +15,7 @@ from unicorn.x86_const import UC_X86_REG_EBX
 # 독립 입력/출력의 열 순서와 저장 경로다.
 KEYS=('kind','argument','direction','profile','x','y','footX','footY','explicit','alias','default','mutation')
 FIXTURE=ROOT/'cpppj/tests/fixtures/canongeometry-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-canongeometry-evidence.json'
+REPORT=ROOT/'cpppj/canongeometry.json'
 # 실제 snap이 복사 좌표에 저장하는 스택 오프셋이다. 원래 decoder 좌표와 구분한다.
 SNAPPED={'originals':0x3c,'originalCD':0x24,'original1037':0x24}
 

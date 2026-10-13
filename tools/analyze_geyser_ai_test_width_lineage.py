@@ -10,10 +10,10 @@ from pathlib import Path
 
 # 수정대상은Test literal 한 곳이며 Native/생산/입력바이트는 불변이다.
 ROOT=Path(__file__).resolve().parent.parent
-HISTORY='cpppj/recovery-history/geyser-ai-before-test-width'
+HISTORY='cpppj/hist/geyser-ai-be-f962f'
 TEST='cpppj/tests/GeyserAiRegistrationTests.cpp'
-NATIVE='cpppj/recovery-geyser-ai-registration-evidence.json'
-REPORT=ROOT/'cpppj/recovery-geyser-ai-test-width-lineage-evidence.json'
+NATIVE='cpppj/geyser-ai-registration.json'
+REPORT=ROOT/'cpppj/geyser-ai-test-width-lineage.json'
 
 
 def pin(name):
@@ -28,7 +28,7 @@ def capture():
     proof=json.loads((ROOT/NATIVE).read_text(encoding='utf-8'));names=[NATIVE,TEST,'cpppj/src/o/RawGeyserAiRegistration.h','cpppj/src/o/RawGeyserAiRegistration.cpp',
         'cpppj/tests/fixtures/geyser-ai-registration-x86.tsv','tools/decomp_geyser_ai_registration_oracle.py','tools/ghidra/geyser-ai-registration-functions.json',
         'docs/exe/cpp-geyser-ai-registration-20261014.md','cpppj/tests/RawSceneSupport.h','cpppj/src/o/RawPlayerWorld.h','cpppj/src/o/RawPlayerWorld.cpp',
-        'cpppj/src/o/SquidPostPop.h','cpppj/src/o/SquidPostPop.cpp','cpppj/recovery-player-postpop-binding-lineage-evidence.json','extracted/campaign-runtime14-build-third.log']
+        'cpppj/src/o/SquidPostPop.h','cpppj/src/o/SquidPostPop.cpp','cpppj/player-postpop-binding-lineage.json','extracted/run14-build-third.log']
     saved=[]
     # 보호PE는변경없이해시로연결하고그외604관찰출처의현재전체파일도보존한다.
     names.extend(name for name in proof['files'] if not name.startswith(('originals/','originalCD/')))

@@ -23,7 +23,7 @@ from unicorn.x86_const import UC_X86_REG_EAX,UC_X86_REG_ECX,UC_X86_REG_ESP,UC_X8
 # Player9/현재handle/명시 번역결과는 기존 Fort 분석buffer 안의 독립 주소다.
 PLAYERS,HANDLE,TRANSLATED=ARENA+0x2000,ARENA+0x3000,ARENA+0x3100
 FIXTURE=ROOT/'cpppj/tests/fixtures/campaign-worldload-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-campaign-worldload-evidence.json'
+REPORT=ROOT/'cpppj/campaign-worldload.json'
 KEYS=('owner','battle','editor','profile','position','end','depth','mutation','subscriber','handle')
 # 실제미션 부모/선택후처리와 명시 하위경계를 판본별로 분리한다.
 PLAN={

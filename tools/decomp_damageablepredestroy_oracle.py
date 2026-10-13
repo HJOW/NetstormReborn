@@ -33,7 +33,7 @@ PRE={
 PRE['original1037']=dict(PRE['originalCD'])
 # 앞 단계와 분리된 원본 관찰/감사 기록이다.
 FIXTURE=ROOT/'cpppj/tests/fixtures/damageablepredestroy-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-damageablepredestroy-evidence.json'
+REPORT=ROOT/'cpppj/damageablepredestroy.json'
 
 
 def bits(value):

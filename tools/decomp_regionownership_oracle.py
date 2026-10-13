@@ -27,7 +27,7 @@ FRAME=0x12345678
 REVISION=0xffffffff
 DIRTY=0x12345678
 FIXTURE=ROOT/'cpppj/tests/fixtures/regionownership-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-regionownership-evidence.json'
+REPORT=ROOT/'cpppj/regionownership.json'
 KEYS=('scene','variant','mode','option','paintRegions','x','y','empty')
 # 기대값을 포함하지 않는 SID 목록·좌표·소유자/타입 입력이다.
 SCENES=[([],[]),([50],[]),([50,53],[60]),([50],[60,63]),([50,51,53],[60,61]),

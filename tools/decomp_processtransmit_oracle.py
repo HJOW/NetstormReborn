@@ -14,7 +14,7 @@ from unicorn.x86_const import UC_X86_REG_EAX, UC_X86_REG_ECX, UC_X86_REG_ESP, UC
 # 입력 열과 독립 산출물 경로다. 기존 ProcessForm/재수신 근거는 덮어쓰지 않는다.
 KEYS=('server','named','state','head','flags','type','size')
 FIXTURE=ROOT/'cpppj/tests/fixtures/processtransmit-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-processtransmit-evidence.json'
+REPORT=ROOT/'cpppj/processtransmit.json'
 # 프로세스의 합성 가상 표와 OnAttached 관찰 주소다. 원본 메모리 밖의 격리 영역만 사용한다.
 TAG_TABLE,ATTACHED,WRITE=ARENA+0x1e000,STUBS+0x340,STUBS+0x360
 

@@ -19,7 +19,7 @@ SPECS = {'originals': {'root': 0x4c10a0, 'helpers': ()},
 # 두 x87 정밀도는 동일 고유 입력의 반복 대조이며 새 입력에 두 번 더하지 않는다.
 CONTROLS = (0x027f, 0x037f)
 FIXTURE = ROOT / 'cpppj/tests/fixtures/terraingrowth-x86.tsv'
-REPORT = ROOT / 'cpppj/recovery-terraingrowth-evidence.json'
+REPORT = ROOT / 'cpppj/terraingrowth.json'
 
 
 def inputs():

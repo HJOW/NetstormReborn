@@ -8,10 +8,10 @@ import json
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1] # 현재 저장소의 전체 바이트를 읽는 기준이다.
-HISTORY=ROOT/'cpppj/recovery-history/priest-arrival-before-test-syntax' # 두 번째 빌드의 전체 현재 생산/관찰/검사를 저장한다.
+HISTORY=ROOT/'cpppj/hist/priest-arriv-35eb0' # 두 번째 빌드의 전체 현재 생산/관찰/검사를 저장한다.
 TEST='cpppj/tests/PriestPathArrivalHostTests.cpp' # 실제 같은 Host 걷기/도착/cleanup 검사의 문법만 바뀐다.
-REPORT=ROOT/'cpppj/recovery-priest-arrival-test-syntax-lineage-evidence.json' # 이전 name/Carrier 보고서를 덮지 않는 현재 successor다.
-PRIOR='cpppj/recovery-priest-arrival-name-lineage-evidence.json' # 당시 같은 검사 SHA를 포함한 이름 교정의 전수 근거다.
+REPORT=ROOT/'cpppj/priest-arrival-test-syntax-lineage.json' # 이전 name/Carrier 보고서를 덮지 않는 현재 successor다.
+PRIOR='cpppj/priest-arrival-name-lineage.json' # 당시 같은 검사 SHA를 포함한 이름 교정의 전수 근거다.
 INCLUDE='#include "o/RawContainedLookup.h"\n' # 전방 선언뿐이던 현재 lookup 객체의 실제 정의를 읽는다.
 BEFORE='owned->Runtime().SetPath({{20.75F,21.9F},{21.75F,21.9F}},{2,2},{0,0});' # 이전 동일 경로/방향/시각 입력이다.
 AFTER='const std::array<RawPathPoint,2> pathPoints{{{20.75F,21.9F},{21.75F,21.9F}}};const std::array<std::int32_t,2> pathDirections{{2,2}};const std::array<double,2> pathTimes{{0,0}};owned->Runtime().SetPath(pathPoints,pathDirections,pathTimes);' # span이 읽을 같은 두 원소 배열을 실체화한다.
@@ -53,7 +53,7 @@ def expected():
     for name,digest in baseline['files'].items():
         assert sha(HISTORY/name)==digest,name
         if name==TEST:assert hashlib.sha256(restored).hexdigest()==digest
-        elif not name.startswith(('docs/','extracted/campaign-runtime14-')):assert sha(ROOT/name)==digest,name
+        elif not name.startswith(('docs/','extracted/run14-')):assert sha(ROOT/name)==digest,name
     old=importlib.import_module('analyze_priest_arrival_name_lineage');original=Path.read_bytes
     def historical(path):
         """이전 이름 감사에서 변경된 검사 하나만 저장한 전체 이전 파일로 읽는다."""
@@ -65,7 +65,7 @@ def expected():
                 preserved_carrier_normal_inputs=406,preserved_halt_normal_inputs=864,whole_test_exact_inverse=True,
                 production_and_native_fixture_bytes_unchanged=True,prior_name_and_carrier_binding_reproduced=True,
                 current_test_sha256=sha(ROOT/TEST),previous_test_sha256=sha(HISTORY/TEST),prior_name_sha256=sha(ROOT/PRIOR),tool_sha256=sha(Path(__file__)),
-                files={name:sha(ROOT/name) for name in baseline['files'] if not name.startswith(('docs/','extracted/campaign-runtime14-'))},
+                files={name:sha(ROOT/name) for name in baseline['files'] if not name.startswith(('docs/','extracted/run14-'))},
                 history={path.relative_to(ROOT).as_posix():sha(path) for path in sorted(HISTORY.rglob('*')) if path.is_file()},
                 scope='RawContainedLookup 정의 include 한 줄을 추가하고 기존 두 점 float/방향int32/시각double의 같은 입력을 const std::array로 실체화해 span에 전달한다. 새 계산/입력 변경0, 원본406·864 및 생산body/fixture/기존name·Carrier 보고서는 불변이다. 이전 검사 전체 read view로 name.expected와 그 내부 Carrier binding.expected를 재현한다.')
 

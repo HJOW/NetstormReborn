@@ -10,7 +10,7 @@ from pathlib import Path
 
 # 앞선 Path/Factory의 역사적 근거를 덮어쓰지 않는 새 통합 단위다.
 ROOT=Path(__file__).resolve().parent.parent
-REPORT=ROOT/'cpppj/recovery-campaign-target-path-evidence.json'
+REPORT=ROOT/'cpppj/campaign-target-path.json'
 BUILD='extracted/campaign-target-path-build-final.log'
 CTEST='extracted/campaign-target-path-ctest-final.log'
 TESTS='extracted/campaign-target-path-tests-final.log'
@@ -57,7 +57,7 @@ def main():
     files=SOURCES+[BUILD,CTEST,TESTS];counts={}
     # 고유 fixture 행 수와 native 도구가 기록한 현재 출처 SHA를 확인한다.
     for unit,(key,expected) in UNITS.items():
-        name=f'cpppj/recovery-{unit}-evidence.json';evidence=json.loads(read(name));assert evidence[key]==expected
+        name=f'cpppj/{unit}.json';evidence=json.loads(read(name));assert evidence[key]==expected
         fixture=f'cpppj/tests/fixtures/{unit}-x86.tsv';rows=[line for line in read(fixture).splitlines() if line and not line.startswith('#')]
         oracle=f'tools/decomp_{unit}_oracle.py'
         assert len(rows)==expected;counts[unit]=expected;files += [name,fixture,oracle]
@@ -66,7 +66,7 @@ def main():
             for path,digest in evidence.get(group,{}).items():assert sha(path)==digest,path;files.append(path)
         if 'fixture' in evidence:assert sha(fixture)==evidence['fixture'],fixture
     # 기존 Factory996개는 명칭 교정 뒤 같은 결과를 재사용했으며 신규 관찰에 더하지 않는다.
-    reused='cpppj/recovery-factorypostpop-evidence.json';evidence=json.loads(read(reused));assert evidence['total']==996;files.append(reused)
+    reused='cpppj/factorypostpop.json';evidence=json.loads(read(reused));assert evidence['total']==996;files.append(reused)
     for path,digest in evidence['files'].items():assert sha(path)==digest,path;files.append(path)
     for prefix,count in FOCUSED.items():
         path=f'extracted/campaign-target-path-focused-{prefix}-final.log';assert f'{count} test(s), 0 failed check(s)' in read(path);files.append(path)

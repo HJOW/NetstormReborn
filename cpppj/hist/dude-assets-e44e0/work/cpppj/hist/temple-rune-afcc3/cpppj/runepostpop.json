@@ -1,0 +1,95 @@
+{
+  "host": "HJOW-Athlon",
+  "total": 1920,
+  "editions": {
+    "originals": {
+      "cases": 960,
+      "returns": 1920,
+      "entries": {
+        "00448340": 2456,
+        "004b1fa0": 2456,
+        "0049a840": 10584,
+        "0041d770": 2456,
+        "004e49c0": 37600,
+        "004b16d0": 5336,
+        "00434380": 23792,
+        "004b2b00": 78736,
+        "004b1810": 9968,
+        "0049a900": 8128,
+        "0044daa0": 8128,
+        "00448a20": 2880,
+        "00422230": 2880,
+        "0041d7a0": 2880,
+        "00448930": 1920
+      },
+      "boundaries": {
+        "base": 1920,
+        "new": 960,
+        "regular": 480,
+        "construction": 536
+      },
+      "asserts": 0
+    },
+    "originalCD": {
+      "cases": 960,
+      "returns": 1920,
+      "entries": {
+        "00482990": 2456,
+        "004816a0": 2456,
+        "004eb4b0": 2456,
+        "00440a50": 2456,
+        "004f161c": 22880,
+        "004eae20": 3416,
+        "00479d90": 33040,
+        "004eafe0": 5680,
+        "004442b0": 4608,
+        "0040f180": 4608,
+        "00484520": 1920,
+        "00440a80": 960
+      },
+      "boundaries": {
+        "base": 1920,
+        "new": 960,
+        "regular": 480,
+        "construction": 536
+      },
+      "asserts": 0
+    }
+  },
+  "files": {
+    "cpppj/runepostpop-lineage.json": "1873f3a406de8b9bdfce672a7202fff3f6a5ec8948a2d1f906d8b8e756d4d3fa",
+    "cpppj/src/o/RawRunePostPop.cpp": "da2d069182900bb8526236ebfec1867d47167422d7837e2c2a8ecae741db345e",
+    "cpppj/src/o/RawRunePostPop.h": "736b4db5d7b02a0c7eda3c23a91b992e755fd515d0715fd57127f14984659276",
+    "cpppj/tests/fixtures/runepostpop-x86.tsv": "784669b8c4c20b725b3e23492bc76e4b1a4ab21042dfb9850378907bafd35e99",
+    "cpppj/tests/RunePostPopTests.cpp": "9918c7375cb132f74579c6a3bfe94d0996e4e9f0f17c76abdf06887e933c2470",
+    "extracted/pathcleanup/originalCD/creation.c": "04f9971bb13ea3d8bcbdba18a473cdd9222188a083fdb4aba02745f30aaaa769",
+    "extracted/pathcleanup/originalCD/functions.tsv": "d033d69ba177638816190b60bbaeb57b327a49e8fad001a0c2899ad4d05d9c92",
+    "extracted/pathcleanup/originals/creation.c": "3d28d0a1811b6f925b6ca249ee98dd9283e16c1f633acc36a4da0ee2fa485804",
+    "extracted/pathcleanup/originals/functions.tsv": "3e4631f9435843ac3de880e668d2d7e4834662fcef7c3093a1fb271fd4831442",
+    "extracted/runepostpop/originalCD/creation.c": "a44e458e4ab94ae5fbc0fef4dfeb611101b7d31dfa8fbe1ad9a05a567664463a",
+    "extracted/runepostpop/originalCD/functions.tsv": "a3fc096edc836e75f95a12e110000e120a1449b9c4befdcab2201926440f963a",
+    "extracted/runepostpop/originals/creation.c": "680da9475eef978c696d5bb9baba47107d9292906957f3befd719105aca15473",
+    "extracted/runepostpop/originals/functions.tsv": "d79ecd480a57aeaf2703838737af9f490b93db54965865e6f6963f9458c15e18",
+    "extracted/templeritual/originalCD/creation.c": "1742cab4a792b7b886c4f8977bf006904f7d36686cb7eff74732ce47b17d5dea",
+    "extracted/templeritual/originalCD/functions.tsv": "69dc78ebcf8cf2f717003bdaa2905622a6b82bcef09a1eb772196acc311612ae",
+    "extracted/templeritual/originals/creation.c": "0478473400cbc1553868578292345c56045443e3e07db3e9bba17021039d9c89",
+    "extracted/templeritual/originals/functions.tsv": "4e7a6bb750bcd2232033641a3c457d577dc71ea0281dabce752c64679ef7453d",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_bridgedecay_oracle.py": "887979f3b82cd56a93a4620d473b8048a579807e72022dfa8dddcf873c81641f",
+    "tools/decomp_bridgeeffects_oracle.py": "ed8e76931f972ffec24be024a17e65ddf3224eb487f215764f60b8abfbbaf462",
+    "tools/decomp_rawfinder_oracle.py": "08914eaa23cce0b3e1540799003c71c64062bad64f37383bdd647ede5ab2e2a7",
+    "tools/decomp_runepostpop_oracle.py": "6f93c4f620efd8e47e196301c9e6a7015df1063abfd1acaa0c338aa60fbf3c1f",
+    "tools/decomp_templeritual_oracle.py": "63b82f84235d077612dc9548dfc4cf83263f3ea8fa7e5330072364665646f111",
+    "tools/ghidra/pathcleanup-functions.json": "e1189d20c535b1c03f32a1464ace5cb9543add7a1fa7656eabaacc2900323a45",
+    "tools/ghidra/runepostpop-functions.json": "7c81be957505c039f275dfd2a94c6109454a2d3d42cbb90fc58708a62158662e",
+    "tools/ghidra/templeritual-functions.json": "2d8fabc0bcb8774371707aad07bc36dbe6011b0dcf5208a15f1c7cf745748cec"
+  },
+  "game_runs": 0,
+  "smoke": false,
+  "limits": [
+    "실제Rune postPop/근처같은owner신전/altar원래ownerWORD/player시간조회몸체는실제PE다.",
+    "new/localRegular/ConstructionStart/공통PostPop은명시요청경계이며실제C++소비자는기존Host/Construction/Base를재사용한다.",
+    "기존공통/건설2868관찰은새Rune고유입력에합산하지않는다. 실제게임/GUI/완주검사아님."
+  ]
+}

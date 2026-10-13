@@ -1,6 +1,6 @@
 # cpppj 10.78 기준 복원과 추가 판본 비교
 
-2026-10-07 사용자 결정: **cpppj 1차 목표는 `originals/Netstorm.exe`의 10.78 복원이다.** 10.37·10.62·10.82와 개발 일지는 해석을 교차 확인하는 자료로 사용한다. 최신판의 기능·수치·자료 구조를 10.78 규칙으로 채택하지 않는다. [정적 비교 기록](../../cpppj/recovery-reference-versions.json), [같은 위치 조회 x86 기록](../../cpppj/recovery-graphlookup-evidence.json).
+2026-10-07 사용자 결정: **cpppj 1차 목표는 `originals/Netstorm.exe`의 10.78 복원이다.** 10.37·10.62·10.82와 개발 일지는 해석을 교차 확인하는 자료로 사용한다. 최신판의 기능·수치·자료 구조를 10.78 규칙으로 채택하지 않는다. [정적 비교 기록](../../cpppj/recovery-reference-versions.json), [같은 위치 조회 x86 기록](../../cpppj/graphlookup.json).
 
 현재 PC에서는 원본/복사본 게임, 업데이터·설치/SFX·배치 파일과 클론 창을 실행하지 않았다. Python 바이트 복원·Ghidra 헤드리스·허용한 함수의 Unicorn 격리 실행·Release 빌드·콘솔 CTest만 수행했다. 업데이트 서버에도 접속하지 않았다. 원본 다섯 디렉터리와 AGENTS.md는 변경하지 않았다.
 

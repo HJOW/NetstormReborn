@@ -10,7 +10,7 @@ from pathlib import Path
 # 직전 전체983개 성공 단위의 git blob을 비교 기준으로 고정한다.
 ROOT = Path(__file__).resolve().parent.parent
 BASELINE = 'b76adf9'
-REPORT = ROOT / 'cpppj/recovery-world-bridge-state-lineage-evidence.json'
+REPORT = ROOT / 'cpppj/world-bridge-state-lineage.json'
 # 이 참조 선언과 Core 반환 인자 한 개만 이전 파일에서 달라져야 한다.
 ADDITION = '    // bridgeState: 같은 월드의 실제 표면 소유자 분배·연결이 읽는 현재 mutable 전역이다.\n    o::BridgeConnectState& bridgeState;\n'
 
@@ -44,8 +44,8 @@ def audit():
         before[filename] = digest(old)
         current[filename] = digest(new)
     # 직전 검증 보고서/로그는 수정하지 않고 현재 파일 해시로 연결한다.
-    paths = ('tools/analyze_world_bridge_state_lineage.py', 'cpppj/recovery-campaign-runtime7-evidence.json',
-             'extracted/campaign-runtime7-build-final.log', 'extracted/campaign-runtime7-all-final-tests.log')
+    paths = ('tools/analyze_world_bridge_state_lineage.py', 'cpppj/run7.json',
+             'extracted/run7-build-final.log', 'extracted/run7-all-final.log')
     return {'host': 'HJOW-Athlon',
             'baseline_commit': subprocess.check_output(['git', 'rev-parse', BASELINE], cwd=ROOT, text=True).strip(),
             'baseline_source_blob_sha256': before, 'current_source_sha256': current,

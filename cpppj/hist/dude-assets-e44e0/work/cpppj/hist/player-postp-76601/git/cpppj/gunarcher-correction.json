@@ -1,0 +1,56 @@
+{
+  "schema": 2,
+  "host": "HJOW-Athlon",
+  "native_rows": 1690,
+  "normal": 1688,
+  "prefix": 2,
+  "new_unique_rows": 0,
+  "changes": [
+    "실제 target0 방향 계수90을 적용(초안45 교정)",
+    "실제Host 검사 입력 type71.group=0 공급",
+    "실제 helper float0.5 가산 후 절삭 적용",
+    "실제 Host 서버 풀 및 GunProcess.WritePacket 송신 연결"
+  ],
+  "initial_full_snapshot": true,
+  "aim_corrected_full_snapshot": true,
+  "rounding_pe": {
+    "originals": {
+      "address": "0043fa50",
+      "bytes": "d9442404d805e40e5000e9614f0a00",
+      "constant_address": "00500ee4",
+      "constant_bytes": "0000003f",
+      "value": 0.5
+    },
+    "originalCD": {
+      "address": "0048ee10",
+      "bytes": "d9442404d80554465000e9fd270600",
+      "constant_address": "00504654",
+      "constant_bytes": "0000003f",
+      "value": 0.5
+    }
+  },
+  "files": {
+    "cpppj/gunarcher.json": "8b69696b3ad48efc951a9a053abd648514891d20cb976d94f703eaede20b242b",
+    "cpppj/hist/gunarcher-ai-fdb97/analyze_gunarcher_correction.py": "8d317b85c4c4da466504495979c59b9272b58d1dd9ccde1a68267a188b2fc431",
+    "cpppj/hist/gunarcher-ai-fdb97/ArcherAnimationTests.cpp": "987468b20a2b4b9c2203e710dc3da5f196c44a543a3e25673ac26c8204aa3b5a",
+    "cpppj/hist/gunarcher-ai-fdb97/run8-ArcherAnimation_fixed.log": "1156ac4e853f289948a50984ce401bbc035641d24f9c79f1eb474a1f7ecec6c5",
+    "cpppj/hist/gunarcher-ai-fdb97/decomp_gunarcher_oracle.py": "964f87ac4e39b1a832eaf452db87e972d403de1df21f99139c7106a90b06562e",
+    "cpppj/hist/gunarcher-ai-fdb97/gunarcher-x86.tsv": "7882627526d66a7b5084902407788f83170f5c3da27745dfec0a3aa0cb77ab2b",
+    "cpppj/hist/gunarcher-ai-fdb97/RawArcherAnimation.cpp": "d0aa464b5e15d97db94a552cdd55e6aeca4cb121f66d02fe5638d2c7e2e16afa",
+    "cpppj/hist/gunarcher-ai-fdb97/RawArcherAnimation.h": "da693278bc1bccc8cc5bd4a5735995bfe2a684cdc4ab98ba6088f42fbdc0f8b9",
+    "cpppj/hist/gunarcher-ai-fdb97/gunarcher-correction.json": "085a4d0649e6b7f07132562a6566ce74bb5f598433c330555758c3f60df9ee4b",
+    "cpppj/hist/gunarcher-ai-fdb97/gunarcher.json": "a0f9b5617e292f2d532acf132dc6391e1891916a7a82983e74857d2b28d3b96d",
+    "cpppj/hist/gunarcher-initial/ArcherAnimationTests.cpp": "42e8e89e5610d491fcf85c718a8790a0be733ddc820523f7442faa0efb99506f",
+    "cpppj/hist/gunarcher-initial/decomp_gunarcher_oracle.py": "964f87ac4e39b1a832eaf452db87e972d403de1df21f99139c7106a90b06562e",
+    "cpppj/hist/gunarcher-initial/gunarcher-x86.tsv": "7882627526d66a7b5084902407788f83170f5c3da27745dfec0a3aa0cb77ab2b",
+    "cpppj/hist/gunarcher-initial/RawArcherAnimation.cpp": "1da6eb04980a75d35ef25ac768d2540b0cb1f4945b9ed31593aafc059dceafd6",
+    "cpppj/hist/gunarcher-initial/RawArcherAnimation.h": "da693278bc1bccc8cc5bd4a5735995bfe2a684cdc4ab98ba6088f42fbdc0f8b9",
+    "cpppj/hist/gunarcher-initial/gunarcher.json": "aa1c4aeff920637a9a18f936ba2792a5daec480929f20f40ccb96005e95a40e7",
+    "cpppj/src/o/RawArcherAnimation.cpp": "a1abcc4d7529e95a120d11f65a0414693e35f1c514296fd0b2eed1818913c73d",
+    "cpppj/tests/ArcherAnimationTests.cpp": "d2b171bb32d6c3bf64bb4d625cb944f42772b5f558ee52f6c081968595ca3c30",
+    "cpppj/tests/fixtures/gunarcher-x86.tsv": "7882627526d66a7b5084902407788f83170f5c3da27745dfec0a3aa0cb77ab2b",
+    "extracted/run8-ArcherAnimation_-first.log": "7aae9d8f27a19fd8de6d0790d96529bcda0e3ee388e06b8ac63d4b7eb7de3243",
+    "extracted/run8-ArcherAnimation_fixed.log": "1156ac4e853f289948a50984ce401bbc035641d24f9c79f1eb474a1f7ecec6c5",
+    "tools/analyze_gunarcher_correction.py": "0d97cdc1c9c8d576b0000b15ad578003ee6fc1b2db533a5324a70478d04dbf62"
+  }
+}

@@ -42,7 +42,7 @@ KEYS = ('lock','legal','x','y','inputFlags','costFlags','legalGump','cursorGump'
     'queryChange','prepareChange','sourceChange','detachChange','receiveChange','localChange','addChange')
 SNAPSHOT = ('lock','legal','preview','x','y','inputFlags','costFlags','legalGump','cursorGump','argument','direction')
 FIXTURE = ROOT/'cpppj/tests/fixtures/cursordrop-x86.tsv'
-REPORT = ROOT/'cpppj/recovery-cursordrop-evidence.json'
+REPORT = ROOT/'cpppj/cursordrop.json'
 
 
 def drop_case(**changes):

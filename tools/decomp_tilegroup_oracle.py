@@ -16,7 +16,7 @@ from decomp_process_oracle import (ProcessOracle, ROOT, BINARIES, CONTROLS, STAC
 HEADERS, ARRAY, GRID, POOL, COVERED = 0x15000000, 0x15001000, 0x15010000, 0x15030000, 0x15040000
 CAPACITY, HEADER_CAPACITY, SEED = 96, 64, 0x43341021
 FIXTURE = ROOT/'cpppj/tests/fixtures/tilegroup-x86.tsv'
-REPORT = ROOT/'cpppj/recovery-tilegroup-evidence.json'
+REPORT = ROOT/'cpppj/tilegroup.json'
 # 수집/해시 선택/크기/월드 크기/풀/화면 높이의 실제 주소다. 전부 실제 명령으로 실행한다.
 SPECS = {
     'originals': dict(collect=0x433410, hash=0x542508, scales=0x5424f8, world=0x531928, pool=0x5c8464, height=0x531864, stride=50),

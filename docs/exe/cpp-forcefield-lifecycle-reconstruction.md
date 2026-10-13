@@ -40,7 +40,7 @@ postPop은 `flags & 1`일 때 `new(0x28)`→Regular 사건 **1·payload 0.08f**,
 
 ## 독립 원본 관찰과 C++ 합성 검사
 
-[`decomp_forcefieldpostpop_oracle.py`](../../tools/decomp_forcefieldpostpop_oracle.py)는 실제 postPop/Regular 처리기·좌표 타입 helper·일반 finder/CRT를 정상 반환까지 실행한다. 각 PE **1,208개**, 세 판본 **3,624개**, 두 x87 정밀도에서 같은 관찰을 저장했다. 판본별 접두 입력 128개·Regular 입력 1,080개이며 실제 정상 반환은 접두 **256회**, 처리기 **2,160회**, 총 **7,248회**다. [fixture](../../cpppj/tests/fixtures/forcefieldpostpop-x86.tsv), [근거 JSON](../../cpppj/recovery-forcefieldpostpop-evidence.json).
+[`decomp_forcefieldpostpop_oracle.py`](../../tools/decomp_forcefieldpostpop_oracle.py)는 실제 postPop/Regular 처리기·좌표 타입 helper·일반 finder/CRT를 정상 반환까지 실행한다. 각 PE **1,208개**, 세 판본 **3,624개**, 두 x87 정밀도에서 같은 관찰을 저장했다. 판본별 접두 입력 128개·Regular 입력 1,080개이며 실제 정상 반환은 접두 **256회**, 처리기 **2,160회**, 총 **7,248회**다. [fixture](../../cpppj/tests/fixtures/forcefieldpostpop-x86.tsv), [근거 JSON](../../cpppj/forcefieldpostpop.json).
 
 접두는 flags 8종·두 확보 성공/실패·extra 4종을 교차한다. Regular는 사건 1/2/99·소수/보드 가장자리 좌표·현재 사제 타입 158/159/256·빈/다른 타입/매장/dead/void/다른 소유자/발자국 교차/다른 단계 후보·count/payload(NaN 비트 포함)를 교차한다. Python/C++은 존재/반환/예약의 기대 분기를 계산하지 않는다. 효과 순서/인자·raw 전체·float 반환 비트·ABI/비영 보존 레지스터/SEH/x87 제어·TOP/허용 실행·쓰기/assert·OS 0/SHA/정확한 입력·실제 진입을 감사한다.
 

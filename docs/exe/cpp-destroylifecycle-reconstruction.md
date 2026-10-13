@@ -2,7 +2,7 @@
 
 2026-10-07. **1차 기준은 10.78**이다. [공통 destroy 순서](cpp-destroy-reconstruction.md)에 실제 공통 장부 훅을 연결했다. 호스트 **DESKTOP-HJOW에서 원본/복사본 게임·업데이터/설치 도구·클론 창을 실행하지 않았다.** Graph 비활성·AI 미부착·비전투 null 큐 범위를 콘솔로 검사한다.
 
-소스: [SquidDestroyLifecycle.h](../../cpppj/src/o/SquidDestroyLifecycle.h), [구현](../../cpppj/src/o/SquidDestroyLifecycle.cpp). 검사: [DestroyLifecycleTests.cpp](../../cpppj/tests/DestroyLifecycleTests.cpp). 독립 출력: [destroylifecycle-x86.tsv](../../cpppj/tests/fixtures/destroylifecycle-x86.tsv), [근거 기록](../../cpppj/recovery-destroylifecycle-evidence.json), [생성/감사 도구](../../tools/decomp_destroylifecycle_oracle.py).
+소스: [SquidDestroyLifecycle.h](../../cpppj/src/o/SquidDestroyLifecycle.h), [구현](../../cpppj/src/o/SquidDestroyLifecycle.cpp). 검사: [DestroyLifecycleTests.cpp](../../cpppj/tests/DestroyLifecycleTests.cpp). 독립 출력: [destroylifecycle-x86.tsv](../../cpppj/tests/fixtures/destroylifecycle-x86.tsv), [근거 기록](../../cpppj/destroylifecycle.json), [생성/감사 도구](../../tools/decomp_destroylifecycle_oracle.py).
 
 ## 원본 주소와 새 내보내기
 

@@ -24,7 +24,7 @@ SPECS['original1037']=dict(SPECS['originalCD'])
 # 입력 시드와 완성 관찰/근거 보고서의 저장 경로다.
 SEED=0x46620078
 FIXTURE=ROOT/'cpppj/tests/fixtures/gumpinput-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-gumpinput-evidence.json'
+REPORT=ROOT/'cpppj/gumpinput.json'
 
 
 def plan():

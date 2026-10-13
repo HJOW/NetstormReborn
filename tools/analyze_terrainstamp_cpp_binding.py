@@ -8,12 +8,12 @@ from pathlib import Path
 
 # 원본 보고서와 초기stamp의 현재 C++/공유 후보선택 의존성을 명시한다.
 ROOT=Path(__file__).resolve().parent.parent
-REPORT=ROOT/'cpppj/recovery-terrainstamp-evidence.json'
+REPORT=ROOT/'cpppj/terrainstamp.json'
 SOURCES=('cpppj/src/o/RawTerrainStamp.h','cpppj/src/o/RawTerrainStamp.cpp','cpppj/tests/TerrainStampTests.cpp',
     'cpppj/tests/RawSceneSupport.h','cpppj/src/o/RawFrameChoose.h','cpppj/src/o/RawFrameChoose.cpp',
     'cpppj/src/o/RawSquidRegion.h','cpppj/src/o/RawSquidRegion.cpp',
     'cpppj/src/o/SpStore.h','cpppj/src/o/SpStore.cpp','cpppj/src/o/RiftType.h','cpppj/src/o/RiftType.cpp',
-    'cpppj/src/o/TerrainBuilder.h','cpppj/src/o/TerrainBuilder.cpp','cpppj/recovery-framechoose-lineage-evidence.json',
+    'cpppj/src/o/TerrainBuilder.h','cpppj/src/o/TerrainBuilder.cpp','cpppj/framechoose-lineage.json',
     'tools/analyze_framechoose_lineage.py','tools/analyze_terrainstamp_cpp_binding.py')
 
 
@@ -34,7 +34,7 @@ def bind():
     report['cpp_binding']={
         'native_cases':report['total'],'added_native_cases':0,
         'scope':'두 판본 FrameAt/Stamp와 공유 ChooseTerrainFrame/CRT99cache를 같은 pool/두 난수에서 비교한다.',
-        'shared_choose_lineage':'4e532fd의 RawRegionPaint::Choose 원래 토큰과484개 관찰을 recovery-framechoose-lineage-evidence.json에서 연결한다.',
+        'shared_choose_lineage':'4e532fd의 RawRegionPaint::Choose 원래 토큰과484개 관찰을 framechoose-lineage.json에서 연결한다.',
         'external_cpp_boundaries':'factory/가상 owner/Pop/region setter/region127 chunk 조회/assert는 필수 hooks다. 검사에서는 명시 원본 인자/슬롯 효과를 관찰하며 월드 production 결합 완료로 세지 않는다.',
         'allocator_scope':'native의 실제 allocation/free는 external 계수에 기록한다. C++ std배열/후보vector의 호스트 allocator 호출순서는 게임 효과 대조 항목이 아니다.'}
     REPORT.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')

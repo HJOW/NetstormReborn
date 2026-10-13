@@ -18,7 +18,7 @@ from analyze_styletext import ROOT, digest, read_ranges
 
 # 입력 PE는 읽기만 하고 분석 산출물은 저장소의 extracted/ 및 cpppj/에 기록한다.
 PLAN = ROOT / 'tools/ghidra/gumpform-functions.json'
-REPORT = ROOT / 'cpppj/recovery-gumpform-evidence.json'
+REPORT = ROOT / 'cpppj/gumpform.json'
 # 실제 GumpForm·기본 Gump·메뉴 가상 표/내장 타입 전역/등록 표와 보호 PE의 기준 SHA-256이다.
 EDITIONS = {
     'originals': {'binary': 'originals/Netstorm.exe', 'form_vtable': 0x512188,

@@ -26,7 +26,7 @@ SPEC={
 FULL_SHAPE,POPULATION=0x14000000,ARENA+0x8000
 KEYS=('capacity','count','blocked','x','y','owner','repeat')
 FIXTURE=ROOT/'cpppj/tests/fixtures/dudespawn-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-dudespawn-evidence.json'
+REPORT=ROOT/'cpppj/dudespawn.json'
 
 
 def inputs():

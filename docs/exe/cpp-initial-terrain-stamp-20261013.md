@@ -24,11 +24,11 @@ stamp는 현재 x/X/= mapping을 isle97/edge98/isle97로 다시 지정한다. �
 
 ## 공유 C++ 저장소와 하위 경계
 
-`RawTerrainStamp`는 같은 SidPool·현재 types/frames·원본 code/지역/mapping/alias/bounds/context, 공유 GameRandom, 공유 CRT holdrandDWORD와 독립 전역cache를 참조한다. 기존 `RawRegionPaint::Choose`를 다시 구현하지 않고 root가 공유한 **ChooseTerrainFrame(frames,code,theme,random)**을 호출한다. 공유 몸체의 원래 코드/484개 원본 관찰은 `recovery-framechoose-lineage-evidence.json`의 기준commit **4e532fd**에 연결된다.
+`RawTerrainStamp`는 같은 SidPool·현재 types/frames·원본 code/지역/mapping/alias/bounds/context, 공유 GameRandom, 공유 CRT holdrandDWORD와 독립 전역cache를 참조한다. 기존 `RawRegionPaint::Choose`를 다시 구현하지 않고 root가 공유한 **ChooseTerrainFrame(frames,code,theme,random)**을 호출한다. 공유 몸체의 원래 코드/484개 원본 관찰은 `framechoose-lineage.json`의 기준commit **4e532fd**에 연결된다.
 
-`TerrainStampAssertion`의 두 값에 각각 한국어 용도주석을 추가했다. 교정 전 헤더/보고서는 별도로 보존하고 `tools/analyze_terrainstamp_enum_comments.py`와 `recovery-terrainstamp-enum-comments-evidence.json`에서 **헤더 전체581 C++토큰 불변**, 나머지 원본/소스/fixture 출처 불변을 확인했다. 현재 C++출처 표를 새 헤더SHA에 연결했고 native_source_files는 그대로다. 이 주석 교정의 새 원본 관찰/동작 변경 수는0이다.
+`TerrainStampAssertion`의 두 값에 각각 한국어 용도주석을 추가했다. 교정 전 헤더/보고서는 별도로 보존하고 `tools/analyze_terrainstamp_enum_comments.py`와 `terrainstamp-enum-comments.json`에서 **헤더 전체581 C++토큰 불변**, 나머지 원본/소스/fixture 출처 불변을 확인했다. 현재 C++출처 표를 새 헤더SHA에 연결했고 native_source_files는 그대로다. 이 주석 교정의 새 원본 관찰/동작 변경 수는0이다.
 
-첫 C++ 전수대조의 Frame행2에서 원본보다8 작은 프레임을 발견했다. 실제 양판본의8이웃 bit표는 **{1,2,2,4,4,8,8,1}**이며 직선 N/E/S/W는1/2/4/8, 대각선 NW/NE/SE/SW는1/2/4/8이다. C++의 대각선 NE=1 해석을 실제NE=2로 교정했다. native/fixture1560개는 그대로이며 `tools/analyze_terrainstamp_mask_correction.py`와 `recovery-terrainstamp-mask-correction-evidence.json`에서 교정 전 cpp 전체/이전 출처, 제한된 세 위치의 교정 및 두 보호PE의 실제 bit표를 연결한다. enum 주석 단계의 당시cpp 불변은 그 이후 mask 교정의 `mask_successor`에 이어진다. 초기 실패 로그는 `extracted/campaign-runtime7-TerrainStamp_-initial-tests.log`로 보존한다. 이 교정의 새 native 관찰 수는0이다.
+첫 C++ 전수대조의 Frame행2에서 원본보다8 작은 프레임을 발견했다. 실제 양판본의8이웃 bit표는 **{1,2,2,4,4,8,8,1}**이며 직선 N/E/S/W는1/2/4/8, 대각선 NW/NE/SE/SW는1/2/4/8이다. C++의 대각선 NE=1 해석을 실제NE=2로 교정했다. native/fixture1560개는 그대로이며 `tools/analyze_terrainstamp_mask_correction.py`와 `terrainstamp-mask-correction.json`에서 교정 전 cpp 전체/이전 출처, 제한된 세 위치의 교정 및 두 보호PE의 실제 bit표를 연결한다. enum 주석 단계의 당시cpp 불변은 그 이후 mask 교정의 `mask_successor`에 이어진다. 초기 실패 로그는 `extracted/run7-TerrainStamp_-first.log`로 보존한다. 이 교정의 새 native 관찰 수는0이다.
 
 factory, 가상owner/Pop, 실제 region setter, 지역127의 현재 ChunkMap 조회와 assertion은 필수 hooks다. 미연결이면 생성 시 거부한다. root의 실제 factory/Pop/PostPop과 `SetSquidRegion`을 같은 pool에 바인딩하는 월드 작업은 별도 통합 단계다. 이 모듈의 hooks를 빈 효과로 채워 월드 복원이 완료됐다고 세지 않는다.
 
@@ -40,8 +40,8 @@ factory, 가상owner/Pop, 실제 region setter, 지역127의 현재 ChunkMap 조
 
 독립 실행기는 실제 frame/mask/99cache/CRT·게임난수/Choose/stamp/region setter 명령을 실행한다. CRT thread 주소, allocation/free, factory와 가상owner/Pop, region127 ChunkMap 조회/assert는 격리된 경계다. native allocation/free는 별도 외부호출 계수에 남기며 C++ std배열/후보vector의 호스트 allocator 순서를 게임 효과로 비교하지 않는다. 실제 factory/가상효과 인자·호출순서, 생성 raw의type/frame/owner/region/좌표, lastSid, 특수mapping과 두 난수/99cache의 현재 값은 fixture에 보존한다.
 
-자료는 `tools/decomp_terrainstamp_oracle.py`, `tools/ghidra/terrainstamp-functions.json`, `cpppj/tests/fixtures/terrainstamp-x86.tsv`, `cpppj/recovery-terrainstamp-evidence.json`, `extracted/terrainstamp-oracle-final.log`다. 양판본 smoke12개씩과 최종1560개 native 정상반환/assert0 및 현재SHA/고유입력/두정밀도 반환 감사가 통과했다. 최신 공통 Release는 종료0/경고0이며 **TerrainStamp_3 tests와 양판본1560개 전수 C++ 대조 및 cache재사용/미연결효과 거부가 모두 통과**했다. 전체983개 검사는 예정이며 아직 실행 전이다. source binding 도구 `tools/analyze_terrainstamp_cpp_binding.py`는 native 출처 SHA를 보존하고 현재 C++/공유Choose/실제SquidRegion 출처를 별도 표로 연결했으며 연결SHA 감사가 통과했다. 이 연결 단계의 새 native 관찰 수는0이다.
+자료는 `tools/decomp_terrainstamp_oracle.py`, `tools/ghidra/terrainstamp-functions.json`, `cpppj/tests/fixtures/terrainstamp-x86.tsv`, `cpppj/terrainstamp.json`, `extracted/terrainstamp-oracle-final.log`다. 양판본 smoke12개씩과 최종1560개 native 정상반환/assert0 및 현재SHA/고유입력/두정밀도 반환 감사가 통과했다. 최신 공통 Release는 종료0/경고0이며 **TerrainStamp_3 tests와 양판본1560개 전수 C++ 대조 및 cache재사용/미연결효과 거부가 모두 통과**했다. 전체983개 검사는 예정이며 아직 실행 전이다. source binding 도구 `tools/analyze_terrainstamp_cpp_binding.py`는 native 출처 SHA를 보존하고 현재 C++/공유Choose/실제SquidRegion 출처를 별도 표로 연결했으며 연결SHA 감사가 통과했다. 이 연결 단계의 새 native 관찰 수는0이다.
 
 GUI/OS/실제 게임 창 진입은0이다. 실제 Shape/Pop/PostPop·지형 성장/경계 wrapper·전체 saved 지형 생성·캠페인 플레이/완주를 검증한 보고서는 아니다.
 
-최종 단위07 Release 두 타깃 종료0·경고/오류0, 집중3개 및 **전체983개 검사/실패0**이다. 통합 근거는 `recovery-campaign-runtime7-evidence.json`, 최종 전체 로그는 `extracted/campaign-runtime7-all-final-tests.log`다.
+최종 단위07 Release 두 타깃 종료0·경고/오류0, 집중3개 및 **전체983개 검사/실패0**이다. 통합 근거는 `run7.json`, 최종 전체 로그는 `extracted/run7-all-final.log`다.

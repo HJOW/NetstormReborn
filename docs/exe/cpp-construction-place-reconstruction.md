@@ -94,7 +94,7 @@ C++는 개수 불일치를 두 판본 모두 **효과 전에** 거부한다(원�
 
 관찰에서 뺀 것: 서버 번호 9·void가 아닌 슬롯·개수 불일치·없는 품질 프레임(모두 원본 assert), 번호 5 미만 SID, NaN/무한대 시작 좌표(C++ decoder가 거부한다). 그래서 noIsland 시작 칸 비교의 NaN 차이는 기계어 판독이며 fixture로 대조하지 않았다.
 
-[`ConstructionPlaceTests.cpp`](../../cpppj/tests/ConstructionPlaceTests.cpp)의 새 검사 **6개**: 세 PE 관찰 전체 재생(사건 순서·조각 슬롯 전체·부가 결과 일치), 실제 `SquidFactory`·`SquidOwner`·`SquidReward`·`ScrambledSpStore`와 연결한 확정 배치/abstract 배치/잔액 부족(SP 1000 → 750, 부족 시 안내·환불·취소 통지와 표시 비트, 비권한 강제 차감), 다리 품질과 서버 영역 SID 수신, 누락 경계·다른 풀·개수 불일치(효과 없음)·서버 번호·void 아님·없는 품질 프레임 거부. [fixture](../../cpppj/tests/fixtures/constructionplace-x86.tsv)와 [근거 JSON](../../cpppj/recovery-constructionplace-evidence.json)은 UTF-8/LF다.
+[`ConstructionPlaceTests.cpp`](../../cpppj/tests/ConstructionPlaceTests.cpp)의 새 검사 **6개**: 세 PE 관찰 전체 재생(사건 순서·조각 슬롯 전체·부가 결과 일치), 실제 `SquidFactory`·`SquidOwner`·`SquidReward`·`ScrambledSpStore`와 연결한 확정 배치/abstract 배치/잔액 부족(SP 1000 → 750, 부족 시 안내·환불·취소 통지와 표시 비트, 비권한 강제 차감), 다리 품질과 서버 영역 SID 수신, 누락 경계·다른 풀·개수 불일치(효과 없음)·서버 번호·void 아님·없는 품질 프레임 거부. [fixture](../../cpppj/tests/fixtures/constructionplace-x86.tsv)와 [근거 JSON](../../cpppj/constructionplace.json)은 UTF-8/LF다.
 
 Release 경고/오류 **0**, CTest 내부 **561개·실패 0**(145.73초), 원본 근거 감사 **87종 모두 통과**. 새 변이 18개 확인: 첫 실행은 **17개 검출·1개 미검출**이었다. 미검출 `place-bridge-life-overwrites-word`(다리 수명을 써넣는 단어 마스크 `0x78`을 `0xf8`로 넓힘)는 동등 변이가 아니라 검사 빈틈이었다 — 원본 입력의 수명 상수가 16 이하라 써넣는 값(상수 − 1)이 bit 7을 켜는 일이 없었다. 기계어 대조 도구에 수명 상수 17·33 입력(판본마다 8개)을 더해 원본 기대값을 다시 만든 뒤(저장 입력 3,658 → 3,682개) 재실행에서 검출되어 **18개 모두 검출**이다. 클라이언트 코드는 바꾸지 않았지만 새 실행 파일로 클론 창 회귀 두 가지를 돌렸다: 메뉴 **54상태**(`cpp_menu_smoke.py`), 월드 **20조작 상태**(`cpp_world_smoke.py`), 원본 파일 불변. 원본 보호 파일·AGENTS.md·dotnetpj는 바꾸지 않았다. 로그는 Git 제외 `extracted/constructionplace-*.log`에 있다.
 

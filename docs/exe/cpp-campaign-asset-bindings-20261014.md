@@ -18,7 +18,7 @@ bindings.ActivatePostPop();
 
 `PrepareFrame(now)`는 같은 GameClock now와 현재 Player fortMode를 조회한다. 상위는 각 Pop/Frame 진입 직전에 이를 호출하고 `SetLoadingDepth`로 실제 로더 중첩을 전달한다. `RawAssetPostPop` 생성 직후 **단위15 공유 API `BindPlayerRecords(current9BYTE,&playerState.battleOwner)`**를 호출한다. 현재14에는 이 API가 아직 없으므로 root가14 커밋 뒤 전체 소스/근거 lineage를 보존하여 추가하기 전까지 컴파일할 수 없다. 기존 신전4DWORD의 Before/After 복사는 중첩 Pop getter 시점을 보장하지 못하므로 사용하지 않는다.
 
-Player 신전 원문은 패치+7c/80/84/88, CD+74/78/7c/80이다. AI 등록은 `RawGeyserAiRegistration`이 동일9 BYTE의 현재 포인터를 직접 읽는다. nonnull AI는 첫 실제 요청 인자를 보관한 예외로 거부한다. 공유 optional 현재owner 포인터는 Vortex의 `localOwner` 판정 시점에 같은 `PlayerWorldState.battleOwner` DWORD를 직접 읽는다. 이 값이나 신전 필드를 step 복사로 대체하지 않는다. 최초3파일 API 초안은 `recovery-history/campaign-asset-bindings-before-current-owner-api`에 전체 보존했다. 해당 포인터/Player BYTE의 수명은 binding보다 길어야 한다.
+Player 신전 원문은 패치+7c/80/84/88, CD+74/78/7c/80이다. AI 등록은 `RawGeyserAiRegistration`이 동일9 BYTE의 현재 포인터를 직접 읽는다. nonnull AI는 첫 실제 요청 인자를 보관한 예외로 거부한다. 공유 optional 현재owner 포인터는 Vortex의 `localOwner` 판정 시점에 같은 `PlayerWorldState.battleOwner` DWORD를 직접 읽는다. 이 값이나 신전 필드를 step 복사로 대체하지 않는다. 최초3파일 API 초안은 `hist/campaign-ass-e2f5a`에 전체 보존했다. 해당 포인터/Player BYTE의 수명은 binding보다 길어야 한다.
 
 ## 직접 연결한 기존 몸체
 

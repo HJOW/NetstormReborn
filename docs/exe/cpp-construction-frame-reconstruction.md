@@ -62,6 +62,6 @@ Draw는 **capacity가 0일 때만** 생략한다. total이 0이어도 capacity�
 
 정상 CTest는 저장 fixture만 읽으며 PE/Python/게임/OS를 실행하지 않는다. 원본 생성/삭제/등록과 실제 SHP 팔레트/장치의 내용, 임의 손상/NaN/무한값, 모든 x87 오차 입력의 동등성을 증명한 것은 아니다. 후속은 **표시 소멸자와 RenderProcess 부착/목록·클라이언트 자동 Run/Draw·실제 SHP 캡처/팔레트 생성/출력 연결**이다. 타입 준비 소리 자료, 부모 공간·소유 사제 contained/경로, 집합/지연 패킷 분배와 건설 GUI도 남아 있다.
 
-관련 파일: `cpppj/src/o/RawConstructionFrame.{h,cpp}`, `cpppj/tests/ConstructionFrameTests.cpp`, `cpppj/tests/fixtures/constructionframe-x86.tsv`, `cpppj/recovery-constructionframe-evidence.json`, `tools/decomp_constructionframe_oracle.py`, `tools/ghidra/constructionframe-functions.json`.
+관련 파일: `cpppj/src/o/RawConstructionFrame.{h,cpp}`, `cpppj/tests/ConstructionFrameTests.cpp`, `cpppj/tests/fixtures/constructionframe-x86.tsv`, `cpppj/constructionframe.json`, `tools/decomp_constructionframe_oracle.py`, `tools/ghidra/constructionframe-functions.json`.
 
 재검사: `python -X utf8 tools/decomp_constructionframe_oracle.py --verify`, `cpppj/build/bin/Release/netstorm_tests.exe --filter ConstructionFrame_`, `ctest --test-dir cpppj/build -C Release --output-on-failure`. 내보내기: `powershell -ExecutionPolicy Bypass -File tools/ghidra/export_functions.ps1 -Name constructionframe`.

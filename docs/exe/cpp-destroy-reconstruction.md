@@ -2,7 +2,7 @@
 
 2026-10-07. **1차 기준은 10.78**이다. [일반 공간 탐색](cpp-rawfinder-reconstruction.md) 다음으로 공통 destroy의 dead 표시·가상 훅·종속 체인·전파/선택·Unpop·반납 순서를 복원했다. 기존 [다리 삭제 훅](cpp-bridgeeffects-reconstruction.md) 내부의 링크 삭제를 실제 공통 destroy에 연결해 콘솔에서 대조했다. 호스트 **`DESKTOP-HJOW`에서 원본/복사본·업데이터/설치 도구·클론 창을 실행하지 않았다.**
 
-소스: [RawSquidDestroy.h](../../cpppj/src/o/RawSquidDestroy.h), [RawSquidDestroy.cpp](../../cpppj/src/o/RawSquidDestroy.cpp). 검사: [RawDestroyTests.cpp](../../cpppj/tests/RawDestroyTests.cpp). 독립 출력: [destroy-x86.tsv](../../cpppj/tests/fixtures/destroy-x86.tsv), [근거 기록](../../cpppj/recovery-destroy-evidence.json), [생성/감사 도구](../../tools/decomp_destroy_oracle.py).
+소스: [RawSquidDestroy.h](../../cpppj/src/o/RawSquidDestroy.h), [RawSquidDestroy.cpp](../../cpppj/src/o/RawSquidDestroy.cpp). 검사: [RawDestroyTests.cpp](../../cpppj/tests/RawDestroyTests.cpp). 독립 출력: [destroy-x86.tsv](../../cpppj/tests/fixtures/destroy-x86.tsv), [근거 기록](../../cpppj/destroy.json), [생성/감사 도구](../../tools/decomp_destroy_oracle.py).
 
 **복원 범위는 공통 삭제의 제어 흐름과 지원 자산의 실제 Unpop/반납이다.** 공통 pre/postDestroy의 그래프·목록·통계·소리/삭제 보상·AI 효과와 종속 객체의 파생 가상 메서드는 콜백 계약이다. 기존 GUI GameWorld는 임시 객체 모델이며 이 어댑터에 연결하지 않았다. 미션 완주나 전체 파생 삭제 복원으로 세지 않는다.
 

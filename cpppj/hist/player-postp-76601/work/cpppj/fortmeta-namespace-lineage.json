@@ -1,0 +1,98 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-14",
+  "new_native_unique": 0,
+  "preserved_native_unique": 950,
+  "normal_unique": 394,
+  "assert_unique": 556,
+  "old_files": [
+    {
+      "path": "cpppj/hist/fortmeta-bef-039ea/cpppj/fortmeta-cpp-binding.json",
+      "bytes": 10520,
+      "sha256": "1d0e2570e83821c08337a66e2ac612169f3a8d716ea33e47bbd5b88019666d18"
+    },
+    {
+      "path": "cpppj/hist/fortmeta-bef-039ea/cpppj/fortmeta.json",
+      "bytes": 3497,
+      "sha256": "6d829e2f37c37005c93c0f2de1ae79d06d26ecd9aa36029e0354a566dcf7e4e5"
+    },
+    {
+      "path": "cpppj/hist/fortmeta-bef-039ea/cpppj/src/o/RawFortMetaLoad.cpp",
+      "bytes": 6044,
+      "sha256": "8e2b67f72f134a51c34001a9d815b81a2fb8d4111b2c0c3385421e9adf6adb14"
+    },
+    {
+      "path": "cpppj/hist/fortmeta-bef-039ea/cpppj/src/o/RawFortMetaLoad.h",
+      "bytes": 4914,
+      "sha256": "f937da92ace23acc093569c87ddc1d2c3d05fbd5fb443a56e5df5426b5416478"
+    },
+    {
+      "path": "cpppj/hist/fortmeta-bef-039ea/cpppj/tests/fixtures/fortmeta-x86.tsv",
+      "bytes": 532060,
+      "sha256": "47c1ad6441ef2a9b62e010f32862171cb7ead5f174c4f7edbad81f037c2fe4a9"
+    },
+    {
+      "path": "cpppj/hist/fortmeta-bef-039ea/cpppj/tests/FortMetaLoadTests.cpp",
+      "bytes": 13331,
+      "sha256": "8c66bbcf3887ebe47ceeedf074b0a6e1dc78aa2e7e6bcaae09611830d1f76e2f"
+    },
+    {
+      "path": "cpppj/hist/fortmeta-bef-039ea/docs/exe/cpp-fort-meta-load-20261014.md",
+      "bytes": 6414,
+      "sha256": "2454385322301406e4bb0beec50bdbebfd238441c168132d31e4ba14b203600b"
+    },
+    {
+      "path": "cpppj/hist/fortmeta-bef-039ea/extracted/run12-build-initial.log",
+      "bytes": 14468,
+      "sha256": "47a313eb68e4f73a77b9e01f4e6d433ba40a3ffe6a3bee6f517ddad8a3382a21"
+    },
+    {
+      "path": "cpppj/hist/fortmeta-bef-039ea/extracted/run12-build-repaired.log",
+      "bytes": 646,
+      "sha256": "007899343a4fe115b4af9c6afb40e202990a9092e7c9909e5afd36609dc9bd8a"
+    },
+    {
+      "path": "cpppj/hist/fortmeta-bef-039ea/tools/analyze_fortmeta_cpp_binding.py",
+      "bytes": 4976,
+      "sha256": "3bd9617446254ef4b92f9dc0b310e8fe9388b17c7d9ec0919858f0a88de2f5be"
+    },
+    {
+      "path": "cpppj/hist/fortmeta-bef-039ea/tools/decomp_fortmeta_oracle.py",
+      "bytes": 15541,
+      "sha256": "3848634fef3493b3f2522592f4e63a6eaffde7e0bd63bfeb59174795b340dd8e"
+    },
+    {
+      "path": "cpppj/hist/fortmeta-bef-039ea/tools/ghidra/fortmeta-functions.json",
+      "bytes": 478,
+      "sha256": "331199f5039a05e0f6e9e5fafdbd3fbc9e89ef73443d4d02ce8b560bd85357e8"
+    }
+  ],
+  "current_cpp": {
+    "path": "cpppj/src/o/RawFortMetaLoad.cpp",
+    "bytes": 6046,
+    "sha256": "3c2bd74c58489f08f24cbe3bff8b28295bf584a9922c01b34790c0355f676ab7"
+  },
+  "current_native": {
+    "path": "cpppj/fortmeta.json",
+    "bytes": 3497,
+    "sha256": "6d829e2f37c37005c93c0f2de1ae79d06d26ecd9aa36029e0354a566dcf7e4e5"
+  },
+  "current_binding": {
+    "path": "cpppj/fortmeta-cpp-binding.json",
+    "bytes": 10520,
+    "sha256": "1d0e2570e83821c08337a66e2ac612169f3a8d716ea33e47bbd5b88019666d18"
+  },
+  "tool": {
+    "path": "tools/analyze_fortmeta_namespace_lineage.py",
+    "bytes": 4803,
+    "sha256": "1458e3f237a40d3187e596faaa5ad991b82c1d0dc1dc8440c9cbc879968e1757"
+  },
+  "added_bytes_hex": "7d0a",
+  "changed_cpp_files": 1,
+  "cpp_test_result": "공유재빌드/3검사대기",
+  "limits": [
+    "첫두공유build의C1075는namespace닫힘brace누락이다. source EOF에 }와LF 두BYTE만추가했다.",
+    "950개fixture·원본출력·native tool·초기보고서·다른CPP/test는전체바이트불변이며새원본0이다.",
+    "초기보고서의CPP SHA는교정전whole파일을가리키고현재CPP는이successor로연결한다. 초기빌드실패를삭제하지않는다."
+  ]
+}

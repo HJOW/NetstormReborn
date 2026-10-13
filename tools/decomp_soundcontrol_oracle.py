@@ -28,7 +28,7 @@ CONTROL = {
 CONTROL['original1037'] = dict(CONTROL['originalCD'])
 # 새 단계의 관찰/근거만 쓴다. 기존 재생 fixture와 감사 기록은 바꾸지 않는다.
 FIXTURE = ROOT / 'cpppj/tests/fixtures/soundcontrol-x86.tsv'
-REPORT = ROOT / 'cpppj/recovery-soundcontrol-evidence.json'
+REPORT = ROOT / 'cpppj/soundcontrol.json'
 
 
 def inputs():

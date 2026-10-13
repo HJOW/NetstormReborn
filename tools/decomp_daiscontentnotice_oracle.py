@@ -8,7 +8,7 @@ from unicorn.x86_const import *
 
 SPEC={'originals':dict(notice=0x449660,cue=0x542a50,priest=0x5412d0),'originalCD':dict(notice=0x4816c0,cue=0x512bd8,priest=0x51cbbc)} # 실제 가상 알림과 현재 전역 주소다.
 FIXTURE=ROOT/'cpppj/tests/fixtures/daiscontentnotice-x86.tsv' # 현재 입력/효과/raw의 독립 원본 결과다.
-REPORT=ROOT/'cpppj/recovery-daiscontentnotice-evidence.json' # 새1/1 몸체만의 출처와 명시 공간/장치 경계다.
+REPORT=ROOT/'cpppj/daiscontentnotice.json' # 새1/1 몸체만의 출처와 명시 공간/장치 경계다.
 
 def inputs():
     """현재 reason/kind/owner/로컬/알터 존재/WORD를 교차한다."""

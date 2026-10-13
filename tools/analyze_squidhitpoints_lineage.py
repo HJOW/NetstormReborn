@@ -9,13 +9,13 @@ import subprocess
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parent.parent # 동일 공유저장소의 고정된경로다.
-REPORT=ROOT/'cpppj/recovery-squidhitpoints-lineage-evidence.json' # 이전보고서를바꾸지않는새몸체이동근거다.
+REPORT=ROOT/'cpppj/squidhitpoints-lineage.json' # 이전보고서를바꾸지않는새몸체이동근거다.
 OLD_HEADER='cpppj/src/o/RawConstructionProcess.h' # 선언을그대로보존하는기존건설클래스다.
 OLD_SOURCE='cpppj/src/o/RawConstructionProcess.cpp' # private본문과새include외에는전체소스를보존한다.
 NEW_HEADER='cpppj/src/o/RawSquidHitPoints.h' # 공통직접쓰기의새공유선언이다.
 NEW_SOURCE='cpppj/src/o/RawSquidHitPoints.cpp' # 기존본문을pool매개변수로옮긴새공유구현이다.
-NATIVE='cpppj/recovery-constructionprocess-evidence.json' # 앞서검증한2868개원본관찰출처다.
-INTEGRATED='cpppj/recovery-campaign-runtime7-evidence.json' # 기준07의공유Release/983개최종검사근거를보존한다.
+NATIVE='cpppj/constructionprocess.json' # 앞서검증한2868개원본관찰출처다.
+INTEGRATED='cpppj/run7.json' # 기준07의공유Release/983개최종검사근거를보존한다.
 
 
 def sha(data):

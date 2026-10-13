@@ -52,6 +52,6 @@
 
 입력은 즉시/일반·차가운/재사용 캐시·1×1~61×60 및 용량이 가득 차는 1001×3 크기·일곱 투명/색 패턴·세 난수 시드·기존 입자 반납·selected 감김·signed zOrder·0/음수 배율·부착/캡처 중 전역 변경을 포함한다. 입자 선택/좌표/난수는 실제 PE 몸체가 실행한다. C++ 검사는 저장된 원본 관찰을 읽으며 기대 선택을 같은 알고리즘으로 다시 계산하지 않는다. 정상 CTest는 원본 PE·Python·게임을 실행하지 않는다.
 
-관련 파일: `cpppj/src/o/RawConstructionVisual.{h,cpp}`, `cpppj/tests/ConstructionVisualTests.cpp`, `cpppj/tests/fixtures/constructionvisual-x86.tsv`, `cpppj/recovery-constructionvisual-evidence.json`, `tools/decomp_constructionvisual_oracle.py`, `tools/ghidra/constructionvisual-functions.json`.
+관련 파일: `cpppj/src/o/RawConstructionVisual.{h,cpp}`, `cpppj/tests/ConstructionVisualTests.cpp`, `cpppj/tests/fixtures/constructionvisual-x86.tsv`, `cpppj/constructionvisual.json`, `tools/decomp_constructionvisual_oracle.py`, `tools/ghidra/constructionvisual-functions.json`.
 
 재검사: `python -X utf8 tools/decomp_constructionvisual_oracle.py --verify`, `cpppj/build/bin/Release/netstorm_tests.exe --filter ConstructionVisual_`, `ctest --test-dir cpppj/build -C Release --output-on-failure`. 내보내기: `powershell -ExecutionPolicy Bypass -File tools/ghidra/export_functions.ps1 -Name constructionvisual`.

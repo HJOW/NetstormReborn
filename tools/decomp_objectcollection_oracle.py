@@ -17,7 +17,7 @@ DATA, ARRAY, TYPES, SHAPES, POOL = 0x15000000,0x15001000,0x15004000,0x15008000,0
 GRIDS={1:0x15010000,2:0x15020000,3:0x15024000}
 CAPACITY, SEED = 64,0x43366022
 FIXTURE=ROOT/'cpppj/tests/fixtures/objectcollection-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-objectcollection-evidence.json'
+REPORT=ROOT/'cpppj/objectcollection.json'
 # 전체 수집/현재 해시/크기/월드/풀/타입 배열의 원본 전역과 슬롯 배치다.
 SPECS={
     'originals':dict(collect=0x433660,hash=0x542508,scales=0x5424f8,world=0x531928,pool=0x5c8464,types=0x59ab20,stride=50,type_stride=500),

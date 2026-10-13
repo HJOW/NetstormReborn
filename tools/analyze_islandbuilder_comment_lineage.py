@@ -9,9 +9,9 @@ from pathlib import Path
 # 기존 native/source/report를 덮어쓰지 않고 현재 검사 SHA를 successor에서 연결한다.
 ROOT=Path(__file__).resolve().parents[1]
 TEST="cpppj/tests/IslandBuilderTests.cpp"
-HISTORY="cpppj/recovery-history/islandbuilder-comment-initial"
-REPORT=ROOT/"cpppj/recovery-islandbuilder-comment-lineage-evidence.json"
-FILES=[TEST,"cpppj/recovery-islandbuilder-evidence.json","cpppj/recovery-islandbuilder-partial-profile-lineage-evidence.json",
+HISTORY="cpppj/hist/islandbuilde-a876e"
+REPORT=ROOT/"cpppj/islandbuilder-comment-lineage.json"
+FILES=[TEST,"cpppj/islandbuilder.json","cpppj/islandbuilder-partial-profile-lineage.json",
        "tools/decomp_islandbuilder_oracle.py","tools/analyze_islandbuilder_partial_profile_lineage.py"]
 # 설명 용도를 유지하면서 혼합 문자만 한국어로 바꾼다. C++ 토큰 변경은0이다.
 BEFORE="pointer同一조건의world와별도임시지도를각각소유한다."

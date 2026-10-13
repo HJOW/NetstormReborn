@@ -29,7 +29,7 @@
 
 **MayPlace 중간 후보 구간에 필요한 지역 변수와 현재 SID/타입을 공급하고 지형 진입 또는 거부 분기에서 관찰을 끝낸다.** 후보 구간·현재 타입·무시 helper·CRT·표시/거부는 대체 없이 실행한다. 전체 MayPlace ABI/접두/모양/미리보기/finder/지형·Pop/GUI 실행 근거가 아니다. 전체 DWORD helper 단독 호출/ABI 근거는 기존 `priestcollision` fixture를 유지한다.
 
-두 정밀도 합계로 각 PE의 후보 진입/종료·현재 타입 조회는 15,120회, 실제 무시 helper는 12,096회다. CRT는 패치 12,888회·CD/10.37 각각 15,018회다. 현재 raw 전체와 144바이트 표시·허용 코드/쓰기·스택/x87 균형·assert/OS 0회·SHA/행/실제 호출 수를 감사한다. 새 근거는 [`recovery-canoncollision-evidence.json`](../../cpppj/recovery-canoncollision-evidence.json)이며 기존 fixture/감사 도구는 변경하지 않았다.
+두 정밀도 합계로 각 PE의 후보 진입/종료·현재 타입 조회는 15,120회, 실제 무시 helper는 12,096회다. CRT는 패치 12,888회·CD/10.37 각각 15,018회다. 현재 raw 전체와 144바이트 표시·허용 코드/쓰기·스택/x87 균형·assert/OS 0회·SHA/행/실제 호출 수를 감사한다. 새 근거는 [`canoncollision.json`](../../cpppj/canoncollision.json)이며 기존 fixture/감사 도구는 변경하지 않았다.
 
 ## 검증과 다음 작업
 

@@ -1,0 +1,72 @@
+{
+  "schema": 1,
+  "total": 2058,
+  "host": "HJOW-Athlon",
+  "editions": {
+    "originals": {
+      "returns": 1029,
+      "native_calls": {
+        "004d4da0": 597,
+        "004d4e10": 741,
+        "004e49c0": 2517,
+        "004d4f00": 453,
+        "004d4d40": 453,
+        "0049acf0": 444,
+        "004d4eb0": 273,
+        "004d5000": 144
+      },
+      "boundaries": {
+        "004ac950": 1338,
+        "004ac200": 1350,
+        "004214a0": 741,
+        "004ac550": 906,
+        "20000120": 105
+      },
+      "rate_bytes": "d94148c3",
+      "assertions": 0,
+      "instructions": 148160
+    },
+    "originalCD": {
+      "returns": 1029,
+      "native_calls": {
+        "00443160": 597,
+        "00443200": 741,
+        "004f161c": 2517,
+        "004431f0": 1194,
+        "004432f0": 453,
+        "004432a0": 273,
+        "004433e0": 144
+      },
+      "boundaries": {
+        "004ac420": 1338,
+        "004abae0": 1338,
+        "00448c10": 741,
+        "20000120": 105
+      },
+      "rate_bytes": null,
+      "assertions": 0,
+      "instructions": 131532
+    }
+  },
+  "files": {
+    "tools/decomp_gunhit_oracle.py": "537d873601513d7bba6fc33013367d91af44ae140b7f2c0141c821994388f97b",
+    "cpppj/tests/fixtures/gunhit-x86.tsv": "60d9e113c0a226c94924a7f71b22a066159bef8618fbe4b9bca1df94434ba7ad",
+    "tools/ghidra/gunhit-functions.json": "c004989eeebc491be63ee1e4d8537390f0bdc8d4505cc913c0e5a39022ef403b",
+    "extracted/owner/originals/creation.c": "f9919c046d5259526946f106b47b6259fe5e04971f743d6fa02d6a5361b9dc16",
+    "extracted/owner/originals/functions.tsv": "3ea66dace80a85999a8b2c2dbadb4d5f1bd18b0dcdb0768f9c41075206c7c72d",
+    "extracted/gunhit/originals/creation.c": "862589ee57bf637226c85063ba801ea7bb267594cdd47f506e36d80a611d81db",
+    "extracted/gunhit/originals/functions.tsv": "185289797e7606984a9d1182ad52abcd8f0b37d0bce2418ee4db08201024b712",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/owner/originalCD/creation.c": "115d3f4790315c3647e18c087579cf3aa08af06cdbaeca42adbac1e82725af62",
+    "extracted/owner/originalCD/functions.tsv": "4e184997f62c2622b26b3fa4f047a2580a609d2d919f0e414a75e8efd49d4439",
+    "extracted/gunhit/originalCD/creation.c": "1b292646507ef80285c898347606c1b0484c407a10c71f3f261ab8e29b3ea07c",
+    "extracted/gunhit/originalCD/functions.tsv": "c8163a660aa0eec58492f680c2658b83b358dc9369be3965a95c8c01338675e2",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+  },
+  "limitations": [
+    "현재 type/group/genus query·피해 target+98·공간 통지는 명시 경계다.",
+    "패치는 실제 DPS getter를 실행하며 CD DPS getter만 독립 float 반환 경계다.",
+    "실제 HP/원작 피해·사운드·삭제/월드 연결 완료를 이 격자로 세지 않는다."
+  ],
+  "os_calls": 0
+}

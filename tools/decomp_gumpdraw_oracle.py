@@ -19,7 +19,7 @@ from decomp_process_oracle import (ROOT, BINARIES, CONTROLS, STACK, STOP, STUBS,
 
 # 저장 경로/독립 입력 시드/원본 플래그와 가상 Draw 응답의 격리 진입점이다.
 FIXTURE=ROOT/'cpppj/tests/fixtures/gumpdraw-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-gumpdraw-evidence.json'
+REPORT=ROOT/'cpppj/gumpdraw.json'
 SEED, CLIP_FLAG, VTABLE, VIRTUAL, RESUME=0x46631024,0x400000,DATA+0x9000,STUBS+0x600,STUBS+0x620
 # 실제 Draw/화면 setter, half-open/inclusive 전역이다. 나머지 위치 정보는 앞 단계의 원본 배치를 쓴다.
 SPECS={

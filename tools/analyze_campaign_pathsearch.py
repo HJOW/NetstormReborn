@@ -10,7 +10,7 @@ from pathlib import Path
 
 # 작업 단위의 파일은 앞선 Fort/Gun/ProcessForm 근거와 구별해 보존한다.
 ROOT = Path(__file__).resolve().parent.parent
-REPORT = ROOT / 'cpppj/recovery-campaign-pathsearch-evidence.json'
+REPORT = ROOT / 'cpppj/campaign-pathsearch.json'
 BUILD = 'extracted/campaign-pathsearch-build-final.log'
 CTEST = 'extracted/campaign-pathsearch-ctest-final.log'
 TESTS = 'extracted/campaign-pathsearch-tests-final.log'
@@ -70,7 +70,7 @@ def main():
                       '건설/전투/승패 및 캠페인 1-1 완주를 입증하는 자료가 아니다.'])
     # 각 독립 입력 행 수와 내부 실제 함수 근거를 확인한다.
     for unit, (key, expected) in UNITS.items():
-        name = f'cpppj/recovery-{unit}-evidence.json'
+        name = f'cpppj/{unit}.json'
         evidence = json.loads(read(name))
         assert evidence[key] == expected
         report['native_units'][unit] = expected
@@ -79,7 +79,7 @@ def main():
         for name, digest in evidence['files'].items():
             assert sha(name) == digest, name
             files.append(name)
-    prior = 'cpppj/recovery-pathruntime-evidence.json'
+    prior = 'cpppj/pathruntime.json'
     evidence = json.loads(read(prior))
     assert evidence['cases'] == report['reused_pathruntime_cases']
     files += [prior, 'cpppj/tests/fixtures/pathruntime-x86.tsv', 'tools/decomp_pathruntime_oracle.py']

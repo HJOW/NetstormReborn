@@ -34,7 +34,7 @@ STUBS, STOP, STACK = 0x13000000, 0x20000000, 0x3000f000
 VIRTUAL = {STUBS+0x100:('push',0), STUBS+0x120:('pop',0), STUBS+0x140:('redraw',1),
     STUBS+0x160:('attach',4), STUBS+0x180:('object',5)}
 FIXTURE = ROOT/'cpppj/tests/fixtures/menugump-x86.tsv'
-REPORT = ROOT/'cpppj/recovery-menugump-evidence.json'
+REPORT = ROOT/'cpppj/menugump.json'
 
 
 def bits(value):

@@ -78,7 +78,7 @@ x87 control0x027f/0x037f에서 같은 전체 raw/경계 효과와 보존 레지�
 
 첫 smoke는 해시 전역 주소 및 합성 가상 표시 경계 주소 오류로 각각 중단됐다. 당시 전체 도구는 `extracted/damageablepostdestroy-smoke-initial-tool.py`, `...smoke-repaired-initial-tool.py`와 최초 두 로그에 보존했고 최종25×두 판본 smoke가 성공했다. 표본/실패를4412에 더하지 않는다.
 
-최초 전체4412에서 effectprofile6의 현재 owner 변경 입력이 빠진 것을 발견했다. 이전 전체 tool/h/cpp/report/fixture는 `recovery-history/damageablepost-before-owner-mutation`에 보존했다. `if mutation==6: source.owner=3` 한 줄을 공급하고 재관찰했다. **20행만 변경**, 나머지 **4392개 전체 원본 행 동일**이며 생산 부모 C++는 전체 바이트 불변이다. 재관찰4412는 중복 합산하지 않는다.
+최초 전체4412에서 effectprofile6의 현재 owner 변경 입력이 빠진 것을 발견했다. 이전 전체 tool/h/cpp/report/fixture는 `hist/damageablepo-7d76b`에 보존했다. `if mutation==6: source.owner=3` 한 줄을 공급하고 재관찰했다. **20행만 변경**, 나머지 **4392개 전체 원본 행 동일**이며 생산 부모 C++는 전체 바이트 불변이다. 재관찰4412는 중복 합산하지 않는다.
 
 `python tools/analyze_damageablepostdestroy.py`가 전체 현재 SHA·양판본 input 고유성/정상 계수/두 정밀도 반환·이전 전체 보고서/도구·한 줄 정확 역변환·현재 C++ 검사 소스를 감사하며 통과했다.
 
@@ -94,9 +94,9 @@ Root는 기준11 **5bdb5be** 이후 `RegularProcess::SetInitialCount(uint32_t)`�
 
 새 `DamageablePostDestroyHostTests.cpp`의 **TEST_CASE1개**는 기존2검사와 분리했다. 같은 실제 Factory로 생성한 레지던스/후보, HP Max/중심/finder/Hash, 단일 Pool/Kernel/ProcessHost에서 packed count를 새 Regular에 쓴다. 두 판본×최대HP100/131073의4장면에서 event6699/payload0/현재double시각17.25/Form을 확인하고, 시각 전에는 실행하지 않으며 첫 Kernel 호출에 원본 packed count65587/131073을 전달하는지 확인한다. handler는 **명시 관찰 후0반환**이며 실제 ProcessForm Unpop/Kernel 제거/번호 반환과 삭제깊이0 복구를 확인한다. 실제 DamageableHandle/지면 피해/가상 HP까지 완료됐다고 주장하지 않는다.
 
-기존 Post h/cpp·기존2검사·4412 fixture·두 보고서·두 도구 **전체8파일**을 `recovery-history/damageablepost-host-baseline`에 그대로 보존했다. 현재와 보존된 전체바이트는 동일하며 `analyze_damageablepost_host_binding.py`가 현재 Root count lineage·새consumer·기존전체 의존성과 연결한다. **새native0, 생산 부모 변경0, 고유4412 유지**다. 새 검사와 기존2검사의 공유 빌드 결과는 아직 대기한다. 첫4412 native보고서의 실제Host 미완료 범위는 원문으로 보존하고 현재 소비자 확인 범위는 이 후속 보고서에만 연결했다.
+기존 Post h/cpp·기존2검사·4412 fixture·두 보고서·두 도구 **전체8파일**을 `hist/damageablepo-a3bd8`에 그대로 보존했다. 현재와 보존된 전체바이트는 동일하며 `analyze_damageablepost_host_binding.py`가 현재 Root count lineage·새consumer·기존전체 의존성과 연결한다. **새native0, 생산 부모 변경0, 고유4412 유지**다. 새 검사와 기존2검사의 공유 빌드 결과는 아직 대기한다. 첫4412 native보고서의 실제Host 미완료 범위는 원문으로 보존하고 현재 소비자 확인 범위는 이 후속 보고서에만 연결했다.
 
-12의 세 번째 공유빌드 후 **기존 Post2검사/4412전수는 모두 통과**했다. 별도 Host1은 group의 기본값 **NO_GROUP(-1)** 을 그대로 두어 원본의 `group==0||group==1||vortex` 주변피해 조건을 충족하지 못했다. 첫 실패/3차build로그와 이전consumer/binding/tool/doc·기존 두history·전체4412 원문을 새 `damageablepost-host-before-group-fix`에 보존했다.
+12의 세 번째 공유빌드 후 **기존 Post2검사/4412전수는 모두 통과**했다. 별도 Host1은 group의 기본값 **NO_GROUP(-1)** 을 그대로 두어 원본의 `group==0||group==1||vortex` 주변피해 조건을 충족하지 못했다. 첫 실패/3차build로그와 이전consumer/binding/tool/doc·기존 두history·전체4412 원문을 새 `damageablepo-fa8db`에 보존했다.
 
 선택 입력에 **합성group0**을 명시하고 tuple의60을uint16,6699/0을DWORD로 지정했다. 이것은 실제 레지던스 원래group을 재분류한 변경이 아니다. `analyze_damageablepost_host_group_lineage.py`가 두정확문자열 역변환·현재 source·이전전체출처를 연결하며 **생산/native/4412 결과 변경0**이다. 현재 최종 Post Host 감사는 이 successor를 사용한다. 실제Host1 재대조 및 단위12 전체검사는 대기한다.
 

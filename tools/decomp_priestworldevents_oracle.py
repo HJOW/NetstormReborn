@@ -18,7 +18,7 @@ SPEC={
 TYPE_DEFAULTS=(133,187,137,156,134,135,70,158,105)
 PROCESS_DEFAULTS=(40,38,42,23,41,24,54,39)
 FIXTURE=ROOT/'cpppj/tests/fixtures/priestworldevents-x86.tsv'
-EVIDENCE=ROOT/'cpppj/recovery-priestworldevents-evidence.json'
+EVIDENCE=ROOT/'cpppj/priestworldevents.json'
 SOURCES=['tools/decomp_priestworldevents_oracle.py','tools/decomp_reward_oracle.py','tools/ghidra/priestworldevents-functions.json',
          'cpppj/src/client/RawPriestWorldBindings.h','cpppj/src/client/RawPriestWorldBindings.cpp',
          'cpppj/src/o/RiftType.h','cpppj/src/o/RiftTypeTable.cpp','cpppj/tests/RawPriestWorldBindingsTests.cpp']

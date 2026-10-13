@@ -16,7 +16,7 @@ from decomp_process_oracle import (ProcessOracle, ROOT, BINARIES, CONTROLS, STAC
 DATA,ARRAY,GUMP,TYPE,POOL,SPOTS,SPDATA=0x15000000,0x15000100,0x15001000,0x15001800,0x15002000,0x15010000,0x15020000
 CAPACITY,SEED=64,0x44606031
 FIXTURE=ROOT/'cpppj/tests/fixtures/previewcollection-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-previewcollection-evidence.json'
+REPORT=ROOT/'cpppj/previewcollection.json'
 # 원본 목록/선택/배치/잠금 전역과 패치판 강조/SP 저장소의 실제 주소다.
 SPECS={
     'originals':dict(root=0x446060,lock=0x5325c8,count=0x55a1b8,list=0x55a1d8,parent=0x55a278,type=0x55a280,

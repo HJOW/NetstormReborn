@@ -5,11 +5,11 @@ import argparse,hashlib,json,re,subprocess
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parent.parent # 같은 공유 저장소의 절대 기준이다.
-REPORT=ROOT/'cpppj/recovery-dais-postpop-lineage-evidence.json' # 기존11/수명보고서를 덮어쓰지 않는 새 등록 근거다.
-BASELINE=ROOT/'cpppj/recovery-history/dais-postpop-baseline' # 기준11 Git LF와 작업 CRLF 원문을 함께 보존한다.
-NATIVE=ROOT/'cpppj/recovery-history/dais-lifecycle-before-postpop' # 최초1928 관찰의 현재파일당시 SHA를 보존한다.
+REPORT=ROOT/'cpppj/dais-postpop-lineage.json' # 기존11/수명보고서를 덮어쓰지 않는 새 등록 근거다.
+BASELINE=ROOT/'cpppj/hist/dais-postpop-a6aad' # 기준11 Git LF와 작업 CRLF 원문을 함께 보존한다.
+NATIVE=ROOT/'cpppj/hist/dais-lifecyc-dd023' # 최초1928 관찰의 현재파일당시 SHA를 보존한다.
 SOURCES=('cpppj/src/o/SquidPostPop.h','cpppj/src/o/SquidPostPop.cpp','cpppj/src/o/RawDaisLifecycle.h','cpppj/src/o/RawDaisLifecycle.cpp') # 승인된 최소 등록/검사 네 파일만 다룬다.
-PRIOR=('cpppj/recovery-campaign-runtime11-evidence.json','cpppj/recovery-daisregular-core-evidence.json','cpppj/recovery-altarsacrifice-evidence.json','cpppj/recovery-altarsacrifice-successor-evidence.json','cpppj/recovery-postpop-evidence.json','cpppj/recovery-runepostpop-evidence.json','cpppj/recovery-priestpostpoptail-evidence.json','cpppj/recovery-assetpostpop-evidence.json','cpppj/recovery-factorypostpop-evidence.json') # 기존 관찰을 새 수명 입력에 더하지 않는다.
+PRIOR=('cpppj/run11.json','cpppj/daisregular-core.json','cpppj/altarsacrifice.json','cpppj/altarsacrifice-successor.json','cpppj/postpop.json','cpppj/runepostpop.json','cpppj/priestpostpoptail.json','cpppj/assetpostpop.json','cpppj/factorypostpop.json') # 기존 관찰을 새 수명 입력에 더하지 않는다.
 
 def sha(body):
     """파일 전체 또는 기존 본문 토큰의 SHA256을 계산한다."""
@@ -59,7 +59,7 @@ def observe(commit):
     for name in PRIOR:
         path=ROOT/name;old=git('show',commit+':'+name);assert path.read_bytes()==old,name
         prior[name]=dict(sha256=sha(old),new_native_inputs=0)
-    old_report='cpppj/recovery-daislifecycle-evidence.json';old=(NATIVE/old_report).read_bytes();assert (ROOT/old_report).read_bytes()==old
+    old_report='cpppj/daislifecycle.json';old=(NATIVE/old_report).read_bytes();assert (ROOT/old_report).read_bytes()==old
     data=json.loads(old.decode('utf-8'));assert data['total']==1928 and not data['smoke'] and not data['game_runs']
     # 당시 보고서의 모든 원본/도구/fixture/소스 출처를 확인한다. 새 API 두 파일만 보존 원문으로 연결한다.
     for name,value in data['files'].items():

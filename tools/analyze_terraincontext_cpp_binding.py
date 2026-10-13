@@ -7,7 +7,7 @@ from pathlib import Path
 from analyze_campaign_runtime4 import ROOT, digest
 
 # 현재224개 입력을 다시 실행하지 않고 C++ 비교 대상과 초기 도장 지도 선언을 고정한다.
-REPORT = ROOT / 'cpppj/recovery-terraincontext-evidence.json'
+REPORT = ROOT / 'cpppj/terraincontext.json'
 SOURCES = ('cpppj/tests/TerrainContextTests.cpp', 'cpppj/src/o/RawTerrainStamp.h',
            'cpppj/tests/RawSceneSupport.h', 'tools/analyze_terraincontext_cpp_binding.py')
 

@@ -7,12 +7,12 @@ from pathlib import Path
 from decomp_owner_oracle import ROOT,digest
 
 # 첫 공유 빌드 전 source/test/oracle/fixture/report와 실패 로그의 실제 전체 snapshot이다.
-BEFORE=ROOT/'cpppj/recovery-history/damageablehit-initial'
-CHECKPOINT=ROOT/'cpppj/recovery-history/damageablehit-compile-corrected'
+BEFORE=ROOT/'cpppj/hist/damageablehi-1d1d7'
+CHECKPOINT=ROOT/'cpppj/hist/damageablehi-8cde8'
 TEST=ROOT/'cpppj/tests/DamageableHitTests.cpp'
 CPP=ROOT/'cpppj/src/o/RawDamageableHit.cpp'
-NATIVE=ROOT/'cpppj/recovery-damageablehit-evidence.json'
-REPORT=ROOT/'cpppj/recovery-damageablehit-correction-evidence.json'
+NATIVE=ROOT/'cpppj/damageablehit.json'
+REPORT=ROOT/'cpppj/damageablehit-correction.json'
 # 첫 native/C++ 대조 뒤 원본 fadd qword와 동일 CD map 입력만 교정한 역변환이다.
 CPP_CHANGES=(
     ('// 현재 실제 주 섬에 대한 경고만 표시하고 원본 double 시계+float 간격의 저장 순서를 유지한다.','// 현재 실제 주 섬에 대한 경고만 표시하고 PATCH float wall-clock 저장 순서를 유지한다.'),
@@ -57,7 +57,7 @@ def generate():
     previous=audit();current=json.loads(json.dumps(previous))
     for path in (TEST,CPP,ROOT/'cpppj/src/o/RawPathSearch.cpp',ROOT/'cpppj/src/o/RawPathSearch.h'):current['files'][path.relative_to(ROOT).as_posix()]=digest(path)
     current['source_correction']=dict(kind='검사 명칭/실제double 경고/동일 CD 지면 입력',previous_full_report=(BEFORE/NATIVE.name).relative_to(ROOT).as_posix(),previous_sha256=digest(BEFORE/NATIVE.name),compile_corrected_report=(CHECKPOINT/NATIVE.name).relative_to(ROOT).as_posix(),compile_corrected_sha256=digest(CHECKPOINT/NATIVE.name),new_native_rows=0,new_unique_rows=0,cd_warning_active_observations=0);NATIVE.write_text(json.dumps(current,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-    paths=[Path(__file__),TEST,CPP,NATIVE,ROOT/'extracted/campaign-runtime9-build-initial.log',ROOT/'extracted/campaign-runtime9-DamageableHit_initial-tests.log',*[p for snapshot in (BEFORE,CHECKPOINT) for p in snapshot.iterdir() if p.is_file()]]
+    paths=[Path(__file__),TEST,CPP,NATIVE,ROOT/'extracted/run9-build-initial.log',ROOT/'extracted/run9-DamageableHit_first.log',*[p for snapshot in (BEFORE,CHECKPOINT) for p in snapshot.iterdir() if p.is_file()]]
     REPORT.write_text(json.dumps(dict(schema=2,host='HJOW-Athlon',native_rows=5846,new_native_rows=0,new_unique_rows=0,initial_full_snapshot=True,compile_corrected_full_snapshot=True,change='검사 GameRandom·원본 double 시계+float 간격·동일 CD map/실제 보정 조회',cd_warning_active_observations=0,files={p.relative_to(ROOT).as_posix():digest(p) for p in sorted(paths)}),ensure_ascii=False,indent=2)+'\n',encoding='utf-8');print(json.dumps(dict(verified=True,native_rows=5846,new_native_rows=0),ensure_ascii=False))
 
 

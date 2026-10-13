@@ -2,7 +2,7 @@
 
 2026-10-07. **1차 기준은 10.78**이다. [공통 삭제 장부](cpp-destroylifecycle-reconstruction.md)에 preDestroy의 Graph 분할/직접 Free와 postDestroy의 발자국→일반 finder→표면 Add를 연결했다. 호스트 **DESKTOP-HJOW에서 원본/복사본 게임·업데이터/설치 도구·클론 창을 실행하지 않았다.** CD/추가 10.37은 비교 판본이다. 10.82의 업데이터/본체 구분과 DevLog 비교는 [기존 판본 기록](cpp-reference-versions.md)을 유지한다.
 
-소스: [SquidDestroyLifecycle](../../cpppj/src/o/SquidDestroyLifecycle.cpp), [RawGraph](../../cpppj/src/o/RawGraph.cpp), [Graph](../../cpppj/src/o/Graph.cpp). 검사: [DestroyGraphTests.cpp](../../cpppj/tests/DestroyGraphTests.cpp). 독립 원본 출력: [destroygraph-x86.tsv](../../cpppj/tests/fixtures/destroygraph-x86.tsv), [근거 기록](../../cpppj/recovery-destroygraph-evidence.json), [생성/감사 도구](../../tools/decomp_destroygraph_oracle.py).
+소스: [SquidDestroyLifecycle](../../cpppj/src/o/SquidDestroyLifecycle.cpp), [RawGraph](../../cpppj/src/o/RawGraph.cpp), [Graph](../../cpppj/src/o/Graph.cpp). 검사: [DestroyGraphTests.cpp](../../cpppj/tests/DestroyGraphTests.cpp). 독립 원본 출력: [destroygraph-x86.tsv](../../cpppj/tests/fixtures/destroygraph-x86.tsv), [근거 기록](../../cpppj/destroygraph.json), [생성/감사 도구](../../tools/decomp_destroygraph_oracle.py).
 
 ## 원본 주소와 읽기 전용 내보내기
 

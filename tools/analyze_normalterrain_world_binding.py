@@ -12,7 +12,7 @@ from pathlib import Path
 # 저장소 경로와 완료된 단위09 커밋이다. 공통 인수인계/CMake는 이 도구가 변경하지 않는다.
 ROOT = Path(__file__).resolve().parents[1]
 BASELINE = "5b10ce8"
-REPORT = ROOT / "cpppj/recovery-normalterrain-world-binding-evidence.json"
+REPORT = ROOT / "cpppj/normalterrain-world-binding.json"
 # 새 소비자와 검사만 현재 소스로 고정한다. 기존 모듈은 아래 전체 원문으로 별도 보존한다.
 CPP_FILES = ["cpppj/src/client/RawNormalTerrainWorldBinding.h", "cpppj/src/client/RawNormalTerrainWorldBinding.cpp",
              "cpppj/tests/NormalTerrainWorldBindingTests.cpp"]
@@ -70,7 +70,7 @@ def record() -> None:
     reused = []
     # 보고서/fixture/원본 실행 도구를 전체 바이트 SHA로 연결하고 기존 관찰 수는 분리한다.
     for name, total in NATIVE_REUSE:
-        report_path = f"cpppj/recovery-{name}-evidence.json"
+        report_path = f"cpppj/{name}.json"
         previous = (ROOT / report_path).read_bytes()
         native = json.loads(previous)
         if native["total"] != total:

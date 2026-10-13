@@ -31,7 +31,7 @@ EXPECTED_CASES={'Pair':1152,'Destroy':576}
 EXPECTED_NATIVE={'Destroy':192,'Unpop':104,'Release':192}
 EXPECTED_LIFECYCLE={'Pre':576,'Post':576,'provider_remove':60,'ai':140,'owner_remove':232,'factory_remove':58}
 FIXTURE=ROOT/'cpppj/tests/fixtures/destroylifecycle-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-destroylifecycle-evidence.json'
+REPORT=ROOT/'cpppj/destroylifecycle.json'
 
 
 def list_input(pattern,base,root):

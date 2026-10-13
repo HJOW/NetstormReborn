@@ -233,13 +233,13 @@ def generate():
             '파생 ctor의 raw 쓰기와 실제 공통 postCreate/postTake/void Unpop만',
             '대체 함수 없음; 전체 슬롯 바이트 대조, 전체 풀은 Adler-32',
             'non-void 공간/삭제/게임 월드/GUI/OS API/게임 진입점 미실행']}
-    (ROOT/'cpppj/recovery-derived-evidence.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
+    (ROOT/'cpppj/derived.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
     print(json.dumps({'cases':dict(counts),'total_cases':report['total_cases']}),flush=True)
 
 
 def verify():
     """고정 기록의 원본/도구/표 해시와 fixture 호출 행 수를 확인한다."""
-    report=json.loads((ROOT/'cpppj/recovery-derived-evidence.json').read_text(encoding='utf-8'))
+    report=json.loads((ROOT/'cpppj/derived.json').read_text(encoding='utf-8'))
     for group in ('artifact_sha256','source_sha256'):
         for path,sha in report[group].items():
             assert hashlib.sha256((ROOT/path).read_bytes()).hexdigest()==sha,path

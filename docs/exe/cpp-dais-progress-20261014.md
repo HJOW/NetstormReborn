@@ -26,11 +26,11 @@
 
 - 도구: `tools/decomp_daisprogress_oracle.py`.
 - 기대 입력/출력: `cpppj/tests/fixtures/daisprogress-x86.tsv`.
-- 현재 출처: `cpppj/recovery-daisprogress-evidence.json`.
+- 현재 출처: `cpppj/daisprogress.json`.
 - 전용 C++ 검사: `cpppj/tests/DaisProgressTests.cpp`. 단위12 첫Release경고/오류0이며새Progress1검사/2964전수/실패0을확인했다.
 - 정상 **2964개/assert0**, 판본별 1482개를 두 x87 정밀도에서 같은 출력으로 관찰했다. 판본별 입력 구성은 Progress216·Rune304114·감김30696·알터 payload1056이다. `daisprogress-native-focused.log`에 완료를 기록했다.
-- 원본 보고서를 보존하고 새 검사 전체 SHA를 `analyze_daisprogress_cpp_binding.py`/`recovery-daisprogress-cpp-binding-evidence.json`으로 별도 연결한다. 이 연결의 새 원본 입력 추가는0이다.
-- 처음검사의중복`results`선언하나를지웠다. 그전전체6파일을 `daisprogress-before-cpp-declaration`에보존했고 `analyze_daisprogress_cpp_correction.py`/`recovery-daisprogress-cpp-correction-evidence.json`으로정확역변환·생산/원본2964/tool/fixture/옛연결보고서불변과현재TestSHA를연결한다. 추가원본0이다.
+- 원본 보고서를 보존하고 새 검사 전체 SHA를 `analyze_daisprogress_cpp_binding.py`/`daisprogress-cpp-binding.json`으로 별도 연결한다. 이 연결의 새 원본 입력 추가는0이다.
+- 처음검사의중복`results`선언하나를지웠다. 그전전체6파일을 `daisprogress-05259`에보존했고 `analyze_daisprogress_cpp_correction.py`/`daisprogress-cpp-correction.json`으로정확역변환·생산/원본2964/tool/fixture/옛연결보고서불변과현재TestSHA를연결한다. 추가원본0이다.
 - 최초 준비 중 기존 공통 `self.g`를 새 스펙으로 가린 오류와 Progress의 실제 ret4를 확인해 교정했다. 해당 실패는 정상 관찰에 포함하지 않는다.
 - 전수 첫 시도는 서버 stage0~3의 자격을 충족한 사제 이동이 실제 Path mapper `00488fe0`로 들어가 미허용 주소에서 중단됐다. 로그를 보존하며 해당 입력은 이 좁은 자료에서 제외했다. 빈 Path 경계로 완료 처리하지 않는다.
 - 두 x87 제어 워드 0x027f/0x037f의 동일 입력 결과, 정상 EIP/ESP/SEH/FPCW/TOP와 현재 전체 파일 SHA를 확인한다. 앞 668/2866·수명 1928·기존 Path/룬/신전 관찰을 새 입력 수에 더하지 않는다.

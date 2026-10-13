@@ -28,7 +28,7 @@ SPACE['original1037']=SPACE['originalCD']
 # 단계별 버킷 크기와 새 결과 파일이다. 원본 상수 005424f8 / CD 0052d598.
 SCALES=(1,2,4,16)
 FIXTURE=ROOT/'cpppj/tests/fixtures/neighbor-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-neighbor-evidence.json'
+REPORT=ROOT/'cpppj/neighbor.json'
 
 
 class NeighborOracle(EventOracle):

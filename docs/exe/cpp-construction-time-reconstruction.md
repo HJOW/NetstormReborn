@@ -40,7 +40,7 @@
 
 [`decomp_constructiontime_oracle.py`](../../tools/decomp_constructiontime_oracle.py)는 각 PE의 재설정 전체와 form/부모 getter, CD 진행 계산/뺄셈/CRT/기본 시간 helper를 정상 반환까지 실행한다. **Kernel 조회와 최대 HP만 명시 응답 경계**이며 실제 번호/부모 인자와 호출 횟수를 확인한다.
 
-각 PE **423개**, 새 저장 **1,269개**, 두 x87 정밀도의 정상 반환 **2,538회**다. 유한 합성 시각, 시작/끝이 같은 경우·음수 구간, 최대 HP 0/100/-1, damage DWORD 0/1/100/최상위 비트/전체 비트, 여러 dirty 값과 경계 중 현재 자료 변동을 교차했다. 두 제어값 639/895에서 관찰이 같았고 스택/보존 레지스터/x87 균형·허용 실행/쓰기·부모/form 불변을 확인했다. 원본 assert·게임·OS 호출은 0이다. CD Pentium FDIV 우회 전역은 0이다. [fixture](../../cpppj/tests/fixtures/constructiontime-x86.tsv)와 [근거 JSON](../../cpppj/recovery-constructiontime-evidence.json)의 SHA·입력/필드/raw 폭·진입/정상 반환/경계 집계도 감사한다.
+각 PE **423개**, 새 저장 **1,269개**, 두 x87 정밀도의 정상 반환 **2,538회**다. 유한 합성 시각, 시작/끝이 같은 경우·음수 구간, 최대 HP 0/100/-1, damage DWORD 0/1/100/최상위 비트/전체 비트, 여러 dirty 값과 경계 중 현재 자료 변동을 교차했다. 두 제어값 639/895에서 관찰이 같았고 스택/보존 레지스터/x87 균형·허용 실행/쓰기·부모/form 불변을 확인했다. 원본 assert·게임·OS 호출은 0이다. CD Pentium FDIV 우회 전역은 0이다. [fixture](../../cpppj/tests/fixtures/constructiontime-x86.tsv)와 [근거 JSON](../../cpppj/constructiontime.json)의 SHA·입력/필드/raw 폭·진입/정상 반환/경계 집계도 감사한다.
 
 이번에 완료 검증한 기존 시작/진행/완료 자료 **2,868개**를 포함해 누적은 **484,599개**(480,462 + 2,868 + 1,269)다. 기존 자료를 새 재설정 자료에 중복으로 세지 않는다. 기존 건설 프로세스 12개와 소리 연결 1개, 새 끝 시각 6개를 합쳐 인계 기록 이후 내부 검사는 19개 늘었다.
 

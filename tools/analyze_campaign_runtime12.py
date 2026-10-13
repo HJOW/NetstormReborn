@@ -10,7 +10,7 @@ from pathlib import Path
 from analyze_campaign_runtime4 import ROOT,digest,test_count
 from analyze_campaign_runtime6 import read_log,audit_files
 
-REPORT=ROOT/'cpppj/recovery-campaign-runtime12-evidence.json'  # 실제 최종 성공 로그와 현재 전체 바이트의 기록이다.
+REPORT=ROOT/'cpppj/run12.json'  # 실제 최종 성공 로그와 현재 전체 바이트의 기록이다.
 MODULES={'daislifecycle-current':(1928,0),'daisprogress':(2964,0),'damageablepostdestroy':(4412,0),
          'burningprocess-constructor':(256,0),'burningparticle':(564,0),'fortmeta':(394,556),
          'dudetask':(684,96),'daiscontentnotice':(1444,0)}  # 정상/진단 고유 입력이며 x87 반복 반환은 다시 더하지 않는다.
@@ -39,7 +39,7 @@ def generate():
     modules,focused,names={},{},set()
     # 수명1928의 원래 자료는 Pop 등록/current 입력 successor가 연결하며 현재1928만 고유 수에 넣는다.
     for name,(normal,assertions) in MODULES.items():
-        report=ROOT/f'cpppj/recovery-{name}-evidence.json'
+        report=ROOT/f'cpppj/{name}.json'
         data=json.loads(report.read_text(encoding='utf-8'))
         assert data['host']=='HJOW-Athlon' and data['total']==normal+assertions,name
         fixture=ROOT/f'cpppj/tests/fixtures/{name}-x86.tsv'
@@ -55,22 +55,22 @@ def generate():
         subprocess.run([sys.executable,str(tool),*arguments],cwd=ROOT,check=True)
         paths.append(tool)
     # 별도 successor/소비자 근거의 전체 바이트도 성공한 이번 상태에 고정한다.
-    for name in LINEAGES:paths.append(ROOT/f'cpppj/recovery-{name}-evidence.json')
+    for name in LINEAGES:paths.append(ROOT/f'cpppj/{name}.json')
     # substring이 선택한 실제 검사 수와 고유 이름을 모두 검산한다.
     for name,expected in FILTERS.items():
-        log=ROOT/f'extracted/campaign-runtime12-{name}final-tests.log'
+        log=ROOT/f'extracted/run12-{name}final.log'
         assert test_count(log)==expected,name
         names.update(re.findall(r'\[ OK \] ([^\r\n]+)',read_log(log)))
         focused[name]=expected
         paths.append(log)
     assert len(names)==42
-    whole=ROOT/'extracted/campaign-runtime12-all-final-tests.log'
+    whole=ROOT/'extracted/run12-all-final.log'
     assert test_count(whole)==1056
-    build=ROOT/'extracted/campaign-runtime12-build-final.log'
+    build=ROOT/'extracted/run12-build-final.log'
     content=read_log(build)
     assert not re.search(r'\b(?:warning|error)\s+[A-Z]+\d+\s*:',content,re.I)
     assert 'netstorm_tests.exe' in content and 'NetstormCpp.exe' in content
-    paths.extend([whole,build,ROOT/'cpppj/recovery-campaign-runtime11-evidence.json',ROOT/'cpppj/src/o/CMakeLists.txt',ROOT/'cpppj/tests/CMakeLists.txt'])
+    paths.extend([whole,build,ROOT/'cpppj/run11.json',ROOT/'cpppj/src/o/CMakeLists.txt',ROOT/'cpppj/tests/CMakeLists.txt'])
     # 생성/실행 전체를 보존한 공유 API와 새 생산 몸체를 현재 바이너리에 연결한다.
     for name in ('SquidProcess','SquidPostPop','RawDaisLifecycle','RawDamageablePostDestroy','RawBurningVisual','RawFortMetaLoad','RawDudeTask','RawDaisContentNotice'):
         paths.extend([ROOT/f'cpppj/src/o/{name}.h',ROOT/f'cpppj/src/o/{name}.cpp'])
@@ -101,7 +101,7 @@ def verify():
     """실제 성공한 전체 검사 수와 현재 기록의 전체 SHA를 다시 감사한다."""
     data=json.loads(REPORT.read_text(encoding='utf-8'))
     audit_files(data)
-    assert test_count(ROOT/'extracted/campaign-runtime12-all-final-tests.log')==data['all_tests']
+    assert test_count(ROOT/'extracted/run12-all-final.log')==data['all_tests']
     print('단위12 최종 SHA/전체 검사 감사 통과')
 
 

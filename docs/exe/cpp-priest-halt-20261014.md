@@ -20,9 +20,9 @@
 
 `decomp_priesthalt_oracle.py`는 **864 정상/assert0**을 두x87에서 실행했으며 결과·사건·부모 전체 raw가 동일하다. 판본당432입력/864정상반환이며 부모 HP0/99/100/200·지면0/6/8·전투/권한·소수/정수경계·Unpop 후 변이와 공통검색 genus·가상낙하 반환·특정후보·하위 반환0/1/10/12를 교차한다. 모든 분기 결과는 실제 PE 몸체에서 얻으며 Python/C++ 기대함수로 계산하지 않는다.
 
-첫20smoke 전체5파일과 미등록 초기864 전체5파일은 각각 `recovery-history/priesthalt-initial-smoke`, `priesthalt-before-cd-input`에 보존한다. CD의 비특정 후보187은 실제 타입 범위 안170으로 준비하도록48입력만 교정했다. `analyze_priesthalt_cpp_binding.py`는 이전 oracle 전체 원문의 정확 역변환과 부모 전체 raw·사건·반환864 전량 동일를 감사한다. 초기20/미등록864/이전 CarrierCheck·HP·finder 관찰은 최종 새864에 합산하지 않는다.
+첫20smoke 전체5파일과 미등록 초기864 전체5파일은 각각 `hist/priesthalt-i-e7bbe`, `priesthalt-b-024a7`에 보존한다. CD의 비특정 후보187은 실제 타입 범위 안170으로 준비하도록48입력만 교정했다. `analyze_priesthalt_cpp_binding.py`는 이전 oracle 전체 원문의 정확 역변환과 부모 전체 raw·사건·반환864 전량 동일를 감사한다. 초기20/미등록864/이전 CarrierCheck·HP·finder 관찰은 최종 새864에 합산하지 않는다.
 
-다음 입력 감사에서 기존 Finder의 지면 주소0x11320000이 hash1과 겹쳐 지면 초기화가 특정 운반 후보를 지우는 구성 오류를 확인했다. 당시 Native/fixture/oracle/C++ test/binding/생산/본문/문서 **전체35파일**을 `recovery-history/priesthalt-before-spots-isolation`에 보존하고, 지면만 **0x11850000**에 분리했다. 같은864입력/부모 전체 raw는 전량 동일이며, 복구된 특정후보 요청120행과 반환50행만 바뀐다. 현재 감사는 `analyze_priesthalt_spots_successor.py`/`recovery-priesthalt-spots-successor-evidence.json`으로 이전 oracle의 네 조각만 정확 역변환하고 초기 binding 원문도 역사 경로에서 재현한다. 최종 Native864만 한 번 합산하며 새 추가입력0이다.
+다음 입력 감사에서 기존 Finder의 지면 주소0x11320000이 hash1과 겹쳐 지면 초기화가 특정 운반 후보를 지우는 구성 오류를 확인했다. 당시 Native/fixture/oracle/C++ test/binding/생산/본문/문서 **전체35파일**을 `hist/priesthalt-b-f9d20`에 보존하고, 지면만 **0x11850000**에 분리했다. 같은864입력/부모 전체 raw는 전량 동일이며, 복구된 특정후보 요청120행과 반환50행만 바뀐다. 현재 감사는 `analyze_priesthalt_spots_successor.py`/`priesthalt-spots-successor.json`으로 이전 oracle의 네 조각만 정확 역변환하고 초기 binding 원문도 역사 경로에서 재현한다. 최종 Native864만 한 번 합산하며 새 추가입력0이다.
 
 `PriestHaltTests.cpp`의 **새1검사**는 같은 실제 풀/해시/타입/spot/HP 모드/지면조회/일반 finder를 연결하고 반환·명시효과·전체 부모 raw를 그대로 대조한다. fixture macro는 **NETSTORM_PRIESTHALT_FIXTURE**, prefix는 **rawPriestHalt_**다. C++ test/생산 몸체는 입력 지면 교정 전후 불변이다. 현재 Native/successor 전체SHA 감사와 단위14 공유 C++ 검사 **1검사/864전수/실패0**이 통과했다. 실제 같은 Host 사제 Arrival 소비자는 별도 입력 교정 후 재실행을 기다린다.
 

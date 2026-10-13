@@ -16,7 +16,7 @@ from unicorn.x86_const import UC_X86_REG_ECX, UC_X86_REG_ESP
 # 생성자 실제 BaseProcess 부착만 대체한다. event/payload/time/count의 생성 몸체는 그대로 실행한다.
 ATTACH={'originals':0x41bd20,'originalCD':0x48f590}
 FIXTURE=ROOT/'cpppj/tests/fixtures/constructiontimer-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-constructiontimer-evidence.json'
+REPORT=ROOT/'cpppj/constructiontimer.json'
 
 
 class TimerOracle(BuilderOracle):

@@ -2,7 +2,7 @@
 
 2026-10-07. **1차 기준은 10.78**이다. [공통 삭제](cpp-destroy-reconstruction.md)가 호출자 계약으로 남겨 둔 "종속 form의 가상 release/destroy" 가운데 **ProcessForm**을 복원하고, 그 위에서 도는 지연/주기 이벤트(RegularProcess)를 연결했다. 다리의 지연 낙하 예약(이벤트 `0x2692`)도 이 계층으로 등록/조회한다. 호스트 **DESKTOP-HJOW에서 원본/복사본 게임·업데이터/설치 도구·클론 창을 실행하지 않았다.** CD/추가 10.37은 비교 판본이다.
 
-소스: [SquidProcess](../../cpppj/src/o/SquidProcess.cpp), [Kernel](../../cpppj/src/o/Kernel.cpp), [RawSquidDestroy](../../cpppj/src/o/RawSquidDestroy.cpp). 검사: [ProcessTests.cpp](../../cpppj/tests/ProcessTests.cpp). 독립 원본 출력: [process-x86.tsv](../../cpppj/tests/fixtures/process-x86.tsv), [근거 기록](../../cpppj/recovery-process-evidence.json), [생성/감사 도구](../../tools/decomp_process_oracle.py).
+소스: [SquidProcess](../../cpppj/src/o/SquidProcess.cpp), [Kernel](../../cpppj/src/o/Kernel.cpp), [RawSquidDestroy](../../cpppj/src/o/RawSquidDestroy.cpp). 검사: [ProcessTests.cpp](../../cpppj/tests/ProcessTests.cpp). 독립 원본 출력: [process-x86.tsv](../../cpppj/tests/fixtures/process-x86.tsv), [근거 기록](../../cpppj/process.json), [생성/감사 도구](../../tools/decomp_process_oracle.py).
 
 ## 원본 주소와 읽기 전용 내보내기
 
@@ -61,7 +61,7 @@
 
 연산마다 비교하는 관찰값은 **연산 반환값·freeCount·예측 커서·client/server 머리와 꼬리·32768슬롯 풀 전체 Adler-32·삭제 기록 Adler-32·pre/post/pop 깊이·타입 순환 값·Kernel 슬롯 배치(앞 95개)·살아 있는 프로세스의 form/부모/시각(double 비트)/이벤트/payload/횟수·처리기와 부모 pre/post·삭제 전파의 호출 기록·해제된 프로세스**다. 풀 전체 체크섬이 같으므로 form 슬롯의 모든 바이트와 부모의 종속 머리가 원본과 같다.
 
-**아래 도달 횟수는 처음 생성한 6,044개 기준이다**(보강 후 재생성의 변화는 다음 절 참조). 패치 기준 도달: 부착 성공 369회·free/dead 부모라 건너뜀 8회, 처리기 호출 165회, 프로세스 해제 119회(처리기 0 반환 41개 프레임·종료 요청 50회·프로세스가 붙은 부모 삭제 17회 등), 삭제 전파 10회. CD/10.37은 부착 410회, 처리기 호출 220회, 해제 135회다. 정밀도별 실제 내부 도달은 패치 BaseProcess 생성자 377·Kernel 등록 369·Regular 생성자 299·Regular 실행 526·Kernel 프레임 463·종료 요청 95·공통 destroy 170·form preDestroy 119·체인에서 빼기 118·이벤트 조회 164/마스크 91이고 CD/10.37은 각각 410·410·330·576·481·98·201·135·135·168/77이다([기록](../../cpppj/recovery-process-evidence.json)의 `native_hits`는 두 정밀도를 합한 값이다). 원본 assert 도달 0·허용 밖 실행/쓰기 0·정상 반환/ESP/x87 제어 워드/TOP·FS:[0] 복구를 확인했다.
+**아래 도달 횟수는 처음 생성한 6,044개 기준이다**(보강 후 재생성의 변화는 다음 절 참조). 패치 기준 도달: 부착 성공 369회·free/dead 부모라 건너뜀 8회, 처리기 호출 165회, 프로세스 해제 119회(처리기 0 반환 41개 프레임·종료 요청 50회·프로세스가 붙은 부모 삭제 17회 등), 삭제 전파 10회. CD/10.37은 부착 410회, 처리기 호출 220회, 해제 135회다. 정밀도별 실제 내부 도달은 패치 BaseProcess 생성자 377·Kernel 등록 369·Regular 생성자 299·Regular 실행 526·Kernel 프레임 463·종료 요청 95·공통 destroy 170·form preDestroy 119·체인에서 빼기 118·이벤트 조회 164/마스크 91이고 CD/10.37은 각각 410·410·330·576·481·98·201·135·135·168/77이다([기록](../../cpppj/process.json)의 `native_hits`는 두 정밀도를 합한 값이다). 원본 assert 도달 0·허용 밖 실행/쓰기 0·정상 반환/ESP/x87 제어 워드/TOP·FS:[0] 복구를 확인했다.
 
 **명시적 대체**는 부모 객체의 가상 preDestroy/postDestroy(깊이 감소만)와 이벤트 처리기(vtable +0x5c, 입력 목록의 값을 x87로 반환), 프로세스 객체의 new/free, 삭제 로그, 삭제 전파(인자 기록)뿐이다. BaseProcess/Regular 생성자·Kernel·form 생성/타입/부착/Pop·Unpop/체인·form pre/post·공통 destroy·SID 할당/반납/삭제 기록·종속 탐색은 원본 명령이다. 부모는 실제 `Allocate`로 번호를 받고 합성 가상 표/타입/상태를 쓴 객체이며, **void 상태에서만 삭제**한다(자산의 실제 Unpop은 앞 단계의 범위다).
 

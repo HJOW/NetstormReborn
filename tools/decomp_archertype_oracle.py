@@ -25,7 +25,7 @@ META={
 # 기존 격리된 에뮬레이터 메모리 안의 AST·코드·스레드·SHP 관찰 저장소다.
 AST,FRAMES,THREAD,LOCALE,SHAPE=0x11300000,0x11314000,0x11315000,0x11316000,0x14000000
 FIXTURE=ROOT/'cpppj/tests/fixtures/archertype-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-archertype-evidence.json'
+REPORT=ROOT/'cpppj/archertype.json'
 
 
 def float_bits(value):
@@ -180,7 +180,7 @@ def generate(smoke):
         files.update(oracle.exports);files.add(ROOT/oracle.spec['binary']);files.add(ROOT/edition/'netstorm.tarc');files.add(oracle.shapeFile);print(edition,editions[edition],flush=True)
     if smoke:return
     for relative in ('cpppj/src/o/RawArcherTypeData.cpp','cpppj/src/o/RawArcherTypeData.h','cpppj/tests/ArcherTypeDataTests.cpp','cpppj/src/o/RiftType.cpp','cpppj/src/o/RiftType.h','cpppj/src/o/TypeParser.cpp','cpppj/src/o/RiftTypeTable.cpp','cpppj/src/client/GameAssets.cpp',
-        'cpppj/src/o/RawArcherAnimation.cpp','cpppj/src/o/RawArcherAnimation.h','cpppj/src/o/RawGunProcess.cpp','cpppj/src/o/RawGunTarget.cpp','cpppj/src/o/RawBuildingSpace.cpp','cpppj/src/o/SquidFactory.cpp','cpppj/src/o/DerivedConstructors.inc','cpppj/src/o/TypeConstructors.inc','cpppj/src/o/SquidPop.cpp','cpppj/src/o/SquidUnpop.cpp','cpppj/src/o/SquidProcess.cpp','cpppj/src/o/Kernel.cpp','cpppj/src/client/SquidRenderer.cpp','cpppj/tests/fixtures/gunarcher-x86.tsv','cpppj/recovery-gunarcher-evidence.json'):
+        'cpppj/src/o/RawArcherAnimation.cpp','cpppj/src/o/RawArcherAnimation.h','cpppj/src/o/RawGunProcess.cpp','cpppj/src/o/RawGunTarget.cpp','cpppj/src/o/RawBuildingSpace.cpp','cpppj/src/o/SquidFactory.cpp','cpppj/src/o/DerivedConstructors.inc','cpppj/src/o/TypeConstructors.inc','cpppj/src/o/SquidPop.cpp','cpppj/src/o/SquidUnpop.cpp','cpppj/src/o/SquidProcess.cpp','cpppj/src/o/Kernel.cpp','cpppj/src/client/SquidRenderer.cpp','cpppj/tests/fixtures/gunarcher-x86.tsv','cpppj/gunarcher.json'):
         files.add(ROOT/relative)
     FIXTURE.write_text('# 실제 TYPE 초기화 parser 접두와 보호35클러스터 AST의 전체callback/후처리 정상반환.\n'+'\n'.join('\t'.join(map(str,row)) for row in rows)+'\n',encoding='utf-8');files.add(FIXTURE)
     REPORT.write_text(json.dumps(dict(schema=1,host='HJOW-Athlon',normal_observations=len(rows)-2,prefix=2,total=len(rows),editions=editions,files={path.relative_to(ROOT).as_posix():digest(path) for path in sorted(files)},os_calls=0,limitations=['초기화는 전체TYPE 대입 뒤 실제parser 진입에서 정지하는 접두이며 전체게임로딩 완료가 아니다.','callback은 실제 보호35클러스터/group/theme의 관련부분 AST를 공급한다. 전체파일 lexer/문법parser·경제/소리/효과속성 완료가 아니다.','힙/파일/현재CRT 스레드와 이전dude처리후 두 번째 실제SHP블록 커서는 명시 입력 경계다. 보호전체SHP바이트와 원본 TYPE 후처리·16문자Run·float절삭/ASCII비교는 실제자료/몸체다.','실제 무orientations+실제순서 입력2개와 합성property/순서 대조40개를 구분하며 기존1690/1888근거에 더하지 않는다.']),ensure_ascii=False,indent=2)+'\n',encoding='utf-8')

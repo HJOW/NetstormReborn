@@ -15,7 +15,7 @@ from unicorn.x86_const import (UC_X86_REG_EAX,UC_X86_REG_EBX,UC_X86_REG_ECX,UC_X
 ENTRY={'originals':0x423e80,'originalCD':0x4a60a0}
 KEYS=('capacity','total','lifes','life','source')
 FIXTURE=ROOT/'cpppj/tests/fixtures/burningparticle-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-burningparticle-evidence.json'
+REPORT=ROOT/'cpppj/burningparticle.json'
 
 
 def bits(value):
@@ -60,7 +60,7 @@ class ParticleOracle(BurningOracle):
 
 def generate(smoke):
     """그대로반환한실제입자/숫자출력과고유입력만저장한다."""
-    cases=inputs();cases=cases[:1] if smoke else cases;rows=[];editions={};files={ROOT/'tools/decomp_burningparticle_oracle.py',ROOT/'tools/decomp_burningprocess_oracle.py',ROOT/'tools/decomp_owner_oracle.py',ROOT/'cpppj/src/o/RawBurningVisual.cpp',ROOT/'cpppj/src/o/RawBurningVisual.h',ROOT/'cpppj/tests/BurningParticleTests.cpp',ROOT/'cpppj/recovery-burningprocess-constructor-evidence.json'}
+    cases=inputs();cases=cases[:1] if smoke else cases;rows=[];editions={};files={ROOT/'tools/decomp_burningparticle_oracle.py',ROOT/'tools/decomp_burningprocess_oracle.py',ROOT/'tools/decomp_owner_oracle.py',ROOT/'cpppj/src/o/RawBurningVisual.cpp',ROOT/'cpppj/src/o/RawBurningVisual.h',ROOT/'cpppj/tests/BurningParticleTests.cpp',ROOT/'cpppj/burningprocess-constructor.json'}
     for edition in ENTRY:
         oracle=ParticleOracle(edition)
         # 각판본고유메모리입력은원본몸체를한번씩정상반환까지실행한다.

@@ -139,7 +139,7 @@ def main():
     """두 판본의 기계어 결과가 같을 때만 고정 기대값과 출처 해시를 저장한다."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, default=ROOT / 'cpppj/tests/fixtures/graphics-x86.tsv')
-    parser.add_argument('--report', type=Path, default=ROOT / 'cpppj/recovery-graphics-evidence.json')
+    parser.add_argument('--report', type=Path, default=ROOT / 'cpppj/graphics.json')
     args = parser.parse_args()
     patch, cd = GraphicsOracle('originals'), GraphicsOracle('originalCD')
     rows = ['# shape-hex width height pane-left top right bottom x y background return canvas-hex']

@@ -19,7 +19,7 @@ from analyze_styletext import ROOT, digest, read_ranges
 
 # 보호 PE는 읽기만 하고 근거/디스어셈블 산출물은 작업 공간에 기록한다.
 PLAN = ROOT / 'tools/ghidra/dotnetstageframes-functions.json'
-REPORT = ROOT / 'dotnetpj/recovery-stage-frames-evidence.json'
+REPORT = ROOT / 'dotnetpj/stage-frames.json'
 BINARY = ROOT / 'originals/Netstorm.exe'
 FOLDER = ROOT / 'extracted/dotnetstageframes/originals'
 BUILD = ROOT / 'extracted/dotnet-stage-frame-20261013-build.log'

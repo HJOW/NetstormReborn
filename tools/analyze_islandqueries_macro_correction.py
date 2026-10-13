@@ -7,10 +7,10 @@ from pathlib import Path
 # 승인된세등록매크로와이전pool교정의현재출처다.
 ROOT=Path(__file__).resolve().parent.parent
 TEST=ROOT/'cpppj/tests/IslandQueriesTests.cpp'
-REPORT=ROOT/'cpppj/recovery-islandqueries-evidence.json'
-POOL=ROOT/'cpppj/recovery-islandqueries-pool-correction-evidence.json'
+REPORT=ROOT/'cpppj/islandqueries.json'
+POOL=ROOT/'cpppj/islandqueries-pool-correction.json'
 POOL_TOOL=ROOT/'tools/analyze_islandqueries_pool_correction.py'
-LINEAGE=ROOT/'cpppj/recovery-islandqueries-macro-correction-evidence.json'
+LINEAGE=ROOT/'cpppj/islandqueries-macro-correction.json'
 
 
 def digest(data):
@@ -22,8 +22,8 @@ def apply():
     """전체교정전자료를내장하고등록identifier 세개만바꾼다."""
     before=TEST.read_bytes();prior_bytes=REPORT.read_bytes();prior=json.loads(prior_bytes)
     if before.count(b'TEST(')!=3 or digest(before)!=prior['files'][TEST.relative_to(ROOT).as_posix()]:raise RuntimeError('Query macro 교정전개수/SHA오류')
-    pool_before=(ROOT/'extracted/islandqueries-before-macro-correction-pool-evidence.json').read_bytes()
-    tool_before=(ROOT/'extracted/islandqueries-before-macro-correction-pool-tool.py').read_bytes()
+    pool_before=(ROOT/'extracted/islandqueries-before-macro-correction-80239.json').read_bytes()
+    tool_before=(ROOT/'extracted/islandqueries_before_macro_correction_p_dcfda.py').read_bytes()
     after=before.replace(b'TEST(',b'TEST_CASE(');TEST.write_bytes(after)
     evidence=dict(host='HJOW-Athlon',date='2026-10-14',new_native_observations=0,fixture_cases=8490,macro_changes=3,
         before_test_text=before.decode(),before_test_sha=digest(before),after_test_sha=digest(after),previous_report_text=prior_bytes.decode(),previous_report_sha=digest(prior_bytes),

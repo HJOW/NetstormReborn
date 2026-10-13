@@ -7,8 +7,8 @@ from pathlib import Path
 from analyze_pathruntime_lineage import ROOT, digest, git, tokens
 
 # 기존 native 자료와 새 공유 함수 이동의 별도 근거다. 이전 native 보고서를 수정하지 않는다.
-REPORT=ROOT/'cpppj/recovery-movement-mapper-lineage-evidence.json'
-PRIOR=ROOT/'cpppj/recovery-priestworldevents-evidence.json'
+REPORT=ROOT/'cpppj/movement-mapper-lineage.json'
+PRIOR=ROOT/'cpppj/priestworldevents.json'
 HEADER='cpppj/src/client/RawPriestWorldBindings.h'
 SOURCE='cpppj/src/client/RawPriestWorldBindings.cpp'
 PRIOR_FIXTURE=ROOT/'cpppj/tests/fixtures/priestworldevents-x86.tsv'

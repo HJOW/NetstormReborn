@@ -32,7 +32,7 @@ ISLE,EDGE,FRINGE,OTHER=97,98,102,94
 NEIGHBORS=((0,-1),(1,-1),(1,0),(1,1),(0,1),(-1,1),(-1,0),(-1,-1))
 CONTROLS=(0x027f,0x037f)
 FIXTURE=ROOT/'cpppj/tests/fixtures/terrainstamp-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-terrainstamp-evidence.json'
+REPORT=ROOT/'cpppj/terrainstamp.json'
 
 
 def inputs():

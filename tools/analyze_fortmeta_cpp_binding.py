@@ -11,13 +11,13 @@ from pathlib import Path
 # 새wrapper만추가하며기존전체완료body는11 commit의출처를보존한다.
 ROOT=Path(__file__).resolve().parent.parent
 BASELINE='5bdb5be'
-REPORT=ROOT/'cpppj/recovery-fortmeta-cpp-binding-evidence.json'
-NATIVE='cpppj/recovery-fortmeta-evidence.json'
+REPORT=ROOT/'cpppj/fortmeta-cpp-binding.json'
+NATIVE='cpppj/fortmeta.json'
 DEPENDENCIES=[f'cpppj/src/o/{name}.{extension}' for name in ('RawFortObjectLoad','RawContainedCreate','ContentFormHost','SquidForms','SquidFactory',
  'SidPool','SquidHash','RawSquidFinder','SquidReward','SpStore','RiftType','Template') for extension in ('h','cpp')]
 DEPENDENCIES+=['cpppj/src/o/TypeConstructors.inc','cpppj/src/o/DerivedConstructors.inc','cpppj/tests/RawSceneSupport.h','cpppj/tests/TestSupport.h']
-OLD=['cpppj/recovery-fortobjectload-evidence.json','cpppj/recovery-contained-evidence.json','cpppj/recovery-contentlifetime-evidence.json',
- 'cpppj/recovery-formlifecycle-evidence.json','cpppj/recovery-factory-world-evidence.json']
+OLD=['cpppj/fortobjectload.json','cpppj/contained.json','cpppj/contentlifetime.json',
+ 'cpppj/formlifecycle.json','cpppj/factory-world.json']
 
 
 def pin(name):

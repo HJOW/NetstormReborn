@@ -6,7 +6,7 @@
 
 ## 원본 근거
 
-계획은 `tools/ghidra/scrollmarkup-functions.json`, 내보내기는 `extracted/scrollmarkup/{originals,originalCD}/creation.c`, 범위는 `functions.tsv`, 실제 PE 명령은 `assembly.txt`다. 정적 기록 도구는 `tools/analyze_scrollmarkup.py`, 결과는 `cpppj/recovery-scrollmarkup-evidence.json`이다. 원본 **10개**, CD **11개** 함수를 내보냈다. CD의 문자열 교체 보조 함수가 추가 한 개다.
+계획은 `tools/ghidra/scrollmarkup-functions.json`, 내보내기는 `extracted/scrollmarkup/{originals,originalCD}/creation.c`, 범위는 `functions.tsv`, 실제 PE 명령은 `assembly.txt`다. 정적 기록 도구는 `tools/analyze_scrollmarkup.py`, 결과는 `cpppj/scrollmarkup.json`이다. 원본 **10개**, CD **11개** 함수를 내보냈다. CD의 문자열 교체 보조 함수가 추가 한 개다.
 
 | 기능 | 10.78 | CD 10.72 |
 | --- | --- | --- |

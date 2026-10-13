@@ -61,7 +61,7 @@ python tools/cpp_config_smoke.py
 python tools/cpp_window_smoke.py
 ```
 
-`decomp_options_oracle.py`는 두 판본의 저장·섹션 읽기·XOR 쓰기 기계어를 격리 실행한다. 파일 열기·닫기·`ftell`·`fwrite`·파일 이름 객체·`strncmp`는 명시적으로 대체한다. **XOR 계산은 원본 기계어가 수행**하고, 실제 OS API·원본 게임은 실행하지 않는다. `recovery-options-evidence.json`에 판본 해시, 대체 함수, 직접 호출 지점, 경로 포인터, 화면 모드 분기의 역어셈블을 기록한다.
+`decomp_options_oracle.py`는 두 판본의 저장·섹션 읽기·XOR 쓰기 기계어를 격리 실행한다. 파일 열기·닫기·`ftell`·`fwrite`·파일 이름 객체·`strncmp`는 명시적으로 대체한다. **XOR 계산은 원본 기계어가 수행**하고, 실제 OS API·원본 게임은 실행하지 않는다. `options.json`에 판본 해시, 대체 함수, 직접 호출 지점, 경로 포인터, 화면 모드 분기의 역어셈블을 기록한다.
 
 - 두 판본이 같은 결과를 낸 **16개 입력**: 서명·빈 섹션·대소문자·파일 경로·중복 섹션·모든 비ASCII 바이트·4KB/8KB 경계·실제 설정 버퍼 2개. 기대값은 `tests/fixtures/options-x86.tsv`이며 C++ 단위 검사가 최종 XOR 바이트와 비교한다.
 - 실제 설정 버퍼를 C++와 두 판본 저장 기계어에 넣은 결과도 바이트 단위로 같다. 이 PC에서는 패치판 **834바이트**, CD판 **114바이트**다. `InstallDir`에 따라 다른 PC에서는 길이가 달라질 수 있다.

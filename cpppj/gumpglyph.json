@@ -1,0 +1,77 @@
+{
+  "description": "실제 글리프 반복/표 선택/길이/패스/Gump wrapper. VFX 색 설치/그림·Position·로그만 명시 경계.",
+  "hostname": "VM-W11-Codex",
+  "last_decompile_host": "VM-W11-CODEX",
+  "date": "2026-10-12",
+  "seed": 276313136,
+  "total_cases": 768,
+  "font_inputs": 18,
+  "fixture_sha256": "ae5986c238699c71514b2c41876125384af1db2b47ac3807cb9e9aaa5b3ee4c3",
+  "script_sha256": "167a22259576f76f5db3f61104c8b2be2bf5318057a64e7b98f7d2430b911f20",
+  "plan_sha256": "52343988b5a7d42110d659c0829f1318bf91566478d7881db91771f412932ffe",
+  "editions": {
+    "originals": {
+      "binary_sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "cases": 256,
+      "normal_returns": 256,
+      "instructions": 93301,
+      "calls": {
+        "004a3f70": 256,
+        "004a3430": 884,
+        "00465050": 150
+      },
+      "boundaries": {
+        "color": 884,
+        "glyph": 2310,
+        "position": 150,
+        "log": 66
+      },
+      "exports": {
+        "extracted/gumpglyph/originals/creation.c": "ff3f9b969e683bc1c6bc096570bcbffd48369edcc388b039282bfa6101ee67c8",
+        "extracted/gumpglyph/originals/functions.tsv": "3eafe3f4ab403a5d3169156c2478a900d4a2fd1d3839c338c65378a21f976b1a"
+      }
+    },
+    "originalCD": {
+      "binary_sha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "cases": 256,
+      "normal_returns": 256,
+      "instructions": 114727,
+      "calls": {
+        "004260f0": 256,
+        "00426250": 884,
+        "00493ed0": 150
+      },
+      "boundaries": {
+        "color": 884,
+        "glyph": 2888,
+        "position": 150,
+        "log": 139
+      },
+      "exports": {
+        "extracted/gumpglyph/originalCD/creation.c": "98bee7364567a9a2b0e487e8b6b865350db4293de6693addaf8fe409f2ea95f5",
+        "extracted/gumpglyph/originalCD/functions.tsv": "88a76896533548c8fa371eeb6566258bddaa4ee258bda01c7ea70245b008f847"
+      }
+    },
+    "original1037": {
+      "binary_sha256": "2a118c629e8a4d89fa30580e00e8639d5ce357dbcc4adf3d9f3044f5aac3dfe8",
+      "cases": 256,
+      "normal_returns": 256,
+      "instructions": 114727,
+      "calls": {
+        "004260f0": 256,
+        "00426250": 884,
+        "00493ed0": 150
+      },
+      "boundaries": {
+        "color": 884,
+        "glyph": 2888,
+        "position": 150,
+        "log": 139
+      },
+      "exports": {
+        "extracted/gumpglyph/original1037/creation.c": "98bee7364567a9a2b0e487e8b6b865350db4293de6693addaf8fe409f2ea95f5",
+        "extracted/gumpglyph/original1037/functions.tsv": "88a76896533548c8fa371eeb6566258bddaa4ee258bda01c7ea70245b008f847"
+      }
+    }
+  }
+}

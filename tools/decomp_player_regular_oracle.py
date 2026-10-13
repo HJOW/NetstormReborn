@@ -17,7 +17,7 @@ from unicorn.x86_const import UC_X86_REG_EAX,UC_X86_REG_ECX,UC_X86_REG_ESP,UC_X8
 # 원본이반환한float10을fstpfloat32로관찰하는도구명령과저장주소다.
 CALLER,RESULT=ARENA+0xc000,ARENA+0xc100
 FIXTURE=ROOT/'cpppj/tests/fixtures/player-regular-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-player-regular-evidence.json'
+REPORT=ROOT/'cpppj/player-regular.json'
 KEYS=('kind','owner','local','template','battle','event','count','reserve','payload','mine','transient','prevent','mission','dot','end','mutation')
 PLAN={
  'originals':dict(handle=0x490810,state=0x4bd550,notify=0x4bd540,notifyBody=0x4bd360,log=0x4c2630,compare=0x4e65ed,templates=0x5c89f0,mission=0x594fa0,depth=0x5c89b8,create=0x44d1b0,save=0x44d8d0),

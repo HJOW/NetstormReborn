@@ -16,7 +16,7 @@
 
 정상 반환의 EAX/ESP·EBX/ESI/EDI/EBP 보존·FS 복원·x87 제어 워드/TOP·허용 쓰기·임시 메모리 균형을 확인한다. 허용 결과·표시 차단·144바이트 미리보기/지역 배열·raw/현재 해시/고정 지도 checksum을 저장한다. 각 PE 전체 진입/반환 288회, 임시 확보/반납 각각 104회이며 실제 helper 진입 종류는 패치 49종, CD/10.37 각각 41종이다. assert/OS 호출은 0이다.
 
-[`canonmayplace-x86.tsv`](../../cpppj/tests/fixtures/canonmayplace-x86.tsv)와 [SHA 근거](../../cpppj/recovery-canonmayplace-evidence.json)를 LF로 저장한다. C++의 새 검사 3개는 세 PE 전체 행을 동일 입력의 실제 파이프라인으로 재생한다. 새 fixture 432개를 더해 누적 **341,842개**다. 기존 fixture와 감사 도구는 수정하지 않았다.
+[`canonmayplace-x86.tsv`](../../cpppj/tests/fixtures/canonmayplace-x86.tsv)와 [SHA 근거](../../cpppj/canonmayplace.json)를 LF로 저장한다. C++의 새 검사 3개는 세 PE 전체 행을 동일 입력의 실제 파이프라인으로 재생한다. 새 fixture 432개를 더해 누적 **341,842개**다. 기존 fixture와 감사 도구는 수정하지 않았다.
 
 ## 실제 TYPE·SHP 연결 검사
 

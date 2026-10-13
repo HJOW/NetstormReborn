@@ -62,7 +62,7 @@
 python tools/decomp_config_oracle.py     # 약 2분. extracted/oracle-python 의 Unicorn 필요
 ```
 
-`tools/decomp_config_oracle.py`는 설정 객체 배열을 가상 메모리에 만들고 원본 함수를 실행한다. 두 판본의 결과가 같은 입력만 `cpppj/tests/fixtures/config-x86.tsv`에 적고, 실행 근거를 `cpppj/recovery-config-evidence.json`에 남긴다. C++ 검사 `ConfigObjectLayer_MatchesBothOriginalX86Editions`가 그 기대값을 읽는다.
+`tools/decomp_config_oracle.py`는 설정 객체 배열을 가상 메모리에 만들고 원본 함수를 실행한다. 두 판본의 결과가 같은 입력만 `cpppj/tests/fixtures/config-x86.tsv`에 적고, 실행 근거를 `cpppj/config.json`에 남긴다. C++ 검사 `ConfigObjectLayer_MatchesBothOriginalX86Editions`가 그 기대값을 읽는다.
 
 | 종류 | 입력 수 | 실행한 원본 함수 |
 |---|---|---|

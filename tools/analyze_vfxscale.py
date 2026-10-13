@@ -17,7 +17,7 @@ from analyze_styletext import ROOT,digest,read_ranges
 
 # 원본은 읽기만 하며 생성 자료와 분석 계획은 저장소 안에 둔다.
 PLAN=ROOT/'tools/ghidra/vfxscale-functions.json'
-REPORT=ROOT/'cpppj/recovery-vfxscale-evidence.json'
+REPORT=ROOT/'cpppj/vfxscale.json'
 # 판본별 실제 실행 파일과 각도 0의 cos/sin DWORD 주소다.
 EDITIONS={
     'originals':('originals/Netstorm.exe',0x40572a,0x40653a),

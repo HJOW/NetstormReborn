@@ -24,7 +24,7 @@ PLAN={
     'originalCD':dict(binary='originalCD/NETSTORM.EXE',entry=0x4d8670,players=0x50f834,stride=0xac,ai=0xa8,boundary=0x4d86a0)}
 # 이번 좁은 등록 관찰은 기존 가이저 채집/AssetPostPop 완료 자료와 분리한다.
 FIXTURE=ROOT/'cpppj/tests/fixtures/geyser-ai-registration-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-geyser-ai-registration-evidence.json'
+REPORT=ROOT/'cpppj/geyser-ai-registration.json'
 
 
 def inputs():

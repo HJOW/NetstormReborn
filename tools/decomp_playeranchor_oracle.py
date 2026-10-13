@@ -31,7 +31,7 @@ SPEC={
 SPEC['original1037']=dict(SPEC['originalCD'])
 # 새 기대값과 근거는 기존 fixture/도구와 분리한다.
 FIXTURE=ROOT/'cpppj/tests/fixtures/playeranchor-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-playeranchor-evidence.json'
+REPORT=ROOT/'cpppj/playeranchor.json'
 KEYS=('kind','owner','type','ready','invalid','ignore','genus','mapGraph','mapFilled','x','y','workshops','additional','nodes','sid')
 
 

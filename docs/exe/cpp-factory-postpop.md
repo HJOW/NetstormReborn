@@ -21,7 +21,7 @@ Damageable와 공통 장부를 한 번 실행한 뒤 상태별 첫 프레임·�
 
 독립 원본 입력은 **996개**(판본별 498개)다. 각 입력은 x87 53/64비트 두 정밀도로 실제 실행해 출력이 같음을 확인했으며 반복 반환을 고유 입력 합계에 더하지 않았다. 최초/재Pop·권한·abstract/buried·현재 상태/프레임 양끝·빈 구간·signed 값·개별 할당 실패·중복/가득 찬 목록·callback 뒤 타입/상태/다음 후보 변경을 포함한다. C++은 전체 슬롯·목록의 이전 메모리·외부 효과 순서와 후보 상태를 재생한다.
 
-집중 검사는 native 재생, 효과 누락/다른 풀 거부, 실제 `SquidFrame`의 프레임 쓰기와 두 표시 갱신 연결 **3개**다. 성공 결과는 `recovery-factory-world-evidence.json`과 `tools/analyze_factory_postpop.py`가 최종 빌드·CTest·현재 SHA를 확인해 기록한다.
+집중 검사는 native 재생, 효과 누락/다른 풀 거부, 실제 `SquidFrame`의 프레임 쓰기와 두 표시 갱신 연결 **3개**다. 성공 결과는 `factory-world.json`과 `tools/analyze_factory_postpop.py`가 최종 빌드·CTest·현재 SHA를 확인해 기록한다.
 
 native의 new/Regular·Damageable·프레임 가상 효과·섬 소유권 재계산·로그/삭제는 명시 관찰 경계다. 상태 getter·프레임 구간 판단·일반 finder/CRT·고유 목록·Factory/아웃포스트 몸체는 실제 기계어다. C++에서는 기존 직접 Damageable→공통 장부를 조합하고 실제 프레임 지정까지 추가 검사했다.
 

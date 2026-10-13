@@ -10,7 +10,7 @@ from pathlib import Path
 
 # 이번 작업 단위의 근거를 이전 UI 작업 근거와 별도로 보존한다.
 ROOT=Path(__file__).resolve().parent.parent
-REPORT=ROOT/'cpppj/recovery-campaign-world-evidence.json'
+REPORT=ROOT/'cpppj/campaign-world.json'
 # 실행 당시 실제 구현/호스트 연결/검사의 byte identity를 감사한다.
 SOURCES=[
     'cpppj/src/o/SidPool.h','cpppj/src/o/RiftType.h','cpppj/src/o/RiftTypeTable.cpp',
@@ -62,7 +62,7 @@ def main():
     files=list(SOURCES)+[build_path,ctest_path,'originals/Netstorm.exe','originalCD/NETSTORM.EXE']
     # 실제 저장된 독립 입력수를 읽고 모든 도구/fixture 근거의 바이트를 함께 보존한다.
     for name,key in UNITS.items():
-        evidence=f'cpppj/recovery-{name}-evidence.json';data=json.loads((ROOT/evidence).read_text(encoding='utf-8'))
+        evidence=f'cpppj/{name}.json';data=json.loads((ROOT/evidence).read_text(encoding='utf-8'))
         count=data[key];assert isinstance(count,int) and count>0;report['native_units'][name]=count
         files.extend((evidence,f'cpppj/tests/fixtures/{name}-x86.tsv',f'tools/decomp_{name}_oracle.py'))
     report['native_cases']=sum(report['native_units'].values())

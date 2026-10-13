@@ -60,7 +60,7 @@ python -X utf8 tools/cpp_canongeometry_smoke.py
 
 최종 Release 경고/오류 **0**, CTest 내부 **372개·실패 0**(114.35초), 감사 **53종 모두 통과**했다. 누적 독립 fixture는 **269,113개**다. 기존 사제 배치/지형/생성 통합과 두 판본 실제 자산 대조도 통과했다.
 
-근거 SHA는 `cpppj/recovery-canongeometry-evidence.json`, 관찰은 `cpppj/tests/fixtures/canongeometry-x86.tsv`, C++ 재생/순서/실제 finder 검사는 `CanonPlacementGeometryTests.cpp`다. 최종 검사 수치/로그는 [LEFT_JOBS.md](../../LEFT_JOBS.md) 최신 완료 절에 기록한다.
+근거 SHA는 `cpppj/canongeometry.json`, 관찰은 `cpppj/tests/fixtures/canongeometry-x86.tsv`, C++ 재생/순서/실제 finder 검사는 `CanonPlacementGeometryTests.cpp`다. 최종 검사 수치/로그는 [LEFT_JOBS.md](../../LEFT_JOBS.md) 최신 완료 절에 기록한다.
 
 ## 후속
 

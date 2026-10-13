@@ -105,7 +105,7 @@ def main():
               'dirty_sequences': len(sequences), 'total_cases': len(orders) + len(sequences),
               'fixture_sha256': hashlib.sha256(payload.encode('utf-8')).hexdigest(), 'stubbed': [],
               'limitations': ['Squid 목록 수집·구름·Win32 출력·게임 플레이 대조가 아니다', '유한 float와 정상 사각형 입력']}
-    (ROOT / 'cpppj/recovery-renderer-evidence.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')
+    (ROOT / 'cpppj/renderer.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')
     print(f'Renderer 두 판본 x86 일치: {len(orders)} 정렬, {len(sequences)} 변경 표 시퀀스')
 
 

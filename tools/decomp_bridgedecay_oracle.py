@@ -426,7 +426,7 @@ class DecayOracle:
 
 # 기대값·근거 기록의 저장 위치.
 FIXTURE = ROOT / 'cpppj/tests/fixtures/bridgedecay-x86.tsv'
-EVIDENCE = ROOT / 'cpppj/recovery-bridgedecay-evidence.json'
+EVIDENCE = ROOT / 'cpppj/bridgedecay.json'
 # 실행하는 세 실제 PE. CD와 추가 10.37은 같은 코드 배치다.
 EDITIONS = ('originals', 'originalCD', 'original1037')
 # 시험 장면의 기준 칸과 첫 번호(세 판본의 풀 범위 안).

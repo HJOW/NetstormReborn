@@ -21,7 +21,7 @@ SPEC['original1037']=dict(SPEC['originalCD'])
 # 두 x87 정밀도와 저장할 독립 관찰 파일이다. 조회 자체는 부동소수점 명령을 쓰지 않는다.
 CONTROLS=(639,895)
 FIXTURE=ROOT/'cpppj/tests/fixtures/priestlookup-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-priestlookup-evidence.json'
+REPORT=ROOT/'cpppj/priestlookup.json'
 
 
 def inputs():

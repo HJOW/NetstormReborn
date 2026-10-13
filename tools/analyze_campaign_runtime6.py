@@ -8,7 +8,7 @@ from pathlib import Path
 from analyze_campaign_runtime4 import ROOT, digest, test_count
 
 # 이번 단위의 정상 입력·assert 입력·이전 회귀는 서로 구분해 기록한다.
-REPORT = ROOT / 'cpppj/recovery-campaign-runtime6-evidence.json'
+REPORT = ROOT / 'cpppj/run6.json'
 MODULES = {'geysermined': (2304, 8), 'priestdamage': (3424, 0)}
 # 최종 집중 로그에 실제 등록된 검사 수다.
 FILTERS = {'GeyserMined_': 2, 'PriestDamage_': 4, 'RegionPaint_': 2}
@@ -35,7 +35,7 @@ def generate():
     focused = {}
     # 두 판본의 고유 입력만 세며 x87 반복·이전 입력 재사용은 다시 더하지 않는다.
     for name, (normal, assertions) in MODULES.items():
-        report = ROOT / f'cpppj/recovery-{name}-evidence.json'
+        report = ROOT / f'cpppj/{name}.json'
         data = json.loads(report.read_text(encoding='utf-8'))
         if data['total'] != normal + assertions or data.get('host') != 'HJOW-Athlon':
             raise RuntimeError(f'원본 입력/PC 오류: {name}')
@@ -49,7 +49,7 @@ def generate():
         counts[name] = {'normal_cases': normal, 'assertion_cases': assertions, 'fixture_rows': len(rows)}
         paths.extend([report, fixture])
     # 공유 후보 선택의484개 이전 근거와 나머지 전체 소스 보존을 별도 lineage로 연결한다.
-    lineage = ROOT / 'cpppj/recovery-framechoose-lineage-evidence.json'
+    lineage = ROOT / 'cpppj/framechoose-lineage.json'
     data = json.loads(lineage.read_text(encoding='utf-8'))
     if data['prior_unique_cases'] != 484 or data['new_unique_cases'] != 0 or not data['remaining_header_and_implementation_identical']:
         raise RuntimeError('후보 선택 공유 lineage 오류')
@@ -57,23 +57,23 @@ def generate():
     paths.extend([lineage, ROOT / 'tools/analyze_framechoose_lineage.py', ROOT / 'tools/analyze_geysermined_shadow_lineage.py'])
     # 초기 실패/교정 로그는 보존하며 최종 성공 로그의 검사 수만 완료로 기록한다.
     for name, expected in FILTERS.items():
-        path = ROOT / f'extracted/campaign-runtime6-{name}-final-tests.log'
+        path = ROOT / f'extracted/run6-{name}-final.log'
         count = test_count(path)
         if count != expected:
             raise RuntimeError(f'집중 검사 수 오류: {name}')
         focused[name] = count
         paths.append(path)
-    whole = ROOT / 'extracted/campaign-runtime6-all-final-tests.log'
+    whole = ROOT / 'extracted/run6-all-final.log'
     total = test_count(whole)
     if total != 974:
         raise RuntimeError('최종 전체 검사 수 오류')
-    build = ROOT / 'extracted/campaign-runtime6-build-final.log'
+    build = ROOT / 'extracted/run6-build-final.log'
     content = read_log(build)
     if re.search(r'\b(?:warning|error)\s+[A-Z]+\d+\s*:', content, re.I):
         raise RuntimeError('최종 빌드 경고/오류 존재')
     if 'netstorm_tests.exe' not in content or 'NetstormCpp.exe' not in content:
         raise RuntimeError('두 Release 타깃 빌드 요약 없음')
-    paths.extend([whole, build, ROOT / 'cpppj/recovery-campaign-runtime5-evidence.json'])
+    paths.extend([whole, build, ROOT / 'cpppj/run5.json'])
     # 이 실행에 등록된 구현·검사·바이너리도 같은 스냅샷에 고정한다.
     for name in ('RawFrameChoose', 'RawRegionPaint', 'RawGeyserMined', 'RawPriestDamage', 'RawDamageableBurning'):
         paths.extend([ROOT / f'cpppj/src/o/{name}.cpp', ROOT / f'cpppj/src/o/{name}.h'])
@@ -99,7 +99,7 @@ def verify():
     """저장된 최종 단위의 파일 SHA와 실제 검사 성공 요약을 다시 확인한다."""
     data = json.loads(REPORT.read_text(encoding='utf-8'))
     audit_files(data)
-    if test_count(ROOT / 'extracted/campaign-runtime6-all-final-tests.log') != data['all_tests']:
+    if test_count(ROOT / 'extracted/run6-all-final.log') != data['all_tests']:
         raise RuntimeError('전체 검사 수 오류')
     print('채집·사제 피해·후보 선택 공유 최종 SHA/검사 감사 통과')
 

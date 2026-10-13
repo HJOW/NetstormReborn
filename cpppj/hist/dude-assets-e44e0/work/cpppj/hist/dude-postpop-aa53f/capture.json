@@ -1,0 +1,614 @@
+{
+  "schema": 1,
+  "baseline_commit": "db9b626c0a9c6b9440c6b181dfc401506a07d3e4",
+  "shared": [
+    "cpppj/src/o/SquidPostPop.h",
+    "cpppj/src/o/SquidPostPop.cpp",
+    "cpppj/src/o/SquidPop.cpp"
+  ],
+  "prior_reports": [
+    "cpppj/archertype-draft-lineage.json",
+    "cpppj/archertype.json",
+    "cpppj/archertype-pop-lineage.json",
+    "cpppj/assetpostpop.json",
+    "cpppj/run12.json",
+    "cpppj/run8.json",
+    "cpppj/campaign-target-path.json",
+    "cpppj/campaign-world.json",
+    "cpppj/creation.json",
+    "cpppj/dais-postpop-lineage.json",
+    "cpppj/dais-ritual-consumer-binding.json",
+    "cpppj/dais-ritual-consumer-cpp-correction.json",
+    "cpppj/daiscontentnotice-cpp-correction.json",
+    "cpppj/daislifecycle-current-successor.json",
+    "cpppj/display.json",
+    "cpppj/dudenotice-draft-lineage.json",
+    "cpppj/dudenotice.json",
+    "cpppj/dudenotice-point-lineage.json",
+    "cpppj/dudespawn-draft-lineage.json",
+    "cpppj/dudespawn.json",
+    "cpppj/factory-world.json",
+    "cpppj/normalterrain-world-binding.json",
+    "cpppj/pop.json",
+    "cpppj/postpop.json",
+    "cpppj/runepostpop-lineage.json",
+    "cpppj/setframe.json",
+    "cpppj/unpop.json"
+  ],
+  "captured": {
+    "cpppj/archertype-draft-lineage.json": {
+      "work_sha256": "ff401e95d396e3cabb0c636b13bdbbfb150aafe26fc98c30c480cc2c1ba847ab",
+      "git_sha256": "ff401e95d396e3cabb0c636b13bdbbfb150aafe26fc98c30c480cc2c1ba847ab"
+    },
+    "cpppj/archertype.json": {
+      "work_sha256": "4fd1f3460d513dca292caa8eac7555cbd0485803294b70b2fc7b7bcec3e8ae82",
+      "git_sha256": "4fd1f3460d513dca292caa8eac7555cbd0485803294b70b2fc7b7bcec3e8ae82"
+    },
+    "cpppj/archertype-pop-lineage.json": {
+      "work_sha256": "b26d29bb0230539b316c68aac35a51c0b935694549677bc6929748a5fefd225d",
+      "git_sha256": "b26d29bb0230539b316c68aac35a51c0b935694549677bc6929748a5fefd225d"
+    },
+    "cpppj/assetpostpop.json": {
+      "work_sha256": "973bb7f9c29da1d244ff91f053461a5d4320ba6ff30e1caaf68bbcf6b46c7824",
+      "git_sha256": "973bb7f9c29da1d244ff91f053461a5d4320ba6ff30e1caaf68bbcf6b46c7824"
+    },
+    "cpppj/run12.json": {
+      "work_sha256": "b85ba385a9d50ff60d3dfe68b98fe64bace43ee94976200e1efb42a65dad100d",
+      "git_sha256": "b85ba385a9d50ff60d3dfe68b98fe64bace43ee94976200e1efb42a65dad100d"
+    },
+    "cpppj/run8.json": {
+      "work_sha256": "1a616f3ff34752daee2cc9d2fb87ca8497d8d677ad3ce42eba9653ac5a700cb5",
+      "git_sha256": "1a616f3ff34752daee2cc9d2fb87ca8497d8d677ad3ce42eba9653ac5a700cb5"
+    },
+    "cpppj/campaign-target-path.json": {
+      "work_sha256": "c98099094307cdf115c8b76962acb7eb8e923d2694a070f5cb27f8f8461065d2",
+      "git_sha256": "c98099094307cdf115c8b76962acb7eb8e923d2694a070f5cb27f8f8461065d2"
+    },
+    "cpppj/campaign-world.json": {
+      "work_sha256": "0378af02139169357f9e1bba62ef25a07039f433ec0582a97e471f7a08a74d1f",
+      "git_sha256": "0378af02139169357f9e1bba62ef25a07039f433ec0582a97e471f7a08a74d1f"
+    },
+    "cpppj/creation.json": {
+      "work_sha256": "13700c4265c2be219096c9e35dc3a80e191162de6640b320ee3ef3a5a2997511",
+      "git_sha256": "13700c4265c2be219096c9e35dc3a80e191162de6640b320ee3ef3a5a2997511"
+    },
+    "cpppj/dais-postpop-lineage.json": {
+      "work_sha256": "45791d708c8938da9cb14acb56bb35a16d0095f157cd91539eb293b8178a21c8",
+      "git_sha256": "45791d708c8938da9cb14acb56bb35a16d0095f157cd91539eb293b8178a21c8"
+    },
+    "cpppj/dais-ritual-consumer-binding.json": {
+      "work_sha256": "434af01c390b23fb1c732929031c91f006553d6d140c81991417513227eb38c1",
+      "git_sha256": "434af01c390b23fb1c732929031c91f006553d6d140c81991417513227eb38c1"
+    },
+    "cpppj/dais-ritual-consumer-cpp-correction.json": {
+      "work_sha256": "3649e0785d640781b03e4f01b053f5a1bb9bb02c34305ed2647a5b48d3c4a574",
+      "git_sha256": "3649e0785d640781b03e4f01b053f5a1bb9bb02c34305ed2647a5b48d3c4a574"
+    },
+    "cpppj/daiscontentnotice-cpp-correction.json": {
+      "work_sha256": "9cb93b488d21c1932f2ac4b7aa56ec0f8e7a7c28fcc5936d83c7ea1acfdfd8dc",
+      "git_sha256": "9cb93b488d21c1932f2ac4b7aa56ec0f8e7a7c28fcc5936d83c7ea1acfdfd8dc"
+    },
+    "cpppj/daislifecycle-current-successor.json": {
+      "work_sha256": "548f7632bbca10faffb799b24d775300f85c4fe4b818b1631a0d2633b1c2617c",
+      "git_sha256": "548f7632bbca10faffb799b24d775300f85c4fe4b818b1631a0d2633b1c2617c"
+    },
+    "cpppj/display.json": {
+      "work_sha256": "90c17ba3cb74b2bb89e948c80a54c7878720c21dc4fae0654f544d7baf626476",
+      "git_sha256": "90c17ba3cb74b2bb89e948c80a54c7878720c21dc4fae0654f544d7baf626476"
+    },
+    "cpppj/dudenotice-draft-lineage.json": {
+      "work_sha256": "80114f3277243faeb39e7d3bf41a8dba07de9ff80a24fed885be40e0384ea371",
+      "git_sha256": "80114f3277243faeb39e7d3bf41a8dba07de9ff80a24fed885be40e0384ea371"
+    },
+    "cpppj/dudenotice.json": {
+      "work_sha256": "60f84851d663c7da1e1f3bd6a311e23a9ffe11af142e16517e173bcaa93f64c9",
+      "git_sha256": "60f84851d663c7da1e1f3bd6a311e23a9ffe11af142e16517e173bcaa93f64c9"
+    },
+    "cpppj/dudenotice-point-lineage.json": {
+      "work_sha256": "b637e319569454ad26402fef4aa6afd23c118a01e1ddf0be84e9c0ee29b6e1be",
+      "git_sha256": "b637e319569454ad26402fef4aa6afd23c118a01e1ddf0be84e9c0ee29b6e1be"
+    },
+    "cpppj/dudespawn-draft-lineage.json": {
+      "work_sha256": "7c6360e1c7643410b4431da24a87193819eedeeb4046acc1bea0dea6f0d81d35"
+    },
+    "cpppj/dudespawn.json": {
+      "work_sha256": "15bb6d720a90524485ff293a1b17a6f1158f5bf4a3a7494c6dcc62b148f2dffa"
+    },
+    "cpppj/factory-world.json": {
+      "work_sha256": "79d6d30ac4c1c96fba6b1ae55523ee92f547e8192310cab98746c9ac3a8e6f38",
+      "git_sha256": "79d6d30ac4c1c96fba6b1ae55523ee92f547e8192310cab98746c9ac3a8e6f38"
+    },
+    "cpppj/hist/dudespawn-initial/cpppj/dudespawn.json": {
+      "work_sha256": "90b9ba249b7888394a16591517a789a8eb6aa29cd3058d16b3a90ea29268e202"
+    },
+    "cpppj/hist/dudespawn-initial/cpppj/src/o/RawDudeSpawn.cpp": {
+      "work_sha256": "a0f02ae44824ae62de94f2e4e4314c6b613b330fc6efb3d0be8d57f67cb98c77"
+    },
+    "cpppj/hist/dudespawn-initial/cpppj/src/o/RawDudeSpawn.h": {
+      "work_sha256": "e4cebe47dfbedcba002500b667d01ac3c1d5f72fb2a8d1528219913bee387aec"
+    },
+    "cpppj/hist/dudespawn-initial/cpppj/tests/DudeSpawnTests.cpp": {
+      "work_sha256": "9c19ccffab23cf51de5489151dda2d2c6c16a889152828a27dfbdfe119ac5ed7"
+    },
+    "cpppj/hist/dudespawn-initial/cpppj/tests/fixtures/dudespawn-x86.tsv": {
+      "work_sha256": "c365fb07b0f887b399119d77cb2b71b654439efcd677442cd2fc1b155ba70041"
+    },
+    "cpppj/hist/dudespawn-initial/tools/decomp_dudespawn_oracle.py": {
+      "work_sha256": "294095ff1336d290d8d7e0e465df95d5514ceb4ff87d4bac8c282cdcec2eb786"
+    },
+    "cpppj/normalterrain-world-binding.json": {
+      "work_sha256": "034ffc254b9a4aa7c8e2615e00b53f1e5b2468fcb79d0e754e4d1beb3ba09f1f",
+      "git_sha256": "034ffc254b9a4aa7c8e2615e00b53f1e5b2468fcb79d0e754e4d1beb3ba09f1f"
+    },
+    "cpppj/pop.json": {
+      "work_sha256": "5b87b320324c1549cf4ce9e48589a55a409aef40b2d24516f906374429a18b80",
+      "git_sha256": "5b87b320324c1549cf4ce9e48589a55a409aef40b2d24516f906374429a18b80"
+    },
+    "cpppj/postpop.json": {
+      "work_sha256": "73da14c11b5d4bd1c51e65f512895aca3ef1c9434eb34eb2f79087d022d97604",
+      "git_sha256": "73da14c11b5d4bd1c51e65f512895aca3ef1c9434eb34eb2f79087d022d97604"
+    },
+    "cpppj/runepostpop-lineage.json": {
+      "work_sha256": "1873f3a406de8b9bdfce672a7202fff3f6a5ec8948a2d1f906d8b8e756d4d3fa",
+      "git_sha256": "1873f3a406de8b9bdfce672a7202fff3f6a5ec8948a2d1f906d8b8e756d4d3fa"
+    },
+    "cpppj/setframe.json": {
+      "work_sha256": "bfbf0d7b9e190de39eac39392f94d58eed1152b4c2418d5f7ae1e8edf70d1910",
+      "git_sha256": "bfbf0d7b9e190de39eac39392f94d58eed1152b4c2418d5f7ae1e8edf70d1910"
+    },
+    "cpppj/unpop.json": {
+      "work_sha256": "5029a209846fb6e55ff8101fbda6fe284168d41434893b02848f58983e95ff25",
+      "git_sha256": "5029a209846fb6e55ff8101fbda6fe284168d41434893b02848f58983e95ff25"
+    },
+    "cpppj/src/o/RawDudeDrop.cpp": {
+      "work_sha256": "9b395be29bc0c441c466b8dc79064c10da4cb0974c5c75f3d802691509f7cef6"
+    },
+    "cpppj/src/o/RawDudeDrop.h": {
+      "work_sha256": "e60f63be4c46a8e2ff3ed0c9ef43d2ff6730c250b4dca024bc331247e7165811"
+    },
+    "cpppj/src/o/RawDudeSpawn.cpp": {
+      "work_sha256": "a0f02ae44824ae62de94f2e4e4314c6b613b330fc6efb3d0be8d57f67cb98c77"
+    },
+    "cpppj/src/o/RawDudeSpawn.h": {
+      "work_sha256": "e4cebe47dfbedcba002500b667d01ac3c1d5f72fb2a8d1528219913bee387aec"
+    },
+    "cpppj/src/o/SquidDisplay.cpp": {
+      "work_sha256": "1f157fbf842ef5603f9634d7d2a349cb37b64e1ae057f4db712a36432b4b35e4",
+      "git_sha256": "1f157fbf842ef5603f9634d7d2a349cb37b64e1ae057f4db712a36432b4b35e4"
+    },
+    "cpppj/src/o/SquidFactory.cpp": {
+      "work_sha256": "6221de3262944b7105ae57dacc67ee8cee3e237b62240d5d3a2fd777a5706aed",
+      "git_sha256": "6221de3262944b7105ae57dacc67ee8cee3e237b62240d5d3a2fd777a5706aed"
+    },
+    "cpppj/src/o/SquidFrame.cpp": {
+      "work_sha256": "739652a22b5cbf9abb96f71e5e368772624eb53a8a3957be728e1d6b8fbe27e6",
+      "git_sha256": "739652a22b5cbf9abb96f71e5e368772624eb53a8a3957be728e1d6b8fbe27e6"
+    },
+    "cpppj/src/o/SquidOwner.cpp": {
+      "work_sha256": "297ef63bb582823627a61427e530b7ea95f6ac2e81c86b268264b4ecad7ca0aa",
+      "git_sha256": "297ef63bb582823627a61427e530b7ea95f6ac2e81c86b268264b4ecad7ca0aa"
+    },
+    "cpppj/src/o/SquidPop.cpp": {
+      "work_sha256": "e69942ca111f72c79ba4da05a42b5446e84013ef2ee0b9044381cf64a9e80ec9",
+      "git_sha256": "dce6017fc86415ff5b584e3a305201305c39916e9c31cad47cc117a5b5c980da"
+    },
+    "cpppj/src/o/SquidPop.h": {
+      "work_sha256": "337933973c05c0204a035a48e737b6b0fd5c385170b81e5c47b2bf4bad622e8b",
+      "git_sha256": "337933973c05c0204a035a48e737b6b0fd5c385170b81e5c47b2bf4bad622e8b"
+    },
+    "cpppj/src/o/SquidPostPop.cpp": {
+      "work_sha256": "094e90c54c220d22bb663ab68105c2d30d83cc4b7c8e02002f804b2ae783f687",
+      "git_sha256": "094e90c54c220d22bb663ab68105c2d30d83cc4b7c8e02002f804b2ae783f687"
+    },
+    "cpppj/src/o/SquidPostPop.h": {
+      "work_sha256": "f6e3a41b4dbdf4618ff5643407d3c5e855d2f1ef46b86f09203eef955c00eebc",
+      "git_sha256": "f6e3a41b4dbdf4618ff5643407d3c5e855d2f1ef46b86f09203eef955c00eebc"
+    },
+    "cpppj/src/o/SquidUnpop.cpp": {
+      "work_sha256": "d82a8c1b8df6005e86894613ed33fca1eb4e6f2837c9c8adb8ceee29e00f7768",
+      "git_sha256": "d82a8c1b8df6005e86894613ed33fca1eb4e6f2837c9c8adb8ceee29e00f7768"
+    },
+    "cpppj/src/o/SquidUnpop.h": {
+      "work_sha256": "b05e4dc0ac5f66065ddff9ca8f451bc5344ad0ce3f9ceb08ad4857d9ed2b51b3",
+      "git_sha256": "b05e4dc0ac5f66065ddff9ca8f451bc5344ad0ce3f9ceb08ad4857d9ed2b51b3"
+    },
+    "cpppj/tests/DudeSpawnSupport.h": {
+      "work_sha256": "29dfb2a1983ecb20bd3699d2ef05aea17bc0d9f02b61e66dbacfd363bce0eec1"
+    },
+    "cpppj/tests/DudeSpawnTests.cpp": {
+      "work_sha256": "5a65c66a742fafc1d9afcafa6fb060a27b2219528358376fbb19ff8b01b75458"
+    },
+    "cpppj/tests/fixtures/archertype-x86.tsv": {
+      "work_sha256": "c892b554dc1f9baa161d3ca72fc1c3f891daef4e04eea44172b050c6c0e0580f",
+      "git_sha256": "c892b554dc1f9baa161d3ca72fc1c3f891daef4e04eea44172b050c6c0e0580f"
+    },
+    "cpppj/tests/fixtures/assetpostpop-x86.tsv": {
+      "work_sha256": "706afb7e0bd78de2527e97a1ec1bbe1f35a202aafbd2c81a0dc8d77d99198741",
+      "git_sha256": "706afb7e0bd78de2527e97a1ec1bbe1f35a202aafbd2c81a0dc8d77d99198741"
+    },
+    "cpppj/tests/fixtures/buildingspace-x86.tsv": {
+      "work_sha256": "fb3eca7ff07ac6dced7124ee41e6efc9ebc7b9be4fca2e9e69b01fa03691d465",
+      "git_sha256": "fb3eca7ff07ac6dced7124ee41e6efc9ebc7b9be4fca2e9e69b01fa03691d465"
+    },
+    "cpppj/tests/fixtures/burningparticle-x86.tsv": {
+      "work_sha256": "2d157284340561db003a70b51697d7f2922a89e4b8d9df3871394179f5a795a3",
+      "git_sha256": "2d157284340561db003a70b51697d7f2922a89e4b8d9df3871394179f5a795a3"
+    },
+    "cpppj/tests/fixtures/burningprocess-constructor-x86.tsv": {
+      "work_sha256": "cab4c23c2e79293da37d9d36983cc3bbf7593cd23e9c84bab5aa4f5424962622",
+      "git_sha256": "cab4c23c2e79293da37d9d36983cc3bbf7593cd23e9c84bab5aa4f5424962622"
+    },
+    "cpppj/tests/fixtures/constructionarrival-x86.tsv": {
+      "work_sha256": "de99e6d0f8d2816101d30b6245603a7caffffe64b9b5c7fda505af252a9da691",
+      "git_sha256": "de99e6d0f8d2816101d30b6245603a7caffffe64b9b5c7fda505af252a9da691"
+    },
+    "cpppj/tests/fixtures/constructiontimer-x86.tsv": {
+      "work_sha256": "dd86e75ded7220354551aac29fb2481a938c286c1026917434864432d48d7cc6",
+      "git_sha256": "dd86e75ded7220354551aac29fb2481a938c286c1026917434864432d48d7cc6"
+    },
+    "cpppj/tests/fixtures/constructors-x86.tsv": {
+      "work_sha256": "c92412152abb65808a2037c30b2e5df4dfc783b891d52e995a4313cda527218e",
+      "git_sha256": "c92412152abb65808a2037c30b2e5df4dfc783b891d52e995a4313cda527218e"
+    },
+    "cpppj/tests/fixtures/creation-x86.tsv": {
+      "work_sha256": "3a95581e93b42548eaba0618c576d97750633a6d6caa075835ab84e5d669d379",
+      "git_sha256": "3a95581e93b42548eaba0618c576d97750633a6d6caa075835ab84e5d669d379"
+    },
+    "cpppj/tests/fixtures/daiscontentnotice-x86.tsv": {
+      "work_sha256": "abc3bd27d30a92d17db9e42f57ba97fba2c92503ac4691a0febc8d22474b8eb9",
+      "git_sha256": "abc3bd27d30a92d17db9e42f57ba97fba2c92503ac4691a0febc8d22474b8eb9"
+    },
+    "cpppj/tests/fixtures/daislifecycle-current-x86.tsv": {
+      "work_sha256": "916cbbdf0648018009729bb9e0d9ca1738880725498a52b5ebf3544a9f04b9e7",
+      "git_sha256": "916cbbdf0648018009729bb9e0d9ca1738880725498a52b5ebf3544a9f04b9e7"
+    },
+    "cpppj/tests/fixtures/daislifecycle-x86.tsv": {
+      "work_sha256": "0a3b6ddee8f50793f9ce540987ff1dec37cc8d2ea525da2c487aae72effdd9e0",
+      "git_sha256": "0a3b6ddee8f50793f9ce540987ff1dec37cc8d2ea525da2c487aae72effdd9e0"
+    },
+    "cpppj/tests/fixtures/daisprogress-x86.tsv": {
+      "work_sha256": "20f5ddd2486a3b592db3a4f77a8f18200a9ec4f46cec5f43355d86cf1f215cea",
+      "git_sha256": "20f5ddd2486a3b592db3a4f77a8f18200a9ec4f46cec5f43355d86cf1f215cea"
+    },
+    "cpppj/tests/fixtures/damageablepostdestroy-x86.tsv": {
+      "work_sha256": "7cbf0b93162674cd8d1cf353068ad96b4e717f1167782c0b8fe98908b98a4c6b",
+      "git_sha256": "7cbf0b93162674cd8d1cf353068ad96b4e717f1167782c0b8fe98908b98a4c6b"
+    },
+    "cpppj/tests/fixtures/dudenotice-x86.tsv": {
+      "work_sha256": "2b8f9e950743140662d0487cef5f49a5e11f94d9fc9d009a5021baf9c395e314",
+      "git_sha256": "2b8f9e950743140662d0487cef5f49a5e11f94d9fc9d009a5021baf9c395e314"
+    },
+    "cpppj/tests/fixtures/dudespawn-x86.tsv": {
+      "work_sha256": "c365fb07b0f887b399119d77cb2b71b654439efcd677442cd2fc1b155ba70041"
+    },
+    "cpppj/tests/fixtures/dudetask-x86.tsv": {
+      "work_sha256": "410236dd4d7cc59ecbcb3d58bdeffb7f19490ed7a1353efaf276127e49a3faab",
+      "git_sha256": "410236dd4d7cc59ecbcb3d58bdeffb7f19490ed7a1353efaf276127e49a3faab"
+    },
+    "cpppj/tests/fixtures/factorypostpop-x86.tsv": {
+      "work_sha256": "3c03af2bf6a224449a789e86d6dbe88cb93d84bf56b85ee1e900af540f271b06",
+      "git_sha256": "3c03af2bf6a224449a789e86d6dbe88cb93d84bf56b85ee1e900af540f271b06"
+    },
+    "cpppj/tests/fixtures/farmcluster-x86.tsv": {
+      "work_sha256": "c5e53132543b400050630a81ca9df677d1595eed595ef757fb1398b7ac19db24",
+      "git_sha256": "c5e53132543b400050630a81ca9df677d1595eed595ef757fb1398b7ac19db24"
+    },
+    "cpppj/tests/fixtures/fortmeta-x86.tsv": {
+      "work_sha256": "47c1ad6441ef2a9b62e010f32862171cb7ead5f174c4f7edbad81f037c2fe4a9",
+      "git_sha256": "47c1ad6441ef2a9b62e010f32862171cb7ead5f174c4f7edbad81f037c2fe4a9"
+    },
+    "cpppj/tests/fixtures/gunarcher-x86.tsv": {
+      "work_sha256": "7882627526d66a7b5084902407788f83170f5c3da27745dfec0a3aa0cb77ab2b",
+      "git_sha256": "7882627526d66a7b5084902407788f83170f5c3da27745dfec0a3aa0cb77ab2b"
+    },
+    "cpppj/tests/fixtures/guntarget-x86.tsv": {
+      "work_sha256": "8625065722057d8a1e2e5e45fe4fd0bc89895941e8fc168d2c49464155153892",
+      "git_sha256": "8625065722057d8a1e2e5e45fe4fd0bc89895941e8fc168d2c49464155153892"
+    },
+    "cpppj/tests/fixtures/islandruntime-x86.tsv": {
+      "work_sha256": "bc220732f4d41892cd82c847196ae01507598a3e0edb0ae0d3e1ceed2eaaa180",
+      "git_sha256": "bc220732f4d41892cd82c847196ae01507598a3e0edb0ae0d3e1ceed2eaaa180"
+    },
+    "cpppj/tests/fixtures/metadisplaydirty-x86.tsv": {
+      "work_sha256": "7d35f10062f11a39a1609f1b7ea0b605eb3233f5570deda1e7ef99675b2408a0",
+      "git_sha256": "7d35f10062f11a39a1609f1b7ea0b605eb3233f5570deda1e7ef99675b2408a0"
+    },
+    "cpppj/tests/fixtures/pathdata-x86.tsv": {
+      "work_sha256": "dbd3e1413d6ae263da77fd1da763dc1e133939e34b88bdbd660d2da6c307b23f",
+      "git_sha256": "dbd3e1413d6ae263da77fd1da763dc1e133939e34b88bdbd660d2da6c307b23f"
+    },
+    "cpppj/tests/fixtures/pathprepare-x86.tsv": {
+      "work_sha256": "c854b31ce7ed0bc9ddf059ffa0b09a96d3ac37860aa5f05155df57e0fd772dc8",
+      "git_sha256": "c854b31ce7ed0bc9ddf059ffa0b09a96d3ac37860aa5f05155df57e0fd772dc8"
+    },
+    "cpppj/tests/fixtures/pop-vtables.tsv": {
+      "work_sha256": "959807dbe3c3173232512ab6bd75268158218d33333a720720c1632f322c6577",
+      "git_sha256": "959807dbe3c3173232512ab6bd75268158218d33333a720720c1632f322c6577"
+    },
+    "cpppj/tests/fixtures/pop-x86.tsv": {
+      "work_sha256": "a2033f026d6feda15bb4805ce4d12c65c66928a9345bc45f53939751930b1581",
+      "git_sha256": "a2033f026d6feda15bb4805ce4d12c65c66928a9345bc45f53939751930b1581"
+    },
+    "cpppj/tests/fixtures/priestworldevents-x86.tsv": {
+      "work_sha256": "4556993d777756bfe17a4c0c0eae30311d1f6ffbdcafc9101be0b2cf5ed6df54",
+      "git_sha256": "4556993d777756bfe17a4c0c0eae30311d1f6ffbdcafc9101be0b2cf5ed6df54"
+    },
+    "cpppj/tests/fixtures/runepostpop-x86.tsv": {
+      "work_sha256": "784669b8c4c20b725b3e23492bc76e4b1a4ab21042dfb9850378907bafd35e99",
+      "git_sha256": "784669b8c4c20b725b3e23492bc76e4b1a4ab21042dfb9850378907bafd35e99"
+    },
+    "cpppj/tests/fixtures/setframe-x86.tsv": {
+      "work_sha256": "f7cab1c89d53cef928791f085e10a9a5f241d6056c672526e72c99cf5519ca7a",
+      "git_sha256": "f7cab1c89d53cef928791f085e10a9a5f241d6056c672526e72c99cf5519ca7a"
+    },
+    "cpppj/tests/fixtures/sprotate-x86.tsv": {
+      "work_sha256": "4497a9bc627a0a0ce2dc2da721c4c5e2599e5f07796a1009e3bbfcbc54d4fefc",
+      "git_sha256": "4497a9bc627a0a0ce2dc2da721c4c5e2599e5f07796a1009e3bbfcbc54d4fefc"
+    },
+    "cpppj/tests/fixtures/templeritual-x86.tsv": {
+      "work_sha256": "6ad3c0abef4a2af956e949ae54e7005d89811c0287bd9d5328e94efa3a98be65",
+      "git_sha256": "6ad3c0abef4a2af956e949ae54e7005d89811c0287bd9d5328e94efa3a98be65"
+    },
+    "cpppj/tests/fixtures/terraincontext-x86.tsv": {
+      "work_sha256": "4f2a00ade0e29273a76824b96ea3184a78d51022a0758b79deceaf322fa7696d",
+      "git_sha256": "4f2a00ade0e29273a76824b96ea3184a78d51022a0758b79deceaf322fa7696d"
+    },
+    "cpppj/tests/fixtures/terraingrowth-x86.tsv": {
+      "work_sha256": "050e21070a6c3f6c40e2c35b83c2c224b163a2922abd1dc6520d8edfa0b31824",
+      "git_sha256": "050e21070a6c3f6c40e2c35b83c2c224b163a2922abd1dc6520d8edfa0b31824"
+    },
+    "cpppj/tests/fixtures/terrainstamp-x86.tsv": {
+      "work_sha256": "cf6848c4c51c0af2aecf5ed020637c3798011425ca2cb929a3870ebadb7495c6",
+      "git_sha256": "cf6848c4c51c0af2aecf5ed020637c3798011425ca2cb929a3870ebadb7495c6"
+    },
+    "cpppj/tests/fixtures/unpop-vtables.tsv": {
+      "work_sha256": "d149c425723b9be5f8f1808f37f08e951b93a8f0dca069db4eaffa9fb07f5197",
+      "git_sha256": "d149c425723b9be5f8f1808f37f08e951b93a8f0dca069db4eaffa9fb07f5197"
+    },
+    "cpppj/tests/fixtures/unpop-x86.tsv": {
+      "work_sha256": "76c693fe249b31249fbd011cc5cafadd32d6aa7f016952cc63b2acdda275585b",
+      "git_sha256": "76c693fe249b31249fbd011cc5cafadd32d6aa7f016952cc63b2acdda275585b"
+    },
+    "docs/exe/cpp-dude-spawn-20261014.md": {
+      "work_sha256": "2319b2dfd829d2b880955a449ee96401f12568c49409eaef6a6a91bb5c04fb86"
+    },
+    "extracted/creation/originalCD/creation.c": {
+      "work_sha256": "6968a5c10a81f60f270671e24c163202da11b99bdf64578d038c3eb54cff49ac"
+    },
+    "extracted/creation/originalCD/functions.tsv": {
+      "work_sha256": "4853e93e88fd741083d3cc6d5ef2429e652e8fa13b3a2315dba6e36585ff3f3d"
+    },
+    "extracted/creation/originals/creation.c": {
+      "work_sha256": "426ae0f7c99bece695fc93cd81c3b291ae3cb8303c9dcb7c6223e330e3fa81ae"
+    },
+    "extracted/creation/originals/functions.tsv": {
+      "work_sha256": "42b14fee0b262fd92c833ec51db3cf772e92fd56b6ccbdc1c589955eb347ccb7"
+    },
+    "extracted/display/originalCD/creation.c": {
+      "work_sha256": "8837fa51d12af2683383cde158b69d783494039f11ec7e0904429d8bcbb794b0"
+    },
+    "extracted/display/originalCD/functions.tsv": {
+      "work_sha256": "623cf19b2a6f23ab67026daff3770fb3f894f0a35f0b5d3c988a8ab7a8496d1a"
+    },
+    "extracted/display/originals/creation.c": {
+      "work_sha256": "bccd673912ada7da70332cd898646b18c109a85a9663cf5134e944a97f590804"
+    },
+    "extracted/display/originals/functions.tsv": {
+      "work_sha256": "408c4530becac3e2ce5112b436e23b32437a729b36ec6b0ebae5b2da81eb51b4"
+    },
+    "extracted/dude-spawn/originalCD/creation.c": {
+      "work_sha256": "3d5d942241d258aeffdef4901347c8b1871e2aacf576814d44bad5a846b4aef4"
+    },
+    "extracted/dude-spawn/originalCD/functions.tsv": {
+      "work_sha256": "b3aae52d49b352a1f397bea06e716ccf9b38faf6075160806ff3f21a170af777"
+    },
+    "extracted/dude-spawn/originals/creation.c": {
+      "work_sha256": "fb498e44e72eab9c4a4aa7496af2c91262a543688188d9a4c4cf1a49b852fcd0"
+    },
+    "extracted/dude-spawn/originals/functions.tsv": {
+      "work_sha256": "0df48f73f6418b0aae9cd8c4058998866e245ac632d76513c1a16f57eda670ea"
+    },
+    "extracted/owner/originalCD/creation.c": {
+      "work_sha256": "115d3f4790315c3647e18c087579cf3aa08af06cdbaeca42adbac1e82725af62"
+    },
+    "extracted/owner/originalCD/functions.tsv": {
+      "work_sha256": "4e184997f62c2622b26b3fa4f047a2580a609d2d919f0e414a75e8efd49d4439"
+    },
+    "extracted/owner/originals/creation.c": {
+      "work_sha256": "f9919c046d5259526946f106b47b6259fe5e04971f743d6fa02d6a5361b9dc16"
+    },
+    "extracted/owner/originals/functions.tsv": {
+      "work_sha256": "3ea66dace80a85999a8b2c2dbadb4d5f1bd18b0dcdb0768f9c41075206c7c72d"
+    },
+    "extracted/pop/helpers-originals/creation.c": {
+      "work_sha256": "33272b9b553227ac3ec295bb3807a6e458cecb6cb885f984baa06aeb98d2fab9"
+    },
+    "extracted/pop/helpers-originals/functions.tsv": {
+      "work_sha256": "fc21935402ba4781899da2002c5f844061e53150d0bddeeaa597f29b81d58cb8"
+    },
+    "extracted/pop/originalCD/creation.c": {
+      "work_sha256": "9e6e6e59bcbb02227a72b91b063d0cce00fb9160d22c2f6afd49af3804ddbefb"
+    },
+    "extracted/pop/originalCD/functions.tsv": {
+      "work_sha256": "bad0cad125741fee06381b4c781914f2abec210cd381967a30ce02aaf185284c"
+    },
+    "extracted/pop/originals/creation.c": {
+      "work_sha256": "e59b6c12246f8b9a21a2f1d128cc623a2d04bdf1c9fbe7b5f9989d11413f76b7"
+    },
+    "extracted/pop/originals/functions.tsv": {
+      "work_sha256": "5b3241e336bcc1dea4c188121e3c458d3aef3414c5b6e9c4590db8c126414568"
+    },
+    "extracted/postpop/originalCD/creation.c": {
+      "work_sha256": "739929556c82c7394c9055f92bb3e00098f05ae649aef7c9973b6aa27f97e95a"
+    },
+    "extracted/postpop/originalCD/functions.tsv": {
+      "work_sha256": "f540a3ec002e21f58950dfcedc66c85682a42ec749ac7caa103ae329794c0669"
+    },
+    "extracted/postpop/originals/creation.c": {
+      "work_sha256": "a0df44a01f4e690d255c3d4721ef2b37f4c7452980c8d91bb334be8df89d5f79"
+    },
+    "extracted/postpop/originals/functions.tsv": {
+      "work_sha256": "99dcfa55557ba03e55321146ccb750816cdebd8242c18b4d95e2e1a353a32021"
+    },
+    "extracted/setframe/originalCD/creation.c": {
+      "work_sha256": "62bb22d0ef37cecddcc1927f7ccf219ac6ce7ed7122856500e3d96844217ef6f"
+    },
+    "extracted/setframe/originalCD/functions.tsv": {
+      "work_sha256": "674200974a1a54c0b7ad8dd9e4a596b3926f6a1b08678cb8f7f7ea0e14f19c27"
+    },
+    "extracted/setframe/originals/creation.c": {
+      "work_sha256": "ac6f886701b50c2ee25ef5fb5411fbba8c97dfacd866220c3df6c50a70777b31"
+    },
+    "extracted/setframe/originals/functions.tsv": {
+      "work_sha256": "31422114edd78937f1d285df1480190ad4ceb87b5436e6e1d407e335f621425e"
+    },
+    "extracted/sid/originalCD/functions.tsv": {
+      "work_sha256": "a54643de18c5c9480a91e9e2c67abbc3455506d2cd92934d1882eb3710f57de9"
+    },
+    "extracted/sid/originals/functions.tsv": {
+      "work_sha256": "3034dd0d393ebdfd77f2e9fafe8a5b252d5437f1e71ab94541cc229e8ef8694b"
+    },
+    "tools/analyze_archertype_pop_lineage.py": {
+      "work_sha256": "919d232fe558f261ac09ee8fd291c9015faaa1270325834651e3efc15974e054",
+      "git_sha256": "919d232fe558f261ac09ee8fd291c9015faaa1270325834651e3efc15974e054"
+    },
+    "tools/analyze_campaign_runtime12.py": {
+      "work_sha256": "066a28905fa1f181acf7c74f4d4b375b09ff3cc335f9f4a7cca78badd5d1933a",
+      "git_sha256": "066a28905fa1f181acf7c74f4d4b375b09ff3cc335f9f4a7cca78badd5d1933a"
+    },
+    "tools/analyze_campaign_runtime4.py": {
+      "work_sha256": "821362a66c1d9ab82837a9cbd940b8c927e76016184dbe34b8808d0495d59661",
+      "git_sha256": "821362a66c1d9ab82837a9cbd940b8c927e76016184dbe34b8808d0495d59661"
+    },
+    "tools/analyze_campaign_runtime6.py": {
+      "work_sha256": "0fc3c72565ff77b48801a214ac7b2459fb889b098bf10b887cadd23fcec78b0a",
+      "git_sha256": "0fc3c72565ff77b48801a214ac7b2459fb889b098bf10b887cadd23fcec78b0a"
+    },
+    "tools/analyze_campaign_runtime8.py": {
+      "work_sha256": "2437a927431c6784d446f766c044b791a18815329f87b8e5ead987b957b37e25",
+      "git_sha256": "2437a927431c6784d446f766c044b791a18815329f87b8e5ead987b957b37e25"
+    },
+    "tools/analyze_campaign_target_path.py": {
+      "work_sha256": "1c5d869da7369bddbfcb220c9814190aadd0d0b19f01c87fb4f6812a26d3dec5",
+      "git_sha256": "aa4c66efdc1e2e3ff7e5b46f129af354ea84522dfddb38a0301e09e4e554a548"
+    },
+    "tools/analyze_campaign_world.py": {
+      "work_sha256": "ee12970ea75fa4f0367fbdd507e8bb325095a77ebd4cc6b25fc52c9d4ab6fa8f",
+      "git_sha256": "de3e92fef521778c02c2c07502c740bd6db30e6edfc4b0de8981d569b4246813"
+    },
+    "tools/analyze_dais_followups_cpp_correction.py": {
+      "work_sha256": "a52e478f3aaa67a1ef9a8d3a44455f3cb3ba8086e0dd5d5db843dce82b4e5385",
+      "git_sha256": "a52e478f3aaa67a1ef9a8d3a44455f3cb3ba8086e0dd5d5db843dce82b4e5385"
+    },
+    "tools/analyze_dais_postpop_lineage.py": {
+      "work_sha256": "cfb510bd400288fbaf5fd74a90e53e04cf6d33654d3ef5aa1778e71f02081983",
+      "git_sha256": "cfb510bd400288fbaf5fd74a90e53e04cf6d33654d3ef5aa1778e71f02081983"
+    },
+    "tools/analyze_dais_ritual_consumer_binding.py": {
+      "work_sha256": "dde6ffb97f463e87b0a5f7ac88fd58483fe1396777846b606d7a20fde8e343f3",
+      "git_sha256": "dde6ffb97f463e87b0a5f7ac88fd58483fe1396777846b606d7a20fde8e343f3"
+    },
+    "tools/analyze_daislifecycle_current_successor.py": {
+      "work_sha256": "6a70de4675a72e5dc1571f28a62567d65dc9e06c413887544762dfb5ecf4ccf7",
+      "git_sha256": "6a70de4675a72e5dc1571f28a62567d65dc9e06c413887544762dfb5ecf4ccf7"
+    },
+    "tools/analyze_daisprogress_cpp_correction.py": {
+      "work_sha256": "23a2a6e1da99b1fd3ca2a84fb2c7975a884dc17d729f2b51caf4fc566e57cca0",
+      "git_sha256": "23a2a6e1da99b1fd3ca2a84fb2c7975a884dc17d729f2b51caf4fc566e57cca0"
+    },
+    "tools/analyze_damageablepost_host_group_lineage.py": {
+      "work_sha256": "e0529e0e9cf84cfdc43144b1aef4a3e0562ecf09a9a9ac7224a58c43dc0d5c91",
+      "git_sha256": "e0529e0e9cf84cfdc43144b1aef4a3e0562ecf09a9a9ac7224a58c43dc0d5c91"
+    },
+    "tools/analyze_damageablepostdestroy.py": {
+      "work_sha256": "d7dff7e29877740040cd9a15b63c5b850b6f7322d2059ec62ebc3226d88c4445",
+      "git_sha256": "d7dff7e29877740040cd9a15b63c5b850b6f7322d2059ec62ebc3226d88c4445"
+    },
+    "tools/analyze_dudenotice_draft_lineage.py": {
+      "work_sha256": "f1f2d4ec4393e6c4d9284f3fc3486e2d73c9149ebd392a4250c88e52586674d6",
+      "git_sha256": "f1f2d4ec4393e6c4d9284f3fc3486e2d73c9149ebd392a4250c88e52586674d6"
+    },
+    "tools/analyze_dudespawn_draft_lineage.py": {
+      "work_sha256": "bd1f8f12a2aabd1112dd6be7314ca0fe2b4253144823a19a180eba6274c17bfd"
+    },
+    "tools/analyze_factory_postpop.py": {
+      "work_sha256": "0e6538d6a0e6b9d0dc68510aeaaa0301157103433aba4dfb46aeda980478132a",
+      "git_sha256": "7e6e2e56941d17c3b07227e5579ad3bad17d2148076faf1c0c2330ec759b8762"
+    },
+    "tools/analyze_fortmeta_namespace_lineage.py": {
+      "work_sha256": "1458e3f237a40d3187e596faaa5ad991b82c1d0dc1dc8440c9cbc879968e1757",
+      "git_sha256": "1458e3f237a40d3187e596faaa5ad991b82c1d0dc1dc8440c9cbc879968e1757"
+    },
+    "tools/analyze_gunarcher_correction.py": {
+      "work_sha256": "0d97cdc1c9c8d576b0000b15ad578003ee6fc1b2db533a5324a70478d04dbf62",
+      "git_sha256": "0d97cdc1c9c8d576b0000b15ad578003ee6fc1b2db533a5324a70478d04dbf62"
+    },
+    "tools/analyze_regular_initial_count_lineage.py": {
+      "work_sha256": "9f75ba8fcb9203db1351b6329b61d88f3350a6517e4aed27be4ff28afc7fe3ed",
+      "git_sha256": "9f75ba8fcb9203db1351b6329b61d88f3350a6517e4aed27be4ff28afc7fe3ed"
+    },
+    "tools/analyze_runepostpop_lineage.py": {
+      "work_sha256": "01d980d4d774bd66422dbe62d2f6d30014fcaa5616a800488cb29680f1f224ca",
+      "git_sha256": "01d980d4d774bd66422dbe62d2f6d30014fcaa5616a800488cb29680f1f224ca"
+    },
+    "tools/analyze_squidhitpoints_lineage.py": {
+      "work_sha256": "0874ccdf9dfdc2b1567641265f68fc4b91b42f683f48625f1f14540c201e62d7",
+      "git_sha256": "0874ccdf9dfdc2b1567641265f68fc4b91b42f683f48625f1f14540c201e62d7"
+    },
+    "tools/analyze_temple_rune_runtime8_lineage.py": {
+      "work_sha256": "18825db9c21103a5a5c76d73ef9546bb0734038a478e508559d9196d4382944f",
+      "git_sha256": "18825db9c21103a5a5c76d73ef9546bb0734038a478e508559d9196d4382944f"
+    },
+    "tools/analyze_terraincontext_cpp_binding.py": {
+      "work_sha256": "ce425a25c64ffebd2df293d9adb26a9d8e79e2db7ed562588224f358abb0323a",
+      "git_sha256": "ce425a25c64ffebd2df293d9adb26a9d8e79e2db7ed562588224f358abb0323a"
+    },
+    "tools/analyze_world_bridge_state_lineage.py": {
+      "work_sha256": "4bad9c314ee453e4639d5a7a356d7365b3b8b62340ca1bcfe90356bfcc3fad0a",
+      "git_sha256": "4bad9c314ee453e4639d5a7a356d7365b3b8b62340ca1bcfe90356bfcc3fad0a"
+    },
+    "tools/decomp_creation_oracle.py": {
+      "work_sha256": "646adc1ca6c9eaeac08a9c700324ae05ba1727416bc62070e0a066afc07dc053",
+      "git_sha256": "646adc1ca6c9eaeac08a9c700324ae05ba1727416bc62070e0a066afc07dc053"
+    },
+    "tools/decomp_display_oracle.py": {
+      "work_sha256": "bd9a42431cdef96d3fb13accf78d5a0d6a3155243b1bbc0362d58e79f662f7a4",
+      "git_sha256": "bd9a42431cdef96d3fb13accf78d5a0d6a3155243b1bbc0362d58e79f662f7a4"
+    },
+    "tools/decomp_dudedrop_oracle.py": {
+      "work_sha256": "fceccf730e9797d943b9f84e43ebb7ef9dfd0e3662fd01dd256ca847e7a1cd8c"
+    },
+    "tools/decomp_dudespawn_oracle.py": {
+      "work_sha256": "294095ff1336d290d8d7e0e465df95d5514ceb4ff87d4bac8c282cdcec2eb786"
+    },
+    "tools/decomp_oracle.py": {
+      "work_sha256": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+      "git_sha256": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d"
+    },
+    "tools/decomp_owner_oracle.py": {
+      "work_sha256": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
+      "git_sha256": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb"
+    },
+    "tools/decomp_pop_oracle.py": {
+      "work_sha256": "2a50f34e6b229d5ea4611f7073877ca1e165e0bf841f32c83f17d300b6113bb6",
+      "git_sha256": "2a50f34e6b229d5ea4611f7073877ca1e165e0bf841f32c83f17d300b6113bb6"
+    },
+    "tools/decomp_postpop_oracle.py": {
+      "work_sha256": "43dd9adffc6e2b3a1bd4a1fb06563f848518d8082014f2346613243183535129",
+      "git_sha256": "43dd9adffc6e2b3a1bd4a1fb06563f848518d8082014f2346613243183535129"
+    },
+    "tools/decomp_sid_oracle.py": {
+      "work_sha256": "7bfd7b95b26724b1793d407a4ad6654972b2aaa3bf04e4c206cc357670b68dff",
+      "git_sha256": "7bfd7b95b26724b1793d407a4ad6654972b2aaa3bf04e4c206cc357670b68dff"
+    },
+    "tools/ghidra/dude-spawn-functions.json": {
+      "work_sha256": "6fd3a099b040d1c505e148f4fd06579f8ee05ab94650d4c9bf54f519210a3dd0"
+    },
+    "tools/shp.py": {
+      "work_sha256": "19be5473e9c36f9fe654ac7dad723cc96a9ff6eff314ab23281740f8c2007ec3",
+      "git_sha256": "19be5473e9c36f9fe654ac7dad723cc96a9ff6eff314ab23281740f8c2007ec3"
+    }
+  },
+  "native_inputs_preserved": 288,
+  "new_native_inputs": 0
+}

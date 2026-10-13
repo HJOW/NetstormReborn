@@ -33,7 +33,7 @@ KEYS = ('type','argument','direction','x','y','player','authority','footX','foot
     'editor','local','flags1','flags2','genus','may','displace','first','second','spot','surface','islandX','islandY','flags','timeLow','timeHigh','quality','profile')
 REQUEST_KEYS = ('type','x','y','player','argument','direction','flags','timeLow','timeHigh','quality')
 FIXTURE = ROOT / 'cpppj/tests/fixtures/constructionrequest-x86.tsv'
-REPORT = ROOT / 'cpppj/recovery-constructionrequest-evidence.json'
+REPORT = ROOT / 'cpppj/constructionrequest.json'
 
 
 def request_case(**changes):

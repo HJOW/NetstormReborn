@@ -25,7 +25,7 @@ ENTRIES = {'originals': (0x471950,0x4719e0,0x4ae240), 'originalCD': (0x4ed500,0x
 CLEAR={'originals':0x471af0,'originalCD':0x4ed4d0}
 # 원본에서 저장한 행만 C++가 읽는 fixture와 검증 보고서 경로다.
 FIXTURE=ROOT/'cpppj/tests/fixtures/processretake-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-processretake-evidence.json'
+REPORT=ROOT/'cpppj/processretake.json'
 # 입력 열은 기존 Kernel 번호·SID·상태·이웃 형태·인자 타입·flags·회전·PID 변경 여부다.
 KEYS=('slot','form','state','head','type','flags','rotation','redirect')
 

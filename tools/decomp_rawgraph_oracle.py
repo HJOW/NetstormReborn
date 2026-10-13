@@ -157,13 +157,13 @@ def generate():
           '일반 표면과 매몰 다리 Pop만 연결; 정상 다리/섬 Pop의 영역 효과·삭제 분할/소진 복구·GameWorld 미연결',
           '7개 raw 슬롯/dirty 모든 항목 직접 비교; 전체 풀/해시/spot/그래프/스택/통계는 Adler-32',
           '비용 인코딩은 loader 접두 구간이며 준비 Reset/Create 및 내부 graph 호출은 공개 호출 수와 구별'])
-    (ROOT/'cpppj/recovery-rawgraph-evidence.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
+    (ROOT/'cpppj/rawgraph.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
     print(f'raw 그래프 x86 fixture: {report["total_calls"]}회 {dict(counts)}')
 
 
 def verify():
     """게임 실행 없이 PE/부모 도구/fixture SHA와 공개 호출 수를 확인한다."""
-    r=json.loads((ROOT/'cpppj/recovery-rawgraph-evidence.json').read_text(encoding='utf-8'))
+    r=json.loads((ROOT/'cpppj/rawgraph.json').read_text(encoding='utf-8'))
     assert r['tool_sha256']==hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
     for edition,data in r['editions'].items():
         p=ROOT/('originals/Netstorm.exe' if edition=='originals' else 'originalCD/NETSTORM.EXE')

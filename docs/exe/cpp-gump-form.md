@@ -6,7 +6,7 @@
 
 ## 원본 근거
 
-계획은 `tools/ghidra/gumpform-functions.json`, 내보내기는 `extracted/gumpform/{originals,originalCD}/creation.c`, 실제 범위는 `functions.tsv`다. 각 PE에서 **20개** 함수를 내보냈다. `tools/analyze_gumpform.py`는 실제 PE 기계어를 `assembly.txt`에 기록하고 가상 표/내장 타입 초기값/등록 표/슬롯 폭·현재 코드/빌드 해시를 `cpppj/recovery-gumpform-evidence.json`에 남긴다. 실행 관찰이나 C++ 동작 대조를 생성하지 않는다.
+계획은 `tools/ghidra/gumpform-functions.json`, 내보내기는 `extracted/gumpform/{originals,originalCD}/creation.c`, 실제 범위는 `functions.tsv`다. 각 PE에서 **20개** 함수를 내보냈다. `tools/analyze_gumpform.py`는 실제 PE 기계어를 `assembly.txt`에 기록하고 가상 표/내장 타입 초기값/등록 표/슬롯 폭·현재 코드/빌드 해시를 `cpppj/gumpform.json`에 남긴다. 실행 관찰이나 C++ 동작 대조를 생성하지 않는다.
 
 | 기능 | 10.78 | CD 10.72 |
 | --- | --- | --- |

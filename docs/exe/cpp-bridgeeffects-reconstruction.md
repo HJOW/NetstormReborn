@@ -2,7 +2,7 @@
 
 2026-10-07. **1차 기준은 10.78**이다. 다른 AI의 [붕괴 스캔/수명 복원](cpp-bridgedecay-reconstruction.md)을 이어서 다리 preDestroy/postDestroy의 판단·효과 순서와 지연 낙하 이벤트의 좌표 포장을 복원했다.
 
-소스: [RawBridgeLifecycle.h](../../cpppj/src/o/RawBridgeLifecycle.h), [RawBridgeLifecycle.cpp](../../cpppj/src/o/RawBridgeLifecycle.cpp). 검사: [BridgeLifecycleTests.cpp](../../cpppj/tests/BridgeLifecycleTests.cpp). 독립 결과: [bridgeeffects-x86.tsv](../../cpppj/tests/fixtures/bridgeeffects-x86.tsv), [감사 기록](../../cpppj/recovery-bridgeeffects-evidence.json), [실행 도구](../../tools/decomp_bridgeeffects_oracle.py).
+소스: [RawBridgeLifecycle.h](../../cpppj/src/o/RawBridgeLifecycle.h), [RawBridgeLifecycle.cpp](../../cpppj/src/o/RawBridgeLifecycle.cpp). 검사: [BridgeLifecycleTests.cpp](../../cpppj/tests/BridgeLifecycleTests.cpp). 독립 결과: [bridgeeffects-x86.tsv](../../cpppj/tests/fixtures/bridgeeffects-x86.tsv), [감사 기록](../../cpppj/bridgeeffects.json), [실행 도구](../../tools/decomp_bridgeeffects_oracle.py).
 
 **실제 삭제/낙하의 완료를 뜻하지 않는다.** raw 풀에서 현재 필드를 읽고 원본 순서로 외부 효과를 호출하는 어댑터다. 일반 탐색·기본 Squid 삭제·walker 가상 낙하·소리·제거 통지는 호출자가 연결한다. 기존 GUI GameWorld는 아직 임시 객체 모델이며 이 어댑터를 사용하지 않는다.
 

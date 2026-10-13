@@ -8,12 +8,12 @@ from pathlib import Path
 
 # 최초Frame426의 전체원문과현재생산몸체를 별도successor로 연결한다.
 ROOT=Path(__file__).resolve().parent.parent
-HISTORY=ROOT/'cpppj/recovery-history/burningframe-before-extra-offset'
-REPORT=ROOT/'cpppj/recovery-burningframe-draft-lineage-evidence.json'
-NATIVE='cpppj/recovery-burningframe-evidence.json'
+HISTORY=ROOT/'cpppj/hist/burningframe-d5cb6'
+REPORT=ROOT/'cpppj/burningframe-draft-lineage.json'
+NATIVE='cpppj/burningframe.json'
 SOURCE='cpppj/src/o/RawBurningFrame.cpp'
 TEST='cpppj/tests/BurningFrameTests.cpp'
-PREVIOUS=ROOT/'cpppj/recovery-history/burningframe-draft-before-reserve-hook'
+PREVIOUS=ROOT/'cpppj/hist/burningframe-99a53'
 OLD='raw[pool_.Edition()==OriginalEdition::Patch1078 ? 34U : 32U]&1U'
 NEW='raw[pool_.Edition()==OriginalEdition::Patch1078 ? 40U : 35U]&1U'
 OLD_TEST='RawRenderRegistry registry(pool,std::move(registryHooks));BurningVisualState visualState;RawBurningVisual visual(pool,registry,visualState,{});'
@@ -50,7 +50,7 @@ def observe():
         if sha((PREVIOUS/name).read_bytes())!=value:raise RuntimeError('BurningFrame 첫successor 전체SHA 오류 '+name)
         history[(PREVIOUS/name).relative_to(ROOT).as_posix()]=value
     history[(PREVIOUS/'capture.json').relative_to(ROOT).as_posix()]=sha((PREVIOUS/'capture.json').read_bytes())
-    previous=json.loads((PREVIOUS/'cpppj/recovery-burningframe-draft-lineage-evidence.json').read_text(encoding='utf-8'))
+    previous=json.loads((PREVIOUS/'cpppj/burningframe-draft-lineage.json').read_text(encoding='utf-8'))
     if previous['schema']!=1 or previous['total']!=426 or previous['new_native_inputs'] or previous['lineage']['files'][TEST]!=sha((PREVIOUS/TEST).read_bytes()):raise RuntimeError('BurningFrame 첫successor 당시test연결 오류')
     return dict(history=history,dependencies=dependencies,files={name:sha((ROOT/name).read_bytes()) for name in (SOURCE,NATIVE,'cpppj/src/o/RawBurningFrame.h','cpppj/src/client/BurningFrameCapture.h','cpppj/src/client/BurningFrameCapture.cpp',TEST,'cpppj/tests/fixtures/burningframe-x86.tsv','tools/decomp_burningframe_oracle.py')},whole_old_production_inverse=True,whole_old_test_inverse=True,previous_draft_preserved=True)
 

@@ -5,7 +5,7 @@ import argparse,json
 from pathlib import Path
 from decomp_daisprogress_oracle import ROOT,FIXTURE,REPORT,sha,verify as native_verify
 
-BINDING=ROOT/'cpppj/recovery-daisprogress-cpp-binding-evidence.json' # 원본 보고서를 수정하지 않는 C++ 검사 연결 근거다.
+BINDING=ROOT/'cpppj/daisprogress-cpp-binding.json' # 원본 보고서를 수정하지 않는 C++ 검사 연결 근거다.
 TEST=ROOT/'cpppj/tests/DaisProgressTests.cpp' # 같은 입력의 현재 상위 몸체 대조 검사다.
 
 def expected():

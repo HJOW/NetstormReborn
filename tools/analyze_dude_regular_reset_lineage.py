@@ -9,8 +9,8 @@ from decomp_owner_oracle import ROOT,digest
 
 # 단위10 커밋의 LF 원문과 당시 작업트리 바이트를 별도 이름/전체SHA로 보존한다.
 BASELINE='a349e63'
-HISTORY=ROOT/'cpppj/recovery-history/dude-regular-reset-baseline'
-REPORT=ROOT/'cpppj/recovery-dude-regular-reset-lineage-evidence.json'
+HISTORY=ROOT/'cpppj/hist/dude-regular-dc7b9'
+REPORT=ROOT/'cpppj/dude-regular-reset-lineage.json'
 SHARED=('cpppj/src/o/SquidProcess.cpp','cpppj/src/o/SquidProcess.h')
 NAMES=('process','processform','processretake','processtransmit','gunprocess')
 ADDITIONS={
@@ -21,7 +21,7 @@ ADDITIONS={
 
 def paths():
     """기존 전체소스 두 파일과 당시5보고서/5fixture 경로를 돌려준다."""
-    return [*SHARED,*[f'cpppj/{part}' for name in NAMES for part in (f'recovery-{name}-evidence.json',f'tests/fixtures/{name}-x86.tsv')]]
+    return [*SHARED,*[f'cpppj/{part}' for name in NAMES for part in (f'{name}.json',f'tests/fixtures/{name}-x86.tsv')]]
 
 
 def audit():

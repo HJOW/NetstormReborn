@@ -6,9 +6,9 @@ import json
 from pathlib import Path
 from decomp_priesthalt_oracle import ROOT,FIXTURE,REPORT as NATIVE,sha
 
-REPORT=ROOT/'cpppj/recovery-priesthalt-cpp-binding-evidence.json' # 전수 검사와 원본864를 재합산 없이 연결한다.
-HISTORY=ROOT/'cpppj/recovery-history/priesthalt-before-cd-input' # CD 비특정 후보 타입을 범위 안170으로 준비하기 전 전체5파일이다.
-SMOKE=ROOT/'cpppj/recovery-history/priesthalt-initial-smoke' # 처음20smoke는 전수 입력에 다시 합산하지 않는다.
+REPORT=ROOT/'cpppj/priesthalt-cpp-binding.json' # 전수 검사와 원본864를 재합산 없이 연결한다.
+HISTORY=ROOT/'cpppj/hist/priesthalt-b-024a7' # CD 비특정 후보 타입을 범위 안170으로 준비하기 전 전체5파일이다.
+SMOKE=ROOT/'cpppj/hist/priesthalt-i-e7bbe' # 처음20smoke는 전수 입력에 다시 합산하지 않는다.
 TEST=ROOT/'cpppj/tests/PriestHaltTests.cpp' # 같은 HP/CarrierCheck/일반 finder를 재사용하는 검사다.
 
 def rows(path):
@@ -20,7 +20,7 @@ def expected():
     native=json.loads(NATIVE.read_text(encoding='utf-8'));assert native['total']==864 and not native['smoke'] and native['game_runs']==0
     # 현재 전체 원본 몸체/PE/도구/생산/fixture SHA를 Native 보고서와 일치시킨다.
     for name,value in native['files'].items():assert sha(ROOT/name)==value,name
-    old=json.loads((HISTORY/'cpppj/recovery-priesthalt-evidence.json').read_text(encoding='utf-8'));assert old['total']==864 and not old['smoke']
+    old=json.loads((HISTORY/'cpppj/priesthalt.json').read_text(encoding='utf-8'));assert old['total']==864 and not old['smoke']
     # 이전 미등록 전수 자료 전체를 당시 SHA로 보존하며 생산 두파일은 현재도 불변이다.
     for name,value in old['files'].items():
         path=HISTORY/name if (HISTORY/name).is_file() else ROOT/name

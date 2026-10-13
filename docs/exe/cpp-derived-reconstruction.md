@@ -29,7 +29,7 @@
 
 8시퀀스(두 판본×서버/클라이언트×mana 약화 옵션), **6,028회**: Create 716, Construct 1,432, postCreate 716, postTake 716, Take 2,448. 지원하는 **179개 타입 연결을 모두** 실행한다. 기존 free 슬롯 수신과 반복 void Take, 오염 payload/상태 상위 비트, HP 경계/음수, 예측/클라이언트 flags를 포함한다. 대상 슬롯은 모든 바이트를 직접 비교하고 전체 풀은 Adler-32와 머리/꼬리/카운터를 대조한다. 실제 void Unpop도 패치 948회/CD 784회 호출하며 대체하지 않았다.
 
-[CreationTests.cpp](../../cpppj/tests/CreationTests.cpp)의 추가 검사는 fixture 재생, null/assert/unknown 주소의 변경 전 거부, anim의 판본별 HP 폭과 기존 void 반납 연결, 독립 Construct의 호출자 필드 보존/잘못된 슬롯 거부다. **Release 빌드 경고·오류 0, CTest 한 실행 파일 내부 108개 검사 통과.** 원본/도구/표/fixture SHA-256과 행 수는 [검증 기록](../../cpppj/recovery-derived-evidence.json) 및 `--verify`로 확인한다. 기존 base 생성 검증 기록은 수정하지 않았다. 누적 제한 x86 입력은 **42,538행**이고 생성자 표 359행은 별도다.
+[CreationTests.cpp](../../cpppj/tests/CreationTests.cpp)의 추가 검사는 fixture 재생, null/assert/unknown 주소의 변경 전 거부, anim의 판본별 HP 폭과 기존 void 반납 연결, 독립 Construct의 호출자 필드 보존/잘못된 슬롯 거부다. **Release 빌드 경고·오류 0, CTest 한 실행 파일 내부 108개 검사 통과.** 원본/도구/표/fixture SHA-256과 행 수는 [검증 기록](../../cpppj/derived.json) 및 `--verify`로 확인한다. 기존 base 생성 검증 기록은 수정하지 않았다. 누적 제한 x86 입력은 **42,538행**이고 생성자 표 359행은 별도다.
 
 이 검증은 합성 타입 필드와 이미 확보한 메모리에서의 생성자/공통 초기화/void 수신이다. 실제 자산 파서 전체, malloc/소진 복구, non-void Unpop·파생 영역/삭제/의존 객체·실제 참조 수명·네트워크 목록/카운터 호출 순서·GameWorld 연결은 남았다. Take는 free list/freeCount를 변경하지 않으므로 일반 서버 Allocate와의 혼용 흐름이 완료된 것은 아니다. 생성자 복원을 유닛 클래스 전체·미션 완주·원본 화면 일치로 해석하지 않는다.
 

@@ -33,7 +33,7 @@ preDestroy는 extra `& 9`가 0이면 flags와 무관하게 두 목록의 **모�
 
 입력은 Pop/삭제 × extra 6종 × flags 4종 × 목록 장면 8종 × 지역 콜백 변경 2종이다. 서로 다른 빈/중복/가득 찬/거의 찬 목록과 비활성 `0xabababab` 꼬리를 공급한다. 원본의 목록 count/저장소 전체·외부 사건 순서/당시 count·최종 raw 전체를 관찰한다. 기대 등록·삭제 결과를 Python/C++ 알고리즘으로 만들지 않는다.
 
-각 PE 정상 반환 **1,536회**, 부모 대체 **1,536회**, 지역 대체 **672회**다. 패치 Array 추가 **576회**, 제거 **768회**이며 CD/10.37은 해당 처리가 인라인이다. ESP·EBX/ESI/EDI/EBP·x87 제어 워드/TOP·허용 코드/쓰기·assert/OS 0·SHA/입력/행·실제 진입/대체 수를 감사한다. [fixture](../../cpppj/tests/fixtures/outpostlifecycle-x86.tsv)와 [근거 JSON](../../cpppj/recovery-outpostlifecycle-evidence.json)은 LF로 저장한다. 누적 독립 fixture는 **344,146개**다.
+각 PE 정상 반환 **1,536회**, 부모 대체 **1,536회**, 지역 대체 **672회**다. 패치 Array 추가 **576회**, 제거 **768회**이며 CD/10.37은 해당 처리가 인라인이다. ESP·EBX/ESI/EDI/EBP·x87 제어 워드/TOP·허용 코드/쓰기·assert/OS 0·SHA/입력/행·실제 진입/대체 수를 감사한다. [fixture](../../cpppj/tests/fixtures/outpostlifecycle-x86.tsv)와 [근거 JSON](../../cpppj/outpostlifecycle.json)은 LF로 저장한다. 누적 독립 fixture는 **344,146개**다.
 
 새 [C++ 검사](../../cpppj/tests/OutpostLifecycleTests.cpp) 5개는 세 PE 전체 재생, 등록/중복 등록/삭제/재등록→실제 Player 종속·그래프·기준점 조회 연결, 필수 경계/손상된 두 번째 목록/다른 풀/부모 사전 거부/조기 읽기 생략을 검사한다. 실제 Damageable의 붕괴·소리·공통 부모 호출도 연결한다. Player의 워크샾 후보가 다른 그래프라서 제외되어도 실제 종속이 linked를 켜면 등록된 outpost만 추가 후보가 되고, 제거 직후 반환이 0으로 바뀐다.
 

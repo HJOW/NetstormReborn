@@ -34,7 +34,7 @@ SPECS = {
 SPECS['original1037'] = dict(SPECS['originalCD'])
 # CTest가 원본/Python 없이 읽을 입력/실제 관찰과 감사 보고서다.
 FIXTURE = ROOT / 'cpppj/tests/fixtures/gumpglyph-x86.tsv'
-REPORT = ROOT / 'cpppj/recovery-gumpglyph-evidence.json'
+REPORT = ROOT / 'cpppj/gumpglyph.json'
 
 
 def font_inputs():

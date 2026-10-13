@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-13",
+  "unit": "20261013-05",
+  "new_normal_cases": 3850,
+  "modules": {
+    "gunmissile": 296,
+    "gunhit": 2058,
+    "vortexascend": 1496
+  },
+  "focused_tests": {
+    "Missile_": 4,
+    "GunHit_": 3,
+    "VortexAscend_": 3
+  },
+  "all_tests": 968,
+  "prior_unit_new_normal_cases": 5482,
+  "preparatory_runtime_apis_no_new_observation": [
+    "Helper",
+    "ClearHelper"
+  ],
+  "files": {
+    "tools/analyze_campaign_runtime5.py": "19f65916ff13676f833f78d0ff645e56a83bb5aab2774bb60801e42ec58b5df1",
+    "tools/analyze_campaign_runtime4.py": "821362a66c1d9ab82837a9cbd940b8c927e76016184dbe34b8808d0495d59661",
+    "cpppj/gunmissile.json": "d09940432fa926024d70903c1ff12b5ec7e710b76c5a4af0a75acfe235871be5",
+    "cpppj/gunhit.json": "e3cde9d5066e4b325b9790f16cc8353299d56c983327a0a0bc84929160326811",
+    "cpppj/vortexascend.json": "348a929e7ba5a27aa1f899f510b014adf4f4dd4cd958e7921330f1531d669f70",
+    "extracted/run5-Missile_-final.log": "82bfc73d07c92792a3b5aba33d76780efbbaed369909dd35212c7a90182c9d96",
+    "extracted/run5-GunHit_-final.log": "84b835b40532ee242e21139e59cbf9a218281936a5f7a5ccf5700e71d7bcc7db",
+    "extracted/run5-VortexAscend_-final.log": "5cf87728765562334740cbf7a677e5ec5f72e0f97b9a57fa9a1dd3c1c0d3601e",
+    "extracted/run5-all-final.log": "55956b059888b9f1d7874b06ed0aab4b2bfc490b8beefe51ecf2ceb78598911e",
+    "cpppj/tests/MissileTests.cpp": "28fccbe9220be35775ee9316deabc14fc712f6acbe027fabe8783dbd0731650c",
+    "cpppj/tests/GunHitTests.cpp": "5d98edca83e856e59a215cb672aec973a76ce636c1d91a8ca73f7f59f459aef5",
+    "cpppj/tests/VortexAscendTests.cpp": "3f3b5afe23bba6b316295847389732888469246f2e853b2381f9f6442ea0acbb",
+    "cpppj/build/bin/Release/netstorm_tests.exe": "e208c2113cc5595c0a615f70df568108d3de1b125b1c58449a80f005be0edd6b",
+    "cpppj/build/bin/Release/NetstormCpp.exe": "b52fb4af4d75becf5912821af270ea89c775c4727ab2f80d841b5a19cd45cc2c",
+    "extracted/run5-build-final.log": "6f1d97147610eeacc3351c6e51827350100f991afec1c996c3cc0fb47104b701",
+    "cpppj/run4.json": "86f8df2ae7ebbe57716f61fb953313d56df5c1de4a5fe9d06c1da2bb18b383b4",
+    "cpppj/src/o/RawPathRuntime.h": "58bcd94fc894425ed8a4fd4d4ace1220f6f3b0c8cb118808f7402bbee96051ea",
+    "cpppj/src/o/RawPathRuntime.cpp": "d2469e6ab4ac8fd655078cf4bf8d2be024b921f4db92ef5ce966a52009fb0688",
+    "tools/analyze_pathcleanup_runtime_lineage.py": "46b436f59d9743a2dabe7963a1208e48393538b7664809b16daf24e9ffe2f0b0",
+    "cpppj/pathcleanup-runtime-lineage.json": "4635f26cf749d7cf285052ee6b3b24d41c2bbe2bf017e6f79599310eb790df0d"
+  },
+  "limitations": [
+    "GameWorld·GUI·실제 캠페인 완주 근거가 아니다.",
+    "victim damage/fieryTail 비행 효과/충돌 시각·사운드 하위 몸체는 아직 명시 경계다.",
+    "실제 Factory/공간/Kernel 수명 검사는 effectType0의 원본 자연 분기다. 타입11 구현 완료를 증명하지 않는다.",
+    "Missile 이전148행은 현재296행에 포함된다. 이전 관찰과 반복 실행을 신규 입력으로 다시 더하지 않는다."
+  ]
+}

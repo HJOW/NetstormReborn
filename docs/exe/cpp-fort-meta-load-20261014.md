@@ -55,9 +55,9 @@ fixture SHA256은 **47c1ad6441ef2a9b62e010f32862171cb7ead5f174c4f7edbad81f037c2f
 
 ## 단위12 첫 공유 빌드의 namespace 교정
 
-첫 공유 빌드의 C1075는 `RawFortMetaLoad.cpp` 마지막 namespace 닫힘 누락이었다. 당시 h/cpp·3검사·950fixture·두보고서·두도구·spec·문서·초기/두번째 실패로그를 **전체12파일**로 `recovery-history/fortmeta-before-namespace-fix`에 보존했다. 생산 CPP EOF에 **`}`와LF의2BYTE만** 추가했고 정확히 그2BYTE를 제거하면 이전 전체파일과 동일하다.
+첫 공유 빌드의 C1075는 `RawFortMetaLoad.cpp` 마지막 namespace 닫힘 누락이었다. 당시 h/cpp·3검사·950fixture·두보고서·두도구·spec·문서·초기/두번째 실패로그를 **전체12파일**로 `hist/fortmeta-bef-039ea`에 보존했다. 생산 CPP EOF에 **`}`와LF의2BYTE만** 추가했고 정확히 그2BYTE를 제거하면 이전 전체파일과 동일하다.
 
-950행/원본 결과/native 도구·기존 보고서의 당시 source SHA는 불변이다. 현재 CPP source SHA는 새 `recovery-fortmeta-namespace-lineage-evidence.json`으로 연결한다. **새native0, 기존950=정상394/assert556 유지**다. 현재 전집 감사 명령은 **`python tools/analyze_fortmeta_namespace_lineage.py`**다. 이 도구는 초기 원문 두 감사기를 그대로 읽고 해당 CPP만 교정전 whole snapshot으로 명시 연결해 모든 다른 현재 PE/tool/export/fixture/의존성 SHA를 엄격히 확인한다. 초기 두 감사기의 standalone 현재CPP SHA 불일치를 숨기거나 원래 보고서의 source SHA를 새 값으로 덮지 않는다. 공유 재빌드와 새3검사는 대기한다.
+950행/원본 결과/native 도구·기존 보고서의 당시 source SHA는 불변이다. 현재 CPP source SHA는 새 `fortmeta-namespace-lineage.json`으로 연결한다. **새native0, 기존950=정상394/assert556 유지**다. 현재 전집 감사 명령은 **`python tools/analyze_fortmeta_namespace_lineage.py`**다. 이 도구는 초기 원문 두 감사기를 그대로 읽고 해당 CPP만 교정전 whole snapshot으로 명시 연결해 모든 다른 현재 PE/tool/export/fixture/의존성 SHA를 엄격히 확인한다. 초기 두 감사기의 standalone 현재CPP SHA 불일치를 숨기거나 원래 보고서의 source SHA를 새 값으로 덮지 않는다. 공유 재빌드와 새3검사는 대기한다.
 
 Root의 **12 세 번째 공유 Release 빌드 종료0** 후 **FortMeta 새3검사 모두 통과**했다. 950행/같은풀 Contents/거부 경계 대조가 성공했으며 source/tool/report/fixture는 현재 그대로 동결했다. 당시 빌드의 PostHost tuple 경고1과 다른 신규 소비자 실패는 별도 교정 중이므로 단위12 전체 경고0/전체검사 성공은 아직 완료로 표시하지 않는다.
 

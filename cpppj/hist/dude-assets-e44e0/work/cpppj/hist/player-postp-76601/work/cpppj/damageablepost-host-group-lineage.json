@@ -1,0 +1,178 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-14",
+  "new_native_unique": 0,
+  "preserved_native_unique": 4412,
+  "normal_unique": 4412,
+  "assert_unique": 0,
+  "old_files": [
+    {
+      "path": "cpppj/hist/damageablepo-fa8db/cpppj/damageablepost-host-binding.json",
+      "bytes": 13458,
+      "sha256": "68a00ad3c2bd95e3a1bdcbe1d7dd2a6822120a814bff08c11b36406ea7ad0fc1"
+    },
+    {
+      "path": "cpppj/hist/damageablepo-fa8db/cpppj/damageablepostdestroy.json",
+      "bytes": 4597,
+      "sha256": "83ee40686f3029ba90e93a1b027bd1b5113eb8625847d3e361c630005818c616"
+    },
+    {
+      "path": "cpppj/hist/damageablepo-fa8db/cpppj/damageablepostdestroy-lineage.json",
+      "bytes": 6084,
+      "sha256": "b904c726e2f4a288f2ef9c4bf45f0f488863cb7f3aaa5551d43e3d078b2925de"
+    },
+    {
+      "path": "cpppj/hist/damageablepo-fa8db/cpppj/hist/damageablepo-7d76b/cpppj/damageablepostdestroy.json",
+      "bytes": 4597,
+      "sha256": "93f775095ab5782b1a71e5847901e667e37ab2da6798194988360f6abd3372a7"
+    },
+    {
+      "path": "cpppj/hist/damageablepo-fa8db/cpppj/hist/damageablepo-7d76b/cpppj/src/o/RawDamageablePostDestroy.cpp",
+      "bytes": 10157,
+      "sha256": "c70069e2dc850b8f1496aee07008c03ffb1655ff5943365334a4938ead99fb18"
+    },
+    {
+      "path": "cpppj/hist/damageablepo-fa8db/cpppj/hist/damageablepo-7d76b/cpppj/src/o/RawDamageablePostDestroy.h",
+      "bytes": 5497,
+      "sha256": "16404ca3857f952ab7809ed370d68b36158e2c834290d76eb4bbc85b2b3fdf03"
+    },
+    {
+      "path": "cpppj/hist/damageablepo-fa8db/cpppj/hist/damageablepo-7d76b/cpppj/tests/fixtures/damageablepostdestroy-x86.tsv",
+      "bytes": 3253663,
+      "sha256": "447a55e60542181c11316c0424ebdcf2840b21437eb0bdb3eca3c37f49e27efa"
+    },
+    {
+      "path": "cpppj/hist/damageablepo-fa8db/cpppj/hist/damageablepo-7d76b/tools/decomp_damageablepostdestroy_oracle.py",
+      "bytes": 16125,
+      "sha256": "3af73dcc03660a9ce9aa194cfb50fbc39a975515eb972ff90bbeb93e519fb1b9"
+    },
+    {
+      "path": "cpppj/hist/damageablepo-fa8db/cpppj/hist/damageablepo-a3bd8/cpppj/damageablepostdestroy.json",
+      "bytes": 4597,
+      "sha256": "83ee40686f3029ba90e93a1b027bd1b5113eb8625847d3e361c630005818c616"
+    },
+    {
+      "path": "cpppj/hist/damageablepo-fa8db/cpppj/hist/damageablepo-a3bd8/cpppj/damageablepostdestroy-lineage.json",
+      "bytes": 6084,
+      "sha256": "b904c726e2f4a288f2ef9c4bf45f0f488863cb7f3aaa5551d43e3d078b2925de"
+    },
+    {
+      "path": "cpppj/hist/damageablepo-fa8db/cpppj/hist/damageablepo-a3bd8/cpppj/src/o/RawDamageablePostDestroy.cpp",
+      "bytes": 10157,
+      "sha256": "c70069e2dc850b8f1496aee07008c03ffb1655ff5943365334a4938ead99fb18"
+    },
+    {
+      "path": "cpppj/hist/damageablepo-fa8db/cpppj/hist/damageablepo-a3bd8/cpppj/src/o/RawDamageablePostDestroy.h",
+      "bytes": 5497,
+      "sha256": "16404ca3857f952ab7809ed370d68b36158e2c834290d76eb4bbc85b2b3fdf03"
+    },
+    {
+      "path": "cpppj/hist/damageablepo-fa8db/cpppj/hist/damageablepo-a3bd8/cpppj/tests/DamageablePostDestroyTests.cpp",
+      "bytes": 11461,
+      "sha256": "80f00aac6a93ead2befddeec89c43537819f22ea5062d2b15a91b31057b26faa"
+    },
+    {
+      "path": "cpppj/hist/damageablepo-fa8db/cpppj/hist/damageablepo-a3bd8/cpppj/tests/fixtures/damageablepostdestroy-x86.tsv",
+      "bytes": 3253663,
+      "sha256": "7cbf0b93162674cd8d1cf353068ad96b4e717f1167782c0b8fe98908b98a4c6b"
+    },
+    {
+      "path": "cpppj/hist/damageablepo-fa8db/cpppj/hist/damageablepo-a3bd8/tools/analyze_damageablepostdestroy.py",
+      "bytes": 6453,
+      "sha256": "d7dff7e29877740040cd9a15b63c5b850b6f7322d2059ec62ebc3226d88c4445"
+    },
+    {
+      "path": "cpppj/hist/damageablepo-fa8db/cpppj/hist/damageablepo-a3bd8/tools/decomp_damageablepostdestroy_oracle.py",
+      "bytes": 16200,
+      "sha256": "0cdcb6d3f29cd23e67a1e7b4769c82354d5bb9b8051f09c8e190892da390b31a"
+    },
+    {
+      "path": "cpppj/hist/damageablepo-fa8db/cpppj/src/o/RawDamageablePostDestroy.cpp",
+      "bytes": 10157,
+      "sha256": "c70069e2dc850b8f1496aee07008c03ffb1655ff5943365334a4938ead99fb18"
+    },
+    {
+      "path": "cpppj/hist/damageablepo-fa8db/cpppj/src/o/RawDamageablePostDestroy.h",
+      "bytes": 5497,
+      "sha256": "16404ca3857f952ab7809ed370d68b36158e2c834290d76eb4bbc85b2b3fdf03"
+    },
+    {
+      "path": "cpppj/hist/damageablepo-fa8db/cpppj/tests/DamageablePostDestroyHostTests.cpp",
+      "bytes": 5684,
+      "sha256": "55e8ead3a90ec996385b6c6829c1ceb097c182b61b4dc3f7b4301479a57e837c"
+    },
+    {
+      "path": "cpppj/hist/damageablepo-fa8db/cpppj/tests/DamageablePostDestroyTests.cpp",
+      "bytes": 11461,
+      "sha256": "80f00aac6a93ead2befddeec89c43537819f22ea5062d2b15a91b31057b26faa"
+    },
+    {
+      "path": "cpppj/hist/damageablepo-fa8db/cpppj/tests/fixtures/damageablepostdestroy-x86.tsv",
+      "bytes": 3253663,
+      "sha256": "7cbf0b93162674cd8d1cf353068ad96b4e717f1167782c0b8fe98908b98a4c6b"
+    },
+    {
+      "path": "cpppj/hist/damageablepo-fa8db/docs/exe/cpp-damageable-post-destroy-20261014.md",
+      "bytes": 12333,
+      "sha256": "9041f13693e4c4ecbf67c71fa6a9dae3e093e178472f1e190f67be491309672a"
+    },
+    {
+      "path": "cpppj/hist/damageablepo-fa8db/extracted/run12-build-third.log",
+      "bytes": 8462,
+      "sha256": "5127e098a80eeeabdf38bf1c12e197e21fd31b248161bf09e5c8405677395458"
+    },
+    {
+      "path": "cpppj/hist/damageablepo-fa8db/extracted/run12-DamageablePostDestroy_fixed.log",
+      "bytes": 1798,
+      "sha256": "13eea1c6d6e7683fe879c989f97596fb39f4fb6de5ce64e81e0d279574ecb516"
+    },
+    {
+      "path": "cpppj/hist/damageablepo-fa8db/tools/analyze_damageablepost_host_binding.py",
+      "bytes": 5296,
+      "sha256": "3c8e0c949702d5f32516551de44c01c21ea16c3a821a7c71a4766de4f8fd6165"
+    },
+    {
+      "path": "cpppj/hist/damageablepo-fa8db/tools/analyze_damageablepostdestroy.py",
+      "bytes": 6453,
+      "sha256": "d7dff7e29877740040cd9a15b63c5b850b6f7322d2059ec62ebc3226d88c4445"
+    },
+    {
+      "path": "cpppj/hist/damageablepo-fa8db/tools/decomp_damageablepostdestroy_oracle.py",
+      "bytes": 16200,
+      "sha256": "0cdcb6d3f29cd23e67a1e7b4769c82354d5bb9b8051f09c8e190892da390b31a"
+    }
+  ],
+  "current_test": {
+    "path": "cpppj/tests/DamageablePostDestroyHostTests.cpp",
+    "bytes": 5794,
+    "sha256": "a5150f05dd64d094aeaf4cb0f5204c8fe16c5da13709f5b41aaf0f204a366871"
+  },
+  "previous_binding": {
+    "path": "cpppj/damageablepost-host-binding.json",
+    "bytes": 13458,
+    "sha256": "68a00ad3c2bd95e3a1bdcbe1d7dd2a6822120a814bff08c11b36406ea7ad0fc1"
+  },
+  "tool": {
+    "path": "tools/analyze_damageablepost_host_group_lineage.py",
+    "bytes": 4295,
+    "sha256": "e0529e0e9cf84cfdc43144b1aef4a3e0562ecf09a9a9ac7224a58c43dc0d5c91"
+  },
+  "replacements": [
+    [
+      "residence.footX=residence.footY=3;",
+      "residence.footX=residence.footY=3;residence.group=0; // native와같은합성group0이주변피해Regular분기를선택한다."
+    ],
+    [
+      "std::uint32_t>(60,6699,expected,0)",
+      "std::uint32_t>(std::uint16_t{60},6699U,expected,0U)"
+    ]
+  ],
+  "production_changed": false,
+  "cpp_test_result": "공유재빌드/실제Host1검사대기",
+  "limits": [
+    "초기types[89].group는기본NO_GROUP(-1)이었고원본조건group0/1 또는vortex를충족하지않아Regular를만들지않았다.",
+    "입력에합성group0을명시해기존4412원본격자의주변피해분기를선택한다. 실제레지던스의원래metadata가group0이라고주장하지않는다.",
+    "tuple검사의60은명시uint16,6699/0은DWORD로지정해C4244를해소한다. 기대packed값은변경하지않는다.",
+    "기존4412 fixture/원본도구/생산hcpp/기존2검사/보고서및Root초기count역사는불변이며새원본0이다."
+  ]
+}

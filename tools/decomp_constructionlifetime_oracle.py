@@ -27,7 +27,7 @@ SPECS['original1037']=dict(SPECS['originalCD'])
 KEYS=('capacity','pattern','parent','z0','z','mutate','buffers','flags','slot')
 OFFSETS=(4,8,0xc,0x10,0x14,0x18,0x1c,0x20)
 FIXTURE=ROOT/'cpppj/tests/fixtures/constructionlifetime-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-constructionlifetime-evidence.json'
+REPORT=ROOT/'cpppj/constructionlifetime.json'
 
 
 def case(**changes):

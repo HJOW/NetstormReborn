@@ -8,8 +8,8 @@ import re
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parent.parent # 같은 공유 저장소의 절대 기준이다.
-SNAPSHOT=ROOT/'cpppj/recovery-history/temple-rune-initial' # 수정 전 전용 소스/검사/도구/fixture/보고서를 커밋 가능한 원경로로 보존한다.
-REPORT=ROOT/'cpppj/recovery-temple-rune-runtime8-lineage-evidence.json' # 기존 등록/HP 이동 근거를 보존하는 별도 교정 보고서다.
+SNAPSHOT=ROOT/'cpppj/hist/temple-rune-afcc3' # 수정 전 전용 소스/검사/도구/fixture/보고서를 커밋 가능한 원경로로 보존한다.
+REPORT=ROOT/'cpppj/temple-rune-runtime8-lineage.json' # 기존 등록/HP 이동 근거를 보존하는 별도 교정 보고서다.
 RUNE_COMMENT='// 발견한 Dais가 시간 helper의 this다. Rune의 위치로 대신 계산하지 않는다(두 판본의 실제 ECX 추적 확인).\n' # 교정 설명만 역제거할 때 쓰는 정확한 한줄이다.
 MODULES=('templeritual','runepostpop') # 새 고유 입력 수를 늘리지 않고 현재 결과로 대체하는 두 모듈이다.
 
@@ -54,7 +54,7 @@ def observe():
     assert snapshots
     # 원본 관찰 출처는 당시 보고서가 가진 SHA로 계속 확인한다.
     for module,expected in zip(MODULES,(6720,1920)):
-        name=f'cpppj/recovery-{module}-evidence.json';before=json.loads((SNAPSHOT/name).read_text(encoding='utf-8'));after=json.loads((ROOT/name).read_text(encoding='utf-8'))
+        name=f'cpppj/{module}.json';before=json.loads((SNAPSHOT/name).read_text(encoding='utf-8'));after=json.loads((ROOT/name).read_text(encoding='utf-8'))
         assert before['total']==after['total']==expected and before['game_runs']==after['game_runs']==0
         for file,value in before['files'].items():
             preserved=SNAPSHOT/file
@@ -75,7 +75,7 @@ def observe():
             old=preserved.read_text(encoding='utf-8');now=(ROOT/name).read_text(encoding='utf-8');restored=restore(name,now);assert old==restored and tokens(old)==tokens(restored),name
             source[name]=dict(current_sha256=sha((ROOT/name).read_bytes()),prior_sha256=sha(preserved.read_bytes()),prior_token_sha256=sha(tokens(old)),restored_entire_source_unchanged=True)
             current[name]=sha((ROOT/name).read_bytes())
-        elif name=='cpppj/recovery-runepostpop-lineage-evidence.json':
+        elif name=='cpppj/runepostpop-lineage.json':
             assert preserved.read_bytes()==(ROOT/name).read_bytes();current[name]=sha((ROOT/name).read_bytes())
     return dict(snapshot_files=snapshots,current_files=current,source_lineage=source,modules=modules)
 

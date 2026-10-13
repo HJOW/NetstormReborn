@@ -43,7 +43,7 @@ Burning은 기존 건설 표시와 같은 시스템 목록을 공유해야 한�
 
 - `cpppj/src/o/RawBurningVisual.h/.cpp`.
 - `cpppj/tests/BurningVisualTests.cpp`: 두 판본 warm생성자 전수와 `MissingColdPaletteRejected`3검사. macro `NETSTORM_BURNINGPROCESS_FIXTURE`.
-- `tools/decomp_burningprocess_oracle.py`, `cpppj/tests/fixtures/burningprocess-constructor-x86.tsv`, `cpppj/recovery-burningprocess-constructor-evidence.json`.
+- `tools/decomp_burningprocess_oracle.py`, `cpppj/tests/fixtures/burningprocess-constructor-x86.tsv`, `cpppj/burningprocess-constructor.json`.
 - 현재256/전체 source·test·도구·공유기존몸체·실제 exports·보호 PE SHA 감사는 `python -X utf8 tools/decomp_burningprocess_oracle.py --verify`이며 성공했다.
 - root 순차 정밀readOnly: `extracted/burning-process`18/19함수, `extracted/burning-process-particle-helper/originalCD`1함수. spec은 같은 이름의 `tools/ghidra/*-functions.json`이다.
 

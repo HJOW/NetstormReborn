@@ -20,7 +20,7 @@ SPEC={
 VTABLE,OUTPUT,VALUE,CD_DPS,DAMAGE=0x11318000,0x11319000,0x1131a000,STOP+0x100,STOP+0x120
 KEYS=('kind','word','now','dps','target','targetstate','special','genus')
 FIXTURE=ROOT/'cpppj/tests/fixtures/gunhit-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-gunhit-evidence.json'
+REPORT=ROOT/'cpppj/gunhit.json'
 
 
 def wide(value):

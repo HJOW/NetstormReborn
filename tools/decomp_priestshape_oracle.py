@@ -19,7 +19,7 @@ from unicorn.x86_const import UC_X86_REG_ECX
 # 분석 전용 SHP와 출력/기준점 저장소다. 실제 PE 파일을 바꾸지 않는다.
 SHP=0x14500000
 FIXTURE=ROOT/'cpppj/tests/fixtures/priestshape-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-priestshape-evidence.json'
+REPORT=ROOT/'cpppj/priestshape.json'
 # 실제 getter/픽셀 배율/타입 기준점 필드다.
 SHAPE={'originals':dict(entry=0x43cbd0,scale=0x59a92c,hot=0x1dc,header=0x419850),
        'originalCD':dict(entry=0x4ed7c0,scale=0x565c44,hot=0x1bc,header=0)}

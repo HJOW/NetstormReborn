@@ -12,8 +12,8 @@ ROOT=Path(__file__).resolve().parent.parent
 HEADER='cpppj/src/o/RawTerrainStamp.h'
 BEFORE_HEADER=ROOT/'extracted/terrainstamp-before-enum-comment.h'
 BEFORE_REPORT=ROOT/'extracted/terrainstamp-before-enum-comment-evidence.json'
-CURRENT_REPORT=ROOT/'cpppj/recovery-terrainstamp-evidence.json'
-REPORT=ROOT/'cpppj/recovery-terrainstamp-enum-comments-evidence.json'
+CURRENT_REPORT=ROOT/'cpppj/terrainstamp.json'
+REPORT=ROOT/'cpppj/terrainstamp-enum-comments.json'
 
 
 def sha(data):
@@ -63,7 +63,7 @@ def verify():
 
 def link_mask():
     """주석 단계의 당시cpp SHA를 이후 제한된 mask교정 출처로 연결한다. 기존헤더토큰/native는 그대로다."""
-    report=json.loads(REPORT.read_text(encoding='utf-8'));path='cpppj/recovery-terrainstamp-mask-correction-evidence.json';mask=json.loads((ROOT/path).read_text(encoding='utf-8'))
+    report=json.loads(REPORT.read_text(encoding='utf-8'));path='cpppj/terrainstamp-mask-correction.json';mask=json.loads((ROOT/path).read_text(encoding='utf-8'))
     if report['preserved_files']['cpppj/src/o/RawTerrainStamp.cpp']!=mask['baseline_cpp_sha256']:raise RuntimeError('초기stamp enum→mask 이전cpp SHA 불일치')
     report['mask_successor']=dict(path=path,sha256=sha((ROOT/path).read_bytes()),
         reason='주석 단계의 cpp 불변 근거를 그 이후의 제한된 대각선bit 교정에 연결한다. 헤더581토큰/native1560행은 그대로다.')

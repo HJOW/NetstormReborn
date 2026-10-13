@@ -9,11 +9,11 @@ from pathlib import Path
 
 # 원본/도구/행을재관찰하거나덮어쓰지않고현재CPP한파일만최소교정한다.
 ROOT=Path(__file__).resolve().parent.parent
-HISTORY='cpppj/recovery-history/fortmeta-before-namespace-fix'
+HISTORY='cpppj/hist/fortmeta-bef-039ea'
 CPP='cpppj/src/o/RawFortMetaLoad.cpp'
-NATIVE='cpppj/recovery-fortmeta-evidence.json'
-BINDING='cpppj/recovery-fortmeta-cpp-binding-evidence.json'
-REPORT=ROOT/'cpppj/recovery-fortmeta-namespace-lineage-evidence.json'
+NATIVE='cpppj/fortmeta.json'
+BINDING='cpppj/fortmeta-cpp-binding.json'
+REPORT=ROOT/'cpppj/fortmeta-namespace-lineage.json'
 
 
 def pin(name):

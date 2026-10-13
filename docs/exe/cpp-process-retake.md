@@ -40,7 +40,7 @@ Kernel 제거 `004719e0 / CD 004ed590`은 가상 소멸자 호출이 끝난 뒤 
 | Form 삭제 | 4 | 기존 번호 1/7, 통지 중 PID 9로 변경 유무·현재 PID 제거·소멸자 안의 슬롯 존재·Unpop·반납 |
 | Kernel 전체 정리 | 4 | 슬롯 증가 순회·다른 소멸자에서 앞 슬롯 null·앞 신규 객체 잔류/뒤 신규 객체 같은 순회 삭제·미래 슬롯 중첩 제거 |
 
-fixture는 `cpppj/tests/fixtures/processretake-x86.tsv`, 보고서는 `cpppj/recovery-processretake-evidence.json`이다. TSV에는 사건 순서, 전체 Form/부모/이웃 raw, 프로세스 SID 필드, 앞 64개 Kernel 슬롯, 타입 순환, FIFO/카운터, 삭제 깊이, **Kernel 등록의 반환 PID**를 저장한다. 생성자/삭제의 반환 열은 의미 없는 EAX를 비교하지 않도록 0으로 정규화한다. 실행은 정상 EIP/ESP, x87 스택/제어 워드, FS:[0] 복귀와 허용 범위 밖 쓰기/실행 부재를 검사한다. `--verify`는 PE/도구/내보내기/fixture SHA와 입력의 정확한 집합·개수를 감사한다.
+fixture는 `cpppj/tests/fixtures/processretake-x86.tsv`, 보고서는 `cpppj/processretake.json`이다. TSV에는 사건 순서, 전체 Form/부모/이웃 raw, 프로세스 SID 필드, 앞 64개 Kernel 슬롯, 타입 순환, FIFO/카운터, 삭제 깊이, **Kernel 등록의 반환 PID**를 저장한다. 생성자/삭제의 반환 열은 의미 없는 EAX를 비교하지 않도록 0으로 정규화한다. 실행은 정상 EIP/ESP, x87 스택/제어 워드, FS:[0] 복귀와 허용 범위 밖 쓰기/실행 부재를 검사한다. `--verify`는 PE/도구/내보내기/fixture SHA와 입력의 정확한 집합·개수를 감사한다.
 
 `ProcessRetakeTests.cpp`는 같은 입력을 실제 C++ 풀·Kernel·Form host·공통 삭제에 적용하고 저장된 출력만 기대값으로 사용한다. live/free의 타입 순환 helper는 host 경로에서 대조한다. **독립 Kernel 등록 6개 행 및 Clear 중 신규 등록 2개 행에서는 슬롯/반환/순서를 대조하고 타입 순환 열은 제외한다.** C++ 타입 순환 전역은 아직 `SquidProcessState`에 있어 Kernel의 독립 등록 API에는 연결되지 않았다. 이 제외를 Kernel 전체 전역 동작의 동일성 증명으로 보지 않는다. 삭제된 C++ 객체의 SID 필드는 해제 메모리를 읽지 않고 직전 살아 있을 때 저장한 필드와 대조한다.
 
@@ -48,7 +48,7 @@ fixture는 `cpppj/tests/fixtures/processretake-x86.tsv`, 보고서는 `cpppj/rec
 
 ## 검증 및 남은 범위
 
-최종 통합 Release 빌드 `extracted/campaign-runtime-build-final.log`는 **종료 0·경고/오류 0**이다. 실제 PE **388개 입력과 같은 388개 C++ 출력 대조**, ProcessRetake 신규 **5개**, 기존 ProcessForm **4개**, `process_` 기존 프로세스/사제/캐리어/섬 연결 **14개**가 모두 통과했다. 최종 `--verify`도 388개 SHA·입력 감사를 통과했다. 이 작업의 새 독립 관찰/대조는 각각 **388개**이며, 초기 380개·x87 재실행·준비용 부착을 다시 더하지 않는다.
+최종 통합 Release 빌드 `extracted/run-build-final.log`는 **종료 0·경고/오류 0**이다. 실제 PE **388개 입력과 같은 388개 C++ 출력 대조**, ProcessRetake 신규 **5개**, 기존 ProcessForm **4개**, `process_` 기존 프로세스/사제/캐리어/섬 연결 **14개**가 모두 통과했다. 최종 `--verify`도 388개 SHA·입력 감사를 통과했다. 이 작업의 새 독립 관찰/대조는 각각 **388개**이며, 초기 380개·x87 재실행·준비용 부착을 다시 더하지 않는다.
 
 로그는 `extracted/processretake-focused-final.log`, `processretake-processform-regression-final.log`, `processretake-process-regression-final.log`, `processretake-oracle-final.log`다. 초기 병렬 라이브러리 빌드의 UI 반환 타입 오류는 `processretake-build-library.log`에 남겼으며 최종 성공으로 덮어쓰지 않았다. 빌드 종료 후 C++ CD 입력의 존재하지 않는 타입 순환 상태를 0으로 교정하고 root의 최종 빌드에서 새 검사 소스를 다시 컴파일했다. 전체 CTest는 root의 통합 검증으로 별도 기록하며 이 필터 결과를 전체 통과로 표현하지 않는다. 게임/GUI/캠페인 플레이는 실행하지 않았다.
 
@@ -61,7 +61,7 @@ fixture는 `cpppj/tests/fixtures/processretake-x86.tsv`, 보고서는 `cpppj/rec
 | `cpppj/src/o/SquidProcess.h` | `3c650fb9f53e2e303559971f022b99191dd6b7eacdb4118e5236ce90762ec5f8` |
 | `cpppj/src/o/SquidProcess.cpp` | `fe1ed93b3ae2f9e86d4d163500c0e1818ab77fef527500f59f92bd1a904273ac` |
 | `cpppj/tests/ProcessRetakeTests.cpp` | `63cd3352a1071d125a3545427d3b7d23bb51dfae364b03c743264b1290eacad7` |
-| `tools/decomp_processretake_oracle.py` | `ab2db09f7c639cf04afbefe466f2b78367908792ebaf7818aa7072a1277adddb` |
+| `tools/decomp_processretake_oracle.py` | `4edfea452d3c37005ddc7274fecff5543702d7a0ecd64b1f5f538c86c990c3df` |
 | `tools/ghidra/processretake-functions.json` | `f4e39badf96d0b64e04b12dae815db68315be442464bf82fb62eb6d942527863` |
 | `cpppj/tests/fixtures/processretake-x86.tsv` | `705276d822488e0177fc743d09d394d5f7dcbb3e796a7a77238044b7b88a09c8` |
 

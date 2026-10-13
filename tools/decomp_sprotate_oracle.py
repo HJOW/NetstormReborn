@@ -17,7 +17,7 @@ from decomp_reward_oracle import RewardOracle, ROOT, ARENA, ARENA_SIZE, STACK
 
 # 고유 입력/근거/내보내기 경로와 실제 회전 진입 주소다.
 FIXTURE = ROOT / 'cpppj/tests/fixtures/sprotate-x86.tsv'
-EVIDENCE = ROOT / 'cpppj/recovery-sprotate-evidence.json'
+EVIDENCE = ROOT / 'cpppj/sprotate.json'
 EXPORT = ROOT / 'extracted/sprotate/originals'
 ROTATE = 0x491680
 # SHA를 고정할 코드/원본 경계 자료다. 실제 원본 파일은 읽기만 한다.

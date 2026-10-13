@@ -9,7 +9,7 @@ from pathlib import Path
 
 # 작업 루트와 이번 단위의 근거 파일이다. 후속 단위의 관찰을 여기에 합산하지 않는다.
 ROOT=Path(__file__).resolve().parent.parent
-REPORT=ROOT/'cpppj/recovery-campaign-runtime4-evidence.json'
+REPORT=ROOT/'cpppj/run4.json'
 # 원본 입력 수는 fixture의 행 수에서 읽으며 완료·접두·기존 회귀는 별도로 기록한다.
 FIXTURES={'pathstart':512,'pathprocesstype':718,'gunanimation':2560,'assetregular':1976,'regionpaint':484}
 # 각 집중 검사의 실제 실행 로그와 등록 검사 수다.
@@ -38,25 +38,25 @@ def generate():
         fixture_counts[name]=len(rows);paths.append(path)
     # 초기 실패 로그와 교정 과정은 별도 보존하며 최종 성공 로그만 완료 근거로 사용한다.
     for name,expected in FILTERS.items():
-        path=ROOT/f'extracted/campaign-runtime4-{name}-final-tests.log';count=test_count(path)
+        path=ROOT/f'extracted/run4-{name}-final.log';count=test_count(path)
         if count!=expected:raise RuntimeError(f'집중 검사 수 오류: {name}')
         focused[name]=count;paths.append(path)
-    whole=ROOT/'extracted/campaign-runtime4-all-final-tests.log';total_tests=test_count(whole);paths.append(whole)
+    whole=ROOT/'extracted/run4-all-final.log';total_tests=test_count(whole);paths.append(whole)
     # 현재 하위 보고서의 source/PE/export SHA도 직접 검사한다.
     for name in ('pathstart','gunanimation','assetregular','regionpaint'):
-        path=ROOT/f'cpppj/recovery-{name}-evidence.json';data=json.loads(path.read_text(encoding='utf-8'))
+        path=ROOT/f'cpppj/{name}.json';data=json.loads(path.read_text(encoding='utf-8'))
         if data.get('host')!='HJOW-Athlon':raise RuntimeError(f'원본 관찰 PC 불일치: {name}')
         for source,expected in data['files'].items():
             if digest(ROOT/source)!=expected:raise RuntimeError(f'하위 SHA 불일치: {source}')
         paths.append(path)
     # 새 기능/검사 및 기존 몸체를 공유한 lineage의 최신 파일을 같은 결과에 고정한다.
     for name in ('pathruntime','movement-mapper'):
-        paths.append(ROOT/f'cpppj/recovery-{name}-lineage-evidence.json')
+        paths.append(ROOT/f'cpppj/{name}-lineage.json')
     for name in ('RawPathStartTests','GunAnimationTests','AssetRegularTests','RegionPaintTests'):
         paths.append(ROOT/f'cpppj/tests/{name}.cpp')
     for name in ('netstorm_tests.exe','NetstormCpp.exe'):
         paths.append(ROOT/f'cpppj/build/bin/Release/{name}')
-    paths.append(ROOT/'extracted/campaign-runtime4-build-final.log')
+    paths.append(ROOT/'extracted/run4-build-final.log')
     data={'schema':1,'host':'HJOW-Athlon','date':'2026-10-13','unit':'20261013-04',
           'new_normal_cases':5482,'missile_constructor_prefix_cases':50,'existing_selector_regression_cases':718,
           'existing_runtime_cases_not_added':360,'fixture_rows':fixture_counts,'focused_tests':focused,'all_tests':total_tests,
@@ -72,7 +72,7 @@ def verify():
     data=json.loads(REPORT.read_text(encoding='utf-8'))
     for name,expected in data['files'].items():
         if digest(ROOT/name)!=expected:raise RuntimeError(f'단위 SHA 불일치: {name}')
-    if test_count(ROOT/'extracted/campaign-runtime4-all-final-tests.log')!=data['all_tests']:raise RuntimeError('전체 검사 수 불일치')
+    if test_count(ROOT/'extracted/run4-all-final.log')!=data['all_tests']:raise RuntimeError('전체 검사 수 불일치')
     print('네 캠페인 하위 몸체 최종 SHA/검사 감사 통과')
 
 def main():

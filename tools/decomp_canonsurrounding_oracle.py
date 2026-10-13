@@ -30,7 +30,7 @@ SPEC['original1037']=dict(SPEC['originalCD'])
 HEAP=0x13000000
 MAP,SPOTS,CODES,FINDER,DECODER=HEAP,HEAP+0x20000,HEAP+0x30000,HEAP+0x31000,HEAP+0x32000
 FIXTURE=ROOT/'cpppj/tests/fixtures/canonsurrounding-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-canonsurrounding-evidence.json'
+REPORT=ROOT/'cpppj/canonsurrounding.json'
 KEYS=('kind','width','height','x','y','sourceFrame','sourceFlags','otherFlags','surface','ready','editor','allies','anyOwner','owner','relation','selected','initial','mutation','nodes','cells','spots')
 
 

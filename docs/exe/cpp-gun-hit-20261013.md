@@ -14,6 +14,6 @@
 
 독립 제한 x86 관찰은 **2058개 고유 입력**, 판본별1029개 정상 반환이다. 첫2064행 격자에서 특수DPS와 기본 격자의 동일 입력3개씩을 찾아 제거했다. 이 반복은 누적에 더하지 않는다. 패치는 실제 DPS getter453회와 단일 PE float getter444회를 실행했다. CD DPS는 명시 float 반환 경계이며 원작의 실제 getter 몸체가 실행됐다고 주장하지 않는다. type/group/genus query·표적+0x98 피해·공간 통지도 명시 경계다.
 
-자료는 `GunHitTests.cpp`, `gunhit-x86.tsv`, `recovery-gunhit-evidence.json`, `tools/decomp_gunhit_oracle.py`다. `--verify`는 현재 SHA/고유 입력/행수/정상 반환/assert 및 실제 패치 DPS 실행을 감사한다. 원본 assert/게임/OS 호출은0이다. 최신 Release의 집중3개 검사/2058개 전수 C++ 대조와 전체968개 검사가 실패0으로 통과했다. 로그는 `extracted/campaign-runtime5-GunHit_-final-tests.log`다. 초기30초 경계/판본 제한/float 저장 순서 차이 로그는 보존했다.
+자료는 `GunHitTests.cpp`, `gunhit-x86.tsv`, `gunhit.json`, `tools/decomp_gunhit_oracle.py`다. `--verify`는 현재 SHA/고유 입력/행수/정상 반환/assert 및 실제 패치 DPS 실행을 감사한다. 원본 assert/게임/OS 호출은0이다. 최신 Release의 집중3개 검사/2058개 전수 C++ 대조와 전체968개 검사가 실패0으로 통과했다. 로그는 `extracted/run5-GunHit_-final.log`다. 초기30초 경계/판본 제한/float 저장 순서 차이 로그는 보존했다.
 
 후속 실제 표적 피격은 `victimdamage-functions.json`이다. 사제 `00494380/CD0040cb10`은 HP를1 아래로 내리지 않고 기존 회복 사건/죽은 모양·피해 보정·`RawPriestState.SetHitPoints`·소유자 피해 통지·burning·저HP 감시 해제를 처리한다. 기본 자산 `004add10/CD004aeda0`과 Damageable override `0044c8e0/CD00462300`은 서버 파괴/효과 경로를 가진다. 이 몸체들은 아직 이 숫자 단위의 완료 범위가 아니며 최종 전투 동일성에는 복원이 필요하다.

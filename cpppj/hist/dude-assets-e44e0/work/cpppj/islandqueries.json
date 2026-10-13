@@ -1,0 +1,105 @@
+{
+  "total": 8490,
+  "host": "HJOW-Athlon",
+  "editions": {
+    "originals": {
+      "cases": 4245,
+      "normal_cases": 4245,
+      "assert_cases": 0,
+      "returns": 8490,
+      "by_body": {
+        "FindOwnerTerritory": 3455,
+        "FindTerritory": 426,
+        "CountOwned": 364
+      },
+      "native": {
+        "0046f380": 6910,
+        "0046f3f0": 852,
+        "0046f430": 728
+      },
+      "existing_getter_calls": {},
+      "selected_ranges": {
+        "0046f380": "0046f380-0046f3e1",
+        "0046f3f0": "0046f3f0-0046f428",
+        "0046f430": "0046f430-0046f479",
+        "0046ee50": "0046ee50-0046ee52",
+        "0046ee30": "0046ee30-0046ee4a",
+        "0046f320": "0046f320-0046f378"
+      }
+    },
+    "originalCD": {
+      "cases": 4245,
+      "normal_cases": 4245,
+      "assert_cases": 0,
+      "returns": 8490,
+      "by_body": {
+        "FindOwnerTerritory": 3455,
+        "FindTerritory": 426,
+        "CountOwned": 364
+      },
+      "native": {
+        "004bdaa0": 6910,
+        "004bdb10": 852,
+        "004bdb60": 728
+      },
+      "existing_getter_calls": {
+        "004bd4c0": 18912,
+        "004bd480": 18912,
+        "004bda70": 2054
+      },
+      "selected_ranges": {
+        "004bdaa0": "004bdaa0-004bdb05",
+        "004bdb10": "004bdb10-004bdb53",
+        "004bdb60": "004bdb60-004bdb98",
+        "004bd4f0": "004bd4f0-004bd4f2",
+        "004bd4c0": "004bd4c0-004bd4e4",
+        "004bda70": "004bda70-004bda94",
+        "004bd480": "004bd480-004bd498"
+      }
+    }
+  },
+  "os_calls": 0,
+  "external_calls": 0,
+  "new_existing_getter_observations": 0,
+  "readonly_full_bytes_checked": true,
+  "files": {
+    "tools/decomp_islandqueries_oracle.py": "39f222b4638e064684f50f18c13c9eb4a865bc5c252b6020fff6b531e7c6cfc0",
+    "tools/ghidra/islandqueries-functions.json": "65193641aefdf7c2562e35958a236394c8ecc5d0ac355a893c841ac5146078c4",
+    "cpppj/tests/fixtures/islandqueries-x86.tsv": "9a95feaf0093fe87a35d095f4d9233a8a560aff5e225e649e6bd4e8e8e359ebb",
+    "extracted/islandqueries/originals/creation.c": "c5cb354683254c6993f1773d471829c30c1dab8cbd33365f4d5ef239bf70fd59",
+    "extracted/islandqueries/originals/functions.tsv": "73f99ec2ade33caa5a5226e451d8b9b6b5ba1394e3ea953427e36c45ea78e1a4",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/islandqueries/originalCD/creation.c": "c82181b8f725cc273bcfdf964026874b0e5c7b98ce4eea33820cb11bc20ed62c",
+    "extracted/islandqueries/originalCD/functions.tsv": "e14fe6577de4d1867468599c26e93987b0e769589f2d4af180bca1390b88b840",
+    "extracted/island-runtime/originalCD/creation.c": "e4f5b3782a53e30af16bed2cb16517cd3841cf9972938446a30c80b4c3cc91ee",
+    "extracted/island-runtime/originalCD/functions.tsv": "c2a545e7c7022987bc079c987787f95596422b10129fdb46558a8c41fb490e4d",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "tools/decomp_regionpaint_oracle.py": "6d65f83505c101ffef5e4c278b22425391e8717e7f31c77383f3a3aafb061d5a",
+    "cpppj/src/o/RawIslandQueries.h": "6fd9bc76cbdb734a0f0fa79ee41afd737cc9e316487b01991d8eba8503382413",
+    "cpppj/src/o/RawIslandQueries.cpp": "8e550206846b15753f8563fc415fe307b0caf3192d6326d9a8378afe55c97f76",
+    "cpppj/tests/IslandQueriesTests.cpp": "a0895f0fa8cb269e779a86b0753cab3332ff8beda2fd1ab68b593418d003c930",
+    "cpppj/src/o/RawIslandRuntime.h": "6205b879664770b0a3047ed1066f2ae7dd243c3ec2bbd13689fef1da77298fa4",
+    "cpppj/src/o/RawIslandRuntime.cpp": "3be93556f2b32efc641442ed1e21654fbd0504be1643085b82ab1e80f71acd12",
+    "cpppj/islandruntime.json": "6024e529871f1d772a0cfda8b8eb577bd6af2c8f9e198649e12f8f8d72b8281c",
+    "cpppj/islandqueries-pool-correction.json": "fb89606072d3bf7d9649e5a6dc15465eac4a806dc64bdfb7bd114a4f43d46dac",
+    "tools/analyze_islandqueries_pool_correction.py": "db56d779ea29a3bf38a1a0e7170e4dcd1b356a1ee4be10c33bb73fe69b15acbe",
+    "cpppj/islandqueries-macro-correction.json": "4325a894ebd2ddd46594440a7a07af5d84d89372b8f69bfb8506edeba368db90",
+    "tools/analyze_islandqueries_macro_correction.py": "0ae5770d4e4194078112dd894287b83355aecc2ba03b3604766d1ddb8be12a70"
+  },
+  "limits": [
+    "실제3204BYTE/currentCount/Exists/현재ownerDWORD·원래owner와territory signedBYTE의세검색몸체를실행한다.",
+    "기존count/Exists/Owner getter는허용callee와회귀근거이며새독립관찰로합산하지않는다. 외부stub0/OS0이다.",
+    "물리100기록초과양수count는원본배열밖접근이므로정상입력에포함하지않는다.",
+    "동일월드의실제mutable목록연결이가능하다. GameWorld초기순서/승패·캠페인완주검증은아니다."
+  ],
+  "cpp_pool_correction": {
+    "evidence": "cpppj/islandqueries-pool-correction.json",
+    "new_native_observations": 0,
+    "reason": "검사pool capacity128을원본예측SID영역보다큰기존kCapacity24000으로교정"
+  },
+  "cpp_macro_correction": {
+    "evidence": "cpppj/islandqueries-macro-correction.json",
+    "new_native_observations": 0,
+    "macro_changes": 3
+  }
+}

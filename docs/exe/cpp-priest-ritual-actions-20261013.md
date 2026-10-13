@@ -26,7 +26,7 @@ Continue는 유효 번호 검사→Begin→new0x28 요청→성공 시 **같은 
 
 Factory include 누락, 없는 RiftTypeRecord.number 대입, client/server SID 준비 교정 전 test/report를 각각 `extracted/priestritualactions-before-*` snapshot으로 보존했다. `tools/analyze_priestritualactions_test_lineage.py`는 세 수정만 되돌리면 초기 전체 테스트와 같고 기존 production/fixture/PE/export/oracle가 그대로임을 증명해 현재 SourceSHA를 연결한다. 교정의 신규 원본 관찰은0개다.
 
-단위07 최종 공유 Release 두 타깃은 **종료0·경고0·오류0**, 집중 C++ 두 검사 모두 성공했다. **1752개 전수 대조**와 실제 frame/같은 SharedRegular 예약·중복 공존 검사를 통과했다. **전체983개 검사/실패0**이며 통합 근거는 `recovery-campaign-runtime7-evidence.json`, 초기/교정/최종 로그는 `extracted/campaign-runtime7-*`에 보존했다.
+단위07 최종 공유 Release 두 타깃은 **종료0·경고0·오류0**, 집중 C++ 두 검사 모두 성공했다. **1752개 전수 대조**와 실제 frame/같은 SharedRegular 예약·중복 공존 검사를 통과했다. **전체983개 검사/실패0**이며 통합 근거는 `run7.json`, 초기/교정/최종 로그는 `extracted/run7-*`에 보존했다.
 
 ```text
 python -X utf8 tools/decomp_priestritualactions_oracle.py --verify

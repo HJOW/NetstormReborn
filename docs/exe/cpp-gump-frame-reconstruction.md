@@ -32,7 +32,7 @@ idle 표는 패치판 `005634d0`의 500칸, CD·추가판 `0056b5b8`의 80칸이
 
 같은 저장소를 사용하는 C++ 검사는 실제 기본 생성·트리 Attach→idle 등록→idle 중 다른 노드 Kill→실제 트리 Push/후속 호출 제외→기본/scalar 소멸자 Cleanup/저장소 해제→다음 idle을 연결한다. 등록 통지의 signed 개수·루트 제외와 재그리기의 최상위/하위 링크 조회 차이, CD 표 끝, 호스트 예외 계약도 검사한다.
 
-자료는 `cpppj/recovery-gumpframe-evidence.json`, `cpppj/tests/fixtures/gumpframe-x86.tsv`, `extracted/gumpframe/{originals,originalCD,original1037}/`, `extracted/gumpframe-{export,smoke,oracle,build,build-final,focused,ctest}.log`에 있다.
+자료는 `cpppj/gumpframe.json`, `cpppj/tests/fixtures/gumpframe-x86.tsv`, `extracted/gumpframe/{originals,originalCD,original1037}/`, `extracted/gumpframe-{export,smoke,oracle,build,build-final,focused,ctest}.log`에 있다.
 
 ## 검증 결과
 

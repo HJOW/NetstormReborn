@@ -26,7 +26,7 @@ OBJECT,CHILD,VTABLE,ATTACH=TYPES+0x10000,TYPES+0x11000,TYPES+0x12000,TYPES+0x130
 # 입력만 만드는 시드·두 x87 정밀도·고정 출력 위치다.
 SEED,CONTROLS=0x424ff0,(0x027f,0x037f)
 FIXTURE=ROOT/'cpppj/tests/fixtures/gumpvisual-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-gumpvisual-evidence.json'
+REPORT=ROOT/'cpppj/gumpvisual.json'
 
 
 def inputs():

@@ -8,8 +8,8 @@ import json
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]  # 현재 저장소 전체 원문을 읽는 기준이다.
-HISTORY=ROOT/'cpppj/recovery-history/graph-forms-before-test-scope'  # 첫 공유 실행과 이전 검사/원본 결과를 전체 보존한다.
-REPORT=ROOT/'cpppj/recovery-graph-forms-test-lineage-evidence.json'  # 기존 보호 검사의 입력 범위 교정 출처다.
+HISTORY=ROOT/'cpppj/hist/graph-forms-dbad6'  # 첫 공유 실행과 이전 검사/원본 결과를 전체 보존한다.
+REPORT=ROOT/'cpppj/graph-forms-test-lineage.json'  # 기존 보호 검사의 입력 범위 교정 출처다.
 TEST='cpppj/tests/RawGraphTests.cpp'  # 기존 그래프 원본 전수와 손상 입력 보호 검사 전체다.
 CHANGES=(
     ('// 전체 풀 복구를 선택한 Pop도 다른 void 표면의 손상/내부 타입을 공간 쓰기 전에 거부한다.',
@@ -22,9 +22,9 @@ CHANGES=(
      'if (scenario) { Put(bytes,36,0); bytes[10]=255; }'),
 )  # 표면 계산과 검사 조건은 보존하고 복원된 내부 타입 생략과 손상 입력을 구분한다.
 SAVED=(TEST,'cpppj/src/o/RawGraph.cpp','tools/analyze_graph_forms_lineage.py',
-       'cpppj/recovery-graph-forms-lineage-evidence.json','tools/decomp_graphforms_oracle.py',
-       'cpppj/recovery-graphforms-evidence.json','cpppj/tests/fixtures/graphforms-x86.tsv',
-       'extracted/campaign-runtime13-build-initial.log','extracted/campaign-runtime13-RawGraph_initial-tests.log')  # 최초 전체 결과/소스/로그다.
+       'cpppj/graph-forms-lineage.json','tools/decomp_graphforms_oracle.py',
+       'cpppj/graphforms.json','cpppj/tests/fixtures/graphforms-x86.tsv',
+       'extracted/run13-build-initial.log','extracted/run13-RawGraph_first.log')  # 최초 전체 결과/소스/로그다.
 
 
 def sha(path):

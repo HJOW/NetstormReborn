@@ -8,7 +8,7 @@
 
 ## 원본 근거
 
-[안내창 정지 분석](gameplay/dialog-pause.md)을 현재 PC의 정밀 디컴파일과 원본 10.78 기계어로 다시 확인했다. `tools/ghidra/dotnetdialogframes-functions.json`의 **7개** 함수를 읽기 전용으로 내보냈다. 자료는 `extracted/dotnetdialogframes/originals/{creation.c,functions.tsv,assembly.txt}`, 정적 기록은 `tools/analyze_dotnet_dialog_frames.py` / `dotnetpj/recovery-dialog-frames-evidence.json`이다.
+[안내창 정지 분석](gameplay/dialog-pause.md)을 현재 PC의 정밀 디컴파일과 원본 10.78 기계어로 다시 확인했다. `tools/ghidra/dotnetdialogframes-functions.json`의 **7개** 함수를 읽기 전용으로 내보냈다. 자료는 `extracted/dotnetdialogframes/originals/{creation.c,functions.tsv,assembly.txt}`, 정적 기록은 `tools/analyze_dotnet_dialog_frames.py` / `dotnetpj/dialog-frames.json`이다.
 
 | 기능 | 원본 함수/필드 |
 | --- | --- |

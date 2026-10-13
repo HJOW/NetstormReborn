@@ -10,6 +10,6 @@
 
 독립 실행기 `tools/decomp_processtransmit_oracle.py`는 각 PE의 서버/클라이언트, 신규/지정 free, 잔여 상태, 이웃 Form/자산, flags, 프로세스 타입, 양수/음수 WriteData의 입력을 만든다. 생성자/Allocate/Take/부착/공통 Pop/갱신은 실제 명령을 실행한다. 파생 WriteData·송신·OnAttached는 그 순간의 raw 바이트와 순서를 관찰하는 경계다. Kernel은 판본별 대표 입력을 두 x87 정밀도에서 실제 실행하고, 나머지 교차 입력은 번호1 응답 경계와 기존 독립 Kernel 근거를 사용한다. C++ 재생에서는 모든 입력의 실제 Kernel 등록을 실행한다. 게임·창·OS 호출은 없다.
 
-전송의 고유 입력은 **376개**(두 PE 각각 94개 입력×부착/갱신 두 연산)이며 독립 SHA/정상 반환 감사와 C++ 두 재생 검사가 통과했다. 같은 월드 집중6개·기존 재수신5개도 통과했다. 새 Fort/후처리/Gun/Path와 함께 **전체928개·실패0**, CTest88.83초, 최종 Release 경고0/오류0이다. 근거는 `recovery-campaign-process-evidence.json`과 `tools/analyze_campaign_process.py --verify`에 보존한다. 마지막 디컴파일 수행 PC는 **VM-W11-CODEX, 2026-10-13**이다.
+전송의 고유 입력은 **376개**(두 PE 각각 94개 입력×부착/갱신 두 연산)이며 독립 SHA/정상 반환 감사와 C++ 두 재생 검사가 통과했다. 같은 월드 집중6개·기존 재수신5개도 통과했다. 새 Fort/후처리/Gun/Path와 함께 **전체928개·실패0**, CTest88.83초, 최종 Release 경고0/오류0이다. 근거는 `campaign-process.json`과 `tools/analyze_campaign_process.py --verify`에 보존한다. 마지막 디컴파일 수행 PC는 **VM-W11-CODEX, 2026-10-13**이다.
 
 이 연결은 실제 캠페인 플레이 완료를 뜻하지 않는다. 현재 GameWorld의 비표면 객체·이동은 기존 어댑터에 남아 있으며, 실제 Fort 로더/Gun/Path·건설/전투/사제 운반·의식/승패를 같은 core에 이관해야 한다. DirectDraw 전체화면 수정과 dotnetpj 작업은 이번 범위에서 제외했다.

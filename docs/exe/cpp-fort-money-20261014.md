@@ -28,6 +28,6 @@
 
 `FortMoneyLoadTests.cpp`의3검사는 두판본 전수와 실제RawSurfaceWorld장부/current owner·현재모드/같은SP저장소·게임난수 연결을 검사한다. 실제World연결검사의사용하지않는타입/프레임/SHP는 합성입력이며 새실제자산 관찰이아니다. 공유Release/집중/전체검사 최종상태는단위11 인수인계에서기록한다.
 
-첫 C++ 대조에서 패치 비로컬 special 지정과 fort 고정값의 차이가 드러났다. 실제 `00447861~00447880`은 비로컬 지정에도 special 고정값을 적용하며, 패치 Money의 실제 상수 `0x483d9c80`은194162.0f다. CD의100000.0f와 분리해 수정했다. 실제 월드 검사에는 초기 다리 연결 타입 번호를 공급하고 로컬 BYTE 지정도 명시변환했다. 전체 이전11파일과 첫 실패/빌드 로그를 `cpppj/recovery-history/fortmoney-before-cpp-correction/`에 보존했다. 정확 역변환과 전체408 원본 결과 불변을 `tools/analyze_fortmoney_cpp_correction.py`로 감사한다. 두 번째 공유 Release에서 새3검사 모두 통과했으며 새 원본 입력은0이다.
+첫 C++ 대조에서 패치 비로컬 special 지정과 fort 고정값의 차이가 드러났다. 실제 `00447861~00447880`은 비로컬 지정에도 special 고정값을 적용하며, 패치 Money의 실제 상수 `0x483d9c80`은194162.0f다. CD의100000.0f와 분리해 수정했다. 실제 월드 검사에는 초기 다리 연결 타입 번호를 공급하고 로컬 BYTE 지정도 명시변환했다. 전체 이전11파일과 첫 실패/빌드 로그를 `cpppj/hist/fortmoney-be-e2121/`에 보존했다. 정확 역변환과 전체408 원본 결과 불변을 `tools/analyze_fortmoney_cpp_correction.py`로 감사한다. 두 번째 공유 Release에서 새3검사 모두 통과했으며 새 원본 입력은0이다.
 
 현재파일섹션조회/시각재시드/힙확보/진단/표시는명시경계다. Badges/Technology/전체Fort부모·실제GameWorld 설치/캠페인완주 동일성은 후속이다. 이번Money 복원만으로 캠페인시작SP가최종3000이라고 확정하지않는다. 뒤의실제미션/Player 초기화순서를 함께연결해야한다.

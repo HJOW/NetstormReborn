@@ -14,7 +14,7 @@ from decomp_damageablepredestroy_oracle import CONTROLS,bits
 TYPE_IDS=(107,82,94,157,131,129,140,142,158)
 COUNTS=(68,26,2,1,1,1,1,1)
 FIXTURE=ROOT/'cpppj/tests/fixtures/canontype-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-canontype-evidence.json'
+REPORT=ROOT/'cpppj/canontype.json'
 # 패턴 표 주소와 실제 방향 getter 진입점이다.
 TABLES={'originals':(0x5300f0,0x52f998,0x531410,0x5314a0,0x5314e8),
         'originalCD':(0x5151d8,0x514a80,0x5164f8,0x516588,0x5165d0)}

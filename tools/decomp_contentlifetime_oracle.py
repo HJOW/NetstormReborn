@@ -24,7 +24,7 @@ CONTENT = {
 }
 # 새 fixture/보고서 파일이다. 이전 관찰 근거는 바꾸지 않는다.
 FIXTURE = ROOT / 'cpppj/tests/fixtures/contentlifetime-x86.tsv'
-REPORT = ROOT / 'cpppj/recovery-contentlifetime-evidence.json'
+REPORT = ROOT / 'cpppj/contentlifetime.json'
 
 
 class ContentOracle(LifecycleOracle):

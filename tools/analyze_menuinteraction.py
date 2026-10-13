@@ -18,7 +18,7 @@ from analyze_styletext import ROOT, digest, read_ranges
 
 # 계획/결과는 저장소에 기록하고 보호 PE와 같은 PC의 기존 내보내기는 읽기만 한다.
 PLAN = ROOT / 'tools/ghidra/menuinteraction-functions.json'
-REPORT = ROOT / 'cpppj/recovery-menuinteraction-evidence.json'
+REPORT = ROOT / 'cpppj/menuinteraction.json'
 # 실제 가상 표·현재 사건/색/타입/등록표/객체 Form 전역과 식별 BYTE의 두 판본 주소다.
 EDITIONS = {
     'originals': {

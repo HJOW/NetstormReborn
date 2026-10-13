@@ -51,7 +51,7 @@ RiftType 크기는 후처리 `0049b0d0`의 인덱스 계산 `/500`, CD `00444e10
 
 64개 생성 RLE와 두 판본의 대표 타입 24프레임을 서로 다른 pane·배치·배경에서 실행하고 오류 반환도 확인했다. 총 **709개**의 반환 코드·화면 전체 바이트가 두 원본 기계어와 C++에서 일치한다. 32비트 flat 세그먼트를 구성하여 `push/pop ES`·문자열 복사 명령도 그대로 실행한다. 이 검사에는 **CRT·assert 대체 함수가 없다**. 게임 진입점·OS API로 들어가면 즉시 실패한다.
 
-기대값은 [graphics-x86.tsv](../../cpppj/tests/fixtures/graphics-x86.tsv), 실행 파일·기대값 SHA-256과 범위는 [recovery-graphics-evidence.json](../../cpppj/recovery-graphics-evidence.json)에 있다. 기존 프레임 검색·Config 기대값 1,806개도 유지하므로 CTest는 **17개 테스트에서 총 2,515개 x86 입력**을 대조한다. 원본 바이너리·Python 없이 C++ 회귀 검사를 실행할 수 있다.
+기대값은 [graphics-x86.tsv](../../cpppj/tests/fixtures/graphics-x86.tsv), 실행 파일·기대값 SHA-256과 범위는 [graphics.json](../../cpppj/graphics.json)에 있다. 기존 프레임 검색·Config 기대값 1,806개도 유지하므로 CTest는 **17개 테스트에서 총 2,515개 x86 입력**을 대조한다. 원본 바이너리·Python 없이 C++ 회귀 검사를 실행할 수 있다.
 
 [tools/cpp_assets_smoke.py](../../tools/cpp_assets_smoke.py)는 PE의 로딩 배열을 직접 읽고 기존 Python `.type`·SHP 판독기와 독립 대조한다. 두 판본 **217개 타입·6,777개 이미지의 15,940,472픽셀**에서 헤더·속성·클러스터 코드·팔레트 번호·투명 마스크가 일치했다. 일반 프레임뿐 아니라 특수 레코드 173개도 헤더를 비교했다. 각 판본의 Nimbian·Sun Cannon 본체/그림자·Altar, 총 **8개 BMP**를 Pillow로 다시 읽어 RGBA·상하 방향까지 확인한다. 원본 실행 파일·아카이브·SHP 해시는 검사 전후 동일하다.
 

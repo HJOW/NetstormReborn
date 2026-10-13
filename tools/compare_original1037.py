@@ -17,7 +17,7 @@ import pefile
 BINARIES = {'original1037': 'original1037/netstorm.exe', 'originalCD': 'originalCD/NETSTORM.EXE',
             'originals': 'originals/Netstorm.exe'}
 # 읽기 전용 비교 결과의 저장 경로다.
-REPORT = ROOT / 'cpppj/recovery-original1037-evidence.json'
+REPORT = ROOT / 'cpppj/original1037.json'
 
 
 def sha(path):

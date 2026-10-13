@@ -16,7 +16,7 @@ from decomp_owner_oracle import OwnerOracle, ROOT, SPECS, TYPES, STOP, TARGET, d
 
 # 별도 근거와 새 객체 관찰 슬롯, 합성 가상 표/함수 주소다.
 FIXTURE=ROOT/'cpppj/tests/fixtures/damageablerelease-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-damageablerelease-evidence.json'
+REPORT=ROOT/'cpppj/damageablerelease.json'
 NEW_IDS=(100,101,102,103)
 VTABLE,OWNER,POP=STOP+0x100,STOP+0x300,STOP+0x400
 # 실제 하위 경계와 현재 전역 주소다. bridge WORD 쓰기는 대체하지 않는다.

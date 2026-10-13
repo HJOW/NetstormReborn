@@ -29,7 +29,7 @@ PRE = {
 PRE['original1037'] = dict(PRE['originalCD'])
 # 독립 C++ 회귀 자료와 감사 기록이다.
 FIXTURE = ROOT/'cpppj/tests/fixtures/priestdestroy-x86.tsv'
-REPORT = ROOT/'cpppj/recovery-priestdestroy-evidence.json'
+REPORT = ROOT/'cpppj/priestdestroy.json'
 
 
 def inputs():

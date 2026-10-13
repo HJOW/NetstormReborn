@@ -382,14 +382,14 @@ def generate(args):
     fixture = ROOT / 'cpppj/tests/fixtures/reward-x86.tsv'
     fixture.parent.mkdir(parents=True, exist_ok=True)
     fixture.write_text(payload, encoding='utf-8', newline='\n')
-    (ROOT / 'cpppj/recovery-reward-evidence.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n',
+    (ROOT / 'cpppj/reward.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n',
                                                               encoding='utf-8', newline='\n')
     print(f'삭제 보상 x86 fixture {total}개 → {fixture}')
 
 
 def verify():
     """기계어를 다시 실행하지 않고 원본/도구/내보내기/fixture SHA와 행 수를 감사한다."""
-    report = json.loads((ROOT / 'cpppj/recovery-reward-evidence.json').read_text(encoding='utf-8'))
+    report = json.loads((ROOT / 'cpppj/reward.json').read_text(encoding='utf-8'))
     assert report['tool_sha256'] == digest(Path(__file__)), '도구 SHA 불일치'
     for binary, data in report['editions'].items():
         assert data['binary_sha256'] == digest(ROOT / BINARIES[binary]), f'원본 SHA 불일치: {binary}'

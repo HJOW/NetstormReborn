@@ -8,9 +8,9 @@ from pathlib import Path
 
 # 최초 정상306/assert2의 전체 보고서/출처와 현재 test successor를 분리한다.
 ROOT=Path(__file__).resolve().parent.parent
-HISTORY=ROOT/'cpppj/recovery-history/dudedrop-before-assert-lines'
-REPORT=ROOT/'cpppj/recovery-dudedrop-draft-lineage-evidence.json'
-NATIVE='cpppj/recovery-dudedrop-evidence.json'
+HISTORY=ROOT/'cpppj/hist/dudedrop-bef-bac65'
+REPORT=ROOT/'cpppj/dudedrop-draft-lineage.json'
+NATIVE='cpppj/dudedrop.json'
 TEST='cpppj/tests/DudeDropTests.cpp'
 OLD='events.push_back("A:0");'
 NEW='events.push_back("A:"+std::to_string(Number(row[1]) ? 452 : 469));'

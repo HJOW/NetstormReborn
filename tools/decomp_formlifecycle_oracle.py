@@ -284,13 +284,13 @@ def generate():
         method='실제 두 PE의 Form 생성/가상 부착/조회/감시 중첩 삭제/SID 반납/Content 정렬·양수 피해. C++ 호출 없음.',
         boundaries=['부모 가상 +24/+34 알림 및 선택/전송/진단. Content 특수 preDestroy는 이번 관찰 대상 밖.'],
         fixture_sha256=hashlib.sha256(fixture.read_bytes()).hexdigest(), editions=reports)
-    (ROOT / 'cpppj/recovery-formlifecycle-evidence.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    (ROOT / 'cpppj/formlifecycle.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     print('Form 수명 원본 관찰:', {edition: item['cases'] for edition, item in reports.items()})
 
 
 def verify():
     """PE/내보내기/fixture의 바이트 해시와 사례 수/정상 명령 실행 감사를 확인한다."""
-    report = json.loads((ROOT / 'cpppj/recovery-formlifecycle-evidence.json').read_text(encoding='utf-8'))
+    report = json.loads((ROOT / 'cpppj/formlifecycle.json').read_text(encoding='utf-8'))
     fixture = ROOT / 'cpppj/tests/fixtures/formlifecycle-x86.tsv'
     if hashlib.sha256(fixture.read_bytes()).hexdigest() != report['fixture_sha256']:
         raise RuntimeError('Form 수명 fixture SHA 불일치')

@@ -1,0 +1,66 @@
+{
+  "host": "HJOW-Athlon",
+  "total": 1752,
+  "editions": {
+    "originals": {
+      "cases": 876,
+      "returns": 1752,
+      "entries": {
+        "00491ca0": 876,
+        "004ac550": 1728,
+        "0049a840": 1728,
+        "00491cf0": 876
+      },
+      "boundaries": {
+        "frame": 1728,
+        "reserve": 864,
+        "shared": 432
+      },
+      "asserts": 0
+    },
+    "originalCD": {
+      "cases": 876,
+      "returns": 1752,
+      "entries": {
+        "0040cf10": 1740,
+        "004abf50": 1728,
+        "0040cf60": 876
+      },
+      "boundaries": {
+        "frame": 1728,
+        "reserve": 864,
+        "shared": 432
+      },
+      "asserts": 0
+    }
+  },
+  "files": {
+    "cpppj/src/o/RawPriestRitualActions.cpp": "b26565b1f79e08785bca766c6c6d34632b552df3c697da6b0a10c6c5d9d486ae",
+    "cpppj/src/o/RawPriestRitualActions.h": "ccc14f6b619803f544dd377d578927af5942c5c99d50429f4540ed0261b981bd",
+    "cpppj/src/o/RiftType.cpp": "795554df3a4538ba475a2095a1b87a6bf9ddf4ba5ff904b469cef1f7128dc895",
+    "cpppj/src/o/RiftType.h": "6861baebea2e47f0ac175fdabd7ff7aa09fd53bb978bbdf6b0ffd4ca70455f5a",
+    "cpppj/src/o/SquidFrame.cpp": "739652a22b5cbf9abb96f71e5e368772624eb53a8a3957be728e1d6b8fbe27e6",
+    "cpppj/src/o/SquidFrame.h": "a37bc603b77ea161eef8234839146764a517b22a85a2d218d567c627a3eba46f",
+    "cpppj/src/o/SquidProcess.cpp": "15f0790f5ca0fd999d7d3761fce535ad9691b916f0f9c15c2007baece3f8d203",
+    "cpppj/src/o/SquidProcess.h": "07c4ab4f81dd2f7dd8c3ea894bad7d8958350b7eaf1b30dc103500d4ebcee978",
+    "cpppj/tests/fixtures/priestritualactions-x86.tsv": "95fddc7b02742d80d62159da55b893881bf597346c6f6c52feef4748b11ea72c",
+    "cpppj/tests/PriestRitualActionsTests.cpp": "e568c879c702c179b2fea98f4d47b1c3aa926c411f350b2ef84be9686b27d44f",
+    "extracted/priestritualactions/originalCD/creation.c": "f9ea009c1b881d4e9ab6168de18860e83160625c4a7c445c24f0a8d68395e9ef",
+    "extracted/priestritualactions/originalCD/functions.tsv": "5209c9433aaf75b6c79010c31f35cb9b400eed9dc34f106912ad6e7ff0ec0b6e",
+    "extracted/priestritualactions/originals/creation.c": "c1f7af7ee1a873c7b8aef12dc948cbea0ac8939a784fbaa225a56743d6903f34",
+    "extracted/priestritualactions/originals/functions.tsv": "fe3e90e4e2d322df326bcb37d8d25fcfd4031e4eaf8889de1494c3ce4340a490",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_bridgedecay_oracle.py": "887979f3b82cd56a93a4620d473b8048a579807e72022dfa8dddcf873c81641f",
+    "tools/decomp_bridgeeffects_oracle.py": "ed8e76931f972ffec24be024a17e65ddf3224eb487f215764f60b8abfbbaf462",
+    "tools/decomp_priestritualactions_oracle.py": "3903dd5b9a3f2d39b56ddc185942521accc50a7c6e3b8c054ede3a6aa9c4ebcd",
+    "tools/decomp_rawfinder_oracle.py": "08914eaa23cce0b3e1540799003c71c64062bad64f37383bdd647ede5ab2e2a7",
+    "tools/ghidra/priestritualactions-functions.json": "f866c681b9ec796c0b46bf51d3ab0a80c641fd23292e09c6b1eb8c7f8baf4dcb"
+  },
+  "game_runs": 0,
+  "limits": [
+    "실제 wrapper/현재 타입 first-table 선택·SID 범위·frame 뒤 예약 순서는 실제 PE다.",
+    "frame setter·malloc·SharedRegular ctor는 명시 관찰 경계이며 C++ 소비자는 기존 SquidFrame/Host를 재사용한다.",
+    "K..P stage0..5 정상 타입 first-table 범위만 복원한다. 신전 ritual/좌표/음향/다음 의식 단계·실제 GameWorld/GUI는 후속이다."
+  ]
+}

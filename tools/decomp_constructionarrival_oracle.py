@@ -21,7 +21,7 @@ from unicorn.x86_const import UC_X86_REG_EAX, UC_X86_REG_ECX, UC_X86_REG_ESP, UC
 TYPES,POOL,VTABLE,MAP,STOP,STACK = 0x11000000,0x12000000,0x13000000,0x14000000,0x20000000,0x3003f000
 START,REMOVE,DESTROY = STOP+0x100,STOP+0x200,STOP+0x300
 FIXTURE = ROOT/'cpppj/tests/fixtures/constructionarrival-x86.tsv'
-REPORT = ROOT/'cpppj/recovery-constructionarrival-evidence.json'
+REPORT = ROOT/'cpppj/constructionarrival.json'
 SPECS = {
     'originals':dict(binary='originals/Netstorm.exe',entry=0x444080,stride=50,type_stride=500,extra=40,first=15000,
         types=0x59ab20,pool=0x5c8464,capacity=0x5c847c,grid=0x542508,board=0x531928,begin=0x4b16d0,

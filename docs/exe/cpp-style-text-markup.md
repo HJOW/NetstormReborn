@@ -83,7 +83,7 @@ StyleText styled(styleState, std::move(styleHooks), edition);
 
 게임 라이브러리/`NetstormCpp` **Release 빌드 경고 0·오류 0**. SOURCE_MAP 생성/내용 차이 없음. **새 테스트 추가/실행·전체 CTest·독립 원본 동작 대조·게임/GUI 실행은 미수행**이다. 원본 관찰 **523,634개**, C++ 대조 **523,374개**, CTest **854개 통과**는 앞 단계 기록이며 이번 변경의 검증 수치가 아니다.
 
-자료: `cpppj/recovery-stylemarkup-evidence.json`, `tools/analyze_stylemarkup.py`, `tools/ghidra/stylemarkup-functions.json`, `extracted/stylemarkup/`, `extracted/stylemarkup-*-export.log`, `extracted/stylemarkup-build.log`, `extracted/stylemarkup-final-build.log`. 보고서는 실제 ROM 정규식/옵션 기본값/맞춤 크기/함수 범위/명령과 현재 코드 해시를 기록한다. 앞 단계 StyleText/Markup 보고서는 당시 코드의 기록이며 이번 변경은 새 보고서를 따른다.
+자료: `cpppj/stylemarkup.json`, `tools/analyze_stylemarkup.py`, `tools/ghidra/stylemarkup-functions.json`, `extracted/stylemarkup/`, `extracted/stylemarkup-*-export.log`, `extracted/stylemarkup-build.log`, `extracted/stylemarkup-final-build.log`. 보고서는 실제 ROM 정규식/옵션 기본값/맞춤 크기/함수 범위/명령과 현재 코드 해시를 기록한다. 앞 단계 StyleText/Markup 보고서는 당시 코드의 기록이며 이번 변경은 새 보고서를 따른다.
 
 후속은 이번 명령·공통 태그/타입 초기값·직전 VFX 배율·StyleText/메뉴의 독립 원본/C++ 대조, 원본 그림 변환 표 공급, TextGump의 W 명령/다중 줄/줄바꿈/스크롤·Form/메뉴 생성·입력/자동 UI 연결이다. **Client/UberGump는 기존 메뉴 어댑터이며 raw 자동 GUI와 건설·미션 완주는 미완료다.**
 

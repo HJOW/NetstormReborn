@@ -31,7 +31,7 @@ SPEC['original1037'] = dict(SPEC['originalCD'])
 KEYS = ('type','x','y','argument','direction','local','flags','quality','source','flags1','spot',
     'islandX','islandY','frames','default','toggle','sourceMutate','count','baseCount')
 FIXTURE = ROOT/'cpppj/tests/fixtures/constructionlocal-x86.tsv'
-REPORT = ROOT/'cpppj/recovery-constructionlocal-evidence.json'
+REPORT = ROOT/'cpppj/constructionlocal.json'
 
 
 def local_case(**changes):

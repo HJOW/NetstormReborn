@@ -26,7 +26,7 @@
 
 `tools/decomp_gunmissile_oracle.py`는 생성자와 Frame의 실제 몸체를 제한 x86으로 실행한다. 포구·SHP·타입 query·사정선·발자국·자산 생성/소유자/Pop·비행 효과·피해·visual·사운드·삭제는 명시 관찰 경계다. 따라서 C++의 정상 대조는 각 숫자 몸체와 경계 인자/순서를 증명하며, 그 경계 자체의 실제 월드 구현 완료를 증명하지 않는다.
 
-최종 고유 격자는 **296개 정상 반환**(판본별 ctor 36 + Frame 112)이다. 일반 직접 피해 경계는 각 판본 7회, 별도 배리어 visual 경계도 각 판본 7회 관찰한다. 앞선 valid 코너 전용 148행 생성은 이 격자에 포함되므로 별도 신규 관찰로 더하지 않는다. 원본 assert/OS 호출은 0이다. 저장물은 `cpppj/tests/fixtures/gunmissile-x86.tsv`와 `cpppj/recovery-gunmissile-evidence.json`, C++ 대조는 `MissileTests.cpp`다. 감사 명령은 `python -X utf8 tools/decomp_gunmissile_oracle.py --verify`다.
+최종 고유 격자는 **296개 정상 반환**(판본별 ctor 36 + Frame 112)이다. 일반 직접 피해 경계는 각 판본 7회, 별도 배리어 visual 경계도 각 판본 7회 관찰한다. 앞선 valid 코너 전용 148행 생성은 이 격자에 포함되므로 별도 신규 관찰로 더하지 않는다. 원본 assert/OS 호출은 0이다. 저장물은 `cpppj/tests/fixtures/gunmissile-x86.tsv`와 `cpppj/gunmissile.json`, C++ 대조는 `MissileTests.cpp`다. 감사 명령은 `python -X utf8 tools/decomp_gunmissile_oracle.py --verify`다.
 
 초기 대조 실패를 조사하며 사정선 관찰 경계의 반환 계약을 교정했다. 실제 `00481750/CD0044a960` 호출자는 출력 포인터를 EAX로 받아 즉시 읽는다. 경계가 좌표만 쓰고 EAX에0을 반환했던 초안에서는 주소0의0좌표를 읽어 종점을 `(1,1)`로 Clamp했다. 출력 포인터를 반환하도록 바꾸고 같은296개 입력을 재생성했으며, 교정 전 관찰을 추가 누적으로 세지 않는다.
 
@@ -38,4 +38,4 @@
 - 실제 사정선·비행 fieryTailSystem 타입11·hitEffect·Gun 직접 피해/사거리 갱신·배리어 visual/Regular/사운드 및 삭제를 같은 월드에 연결해야 한다. 누락 callback은 예외를 유지한다.
 - 반사/다른 총/패치 빗나감 경로/디버그 좌표 보정/0거리 특수 처리와 실제 게임 플레이 동일성은 아직 미완료다. 이 단위만으로 캠페인 전투 완성을 주장하지 않는다.
 
-최신 Release에서 집중4개 검사/296개 전수 C++ 대조와 실제 Factory/공간/Kernel 삭제 수명 검사가 통과했다. 전체968개 검사도 실패0이다. 로그는 `extracted/campaign-runtime5-Missile_-final-tests.log`다. 첫 차이는 oracle ray 경계의 결과 포인터 EAX 미반환 때문에 종점이(1,1)로 clamp된 문제였으며 실제 반환 계약으로 교정했다. 같은296개 입력을 다시 관찰했고 신규 입력으로 중복 합산하지 않았다. 초기 차이 로그는 보존한다.
+최신 Release에서 집중4개 검사/296개 전수 C++ 대조와 실제 Factory/공간/Kernel 삭제 수명 검사가 통과했다. 전체968개 검사도 실패0이다. 로그는 `extracted/run5-Missile_-final.log`다. 첫 차이는 oracle ray 경계의 결과 포인터 EAX 미반환 때문에 종점이(1,1)로 clamp된 문제였으며 실제 반환 계약으로 교정했다. 같은296개 입력을 다시 관찰했고 신규 입력으로 중복 합산하지 않았다. 초기 차이 로그는 보존한다.

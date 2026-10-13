@@ -10,7 +10,7 @@ from pathlib import Path
 
 # 완료한 작업 단위의 보고서 위치다. 캠페인 전체 완료 상태와 구별한다.
 ROOT = Path(__file__).resolve().parent.parent
-REPORT = ROOT / 'cpppj/recovery-campaign-runtime-evidence.json'
+REPORT = ROOT / 'cpppj/run.json'
 # 검증 시 변경을 검출할 실제 구현/검사/호스트 연결 파일이다.
 SOURCES = [
     'cpppj/src/client/RawButtonControls.h', 'cpppj/src/client/RawButtonControls.cpp',
@@ -44,7 +44,7 @@ def main():
         assert saved['tests']['failed_checks'] == 0 and saved['campaign_completed'] is False
         print(f"실행 기반 SHA 감사 통과: {saved['tests']['cases']}개 검사, 원본/C++ {saved['native_cases']}개")
         return
-    log = (ROOT / 'extracted/campaign-runtime-ctest-final.log').read_text(encoding='utf-8')
+    log = (ROOT / 'extracted/run-ctest-final.log').read_text(encoding='utf-8')
     assert '100% tests passed' in log, '전체 CTest 최종 성공이 필요함'
     match = re.search(r'(\d+) test\(s\), (\d+) failed check\(s\)',
         (ROOT / 'cpppj/build/Testing/Temporary/LastTest.log').read_text(encoding='utf-8', errors='replace'))
@@ -53,10 +53,10 @@ def main():
         campaign_completed=False, directdraw_fullscreen_changed=False, native_cases=1358,
         tests=dict(cases=int(match[1]), failed_checks=int(match[2])), native_units={}, gui={}, sha256={})
     files = list(SOURCES) + ['originals/Netstorm.exe', 'originalCD/NETSTORM.EXE',
-        'extracted/campaign-runtime-ctest-final.log', 'extracted/campaign-runtime-build-final-pixel-expectations.log']
+        'extracted/run-ctest-final.log', 'extracted/run-build-final-pixel-expectations.log']
     # 실제 세 독립 보고서/fixture의 입력 개수를 읽고 중복 재실행/기존 시각 fixture를 새 입력에 더하지 않는다.
     for name in ('processretake', 'uireset', 'missionoutcome'):
-        path = f'cpppj/recovery-{name}-evidence.json'
+        path = f'cpppj/{name}.json'
         data = json.loads((ROOT / path).read_text(encoding='utf-8'))
         count = sum(value['rows'] for value in data['editions'].values()) if name == 'processretake' else data['total']
         saved['native_units'][name] = count

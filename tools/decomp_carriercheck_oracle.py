@@ -20,7 +20,7 @@ CHECK = {'originals':(0x426fc0,0x494e80),'originalCD':(0x4e50d0,0x40d770)}
 CHECK['original1037'] = CHECK['originalCD']
 VTABLE, VIRTUAL = LISTS+0x3000,STOP+0x200
 FIXTURE = ROOT/'cpppj/tests/fixtures/carriercheck-x86.tsv'
-REPORT = ROOT/'cpppj/recovery-carriercheck-evidence.json'
+REPORT = ROOT/'cpppj/carriercheck.json'
 KEYS = ('kind','genus','floor','ceil','side','authority','allocated','change','virtual','reply','x','y','extra','state')
 # 서로 다른 almost-ceil/단순 절삭 칸 및 요청 자체가 계산하지 않는 지도 밖 좌표다.
 COORDS = ((20.75,21.9),(20.000099182128906,21.000099182128906),(-2.0,21.0),

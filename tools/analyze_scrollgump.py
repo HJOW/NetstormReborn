@@ -17,7 +17,7 @@ from analyze_styletext import ROOT,digest,read_ranges
 
 # 보호 원본은 읽기만 하며 계획/보고서/명령 자료는 프로젝트 안에서 생성한다.
 PLAN=ROOT/'tools/ghidra/scrollgump-functions.json'
-REPORT=ROOT/'cpppj/recovery-scrollgump-evidence.json'
+REPORT=ROOT/'cpppj/scrollgump.json'
 # 실제 두 PE의 Slider/손잡이 가상 표 주소다. 생성/픽셀 Draw는 참고 내보내기이며 이번 구현 범위와 구분한다.
 EDITIONS={
     'originals':('originals/Netstorm.exe',{'slider':0x5116f8,'thumb':0x511668}),

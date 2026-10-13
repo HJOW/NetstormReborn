@@ -33,7 +33,7 @@ SHAPE,REGULAR=0x14000000,ARENA+0x8000
 CONTROLS=(0x027f,0x037f)
 KEYS=('kind','owner','local','template','known','fort','special','reserve','flags','now')
 FIXTURE=ROOT/'cpppj/tests/fixtures/player-world-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-player-world-evidence.json'
+REPORT=ROOT/'cpppj/player-world.json'
 
 
 def inputs():

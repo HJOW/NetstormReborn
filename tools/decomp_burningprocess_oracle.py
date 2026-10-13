@@ -27,7 +27,7 @@ TOKEN=777
 OFFSETS=(4,8,12,16,20,24,28,32,36,40,48,52,56,60,72,80,84,88,92,96,100,104,108,112,120,124,128)
 KEYS=('parent','mode','registry','depth','zeroDepth','fill')
 FIXTURE=ROOT/'cpppj/tests/fixtures/burningprocess-constructor-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-burningprocess-constructor-evidence.json'
+REPORT=ROOT/'cpppj/burningprocess-constructor.json'
 
 
 def inputs():
@@ -100,7 +100,7 @@ def generate(smoke):
             rows.append([edition,*[case[key] for key in KEYS],*result])
         editions[edition]=dict(returns=oracle.returns,instructions=oracle.instructions,assertions=oracle.assertions,native_calls=dict(oracle.native_calls),boundaries=dict(oracle.boundaries));files.update(oracle.exports);files.add(ROOT/oracle.spec['binary']);print(edition,oracle.returns,flush=True)
     if smoke:return
-    for relative in ('cpppj/src/o/RawBurningVisual.cpp','cpppj/src/o/RawBurningVisual.h','cpppj/tests/BurningVisualTests.cpp','cpppj/src/o/RawConstructionLifetime.cpp','cpppj/src/o/RawConstructionLifetime.h','cpppj/recovery-constructionlifetime-evidence.json'):
+    for relative in ('cpppj/src/o/RawBurningVisual.cpp','cpppj/src/o/RawBurningVisual.h','cpppj/tests/BurningVisualTests.cpp','cpppj/src/o/RawConstructionLifetime.cpp','cpppj/src/o/RawConstructionLifetime.h','cpppj/constructionlifetime.json'):
         files.add(ROOT/relative)
     FIXTURE.write_text('# 실제Burning 모드0/1 warm-palette 생성자 정상반환. cold팔레트/후속particle frame은별도경계다.\n'+'\n'.join('\t'.join(map(str,row)) for row in rows)+'\n',encoding='utf-8');files.add(FIXTURE)
     REPORT.write_text(json.dumps(dict(schema=1,host='HJOW-Athlon',total=len(rows),editions=editions,files={path.relative_to(ROOT).as_posix():digest(path) for path in sorted(files)},os_calls=0,cpp_shared_tests_completed=0,

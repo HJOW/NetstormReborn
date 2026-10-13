@@ -1,0 +1,277 @@
+{
+  "last_decompile_host": "VM-W11-Codex",
+  "recorded_date": "2026-10-13",
+  "method": "실제 두 PE의 Form/공통 Unpop/SID 명령을 정상 반환까지 실행. C++를 호출하지 않고 600개 입력 저장.",
+  "fixture_sha256": "f8f43ed6d0f97ff302a875d3c7c25f9620eb76ea89d945a357aa5cbeefd3be31",
+  "editions": {
+    "originals": {
+      "sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "cases": 300,
+      "assertions": 0,
+      "boundaries": [
+        "CRT malloc: 요청 크기를 기록하고 격리 풀을 반환",
+        "부모 가상+24: raw/이유 2 기록"
+      ],
+      "functions": [
+        {
+          "entry": "004abb10",
+          "ranges": "004abb10-004abb66;004abb70-004abcac;004abcb0-004abdf1"
+        },
+        {
+          "entry": "004af1d0",
+          "ranges": "004af1d0-004af529"
+        },
+        {
+          "entry": "004abf60",
+          "ranges": "004abf60-004ac037"
+        },
+        {
+          "entry": "004abe00",
+          "ranges": "004abe00-004abe26;004abe30-004abf51"
+        },
+        {
+          "entry": "004aba70",
+          "ranges": "004aba70-004abab3"
+        },
+        {
+          "entry": "004952f0",
+          "ranges": "004952f0-0049532a"
+        },
+        {
+          "entry": "004e5b40",
+          "ranges": "004e5b40-004e5b9a;004e5b9c-004e5ba2;004e5bb0-004e5bd8;004e5bdc-004e5bfe;004e5c00-004e5c1c;004e5c40-004e5c89;004e5c9c-004e5ca2;004e5ca4-004e5cae;004e5cb0-004e5cc0;004e5cc4-004e5cda;004e5cdc-004e5d01;004e5d04-004e5d0c;004e5d10-004e5d2e;004e5d3c-004e5d5c;004e5d60-004e5d86;004e5d88-004e5db8;004e5ddc-004e5e25;004e5e38-004e5e3e;004e5e40-004e5e4c;004e5e50-004e5e62;004e5e64-004e5e7c"
+        },
+        {
+          "entry": "004abb10",
+          "ranges": "004abb10-004abb66;004abb70-004abcac;004abcb0-004abdf1"
+        },
+        {
+          "entry": "004af530",
+          "ranges": "004af530-004af600"
+        },
+        {
+          "entry": "004af610",
+          "ranges": "004af610-004af712"
+        },
+        {
+          "entry": "0049a840",
+          "ranges": "0049a840-0049a852"
+        },
+        {
+          "entry": "0049fce0",
+          "ranges": "0049fce0-0049fd6a"
+        },
+        {
+          "entry": "004ae760",
+          "ranges": "004ae760-004ae77a"
+        },
+        {
+          "entry": "004ae3d0",
+          "ranges": "004ae3d0-004ae3ea"
+        },
+        {
+          "entry": "004ae9f0",
+          "ranges": "004ae9f0-004aea0a"
+        },
+        {
+          "entry": "004aea40",
+          "ranges": "004aea40-004aea5a"
+        },
+        {
+          "entry": "004ae140",
+          "ranges": "004ae140-004ae1d3"
+        },
+        {
+          "entry": "004ac6b0",
+          "ranges": "004ac6b0-004ac7fd"
+        },
+        {
+          "entry": "004ad010",
+          "ranges": "004ad010-004ad014"
+        },
+        {
+          "entry": "004abac0",
+          "ranges": "004abac0-004abac4"
+        },
+        {
+          "entry": "004abad0",
+          "ranges": "004abad0-004abadb"
+        },
+        {
+          "entry": "004abae0",
+          "ranges": "004abae0-004abaeb"
+        },
+        {
+          "entry": "004ad040",
+          "ranges": "004ad040-004ad057"
+        },
+        {
+          "entry": "004437f0",
+          "ranges": "004437f0-004437f0"
+        }
+      ]
+    },
+    "originalCD": {
+      "sha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "cases": 300,
+      "assertions": 0,
+      "boundaries": [
+        "CRT malloc: 요청 크기를 기록하고 격리 풀을 반환",
+        "부모 가상+24: raw/이유 2 기록"
+      ],
+      "functions": [
+        {
+          "entry": "004aaad0",
+          "ranges": "004aaad0-004aad2f"
+        },
+        {
+          "entry": "004aae40",
+          "ranges": "004aae40-004ab243"
+        },
+        {
+          "entry": "004ab250",
+          "ranges": "004ab250-004ab380"
+        },
+        {
+          "entry": "004aad30",
+          "ranges": "004aad30-004aae34"
+        },
+        {
+          "entry": "004cff40",
+          "ranges": "004cff40-004cff7a"
+        },
+        {
+          "entry": "004f1a60",
+          "ranges": "004f1a60-004f1a96;004f1aa8-004f1aba;004f1abc-004f1ac8;004f1acc-004f1ad6;004f1ad8-004f1afc;004f1b00-004f1b08;004f1b0c-004f1b2f;004f1b40-004f1b55;004f1b58-004f1b75;004f1b78-004f1ba2;004f1ba4-004f1bad"
+        },
+        {
+          "entry": "004aaad0",
+          "ranges": "004aaad0-004aad2f"
+        },
+        {
+          "entry": "004ab390",
+          "ranges": "004ab390-004ab435"
+        },
+        {
+          "entry": "004ab440",
+          "ranges": "004ab440-004ab57b"
+        },
+        {
+          "entry": "00444720",
+          "ranges": "00444720-00444749"
+        },
+        {
+          "entry": "004448e0",
+          "ranges": "004448e0-004448f2"
+        },
+        {
+          "entry": "004af920",
+          "ranges": "004af920-004af93c"
+        },
+        {
+          "entry": "004af5c0",
+          "ranges": "004af5c0-004af5d9"
+        },
+        {
+          "entry": "004afd60",
+          "ranges": "004afd60-004afd7c"
+        },
+        {
+          "entry": "004afe00",
+          "ranges": "004afe00-004afe1c"
+        },
+        {
+          "entry": "004af270",
+          "ranges": "004af270-004af309"
+        },
+        {
+          "entry": "004ac160",
+          "ranges": "004ac160-004ac2dd"
+        },
+        {
+          "entry": "004b04a0",
+          "ranges": "004b04a0-004b04a6"
+        },
+        {
+          "entry": "004b04b0",
+          "ranges": "004b04b0-004b04b6"
+        },
+        {
+          "entry": "004b04c0",
+          "ranges": "004b04c0-004b04ca"
+        },
+        {
+          "entry": "004b04d0",
+          "ranges": "004b04d0-004b04da"
+        },
+        {
+          "entry": "004accc0",
+          "ranges": "004accc0-004accd9"
+        },
+        {
+          "entry": "004b0470",
+          "ranges": "004b0470-004b0470"
+        },
+        {
+          "entry": "004b0480",
+          "ranges": "004b0480-004b0480"
+        }
+      ]
+    }
+  },
+  "files": {
+    "cpppj/src/o/SquidForms.h": "2b2f1083a02d944d743640ccab27347c2f5c52af2d8dcc7f2e0e6950f747fa94",
+    "cpppj/src/o/SquidForms.cpp": "b7f3dc18be476696364c2431787668858da4cc22a2d5255a2a68824733ec46dd",
+    "cpppj/src/o/SidPool.h": "69ad2a3cbb837f669dde7f01835535b31898b7cda686c26443aad2effc0f1c30",
+    "cpppj/src/o/SidPool.cpp": "7bc612330f3b631cf8141be5e7a9ae51cefe8caee3ea3eb68be38252d68a6887",
+    "cpppj/src/o/SquidFactory.h": "e9d780a0fcfb64d68febde8641aae49e2d67e855bf9a725dd809c75437e43b23",
+    "cpppj/src/o/SquidFactory.cpp": "3421cfdacf2a4ec9c45c16ef1f79577775f44b69b2f72d0f00d248cf82d4ab99",
+    "cpppj/src/o/SquidProcess.h": "b1daf3d60890c1a373a604f8889780e13f21de565de8a00d29aa024849696c03",
+    "cpppj/src/o/SquidProcess.cpp": "d5bbc5b9fb25b2950749991e3a6166c4e356c378736f448439a0960890d9b73f",
+    "cpppj/src/o/GumpFormHost.h": "5b10492a4ac32361f627ff542266dd57ea17f49dabb22c591ffad6972c7dc067",
+    "cpppj/src/o/GumpFormHost.cpp": "f4045100a4642fdb432cee4f0c223079810176c68235140950fa0a1490f112a4",
+    "cpppj/src/o/CMakeLists.txt": "9add83305c0f5d11ad5a4fda49aa41b0a1be70b47475ff07c0f865da67d65072",
+    "cpppj/tests/CMakeLists.txt": "6a501fc1ca3f012c17a7422d3fd268e9bf585563c6aef5c0cd3bc33d6cbab01e",
+    "cpppj/tests/FormTakeTests.cpp": "234d2fc21cf6cc9d385393230cac73dca82e5f0b8a565f3f29b4d87694f369b6",
+    "cpppj/tests/GumpDrawTests.cpp": "525dc6bd102f85ef0fa80ed3bad1e5754fc216b88059db9d2864a8ecfe389124",
+    "tools/decomp_formtake_oracle.py": "b7892d83d2d78aa06a171eba7cf1c5e92d4d8721e383983770edcba1bf75c7f5",
+    "tools/ghidra/formtake-functions.json": "521d779c0e82f10ecdbb3b318935ad8cfb2c2f978d32288a6a5e745ca37e93dd",
+    "cpppj/tests/fixtures/formtake-x86.tsv": "f8f43ed6d0f97ff302a875d3c7c25f9620eb76ea89d945a357aa5cbeefd3be31",
+    "cpppj/build/bin/Release/NetstormCpp.exe": "ae60e439f3aa8dd843ee85b147dc83601ca0d773a3a8844454845e1029cadf14",
+    "cpppj/build/bin/Release/netstorm_tests.exe": "997d79bbe2888087e876c735d7be2395541aecb209cceed3165bc47d7122961e",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "extracted/formtake/originals/creation.c": "1957aced53f6ed71bac11d8770696a90fcc7b2b599ecb175ad3229183fca3c69",
+    "extracted/formtake/originals/functions.tsv": "73c7ac8dba73e8bb77e140e961a0f4553f1c7fc674095038bf478f6792932a47",
+    "extracted/sid/originals/functions.tsv": "3034dd0d393ebdfd77f2e9fafe8a5b252d5437f1e71ab94541cc229e8ef8694b",
+    "extracted/formtake/originalCD/creation.c": "2039dd5f58a99c03d81510065d3dc12675345415103b86c1ff8d712986643c45",
+    "extracted/formtake/originalCD/functions.tsv": "ac60759023397103532e60471bd0b69cbf188e64f79c3e8c667708eee2756e46",
+    "extracted/sid/originalCD/functions.tsv": "a54643de18c5c9480a91e9e2c67abbc3455506d2cd92934d1882eb3710f57de9",
+    "extracted/formtake-export-originals.log": "1d5995756d263caf52c6c983626511155e0dd9e0d6f3d491f70209829531cdf1",
+    "extracted/formtake-export-originalCD.log": "9d4e64581af88a79a9d0fe87d6866846bd55eb8231e3826f4de748a0b5dd2632",
+    "extracted/formtake-oracle.log": "bded974e978a9d6c5cf32d7ca84ba1c6ac70daf663f033881d7ed2242416bdcd",
+    "extracted/formtake-build.log": "4964ddebc23cc65036344d32892b0c8fff1e635190e0b765407c309bb4ac7a53",
+    "extracted/formtake-build-final.log": "57b263c0b1c0ae1ba81f4bd9c3e990979a103f13a4b2585fe37aac7967a4b123",
+    "extracted/formtake-build-tests-final.log": "73e6405a4e9797062777278ac7ab1aaf30f69ef0737bd9ab7e19fe1e0bb11956",
+    "extracted/formtake-focused.log": "314ee4aea87b8ea0f6992c29d567c1c3436721ec75984a1d8a1a07d344643054",
+    "extracted/formtake-gumpdraw-focused.log": "a7fdfe882d2d3435caf8800199de03e976b85c7ee19550ce604ba104df234b3f",
+    "extracted/formtake-ctest.log": "c0796e171e673c9360429563fd7b036f73ef76d64f52d23f4178dddb770b4aee",
+    "extracted/formtake-ctest-final.log": "d8ae4855dd5cd05ef9235321b58c507cbddd8f3ff65c8000755845ec686bfa38"
+  },
+  "new_original_observations": 600,
+  "new_cpp_comparisons": 600,
+  "validation": {
+    "release_warnings": 0,
+    "release_errors": 0,
+    "form_tests": 4,
+    "gump_draw_tests": 11,
+    "full_test_cases": 859,
+    "failed_checks": 0,
+    "ctest_seconds": 83.98,
+    "initial_full_suite_failed_checks": 1,
+    "initial_failure": "stale diagonal-rejection expectation in GumpDraw_Contracts",
+    "source_map_content_changed": false,
+    "original_game_executed": false,
+    "gui_executed": false
+  }
+}

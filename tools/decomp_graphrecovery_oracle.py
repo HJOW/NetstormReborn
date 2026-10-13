@@ -16,7 +16,7 @@ from unicorn.x86_const import UC_X86_REG_ESP
 
 # 기존 독립 도구와 fixture를 보존하는 새 출력이다.
 FIXTURE = ROOT / 'cpppj/tests/fixtures/graphrecovery-x86.tsv'
-REPORT = ROOT / 'cpppj/recovery-graphrecovery-evidence.json'
+REPORT = ROOT / 'cpppj/graphrecovery.json'
 DEPENDENCIES = ('decomp_graphrebuild_oracle.py',) + PARENTS
 # 각 입력은 네 상위 경로의 전역 복구를 실제 전체 풀에서 실행한다.
 CASE_COUNT = 8

@@ -37,7 +37,7 @@ PLAIN,DAIS,PRIEST,OTHER=100,165,158,102
 # 초기 이력 DWORD는 서로 다른 비트로 채운다. 기대 이력은 실제 몸체만 만든다.
 HISTORY=tuple((0x3f800000+i*0x01020304)&0xffffffff for i in range(10))
 FIXTURE=ROOT/'cpppj/tests/fixtures/constructionnotice-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-constructionnotice-evidence.json'
+REPORT=ROOT/'cpppj/constructionnotice.json'
 # 입력 칸 순서다. drift는 첫 이동 뒤 사제 좌표를 바꿔 재시도의 현재 좌표 읽기를 검사한다.
 KEYS=('type','flags1','group','x','y','argument','direction','player','flags','quality','timeLow','timeHigh','count',
     'local','authority','moveLocal','dais','objectType','owner','genus','priestSid','secondPriest','priestState','priestGenus',

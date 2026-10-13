@@ -5,13 +5,13 @@ import argparse,json
 from pathlib import Path
 from decomp_daiscontentnotice_oracle import ROOT,REPORT,FIXTURE,sha,verify as native_verify
 
-HISTORY=ROOT/'cpppj/recovery-history/daiscontentnotice-before-test-include' # 수정 전1444 자료와 검사 원문 전체다.
-SUCCESSOR=ROOT/'cpppj/recovery-daiscontentnotice-successor-evidence.json' # 같은 입력의 재관찰과 헤더 한줄 교정을 분리한 근거다.
+HISTORY=ROOT/'cpppj/hist/daiscontentn-b4878' # 수정 전1444 자료와 검사 원문 전체다.
+SUCCESSOR=ROOT/'cpppj/daiscontentnotice-successor.json' # 같은 입력의 재관찰과 헤더 한줄 교정을 분리한 근거다.
 TEST='cpppj/tests/DaisContentNoticeTests.cpp' # Altar VT 상수 선언을 실제 헤더에서 읽도록 한줄을 추가했다.
 
 def expected():
     """현재 출처·정확 역변환·모든 기존 결과/생산 불변을 확인한다."""
-    native_verify();old=json.loads((HISTORY/'cpppj/recovery-daiscontentnotice-evidence.json').read_text(encoding='utf-8'));current=json.loads(REPORT.read_text(encoding='utf-8'));assert old['total']==current['total']==1444
+    native_verify();old=json.loads((HISTORY/'cpppj/daiscontentnotice.json').read_text(encoding='utf-8'));current=json.loads(REPORT.read_text(encoding='utf-8'));assert old['total']==current['total']==1444
     include='#include "o/RawAltarSacrifice.h"\n';test=(ROOT/TEST).read_text(encoding='utf-8');assert test.count(include)==1 and test.replace(include,'')==(HISTORY/TEST).read_text(encoding='utf-8')
     assert FIXTURE.read_bytes()==(HISTORY/'cpppj/tests/fixtures/daiscontentnotice-x86.tsv').read_bytes()
     assert old['editions']==current['editions'];dependencies={};history={}
@@ -24,7 +24,7 @@ def expected():
     for path in sorted(HISTORY.rglob('*')):
         if path.is_file():history[path.relative_to(ROOT).as_posix()]=sha(path)
     return dict(host='HJOW-Athlon',decompile_date='2026-10-14',normal_inputs=1444,new_native_inputs=0,entire_test_restored_exactly=True,production_and_fixture_unchanged=True,
-        previous_report_sha256=sha(HISTORY/'cpppj/recovery-daiscontentnotice-evidence.json'),current_report_sha256=sha(REPORT),tool_sha256=sha(Path(__file__)),dependencies=dependencies,history=history,
+        previous_report_sha256=sha(HISTORY/'cpppj/daiscontentnotice.json'),current_report_sha256=sha(REPORT),tool_sha256=sha(Path(__file__)),dependencies=dependencies,history=history,
         scope='현재 검사의 명시 Altar 헤더 한줄만 추가. 이전1444/전체생산·도구·fixture·반환/효과/입력은 보존하고 같은1444 재관찰을 새 고유 입력에 더하지 않는다.')
 
 def main(check):

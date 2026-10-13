@@ -8,8 +8,8 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parent.parent
 TEST=ROOT/'cpppj/tests/FarmClusterTests.cpp'
 TOOL=ROOT/'tools/decomp_farmcluster_oracle.py'
-REPORT=ROOT/'cpppj/recovery-farmcluster-evidence.json'
-LINEAGE=ROOT/'cpppj/recovery-farmcluster-cpp-correction-evidence.json'
+REPORT=ROOT/'cpppj/farmcluster.json'
+LINEAGE=ROOT/'cpppj/farmcluster-cpp-correction.json'
 REPLACEMENTS=(('frames(types.size()),','frames(types.size(),RiftTypeFrames({})),') ,('frames.assign(frames.size(),RiftTypeFrames{});','frames.assign(frames.size(),RiftTypeFrames({}));'))
 TOOL_OLD="'cpppj/src/o/DerivedConstructors.inc'):"
 TOOL_NEW="'cpppj/src/o/DerivedConstructors.inc','tools/decomp_constructionarrival_oracle.py','tools/decomp_damageablepredestroy_oracle.py'):"

@@ -13,7 +13,7 @@ SPEC={
 }
 SOUND_MEMORY=(HEAP+0x7000,HEAP+0x7100) # 각 독립 new가 반환하는 격리 음향 프로세스다.
 FIXTURE=ROOT/'cpppj/tests/fixtures/daisprogress-x86.tsv' # 새 상위 입력/반환/효과/음향시각/raw 기록이다.
-REPORT=ROOT/'cpppj/recovery-daisprogress-evidence.json' # 현재 출처와 외부 경계를 구분한 독립 근거다.
+REPORT=ROOT/'cpppj/daisprogress.json' # 현재 출처와 외부 경계를 구분한 독립 근거다.
 
 def inputs():
     """분기 입력을 구성하고 결과는 원본 몸체에서만 얻는다."""

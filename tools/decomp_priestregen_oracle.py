@@ -29,7 +29,7 @@ RNG=0x532710
 TEMP=0x13010000
 CALLER=STOP+0x100
 FIXTURE=ROOT/'cpppj/tests/fixtures/priestregen-x86.tsv'
-REPORT=ROOT/'cpppj/recovery-priestregen-evidence.json'
+REPORT=ROOT/'cpppj/priestregen.json'
 # 유한/음수/0/quiet NaN payload는 반환 비트와 재예약 계약의 입력이다.
 PAYLOAD=(bits(8.25),bits(0.0),bits(-0.0),bits(-1.0),bits(2.0),0x7fc12345)
 

@@ -28,11 +28,11 @@ Frame/가상공간/Factory/음향/UI/표면조회와마지막전체Damageable는
 
 첫 C++ 검사에서1928중효과비교12개가실패했고raw/player검사는전수일치했다. CD의`0048153f`/`0048154e`는각float좌표에`00504030`의0.9999를더한뒤__ftol한다. Ghidra C에서이fadd가생략돼이전oracle이표면SID9를(40,41)에썼지만원본은(41,42)를읽었다. C++생산/검사는수정하지않고새 `decomp_daislifecycle_current_oracle.py`의입력셀만교정했다.
 
-새 `daislifecycle-current-x86.tsv`/`recovery-daislifecycle-current-evidence.json`은같은1928을두x87에서다시관찰했다. CD profile1~4×saved0/1/2의12행효과만변경되고나머지1916행전체·전수raw/player는그대로다. `analyze_daislifecycle_current_successor.py`/`recovery-daislifecycle-current-successor-evidence.json`은새tool의출력경로/입력셀만역변환하면전체옛tool과같음을증명한다. 최초1928/fixture/report/tool/현재생산4/Test/lineage/exports/실패로그의전체16파일은 `recovery-history/daislifecycle-initial-cpp-failure`에보존했다. 기존보고서·fixture·Test·생산본문·11자료를덮어쓰지않으며새입력합산0이다. 단위12 3차 Release는 경고/오류0으로 완료됐고 현재1928 C++ 전수1검사는 실패0으로 통과했다. 로그는 `extracted/campaign-runtime12-rawDaisLifecycle_repaired-tests.log`다.
+새 `daislifecycle-current-x86.tsv`/`daislifecycle-current.json`은같은1928을두x87에서다시관찰했다. CD profile1~4×saved0/1/2의12행효과만변경되고나머지1916행전체·전수raw/player는그대로다. `analyze_daislifecycle_current_successor.py`/`daislifecycle-current-successor.json`은새tool의출력경로/입력셀만역변환하면전체옛tool과같음을증명한다. 최초1928/fixture/report/tool/현재생산4/Test/lineage/exports/실패로그의전체16파일은 `hist/daislifecycl-4443d`에보존했다. 기존보고서·fixture·Test·생산본문·11자료를덮어쓰지않으며새입력합산0이다. 단위12 3차 Release는 경고/오류0으로 완료됐고 현재1928 C++ 전수1검사는 실패0으로 통과했다. 로그는 `extracted/run12-rawDaisLifecycle_fixed.log`다.
 
 ## 후속 실제소비자
 
-단위11 `5bdb5be` 뒤 SquidPostPop의동일Pool등록/Handles/Validate/Activate와RawDaisLifecycle의새prefix Validate를추가했다. `analyze_dais_postpop_lineage.py`와 `recovery-dais-postpop-lineage-evidence.json`은 기준11 네파일의Git LF/작업CRLF 전체원문을보존하고새등록을역제거하면전체기존본문/토큰이동일함을확인한다. 기존11JSON과수명1928당시보고서는덮어쓰지않고 `dais-lifecycle-before-postpop`의당시소스/검사/도구/fixture/spec로새현재SHA를연결한다. 추가원본입력은0이다.
+단위11 `5bdb5be` 뒤 SquidPostPop의동일Pool등록/Handles/Validate/Activate와RawDaisLifecycle의새prefix Validate를추가했다. `analyze_dais_postpop_lineage.py`와 `dais-postpop-lineage.json`은 기준11 네파일의Git LF/작업CRLF 전체원문을보존하고새등록을역제거하면전체기존본문/토큰이동일함을확인한다. 기존11JSON과수명1928당시보고서는덮어쓰지않고 `dais-lifecyc-dd023`의당시소스/검사/도구/fixture/spec로새현재SHA를연결한다. 추가원본입력은0이다.
 
 실제다이스최초Pop→AltarFactory→owner→전체Pop→로컬21과사제해방의전체Pop를같은Pool·Host/Kernel에연결하는검사는별도후속이다. 포획Attach의Dais가상+24도 **00449660/CD004816c0**의필수몸체다. reason1은typedAltar→가상Unpop0→현재타입O첫프레임plain쓰기→포획원래ownerWORD&127→가상Repop0 및로컬cue정지를수행한다. reason2만자연반환하며처음부터빈부모알림으로처리하지않는다. 새RawDaisContentNotice와1/1읽기전용spec를후속준비했다.
 

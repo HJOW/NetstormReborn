@@ -42,7 +42,7 @@ ctest --test-dir cpppj/build -C Release --output-on-failure
 python -X utf8 tools/cpp_canonshape_smoke.py
 ```
 
-최종 빌드/전체 테스트·실제 자산 대조 수치와 로그는 [LEFT_JOBS.md](../../LEFT_JOBS.md) 최신 완료 절에 기록한다. 근거 SHA는 `cpppj/recovery-canonshape-evidence.json`, 원본 관찰은 `cpppj/tests/fixtures/canonshape-x86.tsv`, C++ 대조는 `CanonPixelShapeTests.cpp`다.
+최종 빌드/전체 테스트·실제 자산 대조 수치와 로그는 [LEFT_JOBS.md](../../LEFT_JOBS.md) 최신 완료 절에 기록한다. 근거 SHA는 `cpppj/canonshape.json`, 원본 관찰은 `cpppj/tests/fixtures/canonshape-x86.tsv`, C++ 대조는 `CanonPixelShapeTests.cpp`다.
 
 ## 후속 범위
 

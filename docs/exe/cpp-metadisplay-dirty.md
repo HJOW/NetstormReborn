@@ -41,4 +41,4 @@ bitmap의 실제 셀 그림과 표시 재생성은 아직 별도 복원 경계�
 
 단위 파일 `MetadisplayDirtyTests.cpp`는 native 전체 재생, 같은 풀/현재 raw 좌표 alias와 고유 등록, 비활성 bitmap 확보/활성 필수 효과 거부 및 실제 Pop/Unpop 통합의 네 검사를 포함한다. 통합 검사는 patch overlap 앞의 새 좌표/큐 보존과 아직 void/hash 미등록, 등록 성공 뒤 같은 셀 중복, Unpop의 기존 위치, 매몰/flags2 필터, 다른 풀 거부를 두 판본에서 확인한다. root의 CMake 등록·공유 Release 링크 이후 `--filter metadisplayDirty_`를 실행해 **집중 4개/실패 0**과 native **1,040개 C++ 재생 일치**를 확인했다. 로그는 `extracted/metadisplaydirty-focused-final.log`다. 전체 CTest 결과는 root의 단위 작업 기록을 따른다.
 
-근거는 `recovery-metadisplaydirty-evidence.json`, `cpppj/tests/fixtures/metadisplaydirty-x86.tsv`, `extracted/metadisplaydirty/`와 `extracted/metadisplaydirty-native-*.log`다. 실제 미니맵 그림·GUI/게임·Pop/Unpop 전체 연결·캠페인 완주는 이 좁은 대조로 입증하지 않는다.
+근거는 `metadisplaydirty.json`, `cpppj/tests/fixtures/metadisplaydirty-x86.tsv`, `extracted/metadisplaydirty/`와 `extracted/metadisplaydirty-native-*.log`다. 실제 미니맵 그림·GUI/게임·Pop/Unpop 전체 연결·캠페인 완주는 이 좁은 대조로 입증하지 않는다.

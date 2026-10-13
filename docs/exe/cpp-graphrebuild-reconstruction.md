@@ -33,7 +33,7 @@
 
 ## 독립 검증과 재현
 
-[새 도구](../../tools/decomp_graphrebuild_oracle.py), [고정 fixture](../../cpppj/tests/fixtures/graphrebuild-x86.tsv), [SHA/호출 기록](../../cpppj/recovery-graphrebuild-evidence.json). 기존 도구/fixture/기록은 변경하지 않았다.
+[새 도구](../../tools/decomp_graphrebuild_oracle.py), [고정 fixture](../../cpppj/tests/fixtures/graphrebuild-x86.tsv), [SHA/호출 기록](../../cpppj/graphrebuild.json). 기존 도구/fixture/기록은 변경하지 않았다.
 
 세 실제 PE × x87 53/64비트 × 16입력 × 세 경로 = **288회**(직접 Rebuild 192·소진 Allocate 96). 각 실제 **32768슬롯 전체 순회**를 실행하며 iterator를 건너뛰거나 호스트 함수로 바꾸지 않는다. 명령마다 Ghidra 불연속 몸체 범위를 확인하고, assert/OS/미검토 코드/허용 범위 밖 쓰기는 즉시 실패한다. 이미 확보한 스택과 로그 0을 사용하여 할당/로그 I/O를 자연스럽게 피한다. 판본별 내부 Rebuild 96·Allocate 406·Flood 278 도달은 공개 호출 수에 더하지 않는다. 실제 Reset 2/Create 14회 준비도 별도다.
 
