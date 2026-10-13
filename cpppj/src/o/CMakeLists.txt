@@ -51,6 +51,9 @@ target_sources(netstorm PRIVATE
     RawDamageablePostDestroy.cpp RawDamageablePostDestroy.h
     RawBurningVisual.cpp RawBurningVisual.h
     RawFortMetaLoad.cpp RawFortMetaLoad.h
+    RawFortWorldLoad.cpp RawFortWorldLoad.h
+    RawDudeSpawn.cpp RawDudeSpawn.h
+    RawDudeDrop.cpp RawDudeDrop.h
     RawDudeTask.cpp RawDudeTask.h
     RawDaisContentNotice.cpp RawDaisContentNotice.h
     BaseFile.cpp BaseFile.h

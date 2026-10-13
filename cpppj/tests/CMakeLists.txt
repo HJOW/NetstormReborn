@@ -55,6 +55,13 @@ add_executable(netstorm_tests
     DudeTaskTests.cpp
     DaisContentNoticeTests.cpp
     DaisRitualConsumerTests.cpp
+    DudeSpawnTests.cpp
+    DudeDropTests.cpp
+    DudeSpawnSupport.h
+    FortWorldLoadTests.cpp
+    FortWorldLoadBindingTests.cpp
+    GraphFormsTests.cpp
+    DaisBridgeTests.cpp
     RawButtonControlsTests.cpp
     GumpResetTests.cpp
     MissionOutcomeTests.cpp
@@ -776,3 +783,19 @@ set_source_files_properties(DudeTaskTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_DUDETASK_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/dudetask-x86.tsv\"")
 set_source_files_properties(DaisContentNoticeTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_DAISCONTENTNOTICE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/daiscontentnotice-x86.tsv\"")
+
+# 실제 Dude 생성/전체 Fort 부모 및 내부 Form 그래프의 독립 원본 결과다.
+set_source_files_properties(DudeSpawnTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_DUDESPAWN_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/dudespawn-x86.tsv\"")
+set_source_files_properties(FortWorldLoadTests.cpp FortWorldLoadBindingTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FORTWORLDLOAD_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fortworldload-x86.tsv\"")
+set_source_files_properties(GraphFormsTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_GRAPHFORMS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/graphforms-x86.tsv\"")
+
+# 의식 단계에서 실제 Bridge/Path 준비와 같은 Host 소비자를 대조한다.
+set_source_files_properties(DaisBridgeTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_DAISBRIDGE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/daisbridge-x86.tsv\"")
+
+# 실제 Dude 드롭 부모와 같은 생성/Host/Task 연결의 독립308행이다.
+set_source_files_properties(DudeDropTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_DUDEDROP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/dudedrop-x86.tsv\"")

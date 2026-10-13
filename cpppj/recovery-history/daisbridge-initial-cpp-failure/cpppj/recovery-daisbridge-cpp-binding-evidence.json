@@ -1,0 +1,80 @@
+{
+  "host": "HJOW-Athlon",
+  "decompile_date": "2026-10-14",
+  "normal_inputs": 640,
+  "assert_inputs": 0,
+  "new_native_inputs": 0,
+  "initial_smoke_inputs_not_added": 14,
+  "editions": {
+    "originals": {
+      "normal_inputs": 320,
+      "path_created": 64
+    },
+    "originalCD": {
+      "normal_inputs": 320,
+      "path_created": 64
+    }
+  },
+  "x87_different_inputs": 18,
+  "x87_different_time_words": 26,
+  "x87_time_word_deltas": {
+    "originals:1": 12,
+    "originals:-1": 14
+  },
+  "test_count": 1,
+  "test_prefix": "rawDaisBridge_",
+  "fixture_macro": "NETSTORM_DAISBRIDGE_FIXTURE",
+  "history": {
+    "cpppj/recovery-history/daisbridge-initial-smoke/cpppj/recovery-daisbridge-evidence.json": "f424b508263a0b494d6bf5ebd469e22df64597da96e66b1ac1d6ffb8d93828c0",
+    "cpppj/recovery-history/daisbridge-initial-smoke/cpppj/tests/fixtures/daisbridge-x86.tsv": "9d0d9f670fbcda662b19916b55e24a991ec664b58541ee96bcdeecd46a37d04e",
+    "cpppj/recovery-history/daisbridge-initial-smoke/extracted/daisbridge-native-initial-smoke.log": "beb01a7734b5adad996937a5027df995df826dcea68405f3bbf40d3e933c9e3e",
+    "cpppj/recovery-history/daisbridge-initial-smoke/extracted/daisbridge-native-smoke-with-rune-helper.log": "a4e2854d858000b523d82d7c2a43b14efc1246a23e48de7623f5f01273c4e2b1",
+    "cpppj/recovery-history/daisbridge-initial-smoke/tools/decomp_daisbridge_oracle.py": "ea9720b0e1d7800c5d1108e8272bd4439a59dbfe8296871a5390e491d3526392"
+  },
+  "files": {
+    "cpppj/recovery-daisbridge-evidence.json": "59a912093879b504e61e2863f418790379e4bb1545f3ee82798ea5ec1a80b38e",
+    "cpppj/src/client/RawPriestWorldBindings.cpp": "f8c54dfcce6b31cbf96de451c5853e3fb97127f1eee9bcab80844a756a693b69",
+    "cpppj/src/client/RawPriestWorldBindings.h": "581e4e155cdff0d13bb9ae455801b156ba3afb72d73395069ecf2995b49acd24",
+    "cpppj/src/o/RawCarrierPreDestroy.cpp": "42f6891929dff560c88eec1dddf021ac45e29d1a29fe3d74e15b87d65cbddddb",
+    "cpppj/src/o/RawCarrierPreDestroy.h": "bee50008bc4a1ebafb7c7cfd81d36a75753c718c26818d00831101e2c330dd7a",
+    "cpppj/src/o/RawContainedLookup.cpp": "418921ae7f41be8c059293e1201c2539716da9e2c01808373c233e8f3d48437e",
+    "cpppj/src/o/RawContainedLookup.h": "6b61feb38ffcb4a4ef021dcc39cbc759274e91b8d476f2caa14f0cf771b74410",
+    "cpppj/src/o/RawDaisRegular.cpp": "c1a167728b02f382cbae23454e4aba1046c91a7284dbe4c6e206e856ccc4c433",
+    "cpppj/src/o/RawDaisRegular.h": "fdc080a0ae1ff54909a1cf59a6b9be626e7a7d96c5103072c9325d13efb88ed3",
+    "cpppj/src/o/RawPathCleanup.cpp": "3c8de01449f2773d859b31dd3485480d5cc6fbfdb9a82dae5effc4b0d9491da8",
+    "cpppj/src/o/RawPathCleanup.h": "ae5012944517d2ca56cd1c19629d50c64ff65d9ee3d43f0d87b1bbe5ba0fa8d0",
+    "cpppj/src/o/RawPathData.cpp": "38a2665489e998835caa07cbedb81516fae6f5e33270529a6d40f5d76d3a6a45",
+    "cpppj/src/o/RawPathData.h": "21faf1f4095819996b79996b5036c731a06aac44edb3e5b358d1f3ebb1047430",
+    "cpppj/src/o/RawPathProcess.cpp": "0910c0ca00a9c5ba38f6645b294c83098bba610abf682146fe8eb36530fe93a1",
+    "cpppj/src/o/RawPathProcess.h": "b43bbffdc88656726192511c983f111d09227bd6416623f8563b6b8cd32f59d9",
+    "cpppj/src/o/RawPathRuntime.cpp": "2d399de08631e4227db49a9eb9b5646a5b38719ba6be5520ea935db256bc1b6e",
+    "cpppj/src/o/RawPathRuntime.h": "40b7ecedada3010cb7533f2007fcdb21b6470ad8ea98fc61379029c11c0601ef",
+    "cpppj/src/o/RawPathSearch.cpp": "09d5e57d46312785431500a0debab20e799db3844a03491edeb265c54417123c",
+    "cpppj/src/o/RawPathSearch.h": "69e69c720f8af7e5961e58ae7db0d29197d79fed1d5030b468790dd9822b8464",
+    "cpppj/src/o/RawPathStart.cpp": "a778ad764975ce4abdd96ad36cd4eebd7c0d5871e0b8e99d844a201a4477090c",
+    "cpppj/src/o/RawPathStart.h": "c41ca85f2f4635e58727f8e8ae556c8f4d26264defde470a7d4bd37d14755545",
+    "cpppj/src/o/RawPriestRitualActions.cpp": "b26565b1f79e08785bca766c6c6d34632b552df3c697da6b0a10c6c5d9d486ae",
+    "cpppj/src/o/RawPriestRitualActions.h": "ccc14f6b619803f544dd377d578927af5942c5c99d50429f4540ed0261b981bd",
+    "cpppj/src/o/RawRunePostPop.cpp": "ca10766ced498c5aab0c92fbcca0d0d4ad39c5d9e5c91ce7865dd0523b2f6ab0",
+    "cpppj/src/o/RawRunePostPop.h": "057c813ed8dcb33eab75554f9368645e77d4b85b61df76a22e64f52dcc82d5ee",
+    "cpppj/src/o/RawSquidNeighbors.cpp": "030b8685da739d65b53b5602a89ed98b4c1ff0e7f22690fc77294d3aeb90630b",
+    "cpppj/src/o/RawSquidNeighbors.h": "15116a1d69e6ab9718f556ae59cb5f1e12e484d286c3f6f69a25aa5d1912d484",
+    "cpppj/src/o/RawTempleRitual.cpp": "fee9b37873c162ea621595d819b05db4bdea5c28fb62a3b44908aca064530595",
+    "cpppj/src/o/RawTempleRitual.h": "d1f5ab197e92539a0c4904a5f73c0aba60392c587e20cc9a6fbfc54a881acf73",
+    "cpppj/src/o/SquidFrame.cpp": "d38aa3f5fbb191aaeadf4f808a7fc51e2ee5a558b9605c9dd8660224435d1e62",
+    "cpppj/src/o/SquidFrame.h": "faab1f3ac968b01bb727f374c1cc8b6bdc6b7e3123052e7ed4ae1849f0285b8b",
+    "cpppj/src/o/SquidPop.cpp": "dc45a23ebe2078f6f27cd481028247553b566898ca445fb2e227a2f44b3743bd",
+    "cpppj/src/o/SquidPop.h": "8816c246917f01c63e612b9f4387982484636b0360f8d1a225c7c5296d801255",
+    "cpppj/src/o/SquidProcess.cpp": "2b78ac83db1bbb474f224845ae288d696b30d996a489ee292ac09a1af16986ad",
+    "cpppj/src/o/SquidProcess.h": "827a9789c2a6b66ac7b98181e49e8c0fa19713755bb62fccababb7ae2a0d0589",
+    "cpppj/src/o/SquidReward.cpp": "a29c11afe56a477c470956b1ed0a0678d059340806537ce08b43bf6b6aa1375d",
+    "cpppj/src/o/SquidReward.h": "221e142133a1e3a73f65ff6979d73859b7701912ab84cde9dc6a9fe565ccd2e7",
+    "cpppj/src/o/SquidUnpop.cpp": "c090a5c43f22ec5c59f6885bde124889b1fc3004260c271ea4556879e6263a41",
+    "cpppj/src/o/SquidUnpop.h": "36635a51668570c7ae1df71e507f1f7d6d4fd1b141ccf0529165428034e5aad9",
+    "cpppj/tests/DaisBridgeTests.cpp": "9e6e7e5b121b935336687e38923b74d72667139515a3bef98b707afe2389693f",
+    "cpppj/tests/fixtures/daisbridge-x86.tsv": "f2ccd4f6499e54356a1f6dd6e68d9ceab02f30aa388b7f86ed79e584216f0b17",
+    "tools/analyze_daisbridge_cpp_binding.py": "fe24727b8082616f73306f000464b81c74594e84b1179182ae29c19c5d3642b1",
+    "tools/decomp_daisbridge_oracle.py": "7044d281868c2fbd47fe3809d14481c6b11d316674d779967e2ce417e2cb3c25"
+  },
+  "scope": "새 상위640은 원본보고서에서 한 번만 합산한다. C++ 현재 검사 SHA를 같은 실제 PathStart/BFS/Frame/Host/서버 PathData/구 경로 Kill/공간 접두/RawPathCleanup/Temple.Ritual에 연결한다. generic사제 VT·1×1 표시 합성 입력이며 전체걷기·가상도착·의식307/룬304·실제캠페인 metadata·UI/음향은 후속이다. 최초14smoke/기존512/668/2964는 새원본에 합산하지 않는다."
+}

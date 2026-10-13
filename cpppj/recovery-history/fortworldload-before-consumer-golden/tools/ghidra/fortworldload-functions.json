@@ -1,0 +1,7 @@
+{
+  "description": "실제 Fort 저장 월드 부모와 Territory120BYTE 읽기·최종 Graph0·대체 Island0 Populate 경계를 감사한다. builder/단일 배치/일반 지형/객체/Money/Meta의 기존 완료 몸체는 재사용한다. 현재/마지막 디컴파일 PC HJOW-Athlon, 2026-10-14.",
+  "editions": {
+    "originals": ["004b5f70", "004bd660", "00463110", "0046e630"],
+    "originalCD": ["004330c0", "00427c00", "00427cd2", "00429f30", "0040f1e0", "0045bd60", "004906c0"]
+  }
+}

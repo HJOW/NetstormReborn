@@ -1,0 +1,7 @@
+{
+  "description": "미복원 Path 시작 상위 몸체의 생성·Init·Prepare·Attach 및 두 판본 인자 순서를 판독한다. 완료된 직렬화 대조 수에 합산하지 않는다. 마지막 디컴파일 PC: VM-W11-CODEX, 2026-10-13.",
+  "editions": {
+    "originals": ["00489080", "00488fe0"],
+    "originalCD": ["0047d150", "0047d020"]
+  }
+}

@@ -14,6 +14,7 @@ class RawAssetPostPop;
 class RawFactoryPostPop;
 class RawRunePostPop; // Rune166의 실제304/건설/공통후처리몸체를명시연결한다.
 class RawDaisLifecycle; // 다이스165/알터164의 실제 최초예약·등록·공통후처리를 연결한다.
+class RawDudePostPop; // Dude70의 실제 idle/population/I 프레임·공통후처리를 연결한다.
 // 객체 후처리 Pop 등록한 대상과 그 개수를 보관하는 목록이다.
 struct SquidPostPopList {
     std::vector<std::uint32_t> entries; // 원본 미리 확보한 DWORD 배열. entries.size()가 capacity다.
@@ -92,6 +93,10 @@ public:
     void SetDaisPostPop(const RawDaisLifecycle* postPop);
     // 실제 다이스/알터 타입과 생성자 가상표가 등록된 전체 몸체와 일치하는가.
     bool HandlesDais(Sid sid) const;
+    // Dude의 실제 최초 등록 전체 몸체를 같은 풀에 등록하며 nullptr은 연결을 해제한다.
+    void SetDudePostPop(const RawDudePostPop* postPop);
+    // 현재 Dude 타입과 생성자 가상 표가 등록된 전체 몸체와 일치하는가.
+    bool HandlesDude(Sid sid) const;
     // 이 인스턴스가 처리할 수 있는 파생 postPop인가. Pop이 공간 변경 전에 묻는다.
     bool HandlesDerived(Sid sid) const;
     // 공간 변경 전 연결된 그래프의 최종 Pop 상태·미복원 영역/AI/배치 효과·목록·비용을 확인한다.
@@ -131,5 +136,6 @@ private:
     const RawFactoryPostPop* factoryPostPop_{}; // 같은 해시/목록의 Factory wrapper를 실행하고 공통 깊이를 한 번 줄인다.
     const RawRunePostPop* runePostPop_{}; // 실제Rune예약/건설다음공통깊이를한번감소시키는전체몸체다.
     const RawDaisLifecycle* daisPostPop_{}; // 최초 Player 등록/알터 생성·21 예약 뒤 같은 공통 깊이를 한 번 줄인다.
+    const RawDudePostPop* dudePostPop_{}; // idle/population/I 프레임 뒤 같은 공통 깊이를 한 번 줄이는 전체 몸체다.
 };
 }

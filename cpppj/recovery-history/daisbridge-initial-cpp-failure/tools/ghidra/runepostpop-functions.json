@@ -1,0 +1,7 @@
+{
+  "description": "Rune166 실제 postPop304 Regular·근처 같은 owner dais·altar/player 기반 건설 시간 및 기존 공통 후처리 연결의 읽기 전용 내보내기. 일반 finder/ConstructionStart/Host/Base는 이전 몸체를 재사용한다. 마지막 디컴파일 PC: HJOW-Athlon, 2026-10-13.",
+  "editions": {
+    "originals": ["00448930", "00448a20", "00448340"],
+    "originalCD": ["00484520", "00482990", "004816a0"]
+  }
+}

@@ -265,8 +265,8 @@ TEST_CASE(RawGraph_X86_RecoveryInsideAddDetachPopAndPostPop) {
     ReplayRawGraph(NETSTORM_GRAPHRECOVERY_FIXTURE,6,192,true,true,o::GraphRecovery::FullPool);
 }
 
-// 전체 풀 복구를 선택한 Pop도 다른 void 표면의 손상/내부 타입을 공간 쓰기 전에 거부한다.
-TEST_CASE(RawGraph_RecoveryPreflightRejectsOtherVoidAndInternalTypeBeforePop) {
+// 전체 풀 복구를 선택한 Pop도 다른 void 표면의 손상 프레임/범위 밖 타입을 쓰기 전에 거부한다.
+TEST_CASE(RawGraph_RecoveryPreflightRejectsOtherVoidAndOutOfRangeTypeBeforePop) {
     auto types=Types(o::OriginalEdition::Patch1078); types[74].flags1=types[75].flags1=o::TypeFlag1::kSurface;
     std::vector<std::vector<o::FrameCode>> frames(types.size()); frames[74]=frames[75]={{65,80,1,0}};
     o::SidPool pool(o::OriginalEdition::Patch1078,32768,false); o::SquidFactory factory(pool,types);
@@ -279,9 +279,9 @@ TEST_CASE(RawGraph_RecoveryPreflightRejectsOtherVoidAndInternalTypeBeforePop) {
     for (std::size_t i=0;i<o::Graph::kCount;++i) records[i]={7,1,71};
     o::RawGraph graph(pool,hash,spots,types,frames,records,{},o::GraphRecovery::FullPool);
     o::SquidPostPopState state; state.graphsEnabled=true; o::SquidPostPop post(pool,types,state,&graph); o::SquidPop pop(pool,hash,spots,nullptr,&post);
-    // 처음에는 손상 프레임, 다음에는 미복원 내부 타입을 전체 순회에서 검출한다.
+    // 처음에는 손상 프레임, 다음에는 범위 밖 타입을 전체 순회에서 검출한다.
     for (int scenario=0;scenario<2;++scenario) {
-        auto bytes=pool.AllocatedBytes(other); if (scenario) { Put(bytes,36,0); bytes[10]=5; }
+        auto bytes=pool.AllocatedBytes(other); if (scenario) { Put(bytes,36,0); bytes[10]=255; }
         const std::vector<std::uint8_t> saved(pool.Bytes().begin(),pool.Bytes().end()); const auto before=GraphHashes(graph);
         CHECK(Throws([&]{pop.Pop(root,types[74],1,1,20,20,0x200);}));
         CHECK(GraphHashes(graph)==before && std::equal(saved.begin(),saved.end(),pool.Bytes().begin()));

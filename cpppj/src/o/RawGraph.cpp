@@ -259,7 +259,12 @@ RawGraph::Plan RawGraph::Calculate(Sid sid,Operation operation,std::uint8_t targ
             if (required[id] && current!=sid) throw std::logic_error("raw 그래프 해시의 free/void SID");
             if (current!=sid) continue;
         }
-        if (bytes[10]<kFirstAssetTypeNumber || bytes[10]>=types_.size()) {
+        // 내부 Form은 원본 flags getter의 비표면 타입이며 공간 머리에 없으면 전체순회에서 생략한다.
+        if (bytes[10]<kFirstAssetTypeNumber) {
+            if (required[id]) throw std::logic_error("raw 그래프 후보 타입 오류");
+            continue;
+        }
+        if (bytes[10]>=types_.size()) {
             if (required[id] || fullPool) throw std::logic_error("raw 그래프 후보 타입 오류");
             continue;
         }

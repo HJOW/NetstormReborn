@@ -1,0 +1,17 @@
+{
+  "description": "일반 Dude 작업 설정의 실제 본체와 task WORD/Regular 생성 보조. 패치10.78은 thiscall이며 FALL 교체를 진단하고, CD10.72는 cdecl SID와 free/dead 자연반환 및 FALL 유지가 있다. HJOW-Athlon, 2026-10-14. 실제 Dude 생성/Pop과 드롭 전체는 별도 경계다.",
+  "groups": {
+    "main": {
+      "originals": ["00450670"],
+      "originalCD": ["004e8ba0"]
+    },
+    "helper": {
+      "originals": ["004ac220", "00496e80"],
+      "originalCD": ["004abb00", "0048efd0"]
+    }
+  },
+  "editions": {
+    "originals": ["00450670", "004ac220", "00496e80"],
+    "originalCD": ["004e8ba0", "004abb00", "0048efd0"]
+  }
+}

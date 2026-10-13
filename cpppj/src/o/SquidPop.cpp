@@ -95,7 +95,8 @@ RawPopResult SquidPop::Pop(Sid sid,const RiftTypeRecord& type,float frameWidth,f
     const int right=static_cast<int>(x),bottom=static_cast<int>(y);
     int left=right,top=bottom;
     if (writesSpots) {
-        if (type.footX<1 || type.footY<1 || type.footX>kWorldCells || type.footY>kWorldCells)
+        // 실제 Dude의 발자국0은 left/top이 끝 칸을 넘어 아래 y/x 루프를 빈 순회로 만든다.
+        if (type.footX<0 || type.footY<0 || type.footX>kWorldCells || type.footY>kWorldCells)
             throw std::logic_error("Pop 발자국 크기 오류");
         left=right-type.footX+1; top=bottom-type.footY+1;
         if (left<1 || top<1) throw std::out_of_range("Pop 지도 밖 발자국");
