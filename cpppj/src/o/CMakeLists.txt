@@ -17,6 +17,9 @@ target_sources(netstorm PRIVATE
     RawGunAnimation.cpp RawGunAnimation.h
     RawAssetRegular.cpp RawAssetRegular.h
     RawRegionPaint.cpp RawRegionPaint.h
+    RawMissile.cpp RawMissile.h
+    RawGunHit.cpp RawGunHit.h
+    RawVortexAscend.cpp RawVortexAscend.h
     BaseFile.cpp BaseFile.h
     Config.cpp Config.h
     ConfigInterface.cpp ConfigInterface.h

@@ -16,6 +16,9 @@ add_executable(netstorm_tests
     GunAnimationTests.cpp
     AssetRegularTests.cpp
     RegionPaintTests.cpp
+    MissileTests.cpp
+    GunHitTests.cpp
+    VortexAscendTests.cpp
     RawButtonControlsTests.cpp
     GumpResetTests.cpp
     MissionOutcomeTests.cpp
@@ -640,3 +643,11 @@ set_source_files_properties(AssetRegularTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_ASSETREGULAR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/assetregular-x86.tsv\"")
 set_source_files_properties(RegionPaintTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_REGIONPAINT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/regionpaint-x86.tsv\"")
+
+# 썬 캐논 투사체 생성/비행·직접 피해 시각과 신전 Ascend 정리의 실제 두 PE 입력이다.
+set_source_files_properties(MissileTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_GUNMISSILE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gunmissile-x86.tsv\"")
+set_source_files_properties(GunHitTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_GUNHIT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gunhit-x86.tsv\"")
+set_source_files_properties(VortexAscendTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_VORTEXASCEND_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/vortexascend-x86.tsv\"")

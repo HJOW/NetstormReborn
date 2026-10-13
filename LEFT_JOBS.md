@@ -1,5 +1,15 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-13 cpppj: 실제 투사체·직접 피해 시각·신전 Ascend 검증 (`HJOW-Athlon`)
+
+- [x] 앞 단위 커밋 **8abd00a**(`20261013-04`)·Release/전체958개 성공을 완료했고 이어간다. 작업 중 사용자가 AGENTS.md의0f02dd6에서 추가한 **CD10.72 관련 내용도 문서화** 지침을 확인했다. AGENTS.md 자체는 수정하지 않았다.
+- [x] `RawMissile`의 썬 캐논 최초 투사체 ctor/Frame, `RawGunHit`의 packed WORD 시각·DPS 직접 피해 전달, `RawVortexAscend`의 실제 후보/정리/다른 owner 섬 개수 몸체를 등록했다. **296/2058/1496개**, 합계 **3850개** 정상 원본 입력 모두 C++ 전수 대조했다. 실제 Factory/Owner/Pop/Unpop/Kernel/Form·표시 자산 삭제 수명 검사도 통과했으며 effectType0의 원본 자연 분기로 타입11 비행 효과 완료를 주장하지 않는다.
+- [x] 최종 Release 두 타깃 종료0·경고/오류0, 집중10개 및 **전체968개 검사/실패0** 통과했다. 근거는 `recovery-campaign-runtime5-evidence.json`과 `tools/analyze_campaign_runtime5.py --verify`, 로그는 `extracted/campaign-runtime5-build-final.log`/`campaign-runtime5-all-final-tests.log`다. 앞04의 신규5482개·접두50개·기존회귀718개와 구분해 합산한다.
+- [x] Missile 원본 ray 경계의 EAX 반환, 두 판본의 **30초 초과** 피해 제한과 CD의 float 곱 저장, Ascend 반경의 float0.99999 편향·CD 실제 벡터 소멸자→CRTfree 경계를 교정했다. Ascend 패치748개 이전 행은 원본/출처/행 SHA와 native_reuse로 보존하고 CD748개만 두 x87로 다시 실행했다. 초기 실패 로그를 보존했고 current SHA/고유입력/반환 및 재사용 출처 감사가 통과했다.
+- [x] 후속 cleanup에 필요한 Runtime `Helper/ClearHelper` 두 접근 API와 8abd00a 기준 전체 기존 소스/토큰·이전3보고서 보존 lineage를 함께 기록했다. 준비 API는 신규 완료 원본 입력 수에 더하지 않는다. [투사체](docs/exe/cpp-gun-missile-20261013.md), [피해 시각](docs/exe/cpp-gun-hit-20261013.md), [신전 정리](docs/exe/cpp-vortex-ascend-20261013.md), [실제 월드 연결 준비](docs/exe/cpp-campaign-world-bindings-20261013.md).
+- [ ] 실제 피해 가상+98·시각/비행 효과·초기 적 썬 아처 발사를 계속 복원한다. 후속 `RawPriestDamage`/`RawDamageableBurning`은 원본3424개 정상 관찰·SHA 준비, `RawGeyserMined`는 정상2304/assert8의 별도 관찰·실제Packet/Factory/삭제 연결 검사 준비가 완료됐으며 **CMake/C++ 대조 전**이다. 이 단위 완료 관찰과 커밋 범위에서 제외한다. `RawPathCleanup` 초안의 최신27/19 재내보내기/독립 대조도 이어간다.
+- [ ] 지형 초기 stamp 및 실제 섬 목록의 정밀 readOnly 내보내기는 각각 패치14/CD13, 패치12/CD14 종료0이다. 초기 CRT cache와 이후 도장 cache, 원래 owner BYTE와 현재 owner DWORD를 구분한 감사만 완료됐으며 실행 관찰0이다. [초기 지형 감사](docs/exe/cpp-initial-terrain-stamp-audit-20261013.md). 실제 GameWorld 이관·원본 초기 로딩·운반/의식·AI/경제/미션 승패·UI/캠페인 완주는 계속 미완료다. DirectDraw 제외·보호 원본/AGENTS.md 변경·게임/GUI 실행·푸시 없음. 이번 메시지번호 **20261013-05**, 다음은06이며 마지막 디컴파일 PC **HJOW-Athlon, 2026-10-13**이다.
+
 ## 2026-10-13 cpppj: 실제 경로 시작·Gun 애니메이션·자산 Handle·지형 도장 검증 (`HJOW-Athlon`)
 
 - [x] AGENTS.md와 두 LEFT_JOBS를 다시 읽고 goal active, 실제 시작 트리 clean, 최신 디컴파일 PC와 현재 `HJOW-Athlon` 일치를 확인했다. 앞선 준비 턴은 정밀 결과 생성과 기록을 완료한 진행이며 현재 HEAD는 사용자 커밋 `b84e4ee`다. 이번 목표의 작업 단위 커밋 권한을 적용하며 다음 메시지 번호는 `20261013-04`부터다.

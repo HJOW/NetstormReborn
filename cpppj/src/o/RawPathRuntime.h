@@ -70,6 +70,10 @@ public:
     void SetCommandFields(std::uint32_t helper,std::uint32_t tailWord,std::uint32_t tailByte,RawPathPoint destination);
     // 시작의 연속 꼭짓점 좌표만 덮어쓴다. 시각·방향·개수는 그대로 보존한다.
     void ReplacePoint(std::int32_t index,RawPathPoint point);
+    // cleanup이 읽는 helper DWORD다. 도착 명령 대상 두 개와 혼동하지 않는다.
+    std::uint32_t Helper() const;
+    // SharedRegular 예약 시 helper 필드 하나만0으로 쓴다. 명령 꼬리·목적지·경로는 보존한다.
+    void ClearHelper();
     // ProcessForm 부착 뒤의 실제 번호를 이미지에 기록한다.
     void SetAttachment(Sid form,Sid parent);
 private:

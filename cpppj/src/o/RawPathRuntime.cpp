@@ -5,6 +5,10 @@
 #include <stdexcept>
 
 namespace netstorm::o {
+// 원본 cleanup의 현재 보조 객체 DWORD 조회다.
+std::uint32_t RawPathRuntime::Helper() const { return static_cast<std::uint32_t>(Read(layout_.helper)); }
+// 보조 객체를 예약했을 때 원본 필드 하나만 지운다.
+void RawPathRuntime::ClearHelper() { Write(layout_.helper,0); }
 namespace {
 // 두 PE의 방향 배율/한 바퀴/늦은 시작 허용 간격은 각각 45도/360도/2초다.
 constexpr float kDirectionDegrees=45.0F,kFullTurn=360.0F;
