@@ -1,0 +1,58 @@
+{
+  "host": "HJOW-Athlon",
+  "uniqueInputs": 240,
+  "editions": {
+    "originals": {
+      "samples": 120,
+      "returns": 120,
+      "assertions": 0,
+      "peSha": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "exports": {
+        "extracted/projectile-geom/originals/creation.c": "98cac21b3c7b327548c12d4dec00c8f8b132e3d869c5d5fea452c6baa647aa7b",
+        "extracted/projectile-geom/originals/functions.tsv": "3c304b7348ef028de98ed3fef871a9dec42af34109ccd13951162403cb374c4c",
+        "extracted/projectile-help/originals/creation.c": "9b5a17bd6f4609486585f57bfcac7c933b99a6caedeb8f53739de41073a17888",
+        "extracted/projectile-help/originals/functions.tsv": "65a63ce55c4484c0867a241727ea80ef2eeaf861446ae85a0a7ed5eae6a3d51c"
+      },
+      "nativeCalls": {
+        "0046a780": 96,
+        "004ac550": 96,
+        "0049a840": 96,
+        "00419850": 192,
+        "0041d180": 96,
+        "0049af10": 21,
+        "0040e880": 21,
+        "0041d0d0": 42,
+        "0040e800": 42,
+        "0040e8f0": 21,
+        "0049a900": 3
+      }
+    },
+    "originalCD": {
+      "samples": 120,
+      "returns": 120,
+      "assertions": 0,
+      "peSha": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "exports": {
+        "extracted/projectile-geom/originalCD/creation.c": "9cd33c7abd93c284918fca32e5c421790f1025ba0db10f207725ee9f896595d0",
+        "extracted/projectile-geom/originalCD/functions.tsv": "26422b5349318b2b11b688c11010668a2ea23507cbc842bbad21e965ba196513",
+        "extracted/projectile-help/originalCD/creation.c": "0cf26529ccb7805799283f90686fc330a4fd3623fbd6393eb18125446c29bab0",
+        "extracted/projectile-help/originalCD/functions.tsv": "1615c33557b2e8e5f44a2a7026fff99a1787e1441369a2b12a6d2169f11858e5"
+      },
+      "nativeCalls": {
+        "00437390": 96,
+        "004abf50": 96,
+        "0043fa10": 96,
+        "00444b50": 21,
+        "004442b0": 24,
+        "0043f950": 42
+      }
+    }
+  },
+  "fixtureSha": "4bd57e85b13ff957ec63459638b0655d44b1595bfb5db79d37ca4ec2fbeeaffc",
+  "toolSha": "dfbe9bc05c452a0d720047946a7bc829679182e21889698cb8c4bc680e516021",
+  "limitations": [
+    "합성 TYPE71/SHP signed WORD/위치 입력이며 전체 캠페인 발사 검증은 별도다.",
+    "가상78 기본프레임1만 명시 외부 입력이다. 포구/SHP lookup/좌표/치수/상자/helper는 실제 몸체다.",
+    "유한 좌표와 작은 정수 치수만 검증한다. NaN/정수 덧셈 overflow/범위 밖 프레임은 포함하지 않는다."
+  ]
+}

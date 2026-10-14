@@ -1,5 +1,19 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-15 완료: 단위22 실제 썬 아처 Fire·썬 디스크 첫 비행 (`HJOW-Athlon`)
+
+- [x] AGENTS 및 양 LEFT를 다시 읽고 기준 `55c6f9e`에서 재개했다. 현재/마지막 정밀 디컴파일 PC는 **HJOW-Athlon, 2026-10-15**로 같다. 보호 원본 및 AGENTS는 불변이다. 직접 영향6파일을 `run22-base`에 편집 전 보존했다.
+- [x] 기존 실제 `RawArcherAnimation`/`RawMissile`을 같은 World/Host에 조립하는 `RawCampaignArcherBindings`를 추가했다. 실제 게임 시각/경과·공유 난수·공간·생성·완료·삭제를 연결한다. 보호 썬 아처71은 방향수0이며 Gun 단계2에서 실제로 회전을 건너뛰고 단계5 Fire를 선택한다.
+- [x] 실제 포구+SHP 마지막 두 WORD/현재 TYPE 치수/충돌 상자를 `RawProjectileGeometry`에 복원하고 새 독립 PE240행의 전체 float 비트를 대조했다. 실제83 Regular의 TYPE 방향별 modulo 처리기 `RawDiscRegular` 및 동일 Archer binding의 Handler도 새 독립192행과 대조했다. 이전 setter/Archer/Missile 입력은 재합산하지 않는다.
+- [x] 중간 Release 빌드1~3과 위치 집중1개를 수행했다. 실제1-1 썬 아처는 적owner2의132~152/116~138 구역이고 내 사제158은94/108이다. 보호71은 방향수0/35프레임이며 실제Gun 단계2에서 회전을 생략한다. 최초 토큰size_t 경고는 전체소스/로그를 `run22-warn1`에 보존한 뒤 명시타입으로 교정했다. 초기 위치 검사에서 사제를Dude70으로 오인한 입력도158현재전역 조회로 교정했다.
+- [x] 새 정밀 `projectile-geom` PATCH6/CD4, `projectile-help` 각4, `projectile-disc` 각3 export를 완료했다(같은HJOW-Athlon). 고유24개 export는 준비자료를 포함하며 전부 실제실행으로 합산하지 않는다. 포구 abstract 인자는 물리 레이어를 더하지 않는 것을 실제419850으로 확인해 교정했다. **중간 CDint>=1 해석은 아래의 실제 기계어 대조로 폐기했다.**
+- [x] 후속 독립 기계어에서 포구/치수/상자240·썬 디스크 Handle192가 정상반환/assert0이다. **위 중간 CDint>=1 해석은 잘못됐다.** 실제 `cmp DWORD,0`은 float 비트 signed 비교이며 유한 양수의판정은PATCHfloat>0과 같다. Native입력은 불변이며 최초CD6불일치 소스/로그·진단/기계어를 `run22-fail1/fail2`에 보존 후 생산식만 교정했다.
+- [x] 실제1-1 저장 사제15000을 실제Unpop/Pop으로130/114에 재배치한 **명시 입력** 뒤 전체현재Kernel의 finder→Gun→Fire35→Missile28/sunDisc83→표시부모67의 첫 이동을 확인했다. 접근조작/충돌/피해/완료반복의 성공으로 주장하지 않는다. fencemark없음은 검사 외부전제이며 교차 corner helper의 전체복원은 아니다. 음향/송신은 외부요청 관찰이다.
+- [x] 최초83 Regular event0 미연결/독립CD6실패·진단/기계어의 전체직접소스/로그는 `run22-fail1/fail2`, 포구abstract오독은 `run22-geom1`, 경고는 `run22-warn1`, 직접include누락 빌드실패는 `run22-buildfail`에 보존·교정했다. 초기사제70 입력 및빌드중옛실행파일 필터미등록은 최종성공으로 세지 않는다. 그 초기입력 각버전 전체원문은 미보존임을 문서에 명시했다.
+- [x] 최종 Release 경고/오류0, 새집중6개 성공, 전체CTest **1/1·내부1,126개·실패체크0**(181.29초)다. 새Native **432고유/정상432/assert0**이며 전체원문/입력/실행SHA는 `run22.json`과 `tools/check_campaign22.py finalize/verify`에 고정한다. [상세 단위22](docs/exe/cpp-run22-20261015.md). 인수인계작성 뒤 로컬 **`20261015-07 실제 썬 아처 발사와 썬 디스크 첫 비행 연결 검증`**을 커밋하며 push하지 않는다.
+- [ ] 다음은 실제충돌효과/주변Dude반응/GunHit/사제피해·HP1 감시해제/자산삭제수명을 연결한다. fencemark 교차corner와 실제GameWorld/음향/전송도 미완료다. 현재 경로감사 최장178자, 이전 ignored이력 파일명41자1건은 원문보존상 임의수정하지 않았다.
+- [ ] 실제 GameWorld·Ready/login/9 Player/RNG·입력/생산/전투/경제/운반/AI/Guide/UI/음향/승패와 Early Missions/1-1~1-2 완주 동일성은 미완료다. 전체화면 DirectDraw 오류 제외, 목표active 유지. 기존 경로/참조/과거 SHA 감사도 계속 인계한다.
+
 ## 2026-10-15 완료: 단위21 실제 Gun 표적 감시 Form·현재PID 통지 (`HJOW-Athlon`)
 
 - [x] AGENTS와 양 LEFT를 다시 읽고 기준 `acd7882`에서 재개했다. 현재/마지막 디컴파일 PC는 **HJOW-Athlon, 2026-10-15**로 같다. 보호 원본 및 AGENTS는 불변이다.

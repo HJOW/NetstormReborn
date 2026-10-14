@@ -35,6 +35,27 @@ tools/decomp_derived_oracle.py text eol=lf
 # raw 공간 해제의 기계어 검증 기록·도구·가상 주소 표를 재현 가능한 LF로 고정한다.
 cpppj/unpop.json text eol=lf
 cpppj/src/o/UnpopVtables.inc text eol=lf
+
+# 썬 아처 발사/포구/썬 디스크 예약의 신규 원문과 독립 입력은 UTF-8/LF로 고정한다.
+cpppj/src/client/RawCampaignArcherBindings.* text eol=lf
+cpppj/src/o/RawProjectileGeometry.* text eol=lf
+cpppj/src/o/RawDiscRegular.* text eol=lf
+cpppj/tests/CampaignFireTests.cpp text eol=lf
+cpppj/tests/ProjectileGeometryTests.cpp text eol=lf
+cpppj/tests/DiscRegularTests.cpp text eol=lf
+cpppj/tests/fixtures/projectile-geom-x86.tsv text eol=lf
+cpppj/tests/fixtures/disc-regular-x86.tsv text eol=lf
+cpppj/projectile-geom.json text eol=lf
+cpppj/disc-regular.json text eol=lf
+cpppj/run22.json text eol=lf
+tools/check_campaign22.py text eol=lf
+tools/decomp_projectile_geom.py text eol=lf
+tools/decomp_disc_regular.py text eol=lf
+tools/ghidra/projectile-*-functions.json text eol=lf
+docs/exe/cpp-run22-20261015.md text eol=lf
+extracted/projectile-*/** -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+extracted/run22-*.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+extracted/run22_*.py text eol=lf
 cpppj/src/o/RawAssetRegular.* text eol=lf
 cpppj/src/client/RawCampaignGunQueries.* text eol=lf
 cpppj/tests/CampaignNativeFrameTests.cpp text eol=lf

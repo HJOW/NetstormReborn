@@ -6,6 +6,9 @@ add_executable(netstorm_tests
     CampaignMotionTests.cpp
     CampaignFrameTests.cpp
     CampaignTargetTests.cpp
+    CampaignFireTests.cpp
+    ProjectileGeometryTests.cpp
+    DiscRegularTests.cpp
     CampaignNativeFrameTests.cpp
     VortexDisplayTests.cpp
     CampaignInstallSupport.h
@@ -856,3 +859,11 @@ set_source_files_properties(CampaignTargetTests.cpp PROPERTIES COMPILE_DEFINITIO
 # 새 신전 활성 표시의 독립 native 변경표를 해당 검사에서만 읽는다.
 set_source_files_properties(VortexDisplayTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_VORTEX_DISPLAY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/vortex-display-x86.tsv\"")
+
+# 새 포구/충돌 상자 독립 원본 입력을 해당 검사에서만 소비한다.
+set_source_files_properties(ProjectileGeometryTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PROJECTILE_GEOM_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/projectile-geom-x86.tsv\"")
+
+# 썬 디스크 예약 Handle의 독립 요청/반환 입력이다.
+set_source_files_properties(DiscRegularTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_DISC_REGULAR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/disc-regular-x86.tsv\"")

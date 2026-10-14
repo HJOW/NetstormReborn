@@ -3,6 +3,7 @@
 # 다시 만든 파일을 아래 목록에 더한다. 파일 이름은 SOURCE_MAP.md 의 "cpppj 경로"를 따른다.
 target_sources(netstorm PRIVATE
     ClientAudio.cpp
+    RawCampaignArcherBindings.cpp RawCampaignArcherBindings.h
     ClientAudio.h
     ClientMain.cpp
     ClientMain.h

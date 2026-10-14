@@ -1,0 +1,46 @@
+{
+  "host": "HJOW-Athlon",
+  "uniqueInputs": 192,
+  "editions": {
+    "originals": {
+      "samples": 96,
+      "returns": 96,
+      "assertions": 0,
+      "peSha": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "exports": {
+        "extracted/projectile-disc/originals/creation.c": "ab26022ac52ccff4b74b24f9eca9634719bb138f58db89545078ce632bf445d4",
+        "extracted/projectile-disc/originals/functions.tsv": "e1e9de496c36f739a93d5715ccd2378c91164b90bc8a3226d01c4f27ef517147",
+        "extracted/projectile-help/originals/creation.c": "9b5a17bd6f4609486585f57bfcac7c933b99a6caedeb8f53739de41073a17888",
+        "extracted/projectile-help/originals/functions.tsv": "65a63ce55c4484c0867a241727ea80ef2eeaf861446ae85a0a7ed5eae6a3d51c"
+      },
+      "nativeCalls": {
+        "00469540": 96,
+        "004ac550": 96,
+        "0049a840": 96
+      }
+    },
+    "originalCD": {
+      "samples": 96,
+      "returns": 96,
+      "assertions": 0,
+      "peSha": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "exports": {
+        "extracted/projectile-disc/originalCD/creation.c": "8230e8e34f8f34a806da635a89b6bd96ac41faa5a185972c1b63338060048110",
+        "extracted/projectile-disc/originalCD/functions.tsv": "6da57e8cbf17ad97ee922cccab52061062457cfbb9ae0b090866166c63985062",
+        "extracted/projectile-help/originalCD/creation.c": "0cf26529ccb7805799283f90686fc330a4fd3623fbd6393eb18125446c29bab0",
+        "extracted/projectile-help/originalCD/functions.tsv": "1615c33557b2e8e5f44a2a7026fff99a1787e1441369a2b12a6d2169f11858e5"
+      },
+      "nativeCalls": {
+        "00437290": 96,
+        "004abf50": 96
+      }
+    }
+  },
+  "fixtureSha": "932fae68bcf6862b05ab3ae2316f80e60f1f3230d109e6f57cd870ab6edd1f1a",
+  "toolSha": "3827afc850fa5da7dbbab3945b23af99a202909d9967883b1db5d61888592e20",
+  "limitations": [
+    "합성 TYPE83/현재 frame과 유한 payload. 실제 Handle/TYPE getter를 실행한다.",
+    "공통 setter는 요청 관찰이다. 그 기존 Native 검증 입력은 재합산하지 않는다.",
+    "방향0/분모0/음수frame/정수overflow와 전체 캠페인 충돌은 별도 범위다."
+  ]
+}

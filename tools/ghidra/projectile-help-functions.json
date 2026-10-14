@@ -1,0 +1,7 @@
+{
+  "description": "포구/충돌 사각형이 실제 호출하는 타입/헤더/Clamp helper. HJOW-Athlon, 2026-10-15.",
+  "editions": {
+    "originals": ["004ac550", "00419850", "0041d0d0", "0040e800"],
+    "originalCD": ["004abf50", "004abac0", "0043f950", "004f161c"]
+  }
+}

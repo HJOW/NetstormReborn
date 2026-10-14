@@ -10,6 +10,9 @@
 #include "client/RawCampaignGunQueries.h"
 #include "o/RawPlayerRegular.h"
 #include "o/RawPlayerTemplateState.h"
+#include "client/RawCampaignArcherBindings.h"
+#include "o/RawArcherTypeData.h"
+#include "o/RawProjectileGeometry.h"
 #include <cstdio>
 
 using namespace netstorm::o;
@@ -71,6 +74,13 @@ struct InstallScene {
     std::unique_ptr<RawGunMode> gunMode; // 현재 raw 공격 방향을 매 검색마다 읽는다.
     std::unique_ptr<RawGunTarget> gunTarget; // 실제 finder/ray/필터의 같은 Core 인스턴스다.
     std::unique_ptr<RawGunHit> gunHit; // 실제 Q16 시간 압축과 현재 피해 getter다.
+    std::vector<ArcherTypeData> archerTypes; // 원본 orientations/클러스터 수의 실제 보충 표다.
+    std::vector<MissileTypeData> missileTypes; // 원본 투사체 사거리/방향/소리 입력이다.
+    std::vector<ProjectileGeometryType> projectileTypes; // 실제 SHP 포구 WORD와 기본/물리 프레임 표다.
+    ArcherAnimationState archerState; // 같은 Kernel의 게임 시각/경과다.
+    MissileState missileState; // 같은 투사체 게임 시각이다.
+    std::unique_ptr<RawProjectileGeometry> projectileGeometry; // 실제 포구/표적 치수/충돌 상자다.
+    std::unique_ptr<RawCampaignArcherBindings> combat; // 같은 Archer/Missile 생성/공간/Host를 소유한다.
     std::uint32_t archerCommand{0x030000b0}; // 보호 PE의 실제 입력 토큰이다.
     std::unique_ptr<RawCampaignAssetBindings> assetBindings; // 실제 저장 건물 후처리와 Gun/Regular다.
     CanonPlacementPipelineState placement; // 실제 공간/기하/지형 허용 상태다.
@@ -98,7 +108,8 @@ struct InstallScene {
     explicit InstallScene(std::string_view mission="thewarbegins"):assets(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078)),metadata(assets.game),
         world(OriginalEdition::Patch1078,assets.types,assets.frames,metadata.shapes,CampaignLinks(),97),core(world.Core()),
         sp(random,[] { return 1U; }),hp(core.pool,core.types,core.bookkeeping,rewardState,&sp),themes(core.types.size()),elements(core.types.size()),
-        gunTypes(core.types.size()),hitTypes(core.types.size()),firingIntervals(core.types.size()) {
+        gunTypes(core.types.size()),hitTypes(core.types.size()),firingIntervals(core.types.size()),
+        archerTypes(core.types.size()),missileTypes(core.types.size()),projectileTypes(core.types.size()) {
         sp.Initialize();level=std::make_unique<RawSquidLevel>(core.pool,core.types,InstallForbidden<void,SquidLevelAssertion>());
         priestState.regen.patch.sequence=std::bit_cast<std::int32_t>(sp.Offset());
         priestState.regen.patch.observedSequence=priestState.regen.patch.sequence;
@@ -160,19 +171,54 @@ struct InstallScene {
             MakeCarrierPostPopHooks(core.pool,core.postPop,[this](Sid sid) { static_cast<void>(priests->CheckCarrier(sid)); },[this](float x,float y,std::uint8_t owner) { world.SetSupportOwner(x,y,owner); }));
         // 보호 .type의 실제 숫자/문자 Run을 같은 TYPE 번호의 보충 표에 연결한다.
         for (const auto& asset:assets.game.Types()) {
-            const auto type=70+asset.block;auto& target=gunTypes[type];target.range=static_cast<float>(asset.definition.Number("range").value_or(0));
+            const auto type=static_cast<std::uint32_t>(70+asset.block);auto& target=gunTypes[type];target.range=static_cast<float>(asset.definition.Number("range").value_or(0));
             target.heightExtension=static_cast<int>(asset.definition.Number("height").value_or(0));
             const auto theme=asset.definition.String("theme").value_or("sun");target.theme=theme=="wind" ? 0 : theme=="rain" ? 1 : theme=="thunder" ? 2 : 3;
             // 원본 방향별 L/M/N/O 첫 프레임 표다. 없는Run의-1은 실제 검색 몸체가 처리한다.
             for (std::uint8_t direction=0;direction<4;++direction) target.directionFrames[direction]=core.frames[type].Run(static_cast<std::uint8_t>('L'+direction)).first;
             hitTypes[type].damagePerSecond=static_cast<float>(asset.definition.Number("hpPerSec").value_or(0));
             firingIntervals[type]=static_cast<float>(asset.definition.Number("delayBetweenShots").value_or(0));
+            archerTypes[type]=ReadRawArcherTypeData(asset.definition);missileTypes[type].range=target.range;
+            missileTypes[type].frameCount=archerTypes[type].directions;
+            const auto firingSound=asset.definition.String("firingSound"),impactSound=asset.definition.String("impactSound");
+            missileTypes[type].firingSound=firingSound && !firingSound->empty() ? type : 0;
+            missileTypes[type].impactSound=impactSound && !impactSound->empty() ? type : 0;
+            auto& geometry=projectileTypes[type];geometry.defaultFrame=asset.definition.specialFrames.defaultFrame;
+            geometry.frameCount=archerTypes[type].frameCount;geometry.heightExtension=target.heightExtension;
+            // 각 물리 SHP header 마지막 두 WORD를 그대로 읽으며 표시 hotspot과 혼용하지 않는다.
+            for (std::size_t frame=0;frame<core.shapes[type].frames.size();++frame) {
+                const auto header=assets.game.Shapes().SquidHeader(asset.block,frame);
+                geometry.shotOffsets.push_back({std::bit_cast<std::int16_t>(static_cast<std::uint16_t>(header[32]|(std::uint16_t(header[33])<<8))),
+                    std::bit_cast<std::int16_t>(static_cast<std::uint16_t>(header[34]|(std::uint16_t(header[35])<<8)))});
+            }
         }
         gunMode=std::make_unique<RawGunMode>(core.pool,core.frames,gunState.windArcherType);
         gunTarget=std::make_unique<RawGunTarget>(core.pool,core.hash,core.types,gunTypes,core.shapes,gunTargetState);
         gunHit=std::make_unique<RawGunHit>(core.pool,core.types,hitTypes,GunHitHooks{InstallForbidden<void,Sid,std::int32_t,std::uint8_t,Sid>(),[this](Sid sid) { core.building.NotifySurface(sid); }});
+        projectileGeometry=std::make_unique<RawProjectileGeometry>(core.pool,core.types,projectileTypes);
+        RawCampaignArcherEffects combatEffects;
+        combatEffects.animation.common.sound=[this](Sid,std::string_view sound) { external.push_back("Archer 소리:"+std::string(sound)); };
+        combatEffects.animation.common.targetPoint=[this](Sid,Sid) {
+            // 초기 미션에 fencemark가 없다는 명시 검사 입력에서 원본 invalid corner를 제공한다. 교차 helper 복원은 별도다.
+            for (std::uint32_t id=5;id<core.pool.Capacity();++id) {
+                const auto raw=core.pool.Slot(Sid{static_cast<std::uint16_t>(id)});
+                if (!(raw[11]&3) && raw[10]==90) throw std::logic_error("현재 fencemark 교차 corner helper 미연결");
+            }
+            return std::array<float,2>{-10000,-10000};
+        };
+        combatEffects.missile.muzzle=[this](Sid sid) { return projectileGeometry->ArcherMuzzle(sid); };
+        combatEffects.missile.targetDimensions=[this](Sid sid) { return projectileGeometry->Dimensions(sid); };
+        combatEffects.missile.targetBounds=[this](Sid sid,std::array<float,2> point) { return projectileGeometry->TargetBounds(sid,point); };
+        combatEffects.missile.firingSound=[this](float,float,std::uint32_t token) { external.push_back("Missile 발사음:"+std::to_string(token)); };
+        combatEffects.missile.impactSound=[this](float,float,std::uint32_t token) { external.push_back("Missile 충돌음:"+std::to_string(token)); };
+        combatEffects.missile.hitEffect=InstallForbidden<void,float,float>();
+        combatEffects.missile.hit=InstallForbidden<void,Sid,Sid>();
+        combatEffects.missile.refresh=[this](Sid sid) { gunHit->SetTime(sid,missileState.now); };
+        combat=std::make_unique<RawCampaignArcherBindings>(world,*gunTarget,random,archerTypes,missileTypes,archerState,missileState,std::move(combatEffects));
         RawCampaignAssetEffects assetEffects;assetEffects.postPop.reserveRegular=[] { return true; };
         assetEffects.gun=MakeCampaignGunQueryHooks(core,*gunMode,*gunTarget,*gunHit,gunState,firingIntervals,std::move(assetEffects.gun));
+        assetEffects.gun=MakeGunTargetHooks(core.pool,*gunTarget,std::move(assetEffects.gun));
+        assetEffects.gun=combat->GunHooks(std::move(assetEffects.gun));
         assetEffects.factory.warnDuplicate=InstallForbidden<void,Sid,std::int32_t,std::int32_t>();
         assetEffects.levelAssertion=InstallForbidden<void,SquidLevelAssertion>();
         assetEffects.factory.regionOwnership=[this](float x,float y) { ownership->UpdateRegion(x,y); };
@@ -198,11 +244,11 @@ struct InstallScene {
             external.push_back("삭제 전송");
         };worldHooks.assets.selected=[] { return Sid{}; };
         worldHooks.destroy=InstallForbidden<bool,Sid,std::uint32_t,const SquidDestroyHooks&>();
-        worldHooks.regular=assetBindings->Handler(priests->RegularHandler([this](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
+        worldHooks.regular=combat->Handler(assetBindings->Handler(priests->RegularHandler([this](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
             if (playerRegular->Handles(sid)) return playerRegular->Handle(sid,event,count,payload);
             throw std::logic_error("캠페인 현재 Kernel의 다른 실제 Regular 부모 미연결: TYPE"+
                 std::to_string(core.pool.Slot(sid)[10])+" event"+std::to_string(event));
-        }));
+        })));
         worldHooks.transmit=assetBindings->Transmission();worldHooks.walkerFall=[this](Sid sid) { return priests->FallWalker(sid); };
         worldHooks.loadingDepth=[this](std::uint32_t depth) { objectState.loadingDepth=depth;carrierState.loadingDepth=depth;priests->SetLoadingDepth(depth);assetBindings->SetLoadingDepth(depth); };
         world.BindRuntime(std::move(worldHooks));
