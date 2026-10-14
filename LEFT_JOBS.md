@@ -1,5 +1,14 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-15 완료: 단위18 실제 캠페인 설치 조립 (`HJOW-Athlon`)
+
+- [x] AGENTS와 양 LEFT를 다시 읽고 `637ad76`에서 재개했다. 현재/마지막 디컴파일 PC는 **HJOW-Athlon, 2026-10-15**로 같다. 보호 원본/AGENTS는 수정하지 않는다.
+- [x] `RawCampaignWorldRuntime`으로 실제 Player→Builder/Territory→일반 지형→저장 객체→Graph(false)→카메라→로딩 종료를 동일 Core에 연결했다. 신전 Owner와 FinishOwner는 동일9 Player 기록을 사용한다. 직접 영향4파일 전체를 `cpppj/hist/run18-base`에 보존했다.
+- [x] 보호 `.fort`/TYPE/프레임/SHP를 사용한1-1 최초 설치 검사가 통과했다. 저장172객체의 타입별 수, 실제contained6의2개 부모 연결, 실제Player152 하나, 사제/신전 각2개·간헐천14개를 검사했다. 정상 지형/받침 포함 활성 자산1875·Kernel34·명시 외부 요청33이다. 새 Native입력은0이며 기존 관찰 입력을 재합산하지 않는다.
+- [x] Release 컴파일/링크가 통과했고 집중3개 검사 실패0이다. 초기 연결/테스트 컴파일과 PlayerKnown/청크 getter의 오류 원문·로그는 해당 `run18-*` 보존본에 남겼다.
+- [x] 전체 CTest **1/1·내부1105개·실패 체크0**(174.90초), 최종 Release 경고/오류0이다. 소스/입력/로그/바이너리·보존본의 전체SHA와 신규 C++ 전체 원문을 `cpppj/run18.json`에 고정했다. 상세: [단위18](docs/exe/cpp-run18-20261015.md). 로컬 커밋은 **`20261015-03 실제 캠페인 초기 월드와 저장 객체 설치 연결 검증`**으로 진행하며 push는 하지 않는다.
+- [ ] 실제 GameWorld/Ready/login과 입력·생산·전투·경제·운반·AI/Guide/UI·음향·승패·Early Missions/1-1~1-2 완주 동일성은 미완료다. 이번 UI/음향/전송/내용물 부모 통지는 검사 외부 경계이며 실구현을 뜻하지 않는다. 사제 삭제 Damageable/Placement 및 미사용 전투 하위는 명시 거부 상태다. 전체화면 DirectDraw 오류는 제외하고 목표는 active로 유지한다. 이전 경로/참조/과거SHA 최종 감사와41자 로컬 이력 로그1건도 계속 인계한다.
+
 ## 2026-10-15 완료: 단위17 실제 신전 Owner·캠페인 소유권·공유 첫 지역 (`HJOW-Athlon`)
 
 - [x] AGENTS 및 양 LEFT를 다시 읽고 `cfa283a`에서 재개했다. 현재 호스트는 마지막 PC와 같은 **HJOW-Athlon**이다. 실제 신전 Owner PATCH004dc4e0/CD0044f2a0을 정밀 읽기 전용 export했다. **마지막 디컴파일 PC: HJOW-Athlon, 2026-10-15.**

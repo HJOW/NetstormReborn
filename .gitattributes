@@ -583,3 +583,9 @@ cpppj/tests/IslandRuntimeTests.cpp text eol=lf
 cpppj/tests/VortexOwnerTests.cpp text eol=lf
 # 기존 Finish 검사 원문의 현재 CRLF 바이트도 고정하여 컴파일/근거 SHA를 보존한다.
 cpppj/tests/FortFinishOwnerTests.cpp -text whitespace=cr-at-eol
+# 실제 캠페인 설치 연결의 신규 원문은 UTF-8/LF를 유지한다.
+cpppj/src/client/RawCampaignWorldRuntime.* text eol=lf
+cpppj/tests/CampaignWorldRuntimeTests.cpp text eol=lf
+tools/check_campaign18.py text eol=lf
+cpppj/run18.json text eol=lf
+docs/exe/cpp-run18-20261015.md text eol=lf

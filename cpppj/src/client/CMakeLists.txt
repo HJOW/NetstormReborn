@@ -81,6 +81,7 @@ target_sources(netstorm PRIVATE
     # 실제 Player 신전 기록과 같은 Core의 자산/사제 경로를 공유하는 캠페인 연결부다.
     RawCampaignAssetBindings.cpp RawCampaignAssetBindings.h
     RawCampaignOwnership.cpp RawCampaignOwnership.h
+    RawCampaignWorldRuntime.cpp RawCampaignWorldRuntime.h
     RawCampaignPathBindings.cpp RawCampaignPathBindings.h
     UserInput.cpp UserInput.h
     Sound.cpp Sound.h

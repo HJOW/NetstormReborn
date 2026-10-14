@@ -1,0 +1,10 @@
+{
+  "baseline": "637ad76",
+  "host": "HJOW-Athlon",
+  "files": {
+    ".gitattributes": "2bd8c6695383364bbf02fede42ad0a01561bb530cbc0a560a2240d5bbff77ad2",
+    "cpppj/src/client/CMakeLists.txt": "0096af8628ed0ca5e922465e5bad7e6e6e358cf61fdf887336c6b52550e99536",
+    "cpppj/tests/CMakeLists.txt": "a8b6eef9a67886993200acd9d85d2180ee0c986d2cb493a95efceb0b13b5a05e",
+    "LEFT_JOBS.md": "c980b219f6e1dfad102305535ee9efd36400ec0964780faa03775b3916b7ab4e"
+  }
+}
