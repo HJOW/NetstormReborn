@@ -4,6 +4,7 @@
 target_sources(netstorm PRIVATE
     ClientAudio.cpp
     RawCampaignArcherBindings.cpp RawCampaignArcherBindings.h
+    RawCampaignHitBindings.cpp RawCampaignHitBindings.h
     ClientAudio.h
     ClientMain.cpp
     ClientMain.h

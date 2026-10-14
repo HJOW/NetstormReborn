@@ -1,0 +1,11 @@
+{
+  "baseline": "5f564e8",
+  "host": "HJOW-Athlon",
+  "files": {
+    ".gitattributes": "7fd663b4371708249727c53ad820db1b245754d0b6bbfc9c4fed12ca609df066",
+    "LEFT_JOBS.md": "4cdd212bdff15626d56fcea87f953c86020a98e503ee7f975fa6a56de57b2a02",
+    "cpppj/src/client/CMakeLists.txt": "b80e6ce563d76811cb50959aa3122d6c54d64883ba42a2460082f8fc93f490ec",
+    "cpppj/tests/CMakeLists.txt": "f5bab9f83bc574ad27a849706c584d7bc6e4217f6e909c33035a1f98917e237a",
+    "cpppj/tests/CampaignInstallSupport.h": "e14e0bc1a824a146c6cffb79ac0e0a326bcb5f50f662a110adc49aca437dc6a5"
+  }
+}

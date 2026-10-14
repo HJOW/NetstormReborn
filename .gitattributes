@@ -56,6 +56,18 @@ docs/exe/cpp-run22-20261015.md text eol=lf
 extracted/projectile-*/** -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
 extracted/run22-*.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
 extracted/run22_*.py text eol=lf
+
+# 캠페인 충돌/사제 피해의 신규 원문과 별도 사슬 입력은 UTF-8/LF로 고정한다.
+cpppj/src/client/RawCampaignHitBindings.* text eol=lf
+cpppj/tests/CampaignHitTests.cpp text eol=lf
+cpppj/tests/fixtures/campaign-hit-x86.tsv text eol=lf
+cpppj/campaign-hit.json text eol=lf
+cpppj/run23.json text eol=lf
+tools/decomp_campaign_hit.py text eol=lf
+tools/check_campaign23.py text eol=lf
+docs/exe/cpp-run23-20261015.md text eol=lf
+extracted/run23-*.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+extracted/run23_*.py text eol=lf
 cpppj/src/o/RawAssetRegular.* text eol=lf
 cpppj/src/client/RawCampaignGunQueries.* text eol=lf
 cpppj/tests/CampaignNativeFrameTests.cpp text eol=lf

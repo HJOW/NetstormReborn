@@ -11,6 +11,9 @@
 #include "o/RawPlayerRegular.h"
 #include "o/RawPlayerTemplateState.h"
 #include "client/RawCampaignArcherBindings.h"
+#include "client/RawCampaignHitBindings.h"
+#include "client/SoundProcess.h"
+#include <unordered_set>
 #include "o/RawArcherTypeData.h"
 #include "o/RawProjectileGeometry.h"
 #include <cstdio>
@@ -74,6 +77,15 @@ struct InstallScene {
     std::unique_ptr<RawGunMode> gunMode; // 현재 raw 공격 방향을 매 검색마다 읽는다.
     std::unique_ptr<RawGunTarget> gunTarget; // 실제 finder/ray/필터의 같은 Core 인스턴스다.
     std::unique_ptr<RawGunHit> gunHit; // 실제 Q16 시간 압축과 현재 피해 getter다.
+    PriestDamageState priestDamageState; // 실제 미션 레벨보정 차단/HP1 감시 권한이다.
+    DamageableBurningState burningState; // 현재 nonzero damageEffect의 실제 생성 판정 전역이다.
+    GunImpactState impactState; // 현재 충돌 시각 효과 억제/anim160 전역이다.
+    std::vector<DudeNoticeTypeData> dudeSpeeds; // 실제 TYPE 이동속도의 현재 mutable 보충 표다.
+    std::unique_ptr<RawCampaignHitBindings> hits; // 같은 피해/감시/충돌/주변Dude/자산수명 처리기다.
+    SoundList soundNames{OriginalEdition::Patch1078}; // 실제 보호막 파일명의 원본 이름표/opaque handle 조회다.
+    SoundProcessState soundState; // 실제47 프로세스의 현재 frame/TYPE 중복 재생 전역이다.
+    std::unordered_set<SoundHandle> playingSounds; // 소리 장치 외부 관찰 입력의 현재 재생 토큰이다.
+    std::unique_ptr<SoundProcessSystem> sounds; // 같은 Host/Kernel의 실제 보호막 sound47 수명을 수행한다.
     std::vector<ArcherTypeData> archerTypes; // 원본 orientations/클러스터 수의 실제 보충 표다.
     std::vector<MissileTypeData> missileTypes; // 원본 투사체 사거리/방향/소리 입력이다.
     std::vector<ProjectileGeometryType> projectileTypes; // 실제 SHP 포구 WORD와 기본/물리 프레임 표다.
@@ -108,7 +120,7 @@ struct InstallScene {
     explicit InstallScene(std::string_view mission="thewarbegins"):assets(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078)),metadata(assets.game),
         world(OriginalEdition::Patch1078,assets.types,assets.frames,metadata.shapes,CampaignLinks(),97),core(world.Core()),
         sp(random,[] { return 1U; }),hp(core.pool,core.types,core.bookkeeping,rewardState,&sp),themes(core.types.size()),elements(core.types.size()),
-        gunTypes(core.types.size()),hitTypes(core.types.size()),firingIntervals(core.types.size()),
+        gunTypes(core.types.size()),hitTypes(core.types.size()),firingIntervals(core.types.size()),dudeSpeeds(core.types.size()),
         archerTypes(core.types.size()),missileTypes(core.types.size()),projectileTypes(core.types.size()) {
         sp.Initialize();level=std::make_unique<RawSquidLevel>(core.pool,core.types,InstallForbidden<void,SquidLevelAssertion>());
         priestState.regen.patch.sequence=std::bit_cast<std::int32_t>(sp.Offset());
@@ -135,16 +147,28 @@ struct InstallScene {
         priestEffects.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); };
         priestEffects.dependentFound=InstallForbidden<void>();priestEffects.reserveRegular=[] { return true; };
         priestEffects.shield.reserveSound=[] { return true; };
-        priestEffects.shield.loadSound=InstallForbidden<std::uint32_t,std::string_view>();
-        priestEffects.shield.attachSound=InstallForbidden<void,Sid,std::uint32_t,std::uint32_t,std::uint32_t>();
-        priestEffects.shield.noticeSound=InstallForbidden<void,const PriestShieldNotice&>();
-        priestEffects.shield.translate=InstallForbidden<std::string,std::string_view>();priestEffects.shield.tell=InstallForbidden<void,std::string_view>();
+        soundNames.Initialize();SoundProcessHooks soundHooks;
+        soundHooks.wallSeconds=[this] { return missileState.now; }; // 명시 동일 game/wall 입력이며 장치나 OS 시계를 열지 않는다.
+        soundHooks.playLoopAt=[this](float,float,SoundHandle current,SoundHandle sound) { const auto playing=current ? current : sound;playingSounds.insert(playing);external.push_back("보호막 위치 반복음");return playing; };
+        soundHooks.playOnceAt=[this](float,float,SoundHandle sound,std::uint32_t,std::uint32_t) { external.push_back("위치 단발음");return sound; };
+        soundHooks.play=[this](SoundHandle sound,std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t) { playingSounds.insert(sound);external.push_back("전역음");return sound; };
+        soundHooks.stop=[this](SoundHandle sound) { playingSounds.erase(sound);external.push_back("반복음 종료"); };
+        soundHooks.isPlaying=[this](SoundHandle sound) { return playingSounds.contains(sound) ? 1U : 0U; };
+        soundHooks.report=InstallForbidden<void,std::string_view,std::int32_t>();
+        sounds=std::make_unique<SoundProcessSystem>(core.processes,soundState,std::move(soundHooks));
+        priestEffects.shield.loadSound=[this](std::string_view name) { external.push_back("보호막 파일 조회:"+std::string(name));return soundNames.Lookup(name); };
+        priestEffects.shield.attachSound=[this](Sid parent,std::uint32_t sound,std::uint32_t alternate,std::uint32_t flags) { CHECK(sounds->Add(parent,sound,alternate,flags)!=nullptr); };
+        priestEffects.shield.noticeSound=[this](const PriestShieldNotice& notice) { CHECK(notice.file=="ourPriestImmobile.wav");external.push_back("사제 이동불가 안내음"); };
+        // 번역/안내는 명시 키 요청 관찰이다. 실제 UI/번역 문자열/게임 정지는 이 검사 범위 밖이다.
+        priestEffects.shield.translate=[this](std::string_view key) { CHECK(key=="PriestImmobile");external.push_back("보호막 안내 키:"+std::string(key));return std::string(key); };
+        priestEffects.shield.tell=[this](std::string_view text) { external.push_back("보호막 안내 요청:"+std::string(text)); };
         priestEffects.fallSound=InstallForbidden<void,Sid,float,float>();priestEffects.otherWalkerFall=InstallForbidden<bool,Sid>();
         priestEffects.regen.refresh=[this](Sid sid) { core.display.Update(core.pool.Slot(sid)); };
         priestEffects.regen.neutralAction=InstallForbidden<void,Sid>();
         // 실제 SP 회전 몸체의 현재 offset을 같은 회복 추적 전역에 반영한다. 저장 값/게임 난수를 유지한다.
         priestEffects.regen.patchAudit=[this] { sp.Rotate();priestState.regen.patch.observedSequence=std::bit_cast<std::int32_t>(sp.Offset()); };
         priestEffects.regen.measurement=InstallForbidden<double>();
+        priestEffects.regen.damageable=[this](Sid sid) { hits->Burning().Refresh(sid); };
         priests=std::make_unique<RawPriestWorldBindings>(RawPriestWorldCore{core.pool,core.hash,core.types,core.frames,core.spots,core.hash.Entries(0),hp,random,core.factory,core.owner,core.ownerMode,core.postPop,core.frame},priestState,std::move(priestEffects));
         priests->BindProcesses(core.processes);priests->SetAuthority(true);priests->SetLocalPlayer(1);
         PlayerWorldHooks playerHooks;
@@ -173,6 +197,7 @@ struct InstallScene {
         for (const auto& asset:assets.game.Types()) {
             const auto type=static_cast<std::uint32_t>(70+asset.block);auto& target=gunTypes[type];target.range=static_cast<float>(asset.definition.Number("range").value_or(0));
             target.heightExtension=static_cast<int>(asset.definition.Number("height").value_or(0));
+            dudeSpeeds[type].speed=static_cast<float>(asset.definition.Number("speed").value_or(0));
             const auto theme=asset.definition.String("theme").value_or("sun");target.theme=theme=="wind" ? 0 : theme=="rain" ? 1 : theme=="thunder" ? 2 : 3;
             // 원본 방향별 L/M/N/O 첫 프레임 표다. 없는Run의-1은 실제 검색 몸체가 처리한다.
             for (std::uint8_t direction=0;direction<4;++direction) target.directionFrames[direction]=core.frames[type].Run(static_cast<std::uint8_t>('L'+direction)).first;
@@ -194,7 +219,18 @@ struct InstallScene {
         }
         gunMode=std::make_unique<RawGunMode>(core.pool,core.frames,gunState.windArcherType);
         gunTarget=std::make_unique<RawGunTarget>(core.pool,core.hash,core.types,gunTypes,core.shapes,gunTargetState);
-        gunHit=std::make_unique<RawGunHit>(core.pool,core.types,hitTypes,GunHitHooks{InstallForbidden<void,Sid,std::int32_t,std::uint8_t,Sid>(),[this](Sid sid) { core.building.NotifySurface(sid); }});
+        priestDamageState.levelCorrectionDisabled=globals.missionPost;priestDamageState.boss=assetState.boss;
+        RawCampaignHitEffects hitEffects;
+        hitEffects.priest.defaultFrame=[this](Sid sid) { return projectileTypes[core.pool.Slot(sid)[10]].defaultFrame; };
+        // 소유자 AI/알림은 현재 외부 요청으로 관찰한다. 실제 HP/회복/감시 처리는 바인딩의 원본 몸체다.
+        hitEffects.priest.ownerDamageNotice=[this](std::uint8_t owner,Sid victim,Sid attacker) { external.push_back("사제 피해 통지:"+std::to_string(owner)+':'+std::to_string(victim.value)+':'+std::to_string(attacker.value)); };
+        hitEffects.burning.create=InstallForbidden<Sid,Sid>();hitEffects.burning.bulfSound=InstallForbidden<void,Sid,float,float>();
+        hitEffects.dudes.createBurning=InstallForbidden<void,Sid>();
+        hitEffects.dudes.pathEndpoint=InstallForbidden<std::optional<std::array<float,2>>,Sid>();
+        hitEffects.dudes.startPath=InstallForbidden<bool,Sid,float,float>();
+        hits=std::make_unique<RawCampaignHitBindings>(world,*priests,hp,random,dudeSpeeds,assetState.residences,
+            priestDamageState,burningState,impactState,std::move(hitEffects));
+        gunHit=std::make_unique<RawGunHit>(core.pool,core.types,hitTypes,hits->DamageHooks(GunHitHooks{InstallForbidden<void,Sid,std::int32_t,std::uint8_t,Sid>(),[this](Sid sid) { core.building.NotifySurface(sid); }}));
         projectileGeometry=std::make_unique<RawProjectileGeometry>(core.pool,core.types,projectileTypes);
         RawCampaignArcherEffects combatEffects;
         combatEffects.animation.common.sound=[this](Sid,std::string_view sound) { external.push_back("Archer 소리:"+std::string(sound)); };
@@ -211,9 +247,7 @@ struct InstallScene {
         combatEffects.missile.targetBounds=[this](Sid sid,std::array<float,2> point) { return projectileGeometry->TargetBounds(sid,point); };
         combatEffects.missile.firingSound=[this](float,float,std::uint32_t token) { external.push_back("Missile 발사음:"+std::to_string(token)); };
         combatEffects.missile.impactSound=[this](float,float,std::uint32_t token) { external.push_back("Missile 충돌음:"+std::to_string(token)); };
-        combatEffects.missile.hitEffect=InstallForbidden<void,float,float>();
-        combatEffects.missile.hit=InstallForbidden<void,Sid,Sid>();
-        combatEffects.missile.refresh=[this](Sid sid) { gunHit->SetTime(sid,missileState.now); };
+        combatEffects.missile=hits->MissileHooks(*gunHit,missileState,std::move(combatEffects.missile));
         combat=std::make_unique<RawCampaignArcherBindings>(world,*gunTarget,random,archerTypes,missileTypes,archerState,missileState,std::move(combatEffects));
         RawCampaignAssetEffects assetEffects;assetEffects.postPop.reserveRegular=[] { return true; };
         assetEffects.gun=MakeCampaignGunQueryHooks(core,*gunMode,*gunTarget,*gunHit,gunState,firingIntervals,std::move(assetEffects.gun));
@@ -242,13 +276,13 @@ struct InstallScene {
         worldHooks.assets.emit=[this](const SquidDestroyEvent& event) {
             if (event.effect!=SquidDestroyEffect::Transmit) throw std::logic_error("캠페인 검사에서 미연결 자산 삭제 수명 효과");
             external.push_back("삭제 전송");
-        };worldHooks.assets.selected=[] { return Sid{}; };
-        worldHooks.destroy=InstallForbidden<bool,Sid,std::uint32_t,const SquidDestroyHooks&>();
-        worldHooks.regular=combat->Handler(assetBindings->Handler(priests->RegularHandler([this](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
+        };worldHooks.assets.selected=[] { return Sid{}; };worldHooks.assets=hits->DestroyHooks(std::move(worldHooks.assets));
+        worldHooks.destroy=hits->Destroy(InstallForbidden<bool,Sid,std::uint32_t,const SquidDestroyHooks&>());
+        worldHooks.regular=hits->Handler(combat->Handler(assetBindings->Handler(priests->RegularHandler([this](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
             if (playerRegular->Handles(sid)) return playerRegular->Handle(sid,event,count,payload);
             throw std::logic_error("캠페인 현재 Kernel의 다른 실제 Regular 부모 미연결: TYPE"+
                 std::to_string(core.pool.Slot(sid)[10])+" event"+std::to_string(event));
-        })));
+        }))));
         worldHooks.transmit=assetBindings->Transmission();worldHooks.walkerFall=[this](Sid sid) { return priests->FallWalker(sid); };
         worldHooks.loadingDepth=[this](std::uint32_t depth) { objectState.loadingDepth=depth;carrierState.loadingDepth=depth;priests->SetLoadingDepth(depth);assetBindings->SetLoadingDepth(depth); };
         world.BindRuntime(std::move(worldHooks));

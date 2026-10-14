@@ -1,5 +1,18 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-15 완료: 단위23 실제 충돌·사제 HP1·투사체 종료 (`HJOW-Athlon`)
+
+- [x] AGENTS/양 LEFT를 다시 읽고 현재/마지막 정밀 PC가HJOW-Athlon임을 확인했다. 기준 `5f564e8`의 직접 영향5파일을 `run23-base`에 전체보존했다. 이전 턴은 원본432입력/발사 첫 이동/빌드1126 성공 및 실제 커밋으로 진척했다.
+- [x] 보호 PE의83/160 가상10/14/18이 실제 공통Destroy/Pre/Post, 사제158의98은 기존PriestDamage인 것을 직접 조회했다. 기존실제RawGunImpact/RawDudeNotice/RawGunHit/RawPriestDamage/RawDamageableBurning을 동일Core/Host/HP/감시에 조립하는 `RawCampaignHitBindings`를 추가했다.
+- [x] 실제1-1 재배치 입력 뒤 최초충돌/HP감소 및 반복HP1을 같은 현재Kernel에서 검사했다. 보호TYPE158의damageEffect0은 원본자료의 자연반환이며 임의로0을덮어쓰지않았다. nonzeroBurning/주변Dude 대피 생성 및 실제owner피해통지 소비자는 아직 별도 선택경계다. 실제몸체를 빈 성공으로 바꾸지 않았다.
+- [x] 첫실제 충돌은HP100→59/frame173으로 성공했다. 반복피격은HP1보호막 파일요청에서 첫실패했으며 source/log를 `run23-fail1`에 전체보존했다. 실제SoundList 이름조회/SoundProcessSystem47 부착을같은Host에 연결한뒤 두검사가 성공(HP1후2초/frame298/process42)했다. 장치 출력/번역키/안내/owner피해는 명시 외부관찰이며 실제GUI정지/음향 완료가 아니다.
+- [x] 새 독립 GunHit→Apply→PriestHit→HPsetter/burning 사슬96입력(PATCH48/CD48)이 정상반환/assert0이다. 개별이전 입력은 재합산하지 않는다. 타입query/CD DPS/회복·공간·소유자통지 등 명시경계 및 입력준비Adjust0은 별도이며 실제표적98 body를 대체하지 않았다.
+- [x] 두번째 성공 원문/로그를 `run23-success2`에 보존한뒤 HP1후12초 전체Kernel/감시없음/효과종료 및PATCH48 사슬의현재같은Core소비자 비교를 추가했다. 실제교전검사는 **HP100→59/frame173**, HP1후12초 **frame898/process42**에서 모든총의해당표적/감시없음·잔여83/160종료·보호막과sound47유지·깊이0/SP추적일치를 확인했다. 발사Animation35의모든완료상태를별도검사했다고주장하지않는다.
+- [x] Release3 뒤 PATCH48의HP/WORD/통지는모두일치했으나 피해를선택하지않은12입력에서도회복이취소돼야한다고검사가잘못가정해12체크실패했다. `run23-fail2`에 source/log/Native전체자료를보존하고 **통지0이면PriestHit 미선택·기존회복유지**로기대관계만교정했다. Native96입력 및생산몸체는불변이다.
+- [x] 최종 Release 경고/오류0·새집중3개 성공·전체CTest **1/1·내부1,129개·실패체크0**(175.20초)다. Native96정상/assert0·CPP직접PATCH48이며 이전입력 재합산0이다. [상세 단위23](docs/exe/cpp-run23-20261015.md), `run23.json`과 `tools/check_campaign23.py finalize/verify`에 전체원문/이력/실행 SHA를고정한다. 인수인계작성뒤 로컬 **`20261015-08 실제 충돌과 사제 HP1 및 투사체 종료 연결 검증`**으로커밋하며 push하지않는다.
+- [ ] 다음은실제GameWorld/세션/화면에 현재복원월드와생성/입력/시계를연결하는 작업을우선검토한다. nonzeroBurning/Dude대피/fencemark/다른파생삭제 및 실제안내정지/ownerAI/음향도미완료다. 기존경로감사파일명41자1건/과거SHA감사는계속인계한다.
+- [ ] 실제 GameWorld/입력/생산/경제/AI/Guide/UI/음향/승패 및 Early Missions/1-1~1-2 완주 동일성은 미완료다. DirectDraw전체화면오류 제외, 목표active 유지.
+
 ## 2026-10-15 완료: 단위22 실제 썬 아처 Fire·썬 디스크 첫 비행 (`HJOW-Athlon`)
 
 - [x] AGENTS 및 양 LEFT를 다시 읽고 기준 `55c6f9e`에서 재개했다. 현재/마지막 정밀 디컴파일 PC는 **HJOW-Athlon, 2026-10-15**로 같다. 보호 원본 및 AGENTS는 불변이다. 직접 영향6파일을 `run22-base`에 편집 전 보존했다.
