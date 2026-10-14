@@ -117,7 +117,7 @@ public:
     GunProcessFields& Fields();
     const GunProcessFields& Fields() const;
     // inner 가상 notify를 같은 raw 상태 기계에 전달한다.
-    void Notify(std::uint32_t event,std::uint32_t info,std::uint32_t value);
+    void Notify(std::uint32_t event,std::uint32_t info,std::uint32_t value) override;
     // AttachForm은 OnAttached 전 writer를 부르므로 현재 base Form/Parent를 먼저 동기화한다.
     std::uint16_t WritePacket(std::span<std::uint8_t> packet,bool parentChanged,bool force=false,std::uint8_t protocol=1,std::uint8_t message=0x3a);
 private:

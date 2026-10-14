@@ -1,0 +1,46 @@
+{
+  "host": "HJOW-Athlon",
+  "uniqueInputs": 138,
+  "editions": {
+    "originals": {
+      "samples": 69,
+      "returns": 69,
+      "assertions": 0,
+      "exports": {
+        "extracted/gun-depend/originals/creation.c": "3641b59282b3eaab8bd50b2c47072ac55bca5c795da57e33dee17b01e9f27364",
+        "extracted/gun-depend/originals/functions.tsv": "8d82b48987b9cb23629b2e05ca6ec4a15b630ddc12703a2333c5e18587e9a657",
+        "extracted/gun-notify/originals/creation.c": "a6afd69158514d9233ebe4cb5db9e9682e9e52c36c01cddd1d01c518c944993f",
+        "extracted/gun-notify/originals/functions.tsv": "600b6ddaeb433fc2123221f7e23f6ee2666c1565ef1bc04c88b5407515bc8a42"
+      },
+      "nativeCalls": {
+        "004b15f0": 9,
+        "004ae280": 60,
+        "00471aa0": 36
+      }
+    },
+    "originalCD": {
+      "samples": 69,
+      "returns": 69,
+      "assertions": 0,
+      "exports": {
+        "extracted/gun-depend/originalCD/creation.c": "4fc6d07e051ff1c4cb036f75cdb0d78df8903c03f104bc31354c0d27cf92815e",
+        "extracted/gun-depend/originalCD/functions.tsv": "63a2eb1d0d35c7f077bc14f382f29f22c7cd6cb2cfa5cf766c9967801051218f",
+        "extracted/gun-notify/originalCD/creation.c": "31feba4ff39dfb97ea4b11baeb31801ec34f3cd8f352c06105da93f678027bf2",
+        "extracted/gun-notify/originalCD/functions.tsv": "f8f14ce032db5eca1223e3aea20943d7ba0d55d86be7ba4fef060d40822812ff"
+      },
+      "nativeCalls": {
+        "00434aa0": 9,
+        "004afa10": 9,
+        "004af490": 60,
+        "004ed640": 36
+      }
+    }
+  },
+  "fixtureSha": "5318cf52e41cc5ae1d20a8081d489cb600c629ec42d8039db82e1e82317bd5f6",
+  "toolSha": "d1f69316fbb4a5f6738287b867a0d7601e6f7bf807d548e2d3b918140a1d63be",
+  "limitations": [
+    "합성 Gun/Form/PID 입력. 실제 wrapper/34/현재PID getter를 실행한다.",
+    "pair 생성과 파생notify는 명시 외부 요청이다. 기존 Form 수명 관찰은 재합산하지 않는다.",
+    "GUI/실제 전투 발사/완주 동일성은 별도 미완료다."
+  ]
+}

@@ -5,6 +5,7 @@ add_executable(netstorm_tests
     CampaignWorldRuntimeTests.cpp
     CampaignMotionTests.cpp
     CampaignFrameTests.cpp
+    CampaignTargetTests.cpp
     CampaignNativeFrameTests.cpp
     VortexDisplayTests.cpp
     CampaignInstallSupport.h
@@ -847,6 +848,10 @@ set_source_files_properties(BurningFrameTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 새 현재 방향/Factory 독립 원본 입력은 해당 번역단위에서만 읽는다.
 set_source_files_properties(CampaignNativeFrameTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CAMPAIGN_FRAME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/campaign-frame-x86.tsv\"")
+
+# 현재 ProcessForm 가상34의 독립 PE 입력을 해당 소비자에만 제공한다.
+set_source_files_properties(CampaignTargetTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_GUN_DEPEND_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gun-depend-x86.tsv\"")
 
 # 새 신전 활성 표시의 독립 native 변경표를 해당 검사에서만 읽는다.
 set_source_files_properties(VortexDisplayTests.cpp PROPERTIES COMPILE_DEFINITIONS

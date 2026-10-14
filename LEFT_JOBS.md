@@ -1,5 +1,14 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-15 완료: 단위21 실제 Gun 표적 감시 Form·현재PID 통지 (`HJOW-Athlon`)
+
+- [x] AGENTS와 양 LEFT를 다시 읽고 기준 `acd7882`에서 재개했다. 현재/마지막 디컴파일 PC는 **HJOW-Athlon, 2026-10-15**로 같다. 보호 원본 및 AGENTS는 불변이다.
+- [x] 직접 영향11파일을 `cpppj/hist/run21-base`에 편집 전 보존했다. 실제 전투에서 최초 표적 지정 뒤 감시 Form 쌍이 월드에 미등록인 것을 확인했다. 같은 Pool/삭제분배기 소유 DependFormHost를 Core에 추가하고 Gun의 실제 생성/제거에 연결했다.
+- [x] ProcessForm 가상34의 실제 server 조건/PID 조회/notify(2,form,watched)를 연결했다. GunProcess는 기존 실제 Notify를 override하며 미복원 파생 Notify는 명시 거부한다. 실제 저장 총/사제의 표적A→B→없음에서 감시쌍2개 생성/반납과 깊이0을 검사했고 명시 dead 입력에서 표적0/상태1/현재Form 전송도 통과했다.
+- [x] 같은 호스트 정밀 export 고유10함수, 새 독립 PE **138입력/정상138/assert0**이다. C++은 현재Host/PID 통지120입력을 직접 비교했고 wrapper18개는 pair 요청 관찰 근거다. 기존 Form 수명 입력은 재합산하지 않는다. 서버 Form 송신 요청은 현재runtime 경계에 연결했으며 실제 직렬화/네트워크는 후속이다.
+- [x] 집중4개 통과, 최종 Release 경고/오류0, 전체 CTest **1/1·내부1,120개·실패 체크0**(176.83초)이다. 초기 server 선언/송신 누락/정규화 flags 가정 실패의 전체 원문·로그를 보존했다. [단위21](docs/exe/cpp-run21-20261015.md), `run21.json`에 현재 전체 원문/입력/실행 SHA를 고정한다. 로컬 커밋은 **`20261015-06 실제 Gun 표적 감시와 현재 ProcessForm 통지 연결 검증`**, push는 하지 않는다.
+- [ ] Ready/login/9 Player/RNG·실제 GameWorld/입력/생산/전투/경제/운반/AI/Guide/UI/음향/승패 및 Early Missions/1-1~1-2 완주 동일성은 미완료다. 전체화면 DirectDraw 오류 제외, 목표active 유지. 이전 최종 경로/참조/과거 SHA 감사도 계속 인계한다.
+
 ## 2026-10-15 완료: 단위20 전체 캠페인 Kernel·방향·Factory·신전 표시 (`HJOW-Athlon`)
 
 - [x] AGENTS 및 양 LEFT와 현재 호스트를 다시 확인했다. 기준 `6fabde2`, 마지막 정밀 디컴파일 PC는 **HJOW-Athlon, 2026-10-15**다. 신전 파생 표시7함수를 같은 PC에서 읽기 전용 export했다. 보호 원본 및 AGENTS는 불변이다.

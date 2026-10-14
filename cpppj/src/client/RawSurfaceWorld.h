@@ -79,6 +79,8 @@ struct RawWorldCore {
     o::RawBridgeEvents& bridgeEvents;
     // forms: 객체에 부착된 Form의 생성·통지·수명 처리기.
     o::SquidFormDispatch& forms;
+    // dependencies: 같은 풀/삭제 깊이/ProcessForm 통지를 사용하는 실제 감시 Form 쌍이다.
+    o::DependFormHost& dependencies;
     // processes: 공유 커널에 연결한 객체 프로세스 호스트.
     o::SquidProcessHost& processes;
     // processState: 프로세스 실행·부착·이벤트 분배에 사용하는 상태.
@@ -102,6 +104,8 @@ struct RawWorldRuntimeHooks {
     std::function<bool(o::Sid)> walkerFall;
     // loadingDepth: 현재 로딩 중첩 깊이를 외부 상태에 전달하는 콜백.
     std::function<void(std::uint32_t)> loadingDepth;
+    // formTransmit: 실제 DependForm 서버 Pop의 현재 raw Form/flags 전송 요청 경계다.
+    o::FormPopTransmit formTransmit;
 };
 // 같은 SID 풀·공간 지도에서 표면 객체의 생성·등록·수명·표시를 관리하는 월드이다.
 class RawSurfaceWorld {

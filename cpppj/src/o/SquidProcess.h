@@ -19,6 +19,9 @@ public:
     virtual void OnFormDestroy(std::uint32_t flags);
     virtual void OnParentDying(Sid parent);
     virtual void OnAttached();
+    // ProcessForm 가상34가 같은 Kernel 객체의 실제 내장 notify1c에 전달하는 event/info/value다.
+    // 복원하지 않은 파생 통지는 선택 시 예외로 거부한다.
+    virtual void Notify(std::uint32_t event,std::uint32_t info,std::uint32_t value);
 protected:
     // 부착한 host다. 부착 전에는 null이다.
     SquidProcessHost* Host() const;
@@ -69,6 +72,7 @@ struct SquidProcessState {
     bool boss{true};              // 권한 플래그(DAT_00540bc4 / CD 00540a2c). 꺼져 있으면 서버 번호 form은 flag 0x10 없이 지우지 않는다.
     std::uint32_t typeRotation{}; // 패치 Kernel 등록이 전진시키는 타입 순환 값(DAT_0059af74). CD에는 없다.
     std::uint32_t pollType{122};  // geyser(DAT_00541240 / CD 0051cb2c): 0.5초보다 먼 예약을 현재 시각으로 당긴다.
+    bool server{true}; // ProcessForm34가 매 통지 읽는 서버 전역(DAT_00540bc0 / CD00540a28)이다.
 };
 // 부모 객체의 이벤트 처리기(vtable +0x5c)다. 원본 base(00496e70)는 payload를 그대로 돌려준다.
 using RegularHandler=std::function<float(Sid parent,std::uint32_t event,std::uint32_t count,float payload)>;
@@ -118,6 +122,8 @@ public:
     bool IsRegistered(ProcessId pid,const SquidProcess* process) const;
     // 004ae2d0 / CD 004af4e0: form +0x12의 현재 DWORD 번호로 Kernel의 프로세스를 조회한다. 비어 있으면 null이다.
     SquidProcess* FromForm(Sid form) const;
+    // PATCH004ae280/CD004af490: server일 때 현재 Form PID의 실제 notify(2,dependForm,watched)를 호출한다.
+    void NotifyDependency(Sid watcher,Sid watched,Sid dependForm) const;
     // 004afb40 ↔ CD 004ac890: 부모의 종속 체인에서 이벤트 번호가 같은 첫 Regular 프로세스를 찾는다.
     RegularProcess* FindEvent(Sid parent,std::uint32_t event) const;
     // 004afbe0 ↔ CD 004ac9c0: (이벤트 & mask) == value인 첫 Regular 프로세스를 찾는다.

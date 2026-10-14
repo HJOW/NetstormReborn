@@ -80,6 +80,8 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
     std::unique_ptr<o::SquidProcessHost> host;
     // formDispatch: 타입별 서로 다른 fallback 사슬을 같은 분배기로 모아 혼합 종속 체인의 중첩 삭제를 지원한다 (std::unique_ptr<o::SquidFormDispatch>).
     std::unique_ptr<o::SquidFormDispatch> formDispatch;
+    // dependencies: 같은 삭제 분배기에 영구 등록하는 실제 감시 Form 쌍 소유자다.
+    std::unique_ptr<o::DependFormHost> dependencies;
     o::Kernel kernel; // 모듈/host보다 먼저 해제되어 예약 프로세스의 참조 수명을 보장한다.
     // 순환하는 콜백은 실제 호출 전에 모든 모듈을 구성한다. 생성 중에는 Pop하지 않는다.
     Impl(o::OriginalEdition selected,std::span<const o::RiftTypeRecord> inputTypes,std::span<const o::RiftTypeFrames> inputFrames,
@@ -141,6 +143,15 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
             [this](o::Sid sid,std::uint32_t flags,const o::SquidDestroyHooks& hooks) { return virtualDestroy->Destroy(sid,flags,hooks); });
         host=std::make_unique<o::SquidProcessHost>(pool,types,kernel,*baseDestroy,processState,o::MakeBridgeRegularHandler(pool,*events),formDispatch->Hooks());
         formDispatch->Bind(*host);
+        dependencies=std::make_unique<o::DependFormHost>(pool,*baseDestroy,
+            [this](o::Sid watcher,o::Sid watched,o::Sid form) {
+                // 실제 ProcessForm34는 server일 때 PID의 notify(2,form,watched)를 호출한다.
+                host->NotifyDependency(watcher,watched,form);
+            },formDispatch->Hooks(),[this](o::Sid form,std::uint32_t flags) {
+                if (!runtime.formTransmit) throw std::logic_error("현재 DependForm 서버 전송 소비자 미연결");
+                runtime.formTransmit(form,flags);
+            });
+        formDispatch->Bind(*dependencies);
     }
     // 표시 억제는 현재 GUI 장치에서 조회한다. 콘솔에서는 변경 요청을 보존한다.
     bool Suppressed() const override { return displayHooks.suppressed && displayHooks.suppressed(); }
@@ -166,7 +177,7 @@ RawSurfaceWorld::~RawSurfaceWorld()=default;
 RawWorldCore RawSurfaceWorld::Core() {
     auto& s=*impl_;return {s.pool,s.hash,s.spots,s.types,s.frames,s.shapes,s.bookkeeping,s.ownerMode,
         *s.factory,*s.owner,*s.frame,*s.pop,*s.unpop,*s.postPop,*s.display,*s.building,*s.graph,*s.neighbors,
-        *s.baseDestroy,*s.virtualDestroy,*s.lifecycle,*s.events,*s.formDispatch,*s.host,s.processState,s.kernel,s.links};
+        *s.baseDestroy,*s.virtualDestroy,*s.lifecycle,*s.events,*s.formDispatch,*s.dependencies,*s.host,s.processState,s.kernel,s.links};
 }
 // 완성된 실제 파생 훅을 설치할 때 Form/Regular의 기존 callback도 현재 경계를 읽게 한다.
 void RawSurfaceWorld::BindRuntime(RawWorldRuntimeHooks hooks) {

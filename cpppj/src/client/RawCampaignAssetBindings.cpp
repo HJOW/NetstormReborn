@@ -84,6 +84,7 @@ struct RawCampaignAssetBindings::Impl {
     void Prepare(double now) {
         if (!std::isfinite(now) || playerState.battleOwner>o::kPlayerCount) throw std::out_of_range("캠페인 자산 현재 clock/Player owner 오류");
         globals.gun.now=now;globals.gun.fortMode=playerState.fortMode;globals.regular.fortMode=playerState.fortMode;assets.fortMode=playerState.fortMode;
+        core.processState.server=globals.gun.server;
     }
     // 실제 getter0046f530/CD004bdc50은 plain 절삭한 hash0을 읽고 bridge/없음이면127이다.
     std::int32_t IslandNumber(float x,float y) const {
@@ -127,6 +128,10 @@ struct RawCampaignAssetBindings::Impl {
     // 초기 생성·현재 Form 전송·차단·난수를 실제 현재 Core에 연결한다.
     o::GunProcessHooks GunHooks() {
         auto hooks=effects.gun;
+        hooks.removeDependency=[this](o::Sid watcher,o::Sid watched) { core.dependencies.Remove(watcher,watched,0); };
+        hooks.addDependency=[this](o::Sid watched,o::GunProcessFields& fields) {
+            const auto& process=CurrentGun(fields);core.dependencies.Create(watched,process.Form());
+        };
         hooks.repopForm=[this](o::GunProcessFields& fields) { core.processes.RefreshForm(CurrentGun(fields)); };
         hooks.animationForm=[this](o::Sid parent) { return AnimationForm(parent); };
         hooks.killAnimation=[this](o::Sid form,std::uint32_t flags) { auto* process=core.processes.FromForm(form);if (!process || (core.pool.Slot(form)[10]!=kFireProcess && core.pool.Slot(form)[10]!=kRotateProcess)) throw std::logic_error("캠페인 총 Animation 현재 Host 오류");core.processes.Kill(*process,flags); };

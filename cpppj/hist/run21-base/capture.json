@@ -1,0 +1,17 @@
+{
+  "baseline": "acd7882",
+  "host": "HJOW-Athlon",
+  "files": {
+    ".gitattributes": "8b76a4c65325d3f2f3612f22e53ed803ea07c39362cf1d6a8dd6bbbb0eb4cc34",
+    "LEFT_JOBS.md": "617819222a741d3a82d5f33af0c69ab9419797d7266d8d43b7061cfc7fbc492c",
+    "cpppj/src/client/RawSurfaceWorld.h": "6b6ce538f7d865dc435be239f0bb176ed78b4ef7ac1181044617973a069926d1",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "3bdb37094d1edaeb3fd57fde48c59685ad0edebe19f282a52c2392fa6d075bee",
+    "cpppj/src/client/RawCampaignAssetBindings.h": "8348cea0822879e1d4f18eeecc25a0f9908247cda7ecf59c81a329d65f7f4b2d",
+    "cpppj/src/client/RawCampaignAssetBindings.cpp": "0911efb7d84679a745e822119499725dd3495b7a301beebcb74bf7513eec7f4c",
+    "cpppj/tests/CampaignInstallSupport.h": "18d1b1e12b5eba5f04725d6cd4132c0f58329db09eafdf9e01e6a905fe5647dd",
+    "cpppj/tests/CMakeLists.txt": "e3754c07745bd267fb3e945e626bdb7157f6db7b77bd0f56ad64686215fedff5",
+    "cpppj/src/o/SquidProcess.h": "827a9789c2a6b66ac7b98181e49e8c0fa19713755bb62fccababb7ae2a0d0589",
+    "cpppj/src/o/SquidProcess.cpp": "2b78ac83db1bbb474f224845ae288d696b30d996a489ee292ac09a1af16986ad",
+    "cpppj/src/o/RawGunProcess.h": "b628f49ce8cedf55b3b12cbc92c2a4d95de93baeb7961d96d930b3a17d8ab0f3"
+  }
+}

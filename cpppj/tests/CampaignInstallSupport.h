@@ -190,6 +190,8 @@ struct InstallScene {
         assetEffects.sendGunPacket=[this](std::span<const std::uint8_t> packet) { CHECK(!packet.empty());external.push_back("Gun 전송"); };
         assetBindings=std::make_unique<RawCampaignAssetBindings>(world,*carrier,assetState,random,*islands,players,playerState,RawCampaignAssetGlobals{regularState,gunState,elements,archerCommand},std::move(assetEffects));assetBindings->ActivatePostPop();
         RawWorldRuntimeHooks worldHooks;
+        // 서버 Form 전송 요청은 검사 외부 경계에서 현재 타입/flags를 관찰한다. 실제 네트워크 구현을 뜻하지 않는다.
+        worldHooks.formTransmit=[this](Sid form,std::uint32_t flags) { CHECK(core.pool.Slot(form)[10]==1 && flags==0x108);external.push_back("감시 Form 전송"); };
         // 삭제 전송만 검사 외부 경계로 관찰한다. 그 외의 gameplay 수명 효과는 실제 분배기가 처리해야 한다.
         worldHooks.assets.emit=[this](const SquidDestroyEvent& event) {
             if (event.effect!=SquidDestroyEffect::Transmit) throw std::logic_error("캠페인 검사에서 미연결 자산 삭제 수명 효과");

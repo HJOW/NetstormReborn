@@ -29,6 +29,8 @@ Sid SquidProcess::Parent() const { return parent_; }
 void SquidProcess::OnFormDestroy(std::uint32_t) {}
 void SquidProcess::OnParentDying(Sid) {}
 void SquidProcess::OnAttached() {}
+// 실제 notify 몸체를 아직 복원하지 않은 파생 객체가 통지를 성공으로 버리지 않게 거부한다.
+void SquidProcess::Notify(std::uint32_t,std::uint32_t,std::uint32_t) { throw std::logic_error("현재 파생 프로세스의 notify1c 미복원"); }
 SquidProcessHost* SquidProcess::Host() const { return host_; }
 // 부착 때 Kernel이 배정한 번호를 그대로 돌려준다.
 ProcessId SquidProcess::Pid() const { return pid_; }
@@ -256,6 +258,13 @@ SquidProcess* SquidProcessHost::FromForm(Sid form) const {
     // 원본 getter처럼 DWORD 전체를 조립하며 WORD로 절단하지 않는다.
     for (std::size_t i=0;i<4;++i) pid|=static_cast<ProcessId>(raw[kFormPid+i])<<(8*i);
     return dynamic_cast<SquidProcess*>(kernel_.Get(pid));
+}
+// 실제 가상34는 server0이면 PID조차 읽지 않는다. 정상 현재 PID의 가상notify만 호출한다.
+void SquidProcessHost::NotifyDependency(Sid watcher,Sid watched,Sid dependForm) const {
+    if (!state_.server) return;
+    auto* process=FromForm(watcher);
+    if (!process) throw std::logic_error("현재 Depend 통지의 실제 ProcessForm/PID 미연결");
+    process->Notify(2,dependForm.value,watched.value);
 }
 template<class Predicate> RegularProcess* SquidProcessHost::Find(Sid parent,Predicate match) const {
     if (parent.value==0 || parent.value>=pool_.Capacity()) throw std::out_of_range("이벤트 조회 SID 범위 오류");
