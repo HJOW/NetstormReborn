@@ -22,8 +22,8 @@ void Put(std::span<std::uint8_t> raw,std::size_t offset,std::uint32_t value,std:
 // signed 원본 좌표의 DWORD 감김 덧셈이다.
 std::int32_t Add(std::int32_t origin,std::uint32_t value) { return std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(origin)+value); }
 // 현재 분기가 요구한 저장 필드가 없으면 임의0을 대신 쓰지 않고 거부한다.
-template<class T> T Required(const std::optional<T>& value) {
-    if (!value) throw std::logic_error("Fort 현재 타입이 요구한 저장 필드 누락");return *value;
+template<class T> T Required(const std::optional<T>& value,const char* field) {
+    if (!value) throw std::logic_error(std::string("Fort 현재 타입이 요구한 저장 필드 누락: ")+field);return *value;
 }
 }
 // 원본 계산 전에 판본·같은 자료 크기와 모든 실제 효과 경계를 검사한다.
@@ -82,15 +82,18 @@ Sid RawFortObjectLoad::Object(const FortObject& object,std::int32_t originX,std:
     const float x=static_cast<float>(Add(originX,static_cast<std::uint32_t>(object.CellX()))),
         y=static_cast<float>(Add(originY,static_cast<std::uint32_t>(object.CellY())));
     const auto sid=hooks_.create(type,0);Type(sid);
-    if (Type(sid).flags1&TypeFlag1::kSaveFrame) Frame(sid,Required(object.frame));
-    if (Type(sid).flags1&TypeFlag1::kSaveQA) Word(sid,(static_cast<std::uint32_t>(pool_.Slot(sid)[kWord+1])<<8)|Required(object.quantityByte));
-    if (Type(sid).flags1&TypeFlag1::kSaveQB) Word(sid,static_cast<std::uint32_t>(Required(object.quantityWord)));
-    if (Type(sid).flags2&TypeFlag2::kBridge) Frame(sid,Required(object.bridgeFrame));
-    if (state_.version==0) hooks_.setState(sid,Required(object.legacyState)); // 원본 legacy state 판정은 OR 명령 때문에 항상 참이다.
-    if (std::bit_cast<std::int32_t>(state_.version)>1 && (Type(sid).flags2&TypeFlag2::kFactory)) hooks_.setState(sid,Required(object.factoryState));
+    if (Type(sid).flags1&TypeFlag1::kSaveFrame) Frame(sid,Required(object.frame,"frame"));
+    if (Type(sid).flags1&TypeFlag1::kSaveQA) Word(sid,(static_cast<std::uint32_t>(pool_.Slot(sid)[kWord+1])<<8)|Required(object.quantityByte,"quantityByte"));
+    if (Type(sid).flags1&TypeFlag1::kSaveQB) Word(sid,static_cast<std::uint32_t>(Required(object.quantityWord,"quantityWord")));
+    if (Type(sid).flags2&TypeFlag2::kBridge) Frame(sid,Required(object.bridgeFrame,"bridgeFrame"));
+    if (state_.version==0) hooks_.setState(sid,Required(object.legacyState,"legacyState")); // 원본 legacy state 판정은 OR 명령 때문에 항상 참이다.
+    if (std::bit_cast<std::int32_t>(state_.version)>1 && (Type(sid).flags2&TypeFlag2::kFactory)) hooks_.setState(sid,Required(object.factoryState,"factoryState"));
     if (std::bit_cast<std::int32_t>(state_.version)>0) {
         if (Type(sid).flags2&state_.ownerSavedMask) {
-            owner=Required(object.owner);if (!owner || owner>8) owner=1;
+            // 실패 진단에는 원래 요청과 생성 후 현재 타입을 함께 남긴다. 저장 필드/분기에는 영향을 주지 않는다.
+            const auto context=std::string("owner (stored=")+std::to_string(object.storedType)+", requested="+
+                std::to_string(object.type)+", current="+std::to_string(pool_.Slot(sid)[kType])+")";
+            owner=Required(object.owner,context.c_str());if (!owner || owner>8) owner=1;
             if (!state_.special && !state_.mission) owner=defaultOwner;
         }
     } else owner=defaultOwner;
@@ -116,7 +119,7 @@ Sid RawFortObjectLoad::Object(const FortObject& object,std::int32_t originX,std:
     }
     if (Type(sid).flags1&kRandomFrame) { const auto frame=RandomFrame(sid);Frame(sid,frame==-1 ? 0U : static_cast<std::uint32_t>(frame)); }
     hooks_.pop(sid,x,y,9);
-    if (Type(sid).flags1&kContainer) Contents(sid,Required(object.contents),9);
+    if (Type(sid).flags1&kContainer) Contents(sid,Required(object.contents,"contents"),9);
     if (state_.fort && !state_.fortDestroyBlocked) {
         const auto genus=Type(sid).flags2;
         if (!(genus&state_.fortKeepMask) ||

@@ -3,6 +3,8 @@
 # 테스트 파일을 만들면 아래 목록에 더한다. 파일 안의 TEST_CASE 는 자동으로 등록된다.
 add_executable(netstorm_tests
     CampaignWorldRuntimeTests.cpp
+    CampaignMotionTests.cpp
+    CampaignInstallSupport.h
     VortexOwnerTests.cpp
     # 준비된 원본 관찰과 실제 캠페인 부모·Player 예약·Burning 프레임을 대조한다.
     CampaignWorldLoadTests.cpp

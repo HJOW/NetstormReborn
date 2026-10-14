@@ -263,6 +263,10 @@ const o::RawPriestSpawn& RawPriestWorldBindings::Spawn() const { return *impl_->
 const o::RawPriestState& RawPriestWorldBindings::PriestState() const { return *impl_->priest; }
 // 보호막 조회의 타입 전역과 hash가 전체 월드와 일치한다.
 const o::RawPriestForcefield& RawPriestWorldBindings::Forcefield() const { return *impl_->lookup; }
+// 삭제와 도착/cleanup이 별도 contained 상태를 만들지 않고 같은 몸체를 읽는다.
+const o::RawCarrierPreDestroy& RawPriestWorldBindings::Carrier() const { return *impl_->carrierPre; }
+// 사제 Halt의 지면 검사를 기존 PostPop/낙하 조회 몸체에 연결한다.
+const o::RawCarrierCheck& RawPriestWorldBindings::CarrierCheck() const { return *impl_->check; }
 // 목록과 원래 소유자별 상태는 미션 outcome까지 같은 객체를 읽는다.
 o::PriestPostPopState& RawPriestWorldBindings::Priests() const { return impl_->state.priests; }
 }

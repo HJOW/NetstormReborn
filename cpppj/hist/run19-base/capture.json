@@ -1,0 +1,21 @@
+{
+  "baseline": "2ed0b3e",
+  "host": "HJOW-Athlon",
+  "files": {
+    ".gitattributes": "74db193fe52ada1999b57e3bed7ab69fba5b475f188993da634014fa2359a3ad",
+    "LEFT_JOBS.md": "3682bcc4126977f2f1bec205e9410aa4fb0ab6f01d2cbd320ffd047d99f1737f",
+    "cpppj/src/client/CMakeLists.txt": "e4ede115260c9d394180df41a2fa543677518297c6b74b05d2a17874b3f905cb",
+    "cpppj/tests/CMakeLists.txt": "b03176a18dbaccb774a5cd3117fe46cc8ea75953164e44ad0fe73b024479f77d",
+    "cpppj/src/client/RawPriestWorldBindings.h": "d0f36f7e7484c797d7361575fe32e0c37d6f7f1f2bf19e2bc96f87c93983acc9",
+    "cpppj/src/client/RawPriestWorldBindings.cpp": "8c0c047440a53acf76f1233cb7f322b31b927a44e3052c828858f345f78aede0",
+    "cpppj/tests/CampaignWorldRuntimeTests.cpp": "8a46ef4088b7ee4d5e424c587ca19fd743058373a5fa30516b7aaefaf46f4247",
+    "cpppj/src/o/CMakeLists.txt": "a7e85d4fd0cc183ba3dfe554884ba45968422cc4a500a62848a52b8d4dbc371e",
+    "cpppj/src/client/RawCampaignAssetBindings.h": "e4dfd66a55e6c45a8c4af8d3eb009bf9f4f6992ea4efbe7dfe44bc6f5922b3cd",
+    "cpppj/src/client/RawCampaignAssetBindings.cpp": "7747a030b9916bd58e4c7fb9d04e7a39a0814ca4b11111436999b831fe14f8bf",
+    "cpppj/src/o/RawFortObjectLoad.cpp": "6fdd110dd0498416bf9bff90479291d3bed2a17fa1fe77b2f83c20e1379be971",
+    "cpppj/src/o/RawFortObjectLoad.h": "fcd6e8e6ca698706c27aec7622e399612c13a0823158ac1b7da8142e7ffa41ea",
+    "cpppj/tests/FortObjectLoadTests.cpp": "f47a0984fdaed14b7db492551a38ea27ff74fb7f30d689d561e682124d8e9a78",
+    "cpppj/src/o/RawFactoryPostPop.h": "28f918f02f18b9c393fc1a5cf28e8bfeb462c82bf5b480b07e278dc4d5d8c508",
+    "cpppj/src/o/RawFactoryPostPop.cpp": "e909e7d9a8d5b4dcec95cf6fbbea9799c2702adfa367479955c56a93ab62bbf3"
+  }
+}

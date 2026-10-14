@@ -1,5 +1,15 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-15 완료: 단위19 실제 사제 이동·1-2 설치·Fort 타입 전역 교정 (`HJOW-Athlon`)
+
+- [x] AGENTS와 양 LEFT를 다시 읽고 `2ed0b3e`에서 재개했다. 현재 PC/마지막 디컴파일 PC는 **HJOW-Athlon, 2026-10-15**다. Level/하위 getter9개를 같은 호스트에서 읽기 전용 export했다. 보호 원본 및 AGENTS는 불변이다.
+- [x] `RawCampaignMotionBindings`로 동일 사제 Carrier/HP/spot/현재Path/BFS/Host54/Halt/Arrival/cleanup을 구성했다. `RawPriestWorldBindings`의 기존 Carrier/CarrierCheck를 재사용한다. 직접 영향15파일 전체를 `cpppj/hist/run19-base`에 보존했다.
+- [x] 실제1-2 `MasterOfWhirligigs` 설치에서 Fort 기본 island/stalag가97/98로 잘못 지정된 것을 발견했다. 두 PE 초기DWORD는94/95이며 parser도94를 건너뛴다. 기본값을 교정했다. 기존 Native fixture의 명시97/98 입력은 C++ 소비자에서 그대로 제공하며 입력/기대값을 변경하지 않는다.
+- [x] 실제 baseLevel has/get/set과 Factory의 Level→상태 프레임 보정을 연결했다. 새 PE96고유입력/정상96, 범위밖 입력의 예상 진단은 각판본24다. 기존 Factory PostPop/Frame 몸체도 같은 자산 바인딩에 등록했다.
+- [x] 집중5개와 기존 FortObjectLoad4개 통과. 실제1-1 적 사제189프레임·1-2 내 사제148프레임의 저수준 명령/도착/현재Form 반납이 통과했다. 다른 Kernel 프로세스 전체/AI/GUI는 실행하지 않았으며 소리토큰0·송신은 명시 관찰 경계다.
+- [x] 최종 Release 경고/오류0, 전체 CTest **1/1·내부1110개·실패 체크0**(183.54초)이다. [단위19](docs/exe/cpp-run19-20261015.md)와 `run19.json`에 전체 신규 원문/실행 SHA를 고정했다. **`20261015-04 실제 사제 이동과 캠페인 1-2 설치 및 Fort 타입 전역 교정`**으로 로컬 커밋하며 push는 하지 않는다.
+- [ ] 실제 GameWorld는 비표면 Squid 배열/관찰 기반 이동을 아직 사용한다. 실제 세션 소유자/Ready/login·입력·생산·전투·경제·운반·AI/Guide/UI/음향·승패·Early Missions와1-1~1-2 완주 동일성을 계속 연결해야 한다. 사제 Damageable/Placement 및 선택되지 않은 큰 운반/의식 하위는 아직 미연결이며 이번 검사는 이를 성공으로 덮지 않는다. 전체화면 DirectDraw 오류 제외, 목표active 유지. 이전 최종 경로/참조/과거SHA 감사와41자 로컬 이력 로그1건은 계속 인계한다.
+
 ## 2026-10-15 완료: 단위18 실제 캠페인 설치 조립 (`HJOW-Athlon`)
 
 - [x] AGENTS와 양 LEFT를 다시 읽고 `637ad76`에서 재개했다. 현재/마지막 디컴파일 PC는 **HJOW-Athlon, 2026-10-15**로 같다. 보호 원본/AGENTS는 수정하지 않는다.

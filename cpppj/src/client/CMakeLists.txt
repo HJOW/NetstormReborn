@@ -83,6 +83,7 @@ target_sources(netstorm PRIVATE
     RawCampaignOwnership.cpp RawCampaignOwnership.h
     RawCampaignWorldRuntime.cpp RawCampaignWorldRuntime.h
     RawCampaignPathBindings.cpp RawCampaignPathBindings.h
+    RawCampaignMotionBindings.cpp RawCampaignMotionBindings.h
     UserInput.cpp UserInput.h
     Sound.cpp Sound.h
     SoundDevice.cpp SoundDevice.h

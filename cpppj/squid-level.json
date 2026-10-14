@@ -1,0 +1,35 @@
+{
+  "host": "HJOW-Athlon",
+  "uniqueInputs": 96,
+  "editions": {
+    "originals": {
+      "samples": 48,
+      "assertions": 24,
+      "pe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "exports": {
+        "extracted/owner/originals/creation.c": "f9919c046d5259526946f106b47b6259fe5e04971f743d6fa02d6a5361b9dc16",
+        "extracted/owner/originals/functions.tsv": "3ea66dace80a85999a8b2c2dbadb4d5f1bd18b0dcdb0768f9c41075206c7c72d",
+        "extracted/squid-level/originals/creation.c": "24b0633d6c81be7f16f59442c6f1c329edcd48d67a3ae4643664628295b9a37f",
+        "extracted/squid-level/originals/functions.tsv": "c5cf2813ec8b091ebc66d5348e92813d76d48e39ba78db6e1cef321af8491e73"
+      }
+    },
+    "originalCD": {
+      "samples": 48,
+      "assertions": 24,
+      "pe": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "exports": {
+        "extracted/owner/originalCD/creation.c": "115d3f4790315c3647e18c087579cf3aa08af06cdbaeca42adbac1e82725af62",
+        "extracted/owner/originalCD/functions.tsv": "4e184997f62c2622b26b3fa4f047a2580a609d2d919f0e414a75e8efd49d4439",
+        "extracted/squid-level/originalCD/creation.c": "85369dca8404a8eb52ce4be8d3b8e9b6997beaf015e0a448a65b906564eb85f3",
+        "extracted/squid-level/originalCD/functions.tsv": "7bd905a413161256983f5b3a205dbeeaeae07ce9a38f8e5f68744a98dd726607",
+        "extracted/squid-level2/originalCD/creation.c": "abde975fe1621997002f05d71dc0772df4ddfb5cadd733adca43996949632fc6",
+        "extracted/squid-level2/originalCD/functions.tsv": "3cd645180b94833885bf312bb9a6f47e99343c52dd8384a48c5e4af17b0755e6",
+        "extracted/squid-level3/originalCD/creation.c": "9eddb44028a00ec31169d5dde566361462a505d73b82e78685a3dc303d01ceea",
+        "extracted/squid-level3/originalCD/functions.tsv": "dfb9d6395c41c76117a881af67d6c03d5295f5d0dfb60611f5110e1c1043de75"
+      }
+    }
+  },
+  "fixtureSha": "abc458e72971188a606e4069d893603a7afcebb29ddba3efaaf2b521eb037436",
+  "toolSha": "a0ceac65cfe2f67797c7a9c1f97520ddcf92fb438fac7a74eb770a991d723709",
+  "boundary": "원본 범위 진단만 관찰/반환하며 setter/getter/hasLevel/type조회는 실제 PE 명령"
+}

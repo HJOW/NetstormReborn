@@ -1,0 +1,7 @@
+{
+  "description": "원본 hasLevel/getLevel/setLevel 몸체. 마지막 디컴파일 PC HJOW-Athlon, 2026-10-15.",
+  "editions": {
+    "originals": ["004ad0a0", "004ad0f0", "004ad110"],
+    "originalCD": ["004acdc0", "004ace00", "004ace20"]
+  }
+}

@@ -6,6 +6,7 @@
 #include "o/RawGeyserAiRegistration.h"
 #include "o/RawGunProcess.h"
 #include "o/RawIslandRuntime.h"
+#include "o/RawFactoryPostPop.h"
 #include "o/RawPlayerWorld.h"
 #include <memory>
 
@@ -19,6 +20,8 @@ struct RawCampaignAssetGlobals {
 };
 // UI/음향/미복원 하위는 호출자가 실제 소비자를 공급한다. 누락된 선택 효과는 예외로 거부한다.
 struct RawCampaignAssetEffects {
+    o::FactoryPostPopHooks factory; // 실제 Factory/아웃포스트 중복 진단과 지역 소유권의 외부 하위다.
+    std::function<void(o::SquidLevelAssertion)> levelAssertion; // 실제 Factory 저장 상태의 원본 범위 진단이다.
     o::AssetPostPopHooks postPop; // 실제 TYPE sound토큰/가상 Vortex owner/region/UI/Slot 등 Core 밖의 몸체다.
     o::AssetRegularHooks regular; // 실제 Ascend/이탈/레지던스 사건2/피해/건설/음향/UI 하위다.
     o::GunProcessHooks gun; // 실제 검색/표적감시/사거리통지/Animation/shot의 추가 소비자다.
@@ -44,6 +47,8 @@ public:
     void PrepareFrame(double now);
     // 실제 Fort 로딩 중첩값을 공유 AssetPostPop 상태에 전달한다.
     void SetLoadingDepth(std::uint32_t depth);
+    // 실제 Factory/아웃포스트 가상84의 Level→상태 프레임 보정을 같은 객체에 적용한다.
+    void SetState(o::Sid sid,std::uint32_t value) const;
     // 사제/Player 등 기존 실제 사건 처리기를 fallback으로 합성한다.
     o::RegularHandler Handler(o::RegularHandler fallback={}) const;
     // Gun34만 실제 writer/송신으로 분배하고 기존 다른 프로세스 전송은 fallback에 전달한다.

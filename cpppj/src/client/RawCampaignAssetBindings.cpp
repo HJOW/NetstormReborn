@@ -47,6 +47,8 @@ struct RawCampaignAssetBindings::Impl {
     o::RawFrameAdvance advance; // 현재 Core.frame/프레임 표의 실제 진행기다.
     std::unique_ptr<o::RawGunProcess> gun; // 원본 초기 총 생성자/상태 기계와 실제 Host 소비자다.
     std::unique_ptr<o::RawAssetPostPop> postPop; // 실제 초기 자산 가상 PostPop 분배 몸체다.
+    std::unique_ptr<o::RawFactoryPostPop> factory; // 같은 Damageable/프레임/목록의 실제 Factory/아웃포스트 몸체다.
+    std::unique_ptr<o::RawSquidLevel> level; // 같은 Pool의 baseLevel과 signed 범위 진단 몸체다.
     std::unique_ptr<o::RawAssetRegular> regular; // 실제 초기 예약의 가상 Handle 몸체다.
     std::array<std::uint8_t,64> packet{}; // 실제 Gun packet writer가 현재 한 요청을 작성하는 임시 저장소다.
     bool writingGun{},active{}; // 송신 분배와 공통 PostPop 등록의 현재 상태다.
@@ -61,8 +63,21 @@ struct RawCampaignAssetBindings::Impl {
         gun=std::make_unique<o::RawGunProcess>(core.pool,core.types,globals.gun,GunHooks());
         postPop=std::make_unique<o::RawAssetPostPop>(core.pool,core.types,core.postPop,damageable,assets,PostHooks());
         postPop->BindPlayerRecords(players,&playerState.battleOwner);
+        factory=std::make_unique<o::RawFactoryPostPop>(core.pool,core.hash,core.types,core.frames,core.postPop,damageable,assets,FactoryHooks());
+        auto assertion=effects.levelAssertion;RejectMissing(assertion,"캠페인 Factory 실제 Level 진단 미연결");
+        level=std::make_unique<o::RawSquidLevel>(core.pool,core.types,std::move(assertion));
         regular=std::make_unique<o::RawAssetRegular>(core.pool,core.hash,core.types,core.frames,globals.elements,core.frame,advance,random,assets,globals.regular,RegularHooks());
         Prepare(core.processState.now);
+    }
+    // 기존 Factory body의 예약/공간/프레임만 같은 Core에 연결한다. 큰 진단/지역 효과는 제공한 경계를 쓴다.
+    o::FactoryPostPopHooks FactoryHooks() {
+        auto hooks=effects.factory;hooks.reserveRegular=effects.postPop.reserveRegular;
+        hooks.addRegular=[this](o::Sid sid,std::uint32_t event,float payload) { if (!core.processes.AddRegular(sid,event,payload)) throw std::logic_error("캠페인 Factory Regular 부착 실패"); };
+        hooks.destroy=[this](o::Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
+        RejectMissing(hooks.reserveRegular,"캠페인 Factory 실제 Regular 확보 미연결");
+        RejectMissing(hooks.warnDuplicate,"캠페인 Factory 중복 진단 미연결");
+        RejectMissing(hooks.regionOwnership,"캠페인 아웃포스트 실제 지역 소유권 미연결");
+        return o::MakeFactoryPostPopHooks(core.pool,core.frame,std::move(hooks));
     }
     // 현재 게임시각과 local/fort 모드를 같은 Player 전역에서 조회한다. 다른 상태/목록은 복사하지 않는다.
     void Prepare(double now) {
@@ -149,13 +164,15 @@ RawCampaignAssetBindings::RawCampaignAssetBindings(RawSurfaceWorld& world,const 
     RawCampaignAssetGlobals globals,RawCampaignAssetEffects effects)
     :impl_(std::make_unique<Impl>(world,damageable,assets,random,islands,playerRecords,playerState,globals,std::move(effects))) {}
 // 상위가현재Kernel/반환callback수명을끝낸후활성자산분배만해제한다.
-RawCampaignAssetBindings::~RawCampaignAssetBindings() { if (impl_->active) impl_->core.postPop.SetAssetPostPop(nullptr); }
+RawCampaignAssetBindings::~RawCampaignAssetBindings() { if (impl_->active) { impl_->core.postPop.SetAssetPostPop(nullptr);impl_->core.postPop.SetFactoryPostPop(nullptr); } }
 // 실제초기Pop전에한번등록하며동일객체의재활성은허용한다.
-void RawCampaignAssetBindings::ActivatePostPop() { impl_->core.postPop.SetAssetPostPop(impl_->postPop.get());impl_->active=true; }
+void RawCampaignAssetBindings::ActivatePostPop() { impl_->core.postPop.SetAssetPostPop(impl_->postPop.get());impl_->core.postPop.SetFactoryPostPop(impl_->factory.get());impl_->active=true; }
 // 원본clock과현재Player모드를조회하여다음실제프레임에사용한다.
 void RawCampaignAssetBindings::PrepareFrame(double now) { impl_->Prepare(now); }
 // 실제부모로더의중첩값을사본상태없이기존자산모듈에전달한다.
 void RawCampaignAssetBindings::SetLoadingDepth(std::uint32_t depth) { impl_->assets.loadingDepth=depth; }
+// actual 가상84의 파생 상태 프레임 변경을 생략하지 않는다.
+void RawCampaignAssetBindings::SetState(o::Sid sid,std::uint32_t value) const { impl_->factory->SetState(*impl_->level,sid,value); }
 // 실제지원가상표만처리하고다른부모는호출자가준실제fallback에넘긴다.
 o::RegularHandler RawCampaignAssetBindings::Handler(o::RegularHandler fallback) const { return impl_->regular->Handler(std::move(fallback)); }
 // 같은서버flags0의Gun packet만분배하고다른현재Process packet은기존경계를유지한다.

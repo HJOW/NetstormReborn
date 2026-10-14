@@ -149,6 +149,10 @@ public:
     // 사제 조회·선택·움직임 및 MissionOutcome이 읽는 단일 상태/목록을 제공한다.
     const o::RawPriestState& PriestState() const;
     const o::RawPriestForcefield& Forcefield() const;
+    // 이동/도착/cleanup이 사제 삭제와 같은 현재 contained 상태·조회 몸체를 재사용한다.
+    const o::RawCarrierPreDestroy& Carrier() const;
+    // Halt가 사제 PostPop과 같은 현재 spot/낙하 몸체를 조회한다.
+    const o::RawCarrierCheck& CarrierCheck() const;
     o::PriestPostPopState& Priests() const;
 private:
     struct Impl;

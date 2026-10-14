@@ -3,6 +3,7 @@
 #include "o/RawCarrierPostPop.h"
 #include "o/RawAssetPostPop.h"
 #include "o/RawSquidFinder.h"
+#include "o/RawSquidLevel.h"
 
 namespace netstorm::o {
 class SquidFrame;
@@ -34,6 +35,8 @@ public:
     void Validate(Sid sid,std::uint32_t flags,const RawGraphPop* pop=nullptr) const;
     // wrapper 등록→최초 예약→Damageable→프레임→현재 일반 finder/중복 삭제 순서를 실행한다.
     void PostPop(Sid sid,std::uint32_t flags) const;
+    // 실제 Factory 가상84는 공통Level 저장 뒤 같은 가상88 상태 프레임 보정을 호출한다.
+    void SetState(const RawSquidLevel& level,Sid sid,std::uint32_t value) const;
     // 공통 분배기에 다른 풀의 처리기를 등록하지 않도록 소유자를 공개한다.
     const SidPool& Pool() const;
 private:

@@ -70,6 +70,8 @@ struct FortLoadScene {
         for (auto type:{v[FortTypeInput],101U}) { types[type].flags1=v[Flags1];types[type].flags2=v[Flags2];types[type].maxHitPoints=803;types[type].footX=types[type].footY=1;frames[type]=Frames(v[FramesInput]); }
         types[164].flags1=0x10;types[164].maxHitPoints=803;types[110].flags1=0x1000;types[110].contentListFlags=0x110;
         types[111].flags1=0x2000;types[112].flags1=0x20000;types[112].contentListFlags=0x20;
+        // 기존 Native 입력은 명시적으로 island97/stalag98을 제공한다. 실제 PE 기본94/95와 합치지 않는다.
+        state.islandType=97;state.largeIslandType=98;
         state.version=v[Version];state.loadingDepth=3;state.chunksX=state.chunksY=2;state.special=v[Special]!=0;state.mission=v[Mission]!=0;
         state.fort=v[Fort]!=0;state.fortDestroyBlocked=v[Blocked]!=0;state.chaffMode=v[ChaffMode]!=0;rewardState.priestQuarterHp=v[Quarter]!=0;
         if (patch) store=std::make_unique<ScrambledSpStore>(random,[] { return 1U; });

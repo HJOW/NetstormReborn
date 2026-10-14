@@ -1,0 +1,6 @@
+{
+  "description": "CD hasLevel의 실제 TYPE 주소 getter. 마지막 디컴파일 PC HJOW-Athlon, 2026-10-15.",
+  "editions": {
+    "originalCD": ["004abf50"]
+  }
+}
