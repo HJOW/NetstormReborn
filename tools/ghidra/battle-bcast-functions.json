@@ -1,0 +1,7 @@
+{
+  "description": "실제 Player9 접속/연결/로컬 제외 송신 분배. HJOW-Athlon, 2026-10-15.",
+  "editions": {
+    "originals": ["004e2e30", "004e2e80"],
+    "originalCD": ["004c0420", "004c0480"]
+  }
+}

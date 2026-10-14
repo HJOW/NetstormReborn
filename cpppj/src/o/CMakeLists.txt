@@ -192,3 +192,6 @@ target_sources(netstorm PRIVATE RawDiscRegular.cpp RawDiscRegular.h)
 
 # 실제 CRT/Unix 시각 재시드를 게임 난수와 같은 상태에 연결한다.
 target_sources(netstorm PRIVATE RawGameRandomSeed.cpp RawGameRandomSeed.h)
+
+# 현재 Player9/연결 객체 표의 원본 송신 분배를 실제 세션에 제공한다.
+target_sources(netstorm PRIVATE RawBattleBroadcast.cpp RawBattleBroadcast.h)

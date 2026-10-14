@@ -8,6 +8,7 @@
 #include "client/RawCampaignHitBindings.h"
 #include "client/SoundProcess.h"
 #include "o/RawPlayerRegular.h"
+#include "o/RawBattleBroadcast.h"
 namespace netstorm::client {
 // 게임 계산을 대신하지 않고 실제 클라이언트 UI/음향/전송의 선택 경계를 공급한다.
 struct RawCampaignSessionServices {
@@ -27,6 +28,7 @@ struct RawCampaignSessionServices {
     SoundList* soundNames{}; // 클라이언트의 단일 실제 이름표를 공유한다. 별도 토큰표를 만들지 않는다.
     SoundProcessHooks sound; // 실제 같은 SoundPlayer/벽시계에 연결한 재생·정지 경계다.
     std::function<void(std::span<const std::uint8_t>)> pathPacket; // 실제 Path 직렬화 버퍼의 송신 소비자다.
+    o::BattlePacketPeers battlePeers; // 실제0..8 연결 객체 표다. 단독 캠페인은 NULL 연결이며 별도 송신 관찰 함수가 필요하지 않다.
 };
 // 초기 객체 생성부터 Kernel 해제까지 동일 주소에서 실제 모듈과 상태를 소유한다.
 class RawCampaignSession {

@@ -63,10 +63,12 @@ TEST_CASE(CampaignSession_ActualWarBeginsGameWorld) { CheckSessionWorld("thewarb
 TEST_CASE(CampaignSession_ActualMasterGameWorld) { CheckSessionWorld("masterofwhirligigs"); }
 
 // 같은 production GameWorld의 선택/좌클릭은 원본 BFS/Host54를 만들고 현재 슬롯을 이동한다.
-TEST_CASE(CampaignSession_ActualWarBeginsClickMovesSamePriest) {
+void CheckSessionMovement(bool actualBroadcast) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
     auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());
-    GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",external.Services());world.Resize(1024,768);
+    auto services=external.Services();
+    if (actualBroadcast) { services.assets.sendGunPacket={};services.pathPacket={}; }
+    GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services));world.Resize(1024,768);
     auto core=world.Surfaces().Core();Sid priest{};
     // 현재 raw 내 사제만 선택한다.
     for (const auto& object:world.Surfaces().Objects()) if (object.object.type==158 && object.object.owner==1) { priest=object.sid;break; }
@@ -93,6 +95,11 @@ TEST_CASE(CampaignSession_ActualWarBeginsClickMovesSamePriest) {
     }
     CHECK(path && moved && core.bookkeeping.depth==0);
 }
+
+// 실제 GameWorld 선택/이동은 원본 경로를 사용한다.
+TEST_CASE(CampaignSession_ActualWarBeginsClickMovesSamePriest) { CheckSessionMovement(false); }
+// 단독 캠페인의 NULL 연결 표는 실제 Gun/Path 직렬화 뒤 원본 송신 분배에서 자연 반환한다.
+TEST_CASE(CampaignSession_ActualSingleplayerBroadcastAndPath) { CheckSessionMovement(true); }
 
 // 실제 생산 세션의 보호 TYPE 원문과 현재 재시드 상태에서 교전/HP1/감시 종료를 검사한다.
 TEST_CASE(CampaignSession_ActualWarBeginsCombatToOne) {

@@ -1,0 +1,14 @@
+{
+  "baseline": "7cb5494",
+  "host": "HJOW-Athlon",
+  "files": {
+    ".gitattributes": "e7f021a95c0a10015e01edb7bffc0b945d9c32dc796e5327c6456d582e05ccd5",
+    "LEFT_JOBS.md": "f3901134a2baefe7bdbfb305cefe12372f0ab3f59b2506d0d87d433adf271666",
+    "cpppj/src/client/RawCampaignSession.h": "1de378d69c134ee031727617e942ed847ba6bc55f432c8095995f763dfda5862",
+    "cpppj/src/client/RawCampaignSession.cpp": "477ee98f0f1ca047e5a1bbff7c45e6cb7ae677a3a5e561629f0e063fb9c29a11",
+    "cpppj/src/o/CMakeLists.txt": "8d21e37951df4d650188ac59b66e251cef81bce13fef13797d25dfe9f76980dc",
+    "cpppj/tests/CMakeLists.txt": "490d2b0cbfc736918d1c2c093f9a95ee79c89ce890c6a82f2bcfc65f97401556",
+    "cpppj/tests/CampaignSessionTests.cpp": "06c1cabf7c46a21f49e2c36618d7a25a8f2bd45fa3bb53504c499297dca828f5",
+    "cpppj/src/client/UberGump.cpp": "7c7e852388d278762d0b2036502c6b4918375f67b772b180f66beac2367fc912"
+  }
+}

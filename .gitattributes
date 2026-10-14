@@ -698,6 +698,19 @@ docs/exe/cpp-run25-20261015.md text eol=lf
 extracted/campaign-client/** -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
 extracted/run25-*.log -text
 extracted/run25_*.py -text
+# 실제 Player9 송신 분배와 현재 세션 경계의 원문 바이트를 유지한다.
+cpppj/src/o/RawBattleBroadcast.* text eol=lf
+cpppj/tests/BattleBroadcastTests.cpp text eol=lf
+cpppj/tests/fixtures/battle-bcast-x86.tsv text eol=lf
+cpppj/battle-bcast.json text eol=lf
+cpppj/run26.json text eol=lf
+tools/check_campaign26.py text eol=lf
+tools/decomp_battle_bcast.py text eol=lf
+tools/ghidra/battle-bcast-functions.json text eol=lf
+docs/exe/cpp-run26-20261015.md text eol=lf
+extracted/battle-bcast/** -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+extracted/run26-*.log -text
+extracted/run26_*.py -text
 cpppj/tests/CampaignFrameTests.cpp text eol=lf
 tools/check_campaign20.py text eol=lf
 cpppj/run20.json text eol=lf

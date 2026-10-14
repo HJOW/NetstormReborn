@@ -1,0 +1,43 @@
+{
+  "host": "HJOW-Athlon",
+  "uniqueInputs": 1356,
+  "editions": {
+    "originals": {
+      "inputs": 678,
+      "returns": 678,
+      "assertions": 0,
+      "peSha": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "nativeCalls": {
+        "004e2e30": 171,
+        "004e2e80": 507
+      },
+      "externalCalls": 892,
+      "exports": {
+        "extracted/battle-bcast/originals/creation.c": "56b5a86a8dc129091dc4cee38ee36c278e5e24db95484c9cb0bcb57956eadf90",
+        "extracted/battle-bcast/originals/functions.tsv": "ae503f4d214d3786c56ddfcc969f3c0cc6c684dd369b4c48409a84593ad94e87"
+      }
+    },
+    "originalCD": {
+      "inputs": 678,
+      "returns": 678,
+      "assertions": 0,
+      "peSha": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "nativeCalls": {
+        "004c0420": 171,
+        "004c0480": 507
+      },
+      "externalCalls": 892,
+      "exports": {
+        "extracted/battle-bcast/originalCD/creation.c": "87184f7c5b029341980b2fd596a4f490dba92f67ef4caadecb5f92bec1d916a3",
+        "extracted/battle-bcast/originalCD/functions.tsv": "bfc0ff5abe2bf5d84aac77ae21b43f81a4e7d828eed88c5b0f8c5d6a868d1b6b"
+      }
+    }
+  },
+  "fixtureSha": "d7da6351dca0e671136a4a81926662815762b2c3466e0d6413d1587b1415d732",
+  "toolSha": "ce6013d7abd1a2f30ce01612e46bde45a82fc123f724f968bb2a56ac92af404e",
+  "limitations": [
+    "실제 송신 분배를 실행했다. 가상+4 송신 장치 요청/현재상태 변경은 명시 관찰 경계이며 네트워크 I/O가 아니다.",
+    "Player 저장소 포인터는 고정했다. 함수 안에서 Player 표 포인터 자체가 교체되는 상황은 검증하지 않았다.",
+    "제외 송신의 server assertion 입력은 정상 server1이다. packet 직렬화/수신/게임 전체 동일성은 별도다."
+  ]
+}
