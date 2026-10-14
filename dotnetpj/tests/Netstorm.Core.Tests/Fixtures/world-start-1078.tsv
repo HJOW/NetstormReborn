@@ -3,7 +3,7 @@
 # object 미션 순번 타입 소유자 영역 칸x 칸y 프레임 수량 HP 내용물수 (탭 구분, 영역 -1 = Chaff)
 # 아래 SHA256 은 줄 끝을 LF 로 맞춘 내용의 값이다 (Windows 체크아웃의 CRLF 와 무관하게 같다).
 # SHA256 cpppj/src/client/GameWorld.cpp 1b1ea1c6008b6a8dc2000d8992b5c006820e3a6c35ea6baf8338adc4db53c627
-# SHA256 cpppj/src/o/Player.cpp 13d1578961b265ddaf026a7a9af63cd1b883cc36b9027a885c493e3a4f499eaa
+# SHA256 cpppj/src/o/Player.cpp 77848464cbefae9fa9f66af2ca820b70ab7d52c1a7f60b5b6f59623953074e35
 # SHA256 cpppj/src/o/Template.cpp a6d05ab59f2ee8ff37276111ac3a7425a154cfe7d08bec9c8808002c488b103b
 player	thewarbegins	1	3000	1	2	Player	sunWalker;rainBattery;sunAviary;sunCannon	26	38
 player	thewarbegins	2	0	2	4	The Jailer	sunWalker;windBattery;sunArcher	0	0

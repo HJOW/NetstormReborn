@@ -204,8 +204,8 @@
     }
   },
   "files": {
-    "tools/analyze_scrollgump.py": "ec853f919df610836885bd963b3ba9bdcfeb8a448a7d792d47677891ae48f701",
-    "tools/analyze_styletext.py": "a69336b3064208e08e5fcea4e84f8427eeaa35512673c64f273c39b4b91877b1",
+    "tools/analyze_scrollgump.py": "76d76d64453953dcc8b49ce003bd9530e8c326df4a2b31def52d9184f851ac32",
+    "tools/analyze_styletext.py": "6e79df1106b085d3cf88e8ff082a9512103e4c00d83cc7aa8fc98d487a87a0ba",
     "tools/ghidra/scrollgump-functions.json": "e4b35b795f40e5aec3795bfdcf153c799c4d623d3b9b5dfe0c16fd6d963578fe",
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
     "extracted/scrollgump/originals/creation.c": "32a73c9252a4f9a6a25af9c300d44752f13b121a72c2d3f7525e8b87d1a8274c",
@@ -216,21 +216,21 @@
     "extracted/scrollgump/originalCD/functions.tsv": "0bac3ae62b73bce236a948ff54dc9a5a2ce9d7121e95f22775b614f30b4750ae",
     "extracted/scrollgump/originalCD/assembly.txt": "553137241fe11f04adad760a920026f9240af64f2bc1936fe9c146dd71d57205",
     "cpppj/src/client/ScrollGump.h": "af8c66b537dd9b39f3c67064541896283b74fee5574f4b0d4416d74381b8db8d",
-    "cpppj/src/client/ScrollGump.cpp": "05da98a2e5746f7eef106df724d72556beaecb394b5a0e627fde8c57f4be8d4c",
+    "cpppj/src/client/ScrollGump.cpp": "e9e947aa2daa02d702488c9112c36f46a1bb79de0090c71c8c11dc1cce95600b",
     "cpppj/src/client/TextGump.h": "c56cbfd1fd27369b4ff15b9c64fdb41ee6e277c46e0d79ae3a74b9501d892f7c",
     "cpppj/src/client/TextGump.cpp": "6a78e6868367034b62b25588c77622a997c9752c8943c5d56fc893e8f9796c2a",
     "cpppj/src/client/GumpTree.h": "998ea4788eac87aca2abc1077c320dfb547e6041f5f6818630afd375e6b8e71c",
-    "cpppj/src/client/GumpTree.cpp": "b623d624f056ef2117dea2393334e1d8b30666b2d8243e49dc53e5e56b633c56",
+    "cpppj/src/client/GumpTree.cpp": "1ec8e239ea67a092fa0c7d06ac82bda524109aab540ef6927947a59ba56351cb",
     "cpppj/src/client/GumpCreate.h": "253ea65d7c91385d5ebe66e44c627c4ccc3dc9fe7a9749e2d0697c45fb3efa14",
-    "cpppj/src/client/GumpCreate.cpp": "4eb77de7063d33238c6bee30b8a282c89506c38172be0c4131afc7b843c33cd9",
+    "cpppj/src/client/GumpCreate.cpp": "1e76324b052aebf54ebd0064a127ccac8fc8bca39c76964364831db22bc0856e",
     "cpppj/src/client/GumpEvents.h": "0532493002f436fd2dc60a2c61c84981e75f9ebd10b56ca5b3de682d06bb830c",
-    "cpppj/src/client/GumpEvents.cpp": "d90edc0bf0342a1136f69225be6a0bc88a0ed8fabd94a460c05c05535761d3dd",
+    "cpppj/src/client/GumpEvents.cpp": "d9adf454f51797b18c8a65010316a68d00078f4e49bd83e7b595463663e8733a",
     "cpppj/src/client/GumpInput.h": "9c582ff7e291434feff349bbe5a08859b0f168df15e404b390219f92734ba5c2",
-    "cpppj/src/client/GumpInput.cpp": "37f593093712024d5edadada70d6fe3d00470da109877f770b805ceb7cf06df0",
+    "cpppj/src/client/GumpInput.cpp": "6bd0921784285d834bd410835eedb95b9abb756d0e218f71d0e23ebc115c23ba",
     "cpppj/src/client/GumpFrame.h": "503708eff4865bd53189917287d72239135a398806673947bb50fc9de1e28353",
     "cpppj/src/client/GumpFrame.cpp": "8b11b43508eb63675acd1d29d39974814575dcf437089a2c76632deec7b19871",
     "cpppj/src/client/GumpCollection.h": "05073bcd17a7b1789dceb154f0c5ac7236d3baf06314456a34e180fef8cb2528",
-    "cpppj/src/client/GumpCollection.cpp": "d913b1ad8a6c786bfbae8820e0db09a7ec900b2674c8c49ba92541b475ea259b",
+    "cpppj/src/client/GumpCollection.cpp": "f656a301576fb0bbf1c99b5a6df62f7d9efe7491647a757d6a25c1ff8bf57c20",
     "cpppj/src/client/CMakeLists.txt": "b61a1ae63c6483aee0fdf0e911d059d0b321d446a00e03ff5f2786724d81e277"
   }
 }

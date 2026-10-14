@@ -60,8 +60,8 @@
     "tools/ghidra/terrainworld-functions.json": "7eebb52feca6b23f7b2ab258c78aa6ba6d6825b9342390c989e69400b49ca9a1",
     "cpppj/tests/TerrainContextTests.cpp": "687b7f4312c456934e38b38661f63368eb10206dd52c5a6d1ead84a0823746d5",
     "cpppj/src/o/RawTerrainStamp.h": "a0147b2acd24ee05520b4d2446c90f738436ff231ee8515a3df36d056227d953",
-    "cpppj/tests/RawSceneSupport.h": "7ef30acb24babc688384ab50f57573a87d004b68b8baa0d0a64c897baad23a4f",
-    "tools/analyze_terraincontext_cpp_binding.py": "ce425a25c64ffebd2df293d9adb26a9d8e79e2db7ed562588224f358abb0323a"
+    "cpppj/tests/RawSceneSupport.h": "87b79d463f38e142b1aa768384af28a08b404a276a6b989e90dd53b393642919",
+    "tools/analyze_terraincontext_cpp_binding.py": "2811a6eced82c1d912b82cdeda33845fce1c9bf478e36a3f7b5a0932ad4002b8"
   },
   "limits": [
     "원본 ChunkMap 포인터 주소·복사 metadata는 C++ 게임데이터 출력에 합산하지 않는다.",
@@ -97,8 +97,8 @@
   "cpp_source_files": {
     "cpppj/tests/TerrainContextTests.cpp": "687b7f4312c456934e38b38661f63368eb10206dd52c5a6d1ead84a0823746d5",
     "cpppj/src/o/RawTerrainStamp.h": "a0147b2acd24ee05520b4d2446c90f738436ff231ee8515a3df36d056227d953",
-    "cpppj/tests/RawSceneSupport.h": "7ef30acb24babc688384ab50f57573a87d004b68b8baa0d0a64c897baad23a4f",
-    "tools/analyze_terraincontext_cpp_binding.py": "ce425a25c64ffebd2df293d9adb26a9d8e79e2db7ed562588224f358abb0323a"
+    "cpppj/tests/RawSceneSupport.h": "87b79d463f38e142b1aa768384af28a08b404a276a6b989e90dd53b393642919",
+    "tools/analyze_terraincontext_cpp_binding.py": "2811a6eced82c1d912b82cdeda33845fce1c9bf478e36a3f7b5a0932ad4002b8"
   },
   "cpp_binding_new_native_cases": 0
 }

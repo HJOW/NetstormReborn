@@ -8,8 +8,8 @@
   "old_files": [
     {
       "path": "cpppj/hist/damageablepo-fa8db/cpppj/damageablepost-host-binding.json",
-      "bytes": 13458,
-      "sha256": "68a00ad3c2bd95e3a1bdcbe1d7dd2a6822120a814bff08c11b36406ea7ad0fc1"
+      "bytes": 13192,
+      "sha256": "889be672b63e24daf211cffd87e861ccf7e2645a0e48a98d328112065dc8a144"
     },
     {
       "path": "cpppj/hist/damageablepo-fa8db/cpppj/damageablepostdestroy.json",
@@ -18,8 +18,8 @@
     },
     {
       "path": "cpppj/hist/damageablepo-fa8db/cpppj/damageablepostdestroy-lineage.json",
-      "bytes": 6084,
-      "sha256": "b904c726e2f4a288f2ef9c4bf45f0f488863cb7f3aaa5551d43e3d078b2925de"
+      "bytes": 5898,
+      "sha256": "d78b3c443b76add24307b86d6af23f8bcb1a13f635b5067edd33868d1f68fae3"
     },
     {
       "path": "cpppj/hist/damageablepo-fa8db/cpppj/hist/damageablepo-7d76b/cpppj/damageablepostdestroy.json",
@@ -43,7 +43,7 @@
     },
     {
       "path": "cpppj/hist/damageablepo-fa8db/cpppj/hist/damageablepo-7d76b/tools/decomp_damageablepostdestroy_oracle.py",
-      "bytes": 16125,
+      "bytes": 16107,
       "sha256": "3af73dcc03660a9ce9aa194cfb50fbc39a975515eb972ff90bbeb93e519fb1b9"
     },
     {
@@ -53,8 +53,8 @@
     },
     {
       "path": "cpppj/hist/damageablepo-fa8db/cpppj/hist/damageablepo-a3bd8/cpppj/damageablepostdestroy-lineage.json",
-      "bytes": 6084,
-      "sha256": "b904c726e2f4a288f2ef9c4bf45f0f488863cb7f3aaa5551d43e3d078b2925de"
+      "bytes": 5898,
+      "sha256": "d78b3c443b76add24307b86d6af23f8bcb1a13f635b5067edd33868d1f68fae3"
     },
     {
       "path": "cpppj/hist/damageablepo-fa8db/cpppj/hist/damageablepo-a3bd8/cpppj/src/o/RawDamageablePostDestroy.cpp",
@@ -78,12 +78,12 @@
     },
     {
       "path": "cpppj/hist/damageablepo-fa8db/cpppj/hist/damageablepo-a3bd8/tools/analyze_damageablepostdestroy.py",
-      "bytes": 6453,
+      "bytes": 6387,
       "sha256": "d7dff7e29877740040cd9a15b63c5b850b6f7322d2059ec62ebc3226d88c4445"
     },
     {
       "path": "cpppj/hist/damageablepo-fa8db/cpppj/hist/damageablepo-a3bd8/tools/decomp_damageablepostdestroy_oracle.py",
-      "bytes": 16200,
+      "bytes": 16182,
       "sha256": "0cdcb6d3f29cd23e67a1e7b4769c82354d5bb9b8051f09c8e190892da390b31a"
     },
     {
@@ -113,7 +113,7 @@
     },
     {
       "path": "cpppj/hist/damageablepo-fa8db/docs/exe/cpp-damageable-post-destroy-20261014.md",
-      "bytes": 12333,
+      "bytes": 12281,
       "sha256": "9041f13693e4c4ecbf67c71fa6a9dae3e093e178472f1e190f67be491309672a"
     },
     {
@@ -128,17 +128,17 @@
     },
     {
       "path": "cpppj/hist/damageablepo-fa8db/tools/analyze_damageablepost_host_binding.py",
-      "bytes": 5296,
+      "bytes": 5202,
       "sha256": "3c8e0c949702d5f32516551de44c01c21ea16c3a821a7c71a4766de4f8fd6165"
     },
     {
       "path": "cpppj/hist/damageablepo-fa8db/tools/analyze_damageablepostdestroy.py",
-      "bytes": 6453,
+      "bytes": 6387,
       "sha256": "d7dff7e29877740040cd9a15b63c5b850b6f7322d2059ec62ebc3226d88c4445"
     },
     {
       "path": "cpppj/hist/damageablepo-fa8db/tools/decomp_damageablepostdestroy_oracle.py",
-      "bytes": 16200,
+      "bytes": 16182,
       "sha256": "0cdcb6d3f29cd23e67a1e7b4769c82354d5bb9b8051f09c8e190892da390b31a"
     }
   ],
@@ -149,12 +149,12 @@
   },
   "previous_binding": {
     "path": "cpppj/damageablepost-host-binding.json",
-    "bytes": 13458,
-    "sha256": "68a00ad3c2bd95e3a1bdcbe1d7dd2a6822120a814bff08c11b36406ea7ad0fc1"
+    "bytes": 13192,
+    "sha256": "889be672b63e24daf211cffd87e861ccf7e2645a0e48a98d328112065dc8a144"
   },
   "tool": {
     "path": "tools/analyze_damageablepost_host_group_lineage.py",
-    "bytes": 4295,
+    "bytes": 4229,
     "sha256": "e0529e0e9cf84cfdc43144b1aef4a3e0562ecf09a9a9ac7224a58c43dc0d5c91"
   },
   "replacements": [

@@ -171,8 +171,8 @@
     "cpppj/tests/PlayerRegularTests.cpp": "691f83150cd786369635ecf748289c97e9166d285f422b469dda82790030ce31",
     "cpppj/tests/fixtures/burningframe-x86.tsv": "8b09c3d54803039df92c36374537ff316fbd8062ffbaa02913e89dc0d4fdbcc6",
     "cpppj/tests/fixtures/player-regular-x86.tsv": "e3ef582f5da9c62f3235eb16f30bd76b97f9db1a5bff0728070f7ac83ccea932",
-    "cpppj/burningframe.json": "bd846f05f9d147e32f78c1f1a9eb1c4ec1aa9e11b55b00c08308eaf3abd3ca42",
-    "cpppj/player-regular.json": "6e37f6ff3fac0c919daaa5f1e167bc83c30e5851b4489babbf3ca5d6e450484a",
+    "cpppj/burningframe.json": "28c6315a3fa1c03acfb36989606ea9fd2c2fce52d81e04151008a24851475308",
+    "cpppj/player-regular.json": "32a2e5712b7f833dd4242f800aadfecd8ddaba387e572b9a5d8a6719222a88a8",
     "extracted/run15-new-first-tests.log": "05f436f63bb1ff63f313c443bf7f66910fa296e0570f417d0d07ff508415f160",
     "extracted/run15-all-first-tests.log": "7e10e35fb576e7fcbc14fce22a66e533ed677b3ca67333ff1a2107a55d6d9c3d"
   },

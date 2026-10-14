@@ -425,10 +425,10 @@
     }
   },
   "files": {
-    "tools/analyze_scrollmarkup.py": "9b14e2136a2924323036a79c3d8a3d59a4b36fde2b2a8d745908195304be14b2",
+    "tools/analyze_scrollmarkup.py": "c89ac70331257ec63b6023aa898c514255102fbd4c75b1bd82b247cbc10a0bfe",
     "tools/ghidra/scrollmarkup-functions.json": "0d446f116a655695728ea910265314dc8341a8a7f6ee9bd7de06ca878827bf2f",
-    "tools/analyze_styletext.py": "a69336b3064208e08e5fcea4e84f8427eeaa35512673c64f273c39b4b91877b1",
-    "tools/analyze_stylemarkup.py": "0ed8a010a4534cbc6e4ff1f802d1c77284d66f1ce8c0fbe6973573eba571ea64",
+    "tools/analyze_styletext.py": "6e79df1106b085d3cf88e8ff082a9512103e4c00d83cc7aa8fc98d487a87a0ba",
+    "tools/analyze_stylemarkup.py": "50ec494e2285d67bde4f83096dd978167316ee1454f7ae713de4c8db8bcceaf3",
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
     "extracted/scrollmarkup/originals/creation.c": "8699bea089ec83bf8994036c0924ba696a013f317c5e960bdfd5288042642d0e",
     "extracted/scrollmarkup/originals/functions.tsv": "ae77dafaa6f3b2e12688c3093848bf3dfcdeb893ae9ab39fbb8cdbb19258e16c",
@@ -438,19 +438,19 @@
     "extracted/scrollmarkup/originalCD/functions.tsv": "711dca7dfc6f9d66d11db5fc4dafe875b3e6317f1d45672493b8c73056b9c68e",
     "extracted/scrollmarkup/originalCD/assembly.txt": "75f6034354fcfd8dfc0ab757e9f5279a4b05a392c3a3ca5b3eeb22e0a2c2cdf7",
     "cpppj/src/client/ScrollingTextGumpMarkup.h": "155c89619e568af6b243c324f2bc048c7bdc278d102cc886da8f6b64c8c2b1fe",
-    "cpppj/src/client/ScrollingTextGumpMarkup.cpp": "3088e4533c4a1aebffb040701c4cd6ec7a34cbfa7379a7782e97572d6840cddc",
+    "cpppj/src/client/ScrollingTextGumpMarkup.cpp": "94a0df0e8aaa7b0db2c91e40bd2fafb6bc448cf77a825718130f896b38660b35",
     "cpppj/src/client/StyleText.h": "f8b442df8607910d8d1e0b74e4f0ffb7a573e1a85b82e8606dcb2f7b0a84b115",
     "cpppj/src/client/StyleText.cpp": "c58a68b7a873769871552dc57431c7c0bd0ab2a02149cb21f909e5f0c5b66c64",
     "cpppj/src/client/StyleTextMarkup.h": "c66adae8b57e21854c7a8774a6276de235347d7116af30259f72465c94fdcbe7",
     "cpppj/src/client/StyleTextMarkup.cpp": "19d4588f8c2e78de50ef74190c34469518c40928aaf9ddbb59b4e4d82cf28a0d",
     "cpppj/src/client/TextGump.h": "bf0be74b30d00aa8b2e95233b43bf5c6efc88b63b16b0f7116d515eade6f25b6",
-    "cpppj/src/client/TextGump.cpp": "7b5470a4507ec7466d0822c10b89d3041b5d53e8124441c0169d80fa69f0e705",
+    "cpppj/src/client/TextGump.cpp": "58d621e3347027b6221af2fdce5a15b37534cd15610d10a40bc44fd2a608387d",
     "cpppj/src/client/ScrollingTextGumpWidgets.h": "b2ecfea5030e676312f995f91948618f3e6b94b30faf1f34a1a3bb50086be5af",
-    "cpppj/src/client/ScrollingTextGumpWidgets.cpp": "e1cea18cf25fa03b9105f58cb966afce80f9071231b41d583d55ab62f265d16f",
+    "cpppj/src/client/ScrollingTextGumpWidgets.cpp": "3cf6c5fe419953c4d6cd4c95baf0a519594fcebebb75cdc62eee55abfd425364",
     "cpppj/src/client/StyleTextBuffer.h": "ee595397e0cf2059cbf6d8c3df24987b6ce0c856f8296179f8cd8f67b3cbcb3e",
-    "cpppj/src/client/StyleTextBuffer.cpp": "2aa0f6983c460aa3d5a960085a8b1ed86f153cb0916246329878f6d1b77f8ea2",
+    "cpppj/src/client/StyleTextBuffer.cpp": "8eaf39ef8d5fbd01ce8b28c87deaa7c976d95aa3080f4e50ff098ddf277b50ec",
     "cpppj/src/client/Markup.h": "8fec3e164ef546e3b81837d4063200addc0e4a474926c348ec04aac3716f0235",
-    "cpppj/src/client/Markup.cpp": "3ef98b57be34741fc0c7a11d233744636a83a34ba4457053e4d57b51f9fec6c0",
+    "cpppj/src/client/Markup.cpp": "5d3ab7d8b3caa308e4d185c0fec8fb52ee0f368f06deca0757162c2918390540",
     "cpppj/src/client/CMakeLists.txt": "31920329a6279dc8839a1b18067c41e3fb33a73bb2220369641857bee2bffca3"
   }
 }

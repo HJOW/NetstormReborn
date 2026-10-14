@@ -25,7 +25,7 @@
     }
   },
   "files": {
-    "cpppj/burningprocess-constructor.json": "150abb097f7260a42426f23ba3311aa5ab9f7d8fbb5564708affbfc6379d913b",
+    "cpppj/burningprocess-constructor.json": "10f01daf4a2efcf4f61c37132a21d8dd8defbb783d1eb802291bded82b1dbfd1",
     "cpppj/src/o/RawBurningVisual.cpp": "9521fe84204f87283fb4c9f2b5b3ebbccf8bca749b76a9bebf4691f563ade522",
     "cpppj/src/o/RawBurningVisual.h": "54aa4dfa1f816c18685f3023c9e27d5193ff55b3f91e6c0426361db4fb240f69",
     "cpppj/tests/BurningParticleTests.cpp": "f51e8c735beb07dfa86400cb6ce83e771a7e5f7c1a652cce58aa03ac4a177ed3",

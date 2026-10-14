@@ -136,8 +136,8 @@
     }
   },
   "files": {
-    "tools/analyze_markup.py": "fc2c8ef97a0cb988eb2aa1602c6901310251901b13b5b00d3fa1fb1b6de26a55",
-    "tools/analyze_styletext.py": "a69336b3064208e08e5fcea4e84f8427eeaa35512673c64f273c39b4b91877b1",
+    "tools/analyze_markup.py": "1ac25fc0208a3d9b35932c82b274f316757db2116f0668fc8e033a99c1f329af",
+    "tools/analyze_styletext.py": "6e79df1106b085d3cf88e8ff082a9512103e4c00d83cc7aa8fc98d487a87a0ba",
     "tools/ghidra/markup-functions.json": "116be38e71bacba6b343e22a75d39c408e8efb389035d5328ccb468f17a04db0",
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
     "extracted/markup/originals/creation.c": "d36864db0f68bb06fa672cfa353aa865207a432ac6c2f44590134d58ad4fc280",
@@ -151,7 +151,7 @@
     "cpppj/src/client/Markup.h": "48067dca05027a88ceadd1f36970a37b63f48a9c5b3ec19d4446862f4b1703af",
     "cpppj/src/client/StyleText.cpp": "bb6b78c480b689c8a60824c39c41cd1894f6179ed92b4fb862804954e0c9e822",
     "cpppj/src/client/StyleText.h": "f079a420d37cdd6f10c7d1eb566acbcc1998352e0cd0f0f5c3e9e899ee21582c",
-    "cpppj/src/client/VFXDraw.cpp": "d4c95ba9875659715bdb234b56baf7084d2abc6f5f4f879d1247cb309f0f5ad4",
+    "cpppj/src/client/VFXDraw.cpp": "1de6889912f1f18cc83e0efc7cc33a43216e063730aaca7917aad8bf5a8c37b7",
     "cpppj/src/client/VFXDraw.h": "3692cc45ce931aedcd4e7aaf0f80f1d6966aea70a3e8d648fe6e7810a477eebb",
     "cpppj/src/client/CMakeLists.txt": "fe8f196d4fe789ac62ac90522639bd180cd25f9aea1ba5f43c1a56c853994eff"
   }

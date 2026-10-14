@@ -56,7 +56,7 @@
     "24Hz/8틱 상한·두 시각/새 경로 보간·FPS/Capture/OS 초기화·경고 창 정지 분류·실제 캠페인 완주"
   ],
   "files": {
-    "tools/analyze_dotnet_dialog_frames.py": "d1d8d5c4cb3da9a76a70a5c3d3983b4ec73f69ea9fea60aba2f75a4441d58988",
+    "tools/analyze_dotnet_dialog_frames.py": "011b0995b6204b52c4c2771cd76786aa53d94727e2ee4b6c8f92326d3204a49e",
     "tools/ghidra/dotnetdialogframes-functions.json": "ca6a02ec8da073170ce063fa0650505634c4208cae2a91891dc49970d29708b3",
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
     "extracted/dotnetdialogframes/originals/creation.c": "c6aa49f4ba138d310acac6cbf2998618352552489d30235870b56784d284b374",
@@ -64,8 +64,8 @@
     "extracted/dotnetdialogframes/originals/assembly.txt": "effdeea4fabff1cd901679388e90a2f408fecf4770d4016153c24468ef75724e",
     "dotnetpj/src/Netstorm.Core/Simulation/MissionDialogFrameGate.cs": "fa1a0c1c7c665efa7fed1bd677c90ef0ef38ffa19d61172e52e4e7d2467d61e1",
     "dotnetpj/src/Netstorm.Core/Simulation/BattleSession.cs": "ece54bc42f524de5c2a62a2ee40911501e15142f8f03d61d976f7b1466f9a3cc",
-    "dotnetpj/src/Netstorm.Core/Simulation/BattleSessionFrameClock.cs": "01a1795fb0b9733a1b494ee8a2429ef2a398c6db49a61350a7caa42ebc85edd8",
-    "dotnetpj/src/Netstorm.Core/Display/OriginalGameClock.cs": "d4776e96e175ea6ce46bd9cc2792e30c77a97dc5152f0e925f5ca02bdf63f8e4",
+    "dotnetpj/src/Netstorm.Core/Simulation/BattleSessionFrameClock.cs": "60ff53665398708b4ef170f69681488bf358b90fd9c444e872a0dcf5367ce411",
+    "dotnetpj/src/Netstorm.Core/Display/OriginalGameClock.cs": "bcfa44510dc3cc9969ea0efab7bc5abcbb49a666e0069b7b6bd9f4fde20800f1",
     "dotnetpj/src/Netstorm.Game/FortMapViewer.cs": "9c3fd39a52c8f7a418e5679c163076c8aadd2c4e419b1996bea8b4e0dc9c4e60",
     "dotnetpj/src/Netstorm.Game/FortMapViewer.Session.cs": "83961cc30a26555b76650301487c759b96454b74c27e2c55362a006a9321098d",
     "dotnetpj/src/Netstorm.Game/FortMapViewer.TutorialDialog.cs": "3af9c75ce6bc2213cfbd52c4907bec9ad4b86109605a46d5b5dc7be0ab66fdbc",

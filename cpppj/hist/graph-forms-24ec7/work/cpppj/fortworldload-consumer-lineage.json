@@ -10,18 +10,18 @@
   "old_files": [
     {
       "path": "cpppj/hist/fortworldloa-075e2/cpppj/fortworldload-binding.json",
-      "bytes": 15591,
-      "sha256": "ebf459eed30ace94dc46fb18c884010eea160c8fd3c2ed2f64a96d79dd5476c4"
+      "bytes": 15070,
+      "sha256": "f15d7e7ae1cb5767083f9242a4377581fc92899097bd7f4ed27131d8b8ee181b"
     },
     {
       "path": "cpppj/hist/fortworldloa-075e2/cpppj/fortworldload.json",
       "bytes": 6656,
-      "sha256": "7b9ee562a9a80e5f8807b689e466c5e74a2caf20bc946819f0118f169d3ce210"
+      "sha256": "73445bda823b696444fbae2ed863c9699292ff8dc062fe3fc24b6246fa173307"
     },
     {
       "path": "cpppj/hist/fortworldloa-075e2/cpppj/hist/fortworldloa-b241d/cpppj/fortworldload.json",
       "bytes": 6656,
-      "sha256": "7b9ee562a9a80e5f8807b689e466c5e74a2caf20bc946819f0118f169d3ce210"
+      "sha256": "73445bda823b696444fbae2ed863c9699292ff8dc062fe3fc24b6246fa173307"
     },
     {
       "path": "cpppj/hist/fortworldloa-075e2/cpppj/hist/fortworldloa-b241d/cpppj/src/client/RawFortWorldLoadBinding.cpp",
@@ -60,12 +60,12 @@
     },
     {
       "path": "cpppj/hist/fortworldloa-075e2/cpppj/hist/fortworldloa-b241d/extracted/fortworldload-smoke-initial-tool.py",
-      "bytes": 15164,
+      "bytes": 15146,
       "sha256": "66461673140f36fb0494ab39e7671a29d5a7409ade7aa84294b192093cb41e0a"
     },
     {
       "path": "cpppj/hist/fortworldloa-075e2/cpppj/hist/fortworldloa-b241d/tools/decomp_fortworldload_oracle.py",
-      "bytes": 15674,
+      "bytes": 15656,
       "sha256": "0869e180789645bf5e83bf8e810c026be626a47c5b0b0c94625e37a44ae32d52"
     },
     {
@@ -110,17 +110,17 @@
     },
     {
       "path": "cpppj/hist/fortworldloa-075e2/docs/exe/cpp-fort-world-load-20261014.md",
-      "bytes": 9069,
+      "bytes": 9050,
       "sha256": "5f65ad5812cb3d611c1c63fbda128dab0f917ae48c84fa99c7c7a0d2a5c62004"
     },
     {
       "path": "cpppj/hist/fortworldloa-075e2/tools/analyze_fortworldload_binding.py",
-      "bytes": 5903,
+      "bytes": 5692,
       "sha256": "52ca5833e87c37403548c3bf1c04af8de05173bf95b233919fa0bdbd9afab8a4"
     },
     {
       "path": "cpppj/hist/fortworldloa-075e2/tools/decomp_fortworldload_oracle.py",
-      "bytes": 15674,
+      "bytes": 15656,
       "sha256": "0869e180789645bf5e83bf8e810c026be626a47c5b0b0c94625e37a44ae32d52"
     },
     {
@@ -136,13 +136,13 @@
   },
   "previous_binding": {
     "path": "cpppj/fortworldload-binding.json",
-    "bytes": 15591,
-    "sha256": "ebf459eed30ace94dc46fb18c884010eea160c8fd3c2ed2f64a96d79dd5476c4"
+    "bytes": 15070,
+    "sha256": "f15d7e7ae1cb5767083f9242a4377581fc92899097bd7f4ed27131d8b8ee181b"
   },
   "golden_report": {
     "path": "cpppj/fortworldload-builder-consumer.json",
     "bytes": 5489,
-    "sha256": "ad58ff2d99d855e6738807d2fdf485ecf8cbe452fb0653f8af3349a9c05b3d9c"
+    "sha256": "81b9cd14f58c6ce1ad15392be4f56046a05ad1d29303ca11c2be0af487887545"
   },
   "golden_fixture": {
     "path": "cpppj/tests/fixtures/fortworldload-builder-consumer-x86.tsv",
@@ -151,12 +151,12 @@
   },
   "golden_tool": {
     "path": "tools/decomp_fortworld_builder_consumer_oracle.py",
-    "bytes": 8530,
+    "bytes": 8512,
     "sha256": "5736b5f67b185787bc9eb24af7921ec770fcbdbc282a2df56c843e7aeb9590df"
   },
   "tool": {
     "path": "tools/analyze_fortworldload_consumer_lineage.py",
-    "bytes": 5615,
+    "bytes": 5531,
     "sha256": "68192fa2487219d70af54ee4eaabfae9bfd06089bf322f850f65de5abede39c0"
   },
   "byte_inverse": [

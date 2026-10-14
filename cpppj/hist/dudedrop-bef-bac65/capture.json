@@ -1,9 +1,9 @@
 {
   "files": {
-    "cpppj/dude-postpop-binding-lineage.json": "521b991c5c1a18abba0cb4c42c4db50093b6d501181fe17e268da4e28c0776a5",
-    "cpppj/dudedrop.json": "39acf8b78089f8dffd3fcb713b592a22258db4012596ef78779e9a86423624cd",
-    "cpppj/dudespawn.json": "15bb6d720a90524485ff293a1b17a6f1158f5bf4a3a7494c6dcc62b148f2dffa",
-    "cpppj/dudetask.json": "f2ebbb3c1345b8f7c2fddd623302a19d97726d206a9d2d1e310ef03b86ab8eeb",
+    "cpppj/dude-postpop-binding-lineage.json": "cc50e4e4e844123b859926bca37f20cdd3036f33600c86af218c4bd65f1fe8d5",
+    "cpppj/dudedrop.json": "6496c14539c4c6b6c58b20d3ade02790b938acdf3624070865fc8dad383ca07d",
+    "cpppj/dudespawn.json": "35b8a3ebad0815f3e09872048ea204a1cb7e1faaf5245418a1c2af94890bc5cf",
+    "cpppj/dudetask.json": "d7b0aa3e7dde699dae8123041982289dd4ae7f2004f6872f1d5761c26ea817d8",
     "cpppj/src/o/RawDudeDrop.cpp": "9b395be29bc0c441c466b8dc79064c10da4cb0974c5c75f3d802691509f7cef6",
     "cpppj/src/o/RawDudeDrop.h": "e60f63be4c46a8e2ff3ed0c9ef43d2ff6730c250b4dca024bc331247e7165811",
     "cpppj/src/o/RawDudeNotice.cpp": "338e8bd6321fee6514f0beb8a469dc1661fff682f57145c5d81326f7a409c182",

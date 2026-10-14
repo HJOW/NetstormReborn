@@ -41,7 +41,7 @@
   ],
   "files": {
     "cpppj/src/client/GumpLifetime.h": "34d0c9e8e25ead551760fd9c424acfa9acc65ac8bb2c9158f58c9105141c23fd",
-    "cpppj/src/client/GumpLifetime.cpp": "c0b7bacd2f1ed87a2b5e9c0854d2f89200574f1408d7ac738cec891a185ca57a",
+    "cpppj/src/client/GumpLifetime.cpp": "29989c46833f5fbbdd7999d4b8eebb80d044a23232f18004fe4aa92a26ae69e8",
     "cpppj/tests/GumpResetTests.cpp": "182b373c84d371ec83f02395452e3633ea110ffeb34fc31ace5687196c6ccad3",
     "tools/decomp_uireset_oracle.py": "74112a1d2602ccb9a4e0b44509c6617c2352c053136b13a14fbaa6da0a4dc914",
     "tools/ghidra/uireset-functions.json": "d47eccc3fa922ca731192c33dc03fc349aa1ac9ac1b73d8bfb246e03e0c44251",

@@ -10,12 +10,12 @@
   "cpp_tests_completed": 0,
   "lineage": {
     "history": {
-      "cpppj/hist/burningframe-d5cb6/cpppj/burningframe.json": "bd846f05f9d147e32f78c1f1a9eb1c4ec1aa9e11b55b00c08308eaf3abd3ca42",
+      "cpppj/hist/burningframe-d5cb6/cpppj/burningframe.json": "28c6315a3fa1c03acfb36989606ea9fd2c2fce52d81e04151008a24851475308",
       "cpppj/hist/burningframe-d5cb6/cpppj/src/client/BurningFrameCapture.cpp": "dabfe21f7aed591ac6586f5757bf158e181cf0bb2199046c82740589cd746637",
       "cpppj/hist/burningframe-d5cb6/cpppj/src/client/BurningFrameCapture.h": "536fecc436d79053f6d78b67bf0b381567ca2588cdc51bd33e69bfa76033cdc0",
       "cpppj/hist/burningframe-d5cb6/cpppj/src/client/RawShapeToBuffer.cpp": "a25daa6a79c7edbfee525ed6a64156cb71d2b1ceee996c7d0a4a002af0ced3d4",
       "cpppj/hist/burningframe-d5cb6/cpppj/src/client/RawShapeToBuffer.h": "0d957cb5d99e2042ff04dbea766bb05e79560b390ffe82976388692ae5b259bb",
-      "cpppj/hist/burningframe-d5cb6/cpppj/src/client/Renderer.cpp": "2b7f456faca5262b066bb46c999da2e5644e7b006beabe9893df30f19d62bd9d",
+      "cpppj/hist/burningframe-d5cb6/cpppj/src/client/Renderer.cpp": "7b0c0e21236ec3f40847276d64a4b6f392afa8498774751b1c2cacc5eeffefa9",
       "cpppj/hist/burningframe-d5cb6/cpppj/src/client/VFXDraw.cpp": "d4c95ba9875659715bdb234b56baf7084d2abc6f5f4f879d1247cb309f0f5ad4",
       "cpppj/hist/burningframe-d5cb6/cpppj/src/o/RawBurningFrame.cpp": "955cf341a2cd4e14a8249939455f799b997f796d17e724d72719925c52322b8e",
       "cpppj/hist/burningframe-d5cb6/cpppj/src/o/RawBurningFrame.h": "a8eb3aefeb0a1fb6afbe4aadc31cdbf0fdab5345355a661ed1e01699d23c56c7",
@@ -101,7 +101,7 @@
       "cpppj/hist/burningframe-d5cb6/cpppj/hist/burningframe-77634/cpppj/src/o/RawBurningFrame.cpp": "955cf341a2cd4e14a8249939455f799b997f796d17e724d72719925c52322b8e",
       "cpppj/hist/burningframe-d5cb6/cpppj/hist/burningframe-77634/cpppj/src/client/BurningFrameCapture.h": "536fecc436d79053f6d78b67bf0b381567ca2588cdc51bd33e69bfa76033cdc0",
       "cpppj/hist/burningframe-d5cb6/cpppj/hist/burningframe-77634/cpppj/src/client/BurningFrameCapture.cpp": "dabfe21f7aed591ac6586f5757bf158e181cf0bb2199046c82740589cd746637",
-      "cpppj/hist/burningframe-d5cb6/capture.json": "12d0d7f27a481a3a629458ff3e79cbc19011d597993c0749311aec3412a3d17a"
+      "cpppj/hist/burningframe-d5cb6/capture.json": "639553b3d30be2a323150b783f9b8a70bf54cc7d8752623213f471a9261f29fd"
     },
     "dependencies": {
       "cpppj/src/client/BurningFrameCapture.cpp": {
@@ -121,11 +121,11 @@
         "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/cpppj/src/client/RawShapeToBuffer.h"
       },
       "cpppj/src/client/Renderer.cpp": {
-        "reported_sha256": "2b7f456faca5262b066bb46c999da2e5644e7b006beabe9893df30f19d62bd9d",
+        "reported_sha256": "7b0c0e21236ec3f40847276d64a4b6f392afa8498774751b1c2cacc5eeffefa9",
         "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/cpppj/src/client/Renderer.cpp"
       },
       "cpppj/src/client/VFXDraw.cpp": {
-        "reported_sha256": "d4c95ba9875659715bdb234b56baf7084d2abc6f5f4f879d1247cb309f0f5ad4",
+        "reported_sha256": "1de6889912f1f18cc83e0efc7cc33a43216e063730aaca7917aad8bf5a8c37b7",
         "preserved_or_current_path": "cpppj/hist/burningframe-d5cb6/cpppj/src/client/VFXDraw.cpp"
       },
       "cpppj/src/o/RawBurningFrame.cpp": {
@@ -459,7 +459,7 @@
     },
     "files": {
       "cpppj/src/o/RawBurningFrame.cpp": "abfe7fbc7e69d8116baa83b4663c9ccfb874dc3ac1a15e671aea61fbe479a27d",
-      "cpppj/burningframe.json": "bd846f05f9d147e32f78c1f1a9eb1c4ec1aa9e11b55b00c08308eaf3abd3ca42",
+      "cpppj/burningframe.json": "28c6315a3fa1c03acfb36989606ea9fd2c2fce52d81e04151008a24851475308",
       "cpppj/src/o/RawBurningFrame.h": "a8eb3aefeb0a1fb6afbe4aadc31cdbf0fdab5345355a661ed1e01699d23c56c7",
       "cpppj/src/client/BurningFrameCapture.h": "536fecc436d79053f6d78b67bf0b381567ca2588cdc51bd33e69bfa76033cdc0",
       "cpppj/src/client/BurningFrameCapture.cpp": "dabfe21f7aed591ac6586f5757bf158e181cf0bb2199046c82740589cd746637",

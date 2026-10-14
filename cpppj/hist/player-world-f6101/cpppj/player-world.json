@@ -111,8 +111,8 @@
     "tools/decomp_postpop_oracle.py": "43dd9adffc6e2b3a1bd4a1fb06563f848518d8082014f2346613243183535129",
     "tools/decomp_sid_oracle.py": "7bfd7b95b26724b1793d407a4ad6654972b2aaa3bf04e4c206cc357670b68dff",
     "tools/ghidra/player-world-functions.json": "90bc2aa81ecdf0319bd68fcfaa3c20f1a8237505436e013c1e06c43580f8af63",
-    "tools/shp.py": "19be5473e9c36f9fe654ac7dad723cc96a9ff6eff314ab23281740f8c2007ec3",
-    "tools/taff.py": "307a1f0ba328170008ad3b716f6d489d78907e78b8bf7898c5fadd5c054cea29"
+    "tools/shp.py": "4cb8bee6ed773e29e8658ddb315594ebf5ac005ea5b96c6b760a177029515bfd",
+    "tools/taff.py": "461860cdfc9451b85a8694dd30fd2c56c1cfdf5c6bb7ab8f63a4089971889795"
   },
   "game_runs": 0,
   "os_calls": 0,

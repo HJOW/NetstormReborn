@@ -6,20 +6,20 @@
     "sources": {
       "cpppj/src/o/RawVortexAscend.h": {
         "baseline_sha256": "54b8abe1f8ea73a85c70d98f9dd4610a2c29069d43137c0243b6991cc3a74ae1",
-        "current_sha256": "f5976fe8197d5577358322b2335fcaafb099c5cc1604a6ac068c090594fdbb1f",
+        "current_sha256": "4ceb2a5e2d1d33a41b847b13bf8b3043c0b24b0a64293b8875bc902f04ee392e",
         "entire_existing_token_sha256": "7dcf40a1e099441fb14753b254306848f717dcd83c8bb2d6464cd879c62565f8",
         "entire_existing_source_unchanged": true
       },
       "cpppj/src/o/RawVortexAscend.cpp": {
         "baseline_sha256": "b530bd89ca21bad3d9ae222638ac88248467a779e5bbcc21ea825722a74e1bdf",
-        "current_sha256": "4ceec2f7d27ea80123fe51a46271e93e5ac7a3e86ab1744dfbe44ab8904cecb1",
+        "current_sha256": "9264dc945cbc4d71b909a61ae5832d7cebdb4fcc2d8c316ca5c4a4d628066955",
         "entire_existing_token_sha256": "f9bbc7f72cdff7aff61adad8181ecaf20ad4fa177755f1fb550a3bf9a9d9dfb9",
         "entire_existing_source_unchanged": true
       }
     },
     "prior_reports": {
       "cpppj/vortexascend.json": {
-        "sha256": "348a929e7ba5a27aa1f899f510b014adf4f4dd4cd958e7921330f1531d669f70",
+        "sha256": "631e9dc7f887d5f75a00762396f0c3236b3b086c01496d16f136f2134e31fa81",
         "total": 1496,
         "dependencies": {
           "tools/decomp_vortexascend_oracle.py": {
@@ -150,7 +150,7 @@
         }
       },
       "cpppj/run9.json": {
-        "sha256": "48d6626334fcaad432cdebc7cc4b1992580dedab0ba70b779508c3de857a74cb",
+        "sha256": "a88411c2c6880931849bbfb752253032a81dca915965fa56a762d177911481bf",
         "total": null,
         "dependencies": {}
       }
@@ -159,10 +159,10 @@
       "originals": 20,
       "originalCD": 20
     },
-    "test_sha256": "92dde6c59535d6bdac2fd57f7659cabad9bb6d390b15e381794034e2025ec2f3",
+    "test_sha256": "32acb55ae4db50d4c86c38e94247882b66674c71a684ea8f8cd4e665651dba43",
     "fixture_sha256": "6f77aec0c642c3cc10c405ef03150c65e9aa0698ff3abe5b1f5ec85670c54a75"
   },
-  "tool_sha256": "1203e376bc65cdb6fe43a971cec1c101c50a392288bdcee317a727035305bea6",
+  "tool_sha256": "8b5961e7979281b9f3bfb7ff80bc6d00c557c4f484cb6b1c1d491598d9824044",
   "additional_unique_native_cases": 0,
   "reused_existing_count_cases": 40,
   "new_cpp_tests": 2,

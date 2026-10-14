@@ -79,10 +79,10 @@
     }
   },
   "files": {
-    "cpppj/dude-regular-reset-lineage.json": "b317d0b5e99232e48ea82497ef19a64f7b0f46228aa6a469990db3fd5e833eb6",
+    "cpppj/dude-regular-reset-lineage.json": "1cf10279e383cc03142c4ee4cd409346755ed921457c50c5f460b2307583a680",
     "cpppj/src/o/RawDudeNotice.cpp": "f99a8da51ea2f67eae249369ad0fa95052ea865cb7696928e2a7e3d38c81be2a",
     "cpppj/src/o/RawDudeNotice.h": "043871673a6bb3708d5bd66066b1d82d830aecf1abd0d1ec79d5f7ae89d4e548",
-    "cpppj/src/o/RawSquidFinder.cpp": "f7947c488c45aa7632d0a705a863c0fe5262c3ea1c29c17ea23c56ed4249e4e2",
+    "cpppj/src/o/RawSquidFinder.cpp": "74f8141e46a2a1fa8e5b64fc91eb8a15a8b806b718b555414fbc1bd1614c8694",
     "cpppj/src/o/SquidPostPop.cpp": "9a88465d2b1d6e7cbdd1c7516fe051741012612805a28a8c848739763fccdcfb",
     "cpppj/src/o/SquidProcess.cpp": "188376ba728d8544d0bfafb92cc6f66403aea92434a81fa98efe894ed9f042e5",
     "cpppj/src/o/SquidProcess.h": "96f0b2275393d53307b01d36732f51fc8bcb8c341b2d15339d3f5a37cb702bcd",
@@ -117,7 +117,7 @@
   ],
   "new_burning_constructors_completed": 0,
   "draft_lineage": {
-    "prior_full_report_sha256": "e4a3239e28c6e4455fe81c1f39133bec3029d95c106e64408f0593fabc8485f4",
+    "prior_full_report_sha256": "0d387d89214fa62be930f52fd63a8886a4c0b8600bd4ef4c1eae69064b14905e",
     "normal_preserved": 414,
     "new_native": 0,
     "new_unique": 0,

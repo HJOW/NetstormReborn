@@ -34,146 +34,146 @@
     {
       "path": "cpppj/src/o/RawFortObjectLoad.h",
       "bytes": 6536,
-      "sha256": "fcd6e8e6ca698706c27aec7622e399612c13a0823158ac1b7da8142e7ffa41ea",
+      "sha256": "5768661283aa0f8cdbc229882fb3bdb1f203bbc2e01460cefa5fb93311aefdb5",
       "git_blob_sha256": "fcd6e8e6ca698706c27aec7622e399612c13a0823158ac1b7da8142e7ffa41ea"
     },
     {
       "path": "cpppj/src/o/RawFortObjectLoad.cpp",
       "bytes": 14512,
-      "sha256": "6fdd110dd0498416bf9bff90479291d3bed2a17fa1fe77b2f83c20e1379be971",
+      "sha256": "4dd7e2d9e307269b2a4f68bc4238cd2b8ea913965887b403db08f55a5103b38b",
       "git_blob_sha256": "6fdd110dd0498416bf9bff90479291d3bed2a17fa1fe77b2f83c20e1379be971"
     },
     {
       "path": "cpppj/src/o/RawContainedCreate.h",
       "bytes": 2560,
-      "sha256": "f095756ee7515a66808967d2d42ce07879dc215b24a3451f27bb6d45653a8ed9",
-      "git_blob_sha256": "f095756ee7515a66808967d2d42ce07879dc215b24a3451f27bb6d45653a8ed9"
+      "sha256": "ef4f9bdf3e04eb90ccc4430e935211ab6dc067671f277202bea03a23e39b51be",
+      "git_blob_sha256": "ef4f9bdf3e04eb90ccc4430e935211ab6dc067671f277202bea03a23e39b51be"
     },
     {
       "path": "cpppj/src/o/RawContainedCreate.cpp",
       "bytes": 2664,
       "sha256": "54ac5f440300896af9fc25bfc98315ae5efe3e99b393fce348f006e09c3cbf97",
-      "git_blob_sha256": "54ac5f440300896af9fc25bfc98315ae5efe3e99b393fce348f006e09c3cbf97"
+      "git_blob_sha256": "f85bc4ab19d0ea446234e3b5a3b564751981552e97f144c74ead300e3af8f442"
     },
     {
       "path": "cpppj/src/o/ContentFormHost.h",
       "bytes": 4373,
-      "sha256": "8653814bdfbe2c0b82957014ca65f7c17381bf428dc3671a7254ec14324c441f",
+      "sha256": "fec4ff5c6bdd65fde79350f506fee99cec8a3ff3802a7cdae155fd00a2e62a3f",
       "git_blob_sha256": "8653814bdfbe2c0b82957014ca65f7c17381bf428dc3671a7254ec14324c441f"
     },
     {
       "path": "cpppj/src/o/ContentFormHost.cpp",
       "bytes": 8471,
-      "sha256": "cb21effe599b73f6ca85d826c6f85f0e3f6f41e956fbc80cf344a06674d20cb4",
+      "sha256": "5b6c7689e7c2a9aa4803583f9486d22d3004311c9766ee426c4ee8adc0b60890",
       "git_blob_sha256": "cb21effe599b73f6ca85d826c6f85f0e3f6f41e956fbc80cf344a06674d20cb4"
     },
     {
       "path": "cpppj/src/o/SquidForms.h",
       "bytes": 3917,
-      "sha256": "6937069c3482802ad622c7845041c0f3ccfc02d8ab67b6c08d35c3cf34c37683",
+      "sha256": "7380abfffe3973db7f509dc6c9a8af9bd560c339ba00f4ff7d8fa3c35dd115ff",
       "git_blob_sha256": "6937069c3482802ad622c7845041c0f3ccfc02d8ab67b6c08d35c3cf34c37683"
     },
     {
       "path": "cpppj/src/o/SquidForms.cpp",
       "bytes": 9994,
-      "sha256": "013e35f13121c1447cee1b00014e2bcdd453c0ab29207af05e2fe1345d574080",
+      "sha256": "36dcb110dcc97fe1f443c0b88b4f64bb354d47202d04cca36994140e5be26187",
       "git_blob_sha256": "013e35f13121c1447cee1b00014e2bcdd453c0ab29207af05e2fe1345d574080"
     },
     {
       "path": "cpppj/src/o/SquidFactory.h",
       "bytes": 3444,
-      "sha256": "9a2b50ead267868364024a9fb0306e6fbf224486b87479a79c531ad2f3607708",
-      "git_blob_sha256": "9a2b50ead267868364024a9fb0306e6fbf224486b87479a79c531ad2f3607708"
+      "sha256": "70394e3a27fd8c768c851445b0c03a8b321914eea66fb530bd004d094ba0f5d4",
+      "git_blob_sha256": "70394e3a27fd8c768c851445b0c03a8b321914eea66fb530bd004d094ba0f5d4"
     },
     {
       "path": "cpppj/src/o/SquidFactory.cpp",
       "bytes": 11463,
-      "sha256": "6221de3262944b7105ae57dacc67ee8cee3e237b62240d5d3a2fd777a5706aed",
-      "git_blob_sha256": "6221de3262944b7105ae57dacc67ee8cee3e237b62240d5d3a2fd777a5706aed"
+      "sha256": "9773bb2d4f5b7dd0114fbb9406a95080e6f919a1106efe5b6a15ef8ed68e39e0",
+      "git_blob_sha256": "9773bb2d4f5b7dd0114fbb9406a95080e6f919a1106efe5b6a15ef8ed68e39e0"
     },
     {
       "path": "cpppj/src/o/SidPool.h",
       "bytes": 5283,
-      "sha256": "f56b3fd3b8c4cc0697afadb0d97ef4b7c62808103283c856c46bf68b59f0f35a",
-      "git_blob_sha256": "f56b3fd3b8c4cc0697afadb0d97ef4b7c62808103283c856c46bf68b59f0f35a"
+      "sha256": "dede45b0aed7bcbc896b8da80d72540c266d9e5a56b99878efbf4f2abad6448d",
+      "git_blob_sha256": "dede45b0aed7bcbc896b8da80d72540c266d9e5a56b99878efbf4f2abad6448d"
     },
     {
       "path": "cpppj/src/o/SidPool.cpp",
       "bytes": 10030,
-      "sha256": "7bc612330f3b631cf8141be5e7a9ae51cefe8caee3ea3eb68be38252d68a6887",
-      "git_blob_sha256": "7bc612330f3b631cf8141be5e7a9ae51cefe8caee3ea3eb68be38252d68a6887"
+      "sha256": "0f72cb4540e5d28ff63e5ce9078d8591b733f192c8ee6c8c5bf486b93cfd16f0",
+      "git_blob_sha256": "0f72cb4540e5d28ff63e5ce9078d8591b733f192c8ee6c8c5bf486b93cfd16f0"
     },
     {
       "path": "cpppj/src/o/SquidHash.h",
       "bytes": 2764,
-      "sha256": "f8c0993b5e666fbd369ef876f4684c8b67e38cc81a3ad026cdc52b2d3de80d1d",
-      "git_blob_sha256": "f8c0993b5e666fbd369ef876f4684c8b67e38cc81a3ad026cdc52b2d3de80d1d"
+      "sha256": "ee3c9fbc61c659e8a62b0d9675f028ca3ca1b29cc364abc49680bdb1a5e50ac7",
+      "git_blob_sha256": "ee3c9fbc61c659e8a62b0d9675f028ca3ca1b29cc364abc49680bdb1a5e50ac7"
     },
     {
       "path": "cpppj/src/o/SquidHash.cpp",
-      "bytes": 4305,
-      "sha256": "e275a8239016e45237a57a85c43c22a9767351bfdaeedc728423c3bb42a3e5e4",
-      "git_blob_sha256": "e275a8239016e45237a57a85c43c22a9767351bfdaeedc728423c3bb42a3e5e4"
+      "bytes": 4352,
+      "sha256": "9ceffaf0d4c995cb5901b7c49eceae575b9441e8e08dec8cd92e504821fa20ca",
+      "git_blob_sha256": "9ceffaf0d4c995cb5901b7c49eceae575b9441e8e08dec8cd92e504821fa20ca"
     },
     {
       "path": "cpppj/src/o/RawSquidFinder.h",
       "bytes": 4023,
-      "sha256": "e84bf53e772117ecfbc913eabbf460e86f1e687d79cb3f48f2f9c7db8893ed63",
-      "git_blob_sha256": "e84bf53e772117ecfbc913eabbf460e86f1e687d79cb3f48f2f9c7db8893ed63"
+      "sha256": "497717eb2a4cc6cc26b541bd62ff783b48e4ac1f5330fd19b92f5e847eec2ac3",
+      "git_blob_sha256": "497717eb2a4cc6cc26b541bd62ff783b48e4ac1f5330fd19b92f5e847eec2ac3"
     },
     {
       "path": "cpppj/src/o/RawSquidFinder.cpp",
       "bytes": 5905,
-      "sha256": "f7947c488c45aa7632d0a705a863c0fe5262c3ea1c29c17ea23c56ed4249e4e2",
-      "git_blob_sha256": "f7947c488c45aa7632d0a705a863c0fe5262c3ea1c29c17ea23c56ed4249e4e2"
+      "sha256": "74f8141e46a2a1fa8e5b64fc91eb8a15a8b806b718b555414fbc1bd1614c8694",
+      "git_blob_sha256": "74f8141e46a2a1fa8e5b64fc91eb8a15a8b806b718b555414fbc1bd1614c8694"
     },
     {
       "path": "cpppj/src/o/SquidReward.h",
       "bytes": 8117,
-      "sha256": "33df23ab3590c965b68fef4c14a55cf38de55281c08430d22a26e6dc12b6aee6",
-      "git_blob_sha256": "33df23ab3590c965b68fef4c14a55cf38de55281c08430d22a26e6dc12b6aee6"
+      "sha256": "221e142133a1e3a73f65ff6979d73859b7701912ab84cde9dc6a9fe565ccd2e7",
+      "git_blob_sha256": "221e142133a1e3a73f65ff6979d73859b7701912ab84cde9dc6a9fe565ccd2e7"
     },
     {
       "path": "cpppj/src/o/SquidReward.cpp",
       "bytes": 13359,
-      "sha256": "9a1f1a1d4c0f0b0255357b1f3ec9255cea2bb234ed351da70fb30dd1ed859f9c",
-      "git_blob_sha256": "9a1f1a1d4c0f0b0255357b1f3ec9255cea2bb234ed351da70fb30dd1ed859f9c"
+      "sha256": "a29c11afe56a477c470956b1ed0a0678d059340806537ce08b43bf6b6aa1375d",
+      "git_blob_sha256": "a29c11afe56a477c470956b1ed0a0678d059340806537ce08b43bf6b6aa1375d"
     },
     {
       "path": "cpppj/src/o/SpStore.h",
       "bytes": 4064,
-      "sha256": "5bb676a1593e7583a69ef45238f7045009b1cf0fff751649e40833226e80b817",
-      "git_blob_sha256": "5bb676a1593e7583a69ef45238f7045009b1cf0fff751649e40833226e80b817"
+      "sha256": "10e25c2956dc7e917de784865a38341a045a0ed76b49785aaaf67b9f674c4797",
+      "git_blob_sha256": "10e25c2956dc7e917de784865a38341a045a0ed76b49785aaaf67b9f674c4797"
     },
     {
       "path": "cpppj/src/o/SpStore.cpp",
       "bytes": 4577,
-      "sha256": "010b2c3c0b60d089d10a059bb63618d029eec3d3ea341f1bacf7426e71a85ba9",
-      "git_blob_sha256": "010b2c3c0b60d089d10a059bb63618d029eec3d3ea341f1bacf7426e71a85ba9"
+      "sha256": "61723355bccecc352ff415d79434767fec6bfb776ba411cb096bb8b2046fd37a",
+      "git_blob_sha256": "61723355bccecc352ff415d79434767fec6bfb776ba411cb096bb8b2046fd37a"
     },
     {
       "path": "cpppj/src/o/RiftType.h",
       "bytes": 13861,
-      "sha256": "6861baebea2e47f0ac175fdabd7ff7aa09fd53bb978bbdf6b0ffd4ca70455f5a",
-      "git_blob_sha256": "6861baebea2e47f0ac175fdabd7ff7aa09fd53bb978bbdf6b0ffd4ca70455f5a"
+      "sha256": "e1c78cd6c0ac3f9a1135345b4288d07796785cfac20e93465548726cac3ddfdf",
+      "git_blob_sha256": "e1c78cd6c0ac3f9a1135345b4288d07796785cfac20e93465548726cac3ddfdf"
     },
     {
       "path": "cpppj/src/o/RiftType.cpp",
       "bytes": 3726,
       "sha256": "795554df3a4538ba475a2095a1b87a6bf9ddf4ba5ff904b469cef1f7128dc895",
-      "git_blob_sha256": "795554df3a4538ba475a2095a1b87a6bf9ddf4ba5ff904b469cef1f7128dc895"
+      "git_blob_sha256": "fa654b26a5abde84f72dae38ba7d0c5278a5d893a3e22da0b71dd428d944587c"
     },
     {
       "path": "cpppj/src/o/Template.h",
       "bytes": 7420,
-      "sha256": "9c74dcdf92da6b4435ceb88634690662cf437cf7c0f3cb7222faeeaa64695f7a",
-      "git_blob_sha256": "9c74dcdf92da6b4435ceb88634690662cf437cf7c0f3cb7222faeeaa64695f7a"
+      "sha256": "3426d9944a042cfa62f600168e59afcbf8c6b44308293f43f35c4a6283075500",
+      "git_blob_sha256": "3426d9944a042cfa62f600168e59afcbf8c6b44308293f43f35c4a6283075500"
     },
     {
       "path": "cpppj/src/o/Template.cpp",
       "bytes": 14516,
-      "sha256": "36d9075d458e587abe19f054d9afcfad409710eab75ad30c399454a121108641",
-      "git_blob_sha256": "36d9075d458e587abe19f054d9afcfad409710eab75ad30c399454a121108641"
+      "sha256": "01b1c9aca985827a3fae9d823c30005530d611f4538b909d0217316cab286e43",
+      "git_blob_sha256": "01b1c9aca985827a3fae9d823c30005530d611f4538b909d0217316cab286e43"
     },
     {
       "path": "cpppj/src/o/TypeConstructors.inc",
@@ -190,20 +190,20 @@
     {
       "path": "cpppj/tests/RawSceneSupport.h",
       "bytes": 15993,
-      "sha256": "7ef30acb24babc688384ab50f57573a87d004b68b8baa0d0a64c897baad23a4f",
+      "sha256": "87b79d463f38e142b1aa768384af28a08b404a276a6b989e90dd53b393642919",
       "git_blob_sha256": "7ef30acb24babc688384ab50f57573a87d004b68b8baa0d0a64c897baad23a4f"
     },
     {
       "path": "cpppj/tests/TestSupport.h",
       "bytes": 2752,
-      "sha256": "099eb5d48b6afecf5cfa37d034841fbd2fa323f83d3ec4884a67212dbd24231f",
-      "git_blob_sha256": "099eb5d48b6afecf5cfa37d034841fbd2fa323f83d3ec4884a67212dbd24231f"
+      "sha256": "18827372a8b50e27d20954793d196c44a53b0dbe304457dd7c7127021373166c",
+      "git_blob_sha256": "18827372a8b50e27d20954793d196c44a53b0dbe304457dd7c7127021373166c"
     },
     {
       "path": "cpppj/fortobjectload.json",
-      "bytes": 4517,
-      "sha256": "d1706628fd636df15602985296965df2a4e03c52fb027fada3c3e2578879992e",
-      "git_blob_sha256": "d1706628fd636df15602985296965df2a4e03c52fb027fada3c3e2578879992e"
+      "bytes": 4648,
+      "sha256": "514e66c7d0d0b5f59b004a9e98099a5799c68bec3b4d6732cb6424b84a807342",
+      "git_blob_sha256": "093f57d5772769c5774351da8dd6ce571940d3996010fd5bec30dfc375be2c39"
     },
     {
       "path": "cpppj/contained.json",
@@ -215,7 +215,7 @@
       "path": "cpppj/contentlifetime.json",
       "bytes": 13364,
       "sha256": "9ac7cf056499a7cfee983304f9022e8f7406ef57376d3327dfa68dbf6a6cc569",
-      "git_blob_sha256": "9ac7cf056499a7cfee983304f9022e8f7406ef57376d3327dfa68dbf6a6cc569"
+      "git_blob_sha256": "3005dd59f532ef6768c5fcf7bf51abfe0f13e42022e522d9a61b602df6d48373"
     },
     {
       "path": "cpppj/formlifecycle.json",
@@ -225,14 +225,14 @@
     },
     {
       "path": "cpppj/factory-world.json",
-      "bytes": 4813,
+      "bytes": 4795,
       "sha256": "79d6d30ac4c1c96fba6b1ae55523ee92f547e8192310cab98746c9ac3a8e6f38",
       "git_blob_sha256": "79d6d30ac4c1c96fba6b1ae55523ee92f547e8192310cab98746c9ac3a8e6f38"
     }
   ],
   "tool": {
     "path": "tools/analyze_fortmeta_cpp_binding.py",
-    "bytes": 4976,
+    "bytes": 4850,
     "sha256": "3bd9617446254ef4b92f9dc0b310e8fe9388b17c7d9ec0919858f0a88de2f5be"
   },
   "cpp_tests": 3,

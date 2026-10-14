@@ -2,8 +2,8 @@
   "host": "HJOW-Athlon",
   "lineage": {
     "snapshot_files": {
-      "cpppj/hist/temple-rune-afcc3/cpppj/runepostpop.json": "00fd5d55f22a3a70ca66b4d6af93ead27c7f74f1cff83ca3773f4295601abdbc",
-      "cpppj/hist/temple-rune-afcc3/cpppj/templeritual.json": "0366634b52f99eb272d3dd7a5af65f4b07575fbc365fc5934a6f60a837e9c7e8",
+      "cpppj/hist/temple-rune-afcc3/cpppj/runepostpop.json": "7cbec8c206c4f9062a8ce1fdef2421298f5678edcae5e2bee9236b965fa2d094",
+      "cpppj/hist/temple-rune-afcc3/cpppj/templeritual.json": "08aeda3320c54046d5377825f98ded2bc716467db7285105ff2076cff47a7ee5",
       "cpppj/hist/temple-rune-afcc3/cpppj/src/o/RawRunePostPop.cpp": "da2d069182900bb8526236ebfec1867d47167422d7837e2c2a8ecae741db345e",
       "cpppj/hist/temple-rune-afcc3/cpppj/src/o/RawRunePostPop.h": "736b4db5d7b02a0c7eda3c23a91b992e755fd515d0715fd57127f14984659276",
       "cpppj/hist/temple-rune-afcc3/cpppj/src/o/RawTempleRitual.cpp": "fee9b37873c162ea621595d819b05db4bdea5c28fb62a3b44908aca064530595",
@@ -17,9 +17,9 @@
       "cpppj/hist/temple-rune-afcc3/tools/decomp_templeritual_oracle.py": "63b82f84235d077612dc9548dfc4cf83263f3ea8fa7e5330072364665646f111"
     },
     "current_files": {
-      "cpppj/templeritual.json": "9595ade0c700c5357ee3020c87152df492c48a706b6527f800082ac0eef14121",
+      "cpppj/templeritual.json": "5321e284dae09eb688c190fc4a10ac51ecd964631c65af9984ff98bdabd2a6c7",
       "cpppj/tests/fixtures/templeritual-x86.tsv": "6ad3c0abef4a2af956e949ae54e7005d89811c0287bd9d5328e94efa3a98be65",
-      "cpppj/runepostpop.json": "763955bb527c8e11f1fc01a881f3737089870c63098dd3c21394486126a562dc",
+      "cpppj/runepostpop.json": "403b27fa0d713ec0793830118af4d2edd9993dc7a3be1a6bc5ca4e402fbbf42f",
       "cpppj/tests/fixtures/runepostpop-x86.tsv": "784669b8c4c20b725b3e23492bc76e4b1a4ab21042dfb9850378907bafd35e99",
       "cpppj/src/o/RawRunePostPop.cpp": "854043c685372a5805140e6a30af061d5798919250c2457c125ad0e26760aa9a",
       "cpppj/src/o/RawRunePostPop.h": "736b4db5d7b02a0c7eda3c23a91b992e755fd515d0715fd57127f14984659276",
@@ -44,26 +44,26 @@
         "restored_entire_source_unchanged": true
       },
       "cpppj/src/o/RawTempleRitual.cpp": {
-        "current_sha256": "fee9b37873c162ea621595d819b05db4bdea5c28fb62a3b44908aca064530595",
-        "prior_sha256": "fee9b37873c162ea621595d819b05db4bdea5c28fb62a3b44908aca064530595",
+        "current_sha256": "093217e1b19e27f95af7938b77f31ec7991f5042bfc63e733f5268f395042a11",
+        "prior_sha256": "093217e1b19e27f95af7938b77f31ec7991f5042bfc63e733f5268f395042a11",
         "prior_token_sha256": "05813691042d0488b6116e871df69f30d487c7c4acf0dca814f2e144d375ae0a",
         "restored_entire_source_unchanged": true
       },
       "cpppj/src/o/RawTempleRitual.h": {
-        "current_sha256": "d1f5ab197e92539a0c4904a5f73c0aba60392c587e20cc9a6fbfc54a881acf73",
-        "prior_sha256": "d1f5ab197e92539a0c4904a5f73c0aba60392c587e20cc9a6fbfc54a881acf73",
+        "current_sha256": "d7aa14df47252ed5b8ea1727077e90f3dcd41ede8d6585bd11ba66e0fefdfa4e",
+        "prior_sha256": "d7aa14df47252ed5b8ea1727077e90f3dcd41ede8d6585bd11ba66e0fefdfa4e",
         "prior_token_sha256": "fdcc2f03d44dddbda47262b3f37e332f45b8dcb1d4197dca3e4deb4a009e0eb7",
         "restored_entire_source_unchanged": true
       },
       "cpppj/tests/RunePostPopTests.cpp": {
-        "current_sha256": "9918c7375cb132f74579c6a3bfe94d0996e4e9f0f17c76abdf06887e933c2470",
-        "prior_sha256": "9918c7375cb132f74579c6a3bfe94d0996e4e9f0f17c76abdf06887e933c2470",
+        "current_sha256": "3e8508978b10b8bc167e2b32c60437387d7e966092b6d13d2903a492fdd94d88",
+        "prior_sha256": "3e8508978b10b8bc167e2b32c60437387d7e966092b6d13d2903a492fdd94d88",
         "prior_token_sha256": "23c04de7a3b70294cd66b86ff3f7ae72f15a2f6e583612d2711a41a8fa065897",
         "restored_entire_source_unchanged": true
       },
       "cpppj/tests/TempleRitualTests.cpp": {
-        "current_sha256": "93cb36182f961449ba897b8fd87ec85cf745e04d33941f8cbbda8cf4f059e1ca",
-        "prior_sha256": "93cb36182f961449ba897b8fd87ec85cf745e04d33941f8cbbda8cf4f059e1ca",
+        "current_sha256": "d8d462d8f942a4e8f03ca53b015bd8498f78422ab3259b1943e9c0f01a50a839",
+        "prior_sha256": "d8d462d8f942a4e8f03ca53b015bd8498f78422ab3259b1943e9c0f01a50a839",
         "prior_token_sha256": "e4e9569b25fd828fbcf9c71efc821a8504103a6cd212c8a689133f8fd8cd5fb5",
         "restored_entire_source_unchanged": true
       },
@@ -85,21 +85,21 @@
         "unique_cases": 6720,
         "additional_unique_cases": 0,
         "case_identifiers_unchanged": true,
-        "prior_report_sha256": "0366634b52f99eb272d3dd7a5af65f4b07575fbc365fc5934a6f60a837e9c7e8",
-        "current_report_sha256": "9595ade0c700c5357ee3020c87152df492c48a706b6527f800082ac0eef14121",
+        "prior_report_sha256": "51288d52663147aa58514a755ef03673c8f4d84c9804c7692c5d94c09aeb77c4",
+        "current_report_sha256": "d03a6c90baacfdec9815d3f54cf920aff50cc3ceb969c3fba34cae18bcf5c2fa",
         "fixture_changed_rows": 972
       },
       "runepostpop": {
         "unique_cases": 1920,
         "additional_unique_cases": 0,
         "case_identifiers_unchanged": true,
-        "prior_report_sha256": "00fd5d55f22a3a70ca66b4d6af93ead27c7f74f1cff83ca3773f4295601abdbc",
-        "current_report_sha256": "763955bb527c8e11f1fc01a881f3737089870c63098dd3c21394486126a562dc",
+        "prior_report_sha256": "c39f6947468ffdcb1ba918e24131cbe8589d8f9a7d81f85db853cdde6ff06412",
+        "current_report_sha256": "4f2dfde9cf3b386db1136ae826d24250044bb609a6b58524d75977d049f8e7b0",
         "fixture_changed_rows": 0
       }
     }
   },
-  "tool_sha256": "18825db9c21103a5a5c76d73ef9546bb0734038a478e508559d9196d4382944f",
+  "tool_sha256": "7bd51e179d6856c396ff495381d94afd3f3140d84037477c5cad623fd3f6e686",
   "additional_unique_cases": 0,
   "initial_cpp_failed_checks": {
     "templeritual": 1330,

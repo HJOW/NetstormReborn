@@ -5,38 +5,38 @@
     "sources": {
       "cpppj/src/o/RawRunePostPop.h": {
         "baseline_sha256": "736b4db5d7b02a0c7eda3c23a91b992e755fd515d0715fd57127f14984659276",
-        "current_sha256": "057c813ed8dcb33eab75554f9368645e77d4b85b61df76a22e64f52dcc82d5ee",
+        "current_sha256": "d84feb8d00f467cd8a4cae96785cf93ec86185ca30e9da3783ad50f0ecc09196",
         "entire_existing_token_sha256": "8f912cd2d684f56122d82e4c2dce60eb961fe430f3eacf0f8d0bc861638a2059",
         "entire_existing_source_unchanged": true
       },
       "cpppj/src/o/RawRunePostPop.cpp": {
         "baseline_sha256": "854043c685372a5805140e6a30af061d5798919250c2457c125ad0e26760aa9a",
-        "current_sha256": "ca10766ced498c5aab0c92fbcca0d0d4ad39c5d9e5c91ce7865dd0523b2f6ab0",
+        "current_sha256": "4989a484a4f080d40998cf2e3e9f34a73f48958d8f965c743c69cc17e27b4560",
         "entire_existing_token_sha256": "bc5162583ea1234efe1f90bb0501f52e127fc4c5d5c3be2f0fec2fa6d3f151dd",
         "entire_existing_source_unchanged": true
       },
       "cpppj/src/o/RawPathRuntime.h": {
         "baseline_sha256": "aa5cb266d2952222fbb50bac558f280448f3086593bc3098046237dba4036158",
-        "current_sha256": "37c7cd34a4f9ea159f87364179d0909d1bd8ef694dba7c14e0f9a9e3f45798b2",
+        "current_sha256": "40b7ecedada3010cb7533f2007fcdb21b6470ad8ea98fc61379029c11c0601ef",
         "entire_existing_token_sha256": "ddcc760a34904bba5141b65e06802e9504980793e268bf426795173b322de100",
         "entire_existing_source_unchanged": true
       },
       "cpppj/src/o/RawPathRuntime.cpp": {
         "baseline_sha256": "4debe1d124ba7ef49596109bd1facf0c244f57ecce7be8737a9d44b7b5e04754",
-        "current_sha256": "eb5f55911d1447a6133f494131412337e116847122111349a369cc7d94e61829",
+        "current_sha256": "2d399de08631e4227db49a9eb9b5646a5b38719ba6be5520ea935db256bc1b6e",
         "entire_existing_token_sha256": "4b02abac0ca4fb1850c993b58a0ee91f8db053fc097a798a18871961e17a332c",
         "entire_existing_source_unchanged": true
       }
     },
     "prior_reports": {
       "cpppj/run8.json": {
-        "sha256": "1a616f3ff34752daee2cc9d2fb87ca8497d8d677ad3ce42eba9653ac5a700cb5",
+        "sha256": "e2ceeedf99a4c348c4598df337a1efd8bb1187283350d9f4624145feff9df49d",
         "total": null,
         "additional_unique_cases": 0,
         "dependencies": {}
       },
       "cpppj/runepostpop.json": {
-        "sha256": "763955bb527c8e11f1fc01a881f3737089870c63098dd3c21394486126a562dc",
+        "sha256": "4f2dfde9cf3b386db1136ae826d24250044bb609a6b58524d75977d049f8e7b0",
         "total": 1920,
         "additional_unique_cases": 0,
         "dependencies": {
@@ -158,24 +158,24 @@
         }
       },
       "cpppj/runepostpop-lineage.json": {
-        "sha256": "1873f3a406de8b9bdfce672a7202fff3f6a5ec8948a2d1f906d8b8e756d4d3fa",
+        "sha256": "681860242d5774c8764ecc2cd3eaea88b01224c49d5d4cafbf4274012ed1b0d4",
         "total": null,
         "additional_unique_cases": 0,
         "dependencies": {}
       },
       "cpppj/temple-rune-runtime8-lineage.json": {
-        "sha256": "23eca0095be8990d302e777042aa23ea01366671c5e2f0e17e736339afd29469",
+        "sha256": "b7ef4e43a91c65bcecb708b776cf368e64a61e43cfa87a1d55bed75fc515f88f",
         "total": null,
         "additional_unique_cases": 0,
         "dependencies": {}
       },
       "cpppj/pathruntime.json": {
-        "sha256": "85996e1fdd1495ef9a5816479deaf3f4ca812a343c6209611300679fc70997c7",
+        "sha256": "64fb3d27ce722209c9cf6e96c9e199de57ef65fb6b799a7133e2f2d5544671aa",
         "total": null,
         "additional_unique_cases": 0,
         "dependencies": {
           "tools/decomp_pathruntime_oracle.py": {
-            "reported_sha256": "776fca22fee4ea48ab1e5fc843378a655fd6388be8672c1262a7285deef2b282",
+            "reported_sha256": "d9764f3b0dc5005d8c0b229e367df88c42dcf74d171d5f29927c2855673d9fcc",
             "baseline_08_sha256": "d9764f3b0dc5005d8c0b229e367df88c42dcf74d171d5f29927c2855673d9fcc",
             "current_sha256": "d9764f3b0dc5005d8c0b229e367df88c42dcf74d171d5f29927c2855673d9fcc"
           },
@@ -186,8 +186,8 @@
           },
           "tools/ghidra/pathruntime-functions.json": {
             "reported_sha256": "4977321286c9dc55ed0568c0189ee5df080687ebf92e9f17bb7f721534cc41a0",
-            "baseline_08_sha256": "cd2864b4e6eb9b4f6b6e03be4664f84fab2acd934df3f3a53d0af1a81ed9dc21",
-            "current_sha256": "cd2864b4e6eb9b4f6b6e03be4664f84fab2acd934df3f3a53d0af1a81ed9dc21"
+            "baseline_08_sha256": "4977321286c9dc55ed0568c0189ee5df080687ebf92e9f17bb7f721534cc41a0",
+            "current_sha256": "4977321286c9dc55ed0568c0189ee5df080687ebf92e9f17bb7f721534cc41a0"
           },
           "tools/ghidra/pathruntimehelpers-functions.json": {
             "reported_sha256": "235f32e99e22e952d0ab1b1263d8c071afbbbce7f839bc70b7ab7d2ff212299c",
@@ -272,7 +272,7 @@
         }
       },
       "cpppj/pathstart.json": {
-        "sha256": "c7c4327ec5c82c590c906652b4f52466260f3ab6c45ac14f019bc2fcd392d2af",
+        "sha256": "903bebe4f32f7969ae15b375f1de8f604e90a2922bb95927a64e9cbcbc3edda3",
         "total": 512,
         "additional_unique_cases": 0,
         "dependencies": {
@@ -412,9 +412,9 @@
             "current_sha256": "a0c7a00b68bc1ef316a34b23a54137d15d00a27c5fffff6a86e60466eb3ada06"
           },
           "tools/ghidra/pathruntime-functions.json": {
-            "reported_sha256": "cd2864b4e6eb9b4f6b6e03be4664f84fab2acd934df3f3a53d0af1a81ed9dc21",
-            "baseline_08_sha256": "cd2864b4e6eb9b4f6b6e03be4664f84fab2acd934df3f3a53d0af1a81ed9dc21",
-            "current_sha256": "cd2864b4e6eb9b4f6b6e03be4664f84fab2acd934df3f3a53d0af1a81ed9dc21"
+            "reported_sha256": "4977321286c9dc55ed0568c0189ee5df080687ebf92e9f17bb7f721534cc41a0",
+            "baseline_08_sha256": "4977321286c9dc55ed0568c0189ee5df080687ebf92e9f17bb7f721534cc41a0",
+            "current_sha256": "4977321286c9dc55ed0568c0189ee5df080687ebf92e9f17bb7f721534cc41a0"
           },
           "tools/ghidra/pathruntimehelpers-functions.json": {
             "reported_sha256": "235f32e99e22e952d0ab1b1263d8c071afbbbce7f839bc70b7ab7d2ff212299c",
@@ -439,7 +439,7 @@
         }
       },
       "cpppj/pathcleanup.json": {
-        "sha256": "d16c58c4fafe9af76d49d0bd90a8862e717757f5f93b21a9ab0dbb9ac65b2bce",
+        "sha256": "f047539711e4e79564d56e261c9430445f5aa47cc6a12bd4bc801a59d54d8fd9",
         "total": 1732,
         "additional_unique_cases": 0,
         "dependencies": {
@@ -504,15 +504,15 @@
             "current_sha256": "e1189d20c535b1c03f32a1464ace5cb9543add7a1fa7656eabaacc2900323a45"
           },
           "tools/analyze_pathcleanup_test_lineage.py": {
-            "reported_sha256": "17e7b7ca24b575db04dc3af3f526310e89f453745331ca982138f4754b4c7ad8",
-            "baseline_08_sha256": "17e7b7ca24b575db04dc3af3f526310e89f453745331ca982138f4754b4c7ad8",
-            "current_sha256": "17e7b7ca24b575db04dc3af3f526310e89f453745331ca982138f4754b4c7ad8"
+            "reported_sha256": "e3e0607598ffa5fd8f3a71d39a30e4222d87f22b13ecc7423b7167e90182f2d0",
+            "baseline_08_sha256": "e3e0607598ffa5fd8f3a71d39a30e4222d87f22b13ecc7423b7167e90182f2d0",
+            "current_sha256": "e3e0607598ffa5fd8f3a71d39a30e4222d87f22b13ecc7423b7167e90182f2d0"
           }
         }
       }
     }
   },
-  "tool_sha256": "eedb8160c86a1caa46c2edcd3a335996b7d52417d2abb4b4912d75d6b6fdc3fb",
+  "tool_sha256": "464120e6f472fb30605f35f2b0137fd2b0a5f2c5c25a4c462e5a198e81d615f7",
   "additional_unique_cases": 0,
   "scope": "AltarAt은 기존 ConstructionSeconds typed 조회 prefix를 그대로 이동하고 시간 선택 본문은 보존한다. MoveAwayDepth는 helper+4 signedDWORD 조회/쓰기만 추가한다. 이전 Rune1920/Runtime/Path/08 관찰을 새 Dais 고유 입력에 합산하지 않는다."
 }

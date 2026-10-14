@@ -10,13 +10,13 @@
       "path": "cpppj/campaign-world.json",
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/cpppj/campaign-world.json",
-        "bytes": 6867,
-        "sha256": "0378af02139169357f9e1bba62ef25a07039f433ec0582a97e471f7a08a74d1f"
+        "bytes": 6759,
+        "sha256": "61db37cacf69a05421ad72baae48d3c37dd56273e3016071185c407e40c0ecbc"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/cpppj/campaign-world.json",
-        "bytes": 6867,
-        "sha256": "0378af02139169357f9e1bba62ef25a07039f433ec0582a97e471f7a08a74d1f"
+        "bytes": 6759,
+        "sha256": "61db37cacf69a05421ad72baae48d3c37dd56273e3016071185c407e40c0ecbc"
       },
       "changed": false
     },
@@ -39,12 +39,12 @@
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/cpppj/gunimpact.json",
         "bytes": 8122,
-        "sha256": "3d14869770db18161c71f5d8ffe9a0eb2d977805286a0abe05f541755c68ea14"
+        "sha256": "5bce4bee32c86618a3d547fd16338cd32da74ea22b9bdc01a22c712e0d5265db"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/cpppj/gunimpact.json",
         "bytes": 7987,
-        "sha256": "6952df9f64f236a11752acd9c725b358ce385687f27c231974810ff03e2e492c"
+        "sha256": "6c52cdcdb01a8f801e5380f8d1b30d5dd1c8dfd83d3f4a45d64782b9ecc917c3"
       },
       "changed": false
     },
@@ -53,12 +53,12 @@
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/cpppj/normalterrain-world-binding.json",
         "bytes": 693812,
-        "sha256": "034ffc254b9a4aa7c8e2615e00b53f1e5b2468fcb79d0e754e4d1beb3ba09f1f"
+        "sha256": "026b44678fe73b23ab1cd734d0f4b7443db20c27a9efb04cfcbcf1002ae66ea5"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/cpppj/normalterrain-world-binding.json",
         "bytes": 693812,
-        "sha256": "034ffc254b9a4aa7c8e2615e00b53f1e5b2468fcb79d0e754e4d1beb3ba09f1f"
+        "sha256": "026b44678fe73b23ab1cd734d0f4b7443db20c27a9efb04cfcbcf1002ae66ea5"
       },
       "changed": false
     },
@@ -66,13 +66,13 @@
       "path": "cpppj/priestritualactions.json",
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/cpppj/priestritualactions.json",
-        "bytes": 5210,
-        "sha256": "46715e61ceaccc36206adcbe911cb712aa1a3df17144b8602d078436190797c3"
+        "bytes": 5170,
+        "sha256": "02ca5d4219050b5e0fa0555fb8ea31f31444d450028c203929056747a523b20d"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/cpppj/priestritualactions.json",
-        "bytes": 5210,
-        "sha256": "46715e61ceaccc36206adcbe911cb712aa1a3df17144b8602d078436190797c3"
+        "bytes": 5170,
+        "sha256": "02ca5d4219050b5e0fa0555fb8ea31f31444d450028c203929056747a523b20d"
       },
       "changed": false
     },
@@ -95,12 +95,12 @@
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/cpppj/stylemarkup.json",
         "bytes": 7983,
-        "sha256": "ad914a98cc5058c12b953ffad75cbbca65d81813b184d8840be18f0e46a6958b"
+        "sha256": "42f2e27ff68ee6fc07618b2b885fb19ce9e1fda6738dc4def7e1fc6edf865697"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/cpppj/stylemarkup.json",
-        "bytes": 7762,
-        "sha256": "3ac61be21ed5565f313601b8d5ce68f4697cf44742a022290c05b7063f20127e"
+        "bytes": 7983,
+        "sha256": "42f2e27ff68ee6fc07618b2b885fb19ce9e1fda6738dc4def7e1fc6edf865697"
       },
       "changed": false
     },
@@ -108,13 +108,13 @@
       "path": "cpppj/terrainstamp-enum-comments.json",
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/cpppj/terrainstamp-enum-comments.json",
-        "bytes": 15440,
-        "sha256": "63dd8eb1cecfabd40385d3edc62448f607da515d262740ce94c5055cbfd5f12a"
+        "bytes": 15386,
+        "sha256": "d94be019652f628c9cf833c02e49b215a2c5c53cf4cd6f52765b9548917636b6"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/cpppj/terrainstamp-enum-comments.json",
-        "bytes": 15440,
-        "sha256": "63dd8eb1cecfabd40385d3edc62448f607da515d262740ce94c5055cbfd5f12a"
+        "bytes": 15386,
+        "sha256": "d94be019652f628c9cf833c02e49b215a2c5c53cf4cd6f52765b9548917636b6"
       },
       "changed": false
     },
@@ -123,12 +123,12 @@
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/cpppj/terrainstamp.json",
         "bytes": 9475,
-        "sha256": "175399260b85bab4175013e45d841aab684f47a0c31eec3c96a60e9645241bb0"
+        "sha256": "1ebd3fb74e53b938a5454b3b9df4576d7bec61dbdcf226f0c81c70fd86037e92"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/cpppj/terrainstamp.json",
         "bytes": 9475,
-        "sha256": "175399260b85bab4175013e45d841aab684f47a0c31eec3c96a60e9645241bb0"
+        "sha256": "1ebd3fb74e53b938a5454b3b9df4576d7bec61dbdcf226f0c81c70fd86037e92"
       },
       "changed": false
     },
@@ -136,13 +136,13 @@
       "path": "cpppj/terrainstamp-mask-correction.json",
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/cpppj/terrainstamp-mask-correction.json",
-        "bytes": 18101,
-        "sha256": "71d450307c7c20a571b3fa21f39aa839d0f580b31ded7c24df3a6066a14aaae0"
+        "bytes": 18065,
+        "sha256": "4e9a27a09567b1980734310b6b3f92f0933447bbf35fa90dc0fe73c23defddd2"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/cpppj/terrainstamp-mask-correction.json",
-        "bytes": 18101,
-        "sha256": "71d450307c7c20a571b3fa21f39aa839d0f580b31ded7c24df3a6066a14aaae0"
+        "bytes": 18065,
+        "sha256": "4e9a27a09567b1980734310b6b3f92f0933447bbf35fa90dc0fe73c23defddd2"
       },
       "changed": false
     },
@@ -207,7 +207,7 @@
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/cpppj/src/o/CanonTypeDecoder.h",
         "bytes": 1222,
-        "sha256": "09cc8fc79c9194abfb5461747f14cf7ce4241d8a80fcac9ebb647cb3b3067090"
+        "sha256": "7acea51ce603ba1c782a6c49a00c55258eabdb5763c51220fe4a64f773f53ff4"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/cpppj/src/o/CanonTypeDecoder.h",
@@ -235,7 +235,7 @@
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/cpppj/src/o/RiftType.h",
         "bytes": 13861,
-        "sha256": "6861baebea2e47f0ac175fdabd7ff7aa09fd53bb978bbdf6b0ffd4ca70455f5a"
+        "sha256": "e1c78cd6c0ac3f9a1135345b4288d07796785cfac20e93465548726cac3ddfdf"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/cpppj/src/o/RiftType.h",
@@ -347,7 +347,7 @@
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/cpppj/tests/fixtures/gunimpact-x86.tsv",
         "bytes": 440479,
-        "sha256": "2890d6b54b9e06809d2303845a858e64ef5f85a49ecd015eb42e86e5e75a7638"
+        "sha256": "eb110fec2551edd4c177e78bb338aeb17c75d37c04914b2adf6111c4a9bbe3e5"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/cpppj/tests/fixtures/gunimpact-x86.tsv",
@@ -458,13 +458,13 @@
       "path": "tools/analyze_campaign_world.py",
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/tools/analyze_campaign_world.py",
-        "bytes": 5598,
+        "bytes": 5562,
         "sha256": "ee12970ea75fa4f0367fbdd507e8bb325095a77ebd4cc6b25fc52c9d4ab6fa8f"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/tools/analyze_campaign_world.py",
         "bytes": 5522,
-        "sha256": "de3e92fef521778c02c2c07502c740bd6db30e6edfc4b0de8981d569b4246813"
+        "sha256": "ee12970ea75fa4f0367fbdd507e8bb325095a77ebd4cc6b25fc52c9d4ab6fa8f"
       },
       "changed": false
     },
@@ -473,12 +473,12 @@
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/tools/analyze_framechoose_lineage.py",
         "bytes": 4880,
-        "sha256": "a05241129f49884eff18d17d3831aef75ab1a89cfe0f3348cc73906cb1a68504"
+        "sha256": "ad7d7b0a29370f799db06bc1446a3e8e57e1856e7056be836cf1919fefe051ac"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/tools/analyze_framechoose_lineage.py",
         "bytes": 4880,
-        "sha256": "a05241129f49884eff18d17d3831aef75ab1a89cfe0f3348cc73906cb1a68504"
+        "sha256": "ad7d7b0a29370f799db06bc1446a3e8e57e1856e7056be836cf1919fefe051ac"
       },
       "changed": false
     },
@@ -487,12 +487,12 @@
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/tools/analyze_normalterrain_binding_cpp_correction.py",
         "bytes": 7233,
-        "sha256": "2121d046422bb4ad6223cae0887e33b75b65af92a0c28d1f9f246c1a5e03a3f6"
+        "sha256": "88c1b48c647c668779699d9302a5c768c8fc02c42ef0156e093f96bde06f2fa0"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/tools/analyze_normalterrain_binding_cpp_correction.py",
         "bytes": 7233,
-        "sha256": "2121d046422bb4ad6223cae0887e33b75b65af92a0c28d1f9f246c1a5e03a3f6"
+        "sha256": "88c1b48c647c668779699d9302a5c768c8fc02c42ef0156e093f96bde06f2fa0"
       },
       "changed": false
     },
@@ -501,12 +501,12 @@
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/tools/check_terrain_frame_fix.py",
         "bytes": 4168,
-        "sha256": "eadf27f0c26d9dd81861ab823d6c012368dacef84968f337906b3ec0bb46c279"
+        "sha256": "7a7b62309553920658a590c579c9bf04a8bf2676f8f7430ce8576db6d8692624"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/tools/check_terrain_frame_fix.py",
         "bytes": 4168,
-        "sha256": "eadf27f0c26d9dd81861ab823d6c012368dacef84968f337906b3ec0bb46c279"
+        "sha256": "7a7b62309553920658a590c579c9bf04a8bf2676f8f7430ce8576db6d8692624"
       },
       "changed": false
     },
@@ -515,12 +515,12 @@
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/tools/check_terrain_profile_fix.py",
         "bytes": 3635,
-        "sha256": "792d795f9f4286ea88c4078d66ff5187455dbf2b404c0002e166b757a94480f1"
+        "sha256": "3ece69278c73cc5d83640922d0c9909271d314e8fce7e37660c4df37c8997959"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/tools/check_terrain_profile_fix.py",
         "bytes": 3635,
-        "sha256": "792d795f9f4286ea88c4078d66ff5187455dbf2b404c0002e166b757a94480f1"
+        "sha256": "3ece69278c73cc5d83640922d0c9909271d314e8fce7e37660c4df37c8997959"
       },
       "changed": false
     },
@@ -529,12 +529,12 @@
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/tools/analyze_normalterrain_world_binding.py",
         "bytes": 9858,
-        "sha256": "d75ed5911b0cef82be3b8111cc92620dca3aff5886a4c26f9103c5dc87fdc2ae"
+        "sha256": "bba2dce354eda6c0eaf00486402a53267bc5925f010cc80461c6449519dbcf73"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/tools/analyze_normalterrain_world_binding.py",
         "bytes": 9858,
-        "sha256": "d75ed5911b0cef82be3b8111cc92620dca3aff5886a4c26f9103c5dc87fdc2ae"
+        "sha256": "bba2dce354eda6c0eaf00486402a53267bc5925f010cc80461c6449519dbcf73"
       },
       "changed": false
     },
@@ -543,12 +543,12 @@
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/tools/analyze_priestritualactions_test_lineage.py",
         "bytes": 5204,
-        "sha256": "90c90c30256a1e57a1b416a07c16def86cf6a89281cba98934a14dd059babe48"
+        "sha256": "f6b1849777fd3d891a8a34750466052e41a74780e54f468b5a1755a39a465af2"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/tools/analyze_priestritualactions_test_lineage.py",
         "bytes": 5204,
-        "sha256": "90c90c30256a1e57a1b416a07c16def86cf6a89281cba98934a14dd059babe48"
+        "sha256": "f6b1849777fd3d891a8a34750466052e41a74780e54f468b5a1755a39a465af2"
       },
       "changed": false
     },
@@ -557,12 +557,12 @@
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/tools/analyze_stylemarkup.py",
         "bytes": 6473,
-        "sha256": "0ed8a010a4534cbc6e4ff1f802d1c77284d66f1ce8c0fbe6973573eba571ea64"
+        "sha256": "50ec494e2285d67bde4f83096dd978167316ee1454f7ae713de4c8db8bcceaf3"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/tools/analyze_stylemarkup.py",
         "bytes": 6473,
-        "sha256": "0ed8a010a4534cbc6e4ff1f802d1c77284d66f1ce8c0fbe6973573eba571ea64"
+        "sha256": "50ec494e2285d67bde4f83096dd978167316ee1454f7ae713de4c8db8bcceaf3"
       },
       "changed": false
     },
@@ -571,12 +571,12 @@
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/tools/analyze_styletext.py",
         "bytes": 5791,
-        "sha256": "a69336b3064208e08e5fcea4e84f8427eeaa35512673c64f273c39b4b91877b1"
+        "sha256": "6e79df1106b085d3cf88e8ff082a9512103e4c00d83cc7aa8fc98d487a87a0ba"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/tools/analyze_styletext.py",
         "bytes": 5791,
-        "sha256": "a69336b3064208e08e5fcea4e84f8427eeaa35512673c64f273c39b4b91877b1"
+        "sha256": "6e79df1106b085d3cf88e8ff082a9512103e4c00d83cc7aa8fc98d487a87a0ba"
       },
       "changed": false
     },
@@ -585,12 +585,12 @@
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/tools/analyze_terrainstamp_cpp_binding.py",
         "bytes": 3905,
-        "sha256": "c9bc489b851c7d60155082170d61448878f9aa0a0c62e959d568235da270fe8c"
+        "sha256": "e9a7699003cdff42a36f27237e78cb5a2936f3c95adbe9d0440974bf43c8fe63"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/tools/analyze_terrainstamp_cpp_binding.py",
         "bytes": 3905,
-        "sha256": "c9bc489b851c7d60155082170d61448878f9aa0a0c62e959d568235da270fe8c"
+        "sha256": "e9a7699003cdff42a36f27237e78cb5a2936f3c95adbe9d0440974bf43c8fe63"
       },
       "changed": false
     },
@@ -599,12 +599,12 @@
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/tools/analyze_terrainstamp_enum_comments.py",
         "bytes": 6519,
-        "sha256": "0f5440abc2b6d2a6e43f9eaddf62c06191d796f79c7473fd0353df15fd95dad8"
+        "sha256": "15ecaef88e7e0983671076fde81fefeaaa37cec1b7f45cab6dce421cd944cfbf"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/tools/analyze_terrainstamp_enum_comments.py",
         "bytes": 6519,
-        "sha256": "0f5440abc2b6d2a6e43f9eaddf62c06191d796f79c7473fd0353df15fd95dad8"
+        "sha256": "15ecaef88e7e0983671076fde81fefeaaa37cec1b7f45cab6dce421cd944cfbf"
       },
       "changed": false
     },
@@ -613,12 +613,12 @@
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/tools/analyze_terrainstamp_mask_correction.py",
         "bytes": 6054,
-        "sha256": "7f803b541d4f5f41c02bb1a47df0c9df05e2325734b59e9ca7801adadda7fdf8"
+        "sha256": "80435f45ed10d4a0c223b380f4e89be674b5bd2c5ef2b4811dc90e3b81bebbd8"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/tools/analyze_terrainstamp_mask_correction.py",
         "bytes": 6054,
-        "sha256": "7f803b541d4f5f41c02bb1a47df0c9df05e2325734b59e9ca7801adadda7fdf8"
+        "sha256": "80435f45ed10d4a0c223b380f4e89be674b5bd2c5ef2b4811dc90e3b81bebbd8"
       },
       "changed": false
     },
@@ -640,12 +640,12 @@
       "path": "tools/decomp_assetpostpop_oracle.py",
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/tools/decomp_assetpostpop_oracle.py",
-        "bytes": 19446,
+        "bytes": 19428,
         "sha256": "347af1e5202ecf14b5f32125f19046e83fdd1ee420018510333437c001154e31"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/tools/decomp_assetpostpop_oracle.py",
-        "bytes": 19446,
+        "bytes": 19428,
         "sha256": "347af1e5202ecf14b5f32125f19046e83fdd1ee420018510333437c001154e31"
       },
       "changed": false
@@ -654,12 +654,12 @@
       "path": "tools/decomp_bridgedecay_oracle.py",
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/tools/decomp_bridgedecay_oracle.py",
-        "bytes": 53870,
+        "bytes": 53852,
         "sha256": "887979f3b82cd56a93a4620d473b8048a579807e72022dfa8dddcf873c81641f"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/tools/decomp_bridgedecay_oracle.py",
-        "bytes": 53870,
+        "bytes": 53852,
         "sha256": "887979f3b82cd56a93a4620d473b8048a579807e72022dfa8dddcf873c81641f"
       },
       "changed": false
@@ -668,12 +668,12 @@
       "path": "tools/decomp_bridgeeffects_oracle.py",
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/tools/decomp_bridgeeffects_oracle.py",
-        "bytes": 15417,
+        "bytes": 15399,
         "sha256": "ed8e76931f972ffec24be024a17e65ddf3224eb487f215764f60b8abfbbaf462"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/tools/decomp_bridgeeffects_oracle.py",
-        "bytes": 15417,
+        "bytes": 15399,
         "sha256": "ed8e76931f972ffec24be024a17e65ddf3224eb487f215764f60b8abfbbaf462"
       },
       "changed": false
@@ -682,12 +682,12 @@
       "path": "tools/decomp_bridgeevent_oracle.py",
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/tools/decomp_bridgeevent_oracle.py",
-        "bytes": 30022,
+        "bytes": 30004,
         "sha256": "f85efae5dbbedce6e49b4eddd4e4b1a6ccfdcc394ec215d740082e6f759347a9"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/tools/decomp_bridgeevent_oracle.py",
-        "bytes": 30022,
+        "bytes": 30004,
         "sha256": "f85efae5dbbedce6e49b4eddd4e4b1a6ccfdcc394ec215d740082e6f759347a9"
       },
       "changed": false
@@ -696,12 +696,12 @@
       "path": "tools/decomp_buildingspace_oracle.py",
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/tools/decomp_buildingspace_oracle.py",
-        "bytes": 10670,
+        "bytes": 10634,
         "sha256": "01abe6e64276d2247f7df98b09792a5a0ec35ab7701180b9d9743583eb081b02"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/tools/decomp_buildingspace_oracle.py",
-        "bytes": 10670,
+        "bytes": 10634,
         "sha256": "01abe6e64276d2247f7df98b09792a5a0ec35ab7701180b9d9743583eb081b02"
       },
       "changed": false
@@ -710,12 +710,12 @@
       "path": "tools/decomp_canontype_oracle.py",
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/tools/decomp_canontype_oracle.py",
-        "bytes": 11076,
+        "bytes": 11058,
         "sha256": "1509f5b903242cac8a64ced514b092ecdf63d7eb527fa6fe20c5b5830e39d052"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/tools/decomp_canontype_oracle.py",
-        "bytes": 11076,
+        "bytes": 11058,
         "sha256": "1509f5b903242cac8a64ced514b092ecdf63d7eb527fa6fe20c5b5830e39d052"
       },
       "changed": false
@@ -724,12 +724,12 @@
       "path": "tools/decomp_constructionarrival_oracle.py",
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/tools/decomp_constructionarrival_oracle.py",
-        "bytes": 13978,
+        "bytes": 13960,
         "sha256": "a3db1f04c4c193f223a6b06790ac209dde0b7398a55d52bdb89588ffe4397ec3"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/tools/decomp_constructionarrival_oracle.py",
-        "bytes": 13978,
+        "bytes": 13960,
         "sha256": "a3db1f04c4c193f223a6b06790ac209dde0b7398a55d52bdb89588ffe4397ec3"
       },
       "changed": false
@@ -738,12 +738,12 @@
       "path": "tools/decomp_constructiontimer_oracle.py",
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/tools/decomp_constructiontimer_oracle.py",
-        "bytes": 6587,
+        "bytes": 6569,
         "sha256": "e0d46e052222698a843c8c5d0d8a9122be9d15961c302c2243bbcb8706ecb158"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/tools/decomp_constructiontimer_oracle.py",
-        "bytes": 6587,
+        "bytes": 6569,
         "sha256": "e0d46e052222698a843c8c5d0d8a9122be9d15961c302c2243bbcb8706ecb158"
       },
       "changed": false
@@ -752,12 +752,12 @@
       "path": "tools/decomp_damageablepredestroy_oracle.py",
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/tools/decomp_damageablepredestroy_oracle.py",
-        "bytes": 16663,
+        "bytes": 16645,
         "sha256": "6f260fca831f979df7361fb783b38de9ccadf93bced292e55a04e090c46a748b"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/tools/decomp_damageablepredestroy_oracle.py",
-        "bytes": 16663,
+        "bytes": 16645,
         "sha256": "6f260fca831f979df7361fb783b38de9ccadf93bced292e55a04e090c46a748b"
       },
       "changed": false
@@ -766,12 +766,12 @@
       "path": "tools/decomp_farmcluster_oracle.py",
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/tools/decomp_farmcluster_oracle.py",
-        "bytes": 19658,
+        "bytes": 19640,
         "sha256": "832625acc1444baa6b43c879c79f8870982056c71afc717ed57842e8db8051c6"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/tools/decomp_farmcluster_oracle.py",
-        "bytes": 19658,
+        "bytes": 19640,
         "sha256": "832625acc1444baa6b43c879c79f8870982056c71afc717ed57842e8db8051c6"
       },
       "changed": false
@@ -780,12 +780,12 @@
       "path": "tools/decomp_gunimpact_oracle.py",
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/tools/decomp_gunimpact_oracle.py",
-        "bytes": 14745,
+        "bytes": 14727,
         "sha256": "6567bc8a29946f2e5100cbba940f7c23e98627ac472557f67491c6a84354b615"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/tools/decomp_gunimpact_oracle.py",
-        "bytes": 14745,
+        "bytes": 14727,
         "sha256": "6567bc8a29946f2e5100cbba940f7c23e98627ac472557f67491c6a84354b615"
       },
       "changed": false
@@ -794,12 +794,12 @@
       "path": "tools/decomp_islandruntime_oracle.py",
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/tools/decomp_islandruntime_oracle.py",
-        "bytes": 17033,
+        "bytes": 17015,
         "sha256": "cf0ad9958569df9d40ff2fd949c03e100058b22cda00bc5d6cda3b0d0eeb91f3"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/tools/decomp_islandruntime_oracle.py",
-        "bytes": 17033,
+        "bytes": 17015,
         "sha256": "cf0ad9958569df9d40ff2fd949c03e100058b22cda00bc5d6cda3b0d0eeb91f3"
       },
       "changed": false
@@ -808,12 +808,12 @@
       "path": "tools/decomp_neighbor_oracle.py",
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/tools/decomp_neighbor_oracle.py",
-        "bytes": 13523,
+        "bytes": 13505,
         "sha256": "3b0791e322aa3741b1316401d43a79f8cd011283643176d995f89922223115f5"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/tools/decomp_neighbor_oracle.py",
-        "bytes": 13523,
+        "bytes": 13505,
         "sha256": "3b0791e322aa3741b1316401d43a79f8cd011283643176d995f89922223115f5"
       },
       "changed": false
@@ -822,12 +822,12 @@
       "path": "tools/decomp_owner_oracle.py",
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/tools/decomp_owner_oracle.py",
-        "bytes": 15141,
+        "bytes": 15123,
         "sha256": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/tools/decomp_owner_oracle.py",
-        "bytes": 15141,
+        "bytes": 15123,
         "sha256": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb"
       },
       "changed": false
@@ -836,12 +836,12 @@
       "path": "tools/decomp_priestgeometry_oracle.py",
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/tools/decomp_priestgeometry_oracle.py",
-        "bytes": 13336,
+        "bytes": 13318,
         "sha256": "a2e100450c4e22d4f7de0bc4f725c766b7836ab3f7270a6ebb72df7b92e33dc1"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/tools/decomp_priestgeometry_oracle.py",
-        "bytes": 13336,
+        "bytes": 13318,
         "sha256": "a2e100450c4e22d4f7de0bc4f725c766b7836ab3f7270a6ebb72df7b92e33dc1"
       },
       "changed": false
@@ -850,12 +850,12 @@
       "path": "tools/decomp_priestritualactions_oracle.py",
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/tools/decomp_priestritualactions_oracle.py",
-        "bytes": 9503,
+        "bytes": 9485,
         "sha256": "3903dd5b9a3f2d39b56ddc185942521accc50a7c6e3b8c054ede3a6aa9c4ebcd"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/tools/decomp_priestritualactions_oracle.py",
-        "bytes": 9503,
+        "bytes": 9485,
         "sha256": "3903dd5b9a3f2d39b56ddc185942521accc50a7c6e3b8c054ede3a6aa9c4ebcd"
       },
       "changed": false
@@ -864,12 +864,12 @@
       "path": "tools/decomp_priestworldevents_oracle.py",
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/tools/decomp_priestworldevents_oracle.py",
-        "bytes": 7598,
+        "bytes": 7580,
         "sha256": "9bf4dac20f05a5b299711c5f85ea1d81efa429389d69b10e270e1240e472f878"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/tools/decomp_priestworldevents_oracle.py",
-        "bytes": 7598,
+        "bytes": 7580,
         "sha256": "9bf4dac20f05a5b299711c5f85ea1d81efa429389d69b10e270e1240e472f878"
       },
       "changed": false
@@ -878,12 +878,12 @@
       "path": "tools/decomp_rawfinder_oracle.py",
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/tools/decomp_rawfinder_oracle.py",
-        "bytes": 13458,
+        "bytes": 13440,
         "sha256": "08914eaa23cce0b3e1540799003c71c64062bad64f37383bdd647ede5ab2e2a7"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/tools/decomp_rawfinder_oracle.py",
-        "bytes": 13458,
+        "bytes": 13440,
         "sha256": "08914eaa23cce0b3e1540799003c71c64062bad64f37383bdd647ede5ab2e2a7"
       },
       "changed": false
@@ -892,12 +892,12 @@
       "path": "tools/decomp_regionpaint_oracle.py",
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/tools/decomp_regionpaint_oracle.py",
-        "bytes": 17090,
+        "bytes": 17072,
         "sha256": "6d65f83505c101ffef5e4c278b22425391e8717e7f31c77383f3a3aafb061d5a"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/tools/decomp_regionpaint_oracle.py",
-        "bytes": 17090,
+        "bytes": 17072,
         "sha256": "6d65f83505c101ffef5e4c278b22425391e8717e7f31c77383f3a3aafb061d5a"
       },
       "changed": false
@@ -906,12 +906,12 @@
       "path": "tools/decomp_reward_oracle.py",
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/tools/decomp_reward_oracle.py",
-        "bytes": 25654,
+        "bytes": 25618,
         "sha256": "ca25b2b1befd0f4626759c17dde1af5eb080e86e4137f7a2b384d97f25a7a143"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/tools/decomp_reward_oracle.py",
-        "bytes": 25654,
+        "bytes": 25618,
         "sha256": "ca25b2b1befd0f4626759c17dde1af5eb080e86e4137f7a2b384d97f25a7a143"
       },
       "changed": false
@@ -920,12 +920,12 @@
       "path": "tools/decomp_setframe_oracle.py",
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/tools/decomp_setframe_oracle.py",
-        "bytes": 13881,
+        "bytes": 13863,
         "sha256": "d778434e98db0784ba34b6f7d5de3ef669ac744a4e5bc9cca9e0b30fd2c9a845"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/tools/decomp_setframe_oracle.py",
-        "bytes": 13881,
+        "bytes": 13863,
         "sha256": "d778434e98db0784ba34b6f7d5de3ef669ac744a4e5bc9cca9e0b30fd2c9a845"
       },
       "changed": false
@@ -934,12 +934,12 @@
       "path": "tools/decomp_sprotate_oracle.py",
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/tools/decomp_sprotate_oracle.py",
-        "bytes": 8629,
+        "bytes": 8611,
         "sha256": "798acdfe3a9c1be1d6bb1ab15511bd75c0c74012abf15c19c5d2befefecade01"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/tools/decomp_sprotate_oracle.py",
-        "bytes": 8629,
+        "bytes": 8611,
         "sha256": "798acdfe3a9c1be1d6bb1ab15511bd75c0c74012abf15c19c5d2befefecade01"
       },
       "changed": false
@@ -948,12 +948,12 @@
       "path": "tools/decomp_terraincontext_oracle.py",
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/tools/decomp_terraincontext_oracle.py",
-        "bytes": 11057,
+        "bytes": 11039,
         "sha256": "f5d7582b9440b5f222b79f2f78f63c5fdc157e327f3e368416de83dd4147d809"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/tools/decomp_terraincontext_oracle.py",
-        "bytes": 11057,
+        "bytes": 11039,
         "sha256": "f5d7582b9440b5f222b79f2f78f63c5fdc157e327f3e368416de83dd4147d809"
       },
       "changed": false
@@ -962,12 +962,12 @@
       "path": "tools/decomp_terraingrowth_oracle.py",
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/tools/decomp_terraingrowth_oracle.py",
-        "bytes": 12074,
+        "bytes": 12056,
         "sha256": "c63b965a9eee1c34d461e0eeb1dec3900d948731dbec377da26523dd05ca26d8"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/tools/decomp_terraingrowth_oracle.py",
-        "bytes": 12074,
+        "bytes": 12056,
         "sha256": "c63b965a9eee1c34d461e0eeb1dec3900d948731dbec377da26523dd05ca26d8"
       },
       "changed": false
@@ -976,12 +976,12 @@
       "path": "tools/decomp_terrainstamp_oracle.py",
       "snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/tools/decomp_terrainstamp_oracle.py",
-        "bytes": 18089,
+        "bytes": 18071,
         "sha256": "c60bc7ea2acd1f71d980b3c1d8d9b996bf1af5917dbc324be52fa0e6bafdae96"
       },
       "git_snapshot": {
         "path": "cpppj/hist/islandbuilde-b0a1c/git/tools/decomp_terrainstamp_oracle.py",
-        "bytes": 18089,
+        "bytes": 18071,
         "sha256": "c60bc7ea2acd1f71d980b3c1d8d9b996bf1af5917dbc324be52fa0e6bafdae96"
       },
       "changed": false
@@ -1113,7 +1113,7 @@
   ],
   "tool": {
     "path": "tools/analyze_islandbuilder_decoder_lineage.py",
-    "bytes": 9890,
+    "bytes": 9818,
     "sha256": "43943f2d1344333fdcdf6da7db7c627484968dab0ab49ded077b302702f65b64"
   },
   "limits": [

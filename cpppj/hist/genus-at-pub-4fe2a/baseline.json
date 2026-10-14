@@ -2,36 +2,36 @@
   "commit": "860030e",
   "files": {
     "cpppj/run12.json": {
-      "work_sha256": "b85ba385a9d50ff60d3dfe68b98fe64bace43ee94976200e1efb42a65dad100d",
-      "git_sha256": "b85ba385a9d50ff60d3dfe68b98fe64bace43ee94976200e1efb42a65dad100d"
+      "work_sha256": "0b1cf5f2cd034610dacfd47e2b902cb6e3088c29020bad217c5e67e2dadf8d90",
+      "git_sha256": "0b1cf5f2cd034610dacfd47e2b902cb6e3088c29020bad217c5e67e2dadf8d90"
     },
     "cpppj/dais-ritual-consumer-binding.json": {
-      "work_sha256": "434af01c390b23fb1c732929031c91f006553d6d140c81991417513227eb38c1",
-      "git_sha256": "434af01c390b23fb1c732929031c91f006553d6d140c81991417513227eb38c1"
+      "work_sha256": "b1c771a30907d8cc56844470a92b2c5e44154cfd6379475fd9d3312a1863a222",
+      "git_sha256": "b1c771a30907d8cc56844470a92b2c5e44154cfd6379475fd9d3312a1863a222"
     },
     "cpppj/dais-ritual-consumer-cpp-correction.json": {
-      "work_sha256": "3649e0785d640781b03e4f01b053f5a1bb9bb02c34305ed2647a5b48d3c4a574",
-      "git_sha256": "3649e0785d640781b03e4f01b053f5a1bb9bb02c34305ed2647a5b48d3c4a574"
+      "work_sha256": "48b5f7cdb656fbb5be70cdd8431c4dc33328a620839d60fa36a62c63c99a3fa6",
+      "git_sha256": "48b5f7cdb656fbb5be70cdd8431c4dc33328a620839d60fa36a62c63c99a3fa6"
     },
     "cpppj/daiscontentnotice-cpp-correction.json": {
-      "work_sha256": "9cb93b488d21c1932f2ac4b7aa56ec0f8e7a7c28fcc5936d83c7ea1acfdfd8dc",
-      "git_sha256": "9cb93b488d21c1932f2ac4b7aa56ec0f8e7a7c28fcc5936d83c7ea1acfdfd8dc"
+      "work_sha256": "d72cd1635805d8c6b22bfbfbeaccdf984236bfe41fe743c6614dd8751da7b691",
+      "git_sha256": "d72cd1635805d8c6b22bfbfbeaccdf984236bfe41fe743c6614dd8751da7b691"
     },
     "cpppj/damageablepost-host-binding.json": {
-      "work_sha256": "68a00ad3c2bd95e3a1bdcbe1d7dd2a6822120a814bff08c11b36406ea7ad0fc1",
-      "git_sha256": "68a00ad3c2bd95e3a1bdcbe1d7dd2a6822120a814bff08c11b36406ea7ad0fc1"
+      "work_sha256": "889be672b63e24daf211cffd87e861ccf7e2645a0e48a98d328112065dc8a144",
+      "git_sha256": "889be672b63e24daf211cffd87e861ccf7e2645a0e48a98d328112065dc8a144"
     },
     "cpppj/damageablepost-host-group-lineage.json": {
-      "work_sha256": "b6f1f8e0901c3874b8164a5b620cfb63ddecf9a922914161077c74de7096c696",
-      "git_sha256": "b6f1f8e0901c3874b8164a5b620cfb63ddecf9a922914161077c74de7096c696"
+      "work_sha256": "b978e02003280938eabb08582b475a720e73b0680ee8b1b142807d3ba96b3524",
+      "git_sha256": "b978e02003280938eabb08582b475a720e73b0680ee8b1b142807d3ba96b3524"
     },
     "cpppj/damageablepostdestroy.json": {
       "work_sha256": "83ee40686f3029ba90e93a1b027bd1b5113eb8625847d3e361c630005818c616",
       "git_sha256": "83ee40686f3029ba90e93a1b027bd1b5113eb8625847d3e361c630005818c616"
     },
     "cpppj/damageablepostdestroy-lineage.json": {
-      "work_sha256": "b904c726e2f4a288f2ef9c4bf45f0f488863cb7f3aaa5551d43e3d078b2925de",
-      "git_sha256": "b904c726e2f4a288f2ef9c4bf45f0f488863cb7f3aaa5551d43e3d078b2925de"
+      "work_sha256": "d78b3c443b76add24307b86d6af23f8bcb1a13f635b5067edd33868d1f68fae3",
+      "git_sha256": "d78b3c443b76add24307b86d6af23f8bcb1a13f635b5067edd33868d1f68fae3"
     },
     "cpppj/src/o/RawDamageablePostDestroy.cpp": {
       "work_sha256": "c70069e2dc850b8f1496aee07008c03ffb1655ff5943365334a4938ead99fb18",

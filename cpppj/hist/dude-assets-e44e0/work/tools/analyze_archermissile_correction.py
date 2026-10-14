@@ -11,7 +11,7 @@ from decomp_owner_oracle import ROOT, digest
 OBSERVED={
     'cpppj/tests/fixtures/archermissile-x86.tsv':'dca76f0dfcaf30463522d79931c57a8ef77712d6cc03428bffcbe033572d9b7b',
     'cpppj/src/o/RawMissile.cpp':'176436c391308b86ddbe9d9595501da16cd21eb8825515d3836c49031a8d0427',
-    'cpppj/src/o/RawMissile.h':'a48c2833f5463df9fdaf25634c440805f5edce224e30b3725cea142fa21b3487',
+    'cpppj/src/o/RawMissile.h':'93386ab9d5c26b5adfc78518afcca90dee2f477fe469b8675ae15152f62626dc',
 }
 # 현재와 교정 전의 실제 ctor 두 분기/충돌 사운드 조건 및 새 설명 줄을 역변환한다.
 CHANGES=(

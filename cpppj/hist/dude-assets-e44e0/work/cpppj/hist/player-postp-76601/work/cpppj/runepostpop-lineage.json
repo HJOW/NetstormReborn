@@ -28,7 +28,7 @@
         "new_unique_cases": 0
       },
       "cpppj/priestpostpoptail.json": {
-        "sha256": "25d4b46d120f0d9e2bad808216452aa8a42b1eaa973fc4130afdedf5a7ab6029",
+        "sha256": "16a1cea8ddb3d58a656385750026e701db0d2d8c5937f9982114d0c1d435dc19",
         "total": 6144,
         "new_unique_cases": 0
       },
@@ -39,7 +39,7 @@
       }
     }
   },
-  "tool_sha256": "01d980d4d774bd66422dbe62d2f6d30014fcaa5616a800488cb29680f1f224ca",
+  "tool_sha256": "128a1059c88a13dca04c30fa34fea9aaba2482d8b0d2a0aaff60b9c0033aea85",
   "new_unique_cases": 0,
   "scope": "새Rune등록/Validate/Activate분기만역제거하면기존전체소스/토큰동일. 기존공통/Pop/사제/건설native는새관찰에합산하지않는다."
 }

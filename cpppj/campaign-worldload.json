@@ -137,12 +137,12 @@
     "tools/decomp_islandbuilder_oracle.py": "4413a5737d165f2ec20b87d2493efbc386819644dd951f11e49d74b48ad4cfd7",
     "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
     "tools/decomp_priestgeometry_oracle.py": "a2e100450c4e22d4f7de0bc4f725c766b7836ab3f7270a6ebb72df7b92e33dc1",
-    "tools/fort.py": "3a3fdb20a3e8e1c7c6fde5f024802ceeaed382e8d0cb1343d52ebcfa11add8fc",
+    "tools/fort.py": "ee8ff8f00eea02771ac5c7a519dcd582e14cc07a2d97337c946c191022554e13",
     "tools/ghidra/campaign-world-load-functions.json": "0918835b418012d7a34061621f4fdbc745dc22b15bc1ad6194f1552dfde19a7a",
     "tools/ghidra/campaign-world-post-functions.json": "1303f871f351fa395efea8e4172f4a8557fc53af618ab75067bc63ca483f4600",
-    "tools/shp.py": "19be5473e9c36f9fe654ac7dad723cc96a9ff6eff314ab23281740f8c2007ec3",
-    "tools/taff.py": "307a1f0ba328170008ad3b716f6d489d78907e78b8bf7898c5fadd5c054cea29",
-    "tools/typefile.py": "c66169a62109ee93ab9c3f162c18804f217c35326a6ff729884637d1cd10af61"
+    "tools/shp.py": "4cb8bee6ed773e29e8658ddb315594ebf5ac005ea5b96c6b760a177029515bfd",
+    "tools/taff.py": "461860cdfc9451b85a8694dd30fd2c56c1cfdf5c6bb7ab8f63a4089971889795",
+    "tools/typefile.py": "a564a4b1bbc4f06d05ecb8b1f3fae4c32f6231cf95ea7bfadff2499931804d90"
   },
   "game_runs": 0,
   "os_calls": 0,

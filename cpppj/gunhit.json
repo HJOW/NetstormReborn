@@ -50,7 +50,7 @@
   },
   "files": {
     "tools/decomp_gunhit_oracle.py": "537d873601513d7bba6fc33013367d91af44ae140b7f2c0141c821994388f97b",
-    "cpppj/tests/fixtures/gunhit-x86.tsv": "60d9e113c0a226c94924a7f71b22a066159bef8618fbe4b9bca1df94434ba7ad",
+    "cpppj/tests/fixtures/gunhit-x86.tsv": "3faebdf3f3111db531a3915a2b19cf8402e6aabf93ce00b943d744ba779e8549",
     "tools/ghidra/gunhit-functions.json": "c004989eeebc491be63ee1e4d8537390f0bdc8d4505cc913c0e5a39022ef403b",
     "extracted/owner/originals/creation.c": "f9919c046d5259526946f106b47b6259fe5e04971f743d6fa02d6a5361b9dc16",
     "extracted/owner/originals/functions.tsv": "3ea66dace80a85999a8b2c2dbadb4d5f1bd18b0dcdb0768f9c41075206c7c72d",

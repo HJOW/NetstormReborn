@@ -593,8 +593,8 @@
     }
   },
   "files": {
-    "tools/analyze_vfxscale.py": "a440b1d32c27d53a5cb12ed401b778c3ccbf965a8310e76e3403a8785bf2aaf7",
-    "tools/analyze_styletext.py": "a69336b3064208e08e5fcea4e84f8427eeaa35512673c64f273c39b4b91877b1",
+    "tools/analyze_vfxscale.py": "0b4cfdf4e20a7d5dad51317ebfb212ad80681aa0cca4ddc20195259cc801c449",
+    "tools/analyze_styletext.py": "6e79df1106b085d3cf88e8ff082a9512103e4c00d83cc7aa8fc98d487a87a0ba",
     "tools/ghidra/vfxscale-functions.json": "08b74c9f5725cb521926b2a452c7ad9a116aa8709ce4a430a26abf3ee38615f0",
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
     "extracted/vfxscale/originals/creation.c": "209341f1bd529b22ce0ea611efe6a6ff08de3f200ca9d5d34fb03a96dc329fda",
@@ -604,15 +604,15 @@
     "extracted/vfxscale/originalCD/creation.c": "827df41bd8abc5644331358b7e6925c926675cfc767885bb569bc07fcb8d078f",
     "extracted/vfxscale/originalCD/functions.tsv": "b26d696a663c779a9679e823b8d9ded8a5be7a190a712647cea25a8da6debb2c",
     "extracted/vfxscale/originalCD/assembly.txt": "1dc0361e1cff5f19fbdc5b09424c9bc5b9a9ff3c999d0cdfd712312b306b490c",
-    "cpppj/src/client/VFXTransform.cpp": "e75902e9b390d9022019bdcd4801e6e4f0c28c4c52392f7b2299031e56d8b7ee",
-    "cpppj/src/client/VFXTransform.h": "a9d3e20e2b2eab3bcf22dba9e24f89cf3ef3674d64e96acf4667c27169f22997",
+    "cpppj/src/client/VFXTransform.cpp": "798d60eaccc978d603ebce7819ab61af5f8157df7504495108bbda6e4b3b0254",
+    "cpppj/src/client/VFXTransform.h": "e9982ec4dfe645d95253b724aac817428ead0130419cf138e80fa8da67dd449a",
     "cpppj/src/client/GumpDraw.cpp": "e75fb587cd51e3bb800ec75dddebeaf374e896cc6554b31ac328fd33ce68b03a",
     "cpppj/src/client/GumpDraw.h": "7e54811ba64fe7edf3322f584c02bc91cf08f1d213a3d7ed0cdf1e6a75168484",
-    "cpppj/src/client/Markup.cpp": "3ef98b57be34741fc0c7a11d233744636a83a34ba4457053e4d57b51f9fec6c0",
+    "cpppj/src/client/Markup.cpp": "5d3ab7d8b3caa308e4d185c0fec8fb52ee0f368f06deca0757162c2918390540",
     "cpppj/src/client/Markup.h": "8fec3e164ef546e3b81837d4063200addc0e4a474926c348ec04aac3716f0235",
-    "cpppj/src/client/VFXDraw.cpp": "d4c95ba9875659715bdb234b56baf7084d2abc6f5f4f879d1247cb309f0f5ad4",
+    "cpppj/src/client/VFXDraw.cpp": "1de6889912f1f18cc83e0efc7cc33a43216e063730aaca7917aad8bf5a8c37b7",
     "cpppj/src/client/VFXDraw.h": "3692cc45ce931aedcd4e7aaf0f80f1d6966aea70a3e8d648fe6e7810a477eebb",
-    "cpppj/src/client/Renderer.cpp": "2b7f456faca5262b066bb46c999da2e5644e7b006beabe9893df30f19d62bd9d",
+    "cpppj/src/client/Renderer.cpp": "7b0c0e21236ec3f40847276d64a4b6f392afa8498774751b1c2cacc5eeffefa9",
     "cpppj/src/client/Renderer.h": "40b7ab272682a9bc57d49cc51abd238765e43bc8452e03662151494070165d7c",
     "cpppj/src/client/CMakeLists.txt": "d0e2b7d02334a9f92f90684894e7676379fee983e21899c192c578dd39872350"
   }

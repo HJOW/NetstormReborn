@@ -20,44 +20,44 @@
   {
     "path": "cpppj/normalterrain-world-binding.json",
     "snapshot": "cpppj/hist/normalterrai-e6929/cpppj/normalterrain-world-binding.json",
-    "sha256": "31e41512d22b8c2d7a721fa8c3bcd6be5fc86d4db76d717cfbb2f309efcdfdf5",
-    "bytes": 693244
+    "sha256": "2ae71e552ff992fc86e0a01eac0bf4333dbf40d9a9e5d152fc96abd0217fa8be",
+    "bytes": 692969
   },
   {
     "path": "cpppj/normalterrain-binding-cpp-correction.json",
     "snapshot": "cpppj/hist/normalterrai-e6929/cpppj/normalterrain-binding-cpp-correction.json",
-    "sha256": "bcf4de71a40a3ab1addb63d60620e0078ae0ac27ea5a1fd20fc0fd95fea18f03",
-    "bytes": 1844
+    "sha256": "21e4c5b25840b22713dd83e4ac0b47bbaef26d905b667e083a0f9686e99340f4",
+    "bytes": 1716
   },
   {
     "path": "cpppj/normalterrain-binding-profile-correction.json",
     "snapshot": "cpppj/hist/normalterrai-e6929/cpppj/normalterrain-binding-profile-correction.json",
-    "sha256": "814ba8c9521671e2c6ccc71254bc7b90dd34af6b48ec048dbac663c28b5afc88",
-    "bytes": 1630
+    "sha256": "7874822f0d7a402aa48fc1c59ffde83d6ccd953e6b60789edf04431948a72d69",
+    "bytes": 1475
   },
   {
     "path": "tools/analyze_normalterrain_world_binding.py",
     "snapshot": "cpppj/hist/normalterrai-e6929/tools/analyze_normalterrain_world_binding.py",
-    "sha256": "d75ed5911b0cef82be3b8111cc92620dca3aff5886a4c26f9103c5dc87fdc2ae",
-    "bytes": 9858
+    "sha256": "bba2dce354eda6c0eaf00486402a53267bc5925f010cc80461c6449519dbcf73",
+    "bytes": 9968
   },
   {
     "path": "tools/analyze_normalterrain_binding_cpp_correction.py",
     "snapshot": "cpppj/hist/normalterrai-e6929/tools/analyze_normalterrain_binding_cpp_correction.py",
-    "sha256": "2121d046422bb4ad6223cae0887e33b75b65af92a0c28d1f9f246c1a5e03a3f6",
-    "bytes": 7233
+    "sha256": "88c1b48c647c668779699d9302a5c768c8fc02c42ef0156e093f96bde06f2fa0",
+    "bytes": 7213
   },
   {
     "path": "tools/check_terrain_profile_fix.py",
     "snapshot": "cpppj/hist/normalterrai-e6929/tools/check_terrain_profile_fix.py",
     "sha256": "b0dee03720fdb69ee42f84384ea3b06a8c32fa61ddf66baca949c72f66ac43b5",
-    "bytes": 2997
+    "bytes": 2943
   },
   {
     "path": "docs/exe/cpp-normal-terrain-world-binding-20261014.md",
     "snapshot": "cpppj/hist/normalterrai-e6929/docs/exe/cpp-normal-terrain-world-binding-20261014.md",
     "sha256": "053abae78905711b38456d79e4ac4446e0e9860375bad8b7c5716eeb797feff5",
-    "bytes": 11811
+    "bytes": 11733
   },
   {
     "path": "extracted/run10-NormalTerrainWorldBinding_first.log",

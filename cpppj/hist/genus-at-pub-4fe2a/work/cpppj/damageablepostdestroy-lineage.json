@@ -87,7 +87,7 @@
       "original_path": "tools/decomp_damageablepostdestroy_oracle.py",
       "saved": {
         "path": "cpppj/hist/damageablepo-7d76b/tools/decomp_damageablepostdestroy_oracle.py",
-        "bytes": 16125,
+        "bytes": 16107,
         "sha256": "3af73dcc03660a9ce9aa194cfb50fbc39a975515eb972ff90bbeb93e519fb1b9"
       }
     },
@@ -95,7 +95,7 @@
       "original_path": "tools/decomp_damageablepredestroy_oracle.py",
       "saved": {
         "path": "tools/decomp_damageablepredestroy_oracle.py",
-        "bytes": 16663,
+        "bytes": 16645,
         "sha256": "6f260fca831f979df7361fb783b38de9ccadf93bced292e55a04e090c46a748b"
       }
     },
@@ -103,7 +103,7 @@
       "original_path": "tools/decomp_owner_oracle.py",
       "saved": {
         "path": "tools/decomp_owner_oracle.py",
-        "bytes": 15141,
+        "bytes": 15123,
         "sha256": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb"
       }
     },
@@ -111,7 +111,7 @@
       "original_path": "tools/decomp_priestgeometry_oracle.py",
       "saved": {
         "path": "tools/decomp_priestgeometry_oracle.py",
-        "bytes": 13336,
+        "bytes": 13318,
         "sha256": "a2e100450c4e22d4f7de0bc4f725c766b7836ab3f7270a6ebb72df7b92e33dc1"
       }
     },
@@ -148,7 +148,7 @@
   ],
   "tool": {
     "path": "tools/analyze_damageablepostdestroy.py",
-    "bytes": 6453,
+    "bytes": 6387,
     "sha256": "d7dff7e29877740040cd9a15b63c5b850b6f7322d2059ec62ebc3226d88c4445"
   },
   "changed_profile_rows": 20,

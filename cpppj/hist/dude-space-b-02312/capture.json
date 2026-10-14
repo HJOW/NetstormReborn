@@ -1,12 +1,12 @@
 {
   "files": {
-    "cpppj/dude-postpop-binding-lineage.json": "521b991c5c1a18abba0cb4c42c4db50093b6d501181fe17e268da4e28c0776a5",
-    "cpppj/dude-space.json": "4542f389876c8ab43da265e736a829fca3012ef088f4150d603ad74fc679623d",
-    "cpppj/dudespawn.json": "15bb6d720a90524485ff293a1b17a6f1158f5bf4a3a7494c6dcc62b148f2dffa",
+    "cpppj/dude-postpop-binding-lineage.json": "865827ecede651226133b6e2be70e4447e4dd1a3ef3c3c67c1755206a99a36af",
+    "cpppj/dude-space.json": "127afaf831fe91de12c50cd672766a9730154c3e0235aecf1a0b46abc65cded6",
+    "cpppj/dudespawn.json": "35b8a3ebad0815f3e09872048ea204a1cb7e1faaf5245418a1c2af94890bc5cf",
     "cpppj/src/o/RawDudeSpawn.cpp": "a0f02ae44824ae62de94f2e4e4314c6b613b330fc6efb3d0be8d57f67cb98c77",
     "cpppj/src/o/SquidPop.cpp": "dc45a23ebe2078f6f27cd481028247553b566898ca445fb2e227a2f44b3743bd",
     "cpppj/src/o/SquidPostPop.cpp": "7725741e3e8c1d087b79c3a0ce2c67837fd78bd39b348c37cf3548eff8d2b1a8",
-    "cpppj/src/o/SquidUnpop.cpp": "d82a8c1b8df6005e86894613ed33fca1eb4e6f2837c9c8adb8ceee29e00f7768",
+    "cpppj/src/o/SquidUnpop.cpp": "c090a5c43f22ec5c59f6885bde124889b1fc3004260c271ea4556879e6263a41",
     "cpppj/tests/DudeSpaceSupport.h": "e77396ff164bf83e577f2c1694e967b57da9a67f8f9a0bea42d4182fcc182242",
     "cpppj/tests/DudeSpaceTests.cpp": "d4ad98bc757b744b18836ec5bb19d2c0c0973005fd4f6ec1d0edda52f564b624",
     "cpppj/tests/fixtures/dude-space-x86.tsv": "1c931c029fe455c96325aecc37245d83dc78d94ba285b686783cfd9dd154600e",

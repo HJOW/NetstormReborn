@@ -90,7 +90,7 @@ PlaceAll은 `[start,end)`의 실제120BYTE/20레코드를 파일 순서대로 �
 
 assert 입력은 각 fixture 행의 **마지막 실제 진단 횟수가0이 아닌지**로 구분한다. PlaceAll에서 호출한 Place의 반복 진입은 별도 신규 입력이 아니다. 판본별 실제 primary 진입은 Place1176/PlaceAll60이며 그 합을1156 고유 입력에 추가하지 않는다.
 
-최종 fixture SHA-256은 `8048e92b263b026d17d02ccf7ddf8b0a3fefa0240970c8581cf5a3ea2b6c60a4`, native 보고서 SHA-256은 `f2aac0dd53686578620f2c21e39ff4e69cd7d97a3d84211267e875873d18ac53`다. 관찰 당시 source/tool/export/PE와 전체 fixture SHA는 `islandbuilder.json`에 고정했다.
+최종 fixture SHA-256은 `8048e92b263b026d17d02ccf7ddf8b0a3fefa0240970c8581cf5a3ea2b6c60a4`, native 보고서 SHA-256은 `fc06935201577f63fffe3a580dd94660d572f4634d2b292a08eaa38eeea99423`다. 관찰 당시 source/tool/export/PE와 전체 fixture SHA는 `islandbuilder.json`에 고정했다.
 
 최종 주석 감사에서 검사 scene의 주소 동일성을 설명한 한 줄에 혼합 문자가 남은 것을 발견해 한국어로 교정했다. `hist/islandbuilde-a876e`에는 이전 전체 test/native report/부분프레임 lineage/두 도구를 보존한다. `analyze_islandbuilder_comment_lineage.py`가 한 주석의 정확 역변환으로 C++ 토큰 불변을 확인하고 현재 test SHA를 별도 successor에 고정한다. 생산·원본 입력·fixture 변경은0이다. 이전 두 감사기의 **TEST 한 파일만 교정전 전체 snapshot으로 연결**하고 나머지 현재 SHA 검사는 그대로 실행하므로 관찰 당시 소스를 현재 주석 SHA로 덮어쓰지 않는다.
 

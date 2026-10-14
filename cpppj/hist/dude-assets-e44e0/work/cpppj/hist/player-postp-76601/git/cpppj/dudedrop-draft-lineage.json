@@ -8,10 +8,10 @@
   "cpp_tests_completed": 0,
   "lineage": {
     "history": {
-      "cpppj/hist/dudedrop-bef-bac65/cpppj/dude-postpop-binding-lineage.json": "521b991c5c1a18abba0cb4c42c4db50093b6d501181fe17e268da4e28c0776a5",
-      "cpppj/hist/dudedrop-bef-bac65/cpppj/dudedrop.json": "39acf8b78089f8dffd3fcb713b592a22258db4012596ef78779e9a86423624cd",
-      "cpppj/hist/dudedrop-bef-bac65/cpppj/dudespawn.json": "15bb6d720a90524485ff293a1b17a6f1158f5bf4a3a7494c6dcc62b148f2dffa",
-      "cpppj/hist/dudedrop-bef-bac65/cpppj/dudetask.json": "f2ebbb3c1345b8f7c2fddd623302a19d97726d206a9d2d1e310ef03b86ab8eeb",
+      "cpppj/hist/dudedrop-bef-bac65/cpppj/dude-postpop-binding-lineage.json": "bdafdbdf76ee79f7dd70e53d665039795b25ca22877a791cac69cccefedd3c06",
+      "cpppj/hist/dudedrop-bef-bac65/cpppj/dudedrop.json": "d80eb8e96f0b5b86a732b93f2cfc0a5a562fb6d45f047f31cb3438a7e5b15348",
+      "cpppj/hist/dudedrop-bef-bac65/cpppj/dudespawn.json": "35b8a3ebad0815f3e09872048ea204a1cb7e1faaf5245418a1c2af94890bc5cf",
+      "cpppj/hist/dudedrop-bef-bac65/cpppj/dudetask.json": "d7b0aa3e7dde699dae8123041982289dd4ae7f2004f6872f1d5761c26ea817d8",
       "cpppj/hist/dudedrop-bef-bac65/cpppj/src/o/RawDudeDrop.cpp": "9b395be29bc0c441c466b8dc79064c10da4cb0974c5c75f3d802691509f7cef6",
       "cpppj/hist/dudedrop-bef-bac65/cpppj/src/o/RawDudeDrop.h": "e60f63be4c46a8e2ff3ed0c9ef43d2ff6730c250b4dca024bc331247e7165811",
       "cpppj/hist/dudedrop-bef-bac65/cpppj/src/o/RawDudeNotice.cpp": "338e8bd6321fee6514f0beb8a469dc1661fff682f57145c5d81326f7a409c182",
@@ -77,19 +77,19 @@
       "cpppj/hist/dudedrop-bef-bac65/tools/decomp_sid_oracle.py": "7bfd7b95b26724b1793d407a4ad6654972b2aaa3bf04e4c206cc357670b68dff",
       "cpppj/hist/dudedrop-bef-bac65/tools/ghidra/dude-spawn-functions.json": "6fd3a099b040d1c505e148f4fd06579f8ee05ab94650d4c9bf54f519210a3dd0",
       "cpppj/hist/dudedrop-bef-bac65/tools/ghidra/dude-task-functions.json": "927e72e67a901da514a4af0b80b63b767a334eec0ab5d8a9e34f44b44747afeb",
-      "cpppj/hist/dudedrop-bef-bac65/capture.json": "3825fc19cd106be4e10e7f000d2b8c53155d29d4b9eea80effe7567fb153d67b"
+      "cpppj/hist/dudedrop-bef-bac65/capture.json": "5fc4adf10207b54a2475b1f6492c94a5eec1dfd4e198c44909b8ba2483967b0e"
     },
     "dependencies": {
       "cpppj/dude-postpop-binding-lineage.json": {
-        "reported_sha256": "521b991c5c1a18abba0cb4c42c4db50093b6d501181fe17e268da4e28c0776a5",
+        "reported_sha256": "5d0107fbc97140011e57b44e1784f478549812c9bce5436e4aba0f63a172e20a",
         "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/cpppj/dude-postpop-binding-lineage.json"
       },
       "cpppj/dudespawn.json": {
-        "reported_sha256": "15bb6d720a90524485ff293a1b17a6f1158f5bf4a3a7494c6dcc62b148f2dffa",
+        "reported_sha256": "f2e2ffd9d77e323718997f4e3382a8fbd243d409794f8e70f2d9b361f9bcd3aa",
         "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/cpppj/dudespawn.json"
       },
       "cpppj/dudetask.json": {
-        "reported_sha256": "f2ebbb3c1345b8f7c2fddd623302a19d97726d206a9d2d1e310ef03b86ab8eeb",
+        "reported_sha256": "af6072077ae506d7ca126fb7b9af367d834b24f39d1b5f248d459ef5621bbd48",
         "preserved_or_current_path": "cpppj/hist/dudedrop-bef-bac65/cpppj/dudetask.json"
       },
       "cpppj/src/o/RawDudeDrop.cpp": {
@@ -378,7 +378,7 @@
       }
     },
     "files": {
-      "cpppj/dudedrop.json": "39acf8b78089f8dffd3fcb713b592a22258db4012596ef78779e9a86423624cd",
+      "cpppj/dudedrop.json": "d80eb8e96f0b5b86a732b93f2cfc0a5a562fb6d45f047f31cb3438a7e5b15348",
       "cpppj/tests/DudeDropTests.cpp": "d710fc602cdfad2f186acf25bb2beffe28d542ccaca61bb502b1e08b890fb506",
       "cpppj/tests/fixtures/dudedrop-x86.tsv": "7675d8bc62a229d27aa046e2f05f06b3cca19483c96bbba5b52c4cc6fd3269d7",
       "cpppj/src/o/RawDudeDrop.h": "e60f63be4c46a8e2ff3ed0c9ef43d2ff6730c250b4dca024bc331247e7165811",

@@ -1,7 +1,7 @@
 {
   "host": "HJOW-Athlon",
   "baseline_commit": "b84e4eed34ece48370f3112b5e55e4267667336e",
-  "prior_native_report_sha256": "85996e1fdd1495ef9a5816479deaf3f4ca812a343c6209611300679fc70997c7",
+  "prior_native_report_sha256": "64fb3d27ce722209c9cf6e96c9e199de57ef65fb6b799a7133e2f2d5544671aa",
   "prior_unique_cases": 360,
   "new_unique_cases": 0,
   "additions": [
@@ -30,6 +30,6 @@
       "unchanged_existing_source": true
     }
   },
-  "tool_sha256": "30ea9123867597374cd092304eb2690c91dfb238524c14111195b1f50236eb57",
+  "tool_sha256": "e8c37787edca6c7ce6732cf55bff2b8ad041855aaef6fcedb7bc776a820f3908",
   "scope": "두 새 선언/정의와 해당 설명 주석만 제거하면 기존 전체 소스가 고정 git 객체와 개행 정규화 후 일치한다. 기존360개를 신규 관찰에 합산하지 않는다."
 }

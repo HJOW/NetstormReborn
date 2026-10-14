@@ -105,9 +105,9 @@
     "tools/ghidra/terraingrowth-functions.json": "d847257642e7dd97854e57e55e9a96cefc6d4d933e760084d019408caea78904",
     "cpppj/tests/TerrainGrowthTests.cpp": "2afa05205d3b8a0d4bd0f6db208b493f40da0b3855e1145ea26460d196f04b50",
     "cpppj/src/o/RawTerrainContext.h": "debce2664dc50d88797b25cdfaf02318bdffc6b9bcd38a012930599bc3c13e40",
-    "cpppj/src/o/TerrainBuilder.h": "ba2f603989457afe90570cbfa20f1c60483bb9f3d9b25f8e189106d26cbf381b",
-    "cpppj/src/o/TerrainBuilder.cpp": "61702bee641fa060c0f6af330e0423121d1acf1ee73b3837b242321dd01c104d",
-    "cpppj/tests/RawSceneSupport.h": "7ef30acb24babc688384ab50f57573a87d004b68b8baa0d0a64c897baad23a4f",
+    "cpppj/src/o/TerrainBuilder.h": "504ed96f652444ed971a4ec5f69d29d1a872e5c7f6e4950d86427c698d00be4b",
+    "cpppj/src/o/TerrainBuilder.cpp": "20c2732303039c44ce69b47b7e4d01ef4d0480e350f11b7f28da50004cd455a5",
+    "cpppj/tests/RawSceneSupport.h": "87b79d463f38e142b1aa768384af28a08b404a276a6b989e90dd53b393642919",
     "tools/analyze_terraingrowth_cpp_binding.py": "f5396a23110928a8184e06ed537b2caa3dc3901e9482e9df915c1d8112c7d715"
   },
   "limits": [

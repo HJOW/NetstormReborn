@@ -71,7 +71,7 @@
     }
   },
   "files": {
-    "cpppj/priestdamage.json": "fc611954514d656a684a6cfc7f4b91ca486b74f7c2e08cf5f6a7af6d1302667e",
+    "cpppj/priestdamage.json": "48dc6441097cfc1ae2a2f88a0cf4b1e8881dc9d1f88323908049c7733dd4a18c",
     "cpppj/src/o/RawDamageableBurning.cpp": "70f763107dd0a8ec1934fc15d61f2b76d21513cd9931c39beea5a455665e30a6",
     "cpppj/src/o/RawDamageableBurning.h": "aaa63da16cc567245c04044c2d112c04999e485b81566e6dae6a4ed4a8d164f9",
     "cpppj/src/o/RawDamageableHit.cpp": "73fff81d2a6812182bd3aad3111c49abafebe4b4968281f0cd6b6ebb031af6ac",
@@ -80,8 +80,8 @@
     "cpppj/src/o/RawPriestDamage.h": "3488f9c6b6fa8e8de2a65429c8afbd1901b1f3a56b47ed92f374c97e1713845a",
     "cpppj/src/o/RawSquidHitPoints.cpp": "da3ebda20f092efd23939e17b75c09c21c5608921888e8b99844d8635d3375f5",
     "cpppj/src/o/RawSquidHitPoints.h": "b2ede7095eb575c39e7e92ba6ca3cca9d7b3ed409baf61bf18a1caa066837b8c",
-    "cpppj/src/o/SquidReward.cpp": "9a1f1a1d4c0f0b0255357b1f3ec9255cea2bb234ed351da70fb30dd1ed859f9c",
-    "cpppj/src/o/SquidReward.h": "33df23ab3590c965b68fef4c14a55cf38de55281c08430d22a26e6dc12b6aee6",
+    "cpppj/src/o/SquidReward.cpp": "a29c11afe56a477c470956b1ed0a0678d059340806537ce08b43bf6b6aa1375d",
+    "cpppj/src/o/SquidReward.h": "221e142133a1e3a73f65ff6979d73859b7701912ab84cde9dc6a9fe565ccd2e7",
     "cpppj/tests/DamageableHitTests.cpp": "ef82124564070643e73bd28a7b0496e2019947c054d2dad6e9324a9dd6c70072",
     "cpppj/tests/fixtures/damageablehit-x86.tsv": "77a50ddaf8af98fd6ead3679aa0546f0f48eb1c325147f3321e30615b908a2e6",
     "extracted/assetregular/originalCD/creation.c": "8be2b172ced3cd0cdb179abd5722e1f4c092cff0e639562d74b6c5a7d285add8",
@@ -112,7 +112,7 @@
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
     "tools/decomp_damageablehit_oracle.py": "e37031afe031259aecb4d9effec45f78f7d10f547d21ba752fcce1a64a55c1f0",
     "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
-    "tools/decomp_priestdamage_oracle.py": "09c6d9dde6a6d9fd3c359d1ab85c624f0665c22d811517d0b7ad06e080e24b4b",
+    "tools/decomp_priestdamage_oracle.py": "4f04a22dad8ad8ea31b2156432bcc2b93557a1752fbc6fe3208a18a285aa6084",
     "tools/decomp_prieststate_oracle.py": "318f2f0f67ae946cec0325413da74eb6d0ab0be439b4d9d88baa070a266b1997",
     "tools/ghidra/damageablehit-helper-functions.json": "ccec0120e1ffa12bc5adde8379a9687fc30f6ccf8cda882af8d9045001955655"
   },
@@ -125,7 +125,7 @@
   "source_correction": {
     "kind": "검사 난수 타입 명칭 한 줄",
     "previous_full_report": "cpppj/hist/damageablehi-1d1d7/damageablehit.json",
-    "previous_sha256": "88acc0f3ed7d5fd0dc76ce8af84ac14c79434ea1f125e4e9afaa8ae1bb891c52",
+    "previous_sha256": "9ec2c0610a9b12439203aa19f4027fc9ac71051f5f31fd8bcd4c53dd4cfeacc8",
     "new_native_rows": 0,
     "new_unique_rows": 0
   }

@@ -195,8 +195,8 @@
     }
   },
   "files": {
-    "tools/analyze_stylemarkup.py": "0ed8a010a4534cbc6e4ff1f802d1c77284d66f1ce8c0fbe6973573eba571ea64",
-    "tools/analyze_styletext.py": "a69336b3064208e08e5fcea4e84f8427eeaa35512673c64f273c39b4b91877b1",
+    "tools/analyze_stylemarkup.py": "50ec494e2285d67bde4f83096dd978167316ee1454f7ae713de4c8db8bcceaf3",
+    "tools/analyze_styletext.py": "6e79df1106b085d3cf88e8ff082a9512103e4c00d83cc7aa8fc98d487a87a0ba",
     "tools/ghidra/stylemarkup-functions.json": "a394ac193931063c7988958dddea81ca011a18439213855633998c58f38edf5a",
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
     "extracted/stylemarkup/originals/creation.c": "89cf610e1a9d485291d6126f3e5878cfc3851ed01e094b6c2e7e0898f9f7477d",

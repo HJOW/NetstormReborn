@@ -74,8 +74,8 @@
   "files": {
     "cpppj/src/o/RawMissile.cpp": "e817c8c22828dc6ae0ab7fca297d6162bb5da16d5ac7416da4c636a52bab218a",
     "cpppj/src/o/RawMissile.h": "a48c2833f5463df9fdaf25634c440805f5edce224e30b3725cea142fa21b3487",
-    "cpppj/tests/ArcherMissileTests.cpp": "08840d3289ef7b3c2de0ea65a189b790bc95e2375bb15eeeafad151d6b5375e4",
-    "cpppj/tests/fixtures/archermissile-x86.tsv": "dca76f0dfcaf30463522d79931c57a8ef77712d6cc03428bffcbe033572d9b7b",
+    "cpppj/tests/ArcherMissileTests.cpp": "9c73ce787d67c22d658ea289491cceb6ea4dd235beef9cbf27950bd65582f400",
+    "cpppj/tests/fixtures/archermissile-x86.tsv": "3ac77dbd052c7a7fd7df1be9ed18fa4ce3f8f1b22ceaf1fbfc311a8b85d2be3f",
     "extracted/gunmissile/originalCD/creation.c": "effe518f78de163fe5ee5b7e4cd6982d316710823d1d7f0d12e8d960684e9906",
     "extracted/gunmissile/originalCD/functions.tsv": "a37bcf90565fa613f072d328ab26ee9463d483f43d46768eec8053ed6016c824",
     "extracted/gunmissile/originals/creation.c": "970a4c4026b7353b9945882d1d1b5d8d41a0a008c93e34e979aeebe301033130",
@@ -101,7 +101,7 @@
     "sha256": {
       "cpppj/src/o/RawMissile.cpp": "9545759cb67226d71b6342ca5fefb7bede988ac2652ef829cc7e5673741b7c5d",
       "cpppj/src/o/RawMissile.h": "6174b99462d9472646dafee379816a88092aacc11ca2822f34c2cd74ad5cb7b8",
-      "cpppj/tests/fixtures/gunmissile-x86.tsv": "3bf00d1918ac56c7cdfeab8ae9d1247f99f459e56d8be7aa53f75e0b778c2b67"
+      "cpppj/tests/fixtures/gunmissile-x86.tsv": "8cdb44b7cc29571bd57444ed702fcae1514517e6bc48b75f915c6aa4f9f38f67"
     }
   },
   "metadata": {

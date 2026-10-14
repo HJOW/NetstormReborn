@@ -35,11 +35,11 @@
     },
     "prior_reports": {
       "cpppj/run11.json": {
-        "sha256": "ccf40cf8f4fcad8747ee840a118d7a9fc373b631db8c6501a95d4fd0d2d795eb",
+        "sha256": "917356b157723c28efc15e233f4bdb22601f68571551025ed084abaea9855254",
         "new_native_inputs": 0
       },
       "cpppj/daisregular-core.json": {
-        "sha256": "f5f18755c4f4b004c37c23391e74df85deca1ab4fa3006bbf9a637ec0a5e85a3",
+        "sha256": "7767b88f635be1f8810f4547572ebde32589a372a4b40d118c7a6796fc747c4c",
         "new_native_inputs": 0
       },
       "cpppj/altarsacrifice.json": {
@@ -55,11 +55,11 @@
         "new_native_inputs": 0
       },
       "cpppj/runepostpop.json": {
-        "sha256": "763955bb527c8e11f1fc01a881f3737089870c63098dd3c21394486126a562dc",
+        "sha256": "4f2dfde9cf3b386db1136ae826d24250044bb609a6b58524d75977d049f8e7b0",
         "new_native_inputs": 0
       },
       "cpppj/priestpostpoptail.json": {
-        "sha256": "25d4b46d120f0d9e2bad808216452aa8a42b1eaa973fc4130afdedf5a7ab6029",
+        "sha256": "16a1cea8ddb3d58a656385750026e701db0d2d8c5937f9982114d0c1d435dc19",
         "new_native_inputs": 0
       },
       "cpppj/assetpostpop.json": {

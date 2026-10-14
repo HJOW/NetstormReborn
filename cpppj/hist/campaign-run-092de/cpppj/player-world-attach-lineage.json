@@ -12,7 +12,7 @@
     {
       "path": "cpppj/hist/player-world-f6101/cpppj/player-world.json",
       "bytes": 8739,
-      "sha256": "f0daca2026822100a2e7a70422c93bd1283daa7bebb25e5dc2aa6cd0901d1f60"
+      "sha256": "b47d1d15cf0e9a0ebde3a9af679e109ee4c8fa0dbb04b544f3590963f1e003db"
     },
     {
       "path": "cpppj/hist/player-world-f6101/cpppj/src/o/RawPlayerWorld.cpp",
@@ -31,12 +31,12 @@
     },
     {
       "path": "cpppj/hist/player-world-f6101/manifest.json",
-      "bytes": 858,
-      "sha256": "ff1fd4ce9e1d780f54e782d0a5bd38ee3938329b464dc746905a3144582e401a"
+      "bytes": 840,
+      "sha256": "22af45b8d42e078736ae26b93757ee7056cc8abba32e587f2d5d8a21a7742f08"
     },
     {
       "path": "cpppj/hist/player-world-f6101/tools/decomp_player_world_oracle.py",
-      "bytes": 15948,
+      "bytes": 15930,
       "sha256": "dc160873b1cc5551c3f00f0b4560c540df34e617368b8aaf9bc2fa7c918bf3e3"
     },
     {
@@ -48,13 +48,13 @@
   "current_files": [
     {
       "path": "tools/decomp_player_world_oracle.py",
-      "bytes": 17881,
+      "bytes": 17863,
       "sha256": "704fabe92fb3fea4fc5e8f7d180cb7b4f24169eca50b09f507b9613030d24ed2"
     },
     {
       "path": "cpppj/player-world.json",
       "bytes": 9281,
-      "sha256": "5a6f20621c9e08439215e5bad100b7f068240f930f55d0437563036e978df2b1"
+      "sha256": "da706f844ab0c6a8a7f23e6e03a6d5549dde79e0a0bde65f2a6d96937217526b"
     },
     {
       "path": "cpppj/tests/fixtures/player-world-x86.tsv",
@@ -74,7 +74,7 @@
   ],
   "tool": {
     "path": "tools/analyze_player_world_attach_lineage.py",
-    "bytes": 7193,
+    "bytes": 7132,
     "sha256": "969c80f2249049e9b62270d4cd4a3efe39c5011c42eafd6d0542d896e2f92855"
   },
   "limitations": [

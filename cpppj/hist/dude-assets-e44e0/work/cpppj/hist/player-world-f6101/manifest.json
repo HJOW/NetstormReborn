@@ -7,7 +7,7 @@
     "tools/ghidra/player-world-functions.json": "90bc2aa81ecdf0319bd68fcfaa3c20f1a8237505436e013c1e06c43580f8af63",
     "cpppj/src/o/RawPlayerWorld.h": "3566f2ff59b7775d47293516cb5e492e776a64c92e66dba77e0f8da5a1e67aff",
     "cpppj/src/o/RawPlayerWorld.cpp": "bee77b8e1d25393fce7b54638ac1c7a76179055da5796c2b767f7ed4e360f7b5",
-    "cpppj/player-world.json": "f0daca2026822100a2e7a70422c93bd1283daa7bebb25e5dc2aa6cd0901d1f60",
+    "cpppj/player-world.json": "b47d1d15cf0e9a0ebde3a9af679e109ee4c8fa0dbb04b544f3590963f1e003db",
     "cpppj/tests/fixtures/player-world-x86.tsv": "9986455501d3732f45a6fbf547e7ad176183db49530b3eeeade3b9234e572946"
   }
 }

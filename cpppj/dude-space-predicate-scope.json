@@ -9,13 +9,13 @@
   "requires_shared_unpop_change": false,
   "lineage": {
     "history": {
-      "cpppj/hist/dude-space-b-02312/cpppj/dude-postpop-binding-lineage.json": "521b991c5c1a18abba0cb4c42c4db50093b6d501181fe17e268da4e28c0776a5",
-      "cpppj/hist/dude-space-b-02312/cpppj/dude-space.json": "4542f389876c8ab43da265e736a829fca3012ef088f4150d603ad74fc679623d",
-      "cpppj/hist/dude-space-b-02312/cpppj/dudespawn.json": "15bb6d720a90524485ff293a1b17a6f1158f5bf4a3a7494c6dcc62b148f2dffa",
+      "cpppj/hist/dude-space-b-02312/cpppj/dude-postpop-binding-lineage.json": "bdafdbdf76ee79f7dd70e53d665039795b25ca22877a791cac69cccefedd3c06",
+      "cpppj/hist/dude-space-b-02312/cpppj/dude-space.json": "d5f5f7e4d3e3fbfc99a5183cdae45e00fe2a1e1e79d5d687e9b3cb52631d5e78",
+      "cpppj/hist/dude-space-b-02312/cpppj/dudespawn.json": "35b8a3ebad0815f3e09872048ea204a1cb7e1faaf5245418a1c2af94890bc5cf",
       "cpppj/hist/dude-space-b-02312/cpppj/src/o/RawDudeSpawn.cpp": "a0f02ae44824ae62de94f2e4e4314c6b613b330fc6efb3d0be8d57f67cb98c77",
       "cpppj/hist/dude-space-b-02312/cpppj/src/o/SquidPop.cpp": "dc45a23ebe2078f6f27cd481028247553b566898ca445fb2e227a2f44b3743bd",
       "cpppj/hist/dude-space-b-02312/cpppj/src/o/SquidPostPop.cpp": "7725741e3e8c1d087b79c3a0ce2c67837fd78bd39b348c37cf3548eff8d2b1a8",
-      "cpppj/hist/dude-space-b-02312/cpppj/src/o/SquidUnpop.cpp": "d82a8c1b8df6005e86894613ed33fca1eb4e6f2837c9c8adb8ceee29e00f7768",
+      "cpppj/hist/dude-space-b-02312/cpppj/src/o/SquidUnpop.cpp": "c090a5c43f22ec5c59f6885bde124889b1fc3004260c271ea4556879e6263a41",
       "cpppj/hist/dude-space-b-02312/cpppj/tests/DudeSpaceSupport.h": "e77396ff164bf83e577f2c1694e967b57da9a67f8f9a0bea42d4182fcc182242",
       "cpppj/hist/dude-space-b-02312/cpppj/tests/DudeSpaceTests.cpp": "d4ad98bc757b744b18836ec5bb19d2c0c0973005fd4f6ec1d0edda52f564b624",
       "cpppj/hist/dude-space-b-02312/cpppj/tests/fixtures/dude-space-x86.tsv": "1c931c029fe455c96325aecc37245d83dc78d94ba285b686783cfd9dd154600e",
@@ -60,15 +60,15 @@
       "cpppj/hist/dude-space-b-02312/tools/decomp_postpop_oracle.py": "43dd9adffc6e2b3a1bd4a1fb06563f848518d8082014f2346613243183535129",
       "cpppj/hist/dude-space-b-02312/tools/decomp_sid_oracle.py": "7bfd7b95b26724b1793d407a4ad6654972b2aaa3bf04e4c206cc357670b68dff",
       "cpppj/hist/dude-space-p-48125/tools/analyze_dude_space_predicate_scope.py": "1cceeaee920dce66cbcbf80cd9eee77e04cfd77514139bc9ae4903a74a7c6688",
-      "cpppj/hist/dude-space-p-48125/cpppj/dude-space-predicate-scope.json": "e83eefd801f16fe24790459da63cad8eb5b54000764309c6ab833bda8b05fad2",
-      "cpppj/hist/dude-space-p-48125/cpppj/dude-space.json": "4542f389876c8ab43da265e736a829fca3012ef088f4150d603ad74fc679623d",
+      "cpppj/hist/dude-space-p-48125/cpppj/dude-space-predicate-scope.json": "dadfbecb905dcd0404eff0c0722ce50dcb61307d7f2f6ed165490b9d32b57916",
+      "cpppj/hist/dude-space-p-48125/cpppj/dude-space.json": "d5f5f7e4d3e3fbfc99a5183cdae45e00fe2a1e1e79d5d687e9b3cb52631d5e78",
       "cpppj/hist/dude-space-p-48125/tools/decomp_dude_space_oracle.py": "12d5ec853070ee5f39da0e28fead3918141138d146f803ed1b1266e645a5541e",
       "cpppj/hist/dude-space-p-48125/cpppj/tests/DudeSpaceTests.cpp": "d4ad98bc757b744b18836ec5bb19d2c0c0973005fd4f6ec1d0edda52f564b624",
       "cpppj/hist/dude-space-p-48125/cpppj/tests/DudeSpaceSupport.h": "e77396ff164bf83e577f2c1694e967b57da9a67f8f9a0bea42d4182fcc182242",
       "cpppj/hist/dude-space-p-48125/cpppj/tests/fixtures/dude-space-x86.tsv": "1c931c029fe455c96325aecc37245d83dc78d94ba285b686783cfd9dd154600e",
       "cpppj/hist/dude-space-p-48125/docs/exe/cpp-dude-space-20261014.md": "0c62a3d5bc746a97801a2c516f9f7c58c1890b36cb26cf03b92fdeb6666ae021"
     },
-    "native_report_sha256": "4542f389876c8ab43da265e736a829fca3012ef088f4150d603ad74fc679623d",
+    "native_report_sha256": "a95a3a01c0a3fa066a6fd0785bc581cc3fb159c9197c47a46de73057d46a8251",
     "predicate": {
       "originals": {
         "pe_sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
@@ -110,8 +110,8 @@
       }
     },
     "files": {
-      "cpppj/dude-space.json": "4542f389876c8ab43da265e736a829fca3012ef088f4150d603ad74fc679623d",
-      "cpppj/src/o/SquidUnpop.cpp": "d82a8c1b8df6005e86894613ed33fca1eb4e6f2837c9c8adb8ceee29e00f7768",
+      "cpppj/dude-space.json": "d5f5f7e4d3e3fbfc99a5183cdae45e00fe2a1e1e79d5d687e9b3cb52631d5e78",
+      "cpppj/src/o/SquidUnpop.cpp": "c090a5c43f22ec5c59f6885bde124889b1fc3004260c271ea4556879e6263a41",
       "cpppj/tests/DudeSpaceTests.cpp": "d4ad98bc757b744b18836ec5bb19d2c0c0973005fd4f6ec1d0edda52f564b624",
       "cpppj/tests/DudeSpaceSupport.h": "e77396ff164bf83e577f2c1694e967b57da9a67f8f9a0bea42d4182fcc182242",
       "cpppj/tests/fixtures/dude-space-x86.tsv": "1c931c029fe455c96325aecc37245d83dc78d94ba285b686783cfd9dd154600e",

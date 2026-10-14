@@ -54,9 +54,9 @@
     "tools/decomp_metadisplaydirty_oracle.py": "04a7aedd92fee786326cf12eca6897c78d10326ce0f6918a28151498769f019b",
     "cpppj/tests/fixtures/metadisplaydirty-x86.tsv": "7d35f10062f11a39a1609f1b7ea0b605eb3233f5570deda1e7ef99675b2408a0",
     "tools/ghidra/metadisplaydirty-functions.json": "7795090ccd789b7d5e584f2ccee124d69bf011f95522da4454dc367974c8c589",
-    "cpppj/src/o/RawMetadisplayDirty.h": "dc985bd7adf108f50cf37b4752127e4aba5a4f20e81ee6978df434eb31dbf9b9",
-    "cpppj/src/o/RawMetadisplayDirty.cpp": "ac6035e88d02430e2dc3ff1f4531a2bcd07b72286f6e15bf3e95b3f6770cbae4",
-    "cpppj/tests/MetadisplayDirtyTests.cpp": "f6ff674bd6ffa8ae8c4c730dfd6797ab72865d7b3898d37e19418225f926cbbd"
+    "cpppj/src/o/RawMetadisplayDirty.h": "49e7e5f443ad66140a017b31ad6fb71e361481fbd7472373b1862095941d9426",
+    "cpppj/src/o/RawMetadisplayDirty.cpp": "078f2fd93f92fbaf8ca11d08ff7b4677db29b812cbeefa4d60e5473ec968f897",
+    "cpppj/tests/MetadisplayDirtyTests.cpp": "0e47b828aba2178ddf824536b240c86058beed67cb8c741e3b1c8e2fa1a9b0ba"
   },
   "limits": [
     "미니맵 bitmap/표시 포인터의 확보·표시 rebuild·실제 셀 그림·CD atexit은 명시 관찰 경계다.",

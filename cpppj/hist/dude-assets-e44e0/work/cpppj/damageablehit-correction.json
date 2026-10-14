@@ -9,7 +9,7 @@
   "change": "검사 GameRandom·원본 double 시계+float 간격·동일 CD map/실제 보정 조회",
   "cd_warning_active_observations": 0,
   "files": {
-    "cpppj/damageablehit.json": "6aed9a90657d2b9538d3670ec94257024b4ba59e5a689a587dda4763a8a269f6",
+    "cpppj/damageablehit.json": "12d36a4f721adbfd4f2442f8e2355c694bdb7196006cc7f310aa2c3538af17a5",
     "cpppj/hist/damageablehi-8cde8/analyze_damageablehit_correction.py": "6322cdb65d72493f5c1c3dd934966951e8e591cd693e7b1088ee31b0d4fbe9ad",
     "cpppj/hist/damageablehi-8cde8/run9-DamageableHit_first.log": "1848dbf74566f5ecbfdd300e15824b82aa813abd7f9eb255a836deff4b1e1df0",
     "cpppj/hist/damageablehi-8cde8/damageablehit-x86.tsv": "77a50ddaf8af98fd6ead3679aa0546f0f48eb1c325147f3321e30615b908a2e6",
@@ -17,19 +17,19 @@
     "cpppj/hist/damageablehi-8cde8/decomp_damageablehit_oracle.py": "e37031afe031259aecb4d9effec45f78f7d10f547d21ba752fcce1a64a55c1f0",
     "cpppj/hist/damageablehi-8cde8/RawDamageableHit.cpp": "73fff81d2a6812182bd3aad3111c49abafebe4b4968281f0cd6b6ebb031af6ac",
     "cpppj/hist/damageablehi-8cde8/RawDamageableHit.h": "b203658be4ffecd674c8a0f217708d042a2d125a13394780613a4b11568e15e2",
-    "cpppj/hist/damageablehi-8cde8/damageablehit-correction.json": "5dde603581c6fbb9e59a120a3252be9b2cd9f0bd47fdad093c1474c1c97310ef",
-    "cpppj/hist/damageablehi-8cde8/damageablehit.json": "60c6ee5833fc93dc59e9f5c87d459f9ff1fd551ea1d321c5ae6553f7c8b8ea57",
+    "cpppj/hist/damageablehi-8cde8/damageablehit-correction.json": "98d1abce551ddde01f2f271e2ef6a5b38b5fd4dd9069fd2868cb8ec56b28a04c",
+    "cpppj/hist/damageablehi-8cde8/damageablehit.json": "f8cf5e47aba075f2350b1bde1c721b82e5308eb1929e08add1cd3ecc528ba96c",
     "cpppj/hist/damageablehi-1d1d7/run9-build-initial.log": "5416ccee0710ac675a18e2615430f4b51540d4df7540f2bd32d20a9cd6fa6fb6",
     "cpppj/hist/damageablehi-1d1d7/damageablehit-x86.tsv": "77a50ddaf8af98fd6ead3679aa0546f0f48eb1c325147f3321e30615b908a2e6",
     "cpppj/hist/damageablehi-1d1d7/DamageableHitTests.cpp": "1f8c717ae9046e7faef52fc8c6f4a8c0b73b7a5b2a63c3f85f900d65d8d47528",
     "cpppj/hist/damageablehi-1d1d7/decomp_damageablehit_oracle.py": "e37031afe031259aecb4d9effec45f78f7d10f547d21ba752fcce1a64a55c1f0",
     "cpppj/hist/damageablehi-1d1d7/RawDamageableHit.cpp": "73fff81d2a6812182bd3aad3111c49abafebe4b4968281f0cd6b6ebb031af6ac",
     "cpppj/hist/damageablehi-1d1d7/RawDamageableHit.h": "b203658be4ffecd674c8a0f217708d042a2d125a13394780613a4b11568e15e2",
-    "cpppj/hist/damageablehi-1d1d7/damageablehit.json": "88acc0f3ed7d5fd0dc76ce8af84ac14c79434ea1f125e4e9afaa8ae1bb891c52",
+    "cpppj/hist/damageablehi-1d1d7/damageablehit.json": "62ed190706e03c6df015de902257768246dad65205d4658296a6cfdf8f82706c",
     "cpppj/src/o/RawDamageableHit.cpp": "0241f2b64ae7ca087c9e24fb1cbd59ed358e99cb61819c86fbfd5e3ab756e31c",
     "cpppj/tests/DamageableHitTests.cpp": "811f951fa0370ebe26c2cf6c4faae36567379659dd2035eb8f4c35097e33480b",
     "extracted/run9-build-initial.log": "5416ccee0710ac675a18e2615430f4b51540d4df7540f2bd32d20a9cd6fa6fb6",
     "extracted/run9-DamageableHit_first.log": "1848dbf74566f5ecbfdd300e15824b82aa813abd7f9eb255a836deff4b1e1df0",
-    "tools/analyze_damageablehit_correction.py": "c0cff10817ea034dd7bba50f65db86a7538ee002de86b30a695ed73a4117168b"
+    "tools/analyze_damageablehit_correction.py": "1c8d5f735e3a22e5c4750d5c3d0d0bd94bde37fef4a09da676ae15908b2b3ce1"
   }
 }

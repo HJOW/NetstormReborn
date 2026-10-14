@@ -11,7 +11,7 @@
     "cpppj/hist/archertype-initial/ArcherTypeDataTests.cpp": "6b0c7c47ae22f546922f2b479c8e43312c29711b3d7d4e6837568b159ee93607",
     "cpppj/hist/archertype-initial/decomp_archertype_oracle.py": "2f02fdfc0e91fa1b112ccb34a53379ce6bb191dcecd4b0620deafaf25279f16a",
     "cpppj/hist/archertype-initial/archertype-x86.tsv": "c892b554dc1f9baa161d3ca72fc1c3f891daef4e04eea44172b050c6c0e0580f",
-    "cpppj/hist/archertype-initial/archertype.json": "be662edcc713cac0d8ed08ebc5fa3aa31166a5268c8764b01a1e71afce4b6030"
+    "cpppj/hist/archertype-initial/archertype.json": "6f40f838431bf231d5300b1a1845d600b023b835846f764e344d1e425374be18"
   },
   "current_files": {
     "cpppj/src/o/RawArcherTypeData.cpp": "8f637aea87127777b76480a23dedf2f6c920634eb06d6d6e3efc1d95bb8a3f4f",
@@ -19,7 +19,7 @@
     "cpppj/tests/ArcherTypeDataTests.cpp": "1c2c6d601f75f6b1058ccbbfb3d5ab2c3de44facb91ce28a9a566fbc5fddb731",
     "tools/decomp_archertype_oracle.py": "2f02fdfc0e91fa1b112ccb34a53379ce6bb191dcecd4b0620deafaf25279f16a",
     "cpppj/tests/fixtures/archertype-x86.tsv": "c892b554dc1f9baa161d3ca72fc1c3f891daef4e04eea44172b050c6c0e0580f",
-    "cpppj/archertype.json": "af0a88fada48c9a3d5a25060aade52ab212ec448069c3906118c04e0d4c25a42"
+    "cpppj/archertype.json": "d1e1ac3a68a2e5df8a73b582d89ca836abebbaf7d2730c2c95a50ac4f62008eb"
   },
   "tool_sha256": "f2294031af2cf9c45a3d736c0f70d7510eca48878e15132b7e5516c5c4348c7e"
 }

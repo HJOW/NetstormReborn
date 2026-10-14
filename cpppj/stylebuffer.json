@@ -238,8 +238,8 @@
     }
   },
   "files": {
-    "tools/analyze_stylebuffer.py": "cfae630b19923ced414a7d12c508e379ff93290c1b02c60f6ad46475e738836d",
-    "tools/analyze_styletext.py": "a69336b3064208e08e5fcea4e84f8427eeaa35512673c64f273c39b4b91877b1",
+    "tools/analyze_stylebuffer.py": "0bfa6295b8e21ff791151658a75c9dc8a847e223b89631da4f09f7dc5135feca",
+    "tools/analyze_styletext.py": "6e79df1106b085d3cf88e8ff082a9512103e4c00d83cc7aa8fc98d487a87a0ba",
     "tools/ghidra/stylebuffer-functions.json": "ae36fb0a1d69f8bd6814783f3f73508a53b8e43d4588cf82d45304cbdfc52145",
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
     "extracted/stylebuffer/originals/creation.c": "320f6e5c0412ea0e13f005565282c0c69f60f4b7d211a8d99a2072d0cc0a17d0",
@@ -249,13 +249,13 @@
     "extracted/stylebuffer/originalCD/creation.c": "b5c41afc5c6dbf0304a77c9def582acc48c56dc30f4a687ad0069990aa83cb1f",
     "extracted/stylebuffer/originalCD/functions.tsv": "671912e209178cb5755775cb8f5b12b79956e0d56e017f540a1472172ba7e85e",
     "extracted/stylebuffer/originalCD/assembly.txt": "4619ac67ef6a86266e8980752113da2f00f2ca0ddae7f6516a476fd45470928c",
-    "cpppj/src/client/StyleTextBuffer.cpp": "2aa0f6983c460aa3d5a960085a8b1ed86f153cb0916246329878f6d1b77f8ea2",
+    "cpppj/src/client/StyleTextBuffer.cpp": "8eaf39ef8d5fbd01ce8b28c87deaa7c976d95aa3080f4e50ff098ddf277b50ec",
     "cpppj/src/client/StyleTextBuffer.h": "ee595397e0cf2059cbf6d8c3df24987b6ce0c856f8296179f8cd8f67b3cbcb3e",
     "cpppj/src/client/StyleText.cpp": "fe2c920a676ebd7c13ae5815f76d1b9050eeaef8321e881f83f20f4615458a6f",
     "cpppj/src/client/StyleText.h": "5cbf6d490dcfc4dd2a89c8f10edd49f6ba93557abba0eb8d2d0ce836ca14032d",
-    "cpppj/src/client/Markup.cpp": "3ef98b57be34741fc0c7a11d233744636a83a34ba4457053e4d57b51f9fec6c0",
+    "cpppj/src/client/Markup.cpp": "5d3ab7d8b3caa308e4d185c0fec8fb52ee0f368f06deca0757162c2918390540",
     "cpppj/src/client/Markup.h": "8fec3e164ef546e3b81837d4063200addc0e4a474926c348ec04aac3716f0235",
-    "cpppj/src/client/GumpText.cpp": "bb6924f6131ac6d3df3cca683260d0b41b46d71706874b672bf79a927fa61856",
+    "cpppj/src/client/GumpText.cpp": "1222ac4f9ab258bcbfe1baba0da59c3dc83bc02699520361bb4239dee4f88547",
     "cpppj/src/client/GumpText.h": "66ae40d7ba7bb50dd02480517be4abee41da88e73011053b8739f0df53d11340",
     "cpppj/src/client/CMakeLists.txt": "1ab33c7573fabcf9d10374125057782f8799fdf721a6d45538dcee73712d68ed"
   }

@@ -81,7 +81,7 @@
   },
   "files": {
     "tools/decomp_gunmissile_oracle.py": "4671a0a69ee91d6e0280a6c4af73d38e6ca6b096ee04161aeaef8d2d3e5c0fd1",
-    "cpppj/tests/fixtures/gunmissile-x86.tsv": "3bf00d1918ac56c7cdfeab8ae9d1247f99f459e56d8be7aa53f75e0b778c2b67",
+    "cpppj/tests/fixtures/gunmissile-x86.tsv": "8cdb44b7cc29571bd57444ed702fcae1514517e6bc48b75f915c6aa4f9f38f67",
     "tools/ghidra/gunmissile-functions.json": "95064438029313d2bbd11a3f2c960ff24173b28ade724c3329ffaf7d2cc36609",
     "tools/ghidra/gunmissile-helper-functions.json": "9d39ab1525d8b6fc9e829a8b1d3fd319f9875584453e5b9b14bdf5de99f791b1",
     "extracted/owner/originals/creation.c": "f9919c046d5259526946f106b47b6259fe5e04971f743d6fa02d6a5361b9dc16",

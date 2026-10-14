@@ -176,7 +176,7 @@
     "cpppj/src/o/RawArcherAnimation.cpp": "d0aa464b5e15d97db94a552cdd55e6aeca4cb121f66d02fe5638d2c7e2e16afa",
     "cpppj/src/o/RawArcherAnimation.h": "da693278bc1bccc8cc5bd4a5735995bfe2a684cdc4ab98ba6088f42fbdc0f8b9",
     "cpppj/tests/ArcherAnimationTests.cpp": "987468b20a2b4b9c2203e710dc3da5f196c44a543a3e25673ac26c8204aa3b5a",
-    "cpppj/tests/fixtures/gunarcher-x86.tsv": "7882627526d66a7b5084902407788f83170f5c3da27745dfec0a3aa0cb77ab2b",
+    "cpppj/tests/fixtures/gunarcher-x86.tsv": "996b7e202d49d03f5d36e6af5a3b514193d5f5d03599d430c8610ce4fd54273c",
     "extracted/gunanimation/originalCD/creation.c": "b3e9a244c0050661106884797d2e75c4522fb79f9c0014215709471ca7aa68c6",
     "extracted/gunanimation/originalCD/functions.tsv": "b3fb8c32b0aa3b6645fee777f121794e0475bac768c7b79c33061917f78a62ee",
     "extracted/gunanimation/originals/creation.c": "03f73fadadbcd38384f84bd841fe4d84b2f32a6080770e167cf92885d57e78ff",

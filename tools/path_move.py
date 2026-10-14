@@ -12,7 +12,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]  # 이동 전후의 모든 대상은 이 작업공간 안에 있어야 한다.
 MAP = ROOT / 'docs/path-map.json'  # 이전 이름과 새 이름·전체 바이트 변경 근거를 별도로 기록한다.
 SKIP = {'.git', 'originals', 'originalCD', 'originalFanGame', 'playingVideos', 'fonts'}  # 보호·외부자료는 이관하지 않는다.
-TEXT = {'.py', '.cpp', '.h', '.hpp', '.c', '.cs', '.json', '.md', '.txt', '.tsv', '.log', '.ps1', '.java', '.cmake', '.yml', '.yaml', '.sh', '.bat', '.cfg'}  # 실제 참조를 포함할 수 있는 프로젝트 텍스트 형식이다.
+TEXT = {'.py', '.cpp', '.h', '.hpp', '.c', '.cs', '.inc', '.csproj', '.props', '.manifest', '.sln', '.json', '.md', '.txt', '.tsv', '.log', '.stackdump', '.ps1', '.java', '.cmake', '.yml', '.yaml', '.sh', '.bat', '.cfg'}  # 실제 참조를 포함할 수 있는 소스와 빌드 정의의 텍스트 형식이다.
 NAME_LIMIT = 48  # 이번 기존파일 정리의 상한이며 신규파일은 문서의40자 기준을 따른다.
 PATH_LIMIT = 200  # 작업공간 루트를 포함한 절대경로에 적용할 안전 여유 한도다.
 HASH = re.compile(r'(?<![0-9a-fA-F])[0-9a-fA-F]{64}(?![0-9a-fA-F])')  # 전체 SHA256 토큰만 바꾸며 임의 숫자 부분은 건드리지 않는다.
@@ -40,7 +40,7 @@ def inventory():
                     found.add(path)
     # 현재 원본 실행기의 참조가 있는 평면 분석 로그·보고서만 추가하고 큰 녹화/이미지는 건드리지 않는다.
     for path in (ROOT / 'extracted').iterdir():
-        if path.is_file() and path.suffix in {'.log', '.json', '.py', '.txt'}:
+        if path.is_file() and not path.name.startswith('path-') and path.suffix in {'.log', '.json', '.py', '.txt'}:
             found.add(path)
     return sorted(path for path in found if path != MAP and path.name != 'AGENTS.md')
 
@@ -187,6 +187,7 @@ def apply():
 def verify():
     """이관한 전체 바이트와 이름 길이를 변경 없이 다시 확인한다."""
     data = json.loads(MAP.read_text(encoding='utf-8'))
+    assert not data.get('pending'), '미완료 대응표는 --resume으로 먼저 적용합니다.'
     # Git 기준 원문은이관 대응표에 남기며 현재 전체 자료는 이동 뒤 SHA로 확인한다.
     for previous, entry in data['files'].items():
         target = ROOT / entry['target']

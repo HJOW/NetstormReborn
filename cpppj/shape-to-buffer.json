@@ -23,9 +23,9 @@
   "files": {
     "cpppj/src/client/RawShapeToBuffer.cpp": "a25daa6a79c7edbfee525ed6a64156cb71d2b1ceee996c7d0a4a002af0ced3d4",
     "cpppj/src/client/RawShapeToBuffer.h": "0d957cb5d99e2042ff04dbea766bb05e79560b390ffe82976388692ae5b259bb",
-    "cpppj/src/client/SquidRenderer.cpp": "cc910d0b73703cc32019189e1a1ff6f32c868a4afb73cf3c61b48e485580f6f9",
-    "cpppj/src/client/VFXDraw.cpp": "d4c95ba9875659715bdb234b56baf7084d2abc6f5f4f879d1247cb309f0f5ad4",
-    "cpppj/src/client/VFXDraw.h": "953079a93732127a0e2861f4d091328c37209c25dab7330d2a978afb52896894",
+    "cpppj/src/client/SquidRenderer.cpp": "2f022fb49565f71bf9aa7a146b023912487f2e2ecffe42b4ac3445bf905bbf7f",
+    "cpppj/src/client/VFXDraw.cpp": "1de6889912f1f18cc83e0efc7cc33a43216e063730aaca7917aad8bf5a8c37b7",
+    "cpppj/src/client/VFXDraw.h": "3ac09a428f585449877a89cb3fbd8a1f92755bb635c8c5778519f827ce3cf9bc",
     "cpppj/tests/fixtures/shape-to-buffer-x86.tsv": "d92bc1a292b8f44cb87ec59ffec881f7e97db4c4b6680af92ad554af2d7c89c1",
     "cpppj/tests/ShapeToBufferTests.cpp": "67dd7ac14fb89b601d9be8d32331094b9d16cc4fa685f3385727c200475e9591",
     "extracted/burning-frame-helper/originalCD/creation.c": "79332ff09557a261e3148a25cf776e09fff3d59ef0bb435867f7bec8c80ea9ab",

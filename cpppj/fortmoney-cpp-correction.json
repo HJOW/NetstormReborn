@@ -22,8 +22,8 @@
     }
   },
   "saved_files": {
-    "cpppj/fortmoney.json": "29e7f1985f82941adcea621354091b02062e016c7bb22c0534d8ce4e96ba8442",
-    "cpppj/fortmoney-cpp-binding.json": "d9d0877e18e5d6c063a16c123b357e1a9eb55b411429301d2ae48a0cb96e9471",
+    "cpppj/fortmoney.json": "5a67a58bd24ba882729ca0bac88c9eb28f8807237b9f22ff1873a56ba722e900",
+    "cpppj/fortmoney-cpp-binding.json": "822934e69c2fe12f3e525e50701af454dbe344646349682d9cf6f698d5811d0d",
     "tools/decomp_fortmoney_oracle.py": "bffdeaf9744052a746fe0e3f154b77678fa4426819f9533dfe35a69fcda1d264",
     "tools/analyze_fortmoney_cpp_binding.py": "ab66439166dfe78228f89be88c97c2bd5b7e900e96926b143f08ac57e6d73426",
     "extracted/run11-FortMoneyLoad_first.log": "f632e0d0d196924815368d2c5e66742a22a5ce191ae6f91206b7eebf88e442ff",
@@ -34,8 +34,8 @@
     "cpppj/src/o/RawFortMoneyLoad.h": "b79a23f3c70e4cd2db8e2ef70a662bd3bce3b445e72d1ba8968a9b8180aac340",
     "cpppj/src/o/RawFortMoneyLoad.cpp": "35d7a3eb7c2e27cab3e018e93eb27ecec450b254cea8be026c8956584e6e1afb"
   },
-  "current_native_report_sha256": "61ef8b7f84dc999e823b44f06176c5a5cbd3345d7d76dba590be26cdd4f3e3b5",
-  "current_binding_sha256": "15f83b0de2c970aef899d8d66a10eedd9bf69952238501d9b9c30f9483cd6eec",
+  "current_native_report_sha256": "f14ec071b0d89e7329b56305a6df6f9e2c38bfe9558b4987bc87ef5bbf5c2bcf",
+  "current_binding_sha256": "9d109188653394b1448c55421b7e953bcb3e258dff85cca162c4cf670f181c5c",
   "tool_sha256": "2837b6b631ed73b3df90183cc65dd3bc64c0e93c2d5632aa0028eafd6fe7b518",
   "reason": "실제447861~447880의비로컬special분기와패치483d9c80=194162/CD100000차이를교정했다. BYTE소유자명시변환/실제bridge타입으로world입력도교정했다."
 }

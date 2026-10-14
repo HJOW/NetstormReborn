@@ -27,4 +27,4 @@
 
 이후 클론 자산·지도·언어 변경은 `game-data/`에서 관리한다. `migration-manifest.json`은 **최초 이관본의 출처 기록**이며 이후 수정본을 원본으로 되돌리거나 동기화하는 도구가 아니다. 원본 분석 도구의 `originals/` 경로와 원본 분석 문서는 계속 유지한다.
 
-Assets·Core 통합 테스트도 이 데이터를 사용하며 누락 시 실패한다. 원본 exe를 읽던 다리 표 회귀 검사는 독립적으로 추출한 [고정 JSON 자료](../tests/Netstorm.Core.Tests/Fixtures/bridge-tables.json)로 대체했다. 자료에 원본 exe의 SHA-256과 추출 주소를 기록했으며, 클론 구현에서 기대값을 다시 생성하지 않는다.
+Assets·Core 통합 테스트도 이 데이터를 사용하며 누락 시 실패한다. 원본 exe를 읽던 다리 표 회귀 검사는 독립적으로 추출한 [고정 JSON 자료](../dotnetpj/tests/Netstorm.Core.Tests/Fixtures/bridge-tables.json)로 대체했다. 자료에 원본 exe의 SHA-256과 추출 주소를 기록했으며, 클론 구현에서 기대값을 다시 생성하지 않는다.

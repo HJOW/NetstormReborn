@@ -82,7 +82,7 @@
     "cpppj/src/o/RawDamageableBurning.h": "aaa63da16cc567245c04044c2d112c04999e485b81566e6dae6a4ed4a8d164f9",
     "cpppj/src/o/RawPriestDamage.cpp": "fde7209a3e9e3727ce8a1e2b02e74e967c0a1c0dbaa287cd271596876b0f7c4c",
     "cpppj/src/o/RawPriestDamage.h": "3488f9c6b6fa8e8de2a65429c8afbd1901b1f3a56b47ed92f374c97e1713845a",
-    "cpppj/tests/fixtures/priestdamage-x86.tsv": "40b8047e40fe0d1f0f8d9523f0516b8e201c9b4aeaca02698e73b2792c1ddbd0",
+    "cpppj/tests/fixtures/priestdamage-x86.tsv": "68004b70e556920ec30490ccb1145d5e0cc7ff2708ac3031b648886e9d602a0b",
     "cpppj/tests/PriestDamageTests.cpp": "f5436f409d52aa05cbcbda9b8507b305373994571b6dc346688cefbeaf743fce",
     "extracted/assetregular/originalCD/creation.c": "8be2b172ced3cd0cdb179abd5722e1f4c092cff0e639562d74b6c5a7d285add8",
     "extracted/assetregular/originalCD/functions.tsv": "68225246756277c7fb51a6c2d5886959e33dc568eac4dd2e7dd61bd960a28f0f",
@@ -107,7 +107,7 @@
     "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
     "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
-    "tools/decomp_priestdamage_oracle.py": "09c6d9dde6a6d9fd3c359d1ab85c624f0665c22d811517d0b7ad06e080e24b4b",
+    "tools/decomp_priestdamage_oracle.py": "4f04a22dad8ad8ea31b2156432bcc2b93557a1752fbc6fe3208a18a285aa6084",
     "tools/decomp_prieststate_oracle.py": "318f2f0f67ae946cec0325413da74eb6d0ab0be439b4d9d88baa070a266b1997",
     "tools/ghidra/victimdamage-functions.json": "1118fba414e88a413d633039d1887710008a47cb5ce4a330414f3b5d8a35dbf7",
     "tools/ghidra/victimdamage-helper-functions.json": "037cffdef46bbb142e897bd4d254b38f4940d4952b30f7886003ace0dedfb42b"

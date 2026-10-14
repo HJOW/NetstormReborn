@@ -116,7 +116,7 @@
   },
   "files": {
     "tools/decomp_gunanimation_oracle.py": "7dad644a16ef1e166f96e995de12dc516768874dbde5ee43c5bf146b08af4f3e",
-    "cpppj/tests/fixtures/gunanimation-x86.tsv": "7ed89da7895a89b1d65efcbdbef0bddbc5855d525ef51b30d17305b3c7145d6f",
+    "cpppj/tests/fixtures/gunanimation-x86.tsv": "134f220c096ebd745c57fa177a18affa14b3132bb7e3090645f073b333b0edb7",
     "tools/ghidra/gunanimation-functions.json": "89b25b1246b2ab05fbfa76577d986d2742c7a769e669d4ffb4ceee246c546651",
     "extracted/owner/originals/creation.c": "f9919c046d5259526946f106b47b6259fe5e04971f743d6fa02d6a5361b9dc16",
     "extracted/owner/originals/functions.tsv": "3ea66dace80a85999a8b2c2dbadb4d5f1bd18b0dcdb0768f9c41075206c7c72d",

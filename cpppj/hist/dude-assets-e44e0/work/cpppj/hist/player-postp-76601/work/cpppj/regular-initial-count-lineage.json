@@ -6,132 +6,132 @@
   "new_unique": 0,
   "baseline_files": {
     "cpppj/archertype-draft-lineage.json": {
-      "work_sha256": "ff401e95d396e3cabb0c636b13bdbbfb150aafe26fc98c30c480cc2c1ba847ab",
-      "git_sha256": "ff401e95d396e3cabb0c636b13bdbbfb150aafe26fc98c30c480cc2c1ba847ab"
+      "work_sha256": "7b35c854f7972fc1701b1507a78c9166ab5a66988c27d74bab0325fdfe26ff90",
+      "git_sha256": "7b35c854f7972fc1701b1507a78c9166ab5a66988c27d74bab0325fdfe26ff90"
     },
     "cpppj/archertype.json": {
-      "work_sha256": "4fd1f3460d513dca292caa8eac7555cbd0485803294b70b2fc7b7bcec3e8ae82",
-      "git_sha256": "4fd1f3460d513dca292caa8eac7555cbd0485803294b70b2fc7b7bcec3e8ae82"
+      "work_sha256": "641d8e0499c02b08036351a1f2c58bae3c46081da754b932aeabca01bf109c76",
+      "git_sha256": "641d8e0499c02b08036351a1f2c58bae3c46081da754b932aeabca01bf109c76"
     },
     "cpppj/archertype-pop-lineage.json": {
-      "work_sha256": "b26d29bb0230539b316c68aac35a51c0b935694549677bc6929748a5fefd225d",
-      "git_sha256": "b26d29bb0230539b316c68aac35a51c0b935694549677bc6929748a5fefd225d"
+      "work_sha256": "f534edbe5bd267e3a0f24022eeff23390060c80e4844b31a87062edc4a0374ee",
+      "git_sha256": "f534edbe5bd267e3a0f24022eeff23390060c80e4844b31a87062edc4a0374ee"
     },
     "cpppj/campaign-process.json": {
-      "work_sha256": "12702bd0685c03d6d7f5e641626d3f465ba8773fb9223afc46c3cd28e37f4225",
-      "git_sha256": "12702bd0685c03d6d7f5e641626d3f465ba8773fb9223afc46c3cd28e37f4225"
+      "work_sha256": "3c31a88b151c00a9ea87833ce430690330e5cd27ccd88e7eab1e57557a307808",
+      "git_sha256": "3c31a88b151c00a9ea87833ce430690330e5cd27ccd88e7eab1e57557a307808"
     },
     "cpppj/run.json": {
-      "work_sha256": "207970604dd04a351bdb103d4210a3df0d5529b4b73846a59611895fe0efe8f9",
-      "git_sha256": "207970604dd04a351bdb103d4210a3df0d5529b4b73846a59611895fe0efe8f9"
+      "work_sha256": "0ae4bf4cea2b8590b076ce79dce39143e648b7aeb6ace4b2ca11474a7204dc38",
+      "git_sha256": "0ae4bf4cea2b8590b076ce79dce39143e648b7aeb6ace4b2ca11474a7204dc38"
     },
     "cpppj/run11.json": {
-      "work_sha256": "ccf40cf8f4fcad8747ee840a118d7a9fc373b631db8c6501a95d4fd0d2d795eb",
-      "git_sha256": "ccf40cf8f4fcad8747ee840a118d7a9fc373b631db8c6501a95d4fd0d2d795eb"
+      "work_sha256": "ca72e82f3358a8f7d3c8a026b2732dc6a37eb5470a572f48eb6b2c64366d1b28",
+      "git_sha256": "ca72e82f3358a8f7d3c8a026b2732dc6a37eb5470a572f48eb6b2c64366d1b28"
     },
     "cpppj/dude-regular-reset-lineage.json": {
-      "work_sha256": "b317d0b5e99232e48ea82497ef19a64f7b0f46228aa6a469990db3fd5e833eb6",
-      "git_sha256": "b317d0b5e99232e48ea82497ef19a64f7b0f46228aa6a469990db3fd5e833eb6"
+      "work_sha256": "4cf10c502c6101c3929de1cd6920c08ccab7040041e1c499d68722d479375008",
+      "git_sha256": "4cf10c502c6101c3929de1cd6920c08ccab7040041e1c499d68722d479375008"
     },
     "cpppj/dudenotice-draft-lineage.json": {
-      "work_sha256": "80114f3277243faeb39e7d3bf41a8dba07de9ff80a24fed885be40e0384ea371",
-      "git_sha256": "80114f3277243faeb39e7d3bf41a8dba07de9ff80a24fed885be40e0384ea371"
+      "work_sha256": "a21302af309f0bbf44eac9b64f6b698470a3bcf476a7405b8daeead5139acfcb",
+      "git_sha256": "a21302af309f0bbf44eac9b64f6b698470a3bcf476a7405b8daeead5139acfcb"
     },
     "cpppj/dudenotice.json": {
-      "work_sha256": "60f84851d663c7da1e1f3bd6a311e23a9ffe11af142e16517e173bcaa93f64c9",
-      "git_sha256": "60f84851d663c7da1e1f3bd6a311e23a9ffe11af142e16517e173bcaa93f64c9"
+      "work_sha256": "9c0688eb39c8907b658526b0a4ddf7869ac885bcf49c74b7508ae06c260e3010",
+      "git_sha256": "9c0688eb39c8907b658526b0a4ddf7869ac885bcf49c74b7508ae06c260e3010"
     },
     "cpppj/dudenotice-point-lineage.json": {
-      "work_sha256": "b637e319569454ad26402fef4aa6afd23c118a01e1ddf0be84e9c0ee29b6e1be",
-      "git_sha256": "b637e319569454ad26402fef4aa6afd23c118a01e1ddf0be84e9c0ee29b6e1be"
+      "work_sha256": "dc9fcf0fcc8c657ff52972c935e2c09c30526a40a7cb34e26c89518067fd7128",
+      "git_sha256": "dc9fcf0fcc8c657ff52972c935e2c09c30526a40a7cb34e26c89518067fd7128"
     },
     "cpppj/formtake.json": {
-      "work_sha256": "7582a02c4c5f48bda49e28569fdc2ea8026267e383ee1c5ad58e9353847e4d00",
-      "git_sha256": "7582a02c4c5f48bda49e28569fdc2ea8026267e383ee1c5ad58e9353847e4d00"
+      "work_sha256": "0430b340142cd482e5f0416f34bac8ec65fef1a030afac86387c9866396b68a2",
+      "git_sha256": "0430b340142cd482e5f0416f34bac8ec65fef1a030afac86387c9866396b68a2"
     },
     "cpppj/gumpform.json": {
-      "work_sha256": "b161a20d9a2b1286d6bc022cec632f3a155ecbeadb277d8d8dd4e85f2991e8fd",
-      "git_sha256": "b161a20d9a2b1286d6bc022cec632f3a155ecbeadb277d8d8dd4e85f2991e8fd"
+      "work_sha256": "f95b7d01483cef25fbecfb00ca5f048a82659e346d1e3836b2a46559b465b2d3",
+      "git_sha256": "f95b7d01483cef25fbecfb00ca5f048a82659e346d1e3836b2a46559b465b2d3"
     },
     "cpppj/gunimpact.json": {
-      "work_sha256": "3d14869770db18161c71f5d8ffe9a0eb2d977805286a0abe05f541755c68ea14",
-      "git_sha256": "6952df9f64f236a11752acd9c725b358ce385687f27c231974810ff03e2e492c"
+      "work_sha256": "5bce4bee32c86618a3d547fd16338cd32da74ea22b9bdc01a22c712e0d5265db",
+      "git_sha256": "6c52cdcdb01a8f801e5380f8d1b30d5dd1c8dfd83d3f4a45d64782b9ecc917c3"
     },
     "cpppj/hist/archertype-b-e9d47/cpppj/archertype.json": {
-      "work_sha256": "dab4abaa4505f522bdb3f1cc43d52f7191807252c0576ffae31c183073daea9d",
-      "git_sha256": "dab4abaa4505f522bdb3f1cc43d52f7191807252c0576ffae31c183073daea9d"
+      "work_sha256": "98d1602df35a4ce3827b528efcc79b64f0b6482c5a470bc37c0ddb28ab705687",
+      "git_sha256": "98d1602df35a4ce3827b528efcc79b64f0b6482c5a470bc37c0ddb28ab705687"
     },
     "cpppj/hist/archertype-b-e9d47/cpppj/dude-regular-reset-lineage.json": {
-      "work_sha256": "b317d0b5e99232e48ea82497ef19a64f7b0f46228aa6a469990db3fd5e833eb6",
-      "git_sha256": "b317d0b5e99232e48ea82497ef19a64f7b0f46228aa6a469990db3fd5e833eb6"
+      "work_sha256": "4cf10c502c6101c3929de1cd6920c08ccab7040041e1c499d68722d479375008",
+      "git_sha256": "4cf10c502c6101c3929de1cd6920c08ccab7040041e1c499d68722d479375008"
     },
     "cpppj/hist/archertype-b-e9d47/cpppj/hist/archertype-b-2578b/archertype.json": {
-      "work_sha256": "af0a88fada48c9a3d5a25060aade52ab212ec448069c3906118c04e0d4c25a42",
-      "git_sha256": "af0a88fada48c9a3d5a25060aade52ab212ec448069c3906118c04e0d4c25a42"
+      "work_sha256": "d1e1ac3a68a2e5df8a73b582d89ca836abebbaf7d2730c2c95a50ac4f62008eb",
+      "git_sha256": "d1e1ac3a68a2e5df8a73b582d89ca836abebbaf7d2730c2c95a50ac4f62008eb"
     },
     "cpppj/hist/archertype-b-e9d47/cpppj/hist/archertype-b-d5269/archertype.json": {
-      "work_sha256": "d606e8968dee1ea68c80d3368454b9846530770805c825f82fcb646a65bd86be",
-      "git_sha256": "d606e8968dee1ea68c80d3368454b9846530770805c825f82fcb646a65bd86be"
+      "work_sha256": "ab00360f68ac1384d291744ea5e9c3bf30bf8a3a44a28bc0a400c2aae21fb6ba",
+      "git_sha256": "ab00360f68ac1384d291744ea5e9c3bf30bf8a3a44a28bc0a400c2aae21fb6ba"
     },
     "cpppj/hist/archertype-b-e9d47/cpppj/hist/archertype-initial/archertype.json": {
-      "work_sha256": "be662edcc713cac0d8ed08ebc5fa3aa31166a5268c8764b01a1e71afce4b6030",
-      "git_sha256": "be662edcc713cac0d8ed08ebc5fa3aa31166a5268c8764b01a1e71afce4b6030"
+      "work_sha256": "6f40f838431bf231d5300b1a1845d600b023b835846f764e344d1e425374be18",
+      "git_sha256": "6f40f838431bf231d5300b1a1845d600b023b835846f764e344d1e425374be18"
     },
     "cpppj/hist/archertype-b-2578b/archertype.json": {
-      "work_sha256": "af0a88fada48c9a3d5a25060aade52ab212ec448069c3906118c04e0d4c25a42",
-      "git_sha256": "af0a88fada48c9a3d5a25060aade52ab212ec448069c3906118c04e0d4c25a42"
+      "work_sha256": "d1e1ac3a68a2e5df8a73b582d89ca836abebbaf7d2730c2c95a50ac4f62008eb",
+      "git_sha256": "d1e1ac3a68a2e5df8a73b582d89ca836abebbaf7d2730c2c95a50ac4f62008eb"
     },
     "cpppj/hist/archertype-b-d5269/archertype.json": {
-      "work_sha256": "d606e8968dee1ea68c80d3368454b9846530770805c825f82fcb646a65bd86be",
-      "git_sha256": "d606e8968dee1ea68c80d3368454b9846530770805c825f82fcb646a65bd86be"
+      "work_sha256": "ab00360f68ac1384d291744ea5e9c3bf30bf8a3a44a28bc0a400c2aae21fb6ba",
+      "git_sha256": "ab00360f68ac1384d291744ea5e9c3bf30bf8a3a44a28bc0a400c2aae21fb6ba"
     },
     "cpppj/hist/archertype-initial/archertype.json": {
-      "work_sha256": "be662edcc713cac0d8ed08ebc5fa3aa31166a5268c8764b01a1e71afce4b6030",
-      "git_sha256": "be662edcc713cac0d8ed08ebc5fa3aa31166a5268c8764b01a1e71afce4b6030"
+      "work_sha256": "6f40f838431bf231d5300b1a1845d600b023b835846f764e344d1e425374be18",
+      "git_sha256": "6f40f838431bf231d5300b1a1845d600b023b835846f764e344d1e425374be18"
     },
     "cpppj/hist/dudenotice-b-7ab49/cpppj/dude-regular-reset-lineage.json": {
-      "work_sha256": "b317d0b5e99232e48ea82497ef19a64f7b0f46228aa6a469990db3fd5e833eb6",
-      "git_sha256": "b317d0b5e99232e48ea82497ef19a64f7b0f46228aa6a469990db3fd5e833eb6"
+      "work_sha256": "4cf10c502c6101c3929de1cd6920c08ccab7040041e1c499d68722d479375008",
+      "git_sha256": "4cf10c502c6101c3929de1cd6920c08ccab7040041e1c499d68722d479375008"
     },
     "cpppj/hist/dudenotice-b-7ab49/cpppj/dudenotice.json": {
-      "work_sha256": "afd903fae53c13f518a0ee7a26ed87ed12b400db37cf2503b377af4180fcb7f2",
-      "git_sha256": "afd903fae53c13f518a0ee7a26ed87ed12b400db37cf2503b377af4180fcb7f2"
+      "work_sha256": "7d968e18637f26ceb9bac2ffa04a338a1620e86f812c8022126b2af46c81344b",
+      "git_sha256": "7d968e18637f26ceb9bac2ffa04a338a1620e86f812c8022126b2af46c81344b"
     },
     "cpppj/hist/dudenotice-b-7ab49/cpppj/hist/dudenotice-initial/dudenotice.json": {
-      "work_sha256": "e4a3239e28c6e4455fe81c1f39133bec3029d95c106e64408f0593fabc8485f4",
-      "git_sha256": "e4a3239e28c6e4455fe81c1f39133bec3029d95c106e64408f0593fabc8485f4"
+      "work_sha256": "e3be5ee1d000feb882e1f271252dfb3ccf302e613c5a156ee45d92ae032e7d5a",
+      "git_sha256": "e3be5ee1d000feb882e1f271252dfb3ccf302e613c5a156ee45d92ae032e7d5a"
     },
     "cpppj/hist/dudenotice-initial/dudenotice.json": {
-      "work_sha256": "e4a3239e28c6e4455fe81c1f39133bec3029d95c106e64408f0593fabc8485f4",
-      "git_sha256": "e4a3239e28c6e4455fe81c1f39133bec3029d95c106e64408f0593fabc8485f4"
+      "work_sha256": "e3be5ee1d000feb882e1f271252dfb3ccf302e613c5a156ee45d92ae032e7d5a",
+      "git_sha256": "e3be5ee1d000feb882e1f271252dfb3ccf302e613c5a156ee45d92ae032e7d5a"
     },
     "cpppj/hist/gunimpact-be-be7bd/gunimpact.json": {
-      "work_sha256": "1b607e34e9e7ba6aceaf3a50d91875e6c6e46c0f4f14a2a49b07138108e0b6ed",
-      "git_sha256": "b96b1b53df37203ce40a2fa1219ea9cadded6df230b70eb765bf3d2a099c2f50"
+      "work_sha256": "d86714d85a51fcb9a94e7820d82e88f2c025c473bbbeb7073c2d48a068d5dfcd",
+      "git_sha256": "87c4306319f000707978e0442b263624404a972a31eea750519d9071703e2acf"
     },
     "cpppj/hist/gunimpact-initial/gunimpact.json": {
-      "work_sha256": "9a5666c4194fc9922d48b074d4c0668c72b3b65a236df537011dcbc8206d3353",
-      "git_sha256": "5029442f7a0fe510c02241cd724d08a2db5ee29365165b92649ced393c079b73"
+      "work_sha256": "1a7662f2c0cde3bb71961b72b2bc3e6da46c1cf4c12d248a1e990953bc4c695f",
+      "git_sha256": "e1b8fcfbb777b4297977abbcbecd2fd8ad3cd225086ab8343a77911ceab0147f"
     },
     "cpppj/hist/islandbuilde-b0a1c/cpppj/gunimpact.json": {
-      "work_sha256": "3d14869770db18161c71f5d8ffe9a0eb2d977805286a0abe05f541755c68ea14",
-      "git_sha256": "3d14869770db18161c71f5d8ffe9a0eb2d977805286a0abe05f541755c68ea14"
+      "work_sha256": "5bce4bee32c86618a3d547fd16338cd32da74ea22b9bdc01a22c712e0d5265db",
+      "git_sha256": "5bce4bee32c86618a3d547fd16338cd32da74ea22b9bdc01a22c712e0d5265db"
     },
     "cpppj/hist/islandbuilde-b0a1c/cpppj/priestritualactions.json": {
-      "work_sha256": "46715e61ceaccc36206adcbe911cb712aa1a3df17144b8602d078436190797c3",
-      "git_sha256": "46715e61ceaccc36206adcbe911cb712aa1a3df17144b8602d078436190797c3"
+      "work_sha256": "02ca5d4219050b5e0fa0555fb8ea31f31444d450028c203929056747a523b20d",
+      "git_sha256": "02ca5d4219050b5e0fa0555fb8ea31f31444d450028c203929056747a523b20d"
     },
     "cpppj/hist/islandbuilde-b0a1c/git/cpppj/gunimpact.json": {
-      "work_sha256": "6952df9f64f236a11752acd9c725b358ce385687f27c231974810ff03e2e492c",
-      "git_sha256": "6952df9f64f236a11752acd9c725b358ce385687f27c231974810ff03e2e492c"
+      "work_sha256": "147479246ec0207d20140b5a062922d95e9ad8ca53f17861f4ce9ebff43adf87",
+      "git_sha256": "147479246ec0207d20140b5a062922d95e9ad8ca53f17861f4ce9ebff43adf87"
     },
     "cpppj/hist/islandbuilde-b0a1c/git/cpppj/priestritualactions.json": {
-      "work_sha256": "46715e61ceaccc36206adcbe911cb712aa1a3df17144b8602d078436190797c3",
-      "git_sha256": "46715e61ceaccc36206adcbe911cb712aa1a3df17144b8602d078436190797c3"
+      "work_sha256": "02ca5d4219050b5e0fa0555fb8ea31f31444d450028c203929056747a523b20d",
+      "git_sha256": "02ca5d4219050b5e0fa0555fb8ea31f31444d450028c203929056747a523b20d"
     },
     "cpppj/priestritualactions.json": {
-      "work_sha256": "46715e61ceaccc36206adcbe911cb712aa1a3df17144b8602d078436190797c3",
-      "git_sha256": "46715e61ceaccc36206adcbe911cb712aa1a3df17144b8602d078436190797c3"
+      "work_sha256": "02ca5d4219050b5e0fa0555fb8ea31f31444d450028c203929056747a523b20d",
+      "git_sha256": "02ca5d4219050b5e0fa0555fb8ea31f31444d450028c203929056747a523b20d"
     },
     "cpppj/src/o/SquidProcess.cpp": {
       "work_sha256": "188376ba728d8544d0bfafb92cc6f66403aea92434a81fa98efe894ed9f042e5",
@@ -142,8 +142,8 @@
       "git_sha256": "96f0b2275393d53307b01d36732f51fc8bcb8c341b2d15339d3f5a37cb702bcd"
     },
     "cpppj/tests/fixtures/gunprocess-x86.tsv": {
-      "work_sha256": "d13077033f5e3154e9109a93e7350ce4cbf33b365d03b297db95fa7159c058e7",
-      "git_sha256": "d13077033f5e3154e9109a93e7350ce4cbf33b365d03b297db95fa7159c058e7"
+      "work_sha256": "bde706b17c85c3cee46418c83e01b2b6ce6e33a27b350790aceaf37d40832ff7",
+      "git_sha256": "bde706b17c85c3cee46418c83e01b2b6ce6e33a27b350790aceaf37d40832ff7"
     },
     "cpppj/tests/fixtures/process-x86.tsv": {
       "work_sha256": "34be38ab8e39ff846142cf51aa453c60c9ab0620b40e92646d5dafe9f8ebc553",
@@ -163,85 +163,85 @@
     }
   },
   "history_files": {
-    "cpppj/hist/regular-init-48bf5/baseline.json": "eba061f4c7aa4e789f38f59c512684599a6175be6c2a6c6870ad375e780121f4",
-    "cpppj/hist/regular-init-48bf5/git/cpppj/archertype-draft-lineage.json": "ff401e95d396e3cabb0c636b13bdbbfb150aafe26fc98c30c480cc2c1ba847ab",
-    "cpppj/hist/regular-init-48bf5/git/cpppj/archertype.json": "4fd1f3460d513dca292caa8eac7555cbd0485803294b70b2fc7b7bcec3e8ae82",
-    "cpppj/hist/regular-init-48bf5/git/cpppj/archertype-pop-lineage.json": "b26d29bb0230539b316c68aac35a51c0b935694549677bc6929748a5fefd225d",
-    "cpppj/hist/regular-init-48bf5/git/cpppj/campaign-process.json": "12702bd0685c03d6d7f5e641626d3f465ba8773fb9223afc46c3cd28e37f4225",
-    "cpppj/hist/regular-init-48bf5/git/cpppj/run.json": "207970604dd04a351bdb103d4210a3df0d5529b4b73846a59611895fe0efe8f9",
-    "cpppj/hist/regular-init-48bf5/git/cpppj/run11.json": "ccf40cf8f4fcad8747ee840a118d7a9fc373b631db8c6501a95d4fd0d2d795eb",
-    "cpppj/hist/regular-init-48bf5/git/cpppj/dude-regular-reset-lineage.json": "b317d0b5e99232e48ea82497ef19a64f7b0f46228aa6a469990db3fd5e833eb6",
-    "cpppj/hist/regular-init-48bf5/git/cpppj/dudenotice-draft-lineage.json": "80114f3277243faeb39e7d3bf41a8dba07de9ff80a24fed885be40e0384ea371",
-    "cpppj/hist/regular-init-48bf5/git/cpppj/dudenotice.json": "60f84851d663c7da1e1f3bd6a311e23a9ffe11af142e16517e173bcaa93f64c9",
-    "cpppj/hist/regular-init-48bf5/git/cpppj/dudenotice-point-lineage.json": "b637e319569454ad26402fef4aa6afd23c118a01e1ddf0be84e9c0ee29b6e1be",
-    "cpppj/hist/regular-init-48bf5/git/cpppj/formtake.json": "7582a02c4c5f48bda49e28569fdc2ea8026267e383ee1c5ad58e9353847e4d00",
-    "cpppj/hist/regular-init-48bf5/git/cpppj/gumpform.json": "b161a20d9a2b1286d6bc022cec632f3a155ecbeadb277d8d8dd4e85f2991e8fd",
-    "cpppj/hist/regular-init-48bf5/git/cpppj/gunimpact.json": "6952df9f64f236a11752acd9c725b358ce385687f27c231974810ff03e2e492c",
-    "cpppj/hist/regular-init-48bf5/git/cpppj/priestritualactions.json": "46715e61ceaccc36206adcbe911cb712aa1a3df17144b8602d078436190797c3",
-    "cpppj/hist/regular-init-48bf5/git/cpppj/tests/fixtures/gunprocess-x86.tsv": "d13077033f5e3154e9109a93e7350ce4cbf33b365d03b297db95fa7159c058e7",
+    "cpppj/hist/regular-init-48bf5/baseline.json": "d8710bb7c3ec93f8e9ed80cc2c4b3c6657c63ab45c13ea01356340c75a097696",
+    "cpppj/hist/regular-init-48bf5/git/cpppj/archertype-draft-lineage.json": "7b35c854f7972fc1701b1507a78c9166ab5a66988c27d74bab0325fdfe26ff90",
+    "cpppj/hist/regular-init-48bf5/git/cpppj/archertype.json": "641d8e0499c02b08036351a1f2c58bae3c46081da754b932aeabca01bf109c76",
+    "cpppj/hist/regular-init-48bf5/git/cpppj/archertype-pop-lineage.json": "f534edbe5bd267e3a0f24022eeff23390060c80e4844b31a87062edc4a0374ee",
+    "cpppj/hist/regular-init-48bf5/git/cpppj/campaign-process.json": "3c31a88b151c00a9ea87833ce430690330e5cd27ccd88e7eab1e57557a307808",
+    "cpppj/hist/regular-init-48bf5/git/cpppj/run.json": "0ae4bf4cea2b8590b076ce79dce39143e648b7aeb6ace4b2ca11474a7204dc38",
+    "cpppj/hist/regular-init-48bf5/git/cpppj/run11.json": "ca72e82f3358a8f7d3c8a026b2732dc6a37eb5470a572f48eb6b2c64366d1b28",
+    "cpppj/hist/regular-init-48bf5/git/cpppj/dude-regular-reset-lineage.json": "1cf10279e383cc03142c4ee4cd409346755ed921457c50c5f460b2307583a680",
+    "cpppj/hist/regular-init-48bf5/git/cpppj/dudenotice-draft-lineage.json": "a21302af309f0bbf44eac9b64f6b698470a3bcf476a7405b8daeead5139acfcb",
+    "cpppj/hist/regular-init-48bf5/git/cpppj/dudenotice.json": "9c0688eb39c8907b658526b0a4ddf7869ac885bcf49c74b7508ae06c260e3010",
+    "cpppj/hist/regular-init-48bf5/git/cpppj/dudenotice-point-lineage.json": "dc9fcf0fcc8c657ff52972c935e2c09c30526a40a7cb34e26c89518067fd7128",
+    "cpppj/hist/regular-init-48bf5/git/cpppj/formtake.json": "0430b340142cd482e5f0416f34bac8ec65fef1a030afac86387c9866396b68a2",
+    "cpppj/hist/regular-init-48bf5/git/cpppj/gumpform.json": "f95b7d01483cef25fbecfb00ca5f048a82659e346d1e3836b2a46559b465b2d3",
+    "cpppj/hist/regular-init-48bf5/git/cpppj/gunimpact.json": "147479246ec0207d20140b5a062922d95e9ad8ca53f17861f4ce9ebff43adf87",
+    "cpppj/hist/regular-init-48bf5/git/cpppj/priestritualactions.json": "02ca5d4219050b5e0fa0555fb8ea31f31444d450028c203929056747a523b20d",
+    "cpppj/hist/regular-init-48bf5/git/cpppj/tests/fixtures/gunprocess-x86.tsv": "bde706b17c85c3cee46418c83e01b2b6ce6e33a27b350790aceaf37d40832ff7",
     "cpppj/hist/regular-init-48bf5/git/cpppj/tests/fixtures/process-x86.tsv": "34be38ab8e39ff846142cf51aa453c60c9ab0620b40e92646d5dafe9f8ebc553",
     "cpppj/hist/regular-init-48bf5/git/cpppj/tests/fixtures/processform-x86.tsv": "32b67fe92fe59e484ea2b8c32599a7bac63c13145a56f3b3481398a21ac8b5ef",
     "cpppj/hist/regular-init-48bf5/git/cpppj/tests/fixtures/processretake-x86.tsv": "705276d822488e0177fc743d09d394d5f7dcbb3e796a7a77238044b7b88a09c8",
     "cpppj/hist/regular-init-48bf5/git/cpppj/tests/fixtures/processtransmit-x86.tsv": "5ae6f79b52b4eeb888a858e16cecea9e332b4538a34cafe52a8ce74d7abbcfe1",
     "cpppj/hist/regular-init-48bf5/git/cpppj/src/o/SquidProcess.cpp": "188376ba728d8544d0bfafb92cc6f66403aea92434a81fa98efe894ed9f042e5",
     "cpppj/hist/regular-init-48bf5/git/cpppj/src/o/SquidProcess.h": "96f0b2275393d53307b01d36732f51fc8bcb8c341b2d15339d3f5a37cb702bcd",
-    "cpppj/hist/regular-init-48bf5/git/cpppj/hist/archertype-b-2578b/archertype.json": "af0a88fada48c9a3d5a25060aade52ab212ec448069c3906118c04e0d4c25a42",
-    "cpppj/hist/regular-init-48bf5/git/cpppj/hist/archertype-b-d5269/archertype.json": "d606e8968dee1ea68c80d3368454b9846530770805c825f82fcb646a65bd86be",
-    "cpppj/hist/regular-init-48bf5/git/cpppj/hist/archertype-initial/archertype.json": "be662edcc713cac0d8ed08ebc5fa3aa31166a5268c8764b01a1e71afce4b6030",
-    "cpppj/hist/regular-init-48bf5/git/cpppj/hist/dudenotice-initial/dudenotice.json": "e4a3239e28c6e4455fe81c1f39133bec3029d95c106e64408f0593fabc8485f4",
-    "cpppj/hist/regular-init-48bf5/git/cpppj/hist/gunimpact-be-be7bd/gunimpact.json": "b96b1b53df37203ce40a2fa1219ea9cadded6df230b70eb765bf3d2a099c2f50",
-    "cpppj/hist/regular-init-48bf5/git/cpppj/hist/gunimpact-initial/gunimpact.json": "5029442f7a0fe510c02241cd724d08a2db5ee29365165b92649ced393c079b73",
-    "cpppj/hist/regular-init-48bf5/git/cpppj/hist/islandbuilde-b0a1c/cpppj/gunimpact.json": "3d14869770db18161c71f5d8ffe9a0eb2d977805286a0abe05f541755c68ea14",
-    "cpppj/hist/regular-init-48bf5/git/cpppj/hist/islandbuilde-b0a1c/cpppj/priestritualactions.json": "46715e61ceaccc36206adcbe911cb712aa1a3df17144b8602d078436190797c3",
-    "cpppj/hist/regular-init-48bf5/git/cpppj/hist/islandbuilde-b0a1c/git/cpppj/gunimpact.json": "6952df9f64f236a11752acd9c725b358ce385687f27c231974810ff03e2e492c",
-    "cpppj/hist/regular-init-48bf5/git/cpppj/hist/islandbuilde-b0a1c/git/cpppj/priestritualactions.json": "46715e61ceaccc36206adcbe911cb712aa1a3df17144b8602d078436190797c3",
-    "cpppj/hist/regular-init-48bf5/git/cpppj/hist/dudenotice-b-7ab49/cpppj/dude-regular-reset-lineage.json": "b317d0b5e99232e48ea82497ef19a64f7b0f46228aa6a469990db3fd5e833eb6",
-    "cpppj/hist/regular-init-48bf5/git/cpppj/hist/dudenotice-b-7ab49/cpppj/dudenotice.json": "afd903fae53c13f518a0ee7a26ed87ed12b400db37cf2503b377af4180fcb7f2",
-    "cpppj/hist/regular-init-48bf5/git/cpppj/hist/dudenotice-b-7ab49/cpppj/hist/dudenotice-initial/dudenotice.json": "e4a3239e28c6e4455fe81c1f39133bec3029d95c106e64408f0593fabc8485f4",
-    "cpppj/hist/regular-init-48bf5/git/cpppj/hist/archertype-b-e9d47/cpppj/archertype.json": "dab4abaa4505f522bdb3f1cc43d52f7191807252c0576ffae31c183073daea9d",
-    "cpppj/hist/regular-init-48bf5/git/cpppj/hist/archertype-b-e9d47/cpppj/dude-regular-reset-lineage.json": "b317d0b5e99232e48ea82497ef19a64f7b0f46228aa6a469990db3fd5e833eb6",
-    "cpppj/hist/regular-init-48bf5/git/cpppj/hist/archertype-b-e9d47/cpppj/hist/archertype-b-2578b/archertype.json": "af0a88fada48c9a3d5a25060aade52ab212ec448069c3906118c04e0d4c25a42",
-    "cpppj/hist/regular-init-48bf5/git/cpppj/hist/archertype-b-e9d47/cpppj/hist/archertype-b-d5269/archertype.json": "d606e8968dee1ea68c80d3368454b9846530770805c825f82fcb646a65bd86be",
-    "cpppj/hist/regular-init-48bf5/git/cpppj/hist/archertype-b-e9d47/cpppj/hist/archertype-initial/archertype.json": "be662edcc713cac0d8ed08ebc5fa3aa31166a5268c8764b01a1e71afce4b6030",
-    "cpppj/hist/regular-init-48bf5/work/cpppj/archertype-draft-lineage.json": "ff401e95d396e3cabb0c636b13bdbbfb150aafe26fc98c30c480cc2c1ba847ab",
-    "cpppj/hist/regular-init-48bf5/work/cpppj/archertype.json": "4fd1f3460d513dca292caa8eac7555cbd0485803294b70b2fc7b7bcec3e8ae82",
-    "cpppj/hist/regular-init-48bf5/work/cpppj/archertype-pop-lineage.json": "b26d29bb0230539b316c68aac35a51c0b935694549677bc6929748a5fefd225d",
-    "cpppj/hist/regular-init-48bf5/work/cpppj/campaign-process.json": "12702bd0685c03d6d7f5e641626d3f465ba8773fb9223afc46c3cd28e37f4225",
-    "cpppj/hist/regular-init-48bf5/work/cpppj/run.json": "207970604dd04a351bdb103d4210a3df0d5529b4b73846a59611895fe0efe8f9",
-    "cpppj/hist/regular-init-48bf5/work/cpppj/run11.json": "ccf40cf8f4fcad8747ee840a118d7a9fc373b631db8c6501a95d4fd0d2d795eb",
-    "cpppj/hist/regular-init-48bf5/work/cpppj/dude-regular-reset-lineage.json": "b317d0b5e99232e48ea82497ef19a64f7b0f46228aa6a469990db3fd5e833eb6",
-    "cpppj/hist/regular-init-48bf5/work/cpppj/dudenotice-draft-lineage.json": "80114f3277243faeb39e7d3bf41a8dba07de9ff80a24fed885be40e0384ea371",
-    "cpppj/hist/regular-init-48bf5/work/cpppj/dudenotice.json": "60f84851d663c7da1e1f3bd6a311e23a9ffe11af142e16517e173bcaa93f64c9",
-    "cpppj/hist/regular-init-48bf5/work/cpppj/dudenotice-point-lineage.json": "b637e319569454ad26402fef4aa6afd23c118a01e1ddf0be84e9c0ee29b6e1be",
-    "cpppj/hist/regular-init-48bf5/work/cpppj/formtake.json": "7582a02c4c5f48bda49e28569fdc2ea8026267e383ee1c5ad58e9353847e4d00",
-    "cpppj/hist/regular-init-48bf5/work/cpppj/gumpform.json": "b161a20d9a2b1286d6bc022cec632f3a155ecbeadb277d8d8dd4e85f2991e8fd",
-    "cpppj/hist/regular-init-48bf5/work/cpppj/gunimpact.json": "3d14869770db18161c71f5d8ffe9a0eb2d977805286a0abe05f541755c68ea14",
-    "cpppj/hist/regular-init-48bf5/work/cpppj/priestritualactions.json": "46715e61ceaccc36206adcbe911cb712aa1a3df17144b8602d078436190797c3",
-    "cpppj/hist/regular-init-48bf5/work/cpppj/tests/fixtures/gunprocess-x86.tsv": "d13077033f5e3154e9109a93e7350ce4cbf33b365d03b297db95fa7159c058e7",
+    "cpppj/hist/regular-init-48bf5/git/cpppj/hist/archertype-b-2578b/archertype.json": "d1e1ac3a68a2e5df8a73b582d89ca836abebbaf7d2730c2c95a50ac4f62008eb",
+    "cpppj/hist/regular-init-48bf5/git/cpppj/hist/archertype-b-d5269/archertype.json": "ab00360f68ac1384d291744ea5e9c3bf30bf8a3a44a28bc0a400c2aae21fb6ba",
+    "cpppj/hist/regular-init-48bf5/git/cpppj/hist/archertype-initial/archertype.json": "6f40f838431bf231d5300b1a1845d600b023b835846f764e344d1e425374be18",
+    "cpppj/hist/regular-init-48bf5/git/cpppj/hist/dudenotice-initial/dudenotice.json": "e3be5ee1d000feb882e1f271252dfb3ccf302e613c5a156ee45d92ae032e7d5a",
+    "cpppj/hist/regular-init-48bf5/git/cpppj/hist/gunimpact-be-be7bd/gunimpact.json": "87c4306319f000707978e0442b263624404a972a31eea750519d9071703e2acf",
+    "cpppj/hist/regular-init-48bf5/git/cpppj/hist/gunimpact-initial/gunimpact.json": "e1b8fcfbb777b4297977abbcbecd2fd8ad3cd225086ab8343a77911ceab0147f",
+    "cpppj/hist/regular-init-48bf5/git/cpppj/hist/islandbuilde-b0a1c/cpppj/gunimpact.json": "5bce4bee32c86618a3d547fd16338cd32da74ea22b9bdc01a22c712e0d5265db",
+    "cpppj/hist/regular-init-48bf5/git/cpppj/hist/islandbuilde-b0a1c/cpppj/priestritualactions.json": "02ca5d4219050b5e0fa0555fb8ea31f31444d450028c203929056747a523b20d",
+    "cpppj/hist/regular-init-48bf5/git/cpppj/hist/islandbuilde-b0a1c/git/cpppj/gunimpact.json": "147479246ec0207d20140b5a062922d95e9ad8ca53f17861f4ce9ebff43adf87",
+    "cpppj/hist/regular-init-48bf5/git/cpppj/hist/islandbuilde-b0a1c/git/cpppj/priestritualactions.json": "02ca5d4219050b5e0fa0555fb8ea31f31444d450028c203929056747a523b20d",
+    "cpppj/hist/regular-init-48bf5/git/cpppj/hist/dudenotice-b-7ab49/cpppj/dude-regular-reset-lineage.json": "1cf10279e383cc03142c4ee4cd409346755ed921457c50c5f460b2307583a680",
+    "cpppj/hist/regular-init-48bf5/git/cpppj/hist/dudenotice-b-7ab49/cpppj/dudenotice.json": "7d968e18637f26ceb9bac2ffa04a338a1620e86f812c8022126b2af46c81344b",
+    "cpppj/hist/regular-init-48bf5/git/cpppj/hist/dudenotice-b-7ab49/cpppj/hist/dudenotice-initial/dudenotice.json": "e3be5ee1d000feb882e1f271252dfb3ccf302e613c5a156ee45d92ae032e7d5a",
+    "cpppj/hist/regular-init-48bf5/git/cpppj/hist/archertype-b-e9d47/cpppj/archertype.json": "98d1602df35a4ce3827b528efcc79b64f0b6482c5a470bc37c0ddb28ab705687",
+    "cpppj/hist/regular-init-48bf5/git/cpppj/hist/archertype-b-e9d47/cpppj/dude-regular-reset-lineage.json": "1cf10279e383cc03142c4ee4cd409346755ed921457c50c5f460b2307583a680",
+    "cpppj/hist/regular-init-48bf5/git/cpppj/hist/archertype-b-e9d47/cpppj/hist/archertype-b-2578b/archertype.json": "d1e1ac3a68a2e5df8a73b582d89ca836abebbaf7d2730c2c95a50ac4f62008eb",
+    "cpppj/hist/regular-init-48bf5/git/cpppj/hist/archertype-b-e9d47/cpppj/hist/archertype-b-d5269/archertype.json": "ab00360f68ac1384d291744ea5e9c3bf30bf8a3a44a28bc0a400c2aae21fb6ba",
+    "cpppj/hist/regular-init-48bf5/git/cpppj/hist/archertype-b-e9d47/cpppj/hist/archertype-initial/archertype.json": "6f40f838431bf231d5300b1a1845d600b023b835846f764e344d1e425374be18",
+    "cpppj/hist/regular-init-48bf5/work/cpppj/archertype-draft-lineage.json": "7b35c854f7972fc1701b1507a78c9166ab5a66988c27d74bab0325fdfe26ff90",
+    "cpppj/hist/regular-init-48bf5/work/cpppj/archertype.json": "641d8e0499c02b08036351a1f2c58bae3c46081da754b932aeabca01bf109c76",
+    "cpppj/hist/regular-init-48bf5/work/cpppj/archertype-pop-lineage.json": "f534edbe5bd267e3a0f24022eeff23390060c80e4844b31a87062edc4a0374ee",
+    "cpppj/hist/regular-init-48bf5/work/cpppj/campaign-process.json": "3c31a88b151c00a9ea87833ce430690330e5cd27ccd88e7eab1e57557a307808",
+    "cpppj/hist/regular-init-48bf5/work/cpppj/run.json": "0ae4bf4cea2b8590b076ce79dce39143e648b7aeb6ace4b2ca11474a7204dc38",
+    "cpppj/hist/regular-init-48bf5/work/cpppj/run11.json": "ca72e82f3358a8f7d3c8a026b2732dc6a37eb5470a572f48eb6b2c64366d1b28",
+    "cpppj/hist/regular-init-48bf5/work/cpppj/dude-regular-reset-lineage.json": "1cf10279e383cc03142c4ee4cd409346755ed921457c50c5f460b2307583a680",
+    "cpppj/hist/regular-init-48bf5/work/cpppj/dudenotice-draft-lineage.json": "a21302af309f0bbf44eac9b64f6b698470a3bcf476a7405b8daeead5139acfcb",
+    "cpppj/hist/regular-init-48bf5/work/cpppj/dudenotice.json": "9c0688eb39c8907b658526b0a4ddf7869ac885bcf49c74b7508ae06c260e3010",
+    "cpppj/hist/regular-init-48bf5/work/cpppj/dudenotice-point-lineage.json": "dc9fcf0fcc8c657ff52972c935e2c09c30526a40a7cb34e26c89518067fd7128",
+    "cpppj/hist/regular-init-48bf5/work/cpppj/formtake.json": "0430b340142cd482e5f0416f34bac8ec65fef1a030afac86387c9866396b68a2",
+    "cpppj/hist/regular-init-48bf5/work/cpppj/gumpform.json": "f95b7d01483cef25fbecfb00ca5f048a82659e346d1e3836b2a46559b465b2d3",
+    "cpppj/hist/regular-init-48bf5/work/cpppj/gunimpact.json": "5bce4bee32c86618a3d547fd16338cd32da74ea22b9bdc01a22c712e0d5265db",
+    "cpppj/hist/regular-init-48bf5/work/cpppj/priestritualactions.json": "02ca5d4219050b5e0fa0555fb8ea31f31444d450028c203929056747a523b20d",
+    "cpppj/hist/regular-init-48bf5/work/cpppj/tests/fixtures/gunprocess-x86.tsv": "bde706b17c85c3cee46418c83e01b2b6ce6e33a27b350790aceaf37d40832ff7",
     "cpppj/hist/regular-init-48bf5/work/cpppj/tests/fixtures/process-x86.tsv": "34be38ab8e39ff846142cf51aa453c60c9ab0620b40e92646d5dafe9f8ebc553",
     "cpppj/hist/regular-init-48bf5/work/cpppj/tests/fixtures/processform-x86.tsv": "32b67fe92fe59e484ea2b8c32599a7bac63c13145a56f3b3481398a21ac8b5ef",
     "cpppj/hist/regular-init-48bf5/work/cpppj/tests/fixtures/processretake-x86.tsv": "705276d822488e0177fc743d09d394d5f7dcbb3e796a7a77238044b7b88a09c8",
     "cpppj/hist/regular-init-48bf5/work/cpppj/tests/fixtures/processtransmit-x86.tsv": "5ae6f79b52b4eeb888a858e16cecea9e332b4538a34cafe52a8ce74d7abbcfe1",
     "cpppj/hist/regular-init-48bf5/work/cpppj/src/o/SquidProcess.cpp": "188376ba728d8544d0bfafb92cc6f66403aea92434a81fa98efe894ed9f042e5",
     "cpppj/hist/regular-init-48bf5/work/cpppj/src/o/SquidProcess.h": "96f0b2275393d53307b01d36732f51fc8bcb8c341b2d15339d3f5a37cb702bcd",
-    "cpppj/hist/regular-init-48bf5/work/cpppj/hist/archertype-b-2578b/archertype.json": "af0a88fada48c9a3d5a25060aade52ab212ec448069c3906118c04e0d4c25a42",
-    "cpppj/hist/regular-init-48bf5/work/cpppj/hist/archertype-b-d5269/archertype.json": "d606e8968dee1ea68c80d3368454b9846530770805c825f82fcb646a65bd86be",
-    "cpppj/hist/regular-init-48bf5/work/cpppj/hist/archertype-initial/archertype.json": "be662edcc713cac0d8ed08ebc5fa3aa31166a5268c8764b01a1e71afce4b6030",
-    "cpppj/hist/regular-init-48bf5/work/cpppj/hist/dudenotice-initial/dudenotice.json": "e4a3239e28c6e4455fe81c1f39133bec3029d95c106e64408f0593fabc8485f4",
-    "cpppj/hist/regular-init-48bf5/work/cpppj/hist/gunimpact-be-be7bd/gunimpact.json": "1b607e34e9e7ba6aceaf3a50d91875e6c6e46c0f4f14a2a49b07138108e0b6ed",
-    "cpppj/hist/regular-init-48bf5/work/cpppj/hist/gunimpact-initial/gunimpact.json": "9a5666c4194fc9922d48b074d4c0668c72b3b65a236df537011dcbc8206d3353",
-    "cpppj/hist/regular-init-48bf5/work/cpppj/hist/islandbuilde-b0a1c/cpppj/gunimpact.json": "3d14869770db18161c71f5d8ffe9a0eb2d977805286a0abe05f541755c68ea14",
-    "cpppj/hist/regular-init-48bf5/work/cpppj/hist/islandbuilde-b0a1c/cpppj/priestritualactions.json": "46715e61ceaccc36206adcbe911cb712aa1a3df17144b8602d078436190797c3",
-    "cpppj/hist/regular-init-48bf5/work/cpppj/hist/islandbuilde-b0a1c/git/cpppj/gunimpact.json": "6952df9f64f236a11752acd9c725b358ce385687f27c231974810ff03e2e492c",
-    "cpppj/hist/regular-init-48bf5/work/cpppj/hist/islandbuilde-b0a1c/git/cpppj/priestritualactions.json": "46715e61ceaccc36206adcbe911cb712aa1a3df17144b8602d078436190797c3",
-    "cpppj/hist/regular-init-48bf5/work/cpppj/hist/dudenotice-b-7ab49/cpppj/dude-regular-reset-lineage.json": "b317d0b5e99232e48ea82497ef19a64f7b0f46228aa6a469990db3fd5e833eb6",
-    "cpppj/hist/regular-init-48bf5/work/cpppj/hist/dudenotice-b-7ab49/cpppj/dudenotice.json": "afd903fae53c13f518a0ee7a26ed87ed12b400db37cf2503b377af4180fcb7f2",
-    "cpppj/hist/regular-init-48bf5/work/cpppj/hist/dudenotice-b-7ab49/cpppj/hist/dudenotice-initial/dudenotice.json": "e4a3239e28c6e4455fe81c1f39133bec3029d95c106e64408f0593fabc8485f4",
-    "cpppj/hist/regular-init-48bf5/work/cpppj/hist/archertype-b-e9d47/cpppj/archertype.json": "dab4abaa4505f522bdb3f1cc43d52f7191807252c0576ffae31c183073daea9d",
-    "cpppj/hist/regular-init-48bf5/work/cpppj/hist/archertype-b-e9d47/cpppj/dude-regular-reset-lineage.json": "b317d0b5e99232e48ea82497ef19a64f7b0f46228aa6a469990db3fd5e833eb6",
-    "cpppj/hist/regular-init-48bf5/work/cpppj/hist/archertype-b-e9d47/cpppj/hist/archertype-b-2578b/archertype.json": "af0a88fada48c9a3d5a25060aade52ab212ec448069c3906118c04e0d4c25a42",
-    "cpppj/hist/regular-init-48bf5/work/cpppj/hist/archertype-b-e9d47/cpppj/hist/archertype-b-d5269/archertype.json": "d606e8968dee1ea68c80d3368454b9846530770805c825f82fcb646a65bd86be",
-    "cpppj/hist/regular-init-48bf5/work/cpppj/hist/archertype-b-e9d47/cpppj/hist/archertype-initial/archertype.json": "be662edcc713cac0d8ed08ebc5fa3aa31166a5268c8764b01a1e71afce4b6030"
+    "cpppj/hist/regular-init-48bf5/work/cpppj/hist/archertype-b-2578b/archertype.json": "d1e1ac3a68a2e5df8a73b582d89ca836abebbaf7d2730c2c95a50ac4f62008eb",
+    "cpppj/hist/regular-init-48bf5/work/cpppj/hist/archertype-b-d5269/archertype.json": "ab00360f68ac1384d291744ea5e9c3bf30bf8a3a44a28bc0a400c2aae21fb6ba",
+    "cpppj/hist/regular-init-48bf5/work/cpppj/hist/archertype-initial/archertype.json": "6f40f838431bf231d5300b1a1845d600b023b835846f764e344d1e425374be18",
+    "cpppj/hist/regular-init-48bf5/work/cpppj/hist/dudenotice-initial/dudenotice.json": "e3be5ee1d000feb882e1f271252dfb3ccf302e613c5a156ee45d92ae032e7d5a",
+    "cpppj/hist/regular-init-48bf5/work/cpppj/hist/gunimpact-be-be7bd/gunimpact.json": "d86714d85a51fcb9a94e7820d82e88f2c025c473bbbeb7073c2d48a068d5dfcd",
+    "cpppj/hist/regular-init-48bf5/work/cpppj/hist/gunimpact-initial/gunimpact.json": "1a7662f2c0cde3bb71961b72b2bc3e6da46c1cf4c12d248a1e990953bc4c695f",
+    "cpppj/hist/regular-init-48bf5/work/cpppj/hist/islandbuilde-b0a1c/cpppj/gunimpact.json": "5bce4bee32c86618a3d547fd16338cd32da74ea22b9bdc01a22c712e0d5265db",
+    "cpppj/hist/regular-init-48bf5/work/cpppj/hist/islandbuilde-b0a1c/cpppj/priestritualactions.json": "02ca5d4219050b5e0fa0555fb8ea31f31444d450028c203929056747a523b20d",
+    "cpppj/hist/regular-init-48bf5/work/cpppj/hist/islandbuilde-b0a1c/git/cpppj/gunimpact.json": "147479246ec0207d20140b5a062922d95e9ad8ca53f17861f4ce9ebff43adf87",
+    "cpppj/hist/regular-init-48bf5/work/cpppj/hist/islandbuilde-b0a1c/git/cpppj/priestritualactions.json": "02ca5d4219050b5e0fa0555fb8ea31f31444d450028c203929056747a523b20d",
+    "cpppj/hist/regular-init-48bf5/work/cpppj/hist/dudenotice-b-7ab49/cpppj/dude-regular-reset-lineage.json": "1cf10279e383cc03142c4ee4cd409346755ed921457c50c5f460b2307583a680",
+    "cpppj/hist/regular-init-48bf5/work/cpppj/hist/dudenotice-b-7ab49/cpppj/dudenotice.json": "7d968e18637f26ceb9bac2ffa04a338a1620e86f812c8022126b2af46c81344b",
+    "cpppj/hist/regular-init-48bf5/work/cpppj/hist/dudenotice-b-7ab49/cpppj/hist/dudenotice-initial/dudenotice.json": "e3be5ee1d000feb882e1f271252dfb3ccf302e613c5a156ee45d92ae032e7d5a",
+    "cpppj/hist/regular-init-48bf5/work/cpppj/hist/archertype-b-e9d47/cpppj/archertype.json": "98d1602df35a4ce3827b528efcc79b64f0b6482c5a470bc37c0ddb28ab705687",
+    "cpppj/hist/regular-init-48bf5/work/cpppj/hist/archertype-b-e9d47/cpppj/dude-regular-reset-lineage.json": "1cf10279e383cc03142c4ee4cd409346755ed921457c50c5f460b2307583a680",
+    "cpppj/hist/regular-init-48bf5/work/cpppj/hist/archertype-b-e9d47/cpppj/hist/archertype-b-2578b/archertype.json": "d1e1ac3a68a2e5df8a73b582d89ca836abebbaf7d2730c2c95a50ac4f62008eb",
+    "cpppj/hist/regular-init-48bf5/work/cpppj/hist/archertype-b-e9d47/cpppj/hist/archertype-b-d5269/archertype.json": "ab00360f68ac1384d291744ea5e9c3bf30bf8a3a44a28bc0a400c2aae21fb6ba",
+    "cpppj/hist/regular-init-48bf5/work/cpppj/hist/archertype-b-e9d47/cpppj/hist/archertype-initial/archertype.json": "6f40f838431bf231d5300b1a1845d600b023b835846f764e344d1e425374be18"
   },
   "current_sources": {
     "cpppj/src/o/SquidProcess.h": "827a9789c2a6b66ac7b98181e49e8c0fa19713755bb62fccababb7ae2a0d0589",

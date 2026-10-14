@@ -124,8 +124,8 @@
   "host": "VM-W11-CODEX",
   "files": {
     "tools/decomp_assetpostpop_oracle.py": "347af1e5202ecf14b5f32125f19046e83fdd1ee420018510333437c001154e31",
-    "cpppj/tests/fixtures/assetpostpop-x86.tsv": "10682166af93d6f17bb1d3942ece783d475f1b3171591b39225b3ae5300973e4",
-    "tools/ghidra/assetpostpop-functions.json": "8aebeab14c2986cd01c848d924d286f67aa1ec095450ff5ddbe6b0de66960c4e",
+    "cpppj/tests/fixtures/assetpostpop-x86.tsv": "706afb7e0bd78de2527e97a1ec1bbe1f35a202aafbd2c81a0dc8d77d99198741",
+    "tools/ghidra/assetpostpop-functions.json": "68c75e3d8d04079f1a810eb7a8244b058fa1b305d7aa4470771152c6833405f0",
     "extracted/owner/originals/creation.c": "f9919c046d5259526946f106b47b6259fe5e04971f743d6fa02d6a5361b9dc16",
     "extracted/owner/originals/functions.tsv": "3ea66dace80a85999a8b2c2dbadb4d5f1bd18b0dcdb0768f9c41075206c7c72d",
     "extracted/assetpostpop/originals/creation.c": "221b1dcd5df4da19f977281db6895951a95efc9267ebdff479f9ed31da7fbcb6",

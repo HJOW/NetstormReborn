@@ -43,13 +43,15 @@ def inspect(candidates=None):
         maximum = max(maximum, absolute)
         if units(path.as_posix()) > RELATIVE_LIMIT or (os.name == 'nt' and absolute > ABSOLUTE_LIMIT):
             errors.append((name, f'전체경로 {absolute}자/상대경로 {len(path.as_posix())}자'))
-        if name not in legacy and len(path.name) > NEW_NAME_LIMIT:
-            errors.append((name, f'신규파일명 {len(path.name)}자'))
-        if name not in legacy and any(len(part) > DIRECTORY_LIMIT for part in path.parts[:-1]):
+        existing = name in legacy and name not in (candidates or ())  # 명시 신규 후보에는 과거 대응표의 예외를 적용하지 않는다.
+        name_limit = (48 if path.suffix in {'.py', '.cpp', '.h', '.json', '.md'} else 64) if existing else NEW_NAME_LIMIT
+        if units(path.name) > name_limit:
+            errors.append((name, f'파일명 {units(path.name)}자/상한 {name_limit}자'))
+        if not existing and any(units(part) > DIRECTORY_LIMIT for part in path.parts[:-1]):
             errors.append((name, '신규디렉토리 이름24자 초과'))
         if path.parts.count('hist') > 1:
             # 과거 중첩 복사는 대응표로만 허용하고 같은 구조의 신규 생성은 거부한다.
-            if name not in legacy:
+            if not existing:
                 errors.append((name, '분석이력의 재귀 복사'))
     return checked, maximum, errors
 

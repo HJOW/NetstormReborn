@@ -13,8 +13,8 @@
     },
     {
       "path": "cpppj/player-postpop-binding-lineage.json",
-      "bytes": 205711,
-      "sha256": "f84990e193c4fb1500d001f32d5133874d996d316f0fae9e37dbfc2b7b279aa0"
+      "bytes": 181436,
+      "sha256": "021098924a5c30eb7eb2f41ac930480c140fede63091fadfeed8c323450a4258"
     },
     {
       "path": "cpppj/src/o/RawGeyserAiRegistration.cpp",
@@ -54,7 +54,7 @@
     {
       "path": "cpppj/tests/RawSceneSupport.h",
       "bytes": 15993,
-      "sha256": "7ef30acb24babc688384ab50f57573a87d004b68b8baa0d0a64c897baad23a4f"
+      "sha256": "87b79d463f38e142b1aa768384af28a08b404a276a6b989e90dd53b393642919"
     },
     {
       "path": "cpppj/tests/fixtures/geyser-ai-registration-x86.tsv",
@@ -63,7 +63,7 @@
     },
     {
       "path": "docs/exe/cpp-geyser-ai-registration-20261014.md",
-      "bytes": 4384,
+      "bytes": 4365,
       "sha256": "4fcd656e4b099b1be1b44aeab0db304c78a1be207c060fe7f08fab9aa3528616"
     },
     {
@@ -93,12 +93,12 @@
     },
     {
       "path": "tools/decomp_geyser_ai_registration_oracle.py",
-      "bytes": 11543,
+      "bytes": 11525,
       "sha256": "0143da8d9f8c6620543ff100b4367b48c5f4390194eb9202fa73f16c3fbb96dc"
     },
     {
       "path": "tools/decomp_owner_oracle.py",
-      "bytes": 15141,
+      "bytes": 15123,
       "sha256": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb"
     },
     {

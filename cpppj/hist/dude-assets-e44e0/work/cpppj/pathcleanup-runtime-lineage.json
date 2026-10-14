@@ -26,11 +26,11 @@
     }
   },
   "prior_reports": {
-    "cpppj/pathruntime.json": "85996e1fdd1495ef9a5816479deaf3f4ca812a343c6209611300679fc70997c7",
-    "cpppj/pathruntime-lineage.json": "76aca478397d14764eead7725d8db2047e5d0f4cc0c7eb1567e651d9499e4572",
-    "cpppj/pathstart.json": "c7c4327ec5c82c590c906652b4f52466260f3ab6c45ac14f019bc2fcd392d2af"
+    "cpppj/pathruntime.json": "5f86bb83e6cf319d7d46ca96741c75b9df46d60e6712b1916be1cc9d3e0d3492",
+    "cpppj/pathruntime-lineage.json": "e35f68d46d5d6b8be419c2e5e3b110b14996e8f774ae672f4a4dcf5e3cc742f9",
+    "cpppj/pathstart.json": "e2551d2900a8f40c81f6f5be326b5397bcae4bf7bb66e7f8b859f78168e1b2e6"
   },
-  "tool_sha256": "46b436f59d9743a2dabe7963a1208e48393538b7664809b16daf24e9ffe2f0b0",
+  "tool_sha256": "007be6ce38dd53f09351e4e590851784aad2f2caa5d0a87e75ee929325451dc9",
   "new_unique_cases": 0,
   "scope": "새 helper 조회/0쓰기 API와 설명만 제거하면 8abd00a 전체 소스/토큰과 일치한다. 이전 Runtime360/Start512를 새 관찰에 더하지 않는다."
 }

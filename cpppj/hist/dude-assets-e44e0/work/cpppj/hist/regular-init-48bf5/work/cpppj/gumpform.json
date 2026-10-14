@@ -232,9 +232,9 @@
     }
   },
   "files": {
-    "tools/analyze_gumpform.py": "56a5072623b8a1fa3f71f9607b296e726152826c89bd4d8e0ee07cdc2ddcf27e",
+    "tools/analyze_gumpform.py": "ae56f818134b4fcded82afae39e71b03de1e91ba0da9e655625116f0fa027676",
     "tools/ghidra/gumpform-functions.json": "67f35590c349af2cc2feb635b9baa9c305d8268b3daa46a52b79275d39b74555",
-    "tools/analyze_styletext.py": "a69336b3064208e08e5fcea4e84f8427eeaa35512673c64f273c39b4b91877b1",
+    "tools/analyze_styletext.py": "6e79df1106b085d3cf88e8ff082a9512103e4c00d83cc7aa8fc98d487a87a0ba",
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
     "extracted/gumpform/originals/creation.c": "01ac82275398069c46c5e8917522791b2e2139f5c8ac5d1aa5519260d8177e73",
     "extracted/gumpform/originals/functions.tsv": "638842f8f8426204d79bb092efbc0a3f4d050451b5b6c3ea041acd2d949e056a",
@@ -250,7 +250,7 @@
     "cpppj/src/o/SidPool.h": "a952efd9b797e1cf0be7b4342dddd924eb80524e68a228b4c0514bf6a30ca3d5",
     "cpppj/src/o/SidPool.cpp": "19b48e338cdcf390df3f0b9230e63bcce45493a18f5a6942e44e1e4d8b4e6de0",
     "cpppj/src/o/RawSquidDestroy.h": "36d40efac9fb0c1b0140aace772ed26e2e8a03c1d717e993f79442ac28f165dd",
-    "cpppj/src/o/RawSquidDestroy.cpp": "64ac08fb4032848dd1b2f7b0e3a3a53bbf1feac4e28313d2f66c0493eb258045",
+    "cpppj/src/o/RawSquidDestroy.cpp": "7be89b9d016cdacc80e0695f660bfca051dee6a18039978eb40117539ef89958",
     "cpppj/src/o/SquidProcess.h": "fa9111e6dabfc6414d56e6d6105db03bdb6e3448bbd9216c47aa1bff0cd80b2f",
     "cpppj/src/o/SquidProcess.cpp": "079beb97fe5111797be3bafd20464d954162e38544dc1fc8f0c57a5ad4e7363a",
     "cpppj/src/client/GumpFormBinding.h": "db73e0cb75a3b35f7a20368673db6805ce8ba5fd47428e1d5bb6f37359d23ca5",

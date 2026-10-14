@@ -123,12 +123,12 @@
     }
   },
   "files": {
-    "cpppj/src/client/RawPriestWorldBindings.cpp": "8c0c047440a53acf76f1233cb7f322b31b927a44e3052c828858f345f78aede0",
-    "cpppj/src/client/RawPriestWorldBindings.h": "d0f36f7e7484c797d7361575fe32e0c37d6f7f1f2bf19e2bc96f87c93983acc9",
+    "cpppj/src/client/RawPriestWorldBindings.cpp": "f8c54dfcce6b31cbf96de451c5853e3fb97127f1eee9bcab80844a756a693b69",
+    "cpppj/src/client/RawPriestWorldBindings.h": "581e4e155cdff0d13bb9ae455801b156ba3afb72d73395069ecf2995b49acd24",
     "cpppj/src/o/RawPathRuntime.cpp": "e9cd97a76dbe1f2b9fc88d2c14a70f901f83e9b41210e7019050522be5ea1046",
     "cpppj/src/o/RawPathRuntime.h": "3aa49155494dabd4b173fca09abf09b5c8131a91881d244c084e6e6ae83a02ab",
-    "cpppj/src/o/RawPathStart.cpp": "289908568a07c6da645f13b4d5a4bd2c97d8eafa184a1609dc121deef15f4501",
-    "cpppj/src/o/RawPathStart.h": "40417a5eaad905be22e72716968f268b78deeafe4dfcf1a744de85433b75d674",
+    "cpppj/src/o/RawPathStart.cpp": "a778ad764975ce4abdd96ad36cd4eebd7c0d5871e0b8e99d844a201a4477090c",
+    "cpppj/src/o/RawPathStart.h": "c41ca85f2f4635e58727f8e8ae556c8f4d26264defde470a7d4bd37d14755545",
     "cpppj/tests/fixtures/pathprocesstype-x86.tsv": "4a5da6130b1c840c4a6387efc64671f535c46251ccc529510f5386d0e9bcbb6f",
     "cpppj/tests/fixtures/pathstart-x86.tsv": "465f2d5e682d4e15756fd6d7f1fcb8427e55df5afc251d1dbbff1a6bb3126c3c",
     "cpppj/tests/RawPathStartTests.cpp": "b5dcda9c5e3a3634fe70bc3a5a35be3ef96eb520779ec6dcca3dad84cab34a0b",
