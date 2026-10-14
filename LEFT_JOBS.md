@@ -1,5 +1,15 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-15 완료: 단위24 실제 세션 경계 감사·재시드 전제 (`HJOW-Athlon`)
+
+- [x] AGENTS/양 LEFT를 다시 읽고 기준 `9ecedb6`에서 시작했다. 현재/마지막 정밀PC는HJOW-Athlon으로 같다. 직접영향8파일을 `run24-base`에 편집전전체보존했다. 이전턴은 실제교전/새Native96/CPP48/전체1129 및커밋으로진척했다.
+- [x] 실제UberGump.BeginMission은Battle을NotImplemented로거부하고 GameWorld는 별도objects_·관찰기반보행/지형어댑터를쓴다. 복원된설치/전투/경로조립은현재검사에서만소유되어있다. 세션소유자를생산코드에구성하고 같은raw상태를화면/입력에연결하는것이필요하다.
+- [x] 생산세션전제인 실제SP재시드004559d0/하위55970/CRT srand/rand의고유4몸체를같은PC에서읽었다. 첫plan의빈CD목록export실패와모든원문/로그는불변이며 별도seed2/seed3 plan으로순차보완했다. 반복export를새고유함수로재합산하지않는다. CD10.72재시드진입은이번비교밖이다.
+- [x] `RawGameRandomSeed`에 mode0고정/그외time32 Unix초→CRT100+3소비→3값DWORD곱→게임상태기록과임시mode1복원을복원했다. 실제세상태/시각·TLS 요청의새Native96정상/assert0·CPP96정확대조가통과했다. time/TLS포인터만외부입력이며 srand/rand산술은실제PE다. 같은객체의Reseed를기존SP.Initialize에연결하는검사와예외시mode복원도통과했다.
+- [x] 최초8원문에무편집공용CMake/SpStore3원문을추가해기준11개를보존했다. 기존검사seed1/이전SP입력은불변이며재합산하지않았다. 최종Release경고/오류0·새집중2개성공·전체CTest **1/1·내부1,131개·실패체크0**(174.43초)다. [상세 단위24](docs/exe/cpp-run24-20261015.md), `run24.json`과 `tools/check_campaign24.py finalize/verify`에전체원문/Native/이력/실행SHA를고정한다.
+- [x] 이번단위는 **세션 연결 준비**이며 GameWorld/Battle 화면/입력을연결한것이아니다. 실제서비스를공급하는세션소유자와같은raw상태의화면/입력연결이우선남는다. 검사UI/음향/송신관찰콜백을실제동작으로복사하지않는다. 인수인계뒤 로컬 **`20261015-09 실제 세션 경계 감사와 게임 재시드 전제 복원 검증`**으로커밋하며push하지않는다.
+- [ ] Early Missions/1-1~1-2 실제진행·완주동일성은미완료다. DirectDraw전체화면오류제외, 목표active 유지.
+
 ## 2026-10-15 완료: 단위23 실제 충돌·사제 HP1·투사체 종료 (`HJOW-Athlon`)
 
 - [x] AGENTS/양 LEFT를 다시 읽고 현재/마지막 정밀 PC가HJOW-Athlon임을 확인했다. 기준 `5f564e8`의 직접 영향5파일을 `run23-base`에 전체보존했다. 이전 턴은 원본432입력/발사 첫 이동/빌드1126 성공 및 실제 커밋으로 진척했다.

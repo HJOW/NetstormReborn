@@ -1,0 +1,17 @@
+{
+  "baseline": "9ecedb6",
+  "host": "HJOW-Athlon",
+  "files": {
+    ".gitattributes": "21dbd2a604229bfec6aa93c60b2e14830b19104801faf782c9ddbf5df5310e2d",
+    "LEFT_JOBS.md": "a05736fab3c958dcd3861213dce2298f013c4ad01e09fd6aa239ae28d5d11b63",
+    "cpppj/src/client/CMakeLists.txt": "a4f3fa96d33d31e6363b0b53b9349852290bb0ca7f30a7d99db9a7aeea122b41",
+    "cpppj/tests/CMakeLists.txt": "38b1bdb0a61e211f82e4d08c775abf2a7669debd6167c24e7cb3cddc74b75b81",
+    "cpppj/src/client/GameWorld.h": "6f6f5bc3811ddb40e33292fac06a968c74ca2b55642db4580b47f7e3190f5898",
+    "cpppj/src/client/GameWorld.cpp": "8b417d5eda6564cc35554428c37ce72bd45ff31910398ffeb45170e9d9968a0b",
+    "cpppj/src/client/UberGump.cpp": "7c7e852388d278762d0b2036502c6b4918375f67b772b180f66beac2367fc912",
+    "cpppj/tests/CampaignInstallSupport.h": "2d42c64bfd2e49e9f1bdb5218c8e0e3f47d5029e24a9c1e2c65180aaf08cf02a",
+    "cpppj/src/o/CMakeLists.txt": "ceeedf2d7449549733f2d52c5fa37697baf14f53e9f5baf6ed018da3d8c320d1",
+    "cpppj/src/o/SpStore.h": "5bb676a1593e7583a69ef45238f7045009b1cf0fff751649e40833226e80b817",
+    "cpppj/src/o/SpStore.cpp": "010b2c3c0b60d089d10a059bb63618d029eec3d3ea341f1bacf7426e71a85ba9"
+  }
+}

@@ -189,3 +189,6 @@ target_sources(netstorm PRIVATE
 
 # 썬 디스크의 방향별 modulo Regular는 글자별 진행기와 별도로 연결한다.
 target_sources(netstorm PRIVATE RawDiscRegular.cpp RawDiscRegular.h)
+
+# 실제 CRT/Unix 시각 재시드를 게임 난수와 같은 상태에 연결한다.
+target_sources(netstorm PRIVATE RawGameRandomSeed.cpp RawGameRandomSeed.h)

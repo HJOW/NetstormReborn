@@ -8,6 +8,7 @@ add_executable(netstorm_tests
     CampaignTargetTests.cpp
     CampaignFireTests.cpp
     CampaignHitTests.cpp
+    CampaignSeedTests.cpp
     ProjectileGeometryTests.cpp
     DiscRegularTests.cpp
     CampaignNativeFrameTests.cpp
@@ -872,3 +873,7 @@ set_source_files_properties(DiscRegularTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 실제 총→사제 호출 사슬의 별도 독립 원본 입력이다.
 set_source_files_properties(CampaignHitTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CAMPAIGN_HIT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/campaign-hit-x86.tsv\"")
+
+# 실제 생산 초기화에 필요한 원본 CRT/게임 시드의 별도 입력이다.
+set_source_files_properties(CampaignSeedTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CAMPAIGN_SEED_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/campaign-seed-x86.tsv\"")

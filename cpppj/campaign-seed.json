@@ -1,0 +1,24 @@
+{
+  "host": "HJOW-Athlon",
+  "uniqueInputs": 96,
+  "returns": 96,
+  "assertions": 0,
+  "peSha": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "nativeCalls": {
+    "00455970": 96,
+    "004e649e": 96,
+    "004e64ab": 9888,
+    "004559d0": 48
+  },
+  "exports": {
+    "extracted/campaign-seed3/originals/creation.c": "4477f898cf6e46d63d388752ae542b309446ee235bc68515a2462ea304be6ca0",
+    "extracted/campaign-seed3/originals/functions.tsv": "d3325b40e4a7af6af5e21f79a7ff4c704c0652875ef1361a0247ce2b6fdaa8ad"
+  },
+  "fixtureSha": "52329ec28d81e0ecfbd1cf301dd94f615ff5b3c059a046277d1e9269fe163cae",
+  "toolSha": "cfc5824dce2cf63e1bc51a51de6bb868afdb8abe6d517e6f5c278bf9deee9273",
+  "limitations": [
+    "PATCH10.78만 직접 관찰했다. CD10.72 재시드 진입은 이번 비교 범위 밖이다.",
+    "time32 signed Unix 초와 TLS 포인터는 명시 외부 입력이다. 실제초기화/helper/srand/rand 계산은 원본 몸체다.",
+    "GUI/운영체제시계/스레드초기화/세션전체 및 SP전체 caller는 별도 연결 범위다."
+  ]
+}

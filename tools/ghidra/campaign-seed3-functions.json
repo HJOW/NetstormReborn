@@ -1,0 +1,6 @@
+{
+  "description": "실제 재시드와 CRT srand/rand 몸체. HJOW-Athlon, 2026-10-15.",
+  "editions": {
+    "originals": ["00455970", "004559d0", "004e649e", "004e64ab"]
+  }
+}

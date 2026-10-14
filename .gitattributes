@@ -68,6 +68,20 @@ tools/check_campaign23.py text eol=lf
 docs/exe/cpp-run23-20261015.md text eol=lf
 extracted/run23-*.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
 extracted/run23_*.py text eol=lf
+
+# 실제 생산 세션의 CRT/게임 재시드 준비 원문과 독립 입력을 UTF-8/LF로 고정한다.
+cpppj/src/o/RawGameRandomSeed.* text eol=lf
+cpppj/tests/CampaignSeedTests.cpp text eol=lf
+cpppj/tests/fixtures/campaign-seed-x86.tsv text eol=lf
+cpppj/campaign-seed.json text eol=lf
+cpppj/run24.json text eol=lf
+tools/decomp_campaign_seed.py text eol=lf
+tools/check_campaign24.py text eol=lf
+tools/ghidra/campaign-seed*-functions.json text eol=lf
+docs/exe/cpp-run24-20261015.md text eol=lf
+extracted/campaign-seed*/** -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+extracted/run24-*.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+extracted/run24_*.py text eol=lf
 cpppj/src/o/RawAssetRegular.* text eol=lf
 cpppj/src/client/RawCampaignGunQueries.* text eol=lf
 cpppj/tests/CampaignNativeFrameTests.cpp text eol=lf
