@@ -1,0 +1,22 @@
+{
+  "baseline": "cfa283a",
+  "host": "HJOW-Athlon",
+  "files": {
+    ".gitattributes": "42a2c7d438d2318b5b31edd794b2dfc2cc0ccf701e7edd216fa7ae51ef841a1d",
+    "cpppj/src/o/CMakeLists.txt": "934423d7577f2b20eec66d10af67dd8bf18b04d75c3c0efa0695090312564be6",
+    "cpppj/src/client/CMakeLists.txt": "de9f15ac506d0cdf9ebbe0e820fa70525d634ac03562447d212f985d0e6fd247",
+    "cpppj/tests/CMakeLists.txt": "583e8a54e6302852833aaf8b6a9c6b981677b4c4a603d56f4608138141a8f61e",
+    "cpppj/src/o/RawIslandRuntime.h": "6205b879664770b0a3047ed1066f2ae7dd243c3ec2bbd13689fef1da77298fa4",
+    "cpppj/src/o/RawIslandRuntime.cpp": "3be93556f2b32efc641442ed1e21654fbd0504be1643085b82ab1e80f71acd12",
+    "cpppj/src/o/RawFortFinishOwner.h": "ae779a85309d56e9bc64514247a3576469a7afcada522db6e682a547598907f0",
+    "cpppj/src/o/RawFortFinishOwner.cpp": "aa8f9f6e75a3777b91db19439d81a50382e1dd5fca083dfce285fcb5a437d9e2",
+    "cpppj/tests/IslandRuntimeTests.cpp": "59a9c90d203d86dcd89ada05eb973d247d536aeb67dbabfac49b19928b4d5c2b",
+    "cpppj/tests/FortFinishOwnerTests.cpp": "630081d336eaf191ec57d78da15b9c292c5b8242b9dc9b30a2ad7da41446a24a",
+    "cpppj/islandruntime.json": "6024e529871f1d772a0cfda8b8eb577bd6af2c8f9e198649e12f8f8d72b8281c",
+    "cpppj/tests/fixtures/islandruntime-x86.tsv": "bc220732f4d41892cd82c847196ae01507598a3e0edb0ae0d3e1ceed2eaaa180",
+    "cpppj/fortfinishowner.json": "7eae9e5a95b8a5230f8cc055037dce2d6c90d597e593ce99ee212a81c35a0843",
+    "cpppj/tests/fixtures/fortfinishowner-x86.tsv": "0bcdfd8325d57267bb47c4e7927577285aabe4b90355b619b00e545a70256da5",
+    "cpppj/run16.json": "e95d9e69d3297305b815ba29328058625485b75cce526de3c9c4ae00efcb086c",
+    "tools/check_campaign16.py": "c15e761b2722ac59d728521a2aa6f8a1f5408efc6b85e0ba6cf9e4e25141b69d"
+  }
+}

@@ -37,7 +37,7 @@ std::uint32_t RawFortFinishOwner::TimeSeed(double wallSeconds) {
 void RawFortFinishOwner::Finish(std::uint32_t owner) const {
     if (state_.chaffMode || state_.special) return;
     if (owner>=state_.playerRegions.size()) throw std::out_of_range("Fort owner 기본 지역 범위 오류");
-    const auto region=state_.fort ? 0 : state_.playerRegions[owner];if (region==state_.invalidRegion) return;
+    const auto region=state_.fort ? 0 : PlayerRegion(owner);if (region==state_.invalidRegion) return;
     const auto ownerOffset=pool_.Edition()==OriginalEdition::Patch1078 ? kPatchOwner : kCdOwner;
     // 원본은 실패1000회 뒤에도 다음 region/시각 seed를 구해 계속한다. 가짜 외부 타이머/성공을 넣지 않는다.
     for (;;) {
@@ -71,6 +71,21 @@ std::uint32_t RawFortFinishOwner::PlaceRandom(GameRandom& random,const FortRando
 }
 // 실제 같은 월드 참조다.
 const SidPool& RawFortFinishOwner::Pool() const { return pool_; }
+// 최초 지역 조회가 다른 Player 사본을 쓰지 않도록 실제9기록 크기를 확인한다.
+void RawFortFinishOwner::BindPlayerRecords(std::span<const std::uint8_t> players) {
+    const auto stride=pool_.Edition()==OriginalEdition::Patch1078 ? 0xb4U : 0xacU; // 해당 원본 Player의 실제 크기다.
+    if (players.size()!=9*stride) throw std::invalid_argument("FortFinishOwner 실제9 Player 크기 오류");players_=players;
+}
+// entry 최초의 지역 snapshot만 같은 원문에서 읽는다. 후속 반복에서 지역을 다시 고르지 않는다.
+std::int32_t RawFortFinishOwner::PlayerRegion(std::uint32_t owner) const {
+    if (players_.empty()) return state_.playerRegions.at(owner);
+    const bool patch=pool_.Edition()==OriginalEdition::Patch1078; // 현재 Player 기록의 판본이다.
+    const auto field=owner*(patch ? 0xb4U : 0xacU)+(patch ? 0x78U : 0x70U); // 원본 첫 지역 필드다.
+    std::uint32_t value=0; // 실제DWORD의 원본 비트다.
+    // 정확 네BYTE를 조합하여 stale 주변 필드를 보존한다.
+    for (std::size_t index=0;index<4;++index) value|=static_cast<std::uint32_t>(players_[field+index])<<(index*8);
+    return std::bit_cast<std::int32_t>(value);
+}
 // 누락된 finishOwner를 자연 반환/반복의 실제 몸체로만 교체한다.
 FortObjectLoadHooks MakeFortFinishOwnerHooks(const SidPool& pool,const RawFortFinishOwner& finish,FortObjectLoadHooks hooks) {
     if (&pool!=&finish.Pool()) throw std::invalid_argument("Fort loader/owner 후처리 SID 풀이 다릅니다");

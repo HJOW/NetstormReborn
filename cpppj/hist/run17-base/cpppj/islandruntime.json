@@ -1,0 +1,81 @@
+{
+  "total": 2018,
+  "host": "HJOW-Athlon",
+  "editions": {
+    "originals": {
+      "cases": 1009,
+      "normal_cases": 508,
+      "assert_cases": 501,
+      "returns": 2018,
+      "native": {
+        "0046edf0": 6,
+        "0046ee50": 10,
+        "0046ee30": 36,
+        "0046f320": 36,
+        "0046f260": 36,
+        "0046ee90": 36,
+        "0046f130": 30,
+        "0046ee60": 72,
+        "0046f2c0": 48,
+        "0046f190": 144,
+        "0046f200": 256,
+        "0046ef10": 1308
+      },
+      "external": {
+        "assert": 1002,
+        "virtual_owner": 1080
+      }
+    },
+    "originalCD": {
+      "cases": 1009,
+      "normal_cases": 730,
+      "assert_cases": 279,
+      "returns": 2018,
+      "native": {
+        "004bd450": 6,
+        "004bd4f0": 82,
+        "004bd4c0": 1930,
+        "004bda70": 36,
+        "004bd9c0": 36,
+        "004bd640": 36,
+        "004bd8a0": 30,
+        "004bd500": 72,
+        "004bda40": 48,
+        "004bd900": 144,
+        "004bd940": 256,
+        "004bd670": 1308
+      },
+      "external": {
+        "assert": 558,
+        "virtual_owner": 1620
+      }
+    }
+  },
+  "os_calls": 0,
+  "files": {
+    "tools/decomp_islandruntime_oracle.py": "cf0ad9958569df9d40ff2fd949c03e100058b22cda00bc5d6cda3b0d0eeb91f3",
+    "tools/ghidra/island-runtime-functions.json": "95076e78e1e9e4ce2fbaa9c17445396b6955932900d9eef3107a94ecafb3c419",
+    "cpppj/tests/fixtures/islandruntime-x86.tsv": "bc220732f4d41892cd82c847196ae01507598a3e0edb0ae0d3e1ceed2eaaa180",
+    "extracted/regionpaint/originals/creation.c": "54191908282833173cdd2181b46ac549e8cb494fe1ec2e58973968cc6745479f",
+    "extracted/regionpaint/originals/functions.tsv": "156b9522eaadd07fd128619913803d6c6efad29d57efd82ff5dfc823835326d9",
+    "extracted/island-runtime/originals/creation.c": "c60d6e8fc2d95eb678cf2d3e7003bae1719d90b1bde0072f2ef73641525305ff",
+    "extracted/island-runtime/originals/functions.tsv": "7db4a222ff212fe6b7a01bc596a77e39912d36c8bc36c88b8fa9f8b41514b7e0",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/regionpaint/originalCD/creation.c": "7b1d592f8f5d713fafd286c2ab735ead63fe32bc7fd388ed2346de15938f0fca",
+    "extracted/regionpaint/originalCD/functions.tsv": "1d9ba069c7b593820b857ea19f823315a96686d22dad1afa076a53c5b46ccc94",
+    "extracted/island-runtime/originalCD/creation.c": "e4f5b3782a53e30af16bed2cb16517cd3841cf9972938446a30c80b4c3cc91ee",
+    "extracted/island-runtime/originalCD/functions.tsv": "c2a545e7c7022987bc079c987787f95596422b10129fdb46558a8c41fb490e4d",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "tools/decomp_regionpaint_oracle.py": "6d65f83505c101ffef5e4c278b22425391e8717e7f31c77383f3a3aafb061d5a",
+    "cpppj/src/o/RawIslandRuntime.h": "6205b879664770b0a3047ed1066f2ae7dd243c3ec2bbd13689fef1da77298fa4",
+    "cpppj/src/o/RawIslandRuntime.cpp": "3be93556f2b32efc641442ed1e21654fbd0504be1643085b82ab1e80f71acd12",
+    "cpppj/tests/IslandRuntimeTests.cpp": "59a9c90d203d86dcd89ada05eb973d247d536aeb67dbabfac49b19928b4d5c2b"
+  },
+  "limits": [
+    "실제100개32바이트기록/owner/currentmode/Bounds/표면helper와현재Player첫지역을실행한다.",
+    "레지던스가상owner/assert만외부경계이며callback뒤현재목록/표면/mode/Player변경을다시읽는다.",
+    "정상과원본assert입력은분리한다. GUI/전체Map생성/실제파생owner·캠페인완주검증이아니다.",
+    "물리100기록밖GetBounds/Add의원본메모리접근은정상입력으로계수하지않는다."
+  ]
+}

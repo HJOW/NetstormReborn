@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "host": "HJOW-Athlon",
+  "last_decompile_date": "2026-10-15",
+  "total": 1728,
+  "editions": {
+    "originals": {
+      "unique_inputs": 864,
+      "normal_returns": 864,
+      "assertions": 0,
+      "instructions": 116082
+    },
+    "originalCD": {
+      "unique_inputs": 864,
+      "normal_returns": 864,
+      "assertions": 0,
+      "instructions": 125945
+    }
+  },
+  "original_owner_recount": 0,
+  "missing_island_assertion_pending": true,
+  "files": {
+    "cpppj/tests/fixtures/vortex-owner-x86.tsv": "6793098e34d190f6b25e794a34145756ccfc34a04f74b045c4f1a4316f192e70",
+    "extracted/owner/originalCD/creation.c": "115d3f4790315c3647e18c087579cf3aa08af06cdbaeca42adbac1e82725af62",
+    "extracted/owner/originalCD/functions.tsv": "4e184997f62c2622b26b3fa4f047a2580a609d2d919f0e414a75e8efd49d4439",
+    "extracted/owner/originals/creation.c": "f9919c046d5259526946f106b47b6259fe5e04971f743d6fa02d6a5361b9dc16",
+    "extracted/owner/originals/functions.tsv": "3ea66dace80a85999a8b2c2dbadb4d5f1bd18b0dcdb0768f9c41075206c7c72d",
+    "extracted/vortex-owner/originalCD/creation.c": "46b32abca712146c6e2ec53800912a02338f0da4930632cbbeaaa9515d0de4ff",
+    "extracted/vortex-owner/originalCD/functions.tsv": "99205d33f6d7e93d7a46b01dd80c090a156d75714b5d8fc74d45f900c32fa4d7",
+    "extracted/vortex-owner/originals/creation.c": "0c0ddfa9513a175c33118ec9a875696304a574ab67743afea0c9e7d38484433f",
+    "extracted/vortex-owner/originals/functions.tsv": "9fb6d6b356a4581e16706ba1456269990e46aeca3bc8677540a51c089132b21a",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
+    "tools/decomp_vortex_owner.py": "6ec4e56ac233c5465bde3043291af73a41a74f8e582312cebb3a26de47d2ca63",
+    "tools/ghidra/vortex-owner-functions.json": "eba13727a1a800236f581e8d5fc823505c35469af8fb870c5555b9a5fa3eb7ca"
+  }
+}

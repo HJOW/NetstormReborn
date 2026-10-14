@@ -31,6 +31,7 @@ struct IslandRuntimeScene {
     std::uint32_t assertions{}; // 원본진단 callback의 호출 수다.
     bool patch; // 현재 raw ownerBYTE의 판본 배치다.
     std::unique_ptr<RawIslandRuntime> runtime; // 위 단일 자료에서 실행하는 복원 몸체다.
+    std::vector<std::uint8_t> players; // 공유모드에서 원본 첫 지역을 저장하는 실제9 Player BYTE다.
     // 원본입력 SID를 미리 client 정책으로 확보한다.
     explicit IslandRuntimeScene(OriginalEdition edition):pool(edition,kCapacity,false),patch(edition==OriginalEdition::Patch1078) {
         // 레지던스/표면의 명시 공간번호를 모두 확보한다.
@@ -47,13 +48,16 @@ struct IslandRuntimeScene {
             if (input[14]==2) residences.count=1;
             if (input[14]==3) hash.Cell(0,51,53)=72;
             if (input[14]==4) { modes.fort=true;modes.special=false; }
-            if (input[14]==6) modes.playerRegions[input[6]]=5;
+            if (input[14]==6) {
+                if (players.empty()) modes.playerRegions[input[6]]=5;
+                else Put(players,input[6]*(patch ? 0xb4U : 0xacU)+(patch ? 0x78U : 0x70U),5);
+            }
         };
         return hooks;
     }
     // 기대값 계산 없이 입력record의 실제필드 폭/두 종류owner와 기존목록을 구성한다.
     void Prepare(const std::vector<std::string>& row) {
-        input.clear();events.clear();assertions=0;hash.Reset();modes={};
+        input.clear();events.clear();players.clear();assertions=0;hash.Reset();modes={};
         // 원본DWORD의 비트를 그대로 읽는다.
         for (const auto& number:Split(row[2],',')) input.push_back(Number(number));
         CHECK(input.size()==15);records.fill(static_cast<std::uint8_t>(input[6]));Put(records,0,input[0]);
@@ -82,11 +86,18 @@ struct IslandRuntimeScene {
     }
 };
 // 원본scalar/전체3204raw/출력bounds/공유전역/등록목록/가상owner를 전수 비교한다.
-void ReplayIslandRuntime(const char* edition) {
+void ReplayIslandRuntime(const char* edition,bool sharedPlayers=false) {
     IslandRuntimeScene scene(std::string_view(edition)=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072);std::size_t count=0;
     // 각 독립 native입력을 복원 몸체에 전달한다.
     for (const auto& row:RuntimeRows()) {
         if (row[0]!=edition) continue;CHECK(row.size()==15);scene.Prepare(row);const auto island=std::bit_cast<std::int32_t>(scene.input[1]);std::uint32_t result=0;std::string bounds="-";
+        if (sharedPlayers) {
+            const auto stride=scene.patch ? 0xb4U : 0xacU,field=scene.patch ? 0x78U : 0x70U; // 원본 Player 첫 지역DWORD의 위치다.
+            scene.players.assign(9*stride,0xa5);
+            // 기대값 대신 기존 입력상태의 아홉 지역 필드만 준비한다.
+            for (std::size_t owner=0;owner<9;++owner) Put(scene.players,owner*stride+field,static_cast<std::uint32_t>(scene.modes.playerRegions[owner]));
+            scene.runtime->BindPlayerRecords(scene.players);scene.modes.playerRegions.fill(999);
+        }
         const auto& kind=row[1];
         if (kind=="Reset") scene.runtime->Reset();
         else if (kind=="Count") result=scene.runtime->Count();
@@ -107,7 +118,19 @@ void ReplayIslandRuntime(const char* edition) {
         }
         std::string players,effects,entries,owners;
         // 현재 Player의 첫 지역을 읽는다.
-        for (const auto region:scene.modes.playerRegions) { if (!players.empty()) players+=',';players+=std::to_string(static_cast<std::uint32_t>(region)); }
+        for (std::size_t owner=0;owner<9;++owner) {
+            if (!players.empty()) players+=',';
+            players+=std::to_string(sharedPlayers ? Get(scene.players,owner*(scene.patch ? 0xb4U : 0xacU)+(scene.patch ? 0x78U : 0x70U)) : static_cast<std::uint32_t>(scene.modes.playerRegions[owner]));
+        }
+        if (sharedPlayers) {
+            // 첫 지역 네BYTE 외의 Player 전부는 그대로 유지되어야 한다.
+            for (std::size_t index=0;index<scene.players.size();++index) {
+                const auto offset=index%(scene.patch ? 0xb4U : 0xacU); // 현재 기록 안의 BYTE 위치다.
+                const auto field=scene.patch ? 0x78U : 0x70U; // 현재 판본의 첫 지역 시작 주소다.
+                if (offset<field || offset>=field+4) CHECK(scene.players[index]==0xa5);
+            }
+            CHECK(std::ranges::all_of(scene.modes.playerRegions,[](std::int32_t value) { return value==999; }));
+        }
         // callback을 포함한 실제효과 순서를 저장한다.
         for (const auto& event:scene.events) { if (!effects.empty()) effects+=';';effects+=event; }if (effects.empty()) effects="-";
         // 첫4개 현재등록 SID와 실제ownerBYTE를 비교한다.
@@ -128,6 +151,10 @@ void ReplayIslandRuntime(const char* edition) {
 TEST_CASE(IslandRuntime_ReplaysPatch) { ReplayIslandRuntime("originals"); }
 // CD의조용한getter/setter와boundsunordered/owner전파차이를actual출력과비교한다.
 TEST_CASE(IslandRuntime_ReplaysCd) { ReplayIslandRuntime("originalCD"); }
+// 기존 패치 원본1009입력을 실제 Player BYTE와 효과 뒤 현재값으로 재생한다.
+TEST_CASE(IslandRuntime_PatchSharedPlayerRecords) { ReplayIslandRuntime("originals",true); }
+// CD의 첫 지역 위치와 주변 바이트를 같은 기존 원본1009입력으로 검증한다.
+TEST_CASE(IslandRuntime_CdSharedPlayerRecords) { ReplayIslandRuntime("originalCD",true); }
 // 물리100기록경계/필수효과를원본의정상반환으로꾸미지않고명시적으로거부한다.
 TEST_CASE(IslandRuntime_RejectsMissingEffectsAndPhysicalOverflow) {
     IslandRuntimeScene scene(OriginalEdition::Patch1078);scene.Prepare(RuntimeRows().front());Put(scene.records,0,100);

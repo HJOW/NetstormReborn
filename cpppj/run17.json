@@ -1,0 +1,142 @@
+{
+  "schema": 1,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-15",
+  "unit": "20261015-02",
+  "all_tests": 1102,
+  "new_cpp_tests": 8,
+  "focused_tests": 15,
+  "new_native_inputs": 1728,
+  "prior_native_recount": 0,
+  "failed_checks": 0,
+  "campaign_completed": false,
+  "changes": {
+    ".gitattributes": {
+      "before_sha256": "42a2c7d438d2318b5b31edd794b2dfc2cc0ccf701e7edd216fa7ae51ef841a1d",
+      "after_sha256": "2bd8c6695383364bbf02fede42ad0a01561bb530cbc0a560a2240d5bbff77ad2",
+      "patch": "--- before\n+++ after\n@@ -565,3 +565,21 @@\n cpppj/src/o/RawAssetPostPop.cpp text eol=lf\n cpppj/src/client/RawSurfaceWorld.h text eol=lf\n cpppj/src/client/RawSurfaceWorld.cpp text eol=lf\n+# 단위17의 새 신전/지역 공유 구현과 독립 입력은 전체 SHA 재현을 위해 LF로 유지한다.\n+tools/check_campaign17.py text eol=lf\n+tools/decomp_vortex_owner.py text eol=lf\n+tools/ghidra/vortex-owner-functions.json text eol=lf\n+cpppj/vortex-owner.json text eol=lf\n+cpppj/run17.json text eol=lf\n+cpppj/src/o/RawVortexOwner.h text eol=lf\n+cpppj/src/o/RawVortexOwner.cpp text eol=lf\n+cpppj/src/client/RawCampaignOwnership.h text eol=lf\n+cpppj/src/client/RawCampaignOwnership.cpp text eol=lf\n+cpppj/src/o/RawIslandRuntime.h text eol=lf\n+cpppj/src/o/RawIslandRuntime.cpp text eol=lf\n+cpppj/src/o/RawFortFinishOwner.h text eol=lf\n+cpppj/src/o/RawFortFinishOwner.cpp text eol=lf\n+cpppj/tests/IslandRuntimeTests.cpp text eol=lf\n+cpppj/tests/VortexOwnerTests.cpp text eol=lf\n+# 기존 Finish 검사 원문의 현재 CRLF 바이트도 고정하여 컴파일/근거 SHA를 보존한다.\n+cpppj/tests/FortFinishOwnerTests.cpp -text whitespace=cr-at-eol\n"
+    },
+    "cpppj/src/o/CMakeLists.txt": {
+      "before_sha256": "934423d7577f2b20eec66d10af67dd8bf18b04d75c3c0efa0695090312564be6",
+      "after_sha256": "a7e85d4fd0cc183ba3dfe554884ba45968422cc4a500a62848a52b8d4dbc371e",
+      "patch": "--- before\n+++ after\n@@ -2,6 +2,7 @@\n # 클라이언트와 서버가 함께 쓰던 코드로 보인다. 이 폴더의 코드는 client/ 와 platform/ 을 포함하지 않는다.\n # 다시 만든 파일을 아래 목록에 더한다. 파일 이름은 SOURCE_MAP.md 의 \"cpppj 경로\"를 따른다.\n target_sources(netstorm PRIVATE\n+    RawVortexOwner.cpp RawVortexOwner.h\n     RawMissionOutcome.cpp RawMissionOutcome.h\n     RawFortObjectLoad.cpp RawFortObjectLoad.h\n     RawFortFinishOwner.cpp RawFortFinishOwner.h\n"
+    },
+    "cpppj/src/client/CMakeLists.txt": {
+      "before_sha256": "de9f15ac506d0cdf9ebbe0e820fa70525d634ac03562447d212f985d0e6fd247",
+      "after_sha256": "0096af8628ed0ca5e922465e5bad7e6e6e358cf61fdf887336c6b52550e99536",
+      "patch": "--- before\n+++ after\n@@ -80,6 +80,7 @@\n     RawPriestWorldBindings.cpp RawPriestWorldBindings.h\n     # 실제 Player 신전 기록과 같은 Core의 자산/사제 경로를 공유하는 캠페인 연결부다.\n     RawCampaignAssetBindings.cpp RawCampaignAssetBindings.h\n+    RawCampaignOwnership.cpp RawCampaignOwnership.h\n     RawCampaignPathBindings.cpp RawCampaignPathBindings.h\n     UserInput.cpp UserInput.h\n     Sound.cpp Sound.h\n"
+    },
+    "cpppj/tests/CMakeLists.txt": {
+      "before_sha256": "583e8a54e6302852833aaf8b6a9c6b981677b4c4a603d56f4608138141a8f61e",
+      "after_sha256": "a8b6eef9a67886993200acd9d85d2180ee0c986d2cb493a95efceb0b13b5a05e",
+      "patch": "--- before\n+++ after\n@@ -2,6 +2,7 @@\n # (첫 구성 때 인터넷에서 내려받을 것이 없다).\n # 테스트 파일을 만들면 아래 목록에 더한다. 파일 안의 TEST_CASE 는 자동으로 등록된다.\n add_executable(netstorm_tests\n+    VortexOwnerTests.cpp\n     # 준비된 원본 관찰과 실제 캠페인 부모·Player 예약·Burning 프레임을 대조한다.\n     CampaignWorldLoadTests.cpp\n     PlayerRegularTests.cpp\n@@ -732,6 +733,8 @@\n     \"NETSTORM_GUNARCHER_FIXTURE=\\\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gunarcher-x86.tsv\\\"\")\n set_source_files_properties(IslandRuntimeTests.cpp PROPERTIES COMPILE_DEFINITIONS\n     \"NETSTORM_ISLANDRUNTIME_FIXTURE=\\\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/islandruntime-x86.tsv\\\"\")\n+set_source_files_properties(VortexOwnerTests.cpp PROPERTIES COMPILE_DEFINITIONS\n+    \"NETSTORM_VORTEXOWNER_FIXTURE=\\\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/vortex-owner-x86.tsv\\\"\")\n \n # 실제 신전 의식 상위와 초기 지형 constructor/경계문자의 정상·assert 결과다.\n set_source_files_properties(TempleRitualTests.cpp PROPERTIES COMPILE_DEFINITIONS\n"
+    },
+    "cpppj/src/o/RawIslandRuntime.h": {
+      "before_sha256": "6205b879664770b0a3047ed1066f2ae7dd243c3ec2bbd13689fef1da77298fa4",
+      "after_sha256": "9bbc1cf7e4cf3972d66b19f349058c740c1b3b16da49fcc73782438e41de42f5",
+      "patch": "--- before\n+++ after\n@@ -55,7 +55,12 @@\n     std::span<const std::uint8_t> Bytes() const;\n     // 실제pool의 동일성을 월드/후처리 바인딩에서 확인한다.\n     const SidPool& Pool() const;\n+    // 실제9 Player BYTE의 첫 지역DWORD를 직접 공유한다. 연결 뒤 modes.playerRegions 사본은 쓰지 않는다.\n+    void BindPlayerRecords(std::span<std::uint8_t> players);\n private:\n+    // 현재owner의 PATCH+78/CD+70 첫 지역DWORD를 읽고 쓴다.\n+    std::int32_t FirstRegion(std::uint32_t owner) const;\n+    void FirstRegion(std::uint32_t owner,std::int32_t region);\n     // 실제 little endian BYTE/WORD/DWORD를 지정한 폭으로 읽는다.\n     std::uint32_t Read(std::size_t offset,std::size_t width=4) const;\n     // 지정한 폭의 원본 필드만 쓰고 이웃/padding을 보존한다.\n@@ -88,5 +93,6 @@\n     IslandRuntimeHooks hooks_;\n     // worldExtent_: 실제isValid에서float로 읽는 원본월드상한DWORD다.\n     std::int32_t worldExtent_;\n+    std::span<std::uint8_t> players_; // 생성/신전/경제와 같은 실제9 Player 기록이다. 미연결 독립 검사는 기존 상태를 쓴다.\n };\n }\n"
+    },
+    "cpppj/src/o/RawIslandRuntime.cpp": {
+      "before_sha256": "3be93556f2b32efc641442ed1e21654fbd0504be1643085b82ab1e80f71acd12",
+      "after_sha256": "9f3bfd0e6c469673aca7666b74fb35d4df25f3bf6e698d079434610f379dd785",
+      "patch": "--- before\n+++ after\n@@ -131,11 +131,35 @@\n     }\n     if (owner) {\n         if (owner>=modes_.playerRegions.size()) throw std::out_of_range(\"IslandRuntime Player첫지역범위오류\");\n-        if (modes_.playerRegions[owner]==kUnassignedFirstRegion) modes_.playerRegions[owner]=island;\n+        if (FirstRegion(owner)==kUnassignedFirstRegion) FirstRegion(owner,island);\n     }\n }\n // 같은mutable100개기록을외부소비자에게제공한다.\n std::span<const std::uint8_t> RawIslandRuntime::Bytes() const { return records_; }\n // 실제pool참조를월드바인딩검사에전달한다.\n const SidPool& RawIslandRuntime::Pool() const { return pool_; }\n+// 잘못된 물리크기를 쓰기 전에 거부하고 같은 Player 주소만 빌린다.\n+void RawIslandRuntime::BindPlayerRecords(std::span<std::uint8_t> players) {\n+    const auto stride=pool_.Edition()==OriginalEdition::Patch1078 ? 0xb4U : 0xacU; // 실제 판본별 한 기록의 크기다.\n+    if (players.size()!=9*stride) throw std::invalid_argument(\"IslandRuntime 실제9 Player 크기 오류\");players_=players;\n }\n+// 외부 residence callback 뒤의 현재 Player DWORD를 다시 읽는다.\n+std::int32_t RawIslandRuntime::FirstRegion(std::uint32_t owner) const {\n+    if (players_.empty()) return modes_.playerRegions.at(owner);\n+    const bool patch=pool_.Edition()==OriginalEdition::Patch1078; // 첫 지역의 판본별 위치를 선택한다.\n+    const auto field=owner*(patch ? 0xb4U : 0xacU)+(patch ? 0x78U : 0x70U); // 현재owner의 물리DWORD 주소다.\n+    std::uint32_t value=0; // 현재 기록에서 읽은 원본 비트다.\n+    // 정확한 네BYTE만 조합한다.\n+    for (std::size_t index=0;index<4;++index) value|=static_cast<std::uint32_t>(players_[field+index])<<(index*8);\n+    return std::bit_cast<std::int32_t>(value);\n+}\n+// 공유기록 모드에서는 첫 지역 필드만 저장한다. 다른 Player 메모리와 독립 상태는 보존한다.\n+void RawIslandRuntime::FirstRegion(std::uint32_t owner,std::int32_t region) {\n+    if (players_.empty()) { modes_.playerRegions.at(owner)=region;return; }\n+    const bool patch=pool_.Edition()==OriginalEdition::Patch1078; // 실제 저장폭은 두 판본 모두DWORD다.\n+    const auto field=owner*(patch ? 0xb4U : 0xacU)+(patch ? 0x78U : 0x70U); // 현재owner의 첫 지역 주소다.\n+    const auto value=std::bit_cast<std::uint32_t>(region); // 부호와 무관하게 원본 비트를 저장한다.\n+    // 인접 신전/레지던스 필드를 바꾸지 않는다.\n+    for (std::size_t index=0;index<4;++index) players_[field+index]=static_cast<std::uint8_t>(value>>(index*8));\n+}\n+}\n"
+    },
+    "cpppj/src/o/RawFortFinishOwner.h": {
+      "before_sha256": "ae779a85309d56e9bc64514247a3576469a7afcada522db6e682a547598907f0",
+      "after_sha256": "f880679db9b6035e8a9ffd1f18018e706953ed8dca7ea4e867f9e2a1248a8a8a",
+      "patch": "--- before\n+++ after\n@@ -39,11 +39,16 @@\n     static std::uint32_t TimeSeed(double wallSeconds);\n     // loader hook과 같은 pool인지 검사하는 참조다.\n     const SidPool& Pool() const;\n+    // 같은9 Player BYTE의 PATCH+78/CD+70을 공유하며 최초 지역을 현재 원문에서 읽는다.\n+    void BindPlayerRecords(std::span<const std::uint8_t> players);\n private:\n+    // 미연결 독립 모듈은 기존 상태, 캠페인은 공유 Player 첫 지역DWORD를 조회한다.\n+    std::int32_t PlayerRegion(std::uint32_t owner) const;\n     // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.\n     const SidPool& pool_;/* types_: 타입 번호로 속성·플래그를 조회하는 타입 표. */ std::span<const RiftTypeRecord> types_;/* residences_: 거주건물. */ SquidPostPopList& residences_;\n     // state_: 최초 진입만 읽는 모드/기본 지역과 반복 생성 때마다 읽는 현재 타입 전역이다 (FortFinishOwnerState).\n     FortFinishOwnerState& state_;/* hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (FortFinishOwnerHooks). */ FortFinishOwnerHooks hooks_;\n+    std::span<const std::uint8_t> players_; // 신전/IslandRuntime이 함께 갱신하는 같은9 Player 기록이다.\n };\n // 같은 월드의 Finish 몸체를 Fort loader의 필수 owner 후처리에 연결한다.\n FortObjectLoadHooks MakeFortFinishOwnerHooks(const SidPool& pool,const RawFortFinishOwner& finish,FortObjectLoadHooks hooks);\n"
+    },
+    "cpppj/src/o/RawFortFinishOwner.cpp": {
+      "before_sha256": "aa8f9f6e75a3777b91db19439d81a50382e1dd5fca083dfce285fcb5a437d9e2",
+      "after_sha256": "e9b43ea2937c3f4c050e43f2be4fab756d91e57fe59da2180ed5978f16434abe",
+      "patch": "--- before\n+++ after\n@@ -37,7 +37,7 @@\n void RawFortFinishOwner::Finish(std::uint32_t owner) const {\n     if (state_.chaffMode || state_.special) return;\n     if (owner>=state_.playerRegions.size()) throw std::out_of_range(\"Fort owner 기본 지역 범위 오류\");\n-    const auto region=state_.fort ? 0 : state_.playerRegions[owner];if (region==state_.invalidRegion) return;\n+    const auto region=state_.fort ? 0 : PlayerRegion(owner);if (region==state_.invalidRegion) return;\n     const auto ownerOffset=pool_.Edition()==OriginalEdition::Patch1078 ? kPatchOwner : kCdOwner;\n     // 원본은 실패1000회 뒤에도 다음 region/시각 seed를 구해 계속한다. 가짜 외부 타이머/성공을 넣지 않는다.\n     for (;;) {\n@@ -71,6 +71,21 @@\n }\n // 실제 같은 월드 참조다.\n const SidPool& RawFortFinishOwner::Pool() const { return pool_; }\n+// 최초 지역 조회가 다른 Player 사본을 쓰지 않도록 실제9기록 크기를 확인한다.\n+void RawFortFinishOwner::BindPlayerRecords(std::span<const std::uint8_t> players) {\n+    const auto stride=pool_.Edition()==OriginalEdition::Patch1078 ? 0xb4U : 0xacU; // 해당 원본 Player의 실제 크기다.\n+    if (players.size()!=9*stride) throw std::invalid_argument(\"FortFinishOwner 실제9 Player 크기 오류\");players_=players;\n+}\n+// entry 최초의 지역 snapshot만 같은 원문에서 읽는다. 후속 반복에서 지역을 다시 고르지 않는다.\n+std::int32_t RawFortFinishOwner::PlayerRegion(std::uint32_t owner) const {\n+    if (players_.empty()) return state_.playerRegions.at(owner);\n+    const bool patch=pool_.Edition()==OriginalEdition::Patch1078; // 현재 Player 기록의 판본이다.\n+    const auto field=owner*(patch ? 0xb4U : 0xacU)+(patch ? 0x78U : 0x70U); // 원본 첫 지역 필드다.\n+    std::uint32_t value=0; // 실제DWORD의 원본 비트다.\n+    // 정확 네BYTE를 조합하여 stale 주변 필드를 보존한다.\n+    for (std::size_t index=0;index<4;++index) value|=static_cast<std::uint32_t>(players_[field+index])<<(index*8);\n+    return std::bit_cast<std::int32_t>(value);\n+}\n // 누락된 finishOwner를 자연 반환/반복의 실제 몸체로만 교체한다.\n FortObjectLoadHooks MakeFortFinishOwnerHooks(const SidPool& pool,const RawFortFinishOwner& finish,FortObjectLoadHooks hooks) {\n     if (&pool!=&finish.Pool()) throw std::invalid_argument(\"Fort loader/owner 후처리 SID 풀이 다릅니다\");\n"
+    },
+    "cpppj/tests/IslandRuntimeTests.cpp": {
+      "before_sha256": "59a9c90d203d86dcd89ada05eb973d247d536aeb67dbabfac49b19928b4d5c2b",
+      "after_sha256": "6829f96d02e5bf4b67c2f46f675e8353ea0970f9cf0a4fde387e045e0634fb67",
+      "patch": "--- before\n+++ after\n@@ -31,6 +31,7 @@\n     std::uint32_t assertions{}; // 원본진단 callback의 호출 수다.\n     bool patch; // 현재 raw ownerBYTE의 판본 배치다.\n     std::unique_ptr<RawIslandRuntime> runtime; // 위 단일 자료에서 실행하는 복원 몸체다.\n+    std::vector<std::uint8_t> players; // 공유모드에서 원본 첫 지역을 저장하는 실제9 Player BYTE다.\n     // 원본입력 SID를 미리 client 정책으로 확보한다.\n     explicit IslandRuntimeScene(OriginalEdition edition):pool(edition,kCapacity,false),patch(edition==OriginalEdition::Patch1078) {\n         // 레지던스/표면의 명시 공간번호를 모두 확보한다.\n@@ -47,13 +48,16 @@\n             if (input[14]==2) residences.count=1;\n             if (input[14]==3) hash.Cell(0,51,53)=72;\n             if (input[14]==4) { modes.fort=true;modes.special=false; }\n-            if (input[14]==6) modes.playerRegions[input[6]]=5;\n+            if (input[14]==6) {\n+                if (players.empty()) modes.playerRegions[input[6]]=5;\n+                else Put(players,input[6]*(patch ? 0xb4U : 0xacU)+(patch ? 0x78U : 0x70U),5);\n+            }\n         };\n         return hooks;\n     }\n     // 기대값 계산 없이 입력record의 실제필드 폭/두 종류owner와 기존목록을 구성한다.\n     void Prepare(const std::vector<std::string>& row) {\n-        input.clear();events.clear();assertions=0;hash.Reset();modes={};\n+        input.clear();events.clear();players.clear();assertions=0;hash.Reset();modes={};\n         // 원본DWORD의 비트를 그대로 읽는다.\n         for (const auto& number:Split(row[2],',')) input.push_back(Number(number));\n         CHECK(input.size()==15);records.fill(static_cast<std::uint8_t>(input[6]));Put(records,0,input[0]);\n@@ -82,11 +86,18 @@\n     }\n };\n // 원본scalar/전체3204raw/출력bounds/공유전역/등록목록/가상owner를 전수 비교한다.\n-void ReplayIslandRuntime(const char* edition) {\n+void ReplayIslandRuntime(const char* edition,bool sharedPlayers=false) {\n     IslandRuntimeScene scene(std::string_view(edition)==\"originals\" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072);std::size_t count=0;\n     // 각 독립 native입력을 복원 몸체에 전달한다.\n     for (const auto& row:RuntimeRows()) {\n         if (row[0]!=edition) continue;CHECK(row.size()==15);scene.Prepare(row);const auto island=std::bit_cast<std::int32_t>(scene.input[1]);std::uint32_t result=0;std::string bounds=\"-\";\n+        if (sharedPlayers) {\n+            const auto stride=scene.patch ? 0xb4U : 0xacU,field=scene.patch ? 0x78U : 0x70U; // 원본 Player 첫 지역DWORD의 위치다.\n+            scene.players.assign(9*stride,0xa5);\n+            // 기대값 대신 기존 입력상태의 아홉 지역 필드만 준비한다.\n+            for (std::size_t owner=0;owner<9;++owner) Put(scene.players,owner*stride+field,static_cast<std::uint32_t>(scene.modes.playerRegions[owner]));\n+            scene.runtime->BindPlayerRecords(scene.players);scene.modes.playerRegions.fill(999);\n+        }\n         const auto& kind=row[1];\n         if (kind==\"Reset\") scene.runtime->Reset();\n         else if (kind==\"Count\") result=scene.runtime->Count();\n@@ -107,7 +118,19 @@\n         }\n         std::string players,effects,entries,owners;\n         // 현재 Player의 첫 지역을 읽는다.\n-        for (const auto region:scene.modes.playerRegions) { if (!players.empty()) players+=',';players+=std::to_string(static_cast<std::uint32_t>(region)); }\n+        for (std::size_t owner=0;owner<9;++owner) {\n+            if (!players.empty()) players+=',';\n+            players+=std::to_string(sharedPlayers ? Get(scene.players,owner*(scene.patch ? 0xb4U : 0xacU)+(scene.patch ? 0x78U : 0x70U)) : static_cast<std::uint32_t>(scene.modes.playerRegions[owner]));\n+        }\n+        if (sharedPlayers) {\n+            // 첫 지역 네BYTE 외의 Player 전부는 그대로 유지되어야 한다.\n+            for (std::size_t index=0;index<scene.players.size();++index) {\n+                const auto offset=index%(scene.patch ? 0xb4U : 0xacU); // 현재 기록 안의 BYTE 위치다.\n+                const auto field=scene.patch ? 0x78U : 0x70U; // 현재 판본의 첫 지역 시작 주소다.\n+                if (offset<field || offset>=field+4) CHECK(scene.players[index]==0xa5);\n+            }\n+            CHECK(std::ranges::all_of(scene.modes.playerRegions,[](std::int32_t value) { return value==999; }));\n+        }\n         // callback을 포함한 실제효과 순서를 저장한다.\n         for (const auto& event:scene.events) { if (!effects.empty()) effects+=';';effects+=event; }if (effects.empty()) effects=\"-\";\n         // 첫4개 현재등록 SID와 실제ownerBYTE를 비교한다.\n@@ -128,6 +151,10 @@\n TEST_CASE(IslandRuntime_ReplaysPatch) { ReplayIslandRuntime(\"originals\"); }\n // CD의조용한getter/setter와boundsunordered/owner전파차이를actual출력과비교한다.\n TEST_CASE(IslandRuntime_ReplaysCd) { ReplayIslandRuntime(\"originalCD\"); }\n+// 기존 패치 원본1009입력을 실제 Player BYTE와 효과 뒤 현재값으로 재생한다.\n+TEST_CASE(IslandRuntime_PatchSharedPlayerRecords) { ReplayIslandRuntime(\"originals\",true); }\n+// CD의 첫 지역 위치와 주변 바이트를 같은 기존 원본1009입력으로 검증한다.\n+TEST_CASE(IslandRuntime_CdSharedPlayerRecords) { ReplayIslandRuntime(\"originalCD\",true); }\n // 물리100기록경계/필수효과를원본의정상반환으로꾸미지않고명시적으로거부한다.\n TEST_CASE(IslandRuntime_RejectsMissingEffectsAndPhysicalOverflow) {\n     IslandRuntimeScene scene(OriginalEdition::Patch1078);scene.Prepare(RuntimeRows().front());Put(scene.records,0,100);\n"
+    },
+    "cpppj/tests/FortFinishOwnerTests.cpp": {
+      "before_sha256": "630081d336eaf191ec57d78da15b9c292c5b8242b9dc9b30a2ad7da41446a24a",
+      "after_sha256": "34db3761e8738281181e593682bea837cff8a87f9017c5a876e379dc2037590d",
+      "patch": "--- before\n+++ after\n@@ -88,18 +88,27 @@\n     }\n };\n // entry/standalone batch/실제 seed 생성 관찰을 동일 입력의 C++ 몸체와 대조한다.\n-void ReplayFinish(std::string_view edition) {\n+void ReplayFinish(std::string_view edition,bool sharedPlayers=false) {\n     CHECK(FinishFixture().size()==2*kFinishCases);std::size_t count=0;\n     // 한 행마다 다른 actual pool/목록을 구성해 이전 callback 상태가 섞이지 않게 한다.\n     for (const auto& row:FinishFixture()) {\n         if (row[0]!=edition) continue;CHECK(row.size()==8);FortFinishScene scene(edition==\"originals\" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072,Inputs(row[2]));\n         RawFortFinishOwner finish(scene.pool,scene.types,scene.residences,scene.state,scene.Hooks(row[1]==\"F\"));std::uint32_t result=0;\n+        const auto stride=scene.patch ? 0xb4U : 0xacU,field=scene.patch ? 0x78U : 0x70U; // 첫 지역의 실제 Player 주소다.\n+        std::vector<std::uint8_t> records(9*stride,0xa5); // 공유모드의 현재9 Player BYTE다.\n+        if (sharedPlayers) {\n+            // 기존 독립 입력의 지역만 원문에 넣고 state 사본은 다른 값으로 분리한다.\n+            for (std::size_t owner=0;owner<9;++owner) Put(records,owner*stride+field,scene.values[FRegion]);\n+            finish.BindPlayerRecords(records);scene.state.playerRegions.fill(999);\n+        }\n+        const auto before=records; // 이 getter/후처리는 Player BYTE를 쓰지 않아야 한다.\n         if (row[1]==\"F\") finish.Finish(scene.values[FOwner]);\n         else if (row[1]==\"B\") {\n             GameRandom random(scene.values[FSeed]);result=finish.PlaceRandom(random,FinishRectangle(scene.values[FRect]),std::bit_cast<std::int32_t>(scene.values[FRegion]),\n                 scene.values[FQuantity],scene.values[FType],scene.values[FForce]);scene.lastSeed=random.State();\n         } else { result=finish.TimeSeed(scene.Clock());scene.lastSeed=result; }\n         const bool same=scene.Events()==row[3] && std::to_string(result)==row[4] && std::to_string(scene.lastSeed)==row[5] && scene.List()==row[6] && std::to_string(scene.state.residenceType)==row[7];\n+        if (sharedPlayers) CHECK(records==before && std::ranges::all_of(scene.state.playerRegions,[](std::int32_t value) { return value==999; }));\n         CHECK(same);if (!same) { std::printf(\"Fort finish actual %s %s 행%zu 불일치\\n\",row[0].c_str(),row[1].c_str(),count);break; }++count;\n     }\n     CHECK(count==kFinishCases);\n@@ -109,6 +118,10 @@\n TEST_CASE(FortFinishOwner_ReplaysPatch) { ReplayFinish(\"originals\"); }\n // CD의 사각형 점 helper/local PRNG 및 정수 HP와 별도의 후처리 관찰이다.\n TEST_CASE(FortFinishOwner_ReplaysCd) { ReplayFinish(\"originalCD\"); }\n+// 기존 패치719입력을 현재 Player 지역DWORD로 재생하며 별도 상태를 읽지 않는다.\n+TEST_CASE(FortFinishOwner_PatchSharedPlayerRecords) { ReplayFinish(\"originals\",true); }\n+// CD의 다른 물리 위치와 지역 snapshot/반복 흐름을 기존719입력과 대조한다.\n+TEST_CASE(FortFinishOwner_CdSharedPlayerRecords) { ReplayFinish(\"originalCD\",true); }\n \n // loader 후처리는 실제 같은 월드 모듈을 호출하고 residence가 있으면 지역/시각/배치를 하지 않는다.\n TEST_CASE(FortFinishOwner_ConnectsTheSameResidenceWorld) {\n"
+    },
+    "cpppj/islandruntime.json": {
+      "before_sha256": "6024e529871f1d772a0cfda8b8eb577bd6af2c8f9e198649e12f8f8d72b8281c",
+      "after_sha256": "6024e529871f1d772a0cfda8b8eb577bd6af2c8f9e198649e12f8f8d72b8281c",
+      "patch": ""
+    },
+    "cpppj/tests/fixtures/islandruntime-x86.tsv": {
+      "before_sha256": "bc220732f4d41892cd82c847196ae01507598a3e0edb0ae0d3e1ceed2eaaa180",
+      "after_sha256": "bc220732f4d41892cd82c847196ae01507598a3e0edb0ae0d3e1ceed2eaaa180",
+      "patch": ""
+    },
+    "cpppj/fortfinishowner.json": {
+      "before_sha256": "7eae9e5a95b8a5230f8cc055037dce2d6c90d597e593ce99ee212a81c35a0843",
+      "after_sha256": "7eae9e5a95b8a5230f8cc055037dce2d6c90d597e593ce99ee212a81c35a0843",
+      "patch": ""
+    },
+    "cpppj/tests/fixtures/fortfinishowner-x86.tsv": {
+      "before_sha256": "0bcdfd8325d57267bb47c4e7927577285aabe4b90355b619b00e545a70256da5",
+      "after_sha256": "0bcdfd8325d57267bb47c4e7927577285aabe4b90355b619b00e545a70256da5",
+      "patch": ""
+    },
+    "cpppj/run16.json": {
+      "before_sha256": "e95d9e69d3297305b815ba29328058625485b75cce526de3c9c4ae00efcb086c",
+      "after_sha256": "e95d9e69d3297305b815ba29328058625485b75cce526de3c9c4ae00efcb086c",
+      "patch": ""
+    },
+    "tools/check_campaign16.py": {
+      "before_sha256": "c15e761b2722ac59d728521a2aa6f8a1f5408efc6b85e0ba6cf9e4e25141b69d",
+      "after_sha256": "c15e761b2722ac59d728521a2aa6f8a1f5408efc6b85e0ba6cf9e4e25141b69d",
+      "patch": ""
+    }
+  },
+  "protected_pe_sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+  },
+  "files": {
+    ".gitattributes": "2bd8c6695383364bbf02fede42ad0a01561bb530cbc0a560a2240d5bbff77ad2",
+    "cpppj/build/bin/Release/NetstormCpp.exe": "e506dd7e8080eca2fb8bfc72e6446087930c8a4778925ff5940dca9e5b264771",
+    "cpppj/build/bin/Release/netstorm_tests.exe": "fbe21409d62b08e91ade90cf6c7cf85471ea6524df9af0aed27fdb7da7f3a712",
+    "cpppj/fortfinishowner.json": "7eae9e5a95b8a5230f8cc055037dce2d6c90d597e593ce99ee212a81c35a0843",
+    "cpppj/hist/run17-base/capture.json": "6c7da5486db0bcda37ab1fbaebdb9318cb82357d14771b634d829662ac70425d",
+    "cpppj/hist/run17-fail/cpppj/src/client/RawCampaignOwnership.cpp": "960af85c2b29897a853f2f08e8a78283e87b5c04a7595ca9e62924e2c455c6c5",
+    "cpppj/hist/run17-fail/cpppj/src/client/RawCampaignOwnership.h": "80621fe1de0639174b123e57889917f8a9bbd25c38093726bb7e6fcf790d0b8a",
+    "cpppj/hist/run17-fail/cpppj/tests/IslandRuntimeTests.cpp": "f495dda978413ef91e937149076d69ad00908923d94954d0745774fe07fa5380",
+    "cpppj/hist/run17-fail/cpppj/tests/VortexOwnerTests.cpp": "06b1854ebb61a64bef7ad250d55300641d4858827ca45f32c9b368b044b53f9e",
+    "cpppj/hist/run17-fail/extracted/run17-build.log": "e833a3b3e30bb05bb9f53e167caecb6d5cbb8d9915dad0f750bcbc227e0e7cf2",
+    "cpppj/hist/run17-link/cpppj/tests/VortexOwnerTests.cpp": "a155b923917dbaa2b187736300d2651f9de3fb937c56b67e7cd8ece66fb75e5d",
+    "cpppj/hist/run17-link/extracted/run17-build.log": "e6545153aacdbf3beb9b4f2dc5387fbfba7d77b83c29a420bff5edbb52592ac9",
+    "cpppj/islandruntime.json": "6024e529871f1d772a0cfda8b8eb577bd6af2c8f9e198649e12f8f8d72b8281c",
+    "cpppj/run16.json": "e95d9e69d3297305b815ba29328058625485b75cce526de3c9c4ae00efcb086c",
+    "cpppj/src/client/CMakeLists.txt": "0096af8628ed0ca5e922465e5bad7e6e6e358cf61fdf887336c6b52550e99536",
+    "cpppj/src/client/RawCampaignOwnership.cpp": "960af85c2b29897a853f2f08e8a78283e87b5c04a7595ca9e62924e2c455c6c5",
+    "cpppj/src/client/RawCampaignOwnership.h": "f53be166d29d72a8fbcda53fe2e476932e50a392be04c4d5a1a91d56d90c41a1",
+    "cpppj/src/o/CMakeLists.txt": "a7e85d4fd0cc183ba3dfe554884ba45968422cc4a500a62848a52b8d4dbc371e",
+    "cpppj/src/o/RawFortFinishOwner.cpp": "e9b43ea2937c3f4c050e43f2be4fab756d91e57fe59da2180ed5978f16434abe",
+    "cpppj/src/o/RawFortFinishOwner.h": "f880679db9b6035e8a9ffd1f18018e706953ed8dca7ea4e867f9e2a1248a8a8a",
+    "cpppj/src/o/RawIslandRuntime.cpp": "9f3bfd0e6c469673aca7666b74fb35d4df25f3bf6e698d079434610f379dd785",
+    "cpppj/src/o/RawIslandRuntime.h": "9bbc1cf7e4cf3972d66b19f349058c740c1b3b16da49fcc73782438e41de42f5",
+    "cpppj/src/o/RawVortexOwner.cpp": "8004493473c5e35f03290158d71b81860a322b990ecebf3e3a2d4d8b780ef6e8",
+    "cpppj/src/o/RawVortexOwner.h": "c117ea94521e8e13e9a905ba1613d120c909b5399693c707ea8b6d2ae550629f",
+    "cpppj/tests/CMakeLists.txt": "a8b6eef9a67886993200acd9d85d2180ee0c986d2cb493a95efceb0b13b5a05e",
+    "cpppj/tests/FortFinishOwnerTests.cpp": "34db3761e8738281181e593682bea837cff8a87f9017c5a876e379dc2037590d",
+    "cpppj/tests/IslandRuntimeTests.cpp": "6829f96d02e5bf4b67c2f46f675e8353ea0970f9cf0a4fde387e045e0634fb67",
+    "cpppj/tests/VortexOwnerTests.cpp": "f0580b567c5185c46f661e0d7d2879edc26acb9b58738d2bf06d5a1ee26e266a",
+    "cpppj/tests/fixtures/fortfinishowner-x86.tsv": "0bcdfd8325d57267bb47c4e7927577285aabe4b90355b619b00e545a70256da5",
+    "cpppj/tests/fixtures/islandruntime-x86.tsv": "bc220732f4d41892cd82c847196ae01507598a3e0edb0ae0d3e1ceed2eaaa180",
+    "cpppj/tests/fixtures/vortex-owner-x86.tsv": "6793098e34d190f6b25e794a34145756ccfc34a04f74b045c4f1a4316f192e70",
+    "cpppj/vortex-owner.json": "86e588a7f6a53a033ad24a96e7f47ea10063910e0fb191f2b1777d2ed5ecf726",
+    "extracted/run17-all.log": "f5f42e9c05df7c6a67284871faccec069fcfc62cdb62063abcbc46fd2c578cc1",
+    "extracted/run17-build.log": "a5dd294a86f612cd5bd52c0ee353dd777e32c4441177a8ee4d26748bd5aff9b1",
+    "extracted/run17-finish.log": "a58bb6d487daa91795187aa4dca0ec1d7ca9fcf6170900b7755cdfe20071d269",
+    "extracted/run17-islands.log": "8a5f26f5fac10d7ed20a8e4a63bebd4c993f11c0dc481977edeaa8650878b86f",
+    "extracted/run17-vortex.log": "dbf99d1665028d7e844de495cdc4935e01f375f1ab3baaccb7989a3bd9d02304",
+    "tools/check_campaign16.py": "c15e761b2722ac59d728521a2aa6f8a1f5408efc6b85e0ba6cf9e4e25141b69d",
+    "tools/check_campaign17.py": "048b71a199f2a3c6261785b96eb66d7cbd6b2f9e0b4b369300ecd8ecc300f0c5",
+    "tools/decomp_vortex_owner.py": "6ec4e56ac233c5465bde3043291af73a41a74f8e582312cebb3a26de47d2ca63",
+    "tools/ghidra/vortex-owner-functions.json": "eba13727a1a800236f581e8d5fc823505c35469af8fb870c5555b9a5fa3eb7ca"
+  }
+}

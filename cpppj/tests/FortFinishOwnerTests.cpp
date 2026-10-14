@@ -88,18 +88,27 @@ struct FortFinishScene {
     }
 };
 // entry/standalone batch/실제 seed 생성 관찰을 동일 입력의 C++ 몸체와 대조한다.
-void ReplayFinish(std::string_view edition) {
+void ReplayFinish(std::string_view edition,bool sharedPlayers=false) {
     CHECK(FinishFixture().size()==2*kFinishCases);std::size_t count=0;
     // 한 행마다 다른 actual pool/목록을 구성해 이전 callback 상태가 섞이지 않게 한다.
     for (const auto& row:FinishFixture()) {
         if (row[0]!=edition) continue;CHECK(row.size()==8);FortFinishScene scene(edition=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072,Inputs(row[2]));
         RawFortFinishOwner finish(scene.pool,scene.types,scene.residences,scene.state,scene.Hooks(row[1]=="F"));std::uint32_t result=0;
+        const auto stride=scene.patch ? 0xb4U : 0xacU,field=scene.patch ? 0x78U : 0x70U; // 첫 지역의 실제 Player 주소다.
+        std::vector<std::uint8_t> records(9*stride,0xa5); // 공유모드의 현재9 Player BYTE다.
+        if (sharedPlayers) {
+            // 기존 독립 입력의 지역만 원문에 넣고 state 사본은 다른 값으로 분리한다.
+            for (std::size_t owner=0;owner<9;++owner) Put(records,owner*stride+field,scene.values[FRegion]);
+            finish.BindPlayerRecords(records);scene.state.playerRegions.fill(999);
+        }
+        const auto before=records; // 이 getter/후처리는 Player BYTE를 쓰지 않아야 한다.
         if (row[1]=="F") finish.Finish(scene.values[FOwner]);
         else if (row[1]=="B") {
             GameRandom random(scene.values[FSeed]);result=finish.PlaceRandom(random,FinishRectangle(scene.values[FRect]),std::bit_cast<std::int32_t>(scene.values[FRegion]),
                 scene.values[FQuantity],scene.values[FType],scene.values[FForce]);scene.lastSeed=random.State();
         } else { result=finish.TimeSeed(scene.Clock());scene.lastSeed=result; }
         const bool same=scene.Events()==row[3] && std::to_string(result)==row[4] && std::to_string(scene.lastSeed)==row[5] && scene.List()==row[6] && std::to_string(scene.state.residenceType)==row[7];
+        if (sharedPlayers) CHECK(records==before && std::ranges::all_of(scene.state.playerRegions,[](std::int32_t value) { return value==999; }));
         CHECK(same);if (!same) { std::printf("Fort finish actual %s %s 행%zu 불일치\n",row[0].c_str(),row[1].c_str(),count);break; }++count;
     }
     CHECK(count==kFinishCases);
@@ -109,6 +118,10 @@ void ReplayFinish(std::string_view edition) {
 TEST_CASE(FortFinishOwner_ReplaysPatch) { ReplayFinish("originals"); }
 // CD의 사각형 점 helper/local PRNG 및 정수 HP와 별도의 후처리 관찰이다.
 TEST_CASE(FortFinishOwner_ReplaysCd) { ReplayFinish("originalCD"); }
+// 기존 패치719입력을 현재 Player 지역DWORD로 재생하며 별도 상태를 읽지 않는다.
+TEST_CASE(FortFinishOwner_PatchSharedPlayerRecords) { ReplayFinish("originals",true); }
+// CD의 다른 물리 위치와 지역 snapshot/반복 흐름을 기존719입력과 대조한다.
+TEST_CASE(FortFinishOwner_CdSharedPlayerRecords) { ReplayFinish("originalCD",true); }
 
 // loader 후처리는 실제 같은 월드 모듈을 호출하고 residence가 있으면 지역/시각/배치를 하지 않는다.
 TEST_CASE(FortFinishOwner_ConnectsTheSameResidenceWorld) {

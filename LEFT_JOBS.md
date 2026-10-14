@@ -1,5 +1,14 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-15 완료: 단위17 실제 신전 Owner·캠페인 소유권·공유 첫 지역 (`HJOW-Athlon`)
+
+- [x] AGENTS 및 양 LEFT를 다시 읽고 `cfa283a`에서 재개했다. 현재 호스트는 마지막 PC와 같은 **HJOW-Athlon**이다. 실제 신전 Owner PATCH004dc4e0/CD0044f2a0을 정밀 읽기 전용 export했다. **마지막 디컴파일 PC: HJOW-Athlon, 2026-10-15.**
+- [x] 실제 캠페인 설치에서 반드시 호출하는 신전 Owner를 복원했다. 새 PE 고유1728입력/정상1728/assert0, 공통 Owner 실제 명령 재사용이다. 섬/도장/생산은 명시 외부 경계이며 missingIsland 진단은 후속이다. 기존 원본 입력은 재합산하지 않는다.
+- [x] 동일 Core의 실제 지역 getter/투표/도장을 조립한 `RawCampaignOwnership`를 추가했다. IslandRuntime/FinishOwner도 Player 첫 지역DWORD를 같은9기록에 연결했다. 직접 영향16파일을 `run17-base`에 보존했으며 기존 fixture/보고서는 불변이다. 상세: [단위17](docs/exe/cpp-run17-20261015.md).
+- [x] Release 경고/오류0, 신전4·IslandRuntime5·FinishOwner6 집중15검사 통과. 기존 Native2018+1438입력의 공유 지역 재생은 새 입력으로 세지 않는다. 최초 header include/다음 비inline helper 중복 링크 실패는 전체 편집 소스/로그를 보존한 뒤 신규 코드의 include와 기존 inline 소비자로 교정했다.
+- [x] 최종 CTest **1/1·내부1102개·실패 체크0**(175.37초), 새8개/집중15개 통과. 두 보호 PE는 불변이며 전체 원문/실제 빌드/검사/Native 자료는 `run17.json`에 고정한다. 단위 커밋은 **`20261015-02 실제 신전 소유자와 캠페인 지면 소유권 및 공유 Player 지역 검증`**으로 진행한다.
+- [ ] 실제172개 설치와 GameWorld/Ready/login/AI/Guide·실제 입력·생산·전투·경제·운반·음향·UI·승패·Early Missions/1-1~1-2 완주 동일성은 미완료이며 목표는 active다. 다음 로더에서는 새 ownership.SetOwner를 Asset/PostPop에 공급하고 같은9기록을 FinishOwner에도 Bind한다. 생산 갱신0047d890→00466200은 실제 Gump 분배 경계이며 Kernel PID로 추정하지 않는다. 이전 최종 경로/참조/과거SHA 감사와41자 로컬 이력 로그1건은 계속 인계한다.
+
 ## 2026-10-15 완료: 캠페인 단위16 공유 Player·연결 등록·Graph 종료 (`HJOW-Athlon`)
 
 - [x] AGENTS.md와 양 LEFT를 다시 읽고 기준 `c241c6f`에서 목표를 재개했다. 현재/마지막 디컴파일 PC는 **HJOW-Athlon, 2026-10-14**로 일치한다. 작업 단위별 인수인계·로컬 커밋을 수행하며 전체화면 DirectDraw 오류는 제외한다.

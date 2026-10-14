@@ -39,11 +39,16 @@ public:
     static std::uint32_t TimeSeed(double wallSeconds);
     // loader hook과 같은 pool인지 검사하는 참조다.
     const SidPool& Pool() const;
+    // 같은9 Player BYTE의 PATCH+78/CD+70을 공유하며 최초 지역을 현재 원문에서 읽는다.
+    void BindPlayerRecords(std::span<const std::uint8_t> players);
 private:
+    // 미연결 독립 모듈은 기존 상태, 캠페인은 공유 Player 첫 지역DWORD를 조회한다.
+    std::int32_t PlayerRegion(std::uint32_t owner) const;
     // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     const SidPool& pool_;/* types_: 타입 번호로 속성·플래그를 조회하는 타입 표. */ std::span<const RiftTypeRecord> types_;/* residences_: 거주건물. */ SquidPostPopList& residences_;
     // state_: 최초 진입만 읽는 모드/기본 지역과 반복 생성 때마다 읽는 현재 타입 전역이다 (FortFinishOwnerState).
     FortFinishOwnerState& state_;/* hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (FortFinishOwnerHooks). */ FortFinishOwnerHooks hooks_;
+    std::span<const std::uint8_t> players_; // 신전/IslandRuntime이 함께 갱신하는 같은9 Player 기록이다.
 };
 // 같은 월드의 Finish 몸체를 Fort loader의 필수 owner 후처리에 연결한다.
 FortObjectLoadHooks MakeFortFinishOwnerHooks(const SidPool& pool,const RawFortFinishOwner& finish,FortObjectLoadHooks hooks);

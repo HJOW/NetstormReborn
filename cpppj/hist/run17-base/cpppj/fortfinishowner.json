@@ -1,0 +1,63 @@
+{
+  "host": "VM-W11-CODEX",
+  "date": "2026-10-13",
+  "total": 1438,
+  "editions": {
+    "originals": {
+      "inputs": 719,
+      "native": {
+        "0040e1a0": 984,
+        "004bcab0": 378,
+        "004e49c0": 1962,
+        "0040ded0": 796,
+        "004bca20": 435552,
+        "004ac200": 528,
+        "0049a840": 528
+      },
+      "boundaries": {
+        "R": 360,
+        "T": 378,
+        "P": 217776,
+        "D": 4
+      }
+    },
+    "originalCD": {
+      "inputs": 719,
+      "native": {
+        "0042ca70": 984,
+        "004a5a10": 378,
+        "004f161c": 435930,
+        "0042c7a0": 796,
+        "0042c010": 217776,
+        "004a59d0": 435552,
+        "004a59a0": 254132,
+        "004abae0": 528
+      },
+      "boundaries": {
+        "R": 360,
+        "T": 378,
+        "P": 217776,
+        "D": 4
+      }
+    }
+  },
+  "files": {
+    "cpppj/src/o/RawFortFinishOwner.cpp": "9ba73e890b4eb689e6b281c974a811e3edaf6bac7ad6c5bafcbb46920c4cc941",
+    "cpppj/src/o/RawFortFinishOwner.h": "7c38fa6d70ec71257f69a39778201319def9e0d2d602b43cf64ffdd39a1e0eba",
+    "cpppj/tests/fixtures/fortfinishowner-x86.tsv": "0bcdfd8325d57267bb47c4e7927577285aabe4b90355b619b00e545a70256da5",
+    "extracted/fortfinishowner/originalCD/creation.c": "1e844a48710caf276bf35c13b4ddbec092fc99140d953cb8b77aa9e3c746e602",
+    "extracted/fortfinishowner/originalCD/functions.tsv": "ba9af2bee37c0998480ca9550e8d0bfaa667307752a4e8999c5ad200673aa612",
+    "extracted/fortfinishowner/originals/creation.c": "d9eb2bc9e5a8d82099d3ed9195895a131ae3d707573ec39783da90abb8d8f42e",
+    "extracted/fortfinishowner/originals/functions.tsv": "58428ba159bcf2c7ee5f1fef36e802921fbb98725081e2cc659c9668a3395f22",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_fortfinishowner_oracle.py": "d676c70b7931f2aeffd7a52c0d6d4415810534190b2765b5eb2b4f4e1df35592",
+    "tools/decomp_fortobjectload_oracle.py": "efc9faa3865fe20a9a85bf3285dbc78903ba9ea5923ccc147edd05fc8f53e51f",
+    "tools/ghidra/fortfinishowner-functions.json": "0001831952126951b279e3c6d4679b2a7eb8e6ba096e80e1e69b92b327d5a165"
+  },
+  "limits": [
+    "실제 owner entry·현재 residence 전체 순회·시각 seed·AddRandom/local PRNG/1000회 경계 실행",
+    "실제 지역 경계/현재 wall time/개별 생성·Pop·postPop 전체와 진단 출력은 필수 명시 경계",
+    "게임/GUI/실제 캠페인 완주 아님"
+  ]
+}

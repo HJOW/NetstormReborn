@@ -2,6 +2,7 @@
 # (첫 구성 때 인터넷에서 내려받을 것이 없다).
 # 테스트 파일을 만들면 아래 목록에 더한다. 파일 안의 TEST_CASE 는 자동으로 등록된다.
 add_executable(netstorm_tests
+    VortexOwnerTests.cpp
     # 준비된 원본 관찰과 실제 캠페인 부모·Player 예약·Burning 프레임을 대조한다.
     CampaignWorldLoadTests.cpp
     PlayerRegularTests.cpp
@@ -732,6 +733,8 @@ set_source_files_properties(ArcherAnimationTests.cpp PROPERTIES COMPILE_DEFINITI
     "NETSTORM_GUNARCHER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gunarcher-x86.tsv\"")
 set_source_files_properties(IslandRuntimeTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_ISLANDRUNTIME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/islandruntime-x86.tsv\"")
+set_source_files_properties(VortexOwnerTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_VORTEXOWNER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/vortex-owner-x86.tsv\"")
 
 # 실제 신전 의식 상위와 초기 지형 constructor/경계문자의 정상·assert 결과다.
 set_source_files_properties(TempleRitualTests.cpp PROPERTIES COMPILE_DEFINITIONS

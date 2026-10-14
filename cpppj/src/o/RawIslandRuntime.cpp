@@ -131,11 +131,35 @@ void RawIslandRuntime::Owner(std::int32_t island,std::uint32_t owner) {
     }
     if (owner) {
         if (owner>=modes_.playerRegions.size()) throw std::out_of_range("IslandRuntime Player첫지역범위오류");
-        if (modes_.playerRegions[owner]==kUnassignedFirstRegion) modes_.playerRegions[owner]=island;
+        if (FirstRegion(owner)==kUnassignedFirstRegion) FirstRegion(owner,island);
     }
 }
 // 같은mutable100개기록을외부소비자에게제공한다.
 std::span<const std::uint8_t> RawIslandRuntime::Bytes() const { return records_; }
 // 실제pool참조를월드바인딩검사에전달한다.
 const SidPool& RawIslandRuntime::Pool() const { return pool_; }
+// 잘못된 물리크기를 쓰기 전에 거부하고 같은 Player 주소만 빌린다.
+void RawIslandRuntime::BindPlayerRecords(std::span<std::uint8_t> players) {
+    const auto stride=pool_.Edition()==OriginalEdition::Patch1078 ? 0xb4U : 0xacU; // 실제 판본별 한 기록의 크기다.
+    if (players.size()!=9*stride) throw std::invalid_argument("IslandRuntime 실제9 Player 크기 오류");players_=players;
+}
+// 외부 residence callback 뒤의 현재 Player DWORD를 다시 읽는다.
+std::int32_t RawIslandRuntime::FirstRegion(std::uint32_t owner) const {
+    if (players_.empty()) return modes_.playerRegions.at(owner);
+    const bool patch=pool_.Edition()==OriginalEdition::Patch1078; // 첫 지역의 판본별 위치를 선택한다.
+    const auto field=owner*(patch ? 0xb4U : 0xacU)+(patch ? 0x78U : 0x70U); // 현재owner의 물리DWORD 주소다.
+    std::uint32_t value=0; // 현재 기록에서 읽은 원본 비트다.
+    // 정확한 네BYTE만 조합한다.
+    for (std::size_t index=0;index<4;++index) value|=static_cast<std::uint32_t>(players_[field+index])<<(index*8);
+    return std::bit_cast<std::int32_t>(value);
+}
+// 공유기록 모드에서는 첫 지역 필드만 저장한다. 다른 Player 메모리와 독립 상태는 보존한다.
+void RawIslandRuntime::FirstRegion(std::uint32_t owner,std::int32_t region) {
+    if (players_.empty()) { modes_.playerRegions.at(owner)=region;return; }
+    const bool patch=pool_.Edition()==OriginalEdition::Patch1078; // 실제 저장폭은 두 판본 모두DWORD다.
+    const auto field=owner*(patch ? 0xb4U : 0xacU)+(patch ? 0x78U : 0x70U); // 현재owner의 첫 지역 주소다.
+    const auto value=std::bit_cast<std::uint32_t>(region); // 부호와 무관하게 원본 비트를 저장한다.
+    // 인접 신전/레지던스 필드를 바꾸지 않는다.
+    for (std::size_t index=0;index<4;++index) players_[field+index]=static_cast<std::uint8_t>(value>>(index*8));
+}
 }

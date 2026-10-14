@@ -565,3 +565,21 @@ cpppj/src/o/RawAssetPostPop.h text eol=lf
 cpppj/src/o/RawAssetPostPop.cpp text eol=lf
 cpppj/src/client/RawSurfaceWorld.h text eol=lf
 cpppj/src/client/RawSurfaceWorld.cpp text eol=lf
+# 단위17의 새 신전/지역 공유 구현과 독립 입력은 전체 SHA 재현을 위해 LF로 유지한다.
+tools/check_campaign17.py text eol=lf
+tools/decomp_vortex_owner.py text eol=lf
+tools/ghidra/vortex-owner-functions.json text eol=lf
+cpppj/vortex-owner.json text eol=lf
+cpppj/run17.json text eol=lf
+cpppj/src/o/RawVortexOwner.h text eol=lf
+cpppj/src/o/RawVortexOwner.cpp text eol=lf
+cpppj/src/client/RawCampaignOwnership.h text eol=lf
+cpppj/src/client/RawCampaignOwnership.cpp text eol=lf
+cpppj/src/o/RawIslandRuntime.h text eol=lf
+cpppj/src/o/RawIslandRuntime.cpp text eol=lf
+cpppj/src/o/RawFortFinishOwner.h text eol=lf
+cpppj/src/o/RawFortFinishOwner.cpp text eol=lf
+cpppj/tests/IslandRuntimeTests.cpp text eol=lf
+cpppj/tests/VortexOwnerTests.cpp text eol=lf
+# 기존 Finish 검사 원문의 현재 CRLF 바이트도 고정하여 컴파일/근거 SHA를 보존한다.
+cpppj/tests/FortFinishOwnerTests.cpp -text whitespace=cr-at-eol

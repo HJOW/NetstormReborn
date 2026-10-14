@@ -55,7 +55,12 @@ public:
     std::span<const std::uint8_t> Bytes() const;
     // 실제pool의 동일성을 월드/후처리 바인딩에서 확인한다.
     const SidPool& Pool() const;
+    // 실제9 Player BYTE의 첫 지역DWORD를 직접 공유한다. 연결 뒤 modes.playerRegions 사본은 쓰지 않는다.
+    void BindPlayerRecords(std::span<std::uint8_t> players);
 private:
+    // 현재owner의 PATCH+78/CD+70 첫 지역DWORD를 읽고 쓴다.
+    std::int32_t FirstRegion(std::uint32_t owner) const;
+    void FirstRegion(std::uint32_t owner,std::int32_t region);
     // 실제 little endian BYTE/WORD/DWORD를 지정한 폭으로 읽는다.
     std::uint32_t Read(std::size_t offset,std::size_t width=4) const;
     // 지정한 폭의 원본 필드만 쓰고 이웃/padding을 보존한다.
@@ -88,5 +93,6 @@ private:
     IslandRuntimeHooks hooks_;
     // worldExtent_: 실제isValid에서float로 읽는 원본월드상한DWORD다.
     std::int32_t worldExtent_;
+    std::span<std::uint8_t> players_; // 생성/신전/경제와 같은 실제9 Player 기록이다. 미연결 독립 검사는 기존 상태를 쓴다.
 };
 }
