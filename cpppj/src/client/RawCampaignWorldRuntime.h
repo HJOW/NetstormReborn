@@ -17,7 +17,7 @@ struct RawCampaignInstallData {
 struct RawCampaignInstallEffects {
     std::function<std::span<const std::uint8_t>()> translateYou; // 현재 번역키 You의 실제 NUL 포함 바이트다.
     std::function<void(std::string_view,std::span<const std::uint8_t>)> setConfig; // 현재 fort.mySubHandle을 저장한다.
-    std::function<void()> refreshFortSpecification,resetCamera; // 원본 config 재조회와 카메라 재설정의 실제 소비자다.
+    std::function<void()> refreshWindowTitle,resetCamera; // 원본 창 제목 갱신과 카메라 재설정의 실제 소비자다.
     std::function<void(o::RawIslandBuilderAssertion)> builderAssertion; // PlaceAll의 실제 진단이다.
     std::function<void(o::FortWorldLoadAssertion)> territoryAssertion; // 현재 Territory의 누락/범위 진단이다.
     std::function<void(o::Sid)> notifySurface; // 저장 QA 지정 뒤 다리의 실제 표면 통지다.

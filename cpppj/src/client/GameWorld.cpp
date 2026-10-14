@@ -55,6 +55,36 @@ GameWorld::GameWorld(const GameAssets& assets,const o::FortTemplate& fort,o::Mis
     BuildTerrain();
     BuildSurfaces();
 }
+// 실제 캠페인에서는 이전 관찰기반 객체/지형 어댑터를 생성하지 않고 같은 raw 세션을 설치한다.
+GameWorld::GameWorld(const GameAssets& assets,const o::BaseFileSystem& files,o::FortTemplate fort,o::MissionPlayers players,
+    std::string mission,RawCampaignSessionServices services):assets_(assets),players_(std::move(players)) {
+    // 현재 보호 팔레트 번호만 UI 색 조회용으로 보관한다.
+    for (std::size_t i=0;i<palette_.size();++i) palette_[i]=assets_.Palette().Color(static_cast<std::uint8_t>(i));
+    campaign_=std::make_unique<RawCampaignSession>(assets,files,std::move(fort),std::move(mission),std::move(services));
+    campaign_->Load();RefreshCampaignObjects();
+}
+// 같은 실제 슬롯의 표시/선택용 뷰다. 이 목록에는 이동/HP 계산이나 별도 경로를 저장하지 않는다.
+void GameWorld::RefreshCampaignObjects() {
+    if (!campaign_) return;objects_.clear();const auto core=campaign_->Core();
+    // 현재 live 자산의 실제 SID/타입/좌표/프레임/HP를 조회한다.
+    for (const auto& snapshot:campaign_->World().Objects()) {
+        const auto& rawObject=snapshot.object;
+        if (rawObject.type<o::kFirstAssetTypeNumber || rawObject.type-o::kFirstAssetTypeNumber>=assets_.Types().size()) continue;
+        const auto& type=assets_.Types()[rawObject.type-o::kFirstAssetTypeNumber];const auto slot=core.pool.Slot(snapshot.sid);
+        o::Squid view;view.id=snapshot.sid.value;view.type=static_cast<int>(rawObject.type);view.owner=static_cast<int>(rawObject.owner);
+        view.x=rawObject.x;view.y=rawObject.y;view.cell={static_cast<int>(view.x),static_cast<int>(view.y)};view.frame=static_cast<std::size_t>(std::max(rawObject.frame,0));
+        view.initialFrame=view.frame;view.mobile=(core.types[rawObject.type].flags2&o::TypeFlag2::kWalker)!=0;
+        const auto& pictures=assets_.Shapes().Blocks()[type.block].frames;
+        view.visible=o::AsciiLower(type.assetName)!="noisland" && view.frame<pictures.size() && !pictures[view.frame].IsSpecial();
+        view.selectable=view.visible && !Has(type,"not_selectable") && !Has(type,"bridge");
+        if (campaign_->HitPoints().HasHitPoints(snapshot.sid)) {
+            view.maxHitPoints=campaign_->HitPoints().MaxHitPoints(snapshot.sid);
+            view.hitPoints=static_cast<std::int32_t>(static_cast<std::uint32_t>(slot[26])|(std::uint32_t(slot[27])<<8)|(std::uint32_t(slot[28])<<16)|(std::uint32_t(slot[29])<<24));
+        }
+        objects_.push_back(std::move(view));
+    }
+    if (selected_ && !Object(selected_)) selected_=0;
+}
 // 섬 타입의 저장 레코드는 원본처럼 건너뛰고 다른 자산 객체에 런타임 번호를 배정한다.
 void GameWorld::Place(const o::FortChunkSection& section,std::span<const o::ChunkCoordinate> chunks,int territory) {
     if (!section.present) return;
@@ -222,6 +252,7 @@ void GameWorld::RefreshSurfaceGround() {
 void GameWorld::RunFrame() {
     const bool stopped=paused && paused();
     if (frameTime) {
+        if (campaign_) { surfaceTime_=frameTime();SurfaceView();campaign_->RunFrame(surfaceTime_,stopped);RefreshCampaignObjects();return; }
         surfaceTime_=frameTime();SurfaceView();surfaces_->RunFrame(surfaceTime_,stopped);RefreshSurfaceGround();
         if (!stopped) AdvanceObjects(surfaceTime_.delta);
     } else if (elapsed && !stopped) Step(elapsed());
@@ -229,7 +260,9 @@ void GameWorld::RunFrame() {
 // 콘솔에서는 같은 실행 경로에 누적된 게임 시각을 공급한다.
 void GameWorld::Step(double seconds) {
     if (!std::isfinite(seconds) || seconds<0) throw std::invalid_argument("월드 시간차 범위 오류");
-    surfaceTime_.game+=seconds;surfaceTime_.delta=seconds;++surfaceTime_.number;SurfaceView();surfaces_->RunFrame(surfaceTime_,false);RefreshSurfaceGround();AdvanceObjects(seconds);
+    surfaceTime_.game+=seconds;surfaceTime_.delta=seconds;++surfaceTime_.number;SurfaceView();
+    if (campaign_) { surfaceTime_.wall+=seconds;campaign_->RunFrame(surfaceTime_,false);RefreshCampaignObjects();return; }
+    surfaces_->RunFrame(surfaceTime_,false);RefreshSurfaceGround();AdvanceObjects(seconds);
 }
 // 비표면 유닛의 관찰 기반 이동은 raw 표면 렌더링과 구별한다.
 void GameWorld::AdvanceObjects(double seconds) {
@@ -240,7 +273,7 @@ void GameWorld::AdvanceObjects(double seconds) {
 // 원본 가변 생산/상태 패널의 영역 계산은 아직 복원하지 않았으며, 위치 계산 함수 자체는 SoundPlayer의 원본 규칙을 쓴다.
 void GameWorld::SurfaceView() {
     const o::SquidDisplayRect clip{0,std::min(kMenuHeight,height_),width_,height_};
-    surfaces_->SetDisplay({scrollX_,scrollY_,65536,clip},surfaceDisplay);
+    Surfaces().SetDisplay({scrollX_,scrollY_,65536,clip},surfaceDisplay);
     if (soundViewChanged) soundViewChanged({scrollX_,scrollY_,clip.left,clip.top,clip.right,clip.bottom});
 }
 // 카메라 크기만 바뀌어도 다시 표시하고 위치 효과음의 화면 기준을 갱신한다. 같은 크기로 불러도 새 수신자를 갱신한다.
@@ -303,6 +336,12 @@ o::SquidId GameWorld::Pick(ScreenPoint point) const {
 void GameWorld::Select(o::SquidId id) { const auto* object=Object(id); selected_=object && object->selectable ? id : 0; changed_=true; }
 // 선택한 유닛의 주인이 나일 때만 명령을 적용한다.
 bool GameWorld::MoveSelected(ScreenPoint point) {
+    if (campaign_) {
+        const auto id=selected_;selected_=0;changed_=true;const auto* view=Object(id);
+        if (!view || view->owner!=1 || view->type!=static_cast<int>(o::kPriestType)) return false;
+        const o::Sid sid{static_cast<std::uint16_t>(id)};if (campaign_->Priests().PriestState().Immobile(sid)) return false;
+        return campaign_->MovePriest(sid,{static_cast<float>((point.x+scrollX_)/16.0),static_cast<float>((point.y+scrollY_)/11.0)});
+    }
     RefreshSurfaceGround();
     const auto id=selected_; selected_=0; changed_=true; if (id==0 || id>objects_.size()) return false;
     auto& object=objects_[id-1]; if (object.owner!=1 || !object.mobile || object.speed<=0) return false;
@@ -316,7 +355,13 @@ bool GameWorld::MoveSelected(ScreenPoint point) {
     object.goal=goal; object.route=std::move(route); object.next=0; object.walking=true; object.Face(object.route[0]); object.frame=Frame(object); return true;
 }
 // 존재하지 않는 번호와 0은 널이다.
-const o::Squid* GameWorld::Object(o::SquidId id) const { return id>0 && id<=objects_.size() ? &objects_[id-1] : nullptr; }
+const o::Squid* GameWorld::Object(o::SquidId id) const {
+    if (campaign_) {
+        const auto found=std::find_if(objects_.begin(),objects_.end(),[id](const o::Squid& object) { return object.id==id; });
+        return found==objects_.end() ? nullptr : &*found;
+    }
+    return id>0 && id<=objects_.size() ? &objects_[id-1] : nullptr;
+}
 // 화면 경계 밖 그림은 제출하지 않아 지형 전체를 매번 그리지 않는다.
 std::vector<RenderSprite> GameWorld::Sprites() const {
     std::vector<RenderSprite> result; const ScreenRect clip{0,kMenuHeight,width_,height_};
@@ -330,14 +375,15 @@ std::vector<RenderSprite> GameWorld::Sprites() const {
     // 받침·지면·절벽은 원본 이미지 기준점으로 제출한다.
     for (const auto& tile:tiles_) if (o::AsciiLower(tile.type->assetName)=="fringe") add(*tile.type,tile.frame,tile.x,tile.y,tile.owner,tile.depth,false);
     // 지면·받침·종유석·다리·연결 조각은 현재 raw SID의 프레임/좌표/소유자를 직접 제출한다.
-    for (const auto& snapshot:surfaces_->Objects()) {
-        const auto& object=snapshot.object;const auto& type=assets_.Types()[object.type-o::kFirstAssetTypeNumber];
+    for (const auto& snapshot:(campaign_ ? campaign_->World() : *surfaces_).Objects()) {
+        const auto& object=snapshot.object;if (object.type<o::kFirstAssetTypeNumber || object.type-o::kFirstAssetTypeNumber>=assets_.Types().size()) continue;
+        const auto& type=assets_.Types()[object.type-o::kFirstAssetTypeNumber];
         const auto name=o::AsciiLower(type.assetName);if (name=="noisland") continue;
         const auto depth=name=="islandstalag" ? kCliffDepth : (name=="isle" || name=="island" ? kLandDepth : kObjectDepth);
         add(type,static_cast<std::size_t>(object.frame),object.x,object.y,static_cast<int>(object.owner),depth,false);
     }
     // 살아 있는 객체의 현재 좌표와 현재 프레임을 제출한다.
-    for (const auto& object:objects_) if (object.visible && !Has(assets_.Types()[static_cast<std::size_t>(object.type-o::kFirstAssetTypeNumber)],"bridge")) {
+    for (const auto& object:objects_) if (!campaign_ && object.visible && !Has(assets_.Types()[static_cast<std::size_t>(object.type-o::kFirstAssetTypeNumber)],"bridge")) {
         const auto& type=assets_.Types()[static_cast<std::size_t>(object.type-o::kFirstAssetTypeNumber)];
         add(type,object.frame,object.x,object.y,object.owner,kObjectDepth,false);
     }
@@ -415,11 +461,11 @@ std::optional<ScreenPoint> GameWorld::Point(std::string_view label) const {
     return {};
 }
 // 표시 요청을 한 번만 소비한다.
-bool GameWorld::TakeChanged() { const bool rawChanged=surfaces_->TakeChanged();return std::exchange(changed_,false) || rawChanged; }
+bool GameWorld::TakeChanged() { const bool rawChanged=Surfaces().TakeChanged();return std::exchange(changed_,false) || rawChanged; }
 // 순수한 플레이어 초기 상태 조회다.
 const o::MissionPlayers& GameWorld::Players() const { return players_; }
 // 게임 명령/검사와 렌더링은 같은 raw 상태를 참조한다.
-RawSurfaceWorld& GameWorld::Surfaces() { return *surfaces_; }
+RawSurfaceWorld& GameWorld::Surfaces() { return campaign_ ? campaign_->World() : *surfaces_; }
 // 스모크 관찰용이며 실제 게임 화면에는 구현 세부 정보를 표시하지 않는다.
 std::string GameWorld::Report(bool mask) const {
     std::ostringstream out; out.precision(12);
@@ -433,10 +479,11 @@ std::string GameWorld::Report(bool mask) const {
         // 마스크 바이트를 표현할 16진수 숫자 표다.
         constexpr char digits[]="0123456789abcdef";
         // 각 바이트를 두 자리 16진수로 기록한다.
-        for (const auto value:terrain_->Mask()) out<<digits[value>>4]<<digits[value&15];
+        if (campaign_) { for (const auto value:campaign_->Core().spots) out<<digits[value>>4]<<digits[value&15]; }
+        else { for (const auto value:terrain_->Mask()) out<<digits[value>>4]<<digits[value&15]; }
         out<<"\n";
     }
-    out<<surfaces_->Report();
+    out<<(campaign_ ? campaign_->World() : *surfaces_).Report();
     return out.str();
 }
 }

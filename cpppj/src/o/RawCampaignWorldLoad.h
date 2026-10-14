@@ -15,7 +15,7 @@ struct CampaignWorldGlobals {
 struct CampaignWorldLoadHooks {
     std::function<std::span<const std::uint8_t>()> translateYou; // 원본 번역키"You"의 NUL 포함 실제 결과 BYTE다.
     std::function<void(std::string_view,std::span<const std::uint8_t>)> setConfig; // fort.mySubHandle과 NUL 포함 현재handle을 원본config 경계로 전달한다.
-    std::function<void()> refreshFortSpecification; // PATCH460730/CD4ca4e0의 현재 사양 재조회 경계다.
+    std::function<void()> refreshWindowTitle; // PATCH460730/CD4ca4e0의 현재 창 제목 갱신 경계다.
     std::function<void(RawIslandBuilderAssertion)> builderAssertion; // 실제 PlaceAll/Add/Bounds/CanonDecoder 진단을 보존한다.
     std::function<void(const RawIslandBuilderState&,std::int32_t)> generate; // 같은지도/3204BYTE/두난수의 현재 정상 지형 생성이다.
     std::function<const FortTemplate&(std::uint32_t)> currentTemplate; // Objects 직전의 현재Template owner를 다시 선택한다.

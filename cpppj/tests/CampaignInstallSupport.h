@@ -305,7 +305,7 @@ struct InstallScene {
         RawCampaignInstallEffects hooks;
         hooks.translateYou=[this] { return std::span<const std::uint8_t>(translated); };
         hooks.setConfig=[this](std::string_view key,std::span<const std::uint8_t> bytes) { CHECK(key=="fort.mySubHandle" && bytes.size()==4);external.push_back("이름 config"); };
-        hooks.refreshFortSpecification=[this] { external.push_back("사양 재조회"); };hooks.resetCamera=[this] { external.push_back("카메라"); };
+        hooks.refreshWindowTitle=[this] { external.push_back("사양 재조회"); };hooks.resetCamera=[this] { external.push_back("카메라"); };
         hooks.builderAssertion=InstallForbidden<void,RawIslandBuilderAssertion>();hooks.territoryAssertion=InstallForbidden<void,FortWorldLoadAssertion>();
         hooks.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); };
         hooks.setState=[this](Sid sid,std::uint32_t value) { assetBindings->SetState(sid,value); };

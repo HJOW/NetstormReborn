@@ -1,0 +1,19 @@
+{
+  "baseline": "a24db9d",
+  "host": "HJOW-Athlon",
+  "files": {
+    ".gitattributes": "25f22048dc160b4254cd3910c40e729d2254ccc5892c05592b2acf09cf6c5eb1",
+    "LEFT_JOBS.md": "64e3ef2acf361e7e475d2e1668442359c165cf6bb5ba4df70a3e3d317da3d05c",
+    "cpppj/src/client/CMakeLists.txt": "a4f3fa96d33d31e6363b0b53b9349852290bb0ca7f30a7d99db9a7aeea122b41",
+    "cpppj/tests/CMakeLists.txt": "aace64ebdc1678bfdf480a70fec47e0daa06290dd956cbe40f49593c07c4ecbe",
+    "cpppj/src/client/GameWorld.h": "6f6f5bc3811ddb40e33292fac06a968c74ca2b55642db4580b47f7e3190f5898",
+    "cpppj/src/client/GameWorld.cpp": "8b417d5eda6564cc35554428c37ce72bd45ff31910398ffeb45170e9d9968a0b",
+    "cpppj/src/client/UberGump.cpp": "7c7e852388d278762d0b2036502c6b4918375f67b772b180f66beac2367fc912",
+    "cpppj/tests/CampaignInstallSupport.h": "2d42c64bfd2e49e9f1bdb5218c8e0e3f47d5029e24a9c1e2c65180aaf08cf02a",
+    "cpppj/src/client/RawCampaignWorldRuntime.cpp": "c8013d0c7e3b1b3b9f3196a202397d4f24c17c592186cf2fec201820ba7e473c",
+    "cpppj/src/client/RawCampaignWorldRuntime.h": "4832ee863ef658efb14479c720c0ffa47104c1bcbdd1d042adb4d3f2330f0f97",
+    "cpppj/src/o/RawCampaignWorldLoad.cpp": "89e879705ca786d6f3b06b5d5e7f89af2723991768ad11cca61be5394886b7a6",
+    "cpppj/src/o/RawCampaignWorldLoad.h": "0b08303977f130b0a3c6f651f2fe0fd69e1754ebc80e771cc92b7b89590dbbd5",
+    "cpppj/tests/CampaignWorldLoadTests.cpp": "3f104339ae0ff4ef53e366b50c801427e7a268d8991731a67677e73fbac68326"
+  }
+}

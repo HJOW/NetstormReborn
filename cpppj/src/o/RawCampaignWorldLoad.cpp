@@ -12,7 +12,7 @@ RawCampaignWorldLoad::RawCampaignWorldLoad(ChunkMap& world,RawIslandRuntime& isl
     CampaignWorldGlobals& globals,std::span<std::uint8_t> templateHeaders,std::span<std::uint8_t> currentHandle,CampaignWorldLoadHooks hooks)
     :world_(world),islands_(islands),frames_(frames),puzzlePiece_(puzzlePiece),noRegion_(noRegion),territory_(territory),player_(player),globals_(globals),templates_(templateHeaders),handle_(currentHandle),hooks_(std::move(hooks)) {
     if (&islands.Pool()!=&player.Pool() || &territory.Pool()!=&player.Pool() || frames.size()!=(player.Pool().Edition()==OriginalEdition::Patch1078 ? 188U : 171U) ||
-        templates_.size()!=180 || handle_.empty() || !hooks_.translateYou || !hooks_.setConfig || !hooks_.refreshFortSpecification || !hooks_.builderAssertion || !hooks_.generate || !hooks_.currentTemplate || !hooks_.objects || !hooks_.rebuildGraph || !hooks_.resetCamera)
+        templates_.size()!=180 || handle_.empty() || !hooks_.translateYou || !hooks_.setConfig || !hooks_.refreshWindowTitle || !hooks_.builderAssertion || !hooks_.generate || !hooks_.currentTemplate || !hooks_.objects || !hooks_.rebuildGraph || !hooks_.resetCamera)
         throw std::invalid_argument("실제 캠페인 부모의 동일 Pool/현재 저장소/필수 하위 경계 누락");
 }
 // 원본 두strcpy 형태는 같은 NUL BYTE까지 쓰며 나머지 stale 메모리를 보존한다.
@@ -39,7 +39,7 @@ void RawCampaignWorldLoad::Load() const {
     auto header=templates_.subspan(owner*20+8,4); // 최초현재Template의+8 DWORD만1로 저장한다.
     header[0]=1;header[1]=header[2]=header[3]=0;CopyName(handle_,hooks_.translateYou());
     const auto handleEnd=std::find(handle_.begin(),handle_.end(),std::uint8_t{}); // config에전달하는현재NUL포함handle이다.
-    hooks_.setConfig("fort.mySubHandle",handle_.first(static_cast<std::size_t>(handleEnd-handle_.begin())+1));hooks_.refreshFortSpecification();
+    hooks_.setConfig("fort.mySubHandle",handle_.first(static_cast<std::size_t>(handleEnd-handle_.begin())+1));hooks_.refreshWindowTitle();
     player_.Create(std::bit_cast<std::int32_t>(player_.State().battleOwner));
     RawIslandBuilderState state;RawIslandBuilder builder(world_,world_,islands_,frames_,puzzlePiece_,state,hooks_.builderAssertion);
     if (globals_.editor) { auto raw=CurrentPlayer();const auto field=Pool().Edition()==OriginalEdition::Patch1078 ? 0x78U : 0x70U;std::fill_n(raw.begin()+field,4,std::uint8_t{}); }

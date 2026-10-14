@@ -9,6 +9,7 @@ add_executable(netstorm_tests
     CampaignFireTests.cpp
     CampaignHitTests.cpp
     CampaignSeedTests.cpp
+    CampaignSessionTests.cpp
     ProjectileGeometryTests.cpp
     DiscRegularTests.cpp
     CampaignNativeFrameTests.cpp

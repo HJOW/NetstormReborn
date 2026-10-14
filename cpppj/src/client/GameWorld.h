@@ -4,6 +4,7 @@
 #include "client/GameAssets.h"
 #include "client/Renderer.h"
 #include "client/RawSurfaceWorld.h"
+#include "client/RawCampaignSession.h"
 #include "client/Sound.h"
 #include "o/BaseProcess.h"
 #include "o/Player.h"
@@ -17,6 +18,9 @@ class GameWorld : public o::BaseProcess {
 public:
     // 저장 위치를 쓰는 Tutorial 미션의 초기 월드를 만든다. Battle 재배치는 아직 지원하지 않는다.
     GameWorld(const GameAssets& assets,const o::FortTemplate& fort,o::MissionPlayers players);
+    // 실제 캠페인 세션을 소유하며 모든 그림/선택/이동이 같은 raw SID를 사용한다.
+    GameWorld(const GameAssets& assets,const o::BaseFileSystem& files,o::FortTemplate fort,o::MissionPlayers players,
+        std::string mission,RawCampaignSessionServices services);
     // Kernel에서 호출할 실제 게임 시간과 정지 상태의 공급자를 연결한다.
     std::function<double()> elapsed;
     // paused: 현재 게임 시계가 정지했는지 조회하는 콜백.
@@ -66,6 +70,8 @@ public:
     // 검사/후속 게임 명령이 사용하는 실제 raw 표면 월드다. 표시도 같은 슬롯을 읽는다.
     RawSurfaceWorld& Surfaces();
 private:
+    // 현재 실제 슬롯에서 읽기 전용 UI 뷰만 갱신하며 별도 게임 상태를 진행하지 않는다.
+    void RefreshCampaignObjects();
     // 월드 지형 타일의 타입·프레임·좌표·소유자·깊이이다.
     struct Tile { /* type: 객체 종류를 구별하는 타입 자료. */ const TypeAsset* type{}; /* frame: 타입에서 사용할 그림 프레임 번호. */ std::size_t frame{}; /* x: X 좌표. */ /* y: Y 좌표. */ /* owner: 객체나 지역을 소유한 플레이어 번호. */ int x{},y{},owner{}; /* depth: 출력이나 이벤트 후보의 깊이 값. */ std::int16_t depth{}; };
     // 청크 순서의 저장 객체를 월드 좌표에 생성한다.
@@ -108,6 +114,7 @@ private:
     std::vector<Tile> tiles_;
     // surfaces_: 표면 객체의 공간·연결·수명 처리 자료.
     std::unique_ptr<RawSurfaceWorld> surfaces_;
+    std::unique_ptr<RawCampaignSession> campaign_; // 실제 설치/전투/경로/HP/현재 Kernel의 단일 수명 소유자다.
     // surfaceTime_: 표면 프레임 갱신에 누적한 게임 시각(초).
     o::FrameTime surfaceTime_{};
     // surfaceCells_: 월드 칸별 표면 객체 등록 정보.

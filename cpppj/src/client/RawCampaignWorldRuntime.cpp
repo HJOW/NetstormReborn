@@ -34,7 +34,7 @@ struct RawCampaignWorldRuntime::Impl {
             &hp.Pool()!=&core.pool || &hp.Bookkeeping()!=&core.bookkeeping || &ownership.Vortex().Pool()!=&core.pool || &finish.Pool()!=&core.pool ||
             &contained.Pool()!=&core.pool || ownership.Vortex().Records().data()!=player.Records().data() ||
             data.templates.size()!=9 || data.territories.size()!=9 || data.headers.size()!=180 || data.handle.empty() ||
-            !effects.translateYou || !effects.setConfig || !effects.refreshFortSpecification || !effects.resetCamera ||
+            !effects.translateYou || !effects.setConfig || !effects.refreshWindowTitle || !effects.resetCamera ||
             !effects.builderAssertion || !effects.territoryAssertion || !effects.notifySurface || !effects.setState || !effects.virtualCount)
             throw std::invalid_argument("캠페인 설치의 동일 Core/Player/9 Template/실제 경계 누락");
         finish.BindPlayerRecords(player.Records());
@@ -62,7 +62,7 @@ struct RawCampaignWorldRuntime::Impl {
         territoryHooks.populateIsland=[](const o::RawIslandBuilderState&,std::int32_t) { throw std::logic_error("캠페인 설치의 alternate Fort populate 미연결"); };
         territoryHooks.rebuildGraph=[this](bool mode) { core.graph.Rebuild(mode); };
         territory=std::make_unique<o::RawFortWorldLoad>(core.pool,chunks,islands,core.frames,puzzlePiece,player.State().templateOwner,noRegion,objectState.loadingDepth,std::move(territoryHooks));
-        o::CampaignWorldLoadHooks campaignHooks{effects.translateYou,effects.setConfig,effects.refreshFortSpecification,effects.builderAssertion,
+        o::CampaignWorldLoadHooks campaignHooks{effects.translateYou,effects.setConfig,effects.refreshWindowTitle,effects.builderAssertion,
             [this](const o::RawIslandBuilderState& builder,std::int32_t region) { Generate(builder,region); },
             [this](std::uint32_t slot)->const o::FortTemplate& { return Template(slot); },
             [this](const o::FortTemplate& input,std::uint32_t slot) { objects->Load(input,static_cast<std::int32_t>(slot)); },

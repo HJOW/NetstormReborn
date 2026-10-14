@@ -684,6 +684,20 @@ cpppj/tests/fixtures/squid-level-x86.tsv text eol=lf
 tools/ghidra/squid-level*-functions.json text eol=lf
 extracted/squid-level*/** -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
 # 전체 캠페인 Kernel 연결의 신규 원문은 UTF-8/LF로 고정한다.
+# 실제 생산 세션과 GameWorld의 현재 바이트를 LF로 고정한다.
+cpppj/src/client/RawCampaignSession.* text eol=lf
+cpppj/src/client/GameWorld.* text eol=lf
+cpppj/src/client/RawCampaignWorldRuntime.* text eol=lf
+cpppj/src/o/RawCampaignWorldLoad.* text eol=lf
+cpppj/tests/CampaignSessionTests.cpp text eol=lf
+cpppj/tests/CampaignWorldLoadTests.cpp text eol=lf
+tools/check_campaign25.py text eol=lf
+tools/ghidra/campaign-client-functions.json text eol=lf
+cpppj/run25.json text eol=lf
+docs/exe/cpp-run25-20261015.md text eol=lf
+extracted/campaign-client/** -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+extracted/run25-*.log -text
+extracted/run25_*.py -text
 cpppj/tests/CampaignFrameTests.cpp text eol=lf
 tools/check_campaign20.py text eol=lf
 cpppj/run20.json text eol=lf
