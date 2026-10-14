@@ -1,0 +1,25 @@
+{
+    "host":  "HJOW-Athlon",
+    "baseline_commit":  "c241c6f",
+    "files":  {
+                  "cpppj/src/o/RawAssetPostPop.h":  "f9c8af71e5c351f6bf964add75d06af0a8d8b4a2346f5ba3665a5c44880633aa",
+                  "cpppj/src/o/RawAssetPostPop.cpp":  "b24f88e6cac9aa2275fe0821f9856143761123628ed0450a205c946205c85d73",
+                  "cpppj/src/client/RawSurfaceWorld.h":  "ee59c85ea6a642c5fb82f9eb8387ee6d5f170d16b3a848339914dbec9420b6c2",
+                  "cpppj/src/client/RawSurfaceWorld.cpp":  "230fe40222dddc780fc88e63cd7f252a1f285086e2b5ee7ac75b614488ccfd19",
+                  "cpppj/src/client/RawCampaignAssetBindings.h":  "eb33fc606d131e561811a82540acb10d5cd33817894ad34ea90b23bb9763edb4",
+                  "cpppj/src/client/RawCampaignAssetBindings.cpp":  "7747a030b9916bd58e4c7fb9d04e7a39a0814ca4b11111436999b831fe14f8bf",
+                  "cpppj/src/client/RawCampaignPathBindings.h":  "60ba6fdb85793117685d888b73e4dfb1f9dad7cb74d50dde63ac47c504bc2463",
+                  "cpppj/src/client/RawCampaignPathBindings.cpp":  "3cb584c6ff3797d7de01f1c18e83074323a2883ba5e852a5f598b91ebf3ac993",
+                  "cpppj/src/client/CMakeLists.txt":  "24fe88f70687bf85c95418a8054e93b99a0878c90bc6b5c7d58ec597a6d4db94",
+                  "cpppj/tests/CMakeLists.txt":  "230c6fd7b6235afb98233d8f72a19ab2fd9af166d02f1dd5dfa2caff3f7eb1ee",
+                  "cpppj/tests/AssetPostPopTests.cpp":  "cb4af5bfc7b3f3e1f1a08b7a4a3f35b4a63566daa8de7eb9897a977a1be7d9c2",
+                  "cpppj/tests/RawSurfaceWorldTests.cpp":  "425a3056b0edab2cb6d3d953b172c1dba9cdd1cff5961ef5f265fc9f00143966",
+                  "cpppj/tests/fixtures/assetpostpop-x86.tsv":  "706afb7e0bd78de2527e97a1ec1bbe1f35a202aafbd2c81a0dc8d77d99198741",
+                  "cpppj/assetpostpop.json":  "304afebe7339127991718e767b0fcf402ba89f5e2cc3d650457f47acfbe103e5",
+                  "tools/decomp_assetpostpop_oracle.py":  "347af1e5202ecf14b5f32125f19046e83fdd1ee420018510333437c001154e31",
+                  "cpppj/campaign-path-bindings.json":  "44c8691d48a448d9d7100f1e6314f5dee8a5808238a8aa5e0b6980259ce5d52a",
+                  "tools/analyze_campaign_path_bindings.py":  "e50f6af3f1a4505e86fcad843ad9fbaf54c10f634cc0f848a37ac5ee5df88308",
+                  "cpppj/run15.json":  "dc0bdfaafdc7d60880c1f91983c4b7417fba9a119c31a1ebcb1e77c3739268ba",
+                  ".gitattributes":  "957b9198c91af152d748e9ff9fe527b8876098cea1f4e0ea816cc1c047827a7e"
+              }
+}

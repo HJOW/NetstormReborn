@@ -665,7 +665,7 @@ set_source_files_properties(SpRotateTests.cpp PROPERTIES COMPILE_DEFINITIONS
 
 # 건물 가상 postPop과 일반 Pop/Unpop 옆면의 독립 원본 관찰이다.
 set_source_files_properties(AssetPostPopTests.cpp PROPERTIES COMPILE_DEFINITIONS
-    "NETSTORM_ASSETPOSTPOP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/assetpostpop-x86.tsv\"")
+    "NETSTORM_ASSETPOSTPOP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/assetpostpop-x86.tsv\";NETSTORM_ASSETPLAYER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/asset-player-x86.tsv\"")
 # Factory/아비어리의 실제 일반 finder·프레임 구간·목록 등록 관찰이다.
 set_source_files_properties(FactoryPostPopTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_FACTORYPOSTPOP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/factorypostpop-x86.tsv\"")

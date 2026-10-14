@@ -2,6 +2,7 @@
 #pragma once
 #include "o/RawCarrierPostPop.h"
 #include <array>
+#include <span>
 
 namespace netstorm::o {
 // 원본 Player의 신전 네 필드를 유지한다. 복사본을 읽지 않도록 실행 월드가 이 저장소를 공유한다.
@@ -80,6 +81,9 @@ public:
     void Validate(Sid sid,std::uint32_t flags,const RawGraphPop* pop=nullptr) const;
     // Gun·제네레이터·레지던스·배리케이드·가이저·신전 전체 재정의 순서를 실행한다.
     void PostPop(Sid sid,std::uint32_t flags) const;
+    // 실제9 Player BYTE를 공유한다. 현재 localOwner 포인터를 주면 외부 효과 후에도 그 DWORD를 다시 읽는다.
+    // 기록은 PATCH0xb4/CD0xac 크기9개이며 이 모듈보다 오래 살아야 한다. 생략한 owner는 state.localOwner다.
+    void BindPlayerRecords(std::span<std::uint8_t> records,const std::uint32_t* currentLocalOwner=nullptr);
     // SquidPostPop 구성 때 같은 풀인지 확인한다.
     const SidPool& Pool() const;
 private:
@@ -97,6 +101,14 @@ private:
     void Vortex(Sid sid,std::uint32_t flags,std::uint32_t kind) const;
     // Damageable 뒤 Player·목록·영역·다른 신전 삭제·slot 생성을 처리한다.
     void VortexBase(Sid sid,std::uint32_t flags) const;
+    // 현재 Player의 신전 네 DWORD를 실제 BYTE 저장소에서 읽는다. 미연결 독립 모듈은 기존 상태를 사용한다.
+    std::uint32_t PlayerTemple(std::uint32_t owner,std::size_t field) const;
+    // 초기/새 신전 및 각각의 복사 필드를 정확DWORD 폭으로 쓰고 다른 Player 바이트를 보존한다.
+    void SetPlayerTemple(std::uint32_t owner,std::size_t field,std::uint32_t sid) const;
+    // 실제9기록의 판본별 신전 필드 주소를 계산한다. field0..3은 initial/copy/new/copy 순서다.
+    std::size_t PlayerTempleOffset(std::uint32_t owner,std::size_t field) const;
+    // 현재 외부 battleOwner DWORD 또는 독립 모듈의 localOwner BYTE를 조회한다.
+    std::uint32_t LocalOwner() const;
     // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
     // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
@@ -109,5 +121,9 @@ private:
     AssetPostPopState& state_;
     // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (AssetPostPopHooks).
     AssetPostPopHooks hooks_;
+    // playerRecords_: Player 생성·AI·경제와 공유하는 현재9기록이다. 연결되면 state.players 사본을 쓰지 않는다.
+    std::span<std::uint8_t> playerRecords_;
+    // localOwner_: 효과 콜백이 변경할 수 있는 현재 원본 소유자 DWORD의 장기 주소다.
+    const std::uint32_t* localOwner_{};
 };
 }

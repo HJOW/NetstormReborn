@@ -123,6 +123,8 @@ public:
     // 원본 Fort 순서대로 Create/필드 저장/Pop하는 로더의 시작과 종료다. 종료 시 Graph를 재구성한다.
     void BeginLoad();
     void FinishLoad();
+    // 실제 캠페인 부모가 Graph(false)를 이미 실행한 뒤 로딩 상태만 종료한다. Graph/풀/해시를 재구성하지 않는다.
+    void FinishLoadAfterGraph();
     // 로더와 실제 명령이 사용하는 같은 가상 생성·SHP 공간 등록·해제·재등록이다.
     o::Sid Create(std::uint32_t type,std::uint32_t flags=0);
     void Pop(o::Sid sid,float x,float y,std::uint32_t flags);

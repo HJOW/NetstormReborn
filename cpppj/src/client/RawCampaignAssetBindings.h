@@ -29,7 +29,7 @@ struct RawCampaignAssetEffects {
 class RawCampaignAssetBindings {
 public:
     // 동일 Pool의 실제 Carrier Damageable/섬 목록과 현재9 Player BYTE를 받는다.
-    // shared BindPlayerRecords API가 있는 단위15 이후 소스에서 사용한다.
+    // BindPlayerRecords로 Player 생성과 같은 기록 및 현재 battleOwner 주소를 공유한다.
     RawCampaignAssetBindings(RawSurfaceWorld& world,const o::RawCarrierPostPop& damageable,
         o::AssetPostPopState& assets,o::GameRandom& random,o::RawIslandRuntime& islands,
         std::span<std::uint8_t> playerRecords,o::PlayerWorldState& playerState,

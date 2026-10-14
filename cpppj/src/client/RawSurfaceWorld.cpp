@@ -189,7 +189,12 @@ void RawSurfaceWorld::BeginLoad() {
 // 모든 실제 객체를 등록한 뒤 원본 Graph/장부를 활성화한다.
 void RawSurfaceWorld::FinishLoad() {
     auto& s=*impl_;if (!s.loading || s.loaded) throw std::logic_error("raw 월드 로드 종료 순서 오류");
-    s.graph->Rebuild(true);s.bookkeeping.graphsEnabled=true;SetLoadingDepth(0);s.loading=false;s.loaded=true;s.changed=true;
+    s.graph->Rebuild(true);FinishLoadAfterGraph();
+}
+// 실제 부모의 Graph(false)·mission 후처리·Camera 순서를 끝낸 뒤 로딩 활성화만 수행한다.
+void RawSurfaceWorld::FinishLoadAfterGraph() {
+    auto& s=*impl_;if (!s.loading || s.loaded) throw std::logic_error("raw 월드 로드 종료 순서 오류");
+    s.bookkeeping.graphsEnabled=true;SetLoadingDepth(0);s.loading=false;s.loaded=true;s.changed=true;
 }
 // 복원된 타입 생성자를 같은 풀에서 실행한다.
 o::Sid RawSurfaceWorld::Create(std::uint32_t type,std::uint32_t flags) { impl_->changed=true;return impl_->factory->Create(type,flags); }

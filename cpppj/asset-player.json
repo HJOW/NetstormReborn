@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "host": "HJOW-Athlon",
+  "last_decompile_date": "2026-10-14",
+  "new_native_inputs": 576,
+  "prior_input_recount": 0,
+  "editions": {
+    "originals": {
+      "inputs": 288,
+      "returns": 288,
+      "assertions": 0,
+      "instructions": 32688
+    },
+    "originalCD": {
+      "inputs": 288,
+      "returns": 288,
+      "assertions": 0,
+      "instructions": 37128
+    }
+  },
+  "files": {
+    "cpppj/tests/fixtures/asset-player-x86.tsv": "9562745a755606ed0492e8a457d1c5f97822f073896882db282e04bbb992c3a4",
+    "extracted/assetpostpop/originalCD/creation.c": "2c920a9b21b29126773c2a4bbf33b48b2e7819909c8d731ae571d796636547e3",
+    "extracted/assetpostpop/originalCD/functions.tsv": "5f5ed429a2f4ea6f6cdfef8bd0cf97baef9e4914954455ae457f2dcedcb1304a",
+    "extracted/assetpostpop/originals/creation.c": "f80f3255e1a56c40231006034d1ebaabdc5439e3e9d7e8d61696a6d76057c485",
+    "extracted/assetpostpop/originals/functions.tsv": "58ccb9666a16b0fa1c3169e2d11b6fe17337c36c61667ea6edc29512a351f8d8",
+    "extracted/owner/originalCD/creation.c": "115d3f4790315c3647e18c087579cf3aa08af06cdbaeca42adbac1e82725af62",
+    "extracted/owner/originalCD/functions.tsv": "4e184997f62c2622b26b3fa4f047a2580a609d2d919f0e414a75e8efd49d4439",
+    "extracted/owner/originals/creation.c": "f9919c046d5259526946f106b47b6259fe5e04971f743d6fa02d6a5361b9dc16",
+    "extracted/owner/originals/functions.tsv": "3ea66dace80a85999a8b2c2dbadb4d5f1bd18b0dcdb0768f9c41075206c7c72d",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_asset_players.py": "62d3bdf7532bb2c18438063ef57fad59bcb0dfabc9bf0132aa1172448840ae0a",
+    "tools/decomp_assetpostpop_oracle.py": "347af1e5202ecf14b5f32125f19046e83fdd1ee420018510333437c001154e31",
+    "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb"
+  }
+}

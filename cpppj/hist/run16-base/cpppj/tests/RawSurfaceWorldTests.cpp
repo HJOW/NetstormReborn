@@ -1,0 +1,174 @@
+// GUI가 소유하는 raw 월드의 시각·정지·장치 교체·예약 수명을 원본 파일 없이 검사한다.
+#include "RawSceneSupport.h"
+#include "client/RawSurfaceWorld.h"
+#include "o/SquidFactory.h"
+#include <limits>
+
+using namespace netstorm::o;
+using namespace netstorm::client;
+using namespace netstorm::test::rawscene;
+namespace {
+// 실제 표면 타입 번호 및 정상/단단한 K 다리의 원본 프레임 번호다.
+constexpr std::uint32_t kBridge=82,kTerrain=83,kIsland=94,kStalag=95,kConnector=155,kSurface=157;
+constexpr int kNormal=41,kHard=46,kEnd=56;
+// 저장된 실제 bridge.type 코드 한 행을 읽는다. 연결 결과를 합성하지 않는다.
+RiftTypeFrames ActualBridgeFrames() {
+    std::ifstream input(NETSTORM_BRIDGEDECAY_FIXTURE);std::string line;
+    // 첫 프레임 행 뒤의 큰 관찰 목록은 읽지 않는다.
+    while (std::getline(input,line)) {
+        if (!line.starts_with("Frames\t0\t")) continue;
+        const auto hex=Split(line,'\t').at(2);std::vector<FrameCode> result;
+        // 네 바이트가 하나의 프레임 코드다.
+        for (std::size_t i=0;i+7<hex.size();i+=8) {
+            const auto byte=[&](std::size_t offset) { return static_cast<std::uint8_t>(std::stoul(hex.substr(i+offset,2),nullptr,16)); };
+            result.push_back({byte(0),byte(2),byte(4),byte(6)});
+        }
+        return RiftTypeFrames(std::move(result));
+    }
+    throw std::runtime_error("실제 다리 프레임 fixture 없음");
+}
+// RawSurfaceWorld 검사에서 같은 풀·상태·처리기를 조립해 입력과 결과를 대조하는 자료형이다.
+struct Inputs {
+    // types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다.
+    std::vector<RiftTypeRecord> types;
+    // frames: 타입별 프레임 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
+    std::vector<RiftTypeFrames> frames;
+    // shapes: 프레임의 크기·그림 데이터를 조회하는 셰이프 자료. 입력 구성 또는 실행 결과 대조에 사용한다.
+    std::vector<SquidDisplayShape> shapes;
+    // links: 연결 함수들이 읽는 원본 전역이다. 패치 주소 / CD 주소를 주석에 둔다 (BridgeConnectState).
+    BridgeConnectState links;
+    // 실제 생성자/플래그와 작은 합성 SHP를 사용한다. 실제 SHP는 GUI 스모크에서 별도 확인한다.
+    explicit Inputs(OriginalEdition edition):types(edition==OriginalEdition::Patch1078 ? 188 : 171),
+        frames(types.size(),RiftTypeFrames({})),shapes(types.size()) {
+        const auto define=[&](std::uint32_t type,std::uint32_t flags1,std::uint32_t flags2,int foot) {
+            auto& value=types[type];value.constructorAddress=TypeConstructorAddress(edition,type);
+            value.flags1=flags1;value.flags2=flags2;value.footX=value.footY=foot;
+        };
+        define(kBridge,0x802,4,1);types[kBridge].cost=5;define(kTerrain,0x28000803,2,1);
+        define(kIsland,0x28000003,0x01000000,3);define(kStalag,0x28000002,0,3);
+        define(kConnector,0x28000002,0x02000000,1);define(kSurface,0x08000803,0x01000002,1);
+        frames[kBridge]=ActualBridgeFrames();frames[kTerrain]=RiftTypeFrames({FrameCode{'A','A',0,0}});
+        std::vector<FrameCode> surface;
+        // noIsland 적재에서 선택되는 실제 글자 순서다.
+        for (const char side:std::string_view("FCGBADIEH")) surface.push_back({static_cast<std::uint8_t>(side),'P',1,0});
+        frames[kSurface]=RiftTypeFrames(std::move(surface));
+        // 소유자별 받침·종유석 프레임과 연결 조각에 실제 크기의 발자국을 공급한다.
+        for (const auto type:{kIsland,kStalag,kConnector}) frames[type]=RiftTypeFrames(std::vector<FrameCode>(9,FrameCode{'A','P',1,0}));
+        // 표시 픽셀과 공간 칸 크기를 각각 공급한다.
+        for (const auto type:{kBridge,kTerrain,kIsland,kStalag,kConnector,kSurface}) {
+            auto& shape=shapes[type];shape.loaded=true;shape.frameCount=static_cast<int>(frames[type].Codes().size());
+            shape.frames.assign(static_cast<std::size_t>(shape.frameCount),SquidDisplayFrame{20,16,8,12,
+                static_cast<float>(types[type].footX),static_cast<float>(types[type].footY)});
+        }
+        links.bridgeType=kBridge;links.islandType=kIsland;links.stalagType=kStalag;links.connectorType=kConnector;
+        links.noIslandType=kSurface;links.battle=true;
+    }
+    // 월드 생성 뒤 입력 자료 수명이 끝나도 내부 표는 유효하다.
+    std::unique_ptr<RawSurfaceWorld> Make(OriginalEdition edition) const {
+        return std::make_unique<RawSurfaceWorld>(edition,types,frames,shapes,links,kTerrain);
+    }
+};
+// 순서를 뒤섞은 3×3 받침과 동쪽 두 다리를 초기 입력으로 제공한다.
+std::vector<SurfaceSeed> Seeds(bool hard=false) {
+    std::vector<SurfaceSeed> result{{kBridge,3,kNormal,32,29},{kBridge,3,hard ? kHard : kNormal,31,29}};
+    // 역순 저장이어도 월드는 행 우선으로 적재해야 한다.
+    for (int y=30;y>=28;--y)
+        // 같은 행도 뒤에서부터 전달한다.
+        for (int x=30;x>=28;--x) result.push_back({kSurface,0,0,static_cast<float>(x),static_cast<float>(y)});
+    return result;
+}
+// 요약의 필드만 읽고 raw SID 번호는 시나리오에서 직접 조회한다.
+std::vector<std::string> Summary(const RawSurfaceWorld& world) { const auto report=world.Report();return Split(report.substr(0,report.find('\n')),'\t'); }
+// 특정 SID의 현재 렌더링 입력을 찾는다.
+SurfaceSeed Object(const RawSurfaceWorld& world,Sid sid) {
+    // live snapshot은 현재 SID를 기준으로 찾는다.
+    for (const auto& snapshot:world.Objects()) if (snapshot.sid==sid) return snapshot.object;
+    throw std::runtime_error("검사할 raw 객체 없음");
+}
+}
+
+TEST_CASE(RawSurfaceWorld_PausedRegularResumesWithClientGameClock) {
+    // 두 판본 모두 같은 GUI 호스트 경로를 사용한다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
+        auto world=Inputs(edition).Make(edition);world->Load(Seeds());
+        CHECK(world->Objects().size()==14);CHECK(Summary(*world)[4]=="11" && Summary(*world)[5]=="1");
+        const auto bridge=world->Find(31,29,kBridge),link=world->Find(30,29,kConnector),island=world->Find(30,30,kIsland);
+        CHECK(bridge.value && link.value && island.value);CHECK(Object(*world,island).owner==3 && Object(*world,island).frame==2);
+        GameClock clock;world->RunFrame(clock.Capture(1000),false);clock.Pause(1000);
+        CHECK(world->Destroy(island));CHECK(Summary(*world)[3]=="1");world->TakeChanged();
+        world->RunFrame(clock.Capture(8000),clock.IsPaused());
+        CHECK(world->Find(31,29,kBridge)==bridge && world->Find(30,29,kConnector)==link);
+        CHECK(Summary(*world)[1]=="1" && Summary(*world)[3]=="1" && !world->TakeChanged());
+        clock.Resume(8000);world->RunFrame(clock.Capture(8000),clock.IsPaused());
+        const auto end=world->Find(31,29,kBridge);CHECK(end.value && end!=bridge && Object(*world,end).frame==kEnd);
+        CHECK(world->Find(30,29,kConnector).value==0 && world->Find(32,29,kBridge).value!=0);
+        const auto summary=Summary(*world);CHECK(summary[3]=="0" && summary[4]=="11" && summary[6]=="10");
+        CHECK(summary[7]=="0" && summary[8]=="0" && summary[9]=="0" && world->TakeChanged());
+        CHECK(Throws([&] { world->RunFrame({0.5,0,0,4},false); }));
+    }
+}
+TEST_CASE(RawSurfaceWorld_HardBridgeAndPendingMissionTeardown) {
+    // 미션 종료 시 유지되는 Regular가 있어도 다음 월드와 SID/시각을 공유하지 않는다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
+        auto world=Inputs(edition).Make(edition);world->Load(Seeds(true));world->TakeChanged();
+        const auto bridge=world->Find(31,29,kBridge);const auto before=world->Report();
+        CHECK(!world->Destroy(bridge) && world->Report()==before && !world->TakeChanged());
+        CHECK(world->Destroy(world->Find(30,30,kIsland)));world->RunFrame({12,12,12,1},false);
+        CHECK(world->Find(31,29,kBridge)==bridge && Object(*world,bridge).frame==kHard && Summary(*world)[3]=="1");
+        world.reset();world=Inputs(edition).Make(edition);world->Load(Seeds());world->RunFrame({0,0,0,1},false);
+        CHECK(Summary(*world)[3]=="0" && world->Find(30,30,kIsland).value!=0 && Object(*world,world->Find(31,29,kBridge)).frame==kNormal);
+    }
+}
+TEST_CASE(RawSurfaceWorld_DisplaySuppressionAndDeviceReplacement) {
+    auto world=Inputs(OriginalEdition::Patch1078).Make(OriginalEdition::Patch1078);world->Load(Seeds());
+    bool suppressed=true;int oldNotices=0,newNotices=0;
+    world->SetDisplay({400,280,65536,{0,0,640,480}},{[&] { return suppressed; },[&](SquidDisplayRect,std::uint32_t) { ++oldNotices; }});
+    world->TakeChanged();world->SetSupportOwner(30,30,4);CHECK(world->TakeChanged() && oldNotices==0);
+    CHECK(Object(*world,world->Find(30,30,kIsland)).frame==3);
+    suppressed=false;world->SetDisplay({400,280,65536,{0,0,640,480}},{[&] { return suppressed; },[&](SquidDisplayRect rect,std::uint32_t) {
+        CHECK(rect.left<rect.right && rect.top<rect.bottom);++newNotices;
+    }});
+    world->SetSupportOwner(30,30,5);CHECK(newNotices>0 && oldNotices==0 && world->TakeChanged());
+    CHECK(Object(*world,world->Find(30,30,kStalag)).frame==4);
+}
+TEST_CASE(RawSurfaceWorld_InvalidLoadRejectedBeforeAllocation) {
+    auto world=Inputs(OriginalEdition::Patch1078).Make(OriginalEdition::Patch1078);const auto before=world->Report();
+    auto seeds=Seeds();seeds.back().x=std::numeric_limits<float>::quiet_NaN();
+    CHECK(Throws([&] { world->Load(seeds); }) && world->Report()==before);
+    seeds=Seeds();seeds.back().owner=9;CHECK(Throws([&] { world->Load(seeds); }) && world->Report()==before);
+    world->Load(Seeds());const auto loaded=world->Report();CHECK(Throws([&] { world->Load(Seeds()); }) && world->Report()==loaded);
+}
+// 외부 미션 모듈의 같은 풀/전송/현재 Form 분배를 실제 Kernel·공간·삭제에 연결한다.
+TEST_CASE(RawSurfaceWorld_RuntimeSharesStorageAndCurrentDispatch) {
+    // 두 판본의 raw stride와 서버 Form 번호를 실제 모듈에 그대로 적용한다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
+        Inputs input(edition);constexpr std::uint32_t type=100; // 합성 타입은 원본 base 생성자/가상 몸체를 사용한다.
+        input.types[type].flags1=0x10;input.types[type].footX=input.types[type].footY=1;
+        input.frames[type]=RiftTypeFrames({FrameCode{'A','A',0,0}});
+        input.shapes[type]={1,true,{SquidDisplayFrame{20,16,8,12,1,1}}};
+        auto world=input.Make(edition);auto core=world->Core();const auto originalHooks=core.forms.Hooks();Sid selected{};
+        std::vector<std::uint32_t> depths;std::uint32_t writes=0,sends=0,regulars=0;
+        RawWorldRuntimeHooks hooks;hooks.assets=core.surfaces.Hooks();hooks.assets.selected=[&] { return selected; };
+        hooks.destroy=[&](Sid sid,std::uint32_t flags,const SquidDestroyHooks& effects) { return core.virtualDestroy.Destroy(sid,flags,effects); };
+        hooks.regular=[&](Sid,std::uint32_t event,std::uint32_t count,float payload) { CHECK(event==77 && count==0 && payload==0.25F);++regulars;return 0.0F; };
+        hooks.transmit={[&](SquidProcess& process,bool changed) { CHECK(changed && core.pool.Slot(process.Form())[11]&4);++writes;return 8; },
+            [&](std::int32_t length) { CHECK(length==8);++sends; }};
+        hooks.walkerFall=[](Sid)->bool { throw std::logic_error("이번 검사는 낙하를 만들지 않습니다"); };
+        hooks.loadingDepth=[&](std::uint32_t depth) { depths.push_back(depth); };
+        world->BindRuntime(std::move(hooks));CHECK(core.hash.Entries(0).data()==world->Core().hash.Entries(0).data());
+        world->BeginLoad();const auto object=world->Create(type);core.owner.Set(object,1);world->Pop(object,25,25,9);world->FinishLoad();
+        CHECK(world->Objects().size()==1 && world->Objects()[0].sid==object && world->Objects()[0].object.x==25);
+        CHECK(depths==std::vector<std::uint32_t>({1,1,0}) && core.bookkeeping.depth==0);
+        selected=object;CHECK(originalHooks.selected()==object);selected={};
+        auto* timer=core.processes.AddRegular(object,77,0.25F,0);CHECK(timer && writes==1 && sends==1 && core.kernel.Size()==1);
+        world->RunFrame({1,1,1,1},false);CHECK(regulars==1 && core.kernel.Size()==0);
+        world->Unpop(object,0);CHECK(world->Objects().empty());world->Repop(object,0x40);CHECK(world->Objects().size()==1);
+        CHECK(world->Destroy(object) && world->Objects().empty());world->ClearProcesses();
+    }
+}
+// 필수 경계 누락/늦은 설치는 이미 존재하는 공간/객체/예약을 바꾸지 않는다.
+TEST_CASE(RawSurfaceWorld_RuntimeRejectsIncompleteOrLateBinding) {
+    auto world=Inputs(OriginalEdition::Patch1078).Make(OriginalEdition::Patch1078);const auto before=world->Report();
+    CHECK(Throws([&] { world->BindRuntime({}); }) && world->Report()==before);
+    world->Load(Seeds());const auto loaded=world->Report();CHECK(Throws([&] { world->BindRuntime({}); }) && world->Report()==loaded);
+}

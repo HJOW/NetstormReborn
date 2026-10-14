@@ -12,6 +12,10 @@ namespace {
 // 실제 후처리 몸체의 분류다. 숫자는 호스트 분배용이며 원본 타입 번호와 다르다.
 constexpr std::uint32_t kGenerator=1,kGunAngle=2,kGunFirst=3,kGunSun=4,kGunArcher=5,kGunDecoration=6,
     kResidence=7,kBlocker=8,kGeyser=9,kVortexRain=10,kVortexWind=11,kVortexThunder=12;
+// 독립 모듈의 기존 상태에서 신전 네 필드를 원본 저장 순서로 선택하는 멤버 주소다.
+constexpr std::array<std::uint32_t AssetPostPopPlayer::*,4> kTempleFields{
+    &AssetPostPopPlayer::initialTemple,&AssetPostPopPlayer::initialTempleCopy,
+    &AssetPostPopPlayer::newTemple,&AssetPostPopPlayer::newTempleCopy};
 // 복원한 PE 가상 표와 +0x20의 몸체 부류를 대응한다.
 struct PostPopTable { /* vtable: 원본 객체의 가상 함수 표 주소. */ /* kind: 자료나 동작의 종류를 구별하는 값. */ std::uint32_t vtable,kind; };
 // 패치10.78의 실제 +0x20 주소마다 분배한다. 캐논과 빈 패치타입186도 같은 VortexWind 몸체다.
@@ -61,6 +65,31 @@ RawAssetPostPop::RawAssetPostPop(SidPool& pool,std::span<const RiftTypeRecord> t
     if (&base.Pool()!=&pool_ || &damageable.Pool()!=&pool_ || types.size()!=(pool.Edition()==OriginalEdition::Patch1078 ? 188U : 171U))
         throw std::invalid_argument("자산 postPop 풀/판본/타입 표 불일치");
 }
+// 전체 물리기록 크기를 확인한 뒤 같은9 Player 저장소와 현재 소유자 전역을 빌린다.
+void RawAssetPostPop::BindPlayerRecords(std::span<std::uint8_t> records,const std::uint32_t* currentLocalOwner) {
+    const auto stride=pool_.Edition()==OriginalEdition::Patch1078 ? 0xb4U : 0xacU; // 실제 Player 한 기록의 BYTE 크기다.
+    if (records.size()!=(kPlayerCount+1)*stride) throw std::invalid_argument("자산 postPop 실제9 Player 기록 크기 오류");
+    playerRecords_=records;localOwner_=currentLocalOwner;
+}
+// 네 필드는 PATCH+7c/+80/+84/+88 및 CD+74/+78/+7c/+80의 원본DWORD다.
+std::size_t RawAssetPostPop::PlayerTempleOffset(std::uint32_t owner,std::size_t field) const {
+    if (owner>kPlayerCount || field>=kTempleFields.size()) throw std::out_of_range("자산 postPop Player 신전 필드 범위 오류");
+    const bool patch=pool_.Edition()==OriginalEdition::Patch1078; // 현재 모듈의 원본 판본이다.
+    return owner*(patch ? 0xb4U : 0xacU)+(patch ? 0x7cU : 0x74U)+field*4;
+}
+// 외부 음향/가상 효과 뒤에 변경된 Player DWORD도 매번 현재 원문에서 읽는다.
+std::uint32_t RawAssetPostPop::PlayerTemple(std::uint32_t owner,std::size_t field) const {
+    const auto offset=PlayerTempleOffset(owner,field); // 현재 owner/field의 물리 저장 주소다.
+    return playerRecords_.empty() ? state_.players[owner].*kTempleFields[field] : Read(playerRecords_,offset);
+}
+// 공유기록 모드에서는 이전 별도 상태 사본을 갱신하지 않아 쓰기 원천을 하나로 유지한다.
+void RawAssetPostPop::SetPlayerTemple(std::uint32_t owner,std::size_t field,std::uint32_t sid) const {
+    const auto offset=PlayerTempleOffset(owner,field); // 원본이 쓰는 정확DWORD 위치다.
+    if (playerRecords_.empty()) state_.players[owner].*kTempleFields[field]=sid;
+    else Write(playerRecords_,offset,sid,4);
+}
+// callback에서 owner를 바꾼 경우에도 다음 비교는 변경된 같은 전역을 사용한다.
+std::uint32_t RawAssetPostPop::LocalOwner() const { return localOwner_ ? *localOwner_ : state_.localOwner; }
 // 주소는 기록값으로만 비교한다. 호스트 포인터로 호출하지 않는다.
 std::uint32_t RawAssetPostPop::Kind(Sid sid) const {
     const auto values=pool_.Edition()==OriginalEdition::Patch1078 ? std::span<const PostPopTable>(kPatchTables) : std::span<const PostPopTable>(kCdTables);
@@ -173,20 +202,20 @@ void RawAssetPostPop::VortexBase(Sid sid,std::uint32_t flags) const {
     damageable_.DamageablePostPop(sid,flags);
     if (flags&2) {
         const auto owner=pool_.Slot(sid)[ownerOffset];if (!owner || owner>kPlayerCount) throw std::logic_error("Vortex postPop 새 신전 소유자 assert");
-        state_.players[owner].newTemple=sid.value;state_.players[owner].newTempleCopy=sid.value;
+        SetPlayerTemple(owner,2,sid.value);SetPlayerTemple(owner,3,sid.value);
     }
     if (!(flags&1)) return;
     ++state_.templeCount;
     if (!(pool_.Slot(sid)[extraOffset]&8)) {
         hooks_.playImpactSound(hooks_.typeDword(sid,0x74));Write(pool_.AllocatedBytes(sid),12,0,2);
         const auto owner=pool_.Slot(sid)[ownerOffset];
-        if (owner && owner<=kPlayerCount && !state_.players[owner].initialTemple && !(pool_.Slot(sid)[extraOffset]&1)) {
-            state_.players[owner].initialTemple=sid.value;state_.players[owner].initialTempleCopy=sid.value;
+        if (owner && owner<=kPlayerCount && !PlayerTemple(owner,0) && !(pool_.Slot(sid)[extraOffset]&1)) {
+            SetPlayerTemple(owner,0,sid.value);SetPlayerTemple(owner,1,sid.value);
         }
     }
     if (!(pool_.Slot(sid)[extraOffset]&9)) {
         Add(state_.temples,sid,true);Add(state_.residences,sid,true);
-        if (state_.selected && pool_.Slot(sid)[ownerOffset]==state_.localOwner) {
+        if (state_.selected && pool_.Slot(sid)[ownerOffset]==LocalOwner()) {
             const auto form=pool_.Slot(Sid{static_cast<std::uint16_t>(state_.selected)});const auto type=Read(form,18,2);
             if (type<types_.size() && (types_[type].flags2&0x200)) hooks_.clearPlacement();
         }

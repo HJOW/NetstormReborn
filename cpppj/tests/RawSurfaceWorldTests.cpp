@@ -3,6 +3,7 @@
 #include "client/RawSurfaceWorld.h"
 #include "o/SquidFactory.h"
 #include <limits>
+#include <cstring>
 
 using namespace netstorm::o;
 using namespace netstorm::client;
@@ -171,4 +172,28 @@ TEST_CASE(RawSurfaceWorld_RuntimeRejectsIncompleteOrLateBinding) {
     auto world=Inputs(OriginalEdition::Patch1078).Make(OriginalEdition::Patch1078);const auto before=world->Report();
     CHECK(Throws([&] { world->BindRuntime({}); }) && world->Report()==before);
     world->Load(Seeds());const auto loaded=world->Report();CHECK(Throws([&] { world->BindRuntime({}); }) && world->Report()==loaded);
+}
+// 실제 캠페인 부모의 Graph(false) 뒤 종료는 같은 표/stack/슬롯/지도를 바꾸지 않는다.
+TEST_CASE(RawSurfaceWorld_CampaignFinishPreservesParentGraph) {
+    // 두 판본의 같은 공유 Core에서 원본 Graph(false)와 상태 종료를 구별한다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
+        auto world=Inputs(edition).Make(edition);auto core=world->Core();
+        CHECK(Throws([&] { world->FinishLoadAfterGraph(); }));world->BeginLoad();
+        const auto sid=world->Create(kBridge); // 실제 Factory·가상 후처리가 등록된 표면 SID다.
+        Put(core.pool.AllocatedBytes(sid),edition==OriginalEdition::Patch1078 ? 36U : 34U,kNormal,
+            edition==OriginalEdition::Patch1078 ? 4U : 1U); // 실제 K 다리의 정상 프레임을 입력한다.
+        core.owner.Set(sid,1);world->Pop(sid,26,26,0);core.graph.Rebuild(false);
+        const auto extraGraph=core.graph.Allocate(); // 추가 Graph(true)가 초기화할 수 있는 실제 장부 번호다.
+        const std::vector<GraphRecord> records(core.graph.Records().begin(),core.graph.Records().end()); // 종료 직전 전체 Graph 표다.
+        const std::vector<std::uint32_t> stack(core.graph.FloodStack().begin(),core.graph.FloodStack().end()); // 같은 flood 임시 저장소다.
+        const std::vector<std::uint8_t> raw(core.pool.Slot(sid).begin(),core.pool.Slot(sid).end()); // Graph 번호를 포함한 전체 슬롯이다.
+        const std::vector<std::uint8_t> spots(core.spots.begin(),core.spots.end()); // 전체 원본 공간 비트다.
+        const std::vector<std::uint16_t> hash(core.hash.Entries(0).begin(),core.hash.Entries(0).end()); // 원본 지면 조회 지도다.
+        world->FinishLoadAfterGraph();
+        CHECK(core.bookkeeping.graphsEnabled && core.bookkeeping.depth==0 && core.graph.Records()[extraGraph].inUse);
+        CHECK(std::memcmp(records.data(),core.graph.Records().data(),records.size()*sizeof(GraphRecord))==0);
+        CHECK(std::ranges::equal(stack,core.graph.FloodStack()) && std::ranges::equal(raw,core.pool.Slot(sid)));
+        CHECK(std::ranges::equal(spots,core.spots) && std::ranges::equal(hash,core.hash.Entries(0)));
+        CHECK(Throws([&] { world->FinishLoadAfterGraph(); }) && Throws([&] { world->BeginLoad(); }));
+    }
 }

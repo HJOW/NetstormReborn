@@ -163,3 +163,96 @@ TEST_CASE(AssetPostPop_MissingEffectsBeforeMutation) {
     RawAssetPostPop assets(scene.pool,scene.types,base,damageable,scene.state,{});base.SetAssetPostPop(&assets);const auto before=scene.Output();
     CHECK(Throws([&] { base.Activate(kSource,1); }));CHECK(scene.Output()==before && scene.baseState.depth==0);
 }
+namespace {
+// 기존 독립 PE 기대값을 공유 Player BYTE에 그대로 재생하며 기존 state.players 사본과 구별한다.
+void ReplayPlayerRecords(const char* edition) {
+    AssetScene scene(std::string_view(edition)=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072);
+    const auto stride=scene.patch ? 0xb4U : 0xacU; // 원본 Player 물리기록 크기다.
+    const auto temple=scene.patch ? 0x7cU : 0x74U; // 기존 PE fixture 추출기가 확인한 첫 신전 DWORD 위치다.
+    std::size_t count=0; // 해당 판본에서 원본 기대값과 대조한 입력 수다.
+    // 원본 입력과 기대값은 바꾸지 않고 모든 자산 body를 같은9기록에 다시 재생한다.
+    for (const auto& row:Rows()) {
+        if (row[0]!=edition) continue;
+        scene.Prepare(row);scene.state.players[1]={901,902,903,904};
+        std::vector<std::uint8_t> records(9*stride,0xa5); // 신전 이외의 필드 쓰기를 검출하는 실제 공유9기록이다.
+        // 아홉 기록의 신전 네DWORD만 원본 입력과 같은0으로 준비한다.
+        for (std::size_t owner=0;owner<9;++owner) std::fill_n(records.begin()+owner*stride+temple,16,std::uint8_t{});
+        auto expectedRecords=records; // 기존 원본 출력의 신전 필드만 적용할 전체 BYTE 기대값이다.
+        std::uint32_t owner=1; // 캠페인의 현재 battleOwner DWORD와 같은 장기 전역이다.
+        SquidPostPop base(scene.pool,scene.types,scene.baseState);
+        RawCarrierPostPop damageable(scene.pool,scene.types,scene.carrierState,scene.CarrierHooks(base));
+        RawAssetPostPop assets(scene.pool,scene.types,base,damageable,scene.state,scene.Hooks());
+        assets.BindPlayerRecords(records,&owner);base.SetAssetPostPop(&assets);base.Activate(kSource,Number(row[2]));
+        auto output=scene.Output();output[3].clear(); // 현재 raw 기록을 원본 fixture의 네DWORD 출력 형식으로 읽는다.
+        const auto fields=Split(row[18],','); // 구현 계산이 아닌 기존 PE 출력의 네 신전 값이다.
+        // 원본 출력대로 네DWORD만 기대기록에 쓰고 실제 BYTE 결과를 직렬화한다.
+        for (std::size_t field=0;field<4;++field) {
+            Put(expectedRecords,stride+temple+field*4,Number(fields[field]));
+            if (field) output[3]+=',';
+            output[3]+=std::to_string(Get(records,stride+temple+field*4));
+        }
+        CHECK(output==std::vector<std::string>(row.begin()+15,row.end()));CHECK(records==expectedRecords);
+        CHECK(scene.state.players[1].initialTemple==901 && scene.state.players[1].initialTempleCopy==902 &&
+            scene.state.players[1].newTemple==903 && scene.state.players[1].newTempleCopy==904 && scene.baseState.depth==0);
+        ++count;
+    }
+    CHECK(count==Rows().size()/2);
+}
+}
+// 패치의 동일 원본 입력을 실제9 Player에 직접 기록하며 stale 사본을 소비하지 않는다.
+TEST_CASE(AssetPostPop_PatchSharedPlayerRecordsNativeBodies) { ReplayPlayerRecords("originals"); }
+// CD의 다른 stride/신전DWORD 위치와 원본 몸체 전체를 같은 BYTE 저장소로 검증한다.
+TEST_CASE(AssetPostPop_CdSharedPlayerRecordsNativeBodies) { ReplayPlayerRecords("originalCD"); }
+// 잘못된9기록 바인딩은 기존 참조를 바꾸거나 Player 바이트를 쓰기 전에 거부한다.
+TEST_CASE(AssetPostPop_PlayerRecordBindingRejectsWrongSize) {
+    AssetScene scene(OriginalEdition::Patch1078);scene.Prepare(Rows().front());
+    SquidPostPop base(scene.pool,scene.types,scene.baseState);
+    RawCarrierPostPop damageable(scene.pool,scene.types,scene.carrierState,scene.CarrierHooks(base));
+    RawAssetPostPop assets(scene.pool,scene.types,base,damageable,scene.state,scene.Hooks());
+    std::vector<std::uint8_t> records(9*0xb4U,0xa5); // 정상 연결을 유지하는 공유 물리기록이다.
+    assets.BindPlayerRecords(records);const auto before=records; // 실패 전 전체 BYTE의 기준이다.
+    CHECK(Throws([&] { assets.BindPlayerRecords(std::span<std::uint8_t>(records).first(records.size()-1)); }));
+    CHECK(records==before && Throws([&] { assets.BindPlayerRecords({}); }));
+}
+namespace {
+// 새 독립 PE 입력의 현재owner·음향callback 뒤 신전DWORD를 같은 공유기록에 재생한다.
+void ReplayMutablePlayers(const char* edition) {
+    const auto fixture=LoadFixture(NETSTORM_ASSETPLAYER_FIXTURE); // 구현과 독립된 실제 PE의 전체9기록 출력이다.
+    AssetScene scene(std::string_view(edition)=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072);
+    const auto stride=scene.patch ? 0xb4U : 0xacU; // 실제 Player 한 기록의 크기다.
+    const auto temple=scene.patch ? 0x7cU : 0x74U; // 첫 신전DWORD의 판본별 위치다.
+    std::size_t count=0; // 해당 판본에서 대조한 새 고유 입력 수다.
+    // 현재raw/전역을 변경하는 외부 경계 뒤의 실제 원본 반환을 전수 비교한다.
+    for (const auto& row:fixture.rows) {
+        if (row[0]!=edition) continue;
+        CHECK(row.size()==17);scene.Prepare(Rows().front());scene.state.inBattle=true;
+        scene.state.loadingDepth=1;scene.state.fortMode=true;scene.state.selected=62;scene.reserveMask=0;
+        auto raw=scene.pool.AllocatedBytes(kSource); // 현재 원본 신전 객체의 입력 바이트다.
+        Put(raw,0,(scene.patch ? kPatchAssetTables : kCdAssetTables)[Number(row[1])]);
+        raw[scene.Owner()]=static_cast<std::uint8_t>(Number(row[4]));raw[scene.Extra()]=static_cast<std::uint8_t>(Number(row[3]));
+        std::vector<std::uint8_t> records(9*stride,0xa5); // 새 Native 입력과 같은 stale BYTE다.
+        // 실제 PE에 공급한 네DWORD 입력을 아홉 기록에 각각 준비한다.
+        for (std::size_t owner=0;owner<9;++owner) {
+            Put(records,owner*stride+temple,Number(row[8]));Put(records,owner*stride+temple+4,0x11112222);
+            Put(records,owner*stride+temple+8,0x33334444);Put(records,owner*stride+temple+12,0x55556666);
+        }
+        std::uint32_t local=Number(row[6]); // 매 효과 뒤 재조회할 실제battleOwner DWORD다.
+        SquidPostPop base(scene.pool,scene.types,scene.baseState);
+        auto carrierHooks=scene.CarrierHooks(base);const auto common=carrierHooks.base; // 기존 독립 Damageable 경계다.
+        carrierHooks.base=[&](Sid sid,std::uint32_t flags) { scene.pool.AllocatedBytes(sid)[scene.Owner()]=static_cast<std::uint8_t>(Number(row[5]));common(sid,flags); };
+        RawCarrierPostPop damageable(scene.pool,scene.types,scene.carrierState,std::move(carrierHooks));
+        auto hooks=scene.Hooks();const auto sound=hooks.playImpactSound; // Native에서 같은 외부 음향효과로 지정한 경계다.
+        hooks.playImpactSound=[&](std::uint32_t token) { local=Number(row[7]);const auto value=std::stoi(row[9]);if (value>=0) Put(records,Number(row[5])*stride+temple,static_cast<std::uint32_t>(value));sound(token); };
+        RawAssetPostPop assets(scene.pool,scene.types,base,damageable,scene.state,std::move(hooks));
+        assets.BindPlayerRecords(records,&local);base.SetAssetPostPop(&assets);base.Activate(kSource,Number(row[2]));
+        auto output=scene.Output();output[3]=Hex(records); // 전체 Player 바이트를 원본 반환과 직접 대조한다.
+        CHECK(output==std::vector<std::string>(row.begin()+10,row.begin()+16));CHECK(local==Number(row[16]));
+        ++count;
+    }
+    CHECK(count==fixture.rows.size()/2);
+}
+}
+// 패치의 callback 뒤 owner 변경과 현재 신전DWORD를 실제 PE 전체바이트로 비교한다.
+TEST_CASE(AssetPostPop_PatchMutablePlayerNativeRecords) { ReplayMutablePlayers("originals"); }
+// CD의 다른 기록배치·원소wrapper·abstract/buried를 같은 독립 입력으로 비교한다.
+TEST_CASE(AssetPostPop_CdMutablePlayerNativeRecords) { ReplayMutablePlayers("originalCD"); }

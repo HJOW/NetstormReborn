@@ -554,3 +554,14 @@ extracted/run15*.log -text whitespace=cr-at-eol
 tools/path_move.py text eol=lf
 tools/path_audit.py text eol=lf
 docs/path-map.json text eol=lf
+# 단위16의 새 독립 입력·도구·소스·보고서 SHA를 체크아웃 후에도 같은 UTF-8/LF로 유지한다.
+.gitattributes text eol=lf
+tools/check_campaign16.py text eol=lf
+tools/decomp_asset_players.py text eol=lf
+cpppj/asset-player.json text eol=lf
+cpppj/run16.json text eol=lf
+cpppj/run16-delta.json text eol=lf
+cpppj/src/o/RawAssetPostPop.h text eol=lf
+cpppj/src/o/RawAssetPostPop.cpp text eol=lf
+cpppj/src/client/RawSurfaceWorld.h text eol=lf
+cpppj/src/client/RawSurfaceWorld.cpp text eol=lf

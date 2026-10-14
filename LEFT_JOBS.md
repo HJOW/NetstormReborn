@@ -1,5 +1,16 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-15 완료: 캠페인 단위16 공유 Player·연결 등록·Graph 종료 (`HJOW-Athlon`)
+
+- [x] AGENTS.md와 양 LEFT를 다시 읽고 기준 `c241c6f`에서 목표를 재개했다. 현재/마지막 디컴파일 PC는 **HJOW-Athlon, 2026-10-14**로 일치한다. 작업 단위별 인수인계·로컬 커밋을 수행하며 전체화면 DirectDraw 오류는 제외한다.
+- [x] 직접 영향19파일(Git 속성 포함)의 전체 원문을 `cpppj/hist/run16-base`에 보존했다. 실제9 Player 신전DWORD/current battleOwner를 직접 참조하는 API와 부모 Graph(false) 뒤 로딩 종료 API를 추가하고 캠페인 Asset/Path 연결부를 CMake에 등록했다.
+- [x] 같은 PC 정밀 `assetpostpop` PATCH19/CD17 읽기 전용 export와 새 독립 원본576입력(정상576/assert0)을 생성했다. 기존 원본 입력·기대값은 불변이다. 상세: [단위16](docs/exe/cpp-run16-20261015.md).
+- [x] Release 빌드 경고/오류0, 공유 Player9개·표면 월드7개 집중검사 모두 통과했다. 최초 새Graph검사의 미등록지형 입력은 실패 원문/로그를 보존한 뒤 기존 지원K다리 입력으로 교정했다.
+- [x] 최종 CTest **1/1·내부1094개·실패 체크0**(192.63초), 새6개/집중16개 통과. `run16.json`/`run16-delta.json`에 전체 원문·양방향 소스 재구성·보호PE·Native/fixture·빌드/검사 SHA를 고정했고 읽기 감사가 통과했다. 단위 커밋은 **`20261015-01 공유 Player 신전 기록과 캠페인 연결 및 단일 Graph 종료 검증`**으로 진행한다.
+- [x] Git fixture LF와 생성기의 CRLF 차이를 교정했다. 최초576전체관찰/보고서/도구를 `run16-serial`에 보존한 뒤 같은576입력을 UTF-8/LF로 재실행했고 전체 출력은 줄바꿈 외에 동일했다. 반복576반환을 새 입력 수에 재합산하지 않는다.
+- [ ] 다음: `RawCampaignWorldRuntime`의 같은 Core/172 저장객체 설치·현재cleanup 출처/실제 사제 명령 소비자 연결 → GameWorld 실제 입력·생산·전투·경제·운반·AI/Guide/UI/음향·승패 → Early Missions/1-1~1-2 완주 동일성. 목표는 계속 active다. 이번 단위는 실제 게임/GUI 실행0이며 원본 함수의 OS 진입0이다.
+- [ ] 전체 경로검사는 기존 Git제외 이력 로그 `cpppj/hist/normalterrai-e6929/extracted/run10-NormalTerrainWorldBinding_first.log`의 파일명41자1건을 발견했다. 이번 신규 경로는 기준 안에 있다. 기존 최종 경로/참조/과거 전체SHA 감사 미완료 사항은 그대로 인계한다.
+
 ## 2026-10-14 완료: 10.78/10.72 재디컴파일 및 cpppj Release 검증 (`HJOW-Athlon`)
 
 - [x] AGENTS.md 및 양 LEFT_JOBS 인수인계를 읽고 현재 호스트를 확인했다. 마지막 전체 디컴파일은 `VM-W11-Codex`였으므로 현재 PC **HJOW-Athlon**에서 10.78 패치판과 CD 10.72판을 다시 디컴파일했다.

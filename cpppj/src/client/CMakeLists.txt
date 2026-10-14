@@ -78,6 +78,9 @@ target_sources(netstorm PRIVATE
     # 같은 raw 피해객체와 실제 SHP에서 Burning 프레임의 최초 이미지를 얻는다.
     BurningFrameCapture.cpp BurningFrameCapture.h
     RawPriestWorldBindings.cpp RawPriestWorldBindings.h
+    # 실제 Player 신전 기록과 같은 Core의 자산/사제 경로를 공유하는 캠페인 연결부다.
+    RawCampaignAssetBindings.cpp RawCampaignAssetBindings.h
+    RawCampaignPathBindings.cpp RawCampaignPathBindings.h
     UserInput.cpp UserInput.h
     Sound.cpp Sound.h
     SoundDevice.cpp SoundDevice.h
