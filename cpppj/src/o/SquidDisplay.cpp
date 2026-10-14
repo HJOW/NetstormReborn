@@ -5,12 +5,21 @@
 #include <bit>
 #include <cmath>
 #include <limits>
+#include <optional>
 #include <stdexcept>
 
 namespace netstorm::o {
 namespace {
 // 표시 레이어와 extra의 선택/표식 비트다.
 constexpr std::uint32_t kDoubleFrames=0x440000,kShadow=0x40000,kMarker=0x10;
+// WORD0인 신전 가상8c는 실제 rune 사각형의 네 inset으로 본그림만 갱신한다. 썬 신전은 기본88의 thunk다.
+std::optional<std::array<int,4>> VortexInsets(OriginalEdition edition,std::uint32_t table) {
+    const bool patch=edition==OriginalEdition::Patch1078;
+    if (table==(patch ? 0x5196f0U : 0x501d28U)) return std::array<int,4>{12,29,12,23};
+    if (table==(patch ? 0x519860U : 0x501de0U)) return std::array<int,4>{39,30,33,34};
+    if (table==(patch ? 0x519918U : 0x501e98U)) return std::array<int,4>{27,0,28,30};
+    return std::nullopt;
+}
 // little endian raw 값을 읽으며 부족한 슬롯을 먼저 거부한다.
 std::uint32_t Read(std::span<const std::uint8_t> bytes,std::size_t offset,std::size_t width=4) {
     if (offset>bytes.size() || width>bytes.size()-offset) throw std::out_of_range("표시 raw 슬롯 범위 오류");
@@ -94,6 +103,11 @@ void SquidDisplay::Validate(OriginalEdition edition,std::span<const std::uint8_t
     if (type>=types_.size()) throw std::out_of_range("표시 타입 번호 범위 오류");
     const bool patch=edition_==OriginalEdition::Patch1078;
     const auto frame=patch ? std::bit_cast<std::int32_t>(Read(bytes,36)) : static_cast<int>(Read(bytes,34,1));
+    // 부분 갱신의 물리 계약만 검증한다. 실제 변경 영역은 Update에서 한 번만 등록한다.
+    if ((flags&0x2000) && Read(bytes,12,2)==0 && VortexInsets(edition_,Read(bytes,0))) {
+        if (!sink_.Suppressed()) static_cast<void>(Bounds(type,frame,std::bit_cast<float>(Read(bytes,14)),std::bit_cast<float>(Read(bytes,18))));
+        return;
+    }
     static_cast<void>(Read(bytes,patch ? 40 : 35,1));
     if ((patch && !PatchFrameValid(type,frame)) || sink_.Suppressed()) return;
     const auto& shape=shapes_[type];
@@ -119,6 +133,18 @@ void SquidDisplay::Update(std::span<const std::uint8_t> bytes,std::uint32_t flag
     Validate(edition_,bytes,flags);
     const bool patch=edition_==OriginalEdition::Patch1078; const auto type=Read(bytes,10,1);
     const auto frame=patch ? std::bit_cast<std::int32_t>(Read(bytes,36)) : static_cast<int>(Read(bytes,34,1));
+    // 실제 부분 갱신 helper는 표시 억제부터 검사하고 선택 표식/그림자 갱신을 추가하지 않는다.
+    if ((flags&0x2000) && Read(bytes,12,2)==0) {
+        if (const auto insets=VortexInsets(edition_,Read(bytes,0))) {
+            if (sink_.Suppressed()) return;
+            const auto x=std::bit_cast<float>(Read(bytes,14)),y=std::bit_cast<float>(Read(bytes,18));
+            auto rect=Bounds(type,frame,x,y);rect.left=Coordinate(static_cast<std::int64_t>(rect.left)+(*insets)[0]);
+            rect.top=Coordinate(static_cast<std::int64_t>(rect.top)+(*insets)[1]);
+            rect.right=Coordinate(static_cast<std::int64_t>(rect.right)-(*insets)[2]);
+            rect.bottom=Coordinate(static_cast<std::int64_t>(rect.bottom)-(*insets)[3]);
+            rect=Clip(rect,view_.viewport);if (Nonempty(rect)) sink_.Invalidate(rect,0);return;
+        }
+    }
     if ((patch && !PatchFrameValid(type,frame)) || sink_.Suppressed()) return;
     const auto x=std::bit_cast<float>(Read(bytes,14)),y=std::bit_cast<float>(Read(bytes,18));
     const auto marker=(Read(bytes,patch ? 40 : 35,1)&4)!=0 ? kMarker : 0;

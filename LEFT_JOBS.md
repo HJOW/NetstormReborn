@@ -1,5 +1,15 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-15 완료: 단위20 전체 캠페인 Kernel·방향·Factory·신전 표시 (`HJOW-Athlon`)
+
+- [x] AGENTS 및 양 LEFT와 현재 호스트를 다시 확인했다. 기준 `6fabde2`, 마지막 정밀 디컴파일 PC는 **HJOW-Athlon, 2026-10-15**다. 신전 파생 표시7함수를 같은 PC에서 읽기 전용 export했다. 보호 원본 및 AGENTS는 불변이다.
+- [x] 직접 영향16파일을 `cpppj/hist/run20-base`에 편집 전 보존했다. 동일 Core의 SP Rotate·실제 Gun 방향/표적/시간 압축 조회·PlayerRegular/TemplateState를 캠페인 설치 검사에 연결했다. 실제1-1·1-2 전체 Kernel각600프레임이 통과했고 실행 후process34/26, 장부 깊이0·SP 추적 일치·Player 예약 전환을 검사했다.
+- [x] 단위19의 Factory SetState 연결 오인을 교정했다. 실제 가상+88은 기본 표시 갱신이며 프레임 보정은 PostPop의 별도 함수다. 과거 보고서는 변경하지 않고 이번 단위에서 교정 근거를 남긴다.
+- [x] Factory event1은 기존 실제 `RawFrameAdvance(1,0)`, event2는 현재Level 첫프레임+동일Next, event4는 count 비영점0 반환으로 연결했다. 패치event5는 상태0~2에서 공통 반환이며 **CD는 사건5 분기 자체가 없다**. 패치 상위상태 입자효과/큰upgrade는 명시 미연결이다. 신전8c의 실제 부분 사각형과 기본88 fallback도 복원했다.
+- [x] 최종 새 독립 PE 입력 **1,412개/정상반환1,412/assert0**, 방향/Factory764와 신전표시648이며 기존 입력/실험 재실행은 재합산하지 않는다. 실패 원문/fixture/생성기/로그를 보존했다. 첫 전체회귀7체크 실패는 새 신전8c 지원과 기존 공통mask 소비자의 차이였으며 원본151행 fixture를 유지하고 실제 복원주소만 소비자에 추가했다.
+- [x] 최종 Release 경고/오류0, 집중6개 통과, 전체 CTest **1/1·내부1,116개·실패 체크0**(188.85초)이다. [단위20](docs/exe/cpp-run20-20261015.md), `run20.json`에 전체 신규 원문/현재 소스/입력/바이너리/로그 SHA를 고정한다. 로컬 커밋은 **`20261015-05 캠페인 전체 Kernel과 실제 방향 및 Factory 신전 표시 연결 검증`**, push는 하지 않는다.
+- [ ] GameWorld 실제 세션·Ready/login/AI·UI/음향/생산/전투/운반/승패 및 Early Missions/1-1~1-2 완주 동일성은 미완료다. 600프레임 검사도 GUI/플레이 가능 판정을 뜻하지 않는다. 전체화면 DirectDraw 오류 제외, 목표active 유지. 기존 최종 경로/참조/과거SHA 감사는 계속 인계한다.
+
 ## 2026-10-15 완료: 단위19 실제 사제 이동·1-2 설치·Fort 타입 전역 교정 (`HJOW-Athlon`)
 
 - [x] AGENTS와 양 LEFT를 다시 읽고 `2ed0b3e`에서 재개했다. 현재 PC/마지막 디컴파일 PC는 **HJOW-Athlon, 2026-10-15**다. Level/하위 getter9개를 같은 호스트에서 읽기 전용 export했다. 보호 원본 및 AGENTS는 불변이다.

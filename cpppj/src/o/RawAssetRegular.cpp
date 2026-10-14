@@ -64,6 +64,7 @@ unsigned RawAssetRegular::Kind(Sid sid) const {
     if (table==(patch ? 0x50da88U : 0x500760U)) return 2;
     if (patch ? table==0x5196f0U || table==0x5197a8U || table==0x519860U || table==0x519918U :
                 table==0x501d28U || table==0x501de0U || table==0x501e98U) return 3;
+    if (table==(patch ? 0x509148U : 0x503298U) || table==(patch ? 0x509210U : 0x503358U)) return 4;
     return 0;
 }
 // +5c가 복원된 부모인지 실제 가상 표로 확인한다.
@@ -80,8 +81,26 @@ float RawAssetRegular::Handle(Sid sid,std::uint32_t event,std::uint32_t count,fl
     case 1:return Residence(sid,event,count,payload);
     case 2:return Geyser(sid,event,count,payload);
     case 3:return Vortex(sid,event,count,payload);
+    case 4:return Factory(sid,event,count,payload);
     default:throw std::invalid_argument("자산 Handle 가상 표 미복원");
     }
+}
+// PATCH004549c0/CD0047ac20: 현재 상태의 첫프레임+Next(현재count)를 지정한 뒤 공통Handle에 넘긴다.
+float RawAssetRegular::Factory(Sid sid,std::uint32_t event,std::uint32_t count,float payload) const {
+    if (event==2) {
+        const auto raw=pool_.Slot(sid);const auto first=frames_[raw[10]].Run(static_cast<std::uint8_t>('A'+(raw[11]>>5))).first;
+        const auto current=pool_.Slot(sid);const auto size=frames_[current[10]].Run(static_cast<std::uint8_t>('A'+(current[11]>>5))).count;
+        if (size<=0) throw std::logic_error("Factory Handle 원본 상태 프레임 난수 범위0");
+        setter_.Set(sid,Add(first,static_cast<std::int32_t>(random_.Next(static_cast<std::uint32_t>(size)))),0);
+    } else if (event==1) {
+        advance_.Advance(sid,1,0);
+    } else if (event==5) {
+        // CD는 사건5 분기 자체가 없고 패치만 상위 상태에서 입자효과를 호출한다.
+        if (pool_.Edition()==OriginalEdition::Patch1078 && (pool_.Slot(sid)[11]>>5)>2) throw std::logic_error("Factory 상위 상태 입자효과0045a6c0 미연결");
+    } else if (event==3) {
+        throw std::logic_error("Factory 미복원 사건 "+std::to_string(event)+" count "+std::to_string(count));
+    } else if (event==4 && count) return 0.0f;
+    return DamageableHandle(sid,event,count,payload);
 }
 // 사제·보호막 등 기존 처리기를 먼저 합성할 때 미복원 자산은 fallback이 명시적으로 책임진다.
 RegularHandler RawAssetRegular::Handler(RegularHandler fallback) const {

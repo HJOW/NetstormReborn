@@ -1,0 +1,48 @@
+{
+  "host": "HJOW-Athlon",
+  "uniqueInputs": 648,
+  "editions": {
+    "originals": {
+      "samples": 324,
+      "returns": 324,
+      "assertions": 0,
+      "registrations": 0,
+      "exports": {
+        "extracted/vortex-update/originals/creation.c": "55514ce2ef2e516aa21b2b378a53742e6387fff4daa34151a3271a42da8579c2",
+        "extracted/vortex-update/originals/functions.tsv": "5b24a0559f8cc5af1b75bc868447996b3a788ba27a73e660b62d0e7b7fb59aa0",
+        "extracted/campaign-frame/originals/creation.c": "4199afa3dbfdcbc25ee38f85518b00138aa340832175ae03e04f15da0a71e20b",
+        "extracted/campaign-frame/originals/functions.tsv": "8dfaa5d3161eb69b5ff0b17666939fe3f13fbbc1571003f402e4a45637cd8001"
+      },
+      "displayCalls": {
+        "bounds": 432,
+        "dirty": 392,
+        "update": 216,
+        "mark": 216
+      }
+    },
+    "originalCD": {
+      "samples": 324,
+      "returns": 324,
+      "assertions": 0,
+      "registrations": 3,
+      "exports": {
+        "extracted/vortex-update/originalCD/creation.c": "b2e48d1f3b3427b97ad06c6ed6df74ad4a7ba3f4fe132edb2363c79c7c5a22f7",
+        "extracted/vortex-update/originalCD/functions.tsv": "87cfe8b9dcc1b577f3687174689a637ae0524565c541287b690a761c737e02a6",
+        "extracted/campaign-frame/originalCD/creation.c": "3b3b4a7e4ba41b477ce8f1071c898838ef22f41ef645e9e7eba1b5ca4738cad5",
+        "extracted/campaign-frame/originalCD/functions.tsv": "e56eefbabdcdb5c66f3056fd0eff924142981a71af57a8baba87ae7aa4dcdaed"
+      },
+      "displayCalls": {
+        "bounds": 432,
+        "dirty": 392,
+        "update": 216,
+        "mark": 216
+      }
+    }
+  },
+  "fixtureSha": "62a5ea1400238d64d6ad99b0585d6592c263578f8ff9863f0aeb548a2f7944e3",
+  "toolSha": "798771884b9967f9acf4574d406708927a4fbf0b141b1b9846d8bb82e39c69a2",
+  "limitations": [
+    "실제 파생8c/부분사각형/공통88/bounds/dirty 명령. 합성TYPE/SHP와 유한 카메라 입력이다.",
+    "CD 종료 등록은 관찰 경계이며 callback은 실행하지 않는다. GUI/실제 게임 플레이 검증은 별도다."
+  ]
+}

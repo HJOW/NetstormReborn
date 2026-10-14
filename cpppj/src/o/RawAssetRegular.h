@@ -48,7 +48,7 @@ public:
         std::span<const RiftTypeFrames> frames,std::span<const std::int32_t> elements,
         const SquidFrame& setter,const RawFrameAdvance& advance,GameRandom& random,
         AssetPostPopState& assets,AssetRegularState& state,AssetRegularHooks hooks);
-    // 레지던스/가이저/레인·윈드·썬더 신전의 실제 가상 표를 확인한다.
+    // 레지던스/가이저/신전/Factory의 실제 가상 표를 확인한다.
     bool Handles(Sid sid) const;
     // 해당 부모의 실제 사건을 실행한다. 최초 float는 지연이 아닌 payload이며 시각 예약은 ProcessHost가 담당한다.
     float Handle(Sid sid,std::uint32_t event,std::uint32_t count,float payload) const;
@@ -59,6 +59,8 @@ public:
     // 어댑터가 다른 월드의 풀을 섞지 않게 확인한다.
     const SidPool& Pool() const;
 private:
+    // Factory의 실제 사건2 프레임 난수와 공통 Damageable 위임이다. 큰 upgrade 사건은 명시 미복원이다.
+    float Factory(Sid sid,std::uint32_t event,std::uint32_t count,float payload) const;
     // 실제 가상 표에서 레지던스1/가이저2/신전3을 구한다.
     unsigned Kind(Sid sid) const;
     // 판본별 현재 프레임 DWORD/BYTE를 읽는다.

@@ -74,6 +74,7 @@ struct RawCampaignAssetBindings::Impl {
         auto hooks=effects.factory;hooks.reserveRegular=effects.postPop.reserveRegular;
         hooks.addRegular=[this](o::Sid sid,std::uint32_t event,float payload) { if (!core.processes.AddRegular(sid,event,payload)) throw std::logic_error("캠페인 Factory Regular 부착 실패"); };
         hooks.destroy=[this](o::Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
+        hooks.updateState=[this](o::Sid sid) { core.display.Update(core.pool.Slot(sid)); };
         RejectMissing(hooks.reserveRegular,"캠페인 Factory 실제 Regular 확보 미연결");
         RejectMissing(hooks.warnDuplicate,"캠페인 Factory 중복 진단 미연결");
         RejectMissing(hooks.regionOwnership,"캠페인 아웃포스트 실제 지역 소유권 미연결");
@@ -171,7 +172,7 @@ void RawCampaignAssetBindings::ActivatePostPop() { impl_->core.postPop.SetAssetP
 void RawCampaignAssetBindings::PrepareFrame(double now) { impl_->Prepare(now); }
 // 실제부모로더의중첩값을사본상태없이기존자산모듈에전달한다.
 void RawCampaignAssetBindings::SetLoadingDepth(std::uint32_t depth) { impl_->assets.loadingDepth=depth; }
-// actual 가상84의 파생 상태 프레임 변경을 생략하지 않는다.
+// actual 가상84의 Level 저장 후 기본 표시 갱신을 생략하지 않는다.
 void RawCampaignAssetBindings::SetState(o::Sid sid,std::uint32_t value) const { impl_->factory->SetState(*impl_->level,sid,value); }
 // 실제지원가상표만처리하고다른부모는호출자가준실제fallback에넘긴다.
 o::RegularHandler RawCampaignAssetBindings::Handler(o::RegularHandler fallback) const { return impl_->regular->Handler(std::move(fallback)); }

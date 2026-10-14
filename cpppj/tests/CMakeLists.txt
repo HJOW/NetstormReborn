@@ -4,6 +4,9 @@
 add_executable(netstorm_tests
     CampaignWorldRuntimeTests.cpp
     CampaignMotionTests.cpp
+    CampaignFrameTests.cpp
+    CampaignNativeFrameTests.cpp
+    VortexDisplayTests.cpp
     CampaignInstallSupport.h
     VortexOwnerTests.cpp
     # 준비된 원본 관찰과 실제 캠페인 부모·Player 예약·Burning 프레임을 대조한다.
@@ -840,3 +843,11 @@ set_source_files_properties(PlayerRegularTests.cpp PROPERTIES COMPILE_DEFINITION
     "NETSTORM_PLAYER_REGULAR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/player-regular-x86.tsv\"")
 set_source_files_properties(BurningFrameTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_BURNINGFRAME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/burningframe-x86.tsv\"")
+
+# 새 현재 방향/Factory 독립 원본 입력은 해당 번역단위에서만 읽는다.
+set_source_files_properties(CampaignNativeFrameTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CAMPAIGN_FRAME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/campaign-frame-x86.tsv\"")
+
+# 새 신전 활성 표시의 독립 native 변경표를 해당 검사에서만 읽는다.
+set_source_files_properties(VortexDisplayTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_VORTEX_DISPLAY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/vortex-display-x86.tsv\"")

@@ -134,17 +134,21 @@ TEST_CASE(SquidUnpop_X86Fixture_ReplaysRawUnpopTakeReleaseAndFirstPop) {
     CHECK(begins==18 && steps==3618);
 }
 
-// vtable 메타데이터는 두 PE의 실제 메서드 주소 선택과 각각 같은 지원 여부다.
+// 기존 공통 경로와 새 독립 native로 복원한 신전8c의 실제 주소별 지원을 함께 검사한다.
 TEST_CASE(SquidUnpop_VtableMetadata_MatchesActualCommonDisplayPaths) {
     std::ifstream input(NETSTORM_UNPOP_VTABLE_FIXTURE); CHECK(static_cast<bool>(input)); std::string line; int rows=0;
-    // 표시 override를 base로 대체하지 않고 지정한 88/8c 경로별로 거부한다.
+    // 기존 fixture의 원본 주소/공통 mask는 불변이며 복원된 신전8c만 추가로 허용한다.
     while (std::getline(input,line)) {
         if (line.empty() || line[0]=='#') continue;
         const auto row=Fields(line); CHECK(row.size()==6);
         const auto edition=row[0]=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072;
         const auto vtable=static_cast<std::uint32_t>(std::stoul(row[1])); const auto mask=std::stoul(row[5]);
         CHECK(SquidUnpop::SupportsDisplay(edition,vtable,0)==((mask&1)!=0));
-        CHECK(SquidUnpop::SupportsDisplay(edition,vtable,0x2000)==((mask&2)!=0)); ++rows;
+        const auto alternate=static_cast<std::uint32_t>(std::stoul(row[3]));
+        const bool vortex=edition==OriginalEdition::Patch1078 ?
+            alternate==0x4dcda0U || alternate==0x4dcf80U || alternate==0x4dd150U || alternate==0x4dbcd0U :
+            alternate==0x44feb0U || alternate==0x450140U || alternate==0x450320U;
+        CHECK(SquidUnpop::SupportsDisplay(edition,vtable,0x2000)==(((mask&2)!=0) || vortex)); ++rows;
     }
     CHECK(rows==151); CHECK(!SquidUnpop::SupportsDisplay(OriginalEdition::Patch1078,0,0));
 }

@@ -47,7 +47,7 @@ public:
     void PrepareFrame(double now);
     // 실제 Fort 로딩 중첩값을 공유 AssetPostPop 상태에 전달한다.
     void SetLoadingDepth(std::uint32_t depth);
-    // 실제 Factory/아웃포스트 가상84의 Level→상태 프레임 보정을 같은 객체에 적용한다.
+    // 실제 Factory/아웃포스트 가상84의 Level→기본 표시 갱신을 같은 객체에 적용한다.
     void SetState(o::Sid sid,std::uint32_t value) const;
     // 사제/Player 등 기존 실제 사건 처리기를 fallback으로 합성한다.
     o::RegularHandler Handler(o::RegularHandler fallback={}) const;

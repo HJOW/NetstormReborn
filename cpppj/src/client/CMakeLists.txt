@@ -84,6 +84,7 @@ target_sources(netstorm PRIVATE
     RawCampaignWorldRuntime.cpp RawCampaignWorldRuntime.h
     RawCampaignPathBindings.cpp RawCampaignPathBindings.h
     RawCampaignMotionBindings.cpp RawCampaignMotionBindings.h
+    RawCampaignGunQueries.cpp RawCampaignGunQueries.h
     UserInput.cpp UserInput.h
     Sound.cpp Sound.h
     SoundDevice.cpp SoundDevice.h

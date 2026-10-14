@@ -1,0 +1,22 @@
+{
+  "baseline": "6fabde2",
+  "host": "HJOW-Athlon",
+  "files": {
+    ".gitattributes": "65a473f01991f4857673dd3ec464a34fd1505d9bf7ff3664a73815673018eb9b",
+    "LEFT_JOBS.md": "b65593da6ee8046f48198d7a4c1ce4b6041a1e544b2e5aae2ef4d5c1dbfc9a29",
+    "cpppj/src/client/CMakeLists.txt": "201686d9808c4948d69e47843d93d2c38785692fac765538d2e7079f46381040",
+    "cpppj/tests/CMakeLists.txt": "a5e8a341d1723f43a7a616345a517de935fed7af6605d276ed3ed8916652b225",
+    "cpppj/tests/CampaignInstallSupport.h": "f677124205b4bfe27c0f87a61e90ea7607cad4025f18d798e7ea2dcd20115ada",
+    "cpppj/src/o/CMakeLists.txt": "6edf30b8427629b4561493c62a8b8a04e690e45498938f37794e7eaffdacfc2c",
+    "cpppj/src/client/RawCampaignAssetBindings.cpp": "338b0de01914a33cd96b5807b6e5bae310b200af11fbf5862a4449f70f19b865",
+    "cpppj/src/client/RawCampaignAssetBindings.h": "0c4d1c6b3779bc3f08de7e377b8948c6e08080b1473c4ed6b5c06fd777697322",
+    "cpppj/src/o/SquidDisplay.h": "83ed777ce826ec37cc2a72808ffd3658b8f6bcb9644efcf31f203fc6da363be7",
+    "cpppj/src/o/SquidDisplay.cpp": "1f157fbf842ef5603f9634d7d2a349cb37b64e1ae057f4db712a36432b4b35e4",
+    "cpppj/src/o/UnpopVtables.inc": "c0b58962d0d38012e5b329af99a861e316ee29d910c4dce3df70bbca243ba5ee",
+    "cpppj/src/o/RawFactoryPostPop.h": "cdabe695b8eb70b388aec7606ba919a8e1e782c6df9b0777dc4219d2ad31f694",
+    "cpppj/src/o/RawFactoryPostPop.cpp": "1e99c7761591c47e153030c0d30df32452b2ddcafd794725f68c1ba9885d1295",
+    "cpppj/src/o/RawAssetRegular.h": "0f09ec677577d0899195d89782f6e8f9e998870bc966694783430d135ccf0048",
+    "cpppj/src/o/RawAssetRegular.cpp": "193c371424afd15e582a4695f71673334db4fc632d2d87aa5ba527272303e928",
+    "cpppj/tests/UnpopTests.cpp": "89ee0eb425b59778c216314eccb6dd09909a57118fb032cab1013c3f3345233c"
+  }
+}

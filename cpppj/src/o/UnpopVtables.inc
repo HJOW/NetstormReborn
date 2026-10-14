@@ -80,10 +80,10 @@ constexpr std::array<DisplayVtable,83> kPatchDisplayVtables{{
     {0x0050ee08U,3},
     {0x0050f210U,3},
     {0x0050f540U,3},
-    {0x005196f0U,1},
-    {0x005197a8U,1},
-    {0x00519860U,1},
-    {0x00519918U,1},
+    {0x005196f0U,3},
+    {0x005197a8U,3},
+    {0x00519860U,3},
+    {0x00519918U,3},
 }};
 // originalCD 판본별 공통 표시 가상 함수의 지원 비트다.
 constexpr std::array<DisplayVtable,68> kCdDisplayVtables{{
@@ -105,9 +105,9 @@ constexpr std::array<DisplayVtable,68> kCdDisplayVtables{{
     {0x005019f8U,3},
     {0x00501ab0U,3},
     {0x00501b90U,3},
-    {0x00501d28U,1},
-    {0x00501de0U,1},
-    {0x00501e98U,1},
+    {0x00501d28U,3},
+    {0x00501de0U,3},
+    {0x00501e98U,3},
     {0x005022f8U,3},
     {0x005026b8U,3},
     {0x00502780U,3},

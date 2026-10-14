@@ -7,6 +7,9 @@
 #include "client/PriestPlacementAssets.h"
 #include "o/RawSquidFinder.h"
 #include "o/RawSquidLevel.h"
+#include "client/RawCampaignGunQueries.h"
+#include "o/RawPlayerRegular.h"
+#include "o/RawPlayerTemplateState.h"
 #include <cstdio>
 
 using namespace netstorm::o;
@@ -47,6 +50,11 @@ struct InstallScene {
     std::unique_ptr<RawIslandRuntime> islands; // 위3204BYTE와 동일 Pool을 공유한다.
     std::unique_ptr<RawPriestWorldBindings> priests; // 저장 사제의 실제 Owner/PostPop/보호막 분배기다.
     std::unique_ptr<RawPlayerWorld> player; // 최초152 생성자/실제 PostPop/9기록을 연결한다.
+    std::unique_ptr<RawPlayerRegular> playerRegular; // 현재 Player의 실제 사건1/2를 처리한다.
+    std::unique_ptr<RawPlayerTemplateState> templateState; // 같은Template header/원본State28BYTE를 직접 읽는다.
+    std::array<std::vector<std::uint8_t>,9> stateBytes; // 실제 선택한 State 섹션의 writable 원문이다.
+    std::array<PlayerTemplateStateStream,9> stateStreams; // 같은 State cursor/end를 공유한다.
+    std::array<std::string,9> stateNames; // 같은 현재 Template manager의 실제 이름이다.
     RegionPaintState paint; // 실제 지역 도장의 장기 상태다.
     RegionOwnershipState votes; // 실제 현재 신전/워크샾 투표 상태다.
     std::vector<std::uint32_t> themes; // 현재 TYPE의 같은 원소 번호다.
@@ -56,6 +64,13 @@ struct InstallScene {
     std::unique_ptr<RawCarrierPostPop> carrier; // 같은 공통 장부와 실제 지면 소유자 경계다.
     AssetRegularState regularState; // 실제 예약 사건의 현재 전역이다.
     GunProcessState gunState; // 실제 Gun 초기 Form/시각/서버 전역이다.
+    GunTargetState gunTargetState; // 실제 자기 동맹/검색의 현재 상태다.
+    std::vector<GunTargetType> gunTypes; // 보호 TYPE의 사거리/방향/높이 보충 자료다.
+    std::vector<GunHitType> hitTypes; // 보호 TYPE의 HP/초와 별도 피해 보충 자료다.
+    std::vector<float> firingIntervals; // 실제 타입별 발사 간격이다.
+    std::unique_ptr<RawGunMode> gunMode; // 현재 raw 공격 방향을 매 검색마다 읽는다.
+    std::unique_ptr<RawGunTarget> gunTarget; // 실제 finder/ray/필터의 같은 Core 인스턴스다.
+    std::unique_ptr<RawGunHit> gunHit; // 실제 Q16 시간 압축과 현재 피해 getter다.
     std::uint32_t archerCommand{0x030000b0}; // 보호 PE의 실제 입력 토큰이다.
     std::unique_ptr<RawCampaignAssetBindings> assetBindings; // 실제 저장 건물 후처리와 Gun/Regular다.
     CanonPlacementPipelineState placement; // 실제 공간/기하/지형 허용 상태다.
@@ -82,14 +97,20 @@ struct InstallScene {
     // 보호 자료를 읽기 전용으로 사용하며 모든 필수 후처리를 첫 생성 전에 등록한다.
     explicit InstallScene(std::string_view mission="thewarbegins"):assets(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078)),metadata(assets.game),
         world(OriginalEdition::Patch1078,assets.types,assets.frames,metadata.shapes,CampaignLinks(),97),core(world.Core()),
-        sp(random,[] { return 1U; }),hp(core.pool,core.types,core.bookkeeping,rewardState,&sp),themes(core.types.size()),elements(core.types.size()) {
+        sp(random,[] { return 1U; }),hp(core.pool,core.types,core.bookkeeping,rewardState,&sp),themes(core.types.size()),elements(core.types.size()),
+        gunTypes(core.types.size()),hitTypes(core.types.size()),firingIntervals(core.types.size()) {
         sp.Initialize();level=std::make_unique<RawSquidLevel>(core.pool,core.types,InstallForbidden<void,SquidLevelAssertion>());
+        priestState.regen.patch.sequence=std::bit_cast<std::int32_t>(sp.Offset());
+        priestState.regen.patch.observedSequence=priestState.regen.patch.sequence;
         finishState.chaffMode=true;objectState.mission=true;objectState.chaffMode=true;
         playerState.playerKnown=1;assetState.boss=true;assetState.inBattle=true;assetState.localOwner=1;gunState.boss=true;
         priestState.priests.priests.entries.resize(100);assetState.residences.entries.resize(100);
         assetState.temples.entries.resize(100);assetState.outposts.entries.resize(100);assetState.geysers.entries.resize(100);
         // 원본 Player의 첫 지역 sentinel은9기록에 직접 쓴다. 별도 playerRegions 배열을 사용하지 않는다.
-        for (std::uint32_t owner=0;owner<9;++owner) Put(players,owner*0xb4+0x78,127);
+        for (std::uint32_t owner=0;owner<9;++owner) {
+            Put(players,owner*0xb4+0x78,127);Put(players,owner*0xb4+0x54,1U<<owner);
+            gunTargetState.allyMasks[owner]=1U<<owner;gunState.allies[owner][owner]=true;
+        }
         islands=std::make_unique<RawIslandRuntime>(core.pool,core.hash,islandBytes,finishState,assetState.residences,revision,ownerChanged,
             IslandRuntimeHooks{[this](Sid sid,std::uint32_t owner) { ownership->SetOwner(sid,owner); },InstallForbidden<void,IslandRuntimeAssertion>()});
         islands->Reset();
@@ -109,7 +130,9 @@ struct InstallScene {
         priestEffects.shield.translate=InstallForbidden<std::string,std::string_view>();priestEffects.shield.tell=InstallForbidden<void,std::string_view>();
         priestEffects.fallSound=InstallForbidden<void,Sid,float,float>();priestEffects.otherWalkerFall=InstallForbidden<bool,Sid>();
         priestEffects.regen.refresh=[this](Sid sid) { core.display.Update(core.pool.Slot(sid)); };
-        priestEffects.regen.neutralAction=InstallForbidden<void,Sid>();priestEffects.regen.patchAudit=InstallForbidden<void>();
+        priestEffects.regen.neutralAction=InstallForbidden<void,Sid>();
+        // 실제 SP 회전 몸체의 현재 offset을 같은 회복 추적 전역에 반영한다. 저장 값/게임 난수를 유지한다.
+        priestEffects.regen.patchAudit=[this] { sp.Rotate();priestState.regen.patch.observedSequence=std::bit_cast<std::int32_t>(sp.Offset()); };
         priestEffects.regen.measurement=InstallForbidden<double>();
         priests=std::make_unique<RawPriestWorldBindings>(RawPriestWorldCore{core.pool,core.hash,core.types,core.frames,core.spots,core.hash.Entries(0),hp,random,core.factory,core.owner,core.ownerMode,core.postPop,core.frame},priestState,std::move(priestEffects));
         priests->BindProcesses(core.processes);priests->SetAuthority(true);priests->SetLocalPlayer(1);
@@ -122,11 +145,34 @@ struct InstallScene {
         playerHooks.reserveRegular=[] { return true; };
         playerHooks.addRegular=[this](Sid sid,std::uint32_t event,float payload) { CHECK(core.processes.AddRegular(sid,event,payload)!=nullptr); };
         player=std::make_unique<RawPlayerWorld>(core.pool,core.postPop,players,playerState,std::move(playerHooks));core.postPop.SetPlayerPostPop(player.get());
+        templateState=std::make_unique<RawPlayerTemplateState>(core.pool.Edition(),headers,stateStreams,stateNames,
+            objectState.loadingDepth,objectState.mission,InstallForbidden<void,PlayerTemplateStateAssertion>(),[this](std::uint32_t depth) { world.SetLoadingDepth(depth); });
+        PlayerRegularHooks playerRegularHooks;playerRegularHooks.assertion=InstallForbidden<void,PlayerRegularAssertion>();
+        playerRegularHooks.log=[this](std::uint32_t,std::string_view text) { external.push_back(std::string(text)); };
+        playerRegularHooks.reserveRegular=[] { return true; };
+        playerRegularHooks.addRegular=[this](Sid sid,std::uint32_t event,float payload) { CHECK(core.processes.AddRegular(sid,event,payload)!=nullptr); };
+        playerRegularHooks.templateState=[this](std::uint32_t slot) { return templateState->Get(slot); };
+        playerRegularHooks.templateChanged=[this](std::uint32_t slot) { templateState->Changed(slot); };
+        playerRegular=std::make_unique<RawPlayerRegular>(*player,core.ownerMode,std::move(playerRegularHooks));
         ownership=std::make_unique<RawCampaignOwnership>(world,*islands,assetState,players,metadata.frames,themes,random,paint,votes,vortexRevision,97,121,
             CampaignOwnershipEffects{[this](Sid sid,std::uint32_t owner) { priests->SetOwner(sid,owner); },[this] { external.push_back("생산 Gump 요청"); },[] { return 0U; },InstallForbidden<void,Sid,std::int32_t,std::uint32_t>()});
         carrier=std::make_unique<RawCarrierPostPop>(core.pool,core.types,carrierState,
             MakeCarrierPostPopHooks(core.pool,core.postPop,[this](Sid sid) { static_cast<void>(priests->CheckCarrier(sid)); },[this](float x,float y,std::uint8_t owner) { world.SetSupportOwner(x,y,owner); }));
+        // 보호 .type의 실제 숫자/문자 Run을 같은 TYPE 번호의 보충 표에 연결한다.
+        for (const auto& asset:assets.game.Types()) {
+            const auto type=70+asset.block;auto& target=gunTypes[type];target.range=static_cast<float>(asset.definition.Number("range").value_or(0));
+            target.heightExtension=static_cast<int>(asset.definition.Number("height").value_or(0));
+            const auto theme=asset.definition.String("theme").value_or("sun");target.theme=theme=="wind" ? 0 : theme=="rain" ? 1 : theme=="thunder" ? 2 : 3;
+            // 원본 방향별 L/M/N/O 첫 프레임 표다. 없는Run의-1은 실제 검색 몸체가 처리한다.
+            for (std::uint8_t direction=0;direction<4;++direction) target.directionFrames[direction]=core.frames[type].Run(static_cast<std::uint8_t>('L'+direction)).first;
+            hitTypes[type].damagePerSecond=static_cast<float>(asset.definition.Number("hpPerSec").value_or(0));
+            firingIntervals[type]=static_cast<float>(asset.definition.Number("delayBetweenShots").value_or(0));
+        }
+        gunMode=std::make_unique<RawGunMode>(core.pool,core.frames,gunState.windArcherType);
+        gunTarget=std::make_unique<RawGunTarget>(core.pool,core.hash,core.types,gunTypes,core.shapes,gunTargetState);
+        gunHit=std::make_unique<RawGunHit>(core.pool,core.types,hitTypes,GunHitHooks{InstallForbidden<void,Sid,std::int32_t,std::uint8_t,Sid>(),[this](Sid sid) { core.building.NotifySurface(sid); }});
         RawCampaignAssetEffects assetEffects;assetEffects.postPop.reserveRegular=[] { return true; };
+        assetEffects.gun=MakeCampaignGunQueryHooks(core,*gunMode,*gunTarget,*gunHit,gunState,firingIntervals,std::move(assetEffects.gun));
         assetEffects.factory.warnDuplicate=InstallForbidden<void,Sid,std::int32_t,std::int32_t>();
         assetEffects.levelAssertion=InstallForbidden<void,SquidLevelAssertion>();
         assetEffects.factory.regionOwnership=[this](float x,float y) { ownership->UpdateRegion(x,y); };
@@ -149,7 +195,12 @@ struct InstallScene {
             if (event.effect!=SquidDestroyEffect::Transmit) throw std::logic_error("캠페인 검사에서 미연결 자산 삭제 수명 효과");
             external.push_back("삭제 전송");
         };worldHooks.assets.selected=[] { return Sid{}; };
-        worldHooks.destroy=InstallForbidden<bool,Sid,std::uint32_t,const SquidDestroyHooks&>();worldHooks.regular=assetBindings->Handler(priests->RegularHandler());
+        worldHooks.destroy=InstallForbidden<bool,Sid,std::uint32_t,const SquidDestroyHooks&>();
+        worldHooks.regular=assetBindings->Handler(priests->RegularHandler([this](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
+            if (playerRegular->Handles(sid)) return playerRegular->Handle(sid,event,count,payload);
+            throw std::logic_error("캠페인 현재 Kernel의 다른 실제 Regular 부모 미연결: TYPE"+
+                std::to_string(core.pool.Slot(sid)[10])+" event"+std::to_string(event));
+        }));
         worldHooks.transmit=assetBindings->Transmission();worldHooks.walkerFall=[this](Sid sid) { return priests->FallWalker(sid); };
         worldHooks.loadingDepth=[this](std::uint32_t depth) { objectState.loadingDepth=depth;carrierState.loadingDepth=depth;priests->SetLoadingDepth(depth);assetBindings->SetLoadingDepth(depth); };
         world.BindRuntime(std::move(worldHooks));
@@ -162,6 +213,8 @@ struct InstallScene {
         contentForms=std::make_unique<ContentFormHost>(core.pool,core.types,[this](Sid,Sid,std::uint32_t) { external.push_back("내용물 부모 통지"); });
         contained=std::make_unique<RawContainedCreate>(core.pool,contentState,contentForms->BindCreate(core.factory,std::move(contentHooks)));
         templates[1]=FortTemplate::Parse(assets.files.Read("d/"+std::string(mission)+".fort"),assets.game.TypeTable());
+        const auto state=templates[1].Section("State");stateBytes[1].assign(state.begin(),state.end());
+        stateStreams[1]={stateBytes[1],0,static_cast<std::uint32_t>(stateBytes[1].size()),!stateBytes[1].empty()};stateNames[1]=std::string(mission);
         streams[1]={templates[1].territory,0,static_cast<std::uint32_t>(templates[1].territory.size())};headers[20]=1;
         runtime=MakeRuntime();
     }

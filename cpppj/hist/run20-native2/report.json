@@ -1,0 +1,93 @@
+{
+  "host": "HJOW-Athlon",
+  "uniqueInputs": 756,
+  "editions": {
+    "originals": {
+      "samples": 378,
+      "returns": 378,
+      "assertions": 0,
+      "exports": {
+        "extracted/finder/originals/creation.c": "2f6baf5e3cf77598e067963196c8fcd5c7d15ee09db54f3f68e8071191ea9070",
+        "extracted/frameadvance/originals/creation.c": "845432595db34fadb63ce5e2bc7ca0e49c38e9d54adb2624b90a3261a22d93ad",
+        "extracted/bridgeeffects/originals/functions.tsv": "485cd05093884690ffc94c433c4e040282cd6ca26eb7da469732f74e1c983cec",
+        "extracted/bridgeeffects/originals/creation.c": "ac1856212fbd285650dc4ec999fa996a306ba536a3e42d605fba4ab26178fdbc",
+        "extracted/campaign-frame/originals/functions.tsv": "8dfaa5d3161eb69b5ff0b17666939fe3f13fbbc1571003f402e4a45637cd8001",
+        "extracted/squid-level/originals/functions.tsv": "c5cf2813ec8b091ebc66d5348e92813d76d48e39ba78db6e1cef321af8491e73",
+        "extracted/finder/originals/functions.tsv": "7ee781ffc6200c8f6b231381c4dae7ce88e5c0158f4b8effb222090bf8345704",
+        "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+        "extracted/frameadvance/originals/functions.tsv": "7c8ef6db38057bddcb3d6db0c6172be80b23ea89f3cbc9fa423948e60a3144d6",
+        "extracted/squid-level/originals/creation.c": "24b0633d6c81be7f16f59442c6f1c329edcd48d67a3ae4643664628295b9a37f",
+        "extracted/campaign-frame/originals/creation.c": "4199afa3dbfdcbc25ee38f85518b00138aa340832175ae03e04f15da0a71e20b",
+        "extracted/assetregular/originals/creation.c": "d8d68fa2e637f1f3b622a45e0d1b4a638fd5a300e29cf5a6545feaff89a753b2",
+        "extracted/assetregular/originals/functions.tsv": "539f2f4a8ba3c925d40fbbb292e07ea5da3a595566966b772e18902a2180997d"
+      },
+      "nativeCalls": {
+        "004d4d00": 240,
+        "004ad680": 180,
+        "0049a840": 516,
+        "004ad390": 60,
+        "00475290": 18,
+        "004ad110": 18,
+        "004ad0a0": 90,
+        "004549c0": 120,
+        "004afc90": 24,
+        "0044b900": 108,
+        "00496e70": 108,
+        "004ad0f0": 72,
+        "004ac550": 48,
+        "004558c0": 24
+      }
+    },
+    "originalCD": {
+      "samples": 378,
+      "returns": 378,
+      "assertions": 0,
+      "exports": {
+        "extracted/squid-level/originalCD/functions.tsv": "7bd905a413161256983f5b3a205dbeeaeae07ce9a38f8e5f68744a98dd726607",
+        "extracted/squid-level3/originalCD/creation.c": "9eddb44028a00ec31169d5dde566361462a505d73b82e78685a3dc303d01ceea",
+        "extracted/finder/originalCD/creation.c": "822eece37b0a0edde482232eacb0710ae8cf11c759417bc3108fa5ecc0585972",
+        "extracted/bridgeeffects/originalCD/functions.tsv": "b99e5f65a90d402a49be3353263e66080fbf1d3825b19685d7a49edd2e4c4abd",
+        "extracted/finder/originalCD/functions.tsv": "60cf1f9e4a7832ebe882a869af2bd2cd69e549e761fb03d7d4d64bb5fb3c5935",
+        "extracted/squid-level/originalCD/creation.c": "85369dca8404a8eb52ce4be8d3b8e9b6997beaf015e0a448a65b906564eb85f3",
+        "extracted/squid-level2/originalCD/creation.c": "abde975fe1621997002f05d71dc0772df4ddfb5cadd733adca43996949632fc6",
+        "extracted/campaign-frame/originalCD/functions.tsv": "e56eefbabdcdb5c66f3056fd0eff924142981a71af57a8baba87ae7aa4dcdaed",
+        "extracted/frameadvance/originalCD/creation.c": "55c7cb1c0145ac15568eefa4aa2e413c5b737d7e25364e051f910c6bf6c7e8be",
+        "extracted/squid-level2/originalCD/functions.tsv": "3cd645180b94833885bf312bb9a6f47e99343c52dd8384a48c5e4af17b0755e6",
+        "extracted/squid-level3/originalCD/functions.tsv": "dfb9d6395c41c76117a881af67d6c03d5295f5d0dfb60611f5110e1c1043de75",
+        "extracted/assetregular/originalCD/creation.c": "8be2b172ced3cd0cdb179abd5722e1f4c092cff0e639562d74b6c5a7d285add8",
+        "extracted/frameadvance/originalCD/functions.tsv": "582b00b1a418904c2bf56501b504c55816650f08cc0391fbe16bdeb387d52023",
+        "extracted/assetregular/originalCD/functions.tsv": "68225246756277c7fb51a6c2d5886959e33dc568eac4dd2e7dd61bd960a28f0f",
+        "extracted/campaign-frame/originalCD/creation.c": "3b3b4a7e4ba41b477ce8f1071c898838ef22f41ef645e9e7eba1b5ca4738cad5",
+        "extracted/bridgeeffects/originalCD/creation.c": "76acd15962cfadb844dd6689014a8a67ee0fc744d16c5a32528d4cafdb7fb911"
+      },
+      "nativeCalls": {
+        "00443110": 240,
+        "004ae3f0": 180,
+        "004adbc0": 60,
+        "0042b230": 18,
+        "004ace20": 18,
+        "004acdc0": 66,
+        "004acd90": 66,
+        "004abf50": 162,
+        "004abac0": 66,
+        "0047ac20": 120,
+        "004acce0": 24,
+        "004ae4b0": 24,
+        "00461a40": 108,
+        "0048f430": 108,
+        "004ace00": 48,
+        "0048cbd0": 24
+      }
+    }
+  },
+  "fixtureSha": "cbfc7db9a68a39edb67931e7d838793c7e1f0b3e82427394b470c750c2d6ba7a",
+  "toolSha": "b81dbfdeb82d292e6bdc07007e832f36be7ab6ade0619e87b4a6765ce93e3333",
+  "protected": {
+    "originals": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+  },
+  "limitations": [
+    "합성TYPE/슬롯. 실제 방향/Handle/Level 명령과 기존 난수/Advance를 실행했다.",
+    "Frame 지정과 표시 요청은 기존 명시 경계다. 큰upgrade/상위상태입자/GUI/실제게임완주는 검증하지 않는다."
+  ]
+}

@@ -21,6 +21,7 @@ struct FactoryPostPopHooks {
     std::function<void(float,float)> regionOwnership; // 00455380(x,y,0)/CD0047b3c0: 아웃포스트와 신전으로 섬 소유권을 다시 계산한다.
     std::function<void(Sid,std::int32_t,std::int32_t)> warnDuplicate; // 중복 워크샾 삭제 직전의 원본 경고 로그다.
     std::function<void(Sid,std::uint32_t)> destroy; // 실제 같은 풀의 가상 +0x10 삭제이며 flags0을 전달한다.
+    std::function<void(Sid)> updateState; // 가상84의 Level 저장 후 실제 가상88 기본 표시 갱신이다. 상태 프레임 보정과 구별한다.
 };
 // 실제 vtable +0x20과 +0x80이 검증된 Factory 부류만 받아 공통 깊이를 한 번 줄인다.
 class RawFactoryPostPop {
@@ -35,7 +36,7 @@ public:
     void Validate(Sid sid,std::uint32_t flags,const RawGraphPop* pop=nullptr) const;
     // wrapper 등록→최초 예약→Damageable→프레임→현재 일반 finder/중복 삭제 순서를 실행한다.
     void PostPop(Sid sid,std::uint32_t flags) const;
-    // 실제 Factory 가상84는 공통Level 저장 뒤 같은 가상88 상태 프레임 보정을 호출한다.
+    // 실제 Factory 가상84는 공통Level 저장 뒤 같은 가상88 기본 표시 갱신을 호출한다.
     void SetState(const RawSquidLevel& level,Sid sid,std::uint32_t value) const;
     // 공통 분배기에 다른 풀의 처리기를 등록하지 않도록 소유자를 공개한다.
     const SidPool& Pool() const;

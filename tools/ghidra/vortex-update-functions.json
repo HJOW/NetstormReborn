@@ -1,0 +1,7 @@
+{
+  "description": "원본 신전의 실제 가상8c 표시 갱신. 마지막 디컴파일 PC HJOW-Athlon, 2026-10-15.",
+  "editions": {
+    "originals": ["004dcda0", "004dcf80", "004dbcd0", "004dd150"],
+    "originalCD": ["0044feb0", "00450140", "00450320"]
+  }
+}
