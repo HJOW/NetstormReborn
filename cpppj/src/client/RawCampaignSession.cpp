@@ -22,6 +22,7 @@
 #include "o/RawPriestLookup.h"
 #include "o/RawRunePostPop.h"
 #include "o/RawVortexPreDestroy.h"
+#include "o/RawBuriedPostPop.h"
 #include "o/RawDamageableRelease.h"
 #include <bit>
 #include <cstdio>
@@ -184,6 +185,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawDamageablePreDestroy> damageablePre; // 공통 삭제와 같은 깊이/Graph/장부를 사용한다.
     std::unique_ptr<RawDamageablePostDestroy> damageablePost; // 같은 실제 예약/다리/공통 후처리다.
     std::unique_ptr<RawVortexPreDestroy> vortexPre; // 실제 신전의 목록/섬/Player 정리를 담당한다.
+    std::unique_ptr<RawBuriedPostPop> buriedPostPop; // 같은 boss/로딩 전역과 공통 장부를 사용하는 저장 buried 후처리다.
     std::array<FortTemplate,9> templates; // 실제 선택 자료는1번 Template에 둔다.
     std::array<FortTerritoryStream,9> streams; // 같은 Template의 실제120BYTE view다.
     std::array<std::uint8_t,180> headers{}; // 실제 Template9 header의 현재 바이트다.
@@ -411,6 +413,12 @@ struct RawCampaignSession::Impl {
         InstallContents(worldHooks.assets);
         ConnectConstruction(); // 실제공통삭제후설치뒤같은noIsland VT의표면가상분배를첫객체전등록한다.
         ConnectDamageable(); // 같은 공통 삭제와 신전/사제 해방의 파생 하위를 첫 객체 전에 연결한다.
+        BuriedPostPopHooks buried;buried.chooseType=SessionMissing<std::uint32_t,std::uint32_t>(); // 비로딩 최초 생성의 실제 보상 추첨은 별도 복원 전 명시 거부한다.
+        buried.reserveRegular=[] { return true; }; // 실제 Host 할당 실패는 addRegular에서 예외로 전달한다.
+        buried.addRegular=[this](Sid sid,std::uint32_t event,float delay) { SessionCheck(core.processes.AddRegular(sid,event,delay)!=nullptr); };
+        buried.validateBase=[this](Sid sid,std::uint32_t flags,const RawGraphPop* projected) { core.postPop.ValidateBase(sid,flags,projected); };
+        buried.base=[this](Sid sid,std::uint32_t flags) { core.postPop.PostPopBase(sid,flags); };
+        buriedPostPop=std::make_unique<RawBuriedPostPop>(core.pool,assetState.boss,objectState.loadingDepth,std::move(buried));core.postPop.SetBuriedPostPop(buriedPostPop.get()); // 00462170의 실제00540bc4는 현재 boss이며 별도 server/전투 조건을 사용하지 않는다.
         worldHooks.assets=construction->DestroyHooks(lifetime->DestroyHooks(hits->DestroyHooks(std::move(worldHooks.assets))));
         worldHooks.destroy=construction->Destroy(lifetime->Destroy(hits->Destroy(services.destroy)));
         auto previousEffects=std::move(worldHooks.assets.emit); // 다른 기존 파생/전송/선택 처리기를 유지한다.
@@ -648,6 +656,7 @@ struct RawCampaignSession::Impl {
         catch (const std::exception& error) { std::fprintf(stderr,"실제 Session Kernel 정리 실패: %s\n",error.what()); }
         catch (...) { std::fprintf(stderr,"실제 Session Kernel 정리 실패: 알 수 없는 예외\n"); }
         core.postPop.SetPlayerPostPop(nullptr);
+        core.postPop.SetBuriedPostPop(nullptr); // 장기 모듈 해제 뒤 파생 포인터를 남기지 않는다.
     }
 
 };

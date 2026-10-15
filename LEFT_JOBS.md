@@ -1,5 +1,16 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-16 Early Missions·데모3개·캠페인1-1/1-2 목표 재개 (`HJOW-Athlon`)
+
+- [x] 새 목표 이어가기 요청과 실제 목표 `active` 상태를 확인하고 AGENTS.md·양 LEFT_JOBS·직전 중단 인수인계와 작업 트리를 다시 읽었다. 직전 턴은 중단 커밋/전체 회귀/인수인계를 완료한 진행 턴이다. 시작 커밋은 `463aad2`이며 작업 트리는 깨끗했다. 이번 목표의 데모 미션3개도 포함하며 아래 과거 중단 절을 새 중단 지시로 해석하지 않는다. 서브 AI는 재가동하지 않고 단독 진행한다.
+- [x] 단위73 후속 진단: Tutorial5는 **Load 중 SID15011·TYPE112 `buried`·VT0050a748**에서 실패했다. 실제 +20은00462170이며 최초 Pop의 두 Regular 예약이 미연결이었다. 보호 원본의 buried2개는 QA114를 저장한다. 원본 DEMOVILLE의3명령은 **DemoStormRages·GuardMyBack·DissolvedAlliance**이며 StartDemo는004d7ffb→00463b70(미션 생성),004d8006→00463a00(실제+68=1)이다. 스크립트에 demo를 추가하는 흐름으로 대체하지 않는다.
+- [x] **단위74 완료:** 신규 `RawBuriedPostPop`과 같은 Session의 실제 loading/공통 장부/Regular 분배를 조립했다. 실제00462170/QA helper/타입 주소 계산의 **580개 고유 입력**은 정상 반환·스택/SEH/비휘발 레지스터/쓰기guard를 확인했고 새 C++2개 검사에서 전수 일치했다. 추첨/힙/Regular/공통 장부는 명시 외부 경계다. 비로딩 최초 생성의 보상 추첨, buried Regular 사건 몸체는 아직 별도 미복원이다. [상세](docs/exe/cpp-buried-postpop-20261016.md)와 `cpppj/buried-postpop.json`을 따른다. 자연 완주·동일성은 미달성이다.
+- [x] 00462170의 조건은 실제 **boss00540bc4**로, server00540bc0/전투 모드00594fbc와 구별했다. Session은 같은 `assetState.boss`를 참조한다. 권한 명칭을 바로잡아 원문을580개 재생했고 데이터 행은 전부 같았다. Tutorial5의 저장 QA114·동일 부모의 사건0/1 예약/초기 payload 검사도 추가했다. 초기 공용 헤더 빌드 중 수정한 boss 연결/검사 소스는 고정 뒤 다시 빌드했고, 최종 실행 파일에서 검사했다. 초기 빌드 파일을 최종 검증에 사용하지 않았다.
+- [x] 초기 빌드57343과 고정 소스 재빌드93974는 모두 종료0이다. 최종 `goal-buried-start-final-build.log` 실행 파일로 **BuriedPostPop2개·실패0/원본580행 일치**를 확인했다. 실제8미션 시작의 다른2개는 통과했으나 순회는 Tutorial5의 다음 객체 **SID15013·TYPE72 sunAviary·VT00509930**에서 중단했다. 저장 QA114/두 Regular의 실제 미션 검사는 Load 뒤라 아직 미실행이며 통과로 세지 않는다. 로그 `extracted/goal-buried-start-focused.log`를 따른다.
+- [x] 최종 Release **종료0·경고0·오류0**, 집중5개 중4개 통과·위 순회1개 실패다. 전체 내부 **1,316개 중1,315개 통과·1개 실패**, CTest **0/1 통과·종료8·검사205.15초/전체205.20초**이며 유일한 실패는 위 sunAviary다. 세 실행 세션57343/93974/98308은 모두 종료했다. `extracted/goal-buried-start-{final-build,focused,ctest,tests,audit}.log`에 보존한다. native/SHA/고유 입력·Python 구문·UTF-8·`git diff --check`는 통과했다. 기존 요구에너지2352 제품/fixture는 바꾸지 않고 현재 CMake2파일 SHA/이력만 갱신했다.
+- [ ] **바로 다음 단위75:** 실제 sunAviary PostPop0045ec50과 프로세스 생성자0045d690/부착/현재 Kernel 몸체를 연결한다. 원문은 server00540bc0/flags1의 process 중복 진단→new0x30→0045d690+20→Attach0041bd20(type005410f0,SID,0,8)→Damageable0044bf80이다. 비어 있는 성공 효과나 일반 Factory 분배로 우회하지 않는다. 이후 보호8미션을 마저 확인하고 실제 데모3개/GUI 로그인·Guide·Start 및 자연 플레이 연결을 계속한다. AGENTS.md를 커밋 직전 다시 읽고 **`20261016-02 CP buried 최초 후처리 복원과 원본 580개 대조 및 미션 로드 누락 추적`**으로 로컬 커밋한다. 전체 목표는 **active**로 유지한다.
+- [x] 현재 PC와 마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon, 2026-10-15**로 일치한다. 원본/GUI 실행·보호 원본/AGENTS/dotnetpj 변경·원격 push와 DirectDraw 전체화면 오류 수정은 없다.
+
 ## 2026-10-16 사용자 요청에 따른 일시 중단·회귀 마감 (`HJOW-Athlon`)
 
 - [x] 사용자 중단 요청에 따라 새 구현을 멈추고 `construction_audit`·`energy_finish`·`session_audit` 모두 **interrupted** 상태임을 확인했다. 재개 지시 전까지 세 서브 AI와 목표를 대기시킨다. 아래의 과거 목표 재개 절은 이번 중단 지시를 대체하지 않는다. [최신 중단 인수인계](docs/exe/cpp-pause-handoff-20261016.md)를 먼저 읽는다.

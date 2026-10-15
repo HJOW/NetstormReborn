@@ -9,6 +9,7 @@
 #include "o/RawDaisLifecycle.h"
 #include "o/RawDudeSpawn.h"
 #include "o/RawPlayerWorld.h"
+#include "o/RawBuriedPostPop.h"
 #include "o/SquidPop.h"
 #include "o/RawIslandPostPop.h"
 #include <algorithm>
@@ -75,7 +76,11 @@ bool SquidPostPop::HandlesIsland(Sid sid) const {
     return islandPrefix_ && Vtable(pool_.Slot(sid))==expected;
 }
 // 파생 표는 서로 다른 주소이므로 한 종류만 참이 된다.
-bool SquidPostPop::HandlesDerived(Sid sid) const { return HandlesBridge(sid) || HandlesIsland(sid) || HandlesSurface(sid) || HandlesPriest(sid) || HandlesForcefield(sid) || HandlesCarrier(sid) || HandlesDamageable(sid) || HandlesAsset(sid) || HandlesFactory(sid) || HandlesRune(sid) || HandlesDais(sid) || HandlesDude(sid) || HandlesPlayer(sid); }
+bool SquidPostPop::HandlesDerived(Sid sid) const { return HandlesBridge(sid) || HandlesIsland(sid) || HandlesSurface(sid) || HandlesPriest(sid) || HandlesForcefield(sid) || HandlesCarrier(sid) || HandlesDamageable(sid) || HandlesAsset(sid) || HandlesFactory(sid) || HandlesRune(sid) || HandlesDais(sid) || HandlesDude(sid) || HandlesPlayer(sid) || HandlesBuried(sid); }
+// 다른 월드의 QA와 장부를 조합하지 않도록 실제 풀을 확인한다.
+void SquidPostPop::SetBuriedPostPop(const RawBuriedPostPop* postPop) { if (postPop && &postPop->Pool()!=&pool_) throw std::invalid_argument("buried Pop/후처리 풀 불일치");buriedPostPop_=postPop; }
+// 주소 표를 넓히지 않고 완성한 실제 몸체에 파생 지원 여부를 위임한다.
+bool SquidPostPop::HandlesBuried(Sid sid) const { return buriedPostPop_ && buriedPostPop_->Handles(sid); }
 // 지원 주소만 늘리지 않고 실제 전체 몸체와 동일 풀을 확인한다.
 void SquidPostPop::SetFactoryPostPop(const RawFactoryPostPop* postPop) {
     if (postPop && &postPop->Pool()!=&pool_) throw std::invalid_argument("Factory Pop/후처리 풀 불일치");
@@ -196,6 +201,7 @@ void SquidPostPop::Validate(Sid sid,std::uint32_t flags,const RawGraphPop* pop) 
     if (HandlesDais(sid)) daisPostPop_->Validate(sid,flags);
     if (HandlesDude(sid)) dudePostPop_->Validate(sid,flags);
     if (HandlesPlayer(sid)) playerPostPop_->Validate(sid,flags,pop);
+    if (HandlesBuried(sid)) buriedPostPop_->Validate(sid,flags,pop);
     if (HandlesForcefield(sid)) forcefieldPostPop_->Validate(sid);
     if (HandlesAsset(sid)) assetPostPop_->Validate(sid,flags,pop);
     if (HandlesFactory(sid)) factoryPostPop_->Validate(sid,flags,pop);
@@ -236,6 +242,12 @@ void SquidPostPop::Activate(Sid sid,std::uint32_t flags) {
     if (HandlesPlayer(sid)) {
         playerPostPop_->PostPop(sid,flags);
         if (state_.depth!=before) throw std::logic_error("Player Activate 공통 깊이 불일치");
+        return;
+    }
+    // buried도 QA/예약 뒤 같은 공통 장부를 내부에서 한 번 호출한다.
+    if (HandlesBuried(sid)) {
+        buriedPostPop_->PostPop(sid,flags);
+        if (state_.depth!=before) throw std::logic_error("buried Activate 공통 깊이 불일치");
         return;
     }
     // Dude는 idle/population/I 프레임 뒤 자기 전체 몸체에서 공통 장부를 한 번 호출한다.

@@ -239,3 +239,6 @@ target_sources(netstorm PRIVATE RawGameRandomSeed.cpp RawGameRandomSeed.h)
 
 # 현재 Player9/연결 객체 표의 원본 송신 분배를 실제 세션에 제공한다.
 target_sources(netstorm PRIVATE RawBattleBroadcast.cpp RawBattleBroadcast.h)
+
+# 저장된 buried의 QA와 최초 Regular 두 예약을 실제 공통 PostPop에 연결한다.
+target_sources(netstorm PRIVATE RawBuriedPostPop.cpp RawBuriedPostPop.h)

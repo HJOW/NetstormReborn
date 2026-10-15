@@ -1,0 +1,65 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-16",
+  "last_full_refined_host": "HJOW-Athlon",
+  "last_full_refined_date": "2026-10-15",
+  "observations": 580,
+  "status": "native580-cpp-compared-session-next-missing-aviary",
+  "game_gui_runs": 0,
+  "boundary": "00462170/QA helper/타입 주소계산은 원본 명령이다. 추첨/힙/Regular/공통 장부는 명시 외부 경계다. 전체 객체/현재 전역/호출 순서와 스택/SEH/비휘발 레지스터/쓰기 주소를 대조한다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_buried_postpop.py": "052cf6e518890ae28d2654ac66baf38f754bae63f540672c74f6f4876f8bcb85",
+    "cpppj/src/o/RawBuriedPostPop.h": "68caf9d465b324dc65c711e5bd7c03aff18776666fa60140b313ce5fcbb7c02e",
+    "cpppj/src/o/RawBuriedPostPop.cpp": "f7e3bc23db5ef4b9f120b73577bda46e60bc359ab6346277410127b481f09109",
+    "cpppj/tests/BuriedPostPopTests.cpp": "40650754c86dd8bc93bf94aa498a78a62ca0d1fac6325cd65e447c01b481f213",
+    "cpppj/tests/fixtures/buried-postpop-x86.tsv": "76e346fc32bfe640f615ced94d4d497198e0abc483f17de8bfbdd9fbe6517bf4"
+  },
+  "cpp_validation": {
+    "build_exit": 0,
+    "focused_tests": 2,
+    "failed_checks": 0,
+    "native_rows_compared": 580,
+    "log": "extracted/goal-buried-start-focused.log",
+    "build_warnings": 0,
+    "build_errors": 0
+  },
+  "session_validation": {
+    "focused_tests": 3,
+    "failed_checks": 1,
+    "failure": "Tutorial5 Load: SID15013 TYPE72 sunAviary VT00509930; original PostPop0045ec50 not connected",
+    "protected_8_missions_passed": false,
+    "saved_buried_qa_and_regular_checks_reached": false,
+    "full_ctest": {
+      "internal_tests": 1316,
+      "passed": 1315,
+      "failed_checks": 1,
+      "ctest_exit": 8,
+      "test_seconds": 205.15,
+      "total_seconds": 205.2
+    }
+  },
+  "integration_snapshot": {
+    "baseline_commit": "463aad2",
+    "date": "2026-10-16",
+    "scope": "Historical snapshot of unit74 integration; later Session/registration edits do not change the580 native observations",
+    "sha256": {
+      "cpppj/src/o/SquidPop.cpp": "c0d3a97d44a4166c8cb8a7ab28c695195f7ad902b239cf437dbc7e6001071e2a",
+      "cpppj/src/o/SquidPostPop.h": "9d6edf5f147ac5defc2f779a53c705302d8c86fe6c358b3e3e218e5b16242038",
+      "cpppj/src/o/SquidPostPop.cpp": "f0a751d92e335edac8b7e707ed21b990acb6a596eacf044f3e6d5a2a10718fc8",
+      "cpppj/src/client/RawCampaignSession.cpp": "059437aecba44cb962cb1d3ff617a5c18670b63803c104c19dcc9add0b7e18e2",
+      "cpppj/tests/CampaignMissionStartTests.cpp": "bfef81d8fad9f9e5768725dd5a377308a344adc2f6373ecbd4c7d6171fd89cf3",
+      "cpppj/tests/CMakeLists.txt": "c2b9ec10999ad06a45184d27f68f090a2eb0867a9e41d23f20e0630d3c803c2f",
+      "cpppj/src/o/CMakeLists.txt": "05b3360aad5ff2699c7b1854cbdacc86d69a026e06af65e76c92a7acfe565ac5",
+      "cpppj/type-required-energy.json": "daf89220e6fc2c1dd88e248a75d32731fb313742183a460b136510fd2a33c552",
+      "LEFT_JOBS.md": "df355c1ccf00195a43a15b2b58cef45f9414853a4d549fa581ace16e8ecd4026",
+      "docs/exe/cpp-buried-postpop-20261016.md": "d97169dcee08c260c10c51f3d30dc0865d05e003f0924b85ae80d9c23d26024d",
+      "extracted/goal-buried-start-final-build.log": "f11a94723ee0e3ce3bac7fae9b85c23082c3b559a9c48378d196fa8e475745a7",
+      "extracted/goal-buried-start-focused.log": "302167a4eae715256a2461f6aa4b010e87061d705aef6a7630d15c7b0c6a80ee",
+      "extracted/goal-buried-start-ctest.log": "4c60247424fad8939ba99966b80da39eae08e42c8918d0ce7c0bd25c0f80001f",
+      "extracted/goal-buried-start-tests.log": "e6bc6628044da0891784ccdcd173f558975eab4f2a9f2d26442674dc4568cbb4",
+      "extracted/goal-buried-start-audit.log": "c5d2bb6dddbc136f7ad533cd146742046c7824385e9843b97fe4637cf58db8da"
+    }
+  }
+}

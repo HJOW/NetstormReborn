@@ -9,6 +9,7 @@
 #include <bit>
 #include <cmath>
 #include <stdexcept>
+#include <string>
 
 namespace netstorm::o {
 // 다른 월드의 SID 풀을 사용하는 큐는 구성 단계에서 거부한다.
@@ -87,7 +88,9 @@ RawPopResult SquidPop::Pop(Sid sid,const RiftTypeRecord& type,float frameWidth,f
     // 다리와 섬 받침은 전용 postPop의 접두 동작과 연결 효과를 공급한 경우에만 허용한다. 기존 공통 가상 표 목록은 바꾸지 않는다.
     if (!Supports(pool_.Edition(),Read(old,0),flags) &&
         !(postPop_ && postPop_->HandlesDerived(sid) && SquidUnpop::SupportsDisplay(pool_.Edition(),Read(old,0),flags)))
-        throw std::logic_error("Pop 파생 가상 후처리는 아직 지원하지 않습니다");
+        // 미복원 분배를 실제 저장 객체와 연결해 분석할 수 있도록 현재 SID/타입/가상 표를 남긴다.
+        throw std::logic_error("Pop 파생 가상 후처리는 아직 지원하지 않습니다: SID"+std::to_string(sid.value)+
+            " TYPE"+std::to_string(old[kType])+" VT"+std::to_string(Read(old,0)));
     const auto level=SquidHash::ObjectLevel(type.flags2,frameWidth,frameHeight);
     auto& head=hash_.Bucket(level,x,y);
     if (head==sid.value || head>=pool_.Capacity()) throw std::logic_error("Pop 해시 머리 오류");

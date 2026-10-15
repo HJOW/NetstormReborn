@@ -62,6 +62,19 @@ TEST_CASE(CampaignMissionStart_ProtectedEightMissions) {
         ConfigInterface config([&](std::string_view path) { return assets.files.TryRead(path); });ConfigureStart(config);MissionScript script(config,input.name);CHECK(script.Loaded());
         auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());StartExternal external;
         RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),external.Services());session.Load();
+        std::fprintf(stderr,"실제 미션 Load 완료: %s\n",input.name.data()); // Start 이전 저장객체 Pop 실패와 시작 효과 실패를 구별한다.
+        if (input.name=="Tutorial5") {
+            auto core=session.Core();std::size_t buried{}; // 보호 원문은 QA114의 buried 두 개를 저장한다.
+            // 실제 풀에서만 대상을 찾고 별도 관찰용 객체/예약 목록을 만들지 않는다.
+            for (std::uint32_t number=5;number<core.pool.Capacity();++number) {
+                const Sid sid{static_cast<std::uint16_t>(number)};const auto raw=core.pool.Slot(sid);
+                if (raw[10]!=112 || (raw[11]&1U)) continue;
+                ++buried;CHECK(raw[12]==114);const auto* first=core.processes.FindEvent(sid,0);const auto* second=core.processes.FindEvent(sid,1);
+                CHECK(first && second && first!=second);
+                if (first && second) CHECK(first->Parent()==sid && second->Parent()==sid && first->Count()==0 && second->Count()==0 && first->Payload()==0 && std::bit_cast<std::uint32_t>(second->Payload())==0x3c23d70a);
+            }
+            CHECK(buried==2 && core.bookkeeping.depth==0);
+        }
         MissionFrameGateState gate;MissionStartState state;MissionStartGlobals globals;MissionAiSettingsState ai;state.sequence=3;state.fieldC0=7;state.fieldC4=8;ai.stuffRefreshRate=4;
         RawCampaignMissionStartBindings start(session,script,gate,state,globals,ai,external.Effects());CHECK(&start.Gate()==&gate && gate.started==0 && session.AiMemory().Allocations().empty());
         std::array<bool,9> live{};std::size_t requested{}; // 실제 초기 사제 입력을 Start 효과 전에 보존한다.
