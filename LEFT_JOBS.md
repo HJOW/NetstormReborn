@@ -1,5 +1,12 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-15 단위42 완료: 실제 Player 로그인·방향별 동맹·AI 부착 수명 (`VM-W11-Codex`)
+
+- [x] `RawPlayerParticipation`에 원본 로그인 flags/거부·연결 배치, 자기 포함 한 행 동맹/단방향 추가, Chat 재구성, 실제 brain 토큰 부착·파괴/반납 수명을 복원했다. 같은 Player9×0xb4/방향별81DWORD를 공유하며 기존 값형 active/대칭 동맹을 복사하지 않는다. [단위42 상세](docs/exe/cpp-player-participation-20261015.md).
+- [x] PATCH7함수를 읽기 전용 정밀 export했다. 실제 원본 **608고유입력**의 Player전체1,620B/동맹324B·반환값·효과 인자/순서를 전수 대조했다. 초기606행에 이름30/31글자2행을 추가하고 실제32바이트 이름 필드를 교정했다. 최종 Release게임/검사빌드 경고·오류0·집중2개 실패0·608행 SHA/행수감사·공백검사 통과다. 전체1,183개 통과 뒤의 이름 필드 보강은 최종 집중으로 확인했으며 전체 재실행으로 세지 않는다.
+- [x] 최초 CRT free주소 추정 오류·동시빌드 tlog잠금·fixture머리행 setup 오류는 교정하고 로그를 보존했다. 현재/마지막 정밀 디컴파일 PC는 **VM-W11-Codex, 2026-10-15**다. 실제 게임/GUI실행·보호원본·AGENTS·dotnetpj변경은 없다. 인수인계 뒤 **`20261015-32 실제 플레이어 참여와 방향별 동맹 및 AI 부착 수명 복원 검증`**으로 로컬커밋하며push하지않는다.
+- [ ] 실제 AI constructor/초기 기술·SP/전략 프레임은 미복원이며 이 모듈은 brain을 생성하지 않는다. 미션 시작의 실제 설정/AI생성 사슬을 복원 중이다. 실제 로그인/AI·방향별 동맹 초기화와 게이트를 연결한 뒤에만 자동 승패를 켠다. 최근5개 간헐천생성·본문 HTML 변환·완주를 위한 건설/다리/수확도 계속 진행한다. 목표active·완주동일성미완료·DirectDraw전체화면오류제외를 유지한다.
+
 ## 2026-10-15 단위41 완료: 현재 raw 승패 입력·지면 소유자 연결 (`VM-W11-Codex`)
 
 - [x] `RawMissionOutcome`에 같은 Player9 원문/방향별81DWORD·현재 local/Demo/Tell 차단을 매 조회 읽는 연결을 추가했다. `RawCampaignSession`은 같은 사제/HP/표면과 영구 latch를 소유하고 `GameWorld::CheckMissionOutcome()`에서 명시 호출한다. 초기화 전 자동 Check는 켜지 않았다. [단위41 상세](docs/exe/cpp-outcome-live-20261015.md).

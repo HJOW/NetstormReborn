@@ -9,6 +9,7 @@ target_sources(netstorm PRIVATE
     RawFenceTarget.cpp RawFenceTarget.h
     RawContentParentNotice.cpp RawContentParentNotice.h ContentNoticeVtables.inc
     RawPlayerDamageNotice.cpp RawPlayerDamageNotice.h
+    RawPlayerParticipation.cpp RawPlayerParticipation.h
     RawFormPacket.cpp RawFormPacket.h
     RawProjectileGeometry.cpp RawProjectileGeometry.h
     RawSquidLevel.cpp RawSquidLevel.h

@@ -8,6 +8,7 @@ add_executable(netstorm_tests
     TutorialTwoTests.cpp
     WarningTests.cpp
     PriestMenuTests.cpp
+    PlayerParticipationTests.cpp
     RainDrawTests.cpp
     FenceTargetTests.cpp
     CampaignNoticeTests.cpp
@@ -926,12 +927,17 @@ set_source_files_properties(WarningTests.cpp PROPERTIES COMPILE_DEFINITIONS
 set_source_files_properties(PriestMenuTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PRIESTMENU_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/priestmenu-x86.tsv\"")
 
+# 실제 Player 로그인/동맹/brain필드수명의고유기계어관찰을전수대조한다.
+set_source_files_properties(PlayerParticipationTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PLAYER_PARTICIPATION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/player-participation-x86.tsv\"")
+
 # 실제 미션 공통 게이트와 Early1/Totalmade의 독립 원본 입력 경로다.
 set_source_files_properties(MissionFrameGateTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_MISSIONFRAME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/missionframe-x86.tsv\"")
 set_source_files_properties(TutorialOneTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_TUTORIAL_ONE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/tutorial-one-x86.tsv\"")
 
+# 공통 게이트와 같은 상태에서 실행하는 실제 Tutorial2의 독립 원본 입력이다.
 set_source_files_properties(TutorialTwoTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_TUTORIALTWO_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/tutorial-two-x86.tsv\"")
 
