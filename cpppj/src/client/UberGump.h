@@ -14,6 +14,7 @@ namespace netstorm::client {
 class Client;
 class GameWorld;
 class UserInput;
+class WarningMessages;
 // 메뉴·브리핑·미션 페이지와 해당 UI 동작을 관리하는 처리기이다.
 class UberGump {
 public:
@@ -75,6 +76,7 @@ private:
     // input_: 처리할 입력 또는 입력 분배기.
     GumpControlInput input_;
     std::unique_ptr<RawButtonControls> rawButtons_; // 돌 버튼은 실제 공유 트리/수명/캡처를 사용한다. input_은 메뉴 행/판정 보고용이다.
+    std::unique_ptr<WarningMessages> warnings_; // 원본의 모달이 아닌10초 글자 안내와 실제 StyleText/Gump 수명이다.
     std::uint32_t buttonTextureType_{},buttonTextureFrame_{}; // 실제 A00 배경 생성자에 전달할 타입/프레임 번호다.
     // scripts_: 스크립트.
     std::map<std::string, std::unique_ptr<o::Config>> scripts_;

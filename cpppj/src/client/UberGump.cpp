@@ -10,6 +10,7 @@
 #include "client/GameWorld.h"
 #include "client/UserInput.h"
 #include "client/WindowTitle.h"
+#include "client/WarningMessages.h"
 #include "o/OriginalText.h"
 #include "o/Template.h"
 #include <algorithm>
@@ -123,6 +124,9 @@ UberGump::UberGump(Client& client) : client_(client) {
     rawButtons_=std::make_unique<RawButtonControls>(client_.Assets().Edition(),RawButtonHooks{
         [this] { return client_.WallSeconds(); },[this](auto code) { return client_.Poll(code); },
         [this] { if (client_.Audio()) client_.Audio()->Sounds().PlayByName("button.wav",0,0,0,0,0); }});
+    warnings_=std::make_unique<WarningMessages>(client_.Fonts(),client_.GetScreen().Colors(),[this] { return client_.WallSeconds(); },[this] {
+        client_.WorldAudio().Sounds().PlayByName("newWarnMessage.wav",0,0,0,0,0);
+    });
     MainMenu(); Compose(); client_.ShowScene();
 }
 // 입력 참조를 먼저 없애고 커널이 소유한 월드를 이 구현 파일에서 제거한다.
@@ -183,7 +187,12 @@ void UberGump::Tell(std::string target, bool briefing) {
     }
     if (!body) throw std::runtime_error("Missing dialog section: " + target);
     const auto protectedBody = Replace(*body, "{cur.file}", "__CURRENT_FILE__");
-    page_ = ParseDialogPage(Replace(client_.Configuration().SubstituteLocal(protectedBody), "__CURRENT_FILE__", "{cur.file}"));
+    auto parsed=ParseDialogPage(Replace(client_.Configuration().SubstituteLocal(protectedBody), "__CURRENT_FILE__", "{cur.file}"));
+    // Warning 명령만 있는 Tell은 원본처럼 화면 안내만 생성하며 미션/기존 페이지/정지를 바꾸지 않는다.
+    warnings_->SetView(client_.GetScreen().Width(),client_.GetScreen().Height(),client_.GetScreen().Colors());
+    for (const auto& warning:parsed.warnings) warnings_->Add(warning);
+    if (!parsed.warnings.empty() && parsed.paragraphs.empty() && parsed.items.empty()) { rebuild_=true;return; }
+    page_=std::move(parsed);
     ExpandMenus(page_);
     if (page_.items.empty()) page_.items.push_back({"OK", {"DoNothing", "0"}});
     state_.phase = briefing ? ClientPhase::Briefing : ClientPhase::Dialog;
@@ -332,6 +341,7 @@ void UberGump::Event(InputEvent event) {
 bool UberGump::Input() {
     // 사건 순서를 유지한다. 첫 상태 전환만 다음 프레임에 예약된다.
     while (!client_.Input().Empty()) Event(client_.Input().Pop(false));
+    if (warnings_->Idle()) rebuild_=true;
     const auto mouse = client_.Poll(InputCode::kLeftButton);
     if (rawButtons_->Poll(mouse)) rebuild_=true;
     if (input_.Move({mouse.x, mouse.y}, (mouse.code & InputCode::kOutside) == 0)) rebuild_ = true;
@@ -416,6 +426,9 @@ void UberGump::Compose(bool controls) {
     // 마지막 파일 로딩의 실제 버튼 색/문맥을 사용한다. 일시 번개 팔레트에서 색 번호를 다시 찾지 않는다.
     const auto buttonColors=ButtonColors(client_.GetScreen().Colors());
     const auto buttonContexts=ButtonTextContexts(buttonColors);
+    warnings_->SetView(width,height,client_.GetScreen().Colors());
+    // TextGump의 실제 기준선/내부 클립을 UI 글자 목록 끝에 제출한다.
+    const auto appendWarnings=[&] { auto messages=warnings_->Text();text.insert(text.end(),std::make_move_iterator(messages.begin()),std::make_move_iterator(messages.end())); };
     std::vector<RenderSprite> worldSprites;
     client_.GetRenderer().SetOverlay(nullptr);
     if (world_ && state_.phase!=ClientPhase::LoadingMission) {
@@ -464,7 +477,7 @@ void UberGump::Compose(bool controls) {
         // 현재 연결한 Game 메뉴와 시작 Storm Power를 월드 위에 표시한다.
         button({"Game", {"Menu", "game"}}, 4, 4, kButtonWidth);
         if (world_) text.push_back({&font,"Storm Power: "+std::to_string(static_cast<long long>(world_->Players().players[1].stormPower)),width-200,6,255,0,{1,1},true,false});
-        client_.GetRenderer().SetBackground(canvas); client_.GetRenderer().SetScene(std::move(worldSprites), std::move(text));
+        appendWarnings();client_.GetRenderer().SetBackground(canvas); client_.GetRenderer().SetScene(std::move(worldSprites), std::move(text));
         if (world_) client_.GetRenderer().SetOverlay(world_->SelectionImage());
     } else {
         if (!popup_.empty()) {
@@ -533,7 +546,7 @@ void UberGump::Compose(bool controls) {
         } else if (state_.phase == ClientPhase::LoadingMission) {
             text.push_back({&body, "Starting Mission...", (width - body.Measure("Starting Mission...")) / 2, height / 2, 255});
         }
-        client_.GetRenderer().SetBackground(canvas); client_.GetRenderer().SetScene({}, std::move(text));
+        appendWarnings();client_.GetRenderer().SetBackground(canvas); client_.GetRenderer().SetScene({}, std::move(text));
     }
     if (controls) {
         std::vector<std::string> originalLabels;originalLabels.reserve(labels_.size());
@@ -564,6 +577,7 @@ std::string UberGump::Report() const {
     out << "paused\t" << client_.Paused() << "\nsound\t" << client_.Configuration().GetInt("sound") << "\n";
     out << "thunder_processes\t" << client_.ThunderFlashCount() << '\n';
     out<<rawButtons_->Report()<<'\n';
+    out<<warnings_->Report();
     out.precision(12); out<<"time\t"<<client_.Time().game<<'\t'<<client_.Time().wall<<"\n";
     out << "fullscreenMarker\t" << client_.Files().TryRead("fullscreenStateFile.dat").has_value() << "\n";
     out << "musicVolume\t" << client_.Configuration().GetInt("musicVolume") << "\nsoundVolume\t" << client_.Configuration().GetInt("soundVolume") << "\n";

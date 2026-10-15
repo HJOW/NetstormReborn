@@ -1,0 +1,26 @@
+{
+  "host": "VM-W11-Codex",
+  "date": "2026-10-15",
+  "counts": {
+    "Board": 154,
+    "Deadline": 10,
+    "Expired": 90
+  },
+  "unique_inputs": 254,
+  "native_instructions": 122528,
+  "x87_control_word": "027f",
+  "boundaries": [
+    "new",
+    "message-constructor",
+    "attach",
+    "kill",
+    "wall-clock"
+  ],
+  "sha256": {
+    "originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted\\warnings\\originals\\creation.c": "317126c95a2cf8ee3cc329635405491024f806b8026180008a4eb619116a7209",
+    "extracted\\warnings\\originals\\functions.tsv": "2c4261ef38e89f94115588a739afa2e487e9ccfa26664ec7dc759d8e8880af6c",
+    "cpppj\\tests\\fixtures\\warnings-x86.tsv": "bfad2725ac63964207083b984c3ed4b8968fff721fbbbd8df3ab8315311dd130",
+    "tools\\decomp_warnings.py": "f0f2c3f309cd0505b1e8e8d6f3c4e54b66fd77941a63192b2a03239b10cac04a"
+  }
+}

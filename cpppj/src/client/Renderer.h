@@ -77,6 +77,8 @@ struct RenderText {
     // shadow: 그림자 여부.
     // outline: 윤곽 여부.
     bool shadow{}, outline{};
+    // TextGump 등 파생 글자의 내부 클립이다. 비어 있으면 기존 화면 클립만 적용한다.
+    std::optional<ScreenRect> clip;
 };
 // 수집한 스프라이트·텍스트·배경을 갱신 영역에 그리는 출력 관리자이다.
 class Renderer {

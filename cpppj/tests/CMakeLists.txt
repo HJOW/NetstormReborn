@@ -2,6 +2,7 @@
 # (첫 구성 때 인터넷에서 내려받을 것이 없다).
 # 테스트 파일을 만들면 아래 목록에 더한다. 파일 안의 TEST_CASE 는 자동으로 등록된다.
 add_executable(netstorm_tests
+    WarningTests.cpp
     RainDrawTests.cpp
     FenceTargetTests.cpp
     CampaignNoticeTests.cpp
@@ -911,3 +912,7 @@ set_source_files_properties(FenceTargetTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 원본 레인 신전 가상 Draw의 두 판본 호출 순서다.
 set_source_files_properties(RainDrawTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_RAIN_DRAW_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/rain-draw-x86.tsv\"")
+
+# 원본 메시지 표/기한/idle의 명시 경계 관찰이다.
+set_source_files_properties(WarningTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_WARNINGS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/warnings-x86.tsv\"")

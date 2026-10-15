@@ -108,6 +108,20 @@ DialogPage ParseDialogPage(std::string_view source) {
     DialogPage page; std::string body;
     // 줄 가운데 $명령도 읽는다. 다른 $명령 또는 줄바꿈에서 인자가 끝난다.
     for (std::size_t i = 0; i < filtered.size();) {
+        if (std::string_view(filtered).substr(i,2)=="<$") {
+            bool quoted=false;std::size_t end=i+2;
+            // 따옴표 안의 >와 쉼표는 Warning 문자열의 일부다.
+            for (;end<filtered.size();++end) {
+                if (filtered[end]=='"') quoted=!quoted;
+                if (filtered[end]=='>' && !quoted) break;
+            }
+            if (end<filtered.size()) {
+                const auto arguments=Fields(std::string_view(filtered).substr(i+2,end-i-2));
+                if (!arguments.empty() && o::AsciiLower(arguments[0])=="warning") {
+                    page.warnings.push_back(arguments.size()>1 ? arguments[1] : std::string());i=end+1;continue;
+                }
+            }
+        }
         if (filtered[i] != '$') { body.push_back(filtered[i++]); continue; }
         const auto equal = filtered.find('=', i + 1), boundary = filtered.find_first_of("\r\n$", i + 1);
         if (equal == std::string::npos || (boundary != std::string::npos && equal > boundary)) { ++i; continue; }

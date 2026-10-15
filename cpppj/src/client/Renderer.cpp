@@ -192,6 +192,7 @@ const IndexedImage& Renderer::Image(const ShapeDatabase& database, std::size_t b
 }
 // 기존 메뉴도 raw Gump와 같은 실제 글리프 반복/출력 순서를 사용한다. 해제 이미지 캐시는 유지한다.
 void Renderer::Text(std::span<std::uint8_t> pixels, int pitch, ScreenRect clip, const RenderText& text) {
+    if (text.clip) clip=ClipScreenRect(clip,*text.clip);
     if (!text.font) throw std::invalid_argument("Null bitmap font");
     if (text.bytes.size()>static_cast<std::size_t>(INT_MAX)) throw std::invalid_argument("Renderer 글자 길이 범위 오류");
     ColorMap map{};GumpGlyphHooks hooks;

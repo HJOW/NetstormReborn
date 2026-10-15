@@ -2,6 +2,7 @@
 # (ClientMain·UserInput·Gump 계열·Screen·Renderer·Sound·State·Mission 등)
 # 다시 만든 파일을 아래 목록에 더한다. 파일 이름은 SOURCE_MAP.md 의 "cpppj 경로"를 따른다.
 target_sources(netstorm PRIVATE
+    MessageBoard.cpp MessageBoard.h WarningMessages.cpp WarningMessages.h
     ClientAudio.cpp
     RawCampaignArcherBindings.cpp RawCampaignArcherBindings.h
     RawCampaignHitBindings.cpp RawCampaignHitBindings.h

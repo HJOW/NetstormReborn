@@ -21,6 +21,8 @@ struct DialogItem {
 struct DialogParagraph { /* text: 표시하거나 해석할 본문 문자열. */ std::string text; /* heading: 이동 방향 번호. */ int heading{}; /* italic: 본문에 기울임 글꼴 효과를 적용할지. */ /* bold: 본문에 굵은 글씨 효과를 적용할지. */ bool italic{}, bold{}; };
 // 다이얼로그 한 페이지의 문단·항목·배경·시간 제한 동작이다.
 struct DialogPage {
+    // HTML의 <$Warning,"..."> 명령 인자다. 스타일 바이트를 그대로 즉시 Warning 처리기에 전달한다.
+    std::vector<std::string> warnings;
     // paragraphs: 표시 순서대로 해석한 다이얼로그 문단 목록.
     std::vector<DialogParagraph> paragraphs;
     // items: 읽거나 생성한 항목의 순서 있는 목록.
