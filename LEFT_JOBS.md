@@ -1,5 +1,12 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-15 단위43 완료: Early1 최근 간헐천 생성 부모·후보 (`VM-W11-Codex`)
+
+- [x] `RawLocalGeyser`에 원본 로컬 Player순회/공유난수/후보100회·현재empty재사용·실제프레임문자거부·삭제/건설확정/생성/Pop·최근최대5목록/자원감소를 복원했다. 전체 간헐천 장부와 별도인 최근목록을 Early1에서 사용한다. [단위43 상세](docs/exe/cpp-local-geyser-20261015.md).
+- [x] 같은PC에서 PATCH11함수 정밀export, 실제기계어 **220고유입력/정상반환**·현재상태/효과순서를 독립 대조했다. 최초ctor뒤 +ac/+b0 덮어쓰기 누락은 실제명령으로 교정하고 실패자료를 보존했다. TSV 빈trace를 '-'로바꾼 동일220행 재생성은 새입력수로 합산하지 않는다. 최종Release게임/검사경고·오류0·포맷후 집중2개 실패0·SHA/행수/공백감사 통과다.
+- [x] 현재/마지막 정밀 디컴파일 PC는 **VM-W11-Codex, 2026-10-15**이며 실제게임/GUI실행·원본/AGENTS/dotnetpj변경은 없다. 인수인계뒤 **`20261015-33 원본 로컬 간헐천 생성과 최근 목록 및 난수 복원 검증`**으로 로컬커밋하며push하지않는다.
+- [ ] 실제Session의 Confirm/Clear/Notice/Place와 empty84파생삭제, 실제Player 배치사각형이 미연결이므로 실제초기생성을활성화하지않았다. Player배치사각형을다음단위에서복원중이다. 같은factory/Pop은이미존재하지만빈효과로부족한하위를건너뛰지않는다. 건설/다리/수확/진행저장·완주동일성은미완료·목표active·DirectDraw전체화면오류제외다.
+
 ## 2026-10-15 단위42 완료: 실제 Player 로그인·방향별 동맹·AI 부착 수명 (`VM-W11-Codex`)
 
 - [x] `RawPlayerParticipation`에 원본 로그인 flags/거부·연결 배치, 자기 포함 한 행 동맹/단방향 추가, Chat 재구성, 실제 brain 토큰 부착·파괴/반납 수명을 복원했다. 같은 Player9×0xb4/방향별81DWORD를 공유하며 기존 값형 active/대칭 동맹을 복사하지 않는다. [단위42 상세](docs/exe/cpp-player-participation-20261015.md).

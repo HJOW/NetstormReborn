@@ -1,0 +1,49 @@
+{
+  "host": "VM-W11-Codex",
+  "date": "2026-10-15",
+  "total": 220,
+  "returns": 220,
+  "native": {
+    "00485890": 621,
+    "0041daf0": 621,
+    "004e49c0": 2637,
+    "004bca20": 1192,
+    "0043fa60": 1242,
+    "004e62a0": 1242,
+    "004e65ed": 160,
+    "004ef510": 160,
+    "00486130": 117,
+    "00486030": 87,
+    "0049a840": 206,
+    "00486360": 31,
+    "004bcab0": 15,
+    "004ad680": 54
+  },
+  "boundaries": {
+    "Find": 1894,
+    "Thread": 160,
+    "Assert": 3,
+    "Confirm": 152,
+    "Create": 152,
+    "Pop": 152,
+    "Destroy": 18,
+    "Config": 31,
+    "Time": 15,
+    "Bounds": 56
+  },
+  "os_calls": 0,
+  "files": {
+    "tools/decomp_local_geyser.py": "753f5d3c3b528096eaeab823c381035e38c5be796a0ad66153863cb488b1b724",
+    "tools/decomp_missionframe_oracle.py": "98987447be7aa3632aeb6337a21880d57c43ad184e3657fae4171c8e9ffb1739",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "cpppj/tests/fixtures/local-geyser-x86.tsv": "e4aeb920062d8db165d7245eac342f3a5f8053442a6beb3f8c8f67851b4720ef",
+    "extracted/local-geyser/originals/functions.tsv": "72565cc49a0fc45f58b8b672b946c0da0951f255b9a3f7366f2e34f26a250df7",
+    "extracted/fortfinishowner/originals/functions.tsv": "58428ba159bcf2c7ee5f1fef36e802921fbb98725081e2cc659c9668a3395f22",
+    "extracted/local-geyser/originals/creation.c": "65aac484d7003d121022874906de3e661118cbc36698e2a801122404a48aaa3c"
+  },
+  "limits": [
+    "PATCH의args0/0/1및부모의empty타입재사용/현재isle프레임무늬검사를실행한다. genericexclusion모드는범위밖이다.",
+    "실제부모/후보/100회/최근5/pool/난수/CRT정상finitefloor/절삭은기계어다. 생성/Pop/typedFind/건설확정/Player범위/설정/벽시각은명시관찰경계다.",
+    "실제GUI/원본게임/캠페인완주및동일풀Session연결은이번검사로증명하지않는다."
+  ]
+}

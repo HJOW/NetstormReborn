@@ -3,6 +3,7 @@
 # 테스트 파일을 만들면 아래 목록에 더한다. 파일 안의 TEST_CASE 는 자동으로 등록된다.
 add_executable(netstorm_tests
     RegionOwnerTests.cpp
+    LocalGeyserTests.cpp
     MissionFrameGateTests.cpp
     TutorialOneTests.cpp
     TutorialTwoTests.cpp
@@ -944,3 +945,7 @@ set_source_files_properties(TutorialTwoTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 실제 두 PE의 지면 소유자/float snap/CRT 독립 입력이다.
 set_source_files_properties(RegionOwnerTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_REGION_OWNER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/region-owner-x86.tsv\"")
+
+# 실제 로컬 간헐천 생성/난수/최근 목록의 독립 원본 입력이다.
+set_source_files_properties(LocalGeyserTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_LOCALGEYSER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/local-geyser-x86.tsv\"")
