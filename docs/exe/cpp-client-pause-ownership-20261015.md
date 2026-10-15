@@ -8,6 +8,6 @@
 
 새 검사2개는 실제 Client를 만들고 Run을 호출하지 않은 상태에서 메뉴→미션·미션→메뉴의 해제 순서, 반복 요청, UI 소유 없이 들어온 false 요청, 중첩 미션 깊이를 확인한다. 생성자는 보호 archive를 읽기만 하며 창/장치/설정 쓰기를 수행하지 않는다. 게임 시계의 수치 계산은 변경하지 않는다.
 
-Release 빌드 종료0·경고0·오류0, 새 실제 Client 검사2개 및 기존 프레임 제한 검사3개가 통과했다. 같은 집중 실행의 건설 Session 검사1개는 별도 파생 삭제 미연결로 실패했으며 이 단위의 성공으로 숨기지 않는다. 전체 CTest는 건설 연결 교정 뒤 수행할 예정이며 아직 실행하지 않았다. 로그는 `extracted/goal-construction-pause-build.log`, `extracted/goal-construction-pause-focused.log`다.
+Release 빌드 종료0·경고0·오류0, 새 실제 Client 검사2개 및 기존 프레임 제한 검사3개가 통과했다. 최초 집중 실행의 건설 Session 검사1개는 별도 파생 삭제 미연결로 실패했으며 원래 로그를 보존했다. 이후 해당 실제 VT 삭제 연결을 교정하고 같은 소스로 **집중49개 실패0·전체 CTest1/1·내부1,256개 실패0·193.66초**를 확인했다. 최초 로그는 `extracted/goal-construction-pause-{build,focused}.log`, 최종 로그는 `goal-construction-final-{build,focused}.log`와 `goal-units62-66-ctest.log`다.
 
 실제 UberGump의 공통 미션 게이트/Guide·로그인 순서 연결과 10프레임 안내·7프레임 재개 GUI 대조는 다음 단위다. Early Missions 및 캠페인 자연 완주를 달성했다는 뜻은 아니다.

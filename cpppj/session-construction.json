@@ -1,0 +1,175 @@
+{
+  "host": "HJOW-Athlon",
+  "lastRefinedDecompileHost": "HJOW-Athlon",
+  "date": "2026-10-15",
+  "workUnit": 65,
+  "status": "release-warning0-error0-focused49-and-full1256-passed",
+  "newNativeUniqueInputs": 0,
+  "newGameOrGuiRuns": 0,
+  "protectedFilesModified": false,
+  "newFocusedTests": [
+    "CampaignConstruction_ProtectedNoIslandPacketAndSelfNotice",
+    "CampaignConstruction_ProtectedLocalGeysersUseCurrentWorld",
+    "CampaignSession_ConstructionSupportUsesSameWorld",
+    "CampaignSession_LocalGeysersUseCurrentInputs",
+    "CampaignSession_LocalGeysersKeepNonnullAiBoundary"
+  ],
+  "initialFailure": {
+    "test": "CampaignSession_ConstructionSupportUsesSameWorld",
+    "failedChecks": 1,
+    "message": "캠페인 다른 실제 자산 가상 삭제 미연결",
+    "cause": "Session runtime asset route only recognized empty84 and Hit common assets; actual noIsland prediction VT was absent",
+    "log": "extracted/goal-construction-pause-focused.log"
+  },
+  "correction": {
+    "actualVtable": "00506f08",
+    "selection": "Current noIsland type AND actual factory-installed PATCH noIsland VT",
+    "body": "Same RawSquidDestroyDispatch complete destruction; same RawSurfaceLifecycle common Pre and actual SurfacePostDestroy; existing Form/dependency/content/transmit/selection dispatch retained",
+    "installation": "InstallContents actual reward/deletion binding -> ConnectConstruction -> construction/lifetime/hit wrappers -> BindRuntime, before first object",
+    "newNativeObservation": false,
+    "testsWeakened": false
+  },
+  "boundaries": [
+    "Only explicit noIsland/Player0/all-other-arguments-zero confirmation is public; other construction and recorder paths reject before factory",
+    "Same actual Pool/hash/spot/TYPE188/frames/HP/SP/reward.geyserPool/Player9/ChunkMap and distinct recent5 versus all geysers",
+    "Actual512-byte writer and variable length finalization precede current BattleBroadcast and original direct local Notice processing",
+    "Actual Client config ReadInt/fallback, WallSeconds, current Renderer invalidation and continuing diagnostic logs are external services",
+    "No automatic Load/frame/Stage3 geyser generation; explicit API requires completed same-session Load",
+    "Explicit CreateAi followed by Generate preserves nonnull RawGeyserAiRegistrationBoundary and prior original-order partial effects",
+    "Player flags/resource changes in tests are explicit inputs and do not claim original login/Stage3 execution"
+  ],
+  "historicalFixtureProvenance": {
+    "constructionconfirm-x86.tsv": {
+      "path": "cpppj/tests/fixtures/constructionconfirm-x86.tsv",
+      "sha256": "0970aaa9df5042a43d41d858d49e66e8beccc65c3a5841ea179c8e697ccb1777",
+      "classification": "existing-input-provenance; not counted as new native cases"
+    },
+    "construction-packet-x86.tsv": {
+      "path": "cpppj/tests/fixtures/construction-packet-x86.tsv",
+      "sha256": "0fe67a16e27ff926d1f8261521c9779d6fd4ca3e23a2eafc3d88e19cf3ef8dad",
+      "classification": "existing-input-provenance; not counted as new native cases"
+    },
+    "constructionnotice-x86.tsv": {
+      "path": "cpppj/tests/fixtures/constructionnotice-x86.tsv",
+      "sha256": "b3fd22d42e3fd30d261433436e696c0442abd1987b9e14073fa94f469121a2d1",
+      "classification": "existing-input-provenance; not counted as new native cases"
+    },
+    "constructionclear-x86.tsv": {
+      "path": "cpppj/tests/fixtures/constructionclear-x86.tsv",
+      "sha256": "9453f28cccf71d2cff848744f53b1b3ebec39821110d3188a9100e68c1b63f88",
+      "classification": "existing-input-provenance; not counted as new native cases"
+    },
+    "constructionplace-x86.tsv": {
+      "path": "cpppj/tests/fixtures/constructionplace-x86.tsv",
+      "sha256": "aace8e0b8b24d41ee120ff99c711a0241ddb4b799b5d0f6044f9a521ed8dfcbb",
+      "classification": "existing-input-provenance; not counted as new native cases"
+    },
+    "local-geyser-x86.tsv": {
+      "path": "cpppj/tests/fixtures/local-geyser-x86.tsv",
+      "sha256": "6bb5a9dd5d7d909b61b967523a4da4dc8cea6c652f367f007155206651bad639",
+      "classification": "existing-input-provenance; not counted as new native cases"
+    },
+    "player-geyser-bounds-x86.tsv": {
+      "path": "cpppj/tests/fixtures/player-geyser-bounds-x86.tsv",
+      "sha256": "9803c4376774b817ff1cd67cdc75f6cc430c29115d0ecb6bea199013b576020c",
+      "classification": "existing-input-provenance; not counted as new native cases"
+    }
+  },
+  "validation": {
+    "build": {
+      "configuration": "Release",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "log": "extracted/goal-construction-final-build.log"
+    },
+    "focused": {
+      "tests": 49,
+      "failedChecks": 0,
+      "newTestsThisUnit": 5,
+      "otherUnitNewPauseTests": 2,
+      "groups": {
+        "CampaignConstruction": 2,
+        "CampaignSession": 15,
+        "ClientPause": 2,
+        "FrameInterval": 3,
+        "AiBrain": 4,
+        "AiInitialUpdate": 2,
+        "PlayerParticipation": 2,
+        "TypeRequiredEnergy": 3,
+        "rawGunTarget": 4,
+        "GunProcess": 7,
+        "FenceTarget": 5
+      },
+      "log": "extracted/goal-construction-final-focused.log"
+    },
+    "fullCtest": {
+      "status": "passed",
+      "ctestPassed": 1,
+      "ctestTotal": 1,
+      "internalTests": 1256,
+      "failedChecks": 0,
+      "seconds": 193.66,
+      "log": "extracted/goal-units62-66-ctest.log",
+      "testOutput": "extracted/goal-units62-66-tests.log"
+    },
+    "initialFailureLogPreserved": true
+  },
+  "sha256": {
+    "cpppj/src/client/RawCampaignConstructionBindings.h": "44fc9c2f1da6b663a45822854b292a91acf0145db67ad7dfbb08efa5339397bd",
+    "cpppj/src/client/RawCampaignConstructionBindings.cpp": "69d2313ec0b88aafb4af2743cb1bbb3a66915f7d91b0981b4eb0b68f7796c2ff",
+    "cpppj/src/client/RawCampaignSession.h": "22f17f2a2dfbd71c5995e498b870e9d0ab27cfb3d2b532f6ce2fcdc032479244",
+    "cpppj/src/client/RawCampaignSession.cpp": "36b23f4e6c6b557ceaf908de235f6451938f10bdde86cac3fa715eafe8d71ea1",
+    "cpppj/src/client/CampaignClientServices.cpp": "86407af96a1a5ccaaa16ba158f205bbe66fa97c88f091629b1516eb6f2395ed3",
+    "cpppj/src/client/RawCampaignLifetimeBindings.h": "f7c7bb580be2152ec83e474dd1a84b6079b14bc9760e6c70b1a7dba034d92f1d",
+    "cpppj/src/client/RawCampaignLifetimeBindings.cpp": "e36af28a35b3d3ab025029c0682a05f65a35a8f575b49226edfbd1df0ad75fb2",
+    "cpppj/src/client/RawSurfaceWorld.h": "c5d3eb83397d1d3e09f021c419cd305585cd9b8496a4c0b56b02bae9104d4bb1",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "18705f46068add5b61eff6c6d176e7391ea637d4686a6d9fab95fd7db4f6721d",
+    "cpppj/src/o/RawSquidDestroyDispatch.h": "1d040f3140f5a422d360bed59fe53fdf665dfdd8218a4d4e21132f2418364b43",
+    "cpppj/src/o/RawSquidDestroyDispatch.cpp": "21436c647db2fbc1746ac8e95f903c9d2510c9d308ba7e5879626139ad5a995c",
+    "cpppj/src/o/RawSurfaceLifecycle.h": "e94d81db2da04ed535b8359527c0e854af960a381398b821e1f2cb4864d85ebb",
+    "cpppj/src/o/RawSurfaceLifecycle.cpp": "49d7eb66e77d473c9f6ba8d45d19e3f7491bbb8fa677ec707162390a6670310c",
+    "cpppj/src/o/RawIslandLifecycle.cpp": "bfe0af88c918f259dc432cf517ef241426599316ac8b80410849edf02bc57bff",
+    "cpppj/src/o/RawConstructionConfirm.h": "f109a12acb84a9c59481f1bb7aa5d20308a5af4701c37ed166a9866f81e12db4",
+    "cpppj/src/o/RawConstructionConfirm.cpp": "0b50515a6d1cd9f79c10af3f8d8ed899cbcfc9db5c94ae829bf6fb0b9e21c330",
+    "cpppj/src/o/RawConstructionPacket.h": "07783d4261c3275eeb3442cebc223e43fe4e645350c53d0f9ebd73beb9c260ea",
+    "cpppj/src/o/RawConstructionPacket.cpp": "f3d16c0ed9bfc1a068d59d6941922ddc30c5b52e38c3f2b0e5337922e0b68fc8",
+    "cpppj/src/o/RawConstructionNotice.h": "d43e7d5fec25b4ad3f4c4ddcb5e7894e1ea7ac6729c9fa20104bc542f8319c13",
+    "cpppj/src/o/RawConstructionNotice.cpp": "aa4bae3beeac9dc5aef0899d7e0ceec3beea0655702e862125c1f8a7bbd1d8ee",
+    "cpppj/src/o/RawConstructionClear.h": "96af0b799ef88ba5c55ec96b00d1d6408a170314d60493e4b00ef22ecf61d440",
+    "cpppj/src/o/RawConstructionClear.cpp": "9bc0b5165242ea92637a22a38ee2ac1b2681fa2bf93b176096d93266336da238",
+    "cpppj/src/o/RawConstructionPlace.h": "04b204d48496ad8db14886e12c2ec70ed8fb7165619daf5ee69ce2287830d691",
+    "cpppj/src/o/RawConstructionPlace.cpp": "623c69f19aac8dbc2d918885c8324afb881cca3b47339303bf65e62c789eaaf8",
+    "cpppj/src/o/RawLocalGeyser.h": "6de11b55587db730335842d6d59ccf857e615dd3e468cf9ba90cc60bba073c59",
+    "cpppj/src/o/RawLocalGeyser.cpp": "782e33a62604a0767809f2d999b1b84badfc1d12cea21382394a8f1257843658",
+    "cpppj/src/o/RawPlayerGeyserBounds.h": "43e5c680a8ef31dafae366e262f19723474b129fab43ac8de344e6068e2f8e66",
+    "cpppj/src/o/RawPlayerGeyserBounds.cpp": "144858939bb867934111baa38a96a179a5651731481f3b942effe5f0dffb5370",
+    "cpppj/tests/CampaignConstructionTests.cpp": "d174046ac88bedb2fbec01a5ead2138806edeaad103066d3c9abe2a53517bad2",
+    "cpppj/tests/CampaignSessionTests.cpp": "41cf3b0114ab0c0e909fbf7d25638d21ad81b8c7e690914290f992faa8f36cf0",
+    "cpppj/src/client/CMakeLists.txt": "aa92fd831eb24c7ea783615d6e7376d3729192cbf255132bddad5d213a00a483",
+    "cpppj/tests/CMakeLists.txt": "7d00c35880c3935e7497bd6758e7664f2dd6217b3781a85e941e736a76e71fb2",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "cpppj/tests/fixtures/constructionconfirm-x86.tsv": "0970aaa9df5042a43d41d858d49e66e8beccc65c3a5841ea179c8e697ccb1777",
+    "cpppj/tests/fixtures/construction-packet-x86.tsv": "0fe67a16e27ff926d1f8261521c9779d6fd4ca3e23a2eafc3d88e19cf3ef8dad",
+    "cpppj/tests/fixtures/constructionnotice-x86.tsv": "b3fd22d42e3fd30d261433436e696c0442abd1987b9e14073fa94f469121a2d1",
+    "cpppj/tests/fixtures/constructionclear-x86.tsv": "9453f28cccf71d2cff848744f53b1b3ebec39821110d3188a9100e68c1b63f88",
+    "cpppj/tests/fixtures/constructionplace-x86.tsv": "aace8e0b8b24d41ee120ff99c711a0241ddb4b799b5d0f6044f9a521ed8dfcbb",
+    "cpppj/tests/fixtures/local-geyser-x86.tsv": "6bb5a9dd5d7d909b61b967523a4da4dc8cea6c652f367f007155206651bad639",
+    "cpppj/tests/fixtures/player-geyser-bounds-x86.tsv": "9803c4376774b817ff1cd67cdc75f6cc430c29115d0ecb6bea199013b576020c"
+  },
+  "validationLogSha256": {
+    "extracted/goal-construction-pause-build.log": "9c8347cfbb8af2bac473087893e03299cdf7c8e780fce71ed72e7ffaa5a770ec",
+    "extracted/goal-construction-pause-focused.log": "07dd2cabe0407f3bf3ad41c03d134e07f8b927a1f245a2b0697443b2b48b60da",
+    "extracted/goal-construction-final-build.log": "7634f67ea1a214f13ed23d1b8259267bd1c919fb48184ba415aa90e1e729c2d3",
+    "extracted/goal-construction-final-focused.log": "47811534e5701c01a0ec31a8be28234ee7b5e0a5943f0a8c3a5709dc9cc9180b",
+    "extracted/goal-units62-66-ctest.log": "96dd8dce2a264d903d2cbc9caa908d5b4a07f8f760a7ba86822debcbd9a22084",
+    "extracted/goal-units62-66-tests.log": "2d2c7a69b412e090febf548b0e14b30fa96f921a294f293dc7f025f27fd61b18"
+  },
+  "provenanceNote": "Unit63 session-ai.json source SHA values are the historical c9bc0f4 snapshot; this report records the current unit65 source bytes separately.",
+  "remaining": [
+    "General Construct/menu cursor ownership and local/server request, construction Builder teleport23/manaBolt39 paths/Mana selection/speed/arrival/Process/visual/audio",
+    "Nonnull AI geyser/damage/economy/strategy consumers remain explicit unsupported boundaries",
+    "Original CheckLogin/worldLoad/Ready40/Stage3 and mission frame/tutorial/pause ownership parent integration",
+    "Natural Early Missions/campaign1-1..1-2 completion and original visual/audio/behavior equality; DirectDraw fullscreen excluded"
+  ]
+}

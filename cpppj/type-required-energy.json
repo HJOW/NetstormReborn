@@ -29,8 +29,8 @@
     "cpppj/tests/fixtures/type-required-energy-x86.tsv": "8bcb3e215c958f5df0a395365059f5481801b1660569f2f04c0720f394f14f4c",
     "cpppj/tests/TypeRequiredEnergyTests.cpp": "0802ab400413ec5da3f2d03a4ac6b6f88e2d088915646609a2ca0bb39a02b05c",
     "cpppj/src/o/CMakeLists.txt": "f66ecd48b27ff161994c59dcb32e24610ba585e64ec2a57000224c55d8593684",
-    "cpppj/src/client/CMakeLists.txt": "6a076ef9754928bb5190c67e9c72a802629abe683a5eaf688aaf913a5194e6cb",
-    "cpppj/tests/CMakeLists.txt": "aeb57f3668c6f14d8f4f5d0e362ebae474866d1cab4f5be37f49facc69e2605a"
+    "cpppj/src/client/CMakeLists.txt": "aa92fd831eb24c7ea783615d6e7376d3729192cbf255132bddad5d213a00a483",
+    "cpppj/tests/CMakeLists.txt": "7d00c35880c3935e7497bd6758e7664f2dd6217b3781a85e941e736a76e71fb2"
   },
   "product_validation": {
     "configuration": "Release",
@@ -46,5 +46,27 @@
     "test_command": "cpppj/build/bin/Release/netstorm_tests.exe --filter TypeRequiredEnergy_",
     "build_log": "extracted/goal-type-energy-build.log",
     "test_log": "extracted/goal-type-energy-focused.log"
-  }
+  },
+  "integration_updates": [
+    {
+      "date": "2026-10-15",
+      "reason": "unit65 construction registration; TYPE product/fixture/native observations unchanged",
+      "cmake_sha256": {
+        "cpppj/src/client/CMakeLists.txt": {
+          "previous": "6a076ef9754928bb5190c67e9c72a802629abe683a5eaf688aaf913a5194e6cb",
+          "current": "aa92fd831eb24c7ea783615d6e7376d3729192cbf255132bddad5d213a00a483"
+        },
+        "cpppj/tests/CMakeLists.txt": {
+          "previous": "aeb57f3668c6f14d8f4f5d0e362ebae474866d1cab4f5be37f49facc69e2605a",
+          "current": "7d00c35880c3935e7497bd6758e7664f2dd6217b3781a85e941e736a76e71fb2"
+        }
+      },
+      "full_ctest": {
+        "tests": 1256,
+        "failed_checks": 0,
+        "seconds": 193.66,
+        "log": "extracted/goal-units62-66-ctest.log"
+      }
+    }
+  ]
 }

@@ -24,7 +24,13 @@
     "newFocusedTests": 4,
     "buildLog": "extracted/goal-session-ai-combat-build.log",
     "focusedLog": "extracted/goal-session-ai-combat-focused.log",
-    "fullCTestAfterChange": "pending"
+    "fullCTestAfterChange": {
+      "tests": 1256,
+      "failedChecks": 0,
+      "seconds": 193.66,
+      "log": "extracted/goal-units62-66-ctest.log",
+      "sameSharedBuild": "unit65/66 source-frozen integration"
+    }
   },
   "boundaries": [
     "Historical fixture inputs reused; no new native or original game/GUI execution",

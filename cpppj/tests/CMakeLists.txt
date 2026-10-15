@@ -35,6 +35,7 @@ add_executable(netstorm_tests
     CampaignHitTests.cpp
     CampaignSeedTests.cpp
     CampaignSessionTests.cpp
+    CampaignConstructionTests.cpp
     BattleBroadcastTests.cpp
     WindowTitleTests.cpp
     CameraHomeTests.cpp

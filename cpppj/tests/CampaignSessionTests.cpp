@@ -3,6 +3,7 @@
 #include "client/GameWorld.h"
 #include "client/AiTypeRequiredEnergy.h"
 #include "o/RawMissionAiSettings.h"
+#include "o/RawGeyserAiRegistration.h"
 #include <unordered_set>
 using namespace netstorm::client;
 namespace {
@@ -13,6 +14,7 @@ struct SessionServicesFixture {
     std::array<std::uint8_t,4> you{'Y','o','u',0}; // 원본 부모의 명시 영어 번역 입력이다.
     std::vector<std::vector<std::uint8_t>> packets; // 실제 직렬화 송신 요청 전체바이트다.
     std::size_t notices{}; // 외부 UI/음향 요청의 관찰 개수다.
+    std::size_t constructionConfigReads{},constructionRefreshes{}; // 명시 건설 요청만 선택해야 하는 실제 설정/표시 외부 경계다.
     // 같은 fixture가 세션보다 오래 살아야 하며 모든 실제 선택 경계를 명시한다.
     RawCampaignSessionServices Services() {
         names.Initialize();RawCampaignSessionServices s;s.unixSeconds=[] { return 946684800; };s.soundNames=&names;
@@ -36,6 +38,10 @@ struct SessionServicesFixture {
         s.player.log=[this](std::uint32_t,std::string_view) { ++notices; };
         s.deletion.emit=[this](const SquidDestroyEvent& event) { if (event.effect!=SquidDestroyEffect::Transmit) throw std::logic_error("다른파생삭제미연결");++notices; };
         s.deletion.selected=[] { return Sid{}; };s.dependencyTransmit=[this](Sid,std::uint32_t) { ++notices; };
+        s.construction.configInt=[this](std::string_view key,std::int32_t fallback) { CHECK(key=="predictableGeysers" && fallback==1);++constructionConfigReads;return 1; };
+        s.construction.wallSeconds=[] { return 100.0; };s.construction.refresh=[this] { ++constructionRefreshes; };
+        s.construction.negativeQuantity=[] { throw std::logic_error("실제 Session 검사에서 음수 생성수량 진단"); };
+        s.construction.boundsAssertion=[](PlayerGeyserBoundsAssertion) { throw std::logic_error("실제 Session 검사에서 PlayerBounds 진단"); };
         return s; // 실제 부모 VT 통지와 Player AI 조회 래퍼를 세션이 공급한다.
     }
 };
@@ -48,6 +54,94 @@ std::array<std::uint8_t,RawMissionAiSettings::kSize> SessionAiSettings(std::stri
     std::copy(name.begin(),name.end(),profile.begin());profile[name.size()]=0;
     std::copy(technology.begin(),technology.end(),profile.begin()+30);profile[30+technology.size()]=0;
     Put(profile,0x22c,777);Put(profile,0x23c,allies);return profile;
+}
+// 실제 같은 지도의 빈3×3칸을 명시 배치 입력으로 선택한다. 확정 결과나 서버SID를 계산하지 않는다.
+CellPoint EmptySessionSupport(const RawWorldCore& core) {
+    // 가장자리 밖 원본 발자국을 피하고 실제 spot 하위6비트로만 입력 위치를 고른다.
+    for (int y=4;y<248;++y) {
+        // 같은 행의 왼쪽부터 자유로운 첫 정사각형을 찾는다.
+        for (int x=4;x<248;++x) {
+            bool empty=true;
+            // 후보발자국의세행을검사하며막힌칸을찾은뒤에는다음후보로넘어간다.
+            for (int dy=0;dy<3 && empty;++dy) {
+                // 현재spot의실제점유비트를읽으며좌표/지형을합성하지않는다.
+                for (int dx=0;dx<3;++dx) if (core.spots[(y+dy)*256+x+dx]&0x3fU) { empty=false;break; }
+            }
+            if (empty) return {x,y};
+        }
+    }
+    throw std::logic_error("보호 Session의 빈3×3 받침 입력 위치 부재");
+}
+// 실제Session의첫객체전바인딩이같은서버확정/예측삭제/패킷/공간으로들어가야한다.
+TEST_CASE(CampaignSession_ConstructionSupportUsesSameWorld) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());
+    RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Services());
+    const auto initial=session.Core().pool.FreeCount();bool rejected=false; // 설치전요청은실제공간쓰기이전에거부한다.
+    try { session.ConfirmSupport(10,10); } catch (const std::logic_error&) { rejected=true; }
+    CHECK(rejected && session.Core().pool.FreeCount()==initial && session.Construction().LastPacket().empty());
+    session.Load();const auto core=session.Core();CHECK(&session.Construction().Pool()==&core.pool);
+    CHECK(session.Construction().LastPacket().empty() && external.constructionConfigReads==0 && external.constructionRefreshes==0);
+    const auto origin=EmptySessionSupport(core);const auto preview=session.World().Create(157,2); // 명시예측SID입력이다.
+    const std::array<std::uint32_t,8> patterns{107,82,94,157,131,129,140,142}; // 실제기본Canon타입전역이며미리보기입력프레임선택에만쓴다.
+    const auto decoder=DecodeCanonType(core.frames[157],0,patterns,{157,0,0,static_cast<float>(origin.x),static_cast<float>(origin.y),false},OriginalEdition::Patch1078);
+    auto raw=core.pool.AllocatedBytes(preview);raw[40]|=1;Put(raw,36,std::bit_cast<std::uint32_t>(decoder.Frame()));
+    CHECK(Get(raw,0)==kPatchNoIslandVtable); // 실제생성자VT로분배하며타입157만보고일반삭제를허용하지않는다.
+    session.World().Pop(preview,static_cast<float>(origin.x),static_cast<float>(origin.y),2);
+    CHECK(session.ConfirmSupport(static_cast<float>(origin.x),static_cast<float>(origin.y)));
+    const auto bytes=session.Construction().LastPacket();CHECK(bytes.size()==45 && bytes[1]==0x3f && bytes[26]==9 && external.constructionRefreshes==1);
+    CHECK((core.pool.Slot(preview)[11]&1U)!=0);
+    // 동일wire에서읽은서버9SID가같은raw표면과spot에등록되어야한다.
+    for (std::size_t index=0;index<bytes[26];++index) {
+        const Sid sid{static_cast<std::uint16_t>(Get(bytes,27+2*index,2))};const auto placed=core.pool.Slot(sid);
+        CHECK(sid.value>=core.pool.Layout().serverFirst && sid!=preview && placed[10]==157 && !(placed[11]&15U) && !(placed[40]&1U));
+        const auto x=static_cast<int>(std::bit_cast<float>(Get(placed,14))),y=static_cast<int>(std::bit_cast<float>(Get(placed,18)));
+        CHECK(core.hash.Entries(0)[y*256+x]==sid.value && (core.spots[y*256+x]&2U));
+    }
+    CHECK(core.bookkeeping.depth==0 && core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0);
+}
+// 실제Session의현재Player/실제Bounds/전용최근목록/같은보상pool/실제Geyser후처리를연결한다.
+TEST_CASE(CampaignSession_LocalGeysersUseCurrentInputs) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());
+    RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Services());session.Load();const auto core=session.Core();
+    const auto& local=session.Construction().LocalGeysers();CHECK(&local.Pool()==&core.pool && local.Recent().count==0 && local.ResourcePool()==0);
+    auto records=session.PlayerRecords();
+    // 이전가짜참여표없이현재원문flags만명시입력으로설정하며실제로드한지역은유지한다.
+    for (std::size_t owner=1;owner<9;++owner) records[owner*0xb4+0x50]=0;
+    local.ResourcePool()=9000;session.GenerateLocalGeysers();CHECK(local.Recent().count==0 && local.ResourcePool()==9000);
+    records[0xb4+0x50]=2;CHECK(Get(records,0xb4+0x78)!=127);
+    session.GenerateLocalGeysers();CHECK(local.Recent().count==3 && local.ResourcePool()==3000 && external.constructionConfigReads==2);
+    CHECK(session.Construction().LastPacket().size()==45 && external.constructionRefreshes!=0);
+    // 최근목록의실제SID에최초수량2000과실제Regular가부착되어야한다.
+    for (const auto value:local.Recent().Items()) {
+        const Sid sid{static_cast<std::uint16_t>(value)};const auto raw=core.pool.Slot(sid);
+        CHECK(raw[10]==122 && Get(raw,12,2)==2000 && !(raw[11]&15U));
+        CHECK(core.processes.FindEvent(sid,0)!=nullptr);
+    }
+    records[0xb4+0x50]=0;session.GenerateLocalGeysers();CHECK(local.Recent().count==3 && local.ResourcePool()==3000);
+    // 원본권한/요새guard는호출시점현재core모드를읽어생성을생략한다.
+    records[0xb4+0x50]=2;core.ownerMode.fort=true;const auto free=core.pool.FreeCount();session.GenerateLocalGeysers();
+    CHECK(core.pool.FreeCount()==free && local.Recent().count==3 && local.ResourcePool()==3000);core.ownerMode.fort=false;
+    CHECK(core.bookkeeping.depth==0 && core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0);
+}
+// 실제CreateAi뒤가이저등록은미복원AI하위를명시거부하며임시성공이나빈AI로대체하지않는다.
+TEST_CASE(CampaignSession_LocalGeysersKeepNonnullAiBoundary) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());auto services=external.Services();
+    services.ai.allocationBytes=[](std::span<std::uint8_t> bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x71}); };
+    services.ai.participation.clearChat=[&external](std::uint32_t) { ++external.notices; };
+    services.ai.participation.addChat=[&external](std::uint32_t,std::string_view,std::uint32_t) { ++external.notices; };
+    RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();
+    const auto token=session.CreateAi(2,SessionAiSettings("Explicit","sunCannon"));auto records=session.PlayerRecords();records[0xb4+0x50]=2;
+    CHECK(token!=0 && session.Participation().Brain(2)==token);bool rejected=false;
+    try { session.GenerateLocalGeysers(); } catch (const GeyserAiRegistrationBoundary& boundary) {
+        rejected=true;CHECK(boundary.owner==2 && boundary.aiPointer==token && boundary.state==1);
+        CHECK(boundary.sid>=session.Core().pool.Layout().serverFirst && session.Core().pool.Slot(Sid{static_cast<std::uint16_t>(boundary.sid)})[10]==122);
+    }
+    CHECK(rejected && session.Participation().Brain(2)==token && session.AiMemory().Contains(token));
+    CHECK(session.Construction().LocalGeysers().Recent().count==0); // 원본순서에서실패한Pop뒤최근목록추가는실행하지않는다.
+    session.RemoveAi(2);CHECK(session.Participation().Brain(2)==0);
 }
 // 같은 Session의 실제 본체/기술/동맹/현재 그래프 getter와 정상 목록 소멸을 함께 검사한다.
 TEST_CASE(CampaignSession_AiUsesCurrentWorldAndLifetime) {

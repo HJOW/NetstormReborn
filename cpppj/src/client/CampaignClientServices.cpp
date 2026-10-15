@@ -79,6 +79,18 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
     };
     // 원본 Player 진단 그룹과 문자열을 실제 프로세스 로그 스트림에 순서대로 출력한다.
     services.player.log=[](std::uint32_t group,std::string_view text) { std::clog<<"["<<group<<"] "<<text; };
+    // 원본 predictableGeysers의 기본값을 유지하고 호출 때마다 현재 Config를 다시 읽는다.
+    services.construction.configInt=[&client](std::string_view key,std::int32_t fallback) {
+        auto value=fallback;client.Configuration().ReadInt(key,value);return value;
+    };
+    services.construction.wallSeconds=[&client] { return client.WallSeconds(); }; // 비결정적 TimeSeed만 실제 벽시각을 읽는다.
+    services.construction.refresh=[&client] { client.GetRenderer().InvalidateAll(); }; // 장치 재생성 뒤에도 현재 Renderer를 갱신한다.
+    // 원본 진단 뒤 계속하는 계약을 보존하며 실제 로그 스트림에 진단을 남긴다.
+    services.construction.negativeQuantity=[] { std::clog<<"로컬 간헐천 원본 진단: reps >= 0\n"; };
+    services.construction.boundsAssertion=[](o::PlayerGeyserBoundsAssertion assertion) {
+        constexpr std::array<std::string_view,5> descriptions{"참여하지 않은 Player","metamap PlayerId","전투 밖 배치","Player1..8 범위","Canon 프레임 부재"}; // 원본 진단 분류와 같은 순서의 실제 로그 설명이다.
+        std::clog<<"Player 간헐천 범위 원본 진단: "<<descriptions.at(static_cast<std::size_t>(assertion))<<'\n';
+    };
     return services;
 }
 }

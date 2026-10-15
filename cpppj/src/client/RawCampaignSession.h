@@ -7,6 +7,7 @@
 #include "client/RawCampaignArcherBindings.h"
 #include "client/RawCampaignHitBindings.h"
 #include "client/RawCampaignLifetimeBindings.h"
+#include "client/RawCampaignConstructionBindings.h"
 #include "client/SoundProcess.h"
 #include "o/RawPlayerRegular.h"
 #include "o/RawBattleBroadcast.h"
@@ -43,6 +44,7 @@ struct RawCampaignSessionServices {
     o::PlayerRegularHooks player; // 실제 Player 로그와 예약 외부 경계다.
     CampaignMissionOutcomeUi missionOutcome; // 현재 미션의 실제 UI/차단 조회 경계다. Check를 호출할 때만 필요하다.
     CampaignAiServices ai; // 선택된 실제 AI 초기화/참여의 외부 경계이며 Load/프레임에서 자동 호출하지 않는다.
+    RawCampaignConstructionEffects construction; // 로컬 간헐천의 실제 설정/벽시각/표시/진단이며 일반 건설을 대신하지 않는다.
     o::SquidDestroyHooks deletion; // 다른 파생 삭제/선택/전송의 실제 외부 경계다.
     std::function<void(o::Sid)> unitLost; // 공통 삭제가 요청한 실제 unitLost 전역 소리를 재생한다.
     o::ContentLifetimeHooks contentLifetime; // 같은 ContentForm의 실제 커서/수입/AI 지갑/소리 경계다.
@@ -88,6 +90,12 @@ public:
     void RemoveAi(std::uint32_t owner);
     // 후속 실제 전략/검사가 같은 본체/목록 소유 저장소를 확인한다. 여기서 메모리를 합성하지 않는다.
     const o::RawAiBrainMemory& AiMemory() const;
+    // 설치 뒤 로컬 간헐천의 noIsland/Player0 받침만 실제 서버 확정 사슬로 만든다.
+    bool ConfirmSupport(float x,float y);
+    // 원본 미션 부모가 정한 위치에서 명시 호출한다. Load/프레임의 자동 생성은 하지 않는다.
+    void GenerateLocalGeysers();
+    // 같은 실제 Pool/현재 Bounds/최근목록/자원/마지막 패킷을 읽는 연결부다.
+    const RawCampaignConstructionBindings& Construction() const;
     // 실제 시작 설정/AI와 같은 Player 기술 부모에 원본 목록 파서를 적용한다.
     void AddTechnology(std::int32_t owner,std::string_view list);
     // 실제 flags4 기술을 가상 삭제하여 부모 체인/등록/삭제 깊이를 함께 정리한다.

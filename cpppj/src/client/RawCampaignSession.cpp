@@ -186,6 +186,11 @@ struct RawCampaignSession::Impl {
     FormDeletionStamp deletionStamp; // 실제 삭제 writer가 한 번 소비하는 최근 명령 표식이다.
     std::unique_ptr<RawFormPacket> formWriter; // 동일 Pool의 실제 가상+54/+58 직렬화 몸체다.
     std::array<std::uint8_t,2048> formBuffer{}; // 감시/내용물/삭제 요청이 공유하는 원본 크기의 현재 송신 버퍼다.
+    RawCampaignConstructionState constructionState; // 실제 받침 확정/Notice 이력과 로컬 수량 전역의 장기 저장소다.
+    SquidPostPopList recentGeysers; // 00595094/98의 전용 최근5목록이며 전체 assetState.geysers와 분리한다.
+    std::uint8_t geyserMapSize{}; // 실제0052f7e6 초기BYTE0이며 PlayerBounds가 현재 참조로 읽는다.
+    std::array<std::uint32_t,9> playerDirections{16448,4,0,6,2,7,3,5,1}; // 실제0053181c의 Player0까지 보존한 초기9DWORD다.
+    std::unique_ptr<RawCampaignConstructionBindings> construction; // 같은 실제 HP/SP/장부/Player/지도에 첫 객체 전 설치한다.
 
     // 보호 자료를 읽기 전용으로 사용하며 모든 필수 후처리를 첫 생성 전에 등록한다.
     Impl(const GameAssets& game,const BaseFileSystem& files,FortTemplate fort,std::string mission,RawCampaignSessionServices input):
@@ -382,8 +387,9 @@ struct RawCampaignSession::Impl {
             other(event);
         };
         InstallContents(worldHooks.assets);
-        worldHooks.assets=lifetime->DestroyHooks(hits->DestroyHooks(std::move(worldHooks.assets)));
-        worldHooks.destroy=lifetime->Destroy(hits->Destroy(services.destroy));
+        ConnectConstruction(); // 실제공통삭제후설치뒤같은noIsland VT의표면가상분배를첫객체전등록한다.
+        worldHooks.assets=construction->DestroyHooks(lifetime->DestroyHooks(hits->DestroyHooks(std::move(worldHooks.assets))));
+        worldHooks.destroy=construction->Destroy(lifetime->Destroy(hits->Destroy(services.destroy)));
         worldHooks.regular=hits->Handler(combat->Handler(assetBindings->Handler(priests->RegularHandler([this](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
             if (playerRegular->Handles(sid)) return playerRegular->Handle(sid,event,count,payload);
             throw std::logic_error("캠페인 현재 Kernel의 다른 실제 Regular 부모 미연결: TYPE"+
@@ -413,6 +419,29 @@ struct RawCampaignSession::Impl {
             MakeMissionOutcomeHooks(core.pool,hp,std::move(outcomeHooks)));
         outcome->BindCurrentInputs({players,alliances,[this] { return player->State().battleOwner; },ui.demo,ui.tellBlocked});
         ConnectAi();
+    }
+    // 각 명시 요청에서 현재 실제 소유자/서버/권한/요새/타입만 공급한다. Player/자원/지도는 복사하지 않는다.
+    void PrepareConstruction() {
+        constructionState.place.localPlayer=constructionState.notice.localPlayer=assetState.localOwner;
+        constructionState.place.server=core.processState.server;
+        constructionState.place.authority=constructionState.clear.authority=constructionState.notice.authority=constructionState.geyser.boss=assetState.boss;
+        constructionState.geyser.fort=core.ownerMode.fort;
+        constructionState.place.noIslandType=constructionState.geyser.noIslandType=core.bridgeState.noIslandType;
+        constructionState.place.bridgeType=constructionState.clear.bridgeType=core.bridgeState.bridgeType;
+        constructionState.confirm.patternTypes[0]=piece;constructionState.confirm.patternTypes[1]=core.bridgeState.bridgeType;
+        constructionState.confirm.patternTypes[2]=core.bridgeState.islandType;constructionState.confirm.patternTypes[3]=core.bridgeState.noIslandType;
+        constructionState.clear.patternTypes=constructionState.place.patternTypes=constructionState.confirm.patternTypes;
+    }
+    // 수명/자산의 실제 파생 동작을 설치한 뒤 첫 객체 생성 전에 받침/로컬 간헐천 연결을 한 번 구성한다.
+    void ConnectConstruction() {
+        if (construction) throw std::logic_error("실제 Session 받침/간헐천 중복 연결");
+        recentGeysers.entries.resize(5);PrepareConstruction();
+        auto effects=services.construction; // 미선택 외부 경계는 실제 호출 때 오류로 드러내며 성공 관찰로 채우지 않는다.
+        FillMissing(effects.configInt);FillMissing(effects.wallSeconds);FillMissing(effects.refresh);
+        FillMissing(effects.negativeQuantity);FillMissing(effects.boundsAssertion);
+        construction=std::make_unique<RawCampaignConstructionBindings>(world,hp,sp,rewardState,metadata.frames,chunks,players,*broadcast,constructionState,
+            PlayerGeyserBoundsState{core.ownerMode.battle,objectState.mission,core.ownerMode.challenge,geyserMapSize,piece,playerDirections},
+            recentGeysers,assetState.geysers,std::move(effects));
     }
     // 실제 AI의 모든 계산/현재 저장소는 Session이 연결하고 언어/채팅/색만 실제 외부 소비자에 남긴다.
     void ConnectAi() {
@@ -583,6 +612,18 @@ std::uint32_t RawCampaignSession::CreateAi(std::uint32_t owner,std::span<const s
 void RawCampaignSession::RemoveAi(std::uint32_t owner) { impl_->participation->RemoveBrain(owner); }
 // 후속 실제 전략은 현재 Player 토큰으로 이 유일한 본체/목록 저장소를 조회해야 한다.
 const RawAiBrainMemory& RawCampaignSession::AiMemory() const { return impl_->aiMemory; }
+// 원본 부모 설치 전의 임의 공간 쓰기를 거부하며 같은 현재 noIsland 전역으로 요청을 구성한다.
+bool RawCampaignSession::ConfirmSupport(float x,float y) {
+    if (!impl_->loaded) throw std::logic_error("실제 Session 설치 전 받침 확정 요청");
+    impl_->PrepareConstruction();return impl_->construction->ConfirmSupport({impl_->core.bridgeState.noIslandType,x,y,0,0,0,0,0,0,0});
+}
+// 로그인/미션 단계의 자동 호출을 추가하지 않고 실제 부모가 요청할 때만 현재 raw 기록으로 생성한다.
+void RawCampaignSession::GenerateLocalGeysers() {
+    if (!impl_->loaded) throw std::logic_error("실제 Session 설치 전 로컬 간헐천 생성 요청");
+    impl_->PrepareConstruction();impl_->construction->GenerateLocalGeysers();
+}
+// 초기 객체 이전에 설치한 같은 연결부를 제공하며 게임 요청은 명시 Session API를 사용한다.
+const RawCampaignConstructionBindings& RawCampaignSession::Construction() const { return *impl_->construction; }
 // 원본 시작/AI 기술 처리가 사용하는 같은 현재 부모/실제 contained 생성 경로다.
 void RawCampaignSession::AddTechnology(std::int32_t owner,std::string_view list) { impl_->technology->AddList(owner,list); }
 // 제거 통지는 현재 Player SP 접두와 직접 Gump 가상 처리까지 같은 경로를 사용한다.
