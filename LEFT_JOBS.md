@@ -1,9 +1,17 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-16 cpppj 사전 정밀 디컴파일 완료 (`VM-W11-Codex`)
+
+- [x] 사용자 요청에 따라 `AGENTS.md`, `LEFT_JOBS.md`, `LEFT_JOBS.dotnetpj.md`와 역공학 절차를 확인했다. 직전 마지막 정밀 디컴파일은 **HJOW-Athlon / 2026-10-15**였으므로 다른 PC 작업 규칙에 따라 10.78 패치판과 CD 10.72판을 모두 다시 처리했다. Ghidra 12.1.4 헤드리스 `tools/ghidra/refine_all.ps1` 실행은 종료 코드 0이다. 실행 로그는 `extracted/decompile-vmw11-20261016-run.log`에 있다.
+- [x] 10.78 `originals/Netstorm.exe` (`A305414CFE0B94494BB32FEF2B359E920E9DABA225E0821B76AEA1F9F8E7D236`): 최종 C와 함수표 각각 **5,549개**, 디컴파일 실패 0. 10.72 `originalCD/NETSTORM.EXE` (`613500A394B3062E914604EB7D09896D678192BE24545D0E575082A87C851233`): 각각 **5,823개**, 성공 5,822·실패 1. 유일한 실패는 `0049f99f`의 `Low-level Error: Cannot properly adjust input varnodes`로 기존 기록과 같다.
+- [x] 판본 함수 대응은 **2,496쌍**(강 1,738·중 707·약 51), 대응 함수의 호출 규약 일치 2,313/2,379(97.2%), `ret N` 일치 2,339/2,389(97.9%)다. 최종 C SHA-256은 10.78 `AF7CBF0B68E9D8E5AEB7068382C88D66201D3906C2926C54909AE14DE4AD5646`, 10.72 `F8CF1CA26B0B272C19AD6CC46BE3D21A2654BD3FF697B367265678A224EFFDBB`이며 직전 기록의 산출물과 동일하다.
+- [x] 상세 입력·결과·제한은 [재디컴파일 기록](docs/exe/decompile-vmw11-20261016.md)에 작성했다. 원본 바이너리는 읽기 전용으로 사용했고 실행하지 않았다. cpppj 소스 수정·게임 실행·테스트는 하지 않았다. 산출물은 Git 제외 경로 `extracted/refined/`에 있다.
+- [x] 현재 마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-16**이다. cpppj 분석은 이 PC의 새 산출물을 사용한다. 다른 PC에서 시작하면 AGENTS 규칙에 따라 다시 디컴파일한다.
+
 ## 2026-10-16 최신 중단 인수인계: 검사도 다음 재개로 이관 (`HJOW-Athlon`)
 
 - [x] 사용자 최신 요청 **“검사도 다음으로 넘겨. 검사 필요까지 바로 인수인계해줘”**에 따라 구현과 검사를 중단했다. 시작했던 전체 CTest 및 자식 `netstorm_tests.exe`와 실행 래퍼를 종료했다. 서브 AI `construction_audit`·`energy_finish`·`session_audit` 3개는 모두 `interrupted` 상태다. 새 구현·추가 검사·GUI 실행을 진행하지 않는다. 목표는 **미달성 상태로 일시 중단**하며 사용자 재개 요청을 기다린다.
-- [x] 상세 인수인계는 [이번 중단 기록](docs/exe/cpp-pause-handoff-20261016-sun-aviary.md)과 [썬 아비어리 복원 기록](docs/exe/cpp-sun-aviary-20261016.md)에 작성했다. 마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-15**이며 현재 PC와 일치한다. 다른 PC에서 이어가면 AGENTS 규칙에 따라 다시 디컴파일한다.
+- [x] 상세 인수인계는 [이번 중단 기록](docs/exe/cpp-pause-handoff-20261016-sun-aviary.md)과 [썬 아비어리 복원 기록](docs/exe/cpp-sun-aviary-20261016.md)에 작성했다. 당시 마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-15**였다. 이후 다른 PC에서 수행한 재디컴파일은 바로 위의 완료 기록을 따른다.
 - [x] 중단 전 완료된 결과: Release 빌드 종료0, `SunAviary_` **5개·실패0**, `CampaignMissionStart_` **3개 중2개 통과·1개 실패**다. Tutorial1~5는 Load/Start 및 해당 검사를 통과했고, Tutorial5의 buried QA114/두 Regular와 실제 아비어리 Form/Kernel/초기stage/dirty 검사도 도달했다. 이것은 자연 플레이 완주나 8미션 전체 통과가 아니다.
 - [ ] **재개 시 검사부터 필요:** 현재 단위의 전체 회귀는 사용자 요청으로 취소했으므로 결과가 없다. `extracted/goal-sun-aviary-ctest.log`는 중단된 로그이며 완료 근거로 사용하지 않는다. 이전 전체 결과 **1,316개 중1개 실패**는 단위74의 과거 결과다. native `--verify`, 변경 파일/UTF-8/주석/공백 감사와 전체 CTest를 다음 재개 때 수행한다. 정확한 명령과 확인 순서는 상세 인수인계를 따른다.
 - [ ] 실제 다음 실패는 **Tutorial6 Load: SID15006·TYPE136·VT00509470(10진5280880)**의 미복원 Pop 파생 가상 후처리다. 이를 우회하거나 검사 기대값을 바꾸지 않는다. 이후 Tutorial6·캠페인1-1/1-2와 데모3개 진입, 자연 플레이/승패/다음 미션/그래픽·음향 동일성 확인이 남아 있다. 썬 플라이어73의 파생 후처리/이동과 `0045c1b0` BaseFlyer 연결도 미완료다.
