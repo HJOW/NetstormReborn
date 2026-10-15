@@ -39,6 +39,7 @@ void SessionCheck(bool value) { if (!value) throw std::logic_error("실제 캠�
 SoundList& RequireSounds(const RawCampaignSessionServices& services) { if (!services.soundNames) throw std::invalid_argument("세션의 실제 SoundList 누락");return *services.soundNames; }
 // 현재 원본 초기 다리/받침/미션 전역이다.
 BridgeConnectState CampaignLinks() { BridgeConnectState result;result.bridgeType=82;result.islandType=94;result.stalagType=95;result.connectorType=155;result.noIslandType=157;result.battle=true;result.mission=true;return result; }
+constexpr std::size_t kCampaignFactoryCapacity=500; // PATCH004fc990의push1f4→0044fb20이확보하는실제0055a4d0목록의DWORD수다.
 // 보호 GameAssets의 실제 TYPE/프레임을 보관하며 검사 전용74 변경을 적용하지 않는다.
 struct SessionAssets {
     const GameAssets& game; // 클라이언트가 소유하는 단일 자산이다.
@@ -169,6 +170,11 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawPlayerContentNotice> playerContent; // 현재 SP 저장소/같은 Player 체인/실제 UI를 조회한다.
     std::unique_ptr<RawCampaignLifetimeBindings> lifetime; // 공통 삭제와 ContentForm의 같은 풀 수명을 등록한다.
     std::unique_ptr<RawPlayerTechnology> technology; // 실제 시작/AI 갱신이 공유할 같은 Player 기술 체인이다.
+    std::array<std::uint32_t,256> restrictions{}; // 실제 미션과 생산이 공유하는 금지DWORD 표이며 256번째 칸을 별도로 보존한다.
+    std::unique_ptr<RawTotalMade> totalMade; // 같은 PostPop의 세 카운터와 위 금지 표를 읽는다.
+    std::unique_ptr<RawProductionDeck> productionDeck; // 현재 Player+68의 실제 블록을 단독 소유한다.
+    std::uint32_t fullDeck{},freeTechnologyType{153},templeProduct{133}; // PATCH0054db14/005412bc/0054126c의 현재 생산 전역이다.
+    std::unique_ptr<RawCampaignProductionBindings> production; // 같은 현재 Factory/기술 내용물/허용 표를 조합한다.
     std::array<FortTemplate,9> templates; // 실제 선택 자료는1번 Template에 둔다.
     std::array<FortTerritoryStream,9> streams; // 같은 Template의 실제120BYTE view다.
     std::array<std::uint8_t,180> headers{}; // 실제 Template9 header의 현재 바이트다.
@@ -224,6 +230,7 @@ struct RawCampaignSession::Impl {
         };
         priestState.priests.priests.entries.resize(100);assetState.residences.entries.resize(100);
         assetState.temples.entries.resize(100);assetState.outposts.entries.resize(100);assetState.geysers.entries.resize(100);
+        core.bookkeeping.factories.entries.resize(kCampaignFactoryCapacity); // 첫저장객체Pop전에예약하여원본Append의capacity0생략을방지한다.
         // 원본 Player의 첫 지역 sentinel은9기록에 직접 쓴다. 별도 playerRegions 배열을 사용하지 않는다.
         for (std::uint32_t owner=0;owner<9;++owner) {
             Put(players,owner*0xb4+0x78,127);Put(players,owner*0xb4+0x54,1U<<owner);
@@ -520,6 +527,14 @@ struct RawCampaignSession::Impl {
         techHooks.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
         technology=std::make_unique<RawPlayerTechnology>(*player,priests->Carrier(),*contained,core.types,
             BindPlayerTechnologyTypes(assets.game.TypeTable(),std::move(techHooks)));
+        totalMade=std::make_unique<RawTotalMade>(core.pool.Edition(),core.types,core.bookkeeping,restrictions,
+            SessionMissing<void,TotalMadeAssertion>());
+        productionDeck=std::make_unique<RawProductionDeck>(*player,[this](std::span<std::uint8_t> bytes) {
+            if (!services.production.allocationBytes) throw std::logic_error("실제 Session 생산 Deck 할당 입력 미연결");
+            services.production.allocationBytes(bytes);
+        },SessionMissing<void,ProductionDeckAssertion>());
+        production=std::make_unique<RawCampaignProductionBindings>(core,*player,priests->Carrier(),*contained,*productionDeck,*totalMade,contentFinder,
+            CampaignProductionState{objectState.mission,fullDeck,freeTechnologyType,templeProduct},services.production.effects);
     }
     // 외부 config/UI는 현재 클라이언트 서비스를 사용하고 게임 계산은 동일 원본 모듈을 사용한다.
     std::unique_ptr<RawCampaignWorldRuntime> MakeRuntime(std::size_t templateCount=9) {
@@ -650,6 +665,10 @@ void RawCampaignSession::GenerateLocalGeysers() {
 }
 // 초기 객체 이전에 설치한 같은 연결부를 제공하며 게임 요청은 명시 Session API를 사용한다.
 const RawCampaignConstructionBindings& RawCampaignSession::Construction() const { return *impl_->construction; }
+// 동일 Pool/Player 기록과 현재 Factory 목록을 읽으며 자동 재계산을 추가하지 않는다.
+const RawCampaignProductionBindings& RawCampaignSession::Production() const { return *impl_->production; }
+// 현재 세 카운터와 생산이 사용하는 같은 금지DWORD 표를 빌린다.
+RawTotalMade& RawCampaignSession::TotalMade() { return *impl_->totalMade; }
 // 원본 시작/AI 기술 처리가 사용하는 같은 현재 부모/실제 contained 생성 경로다.
 void RawCampaignSession::AddTechnology(std::int32_t owner,std::string_view list) { impl_->technology->AddList(owner,list); }
 // 제거 통지는 현재 Player SP 접두와 직접 Gump 가상 처리까지 같은 경로를 사용한다.

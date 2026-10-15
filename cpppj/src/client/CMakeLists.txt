@@ -15,6 +15,8 @@ target_sources(netstorm PRIVATE
     RawCampaignHitBindings.cpp RawCampaignHitBindings.h
     RawCampaignSession.cpp RawCampaignSession.h
     RawCampaignConstructionBindings.cpp RawCampaignConstructionBindings.h
+    # 같은 Player/Factory 목록과 실제 Deck으로 생산 가능 항목을 재계산한다.
+    RawCampaignProductionBindings.cpp RawCampaignProductionBindings.h
     CampaignClientServices.cpp CampaignClientServices.h
     ClientAudio.h
     ClientMain.cpp

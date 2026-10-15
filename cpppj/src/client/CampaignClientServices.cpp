@@ -8,12 +8,23 @@
 #include <algorithm>
 #include <bit>
 #include <ctime>
+#include <cstdlib>
+#include <cstring>
 #include <iostream>
 #include <limits>
 #include <stdexcept>
 #include <utility>
 
 namespace netstorm::client {
+namespace {
+// 원본 생성자가 초기화하지 않는 바이트는 현재 CRT 할당의 실제 입력을 복사한다. 할당은 복사 뒤 즉시 반환한다.
+void CurrentAllocationBytes(std::span<std::uint8_t> bytes) {
+    if (bytes.empty()) return;
+    void* allocation=std::malloc(bytes.size()); // 원본 malloc 계층처럼 zero 플래그 없는 실제 힙을 사용한다.
+    if (!allocation) throw std::bad_alloc();
+    std::memcpy(bytes.data(),allocation,bytes.size());std::free(allocation);
+}
+}
 // Player SetAlliance의 실제 채널 수정과004410f0(defaultAiName)의 현재 원본 바이트를 같은 Client에 연결한다.
 void BindCampaignAiClientServices(Client& client,CampaignAiServices& ai) {
     // 원본 Clear는 채널 BYTE만 지우고 Add는 현재 자기 subscriber의 자연 -1 반환까지 수행한다.
@@ -34,6 +45,12 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
     auto& audio=client.WorldAudio(); // noAudio도 같은 실제 이름표/비활성 재생 계층을 사용한다.
     auto& player=audio.Sounds(); // 반환한 콜백이 빌리는 장기 실제 SoundPlayer다.
     RawCampaignSessionServices services; // 게임 규칙 경계는 실제 세션의 명시 누락 판정을 유지한다.
+    services.ai.allocationBytes=CurrentAllocationBytes; // 실제 AI 생성자가 보존하는 바이트의 현재 힙 입력이다.
+    services.production.allocationBytes=CurrentAllocationBytes; // Deck 생성자도 초기화하는 5DWORD 이외의 입력을 보존한다.
+    services.production.effects.configInt=[&client](std::string_view key) {
+        std::int32_t value{};client.Configuration().ReadInt(key,value);return value;
+    };
+    services.production.effects.modeAssertion=[] { std::clog<<"생산 재계산 원본 진단: inFortMode || inBattleMode\n"; };
     // 원본 _time32의 지원 범위만 허용한다. 날짜를 DWORD로 감아 다른 난수 시드로 바꾸지 않는다.
     services.unixSeconds=[] {
         const auto now=std::time(nullptr); // 실제 시스템의 현재 Unix 초다.

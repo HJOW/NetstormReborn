@@ -1,0 +1,99 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-15",
+  "status": "release-focused-and-full-ctest-validated",
+  "observations": 219,
+  "kinds": {
+    "I": 116,
+    "S": 93,
+    "F": 10
+  },
+  "native_calls": {
+    "0040a540": 102,
+    "004bf520": 208,
+    "0044d640": 208,
+    "004bccb0": 208,
+    "004437f0": 208,
+    "0044cc20": 208,
+    "004bcd80": 208,
+    "0044cce0": 416,
+    "004a8850": 7488,
+    "004a8800": 208,
+    "004a7240": 93,
+    "004e4a40": 92,
+    "004df590": 92,
+    "0040a580": 92,
+    "00482ba0": 92
+  },
+  "explicit_crt_substitutions": {
+    "004e4391": 416,
+    "004a89c0": 4160,
+    "004e65ed": 131040
+  },
+  "normal_return_stack_callee_saved_seh": true,
+  "native_write_guard": true,
+  "whole_image_zero_tail_checked": true,
+  "selection_and_send": "explicit external boundaries; packet finalizer executes actual PE",
+  "game_gui_os_calls": 0,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "72d14bfa36091dc86a273ad9b1998c940f575bb954195d0e0920e5e63ea10bc7",
+    "tools/decomp_fort_image_packets.py": "1c48eeb8cb387c0f300ab696af26a9b9b5cf87f269aa4f9409c22572d5149185",
+    "cpppj/src/o/RawFortImage.h": "356139b484b9cd058f403047cf7d5bcf3abf6d6971c561f05da2f8651dadd8a6",
+    "cpppj/src/o/RawFortImage.cpp": "2a85e2343d6d8eb44096f531072c7bcae511bdc6a25d6e39347df4a70ca01163",
+    "cpppj/src/o/RawMissionLoginPackets.h": "b8952e18b874b841288bf348def7c1d2aa860356f4426facb17014dabfebfef8",
+    "cpppj/src/o/RawMissionLoginPackets.cpp": "503935441f0882568dba6502eb2e04d24c4e7e5dd75ab623ecbabc17d38b5299",
+    "cpppj/tests/FortImagePacketsTests.cpp": "ef582b9176bc7f46628bc5c76602c7ceed7da0bc2e21edc25c6a77876bdc75a8",
+    "cpppj/tests/fixtures/fort-image-packets-x86.tsv": "49abe4d0f80a4a5c4293ae8d59580ae6e4f34feff69ea140594290bf2bf88d8a",
+    "tools/taff.py": "461860cdfc9451b85a8694dd30fd2c56c1cfdf5c6bb7ab8f63a4089971889795",
+    "cpppj/src/o/Template.h": "3426d9944a042cfa62f600168e59afcbf8c6b44308293f43f35c4a6283075500",
+    "cpppj/src/o/Template.cpp": "01b1c9aca985827a3fae9d823c30005530d611f4538b909d0217316cab286e43",
+    "docs/exe/cpp-fort-image-packets-20261015.md": "8c5a58ab8769c5d9293be6d8f3f08f09a6c7d83c574b07216d2060620cf47ef7"
+  },
+  "tests_prepared": 4,
+  "cpp_build_and_fixture_comparison": "passed: registered, Release, 219 inputs within4 tests; full1306 passed",
+  "native_function_allowlist": [
+    "0040a540",
+    "004bf520",
+    "0044d640",
+    "004bccb0",
+    "004437f0",
+    "0044cc20",
+    "004bcd80",
+    "0044cce0",
+    "004a8850",
+    "004a8800",
+    "004a7240",
+    "004e4a40",
+    "004df590",
+    "0040a580",
+    "00482ba0"
+  ],
+  "physical_overflow": "explicit C++ rejection; native overflowing write is outside supported inputs",
+  "packet_boundary": "native 004e2dc0 entry observes pre-finalizer reservation; actual 0040a540 runs before post-finalizer/wire snapshot; product send receives finalized wire",
+  "source_refresh": "post-native test named count and documentation/dependency SHA only; native fixture unchanged",
+  "product_validation": {
+    "configuration": "Release",
+    "build_warnings": 0,
+    "build_errors": 0,
+    "focused_tests": 42,
+    "failed_checks": 0,
+    "full_ctest": {
+      "ctest_passed": 1,
+      "ctest_total": 1,
+      "tests": 1306,
+      "failed_checks": 0,
+      "seconds": 199.5,
+      "total_seconds": 199.54
+    },
+    "game_gui_runs": 0,
+    "log_sha256": {
+      "extracted/goal-pause-final-build.log": "e1165b8c48fd6c49c27f9d462e23cfe8b8d82c19951b716562e617d07da4f683",
+      "extracted/goal-pause-final-focused.log": "6953822244a44ce3ed82713db3bcd64b1ad4b28501c0a7a7881cfa2303d3a7ec",
+      "extracted/goal-pause-final-ctest.log": "302c70b495ea8e9ac3ee18817606773f7dfb5aec9e5679aad42c939f4e45a52d",
+      "extracted/goal-pause-final-tests.log": "91364ac6c5274ab548e3c4f14b64140a5935e4419760df5fa6c138f4a60a173b"
+    }
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-15",
+  "nativeUniqueInputs": 3305,
+  "status": "release-focused-and-full-ctest-validated",
+  "counts": {
+    "Range": 3003,
+    "Cost": 4,
+    "Value": 6,
+    "Clear": 4,
+    "Apply": 288
+  },
+  "boundaries": [
+    "같은PC 전체정밀 범위의004b4860/0041c8b0/0041ca70/0041c320과004b4900/0040aec0/0049a840 실제명령을 실행한다. 외부함수 hook 대체0",
+    "0x67 부모는outpost0/missionPost1 자연분기를 사용하며87옵션을 복사한 뒤 실제순수하위를 실행한다",
+    "x87 기본control word027f와masked예외를 사용한다. 예외플래그/호스트별비정상trap은 대조대상이 아니다",
+    "Unicorn의FLD/FSTP는signaling NaN을그대로저장한다. 실제현재CPU의동일명령쌍은quiet로변환하므로해당입력은원본fixture에서제외하고분리진단한다",
+    "정상반환stack/EBX/ESI/EDI/EBP/전체실제쓰기guard/범위float비트/선택TYPE비용188/사용표256+이웃8/옵션87/현재파생값을 보존한다",
+    "Root registered and compared all3305 inputs in C++; actual Session options and GUI login integration remain pending."
+  ],
+  "host_x87_diagnostic": {
+    "status": "현재CPU명령진단완료",
+    "architecture": "AMD64",
+    "body_hex": "4883ec28d9342466c74424207f02d96c2420d901d91ad924244883c428c3",
+    "control_word": "027f",
+    "complete_x87_environment_restored": true,
+    "original_function_inputs": 0,
+    "observations": [
+      {
+        "input": "0x7f800001",
+        "stored": "0x7fc00001"
+      },
+      {
+        "input": "0xff800001",
+        "stored": "0xffc00001"
+      },
+      {
+        "input": "0x7fc12345",
+        "stored": "0x7fc12345"
+      },
+      {
+        "input": "0xffc12345",
+        "stored": "0xffc12345"
+      },
+      {
+        "input": "0x80000000",
+        "stored": "0x80000000"
+      }
+    ]
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_mission_battle_options.py": "83a4b51550fb9b460e48c7c0072737ca0fd029da22fed6a35e458dbb466a298b",
+    "cpppj/src/o/RawMissionBattleOptions.h": "e3a08504765d474b09ccfd2607f4f2b763e29eb5447f9f4183e58b306204b244",
+    "cpppj/src/o/RawMissionBattleOptions.cpp": "d7179f0113d06d86c8b9254bcb84246281b1960194108353720e4a9a6fb495a4",
+    "cpppj/tests/MissionBattleOptionsTests.cpp": "e455c77b1e9dfdac56b625ebf6e6c27592a6d1f876b5aa06e11557b29bc0354e",
+    "cpppj/tests/fixtures/mission-battle-options-x86.tsv": "cc55ca5d315e9e379185ff33082754dd5928e623ae91d8beb8b6a76aadcb2a5e"
+  },
+  "product_validation": {
+    "configuration": "Release",
+    "build_warnings": 0,
+    "build_errors": 0,
+    "focused_tests": 42,
+    "failed_checks": 0,
+    "full_ctest": {
+      "ctest_passed": 1,
+      "ctest_total": 1,
+      "tests": 1306,
+      "failed_checks": 0,
+      "seconds": 199.5,
+      "total_seconds": 199.54
+    },
+    "game_gui_runs": 0,
+    "log_sha256": {
+      "extracted/goal-pause-final-build.log": "e1165b8c48fd6c49c27f9d462e23cfe8b8d82c19951b716562e617d07da4f683",
+      "extracted/goal-pause-final-focused.log": "6953822244a44ce3ed82713db3bcd64b1ad4b28501c0a7a7881cfa2303d3a7ec",
+      "extracted/goal-pause-final-ctest.log": "302c70b495ea8e9ac3ee18817606773f7dfb5aec9e5679aad42c939f4e45a52d",
+      "extracted/goal-pause-final-tests.log": "91364ac6c5274ab548e3c4f14b64140a5935e4419760df5fa6c138f4a60a173b"
+    }
+  }
+}

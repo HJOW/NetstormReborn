@@ -8,6 +8,7 @@
 #include "client/RawCampaignHitBindings.h"
 #include "client/RawCampaignLifetimeBindings.h"
 #include "client/RawCampaignConstructionBindings.h"
+#include "client/RawCampaignProductionBindings.h"
 #include "client/SoundProcess.h"
 #include "o/RawPlayerRegular.h"
 #include "o/RawBattleBroadcast.h"
@@ -33,6 +34,11 @@ struct CampaignAiServices {
     o::PlayerParticipationHooks participation; // 실제 Chat/동맹 송신/연결·진단이다. brain 소멸/반납은 Session의 실제 소유자로 교체한다.
     std::function<bool()> localTransport; // CheckLogin이 현재 로컬 전송 모드를 읽는 실제 경계다.
 };
+// 원본 Deck의 할당 입력과 현재 설정/진단을 실제 클라이언트에 연결한다.
+struct CampaignProductionServices {
+    o::RawProductionDeck::Fill allocationBytes; // 실제 할당 직후 바이트이며 생성자가 보존하는 꼬리를 임의 초기화하지 않는다.
+    CampaignProductionEffects effects; // 현재 getTeleportTechFree와 원본 모드 진단이다.
+};
 // 게임 계산을 대신하지 않고 실제 클라이언트 UI/음향/전송의 선택 경계를 공급한다.
 struct RawCampaignSessionServices {
     std::function<std::int32_t()> unixSeconds; // 실제 time32의 현재 Unix 초다.
@@ -46,6 +52,7 @@ struct RawCampaignSessionServices {
     o::PlayerRegularHooks player; // 실제 Player 로그와 예약 외부 경계다.
     CampaignMissionOutcomeUi missionOutcome; // 현재 미션의 실제 UI/차단 조회 경계다. Check를 호출할 때만 필요하다.
     CampaignAiServices ai; // 선택된 실제 AI 초기화/참여의 외부 경계이며 Load/프레임에서 자동 호출하지 않는다.
+    CampaignProductionServices production; // 같은 Player/Factory/허용 표가 사용할 Deck의 실제 외부 입력이다.
     RawCampaignConstructionEffects construction; // 로컬 간헐천의 실제 설정/벽시각/표시/진단이며 일반 건설을 대신하지 않는다.
     o::SquidDestroyHooks deletion; // 다른 파생 삭제/선택/전송의 실제 외부 경계다.
     std::function<void(o::Sid)> unitLost; // 공통 삭제가 요청한 실제 unitLost 전역 소리를 재생한다.
@@ -118,6 +125,10 @@ public:
     void GenerateLocalGeysers();
     // 같은 실제 Pool/현재 Bounds/최근목록/자원/마지막 패킷을 읽는 연결부다.
     const RawCampaignConstructionBindings& Construction() const;
+    // 같은 Player+68과 현재 Factory 목록을 사용하는 실제 생산 계산기를 빌린다. 조회만으로 재계산하지 않는다.
+    const RawCampaignProductionBindings& Production() const;
+    // 생산/튜토리얼/건설 표시가 함께 읽는 금지DWORD 표와 실제 세 카운터를 직접 조작한다.
+    o::RawTotalMade& TotalMade();
     // 실제 시작 설정/AI와 같은 Player 기술 부모에 원본 목록 파서를 적용한다.
     void AddTechnology(std::int32_t owner,std::string_view list);
     // 실제 flags4 기술을 가상 삭제하여 부모 체인/등록/삭제 깊이를 함께 정리한다.

@@ -45,6 +45,10 @@ add_executable(netstorm_tests
     MissionLoginTimerTests.cpp
     MissionClientPacketsTests.cpp
     MissionServerPacketsTests.cpp
+    MissionBattleOptionsTests.cpp
+    ProductionDeckTests.cpp
+    FortImagePacketsTests.cpp
+    MissionSettingsPacketTests.cpp
     BattleBroadcastTests.cpp
     WindowTitleTests.cpp
     CameraHomeTests.cpp
@@ -1035,3 +1039,13 @@ set_source_files_properties(MissionClientPacketsTests.cpp PROPERTIES COMPILE_DEF
     "NETSTORM_MISSION_CLIENT_PACKETS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/mission-client-packets-x86.tsv\"")
 set_source_files_properties(MissionServerPacketsTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_MISSION_SERVER_PACKETS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/mission-server-packets-x86.tsv\"")
+
+# 실제 옵션과 현재 생산 Deck/Factory 재계산의 독립 원본 기대값이다.
+set_source_files_properties(MissionBattleOptionsTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_MISSION_BATTLE_OPTIONS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/mission-battle-options-x86.tsv\"")
+set_source_files_properties(ProductionDeckTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PRODUCTION_DECK_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/production-deck-x86.tsv\";NETSTORM_PRODUCTION_REFRESH_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/production-refresh-x86.tsv\"")
+set_source_files_properties(FortImagePacketsTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FORT_IMAGE_PACKETS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fort-image-packets-x86.tsv\"")
+set_source_files_properties(MissionSettingsPacketTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_MISSION_SETTINGS_PACKET_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/mission-settings-packet-x86.tsv\"")

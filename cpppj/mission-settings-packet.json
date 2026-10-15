@@ -1,0 +1,81 @@
+{
+  "host": "HJOW-Athlon",
+  "last_full_refined_host": "HJOW-Athlon",
+  "date": "2026-10-15",
+  "status": "release-focused-and-full-ctest-validated",
+  "observations": 164,
+  "kinds": {
+    "S": 117,
+    "R": 45,
+    "O": 2
+  },
+  "native_calls": {
+    "0044dbc0": 117,
+    "0040a700": 117,
+    "004df230": 117,
+    "0044dc20": 45,
+    "0040b380": 2
+  },
+  "normal_return_stack_callee_saved": true,
+  "native_write_guard": true,
+  "send_read_order": [
+    1,
+    2,
+    0,
+    4,
+    5,
+    3,
+    6
+  ],
+  "receive_write_order": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "explicit_boundaries": [
+    "current DWORD getter/store effects",
+    "actual connection-gate send"
+  ],
+  "crt_replacements": 0,
+  "game_gui_os_calls": 0,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "72d14bfa36091dc86a273ad9b1998c940f575bb954195d0e0920e5e63ea10bc7",
+    "tools/decomp_mission_settings_packet.py": "9f9c205cc8fb045bf17463fae4a395c088ce9fcc51bc3beab2e7f8906be99fd5",
+    "cpppj/src/o/RawPacketDispatch.h": "db9603cb8e42ab382a3b43312cb329ab9b3b3b208012608d3f1cdbe5fdf59738",
+    "cpppj/src/o/RawPacketDispatch.cpp": "3f9628dad2707355aa7e10419ebbab17e25578e595d2335e03d48d1a1303928a",
+    "cpppj/src/o/RawPacketLengths.h": "ca00327012fdd256377068173a466b3c7adfd20c55ffd1ea9b70d8b4a05309c0",
+    "cpppj/src/o/RawMissionSettingsPacket.h": "dee112ac9c0a9089f5c2265fdf6d0f18d2441e233d44d10c382588e569fdbf2f",
+    "cpppj/src/o/RawMissionSettingsPacket.cpp": "57610a5ae66241ee5d288cbfbe41fbbc3d0208d0b2d487164864613dc9459ea6",
+    "cpppj/tests/MissionSettingsPacketTests.cpp": "6fbe0398b6e8406c83e501ecceaf7ecd4f510ddecbeb516dbda77e1151ff0dd5",
+    "cpppj/tests/fixtures/mission-settings-packet-x86.tsv": "dbd42f654348c6d4d5de37d99e421f0b2b971794061cc7a4631c7f4939616ae4",
+    "docs/exe/cpp-mission-settings-packet-20261015.md": "3990783470d991285c697f1d1447e459f7ac8ac8bd896131bf2927490b2ac2fe"
+  },
+  "product_validation": {
+    "configuration": "Release",
+    "build_warnings": 0,
+    "build_errors": 0,
+    "focused_tests": 42,
+    "failed_checks": 0,
+    "full_ctest": {
+      "ctest_passed": 1,
+      "ctest_total": 1,
+      "tests": 1306,
+      "failed_checks": 0,
+      "seconds": 199.5,
+      "total_seconds": 199.54
+    },
+    "game_gui_runs": 0,
+    "log_sha256": {
+      "extracted/goal-pause-final-build.log": "e1165b8c48fd6c49c27f9d462e23cfe8b8d82c19951b716562e617d07da4f683",
+      "extracted/goal-pause-final-focused.log": "6953822244a44ce3ed82713db3bcd64b1ad4b28501c0a7a7881cfa2303d3a7ec",
+      "extracted/goal-pause-final-ctest.log": "302c70b495ea8e9ac3ee18817606773f7dfb5aec9e5679aad42c939f4e45a52d",
+      "extracted/goal-pause-final-tests.log": "91364ac6c5274ab548e3c4f14b64140a5935e4419760df5fa6c138f4a60a173b"
+    }
+  }
+}

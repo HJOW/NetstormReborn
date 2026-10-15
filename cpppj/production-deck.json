@@ -1,0 +1,87 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-15",
+  "last_full_refined_host": "HJOW-Athlon",
+  "total": 248,
+  "returns": 496,
+  "controls": [
+    639,
+    895
+  ],
+  "ranges": {
+    "0044daa0": "44daa0-44daa7",
+    "0044f160": "44f160-44f1fa",
+    "0044f200": "44f200-44f222",
+    "0044f230": "44f230-44f244",
+    "0044f290": "44f290-44f32c",
+    "0044f3d0": "44f3d0-44f424",
+    "0044f430": "44f430-44f481",
+    "0044f700": "44f700-44f75d",
+    "0044f970": "44f970-44f9c2",
+    "0048fc60": "48fc60-48fc84",
+    "004929e0": "4929e0-492a23",
+    "004acac0": "4acac0-4acb78",
+    "004b1b20": "4b1b20-4b1b74",
+    "004b2270": "4b2270-4b22c9"
+  },
+  "native_calls": {
+    "0044f200": 8,
+    "0044f230": 8,
+    "0044f430": 8,
+    "0044f700": 192,
+    "0044f970": 168,
+    "0044f290": 60,
+    "0044f160": 60,
+    "0044f3d0": 50,
+    "004929e0": 180,
+    "0048fc60": 344,
+    "004acac0": 180,
+    "004b2270": 180,
+    "004b1b20": 250,
+    "0044daa0": 90
+  },
+  "boundaries": {
+    "new": 96,
+    "assert": 80,
+    "create": 164
+  },
+  "os_calls": 0,
+  "gui_runs": 0,
+  "files": {
+    "tools/decomp_production_deck.py": "f88be5e1587c01f6ec5e4c4b9216e68ecc1de92af193af09fa99a195061227fc",
+    "tools/decomp_missionframe_oracle.py": "98987447be7aa3632aeb6337a21880d57c43ad184e3657fae4171c8e9ffb1739",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "cpppj/tests/fixtures/production-deck-x86.tsv": "8c0402e5bfcc7914457eea5acc0144f73b673ea33160bade3b35d02d0c44647c",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236"
+  },
+  "limits": [
+    "Deck Get/Contains/Init/Clear/Append/Activate/Compact 전체와Indicate전체상위/실제kindWORD조회/기본true필터",
+    "CRT new0x160은명시바이트를갖는가상할당경계.진단은요청line을기록하고원본처럼계속한다.",
+    "Indicate하위004afa70은인자/호출경계다.그본문이나실제생성/부착효과를이번native관찰에합산하지않는다.",
+    "실제production재계산/Factory표시/메뉴Gump/게임자연진행은이fixture의범위밖이다."
+  ],
+  "status": "release-focused-and-full-ctest-validated",
+  "product_validation": {
+    "configuration": "Release",
+    "build_warnings": 0,
+    "build_errors": 0,
+    "focused_tests": 42,
+    "failed_checks": 0,
+    "full_ctest": {
+      "ctest_passed": 1,
+      "ctest_total": 1,
+      "tests": 1306,
+      "failed_checks": 0,
+      "seconds": 199.5,
+      "total_seconds": 199.54
+    },
+    "game_gui_runs": 0,
+    "log_sha256": {
+      "extracted/goal-pause-final-build.log": "e1165b8c48fd6c49c27f9d462e23cfe8b8d82c19951b716562e617d07da4f683",
+      "extracted/goal-pause-final-focused.log": "6953822244a44ce3ed82713db3bcd64b1ad4b28501c0a7a7881cfa2303d3a7ec",
+      "extracted/goal-pause-final-ctest.log": "302c70b495ea8e9ac3ee18817606773f7dfb5aec9e5679aad42c939f4e45a52d",
+      "extracted/goal-pause-final-tests.log": "91364ac6c5274ab548e3c4f14b64140a5935e4419760df5fa6c138f4a60a173b"
+    }
+  }
+}

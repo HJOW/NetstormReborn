@@ -1,0 +1,83 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-15",
+  "last_full_refined_host": "HJOW-Athlon",
+  "base_commit": "18a384d",
+  "status": "release-focused-and-full-ctest-validated",
+  "new_native_unique_inputs": 0,
+  "binding": [
+    "동일 Session의 실제 Player+68, 단일 Deck 저장소, 현재 Factory 목록과 기술 내용물",
+    "생산/미션이 공유하는 금지DWORD 표와 기존 PostPop의 세 카운터",
+    "원본004fc990이0044fb20에 넘기는500DWORD를 첫 객체 생성 전에 확보",
+    "실제 Client의 현재 CRT 힙 입력 바이트를 AI/Deck 생성자에 공급"
+  ],
+  "factory_capacity_proof": {
+    "entry": "004fc990",
+    "bytes": "68f4010000b9d0a45500e88131f5ff",
+    "capacity": 500,
+    "constructor": "0044fb20",
+    "list": "0055a4d0",
+    "kind": "보호PE 정적명령 대조이며 실제 원본 게임 실행0"
+  },
+  "limits": [
+    "공급원/Player별Factory 목록의 초기 capacity는 후속 대조 필요",
+    "실제 로그인/상태/Guide/Stage3 자동 결합과 생산 GUI/거래/자연완주는 미완료",
+    "중단 보존 상태/Start 초안5파일은 빌드와 검증에 포함하지 않음"
+  ],
+  "product_validation": {
+    "configuration": "Release",
+    "build_warnings": 0,
+    "build_errors": 0,
+    "focused_tests": 42,
+    "failed_checks": 0,
+    "full_ctest": {
+      "ctest_passed": 1,
+      "ctest_total": 1,
+      "tests": 1306,
+      "failed_checks": 0,
+      "seconds": 199.5,
+      "total_seconds": 199.54
+    },
+    "game_gui_runs": 0,
+    "log_sha256": {
+      "extracted/goal-pause-final-build.log": "e1165b8c48fd6c49c27f9d462e23cfe8b8d82c19951b716562e617d07da4f683",
+      "extracted/goal-pause-final-focused.log": "6953822244a44ce3ed82713db3bcd64b1ad4b28501c0a7a7881cfa2303d3a7ec",
+      "extracted/goal-pause-final-ctest.log": "302c70b495ea8e9ac3ee18817606773f7dfb5aec9e5679aad42c939f4e45a52d",
+      "extracted/goal-pause-final-tests.log": "91364ac6c5274ab548e3c4f14b64140a5935e4419760df5fa6c138f4a60a173b"
+    }
+  },
+  "sha256": {
+    "cpppj/src/client/RawCampaignSession.h": "ce9fd891d6004c46a4244e2e1e2210ad65ddaf434410d43169e66d2aacaabf25",
+    "cpppj/src/client/RawCampaignSession.cpp": "7e2c790fc4d6182457b3afd0b0a340a01df1775b25bbc9471a3198ac010bd8f4",
+    "cpppj/src/client/CampaignClientServices.cpp": "2409e643a193d38df6d71ec5e916f68d241ece75b673433578bca1828126f166",
+    "cpppj/tests/CampaignSessionTests.cpp": "b6de13268095e7926d5ee904fbaefefb0e8f5f56e3952a8d4b96ad9816469e39",
+    "cpppj/src/client/CMakeLists.txt": "6966711ff173da9c147ab8a5dac86c48f08a06942304562c5a2134cf9710d4ca",
+    "cpppj/src/o/CMakeLists.txt": "58e8ffae9f50c4c493533ab426b07c8434f51402f6479891d9d3cac527ce32f2",
+    "cpppj/tests/CMakeLists.txt": "323563f730eb06e71ad9ee1e6746decfd99d53c619bb785abcf590e1025b123c",
+    "docs/exe/cpp-pause-handoff-20261015.md": "58333c06d95a8a9e936fa7c3229a68e3c981ffd3e70686275a19f701c60b7b96",
+    "extracted/goal-factory-capacity-static.log": "3efb6561c5eed681ccdc897c269f4c08f0b1f01f741240a2f0af5ce7d7902e3d",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236"
+  },
+  "unregistered_drafts": {
+    "cpppj/src/o/RawLocalMissionState.h": {
+      "sha256": "728cbb8da133c1d155b496b0a3b3989065280411a28d3c79e795f9e06f11e5af",
+      "status": "unregistered-unbuilt-untested"
+    },
+    "cpppj/src/o/RawLocalMissionState.cpp": {
+      "sha256": "c59b2228d88a978570c5ea461b41ce902015c130b7e8817dc50bd26f184b1113",
+      "status": "unregistered-unbuilt-untested"
+    },
+    "tools/decomp_local_mission_state.py": {
+      "sha256": "39bc500c364086ff23a338c5e7614fdd7355309efd6b6f90c1fb655ddba7199b",
+      "status": "unregistered-unbuilt-untested"
+    },
+    "cpppj/src/client/RawCampaignMissionStartBindings.h": {
+      "sha256": "6508282ef2ff6900df8c520615a18ebcddb76831066fb4bc742426279c20e26c",
+      "status": "unregistered-unbuilt-untested"
+    },
+    "cpppj/src/client/RawCampaignMissionStartBindings.cpp": {
+      "sha256": "ab2db82e0bcb0d5eb812bd4b584071cb78f756f66f6fc87b6e23d8d20ef38fe1",
+      "status": "unregistered-unbuilt-untested"
+    }
+  }
+}

@@ -14,6 +14,14 @@ target_sources(netstorm PRIVATE
     RawMissionClientPackets.cpp RawMissionClientPackets.h
     # 같은 현재 Player 이름/IP와 원본 중앙섬 metadata를 실제 wire로 작성한다.
     RawMissionServerPackets.cpp RawMissionServerPackets.h
+    # 현재 옵션의 범위/TYPE 비용과 생산 Deck의 실제 저장소를 복원한다.
+    RawMissionBattleOptions.cpp RawMissionBattleOptions.h
+    RawProductionDeck.cpp RawProductionDeck.h
+    # 현재 Fort의 35섹션 이미지와 로그인 0x2a 송신 길이를 복원한다.
+    RawFortImage.cpp RawFortImage.h
+    RawMissionLoginPackets.cpp RawMissionLoginPackets.h
+    # 로그인 뒤 같은 7DWORD 설정을 0x32로 송수신한다.
+    RawMissionSettingsPacket.cpp RawMissionSettingsPacket.h
     RawMissionFrameGate.cpp RawMissionFrameGate.h
     RawTutorialOne.cpp RawTutorialOne.h RawTotalMade.cpp RawTotalMade.h
     RawTutorialTwo.cpp RawTutorialTwo.h
