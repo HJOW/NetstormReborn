@@ -6,6 +6,7 @@ target_sources(netstorm PRIVATE
     RawTutorialOne.cpp RawTutorialOne.h RawTotalMade.cpp RawTotalMade.h
     RawTutorialTwo.cpp RawTutorialTwo.h
     RawLocalGeyser.cpp RawLocalGeyser.h
+    RawMissionStart.cpp RawMissionStart.h RawMissionAiSettings.cpp RawMissionAiSettings.h RawAiCreate.cpp RawAiCreate.h
     RawRainVortexDraw.cpp RawRainVortexDraw.h
     RawFenceTarget.cpp RawFenceTarget.h
     RawContentParentNotice.cpp RawContentParentNotice.h ContentNoticeVtables.inc

@@ -4,6 +4,7 @@
 add_executable(netstorm_tests
     RegionOwnerTests.cpp
     LocalGeyserTests.cpp
+    MissionStartTests.cpp
     MissionFrameGateTests.cpp
     TutorialOneTests.cpp
     TutorialTwoTests.cpp
@@ -949,3 +950,7 @@ set_source_files_properties(RegionOwnerTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 실제 로컬 간헐천 생성/난수/최근 목록의 독립 원본 입력이다.
 set_source_files_properties(LocalGeyserTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_LOCALGEYSER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/local-geyser-x86.tsv\"")
+
+# 실제 미션 시작/AI 설정의 독립 원본 결과다.
+set_source_files_properties(MissionStartTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_MISSION_START_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/mission-start-x86.tsv\"")
