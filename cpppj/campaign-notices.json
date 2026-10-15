@@ -1,0 +1,35 @@
+{
+  "host": "VM-W11-Codex",
+  "date": "2026-10-15",
+  "damage_wrapper_inputs": 144,
+  "empty_notice_inputs": 12,
+  "ai_body_executed": false,
+  "ai_boundary_calls": 24,
+  "assertions": 0,
+  "tool_sha256": "306cbabb3a83c714aa8853d1beb48396b634dfc272a04b489e7de97cb2b1cdd8",
+  "helper_sha256": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
+  "fixture_sha256": "6fcc7595701879970253adc8ab187550868ced183739d5991725abec3def621a",
+  "editions": {
+    "originals": {
+      "binary_sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "exports": {
+        "extracted\\campaign-notices\\originals\\creation.c": "e2fd0ffda15782caf1e656dc9246baf36be80ad623f04575b8b6205024719e5f",
+        "extracted\\campaign-notices\\originals\\functions.tsv": "3212c208bb7d5b30e18111d22eb696247d68bd536a0833db5019e0acdb1feb12"
+      },
+      "native_entries": {
+        "00416760": 144,
+        "0041c100": 6
+      }
+    },
+    "originalCD": {
+      "binary_sha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "exports": {
+        "extracted\\campaign-notices\\originalCD\\creation.c": "6601327b750bd0634bb0a0653fb18af07a6522d38d7d8b0fbe9457be188d24da",
+        "extracted\\campaign-notices\\originalCD\\functions.tsv": "261f06ba74f8fe0f5a1a03c2c0f73f421e3611aa804c7e2c244b0ed27d79fdc1"
+      },
+      "native_entries": {
+        "00401c20": 6
+      }
+    }
+  }
+}

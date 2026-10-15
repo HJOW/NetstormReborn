@@ -3,6 +3,7 @@
 #include "client/UberGump.h"
 #include "client/ClientAudio.h"
 #include "client/ClientMain.h"
+#include "client/CampaignClientServices.h"
 #include "client/GifImage.h"
 #include "client/GumpVisual.h"
 #include "client/GumpBackground.h"
@@ -213,16 +214,19 @@ void UberGump::BeginMission(std::string name) {
     if (!mission_->Loaded()) throw std::runtime_error("Missing mission: " + name);
     const auto type = o::AsciiLower(mission_->MissionType());
     if (type != "tutorial" && type != "battle") throw std::runtime_error("Mission type pending: " + mission_->MissionType());
-    const auto fort = o::FortTemplate::Parse(client_.Files().Read(mission_->FortPath()), client_.Assets().TypeTable());
+    auto fort = o::FortTemplate::Parse(client_.Files().Read(mission_->FortPath()), client_.Assets().TypeTable());
     // 전체 요새 레코드를 세어 자동 검사에서 미션 선택과 파일 로드를 함께 확인한다.
     const auto count = [this](const o::FortChunkSection& section) { for (const auto& chunk : section.chunks) fortObjects_ += chunk.objects.size(); };
     fortObjects_ = 0; count(fort.chaff);
     // 플레이어 영역의 저장 오브젝트를 포함한다.
     for (const auto& section : fort.territories) count(section);
-    if (type!="tutorial") { mission_.reset(); Tell("NotImplemented"); return; }
     // Starting Cash 옵션의 기본 인덱스 1은 6500 SP다(0052f5d0 옵션 표). 옵션 전체 복사는 후속이다.
     auto players=o::MissionPlayers::Load([this](std::string_view key) { return mission_->Get(key); },fort,client_.Assets().TypeTable(),6500);
-    auto world=std::make_unique<GameWorld>(client_.Assets(),fort,std::move(players));
+    // 1-1/1-2도 원본 missionType은 Tutorial이다. 지원 두 종류 모두 같은 실제 raw 월드를 생성한다.
+    auto services=MakeCampaignClientServices(client_,*rawButtons_,{
+        [this] { RefreshWindowTitle(); },[this](std::string_view key) { Tell(std::string(key)); }}); // 현재 클라이언트의 설정·음향·입력·UI다.
+    auto world=std::make_unique<GameWorld>(client_.Assets(),client_.Files(),std::move(fort),std::move(players),
+        mission_->FortName(),std::move(services),ScreenPoint{client_.GetScreen().Width(),client_.GetScreen().Height()});
     world->elapsed=[this]() { return client_.Time().delta; }; world->paused=[this]() { return client_.Paused(); };
     world->frameTime=[this]() { return client_.Time(); };
     // 카메라/해상도 변경 직후 위치 효과음의 기준을 갱신한다. 월드와 소리 묶음의 수신은 모두 주 스레드에서 실행한다.

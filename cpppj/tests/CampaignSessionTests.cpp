@@ -28,7 +28,6 @@ struct SessionServicesFixture {
         s.assets.postPop.playImpactSound=[this](std::uint32_t) { ++notices; };
         s.assets.queueCommand=[this](std::uint32_t,std::int32_t,std::int32_t) { ++notices; };
         s.assets.sendGunPacket=s.pathPacket=[this](std::span<const std::uint8_t> bytes) { packets.emplace_back(bytes.begin(),bytes.end()); };
-        s.hit.priest.ownerDamageNotice=[this](std::uint8_t,Sid,Sid) { ++notices; };
         s.archer.animation.common.sound=[this](Sid,std::string_view) { ++notices; };
         s.archer.animation.common.targetPoint=[](Sid,Sid) { return std::array<float,2>{-10000,-10000}; }; // 명시 fencemark없음 입력이다.
         s.archer.missile.firingSound=s.archer.missile.impactSound=[this](float,float,std::uint32_t) { ++notices; };
@@ -36,7 +35,7 @@ struct SessionServicesFixture {
         s.player.log=[this](std::uint32_t,std::string_view) { ++notices; };
         s.deletion.emit=[this](const SquidDestroyEvent& event) { if (event.effect!=SquidDestroyEffect::Transmit) throw std::logic_error("다른파생삭제미연결");++notices; };
         s.deletion.selected=[] { return Sid{}; };s.dependencyTransmit=[this](Sid,std::uint32_t) { ++notices; };
-        s.contentNotice=[this](Sid,Sid,std::uint32_t) { ++notices; };return s;
+        return s; // 실제 부모 VT 통지와 Player AI 조회 래퍼를 세션이 공급한다.
     }
 };
 // 실제1-1/1-2를 production GameWorld에 설치하고 같은 SID/프레임 표시를 확인한다.

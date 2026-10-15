@@ -1,0 +1,94 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""실제 클론의 튜토리얼/초기 캠페인 브리핑과 raw 세션 진입을 같은 UI 입력으로 확인한다."""
+import argparse
+import json
+from pathlib import Path
+import subprocess
+from cpp_smoke_files import preserve_game_settings
+from cpp_renderer_smoke import snapshots
+from cpp_world_smoke import states
+
+ROOT = Path(__file__).resolve().parents[1]  # 보호 자료와 이번 빌드의 기준 경로다.
+EXE = ROOT / 'cpppj/build/bin/Release/NetstormCpp.exe'  # 원본 실행 파일은 시작하지 않는다.
+OUT = ROOT / 'extracted/run32-entry'  # 실제 창의 입력·로그·상태·이미지를 보관한다.
+
+
+def check(mission, play, movement=False):
+    """현재 MissionBegin→브리핑→Play Mission 경로를 실행하고 같은 raw 월드의 출력을 읽는다."""
+    directory = OUT / (mission + ('-movement' if movement else ''))
+    directory.mkdir(parents=True, exist_ok=True)
+    steps = [(3, 'report', 'briefing'), (3, 'snapshot', str(directory / 'briefing.bmp'))]
+    if play:
+        steps += [(5, 'click', 'Play Mission'), (6, 'report', 'mission'),
+                  (8, 'snapshot', str(directory / 'mission.bmp'))]
+    if movement:
+        steps += [(7, 'click', 'world:priest'), (8, 'report', 'selected'),
+                  (9, 'click', 'cell:90,108'), (10, 'report', 'command'),
+                  (1999, 'report', 'after'), (1999, 'snapshot', str(directory / 'after.bmp'))]
+        steps.sort(key=lambda step: step[0])  # 같은 프레임의 기존 사건 순서를 유지하며 시간순으로 배치한다.
+    script = directory / 'steps.tsv'
+    script.write_text(''.join(f'{frame}\t{operation}\t{argument}\n' for frame, operation, argument in steps), encoding='utf-8', newline='\n')
+    command = [str(EXE), '--run', str(ROOT / 'originals'), '--mission', mission, '--window', '--no-audio',
+               '--frames', '2000' if movement else '10', '--set', 'SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0',
+               '--ui-script', str(script), '--ui-report', str(directory / 'states.tsv')]
+    startup = subprocess.STARTUPINFO()  # 콘솔용 보조 창이 전면에 뜨지 않게 한다.
+    startup.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+    startup.wShowWindow = 0
+    result = subprocess.run(command, cwd=ROOT, capture_output=True, startupinfo=startup, timeout=55)
+    (directory / 'stdout.log').write_bytes(result.stdout)
+    (directory / 'stderr.log').write_bytes(result.stderr)
+    record = {'mission': mission, 'command': command, 'exit_code': result.returncode,
+              'stderr': result.stderr.decode('utf-8', errors='replace')}
+    (directory / 'result.json').write_text(json.dumps(record, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    # 긴 이동 실행의 stderr에는 실제 PlayerRegular 로그가 기록된다. 오류는 프로세스 종료 코드로 판정한다.
+    assert result.returncode == 0 and (movement or not result.stderr), record
+    observed = states(directory / 'states.tsv')
+    briefing = observed['briefing']
+    assert briefing['phase'] == ['3'] and briefing['paused'] == ['1']
+    assert briefing['mission'][0] == mission and briefing['mission'][1].lower() == 'tutorial'
+    assert briefing['objects'] and briefing['raw_objects']
+    assert briefing['raw_world'][2] != '0', '실제 Player/Gun/Regular Kernel이 없는 이전 어댑터'
+    if play:
+        playing = observed['mission']
+        assert playing['phase'] == ['4'] and playing['paused'] == ['0']
+        assert any(int(value[0]) >= 70 for value in playing['raw_objects'].values())
+        assert any(value[0] == 'priest' and value[1] == '1' for value in playing['objects'].values())
+        assert playing['raw_world'][6:9] == ['0', '0', '0']
+        record['raw_objects'] = len(playing['raw_objects'])
+        record['camera'] = playing['camera']
+    if movement:
+        selected = int(observed['selected']['selected'][0])
+        before = observed['selected']['objects'][selected]
+        after = observed['after']['objects'][selected]
+        assert before[5:7] != after[5:7] and after[5:7] == ['90', '108']
+        assert observed['after']['raw_world'][6:9] == ['0', '0', '0']
+        record['movement'] = {'sid': selected, 'from': before[5:7], 'to': after[5:7],
+                              'game_before': observed['command']['raw_world'][0], 'game_after': observed['after']['raw_world'][0]}
+    record['passed'] = True
+    (directory / 'result.json').write_text(json.dumps(record, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    print(directory.name, 'PASS', flush=True)
+    return record
+
+
+def main():
+    """설정 바이트와 존재 상태를 복구하고 다섯 클론 실행 전후 보호 디렉터리 전체를 비교한다."""
+    OUT.mkdir(parents=True, exist_ok=True)
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--movement', action='store_true', help='실제 1-1 마우스 이동을 2000프레임 동안 추가 확인한다')
+    args = parser.parse_args()
+    before = snapshots(ROOT / 'originals')
+    records = []
+    with preserve_game_settings(ROOT / 'originals', 'd'):
+        # 같은 보호 설정을 쓰므로 창은 한 번에 하나만 시작한다.
+        for mission, play in (('thewarbegins', True), ('masterofwhirligigs', True),
+                              ('tutorial1', False), ('tutorial2', False), ('tutorial3', False)):
+            records.append(check(mission, play))
+        if args.movement:
+            records.append(check('thewarbegins', True, True))
+    assert snapshots(ROOT / 'originals') == before
+    (OUT / 'results.json').write_text(json.dumps({'runs': records, 'originals_unchanged': True}, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+
+if __name__ == '__main__':
+    main()

@@ -1,0 +1,31 @@
+{
+  "host": "VM-W11-Codex",
+  "date": "2026-10-15",
+  "tool_sha256": "6df82e61546cee58f3c30ec3730b97273e5b697270730d96efca2c52b41931d4",
+  "catalog_sha256": "fac1a032778ba7e6745476904a13446c36b79625e38c40120195bc009a798b00",
+  "editions": {
+    "originals": {
+      "binary_sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "tables": 83,
+      "entries": {
+        "0041c100": 71,
+        "00429560": 8,
+        "00449660": 1,
+        "00453b50": 2,
+        "00490750": 1
+      }
+    },
+    "originalCD": {
+      "binary_sha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "tables": 68,
+      "entries": {
+        "00401c20": 57,
+        "00407e30": 1,
+        "004e6390": 7,
+        "0047a6c0": 2,
+        "004816c0": 1
+      }
+    }
+  },
+  "output_sha256": "41a4508c4ed3ca25250beeb7f3f94aac0feb77de933eac1a38dd64bd8ef4fcdc"
+}

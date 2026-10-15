@@ -1,0 +1,7 @@
+{
+  "description": "내용물 기본 빈 통지와 PATCH Player 피해 AI 조회 래퍼. 자동 판본 대응은 사용하지 않는다. VM-W11-Codex, 2026-10-15.",
+  "editions": {
+    "originals": ["0041c100", "00416760"],
+    "originalCD": ["00401c20"]
+  }
+}

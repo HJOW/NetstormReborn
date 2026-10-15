@@ -9,6 +9,8 @@
 #include "o/RawArcherTypeData.h"
 #include "o/RawProjectileGeometry.h"
 #include "o/RawFormPacket.h"
+#include "o/RawContentParentNotice.h"
+#include "o/RawPlayerDamageNotice.h"
 #include <bit>
 #include <stdexcept>
 using namespace netstorm::o;
@@ -99,6 +101,7 @@ struct RawCampaignSession::Impl {
     DamageableBurningState burningState; // 현재 nonzero damageEffect의 실제 생성 판정 전역이다.
     GunImpactState impactState; // 현재 충돌 시각 효과 억제/anim160 전역이다.
     std::vector<DudeNoticeTypeData> dudeSpeeds; // 실제 TYPE 이동속도의 현재 mutable 보충 표다.
+    std::unique_ptr<RawPlayerDamageNotice> playerDamage; // 같은 Player9/모드의 실제 AI 조회와 피해 통지 래퍼다.
     std::unique_ptr<RawCampaignHitBindings> hits; // 같은 피해/감시/충돌/주변Dude/자산수명 처리기다.
     SoundList& soundNames; // 실제 보호막 파일명의 원본 이름표/opaque handle 조회다.
     SoundProcessState soundState; // 실제47 프로세스의 현재 frame/TYPE 중복 재생 전역이다.
@@ -124,6 +127,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawFortFinishOwner> finish; // 같은9 Player의 최초 지역을 읽는다.
     ContainedCreateState contentState; // 저장 내용물은 실제 Form6으로 생성한다.
     std::unique_ptr<ContentFormHost> contentForms; // ProcessForm과 다른 실제 Form6의 정렬 부착 몸체다.
+    std::unique_ptr<RawContentParentNotice> contentNotice; // 부모의 실제 현재 VT로 기본/파생 +24를 분배한다.
     std::unique_ptr<RawContainedCreate> contained; // 실제 Factory/ContentFormHost의 저장 내용물 생성이다.
     std::array<FortTemplate,9> templates; // 실제 선택 자료는1번 Template에 둔다.
     std::array<FortTerritoryStream,9> streams; // 같은 Template의 실제120BYTE view다.
@@ -263,7 +267,10 @@ struct RawCampaignSession::Impl {
         priestDamageState.levelCorrectionDisabled=globals.missionPost;priestDamageState.boss=assetState.boss;
         auto hitEffects=services.hit;
         hitEffects.priest.defaultFrame=[this](Sid sid) { return projectileTypes[core.pool.Slot(sid)[10]].defaultFrame; };
-        FillMissing(hitEffects.priest.ownerDamageNotice);
+        playerDamage=std::make_unique<RawPlayerDamageNotice>(players,core.ownerMode);
+        // 실제 Player AI가 없는 자연 반환은 래퍼가 판단한다. 비영 AI의 미복원 몸체는 명시 오류를 유지한다.
+        if (!hitEffects.priest.ownerDamageNotice) hitEffects.priest.ownerDamageNotice=
+            [this](std::uint8_t owner,Sid victim,Sid attacker) { playerDamage->Notice(owner,victim,attacker); };
         FillMissing(hitEffects.burning.create);FillMissing(hitEffects.burning.bulfSound);
         FillMissing(hitEffects.dudes.createBurning);FillMissing(hitEffects.dudes.pathEndpoint);FillMissing(hitEffects.dudes.startPath);
         hits=std::make_unique<RawCampaignHitBindings>(world,*priests,hp,random,dudeSpeeds,assetState.residences,
@@ -336,7 +343,9 @@ struct RawCampaignSession::Impl {
         normal=std::make_unique<RawNormalTerrainWorldBinding>(world,chunks,*islands,random,crt,terrainGlobals,stamp,randomPlacement,farm,piece,*pipeline,hp,*carrier,std::move(diagnostics));
         finish=std::make_unique<RawFortFinishOwner>(core.pool,core.types,assetState.residences,finishState,FortFinishOwnerHooks{SessionMissing<FortRandomRectangle,std::int32_t>(),SessionMissing<double>(),SessionMissing<std::uint32_t,GameRandom&,const FortRandomPlaceRequest&>(),SessionMissing<void>()});
         ContainedCreateHooks contentHooks;contentHooks.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); };
-        FillMissing(services.contentNotice);contentForms=std::make_unique<ContentFormHost>(core.pool,core.types,services.contentNotice,services.dependencyTransmit);
+        contentNotice=std::make_unique<RawContentParentNotice>(core.pool,services.contentNotice);
+        contentForms=std::make_unique<ContentFormHost>(core.pool,core.types,
+            [this](Sid parent,Sid form,std::uint32_t reason) { contentNotice->Notice(parent,form,reason); },services.dependencyTransmit);
         contained=std::make_unique<RawContainedCreate>(core.pool,contentState,contentForms->BindCreate(core.factory,std::move(contentHooks)));
         templates[1]=std::move(fort);
         const auto state=templates[1].Section("State");stateBytes[1].assign(state.begin(),state.end());
