@@ -1,5 +1,12 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-15 단위54 중단 인수인계: AI mana 메타데이터 미등록 초안 (`VM-W11-Codex`)
+
+- [x] 사용자 일시 중단 요청으로 현재 선택 export/미등록 구현까지만 정리했다. 실제 속성 키는 `mana`, TYPE+a0 내장 C 문자열이며 빈 내부 타입은 zero 초기화 뒤 후처리를 거친다. 선택 export3함수는 종료0·lock 해제, 마지막 정밀 PC는 **VM-W11-Codex, 2026-10-15**다. [재개 절차와 정확한 경계](docs/exe/cpp-ai-required-energy-20261015.md).
+- [x] `RawTypeRequiredEnergy`/`AiTypeRequiredEnergy` 4파일은 **CMake 미등록·빌드 미실행·새 native 대조0**인 초안으로 보관한다. 상태 JSON은 SHA 인수인계 자료이며 native 검증 보고서가 아니다. UTF-8 손상을 교정하고 공백/해시를 확인했다. 기존 AI160/133 소스는 변경하지 않았다.
+- [ ] 재개 때 실제 mana/default 후처리와188TYPE 공급을 검증한 뒤 등록한다. `AiBrainConstructorGlobals.invalidGraph`의 DWORD 참조를 실제 BYTE backing 현재 getter로 교정하고 기존160을 재대조하는 일도 미실행이다. 이 초안을 검증된 AI 초기화/실제 Session 활성화로 취급하지 않는다.
+- [x] 새 후속 작업 없이 대기한다. 인수인계 뒤 **`20261015-44 AI mana 메타데이터 미등록 초안과 재개 경계 인수인계`**로 로컬 커밋하며 push하지 않는다. 보호 원본/AGENTS/dotnetpj와 원본 게임 실행은 없다.
+
 ## 2026-10-15 단위53 완료: 실제 HTML 조건·현재 Config 치환 순서 (`VM-W11-Codex`)
 
 - [x] `HtmlConditionEffect`에 두 PE의 boolean/비교/부정·원본 토큰 구분자·shown/depth와 오른쪽→왼쪽 현재 Config 치환 순서를 복원했다. 숨김 중 nested 열림을 일반 HTML stack으로 바꾸지 않는다. [상세](docs/exe/cpp-html-condition-20261015.md).

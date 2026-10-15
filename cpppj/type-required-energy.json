@@ -1,0 +1,25 @@
+{
+  "host": "VM-W11-Codex",
+  "date": "2026-10-15",
+  "status": "interrupted-unregistered-unbuilt-no-native-observations",
+  "selected_functions": [
+    "0049b0d0",
+    "0049c3b0",
+    "0049ebb0"
+  ],
+  "source_sha256": {
+    "cpppj/src/o/RawTypeRequiredEnergy.h": "8603497d0b3b61726e66792b1134d074ddd194925c7f3e8580e9833e272f44eb",
+    "cpppj/src/o/RawTypeRequiredEnergy.cpp": "fefb5629b7d21f785a8e2ae9f8ae038018567aff54f0e08d940cfa29e606eeb0",
+    "cpppj/src/client/AiTypeRequiredEnergy.h": "4f6f1176c0f92b7be78e969c23b85164340311871436ed97df56646443ab194a",
+    "cpppj/src/client/AiTypeRequiredEnergy.cpp": "a77ecbbece0a23b295c26e35ba5f788ea1c61a660b95880a83abc6988ef559c0",
+    "tools/ghidra/type-required-energy-functions.json": "74206e181506f467f769ae2cdd0f025660af0fdccb62826856f1ed7e98f6379f",
+    "extracted/type-required-energy/originals/creation.c": "c9deb949c8ca676cf815ca48a27fffa84684ca4227e6546bf5a5fe9f297e2eea",
+    "extracted/type-required-energy/originals/functions.tsv": "6ed3425b1e150dbb79e6b29d644a86f4351b79a7ba868c01e98138ea2728276f"
+  },
+  "remaining": [
+    "Register new raw/client files only after native comparison and focused tests",
+    "Verify actual protected188 TYPE metadata and default/explicit mana branches",
+    "Change existing AiBrain invalidGraph reference to required current getter after shared build freeze ends",
+    "Integrate Session only with same current TYPE/AST lifetime and both actual AI callbacks"
+  ]
+}
