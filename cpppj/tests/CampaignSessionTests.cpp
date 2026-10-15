@@ -51,6 +51,16 @@ void CheckSessionWorld(std::string_view mission) {
     const auto& type=core.types[core.pool.Slot(priest)[10]];const auto view=world.Object(priest.value); // 실제 초기 카메라는 내 사제의 전체 발자국 차감 지점을 중심으로 둔다.
     CHECK(world.ToScreen(view->x-type.footX,view->y-type.footY).x==512 && world.ToScreen(view->x-type.footX,view->y-type.footY).y==384);
     CHECK(!world.Sprites().empty());
+    // 실제 캠페인의 레인 신전은 현재 물결만 제출하지 않고 기본0과 같은 항목으로 그린다.
+    if (mission=="thewarbegins") {
+        const auto& temple=assets.game.Find("rainVortex");bool found=false;
+        // 화면에 제출된 실제 신전의 원본 Draw 순서와 전체 몸체 클릭 범위를 확인한다.
+        for (const auto& sprite:world.Sprites()) if (sprite.block==temple.block) {
+            CHECK(sprite.frame==0 && sprite.followingFrames==std::vector<std::size_t>{1});found=true;
+            const auto point=world.ToScreen(89,116);CHECK(world.Pick({point.x-112,point.y-80})==15002);
+        }
+        CHECK(found);
+    }
     // paused 프레임도 실제 절대 시각은 공유하고 Kernel은 진행하지 않는다.
     const auto kernel=core.kernel.Size();world.frameTime=[] { return FrameTime{0,1,0,1}; };world.paused=[] { return true; };world.RunFrame();
     CHECK(core.kernel.Size()==kernel && world.Object(priest.value)!=nullptr);

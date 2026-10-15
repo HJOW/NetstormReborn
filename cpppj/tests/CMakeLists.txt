@@ -2,6 +2,7 @@
 # (첫 구성 때 인터넷에서 내려받을 것이 없다).
 # 테스트 파일을 만들면 아래 목록에 더한다. 파일 안의 TEST_CASE 는 자동으로 등록된다.
 add_executable(netstorm_tests
+    RainDrawTests.cpp
     FenceTargetTests.cpp
     CampaignNoticeTests.cpp
     FormPacketTests.cpp
@@ -906,3 +907,7 @@ set_source_files_properties(CampaignNoticeTests.cpp PROPERTIES COMPILE_DEFINITIO
 # 실제 PATCH fencemark 전체 표적/교차/포구의 원본 관찰이다.
 set_source_files_properties(FenceTargetTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_FENCE_TARGET_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fence-target-x86.tsv\"")
+
+# 원본 레인 신전 가상 Draw의 두 판본 호출 순서다.
+set_source_files_properties(RainDrawTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_RAIN_DRAW_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/rain-draw-x86.tsv\"")

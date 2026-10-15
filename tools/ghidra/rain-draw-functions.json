@@ -1,0 +1,7 @@
+{
+  "description": "레인 신전 Draw와 실제 TYPE/방향 조회. VM-W11-Codex, 2026-10-15. 픽셀/음향은 별도 관찰 경계다.",
+  "editions": {
+    "originals": ["004dcd00", "004ac550", "0049a840", "004ad710", "00497280"],
+    "originalCD": ["0044fe00", "004abf50", "004ae4b0", "00455ee0"]
+  }
+}

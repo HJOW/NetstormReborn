@@ -57,6 +57,8 @@ struct RenderSprite {
     std::optional<ColorMap> colors;
     // shadow: 그림자 여부.
     bool shadow{};
+    // 같은 객체 Draw 안에서 본 프레임 뒤에 순서대로 그릴 그림이다. 정렬은 객체당 한 번만 한다.
+    std::vector<std::size_t> followingFrames;
 };
 // 004a3f70의 글자 색·그림자·네 방향 외곽선 문맥. 문자열은 원본 코드 페이지 바이트다.
 struct RenderText {
@@ -109,6 +111,8 @@ private:
     const IndexedImage& Image(const ShapeDatabase& database, std::size_t block, std::size_t frame);
     // 원본 기준점과 VFX 상대 사각형에서 화면상의 그림 범위를 구한다.
     ScreenRect Bounds(const RenderSprite& sprite) const;
+    // 본 그림과 후속 그림을 하나의 정렬 항목 안에서 동일 위치/색/클립으로 그린다.
+    void DrawSprite(std::span<std::uint8_t> pixels,int pitch,ScreenRect clip,const RenderSprite& sprite);
     // 현재 변경 영역 안에 바이트 글자를 원본 전진 폭으로 그린다.
     void Text(std::span<std::uint8_t> pixels, int pitch, ScreenRect clip, const RenderText& text);
     // width_: 가로 크기.

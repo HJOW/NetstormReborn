@@ -90,14 +90,35 @@ void DrawIndexedImage(std::span<std::uint8_t> pixels, int pitch, int height, con
 }
 // 첫 프레임을 원본처럼 전체 화면으로 그린다.
 Renderer::Renderer(int width, int height,o::OriginalEdition edition) : width_(width), height_(height),edition_(edition), dirty_(width, height) { dirty_.InvalidateAll(); }
-// 특수 프레임은 이미지가 아니므로 변경 범위도 갖지 않는다.
+// 같은 객체가 제출한 모든 그림의 합집합을 무효화한다. 특수 프레임은 그림 범위가 없다.
 ScreenRect Renderer::Bounds(const RenderSprite& sprite) const {
     if (!sprite.database) throw std::invalid_argument("Null sprite database");
     if (sprite.block >= sprite.database->Blocks().size()) throw std::out_of_range("Invalid sprite block");
-    const auto& frame = sprite.database->Blocks()[sprite.block].frames.at(sprite.frame);
-    if (frame.IsSpecial()) return {};
-    return ClipScreenRect({Position(sprite.x, frame.rect.left), Position(sprite.y, frame.rect.top),
-        Position(sprite.x, frame.rect.right, 1), Position(sprite.y, frame.rect.bottom, 1)}, sprite.clip);
+    ScreenRect bounds{};bool present=false;
+    // 각 그림의 압축 영역을 같은 화면 기준점에 옮긴다.
+    const auto include=[&](std::size_t number) {
+        const auto& frame=sprite.database->Blocks()[sprite.block].frames.at(number);if (frame.IsSpecial()) return;
+        const auto rect=ClipScreenRect({Position(sprite.x,frame.rect.left),Position(sprite.y,frame.rect.top),
+            Position(sprite.x,frame.rect.right,1),Position(sprite.y,frame.rect.bottom,1)},sprite.clip);
+        if (!Nonempty(rect)) return;
+        bounds=present ? ScreenRect{std::min(bounds.left,rect.left),std::min(bounds.top,rect.top),std::max(bounds.right,rect.right),std::max(bounds.bottom,rect.bottom)} : rect;present=true;
+    };
+    include(sprite.frame);
+    // 레이어를 별도 정렬하지 않고 전체 출력 영역에만 포함한다.
+    for (const auto number:sprite.followingFrames) include(number);
+    return bounds;
+}
+// 부분 갱신과 SceneImage 모두 같은 객체 내부 합성 순서를 사용한다.
+void Renderer::DrawSprite(std::span<std::uint8_t> pixels,int pitch,ScreenRect clip,const RenderSprite& sprite) {
+    const auto cut=ClipScreenRect(clip,sprite.clip);
+    // 압축 영역의 투명도와 색 치환 규칙은 기존 한 장 그리기를 그대로 사용한다.
+    const auto draw=[&](std::size_t number) {
+        const auto& frame=sprite.database->Blocks()[sprite.block].frames.at(number);if (frame.IsSpecial()) return;
+        DrawIndexedImage(pixels,pitch,height_,Image(*sprite.database,sprite.block,number),Position(sprite.x,frame.rect.left),Position(sprite.y,frame.rect.top),cut,sprite.colors ? &*sprite.colors : nullptr,sprite.shadow);
+    };
+    draw(sprite.frame);
+    // 0번 기반 그림 뒤 현재 물결과 상태별 그림을 원본 호출 순서로 덮는다.
+    for (const auto number:sprite.followingFrames) draw(number);
 }
 // 이동 전후 그림을 같은 변경 표에 넣어 사라진 그림의 배경도 복구한다.
 void Renderer::SetScene(std::vector<RenderSprite> sprites, std::vector<RenderText> text, bool sort) {
@@ -139,9 +160,7 @@ IndexedImage Renderer::SceneImage() {
     for (const auto& sprite : sprites_) {
         const auto cut = ClipScreenRect(all, sprite.clip);
         if (!Nonempty(ClipScreenRect(Bounds(sprite), cut))) continue;
-        const auto& frame = sprite.database->Blocks()[sprite.block].frames.at(sprite.frame);
-        DrawIndexedImage(result.indices,width_,height_,Image(*sprite.database,sprite.block,sprite.frame),
-            Position(sprite.x,frame.rect.left),Position(sprite.y,frame.rect.top),cut,sprite.colors ? &*sprite.colors : nullptr,sprite.shadow);
+        DrawSprite(result.indices,width_,cut,sprite);
     }
     if (overlay_) DrawIndexedImage(result.indices,width_,height_,*overlay_,0,0,all);
     return result;
@@ -215,9 +234,7 @@ std::span<const ScreenRect> Renderer::Draw(std::span<std::uint8_t> pixels, int p
         for (const auto& sprite : sprites_) {
             const auto bounds = Bounds(sprite); const auto cut = ClipScreenRect(clip, sprite.clip);
             if (!Nonempty(ClipScreenRect(bounds, cut))) continue;
-            const auto& frame = sprite.database->Blocks()[sprite.block].frames.at(sprite.frame);
-            DrawIndexedImage(pixels, pitch, height_, Image(*sprite.database, sprite.block, sprite.frame), Position(sprite.x, frame.rect.left), Position(sprite.y, frame.rect.top), cut,
-                sprite.colors ? &*sprite.colors : nullptr, sprite.shadow);
+            DrawSprite(pixels,pitch,cut,sprite);
         }
         if (overlay_) DrawIndexedImage(pixels,pitch,height_,*overlay_,0,0,clip);
         // UI 글자는 지형 위에 낸다. Gump 깊이 통합은 메뉴 복원 단계에서 진행한다.

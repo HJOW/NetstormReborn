@@ -1,0 +1,37 @@
+{
+  "host": "VM-W11-Codex",
+  "date": "2026-10-15",
+  "cases": 232,
+  "editions": {
+    "originals": {
+      "binary_sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "entry": "004dcd00",
+      "cases": 116,
+      "native_instruction_count": 7266,
+      "leaf_observations": [
+        "shape-submit",
+        "sound-submit"
+      ],
+      "exports": {
+        "creation.c": "4825650b14f2173ad5c4d27a99fc8dc8526a813b6a58856cbcbc2204b20009af",
+        "functions.tsv": "a8e24af6d4fa0f935711c65e7f6a9b67e578efba0e17b15a8168449e4ff6cd9c"
+      }
+    },
+    "originalCD": {
+      "binary_sha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "entry": "0044fe00",
+      "cases": 116,
+      "native_instruction_count": 7451,
+      "leaf_observations": [
+        "shape-submit",
+        "sound-submit"
+      ],
+      "exports": {
+        "creation.c": "e8df2d4fff505d064965cf4b95e4c5218ad4c057d8a74a1fb4f5a370074dcc73",
+        "functions.tsv": "8bbebd8468a4a2331132b4ce2cb2ba7a739272becbc27921f427f38df365a79d"
+      }
+    }
+  },
+  "fixture_sha256": "cf5130a71f17a4ea09a0ba8f6bfcd07ede3f14bc43b44bb498ee27110cde02c8",
+  "tool_sha256": "a7a8a40dbb5e1508e21745a94a4320fba207cd08a9ee38ae6a200614d4c2e249"
+}

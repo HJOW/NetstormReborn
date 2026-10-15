@@ -3,6 +3,7 @@
 #include "client/PriestPlacementAssets.h"
 #include "o/RawPathAnimation.h"
 #include "o/OriginalText.h"
+#include "o/RawRainVortexDraw.h"
 #include <algorithm>
 #include <cmath>
 #include <limits>
@@ -334,6 +335,11 @@ std::size_t GameWorld::Frame(const o::Squid& object) const {
 }
 // 현재 그림의 불투명 프레임 사각형으로 몸통 클릭을 판정한다.
 ScreenRect GameWorld::Bounds(const o::Squid& object) const {
+    // 레인 신전의 현재 물결 압축 영역은 본체보다 작다. 원본 Squid 표시 헤더의 전체 영역을 사용한다.
+    if (campaign_ && o::IsRainVortex(assets_.Edition(),campaign_->Core().pool.Slot(o::Sid{static_cast<std::uint16_t>(object.id)}))) {
+        const auto rect=campaign_->Core().display.Bounds(static_cast<std::size_t>(object.type),static_cast<int>(object.frame),static_cast<float>(object.x),static_cast<float>(object.y));
+        return {rect.left,rect.top,rect.right,rect.bottom};
+    }
     const auto& type=assets_.Types()[static_cast<std::size_t>(object.type-o::kFirstAssetTypeNumber)]; const auto& frame=assets_.Shapes().Blocks()[type.block].frames[object.frame];
     const auto p=ToScreen(object.x,object.y); return {p.x+frame.rect.left,p.y+frame.rect.top,p.x+frame.rect.right+1,p.y+frame.rect.bottom+1};
 }
@@ -384,11 +390,17 @@ const o::Squid* GameWorld::Object(o::SquidId id) const {
 std::vector<RenderSprite> GameWorld::Sprites() const {
     std::vector<RenderSprite> result; const ScreenRect clip{0,kMenuHeight,width_,height_};
     // 현재 프레임을 화면 범위와 소유자 색에 맞춰 장면에 추가한다.
-    const auto add=[&](const TypeAsset& type,std::size_t frame,double x,double y,int owner,std::int16_t depth,bool shadow) {
+    const auto add=[&](const TypeAsset& type,std::size_t frame,double x,double y,int owner,std::int16_t depth,bool shadow,std::vector<std::size_t> following=std::vector<std::size_t>{}) {
         const auto& frames=assets_.Shapes().Blocks()[type.block].frames; if (frame>=frames.size() || frames[frame].IsSpecial()) return;
-        const auto p=ToScreen(x,y); const auto r=frames[frame].rect;
+        const auto p=ToScreen(x,y); auto r=frames[frame].rect;
+        // 같은 객체 내부의 후속 그림까지 포함해 화면 밖 판정을 한다.
+        for (const auto number:following) {
+            if (number>=frames.size()) throw std::out_of_range("후속 그림의 물리 프레임 범위 오류");
+            const auto& layer=frames[number];if (layer.IsSpecial()) continue;
+            r={std::min(r.left,layer.rect.left),std::min(r.top,layer.rect.top),std::max(r.right,layer.rect.right),std::max(r.bottom,layer.rect.bottom)};
+        }
         if (p.x+r.right<clip.left || p.x+r.left>=clip.right || p.y+r.bottom<clip.top || p.y+r.top>=clip.bottom) return;
-        result.push_back({&assets_.Shapes(),type.block,frame,p.x,p.y,clip,{static_cast<float>(x),static_cast<float>(y),depth},shadow ? std::optional<ColorMap>{} : Remap(type,owner),shadow});
+        result.push_back({&assets_.Shapes(),type.block,frame,p.x,p.y,clip,{static_cast<float>(x),static_cast<float>(y),depth},shadow ? std::optional<ColorMap>{} : Remap(type,owner),shadow,std::move(following)});
     };
     // 받침·지면·절벽은 원본 이미지 기준점으로 제출한다.
     for (const auto& tile:tiles_) if (o::AsciiLower(tile.type->assetName)=="fringe") add(*tile.type,tile.frame,tile.x,tile.y,tile.owner,tile.depth,false);
@@ -398,6 +410,22 @@ std::vector<RenderSprite> GameWorld::Sprites() const {
         const auto& type=assets_.Types()[object.type-o::kFirstAssetTypeNumber];
         const auto name=o::AsciiLower(type.assetName);if (name=="noisland") continue;
         const auto depth=name=="islandstalag" ? kCliffDepth : (name=="isle" || name=="island" ? kLandDepth : kObjectDepth);
+        if (campaign_) {
+            const auto raw=campaign_->Core().pool.Slot(snapshot.sid);
+            // alive·일반 색의 실제 가상 Draw만 연결한다. abstract/dead 색 분기는 기존 SpriteDraw 통합의 후속이다.
+            if (o::IsRainVortex(assets_.Edition(),raw) && (raw[40]&0x13U)==2U) {
+                const auto visible=campaign_->Core().display.Bounds(object.type,object.frame,object.x,object.y);
+                if (visible.right<=clip.left || visible.left>=clip.right || visible.bottom<=clip.top || visible.top>=clip.bottom) continue;
+                std::vector<std::size_t> layers;
+                // 원본 가상 Draw의 호출 순서를 한 Renderer 항목 안에 보관한다.
+                campaign_->DrawRainTemple(snapshot.sid,[&](std::int32_t number) {
+                    if (number<0) throw std::out_of_range("레인 신전 음수 그림 번호");layers.push_back(static_cast<std::size_t>(number));
+                });
+                if (layers.empty()) throw std::logic_error("레인 신전 기본 그림 제출 누락");
+                const auto first=layers.front();layers.erase(layers.begin());
+                add(type,first,object.x,object.y,static_cast<int>(object.owner),depth,false,std::move(layers));continue;
+            }
+        }
         add(type,static_cast<std::size_t>(object.frame),object.x,object.y,static_cast<int>(object.owner),depth,false);
     }
     // 살아 있는 객체의 현재 좌표와 현재 프레임을 제출한다.

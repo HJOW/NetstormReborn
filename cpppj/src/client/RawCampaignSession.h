@@ -50,6 +50,8 @@ public:
     void RunFrame(o::FrameTime time,bool paused);
     // 실제 사제의 같은 Start/BFS/Host54 경로를 시작한다.
     bool MovePriest(o::Sid sid,o::RawPathPoint destination);
+    // 같은 raw 신전의 가상 Draw를 실행하고 실제 SoundList/재생 경계로 상승음을 보낸다.
+    void DrawRainTemple(o::Sid sid,const std::function<void(std::int32_t)>& frame) const;
     // 화면/명령은 같은 현재 raw 월드와 HP를 읽는다.
     RawSurfaceWorld& World();
     // 같은 월드의 현재 Pool/장부/Host 참조를 빌린다.

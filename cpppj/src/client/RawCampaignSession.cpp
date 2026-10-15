@@ -12,6 +12,7 @@
 #include "o/RawContentParentNotice.h"
 #include "o/RawPlayerDamageNotice.h"
 #include "o/RawFenceTarget.h"
+#include "o/RawRainVortexDraw.h"
 #include <bit>
 #include <stdexcept>
 using namespace netstorm::o;
@@ -429,6 +430,14 @@ bool RawCampaignSession::MovePriest(Sid sid,RawPathPoint destination) {
     if (!impl_->motion) throw std::logic_error("실제 세션 설치 전 사제 명령");
     auto* path=impl_->motion->Paths().StartPriest({sid,destination,1,0,0,0,0});
     return path!=nullptr || impl_->motion->Paths().CurrentPath(sid)!=nullptr;
+}
+// Draw의 조건부 소리도 기존 세션의 단일 실제 이름표와 장치 경계를 사용한다.
+void RawCampaignSession::DrawRainTemple(Sid sid,const std::function<void(std::int32_t)>& frame) const {
+    const auto raw=impl_->core.pool.Slot(sid);
+    DrawRainVortex(impl_->core.pool.Edition(),raw,impl_->core.frames[raw[10]],{frame,[this] {
+        if (!impl_->services.sound.play) throw std::logic_error("레인 신전 상승음 실제 재생 미연결");
+        impl_->services.sound.play(impl_->soundNames.Lookup("templeAscend.wav"),0,0,0,0,0);
+    }});
 }
 // 화면과 입력은 같은 살아 있는 상태를 읽는다.
 RawSurfaceWorld& RawCampaignSession::World() { return impl_->world; }
