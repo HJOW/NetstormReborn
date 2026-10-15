@@ -44,6 +44,8 @@ public:
     std::optional<ScreenPoint> ControlPoint(std::string_view label) const;
     // --ui-script 전용 검사 경계다. 실제 월드의 가상 삭제를 호출하며 일반 게임 입력에는 노출하지 않는다.
     bool InspectDestroySurface(std::string_view type,float x,float y);
+    // --ui-script의 커널 검사에서 일반 게임과 같은 Tell 경로를 실행한다. 일반 사용자 명령으로 노출하지 않는다.
+    void InspectTell(std::string target);
 private:
     // 원본 Tell의 파일.섹션/현재 tell 섹션을 읽어 대화상자를 연다.
     void Tell(std::string target, bool briefing = false);
@@ -51,8 +53,10 @@ private:
     o::Config& Script(std::string_view name);
     // @guideSpec/%userSpec 파일 목록을 현재 파일 설정으로 확장한다.
     void ExpandMenus(DialogPage& page);
-    // 표시 상태에 맞춰 배경·돌 장식·글자·판정 영역을 다시 만든다.
-    void Compose(bool controls = true);
+    // 표시 상태를 합성한다. 페이지 교체 예약이 있을 때만 입력 영역과 실제 돌 버튼을 함께 교체한다.
+    void Compose();
+    // 새 페이지/팝업/해상도의 입력 영역 교체를 다음 합성에 예약한다. 단순 픽셀 갱신에는 쓰지 않는다.
+    void RebuildControls();
     // 대기 중인 명령을 실행한다. 지원하지 않는 명령은 실제 동작으로 가장하지 않는다.
     void Execute(const DialogAction& action);
     // 미션 스크립트·요새를 먼저 검증하고 Loading→Briefing으로 넘긴다.
@@ -117,5 +121,7 @@ private:
     // quit_: 종료 여부.
     // rebuild_: 재구성 여부.
     bool quit_{}, rebuild_{true};
+    // controlsChanged_: 새 페이지의 라벨·명령·영역과 raw 버튼 트리를 같은 합성에서 교체해야 하는지 나타낸다.
+    bool controlsChanged_{true};
 };
 }

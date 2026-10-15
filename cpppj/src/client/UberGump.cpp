@@ -26,6 +26,8 @@ bool UberGump::InspectDestroySurface(std::string_view type,float x,float y) {
     if (!sid.value) throw std::out_of_range("검사할 raw 표면 없음");
     return world_->Surfaces().Destroy(sid);
 }
+// 검사 호출 시점만 커널로 옮기고 실제 섹션 해석·페이지 교체·정지는 일반 Tell에 맡긴다.
+void UberGump::InspectTell(std::string target) { Tell(std::move(target)); }
 namespace {
 // 원본 메인 메뉴의 돌 버튼 폭·높이·피치와 목록 행 높이.
 constexpr int kButtonWidth = 75, kButtonHeight = 19, kButtonPitch = 79, kRowHeight = 18;
@@ -174,7 +176,7 @@ void UberGump::Tell(std::string target, bool briefing) {
     if (o::AsciiLower(target) == "blank" || target.empty()) {
         if (mission_) { state_.phase = ClientPhase::Mission; pageName_ = "mission"; popup_.clear(); page_ = {}; client_.Pause(false); }
         else MainMenu();
-        rebuild_ = true; return;
+        RebuildControls(); return;
     }
     std::optional<std::string> body;
     const auto split = target.find('.');
@@ -196,7 +198,7 @@ void UberGump::Tell(std::string target, bool briefing) {
     ExpandMenus(page_);
     if (page_.items.empty()) page_.items.push_back({"OK", {"DoNothing", "0"}});
     state_.phase = briefing ? ClientPhase::Briefing : ClientPhase::Dialog;
-    pageName_ = target; popup_.clear(); opened_ = client_.Time().wall; rebuild_ = true;
+    pageName_ = target; popup_.clear(); opened_ = client_.Time().wall; RebuildControls();
     if (mission_) client_.Pause(true);
 }
 // 메인 메뉴로 돌아올 때 미션 설정 객체도 등록 목록에서 제거한다.
@@ -205,7 +207,7 @@ void UberGump::MainMenu() {
     client_.GetRenderer().SetOverlay(nullptr);
     ClearWorld(); mission_.reset(); fortObjects_ = 0; briefingSections_.clear(); briefingIndex_ = 0;
     state_.phase = ClientPhase::MainMenu; pageName_ = "main"; popup_.clear(); page_ = {}; input_.Cancel();
-    client_.Pause(false); RefreshWindowTitle(); rebuild_ = true;
+    client_.Pause(false); RefreshWindowTitle(); RebuildControls();
 }
 // 현재 일반 미션의 원본 제목 설정을 적용한다. Demo/편집/테스트 미션은 해당 진입 구현과 함께 모드를 공급해야 한다.
 void UberGump::RefreshWindowTitle() {
@@ -252,7 +254,7 @@ void UberGump::BeginMission(std::string name) {
     briefingSections_.clear(); briefingIndex_ = 0;
     // 원본 초기 브리핑은 A.이며 A1. 등은 본문 Tell 명령이 넘긴다.
     if (mission_->Section("A.")) briefingSections_.push_back("A.");
-    state_.phase = ClientPhase::LoadingMission; pageName_ = "loading"; popup_.clear(); page_ = {}; rebuild_ = true;
+    state_.phase = ClientPhase::LoadingMission; pageName_ = "loading"; popup_.clear(); page_ = {}; RebuildControls();
     RefreshWindowTitle(); client_.Pause(true);
     // 원본 004b6dd0의 미션 시작 절차(전투 여부를 켜고 FUN_00469fc0): 난수로 고른 원소 곡으로 전투 음악을 시작한다.
     if (client_.Audio()) client_.Audio()->StartScene(true);
@@ -261,7 +263,7 @@ void UberGump::BeginMission(std::string name) {
 void UberGump::AdvanceBriefing() {
     if (briefingIndex_ < briefingSections_.size()) { Tell(briefingSections_[briefingIndex_++], true); return; }
     state_.phase = ClientPhase::Mission; pageName_ = "mission"; page_ = {}; popup_.clear(); client_.Pause(false);
-    world_->Resize(client_.GetScreen().Width(),client_.GetScreen().Height()); userInput_->Cancel(); rebuild_=true;
+    world_->Resize(client_.GetScreen().Width(),client_.GetScreen().Height()); userInput_->Cancel(); RebuildControls();
 }
 // 현재 복원 범위에서 의미가 있는 원본 옵션을 구성한다. 소리 장치와 전체화면 항목은 후속이다.
 void UberGump::OpenMenu(std::string name) {
@@ -296,7 +298,7 @@ void UberGump::OpenMenu(std::string name) {
         add("Leave Battle", "Tell", "LeaveNormal");
     } else throw std::runtime_error("Unknown popup: " + name);
     if (world_) { client_.Pause(true); userInput_->Cancel(); }
-    opened_ = client_.Time().wall; rebuild_ = true;
+    opened_ = client_.Time().wall; RebuildControls();
 }
 // 현재 건설과 수확은 미복원이므로 원본 메뉴의 해당 항목을 비활성화한다.
 void UberGump::OpenObjectMenu(o::SquidId id) {
@@ -306,7 +308,7 @@ void UberGump::OpenObjectMenu(o::SquidId id) {
     page_.items.push_back({std::string(type.definition.String("description").value_or(type.assetName)),{},true,false,false});
     if (object->owner==1 && o::AsciiLower(type.assetName)=="priest") page_.items.push_back({"Construct >",{},true,false,false});
     page_.items.push_back({"About",{},true,false,false});
-    userInput_->Cancel(); client_.Pause(true); rebuild_=true;
+    userInput_->Cancel(); client_.Pause(true); RebuildControls();
 }
 // 현재 입력 단계에서는 객체를 파괴하지 않고 다음 프레임의 State로 넘긴다.
 void UberGump::Event(InputEvent event) {
@@ -348,7 +350,7 @@ bool UberGump::Input() {
     if (userInput_ && state_.phase==ClientPhase::Mission && popup_.empty()) userInput_->Tick();
     else if (userInput_) userInput_->Cancel();
     if (world_ && world_->TakeChanged()) rebuild_=true;
-    if (rebuild_) Compose(false);
+    if (rebuild_) Compose();
     return quit_;
 }
 // 예약 명령은 메시지/입력보다 앞서 실행한다(원본 004b88c0 자리).
@@ -361,10 +363,10 @@ void UberGump::Tick() {
     }
     if (rebuild_) Compose();
 }
-// 커널의 이동과 장면 음악의 날씨 갱신 요청을 같은 프레임에 반영한다. 입력 영역/누름 상태는 유지한다.
+// 커널의 이동·날씨와 비동기 Tell을 같은 프레임에 반영한다. 페이지가 같으면 입력 영역/누름 상태를 유지한다.
 void UberGump::Frame() {
     if (world_ && world_->TakeChanged()) rebuild_=true;
-    if (rebuild_) Compose(false);
+    if (rebuild_) Compose();
 }
 // UI 합성을 예약하고 이미 제출된 정적 픽셀도 다시 그리게 한다.
 void UberGump::Refresh() { rebuild_=true;client_.GetRenderer().InvalidateAll(); }
@@ -390,7 +392,7 @@ void UberGump::Execute(const DialogAction& action) {
         if (state_.phase == ClientPhase::Briefing) AdvanceBriefing(); else Tell("Blank"); return;
     }
     if (command == "menu") {
-        if (action.argument == "close") { popup_.clear(); page_ = {}; if (world_ && state_.phase==ClientPhase::Mission) client_.Pause(false); rebuild_ = true; }
+        if (action.argument == "close") { popup_.clear(); page_ = {}; if (world_ && state_.phase==ClientPhase::Mission) client_.Pause(false); RebuildControls(); }
         else OpenMenu(action.argument);
         return;
     }
@@ -399,21 +401,24 @@ void UberGump::Execute(const DialogAction& action) {
         auto& config = client_.Configuration(); config.SetInt(action.argument, config.GetInt(action.argument) == 0 ? 1 : 0);
         // 소리·음악·좌우 바꿈은 원본 Interpret Options처럼 장치와 현재 곡에 바로 반영한다.
         if (action.argument == "sound" || action.argument == "music" || action.argument == "swapLeftRightSpeakers") client_.ApplyAudioOptions();
-        popup_.clear(); page_ = {}; if (world_ && state_.phase==ClientPhase::Mission) client_.Pause(false); rebuild_ = true; return;
+        popup_.clear(); page_ = {}; if (world_ && state_.phase==ClientPhase::Mission) client_.Pause(false); RebuildControls(); return;
     }
     if (command == "volume") {
         const auto equal = action.argument.find('='); client_.Configuration().SetInt(action.argument.substr(0, equal), o::ConfigParseLong(action.argument.substr(equal + 1)));
         client_.ApplyAudioOptions(); // 효과음·음악 음량 단계를 장치에 바로 적용한다.
-        popup_.clear(); page_ = {}; if (world_ && state_.phase==ClientPhase::Mission) client_.Pause(false); rebuild_ = true; return;
+        popup_.clear(); page_ = {}; if (world_ && state_.phase==ClientPhase::Mission) client_.Pause(false); RebuildControls(); return;
     }
     if (command == "resolution") {
         const int width = o::ConfigParseLong(action.argument), height = width == 640 ? 480 : width == 800 ? 600 : 768;
-        client_.ChangeResolution(width, height); popup_.clear(); page_ = {}; if (world_ && state_.phase==ClientPhase::Mission) client_.Pause(false); rebuild_ = true; return;
+        client_.ChangeResolution(width, height); popup_.clear(); page_ = {}; if (world_ && state_.phase==ClientPhase::Mission) client_.Pause(false); RebuildControls(); return;
     }
     throw std::runtime_error("Command pending: " + action.command);
 }
-// 배경 합성과 글자 목록 제출은 입력 판정과 분리한다. 누름 그림 갱신 중에는 캡처를 유지한다.
-void UberGump::Compose(bool controls) {
+// Tell의 호출 단계와 무관하게 다음 합성에서 이전 입력 트리를 폐기하도록 예약한다.
+void UberGump::RebuildControls() { controlsChanged_=true;rebuild_=true; }
+// 배경 합성과 글자 목록 제출은 입력 판정과 분리한다. 페이지 교체 때만 이전 캡처/등록을 정리한다.
+void UberGump::Compose() {
+    const bool controls=controlsChanged_; // Tick/Input/Kernel 뒤 Frame 중 어느 합성이든 같은 교체 예약을 소비한다.
     const int width = client_.GetScreen().Width(), height = client_.GetScreen().Height();
     const ScreenRect all{0, 0, width, height};
     auto canvas = std::make_shared<IndexedImage>(); canvas->width = width; canvas->height = height;
@@ -556,7 +561,7 @@ void UberGump::Compose(bool controls) {
             static_cast<std::int16_t>(buttonTextureMetrics_.width),static_cast<std::int16_t>(buttonTextureMetrics_.height),buttonColors});
         input_.SetControls(std::move(regions));
         // 새 페이지는 같은 raw 노드로 한 번 다시 합성하며 중간 어댑터 그림은 화면에 제출하지 않는다.
-        Compose(false);return;
+        controlsChanged_=false;Compose();return;
     }
     if (world_) world_->TakeChanged();
     rebuild_ = false;

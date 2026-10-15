@@ -540,6 +540,23 @@ int RunFortCommand(const std::string& command, std::vector<std::string> argument
 
 // 새 검사 도구의 한 단계. 탭 뒤의 라벨은 공백을 보존한다.
 struct UiStep { /* frame: 타입에서 사용할 그림 프레임 번호. */ std::uint64_t frame{}; /* operation: 자동 UI 프레임에서 실행할 작업 이름. */ /* argument: 타입·패턴·명령에 별도로 전달하는 첫 인자. */ std::string operation, argument; };
+// 검사에서 예약한 Tell을 실제 Kernel 순회 중 실행하여 입력 이후 페이지 교체를 재현한다.
+class UiKernelTell final : public netstorm::o::BaseProcess {
+public:
+    // menu는 검사 Client가 먼저 만들며 이 프로세스보다 오래 유지한다.
+    explicit UiKernelTell(netstorm::client::UberGump& menu):menu_(menu) {}
+    // 같은 프레임에 예약된 섹션도 스크립트 순서대로 처리한다.
+    void Queue(std::string target) { pending_.push_back(std::move(target)); }
+    // 실제 커널 단계에서만 일반 Tell을 호출하고 다음 프레임의 중복 실행을 막는다.
+    void RunFrame() override {
+        auto pending=std::move(pending_);pending_.clear();
+        // 여러 Tell이 한 프레임에 오면 마지막 페이지와 그 전에 추가된 Warning을 함께 보존한다.
+        for (auto& target:pending) menu_.InspectTell(std::move(target));
+    }
+private:
+    netstorm::client::UberGump& menu_; // 실제 페이지/입력 트리를 소유하는 검사 Client의 UI다.
+    std::vector<std::string> pending_; // 다음 Kernel 순회에서 한 번만 실행할 섹션 이름들이다.
+};
 // 검사용 TSV를 읽는다. 프레임 번호/동작/라벨 또는 캡처 경로 순이다.
 std::vector<UiStep> ReadUiSteps(const std::filesystem::path& path) {
     std::ifstream file(path, std::ios::binary); if (!file) throw std::runtime_error("Unable to read UI script");
@@ -597,6 +614,7 @@ int RunClient(std::vector<std::string> arguments) {
     std::size_t next = 0; std::string report;
     // UI 스크립트의 마지막 마우스 좌표/왼쪽 버튼 상태다. 실제 커서를 움직이지 않고 폴링과 사건을 일치시킨다.
     std::optional<netstorm::client::InputEvent> scriptPointer;
+    UiKernelTell* kernelTell{}; // 커널이 소유한 검사 전용 프로세스다. Client::Run 동안만 사용한다.
     if (!uiScript.empty()) {
         if (!view.empty()) throw std::invalid_argument("UI script cannot be combined with --view");
         // 왼쪽 버튼 폴링만 스크립트가 공급한다. 키보드 등 다른 폴링은 실제 장치 경로를 유지한다.
@@ -607,7 +625,14 @@ int RunClient(std::vector<std::string> arguments) {
             // 이번 프레임의 입력만 실제 InputQueue에 넣는다.
             for (std::size_t i = next; i < steps.size() && steps[i].frame == c.Time().number; ++i) {
                 const auto& step = steps[i]; using namespace netstorm::client;
-                if (step.operation == "snapshot" || step.operation == "report") continue;
+                if (step.operation == "snapshot" || step.operation == "report" || step.operation=="refresh") continue;
+                // 입력 처리 뒤의 실제 Kernel 단계까지 Tell을 지연한다. 일반 클릭 명령 경로와 구별한다.
+                if (step.operation=="kernel-tell") {
+                    if (!kernelTell) {
+                        auto process=std::make_unique<UiKernelTell>(*c.Menu());kernelTell=process.get();c.GetKernel().Add(std::move(process));
+                    }
+                    kernelTell->Queue(step.argument);continue;
+                }
                 // 날씨 순환의 실제 다음 곡 경로를 검사용으로만 호출한다. 몇 분짜리 곡 끝을 기다리지 않고 네 팔레트를 검사한다.
                 if (step.operation=="music-next") {
                     if (!c.Audio()) throw std::runtime_error("music-next requires client audio");
@@ -646,6 +671,8 @@ int RunClient(std::vector<std::string> arguments) {
                 const auto& step = steps[next++];
                 if (step.operation == "snapshot") c.Capture(step.argument);
                 if (step.operation == "report") report += "frame\t" + std::to_string(step.frame) + "\t" + step.argument + "\n" + c.Menu()->Report();
+                // 다음 Tick에서 표시만 갱신하여 버튼 캡처/serial을 보존하는지 검사한다.
+                if (step.operation=="refresh") c.Menu()->Refresh();
             }
         };
     }
