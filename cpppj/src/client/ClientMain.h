@@ -75,8 +75,12 @@ public:
     // 원본 00436e40 ↔ CD 00487720: UberGump의 버튼 사건에서 전체화면 시작 표시 파일을 지운다.
     // 기본 메뉴의 활성 버튼 사건에 연결한다. 일반 종료에서는 부르지 않는다.
     void ClearFullScreenState();
-    // 메뉴/브리핑의 게임 시간 정지. 같은 상태를 반복 적용해도 중첩하지 않는다.
+    // 메뉴/브리핑 UI가 보유한 게임 시간 정지만 변경한다. 같은 요청은 중첩하지 않고 다른 소유자의 정지를 해제하지 않는다.
     void Pause(bool paused);
+    // 원본00460df0의 중첩 정지 한 깊이를 보유한다. 미션의 scriptPaused가 중복 요청을 막아야 한다.
+    void PushGamePause();
+    // 원본00460e30의 정지 한 깊이를 반납한다. 호출자가 자신이 보유한 깊이와 짝을 맞춘다.
+    void PopGamePause();
     // 원본 게임 시계의 실제 정지 여부를 관찰한다.
     bool Paused() const;
     // 원본 세 해상도의 창 모드 장치와 Renderer를 다시 만든다.
@@ -202,6 +206,7 @@ private:
     InputQueue input_;
     // clock_: 프레임 판정에 현재 게임 시각을 공급하는 시계.
     o::GameClock clock_;
+    bool uiPaused_{}; // 메뉴/브리핑의 단일 정지 소유 표식이다. 원본 미션 scriptPaused와 별도로 유지한다.
     // time_: 프레임의 게임 시각과 벽 시각 및 시간 차 (o::FrameTime).
     o::FrameTime time_{};
     // kernel_: 프로세스 등록과 프레임 실행을 담당하는 커널.

@@ -27,3 +27,23 @@ TEST_CASE(FrameInterval_OriginalClockQuantization_IsPreserved) {
     CHECK(netstorm::client::QuantizedFrameMilliseconds(120) == 9);
     CHECK(netstorm::client::QuantizedFrameMilliseconds(0) == 0);
 }
+// 실제 Client의 메뉴 정지와 미션 정지가 서로의 깊이를 반납하지 않아야 한다. Run을 호출하지 않아 창/장치/파일쓰기는 없다.
+TEST_CASE(ClientPause_UiAndMissionHaveSeparateOwnership) {
+    netstorm::client::ClientOptions options;
+    options.gameDirectory=std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"originals";
+    netstorm::client::Client client(std::move(options));
+    CHECK(!client.Paused());client.PushGamePause();client.Pause(true);client.PopGamePause();
+    CHECK(client.Paused());client.Pause(false);CHECK(!client.Paused());
+    client.Pause(true);client.PushGamePause();client.Pause(false);CHECK(client.Paused());
+    client.PopGamePause();CHECK(!client.Paused());
+}
+// 반복 메뉴 요청은 한 깊이만 보유하고, UI가 보유하지 않은 정지는 false 요청으로 풀리지 않아야 한다.
+TEST_CASE(ClientPause_RepeatedUiDoesNotConsumeNestedMissionDepths) {
+    netstorm::client::ClientOptions options;
+    options.gameDirectory=std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"originals";
+    netstorm::client::Client client(std::move(options));
+    client.PushGamePause();client.PushGamePause();client.Pause(false);CHECK(client.Paused());
+    client.PopGamePause();CHECK(client.Paused());client.PopGamePause();CHECK(!client.Paused());
+    client.Pause(true);client.Pause(true);client.PushGamePause();client.Pause(false);client.Pause(false);
+    CHECK(client.Paused());client.PopGamePause();CHECK(!client.Paused());
+}

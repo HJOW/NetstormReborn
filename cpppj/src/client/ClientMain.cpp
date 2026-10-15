@@ -536,9 +536,14 @@ void Client::Capture(const std::filesystem::path& path) {
 
 // UI는 정지 상태를 한 번만 적용한다. wall 시각은 계속 흐른다.
 void Client::Pause(bool paused) {
-    if (paused && !clock_.IsPaused()) clock_.Pause(timeGetTime());
-    else if (!paused && clock_.IsPaused()) clock_.Resume(timeGetTime());
+    if (paused==uiPaused_) return;
+    if (paused) PushGamePause();else PopGamePause();
+    uiPaused_=paused;
 }
+// 원본 미션 정지는 메뉴 정지 여부와 무관하게 실제 같은 시계 깊이를 한 번 증가시킨다.
+void Client::PushGamePause() { clock_.Pause(timeGetTime()); }
+// 원본 미션 재개는 실제 같은 시계의 마지막 깊이가 해제될 때만 시간을 진행한다.
+void Client::PopGamePause() { clock_.Resume(timeGetTime()); }
 // 자동 검사는 표시 단계와 실제 시계 정지를 함께 검사한다.
 bool Client::Paused() const { return clock_.IsPaused(); }
 // 원본 창 제목을 ANSI 바이트로 적용한다(한국어는 후순위).
