@@ -1,5 +1,12 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-15 단위49 완료: 실제 Player 간헐천 배치 사각형 (`VM-W11-Codex`)
+
+- [x] `RawPlayerGeyserBounds`는같은ChunkMap/Player9/TYPE/프레임/CanonDecoder를사용한다. y행/x열의signed영역첫6BYTE레코드를찾고미션의실제패턴/회전·발자국또는비미션의현재옵션/플레이어방향배치를계산한다. DWORD<<4→float→양쪽4확장순서이며IslandRuntime.Bounds를대체입력으로쓰지않는다. [단위49 상세](docs/exe/cpp-player-geyser-bounds-20261015.md).
+- [x] PATCH17함수정밀export와실제 **439고유입력/정상반환**의16BYTE출력/현재전역/진단뒤재조회를대조했다. 실제Canon/TYPE/CRT몸체를실행하며assert만명시관찰경계다. 최종통합Release게임/검사빌드경고·오류0·집중2개실패0·SHA/행수/공백감사통과다. 이모듈의실제GUI검증은0이다.
+- [x] 현재/마지막정밀디컴파일PC는 **VM-W11-Codex, 2026-10-15**다. 실제게임/GUI실행·보호원본/AGENTS/dotnetpj변경은없다. 인수인계뒤 **`20261015-38 실제 플레이어 간헐천 배치 사각형과 패턴 회전 복원 검증`**으로로컬커밋하며push하지않는다.
+- [ ] LocalGeyser의playerBounds에연결할몸체는갖췄으나같은Session의Confirm/Notice/Clear/Place와empty84삭제분배를공급해야생성전체를켜는전제가갖춰진다. 실제보상/선택을갖춘공통Lifecycle과기술Content수명도복원중이다. 완주동일성미완료·목표active·DirectDraw전체화면오류제외를유지한다.
+
 ## 2026-10-15 단위48 완료: 실제 Player 기술 제거·조회·생성·목록 (`VM-W11-Codex`)
 
 - [x] `RawPlayerTechnology`는같은RawPlayerWorld/ContainedFinder/Create/실제TYPE을사용한다. 실제flags4기술을현재체인에서삭제하고, Ensure의진단/부모재조회·실제contained생성인자,40개중복제거/전체TYPE목록을복원했다. 미등록이름의원본무진행은skip성공으로바꾸지않는다. [단위48 상세](docs/exe/cpp-player-technology-20261015.md).

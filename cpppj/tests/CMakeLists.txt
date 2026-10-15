@@ -8,6 +8,7 @@ add_executable(netstorm_tests
     MissionStartTests.cpp
     ScriptCommandTests.cpp
     PlayerTechnologyTests.cpp
+    PlayerGeyserBoundsTests.cpp
     MissionFrameGateTests.cpp
     TutorialOneTests.cpp
     TutorialTwoTests.cpp
@@ -969,3 +970,7 @@ set_source_files_properties(ScriptCommandTests.cpp PROPERTIES COMPILE_DEFINITION
 # 실제 Player 기술 제거/생성/목록을 대조한다.
 set_source_files_properties(PlayerTechnologyTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PLAYER_TECHNOLOGY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/player-technology-x86.tsv\"")
+
+# 실제 Player 간헐천 배치 사각형과 패턴/회전을 대조한다.
+set_source_files_properties(PlayerGeyserBoundsTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PLAYER_GEYSER_BOUNDS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/player-geyser-bounds-x86.tsv\"")

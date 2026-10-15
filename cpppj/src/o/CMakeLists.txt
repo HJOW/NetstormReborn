@@ -9,6 +9,7 @@ target_sources(netstorm PRIVATE
     RawMissionStart.cpp RawMissionStart.h RawMissionAiSettings.cpp RawMissionAiSettings.h RawAiCreate.cpp RawAiCreate.h
     RawTextToken.cpp RawTextToken.h
     RawPlayerTechnology.cpp RawPlayerTechnology.h
+    RawPlayerGeyserBounds.cpp RawPlayerGeyserBounds.h
     RawRainVortexDraw.cpp RawRainVortexDraw.h
     RawFenceTarget.cpp RawFenceTarget.h
     RawContentParentNotice.cpp RawContentParentNotice.h ContentNoticeVtables.inc

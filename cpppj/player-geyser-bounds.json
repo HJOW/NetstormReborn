@@ -1,0 +1,40 @@
+{
+  "host": "VM-W11-Codex",
+  "date": "2026-10-15",
+  "total": 439,
+  "returns": 439,
+  "native": {
+    "0048f5c0": 376,
+    "00432430": 418,
+    "00432180": 27188,
+    "0048f550": 376,
+    "00432050": 397,
+    "004bfd70": 356,
+    "00425c20": 356,
+    "0049a840": 712,
+    "00425860": 356,
+    "00425700": 644,
+    "0049a940": 434,
+    "00425b90": 356,
+    "0049a900": 356,
+    "004e49c0": 712,
+    "0040d900": 376,
+    "0041ca10": 122
+  },
+  "assertions": 137,
+  "os_calls": 0,
+  "files": {
+    "tools/decomp_player_geyser_bounds.py": "5efdaa8417a1cc57f3962969eadeca953969ab690be1dffe45a125f05aab45e9",
+    "tools/decomp_missionframe_oracle.py": "98987447be7aa3632aeb6337a21880d57c43ad184e3657fae4171c8e9ffb1739",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "cpppj/tests/fixtures/player-geyser-bounds-x86.tsv": "9803c4376774b817ff1cd67cdc75f6cc430c29115d0ecb6bea199013b576020c",
+    "extracted/player-geyser-bounds/originals/functions.tsv": "ed78dd114f00ce90c9ca7e613b08d77320baada7eb771a3cc10482a653a4516b",
+    "extracted/player-geyser-bounds/originals/creation.c": "721f8219af308e268b01f89bd62e666a4b2e17c4cdfead1b85b1b3e9de76156f",
+    "tools/ghidra/player-geyser-bounds-functions.json": "b5887078a524099bc57a7c661a8f779315fb9e8563a73ca630efa60bdaf971bb"
+  },
+  "limits": [
+    "PATCH의유효ChunkMap/정렬Player0..8을실행한다.CD/손상포인터/물리표밖은범위밖이다.",
+    "Player/record/placement/실제CanonDecoder/TYPE발자국/CRT와변환은기계어다.assert보고만외부경계다.",
+    "Session의Confirm/empty84삭제/실제미션연결은미완료다."
+  ]
+}
