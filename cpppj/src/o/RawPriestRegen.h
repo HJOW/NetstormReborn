@@ -2,17 +2,18 @@
 #pragma once
 #include "o/RawPriestPostPop.h"
 #include "o/RawPriestState.h"
+#include <optional>
 
 namespace netstorm::o {
 // 사제 회복 패치 처리 중 조회·갱신하는 상태 묶음이다.
 struct PriestRegenPatchState {
     std::uint32_t sample{}; // 00540cb8: 원본 Next(9)의 결과다.
     std::int32_t sequence{}; // 0054d4e0: 3씩 증가하고 9600을 한 번 뺀다.
-    std::int32_t observedSequence{}; // 00568af8: 외부 검증 함수 뒤 현재 값을 읽는다.
+    std::int32_t observedSequence{}; // 독립 fixture의 00568af8 입력이다. 실제 세션은 spReads로 현재 저장소를 읽는다.
     std::uint32_t changedSample{}; // 005318ec: 추적 조건이 참이면 현재 sample을 쓴다.
     std::uint32_t remaining{}; // 005c89c4: 0이 아니면 측정 후 하나 줄인다.
-    std::uint32_t gate{}; // 00594fd0: 0이면 changedSample을 쓴다.
-    std::int16_t sentinel{}; // 00531890: DWORD가 아닌 signed WORD의 -1 조건이다.
+    std::uint32_t gate{}; // 독립 fixture의 00594fd0 입력이다. 실제 세션은 첫 분산배열 주소를 직접 읽는다.
+    std::int16_t sentinel{}; // 독립 fixture의 00531890 signed WORD 입력이다. 실제 세션은 같은 순열 배열을 읽는다.
 };
 // 사제 회복 처리 중 조회·갱신하는 상태 묶음이다.
 struct PriestRegenState {
@@ -21,6 +22,14 @@ struct PriestRegenState {
     // patch: 10.78 패치판의 상태 또는 패치판 검사용 자료.
     PriestRegenPatchState patch;
 };
+// 실제 SP 전역을 각 원본 읽기 지점에서 조회한다. 독립 fixture의 값형 상태와 구분한다.
+struct PriestRegenSpReads {
+    std::function<std::int32_t()> observedSequence; // 중립 효과 뒤 현재 00568af8의 signed DWORD를 읽는다.
+    std::function<const std::uint32_t*()> firstPool; // 측정 뒤 현재 00594fd0의 실제 첫 배열 주소를 읽는다.
+    std::function<std::int16_t()> firstPermutation; // 첫 배열 검사와 별개로 현재 00531890의 signed WORD를 읽는다.
+};
+// store가 빌린 추적 주소는 patch.sequence여야 한다. 두 객체는 반환 조회기보다 오래 살아야 한다.
+PriestRegenSpReads BindPriestRegenSpStore(const ScrambledSpStore& store,const PriestRegenPatchState& patch);
 // 사제 회복 외부 동작과 저장소 조회를 연결하는 콜백 묶음이다.
 struct PriestRegenHooks {
     std::function<void(Sid)> refresh; // 회복을 시도한 뒤 vtable +0x88을 부른다. HP가 거부되어도 호출한다.
@@ -30,6 +39,7 @@ struct PriestRegenHooks {
     std::function<void(Sid)> neutralAction; // 조건을 만족하고 점유 결과가 0일 때 00491db0 / CD 0040d030을 부른다.
     std::function<void()> patchAudit; // 패치 전용 00491680. 추적/SP 전역 효과는 호출자가 공급한다.
     std::function<double()> measurement; // 패치 전용 0040ee90의 x87 측정 결과다. remaining!=0일 때만 읽는다.
+    std::optional<PriestRegenSpReads> spReads; // 실제 세션은 현재 저장소를 연결하며 미지정은 기존 독립 fixture의 값형 입력이다.
 };
 // 사제 이벤트 0x25a의 실제 HP 회복과 중립 후처리/패치 추적 순서를 복원한다.
 class RawPriestRegen {

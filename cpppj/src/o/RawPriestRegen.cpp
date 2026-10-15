@@ -20,13 +20,24 @@ std::int32_t Add(std::int32_t a,std::int32_t b) {
     return std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(a)+static_cast<std::uint32_t>(b));
 }
 }
+// 같은 추적 전역 주소를 확인하며 초기화/회전 이후 값도 동기화 없이 직접 읽는다.
+PriestRegenSpReads BindPriestRegenSpStore(const ScrambledSpStore& store,const PriestRegenPatchState& patch) {
+    if (&store.TrackingOffsetCurrent()!=&patch.sequence)
+        throw std::invalid_argument("사제 회복과 SP 저장소의 추적 주소 불일치");
+    return {
+        [&store] { return std::bit_cast<std::int32_t>(store.OffsetCurrent()); },
+        [&store] { return store.FirstPoolCurrent(); },
+        [&store] { return store.Permutation().front(); }
+    };
+}
 // 미복원 효과를 빠뜨린 연결과 서로 다른 풀을 실행 전에 거부한다.
 RawPriestRegen::RawPriestRegen(SidPool& pool,const SquidReward& hp,const RawPriestState& priest,
     const PriestHitPointMode& mode,PriestHitPointHooks space,GameRandom& random,PriestRegenState& state,PriestRegenHooks hooks)
     :pool_(pool),hp_(hp),priest_(priest),mode_(mode),space_(std::move(space)),random_(random),state_(state),hooks_(std::move(hooks)) {
     if (&hp.Pool()!=&pool || &priest.Pool()!=&pool || !space_.unpop || !space_.repop || !hooks_.refresh ||
         !hooks_.damageable || !hooks_.shape || !hooks_.occupied || !hooks_.neutralAction ||
-        (pool.Edition()==OriginalEdition::Patch1078 && (!hooks_.patchAudit || !hooks_.measurement)))
+        (pool.Edition()==OriginalEdition::Patch1078 && (!hooks_.patchAudit || !hooks_.measurement)) ||
+        (hooks_.spReads && (!hooks_.spReads->observedSequence || !hooks_.spReads->firstPool || !hooks_.spReads->firstPermutation)))
         throw std::invalid_argument("사제 회복 풀/외부 효과 연결 오류");
 }
 // 분배기의 동일 풀 보호에 쓴다.
@@ -61,12 +72,15 @@ float RawPriestRegen::Handle(Sid sid,std::uint32_t event,std::uint32_t count,flo
     }
     if (patch) {
         auto& tracking=state_.patch;
-        if (tracking.observedSequence!=tracking.sequence) tracking.changedSample=tracking.sample;
+        const auto observed=hooks_.spReads ? hooks_.spReads->observedSequence() : tracking.observedSequence;
+        if (observed!=tracking.sequence) tracking.changedSample=tracking.sample;
         if (tracking.remaining!=0) {
             if (hooks_.measurement()>kMeasurementLimit) tracking.changedSample=tracking.sample;
             --tracking.remaining;
         }
-        if (tracking.gate==0 || tracking.sentinel==-1) tracking.changedSample=tracking.sample;
+        // 원본은 두 독립 if다. 첫 배열이 NULL이어도 뒤의 signed WORD를 반드시 현재 읽는다.
+        if (hooks_.spReads ? hooks_.spReads->firstPool()==nullptr : tracking.gate==0) tracking.changedSample=tracking.sample;
+        if ((hooks_.spReads ? hooks_.spReads->firstPermutation() : tracking.sentinel)==-1) tracking.changedSample=tracking.sample;
     }
     return payload;
 }

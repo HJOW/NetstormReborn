@@ -176,7 +176,6 @@ struct RawCampaignSession::Impl {
         start{core.processState,priestState.movement.dude,priestState.movement.teleport,priestState.movement.manaBolt,priestState.movement.priest,geyserType,snap,retrying},process{core.processState} {
         sp.BindTrackingOffset(priestState.regen.patch.sequence);sp.Initialize();
         level=std::make_unique<RawSquidLevel>(core.pool,core.types,SessionMissing<void,SquidLevelAssertion>());
-        priestState.regen.patch.observedSequence=priestState.regen.patch.sequence;
         finishState.chaffMode=true;objectState.mission=true;objectState.chaffMode=true;
         playerState.playerKnown=1;assetState.boss=true;assetState.inBattle=true;assetState.localOwner=1;gunState.boss=true;
         broadcast=std::make_unique<RawBattleBroadcast>(core.pool.Edition(),players,services.battlePeers,assetState.localOwner,assetState.boss);
@@ -220,8 +219,9 @@ struct RawCampaignSession::Impl {
         FillMissing(priestEffects.fallSound);FillMissing(priestEffects.otherWalkerFall);
         priestEffects.regen.refresh=[this](Sid sid) { core.display.Update(core.pool.Slot(sid)); };
         FillMissing(priestEffects.regen.neutralAction);
-        // 실제 SP 회전 몸체의 현재 offset을 같은 회복 추적 전역에 반영한다. 저장 값/게임 난수를 유지한다.
-        priestEffects.regen.patchAudit=[this] { sp.Rotate();priestState.regen.patch.observedSequence=std::bit_cast<std::int32_t>(sp.Offset()); };
+        // 회전과 뒤의 읽기를 분리하여 중립 동작/측정이 바꾼 현재 SP 전역도 원본 시점에 조회한다.
+        priestEffects.regen.patchAudit=[this] { sp.Rotate(); };
+        priestEffects.regen.spReads=BindPriestRegenSpStore(sp,priestState.regen.patch);
         FillMissing(priestEffects.regen.measurement);
         priestEffects.regen.damageable=[this](Sid sid) { hits->Burning().Refresh(sid); };
         priests=std::make_unique<RawPriestWorldBindings>(RawPriestWorldCore{core.pool,core.hash,core.types,core.frames,core.spots,core.hash.Entries(0),hp,random,core.factory,core.owner,core.ownerMode,core.postPop,core.frame},priestState,std::move(priestEffects));

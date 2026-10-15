@@ -1,5 +1,13 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-15 단위60 완료: 사제 회복의 현재 SP 저장소 연결 (`HJOW-Athlon`)
+
+- [x] `RawPriestRegen`에 같은 추적 주소를 확인하는 현재 offset/실제 첫 배열/첫 순열 WORD getter를 설치하고 실제 Session의 audit 직후 사본 동기화를 제거했다. 중립 효과·측정 뒤 원본 시점에 읽으며 NULL 배열 검사 뒤 WORD도 독립적으로 읽는다. [상세](docs/exe/cpp-priest-regen-current-sp-20261015.md).
+- [x] 기존3판본 회복 **4,539개(각1,513개)**를 격리 x86로 재생성했고 fixture SHA는 기존과 같다. `--verify`가 통과했다. 신규 고유입력0이며 새 게임/GUI 실행0이다. 현재/마지막 정밀 PC는 **HJOW-Athlon, 2026-10-15**다.
+- [x] 중립 효과의 추가 회전/저장 SP 보존, 측정 안 lazy 초기화/현재 조회 순서, NULL 배열 뒤 WORD 조회와 잘못된 바인딩 거부의 새 검사3개를 추가했다. 기존 값형 fixture backend는 유지한다.
+- [x] 두 단위를 함께 반영한 소스 고정 Release 빌드 경고0·오류0, 사제회복8·AI생성자4·SP통지4·실제Session8 집중 검사가 통과했다. 새 사제 회복3개도 포함한다.
+- [x] SP와 AI 현재 조회기 변경을 함께 검사한 작업트리의 전체 CTest **1/1·내부1,238개 실패0·195.14초**가 통과했다. **20261015-54**로 커밋한다. 이전 SP61/Player88 SHA 감사는 이 PC의 선택 export 누락으로 실행할 수 없었으며 새 성공 근거로 사용하지 않는다. 이 단위는 해당 SP/Player 몸체를 변경하지 않았다.
+
 ## 2026-10-15 완료: 현재 호스트 10.78·10.72 정밀 디컴파일 재생성 (`HJOW-Athlon`)
 
 - [x] `AGENTS.md`와 양쪽 인수인계를 확인했다. 마지막 정밀 디컴파일 PC는 `VM-W11-Codex`였고 현재 PC는 `HJOW-Athlon`이므로 현재 PC에서 다시 생성했다. 기존 `extracted/refined/` 산출물은 `extracted/refined-backup-before-HJOW-Athlon-20261015/`로 보존했다.

@@ -185,3 +185,56 @@ TEST_CASE(priest_regen_binds_factory_postpop_process_and_kernel) {
         host.Kill(*regular,0x10);CHECK(kernel.Size()==0 && pool.FreeCount()==free && !store.Initialized());
     }
 }
+// 같은 SP 몸체가 중립 효과에서 다시 회전하면 audit 직후 사본 대신 최종 현재 offset을 읽어야 한다.
+TEST_CASE(priest_regen_reads_current_store_after_neutral_effect) {
+    RegenScene scene(OriginalEdition::Patch1078);auto row=Fixture().front();
+    row[1]="200";row[2]="0";row[3]="200";row[4]="1";row[5]="1";row[6]="0";
+    row[10]="0";row[11]="0";row[12]="0";row[18]="19";row[19]="0";row[20]="0";row[21]="-1";row[23]="-";
+    scene.Prepare(row);scene.store.BindTrackingOffset(scene.state.patch.sequence);scene.store.Initialize();
+    scene.store.Set(1,std::bit_cast<std::uint32_t>(1234.5F));auto hooks=scene.Hooks();bool rotateNeutral=false;
+    hooks.patchAudit=[&] { scene.store.Rotate(); };
+    hooks.neutralAction=[&](Sid) { if (rotateNeutral) scene.store.Rotate(); };
+    hooks.spReads=BindPriestRegenSpStore(scene.store,scene.state.patch);
+    RawPriestRegen regen(scene.pool,*scene.hp,*scene.priest,scene.mode,scene.Space(),scene.random,scene.state,std::move(hooks));
+    regen.Handle(kSource,kPriestRegenEvent,0,8.25F);
+    CHECK(scene.state.patch.changedSample==19 && scene.store.Offset()==static_cast<std::uint32_t>(scene.state.patch.sequence));
+    rotateNeutral=true;regen.Handle(kSource,kPriestRegenEvent,0,8.25F);
+    CHECK(scene.store.Offset()!=static_cast<std::uint32_t>(scene.state.patch.sequence));
+    CHECK(scene.state.patch.changedSample==scene.state.patch.sample);
+    CHECK(scene.store.Get(1)==std::bit_cast<std::uint32_t>(1234.5F));
+    CHECK(&scene.store.TrackingOffsetCurrent()==&scene.state.patch.sequence);
+}
+// 원본의 observed→측정→첫 포인터→signed WORD 읽기 순서와 측정 안의 lazy 초기화를 확인한다.
+TEST_CASE(priest_regen_reads_store_after_measurement_in_original_order) {
+    RegenScene scene(OriginalEdition::Patch1078);auto row=Fixture().front();
+    row[1]="200";row[2]="0";row[3]="200";row[4]="0";row[16]="-3";row[18]="19";row[19]="1";row[20]="0";row[21]="-1";
+    scene.Prepare(row);scene.store.BindTrackingOffset(scene.state.patch.sequence);auto hooks=scene.Hooks();std::string order;
+    const auto reads=BindPriestRegenSpStore(scene.store,scene.state.patch);
+    hooks.patchAudit=[] {}; // 독립 경계 입력으로 초기화 전 상태를 측정까지 유지한다.
+    hooks.measurement=[&] { order+='M';scene.store.Initialize();return 7000.0; };
+    hooks.spReads=PriestRegenSpReads{
+        [&] { order+='O';return reads.observedSequence(); },
+        [&] { order+='P';return reads.firstPool(); },
+        [&] { order+='S';return reads.firstPermutation(); }};
+    RawPriestRegen regen(scene.pool,*scene.hp,*scene.priest,scene.mode,scene.Space(),scene.random,scene.state,std::move(hooks));
+    CHECK(!scene.store.Initialized());regen.Handle(kSource,kPriestRegenEvent,0,8.25F);
+    CHECK(order=="OMPS" && scene.store.Initialized() && scene.state.patch.remaining==0);
+    CHECK(scene.state.patch.changedSample==19 && scene.store.FirstPoolCurrent()==scene.store.Pools().data());
+}
+// NULL 배열이어도 WORD를 읽고, 미연결/다른 추적 주소/부분 getter는 부작용 전에 거부한다.
+TEST_CASE(priest_regen_store_binding_and_independent_word_read) {
+    RegenScene scene(OriginalEdition::Patch1078);scene.Prepare(Fixture().front());
+    CHECK(Throws([&] { static_cast<void>(BindPriestRegenSpStore(scene.store,scene.state.patch)); }));
+    PriestRegenPatchState other;scene.store.BindTrackingOffset(other.sequence);
+    CHECK(Throws([&] { static_cast<void>(BindPriestRegenSpStore(scene.store,scene.state.patch)); }));
+    auto hooks=scene.Hooks();hooks.spReads=PriestRegenSpReads{};
+    CHECK(Throws([&] { RawPriestRegen invalid(scene.pool,*scene.hp,*scene.priest,scene.mode,scene.Space(),scene.random,scene.state,hooks); }));
+    std::string order;scene.state.patch.remaining=0;scene.mode.authority=false;
+    hooks.patchAudit=[] {};hooks.spReads=PriestRegenSpReads{
+        [&] { order+='O';return scene.state.patch.sequence; },
+        [&]()->const std::uint32_t* { order+='P';return nullptr; },
+        [&] { order+='S';return std::int16_t{-1}; }};
+    RawPriestRegen regen(scene.pool,*scene.hp,*scene.priest,scene.mode,scene.Space(),scene.random,scene.state,std::move(hooks));
+    regen.Handle(kSource,kPriestRegenEvent,0,8.25F);CHECK(order=="OPS");
+    CHECK(scene.state.patch.changedSample==scene.state.patch.sample);
+}
