@@ -1,5 +1,13 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-15 단위46 완료: 실제 안내 명령 큐·완료값 저장 (`VM-W11-Codex`)
+
+- [x] `RawTextToken`/`ScriptStringRing`/`QueueScriptCommand`/`ApplyScriptConfig`에 원본78입력바이트·인용/공백·80칸문자열수명·명령표/숫자판별/진단순서·Config덮어쓰기를복원했다. 실제Tell은모든inline명령을순서대로기존입력큐에넣고다음Input에서Config/Warning을소비한다. [단위46 상세](docs/exe/cpp-script-command-20261015.md).
+- [x] PATCH9함수정밀export·실제 **262상태입력/정상반환**(토큰128/Config18/명령31/고리85연속수명), 최종Release경고·오류0·집중ScriptCommand2/Warnings6 실패0·SHA/행수/공백감사통과다. 공백키/저장인용문법의최초검사가정3체크와즉시Warning의GUI기대1건을교정했다.
+- [x] 실제대화상자/캡처회귀 **97상태**, Early1/2완료안내예약전0→다음입력1→다음Tutorial/Leave→실제options두Done값1 **9상태**가통과했다. 양검사는허용설정을복구하고originals전체파일명/SHA불변을확인했다. 완료섹션의처리검사이며실제플레이완주로세지않는다. 전체1,183개통과는이변경이전검사다.
+- [x] 현재/마지막정밀PC는 **VM-W11-Codex, 2026-10-15**다. 원본게임실행·보호원본/AGENTS/dotnetpj변경은없다. 인수인계뒤 **`20261015-36 실제 안내 명령 큐와 튜토리얼 완료 설정 저장 연결 검증`**으로로컬커밋하며push하지않는다.
+- [ ] 실제HTML본문/StyleTextBuffer helper는집중5개통과후Compose연결대기다. 조건/버튼parser의기존편차와Config/Warning외inline명령, 자동단계/승패·AI·건설/다리/수확/운반은후속이다. 완주동일성미완료·목표active·DirectDraw전체화면오류제외를유지한다.
+
 ## 2026-10-15 단위45 완료: 원본 HTML→StyleText 본문 변환 (`VM-W11-Codex`)
 
 - [x] `HtmlTextParser`에 기본VT의현재가림/태그/문자상태·용량/소비위치·제목/본문제어문자를복원했다. `<i>`는원본색상`~N~j`, `<b>`는굵기이며부분대소문자규칙과CD의`</h1>` 추가빈줄을유지한다. 조건/명령/그림/링크/배경·파생VT는명시효과경계다. [단위45 상세](docs/exe/cpp-html-text-20261015.md).

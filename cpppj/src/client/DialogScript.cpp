@@ -116,10 +116,12 @@ DialogPage ParseDialogPage(std::string_view source) {
                 if (filtered[end]=='>' && !quoted) break;
             }
             if (end<filtered.size()) {
-                const auto arguments=Fields(std::string_view(filtered).substr(i+2,end-i-2));
+                const auto raw=std::string_view(filtered).substr(i+2,end-i-2); // '$' 뒤 원문은 실제004c9090의 토큰 helper가 처리한다.
+                page.commands.emplace_back(raw);const auto arguments=Fields(raw);
                 if (!arguments.empty() && o::AsciiLower(arguments[0])=="warning") {
-                    page.warnings.push_back(arguments.size()>1 ? arguments[1] : std::string());i=end+1;continue;
+                    page.warnings.push_back(arguments.size()>1 ? arguments[1] : std::string());
                 }
+                i=end+1;continue;
             }
         }
         if (filtered[i] != '$') { body.push_back(filtered[i++]); continue; }
@@ -138,7 +140,7 @@ DialogPage ParseDialogPage(std::string_view source) {
         else if (kind == "onexit") page.onExit = action;
         i = end == std::string::npos ? filtered.size() : end;
     }
-    page.paragraphs = Paragraphs(body, page.background);
+    page.htmlBody=body;page.paragraphs = Paragraphs(body, page.background);
     return page;
 }
 }

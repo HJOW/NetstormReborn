@@ -1,0 +1,25 @@
+{
+  "host": "VM-W11-Codex",
+  "date": "2026-10-15",
+  "edition": "10.78",
+  "observations": 262,
+  "nativeInstructions": 565200,
+  "limitations": [
+    "설정 Set/변경통지/로그와 메모리 할당·반납/TLS 포인터는 명시 경계다.",
+    "원본 명령 표·문자열 복사/고리·입력큐·토큰·C로케일CRT 몸체는 실제 명령이다.",
+    "Ring85행은 연속 수명이며 같은 문자열의 재등록은 서로 다른 상태 입력이다."
+  ],
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_script_command.py": "4117195f63985867cf922237d297aaee6a83d9ca9c6dd4c5d7b1de30f51eb749",
+    "tools/ghidra/script-command-functions.json": "053d633fec13fd4a115d6ea0a22dee921e5d8a3f72a42b08e05dd36e184bd289",
+    "extracted/script-command/originals/creation.c": "e60ccb207d28a9b2eaedc0b8fdc79759e340dff9cbc295d418ff4ecebbec213e",
+    "extracted/script-command/originals/functions.tsv": "84ebc743f42f0494041045581decae00fcdfcf85d24470e8410cffa612290055",
+    "cpppj/src/o/RawTextToken.h": "5d50953aa12ae4309cc4ff5bf404fc9952b3a12014a38dd26a944733a11d6057",
+    "cpppj/src/o/RawTextToken.cpp": "fac3f0ad807212318fd09502c6f3cfcdcac9eec1f439083f37d35a701ff1c086",
+    "cpppj/src/client/ScriptCommand.h": "9947e5e4357692c5351bc60d7b523bcc066d4d73729e883ed8c719491aa64a05",
+    "cpppj/src/client/ScriptCommand.cpp": "685912691a4932ffc85242ee08a28a0d70402eb691f50620ebc5319a9e4a60b5",
+    "cpppj/tests/ScriptCommandTests.cpp": "86b018f21d9644d27bb8d53fc9e4d384b815e6b591b3db5ff0c81384c25ff523",
+    "cpppj/tests/fixtures/script-command-x86.tsv": "34ddbcb593f7f38ffd206aae777438697c7c194f5b1215a2a488f0ff7f878d4d"
+  }
+}

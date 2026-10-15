@@ -2,6 +2,7 @@
 #pragma once
 #include "client/Gump.h"
 #include "client/RawButtonControls.h"
+#include "client/ScriptCommand.h"
 #include "client/State.h"
 #include "client/Mission.h"
 #include "client/VFXDraw.h"
@@ -83,6 +84,7 @@ private:
     GumpControlInput input_;
     std::unique_ptr<RawButtonControls> rawButtons_; // 돌 버튼은 실제 공유 트리/수명/캡처를 사용한다. input_은 메뉴 행/판정 보고용이다.
     std::unique_ptr<WarningMessages> warnings_; // 원본의 모달이 아닌10초 글자 안내와 실제 StyleText/Gump 수명이다.
+    ScriptStringRing scriptStrings_; // 입력 큐에 예약한 문자열의 원본80칸 수명이며 페이지가 바뀌어도 보존한다.
     std::uint32_t buttonTextureType_{},buttonTextureFrame_{}; // 실제 A00 배경 생성자에 전달할 타입/프레임 번호다.
     // scripts_: 스크립트.
     std::map<std::string, std::unique_ptr<o::Config>> scripts_;

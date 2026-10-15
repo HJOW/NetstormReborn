@@ -15,13 +15,13 @@ ROOT = Path(__file__).resolve().parent.parent
 OUTPUT = ROOT / 'extracted/dialog-controls'
 
 
-def run_scene(executable, name, steps, mission=None):
+def run_scene(executable, name, steps, mission=None, settings=''):
     """실제 Win32 클론을 무음 실행하고 프레임/실패 출력을 검사 폴더에 보존한다."""
     script = OUTPUT / f'{name}.tsv'
     state_path = OUTPUT / f'{name}-states.tsv'
     script.write_text(''.join(f'{frame}\t{operation}\t{argument}\n' for frame, operation, argument in steps), encoding='utf-8')
     arguments = [str(executable), '--run', str(ROOT / 'originals'), '--window', '--no-audio',
-                 '--frames', str(steps[-1][0] + 2), '--set', 'SCREENW=640;SCREENH=480;maxFPS=75',
+                 '--frames', str(steps[-1][0] + 2), '--set', 'SCREENW=640;SCREENH=480;maxFPS=75;'+settings,
                  '--ui-script', str(script), '--ui-report', str(state_path)]
     if mission:
         arguments.extend(['--mission', mission])
@@ -56,16 +56,19 @@ def check_menu(executable):
         (4, 'snapshot', str(OUTPUT / 'credits.bmp')), (5, 'up', 'Cancel'), (6, 'report', 'stale_release'),
         (7, 'click', 'Cancel'), (8, 'report', 'cancel'), (9, 'kernel-tell', 'About'), (9, 'report', 'about'),
         (10, 'click', 'OK'), (11, 'report', 'ok'), (12, 'down', 'Campaign'), (12, 'report', 'warning_before'),
-        (13, 'kernel-tell', 'PriestImmobile'), (13, 'report', 'warning'), (14, 'up', 'Campaign'),
+        (13, 'kernel-tell', 'PriestImmobile'), (13, 'report', 'warning_queued'), (14, 'up', 'Campaign'),
         (15, 'report', 'warning_release'), (16, 'kernel-tell', 'LeaveNormal'), (16, 'report', 'leave'),
         (17, 'click', 'Stay'), (18, 'report', 'stay'), (19, 'click', 'Options'), (20, 'report', 'popup'),
         (21, 'kernel-tell', 'About'), (21, 'report', 'popup_replaced'), (22, 'click', 'OK'),
         (23, 'report', 'popup_ok'), (24, 'kernel-tell', 'Credits'),
         (25, 'click', 'Netstorm 10.72 Patch Credits'), (26, 'report', 'menu_command'),
         (27, 'kernel-tell', 'Blank'), (27, 'report', 'blank')]
+    # Kernel에서예약한Warning은다음Input에소비된다. 소비전에는기존캡처를그대로보존한다.
+    steps=[(frame+1 if frame>=14 else frame,operation,argument) for frame,operation,argument in steps]
+    steps.append((14,'report','warning'));steps.sort(key=lambda step:step[0])
     # 다수의 실제 Kernel 페이지 교체에서 등록 누적/오래된 serial 재사용을 검사한다.
     for cycle in range(32):
-        frame = 28 + cycle * 2
+        frame = 29 + cycle * 2
         steps.extend([(frame, 'kernel-tell', 'About'), (frame, 'report', f'cycle-{cycle}-dialog'),
                       (frame + 1, 'kernel-tell', 'Blank'), (frame + 1, 'report', f'cycle-{cycle}-main')])
     states = run_scene(executable, 'menu', steps)
@@ -82,6 +85,7 @@ def check_menu(executable):
     page(states['warning'], 'main', main, 0, 0)
     assert raw(states['warning_before']) == raw(states['warning']), 'Warning이 기존 버튼 캡처/등록을 바꿈'
     assert states['warning']['warning_count'][0] == '1'
+    assert states['warning_queued']['warning_count'][0]=='0'
     assert states['warning_release']['page'] == ['UCampaign'], 'Warning 뒤 캡처의 원래 명령이 실행되지 않음'
     page(states['leave'], 'LeaveNormal', {'Leave Honorably', 'Stay'}, 1, 0)
     page(states['stay'], 'main', main, 0, 0)
@@ -117,6 +121,7 @@ def check_mission(executable):
              (16, 'report', 'warning'), (16, 'refresh', ''), (17, 'report', 'warning_refreshed'),
              (18, 'up', 'Game'), (19, 'report', 'warning_release'),
              (20, 'kernel-tell', 'Blank'), (20, 'report', 'blank')]
+    steps.append((13,'report','modal_warning_consumed'));steps.sort(key=lambda step:step[0])
     states = run_scene(executable, 'mission', steps, 'thewarbegins')
     page(states['mission'], 'mission', {'Game'}, 4, 0)
     assert raw(states['capture'])[3] and raw(states['capture'])[4] == 1
@@ -125,10 +130,13 @@ def check_mission(executable):
     page(states['stale_release'], 'LeaveNormal', {'Leave Honorably', 'Stay'}, 1, 1)
     page(states['resumed'], 'mission', {'Game'}, 4, 0)
     page(states['modal_warning'], 'About', {'OK'}, 1, 1)
-    assert states['modal_warning']['warning_count'][0] == '1'
+    assert states['modal_warning']['warning_count'][0] == '0'
+    page(states['modal_warning_consumed'],'About',{'OK'},1,1)
+    assert states['modal_warning_consumed']['warning_count'][0]=='1'
     page(states['modal_ok'], 'mission', {'Game'}, 4, 0)
     page(states['warning'], 'mission', {'Game'}, 4, 0)
     assert raw(states['warning_before']) == raw(states['warning']) == raw(states['warning_refreshed'])
+    assert states['warning']['warning_count'][0]=='1' and states['warning_refreshed']['warning_count'][0]=='2'
     assert states['warning_release']['popup'] == ['game']
     page(states['blank'], 'mission', {'Game'}, 4, 0)
     return {'states': len(states), 'mission': 'thewarbegins', 'kernel_modal_paused': True,

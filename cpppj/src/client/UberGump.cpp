@@ -16,6 +16,8 @@
 #include <algorithm>
 #include <sstream>
 #include <stdexcept>
+#include <bit>
+#include <iostream>
 
 namespace netstorm::client {
 // 화면 검사도 GUI가 표시하는 같은 raw 월드의 삭제/프로세스 경로를 사용한다.
@@ -195,10 +197,12 @@ bool UberGump::TryTell(std::string target,bool briefing) {
     if (!body) return false;
     const auto protectedBody = Replace(*body, "{cur.file}", "__CURRENT_FILE__");
     auto parsed=ParseDialogPage(Replace(client_.Configuration().SubstituteLocal(protectedBody), "__CURRENT_FILE__", "{cur.file}"));
-    // Warning 명령만 있는 Tell은 원본처럼 화면 안내만 생성하며 미션/기존 페이지/정지를 바꾸지 않는다.
-    warnings_->SetView(client_.GetScreen().Width(),client_.GetScreen().Height(),client_.GetScreen().Colors());
-    for (const auto& warning:parsed.warnings) warnings_->Add(warning);
-    if (!parsed.warnings.empty() && parsed.paragraphs.empty() && parsed.items.empty()) { rebuild_=true;return true; }
+    ScriptCommandHooks commands; // 현재복원된실제명령을원본ID로조회하고미등록은원본처럼진단뒤거부한다.
+    commands.lookup=[](std::string_view name) { const auto lower=o::AsciiLower(name);return lower=="config" ? kScriptConfig : lower=="warning" ? kScriptWarning : 0xffffffffU; };
+    commands.unknown=[](std::string_view name) { std::clog<<"스크립트 명령 미연결: "<<name<<'\n'; };
+    // 같은 페이지의 여러 명령을 첫 상태전환 하나로 줄이지 않고 실제40칸 입력 큐에 넣는다.
+    for (const auto& command:parsed.commands) QueueScriptCommand(FontBytes(command),client_.Input(),scriptStrings_,commands);
+    if (!parsed.commands.empty() && parsed.paragraphs.empty() && parsed.items.empty()) { rebuild_=true;return true; }
     page_=std::move(parsed);
     ExpandMenus(page_);
     if (page_.items.empty()) page_.items.push_back({"OK", {"DoNothing", "0"}});
@@ -318,6 +322,18 @@ void UberGump::OpenObjectMenu(o::SquidId id) {
 }
 // 현재 입력 단계에서는 객체를 파괴하지 않고 다음 프레임의 State로 넘긴다.
 void UberGump::Event(InputEvent event) {
+    const auto commandCode=event.code&0x03ffffffU; // 원본명령분배와같이최상위입력플래그만제거한다.
+    if (commandCode==kScriptConfig) {
+        // 토큰 제한은 원본바이트에 적용하고 Config의 내부UTF-8 경계에서만 변환한다.
+        ApplyScriptConfig(scriptStrings_.Resolve(std::bit_cast<std::uint32_t>(event.x)),[&](std::string_view key,std::string_view value) {
+            const auto decode=[](std::string_view bytes) { return o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(bytes.data()),bytes.size()}); }; // 각토큰의원본Windows-1252를내부UTF-8로되돌린다.
+            return client_.Configuration().Set(decode(key),decode(value));
+        });return;
+    }
+    if (commandCode==kScriptWarning) {
+        warnings_->SetView(client_.GetScreen().Width(),client_.GetScreen().Height(),client_.GetScreen().Colors());
+        warnings_->Add(scriptStrings_.Resolve(std::bit_cast<std::uint32_t>(event.x)));rebuild_=true;return;
+    }
     // 원본 ESC 글자 사건. 초기 브리핑은 확인 버튼으로만 닫는다.
     if ((event.code & 0xffffu) == 0x1b && (event.code & InputCode::kRelease) == 0) {
         if (state_.phase == ClientPhase::Briefing || state_.phase == ClientPhase::LoadingMission) return;
@@ -592,7 +608,10 @@ std::string UberGump::Report() const {
     out.precision(12); out<<"time\t"<<client_.Time().game<<'\t'<<client_.Time().wall<<"\n";
     out << "fullscreenMarker\t" << client_.Files().TryRead("fullscreenStateFile.dat").has_value() << "\n";
     out << "musicVolume\t" << client_.Configuration().GetInt("musicVolume") << "\nsoundVolume\t" << client_.Configuration().GetInt("soundVolume") << "\n";
-    if (mission_) out << "mission\t" << Field(mission_->Name()) << '\t' << Field(mission_->MissionType()) << '\t' << fortObjects_ << "\n";
+    if (mission_) {
+        out << "mission\t" << Field(mission_->Name()) << '\t' << Field(mission_->MissionType()) << '\t' << fortObjects_ << "\n";
+        out<<"mission_progress\t"<<client_.Configuration().GetInt("Done"+mission_->Name())<<'\n'; // 실제안내Config명령과같은저장값을검사보고에서읽는다.
+    }
     if (world_) out<<world_->Report();
     // 화면/월드와 같은 프레임에 위치 효과음이 실제로 읽는 여섯 값을 기록한다. 소리 없는 실행에는 항목을 만들지 않는다.
     if (client_.Audio()) {
