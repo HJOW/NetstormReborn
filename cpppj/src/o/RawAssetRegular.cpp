@@ -158,7 +158,9 @@ float RawAssetRegular::Residence(Sid sid,std::uint32_t event,std::uint32_t,float
             const auto temple=pool_.Slot(Sid{static_cast<std::uint16_t>(value)});
             if (temple[34]!=pool_.Slot(sid)[34]) continue;
             const auto type=temple[10];if (type>=elements_.size()) throw std::out_of_range("레지던스 신전 원소 오류");
-            if (state_.themeMode) { const auto element=elements_[type];theme=element==2 ? 1 : element==0 ? 2 : element==1 ? 3 : 0; }
+            const auto element=elements_[type]; // 원본004ac970은 설정 조회 전에 현재 TYPE+98을 읽는다.
+            const bool enabled=hooks_.themeMode ? hooks_.themeMode()!=0 : state_.themeMode; // 실제 옵션 조회는 첫 일치 신전에서만 수행한다.
+            if (enabled) theme=element==2 ? 1 : element==0 ? 2 : element==1 ? 3 : 0;
             break;
         }
         setter_.Set(sid,Add(std::bit_cast<std::int32_t>(Read(pool_.Slot(sid),42)),theme*6),0);

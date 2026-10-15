@@ -13,7 +13,7 @@ struct AssetRegularState {
     bool boss{true}; // 신전 이탈 사건의 3회/23회 대기를 선택한다.
     bool suppressLeaveRequest{}; // 신전 이탈 패킷 생성을 억제하는 원본 전역이다.
     bool checkingForms{}; // event4가 count4 이후 대기를 생략하는 진단 전역이다.
-    bool themeMode{true}; // 원본 theammode 설정이다. 꺼져 있으면 레지던스 테마 보정이 없다.
+    bool themeMode{true}; // 독립 호출의 고정 옵션 입력이다. 실제 캠페인은 hooks.themeMode로 현재 설정을 읽는다.
     std::uint32_t decorationType{102}; // event1이 탐색하는 실제 장식 타입 전역이다. 두 PE 초기값은102다.
     std::uint32_t maxDecorationScan{}; // 원본 전역에 저장하는 한 번의 finder 최대 조사 개수다.
     std::uint32_t damageEvent{6699},constructionEvent{6700}; // Damageable의 폭발 연쇄/abstract 건설 재시도 이벤트 번호다.
@@ -23,6 +23,7 @@ struct AssetRegularState {
 };
 // 아직 독립 하위 모듈로 연결해야 하는 효과다. 누락 시 해당 사건을 거부하며 무효 반환으로 대신하지 않는다.
 struct AssetRegularHooks {
+    std::function<std::uint32_t()> themeMode; // 레지던스의 일치 신전 조회 뒤 현재 theammode를 읽는다. 미연결 독립 호출은 state 값을 쓴다.
     std::function<void(Sid)> notifySurface; // 주민 변화 뒤 실제 004214a0 연결 재평가를 호출한다.
     std::function<Sid(float,float)> surface; // 레지던스 아래의 실제 표면 SID를 조회한다.
     std::function<void(Sid,std::uint32_t)> setOwner; // 가상 소유자 지정의 실제 파생 분배를 호출한다.

@@ -219,12 +219,15 @@ struct RawCampaignSession::Impl {
         ownership=std::make_unique<RawCampaignOwnership>(world,*islands,assetState,players,metadata.frames,themes,random,paint,votes,vortexRevision,97,121,std::move(ownerEffects));
         carrier=std::make_unique<RawCarrierPostPop>(core.pool,core.types,carrierState,
             MakeCarrierPostPopHooks(core.pool,core.postPop,[this](Sid sid) { static_cast<void>(priests->CheckCarrier(sid)); },[this](float x,float y,std::uint8_t owner) { world.SetSupportOwner(x,y,owner); }));
+        // 빈/내장 타입을 포함해 실제 TYPE+98의 판본 초기값과 파싱값을 같은 번호의 모든 소비자에게 전달한다.
+        for (std::size_t type=0;type<core.types.size();++type) {
+            gunTypes[type].theme=core.types[type].theme;themes[type]=std::bit_cast<std::uint32_t>(core.types[type].theme);elements[type]=core.types[type].theme;
+        }
         // 보호 .type의 실제 숫자/문자 Run을 같은 TYPE 번호의 보충 표에 연결한다.
         for (const auto& asset:assets.game.Types()) {
             const auto type=static_cast<std::uint32_t>(70+asset.block);auto& target=gunTypes[type];target.range=static_cast<float>(asset.definition.Number("range").value_or(0));
             target.heightExtension=static_cast<int>(asset.definition.Number("height").value_or(0));
             dudeSpeeds[type].speed=static_cast<float>(asset.definition.Number("speed").value_or(0));
-            const auto theme=asset.definition.String("theme").value_or("sun");target.theme=theme=="wind" ? 0 : theme=="rain" ? 1 : theme=="thunder" ? 2 : 3;
             // 원본 방향별 L/M/N/O 첫 프레임 표다. 없는Run의-1은 실제 검색 몸체가 처리한다.
             for (std::uint8_t direction=0;direction<4;++direction) target.directionFrames[direction]=core.frames[type].Run(static_cast<std::uint8_t>('L'+direction)).first;
             hitTypes[type].damagePerSecond=static_cast<float>(asset.definition.Number("hpPerSec").value_or(0));
@@ -272,6 +275,9 @@ struct RawCampaignSession::Impl {
         combatEffects.missile=hits->MissileHooks(*gunHit,missileState,std::move(combatEffects.missile));
         combat=std::make_unique<RawCampaignArcherBindings>(world,*gunTarget,random,archerTypes,missileTypes,archerState,missileState,std::move(combatEffects));
         auto assetEffects=services.assets;assetEffects.postPop.reserveRegular=[] { return true; };
+        // 레지던스는 현재 일치 신전을 찾은 호출 위치에서 실제 theammode를 다시 읽는다.
+        if (!assetEffects.regular.themeMode) assetEffects.regular.themeMode=services.ownership.themeMode;
+        FillMissing(assetEffects.regular.themeMode);
         assetEffects.gun=MakeCampaignGunQueryHooks(core,*gunMode,*gunTarget,*gunHit,gunState,firingIntervals,std::move(assetEffects.gun));
         assetEffects.gun=MakeGunTargetHooks(core.pool,*gunTarget,std::move(assetEffects.gun));
         assetEffects.gun=combat->GunHooks(std::move(assetEffects.gun));

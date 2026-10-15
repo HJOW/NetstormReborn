@@ -1,6 +1,6 @@
 // 원본 RiftType.cpp의 타입 표: 0049ebb0 ↔ CD 004434d0(배열 초기화·내장 이름), 0049c3b0 ↔ CD 004460f0(플래그 단어·속성),
 //       0049b0d0 ↔ CD 00444e10(후처리), 0049a860 ↔ CD 00443410(이름 검색).
-// 범위: 타입 번호 체계·이름·플래그 1/2·종류 단어·그룹·목록 플래그·발자국·초기 HP/깊이·생성자 주소 기록.
+// 범위: 타입 번호 체계·이름·플래그 1/2·종류 단어·그룹·원소·목록 플래그·발자국·초기 HP/깊이·생성자 주소 기록.
 //       비용 +0xc4도 읽는다. 사거리 등 전투 수치·요구 에너지 문자열(+0xa0)·최대 사거리 집계는 후속이다.
 // 검증: 이름 해시 표가 실제 .fort의 `TypeNames` 섹션과 같음을 tools/cpp_fort_smoke.py가 두 판본에서 확인한다.
 #include "o/RiftType.h"
@@ -125,8 +125,22 @@ void CopyKind(std::array<char, kKindBytes>& kind, std::string_view word) {
     for (std::size_t i = 0; i < kKindBytes && i < word.size(); ++i) kind[i] = word[i];
 }
 
-// 0049c3b0의 플래그·속성 부분: 정의에서 타입 구조체의 필드를 채운다.
-void ApplyDefinition(RiftTypeRecord& type, const RiftTypeDefinition& definition) {
+// 00472e60/CD0048a2c0이 만든 TYPE+98 조회 표를 읽는다. suffix/대소문자를 정규화하지 않는다.
+std::int32_t ThemeNumber(std::string_view text,OriginalEdition edition) {
+    const auto first=text.empty() ? std::uint8_t{} : static_cast<std::uint8_t>(text.front()); // 원본 AST 문자열의 첫 BYTE다.
+    if (first>=122) throw std::out_of_range("TYPE theme의 원본 초기화 표 범위 초과");
+    // 원본 표의 첫90 DWORD만 PATCH5/CD4로 채우며 그 뒤의 미지정 BSS는0이다.
+    std::int32_t value=first<90 ? (edition==OriginalEdition::Patch1078 ? 5 : 4) : 0;
+    constexpr std::string_view kThemeLetters="wrtsWRTS.?>"; // 두 PE 포인터가 가리키는 원문이며 순서 자체가 조회 의미다.
+    const std::size_t count=edition==OriginalEdition::Patch1078 ? 10U : 8U; // PATCH는5원소×2, CD는4원소×2를 기록한다.
+    const std::size_t modulus=edition==OriginalEdition::Patch1078 ? 5U : 4U; // PATCH의 대문자 결과 차이도 원본 그대로 보존한다.
+    // 초기화 몸체와 같은 순서로 지정 글자의 DWORD를 덮어쓴다.
+    for (std::size_t i=0;i<count;++i) if (first==static_cast<std::uint8_t>(kThemeLetters[i])) value=static_cast<std::int32_t>(i%modulus);
+    return value;
+}
+
+// 0049c3b0/CD004460f0의 플래그·속성 부분: 정의에서 타입 구조체의 필드를 채운다.
+void ApplyDefinition(RiftTypeRecord& type, const RiftTypeDefinition& definition,OriginalEdition edition) {
     type.footX = 1;
     type.footY = 1;
     type.flags1 = 0;
@@ -184,6 +198,10 @@ void ApplyDefinition(RiftTypeRecord& type, const RiftTypeDefinition& definition)
         }
         else if (is("hotFootX") || is("hotFootY")) throw std::invalid_argument("원본이 거부하는 hotFootX/Y 속성입니다");
         else if (is("level") && number) type.level = ToInt(*number) - 1;
+        else if (is("theme")) {
+            if (!text) throw std::invalid_argument("theme은 문자열이어야 합니다");
+            type.theme=ThemeNumber(*text,edition);
+        }
         else if (is("description") && text) { type.description = text->substr(0, kDescriptionBytes); hasDescription = true; }
         else if (is("group") && text) {
             type.group = -1;
@@ -246,6 +264,8 @@ std::int32_t TypeHotFootOffset(float ratio,bool vertical) {
 RiftTypeTable::RiftTypeTable(OriginalEdition edition, std::span<const RiftTypeSource> sources) {
     const bool cd = edition == OriginalEdition::Cd1072;
     types_.resize(cd ? kCdTypeCount : kPatchTypeCount);
+    // 원본 전체 TYPE 초기화는 메모리를0으로 지운 뒤 +98에 PATCH5/CD4를 넣는다.
+    for (auto& type:types_) type.theme=cd ? 4 : 5;
     const auto order = TypeLoadOrder(edition);
     if (sources.size() != order.size()) throw std::invalid_argument("Type source count does not match the edition load order");
     // .type 타입: 번호 = 70 + 로딩 순서. 이름은 정의의 typename이 아니라 파일 이름이다(원본 0049c3b0).
@@ -256,7 +276,7 @@ RiftTypeTable::RiftTypeTable(OriginalEdition edition, std::span<const RiftTypeSo
         type.name = std::string(order[i]); // 원본은 실행 파일의 이름 목록에서 복사한다.
         type.assetName = type.name;
         type.fromAsset = true;
-        ApplyDefinition(type, *sources[i].definition);
+        ApplyDefinition(type, *sources[i].definition,edition);
     }
     // 내장 프로세스 타입 이름: 20바이트 필드에 strncpy 하므로 긴 이름은 잘린다.
     const auto processNames = ProcessTypeNames(edition);

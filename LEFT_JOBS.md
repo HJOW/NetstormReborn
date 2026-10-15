@@ -1,11 +1,18 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-15 완료: 단위30 TYPE 원소 자료와 현재 옵션 연결 (`VM-W11-Codex`)
+
+- [x] 기준 `7d46ec5`에서 이어간다. 현재/마지막 정밀 PC는 **VM-W11-Codex, 2026-10-15**다. 보호 원본·AGENTS·사용자 `TODO.md`는 보존한다.
+- [x] 실제 TYPE+98의 첫 BYTE 조회 표와 전체 TYPE 초기값 **PATCH5/CD4**를 복원했다. 원문 `wrtsWRTS.?>`의 PATCH 앞10/i%5·CD 앞8/i%4와 대문자 차이를 유지한다. `RiftTypeRecord.theme`을 같은 세션의 지역/레지던스/총 보충 표에 연결하여 기존0 표와 썬 fallback을 제거했다. 레지던스도 현재 첫 일치 신전의 원소를 읽은 뒤 실제 `theammode`를 조회한다.
+- [x] **최종 NetstormCpp Release 빌드 종료0·경고0·오류0**, 공백 오류0·보호 두 PE SHA 불변이다. 새 테스트/fixture 추가·테스트 실행·게임/GUI 실행은0이다. [단위30 상세](docs/exe/cpp-run30-20261015.md)에 원본 기본값/판본 차이·표 범위와 후속 Form/내용물/피해 통지의 실제 주소를 정리했다. 인수인계 뒤 로컬 **`20261015-16 실제 TYPE 원소와 레지던스 현재 옵션 연결`**로 커밋하며 push하지 않는다.
+- [ ] 다음은 실제 내용물 부모 통지(base VT+24는 실제 빈 몸체이며 파생은 별도)·owner 피해/AI·감시/내용물 Form13/18바이트와 삭제8바이트 직렬화·fencemark·Ready/login이다. 초기1-1/1-2의 저장 내용물 부모는 레인/윈드 신전이다. 단위29 생성부를 실제 UberGump에 소비시키고 Battle 차단을 해제하는 작업과 Early Missions/1-1~1-2 완주 동일성은 미완료다. 목표active·DirectDraw 전체화면 오류 제외를 유지한다.
+
 ## 2026-10-15 완료: 단위29 실제 클라이언트 설정·음향 서비스 준비 (`VM-W11-Codex`)
 
 - [x] AGENTS와 양 LEFT를 다시 읽었다. 현재/마지막 정밀 디컴파일 PC는 **VM-W11-Codex, 2026-10-15**이며 기준은 `82cc438`이다. 사용자 `TODO.md` 수정은 보존한다.
 - [x] `CampaignClientServices`에 실제 ConfigInterface/Xlat/InputQueue/SoundPlayer와 Gump 생산 갱신 사건을 연결하는 생성부를 준비했다. 사제 Owner 통지는 기존 실제 무상태 다리 진단, 이름 기반 아처 음향은 같은 SID의 현재 float 위치를 사용한다. noAudio도 실제 이름표/비활성 재생을 유지하고 월드/프로세스→음향→화면 해제 순서를 적용했다. 누락된 게임 규칙은 기존 선택 오류를 유지한다.
 - [x] **NetstormCpp 최종 Release 빌드 종료0·경고0·오류0**, 공백 오류0·보호 두 PE SHA 불변이다. 새 테스트 추가·실행 및 GUI/게임 실행은0이다. 이전 전체1,145개 통과를 이번 실행으로 세지 않는다. [단위29 상세](docs/exe/cpp-run29-20261015.md)에 실제 기계어 호출 인자와 준비 범위를 기록했다. 로컬 **`20261015-15 실제 캠페인 클라이언트 서비스와 음향 수명 준비`**로 커밋하며 push하지 않는다.
-- [ ] 새 생성부의 실제 `UberGump` 소비와 Battle 차단 해제는 Form 직렬화/삭제 전파·내용물 부모 통지·피해 owner/AI·fencemark 표적 코너·Ready/login 경계를 복원한 뒤 진행한다. TYPE+98의 `themes/elements` 보충 표0 초기화 문제도 후속이다. Early Missions/1-1~1-2 완주 동일성은 미완료이며 목표active·DirectDraw 전체화면 오류 제외를 유지한다.
+- [ ] 새 생성부의 실제 `UberGump` 소비와 Battle 차단 해제는 Form 직렬화/삭제 전파·내용물 부모 통지·피해 owner/AI·fencemark 표적 코너·Ready/login 경계를 복원한 뒤 진행한다. TYPE+98의 `themes/elements` 보충 표 문제는 위 단위30에서 처리했다. Early Missions/1-1~1-2 완주 동일성은 미완료이며 목표active·DirectDraw 전체화면 오류 제외를 유지한다.
 
 ## 2026-10-15 완료: 단위28 실제 초기 카메라·캠페인 설치 연결 (`VM-W11-Codex`)
 
