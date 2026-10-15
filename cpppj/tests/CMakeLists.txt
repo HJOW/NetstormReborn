@@ -38,6 +38,11 @@ add_executable(netstorm_tests
     CampaignConstructionTests.cpp
     ChatChannelsTests.cpp
     LocalMissionTransportTests.cpp
+    MissionGuideTests.cpp
+    PriestParticipationTests.cpp
+    TutorialLaterTests.cpp
+    MissionLoginTests.cpp
+    MissionLoginTimerTests.cpp
     BattleBroadcastTests.cpp
     WindowTitleTests.cpp
     CameraHomeTests.cpp
@@ -1012,3 +1017,15 @@ set_source_files_properties(ChatChannelsTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CHAT_CHANNELS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/chat-channels-x86.tsv\"")
 set_source_files_properties(LocalMissionTransportTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_LOCAL_MISSION_TRANSPORT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/local-mission-transport-x86.tsv\"")
+
+# 실제 Guide/Advance와 포획된 사제를 포함한 참여 상태의 독립 원본 기대값이다.
+set_source_files_properties(MissionGuideTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_MISSION_GUIDE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/mission-guide-x86.tsv\"")
+set_source_files_properties(PriestParticipationTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PRIEST_PARTICIPATION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/priest-participation-x86.tsv\"")
+set_source_files_properties(TutorialLaterTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_TUTORIAL_LATER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/tutorial-later-x86.tsv\"")
+set_source_files_properties(MissionLoginTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_MISSION_LOGIN_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/mission-login-x86.tsv\"")
+set_source_files_properties(MissionLoginTimerTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_MISSION_LOGIN_TIMER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/mission-login-timer-x86.tsv\"")

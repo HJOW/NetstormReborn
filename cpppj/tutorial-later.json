@@ -1,0 +1,88 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-15",
+  "status": "release-focused-and-full-ctest-validated",
+  "native_unique_inputs": 533,
+  "normal_returns": 533,
+  "native_entries": {
+    "004c3f00": 134,
+    "004c33f0": 169,
+    "004ac200": 18,
+    "0049a840": 18,
+    "004c40f0": 132,
+    "004c23e0": 28,
+    "004c2560": 247,
+    "004c2480": 70,
+    "004c42b0": 135,
+    "004c2a40": 36,
+    "004c45e0": 132
+  },
+  "boundaries": {
+    "Q": 205,
+    "F2": 30,
+    "F1": 14,
+    "G10": 13,
+    "G11": 15,
+    "C71": 139,
+    "I75": 15,
+    "C76": 15,
+    "C75": 110,
+    "C77": 3,
+    "R": 1,
+    "N16777216": 1,
+    "H11": 13,
+    "I128": 14,
+    "C128": 116,
+    "TVortexDestroyed": 21,
+    "K": 36,
+    "P": 28,
+    "C78": 94,
+    "S": 15,
+    "TFactoryDestroyed": 15,
+    "Z": 6,
+    "X": 6,
+    "I140": 14,
+    "C140": 14
+  },
+  "os_gui_runs": 0,
+  "limits": [
+    "실제 Tutorial3~6/Gate Advance/Pause/TotalMade/Genus 몸체를 실행했다. 생산/Graph/지역/포획/선택/Tell은 명시 외부 경계다.",
+    "실제 게임/건설/AI전략/자연완주/CD는 이번 범위가 아니다."
+  ],
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_tutorial_later.py": "d37fab16a838e849fb1969368de997328b3050390a7100462a08a69fa86ba7bf",
+    "tools/decomp_missionframe_oracle.py": "98987447be7aa3632aeb6337a21880d57c43ad184e3657fae4171c8e9ffb1739",
+    "cpppj/src/o/RawTutorialLater.h": "cdad972521cf5bb77a9786044d62885aaa3c89bc0f6812de976a537dd57194e7",
+    "cpppj/src/o/RawTutorialLater.cpp": "3ff41fc6f360ddf0f1d33530661bafca8ba4d03fdbc4ea8f345f34cacf7eea11",
+    "cpppj/tests/fixtures/tutorial-later-x86.tsv": "4bf256da853bb6d96518df5f9779249ac1e82d56665d7de699e7f2fc8dbd68c4",
+    "cpppj/tests/TutorialLaterTests.cpp": "8125e5183131b7bd2269aba8668bd2f229e0a040eb63728ec282820b2752f918"
+  },
+  "product_validation": {
+    "configuration": "Release",
+    "build_exit_code": 0,
+    "build_warnings": 0,
+    "build_errors": 0,
+    "focused_tests": 60,
+    "failed_checks": 0,
+    "build_log": "extracted/goal-mission-entry-final-build.log",
+    "focused_log": "extracted/goal-mission-entry-final-focused.log",
+    "full_ctest": {
+      "ctest_passed": 1,
+      "ctest_total": 1,
+      "tests": 1283,
+      "failed_checks": 0,
+      "seconds": 216.33,
+      "log": "extracted/goal-mission-entry-ctest.log",
+      "internal_log": "extracted/goal-mission-entry-tests.log"
+    },
+    "game_gui_runs": 0,
+    "log_sha256": {
+      "extracted/goal-mission-entry-final-build.log": "c0a3e1d3bf1e79a1a772dad347058b670683acc74cae23bdb439a4a724db350a",
+      "extracted/goal-mission-entry-final-focused.log": "975ac1a097e37c3d835991c882df872cb0c589a98e7fa390f4b584b1dcc27dd0",
+      "extracted/goal-mission-entry-ctest.log": "a7700b2651646f2a8d956301e31f8c6a75f306c03158520e9c3ac3659b637251",
+      "extracted/goal-mission-entry-tests.log": "9c7bc0203bb8c9b7a3e6b10c639e98dddbbbdffbef3534eb925e61bb2d90435e"
+    }
+  }
+}

@@ -13,6 +13,7 @@
 #include "o/RawBattleBroadcast.h"
 #include "o/RawMissionOutcome.h"
 #include "o/RawAiBrain.h"
+#include "o/RawPriestParticipation.h"
 #include "client/CameraHome.h"
 namespace netstorm::client {
 // 미션 입력/정지/UI 수명은 실제 UberGump의 현재 저장소와 동작을 빌린다.
@@ -92,6 +93,12 @@ public:
     void RemoveAi(std::uint32_t owner);
     // 후속 실제 전략/검사가 같은 본체/목록 소유 저장소를 확인한다. 여기서 메모리를 합성하지 않는다.
     const o::RawAiBrainMemory& AiMemory() const;
+    // 원본 로그인 종료의 live/포획 사제 조회다. 현재 같은 풀/목록을 읽으며 상태를 갱신하지 않는다.
+    std::uint32_t FindPriestParticipation(std::uint32_t owner) const;
+    // 로그인 종료 타이머가 명시 요청할 때만 기존 ownerState를 갱신한다. Load/프레임 자동 갱신은 없다.
+    void RefreshPriestParticipation(std::uint32_t owner);
+    // 같은 현재 사제 목록/ownerState/풀에 연결된 참여 몸체를 읽기 전용으로 빌린다.
+    const o::RawPriestParticipation& PriestParticipation() const;
     // 설치 뒤 로컬 간헐천의 noIsland/Player0 받침만 실제 서버 확정 사슬로 만든다.
     bool ConfirmSupport(float x,float y);
     // 원본 미션 부모가 정한 위치에서 명시 호출한다. Load/프레임의 자동 생성은 하지 않는다.

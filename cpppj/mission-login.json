@@ -1,0 +1,54 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-15",
+  "nativeUniqueInputs": 48,
+  "status": "release-focused-and-full-ctest-validated",
+  "boundaries": [
+    "같은PC 전체 정밀 함수표의 검토한 실제 범위만 실행; 게임/OS 진입 없음",
+    "004a7800 부모 및 CheckLogin/owner지정/가입Player 순회/Begin·SP·응답·Ready 실제helper 실행",
+    "Template 파일/이미지/직렬화·중앙 metadata·동기화·worldLoad·옵션 적용·SP 저장소·CRT clock·wall·전송은 명시 외부 몸체",
+    "현재 Player9 전체1620바이트/8전역/모든 송신 packet바이트/전체 효과순서·반환스택·callee저장레지스터 비교",
+    "generic Battle/simulconnect/debugBurst는 이번 정상입력 관찰 범위가 아니며 C++에서 명시 거부"
+  ],
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_mission_login.py": "db60162888bf933d04fc1da67d6c4d3f152499668e37b41809efd522c1d72c51",
+    "cpppj/src/o/RawMissionLogin.h": "d97627e72f6d86a1fe3b410fb7104664d0c103192fb4b57bba54e571c5e21cff",
+    "cpppj/src/o/RawMissionLogin.cpp": "e528e46cd43a7003eb6fbd0954c40462646a245ffabf689ecf3858871a20589c",
+    "cpppj/tests/MissionLoginTests.cpp": "f0ace462b307a224b4b290ce7b33edbc121e57291aa8770d42b21ff43a320450",
+    "cpppj/tests/fixtures/mission-login-x86.tsv": "d57f9122eb04350eb4eceb141b64ea9d3e4d63ac4b06066e7206902126e24790"
+  },
+  "product_validation": {
+    "configuration": "Release",
+    "build_exit_code": 0,
+    "build_warnings": 0,
+    "build_errors": 0,
+    "focused_tests": 60,
+    "failed_checks": 0,
+    "build_log": "extracted/goal-mission-entry-final-build.log",
+    "focused_log": "extracted/goal-mission-entry-final-focused.log",
+    "full_ctest": {
+      "ctest_passed": 1,
+      "ctest_total": 1,
+      "tests": 1283,
+      "failed_checks": 0,
+      "seconds": 216.33,
+      "log": "extracted/goal-mission-entry-ctest.log",
+      "internal_log": "extracted/goal-mission-entry-tests.log"
+    },
+    "game_gui_runs": 0,
+    "log_sha256": {
+      "extracted/goal-mission-entry-final-build.log": "c0a3e1d3bf1e79a1a772dad347058b670683acc74cae23bdb439a4a724db350a",
+      "extracted/goal-mission-entry-final-focused.log": "975ac1a097e37c3d835991c882df872cb0c589a98e7fa390f4b584b1dcc27dd0",
+      "extracted/goal-mission-entry-ctest.log": "a7700b2651646f2a8d956301e31f8c6a75f306c03158520e9c3ac3659b637251",
+      "extracted/goal-mission-entry-tests.log": "9c7bc0203bb8c9b7a3e6b10c639e98dddbbbdffbef3534eb925e61bb2d90435e"
+    }
+  },
+  "observerAddressCorrection": {
+    "old": "0040aed0",
+    "current": "0040ae80",
+    "reason": "0x67 원본 등록의 실제 observer로 교정. 정상 입력 bytes/48입력 fixture SHA 불변. 다른 함수 범위를 넓히지 않음.",
+    "fixtureSha256Unchanged": "d57f9122eb04350eb4eceb141b64ea9d3e4d63ac4b06066e7206902126e24790"
+  }
+}

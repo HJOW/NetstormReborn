@@ -28,9 +28,9 @@
     "cpppj/src/client/AiTypeRequiredEnergy.cpp": "869c8193f7f74d8497a610fa893d5aba1854ced7da71e0db7709c31f9dd6d31f",
     "cpppj/tests/fixtures/type-required-energy-x86.tsv": "8bcb3e215c958f5df0a395365059f5481801b1660569f2f04c0720f394f14f4c",
     "cpppj/tests/TypeRequiredEnergyTests.cpp": "0802ab400413ec5da3f2d03a4ac6b6f88e2d088915646609a2ca0bb39a02b05c",
-    "cpppj/src/o/CMakeLists.txt": "f66ecd48b27ff161994c59dcb32e24610ba585e64ec2a57000224c55d8593684",
+    "cpppj/src/o/CMakeLists.txt": "17a47bed95feeae84e042ab5c25e2d29ce6946a1a1a99eb1169c63c4a8ec7895",
     "cpppj/src/client/CMakeLists.txt": "da63b087693ab955ced2534988ffd5fd742ba47ec518126bcfeb70cedac17339",
-    "cpppj/tests/CMakeLists.txt": "8d6c7497d2418e228a4eb8af75b86776ca8344fd3e11b2c2753602ee6bb5a27e"
+    "cpppj/tests/CMakeLists.txt": "b2039502749c9a1170c75ea77859341627b98dfd2daf3a500b4727fd01d06e7f"
   },
   "product_validation": {
     "configuration": "Release",
@@ -84,6 +84,23 @@
       "focused_tests": 3,
       "failed_checks": 0,
       "log": "extracted/goal-chat-transport-final-focused.log"
+    },
+    {
+      "date": "2026-10-15",
+      "reason": "mission Guide, Priest participation, Tutorial3-6, Login and Timer registration; TYPE product/native fixture unchanged",
+      "cmake_sha256": {
+        "cpppj/src/o/CMakeLists.txt": {
+          "previous": "f66ecd48b27ff161994c59dcb32e24610ba585e64ec2a57000224c55d8593684",
+          "current": "17a47bed95feeae84e042ab5c25e2d29ce6946a1a1a99eb1169c63c4a8ec7895"
+        },
+        "cpppj/tests/CMakeLists.txt": {
+          "previous": "8d6c7497d2418e228a4eb8af75b86776ca8344fd3e11b2c2753602ee6bb5a27e",
+          "current": "b2039502749c9a1170c75ea77859341627b98dfd2daf3a500b4727fd01d06e7f"
+        }
+      },
+      "focused_tests": 3,
+      "failed_checks": 0,
+      "log": "extracted/goal-mission-entry-final-focused.log"
     }
   ]
 }

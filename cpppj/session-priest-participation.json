@@ -1,0 +1,127 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-15",
+  "last_full_refined_host": "HJOW-Athlon",
+  "base_commit": "fb1b290",
+  "current_sources": {
+    "cpppj/src/client/RawCampaignSession.h": "6cb70505b90a065f64e147e768efe036b7b9f2f4e5b67a641a7253fa0104a03e",
+    "cpppj/src/client/RawCampaignSession.cpp": "226e00f01730df669cdedf9751e1bafc9a2ac1276a3cce78db15067aa6880b1c",
+    "cpppj/tests/CampaignSessionTests.cpp": "e8957d3ad7449dee2267d1f61788275662628abd49c3a0b9c2d1173d2b540c6d",
+    "cpppj/src/o/RawPriestParticipation.h": "e22ac1e0f2700463989c63876c3f4df883c71166e557052e5f69a2f916659937",
+    "cpppj/src/o/RawPriestParticipation.cpp": "563ca89986b3a8f93bc0a8d4986e0ca3fa06f55da77abcf94d2f2b5b4f426cc5",
+    "cpppj/tests/PriestParticipationTests.cpp": "68f94541cb6a109ae23391ddf983df7cb63cda9b652ef2190db4977acfd6da8f",
+    "cpppj/src/o/CMakeLists.txt": "17a47bed95feeae84e042ab5c25e2d29ce6946a1a1a99eb1169c63c4a8ec7895",
+    "cpppj/tests/CMakeLists.txt": "b2039502749c9a1170c75ea77859341627b98dfd2daf3a500b4727fd01d06e7f",
+    "cpppj/src/client/RawPriestWorldBindings.h": "bef744fbc276999b9e1aebafe0ae16445d9ee57d9cab73d9c1ad5248db0240b6",
+    "cpppj/src/client/RawPriestWorldBindings.cpp": "982722ce738ad8011c8f3efe2d6c351c22dd01fafd14a721f2c1f4dba11c7ed5",
+    "cpppj/src/o/RawPriestLookup.h": "c637a195c967c84c2ab8c7815e054b00b07223af0af5e799cd41680480eaf935",
+    "cpppj/src/o/RawPriestLookup.cpp": "66b80a17e85ac94c0e1fed6279ec3ee74cfd4ed483e9364ee3a2574d0fe0ffdc",
+    "cpppj/src/o/RawPriestPostPop.h": "7455e8fe47215746bcd223a35d0e8df82419b68efe9ae4b8609391ea61a96ec1",
+    "cpppj/src/o/RawPriestPostPop.cpp": "452f60d1b1afc344cdd618d7583cff295a4b6b41948d4d3f2ec950b72e720c0d",
+    "cpppj/src/o/RawCarrierPreDestroy.h": "d1f5903fc44c51dc7c6985ff073851b31f46f3f6fdd1a972cb568440cf7d173a",
+    "cpppj/src/o/RawCarrierPreDestroy.cpp": "18a4daeff34834590cfbc4d1b73f64475a009b4815a88ac98aa76f5b1e618c95",
+    "cpppj/src/o/RawContainedFinder.h": "ebce363e0a9fbebcd3604fcdfb39e89b1ac1b36a0624fb4ccdccebebb8c9c0a8",
+    "cpppj/src/o/RawContainedFinder.cpp": "3a7c0ca4530d019de4ba9fcb714991ac3d53703612d8bd5c865346e69fe9b8df",
+    "cpppj/src/o/RawAltarSacrifice.h": "1df83640935f495e4b6687c41ac5d181a8947f2bc6f349659870acea225b89c3",
+    "cpppj/src/o/RawAltarSacrifice.cpp": "c45c6083846aa97aec3d1dc0cd2dda2d0beab45fcd7addb07c755d1e2482f464",
+    "cpppj/src/o/RawSquidFinder.h": "e84bf53e772117ecfbc913eabbf460e86f1e687d79cb3f48f2f9c7db8893ed63",
+    "cpppj/src/o/RawSquidFinder.cpp": "f7947c488c45aa7632d0a705a863c0fe5262c3ea1c29c17ea23c56ed4249e4e2",
+    "cpppj/src/o/RawRunePostPop.h": "057c813ed8dcb33eab75554f9368645e77d4b85b61df76a22e64f52dcc82d5ee",
+    "cpppj/src/o/SidPool.h": "f56b3fd3b8c4cc0697afadb0d97ef4b7c62808103283c856c46bf68b59f0f35a",
+    "cpppj/src/o/SidPool.cpp": "7bc612330f3b631cf8141be5e7a9ae51cefe8caee3ea3eb68be38252d68a6887",
+    "cpppj/src/o/SquidHash.h": "ee3c9fbc61c659e8a62b0d9675f028ca3ca1b29cc364abc49680bdb1a5e50ac7",
+    "cpppj/src/o/SquidHash.cpp": "e275a8239016e45237a57a85c43c22a9767351bfdaeedc728423c3bb42a3e5e4",
+    "cpppj/src/o/SquidFactory.cpp": "6221de3262944b7105ae57dacc67ee8cee3e237b62240d5d3a2fd777a5706aed",
+    "cpppj/src/o/SquidForms.cpp": "013e35f13121c1447cee1b00014e2bcdd453c0ab29207af05e2fe1345d574080"
+  },
+  "original_observation": {
+    "cpppj/priest-participation.json": "bb9a67d2e328f040dd71d321fc3ee5ae58663e959750c3a87b020c2ea9b7798b",
+    "cpppj/tests/fixtures/priest-participation-x86.tsv": "53c28169db230311142e136cc0a3ff95f83dea99216e164cb19c77433aecda96",
+    "tools/decomp_priest_participation.py": "c4ac2c6d48dc37364244fab762e638888f852a1e8e38a65c8730fb780ebc42ed"
+  },
+  "new_native_unique_inputs": 304,
+  "new_native_returns": 1216,
+  "os_calls": 0,
+  "gui_runs": 0,
+  "substitutions": {},
+  "historical_provenance": {
+    "cpppj/session-ai.json": {
+      "snapshot_commit": "c9bc0f4",
+      "meaning": "AI 연결 완료 당시 역사 스냅샷이며 현재 Session SHA로 덮어쓰지 않는다.",
+      "sha": "9e1a9946b7851883345bcd00b8a99e6bd63a7bc6901fff9720a6c64ba149039f"
+    },
+    "cpppj/session-construction.json": {
+      "snapshot_commit": "81fae7c",
+      "meaning": "단위65 완료 당시 소스와 fixture 검증의 역사 스냅샷이다.",
+      "sha": "d0859204e6bcba9126f18bf71f9b7e202e73a483b364341d978f6e1c07e0eacb"
+    },
+    "cpppj/client-ai-chat.json": {
+      "snapshot_commit": "fb1b290",
+      "meaning": "단위67 완료 당시 실제 Client/Chat/현재 기본이름 연결의 역사 스냅샷이다.",
+      "sha": "141f6b7d4d7db2b4141536187a7de429fc9a645462786dbe0ebd4ad090ea3513"
+    }
+  },
+  "binding": [
+    "첫 객체 전 같은 core.pool/hash/types와 priests->Carrier()/Priests()를 연결한다.",
+    "현재 priestState.movement.priest 및 runeState.altarType/daisType을 참조한다.",
+    "기존 PostPop/PreDestroy/MissionOutcome과 같은 ownerState 저장소를 공유한다.",
+    "constructor/Load/RunFrame의 자동 Refresh는 없으며 실제 로그인 종료 부모가 명시 호출한다."
+  ],
+  "validation": {
+    "native_verify": "304고유입력·실제19함수·1216정상반환·외부대체0",
+    "release_build": "소스 고정 Release 경고0·오류0",
+    "focused_tests": "새 독립3개·실제 Session2개를 포함한 관련60개 실패0",
+    "full_ctest": {
+      "ctest_passed": 1,
+      "ctest_total": 1,
+      "tests": 1283,
+      "failed_checks": 0,
+      "seconds": 216.33,
+      "log": "extracted/goal-mission-entry-ctest.log",
+      "internal_log": "extracted/goal-mission-entry-tests.log"
+    }
+  },
+  "limits": [
+    "Session2는 실제 Factory 객체에 명시 raw 종속/typed 조회 입력을 공급하며 전체 capture/Altar Pop을 실행한 검사가 아니다.",
+    "새 native fixture는10.78이며 CD0040ef50/0040f0e0는 정적 대응 분석만 기록했다.",
+    "실제 로그인 종료/Guide/Stage3/자동 미션 판정/GUI는 아직 후속 연결이다."
+  ],
+  "initial_failure": {
+    "log": "extracted/goal-guide-participation-focused.log",
+    "sha256": "8c9c78da31304b1ec1a617468d01db46749133325c5eae48780fe965523cde4d",
+    "failed_check": "실제 Session Dais 발자국에 합성 fixture의3x3을 잘못 가정했다.",
+    "protected_asset_evidence": "보호 netstorm.tarc의 d/dais.type 및 d/altar.type는 모두 foot_x=7;foot_y=7이다.",
+    "correction": "제품과 실제 TYPE를 바꾸지 않고 실제7x7 크기 및 Carrier 우선순위를 각각 독립 CHECK로 검사했다."
+  },
+  "protected_assets": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
+  },
+  "product_validation": {
+    "configuration": "Release",
+    "build_exit_code": 0,
+    "build_warnings": 0,
+    "build_errors": 0,
+    "focused_tests": 60,
+    "failed_checks": 0,
+    "build_log": "extracted/goal-mission-entry-final-build.log",
+    "focused_log": "extracted/goal-mission-entry-final-focused.log",
+    "full_ctest": {
+      "ctest_passed": 1,
+      "ctest_total": 1,
+      "tests": 1283,
+      "failed_checks": 0,
+      "seconds": 216.33,
+      "log": "extracted/goal-mission-entry-ctest.log",
+      "internal_log": "extracted/goal-mission-entry-tests.log"
+    },
+    "game_gui_runs": 0,
+    "log_sha256": {
+      "extracted/goal-mission-entry-final-build.log": "c0a3e1d3bf1e79a1a772dad347058b670683acc74cae23bdb439a4a724db350a",
+      "extracted/goal-mission-entry-final-focused.log": "975ac1a097e37c3d835991c882df872cb0c589a98e7fa390f4b584b1dcc27dd0",
+      "extracted/goal-mission-entry-ctest.log": "a7700b2651646f2a8d956301e31f8c6a75f306c03158520e9c3ac3659b637251",
+      "extracted/goal-mission-entry-tests.log": "9c7bc0203bb8c9b7a3e6b10c639e98dddbbbdffbef3534eb925e61bb2d90435e"
+    }
+  },
+  "status": "release-focused-and-full-ctest-validated"
+}

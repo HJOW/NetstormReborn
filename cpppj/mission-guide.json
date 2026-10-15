@@ -1,0 +1,67 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-15",
+  "status": "release-focused-and-full-ctest-validated",
+  "observations": 1550,
+  "run_inputs": 1462,
+  "advance_inputs": 88,
+  "native_calls": {
+    "00482c80": 607,
+    "00463bb0": 1834
+  },
+  "explicit_external_boundaries": {
+    "004b32e0": 1728,
+    "004c8e90": 1474,
+    "20000170": 304,
+    "20000100": 195,
+    "20000110": 192,
+    "20000120": 209,
+    "20000130": 102,
+    "20000140": 104,
+    "20000150": 161,
+    "20000160": 122,
+    "00463ab0": 334,
+    "004e0620": 339
+  },
+  "normal_return": true,
+  "stack_and_preserved_registers_checked": true,
+  "native_write_guard": "two mission flags/sequence fields and bounded stack only",
+  "game_gui_os_calls": 0,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "72d14bfa36091dc86a273ad9b1998c940f575bb954195d0e0920e5e63ea10bc7",
+    "tools/decomp_mission_guide.py": "14764a6c735394e2b04e122ac306edaf00758dab0c295881c396ff6ba6c82f20",
+    "cpppj/src/o/RawMissionGuide.h": "abe25116bc9b3d97d85528d0dee6e9be8379444dbc3eebb4345c475e001e9c37",
+    "cpppj/src/o/RawMissionGuide.cpp": "1cb21c385c42a89cd319fccdc15d118e1cf329ff6b50a3ab144fa85f69e5a8b8",
+    "cpppj/src/o/RawMissionStart.h": "f538748e470a5e5e7468d09bf0cd7ab583212c1da25a887ccb0e2a761ab7bd38",
+    "cpppj/tests/MissionGuideTests.cpp": "77a34451170f5e42e1ba6e9e170a1148aa52c739cdca543b1570e99689b09cbb",
+    "cpppj/tests/fixtures/mission-guide-x86.tsv": "d69b394b3ac8a87f220bd1f382f1ad7aa54bd9bb6664319becc3bde89ab6e698"
+  },
+  "product_validation": {
+    "configuration": "Release",
+    "build_exit_code": 0,
+    "build_warnings": 0,
+    "build_errors": 0,
+    "focused_tests": 60,
+    "failed_checks": 0,
+    "build_log": "extracted/goal-mission-entry-final-build.log",
+    "focused_log": "extracted/goal-mission-entry-final-focused.log",
+    "full_ctest": {
+      "ctest_passed": 1,
+      "ctest_total": 1,
+      "tests": 1283,
+      "failed_checks": 0,
+      "seconds": 216.33,
+      "log": "extracted/goal-mission-entry-ctest.log",
+      "internal_log": "extracted/goal-mission-entry-tests.log"
+    },
+    "game_gui_runs": 0,
+    "log_sha256": {
+      "extracted/goal-mission-entry-final-build.log": "c0a3e1d3bf1e79a1a772dad347058b670683acc74cae23bdb439a4a724db350a",
+      "extracted/goal-mission-entry-final-focused.log": "975ac1a097e37c3d835991c882df872cb0c589a98e7fa390f4b584b1dcc27dd0",
+      "extracted/goal-mission-entry-ctest.log": "a7700b2651646f2a8d956301e31f8c6a75f306c03158520e9c3ac3659b637251",
+      "extracted/goal-mission-entry-tests.log": "9c7bc0203bb8c9b7a3e6b10c639e98dddbbbdffbef3534eb925e61bb2d90435e"
+    }
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-15",
+  "status": "release-focused-and-full-ctest-validated",
+  "observations": 1984,
+  "kinds": {
+    "R": 1466,
+    "S": 18,
+    "E": 19,
+    "B": 72,
+    "A": 15,
+    "C": 394
+  },
+  "native_calls": {
+    "004b6780": 288,
+    "004b61f0": 658,
+    "0040b010": 658,
+    "004df230": 658,
+    "00490ab0": 811,
+    "00490a00": 394,
+    "00490bc0": 811,
+    "00490b20": 811,
+    "00490970": 647,
+    "004180a0": 312,
+    "004b67c0": 1484
+  },
+  "explicit_external_boundaries": {
+    "004b6350": 288,
+    "004c8d90": 1079,
+    "004e2e30": 658,
+    "004e0620": 18,
+    "00460d70": 330,
+    "004e78d0": 664,
+    "004e2b10": 488,
+    "004b6180": 247,
+    "004b68d6": 82,
+    "004a68e0": 3164,
+    "00495060": 6328,
+    "004b54e0": 791,
+    "004340d0": 353,
+    "0045ad00": 18,
+    "00441090": 18
+  },
+  "explicit_general_initialization_rejections": 0,
+  "normal_return_all_saved_observations": true,
+  "stack_and_preserved_registers_checked": true,
+  "native_write_guard": "bounded stack, end/timeout/begin/scriptBreak/requestPhase/clock only",
+  "progress_tail": "explicit external boundary, then actual original epilogue",
+  "game_gui_os_calls": 0,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "72d14bfa36091dc86a273ad9b1998c940f575bb954195d0e0920e5e63ea10bc7",
+    "tools/decomp_mission_login_timer.py": "17f766b78e0167f4af1bc4792cef5ab8ce584334a942f4c7ed592f81d32c6d4c",
+    "cpppj/src/o/RawMissionLoginTimer.h": "6d02e1dfb1b176dfc0f8a257ae862ab15f5206f996f576b7b8b3f7a82c372f91",
+    "cpppj/src/o/RawMissionLoginTimer.cpp": "34727e857f4cb47965d708a97f6c979fb8409a7ed2b581f3b6585046085a40de",
+    "cpppj/tests/MissionLoginTimerTests.cpp": "fd8ede0a61ca9ff2876739708ecc20e41d326fc7249faed5e5468738b538483f",
+    "cpppj/tests/fixtures/mission-login-timer-x86.tsv": "780a993bbac4f8b51ae7a0e425eb6b44dd5a4161dbcddb96124bfc32b9aacb35"
+  },
+  "product_validation": {
+    "configuration": "Release",
+    "build_exit_code": 0,
+    "build_warnings": 0,
+    "build_errors": 0,
+    "focused_tests": 60,
+    "failed_checks": 0,
+    "build_log": "extracted/goal-mission-entry-final-build.log",
+    "focused_log": "extracted/goal-mission-entry-final-focused.log",
+    "full_ctest": {
+      "ctest_passed": 1,
+      "ctest_total": 1,
+      "tests": 1283,
+      "failed_checks": 0,
+      "seconds": 216.33,
+      "log": "extracted/goal-mission-entry-ctest.log",
+      "internal_log": "extracted/goal-mission-entry-tests.log"
+    },
+    "game_gui_runs": 0,
+    "log_sha256": {
+      "extracted/goal-mission-entry-final-build.log": "c0a3e1d3bf1e79a1a772dad347058b670683acc74cae23bdb439a4a724db350a",
+      "extracted/goal-mission-entry-final-focused.log": "975ac1a097e37c3d835991c882df872cb0c589a98e7fa390f4b584b1dcc27dd0",
+      "extracted/goal-mission-entry-ctest.log": "a7700b2651646f2a8d956301e31f8c6a75f306c03158520e9c3ac3659b637251",
+      "extracted/goal-mission-entry-tests.log": "9c7bc0203bb8c9b7a3e6b10c639e98dddbbbdffbef3534eb925e61bb2d90435e"
+    }
+  }
+}

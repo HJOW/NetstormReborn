@@ -20,6 +20,7 @@
 #include "o/RawAiCreate.h"
 #include "o/RawAiBrainInitialUpdate.h"
 #include "o/RawPriestLookup.h"
+#include "o/RawRunePostPop.h"
 #include <bit>
 #include <cstdio>
 #include <stdexcept>
@@ -97,6 +98,7 @@ struct RawCampaignSession::Impl {
     FortFinishOwnerState finishState; // 실제 미션 chaffMode의 자연 반환 조건이다.
     AssetPostPopState assetState; // 실제 신전/레지던스/간헐천/아웃포스트 목록이다.
     RawPriestWorldState priestState; // 실제 사제/Carrier/보호막 장기 전역이다.
+    RunePostPopState runeState; // PATCH005412e8/ec/f0의 현재Altar164/Dais165/Rune166이며 후속 실제 의식도 같은 저장소를 사용한다.
     PlayerWorldState playerState; // 현재 battleOwner와 templateOwner는 별도 상태다.
     FortObjectLoadState objectState; // 저장객체의 실제 미션/로딩 상태다.
     CampaignWorldGlobals globals; // 실제 로그인과 missionPost의 장기 전역이다.
@@ -106,6 +108,7 @@ struct RawCampaignSession::Impl {
     std::int32_t noRegion{127}; // 정상 지형 생성의 실제 현재 지역없음 번호다.
     std::unique_ptr<RawIslandRuntime> islands; // 위3204BYTE와 동일 Pool을 공유한다.
     std::unique_ptr<RawPriestWorldBindings> priests; // 저장 사제의 실제 Owner/PostPop/보호막 분배기다.
+    std::unique_ptr<RawPriestParticipation> priestParticipation; // 같은 현재live/Carrier/typedDais와기존ownerState의로그인종료조회다.
     std::unique_ptr<RawPlayerWorld> player; // 최초152 생성자/실제 PostPop/9기록을 연결한다.
     std::unique_ptr<RawPlayerRegular> playerRegular; // 현재 Player의 실제 사건1/2를 처리한다.
     std::unique_ptr<RawPlayerTemplateState> templateState; // 같은Template header/원본State28BYTE를 직접 읽는다.
@@ -267,6 +270,9 @@ struct RawCampaignSession::Impl {
         priestEffects.regen.damageable=[this](Sid sid) { hits->Burning().Refresh(sid); };
         priests=std::make_unique<RawPriestWorldBindings>(RawPriestWorldCore{core.pool,core.hash,core.types,core.frames,core.spots,core.hash.Entries(0),hp,random,core.factory,core.owner,core.ownerMode,core.postPop,core.frame},priestState,std::move(priestEffects));
         priests->BindProcesses(core.processes);priests->SetAuthority(true);priests->SetLocalPlayer(1);
+        // 첫객체전에같은실제Carrier/목록과현재타입참조만연결하며ownerState는여기서갱신하지않는다.
+        priestParticipation=std::make_unique<RawPriestParticipation>(core.pool,core.hash,core.types,priests->Priests(),priests->Carrier(),
+            PriestParticipationState{priestState.movement.priest,runeState.altarType,runeState.daisType});
         PlayerWorldHooks playerHooks;
         playerHooks.assertion=SessionMissing<void,PlayerWorldAssertion>();
         playerHooks.find=[this](float x,float y,std::uint32_t type) { RawSquidFinder finder(core.pool,core.hash,core.types);return finder.Begin({static_cast<int>(x),static_cast<int>(y),static_cast<int>(x),static_cast<int>(y)},0,[this,type](Sid sid) { return core.pool.Slot(sid)[10]==type; }); };
@@ -614,6 +620,12 @@ std::uint32_t RawCampaignSession::CreateAi(std::uint32_t owner,std::span<const s
 void RawCampaignSession::RemoveAi(std::uint32_t owner) { impl_->participation->RemoveBrain(owner); }
 // 후속 실제 전략은 현재 Player 토큰으로 이 유일한 본체/목록 저장소를 조회해야 한다.
 const RawAiBrainMemory& RawCampaignSession::AiMemory() const { return impl_->aiMemory; }
+// 기존사제목록의현재owner/dead와같은풀의실제포획원소유자를명시조회한다.
+std::uint32_t RawCampaignSession::FindPriestParticipation(std::uint32_t owner) const { return impl_->priestParticipation->Find(owner); }
+// 원본로그인종료타이머소비자가선택한위치에서만기존ownerState1..8을갱신한다.
+void RawCampaignSession::RefreshPriestParticipation(std::uint32_t owner) { impl_->priestParticipation->Refresh(owner); }
+// 실제MissionOutcome/PostPop과동일한저장소인지후속소비자가확인한다.
+const RawPriestParticipation& RawCampaignSession::PriestParticipation() const { return *impl_->priestParticipation; }
 // 원본 부모 설치 전의 임의 공간 쓰기를 거부하며 같은 현재 noIsland 전역으로 요청을 구성한다.
 bool RawCampaignSession::ConfirmSupport(float x,float y) {
     if (!impl_->loaded) throw std::logic_error("실제 Session 설치 전 받침 확정 요청");

@@ -2,6 +2,14 @@
 # 클라이언트와 서버가 함께 쓰던 코드로 보인다. 이 폴더의 코드는 client/ 와 platform/ 을 포함하지 않는다.
 # 다시 만든 파일을 아래 목록에 더한다. 파일 이름은 SOURCE_MAP.md 의 "cpppj 경로"를 따른다.
 target_sources(netstorm PRIVATE
+    # 원본 Guide 반복과 현재 실제 사제 참여 상태를 같은 저장소에서 처리한다.
+    RawMissionGuide.cpp RawMissionGuide.h
+    RawPriestParticipation.cpp RawPriestParticipation.h
+    # 같은 미션 게이트와 제작 장부로 Early Missions3~6의 실제 단계 조건을 판정한다.
+    RawTutorialLater.cpp RawTutorialLater.h
+    # 같은 Player9의 실제 로컬 로그인과 벽시계 완료/중단 순서를 공유한다.
+    RawMissionLogin.cpp RawMissionLogin.h
+    RawMissionLoginTimer.cpp RawMissionLoginTimer.h
     RawMissionFrameGate.cpp RawMissionFrameGate.h
     RawTutorialOne.cpp RawTutorialOne.h RawTotalMade.cpp RawTotalMade.h
     RawTutorialTwo.cpp RawTutorialTwo.h

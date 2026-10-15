@@ -1,0 +1,87 @@
+{
+  "total": 304,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-15",
+  "last_full_refined_host": "HJOW-Athlon",
+  "controls": [
+    639,
+    895
+  ],
+  "capacity": 24000,
+  "binary_sha": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "ranges": {
+    "0040eb40": "40eb40-40eb71",
+    "0041d770": "41d770-41d79a",
+    "00434380": "434380-43440d",
+    "00448bb0": "448bb0-448bc6",
+    "0044daa0": "44daa0-44daa7",
+    "004921f0": "4921f0-49223a",
+    "00494f10": "494f10-49505e",
+    "00495060": "495060-4950c9",
+    "0049a840": "49a840-49a852",
+    "0049a900": "49a900-49a939",
+    "004ac200": "4ac200-4ac213",
+    "004ac9f0": "4ac9f0-4acab6",
+    "004b16d0": "4b16d0-4b1804",
+    "004b1810": "4b1810-4b1a8f",
+    "004b1b20": "4b1b20-4b1b74",
+    "004b1fa0": "4b1fa0-4b206c",
+    "004b2270": "4b2270-4b22c9",
+    "004b2b00": "4b2b00-4b2b46",
+    "004e49c0": "4e49c0-4e4a34"
+  },
+  "returns": 1216,
+  "native_calls": {
+    "00494f10": 1216,
+    "004921f0": 1216,
+    "00495060": 608,
+    "0040eb40": 1088,
+    "004ac200": 2256,
+    "0049a840": 3176,
+    "004ac9f0": 572,
+    "004b2270": 572,
+    "004b1b20": 644,
+    "0044daa0": 1068,
+    "00448bb0": 496,
+    "004b1fa0": 496,
+    "0041d770": 496,
+    "004e49c0": 2832,
+    "004b16d0": 496,
+    "00434380": 1584,
+    "004b2b00": 1896,
+    "004b1810": 496,
+    "0049a900": 424
+  },
+  "data_reads": {
+    "list": 416,
+    "pool": 17005120,
+    "types": 3600,
+    "hash": 1896
+  },
+  "owner_writes": {
+    "1:0": 8,
+    "1:1": 200,
+    "1:2": 14,
+    "8:0": 8,
+    "8:1": 24,
+    "8:2": 12
+  },
+  "substitutions": {},
+  "os_calls": 0,
+  "gui_runs": 0,
+  "files": {
+    "tools/decomp_priest_participation.py": "c4ac2c6d48dc37364244fab762e638888f852a1e8e38a65c8730fb780ebc42ed",
+    "tools/decomp_missionframe_oracle.py": "98987447be7aa3632aeb6337a21880d57c43ad184e3657fae4171c8e9ffb1739",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "cpppj/tests/fixtures/priest-participation-x86.tsv": "53c28169db230311142e136cc0a3ff95f83dea99216e164cb19c77433aecda96",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236"
+  },
+  "limits": [
+    "10.78보호PE의19개전체함수만실행.두기본가상필터/Next도원본주소다.",
+    "동일24000슬롯합성월드/직접해시등록.실제Pop/게임/로그인전체는실행하지않음.",
+    "허용제품쓰기는Refresh의ownerState1..8DWORD뿐.풀/타입/목록/해시불변과cdecl/x87정상반환검사.",
+    "기계어의풀/타입/해시/목록읽기수는관찰통계이며C++메모리읽기명령수동일성을주장하지않음.",
+    "CD0040ef50/0040f0e0은정적대응만확인하며이fixture는10.78전용."
+  ]
+}
