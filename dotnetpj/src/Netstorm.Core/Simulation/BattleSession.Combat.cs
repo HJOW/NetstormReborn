@@ -363,6 +363,8 @@ public sealed partial class BattleSession
         }
         else if (entity.Kind == ObjectKind.Workshop) player?.Deck.RemoveWorkshop(entity.Id);
         _entities.Remove(entity.Id);
+        // 삭제 준비(PreDestroy): 등록한 일반 객체의 현재 수를 내린다(누적 제작 수는 유지).
+        ReleaseLedgerEntity(entity);
         Map.Sids.ReleaseWorld(entity.Id);
         if (entity.Type.Definition.HasFlag("createsisland")) Bridges.InvalidateTerrain();
         _harvestTasks.Remove(entity.Id);

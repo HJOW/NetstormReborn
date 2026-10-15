@@ -165,16 +165,16 @@ public sealed class TutorialStagesTests
         // 조각을 명령 경로로 하나 놓으면 누적 수가 놓은 칸 수만큼 는다.
         int first = SessionData.PlaceBridgePiece(session, player);
         Assert.True(first > 0);
-        Assert.Equal(first, player.MadeWithFlags(TypeFlagBits.Bridge));
+        Assert.Equal(first, session.BuiltForGenus(TypeFlagBits.Bridge));
 
         // 놓은 칸을 모두 걷어내면 살아 있는 칸은 없어도 누적 수는 그대로다.
         KillPlacedBridges(session);
         Assert.DoesNotContain(session.Bridges.Cells, c => c.Owner == 1 && !session.StoredBridgeCells.Contains(c));
-        Assert.Equal(first, player.MadeWithFlags(TypeFlagBits.Bridge));
+        Assert.Equal(first, session.BuiltForGenus(TypeFlagBits.Bridge));
         Assert.Equal('B', session.Tutorial.Stage);
 
         // 놓을 때마다 걷어내며 누적 8칸을 채우면, 살아 있는 칸이 8칸보다 적어도 단계 C 가 된다.
-        while (player.MadeWithFlags(TypeFlagBits.Bridge) < 8)
+        while (session.BuiltForGenus(TypeFlagBits.Bridge) < 8)
         {
             SessionData.PlaceBridgePiece(session, player);
             KillPlacedBridges(session);
@@ -230,13 +230,13 @@ public sealed class TutorialStagesTests
         PlayThrough(session);
         PlayerState player = session.Player(1);
         // 넷을 놓고 하나를 회수했지만 누적은 그대로다
-        Assert.Equal(4, player.Made("sunArcher"));
+        Assert.Equal(4, session.BuiltCount("sunArcher"));
         Assert.Equal(3, session.Entities.Count(e => e.Kind == ObjectKind.Emplacement && e.Owner == 1));
-        Assert.Equal(1, player.MadeWithFlags(Netstorm.Assets.TypeFlagBits.Flag2Words["vortex"]));
-        Assert.Equal(1, player.MadeWithFlags(Netstorm.Assets.TypeFlagBits.Factory));
+        Assert.Equal(1, session.BuiltForGenus(Netstorm.Assets.TypeFlagBits.Flag2Words["vortex"]));
+        Assert.Equal(1, session.BuiltForGenus(Netstorm.Assets.TypeFlagBits.Factory));
         // 대소문자를 구분하지 않고, 짓지 않은 타입은 0 이다
-        Assert.Equal(4, player.Made("SUNARCHER"));
-        Assert.Equal(0, player.Made("bulf"));
+        Assert.Equal(4, session.BuiltCount("SUNARCHER"));
+        Assert.Equal(0, session.BuiltCount("bulf"));
     }
 
     /// <summary>선택 명령은 없는 오브젝트를 거부하고, 선택한 오브젝트가 회수로 사라지면 선택도 풀린다</summary>

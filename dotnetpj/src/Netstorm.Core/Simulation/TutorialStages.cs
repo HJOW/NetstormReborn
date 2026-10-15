@@ -28,17 +28,14 @@ public sealed class TutorialStages
     /// <summary>튜토리얼 1의 완료 단계.</summary>
     private const char BridgeTheGapLastStage = 'G';
 
-    /// <summary>튜토리얼 1의 다리 실습 첫 통과 기준(원본 004c3a20 단계 B: 누적 수가 7보다 큼).</summary>
-    private const int FirstBridgeTarget = 8;
+    /// <summary>튜토리얼 1 의 F4(섬으로 복귀) 명령 토큰. 단계 A 가 현재 사건의 하위 26비트와 비교한다(원본 005429ac 에 해당하는 클론의 표식).</summary>
+    private const uint HomeCommandToken = 0x00730000;
 
-    /// <summary>튜토리얼 1의 다리 회전 실습 통과 기준(원본 004c3a20 단계 C: 누적 수가 0x12(18)보다 큼).</summary>
-    private const int SecondBridgeTarget = 19;
+    /// <summary>튜토리얼 1 의 회수 명령 토큰(원본 0054271c 에 해당하는 클론의 표식). 클론에는 이 토큰을 보내는 사건이 없다.</summary>
+    private const uint ReclaimCommandToken = 0x00123456;
 
-    /// <summary>튜토리얼 1의 최종 Storm Power 목표(미션 스크립트 F.).</summary>
-    private const int BridgeTheGapStormPowerTarget = 600;
-
-    /// <summary>튜토리얼 1에서 결정 하나를 전달한 뒤 넘어가는 Storm Power 기준(원본 0x510298).</summary>
-    private const int FirstCrystalStormPowerTarget = 200;
+    /// <summary>튜토리얼 1 판정이 "최근 생성한 간헐천" 목록에 담는 최대 개수(원본 00595094/98).</summary>
+    private const int RecentGeyserLimit = 5;
 
     /// <summary>단계 C: 신전을 선택한 채 이 시간(초)이 지나면 보정 안내를 띄운다 (exe 0x506590 의 double 값 2.0)</summary>
     private const double NotVortexDelaySeconds = 2.0;
@@ -51,9 +48,6 @@ public sealed class TutorialStages
 
     /// <summary>신전 타입의 플래그2 비트 (typeflags "vortex" = 0x200)</summary>
     private static readonly uint VortexFlag = TypeFlagBits.Flag2Words["vortex"];
-
-    /// <summary>다리 타입의 플래그2 비트 (typeflags "bridge" = 0x4). 튜토리얼 1 단계 A·B·C 가 누적 제작 수의 합으로 읽는다</summary>
-    private static readonly uint BridgeFlag = TypeFlagBits.Bridge;
 
     /// <summary>단계 C 보정 안내 섹션 이름 (스크립트 [NotVortex])</summary>
     public const string NotVortexSection = "NotVortex";
@@ -79,11 +73,20 @@ public sealed class TutorialStages
     /// <summary>마지막 단계에 도달했는지</summary>
     public bool Finished => Stage == (Number == BridgeTheGap ? BridgeTheGapLastStage : SecretWorkshopLastStage);
 
-    /// <summary>튜토리얼 1에서 마지막으로 연결을 검사한 다리 격자 버전.</summary>
-    private int _lastReachVersion = -1;
+    /// <summary>튜토리얼 1 의 원본 단계 판정기(004c3a20 이식). 세션에 처음 닿을 때 만든다.</summary>
+    private TutorialOne? _bridgeJudge;
 
-    /// <summary>마지막 연결 검사에서 가이저에 닿을 수 있었는지.</summary>
-    private bool _lastReachable;
+    /// <summary>판정기가 읽는 최근 생성 간헐천 목록. 판정 직전에 세션의 간헐천으로 채운다.</summary>
+    private readonly RecentGeyserList _recentGeysers = new();
+
+    /// <summary>같은 판정 안에서 이미 단계를 올렸는지. 원본은 Advance 가 잠금 10프레임을 걸어 같은 판정의 추가 호출을 거부한다.</summary>
+    private bool _advancedInJudgement;
+
+    /// <summary>간헐천 도달 가능 여부 캐시의 다리 격자 버전. 버전이 바뀌면 다시 계산한다.</summary>
+    private int _reachVersion = -1;
+
+    /// <summary>간헐천 번호 → 현재 사제가 걸어서 닿을 수 있는지(다리 격자 버전별 캐시).</summary>
+    private readonly Dictionary<int, bool> _reachable = [];
 
     /// <summary>헤드리스 합성 진행의 기존 타이머 틱과 진단값. 실제 화면 판정에서는 TimerSeconds를 사용한다.</summary>
     public long TimerTick { get; private set; }
@@ -156,7 +159,7 @@ public sealed class TutorialStages
                 // 전투 옵션을 덮어쓴다: Generator Range = Short(14칸), Unit Rate = Fast (프레임마다 다시 정하지만 값은 같다)
                 session.Map.Options.ApplyTutorialTwoOverrides();
                 // 신전(typeflags vortex)을 지은 개수가 0 보다 크면 다음 단계
-                if (player.MadeWithFlags(VortexFlag) > 0)
+                if (session.BuiltForGenus(VortexFlag) > 0)
                 {
                     Advance(session);
                 }
@@ -165,7 +168,7 @@ public sealed class TutorialStages
                 // 표에서 Sun Workshop(sunFactory)을 허용으로 바꾼다 (원본 FUN_004c23e0(sunFactory, 허용))
                 player.Tech.Set("sunFactory", true);
                 // 워크샾(typeflags factory)을 지은 개수가 0 보다 크면 다음 단계 (선택을 푼다)
-                if (player.MadeWithFlags(TypeFlagBits.Factory) > 0)
+                if (session.BuiltForGenus(TypeFlagBits.Factory) > 0)
                 {
                     Advance(session);
                     session.ClearSelection(player);
@@ -176,14 +179,14 @@ public sealed class TutorialStages
                 break;
             case 'D':
                 // 첫 Sun Disc Thrower 를 놓았으면 다음 단계
-                if (player.Made("sunArcher") > 0)
+                if (session.BuiltCount("sunArcher") > 0)
                 {
                     Advance(session);
                 }
                 break;
             case 'E':
                 // 두 번째를 놓았으면 다음 단계 (선택을 푼다)
-                if (player.Made("sunArcher") > 1)
+                if (session.BuiltCount("sunArcher") > 1)
                 {
                     Advance(session);
                     session.ClearSelection(player);
@@ -194,7 +197,7 @@ public sealed class TutorialStages
                 break;
             case 'G':
                 // 네 번째를 놓았으면 ("두 개 더") 다음 단계 (선택을 푼다, 타이머는 단계를 넘길 때 지워진다)
-                if (player.Made("sunArcher") > 3)
+                if (session.BuiltCount("sunArcher") > 3)
                 {
                     Advance(session);
                     session.ClearSelection(player);
@@ -206,58 +209,81 @@ public sealed class TutorialStages
         }
     }
 
-    /// <summary>튜토리얼 1의 F4·다리 칸·가이저 연결·결정 전달·600 SP 단계 (원본 004c3a20).</summary>
+    /// <summary>
+    /// 튜토리얼 1의 F4·다리 칸·가이저 연결·결정 전달·600 SP 단계. 원본 004c3a20 의 판정 전체를 이식한 <see cref="TutorialOne"/>에 맡기고
+    /// 이 클래스는 세션의 현재 상태(장부·간헐천·SP)를 경계로 연결한다.
+    /// </summary>
+    /// <remarks>
+    /// 경계 중 근사: 표면 Graph 번호는 아직 세션에 없어 "현재 사제가 그 간헐천까지 걸어갈 수 있는가"로 대신한다(닿으면 신전과 같은 Graph).
+    /// 간헐천 생성은 원본이 단계 C 에서 하지만 클론은 세션 생성 때 미리 만들어 두므로 생성 경계는 비어 있다(D05 후속).
+    /// 2026-10-15 감사 D05/D14: 직접 비교하던 조건을 검증된 판정기와 Totalmade 장부로 교체.
+    /// </remarks>
+    /// <param name="session">세션</param>
+    /// <param name="tickEvents">이번 화면 또는 헤드리스 호출의 명령 사건(F4 복귀를 알아본다)</param>
     private void UpdateBridgeTheGap(BattleSession session, IReadOnlyList<SessionEvent> tickEvents)
     {
         PlayerState player = session.Player(session.HumanPlayer);
-        // 원본은 살아 있는 칸 수가 아니라 누적 제작 표의 합(FUN_004c2500(4) = DAT_005c98d0 에서 플래그2 4번 비트 타입들의 합)을 본다.
-        // 무너진 다리는 표에서 줄지 않으므로 (줄이는 곳은 전체 삭제 004c27c0 뿐) 놓은 칸의 누적 수로 판정한다.
-        // 단계 A·B·C 의 기준(0 보다 큼·7 보다 큼·0x12 보다 큼)은 정밀 디컴파일(004c3a20)로 확인했다.
-        int builtBridges = player.MadeWithFlags(BridgeFlag);
-        switch (Stage)
+        _bridgeJudge ??= CreateBridgeJudge(session);
+        _advancedInJudgement = false;
+        // 최근 생성 간헐천 목록(번호 순 마지막 5개)을 판정 직전의 현재 세션으로 채운다.
+        _recentGeysers.Entries.Clear();
+        _recentGeysers.Entries.AddRange(session.Entities.Where(e => e.Kind == ObjectKind.Geyser).OrderBy(e => e.Id)
+            .TakeLast(RecentGeyserLimit).Select(e => (uint)e.Id));
+        _recentGeysers.Count = (uint)_recentGeysers.Entries.Count;
+        // 이번 호출에 이 플레이어의 F4 복귀 사건이 있으면 현재 사건을 F4 명령 토큰으로 넘긴다.
+        uint currentEvent = tickEvents.Any(e => e.Kind == SessionEventKind.ReturnedHome && e.Player == player.Number) ? HomeCommandToken : 0;
+        _bridgeJudge.Handle(currentEvent);
+    }
+
+    /// <summary>튜토리얼 1 판정기를 세션의 현재 상태에 연결해 만든다.</summary>
+    private TutorialOne CreateBridgeJudge(BattleSession session) => new(
+        new TutorialOneState
         {
-            case 'A':
-                if (builtBridges > 0 || tickEvents.Any(e => e.Kind == SessionEventKind.ReturnedHome && e.Player == player.Number))
-                {
-                    Advance(session);
-                }
-                break;
-            case 'B':
-                if (builtBridges >= FirstBridgeTarget)
-                {
-                    Advance(session);
-                }
-                break;
-            case 'C':
-                if (builtBridges >= SecondBridgeTarget)
-                {
-                    Advance(session);
-                }
-                break;
-            case 'D':
-                if (_lastReachVersion != session.Bridges.Version)
-                {
-                    _lastReachVersion = session.Bridges.Version;
-                    _lastReachable = session.CanReachAnyGeyser(player.Number);
-                }
-                if (_lastReachable)
-                {
-                    Advance(session);
-                }
-                break;
-            case 'E':
-                if (player.StormPower >= FirstCrystalStormPowerTarget)
-                {
-                    Advance(session);
-                }
-                break;
-            case 'F':
-                if (player.StormPower >= BridgeTheGapStormPowerTarget)
-                {
-                    Advance(session);
-                }
-                break;
+            Stage = () => Stage,
+            LocalPlayer = (uint)session.HumanPlayer,
+            // 클론은 항상 Storm Power 를 알고 있다(원본 SP 조회 허용 전역 00595344 가 켜진 상태).
+            BattleShown = 1,
+            HomeCommand = HomeCommandToken,
+            ReclaimCommand = ReclaimCommandToken,
+        },
+        _recentGeysers,
+        new TutorialOneHooks
+        {
+            BuiltForGenus = session.BuiltForGenus,
+            GraphFor = sid => GraphNumber(session, sid),
+            Money = owner => session.Player((int)owner).StormPower,
+            Advance = () =>
+            {
+                // 원본 Advance 는 10프레임 잠금을 걸어 같은 판정의 추가 호출을 거부한다. 헤드리스 경로에도 같은 효과를 준다.
+                if (_advancedInJudgement) return;
+                if (TryAdvance(session)) _advancedInJudgement = true;
+            },
+            // 간헐천은 세션 생성 때 이미 만들어 두었다(원본은 단계 C 에서 생성). D05 후속에서 원본 생성 위치로 옮긴다.
+            SpawnGeysers = () => { },
+            TempleOf = owner => session.Entities.FirstOrDefault(e => e.Kind == ObjectKind.Temple && e.Owner == (int)owner)?.Id is int id ? (uint)id : 0,
+        });
+
+    /// <summary>
+    /// 표면 Graph 번호의 근사: 사제가 걸어서 닿을 수 있는 간헐천은 신전과 같은 번호(0), 닿을 수 없는 간헐천은 자기 번호로 구분한다.
+    /// 다리 격자 버전이 같은 동안은 간헐천마다 결과를 재사용한다. 신전(또는 목록 밖 번호)은 기준 번호 0이다.
+    /// </summary>
+    /// <param name="session">세션</param>
+    /// <param name="sid">신전 또는 간헐천의 객체 번호</param>
+    private uint GraphNumber(BattleSession session, uint sid)
+    {
+        GameEntity? entity = session.Entity((int)sid);
+        if (entity == null || entity.Kind != ObjectKind.Geyser) return 0;
+        if (_reachVersion != session.Bridges.Version)
+        {
+            _reachVersion = session.Bridges.Version;
+            _reachable.Clear();
         }
+        if (!_reachable.TryGetValue(entity.Id, out bool reachable))
+        {
+            reachable = session.CanReachGeyser(session.HumanPlayer, entity);
+            _reachable[entity.Id] = reachable;
+        }
+        return reachable ? 0u : 1u + sid;
     }
 
     /// <summary>
@@ -341,12 +367,17 @@ public sealed class TutorialStages
     /// 화면에 연결되면 게이트가 글자 증가·10프레임 잠금·안내 기한·타이머 0을 한 번에 처리하므로 여기서는 헤드리스 틱 표지만 지운다.
     /// </summary>
     /// <remarks>2026-10-15: 화면 연결 시 캐시된 TutorialFrameLocked 대신 게이트의 현재 정지/잠금 판정을 쓴다.</remarks>
-    private void Advance(BattleSession session)
+    private void Advance(BattleSession session) => TryAdvance(session);
+
+    /// <summary><see cref="Advance"/>와 같고 단계를 올렸는지(정지/잠금으로 거부되지 않았는지) 돌려준다.</summary>
+    /// <param name="session">세션</param>
+    private bool TryAdvance(BattleSession session)
     {
-        if (!session.TryAdvanceTutorialStage()) return;
+        if (!session.TryAdvanceTutorialStage()) return false;
         if (_shared == null) _stage++;
         TimerTick = 0;
         TimerSeconds = 0;
         if (!session.TutorialUsesScreenFrames) session.EmitTutorialTell(session.HumanPlayer, Section);
+        return true;
     }
 }

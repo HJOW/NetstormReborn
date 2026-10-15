@@ -248,7 +248,7 @@ public sealed partial class BattleSession
         {
             // 개발용 배치 시험은 자원 운송 없이 즉시 완성한다.
             if (type.Definition.HasFlag("createsisland")) Bridges.InvalidateTerrain();
-            player.RecordMade(type.Name, type.Flags2);
+            RecordPopped(entity);
         }
         Emit(SessionEventKind.UnitPlaced, command.Player, id, $"{entity.DisplayName} 배치 (−{site.Cost})");
         return CommandResult.Ok();
@@ -417,16 +417,10 @@ public sealed partial class BattleSession
         // 생산 창에 들어온 지 6초가 안 된 조각은 금 간 채로 놓인다
         BridgeCondition quality = BridgeTray.QualityAt(held, Seconds);
         IReadOnlyList<BridgeCellState> placed = Bridges.Place(piece, command.X, command.Y, command.Player, quality);
-        // 원본은 놓은 칸마다 다리 오브젝트를 만들어 첫 등록 때 누적 제작 표(DAT_005c98d0)에 센다.
-        // 튜토리얼 1 단계 B·C 가 이 표의 합(FUN_004c2500(4))을 읽는다 (004c3a20, 디컴파일 확인).
-        // 무너지거나 회수해도 표는 줄지 않는다 (줄이는 곳은 전체 삭제 004c27c0 뿐).
-        TypeInfo? bridgeType = _types.Find(ProductionDeck.BridgeType);
-        uint bridgeFlags = bridgeType?.Flags2 ?? TypeFlagBits.Bridge;
-        // 놓은 칸의 수만큼 누적 수에 넣는다.
-        for (int i = 0; i < placed.Count; i++)
-        {
-            player.RecordMade(bridgeType?.Name ?? ProductionDeck.BridgeType, bridgeFlags);
-        }
+        // 원본은 놓은 칸마다 다리 오브젝트를 만들어 첫 등록 때 공통 postPop 통계(Totalmade 장부)에 센다.
+        // 튜토리얼 1 단계 B·C 가 누적 제작 수의 부류 합(FUN_004c2500(4))을 읽는다 (004c3a20, 디컴파일 확인).
+        // 무너지거나 회수해도 누적 제작 수는 줄지 않고 현재 수만 내려간다.
+        RecordBridgeCellsPopped(placed, command.Player);
         // 놓은 조각의 칸을 비운다 (원본도 다음 채우기에서 그 자리를 채운다)
         player.Tray.ConsumeHeld();
         player.HeldPiece = null;
@@ -462,6 +456,7 @@ public sealed partial class BattleSession
         {
             Emit(SessionEventKind.BridgeCracked, cell.Owner, entity.Id, $"다리 ({cell.X}, {cell.Y}) 금 감 ({entity.DisplayName} 없어짐)");
         }
+        ReleaseLedgerBridgeCells(result.Removed);
         // 무너진 칸을 이벤트로 알린다
         foreach (BridgeCellState cell in result.Removed)
         {

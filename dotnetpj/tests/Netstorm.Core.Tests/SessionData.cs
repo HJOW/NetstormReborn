@@ -150,13 +150,13 @@ internal static class SessionData
         session.Submit(new PickBridgePieceCommand(1, slot));
         session.RunTicks(1);
         (int rotation, int x, int y) = FindBridgeSite(session, pattern);
-        int before = player.Made(ProductionDeck.BridgeType);
+        int before = session.BuiltCount(ProductionDeck.BridgeType);
         session.Submit(new PlaceBridgeCommand(1, rotation, x, y));
         session.RunTicks(1);
         if (player.HeldPiece != null)
         {
             throw new InvalidOperationException("다리 조각 놓기가 거부되었습니다.");
         }
-        return player.Made(ProductionDeck.BridgeType) - before;
+        return session.BuiltCount(ProductionDeck.BridgeType) - before;
     }
 }

@@ -118,7 +118,7 @@ public sealed partial class BattleSession
             if (entity.Kind == ObjectKind.Generator && Elements.FromTheme(entity.Type.Definition.GetString("theme")) is { } element)
                 Map.AddSource(new EnergySource(entity.Id, element, entity.WorldX, entity.WorldY, entity.Owner));
             if (entity.Type.Definition.HasFlag("createsisland")) Bridges.InvalidateTerrain();
-            Player(entity.Owner).RecordMade(entity.Type.Name, entity.Type.Flags2);
+            RecordPopped(entity);
             Emit(SessionEventKind.UnitCompleted, entity.Owner, entity.Id, $"{entity.DisplayName} 생산 완료");
         }
     }

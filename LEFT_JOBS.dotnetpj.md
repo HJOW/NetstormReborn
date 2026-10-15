@@ -1,3 +1,14 @@
+## 2026-10-15 완료: 감사 D14 장부(Totalmade)와 D05 튜토리얼 1 판정기 이식·연결 (`HJOW-X3D`)
+
+- [x] 사용자 요청("해당 원칙으로 dotnetpj 다음 사항 더 진행")으로 진행했다. 시작·종료 시 `git fetch`로 원격을 확인했고(새 커밋 없음) 이번에도 `cpppj/`·공통 `LEFT_JOBS.md`는 수정하지 않았다. 공통 기록상 마지막 정밀 디컴파일 PC는 HJOW-Athlon(2026-10-15)이며 이번 작업은 **디컴파일 산출물을 읽지 않았고** 새 디컴파일·원본 기계어 관찰·원본/클론 게임 실행은 없다. [상세 기록](docs/dotnet-ledger-tutorial-one-20261015.md).
+- [x] **장부:** C# [`TotalMade`](dotnetpj/src/Netstorm.Core/Simulation/TotalMade.cs)(cpppj `RawTotalMade` 이식)로 원본 세 장부의 의미를 확정·구현했다 — 로컬 소유자의 **현재 수**(삭제 때 감소)·**누적 제작 수**(감소 없음, 튜토리얼이 읽음)·**모든 소유자의 전체 현재 수**, 타입 70부터 플래그2 **겹침** 합산(감김), 초기화는 앞 255칸만. 세션 `Ledger`/`BuiltCount`/`BuiltForGenus`에 연결하고(완공·실체화·배치·다리 칸 등록, 삭제·붕괴 때 현재 수 감소, 초기 객체는 장부에 없음) 이름 기반 `PlayerState.Made*`는 삭제했다. 검사합에 장부 표를 넣었다.
+- [x] **판정기:** C# [`TutorialOne`](dotnetpj/src/Netstorm.Core/Simulation/TutorialOne.cs)(cpppj `RawTutorialOne` 이식, 단계 A~F)를 `TutorialStages`가 호출한다. 같은 판정 안의 중복 Advance는 원본 잠금 효과대로 한 번만 허용한다.
+- [x] **검증:** Release 경고/오류 **0**, 단위 **1,057개 통과**(Assets 343 + Core 714; 직전 +22). 원본 fixture `Total` PATCH **52행**(표 4개 1,024바이트·반환·assert)과 `Stage` **266행**(반환·호출 순서)이 처음부터 전부 일치하고, 구현 변이(부류 겹침→전체 일치, 시작 타입, 초기화 범위, D 중단, E 경계, SP 조회, B 기준)는 모두 실패로 잡혔다. 실제 세션 검사(`TutorialOneSessionTests` 11·`SessionLedgerTests` 4)도 변이(중복 Advance 허용·현재 수 읽기·연결 항상 참·등록 표식 제거·누적도 감소)가 실패함을 확인했고 전부 원복했다.
+- [x] **정정한 문서:** `docs/core-rules.md`의 `PlayerState.Made*` 서술을 새 API로 고쳤다(과거 이력 절은 당시 기록으로 보존).
+- [ ] **이번에 하지 않은 것(정직한 한계):** 표면 **Graph 번호**는 세션에 없어 D 단계 연결은 "사제가 걸어 닿는가"로 근사했다. **간헐천 생성**은 원본이 단계 C에서 지역 사각형·공유 보상 풀 규칙으로 하는데 클론은 세션 생성 때 결정적 근사로 미리 만든다(생성 경계는 비어 있음). 금지 표는 세션에 있으나 소비자가 없고 사람 기술 허용은 여전히 `TechPermissions`다. `ResetCounts`의 원본 호출 시점은 미확인이며 현재 수·전체 수 표는 소비자가 아직 없다. 튜토리얼 2 판정기(D06)는 장부 조회만 교체했다. 클론 창 GUI는 실행하지 않았다(Core 한정 변경).
+- [ ] **다음:** D14의 Graph 부분(실제 `SurfaceGraph` 조립·`graphSurfaces`·영역 소유·내용물·선택·감시)과 D05의 간헐천 생성(`local-geyser`·`player-geyser-bounds` fixture 이식), 이어 감사 5절 3번(D12 SP/보상·D09 사제 HP1·D10 총·D11 경로, 이때 D01 시간 소비 목록 이행)과 공통 `ai*` 키 규칙.
+- [x] 인수인계 뒤 **`20261015-58 DN Totalmade 장부와 튜토리얼 1 단계 판정기를 원본 52/266행으로 검증하고 연결`**로 로컬 커밋하며 원격 push는 하지 않는다. 작업 중 사용자가 커밋 메시지 규칙을 `YYYYMMDD-NN PJ MSG`(dotnetpj = `DN`)로 바꿨고(AGENTS.md, `60fe1e2`) 이 커밋부터 따른다. 번호 `57`은 다른 PC의 cpppj 커밋과 겹쳤으므로 `58`을 썼다. 작업 트리에 있던 다른 작업의 미커밋 변경(`cpppj/hash.json` 등)은 포함하지 않는다.
+
 ## 2026-10-15 완료: 감사 5절 2번 중 D03 — 플레이어 참여·방향별 동맹을 원본 규칙으로 (`HJOW-X3D`)
 
 - [x] 사용자 요청("dotnetpj 이어서 진행")으로 AGENTS.md와 두 LEFT_JOBS를 읽고 진행했다. 현재 PC는 **HJOW-X3D**다. 작업 시작 때 공통 기록의 마지막 정밀 디컴파일 PC는 HJOW-X3D였으나, 도중에 원격에서 들어온 cpppj 커밋(`20261015-54~56`)이 이를 **HJOW-Athlon, 2026-10-15**로 갱신했다. 이번 작업은 **디컴파일 산출물을 읽지 않았고**(원본 실행 파일의 문자열 확인·cpppj 문서·fixture만 사용) **새 디컴파일·원본 기계어 관찰·원본/클론 게임 실행은 없다.** [상세 기록](docs/dotnet-player-relations-20261015.md).

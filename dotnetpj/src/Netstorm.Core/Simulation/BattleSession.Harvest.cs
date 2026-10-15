@@ -98,12 +98,15 @@ public sealed partial class BattleSession
         return CommandResult.Ok();
     }
 
-    /// <summary>현재 다리·섬에서 가이저까지 사제가 갈 수 있는지. 튜토리얼 1의 연결 단계에 쓴다.</summary>
-    internal bool CanReachAnyGeyser(int owner)
+    /// <summary>
+    /// 현재 다리·섬에서 지정한 가이저까지 소유자의 사제가 갈 수 있는지. 튜토리얼 1의 연결 단계가 표면 Graph 번호 비교 대신 쓰는 근사다.
+    /// </summary>
+    /// <param name="owner">사제의 소유자</param>
+    /// <param name="geyser">가이저 객체</param>
+    internal bool CanReachGeyser(int owner, GameEntity geyser)
     {
         GameEntity? priest = _entities.Values.FirstOrDefault(e => e.Kind == ObjectKind.Priest && e.Owner == owner);
-        return priest != null && _entities.Values.Any(e => e.Kind == ObjectKind.Geyser
-            && FindHarvestPath(priest.Footprint, e.Footprint, owner) != null);
+        return priest != null && FindHarvestPath(priest.Footprint, geyser.Footprint, owner) != null;
     }
 
     /// <summary>현재 다리 연결이 바뀌면 길을 다시 찾고, 한 틱만큼 사제를 움직여 수확·전달한다.</summary>

@@ -60,7 +60,7 @@ public sealed class UnitProductionTests
         Assert.False(golem.IsComplete);
         Assert.Equal(0, golem.HitPoints);
         Assert.Equal(StartingPower - golem.Cost, session.Player(1).StormPower);
-        Assert.Equal(0, session.Player(1).Made("sunwalker"));
+        Assert.Equal(0, session.BuiltCount("sunwalker"));
         session.Submit(new MoveEntityCommand(1, golem.Id, 25, 8));
         session.RunTicks(1);
         Assert.Contains(session.DrainEvents(), e => e.Failure == CommandFailure.NotComplete);
@@ -71,7 +71,7 @@ public sealed class UnitProductionTests
         SessionData.RunUntilComplete(session, golem);
         Assert.Null(golem.Production);
         Assert.Equal(golem.MaxHitPoints, golem.HitPoints);
-        Assert.Equal(1, session.Player(1).Made("sunwalker"));
+        Assert.Equal(1, session.BuiltCount("sunwalker"));
         Assert.Equal(StartingPower - golem.Cost, session.Player(1).StormPower);
         session.Submit(new MoveEntityCommand(1, golem.Id, 25, 8));
         session.RunTicks(1);

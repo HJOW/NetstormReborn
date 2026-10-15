@@ -124,6 +124,30 @@ public sealed partial class BattleSession
     /// </summary>
     public PlayerParticipation Participation { get; }
 
+    /// <summary>
+    /// 원본 Totalmade 의 허용 표와 세 누적 장부(로컬 소유자의 현재 수·누적 제작 수, 모든 소유자의 전체 현재 수).
+    /// 로컬 소유자는 사람 플레이어다. 튜토리얼 단계 판정이 누적 제작 수를 읽는다.
+    /// 맵에 처음부터 있던 객체는 장부 초기화(004c2450) 뒤의 상태와 같게 세지 않는다.
+    /// </summary>
+    public TotalMade Ledger { get; }
+
+    /// <summary>장부에 등록한 게임 중 놓은 다리 칸(참조 비교). 칸이 무너질 때 한 번만 현재 수를 내린다.</summary>
+    private readonly HashSet<BridgeCellState> _ledgerBridgeCells = new(ReferenceEqualityComparer.Instance);
+
+    /// <summary>
+    /// 타입 하나를 지은 누적 수(원본 004c24c0). 사람 플레이어 기준이며 모르는 타입 이름은 0이다.
+    /// </summary>
+    /// <param name="typeName">.type 이름 (대소문자 무시)</param>
+    public int BuiltCount(string typeName) =>
+        _types.Find(typeName) is { } type ? unchecked((int)Ledger.Built(type.RuntimeIndex)) : 0;
+
+    /// <summary>
+    /// 플래그2 비트를 하나라도 가진 자산 타입들의 누적 제작 수 합(원본 004c2500, DWORD 감김). 신전 = 0x200, 워크샾 = 0x4000, 다리 = 4.
+    /// 사람 플레이어 기준이다.
+    /// </summary>
+    /// <param name="flags2">플래그2 비트 마스크(0이 아니어야 한다)</param>
+    public int BuiltForGenus(uint flags2) => Ledger.BuiltForGenus(flags2);
+
     /// <summary>세션의 모든 플레이어 (번호 순)</summary>
     public IReadOnlyCollection<PlayerState> Players => _players.Values;
 
@@ -159,6 +183,11 @@ public sealed partial class BattleSession
         _storedBridges = storedBridges ?? new Dictionary<FortMapObject, BridgeCellState>();
         StoredBridgeCells = new HashSet<BridgeCellState>(_storedBridges.Values, ReferenceEqualityComparer.Instance);
         _types = types;
+        // 타입 번호(0~187)별 플래그2: 내장 타입(0~69)은 알 수 없어 0, 읽어 들인 타입은 자기 런타임 번호 칸에 둔다.
+        var typeFlags2 = new uint[TotalMade.NativeTypeCount];
+        foreach (TypeInfo type in types.Types)
+            if (type.RuntimeIndex < typeFlags2.Length) typeFlags2[type.RuntimeIndex] = type.Flags2;
+        Ledger = new TotalMade(typeFlags2, _ => { });
         Mission = mission;
         HumanPlayer = humanPlayer;
         Participation = participation ?? MissionParticipation.Create(mission, humanPlayer, map.InitialObjects
@@ -429,6 +458,7 @@ public sealed partial class BattleSession
         {
             Emit(SessionEventKind.BridgeCracked, cell.Owner, 0, $"다리 ({cell.X}, {cell.Y}) 금 감");
         }
+        ReleaseLedgerBridgeCells(decay.Removed);
         // 무너진 칸을 이벤트로 알린다
         foreach (BridgeCellState cell in decay.Removed)
         {
@@ -472,8 +502,8 @@ public sealed partial class BattleSession
             if (_players.TryGetValue(entity.Owner, out PlayerState? player))
             {
                 RegisterCompletedBuilding(player, entity);
-                // 건물은 완공할 때 지은 수로 센다 (튜토리얼 단계 처리가 읽는다)
-                player.RecordMade(entity.Type.Name, entity.Type.Flags2);
+                // 건물은 완공할 때 공통 postPop 통계에 센다 (튜토리얼 단계 처리가 누적 제작 수를 읽는다)
+                RecordPopped(entity);
             }
             Emit(SessionEventKind.BuildingCompleted, entity.Owner, entity.Id, $"{entity.DisplayName} 완공");
         }
@@ -566,6 +596,7 @@ public sealed partial class BattleSession
         hash.Add(Tutorial?.TimerTick ?? 0);
         // 화면의 초기 안내/정지 잠금도 다음 튜토리얼 단계 판정 가능 여부를 바꾸는 상태다.
         hash.Add(TutorialFrameLocked ? 1 : 0);
+        AddLedgerChecksum(hash);
         HashTutorialScreenState(hash);
         // 플레이어 상태: Storm Power, 다리 칸, 집은 조각, 재충전 예약(이름 순)
         foreach (PlayerState player in _players.Values)
@@ -593,12 +624,6 @@ public sealed partial class BattleSession
                 hash.Add(workshop.Id); hash.Add((int)workshop.Element); hash.Add(workshop.Level);
                 // 같은 지식이어도 등록한 공급 건물과 순서가 다르면 생산 상태가 다르다.
                 foreach (string type in workshop.Registered) hash.Add(type.ToLowerInvariant());
-            }
-            // 지은 수(누적)는 튜토리얼 단계를 정하므로 이름 순서로 섞는다
-            foreach ((string name, int count) in player.MadeSnapshot())
-            {
-                hash.Add(name);
-                hash.Add(count);
             }
             // 기술 허용 표도 명령의 결과를 바꾸므로 기본값과 개별 값을 이름 순서로 섞는다
             hash.Add(player.Tech.DefaultAllowed ? 1 : 0);

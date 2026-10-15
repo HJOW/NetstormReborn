@@ -95,6 +95,8 @@ P0는 시간·월드·플레이어·미션 순서 같은 선행 구조, P1은 �
 
 **검증:** `tutorial-one-x86.tsv`·`local-geyser-x86.tsv`·`player-geyser-bounds-x86.tsv`, 생성 전/후·목록 변경·다른 간헐천만 연결·SP 경계/NaN·reclaim 반환을 대조한다. 기존 누적 다리 1/8/19개 검사는 보존한다.
 
+**진행(2026-10-15, HJOW-X3D) — 판정 부분 완료:** `RawTutorialOne`을 C# `TutorialOne`으로 옮겨 `Stage` 행 **266개**(반환값·호출 순서)를 대조하고 `TutorialStages`가 이를 호출하도록 연결했다(A의 F4/누적 수, C의 생성 호출, D의 다중 Advance·최근 5개 목록, E/F의 조회 허용 + float32 SP). 표면 Graph 번호는 "사제가 걸어 닿는가"로 근사하고, **간헐천 생성은 아직 세션 생성 시점의 근사**이며 reclaim 토큰은 쓰이지 않는다. 생성 후보·지역 사각형·공유 보상 풀(`local-geyser`·`player-geyser-bounds`)은 남았다. [상세](dotnet-ledger-tutorial-one-20261015.md).
+
 ### D06. 튜토리얼 2의 성공 사건 대체와 부수효과 순서
 
 **현재 코드:** [TutorialStages.cs](../dotnetpj/src/Netstorm.Core/Simulation/TutorialStages.cs)는 C/F의 double 타이머와 선택 해제 후 예약 유지를 이미 구현했다. H는 현재 명령 ID 대신 **Salvaged 성공 이벤트**를 사용한다. G는 `Advance` 안에서 타이머를 지우므로 Advance가 거절되면 원본의 마지막 timer=0 쓰기가 보장되지 않는다. 선택은 단일 엔티티 조회, 장부는 이름 기반 `_made`다.
@@ -169,6 +171,8 @@ P0는 시간·월드·플레이어·미션 순서 같은 선행 구조, P1은 �
 
 **검증:** 기존 graph/spot/SID fixture를 보존하고 새로 원본 Pop/삭제/내용물/집계 자료를 연결한다. 신전·워크샾·다리 제거 시 Graph 분할/소유권·선택·생산·감시·누적 수·보상/UI가 함께 일관되는지 같은 세션에서 확인한다. 복사한 지도와 별도 Graph를 각각 통과시킨 검사만으로 통합 완료 처리하지 않는다.
 
+**진행(2026-10-15, HJOW-X3D) — 장부 부분 완료:** `RawTotalMade`를 C# `TotalMade`로 옮겨 `tutorial-one-x86.tsv` `Total` 행 **PATCH 52개**(표 4개 전체 바이트)를 대조하고, 세션에 로컬 소유자의 현재 수·누적 제작 수·전체 현재 수 장부로 연결했다(완공/실체화/배치/다리 칸 등록, 삭제·붕괴 때 현재 수만 감소). 이름 기반 `PlayerState` 누적 표는 삭제했다. **남은 것:** 실제 표면 `SurfaceGraph` 조립과 `BridgeGrid.graphSurfaces` 연결, 영역 소유·내용물·선택·감시의 공유 상태, 금지 표와 `TechPermissions`의 일원화, `ResetCounts` 호출 시점 확정. [상세](dotnet-ledger-tutorial-one-20261015.md).
+
 ### D15. CRT 동률 정렬과 신전/애니메이션 출력
 
 **현재 코드:** [DrawOrder.cs:34](../dotnetpj/src/Netstorm.Core/Display/DrawOrder.cs#L34)는 “원본 qsort 미확정” 설명과 안정 정렬을 유지한다. 이 설명은 이미 cpppj의 2026-10-11 복원으로 오래된 상태다. [StructureAnimation.VortexFrames](../dotnetpj/src/Netstorm.Assets/StructureAnimation.cs#L104)는 기본 그림+겹침 그림을 지원하지만 시간 기반 일반 프레임 선택이며 원본 레인 신전의 WORD 상태 분기를 직접 모델링하지 않는다. 그림자/효과도 근사 경로가 남아 있다.
@@ -205,7 +209,7 @@ P0는 시간·월드·플레이어·미션 순서 같은 선행 구조, P1은 �
 | 2 | D14 공유 상태·장부와 D03 참여/방향별 동맹 | 같은 월드의 생성/삭제·플레이어 상태/초기화 계약을 갖춤. 기존 SID/Graph 계산 검사 보존 — **D03 완료(2026-10-15)**, [상세](dotnet-player-relations-20261015.md). D14 남음 |
 | 3 | D12 SP/보상·D09 사제·D10 피해·D11 경로 | 원본 수치/시간/수명 fixture와 실제 객체 연결을 대조. 회복 getter 등 미완료 경계는 남겨서 표시 |
 | 4 | D07/D08 안내 처리와 D04 승패 | 같은 프레임·현재 상태·명령 큐·사건 잠금/정지 소유권을 연결. 초기화 이전 자동 승패 금지 |
-| 5 | D13 건설·D05/D06 Early1/2 | 공통 배치·생산·장부·간헐천/Graph와 연결하고 실제 입력으로 단계 진행 검증 |
+| 5 | D13 건설·D05/D06 Early1/2 | 공통 배치·생산·장부·간헐천/Graph와 연결하고 실제 입력으로 단계 진행 검증 — D05의 판정기·D14의 장부는 2026-10-15 선행 완료([상세](dotnet-ledger-tutorial-one-20261015.md)), 생성·Graph·D06·D13 남음 |
 | 6 | D15 표시 복원·D16 검증된 AI 초기화 | 동률 픽셀/표적 우선순위와 원본 초기 분류 대조. 미복원 전략은 보류 표시 유지 |
 | 7 | 자연 완주·저장·재실행·다음 미션 | 모듈·세션·GUI·자연 플레이 결과를 각각 기록. 다른 미션 공개는 해당 규칙 검증 후 판단 |
 

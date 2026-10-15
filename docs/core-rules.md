@@ -110,9 +110,9 @@
 단계 B에서 sunFactory 허용, 단계 H에서 회수 금지 해제 ([근거](exe/mission-header-flags.md)). 세션이 이를 `TutorialStages`로 재현한다:
 
 * 세션을 만들면 첫 단계 안내 `TutorialTell "A."` 이벤트가 나온다. 단계마다 그 단계의 스크립트 섹션 이름(`"B."` …)을 `TutorialTell` 이벤트로 알리고, 화면이 본문을 안내 창으로 띄운다. `MissionTell`도 대응 미션 스크립트 섹션이 있으면 같은 안내 창으로 연결된다.
-* 조건은 세션 상태만 본다: 지은 수(`PlayerState.Made`·`MadeWithFlags`, 누적 — 파괴·회수로 줄지 않는다), 워크샾 등록 여부, 선택한 오브젝트(`SelectedEntityId`), 이번 틱의 회수 이벤트, 타이머(단계 F 4초·H 2초·C의 `NotVortex` 2초 — exe 상수 값).
+* 조건은 세션 상태만 본다: 지은 수(`BattleSession.BuiltCount`·`BuiltForGenus` — 원본 Totalmade 장부의 누적 제작 수, 사람 플레이어 기준이며 파괴·회수로 줄지 않는다. 2026-10-15 이전의 `PlayerState.Made`·`MadeWithFlags`를 교체), 워크샾 등록 여부, 선택한 오브젝트(`SelectedEntityId`), 이번 틱의 회수 이벤트, 타이머(단계 F 4초·H 2초·C의 `NotVortex` 2초 — exe 상수 값).
 * 표·회수 금지·전투 옵션(Short·Fast)을 바꾸는 것도 단계 처리 몫이다: 단계 A 옵션 덮어쓰기, 단계 B `Tech.Set("sunFactory", true)`, 단계 H `DenySalvage = false`. 팩토리는 시작 시점에도 옵션을 덮어쓴다(단계 A 첫 프레임과 같은 결과).
-* 튜토리얼 1은 F4 또는 첫 다리(A), 다리 8·19칸(B·C), 가이저 연결(D), 200·600 SP(E·F)로 G까지 진행한다. 단계 B·C 는 살아 있는 칸이 아니라 놓은 칸의 누적 수(`FUN_004c2500(4)`, 정밀 디컴파일 004c3a20 확인)를 본다. 명령 경로로 놓은 칸마다 `PlayerState.Made` 에 다리 칸을 넣고 `TutorialStages` 가 그 합으로 판정한다. 원본 위치 생성식도 아직 복원하지 못해 연습 가이저 받침을 결정적으로 만든다.
+* 튜토리얼 1은 F4 또는 첫 다리(A), 다리 8·19칸(B·C), 가이저 연결(D), 200·600 SP(E·F)로 G까지 진행한다. 단계 B·C 는 살아 있는 칸이 아니라 놓은 칸의 누적 수(`FUN_004c2500(4)`, 정밀 디컴파일 004c3a20 확인)를 본다. 명령 경로로 놓은 칸마다 세션의 Totalmade 장부(`Ledger`)에 다리 칸을 넣고, 원본 판정기를 이식한 `TutorialOne` 이 부류 합(`BuiltForGenus(4)`)으로 판정한다(원본 기계어 266행 대조, [상세](dotnet-ledger-tutorial-one-20261015.md)). 원본 위치 생성식도 아직 복원하지 못해 연습 가이저 받침을 결정적으로 만든다.
 * `RunsTutorial = false`로 끌 수 있고, 구현되지 않은 튜토리얼(3~6)과 튜토리얼이 아닌 미션은 `Tutorial == null`이다. 단계·타이머·지은 수·선택·기술 표·회수 금지·사제 운반 상태는 `Checksum()`에 들어간다.
 * 원본이 기술 허용 표를 확인하는 곳(메뉴 항목·덱)에 맞춰 세션도 Construct 판정(`CheckBuilding`)·지식 등록·덱 배치에서 표를 확인한다.
 * 근사: 단계를 넘긴 뒤 원본이 열 번 세는 동안 다음 단계 처리를 멈추는 잠금(`+0x84`, 안내 창이 뜨고 닫힐 때까지로 추정)은 "다음 틱부터 검사"로 대신한다. 건물은 완공 시점에, 유닛은 자원 도착 후 실체화 완료 시점에 지은 수로 센다(원본의 정확한 출생 콜백 시점은 미확인).

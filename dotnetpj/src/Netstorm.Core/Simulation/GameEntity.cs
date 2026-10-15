@@ -37,6 +37,12 @@ public sealed class GameEntity
     /// <summary>건설 또는 자원 운송 후 실체화가 끝나 활성화된 오브젝트인지.</summary>
     public bool IsComplete { get; internal set; } = true;
 
+    /// <summary>
+    /// 공통 postPop 통계(<see cref="TotalMade"/>)에 이미 등록한 일반 객체인지. 등록한 객체만 삭제 때 현재 수를 내려
+    /// 맵에 처음부터 있던 객체(장부 초기화 뒤 세지 않는다)가 DWORD 감김을 일으키지 않게 한다.
+    /// </summary>
+    internal bool LedgerCounted { get; set; }
+
     /// <summary>생산 자원 운송·실체화 상태. 맵의 기존 오브젝트·사제 건물·완성된 유닛은 null이다.</summary>
     public UnitProduction? Production { get; internal set; }
 

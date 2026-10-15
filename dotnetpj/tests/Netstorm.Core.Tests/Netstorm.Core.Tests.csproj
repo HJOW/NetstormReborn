@@ -36,6 +36,8 @@
     <None Include="../../../cpppj/tests/fixtures/missionframe-x86.tsv" Link="X86/missionframe-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- Player 로그인·방향별 동맹·AI 부착/해제의 원본 PE 독립 관찰 608개 (2026-10-15 감사 D03). -->
     <None Include="../../../cpppj/tests/fixtures/player-participation-x86.tsv" Link="X86/player-participation-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <!-- Totalmade 허용 표·세 누적 장부·부류 합산(Total 행)과 Early1 단계 판정(Stage 행)의 원본 PE 독립 관찰 (2026-10-15 감사 D14/D05). -->
+    <None Include="../../../cpppj/tests/fixtures/tutorial-one-x86.tsv" Link="X86/tutorial-one-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <Compile Include="../Shared/X86Fixture.cs" Link="Shared/X86Fixture.cs" />
   </ItemGroup>
 </Project>
