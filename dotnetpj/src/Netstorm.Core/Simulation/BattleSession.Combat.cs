@@ -203,10 +203,13 @@ public sealed partial class BattleSession
         }
     }
 
-    /// <summary>적·사거리·기절·캐논 직선·Crossbow 60도 사격각과 차폐를 검사한다.</summary>
+    /// <summary>
+    /// 적·사거리·기절·캐논 직선·Crossbow 60도 사격각과 차폐를 검사한다. 적 판정은 원본 표적 검색(RawGunTarget)처럼
+    /// 공격자 소유자가 대상 소유자를 동맹으로 선언했는지만 본다(반대 방향은 읽지 않는다).
+    /// </summary>
     private bool CanShoot(GameEntity attacker, GameEntity target, double range)
     {
-        if (target.Owner <= 0 || Map.AreAllied(attacker.Owner, target.Owner) || target.HitPoints <= 0 || target.IsStunned ||
+        if (target.Owner <= 0 || Map.IsAllyOf(attacker.Owner, target.Owner) || target.HitPoints <= 0 || target.IsStunned ||
             DistanceSquared(attacker, target) > range * range) return false;
         if (CombatImmunity.Blocks(target, attacker.Type, attacker.WorldX, attacker.WorldY)) return false;
         bool axisOnly = CannonAnimation.IsCannon(attacker.Type);
@@ -294,7 +297,7 @@ public sealed partial class BattleSession
             }
             RemoveEntity(target);
             // 자기·동맹 오브젝트가 폭발에 휘말려 파괴된 경우에는 보상을 주지 않는다 (원본 보상 분기의 소유자 조건은 미확인, 임시).
-            bool enemy = shot.Owner > 0 && !Map.AreAllied(shot.Owner, target.Owner);
+            bool enemy = shot.Owner > 0 && !Map.IsAllyOf(shot.Owner, target.Owner);
             int reward = enemy ? StormPower.KillReward(target.Cost, Map.Options.KillRewardPercent) : 0;
             if (_players.TryGetValue(shot.Owner, out PlayerState? player)) player.StormPower += reward;
             Emit(SessionEventKind.EntityDestroyed, shot.Owner, target.Id, $"{target.DisplayName} 파괴 (+{reward})");

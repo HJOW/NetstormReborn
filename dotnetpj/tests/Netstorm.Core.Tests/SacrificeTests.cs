@@ -573,10 +573,13 @@ public sealed class SacrificeTests
             objects.Add(Object(types, "sunarcher", 2, 70, 30));
         }
         int? TerritoryAt(int x, int _) => x < 50 ? 2 : 1;
-        bool Allied(int first, int second) => mission?.AreAllied(first, second) ?? first == second;
+        // 미션 동맹은 원본 순서대로(사제가 있는 AI 소유자의 방향별 행) 구성하고 맵과 세션이 같은 표를 읽게 한다.
+        PlayerParticipation? participation = mission == null ? null : MissionParticipation.Create(mission, 1, objects
+            .Where(o => ObjectKinds.Of(o.Object.Type) == ObjectKind.Priest).Select(o => o.Object.LoadOwner));
+        bool Allied(int first, int second) => participation?.Allies(first, second) ?? first == second;
         var map = new BattleMap(objects, TerritoryAt, allied: Allied);
         var bridges = new BridgeGrid((_, _) => true);
-        return new BattleSession(map, bridges, types, mission);
+        return new BattleSession(map, bridges, types, mission, participation: participation);
     }
 
     /// <summary>원본 타입을 사용해 맵 오브젝트를 만든다.</summary>

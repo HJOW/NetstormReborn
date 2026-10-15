@@ -44,7 +44,7 @@ public sealed partial class BattleSession
     {
         if (Mission is not { UsesCampaignAi: true, AiOff: false } || Tick % TicksFor(Mission.AiMoveInterval) != 0) return;
         // 적 플레이어마다 동일한 우선순위로 판단한다.
-        foreach (PlayerState player in _players.Values.Where(p => p.Number != HumanPlayer && !Map.AreAllied(p.Number, HumanPlayer)))
+        foreach (PlayerState player in _players.Values.Where(p => p.Number != HumanPlayer && !Map.IsAllyOf(p.Number, HumanPlayer)))
         {
             GameEntity? priest = OwnFreePriest(player.Number);
             GameEntity? temple = _entities.Values.FirstOrDefault(e => e.Owner == player.Number && e.Kind == ObjectKind.Temple && e.IsComplete);

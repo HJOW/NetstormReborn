@@ -171,16 +171,47 @@ public sealed record MissionStart(string? Title, string? LoadFort, int? StartSto
     public int AiMoveInterval { get; init; } = 6;
 
     /// <summary>
-    /// 동맹 목록 (aiNAllyList = "1;4" → N 과 1·4 가 동맹). 한쪽만 적어도 동맹으로 본다.
-    /// 3-4 Enemy Territory 의 구출 대상(ai2AllyList = "1")처럼 사람 플레이어와의 동맹도 여기서 온다.
+    /// 소유자별 동맹 목록 원문 (머리 값 aiNAllyList = "1;4"). 원본 AI 생성이 그 소유자(N)의 한 방향 동맹 행에 더한다.
+    /// 값은 따옴표만 벗긴 원문이며 해석은 <see cref="AllyMask"/> 가 원본 규칙(';' 구분·atol)으로 한다.
     /// </summary>
-    public IReadOnlyDictionary<int, IReadOnlyList<int>> AllyLists { get; init; } = new Dictionary<int, IReadOnlyList<int>>();
+    public IReadOnlyDictionary<int, string> AllyListTexts { get; init; } = new Dictionary<int, string>();
 
     /// <summary>
-    /// 사람 플레이어의 동맹 목록 (머리 값 myAllyList = "4;6;7;8"). 사람 플레이어 번호는 세션이 정하므로(<see cref="AreAllied"/> 의 human)
-    /// aiNAllyList 와 따로 둔다. 한쪽만 적어도 동맹으로 본다.
+    /// 모든 AI 에 공통인 동맹 목록 원문 (번호 없는 머리 값 aiAllyList). 원본 AI 설정은 공통 값을 먼저 적용한 뒤
+    /// 소유자별 값을 더하므로(004c2d40) 이 값은 플레이어 2 만이 아니라 모든 AI 에 적용된다.
     /// </summary>
-    public IReadOnlyList<int> MyAllyList { get; init; } = [];
+    public string CommonAllyListText { get; init; } = "";
+
+    /// <summary>
+    /// 소유자 N 의 AI 동맹 마스크: 공통 aiAllyList 와 aiNAllyList 의 항목을 합친다. 항목은 ';' 로만 나누고(쉼표는 구분자가 아니다)
+    /// 각 항목에 atol 을 적용해 양수일 때만 <c>1 &lt;&lt; (값 &amp; 31)</c> 비트를 OR 한다. 목록의 앞 10개 항목만 읽는다.
+    /// 자기 비트는 여기서 더하지 않는다(<see cref="PlayerParticipation.SetAlliance"/> 가 더한다).
+    /// 이 마스크는 N 쪽 한 방향이며 반대 방향은 별도다.
+    /// </summary>
+    /// <param name="owner">AI 소유자 번호(1~8).</param>
+    /// <remarks>
+    /// 원본 RawMissionAiSettings(0040f030/004c2d90): 공통(-1)→소유자 순서, 빈 값은 쓰지 않는 누적 OR. myAllyList 는 원본 실행 파일에
+    /// 없는 키라 읽지 않는다(2026-10-15 감사 D03 — 2026-10-01 에 승패 오발동 우회로 넣었던 해석을 철회).
+    /// </remarks>
+    public uint AllyMask(int owner)
+    {
+        uint mask = 0;
+        string[] texts = [CommonAllyListText, AllyListTexts.GetValueOrDefault(owner, "")];
+        // 공통 → 소유자 순서로 목록의 앞 10개 항목만 읽는다.
+        foreach (string text in texts)
+        {
+            // 항목마다 atol 을 적용하고 양수만 비트로 더한다.
+            for (int index = 0; index < AllyListItemLimit; index++)
+            {
+                int value = ConfigNumbers.ParseLong(ConfigNumbers.ListItem(text, index));
+                if (value > 0) mask |= 1u << (value & 31);
+            }
+        }
+        return mask;
+    }
+
+    /// <summary>원본이 동맹 목록에서 읽는 항목 수의 상한(앞 10개).</summary>
+    private const int AllyListItemLimit = 10;
 
     /// <summary>
     /// AI 플레이어의 색 번호 덮어쓰기 (aiNColor = red → N 의 색 2). 색 이름 목록에 없는 값은 넣지 않는다.
@@ -194,19 +225,6 @@ public sealed record MissionStart(string? Title, string? LoadFort, int? StartSto
     /// </summary>
     public bool AllowAnyCapture { get; init; }
 
-    /// <summary>두 플레이어가 미션 동맹인지 (같은 번호 포함)</summary>
-    /// <param name="first">플레이어</param>
-    /// <param name="second">플레이어</param>
-    /// <param name="human">사람 플레이어 번호 (myAllyList 의 주인)</param>
-    public bool AreAllied(int first, int second, int human = 1) =>
-        first == second
-        || ListedBy(first, second, human) || ListedBy(second, first, human);
-
-    /// <summary>owner 의 동맹 목록(사람이면 myAllyList, AI 이면 aiNAllyList)에 other 가 있는지</summary>
-    private bool ListedBy(int owner, int other, int human) =>
-        (owner == human && MyAllyList.Contains(other))
-        || AllyLists.TryGetValue(owner, out IReadOnlyList<int>? list) && list.Contains(other);
-
     /// <summary>미션 스크립트의 머리 값으로 만든다</summary>
     /// <param name="script">미션 스크립트</param>
     public static MissionStart FromScript(MissionScript script) => FromHeader(script.GetHeader);
@@ -219,10 +237,7 @@ public sealed record MissionStart(string? Title, string? LoadFort, int? StartSto
         int? Number(string key) => int.TryParse(Text(key), out int value) ? value : null;
         bool Flag(string key) => Number(key) is { } value && value != 0;
         string[] knowledge = (Text("myTech") ?? "").Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-        var allies = new Dictionary<int, IReadOnlyList<int>>();
-        // 번호 목록 문자열("2;3,4")을 읽는다 (숫자가 아닌 조각은 버린다)
-        static int[] Numbers(string? text) => [.. (text ?? "").Split(';', ',', ' ')
-            .Select(part => int.TryParse(part, out int number) ? number : 0).Where(number => number > 0)];
+        var allies = new Dictionary<int, string>();
         var colors = new Dictionary<int, int>();
         var money = new Dictionary<int, int>();
         var tech = new Dictionary<int, IReadOnlyList<string>>();
@@ -234,10 +249,10 @@ public sealed record MissionStart(string? Title, string? LoadFort, int? StartSto
         {
             // 이 번호의 ai 머리 값을 읽는다: "ai<번호><접미어>" 가 먼저이고 플레이어 2 는 번호 없는 "ai<접미어>" 도 본다
             string? Ai(string suffix) => Text($"ai{player}{suffix}") ?? (player == LegacyAiPlayer ? Text($"ai{suffix}") : null);
-            int[] list = Numbers(Ai("AllyList"));
-            if (list.Length > 0)
+            // 동맹 목록은 번호 없는 값이 플레이어 2 전용이 아니라 모든 AI 의 공통 기본값이므로 ai<번호>AllyList 만 따로 읽는다.
+            if (Text($"ai{player}AllyList") is { Length: > 0 } allyList)
             {
-                allies[player] = list;
+                allies[player] = allyList;
             }
             int color = PlayerColors.Parse(Ai("Color"));
             if (color > PlayerColors.None)
@@ -256,9 +271,9 @@ public sealed record MissionStart(string? Title, string? LoadFort, int? StartSto
         return new MissionStart(Text("title"), Text("loadFort"), Number("myStartMoney"), knowledge,
             TechPermissions.Parse(Text("techAllowed")), Flag("denySalvage"), Flag("denyAscend"), Flag("aiOff"), Number("tutorialNumber"))
         {
-            AllyLists = allies,
+            AllyListTexts = allies,
+            CommonAllyListText = Text("aiAllyList") ?? "",
             AiColors = colors,
-            MyAllyList = Numbers(Text("myAllyList")),
             AllowAnyCapture = Flag("allowAnyCapture"),
             AiStartMoney = Number("aiStartMoney"),
             AiKnowledge = Names(Text("aiTech")),

@@ -195,12 +195,16 @@ public sealed class CppWorldStartTests
             if (cpp.Number == session.HumanPlayer) learned = learned.Where(start.Tech.IsAllowed);
             Assert.Equal(learned.Select(n => n.ToLowerInvariant()).Distinct().Order(), player.Deck.Knowledge.Select(n => n.ToLowerInvariant()).Order());
             int allies = 0;
-            // 동맹 비트: 자기 자신과 미션 동맹인 번호의 비트를 켠다.
+            // 동맹 비트: 이 플레이어가 선언한 방향(행)에서 동맹인 번호의 비트를 켠다.
             for (int other = 1; other <= MissionStart.MaximumPlayer; other++)
             {
-                if (start.AreAllied(cpp.Number, other, session.HumanPlayer)) allies |= 1 << other;
+                if (session.Participation.Allies(cpp.Number, other)) allies |= 1 << other;
             }
-            Assert.True(cpp.Allies == allies, $"{mission} 플레이어 {cpp.Number}: 동맹 비트 cpppj {cpp.Allies} != {allies}");
+            // TEST01 의 myAllyList = "2" 는 원본 실행 파일이 읽지 않는 키다(2026-10-15 감사 D03). cpppj 값형 월드 덤프(MissionPlayers)는
+            // 이를 동맹으로 읽고 대칭화하는데 x86 관찰이 아니므로, 이 미션은 원본 규칙의 기대값(ai2/ai3 목록이 자기 자신뿐 →
+            // 각 플레이어는 자기 비트만)을 직접 적는다.
+            int expectedAllies = mission == "TEST01" ? 1 << cpp.Number : cpp.Allies;
+            Assert.True(expectedAllies == allies, $"{mission} 플레이어 {cpp.Number}: 동맹 비트 기대 {expectedAllies} != {allies}");
             Assert.True(cpp.Color == colors[cpp.Number], $"{mission} 플레이어 {cpp.Number}: 색 cpppj {cpp.Color} != {colors[cpp.Number]}");
         }
     }

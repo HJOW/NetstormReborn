@@ -118,6 +118,12 @@ public sealed partial class BattleSession
     /// <summary>다음 논리 틱까지 흐른 비율. 화면 보간에만 사용하며 전투 판정·검사합에는 넣지 않는다.</summary>
     public double InterpolationAlpha => _timestep.Alpha;
 
+    /// <summary>
+    /// 플레이어 참여(사람 연결 0x02 / AI 부착 0x20)와 방향별 동맹 상태 (원본 Player 기록 + 9×9 표).
+    /// 승패·사제 생존 판정이 읽는 참여 조건과 소비자별 동맹 방향을 한곳에서 소유한다.
+    /// </summary>
+    public PlayerParticipation Participation { get; }
+
     /// <summary>세션의 모든 플레이어 (번호 순)</summary>
     public IReadOnlyCollection<PlayerState> Players => _players.Values;
 
@@ -137,9 +143,11 @@ public sealed partial class BattleSession
     /// <param name="seed">전역 난수 시드</param>
     /// <param name="storedBridges">맵에 저장된 다리 오브젝트 → 격자 칸 (화면이 무너진 저장 다리를 숨기는 데 쓴다, 없으면 빈 표)</param>
     /// <param name="initialFrameSeconds">세션 시작의 게임 프레임 시각. 새 게임은 0이며 기존 시계를 이어받을 때는 그 시각을 넘긴다.</param>
+    /// <param name="participation">플레이어 참여·방향별 동맹 상태. 없으면 미션 시작 조건과 맵의 사제 소유자로 원본 순서대로 만든다.</param>
     public BattleSession(BattleMap map, BridgeGrid bridges, TypeCatalog types, MissionStart? mission = null,
         int humanPlayer = 1, int? startStormPower = null, uint seed = 0,
-        IReadOnlyDictionary<FortMapObject, BridgeCellState>? storedBridges = null, double initialFrameSeconds = 0)
+        IReadOnlyDictionary<FortMapObject, BridgeCellState>? storedBridges = null, double initialFrameSeconds = 0,
+        PlayerParticipation? participation = null)
     {
         if (!double.IsFinite(initialFrameSeconds) || initialFrameSeconds < 0)
             throw new ArgumentOutOfRangeException(nameof(initialFrameSeconds));
@@ -153,6 +161,9 @@ public sealed partial class BattleSession
         _types = types;
         Mission = mission;
         HumanPlayer = humanPlayer;
+        Participation = participation ?? MissionParticipation.Create(mission, humanPlayer, map.InitialObjects
+            .Where(entry => ObjectKinds.Of(entry.Item.Object.Type) == ObjectKind.Priest && entry.Item.Object.LoadOwner > 0)
+            .Select(entry => entry.Item.Object.LoadOwner));
         DenySalvage = mission?.DenySalvage ?? false;
         _random = new NetstormRandom(seed);
         if (mission?.TutorialNumber is int tutorialNumber && TutorialStages.IsSupported(tutorialNumber))

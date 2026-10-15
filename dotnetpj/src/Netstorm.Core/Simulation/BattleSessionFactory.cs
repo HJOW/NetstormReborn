@@ -62,9 +62,13 @@ public static class BattleSessionFactory
                 objects.Add(geyser);
             }
         }
-        // 미션 동맹 목록(aiNAllyList)이 있으면 공급·전투·포획 판정에 함께 쓴다
+        // 플레이어 참여와 방향별 동맹은 원본 순서(로컬 로그인 → 사제가 있는 AI 소유자마다 AllyList 행 설정)로 만들고,
+        // 공급·전투·포획 판정(맵)과 승패 판정(세션)이 같은 표를 읽도록 함께 넘긴다.
+        PlayerParticipation participation = MissionParticipation.Create(mission, humanPlayer, objects
+            .Where(item => ObjectKinds.Of(item.Object.Type) == ObjectKind.Priest && item.Object.LoadOwner > 0)
+            .Select(item => item.Object.LoadOwner));
         var battle = new BattleMap(objects, (x, y) => territories.TryGetValue((x, y), out int t) ? t : null, options,
-            mission != null ? (first, second) => mission.AreAllied(first, second, humanPlayer) : null);
+            mission != null ? (from, to) => participation.Allies(from, to) : null);
 
         // 다리 격자의 섬 칸 = 본섬 미리보기 칸 + 작은 받침(noIsland) 칸
         var island = cells.Select(c => (c.X, c.Y)).ToHashSet();
@@ -103,7 +107,8 @@ public static class BattleSessionFactory
         {
             stored[item] = grid.AddStored(frames, item.Object.BridgeShape!.Value, item.X, item.Y, item.Object.LoadOwner, id);
         }
-        session = new BattleSession(battle, grid, types, mission, humanPlayer, startStormPower, seed, stored, initialFrameSeconds);
+        session = new BattleSession(battle, grid, types, mission, humanPlayer, startStormPower, seed, stored, initialFrameSeconds,
+            participation);
         return session;
     }
 }

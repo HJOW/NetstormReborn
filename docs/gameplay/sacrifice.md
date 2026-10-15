@@ -35,7 +35,7 @@
 
 **점검 보완(2026-10-01, 원본 미션 전수 검사):**
 - 신전·사제·팀 전멸 이벤트(`TempleDead`·`TempleHalfDead`·`PriestDead`·`GoodTeamDead`·`BadTeamDead`·`Failed`)는 그 대상이 **한 번이라도 살아 있는 것을 본 뒤에만** 낸다(`_seenAlive`). 이전에는 적 사제·신전이 처음부터 지도에 없는 미션(`tnron8ex` 등)이 시작 즉시 성공·실패 창을 띄우고, 동맹이 없는 거의 모든 미션에서 `GoodTeamDead`가 첫 틱에 참이 됐다. 원본은 AI 의 신전·사제를 미션 시작에 연결해 두므로 정상 미션의 결과는 같다. 회귀 검사: `MissionOutcomeTests`(원본 미션 전부 5초 진행).
-- 동맹은 `aiNAllyList`뿐 아니라 사람 플레이어의 머리 값 **`myAllyList`**("4;6;7;8")도 읽는다(한쪽만 적어도 동맹).
+- ~~동맹은 `aiNAllyList`뿐 아니라 사람 플레이어의 머리 값 `myAllyList`("4;6;7;8")도 읽는다(한쪽만 적어도 동맹).~~ **정정(2026-10-15):** 원본 10.78·CD 실행 파일에는 `myAllyList` 문자열이 없어 읽지 않는다. 동맹은 `ai%sAllyList`(공통 `aiAllyList` + 소유자별)만 읽고 **방향별**이다. [상세](../dotnet-player-relations-20261015.md)
 - 실패 창의 Continue(`Tell,TryAgain`)는 미션 스크립트가 아니라 공용 `tell.english`의 `[TryAgain]`(Replay Mission / Leave Missions)을 연다. `{mission.title}`·`{mission.fileName}`은 현재 미션 값으로 치환한다(`TutorialDialogScript`의 공용 스크립트·미션 값 인자).
 - 희생 음악은 의식 완료 뒤에도 알타이 소멸할 때까지 "진행 중"으로 본다(원본 알타 프레임이 단계 1 이상인 동안).
 

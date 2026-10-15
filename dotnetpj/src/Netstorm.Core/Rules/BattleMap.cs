@@ -30,7 +30,7 @@ public sealed class BattleMap
     /// <summary>칸 → 영역 번호 (섬 칸이 아니면 없음)</summary>
     private readonly Func<int, int, int?> _territoryAt;
 
-    /// <summary>두 플레이어가 동맹인지 (같은 플레이어 포함). 기본은 같은 번호만</summary>
+    /// <summary>출발 → 도착 방향으로 동맹인지 (같은 플레이어 포함). 기본은 같은 번호만</summary>
     private readonly Func<int, int, bool> _allied;
 
     /// <summary>오브젝트가 차지한 칸 → 겹쳐 차지한 오브젝트 수 (배치 시 "빈 자리" 판정, 제거 시 마지막 하나가 빠질 때만 칸이 빈다)</summary>
@@ -51,8 +51,22 @@ public sealed class BattleMap
     /// <summary>에너지 공급원 목록</summary>
     public IReadOnlyList<EnergySource> Sources => _sources;
 
-    /// <summary>전투 목표 선택도 에너지 공급과 같은 동맹 판정을 사용한다.</summary>
-    public bool AreAllied(int first, int second) => first == second || _allied(first, second);
+    /// <summary>
+    /// 출발 플레이어가 도착 플레이어를 동맹으로 두었는지(같은 플레이어 포함). 원본의 동맹 표는 방향별이라
+    /// 소비자가 원본이 읽는 방향(예: 사격·방어선 표적은 공격자 → 대상)을 직접 골라 부른다.
+    /// 2026-10-15 감사 D03: 대칭으로 합쳐 주던 AreAllied 를 방향 질의로 교체했다.
+    /// </summary>
+    /// <param name="from">동맹 관계를 선언한 쪽(출발).</param>
+    /// <param name="to">관계의 대상(도착).</param>
+    public bool IsAllyOf(int from, int to) => from == to || _allied(from, to);
+
+    /// <summary>
+    /// 두 방향이 모두 동맹인지(같은 플레이어 포함). 원본 승패 판정(004c36c0)은 로컬 ↔ 대상의 양방향이 모두 참일 때만
+    /// 같은 편으로 센다.
+    /// </summary>
+    /// <param name="first">플레이어.</param>
+    /// <param name="second">플레이어.</param>
+    public bool AreMutualAllies(int first, int second) => IsAllyOf(first, second) && IsAllyOf(second, first);
 
     /// <summary>맵을 읽을 때 등록한 오브젝트와 번호 (noIsland 제외). 엔티티 목록을 만들 때 같은 번호를 쓰도록 노출한다.</summary>
     public IReadOnlyList<(int Id, FortMapObject Item)> InitialObjects => _initialObjects;
@@ -63,7 +77,7 @@ public sealed class BattleMap
     /// <param name="objects">월드 좌표가 정해진 오브젝트 (FortMap.Objects)</param>
     /// <param name="territoryAt">칸 → 영역 번호 (지면 미리보기의 섬 칸 등). 섬 칸이 아니면 null</param>
     /// <param name="options">전투 옵션 (null 이면 원본 기본값)</param>
-    /// <param name="allied">동맹 판정 (null 이면 같은 플레이어만)</param>
+    /// <param name="allied">출발 → 도착 방향의 동맹 판정 (null 이면 같은 플레이어만)</param>
     /// <param name="sids">공유 번호 풀 (없으면 원본 크기의 로컬 서버 풀)</param>
     public BattleMap(IEnumerable<FortMapObject> objects, Func<int, int, int?> territoryAt, BattleOptions? options = null,
         Func<int, int, bool>? allied = null, SidPool? sids = null)

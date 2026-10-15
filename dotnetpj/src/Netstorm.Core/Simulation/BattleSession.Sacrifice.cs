@@ -295,7 +295,7 @@ public sealed partial class BattleSession
         {
             return true;
         }
-        return priest.IsStunned && !Map.AreAllied(player, priest.Owner);
+        return priest.IsStunned && !Map.IsAllyOf(player, priest.Owner);
     }
 
     /// <summary>플레이어의 자유롭고 기절하지 않은 사제 (없으면 null)</summary>
@@ -692,7 +692,9 @@ public sealed partial class BattleSession
         int good = 0;
         int bad = 0;
         // AI 플레이어를 번호순으로 검사한다
-        foreach (PlayerState player in _players.Values.Where(p => p.Number != HumanPlayer && p.Number <= MissionStart.MaximumPlayer))
+        // 원본은 참여 중인 플레이어(flags & 0x22)만 센다: 실제 사제가 있어 AI 가 만들어진 소유자만 대상이다.
+        foreach (PlayerState player in _players.Values.Where(p => p.Number != HumanPlayer && p.Number <= MissionStart.MaximumPlayer
+            && Participation.Participates(p.Number)))
         {
             int n = player.Number;
             GameEntity? temple = _entities.Values.FirstOrDefault(e => e.Kind == ObjectKind.Temple && e.Owner == n);
@@ -708,7 +710,8 @@ public sealed partial class BattleSession
             TellOnce($"ai{n}PriestSaved", saved, n);
             if (priest != null)
             {
-                if (Map.AreAllied(HumanPlayer, n))
+                // 원본 승패(004c36c0): 로컬 ↔ 대상의 양방향 동맹이 모두 참일 때만 같은 편으로 센다.
+                if (Map.AreMutualAllies(HumanPlayer, n))
                 {
                     good++;
                 }

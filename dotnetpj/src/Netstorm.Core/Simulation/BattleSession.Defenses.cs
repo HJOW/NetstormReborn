@@ -72,7 +72,7 @@ public sealed partial class BattleSession
                     ? e.Footprint.AnchorY == first.Footprint.AnchorY && e.Footprint.AnchorX > first.Footprint.AnchorX
                     : e.Footprint.AnchorX == first.Footprint.AnchorX && e.Footprint.AnchorY > first.Footprint.AnchorY)
                     .OrderBy(e => DistanceSquared(first, e)).ThenBy(e => e.Id).FirstOrDefault();
-                if (second == null || !Map.AreAllied(first.Owner, second.Owner)) continue;
+                if (second == null || !Map.AreMutualAllies(first.Owner, second.Owner)) continue;
                 double range = Math.Min(first.Type.Definition.GetDouble("range") ?? 0, second.Type.Definition.GetDouble("range") ?? 0);
                 if (DistanceSquared(first, second) >= range * range) continue;
                 fields.Add(new SunForceField(first.Id, second.Id, first.Owner, first.WorldX, first.WorldY, second.WorldX, second.WorldY));
@@ -90,7 +90,8 @@ public sealed partial class BattleSession
         // 여러 선을 가로지를 때도 발사점에서 가장 가까운 선 하나에만 맞힌다.
         foreach (SunForceField field in fields)
         {
-            if (Map.AreAllied(owner, field.Owner)) continue;
+            // 원본 방어선 표적(RawFenceTarget): 발사자가 방어선 소유자를 동맹으로 선언했으면 표적이 아니다.
+            if (Map.IsAllyOf(owner, field.Owner)) continue;
             double fx = field.EndX - field.StartX, fy = field.EndY - field.StartY;
             double cross = dx * fy - dy * fx;
             if (Math.Abs(cross) < 1e-9) continue;

@@ -98,7 +98,7 @@ public sealed partial class BattleSession
     private bool CanFlyerTarget(GameEntity flyer, GameEntity target)
     {
         if (target.Owner <= 0 || target.HitPoints <= 0 || target.IsStunned || target.Kind == ObjectKind.Transport ||
-            Map.AreAllied(flyer.Owner, target.Owner)) return false;
+            Map.IsAllyOf(flyer.Owner, target.Owner)) return false;
         if (CombatImmunity.Blocks(target, flyer.Type, flyer.WorldX, flyer.WorldY)) return false;
         FlyerFlight flight = flyer.Flight!;
         double dx = target.WorldX - flight.OriginX;
