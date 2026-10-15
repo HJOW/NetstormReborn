@@ -5,6 +5,7 @@ add_executable(netstorm_tests
     MissionFrameGateTests.cpp
     TutorialOneTests.cpp
     WarningTests.cpp
+    PriestMenuTests.cpp
     RainDrawTests.cpp
     FenceTargetTests.cpp
     CampaignNoticeTests.cpp
@@ -918,6 +919,10 @@ set_source_files_properties(RainDrawTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 원본 메시지 표/기한/idle의 명시 경계 관찰이다.
 set_source_files_properties(WarningTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_WARNINGS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/warnings-x86.tsv\"")
+
+# 실제 PATCH 사제 메뉴/선택 관문의 독립 기계어 관찰을 전수 재생한다.
+set_source_files_properties(PriestMenuTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PRIESTMENU_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/priestmenu-x86.tsv\"")
 
 # 실제 미션 공통 게이트와 Early1/Totalmade의 독립 원본 입력 경로다.
 set_source_files_properties(MissionFrameGateTests.cpp PROPERTIES COMPILE_DEFINITIONS

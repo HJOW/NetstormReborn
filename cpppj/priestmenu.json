@@ -1,0 +1,35 @@
+{
+  "host": "VM-W11-Codex",
+  "edition": "PATCH10.78",
+  "observations": 905,
+  "counts": {
+    "Open": 329,
+    "Select": 64,
+    "Theme": 256,
+    "Frame": 256
+  },
+  "instructions": 260365,
+  "boundaries": [
+    "현재허용/비용/SP/TYPE설명/번역서식",
+    "Open/Select의테마query·내용물query와Theme실행의내용물커서",
+    "실제HP불가/사건조회",
+    "메뉴생성/작성/기본객체메뉴",
+    "ContainedCreate/실제커서취득"
+  ],
+  "limits": [
+    "실제메뉴저장소/픽셀/게임커서/건설실행은이oracle관찰범위밖",
+    "CD10.72대응분석은미수행"
+  ],
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/priestmenu/originals/creation.c": "5dd262b868fbd108a43f02166cdf0f1a624b97f4309f4c22d907545d0fcf2f59",
+    "extracted/priestmenu/originals/functions.tsv": "d06a50acf33ca02d99d1ea2c8ef299f728b7e0ffd4f101c1adc935a39c51a42e",
+    "tools/ghidra/priestmenu-functions.json": "c1ff270ce889835ed326a355fe523162403c11ed91fb437a2120eba63ea86339",
+    "tools/decomp_priestmenu.py": "72d14bfa36091dc86a273ad9b1998c940f575bb954195d0e0920e5e63ea10bc7",
+    "cpppj/src/client/RawPriestMenu.cpp": "ced6ef18b8ecba70bac5c9566dff15f44794d9d502d416ac7c19d98e69ddc50b",
+    "cpppj/src/client/RawPriestMenu.h": "697ce519d27ff4d4ea695dfcd549e0f4ddabe8df4597b249ee91517c2fc99284",
+    "cpppj/tests/PriestMenuTests.cpp": "51b46963c14c553e98939f0e3772440b839846294c6ec82a0228255a6af553ac",
+    "cpppj/tests/fixtures/priestmenu-x86.tsv": "2dda11277f2b67f1a69447ea7cb1694e989a08ed513dbf9819e14bfbf3ce6208"
+  }
+}

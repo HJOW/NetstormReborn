@@ -1,5 +1,13 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-15 단위38 완료: 사제의 원본 건설 메뉴·선택 관문 (`VM-W11-Codex`)
+
+- [x] `RawPriestMenu`에 현재 Player/사제/기술 내용물/프레임을 읽는 신전·워크샾·Construct·Prayer 구성, 비용 문구와 허용/제외 조건, 선택 때 두 번의 SP 비교 및 실제 미리보기 Form 요청을 복원했다. 기존 controlled Menu/Gump와 같은 월드 조회를 연결하는 어댑터도 제공한다. [단위38 상세](docs/exe/cpp-priest-menu-20261015.md).
+- [x] 현재/마지막 정밀 디컴파일 PC는 **VM-W11-Codex, 2026-10-15**다. PATCH6함수를 새 읽기 전용 export했고 실제 원본 **905고유입력**(Open329/Select64/Theme256/Frame256)을 대조했다. 초기334메뉴입력의 중복5개와 중간총398/910을 최종905에 합산하지 않는다.
+- [x] 최종 검사 Release빌드 경고/오류0·집중4개 실패0·원본/도구/소스/fixture SHA·행수/중복감사·`git diff --check` 통과다. 앞 전체CTest 내부1,174개/실패0 뒤 production 변경 없이 getter전수검사1개와 fixture중복정리를 추가하여 최종집중4개로 확인했다. 최종1,175개 전체를 새로 실행한 것으로 세지 않는다.
+- [x] 인수인계 뒤 **`20261015-28 사제 건설 메뉴 조건과 선택 및 기술 조회 복원 검증`**으로 로컬커밋한다. 원본/AGENTS/dotnetpj 변경·원본게임실행·원격push는 없다.
+- [ ] 실제 `UberGump`·`RawCampaignSession` 연결과 커서00447000/기본객체메뉴004288f0·현재 번역/서식 공급은 남아 있다. Construct는 아직 비활성이다. 현재 Player+50 활성플래그/방향별81DWORD동맹 초기화가 없어 승패게이트를 바로 켜면 잘못된 즉시실패가 발생하므로, 원본 초기화 경계와 같은 raw상태 Outcome연결을 먼저 복원한다. Tutorial2는 별도 단위로 병행한다. 목표active·DirectDraw전체화면오류제외를 유지한다.
+
 ## 2026-10-15 단위37 완료: 공통 미션 게이트와 Early1 실제 단계 조건 (`VM-W11-Codex`)
 
 - [x] 공통 `RawMissionFrameGate`에 최초10프레임/후속float0.5초+double현재시각·10프레임, 잠금/정지중단계거부, 닫힘7빈프레임재개, 승패→안내→tellAt→재개→demo→튜토리얼의 실제 순서를 복원했다. 단계/timer는 같은 상태 하나를 참조한다. [게이트 상세](docs/exe/cpp-mission-frame-gate-20261015.md).
