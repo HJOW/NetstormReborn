@@ -64,9 +64,18 @@ GameWorld::GameWorld(const GameAssets& assets,const o::BaseFileSystem& files,o::
     for (std::size_t i=0;i<palette_.size();++i) palette_[i]=assets_.Palette().Color(static_cast<std::uint8_t>(i));
     // 실제 카메라는 이 월드가 소유한다. 로더의 같은 호출 위치에서 실행하며 외부 관찰 콜백을 사용하지 않는다.
     services.install.resetCamera=[this] { ResetCampaignCamera(); };
+    // 선택도 같은 GameWorld가 소유한다. 설치 중에는0이며 삭제의 실제 ClearSelection에서 같은 표시를 갱신한다.
+    services.deletion.selected=[this] { return o::Sid{static_cast<std::uint16_t>(selected_)}; };
+    services.deletion.emit=[this,other=std::move(services.deletion.emit)](const o::SquidDestroyEvent& event) {
+        if (event.effect==o::SquidDestroyEffect::ClearSelection) { Select(0);return; }
+        if (!other) throw std::logic_error("GameWorld의 다른 파생 삭제 효과 미연결");
+        other(event);
+    };
     campaign_=std::make_unique<RawCampaignSession>(assets,files,std::move(fort),std::move(mission),std::move(services));
     campaign_->Load();RefreshCampaignObjects();
 }
+// 세션의 실제 Kernel/음향/Form 콜백은 나머지 월드 멤버가 살아 있는 동안 정리한다.
+GameWorld::~GameWorld() { campaign_.reset(); }
 // 초기 카메라의 원본 좌표를 clamp나 신전 우선 선택 없이 현재 raw 표시와 음향 원점에 전달한다.
 void GameWorld::ResetCampaignCamera() {
     cameraHome_.width=width_;cameraHome_.height=height_;

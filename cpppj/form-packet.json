@@ -1,0 +1,55 @@
+{
+  "host": "VM-W11-Codex",
+  "uniqueInputs": 1152,
+  "editions": {
+    "originals": {
+      "inputs": 576,
+      "returns": 576,
+      "assertions": 0,
+      "peSha": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "nativeCalls": {
+        "004ae560": 192,
+        "004ad010": 768,
+        "004df590": 576,
+        "004aeb40": 192,
+        "004ac340": 192,
+        "004ac260": 288
+      },
+      "externalBroadcasts": 288,
+      "exports": {
+        "extracted/form-packet/originals/creation.c": "ae480a9cde7dc0ace3671511118ba41c9fe0793562c2a1db35216973c13d539a",
+        "extracted/form-packet/originals/functions.tsv": "26354303a0939fa9467e3b5a9029eb6e6e033a6b72c5303f1a7b199658f3cf30"
+      }
+    },
+    "originalCD": {
+      "inputs": 576,
+      "returns": 576,
+      "assertions": 0,
+      "peSha": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "nativeCalls": {
+        "004af750": 192,
+        "004b04a0": 768,
+        "00418b60": 576,
+        "00419090": 576,
+        "004aff30": 192,
+        "004abc10": 192,
+        "004aaa00": 192,
+        "004abb40": 288
+      },
+      "externalBroadcasts": 288,
+      "exports": {
+        "extracted/form-packet/originalCD/creation.c": "cb4d7a721fa078a7e6a456ea0162e040c20559b9e0675cb77be7ba1d81c5d04f",
+        "extracted/form-packet/originalCD/functions.tsv": "6911e0ff591d98895d179218fc5a2927f9cfc68918d8ffb6b3f0ea19cbe59576"
+      }
+    }
+  },
+  "fixtureSha": "6ae20907d88e70ebaad17d0859c5e33980ef104d228f048357ad8bc3584c5190",
+  "toolSha": "a45eb30943ca3491f62056ecab142780661a8fd30390c3fb6c51b725ef34002e",
+  "helperSha": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
+  "limitations": [
+    "실제 writer/헤더/부모 getter/삭제 표식 및 wrapper를 실행했다. broadcast 장치만 외부 관찰이며 실제 소켓 I/O가 아니다.",
+    "정상 server/부모/상대 Form 경로만 실행한다. 원본 assert 경로와 다른 파생 가상 getter/writer는 제외한다.",
+    "wrapper 수신자는-1이다. 특정 수신자 조회/송신 분기는 이번 실행 범위가 아니다.",
+    "두 논리 풀은24000슬롯이며 주소/확보 바이트 수와 free list 준비 방식은 다르다. writer는 free list를 읽지 않는다. 입력 슬롯과64바이트 버퍼를 직접 대조한다."
+  ]
+}

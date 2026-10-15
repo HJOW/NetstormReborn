@@ -21,6 +21,8 @@ public:
     // 실제 캠페인 세션을 소유하며 모든 그림/선택/이동이 같은 raw SID를 사용한다. viewport는 로더 실행 전 실제 화면 크기다.
     GameWorld(const GameAssets& assets,const o::BaseFileSystem& files,o::FortTemplate fort,o::MissionPlayers players,
         std::string mission,RawCampaignSessionServices services,ScreenPoint viewport);
+    // 콜백이 읽는 선택/그림 저장소의 수명이 끝나기 전에 실제 캠페인 프로세스를 정리한다.
+    ~GameWorld() override;
     // Kernel에서 호출할 실제 게임 시간과 정지 상태의 공급자를 연결한다.
     std::function<double()> elapsed;
     // paused: 현재 게임 시계가 정지했는지 조회하는 콜백.

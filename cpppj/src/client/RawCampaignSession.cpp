@@ -8,6 +8,7 @@
 #include "o/RawPlayerTemplateState.h"
 #include "o/RawArcherTypeData.h"
 #include "o/RawProjectileGeometry.h"
+#include "o/RawFormPacket.h"
 #include <bit>
 #include <stdexcept>
 using namespace netstorm::o;
@@ -140,6 +141,10 @@ struct RawCampaignSession::Impl {
     RawPathDataHeader pathHeader; // 실제 경로 writer가 사용하는 현재 프로토콜 header다.
     std::array<std::uint8_t,16384> pathBuffer{}; // 원본 경로 직렬화의 현재 송신 버퍼다.
     std::unique_ptr<RawBattleBroadcast> broadcast; // 동일 Player9와 실제 현재 연결 표를 사용하는 송신 분배기다.
+    FormPacketHeaders formHeaders; // 원본 현재 감시/내용물/삭제 헤더 전역이다.
+    FormDeletionStamp deletionStamp; // 실제 삭제 writer가 한 번 소비하는 최근 명령 표식이다.
+    std::unique_ptr<RawFormPacket> formWriter; // 동일 Pool의 실제 가상+54/+58 직렬화 몸체다.
+    std::array<std::uint8_t,2048> formBuffer{}; // 감시/내용물/삭제 요청이 공유하는 원본 크기의 현재 송신 버퍼다.
 
     // 보호 자료를 읽기 전용으로 사용하며 모든 필수 후처리를 첫 생성 전에 등록한다.
     Impl(const GameAssets& game,const BaseFileSystem& files,FortTemplate fort,std::string mission,RawCampaignSessionServices input):
@@ -158,6 +163,13 @@ struct RawCampaignSession::Impl {
         // 별도 관찰/장치 송신이 없으면 실제 분배기를 사용한다. NULL 연결은 원본 조건에서 자연스럽게 생략한다.
         if (!services.assets.sendGunPacket) services.assets.sendGunPacket=[this](std::span<const std::uint8_t> bytes) { broadcast->Send(bytes); };
         if (!services.pathPacket) services.pathPacket=[this](std::span<const std::uint8_t> bytes) { broadcast->Send(bytes); };
+        if (!services.formPacket) services.formPacket=[this](std::span<const std::uint8_t> bytes) { broadcast->Send(bytes); };
+        formWriter=std::make_unique<RawFormPacket>(core.pool,formHeaders,deletionStamp);
+        // 실제 Form Pop이 정규화한 현재 상태 BYTE를 writer가 읽은 다음 같은 송신 분배기로 보낸다.
+        if (!services.dependencyTransmit) services.dependencyTransmit=[this](Sid form,std::uint32_t) {
+            const auto size=formWriter->WriteData(form,formBuffer); // 원본 반환 크기13/18이며 헤더의 선언 길이와 별개다.
+            services.formPacket(std::span<const std::uint8_t>(formBuffer).first(size));
+        };
         priestState.priests.priests.entries.resize(100);assetState.residences.entries.resize(100);
         assetState.temples.entries.resize(100);assetState.outposts.entries.resize(100);assetState.geysers.entries.resize(100);
         // 원본 Player의 첫 지역 sentinel은9기록에 직접 쓴다. 별도 playerRegions 배열을 사용하지 않는다.
@@ -298,7 +310,16 @@ struct RawCampaignSession::Impl {
         RawWorldRuntimeHooks worldHooks;
         worldHooks.formTransmit=services.dependencyTransmit;
         FillMissing(worldHooks.formTransmit);
-        worldHooks.assets=services.deletion;FillMissing(worldHooks.assets.emit);FillMissing(worldHooks.assets.selected);
+        worldHooks.assets=services.deletion;FillMissing(worldHooks.assets.selected);
+        // 공통 삭제의 -1/-2/0/flags 요청은 실제+58을 실행한다. 다른 파생/선택 효과는 실제 상위 소비자로 전달한다.
+        worldHooks.assets.emit=[this,other=services.deletion.emit](const SquidDestroyEvent& event) {
+            if (event.effect==SquidDestroyEffect::Transmit) {
+                const auto size=formWriter->WriteDeletion(event.sid,event.flags,formBuffer); // 아직 반납 전인 같은 SID다.
+                services.formPacket(std::span<const std::uint8_t>(formBuffer).first(size));return;
+            }
+            if (!other) throw std::logic_error("실제 세션의 다른 파생 삭제/선택 효과 미연결");
+            other(event);
+        };
         worldHooks.assets=hits->DestroyHooks(std::move(worldHooks.assets));
         worldHooks.destroy=hits->Destroy(services.destroy);
         worldHooks.regular=hits->Handler(combat->Handler(assetBindings->Handler(priests->RegularHandler([this](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
@@ -315,7 +336,7 @@ struct RawCampaignSession::Impl {
         normal=std::make_unique<RawNormalTerrainWorldBinding>(world,chunks,*islands,random,crt,terrainGlobals,stamp,randomPlacement,farm,piece,*pipeline,hp,*carrier,std::move(diagnostics));
         finish=std::make_unique<RawFortFinishOwner>(core.pool,core.types,assetState.residences,finishState,FortFinishOwnerHooks{SessionMissing<FortRandomRectangle,std::int32_t>(),SessionMissing<double>(),SessionMissing<std::uint32_t,GameRandom&,const FortRandomPlaceRequest&>(),SessionMissing<void>()});
         ContainedCreateHooks contentHooks;contentHooks.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); };
-        FillMissing(services.contentNotice);contentForms=std::make_unique<ContentFormHost>(core.pool,core.types,services.contentNotice);
+        FillMissing(services.contentNotice);contentForms=std::make_unique<ContentFormHost>(core.pool,core.types,services.contentNotice,services.dependencyTransmit);
         contained=std::make_unique<RawContainedCreate>(core.pool,contentState,contentForms->BindCreate(core.factory,std::move(contentHooks)));
         templates[1]=std::move(fort);
         const auto state=templates[1].Section("State");stateBytes[1].assign(state.begin(),state.end());

@@ -1,0 +1,7 @@
+{
+  "description": "감시/내용물 Form과 삭제 writer 및 같은 wrapper/헤더/부모 getter. VM-W11-Codex, 2026-10-15. 원본은 읽기만 하며 누락 함수는 읽기 전용 세션 안에서 정의한다.",
+  "editions": {
+    "originals": ["004ae560", "004aeb40", "004ac340", "004ac260", "004ad010", "004df590"],
+    "originalCD": ["004af750", "004aff30", "004abc10", "004abb40", "004b04a0", "004aaa00", "00418b60", "00419090"]
+  }
+}

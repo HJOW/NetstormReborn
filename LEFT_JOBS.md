@@ -1,18 +1,26 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-15 완료: 단위31 감시/내용물 Form 및 삭제 송신 (`VM-W11-Codex`)
+
+- [x] AGENTS와 두 LEFT를 재독했다. 기준은 `e719a02`, 현재/마지막 정밀 PC는 **VM-W11-Codex, 2026-10-15**다. 직전 턴은 두 구현 커밋과 실제 빌드로 진척했다. 사용자 `TODO.md`는 보존한다.
+- [x] 실제 두 PE의 Form13/18바이트·삭제8바이트 writer와 wrapper 수신자/flags 인자를 확인하고 같은 세션의 BattleBroadcast에 연결했다. NULL LAN 연결이어도 직렬화한다. ContentFormHost도 같은 실제 소비자를 사용하고 GameWorld의 선택/해제와 세션 해제 순서를 연결했다.
+- [x] 정밀 export PATCH6/CD8과 새 Native1,152개 정상/assert0, C++ 전체64바이트·표식 대조2개/버퍼1개 및 실제 캠페인 세션5개가 통과했다. 실제 교전의173/178/898프레임을 유지하면서 실제13/8바이트 송신을 확인했다. Release 게임/검사 빌드 경고·오류0이다.
+- [x] 전체 CTest **1/1·내부1,148개·실패 체크0**(153.25초), 원본/정밀 범위/도구/helper/fixture SHA 일치다. 원본 두 PE는 불변이며 새 Native 고유 입력은1,152개만 센다. [단위31 상세](docs/exe/cpp-run31-20261015.md)에 명시 장치 경계/전체64바이트/스택·보존 레지스터·표식/최초 관찰 보강을 기록했다. 주석1줄 교정 뒤 최종 증분 빌드 경고/오류0·집중3+5개 실패0도 확인했다. **`20261015-17 실제 Form과 삭제 패킷 복원 및 세션 송신 연결`**로 로컬 커밋하며 push하지 않는다.
+- [ ] 다음은 실제 부모 내용물 통지/피해 owner·AI/fencemark·Ready/login 및 단위29 UI 서비스 소비/Battle 차단 해제다. Gun/Path와 전체 공용 송신 버퍼 통합·수신 명령의 최근 표식 설정·서버 Content 실제 생산도 후속이다. Early Missions/1-1~1-2 완주 동일성은 미완료며 목표active·DirectDraw 전체화면 오류 제외를 유지한다.
+
 ## 2026-10-15 완료: 단위30 TYPE 원소 자료와 현재 옵션 연결 (`VM-W11-Codex`)
 
 - [x] 기준 `7d46ec5`에서 이어간다. 현재/마지막 정밀 PC는 **VM-W11-Codex, 2026-10-15**다. 보호 원본·AGENTS·사용자 `TODO.md`는 보존한다.
 - [x] 실제 TYPE+98의 첫 BYTE 조회 표와 전체 TYPE 초기값 **PATCH5/CD4**를 복원했다. 원문 `wrtsWRTS.?>`의 PATCH 앞10/i%5·CD 앞8/i%4와 대문자 차이를 유지한다. `RiftTypeRecord.theme`을 같은 세션의 지역/레지던스/총 보충 표에 연결하여 기존0 표와 썬 fallback을 제거했다. 레지던스도 현재 첫 일치 신전의 원소를 읽은 뒤 실제 `theammode`를 조회한다.
 - [x] **최종 NetstormCpp Release 빌드 종료0·경고0·오류0**, 공백 오류0·보호 두 PE SHA 불변이다. 새 테스트/fixture 추가·테스트 실행·게임/GUI 실행은0이다. [단위30 상세](docs/exe/cpp-run30-20261015.md)에 원본 기본값/판본 차이·표 범위와 후속 Form/내용물/피해 통지의 실제 주소를 정리했다. 인수인계 뒤 로컬 **`20261015-16 실제 TYPE 원소와 레지던스 현재 옵션 연결`**로 커밋하며 push하지 않는다.
-- [ ] 다음은 실제 내용물 부모 통지(base VT+24는 실제 빈 몸체이며 파생은 별도)·owner 피해/AI·감시/내용물 Form13/18바이트와 삭제8바이트 직렬화·fencemark·Ready/login이다. 초기1-1/1-2의 저장 내용물 부모는 레인/윈드 신전이다. 단위29 생성부를 실제 UberGump에 소비시키고 Battle 차단을 해제하는 작업과 Early Missions/1-1~1-2 완주 동일성은 미완료다. 목표active·DirectDraw 전체화면 오류 제외를 유지한다.
+- [ ] 다음은 실제 내용물 부모 통지(base VT+24는 실제 빈 몸체이며 파생은 별도)·owner 피해/AI·fencemark·Ready/login이다. Form13/18바이트와 삭제8바이트 직렬화/송신은 단위31에서 연결했다. 초기1-1/1-2의 저장 내용물 부모는 레인/윈드 신전이다. 단위29 생성부를 실제 UberGump에 소비시키고 Battle 차단을 해제하는 작업과 Early Missions/1-1~1-2 완주 동일성은 미완료다. 목표active·DirectDraw 전체화면 오류 제외를 유지한다.
 
 ## 2026-10-15 완료: 단위29 실제 클라이언트 설정·음향 서비스 준비 (`VM-W11-Codex`)
 
 - [x] AGENTS와 양 LEFT를 다시 읽었다. 현재/마지막 정밀 디컴파일 PC는 **VM-W11-Codex, 2026-10-15**이며 기준은 `82cc438`이다. 사용자 `TODO.md` 수정은 보존한다.
 - [x] `CampaignClientServices`에 실제 ConfigInterface/Xlat/InputQueue/SoundPlayer와 Gump 생산 갱신 사건을 연결하는 생성부를 준비했다. 사제 Owner 통지는 기존 실제 무상태 다리 진단, 이름 기반 아처 음향은 같은 SID의 현재 float 위치를 사용한다. noAudio도 실제 이름표/비활성 재생을 유지하고 월드/프로세스→음향→화면 해제 순서를 적용했다. 누락된 게임 규칙은 기존 선택 오류를 유지한다.
 - [x] **NetstormCpp 최종 Release 빌드 종료0·경고0·오류0**, 공백 오류0·보호 두 PE SHA 불변이다. 새 테스트 추가·실행 및 GUI/게임 실행은0이다. 이전 전체1,145개 통과를 이번 실행으로 세지 않는다. [단위29 상세](docs/exe/cpp-run29-20261015.md)에 실제 기계어 호출 인자와 준비 범위를 기록했다. 로컬 **`20261015-15 실제 캠페인 클라이언트 서비스와 음향 수명 준비`**로 커밋하며 push하지 않는다.
-- [ ] 새 생성부의 실제 `UberGump` 소비와 Battle 차단 해제는 Form 직렬화/삭제 전파·내용물 부모 통지·피해 owner/AI·fencemark 표적 코너·Ready/login 경계를 복원한 뒤 진행한다. TYPE+98의 `themes/elements` 보충 표 문제는 위 단위30에서 처리했다. Early Missions/1-1~1-2 완주 동일성은 미완료이며 목표active·DirectDraw 전체화면 오류 제외를 유지한다.
+- [ ] 새 생성부의 실제 `UberGump` 소비와 Battle 차단 해제에는 내용물 부모 통지·피해 owner/AI·fencemark 표적 코너·Ready/login이 남는다. Form 직렬화/삭제 송신은 단위31, TYPE+98 보충 표는 단위30에서 처리했다. Early Missions/1-1~1-2 완주 동일성은 미완료이며 목표active·DirectDraw 전체화면 오류 제외를 유지한다.
 
 ## 2026-10-15 완료: 단위28 실제 초기 카메라·캠페인 설치 연결 (`VM-W11-Codex`)
 
