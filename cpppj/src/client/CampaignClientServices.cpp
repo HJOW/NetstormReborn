@@ -3,6 +3,7 @@
 #include "client/ClientAudio.h"
 #include "client/ClientMain.h"
 #include "client/RawButtonControls.h"
+#include "client/RawChatChannels.h"
 #include "o/OriginalText.h"
 #include <algorithm>
 #include <bit>
@@ -13,6 +14,19 @@
 #include <utility>
 
 namespace netstorm::client {
+// Player SetAlliance의 실제 채널 수정과004410f0(defaultAiName)의 현재 원본 바이트를 같은 Client에 연결한다.
+void BindCampaignAiClientServices(Client& client,CampaignAiServices& ai) {
+    // 원본 Clear는 채널 BYTE만 지우고 Add는 현재 자기 subscriber의 자연 -1 반환까지 수행한다.
+    ai.participation.clearChat=[&client](std::uint32_t channel) { client.ChatChannels().Clear(channel); };
+    ai.participation.addChat=[&client](std::uint32_t subscriber,std::string_view name,std::uint32_t channel) {
+        static_cast<void>(client.ChatChannels().AddToChannel(subscriber,name,channel));
+    };
+    // Xlat 키로 바꾸지 않는다. 현재 언어 Config/치환 결과를 매 요청마다 원본 Windows-1252로 인코딩한다.
+    ai.defaultName=[&client] {
+        const auto bytes=o::EncodeOriginalText(client.Configuration().PathSpec("defaultAiName")); // 현재 언어 교체/설정 변경을 반영한 실제 좁은 바이트다.
+        return std::string(bytes.begin(),bytes.end());
+    };
+}
 // 원본 time32/번역/설정/음향/입력을 동일 클라이언트의 저장소와 장치에 연결한다.
 RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonControls& controls,CampaignClientUi ui) {
     if (!ui.refreshWindowTitle || !ui.tell)
@@ -91,6 +105,7 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
         constexpr std::array<std::string_view,5> descriptions{"참여하지 않은 Player","metamap PlayerId","전투 밖 배치","Player1..8 범위","Canon 프레임 부재"}; // 원본 진단 분류와 같은 순서의 실제 로그 설명이다.
         std::clog<<"Player 간헐천 범위 원본 진단: "<<descriptions.at(static_cast<std::size_t>(assertion))<<'\n';
     };
+    BindCampaignAiClientServices(client,services.ai); // 장치 없는 검사와 실제 GUI 월드가 동일한 장기 Client 경계를 사용한다.
     return services;
 }
 }

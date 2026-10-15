@@ -2,6 +2,8 @@
 # (ClientMain·UserInput·Gump 계열·Screen·Renderer·Sound·State·Mission 등)
 # 다시 만든 파일을 아래 목록에 더한다. 파일 이름은 SOURCE_MAP.md 의 "cpppj 경로"를 따른다.
 target_sources(netstorm PRIVATE
+    # 실제 Client 수명의 원본 100기록 채팅 채널을 공유한다.
+    RawChatChannels.cpp RawChatChannels.h
     DialogBodyLayout.cpp DialogBodyLayout.h
     RawCampaignLifetimeBindings.cpp RawCampaignLifetimeBindings.h
     HtmlTextParser.cpp HtmlTextParser.h

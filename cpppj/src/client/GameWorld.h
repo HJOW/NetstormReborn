@@ -71,6 +71,8 @@ public:
     std::string Report(bool mask=false) const;
     // 현재 미션의 시작 자원·기술·동맹 상태를 읽기 전용으로 조회한다.
     const o::MissionPlayers& Players() const;
+    // 현재 실제 캠페인 Session의 globals.mySubscriber다. 이전 값형 어댑터에는 로그인 전역이 없어 0이다.
+    std::uint32_t CurrentSubscriber() const;
     // 검사/후속 게임 명령이 사용하는 실제 raw 표면 월드다. 표시도 같은 슬롯을 읽는다.
     RawSurfaceWorld& Surfaces();
 private:

@@ -36,6 +36,8 @@ add_executable(netstorm_tests
     CampaignSeedTests.cpp
     CampaignSessionTests.cpp
     CampaignConstructionTests.cpp
+    ChatChannelsTests.cpp
+    LocalMissionTransportTests.cpp
     BattleBroadcastTests.cpp
     WindowTitleTests.cpp
     CameraHomeTests.cpp
@@ -1004,3 +1006,9 @@ set_source_files_properties(AiBrainInitialUpdateTests.cpp PROPERTIES COMPILE_DEF
 # 실제 TYPE mana 후처리와 같은 보호 자산 188개 공급을 대조한다.
 set_source_files_properties(TypeRequiredEnergyTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_TYPE_ENERGY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/type-required-energy-x86.tsv\"")
+
+# 실제 채팅 기록과 단독 미션 전송의 독립 기계어 관찰 경로다.
+set_source_files_properties(ChatChannelsTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CHAT_CHANNELS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/chat-channels-x86.tsv\"")
+set_source_files_properties(LocalMissionTransportTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_LOCAL_MISSION_TRANSPORT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/local-mission-transport-x86.tsv\"")

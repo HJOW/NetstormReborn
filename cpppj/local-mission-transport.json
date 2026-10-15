@@ -1,0 +1,44 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-15",
+  "nativeUniqueInputs": 66,
+  "status": "release-focused-and-full-ctest-validated",
+  "boundaries": [
+    "전체 정밀 함수표의 검토한 불연속 범위만 실행; 게임/OS 진입 없음; 정상 cdecl스택/EBX·ESI·EDI·EBP 보존 검사",
+    "Fort 경로 선택/Template 파일 읽기/이미지 공급/Template 정리/할당/전송/로그인 설정/시간/Chat 이름 등록/서버 시작은 명시 외부 경계",
+    "Zone512 전체 stack과 observer후86BYTE 복제,0x27 전체 예약/observer후송신,Zone설치 전체1620BYTE/현재전역/효과순서",
+    "004df740 집합분배의 실제검증/버전/observer/즉시depth 몸체 실행; 시계·기록·등록receive·종료·반납은 명시 외부 효과",
+    "원본0x27 handler004a7800/Socket/집합 송신버퍼 전체는 이 native 관찰 범위가 아님"
+  ],
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_local_mission_transport.py": "db71da65079aa9a985a3a833edd224f089ba9a20137d92042551cb346937eb78",
+    "cpppj/src/zacket/LocalMissionTransport.h": "b09982ec52f9c0491ae1b46c92d8f27a323d6647fc81c0386136563bfa500cca",
+    "cpppj/src/zacket/LocalMissionTransport.cpp": "9eca9a66112df27a580d8f159bcea58d9d2aa35ffbe35d3bbc8f3182049e09ff",
+    "cpppj/tests/LocalMissionTransportTests.cpp": "ed6bba7db6a2dccf541ed674b4f9064a2d57b15b7ebe3fa6206b3b210b8890c6",
+    "cpppj/tests/fixtures/local-mission-transport-x86.tsv": "34288e9109dd6d15df5231191b61f1f193c97d4a01d72a8aa59d812e3852368c"
+  },
+  "product_validation": {
+    "configuration": "Release",
+    "build_exit_code": 0,
+    "build_warnings": 0,
+    "build_errors": 0,
+    "focused_tests": 33,
+    "failed_checks": 0,
+    "build_log": "extracted/goal-chat-transport-final-build.log",
+    "focused_log": "extracted/goal-chat-transport-final-focused.log",
+    "game_gui_runs": 0,
+    "full_ctest": {
+      "tests": 1264,
+      "failed_checks": 0,
+      "ctest": {
+        "passed": 1,
+        "total": 1
+      },
+      "seconds": 210.62,
+      "log": "extracted/goal-chat-transport-ctest.log",
+      "internal_log": "extracted/goal-chat-transport-tests.log"
+    }
+  }
+}

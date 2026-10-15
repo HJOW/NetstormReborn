@@ -1,0 +1,53 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-15",
+  "status": "release-focused-and-full-ctest-validated",
+  "observations": 2448,
+  "native_calls": {
+    "00444ee0": 2400,
+    "0042b0e0": 1360,
+    "004437f0": 2720,
+    "00445080": 48
+  },
+  "explicit_crt_substitutions": {
+    "004e63e0": 27225,
+    "004e5b40": 4590,
+    "004a89c0": 395,
+    "004e51f0": 1190,
+    "004e58e9": 115
+  },
+  "normal_return": true,
+  "game_gui_os_calls": 0,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_chat_channels.py": "b1601cd2081effd21d2004a4efcf13c5efc3c4cd5eeaf60c38cf624eb4261f09",
+    "tools/decomp_priestmenu.py": "72d14bfa36091dc86a273ad9b1998c940f575bb954195d0e0920e5e63ea10bc7",
+    "cpppj/src/client/RawChatChannels.h": "6da6c3b29fd7002143619c32d3f0d388f936c97fea30fd605718e997dc995620",
+    "cpppj/src/client/RawChatChannels.cpp": "2b603014ecc6608a55a8f66ac2b65efd7987a1c106542988e63aff55d3fb1b80",
+    "cpppj/tests/ChatChannelsTests.cpp": "bce2e89ef2cdd07502b99da0e0d45ea58bb8c18b746d302fb92a6bfc3af2d5f1",
+    "cpppj/tests/fixtures/chat-channels-x86.tsv": "2e8bbcdcf0ff3d053cc1e721991cd8e1aa1a97ea6e9e28c4eceb3fdf99d9bb6d"
+  },
+  "product_validation": {
+    "configuration": "Release",
+    "build_exit_code": 0,
+    "build_warnings": 0,
+    "build_errors": 0,
+    "focused_tests": 33,
+    "failed_checks": 0,
+    "build_log": "extracted/goal-chat-transport-final-build.log",
+    "focused_log": "extracted/goal-chat-transport-final-focused.log",
+    "game_gui_runs": 0,
+    "full_ctest": {
+      "tests": 1264,
+      "failed_checks": 0,
+      "ctest": {
+        "passed": 1,
+        "total": 1
+      },
+      "seconds": 210.62,
+      "log": "extracted/goal-chat-transport-ctest.log",
+      "internal_log": "extracted/goal-chat-transport-tests.log"
+    }
+  }
+}

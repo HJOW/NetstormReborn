@@ -76,6 +76,8 @@ public:
     void RunFrame(o::FrameTime time,bool paused);
     // 원본 미션 게이트의 첫 checkOutcome 위치에서만 호출한다. 설치/활성화 전에 자동 실행하지 않는다.
     void CheckMissionOutcome();
+    // 원본 로그인/월드 로더가 공유하는 현재 globals.mySubscriber를 읽기만 한다. 별도 캐시를 만들지 않는다.
+    std::uint32_t CurrentSubscriber() const;
     // 실제 로그인/AI 초기화가 사용하는 동일9 Player 원문을 빌린다. 프레임별 사본을 만들지 않는다.
     std::span<std::uint8_t> PlayerRecords();
     // 실제 방향별동맹 초기화가 쓰고 승패가 읽는 같은81DWORD를 빌린다.

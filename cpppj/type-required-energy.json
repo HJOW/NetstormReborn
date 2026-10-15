@@ -29,8 +29,8 @@
     "cpppj/tests/fixtures/type-required-energy-x86.tsv": "8bcb3e215c958f5df0a395365059f5481801b1660569f2f04c0720f394f14f4c",
     "cpppj/tests/TypeRequiredEnergyTests.cpp": "0802ab400413ec5da3f2d03a4ac6b6f88e2d088915646609a2ca0bb39a02b05c",
     "cpppj/src/o/CMakeLists.txt": "f66ecd48b27ff161994c59dcb32e24610ba585e64ec2a57000224c55d8593684",
-    "cpppj/src/client/CMakeLists.txt": "aa92fd831eb24c7ea783615d6e7376d3729192cbf255132bddad5d213a00a483",
-    "cpppj/tests/CMakeLists.txt": "7d00c35880c3935e7497bd6758e7664f2dd6217b3781a85e941e736a76e71fb2"
+    "cpppj/src/client/CMakeLists.txt": "da63b087693ab955ced2534988ffd5fd742ba47ec518126bcfeb70cedac17339",
+    "cpppj/tests/CMakeLists.txt": "8d6c7497d2418e228a4eb8af75b86776ca8344fd3e11b2c2753602ee6bb5a27e"
   },
   "product_validation": {
     "configuration": "Release",
@@ -67,6 +67,23 @@
         "seconds": 193.66,
         "log": "extracted/goal-units62-66-ctest.log"
       }
+    },
+    {
+      "date": "2026-10-15",
+      "reason": "unit67/68 Chat and local mission transport registration; TYPE product and native fixture unchanged",
+      "cmake_sha256": {
+        "cpppj/src/client/CMakeLists.txt": {
+          "previous": "aa92fd831eb24c7ea783615d6e7376d3729192cbf255132bddad5d213a00a483",
+          "current": "da63b087693ab955ced2534988ffd5fd742ba47ec518126bcfeb70cedac17339"
+        },
+        "cpppj/tests/CMakeLists.txt": {
+          "previous": "7d00c35880c3935e7497bd6758e7664f2dd6217b3781a85e941e736a76e71fb2",
+          "current": "8d6c7497d2418e228a4eb8af75b86776ca8344fd3e11b2c2753602ee6bb5a27e"
+        }
+      },
+      "focused_tests": 3,
+      "failed_checks": 0,
+      "log": "extracted/goal-chat-transport-final-focused.log"
     }
   ]
 }

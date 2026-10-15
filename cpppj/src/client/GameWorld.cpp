@@ -510,6 +510,8 @@ std::optional<ScreenPoint> GameWorld::Point(std::string_view label) const {
 bool GameWorld::TakeChanged() { const bool rawChanged=Surfaces().TakeChanged();return std::exchange(changed_,false) || rawChanged; }
 // 순수한 플레이어 초기 상태 조회다.
 const o::MissionPlayers& GameWorld::Players() const { return players_; }
+// 생성 중 아직 Session이 없으면 0이며 기존 MissionPlayers의 localPlayer로 대체하지 않는다.
+std::uint32_t GameWorld::CurrentSubscriber() const { return campaign_ ? campaign_->CurrentSubscriber() : 0U; }
 // 게임 명령/검사와 렌더링은 같은 raw 상태를 참조한다.
 RawSurfaceWorld& GameWorld::Surfaces() { return campaign_ ? campaign_->World() : *surfaces_; }
 // 구 어댑터의 미션 상태를 실제 판정으로 가장하지 않고 동일 raw 세션이 있을 때만 실행한다.

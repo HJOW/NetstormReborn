@@ -1,0 +1,104 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-15",
+  "unit": 67,
+  "base_commit": "81fae7c",
+  "status": "release-focused-and-full-ctest-validated",
+  "chat_storage": {
+    "owner": "Client::ChatState",
+    "bytes": 4800,
+    "records": 100,
+    "stride": 48,
+    "per_client": 1,
+    "reset_on_mission_change": false
+  },
+  "current_subscriber": [
+    "Client::CurrentSubscriber",
+    "UberGump::CurrentSubscriber",
+    "GameWorld::CurrentSubscriber",
+    "RawCampaignSession::CurrentSubscriber",
+    "impl_->globals.mySubscriber"
+  ],
+  "services": [
+    "participation.clearChat -> Client::ChatChannels().Clear",
+    "participation.addChat -> Client::ChatChannels().AddToChannel",
+    "defaultName -> Configuration.PathSpec(defaultAiName) -> EncodeOriginalText"
+  ],
+  "unfilled_boundaries": [
+    "allocationBytes",
+    "changeColor",
+    "localTransport",
+    "assignConnection",
+    "rejectLogin",
+    "disconnect",
+    "sendAlliance"
+  ],
+  "automatic_ai_stage3_enabled": false,
+  "game_gui_runs": 0,
+  "new_native_unique_inputs": 0,
+  "existing_native_inputs": {
+    "chat": 2448,
+    "new_observation_this_integration": false
+  },
+  "tests_prepared": {
+    "body": 3,
+    "headless_client": 2,
+    "total": 5,
+    "executed": true
+  },
+  "historical_snapshots": {
+    "cpppj/session-ai.json": "c9bc0f4",
+    "cpppj/session-construction.json": "81fae7c"
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "cpppj/src/client/ClientMain.h": "d02989475e69772f9c3035a152e05ebccb6383798f6c58596ebdd54f94863aac",
+    "cpppj/src/client/ClientMain.cpp": "ea8cf56db9d82a306fb7d2fcdb66ad5f48ab2d1dd039081dcd6bfd4be13a861d",
+    "cpppj/src/client/UberGump.h": "7c4c7164e4966e022f1403a7b76bd1342b7338497764eb68c5c68d4d411222d9",
+    "cpppj/src/client/UberGump.cpp": "9e9483f858f612b200ff41e26c7eeacbca7f49dddee1f07b881f3b8e2ca30796",
+    "cpppj/src/client/GameWorld.h": "3f4d806d22fde6661d04eb2eceb09ac95e94b73b776b7a4c07e08726ead76644",
+    "cpppj/src/client/GameWorld.cpp": "e28f09f0bdf193ead41bfaa6ed683ddd4e2b9225f93aad16246644a6aba3ba89",
+    "cpppj/src/client/RawCampaignSession.h": "89619ba3f728dc0bcf084c0f64b229cbc186cc6bdb6793af039475c8a11dccb5",
+    "cpppj/src/client/RawCampaignSession.cpp": "22c9e79597673e640901aaca83740237b7c3c3dfd8c341edfae67dff77fdf489",
+    "cpppj/src/client/CampaignClientServices.h": "387868f05686b5d13a980abb92e08b4b9aae1326434ffc2481c0b25e40ba21b5",
+    "cpppj/src/client/CampaignClientServices.cpp": "099cbb35bb8233be0588c6a5a41d70d9804628a3a16f5c350fe6d77a4b6f53e0",
+    "cpppj/src/client/RawChatChannels.h": "6da6c3b29fd7002143619c32d3f0d388f936c97fea30fd605718e997dc995620",
+    "cpppj/src/client/RawChatChannels.cpp": "2b603014ecc6608a55a8f66ac2b65efd7987a1c106542988e63aff55d3fb1b80",
+    "cpppj/tests/ChatChannelsTests.cpp": "bce2e89ef2cdd07502b99da0e0d45ea58bb8c18b746d302fb92a6bfc3af2d5f1",
+    "cpppj/tests/fixtures/chat-channels-x86.tsv": "2e8bbcdcf0ff3d053cc1e721991cd8e1aa1a97ea6e9e28c4eceb3fdf99d9bb6d",
+    "tools/decomp_chat_channels.py": "b1601cd2081effd21d2004a4efcf13c5efc3c4cd5eeaf60c38cf624eb4261f09",
+    "docs/exe/cpp-client-ai-chat-20261015.md": "49156bfa02b06b138328c11d8a5a5a64027d4b252fc18e201f8ebfcc9784d23a",
+    "cpppj/src/client/CMakeLists.txt": "da63b087693ab955ced2534988ffd5fd742ba47ec518126bcfeb70cedac17339",
+    "cpppj/src/zacket/CMakeLists.txt": "7ac675da17fdb7efc6f9db3fef74ac999a7f574b836d98cce691491b6ca08e71",
+    "cpppj/tests/CMakeLists.txt": "8d6c7497d2418e228a4eb8af75b86776ca8344fd3e11b2c2753602ee6bb5a27e"
+  },
+  "product_validation": {
+    "configuration": "Release",
+    "build_exit_code": 0,
+    "build_warnings": 0,
+    "build_errors": 0,
+    "focused_tests": 33,
+    "failed_checks": 0,
+    "build_log": "extracted/goal-chat-transport-final-build.log",
+    "focused_log": "extracted/goal-chat-transport-final-focused.log",
+    "game_gui_runs": 0,
+    "full_ctest": {
+      "tests": 1264,
+      "failed_checks": 0,
+      "ctest": {
+        "passed": 1,
+        "total": 1
+      },
+      "seconds": 210.62,
+      "log": "extracted/goal-chat-transport-ctest.log",
+      "internal_log": "extracted/goal-chat-transport-tests.log"
+    }
+  },
+  "initial_validation": {
+    "log": "extracted/goal-chat-transport-focused.log",
+    "default_name_failed_checks": 2,
+    "cause": "Headless test omitted Startup global Config buffer; Get returned null before registry lookup. Test now initializes actual global Config buffer; product unchanged.",
+    "invalid_filter": "ClientMain_ matched no tests; final uses ClientPause_ and FrameInterval_"
+  }
+}

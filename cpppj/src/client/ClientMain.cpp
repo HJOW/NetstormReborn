@@ -7,6 +7,7 @@
 #include "client/ClientMain.h"
 #include "client/ClientAudio.h"
 #include "client/PaletteFlash.h"
+#include "client/RawChatChannels.h"
 #include "client/UberGump.h"
 #include "o/OriginalText.h"
 #include "platform/Bitmap.h"
@@ -141,10 +142,21 @@ std::uint32_t QuantizedFrameMilliseconds(int maxFps) {
     return maxFps > 0 ? (1000u + static_cast<std::uint32_t>(maxFps) - 1u) / static_cast<std::uint32_t>(maxFps) : 0u;
 }
 
-// 파일 시스템과 설정 객체만 만든다. 창과 화면은 Run에서 원본 순서대로 만든다.
+// 원본00558ed0의 정적100기록을 Client 수명으로 소유하며 읽기는 항상 현재 월드까지 내려간다.
+struct Client::ChatState {
+    std::array<std::uint8_t,RawChatChannels::kBytes> records{}; // 원본의0초기화된 단일4800바이트이며 미션 교체로 재초기화하지 않는다.
+    std::optional<RawChatChannels> channels; // PATCH 몸체만 구성한다. 미확정 CD 동작을 PATCH로 대신하지 않는다.
+    // 현재 subscriber를 복사하지 않고 Client의 실제 설치 경로를 매 Add 첫 비교 때 조회한다.
+    ChatState(Client& client,o::OriginalEdition edition) {
+        if (edition==o::OriginalEdition::Patch1078)
+            channels.emplace(edition,records,[&client] { return client.CurrentSubscriber(); });
+    }
+};
+// 파일 시스템·설정·전역 Chat 저장소만 만든다. 창과 화면은 Run에서 원본 순서대로 만든다.
 Client::Client(ClientOptions options)
     : options_(std::move(options)), files_(options_.gameDirectory),
-      configuration_([this](std::string_view path) { return files_.TryRead(path); }) {
+      configuration_([this](std::string_view path) { return files_.TryRead(path); }),
+      chat_(std::make_unique<ChatState>(*this,options_.edition)) {
     files_.RegisterArchive(options_.gameDirectory / "netstorm.tarc");
     configuration_.Registry().environment = Environment;
     if (g_client) throw std::logic_error("Only one client may exist");
@@ -550,6 +562,15 @@ bool Client::Paused() const { return clock_.IsPaused(); }
 void Client::Title(std::string_view title) { SetWindowTextA(static_cast<HWND>(window_), std::string(title).c_str()); }
 // 기본 UI만 제공한다. 검사 장면의 독립 실행은 기존 연결점을 보존한다.
 UberGump* Client::Menu() { return menu_.get(); }
+// 설치 중에는 menu/world가 아직 없을 수 있다. 별도 subscriber 사본이나 로컬 번호 상수를 쓰지 않는다.
+std::uint32_t Client::CurrentSubscriber() const { return menu_ ? menu_->CurrentSubscriber() : 0U; }
+// 실제 PATCH 몸체를 반환하며 CD 호출은 미복원 경계로 명시 거부한다.
+RawChatChannels& Client::ChatChannels() {
+    if (!chat_->channels) throw std::logic_error("CD Chat 채널 몸체는 아직 복원되지 않음");
+    return *chat_->channels;
+}
+// 처리기가 쓰는 물리 저장소 그대로를 읽기 전용으로 공개한다.
+std::span<const std::uint8_t> Client::ChatRecords() const { return chat_->records; }
 // 팔레트 적용 → 원소 색 표 갱신 순서다. SceneMusic은 이 함수 호출 전에 tint를 썼으므로 여기서 현재 tint를 덮어쓰지 않는다.
 void Client::LoadScenePalette(std::string_view name) {
     const auto path=configuration_.PathSpec("DataDir")+"\\"+std::string(name);

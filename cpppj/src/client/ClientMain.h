@@ -20,6 +20,7 @@
 #include <functional>
 #include <memory>
 #include <optional>
+#include <span>
 #include <string>
 #include <utility>
 #include <vector>
@@ -27,6 +28,7 @@
 namespace netstorm::client {
 class UberGump;
 class ClientAudio;
+class RawChatChannels;
 struct ClientAudioOptions;
 
 // 설정 키 "maxFPS" 의 코드 기본값. 화면 루프를 초당 몇 번까지 돌릴지 정한다.
@@ -89,6 +91,12 @@ public:
     void Title(std::string_view title);
     // 기본 실행의 메뉴 상태와 입력 경로. --view 검사에서는 널이다.
     UberGump* Menu();
+    // 현재 설치된 실제 월드의 globals.mySubscriber를 읽는다. 메뉴/월드 설치 전에는 0이다.
+    std::uint32_t CurrentSubscriber() const;
+    // Client 전체 수명의 유일한 PATCH Chat 기록 처리기다. 미션 교체 때 새로 만들거나 지우지 않는다.
+    RawChatChannels& ChatChannels();
+    // 같은 실제 100기록을 읽기 전용으로 빌린다. UI/검사는 별도 채널 사본을 만들지 않는다.
+    std::span<const std::uint8_t> ChatRecords() const;
     // 검사 전용으로 이미 그려진 화면을 지정 파일에 저장한다.
     void Capture(const std::filesystem::path& path);
 
@@ -171,6 +179,8 @@ private:
     o::BaseFileSystem files_;
     // configuration_: 현재 언어와 실행 설정을 조회하는 인터페이스.
     o::ConfigInterface configuration_;
+    struct ChatState; // 실제 전역 Chat 기록과 현재 subscriber 처리기를 구현 파일의 고정 주소에 소유한다.
+    std::unique_ptr<ChatState> chat_; // 메뉴/월드보다 오래 사는 단일100×48바이트이며 미션 수명과 분리한다.
     // translations_: 용어 키를 언어별 표시 문자열로 바꾸는 번역표.
     std::optional<o::XlatTable> translations_;
     // languageNumber_: 현재 언어를 언어 표에서 찾는 번호.
