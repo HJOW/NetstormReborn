@@ -8,63 +8,65 @@ Activision 사에서 1997년도에 개발 후 한참 전에 손 놓은
 Netstorm - Islands at war 게임을
 AI 를 이용해 되살리는 프로젝트입니다.
 
-# 현재 개발 진행상황 관련
+# 현재 개발 진행상황
 
-2026-10-13 cpppj 후속: [실제 BFS·Path Init](docs/exe/cpp-raw-path-search.md)과 [워크샾·아웃포스트 후처리](docs/exe/cpp-factory-postpop.md)에 이어 [Cannon/Archer 표적 탐색](docs/exe/cpp-gun-target.md), [서버 Path 전송·시각 준비](docs/exe/cpp-raw-path-data.md), [미니맵 dirty 통지](docs/exe/cpp-metadisplay-dirty.md)를 연결했습니다. 이번 신규 원본/C++ 대조는 **5,310개**, 최종 전체 **946개/실패0**, Release 경고/오류0입니다. 실제 썬 아비어리는 타입72이며 앞선 Factory wrapper는 아웃포스트126으로 명칭을 교정했습니다. [실제 1-1 초기 데이터와 실행 사슬](docs/exe/cpp-campaign-1-1-runtime-audit.md)을 기준으로 **GameWorld 비표면 이관·초기 자산 Handle·이동 명령·발사 애니메이션/투사체·건설/전투/사제 운반·의식/승패와 캠페인 완주**를 계속 진행합니다. 검증 범위는 [인수인계](LEFT_JOBS.md)에 기록했으며 DirectDraw 전체화면 수정은 제외했습니다.
+**2026-10-15 인수인계 기준**입니다. 실행·플레이 가능 범위와 원본 게임과의 동일성은 아래와 같습니다.
 
-2026-10-13 cpppj 후속: [건물 Pop/Unpop 공간](docs/exe/cpp-building-space.md), [자산 postPop](docs/exe/cpp-asset-postpop.md), [사제·보호막 월드 연결 모듈](docs/exe/cpp-raw-priest-world-bindings.md), [SP 회전](docs/exe/cpp-sp-rotation.md), [건설 운반 도착](docs/exe/cpp-construction-arrival.md)을 복원했습니다. Builder 타이머의 event/payload 반전도 실제 생성자에 맞춰 교정했습니다. 신규 원본/C++ 대조 **5,318개**, 전체 검사 **904개/실패0**, Release 경고/오류0입니다. **비표면 실제 미션 월드 이관·이동/건설/전투/운반·의식 연결과 캠페인 1-1 완주는 미완료**이며 [인수인계](LEFT_JOBS.md)에 다음 단위와 실패/최종 근거를 기록했습니다.
-
-2026-10-13 cpppj 후속: [실제 Client 돌 버튼](docs/exe/cpp-raw-button-controls.md)을 raw 생성·트리·캡처·프레임·수명에 연결했습니다. [지정 프로세스 재부착/Kernel 정리](docs/exe/cpp-process-retake.md), [UI 정리/루트 교체](docs/exe/cpp-ui-reset-analysis.md), [사제 상태/동맹 기반 승패](docs/exe/cpp-mission-outcome.md)를 복원하고 두 PE **1,358개** 독립 입력의 C++ 대조를 통과했습니다. 클론 메뉴·브리핑·옵션·복귀 54상태와 월드 release/재진입 10상태, 원본 함수·독립 자산 해독의 버튼/배경 픽셀 대조가 통과했습니다. **건설·전투·사제 운반/의식과 실제 승패 실행 연결·캠페인 1-1 완주는 미완료**입니다. 전체 회귀와 다음 작업은 [최신 인수인계](LEFT_JOBS.md)를 따릅니다.
-
-2026-10-13 dotnetpj 후속: 초기 브리핑의 10프레임·안내 종료 후 재개의 7프레임을 실제 화면과 중첩 게임 시계에 연결했습니다. Release 빌드 경고/오류 0이며 동작 테스트·게임 실행은 수행하지 않았습니다. [구현과 남은 범위](docs/dotnet-dialog-frames-20261013.md).
-
-2026-10-13 dotnetpj 후속: [한국어 건물·유닛 명칭 규칙](docs/korean-unit-names.md)을 문서와 게임 표시에 반영했습니다. 공유 이름표 55개를 생산 메뉴·건설 목록·지식창·정보 제목에 연결했으며 Release 빌드 경고/오류 0입니다. 새 테스트·GUI 실행은 수행하지 않았습니다.
-
-2026-10-12 dotnetpj 후속: 원본 게임 시계를 실제 세션·중첩 정지에 연결했습니다. Release 빌드 경고/오류 0이며 이번 변경의 동작 테스트·GUI 검증은 아직 수행하지 않았습니다. [작업 기록과 남은 범위](docs/dotnet-session-clock-20261012.md).
-
-현재 **C# + MonoGame 빌드**에서는 **메인 메뉴 → 캠페인 → 자유를 위한 투쟁 → 1-1 전쟁의 시작!**과 **1-2 휘리기그의 지배자(Master of Whirligigs)**를 플레이할 수 있습니다.
-옵션에서 해상도·창/전체화면·소리·음량·바람 소리·스피커 좌우 교환을 바꿀 수 있습니다. 메인 메뉴의 도움말과 F1에서 원본 도움말 전체를 탐색할 수 있으며, 사제·워크샾·생산 항목의 우클릭 메뉴도 사용할 수 있습니다. [녹화 분석의 클론 적용 범위](docs/screens/recorded-ui-clone-20261002.md)를 참고하세요. 다른 미션과 미구현 메뉴는 잠금 표시합니다.
-`dotnet run --project dotnetpj/src/Netstorm.Game -c Release -- --language korean`으로 시작합니다(영어: `--language english`).
-게임 데이터는 `assets/game-data/`에서 관리하며 빌드·배포 출력에 자동으로 포함됩니다. 임시 AI·건설 규칙과 검증 한계는 [캠페인 1-1 구현](docs/gameplay/campaign-one.md)과 [캠페인 1-2 구현](docs/gameplay/campaign-two.md)에 정리했습니다.
-
-# 프로젝트 구성
-
-게임 빌드가 둘 있으며 cpppj는 **10.78 싱글플레이 복원 → Windows 10/11 안정 구동 → 한국어 지원 → TCP/IP 로컬 멀티플레이/outpost → 요구사항·MCP 추가** 순서로 진행합니다. outpost는 멀티플레이 전용이므로 한국어 지원까지 끝낸 뒤 멀티플레이와 함께 구현하며 공식 서버 접속은 복원하지 않습니다. cpppj는 Windows 전용입니다. dotnetpj는 cpppj 완성 후 분석하여 **원본과 완전히 동일한 동작을 먼저 구현하고 이후 요구사항을 반영**합니다. dotnetpj의 Linux 개발은 후순위입니다.
-
-| 폴더 | 내용 | 상태 |
+| 프로젝트 | 실행·플레이 가능 범위 | 원본과의 동일성 및 남은 범위 |
 | --- | --- | --- |
-| `dotnetpj/` | **C# + MonoGame 빌드.** 원본을 분석해 새로 구현한 클론입니다. | 위의 캠페인 1-1·1-2를 플레이할 수 있습니다. |
-| `cpppj/` | **C++ 빌드.** 기존 게임 10.78을 디컴파일한 소스를 토대로 C++ 소스를 다시 만듭니다. | Windows 전용. 메뉴→캠페인→브리핑→지형/객체 표시·선택/사제 이동·복귀를 연결했습니다. raw 다리 계산·붕괴/삭제 훅·일반 탐색·공통 삭제/공간 해제/SID 반납과 공통 pre/post의 선택·목록·통계·비용 장부를 복원했습니다. 공통 삭제의 Graph 분할/주변 표면 Add와 삭제 보상(SP 지급·AI 지갑·샘 풀, 패치판 SP 저장소 포함)을 연결했습니다. 객체에 붙는 프로세스(Kernel 슬롯·form SID)와 지연/주기 이벤트, 다리 지연 낙하 예약도 복원했습니다. AI 부착 통지·이벤트 처리기 몸체와 다른 파생 프로세스·실제 월드 연결·건설/전투·미션 완주는 후속입니다. |
+| `cpppj/` — C++ 복원판 | Windows 창 모드에서 메뉴 → 캠페인 → 브리핑 → 요새·지형·객체·안내 표시, 선택·사제 이동·일부 실제 교전과 메뉴 복귀가 동작합니다. | 10.78의 디컴파일·기계어 대조를 바탕으로 복원 중입니다. **Construct는 비활성**이며 건설·생산·다리·수확·운반·희생, AI 활성화·전략, 실제 미션 단계·승패 후 저장 연결이 남아 있습니다. Early Missions와 캠페인 1-1·1-2의 자연스러운 완주 및 전체 그래픽·음향 동일성은 미완료입니다. |
+| `dotnetpj/` — C# + MonoGame 클론 | 캠페인 **1-1 전쟁의 시작!(The War Begins!)**, **1-2 휘리기그의 지배자(Master of Whirligigs)**의 플레이와 건설·생산·이동·전투 조작을 구현했습니다. 영어·한국어 UI, 도움말·우클릭 메뉴·옵션을 제공합니다. | 원본 자료를 재사용하면서 규칙을 복원 중이며 임시 AI·건설 규칙과 시간·프레임·표시 차이가 남아 있습니다. 최근 세션 시계·튜토리얼 프레임 변경은 빌드 확인까지 진행했습니다. 실제 완주 → 진행 저장 → 재실행 → 다음 미션 해제의 전체 경로와 원본 동일성은 추가 검증이 필요합니다. |
 
-cpppj 최신(2026-10-13): [메뉴 정상 생성·장식/제목·수명/부착](docs/exe/cpp-menu-gump-widgets.md)을 복원했습니다. 두 PE 함수 13/18개 정적 내보내기, Release 경고/오류 0입니다. 메뉴 실제 출력·입력과 raw 자동 UI·건설/미션 완주는 후속입니다. 이번 단계의 테스트·게임 실행은 수행하지 않았습니다.
+## C++ 복원판의 최신 상태
 
-cpppj 앞 단계(2026-10-12): [Gump 입력 캡처·dialog·overlay 전달 복원](docs/exe/cpp-gump-input-reconstruction.md). 같은 저장소에서 캡처/dialog/루트 전달·등록/제거·실제 선택/삭제 요청을 연결했습니다. 새 원본 대조 **696개**, 전체 C++ **810개·실패 0**, Release 경고/오류 **0**, 근거 감사 **121종**·새 변이 **14개 모두 검출**. 실제 버튼/메뉴 처리기·OS 입력 큐/전체 UI 프레임·건설 GUI는 후속입니다.
+같은 캠페인 세션에 공통 삭제·기술 내용물 수명·현재 SP와 UI 통지를 연결했고, 안내 본문에는 원본 HTML 조건·설정 치환·그림·인라인 스타일 처리 순서를 연결했습니다. AI 생성자와 초기 갱신은 독립 모듈로 복원·검증했으나 실제 세션의 AI 활성화는 아직 연결하지 않았습니다. mana 메타데이터 4파일은 **CMake 미등록·빌드 및 새 원본 대조 미실행 초안**입니다.
 
-cpppj 앞 단계(2026-10-12): [Gump 커서 선택·기본 이벤트 전달 복원](docs/exe/cpp-gump-events-reconstruction.md). 같은 생성/트리/수명 저장소에서 직계/전체 선택·기본 필터·자식 우선 전달·부모 전파를 연결했습니다. 새 원본 대조 **771개**, 전체 C++ **801개·실패 0**, Release 경고/오류 **0**, 공통 포함 근거 감사 **120종**·새 변이 **14개 모두 검출**. 실제 버튼/메뉴 처리기·전체 입력 프레임·건설 GUI는 후속입니다.
+2026-10-15 최종 기록은 Release 게임·검사 빌드 **경고 0·오류 0**, CTest **1/1 통과(내부 1,233개·실패 0)**입니다. 클론 GUI의 대화상자 97상태·Early1/2 안내 23상태·완료값 저장/다음 튜토리얼 9상태도 확인했습니다. 완료 안내를 강제로 호출한 검사는 실제 플레이 완주 검증과 구분합니다. 기존 DirectDraw 전체화면 오류 수정은 현재 작업 범위에서 제외되어 있습니다.
 
-cpppj 앞 단계(2026-10-12): [Gump 삭제 큐·등록 해제·기본 소멸자 복원](docs/exe/cpp-gump-lifetime-reconstruction.md). 같은 생성/트리 저장소에서 자식 우선 삭제 요청·정리·객체 해제와 등록 칸 재사용을 연결했습니다. 새 원본 대조 **519개**, 전체 C++ **793개·실패 0**, Release 경고/오류 **0**, 근거 감사 **118종**·새 변이 **13개 모두 검출**. 파생 UI 생성/소멸자·텍스트/입력·전체 게임 프레임·건설 GUI는 후속입니다.
+완주 동일성 개발은 사용자 요청으로 일시 중지한 상태입니다. 재개 순서와 미완료 경계는 [cpppj·공통 인수인계](LEFT_JOBS.md)를 따릅니다. 세부 근거는 [실제 세션 수명 연결](docs/exe/cpp-session-lifetime-20261015.md), [SP 저장소·통지](docs/exe/cpp-sp-store-notice-20261015.md), [AI 초기 갱신](docs/exe/cpp-ai-initial-update-20261015.md), [안내 조건·처리 순서](docs/exe/cpp-dialog-condition-flow-20261015.md)에 있습니다.
 
-cpppj 앞 단계(2026-10-12): [Gump 부모·자식 부착·정렬·이동 복원](docs/exe/cpp-gump-tree-reconstruction.md). 같은 생성 저장소에서 실제 트리 부착·분리·재부착과 자식 정렬/깊이/이동을 복원하고 수집/Draw 픽셀까지 연결했습니다. 새 원본 대조 **1,722개**, 전체 C++ **784개·실패 0**, Release 경고/오류 **0**, 근거 감사 **117종**·새 변이 **15개 모두 검출**. 파생 UI 처리기·삭제 수명/입력·전체 게임 프레임·건설 GUI는 후속입니다.
+## C# + MonoGame 클론의 최신 상태
 
-cpppj 앞 단계(2026-10-11): [원본 CRT 표시 정렬·동률 순서 복원](docs/exe/cpp-draw-sort-reconstruction.md). 판본별 qsort와 같은 깊이/좌표의 교환 순서를 실제 Renderer·건설 표시·Client에 연결했습니다. 원본 대조 1,155개, 내부 검사 703개·실패 0, Release 경고/오류 0, 근거 감사 107종·기존 클론 화면 스모크 통과. 새 변이 8개와 갱신한 앞 단계 1개, 총 **9개 모두 검출**(`--focused`, 변이 전 사본 전체 검사 통과). 공통 효과 수집/종류 분배·실제 건설 SHP/출력·프레임 연결은 후속입니다.
+메인 메뉴의 캠페인 목록은 원본 스크립트의 장·선행 완료 조건과 저장된 진행값을 읽고, 실제 지원 미션을 제한합니다. 옵션에서는 해상도·창/전체화면·소리·음량·바람 소리·스피커 좌우 교환을 바꿀 수 있습니다. 도움말과 F1에서 원본 도움말 전체를 탐색하고, 사제·워크샾·생산 항목의 우클릭 메뉴를 사용할 수 있습니다. [기능·진행 저장 검토](docs/dotnet-review-20261011.md), [녹화 분석 적용 범위](docs/screens/recorded-ui-clone-20261002.md), [캠페인 1-1](docs/gameplay/campaign-one.md)·[1-2 구현](docs/gameplay/campaign-two.md)을 참고하세요. 초기 구현 문서보다 최신 인수인계가 우선합니다.
 
-cpppj 앞 단계(2026-10-11): [표시 목록 수집·가시 영역·정렬 제출 복원](docs/exe/cpp-render-collection-reconstruction.md). 원본 영역 환산/교차/수집을 실제 건설 표시의 가시 수집·깊이 정렬·선택 Draw에 연결했습니다. 새 원본 대조 4,305개, Release 경고/오류 0, 내부 검사 696개·실패 0, 근거 감사 106종 모두 통과했습니다. 새 변이 **8개 모두 검출**(`--focused`, 변이 전 사본 전체 검사 통과). 실제 Client/GameWorld 프레임·자산/효과 공통 목록·SHP/팔레트/장치 출력은 후속입니다.
+2026-10-12~13에는 원본 숫자 시계를 실제 세션·중첩 정지에 연결하고, 초기 브리핑 10프레임·안내 종료 후 재개 7프레임, 후속 안내 0.5초/10프레임·튜토리얼 2의 2/4초 타이머를 연결했습니다. 이 연결 이후의 동작·GUI·독립 원본 대조는 아직 수행하지 않았습니다. 2026-10-14 전체 솔루션 Release 빌드는 **경고 0·오류 0**입니다. 앞 단계인 2026-10-12의 단위 **990개 통과**·GUI **12회/188개 단언 통과**는 최근 변경의 검증 결과로 합산하지 않습니다.
 
-cpppj 앞 단계(2026-10-11): [건설 표시의 실제 Kernel/form·소멸 연결](docs/exe/cpp-construction-visual-system-integration.md). 실제 표시 프로세스 부착·Kernel 자동 실행·목록 Draw 제출과 자기 종료/부모 삭제/실패 정리를 연결했습니다. Release 경고/오류 0, 내부 검사 689개·실패 0, 기존 근거 감사 105종·새 변이 7개 모두 통과했습니다. 원본 클라이언트 정렬/가시 영역/프레임 루프와 실제 SHP·화면 출력, 타입 준비 소리·부모 공간/사제 contained·건설 GUI는 후속입니다.
+다음 작업은 최근 시계·안내 변경의 동작 확인, 남은 이동·전투·건설·생산·수확·의식·AI·애니메이션 타이머와 24Hz/8틱 상한 정리, 전체 플레이·진행 저장 검증입니다. [dotnetpj 인수인계](LEFT_JOBS.dotnetpj.md), [세션 시계](docs/dotnet-session-clock-20261012.md), [튜토리얼 프레임·타이머](docs/dotnet-stage-frames-20261013.md)에 범위를 기록했습니다.
 
-cpppj 앞 단계(2026-10-11): [건설 표시 등록·삭제 수명 복원](docs/exe/cpp-construction-lifetime-reconstruction.md). 40칸씩 확장하는 표시 목록·첫 빈 칸 재사용·부모 부착 순서·버퍼/등록 해제와 실제 Create→Run/Draw→Kill 요청 연결을 검증했습니다. 새 독립 원본 1,377개, Release 경고/오류 0, 내부 검사 680개·실패 0, 근거 감사 105종·새 변이 8개 통과. 실제 Kernel/form 부착·클라이언트 자동 Run/Draw·SHP 캡처/팔레트 생성/장치 출력·타입 준비 소리 자료·부모 공간/사제 contained·건설 GUI는 후속입니다.
+# 프로젝트 구성과 개발 목표
 
-dotnetpj 최신(2026-10-12): [원본 숫자 시계·중첩 정지·double 그리기 제한](docs/dotnet-clock-kernel-20261012.md). DWORD 원점/epoch·몫/나머지 double·중첩 정지 누계를 복원하고 벽시각 차이를 실제 그리기 제한에 연결했습니다. 원본 기본 x87 **4,464개** 비트 일치, Release 경고/오류 0, 단위 **990개**·GUI **12회/188개 게임 내 단언** 모두 통과했습니다. 남은 24Hz/8틱 상한·숫자 게임 시계의 세션 연결·절대 시각 이동과 대기 방식 판정은 후속입니다.
+`cpppj`는 **① 10.78 싱글플레이 복원 → ② Windows 10/11 안정 구동 → ③ 한국어 지원 → ④ TCP/IP 로컬 네트워크 멀티플레이·아웃포스트 → ⑤ 추가 요구사항·MCP** 순서로 진행합니다. Windows 전용이며, 멀티플레이 전용 아웃포스트는 4차 목표에 포함합니다. 공식 서버 접속은 복원하지 않습니다. CD판 10.72의 비교·분석 기록도 보존합니다.
 
-dotnetpj 앞 단계(2026-10-12): [실제 화면 루프·직전 그리기 기준 제한](docs/dotnet-loop-parity-20261012.md). 화면 갱신의 합성 따라잡기를 제거하고 WINMM 실제 간격·정지/늦은 프레임 제한 분기를 연결했습니다. Release 경고/오류 0, 단위 **983개**, GUI **20회/454개 게임 내 단언** 모두 통과했습니다.
+`dotnetpj`는 C# + MonoGame 기반이며, 이미 구현된 클론을 바탕으로 향후 완성된 `cpppj`를 분석해 원본과 완전히 같은 동작을 먼저 구현하고 추가 요구사항을 반영합니다. GUI Linux 지원과 멀티플레이는 후순위입니다. 최종 요구사항에는 전체화면·16:9/16:10/4:3 화면비·전체화면 가장자리 스크롤·영어/한국어 지원이 포함됩니다. 애니메이션은 원본 수준을 먼저 복원한 뒤 60/120프레임 지원을 진행합니다.
 
-dotnetpj 앞 단계(2026-10-11): [도움말 보류 검증·중첩 스타일/공백·스크롤 정리](docs/dotnet-help-validation-20261011.md). 원본 도움말의 중첩 색/굵기와 인라인 공백을 보존하고, 영어/한국어 모드의 실제 링크·스크롤·info 머리를 확인했습니다. Release 경고/오류 0, 단위 **968개**·최종 GUI **11회/313개 게임 내 단언** 모두 통과했습니다. 전체화면 저장/재실행·창 복귀도 확인했습니다. 다음은 남은 원본 시간 모델(9-1 A)과 창 폭·Graph/표면 identity입니다.
+| 경로 | 용도 |
+| --- | --- |
+| `cpppj/` | C++20·Win32 기반 복원판과 검사 |
+| `dotnetpj/` | C#·MonoGame DesktopGL 클론과 검사 |
+| `assets/game-data/` | 클론용 그래픽·지도·미션·음악·효과음 데이터 |
+| `fonts/` | 한국어 표시용 D2Coding 글꼴 |
+| `docs/` | 분석·복원 근거, 빌드·플레이·검증 문서 |
+| `tools/`, `analyzeManager/` | 정적 분석·원본 관찰·검증 도구 |
+| `originals/`, `originalCD/` | 분석용 원본 10.78 및 CD판 10.72 자료 |
+| `screenShots/`, `playingVideos/`, `originalFanGame/` | 스크린샷·녹화·팬게임 참고 자료. 대용량 영상과 팬게임 코드는 Git에 포함하지 않아 PC마다 없을 수 있습니다. |
 
-dotnetpj 앞 단계(2026-10-11): [9-1 A 첫 단계: 프레임 명령·다리 스캔·정지 입력 수정](docs/dotnet-frame-parity-20261011.md). 명령과 붕괴 스캔을 실제 화면 프레임에 연결하고, 정지 중 입력이 게임 시각을 진행시키던 문제와 지도 입력 순서를 고쳤습니다. 기존 원본 10.78 x86 시간열 1,952행의 실제 세션 대조가 일치했습니다. Release 경고/오류 0, 단위 964개·GUI 60회/738개 단언 모두 통과했습니다. 정지·이동·건설·월드 겹침/선택·와이드·전체화면 재실행을 확인했습니다. A 전체는 미완료이며, 다음은 남은 이동·전투·건설 등의 정수 틱 타이머와 화면 갱신을 원본 시간 모델로 옮기는 작업입니다.
+한국어 건물·유닛 이름은 [공통 명칭 규칙](docs/korean-unit-names.md)을 따릅니다. 사제·신전·다리·발사기·간헐천은 번역할 수 있으며, 나머지는 워크샾·제네레이터처럼 영어 발음을 한글로 표기합니다. dotnetpj의 메뉴·유닛 제목에는 공유 이름표 55개를 연결했습니다. 도움말·미션 본문의 전체 번역은 아직 완료하지 않았습니다.
 
-C++의 최신 복원: [로컬 예측 조각 정리](docs/exe/cpp-construction-clear-reconstruction.md), [서버의 건설 확정·배치 통지](docs/exe/cpp-construction-confirm-reconstruction.md), [건설 배치 실행·비용 부족 처리](docs/exe/cpp-construction-place-reconstruction.md). 건설 요청을 확정해 조각 번호를 확보하는 함수, 미리 놓아 둔 예측 조각을 치우는 함수, 건물·다리 조각을 실제로 놓는 함수를 옮겨 원본 함수 관찰과 대조했습니다. 건설 메뉴·건설 진행·전투는 이어서 복원하며 게임 안에서 건물을 지을 수는 아직 없습니다. 그 앞 단계는 [돌 버튼의 화면 기준 질감 반복·명암 테두리](docs/exe/cpp-gump-background-reconstruction.md)입니다.
+작업 전 [AGENTS.md](AGENTS.md)와 양쪽 인수인계를 확인합니다. 원본·별도 창 실행 조건은 [실행 확인 규칙](docs/execution-confirmation.md)을 따릅니다. 분석용 원본 파일은 보호하며, 클론 데이터의 변경은 `assets/game-data/`에서 관리합니다.
 
-게임 데이터(`assets/game-data/`), 글꼴(`fonts/`), 분석 문서(`docs/`), 분석 도구(`tools/`, `analyzeManager/`)는 두 빌드가 함께 쓰며 저장소 루트에 있습니다. C++ 빌드의 구조와 빌드 방법, 디컴파일 결과에서 소스를 만드는 절차는 [C++ 빌드](docs/cpp-build.md)를 참고하세요.
+# 개발 환경 준비
+
+루트의 준비 스크립트에서 필요한 도구를 선택해 설치하거나 현재 환경을 점검할 수 있습니다. 점검만 하려면 다음 명령을 사용합니다.
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\PREPARE.ps1 -CheckOnly
+```
+
+```sh
+bash ./PREPARE.sh --check-only
+```
+
+설치·선택 화면은 각각 `-CheckOnly` 또는 `--check-only`를 생략해 엽니다. REA는 기본 선택되지 않는 선택 항목이며 기존 Node.js·npm을 사용합니다. Ghidra와 REA를 함께 준비하면 `GHIDRA_INSTALL_DIR`를 연결합니다. 두 게임의 빌드에 원본 게임 실행이나 REA 설치는 필요하지 않습니다.
 
 # 빌드 및 실행 파일 만들기 (C# + MonoGame 빌드)
 
@@ -77,15 +79,14 @@ C++의 최신 복원: [로컬 예측 조각 정리](docs/exe/cpp-construction-cl
 - 저장소의 `assets/game-data/`와 한국어 글꼴 `fonts/D2Coding-Ver1.3.2-20180524-all.ttc`를 함께 체크아웃합니다. 데이터·글꼴은 빌드·배포 출력에 자동으로 복사됩니다.
 - 실행 대상은 **Windows 10/11 x64** 또는 **GUI 환경의 x64 Linux(glibc 기반)**입니다. OpenGL을 지원하는 그래픽 드라이버가 필요합니다.
 
-`originals/`는 기존 게임을 분석하기 위한 자료입니다. 클론의 빌드·테스트·실행은 독립된 `assets/game-data/`를 사용하므로 분석 완료 후 `originals/`를 제거해도 동작합니다. 자산의 구성과 이관 기록은 [클론 게임 데이터](assets/README.md)를 참고합니다.
+dotnetpj의 빌드·테스트·실행은 독립된 `assets/game-data/`를 사용하며 원본 실행 파일이 필요하지 않습니다. `originals/`는 분석용 보호 자료로 별도 보존합니다. 자산의 구성과 이관 기록은 [클론 게임 데이터](assets/README.md)를 참고합니다.
 
 ## 개발용 빌드와 실행
-
-AI가 게임 또는 클론/도구의 별도 창을 실행할 때는 [실행 전 사용자 확인 조건](docs/execution-confirmation.md)을 따른다(2026-10-12). 지정된 세 시스템에서는 **기존 게임 실행과 별도 창 작업 모두 확인 없이 가능**하다. 게임/창 없는 빌드·정적 분석·단위 테스트는 확인 대상이 아니다.
 
 ```sh
 dotnet restore dotnetpj/Netstorm.sln
 dotnet build dotnetpj/Netstorm.sln -c Release --no-restore
+dotnet test dotnetpj/Netstorm.sln -c Release --no-build
 dotnet run --project dotnetpj/src/Netstorm.Game -c Release --no-build -- --language korean
 ```
 
@@ -153,7 +154,7 @@ NETSTORM_DATA="/절대/경로/game-data" ./dist/linux-x64/NetstormClone --langua
 
 # C++ 빌드 (복원 진행 중)
 
-Windows 10/11, CMake 3.21 이상, C++20 컴파일러(Visual Studio 2022 이상)가 필요합니다. C++ 빌드는 원본처럼 Win32 API를 직접 부르므로 Windows 전용입니다. 프로젝트 루트에서 실행합니다.
+Windows 10/11, CMake 3.21 이상, C++20 컴파일러(Visual Studio 2022 또는 Build Tools의 C++ 도구)가 필요합니다. Win32 API를 직접 사용하는 Windows 전용 빌드입니다. 프로젝트 루트에서 실행합니다.
 
 ```sh
 cmake -S cpppj -B cpppj/build -DCMAKE_BUILD_TYPE=Release
@@ -161,7 +162,20 @@ cmake --build cpppj/build --config Release
 ctest --test-dir cpppj/build --build-config Release --output-on-failure
 ```
 
-cpppj는 **10.78 싱글플레이 복원과 Windows 10/11 안정 구동을 우선**하며 한국어 지원은 3차, LAN 멀티플레이·outpost는 4차, 화면비·추가 기능·MCP는 5차 목표입니다. cpppj는 Windows 전용이고 Linux는 이후 dotnetpj에서 진행합니다. 현재 실행 파일(`NetstormCpp`)은 메뉴→캠페인→브리핑→지형/객체 표시·선택/사제 이동·메뉴 복귀와 자산·글꼴 검사 장면을 제공합니다. 건설·경제·전투·승패와 raw 월드 연결은 남아 있어 미션 완주는 아직 불가능합니다. 예: `cpppj/build/bin/Release/NetstormCpp.exe --run originals --view fonts --window`. 자세한 내용은 [C++ 빌드](docs/cpp-build.md), [실제 플레이 복원 계획](docs/cpp-playable-plan.md), [표시 기반 근거](docs/exe/cpp-renderer-reconstruction.md)에 있습니다.
+Visual Studio 생성기 기준 실행 파일은 `cpppj/build/bin/Release/NetstormCpp.exe`입니다. 다음 명령은 창 모드로 C++ 복원판의 메인 메뉴를 엽니다.
+
+```powershell
+.\cpppj\build\bin\Release\NetstormCpp.exe --run originals --window
+```
+
+`--run <게임 데이터 폴더>`는 C++ 복원판을 실행합니다. `--view fonts`, `--view types`, `--view TEST01`은 글꼴·타입·미션 검사 장면입니다. 현재 메뉴·이동·일부 교전은 동작하지만 Construct와 미션 완주 연결은 아직 미완료입니다. 빌드 절차는 [C++ 빌드](docs/cpp-build.md), 실제 최신 연결 상태는 [인수인계](LEFT_JOBS.md)를 참고하세요.
+
+# 주요 문서
+
+- [cpppj·공통 인수인계](LEFT_JOBS.md) / [dotnetpj 인수인계](LEFT_JOBS.dotnetpj.md): 최신 완료·미완료 범위와 재개 순서
+- [C++ 복원 로드맵](docs/cpp-roadmap.md) / [실제 플레이 복원 계획](docs/cpp-playable-plan.md): 개발 단계와 복원 계획
+- [클론 게임 데이터](assets/README.md): 자산 구성·출처·빌드 포함 방식
+- [원본 실행·별도 창 확인 규칙](docs/execution-confirmation.md): AI 작업의 실행 조건
 
 # License
 
