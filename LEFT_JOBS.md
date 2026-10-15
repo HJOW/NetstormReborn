@@ -1,5 +1,13 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-15 완료: 현재 호스트 10.78·10.72 정밀 디컴파일 재생성 (`HJOW-Athlon`)
+
+- [x] `AGENTS.md`와 양쪽 인수인계를 확인했다. 마지막 정밀 디컴파일 PC는 `VM-W11-Codex`였고 현재 PC는 `HJOW-Athlon`이므로 현재 PC에서 다시 생성했다. 기존 `extracted/refined/` 산출물은 `extracted/refined-backup-before-HJOW-Athlon-20261015/`로 보존했다.
+- [x] Ghidra 12.1.4와 `tools/ghidra/refine_all.ps1`로 패치 10.78 및 CD 10.72 정밀 디컴파일·판본 매칭·호출 규약 힌트 적용·최종 C 파일 생성을 완료했다. 최종 패치판은 **5,549개 성공·실패 0개**, CD판은 **5,823개 함수 중 5,822개 성공·실패 1개**다. CD 실패는 기존과 같은 `FUN_0049f99f` / `Cannot properly adjust input varnodes`다.
+- [x] 최종 C 표식과 함수표는 패치판 **5,549개**, CD판 **5,823개**로 각각 일치한다. 함수 대응은 **2,496쌍**(강 1,738·중 707·약 51), 호출 규약 일치는 **2,313/2,379 (97.2%)**, `ret N` 일치는 **2,339/2,389 (97.9%)**다. 양 원본 PE의 SHA-256도 작업 전후 인수인계 기준값과 같다. 상세: [HJOW-Athlon 정밀 디컴파일 기록](docs/exe/decompile-hjow-20261015.md).
+- [x] 새 결과는 `extracted/refined/`에 있으며 Git 제외 대상이다. 원본 실행 파일은 읽기만 했다. 실제 게임/GUI 실행, 빌드, 테스트, cpppj·dotnetpj 소스 변경은 없다. 현재 및 마지막 정밀 디컴파일 PC: **HJOW-Athlon, 2026-10-15**.
+- [x] 인수인계 뒤 **`20261015-53 HJOW-Athlon에서 양 판본 정밀 디컴파일 재생성`**으로 로컬 커밋하며 원격 push는 하지 않는다.
+
 ## 2026-10-15 완료: dotnetpj 반영 점검 문서 작성 (`VM-W11-Codex`)
 
 - [x] 사용자 요청으로 cpppj의 기존 원본 분석 근거와 dotnetpj의 현재 대응 코드·검사를 정적으로 비교하여 [수정 계획 D01~D16](docs/dotnet-cpp-audit-20261015.md)을 작성했다. 현재 플레이 가능 범위·원본 동일성, 확인된 차이·이미 반영된 기능·미검증/미복원 경계, 우선순위·선행 관계·검증 자료를 기록했다. 상세 완료/후속은 LEFT_JOBS.dotnetpj.md 최신 절을 따른다.
