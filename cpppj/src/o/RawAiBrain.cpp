@@ -51,7 +51,7 @@ const std::vector<std::uint32_t>& RawAiBrainMemory::Frees() const { return frees
 // 현재Player9/섬기록과같은Pool/방향별81DWORD만연결한다.
 RawAiBrainConstructor::RawAiBrainConstructor(RawAiBrainMemory& memory,RawPlayerWorld& player,RawPlayerParticipation& participation,RawIslandRuntime& islands,std::span<std::uint32_t> allies,std::span<const RiftTypeRecord> types,AiBrainConstructorGlobals globals,AiBrainConstructorHooks hooks)
     :memory_(memory),player_(player),participation_(participation),islands_(islands),allies_(allies),types_(types),globals_(globals),hooks_(std::move(hooks)) {
-    if (player.Pool().Edition()!=OriginalEdition::Patch1078 || &player.Pool()!=&islands.Pool() || player.Records().size()!=1620 || allies.size()!=81 || types.empty()) throw std::invalid_argument("AI생성자같은PATCH세계/Player9/동맹표누락");
+    if (player.Pool().Edition()!=OriginalEdition::Patch1078 || &player.Pool()!=&islands.Pool() || player.Records().size()!=1620 || allies.size()!=81 || types.empty() || !globals_.invalidGraph) throw std::invalid_argument("AI생성자같은PATCH세계/Player9/동맹표/현재그래프조회누락");
 }
 // 실제0xb08본체는목록생성실패때도소유자가정리한다.
 std::uint32_t RawAiBrainConstructor::Construct(std::uint32_t owner,std::span<const std::uint8_t> settings,std::size_t bytes) {
@@ -79,7 +79,7 @@ void RawAiBrainConstructor::Initialize(std::uint32_t token,std::uint32_t owner,s
         for (std::size_t index=0;index<255;++index) Put(raw,0x6d4+index*4,0);
         // 주변미초기화영역을보존한다.
         for (const auto [offset,value]:lastFields) Put(raw,offset,value);
-        Put(raw,0x298,globals_.invalidGraph);Put(raw,0x2a8,0);Put(raw,0x2ac,globals_.invalidGraph);
+        Put(raw,0x298,globals_.invalidGraph());Put(raw,0x2a8,0);Put(raw,0x2ac,globals_.invalidGraph());
         const auto records=player_.Records();
         const auto playerOffset=[&]() { const auto current=Read(raw,0x260);if (current>=9) throw std::out_of_range("AI현재owner실제9기록범위오류");return static_cast<std::size_t>(current)*180; }; //callback뒤에도현재brainowner를다시읽는다.
         if (std::bit_cast<std::int32_t>(Read(records,playerOffset()+0x78))==globals_.noRegion) {

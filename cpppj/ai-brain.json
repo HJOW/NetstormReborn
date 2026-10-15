@@ -1,5 +1,5 @@
 {
-  "host": "VM-W11-Codex",
+  "host": "HJOW-Athlon",
   "date": "2026-10-15",
   "observations": 160,
   "boundaries": [
@@ -13,12 +13,12 @@
     "extracted/ai-brain/originals/creation.c": "8b00c2ec04f0b91f5107e5644cc286dc10f36800ee9377bc9dd777ac02b563a1",
     "extracted/ai-brain/originals/functions.tsv": "2286a75b55e408c5b139fe166042047ebbb6a83fcdac20d8fd497bfe3a5fdde2",
     "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
-    "tools/ghidra/ai-brain-functions.json": "ba53f67580312373a9b39d16c8d5031c45b59fb0b5a6ba8433513a35e6b1d828",
-    "tools/decomp_ai_brain.py": "7bc2a47e628a540de0f126a1d1430a77e08fbac5dbd310588412580f9c9e1a3c",
+    "tools/ghidra/ai-brain-functions.json": "a3d986437f016f878265e88a95b2e342405140167241bcb00674961bfd70b641",
+    "tools/decomp_ai_brain.py": "3998d2fb5d90cf1a204a130a35b3ca96d46385189bb183095722d9d6f6db7587",
     "tools/decomp_priestmenu.py": "72d14bfa36091dc86a273ad9b1998c940f575bb954195d0e0920e5e63ea10bc7",
-    "cpppj/src/o/RawAiBrain.h": "486bc77c9405776bfce2faa6c7a03372fd8b7b84fea0997db34df30fd8aa16ad",
-    "cpppj/src/o/RawAiBrain.cpp": "9f9083860a8abb2704493d31ecce38ed672d055aa34ee3741ed6e08f56f5f86f",
-    "cpppj/tests/AiBrainTests.cpp": "8364327df05dbc8d1f40b9115a92ffc52d80eb96461e6a1a8df6a8e98a481d9f",
+    "cpppj/src/o/RawAiBrain.h": "8be51d55642492fbd9360fdc572b44da8876a29447020b526a8451d88e069724",
+    "cpppj/src/o/RawAiBrain.cpp": "827c6d75630994df87f04bfe98814f2cebe1d8e0af4f1d78534a29a9852d37bd",
+    "cpppj/tests/AiBrainTests.cpp": "e98c3fb0f20fec05b6511d774221df2622173fc24ce4545515490e183c5a7171",
     "cpppj/tests/fixtures/ai-brain-x86.tsv": "53aecd3e635d5743ea07091d863d6db7fb328daa8181b7a5769b78a233087fab"
   }
 }

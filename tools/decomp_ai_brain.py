@@ -3,6 +3,7 @@
 """PATCH AI생성자/소멸자의전체본체/Player/방향별동맹/실제목록수명을격리관찰한다. 게임실행없음."""
 import csv
 import json
+import socket
 import struct
 import sys
 import zlib
@@ -96,7 +97,7 @@ def main():
     oracle = Oracle();rows = [oracle.run(values) for values in cases()];assert len({row[0] for row in rows}) == len(rows)
     with fixture.open('w', encoding='utf-8', newline='') as stream:
         writer = csv.writer(stream, delimiter='\t', lineterminator='\n');writer.writerow(['input', 'raw', 'players', 'allies', 'islands', 'blocks', 'frees', 'trace']);writer.writerows(rows)
-    facts = {'host': 'VM-W11-Codex', 'date': '2026-10-15', 'observations': len(rows), 'boundaries': ['body preallocated0xb08 and17actual nested allocations backed by fixture memory', 'priest/region/island-owner/TYPE-energy responses; SetAlliance/AddAlly machine code real', 'initialUpdate00414710 and strategies not exercised; ctor itself never attaches player brain or flags20', 'virtual handles remap host-owned memory; no original pointer/OOM equality claim'], 'sha256': {name: digest(ROOT / name) for name in sources}}
+    facts = {'host': socket.gethostname(), 'date': '2026-10-15', 'observations': len(rows), 'boundaries': ['body preallocated0xb08 and17actual nested allocations backed by fixture memory', 'priest/region/island-owner/TYPE-energy responses; SetAlliance/AddAlly machine code real', 'initialUpdate00414710 and strategies not exercised; ctor itself never attaches player brain or flags20', 'virtual handles remap host-owned memory; no original pointer/OOM equality claim'], 'sha256': {name: digest(ROOT / name) for name in sources}}
     report.write_text(json.dumps(facts, ensure_ascii=False, indent=2) + '\n', encoding='utf-8');print('AiBrain 원본고유입력:', len(rows))
 
 

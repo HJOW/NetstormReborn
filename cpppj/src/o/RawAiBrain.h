@@ -38,7 +38,7 @@ private:
 struct AiBrainConstructorGlobals {
     const std::uint32_t& localOwner; //00540c70의현재로컬owner다.
     const std::int32_t& noRegion; //0050c038의현재첫지역없음DWORD다.
-    const std::uint32_t& invalidGraph; //00540410의현재254초기그래프DWORD다.
+    std::function<std::uint32_t()> invalidGraph; // 같은 장부의 현재 값을 각 00540410 읽기 지점에서 받아 본체 DWORD에 쓴다. BYTE backing도 안전하게 연결한다.
 };
 // 생성자가실제로호출하는사제/좌표지역/요구에너지metadata의명시경계다.
 struct AiBrainConstructorHooks {

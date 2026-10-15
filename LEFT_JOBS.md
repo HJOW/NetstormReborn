@@ -1,5 +1,13 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-15 단위61 완료: AI 현재 그래프 조회 (`HJOW-Athlon`)
+
+- [x] 사용자 요청으로 완주 개발을 재개했고 AGENTS와 양 LEFT를 읽었다. 현재 PC/마지막 전체 정밀 디컴파일 PC는 모두 **HJOW-Athlon, 2026-10-15**다. 이후 사용자의 작업 중지 요청은 맨 위 최신 인수인계를 따른다. DirectDraw 전체화면 오류 제외와 로컬 단위 커밋/원격 push 금지를 유지한다.
+- [x] `AiBrainConstructorGlobals.invalidGraph`를 필수 현재 getter로 바꾸고 두 쓰기 지점에서 각각 읽게 했다. 실제 클론 장부의 BYTE backing을 DWORD 임시 참조 없이 연결할 수 있다. 원본의 두 읽기는 DWORD다. [상세](docs/exe/cpp-ai-current-graph-20261015.md).
+- [x] 같은 정밀 프로젝트에서 생성자/소멸자2개를 읽기 전용으로 다시 내보냈다. 마지막 선택/전체 정밀 PC는 **HJOW-Athlon, 2026-10-15**다. 기존160 원본 입력을 재실행했으며 신규 고유입력으로 더하지 않는다. 두 현재 읽기/쓰기 순서와 빈 getter 거부 검사2개를 추가했다.
+- [x] 최종 소스 고정 뒤 Release 증분 빌드에서 실제 AI2객체를 다시 컴파일하고 게임/검사 링크를 갱신했다. 경고0·오류0, AI생성자4·사제회복8·SP통지4·실제Session8 집중 검사가 통과했다. 자료는 `extracted/goal-current-state-final-build.log`, `goal-current-state-focused.log`다. 최초 집중 로그의 혼합 인코딩은 바이너리 출력 캡처로 재생성하여 UTF-8로 고쳤다.
+- [x] 단위60/61을 함께 반영한 작업트리의 전체 CTest **1/1·내부1,238개 실패0·195.14초**가 통과했다. 초기 단일 컴파일 빌드는 중단하고 `/MP3`로 전환했으며 최종 소스 고정 증분 빌드까지 마쳤다. **20261015-55**로 커밋한다. AI mana4파일은 여전히 미등록 초안이며 실제 Session AI 활성화/전략은 미복원이다.
+
 ## 2026-10-15 단위60 완료: 사제 회복의 현재 SP 저장소 연결 (`HJOW-Athlon`)
 
 - [x] `RawPriestRegen`에 같은 추적 주소를 확인하는 현재 offset/실제 첫 배열/첫 순열 WORD getter를 설치하고 실제 Session의 audit 직후 사본 동기화를 제거했다. 중립 효과·측정 뒤 원본 시점에 읽으며 NULL 배열 검사 뒤 WORD도 독립적으로 읽는다. [상세](docs/exe/cpp-priest-regen-current-sp-20261015.md).

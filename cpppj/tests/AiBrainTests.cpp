@@ -30,7 +30,8 @@ struct BrainScene {
     std::array<std::uint8_t,3204> islandBytes{}; //실제100개IslandList원문이다.
     FortFinishOwnerState modes; //지역owner의현재fort/special/chaff전역이다.
     SquidPostPopList residences; //이번장면은빈실제레지던스목록이다.
-    std::uint32_t revision{},ownerChanged{},invalidGraph{254}; //현재실제섬/그래프전역이다.
+    std::uint32_t revision{},ownerChanged{}; // 현재 실제 섬/소유자 변경 전역이다.
+    std::uint8_t invalidGraph{254}; // 실제 장부와 같은 BYTE backing이며 DWORD 임시 참조를 만들지 않는다.
     std::int32_t noRegion{127}; //실제첫지역없음전역이다.
     std::unique_ptr<RawIslandRuntime> islands; //현재실제존재/owner/Player첫지역몸체다.
     std::size_t allocationIndex{}; //각실제할당의독립미초기화byte패턴번호다.
@@ -57,8 +58,10 @@ struct BrainScene {
         memory=std::make_unique<RawAiBrainMemory>(kBrainBase,[this](std::span<std::uint8_t> bytes) {
             // 실제할당의caller입력byte이며기대초기화결과가아니다.
             for (std::size_t index=0;index<bytes.size();++index) bytes[index]=static_cast<std::uint8_t>(index*29+input[8]+allocationIndex*17);++allocationIndex;
-        });runtime=std::make_unique<RawAiBrainConstructor>(*memory,*player,*participation,*islands,allies,std::span<const RiftTypeRecord>(types).first(48),AiBrainConstructorGlobals{playerState.battleOwner,noRegion,invalidGraph},Hooks());
+        });runtime=std::make_unique<RawAiBrainConstructor>(*memory,*player,*participation,*islands,allies,std::span<const RiftTypeRecord>(types).first(48),Globals(),Hooks());
     }
+    // 실제 BYTE의 현재 값을 필요할 때 확장하며 세션처럼 같은 backing을 계속 빌린다.
+    AiBrainConstructorGlobals Globals() { return {playerState.battleOwner,noRegion,[this] { return invalidGraph; }}; }
     // 현재경계가실제로요청한순서만기록한다.
     void Add(std::string value) { if (!trace.empty()) trace+=';';trace+=value; }
     // 원본의외부몸체만명시입력에연결한다.
@@ -86,5 +89,30 @@ TEST_CASE(AiBrain_Native160) {
 TEST_CASE(AiBrain_OwnedLifetimeAndMissingInitialUpdate) {
     BrainScene scene("1,8,5,0,256,1,70,2,19");AiCreateHooks hooks;hooks.construct=[&](std::uint32_t owner,std::span<const std::uint8_t> settings,std::size_t bytes) { return scene.runtime->Construct(owner,settings,bytes); };RawAiCreate wrapper(OriginalEdition::Patch1078,*scene.participation,hooks);bool rejected=false;try { wrapper.Create(1,scene.profile); } catch (const std::logic_error&) { rejected=true; }CHECK(rejected && scene.memory->Allocations().empty() && scene.participation->Brain(1)==0);
     const auto token=scene.runtime->Construct(1,scene.profile);CHECK(scene.memory->Allocations().size()==18);CHECK(scene.participation->Brain(1)==0 && (scene.records[180+0x50]&0x20)==0);scene.participation->AttachBrain(1,token);scene.participation->RemoveBrain(1);CHECK(!scene.memory->Contains(token) && scene.participation->Brain(1)==0 && (scene.records[180+0x50]&0x20)!=0);CHECK(scene.memory->Frees().size()==18);
-    BrainScene missing("1,8,5,1,256,1,70,2,19");auto missingHooks=missing.Hooks();missingHooks.requiredEnergy={};RawAiBrainConstructor incomplete(*missing.memory,*missing.player,*missing.participation,*missing.islands,missing.allies,std::span<const RiftTypeRecord>(missing.types).first(48),{missing.playerState.battleOwner,missing.noRegion,missing.invalidGraph},missingHooks);rejected=false;try { incomplete.Construct(1,missing.profile); } catch (const std::logic_error&) { rejected=true; }CHECK(rejected && missing.memory->Allocations().size()==18 && missing.memory->Frees().size()==18);CHECK(missing.participation->Brain(1)==0 && (missing.records[180+0x50]&0x20)==0);
+    BrainScene missing("1,8,5,1,256,1,70,2,19");auto missingHooks=missing.Hooks();missingHooks.requiredEnergy={};RawAiBrainConstructor incomplete(*missing.memory,*missing.player,*missing.participation,*missing.islands,missing.allies,std::span<const RiftTypeRecord>(missing.types).first(48),missing.Globals(),missingHooks);rejected=false;try { incomplete.Construct(1,missing.profile); } catch (const std::logic_error&) { rejected=true; }CHECK(rejected && missing.memory->Allocations().size()==18 && missing.memory->Frees().size()==18);CHECK(missing.participation->Brain(1)==0 && (missing.records[180+0x50]&0x20)==0);
+}
+// 생성자는 각 원본 쓰기 위치에서 BYTE를 다시 읽고 두 조회 사이의 실제 초기화 순서를 지킨다.
+TEST_CASE(AiBrain_ReadsCurrentByteAtBothGraphWrites) {
+    BrainScene scene("1,8,5,0,256,1,70,2,19");auto globals=scene.Globals();
+    const auto token=scene.memory->Allocate(RawAiBrainConstructor::kBytes);std::uint32_t calls=0;
+    globals.invalidGraph=[&] {
+        ++calls;const auto value=scene.invalidGraph;
+        if (calls==1) scene.invalidGraph=17;
+        else { CHECK(Get(scene.memory->Bytes(token),0x298)==254);CHECK(Get(scene.memory->Bytes(token),0x2a8)==0); }
+        return value;
+    };
+    RawAiBrainConstructor runtime(*scene.memory,*scene.player,*scene.participation,*scene.islands,scene.allies,
+        std::span<const RiftTypeRecord>(scene.types).first(48),std::move(globals),scene.Hooks());
+    runtime.Initialize(token,1,scene.profile);CHECK(calls==2);
+    CHECK(Get(runtime.Bytes(token),0x298)==254 && Get(runtime.Bytes(token),0x2ac)==17);
+    runtime.Destruct(token);runtime.FreeBody(token);CHECK(!scene.memory->Contains(token));
+}
+// 현재 조회기가 없으면 실제 본체를 확보하기 전에 연결 오류를 보고한다.
+TEST_CASE(AiBrain_RejectsMissingCurrentGraphGetter) {
+    BrainScene scene("1,8,5,0,256,1,70,2,19");auto globals=scene.Globals();globals.invalidGraph={};bool rejected=false;
+    try {
+        RawAiBrainConstructor invalid(*scene.memory,*scene.player,*scene.participation,*scene.islands,scene.allies,
+            std::span<const RiftTypeRecord>(scene.types).first(48),std::move(globals),scene.Hooks());
+    } catch (const std::invalid_argument&) { rejected=true; }
+    CHECK(rejected && scene.memory->Allocations().empty());
 }
