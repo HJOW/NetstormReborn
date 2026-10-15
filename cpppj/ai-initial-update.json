@@ -1,0 +1,26 @@
+{
+  "host": "VM-W11-Codex",
+  "date": "2026-10-15",
+  "observations": 133,
+  "boundaries": [
+    "caller-owned0xb08/builder-array/profile/contained input state",
+    "default language name and existing PlayerWorld Technology/Create wrappers supplied as external state responses",
+    "PlayerTechnology/contained/finder/workshop-switch/ftol machine bodies real",
+    "temporary heap/Factory/virtual attachment are prior explicit boundaries; no initial SP/wallet mutation added"
+  ],
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/ai-initial-update/originals/creation.c": "1b80386f97035223edb07d3d795277718dff90e7a5317c02c19c2a100448a382",
+    "extracted/ai-initial-update/originals/functions.tsv": "3e653849767d34b80f3751d26803a45e7b20a34b37aa5f16a88979b2f902624d",
+    "extracted/player-technology/originals/functions.tsv": "b7516f2e5157b07e41b49c6cec8e48a8a89cbe1379029e44cd1ce0ec43a681b1",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/ghidra/ai-initial-update-functions.json": "208ea19c3e44bfc0c1059a69446b0c19655507126cd81cc8020e4f452c258d64",
+    "tools/decomp_ai_initial_update.py": "17f64a845661654876de209546dc20b168eb51bd6ec0d8751f13be2a7e51e2b9",
+    "tools/decomp_player_technology.py": "23c1641c7ddd917f5f7fef295529d0fff8c65e99148e143741c20e523fbe02be",
+    "tools/decomp_priestmenu.py": "72d14bfa36091dc86a273ad9b1998c940f575bb954195d0e0920e5e63ea10bc7",
+    "cpppj/src/o/RawAiBrainInitialUpdate.h": "f9f6e28a29acf8c7e8828cc4c71eeb30f29edca97e8c25d2c82ec44e4a1f0022",
+    "cpppj/src/o/RawAiBrainInitialUpdate.cpp": "952ca7ef83c8e2285ed42c8ce83bd9207eb8b08106c8b2139d33a9621ce8180e",
+    "cpppj/tests/AiBrainInitialUpdateTests.cpp": "bf818c7f496c5cea2cba2c61287522147fd913ba7c12d07d990788a020563e76",
+    "cpppj/tests/fixtures/ai-initial-update-x86.tsv": "8784606de578d467f5ab2fbedc05662044782accf770ce9eb9ba1b18665a059d"
+  }
+}
