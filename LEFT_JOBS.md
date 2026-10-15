@@ -1,5 +1,22 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-15 사용자 요청에 따른 작업 중지·최종 인수인계 (`HJOW-Athlon`)
+
+- [x] 사용자가 인수인계 작성·로컬 커밋 뒤 작업 중지를 요청했다. 아래 단위60/61의 검증 완료 변경과 단위62의 미등록·미빌드 초안을 구분해 보존한다. 문서/커밋을 마친 뒤 목표를 **paused**로 전환하고 새 구현/빌드/게임 실행을 진행하지 않는다. 목표 달성으로 처리하지 않는다.
+- [x] 최종 등록 제품/검사는 **Release 경고0·오류0**, 집중 **24개 실패0**, 전체 CTest **1/1·내부1,238개 실패0·195.14초**다. 초기 빌드 중 변경한 AI2객체는 소스 고정 뒤 다시 컴파일하고 게임/검사 링크를 갱신했다. 자료는 `extracted/goal-current-state-final-build.log`, `goal-current-state-focused.log`, `goal-current-state-ctest.log`, `goal-current-state-tests.log`다. 이 전체 검사에 단위62의 미등록3개 검사는 포함되지 않는다.
+- [x] SP 회복4,539개와 AI 생성자160개는 기존 고유입력 재검증이며 fixture가 기존과 같다. mana2,352개는 새 후처리 관찰이고 CRT/프레임을 명시 대체했다. 같은 mana 프로브와 영구 관찰의 수를 중복 합산하지 않는다. 원본 게임/GUI 실행0이며 AGENTS·보호 원본·dotnetpj는 변경하지 않았다. 현재/마지막 전체 및 선택 정밀 디컴파일 PC는 **HJOW-Athlon, 2026-10-15**다.
+- [x] 작업은 **`20261015-54 사제 회복의 현재 SP 저장소와 원본 조회 순서 연결`**, **`20261015-55 AI 생성자의 현재 그래프 조회와 BYTE 장부 연결 검증`**, **`20261015-56 사용자 요청 중단 인수인계와 미등록 mana 관찰 초안 보존`**으로 나눠 로컬 커밋한다. 원격 push는 하지 않는다.
+- [ ] 재개 시 AGENTS와 양 LEFT를 먼저 읽고 호스트 일치/정밀 재생성 규칙을 따른다. 우선 단위62의4파일을 `src/o`·`src/client` CMake에 등록하고 검사1파일 및 `NETSTORM_TYPE_ENERGY_FIXTURE`를 tests CMake에 등록한다. 새2352/보호188/경계 검사3개를 빌드·대조한 뒤에만 제품 검증 완료로 표시한다. 현재는 **실제188TYPE 공급 검사가 실행되지 않았다**. 이후 같은 Session의 AI 생성/초기 갱신·로그인/Ready40/Stage3를 연결한다.
+- [ ] **Construct 비활성, AI 전략·건설 Confirm/Packet/Notice/Clear/Place·생산/다리/수확/운반/희생·미션 단계/정지 소유권·자연 승패/저장/다음 미션 연결은 미완료**다. Early Missions 및 캠페인1-1~1-2 자연 완주/원본 동일성을 달성하지 않았다. DirectDraw 전체화면 오류는 계속 제외한다. 사용자 재개 요청 전까지 후속 작업을 하지 않는다.
+
+## 2026-10-15 단위62 중단 인수인계: AI mana 후처리 관찰·미등록 검사 (`HJOW-Athlon`)
+
+- [x] `tools/decomp_type_required_energy.py`와 `type-required-energy-x86.tsv`에 실제 `0049b0d0`의 **2,352개 고유입력/정상 반환**을 보존했다. TYPE500/함수 스택 밖 쓰기와 미검토 명령을 거부한다. ASCII CRT6,808회와 프레임 후처리2,352회는 명시 외부 대체이며 AST 파싱/zero 생성자는 입력 공급이다. `--verify`가 통과했다. 같은2352의 프로브/영구 관찰을 중복 합산하지 않는다.
+- [x] 미등록 helper를 원본 순서의 모든 mana 지정 검사/마지막 정상 문자열 유지로 보완했다. 앞선 비정상 지정값을 마지막 속성 조회로 건너뛰지 않는다. 새 `TypeRequiredEnergyTests.cpp`는 원본2352·실제188TYPE 공급·명시 경계/속성 순서의3개 검사 초안이다. 실제 TYPE는 검사용74 수정 사본 대신 보호 GameAssets의 전체 표를 사용한다.
+- [ ] **CMake 미등록·새 제품/검사 빌드 미실행·C++ 대조 미실행**이다. 보고서는 `native-postprocess-observed-product-unbuilt` 상태다. 사용자 요청으로 여기서 중단하며 새4파일과 검사1파일의 등록/검증은 재개 이후에만 한다. 정상 문자열 관찰을 실제 AST 파싱/AI 활성화/자연 완주 근거로 사용하지 않는다. [상세 재개 기록](docs/exe/cpp-ai-required-energy-20261015.md).
+- [x] 현재/마지막 정밀 디컴파일 PC는 **HJOW-Athlon, 2026-10-15**이며 추가 선택 export 없이 같은 전체 정밀 함수 범위를 읽었다. 원본 게임/GUI·보호 원본·AGENTS·dotnetpj 변경은 없다. **20261015-56**에 초안과 관찰/검사 자료를 보존하고 중지한다.
+- [x] 새/변경7파일의 UTF-8·문서 링크와 native 보고서 SHA를 확인했다. fixture는6열 TSV이며 빈 mana/빈 결과의 끝 탭을 데이터로 보존한다. 이 TSV의 필수 빈 열에 대한 `git diff --check` 후행 탭 표시는 구조 검사와 구분하고, TSV 외 소스/문서의 공백 검사는 통과했다.
+
 ## 2026-10-15 단위61 완료: AI 현재 그래프 조회 (`HJOW-Athlon`)
 
 - [x] 사용자 요청으로 완주 개발을 재개했고 AGENTS와 양 LEFT를 읽었다. 현재 PC/마지막 전체 정밀 디컴파일 PC는 모두 **HJOW-Athlon, 2026-10-15**다. 이후 사용자의 작업 중지 요청은 맨 위 최신 인수인계를 따른다. DirectDraw 전체화면 오류 제외와 로컬 단위 커밋/원격 push 금지를 유지한다.
@@ -15,6 +32,10 @@
 - [x] 중립 효과의 추가 회전/저장 SP 보존, 측정 안 lazy 초기화/현재 조회 순서, NULL 배열 뒤 WORD 조회와 잘못된 바인딩 거부의 새 검사3개를 추가했다. 기존 값형 fixture backend는 유지한다.
 - [x] 두 단위를 함께 반영한 소스 고정 Release 빌드 경고0·오류0, 사제회복8·AI생성자4·SP통지4·실제Session8 집중 검사가 통과했다. 새 사제 회복3개도 포함한다.
 - [x] SP와 AI 현재 조회기 변경을 함께 검사한 작업트리의 전체 CTest **1/1·내부1,238개 실패0·195.14초**가 통과했다. **20261015-54**로 커밋한다. 이전 SP61/Player88 SHA 감사는 이 PC의 선택 export 누락으로 실행할 수 없었으며 새 성공 근거로 사용하지 않는다. 이 단위는 해당 SP/Player 몸체를 변경하지 않았다.
+
+다음 연결은 mana/default 실제 원본 대조와188TYPE 공급 → 실제 AI 생성/초기 갱신/로그인·Ready·Stage3 → 같은 월드 건설 Confirm/Packet/Notice/Clear/Place → 생산·다리·수확·운반·희생/미션 단계·정지 소유권·자연 승패/저장이다. Early Missions·캠페인1-1~1-2 자연 완주와 원본 동일성은 아직 미완료다. AGENTS·보호 원본·dotnetpj는 변경하지 않았다.
+
+mana 프로브의 예비 자료는 `extracted/probe_type_required_energy.py`, `extracted/type-required-energy-probe.tsv`, `extracted/goal-mana-probe.log`다. Git에 보존하는 영구 관찰기/fixture/보고서는 단위62를 따른다. 기존1,728개 격자를2,352개로 확장한 같은 분석이며 두 수나 프로브/영구 결과를 합산하지 않는다. 아직 미등록 helper/C++와 대조하거나188TYPE 공급 검사를 실행하지 않았다. 제품 또는 자연 완주 검증 완료 근거로 쓰지 않는다.
 
 ## 2026-10-15 완료: 현재 호스트 10.78·10.72 정밀 디컴파일 재생성 (`HJOW-Athlon`)
 

@@ -19,8 +19,10 @@ std::string TypeRequiredEnergy(OriginalEdition edition,const RiftTypeRecord& typ
         throw std::invalid_argument("TYPE 요구 에너지는 PATCH 실제 후처리 전용입니다");
     std::string value; //원본 TYPE+a0의 zero 초기 입력과 mana 대입 결과다.
     if (definition) {
-        if (const auto* property=definition->Property("mana")) {
-            const auto* text=std::get_if<std::string>(&property->value); //BT_STRING_CONSTANT에 해당한다.
+        // 원본 로더처럼 모든 지정값을 순서대로 검사하고 마지막 정상 문자열을 보존한다.
+        for (const auto& property:definition->properties) {
+            if (AsciiLower(property.name)!="mana") continue;
+            const auto* text=std::get_if<std::string>(&property.value); //BT_STRING_CONSTANT에 해당한다.
             if (!text) throw std::invalid_argument("원본 TYPE mana는 문자열 AST여야 합니다");
             const auto encoded=EncodeOriginalText(*text); //원본 strcpy에 전달할 Windows-1252 byte다.
             value.assign(encoded.begin(),encoded.end());
