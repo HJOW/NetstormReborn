@@ -16,6 +16,8 @@
 #
 # 지원 패키지 관리자: apt(Debian/Ubuntu 계열), dnf(Fedora/RHEL 계열), pacman(Arch 계열), zypper(openSUSE)
 # 시스템 패키지 설치 시 sudo 를 호출한다. 스크립트 자체는 일반 사용자로 실행해야 한다.
+# REA 는 선택사항이며 기존 Node.js·npm 으로 설치한다 (Node.js 는 설치하지 않는다).
+# Ghidra 와 REA 를 함께 선택하면 GHIDRA_INSTALL_DIR 를 사용자 셸 환경에 저장한다.
 # ============================================================
 
 # bash 전용 문법(배열 등)을 쓰므로 sh/dash 로 실행되면 바로 중단한다
@@ -40,6 +42,16 @@ MONOGAME_TEMPLATE_PACKAGE='MonoGame.Templates.CSharp::3.8.5.1'
 
 # Ghidra 실행에 필요한 최소 JDK 주 버전
 MIN_JDK_MAJOR=21
+
+# REA CLI 설치에 사용할 검토된 npm 패키지 버전 (Node.js 는 기존 설치를 사용한다)
+# 설치·환경 변수 기준: https://github.com/morluto/rea/blob/main/docs/installation.md
+REA_PACKAGE_VERSION='6.5.0'
+
+# 관리자 권한 없이 REA 패키지와 명령을 설치할 사용자 npm 전역 경로
+REA_NPM_PREFIX="$HOME/.local"
+
+# Ghidra 경로가 바뀌어도 셸 시작 파일에 예전 export 가 쌓이지 않도록 덮어쓰는 전용 환경 설정 파일
+REA_GHIDRA_ENV_FILE="$HOME/.config/netstorm-reborn/rea-ghidra.sh"
 
 # Python 도구에 필요한 최소 버전
 MIN_PYTHON_VERSION='3.10'
@@ -194,7 +206,7 @@ ensure_profile_line() {
     # 각 시작 파일마다 같은 줄이 없을 때만 끝에 추가
     for f in "${files[@]}"; do
         if ! grep -Fqx -- "$line" "$f" 2>/dev/null; then
-            printf '\n%s\n' "$line" >> "$f"
+            printf '\n%s\n' "$line" >> "$f" || return 1
             echo "    $f 에 환경 설정을 추가했습니다."
         fi
     done
@@ -398,6 +410,65 @@ install_ghidra() {
     fi
 }
 
+# 기존 Node.js 가 REA 지원 범위(22.19+, 24.11+, 26+)이면 버전을 출력한다. Node.js 설치·변경은 하지 않는다.
+get_rea_node_version() {
+    has_cmd node || return 0
+    local version major minor
+    version=$(node -p 'process.versions.node' 2>/dev/null) || return 0
+    [[ $version =~ ^([0-9]+)\.([0-9]+)\.[0-9]+$ ]] || return 0
+    major=${BASH_REMATCH[1]}; minor=${BASH_REMATCH[2]}
+    if (( (major == 22 && minor >= 19) || (major == 24 && minor >= 11) || major >= 26 )); then
+        printf '%s\n' "$version"
+    fi
+}
+
+# 기존 Node.js·npm 과 REA CLI 가 모두 실행 가능할 때 REA 버전을 출력한다.
+check_rea() {
+    [ -n "$(get_rea_node_version)" ] && has_cmd npm && has_cmd rea || return 0
+    local version
+    version=$(rea --version 2>/dev/null) || return 0
+    [ -n "$version" ] && printf '%s\n' "$version"
+}
+
+# 기존 Node.js·npm 으로 사용자 영역에 REA 만 설치한다. --prefix 로 시스템 npm 폴더 쓰기와 sudo 를 피한다.
+install_rea() {
+    if [ -z "$(get_rea_node_version)" ] || ! has_cmd npm; then
+        err '기존 Node.js 22.x(22.19 이상), 24.x(24.11 이상), 26 이상과 npm 이 필요합니다. Node.js 는 자동 설치하지 않습니다.'
+        return 1
+    fi
+    npm install --global --prefix "$REA_NPM_PREFIX" "rea-agents@$REA_PACKAGE_VERSION" || return 1
+    ensure_profile_line 'case ":$PATH:" in *":$HOME/.local/bin:"*) ;; *) export PATH="$HOME/.local/bin:$PATH" ;; esac'
+}
+
+# 함께 선택해 준비된 Ghidra·REA 의 연결 결과를 요약에 추가한다. 설치 모드는 현재 세션과 셸 시작 파일에 경로를 저장하고 점검 모드는 비교만 한다.
+configure_rea_ghidra() {
+    local dir escaped
+    dir=$(get_ghidra_dir)
+    if [ -z "$dir" ] || [ ! -f "$dir/support/analyzeHeadless" ] || [ -z "$(check_rea)" ]; then
+        add_result 'REA용 Ghidra 경로' '설정 불가' 'Ghidra 와 REA 설치가 모두 완료되어야 합니다.'
+        return 1
+    fi
+    dir=$(cd "$dir" && pwd -P) || return 1
+    if [ "$CHECK_ONLY" -eq 1 ]; then
+        if [ "${GHIDRA_INSTALL_DIR:-}" = "$dir" ]; then
+            add_result 'REA용 Ghidra 경로' '설정됨' "GHIDRA_INSTALL_DIR=$dir"
+        else
+            add_result 'REA용 Ghidra 경로' '설정 필요' "GHIDRA_INSTALL_DIR=$dir"
+        fi
+        return 0
+    fi
+    # POSIX 셸의 작은따옴표 문법으로 경로를 저장해 공백·따옴표·달러·역따옴표를 명령으로 해석하지 않게 한다.
+    escaped=${dir//\'/\'\\\'\'}
+    if ! mkdir -p "$(dirname "$REA_GHIDRA_ENV_FILE")" ||
+       ! printf "# PREPARE.sh 에서 저장한 REA용 Ghidra 설치 경로\nexport GHIDRA_INSTALL_DIR='%s'\n" "$escaped" > "$REA_GHIDRA_ENV_FILE" ||
+       ! ensure_profile_line '[ ! -f "$HOME/.config/netstorm-reborn/rea-ghidra.sh" ] || . "$HOME/.config/netstorm-reborn/rea-ghidra.sh"'; then
+        add_result 'REA용 Ghidra 경로' '설정 실패' '사용자 환경 설정 파일을 저장하지 못했습니다.'
+        return 1
+    fi
+    export GHIDRA_INSTALL_DIR="$dir"
+    add_result 'REA용 Ghidra 경로' '설정 완료' "GHIDRA_INSTALL_DIR=$dir"
+}
+
 # --- Wine: 원본 Netstorm.exe(32bit) 실행·동적 분석 ---
 check_wine() { has_cmd wine && first_line wine --version; }
 install_wine() {
@@ -575,6 +646,7 @@ add_item cmake        '권장' 0 'CMake'                      '빌드 시스템 
 add_item ninja        '선택' 0 'Ninja'                      '빌드 실행기 (C++ 빌드 cpppj/ 의 ninja 프리셋용)'
 add_item jdk          '필수' 1 "JDK $MIN_JDK_MAJOR+"        'Ghidra 실행용 Java'
 add_item ghidra       '필수' 1 'Ghidra'                     "Netstorm.exe 정적 분석 ($TOOLS_DIR 에 설치)"
+add_item rea          '선택' 0 'REA'                        "역공학 MCP/CLI (rea-agents@$REA_PACKAGE_VERSION, 기존 Node.js·npm 필요, Node.js 설치 없음)"
 add_item wine         '권장' 0 'Wine'                       '원본 exe 실행·winedbg 동적 분석·WINEDEBUG=+file 파일 접근 관찰 (x64dbg·Process Monitor 대체)'
 add_item safedir      '필수' 1 'git safe.directory 등록'    "'dubious ownership' 오류 해결 (git 전역 설정 변경)"
 add_item vcpkg        '선택' 0 'vcpkg'                      "C++ 라이브러리 관리자 ($TOOLS_DIR 에 설치, C++ 빌드에서 아직 쓰지 않음)"
@@ -687,6 +759,10 @@ fi
 # 결과 요약용 배열 (항목 이름, 결과, 상세)
 RES_NAMES=(); RES_RESULTS=(); RES_DETAILS=()
 
+# 실제로 선택한 REA·Ghidra 항목을 기록해 두 항목을 함께 선택했을 때만 경로를 연결한다.
+REA_SELECTED=0
+GHIDRA_SELECTED=0
+
 # 결과 한 건을 요약 배열에 추가한다
 add_result() { RES_NAMES+=("$1"); RES_RESULTS+=("$2"); RES_DETAILS+=("$3"); }
 
@@ -694,6 +770,7 @@ add_result() { RES_NAMES+=("$1"); RES_RESULTS+=("$2"); RES_DETAILS+=("$3"); }
 for i in "${TARGETS[@]}"; do
     id=${ITEM_IDS[$i]}
     name=${ITEM_NAMES[$i]}
+    case "$id" in rea) REA_SELECTED=1 ;; ghidra) GHIDRA_SELECTED=1 ;; esac
     echo
     say "$C_CYAN" "▶ $name"
     status=$("check_$id")
@@ -727,19 +804,28 @@ for i in "${TARGETS[@]}"; do
     fi
 done
 
+# 이미 설치된 항목도 위 반복문에서 선택 여부를 기록하므로 재실행할 때도 환경 설정을 보완할 수 있다.
+if [ "$REA_SELECTED" -eq 1 ] && [ "$GHIDRA_SELECTED" -eq 1 ]; then
+    configure_rea_ghidra
+fi
+
 echo
 say "$C_CYAN" '=== 결과 요약 ==='
 # 결과를 항목별로 한 줄씩 출력 (한글 폭 때문에 표 대신 목록 형식 사용)
 for i in "${!RES_NAMES[@]}"; do
     case "${RES_RESULTS[$i]}" in
-        '이미 설치됨'|'설치 완료') color=$C_GREEN ;;
-        '없음'|'확인 실패')        color=$C_YELLOW ;;
+        '이미 설치됨'|'설치 완료'|'설정됨'|'설정 완료') color=$C_GREEN ;;
+        '없음'|'확인 실패'|'설정 필요')                 color=$C_YELLOW ;;
         *)                          color=$C_RED ;;
     esac
     line="  - ${RES_NAMES[$i]} : ${color}${RES_RESULTS[$i]}${C_RESET}"
     [ -n "${RES_DETAILS[$i]}" ] && line="$line ${C_GRAY}(${RES_DETAILS[$i]})${C_RESET}"
     printf '%s\n' "$line"
 done
+
+if [ "$REA_SELECTED" -eq 1 ] && [ -n "$(check_rea)" ]; then
+    echo 'REA 를 에이전트에 연결하려면 새 터미널에서 rea setup 을 실행하고 사용할 클라이언트와 변경 내역을 확인하세요.'
+fi
 
 if [ "$CHECK_ONLY" -eq 0 ]; then
     echo

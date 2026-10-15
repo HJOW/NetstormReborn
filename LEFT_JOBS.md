@@ -1,5 +1,12 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-15 완료: 준비 스크립트의 선택형 REA 설치와 Ghidra 경로 연결 (`VM-W11-Codex`)
+
+- [x] `PREPARE.ps1`·`PREPARE.sh`에 기본 해제된 **선택 항목 REA**를 추가했다. 기존 Node.js 22.x(22.19 이상)·24.x(24.11 이상)·26 이상과 npm을 확인한 뒤 `rea-agents@6.5.0`만 사용자 npm 경로에 설치한다. **사용자 추가 지시에 따라 Node.js 설치 기능은 넣지 않았다.** Windows는 `%APPDATA%\npm`, Linux는 `~/.local`을 사용하며 명령 검색 경로를 저장한다.
+- [x] **Ghidra와 REA를 모두 선택해 준비된 경우** `GHIDRA_INSTALL_DIR`를 현재 프로세스와 사용자 환경에 저장한다. Windows는 사용자 환경 변수, Linux는 `~/.config/netstorm-reborn/rea-ghidra.sh`와 셸 시작 파일 연결을 사용한다. 이미 설치된 항목에도 적용하며, 하나만 선택했거나 설치에 실패하면 경로를 쓰지 않는다. `-CheckOnly`·`--check-only`는 현재 값을 비교하고 필요한 설정만 안내한다. 에이전트 연결은 설치 후 안내하는 `rea setup`에서 사용자가 클라이언트와 변경 내역을 검토한다. 기준: [REA 공식 설치 안내](https://github.com/morluto/rea/blob/main/docs/installation.md).
+- [x] **PowerShell 5.1 파서·Bash 구문 검사, PowerShell 모의23개·Git Bash 모의35개, `git diff --check` 통과.** 신규/기존 설치·단독/동시 선택·Node 버전 경계·Node 부재·npm 실패·점검 모드 쓰기 방지·공백/따옴표/달러/역따옴표 경로 저장·프로필 중복 방지/경로 변경을 확인했다. 검증 자료는 `extracted/prepare-rea-20261015/`에 있다. 실제 npm 설치·영구 환경 변수/실제 사용자 홈 변경·원본 게임 실행은 없으며, Linux 실기기 설치 검증은 하지 않았다.
+- [x] 인수인계 후 `20261015-25 준비 스크립트에 선택형 REA 설치와 Ghidra 환경 경로 연결`로 로컬 커밋한다. 원격 push는 하지 않는다.
+
 ## 2026-10-15 완료: REA 및 Ghidra 가용성 확인 (`VM-W11-Codex`)
 
 - [x] 양쪽 인수인계 문서를 확인했다. 현재 Codex 세션에서 REA MCP **6.5.0**의 `binary_session` 호출과 도구 카탈로그(207개)가 동작한다. Ghidra **12.1.4**가 `C:\Tools\ghidra_12.1.4_PUBLIC`에서 인식됐으며 Windows 11 x64, Java 21.0.12.1, headless 실행 파일, 네이티브 디컴파일러를 포함한 환경 검사가 모두 통과했다.

@@ -7,6 +7,8 @@
     점검 결과 설치되어 있지 않은 항목은 자동으로 설치한 뒤 다시 점검한다.
     관리자 권한이 필요한 항목(방화벽 예외)은 관리자 권한이 아니면 '사용 불가'로 표시하고 건너뛴다.
     방화벽 항목을 쓰려면 관리자 권한 PowerShell 에서 실행한다.
+    REA 는 선택사항이며 기존 Node.js·npm 으로 설치한다 (Node.js 는 설치하지 않는다).
+    Ghidra 와 REA 를 함께 선택하면 GHIDRA_INSTALL_DIR 를 사용자 환경 변수에 저장한다.
 
 .PARAMETER ToolsDir
     Ghidra, vcpkg 처럼 winget 으로 설치할 수 없는 도구를 설치할 폴더 (기본값: C:\Tools)
@@ -38,6 +40,13 @@ $MonoGameTemplatePackage = 'MonoGame.Templates.CSharp::3.8.5.1'
 
 # Ghidra 실행에 필요한 최소 JDK 주 버전
 $MinJdkMajor = 21
+
+# REA CLI 설치에 사용할 검토된 npm 패키지 버전 (Node.js 는 기존 설치를 사용한다)
+# 설치·환경 변수 기준: https://github.com/morluto/rea/blob/main/docs/installation.md
+$ReaPackageVersion = '6.5.0'
+
+# 관리자 권한 없이 REA 명령을 설치할 사용자 npm 전역 경로
+$ReaNpmPrefix = Join-Path $env:APPDATA 'npm'
 
 # Python 도구에 필요한 최소 버전
 $MinPythonVersion = [version]'3.10'
@@ -138,6 +147,49 @@ function Get-GhidraDir {
     return (Get-ChildItem $ToolsDir -Directory -Filter 'ghidra_*' |
             Where-Object { Test-Path (Join-Path $_.FullName 'ghidraRun.bat') } |
             Sort-Object Name -Descending | Select-Object -First 1)
+}
+
+# 기존 Node.js 가 REA 지원 범위(22.19+, 24.11+, 26+)이면 버전을 반환하고, 없거나 미지원이면 $null 을 반환한다.
+function Get-ReaNodeVersion {
+    if (-not (Test-Command node)) { return $null }
+    $version = & node -p 'process.versions.node' 2>$null
+    if ($LASTEXITCODE -ne 0 -or $version -notmatch '^(\d+)\.(\d+)\.\d+$') { return $null }
+    $major = [int]$Matches[1]
+    $minor = [int]$Matches[2]
+    if (($major -eq 22 -and $minor -ge 19) -or ($major -eq 24 -and $minor -ge 11) -or $major -ge 26) {
+        return $version
+    }
+    return $null
+}
+
+# 기존 Node.js·npm 과 REA CLI 가 모두 실행 가능할 때 REA 버전을 반환한다. npm/REA 의 .cmd 를 사용해 PowerShell 실행 정책의 영향을 피한다.
+function Get-ReaVersion {
+    if (-not (Get-ReaNodeVersion) -or -not (Test-Command npm.cmd) -or -not (Test-Command rea.cmd)) { return $null }
+    $version = & rea.cmd --version 2>$null
+    if ($LASTEXITCODE -eq 0 -and $version) { return ([string]$version).Trim() }
+    return $null
+}
+
+# 함께 선택해 준비된 Ghidra·REA 의 연결 상태를 결과 행으로 반환한다. 점검 모드는 현재 값만 비교하며, 설치 모드는 사용자·현재 프로세스에 경로를 저장한다.
+function Set-ReaGhidraEnvironment {
+    $row = [pscustomobject]@{ 항목 = 'REA용 Ghidra 경로'; 결과 = '설정 불가'; 상세 = 'Ghidra 와 REA 설치가 모두 완료되어야 합니다.' }
+    $dir = Get-GhidraDir
+    if (-not $dir -or -not (Test-Path (Join-Path $dir.FullName 'support\analyzeHeadless.bat')) -or -not (Get-ReaVersion)) { return $row }
+    $row.상세 = "GHIDRA_INSTALL_DIR=$($dir.FullName)"
+    if ($CheckOnly) {
+        $row.결과 = if ($env:GHIDRA_INSTALL_DIR -eq $dir.FullName) { '설정됨' } else { '설정 필요' }
+        return $row
+    }
+    try {
+        [Environment]::SetEnvironmentVariable('GHIDRA_INSTALL_DIR', $dir.FullName, 'User')
+        $env:GHIDRA_INSTALL_DIR = $dir.FullName
+        $row.결과 = '설정 완료'
+    }
+    catch {
+        $row.결과 = '설정 실패'
+        $row.상세 = $_.Exception.Message
+    }
+    return $row
 }
 
 # vcpkg 설치 폴더를 찾는다 (VCPKG_ROOT 우선, 없으면 ToolsDir\vcpkg)
@@ -315,6 +367,24 @@ $Items = @(
             Add-Type -AssemblyName System.IO.Compression.FileSystem
             [System.IO.Compression.ZipFile]::ExtractToDirectory($zipPath, $ToolsDir)
             Remove-Item $zipPath
+        }
+    }
+    # 기존 Node.js·npm 으로 REA 만 설치한다. Ghidra 뒤에 두어 함께 선택한 경우 최종 설치 경로를 연결할 수 있게 한다.
+    [pscustomobject]@{
+        Name = 'REA'; Group = '선택'; Default = $false
+        Description = "역공학 MCP/CLI (rea-agents@$ReaPackageVersion, 기존 Node.js·npm 필요, Node.js 설치 없음)"
+        Check   = { Get-ReaVersion }
+        Install = {
+            if (-not (Get-ReaNodeVersion) -or -not (Test-Command npm.cmd)) {
+                throw '기존 Node.js 22.x(22.19 이상), 24.x(24.11 이상), 26 이상과 npm 이 필요합니다. Node.js 는 자동 설치하지 않습니다.'
+            }
+            & npm.cmd install --global --prefix $ReaNpmPrefix "rea-agents@$ReaPackageVersion"
+            if ($LASTEXITCODE -ne 0) { throw "REA npm 설치 실패 (종료 코드 $LASTEXITCODE)" }
+            # 사용자 npm 명령 폴더가 새 터미널에서도 검색되도록 기존 사용자 PATH 끝에 한 번만 등록한다.
+            $userPath = [Environment]::GetEnvironmentVariable('Path', 'User')
+            if (($userPath -split ';') -notcontains $ReaNpmPrefix) {
+                [Environment]::SetEnvironmentVariable('Path', ((([string]$userPath).TrimEnd(';') + ';' + $ReaNpmPrefix).TrimStart(';')), 'User')
+            }
         }
     }
     [pscustomobject]@{
@@ -546,8 +616,17 @@ foreach ($item in $targets) {
 }
 
 Write-Host ''
+# 두 항목을 모두 선택한 실행에만 경로 연결을 적용한다. 이미 설치됨으로 건너뛴 항목도 포함하며 점검 모드는 쓰지 않는다.
+if ($targets.Name -contains 'Ghidra' -and $targets.Name -contains 'REA') {
+    $results += Set-ReaGhidraEnvironment
+}
+
 Write-Host '=== 결과 요약 ===' -ForegroundColor Cyan
 $results | Format-Table -AutoSize -Wrap
+
+if ($targets.Name -contains 'REA' -and (Get-ReaVersion)) {
+    Write-Host 'REA 를 에이전트에 연결하려면 새 터미널에서 rea setup 을 실행하고 사용할 클라이언트와 변경 내역을 확인하세요.'
+}
 
 if (-not $CheckOnly) {
     Write-Host 'PATH·환경 변수 변경을 반영하려면 터미널(및 VS Code)을 다시 여세요.'
