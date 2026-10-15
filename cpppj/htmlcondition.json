@@ -1,0 +1,37 @@
+{
+  "host": "VM-W11-Codex",
+  "date": "2026-10-15",
+  "unique_inputs": 754,
+  "returns": {
+    "originals": 489,
+    "originalCD": 265
+  },
+  "instructions": {
+    "originals": 376234,
+    "originalCD": 87739
+  },
+  "configInstructions": {
+    "originals": 124279,
+    "originalCD": 28742
+  },
+  "substitutions": {
+    "originals": 672,
+    "originalCD": 153
+  },
+  "os_calls": 0,
+  "boundaries": [
+    "HTML ConfigInterface ABI→분리 VM의 실제 Config::Substitute + 같은 현재 설정/빈 local 객체",
+    "HTML tolower ASCII mapping",
+    "PATCH CRT TLS pointer",
+    "Config oracle ASCII toupper/strnicmp/strchr/getenv/sprintf/assert boundaries"
+  ],
+  "files": {
+    "tools/decomp_htmlcondition_oracle.py": "fda49ecad65e3c93655ba0d0bd4e9f1595322fcadc992c0a43f932ef07340e7a",
+    "tools/decomp_htmltext_oracle.py": "577cd2e9e96ea6ce039fbc05baa37142437cce1f4d3f33160c71f92c4c4b8ef7",
+    "tools/decomp_config_oracle.py": "045539ff9f6bfc90ddb87b3dcc4322495d9b66c640b2a558ae662b188d718ba4",
+    "tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+    "cpppj/tests/fixtures/htmlcondition-x86.tsv": "9e65562b49035d78051b14516404a6951b1be5a04d8fbc9d1753b662253615be",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+  }
+}

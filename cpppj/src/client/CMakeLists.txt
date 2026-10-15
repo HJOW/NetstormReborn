@@ -5,6 +5,7 @@ target_sources(netstorm PRIVATE
     DialogBodyLayout.cpp DialogBodyLayout.h
     RawCampaignLifetimeBindings.cpp RawCampaignLifetimeBindings.h
     HtmlTextParser.cpp HtmlTextParser.h
+    HtmlConditionEffect.cpp HtmlConditionEffect.h
     ScriptCommand.cpp ScriptCommand.h
     MessageBoard.cpp MessageBoard.h WarningMessages.cpp WarningMessages.h
     ClientAudio.cpp

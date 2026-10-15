@@ -1,5 +1,12 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-15 단위53 완료: 실제 HTML 조건·현재 Config 치환 순서 (`VM-W11-Codex`)
+
+- [x] `HtmlConditionEffect`에 두 PE의 boolean/비교/부정·원본 토큰 구분자·shown/depth와 오른쪽→왼쪽 현재 Config 치환 순서를 복원했다. 숨김 중 nested 열림을 일반 HTML stack으로 바꾸지 않는다. [상세](docs/exe/cpp-html-condition-20261015.md).
+- [x] 두 PE **754고유입력/정상반환**, 실제 Config **825호출**의 순서·상태를 대조했다. Release 게임/검사 경고0·오류0, 집중4개 실패0, 같은 소스 전체 **1,218개 실패0·118.02초**가 통과했다. 현재/마지막 정밀 디컴파일 PC는 **VM-W11-Codex, 2026-10-15**다. 보호 원본/AGENTS/dotnetpj 변경과 원본 게임/GUI 실행은 없다.
+- [x] 인수인계 뒤 **`20261015-43 원본 HTML 조건과 현재 Config 치환 순서 복원 검증`**으로 로컬 커밋하며 push하지 않는다.
+- [ ] 실제 Tell은 `004cf270`의 선행 전체 Config 치환→1차 HTML→메타 추출→LF를BR로 치환→같은 HTML 상태의2차 순회 순서로 연결 중이다. 선행 전체 치환을 제거하지 않는다. 실제 AI 초기 갱신/같은 Session 삭제·건설 연결과 Early Missions·캠페인1-1~1-2 완주 동일성은 후속이며 목표 active, DirectDraw 전체화면 오류 제외를 유지한다.
+
 ## 2026-10-15 단위52 완료: 같은 월드 공통 삭제·내용물·간헐천 자원 연결 (`VM-W11-Codex`)
 
 - [x] `RawCampaignLifetimeBindings`로 같은 풀의 emptyGeyser84 공통 삭제와 실제 ContentForm 수명/Player 부모 통지를 연결하는 모듈을 복원했다. `RawSurfaceWorld::BindDeletion`은 첫 객체 이전에 현재 보상/선택/음향 소비자를 설치하며 관찰 카운터를 게임 효과로 사용하지 않는다. [상세](docs/exe/cpp-campaign-lifetime-20261015.md).

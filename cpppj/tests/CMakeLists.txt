@@ -4,6 +4,7 @@
 add_executable(netstorm_tests
     DialogBodyLayoutTests.cpp
     HtmlTextParserTests.cpp
+    HtmlConditionEffectTests.cpp
     RegionOwnerTests.cpp
     LocalGeyserTests.cpp
     MissionStartTests.cpp
