@@ -1,0 +1,171 @@
+{
+  "host": "VM-W11-Codex",
+  "date": "2026-10-15",
+  "unique_inputs": 816,
+  "returns": {
+    "originals": 408,
+    "originalCD": 408
+  },
+  "instructions": {
+    "originals": 851720,
+    "originalCD": 719316
+  },
+  "tolower_arguments": {
+    "originals": [
+      -128,
+      -1,
+      0,
+      62,
+      65,
+      66,
+      67,
+      72,
+      73,
+      80,
+      81,
+      97,
+      98,
+      99,
+      104,
+      105,
+      112,
+      113,
+      117,
+      126
+    ],
+    "originalCD": [
+      -128,
+      -1,
+      0,
+      62,
+      65,
+      66,
+      67,
+      72,
+      73,
+      80,
+      81,
+      97,
+      98,
+      99,
+      104,
+      105,
+      112,
+      113,
+      117,
+      126
+    ]
+  },
+  "boundaries": [
+    "CRT tolower: signed input/ASCII mapping; nonASCII locale behavior unclaimed"
+  ],
+  "link_storage": 0,
+  "os_calls": 0,
+  "spec": {
+    "originals": {
+      "binary": "originals/Netstorm.exe",
+      "ctor": 4636320,
+      "output": 4636368,
+      "input": 4636416,
+      "run": 4638736,
+      "lower": 5133276,
+      "suppress": 5660352,
+      "helpers": [
+        4470768,
+        4240256
+      ],
+      "ranges": [
+        [
+          4636320,
+          4636362
+        ],
+        [
+          4636368,
+          4636409
+        ],
+        [
+          4636416,
+          4636426
+        ],
+        [
+          4636432,
+          4636471
+        ],
+        [
+          4636608,
+          4636807
+        ],
+        [
+          4636816,
+          4638561
+        ],
+        [
+          4638736,
+          4639161
+        ],
+        [
+          4470768,
+          4470769
+        ],
+        [
+          4240256,
+          4240259
+        ]
+      ]
+    },
+    "originalCD": {
+      "binary": "originalCD/NETSTORM.EXE",
+      "ctor": 4805232,
+      "output": 4805280,
+      "input": 4805328,
+      "run": 4806576,
+      "lower": 5188144,
+      "suppress": 5464936,
+      "helpers": [
+        4807776,
+        4807792,
+        4807808
+      ],
+      "ranges": [
+        [
+          4805232,
+          4805274
+        ],
+        [
+          4805280,
+          4805321
+        ],
+        [
+          4805328,
+          4805338
+        ],
+        [
+          4805360,
+          4805392
+        ],
+        [
+          4805488,
+          4805663
+        ],
+        [
+          4805664,
+          4806432
+        ],
+        [
+          4806576,
+          4806963
+        ],
+        [
+          4807776,
+          4807813
+        ]
+      ]
+    }
+  },
+  "files": {
+    "tools/decomp_htmltext_oracle.py": "577cd2e9e96ea6ce039fbc05baa37142437cce1f4d3f33160c71f92c4c4b8ef7",
+    "cpppj/tests/fixtures/htmltext-x86.tsv": "ae9353f6629cf35a0a9b081ecf3c1b6235a94d5ce4d460cff81196bf96f7c36b",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+  }
+}

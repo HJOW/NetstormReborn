@@ -2,6 +2,7 @@
 # (첫 구성 때 인터넷에서 내려받을 것이 없다).
 # 테스트 파일을 만들면 아래 목록에 더한다. 파일 안의 TEST_CASE 는 자동으로 등록된다.
 add_executable(netstorm_tests
+    HtmlTextParserTests.cpp
     RegionOwnerTests.cpp
     LocalGeyserTests.cpp
     MissionStartTests.cpp
@@ -954,3 +955,7 @@ set_source_files_properties(LocalGeyserTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 실제 미션 시작/AI 설정의 독립 원본 결과다.
 set_source_files_properties(MissionStartTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_MISSION_START_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/mission-start-x86.tsv\"")
+
+# 두 실제 PE의 기본 HTML 본문 변환을 독립 입력으로 재생한다.
+set_source_files_properties(HtmlTextParserTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_HTMLTEXT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/htmltext-x86.tsv\"")

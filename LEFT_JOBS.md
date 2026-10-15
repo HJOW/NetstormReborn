@@ -1,5 +1,12 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-15 단위45 완료: 원본 HTML→StyleText 본문 변환 (`VM-W11-Codex`)
+
+- [x] `HtmlTextParser`에 기본VT의현재가림/태그/문자상태·용량/소비위치·제목/본문제어문자를복원했다. `<i>`는원본색상`~N~j`, `<b>`는굵기이며부분대소문자규칙과CD의`</h1>` 추가빈줄을유지한다. 조건/명령/그림/링크/배경·파생VT는명시효과경계다. [단위45 상세](docs/exe/cpp-html-text-20261015.md).
+- [x] 두보호PE의실제기계어 **816고유입력/정상반환**과전체출력/상태/소비위치를대조했다. 최초CD제목빈줄오류9건과검사인자의anchor공백오류1건을교정했다. 최종Release게임/검사빌드경고·오류0·집중5개실패0·SHA/입력계획/공백감사통과다. 기존StyleText연결에서inline색/굵기변경이새줄을추가하지않음을확인했다.
+- [x] 현재/마지막정밀PC는 **VM-W11-Codex, 2026-10-15**다. 실제게임/GUI실행·새export/보호원본/AGENTS/dotnetpj변경은없다. 인수인계뒤 **`20261015-35 원본 HTML 본문과 스타일 제어문자 변환 복원 검증`**으로로컬커밋하며push하지않는다.
+- [ ] 실제Tell본문은아직이모듈을사용하지않는다. 현재페이지의효과를한번실행하는본문수명/StyleTextBuffer/Renderer연결을다음단위에서진행중이다. 전체HTML조건/파생help/그림/링크와게임완주동일성은미완료·목표active·DirectDraw전체화면오류제외를유지한다.
+
 ## 2026-10-15 단위44 완료: 실제 미션 시작·AI 설정과 생성 경계 (`VM-W11-Codex`)
 
 - [x] `RawMissionStart`에 시작전역/시계/안내목록·SP/기술·사제조회/AI요청·Gump/간헐천/카메라·최종started 쓰기 순서를 복원했다. 같은 게이트상태를 공유한다. `RawMissionAiSettings`는600바이트의 공통→owner설정·가산동맹·능력/색을, `RawAiCreate`는 기존brain/NoTemple/실제생성→부착→초기갱신을 복원한다. [단위44 상세](docs/exe/cpp-mission-start-20261015.md).
