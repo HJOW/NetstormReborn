@@ -64,11 +64,14 @@ class Oracle(BaseOracle):
         if address==0x466280:self.events.append('UI,'+str(args[1]));self.ret();return
         if address==0x4de9a0:self.ret(args[0],4);return
         if address==0x4cf570:
-            pattern=self.string(args[0]);event='MissionStarting' if b'Mission' in pattern or b'mission' in pattern else 'ReconnectStarting' if b'Reconnect' in pattern or b'reconnect' in pattern else 'ServerLost'
+            pattern=self.string(args[0]);event='MissionStarting' if pattern==b'Initializing.' else 'ReconnectStarting' if b'Reconnect' in pattern or b'reconnect' in pattern else 'ServerLost'
             if b'Countdown' in pattern:event='ReconnectCountdown' if b'Reconnect' in pattern else 'ConnectingCountdown'
-            self.events.append('Progress,'+event+','+str(args[2] if b'Countdown' in pattern else 0));self.ret();return
+            # Progress는문자열포인터한인자다. Countdown정수는앞선실제formatter의네번째인자에서관찰한다.
+            self.events.append('Progress,'+event+','+str(self.progress_countdown if b'Countdown' in pattern else 0));self.ret();return
         if address==0x4a89c0:
-            pattern=self.string(args[1]);self.mu.mem_write(args[0],pattern+b'\0');self.ret(args[0]);return
+            pattern=self.string(args[1])
+            if b'Countdown' in pattern:self.progress_countdown=struct.unpack('<i',struct.pack('<I',args[3]))[0]
+            self.mu.mem_write(args[0],pattern+b'\0');self.ret(args[0]);return
         if address==0x4e0cd0:self.ret(ecx,8);return
         if address==0x4410f0:self.events.append('Palette');self.ret(77);return
         if address==0x4b6100:self.events.append('ApplyPalette,'+str(args[0]));self.ret();return
@@ -100,7 +103,7 @@ class Oracle(BaseOracle):
 
     def run(self,case):
         """전체블록/외부전역/두현재시계/실제Core의모든바이트와정상반환을보존한다."""
-        kind,selected,self.variant,self.mutation=case;self.events=[];self.instructions=0
+        kind,selected,self.variant,self.mutation=case;self.events=[];self.instructions=0;self.progress_countdown=None
         # 모든상태의부가인자는구별되는원문DWORD로공급한다.
         for block_index,base in enumerate(BLOCKS):self.mu.mem_write(base,struct.pack('<'+'I'*36,*[block_index*1000+index for index in range(36)]))
         current=0x5c8878 if kind=='Poll' else 0x5c87e8;self.put(current,selected);self.put(current+0x80,ZONE);self.put(current+0x84,1 if self.variant&2 else 0);self.put(current+0x88,1250)
@@ -117,6 +120,7 @@ class Oracle(BaseOracle):
         args=[selected] if kind=='Request' else [];self.mu.reg_write(UC_X86_REG_FPCW,0x27f);self.mu.reg_write(UC_X86_REG_FPTAG,0xffff);self.mu.reg_write(UC_X86_REG_ESP,STACK);self.mu.mem_write(STACK,struct.pack('<'+'I'*(1+len(args)),STOP,*args));self.mu.emu_start({'Run':0x4b6dd0,'Poll':0x4b88c0,'Request':0x4b2bc0}[kind],STOP)
         assert self.mu.reg_read(UC_X86_REG_ESP)==STACK+4
         for register in (UC_X86_REG_EBX,UC_X86_REG_ESI,UC_X86_REG_EDI,UC_X86_REG_EBP):assert self.mu.reg_read(register)==0x76543210+register
+        assert self.mu.reg_read(UC_X86_REG_FPTAG)==0xffff
         state=b''.join(bytes(self.mu.mem_read(base,144)) for base in BLOCKS);globals_text=','.join(str(self.words(address)[0]) for address in GLOBALS)+','+str(self.mu.mem_read(0x565e70,1)[0])
         timers=bytes(self.mu.mem_read(0x5c85f8,8))+bytes(self.mu.mem_read(0x544d58,8))
         return [','.join(map(str,case)),state.hex(),globals_text,timers.hex(),bytes(self.mu.mem_read(HEAP+0x1000,192)).hex(),';'.join(self.events) or '-']
@@ -147,7 +151,7 @@ def main():
     oracle=Oracle();rows=[oracle.run(case) for case in cases()];assert len(rows)==len({row[0] for row in rows})
     with fixture.open('w',encoding='utf-8',newline='') as stream:
         writer=csv.writer(stream,delimiter='\t',lineterminator='\n');writer.writerow(['input','blocks','globals','timers','cores','trace']);writer.writerows(rows)
-    facts={'host':socket.gethostname(),'date':'2026-10-15','nativeUniqueInputs':len(rows),'status':'native-observed-cpp-validation-pending','boundaries':['실제7~10/13/14와Request/Poll/Run공통부의전체정밀범위명령을실행한다','큰전투정리/Zone설치/파일/Templatewrapper/UI/음악/팔레트/네트워크/타이머시작은명시효과경계이며현재입력변경을일부공급한다','정수변환004e49c0/만료004180a0/활성벽타이머004180d0과빈refresh004437f0은실제원본몸체다','부모1/2/3전체의새native완료나실제게임완주를주장하지않는다'],'sha256':{path:digest(ROOT/path) for path in paths if (ROOT/path).is_file()}}
+    facts={'host':socket.gethostname(),'date':'2026-10-15','last_full_refined_host':'HJOW-Athlon','nativeUniqueInputs':len(rows),'status':'native-observed-cpp-validation-pending','normal_stack_saved_registers_x87_checked':True,'boundaries':['실제7~10/13/14와Request/Poll/Run공통부의전체정밀범위명령을실행한다','큰전투정리/Zone설치/파일/Templatewrapper/UI/음악/팔레트/네트워크/타이머시작은명시효과경계이며현재입력변경을일부공급한다','정수변환004e49c0/만료004180a0/활성벽타이머004180d0과빈refresh004437f0은실제원본몸체다','진행창은실제Initializing/재접속/연결실패문자열로분류하고Countdown정수는실제formatter의네번째인자를관찰한다','부모1/2/3전체의새native완료나실제게임완주를주장하지않는다'],'sha256':{path:digest(ROOT/path) for path in paths if (ROOT/path).is_file()}}
     report.write_text(json.dumps(facts,ensure_ascii=False,indent=2)+'\n',encoding='utf-8');print('로컬 상태 원본 고유입력:',len(rows))
 
 

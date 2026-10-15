@@ -22,6 +22,8 @@ target_sources(netstorm PRIVATE
     RawMissionLoginPackets.cpp RawMissionLoginPackets.h
     # 로그인 뒤 같은 7DWORD 설정을 0x32로 송수신한다.
     RawMissionSettingsPacket.cpp RawMissionSettingsPacket.h
+    # 실제 로컬 미션의 다섯 상태 블록을 공통 확정 순서로 전환한다.
+    RawLocalMissionState.cpp RawLocalMissionState.h
     RawMissionFrameGate.cpp RawMissionFrameGate.h
     RawTutorialOne.cpp RawTutorialOne.h RawTotalMade.cpp RawTotalMade.h
     RawTutorialTwo.cpp RawTutorialTwo.h

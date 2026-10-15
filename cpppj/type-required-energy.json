@@ -28,9 +28,9 @@
     "cpppj/src/client/AiTypeRequiredEnergy.cpp": "869c8193f7f74d8497a610fa893d5aba1854ced7da71e0db7709c31f9dd6d31f",
     "cpppj/tests/fixtures/type-required-energy-x86.tsv": "8bcb3e215c958f5df0a395365059f5481801b1660569f2f04c0720f394f14f4c",
     "cpppj/tests/TypeRequiredEnergyTests.cpp": "0802ab400413ec5da3f2d03a4ac6b6f88e2d088915646609a2ca0bb39a02b05c",
-    "cpppj/src/o/CMakeLists.txt": "58e8ffae9f50c4c493533ab426b07c8434f51402f6479891d9d3cac527ce32f2",
+    "cpppj/src/o/CMakeLists.txt": "0b9cd27cba4b347b2f07ff3151b50cc999d45e923e73263c920f134193fc5c1f",
     "cpppj/src/client/CMakeLists.txt": "6966711ff173da9c147ab8a5dac86c48f08a06942304562c5a2134cf9710d4ca",
-    "cpppj/tests/CMakeLists.txt": "323563f730eb06e71ad9ee1e6746decfd99d53c619bb785abcf590e1025b123c"
+    "cpppj/tests/CMakeLists.txt": "b844ea64c912b15ed7ae21f1ba0f2b48ab9bdbcad95e558c641407130deb8c52"
   },
   "product_validation": {
     "configuration": "Release",
@@ -164,6 +164,40 @@
           "extracted/goal-pause-final-focused.log": "6953822244a44ce3ed82713db3bcd64b1ad4b28501c0a7a7881cfa2303d3a7ec",
           "extracted/goal-pause-final-ctest.log": "302c70b495ea8e9ac3ee18817606773f7dfb5aec9e5679aad42c939f4e45a52d",
           "extracted/goal-pause-final-tests.log": "91364ac6c5274ab548e3c4f14b64140a5935e4419760df5fa6c138f4a60a173b"
+        }
+      }
+    },
+    {
+      "date": "2026-10-15",
+      "reason": "local mission state registration; TYPE product and native2352 fixture unchanged",
+      "cmake_sha256": {
+        "cpppj/src/o/CMakeLists.txt": {
+          "previous": "58e8ffae9f50c4c493533ab426b07c8434f51402f6479891d9d3cac527ce32f2",
+          "current": "0b9cd27cba4b347b2f07ff3151b50cc999d45e923e73263c920f134193fc5c1f"
+        },
+        "cpppj/tests/CMakeLists.txt": {
+          "previous": "323563f730eb06e71ad9ee1e6746decfd99d53c619bb785abcf590e1025b123c",
+          "current": "b844ea64c912b15ed7ae21f1ba0f2b48ab9bdbcad95e558c641407130deb8c52"
+        }
+      },
+      "product_validation": {
+        "configuration": "Release",
+        "warnings": 0,
+        "errors": 0,
+        "focused_tests": 3,
+        "failed_checks": 0,
+        "full_tests": 1309,
+        "full_ctest_passed": 1,
+        "full_ctest_total": 1,
+        "seconds": 187.98,
+        "total_seconds": 188.01,
+        "game_gui_runs": 0,
+        "logs": {
+          "extracted/goal-local-state-build.log": "78bd31581f0fbd5c43303a3291ecea1150f30f5b8bc3e0ee9157f7eb92ee1fa9",
+          "extracted/goal-local-state-parser-build.log": "aee309d74bec53415b272954e1d068fbfef334f5345e15a3e7d257755011de29",
+          "extracted/goal-local-state-focused.log": "edf70a81b6845d0dab0ed9cf57e3746cb1b9fa5e7e21bddcbd9623ef269de3fa",
+          "extracted/goal-local-state-ctest.log": "08ef803310658a5b77b178582be0cce78eee41e54d7bfc772a8b1b4b62aaf588",
+          "extracted/goal-local-state-tests.log": "43fb7e07052a6a3854f64d7be90fbcb787ab268c5cceb791151a4a6d45a8fd3f"
         }
       }
     }

@@ -1,0 +1,46 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-15",
+  "last_full_refined_host": "HJOW-Athlon",
+  "nativeUniqueInputs": 33,
+  "status": "release-focused-and-full-ctest-validated",
+  "normal_stack_saved_registers_x87_checked": true,
+  "boundaries": [
+    "실제7~10/13/14와Request/Poll/Run공통부의전체정밀범위명령을실행한다",
+    "큰전투정리/Zone설치/파일/Templatewrapper/UI/음악/팔레트/네트워크/타이머시작은명시효과경계이며현재입력변경을일부공급한다",
+    "정수변환004e49c0/만료004180a0/활성벽타이머004180d0과빈refresh004437f0은실제원본몸체다",
+    "진행창은실제Initializing/재접속/연결실패문자열로분류하고Countdown정수는실제formatter의네번째인자를관찰한다",
+    "부모1/2/3전체의새native완료나실제게임완주를주장하지않는다"
+  ],
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_local_mission_state.py": "572e6963aba62a5df7aef23a897a37c266834cafa590e5637cb47a0cdfa9c82c",
+    "cpppj/src/o/RawLocalMissionState.h": "728cbb8da133c1d155b496b0a3b3989065280411a28d3c79e795f9e06f11e5af",
+    "cpppj/src/o/RawLocalMissionState.cpp": "c59b2228d88a978570c5ea461b41ce902015c130b7e8817dc50bd26f184b1113",
+    "cpppj/tests/LocalMissionStateTests.cpp": "dffac3310b10488c2253bf2942e17ee3f171e05f8124cfaeb57ca9db914c609e",
+    "cpppj/tests/fixtures/local-mission-state-x86.tsv": "b591cc51ffd837ce29d04e8090c066d33f5baf4abc1b3c863371346f161d2995",
+    "docs/exe/cpp-local-mission-state-20261015.md": "82cefcee60b5ca1c29ce1e8013d2b65e74afeb7bd4246dacaa747f136da7f25a"
+  },
+  "product_validation": {
+    "configuration": "Release",
+    "warnings": 0,
+    "errors": 0,
+    "focused_tests": 3,
+    "failed_checks": 0,
+    "full_tests": 1309,
+    "full_ctest_passed": 1,
+    "full_ctest_total": 1,
+    "seconds": 187.98,
+    "total_seconds": 188.01,
+    "game_gui_runs": 0,
+    "logs": {
+      "extracted/goal-local-state-build.log": "78bd31581f0fbd5c43303a3291ecea1150f30f5b8bc3e0ee9157f7eb92ee1fa9",
+      "extracted/goal-local-state-parser-build.log": "aee309d74bec53415b272954e1d068fbfef334f5345e15a3e7d257755011de29",
+      "extracted/goal-local-state-focused.log": "edf70a81b6845d0dab0ed9cf57e3746cb1b9fa5e7e21bddcbd9623ef269de3fa",
+      "extracted/goal-local-state-ctest.log": "08ef803310658a5b77b178582be0cce78eee41e54d7bfc772a8b1b4b62aaf588",
+      "extracted/goal-local-state-tests.log": "43fb7e07052a6a3854f64d7be90fbcb787ab268c5cceb791151a4a6d45a8fd3f"
+    }
+  },
+  "base_commit": "05d7cb5"
+}

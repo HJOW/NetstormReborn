@@ -49,6 +49,7 @@ add_executable(netstorm_tests
     ProductionDeckTests.cpp
     FortImagePacketsTests.cpp
     MissionSettingsPacketTests.cpp
+    LocalMissionStateTests.cpp
     BattleBroadcastTests.cpp
     WindowTitleTests.cpp
     CameraHomeTests.cpp
@@ -1049,3 +1050,5 @@ set_source_files_properties(FortImagePacketsTests.cpp PROPERTIES COMPILE_DEFINIT
     "NETSTORM_FORT_IMAGE_PACKETS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fort-image-packets-x86.tsv\"")
 set_source_files_properties(MissionSettingsPacketTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_MISSION_SETTINGS_PACKET_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/mission-settings-packet-x86.tsv\"")
+set_source_files_properties(LocalMissionStateTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_LOCAL_MISSION_STATE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/local-mission-state-x86.tsv\"")

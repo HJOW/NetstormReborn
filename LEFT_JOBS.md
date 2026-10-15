@@ -1,5 +1,12 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-15 목표 재개 후 로그인 상태 검증 중 (`HJOW-Athlon`)
+
+- [x] 새 목표 이어가기 지시와 실제 목표 상태 `active`를 확인하고 AGENTS.md·양 LEFT_JOBS·현재 작업 트리를 다시 읽었다. 기준 커밋은 `05d7cb5`이며 시작 작업 트리는 깨끗하다. 아래 중단 마감은 직전 이력으로 보존한다. 서브 AI는 재가동하지 않고 단독 진행한다.
+- [x] **단위72 완료:** `RawLocalMissionState`를 등록해 원본 상태7~10/13/14·Request/Poll/Run의 **33개 고유 입력**과 전체0x90BYTE 블록5개/현재 전역/타이머/Core/효과 순서를 대조했다. Release 경고0·오류0, 새 집중3개 실패0·전체 CTest1/1·내부1,309개 실패0·187.98초다. 처음3CHECK는 TSV헤더를 입력으로 읽은 검사 전제였고 다음5CHECK는 관찰기의 진행 문구/formatter 인자 위치 해석 오류라 원문 ABI대로 교정했다. 제품 몸체와 상태 대조는 변경하지 않았다. [상세](docs/exe/cpp-local-mission-state-20261015.md), `cpppj/local-mission-state.json`, `extracted/goal-local-state-{build,parser-build,focused,ctest,tests}.log`를 따른다. **`20261015-66 CP 단독 미션 로그인 상태 전환과 비동기 수신 순서 복원 검증`**으로 로컬 커밋한다.
+- [ ] **단위73 진행:** 미등록 Start 바인딩의 현재 AI 문자열을 원본Windows-1252로 인코딩하고 미등록 능력 진단을 실제 외부 경계로 전달하도록 교정했다. `CampaignMissionStartTests.cpp`에 보호8미션의 실제 Script/Session/SP/기술/사제/AI 연결 검사를 준비했으나 아직 CMake 미등록·빌드/실행 전이다. 단위72 전체 회귀에는 포함하지 않는다. 로그인 응답은 송신 callback에서 즉시 실행하지 않고 phase10 확정 뒤 실제 수신 큐에서 분배해야 한다. 실제 Session/UberGump 통합과 자연 완주는 여전히 미완료다.
+- [x] 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon, 2026-10-15**로 같으며 새 디컴파일/게임/GUI 실행은 없다. DirectDraw 전체화면 오류 수정·원격 push·보호 원본/AGENTS/dotnetpj 변경은 제외한다.
+
 ## 2026-10-15 사용자 요청에 따른 일시 중단·회귀 마감 (`HJOW-Athlon`)
 
 - [x] 사용자가 서브 AI 중단·대기, 회귀 검사, 인수인계, 로컬 커밋 뒤 목표 중단을 명시했다. `construction_audit`, `energy_finish`, `session_audit`를 모두 interrupt했고 세 agent의 **interrupted** 상태를 확인했다. 이 절은 아래 완주 목표 재개 절보다 최신이며, 다시 재개 지시가 있기 전에는 후속 개발을 진행하지 않는다.
