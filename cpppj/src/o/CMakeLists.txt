@@ -242,3 +242,6 @@ target_sources(netstorm PRIVATE RawBattleBroadcast.cpp RawBattleBroadcast.h)
 
 # 저장된 buried의 QA와 최초 Regular 두 예약을 실제 공통 PostPop에 연결한다.
 target_sources(netstorm PRIVATE RawBuriedPostPop.cpp RawBuriedPostPop.h)
+
+# 썬 아비어리 최초 부착/프레임/상태 패킷의 실제 Kernel 객체다.
+target_sources(netstorm PRIVATE RawSunAviaryProcess.cpp RawSunAviaryProcess.h)

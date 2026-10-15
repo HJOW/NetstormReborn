@@ -2,6 +2,7 @@
 # (첫 구성 때 인터넷에서 내려받을 것이 없다).
 # 테스트 파일을 만들면 아래 목록에 더한다. 파일 안의 TEST_CASE 는 자동으로 등록된다.
 add_executable(netstorm_tests
+    SunAviaryProcessTests.cpp
     BuriedPostPopTests.cpp
     DialogBodyLayoutTests.cpp
     HtmlTextParserTests.cpp
@@ -1061,3 +1062,7 @@ set_source_files_properties(VortexPreDestroyTests.cpp PROPERTIES COMPILE_DEFINIT
 # buried의 현재 QA/개별 할당/예약 순서를 원본 기계어 결과와 대조한다.
 set_source_files_properties(BuriedPostPopTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_BURIED_POSTPOP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/buried-postpop-x86.tsv\"")
+
+# 썬 아비어리의 네 원문 범위를 독립 기계어 기대값으로 대조한다.
+set_source_files_properties(SunAviaryProcessTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_SUN_AVIARY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/sun-aviary-x86.tsv\"")

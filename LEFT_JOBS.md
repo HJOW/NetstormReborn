@@ -1,5 +1,22 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-16 최신 중단 인수인계: 검사도 다음 재개로 이관 (`HJOW-Athlon`)
+
+- [x] 사용자 최신 요청 **“검사도 다음으로 넘겨. 검사 필요까지 바로 인수인계해줘”**에 따라 구현과 검사를 중단했다. 시작했던 전체 CTest 및 자식 `netstorm_tests.exe`와 실행 래퍼를 종료했다. 서브 AI `construction_audit`·`energy_finish`·`session_audit` 3개는 모두 `interrupted` 상태다. 새 구현·추가 검사·GUI 실행을 진행하지 않는다. 목표는 **미달성 상태로 일시 중단**하며 사용자 재개 요청을 기다린다.
+- [x] 상세 인수인계는 [이번 중단 기록](docs/exe/cpp-pause-handoff-20261016-sun-aviary.md)과 [썬 아비어리 복원 기록](docs/exe/cpp-sun-aviary-20261016.md)에 작성했다. 마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-15**이며 현재 PC와 일치한다. 다른 PC에서 이어가면 AGENTS 규칙에 따라 다시 디컴파일한다.
+- [x] 중단 전 완료된 결과: Release 빌드 종료0, `SunAviary_` **5개·실패0**, `CampaignMissionStart_` **3개 중2개 통과·1개 실패**다. Tutorial1~5는 Load/Start 및 해당 검사를 통과했고, Tutorial5의 buried QA114/두 Regular와 실제 아비어리 Form/Kernel/초기stage/dirty 검사도 도달했다. 이것은 자연 플레이 완주나 8미션 전체 통과가 아니다.
+- [ ] **재개 시 검사부터 필요:** 현재 단위의 전체 회귀는 사용자 요청으로 취소했으므로 결과가 없다. `extracted/goal-sun-aviary-ctest.log`는 중단된 로그이며 완료 근거로 사용하지 않는다. 이전 전체 결과 **1,316개 중1개 실패**는 단위74의 과거 결과다. native `--verify`, 변경 파일/UTF-8/주석/공백 감사와 전체 CTest를 다음 재개 때 수행한다. 정확한 명령과 확인 순서는 상세 인수인계를 따른다.
+- [ ] 실제 다음 실패는 **Tutorial6 Load: SID15006·TYPE136·VT00509470(10진5280880)**의 미복원 Pop 파생 가상 후처리다. 이를 우회하거나 검사 기대값을 바꾸지 않는다. 이후 Tutorial6·캠페인1-1/1-2와 데모3개 진입, 자연 플레이/승패/다음 미션/그래픽·음향 동일성 확인이 남아 있다. 썬 플라이어73의 파생 후처리/이동과 `0045c1b0` BaseFlyer 연결도 미완료다.
+- [x] 인수인계와 현재 변경분을 `20261016-03 CP` 형식의 로컬 중단 커밋으로 보존한다. 새 검사 없이 커밋하며, 원격 push·AGENTS·보호 원본·dotnetpj 변경은 없다. 아래 재개/active 문구는 과거 이력이며 이 최신 중단 지시가 우선한다.
+
+## 2026-10-16 단위75 썬 아비어리 복원: 집중 검사 완료·전체 회귀 이관 (`HJOW-Athlon`)
+
+- [x] 직전 턴은 `446713e`의 buried580 대조/실제 다음 누락 발견/전체1,316개 중1개 실패/인수인계를 완료한 진행 턴이다. 새 이어가기 요청 후 AGENTS.md와 양 LEFT_JOBS를 다시 읽고 깨끗한 작업 트리·현재/마지막 정밀 PC **HJOW-Athlon, 2026-10-15**를 확인했다. 서브 AI를 재가동하지 않고 단독 진행한다.
+- [x] 실제 sunAviary PostPop0045ec50, 생성자0045d690, inner Frame0045d8c0, writer0045d6e0→0045b070의 새 제품 코드와 Session 연결을 작성했다. 실제 Kernel의 가상+18은 inner+20에서 부르며 Form타입32·flags8이다. 아비어리/새 플라이어 QA가 서로의 SID를 저장하는 실제 위치와 효과 이후 현재 부모/시각/단계 재조회를 유지한다. 현재 생성/후처리18/98·프레임594·writer1024의 **고유1,734개 native 입력**을 확보하고 두 x87 정밀도027f/037f에서 같은 출력을 확인했다(중복 합산하지 않음). 원본 반환 스택/비휘발 레지스터/허용 쓰기 및 전체48BYTE·객체5개·현재 전역·64BYTE 패킷·순서를 기록했다.
+- [x] 신규 C++5개 검사와 실제8미션 Load의 아비어리 실제 Form/Kernel/초기Stage/dirty 검사를 CMake에 등록했다. 빌드 exec **40417**은 종료0이며 `extracted/goal-sun-aviary-build.log`에 보존했다. `SunAviary_` 5개는 고유1,734개 native 입력 전수 비교를 통과했다. `CampaignMissionStart_` 3개 중2개 통과·1개 실패이며, Tutorial5를 통과한 뒤 Tutorial6의 다음 미복원 VT00509470에서 멈췄다. 집중 로그는 `extracted/goal-sun-aviary-focused.log`다. 중단 전 source/fixture SHA 및 Python 구문 감사는 종료0이었으며, 마감 시 추가 감사와 전체 회귀는 사용자 지시로 다음에 넘긴다. 기존 큰 공용 PostPop 레이아웃은 바꾸지 않고 실제 AssetPostPop의00509930 분배를 추가했다.
+- [ ] 개발자 frameCheck의 정상 범위는 실제 타입 코드표로 확인하며 잘못된 자료의 진단은 명시 거부한다. stage6의 실제 sunFlyer73 생성/소유자/Pop와0045c1b0 BaseFlyer 연결은 하위가 미복원일 수 있으므로 선택 시 기존 명시 실패를 유지한다. 초기 후처리를 가짜 프로세스나 빈 성공 callback으로 우회하지 않는다. 생성자/후처리/프레임/패킷의 분리 native 관찰과 실제8미션 Start 검증을 준비한다.
+- [x] 원본/클론 GUI 실행·보호 원본/AGENTS/dotnetpj 변경·원격 push는 없다. 전체 Early Missions·데모3개·캠페인1-1/1-2 자연 완주/동일성 목표는 미달성이며 사용자 요청으로 일시 중단한다.
+
 ## 2026-10-16 Early Missions·데모3개·캠페인1-1/1-2 목표 재개 (`HJOW-Athlon`)
 
 - [x] 새 목표 이어가기 요청과 실제 목표 `active` 상태를 확인하고 AGENTS.md·양 LEFT_JOBS·직전 중단 인수인계와 작업 트리를 다시 읽었다. 직전 턴은 중단 커밋/전체 회귀/인수인계를 완료한 진행 턴이다. 시작 커밋은 `463aad2`이며 작업 트리는 깨끗했다. 이번 목표의 데모 미션3개도 포함하며 아래 과거 중단 절을 새 중단 지시로 해석하지 않는다. 서브 AI는 재가동하지 않고 단독 진행한다.

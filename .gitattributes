@@ -35,6 +35,12 @@ tools/decomp_derived_oracle.py text eol=lf
 # raw 공간 해제의 기계어 검증 기록·도구·가상 주소 표를 재현 가능한 LF로 고정한다.
 cpppj/unpop.json text eol=lf
 cpppj/src/o/UnpopVtables.inc text eol=lf
+# 썬 아비어리의 원문/관찰/검사 바이트를 Windows 체크아웃에서도 보존한다.
+cpppj/src/o/RawSunAviaryProcess.* text eol=lf
+cpppj/tests/SunAviaryProcessTests.cpp text eol=lf
+cpppj/sun-aviary.json text eol=lf
+tools/decomp_sun_aviary.py text eol=lf
+docs/exe/cpp-sun-aviary-20261016.md text eol=lf
 
 # 썬 아처 발사/포구/썬 디스크 예약의 신규 원문과 독립 입력은 UTF-8/LF로 고정한다.
 cpppj/src/client/RawCampaignArcherBindings.* text eol=lf

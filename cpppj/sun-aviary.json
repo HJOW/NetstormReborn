@@ -1,0 +1,50 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-16",
+  "last_full_refined_host": "HJOW-Athlon",
+  "last_full_refined_date": "2026-10-15",
+  "observations": 1734,
+  "scopes": {
+    "C": 18,
+    "P": 98,
+    "F": 594,
+    "W": 1024
+  },
+  "status": "native-compared-focused-cpp-passed-full-regression-deferred-user-pause",
+  "cpp_validation": {
+    "tests": 5,
+    "failed_checks": 0,
+    "native_rows_compared": 1734,
+    "log": "extracted/goal-sun-aviary-focused.log"
+  },
+  "session_validation": {
+    "tests": 3,
+    "passed": 2,
+    "failed_checks": 1,
+    "failed_test": "CampaignMissionStart_ProtectedEightMissions",
+    "failure": "Tutorial6 Load: SID15006 TYPE136 VT00509470",
+    "tutorial5_qa_regular_and_aviary_checks_reached": true,
+    "protected_eight_missions_passed": false
+  },
+  "full_regression": {
+    "status": "cancelled-by-user-deferred-until-resume",
+    "completed": false,
+    "partial_log": "extracted/goal-sun-aviary-ctest.log",
+    "handoff": "docs/exe/cpp-pause-handoff-20261016-sun-aviary.md"
+  },
+  "game_gui_runs": 0,
+  "boundary": "실제 생성/후처리/Frame/writer 및 타이머/QA/부모/첫 Process helper를 실행한다. 힙/부착/Damageable/프레임 지정/장치/플라이어 생성·소유자·Pop·BaseFlyer 연결/재전송은 명시 외부 경계다. 개발자 Frame 진단은 꺼진 입력이며 전체48BYTE/객체5개/현재 전역/64BYTE패킷/호출/스택/비휘발/쓰기 guard를 대조한다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_sun_aviary.py": "07ef452c508b028ace987a2e70315e22c4f02f0c34ad5619332df8ffa3dc41f5",
+    "cpppj/src/o/RawSunAviaryProcess.h": "af0b47499c801d16044c7cf9af1b6ddc94fe99ace10aee69f8f4679927ea63d0",
+    "cpppj/src/o/RawSunAviaryProcess.cpp": "58b0bc5bec96469793ef802ba52c728168684f1d3b5f2b3b40d80d5530a0f588",
+    "cpppj/tests/SunAviaryProcessTests.cpp": "6f8b68949136a6d839aa318f49ef3615002e24aa668497072a2126f33a0931ce",
+    "cpppj/tests/fixtures/sun-aviary-x86.tsv": "e64841e232f3ea3b79eba3fba4d21656277a9b4dd05766f1ff1e77414cb6d0db"
+  },
+  "precision_replays": [
+    639,
+    895
+  ]
+}

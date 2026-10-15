@@ -1,6 +1,7 @@
 // 보호8미션의같은Script/Session/SP/기술/사제/AI생성으로실제공통Start를검사한다.
 #include "DudeSpawnSupport.h"
 #include "client/RawCampaignMissionStartBindings.h"
+#include "o/RawSunAviaryProcess.h"
 #include <unordered_set>
 
 using namespace netstorm::client;
@@ -63,6 +64,10 @@ TEST_CASE(CampaignMissionStart_ProtectedEightMissions) {
         auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());StartExternal external;
         RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),external.Services());session.Load();
         std::fprintf(stderr,"실제 미션 Load 완료: %s\n",input.name.data()); // Start 이전 저장객체 Pop 실패와 시작 효과 실패를 구별한다.
+        for (const auto& object:session.World().Objects()) if (object.object.type==72) { // 저장 썬 아비어리는 같은 실제 타입32 Form과 Kernel 객체를 소유해야 한다.
+            const auto core=session.Core();const auto form=FindAttachedProcess(core.pool,object.sid,32);CHECK(form.value!=0);auto* process=form.value ? dynamic_cast<SunAviaryProcess*>(core.processes.FromForm(form)) : nullptr;
+            CHECK(process && process->Parent()==object.sid && process->Fields().Form()==form && process->Fields().Stage()==1 && process->Fields().Dirty()==0);
+        }
         if (input.name=="Tutorial5") {
             auto core=session.Core();std::size_t buried{}; // 보호 원문은 QA114의 buried 두 개를 저장한다.
             // 실제 풀에서만 대상을 찾고 별도 관찰용 객체/예약 목록을 만들지 않는다.
