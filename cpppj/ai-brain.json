@@ -1,0 +1,24 @@
+{
+  "host": "VM-W11-Codex",
+  "date": "2026-10-15",
+  "observations": 160,
+  "boundaries": [
+    "body preallocated0xb08 and17actual nested allocations backed by fixture memory",
+    "priest/region/island-owner/TYPE-energy responses; SetAlliance/AddAlly machine code real",
+    "initialUpdate00414710 and strategies not exercised; ctor itself never attaches player brain or flags20",
+    "virtual handles remap host-owned memory; no original pointer/OOM equality claim"
+  ],
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/ai-brain/originals/creation.c": "8b00c2ec04f0b91f5107e5644cc286dc10f36800ee9377bc9dd777ac02b563a1",
+    "extracted/ai-brain/originals/functions.tsv": "2286a75b55e408c5b139fe166042047ebbb6a83fcdac20d8fd497bfe3a5fdde2",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/ghidra/ai-brain-functions.json": "ba53f67580312373a9b39d16c8d5031c45b59fb0b5a6ba8433513a35e6b1d828",
+    "tools/decomp_ai_brain.py": "7bc2a47e628a540de0f126a1d1430a77e08fbac5dbd310588412580f9c9e1a3c",
+    "tools/decomp_priestmenu.py": "72d14bfa36091dc86a273ad9b1998c940f575bb954195d0e0920e5e63ea10bc7",
+    "cpppj/src/o/RawAiBrain.h": "486bc77c9405776bfce2faa6c7a03372fd8b7b84fea0997db34df30fd8aa16ad",
+    "cpppj/src/o/RawAiBrain.cpp": "9f9083860a8abb2704493d31ecce38ed672d055aa34ee3741ed6e08f56f5f86f",
+    "cpppj/tests/AiBrainTests.cpp": "8364327df05dbc8d1f40b9115a92ffc52d80eb96461e6a1a8df6a8e98a481d9f",
+    "cpppj/tests/fixtures/ai-brain-x86.tsv": "53aecd3e635d5743ea07091d863d6db7fb328daa8181b7a5769b78a233087fab"
+  }
+}

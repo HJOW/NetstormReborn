@@ -1,5 +1,12 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-15 단위51 완료: 실제 AI 생성자·목록 소유 수명 (`VM-W11-Codex`)
+
+- [x] `RawAiBrainMemory`/`RawAiBrainConstructor`에 실제0xb08본체/17목록의소유메모리·원문/필드초기화·지역/요구에너지/단방향동맹·역순소멸/본체반납을복원했다. 가짜토큰표식이아니라동일등록부의실제바이트블록을후속update/전략이공유한다. [단위51 상세](docs/exe/cpp-ai-brain-20261015.md).
+- [x] PATCH생성자/소멸자2함수정밀export·실제 **160고유입력/정상반환**의본체전체/Player1620B/동맹324B/섬3204B·18블록의요청/내용/해제순서를대조했다. 최종Release게임/검사경고·오류0·집중2개실패0·SHA/행수/공백감사통과다. 생성자자체는Playerbrain/flags20을부착하지않으며실제InitialUpdate누락전중단을유지한다.
+- [x] 현재/마지막정밀PC는 **VM-W11-Codex, 2026-10-15**다. 실제게임/GUI실행·보호원본/AGENTS/dotnetpj변경은없다. 인수인계뒤 **`20261015-41 실제 AI 생성자와 목록 및 본체 소유 수명 복원 검증`**으로로컬커밋하며push하지않는다.
+- [ ] 실제initialUpdate00414710를같은원문/기술/이름/분류배열에복원중이다. 최대비용/비용이큰워크샾선택이며기존최저가해석은문서에서교정했다. update에없는SP지정/AI지갑초기화를추가하지않는다. 전략프레임·실제Session활성화·완주동일성미완료·목표active·DirectDraw전체화면오류제외다.
+
 ## 2026-10-15 단위50 완료: 건설 통지의 실제512바이트·가변길이 (`VM-W11-Codex`)
 
 - [x] `WriteConstructionPacket`/`FinalizeConstructionPacket`에 실제Confirm의512BYTE ff초기화·모든필드/SID쓰기·현재WORD등록길이와송신직전count기반길이를복원했다. 임시버퍼크기와최종전송길이를합치지않는다. [단위50 상세](docs/exe/cpp-construction-packet-20261015.md).

@@ -11,6 +11,7 @@ add_executable(netstorm_tests
     PlayerTechnologyTests.cpp
     PlayerGeyserBoundsTests.cpp
     ConstructionPacketTests.cpp
+    AiBrainTests.cpp
     MissionFrameGateTests.cpp
     TutorialOneTests.cpp
     TutorialTwoTests.cpp
@@ -980,3 +981,7 @@ set_source_files_properties(PlayerGeyserBoundsTests.cpp PROPERTIES COMPILE_DEFIN
 # 실제 건설 패킷의 전체512바이트/가변길이를 대조한다.
 set_source_files_properties(ConstructionPacketTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CONSTRUCTION_PACKET_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/construction-packet-x86.tsv\"")
+
+# 실제 AI 생성자/소멸자의 전체 소유 저장소를 대조한다.
+set_source_files_properties(AiBrainTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_AI_BRAIN_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/ai-brain-x86.tsv\"")

@@ -58,9 +58,9 @@ Ability는 PE의 실제13개 이름 순서를 보존한다. 선두 느낌표는 
 
 정상 생성 경로는 실제 new 크기0xb08/생성자 `00416860` 경계와 초기 갱신 `00414710` 경계가 **둘 다 공급되어야** 시작한다. 그 뒤 실제 생성자가 돌려준 opaque32 소유자만 기존 `RawPlayerParticipation::AttachBrain`으로 등록하고 초기 갱신을 실행한다. 이 wrapper에 가짜 brain allocator/빈 초기 갱신은 없다. 생성자가0을 돌려주면 명시 오류다. 원본의 할당 실패 뒤 NULL 부착/NULL 초기 갱신으로 이어지는 비정상 경로를 호스트에서 재현하는 범위는 아니다. 검사는 정상 비NULL 생성과 기존brain/NoTemple 분기를 대조한다.
 
-**실제 생성자/초기 갱신은 아직 미복원이다.** `00416860`에는 실제 동적 목록 할당,600바이트 복사, 지갑/타이머/전략배열, 첫 지역 소유권, 실제 타입 ss 검색과 동맹이 있다. 마지막 동맹은 `SetAlliance(ai,mask)` 뒤 `allies[ai][local]`이 비제로일 때만 `AddAlly(local,ai)`를 더하는 방향별 규칙이며, 아직 wrapper가 대신 실행하지 않는다. 실제 생성자를 구현할 때 기존 참여 모듈을 재사용해야 한다.
+후속 [실제 AI 생성자 단위](cpp-ai-brain-20261015.md)에서 `00416860`의0xb08본체/17목록/600바이트 복사/지갑·타이머·전략배열/첫지역/요구에너지ss 검색/동맹 및 `00410100` 소멸을 `RawAiBrainConstructor`로 복원하고 원본160입력/집중2개를 확인했다. 마지막 동맹은 `SetAlliance(ai,mask)` 뒤 `allies[ai][local]`이 비제로일 때만 `AddAlly(local,ai)`를 더하는 방향별 규칙이며 기존 실제 참여 모듈을 사용한다. 초기 갱신 전체와 실제 TYPE+a0 metadata 공급은 여전히 필요한 전제다.
 
-`00414710`은 설정을 다시600바이트 복사하고 미션이면 name/defaultAiName을 Player에 쓴다. `RawPlayerWorld::Technology/Create`에 해당하는 실제 기술 부모를 조회/생성하고 `004915c0`으로 기술 내용을 추가한 뒤 flags4의 contained들을 순회한다. 실제 TYPE의 속성으로 builder 목록/원소별 개수/비용/테마/최저가 및 분류 자료를 만든다. 이를 빈 초기 갱신으로 대체하면 이후 전략·피해 통지가 실제 brain을 읽을 때 원본과 달라진다. 전략 프레임 `00417d30/00417de0` 및 호출된 주요 `00414af0/00416eb0/004139f0/00417c70`도 후속이다. **aiName 또는 flags20만으로 Outcome 참여를 켜지 않는다.**
+`00414710`은 설정을 다시600바이트 복사하고 미션이면 name/defaultAiName을 Player에 쓴다. `RawPlayerWorld::Technology/Create`에 해당하는 실제 기술 부모를 조회/생성하고 `004915c0`으로 기술 내용을 추가한 뒤 flags4의 contained들을 순회한다. 실제 TYPE의 속성으로 builder 목록/원소별 개수/최대 비용/비용이 가장 큰 워크샾 및 분류 자료를 만든다. 최초 서술의 최저가 해석은 후속 assembly에서 최대비용 조건으로 교정했다. 이를 빈 초기 갱신으로 대체하면 이후 전략·피해 통지가 실제 brain을 읽을 때 원본과 달라진다. 전략 프레임 `00417d30/00417de0` 및 호출된 주요 `00414af0/00416eb0/004139f0/00417c70`도 후속이다. **aiName 또는 flags20만으로 Outcome 참여를 켜지 않는다.**
 
 현재 재사용 가능한 실제 하위는 Player 기술 부모의 `RawPlayerWorld::{Technology,Create}`, 현재9기록의 `Records`, 섬 신전 getter의 `RawIslandRuntime::Temple`, 분산 SP의 `ScrambledSpStore::Set`, 실제 사제 조회 계층이다. 후속 [Player 기술 단위](cpp-player-technology-20261015.md)에서 `004903b0`의 flags4 기술 제거와 `004915c0`의 문자열 타입해석→ensure00490420→contained 생성 사슬도 `RawPlayerTechnology`로 복원하고 원본158입력/집중2개를 확인했다. 실제 세션의 가상파괴/ContentForm 알림/현재 PlayerKnown 연결 전제는 여전히 필요하다. 단순 `MissionPlayers::Load`의 double SP/대칭동맹 사본을 이 실제 경계로 재사용하지 않는다.
 
