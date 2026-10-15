@@ -56,6 +56,8 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
     // processState: 프로세스 실행·부착·이벤트 분배에 사용하는 상태.
     o::SquidProcessState processState;/* time: 프레임의 게임 시각과 벽 시각 및 시간 차 (o::FrameTime). */ o::FrameTime time{};/* changed: 상태 변경으로 후속 갱신이 필요한지. */ /* loaded: 현재 자료의 로딩이 완료됐는지. */ /* loading: 현재 로딩 작업 중인지. */ /* runtimeBound: 실행 연결된 여부. */ bool changed{true},loaded{},loading{},runtimeBound{};
     RawWorldRuntimeHooks runtime; // 외부 미션 모듈의 참조는 첫 객체 생성 전에만 설치한다.
+    std::function<o::Sid()> deletionSelected; // 실제 후설치 뒤 매 삭제/공통pre에서 현재 UI선택을 읽는다.
+    bool deletionBound{}; // 같은공통state의실제보상/효과후설치는첫객체생성전한번만허용한다.
     // displayHooks: 해상도 변경으로 Renderer가 교체되어도 현재 장치에 전달할 수 있는 표시 콜백이다 (SurfaceDisplayHooks).
     SurfaceDisplayHooks displayHooks;/* effectRequests: 효과 요청. */ /* walkerFalls: 이동유닛 추락. */ /* deletionRequests: 삭제 요청. */ std::size_t effectRequests{},walkerFalls{},deletionRequests{};
     // graph: 서로 연결된 표면의 Graph 소속을 관리하는 처리기.
@@ -122,12 +124,13 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
             [](bool,bool,bool) { throw std::logic_error("raw 표면 월드의 불완전한 받침 묶음"); }});
         baseDestroy=std::make_unique<o::RawSquidDestroy>(pool,*unpop,types);
         virtualDestroy=std::make_unique<o::RawSquidDestroyDispatch>(*baseDestroy,*neighbors,mode,graph.get());
+        // 이 기본값은 단독 표면 기하 검사용 관찰이다. 실제 세션은 BindDeletion으로 보상/실제 UI를 공급한다.
         common=std::make_unique<o::SquidDestroyLifecycle>(pool,types,bookkeeping,deletion,*baseDestroy,o::SquidDeletionHooks{
             [this](const o::SquidDeletionEvent&) { ++deletionRequests; },
             [](const o::SquidDestroyEvent& event) {
                 if (event.effect!=o::SquidDestroyEffect::Transmit) throw std::logic_error("raw 표면 월드의 미연결 삭제 효과");
             }},graph.get());
-        lifecycle=std::make_unique<o::RawSurfaceLifecycle>(pool,*neighbors,links.connectorType,common->Hooks(),o::SurfaceLifecycleHooks{
+        lifecycle=std::make_unique<o::RawSurfaceLifecycle>(pool,*neighbors,links.connectorType,CommonDeletionHooks(),o::SurfaceLifecycleHooks{
             [this](o::Sid sid,float x,float y) { o::ScheduleBridgeFall(*host,sid,x,y); },
             [this](o::Sid sid,std::uint32_t flags) { Destroy(sid,flags); },
             [this](o::Sid sid) { if (runtimeBound) { if (!runtime.walkerFall(sid)) throw std::logic_error("월드 낙하 처리 실패"); }else ++walkerFalls; },
@@ -152,6 +155,15 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
                 runtime.formTransmit(form,flags);
             });
         formDispatch->Bind(*dependencies);
+    }
+    // proxy는후설치이전공통객체의주소를보존하지않아같은state/reward로교체한뒤에도현재몸체를호출한다.
+    o::SquidDestroyHooks CommonDeletionHooks() {
+        o::SquidDestroyHooks hooks;
+        hooks.selected=[this] { return deletionSelected ? deletionSelected() : deletion.selected; };
+        hooks.emit=[this](const o::SquidDestroyEvent& event) {
+            if (event.effect==o::SquidDestroyEffect::PreDestroy && deletionSelected) deletion.selected=deletionSelected();
+            common->Hooks().emit(event);
+        };return hooks;
     }
     // 표시 억제는 현재 GUI 장치에서 조회한다. 콘솔에서는 변경 요청을 보존한다.
     bool Suppressed() const override { return displayHooks.suppressed && displayHooks.suppressed(); }
@@ -192,6 +204,21 @@ void RawSurfaceWorld::BindRuntime(RawWorldRuntimeHooks hooks) {
     s.formDispatch->SetAssets(hooks.assets,hooks.destroy);s.host->SetRegularHandler(hooks.regular);s.host->SetFormTransmit(hooks.transmit);
     s.runtime=std::move(hooks);s.runtimeBound=true;s.runtime.loadingDepth(s.loadState.loadingDepth);
 }
+// 기존표면분배기가보유한proxy를유지하면서단일공통삭제state의실제경제/UI소비자를교체한다.
+void RawSurfaceWorld::BindDeletion(o::SquidReward& reward,std::function<o::Sid()> selected,o::SquidDeletionHooks hooks) {
+    auto& state=*impl_;
+    if (state.deletionBound || state.loading || state.loaded || state.kernel.Size() || state.pool.FreeCount()!=state.pool.Capacity()-5)
+        throw std::logic_error("공통 삭제 실제 소비자는 첫 객체 생성 전에 한 번 연결해야 합니다");
+    // Take는freeCount를보존할수있으므로동일물리슬롯도검사한다.
+    for (std::uint32_t id=5;id<state.pool.Capacity();++id)
+        if (!(state.pool.Slot(o::Sid{static_cast<std::uint16_t>(id)})[11]&1U)) throw std::logic_error("공통 삭제 실제 소비자 설치 전 객체가 존재합니다");
+    if (!selected || !hooks.emit || !hooks.forward) throw std::invalid_argument("공통 삭제의 실제 선택/효과/파생 경계 누락");
+    auto replacement=std::make_unique<o::SquidDestroyLifecycle>(state.pool,state.types,state.bookkeeping,state.deletion,*state.baseDestroy,
+        std::move(hooks),state.graph.get(),&reward); // 같은Pool/장부가아닌reward는기존생성자가효과전에거부한다.
+    state.common=std::move(replacement);state.deletionSelected=std::move(selected);state.deletionBound=true;
+}
+// 기존표면과후설치된공통body가읽는같은유일전역이다.
+o::SquidDeletionState& RawSurfaceWorld::DeletionState() { return impl_->deletion; }
 // Fort의 원본 객체 순서를 보존하는 외부 로더는 이 경계 사이에서 Create/Pop을 직접 호출한다.
 void RawSurfaceWorld::BeginLoad() {
     auto& s=*impl_;if (s.loaded || s.loading) throw std::logic_error("raw 월드 중복 로드 시작");

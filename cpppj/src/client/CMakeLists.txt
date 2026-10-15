@@ -3,6 +3,7 @@
 # 다시 만든 파일을 아래 목록에 더한다. 파일 이름은 SOURCE_MAP.md 의 "cpppj 경로"를 따른다.
 target_sources(netstorm PRIVATE
     DialogBodyLayout.cpp DialogBodyLayout.h
+    RawCampaignLifetimeBindings.cpp RawCampaignLifetimeBindings.h
     HtmlTextParser.cpp HtmlTextParser.h
     ScriptCommand.cpp ScriptCommand.h
     MessageBoard.cpp MessageBoard.h WarningMessages.cpp WarningMessages.h

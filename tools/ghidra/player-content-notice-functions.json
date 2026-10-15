@@ -1,0 +1,6 @@
+{
+  "description": "PATCH Player의 실제 내용물 통지+24와 현재 GumpForm/UI 순회 사슬의 선택 근거. 마지막 정밀 디컴파일 PC VM-W11-Codex, 2026-10-15. 보호 PE/정밀 프로젝트는 읽기 전용이다.",
+  "editions": {
+    "originals": ["00490750", "004d55e0", "00463ff0"]
+  }
+}

@@ -58,6 +58,8 @@ def cases():
     # 현재3×3isle프레임문자의대소문자일치거부와다른무늬의허용을확인한다.
     for surfaces in (1,2,3):
         for op in ('T','P'):result.append(case(op=op,surfaces=surfaces))
+    # 삭제환급과후속Pop이같은자원전역을변경한뒤부모가다시읽는추가1입력이다.
+    result.append(case(op='P',quantity=1,empty=1,mutation=3))
     unique={}
     # 중복된명시입력을새관찰수에다시세지않는다.
     for value in result:unique.setdefault(json.dumps(value,sort_keys=True),value)
@@ -137,6 +139,7 @@ class Oracle:
                 self.ret(9 if self.c['empty'] else 0);return
             if kind=='Destroy':
                 if mu.reg_read(UC_X86_REG_ECX)!=POOL+9*50 or self.get(esp+4)!=0x400000:raise RuntimeError('실제emptyGeyser삭제인자불일치')
+                if self.c['mutation']==3:self.put(0x595088,12000)
                 self.trace.append('Destroy:9:4194304');self.ret(cleanup=4);return
             if kind=='Confirm':
                 values=[self.get(esp+4+i*4) for i in range(10)];self.trace.append('Confirm:'+','.join(map(str,values)));self.ret();return
@@ -146,6 +149,7 @@ class Oracle:
             if kind=='Pop':
                 sid=(mu.reg_read(UC_X86_REG_ECX)-POOL)//50;x,y,flags=(self.get(esp+i) for i in (4,8,12));self.trace.append(f'Pop:{sid}:{x}:{y}:{flags}')
                 if self.c['mutation']==1:self.put(0x595088,16777217);self.put(TYPES+122*500+0xc4,common.bits(4000.0,4));self.put(0x595094,4)
+                elif self.c['mutation']==3:self.put(0x595088,self.get(0x595088)+1000)
                 self.ret(cleanup=12);return
         if not any(low<=address and address+size<=high for low,high in self.allowed):raise RuntimeError(f'미허용로컬간헐천native실행 {address:08x}')
 

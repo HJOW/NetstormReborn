@@ -119,9 +119,9 @@ void RawLocalGeyser::Populate(std::int32_t quantity,GameRandom& random,FortRando
             if (recent_.count>=recent_.entries.size()) throw std::out_of_range("로컬 간헐천 최근목록 물리 범위");
             recent_.entries[recent_.count]=created.value;++recent_.count;
         }
-        const float pool=static_cast<float>(state_.resourcePool); // 원본은TYPE조회전에현재int pool을float로한번저장한다.
+        const float pool=static_cast<float>(ResourcePool()); // 원본은삭제/Pop뒤같은00595088을다시읽어TYPE조회전에float로한번저장한다.
         if (state_.geyserType>=types_.size()) throw std::out_of_range("로컬 간헐천 현재 cost타입 범위");
-        state_.resourcePool=std::max(0,Truncate(static_cast<double>(pool)-types_[state_.geyserType].cost));
+        ResourcePool()=std::max(0,Truncate(static_cast<double>(pool)-types_[state_.geyserType].cost));
     }
 }
 // 원본은부모진입에서boss/fort로earlyreturn하지않으며각Populate가현재값을검사한다.
@@ -136,6 +136,13 @@ void RawLocalGeyser::Generate() const {
         Populate(owner<=4 ? state_.firstPlayerQuantity : state_.lastPlayerQuantity,random,rectangle);
     }
 }
+// 실제 자원 전역의 주소만 빌리며 기존값복사·주기적동기화·로컬예산사본을 만들지 않는다.
+void RawLocalGeyser::BindResourcePool(std::int32_t& resourcePool) {
+    if (resourcePool_ && resourcePool_!=&resourcePool) throw std::logic_error("로컬 간헐천 자원 전역의 중복 다른 주소 연결");
+    resourcePool_=&resourcePool;
+}
+// 미연결 독립fixture만 기존값형상태를 사용한다. 실제연결은같은reward 전역참조다.
+std::int32_t& RawLocalGeyser::ResourcePool() const { return resourcePool_ ? *resourcePool_ : state_.resourcePool; }
 // 실제같은raw풀/최근목록을상위바인딩에노출한다.
 const SidPool& RawLocalGeyser::Pool() const { return pool_; }
 SquidPostPopList& RawLocalGeyser::Recent() const { return recent_; }

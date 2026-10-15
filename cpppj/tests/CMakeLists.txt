@@ -12,6 +12,7 @@ add_executable(netstorm_tests
     PlayerGeyserBoundsTests.cpp
     ConstructionPacketTests.cpp
     AiBrainTests.cpp
+    CampaignLifetimeTests.cpp
     MissionFrameGateTests.cpp
     TutorialOneTests.cpp
     TutorialTwoTests.cpp
@@ -985,3 +986,7 @@ set_source_files_properties(ConstructionPacketTests.cpp PROPERTIES COMPILE_DEFIN
 # 실제 AI 생성자/소멸자의 전체 소유 저장소를 대조한다.
 set_source_files_properties(AiBrainTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_AI_BRAIN_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/ai-brain-x86.tsv\"")
+
+# 실제 Player 내용물 통지와 같은 세션 공통 삭제를 대조한다.
+set_source_files_properties(CampaignLifetimeTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PLAYER_CONTENT_NOTICE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/player-content-notice-x86.tsv\"")

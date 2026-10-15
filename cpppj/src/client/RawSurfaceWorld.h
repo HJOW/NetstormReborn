@@ -11,6 +11,7 @@
 #include "o/SquidFactory.h"
 #include "o/SquidFormDispatch.h"
 #include "o/SquidFrameBinding.h"
+#include "o/SquidDestroyLifecycle.h"
 #include "o/SquidOwner.h"
 #include <functional>
 #include <memory>
@@ -124,6 +125,10 @@ public:
     RawWorldCore Core();
     // 같은 저장소를 사용하는 자산/Regular/Form 전송/낙하/로딩 경계를 설치한다. 미연결 콜백을 생략하지 않는다.
     void BindRuntime(RawWorldRuntimeHooks hooks);
+    // 첫 객체 생성 전에 공통 삭제의 관찰 경계를 실제 보상/현재 선택/선택해제·소리 소비자로 한 번 교체한다.
+    void BindDeletion(o::SquidReward& reward,std::function<o::Sid()> selected,o::SquidDeletionHooks hooks);
+    // 후설치와 같은 현재 원본 삭제 전역이다. 별도 세션 사본을 만들지 않는다.
+    o::SquidDeletionState& DeletionState();
     // 원본 Fort 순서대로 Create/필드 저장/Pop하는 로더의 시작과 종료다. 종료 시 Graph를 재구성한다.
     void BeginLoad();
     void FinishLoad();

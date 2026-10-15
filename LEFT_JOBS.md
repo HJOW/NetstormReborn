@@ -1,5 +1,13 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-15 단위52 완료: 같은 월드 공통 삭제·내용물·간헐천 자원 연결 (`VM-W11-Codex`)
+
+- [x] `RawCampaignLifetimeBindings`로 같은 풀의 emptyGeyser84 공통 삭제와 실제 ContentForm 수명/Player 부모 통지를 연결하는 모듈을 복원했다. `RawSurfaceWorld::BindDeletion`은 첫 객체 이전에 현재 보상/선택/음향 소비자를 설치하며 관찰 카운터를 게임 효과로 사용하지 않는다. [상세](docs/exe/cpp-campaign-lifetime-20261015.md).
+- [x] 실제 Player 통지의 SP 정합성 접두·현재 종속 체인·Gump 직접 가상 처리를 **88고유입력/정상반환**으로 대조했다. LocalGeyser는 같은 `SquidRewardState.geyserPool` 주소를 참조하며 기존220행을 유지한 최신221행으로 검증했다. 기존220을 다시 더하지 않는다.
+- [x] 최종 Release 게임/검사 경고0·오류0, Lifetime 집중3개 및 LocalGeyser 집중3개 실패0이다. 같은 소스의 전체 CTest **1/1·내부1,218개·실패0, 118.02초**가 통과했다. 현재/마지막 정밀 디컴파일 PC는 **VM-W11-Codex, 2026-10-15**다. 이번 단위는 원본 게임/GUI를 실행하지 않았고 보호 원본/AGENTS/dotnetpj를 변경하지 않았다.
+- [x] 인수인계 뒤 **`20261015-42 같은 월드 공통 삭제와 내용물 통지 및 자원 연결 복원 검증`**으로 로컬 커밋하며 push하지 않는다.
+- [ ] 실제 Session 후설치는 SP offset/추적 offset/첫 실제 배열/순열의 현재 상태 공급을 완성한 뒤 진행한다. ContentHost를 첫 객체 이전으로 옮기고 현재 UI 직접 가상 소비자를 공급해야 한다. AI 초기 갱신과 건설 Confirm/Notice/Clear/Place 조립도 진행 중이다. Early Missions·캠페인1-1~1-2의 완주 및 원본 동일성은 미완료이며 목표 active, DirectDraw 전체화면 오류 제외를 유지한다.
+
 ## 2026-10-15 단위51 완료: 실제 AI 생성자·목록 소유 수명 (`VM-W11-Codex`)
 
 - [x] `RawAiBrainMemory`/`RawAiBrainConstructor`에 실제0xb08본체/17목록의소유메모리·원문/필드초기화·지역/요구에너지/단방향동맹·역순소멸/본체반납을복원했다. 가짜토큰표식이아니라동일등록부의실제바이트블록을후속update/전략이공유한다. [단위51 상세](docs/exe/cpp-ai-brain-20261015.md).

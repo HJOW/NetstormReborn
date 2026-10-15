@@ -8,7 +8,7 @@
 using namespace netstorm::o;
 using namespace netstorm::test::construction;
 namespace {
-constexpr std::uint32_t kLocalGeyserCases=220,kLocalPoolCapacity=32768; // 새 고유 원본 입력과 실제 서버/예측 영역 검사 용량이다.
+constexpr std::uint32_t kLocalGeyserCases=221,kLocalPoolCapacity=32768; // 기존220입력과추가공유자원1입력및실제서버/예측영역검사용량이다.
 // fixture의 원본 사각형 입력만 제공하며 성공 좌표를 계산하지 않는다.
 FortRandomRectangle GeyserRectangle(std::uint32_t profile) {
     constexpr std::array<FortRandomRectangle,5> areas{{{16,24,48,56},{16.25F,24.5F,48.75F,56.25F},{16,24,16.5F,24.5F},{16,24,15,23},{0,0,2,2}}}; // 독립 실행기에 넘긴 같은 명시 사각형이다.
@@ -36,11 +36,14 @@ struct GeyserEnvironment {
     SquidPostPopList& recent; // 같은 최근5목록의 mutable 입력이다.
     std::span<std::uint8_t> players; // 같은 raw9Player 기록이다.
     std::span<RiftTypeRecord> types; // 실제 Pop 뒤 cost변경 입력을 적용할 같은 타입표다.
+    std::int32_t* sharedPool{}; // 연결검사는같은SquidReward전역주소를공급하며미연결검사는기존값형입력이다.
     std::uint32_t predictable{},mutation{},created{}; // 명시 설정/외부효과/생성SID 순번이다.
     double time{}; // 실제 PE TimeSeed에 넘긴 같은 벽시각이다.
     std::string trace; // 실제 외부 효과 순서다.
     // 원본 fixture와 같은 한 항목의 외부 효과를 기록한다.
     void Add(std::string value) { if (!trace.empty()) trace+='|';trace+=std::move(value); }
+    // 외부삭제/Pop효과가실제로변경하는단일현재자원저장소다.
+    std::int32_t& Pool() const { return sharedPool ? *sharedPool : state.resourcePool; }
     // 실제 함수에 해당하는 명시 장치/공간 하위만 공급한다.
     LocalGeyserHooks Hooks() {
         LocalGeyserHooks hooks;
@@ -53,7 +56,7 @@ struct GeyserEnvironment {
             return FortRandomRectangle{origin,origin,origin+32,origin+32};
         };
         hooks.negativeQuantity=[this] { Add("Assert"); };
-        hooks.destroy=[this](Sid sid,std::uint32_t flags) { CHECK(sid.value==9);Add("Destroy:"+std::to_string(sid.value)+":"+std::to_string(flags)); };
+        hooks.destroy=[this](Sid sid,std::uint32_t flags) { CHECK(sid.value==9);if (mutation==3) Pool()=12000;Add("Destroy:"+std::to_string(sid.value)+":"+std::to_string(flags)); };
         hooks.confirm=[this](const ConstructionConfirmRequest& request) {
             const std::array<std::uint32_t,10> values{request.type,Bits(request.x),Bits(request.y),request.player,request.argument,request.direction,request.flags,request.timeLow,request.timeHigh,request.quality}; // 실제 원본10인자 비트다.
             std::string text="Confirm:";
@@ -66,14 +69,15 @@ struct GeyserEnvironment {
         };
         hooks.pop=[this](Sid sid,float x,float y,std::uint32_t flags) {
             Add("Pop:"+std::to_string(sid.value)+":"+std::to_string(Bits(x))+":"+std::to_string(Bits(y))+":"+std::to_string(flags));
-            if (mutation==1) { state.resourcePool=16777217;types[122].cost=4000;recent.count=4; }
+            if (mutation==1) { Pool()=16777217;types[122].cost=4000;recent.count=4; }
+            else if (mutation==3) Pool()+=1000;
         };return hooks;
     }
 };
 }
 
-// 새 원본220행의 결과/좌표/seed/최근전체7칸/pool/수량/생성수/효과순서를 직접 대조한다.
-TEST_CASE(LocalGeyser_IndependentPeFixture) {
+// 같은원본221행을기존독립상태/실제공유자원두backend에서결과/전체저장소/효과순서까지대조한다.
+void CheckLocalGeyserFixture(bool shared) {
     std::ifstream input(NETSTORM_LOCALGEYSER_FIXTURE);if (!input) throw std::runtime_error("로컬간헐천 fixture 없음");
     std::string line;std::uint32_t count=0;
     // 사례마다 실제 원본과 같은 독립 raw 저장소를 구성한다.
@@ -105,18 +109,27 @@ TEST_CASE(LocalGeyser_IndependentPeFixture) {
         state.firstPlayerQuantity=static_cast<std::int32_t>(std::stoll(row[12]));state.lastPlayerQuantity=static_cast<std::int32_t>(std::stoll(row[13]));
         GeyserPlayers(players,Number(row[9]));if (Number(row[14])==2) { Put(players,0xb4+0x50,2,1);Put(players,0xb4+0x78,1); }
         GeyserEnvironment environment{state,recent,players,types};environment.predictable=Number(row[10]);environment.time=std::bit_cast<double>(std::stoull(row[11]));environment.mutation=Number(row[14]);
+        std::int32_t sharedPool=state.resourcePool; // 실제전역의명시초기입력이며Bind시의복사/예산snapshot이아니다.
+        if (shared) { state.resourcePool=-777;environment.sharedPool=&sharedPool; }
         RawLocalGeyser body(pool,hash,spots,types,frames,players,recent,state,environment.Hooks());CHECK(&body.Pool()==&pool);CHECK(&body.Recent()==&recent);
+        if (shared) { body.BindResourcePool(sharedPool);CHECK(&body.ResourcePool()==&sharedPool); }
         GameRandom random(Number(row[1]));LocalGeyserPoint point{Float(0xdeadbeef),Float(0xcafebabe)};std::uint32_t result=0;
         if (row[0]=="T") result=body.TryCandidate(random,GeyserRectangle(Number(row[2])),point);
         else if (row[0]=="P") body.Populate(static_cast<std::int32_t>(std::stoll(row[4])),random,GeyserRectangle(Number(row[2])));
         else if (row[0]=="G") body.Generate();else throw std::runtime_error("로컬간헐천 fixture 연산 오류");
         CHECK(result==Number(row[16]));CHECK(Bits(point.x)==Number(row[17]));CHECK(Bits(point.y)==Number(row[18]));CHECK(random.State()==Number(row[19]));
-        CHECK(recent.count==Number(row[20]));CHECK(GeyserRecent(recent)==row[21]);CHECK(std::bit_cast<std::uint32_t>(state.resourcePool)==Number(row[22]));
+        CHECK(recent.count==Number(row[20]));CHECK(GeyserRecent(recent)==row[21]);CHECK(std::bit_cast<std::uint32_t>(body.ResourcePool())==Number(row[22]));
+        if (shared) CHECK(state.resourcePool==-777);
         // 외부호출이없는행은fixture의빈열sentinel과비교하며실제관찰내용을바꾸지않는다.
         CHECK(state.firstPlayerQuantity==static_cast<std::int32_t>(std::stoll(row[23])));CHECK(environment.created==Number(row[24]));CHECK((environment.trace.empty() ? "-" : environment.trace)==row[25]);
     }
     CHECK(count==kLocalGeyserCases);
 }
+
+// 기존값형독립fixture의현재동작을유지한다.
+TEST_CASE(LocalGeyser_IndependentPeFixture) { CheckLocalGeyserFixture(false); }
+// 현재보상전역을직접참조하고삭제환급/Pop뒤현재값을다시읽으며사본은수정하지않는다.
+TEST_CASE(LocalGeyser_SharedResourcePoolPeFixture) { CheckLocalGeyserFixture(true); }
 
 // 실제 생성이 누락된 상태를 간헐천 생성 완료로 세지 않는다.
 TEST_CASE(LocalGeyser_RejectsMissingCreation) {

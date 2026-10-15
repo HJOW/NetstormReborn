@@ -1,0 +1,30 @@
+{
+  "host": "VM-W11-Codex",
+  "date": "2026-10-15",
+  "total": 88,
+  "returns": 88,
+  "native": {
+    "00490750": 82,
+    "004d55e0": 88,
+    "00463ff0": 26
+  },
+  "boundaries": {
+    "money": 41,
+    "handle": 22
+  },
+  "os_calls": 0,
+  "files": {
+    "tools/decomp_player_content_notice.py": "774ae6f88df3d80028dad2f021acce9ed6df90f41439f0d09cadad08134d7df4",
+    "tools/decomp_missionframe_oracle.py": "98987447be7aa3632aeb6337a21880d57c43ad184e3657fae4171c8e9ffb1739",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "cpppj/tests/fixtures/player-content-notice-x86.tsv": "a1959c5abc986ade068e4973b4dbd7c9202052ad9add1c648afb0602b783a68e",
+    "extracted/player-content-notice/originals/functions.tsv": "8e61cd3da491e1c03983ff123954996f731ac2c10eb9a927e6e05f928dc103fc",
+    "extracted/player-content-notice/originals/creation.c": "c5bf0a054338076f9175c5c6df768d4d6e8fabea4167f6de4095ded6842997ca",
+    "tools/ghidra/player-content-notice-functions.json": "b36418d0d8c1aa05258819cb6f5a107216a1fb537df13b11e15c11aaf54f6d7e"
+  },
+  "limits": [
+    "Player+24/실제진단접두/현재종속순회/현재Gump등록표는기계어다.SP출력과최종Gump가상handle은명시경계다.",
+    "Content삭제/empty84공통삭제는기존독립기계어근거를재사용하며신규native수로더하지않는다.",
+    "실제Session/UI설치나완주검증은아니다."
+  ]
+}

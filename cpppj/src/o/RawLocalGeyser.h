@@ -38,6 +38,11 @@ public:
     void Populate(std::int32_t quantity,GameRandom& random,FortRandomRectangle rectangle) const;
     // 00486030/00485890의 로컬 후보: 원본 rectangle 난수/반올림/포함 경계/3×3 spot 순서를 실행한다.
     bool TryCandidate(GameRandom& random,FortRandomRectangle rectangle,LocalGeyserPoint& point) const;
+    // 실제 Session은 원본00595088과 같은 SquidRewardState.geyserPool 주소를 생성/삭제 전에 연결한다.
+    // 독립 fixture는 기존 state.resourcePool을 쓰며, 연결 시 값을 복사하거나 양쪽을 동기화하지 않는다.
+    void BindResourcePool(std::int32_t& resourcePool);
+    // 현재 실제 단일 자원 저장소다. 삭제/Pop 효과 뒤에도 이 주소의 현재 값을 다시 읽는다.
+    std::int32_t& ResourcePool() const;
     // 상위가 전체 간헐천 목록이나 다른 풀을 잘못 연결하지 않도록 같은 자료 identity를 제공한다.
     const SidPool& Pool() const;
     SquidPostPopList& Recent() const;
@@ -63,5 +68,6 @@ private:
     SquidPostPopList& recent_; // 00595094/98의 최근 최대5생성 목록이며 전체 장부를 대신하지 않는다.
     LocalGeyserState& state_; // 권한/수량/자원pool/현재타입 전역의 단일 저장소다.
     LocalGeyserHooks hooks_; // 실제 설정/region 사각형/건설확정/파생수명 경계다.
+    std::int32_t* resourcePool_{}; // 후설치되면 실제 보상과 같은00595088 주소이며state의 독립검사용값은 사용하지 않는다.
 };
 }
