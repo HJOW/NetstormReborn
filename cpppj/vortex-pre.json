@@ -1,0 +1,33 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-16",
+  "last_full_refined_host": "HJOW-Athlon",
+  "last_full_refined_date": "2026-10-15",
+  "observations": 102,
+  "status": "native-102-cpp-compared-session-partial-pause-checkpoint",
+  "game_gui_runs": 0,
+  "boundary": "실제004dca50/removeAll만실행. 섬/지역/Damageable/UI는명시외부경계. 전체Player/세객체/물리목록/호출순서/정상스택과보존레지스터/쓰기주소를대조한다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_vortex_pre.py": "965f01f05b17e101679a2255a26ce0285f5b5a034cb198aa0453b689e5480652",
+    "cpppj/src/o/RawVortexPreDestroy.h": "f41911f8bcb8d611a4c1611f56abd15a3da98063a5a450181eee4e1474eb96bb",
+    "cpppj/src/o/RawVortexPreDestroy.cpp": "9311cf2a535362e333889f7fbdab9c606289af79de3d6c733a83d8a85fbbc41a",
+    "cpppj/tests/VortexPreDestroyTests.cpp": "fc5520d639e42d972e9f985f5aa34df5ce328fa81dcaa3ec2111b57804eb9c19",
+    "cpppj/tests/fixtures/vortex-pre-x86.tsv": "027a0d1edeb5d6c96d82980c3be92ce18cdc0bc8bc83c48002e22e7d952cca9c"
+  },
+  "cpp_validation": {
+    "native_rows_compared": 102,
+    "focused_tests": 2,
+    "failed_checks": 0,
+    "log": "extracted/goal-vortex-start-first-focused.log"
+  },
+  "session_integration": {
+    "protected_mission_start_tests": 3,
+    "failed_checks": 1,
+    "failure": "Tutorial5: derived Pop post-handler unsupported",
+    "tutorial1_through_4_start_checks_reached_and_passed": true,
+    "natural_gameplay_complete": false,
+    "handoff": "docs/exe/cpp-pause-handoff-20261016.md"
+  }
+}

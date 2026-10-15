@@ -1,5 +1,14 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-16 사용자 요청에 따른 일시 중단·회귀 마감 (`HJOW-Athlon`)
+
+- [x] 사용자 중단 요청에 따라 새 구현을 멈추고 `construction_audit`·`energy_finish`·`session_audit` 모두 **interrupted** 상태임을 확인했다. 재개 지시 전까지 세 서브 AI와 목표를 대기시킨다. 아래의 과거 목표 재개 절은 이번 중단 지시를 대체하지 않는다. [최신 중단 인수인계](docs/exe/cpp-pause-handoff-20261016.md)를 먼저 읽는다.
+- [x] 단위73의 Start 바인딩과 보호8미션 검사를 CMake에 등록했다. 실제 AI 이름Windows-1252/미등록 능력의 진단 뒤 계속 진행 및 필수 효과 실패의 부분쓰기 검사는 통과했다. 원본 신전 Pre004dca50/removeAll의 **102개 고유 입력** 대조와 저장소/필수 효과 검사도 통과했다. 지면 getter0046f530의 실제ret8을 확인해 관찰 ABI를 교정했으며 정상스택·보존레지스터·쓰기guard/전체Player·세객체·물리목록·효과를 보존한다.
+- [x] 같은 공통 삭제를 빌리는 `RawSurfaceWorld::CommonDeletion`, 실제 Damageable 해방/사제 생성/공통 Pre/Post 및 신전 목록·섬·Player 정리를 Session에 조립했다. 미복원 붕괴/폭발/Dude·받침 드롭은 선택 시 필수 외부 오류를 유지한다. 실제8미션 첫 실행의 Tutorial3 신전 삭제 실패는 이 연결로 해소했고, 연결 뒤 Tutorial1~4의 Load/Start 검사를 거쳐 Tutorial5에 도달했다.
+- [ ] **보존한 실패/첫 재개 지점:** Tutorial5의 **`Pop 파생 가상 후처리는 아직 지원하지 않습니다`** 예외다. Load/Start 중 어느 호출에서 실패했는지와 실제 타입/VT를 아직 분리하지 않았다. `CampaignMissionStart_ProtectedEightMissions`를 실패 상태로 그대로 보존한다. 뒤 Tutorial6·캠페인1-1/1-2가 이 순회에서 통과했다고 세지 않는다. 직전 성공 전체 기준선은 **9a8a0f8·1,309개 실패0**이며 새 변경의 집중5개는 **실패1**이다. 로그 `extracted/goal-vortex-start-first-focused.log`와 상세 인수인계를 따른다.
+- [x] 중단 마감 고정 소스 Release 재빌드는 **종료0·경고0·오류0**이다. 전체 내부 **1,314개 중 1,313개 통과·1개 실패**, CTest **0/1 통과·종료8·검사202.91초/전체202.95초**다. 실패는 위 Tutorial5 한 건이며 기존 기준선 검사는 통과했다. 로그는 `extracted/goal-pause-20261016-{build,ctest,tests,audit}.log`다. 새 신전102·기존 요구에너지2352의 SHA/고유입력 감사, Python 구문, UTF-8과 `git diff --check`는 통과했다. 기존 요구에너지 제품/fixture는 바꾸지 않고 현재 CMake3파일 SHA만 이력과 함께 갱신했다. `cpppj/mission-start-session.json`에 성공/실패와 현재 소스/로그 SHA를 구분해 보존한다.
+- [x] 현재 PC는 HJOW-Athlon이고 마지막 전체 정밀 디컴파일 PC/날짜는 **HJOW-Athlon, 2026-10-15**다. 원본 게임/GUI 실행·보호 원본/AGENTS/dotnetpj 변경·원격 push는 없다. 문서 마감 후 AGENTS.md의 최신 **YYYYMMDD-NN PJ MSG** 규칙을 다시 읽고 **`20261016-01 CP 신전 삭제 복원과 미션 시작 회귀 실패 및 중단 인수인계`**로 로컬 커밋한 뒤 목표를 **paused**로 전환한다. **Early Missions1~6 및 캠페인1-1~1-2 자연 완주·원본 동일성은 미달성**이다.
+
 ## 2026-10-15 목표 재개 후 로그인 상태 검증 중 (`HJOW-Athlon`)
 
 - [x] 새 목표 이어가기 지시와 실제 목표 상태 `active`를 확인하고 AGENTS.md·양 LEFT_JOBS·현재 작업 트리를 다시 읽었다. 기준 커밋은 `05d7cb5`이며 시작 작업 트리는 깨끗하다. 아래 중단 마감은 직전 이력으로 보존한다. 서브 AI는 재가동하지 않고 단독 진행한다.

@@ -21,6 +21,8 @@
 #include "o/RawAiBrainInitialUpdate.h"
 #include "o/RawPriestLookup.h"
 #include "o/RawRunePostPop.h"
+#include "o/RawVortexPreDestroy.h"
+#include "o/RawDamageableRelease.h"
 #include <bit>
 #include <cstdio>
 #include <stdexcept>
@@ -175,6 +177,13 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawProductionDeck> productionDeck; // 현재 Player+68의 실제 블록을 단독 소유한다.
     std::uint32_t fullDeck{},freeTechnologyType{153},templeProduct{133}; // PATCH0054db14/005412bc/0054126c의 현재 생산 전역이다.
     std::unique_ptr<RawCampaignProductionBindings> production; // 같은 현재 Factory/기술 내용물/허용 표를 조합한다.
+    DamageablePreDestroyState damageablePreState; // 같은 사제 타입을 읽는 실제 공통 삭제 전역이다.
+    DamageableReleaseState damageableReleaseState; // 해방 요청마다 같은 현재 전투 모드를 공급한다.
+    DamageablePostDestroyState damageablePostState; // 삭제 후의 현재 전투/권한 전역이다.
+    std::unique_ptr<RawDamageableRelease> damageableRelease; // 같은 풀/내용물/사제 실제 생성으로 해방한다.
+    std::unique_ptr<RawDamageablePreDestroy> damageablePre; // 공통 삭제와 같은 깊이/Graph/장부를 사용한다.
+    std::unique_ptr<RawDamageablePostDestroy> damageablePost; // 같은 실제 예약/다리/공통 후처리다.
+    std::unique_ptr<RawVortexPreDestroy> vortexPre; // 실제 신전의 목록/섬/Player 정리를 담당한다.
     std::array<FortTemplate,9> templates; // 실제 선택 자료는1번 Template에 둔다.
     std::array<FortTerritoryStream,9> streams; // 같은 Template의 실제120BYTE view다.
     std::array<std::uint8_t,180> headers{}; // 실제 Template9 header의 현재 바이트다.
@@ -401,8 +410,21 @@ struct RawCampaignSession::Impl {
         };
         InstallContents(worldHooks.assets);
         ConnectConstruction(); // 실제공통삭제후설치뒤같은noIsland VT의표면가상분배를첫객체전등록한다.
+        ConnectDamageable(); // 같은 공통 삭제와 신전/사제 해방의 파생 하위를 첫 객체 전에 연결한다.
         worldHooks.assets=construction->DestroyHooks(lifetime->DestroyHooks(hits->DestroyHooks(std::move(worldHooks.assets))));
         worldHooks.destroy=construction->Destroy(lifetime->Destroy(hits->Destroy(services.destroy)));
+        auto previousEffects=std::move(worldHooks.assets.emit); // 다른 기존 파생/전송/선택 처리기를 유지한다.
+        worldHooks.assets.emit=[this,previous=std::move(previousEffects)](const SquidDestroyEvent& event) {
+            if (Vortex(event.sid)) {
+                if (event.effect==SquidDestroyEffect::PreDestroy) { vortexPre->PreDestroy(event.sid,event.flags);return; }
+                if (event.effect==SquidDestroyEffect::PostDestroy) { damageablePostState.battle=core.ownerMode.battle;damageablePostState.boss=assetState.boss;damageablePost->PostDestroy(event.sid,event.flags);return; }
+            }
+            previous(event);
+        };
+        auto previousDestroy=std::move(worldHooks.destroy); // 실제 신전 VT의 공통+10만 추가 분배한다.
+        worldHooks.destroy=[this,previous=std::move(previousDestroy)](Sid sid,std::uint32_t flags,const SquidDestroyHooks& hooks) {
+            if (Vortex(sid)) return core.virtualDestroy.Destroy(sid,flags,hooks);return previous(sid,flags,hooks);
+        };
         worldHooks.regular=hits->Handler(combat->Handler(assetBindings->Handler(priests->RegularHandler([this](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
             if (playerRegular->Handles(sid)) return playerRegular->Handle(sid,event,count,payload);
             throw std::logic_error("캠페인 현재 Kernel의 다른 실제 Regular 부모 미연결: TYPE"+
@@ -432,6 +454,36 @@ struct RawCampaignSession::Impl {
             MakeMissionOutcomeHooks(core.pool,hp,std::move(outcomeHooks)));
         outcome->BindCurrentInputs({players,alliances,[this] { return player->State().battleOwner; },ui.demo,ui.tellBlocked});
         ConnectAi();
+    }
+    // 실제 PE의 신전 네 가상 표를 판정하며 다른 자산을 타입 이름만으로 허용하지 않는다.
+    bool Vortex(Sid sid) const {
+        const auto table=Read(core.pool.Slot(sid),0);return table==0x005196f0 || table==0x005197a8 || table==0x00519860 || table==0x00519918;
+    }
+    // 실제 Damageable 해방/공통 삭제와 신전 Pre를 같은 현재 월드에 조립한다.
+    void ConnectDamageable() {
+        DamageableReleaseHooks release;release.create=[this](std::uint32_t type,std::uint32_t flags) { return world.Create(type,flags); };
+        release.setOwner=[this](Sid sid,std::uint32_t owner) { ownership->SetOwner(sid,owner); };
+        release.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };release.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); };
+        release=MakePriestSpawnHooks(core.pool,priests->Spawn(),std::move(release));
+        damageableRelease=std::make_unique<RawDamageableRelease>(core.pool,core.types,core.spots,contentFinder,damageableReleaseState,std::move(release));
+        auto pre=services.damageablePre;FillMissing(pre.collapse);FillMissing(pre.explosion);FillMissing(pre.sound);
+        pre.validateBase=[this](Sid sid,std::uint32_t flags) { world.CommonDeletion().ValidatePre(sid,flags); };
+        pre.base=[this](Sid sid,std::uint32_t flags) { world.CommonDeletion().PreDestroy(sid,flags); };
+        pre.releaseContained=[this](Sid sid) { damageableReleaseState.battle=core.ownerMode.battle;damageableRelease->Release(sid); };
+        damageablePre=std::make_unique<RawDamageablePreDestroy>(core.pool,core.spots,contentFinder,damageablePreState,std::move(pre));priests->BindDamageable(*damageablePre);
+        auto post=services.damageablePost;FillMissing(post.dropDude);FillMissing(post.dropIsland);
+        post.regular=[this](Sid sid,std::uint32_t event,float payload,std::uint32_t count) { auto* process=core.processes.AddRegular(sid,event,payload);if (!process) throw std::bad_alloc();process->SetInitialCount(count); };
+        post.hasBridgeFall=[this](Sid sid) { return HasScheduledBridgeFall(core.processes,sid); };post.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); };
+        post.displayUpdate=[this](Sid sid) { core.display.Update(core.pool.Slot(sid)); };post.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
+        post.base=[this](Sid sid,std::uint32_t flags) { world.CommonDeletion().PostDestroy(sid,flags); };
+        damageablePost=std::make_unique<RawDamageablePostDestroy>(core.pool,core.hash,core.types,core.frames,hp,core.neighbors,damageablePostState,std::move(post));
+        VortexPreDestroyHooks vortex;vortex.islandNumber=[this](float x,float y) { return ownership->IslandNumber(x,y); };vortex.islandExists=[this](std::int32_t island) { return islands->Exists(island)!=0; };
+        vortex.islandTemple=[this](std::int32_t island) { return islands->Temple(island); };
+        vortex.clearIslandTemple=[this](std::int32_t island) { if (!islands->Exists(island)) throw std::logic_error("신전 삭제의 실제 섬 부재 진단");islands->Temple(island,0);services.ownership.refreshProduction(); };
+        vortex.islandOwner=[this](std::int32_t island,std::uint32_t owner) { islands->Owner(island,owner); };vortex.regionOwnership=[this](float x,float y) { ownership->UpdateRegion(x,y); };
+        vortex.damageablePre=[this](Sid sid,std::uint32_t flags) { damageablePre->PreDestroy(sid,flags); };vortex.refreshProduction=services.ownership.refreshProduction;
+        vortex.assertion=SessionMissing<void,std::uint32_t>();
+        vortexPre=std::make_unique<RawVortexPreDestroy>(core.pool,players,assetState.temples,assetState.residences,assetState.outposts,objectState.loadingDepth,std::move(vortex));
     }
     // 각 명시 요청에서 현재 실제 소유자/서버/권한/요새/타입만 공급한다. Player/자원/지도는 복사하지 않는다.
     void PrepareConstruction() {

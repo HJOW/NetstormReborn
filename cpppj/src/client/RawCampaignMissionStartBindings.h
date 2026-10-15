@@ -15,6 +15,7 @@ struct CampaignMissionStartEffects {
     std::function<void()> refreshCommandGump; // 실제0042e440의 현재 명령 Gump 갱신이다.
     std::function<void()> randomGeysers; // 실제00486440의 세계 랜덤 간헐천 생성이며 로컬 GenerateLocalGeysers와 다르다.
     std::function<void()> resetCamera; // 같은 실제 Session의 현재 카메라 재설정 소비자다.
+    std::function<void(std::string_view)> unknownAbilityAssertion,unknownAbilityLog; // 실제 원본의 미등록 능력 진단 뒤 계속하는 외부 경계다.
 };
 // 같은 Session/Script/장기 상태는 이 연결보다 오래 살아야 한다. 생성만으로 Start/AI를 실행하지 않는다.
 class RawCampaignMissionStartBindings {

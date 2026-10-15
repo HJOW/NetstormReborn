@@ -24,6 +24,8 @@ target_sources(netstorm PRIVATE
     RawMissionSettingsPacket.cpp RawMissionSettingsPacket.h
     # 실제 로컬 미션의 다섯 상태 블록을 공통 확정 순서로 전환한다.
     RawLocalMissionState.cpp RawLocalMissionState.h
+    # 같은 현재 신전 목록/섬/Player를 원본 PreDestroy 순서로 정리한다.
+    RawVortexPreDestroy.cpp RawVortexPreDestroy.h
     RawMissionFrameGate.cpp RawMissionFrameGate.h
     RawTutorialOne.cpp RawTutorialOne.h RawTotalMade.cpp RawTotalMade.h
     RawTutorialTwo.cpp RawTutorialTwo.h

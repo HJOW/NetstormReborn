@@ -50,6 +50,8 @@ add_executable(netstorm_tests
     FortImagePacketsTests.cpp
     MissionSettingsPacketTests.cpp
     LocalMissionStateTests.cpp
+    CampaignMissionStartTests.cpp
+    VortexPreDestroyTests.cpp
     BattleBroadcastTests.cpp
     WindowTitleTests.cpp
     CameraHomeTests.cpp
@@ -1052,3 +1054,5 @@ set_source_files_properties(MissionSettingsPacketTests.cpp PROPERTIES COMPILE_DE
     "NETSTORM_MISSION_SETTINGS_PACKET_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/mission-settings-packet-x86.tsv\"")
 set_source_files_properties(LocalMissionStateTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_LOCAL_MISSION_STATE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/local-mission-state-x86.tsv\"")
+set_source_files_properties(VortexPreDestroyTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_VORTEX_PRE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/vortex-pre-x86.tsv\"")

@@ -1,5 +1,6 @@
 // 관찰 callback으로 게임 계산을 대신하지 않고 기존 원본 몸체의 실제 Session 소비자를 공급한다.
 #include "client/RawCampaignMissionStartBindings.h"
+#include "o/OriginalText.h"
 #include <array>
 #include <cstdlib>
 #include <stdexcept>
@@ -18,13 +19,13 @@ RawCampaignMissionStartBindings::RawCampaignMissionStartBindings(RawCampaignSess
         throw std::invalid_argument("실제 MissionStart의 Script/설정초기입력/시계/UI/랜덤간헐천 경계 누락");
     start_.BindCurrentInputs({[this] { return session_.LocalOwner(); },[this] { return session_.PlayerKnown(); },[this] { return session_.Editor(); }});
 }
-// 원본 atOf의 좁은 문자열 변환은 호스트 CRT로 수행하며 실패 문자열도0 반환 의미를 유지한다.
+// 원본 atof의 좁은 문자열 변환과 현재 미션 문자열의 Windows-1252 경계를 사용한다.
 o::MissionAiSettingsHooks RawCampaignMissionStartBindings::AiHooks() {
     o::MissionAiSettingsHooks hooks;
-    hooks.get=[this](std::string_view key) { return script_.Get(key).value_or(std::string{}); };
+    hooks.get=[this](std::string_view key) { const auto bytes=o::EncodeOriginalText(script_.Get(key).value_or(std::string{}));return std::string(bytes.begin(),bytes.end()); };
     hooks.parseFloat=[](std::string_view value) { const std::string text(value);return std::strtod(text.c_str(),nullptr); };
-    hooks.unknownAbilityAssertion=[](std::string_view name) { throw std::logic_error("미션 AI의 알 수 없는 능력 이름 진단: "+std::string(name)); };
-    hooks.unknownAbilityLog=[](std::string_view name) { throw std::logic_error("미션 AI의 알 수 없는 능력 이름 기록: "+std::string(name)); };
+    hooks.unknownAbilityAssertion=[this](std::string_view name) { if (!effects_.unknownAbilityAssertion) throw std::logic_error("미션 AI의 실제 능력 이름 진단 미연결");effects_.unknownAbilityAssertion(name); };
+    hooks.unknownAbilityLog=[this](std::string_view name) { if (!effects_.unknownAbilityLog) throw std::logic_error("미션 AI의 실제 능력 이름 기록 미연결");effects_.unknownAbilityLog(name); };
     return hooks;
 }
 // 같은 현재 Script/Session과 원본 getter를 읽기 위치 그대로 연결한다.

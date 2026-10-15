@@ -219,6 +219,8 @@ void RawSurfaceWorld::BindDeletion(o::SquidReward& reward,std::function<o::Sid()
 }
 // 기존표면과후설치된공통body가읽는같은유일전역이다.
 o::SquidDeletionState& RawSurfaceWorld::DeletionState() { return impl_->deletion; }
+// BindDeletion이 교체한 현재 공통 몸체를 반환하고 별도 깊이/보상 사본을 만들지 않는다.
+o::SquidDestroyLifecycle& RawSurfaceWorld::CommonDeletion() { return *impl_->common; }
 // Fort의 원본 객체 순서를 보존하는 외부 로더는 이 경계 사이에서 Create/Pop을 직접 호출한다.
 void RawSurfaceWorld::BeginLoad() {
     auto& s=*impl_;if (s.loaded || s.loading) throw std::logic_error("raw 월드 중복 로드 시작");

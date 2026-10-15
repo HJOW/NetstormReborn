@@ -16,6 +16,7 @@
 #include "o/RawAiBrain.h"
 #include "o/SpStore.h"
 #include "o/RawPriestParticipation.h"
+#include "o/RawDamageablePostDestroy.h"
 #include "client/CameraHome.h"
 namespace netstorm::client {
 // 미션 입력/정지/UI 수명은 실제 UberGump의 현재 저장소와 동작을 빌린다.
@@ -53,6 +54,8 @@ struct RawCampaignSessionServices {
     CampaignMissionOutcomeUi missionOutcome; // 현재 미션의 실제 UI/차단 조회 경계다. Check를 호출할 때만 필요하다.
     CampaignAiServices ai; // 선택된 실제 AI 초기화/참여의 외부 경계이며 Load/프레임에서 자동 호출하지 않는다.
     CampaignProductionServices production; // 같은 Player/Factory/허용 표가 사용할 Deck의 실제 외부 입력이다.
+    o::DamageablePreDestroyHooks damageablePre; // 붕괴/폭발/음향의 실제 장치/효과 경계다. 해방/공통 삭제는 Session이 공급한다.
+    o::DamageablePostDestroyHooks damageablePost; // 드롭 Dude/받침의 실제 생성 경계다. 예약/현재 다리/공통 삭제는 Session이 공급한다.
     RawCampaignConstructionEffects construction; // 로컬 간헐천의 실제 설정/벽시각/표시/진단이며 일반 건설을 대신하지 않는다.
     o::SquidDestroyHooks deletion; // 다른 파생 삭제/선택/전송의 실제 외부 경계다.
     std::function<void(o::Sid)> unitLost; // 공통 삭제가 요청한 실제 unitLost 전역 소리를 재생한다.

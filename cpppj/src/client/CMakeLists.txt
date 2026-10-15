@@ -17,6 +17,8 @@ target_sources(netstorm PRIVATE
     RawCampaignConstructionBindings.cpp RawCampaignConstructionBindings.h
     # 같은 Player/Factory 목록과 실제 Deck으로 생산 가능 항목을 재계산한다.
     RawCampaignProductionBindings.cpp RawCampaignProductionBindings.h
+    # 실제 미션 Start의 같은 Script/Player/SP/기술/AI 설정을 연결한다.
+    RawCampaignMissionStartBindings.cpp RawCampaignMissionStartBindings.h
     CampaignClientServices.cpp CampaignClientServices.h
     ClientAudio.h
     ClientMain.cpp
