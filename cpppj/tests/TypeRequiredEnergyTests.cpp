@@ -72,6 +72,9 @@ TEST_CASE(TypeRequiredEnergy_Protected188Bindings) {
         const auto mana=entry==definitions.end() ? std::string_view{} : entry->second->String("mana").value_or("");
         CHECK(getter(static_cast<std::uint32_t>(number))==EnergyExpected(types[number],mana).expected);
     }
+    // getter 생성 뒤 같은 TYPE의 변경을 읽으며 초기 복제나 캐시를 참조하지 않는다.
+    types[69].group=0;types[69].flags2=0;types[69].level=2;types[69].theme=0;
+    CHECK(getter(69)==EnergyExpected(types[69],{}).expected);
     CHECK(Throws([&] { getter(188); }));
     CHECK(Throws([&] { netstorm::client::BindAiTypeRequiredEnergy(assets,std::span<const RiftTypeRecord>(types).first(187)); }));
 }

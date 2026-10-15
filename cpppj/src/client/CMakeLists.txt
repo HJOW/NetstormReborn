@@ -22,6 +22,7 @@ target_sources(netstorm PRIVATE
     PaletteColors.cpp PaletteColors.h
     PaletteFlash.cpp PaletteFlash.h
     GameAssets.cpp GameAssets.h
+    AiTypeRequiredEnergy.cpp AiTypeRequiredEnergy.h
     PriestPlacementAssets.cpp PriestPlacementAssets.h
     Mission.cpp Mission.h
     WindowTitle.cpp WindowTitle.h

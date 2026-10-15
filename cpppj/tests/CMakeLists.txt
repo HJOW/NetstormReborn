@@ -15,6 +15,7 @@ add_executable(netstorm_tests
     ConstructionPacketTests.cpp
     AiBrainTests.cpp
     AiBrainInitialUpdateTests.cpp
+    TypeRequiredEnergyTests.cpp
     CampaignLifetimeTests.cpp
     MissionFrameGateTests.cpp
     TutorialOneTests.cpp
@@ -998,3 +999,7 @@ set_source_files_properties(CampaignLifetimeTests.cpp PROPERTIES COMPILE_DEFINIT
 # 실제 AI 초기갱신 원문을 대조한다.
 set_source_files_properties(AiBrainInitialUpdateTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_AI_INITIAL_UPDATE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/ai-initial-update-x86.tsv\"")
+
+# 실제 TYPE mana 후처리와 같은 보호 자산 188개 공급을 대조한다.
+set_source_files_properties(TypeRequiredEnergyTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_TYPE_ENERGY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/type-required-energy-x86.tsv\"")

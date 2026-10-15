@@ -1,17 +1,18 @@
-# AI 요구 에너지 공급 중단 인수인계 (2026-10-15)
+# AI 요구 에너지 후처리와 실제 TYPE 공급 (2026-10-15)
 
-## HJOW-Athlon 재개 후 다시 중단한 현재 상태
+## HJOW-Athlon 단위62 등록·집중 검증 완료
 
-현재/마지막 정밀 디컴파일 PC는 **HJOW-Athlon, 2026-10-15**다. 사용자 요청으로 인수인계·로컬 커밋 뒤 작업을 중지한다. 아래 VM-W11-Codex 절은 이전 중단 당시 기록이며 최신 상태는 이 절을 우선한다.
+사용자의 완주 개발 재개 요청에 따라 AGENTS와 양 LEFT를 다시 읽고 단위62를 진행했다. 현재/마지막 정밀 디컴파일 PC는 **HJOW-Athlon, 2026-10-15**로 일치한다. 같은 PC의 보존 관찰과 기존 소스를 사용했으며 이번 등록 단계의 새 디컴파일·새 native 고유입력·원본 게임/GUI 실행은 없다. 아래 VM-W11-Codex 절은 이전 중단 당시 기록이며 최신 상태는 이 절을 우선한다.
 
 - `tools/decomp_type_required_energy.py`가 같은 PC의 전체 정밀 함수 범위와 실제 PATCH `0049b0d0`을 실행한다. **2,352개 고유입력·정상 반환**, TYPE500/함수 스택 밖 쓰기 및 미검토 명령 거부, 실제 반환/스택을 확인했다. 기본/명시 mana·group10·0x200000·level -2/-1/0/1/2/3/98·원소 표 NUL을 포함한다. `--verify`가 통과했다. 같은 프로브 결과를 신규 고유입력으로 중복 합산하지 않는다.
 - **CRT ASCII 소문자화6,808회와 프레임 후처리2,352회는 외부 대체**다. AST mana 파싱과 zero 생성자는 입력 공급이며 새 native 파싱 관찰이 아니다. 비ASCII CRT·손상/표 밖 입력·OOM/원본 포인터 동일성은 검증하지 않았다.
-- 미등록 `RawTypeRequiredEnergy.cpp`는 모든 mana 지정값을 순서대로 검사해 마지막 정상 문자열을 유지한다. 앞선 숫자/길이 초과 입력을 마지막 정상 속성으로 숨기지 않는다. 비정상 입력의 명시 거부는 원본 정상 반환 관찰과 구분한다.
-- `TypeRequiredEnergyTests.cpp`에 원본2352·보호188TYPE getter 공급·경계/순서3개를 작성했다. 실제 TYPE는 검사용74 수정 사본을 피하고 보호 GameAssets 전체 표를 사용한다. **새4파일과 검사1파일 모두 CMake 미등록·빌드 미실행·C++ 대조 미실행**이다. 현재 전체1,238개 통과에는 이3개가 포함되지 않는다. 실제188TYPE 비교/검증 완료를 주장하지 않는다.
-- `cpppj/type-required-energy.json`은 예전 중단 시점 SHA 목록을 새 native 후처리 보고서로 갱신했으며 상태는 **`native-postprocess-observed-product-unbuilt`**다. 보호 PE·전체 함수 범위·관찰기·현 helper·fixture SHA를 보존한다. fixture는 `cpppj/tests/fixtures/type-required-energy-x86.tsv`다.
+- `RawTypeRequiredEnergy.cpp`는 모든 mana 지정값을 순서대로 검사해 마지막 정상 문자열을 유지한다. 앞선 숫자/길이 초과 입력을 마지막 정상 속성으로 숨기지 않는다. 비정상 입력의 명시 거부는 원본 정상 반환 관찰과 구분한다.
+- 제품4파일을 `src/o`·`src/client` CMake에, `TypeRequiredEnergyTests.cpp`와 `NETSTORM_TYPE_ENERGY_FIXTURE`를 tests CMake에 등록했다. **Release 빌드 종료0·경고0·오류0, 28.95초**이며 새 객체2개와 게임/검사 링크를 갱신했다. 빌드는 `cmake --build cpppj/build --config Release --parallel 3 -- /p:CL_MPcount=3`으로 실행했다.
+- **집중3개·실패0**이다. 보존2352 입력의 실제 후처리 문자열과 C++를 대조했고, 보호 GameAssets의 실제116 AST/내부·빈 타입을 같은188TYPE getter로 읽어 원본 관찰에 대응시켰다. 검사용74 수정 사본은 사용하지 않았다. getter 생성 뒤 같은 TYPE69를 바꿔 현재 값을 읽는 것도 검사했다. 세 번째 검사는 속성 순서·숫자/길이 초과·비ASCII·판본/원소표 밖의 명시 거부를 다룬다. 앞서 통과한 전체1,238개에는 이3개가 없었으므로 이번 집중 결과와 구분한다.
+- `cpppj/type-required-energy.json` 상태는 **`native-postprocess-compared-product-registered`**다. 보호 PE·전체 함수 범위·관찰기·제품/검사/CMake·fixture SHA와 실제 집중 실행 내역을 보존한다. fixture는 `cpppj/tests/fixtures/type-required-energy-x86.tsv`, 로그는 `extracted/goal-type-energy-build.log`·`goal-type-energy-focused.log`다. 보고서 `--verify`는 보존 바이트/고유입력/관찰 경계 감사이며 C++ 검사를 대신하지 않는다.
 - 기존 `invalidGraph`의 필수 현재 getter는 별도 단위61에서 검증을 완료했다. [현재 그래프 연결](cpp-ai-current-graph-20261015.md)을 따른다. 기존 생성자160/회복4539 재검증과 SP/AI 공통 전체1,238개 통과는 이번2352 native 관찰과 구분한다. 실제 Session의 AI 생성/초기 갱신/전략 활성화는 여전히 남는다.
 
-재개 시 AGENTS·양 LEFT와 호스트 규칙을 먼저 확인한다. 현재4파일을 `src/o`/`src/client` CMake에 등록하고 검사1파일과 `NETSTORM_TYPE_ENERGY_FIXTURE`를 tests CMake에 등록한 뒤 Release·새3개 대조를 실행한다. 숫자/길이 초과/비ASCII는 정상 native 반환 수에 넣지 않는다. 같은 현재 TYPE/AST의 수명과 미래 TYPE 변경 시 재계산/실제 저장+a0 차이는 아래 기존 주의사항을 유지한다. 사용자 재개 요청 전에는 이 절의 후속을 진행하지 않는다.
+숫자/길이 초과/비ASCII의 명시 거부는 정상 native 반환 수에 넣지 않는다. 같은 현재 TYPE/AST의 수명과 미래 TYPE 변경 시 재계산/실제 저장+a0 차이는 아래 기존 주의사항을 유지한다. 같은 Session의 AI 생성자/초기 갱신에 getter를 공급하는 연결과 실제 AI 전략 활성화는 다음 작업이다. 이 모듈의2352/188/집중3개 통과를 AI 활성화·건설·미션 자연 완주의 근거로 사용하지 않는다. 전체 CTest 결과는 별도 공용 최종 검증 기록을 따른다.
 
 ## 이전 VM-W11-Codex 중단 기록
 

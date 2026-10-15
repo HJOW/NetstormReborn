@@ -2,7 +2,7 @@
   "host": "HJOW-Athlon",
   "date": "2026-10-15",
   "observations": 2352,
-  "status": "native-postprocess-observed-product-unbuilt",
+  "status": "native-postprocess-compared-product-registered",
   "normal_return": true,
   "os_calls": 0,
   "native_entry": "0049b0d0",
@@ -15,7 +15,7 @@
     "mana AST parsing and zero constructor are supplied inputs, not native parser observations",
     "ASCII CRT conversion and frame postprocess are explicit external substitutions",
     "Only TYPE500 and stack writes allowed; no original game or OS execution",
-    "Product comparison and actual188TYPE bindings require separate C++ tests"
+    "C++2352 postprocess comparisons and actual188TYPE bindings passed; Session AI activation and strategy remain separate work"
   ],
   "sha256": {
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
@@ -26,6 +26,25 @@
     "cpppj/src/o/RawTypeRequiredEnergy.cpp": "64dd0667cb8f822650af1318ac91bdc65618ae1da3f05a97cc3296c4dbccefbc",
     "cpppj/src/client/AiTypeRequiredEnergy.h": "fc68f0306d0807515cdec66743f6641c986a4585e9a7de64af32fda30be05ef6",
     "cpppj/src/client/AiTypeRequiredEnergy.cpp": "869c8193f7f74d8497a610fa893d5aba1854ced7da71e0db7709c31f9dd6d31f",
-    "cpppj/tests/fixtures/type-required-energy-x86.tsv": "8bcb3e215c958f5df0a395365059f5481801b1660569f2f04c0720f394f14f4c"
+    "cpppj/tests/fixtures/type-required-energy-x86.tsv": "8bcb3e215c958f5df0a395365059f5481801b1660569f2f04c0720f394f14f4c",
+    "cpppj/tests/TypeRequiredEnergyTests.cpp": "0802ab400413ec5da3f2d03a4ac6b6f88e2d088915646609a2ca0bb39a02b05c",
+    "cpppj/src/o/CMakeLists.txt": "f66ecd48b27ff161994c59dcb32e24610ba585e64ec2a57000224c55d8593684",
+    "cpppj/src/client/CMakeLists.txt": "6a076ef9754928bb5190c67e9c72a802629abe683a5eaf688aaf913a5194e6cb",
+    "cpppj/tests/CMakeLists.txt": "aeb57f3668c6f14d8f4f5d0e362ebae474866d1cab4f5be37f49facc69e2605a"
+  },
+  "product_validation": {
+    "configuration": "Release",
+    "build_exit_code": 0,
+    "build_warnings": 0,
+    "build_errors": 0,
+    "focused_tests": 3,
+    "failed_checks": 0,
+    "native_postprocess_rows_compared": 2352,
+    "protected_type_bindings_compared": 188,
+    "current_type_read_after_binding": true,
+    "build_command": "cmake --build cpppj/build --config Release --parallel 3 -- /p:CL_MPcount=3",
+    "test_command": "cpppj/build/bin/Release/netstorm_tests.exe --filter TypeRequiredEnergy_",
+    "build_log": "extracted/goal-type-energy-build.log",
+    "test_log": "extracted/goal-type-energy-focused.log"
   }
 }

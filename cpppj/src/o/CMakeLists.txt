@@ -13,6 +13,7 @@ target_sources(netstorm PRIVATE
     RawConstructionPacket.cpp RawConstructionPacket.h
     RawAiBrain.cpp RawAiBrain.h
     RawAiBrainInitialUpdate.cpp RawAiBrainInitialUpdate.h
+    RawTypeRequiredEnergy.cpp RawTypeRequiredEnergy.h
     RawPlayerContentNotice.cpp RawPlayerContentNotice.h
     RawSpStoreNoticeBindings.cpp RawSpStoreNoticeBindings.h
     RawRainVortexDraw.cpp RawRainVortexDraw.h
