@@ -1,5 +1,12 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-15 단위56 완료: SP 저장소와 Player 통지의 현재 조회 (`VM-W11-Codex`)
+
+- [x] `ScrambledSpStore`가 실제 순열·첫 배열 주소를 소유하고 기존 사제 추적 offset 주소를 직접 공유한다. `RawSpStoreNoticeBindings`와 현재 bool 조회로 Player 통지가 사본 없이 현재 SP 상태를 읽는다. 임시 참조/늦은 연결은 거부한다. [상세](docs/exe/cpp-sp-store-notice-20261015.md).
+- [x] 기존 원본 **SP61·Player88**을 재실행해 fixture SHA가 전후 완전히 같음을 확인했다. 신규 고유입력으로 다시 세지 않는다. 최종 Release 경고0·오류0, 집중4개 및 전체 **1,233개 실패0·112.41초**가 통과했다. 현재/마지막 정밀 PC는 **VM-W11-Codex, 2026-10-15**다.
+- [ ] RawPriestRegen의 observed/gate/sentinel 현재 getter 연결은 설계만 남겼고 새 제품/검사/도구 구현은0이다. 다음 재개 때 중립 효과/측정 뒤 실제 읽기 순서와 같은 추적 주소를 보존해야 한다. 사용자 요청으로 여기서 추가 구현 없이 대기한다.
+- [x] 인수인계 뒤 **`20261015-46 실제 SP 저장소와 Player 통지의 현재 상태 연결 검증`**으로 로컬 커밋하며 push하지 않는다. 보호 원본/AGENTS/dotnetpj 변경과 원본 게임 실행은 없다.
+
 ## 2026-10-15 단위55 완료: 실제 AI 초기 갱신 (`VM-W11-Codex`)
 
 - [x] `RawAiBrainInitialUpdate`가 생성자와 같은 소유 메모리·Player 기술·실제 contained 경로를 사용한다. 이름/기술/누적 builder·원소 목록/최대 비용을 복원하며 원본에 없는 SP·AI 지갑 초기화를 추가하지 않는다. [상세](docs/exe/cpp-ai-initial-update-20261015.md).

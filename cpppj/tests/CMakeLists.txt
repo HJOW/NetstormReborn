@@ -216,6 +216,7 @@ add_executable(netstorm_tests
     RawSurfaceWorldTests.cpp
     RawPriestWorldBindingsTests.cpp
     SpRotateTests.cpp
+    SpStoreNoticeTests.cpp
     AssetPostPopTests.cpp
     BuildingSpaceTests.cpp
     ConstructionArrivalTests.cpp
@@ -700,7 +701,7 @@ set_source_files_properties(RawButtonControlsTests.cpp PROPERTIES COMPILE_DEFINI
     "NETSTORM_RAWBUTTON_VISUAL_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gumpvisual-x86.tsv\"")
 
 # SP 저장 비트의 실제 회전과 lazy 초기화가 남긴 10.78 PE 독립 출력이다.
-set_source_files_properties(SpRotateTests.cpp PROPERTIES COMPILE_DEFINITIONS
+set_source_files_properties(SpRotateTests.cpp SpStoreNoticeTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_SPROTATE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/sprotate-x86.tsv\"")
 
 # 건물 가상 postPop과 일반 Pop/Unpop 옆면의 독립 원본 관찰이다.

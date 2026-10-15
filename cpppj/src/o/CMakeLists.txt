@@ -14,6 +14,7 @@ target_sources(netstorm PRIVATE
     RawAiBrain.cpp RawAiBrain.h
     RawAiBrainInitialUpdate.cpp RawAiBrainInitialUpdate.h
     RawPlayerContentNotice.cpp RawPlayerContentNotice.h
+    RawSpStoreNoticeBindings.cpp RawSpStoreNoticeBindings.h
     RawRainVortexDraw.cpp RawRainVortexDraw.h
     RawFenceTarget.cpp RawFenceTarget.h
     RawContentParentNotice.cpp RawContentParentNotice.h ContentNoticeVtables.inc

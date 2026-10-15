@@ -18,8 +18,8 @@
     "tools/decomp_sprotate_oracle.py": "798acdfe3a9c1be1d6bb1ab15511bd75c0c74012abf15c19c5d2befefecade01",
     "tools/decomp_reward_oracle.py": "ca25b2b1befd0f4626759c17dde1af5eb080e86e4137f7a2b384d97f25a7a143",
     "tools/ghidra/sprotate-functions.json": "1ad70ea92aa2069002ac34330870cb26ac271dfb5b9b14fca9fc55b5fdf50d8e",
-    "cpppj/src/o/SpStore.h": "7d09956fdf584f91daca580aa6da0c011431600fcb8128959e5c03b5964d6a5e",
-    "cpppj/src/o/SpStore.cpp": "61723355bccecc352ff415d79434767fec6bfb776ba411cb096bb8b2046fd37a",
+    "cpppj/src/o/SpStore.h": "88a9d2f2913cefc4429ab312a841c01b4405fd5e3799a2d630c1262f66588030",
+    "cpppj/src/o/SpStore.cpp": "2319a90807d423b72b0e47e51101bc9ea1618f234c65e26b704c017313f4268a",
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
     "extracted\\sprotate\\originals\\creation.c": "2c407d8ca6a3c832e492e2f64b97f8add204cc441b55e98174cd1e8d6f2eec33",
     "extracted\\sprotate\\originals\\functions.tsv": "4b346b6a4a9e47db02f5a57e2ab19364f830bfb6a861d3a4d9926201f7d9f99b"
@@ -28,5 +28,13 @@
     "malloc(0x24)/시각 재시드만 대체",
     "게임/GUI 실행 없음",
     "CD에는 이 SP 회전 몸체가 없음"
-  ]
+  ],
+  "revalidated": {
+    "host": "VM-W11-Codex",
+    "date": "2026-10-15",
+    "unique_inputs": 61,
+    "additional_unique_inputs": 0,
+    "unchanged_fixture_sha256": "4497a9bc627a0a0ce2dc2da721c4c5e2599e5f07796a1009e3bbfcbc54d4fefc",
+    "note": "?? ???? ?? ?? ??? ???? ? ??? ?? ??61??? ????? ?? ?? SHA? ????."
+  }
 }

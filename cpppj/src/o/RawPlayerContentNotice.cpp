@@ -23,17 +23,17 @@ RawPlayerContentNotice::RawPlayerContentNotice(const SidPool& pool,PlayerContent
 // Player주소에서얻은같은SID로현재종속체인을읽으며진단접두도원본순서대로실행한다.
 void RawPlayerContentNotice::Notify(Sid parent,std::uint32_t form,std::uint32_t reason) const {
     auto fallback=state_.fallbackCode; // 원본EAX는첫비교직후읽고SP조회가없으면뒤조건에서도보존한다.
-    if (state_.cursorA!=state_.cursorB) state_.problemCode=fallback;
+    if (state_.cursorA.Read()!=state_.cursorB.Read()) state_.problemCode=fallback;
     if (state_.moneyChecks) {
-        if (state_.battleShown) {
+        if (state_.battleShown.Read()) {
             const auto money=hooks_.money(state_.localPlayer); // 출력float는조건부조회에서한번저장한현재SP다.
             fallback=state_.fallbackCode;
             if (money>kMoneyThreshold) state_.problemCode=fallback;
         }
         --state_.moneyChecks;
     }
-    if (!state_.firstSpPool) state_.problemCode=fallback;
-    if (state_.firstPermutation==-1) state_.problemCode=fallback;
+    if (!state_.firstSpPool.Read()) state_.problemCode=fallback;
+    if (state_.firstPermutation.Read()==-1) state_.problemCode=fallback;
     Sid current{static_cast<std::uint16_t>(NoticeWord(pool_.Slot(parent),6,2))};std::unordered_set<std::uint16_t> visited;
     // 현재head는진단/SP효과가끝난뒤읽으며각next는UI조회/처리전에보존한다.
     while (current.value) {
