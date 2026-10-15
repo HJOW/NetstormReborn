@@ -47,6 +47,9 @@ public:
     bool Poll(InputEvent event);
     // 화면 전환/포커스 상실 때 실제 캡처 처리기에 화면 밖 release를 전달한다.
     void Cancel();
+    // 0047d890/CD004773a0: 현재 캡처/dialog/루트에 생산 갱신 사건을 원본 Route 순서로 분배한다.
+    // 생산 패널 노드가 아직 없으면 실제 트리의 미처리 반환을 유지한다.
+    void RefreshProduction();
     // 현재 raw value/pressed 중 하나라도 비영인 첫 돌 버튼 번호다.
     std::optional<int> Pressed() const;
     // 커서가 월드로 이동해도 release를 같은 raw 캡처에 먼저 전달할지 판정한다.

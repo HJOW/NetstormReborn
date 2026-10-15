@@ -131,7 +131,7 @@ void UberGump::ClearWorld() {
     client_.ClearThunderFlashes();
     userInput_.reset(); if (worldProcess_) client_.GetKernel().Remove(worldProcess_);
     world_=nullptr; worldProcess_=0;
-    if (client_.Audio()) client_.Audio()->SetView({0,0,0,0,client_.GetScreen().Width(),client_.GetScreen().Height()});
+    client_.WorldAudio().SetView({0,0,0,0,client_.GetScreen().Width(),client_.GetScreen().Height()});
 }
 // 현재 어댑터의 월드 수명으로 원본 번개 부모 조회 경계를 제공한다.
 bool UberGump::HasWorld() const { return world_!=nullptr; }
@@ -226,7 +226,7 @@ void UberGump::BeginMission(std::string name) {
     world->elapsed=[this]() { return client_.Time().delta; }; world->paused=[this]() { return client_.Paused(); };
     world->frameTime=[this]() { return client_.Time(); };
     // 카메라/해상도 변경 직후 위치 효과음의 기준을 갱신한다. 월드와 소리 묶음의 수신은 모두 주 스레드에서 실행한다.
-    world->soundViewChanged=[this](SoundView view) { if (client_.Audio()) client_.Audio()->SetView(view); };
+    world->soundViewChanged=[this](SoundView view) { client_.WorldAudio().SetView(view); };
     // 장치 재생성 뒤에도 현재 Renderer로 raw 변경 영역을 전달한다.
     world->surfaceDisplay={
         [this]() { return client_.GetRenderer().FullRedrawPending(); },

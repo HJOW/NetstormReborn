@@ -34,7 +34,7 @@ struct PriestShieldHooks {
     std::function<void(Sid,std::uint32_t,std::uint32_t,std::uint32_t)> attachSound;
     // noticeSound: 통지에 대응하는 소리를 재생하는 콜백.
     std::function<void(const PriestShieldNotice&)> noticeSound;
-    // 패치만 PriestImmobile을 번역하여 안내 창을 요청한다. CD에는 두 경계가 없다.
+    // 패치만 PriestImmobile을 포맷하여 Tell 섹션 이름으로 전달한다. 원본은 Xlat 번역을 호출하지 않는다. CD에는 두 경계가 없다.
     std::function<std::string(std::string_view)> translate;
     // tell: 미션 스크립트의 안내 섹션을 요청하는 콜백.
     std::function<void(std::string_view)> tell;

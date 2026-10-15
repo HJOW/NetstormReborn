@@ -118,6 +118,9 @@ public:
     void ShowScene();
     // 소리·음악 묶음. 소리를 끈 실행(noAudio)이거나 초기화 전이면 널이다.
     ClientAudio* Audio();
+    // 캠페인의 유일한 이름표/재생 계층이다. noAudio에서는 장치·스레드 없는 비활성 묶음을 빌린다.
+    // init sound 이전에는 예외다. Audio()의 noAudio/null 계약은 그대로 유지한다.
+    ClientAudio& WorldAudio();
     // 원본 Interpret Options(00435220)의 소리 부분: 설정을 다시 읽어 장치·음량·현재 곡을 맞춘다. 옵션 메뉴에서 소리 설정을 바꾼 뒤 부른다.
     void ApplyAudioOptions();
     // 월드에 붙은 번개 프로세스를 화면/월드 해제 전에 제거한다. 부모 Squid 수명을 대신하는 현재 어댑터의 경계다.
@@ -191,7 +194,8 @@ private:
     std::unique_ptr<Cursor> cursor_;
     // menu_: 메뉴·브리핑·미션 페이지와 해당 UI 동작을 관리하는 처리기 (std::unique_ptr<UberGump>).
     std::unique_ptr<UberGump> menu_;
-    std::unique_ptr<ClientAudio> audio_; // 원본 "init sound"가 만드는 소리·음악 묶음. 화면보다 먼저 닫는다.
+    std::unique_ptr<ClientAudio> audio_; // 원본 "init sound"의 실제 장치/음악 묶음. 월드 뒤·화면 전에 닫는다.
+    std::unique_ptr<ClientAudio> disabledAudio_; // noAudio 전용 실제 이름표/비활성 재생 묶음. 장치·스레드는 열지 않는다.
     // sceneVisible_: 장면 표시 여부.
     bool sceneVisible_{};
     // input_: 처리할 입력 또는 입력 분배기.

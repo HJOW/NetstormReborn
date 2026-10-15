@@ -150,11 +150,12 @@ Client::Client(ClientOptions options)
     if (g_client) throw std::logic_error("Only one client may exist");
     g_client = this;
 }
-// 화면 장치를 먼저 없앤 뒤 GDI 객체와 창을 정리한다.
+// 월드/소리 프로세스→음악·음향→화면→GDI/창 순서로 참조 대상보다 사용자를 먼저 정리한다.
 Client::~Client() {
-    audio_.reset(); // 음악 스레드를 합류하고 소리 장치를 닫는다(협조 창이 살아 있는 동안).
     menu_.reset();
     ClearThunderFlashes();
+    audio_.reset(); // 월드의 반복 소리를 멈춘 뒤 음악 스레드를 합류하고 장치를 닫는다.
+    disabledAudio_.reset(); // noAudio 이름표도 같은 월드 프로세스 해제 이후에 없앤다.
     renderer_.reset(); fonts_.reset(); cursor_.reset();
     screen_.reset();
     if (loadingFont_) DeleteObject(static_cast<HFONT>(loadingFont_));
@@ -273,7 +274,7 @@ int Client::Run() {
     configuration_.SetInt("global.ddSoftwareMouse", (mode & ScreenMode::kSoftwareMouse) != 0);
     configuration_.SetInt("global.ddFourPage", 0);
     // "init sound"(FUN_004aa600 → FUN_004a9520("thunderCrack.wav") → FUN_004aadd0): 소리 장치·음악 스레드.
-    // 장치가 없거나 열리지 않으면 소리 없이 계속 실행한다. 검사용 noAudio이면 만들지 않는다.
+    // 장치가 없거나 열리지 않으면 소리 없이 계속 실행한다. noAudio도 실제 이름표/재생 계층은 유지한다.
     if (!options_.noAudio) {
         SceneMusicHooks scene;
         // 원본 0043dad0의 전체 재표시 경계를 현재 UI 어댑터의 합성/Renderer 변경 영역에 연결한다.
@@ -290,6 +291,11 @@ int Client::Run() {
         audio_->SetView({0,0,0,0,screenWidth_,screenHeight_});
         audio_->Initialize(reinterpret_cast<std::uintptr_t>(window_), ReadAudioOptions());
         if (options_.audioMute) audio_->PushMute();
+    } else {
+        // 생성자/이름표 초기화는 OS 장치와 음악 스레드를 열지 않는다. 실제 Play가 미초기화 상태에서 0을 반환한다.
+        disabledAudio_=std::make_unique<ClientAudio>(options_.gameDirectory,options_.edition,kLanguages[static_cast<std::size_t>(languageNumber_)],
+            [this] { return clock_.WallSeconds(timeGetTime()); },timeGetTime());
+        disabledAudio_->Names().Initialize();disabledAudio_->SetView({0,0,0,0,screenWidth_,screenHeight_});
     }
     // "init kernel"(FUN_00471930): Kernel은 멤버로 이미 만들어져 있다.
     // "init renderer": 화면 장치와 같은 크기의 변경 표·프레임 캐시를 만든다.
@@ -358,6 +364,13 @@ int Client::Run() {
 
 // 소리·음악 묶음이다. noAudio이거나 초기화 전이면 널이다.
 ClientAudio* Client::Audio() { return audio_.get(); }
+
+// 월드가 사용하는 같은 이름표와 실제 SoundPlayer는 소리 옵션/장치 유무와 분리해 유지한다.
+ClientAudio& Client::WorldAudio() {
+    if (audio_) return *audio_;
+    if (disabledAudio_) return *disabledAudio_;
+    throw std::logic_error("캠페인 음향 서비스 초기화 전 접근");
+}
 
 // 설정 키 이름은 원본 Interpret Options(00435220)가 FUN_00441270으로 읽는 문자열이다(sound·music·soundQuality·soundVolume·musicVolume·maxSimulSounds·swapLeftRightSpeakers).
 // 원본 ReadInt는 키가 있고 변수의 현재 값과 다를 때만 변수를 바꾼다. 그래서 변수는 읽기 전에 기본값(setup.cfg·options.cfg의 기본값)을 가져야 하며,
@@ -576,10 +589,8 @@ void Client::ChangeResolution(int width, int height) {
         throw std::runtime_error("Unable to change window resolution");
     renderer_ = std::make_unique<Renderer>(width, height,options_.edition);
     // 메뉴/독립 검사 화면도 새 화면 크기로 위치 효과음을 계산한다. 미션은 다음 Compose/Resize에서 실제 카메라를 공급한다.
-    if (audio_) {
-        const auto previous=audio_->View();
-        audio_->SetView({previous.cameraX,previous.cameraY,previous.left,previous.top,width,height});
-    }
+    const auto previous=WorldAudio().View(); // noAudio도 같은 실제 카메라/화면 영역을 유지한다.
+    WorldAudio().SetView({previous.cameraX,previous.cameraY,previous.left,previous.top,width,height});
     sceneVisible_ = true;
     configuration_.SetInt("SCREENW", width); configuration_.SetInt("SCREENH", height);
 }

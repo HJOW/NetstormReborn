@@ -15,6 +15,8 @@ constexpr std::int8_t kButtonType=56,kStoneType=49,kBackgroundType=35;
 // Gump 기본/배경 할당 크기와 즉시 버튼 플래그다. 모든 실제 파생 노드는 별도로 소유한다.
 constexpr std::size_t kBackgroundSize=0xb8;
 constexpr std::uint32_t kInstant=4;
+// 원본 생산 목록 갱신 문자열 ID의 초기 DWORD다(PATCH00542708/CD00512890).
+constexpr std::uint32_t kRefreshProductionEvent=0x02000003;
 }
 // 기본·돌 버튼·배경은 같은 기본 노드 주소로 조회되며 저장소 이동은 하지 않는다.
 struct RawButtonControls::Impl {
@@ -175,6 +177,8 @@ void RawButtonControls::Cancel() {
     auto& state=*impl_;if (state.life.focus) state.input->Route(InputCode::kLeftButton|InputCode::kRelease,0xffffffffU,0xffffffffU);
     state.activated.reset();
 }
+// 캡처 우선 및 includeHidden=1의 실제 원본 분배이며 UI 상태를 임의 갱신하지 않는다.
+void RawButtonControls::RefreshProduction() { impl_->input->Route(kRefreshProductionEvent,0,0,true); }
 // 렌더링이 이전 어댑터의 캡처 사본을 조회하지 않게 현재 raw 상태만 읽는다.
 std::optional<int> RawButtonControls::Pressed() const {
     // 표시 명령 번호 순서는 부모 트리 방문 순서와 구별한다.

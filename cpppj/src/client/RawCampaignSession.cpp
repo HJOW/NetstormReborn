@@ -174,11 +174,12 @@ struct RawCampaignSession::Impl {
         priestEffects.repop=[this](Sid sid,std::uint32_t flags) { world.Repop(sid,flags); };
         priestEffects.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
         priestEffects.claimGround=[this](float x,float y,std::uint8_t owner) { world.SetSupportOwner(x,y,owner); };
-        FillMissing(priestEffects.ownerNotice);
+        // 사제 Owner의 004214a0도 동일한 실제 무상태 다리 진단 몸체다. 별도 AI 통지로 대체하지 않는다.
+        if (!priestEffects.ownerNotice) priestEffects.ownerNotice=[this](Sid sid) { core.building.NotifySurface(sid); };
         priestEffects.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); };
         priestEffects.dependentFound=SessionMissing<void>();priestEffects.reserveRegular=[] { return true; };
         priestEffects.shield.reserveSound=[] { return true; };
-        sounds=std::make_unique<SoundProcessSystem>(core.processes,soundState,std::move(services.sound));
+        sounds=std::make_unique<SoundProcessSystem>(core.processes,soundState,services.sound);
         priestEffects.shield.loadSound=[this](std::string_view name) { return soundNames.Lookup(name); };
         priestEffects.shield.attachSound=[this](Sid parent,std::uint32_t sound,std::uint32_t alternate,std::uint32_t flags) {
             if (!sounds->Add(parent,sound,alternate,flags)) throw std::logic_error("실제 보호막 Sound47 부착 실패");
@@ -255,7 +256,14 @@ struct RawCampaignSession::Impl {
         gunHit=std::make_unique<RawGunHit>(core.pool,core.types,hitTypes,hits->DamageHooks(GunHitHooks{SessionMissing<void,Sid,std::int32_t,std::uint8_t,Sid>(),[this](Sid sid) { core.building.NotifySurface(sid); }}));
         projectileGeometry=std::make_unique<RawProjectileGeometry>(core.pool,core.types,projectileTypes);
         auto combatEffects=services.archer;
-        FillMissing(combatEffects.animation.common.sound);
+        // 실제 SID의 현재 좌표와 같은 이름표/위치 재생 함수를 사용한다. 설치 전 world_ UI 포인터를 캡처하지 않는다.
+        if (!combatEffects.animation.common.sound) combatEffects.animation.common.sound=[this](Sid sid,std::string_view name) {
+            const auto raw=core.pool.Slot(sid); // 비정렬 원본 float 좌표를 읽는 현재 부모 슬롯이다.
+            std::array<std::uint32_t,2> bits{}; // little endian x/y의 원본 DWORD 비트다.
+            // 두 좌표의 각 네 바이트를 정확한 자리로 조립한다.
+            for (std::size_t i=0;i<4;++i) { bits[0]|=std::uint32_t(raw[14+i])<<(8*i);bits[1]|=std::uint32_t(raw[18+i])<<(8*i); }
+            services.sound.playOnceAt(std::bit_cast<float>(bits[0]),std::bit_cast<float>(bits[1]),soundNames.Lookup(name),0,0);
+        };
         FillMissing(combatEffects.animation.common.targetPoint);
         combatEffects.missile.muzzle=[this](Sid sid) { return projectileGeometry->ArcherMuzzle(sid); };
         combatEffects.missile.targetDimensions=[this](Sid sid) { return projectileGeometry->Dimensions(sid); };
