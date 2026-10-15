@@ -1,0 +1,31 @@
+{
+  "host": "VM-W11-Codex",
+  "date": "2026-10-15",
+  "counts": {
+    "originals": 52,
+    "originalCD": 52,
+    "stage": 266
+  },
+  "unique_inputs": 370,
+  "instructions": 26216,
+  "boundaries": [
+    "debug-assertion",
+    "stage-advance",
+    "graph-getter",
+    "SP-getter",
+    "geyser-spawn",
+    "tutorial-totalmade-getter"
+  ],
+  "normal_returns": true,
+  "sha256": {
+    "tools\\decomp_tutorial_one.py": "83cda6d0c5e588e755f4672054d5e7ae4f8d0e9eeef3fdf18f253773a7fcc62d",
+    "cpppj\\tests\\fixtures\\tutorial-one-x86.tsv": "c9b60f7db8aa3bdf4d2ced899288da045f3412f80a06af30b51139e7e20363e2",
+    "tools\\ghidra\\tutorial-one-functions.json": "077ff622a03aa463a173200cd706d17fa29d538842477e7b332c1e53319ca88c",
+    "originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted\\tutorial-one\\originals\\creation.c": "20110b7fe0e1926b85183590a1f78039777484391902e5319f7b6841f3b66922",
+    "extracted\\tutorial-one\\originals\\functions.tsv": "4f383398611f9744ad2274046f6ab5fbbd18917dff5e9949a24421e9bbba7f3a",
+    "originalCD\\NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "extracted\\tutorial-one\\originalCD\\creation.c": "1982d7be202da1fd06e4b78105c97f035f12e54f1fc481ca56e00036b6e6a9a8",
+    "extracted\\tutorial-one\\originalCD\\functions.tsv": "606711a2c0cea0547bbb45fb505def2d9f478589bdf643028a5b4317a78ae677"
+  }
+}

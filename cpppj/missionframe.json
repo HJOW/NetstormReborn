@@ -1,0 +1,51 @@
+{
+  "host": "VM-W11-Codex",
+  "date": "2026-10-15",
+  "edition": "10.78",
+  "total": 328,
+  "returns": 328,
+  "native": {
+    "Frame": 265,
+    "Advance": 48,
+    "Pause": 9,
+    "Postpone": 6
+  },
+  "boundaries": {
+    "O": 225,
+    "Q": 77,
+    "D": 84,
+    "S": 25,
+    "G": 53,
+    "B": 16,
+    "R": 5,
+    "K": 9,
+    "L": 7,
+    "E": 6,
+    "T1": 5,
+    "T2": 3,
+    "T3": 2,
+    "T4": 2,
+    "T5": 2,
+    "T6": 2,
+    "P": 5
+  },
+  "os_calls": 0,
+  "functions": {
+    "Frame": 4994240,
+    "Advance": 4994032,
+    "Pause": 4991552,
+    "Postpone": 4993392
+  },
+  "files": {
+    "tools/decomp_missionframe_oracle.py": "98987447be7aa3632aeb6337a21880d57c43ad184e3657fae4171c8e9ffb1739",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "cpppj/tests/fixtures/missionframe-x86.tsv": "40182df69191a2950fd1e73c1c6e150504556aa279e69aac5bcf34ba8398796e",
+    "extracted/missionframe/assembly.txt": "8d8865df92c0d4337ee953743d3d5d7aa3d48b44358b04bbb8fa92241b1d69fb",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646"
+  },
+  "limits": [
+    "승패/Tell/list/demo/Tutorial1~6/시계 깊이/UI 조회는 명시 외부 경계이며 실제 게임 실행이 아니다.",
+    "프레임 분기/필드/10·7카운터/float지연+double시각/단계char/기한·순서·반환은 실제 원본 바이트다.",
+    "PATCH 전용이며 CD 대응·실제 미션 생성/Ready/login·UI 등록/완주/진행 저장은 검증하지 않는다."
+  ]
+}

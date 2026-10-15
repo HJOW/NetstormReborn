@@ -2,6 +2,8 @@
 # (첫 구성 때 인터넷에서 내려받을 것이 없다).
 # 테스트 파일을 만들면 아래 목록에 더한다. 파일 안의 TEST_CASE 는 자동으로 등록된다.
 add_executable(netstorm_tests
+    MissionFrameGateTests.cpp
+    TutorialOneTests.cpp
     WarningTests.cpp
     RainDrawTests.cpp
     FenceTargetTests.cpp
@@ -916,3 +918,9 @@ set_source_files_properties(RainDrawTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 원본 메시지 표/기한/idle의 명시 경계 관찰이다.
 set_source_files_properties(WarningTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_WARNINGS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/warnings-x86.tsv\"")
+
+# 실제 미션 공통 게이트와 Early1/Totalmade의 독립 원본 입력 경로다.
+set_source_files_properties(MissionFrameGateTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_MISSIONFRAME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/missionframe-x86.tsv\"")
+set_source_files_properties(TutorialOneTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_TUTORIAL_ONE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/tutorial-one-x86.tsv\"")
