@@ -15,6 +15,22 @@ template<class Function> const Function& Required(const Function& hook,const cha
     if (!hook) throw std::logic_error(std::string("HTML 실제 효과 미연결: ")+name);return hook;
 }
 }
+// 인용 전/안의 '>'와 첫 NUL은 원본처럼 중단하며 이름/프레임 바이트는 정규화하지 않는다.
+std::string HtmlPictureText(std::string_view raw) {
+    raw=raw.substr(0,raw.find('\0'));std::string result="~[I";std::size_t position=0;
+    // 태그 이름 뒤 공백/속성을 해석하지 않고 원본 첫 따옴표만 찾는다.
+    while (position<raw.size() && raw[position]!='>' && raw[position]!='"') ++position;
+    if (position<raw.size() && raw[position]=='"') {
+        ++position;
+        // 인용 내부도 다음 따옴표/꺾쇠에서 끝나며 HTML entity나 이스케이프를 풀지 않는다.
+        while (position<raw.size() && raw[position]!='>' && raw[position]!='"') result+=raw[position++];
+    }
+    result+=']';return result;
+}
+// 변환은 기본 HTML 상태를 바꾸지 않으며 리소스는 기존 다중 줄 파서에서 해석한다.
+void BindHtmlPictureText(HtmlTextParserHooks& hooks) {
+    hooks.picture=[](HtmlTextParserState&,std::string_view raw) { return HtmlPictureText(raw); }; // 원본 helper의 정확한 바이트 출력을 공급한다.
+}
 // 현재 객체의 수명을 빌리며 생성 시 게임/UI/외부 효과는 실행하지 않는다.
 HtmlTextParser::HtmlTextParser(HtmlTextParserState& state,HtmlTextParserGlobals& globals,HtmlTextParserHooks hooks,o::OriginalEdition edition)
     :state_(state),globals_(globals),hooks_(std::move(hooks)),edition_(edition) {}

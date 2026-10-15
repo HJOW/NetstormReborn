@@ -3,6 +3,7 @@
 #include "client/HtmlTextParser.h"
 #include "client/StyleText.h"
 #include <fstream>
+#include <filesystem>
 #include <sstream>
 #include <stdexcept>
 
@@ -90,4 +91,20 @@ TEST_CASE(HtmlTextParser_InlineStyleTextIntegration) {
         if (text=="open") { open=true;CHECK(node.context[3]==2); }
     }
     CHECK(plain=="walk edge and open.\n" && edge && open);
+}
+// 새 그림 helper 입력만 두 PE에서 실제 실행한 바이트/커서/현재 상태를 전수 대조한다.
+TEST_CASE(HtmlTextParser_PictureIndependentPeFixture) {
+    std::ifstream input(std::filesystem::path(__FILE__).parent_path()/"fixtures/htmlpicture-x86.tsv");CHECK(input.good());std::string line;std::size_t count=0;
+    // 그림 helper는 실제 출력만 공급하며 자산 이름 해석은 후속 StyleTextMarkup의 책임이다.
+    while (std::getline(input,line)) {
+        if (line.empty() || line.front()=='#') continue;
+        const auto row=Columns(line);CHECK(row.size()==14);if (row.size()!=14) continue;
+        HtmlTextParserState state;state.shown=static_cast<std::uint32_t>(std::stoul(row[3]));state.hiddenDepth=static_cast<std::uint32_t>(std::stoul(row[4]));
+        HtmlTextParserGlobals globals{static_cast<std::uint32_t>(std::stoul(row[5]))};HtmlTextParserHooks hooks;BindHtmlPictureText(hooks);
+        HtmlTextParser parser(state,globals,hooks,row[0]=="originals" ? netstorm::o::OriginalEdition::Patch1078 : netstorm::o::OriginalEdition::Cd1072);
+        CHECK(parser.Parse(Unhex(row[1]),std::stoi(row[2]))==Unhex(row[6]));CHECK(state.inputOffset==std::stoul(row[7]));
+        CHECK(state.shown==std::stoul(row[8]) && state.hiddenDepth==std::stoul(row[9]));CHECK(state.inTag==std::stoul(row[10]));
+        CHECK(state.textAllowed==std::stoul(row[11]) && state.afterHeading==std::stoul(row[12]));CHECK(globals.suppressParagraph==std::stoul(row[13]));++count;
+    }
+    CHECK(count==276);
 }

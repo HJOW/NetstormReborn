@@ -31,6 +31,10 @@ struct HtmlTextParserHooks {
     std::function<void(HtmlTextParserState&,std::string_view)> beforeClose; // virtual1: 닫힘에서 '/'로 이동한 뒤 호출한다. 기본 VT는 실제 noop다.
     std::function<void(HtmlTextParserState&,std::string_view)> afterTag; // virtual2: '>'를 읽고 inTag=0을 쓴 뒤 호출한다. 기본 VT는 현재 인자 반환만 한다.
 };
+// PATCH0046bf40/CD00495310: 첫 따옴표의 내부를 ~[I...]로 옮긴다. 자산 해석/그림 출력은 수행하지 않는다.
+std::string HtmlPictureText(std::string_view raw);
+// 실제 그림 문자열 helper를 picture 효과에 연결한다. 이후 StyleTextMarkup의 실제 자산 연결은 별도로 필요하다.
+void BindHtmlPictureText(HtmlTextParserHooks& hooks);
 // PATCH0046bea0/bed0/bf00/c090/c810의 기본 변환이다. Config나 게임 명령을 직접 재구현하지 않는다.
 class HtmlTextParser {
 public:

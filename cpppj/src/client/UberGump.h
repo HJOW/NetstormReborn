@@ -3,6 +3,7 @@
 #include "client/Gump.h"
 #include "client/RawButtonControls.h"
 #include "client/ScriptCommand.h"
+#include "client/HtmlTextParser.h"
 #include "client/State.h"
 #include "client/Mission.h"
 #include "client/VFXDraw.h"
@@ -16,6 +17,7 @@ class Client;
 class GameWorld;
 class UserInput;
 class WarningMessages;
+class DialogBodyLayout;
 // 메뉴·브리핑·미션 페이지와 해당 UI 동작을 관리하는 처리기이다.
 class UberGump {
 public:
@@ -85,6 +87,8 @@ private:
     std::unique_ptr<RawButtonControls> rawButtons_; // 돌 버튼은 실제 공유 트리/수명/캡처를 사용한다. input_은 메뉴 행/판정 보고용이다.
     std::unique_ptr<WarningMessages> warnings_; // 원본의 모달이 아닌10초 글자 안내와 실제 StyleText/Gump 수명이다.
     ScriptStringRing scriptStrings_; // 입력 큐에 예약한 문자열의 원본80칸 수명이며 페이지가 바뀌어도 보존한다.
+    std::unique_ptr<DialogBodyLayout> dialogBody_; // 현재페이지의실제StyleText입력/표시복제를소유하며Compose때효과를재실행하지않는다.
+    HtmlTextParserGlobals htmlGlobals_; // 원본의페이지간공유P억제전역이다.
     std::uint32_t buttonTextureType_{},buttonTextureFrame_{}; // 실제 A00 배경 생성자에 전달할 타입/프레임 번호다.
     // scripts_: 스크립트.
     std::map<std::string, std::unique_ptr<o::Config>> scripts_;

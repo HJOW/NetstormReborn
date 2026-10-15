@@ -1,0 +1,24 @@
+{
+  "host": "VM-W11-Codex",
+  "date": "2026-10-15",
+  "unique_inputs": 276,
+  "returns": {
+    "originals": 138,
+    "originalCD": 138
+  },
+  "instructions": {
+    "originals": 63796,
+    "originalCD": 59636
+  },
+  "os_calls": 0,
+  "boundaries": [
+    "CRT tolower signed input/ASCII mapping only"
+  ],
+  "files": {
+    "tools/decomp_htmlpicture_oracle.py": "7a20b793ec628b780db6dabb05d3de2aab0df490e82d510b93776fefb0aecc0a",
+    "tools/decomp_htmltext_oracle.py": "577cd2e9e96ea6ce039fbc05baa37142437cce1f4d3f33160c71f92c4c4b8ef7",
+    "cpppj/tests/fixtures/htmlpicture-x86.tsv": "123b57dcc7794d9c5dc0c5dc4fe21c57c0f0901da4f2a428fc08353721ee2f5c",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+  }
+}

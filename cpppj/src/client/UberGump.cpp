@@ -11,6 +11,7 @@
 #include "client/UserInput.h"
 #include "client/WindowTitle.h"
 #include "client/WarningMessages.h"
+#include "client/DialogBodyLayout.h"
 #include "o/OriginalText.h"
 #include "o/Template.h"
 #include <algorithm>
@@ -81,22 +82,6 @@ std::string Replace(std::string text, std::string_view from, std::string_view to
 std::string FontBytes(std::string_view text) {
     const auto encoded = o::EncodeOriginalText(text); return std::string(encoded.begin(), encoded.end());
 }
-// 영어 원문을 원본 비트맵 글꼴의 전진 폭으로 줄 바꿈한다.
-std::vector<std::string> Wrap(const BitmapFont& font, std::string_view text, int width) {
-    std::vector<std::string> lines; std::istringstream words{std::string(text)}; std::string word, line;
-    // 단어 우선으로 줄을 나누고 긴 단어는 글자 경계에서 나눈다.
-    while (words >> word) {
-        if (!line.empty() && font.Measure(line + " " + word) > width) { lines.push_back(line); line.clear(); }
-        if (!line.empty()) line += ' ';
-        // 빈 줄에서도 넘치는 단어는 한 바이트씩 나눈다.
-        for (const char ch : word) {
-            if (!line.empty() && font.Measure(line + ch) > width) { lines.push_back(line); line.clear(); }
-            line += ch;
-        }
-    }
-    if (!line.empty()) lines.push_back(line);
-    return lines;
-}
 // 현재 단계에서 실제 처리 경로가 있는 메뉴 명령만 활성화한다.
 bool Supported(std::string_view command) {
     const auto name = o::AsciiLower(command);
@@ -131,6 +116,7 @@ UberGump::UberGump(Client& client) : client_(client) {
     warnings_=std::make_unique<WarningMessages>(client_.Fonts(),client_.GetScreen().Colors(),[this] { return client_.WallSeconds(); },[this] {
         client_.WorldAudio().Sounds().PlayByName("newWarnMessage.wav",0,0,0,0,0);
     });
+    dialogBody_=std::make_unique<DialogBodyLayout>(client_.Fonts(),client_.GetScreen().Colors(),client_.Assets(),client_.Assets().Edition());
     MainMenu(); Compose(); client_.ShowScene();
 }
 // 입력 참조를 먼저 없애고 커널이 소유한 월드를 이 구현 파일에서 제거한다.
@@ -203,6 +189,11 @@ bool UberGump::TryTell(std::string target,bool briefing) {
     // 같은 페이지의 여러 명령을 첫 상태전환 하나로 줄이지 않고 실제40칸 입력 큐에 넣는다.
     for (const auto& command:parsed.commands) QueueScriptCommand(FontBytes(command),client_.Input(),scriptStrings_,commands);
     if (!parsed.commands.empty() && parsed.paragraphs.empty() && parsed.items.empty()) { rebuild_=true;return true; }
+    HtmlTextParserState htmlState;HtmlTextParserHooks htmlHooks; // 원본처럼새페이지는기본shown=1의본문변환상태로시작한다.
+    htmlHooks.background=[&](HtmlTextParserState&,std::string_view name) { parsed.background=std::string(name); }; // 실제배경이름을현재페이지에보관하고기존VFS배경표시경로에전달한다.
+    BindHtmlPictureText(htmlHooks); // 원본인용그림표기를실제Markup/SHP를읽는본문버퍼에전달한다.
+    const std::array<std::uint32_t,8> context{0,0,client_.GetScreen().Colors().basic[7],0,0,0,1,1}; // 실제기본TextGump의font0/normal/흰색/그림자오프셋문맥이다.
+    dialogBody_->SetBody(FontBytes(parsed.htmlBody),context,htmlState,htmlGlobals_,std::move(htmlHooks));
     page_=std::move(parsed);
     ExpandMenus(page_);
     if (page_.items.empty()) page_.items.push_back({"OK", {"DoNothing", "0"}});
@@ -456,7 +447,7 @@ void UberGump::Compose() {
     warnings_->SetView(width,height,client_.GetScreen().Colors());
     // TextGump의 실제 기준선/내부 클립을 UI 글자 목록 끝에 제출한다.
     const auto appendWarnings=[&] { auto messages=warnings_->Text();text.insert(text.end(),std::make_move_iterator(messages.begin()),std::make_move_iterator(messages.end())); };
-    std::vector<RenderSprite> worldSprites;
+    std::vector<RenderSprite> worldSprites,dialogSprites; // 월드와본문그림은같은실제자산을읽으며UI본문목록은해당패널에만제출한다.
     client_.GetRenderer().SetOverlay(nullptr);
     if (world_ && state_.phase!=ClientPhase::LoadingMission) {
         world_->Resize(width,height); worldSprites=world_->Sprites();
@@ -535,15 +526,9 @@ void UberGump::Compose() {
                 if (it != decorations_.end()) Paste(*canvas, it->second, (width - static_cast<int>(it->second.width)) / 2, (height - static_cast<int>(it->second.height)) / 2, all);
             }
             const int contentWidth = std::min(480, width - 64), panelWidth = contentWidth + 32;
-            std::vector<RenderText> lines; int contentHeight = 0, menuRows = 0, totalButtonWidth = 0, buttons = 0;
-            // 브리핑/안내 창은 원본 캡처와 같은 제목 슬롯 3·본문 슬롯 0으로 측정하고 그린다.
-            // 도움말 문서 전용 슬롯 5는 별도 도움말 창 복원 때 사용한다(현재는 About 안내만 지원).
-            for (const auto& p : page_.paragraphs) {
-                const auto& f = p.heading ? client_.Fonts().Get(3) : client_.Fonts().Get(0, p.italic ? FontStyle::Italic : p.bold ? FontStyle::Bold : FontStyle::Normal);
-                // 줄마다 같은 원본 스타일을 보존한다.
-                for (const auto& line : Wrap(f, FontBytes(p.text), contentWidth)) { lines.push_back({&f, line, 0, contentHeight, 255, 0, {1, 1}, true, false}); contentHeight += f.Height(); }
-                contentHeight += 8;
-            }
+            int contentHeight = 0, menuRows = 0, totalButtonWidth = 0, buttons = 0; // 원본본문측정과기존목록/버튼의현재패널높이를합친다.
+            const auto measured=dialogBody_->Layout(contentWidth,{0,0},{0,0,contentWidth,height}); // 실제원본버퍼의전체줄높이를구하고inline서식은별도문단으로쪼개지않는다.
+            contentHeight=measured.height;
             // 목록과 하단 버튼의 실제 높이를 더한다.
             for (const auto& item : page_.items) {
                 if (item.menu) ++menuRows; else { ++buttons; totalButtonWidth += std::max(kButtonWidth, font.Measure(FontBytes(item.label)) + 16) + 4; }
@@ -552,8 +537,9 @@ void UberGump::Compose() {
             const int left = (width - panelWidth) / 2, top = (height - panelHeight) / 2;
             const ScreenRect panel{left, top, left + panelWidth, top + panelHeight}; Tile(*canvas, decorations_.at("A00"), panel); Bevel(*canvas, panel, light, dark);
             const int footerTop = top + panelHeight - 16 - (buttons ? 27 : 0) - menuRows * kRowHeight;
-            // 본문이 긴 원본 문서는 패널 영역까지만 표시한다. 스크롤/이미지/링크는 후속이다.
-            for (auto line : lines) if (top + 16 + line.y + line.font->Height() <= footerTop) { line.x += left + 16; line.y += top + 16; text.push_back(std::move(line)); }
+            const auto bodyLayout=dialogBody_->Layout(contentWidth,{left+16,top+16},{left+16,top+16,left+16+contentWidth,footerTop}); // 같은표시복제를현재본문내부영역에서만출력한다.
+            text.insert(text.end(),bodyLayout.text.begin(),bodyLayout.text.end());
+            dialogSprites=bodyLayout.sprites;
             int row = footerTop;
             // 캠페인 제목/완료 체크/잠금 조건은 원본 스크립트 값을 그대로 사용한다.
             for (const auto& item : page_.items) if (item.menu) {
@@ -573,7 +559,7 @@ void UberGump::Compose() {
         } else if (state_.phase == ClientPhase::LoadingMission) {
             text.push_back({&body, "Starting Mission...", (width - body.Measure("Starting Mission...")) / 2, height / 2, 255});
         }
-        appendWarnings();client_.GetRenderer().SetBackground(canvas); client_.GetRenderer().SetScene({}, std::move(text));
+        appendWarnings();client_.GetRenderer().SetBackground(canvas); client_.GetRenderer().SetScene(std::move(dialogSprites), std::move(text));
     }
     if (controls) {
         std::vector<std::string> originalLabels;originalLabels.reserve(labels_.size());

@@ -14,11 +14,13 @@
 - [x] 현재/마지막정밀디컴파일PC는 **VM-W11-Codex, 2026-10-15**다. 실제게임/GUI실행·보호원본/AGENTS/dotnetpj변경은없다. 인수인계뒤 **`20261015-37 실제 플레이어 기술 제거와 생성 및 목록 복원 검증`**으로로컬커밋하며push하지않는다.
 - [ ] 같은Session의ContentFormLifetime/삭제분배·Player부모파생통지를실제공급한뒤Start에연결한다. 기존SurfaceWorld의삭제관찰카운터를실제보상/선택효과로오인하지않도록공통Lifecycle후설치도진행중이다. 실제AI생성자/초기갱신·건설/다리/수확·완주동일성은미완료·목표active·DirectDraw전체화면오류제외다.
 
-## 2026-10-15 진행 중: 단위47 실제 Tell 본문·그림 연결 (`VM-W11-Codex`)
+## 2026-10-15 단위47 완료: 실제 Tell 본문·그림 연결 (`VM-W11-Codex`)
 
-- [x] 독립 `DialogBodyLayout`은 실제HTML→StyleText→StyleTextBuffer→RenderText로본문을소유하며집중5개통과다. 실제Compose에연결하여기존메뉴/1-1대화상자·캡처 **97상태**도통과했다. 현재미커밋UI변경은이후보를포함한다.
-- [ ] **현재중단점:** 실제Early1/2안내에는`<!...>`그림태그가있어`HTML 실제 효과 미연결: picture`로진입실패한다. 빈효과/태그제거로우회하지않으며0046bf40→기존Markup/StyleTextMarkup/실제SHP그림출력을연결중이다. 실패로그는`extracted/dialog-body-ui-progress.log`, 기존회귀통과는`extracted/dialog-body-ui-dialog.log`다. 보호originals해시/허용설정은실패에도복구했다. 이변경을완료로커밋하거나실제미션GUI정상으로세지않는다.
-- [ ] PlayerTechnology 새158입력은최초setup의PostPop타입표크기오류2개를실제188개표로교정하고집중재검사대기다. PlayerGeyserBounds439입력은통합Release경고/오류0·집중2개통과이며문서/커밋대기다. 공용빌드는root가직렬조율한다. 목표active·완주동일성미완료·DirectDraw전체화면오류제외를유지한다.
+- [x] `DialogBodyLayout`의실제HTML→ScrollingTextGumpMarkup/StyleTextMarkup/Markup→StyleTextBuffer→RenderText/RenderSprite를실제Compose에연결했다. inline색/굵기를문단으로분리하던임의Wrap/italic글꼴변경을제거하고실제폰트/원본SHP/본문clip을사용한다. [단위47 상세](docs/exe/cpp-dialog-body-layout-20261015.md).
+- [x] 실제두PE그림변환 **276고유입력/정상반환**, 최종Release게임/검사경고·오류0·HTML집중6개/본문7개실패0·근거감사/공백검사통과다. 초기그림미연결오류는실제helper/자산연결로해소했다. 원본mana가8프레임이라무효인스크립트5그림은원본의count clamp→Lookup거부를유지하며검사가정5체크만교정했다. 임의이미지를대신넣지않았다.
+- [x] 실제클론기존회귀 **97상태**·Early1/2 A/B/C 안내·MORE/BACK/OK와다음Input Warning **23상태**·완료값/다음Tutorial/옵션저장 **9상태**통과다. originals전체파일명/SHA와허용설정을복구했고B.강조가같은행에서원본색으로이어짐을육안확인했다. 실제플레이완주나전체픽셀동일성완료는아니다.
+- [x] 현재/마지막정밀PC는 **VM-W11-Codex, 2026-10-15**다. 원본게임실행·보호원본/AGENTS/dotnetpj변경은없다. 인수인계뒤 **`20261015-39 실제 안내 본문과 원본 그림 및 인라인 스타일 연결 검증`**으로로컬커밋하며push하지않는다.
+- [ ] 조건의기존어댑터편차/링크·파생help·소리/다른그림배율·스크롤바전체수명은후속이다. 같은Session의실제삭제/내용물/건설설치·AI초기갱신도진행중이다. 목표active·완주동일성미완료·DirectDraw전체화면오류제외를유지한다.
 
 ## 2026-10-15 단위46 완료: 실제 안내 명령 큐·완료값 저장 (`VM-W11-Codex`)
 
