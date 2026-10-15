@@ -57,11 +57,20 @@ GameWorld::GameWorld(const GameAssets& assets,const o::FortTemplate& fort,o::Mis
 }
 // 실제 캠페인에서는 이전 관찰기반 객체/지형 어댑터를 생성하지 않고 같은 raw 세션을 설치한다.
 GameWorld::GameWorld(const GameAssets& assets,const o::BaseFileSystem& files,o::FortTemplate fort,o::MissionPlayers players,
-    std::string mission,RawCampaignSessionServices services):assets_(assets),players_(std::move(players)) {
+    std::string mission,RawCampaignSessionServices services,ScreenPoint viewport):assets_(assets),players_(std::move(players)) {
+    if (viewport.x<=0 || viewport.y<=0) throw std::invalid_argument("실제 캠페인 설치 전 화면 크기 누락");
+    width_=viewport.x;height_=viewport.y;
     // 현재 보호 팔레트 번호만 UI 색 조회용으로 보관한다.
     for (std::size_t i=0;i<palette_.size();++i) palette_[i]=assets_.Palette().Color(static_cast<std::uint8_t>(i));
+    // 실제 카메라는 이 월드가 소유한다. 로더의 같은 호출 위치에서 실행하며 외부 관찰 콜백을 사용하지 않는다.
+    services.install.resetCamera=[this] { ResetCampaignCamera(); };
     campaign_=std::make_unique<RawCampaignSession>(assets,files,std::move(fort),std::move(mission),std::move(services));
     campaign_->Load();RefreshCampaignObjects();
+}
+// 초기 카메라의 원본 좌표를 clamp나 신전 우선 선택 없이 현재 raw 표시와 음향 원점에 전달한다.
+void GameWorld::ResetCampaignCamera() {
+    cameraHome_.width=width_;cameraHome_.height=height_;
+    campaign_->ResetCamera(cameraHome_,[this](std::int32_t x,std::int32_t y) { scrollX_=x;scrollY_=y;changed_=true;SurfaceView(); });
 }
 // 같은 실제 슬롯의 표시/선택용 뷰다. 이 목록에는 이동/HP 계산이나 별도 경로를 저장하지 않는다.
 void GameWorld::RefreshCampaignObjects() {

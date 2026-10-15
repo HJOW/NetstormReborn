@@ -368,6 +368,12 @@ RawCampaignSession::RawCampaignSession(const GameAssets& assets,const BaseFileSy
 RawCampaignSession::~RawCampaignSession()=default;
 // 동일 원본 부모를 실행한다.
 void RawCampaignSession::Load() { impl_->runtime->Load();impl_->ConnectMotion(); }
+// UI의 현재 크기/변경 전역을 빌리며 게임 소유자·모드는 실제 세션에서 다시 읽는다.
+void RawCampaignSession::ResetCamera(CameraHomeState& state,std::function<void(std::int32_t,std::int32_t)> apply) const {
+    state.localPlayer=impl_->assetState.localOwner;state.fort=impl_->core.ownerMode.fort;
+    state.battle=impl_->core.ownerMode.battle;state.challenge=impl_->core.ownerMode.challenge;
+    CameraHome(impl_->core.pool,impl_->core.types,state,std::move(apply)).Reset();
+}
 // 현재 같은 시각을 공격/소리/실제 Kernel에 공급한다.
 void RawCampaignSession::RunFrame(FrameTime time,bool paused) { impl_->assetBindings->PrepareFrame(time.game);impl_->combat->PrepareFrame(time);impl_->soundState.frame=static_cast<std::uint32_t>(time.number);impl_->world.RunFrame(time,paused); }
 // 실제 동일 Host54/BFS 경로를 시작하며 원본 재귀의 외부nullptr 뒤 현재 경로도 확인한다.

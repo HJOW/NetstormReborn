@@ -12,6 +12,7 @@ add_executable(netstorm_tests
     CampaignSessionTests.cpp
     BattleBroadcastTests.cpp
     WindowTitleTests.cpp
+    CameraHomeTests.cpp
     ProjectileGeometryTests.cpp
     DiscRegularTests.cpp
     CampaignNativeFrameTests.cpp
@@ -888,3 +889,7 @@ set_source_files_properties(BattleBroadcastTests.cpp PROPERTIES COMPILE_DEFINITI
 # 현재 호스트에서 관찰한 두 판본의 창 제목 선택/설정 인자 자료다.
 set_source_files_properties(WindowTitleTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_WINDOW_TITLE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/window-title-x86.tsv\"")
+
+# 초기 시야/실제 x87 중심 변환의 두 판본 독립 관찰이다.
+set_source_files_properties(CameraHomeTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CAMERA_HOME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/camera-home-x86.tsv\"")

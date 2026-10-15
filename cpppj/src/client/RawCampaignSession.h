@@ -9,13 +9,14 @@
 #include "client/SoundProcess.h"
 #include "o/RawPlayerRegular.h"
 #include "o/RawBattleBroadcast.h"
+#include "client/CameraHome.h"
 namespace netstorm::client {
 // 게임 계산을 대신하지 않고 실제 클라이언트 UI/음향/전송의 선택 경계를 공급한다.
 struct RawCampaignSessionServices {
     std::function<std::int32_t()> unixSeconds; // 실제 time32의 현재 Unix 초다.
     RawPriestWorldEffects priest; // 원본 소유자 통지/보호막 안내/음향 등의 실제 외부 소비자다.
     CampaignOwnershipEffects ownership; // 실제 생산 UI/현재 themeMode 및 진단 경계다.
-    RawCampaignInstallEffects install; // 실제 번역/설정/사양/카메라의 외부 소비자다.
+    RawCampaignInstallEffects install; // 실제 번역/설정/창 제목/카메라의 외부 소비자다.
     RawCampaignAssetEffects assets; // 실제 입력 큐/총 전송/자산 음향의 현재 소비자다.
     RawCampaignHitEffects hit; // 실제 owner 피해 통지/nonzero Burning/Dude 대피 생성 경계다.
     RawCampaignArcherEffects archer; // 실제 음향/fencemark 코너 및 미복원 다른 총의 경계다.
@@ -42,6 +43,8 @@ public:
     RawCampaignSession& operator=(const RawCampaignSession&)=delete; // 다른 월드 상태와 복사하지 않는다.
     // 실제 부모 설치를 한 번 실행한다. 실제 큰 하위가 누락되면 오류를 그대로 반환한다.
     void Load();
+    // 현재 같은 풀/TYPE/실제 로컬 소유자·모드로 원본 초기 시야를 계산하여 화면에 적용한다.
+    void ResetCamera(CameraHomeState& state,std::function<void(std::int32_t,std::int32_t)> apply) const;
     // 현재 같은 시각을 모든 모듈에 공급한 뒤 동일 Kernel을 실행한다.
     void RunFrame(o::FrameTime time,bool paused);
     // 실제 사제의 같은 Start/BFS/Host54 경로를 시작한다.

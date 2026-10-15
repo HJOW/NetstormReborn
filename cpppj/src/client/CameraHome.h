@@ -1,0 +1,34 @@
+// 원본 초기 카메라 선택/중심 이동을 동일 raw 풀의 현재 슬롯과 화면에 연결한다.
+#pragma once
+#include "o/SidPool.h"
+#include <functional>
+
+namespace netstorm::client {
+// 원본 resetCamera와 camera.setCenter가 읽는 현재 모드·화면·갱신 전역이다.
+struct CameraHomeState {
+    std::uint32_t localPlayer{1}; // PATCH540c70/CD50f6c8의 전체 DWORD이며 소유자 BYTE로 축소하지 않는다.
+    bool fort{},battle{true},challenge{}; // 원본 요새/전투/Challenge 모드의 현재 값이다.
+    std::uint32_t challengeType{}; // Challenge에서 찾는 현재 타입 번호다. 일반 캠페인은 읽지 않는다.
+    std::int32_t width{640},height{480}; // 중심 이동 때 읽는 실제 화면 전체 크기다.
+    std::int32_t worldWidth{4096},worldHeight{2816}; // Challenge 빈 목록의 카메라 월드 픽셀 크기다.
+    std::uint32_t suppressionDepth{},requests{},revision{}; // Carrier 표시 억제 깊이·카메라 변경 요청·변환 갱신 번호다.
+};
+// 원본 PATCH4340d0/CD488f50의 초기 대상과 같은 중심 이동 몸체를 사용한다.
+class CameraHome {
+public:
+    // 풀/타입/상태는 호출 동안 살아 있어야 한다. apply는 실제 화면·음향의 현재 원점을 함께 갱신한다.
+    CameraHome(const o::SidPool& pool,std::span<const o::RiftTypeRecord> types,CameraHomeState& state,
+        std::function<void(std::int32_t,std::int32_t)> apply);
+    // free만 건너뛰며 마지막 내 사제를 고른다. dead 후보의 CenterOn 자연 반환도 유지한다.
+    void Reset() const;
+private:
+    // 실제 카메라 변환의 음수 16/11 곱→ftol→화면 절반 차감과 현재 요청 전역을 적용한다.
+    void CenterPoint(float x,float y) const;
+    // 자산 좌표에서 TYPE의 전체 footX/footY를 뺀 뒤 단정도로 저장하고 중심을 이동한다.
+    void CenterOn(o::Sid sid) const;
+    const o::SidPool& pool_; // 원본 번호순 조회와 free/dead/좌표를 공유하는 실제 풀이다.
+    std::span<const o::RiftTypeRecord> types_; // 같은 TYPE의 genus와 중심 이동용 발자국 필드다.
+    CameraHomeState& state_; // 매 조회의 모드/소유자/화면 크기와 변경 카운터를 읽고 쓴다.
+    std::function<void(std::int32_t,std::int32_t)> apply_; // 최종 현재 원점을 실제 화면에 적용하는 경계다.
+};
+}

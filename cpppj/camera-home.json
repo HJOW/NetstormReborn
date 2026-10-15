@@ -1,0 +1,58 @@
+{
+  "host": "VM-W11-Codex",
+  "uniqueInputs": 2364,
+  "editions": {
+    "originals": {
+      "inputs": 1182,
+      "returns": 1182,
+      "assertions": 0,
+      "peSha": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "nativeCalls": {
+        "004340d0": 1182,
+        "0040eb40": 1182,
+        "00433aa0": 1158,
+        "00497f20": 1170,
+        "004e49c0": 2340,
+        "004ac200": 348,
+        "0049a840": 612,
+        "00433ba0": 144,
+        "004ac550": 264,
+        "00426080": 108
+      },
+      "exports": {
+        "extracted/camera-home/originals/creation.c": "6fefbb1a347df8369f4cd49d7bb784ecb96fcea4a01d3d0140e7ac862099d2b9",
+        "extracted/camera-home/originals/functions.tsv": "770ff3619d346d1b7efa330133dafdb3fcfb1877f019fe0e8282f6e8139c53e4"
+      }
+    },
+    "originalCD": {
+      "inputs": 1182,
+      "returns": 1182,
+      "assertions": 0,
+      "peSha": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "nativeCalls": {
+        "00488f50": 1182,
+        "00488db0": 1170,
+        "00458990": 1170,
+        "004f161c": 2340,
+        "00458800": 1170,
+        "004015d0": 1092,
+        "004abae0": 348,
+        "00488eb0": 144,
+        "004abf50": 264,
+        "004e36f0": 108
+      },
+      "exports": {
+        "extracted/camera-home/originalCD/creation.c": "f4c7cc50684be2786c5fd7ef0aef65cf6e93c332f10c7a9e2b4bc1c7fe54c1a3",
+        "extracted/camera-home/originalCD/functions.tsv": "59c7f158a6cc92faff704e500f0b6a82a6d3ec9d91315d0864c60cfe2f53b720"
+      }
+    }
+  },
+  "fixtureSha": "f083d4a18323b6da96fa14930329a812e18a9505be1b8790f8a4277d8dfa3e3e",
+  "toolSha": "412fc5092fed4e41cf0f6c7ef71f452f48521009f5f4105d7e038a5abf5d749e",
+  "supportSha": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
+  "limitations": [
+    "현재 pool/TYPE 입력은 합성이며 실제 미션 화면 전체 동일성을 증명하지 않는다.",
+    "Challenge의 좌표 미초기화 경로와 억제 깊이 UINT_MAX 감김은 실행하지 않았다.",
+    "실제 Renderer commit 내부/직접 Home의 표시 프로세스는 별도다. x87 제어워드는0x027f다."
+  ]
+}

@@ -18,9 +18,9 @@ class GameWorld : public o::BaseProcess {
 public:
     // 저장 위치를 쓰는 Tutorial 미션의 초기 월드를 만든다. Battle 재배치는 아직 지원하지 않는다.
     GameWorld(const GameAssets& assets,const o::FortTemplate& fort,o::MissionPlayers players);
-    // 실제 캠페인 세션을 소유하며 모든 그림/선택/이동이 같은 raw SID를 사용한다.
+    // 실제 캠페인 세션을 소유하며 모든 그림/선택/이동이 같은 raw SID를 사용한다. viewport는 로더 실행 전 실제 화면 크기다.
     GameWorld(const GameAssets& assets,const o::BaseFileSystem& files,o::FortTemplate fort,o::MissionPlayers players,
-        std::string mission,RawCampaignSessionServices services);
+        std::string mission,RawCampaignSessionServices services,ScreenPoint viewport);
     // Kernel에서 호출할 실제 게임 시간과 정지 상태의 공급자를 연결한다.
     std::function<double()> elapsed;
     // paused: 현재 게임 시계가 정지했는지 조회하는 콜백.
@@ -36,7 +36,7 @@ public:
     void RunFrame() override;
     // 검사에서는 OS 시계 없이 같은 이동 경로를 진행한다.
     void Step(double seconds);
-    // 화면 크기를 갱신하고 최초에는 내 신전/사제에 카메라를 둔다.
+    // 화면 크기를 갱신한다. 실제 캠페인의 최초 시야는 생성자의 원본 로더가 설정하며 이전 어댑터는 최초 Resize에서 홈을 고른다.
     void Resize(int width,int height);
     // 표시 팔레트를 바꾸고 팔레트에 의존하는 지면 명도 변환표를 다시 계산하게 한다. 화면 팔레트 적용 직후 부른다.
     void SetPalette(std::span<const ScreenColor> palette);
@@ -72,6 +72,8 @@ public:
 private:
     // 현재 실제 슬롯에서 읽기 전용 UI 뷰만 갱신하며 별도 게임 상태를 진행하지 않는다.
     void RefreshCampaignObjects();
+    // 원본 로더의 Graph 재구성 뒤 현재 raw 풀에서 초기 카메라를 선택하여 실제 표시 원점을 갱신한다.
+    void ResetCampaignCamera();
     // 월드 지형 타일의 타입·프레임·좌표·소유자·깊이이다.
     struct Tile { /* type: 객체 종류를 구별하는 타입 자료. */ const TypeAsset* type{}; /* frame: 타입에서 사용할 그림 프레임 번호. */ std::size_t frame{}; /* x: X 좌표. */ /* y: Y 좌표. */ /* owner: 객체나 지역을 소유한 플레이어 번호. */ int x{},y{},owner{}; /* depth: 출력이나 이벤트 후보의 깊이 값. */ std::int16_t depth{}; };
     // 청크 순서의 저장 객체를 월드 좌표에 생성한다.
@@ -115,6 +117,7 @@ private:
     // surfaces_: 표면 객체의 공간·연결·수명 처리 자료.
     std::unique_ptr<RawSurfaceWorld> surfaces_;
     std::unique_ptr<RawCampaignSession> campaign_; // 실제 설치/전투/경로/HP/현재 Kernel의 단일 수명 소유자다.
+    CameraHomeState cameraHome_; // 실제 화면 크기·초기 시야 억제 깊이·요청/변환 갱신 번호를 보관한다.
     // surfaceTime_: 표면 프레임 갱신에 누적한 게임 시각(초).
     o::FrameTime surfaceTime_{};
     // surfaceCells_: 월드 칸별 표면 객체 등록 정보.

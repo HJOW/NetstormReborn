@@ -43,12 +43,15 @@ struct SessionServicesFixture {
 void CheckSessionWorld(std::string_view mission) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
     auto fort=FortTemplate::Parse(assets.files.Read("d/"+std::string(mission)+".fort"),assets.game.TypeTable());
-    GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},std::string(mission),external.Services());world.Resize(1024,768);
+    auto services=external.Services();services.install.resetCamera={}; // 실제 GameWorld 카메라가 로더의 소비자를 공급해야 한다.
+    GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},std::string(mission),std::move(services),{1024,768});world.Resize(1024,768);
     const auto core=world.Surfaces().Core();Sid priest{};
     // 실제 live 슬롯에서 내 사제를 선택한다. 별도 순번 객체를 만들지 않는다.
     for (const auto& object:world.Surfaces().Objects()) if (object.object.type==158 && object.object.owner==1) { priest=object.sid;break; }
     CHECK(priest.value>=15000 && world.Object(priest.value)!=nullptr);
     CHECK(world.Object(priest.value)->x==std::bit_cast<float>(Get(core.pool.Slot(priest),14)));
+    const auto& type=core.types[core.pool.Slot(priest)[10]];const auto view=world.Object(priest.value); // 실제 초기 카메라는 내 사제의 전체 발자국 차감 지점을 중심으로 둔다.
+    CHECK(world.ToScreen(view->x-type.footX,view->y-type.footY).x==512 && world.ToScreen(view->x-type.footX,view->y-type.footY).y==384);
     CHECK(!world.Sprites().empty());
     // paused 프레임도 실제 절대 시각은 공유하고 Kernel은 진행하지 않는다.
     const auto kernel=core.kernel.Size();world.frameTime=[] { return FrameTime{0,1,0,1}; };world.paused=[] { return true; };world.RunFrame();
@@ -68,7 +71,7 @@ void CheckSessionMovement(bool actualBroadcast) {
     auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());
     auto services=external.Services();
     if (actualBroadcast) { services.assets.sendGunPacket={};services.pathPacket={}; }
-    GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services));world.Resize(1024,768);
+    GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});world.Resize(1024,768);
     auto core=world.Surfaces().Core();Sid priest{};
     // 현재 raw 내 사제만 선택한다.
     for (const auto& object:world.Surfaces().Objects()) if (object.object.type==158 && object.object.owner==1) { priest=object.sid;break; }
@@ -105,7 +108,7 @@ TEST_CASE(CampaignSession_ActualSingleplayerBroadcastAndPath) { CheckSessionMove
 TEST_CASE(CampaignSession_ActualWarBeginsCombatToOne) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
     auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());
-    GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",external.Services());
+    GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",external.Services(),{1024,768});
     auto core=world.Surfaces().Core();Sid priest{};
     // 실제 설치된 내 사제를 선택하며 피해용 가짜 객체를 만들지 않는다.
     for (const auto& object:world.Surfaces().Objects()) if (object.object.type==158 && object.object.owner==1) { priest=object.sid;break; }

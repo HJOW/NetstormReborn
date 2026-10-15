@@ -1,5 +1,13 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-15 완료: 단위28 실제 초기 카메라·캠페인 설치 연결 (`VM-W11-Codex`)
+
+- [x] AGENTS와 양 LEFT를 재독하고 기준 `b4113da`에서 시작했다. 현재/마지막 정밀 디컴파일 PC는 **VM-W11-Codex, 2026-10-15**다. 사용자 `TODO.md` 수정은 보존한다.
+- [x] 원본 초기 시야는 사용 중인 SID의 마지막 내 사제 genus를 선택한다. free만 건너뛰고 dead 후보의 중심 이동은 자연 반환한다. `CameraHome`에 전체 footX/Y 차감·실제 ftol/16/11 변환·화면 절반 차감·반올림/clamp 없음과 억제/요청/변환 전역을 복원했다. 실제 GameWorld의 `install.resetCamera`는 같은 Pool/TYPE/실제 owner·모드를 사용하며 설치 전 실제 화면 크기를 요구한다.
+- [x] 최종 두 판본 각10함수 정밀 내보내기와 새 Native **2,364개 정상 반환/assert0**, C++ 전수 대조2개·장치 실패 깊이 복구1개가 통과했다. 실제1-1/1-2 외부 카메라 콜백 없이 초기 시야·이동/교전 세션5개도 통과했다. 최초 TYPE getter 하위 `0049a840` 누락 거부는 실제 몸체 추가로 해결했다. [단위28 상세](docs/exe/cpp-run28-20261015.md), `cpppj/camera-home.json`에 원본/정밀 근거/도구/fixture SHA와 한계를 기록했다.
+- [x] 최종 Release 경고/오류0·전체 CTest **1/1·내부1,145개·실패 체크0**(110.36초)다. 원본 두 PE의 SHA는 기준값과 같다. 인수인계 완료 뒤 로컬 **`20261015-14 실제 초기 카메라 복원과 캠페인 설치 시야 연결 검증`**으로 커밋하며 push하지 않는다. 원본 Renderer commit 내부·직접 Home/Scroll/가변 패널의 전체 동일성은 별도다.
+- [ ] 다음은 `install.translateYou/setConfig`·음향/UI/owner 통지/Ready/login 및 Battle 진입·Early Missions/1-1~1-2 진행·완주 동일성이다. 목표active와 DirectDraw 전체화면 오류 제외를 유지한다.
+
 ## 2026-10-15 완료: 단위27 실제 창 제목 서비스·메뉴/미션 연결 (`VM-W11-Codex`)
 
 - [x] AGENTS와 양 LEFT를 다시 읽고 기준 `9eeef1e`에서 이어갔다. 현재/마지막 정밀 디컴파일 PC는 **VM-W11-Codex, 2026-10-15**다. 사용자 `TODO.md` 수정은 보존하며 이번 커밋에서 제외한다.
