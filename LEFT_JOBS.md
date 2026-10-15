@@ -1,5 +1,12 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-15 단위50 완료: 건설 통지의 실제512바이트·가변길이 (`VM-W11-Codex`)
+
+- [x] `WriteConstructionPacket`/`FinalizeConstructionPacket`에 실제Confirm의512BYTE ff초기화·모든필드/SID쓰기·현재WORD등록길이와송신직전count기반길이를복원했다. 임시버퍼크기와최종전송길이를합치지않는다. [단위50 상세](docs/exe/cpp-construction-packet-20261015.md).
+- [x] 이PC에서누락된PATCH선택export인constructionplace23/confirm11함수를재생성했다. 실제Confirm/Canon/메시지초기화/최종화 **86고유입력/정상반환**의전체512BYTE를대조했다. 최초18체크제품오류는실제`MOVZX WORD`로교정했고최종Release게임/검사경고·오류0·집중2개실패0·86행SHA/공백감사통과다.
+- [x] 현재/마지막정밀PC는 **VM-W11-Codex, 2026-10-15**다. 실제게임/GUI/네트워크실행·보호원본/AGENTS/dotnetpj변경은없다. 인수인계뒤 **`20261015-40 실제 건설 통지 패킷과 가변 길이 복원 검증`**으로로컬커밋하며push하지않는다.
+- [ ] 실제Session의Confirm→현재broadcast/자기Notice→Clear/Place설치는후속이다. 공통삭제/내용물통지와같은SP자원pool연결, 실제AI초기갱신도병행중이며완주동일성미완료·목표active·DirectDraw전체화면오류제외를유지한다.
+
 ## 2026-10-15 단위49 완료: 실제 Player 간헐천 배치 사각형 (`VM-W11-Codex`)
 
 - [x] `RawPlayerGeyserBounds`는같은ChunkMap/Player9/TYPE/프레임/CanonDecoder를사용한다. y행/x열의signed영역첫6BYTE레코드를찾고미션의실제패턴/회전·발자국또는비미션의현재옵션/플레이어방향배치를계산한다. DWORD<<4→float→양쪽4확장순서이며IslandRuntime.Bounds를대체입력으로쓰지않는다. [단위49 상세](docs/exe/cpp-player-geyser-bounds-20261015.md).

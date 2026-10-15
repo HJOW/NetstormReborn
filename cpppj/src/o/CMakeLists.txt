@@ -10,6 +10,7 @@ target_sources(netstorm PRIVATE
     RawTextToken.cpp RawTextToken.h
     RawPlayerTechnology.cpp RawPlayerTechnology.h
     RawPlayerGeyserBounds.cpp RawPlayerGeyserBounds.h
+    RawConstructionPacket.cpp RawConstructionPacket.h
     RawRainVortexDraw.cpp RawRainVortexDraw.h
     RawFenceTarget.cpp RawFenceTarget.h
     RawContentParentNotice.cpp RawContentParentNotice.h ContentNoticeVtables.inc

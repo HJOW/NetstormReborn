@@ -10,6 +10,7 @@ add_executable(netstorm_tests
     ScriptCommandTests.cpp
     PlayerTechnologyTests.cpp
     PlayerGeyserBoundsTests.cpp
+    ConstructionPacketTests.cpp
     MissionFrameGateTests.cpp
     TutorialOneTests.cpp
     TutorialTwoTests.cpp
@@ -975,3 +976,7 @@ set_source_files_properties(PlayerTechnologyTests.cpp PROPERTIES COMPILE_DEFINIT
 # 실제 Player 간헐천 배치 사각형과 패턴/회전을 대조한다.
 set_source_files_properties(PlayerGeyserBoundsTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PLAYER_GEYSER_BOUNDS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/player-geyser-bounds-x86.tsv\"")
+
+# 실제 건설 패킷의 전체512바이트/가변길이를 대조한다.
+set_source_files_properties(ConstructionPacketTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CONSTRUCTION_PACKET_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/construction-packet-x86.tsv\"")
