@@ -211,7 +211,7 @@ TEST_CASE(MissionScript_ResolvesScriptFortAndType) {
         {"d\\setup.cfg", "DataDir = \"\\D\"\r\ncurrentLanguage=\"english\"\r\n"
                          "missionSpec = \"{DataDir}\\{local.1}.{currentLanguage}\"\r\nfortSpec = \"{DataDir}\\{local.1}.fort\"\r\n"
                          "banner = \"{mission.title|none}\"\r\n"},
-        {"\\D\\first.english", "[Header]\r\nmissionType=\"Tutorial\"\r\ntitle=\"First {DataDir}\"\r\nmyStartMoney=3000 // comment\r\n"},
+        {"\\D\\first.english", "[Header]\r\nmissionType=\"Tutorial\"\r\ntitle=\"First {DataDir}\"\r\nmyStartMoney=3000 // comment\r\n[@10]\r\nFirst\r\n[@25]\r\nSecond\r\n"},
         {"\\D\\second.english", "missionType=\"Battle\"\r\nloadFort=\"shared\"\r\n"},
     };
     ConfigInterface config(Reader(files));
@@ -226,6 +226,11 @@ TEST_CASE(MissionScript_ResolvesScriptFortAndType) {
         // 미션 객체가 살아 있는 동안 다른 설정에서 `{mission.키}`를 쓸 수 있다.
         CHECK(config.Configuration().Get("banner") == "First \\D");
         CHECK(config.Registry().Objects().size() == 3);
+        const auto sections=first.SectionNames("@"); // 실제 Start가 같은 Config에 저장할 원본 예약 섹션 목록이다.
+        CHECK(sections=="@10;@25;");CHECK(!first.Set("tellAtList",sections));
+        CHECK(first.Get("tellAtList")==sections && config.PathSpec("mission.tellAtList")==sections);
+        CHECK(!config.Configuration().GetRaw("tellAtList")); // 현재 미션 쓰기가 전역 설정에 새 키를 만들지 않아야 한다.
+        CHECK(first.Set("title","Changed {DataDir}") && config.Configuration().Get("banner")=="Changed \\D");
     }
     CHECK(config.Registry().Objects().size() == 2 && config.Configuration().Get("banner") == "none");
     // loadFort가 있으면 그 요새를 읽는다. 추가 설정 글은 스크립트보다 먼저 들어가 우선한다.

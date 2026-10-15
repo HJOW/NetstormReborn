@@ -10,6 +10,10 @@ target_sources(netstorm PRIVATE
     # 같은 Player9의 실제 로컬 로그인과 벽시계 완료/중단 순서를 공유한다.
     RawMissionLogin.cpp RawMissionLogin.h
     RawMissionLoginTimer.cpp RawMissionLoginTimer.h
+    # 실제 로컬 서버가 보낸 초기8종 패킷도 같은 Player/SP/State로 소비한다.
+    RawMissionClientPackets.cpp RawMissionClientPackets.h
+    # 같은 현재 Player 이름/IP와 원본 중앙섬 metadata를 실제 wire로 작성한다.
+    RawMissionServerPackets.cpp RawMissionServerPackets.h
     RawMissionFrameGate.cpp RawMissionFrameGate.h
     RawTutorialOne.cpp RawTutorialOne.h RawTotalMade.cpp RawTotalMade.h
     RawTutorialTwo.cpp RawTutorialTwo.h

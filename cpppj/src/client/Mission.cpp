@@ -41,4 +41,8 @@ std::optional<std::string> MissionScript::Section(std::string_view name) const {
     const auto section = script_.Section(name);
     return section ? std::optional<std::string>(std::string(*section)) : std::nullopt;
 }
+// 스크립트 본문의 원래 섹션 순서와 끝 세미콜론을 그대로 반환한다.
+std::string MissionScript::SectionNames(std::string_view prefix) const { return script_.SectionNames(prefix); }
+// 객체 접두어를 더하지 않고 현재 미션 Config에 직접 기록하여 Start의 실제 설정 쓰기를 연결한다.
+bool MissionScript::Set(std::string_view key,std::string_view value) { return script_.Set(key,value); }
 }

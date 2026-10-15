@@ -17,6 +17,12 @@ struct MissionStartGlobals {
     std::int32_t denySalvage{},denyAscend{},allowAnyCapture{}; // 00595078/0059507c/005453e4의 atol DWORD다.
     std::uint32_t ordinaryGeysers{}; // 005950ac은 moreGeysers의 논리 부정이다.
 };
+// 실제 Session이 소유한 현재 전역을 원본 읽기 위치에서 조회한다. 미연결 fixture만 기존 Globals 값을 사용한다.
+struct MissionStartReads {
+    std::function<std::uint32_t()> localOwner; // 00540c70의 현재 PlayerWorld.battleOwner이며 효과 뒤 다시 읽는다.
+    std::function<std::uint32_t()> playerKnown; // 00595344의 현재 실제 PlayerKnown DWORD다.
+    std::function<std::uint32_t()> editor; // 005c85a4의 현재 실제 CampaignWorld editor DWORD다.
+};
 // 설정/세계/UI는 도달한 원본 위치에서 실제 몸체로 연결한다. 누락 효과는 성공으로 처리하지 않는다.
 struct MissionStartHooks {
     std::function<std::string(std::string_view)> get; // 같은 현재 mission.<key>를 조회한다.
@@ -38,14 +44,23 @@ class RawMissionStart {
 public:
     // 현재 미션 상태와 필수 설정 조회를 빌린다. 실제 효과는 선택된 경계에서 확인한다.
     RawMissionStart(OriginalEdition edition,MissionFrameGateState& gate,MissionStartState& state,MissionStartGlobals& globals,MissionStartHooks hooks);
+    // 세 현재 getter를 모두 연결한다. 값형 fallback을 갱신하거나 getter 반환을 저장하지 않는다.
+    void BindCurrentInputs(MissionStartReads reads);
     // 004c2b20 전체 순서이며 실제 효과가 실패하면 이후 상태/started 쓰기를 실행하지 않는다.
     void Start() const;
     // 004c3100: 현재 tellAtIndex 항목의 첫 글자 뒤를 atol로 읽는다. '@' 여부를 추가로 검사하지 않는다.
     void RefreshTellAt() const;
 private:
+    // 원본이 현재 전역을 읽는 위치에서만 getter 또는 기존 값형 fixture를 선택한다.
+    std::uint32_t LocalOwner() const;
+    // SP 쓰기를 선택하는 현재 PlayerKnown만 읽는다. 로컬 owner를 앞당겨 읽지 않는다.
+    std::uint32_t PlayerKnown() const;
+    // myStartMoney 조회 뒤의 현재 편집 모드를 읽는다.
+    std::uint32_t Editor() const;
     MissionFrameGateState& gate_; // 프레임 진행과 같은 장기 상태다.
     MissionStartState& state_; // base Mission/추가 Tutorial 필드다.
     MissionStartGlobals& globals_; // 매 원본 위치에서 다시 읽는 전역이다.
     MissionStartHooks hooks_; // 현재 설정/세계/Player/UI의 실제 효과다.
+    MissionStartReads reads_; // 실제 Session의 현재 getter이며 미연결 fixture의 Globals와 구분한다.
 };
 }

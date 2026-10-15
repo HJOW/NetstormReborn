@@ -13,6 +13,7 @@
 #include "o/RawBattleBroadcast.h"
 #include "o/RawMissionOutcome.h"
 #include "o/RawAiBrain.h"
+#include "o/SpStore.h"
 #include "o/RawPriestParticipation.h"
 #include "client/CameraHome.h"
 namespace netstorm::client {
@@ -79,6 +80,18 @@ public:
     void CheckMissionOutcome();
     // 원본 로그인/월드 로더가 공유하는 현재 globals.mySubscriber를 읽기만 한다. 별도 캐시를 만들지 않는다.
     std::uint32_t CurrentSubscriber() const;
+    // 같은 실제 PlayerWorld의00540c70을 읽는다. 자산/UI 어댑터의 로컬 번호 사본을 사용하지 않는다.
+    std::uint32_t LocalOwner() const;
+    // 실제 PlayerWorld가 공유하는00595344 DWORD를 읽는다. subscriber/Ready와 합치지 않는다.
+    std::uint32_t PlayerKnown() const;
+    // 실제 캠페인 로더와 같은005c85a4 DWORD를 읽는다.
+    std::uint32_t Editor() const;
+    // 사제/Player 내용물/건설/보상이 공유하는 실제 분산 SP를0040ec50의 float비트로 읽는다.
+    float Sp(std::uint32_t owner) const;
+    // 원본0040edb0처럼 직접 float비트만 쓴다. AddSp의 지갑/화면 갱신을 대신 호출하지 않는다.
+    void SetSp(std::uint32_t owner,float value);
+    // 같은 실제32×9 원문 배열/offset/추적주소를 읽기만 한다. 별도 SP 저장소를 생성하지 않는다.
+    const o::ScrambledSpStore& SpStore() const;
     // 실제 로그인/AI 초기화가 사용하는 동일9 Player 원문을 빌린다. 프레임별 사본을 만들지 않는다.
     std::span<std::uint8_t> PlayerRecords();
     // 실제 방향별동맹 초기화가 쓰고 승패가 읽는 같은81DWORD를 빌린다.

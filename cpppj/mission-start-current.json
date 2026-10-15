@@ -1,0 +1,95 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-15",
+  "last_full_refined_host": "HJOW-Athlon",
+  "base_commit": "400aaef",
+  "status": "release-focused-and-full-ctest-validated",
+  "current_reads": [
+    "playerState.battleOwner",
+    "playerState.playerKnown",
+    "globals.editor"
+  ],
+  "sp_store": "same impl_->sp ScrambledSpStore; readonly SpStore() and direct float-bit Get/Set",
+  "new_native_unique_inputs": 0,
+  "existing_start_native_replayed": 48,
+  "existing_fixture_inputs": 204,
+  "tests_prepared": {
+    "start_current_replay": 1,
+    "start_effect_read_order": 1,
+    "protected_session_sp": 1,
+    "executed": true
+  },
+  "root_validation": {
+    "release_warnings": 0,
+    "release_errors": 0,
+    "focused_tests": 52,
+    "focused_failures": 0,
+    "full_ctest": {
+      "ctest_passed": 1,
+      "ctest_total": 1,
+      "tests": 1290,
+      "failed_checks": 0,
+      "seconds": 203.58,
+      "log": "extracted/goal-login-packets-ctest.log",
+      "internal_log": "extracted/goal-login-packets-tests.log"
+    },
+    "logs": [
+      "extracted/goal-login-packets-final-build.log",
+      "extracted/goal-login-packets-final-focused.log",
+      "extracted/goal-login-packets-ctest.log",
+      "extracted/goal-login-packets-tests.log"
+    ]
+  },
+  "automatic_start_ai_outcome_enabled": false,
+  "game_gui_build_runs_by_agent": 0,
+  "historical_reports_preserved_at_base_commit": [
+    "cpppj/mission-start.json",
+    "cpppj/session-ai.json",
+    "cpppj/session-construction.json",
+    "cpppj/client-ai-chat.json",
+    "cpppj/mission-guide.json",
+    "cpppj/session-priest-participation.json"
+  ],
+  "historical_report_policy": "embedded SHA belongs to original completion snapshot; current sources are recorded separately here",
+  "sha256": {
+    "cpppj/src/o/RawMissionStart.h": "a4023427f1ed9b51650c603e3b4434d07d4b8e861c07fb8be299d2c2dea245b2",
+    "cpppj/src/o/RawMissionStart.cpp": "520e7490ae6047d1bfb968e26b29bb4eba67cba8e8bc8a01fa711656ec75716d",
+    "cpppj/src/client/RawCampaignSession.h": "ec4a94d0e686b49d7247dc4bda671538c021e45634ff042a3d2e21603d27d144",
+    "cpppj/src/client/RawCampaignSession.cpp": "3d715fd089507ecdde864023b6700d4d097dc75692673d78efbfaaf00385872c",
+    "cpppj/tests/MissionStartTests.cpp": "7c46c9ab4d5030fc5c51a85e7dfdd50c4e4fe7a6ec29b1b5345d2c8363ce8da4",
+    "cpppj/tests/CampaignSessionTests.cpp": "888275b6aab0a37d73da7f9a9525adc4f105902d020002140d2119eaf6048f9c",
+    "cpppj/src/o/SpStore.h": "88a9d2f2913cefc4429ab312a841c01b4405fd5e3799a2d630c1262f66588030",
+    "cpppj/src/o/SpStore.cpp": "2319a90807d423b72b0e47e51101bc9ea1618f234c65e26b704c017313f4268a",
+    "cpppj/src/o/RawPlayerWorld.h": "c8dcef4b3f28fdfc6e5cdf7a8b0a4003bc14aa8ca9cded22c17ab1e5c49c9de9",
+    "cpppj/src/o/RawCampaignWorldLoad.h": "40d20a63ef3e65c961513d548cfcac25adea814d6b9c0eac68a48f80c1464824",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "cpppj/tests/fixtures/mission-start-x86.tsv": "0872a680e563feda45823a75bd9cc0f6be52576629f57745f22054c7a75a5011",
+    "docs/exe/cpp-mission-start-current-20261015.md": "4deefad589a802dc0e9352cb7fc3adca7e4e70e881b80088032440c6b5754338"
+  },
+  "product_validation": {
+    "configuration": "Release",
+    "build_warnings": 0,
+    "build_errors": 0,
+    "focused_tests": 52,
+    "failed_checks": 0,
+    "build_log": "extracted/goal-login-packets-final-build.log",
+    "focused_log": "extracted/goal-login-packets-final-focused.log",
+    "game_gui_runs": 0,
+    "full_ctest": {
+      "ctest_passed": 1,
+      "ctest_total": 1,
+      "tests": 1290,
+      "failed_checks": 0,
+      "seconds": 203.58,
+      "log": "extracted/goal-login-packets-ctest.log",
+      "internal_log": "extracted/goal-login-packets-tests.log"
+    },
+    "log_sha256": {
+      "extracted/goal-login-packets-final-build.log": "5e68ac44ea2e158e11fe93076184560134c457f529b7a37acf4f44f51bb08150",
+      "extracted/goal-login-packets-final-focused.log": "c1ab1d3def48cf96e9fa96727d4525a2c3630558f63a0d593fd8b63bd8d02164",
+      "extracted/goal-login-packets-ctest.log": "668d1f6d3873c8e2c3320fbd4642d622b30ebc0eae6ed6cba9bc84f8f8404ab6",
+      "extracted/goal-login-packets-tests.log": "78f06ffa2a1f385bb71d52d3bf111b7f8d343ad147840d94f39eebfe9432bdce"
+    }
+  }
+}

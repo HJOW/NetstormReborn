@@ -43,6 +43,8 @@ add_executable(netstorm_tests
     TutorialLaterTests.cpp
     MissionLoginTests.cpp
     MissionLoginTimerTests.cpp
+    MissionClientPacketsTests.cpp
+    MissionServerPacketsTests.cpp
     BattleBroadcastTests.cpp
     WindowTitleTests.cpp
     CameraHomeTests.cpp
@@ -1029,3 +1031,7 @@ set_source_files_properties(MissionLoginTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_MISSION_LOGIN_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/mission-login-x86.tsv\"")
 set_source_files_properties(MissionLoginTimerTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_MISSION_LOGIN_TIMER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/mission-login-timer-x86.tsv\"")
+set_source_files_properties(MissionClientPacketsTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_MISSION_CLIENT_PACKETS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/mission-client-packets-x86.tsv\"")
+set_source_files_properties(MissionServerPacketsTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_MISSION_SERVER_PACKETS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/mission-server-packets-x86.tsv\"")

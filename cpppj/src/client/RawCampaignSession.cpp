@@ -603,6 +603,18 @@ void RawCampaignSession::RunFrame(FrameTime time,bool paused) { impl_->assetBind
 void RawCampaignSession::CheckMissionOutcome() { impl_->outcome->Check(); }
 // 실제 worldLoad의 loginSubscriber 복사 대상과 같은 장기 전역을 매번 읽는다.
 std::uint32_t RawCampaignSession::CurrentSubscriber() const { return impl_->globals.mySubscriber; }
+// 로그인/기술/AI가 공유하는 현재 원본 로컬 Player 번호다.
+std::uint32_t RawCampaignSession::LocalOwner() const { return impl_->playerState.battleOwner; }
+// 실제 Player 생성/현재 기술/참여가 같은 DWORD를 읽는다.
+std::uint32_t RawCampaignSession::PlayerKnown() const { return impl_->playerState.playerKnown; }
+// 원본 로더의 현재 편집 조건과 같은 저장소를 직접 읽는다.
+std::uint32_t RawCampaignSession::Editor() const { return impl_->globals.editor; }
+// Get은 같은 분산배열의 값 비트를 모으고 float로 재해석하며 금액 변환/가산을 하지 않는다.
+float RawCampaignSession::Sp(std::uint32_t owner) const { return std::bit_cast<float>(impl_->sp.Get(owner)); }
+// Set의 실제 난수 잡음 쓰기도 같은 저장소/게임 난수를 사용한다.
+void RawCampaignSession::SetSp(std::uint32_t owner,float value) { impl_->sp.Set(owner,std::bit_cast<std::uint32_t>(value)); }
+// 후속 소비자는 현재 같은 원문 배열의 주소와 offset을 검사할 수 있다.
+const ScrambledSpStore& RawCampaignSession::SpStore() const { return impl_->sp; }
 // 원본 로그인/AI 초기화와 승패 판정은 같은9 Player 바이트를 공유한다.
 std::span<std::uint8_t> RawCampaignSession::PlayerRecords() { return impl_->players; }
 // 방향별 DWORD를 그대로 공유하여 한쪽 변경을 대칭화하거나 bool로 줄이지 않는다.

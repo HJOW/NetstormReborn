@@ -1,0 +1,57 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-15",
+  "nativeUniqueInputs": 157,
+  "status": "release-focused-and-full-ctest-validated",
+  "boundaries": [
+    "실제8수신기와이름/방향별동맹/양수·0 owner/SP지정wrapper/버전검증/Ready송신helper를현재PC전체정밀범위에서실행",
+    "CRT문자열/시계/설정/옵션파생/TYPE조회/Template·Builder/SP하위저장/Chat/UI/전송은명시경계",
+    "실제쓰기범위guard·정상반환stack·EBX/ESI/EDI/EBP와Player1620/동맹324/현재전역/논리SP9/모든외부효과비교",
+    "새source연결/게임·GUI/OS소켓은실행하지않음"
+  ],
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_mission_client_packets.py": "afbf8fc8d5eaf362fe96cd22fda6f7ced73c595e550bec56fe0ded9040ecea06",
+    "cpppj/src/o/RawMissionClientPackets.h": "58f9f9df31f1f2a5814942abb6809b239c5e77a67591022a2182fa331d7b5d9f",
+    "cpppj/src/o/RawMissionClientPackets.cpp": "e5593347ec53057635a218fc8783389fc68fac58224f1ac7333d8eaf9bde32f4",
+    "cpppj/tests/MissionClientPacketsTests.cpp": "8d2e938a00e4d763ea301523ea8ed3868314b0a8da6b45920ded98efc8399c28",
+    "cpppj/tests/fixtures/mission-client-packets-x86.tsv": "ebdf5f1d7df41cec6e5187447c969f1b3b4cfae8b475e217fcb2842687ae6361"
+  },
+  "initial_cpp_failure": {
+    "log": "extracted/goal-start-client-packets-focused.log",
+    "failed_checks": 33,
+    "state_checks": 16,
+    "trace_checks": 17,
+    "correction": [
+      "0x84 실제fmul1000/fsubp를signed64정확한차로복원",
+      "hidden9의현재옵션87+3e alias 입력/생성자계약교정"
+    ],
+    "fixture_sha256_unchanged": "ebdf5f1d7df41cec6e5187447c969f1b3b4cfae8b475e217fcb2842687ae6361"
+  },
+  "product_validation": {
+    "configuration": "Release",
+    "build_warnings": 0,
+    "build_errors": 0,
+    "focused_tests": 52,
+    "failed_checks": 0,
+    "build_log": "extracted/goal-login-packets-final-build.log",
+    "focused_log": "extracted/goal-login-packets-final-focused.log",
+    "full_ctest": {
+      "ctest_passed": 1,
+      "ctest_total": 1,
+      "tests": 1290,
+      "failed_checks": 0,
+      "seconds": 203.58,
+      "log": "extracted/goal-login-packets-ctest.log",
+      "internal_log": "extracted/goal-login-packets-tests.log"
+    },
+    "game_gui_runs": 0,
+    "log_sha256": {
+      "extracted/goal-login-packets-final-build.log": "5e68ac44ea2e158e11fe93076184560134c457f529b7a37acf4f44f51bb08150",
+      "extracted/goal-login-packets-final-focused.log": "c1ab1d3def48cf96e9fa96727d4525a2c3630558f63a0d593fd8b63bd8d02164",
+      "extracted/goal-login-packets-ctest.log": "668d1f6d3873c8e2c3320fbd4642d622b30ebc0eae6ed6cba9bc84f8f8404ab6",
+      "extracted/goal-login-packets-tests.log": "78f06ffa2a1f385bb71d52d3bf111b7f8d343ad147840d94f39eebfe9432bdce"
+    }
+  }
+}

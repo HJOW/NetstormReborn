@@ -29,6 +29,10 @@ public:
     std::string MissionType();
     // 미션 파일의 원본 브리핑 본문을 설정 치환 전 상태로 읽는다.
     std::optional<std::string> Section(std::string_view name) const;
+    // 실제 미션 Config의00440640(prefix)를 실행한다. Start의 tellAtList 작성과 같은 객체를 사용한다.
+    std::string SectionNames(std::string_view prefix) const;
+    // 실제 미션 Config의004404e0(key,value)다. 전역 설정이 아닌 현재 mission 객체에 값을 기록한다.
+    bool Set(std::string_view key,std::string_view value);
 private:
     // configuration_: 현재 언어와 실행 설정을 조회하는 인터페이스.
     o::ConfigInterface& configuration_;

@@ -1,0 +1,67 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-15",
+  "status": "release-focused-and-full-ctest-validated",
+  "native_unique_inputs": 187,
+  "normal_returns": 187,
+  "native_entries": {
+    "0048f9f0": 160,
+    "004e4a40": 184,
+    "004df590": 184,
+    "0048f550": 256,
+    "0042b0e0": 160,
+    "0040a5d0": 160,
+    "0040a590": 160,
+    "004a6b40": 24,
+    "0040b330": 25,
+    "004b3bc0": 15,
+    "0040b110": 16
+  },
+  "explicit_address_boundaries": {
+    "004e2a50": 96,
+    "004e0a30": 96
+  },
+  "game_gui_os_calls": 0,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_mission_server_packets.py": "bf43a0e040f8d5babeb4d7904c43b405c4c2536ac7e318956e9aa9b4201cc36e",
+    "tools/decomp_chat_channels.py": "b1601cd2081effd21d2004a4efcf13c5efc3c4cd5eeaf60c38cf624eb4261f09",
+    "cpppj/src/o/RawMissionServerPackets.h": "132876bc194a5a7b4553017b38d5cf34abd10b56407a13291650b8b53842e718",
+    "cpppj/src/o/RawMissionServerPackets.cpp": "286ce1f3b9ae21da7cae3b22a1e0429e1a218c2ffda61b2a3989333f11388364",
+    "cpppj/tests/fixtures/mission-server-packets-x86.tsv": "89016a9dfc75ecc019d97fb1fbf17481ee28a067d0b142c25d3df22ffa5952e3",
+    "cpppj/tests/MissionServerPacketsTests.cpp": "5a01df08e68d30f28e41b64a116a721572e6f3036fb4a07ec76bfa9d9e2bbc2d"
+  },
+  "selected_domain": "PATCH Player0..8; central island generation is explicitly unsupported; mission zone returns through actual No Central Island log",
+  "boundaries": [
+    "Address object/format and network send are explicit boundaries; actual NameSanitize and two finalizers execute in PE.",
+    "CRT name search/memmove/format are explicit substitutions inherited from Chat oracle.",
+    "Full Player1620, current globals and every declared wire byte are compared.",
+    "Native register/stack return and bounded write guard; game/GUI/OS runs zero."
+  ],
+  "product_validation": {
+    "configuration": "Release",
+    "build_warnings": 0,
+    "build_errors": 0,
+    "focused_tests": 52,
+    "failed_checks": 0,
+    "build_log": "extracted/goal-login-packets-final-build.log",
+    "focused_log": "extracted/goal-login-packets-final-focused.log",
+    "full_ctest": {
+      "ctest_passed": 1,
+      "ctest_total": 1,
+      "tests": 1290,
+      "failed_checks": 0,
+      "seconds": 203.58,
+      "log": "extracted/goal-login-packets-ctest.log",
+      "internal_log": "extracted/goal-login-packets-tests.log"
+    },
+    "game_gui_runs": 0,
+    "log_sha256": {
+      "extracted/goal-login-packets-final-build.log": "5e68ac44ea2e158e11fe93076184560134c457f529b7a37acf4f44f51bb08150",
+      "extracted/goal-login-packets-final-focused.log": "c1ab1d3def48cf96e9fa96727d4525a2c3630558f63a0d593fd8b63bd8d02164",
+      "extracted/goal-login-packets-ctest.log": "668d1f6d3873c8e2c3320fbd4642d622b30ebc0eae6ed6cba9bc84f8f8404ab6",
+      "extracted/goal-login-packets-tests.log": "78f06ffa2a1f385bb71d52d3bf111b7f8d343ad147840d94f39eebfe9432bdce"
+    }
+  }
+}

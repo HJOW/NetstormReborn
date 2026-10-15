@@ -44,8 +44,8 @@ struct StartScene {
     std::string Get(std::string_view key) { Add("G,"+std::string(key));return config[std::string(key)]; }
     // 기본 글로벌과 실제 설정 처리기를 조립한다.
     RawMissionAiSettings SettingsRuntime() { ai.stuffRefreshRate=static_cast<std::int32_t>(numbers[2]);ai.startingSp=static_cast<std::int32_t>(numbers[3]);ai.checkingAsserts=numbers[4]!=0;return {OriginalEdition::Patch1078,ai,aiHooks}; }
-    // 실제 공통 Start 경계의 결과를 같은 필드 순서로 직렬화한다.
-    std::string Start() {
+    // 실제 공통 Start 결과를 직렬화한다. 현재 getter 재생은 fallback만 반대로 두고 같은 독립 입력을 사용한다.
+    std::string Start(bool currentInputs=false) {
         MissionFrameGateState gate;gate.demo=static_cast<std::uint32_t>(numbers[3]);gate.started=0;gate.startSeconds=77.25;gate.demoEndSeconds=77.25;gate.tellAtSeconds=77.25;
         MissionStartState state;state.flags=0xffffffff;state.sequence=static_cast<std::uint32_t>(numbers[5]);state.tellAtIndex=static_cast<std::uint32_t>(numbers[6]);state.fieldC0=0xa5a5a5a5;state.fieldC4=0xa5a5a5a5;
         MissionStartGlobals globals;globals.localOwner=static_cast<std::uint32_t>(numbers[0]);globals.playerKnown=static_cast<std::uint32_t>(numbers[1]);globals.editor=static_cast<std::uint32_t>(numbers[2]);MissionStartHooks hooks;
@@ -55,7 +55,15 @@ struct StartScene {
         hooks.clearTechnology=[this](std::uint32_t owner) { Add("C,"+std::to_string(owner)); };hooks.addTechnology=[this](std::uint32_t owner,std::string_view tech) { Add("T,"+std::to_string(owner)+','+StartHex(tech)); };
         hooks.hasPriest=[this](std::uint32_t owner) { Add("P,"+std::to_string(owner));return (static_cast<std::uint32_t>(numbers[4])&(1U<<owner))!=0; };hooks.createAi=[this](std::uint32_t owner) { Add("I,"+std::to_string(owner)); };
         hooks.refreshCommandGump=[this] { Add("Q"); };hooks.randomGeysers=[this] { Add("Y"); };hooks.resetCamera=[this] { Add("Z"); };
-        RawMissionStart runtime(OriginalEdition::Patch1078,gate,state,globals,hooks);runtime.Start();
+        const auto currentOwner=globals.localOwner,currentKnown=globals.playerKnown,currentEditor=globals.editor; // 기존 native의 실제 입력이며 getter 재생에서도 변경하지 않는다.
+        const auto fallbackOwner=currentOwner==1 ? 8U : 1U,fallbackKnown=currentKnown==0 ? 1U : 0U,fallbackEditor=currentEditor==0 ? 1U : 0U; // 잘못된 fallback 사용을 드러낼 반대 입력이다.
+        RawMissionStart runtime(OriginalEdition::Patch1078,gate,state,globals,hooks);
+        if (currentInputs) {
+            globals.localOwner=fallbackOwner;globals.playerKnown=fallbackKnown;globals.editor=fallbackEditor;
+            runtime.BindCurrentInputs({[&] { return currentOwner; },[&] { return currentKnown; },[&] { return currentEditor; }});
+        }
+        runtime.Start();
+        if (currentInputs) CHECK(globals.localOwner==fallbackOwner && globals.playerKnown==fallbackKnown && globals.editor==fallbackEditor);
         const std::array<std::uint32_t,10> values{{state.flags,state.sequence,state.tellAtIndex,state.fieldC0,state.fieldC4,gate.started,static_cast<std::uint32_t>(globals.denySalvage),static_cast<std::uint32_t>(globals.denyAscend),static_cast<std::uint32_t>(globals.allowAnyCapture),globals.ordinaryGeysers}};std::string result;
         // 전체 관찰 DWORD와 double 비트를 원본 fixture와 같은 순서로 쓴다.
         for (const auto value:values) { if (!result.empty()) result+=',';result+=std::to_string(value); }return result+'|'+StartDouble(gate.startSeconds)+'|'+StartDouble(gate.demoEndSeconds)+'|'+StartDouble(gate.tellAtSeconds);
@@ -84,6 +92,40 @@ TEST_CASE(MissionStart_Native204) {
         CHECK(raw==row[2]);CHECK(result==row[3]);CHECK((scene.trace.empty() ? "-" : scene.trace)==row[4]);++count;
     }
     CHECK(count==204);
+}
+// 기존Start48개의원본출력을현재getter/반대fallback으로그대로재생하며새native입력으로합산하지않는다.
+TEST_CASE(MissionStart_CurrentInputsReplayNative48WithOppositeFallback) {
+    std::size_t compared=0;
+    // 원본48개에서기대상태/모든외부효과를다시읽는다.기대값을getter구현으로계산하지않는다.
+    for (const auto& row:LoadFixture(NETSTORM_MISSION_START_FIXTURE).rows) {
+        if (row[0]!="start") continue;StartScene scene(row[1]);CHECK(scene.Start(true)==row[2]);
+        CHECK((scene.trace.empty() ? "-" : scene.trace)==row[4]);++compared;
+    }
+    CHECK(compared==48);
+}
+// SP/표시/기술/AI효과뒤현재owner재조회와myTech앞의owner보관을원문순서대로검사한다.
+TEST_CASE(MissionStart_CurrentInputsReadAtOriginalEffectBoundaries) {
+    MissionFrameGateState gate;MissionStartState state;MissionStartGlobals globals;globals.localOwner=8; // getter와다른값형fallback이다.
+    std::uint32_t currentOwner=1,currentKnown=1,currentEditor=1;std::string trace; // 외부효과가바꾸는현재원문입력과관찰순서다.
+    const auto add=[&](std::string value) { if (!trace.empty()) trace+=';';trace+=value; }; // 실제읽기/효과위치에서만관찰한다.
+    MissionStartHooks hooks;
+    hooks.get=[&](std::string_view key) {
+        if (key=="myStartMoney") { add("M");return std::string("12"); }
+        if (key=="myTech") { add("T");currentOwner=5; }
+        return std::string{};
+    };
+    hooks.sectionNames=[](std::string_view) { return std::string{}; };hooks.set=[](std::string_view,std::string_view) {}; // 해당설정의명시빈입력이며현재getter순서관찰을방해하지않는다.
+    hooks.setSp=[&](std::uint32_t owner,float money) { CHECK(owner==1 && money==194162.0F);add("S1");currentOwner=2; };
+    hooks.refreshSp=[&] { add("R");currentOwner=3; };hooks.clearTechnology=[&](std::uint32_t owner) { CHECK(owner==3);add("C3");currentOwner=4; };
+    hooks.addTechnology=[&](std::uint32_t owner,std::string_view) { CHECK(owner==4);add("A4");currentOwner=6; };
+    hooks.hasPriest=[&](std::uint32_t owner) { add("P"+std::to_string(owner));return owner==2; };
+    hooks.createAi=[&](std::uint32_t owner) { CHECK(owner==2);add("I2");currentOwner=7; };
+    hooks.refreshCommandGump=[&] { add("Q"); };hooks.resetCamera=[&] { add("Z"); };hooks.gameSeconds=[&] { add("V");return 17.25; };
+    RawMissionStart start(OriginalEdition::Patch1078,gate,state,globals,hooks);
+    CHECK(Throws([&] { start.BindCurrentInputs({[&] { return currentOwner; },{},[&] { return currentEditor; }}); }));
+    start.BindCurrentInputs({[&] { add("O"+std::to_string(currentOwner));return currentOwner; },[&] { add("K");return currentKnown; },[&] { add("E");return currentEditor; }});
+    start.Start();CHECK(trace=="M;E;K;O1;S1;R;O3;C3;O4;T;A4;O6;P1;O6;P2;I2;O7;P3;O7;P4;O7;P5;O7;P6;O7;O7;P8;Q;Z;V");
+    CHECK(globals.localOwner==8 && globals.playerKnown==0 && globals.editor==0 && gate.started==1 && gate.startSeconds==17.25);
 }
 // 미복원 생성자/초기갱신을 실제 성공으로 간주하지 않으며 기존 brain과 NoTemple은 생성자 없이도 정확히 반환한다.
 TEST_CASE(MissionStart_MissingBrainBodiesAndLiveState) {
