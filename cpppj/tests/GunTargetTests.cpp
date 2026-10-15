@@ -103,13 +103,22 @@ std::string RectBits(GunTargetRect rect) {
 }
 }
 
-TEST_CASE(rawGunTarget_native_all) {
+// 같은 원본 입력을 값형 준비 또는 현재 Player 조회기로 재생한다. 기대값은 native fixture를 유지한다.
+void ReplayGunTarget(bool currentPlayers) {
     const auto fixture=LoadFixture(NETSTORM_GUNTARGET_FIXTURE);GunTargetScene patch(true),cd(false);std::size_t compared=0;
+    std::size_t maskReads=0,flagReads=0; // 현재 저장소가 실제 분기에서 조회되는지 확인하는 관찰 수다.
     // 각 고유 원본 입력은 두 정밀도에서 같은 결과임이 별도 native 보고서에 기록되어 있다.
     for (const auto& row:fixture.rows) {
         CHECK(row.size()==5);auto& scene=row[0]=="originals" ? patch : cd;std::vector<std::uint32_t> input;
         // 기대값 계산 없이18개 입력 칸을 같은 순서로 옮긴다.
         for (const auto& value:Split(row[1],',')) input.push_back(Number(value));scene.Prepare(input);
+        auto masks=scene.state.allyMasks;auto flags=scene.state.playerFlags; // getter 수명보다 오래 사는 별도 현재 Player 입력이다.
+        if (currentPlayers) {
+            scene.state.allyMaskRead=[&](std::uint32_t owner) { ++maskReads;return masks.at(owner); };
+            scene.state.playerFlagsRead=[&](std::uint32_t owner) { ++flagReads;return flags.at(owner); };
+            // fallback이 잘못 사용되면 기존 native 출력과 달라지는 반대 입력을 남긴다.
+            scene.state.allyMasks.fill(0xffffffffU);scene.state.playerFlags.fill(0x20);
+        }
         RawGunTarget logic(scene.pool,scene.hash,scene.types,scene.targetTypes,scene.shapes,scene.state,scene.Hooks());
         GunTargetQuery query{kSourceX,kSourceY,kCenterX,kCenterY,input[1],std::bit_cast<std::int32_t>(input[2]),1,std::bit_cast<std::int32_t>(input[14])};
         const auto target=Sid{static_cast<std::uint16_t>(input[17])};std::uint32_t result=0;GunTargetRect rect{};
@@ -129,7 +138,12 @@ TEST_CASE(rawGunTarget_native_all) {
         ++compared;
     }
     CHECK(compared>1000);
+    if (currentPlayers) CHECK(maskReads>0 && flagReads>0);
 }
+// 두 판본의 기존 값형 입력 대조를 보존한다.
+TEST_CASE(rawGunTarget_native_all) { ReplayGunTarget(false); }
+// 같은 native 입력으로 현재 Player 읽기를 검증하며 신규 원본 관찰 수로 합산하지 않는다.
+TEST_CASE(rawGunTarget_current_player_reads) { ReplayGunTarget(true); }
 
 TEST_CASE(rawGunTarget_bindings_and_missing_effect) {
     GunTargetScene scene(true);const std::array<std::uint32_t,18> input{4,128,0,0,std::bit_cast<std::uint32_t>(10.5f),std::bit_cast<std::uint32_t>(55.75f),std::bit_cast<std::uint32_t>(52.5f),0,0x10,0,2,2,0,0,1,0,1,15050};scene.Prepare(input);

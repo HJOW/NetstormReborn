@@ -35,6 +35,12 @@ struct GunTargetState {
     float scaleX{16},scaleY{11}; // Cannon SHP 핫스폿을 칸 좌표로 바꾸는 현재 픽셀 배율이다.
     std::array<std::uint32_t,kPlayerCount+1> allyMasks{}; // Player+54의 소유자별 동맹 비트 마스크다.
     std::array<std::uint8_t,kPlayerCount+1> playerFlags{}; // Player+50의 진단 ray 표시 억제 bit20이다.
+    std::function<std::uint32_t(std::uint32_t)> allyMaskRead; // 실제 세션의 현재 Player+54를 해당 원본 읽기 위치에서 조회한다. 없으면 독립 검사 배열을 사용한다.
+    std::function<std::uint32_t(std::uint32_t)> playerFlagsRead; // 실제 세션의 현재 Player+50을 진단 출력 조건에서 조회한다.
+    // 현재 소유자 행의 마스크를 반환한다. 실제 세션은 동일 Player 저장소 조회기를 연결한다.
+    std::uint32_t AllyMask(std::uint32_t owner) const;
+    // 현재 참여 플래그를 반환한다. AI 부착 뒤에도 초기 사본을 읽지 않는다.
+    std::uint32_t PlayerFlags(std::uint32_t owner) const;
 };
 // 게임 출력 부수효과를 명시적으로 연결한다. 검색·기하 계산은 훅으로 대체하지 않는다.
 struct GunTargetHooks {

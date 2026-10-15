@@ -131,6 +131,44 @@ void Replay(const char* edition) {
 TEST_CASE(GunProcess_PatchNativeBodies) { Replay("originals"); }
 // CD 10.72의 다중 helper·시간 조건·같은 dirty 전송을 비교한다.
 TEST_CASE(GunProcess_CdNativeBodies) { Replay("originalCD"); }
+// 두 판본의 기존 native 상태/효과를 현재 방향별 DWORD getter로 다시 비교한다.
+TEST_CASE(GunProcess_CurrentDirectionalAlliances) {
+    GunScene patch(OriginalEdition::Patch1078),cd(OriginalEdition::Cd1072);std::size_t compared=0,reads=0;
+    // 표적을 검사하는 Frame 입력만 재사용하며 새 native 고유입력을 만들지 않는다.
+    for (const auto& row:Rows()) {
+        if (Number(row[1])!=1) continue;
+        auto& scene=row[0]=="originals" ? patch : cd;scene.Prepare(row);
+        std::array<std::uint32_t,81> current{}; // 실제 소비자는 bool로 복제하지 않은 방향별 DWORD를 읽는다.
+        scene.state.allianceRead=[&](std::uint32_t owner,std::uint32_t target) { ++reads;return current.at(owner*9+target); };
+        RawGunProcess logic(scene.pool,scene.types,scene.state,scene.Hooks());
+        current[11]=Number(row[16]) ? 7U : 0U;current[19]=Number(row[16]) ? 0U : 9U;
+        scene.state.allies[1][2]=Number(row[16])==0; // 반대값의 초기 사본을 쓰면 원본 결과가 달라진다.
+        const auto length=scene.Run(row,logic);CHECK(scene.Output(length)==std::vector<std::string>(row.begin()+30,row.end()));++compared;
+    }
+    CHECK(compared>0 && reads>0);
+}
+// 현재 getter의 호출은 원본 boss/유효표적/죽음 분기 뒤이며 친군발사 조회보다 앞이다.
+TEST_CASE(GunProcess_CurrentAllianceShortCircuit) {
+    // PATCH와 CD의 동일한 짧은 평가 순서를 검사한다. native 고유입력 수에는 넣지 않는다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
+        GunScene scene(edition);scene.Prepare(Rows().front());
+        auto parent=scene.FixtureSlot(Sid{50});auto target=scene.FixtureSlot(Sid{60});
+        parent[10]=128;parent[scene.patch ? 40 : 35]=0;parent[scene.patch ? 34 : 32]=1;
+        target[11]=0;target[scene.patch ? 34 : 32]=2;scene.types[128].group=1;
+        Put(scene.fields.bytes,32,1);Put(scene.fields.bytes,24,60,2);Put(scene.fields.bytes,16,0);Put(scene.fields.bytes,20,0);
+        scene.state.fixedMode=false;scene.state.disabled=false;scene.state.now=-1;scene.state.boss=false;
+        std::size_t reads=0; // 원본의 선택된 한 방향 읽기 횟수다.
+        scene.state.allianceRead=[&](std::uint32_t owner,std::uint32_t other) { CHECK(owner==1 && other==2);++reads;return 0U; };
+        RawGunProcess logic(scene.pool,scene.types,scene.state,scene.Hooks());
+        logic.Frame(scene.fields);CHECK(reads==0 && scene.fields.Target()==Sid{60});
+        scene.state.boss=true;logic.Frame(scene.fields);CHECK(reads==1 && scene.fields.Target()==Sid{60});
+        // 죽은 표적은 표를 읽기 전에 ClearTarget으로 이동한다.
+        target[11]=2;logic.Frame(scene.fields);CHECK(reads==1 && scene.fields.Target().value==0);
+        target[11]=0;Put(scene.fields.bytes,24,60,2);scene.state.friendlyFire=true;
+        scene.state.allianceRead=[&](std::uint32_t,std::uint32_t) { ++reads;scene.state.friendlyFire=false;return 7U; };
+        logic.Frame(scene.fields);CHECK(reads==2 && scene.fields.Target().value==0);
+    }
+}
 // 미복원 검색/생성/효과를 noop로 성공시키지 않으며 packet 부족은 선행 변경 전에 거부한다.
 TEST_CASE(GunProcess_MissingEffectAndPacketBounds) {
     GunScene scene(OriginalEdition::Patch1078);scene.Prepare(Rows().front());RawGunProcess logic(scene.pool,scene.types,scene.state,{});

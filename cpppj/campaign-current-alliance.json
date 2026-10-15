@@ -1,0 +1,53 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-15",
+  "workUnit": 64,
+  "status": "compiled-and-existing-native-fixtures-compared",
+  "newNativeUniqueInputs": 0,
+  "historicalNativeFixtures": {
+    "guntarget": 3454,
+    "gunprocess": 2996,
+    "fence-target": 856
+  },
+  "currentGetterReplays": {
+    "guntarget": 3454,
+    "gunprocessFrames": 522,
+    "fenceAcrossAndPoint": 674
+  },
+  "validation": {
+    "configuration": "Release",
+    "buildExitCode": 0,
+    "buildWarnings": 0,
+    "buildErrors": 0,
+    "integrationFocusedTests": 39,
+    "failedChecks": 0,
+    "newFocusedTests": 4,
+    "buildLog": "extracted/goal-session-ai-combat-build.log",
+    "focusedLog": "extracted/goal-session-ai-combat-focused.log",
+    "fullCTestAfterChange": "pending"
+  },
+  "boundaries": [
+    "Historical fixture inputs reused; no new native or original game/GUI execution",
+    "Current Player+54 DWORD, Player+50 BYTE, directional 81 DWORD reads supplied by same Session",
+    "Boss false and dead target short-circuit before alliance reads; alliance read precedes friendly-fire",
+    "Historical guntarget/archertype product snapshots retained; missing historical narrow exports prevent claiming old full --verify success",
+    "Automatic login/Ready/Stage3/AI strategy/Outcome and natural mission completion remain separate work"
+  ],
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originalCD/functions.tsv": "453aa383c27baf8eefa00d97bf44051d18460150556511c2eb7a46f111e92def",
+    "cpppj/src/o/RawGunTarget.h": "831741675e26c67e13dfc9ec12bb67b47f998a1b9796b15ce6a686a6e75d95b4",
+    "cpppj/src/o/RawGunTarget.cpp": "441d023323148c89d3a5ab46164bfcee3abbcfe74e716c754af5c78df6358b53",
+    "cpppj/src/o/RawGunProcess.h": "807bfccc91f1c61677aea6e92c8c908e72f8094408cb8705b32b09b1f6a49319",
+    "cpppj/src/o/RawGunProcess.cpp": "b07261cffb85f47889866d2544b9651d7730e0712e90e049c4f816503bd34428",
+    "cpppj/src/o/RawFenceTarget.cpp": "0e338dbf5fe3ee18d7215b4c986ec37cdc0f241726c9acafc52bb2aa880d6d75",
+    "cpppj/tests/GunTargetTests.cpp": "6d3d1209000c9b36b78f2bdf3cae10e721098a41ec347ebe7edfcb6ca9719d1c",
+    "cpppj/tests/GunProcessTests.cpp": "5eae89266eb3b1e8681c648148cfadab679152abb3439ba85de8e7c410261828",
+    "cpppj/tests/FenceTargetTests.cpp": "e2cab0033a969992326893d37ccabccc4b78920bee0d296cb26a44762e7506c3",
+    "cpppj/tests/fixtures/guntarget-x86.tsv": "8625065722057d8a1e2e5e45fe4fd0bc89895941e8fc168d2c49464155153892",
+    "cpppj/tests/fixtures/gunprocess-x86.tsv": "d13077033f5e3154e9109a93e7350ce4cbf33b365d03b297db95fa7159c058e7",
+    "cpppj/tests/fixtures/fence-target-x86.tsv": "d3586ba6885ef0fdb5238e0d220f970aaa568086ef5ee81dae0d4d32fbf23446"
+  }
+}

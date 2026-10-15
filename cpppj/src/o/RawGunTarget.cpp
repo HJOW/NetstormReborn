@@ -7,6 +7,16 @@
 #include <utility>
 
 namespace netstorm::o {
+// 실제 세션은 같은 Player+54를 다시 읽고, 독립 native 입력은 기존 배열을 사용한다.
+std::uint32_t GunTargetState::AllyMask(std::uint32_t owner) const {
+    if (owner>=allyMasks.size()) throw std::out_of_range("Gun 현재 동맹 소유자 범위 오류");
+    return allyMaskRead ? allyMaskRead(owner) : allyMasks[owner];
+}
+// 진단 출력 분기가 도달한 시점의 현재 참여 플래그를 읽는다.
+std::uint32_t GunTargetState::PlayerFlags(std::uint32_t owner) const {
+    if (owner>=playerFlags.size()) throw std::out_of_range("Gun 현재 참여 소유자 범위 오류");
+    return playerFlagsRead ? playerFlagsRead(owner) : playerFlags[owner];
+}
 namespace {
 // 짝수 방향의 ray 이동 표이며 원본 0052f83c/0052f85c와 CD 0051c330/0051c350이다.
 constexpr std::array<int,8> kDx{0,1,1,1,0,-1,-1,-1},kDy{-1,-1,0,1,1,1,0,-1};
@@ -137,7 +147,7 @@ GunTargetRect RawGunTarget::CannonRay(const GunTargetQuery& query,std::int32_t d
         rect.right=static_cast<float>(static_cast<double>(Ceiling(rect.right))+kEdgeHigh);rect.bottom=static_cast<float>(static_cast<double>(Ceiling(rect.bottom))+kEdgeHigh);
         Clamp(rect.left,rect.top);Clamp(rect.right,rect.bottom);
     }
-    if (state_.showRanges && !(state_.playerFlags[query.owner]&0x20)) {
+    if (state_.showRanges && !(state_.PlayerFlags(query.owner)&0x20)) {
         if (!hooks_.drawRange) throw std::logic_error("Gun Cannon 진단 출력 경계 누락");hooks_.drawRange(rect,false);
     }
     return rect;
@@ -187,7 +197,7 @@ bool RawGunTarget::MayTarget(const GunTargetQuery& query,Sid target) const {
     if (target.value>=5 && target.value<=reservedLast) return false;
     const auto owner=raw[pool_.Edition()==OriginalEdition::Patch1078 ? 34U : 32U];
     if (owner>kPlayerCount) throw std::out_of_range("Gun 후보 소유자 오류");
-    if (!state_.friendlyFire && (state_.allyMasks[query.owner]&(1U<<owner))) return false;
+    if (!state_.friendlyFire && (state_.AllyMask(query.owner)&(1U<<owner))) return false;
     if (extra&0x11) return false;
     if (type.flags2&kPriest) {
         const auto quantity=pool_.Edition()==OriginalEdition::Patch1078 ? std::bit_cast<std::int32_t>(Read(raw,26)) : static_cast<std::int32_t>(std::bit_cast<std::int16_t>(static_cast<std::uint16_t>(Read(raw,26,2))));
@@ -211,13 +221,14 @@ std::array<float,2> RawGunTarget::HitPoint(const GunTargetQuery& query,GunTarget
 // 실제 Archer finder는 center±trunc(range) 범위와 flags5를 쓰며 ground에1000을 더한다.
 Sid RawGunTarget::FindArcher(const GunTargetQuery& query) const {
     const int range=Truncate(targetTypes_[query.type].range),x=Ceiling(query.centerX),y=Ceiling(query.centerY);
-    if (!state_.friendlyFire && !(state_.allyMasks[query.owner]&(1U<<query.owner))) throw std::logic_error("Gun 자기 동맹 원본 assert");
     std::vector<int> heights;heights.reserve(targetTypes_.size());
     // 일반 finder의 실제 타입 확장 높이 입력을 번호순으로 전달한다.
     for (const auto& type:targetTypes_) heights.push_back(type.heightExtension);
     RawSquidFinder finder(pool_,hash_,types_,heights);float best=1.0e13f;Sid result;
+    const auto first=finder.Begin({x-range,y-range,x+range,y+range},5); // 원본은 첫 후보와 next를 준비한 뒤 자기 동맹을 읽는다.
+    if (!state_.friendlyFire && !(state_.AllyMask(query.owner)&(1U<<query.owner))) throw std::logic_error("Gun 자기 동맹 원본 assert");
     // next는 현재 후보가 반환될 때 이미 저장된다. 후보의 현재 타입/좌표는 매번 다시 조회한다.
-    for (auto sid=finder.Begin({x-range,y-range,x+range,y+range},5);sid.value;sid=finder.Next()) {
+    for (auto sid=first;sid.value;sid=finder.Next()) {
         if (!(types_[pool_.Slot(sid)[10]].flags1&kHitPoints) || !ArcherTarget(query,sid)) continue;
         const auto point=HitPoint(query,Footprint(sid));const double dx=static_cast<double>(query.centerX)-point[0],dy=static_cast<double>(query.centerY)-point[1];
         const float distance=static_cast<float>(dx*dx+dy*dy);const double score=static_cast<double>(distance)+((types_[pool_.Slot(sid)[10]].flags2&kFlyer) ? 0 : kGroundPenalty);

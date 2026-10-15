@@ -7,6 +7,11 @@
 #include <utility>
 
 namespace netstorm::o {
+// 같은 방향별 DWORD의 nonzero를 읽으며 기존 bool 표는 독립 입력 대조에만 남긴다.
+bool GunProcessState::IsAlly(std::uint32_t owner,std::uint32_t target) const {
+    if (owner>=allies.size() || target>=allies.size()) throw std::out_of_range("Gun 현재 방향별 동맹 범위 오류");
+    return allianceRead ? allianceRead(owner,target)!=0 : allies[owner][target];
+}
 namespace {
 // outer GunProcess 및 inner Baseprocess의 원본 필드 위치다.
 constexpr std::size_t kDirty=8,kTime=16,kTarget=24,kStage=28,kGroup=32,kInner=40,kForm=44,kParent=48;
@@ -118,14 +123,17 @@ void RawGunProcess::Frame(GunProcessFields& fields) const {
     auto parent=Parent(fields);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;const auto extra=patch ? 40U : 35U,owner=patch ? 34U : 32U;
     if (fields.Group()!=types_[parent[10]].group || (parent[extra]&9)) throw std::logic_error("GunProcess Frame group/abstract/astral 원본 assert");
     if ((parent[extra]&0x20) || state_.fixedMode || state_.disabled) return;
-    const auto target=fields.Target();const bool valid=target.value && target.value<pool_.Capacity();
-    bool clear=!valid;
-    if (valid) {
-        const auto raw=pool_.Slot(target);const auto first=parent[owner],second=raw[owner];
-        if (first>kPlayerCount || second>kPlayerCount) throw std::out_of_range("GunProcess 동맹 소유자 범위 오류");
-        clear=(raw[11]&3) || (state_.allies[first][second] && !state_.friendlyFire);
+    // 원본 boss 조건이 거짓이면 표적 슬롯/소유자/동맹 조회 자체를 실행하지 않는다.
+    if (state_.boss) {
+        const auto target=fields.Target();const bool valid=target.value && target.value<pool_.Capacity();
+        bool clear=!valid;
+        if (valid) {
+            const auto raw=pool_.Slot(target);const auto first=parent[owner],second=raw[owner];
+            if (first>kPlayerCount || second>kPlayerCount) throw std::out_of_range("GunProcess 동맹 소유자 범위 오류");
+            clear=(raw[11]&3) || (state_.IsAlly(first,second) && !state_.friendlyFire);
+        }
+        if (clear) ClearTarget(fields,false);
     }
-    if (state_.boss && clear) ClearTarget(fields,false);
     parent=Parent(fields);
     // 실제 x87 분기: 패치 test C0는 unordered도 반환하고 CD test C0|C3는 unordered를 진행한다.
     if (patch ? !(fields.Time()<=state_.now) : state_.now<fields.Time()) return;

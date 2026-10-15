@@ -59,11 +59,17 @@ struct FenceFixture {
     }
 };
 // 선택한 실제 루트 종류의 모든 DWORD를 비교한다. 실패할 때 행 번호와 실제/기대 비트를 남긴다.
-void CheckFenceRows(char kind,std::size_t expectedCount) {
+void CheckFenceRows(char kind,std::size_t expectedCount,bool currentAlliances=false) {
     FenceFixture fixture;std::size_t count=0,index=0;
     // 한 행은 Native 고유 루트 한 개이며 반복 재실행을 새 관찰로 세지 않는다.
     for (const auto& row:LoadFixture(NETSTORM_FENCE_TARGET_FIXTURE).rows) {
         ++index;if (row[0][0]!=kind) continue;CHECK(row.size()==29);fixture.Setup(row);
+        std::array<std::uint32_t,81> current{}; // 현재 한 방향 DWORD만 native 입력과 같고 fallback은 반대로 둔다.
+        if (currentAlliances) {
+            current[9+Number(row[14])]=Number(row[15]) ? 7U : 0U;
+            fixture.process.allianceRead=[&](std::uint32_t owner,std::uint32_t target) { return current.at(owner*9+target); };
+            fixture.process.allies[1][Number(row[14])]=Number(row[15])==0;
+        }
         const auto point=[&](std::size_t x,std::size_t y) { return std::array<float,2>{std::bit_cast<float>(Number(row[x])),std::bit_cast<float>(Number(row[y]))}; }; // 명시 입력 좌표를 읽는다.
         std::array<float,4> output{};
         if (kind=='R') { const auto rect=fixture.fence.SightBounds(Sid{kIds[0]});output={rect.left,rect.top,rect.right,rect.bottom}; }
@@ -88,6 +94,8 @@ void CheckFenceRows(char kind,std::size_t expectedCount) {
 TEST_CASE(FenceTarget_NativeAcross) { CheckFenceRows('A',626); }
 // 전체 finder와 현재 해시 단계·후보 유무/가까운 후보 선택 원본48개다.
 TEST_CASE(FenceTarget_NativePointFinder) { CheckFenceRows('P',48); }
+// 원본 배리어/전체 finder 입력을 현재 비대칭 표로 재생한다. 기존 관찰 수에 중복 합산하지 않는다.
+TEST_CASE(FenceTarget_CurrentDirectionalAlliances) { CheckFenceRows('A',626,true);CheckFenceRows('P',48,true); }
 // 일반 포구/시야 사각형은 각24개 원본과 대조한다.
 TEST_CASE(FenceTarget_NativeMuzzleAndSight) { CheckFenceRows('M',24);CheckFenceRows('R',24); }
 // 실제 선분의 평행/수직/사선/끝점/소수 교차 원본134개다.

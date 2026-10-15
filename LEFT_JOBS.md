@@ -2,6 +2,9 @@
 
 ## 2026-10-15 완주 목표 재개 (`HJOW-Athlon`)
 
+- [x] **단위64 완료:** 총 표적의 현재 Player+54/+50과 총/배리어의 현재 방향별81DWORD 조회기를 구현했다. boss0/죽은 표적의 조회 생략·친군발사 이전 동맹 읽기 및 finder/압축 끝점 저장 순서를 원문대로 교정했다. 기존 native 입력을 현재 getter/반대 fallback으로 다시 대조한 새4검사를 포함해 **Release 경고0·오류0·집중39개 실패0**이다. 현재 getter 재생은 표적3,454·총Frame522·배리어674개이며 신규 native 고유입력0이다. 같은 빌드의 전체 CTest는 아직 미실행이다. [상세](docs/exe/cpp-gun-current-alliance-20261015.md), `cpppj/campaign-current-alliance.json`, `extracted/goal-session-ai-combat-{build,focused}.log`를 따른다. **`20261015-58 CP 총과 배리어의 현재 방향별 동맹 조회 및 원본 읽기 순서 복원`**으로 코어/검사를 먼저 커밋하고 실제 Session 공급은 다음 단위63 커밋에 포함한다.
+- [ ] **단위63 검증 완료·커밋 준비:** 같은 Session의 실제 AI 생성/초기 갱신/해제와 단위64의 실제 현재 Player/동맹 공급을 연결했다. 새 Session4개 및 기존 생성자160/초기갱신133/참여608/요구에너지2352 대조를 포함한 위 집중39개가 통과했다. [AI 상세](docs/exe/cpp-session-ai-20261015.md)를 따른다. 자동 Stage3/AI전략/Outcome은 아직 켜지 않았다. 단위65 받침/로컬 간헐천 연결4파일은 현재 **CMake 미등록·미빌드** 초안이다.
+- [x] 사용자 변경 알림에 따라 커밋 전 AGENTS.md를 다시 읽었다. 이후 커밋은 **`YYYYMMDD-NN PJ MSG`**, cpppj는 **CP**, dotnetpj는 DN, 공통은 CM을 사용한다. 이 변경 전에 끝난57번 커밋은 당시 규칙을 따른 기록으로 유지한다.
 - [x] 사용자의 새 `/goal` 요청으로 앞선 중지 상태를 해제하고 AGENTS.md와 양 LEFT_JOBS의 최신 인수인계를 다시 읽었다. 현재 PC와 마지막 전체/선택 정밀 디컴파일 PC는 **HJOW-Athlon, 2026-10-15**로 일치한다. 시작 작업트리는 깨끗하다. 원격 push와 DirectDraw 전체화면 오류 수정은 범위에서 제외한다.
 - [x] 단위62의 미등록 요구 에너지 모듈을 빌드에 등록하고 원본2,352입력·보호188TYPE·경계 집중3개 검사를 확인했다. Release 경고0·오류0, 전체 CTest **1/1·내부1,241개 실패0·212.48초**다. 아래 과거 단위62의 CMake 미등록·실제188TYPE 미검증 항목은 이 결과로 완료다. 근거는 `extracted/goal-type-energy-{build,focused}.log`, `extracted/goal-resume62-ctest.log`와 [상세 기록](docs/exe/cpp-ai-required-energy-20261015.md)이다. 기존2,352입력 재사용이며 새 native 고유입력으로 중복 합산하지 않는다.
 - [x] 단위62를 **`20261015-57 AI 요구 에너지 모듈 등록과 실제188TYPE 공급 검증`**으로 로컬 커밋한다. 게임/GUI·보호 원본·AGENTS·dotnetpj 변경은 없다. 현재/마지막 정밀 디컴파일 PC는 **HJOW-Athlon, 2026-10-15**다.

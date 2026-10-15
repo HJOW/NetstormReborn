@@ -38,6 +38,9 @@ struct GunProcessState {
     std::uint32_t processType{34},windArcherType{140},thunderCannonType{131},rainCannonType{129};
     // allies: 동맹.
     std::array<std::array<bool,kPlayerCount+1>,kPlayerCount+1> allies{};
+    std::function<std::uint32_t(std::uint32_t,std::uint32_t)> allianceRead; // 같은 실제 방향별81DWORD의 현재 한 칸을 읽는다. 없으면 독립 검사 배열을 사용한다.
+    // 원본 방향을 유지해 현재 nonzero 동맹 칸을 판정한다. 반대 방향을 자동으로 읽지 않는다.
+    bool IsAlly(std::uint32_t owner,std::uint32_t target) const;
 };
 // 명시 외부 경계다. 실제 원본 몸체가 아직 없으면 호출자가 예외를 유지하며 noop로 성공시키지 않는다.
 struct GunProcessHooks {

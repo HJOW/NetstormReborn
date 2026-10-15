@@ -117,9 +117,9 @@ std::array<float,2> RawFenceTarget::Intersection(std::array<float,2> a,std::arra
 std::array<float,2> RawFenceTarget::Across(Sid mark,Sid firing,Sid target) const {
     const auto raw=Slot(mark);const auto firingRaw=Slot(firing);const Sid firstSid{static_cast<std::uint16_t>(Read(raw,12,2))};
     const auto firstRaw=Slot(firstSid);const auto owner=firstRaw[34],firingOwner=firingRaw[34];
+    const auto secondId=(Read(raw,26)<<8)|raw[30]; // 동맹 조회 전에 원본 압축 끝점 번호를 보존한다.
     if (owner>=9 || firingOwner>=9) throw std::out_of_range("fencemark 동맹 Player 번호 오류");
-    if (owner==firingOwner || process_.allies[firingOwner][owner]) return kInvalid;
-    const auto secondId=(Read(raw,26)<<8)|raw[30];
+    if (owner==firingOwner || process_.IsAlly(firingOwner,owner)) return kInvalid;
     if (secondId>65535) throw std::out_of_range("fencemark 압축 끝점 SID 오류");
     const auto originalA=Position(firstSid),originalB=Position(Sid{static_cast<std::uint16_t>(secondId)});
     const auto firingPosition=Position(firing),targetPosition=Position(target);
