@@ -42,6 +42,14 @@ struct MissionOutcomeHooks {
     std::function<void()> onSection; // 미션 가상 +0x28. 사건 섹션이 존재한 뒤에 호출한다.
     std::function<void(std::uint32_t)> invalidPlayerAssert; // 패치의 범위 assert 기록만 공급한다. CD는 호출하지 않는다.
 };
+// 실제 세션의 현재 입력을 사본 없이 읽는다. 조회 콜백은 값만 읽으며 게임 상태를 바꾸지 않아야 한다.
+struct MissionOutcomeCurrentInputs {
+    std::span<const std::uint8_t> players; // 현재 Player9 원문이다. flags와 신전 SID는 각 조건의 실제 조회 시점에 읽는다.
+    std::span<const std::uint32_t> allies; // 방향별9×9 DWORD 표다. 한쪽 동맹이나 bool 사본으로 대체하지 않는다.
+    std::function<std::uint32_t()> localPlayer; // 현재 실제 battleOwner DWORD를 읽는다.
+    std::function<std::uint32_t()> demo; // 현재 미션의 Demo 접두 여부를 읽는다.
+    std::function<std::uint32_t()> tellBlocked; // 현재 실제 Tell 차단 DWORD를 읽는다.
+};
 // 004c36c0/CD 00410380, 004c3940/CD 00410a90, 004922e0/CD 0040da20의 실행 계층이다.
 class RawMissionOutcome {
 public:
@@ -57,6 +65,8 @@ public:
     // 플레이어 1~8의 halfTemple/deadTemple/deadPriest/captured/saved 순서 뒤 팀/로컬 실패를 검사한다.
     // 신전 파괴만으로 승리하지 않으며 사제 ownerState와 두 방향 동맹으로 적 팀의 생존을 집계한다.
     void Check() const;
+    // 실제9 Player/방향별동맹/미션 전역을 조회마다 읽도록 연결한다. 생략하면 기존 독립 입력 상태를 사용한다.
+    void BindCurrentInputs(MissionOutcomeCurrentInputs inputs);
     // 후속 연결에서 같은 풀의 객체/최대 HP 몸체를 사용하는지 검증한다.
     const SidPool& Pool() const;
 private:
@@ -70,6 +80,18 @@ private:
     bool TempleDead(std::uint32_t player) const;
     // 현재 사제 목록에서 찾은 좌표의 영역 소유자와 callback 직전에 저장한 로컬 번호를 비교한다.
     bool PriestSaved(std::uint32_t player) const;
+    // 실제 연결에서는 현재 Player의 활성 BYTE를 읽고 독립 검사에서는 지정 상태 필드를 읽는다.
+    std::uint8_t PlayerFlags(std::uint32_t player) const;
+    // 현재 Player의 신전 SID DWORD를 해당 조건의 실제 조회 시점에 읽는다.
+    std::uint32_t PlayerTemple(std::uint32_t player) const;
+    // 현재 방향별9×9 표의 지정 DWORD를 읽는다. 두 방향의 평가는 합치지 않는다.
+    std::uint32_t Ally(std::uint32_t from,std::uint32_t to) const;
+    // 현재 실제 로컬 번호를 조회하며 이전 callback 전의 값을 재사용하지 않는다.
+    std::uint32_t LocalPlayer() const;
+    // 사건 이름을 구성하는 시점의 현재 Demo DWORD를 읽는다.
+    std::uint32_t Demo() const;
+    // 사건을 실행하는 gate 판정 위치에서만 현재 차단 DWORD를 읽는다.
+    std::uint32_t TellBlocked() const;
     // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     const SidPool& pool_;
     // priests_: 사제.
@@ -80,6 +102,7 @@ private:
     MissionOutcomeHooks hooks_;
     // lookup_: 조건에 맞는 현재 객체를 찾는 조회 처리기.
     RawPriestLookup lookup_;
+    MissionOutcomeCurrentInputs current_; // 연결 후에도 span/콜백만 소유하며 Player·동맹·미션 입력을 복사하지 않는다.
 };
 // 최대 HP만 같은 풀의 실제 모듈로 연결한다. UI/스크립트/영역 효과는 호출자가 채운 그대로 둔다.
 MissionOutcomeHooks MakeMissionOutcomeHooks(const SidPool& pool,const SquidReward& reward,MissionOutcomeHooks hooks);

@@ -9,8 +9,17 @@
 #include "client/SoundProcess.h"
 #include "o/RawPlayerRegular.h"
 #include "o/RawBattleBroadcast.h"
+#include "o/RawMissionOutcome.h"
 #include "client/CameraHome.h"
 namespace netstorm::client {
+// 미션 입력/정지/UI 수명은 실제 UberGump의 현재 저장소와 동작을 빌린다.
+struct CampaignMissionOutcomeUi {
+    std::function<std::uint32_t()> demo; // 현재 미션 Demo DWORD를 읽는다.
+    std::function<std::uint32_t()> tellBlocked; // 현재 실제 Tell 차단 DWORD를 읽는다.
+    std::function<bool(std::string_view)> section; // 실제 미션/Tell 섹션을 실행하고 발견 여부를 반환한다.
+    std::function<void()> closeTransient; // 성공한 섹션 뒤 원본 임시 Gump 정리를 실행한다.
+    std::function<void()> onSection; // 성공한 섹션 뒤 현재 미션 가상 통지/정지 소유권을 처리한다.
+};
 // 게임 계산을 대신하지 않고 실제 클라이언트 UI/음향/전송의 선택 경계를 공급한다.
 struct RawCampaignSessionServices {
     std::function<std::int32_t()> unixSeconds; // 실제 time32의 현재 Unix 초다.
@@ -22,6 +31,7 @@ struct RawCampaignSessionServices {
     RawCampaignArcherEffects archer; // 실제 음향/fencemark 코너 및 미복원 다른 총의 경계다.
     RawCampaignMotionEffects motion; // 실제 경로의 음향/운반/의식 등 외부 하위 소비자다.
     o::PlayerRegularHooks player; // 실제 Player 로그와 예약 외부 경계다.
+    CampaignMissionOutcomeUi missionOutcome; // 현재 미션의 실제 UI/차단 조회 경계다. Check를 호출할 때만 필요하다.
     o::SquidDestroyHooks deletion; // 다른 파생 삭제/선택/전송의 실제 외부 경계다.
     o::SquidAssetDestroy destroy; // 다른 파생 자산의 실제 가상 삭제 분배기다.
     o::FormPopTransmit dependencyTransmit; // 감시 Form의 현재 서버 송신 소비자다.
@@ -48,6 +58,12 @@ public:
     void ResetCamera(CameraHomeState& state,std::function<void(std::int32_t,std::int32_t)> apply) const;
     // 현재 같은 시각을 모든 모듈에 공급한 뒤 동일 Kernel을 실행한다.
     void RunFrame(o::FrameTime time,bool paused);
+    // 원본 미션 게이트의 첫 checkOutcome 위치에서만 호출한다. 설치/활성화 전에 자동 실행하지 않는다.
+    void CheckMissionOutcome();
+    // 실제 로그인/AI 초기화가 사용하는 동일9 Player 원문을 빌린다. 프레임별 사본을 만들지 않는다.
+    std::span<std::uint8_t> PlayerRecords();
+    // 실제 방향별동맹 초기화가 쓰고 승패가 읽는 같은81DWORD를 빌린다.
+    std::span<std::uint32_t> Alliances();
     // 실제 사제의 같은 Start/BFS/Host54 경로를 시작한다.
     bool MovePriest(o::Sid sid,o::RawPathPoint destination);
     // 같은 raw 신전의 가상 Draw를 실행하고 실제 SoundList/재생 경계로 상승음을 보낸다.

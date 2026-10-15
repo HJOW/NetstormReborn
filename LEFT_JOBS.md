@@ -1,5 +1,13 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-15 단위41 완료: 현재 raw 승패 입력·지면 소유자 연결 (`VM-W11-Codex`)
+
+- [x] `RawMissionOutcome`에 같은 Player9 원문/방향별81DWORD·현재 local/Demo/Tell 차단을 매 조회 읽는 연결을 추가했다. `RawCampaignSession`은 같은 사제/HP/표면과 영구 latch를 소유하고 `GameWorld::CheckMissionOutcome()`에서 명시 호출한다. 초기화 전 자동 Check는 켜지 않았다. [단위41 상세](docs/exe/cpp-outcome-live-20261015.md).
+- [x] `RawRegionOwner`는 실제 두 PE의 정수/float getter와 snap/CRT를 복원했다. 섬 목록의 추정 소유자를 거치지 않고 현재 hash0의 WORD SID→실제 isle 타입→raw owner BYTE를 읽는다. Native **1,632고유입력/두 x87 모드3,264정상반환**·집중 RegionOwner7개와 MissionOutcome5개 실패0이다. 기존 승패 fixture의 raw backend 재대조는 새 native 입력 수로 합산하지 않는다.
+- [x] 통합 Release게임/검사빌드 경고·오류0·CTest **1/1·내부1,183개·실패 체크0**(114.85초)이며 Early2와 병행 Player참여606입력 당시 변경을 포함한다. 이후 Player 이름32바이트/608입력 보강은 별도 최종 집중2개로 확인한다. 근거감사와 공백검사 통과다. 현재/마지막 정밀PC는 **VM-W11-Codex, 2026-10-15**이며 이번 단위 새 export/게임 실행은 없다.
+- [x] 인수인계 뒤 **`20261015-31 현재 플레이어와 지면 소유자의 미션 승패 입력 연결 검증`**으로 로컬커밋하며 push하지 않는다. 보호 원본·AGENTS·dotnetpj는 변경하지 않았다.
+- [ ] 실제 로그인/AI 생성·방향별 동맹을 원본 순서로 초기화하고 미션 게이트/Tell/정지 소유권을 연결해야 자동 승패를 활성화할 수 있다. Construct/생산/다리/수확/운반·승패 후 진행저장도 후속이며 완주 동일성 미완료·목표active·DirectDraw전체화면오류제외를 유지한다.
+
 ## 2026-10-15 단위40 완료: Early2의 실제 단계·선택·타이머 (`VM-W11-Codex`)
 
 - [x] `RawTutorialTwo`에 PATCH004c3bb0의 A~H 전체 조건/부수효과를 복원했다. 같은 미션 게이트의 stage/timer와 실제 Totalmade 장부를 사용한다. 옵션2/4는 실제 BYTE만 수정하고, 현재 선택을 두 번 조회하는 규칙·C의2초/성공안내정지·F의4초/예약후선택재조회없음·G마지막timer0·H회수사건예약을 유지한다. [단위40 상세](docs/exe/cpp-tutorial-two-20261015.md).

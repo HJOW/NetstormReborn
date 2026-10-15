@@ -14,7 +14,7 @@ target_sources(netstorm PRIVATE
     RawSquidLevel.cpp RawSquidLevel.h
     RawGunMode.cpp RawGunMode.h
     RawVortexOwner.cpp RawVortexOwner.h
-    RawMissionOutcome.cpp RawMissionOutcome.h
+    RawMissionOutcome.cpp RawMissionOutcome.h RawRegionOwner.cpp RawRegionOwner.h
     RawFortObjectLoad.cpp RawFortObjectLoad.h
     RawFortFinishOwner.cpp RawFortFinishOwner.h
     RawGunProcess.cpp RawGunProcess.h

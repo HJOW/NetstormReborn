@@ -13,6 +13,7 @@
 #include "o/RawPlayerDamageNotice.h"
 #include "o/RawFenceTarget.h"
 #include "o/RawRainVortexDraw.h"
+#include "o/RawRegionOwner.h"
 #include <bit>
 #include <stdexcept>
 using namespace netstorm::o;
@@ -55,6 +56,7 @@ struct RawCampaignSession::Impl {
 
     SessionAssets assets; // 보호 archive의 현재 실제 자료다.
     PriestPlacementAssets metadata; // 실제 프레임/핫스폿/SHP이며 합성 그림 자료가 아니다.
+    std::uint32_t terrainType{97}; // 실제 월드 생성과 영역 소유자 getter가 함께 읽는 isle 타입 전역이다.
     RawSurfaceWorld world; // 모든 생성/Pop/Graph가 사용하는 단일 raw 월드다.
     RawWorldCore core; // 같은 Pool/장부/해시의 참조만 유지한다.
     GameRandom random; // 게임 난수의 명시 초기 입력이다.
@@ -65,6 +67,10 @@ struct RawCampaignSession::Impl {
     ChunkMap chunks; // 실제 Builder/성장/객체 선택의 지도다.
     std::array<std::uint8_t,RawIslandRuntime::kBytes> islandBytes{}; // 실제3204BYTE 섬 목록이다.
     std::vector<std::uint8_t> players=std::vector<std::uint8_t>(9*0xb4); // 부모/Owner/신전이 공유하는 실제9 기록이다.
+    std::array<std::uint32_t,81> alliances{}; // 원본 방향별9×9 DWORD 표다. 실제 초기화 모듈이 현재 칸을 직접 쓴다.
+    MissionOutcomeState outcomeState; // 미션 종료까지 유지하는43개 사건 잠금이며 입력 배열은 현재 원문 연결로 대체한다.
+    std::unique_ptr<RawRegionOwner> regionOwner; // 동일 Pool/hash0에서 현재 지면 소유자 BYTE를 읽는다.
+    std::unique_ptr<RawMissionOutcome> outcome; // 같은 Player9/동맹/사제/HP/영역의 현재 입력을 매 조회 읽는다.
     FortFinishOwnerState finishState; // 실제 미션 chaffMode의 자연 반환 조건이다.
     AssetPostPopState assetState; // 실제 신전/레지던스/간헐천/아웃포스트 목록이다.
     RawPriestWorldState priestState; // 실제 사제/Carrier/보호막 장기 전역이다.
@@ -156,7 +162,7 @@ struct RawCampaignSession::Impl {
     // 보호 자료를 읽기 전용으로 사용하며 모든 필수 후처리를 첫 생성 전에 등록한다.
     Impl(const GameAssets& game,const BaseFileSystem& files,FortTemplate fort,std::string mission,RawCampaignSessionServices input):
         services(std::move(input)),assets(game,files),metadata(assets.game),
-        world(OriginalEdition::Patch1078,assets.types,assets.frames,metadata.shapes,CampaignLinks(),97),core(world.Core()),
+        world(OriginalEdition::Patch1078,assets.types,assets.frames,metadata.shapes,CampaignLinks(),terrainType),core(world.Core()),
         sp(random,[this] { return seed.Reseed(); }),hp(core.pool,core.types,core.bookkeeping,rewardState,&sp),seed(random,crt,randomMode,services.unixSeconds),themes(core.types.size()),elements(core.types.size()),
         gunTypes(core.types.size()),hitTypes(core.types.size()),firingIntervals(core.types.size()),dudeSpeeds(core.types.size()),
         soundNames(RequireSounds(services)),archerTypes(core.types.size()),missileTypes(core.types.size()),projectileTypes(core.types.size()),
@@ -357,6 +363,16 @@ struct RawCampaignSession::Impl {
         stateStreams[1]={stateBytes[1],0,static_cast<std::uint32_t>(stateBytes[1].size()),!stateBytes[1].empty()};stateNames[1]=std::string(mission);
         streams[1]={templates[1].territory,0,static_cast<std::uint32_t>(templates[1].territory.size())};headers[20]=1;
         runtime=MakeRuntime();
+        regionOwner=std::make_unique<RawRegionOwner>(core.pool,core.hash.Entries(0),terrainType);
+        auto& ui=services.missionOutcome; // 선택되지 않은 UI를 기본 성공으로 채우지 않고 실제 Check에서 오류를 유지한다.
+        FillMissing(ui.demo);FillMissing(ui.tellBlocked);FillMissing(ui.section);FillMissing(ui.closeTransient);FillMissing(ui.onSection);
+        MissionOutcomeHooks outcomeHooks; // 현재 원본 조건 계산은 기존 RawMissionOutcome에 맡긴다.
+        outcomeHooks.regionOwner=[this](float x,float y) { return regionOwner->At(x,y); };
+        outcomeHooks.section=ui.section;outcomeHooks.closeTransientGumps=ui.closeTransient;outcomeHooks.onSection=ui.onSection;
+        outcomeHooks.invalidPlayerAssert=SessionMissing<void,std::uint32_t>();
+        outcome=std::make_unique<RawMissionOutcome>(core.pool,priests->Priests(),outcomeState,
+            MakeMissionOutcomeHooks(core.pool,hp,std::move(outcomeHooks)));
+        outcome->BindCurrentInputs({players,alliances,[this] { return player->State().battleOwner; },ui.demo,ui.tellBlocked});
     }
     // 외부 config/UI는 현재 클라이언트 서비스를 사용하고 게임 계산은 동일 원본 모듈을 사용한다.
     std::unique_ptr<RawCampaignWorldRuntime> MakeRuntime(std::size_t templateCount=9) {
@@ -425,6 +441,12 @@ void RawCampaignSession::ResetCamera(CameraHomeState& state,std::function<void(s
 }
 // 현재 같은 시각을 공격/소리/실제 Kernel에 공급한다.
 void RawCampaignSession::RunFrame(FrameTime time,bool paused) { impl_->assetBindings->PrepareFrame(time.game);impl_->combat->PrepareFrame(time);impl_->soundState.frame=static_cast<std::uint32_t>(time.number);impl_->world.RunFrame(time,paused); }
+// 원본 미션 게이트가 지정한 순서에 호출하며 Session Kernel 프레임에서는 자동 실행하지 않는다.
+void RawCampaignSession::CheckMissionOutcome() { impl_->outcome->Check(); }
+// 원본 로그인/AI 초기화와 승패 판정은 같은9 Player 바이트를 공유한다.
+std::span<std::uint8_t> RawCampaignSession::PlayerRecords() { return impl_->players; }
+// 방향별 DWORD를 그대로 공유하여 한쪽 변경을 대칭화하거나 bool로 줄이지 않는다.
+std::span<std::uint32_t> RawCampaignSession::Alliances() { return impl_->alliances; }
 // 실제 동일 Host54/BFS 경로를 시작하며 원본 재귀의 외부nullptr 뒤 현재 경로도 확인한다.
 bool RawCampaignSession::MovePriest(Sid sid,RawPathPoint destination) {
     if (!impl_->motion) throw std::logic_error("실제 세션 설치 전 사제 명령");

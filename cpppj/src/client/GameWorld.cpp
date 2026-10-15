@@ -512,6 +512,11 @@ bool GameWorld::TakeChanged() { const bool rawChanged=Surfaces().TakeChanged();r
 const o::MissionPlayers& GameWorld::Players() const { return players_; }
 // 게임 명령/검사와 렌더링은 같은 raw 상태를 참조한다.
 RawSurfaceWorld& GameWorld::Surfaces() { return campaign_ ? campaign_->World() : *surfaces_; }
+// 구 어댑터의 미션 상태를 실제 판정으로 가장하지 않고 동일 raw 세션이 있을 때만 실행한다.
+void GameWorld::CheckMissionOutcome() {
+    if (!campaign_) throw std::logic_error("실제 캠페인 설치 전 미션 승패 판정");
+    campaign_->CheckMissionOutcome();
+}
 // 스모크 관찰용이며 실제 게임 화면에는 구현 세부 정보를 표시하지 않는다.
 std::string GameWorld::Report(bool mask) const {
     std::ostringstream out; out.precision(12);

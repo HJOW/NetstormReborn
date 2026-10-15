@@ -36,6 +36,8 @@ public:
     std::function<void(SoundView)> soundViewChanged;
     // 원본 클라이언트 커널의 갱신 단계에서 이동을 진행한다.
     void RunFrame() override;
+    // 실제 미션 게이트의 checkOutcome 위치에서 동일 캠페인의 현재 Player/사제/영역을 판정한다.
+    void CheckMissionOutcome();
     // 검사에서는 OS 시계 없이 같은 이동 경로를 진행한다.
     void Step(double seconds);
     // 화면 크기를 갱신한다. 실제 캠페인의 최초 시야는 생성자의 원본 로더가 설정하며 이전 어댑터는 최초 Resize에서 홈을 고른다.

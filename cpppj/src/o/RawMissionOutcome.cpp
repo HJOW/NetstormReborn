@@ -37,18 +37,18 @@ bool RawMissionOutcome::ValidPlayer(std::uint32_t player) const {
 }
 // 활성 플래그/ownerState를 매 조회마다 읽는다. captured 상태1도 생존으로 본다.
 bool RawMissionOutcome::PriestDead(std::uint32_t player) const {
-    return !ValidPlayer(player) || !(state_.players[player].flags&kActive) || priests_.ownerState[player]==2;
+    return !ValidPlayer(player) || !(PlayerFlags(player)&kActive) || priests_.ownerState[player]==2;
 }
 // 범위 밖 참이라는 원본 특수 결과와 inactive 거짓을 구분한다.
 bool RawMissionOutcome::PriestCaptured(std::uint32_t player) const {
     if (!ValidPlayer(player)) return true;
-    return (state_.players[player].flags&kActive) && priests_.ownerState[player]==1;
+    return (PlayerFlags(player)&kActive) && priests_.ownerState[player]==1;
 }
 // bool 조건 외의 원본 DWORD 잠금값은 비제로 전체를 처리 완료로 본다. false 조건은 잠금을 지우지 않는다.
 bool RawMissionOutcome::Event(std::uint32_t& latch,bool condition,std::string_view name) const {
     if (!condition || latch) return false;
-    const std::string section=(state_.demo ? "Demo" : "")+std::string(name);
-    if (state_.tellBlocked) return false;
+    const std::string section=(Demo() ? "Demo" : "")+std::string(name);
+    if (TellBlocked()) return false;
     if (hooks_.section(section)) { hooks_.closeTransientGumps();hooks_.onSection(); }
     latch=1;return true;
 }
@@ -59,7 +59,7 @@ std::span<const std::uint8_t> RawMissionOutcome::Raw(std::uint32_t sid) const {
 }
 // 원본 정수 나눗셈은 0 방향 절삭이며 정확히 절반 HP일 때 halfDead가 아니다.
 bool RawMissionOutcome::TempleHalfDead(std::uint32_t player) const {
-    const auto sid=state_.players[player].temple;if (!sid) return true;
+    const auto sid=PlayerTemple(player);if (!sid) return true;
     const auto raw=Raw(sid);
     if (pool_.Edition()==OriginalEdition::Patch1078) {
         const auto hp=Hp(raw,pool_.Edition());return hp<hooks_.maxHitPoints(Sid{static_cast<std::uint16_t>(sid)})/2;
@@ -69,12 +69,12 @@ bool RawMissionOutcome::TempleHalfDead(std::uint32_t player) const {
 }
 // 앞선 halfDead 사건 콜백이 바꾼 현재 신전 SID와 상태를 새로 읽는다.
 bool RawMissionOutcome::TempleDead(std::uint32_t player) const {
-    const auto sid=state_.players[player].temple;return !sid || (Raw(sid)[kRawState]&kDead);
+    const auto sid=PlayerTemple(player);return !sid || (Raw(sid)[kRawState]&kDead);
 }
 // 영역 조회의 callback이 localPlayer를 바꾸어도 원본에서 미리 읽은 비교값은 유지한다.
 bool RawMissionOutcome::PriestSaved(std::uint32_t player) const {
     const auto sid=lookup_.Find(player);if (!sid) return false;
-    const auto local=state_.localPlayer;const auto raw=Raw(sid);
+    const auto local=LocalPlayer();const auto raw=Raw(sid);
     const auto x=std::bit_cast<float>(Read(raw,kX)),y=std::bit_cast<float>(Read(raw,kY));
     return hooks_.regionOwner(x,y)==local;
 }
@@ -83,7 +83,7 @@ void RawMissionOutcome::Check() const {
     std::uint32_t good=0,bad=0;
     // 원본 번호 순서이며 사건마다 현재 입력을 다시 조회한다. 두 팀 집계는 그 플레이어의 saved 사건 뒤다.
     for (std::uint32_t player=1;player<=kPlayerCount;++player) {
-        if (!(state_.players[player].flags&kActive)) continue;
+        if (!(PlayerFlags(player)&kActive)) continue;
         auto& latch=state_.latches[player];const std::string prefix="ai"+std::to_string(player);
         Event(latch.templeHalfDead,TempleHalfDead(player),prefix+"TempleHalfDead");
         Event(latch.templeDead,TempleDead(player),prefix+"TempleDead");
@@ -91,15 +91,44 @@ void RawMissionOutcome::Check() const {
         Event(latch.priestCaptured,PriestCaptured(player),prefix+"PriestCaptured");
         Event(latch.priestSaved,PriestSaved(player),prefix+"PriestSaved");
         if (!PriestDead(player)) {
-            const auto local=state_.localPlayer;
+            const auto local=LocalPlayer();
             if (local>kPlayerCount) throw std::out_of_range("미션 승패 동맹의 로컬 번호 범위 오류");
-            if (state_.allies[local][player] && state_.allies[player][local]) ++good;else ++bad;
+            if (Ally(local,player) && Ally(player,local)) ++good;else ++bad;
         }
     }
     Event(state_.goodTeamDead,good==0,"GoodTeamDead");
     Event(state_.badTeamDead,bad==0,"BadTeamDead");
-    Event(state_.failed,PriestDead(state_.localPlayer),"Failed");
+    Event(state_.failed,PriestDead(LocalPlayer()),"Failed");
 }
+// 모든 필수 현재 입력을 확인한 뒤 한 번에 연결한다. 오류 때는 이전 연결을 유지한다.
+void RawMissionOutcome::BindCurrentInputs(MissionOutcomeCurrentInputs inputs) {
+    const auto stride=pool_.Edition()==OriginalEdition::Patch1078 ? 0xb4U : 0xacU; // 현재 판본 Player 기록 폭이다.
+    if (inputs.players.size()!=9U*stride || inputs.allies.size()!=81 || !inputs.localPlayer || !inputs.demo || !inputs.tellBlocked)
+        throw std::invalid_argument("미션 승패의 실제 Player9/방향별동맹/현재 전역 누락");
+    current_=std::move(inputs);
+}
+// 활성 플래그는 BYTE 그대로 읽어 주변 필드나 후속 callback의 입력을 미리 저장하지 않는다.
+std::uint8_t RawMissionOutcome::PlayerFlags(std::uint32_t player) const {
+    if (current_.players.empty()) return state_.players.at(player).flags;
+    const auto stride=pool_.Edition()==OriginalEdition::Patch1078 ? 0xb4U : 0xacU;
+    return current_.players[player*stride+0x50];
+}
+// 신전은 각 조건이 도달한 시점의 전체 DWORD이며 높은 비트를 WORD로 먼저 줄이지 않는다.
+std::uint32_t RawMissionOutcome::PlayerTemple(std::uint32_t player) const {
+    if (current_.players.empty()) return state_.players.at(player).temple;
+    const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
+    return Read(current_.players,player*(patch ? 0xb4U : 0xacU)+(patch ? 0x7cU : 0x74U));
+}
+// 방향별 표의 현재 DWORD를 그대로 읽으며 두 방향의 단락 평가는 호출자가 유지한다.
+std::uint32_t RawMissionOutcome::Ally(std::uint32_t from,std::uint32_t to) const {
+    return current_.players.empty() ? state_.allies.at(from).at(to) : current_.allies[from*9+to];
+}
+// callback 뒤의 다음 조회도 실제 세션의 현재 로컬 번호를 읽는다.
+std::uint32_t RawMissionOutcome::LocalPlayer() const { return current_.players.empty() ? state_.localPlayer : current_.localPlayer(); }
+// 사건 이름을 만들 때의 현재 Demo 여부만 읽는다.
+std::uint32_t RawMissionOutcome::Demo() const { return current_.players.empty() ? state_.demo : current_.demo(); }
+// 사건의 조건/이름 평가 뒤 실제 gate 판정 위치에서만 현재 차단 값을 읽는다.
+std::uint32_t RawMissionOutcome::TellBlocked() const { return current_.players.empty() ? state_.tellBlocked : current_.tellBlocked(); }
 // 실제 객체 조회/상태 연결이 동일한 월드를 사용하는지 확인한다.
 const SidPool& RawMissionOutcome::Pool() const { return pool_; }
 // 기존 최대 HP의 사제 특수 모드/알타 조건도 재구현 없이 실제 몸체를 사용한다.

@@ -37,6 +37,34 @@ struct SessionServicesFixture {
         return s; // 실제 부모 VT 통지와 Player AI 조회 래퍼를 세션이 공급한다.
     }
 };
+// 실제 Session의 원문/장기 latch와 선택형 UI 경계를 같은 수명에서 검사한다. 원본 초기화 입력을 대신하지 않는다.
+TEST_CASE(CampaignSession_MissionOutcomeSharesCurrentWorld) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());auto services=external.Services();
+    RawCampaignSession* active{};std::uint32_t demo=0,blocked=0,close=0,notified=0;std::vector<std::string> sections;
+    services.missionOutcome.demo=[&] { return demo; };services.missionOutcome.tellBlocked=[&] { return blocked; };
+    // 첫 실제 UI callback이 같은 Player9/사제 상태를 바꾸면 다음 원본 조건은 즉시 현재 값을 읽어야 한다.
+    services.missionOutcome.section=[&](std::string_view key) {
+        sections.emplace_back(key);
+        if (key!="ai1TempleHalfDead") return false;
+        auto records=active->PlayerRecords();Put(records,0xb4+0x7c,0);records[2*0xb4+0x50]=0;
+        active->Priests().Priests().ownerState[1]=1;demo=1;return true;
+    };
+    services.missionOutcome.closeTransient=[&] { ++close; };services.missionOutcome.onSection=[&] { ++notified; };
+    RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));active=&session;session.Load();
+    CHECK(sections.empty() && close==0 && notified==0);auto records=session.PlayerRecords();auto alliances=session.Alliances();
+    CHECK(records.size()==9*0xb4 && alliances.size()==81);
+    // 이 검사는 명시 입력으로 현재 참여 조건을 설정한다. 실제 로그인/AI 초기화 구현의 증거로 합산하지 않는다.
+    records[0xb4+0x50]=2;records[2*0xb4+0x50]=0x20;alliances[10]=7;alliances[20]=9;
+    const Sid temple{static_cast<std::uint16_t>(Get(records,0xb4+0x7c))};CHECK(temple.value!=0);
+    Put(session.Core().pool.AllocatedBytes(temple),26,0);session.CheckMissionOutcome();
+    CHECK(sections.front()=="ai1TempleHalfDead");CHECK(close==1 && notified==1);
+    CHECK(std::find(sections.begin(),sections.end(),"Demoai1TempleDead")!=sections.end());
+    CHECK(std::find(sections.begin(),sections.end(),"Demoai1PriestCaptured")!=sections.end());
+    CHECK(std::find(sections.begin(),sections.end(),"DemoBadTeamDead")!=sections.end());
+    CHECK(std::none_of(sections.begin(),sections.end(),[](const auto& key) { return key.find("ai2")!=std::string::npos; }));
+    const auto count=sections.size();session.CheckMissionOutcome();CHECK(sections.size()==count);
+}
 // 실제1-1/1-2를 production GameWorld에 설치하고 같은 SID/프레임 표시를 확인한다.
 void CheckSessionWorld(std::string_view mission) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;

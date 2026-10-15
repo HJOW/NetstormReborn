@@ -50,14 +50,20 @@ void Mutate(std::string_view kind,std::uint32_t mutation,std::set<std::string>& 
 }
 }
 
-// 두 판본 native 전체 루트 출력/사제 상태/HP 경계/동맹/효과 당시 상태를 직접 대조한다.
-TEST_CASE(MissionOutcome_IndependentPeFixture) {
+// 기존 native 입력 전체 또는 callback/방향별동맹16개만 실제 raw Player/span backend로 실행한다.
+void CheckOutcomeFixture(bool live) {
     std::ifstream input(NETSTORM_MISSIONOUTCOME_FIXTURE);if (!input) throw std::runtime_error("미션 승패 fixture 없음");
-    std::string line;std::array<std::uint32_t,2> counts{};std::uint32_t number=0;
+    std::string line;std::array<std::uint32_t,2> counts{};std::uint32_t number=0;std::set<std::string> liveAlliesSeen;
     // fixture의 각 사례는 새 풀/공유 상태에서 독립적으로 시작한다.
     while (std::getline(input,line)) {
         if (!line.empty() && line.back()=='\r') line.pop_back();if (line.empty() || line.front()=='#') continue;
         const auto row=Split(line,'\t');if (row.size()!=19) throw std::runtime_error("미션 승패 fixture 열 수 오류");++number;
+        if (live && Number(row[6])==0) {
+            if (row[1]!="Check" || row[2]!="1" || row[3]!="0" || row[4]!="0" || row[5]!="1") continue;
+            const auto pairs=Inputs(row[12]); // 단방향0/비영 조합마다 기존 native 사례 하나만 추가 대조한다.
+            if ((pairs[11]!=0 && pairs[11]!=7) || (pairs[19]!=0 && pairs[19]!=9) ||
+                !liveAlliesSeen.insert(row[0]+':'+std::to_string(pairs[11])+':'+std::to_string(pairs[19])).second) continue;
+        }
         const bool patch=row[0]=="originals";CHECK(patch || row[0]=="originalCD");++counts[patch ? 0 : 1];
         SidPool pool(patch ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072,kOutcomeCapacity);PriestPostPopState priests;MissionOutcomeState state;
         state.localPlayer=Number(row[2]);state.demo=Number(row[3]);state.tellBlocked=Number(row[4]);
@@ -82,28 +88,61 @@ TEST_CASE(MissionOutcome_IndependentPeFixture) {
         }
         SquidPostPopState bookkeeping;SquidRewardState rewardState;GameRandom random;ScrambledSpStore store(random,[]{ return 1u; });
         SquidReward reward(pool,types,bookkeeping,rewardState,patch ? &store : nullptr);
+        std::vector<std::uint8_t> records(9U*(patch ? 0xb4U : 0xacU));std::array<std::uint32_t,81> currentAllies{};
+        std::uint32_t local=state.localPlayer,demo=state.demo,blocked=state.tellBlocked;
+        // 조회 callback의 관찰용 view만 만들며 실제 outcome 입력은 계속 raw span에서 읽는다.
+        const auto current=[&] {
+            auto view=state;if (!live) return view;view.localPlayer=local;view.demo=demo;view.tellBlocked=blocked;
+            // 각 기록의 실제 폭/필드만 관찰한다. outcome state의 입력 사본은 읽지 않는다.
+            for (std::size_t p=0;p<9;++p) {
+                view.players[p]={records[p*(patch ? 0xb4U : 0xacU)+0x50],Get(records,p*(patch ? 0xb4U : 0xacU)+(patch ? 0x7cU : 0x74U))};
+                // 방향별 원본 DWORD를 관찰용 문자열에만 복사한다.
+                for (std::size_t other=0;other<9;++other) view.allies[p][other]=currentAllies[p*9+other];
+            }
+            return view;
+        };
+        // native callback이 지정한 입력 변경을 실제 연결 원문에 쓰며 latch는 같은 장기 상태에 쓴다.
+        const auto publish=[&](const MissionOutcomeState& view) {
+            local=view.localPlayer;demo=view.demo;blocked=view.tellBlocked;state.latches=view.latches;
+            // 원본 Player 필드와 방향별 표의 같은 현재 저장소를 갱신한다.
+            for (std::size_t p=0;p<9;++p) {
+                records[p*(patch ? 0xb4U : 0xacU)+0x50]=view.players[p].flags;Put(records,p*(patch ? 0xb4U : 0xacU)+(patch ? 0x7cU : 0x74U),view.players[p].temple);
+                // 양방향을 합치지 않고 각 DWORD를 그대로 쓴다.
+                for (std::size_t other=0;other<9;++other) currentAllies[p*9+other]=view.allies[p][other];
+            }
+        };
+        if (live) { publish(state);state.players={};state.allies={};state.localPlayer=9;state.demo=7;state.tellBlocked=9; }
         const auto mutation=Number(row[6]);std::set<std::string> mutated;std::string trace;MissionOutcomeHooks hooks;
+        // callback마다 현재 raw view를 읽고 해당 native 입력 변화만 원문에 반영한다.
+        const auto change=[&](std::string_view kind) { if (!live) { Mutate(kind,mutation,mutated,state,priests);return; }auto view=current();Mutate(kind,mutation,mutated,view,priests);publish(view); };
+        // 독립 native가 관찰한 입력/잠금 문자열을 현재 live backend에서도 같은 시점에 만든다.
+        const auto snapshot=[&] { auto view=current();return Snapshot(view,priests); };
         // 영역 경계는 명시한 소유자만 반환한다. 호출 인자는 단정도 비트로 기록한다.
-        hooks.regionOwner=[&](float x,float y) { Add(trace,"region:"+ValuesText(std::array{Bits(x),Bits(y)})+'#'+Snapshot(state,priests));Mutate("region",mutation,mutated,state,priests);return Number(row[7]); };
+        hooks.regionOwner=[&](float x,float y) { Add(trace,"region:"+ValuesText(std::array{Bits(x),Bits(y)})+'#'+snapshot());change("region");return Number(row[7]); };
         // 섹션 callback 뒤 상태 변화와 최종 잠금 쓰기 순서를 원본 관찰과 비교한다.
-        hooks.section=[&](std::string_view name) { Add(trace,"section:"+std::string(name)+'#'+Snapshot(state,priests));Mutate("section",mutation,mutated,state,priests);return Number(row[5])!=0; };
-        hooks.closeTransientGumps=[&] { Add(trace,"close#"+Snapshot(state,priests));Mutate("close",mutation,mutated,state,priests); };
-        hooks.onSection=[&] { Add(trace,"stop#"+Snapshot(state,priests));Mutate("stop",mutation,mutated,state,priests); };
-        hooks.invalidPlayerAssert=[&](std::uint32_t player) { Add(trace,"assert:"+std::to_string(player)+'#'+Snapshot(state,priests)); };
+        hooks.section=[&](std::string_view name) { Add(trace,"section:"+std::string(name)+'#'+snapshot());change("section");return Number(row[5])!=0; };
+        hooks.closeTransientGumps=[&] { Add(trace,"close#"+snapshot());change("close"); };
+        hooks.onSection=[&] { Add(trace,"stop#"+snapshot());change("stop"); };
+        hooks.invalidPlayerAssert=[&](std::uint32_t player) { Add(trace,"assert:"+std::to_string(player)+'#'+snapshot()); };
         RawMissionOutcome outcome(pool,priests,state,MakeMissionOutcomeHooks(pool,reward,std::move(hooks)));std::uint32_t result=0;
+        if (live) outcome.BindCurrentInputs({records,currentAllies,[&] { return local; },[&] { return demo; },[&] { return blocked; }});
         if (row[1]=="Check") outcome.Check();
         else if (row[1]=="Dead") result=outcome.PriestDead(Number(row[8]));
         else if (row[1]=="Captured") result=outcome.PriestCaptured(Number(row[8]));
         else if (row[1]=="Event") result=outcome.Event(state.goodTeamDead,Number(row[8])!=0,"BadTeamDead");
         else throw std::runtime_error("미션 fixture 동작 이름 오류");
-        const auto observed=Snapshot(state,priests);
+        const auto observed=snapshot();
         if (observed!=row[16] || trace!=row[17] || result!=Number(row[18])) {
             std::fprintf(stderr,"missionoutcome row %u/%s/%s\n",number,row[0].c_str(),row[1].c_str());
             CHECK(observed==row[16]);CHECK(trace==row[17]);CHECK(result==Number(row[18]));
         }
     }
-    CHECK(counts[0]==kCases && counts[1]==kCases);
+    CHECK(counts[0]==(live ? 8U : kCases) && counts[1]==(live ? 8U : kCases));
 }
+// 두 판본 native 전체 루트 출력/사제 상태/HP 경계/동맹/효과 당시 상태를 직접 대조한다.
+TEST_CASE(MissionOutcome_IndependentPeFixture) { CheckOutcomeFixture(false); }
+// 기존 native callback8개/방향별동맹8개를 raw 원문에 적용한다. 독립 state 입력을 오염시켜 stale 사본 사용을 검출한다.
+TEST_CASE(MissionOutcome_CurrentInputsNativeCallbacks) { CheckOutcomeFixture(true); }
 
 // 같은 사건 callback의 재진입도 최종 latch 쓰기 전에는 실행 가능하다. 원본 호출 순서를 C++에서 별도로 확인한다.
 TEST_CASE(MissionOutcome_ReentrantEventCommitsAfterCallbacks) {

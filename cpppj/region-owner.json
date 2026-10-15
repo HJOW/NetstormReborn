@@ -1,0 +1,79 @@
+{
+  "host": "VM-W11-Codex",
+  "date": "2026-10-15",
+  "unique_inputs": 1632,
+  "returns": {
+    "originals": 1632,
+    "originalCD": 1632
+  },
+  "instructions": {
+    "originals": 131328,
+    "originalCD": 112908
+  },
+  "boundaries": [],
+  "os_calls": 0,
+  "spec": {
+    "originals": {
+      "binary": "originals/Netstorm.exe",
+      "stride": 50,
+      "owner": 34,
+      "integer": 4650768,
+      "floating": 4650864,
+      "pool": 6063204,
+      "surfaces": 6063292,
+      "terrain": 5509596,
+      "ranges": [
+        [
+          4650768,
+          4650854
+        ],
+        [
+          4650864,
+          4650907
+        ],
+        [
+          4315040,
+          4315095
+        ],
+        [
+          5130688,
+          5130805
+        ]
+      ]
+    },
+    "originalCD": {
+      "binary": "originalCD/NETSTORM.EXE",
+      "stride": 36,
+      "owner": 32,
+      "integer": 4971952,
+      "floating": 4972048,
+      "pool": 5477852,
+      "surfaces": 5428624,
+      "terrain": 5360328,
+      "ranges": [
+        [
+          4971952,
+          4972046
+        ],
+        [
+          4972048,
+          4972091
+        ],
+        [
+          4459136,
+          4459195
+        ],
+        [
+          5183004,
+          5183043
+        ]
+      ]
+    }
+  },
+  "files": {
+    "tools/decomp_region_owner.py": "d43be0aaa5829b52a1d8fa105663f99e2eb67a1cc9f96a8ac487fda26ce5540f",
+    "cpppj/tests/fixtures/region-owner-x86.tsv": "138de15121defd70e2e2c02f528bfd8f1be70e7b6cc15e4cffa738f3ad704b00",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+  }
+}
