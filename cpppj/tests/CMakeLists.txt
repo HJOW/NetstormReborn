@@ -2,6 +2,7 @@
 # (첫 구성 때 인터넷에서 내려받을 것이 없다).
 # 테스트 파일을 만들면 아래 목록에 더한다. 파일 안의 TEST_CASE 는 자동으로 등록된다.
 add_executable(netstorm_tests
+    FenceTargetTests.cpp
     CampaignNoticeTests.cpp
     FormPacketTests.cpp
     CampaignWorldRuntimeTests.cpp
@@ -901,3 +902,7 @@ set_source_files_properties(CameraHomeTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 실제 PATCH Player 피해 래퍼의 AI 호출 경계 관찰이다.
 set_source_files_properties(CampaignNoticeTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PLAYER_DAMAGE_NOTICE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/player-damage-notice-x86.tsv\"")
+
+# 실제 PATCH fencemark 전체 표적/교차/포구의 원본 관찰이다.
+set_source_files_properties(FenceTargetTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FENCE_TARGET_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fence-target-x86.tsv\"")

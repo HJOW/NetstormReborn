@@ -11,6 +11,7 @@
 #include "o/RawFormPacket.h"
 #include "o/RawContentParentNotice.h"
 #include "o/RawPlayerDamageNotice.h"
+#include "o/RawFenceTarget.h"
 #include <bit>
 #include <stdexcept>
 using namespace netstorm::o;
@@ -112,6 +113,7 @@ struct RawCampaignSession::Impl {
     ArcherAnimationState archerState; // 같은 Kernel의 게임 시각/경과다.
     MissileState missileState; // 같은 투사체 게임 시각이다.
     std::unique_ptr<RawProjectileGeometry> projectileGeometry; // 실제 포구/표적 치수/충돌 상자다.
+    std::unique_ptr<RawFenceTarget> fenceTarget; // 같은 해시/배리어 끝점/현재 동맹의 실제 표적 코너 계산이다.
     std::unique_ptr<RawCampaignArcherBindings> combat; // 같은 Archer/Missile 생성/공간/Host를 소유한다.
     std::uint32_t archerCommand{0x030000b0}; // 보호 PE의 실제 입력 토큰이다.
     std::unique_ptr<RawCampaignAssetBindings> assetBindings; // 실제 저장 건물 후처리와 Gun/Regular다.
@@ -277,6 +279,7 @@ struct RawCampaignSession::Impl {
             priestDamageState,burningState,impactState,std::move(hitEffects));
         gunHit=std::make_unique<RawGunHit>(core.pool,core.types,hitTypes,hits->DamageHooks(GunHitHooks{SessionMissing<void,Sid,std::int32_t,std::uint8_t,Sid>(),[this](Sid sid) { core.building.NotifySurface(sid); }}));
         projectileGeometry=std::make_unique<RawProjectileGeometry>(core.pool,core.types,projectileTypes);
+        fenceTarget=std::make_unique<RawFenceTarget>(core.pool,core.hash,core.types,projectileTypes,*gunTarget,gunTargetState,gunState);
         auto combatEffects=services.archer;
         // 실제 SID의 현재 좌표와 같은 이름표/위치 재생 함수를 사용한다. 설치 전 world_ UI 포인터를 캡처하지 않는다.
         if (!combatEffects.animation.common.sound) combatEffects.animation.common.sound=[this](Sid sid,std::string_view name) {
@@ -286,7 +289,8 @@ struct RawCampaignSession::Impl {
             for (std::size_t i=0;i<4;++i) { bits[0]|=std::uint32_t(raw[14+i])<<(8*i);bits[1]|=std::uint32_t(raw[18+i])<<(8*i); }
             services.sound.playOnceAt(std::bit_cast<float>(bits[0]),std::bit_cast<float>(bits[1]),soundNames.Lookup(name),0,0);
         };
-        FillMissing(combatEffects.animation.common.targetPoint);
+        if (!combatEffects.animation.common.targetPoint) combatEffects.animation.common.targetPoint=
+            [this](Sid firing,Sid target) { return fenceTarget->Point(firing,target); };
         combatEffects.missile.muzzle=[this](Sid sid) { return projectileGeometry->ArcherMuzzle(sid); };
         combatEffects.missile.targetDimensions=[this](Sid sid) { return projectileGeometry->Dimensions(sid); };
         combatEffects.missile.targetBounds=[this](Sid sid,std::array<float,2> point) { return projectileGeometry->TargetBounds(sid,point); };

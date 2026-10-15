@@ -29,7 +29,6 @@ struct SessionServicesFixture {
         s.assets.queueCommand=[this](std::uint32_t,std::int32_t,std::int32_t) { ++notices; };
         s.assets.sendGunPacket=s.pathPacket=[this](std::span<const std::uint8_t> bytes) { packets.emplace_back(bytes.begin(),bytes.end()); };
         s.archer.animation.common.sound=[this](Sid,std::string_view) { ++notices; };
-        s.archer.animation.common.targetPoint=[](Sid,Sid) { return std::array<float,2>{-10000,-10000}; }; // 명시 fencemark없음 입력이다.
         s.archer.missile.firingSound=s.archer.missile.impactSound=[this](float,float,std::uint32_t) { ++notices; };
         s.motion.path.stepSound=[this](Sid,float,float,std::uint32_t) { ++notices; };
         s.player.log=[this](std::uint32_t,std::string_view) { ++notices; };
