@@ -4,6 +4,7 @@
 add_executable(netstorm_tests
     MissionFrameGateTests.cpp
     TutorialOneTests.cpp
+    TutorialTwoTests.cpp
     WarningTests.cpp
     PriestMenuTests.cpp
     RainDrawTests.cpp
@@ -929,3 +930,6 @@ set_source_files_properties(MissionFrameGateTests.cpp PROPERTIES COMPILE_DEFINIT
     "NETSTORM_MISSIONFRAME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/missionframe-x86.tsv\"")
 set_source_files_properties(TutorialOneTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_TUTORIAL_ONE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/tutorial-one-x86.tsv\"")
+
+set_source_files_properties(TutorialTwoTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_TUTORIALTWO_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/tutorial-two-x86.tsv\"")

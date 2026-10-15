@@ -1,0 +1,42 @@
+{
+  "host": "VM-W11-Codex",
+  "date": "2026-10-15",
+  "edition": "10.78",
+  "total": 346,
+  "returns": 346,
+  "native": {
+    "Two": 346,
+    "GenusBuilt": 49,
+    "Advance": 166,
+    "Allow": 24,
+    "Selected": 190,
+    "Genus": 77,
+    "Pause": 11,
+    "Built": 96
+  },
+  "boundaries": {
+    "R": 25,
+    "Q": 177,
+    "Z": 79,
+    "X": 79,
+    "C": 100,
+    "Tell": 19,
+    "K": 11,
+    "P": 10
+  },
+  "os_calls": 0,
+  "files": {
+    "tools/decomp_tutorial_two.py": "4862fa43f8c2063d3d8e2d2305372fdf438566d7e6fba1c8722c5f2bfa62827c",
+    "tools/decomp_missionframe_oracle.py": "98987447be7aa3632aeb6337a21880d57c43ad184e3657fae4171c8e9ffb1739",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "cpppj/tests/fixtures/tutorial-two-x86.tsv": "677d90896ea069aae53667de24d802535be8887457153a723811afb3dcd9846a",
+    "extracted/tutorial-two/assembly.txt": "da054ebf790b7e3bf63695ba297ab8bdf218d49b7c748c89a4eab605b5d479e3",
+    "extracted/tutorial-one/originals/functions.tsv": "4f383398611f9744ad2274046f6ab5fbbd18917dff5e9949a24421e9bbba7f3a",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646"
+  },
+  "limits": [
+    "Tutorial2 A~H·공유Advance/Pause·현재 선택/Genus/TotalMade는 실제 기계어다. 함수바이트 수정은 없다.",
+    "옵션 범위 갱신·선택 초기화/해제·생산 목록 조회·Tell/팝업·시계 정지깊이는 명시 입력/관찰 경계다.",
+    "실제 게임/GUI/Ready/login/건설/생산/수확/완주 및 CD10.72는 이번 검사 범위가 아니다."
+  ]
+}
