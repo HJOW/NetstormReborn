@@ -65,6 +65,33 @@ TEST_CASE(CampaignSession_MissionOutcomeSharesCurrentWorld) {
     CHECK(std::none_of(sections.begin(),sections.end(),[](const auto& key) { return key.find("ai2")!=std::string::npos; }));
     const auto count=sections.size();session.CheckMissionOutcome();CHECK(sections.size()==count);
 }
+// 생산 세션의 실제 기술 생성/삭제가 같은 Player 체인과 Form 수명을 사용해야 한다.
+TEST_CASE(CampaignSession_TechnologyUsesCurrentLifetime) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());
+    auto services=external.Services();std::uint32_t uiLookups=0;
+    services.playerContent.gump=[&](std::uint32_t) { ++uiLookups;return 0U; };
+    services.playerContent.handle=[](std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t) { throw std::logic_error("없는 UI 대상 처리"); };
+    RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();
+    const auto type=assets.game.TypeTable().Find("sunCannon");CHECK(type>=70);
+    session.AddTechnology(1,"sunCannon");const auto first=session.FindTechnology(1,type);CHECK(first.value!=0);
+    session.AddTechnology(1,"sunCannon;sunCannon");CHECK(session.FindTechnology(1,type)==first);
+    const auto core=session.Core();CHECK(core.pool.Slot(first)[10]==6);
+    session.ClearTechnology(1);CHECK(session.FindTechnology(1,type).value==0);
+    CHECK((core.pool.Slot(first)[11]&1U)!=0 && core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0);
+    CHECK(core.bookkeeping.depth==0 && uiLookups==0);
+}
+// 같은 생산 월드의 empty84는 관찰 카운터 대신 실제 공통 삭제/반납으로 들어가야 한다.
+TEST_CASE(CampaignSession_EmptyGeyserUsesCurrentDeletion) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());
+    RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Services());session.Load();
+    const auto core=session.Core();const auto free=core.pool.FreeCount();
+    const auto empty=session.World().Create(84);session.World().Pop(empty,10,10,0);
+    CHECK(session.World().Destroy(empty,0x400000));
+    CHECK(core.pool.FreeCount()==free && (core.pool.Slot(empty)[11]&1U)!=0);
+    CHECK(core.bookkeeping.depth==0 && core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0);
+}
 // 실제1-1/1-2를 production GameWorld에 설치하고 같은 SID/프레임 표시를 확인한다.
 void CheckSessionWorld(std::string_view mission) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;

@@ -50,6 +50,10 @@ public:
     // 0047d890/CD004773a0: 현재 캡처/dialog/루트에 생산 갱신 사건을 원본 Route 순서로 분배한다.
     // 생산 패널 노드가 아직 없으면 실제 트리의 미처리 반환을 유지한다.
     void RefreshProduction();
+    // Player 내용물 통지는 현재 등록ID를 직접 조회하며 생산 갱신 사건으로 바꾸지 않는다.
+    std::uint32_t RegisteredGump(std::uint32_t id) const;
+    // 등록된 대상 자신의 가상+28만 실행한다. 전체 트리 Route/재귀 분배를 수행하지 않는다.
+    std::uint32_t HandleGump(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second);
     // 현재 raw value/pressed 중 하나라도 비영인 첫 돌 버튼 번호다.
     std::optional<int> Pressed() const;
     // 커서가 월드로 이동해도 release를 같은 raw 캡처에 먼저 전달할지 판정한다.

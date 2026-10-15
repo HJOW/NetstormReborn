@@ -42,6 +42,11 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
     // 원본 0047d890의 사건을 같은 실제 Gump 트리로 분배한다. 생산 노드 자체의 구현은 별도다.
     services.ownership.refreshProduction=[&controls] { controls.RefreshProduction(); };
     services.assets.postPop.refreshProduction=services.ownership.refreshProduction; // 신전 PostPop도 동일한 사건을 보낸다.
+    // Player 부모 통지는 현재 등록표와 대상 가상+28을 직접 사용한다.
+    services.playerContent.gump=[&controls](std::uint32_t id) { return controls.RegisteredGump(id); };
+    services.playerContent.handle=[&controls](std::uint32_t token,std::uint32_t event,std::uint32_t form,std::uint32_t reason) {
+        static_cast<void>(controls.HandleGump(token,event,form,reason));
+    };
     // 원본의 철자가 theammode이며 각 요청마다 기본값 1에서 현재 설정을 읽는다.
     services.ownership.themeMode=[&client] {
         std::int32_t value=1; // 설정 누락 시 원본이 유지하는 기본값이다.
@@ -50,6 +55,11 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
     services.soundNames=&audio.Names(); // TYPE 소리와 보호막 프로세스가 공유하는 유일한 이름표다.
     // 정지와 무관한 실제 벽시계 및 실제 장치의 재생·정지·재생 여부를 사용한다.
     services.sound=MakeSoundProcessHooks(player,[&client] { return client.WallSeconds(); });
+    // 원본 공통 preDestroy의 전역 재생 인자(반복0/음량0/좌우0/우선1/한도0)를 유지한다.
+    services.unitLost=[&player](o::Sid) { player.PlayByName("unitLost.wav",0,0,0,1,0); };
+    // 내용물 너겟 삭제는 같은 실제 입력 큐와 위치 효과음을 사용한다.
+    services.contentLifetime.localNotice=[&client](std::uint32_t command) { client.Input().PushCommand(command,0,0); };
+    services.contentLifetime.sound=[&player](float x,float y) { player.PlayNameAt(x,y,"guy.wav",0); };
     services.priest.shield=MakePriestShieldNoticeHooks(player,{}); // 원본 안내 소리의 우선 인자 1을 유지한다.
     // 00493d30은 004a89c0으로 인자 없는 Tell 키를 포맷한다. Xlat으로 섹션 이름을 바꾸지 않는다.
     services.priest.shield.translate=[](std::string_view key) { return std::string(key); };

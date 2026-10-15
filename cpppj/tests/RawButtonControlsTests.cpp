@@ -98,3 +98,15 @@ TEST_CASE(RawButtonControls_PageReplacementReusesRegistryAndKeepsSerial) {
     CHECK(!input.Event({InputCode::kLeftButton|InputCode::kRelease,20,25}));
     input.SetControls({},kLabels,800,600,kAssets);CHECK(Fields(input)[1]==1 && Fields(input)[5]==1);
 }
+// 내용물 통지의 직접 경계는 현재 등록표/대상 가상을 읽고 빈 등록을 합성하지 않는다.
+TEST_CASE(RawButtonControls_CurrentRegisteredDirectHandle) {
+    RawButtonControls input(netstorm::o::OriginalEdition::Patch1078);
+    input.SetControls(kControls,kLabels,640,480,kAssets);
+    const auto root=input.RegisteredGump(0);CHECK(root!=0);
+    CHECK(input.HandleGump(root,0x02000031,123,2)==0);
+    CHECK(input.RegisteredGump(999)==0);
+    bool invalid=false;
+    try { static_cast<void>(input.RegisteredGump(1000)); } catch (const std::out_of_range&) { invalid=true; }
+    CHECK(invalid);
+    input.SetControls({},kLabels,640,480,kAssets);CHECK(input.RegisteredGump(0)==root);
+}

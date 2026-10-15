@@ -6,6 +6,7 @@
 #include "client/RawCampaignAssetBindings.h"
 #include "client/RawCampaignArcherBindings.h"
 #include "client/RawCampaignHitBindings.h"
+#include "client/RawCampaignLifetimeBindings.h"
 #include "client/SoundProcess.h"
 #include "o/RawPlayerRegular.h"
 #include "o/RawBattleBroadcast.h"
@@ -33,6 +34,9 @@ struct RawCampaignSessionServices {
     o::PlayerRegularHooks player; // 실제 Player 로그와 예약 외부 경계다.
     CampaignMissionOutcomeUi missionOutcome; // 현재 미션의 실제 UI/차단 조회 경계다. Check를 호출할 때만 필요하다.
     o::SquidDestroyHooks deletion; // 다른 파생 삭제/선택/전송의 실제 외부 경계다.
+    std::function<void(o::Sid)> unitLost; // 공통 삭제가 요청한 실제 unitLost 전역 소리를 재생한다.
+    o::ContentLifetimeHooks contentLifetime; // 같은 ContentForm의 실제 커서/수입/AI 지갑/소리 경계다.
+    o::PlayerContentNoticeHooks playerContent; // 같은 현재 Gump 등록표와 대상 자신의 가상 처리를 공급한다.
     o::SquidAssetDestroy destroy; // 다른 파생 자산의 실제 가상 삭제 분배기다.
     o::FormPopTransmit dependencyTransmit; // 감시 Form의 현재 서버 송신 소비자다.
     std::function<void(o::Sid,o::Sid,std::uint32_t)> contentNotice; // 실제 내용물 부모 통지다.
@@ -64,6 +68,12 @@ public:
     std::span<std::uint8_t> PlayerRecords();
     // 실제 방향별동맹 초기화가 쓰고 승패가 읽는 같은81DWORD를 빌린다.
     std::span<std::uint32_t> Alliances();
+    // 실제 시작 설정/AI와 같은 Player 기술 부모에 원본 목록 파서를 적용한다.
+    void AddTechnology(std::int32_t owner,std::string_view list);
+    // 실제 flags4 기술을 가상 삭제하여 부모 체인/등록/삭제 깊이를 함께 정리한다.
+    void ClearTechnology(std::int32_t owner);
+    // 현재 같은 Player 부모에서 지정한 실제 기술 ContentForm을 조회한다.
+    o::Sid FindTechnology(std::int32_t owner,std::int32_t type) const;
     // 실제 사제의 같은 Start/BFS/Host54 경로를 시작한다.
     bool MovePriest(o::Sid sid,o::RawPathPoint destination);
     // 같은 raw 신전의 가상 Draw를 실행하고 실제 SoundList/재생 경계로 상승음을 보낸다.

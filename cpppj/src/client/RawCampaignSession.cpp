@@ -14,6 +14,8 @@
 #include "o/RawFenceTarget.h"
 #include "o/RawRainVortexDraw.h"
 #include "o/RawRegionOwner.h"
+#include "o/RawSpStoreNoticeBindings.h"
+#include "o/RawPlayerTechnology.h"
 #include <bit>
 #include <stdexcept>
 using namespace netstorm::o;
@@ -138,6 +140,11 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<ContentFormHost> contentForms; // ProcessForm과 다른 실제 Form6의 정렬 부착 몸체다.
     std::unique_ptr<RawContentParentNotice> contentNotice; // 부모의 실제 현재 VT로 기본/파생 +24를 분배한다.
     std::unique_ptr<RawContainedCreate> contained; // 실제 Factory/ContentFormHost의 저장 내용물 생성이다.
+    ContentLifetimeState contentLifetimeState; // 같은 ContentForm의 커서·로컬 소유자·수입 명령 전역이다.
+    std::uint32_t contentGumpType{3},contentEvent{0x02000031}; // PATCH0054107c/005427bc의 실제 초기값이다.
+    std::unique_ptr<RawPlayerContentNotice> playerContent; // 현재 SP 저장소/같은 Player 체인/실제 UI를 조회한다.
+    std::unique_ptr<RawCampaignLifetimeBindings> lifetime; // 공통 삭제와 ContentForm의 같은 풀 수명을 등록한다.
+    std::unique_ptr<RawPlayerTechnology> technology; // 실제 시작/AI 갱신이 공유할 같은 Player 기술 체인이다.
     std::array<FortTemplate,9> templates; // 실제 선택 자료는1번 Template에 둔다.
     std::array<FortTerritoryStream,9> streams; // 같은 Template의 실제120BYTE view다.
     std::array<std::uint8_t,180> headers{}; // 실제 Template9 header의 현재 바이트다.
@@ -167,8 +174,8 @@ struct RawCampaignSession::Impl {
         gunTypes(core.types.size()),hitTypes(core.types.size()),firingIntervals(core.types.size()),dudeSpeeds(core.types.size()),
         soundNames(RequireSounds(services)),archerTypes(core.types.size()),missileTypes(core.types.size()),projectileTypes(core.types.size()),
         start{core.processState,priestState.movement.dude,priestState.movement.teleport,priestState.movement.manaBolt,priestState.movement.priest,geyserType,snap,retrying},process{core.processState} {
-        sp.Initialize();level=std::make_unique<RawSquidLevel>(core.pool,core.types,SessionMissing<void,SquidLevelAssertion>());
-        priestState.regen.patch.sequence=std::bit_cast<std::int32_t>(sp.Offset());
+        sp.BindTrackingOffset(priestState.regen.patch.sequence);sp.Initialize();
+        level=std::make_unique<RawSquidLevel>(core.pool,core.types,SessionMissing<void,SquidLevelAssertion>());
         priestState.regen.patch.observedSequence=priestState.regen.patch.sequence;
         finishState.chaffMode=true;objectState.mission=true;objectState.chaffMode=true;
         playerState.playerKnown=1;assetState.boss=true;assetState.inBattle=true;assetState.localOwner=1;gunState.boss=true;
@@ -338,8 +345,9 @@ struct RawCampaignSession::Impl {
             if (!other) throw std::logic_error("실제 세션의 다른 파생 삭제/선택 효과 미연결");
             other(event);
         };
-        worldHooks.assets=hits->DestroyHooks(std::move(worldHooks.assets));
-        worldHooks.destroy=hits->Destroy(services.destroy);
+        InstallContents(worldHooks.assets);
+        worldHooks.assets=lifetime->DestroyHooks(hits->DestroyHooks(std::move(worldHooks.assets)));
+        worldHooks.destroy=lifetime->Destroy(hits->Destroy(services.destroy));
         worldHooks.regular=hits->Handler(combat->Handler(assetBindings->Handler(priests->RegularHandler([this](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
             if (playerRegular->Handles(sid)) return playerRegular->Handle(sid,event,count,payload);
             throw std::logic_error("캠페인 현재 Kernel의 다른 실제 Regular 부모 미연결: TYPE"+
@@ -353,11 +361,6 @@ struct RawCampaignSession::Impl {
         NormalTerrainDiagnostics diagnostics{SessionMissing<void,TerrainContextAssertion>(),SessionMissing<void,TerrainStampAssertion>(),SessionMissing<void,SquidRegionAssert>(),SessionMissing<void,FarmClusterAssertion>(),SessionMissing<void,TerrainFarmPostpassAssertion>()};
         normal=std::make_unique<RawNormalTerrainWorldBinding>(world,chunks,*islands,random,crt,terrainGlobals,stamp,randomPlacement,farm,piece,*pipeline,hp,*carrier,std::move(diagnostics));
         finish=std::make_unique<RawFortFinishOwner>(core.pool,core.types,assetState.residences,finishState,FortFinishOwnerHooks{SessionMissing<FortRandomRectangle,std::int32_t>(),SessionMissing<double>(),SessionMissing<std::uint32_t,GameRandom&,const FortRandomPlaceRequest&>(),SessionMissing<void>()});
-        ContainedCreateHooks contentHooks;contentHooks.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); };
-        contentNotice=std::make_unique<RawContentParentNotice>(core.pool,services.contentNotice);
-        contentForms=std::make_unique<ContentFormHost>(core.pool,core.types,
-            [this](Sid parent,Sid form,std::uint32_t reason) { contentNotice->Notice(parent,form,reason); },services.dependencyTransmit);
-        contained=std::make_unique<RawContainedCreate>(core.pool,contentState,contentForms->BindCreate(core.factory,std::move(contentHooks)));
         templates[1]=std::move(fort);
         const auto state=templates[1].Section("State");stateBytes[1].assign(state.begin(),state.end());
         stateStreams[1]={stateBytes[1],0,static_cast<std::uint32_t>(stateBytes[1].size()),!stateBytes[1].empty()};stateNames[1]=std::string(mission);
@@ -373,6 +376,39 @@ struct RawCampaignSession::Impl {
         outcome=std::make_unique<RawMissionOutcome>(core.pool,priests->Priests(),outcomeState,
             MakeMissionOutcomeHooks(core.pool,hp,std::move(outcomeHooks)));
         outcome->BindCurrentInputs({players,alliances,[this] { return player->State().battleOwner; },ui.demo,ui.tellBlocked});
+    }
+    // 첫 실제 객체 이전에 같은 공통 삭제/내용물/Player 통지/기술 모듈을 한 번 연결한다.
+    void InstallContents(const SquidDestroyHooks& deletion) {
+        FillMissing(services.unitLost);
+        world.BindDeletion(hp,deletion.selected,MakeCampaignDeletionEffects(deletion,services.unitLost));
+        world.DeletionState().silentType=147; // PATCH005412a4의 실제 초기 타입이다.
+        auto playerHooks=services.playerContent;
+        playerHooks.money=[this](std::uint32_t owner) { return std::bit_cast<float>(sp.Get(owner)); };
+        FillMissing(playerHooks.gump);FillMissing(playerHooks.handle);
+        const auto reads=BindSpStoreNotice(sp); // 모든 조회기는 초기값 대신 현재 같은 저장소를 빌린다.
+        auto& patch=priestState.regen.patch;
+        playerContent=std::make_unique<RawPlayerContentNotice>(core.pool,PlayerContentNoticeState{
+            reads.cursorA,reads.cursorB,patch.changedSample,patch.sample,patch.remaining,
+            PlayerContentNoticeRead<std::uint32_t>::Bind([this] { return assetState.inBattle ? 1U : 0U; }),
+            assetState.localOwner,reads.firstSpPool,reads.firstPermutation,contentGumpType,contentEvent},std::move(playerHooks));
+        contentNotice=std::make_unique<RawContentParentNotice>(core.pool,[this](Sid parent,Sid form,std::uint32_t reason) {
+            lifetime->ParentNotice(parent,form,reason);
+        });
+        contentForms=std::make_unique<ContentFormHost>(core.pool,core.types,
+            [this](Sid parent,Sid form,std::uint32_t reason) { contentNotice->Notice(parent,form,reason); },services.dependencyTransmit);
+        auto contentEffects=services.contentLifetime;
+        FillMissing(contentEffects.cancelCursor);FillMissing(contentEffects.localNotice);FillMissing(contentEffects.remoteNotice);
+        FillMissing(contentEffects.wallet);FillMissing(contentEffects.addSp);FillMissing(contentEffects.sound);
+        contentLifetimeState.localOwner=assetState.localOwner;contentLifetimeState.boss=assetState.boss;
+        contentLifetimeState.notice=0x020000b4; // PATCH005429c4의 실제 수입 명령 초기값이다.
+        lifetime=std::make_unique<RawCampaignLifetimeBindings>(world,*contentForms,contentLifetimeState,
+            std::move(contentEffects),hp,*playerContent,services.contentNotice);
+        ContainedCreateHooks createHooks;createHooks.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); };
+        contained=std::make_unique<RawContainedCreate>(core.pool,contentState,contentForms->BindCreate(core.factory,std::move(createHooks)));
+        PlayerTechnologyHooks techHooks;techHooks.assertion=SessionMissing<void,PlayerTechnologyAssertion>();
+        techHooks.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
+        technology=std::make_unique<RawPlayerTechnology>(*player,priests->Carrier(),*contained,core.types,
+            BindPlayerTechnologyTypes(assets.game.TypeTable(),std::move(techHooks)));
     }
     // 외부 config/UI는 현재 클라이언트 서비스를 사용하고 게임 계산은 동일 원본 모듈을 사용한다.
     std::unique_ptr<RawCampaignWorldRuntime> MakeRuntime(std::size_t templateCount=9) {
@@ -447,6 +483,12 @@ void RawCampaignSession::CheckMissionOutcome() { impl_->outcome->Check(); }
 std::span<std::uint8_t> RawCampaignSession::PlayerRecords() { return impl_->players; }
 // 방향별 DWORD를 그대로 공유하여 한쪽 변경을 대칭화하거나 bool로 줄이지 않는다.
 std::span<std::uint32_t> RawCampaignSession::Alliances() { return impl_->alliances; }
+// 원본 시작/AI 기술 처리가 사용하는 같은 현재 부모/실제 contained 생성 경로다.
+void RawCampaignSession::AddTechnology(std::int32_t owner,std::string_view list) { impl_->technology->AddList(owner,list); }
+// 제거 통지는 현재 Player SP 접두와 직접 Gump 가상 처리까지 같은 경로를 사용한다.
+void RawCampaignSession::ClearTechnology(std::int32_t owner) { impl_->technology->Clear(owner); }
+// 상태 사본 없이 현재 raw 부모 체인에서 읽는다.
+Sid RawCampaignSession::FindTechnology(std::int32_t owner,std::int32_t type) const { return impl_->technology->Find(owner,type); }
 // 실제 동일 Host54/BFS 경로를 시작하며 원본 재귀의 외부nullptr 뒤 현재 경로도 확인한다.
 bool RawCampaignSession::MovePriest(Sid sid,RawPathPoint destination) {
     if (!impl_->motion) throw std::logic_error("실제 세션 설치 전 사제 명령");

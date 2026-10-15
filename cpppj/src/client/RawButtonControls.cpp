@@ -179,6 +179,16 @@ void RawButtonControls::Cancel() {
 }
 // 캡처 우선 및 includeHidden=1의 실제 원본 분배이며 UI 상태를 임의 갱신하지 않는다.
 void RawButtonControls::RefreshProduction() { impl_->input->Route(kRefreshProductionEvent,0,0,true); }
+// 원본00463ff0과 같은 실제 등록 배열을 요청 시 읽는다. 등록 없는0은 그대로 반환한다.
+std::uint32_t RawButtonControls::RegisteredGump(std::uint32_t id) const {
+    if (id>=impl_->create.entries.size()) throw std::out_of_range("현재 Gump 등록ID 물리 범위 오류");
+    return impl_->create.entries[id];
+}
+// 실제 노드가 존재하는 대상의 가상 처리기에만 직접 보낸다.
+std::uint32_t RawButtonControls::HandleGump(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second) {
+    if (!token || !impl_->Node(token)) throw std::out_of_range("현재 직접 Gump 가상 처리 대상 없음");
+    return impl_->Handle(token,event,first,second);
+}
 // 렌더링이 이전 어댑터의 캡처 사본을 조회하지 않게 현재 raw 상태만 읽는다.
 std::optional<int> RawButtonControls::Pressed() const {
     // 표시 명령 번호 순서는 부모 트리 방문 순서와 구별한다.
