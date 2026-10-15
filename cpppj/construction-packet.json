@@ -20,7 +20,7 @@
     "extracted/constructionconfirm/originals/functions.tsv": "6a1e451ed1d292f124bd17fbee43a0f58660ea2c902d0d9c5ac1afb5a7c12211",
     "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
     "cpppj/src/o/RawConstructionPacket.h": "53bc7f040c48a14f8445e70c4a7586ba129f7e74cebe60e3ee7690d7bfd3b02e",
-    "cpppj/src/o/RawConstructionPacket.cpp": "558321b6c10e70b036a4706a35d13df5abec0e7c10feb25e7857555d1afaea1f",
+    "cpppj/src/o/RawConstructionPacket.cpp": "2e2e00e3ecb6c95f5623589029618f72f04c1c7ba78019805d2273f2bf3b1549",
     "cpppj/tests/ConstructionPacketTests.cpp": "f5d262e511c256c5ea237dab8cfc52c4ef78a852d047524ed5d25daeb3d21df6",
     "cpppj/tests/fixtures/construction-packet-x86.tsv": "0fe67a16e27ff926d1f8261521c9779d6fd4ca3e23a2eafc3d88e19cf3ef8dad"
   }

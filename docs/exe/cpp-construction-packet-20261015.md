@@ -16,4 +16,6 @@
 
 새 C++ 집중2개는 전체512바이트·호출자뒤5바이트보존·count255진단/후속계산과물리계약을검사한다. 최초18체크실패는길이전역을DWORD로해석한제품오류였다. 실제`MOVZX WORD`를확인해공개필드/읽기폭을WORD로교정했다. helper자체의최소4처리를바꾼것이아니다. 최초자료는`extracted/construction-packet-focused.log`에보존했다. 교정뒤 **Release게임/검사경고·오류0·집중2개실패0**이다(`extracted/construction-packet-build2.log`, `construction-packet-focused2.log`). 같은86개재생성은새고유입력으로합산하지않는다. 실제Session설치/GUI/전체회귀로세지않는다.
 
+후속 공용 재컴파일에서 `fill_n(...,0xff)`의 int→BYTE 변환 경고 C4244를 발견했다(`extracted/ai-initial-update-root-build.log`). 초기화 상수를 `uint8_t{0xff}`로 명시해 같은512바이트 동작을 유지했다. 기존86개 원본 입력을 재생성하고 SHA 보고서를 갱신했으며 `--verify`86개가 통과했다(`extracted/construction-packet-byte-warning-native.log`). 이 재실행을 신규 고유입력으로 합산하지 않는다. 최종 Release 게임/검사 빌드는 **경고0·오류0**, 기존 집중2개를 포함한 전체 CTest는 **1/1·내부1,233개·실패0, 112.41초**다(`extracted/pause-final-build.log`, `extracted/pause-metadata-final-build.log`, `extracted/pause-final-ctest.log`).
+
 원본/도구/정밀함수표/fixture/현재C++소스의SHA는`cpppj/construction-packet.json`에있으며`python tools/decomp_construction_packet.py --verify`로감사한다. 목표active·Early Missions/캠페인1-1~1-2완주동일성미완료·DirectDraw전체화면오류제외를유지한다.
