@@ -1,8 +1,12 @@
-// 원본 조건은 산술식이 아닌 정수 접두어·문자열/정수 비교다. 모든 치환은 호출자가 먼저 한다.
+// 실제Tell은전체치환뒤1차HTML의현재조건/명령효과와2차HTML입력을연결한다. 기존원문호환검사는별도다.
 #include "client/DialogScript.h"
 #include "o/OriginalText.h"
 #include <algorithm>
 #include <cctype>
+#include <array>
+#include <regex>
+#include <stdexcept>
+#include <utility>
 
 namespace netstorm::client {
 namespace {
@@ -102,13 +106,14 @@ std::string FilterDialogConditions(std::string_view source) {
     }
     return result;
 }
-// 명령 줄을 본문에서 빼고 버튼·메뉴·시간 제한을 보존한다.
-DialogPage ParseDialogPage(std::string_view source) {
-    const auto filtered = FilterDialogConditions(source);
+namespace {
+// 기존메타추출과검사호환inline추출을분리한다. 실제경로의inline은이미1차HTML에서실행됐다.
+DialogPage ExtractDialogPage(std::string_view source,bool inlineCommands) {
+    const std::string filtered(source);
     DialogPage page; std::string body;
     // 줄 가운데 $명령도 읽는다. 다른 $명령 또는 줄바꿈에서 인자가 끝난다.
     for (std::size_t i = 0; i < filtered.size();) {
-        if (std::string_view(filtered).substr(i,2)=="<$") {
+        if (inlineCommands && std::string_view(filtered).substr(i,2)=="<$") {
             bool quoted=false;std::size_t end=i+2;
             // 따옴표 안의 >와 쉼표는 Warning 문자열의 일부다.
             for (;end<filtered.size();++end) {
@@ -142,5 +147,75 @@ DialogPage ParseDialogPage(std::string_view source) {
     }
     page.htmlBody=body;page.paragraphs = Paragraphs(body, page.background);
     return page;
+}
+// 기존commands/warnings관찰은태그원문을보관하되실제큐hook에는원본처럼NUL까지의전체remainder를준다.
+std::string CommandText(std::string_view raw) {
+    bool quoted=false;std::size_t end=0;
+    // 따옴표안의>는명령보고문자열에남긴다. 실제HTMLcursor를바꾸는동작은하지않는다.
+    for (;end<raw.size();++end) {
+        if (raw[end]=='"') quoted=!quoted;
+        if (!raw[end] || (raw[end]=='>' && !quoted)) break;
+    }
+    return std::string(raw.substr(0,end));
+}
+// 원본Tell의C로케일alnum존재관문이다. 영문/숫자가없는줄바꿈·기호만으로새창을만들지않는다.
+bool HasContent(std::string_view text) {
+    // StyleText제어문자의영문도원본처럼현재출력바이트에포함하여검사한다.
+    for (const unsigned char byte:text) if ((byte>='A' && byte<='Z') || (byte>='a' && byte<='z') || (byte>='0' && byte<='9')) return true;
+    return false;
+}
+// 1차HTML이원문LF를공백으로바꾸므로원본메타regex의마지막인자경계와종류우선순위를사용한다.
+// Key/Input/Zsend의실제입력컨트롤은아직공급되지않아선택시명시적으로거부한다.
+DialogPage ExtractRuntimeMetadata(std::string text) {
+    static const std::array<std::regex,9> patterns{ // 원본004c83b0의같은대소문자/캡처/검색우선순위다.
+        std::regex(R"(\$Button[ \t]*=[ \t]*([^,]+),([^,]+),([^$ ]+))"),
+        std::regex(R"(\$ButtonInstant[ \t]*=[ \t]*([^,]+),([^,]+),([^$ ]+))"),
+        std::regex(R"(\$Menu[ \t]*=[ \t]*([^,]+),([^,]+),([^$ ]+))"),
+        std::regex(R"(\$Checked[ \t]*=[ \t]*([^,]+),([^,]+),([^,]+),([^,]+),([^$ ]+))"),
+        std::regex(R"(\$Timeout[ \t]*=[ \t]*([^,]+),([^,]+),([^$ ]+))"),
+        std::regex(R"(\$OnExit[ \t]*=[ \t]*([^,]+),([^,]+),([^$ ]+))"),
+        std::regex(R"(\$Key[ \t]*=[ \t]*([^,]+),([^,]+),([^$ ]+))"),
+        std::regex(R"(\$Input[ \t]*=[ \t]*([^,]+),([^,]+),([^$ ]+))"),
+        std::regex(R"(\$Zsend[ \t]*=[ \t]*([^,]+),([^,]+),([^$ ]+))")};
+    DialogPage page;
+    // 매제거뒤다시Button부터검색한다. 원문등장순으로모든메타를정렬하지않는다.
+    for (;;) {
+        std::smatch match;std::size_t kind=0;
+        // 앞종류가없을때만다음종류의첫일치를찾는다.
+        for (;kind<patterns.size();++kind) if (std::regex_search(text,match,patterns[kind])) break;
+        if (kind==patterns.size()) break;
+        if (kind>=6) throw std::logic_error("Tell 메타의실제Key/Input/Zsend컨트롤미연결");
+        const auto label=Trim(match[1].str());const DialogAction action{Trim(match[2].str()),Trim(match[3].str())};
+        if (kind<4) page.items.push_back({label,action,kind==2 || kind==3,kind==3 && o::ConfigParseLong(match[4].str())!=0,
+            kind!=3 || o::ConfigParseLong(match[5].str())!=0,kind==1});
+        else if (kind==4) { page.timeoutSeconds=o::ConfigParseLong(label);page.timeout=action; }
+        else page.onExit=action;
+        const auto start=static_cast<std::size_t>(match.position());auto end=text.find_first_of("\n$",start+1);
+        if (end==std::string::npos) end=text.size();else if (text[end]=='\n') ++end;
+        text.erase(start,end-start); // 원본004c8bbd는캡처끝이아니라다음LF(포함)/$(제외)/NUL까지실제로제거한다.
+    }
+    page.htmlBody=std::move(text);page.paragraphs=Paragraphs(page.htmlBody,page.background);return page;
+}
+}
+// 기존검사의원문호환계약은유지하고실제Tell에서는이overload를선택하지않는다.
+DialogPage ParseDialogPage(std::string_view source) { return ExtractDialogPage(FilterDialogConditions(source),true); }
+// 1차HTML의효과·표시상태를메타추출보다먼저실행하고같은상태의2차HTML입력을반환한다.
+DialogPage ParseDialogPage(std::string_view source,HtmlTextParserState& state,HtmlTextParserGlobals& globals,HtmlTextParserHooks hooks,o::OriginalEdition edition) {
+    std::vector<std::string> commands,warnings;std::string background;
+    const auto command=hooks.command;const auto setBackground=hooks.background;
+    hooks.command=[&](HtmlTextParserState& current,std::string_view raw) {
+        const auto text=CommandText(raw);commands.push_back(text);const auto arguments=Fields(text);
+        if (!arguments.empty() && o::AsciiLower(arguments[0])=="warning") warnings.push_back(arguments.size()>1 ? arguments[1] : std::string());
+        if (!command) throw std::logic_error("Tell 1차HTML의실제명령큐효과미연결");command(current,raw);
+    }; // 선택된명령은메타처리를기다리지않고현재실제큐에예약한다.
+    hooks.background=[&](HtmlTextParserState& current,std::string_view name) {
+        background=name;if (setBackground) setBackground(current,name);
+    }; // 실제배경이름은현재페이지의소유필드에도보관한다.
+    const auto first=HtmlTextParser(state,globals,std::move(hooks),edition).Parse(source);
+    auto page=ExtractRuntimeMetadata(first);page.commands=std::move(commands);page.warnings=std::move(warnings);page.background=std::move(background);page.hasContent=HasContent(first);
+    std::string second;second.reserve(page.htmlBody.size());
+    // 원본00504b0c→00515eb8과같이1차출력의모든LF를실제BR태그로되돌린다.
+    for (const char byte:page.htmlBody) { if (byte=='\n') second+="<br>";else second+=byte; }
+    page.htmlBody=std::move(second);return page;
 }
 }

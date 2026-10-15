@@ -12,6 +12,7 @@
 #include "client/WindowTitle.h"
 #include "client/WarningMessages.h"
 #include "client/DialogBodyLayout.h"
+#include "client/HtmlConditionEffect.h"
 #include "o/OriginalText.h"
 #include "o/Template.h"
 #include <algorithm>
@@ -182,18 +183,20 @@ bool UberGump::TryTell(std::string target,bool briefing) {
     }
     if (!body) return false;
     const auto protectedBody = Replace(*body, "{cur.file}", "__CURRENT_FILE__");
-    auto parsed=ParseDialogPage(Replace(client_.Configuration().SubstituteLocal(protectedBody), "__CURRENT_FILE__", "{cur.file}"));
     ScriptCommandHooks commands; // 현재복원된실제명령을원본ID로조회하고미등록은원본처럼진단뒤거부한다.
     commands.lookup=[](std::string_view name) { const auto lower=o::AsciiLower(name);return lower=="config" ? kScriptConfig : lower=="warning" ? kScriptWarning : 0xffffffffU; };
     commands.unknown=[](std::string_view name) { std::clog<<"스크립트 명령 미연결: "<<name<<'\n'; };
-    // 같은 페이지의 여러 명령을 첫 상태전환 하나로 줄이지 않고 실제40칸 입력 큐에 넣는다.
-    for (const auto& command:parsed.commands) QueueScriptCommand(FontBytes(command),client_.Input(),scriptStrings_,commands);
-    if (!parsed.commands.empty() && parsed.paragraphs.empty() && parsed.items.empty()) { rebuild_=true;return true; }
-    HtmlTextParserState htmlState;HtmlTextParserHooks htmlHooks; // 원본처럼새페이지는기본shown=1의본문변환상태로시작한다.
-    htmlHooks.background=[&](HtmlTextParserState&,std::string_view name) { parsed.background=std::string(name); }; // 실제배경이름을현재페이지에보관하고기존VFS배경표시경로에전달한다.
+    HtmlTextParserState htmlState;HtmlTextParserHooks htmlHooks;std::string background; // 원본처럼새페이지는shown=1로시작하고두번의HTML순회에서같은상태를공유한다.
+    htmlHooks.background=[&](HtmlTextParserState&,std::string_view name) { background=name; }; // 두HTML순회가선택한실제배경이름을현재페이지표시경로에보관한다.
+    htmlHooks.command=[&](HtmlTextParserState&,std::string_view raw) { QueueScriptCommand(FontBytes(raw),client_.Input(),scriptStrings_,commands); }; // 원본1차HTML의선택시점에기존40칸입력큐로예약한다.
+    BindHtmlConditionConfig(htmlHooks,client_.Configuration(),client_.Assets().Edition()); // 초기전체치환결과의조건토큰을그시점의현재Config에서다시치환한다.
     BindHtmlPictureText(htmlHooks); // 원본인용그림표기를실제Markup/SHP를읽는본문버퍼에전달한다.
+    const auto expanded=Replace(client_.Configuration().SubstituteLocal(protectedBody),"__CURRENT_FILE__","{cur.file}"); // 원본004cf270의선행전체치환을HTML조건평가보다먼저유지한다.
+    auto parsed=ParseDialogPage(expanded,htmlState,htmlGlobals_,htmlHooks,client_.Assets().Edition()); // 1차HTML→조건을통과한메타추출→LF의BR재구성을수행한다.
+    if (!parsed.hasContent) { rebuild_=true;return true; } // 원본004c8d50관문처럼명령효과만남고내용이없으면현재대화상자를교체하지않는다.
     const std::array<std::uint32_t,8> context{0,0,client_.GetScreen().Colors().basic[7],0,0,0,1,1}; // 실제기본TextGump의font0/normal/흰색/그림자오프셋문맥이다.
     dialogBody_->SetBody(FontBytes(parsed.htmlBody),context,htmlState,htmlGlobals_,std::move(htmlHooks));
+    parsed.background=std::move(background); // 같은상태의2차HTML이선택한최종배경을실제표시에사용한다.
     page_=std::move(parsed);
     ExpandMenus(page_);
     if (page_.items.empty()) page_.items.push_back({"OK", {"DoNothing", "0"}});

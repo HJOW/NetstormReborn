@@ -1,6 +1,7 @@
 // 원본 Htmlgump.cpp·Ubergump.cpp의 조건/메뉴 명령과 본문을 구성한다.
 #pragma once
 #include "o/ConfigInterface.h"
+#include "client/HtmlTextParser.h"
 
 namespace netstorm::client {
 // 다이얼로그 항목이 실행할 명령과 인자이다.
@@ -22,7 +23,8 @@ struct DialogParagraph { /* text: 표시하거나 해석할 본문 문자열. */
 // 다이얼로그 한 페이지의 문단·항목·배경·시간 제한 동작이다.
 struct DialogPage {
     std::vector<std::string> commands; // HTML의 <$...> 원시 명령을 나타난 순서대로 실제 입력 큐에 예약한다.
-    std::string htmlBody; // 조건/명령/버튼 메타를 분리한 실제 HTML 본문이며 스타일 변환기에 전달한다.
+    std::string htmlBody; // 실제경로는1차HTML→메타제거→LF를<br>로재구성한2차HTML입력이다. 검사호환경로는기존원문본문이다.
+    bool hasContent{}; // 원본004c8d50처럼1차HTML출력에ASCII alnum이있어대화상자가필요한지나타낸다.
     // 기존 검사/관찰용 Warning 인자다. 실행은 commands의 원래 순서와 실제 입력 큐를 사용한다.
     std::vector<std::string> warnings;
     // paragraphs: 표시 순서대로 해석한 다이얼로그 문단 목록.
@@ -37,8 +39,12 @@ struct DialogPage {
     // onExit: 페이지에서 나갈 때 실행할 동작.
     DialogAction timeout, onExit;
 };
-// 0046c090·0046c810: 조건을 숨기면 중첩 여는 태그는 무시하고 첫 닫힘에서 다시 표시한다.
+// 기존독립검사의문자열호환필터다. 실제Tell은아래현재상태/Config효과를받는overload만사용한다.
 std::string FilterDialogConditions(std::string_view source);
-// 004c83b0: 설정 치환/조건 처리 뒤의 HTML 본문과 $Button/$Menu/$Checked 등을 분리한다.
+// 기존독립검사의원문/메타추출호환경로다. 실제게임의HTML효과·Config조회시점검증으로세지않는다.
 DialogPage ParseDialogPage(std::string_view source);
+// 원본004cf270의1차HTML→기존메타추출→LF를<br>로재구성한다. source는선행전체Config치환결과다.
+// 같은state/globals/hooks로DialogBodyLayout::SetBody를호출해2차HTML을수행해야한다. inline명령은선택시실제hook을즉시호출한다.
+DialogPage ParseDialogPage(std::string_view source,HtmlTextParserState& state,HtmlTextParserGlobals& globals,HtmlTextParserHooks hooks,
+    o::OriginalEdition edition=o::OriginalEdition::Patch1078);
 }
