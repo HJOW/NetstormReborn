@@ -1,5 +1,18 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-15 단위48 완료: 실제 Player 기술 제거·조회·생성·목록 (`VM-W11-Codex`)
+
+- [x] `RawPlayerTechnology`는같은RawPlayerWorld/ContainedFinder/Create/실제TYPE을사용한다. 실제flags4기술을현재체인에서삭제하고, Ensure의진단/부모재조회·실제contained생성인자,40개중복제거/전체TYPE목록을복원했다. 미등록이름의원본무진행은skip성공으로바꾸지않는다. [단위48 상세](docs/exe/cpp-player-technology-20261015.md).
+- [x] PATCH5함수정밀export와 **158고유입력**을대조했다. 정상반환155/실제반복무진행관찰3을구분하며후자를정상반환으로합산하지않는다. 최초검사setup의PostPop타입표크기오류2건은실제188개표로교정했다. production조건을완화하지않았다. 최종Release게임/검사빌드경고·오류0·집중2개실패0·SHA/행수/공백감사통과다. 임시40칸은host소유이며heap주소/OOM동일성은범위밖이다.
+- [x] 현재/마지막정밀디컴파일PC는 **VM-W11-Codex, 2026-10-15**다. 실제게임/GUI실행·보호원본/AGENTS/dotnetpj변경은없다. 인수인계뒤 **`20261015-37 실제 플레이어 기술 제거와 생성 및 목록 복원 검증`**으로로컬커밋하며push하지않는다.
+- [ ] 같은Session의ContentFormLifetime/삭제분배·Player부모파생통지를실제공급한뒤Start에연결한다. 기존SurfaceWorld의삭제관찰카운터를실제보상/선택효과로오인하지않도록공통Lifecycle후설치도진행중이다. 실제AI생성자/초기갱신·건설/다리/수확·완주동일성은미완료·목표active·DirectDraw전체화면오류제외다.
+
+## 2026-10-15 진행 중: 단위47 실제 Tell 본문·그림 연결 (`VM-W11-Codex`)
+
+- [x] 독립 `DialogBodyLayout`은 실제HTML→StyleText→StyleTextBuffer→RenderText로본문을소유하며집중5개통과다. 실제Compose에연결하여기존메뉴/1-1대화상자·캡처 **97상태**도통과했다. 현재미커밋UI변경은이후보를포함한다.
+- [ ] **현재중단점:** 실제Early1/2안내에는`<!...>`그림태그가있어`HTML 실제 효과 미연결: picture`로진입실패한다. 빈효과/태그제거로우회하지않으며0046bf40→기존Markup/StyleTextMarkup/실제SHP그림출력을연결중이다. 실패로그는`extracted/dialog-body-ui-progress.log`, 기존회귀통과는`extracted/dialog-body-ui-dialog.log`다. 보호originals해시/허용설정은실패에도복구했다. 이변경을완료로커밋하거나실제미션GUI정상으로세지않는다.
+- [ ] PlayerTechnology 새158입력은최초setup의PostPop타입표크기오류2개를실제188개표로교정하고집중재검사대기다. PlayerGeyserBounds439입력은통합Release경고/오류0·집중2개통과이며문서/커밋대기다. 공용빌드는root가직렬조율한다. 목표active·완주동일성미완료·DirectDraw전체화면오류제외를유지한다.
+
 ## 2026-10-15 단위46 완료: 실제 안내 명령 큐·완료값 저장 (`VM-W11-Codex`)
 
 - [x] `RawTextToken`/`ScriptStringRing`/`QueueScriptCommand`/`ApplyScriptConfig`에 원본78입력바이트·인용/공백·80칸문자열수명·명령표/숫자판별/진단순서·Config덮어쓰기를복원했다. 실제Tell은모든inline명령을순서대로기존입력큐에넣고다음Input에서Config/Warning을소비한다. [단위46 상세](docs/exe/cpp-script-command-20261015.md).

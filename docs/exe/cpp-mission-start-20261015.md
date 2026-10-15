@@ -62,7 +62,7 @@ Ability는 PE의 실제13개 이름 순서를 보존한다. 선두 느낌표는 
 
 `00414710`은 설정을 다시600바이트 복사하고 미션이면 name/defaultAiName을 Player에 쓴다. `RawPlayerWorld::Technology/Create`에 해당하는 실제 기술 부모를 조회/생성하고 `004915c0`으로 기술 내용을 추가한 뒤 flags4의 contained들을 순회한다. 실제 TYPE의 속성으로 builder 목록/원소별 개수/비용/테마/최저가 및 분류 자료를 만든다. 이를 빈 초기 갱신으로 대체하면 이후 전략·피해 통지가 실제 brain을 읽을 때 원본과 달라진다. 전략 프레임 `00417d30/00417de0` 및 호출된 주요 `00414af0/00416eb0/004139f0/00417c70`도 후속이다. **aiName 또는 flags20만으로 Outcome 참여를 켜지 않는다.**
 
-현재 재사용 가능한 실제 하위는 Player 기술 부모의 `RawPlayerWorld::{Technology,Create}`, 현재9기록의 `Records`, 섬 신전 getter의 `RawIslandRuntime::Temple`, 분산 SP의 `ScrambledSpStore::Set`, 실제 사제 조회 계층이다. `004903b0`의 flags4 기술 제거와 `004915c0`의 문자열 타입해석→ensure00490420→contained 생성 사슬은 기존 PlayerWorld의 조회/생성과 구별되는 미복원이다. 단순 `MissionPlayers::Load`의 double SP/대칭동맹 사본을 이 실제 경계로 재사용하지 않는다.
+현재 재사용 가능한 실제 하위는 Player 기술 부모의 `RawPlayerWorld::{Technology,Create}`, 현재9기록의 `Records`, 섬 신전 getter의 `RawIslandRuntime::Temple`, 분산 SP의 `ScrambledSpStore::Set`, 실제 사제 조회 계층이다. 후속 [Player 기술 단위](cpp-player-technology-20261015.md)에서 `004903b0`의 flags4 기술 제거와 `004915c0`의 문자열 타입해석→ensure00490420→contained 생성 사슬도 `RawPlayerTechnology`로 복원하고 원본158입력/집중2개를 확인했다. 실제 세션의 가상파괴/ContentForm 알림/현재 PlayerKnown 연결 전제는 여전히 필요하다. 단순 `MissionPlayers::Load`의 double SP/대칭동맹 사본을 이 실제 경계로 재사용하지 않는다.
 
 ## 원본 대조와 검사
 

@@ -1,0 +1,32 @@
+{
+  "host": "VM-W11-Codex",
+  "date": "2026-10-15",
+  "observations": 158,
+  "kinds": {
+    "add": 18,
+    "clear": 16,
+    "ensure": 56,
+    "find": 56,
+    "parse": 9,
+    "stalled": 3
+  },
+  "boundaries": [
+    "48-type name/group fixture input; real RiftTypeTable finder binds separately",
+    "temporary160-byte allocation/free addresses and OOM excluded; host owns40 entries without synthetic N/X trace",
+    "factory/virtual attach/virtual destroy external effects",
+    "stalled entries observe two real loop iterations then stop without claiming normal return"
+  ],
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/player-technology/originals/creation.c": "ce8c4e517612a5ba5b8146038aeeca498562628f3065b81b0ccc55ee90b2acda",
+    "extracted/player-technology/originals/functions.tsv": "b7516f2e5157b07e41b49c6cec8e48a8a89cbe1379029e44cd1ce0ec43a681b1",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/ghidra/player-technology-functions.json": "ff3e5fee383704ab5058cad020675c47c7d1ce58669a99b5dd8162d0e66b759f",
+    "tools/decomp_player_technology.py": "23c1641c7ddd917f5f7fef295529d0fff8c65e99148e143741c20e523fbe02be",
+    "tools/decomp_priestmenu.py": "72d14bfa36091dc86a273ad9b1998c940f575bb954195d0e0920e5e63ea10bc7",
+    "cpppj/src/o/RawPlayerTechnology.h": "ea3440156adeaa343d97dd90e9a94408d43e0b065dab20ef1a815a5ceca6d65f",
+    "cpppj/src/o/RawPlayerTechnology.cpp": "617a669dc428730f286b5f57f7628321f981f6493a2fd2080b321d227bcea6f7",
+    "cpppj/tests/PlayerTechnologyTests.cpp": "fd452b3d5d4f7be1c2b02646ae55654897d2dba68eebab0a90963c225f24f24f",
+    "cpppj/tests/fixtures/player-technology-x86.tsv": "f3970d37d545c272fab7b0e80c04932ef0f6d9838a67f5789fe3b8de7f832690"
+  }
+}

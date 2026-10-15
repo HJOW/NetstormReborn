@@ -1,0 +1,6 @@
+{
+  "description": "PATCH 실제 Player 기술조회/삭제/ensure와 40개 문자열 목록 사슬. 마지막 디컴파일 PC VM-W11-Codex, 2026-10-15. 읽기 전용 export이며 게임 실행은 없다.",
+  "editions": {
+    "originals": ["00490330", "004903b0", "00490420", "004914e0", "004915c0"]
+  }
+}

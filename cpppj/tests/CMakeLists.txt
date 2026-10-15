@@ -7,6 +7,7 @@ add_executable(netstorm_tests
     LocalGeyserTests.cpp
     MissionStartTests.cpp
     ScriptCommandTests.cpp
+    PlayerTechnologyTests.cpp
     MissionFrameGateTests.cpp
     TutorialOneTests.cpp
     TutorialTwoTests.cpp
@@ -964,3 +965,7 @@ set_source_files_properties(HtmlTextParserTests.cpp PROPERTIES COMPILE_DEFINITIO
 # 실제 토큰/인라인 명령/Config/문자열80칸 고리를 대조한다.
 set_source_files_properties(ScriptCommandTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_SCRIPT_COMMAND_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/script-command-x86.tsv\"")
+
+# 실제 Player 기술 제거/생성/목록을 대조한다.
+set_source_files_properties(PlayerTechnologyTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PLAYER_TECHNOLOGY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/player-technology-x86.tsv\"")
