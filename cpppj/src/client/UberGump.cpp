@@ -171,35 +171,41 @@ void UberGump::ExpandMenus(DialogPage& page) {
     }
     page.items = std::move(items);
 }
-// Tell Blank는 현재 창을 닫는다. 미션 브리핑의 A./A1.은 현재 미션 파일에서 찾는다.
+// 명시 사용자 명령에서 잘못된 섹션은 기존 진단을 유지한다. 선택적 미션 사건은 TryTell을 사용한다.
 void UberGump::Tell(std::string target, bool briefing) {
+    if (!TryTell(target,briefing)) throw std::runtime_error("Missing dialog section: "+target);
+}
+// 원본004cf730은 phase와 무관하게 현재 Mission의 설정에서 전체 target을 조회한다.
+bool UberGump::TryTell(std::string target,bool briefing) {
     if (o::AsciiLower(target) == "blank" || target.empty()) {
         if (mission_) { state_.phase = ClientPhase::Mission; pageName_ = "mission"; popup_.clear(); page_ = {}; client_.Pause(false); }
         else MainMenu();
-        RebuildControls(); return;
+        RebuildControls(); return true;
     }
     std::optional<std::string> body;
     const auto split = target.find('.');
     if (split != std::string::npos && split + 1 < target.size()) {
         auto& script = Script(target.substr(0, split));
         if (const auto section = script.Section(target.substr(split + 1))) body = std::string(*section);
-    } else if (mission_ && (briefing || state_.phase == ClientPhase::Briefing)) body = mission_->Section(target);
+    }
+    if (!body && mission_) body = mission_->Section(target);
     if (!body) {
         if (const auto section = Script("tell").Section(target)) body = std::string(*section);
     }
-    if (!body) throw std::runtime_error("Missing dialog section: " + target);
+    if (!body) return false;
     const auto protectedBody = Replace(*body, "{cur.file}", "__CURRENT_FILE__");
     auto parsed=ParseDialogPage(Replace(client_.Configuration().SubstituteLocal(protectedBody), "__CURRENT_FILE__", "{cur.file}"));
     // Warning 명령만 있는 Tell은 원본처럼 화면 안내만 생성하며 미션/기존 페이지/정지를 바꾸지 않는다.
     warnings_->SetView(client_.GetScreen().Width(),client_.GetScreen().Height(),client_.GetScreen().Colors());
     for (const auto& warning:parsed.warnings) warnings_->Add(warning);
-    if (!parsed.warnings.empty() && parsed.paragraphs.empty() && parsed.items.empty()) { rebuild_=true;return; }
+    if (!parsed.warnings.empty() && parsed.paragraphs.empty() && parsed.items.empty()) { rebuild_=true;return true; }
     page_=std::move(parsed);
     ExpandMenus(page_);
     if (page_.items.empty()) page_.items.push_back({"OK", {"DoNothing", "0"}});
     state_.phase = briefing ? ClientPhase::Briefing : ClientPhase::Dialog;
     pageName_ = target; popup_.clear(); opened_ = client_.Time().wall; RebuildControls();
     if (mission_) client_.Pause(true);
+    return true;
 }
 // 메인 메뉴로 돌아올 때 미션 설정 객체도 등록 목록에서 제거한다.
 void UberGump::MainMenu() {

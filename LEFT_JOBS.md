@@ -1,5 +1,13 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-15 단위39 완료: 진행 중 미션의 현재 Tell 섹션 조회 (`VM-W11-Codex`)
+
+- [x] 원본004c2a90→00482de0→004cf960/004cf730의 현재 Mission 설정 조회에 phase 제한이 없음을 확인했다. UberGump의 Briefing 제한을 제거하고 현재 B./C./B1./C1.을 진행 중에도 조회한다. 선택적 사건용 `TryTell`은 섹션 부재를 false로 반환하며 명시 Tell의 오류 진단은 유지한다. [단위39 상세](docs/exe/cpp-mission-tell-20261015.md).
+- [x] Release게임빌드경고/오류0, 실제Early1/2의MORE/OK진입→Kernel B./C.→MORE/BACK/OK·미션복귀·공통Warning **21상태**와 기존비동기Tell **95상태**가 통과했다. originals전체파일명/해시불변·원본게임실행0이다. 현재/마지막 정밀PC는 **VM-W11-Codex, 2026-10-15**이며새export는없다.
+- [x] 인수인계 뒤 **`20261015-29 진행 중 미션의 현재 안내 섹션 조회와 입력 검증`**으로 로컬커밋한다. 원격push와dotnetpj변경은없다.
+- [ ] 실제승패/단계자동호출은아직없다. RawPlayer로그인/AI참여flags와방향별동맹초기화,같은현재상태Outcome연결을복원중이다. Tutorial2독립복원은346원본입력·집중2개가통과했고인수인계/커밋대기다. Early1최근생성5개간헐천의생성사슬도후속으로조사한다.
+- [ ] Early1 B.캡처에서기존본문renderer가inline italic구간을별도줄로분리하는현상을확인했다. 텍스트줄바꿈/스타일도후속복원하며전체픽셀동일성완료로세지않는다. Construct비활성·완주동일성미완료·DirectDraw전체화면오류제외·목표active를유지한다.
+
 ## 2026-10-15 단위38 완료: 사제의 원본 건설 메뉴·선택 관문 (`VM-W11-Codex`)
 
 - [x] `RawPriestMenu`에 현재 Player/사제/기술 내용물/프레임을 읽는 신전·워크샾·Construct·Prayer 구성, 비용 문구와 허용/제외 조건, 선택 때 두 번의 SP 비교 및 실제 미리보기 Form 요청을 복원했다. 기존 controlled Menu/Gump와 같은 월드 조회를 연결하는 어댑터도 제공한다. [단위38 상세](docs/exe/cpp-priest-menu-20261015.md).

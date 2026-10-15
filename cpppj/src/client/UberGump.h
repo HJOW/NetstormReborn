@@ -49,6 +49,8 @@ public:
 private:
     // 원본 Tell의 파일.섹션/현재 tell 섹션을 읽어 대화상자를 연다.
     void Tell(std::string target, bool briefing = false);
+    // 원본00482de0처럼 현재 미션/일반 섹션이 없으면 false로 반환하며 기존 페이지를 유지한다.
+    bool TryTell(std::string target,bool briefing=false);
     // 원본 이름의 설정 객체를 보존해 캠페인 제목과 변수를 치환한다.
     o::Config& Script(std::string_view name);
     // @guideSpec/%userSpec 파일 목록을 현재 파일 설정으로 확장한다.
