@@ -15,7 +15,7 @@ click-center -120,-64; assert campaigns; capture $OutputDirectory/02-campaigns.p
 click-center 0,10; assert campaigns;
 click-center 0,28; assert missions; capture $OutputDirectory/03-missions.png;
 click-center 0,74; assert missions;
-click-center 0,38; assert briefing; assert-detail mission=thewarbegins; capture $OutputDirectory/04-briefing.png;
+click-center 0,38; wait 15; assert briefing; assert-detail mission=thewarbegins; capture $OutputDirectory/04-briefing.png;
 click-center 82,114; assert battle; wait 90; capture $OutputDirectory/05-battle.png;
 click 40,181; assert placement; capture $OutputDirectory/06-placement.png;
 right-click 500,400; assert battle; capture $OutputDirectory/07-bridges.png;
@@ -23,7 +23,7 @@ click 22,47; assert holding; capture $OutputDirectory/08-held.png;
 key Escape; assert mission-menu; click 109,8; click 150,77; assert leave; capture $OutputDirectory/09-leave.png;
 click-center -82,48; assert main; capture $OutputDirectory/10-return.png;
 click-center -120,-64; assert campaigns; click-center 0,28; assert missions;
-click-center 0,56; assert briefing; assert-detail mission=masterofwhirligigs; capture $OutputDirectory/10a-briefing-1-2.png;
+click-center 0,56; wait 15; assert briefing; assert-detail mission=masterofwhirligigs; capture $OutputDirectory/10a-briefing-1-2.png;
 click-center 83,131; assert battle; wait 90; capture $OutputDirectory/10b-battle-1-2.png;
 key Escape; assert mission-menu; click 109,8; click 150,77; assert leave; click-center -82,48; assert main;
 click-center 38,-42; assert options; capture $OutputDirectory/11-options.png;

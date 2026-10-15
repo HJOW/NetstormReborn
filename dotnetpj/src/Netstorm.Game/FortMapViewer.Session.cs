@@ -65,19 +65,24 @@ internal sealed partial class FortMapViewer
     /// <summary>
     /// 수동 토글·스크립트 안내·비실행 개발 뷰어의 정지 소유권을 독립 비트로 동기화한다.
     /// F6 지식창/일반 도움말·미션 메뉴는 별도 정지를 잡지 않는다. 기존 안내 정지는 닫힌 뒤 7프레임까지 유지된다.
+    /// 안내가 열려 있으면 어떤 경로로 열렸든 이 미션이 정지를 잡는다(이미 보유 중이면 아무것도 하지 않는다).
     /// </summary>
-    /// <remarks>원본 정지 호출 004c2a56/004d82b5 및 docs/gameplay/dialog-pause.md.</remarks>
+    /// <remarks>
+    /// 원본 정지 호출 004c2a56/004d82b5 및 docs/gameplay/dialog-pause.md.
+    /// 2026-10-15: 정지 보유 상태를 게이트의 ScriptPaused 와 Pause/Resume 경계로 옮겼다. 이 경계는 시계를 직접 만지지 않고
+    /// 표식만 바꾸므로 여기서 PauseForDialog 를 불러도 재귀하지 않는다.
+    /// </remarks>
     private void SynchronizePauseReasons()
     {
         SessionPauseReason reasons = SessionPauseReason.None;
         if (_simulationPaused) reasons |= SessionPauseReason.Manual;
-        if (TutorialDialogOpen) _missionDialogFrames?.CapturePause();
-        if (_missionDialogFrames?.OwnsPause == true || _missionDialogFrames == null && TutorialDialogOpen)
+        if (TutorialDialogOpen) _missionFrame?.PauseForDialog();
+        if (_scriptPauseHeld || _missionFrame == null && TutorialDialogOpen)
             reasons |= SessionPauseReason.ScriptDialog;
         if (_mission == null && !_placementMode && !_bridgeMode && !_session.CombatEnabled)
             reasons |= SessionPauseReason.ViewerIdle;
         _sessionFrameClock.SetPauseReasons(reasons, _readFrameMilliseconds());
-        _session.TutorialFrameLocked = _missionDialogFrames?.StagePending == true || _sessionFrameClock.IsPaused;
+        _session.TutorialFrameLocked = _missionFrame?.State.LockFrames > 0 || _sessionFrameClock.IsPaused;
     }
 
     /// <summary>

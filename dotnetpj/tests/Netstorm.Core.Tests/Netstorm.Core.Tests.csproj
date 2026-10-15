@@ -32,6 +32,8 @@
     <None Include="../../../cpppj/tests/fixtures/hash-x86.tsv" Link="X86/hash-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/renderer-x86.tsv" Link="X86/renderer-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/display-x86.tsv" Link="X86/display-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <!-- 공통 미션 프레임·안내 정지·단계 증가·재지연의 원본 PE 독립 관찰 328개 (2026-10-15 감사 D02). -->
+    <None Include="../../../cpppj/tests/fixtures/missionframe-x86.tsv" Link="X86/missionframe-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <Compile Include="../Shared/X86Fixture.cs" Link="Shared/X86Fixture.cs" />
   </ItemGroup>
 </Project>

@@ -16,13 +16,13 @@ $taskRuns = [ordered]@{
     first = @"
 assert main; click-center -120,-64; assert campaigns; click-center 0,28; assert missions;
 click-center 0,69; assert missions; capture $OutputDirectory/first-locked.png;
-click-center 0,51; assert briefing; assert-detail mission=thewarbegins;
+click-center 0,51; wait 15; assert briefing; assert-detail mission=thewarbegins;
 mission-section Succeeded; wait 12; assert briefing; capture $OutputDirectory/first-succeeded.png; quit;
 "@
     second = @"
 assert main; click-center -120,-64; assert campaigns; click-center 0,28; assert missions;
 capture $OutputDirectory/second-unlocked.png;
-click-center 0,69; assert briefing; assert-detail mission=masterofwhirligigs; quit;
+click-center 0,69; wait 15; assert briefing; assert-detail mission=masterofwhirligigs; quit;
 "@
 }
 try {

@@ -24,7 +24,7 @@ P0는 시간·월드·플레이어·미션 순서 같은 선행 구조, P1은 �
 ## 2. 이미 반영되어 보존할 부분
 
 - 원본 숫자 시계·중첩 정지, 실제 화면 간격의 그리기 제한, 명령 처리 중 시간 진행 방지, 화면 프레임 단위 다리 스캔이 있다. 고정 틱을 사용하는 나머지 규칙과 구분해야 한다. [BattleSession.cs](../dotnetpj/src/Netstorm.Core/Simulation/BattleSession.cs#L305), [세션 시계 작업 기록](dotnet-session-clock-20261012.md).
-- 초기 10프레임·재개 7프레임, 후속 0.5초/10프레임과 튜토리얼 2의 double 2/4초 타이머가 이미 구현됐다. `FortMapViewer`의 `finally`에서 화면별 단계 판정도 연결되어 있다. 이를 새 미구현 항목으로 다시 만들지 않는다. [안내 게이트](../dotnetpj/src/Netstorm.Core/Simulation/MissionDialogFrameGate.cs), [화면 연결](../dotnetpj/src/Netstorm.Core/Simulation/BattleSession.TutorialFrames.cs), [튜토리얼 타이머 작업 기록](dotnet-stage-frames-20261013.md).
+- 초기 10프레임·재개 7프레임, 후속 0.5초/10프레임과 튜토리얼 2의 double 2/4초 타이머가 이미 구현됐다. `FortMapViewer`의 `finally`에서 화면별 단계 판정도 연결되어 있다. 이를 새 미구현 항목으로 다시 만들지 않는다. 안내 게이트(점검 당시 `MissionDialogFrameGate.cs`, 2026-10-15에 [MissionFrameGate.cs](../dotnetpj/src/Netstorm.Core/Simulation/MissionFrameGate.cs)로 교체), [화면 연결](../dotnetpj/src/Netstorm.Core/Simulation/BattleSession.TutorialFrames.cs), [튜토리얼 타이머 작업 기록](dotnet-stage-frames-20261013.md).
 - SID 계산 라이브러리만 있는 상태는 지났다. 저장 객체·다리·건설·생산 등이 공유 서버 번호 풀을 사용한다. 다만 실제 표면 Graph와 파생 수명 전체 연결까지 완료된 것은 아니다. [SidPool.cs](../dotnetpj/src/Netstorm.Core/Simulation/SidPool.cs), [BattleSessionFactory.cs](../dotnetpj/src/Netstorm.Core/Simulation/BattleSessionFactory.cs).
 - 공통 월드 표시 목록과 선택 순서 연결, 신전 기본 그림/겹침 그림, 원본 영어 글꼴·커서, 공유 한국어 명칭표, 캠페인 조건/완료값 저장 경로가 있다. 특히 레인 신전 기본 그림이 C#에서도 전혀 없다고 판단해서는 안 된다. [StructureAnimation.cs](../dotnetpj/src/Netstorm.Assets/StructureAnimation.cs#L104), [월드 표시](dotnet-world-display-20261011.md), [진행 저장 검토](dotnet-review-20261011.md).
 
@@ -57,13 +57,17 @@ P0는 시간·월드·플레이어·미션 순서 같은 선행 구조, P1은 �
 
 **검증:** 0틱·여러 틱·700ms 이상 지연, 반복/중첩 정지, 기한 직전/동일/직후, 미션 교체와 DWORD 감김을 같은 시간열로 재생한다. 시간열이 다르면 처리 횟수도 달라질 수 있으므로 모든 FPS에서 검사합이 같아야 한다는 가정을 추가하지 않는다.
 
+**진행(2026-10-15, HJOW-X3D):** 5절 1번의 기준선(Release 경고/오류 0, 단위 990개 통과 → 이후 1,012개)을 새로 기록했고, 아직 고정 틱을 쓰는 시간 소비자의 **규칙별 목록을 확정**했다. 이행 자체(24Hz/8틱 상한 제거)는 시작하지 않았다. [상세와 목록](dotnet-mission-frame-gate-20261015.md#5-d01--아직-고정-틱24hz최대-8틱을-쓰는-시간-소비-목록).
+
 ### D02. 공통 미션 프레임 전체 순서와 정지 소유권
 
-**현재 코드:** [MissionDialogFrameGate.cs](../dotnetpj/src/Netstorm.Core/Simulation/MissionDialogFrameGate.cs)는 안내 예약/재개 중심이다. [FortMapViewer.TutorialDialog.cs:107](../dotnetpj/src/Netstorm.Game/FortMapViewer.TutorialDialog.cs#L107)에서 안내→재개→정지 동기화→튜토리얼을 실행하고, 승패는 `BattleSession.UpdateMissionEvents`가 다른 위치에서 호출한다. 원본의 started·tellAt·demo·사건 반환을 포함한 공통 프레임 전체는 하나의 경로가 아니다.
+**현재 코드:** `MissionDialogFrameGate.cs`(점검 당시 파일, 2026-10-15에 [MissionFrameGate.cs](../dotnetpj/src/Netstorm.Core/Simulation/MissionFrameGate.cs)로 교체)는 안내 예약/재개 중심이다. [FortMapViewer.TutorialDialog.cs:107](../dotnetpj/src/Netstorm.Game/FortMapViewer.TutorialDialog.cs#L107)에서 안내→재개→정지 동기화→튜토리얼을 실행하고, 승패는 `BattleSession.UpdateMissionEvents`가 다른 위치에서 호출한다. 원본의 started·tellAt·demo·사건 반환을 포함한 공통 프레임 전체는 하나의 경로가 아니다.
 
 **반영:** 원본 `004c34c0`의 시작 관문→승패→안내 기한/잠금→tellAt→재개→demo→튜토리얼 순서를 같은 현재 상태에 적용한다. `tellAt < 경과`의 엄격 경계와 demo의 포함 경계를 나눈다. 각 효과 뒤 공유 상태를 다시 읽는다. 기존 10/7/0.5초 구현과 F6 지식창/브리핑 위 도움말의 정지 분류는 보존한다. `CapturePause`의 bool·앱의 정지 사유 연결이 이미 정지 중인 상태에서도 원본의 자기 소유 깊이를 보존하는지 대조해야 하며, 정적 읽기만으로 고장이라고 단정하지 않는다. [원본 계약](exe/cpp-mission-frame-gate-20261015.md).
 
 **검증:** `missionframe-x86.tsv`의 상태/호출 순서와 실제 화면 경로를 각각 대조한다. 안내 중 새 창·반복 Tell·다른 정지 소유자·재개 7번째 프레임·효과 중 상태 변경을 포함한다.
+
+**진행(2026-10-15, HJOW-X3D) — 구현·검증 완료:** 원본 004c34c0 전체(시작 여부→승패→안내 잠금→tellAt→재개→데모→튜토리얼 분배)를 C# `MissionFrameGate`로 옮기고 `missionframe-x86.tsv` **328행의 상태 14필드·정지 깊이·호출 순서·반환값을 전부 대조**했다. 실제 뷰어는 구 부분 구현을 버리고 이 게이트의 `RunFrame`을 화면마다 한 번 호출하며, 튜토리얼 단계·타이머는 게이트 상태가 단일 소유한다. 튜토리얼 2 A~I를 화면 경로로 완주하는 헤드리스 검사와 클론 창 스모크(승인 후 실행)도 통과했다. **남은 것:** 승패 규칙 자체(D04), `Postpone` 상위 호출자, tellAt/데모 예약(출하 미션에 없음). [상세](dotnet-mission-frame-gate-20261015.md).
 
 ### D03. 플레이어 참여와 동맹을 방향별 상태로 분리
 
@@ -195,7 +199,7 @@ P0는 시간·월드·플레이어·미션 순서 같은 선행 구조, P1은 �
 
 | 순서 | 작업 단위 | 선행·완료 기준 |
 | --- | --- | --- |
-| 1 | 현재 검사 기준선 + D01/D02 화면 연결 대조 | 최근 시계/프레임 구현을 실제 연결 경로로 검증하고 남은 규칙별 시간 소비 목록 확정 |
+| 1 | 현재 검사 기준선 + D01/D02 화면 연결 대조 | 최근 시계/프레임 구현을 실제 연결 경로로 검증하고 남은 규칙별 시간 소비 목록 확정 — **완료(2026-10-15)**, [상세](dotnet-mission-frame-gate-20261015.md) |
 | 2 | D14 공유 상태·장부와 D03 참여/방향별 동맹 | 같은 월드의 생성/삭제·플레이어 상태/초기화 계약을 갖춤. 기존 SID/Graph 계산 검사 보존 |
 | 3 | D12 SP/보상·D09 사제·D10 피해·D11 경로 | 원본 수치/시간/수명 fixture와 실제 객체 연결을 대조. 회복 getter 등 미완료 경계는 남겨서 표시 |
 | 4 | D07/D08 안내 처리와 D04 승패 | 같은 프레임·현재 상태·명령 큐·사건 잠금/정지 소유권을 연결. 초기화 이전 자동 승패 금지 |

@@ -671,6 +671,14 @@ public sealed partial class BattleSession
     }
 
     /// <summary>
+    /// 공통 미션 프레임의 첫 단계(원본 004c34c0 이 시작된 프레임에서 가장 먼저 부르는 승패·사제 사건 판정)를 실행한다.
+    /// 이미 알린 섹션은 다시 알리지 않고 "본 적 있음" 기록은 되풀이해도 같으므로 같은 화면에서 두 번 불려도 안전하다.
+    /// 안내 창이 입력을 막아 세션 진행이 생략된 프레임에서도 호출된다.
+    /// </summary>
+    /// <remarks>2026-10-15 감사 D02: 공통 프레임 게이트의 승패 경계. 판정 규칙 자체의 원본 대조는 D04 후속이다.</remarks>
+    public void CheckMissionOutcome() => UpdateMissionEvents();
+
+    /// <summary>
     /// 미션 승패·AI 이벤트를 판정한다 (원본 FUN_004c36c0 과 같은 조건, 각 섹션 이름은 미션당 한 번만).
     /// AI(사람 외 플레이어 1~8)마다 TempleHalfDead·TempleDead·PriestDead·PriestCaptured·PriestSaved,
     /// 전체로 GoodTeamDead(동맹 AI 사제 없음)·BadTeamDead(적 AI 사제 없음 = 성공)·Failed(내 사제 없음).

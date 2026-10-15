@@ -31,8 +31,17 @@ internal sealed partial class FortMapViewer
 
     /// <summary>_tutorialDialog: 현재 튜토리얼 안내의 텍스트와 동작을 제공하는 스크립트.</summary>
     private TutorialDialogScript? _tutorialDialog;
-    /// <summary>초기/후속 단계 10프레임·0.5초 지연과 안내 종료 후 7프레임 재개 잠금. 실제 화면 갱신에서만 진행한다.</summary>
-    private MissionDialogFrameGate? _missionDialogFrames;
+    /// <summary>
+    /// 원본 공통 미션 프레임(004c34c0): 승패→10프레임 안내 잠금→7프레임 재개→튜토리얼 분배. 실제 화면 갱신마다 한 번만 실행한다.
+    /// 초기/후속 단계 안내 잠금·0.5초 지연·정지 소유권 상태(<see cref="MissionFrameGate.State"/>)를 보관한다.
+    /// </summary>
+    private MissionFrameGate? _missionFrame;
+    /// <summary>이 미션 안내가 시계 정지를 보유하는지. 게이트의 Pause/Resume 경계가 바꾸고 정지 사유 동기화가 읽는다(다른 소유자의 정지와 독립).</summary>
+    private bool _scriptPauseHeld;
+    /// <summary>초기 브리핑(섹션 A.) 요청을 이미 보냈는지. 요청 전에는 세션 생성자가 낸 A. 이벤트를 표시하지 않는다.</summary>
+    private bool _initialBriefingRequested;
+    /// <summary>이번 화면 갱신에서 입력 처리 뒤에도 남은 외부 도움말/옵션 창. 공통 프레임의 다이얼로그 조회가 읽고 프레임이 끝나면 지운다.</summary>
+    private bool _externalDialogOpen;
     /// <summary>_pendingTutorialAction: 현재 입력 처리 뒤 실행할 튜토리얼 안내 동작.</summary>
     private TutorialDialogAction? _pendingTutorialAction;
     /// <summary>_tutorialScroll: 튜토리얼 안내 본문을 위로 이동한 스크롤 양.</summary>
@@ -68,9 +77,11 @@ internal sealed partial class FortMapViewer
             var missionValues = new Dictionary<string, string> { ["title"] = _mission.Title ?? Name, ["fileName"] = Name };
             _tutorialDialog = new TutorialDialogScript(script, settings, commonScript, missionValues);
             _tutorialDialog.ConfigHandler = configChanged;
-            _missionDialogFrames = new MissionDialogFrameGate();
+            // 시작된 미션의 공통 프레임 상태: 단계 A(65)·잠금 10·지연 0.5초는 원본 기본값(004c2990)이다.
+            var frameState = new MissionFrameGateState { Started = 1, StartSeconds = _sessionFrameClock.RawGameSeconds };
+            _missionFrame = new MissionFrameGate(frameState, CreateMissionFrameHooks());
             // 화면 보정 안내는 실제 Tell 성공 직후 정지를 잡고 원본처럼 루트 팝업을 닫는다.
-            _session.ConnectTutorialScreenFrames(_missionDialogFrames, section =>
+            _session.ConnectTutorialScreenFrames(_missionFrame, section =>
             {
                 if (!OpenTutorialTell(section)) return;
                 CloseContextMenu();
@@ -81,6 +92,53 @@ internal sealed partial class FortMapViewer
         }
     }
 
+    /// <summary>
+    /// 공통 미션 프레임이 호출하는 외부 경계를 뷰어의 현재 상태에 연결한다. 모든 조회는 호출 시점의 값을 읽는다.
+    /// 출하 미션에 없는 tellAt/데모 예약은 시작 상태가 0이라 호출되지 않으며, 호출되면 빈 성공으로 넘기지 않고 예외를 낸다.
+    /// </summary>
+    /// <remarks>2026-10-15 감사 D02: 원본 004c34c0 의 훅 대응(docs/exe/cpp-mission-frame-gate-20261015.md).</remarks>
+    private MissionFrameGateHooks CreateMissionFrameHooks() => new()
+    {
+        GameSeconds = () => _sessionFrameClock.RawGameSeconds,
+        Paused = () => GameClockPaused,
+        CheckOutcome = () => _session.CheckMissionOutcome(),
+        DialogsClear = () => !(_externalDialogOpen || _leaveMissionPrompt || TutorialDialogOpen),
+        KnowledgeOpen = () => KnowledgeOpen,
+        GuideOpen = () => TutorialDialogOpen,
+        BlockingGumpOpen = () => KnowledgeOpen || ContextMenuOpen || MissionMenuOpen,
+        TellStage = TellCurrentStage,
+        TellAt = () => throw new NotSupportedException("tellAtList 예약은 아직 이 화면에 연결되지 않았습니다(출하 미션에는 없음)."),
+        EndDemo = () => throw new NotSupportedException("데모 종료 명령은 아직 이 화면에 연결되지 않았습니다."),
+        Tutorial = (number, current) =>
+        {
+            // 이번 프레임의 재개/안내 정지를 먼저 동기화해야 단계 판정도 같은 실제 정지 여부를 읽는다.
+            SynchronizePauseReasons();
+            _session.AdvanceTutorialScreenFrame(_sessionFrameClock.RawGameSeconds);
+            return 0;
+        },
+        Pause = () => _scriptPauseHeld = true,
+        Resume = () => _scriptPauseHeld = false,
+    };
+
+    /// <summary>
+    /// 안내 잠금이 끝난 프레임에 현재 단계(초기에는 캠페인 브리핑)의 안내를 연다. 성공하면 원본 004c2a90 처럼 루트 팝업을 닫고
+    /// 이 미션의 정지를 잡는다. 초기 요청은 안내가 열리지 않아도 한 번만 보낸 것으로 기록한다.
+    /// </summary>
+    private void TellCurrentStage()
+    {
+        bool initial = !_initialBriefingRequested;
+        _initialBriefingRequested = true;
+        bool opened = initial ? _tutorialDialog!.OpenBriefing()
+            : _tutorialDialog!.OpenStage(_session.Tutorial?.Section ?? "A.");
+        if (!opened) return;
+        // 지식 격자도 controlled 메뉴 팝업이다.
+        CloseContextMenu();
+        CloseMissionMenu();
+        CloseKnowledge();
+        ResetTutorialPage();
+        _missionFrame!.PauseForDialog();
+    }
+
     /// <summary>안내를 실제로 열고 정지 소유권을 즉시 반영한다. 보정 안내는 F8 복귀 지점으로 기록하지 않는다.</summary>
     private bool OpenTutorialTell(string section)
     {
@@ -89,47 +147,40 @@ internal sealed partial class FortMapViewer
             return false;
         }
         // 세션 생성자의 초기 A. 이벤트는 화면의 10프레임 잠금이 요청할 때 한 번만 표시한다.
-        if (_missionDialogFrames?.BriefingPending == true && section.Equals("A.", StringComparison.OrdinalIgnoreCase)) return false;
+        if (_missionFrame != null && !_initialBriefingRequested && section.Equals("A.", StringComparison.OrdinalIgnoreCase)) return false;
         bool stage = section.Length == 2 && char.IsAsciiLetter(section[0]) && section[1] == '.';
         bool opened = stage ? _tutorialDialog.OpenStage(section) : _tutorialDialog.OpenSection(section);
         if (opened)
         {
             ResetTutorialPage();
+            // 어떤 경로의 Tell이든 성공하면 이 미션이 정지를 잡는다(원본 004c2a40).
+            _missionFrame?.PauseForDialog();
             SynchronizePauseReasons();
         }
         return opened;
     }
 
     /// <summary>
-    /// 이번 화면 입력/세션 처리 뒤 초기/후속 안내 잠금·재개·튜토리얼 판정을 각각 한 번 진행한다.
+    /// 이번 화면 입력/세션 처리 뒤 원본 공통 미션 프레임(승패→안내 잠금→재개→튜토리얼 분배)을 한 번 실행한다.
     /// 외부 도움말/옵션의 현재 상태는 클릭을 뒤 지도에 전달하지 않는 inputBlocked 이력과 구분한다.
+    /// 이번 프레임의 명령 사건은 분배가 없던 프레임에서도 보관하지 않고 비운다.
     /// </summary>
+    /// <param name="externalDialogOpen">입력 처리 뒤에도 남은 외부 도움말/옵션 창이 있는지.</param>
+    /// <remarks>2026-10-15 감사 D02: 구 MissionDialogFrameGate 의 부분 구현을 원본 전체 순서의 MissionFrameGate 로 교체.</remarks>
     private void UpdateMissionDialogFrame(bool externalDialogOpen)
     {
-        if (_missionDialogFrames == null) return;
-        double gameSeconds = _sessionFrameClock.RawGameSeconds;
-        bool initial = _missionDialogFrames.BriefingPending;
-        bool dialogOpen = externalDialogOpen || _leaveMissionPrompt || TutorialDialogOpen;
-        if (_missionDialogFrames.AdvanceStage(gameSeconds, GameClockPaused, dialogOpen))
+        if (_missionFrame == null) return;
+        _externalDialogOpen = externalDialogOpen;
+        try
         {
-            bool opened = initial ? _tutorialDialog!.OpenBriefing()
-                : _tutorialDialog!.OpenStage(_session.Tutorial?.Section ?? "A.");
-            if (opened)
-            {
-                // 원본 004c2a90은 현재 단계 Tell 성공 뒤 루트 팝업을 닫는다. 지식 격자도 controlled 메뉴 팝업이다.
-                CloseContextMenu();
-                CloseMissionMenu();
-                CloseKnowledge();
-                ResetTutorialPage();
-            }
+            _missionFrame.RunFrame();
         }
-        if (TutorialDialogOpen) _missionDialogFrames.CapturePause();
-        dialogOpen = externalDialogOpen || _leaveMissionPrompt || TutorialDialogOpen;
-        _missionDialogFrames.AdvanceResume(TutorialDialogOpen, dialogOpen,
-            KnowledgeOpen || ContextMenuOpen || MissionMenuOpen);
-        // 이번 프레임의 재개/안내 정지를 먼저 동기화해야 단계 판정도 같은 실제 정지 여부를 읽는다.
+        finally
+        {
+            _externalDialogOpen = false;
+            _session.EndTutorialScreenFrame();
+        }
         SynchronizePauseReasons();
-        _session.AdvanceTutorialScreenFrame(gameSeconds);
     }
 
     /// <summary>

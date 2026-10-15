@@ -19,7 +19,7 @@ try {
         $taskCommands = @"
 assert main; click-center -120,-64; assert campaigns; capture $OutputDirectory/$taskCase-campaigns.png;
 click-center 0,28; assert missions; capture $OutputDirectory/$taskCase-missions.png;
-click-center 0,69; assert $(@{ locked = 'missions'; unlocked = 'briefing' }[$taskCase]); quit;
+click-center 0,69; wait 15; assert $(@{ locked = 'missions'; unlocked = 'briefing' }[$taskCase]); quit;
 "@
         $taskCommandFile = Join-Path $taskOutput "$taskCase.txt"
         Set-Content -LiteralPath $taskCommandFile -Encoding UTF8 -Value $taskCommands

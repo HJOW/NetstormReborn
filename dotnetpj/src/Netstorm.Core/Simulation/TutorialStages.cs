@@ -61,8 +61,17 @@ public sealed class TutorialStages
     /// <summary>튜토리얼 번호 (미션 머리 tutorialNumber)</summary>
     public int Number { get; }
 
-    /// <summary>지금 단계 글자 (원본 DAT_005ca8e8)</summary>
-    public char Stage { get; private set; } = FirstStage;
+    /// <summary>헤드리스 합성 진행이 쓰는 단계 글자 저장소. 화면 게이트에 연결되면 게이트 상태의 값을 대신 읽는다.</summary>
+    private char _stage = FirstStage;
+
+    /// <summary>화면 게이트와 공유하는 필드 저장소(연결 전 null). 연결되면 단계 글자와 임시 타이머를 이 저장소 하나가 소유한다.</summary>
+    private MissionFrameGateState? _shared;
+
+    /// <summary>
+    /// 지금 단계 글자 (원본 DAT_005ca8e8). 화면 게이트에 연결되면 공유 상태의 값(저위 8비트)이며,
+    /// 단계 증가는 게이트의 004c33f0 구현이 한다.
+    /// </summary>
+    public char Stage => _shared != null ? (char)unchecked((byte)_shared.Stage) : _stage;
 
     /// <summary>지금 단계의 스크립트 섹션 이름 ("A." 형식, 원본 FUN_004c2a90)</summary>
     public string Section => SectionOf(Stage);
@@ -79,8 +88,37 @@ public sealed class TutorialStages
     /// <summary>헤드리스 합성 진행의 기존 타이머 틱과 진단값. 실제 화면 판정에서는 TimerSeconds를 사용한다.</summary>
     public long TimerTick { get; private set; }
 
-    /// <summary>실제 화면에서 사용하는 원본 +98 double 게임 시각 타이머. 0이면 없음이며 단계가 바뀔 때 지운다.</summary>
-    public double TimerSeconds { get; private set; }
+    /// <summary>헤드리스 합성 진행이 쓰는 타이머 저장소. 화면 게이트에 연결되면 공유 상태의 +98을 대신 읽고 쓴다.</summary>
+    private double _timerSeconds;
+
+    /// <summary>
+    /// 실제 화면에서 사용하는 원본 +98 double 게임 시각 타이머. 0이면 없음이며 단계가 바뀔 때 지운다.
+    /// 화면 게이트에 연결되면 게이트 상태와 같은 값을 공유한다(단계 증가가 0으로 지운다).
+    /// </summary>
+    public double TimerSeconds
+    {
+        get => _shared?.TimerSeconds ?? _timerSeconds;
+        private set
+        {
+            if (_shared != null) _shared.TimerSeconds = value;
+            else _timerSeconds = value;
+        }
+    }
+
+    /// <summary>
+    /// 화면의 공통 프레임 게이트와 단계·타이머 저장소를 하나로 합친다. 지금까지의 단계 글자와 타이머를 공유 상태로 옮기고
+    /// 이후에는 공유 상태만 읽고 쓴다. 튜토리얼 번호(1~6 분배)도 함께 기록한다. 세션이 화면에 연결될 때 한 번 호출한다.
+    /// </summary>
+    /// <param name="state">게이트가 소유하는 원본 필드 저장소.</param>
+    /// <remarks>2026-10-15 감사 D02: 원본은 단계·타이머를 게이트 상태가 한 번만 소유한다(docs/exe/cpp-mission-frame-gate-20261015.md).</remarks>
+    internal void AttachGateState(MissionFrameGateState state)
+    {
+        ArgumentNullException.ThrowIfNull(state);
+        state.Stage = Stage;
+        state.TimerSeconds = TimerSeconds;
+        state.TutorialNumber = (uint)Number;
+        _shared = state;
+    }
 
     /// <summary>튜토리얼 번호에 대한 단계 처리를 구현했는지</summary>
     /// <param name="number">튜토리얼 번호</param>
@@ -298,11 +336,15 @@ public sealed class TutorialStages
     private bool TimerExpired(BattleSession session) => session.TutorialUsesScreenFrames
         ? TimerSeconds <= session.TutorialFrameSeconds : TimerTick <= session.Tick;
 
-    /// <summary>원본 FUN_004c33f0의 정지/잠금 거부 뒤 글자를 높이고 임시 타이머를 지운다. 화면 안내는 예약 뒤 나중에 연다.</summary>
+    /// <summary>
+    /// 원본 FUN_004c33f0의 정지/잠금 거부 뒤 글자를 높이고 임시 타이머를 지운다. 화면 안내는 예약 뒤 나중에 연다.
+    /// 화면에 연결되면 게이트가 글자 증가·10프레임 잠금·안내 기한·타이머 0을 한 번에 처리하므로 여기서는 헤드리스 틱 표지만 지운다.
+    /// </summary>
+    /// <remarks>2026-10-15: 화면 연결 시 캐시된 TutorialFrameLocked 대신 게이트의 현재 정지/잠금 판정을 쓴다.</remarks>
     private void Advance(BattleSession session)
     {
-        if (session.TutorialFrameLocked || !session.ScheduleTutorialStage()) return;
-        Stage++;
+        if (!session.TryAdvanceTutorialStage()) return;
+        if (_shared == null) _stage++;
         TimerTick = 0;
         TimerSeconds = 0;
         if (!session.TutorialUsesScreenFrames) session.EmitTutorialTell(session.HumanPlayer, Section);
