@@ -15,6 +15,11 @@ struct PlayerParticipationState {
     std::uint32_t localOwner{1},playerKnown{}; // 00540c70/00595344의 현재 DWORD다.
     bool battle{},metamap{},localTransport{}; // 00594fbc/00594fc8/0054db50의 서로 다른 모드다.
 };
+// 실제 세션의 다른 모듈이 소유한 현재 전역을 각 원본 읽기 위치에 연결한다.
+struct PlayerParticipationReads {
+    std::function<std::uint32_t()> localOwner,playerKnown; // 같은 PlayerWorld의 현재 owner/known DWORD다.
+    std::function<bool()> battle,metamap,localTransport; // 같은 월드와 전송 계층의 현재 서로 다른 모드다.
+};
 // 실제 전송/Chat UI와 실제 AI 소유자의 파괴·반납 경계다. 가짜 brain 생성/등록은 제공하지 않는다.
 struct PlayerParticipationHooks {
     std::function<void(PlayerParticipationAssertion)> assertion; // 원본 assert 보고 후 계속 수행하는 진단이다.
@@ -31,6 +36,8 @@ public:
     // 이 첫 구현은 PATCH전용이다. 실제 저장소/모드/효과 대상은 객체보다 오래 살아야 한다.
     RawPlayerParticipation(OriginalEdition edition,std::span<std::uint8_t> players,std::span<std::uint32_t> allies,
         std::span<const std::uint8_t> hidden,PlayerParticipationState& state,PlayerParticipationHooks hooks);
+    // 다섯 현재 조회를 모두 공급한다. 독립 원본 대조의 기존 값형 state는 미연결일 때만 사용한다.
+    void BindCurrentInputs(PlayerParticipationReads reads);
     // 004a6dc0: 유효 owner1..8의 bit1 부재에서만 flags=(flags&~100)|3 뒤 연결을 수락한다.
     // 이미 로그인/무효 owner는 거부 응답→연결 해제를 수행한다. Ready40이나 AI20은 이 분기와 별개다.
     bool CheckLogin(std::int32_t pending,std::int32_t owner) const;
@@ -53,10 +60,17 @@ private:
     void Put(std::uint32_t owner,std::size_t offset,std::uint32_t value) const;
     // 원본 Player+0xc NUL 문자열을 현재 채널 등록 직전에 읽는다.
     std::string_view Name(std::uint32_t owner) const;
+    // 효과 callback 뒤에도 같은 원본 전역의 현재 값을 다시 읽는다.
+    std::uint32_t LocalOwner() const;
+    std::uint32_t PlayerKnown() const;
+    bool Battle() const;
+    bool Metamap() const;
+    bool LocalTransport() const;
     std::span<std::uint8_t> players_; // 같은 실제9 Player 기록이다.
     std::span<std::uint32_t> allies_; // 한쪽 방향만 바뀔 수 있는 원본81 DWORD다.
     std::span<const std::uint8_t> hidden_; // 0052f81e의 현재9개 숨김 표시다.
     PlayerParticipationState& state_; // 효과 callback 이후에도 다시 읽는 현재 전역이다.
     PlayerParticipationHooks hooks_; // 실제 전송·Chat·생성 소유자 수명 효과다.
+    PlayerParticipationReads reads_; // 실제 세션이 바인딩한 현재 전역 getter이며 값형 fixture와 구분한다.
 };
 }

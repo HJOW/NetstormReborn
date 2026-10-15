@@ -9,6 +9,7 @@ struct AiBrainInitialUpdateGlobals {
     const std::uint32_t& missionMode; //00594fa4의현재비제로표식이다.
     const std::uint32_t& excludedType; //0054126c의현재분류제외타입133이다.
     std::span<const std::uint32_t> workshops; //theme0/1/2/3의현재b0/b4/b8/ac워크샾타입이다.
+    std::function<std::uint32_t()> missionModeRead; // 실제 세션의 bool backing도 임시 DWORD 사본 없이 현재 위치에서 읽는다.
 };
 // 실제언어설정과TYPE+a0metadata조회경계다.
 struct AiBrainInitialUpdateHooks {

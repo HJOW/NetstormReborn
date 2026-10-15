@@ -1,0 +1,81 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-15",
+  "workUnit": 63,
+  "status": "release-build-and-focused39-passed-full-ctest-not-run",
+  "newNativeUniqueInputs": 0,
+  "historicalFixtures": {
+    "ai-brain-x86.tsv": 160,
+    "ai-initial-update-x86.tsv": 133,
+    "player-participation-x86.tsv": 608,
+    "type-required-energy-x86.tsv": 2352
+  },
+  "newFocusedTests": [
+    "CampaignSession_AiUsesCurrentWorldAndLifetime",
+    "CampaignSession_AiMissingServicesKeepRealFailure",
+    "CampaignSession_AiColorPrecedesExistingBrain",
+    "CampaignSession_ParticipationUsesCurrentReads"
+  ],
+  "boundaries": [
+    "Explicit CreateAi after successful same-session world/motion load; no automatic Stage3, strategy frame or Outcome activation",
+    "Same actual Pool, Player9, 81 directional DWORD alliances, protected GameAssets AST and current188TYPE",
+    "Caller-supplied allocation input bytes; opaque32 handles are actual host storage registrations, not original allocator addresses",
+    "Language defaultAiName, Chat, nonzero Color body, server alliance transmit, login connection and localTransport remain mandatory selected external services",
+    "Existing constructor160, initialUpdate133, participation608 and mana2352 fixture C++ replays are existing inputs; no new native observation count",
+    "Destructor attempts actual owner1..8 nested-destructor/body-free before Kernel/module teardown; abnormal cleanup errors are logged and do not claim successful original lifetime"
+  ],
+  "remaining": [
+    "Original CheckLogin/worldLoad/Ready40/login completion/Guide pending0+GUIempty/Stage3 parent",
+    "AI strategies and nonzero-brain damage, geyser, economy and command consumers",
+    "Natural Early Missions/campaign1-1..1-2 completion and original visual/audio/behavior equality"
+  ],
+  "sha256": {
+    "cpppj/src/client/RawCampaignSession.h": "af44f8d491aa9fe3c1c80cb1caf572eab5996a87fdf60f53258666ea37c82a64",
+    "cpppj/src/client/RawCampaignSession.cpp": "48dbb4918972c6f75dbded75303e288598428b59501edbbeae4c46c01964c3fb",
+    "cpppj/src/client/AiTypeRequiredEnergy.h": "fc68f0306d0807515cdec66743f6641c986a4585e9a7de64af32fda30be05ef6",
+    "cpppj/src/client/AiTypeRequiredEnergy.cpp": "869c8193f7f74d8497a610fa893d5aba1854ced7da71e0db7709c31f9dd6d31f",
+    "cpppj/src/o/RawPlayerParticipation.h": "f81add0213f964bd96205a754f40f887731aed6e0499f5b04740ef903d2b9cc9",
+    "cpppj/src/o/RawPlayerParticipation.cpp": "0eab593fc053a9ad72145628acef6ea7863e4e2269a20ed03bb0d2b70b8849db",
+    "cpppj/src/o/RawAiBrain.h": "8be51d55642492fbd9360fdc572b44da8876a29447020b526a8451d88e069724",
+    "cpppj/src/o/RawAiBrain.cpp": "827c6d75630994df87f04bfe98814f2cebe1d8e0af4f1d78534a29a9852d37bd",
+    "cpppj/src/o/RawAiBrainInitialUpdate.h": "1e72f644502e022a326427735f244ae10094969b8202b467ed42e855a6960f44",
+    "cpppj/src/o/RawAiBrainInitialUpdate.cpp": "3314e5d6b2704011d3e6baeba7460cae4910ea4b27b8569b2962afc7a8ed8d5b",
+    "cpppj/src/o/RawAiCreate.h": "b9573acbad3f219b2d10b2626f5400e756a05808166673bd79a844ba20fc5102",
+    "cpppj/src/o/RawAiCreate.cpp": "ca5adaadc7437ff4dc72b896116e1b4a7b112fed606826abee0724fa52002ee1",
+    "cpppj/tests/CampaignSessionTests.cpp": "a20ca1e3bce4c4b6df797481364574078470c86cbcfa95fe711d7daa66b9caa8",
+    "cpppj/tests/fixtures/ai-brain-x86.tsv": "53aecd3e635d5743ea07091d863d6db7fb328daa8181b7a5769b78a233087fab",
+    "cpppj/tests/fixtures/ai-initial-update-x86.tsv": "8784606de578d467f5ab2fbedc05662044782accf770ce9eb9ba1b18665a059d",
+    "cpppj/tests/fixtures/player-participation-x86.tsv": "77d1e5af049d3f4e6faf591de6fc4814d4a6225d46581a7961844ca8979d8278",
+    "cpppj/tests/fixtures/type-required-energy-x86.tsv": "8bcb3e215c958f5df0a395365059f5481801b1660569f2f04c0720f394f14f4c"
+  },
+  "validation": {
+    "build": {
+      "configuration": "Release",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "log": "extracted/goal-session-ai-combat-build.log"
+    },
+    "focused": {
+      "tests": 39,
+      "failedChecks": 0,
+      "groups": {
+        "CampaignSession": 12,
+        "AiBrain": 4,
+        "AiInitialUpdate": 2,
+        "PlayerParticipation": 2,
+        "TypeRequiredEnergy": 3,
+        "rawGunTarget": 4,
+        "GunProcess": 7,
+        "FenceTarget": 5
+      },
+      "log": "extracted/goal-session-ai-combat-focused.log"
+    },
+    "fullCtest": "not-run-after-this-change; prior unit62 internal1241 is separate",
+    "newGameOrGuiRuns": 0
+  },
+  "validationLogSha256": {
+    "extracted/goal-session-ai-combat-build.log": "524ba3305cbed603f843c642903555432ec2ecb48e913be2f4bc0b6cbeaafa3e",
+    "extracted/goal-session-ai-combat-focused.log": "a2d1e0a2b407b691633d33fb0284e2cc2fc783ef1ec3ccdc3d466b23e783956c"
+  }
+}

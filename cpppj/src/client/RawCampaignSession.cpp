@@ -2,6 +2,7 @@
 #include "client/RawCampaignSession.h"
 #include "client/PriestPlacementAssets.h"
 #include "client/RawCampaignGunQueries.h"
+#include "client/AiTypeRequiredEnergy.h"
 #include "o/RawGameRandomSeed.h"
 #include "o/RawSquidFinder.h"
 #include "o/RawSquidLevel.h"
@@ -16,7 +17,11 @@
 #include "o/RawRegionOwner.h"
 #include "o/RawSpStoreNoticeBindings.h"
 #include "o/RawPlayerTechnology.h"
+#include "o/RawAiCreate.h"
+#include "o/RawAiBrainInitialUpdate.h"
+#include "o/RawPriestLookup.h"
 #include <bit>
+#include <cstdio>
 #include <stdexcept>
 using namespace netstorm::o;
 namespace netstorm::client {
@@ -51,6 +56,12 @@ void Put(std::span<std::uint8_t> raw,std::size_t offset,std::uint32_t value) {
     // 원본 little endian의 네 바이트만 기록한다.
     for (std::size_t i=0;i<4;++i) raw[offset+i]=static_cast<std::uint8_t>(value>>(8*i));
 }
+// 원본 비정렬 DWORD를 같은 현재 바이트 저장소에서 읽는다.
+std::uint32_t Read(std::span<const std::uint8_t> raw,std::size_t offset) {
+    if (offset+4>raw.size()) throw std::out_of_range("실제 세션 현재 DWORD 범위 오류");
+    return static_cast<std::uint32_t>(raw[offset])|(static_cast<std::uint32_t>(raw[offset+1])<<8)|
+        (static_cast<std::uint32_t>(raw[offset+2])<<16)|(static_cast<std::uint32_t>(raw[offset+3])<<24);
+}
 }
 // 실제 월드/상태와 모든 callback 대상을 같은 고정 주소에 소유한다.
 struct RawCampaignSession::Impl {
@@ -70,6 +81,16 @@ struct RawCampaignSession::Impl {
     std::array<std::uint8_t,RawIslandRuntime::kBytes> islandBytes{}; // 실제3204BYTE 섬 목록이다.
     std::vector<std::uint8_t> players=std::vector<std::uint8_t>(9*0xb4); // 부모/Owner/신전이 공유하는 실제9 기록이다.
     std::array<std::uint32_t,81> alliances{}; // 원본 방향별9×9 DWORD 표다. 실제 초기화 모듈이 현재 칸을 직접 쓴다.
+    std::array<std::uint8_t,9> hiddenPlayers{}; // 같은 현재 Chat 숨김 BYTE9이며 동맹이나 active의 사본이 아니다.
+    PlayerParticipationState participationState; // 독립 모듈의 값형 호환 상태이며 실제 세션은 현재 getter로만 읽는다.
+    std::unique_ptr<RawPlayerParticipation> participation; // 같은 Player9/동맹/실제 brain 해제 몸체다.
+    RawAiBrainMemory aiMemory; // AI 본체와17개 목록의 유일한 실제 소유 메모리다.
+    std::unique_ptr<RawAiBrainConstructor> aiConstructor; // 같은 Pool/현재 TYPE/mana/섬/방향별 동맹의 실제 생성·소멸이다.
+    std::unique_ptr<RawAiBrainInitialUpdate> aiInitial; // 같은 Player 기술 부모/contained 분류를 실제 본체에 기록한다.
+    std::unique_ptr<RawAiCreate> aiCreate; // 원본 Color→기존brain→NoTemple→생성/부착/초기갱신 순서다.
+    std::array<std::uint32_t,4> aiWorkshops{86,87,88,85}; // PATCH004709d0의 theme0/1/2/3이 읽는005411b0/b4/b8/ac의 실제 기본 타입이다.
+    std::uint32_t aiExcludedType{133},aiMissionFallback{}; // 실제 sunWalker 분류 제외 번호와 현재 getter를 사용할 때 읽지 않는 값형 호환 저장소다.
+    bool loaded{}; // 같은 실제 저장 부모와 이동 설치가 정상 종료했을 때만 AI 생성 요청을 허용한다.
     MissionOutcomeState outcomeState; // 미션 종료까지 유지하는43개 사건 잠금이며 입력 배열은 현재 원문 연결로 대체한다.
     std::unique_ptr<RawRegionOwner> regionOwner; // 동일 Pool/hash0에서 현재 지면 소유자 BYTE를 읽는다.
     std::unique_ptr<RawMissionOutcome> outcome; // 같은 Player9/동맹/사제/HP/영역의 현재 입력을 매 조회 읽는다.
@@ -170,7 +191,11 @@ struct RawCampaignSession::Impl {
     Impl(const GameAssets& game,const BaseFileSystem& files,FortTemplate fort,std::string mission,RawCampaignSessionServices input):
         services(std::move(input)),assets(game,files),metadata(assets.game),
         world(OriginalEdition::Patch1078,assets.types,assets.frames,metadata.shapes,CampaignLinks(),terrainType),core(world.Core()),
-        sp(random,[this] { return seed.Reseed(); }),hp(core.pool,core.types,core.bookkeeping,rewardState,&sp),seed(random,crt,randomMode,services.unixSeconds),themes(core.types.size()),elements(core.types.size()),
+        sp(random,[this] { return seed.Reseed(); }),hp(core.pool,core.types,core.bookkeeping,rewardState,&sp),
+        aiMemory(0x20000000,[this](std::span<std::uint8_t> bytes) {
+            if (!services.ai.allocationBytes) throw std::logic_error("실제 Session AI 할당 입력 바이트 미연결");services.ai.allocationBytes(bytes);
+        }),
+        seed(random,crt,randomMode,services.unixSeconds),themes(core.types.size()),elements(core.types.size()),
         gunTypes(core.types.size()),hitTypes(core.types.size()),firingIntervals(core.types.size()),dudeSpeeds(core.types.size()),
         soundNames(RequireSounds(services)),archerTypes(core.types.size()),missileTypes(core.types.size()),projectileTypes(core.types.size()),
         start{core.processState,priestState.movement.dude,priestState.movement.teleport,priestState.movement.manaBolt,priestState.movement.priest,geyserType,snap,retrying},process{core.processState} {
@@ -194,8 +219,19 @@ struct RawCampaignSession::Impl {
         // 원본 Player의 첫 지역 sentinel은9기록에 직접 쓴다. 별도 playerRegions 배열을 사용하지 않는다.
         for (std::uint32_t owner=0;owner<9;++owner) {
             Put(players,owner*0xb4+0x78,127);Put(players,owner*0xb4+0x54,1U<<owner);
+            alliances[owner*9+owner]=1;
             gunTargetState.allyMasks[owner]=1U<<owner;gunState.allies[owner][owner]=true;
         }
+        // 방향별 동맹/flag는 실제 현재 Player와 같은81DWORD를 각 총 판정 위치에서 읽는다.
+        gunState.allianceRead=[this](std::uint32_t owner,std::uint32_t target) {
+            if (owner>=9 || target>=9) throw std::out_of_range("실제 세션 현재 동맹 번호 오류");return alliances[owner*9+target];
+        };
+        gunTargetState.allyMaskRead=[this](std::uint32_t owner) {
+            if (owner>=9) throw std::out_of_range("실제 세션 현재 동맹 mask 번호 오류");return Read(players,owner*0xb4+0x54);
+        };
+        gunTargetState.playerFlagsRead=[this](std::uint32_t owner) {
+            if (owner>=9) throw std::out_of_range("실제 세션 현재 Player flag 번호 오류");return static_cast<std::uint32_t>(players[owner*0xb4+0x50]);
+        };
         islands=std::make_unique<RawIslandRuntime>(core.pool,core.hash,islandBytes,finishState,assetState.residences,revision,ownerChanged,
             IslandRuntimeHooks{[this](Sid sid,std::uint32_t owner) { ownership->SetOwner(sid,owner); },SessionMissing<void,IslandRuntimeAssertion>()});
         islands->Reset();
@@ -376,6 +412,46 @@ struct RawCampaignSession::Impl {
         outcome=std::make_unique<RawMissionOutcome>(core.pool,priests->Priests(),outcomeState,
             MakeMissionOutcomeHooks(core.pool,hp,std::move(outcomeHooks)));
         outcome->BindCurrentInputs({players,alliances,[this] { return player->State().battleOwner; },ui.demo,ui.tellBlocked});
+        ConnectAi();
+    }
+    // 실제 AI의 모든 계산/현재 저장소는 Session이 연결하고 언어/채팅/색만 실제 외부 소비자에 남긴다.
+    void ConnectAi() {
+        auto hooks=services.ai.participation; // brain 수명은 외부 관찰 callback에 맡기지 않는다.
+        hooks.destructBrain=[this](std::uint32_t token) { aiConstructor->Destruct(token); };
+        hooks.freeBrain=[this](std::uint32_t token) { aiConstructor->FreeBody(token); };
+        participation=std::make_unique<RawPlayerParticipation>(core.pool.Edition(),players,alliances,hiddenPlayers,participationState,std::move(hooks));
+        participation->BindCurrentInputs({[this] { return playerState.battleOwner; },[this] { return playerState.playerKnown; },
+            [this] { return core.ownerMode.battle; },[this] { return core.ownerMode.challenge; },[this] {
+                if (!services.ai.localTransport) throw std::logic_error("실제 Session 로그인 로컬 전송 조회 미연결");return services.ai.localTransport();
+            }});
+        auto energy=BindAiTypeRequiredEnergy(assets.game,core.types); // 생성자/초기갱신이 같은 실제 AST와 현재188TYPE를 읽는다.
+        AiBrainConstructorHooks constructorHooks;
+        constructorHooks.priest=[this](std::uint32_t owner) { return Sid{static_cast<std::uint16_t>(RawPriestLookup(core.pool,priestState.priests).Find(owner))}; };
+        constructorHooks.regionAt=[this](float x,float y) { return ownership->IslandNumber(x,y); };
+        constructorHooks.requiredEnergy=energy;
+        aiConstructor=std::make_unique<RawAiBrainConstructor>(aiMemory,*player,*participation,*islands,alliances,core.types,
+            AiBrainConstructorGlobals{playerState.battleOwner,noRegion,[this] { return static_cast<std::uint32_t>(core.bookkeeping.invalidGraph); }},std::move(constructorHooks));
+        AiBrainInitialUpdateHooks initialHooks;
+        initialHooks.defaultName=[this] {
+            if (!services.ai.defaultName) throw std::logic_error("실제 Session defaultAiName 현재 언어 조회 미연결");return services.ai.defaultName();
+        };
+        initialHooks.requiredEnergy=std::move(energy);
+        aiInitial=std::make_unique<RawAiBrainInitialUpdate>(aiMemory,*player,*technology,contentFinder,core.types,
+            AiBrainInitialUpdateGlobals{aiMissionFallback,aiExcludedType,aiWorkshops,[this] { return globals.missionPost ? 1U : 0U; }},std::move(initialHooks));
+        AiCreateHooks createHooks;
+        createHooks.changeColor=[this](std::uint32_t owner,std::uint32_t color) {
+            if (!services.ai.changeColor) throw std::logic_error("실제 Session AI 색 변경0043ca70 미연결");services.ai.changeColor(owner,color);
+        };
+        createHooks.firstRegion=[this](std::uint32_t owner) {
+            if (owner>=9) throw std::out_of_range("실제 Session AI 첫 지역 owner 범위 오류");return Read(players,owner*0xb4+0x78);
+        };
+        createHooks.islandTemple=[this](std::uint32_t region) { return islands->Temple(std::bit_cast<std::int32_t>(region)); };
+        createHooks.destroyTemple=[this](std::uint32_t sid,std::uint32_t flags) {
+            if (sid>65535 || sid>=core.pool.Capacity()) throw std::out_of_range("실제 Session AI 신전 SID 범위 오류");world.Destroy(Sid{static_cast<std::uint16_t>(sid)},flags);
+        };
+        createHooks.construct=[this](std::uint32_t owner,std::span<const std::uint8_t> settings,std::size_t bytes) { return aiConstructor->Construct(owner,settings,bytes); };
+        createHooks.initialUpdate=[this](std::uint32_t token,std::span<const std::uint8_t> settings) { aiInitial->Update(token,settings); };
+        aiCreate=std::make_unique<RawAiCreate>(core.pool.Edition(),*participation,std::move(createHooks));
     }
     // 첫 실제 객체 이전에 같은 공통 삭제/내용물/Player 통지/기술 모듈을 한 번 연결한다.
     void InstallContents(const SquidDestroyHooks& deletion) {
@@ -459,7 +535,18 @@ struct RawCampaignSession::Impl {
         core.processes.SetFormTransmit(assetBindings->Transmission(std::move(pathTx)));
     }
     // 외부 콜백이 참조하는 모듈을 해제하기 전에 현재 Kernel을 비운다.
-    ~Impl() { world.ClearProcesses();core.postPop.SetPlayerPostPop(nullptr); }
+    ~Impl() {
+        // 다른 AI의 손상/외부 예외가 나더라도 나머지 실제 brain과 Kernel 정리를 계속하고 오류를 남긴다.
+        for (std::uint32_t owner=1;owner<9;++owner) if (participation) {
+            try { participation->RemoveBrain(owner); }
+            catch (const std::exception& error) { std::fprintf(stderr,"실제 Session AI 정리 실패 owner%u: %s\n",owner,error.what()); }
+            catch (...) { std::fprintf(stderr,"실제 Session AI 정리 실패 owner%u: 알 수 없는 예외\n",owner); }
+        }
+        try { world.ClearProcesses(); }
+        catch (const std::exception& error) { std::fprintf(stderr,"실제 Session Kernel 정리 실패: %s\n",error.what()); }
+        catch (...) { std::fprintf(stderr,"실제 Session Kernel 정리 실패: 알 수 없는 예외\n"); }
+        core.postPop.SetPlayerPostPop(nullptr);
+    }
 
 };
 // 현재 실제 자산/Template/서비스를 보관하고 모든 하위 모듈을 구성한다.
@@ -468,7 +555,7 @@ RawCampaignSession::RawCampaignSession(const GameAssets& assets,const BaseFileSy
 // Impl이 Kernel을 비운 뒤 실제 모듈을 해제한다.
 RawCampaignSession::~RawCampaignSession()=default;
 // 동일 원본 부모를 실행한다.
-void RawCampaignSession::Load() { impl_->runtime->Load();impl_->ConnectMotion(); }
+void RawCampaignSession::Load() { impl_->runtime->Load();impl_->ConnectMotion();impl_->loaded=true; }
 // UI의 현재 크기/변경 전역을 빌리며 게임 소유자·모드는 실제 세션에서 다시 읽는다.
 void RawCampaignSession::ResetCamera(CameraHomeState& state,std::function<void(std::int32_t,std::int32_t)> apply) const {
     state.localPlayer=impl_->assetState.localOwner;state.fort=impl_->core.ownerMode.fort;
@@ -483,6 +570,19 @@ void RawCampaignSession::CheckMissionOutcome() { impl_->outcome->Check(); }
 std::span<std::uint8_t> RawCampaignSession::PlayerRecords() { return impl_->players; }
 // 방향별 DWORD를 그대로 공유하여 한쪽 변경을 대칭화하거나 bool로 줄이지 않는다.
 std::span<std::uint32_t> RawCampaignSession::Alliances() { return impl_->alliances; }
+// 같은 현재 Player 참여/동맹/실제 AI 소유자 수명을 후속 로그인 부모에 빌린다.
+RawPlayerParticipation& RawCampaignSession::Participation() { return *impl_->participation; }
+// 채팅의 실제 현재 숨김표를 빌리며 표시 bool 사본을 만들지 않는다.
+std::span<std::uint8_t> RawCampaignSession::HiddenPlayers() { return impl_->hiddenPlayers; }
+// Stage3 원본의1..8 방문 계약을 지키며 설치 전 요청을 명시 거부한다.
+std::uint32_t RawCampaignSession::CreateAi(std::uint32_t owner,std::span<const std::uint8_t> settings) {
+    if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("실제 Session 설치 후 owner1..8 AI 생성만 허용");
+    return impl_->aiCreate->Create(owner,settings);
+}
+// 명시 해제의 오류는 caller에 전파하고 destructor의 마지막 정리와 구분한다.
+void RawCampaignSession::RemoveAi(std::uint32_t owner) { impl_->participation->RemoveBrain(owner); }
+// 후속 실제 전략은 현재 Player 토큰으로 이 유일한 본체/목록 저장소를 조회해야 한다.
+const RawAiBrainMemory& RawCampaignSession::AiMemory() const { return impl_->aiMemory; }
 // 원본 시작/AI 기술 처리가 사용하는 같은 현재 부모/실제 contained 생성 경로다.
 void RawCampaignSession::AddTechnology(std::int32_t owner,std::string_view list) { impl_->technology->AddList(owner,list); }
 // 제거 통지는 현재 Player SP 접두와 직접 Gump 가상 처리까지 같은 경로를 사용한다.

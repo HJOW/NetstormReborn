@@ -11,6 +11,7 @@
 #include "o/RawPlayerRegular.h"
 #include "o/RawBattleBroadcast.h"
 #include "o/RawMissionOutcome.h"
+#include "o/RawAiBrain.h"
 #include "client/CameraHome.h"
 namespace netstorm::client {
 // 미션 입력/정지/UI 수명은 실제 UberGump의 현재 저장소와 동작을 빌린다.
@@ -20,6 +21,14 @@ struct CampaignMissionOutcomeUi {
     std::function<bool(std::string_view)> section; // 실제 미션/Tell 섹션을 실행하고 발견 여부를 반환한다.
     std::function<void()> closeTransient; // 성공한 섹션 뒤 원본 임시 Gump 정리를 실행한다.
     std::function<void()> onSection; // 성공한 섹션 뒤 현재 미션 가상 통지/정지 소유권을 처리한다.
+};
+// AI의 게임 계산은 같은 Session이 소유하고 현재 언어/채팅/색/할당 입력만 실제 외부 경계로 받는다.
+struct CampaignAiServices {
+    o::RawAiBrainMemory::Fill allocationBytes; // 실제 host 할당 직후의 입력 바이트다. 누락을 임의 0채움 성공으로 바꾸지 않는다.
+    std::function<std::string()> defaultName; // 현재 defaultAiName 설정의 원본 좁은문자열을 반환한다.
+    std::function<void(std::uint32_t,std::uint32_t)> changeColor; // PATCH0043ca70의 실제 색 변경 전체이며 nonzero Color에서만 필요하다.
+    o::PlayerParticipationHooks participation; // 실제 Chat/동맹 송신/연결·진단이다. brain 소멸/반납은 Session의 실제 소유자로 교체한다.
+    std::function<bool()> localTransport; // CheckLogin이 현재 로컬 전송 모드를 읽는 실제 경계다.
 };
 // 게임 계산을 대신하지 않고 실제 클라이언트 UI/음향/전송의 선택 경계를 공급한다.
 struct RawCampaignSessionServices {
@@ -33,6 +42,7 @@ struct RawCampaignSessionServices {
     RawCampaignMotionEffects motion; // 실제 경로의 음향/운반/의식 등 외부 하위 소비자다.
     o::PlayerRegularHooks player; // 실제 Player 로그와 예약 외부 경계다.
     CampaignMissionOutcomeUi missionOutcome; // 현재 미션의 실제 UI/차단 조회 경계다. Check를 호출할 때만 필요하다.
+    CampaignAiServices ai; // 선택된 실제 AI 초기화/참여의 외부 경계이며 Load/프레임에서 자동 호출하지 않는다.
     o::SquidDestroyHooks deletion; // 다른 파생 삭제/선택/전송의 실제 외부 경계다.
     std::function<void(o::Sid)> unitLost; // 공통 삭제가 요청한 실제 unitLost 전역 소리를 재생한다.
     o::ContentLifetimeHooks contentLifetime; // 같은 ContentForm의 실제 커서/수입/AI 지갑/소리 경계다.
@@ -68,6 +78,16 @@ public:
     std::span<std::uint8_t> PlayerRecords();
     // 실제 방향별동맹 초기화가 쓰고 승패가 읽는 같은81DWORD를 빌린다.
     std::span<std::uint32_t> Alliances();
+    // 로그인/Stage3의 후속 부모가 같은 현재 Player9/동맹/brain 수명을 직접 사용한다.
+    o::RawPlayerParticipation& Participation();
+    // 같은 현재 채팅 숨김 BYTE9 저장소다. 방향별 동맹표나 참여 flag와 합치지 않는다.
+    std::span<std::uint8_t> HiddenPlayers();
+    // 설치 뒤 실제 생성자→현재 Player 부착→초기 갱신을 실행한다. 전략 프레임/자동 승패는 켜지 않는다.
+    std::uint32_t CreateAi(std::uint32_t owner,std::span<const std::uint8_t> settings);
+    // 같은 현재 Player의 실제 목록 소멸→본체 반납→포인터0을 수행한다. flags20은 원본대로 보존한다.
+    void RemoveAi(std::uint32_t owner);
+    // 후속 실제 전략/검사가 같은 본체/목록 소유 저장소를 확인한다. 여기서 메모리를 합성하지 않는다.
+    const o::RawAiBrainMemory& AiMemory() const;
     // 실제 시작 설정/AI와 같은 Player 기술 부모에 원본 목록 파서를 적용한다.
     void AddTechnology(std::int32_t owner,std::string_view list);
     // 실제 flags4 기술을 가상 삭제하여 부모 체인/등록/삭제 깊이를 함께 정리한다.

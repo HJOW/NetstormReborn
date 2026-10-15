@@ -19,6 +19,22 @@ RawPlayerParticipation::RawPlayerParticipation(OriginalEdition edition,std::span
     if (edition!=OriginalEdition::Patch1078 || players.size()!=kStride*kCount || allies.size()!=kCount*kCount || hidden.size()!=kCount)
         throw std::invalid_argument("Player 참여 초기화의 PATCH 공유 저장소 크기 오류");
 }
+// 부분 바인딩은 현재 전역과 값형 사본을 섞으므로 첫 변경 전에 거부한다.
+void RawPlayerParticipation::BindCurrentInputs(PlayerParticipationReads reads) {
+    if (!reads.localOwner || !reads.playerKnown || !reads.battle || !reads.metamap || !reads.localTransport)
+        throw std::invalid_argument("Player 참여 현재 전역 조회 다섯 개 누락");
+    reads_=std::move(reads);
+}
+// 값형 원본 fixture를 보존하며 실제 세션에서는 현재 owner를 직접 읽는다.
+std::uint32_t RawPlayerParticipation::LocalOwner() const { return reads_.localOwner ? reads_.localOwner() : state_.localOwner; }
+// 기술 부모와 같은 현재 known DWORD를 읽는다.
+std::uint32_t RawPlayerParticipation::PlayerKnown() const { return reads_.playerKnown ? reads_.playerKnown() : state_.playerKnown; }
+// 현재 전투 모드를 원본의 선택 지점에서 읽는다.
+bool RawPlayerParticipation::Battle() const { return reads_.battle ? reads_.battle() : state_.battle; }
+// 각 원본 진단 직전에 현재 metamap을 읽는다.
+bool RawPlayerParticipation::Metamap() const { return reads_.metamap ? reads_.metamap() : state_.metamap; }
+// 실제 로컬 전송 여부는 연결 수락 분기에서만 읽는다.
+bool RawPlayerParticipation::LocalTransport() const { return reads_.localTransport ? reads_.localTransport() : state_.localTransport; }
 // 0번 중립 기록은 동맹/초기화의 실제 입력이므로 허용한다.
 std::span<std::uint8_t> RawPlayerParticipation::Player(std::uint32_t owner) const {
     if (owner>=kCount) throw std::out_of_range("Player 참여 번호 범위 오류");return players_.subspan(owner*kStride,kStride);
@@ -46,7 +62,7 @@ std::string_view RawPlayerParticipation::Name(std::uint32_t owner) const {
 bool RawPlayerParticipation::CheckLogin(std::int32_t pending,std::int32_t owner) const {
     if (owner>0 && owner<static_cast<std::int32_t>(kCount) && !(Read(static_cast<std::uint32_t>(owner),kFlags)&1)) {
         const auto player=static_cast<std::uint32_t>(owner);Put(player,kFlags,(Read(player,kFlags)&~0x100U)|3U);
-        if (!(state_.localTransport && pending==owner)) Require(hooks_.assignConnection)(pending,owner);return true;
+        if (!(LocalTransport() && pending==owner)) Require(hooks_.assignConnection)(pending,owner);return true;
     }
     Require(hooks_.rejectLogin)(pending);Require(hooks_.disconnect)(pending);return false;
 }
@@ -55,23 +71,23 @@ void RawPlayerParticipation::SetAlliance(std::uint32_t owner,std::uint32_t mask)
     Player(owner);mask|=1U<<(owner&31);Put(owner,kAllies,mask);
     // 원본은 한 행의9개 DWORD를 각각0/1로 갱신한다.
     for (std::uint32_t target=0;target<kCount;++target) allies_[owner*kCount+target]=(mask>>target)&1;
-    if (!state_.playerKnown) return;
+    if (!PlayerKnown()) return;
     Require(hooks_.clearChat)(0x40);Require(hooks_.clearChat)(0x80);
     // 채널 효과 뒤 현재 로컬 번호/표/Player를 다시 읽어 다음 owner를 처리한다.
     for (std::uint32_t player=0;player<kCount;++player) {
-        if (state_.localOwner>=kCount) throw std::out_of_range("Player 참여 Chat의 로컬 번호 오류");
-        if (allies_[state_.localOwner*kCount+player] && allies_[player*kCount+state_.localOwner]) Require(hooks_.addChat)(Read(player,kSubscriber),Name(player),0x40);
-        if (state_.metamap) Require(hooks_.assertion)(PlayerParticipationAssertion::MetamapMode);
+        if (LocalOwner()>=kCount) throw std::out_of_range("Player 참여 Chat의 로컬 번호 오류");
+        if (allies_[LocalOwner()*kCount+player] && allies_[player*kCount+LocalOwner()]) Require(hooks_.addChat)(Read(player,kSubscriber),Name(player),0x40);
+        if (Metamap()) Require(hooks_.assertion)(PlayerParticipationAssertion::MetamapMode);
         if (hidden_[player]) Require(hooks_.addChat)(Read(player,kSubscriber),Name(player),0x80);
     }
 }
 // 가상 owner getter는 현재 Player의 안정된 span인덱스와 같다. metamap의 진단은 원본 getter 호출마다 유지한다.
 void RawPlayerParticipation::AddAlly(std::uint32_t owner,std::uint32_t target) const {
     Player(owner);Player(target);Put(owner,kAllies,Read(owner,kAllies)|(1U<<(target&31)));
-    if (state_.metamap) Require(hooks_.assertion)(PlayerParticipationAssertion::MetamapMode);
-    const bool battle=state_.battle;allies_[owner*kCount+target]=1;
+    if (Metamap()) Require(hooks_.assertion)(PlayerParticipationAssertion::MetamapMode);
+    const bool battle=Battle();allies_[owner*kCount+target]=1;
     if (battle) {
-        if (state_.metamap) Require(hooks_.assertion)(PlayerParticipationAssertion::MetamapMode);
+        if (Metamap()) Require(hooks_.assertion)(PlayerParticipationAssertion::MetamapMode);
         Require(hooks_.sendAlliance)(9,owner,Read(owner,kAllies));
     }
 }
@@ -80,7 +96,7 @@ void RawPlayerParticipation::AttachBrain(std::uint32_t owner,std::uint32_t brain
     if (Read(owner,kBrain)) Require(hooks_.assertion)(PlayerParticipationAssertion::BrainAlreadyAssigned);
     Put(owner,kBrain,brain);Put(owner,kFlags,Read(owner,kFlags)|0x20);
     if (std::bit_cast<std::int32_t>(Read(owner,kSubscriber))<1) {
-        if (state_.metamap) Require(hooks_.assertion)(PlayerParticipationAssertion::MetamapMode);
+        if (Metamap()) Require(hooks_.assertion)(PlayerParticipationAssertion::MetamapMode);
         Put(owner,kSubscriber,owner+10000);auto raw=Player(owner);
         // 원본은 DWORD7개와 마지막WORD를 써 +30..4d의30바이트만 지운다.
         for (std::size_t offset=0x30;offset<0x4e;++offset) raw[offset]=0;
