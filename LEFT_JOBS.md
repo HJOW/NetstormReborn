@@ -1,5 +1,13 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-15 완료: 단위27 실제 창 제목 서비스·메뉴/미션 연결 (`VM-W11-Codex`)
+
+- [x] AGENTS와 양 LEFT를 다시 읽고 기준 `9eeef1e`에서 이어갔다. 현재/마지막 정밀 디컴파일 PC는 **VM-W11-Codex, 2026-10-15**다. 사용자 `TODO.md` 수정은 보존하며 이번 커밋에서 제외한다.
+- [x] 두 판본의 제목 갱신/미션 getter 각4함수를 정밀 내보냈다. `WindowTitle`에 NULL/빈 요새·편집 우선·readonly 별도 조회/공백·demo/test/일반 미션 설정 선택과 현재 title 조회 순서를 복원했다. 실제 메뉴 복귀/일반 미션 진입의 제목을 설정 기반으로 연결했다.
+- [x] 새 독립 PE **1,152개 정상반환/assert0**와 C++ 전수 대조 2개·실제 설정 치환 1개가 통과했다. 최종 Release 경고/오류0, 실제 클론 메뉴/튜토리얼 브리핑의 Win32 제목2개가 일치하고 정상 종료했다. 최초 미션 Get 관찰 경계의 `ret4` 교정과 짧은 정지 프레임 관찰 누락은 [단위27 기록](docs/exe/cpp-run27-20261015.md)에 있다.
+- [x] 최종 전체 CTest **1/1·내부1,142개·실패 체크0**(116.22초)가 통과했다. 새 원본/fixture/도구 SHA는 `cpppj/window-title.json`에 기록했다. 원본 두 PE의 SHA는 기준값과 일치한다. 상세 인수인계 완료 뒤 로컬 **`20261015-13 실제 창 제목 갱신 복원과 메뉴 및 미션 연결 검증`**으로 커밋하며 push하지 않는다.
+- [ ] 다음은 실제 `install.translateYou/setConfig/resetCamera`와 음향·UI·owner 통지·Ready/login 연결이다. Battle 진입 차단과 Early Missions/캠페인 1-1~1-2 실제 진행·완주 동일성은 미완료이며 목표active·DirectDraw 전체화면 오류 제외를 유지한다.
+
 ## 2026-10-15 완료: 현재 호스트 10.78·10.72 정밀 디컴파일 재생성 (`VM-W11-Codex`)
 
 - [x] `AGENTS.md`, `LEFT_JOBS.md`, `LEFT_JOBS.dotnetpj.md`를 읽었다. 마지막 정밀 디컴파일 기록의 호스트가 `HJOW-Athlon`이고 현재 호스트는 `VM-W11-Codex`여서 cpppj 분석 전에 현재 PC에서 재생성했다.

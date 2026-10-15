@@ -8,6 +8,7 @@
 #include "client/GumpBackground.h"
 #include "client/GameWorld.h"
 #include "client/UserInput.h"
+#include "client/WindowTitle.h"
 #include "o/OriginalText.h"
 #include "o/Template.h"
 #include <algorithm>
@@ -194,7 +195,16 @@ void UberGump::MainMenu() {
     client_.GetRenderer().SetOverlay(nullptr);
     ClearWorld(); mission_.reset(); fortObjects_ = 0; briefingSections_.clear(); briefingIndex_ = 0;
     state_.phase = ClientPhase::MainMenu; pageName_ = "main"; popup_.clear(); page_ = {}; input_.Cancel();
-    client_.Pause(false); client_.Title(kWindowTitle); rebuild_ = true;
+    client_.Pause(false); RefreshWindowTitle(); rebuild_ = true;
+}
+// 현재 일반 미션의 원본 제목 설정을 적용한다. Demo/편집/테스트 미션은 해당 진입 구현과 함께 모드를 공급해야 한다.
+void UberGump::RefreshWindowTitle() {
+    WindowTitleState state; // 현재 메뉴는 요새 없음, 살아 있는 MissionScript는 일반 미션 상태다.
+    if (mission_) { state.fortName=mission_->FortName();state.mission=true; }
+    netstorm::client::RefreshWindowTitle(state,{
+        [this](std::string_view key,std::optional<std::string_view> argument) { return client_.Configuration().PathSpec(key,argument); },
+        [this] { return mission_ ? mission_->Get("title").value_or(std::string()) : std::string(); },
+        [this](std::string_view title) { client_.Title(title); }});
 }
 // 미션 종류를 확인하고 원본 스크립트·요새에서 실제 월드 초기 상태를 만든다.
 void UberGump::BeginMission(std::string name) {
@@ -230,7 +240,7 @@ void UberGump::BeginMission(std::string name) {
     // 원본 초기 브리핑은 A.이며 A1. 등은 본문 Tell 명령이 넘긴다.
     if (mission_->Section("A.")) briefingSections_.push_back("A.");
     state_.phase = ClientPhase::LoadingMission; pageName_ = "loading"; popup_.clear(); page_ = {}; rebuild_ = true;
-    client_.Title(mission_->Get("title").value_or(name)); client_.Pause(true);
+    RefreshWindowTitle(); client_.Pause(true);
     // 원본 004b6dd0의 미션 시작 절차(전투 여부를 켜고 FUN_00469fc0): 난수로 고른 원소 곡으로 전투 음악을 시작한다.
     if (client_.Audio()) client_.Audio()->StartScene(true);
 }

@@ -60,6 +60,8 @@ private:
     void AdvanceBriefing();
     // 현재 미션 자원을 해제하고 기본 메뉴로 돌아간다.
     void MainMenu();
+    // 현재 미션/요새의 설정 제목을 원본 선택 순서로 조회하여 실제 창에 적용한다.
+    void RefreshWindowTitle();
     // 원본 Options/Help의 목록과 하위 메뉴를 구성한다.
     void OpenMenu(std::string name);
     // 원본 우클릭 메뉴의 연결점. 건설/수확 명령은 다음 단계에서 활성화한다.

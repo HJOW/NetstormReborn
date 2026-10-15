@@ -1,0 +1,47 @@
+{
+  "host": "VM-W11-Codex",
+  "uniqueInputs": 1152,
+  "editions": {
+    "originals": {
+      "inputs": 576,
+      "returns": 576,
+      "assertions": 0,
+      "peSha": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "nativeCalls": {
+        "00460730": 576,
+        "00463a20": 48,
+        "004639e0": 24,
+        "00463a60": 48
+      },
+      "externalCalls": 1212,
+      "exports": {
+        "extracted/window-title/originals/creation.c": "110dae789cbb976f1b63d00c01ea2e2c4e35b706000035f3420c33ec510912f0",
+        "extracted/window-title/originals/functions.tsv": "baac3acae741157b59f9adb980ca246f0035c633f9459a67aa3e3b73f5862c6c"
+      }
+    },
+    "originalCD": {
+      "inputs": 576,
+      "returns": 576,
+      "assertions": 0,
+      "peSha": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "nativeCalls": {
+        "004ca4e0": 576,
+        "00417060": 48,
+        "00417020": 24,
+        "004170d0": 48
+      },
+      "externalCalls": 1212,
+      "exports": {
+        "extracted/window-title/originalCD/creation.c": "b3876bcf3b31a8231fd2137371e604075adfc199f1531724ae1e0857fa4ffd8e",
+        "extracted/window-title/originalCD/functions.tsv": "59edb5a486cf9dacf24c0f21c17a457e68e3578e3abfd6006eb502b6d3f5ceb1"
+      }
+    }
+  },
+  "fixtureSha": "60bbb56a8094273045859212dc60ac06d4e00e320b12f0be0ebccfabb0b898ef",
+  "toolSha": "a882130e145f29632cc7e6da1c18052d3fe751110c492d90eedc6bc63ff10640",
+  "supportSha": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
+  "limitations": [
+    "256BYTE 안의 정의된 ASCII 문자열 입력이다. 초과/잘못된 포인터는 실행하지 않았다.",
+    "원본 설정 알고리즘/Win32 창 출력의 재관찰이 아니며 선택된 키/인자/복사/최종 적용 요청을 관찰했다."
+  ]
+}

@@ -17,6 +17,7 @@ target_sources(netstorm PRIVATE
     GameAssets.cpp GameAssets.h
     PriestPlacementAssets.cpp PriestPlacementAssets.h
     Mission.cpp Mission.h
+    WindowTitle.cpp WindowTitle.h
     InputEvent.cpp InputEvent.h
     Renderer.cpp Renderer.h
     DrawSort.cpp DrawSort.h
