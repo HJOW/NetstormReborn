@@ -1,5 +1,23 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-15 사용자 요청에 따른 일시 중지·최종 인수인계 (`VM-W11-Codex`)
+
+- [x] 사용자가 현재 서브AI/본 세션 작업을 마무리한 뒤 문서·로컬 커밋을 남기고 목표를 중지하도록 요청했다. 서브AI3개는 현재 단위의 구현/미완료 경계 정리를 마쳤으며 다음 작업을 시작하지 않고 대기한다. 이 절 커밋 뒤 목표를 **paused**로 전환한다. 목표 달성/완주 완료로 처리하지 않는다.
+- [x] 현재/마지막 정밀 디컴파일 PC는 **VM-W11-Codex, 2026-10-15**다. 기존 정밀 C와 선택 export를 사용했고 마지막 mana 선택3함수도 같은 PC에서 종료0·lock 해제됐다. AGENTS·보호 원본/실행 파일·dotnetpj는 변경하지 않았다. 원본 게임 실행0이며 클론 GUI만 검사했다. DirectDraw 전체화면 오류는 계속 제외한다.
+- [x] 최종 Release 게임/검사 빌드 **경고0·오류0**, 새 AI2/SP4/Session2/UI직접등록1/페이지6 집중 검사를 확인했다. 페이지의 이전 object 강제 재컴파일 후 최종 전체 CTest **1/1·내부1,233개·실패0, 112.41초**가 통과했다. 근거는 `extracted/pause-final-build.log`, `pause-final-focused.log`, `pause-metadata-final-build.log`, `pause-metadata-final-focused.log`, `pause-final-ctest.log`다. 최초 실패도 삭제하지 않았다.
+- [x] 최종 실행 파일의 대화상자97상태·Early1/2 안내23상태·완료값 저장/다음Tutorial9상태가 통과했다. 처음 일시 설정 접근/복구 오류가 있었으나 두 허용 파일을 검사 전 바이트로 복구하고 별도 백업 아래 다시 검사했다. 최종 원본 전체 파일명/SHA와 설정 바이트/존재를 확인했다. 자료는 `extracted/pause-settings-final-backup/`이다. 완료 안내를 강제 호출한 검사이며 자연스러운 게임플레이 완주가 아니다.
+- [x] 작업 단위는 로컬 커밋 **20261015-42~49**로 나눴다. **44번의 mana4파일은 CMake 미등록·빌드/새 native 대조 미실행 초안**이다. 그 밖의 등록 제품/검사는 최종 전체 검사 대상이다. 이 최종 기록은 **`20261015-50 사용자 요청에 따른 작업 중단 인수인계와 최종 검증 기록`**으로 커밋한다. 원격 push는 하지 않는다.
+
+현재 cpppj는 창 모드에서 대상 요새/객체/안내 표시, 같은 raw 사제 이동, 실제 교전·HP1과 감시 종료 경로가 동작한다. 같은 세션의 공통 삭제·기술 내용물·현재 SP/UI 통지를 이번에 설치했다. **Construct는 아직 비활성**이며 생산/다리/수확·운반/희생과 실제 미션 단계·승패 후 저장 연결이 남는다. Early Missions와 캠페인1-1~1-2를 원본처럼 자연스럽게 완주할 수 있다는 판정은 아직 내리지 않는다. dotnetpj는 이번 범위에서 변경하지 않았다.
+
+재개 시에는 AGENTS와 양 LEFT를 먼저 읽고, 현재 호스트가 위 마지막 디컴파일 PC와 다른 경우 규정대로 다시 디컴파일한다. 최신 완료 절55~59가 과거 절의 미연결 기록보다 우선한다. 아래 순서는 재개용 제안이며 일시 중지 중에는 수행하지 않는다.
+
+1. [mana 초안](docs/exe/cpp-ai-required-energy-20261015.md)의 원본 후처리/188TYPE 공급을 검증하고 `invalidGraph`를 실제 BYTE backing의 현재 getter로 바꾼다. 기존160·새133 AI 근거를 보존하며 검증 뒤에만 실제 생성자/초기 갱신을 Session에 조립한다. AI 전략은 여전히 미복원이다.
+2. [SP 인수인계](docs/exe/cpp-sp-store-notice-20261015.md)의 RawPriestRegen 현재 getter를 구현한다. 같은 tracking 주소와 중립 효과/측정 뒤의 실제 offset·배열·순열 읽기 순서를 지키며 기존 fixture 값형 backend와 구분한다.
+3. 같은 Session에 Confirm→실제512바이트 작성/송신→자기 Notice→Clear/Place를 연결한다. Player +54/이름·local/표시 상태는 현재 raw 기록에서 읽어야 하며 값형 MissionPlayers의 대칭 동맹/가짜 active를 공급하지 않는다. LocalGeyser는 같은 reward pool·PlayerBounds·최근5목록을 사용한다.
+4. 원본 CheckLogin→worldLoad→Ready40→Stage3/AI/방향별 동맹 순서를 설치한 뒤 미션 게이트/Tutorial1·2와 정지 소유권을 연결한다. 초기화 이전 자동 Outcome은 켜지 않는다. 이어 생산/다리/수확/운반/희생·자연 완료/다음 미션을 실제 입력으로 검증한다.
+5. [Tell 편차](docs/exe/cpp-dialog-condition-flow-20261015.md)의 미복원 컨트롤/링크/param 수명과 전체 픽셀·음향 동일성을 후속 처리한다. 공용 빌드는 관련 소스를 동결한 뒤 실행해 이전 object가 섞이지 않게 한다.
+
 ## 2026-10-15 단위59 완료: 건설 패킷 BYTE 초기화 변환 경고 제거 (`VM-W11-Codex`)
 
 - [x] 공용 재컴파일에서 발견한 `fill_n(...,0xff)`의 int→BYTE C4244를 `uint8_t{0xff}`로 교정했다. 기존 **86개** 실제 원본 입력의 전체512바이트를 다시 대조하고 SHA 보고서를 갱신했다. 신규 고유입력으로 합산하지 않는다. [상세](docs/exe/cpp-construction-packet-20261015.md).
