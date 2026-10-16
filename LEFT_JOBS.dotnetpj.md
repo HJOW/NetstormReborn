@@ -1,3 +1,27 @@
+## 2026-10-16 현행 계획: cpppj 복원 결과를 이식해 원본과 거의 동일한 플레이로 (`DESKTOP-HJOW`)
+
+- [x] **요청·범위:** 사용자 요청은 다음과 같다. 현재까지 진행된 cpppj 소스를 dotnetpj에 적용해 게임 플레이가 기존 게임과 거의 동일한 수준이 되도록 이 문서를 고치고, 루트 README 두 개를 최신으로 갱신한다. LEFT_JOBS.md와 cpppj 소스는 수정하지 않는다. AGENTS.md(2026-10-16의 cpppj 2차 목표 DirectDraw 수정 필수 변경 포함)와 두 LEFT_JOBS를 읽었다. 다른 AI가 cpppj를 진행 중이어서 `cpppj/`·`LEFT_JOBS.md`는 건드리지 않았다. 반영 기준 커밋은 **`53113b66`**(cpppj `20261016-12`까지, 작성 도중 들어온 맨 오 워 풀 복원 포함)다. 현재 PC는 마지막 전체 정밀 디컴파일 PC(VM-W11-Codex, 2026-10-16)와 달라 **디컴파일 산출물은 읽지 않았다.** 근거는 커밋된 cpppj 소스·보고서·원본 fixture다. 게임·창 실행은 없다. 상세는 [cpppj → dotnetpj 이식 계획](docs/dotnet-cpp-port-plan-20261016.md)에 있다.
+- [x] **기준선(이번 측정, 헤드리스):** SDK 10.0.402, `dotnet build dotnetpj/Netstorm.sln -c Release` 경고 0·오류 0(16초), `dotnet test` **1,057개 통과**(Assets 343 + Core 714, 실패·건너뜀 0, 35초). 2026-10-15 마지막 기록과 같다.
+- [x] **차이 진단:** cpppj는 원본 fixture 280개(주석 제외 약 68만 행)와 `Raw*` 모듈 213개를 `RawCampaignSession` 하나에 조립했다. 목표 11개 미션 모두 헤드리스 Load/Start를 통과하고 CTest 내부 1,340개가 전부 통과한다(20261016-12). dotnetpj는 그중 fixture **14개**만 쓴다. `SurfaceGraph`·`SpotMap`·`MsvcRandom`은 세션에서 쓰지 않고, 규칙은 엔티티 목록과 24Hz 틱 위의 근사다. Early Missions는 메뉴에서 잠겨 있고(`CampaignAccess`는 1-1·1-2만 공개) Demo 버튼은 비활성이다.
+- [x] **구조 결정(2026-10-10 사용자 결정 규칙 적용):** 현재 구조로는 원본의 객체 수명 순서·Regular 타이머·SP 쓰기마다의 난수 소비·Graph 분할을 재현할 수 없다. 그래서 `Netstorm.Core.Original`에 cpppj `RawWorldCore`/`RawCampaignSession`에 해당하는 **원본 월드 코어**를 만들고, `BattleSession`을 그 파사드로 바꾼다. 영역별 교체형으로 진행해 1-1·1-2 플레이를 유지한다. cpppj 미복원 동작은 예외로 멈추지 않는다. 기존 근사를 유지하되 [core-rules.md](docs/core-rules.md)의 근사 목록에 등록한다(10절 9·10번).
+- [x] **판정 단계:** L1 모듈(fixture 10.78 행 전부) → L2 세션 시작 상태 → L3 고정 입력 진행 → L4 화면·소리 → L5 자연 완주 순서다. L1 통과를 L2 이후 완료로 합산하지 않는다. 1차 범위는 cpppj 목표와 같은 11개 미션(Tutorial1~6·캠페인 1-1·1-2·데모 3개)이다.
+- [ ] **P0 기반**(순서대로, 각 단위의 fixture·교체 대상·완료 기준은 계획 5절)
+  - [ ] W01 기준선·동기화 장치: 연결 fixture SHA 목록 검사, `X86Fixture` 확장, 반영 커밋 기록
+  - [ ] W02 원본 월드 코어 ① 생성·등록: 객체 표·생성자·Pop/Unpop/PostPop·해시/spot·소유자/프레임·Graph 연결(D14)
+  - [ ] W03 원본 월드 코어 ② 삭제·수명: 공통 삭제·Damageable·종속/내용물/Form·신전 삭제(D14)
+  - [ ] W04 시간·Kernel·Process: Regular·ProcessForm·공통 프레임 진행, 24Hz/8틱 소비자를 하나씩 이행(D01)
+  - [ ] W05 SP·보상·난수: float32 SP 저장소·쓰기마다 난수 160회·보상/환불/AI 지갑/샘 풀(D12)
+  - [ ] W06 미션 로드·월드 생성: Fort 적재·지형 성장·섬·영역·다리 연결
+  - [ ] W07 미션 시작·플레이어·AI 초기화: Start·Player/기술/색·사제 참여·AI 생성/초기 갱신·요구 에너지·생산 Deck·로그인/Guide의 내부 순서(D03 잔여·D16·D17·D19·D21). **M1: 11개 미션 시작 상태가 cpppj와 같다**
+- [ ] **P1 플레이 규칙:** W08 사제(D09) → W09 경로·운반·수확(D11·D05 간헐천) → W10 배치·건설·생산(D13, **M2: 1-1에서 원본 건설 파이프라인**) → W11 전투·파생 건물(D10·D20) → W12 희생·신전·제단 → W13 진행·안내·승패(D04·D06·D07·D08·D18, **M3: 1-1·1-2 원본 규칙 자연 완주, AI 전략 제외**)
+- [ ] **P2 표시·UI·소리(P1과 병행 가능):** W14 표시(D15·D21), W15 Gump UI(D23), W16 소리·음악(D24)
+- [ ] **P3:** W17 데모 3개·캠페인 1-6/2-4(D22) → W18 Early Missions 공개와 11개 미션 자연 완주(**M4**) → W19 cpppj 대기 항목(AI 전략·데빌 메이커 TYPE59·플라이어 BaseFlyer·썬 바리케이드 공격·생산 재시작 상위 호출자) → W20 요구사항(화면비·60/120프레임·Linux)
+- [ ] **cpppj 동기화(매 단위 시작 시):** `git log --oneline <마지막 반영 커밋>..HEAD -- cpppj docs/exe LEFT_JOBS.md`와 `git diff --stat <마지막 반영 커밋>..HEAD -- cpppj/tests/fixtures`로 변경을 확인한다. 반영한 커밋을 이 절에 갱신한다(현재 `53113b66`). HEAD만 근거로 쓰며 다른 AI의 미커밋 변경은 쓰지 않는다.
+- [ ] **cpppj에 전달할 요청(사용자 전달용, cpppj 미수정):** ① 실제 Session의 Load/Start·N프레임 상태 덤프 ② 고정 입력 재생 도구 ③ fixture 열 이름 ④ 모듈별 연결 상태표 ⑤ `cpppj/tests/GraphTests.cpp:105`의 `v[11]` 범위 밖 읽기(2026-10-09 전달, 아직 남음). 상세는 계획 8절.
+- [x] **문서 정리:** 아래 0·1·8절의 순서·대기 표는 당시 기록으로 두고, 머리말과 각 절에서 현행 계획을 가리키게 했다. 10절에 이번 기본값 2건, 12절에 동기화 명령, 13절에 참고 문서를 추가했다. [반영 점검 D01~D16](docs/dotnet-cpp-audit-20261015.md) 머리에 후속 계획 링크를 달았다. 루트 README 두 개의 dotnetpj 상태·다음 작업을 이번 기준선과 계획으로 갱신했다.
+- [x] **다음 시작점은 W01이다.** `DESKTOP-HJOW`에서는 헤드리스 빌드·검사만 하고, 창 검사는 AGENTS.md 면제 PC나 사용자 승인 뒤에 한다.
+- [x] 문서 검사(UTF-8·로컬 링크/앵커·`git diff --check`)를 통과했다. 계획·인수인계는 **`20261016-13 DN cpppj 복원 결과의 dotnetpj 이식 계획 수립과 인수인계 갱신`**, README 두 개는 공통 문서라 **`20261016-14 CM 루트 README의 dotnetpj 현황과 이식 계획 반영`**으로 나눠 로컬 커밋한다. 다른 AI의 cpppj 작업물은 커밋에 넣지 않으며 원격 push는 하지 않는다.
+
 ## 2026-10-15 완료: 감사 D14 장부(Totalmade)와 D05 튜토리얼 1 판정기 이식·연결 (`HJOW-X3D`)
 
 - [x] 사용자 요청("해당 원칙으로 dotnetpj 다음 사항 더 진행")으로 진행했다. 시작·종료 시 `git fetch`로 원격을 확인했고(새 커밋 없음) 이번에도 `cpppj/`·공통 `LEFT_JOBS.md`는 수정하지 않았다. 공통 기록상 마지막 정밀 디컴파일 PC는 HJOW-Athlon(2026-10-15)이며 이번 작업은 **디컴파일 산출물을 읽지 않았고** 새 디컴파일·원본 기계어 관찰·원본/클론 게임 실행은 없다. [상세 기록](docs/dotnet-ledger-tutorial-one-20261015.md).
@@ -309,6 +333,7 @@
 
 # LEFT_JOBS.dotnetpj — dotnetpj(C# + MonoGame) 작업 계획 및 인수인계
 
+> **현행 계획(2026-10-16, `DESKTOP-HJOW`):** cpppj 복원 결과를 W01~W20 단위로 이식해 원본과 거의 동일한 플레이를 만든다. 문서 맨 위 절과 [cpppj → dotnetpj 이식 계획](docs/dotnet-cpp-port-plan-20261016.md)이 아래 0~13절의 순서보다 우선한다. 아래 0~7절은 2026-10-07~10 당시의 1~6단계 기록이다.
 > 이전 갱신: 2026-10-10 (`HJOW-X3D`). 창·메뉴 치수 원본화 뒤 캠페인 목록 자료 읽기 단계에서 중단한 당시 기록이다. 보류 항목의 2026-10-11 해결 결과는 맨 위 절과 [후속 검토](docs/dotnet-review-20261011.md)를 따른다.
 > 이전 갱신: 2026-10-10 (호스트 `HJOW-X3D`, .NET SDK 10.0.401). **5-3 원본 영어 글꼴(사용자 결정: 언어가 영어일 때는 기존 게임의 글꼴)·5-4 커서 표·5-5 배경 GIF 색·5-6 확인·6단계(소유자·시작 값·본섬 마스크·받침·HP) 완료.** **946개 통과**(Assets 322 + Core 624), Release 경고/오류 0. 원본 x86 대조 49,007개는 그대로이고, cpppj `--dump-world` 대조(오브젝트 2,036개·플레이어 8명, x86 직접 기대값 아님)를 더했다. 창·메뉴 치수의 원본화·캠페인 목록·전체 표시 정렬·9-1 판정은 후속이다. 원본 게임·새 디컴파일 없음. 최신 내용은 맨 위 절과 [상세 기록](docs/dotnet-reconstruction-20261010.md)을 따른다.
 > 이전 갱신: 2026-10-10 (호스트 `HJOW-Athlon`, **문서만**). AGENTS.md 최근 변경(원본과 완전히 동일한 동작 우선·Linux 후순위·주석 규칙·글꼴 1.4.0·팬게임보다 디컴파일 우선)을 계획에 반영했고, 같은 날 사용자 결정 3건(의도적 차이를 원본처럼 동작하게·기존 주석 정비 시점·글꼴 교체 우선순위)도 반영했다. 코드·테스트 변경은 없으며 구현 상태는 아래 2026-10-09 갱신과 같다.
@@ -376,6 +401,8 @@ cpppj(원본 10.78 을 디컴파일해 C++ 로 복원하는 프로젝트)와 디
 ---
 
 ## 1. 작업 순서 한눈에 보기
+
+> **2026-10-16:** 아래 표는 2026-10-07 착수 당시의 순서다. 1~6단계는 완료됐고 9-1 A는 일부 진행됐다. 현행 순서는 [이식 계획 5절](docs/dotnet-cpp-port-plan-20261016.md#5-작업-단위와-순서)의 W01~W20이며, 9-1 A의 나머지는 W04(D01)에 포함한다.
 
 | 단계 | 내용 | 창 필요 | 선행 |
 |---|---|---|---|
@@ -679,6 +706,8 @@ C# 은 2026-10-10 전까지 모든 글자를 D2Coding(FontStashSharp)으로 그�
 
 > **2026-10-15 재점검:** 아래 표는 초기 비교 당시의 미복원·미연결 이력이다. 이후 cpppj에서 배치/건설·경로·피격·플레이어·미션 게이트·안내·정렬·AI 초기화 등의 원본 대조 근거가 추가됐다. 현재 수정/부분 반영/보류 구분은 [dotnetpj 반영 점검 D01~D16](docs/dotnet-cpp-audit-20261015.md)을 따른다. 모듈의 검증을 실제 게임 전체 연결 완료로 확대하지 않으며, mana 미검증 초안·AI 전략 등은 계속 보류한다. 이번 작업은 코드 수정 없이 검토·문서화했다.
 
+> **2026-10-16 재점검:** 아래 표의 "미복원·월드 미연결" 항목 대부분이 cpppj에서 원본 대조와 실제 Session 연결까지 진행됐다. 대상은 배치·건설 파이프라인, 섬·noIsland·받침의 표면 등록, 점유 지도, 생산 Deck, 승패, 소리, 그림자·소유자 색 등이다. mana 초안도 요구 에너지 2,352행으로 등록·검증돼 보류가 풀렸다. 현재의 이식 대상과 대기 구분은 [이식 계획 5·6절](docs/dotnet-cpp-port-plan-20261016.md#6-기존-d01d16과-새-d17d24의-대응)을 따른다. 맨 오 워 풀 TYPE143 프로세스도 20261016-12에서 복원됐다. 여전히 cpppj에서 미복원인 것은 AI 전략, 데빌 메이커 TYPE59 프로세스, 플라이어 BaseFlyer, 썬 바리케이드 Regular 공격, 생산 재시작 상위 호출자 등이다(W19).
+
 cpppj 가 아직 복원하지 않았거나 월드에 연결하지 않은 부분이다. 지금 C# 에 넣으면 다시 추정이 된다. cpppj 쪽 진행은 [LEFT_JOBS.md](LEFT_JOBS.md) 맨 위 절과 [cpp-playable-plan.md](docs/cpp-playable-plan.md) 의 4단계 체크 목록에서 확인한다.
 
 | 항목 | 원본 함수 | C# 의 현재 근사 | cpppj 상태 |
@@ -794,6 +823,8 @@ cpppj 는 "원본을 그대로 되살린다"가 목표라 아래를 원본대로
 6. **이미 들어간 요구사항 기능의 처리(2026-10-10 추가, 사용자 확인 전).** 한국어 선택·와이드 화면 시야 확장·테두리 없는 전체화면 창은 이미 구현돼 있다(자체 `settings.json` 은 [9-1](#original-parity-plan) C 의 판정 대상으로 옮겼다). 기본값(에이전트 해석): 되돌리지 않고 유지한다. 기본 실행(영어·4:3)에서 원본과 같은 동작을 먼저 맞추고, 새 요구사항 기능은 ① 뒤로 미룬다.
 7. **D2Coding 1.4.0 교체 — 해결(2026-10-10 사용자 결정): 중요도가 낮다.** 당분간 1.3.2 를 그대로 쓴다. 다른 작업을 미루면서 하지 않으며, 글꼴 코드를 고칠 일이 있거나 여유가 있을 때 한다. 교체할 때 확인할 것: 코드 3곳의 파일명(`Netstorm.Game.csproj`·`NetstormGame.cs`·`TrueTypeCollectionTests.cs`), TTC face 순서·글자 폭·줄 높이, `TrueTypeCollectionTests` 기대값, 한국어 화면 캡처, README 두 개의 파일명.
 8. **기존 코드 주석 정비 — 해결(2026-10-10 사용자 결정): 그 주석이 설명하는 대상이 수정될 때 한다.** 상수·함수·클래스·멤버함수·반복문을 고치면 그 대상의 주석을 새 규칙(설명·사용법 먼저, 추가/수정 이력은 뒤)에 맞춘다. 고치지 않는 대상의 주석을 찾아다니며 일괄 정리하지 않는다.
+9. **cpppj 미복원 동작의 처리(2026-10-16 추가, 에이전트 기본값·사용자 확인 전).** cpppj는 미복원 타입의 후처리를 만나면 명시 오류로 멈춘다. dotnetpj는 플레이 가능 상태 유지를 우선한다. 기존 근사를 유지하고 [core-rules.md](docs/core-rules.md)의 근사 목록에 "원본 근거 없음"으로 등록한 뒤, cpppj가 복원하면 교체한다. 대신 해당 미션을 잠그기를 원하면 이 기본값을 바꾼다.
+10. **원본 월드 코어 도입(2026-10-16 추가, 에이전트 판단).** 5번 결정의 "그렇게 할 수 없으면 구조 자체를 원본처럼 바꾼다"에 해당한다고 판단했다. 근거와 범위는 [이식 계획 4절](docs/dotnet-cpp-port-plan-20261016.md#4-구조-결정-c-원본-월드-코어-도입)에 있다. 규모가 크므로(cpppj 원본 대응 소스 약 6.2만 줄·fixture 약 68만 행) 영역별 교체형으로 진행하고 1-1·1-2 플레이를 유지한다.
 
 ---
 
@@ -823,6 +854,10 @@ dotnet test -c Release
 cpppj/build/bin/Release/NetstormCpp.exe --dump-types originals
 cpppj/build/bin/Release/NetstormCpp.exe --dump-world originals thewarbegins
 cpppj/build/bin/Release/NetstormCpp.exe --inspect-bridges originals
+
+# cpppj 반영 범위 확인 (2026-10-16 추가, 마지막 반영 커밋 이후의 변경)
+git log --oneline 53113b66..HEAD -- cpppj docs/exe LEFT_JOBS.md
+git diff --stat 53113b66..HEAD -- cpppj/tests/fixtures
 ```
 
 - 클론 창을 띄우는 검사(`tools/clone_*_smoke.ps1`, `dotnet run --project dotnetpj/src/Netstorm.Game`)는 `DESKTOP-HJOW` 가 아닌 PC 에서 한다.
@@ -836,6 +871,10 @@ cpppj/build/bin/Release/NetstormCpp.exe --inspect-bridges originals
 
 | 주제 | 문서 | cpppj 기준 구현 |
 |---|---|---|
+| **cpppj → dotnetpj 이식 계획(현행, 2026-10-16)** | [dotnet-cpp-port-plan-20261016.md](docs/dotnet-cpp-port-plan-20261016.md) | `client/RawCampaignSession`, `client/RawSurfaceWorld`의 `RawWorldCore` |
+| 반영 점검 D01~D16 | [dotnet-cpp-audit-20261015.md](docs/dotnet-cpp-audit-20261015.md) | — |
+| 표시 이름·내부 타입명 대응 | [unit-source-name-map.md](docs/unit-source-name-map.md) | `o/RiftTypeTable.cpp` |
+| 데모·캠페인 1-6/2-4 대응 | [demo-campaign-map.md](docs/gameplay/demo-campaign-map.md) | `o/RawMissionStart` |
 | 설정 조회·치환·저장 | [cpp-config-reconstruction.md](docs/exe/cpp-config-reconstruction.md), [cpp-options-reconstruction.md](docs/exe/cpp-options-reconstruction.md) | `o/Config.cpp`, `o/ConfigInterface.cpp` |
 | 타입 표·요새 파일 | [cpp-fort-reconstruction.md](docs/exe/cpp-fort-reconstruction.md), [cpp-assets-reconstruction.md](docs/exe/cpp-assets-reconstruction.md) | `o/RiftTypeTable.cpp`, `o/Template.cpp` |
 | 다리 표·추첨·열린 방향·수명 | [cpp-bridge-reconstruction.md](docs/exe/cpp-bridge-reconstruction.md), [bridge-pieces.md](docs/exe/bridge-pieces.md) | `o/Bridge.cpp`, `o/CanonDecoder.cpp` |
