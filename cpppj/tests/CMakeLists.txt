@@ -2,6 +2,7 @@
 # (첫 구성 때 인터넷에서 내려받을 것이 없다).
 # 테스트 파일을 만들면 아래 목록에 더한다. 파일 안의 TEST_CASE 는 자동으로 등록된다.
 add_executable(netstorm_tests
+    BuriedRegularTests.cpp
     RainAviaryProcessTests.cpp
     PlayerColorTests.cpp
     GraphResetTests.cpp
@@ -1097,3 +1098,7 @@ set_source_files_properties(PlayerColorTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 별도 원본 Rain 생성/후처리/Frame/writer의1602개 전체 출력이다.
 set_source_files_properties(RainAviaryProcessTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_RAIN_AVIARY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/rain-aviary-x86.tsv\"")
+
+# 실제 오벨리스크 Handle의 전체 바이트/반환/난수/표시 순서를 대조한다.
+set_source_files_properties(BuriedRegularTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_BURIED_REGULAR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/buried-regular-x86.tsv\"")

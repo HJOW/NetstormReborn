@@ -1,5 +1,14 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-16 단위82 완료: 오벨리스크(`buried`) 실제 Handle·Kernel 연결 (`VM-W11-Codex`)
+
+- [x] 단위81은 `0b7bc95`로 로컬 커밋했다. 현재/마지막 전체 정밀 PC는 **VM-W11-Codex / 2026-10-16**으로 일치한다. 원본TYPE112 가상표0050a748의+5c는004622f0이며 사용자 표시명은 명칭 대응표의 **Obelisk/오벨리스크**다.
+- [x] `RawBuriedRegular.*`로 실제 event0의 signed count%(B프레임수+1), A/B 프레임 선택과 공유 난수 **2..7초(8미포함)**, event1의 반환 미사용 QA 조회/기본 Handle를 복원하고 같은 Pool/Frame/Random/Kernel에 연결했다. event6699/6700도 Damageable이 아닌 실제 기본 Handle다. 다른 판본/풀/가상 표는 거부한다. [상세](docs/exe/cpp-buried-regular-20261016.md).
+- [x] 선택6함수·**384고유 입력/두 x87 정밀도768정상 반환**을 독립 관찰했고 전체 부모50바이트/반환/난수/모든 표시 순서의 전수 비교2개와 연결 거부1개가 모두 통과했다. Frame 후 난수/QA 변경의 현재 재조회도 포함한다. 최초 검사 풀128은 실제 예측 free list 크기 조건을 위반해24000으로 바로잡았다. 원본/기대값을 C++ 출력으로 만들지 않았다.
+- [x] Release 경고0·오류0, 실제 Tutorial5도400프레임 통과하여 **11개 중7개 성공**이다. 전체 CTest **1356개 중1352통과·4실패, 검사116.09초/전체116.16초**다. 남은 실패는 Tutorial6/GuardMyBack TYPE136 event0·데모1의103프레임 TYPE144 파생Pop·데모3의3프레임 다른 총 animation 미연결이다. 데모3도 오벨리스크 첫 프레임을 지났고 이후 경계를 숨기지 않았다.
+- [x] 새384/기존레지던스1728/요구에너지2352 SHA·Python구문·UTF-8/로컬링크/공백을 확인한다. CMake 이전/현재SHA와 전체 실패 범위를 요구에너지 보고서의 단위82 이력에 보존한다. 로그는 `extracted/goal-buried-20261016-{native,build,final-build,focused,focused-final,frames,ctest}.log`다. 문서와 함께 **`20261016-16 CP 오벨리스크 사건 처리 복원과 실제 Kernel 연결`**로 로컬 커밋한다. 보호원본/AGENTS/dotnetpj·게임/GUI 실행·push는 없다. 현재/마지막 전체 정밀 PC는 **VM-W11-Codex / 2026-10-16**이다.
+- [ ] 다음은 썬 바리케이드 Handle **00457a50**와 helper **004573d0(활성 연결수)/00457460(연결 재생성)/004578f0(이웃 갱신)** 및 연결선mode1·공격이다. TYPE144 rainFlyer Pop/BaseFlyer, `RawCampaignArcherBindings::GunHooks`의 다른 총 부모 animation도 필요하다. 실제 GUI·Guide/미션프레임·AI전략·사용자 명령·승패/저장/다음 미션/전체 그래픽·음향 동일성은 여전히 후속이며 목표는 active·미달성이다.
+
 ## 2026-10-16 단위81 완료: 레지던스 좌표 정정·실제 11미션 연속 Kernel 경계 검사 (`VM-W11-Codex`)
 
 - [x] AGENTS.md와 양 인수인계를 다시 읽었다. 현재/마지막 전체 정밀 PC는 **VM-W11-Codex / 2026-10-16**으로 일치한다. 단위79에서 변경된 2차 DirectDraw 필수 목표 문서는 반영 완료다. 현재 목표는 active·미달성이다.

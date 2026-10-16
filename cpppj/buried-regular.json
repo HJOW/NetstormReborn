@@ -1,0 +1,27 @@
+{
+  "host": "VM-W11-Codex",
+  "last_full_decompile_host": "VM-W11-Codex",
+  "last_full_decompile_date": "2026-10-16",
+  "total": 384,
+  "normal_returns": 768,
+  "os_calls": 0,
+  "sha256": {
+    "tools/decomp_buried_regular.py": "d41903a0dc4a049a81de093667a5b1d11803bde429bb283aa1825134f77f1234",
+    "tools/decomp_local_mission_transport.py": "db71da65079aa9a985a3a833edd224f089ba9a20137d92042551cb346937eb78",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "cpppj/tests/fixtures/buried-regular-x86.tsv": "1eb06afac3c6fc99c94ea2501677981a8c9a102876ed01f665bd2c53da9df0c8",
+    "cpppj/src/o/RawBuriedRegular.h": "2c313da56e267f27db671ead273a7b0911562ea78fb61c52bf87f76581517b59",
+    "cpppj/src/o/RawBuriedRegular.cpp": "b62000b56e453a5dbb7a47056abcaff6a6f31e7ae1dda104b5cdbf31d5cbdfd2",
+    "cpppj/tests/BuriedRegularTests.cpp": "e522f88438866ec3c8a94d22f923f04d1ceaf720c367bd997cff82dbed30f739",
+    "cpppj/src/client/RawCampaignSession.cpp": "fa5f4cf82ada9bb1fabbeee421f439f6624bba581a70da965313a98016f16a21",
+    "cpppj/src/o/CMakeLists.txt": "ea8e75d5f6e307768905b912ecad98e30041585a46a40d504456639998a2434a",
+    "cpppj/tests/CMakeLists.txt": "49aa00de35ef78960e52130f166c15eac6818f47de436fcb84309323c73b05c0"
+  },
+  "limits": [
+    "원본 Frame 지정은 두 표시/현재 프레임 쓰기의 명시 경계다. C++ 검사는 실제 SquidFrame을 조합한다.",
+    "직접TYPE/QA/기본Handle/난수/서명된idiv는 실제10.78 명령이다.",
+    "Frame 후 외부 난수/QA 변경은 명시 입력이며 원본 재조회 순서를 관찰한다.",
+    "CD판/오벨리스크 보상 추첨/GUI/자연 완주는 이번 범위가 아니다."
+  ]
+}
