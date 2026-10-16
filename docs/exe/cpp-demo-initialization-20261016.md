@@ -6,6 +6,8 @@
 
 원본 아카이브 `tell.english`의 `[DEMOVILLE]`은 다음 세 메뉴를 `StartDemo`로 실행한다.
 
+후속 조사에서 데모2는 캠페인2-4, 데모3은 캠페인1-6과 같은 미션 자원을 쓰는 것을 확인했다. 로컬AI/데모 수명 차이와 후속 재사용 항목은 [대응 문서](../gameplay/demo-campaign-map.md)에 기록한다.
+
 | 표시 제목 | 미션 키 | 초기 검사 | 복원 뒤 결과 |
 | --- | --- | --- | --- |
 | The Storm Rages | DemoStormRages | TYPE143 맨 오 워 풀의 PostPop 미지원 | 같은 후처리 미지원으로 Load 실패 |

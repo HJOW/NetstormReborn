@@ -1,5 +1,7 @@
 # 원본 캡처 대조: 캠페인 1-6 "Dissolved Alliance!" 시작 직후
 
+데모3과 같은 미션 자원을 쓰며 데모에서는 로컬AI를 켠다. 캠페인 복원 시 [데모/캠페인 대응 기록](../gameplay/demo-campaign-map.md)의 실행 모드 차이를 함께 확인한다.
+
 > 캡처: `screenShots/Dissolved Alliance! - Started.png` (클라이언트 시작 약 (2~3, 32)), 섬별 `Playing 1`·`Playing 2`
 > 비교 대상: 개발용 맵 뷰어 `--map dissolvedalliance` (2026-09-28)
 > 목록: [README.md](README.md)
