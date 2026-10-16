@@ -457,6 +457,8 @@ struct RawCampaignSession::Impl {
         if (!combatEffects.animation.common.targetPoint) combatEffects.animation.common.targetPoint=
             [this](Sid firing,Sid target) { return fenceTarget->Point(firing,target); };
         combatEffects.missile.muzzle=[this](Sid sid) { return projectileGeometry->Muzzle(sid); };
+        // 현재 썬 캐논 프레임과 보정된 포구에서 방향이 일치하는 사정선 종점을 조회한다.
+        combatEffects.missile.rayEnd=[this](std::array<float,2> from,std::array<float,2> to,Sid sid) { return projectileGeometry->CannonRayEnd(from,to,sid); };
         combatEffects.missile.hotspot=[this](Sid sid) { return projectileGeometry->Hotspot(sid); };
         combatEffects.missile.directionFrame=[this](std::array<float,2> from,std::array<float,2> to,std::uint32_t type) { return projectileGeometry->DirectionFrame(from,to,type); };
         combatEffects.missile.targetDimensions=[this](Sid sid) { return projectileGeometry->Dimensions(sid); };

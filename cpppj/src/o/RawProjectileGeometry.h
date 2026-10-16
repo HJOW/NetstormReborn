@@ -18,8 +18,10 @@ public:
         std::span<const ProjectileGeometryType> geometry,float scaleX=16,float scaleY=11);
     // PATCH0046a780/CD00437390: 기본+현재 물리 SHP 포구 픽셀을 더한 뒤 현재 좌표에 반영한다.
     std::array<float,2> ArcherMuzzle(Sid firing) const;
-    // 실제 가상+b4를 분배한다.71은 두 SHP 포구의 합,10.78의140은 현재 자산 좌표다.
+    // 실제 가상+b4를 분배한다.71은 두 SHP 포구의 합,10.78의128·140은 현재 자산 좌표다.
     std::array<float,2> Muzzle(Sid firing) const;
+    // PATCH00481750의 일치 방향 발사에서 현재 썬 캐논 프레임에 맞는 축 정렬 종점이다.
+    std::array<float,2> CannonRayEnd(std::array<float,2> from,std::array<float,2> to,Sid firing) const;
     // 현재 물리 SHP header+20/+22를 읽는다. 기본 프레임과 합산하지 않는다.
     std::array<std::int32_t,2> Hotspot(Sid firing) const;
     // PATCH0041d6e0: 실제 균등 방향 반올림 뒤 방향당 물리 프레임 수를 곱한다.

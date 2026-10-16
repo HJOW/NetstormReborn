@@ -11,6 +11,7 @@ namespace {
 constexpr double kTwoPi=std::bit_cast<double>(std::uint64_t{0x401921f9f01b866e}),
     kHalfPi=std::bit_cast<double>(std::uint64_t{0x3ff921f9f01b866e}),
     kInverseTwoPi=std::bit_cast<double>(std::uint64_t{0x3fc45f318e7adaf5});
+constexpr std::array<std::int32_t,4> kSunCannonFrameDirections{4,0,6,2}; // 발사 가능 프레임0..3과24..27의 실제 cardinal 방향이다.
 // 현재 원본 little endian DWORD를 정렬 가정 없이 읽는다.
 std::uint32_t Read(std::span<const std::uint8_t> raw,std::size_t offset) {
     std::uint32_t value=0;
@@ -49,13 +50,32 @@ std::array<float,2> RawProjectileGeometry::ArcherMuzzle(Sid firing) const {
     return {static_cast<float>(static_cast<double>(first[0]+current[0])/scaleX_+x),
             static_cast<float>(static_cast<double>(first[1]+current[1])/scaleY_+y)};
 }
-// 실제 VT50b888/50b6e8의+b4는 각각46a780/41c110으로 서로 다른 포구를 반환한다.
+// 실제 VT50b888/50b6e8/50b9b8의+b4는 각각46a780/41c110/41c110으로 포구를 반환한다.
 std::array<float,2> RawProjectileGeometry::Muzzle(Sid firing) const {
     const auto raw=Slot(firing);
     if (raw[10]==71) return ArcherMuzzle(firing);
+    // PATCH TYPE128 썬 캐논의 +0xb4 getter(0041c110)는 원시 x/y 좌표를 그대로 복사한다.
+    if (pool_.Edition()==OriginalEdition::Patch1078 && raw[10]==128)
+        return {std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18))};
     if (pool_.Edition()==OriginalEdition::Patch1078 && raw[10]==140)
         return {std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18))};
     throw std::logic_error("Projectile 실제 가상 포구 미복원 TYPE"+std::to_string(raw[10]));
+}
+// 실제00481750의 썬 캐논 방향 일치 분기만 실행하며 미복원 방향 보정을 통과시키지 않는다.
+std::array<float,2> RawProjectileGeometry::CannonRayEnd(std::array<float,2> from,std::array<float,2> to,Sid firing) const {
+    const auto raw=Slot(firing);
+    if (pool_.Edition()!=OriginalEdition::Patch1078 || raw[10]!=128) throw std::logic_error("Cannon rayEnd 미복원 판본/TYPE");
+    if (!std::isfinite(from[0]) || !std::isfinite(from[1]) || !std::isfinite(to[0]) || !std::isfinite(to[1])) throw std::invalid_argument("Cannon rayEnd 비유한 좌표");
+    const float dx=static_cast<float>(static_cast<double>(to[0])-from[0]),dy=static_cast<float>(static_cast<double>(to[1])-from[1]);
+    const std::int32_t direction=std::abs(dx)<=std::abs(dy) ? (dy>0 ? 4 : 0) : (dx<=0 ? 6 : 2);
+    const auto frame=std::bit_cast<std::int32_t>(Read(raw,36));
+    std::int32_t frameDirection=-1;
+    if (frame>=0 && frame<4) frameDirection=kSunCannonFrameDirections[static_cast<std::size_t>(frame)];
+    else if (frame>=24 && frame<28) frameDirection=kSunCannonFrameDirections[static_cast<std::size_t>(frame-24)];
+    else throw std::logic_error("Cannon rayEnd 미복원 물리 프레임"+std::to_string(frame));
+    if (frameDirection!=direction) throw std::logic_error("Cannon rayEnd 방향 불일치 및 원본 보정 경계 미복원");
+    if (direction==0 || direction==4) return {from[0],to[1]};
+    return {to[0],from[1]};
 }
 // 가상 포구 계산 뒤 Missile ctor가 별도로 요구하는 현재 SHP 기준점이다.
 std::array<std::int32_t,2> RawProjectileGeometry::Hotspot(Sid firing) const {

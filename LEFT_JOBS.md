@@ -1,5 +1,23 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-16 단위94·95 검토·보완 완료: 썬 캐논 포구·사정선 검증 (`HJOW-Athlon`)
+
+- [x] 사용자 요청으로 두 LEFT 인수인계와 미커밋 변경8개를 검토하고 필요한 수정을 수행했다. 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-16**으로 일치한다. 새 디컴파일은 수행하지 않았다.
+- [x] 보호10.78 PE의 `0050b9b8 + 0xb4 → 0041c110`과 좌표 DWORD 복사 기계어, `00481750`·`0041ce90`·`00466df0` 및 실제 방향 허용 표를 대조했다. TYPE128 raw 포구와 방향 일치 종점 계산에서 원본과 어긋나는 구현은 발견하지 않았다. 이 검토의 새 원본 실행 관찰 수는0이다.
+- [x] 최초 검사는0..3·24의5프레임만 포함했으므로 빠진25·26·27을 추가해 **8프레임 전부**를 확인하도록 보완했다. 기존 기대값은 바꾸지 않았다. 사전 `MayFire`의 자산 중심과 `rayEnd`의 보정 포구/코너 입력이 달라 방향 일치를 보장하지 않는 점, 비행 효과11 사전 검사 때문에 전체 Session이 새 포구·종점 조회 전에 멈추는 점을 [사정선 기록](docs/exe/cpp-suncannon-rayend-20261016.md)에 명확히 했다.
+- [x] 최종 Release 전체 빌드 경고0·오류0. `ProjectileGeometry`4개 전부 통과. 전체 CTest 내부 **1413개 중1411통과·2실패, 214.68초, 종료8**이다. 기존과 같은 `TheStormRages`의145프레임/3.625초 TYPE148 stage5, `DissolvedAlliance`의113프레임/2.825초 TYPE128 effect11 실패이며 새 실패는 없다. 기하 단위 검사 통과를 실제 썬 캐논 생성/Pop/비행이나 사용자 자연 완주로 합산하지 않는다.
+- [x] 두 작업 기록·README·인수인계와 UTF-8/한국어 주석/공백을 확인했다. 보호 PE 두 SHA는 기존 기록과 동일하며 AGENTS.md·dotnetpj·보호 원본을 수정하지 않았다. 원본/클론 게임·GUI 실행은 없다. 최종 로그는 `extracted/review-luna-20261016-build-verified.log`, `extracted/review-luna-20261016-build-tests.log`, `extracted/review-luna-20261016-ctest.log`다.
+- [x] 기존 미커밋 구현과 이번 보완을 함께 **`20261016-32 CP 썬 캐논 포구와 방향 일치 사정선 검증`**으로 로컬 커밋한다. 원격 push는 하지 않는다.
+- [ ] **다음 cpppj 작업:** 실제 비행 효과11의 같은 Host/World/Kernel·renderer 연결과 `rayEnd` 방향 불일치 난수 보정이 필요하다. 사전 발사 허용만으로 방향 일치를 가정하지 않는다. 반더 타워148 stage5도 미복원이며 실제 사용자 플레이·자연 완주·전체 동일성은 미완료다.
+
+## 2026-10-16 단위95 완료: 썬 캐논 Missile 사정선 방향 일치 경로
+
+- [x] `00481750`·`0041ce90`·`00466df0`을 읽고 TYPE128의 실제 현재 frame과 cardinal 방향을 대조했다. 정상 Fire가 허용하는 방향 일치 분기는 종점을 수평/수직 축으로 맞춘다. 미일치 난수 보정은 별도 경계로 남겼다.
+- [x] `RawProjectileGeometry::CannonRayEnd`를 추가해 0..3 및24..27의 발사 방향을 계산하고 실제 Sun Cannon `rayEnd`로 연결했다. raw TYPE/frame·좌표 검사를 거쳐 미복원 frame이나 미일치 입력은 명시 오류를 낸다. [작업 기록](docs/exe/cpp-suncannon-rayend-20261016.md).
+- [x] 최초 검사는0..3·24프레임만 포함했고 빌드·테스트·게임/GUI를 실행하지 않았다. 상단 검토·보완에서25·26·27 검사를 추가하고 실제 실행 결과를 기록했다.
+- [x] 문서·인수인계 갱신 후 상단 검토·보완 및 단위94와 함께 **`20261016-32 CP 썬 캐논 포구와 방향 일치 사정선 검증`**으로 로컬 커밋한다. 원격 push는 하지 않는다.
+- [ ] **다음 cpppj 작업:** TYPE80 Sun Cannon Missile이 Pop 후 `+0x1d0` virtual로 생성하는 실제 Fiery Tail process type11을 같은 Host/World/Kernel과 renderer에 연결한다. 현재 `rayEnd`의 원본 난수 보정 분기도 조사한다. DirectDraw 전체화면 오류는 이번 1차 목표에서 제외한다.
+
 ## 2026-10-16 단위93 완료: HJOW-Athlon 10.78·10.72 정밀 디컴파일 재생성
 
 - [x] 작업 전 `AGENTS.md`, `LEFT_JOBS.md`, `LEFT_JOBS.dotnetpj.md`를 읽었다. 마지막 전체 정밀 디컴파일은 VM-W11-Codex / 2026-10-16, 현재 PC는 HJOW-Athlon (`192.168.0.94`)이어서 호스트 일치 규칙에 따라 양 판본을 다시 생성했다.
@@ -7,7 +25,15 @@
 - [x] 원본 PE SHA-256 두 개는 전후 동일하다. 10.78 최종 C와 양 함수표 SHA는 직전 기준과 같지만, CD 10.72 최종 C는 이전 VM 기록 SHA와 다르다. 실행 도구 버전도 달라 원인은 분리되지 않았으며 현재 생성물 해시와 제한을 [작업 기록](docs/exe/decompile-hjow-20261016.md)에 명시했다. 기존 `extracted/refined/`는 `extracted/refined-backup-before-HJOW-Athlon-20261016/`에 보존했다.
 - [x] 정적 디컴파일만 수행했다. 원본/클론 게임·GUI 실행, 빌드·테스트, cpppj·dotnetpj 소스 변경은 없다. 로그는 `extracted/decompile-hjow-20261016-run.log`; Git 제외 산출물은 `extracted/refined/`에 있다. 현재 및 마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-16**이다.
 - [x] 인수인계 갱신 후 **`20261016-31 CP 10.78·10.72 정밀 디컴파일 재생성`**으로 로컬 커밋한다. 원격 push는 하지 않는다.
-- [ ] **다음 cpppj 작업:** 사용자가 요청한 Early Missions·캠페인 1-1~1-2·데모 3개 스테이지의 자연스러운 사용자 플레이 가능 목표를 계속한다. 현행 원문 첫 항목은 TYPE128 썬 캐논 실제 Missile의 `rayEnd`·flightEffect11·포구 경계 복원이다. DirectDraw 전체화면 오류는 이번 1차 목표에서 제외한다.
+- [x] 다음 단위에서 PATCH TYPE128 썬 캐논의 실제 포구 getter를 원본 `0050b9b8 + 0xb4 → 0041c110`과 대조하고 `RawProjectileGeometry::Muzzle`에 연결했다. 다음은 같은 Missile의 `rayEnd`와 비행 효과11 구현이다.
+
+## 2026-10-16 단위94 완료: 썬 캐논 Missile 실제 포구 getter
+
+- [x] 작업 전 `AGENTS.md`와 두 LEFT 인수인계를 다시 확인했다. 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-16**으로 일치한다.
+- [x] 보호된 10.78 PE를 정적으로 읽어 TYPE128 vtable `0050b9b8`의 `+0xb4`가 `0041c110`임을 확인했다. TYPE140과 같은 raw `+0x0e/+0x12` 위치 복사다. TYPE71 `0046a780`의 SHP 기준점 합산 경로와 구별한다.
+- [x] `RawProjectileGeometry::Muzzle`에 PATCH TYPE128 분기를 추가하고 raw float 비트 보존 검사를 작성했다. 이후 `RawMissile`의 SHP hotspot 더하기와 TYPE hotspot 빼기는 기존 순서를 유지한다. [작업 기록](docs/exe/cpp-suncannon-muzzle-20261016.md).
+- [x] 이번 단위에서는 빌드·테스트 실행·게임/GUI 실행을 하지 않았다. 검사는 추가만 했으며 통과로 간주하지 않는다. `git diff --check`와 커밋 전 문서/변경 범위 확인을 수행한다.
+- [x] 단위95에서 정상 방향 일치 `rayEnd` 경로를 연결했다. 다음은 미복원 방향 보정과 실제 비행 효과11이다.
 
 ## 2026-10-16 단위92 완료·중단 인계: 실제 일반 자산 피해·AI 반응 (`VM-W11-Codex`)
 
