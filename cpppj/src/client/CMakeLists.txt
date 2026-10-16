@@ -123,3 +123,5 @@ target_link_libraries(netstorm PUBLIC user32 gdi32 winmm)
 
 # 실제 입자 색 할당/인접 메모리와 같은 캠페인의 Renderer/VFX 출력을 연결한다.
 target_sources(netstorm PRIVATE ParticlePaletteMemory.cpp ParticlePaletteMemory.h RawCampaignParticles.cpp RawCampaignParticles.h)
+# 실제 소유자 색표/색 변환 RLE를 같은 캡처 저장소에 연결한다.
+target_sources(netstorm PRIVATE OwnerColorMaps.h OwnerColorMaps.cpp VFXMappedDraw.h VFXMappedDraw.cpp)

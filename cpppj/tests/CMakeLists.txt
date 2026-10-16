@@ -1200,3 +1200,8 @@ set_source_files_properties(CampaignDamageTests.cpp PROPERTIES COMPILE_DEFINITIO
 # 실제 AI 피해 목록의 전체 본체/네 backing/효과 순서를 독립 원본과 대조한다.
 set_source_files_properties(AiDamageTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_AI_DAMAGE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/ai-damage-x86.tsv\"")
+
+# 실제9개 소유자 색표와 보호 SHP의 mapped 캡처 전체 원문이다.
+target_sources(netstorm_tests PRIVATE OwnerCaptureTests.cpp)
+set_source_files_properties(OwnerCaptureTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_OWNER_CAPTURE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/owner-capture-x86.tsv\"")

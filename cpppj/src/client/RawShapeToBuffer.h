@@ -3,6 +3,7 @@
 #include "client/VFXDraw.h"
 #include "o/RawConstructionVisual.h"
 #include "o/SquidDisplay.h"
+#include <functional>
 
 namespace netstorm::client {
 // 실제 캡처가 읽는 현재 fixed16 배율과 TYPE 추가 기준점 옵션이다.
@@ -10,8 +11,9 @@ struct ShapeToBufferState {
     std::int32_t zoom{65536}; // 패치0059a918/CD00565c30이며 캡처 메타데이터에만 곱한다.
     bool addTypeHotspot{}; // 패치00542414/CD005207b0이 마지막 기준점 보정을 켠다.
     std::span<const std::uint32_t> ownerTypeMaps; // 현재 타입별 색표 토큰이다. 색표가 있으면 실제 mapped 경로가 필요하다.
+    std::function<std::span<const std::uint8_t>(std::uint32_t,std::uint32_t)> ownerColors; // 현재 타입/owner로 실제 색 번호를 선택한256바이트 표다.
 };
-// 004a7db0/CD0045b100의 현재 plain frame 캡처다. owner 색표/추가 가상 그림은 후속 몸체다.
+// 004a7db0/CD0045b100의 현재 plain/mapped frame 캡처다. 추가 가상 그림은 후속 몸체다.
 class RawShapeToBuffer {
 public:
     // 같은 판본/로딩 순서의 TYPE와 SHP를 읽기 전용으로 참조하며 창이나 장치를 만들지 않는다.

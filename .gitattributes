@@ -941,3 +941,11 @@ cpppj/src/o/CrtRandom.* text eol=lf
 cpppj/tests/FlyerPreDestroyTests.cpp text eol=lf
 cpppj/tests/ShrapnelFrameTests.cpp text eol=lf
 docs/exe/cpp-shrapnel-frame-20261017.md text eol=lf
+# 실제 소유자 색표와 mapped 캡처의 원문/제품을 같은 바이트로 유지한다.
+tools/decomp_owner_capture.py text eol=lf
+cpppj/owner-capture.json text eol=lf
+cpppj/tests/fixtures/owner-capture-x86.tsv text eol=lf
+cpppj/src/client/OwnerColorMaps.* text eol=lf
+cpppj/src/client/VFXMappedDraw.* text eol=lf
+cpppj/tests/OwnerCaptureTests.cpp text eol=lf
+docs/exe/cpp-owner-capture-20261017.md text eol=lf

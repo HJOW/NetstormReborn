@@ -1,0 +1,41 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "uniqueInputs": 498,
+  "inputsByKind": {
+    "M": 18,
+    "C": 480
+  },
+  "normalReturns": 1956,
+  "precisionDifferentInputs": [],
+  "nativeCalls": {
+    "0043ba00": 498,
+    "0043b950": 498,
+    "004a7db0": 480,
+    "004ac550": 960,
+    "0049a840": 960,
+    "00419850": 480,
+    "004daa70": 96,
+    "00401d92": 96,
+    "004dabe0": 384,
+    "0040227e": 384,
+    "004daab0": 384,
+    "0040229f": 384,
+    "004021b5": 34,
+    "00402796": 136
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/d/_shapes.shp": "c878353c8054208deef832e34c514b30fe670e175505b129333a5728ba70f68e",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "tools/shp.py": "4cb8bee6ed773e29e8658ddb315594ebf5ac005ea5b96c6b760a177029515bfd",
+    "tools/decomp_owner_capture.py": "349f568e919ed4566543e4c89e0551d134ac9b11374b6d12b57498c2ab749a7c",
+    "cpppj/tests/fixtures/owner-capture-x86.tsv": "0a0c0475893f2ddc4f0786ac7175138b0591de06094dc31a464f8712e0a7d224"
+  },
+  "limitations": [
+    "실제9개 색표/색 선택/보호SHP/capture/plain·mapped RLE를 실행한다. new만 격리 메모리 경계다.",
+    "현재 source/TYPE/색 번호/zoom/추가 기준점은 입력이다. 추가 가상 그림(extra bit2)/전체 초기화/캠페인 효과 수명은 후속이다."
+  ]
+}
