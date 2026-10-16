@@ -22,10 +22,10 @@
     "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
     "tools/decomp_type_required_energy.py": "5169eee31483d050aaa40b4f007bbea9d24b69ad6dff280194da4f97b163d268",
     "tools/decomp_priestmenu.py": "72d14bfa36091dc86a273ad9b1998c940f575bb954195d0e0920e5e63ea10bc7",
-    "cpppj/src/o/RawTypeRequiredEnergy.h": "3ee31f6a175ba1daff76c339b4cebd2d6629efe95042c2a9891d3ac886484ddb",
+    "cpppj/src/o/RawTypeRequiredEnergy.h": "8603497d0b3b61726e66792b1134d074ddd194925c7f3e8580e9833e272f44eb",
     "cpppj/src/o/RawTypeRequiredEnergy.cpp": "64dd0667cb8f822650af1318ac91bdc65618ae1da3f05a97cc3296c4dbccefbc",
-    "cpppj/src/client/AiTypeRequiredEnergy.h": "fc68f0306d0807515cdec66743f6641c986a4585e9a7de64af32fda30be05ef6",
-    "cpppj/src/client/AiTypeRequiredEnergy.cpp": "869c8193f7f74d8497a610fa893d5aba1854ced7da71e0db7709c31f9dd6d31f",
+    "cpppj/src/client/AiTypeRequiredEnergy.h": "4f6f1176c0f92b7be78e969c23b85164340311871436ed97df56646443ab194a",
+    "cpppj/src/client/AiTypeRequiredEnergy.cpp": "a77ecbbece0a23b295c26e35ba5f788ea1c61a660b95880a83abc6988ef559c0",
     "cpppj/tests/fixtures/type-required-energy-x86.tsv": "8bcb3e215c958f5df0a395365059f5481801b1660569f2f04c0720f394f14f4c",
     "cpppj/tests/TypeRequiredEnergyTests.cpp": "0802ab400413ec5da3f2d03a4ac6b6f88e2d088915646609a2ca0bb39a02b05c",
     "cpppj/src/o/CMakeLists.txt": "8724cfb665515c637a92fb4f036809a4468302f470dfa4aaefc2386b64cc8ba7",
@@ -272,6 +272,48 @@
         "completed": false,
         "type_product_or_fixture_changed": false,
         "handoff": "docs/exe/cpp-pause-handoff-20261016-sun-aviary.md"
+      }
+    },
+    {
+      "date": "2026-10-16",
+      "host": "VM-W11-Codex",
+      "reason": "PC 이동 뒤 줄바꿈만 다른 네 파일의 과거 SHA를 대조하고 LF로 고정했다. 기존 2352개 입력과 제품 의미는 유지한다.",
+      "baseline_validation": {
+        "build_exit_code": 0,
+        "warnings": 0,
+        "errors": 0,
+        "tests": 1321,
+        "passed": 1320,
+        "failed_checks": 1,
+        "failed_test": "CampaignMissionStart_ProtectedEightMissions",
+        "failure": "Tutorial6 Load SID15006 TYPE136 VT00509470",
+        "ctest_exit_code": 8,
+        "test_seconds": 132.92,
+        "total_seconds": 133.21,
+        "scope": "썬 펜스 제품 변경 전 실행 파일의 이관 검사",
+        "log": "extracted/goal-resume-20261016-ctest.log"
+      },
+      "line_ending_sha256": {
+        "cpppj/src/o/RawTypeRequiredEnergy.h": {
+          "previous": "3ee31f6a175ba1daff76c339b4cebd2d6629efe95042c2a9891d3ac886484ddb",
+          "current": "8603497d0b3b61726e66792b1134d074ddd194925c7f3e8580e9833e272f44eb",
+          "change": "CRLF/LF만 정규화, 내용 변경 없음"
+        },
+        "cpppj/src/client/AiTypeRequiredEnergy.h": {
+          "previous": "fc68f0306d0807515cdec66743f6641c986a4585e9a7de64af32fda30be05ef6",
+          "current": "4f6f1176c0f92b7be78e969c23b85164340311871436ed97df56646443ab194a",
+          "change": "CRLF/LF만 정규화, 내용 변경 없음"
+        },
+        "cpppj/src/client/AiTypeRequiredEnergy.cpp": {
+          "previous": "869c8193f7f74d8497a610fa893d5aba1854ced7da71e0db7709c31f9dd6d31f",
+          "current": "a77ecbbece0a23b295c26e35ba5f788ea1c61a660b95880a83abc6988ef559c0",
+          "change": "CRLF/LF만 정규화, 내용 변경 없음"
+        },
+        "cpppj/tests/TypeRequiredEnergyTests.cpp": {
+          "previous": "0802ab400413ec5da3f2d03a4ac6b6f88e2d088915646609a2ca0bb39a02b05c",
+          "current": "0802ab400413ec5da3f2d03a4ac6b6f88e2d088915646609a2ca0bb39a02b05c",
+          "change": "CRLF/LF만 정규화, 내용 변경 없음"
+        }
       }
     }
   ]

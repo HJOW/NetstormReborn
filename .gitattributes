@@ -35,6 +35,27 @@ tools/decomp_derived_oracle.py text eol=lf
 # raw 공간 해제의 기계어 검증 기록·도구·가상 주소 표를 재현 가능한 LF로 고정한다.
 cpppj/unpop.json text eol=lf
 cpppj/src/o/UnpopVtables.inc text eol=lf
+
+# 요구에너지 근거 SHA가 PC의 자동 줄바꿈 변환에 따라 달라지지 않도록 고정한다.
+cpppj/src/o/RawTypeRequiredEnergy.* text eol=lf
+cpppj/src/client/AiTypeRequiredEnergy.* text eol=lf
+cpppj/tests/TypeRequiredEnergyTests.cpp text eol=lf
+cpppj/type-required-energy.json text eol=lf
+
+# 썬 펜스 제품/관찰기/기대값의 전체 바이트 SHA를 PC 간 유지한다.
+cpppj/src/o/RawFencePostPop.* text eol=lf
+cpppj/src/o/RawFenceNeighbors.* text eol=lf
+cpppj/src/o/RawFenceLine.* text eol=lf
+cpppj/tests/FencePostPopTests.cpp text eol=lf
+cpppj/tests/FenceNeighborsTests.cpp text eol=lf
+cpppj/tests/FenceLineTests.cpp text eol=lf
+tools/decomp_fence_postpop.py text eol=lf
+tools/decomp_fence_neighbors.py text eol=lf
+tools/decomp_fence_line.py text eol=lf
+cpppj/tests/fixtures/fence-*-x86.tsv text eol=lf
+cpppj/fence-postpop.json text eol=lf
+cpppj/fence-neighbors.json text eol=lf
+cpppj/fence-line.json text eol=lf
 # 썬 아비어리의 원문/관찰/검사 바이트를 Windows 체크아웃에서도 보존한다.
 cpppj/src/o/RawSunAviaryProcess.* text eol=lf
 cpppj/tests/SunAviaryProcessTests.cpp text eol=lf
