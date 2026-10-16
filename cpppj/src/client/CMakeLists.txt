@@ -125,3 +125,5 @@ target_link_libraries(netstorm PUBLIC user32 gdi32 winmm)
 target_sources(netstorm PRIVATE ParticlePaletteMemory.cpp ParticlePaletteMemory.h RawCampaignParticles.cpp RawCampaignParticles.h)
 # 실제 소유자 색표/색 변환 RLE를 같은 캡처 저장소에 연결한다.
 target_sources(netstorm PRIVATE OwnerColorMaps.h OwnerColorMaps.cpp VFXMappedDraw.h VFXMappedDraw.cpp)
+# 사제 건설 선택과 내려놓기의 취득/취소·임시 객체 수명을 공유한다.
+target_sources(netstorm PRIVATE RawCursorLifecycle.h RawCursorLifecycle.cpp)

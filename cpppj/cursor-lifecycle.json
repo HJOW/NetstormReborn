@@ -1,0 +1,53 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "entries": [
+    "00447000",
+    "00446e70",
+    "00445aa0"
+  ],
+  "uniqueInputs": 565,
+  "normalReturns": 1130,
+  "precisionDifferentInputs": [],
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "cpppj/tests/fixtures/cursor-lifecycle-x86.tsv": "153f07eb922205fa0a2adf2a4d365bbbffe82d4822d4814c79fdd539d5a4c53a"
+  },
+  "limitations": [
+    "세 수명 몸체와 실제 CRT 절삭을 실행한다. Take의 실제 두 번째 cdecl 인자를 확인한다.",
+    "가상 효과/위치 준비·판정/임시 생성/마나·범위/번역·측정/sprintf는 명시 경계다.",
+    "비정상 TYPE/SHP 진단·30칸 초과·차단 teleporter는 정상 입력 수에 합산하지 않는다. 실제 GUI/건설 배치 완료를 뜻하지 않는다."
+  ],
+  "observationShape": {
+    "globalsDwords": 78,
+    "rawSlots": 3,
+    "rawBytes": 150,
+    "costText": true,
+    "fullEvents": true
+  },
+  "productValidation": {
+    "configuration": "Release",
+    "buildExitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "focusedTests": 3,
+    "focusedFailed": 0,
+    "ctest": {
+      "total": 1456,
+      "passed": 1456,
+      "failed": 0,
+      "seconds": 227.15,
+      "exitCode": 0,
+      "log": "extracted/goal-cursor-lifecycle-20261017-ctest.log",
+      "outputLog": "extracted/goal-cursor-lifecycle-20261017-ctest-output.log"
+    },
+    "sourceSha256": {
+      "cpppj/src/client/RawCursorLifecycle.h": "2f945a627677997d31f6e05f42021049e9af486017109faf1978187ef517903f",
+      "cpppj/src/client/RawCursorLifecycle.cpp": "b6ceb2db9080d9d1411f519564bd727e421b5a7f529ce6df009f2876b4acb9d3",
+      "cpppj/tests/CursorLifecycleTests.cpp": "66fbcfd8a678dfadd3a6b2473253dec6fa00459ae305f7c9f98c3a053a50a81d"
+    }
+  }
+}

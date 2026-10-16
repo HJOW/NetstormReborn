@@ -961,3 +961,10 @@ tools/decomp_rain_home_notice.py text eol=lf
 cpppj/rain-home-notice.json text eol=lf
 cpppj/tests/fixtures/rain-home-notice-x86.tsv text eol=lf
 cpppj/tests/RainHomeNoticeTests.cpp text eol=lf
+# 커서 취득/취소/임시 삭제의 근거·제품·검사를 동일 UTF-8/LF로 유지한다.
+tools/decomp_cursor_lifecycle.py text eol=lf
+cpppj/cursor-lifecycle.json text eol=lf
+cpppj/tests/fixtures/cursor-lifecycle-x86.tsv text eol=lf
+cpppj/src/client/RawCursorLifecycle.* text eol=lf
+cpppj/tests/CursorLifecycleTests.cpp text eol=lf
+docs/exe/cpp-cursor-lifecycle-20261017.md text eol=lf

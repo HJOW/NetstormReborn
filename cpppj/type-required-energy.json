@@ -29,8 +29,8 @@
     "cpppj/tests/fixtures/type-required-energy-x86.tsv": "8bcb3e215c958f5df0a395365059f5481801b1660569f2f04c0720f394f14f4c",
     "cpppj/tests/TypeRequiredEnergyTests.cpp": "0802ab400413ec5da3f2d03a4ac6b6f88e2d088915646609a2ca0bb39a02b05c",
     "cpppj/src/o/CMakeLists.txt": "5914ae795283dac964ea550a0d6593e4b96b84f5284f8785696fd334649983b8",
-    "cpppj/src/client/CMakeLists.txt": "15b2ba49328c2858963dd6ab9acc66cebdd1ad9855bd5c0ffb782e032ec81170",
-    "cpppj/tests/CMakeLists.txt": "c3c9c5850b14f280e8652ecb70f7414e1c228d23327371e7ba3c7e9689a2cc31"
+    "cpppj/src/client/CMakeLists.txt": "8ccd708c3f414ab63e3655812be62a33734957ee9d737572911a4c272356d449",
+    "cpppj/tests/CMakeLists.txt": "5d0d2eb81f86adb869db7732cb70ab550f3a9121392a5ce36792848c847bde6f"
   },
   "product_validation": {
     "configuration": "Release",
@@ -1042,6 +1042,32 @@
       },
       "focused_tests": 11,
       "focused_failed": 0
+    },
+    {
+      "date": "2026-10-17",
+      "host": "HJOW-Athlon",
+      "reason": "단위111 커서 취득/취소/임시 삭제 원본565입력 대조와 공유 상태/보호 자산 검사 등록. 기존2352행·TYPE 제품·기대값은 보존",
+      "cmake_sha256": {
+        "cpppj/src/client/CMakeLists.txt": {
+          "previous": "15b2ba49328c2858963dd6ab9acc66cebdd1ad9855bd5c0ffb782e032ec81170",
+          "current": "8ccd708c3f414ab63e3655812be62a33734957ee9d737572911a4c272356d449"
+        },
+        "cpppj/tests/CMakeLists.txt": {
+          "previous": "c3c9c5850b14f280e8652ecb70f7414e1c228d23327371e7ba3c7e9689a2cc31",
+          "current": "5d0d2eb81f86adb869db7732cb70ab550f3a9121392a5ce36792848c847bde6f"
+        }
+      },
+      "focused_tests": 3,
+      "focused_failed": 0,
+      "ctest": {
+        "total": 1456,
+        "passed": 1456,
+        "failed": 0,
+        "total_seconds": 227.15,
+        "exit_code": 0,
+        "log": "extracted/goal-cursor-lifecycle-20261017-ctest.log",
+        "output_log": "extracted/goal-cursor-lifecycle-20261017-ctest-output.log"
+      }
     }
   ]
 }
