@@ -28,9 +28,9 @@
     "cpppj/src/client/AiTypeRequiredEnergy.cpp": "a77ecbbece0a23b295c26e35ba5f788ea1c61a660b95880a83abc6988ef559c0",
     "cpppj/tests/fixtures/type-required-energy-x86.tsv": "8bcb3e215c958f5df0a395365059f5481801b1660569f2f04c0720f394f14f4c",
     "cpppj/tests/TypeRequiredEnergyTests.cpp": "0802ab400413ec5da3f2d03a4ac6b6f88e2d088915646609a2ca0bb39a02b05c",
-    "cpppj/src/o/CMakeLists.txt": "91f43ab0e16eb2f73a9f18d77aaa74ca5d47eb2e392c6a1d796a4f757dcb944b",
+    "cpppj/src/o/CMakeLists.txt": "18315979b4b05462a4d87eef335e5d7f8b18548078faf16f0fbb72848c74c10b",
     "cpppj/src/client/CMakeLists.txt": "ea2d57ebe830821400fad4ff3478ddc6f45d7566313a2719952bfef2b5b8a938",
-    "cpppj/tests/CMakeLists.txt": "6d82c511c835cf2ea77f48c202aa963c8a9db9b61b4ffb621e04e863b585d2a0"
+    "cpppj/tests/CMakeLists.txt": "16ee649c6dffccf0816827f73b19ba41e92dc082c2a80d2ad4d81fa45b44a35a"
   },
   "product_validation": {
     "configuration": "Release",
@@ -869,6 +869,31 @@
         "total_seconds": 224.6,
         "exit_code": 8,
         "log": "extracted/goal-thunder-missile-20261017-ctest.log"
+      }
+    },
+    {
+      "date": "2026-10-17",
+      "host": "HJOW-Athlon",
+      "reason": "단위104 공유 빔 경로/재귀 입자와 원본216입력 대조 등록. 기존2352행·TYPE 제품·원본 기대값은 변경하지 않음",
+      "cmake_sha256": {
+        "cpppj/src/o/CMakeLists.txt": {
+          "previous": "91f43ab0e16eb2f73a9f18d77aaa74ca5d47eb2e392c6a1d796a4f757dcb944b",
+          "current": "18315979b4b05462a4d87eef335e5d7f8b18548078faf16f0fbb72848c74c10b"
+        },
+        "cpppj/tests/CMakeLists.txt": {
+          "previous": "6d82c511c835cf2ea77f48c202aa963c8a9db9b61b4ffb621e04e863b585d2a0",
+          "current": "16ee649c6dffccf0816827f73b19ba41e92dc082c2a80d2ad4d81fa45b44a35a"
+        }
+      },
+      "focused_tests": 2,
+      "focused_failed": 0,
+      "ctest": {
+        "total": 1436,
+        "passed": 1435,
+        "failed": 1,
+        "total_seconds": 204.44,
+        "exit_code": 8,
+        "log": "extracted/goal-lightning-path-20261017-ctest.log"
       }
     }
   ]

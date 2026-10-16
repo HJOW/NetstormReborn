@@ -899,3 +899,10 @@ cpppj/thunder-missile.json text eol=lf
 cpppj/tests/fixtures/thunder-missile-x86.tsv text eol=lf
 cpppj/tests/ThunderMissileTests.cpp text eol=lf
 docs/exe/cpp-thunder-missile-20261017.md text eol=lf
+# 공유 빔 경로의 원본 기대값/도구와 재귀 생성 제품을 같은 바이트로 유지한다.
+tools/decomp_lightning_path.py text eol=lf
+cpppj/lightning-path.json text eol=lf
+cpppj/tests/fixtures/lightning-path-x86.tsv text eol=lf
+cpppj/src/o/RawLightningPath.* text eol=lf
+cpppj/tests/LightningPathTests.cpp text eol=lf
+docs/exe/cpp-lightning-path-20261017.md text eol=lf

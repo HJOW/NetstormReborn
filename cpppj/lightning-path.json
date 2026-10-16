@@ -1,0 +1,55 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "uniqueInputs": 216,
+  "inputsByKind": {
+    "0": 72,
+    "1": 144
+  },
+  "normalReturnsPerPrecision": 984,
+  "normalReturns": 1968,
+  "precisionDifferentInputs": [],
+  "nativeCalls": {
+    "00471b20": 216,
+    "004adea0": 432,
+    "0049a840": 432,
+    "0049a900": 432,
+    "004720f0": 144,
+    "00487b20": 5796,
+    "00472180": 624,
+    "00455930": 7308,
+    "00471fc0": 5508,
+    "004558c0": 4860,
+    "00471f60": 144
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "tools/decomp_lightning_path.py": "9e19f521ec61aa2a1f2dc0514cedcb3d93b3f32a91ffd1de917108f3209d710a",
+    "cpppj/tests/fixtures/lightning-path-x86.tsv": "4649c8284babb1b999fcac6987eb92714bb57d8f18b921dcc93a073f9e016f0a"
+  },
+  "limitations": [
+    "실제 경로 생성/Seed/Step·재귀·Append·난수·타입/중심과 x87 sin/cos/atan2/sqrt를 대체 없이 실행했다.",
+    "포인터 두 종류만 입자 index+1·owner1로 정규화했다. 나머지64BYTE와 용량120 전체를 보존했다.",
+    "입자/소유 빔/자산/시계는 독립 입력이다. 실제 빔 생성/Host/Frame/Draw/피해나 사용자 자연 완주의 증거가 아니다."
+  ],
+  "product_validation": {
+    "baseline_commit": "528fd90",
+    "native_cpp_inputs": 216,
+    "focused_tests": 2,
+    "focused_failed": 0,
+    "ctest": {
+      "total": 1436,
+      "passed": 1435,
+      "failed": 1,
+      "total_seconds": 204.44,
+      "exit_code": 8,
+      "log": "extracted/goal-lightning-path-20261017-ctest.log"
+    },
+    "below_minimum_step_snapshots": 24,
+    "minimum_stored_step": 0.04577316343784332,
+    "beam_runtime_connected": false,
+    "user_natural_completion": false
+  }
+}

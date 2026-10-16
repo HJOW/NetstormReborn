@@ -281,3 +281,6 @@ target_sources(netstorm PRIVATE RenderProcessSystem.cpp RenderProcessSystem.h)
 
 # 원본 Fiery Tail 몸체를 실제 같은 Kernel/공통 표시 목록에 부착한다.
 target_sources(netstorm PRIVATE FieryTailVisualSystem.cpp FieryTailVisualSystem.h)
+
+# 반더 타워/맨 오 워 공유 빔의 snapshot 경로와 재귀 입자 생성이다.
+target_sources(netstorm PRIVATE RawLightningPath.cpp RawLightningPath.h)
