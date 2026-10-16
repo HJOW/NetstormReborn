@@ -22,6 +22,10 @@
     <None Include="../../../cpppj/tests/fixtures/config-x86.tsv" Link="X86/config-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/options-x86.tsv" Link="X86/options-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <Compile Include="../Shared/X86Fixture.cs" Link="Shared/X86Fixture.cs" />
+    <!-- 연결한 fixture 의 SHA-256 목록과 그 검사. cpppj 가 fixture 를 다시 만들면 실패해 재대조를 요구한다 (W01, 2026-10-16). 갱신: dotnetpj/tools/cpp_sync.py -->
+    <None Include="../Shared/cpp-fixture-manifest.tsv" Link="X86/cpp-fixture-manifest.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <Compile Include="../Shared/CppFixtureManifest.cs" Link="Shared/CppFixtureManifest.cs" />
+    <Compile Include="../Shared/CppFixtureManifestTests.cs" Link="Shared/CppFixtureManifestTests.cs" />
     <!-- C++의 정적 자산 메타데이터는 x86 실행 기대값과 출처를 구분한다. -->
     <None Update="Fixtures/type-metadata-1078.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>

@@ -25,8 +25,30 @@ internal static class X86Fixture
     /// <summary>부호 없는 십진수 칸을 읽는다.</summary>
     public static uint UInt(string value) => uint.Parse(value, CultureInfo.InvariantCulture);
 
+    /// <summary>부호 있는 64비트 십진수 칸을 읽는다. 원본의 64비트 누적값·시각 틱에 쓴다 (W01 확장, 2026-10-16).</summary>
+    public static long Long(string value) => long.Parse(value, CultureInfo.InvariantCulture);
+
+    /// <summary>부호 없는 64비트 십진수 칸을 읽는다. double 비트 패턴처럼 0x8000... 이상인 값도 잃지 않는다 (W01 확장).</summary>
+    public static ulong ULong(string value) => ulong.Parse(value, CultureInfo.InvariantCulture);
+
     /// <summary>정수로 저장한 단정밀도 좌표의 비트를 그대로 복원한다.</summary>
     public static float FloatBits(string value) => BitConverter.UInt32BitsToSingle(UInt(value));
+
+    /// <summary>64비트 십진수로 저장한 배정밀도 값의 비트 패턴을 그대로 복원한다. 원본 시계·시각 필드의 double 이 대상이다 (W01 확장).</summary>
+    public static double DoubleBits(string value) => BitConverter.UInt64BitsToDouble(ULong(value));
+
+    /// <summary>쉼표로 나눈 부호 없는 64비트 십진수 목록 칸을 읽는다. 빈 칸과 "-" 는 빈 목록이다 (W01 확장).</summary>
+    public static ulong[] ULongs(string cell) => cell.Length == 0 || cell == Empty ? [] : cell.Split(',').Select(ULong).ToArray();
+
+    /// <summary>첫 칸이 <paramref name="label"/> 인 행(한 파일 안의 한 절)만 고른다. 여러 절이 섞인 fixture 에 쓴다 (W01 확장).</summary>
+    public static string[][] Section(string[][] rows, string label) => rows.Where(row => row[0] == label).ToArray();
+
+    /// <summary>fixture 를 읽어 첫 칸이 <paramref name="label"/> 인 절만 돌려준다 (W01 확장).</summary>
+    public static string[][] Read(string name, string label) => Section(Read(name), label);
+
+    /// <summary>행에 나온 절 이름과 행 수를 첫 등장 순서로 돌려준다. 절 구성이 바뀌었는지 확인하는 데 쓴다 (W01 확장).</summary>
+    public static IReadOnlyList<(string Label, int Count)> Sections(string[][] rows) => rows
+        .GroupBy(row => row[0]).Select(group => (group.Key, group.Count())).ToArray();
 
     /// <summary>모든 입력을 끝까지 대조해 실패 개수와 대표 입력을 함께 보고한다.</summary>
     public static void CheckRows(string[][] rows, Func<string[], bool> matches)

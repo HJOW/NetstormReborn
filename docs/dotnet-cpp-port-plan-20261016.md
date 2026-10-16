@@ -1,6 +1,6 @@
 # cpppj 복원 결과를 dotnetpj로 이식하는 계획
 
-2026-10-16, 작업 PC **DESKTOP-HJOW**. 기준 커밋은 **`53113b66`**(cpppj `20261016-12`까지)이다. 사용자 요청은 "현재까지 진행된 cpppj 소스를 dotnetpj에 적용해 dotnetpj 게임 플레이가 기존 게임과 거의 동일한 수준이 되게 하는 계획"이다. 이 문서는 그 **실행 계획**이며 게임 코드는 바꾸지 않았다. 진행 체크리스트와 인수인계는 [dotnetpj 인수인계](../LEFT_JOBS.dotnetpj.md) 맨 위 절이 소유한다.
+2026-10-16, 작업 PC **DESKTOP-HJOW**. 기준 커밋은 **`53113b66`**(cpppj `20261016-12`까지)이다(W01 이후의 현재 반영 커밋은 [7절](#7-cpppj-진행을-따라가는-절차-다른-ai가-cpppj를-계속-진행-중)이 가리키는 목록 파일이 소유한다). 사용자 요청은 "현재까지 진행된 cpppj 소스를 dotnetpj에 적용해 dotnetpj 게임 플레이가 기존 게임과 거의 동일한 수준이 되게 하는 계획"이다. 이 문서는 그 **실행 계획**이며 게임 코드는 바꾸지 않았다. 진행 체크리스트와 인수인계는 [dotnetpj 인수인계](../LEFT_JOBS.dotnetpj.md) 맨 위 절이 소유한다.
 
 읽은 자료는 AGENTS.md, 양쪽 인수인계, [D01~D16 반영 점검](dotnet-cpp-audit-20261015.md), [cpppj 플레이 복원 계획](cpp-playable-plan.md), cpppj의 `src/o`·`src/client` 모듈 목록과 [RawCampaignSession.h](../cpppj/src/client/RawCampaignSession.h)·[RawSurfaceWorld.h](../cpppj/src/client/RawSurfaceWorld.h), `cpppj/tests/fixtures` 전체 목록과 행 수, dotnetpj 소스·검사 구성이다. **디컴파일 산출물은 읽지 않았다.** 이 PC는 마지막 전체 정밀 디컴파일 PC(VM-W11-Codex, 2026-10-16)와 다르다. 이식 근거는 커밋된 cpppj 소스·문서·원본 기계어 fixture로 충분하다. 원본·클론 게임과 창은 실행하지 않았다.
 
@@ -75,7 +75,7 @@ cpppj TSV fixture 279개를 영역별로 묶어 이식 단위 W01~W20으로 나�
 
 | 단위 | 내용 | fixture(행) | 교체·재사용할 C# | 완료 기준 |
 | --- | --- | --- | --- | --- |
-| **W01** 기준선·동기화 장치 | 기준선 기록, fixture 연결 규칙, `X86Fixture` 확장(double 비트·여러 절 행), 연결 fixture의 SHA 목록 검사, 7절 동기화 절차 | — | `tests/Shared/X86Fixture.cs`, `Netstorm.Core.Tests.csproj` | cpppj fixture가 바뀌면 검사가 실패해 재동기화를 요구한다 |
+| **W01** 기준선·동기화 장치 | 기준선 기록, fixture 연결 규칙, `X86Fixture` 확장(double 비트·여러 절 행), 연결 fixture의 SHA 목록 검사, 7절 동기화 절차 | — | `tests/Shared/X86Fixture.cs`, `Netstorm.Core.Tests.csproj` | cpppj fixture가 바뀌면 검사가 실패해 재동기화를 요구한다. **완료(2026-10-16):** 7절의 `cpp_sync.py`·`cpp-fixture-manifest.tsv`·`CppFixtureManifestTests`, `X86Fixture`의 `ULong`·`Long`·`DoubleBits`·`ULongs`·`Section`·`Sections` |
 | **W02** 원본 월드 코어 ① 생성·등록 | 객체 표, 생성자·파생 생성, Pop/Unpop/PostPop, 해시·spot, 소유자·프레임 지정, 건물 공간, 이웃·탐색, Graph 연결 전체 | constructors 359, creation 1,648, derived 7,468, pop 6,240(+vtables 151), unpop 8,422(+vtables 151), postpop 2,140, assetpostpop 1,636, spatial 1,382, owner 3,000, setframe 5,777, squid-level 96, buildingspace 1,759, neighbor 1,728, rawfinder 1,776, rawgraph 1,796, regiongraph 1,926, graphremove 1,548, graphrebuild 582, graphrecovery 390, graphlookup 774, graphforms 64, graph-reset 17, metadisplaydirty 1,040 | `GameEntity`, `BattleMap` 점유, `Footprint`, `SpotMap`, `SurfaceGraph`, `IslandOwnership`, `BridgeReach` | L1 전부 일치. `BridgeGrid`의 Graph 표면 수 공급자가 실제 Graph를 읽는다(D14) |
 | **W03** 원본 월드 코어 ② 삭제·수명 | 공통 삭제(pre/post·장부·Graph), Damageable 피격/해방, 종속 조회, 내용물·Form 수명, 신전 삭제 | destroy 1,992, destroylifecycle 1,728, destroygraph 1,728, damageablehit 5,846, damageablepredestroy 4,896, damageablepostdestroy 4,412, damageablerelease 4,512, contained 2,415, contentlifetime 396, formlifecycle 912, formtake 600, form-packet 1,152, vortex-pre 103 | `BattleSession.Combat.RemoveEntity`와 흩어진 정리 코드 | 삭제 한 번이 장부·Graph·선택·감시·SID 반납을 원본 순서로 처리한다 |
 | **W04** 시간·Kernel·Process | Kernel·BaseProcess·Regular·ProcessForm, 공통 프레임 진행, 메뉴/미션 정지 소유권 | process 360, processform 1,836, processretake 388, processtransmit 376, assetregular 1,976, player-regular 658, frameadvance 23,040, campaign-frame 764, disc-regular 192 | `FixedTimestep`, 각 규칙의 `*Tick`/`TicksFor`, [D01 시간 소비 목록](dotnet-mission-frame-gate-20261015.md) | 옮긴 소비자는 원본 기한·정밀도로 동작한다. 24Hz·8틱 상한을 소비자 단위로 제거한다(D01) |
@@ -146,17 +146,30 @@ cpppj TSV fixture 279개를 영역별로 묶어 이식 단위 W01~W20으로 나�
 
 ## 7. cpppj 진행을 따라가는 절차 (다른 AI가 cpppj를 계속 진행 중)
 
-1. **기준 커밋:** 이 계획은 `53113b66`까지 반영했다. 작성 도중 들어온 `20261016-12`(맨 오 워 풀 복원)도 포함한다. dotnetpj 단위를 시작할 때마다 마지막으로 반영한 커밋 이후를 확인하고, 반영한 커밋을 인수인계에 적는다.
+1. **기준 커밋:** 이 계획은 `53113b66`(cpppj `20261016-12`)까지 읽고 작성했고, W01에서 `ba8c3d83`(`20261016-19`)까지 검토를 이어 갔다. **현재 반영 커밋은 [`cpp-fixture-manifest.tsv`](../dotnetpj/tests/Shared/cpp-fixture-manifest.tsv)의 `reflected-commit` 행이 소유한다.** dotnetpj 단위를 시작할 때마다 저장소 루트에서 다음을 실행해 반영 이후의 변화를 본다. 연결 fixture가 어긋났으면 종료 코드가 1이다.
 
    ```sh
-   git log --oneline 53113b66..HEAD -- cpppj docs/exe LEFT_JOBS.md
-   git diff --stat 53113b66..HEAD -- cpppj/tests/fixtures
+   python dotnetpj/tools/cpp_sync.py        # 연결 fixture 상태, 반영 이후 cpppj 커밋 목록, fixture 추가·수정·삭제 (읽기 전용)
    ```
 
-2. **HEAD만 쓴다.** 다른 AI의 커밋되지 않은 cpppj 변경은 근거로 쓰지 않는다. `cpppj/`·`LEFT_JOBS.md`는 수정하지 않는다. 필요한 요청은 8절에 적어 사용자에게 전달한다.
-3. **fixture 연결 규칙:** 기존 방식대로 `Netstorm.Core.Tests.csproj`에 `<None Include="../../../cpppj/tests/fixtures/<이름>-x86.tsv" Link="X86/<이름>-x86.tsv" .../>`로 연결한다. 사본은 만들지 않는다. W01에서 연결 fixture의 SHA-256 목록을 두고 검사로 비교한다. cpppj가 관찰 ABI 교정 등으로 fixture를 다시 만들면 그 검사가 실패해 재대조를 요구한다. 기대값을 C# 결과로 덮어쓰지 않는다.
+   같은 내용을 손으로 볼 때는 `git log --oneline <반영 커밋>..HEAD -- cpppj docs/exe LEFT_JOBS.md`와 `git diff --stat <반영 커밋>..HEAD -- cpppj/tests/fixtures`다. 단위를 마칠 때 영향이 없거나 이식을 마친 변경을 검토했다면 `--update --reflect HEAD`로 반영 커밋을 올리고 인수인계에 적는다.
+
+2. **HEAD만 쓴다.** 다른 AI의 커밋되지 않은 cpppj 변경은 근거로 쓰지 않는다. `cpppj/`·`LEFT_JOBS.md`는 수정하지 않는다. 필요한 요청은 8절에 적어 사용자에게 전달한다. 도구는 커밋되지 않은 fixture 변경이 있으면 경고한다.
+3. **fixture 연결 규칙:** 기존 방식대로 `Netstorm.Core.Tests.csproj`(또는 Assets)에 `<None Include="../../../cpppj/tests/fixtures/<이름>-x86.tsv" Link="X86/<이름>-x86.tsv" .../>`로 연결한다. 사본은 만들지 않는다. **연결과 동시에** `python dotnetpj/tools/cpp_sync.py --update --add <이름>:Core`로 목록에 등록한다. 등록하지 않으면 `EveryLinkedFixtureIsRegistered`가 실패한다. 이미 연결한 fixture를 cpppj가 다시 만들면(관찰 ABI 교정 등) `LinkedFixturesMatchRecordedHashAndRows`가 실패해 재대조를 요구한다. 해당 C# 검사를 다시 대조한 뒤에만 `--update`로 목록을 갱신하며, 기대값을 C# 결과로 덮어쓰지 않는다. SHA-256은 CRLF를 LF로 바꾼 바이트로 계산해 체크아웃마다 같다.
 4. **이식 대상의 조건:** CMake에 등록돼 빌드·검사되는 모듈, 원본 fixture 또는 보고서의 정적 근거, 보고서에 적힌 외부 경계가 모두 있어야 한다. cpppj 보고서가 "초안·미등록·미검증"으로 적은 모듈은 기다린다.
 5. **cpppj 쪽 의미 변경 대응:** cpppj가 이미 이식한 모듈의 계약을 바로잡으면(예: 관찰기 해석 교정) 같은 단위를 다시 연다. 과거 통과 수를 지키려고 C# 기대값을 바꾸지 않는다.
+6. **검토 기록: `53113b66` → `ba8c3d83`(2026-10-16, W01).** cpppj 커밋 5개(`20261016-15`~`19`)를 검토했다. 이미 연결한 fixture 15개는 하나도 바뀌지 않았고, 이식한 모듈의 cpppj 소스(Graph·SID·Hash·Surface·Bridge·참여·미션 프레임·Totalmade·튜토리얼 1)도 바뀌지 않아 C# 단위를 다시 열지 않았다. 바뀐 기존 소스는 둘뿐이다. `RawAssetRegular.cpp`는 레지던스 좌표 1줄 정정이고, `SquidPostPop.cpp/.h`는 맨 오 워 분배 경로만 더했을 뿐 공통 postPop 집계 규칙은 그대로다(dotnetpj는 `postpop-x86.tsv`를 아직 연결하지 않았다). 새 fixture 6개는 아직 C#과 연결하지 않았고 담당 단위가 온 뒤 이식한다.
+
+   | 새 fixture(행) | cpppj 내용 | 담당 단위 |
+   | --- | --- | --- |
+   | residence-coordinates 1,729 | 레지던스(TYPE89) 이벤트 1의 난수 범위 정정. 둘째 범위의 하한은 `Y-32`(이전 "패치만 `X-32` 원본 결함" 서술은 복원 오류였다). 기존 1,976행은 보존 | W04(assetregular) |
+   | buried-regular 385 | 오벨리스크(TYPE112) 사건 0·1, 2~7초 난수 | W11 |
+   | fence-regular 1,373 | 썬 바리케이드 제어 0·1·2·기본(연결 수·네 방향 스냅샷·사건 2 예약) | W11 |
+   | fence-marker-clear 260 | 기존 연결 표식 삭제(후보 태그·보관 next) | W11 |
+   | fence-create 579 | 연결 표식 생성·포스 필드 생성(`fenceShield` 170, 내부 `fencemark` 90) | W11 |
+   | flyer-postpop 1,422 | 맨 오 워(TYPE144) 최초 후처리·공통 비행 프로세스(타입 31) 생성. BaseFlyer 몸체는 아직 미복원이므로 W19 대기 | W11·W19 |
+
+   결과적으로 실제 11개 미션 중 9개가 cpppj에서 400 Kernel 프레임을 통과한다(데모 1·3 제외). 이는 cpppj의 진행 사실이며 dotnetpj의 L2 이상 판정으로 합산하지 않는다.
 
 ## 8. cpppj 작업자에게 전달할 요청 (이 문서에만 기록, cpppj 미수정)
 

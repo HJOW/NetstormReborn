@@ -1,3 +1,13 @@
+## 2026-10-16 완료: W01 기준선·동기화 장치 (`DESKTOP-HJOW`)
+
+- [x] 사용자 요청("AGENTS.md, LEFT_JOBS.md, LEFT_JOBS.dotnetpj.md를 읽고 dotnetpj 진행. 창 띄우는 작업은 이 PC에서 금지, cpppj 파일 수정 자제")으로 아래 현행 계획의 **다음 시작점 W01**을 수행했다. `cpppj/`·공통 `LEFT_JOBS.md`는 수정하지 않았다. 현재 PC **DESKTOP-HJOW**는 공통 기록의 마지막 정밀 디컴파일 PC(**VM-W11-Codex, 2026-10-16**)와 달라 **디컴파일 산출물을 읽지 않았고** 새 디컴파일·원본 관찰·원본/클론 게임·창 실행은 없다.
+- [x] **기준선(작업 전):** SDK 10.0.402, Release 경고 0·오류 0(10초), 단위 **1,057개 통과**(Assets 343 + Core 714). 계획 문서의 기록과 같다.
+- [x] **구현:** ① [`dotnetpj/tools/cpp_sync.py`](dotnetpj/tools/cpp_sync.py): 연결 fixture의 SHA-256·행 수를 목록과 비교하고, 반영 커밋 이후의 cpppj 커밋 목록·fixture 추가/수정/삭제·커밋되지 않은 fixture 변경을 보고한다(읽기 전용, 어긋나면 종료 코드 1). `--update [--reflect REV] [--add 이름:Core|Assets[:출처]]`로 목록을 갱신·등록한다. ② [`cpp-fixture-manifest.tsv`](dotnetpj/tests/Shared/cpp-fixture-manifest.tsv): 연결 fixture **15개**(cpppj 14 + dotnetpj 소유 `clockkernel` 1)의 SHA-256·행 수·사용 프로젝트와 `reflected-commit`. ③ [`CppFixtureManifest.cs`](dotnetpj/tests/Shared/CppFixtureManifest.cs)·[`CppFixtureManifestTests.cs`](dotnetpj/tests/Shared/CppFixtureManifestTests.cs): 두 테스트 프로젝트가 링크해 자기 몫을 검사한다(형식 / 해시·행 수 일치 / 출력 폴더 fixture의 목록 등록 / CRLF 정규화). 해시는 CRLF를 LF로 바꾼 바이트로 계산하며, 파이썬 도구와 C# 검사가 서로 독립 구현이라 같은 값이 나온 것이 교차 확인이다. ④ [`X86Fixture`](dotnetpj/tests/Shared/X86Fixture.cs) 확장: `Long`·`ULong`·`DoubleBits`·`ULongs`·`Section`·`Read(이름, 절)`·`Sections`. 새 [`X86FixtureTests`](dotnetpj/tests/Netstorm.Core.Tests/X86FixtureTests.cs)가 64비트 경계, 음의 0·무한대·NaN 비트, 합성/실제 fixture의 절 구성(미션 프레임 265/48/9/6, 튜토리얼 1 104/266)을 확인한다. 기존 테스트의 로컬 보조 함수(`Bits`·`Number` 등)는 건드리지 않았다.
+- [x] **검증:** Release 경고 0·오류 0, 단위 **1,070개 통과**(Assets 347 + Core 723; 이번 **+13**). 변이 확인: 목록의 sid 해시 한 글자 변조, graph 항목 삭제, options 행 수 변조를 동시에 넣자 Core의 `LinkedFixturesMatchRecordedHashAndRows`·`EveryLinkedFixtureIsRegistered`와 Assets의 `LinkedFixturesMatchRecordedHashAndRows`가 정확히 그 항목을 지목하며 실패했고, 파이썬 보고도 종료 코드 1로 같은 두 항목을 잡았다. 목록을 원복해 모두 통과함을 다시 확인했다.
+- [x] **cpppj 반영 검토(`53113b66` → `ba8c3d83`):** cpppj 커밋 5개(`20261016-15`~`19`)를 검토했다. 연결 fixture는 하나도 바뀌지 않았고 이식한 모듈의 cpppj 소스도 바뀌지 않아 C# 단위를 다시 열지 않았다. 새 fixture 6개(residence-coordinates·buried-regular·fence-regular·fence-marker-clear·fence-create·flyer-postpop)는 아직 연결하지 않았고 담당 단위(W04·W11·W19)는 [계획 7절 6번](docs/dotnet-cpp-port-plan-20261016.md#7-cpppj-진행을-따라가는-절차-다른-ai가-cpppj를-계속-진행-중)에 정리했다. **반영 커밋을 `ba8c3d83`으로 올렸다.** 계획 문서 5절 W01 행·7절(절차·검토 기록)도 갱신했다.
+- [ ] **하지 않은 것:** 연결하지 않은 fixture 약 270개의 SHA는 목록에 넣지 않았다(연결할 때 `--add`로 등록). 클론 창·GUI 검사는 이 PC 규칙으로 실행하지 않았다(변경은 테스트 도구뿐이라 게임 동작 변화 없음). cpppj에 전달할 요청 5건(현행 계획 절)은 그대로 남아 있다.
+- [x] **다음 시작점은 W02**(원본 월드 코어 ① 생성·등록)이다. 규모가 크므로 먼저 코어의 객체 표·타입별 처리기 표 설계와 constructors(359)→creation(1,648) 순서의 얇은 첫 조각부터 잡는다. 단위를 시작할 때 `python dotnetpj/tools/cpp_sync.py`를 먼저 실행한다.
+
 ## 2026-10-16 현행 계획: cpppj 복원 결과를 이식해 원본과 거의 동일한 플레이로 (`DESKTOP-HJOW`)
 
 - [x] **요청·범위:** 사용자 요청은 다음과 같다. 현재까지 진행된 cpppj 소스를 dotnetpj에 적용해 게임 플레이가 기존 게임과 거의 동일한 수준이 되도록 이 문서를 고치고, 루트 README 두 개를 최신으로 갱신한다. LEFT_JOBS.md와 cpppj 소스는 수정하지 않는다. AGENTS.md(2026-10-16의 cpppj 2차 목표 DirectDraw 수정 필수 변경 포함)와 두 LEFT_JOBS를 읽었다. 다른 AI가 cpppj를 진행 중이어서 `cpppj/`·`LEFT_JOBS.md`는 건드리지 않았다. 반영 기준 커밋은 **`53113b66`**(cpppj `20261016-12`까지, 작성 도중 들어온 맨 오 워 풀 복원 포함)다. 현재 PC는 마지막 전체 정밀 디컴파일 PC(VM-W11-Codex, 2026-10-16)와 달라 **디컴파일 산출물은 읽지 않았다.** 근거는 커밋된 cpppj 소스·보고서·원본 fixture다. 게임·창 실행은 없다. 상세는 [cpppj → dotnetpj 이식 계획](docs/dotnet-cpp-port-plan-20261016.md)에 있다.
@@ -6,7 +16,7 @@
 - [x] **구조 결정(2026-10-10 사용자 결정 규칙 적용):** 현재 구조로는 원본의 객체 수명 순서·Regular 타이머·SP 쓰기마다의 난수 소비·Graph 분할을 재현할 수 없다. 그래서 `Netstorm.Core.Original`에 cpppj `RawWorldCore`/`RawCampaignSession`에 해당하는 **원본 월드 코어**를 만들고, `BattleSession`을 그 파사드로 바꾼다. 영역별 교체형으로 진행해 1-1·1-2 플레이를 유지한다. cpppj 미복원 동작은 예외로 멈추지 않는다. 기존 근사를 유지하되 [core-rules.md](docs/core-rules.md)의 근사 목록에 등록한다(10절 9·10번).
 - [x] **판정 단계:** L1 모듈(fixture 10.78 행 전부) → L2 세션 시작 상태 → L3 고정 입력 진행 → L4 화면·소리 → L5 자연 완주 순서다. L1 통과를 L2 이후 완료로 합산하지 않는다. 1차 범위는 cpppj 목표와 같은 11개 미션(Tutorial1~6·캠페인 1-1·1-2·데모 3개)이다.
 - [ ] **P0 기반**(순서대로, 각 단위의 fixture·교체 대상·완료 기준은 계획 5절)
-  - [ ] W01 기준선·동기화 장치: 연결 fixture SHA 목록 검사, `X86Fixture` 확장, 반영 커밋 기록
+  - [x] W01 기준선·동기화 장치: 연결 fixture SHA 목록 검사, `X86Fixture` 확장, 반영 커밋 기록 (**완료 2026-10-16**, 위 절)
   - [ ] W02 원본 월드 코어 ① 생성·등록: 객체 표·생성자·Pop/Unpop/PostPop·해시/spot·소유자/프레임·Graph 연결(D14)
   - [ ] W03 원본 월드 코어 ② 삭제·수명: 공통 삭제·Damageable·종속/내용물/Form·신전 삭제(D14)
   - [ ] W04 시간·Kernel·Process: Regular·ProcessForm·공통 프레임 진행, 24Hz/8틱 소비자를 하나씩 이행(D01)
@@ -16,10 +26,10 @@
 - [ ] **P1 플레이 규칙:** W08 사제(D09) → W09 경로·운반·수확(D11·D05 간헐천) → W10 배치·건설·생산(D13, **M2: 1-1에서 원본 건설 파이프라인**) → W11 전투·파생 건물(D10·D20) → W12 희생·신전·제단 → W13 진행·안내·승패(D04·D06·D07·D08·D18, **M3: 1-1·1-2 원본 규칙 자연 완주, AI 전략 제외**)
 - [ ] **P2 표시·UI·소리(P1과 병행 가능):** W14 표시(D15·D21), W15 Gump UI(D23), W16 소리·음악(D24)
 - [ ] **P3:** W17 데모 3개·캠페인 1-6/2-4(D22) → W18 Early Missions 공개와 11개 미션 자연 완주(**M4**) → W19 cpppj 대기 항목(AI 전략·데빌 메이커 TYPE59·플라이어 BaseFlyer·썬 바리케이드 공격·생산 재시작 상위 호출자) → W20 요구사항(화면비·60/120프레임·Linux)
-- [ ] **cpppj 동기화(매 단위 시작 시):** `git log --oneline <마지막 반영 커밋>..HEAD -- cpppj docs/exe LEFT_JOBS.md`와 `git diff --stat <마지막 반영 커밋>..HEAD -- cpppj/tests/fixtures`로 변경을 확인한다. 반영한 커밋을 이 절에 갱신한다(현재 `53113b66`). HEAD만 근거로 쓰며 다른 AI의 미커밋 변경은 쓰지 않는다.
+- [ ] **cpppj 동기화(매 단위 시작 시):** 저장소 루트에서 `python dotnetpj/tools/cpp_sync.py`를 실행한다(반영 이후 cpppj 커밋·fixture 변경, 연결 fixture 어긋남 보고). 반영 커밋은 [`cpp-fixture-manifest.tsv`](dotnetpj/tests/Shared/cpp-fixture-manifest.tsv)의 `reflected-commit` 행이 소유하며 **현재 `ba8c3d83`**이다(W01에서 `53113b66`에서 올렸다). 영향이 없거나 이식을 마친 변경을 검토한 뒤 `--update --reflect HEAD`로 올린다. HEAD만 근거로 쓰며 다른 AI의 미커밋 변경은 쓰지 않는다.
 - [ ] **cpppj에 전달할 요청(사용자 전달용, cpppj 미수정):** ① 실제 Session의 Load/Start·N프레임 상태 덤프 ② 고정 입력 재생 도구 ③ fixture 열 이름 ④ 모듈별 연결 상태표 ⑤ `cpppj/tests/GraphTests.cpp:105`의 `v[11]` 범위 밖 읽기(2026-10-09 전달, 아직 남음). 상세는 계획 8절.
 - [x] **문서 정리:** 아래 0·1·8절의 순서·대기 표는 당시 기록으로 두고, 머리말과 각 절에서 현행 계획을 가리키게 했다. 10절에 이번 기본값 2건, 12절에 동기화 명령, 13절에 참고 문서를 추가했다. [반영 점검 D01~D16](docs/dotnet-cpp-audit-20261015.md) 머리에 후속 계획 링크를 달았다. 루트 README 두 개의 dotnetpj 상태·다음 작업을 이번 기준선과 계획으로 갱신했다.
-- [x] **다음 시작점은 W01이다.** `DESKTOP-HJOW`에서는 헤드리스 빌드·검사만 하고, 창 검사는 AGENTS.md 면제 PC나 사용자 승인 뒤에 한다.
+- [x] ~~다음 시작점은 W01이다.~~ W01은 완료했다(위 절). **다음 시작점은 W02다.** `DESKTOP-HJOW`에서는 헤드리스 빌드·검사만 하고, 창 검사는 AGENTS.md 면제 PC나 사용자 승인 뒤에 한다.
 - [x] 문서 검사(UTF-8·로컬 링크/앵커·`git diff --check`)를 통과했다. 계획·인수인계는 **`20261016-13 DN cpppj 복원 결과의 dotnetpj 이식 계획 수립과 인수인계 갱신`**, README 두 개는 공통 문서라 **`20261016-14 CM 루트 README의 dotnetpj 현황과 이식 계획 반영`**으로 나눠 로컬 커밋한다. 다른 AI의 cpppj 작업물은 커밋에 넣지 않으며 원격 push는 하지 않는다.
 
 ## 2026-10-15 완료: 감사 D14 장부(Totalmade)와 D05 튜토리얼 1 판정기 이식·연결 (`HJOW-X3D`)
@@ -855,13 +865,14 @@ cpppj/build/bin/Release/NetstormCpp.exe --dump-types originals
 cpppj/build/bin/Release/NetstormCpp.exe --dump-world originals thewarbegins
 cpppj/build/bin/Release/NetstormCpp.exe --inspect-bridges originals
 
-# cpppj 반영 범위 확인 (2026-10-16 추가, 마지막 반영 커밋 이후의 변경)
-git log --oneline 53113b66..HEAD -- cpppj docs/exe LEFT_JOBS.md
-git diff --stat 53113b66..HEAD -- cpppj/tests/fixtures
+# cpppj 반영 범위 확인 (W01, 2026-10-16). 저장소 루트에서 실행. 마지막 반영 커밋은 cpp-fixture-manifest.tsv 의 reflected-commit
+python dotnetpj/tools/cpp_sync.py                                    # 보고 (읽기 전용, 연결 fixture 가 어긋나면 종료 코드 1)
+python dotnetpj/tools/cpp_sync.py --update --reflect HEAD            # 재대조를 마친 뒤 목록·반영 커밋 갱신
+python dotnetpj/tools/cpp_sync.py --update --add 이름:Core           # 새 fixture 를 연결할 때 목록에 등록 (Assets 도 가능)
 ```
 
 - 클론 창을 띄우는 검사(`tools/clone_*_smoke.ps1`, `dotnet run --project dotnetpj/src/Netstorm.Game`)는 `DESKTOP-HJOW` 가 아닌 PC 에서 한다.
-- 원본 x86 기대값 대조만 돌릴 때: `dotnet test -c Release --filter "FullyQualifiedName~X86"`(Core 39개 + Assets). 새 기대값 파일은 `tests/Netstorm.Core.Tests/Netstorm.Core.Tests.csproj`에 링크로 추가한다(사본 금지).
+- 원본 x86 기대값 대조만 돌릴 때: `dotnet test -c Release --filter "FullyQualifiedName~X86"`(Core 39개 + Assets). 새 기대값 파일은 `tests/Netstorm.Core.Tests/Netstorm.Core.Tests.csproj`에 링크로 추가하고(사본 금지) 위 `cpp_sync.py --update --add`로 SHA-256 목록에 등록한다(빠뜨리면 `EveryLinkedFixtureIsRegistered`가 실패).
 - 새 코드의 **상수·함수·구조체·클래스·멤버함수·멤버변수·반복문**에 한국어 주석을 단다(AGENTS.md 2026-10-13 확장). **주 내용은 설명과 사용법**이고, 언제·왜 추가/수정했는지는 그 뒤에 적는다. C# 에서는 `/// <summary>` 에 무엇을 하는지와 쓰는 방법(인자·반환·호출 조건)을 쓰고, 원본 주소·근거 문서와 추가/수정 이력은 summary 의 뒤쪽이나 `<remarks>` 에 둔다. 반복문은 바로 위 `//` 주석으로 무엇을 도는지 적는다. 기존 주석은 그 주석이 설명하는 대상을 수정할 때 이 규칙에 맞춘다(2026-10-10 사용자 결정). 새 파일은 UTF-8 로 쓴다.
 - 원본 주소를 주석에 적을 때는 10.78 주소를 쓰고, 근거 문서(`docs/exe/cpp-*.md`)를 함께 적는다.
 - 작업이 끝난 항목은 이 문서에서 체크하거나 지운다. 중단하면 변경 파일·검사 결과·다음 항목을 이 문서 맨 위에 날짜 절로 남긴다.
