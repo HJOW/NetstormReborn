@@ -242,7 +242,7 @@ internal sealed partial class FortMapViewer
                     if (words.Length > 3)
                     {
                         (int ax, int ay) = ParseCell(Word(3));
-                        altarId = _session.EntityAt(ax, ay)?.Id ?? throw new ArgumentException("capture 알타 좌표에 알타이 없습니다.");
+                        altarId = _session.EntityAt(ax, ay)?.Id ?? throw new ArgumentException("capture 제단 좌표에 제단이 없습니다.");
                     }
                     SubmitCommand(new CapturePriestCommand(TestPlayer, transport.Id, captive.Id, altarId));
                     break;
@@ -250,12 +250,12 @@ internal sealed partial class FortMapViewer
                     (int dtx, int dty) = ParseCell(Word(1));
                     (int dax, int day) = ParseCell(Word(2));
                     GameEntity delivering = _session.EntityAt(dtx, dty) ?? throw new ArgumentException("deliver 좌표에 수송 유닛이 없습니다.");
-                    GameEntity destinationAltar = _session.EntityAt(dax, day) ?? throw new ArgumentException("deliver 좌표에 알타이 없습니다.");
+                    GameEntity destinationAltar = _session.EntityAt(dax, day) ?? throw new ArgumentException("deliver 좌표에 제단이 없습니다.");
                     SubmitCommand(new DeliverPriestCommand(TestPlayer, delivering.Id, destinationAltar.Id));
                     break;
                 case "altar":
                     (int max, int may) = ParseCell(Word(1));
-                    GameEntity targetAltar = _session.EntityAt(max, may) ?? throw new ArgumentException("altar 좌표에 알타이 없습니다.");
+                    GameEntity targetAltar = _session.EntityAt(max, may) ?? throw new ArgumentException("altar 좌표에 제단이 없습니다.");
                     SubmitCommand(new MovePriestToAltarCommand(TestPlayer, targetAltar.Id));
                     break;
                 case "drop":

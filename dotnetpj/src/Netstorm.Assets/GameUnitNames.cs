@@ -5,7 +5,8 @@ namespace Netstorm.Assets;
 
 /// <summary>
 /// AGENTS.md의 건물·유닛 한국어 명칭을 공유 용어표에서 조회한다.
-/// 사제·신전·다리·발사기는 번역하고 다른 이름은 영어 발음의 한글 표기를 사용한다.
+/// 사제·신전·다리·발사기·간헐천·제단·거주 구역은 번역해도 되고 다른 이름은 영어 발음의 한글 표기를 사용한다.
+/// 발음이 모호한 Whirlibase 는 훨리베이스, Whirligig 는 훨리기그로 정했다 (2026-10-16 AGENTS.md).
 /// 타입 식별자와 원본 description은 변경하지 않으며 표시할 때만 선택 언어를 적용한다.
 /// </summary>
 public static class GameUnitNames

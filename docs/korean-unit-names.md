@@ -4,7 +4,8 @@
 
 ## 표기 원칙
 
-- **Priest → 사제, Temple → 신전, Bridge → 다리, Thrower → 발사기**는 뜻을 번역할 수 있다. 현재 공유 표에서는 이 표기를 사용하며 High Priest도 사제로 표시한다.
+- **Priest → 사제, Temple → 신전, Bridge → 다리, Thrower → 발사기, Geyser → 간헐천, Altar → 제단, Residence → 거주 구역**은 뜻을 번역할 수 있다(Altar·Residence는 2026-10-16 AGENTS.md 변경으로 추가). "번역해도 된다"이지 필수가 아니며, 공유 표는 Geyser를 아직 발음 표기인 **가이저**(Storm Geyser → 스톰 가이저)로 두고 있다. 그 밖의 표기는 이 표기를 사용하며 High Priest도 사제로 표시한다.
+- 발음 표기가 모호한 이름은 다음으로 정한다(2026-10-16 AGENTS.md): **Whirlibase → 훨리베이스, Whirligig → 훨리기그.** 이전 표기(휘리베이스·휘리기그·알타·레지던스)는 쓰지 않는다. 코드 주석과 과거 분석 기록 문서에 남은 이전 표기는 그 대상을 고칠 때 함께 바꾼다.
 - 다른 건물·유닛 이름은 영어 발음의 한글 표기를 사용한다. **Workshop → 워크샾, Generator → 제네레이터**는 사용자가 지정한 표기다.
 - 원소가 이름에 포함되면 Sun/ Wind/ Rain/ Thunder를 각각 썬/윈드/레인/썬더로 쓴다. 예: 레인 제네레이터, 썬 워크샾, 썬 캐논, 썬 디스크 발사기.
 - Generator를 전기 생산 시설을 뜻하는 이름으로 바꾸지 않는다. 판타지 세계관의 의미를 유지한다.
@@ -24,10 +25,11 @@
 | Sun Disc Thrower | 썬 디스크 발사기 |
 | Workshop / Sun Workshop | 워크샾 / 썬 워크샾 |
 | Generator / Rain Generator | 제네레이터 / 레인 제네레이터 |
-| Altar | 알타 |
+| Altar | 제단 |
+| Residence | 거주 구역 |
 | Sun Cannon / Ice Cannon / Thunder Cannon | 썬 캐논 / 아이스 캐논 / 썬더 캐논 |
 | Crossbow | 크로스보우 |
-| Whirligig / Whirlibase | 휘리기그 / 휘리베이스 |
+| Whirligig / Whirlibase | 훨리기그 / 훨리베이스 |
 | Golem / Crystal Crab / Air Ship | 골렘 / 크리스탈 크랩 / 에어 쉽 |
 | Balloon / Cloud Floater | 벌룬 / 클라우드 플로터 |
 

@@ -433,7 +433,7 @@ internal sealed class MainMenuView : IDisposable
             "Complete Victory" => "완전한 승리",
             "User Made Campaigns" => "사용자 캠페인",
             "1 The War Begins!" => "1 전쟁의 시작!",
-            "2 Master of Whirligigs" => "2 휘리기그의 지배자",
+            "2 Master of Whirligigs" => "2 훨리기그의 지배자",
             _ => item.Label,
         };
     }

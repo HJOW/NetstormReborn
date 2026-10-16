@@ -18,7 +18,7 @@
   "Rain Generator": "레인 제네레이터",
   "Wind Generator": "윈드 제네레이터",
   "Thunder Generator": "썬더 제네레이터",
-  "Altar": "알타",
+  "Altar": "제단",
   "Outpost": "아웃포스트",
   "Golem": "골렘",
   "Fire Ant": "파이어 앤트",
@@ -30,8 +30,8 @@
   "Thunder Cannon": "썬더 캐논",
   "Crossbow": "크로스보우",
   "Vander Tower": "밴더 타워",
-  "Whirligig": "휘리기그",
-  "Whirlibase": "휘리베이스",
+  "Whirligig": "훨리기그",
+  "Whirlibase": "훨리베이스",
   "Man o'War": "맨 오 워",
   "Man o'War Pool": "맨 오 워 풀",
   "Dust Devil": "더스트 데빌",
@@ -51,7 +51,7 @@
   "Storm Geyser": "스톰 가이저",
   "Empty Storm Geyser": "엠프티 스톰 가이저",
   "Storm Crystal": "스톰 크리스탈",
-  "Residence": "레지던스",
+  "Residence": "거주 구역",
   "Obelisk": "오벨리스크",
   "Bird": "버드"
 }

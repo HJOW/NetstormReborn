@@ -274,7 +274,7 @@ internal sealed partial class FortMapViewer
             TypeInfo? altar = _candidates.FirstOrDefault(t => t.Name.Equals("altar", StringComparison.OrdinalIgnoreCase));
             // 원본 문구는 로마 숫자가 아니라 "Build Level 1 Altar for 500" 이다 (screenShots/The War Begins! - High Priest Context Menu.png).
             string altarLevel = (altar?.Definition.GetInt("level") ?? 1).ToString(System.Globalization.CultureInfo.InvariantCulture);
-            if (altar != null) rows.Add(Construct(altar, Ui($"알타 Level {altarLevel} 건설: ", $"Build Level {altarLevel} Altar for ")));
+            if (altar != null) rows.Add(Construct(altar, Ui($"제단 Level {altarLevel} 건설: ", $"Build Level {altarLevel} Altar for ")));
             childGroups.Add(rows);
         }
         else if (_contextEntity is { Kind: ObjectKind.Workshop } workshop)

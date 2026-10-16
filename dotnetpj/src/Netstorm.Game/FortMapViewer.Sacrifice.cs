@@ -85,7 +85,7 @@ internal sealed partial class FortMapViewer
                      && entity.Captivity != PriestCaptivity.Free))
         {
             Vector2 anchor = EntityCenterScreen(priest, center);
-            string label = priest.Captivity == PriestCaptivity.Carried ? "운반 중" : "알타에 묶임";
+            string label = priest.Captivity == PriestCaptivity.Carried ? "운반 중" : "제단에 묶임";
             Color color = priest.Captivity == PriestCaptivity.Carried ? Color.LightSkyBlue : Color.Gold;
             batch.Draw(_pixel, new Rectangle((int)anchor.X - 25, (int)anchor.Y - 35, 50, 18), new Color(20, 24, 34) * 0.9f);
             batch.DrawString(font, label, new Vector2(anchor.X - 23, anchor.Y - 34), color);

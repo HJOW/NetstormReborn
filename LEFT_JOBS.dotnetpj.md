@@ -1,3 +1,11 @@
+## 2026-10-16 완료: 한국어 명칭 규칙 변경 반영 — 제단·거주 구역·훨리베이스·훨리기그 (`DESKTOP-HJOW`)
+
+- [x] 작업 중 사용자가 AGENTS.md를 바꿨다(`92a2ec04`): **Altar → 제단, Residence → 거주 구역**을 번역해도 되고, 모호한 발음은 **Whirlibase → 훨리베이스, Whirligig → 훨리기그**로 정했다. 사용자에게 보이는 dotnetpj 한국어를 새 규칙에 맞췄다. AGENTS.md는 수정하지 않았다.
+- [x] **고친 곳:** 공유 명칭 표 [`assets/unit-names.korean.json`](assets/unit-names.korean.json) 4항목(Altar 알타→제단, Residence 레지던스→거주 구역, Whirlibase 휘리베이스→훨리베이스, Whirligig 휘리기그→훨리기그), 게임 문구 — 1-2 브리핑 본문·제목(`FortMapViewer.PlayUi.cs`), 캠페인 목록(`MainMenuView.cs`), 건설 불가 사유(`IslandOwnership.cs`), 우클릭 건설 줄(`FortMapViewer.ContextMenu.cs`), 포로 표식(`FortMapViewer.Sacrifice.cs`), 개발 명령 오류 문구(`FortMapViewer.Session.cs`, "알타이" 문법 오류도 함께 바로잡음). 문서는 [korean-unit-names.md](docs/korean-unit-names.md)·[unit-source-name-map.md](docs/unit-source-name-map.md)·`README.md`의 미션 이름.
+- [x] **검증:** 새 [`GameUnitNamesTests`](dotnetpj/tests/Netstorm.Assets.Tests/GameUnitNamesTests.cs) 13개(대표 이름 11개 표기, 다른 언어·미등록 이름 불변, 공유 표에 이전 표기 없음·55항목)를 추가했다. Release 경고 0·오류 0, 단위 **1,103개 통과**(Assets 360 + Core 743). 이 PC 규칙에 따라 클론 창은 실행하지 않았다(문자열 상수 교체라 빌드·단위 검사로 확인).
+- [ ] **남은 것:** 코드 주석 약 26개 파일과 과거 분석 기록 문서(`docs/gameplay/*`, `docs/videos/*` 등)에 이전 표기(알타 등)가 남아 있다. 사용자에게 보이지 않고 인수인계 10절 8번(주석은 그 대상을 고칠 때 정비)에 따라 일괄 변경하지 않았다. 공유 표의 Geyser는 아직 발음 표기 "가이저"다(번역은 허용일 뿐 필수가 아니므로 사용자 지시가 있으면 "간헐천"으로 바꾼다). 원본 영어 스크립트에서 오는 미션 본문·도움말의 한국어 번역 전체는 별도 작업이다. cpppj 쪽 한국어 표기는 건드리지 않았다.
+- [x] 인수인계 뒤 **`20261016-22 DN 한국어 명칭 규칙 변경(제단·거주 구역·훨리베이스·훨리기그)을 공유 표와 게임 문구에 반영`** 으로 로컬 커밋한다. 원격 push는 하지 않는다.
+
 ## 2026-10-16 완료: W02 첫 조각 — 원본 월드 코어의 슬롯 풀과 오브젝트 생성·Take (`DESKTOP-HJOW`)
 
 - [x] 위 W01에 이어 같은 요청의 범위로 현행 계획의 **W02(원본 월드 코어 ① 생성·등록)** 를 시작했다. `cpppj/`·공통 `LEFT_JOBS.md`는 수정하지 않았고 **디컴파일 산출물을 읽지 않았다**(현재 PC는 마지막 정밀 디컴파일 PC VM-W11-Codex와 다름). 새 디컴파일·원본 관찰·원본/클론 게임·창 실행은 없다. 상세·근거 표·경계는 [원본 월드 코어 W02 첫 조각](docs/dotnet-original-core-20261016.md).

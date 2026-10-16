@@ -144,7 +144,7 @@ public static class PlacementRules
         PlacementProblem.NotConnected => "빈 섬이 내 섬과 다리로 연결되지 않음",
         PlacementProblem.TempleNeedsEmptyIsland => "신전은 빈 섬에만 지을 수 있음",
         PlacementProblem.TempleAlreadyExists => "신전은 플레이어당 1기",
-        PlacementProblem.AltarAlreadyExists => "알타는 플레이어당 1기",
+        PlacementProblem.AltarAlreadyExists => "제단은 플레이어당 1기",
         PlacementProblem.NotOnIslandOrBridgeEnd => "섬 위나 내 다리 끝이 아님",
         PlacementProblem.BuildingNeedsIsland => "건물은 섬 위에만 지을 수 있음",
         PlacementProblem.Occupied => "자리가 비어 있지 않음",

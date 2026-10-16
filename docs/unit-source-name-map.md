@@ -2,7 +2,7 @@
 
 2026-10-16부터 분석 중 확인한 이름을 이 문서에 계속 추가한다. **영어 표시 이름은 원본10.78의 `.type` 속성 `description`, 내부 타입명과 번호는 실제 등록 TYPE 표**를 기준으로 한다. 클래스명·함수명·미션의 기술 키에는 내부 이름이 남아 있으므로 두 이름을 구별한다.
 
-예를 들어 `sunFence`는 **Sun Barricade(썬 바리케이드)**다. `sunBlocker`는 **Stone Tower(스톤 타워)**이며 서로 다른 건물이다. `sunAviary`도 사용자 표시 이름은 **Whirlibase(휘리베이스)**다. 앞으로 설명에는 표시 이름을 사용하고 처음 등장할 때 내부 이름을 함께 적는다. 기존 코드 심벌과 과거 작업 기록의 식별자는 유지한다.
+예를 들어 `sunFence`는 **Sun Barricade(썬 바리케이드)**다. `sunBlocker`는 **Stone Tower(스톤 타워)**이며 서로 다른 건물이다. `sunAviary`도 사용자 표시 이름은 **Whirlibase(훨리베이스)**다. 앞으로 설명에는 표시 이름을 사용하고 처음 등장할 때 내부 이름을 함께 적는다. 기존 코드 심벌과 과거 작업 기록의 식별자는 유지한다.
 
 ## 확인한 건물·유닛·자원
 
@@ -11,8 +11,8 @@
 | 10.78 TYPE | 내부 타입명 | 원본 영어 표시 이름 | 한국어 표기 |
 | ---: | --- | --- | --- |
 | 71 | `sunArcher` | Sun Disc Thrower | 썬 디스크 발사기 |
-| 72 | `sunAviary` | Whirlibase | 휘리베이스 |
-| 73 | `sunFlyer` | Whirligig | 휘리기그 |
+| 72 | `sunAviary` | Whirlibase | 훨리베이스 |
+| 73 | `sunFlyer` | Whirligig | 훨리기그 |
 | 75 | `windBattery` | Wind Generator | 윈드 제네레이터 |
 | 76 | `rainBattery` | Rain Generator | 레인 제네레이터 |
 | 77 | `thunderBattery` | Thunder Generator | 썬더 제네레이터 |
@@ -24,7 +24,7 @@
 | 86 | `windFactory` | Wind Workshop | 윈드 워크샾 |
 | 87 | `rainFactory` | Rain Workshop | 레인 워크샾 |
 | 88 | `thunderFactory` | Thunder Workshop | 썬더 워크샾 |
-| 89 | `residence` | Residence | 레지던스 |
+| 89 | `residence` | Residence | 거주 구역 |
 | 111 | `sunBalloon` | Balloon | 벌룬 |
 | 112 | `buried` | Obelisk | 오벨리스크 |
 | 122 | `geyser` | Storm Geyser | 스톰 가이저 |
@@ -62,7 +62,7 @@
 
 | 10.78 TYPE | 내부 타입명 | 원본 `description` | 취급 |
 | ---: | --- | --- | --- |
-| 164 | `altar` | Altar | 실제 알타 계열 객체. |
+| 164 | `altar` | Altar | 실제 제단 계열 객체. |
 | 165 | `dais` | Altar | 내부 다이스 객체. TYPE164와 합치지 않는다. |
 | 166 | `rune` | Altar | 내부 룬 객체. TYPE164/165와 합치지 않는다. |
 | 167 | `forceField` | High Priest | 사제 관련 내부 객체. 실제 사제 TYPE158 및 표시 이름이 Force Field인 TYPE170과 구별한다. |
@@ -76,7 +76,7 @@
 | 10.78 TYPE | 실제 등록 이름 | 소스/분석에서 쓰는 전체 이름 | 대응 또는 역할 |
 | ---: | --- | --- | --- |
 | 31 | `baseFlyerProcessType` | `baseFlyerProcessType` | 플라이어 공통 동작 프로세스. |
-| 32 | `sunAviaryProcessType` | `sunAviaryProcessType` | 휘리베이스(TYPE72·sunAviary)의 생산 동작 프로세스. |
+| 32 | `sunAviaryProcessType` | `sunAviaryProcessType` | 훨리베이스(TYPE72·sunAviary)의 생산 동작 프로세스. |
 | 59 | `windAviaryProcessTyp` | `windAviaryProcessType` | 데빌 메이커(TYPE139·windAviary)의 생산 동작 프로세스. |
 | 60 | `rainAviaryProcessTyp` | `rainAviaryProcessType` | 맨 오 워 풀(TYPE143·rainAviary)의 생산 동작 프로세스. |
 | 94 | `island` | `island` | 섬 받침. 지형 본체인 TYPE97·isle과 구별한다. |
