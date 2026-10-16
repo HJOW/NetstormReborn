@@ -1220,3 +1220,7 @@ set_source_files_properties(CursorLifecycleTests.cpp PROPERTIES COMPILE_DEFINITI
     "NETSTORM_CURSOR_LIFECYCLE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/cursor-lifecycle-x86.tsv\"")
 # 실제 Client 공통 트리의 원본 메뉴 입력/제목/하위 메뉴/픽셀과 삭제를 검사한다.
 target_sources(netstorm_tests PRIVATE RawMenuControlsTests.cpp)
+# 실제 두 PE의 객체·Damageable·회수 메뉴 전체 효과를 비교한다.
+target_sources(netstorm_tests PRIVATE ObjectMenuTests.cpp)
+set_source_files_properties(ObjectMenuTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_OBJECT_MENU_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/object-menu-x86.tsv\"")

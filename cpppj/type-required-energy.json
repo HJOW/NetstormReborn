@@ -29,8 +29,8 @@
     "cpppj/tests/fixtures/type-required-energy-x86.tsv": "8bcb3e215c958f5df0a395365059f5481801b1660569f2f04c0720f394f14f4c",
     "cpppj/tests/TypeRequiredEnergyTests.cpp": "0802ab400413ec5da3f2d03a4ac6b6f88e2d088915646609a2ca0bb39a02b05c",
     "cpppj/src/o/CMakeLists.txt": "5914ae795283dac964ea550a0d6593e4b96b84f5284f8785696fd334649983b8",
-    "cpppj/src/client/CMakeLists.txt": "3e1be7033a150c975abfcd3b6f15d092cbaf30cb458e9e35eda7a761cb112a05",
-    "cpppj/tests/CMakeLists.txt": "3ac25e61d4fad08405fd70aff32d3ea7673e6905c51865930372c32623126b41"
+    "cpppj/src/client/CMakeLists.txt": "fa3fc0ac28ee2078b97dc0a515ed05c9e680e72d08b30f3f0ed04099f7a4f85b",
+    "cpppj/tests/CMakeLists.txt": "a62a4bf30e59fd1830cc4711447159708ef3b76b398a4064b0acdd58d4e177e9"
   },
   "product_validation": {
     "configuration": "Release",
@@ -1095,6 +1095,26 @@
         "output_log": "extracted/goal-raw-menu-20261017-ctest-output.log"
       },
       "remaining_failure": "기존 시스템 기본 소프트웨어 커서 불투명 픽셀 검사: 단독 재현, Cursor.cpp 변경 없음, 원인 미확정"
+    },
+    {
+      "date": "2026-10-17",
+      "reason": "unit113 object/Damageable/salvage menu registration; TYPE product and native2352 fixture unchanged",
+      "cmake_sha256": {
+        "cpppj/src/client/CMakeLists.txt": {
+          "previous": "3e1be7033a150c975abfcd3b6f15d092cbaf30cb458e9e35eda7a761cb112a05",
+          "current": "fa3fc0ac28ee2078b97dc0a515ed05c9e680e72d08b30f3f0ed04099f7a4f85b"
+        },
+        "cpppj/tests/CMakeLists.txt": {
+          "previous": "3ac25e61d4fad08405fd70aff32d3ea7673e6905c51865930372c32623126b41",
+          "current": "a62a4bf30e59fd1830cc4711447159708ef3b76b398a4064b0acdd58d4e177e9"
+        }
+      },
+      "full_ctest": {
+        "tests": 1463,
+        "failed_checks": 0,
+        "exit_code": 0,
+        "seconds": 226.66
+      }
     }
   ]
 }

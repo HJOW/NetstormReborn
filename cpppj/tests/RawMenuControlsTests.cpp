@@ -2,6 +2,7 @@
 #include "RawSceneSupport.h"
 #include "client/RawMenuControls.h"
 #include "client/RawButtonControls.h"
+#include "client/RawObjectMenu.h"
 #include <filesystem>
 #include <sstream>
 
@@ -90,4 +91,30 @@ TEST_CASE(RawMenuControls_FancySubmenuPixelsAndCleanup) {
     for (int y=0;y<height;++y) for (int x=width;x<pitch;++x) CHECK(pixels[static_cast<std::size_t>(y)*pitch+x]==0x5a);
     if (child) client.Click(*child);CHECK(client.commands.size()==1);if (!client.commands.empty()) CHECK(client.commands[0][0]==0x02000060 && client.commands[0][2]==0x007b0032);
     client.menus->Close();CHECK(!client.menus->HasMenus());CHECK(client.menus->Report().starts_with("raw_menus\t0\t0\t0\t0\t"));
+}
+// 실제 공통 입력을 통해 객체 메뉴 문자열 토큰과 현재 설정 쓰기가 같은 소비자에 도달한다.
+TEST_CASE(RawMenuControls_ObjectMenuCommandsAndCurrentConfig) {
+    MenuClient client;SidPool pool(OriginalEdition::Patch1078,24000,true);
+    // 원문 객체50을 실제 클라이언트 영역에 확보한다.
+    for (std::uint32_t number=5;number<=50;++number) CHECK(pool.Allocate(2).value==number);
+    auto raw=pool.AllocatedBytes(Sid{50});raw[10]=150;raw[34]=1;
+    ConfigInterface config([](std::string_view)->std::optional<std::vector<std::uint8_t>> { return std::nullopt; });
+    ObjectMenuState state;state.denySalvage=1;ObjectMenuHooks hooks;
+    hooks.salvageRefund=[](Sid sid,std::uint32_t type,std::uint32_t count) { CHECK(sid.value==50 && type==150 && count==3);return 45; };
+    hooks.format=[](std::string_view key,std::span<const PriestMenuArgument> arguments) { std::string text(key);CHECK(arguments.size()==1);text.replace(text.find("%d"),2,std::to_string(std::get<std::int32_t>(arguments[0])));return text; };
+    constexpr std::uint32_t denyToken=0xee000001; // 검사 명령 소비자가 함께 쓰는 정적 상수 토큰이다.
+    const auto encode=[](std::string_view text) { if (text=="DenySalvage") return denyToken;throw std::logic_error("검사 미등록 상수 문자열"); };
+    const auto open=[&] {
+        client.poll={InputCode::kRelease,0,0};client.buttons.Poll(client.poll);
+        client.menus->Open({120,110},[&](const auto& widgets,const auto& controls,const auto& menus) {
+            widgets.BeginVertical();BindObjectMenuControls(hooks,controls,menus,config,encode);
+            RawObjectMenu menu(pool,client.assets.TypeTable().Types(),state,hooks);menu.AddSalvage(Sid{50},150,3);
+        });
+        const auto regions=client.menus->Controls();CHECK(regions.size()==1);if (regions.size()==1) client.Click({(regions[0].rect.left+regions[0].rect.right)/2,(regions[0].rect.top+regions[0].rect.bottom)/2});
+    };
+    open();CHECK(client.commands.size()==1);if (client.commands.size()==1) CHECK(client.commands[0][0]==state.tellCommand && client.commands[0][2]==denyToken);
+    CHECK(!config.Configuration().GetRaw("salvageSid"));client.menus->Close();state.denySalvage=0;open();
+    // 실제 Config.Set의 global. 경로는 현재 기본 설정의 salvageSid 키에 쓴다.
+    CHECK(config.GetInt("salvageSid")==50);CHECK(client.commands.size()==2);if (client.commands.size()==2) CHECK(client.commands[1][0]==state.salvageCommand && client.commands[1][2]==50);
+    client.menus->Close();CHECK(!client.menus->HasMenus());
 }

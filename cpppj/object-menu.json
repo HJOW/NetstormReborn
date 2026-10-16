@@ -1,0 +1,71 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-17",
+  "last_full_decompile_host": "HJOW-Athlon",
+  "observations": 1434,
+  "normal_returns": 2868,
+  "precisions": [
+    53,
+    64
+  ],
+  "precision_differences": 0,
+  "instructions": 190090,
+  "os_calls": 0,
+  "entries": {
+    "originals": {
+      "base": "004b1270",
+      "damage": "0044cbd0",
+      "salvage": "0044ca00"
+    },
+    "originalCD": {
+      "base": "004ae780",
+      "damage": "00462a70",
+      "salvage": "004628a0"
+    }
+  },
+  "boundaries": [
+    "TYPE/HP/가상 개수·환불 조회",
+    "번역·CRT 고정 정수 서식",
+    "controlled 메뉴 작성·Player 하위 메뉴",
+    "현재 설정 쓰기"
+  ],
+  "limits": [
+    "세 메뉴 몸체 전체 실행이며 환불/Player 메뉴/GUI 픽셀 몸체의 관찰은 아님",
+    "게임/OS 실행 없음",
+    "Carrier·Priest·실제 Session·건설 연결은 별도"
+  ],
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originalCD/functions.tsv": "453aa383c27baf8eefa00d97bf44051d18460150556511c2eb7a46f111e92def",
+    "tools/decomp_object_menu.py": "883d1b6b694f773acebdb682161665954b020fe6d7068ff6677a7cdbbf3dd6be",
+    "cpppj/tests/fixtures/object-menu-x86.tsv": "dc3b598f70f9d1ad1733e2633534c080ad127dc3d5cc6e3af1c2bc9b0e0bc047"
+  },
+  "product_validation": {
+    "configuration": "Release",
+    "build_exit_code": 0,
+    "build_warnings": 0,
+    "build_errors": 0,
+    "focused_native_tests": 3,
+    "native_rows_compared": 1434,
+    "dependency_test": 1,
+    "common_tree_input_test": 1,
+    "full_tests": 1463,
+    "failed_checks": 0,
+    "ctest_exit_code": 0,
+    "ctest_seconds": 226.66,
+    "build_log": "extracted/goal-object-menu-20261017-build3.log",
+    "full_output": "extracted/goal-object-menu-20261017-ctest-output.log",
+    "fixture_identical_after_output_encoding_update": true,
+    "cursor_intermittent_failure_root_cause_unresolved": true,
+    "sha256": {
+      "cpppj/src/client/RawObjectMenu.h": "779fa9cc64126ccb35f7c6a24f32972c3249817026b4ea77eea4e3abfee1fe08",
+      "cpppj/src/client/RawObjectMenu.cpp": "7c751ff5cb8cc1f7df57f4d18483819c774e23837215f4d925cbe65874699dae",
+      "cpppj/tests/ObjectMenuTests.cpp": "849f3bfabd854e40b451c3f727ed21db9d6d524c516191012da9f8a568875590",
+      "cpppj/tests/RawMenuControlsTests.cpp": "028c7a23580088cf6754dd655d2afa91a96e4ab6b6b0128b1adc3ca6c9ab5434",
+      "cpppj/src/client/CMakeLists.txt": "fa3fc0ac28ee2078b97dc0a515ed05c9e680e72d08b30f3f0ed04099f7a4f85b",
+      "cpppj/tests/CMakeLists.txt": "a62a4bf30e59fd1830cc4711447159708ef3b76b398a4064b0acdd58d4e177e9"
+    }
+  }
+}

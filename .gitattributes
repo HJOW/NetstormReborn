@@ -980,3 +980,10 @@ cpppj/src/client/TextGump.* text eol=lf
 cpppj/src/client/UberGump.cpp text eol=lf
 docs/exe/cpp-client-menu-runtime-20261017.md text eol=lf
 cpppj/tests/fixtures/client-menu-ui.tsv text eol=lf
+# 두 판본 객체/회수 메뉴의 원문과 제품을 같은 UTF-8/LF로 보존한다.
+tools/decomp_object_menu.py text eol=lf
+cpppj/object-menu.json text eol=lf
+cpppj/tests/fixtures/object-menu-x86.tsv text eol=lf
+cpppj/src/client/RawObjectMenu.* text eol=lf
+cpppj/tests/ObjectMenuTests.cpp text eol=lf
+docs/exe/cpp-object-menu-20261017.md text eol=lf
