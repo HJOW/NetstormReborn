@@ -13,6 +13,7 @@ target_sources(netstorm PRIVATE
     RawRainAviaryProcess.cpp RawRainAviaryProcess.h
     RawFlyerProcess.cpp RawFlyerProcess.h
     RawFlyerFrame.cpp RawFlyerFrame.h
+    RawFlyerTarget.cpp RawFlyerTarget.h
     # 총 방향과 같은 실제 소유자 색 표/섬 프레임 변경의 원문 계산이다.
     RawGunAngle.h RawPlayerColor.h
     # 원본 Guide 반복과 현재 실제 사제 참여 상태를 같은 저장소에서 처리한다.

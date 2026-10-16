@@ -9,6 +9,7 @@ add_executable(netstorm_tests
     RainAviaryProcessTests.cpp
     FlyerPostPopTests.cpp
     FlyerFrameTests.cpp
+    FlyerTargetTests.cpp
     PlayerColorTests.cpp
     GraphResetTests.cpp
     GunAngleTests.cpp
@@ -1125,3 +1126,6 @@ set_source_files_properties(FlyerPostPopTests.cpp PROPERTIES COMPILE_DEFINITIONS
 
 set_source_files_properties(FlyerFrameTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_FLYER_FRAME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/flyer-frame-x86.tsv\"")
+
+set_source_files_properties(FlyerTargetTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FLYER_TARGET_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/flyer-target-x86.tsv\"")

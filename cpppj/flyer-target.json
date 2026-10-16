@@ -1,0 +1,170 @@
+{
+  "host": "VM-W11-Codex",
+  "date": "2026-10-16",
+  "last_full_refined_host": "VM-W11-Codex",
+  "last_full_refined_date": "2026-10-16",
+  "observations": 1302,
+  "scopes": {
+    "C": 334,
+    "P": 60,
+    "I": 334,
+    "S": 334,
+    "F": 240
+  },
+  "precision_replays": [
+    639,
+    895
+  ],
+  "normal_returns": 2604,
+  "extended_differences": 0,
+  "status": "native-and-cpp-target-selection-validated-session-integrated",
+  "game_gui_runs": 0,
+  "limits": "실제 선택·산술·공간 사각형 정수변환·의존 finder/상대 getter를 실행한다. 일반 공간 finder의 후보 순서/MayTarget/Host 프로세스 조회/명령은 선언한 외부 입력이다. 실행된 원문 밖의 값을 C++로 계산해 기대값을 만들지 않는다. 전체112BYTE/22객체1100BYTE/현재 전역28BYTE/반환/호출/스택·비휘발·FPU·SEH·쓰기guard를 확인한다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_flyer_target.py": "0a2362102f07462d8c4b6816957dbedc941ad5d6a16cb3f829988ab3b8204c94",
+    "tools/decomp_local_mission_transport.py": "db71da65079aa9a985a3a833edd224f089ba9a20137d92042551cb346937eb78",
+    "cpppj/src/o/RawFlyerTarget.h": "dabdb2be4a6fd425be2a81d54bcd978f2253a6d650831cfac477a346ca998782",
+    "cpppj/src/o/RawFlyerTarget.cpp": "b325cb60c22f98b6e30faa2d330866d1a38f3a403a04388a394baefd188eb772",
+    "cpppj/tests/FlyerTargetTests.cpp": "815b7bc67c54cbd567c06dd33be679f24fe2f0cfb6bff3cc7acdc1effa8861bf",
+    "cpppj/tests/fixtures/flyer-target-x86.tsv": "6a8865b9ab3046b748e1776256e822a50dcfc0938acdad3a17764da9e25fc2d2"
+  },
+  "integration_snapshot_sha256": {
+    "cpppj/src/client/RawCampaignSession.cpp": "8b9707cc0aba8e11237f1618fb0179e9fdfcd460c581b83313f2da793c56c1f8",
+    "cpppj/src/o/CMakeLists.txt": "b6f4167ac5ff46887da61a70bcc940ce419a9525bb357b8dcdce1aa3dfeca3ac",
+    "cpppj/tests/CMakeLists.txt": "d109952745a9d6243c7ad51543af7b30821092f26883a940e5bc144230ad92bf"
+  },
+  "historical_reports": {
+    "cpppj/flyer-frame.json": {
+      "report_sha256": "331e32285b8837ed32d1e1946b063ddb913a10c3e58fbd3567329d1b3e50b691",
+      "primary_pins_match": true,
+      "integration_differences": {
+        "cpppj/src/client/RawCampaignSession.cpp": {
+          "historical": "02330084e9a179eb76c6f78c6ffe4117cf3e69caa7257e4728c98d55e27eea4f",
+          "unit_start": "64090c17193c2ca580ad597aec730c9142e9de59e4424d5a8ea21848a3d58ef6",
+          "current": "8b9707cc0aba8e11237f1618fb0179e9fdfcd460c581b83313f2da793c56c1f8",
+          "changed_in_this_unit": true
+        },
+        "cpppj/src/o/CMakeLists.txt": {
+          "historical": "2ec03e08df88e43593359077ba7d4bd26b74d173fc8d1b929256da382d56ea3e",
+          "unit_start": "2ec03e08df88e43593359077ba7d4bd26b74d173fc8d1b929256da382d56ea3e",
+          "current": "b6f4167ac5ff46887da61a70bcc940ce419a9525bb357b8dcdce1aa3dfeca3ac",
+          "changed_in_this_unit": true
+        },
+        "cpppj/tests/CMakeLists.txt": {
+          "historical": "8af7e46c2cc9364c2d16c950aba2b1c5a06a55124260db626189ea52ba174968",
+          "unit_start": "8af7e46c2cc9364c2d16c950aba2b1c5a06a55124260db626189ea52ba174968",
+          "current": "d109952745a9d6243c7ad51543af7b30821092f26883a940e5bc144230ad92bf",
+          "changed_in_this_unit": true
+        },
+        "assets/unit-names.korean.json": {
+          "historical": "0a6c6d58f252d3134df720327b455b0322f604a081910e860a06e2c26504a371",
+          "unit_start": "e28a6912d9895142d1ff46dbc45d6bb615a58afc9e038fe4cfec2e406099417a",
+          "current": "e28a6912d9895142d1ff46dbc45d6bb615a58afc9e038fe4cfec2e406099417a",
+          "changed_in_this_unit": false
+        }
+      }
+    },
+    "cpppj/flyer-postpop.json": {
+      "report_sha256": "86f4a7fa4551065832f619eb65fcbfac0a372e541cbebe732fb367cc3dc52539",
+      "primary_pins_match": true,
+      "integration_differences": {
+        "cpppj/src/client/RawCampaignSession.cpp": {
+          "historical": "c30e8b480a00f9135461c527d5af8427a9eea81d0f7085d74ecdf436d3f4b9fd",
+          "unit_start": "64090c17193c2ca580ad597aec730c9142e9de59e4424d5a8ea21848a3d58ef6",
+          "current": "8b9707cc0aba8e11237f1618fb0179e9fdfcd460c581b83313f2da793c56c1f8",
+          "changed_in_this_unit": true
+        },
+        "cpppj/src/o/SquidPostPop.cpp": {
+          "historical": "0cfdb750db8571241e7197d36f0e7567afa09d73656b02e9106e17c5bdb3b9ca",
+          "unit_start": "79b1fa443d0e6dbc5e9fd8dbd394952cf92b1270e1449f6438160932964a11b7",
+          "current": "79b1fa443d0e6dbc5e9fd8dbd394952cf92b1270e1449f6438160932964a11b7",
+          "changed_in_this_unit": false
+        },
+        "cpppj/src/o/SquidPostPop.h": {
+          "historical": "2ce0f228e8e9201a6e68beb292f2beb3b3360c57c6340e0216912c63a121ea14",
+          "unit_start": "5aacc745a6ba35f135e00728e5aa09bba4a954741b69da1476b0331cc9e3b307",
+          "current": "5aacc745a6ba35f135e00728e5aa09bba4a954741b69da1476b0331cc9e3b307",
+          "changed_in_this_unit": false
+        },
+        "cpppj/src/o/CMakeLists.txt": {
+          "historical": "153363cd3dcc57d7f4e673b9986db5f404c3c1bee144ec8e25e81a83fb831673",
+          "unit_start": "2ec03e08df88e43593359077ba7d4bd26b74d173fc8d1b929256da382d56ea3e",
+          "current": "b6f4167ac5ff46887da61a70bcc940ce419a9525bb357b8dcdce1aa3dfeca3ac",
+          "changed_in_this_unit": true
+        },
+        "cpppj/tests/CMakeLists.txt": {
+          "historical": "a0e572985fee458038234b24b91b77d6cf6bac043d4e9c4eaddb1cb44c9419b8",
+          "unit_start": "8af7e46c2cc9364c2d16c950aba2b1c5a06a55124260db626189ea52ba174968",
+          "current": "d109952745a9d6243c7ad51543af7b30821092f26883a940e5bc144230ad92bf",
+          "changed_in_this_unit": true
+        },
+        "cpppj/tests/CampaignMissionStartTests.cpp": {
+          "historical": "e37ef86b5cf89bee2f986e9d53f96355dab3333d46f39f9b6b911e663ed6a526",
+          "unit_start": "7d0c844b766f844d34864192d4651ad183444dcbd233e3423d63afa4a679f595",
+          "current": "505f3b23152730193cce5434092c427574abf7c17106706f5a0b01a2f91d6ec7",
+          "changed_in_this_unit": true
+        }
+      }
+    },
+    "cpppj/korean-name-migration.json": {
+      "report_sha256": "4cc673027a13f146f9f441c3236560109c1031d03c441eb812f7ed3d2c83da48",
+      "classification": "Archived exact name-migration snapshot, not regenerated for subsequent functional edits."
+    }
+  },
+  "product_validation": {
+    "build_exit": 0,
+    "warnings": 0,
+    "errors": 0,
+    "build_log": "extracted/goal-flyer-target-20261016-coherent-build.log",
+    "focused_cases": 6,
+    "focused_failed_checks": 0,
+    "frame_regression_cases": 7,
+    "postpop_regression_cases": 5,
+    "regression_failed_checks": 0,
+    "full_ctest": {
+      "full_tests": 1385,
+      "passed": 1383,
+      "failed_checks": 2,
+      "ctest_passed": false,
+      "shell_exit_code": 8,
+      "test_seconds": 132.06,
+      "total_seconds": 132.12,
+      "failing_cases": [
+        "CampaignKernelFrames_TheStormRages",
+        "CampaignKernelFrames_DissolvedAlliance"
+      ],
+      "log": "extracted/goal-flyer-target-20261016-ctest.log"
+    },
+    "demo1": {
+      "before_frame": 103,
+      "before_game_seconds": 2.575,
+      "current_frame": 145,
+      "current_game_seconds": 3.625,
+      "next_boundary": "Archer other-parent animation factory"
+    },
+    "kernel400_passed_missions": 9,
+    "kernel400_total_missions": 11,
+    "game_gui_runs": 0,
+    "natural_playthrough_verified": false,
+    "validated_binary_sha256": {
+      "cpppj/build/bin/Release/netstorm_tests.exe": "accead388701f32d8217167e8b2d70603bc04380129624eb981c75ba6297dec8",
+      "cpppj/build/bin/Release/NetstormCpp.exe": "faad7e7c321af52852cfe037eb1172dba4df1208dc1cdbfc5cb733e4154b8df6"
+    }
+  },
+  "initial_cpp_input_preparation": {
+    "log": "extracted/goal-flyer-target-20261016-focused.log",
+    "passed_scopes": [
+      "F240",
+      "required-boundaries"
+    ],
+    "failed_scope_count": 4,
+    "reason": "Test setup wrote dependency head through AllocatedBytes after free input was installed. Moved free/dead input installation after all links; product contract and native outputs unchanged."
+  },
+  "final_native_replay": {
+    "initial_fixture": "extracted/goal-flyer-target-20261016-initial.tsv",
+    "final_fixture_identical": true,
+    "initial_report": "extracted/goal-flyer-target-20261016-initial.json"
+  }
+}
