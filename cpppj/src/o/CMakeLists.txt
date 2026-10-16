@@ -5,6 +5,8 @@ target_sources(netstorm PRIVATE
     # 썬 바리케이드의 현재 프레임/소유자/연결 수 변경과 실제 사건 위임이다.
     RawFenceRegular.cpp RawFenceRegular.h
     RawFenceMarkerClear.cpp RawFenceMarkerClear.h
+    # 원본 내부 표식/포스 필드 생성과 동맹 연결 재생성의 같은 월드 계산이다.
+    RawFenceCreate.cpp RawFenceCreate.h RawFenceRebuild.cpp RawFenceRebuild.h
     # 오벨리스크의 signed 사건 횟수/현재 프레임/공유 난수 지연이다.
     RawBuriedRegular.cpp RawBuriedRegular.h
     # 맨 오 워 풀의 실제 후처리/48BYTE 프로세스/0x73 writer를 같은 Kernel에서 실행한다.

@@ -1,0 +1,117 @@
+{
+  "host": "VM-W11-Codex",
+  "last_full_decompile_host": "VM-W11-Codex",
+  "last_full_decompile_date": "2026-10-16",
+  "total": 578,
+  "scopes": {
+    "M": 106,
+    "S": 306,
+    "R": 166
+  },
+  "normal_returns": 1156,
+  "os_calls": 0,
+  "sha256": {
+    "tools/decomp_fence_create.py": "c794c7b3dae7979beaad350f7b2071a386f32749372e13ef5a9c9eefe8b40cbc",
+    "tools/decomp_local_mission_transport.py": "db71da65079aa9a985a3a833edd224f089ba9a20137d92042551cb346937eb78",
+    "tools/decomp_fence_line.py": "1715039fd224880725b4ac444270b4dfc5ce083d0ea08b93337fc76e185350bb",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "cpppj/tests/fixtures/fence-create-x86.tsv": "84c1247a20c3a7cc1321f0fa36b5a36553a13f1e01e3df41caa3444a1dc12fd1",
+    "cpppj/src/o/RawFenceCreate.h": "596885f2ce7edb7ad4c81b85fe7c1bccfc6eee3e9f32cd3c2fbc8e9a60eda9ee",
+    "cpppj/src/o/RawFenceCreate.cpp": "6bbab821fa49416c45f60fe07eec0b9f9748a9102ab2c418ec9a556a6bb282c3",
+    "cpppj/src/o/RawFenceRebuild.h": "279b13ddb8901e1ca1a9bedd3e242d495ab27762076870a2f30f9ced803d0526",
+    "cpppj/src/o/RawFenceRebuild.cpp": "de2620c35cef5ed42fa62bfcbda0180e36e7349132bb0f799e1f9867317b9f71",
+    "cpppj/tests/FenceCreateTests.cpp": "ac381357401b860673a6fda94b10b38124b4d7f4d4a22d9164dc5c4dbdb1e1c6"
+  },
+  "limits": [
+    "생성/통지/소유자/Pop은 현재 원본 부모가 호출한 인수와 명시 raw변경의 외부 경계다.",
+    "M/S는 실제 좌표/중심/방향/Rect/해시구간/태그/Frame/owner선택이고 R은 실제 제어에서 이웃/거리/하위 생성을 명시 입력으로 둔다.",
+    "새 일반객체의 전체 원본 생성자/공간/표시를 이번 관찰에서 실행한 것으로 세지 않는다.",
+    "CD판/사건3 잔류x87/이웃재Pop/전체 게임 완주·그래픽동일성은 후속이다."
+  ],
+  "product_validation": {
+    "release_warnings": 0,
+    "release_errors": 0,
+    "focused_tests": 4,
+    "focused_failures": 0,
+    "fence_regression_tests": 21,
+    "fence_regression_failures": 0,
+    "full_tests": 1366,
+    "passed": 1364,
+    "failed_checks": 2,
+    "ctest_passed": false,
+    "shell_exit_code": 1,
+    "test_seconds": 236.65,
+    "total_seconds": 236.8,
+    "failing_cases": [
+      "CampaignKernelFrames_TheStormRages",
+      "CampaignKernelFrames_DissolvedAlliance"
+    ],
+    "log": "extracted/goal-fence-create-20261016-ctest.log",
+    "raw_kernel_frames": 400,
+    "raw_kernel_seconds": 10,
+    "passed_missions": 9,
+    "total_missions": 11,
+    "current_cpp_object_counts": {
+      "Tutorial6": {
+        "markers": 51,
+        "shields": 165
+      },
+      "GuardMyBack": {
+        "markers": 40,
+        "shields": 147
+      }
+    },
+    "limitations": "Counts are current C++ state, not original-game parity measurements. GUI/Guide/AI strategy/natural playthrough remain unverified."
+  },
+  "integration_snapshot_sha256": {
+    "cpppj/src/client/RawCampaignSession.cpp": "c3687d62ac59cfe3869e8c963d880e36ace79ba1110a3bd491831a7684a10e6c",
+    "cpppj/src/o/CMakeLists.txt": "085b02c275c08affa7753891e7100828ee47a82e9815ec5fcbd0e8bc2043d30f",
+    "cpppj/tests/CMakeLists.txt": "2f2a7fe717478b44d0f247668088077a3a6a87e9eaeaddb77ee183b217b6238b",
+    "cpppj/tests/CampaignMissionStartTests.cpp": "57a9d13dc5fcfe3608fb3139582e3a80a0cc1c046b1fba595412779c0202293a"
+  },
+  "historical_reports": {
+    "cpppj/fence-regular.json": {
+      "report_sha256": "25ef3e6139ebe811d40fa4a55e21e5e422e2cb2dc7af80e42adb08fd798faf98",
+      "differences": [
+        {
+          "file": "cpppj/src/client/RawCampaignSession.cpp",
+          "recorded_sha256": "f0bc94db47b79a15c8efd510379fce2885854c0d83cb3c17052158169c9a2794",
+          "current_sha256": "c3687d62ac59cfe3869e8c963d880e36ace79ba1110a3bd491831a7684a10e6c"
+        },
+        {
+          "file": "cpppj/src/o/CMakeLists.txt",
+          "recorded_sha256": "bb5861a9e800d9d873ca1f726230ec94fd049bd4bcaaea678aac533f055da69f",
+          "current_sha256": "085b02c275c08affa7753891e7100828ee47a82e9815ec5fcbd0e8bc2043d30f"
+        },
+        {
+          "file": "cpppj/tests/CMakeLists.txt",
+          "recorded_sha256": "b7b76803f306ba9f952670e5b3f131d35af214e4edeecf94defb3090d4648fae",
+          "current_sha256": "2f2a7fe717478b44d0f247668088077a3a6a87e9eaeaddb77ee183b217b6238b"
+        }
+      ],
+      "scope": "Historical report and original fixtures retained. Current C++ regressions pass; current Session/CMake integration snapshot is recorded separately."
+    },
+    "cpppj/buried-regular.json": {
+      "report_sha256": "42439ec45ddcd4139144ae9c75521ae83c5404268479bb6736d5abf3ced88c13",
+      "differences": [
+        {
+          "file": "cpppj/src/client/RawCampaignSession.cpp",
+          "recorded_sha256": "fa5f4cf82ada9bb1fabbeee421f439f6624bba581a70da965313a98016f16a21",
+          "current_sha256": "c3687d62ac59cfe3869e8c963d880e36ace79ba1110a3bd491831a7684a10e6c"
+        },
+        {
+          "file": "cpppj/src/o/CMakeLists.txt",
+          "recorded_sha256": "ea8e75d5f6e307768905b912ecad98e30041585a46a40d504456639998a2434a",
+          "current_sha256": "085b02c275c08affa7753891e7100828ee47a82e9815ec5fcbd0e8bc2043d30f"
+        },
+        {
+          "file": "cpppj/tests/CMakeLists.txt",
+          "recorded_sha256": "49aa00de35ef78960e52130f166c15eac6818f47de436fcb84309323c73b05c0",
+          "current_sha256": "2f2a7fe717478b44d0f247668088077a3a6a87e9eaeaddb77ee183b217b6238b"
+        }
+      ],
+      "scope": "Historical report and original fixtures retained. Current C++ regressions pass; current Session/CMake integration snapshot is recorded separately."
+    }
+  }
+}

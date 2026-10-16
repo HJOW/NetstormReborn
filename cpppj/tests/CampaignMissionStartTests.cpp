@@ -189,6 +189,23 @@ void RunProtectedKernelFrames(std::string_view name,bool demo) {
         try { session.RunFrame(time,false); }
         catch (const std::exception& error) { throw std::runtime_error(std::string(name)+" Kernel frame"+std::to_string(frame)+" game"+std::to_string(time.game)+": "+error.what()); }
     }
+    if (name=="Tutorial6" || name=="GuardMyBack") {
+        const auto core=session.Core();std::size_t markers{},shields{}; //현재 실제로 Pop된 두 연결 객체의 불변식을 검사한다.
+        for (std::uint32_t number=5;number<core.pool.Capacity();++number) { //별도 관찰 객체를 만들지 않고 현재 전체 풀만 읽는다.
+            const auto raw=core.pool.Slot(Sid{static_cast<std::uint16_t>(number)});if (raw[11]&5U) continue;
+            if (raw[10]==90) {
+                ++markers;const auto first=Get(raw,12,2),second=(Get(raw,26)<<8)|raw[30]; //원본00456460의 두 독립 끝점 태그다.
+                CHECK(first>=5 && first<core.pool.Capacity() && second>=5 && second<core.pool.Capacity());
+                if (first>=5 && first<core.pool.Capacity() && second>=5 && second<core.pool.Capacity()) {
+                    CHECK(core.pool.Slot(Sid{static_cast<std::uint16_t>(first)})[10]==136 && core.pool.Slot(Sid{static_cast<std::uint16_t>(second)})[10]==136);
+                }
+            } else if (raw[10]==170) {
+                ++shields;const auto frame=Get(raw,36);const auto codes=core.frames[170].Codes();CHECK(frame<codes.size());
+                if (frame<codes.size()) CHECK(codes[frame].side=='J' || codes[frame].side=='K'); //원본mode1의 현재 실제 J/K 프레임이어야 한다.
+            }
+        }
+        std::fprintf(stderr,"현재 펜스 연결 객체 %s: 표식%zu 포스필드%zu\n",std::string(name).c_str(),markers,shields); //단순 프레임 정상 반환과 실제 생성 상태를 구별한다.
+    }
     CHECK(session.Core().bookkeeping.depth==0 && gate.started==1);std::fprintf(stderr,"실제 Kernel400프레임 완료: %s\n",std::string(name).c_str()); // 전체 정상 완료와 첫 예외 위치를 구별한다.
 }
 }

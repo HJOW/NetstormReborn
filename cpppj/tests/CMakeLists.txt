@@ -4,6 +4,7 @@
 add_executable(netstorm_tests
     FenceRegularTests.cpp
     FenceMarkerClearTests.cpp
+    FenceCreateTests.cpp
     BuriedRegularTests.cpp
     RainAviaryProcessTests.cpp
     PlayerColorTests.cpp
@@ -1112,3 +1113,7 @@ set_source_files_properties(FenceRegularTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 실제 일반 finder와 끝점 태그의 원본 삭제 선택을 비교한다.
 set_source_files_properties(FenceMarkerClearTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_FENCE_MARKER_CLEAR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fence-marker-clear-x86.tsv\"")
+
+# 실제 표식/포스필드/재생성의 독립 원본 전체 결과를 비교한다.
+set_source_files_properties(FenceCreateTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FENCE_CREATE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fence-create-x86.tsv\"")

@@ -1,5 +1,16 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-16 단위84 완료: 썬 바리케이드 실제 두 생성/재생성·공통 삭제 연결 (`VM-W11-Codex`)
+
+- [x] 직전 단위83은 da2b342로 사건 제어/기존 표식 삭제/90·170 정정·새1631입력/전체1362개를 기록한 **진행**이다. AGENTS.md와 양 LEFT를 다시 읽었고 트리는 깨끗하다. 현재/마지막 전체 정밀 PC는 **VM-W11-Codex / 2026-10-16**으로 일치한다. 목표는 active·미달성이다.
+- [x] 실제00457460의 동맹 최근접/사거리/대상extra21 관문,00456460의 단계2(4칸) fencemark 생성과 태그/통지/owner/Pop,00455b20 mode1의 포스 필드170/직접Frame/J·K/signed SID owner선택/100상한/bit20종료/flags40 Pop를 같은 실제 월드에 연결했다. 선언한 새 객체/표시 효과는 원본 관찰의 외부 경계다. [상세](docs/exe/cpp-fence-create-20261016.md).
+- [x] `RawFenceCreate.*`/`RawFenceRebuild.*`와 Session의 실제 Create/통지/Owner/Pop 연결을 작성했다. 원본 **578고유 입력(M106/S306/R166),1156정상 반환**을 관찰했다. 최초 oracle의 foot offset14/18은 잘못된 입력이어서 실제0049a900의 **1d4/1d8**로 고친 뒤 다시 관찰했다. 최초 자료는 `extracted/goal-fence-create-20261016-first-oracle.{json,tsv}`이며 최종 관찰에 합산하지 않는다.
+- [x] 첫 C++표식 비교에서 실제0043fa50의 **float+0.5f를 x87에서 더한 뒤 ftol**을 확인해 단순절삭을 정정했다. 높은 clientSID4660의 지정Take가 서버전용 계약을 위반한 검사 입력도 고쳤다. 명시 create용60~159/클라이언트 끝점을 미리 확보하고 서버15001에만 실제 Take를 사용한다. 게임 allocator 계약은 완화하지 않는다. 최종 새4개/578입력·펜스 회귀21개는 실패0이다.
+- [x] 실제90/170의+10/+14/+18=004af780/004b0950/004b0840을 PE에서 확인하고 기존 실제 공통 삭제/Pre/Post에 연결했다. **Tutorial6/GuardMyBack도400프레임 통과하여9/11**이다. 현재 실제 표식/포스필드는 Tutorial6 **51/165**, GuardMyBack **40/147**이며 높은 끝점 태그의 실제 TYPE136과 J/K 프레임 불변식도 통과했다. 원본 게임 상태와 직접 대조한 개수가 아니며 자연 완주 증거가 아니다.
+- [x] 최종 Release 경고0·오류0, 전체 CTest **1366개 중1364통과·2실패, 검사236.65초/전체236.80초**다. 실패는 데모1의103프레임 TYPE144 파생Pop와 데모3의3프레임 다른 총animation에 한정된다. 원본578·요구에너지2352 SHA/정상반환·Python구문·UTF-8/주석/링크/공백을 감사한다. CMake 이전/현재SHA와 최종검사를 요구에너지 이력에 보존하고 과거펜스/오벨리스크의 Session/CMake3파일 차이는 새 보고서에 구분한다. 로그는 `extracted/goal-fence-create-20261016-{native,native-final,build,final-build,focused,focused-final,frames,frames-final,fence-regression,ctest}.log`다. 모든 빌드/관찰/검사 핸들은 정상 또는 검사실패 종료를 확인했고 실행 중인 작업은 없다.
+- [x] 문서/인수인계 뒤 **`20261016-18 CP 썬 바리케이드 연결 생성과 재생성 및 공통 삭제 연결`**로 로컬 커밋한다. 보호원본/AGENTS/dotnetpj 변경·게임/GUI 실행·push는 없다. 현재/마지막 전체 정밀 PC는 **VM-W11-Codex / 2026-10-16**으로 일치한다.
+- [ ] 사건3의 잔류x87·004578f0 이웃 재Pop·rainFlyer/다른 총 animation·GUI/AI전략/자연 완주는 여전히 남는다. 보호 원본/AGENTS/dotnetpj 변경이나 게임/GUI 실행은 없다.
+
 ## 2026-10-16 단위83 완료: 썬 바리케이드 Regular 제어·기존 표식 삭제·포스 필드 번호 정정 (`VM-W11-Codex`)
 
 - [x] 직전 턴은 원본384입력/오벨리스크 및 같은 Kernel 연결·문서·커밋07c71e6을 완료한 **진행**이다. AGENTS.md와 양 인수인계를 다시 읽었고 트리는 깨끗하다. 현재/마지막 전체 정밀 PC는 **VM-W11-Codex / 2026-10-16**으로 일치한다. 목표는 active·미달성이다.

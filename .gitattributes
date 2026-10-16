@@ -59,6 +59,13 @@ cpppj/fence-marker-clear.json text eol=lf
 cpppj/tests/FenceLineTests.cpp text eol=lf
 docs/exe/cpp-fence-regular-20261016.md text eol=lf
 docs/unit-source-name-map.md text eol=lf
+cpppj/src/o/RawFenceCreate.* text eol=lf
+cpppj/src/o/RawFenceRebuild.* text eol=lf
+cpppj/tests/FenceCreateTests.cpp text eol=lf
+tools/decomp_fence_create.py text eol=lf
+cpppj/tests/fixtures/fence-create-x86.tsv text eol=lf
+cpppj/fence-create.json text eol=lf
+docs/exe/cpp-fence-create-20261016.md text eol=lf
 
 # 요구에너지 근거 SHA가 PC의 자동 줄바꿈 변환에 따라 달라지지 않도록 고정한다.
 cpppj/src/o/RawTypeRequiredEnergy.* text eol=lf
