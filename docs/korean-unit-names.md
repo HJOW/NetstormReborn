@@ -12,6 +12,8 @@
 
 ## 공유 명칭 표
 
+내부 타입명과 사용자 표시 이름의 차이는 [게임 표시 이름과 소스 타입명 대응표](unit-source-name-map.md)에 기록한다. 예: `sunFence` → Sun Barricade(썬 바리케이드), `sunBlocker` → Stone Tower(스톤 타워).
+
 관리 파일은 [assets/unit-names.korean.json](../assets/unit-names.korean.json)이다. 현재 **55개 영어 명칭/별칭**을 등록했다. 다른 표기가 필요하면 이 공유 자료와 해당 문서를 함께 갱신한다.
 
 | 영어 이름 | 한국어 표시 |
