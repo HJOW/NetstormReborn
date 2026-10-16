@@ -880,3 +880,7 @@ cpppj/tests/FieryTailVisualSystemTests.cpp text eol=lf
 cpppj/tests/fixtures/render-removal-x86.tsv text eol=lf
 cpppj/render-removal.json text eol=lf
 tools/decomp_render_removal.py text eol=lf
+# 실제 원본 프로세스의 읽기 전용 heap 관찰 원문과 감사 코드를 유지한다.
+tools/capture_fierytail_heap.py text eol=lf
+cpppj/fierytail-live-heap.json text eol=lf
+docs/exe/cpp-fierytail-live-heap-20261017.md text eol=lf

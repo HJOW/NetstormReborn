@@ -1,0 +1,97 @@
+{
+  "date": "2026-10-17",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "lastDecompileDate": "2026-10-16",
+  "session": "20261016T150059038Z-1e0a848c4a86",
+  "gamePid": 3344,
+  "processClosed": true,
+  "recordingStopped": true,
+  "purpose": "실제10.78 Demo Dissolved Alliance에서 Fiery Tail11색 뒤 DWORD의 할당 근거를 읽기 전용으로 관찰",
+  "captures": [
+    {
+      "samples": 5095,
+      "readErrors": 0,
+      "elapsedSeconds": 45.00261799999862,
+      "palettes": [
+        {
+          "palette": 79769256,
+          "pointer": 79756720,
+          "count": 11,
+          "raw": "d9000000e20000003e0000003800000033000000c8000000dd000000da000000da000000c5000000c400000001000000647c1b8a37160080c0c55000",
+          "firstSeconds": 38.41369909999776,
+          "samples": 956
+        }
+      ],
+      "rawArtifact": "extracted/goal-fierytail-live-20261017-heap.json",
+      "rawArtifactSha256": "3b6cb983bc10ce1ecc36065f5e0fcf989db190f68257b8beac1bcf0ffb90d603",
+      "effectSnapshots": 186,
+      "snapshotsContainingLife4": 3
+    },
+    {
+      "samples": 301,
+      "readErrors": 0,
+      "elapsedSeconds": 3.005538500001421,
+      "palettes": [
+        {
+          "palette": 79769256,
+          "pointer": 79756720,
+          "count": 11,
+          "prefix": "01000000010000006d7c1c8a0015008c",
+          "raw": "d9000000e20000003e0000003800000033000000c8000000dd000000da000000da000000c5000000c400000001000000647c1b8a37160080c0c55000",
+          "firstSeconds": 0.0002874000056181103,
+          "samples": 296
+        },
+        {
+          "palette": 79769256,
+          "pointer": 79756720,
+          "count": 11,
+          "prefix": "01000000010000006d7c1c8a0015008c",
+          "raw": "d9000000e20000003e0000003800000033000000c8000000dd000000da000000da000000c5000000c400000001000000647c1b8a37160088cc435100",
+          "firstSeconds": 0.056502000021282583,
+          "samples": 5
+        }
+      ],
+      "rawArtifact": "extracted/goal-fierytail-live-20261017-heap-later.json",
+      "rawArtifactSha256": "8e409cfec79203c63ca944b899a2b8809ec66365864c233c05427ddd573c5ca8",
+      "effectSnapshots": 127,
+      "snapshotsContainingLife4": 3
+    }
+  ],
+  "paletteObservations": 1257,
+  "observedAdjacentDwords": [
+    1
+  ],
+  "heapMode": 1,
+  "smallBlockThreshold": 0,
+  "heapHandle": 40960000,
+  "allocationBasis": {
+    "entry": "004e429b",
+    "condition": "heapMode==1",
+    "call": "HeapAlloc(heap,0,44)",
+    "source": "extracted/refined/originals/Netstorm.c",
+    "note": "실제 모드1과 정적 CRT 분기를 대조했다. HeapAlloc 호출 자체의 디버거 추적은 아니다."
+  },
+  "nativeUi": {
+    "computerUseCaptureErrors": [
+      "FrameArrived timed out: timed out waiting on channel",
+      "window capture timed out: timed out waiting on channel"
+    ],
+    "fallback": "게임 전용 analyzeManager의 캡처/입력·자동 녹화 사용",
+    "launchPermission": "AGENTS.md HJOW-Athlon 실행 확인 예외"
+  },
+  "limitations": [
+    "독립 게임 실행은1회이며 반복 읽기5396회/팔레트1257회를 고유 원본 입력 수로 세지 않는다.",
+    "프로세스를 정지시키지 않은 읽기이므로 객체/입자 전체의 원자적 snapshot이나 실제 Draw의 색 조회 추적은 아니다.",
+    "인접 DWORD1은 이 실행의 이 할당에서 읽은 값이다. 다른 실행/다른 allocator의 보장값이나12번째 색 정의가 아니다.",
+    "기존11색은 실제 생성자 fixture의 GIFCLOUD 결과와 일치한다. 배열 뒤16바이트도 원문으로 남기며 후속 DWORD 일부는 관찰 중 바뀌었다.",
+    "제품에 상수1/0 또는 끝색 clamp를 추가하지 않았다. 실제 런타임 할당/읽기 경계와 화면 픽셀 연결은 다음 작업이다.",
+    "캡처 도구는 관찰 뒤 offline --verify 기능을 추가했다. 원문 관찰 데이터와 독립 생성자 fixture는 변경하지 않았다."
+  ],
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/capture_fierytail_heap.py": "c0ddadf468e20bec4aa8a61ae2502eb0cb8143ad43aea32674f82c1990937f9e",
+    "cpppj/tests/fixtures/fierytail-lifetime-x86.tsv": "0bdf2958f9e393cb06c926544ca4364b7cae2611e3899fab74186b93fb40570e"
+  }
+}

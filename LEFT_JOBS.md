@@ -1,5 +1,16 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-17 단위101 완료: 실제 데모3 Fiery Tail 인접 heap 관찰 (`HJOW-Athlon`)
+
+- [x] 직전 단위100은 공통 표시/실제 Host 연결·검증과 **`3fda610`** 커밋을 남긴 **진행**이다. AGENTS.md와 양 LEFT, 깨끗한 트리를 다시 확인했다. 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-16**으로 일치한다. 새 디컴파일·C++ 제품 수정은 없다.
+- [x] 실행 확인 예외인 현재 PC에서 analyzeManager의 원본10.78 복사본을1024×768 창 모드로 실행해 실제 Demo Dissolved Alliance를 관찰했다. 세션 **`20261016T150059038Z-1e0a848c4a86`**(UTC ID, 한국 날짜17일), 게임PID3344·복사본/보호 PE SHA 일치다. computer-use 캡처2회는 시간 초과했고, 게임 전용 analyzeManager의 정상 캡처/입력 증거를 사용했다. [기록](docs/exe/cpp-fierytail-live-heap-20261017.md).
+- [x] `capture_fierytail_heap.py`가 검증된 세션 PID/실행 경로에 조회/메모리 읽기 권한만 열었다. 실제 첫45초5095폴링/후속3초301폴링·읽기오류0, palette1257회·TYPE11 snapshot313개를 읽었다. 프로세스를 정지시키지 않은 snapshot이며 이 반복 읽기를 고유 원본 입력으로 세지 않는다.
+- [x] 공유 객체 `04c12ea8`, 색 배열 `04c0fdb0`, count11·앞11색44바이트는 단위99 GIFCLOUD 원본 생성자와 같다. **배열+44의 실제 DWORD는 이 실행에서1**이었다. 뒤16바이트도 보존했고 더 뒤쪽 일부는 변했다. 실제 heap mode1·threshold0과 정적 CRT `004e429b`는 `HeapAlloc(heap,0,44)` 분기를 가리킨다. HeapAlloc/Draw의 명령 추적이나 다른 실행에서 같은 인접 값이라는 증거는 아니다. 제품에 고정1/0/끝색 clamp를 넣지 않았다.
+- [x] 원문 변형3개·읽기 수·주소와 SHA를 `cpppj/fierytail-live-heap.json`에 보존했고 오프라인 `python tools/capture_fierytail_heap.py --verify`가 실제11색/인접 원문·독립 생성자 fixture·보호 PE/도구 SHA를 확인했다. 전체 raw/녹화는 `extracted/goal-fierytail-live-20261017-*`, 위 분석 세션 경로다. 관찰 뒤 offline 감사 기능만 도구에 추가했고 원문 기대값은 변경하지 않았다.
+- [x] 관찰 메모20번 뒤 `end_session force=true`가 **closed=true**, 자동 녹화 **stopped·9268프레임·오류 없음**으로 마감됐다. 게임/녹화 재시작 대기는 없다. 원본 PE/설정을 직접 수정하지 않았고 AGENTS.md·dotnetpj도 수정하지 않았다. C++ 변경이 없어 빌드/CTest는 재실행하지 않았으며 직전1424개/기존2실패를 새 결과로 세지 않는다.
+- [x] 문서/인수인계 뒤 **`20261017-01 CP 원본 데모의 Fiery Tail 인접 heap 메모리 관찰`**로 로컬 커밋한다. 원격 push는 하지 않으며 목표는 active다.
+- [ ] **다음 실제 진행:** 실제 런타임 할당/인접 메모리 읽기 경계와 공통 표시·원본 좌표 변환·dirty/VFX 선 래스터를 같은 화면에 연결한다. 이번 인접1을 고정 색으로 사용하지 않는다. 그 뒤 Session의 표시 Pop→effect11→Missile 부착과 데모3의113프레임 이후를 검사한다. 반더148 stage5·전체 GUI/입력·AI/건설/경제·승패/저장/다음 미션·자연 완주는 미완료다. 전체화면 DirectDraw는 이번1차 범위에서 제외한다.
+
 ## 2026-10-16 단위100 완료: 공통 표시 목록·Fiery Tail Host 연결 (`HJOW-Athlon`)
 
 - [x] 직전 목표 턴은 단위99 실제 생성자 대조·첫8색 방향 수정과 **`8240d94`** 커밋으로 authoritative 상태를 바꾼 **진행**이다. AGENTS.md와 양 LEFT, 깨끗한 트리를 다시 확인했다. 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-16**으로 일치한다. 새 디컴파일·실제 게임·GUI 실행은 없다.
