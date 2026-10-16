@@ -1,0 +1,493 @@
+{
+  "schema": 1,
+  "host": "VM-W11-Codex",
+  "date": "2026-10-16",
+  "last_full_refined_host": "VM-W11-Codex",
+  "unique_inputs": 703,
+  "normal_returns": 1406,
+  "precision_controls": [
+    639,
+    895
+  ],
+  "fixture_control": 639,
+  "precision_differences": 6,
+  "precision_difference_records": [
+    {
+      "index": 120,
+      "input": {
+        "kind": 0,
+        "x": 1117814784,
+        "y": 1115783168,
+        "hotx": -8,
+        "hoty": -5,
+        "typehotx": 0,
+        "typehoty": 0,
+        "endx": 1120403456,
+        "endy": 1119092736,
+        "fraction": 0,
+        "targetstate": 0,
+        "previous": 0,
+        "corner": 0,
+        "range": 1109393408,
+        "firingSound": 0,
+        "displaySound": 0,
+        "impactSound": 456,
+        "directions": 0,
+        "frames": 16,
+        "extra": 0,
+        "passed": 0
+      },
+      "secondary_result": [
+        "H:50;D:60;A:81:2;O:90:1;P:90:1117749248:1115723590:0;B:28:90:0:16",
+        "30d65000510000005a0000000000000000000000320000003c00000000000000a7b4c1cedbe8f502000000000000000000000c420000000000809f42469780420000c8420000b4420000c6420000b14200401cc600401cc600401cc600401cc600401cc600401cc6c5577c8567442640000000000080244000401cc600401cc6",
+        "009031110000000000008c0000000080a04200808142000000000000000000000000010000000000000000000000000000000090311100000000000047000000000048420000484200000000000000000000000001000000000000000000000000000000009031110000000000005100000000809f424697804200000000000000000000000001000000000000000000000000000000",
+        "0000000000000000"
+      ]
+    },
+    {
+      "index": 121,
+      "input": {
+        "kind": 0,
+        "x": 1117814784,
+        "y": 1115783168,
+        "hotx": -8,
+        "hoty": -5,
+        "typehotx": 0,
+        "typehoty": 0,
+        "endx": 1120403456,
+        "endy": 1119092736,
+        "fraction": 0,
+        "targetstate": 0,
+        "previous": 0,
+        "corner": 0,
+        "range": 1109393408,
+        "firingSound": 0,
+        "displaySound": 0,
+        "impactSound": 456,
+        "directions": 16,
+        "frames": 16,
+        "extra": 0,
+        "passed": 0
+      },
+      "secondary_result": [
+        "H:50;D:60;A:81:2;F:1117749248:1115723590:1120272384:1118896128:81;O:90:1;P:90:1117749248:1115723590:0;B:28:90:0:16",
+        "30d65000510000005a0000000000000000000000320000003c00000000000000a7b4c1cedbe8f502000000000000000000000c420000000000809f42469780420000c8420000b4420000c6420000b14200401cc600401cc600401cc600401cc600401cc600401cc6c5577c8567442640000000000080244000401cc600401cc6",
+        "009031110000000000008c0000000080a04200808142000000000000000000000000010000000000000000000000000000000090311100000000000047000000000048420000484200000000000000000000000001000000000000000000000000000000009031110000000000005100000000809f424697804200000000000000000000000001000600000000000000000000000000",
+        "0000000000000000"
+      ]
+    },
+    {
+      "index": 122,
+      "input": {
+        "kind": 0,
+        "x": 1117814784,
+        "y": 1115783168,
+        "hotx": -8,
+        "hoty": -5,
+        "typehotx": 0,
+        "typehoty": 0,
+        "endx": 1120403456,
+        "endy": 1119092736,
+        "fraction": 0,
+        "targetstate": 0,
+        "previous": 0,
+        "corner": 0,
+        "range": 1109393408,
+        "firingSound": 0,
+        "displaySound": 789,
+        "impactSound": 456,
+        "directions": 0,
+        "frames": 16,
+        "extra": 0,
+        "passed": 0
+      },
+      "secondary_result": [
+        "H:50;D:60;A:81:2;O:90:1;S:1117749248:1115723590:789:0:0;P:90:1117749248:1115723590:0;B:28:90:0:16",
+        "30d65000510000005a0000000000000000000000320000003c00000000000000a7b4c1cedbe8f502000000000000000000000c420000000000809f42469780420000c8420000b4420000c6420000b14200401cc600401cc600401cc600401cc600401cc600401cc6c5577c8567442640000000000080244000401cc600401cc6",
+        "009031110000000000008c0000000080a04200808142000000000000000000000000010000000000000000000000000000000090311100000000000047000000000048420000484200000000000000000000000001000000000000000000000000000000009031110000000000005100000000809f424697804200000000000000000000000001000000000000000000000000000000",
+        "0000000000000000"
+      ]
+    },
+    {
+      "index": 123,
+      "input": {
+        "kind": 0,
+        "x": 1117814784,
+        "y": 1115783168,
+        "hotx": -8,
+        "hoty": -5,
+        "typehotx": 0,
+        "typehoty": 0,
+        "endx": 1120403456,
+        "endy": 1119092736,
+        "fraction": 0,
+        "targetstate": 0,
+        "previous": 0,
+        "corner": 0,
+        "range": 1109393408,
+        "firingSound": 0,
+        "displaySound": 789,
+        "impactSound": 456,
+        "directions": 16,
+        "frames": 16,
+        "extra": 0,
+        "passed": 0
+      },
+      "secondary_result": [
+        "H:50;D:60;A:81:2;F:1117749248:1115723590:1120272384:1118896128:81;O:90:1;S:1117749248:1115723590:789:0:0;P:90:1117749248:1115723590:0;B:28:90:0:16",
+        "30d65000510000005a0000000000000000000000320000003c00000000000000a7b4c1cedbe8f502000000000000000000000c420000000000809f42469780420000c8420000b4420000c6420000b14200401cc600401cc600401cc600401cc600401cc600401cc6c5577c8567442640000000000080244000401cc600401cc6",
+        "009031110000000000008c0000000080a04200808142000000000000000000000000010000000000000000000000000000000090311100000000000047000000000048420000484200000000000000000000000001000000000000000000000000000000009031110000000000005100000000809f424697804200000000000000000000000001000600000000000000000000000000",
+        "0000000000000000"
+      ]
+    },
+    {
+      "index": 124,
+      "input": {
+        "kind": 0,
+        "x": 1117814784,
+        "y": 1115783168,
+        "hotx": -8,
+        "hoty": -5,
+        "typehotx": 0,
+        "typehoty": 0,
+        "endx": 1120403456,
+        "endy": 1119092736,
+        "fraction": 0,
+        "targetstate": 0,
+        "previous": 0,
+        "corner": 0,
+        "range": 1109393408,
+        "firingSound": 123,
+        "displaySound": 789,
+        "impactSound": 456,
+        "directions": 0,
+        "frames": 16,
+        "extra": 0,
+        "passed": 0
+      },
+      "secondary_result": [
+        "H:50;D:60;A:81:2;O:90:1;S:1117749248:1115723590:123:0:0;P:90:1117749248:1115723590:0;B:28:90:0:16",
+        "30d65000510000005a0000000000000000000000320000003c00000000000000a7b4c1cedbe8f502000000000000000000000c420000000000809f42469780420000c8420000b4420000c6420000b14200401cc600401cc600401cc600401cc600401cc600401cc6c5577c8567442640000000000080244000401cc600401cc6",
+        "009031110000000000008c0000000080a04200808142000000000000000000000000010000000000000000000000000000000090311100000000000047000000000048420000484200000000000000000000000001000000000000000000000000000000009031110000000000005100000000809f424697804200000000000000000000000001000000000000000000000000000000",
+        "0000000000000000"
+      ]
+    },
+    {
+      "index": 125,
+      "input": {
+        "kind": 0,
+        "x": 1117814784,
+        "y": 1115783168,
+        "hotx": -8,
+        "hoty": -5,
+        "typehotx": 0,
+        "typehoty": 0,
+        "endx": 1120403456,
+        "endy": 1119092736,
+        "fraction": 0,
+        "targetstate": 0,
+        "previous": 0,
+        "corner": 0,
+        "range": 1109393408,
+        "firingSound": 123,
+        "displaySound": 789,
+        "impactSound": 456,
+        "directions": 16,
+        "frames": 16,
+        "extra": 0,
+        "passed": 0
+      },
+      "secondary_result": [
+        "H:50;D:60;A:81:2;F:1117749248:1115723590:1120272384:1118896128:81;O:90:1;S:1117749248:1115723590:123:0:0;P:90:1117749248:1115723590:0;B:28:90:0:16",
+        "30d65000510000005a0000000000000000000000320000003c00000000000000a7b4c1cedbe8f502000000000000000000000c420000000000809f42469780420000c8420000b4420000c6420000b14200401cc600401cc600401cc600401cc600401cc600401cc6c5577c8567442640000000000080244000401cc600401cc6",
+        "009031110000000000008c0000000080a04200808142000000000000000000000000010000000000000000000000000000000090311100000000000047000000000048420000484200000000000000000000000001000000000000000000000000000000009031110000000000005100000000809f424697804200000000000000000000000001000600000000000000000000000000",
+        "0000000000000000"
+      ]
+    }
+  ],
+  "kinds": {
+    "0": 229,
+    "1": 466,
+    "2": 8
+  },
+  "coverage_expansion": {
+    "previous_fixture_sha256": "e99c617f827fab16dd0d8ea0496f29a4b6ff991394b6ed3b15fa49f67286a25a",
+    "previous_inputs": 699,
+    "unchanged_inputs": 699,
+    "added_inputs": 4,
+    "purpose": "기존699행 C++ 세 검사가 통과한 뒤 dirs8/frames24의 네 사분면 경계를 추가했다. 실패에 맞춰 기대값을 수정한 것이 아니다."
+  },
+  "zero_distance_case": {
+    "input_index": 224,
+    "target_position": [
+      51,
+      51.5
+    ],
+    "target_dimensions": [
+      2,
+      3
+    ],
+    "native_endpoint": [
+      50,
+      50
+    ],
+    "native_origin": [
+      50,
+      50
+    ],
+    "scope": "최초699행부터 들어 있던 실제 생성자 원점/종점 일치 입력이다. frame의0기간 처리는 별도다."
+  },
+  "metadata": {
+    "firingType": 140,
+    "group": 0,
+    "displayType": 81,
+    "speed": 35,
+    "effectType": 0,
+    "virtualMuzzle": "0050b6e8+b4 -> 0041c110"
+  },
+  "executions": [
+    {
+      "control": 639,
+      "returns": 703,
+      "assertions": 0,
+      "native_calls": {
+        "00481a50": 229,
+        "0041c110": 237,
+        "0041d180": 458,
+        "0040e800": 1767,
+        "0041d0d0": 1072,
+        "0041cfc0": 928,
+        "0041d6e0": 121,
+        "0043fa50": 121,
+        "004e49c0": 242,
+        "00482340": 466,
+        "00431f90": 65,
+        "0040e880": 307,
+        "0040e8f0": 307,
+        "00468cc0": 230
+      },
+      "boundaries": {
+        "004ac550": 583,
+        "0049a840": 1065,
+        "00419850": 229,
+        "0049a900": 229,
+        "004ac950": 720,
+        "004af530": 229,
+        "20000110": 229,
+        "20000120": 695,
+        "0041bd20": 229,
+        "004a9c30": 191,
+        "20000130": 466,
+        "00436d00": 65,
+        "0049af10": 65,
+        "004adea0": 699,
+        "00470ac0": 28,
+        "004d4f00": 28,
+        "20000140": 258,
+        "0045a750": 28,
+        "004d5000": 230
+      },
+      "instructions": 291504
+    },
+    {
+      "control": 895,
+      "returns": 703,
+      "assertions": 0,
+      "native_calls": {
+        "00481a50": 229,
+        "0041c110": 237,
+        "0041d180": 458,
+        "0040e800": 1767,
+        "0041d0d0": 1072,
+        "0041cfc0": 928,
+        "0041d6e0": 121,
+        "0043fa50": 121,
+        "004e49c0": 242,
+        "00482340": 466,
+        "00431f90": 65,
+        "0040e880": 307,
+        "0040e8f0": 307,
+        "00468cc0": 230
+      },
+      "boundaries": {
+        "004ac550": 583,
+        "0049a840": 1065,
+        "00419850": 229,
+        "0049a900": 229,
+        "004ac950": 720,
+        "004af530": 229,
+        "20000110": 229,
+        "20000120": 695,
+        "0041bd20": 229,
+        "004a9c30": 191,
+        "20000130": 466,
+        "00436d00": 65,
+        "0049af10": 65,
+        "004adea0": 699,
+        "00470ac0": 28,
+        "004d4f00": 28,
+        "20000140": 258,
+        "0045a750": 28,
+        "004d5000": 230
+      },
+      "instructions": 291504
+    }
+  ],
+  "game_gui_runs": 0,
+  "limitations": [
+    "실제 포구·Missile 생성/비행·방향 helper와 하위 수치 명령을 실행한다.",
+    "합성 TYPE/SHP/표적 치수·bounds, 자산 생성/소유자/공간/사운드/피해/부착/삭제는 명시 경계다.",
+    "실제 게임/GUI·캠페인 완주·CD10.72 대조는 하지 않는다. 반사/빗나감 및 원본 assert 입력은 별도다.",
+    "표적은 TYPE71이다. TYPE146의 확률 회피와 free 발사자 직접 피해 하위는 포함하지 않는다.",
+    "fixture는 x87 027f의 원문 기대값이다. 037f 결과가 다른 행은 제외하지 않고 별도 원문 결과와 함께 기록한다.",
+    "전체128BYTE/세 슬롯150BYTE/효과 순서·반환/스택/비휘발/x87/SEH/쓰기guard를 대조한다."
+  ],
+  "sha256": {
+    "cpppj/tests/fixtures/crossbow-missile-x86.tsv": "c7962b28d0470c64ffe605ea6a2c85f2b89d2d4ef416d8293fd4effe14f9e32f",
+    "extracted/owner/originals/creation.c": "f9919c046d5259526946f106b47b6259fe5e04971f743d6fa02d6a5361b9dc16",
+    "extracted/owner/originals/functions.tsv": "3ea66dace80a85999a8b2c2dbadb4d5f1bd18b0dcdb0768f9c41075206c7c72d",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_crossbow_missile.py": "e54abc592c7c07a866814a591f25e37ac9d654c39cb67ff4bf8a10e10196468f",
+    "tools/decomp_gunmissile_oracle.py": "4671a0a69ee91d6e0280a6c4af73d38e6ca6b096ee04161aeaef8d2d3e5c0fd1",
+    "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb"
+  },
+  "unit_start_commit": "b5982bb",
+  "status": "native703-cpp-bit-exact-and-session-crossbow-arrow-flight-lifecycle-integrated",
+  "ctest": {
+    "total": 1401,
+    "passed": 1399,
+    "failed": 2,
+    "test_seconds": 123.48,
+    "total_seconds": 123.58,
+    "exit_code": 8
+  },
+  "focused_tests": {
+    "CrossbowMissile": 3,
+    "CampaignCrossbow": 1,
+    "CampaignFire": 5,
+    "CannonFire": 5,
+    "CrossbowAnimation": 4,
+    "ArcherAnimation": 4,
+    "GunAnimation": 4,
+    "ProjectileGeometry": 2,
+    "ArcherMissile": 2,
+    "Missile": 4
+  },
+  "build": {
+    "configuration": "Release",
+    "warnings": 0,
+    "errors": 0
+  },
+  "mission_load_start_passed": 11,
+  "mission_400_frames_passed": 9,
+  "natural_user_completion": false,
+  "goal_status": "active",
+  "remaining_kernel_boundaries": [
+    {
+      "mission": "DemoStormRages",
+      "frames": 145,
+      "seconds": 3.625,
+      "type": 148,
+      "stage": 5,
+      "boundary": "animation factory"
+    },
+    {
+      "mission": "DissolvedAlliance",
+      "previous_frames": 5,
+      "previous_seconds": 0.125,
+      "frames": 20,
+      "seconds": 0.5,
+      "firing_type": 140,
+      "target_type": 131,
+      "boundary": "actual target virtual damage"
+    }
+  ],
+  "runtime_test_limits": "실제 Session Load/Start·전체 Kernel의81 생성/이동 뒤 명시 Destroy와 공간/Host 정리 검사다. 자연 충돌 피해/사용자 완주 증거는 아니다.",
+  "first_failures": {
+    "install_scene": "처음의 범위가 좁은 InstallScene 검사는 다른 총 각도→Graph 미연결로 실패했다. 실제 제품 Session/Start 검사로 옮겼다. 제품 callback을 빈 성공으로 바꾸지 않았다.",
+    "compile_warning": "처음 검사에는 signed 비교 경고1개가 있었고 그 임시 검사를 실제 Session 검사로 교체했다. 최종 Release 경고0·오류0이다."
+  },
+  "followup_static_notes": "docs/exe/cpp-vander-beam-notes-20261016.md",
+  "integration_snapshot_sha256": {
+    "cpppj/tests/CMakeLists.txt": {
+      "unit_start": "a46940483d19e4069cc1c9ba806269d5e13fe412f8c95c590dd301987d54c5be",
+      "current": "eb65ee209285d5db110206710480a10914d02d86bf70334d95cee6f4803baac8"
+    },
+    "cpppj/src/o/CMakeLists.txt": {
+      "unit_start": "dd416c251036919e579740db4a00b711855cec87d7f15e23799f24213fdeb1a1",
+      "current": "dd416c251036919e579740db4a00b711855cec87d7f15e23799f24213fdeb1a1"
+    },
+    "cpppj/type-required-energy.json": {
+      "unit_start": "f2c2ab3b7d6652744f247eaf969f91ae6fbf88b459bb35db40cff0c08a156aca",
+      "current": "0cc8d640296aa04882e04fce29e04fae01cc396819c78e2c613321863a0e181f"
+    },
+    "cpppj/cannon-fire.json": {
+      "unit_start": "b1c3936fba303ea1a3c2cf092a9870f6aa89b4b1000ddce795d2f302441c31d5",
+      "current": "b1c3936fba303ea1a3c2cf092a9870f6aa89b4b1000ddce795d2f302441c31d5"
+    },
+    "cpppj/crossbow-animation.json": {
+      "unit_start": "19eafd505c45cee03f552bff108106f97319f5580a0d47de29dcedd913b2b8eb",
+      "current": "19eafd505c45cee03f552bff108106f97319f5580a0d47de29dcedd913b2b8eb"
+    },
+    "cpppj/src/o/RawMissile.cpp": {
+      "unit_start": "abb07b526ba1ae7d415c7215477764f7253aa51af9f199bf6b60c6d37341b8f4",
+      "current": "a9fd93f83bcb8ce785ce6df800db9f2293db244564ffffa7fe01784dfd484a07"
+    },
+    "cpppj/src/o/RawMissile.h": {
+      "unit_start": "a48c2833f5463df9fdaf25634c440805f5edce224e30b3725cea142fa21b3487",
+      "current": "cf026f224b4008b5612a04e47ae1b9d316171176be176d0cce8577322176d164"
+    },
+    "cpppj/src/o/RawProjectileGeometry.cpp": {
+      "unit_start": "6242f38451c346528264b64498c9cbe7f3ebe892f866444a89ac65971cc5dbb9",
+      "current": "44fc84f079d6f780a78c6653faa0f9f0467cf5984356813e92390642828dd2d8"
+    },
+    "cpppj/src/o/RawProjectileGeometry.h": {
+      "unit_start": "282867531f6da0ef171f62ea2f7cf8b13b828e87309aae445800d12cb7733caa",
+      "current": "ca5a9e510e0c109b2013e8f34677315b7e2a09b3bc1e4e4ca1bba5765fb1aed5"
+    },
+    "cpppj/src/client/RawCampaignSession.cpp": {
+      "unit_start": "7efed7166cde740b1cbabfae5ce7ec0aa81de6aeb637d9562d6a059a8ca241be",
+      "current": "a16f070fbc397d5634f2c3acf51032229d3bb85f1d96d8087f1e43f7046014ea"
+    },
+    "cpppj/tests/CampaignInstallSupport.h": {
+      "unit_start": "b15da3610de776368fcddb28edde694c7e6a4f8681712b6bf3046c3abb9734d4",
+      "current": "80f9e2b20387195f5f603fc894d6abc779cc1e2c74e167d97b48b8c3639dcbf1"
+    },
+    "cpppj/src/client/RawCampaignHitBindings.cpp": {
+      "unit_start": "5759ab0d9110d08fa94f2b236b62366412e98ec3766b46660aba0fe588666872",
+      "current": "39510a0f075fc57e29ff085eb44510084af14f092971001cf7224137301e2461"
+    },
+    "cpppj/tests/CampaignFireTests.cpp": {
+      "unit_start": "87c0372eccf92f6137d37bd3b31fa3e6ddd941883fda3c7b72aada7c03fd3ebd",
+      "current": "87c0372eccf92f6137d37bd3b31fa3e6ddd941883fda3c7b72aada7c03fd3ebd"
+    },
+    "cpppj/tests/CrossbowMissileTests.cpp": {
+      "current": "9c45895a514f916b7e8149eb0bf8a8955f7139c350849074bb54a1956b7d20c1"
+    },
+    "cpppj/tests/CampaignMissionStartTests.cpp": {
+      "current": "43f636ba0f2715eb421f2efaa3e50aeae9f5b63740207ca3e64b2cea5c1485a3"
+    },
+    "cpppj/build/bin/Release/netstorm_tests.exe": {
+      "current": "d810112a73ef5a9d048d6a139790793e46c74c9fca4331880a9d404bf569fd04"
+    },
+    "cpppj/build/bin/Release/NetstormCpp.exe": {
+      "current": "e5cdffc1a3ca3fa1b34f0404a9d2bf2a319d9ceb34c024083a8e696d09d1dfea"
+    }
+  },
+  "historical_reports_unchanged": {
+    "cpppj/cannon-fire.json": "b1c3936fba303ea1a3c2cf092a9870f6aa89b4b1000ddce795d2f302441c31d5",
+    "cpppj/crossbow-animation.json": "19eafd505c45cee03f552bff108106f97319f5580a0d47de29dcedd913b2b8eb"
+  },
+  "focused_test_log_note": "CampaignFire count verified separately in extracted/goal-crossbow-missile-20261016-final-campaign-tests.log; one full-ctest stdout prefix was interleaved with stderr.",
+  "post_test_comment_correction": {
+    "scope": "새 원본 실행 도구의 모든 반복문·comprehension에 한국어 목적 주석만 보완했다. generator와 기존 기대값은 다시 쓰지 않았다.",
+    "tested_tool_sha256": "bd13d87dd2d5c95532ab1482fcb7fd012adb31afda58c65df44c60f38a8296d9",
+    "current_tool_sha256": "e54abc592c7c07a866814a591f25e37ac9d654c39cb67ff4bf8a10e10196468f",
+    "python_token_exclusions": ["COMMENT", "NL", "ENCODING"],
+    "compared_tokens": 4091,
+    "executable_tokens_equal": true,
+    "fixture_sha256_unchanged": "c7962b28d0470c64ffe605ea6a2c85f2b89d2d4ef416d8293fd4effe14f9e32f"
+  }
+}

@@ -7,6 +7,10 @@
 
 namespace netstorm::o {
 namespace {
+// 실제10.78 방향 helper의 근사 원주/직각/역원주 double 비트다.
+constexpr double kTwoPi=std::bit_cast<double>(std::uint64_t{0x401921f9f01b866e}),
+    kHalfPi=std::bit_cast<double>(std::uint64_t{0x3ff921f9f01b866e}),
+    kInverseTwoPi=std::bit_cast<double>(std::uint64_t{0x3fc45f318e7adaf5});
 // 현재 원본 little endian DWORD를 정렬 가정 없이 읽는다.
 std::uint32_t Read(std::span<const std::uint8_t> raw,std::size_t offset) {
     std::uint32_t value=0;
@@ -44,6 +48,32 @@ std::array<float,2> RawProjectileGeometry::ArcherMuzzle(Sid firing) const {
     const auto x=std::bit_cast<float>(Read(raw,14)),y=std::bit_cast<float>(Read(raw,18));
     return {static_cast<float>(static_cast<double>(first[0]+current[0])/scaleX_+x),
             static_cast<float>(static_cast<double>(first[1]+current[1])/scaleY_+y)};
+}
+// 실제 VT50b888/50b6e8의+b4는 각각46a780/41c110으로 서로 다른 포구를 반환한다.
+std::array<float,2> RawProjectileGeometry::Muzzle(Sid firing) const {
+    const auto raw=Slot(firing);
+    if (raw[10]==71) return ArcherMuzzle(firing);
+    if (pool_.Edition()==OriginalEdition::Patch1078 && raw[10]==140)
+        return {std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18))};
+    throw std::logic_error("Projectile 실제 가상 포구 미복원 TYPE"+std::to_string(raw[10]));
+}
+// 가상 포구 계산 뒤 Missile ctor가 별도로 요구하는 현재 SHP 기준점이다.
+std::array<std::int32_t,2> RawProjectileGeometry::Hotspot(Sid firing) const {
+    const auto raw=Slot(firing);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
+    const auto offset=Offset(raw[10],patch ? std::bit_cast<std::int32_t>(Read(raw,36)) : raw[34],(raw[patch ? 40U : 35U]&1)!=0);
+    return {offset[0],offset[1]};
+}
+// 20칸 비균등 발사기 회전표와 달리 이 helper는 표시 타입의 균등 방향을 사용한다.
+std::int32_t RawProjectileGeometry::DirectionFrame(std::array<float,2> from,std::array<float,2> to,std::uint32_t type) const {
+    if (pool_.Edition()!=OriginalEdition::Patch1078 || type>=geometry_.size()) throw std::out_of_range("Projectile 방향 helper 판본/TYPE 오류");
+    const auto& data=geometry_[type];
+    if (data.directions<=0 || data.frameCount/data.directions<=0) throw std::logic_error("Projectile 방향/물리 프레임 자료 누락");
+    if (!std::isfinite(from[0]) || !std::isfinite(from[1]) || !std::isfinite(to[0]) || !std::isfinite(to[1])) throw std::invalid_argument("Projectile 비유한 방향 좌표");
+    double angle=std::atan2(-(static_cast<double>(to[1])-from[1]),static_cast<double>(to[0])-from[0])-kHalfPi;
+    if (angle<0) angle+=kTwoPi;
+    const float scaled=static_cast<float>((kTwoPi-angle)*data.directions*kInverseTwoPi);
+    const auto direction=static_cast<std::int32_t>(static_cast<double>(scaled)+0.5);
+    return (direction%data.directions)*(data.frameCount/data.directions);
 }
 // ctor의 TYPE 치수 helper는 확장 플래그0의 현재 footX/footY다.
 std::array<std::int32_t,2> RawProjectileGeometry::Dimensions(Sid target) const { const auto& type=types_[Slot(target)[10]];return {type.footX,type.footY}; }

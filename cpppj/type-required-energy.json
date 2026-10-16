@@ -30,7 +30,7 @@
     "cpppj/tests/TypeRequiredEnergyTests.cpp": "0802ab400413ec5da3f2d03a4ac6b6f88e2d088915646609a2ca0bb39a02b05c",
     "cpppj/src/o/CMakeLists.txt": "dd416c251036919e579740db4a00b711855cec87d7f15e23799f24213fdeb1a1",
     "cpppj/src/client/CMakeLists.txt": "bb8941e288248d13c7d8be90ae2020c23431129f06ca1b2d059fdfdfaa415ab1",
-    "cpppj/tests/CMakeLists.txt": "a46940483d19e4069cc1c9ba806269d5e13fe412f8c95c590dd301987d54c5be"
+    "cpppj/tests/CMakeLists.txt": "eb65ee209285d5db110206710480a10914d02d86bf70334d95cee6f4803baac8"
   },
   "product_validation": {
     "configuration": "Release",
@@ -638,6 +638,25 @@
         "failed": 2,
         "test_seconds": 122.57,
         "total_seconds": 122.62,
+        "exit_code": 8
+      }
+    },
+    {
+      "date": "2026-10-16",
+      "host": "VM-W11-Codex",
+      "reason": "unit91 Crossbow actual Missile/muzzle/direction native703 and Session arrow lifecycle tests; native2352 fixture and TYPE product unchanged",
+      "cmake_sha256": {
+        "cpppj/tests/CMakeLists.txt": {
+          "previous": "a46940483d19e4069cc1c9ba806269d5e13fe412f8c95c590dd301987d54c5be",
+          "current": "eb65ee209285d5db110206710480a10914d02d86bf70334d95cee6f4803baac8"
+        }
+      },
+      "ctest": {
+        "total": 1401,
+        "passed": 1399,
+        "failed": 2,
+        "test_seconds": 123.48,
+        "total_seconds": 123.58,
         "exit_code": 8
       }
     }

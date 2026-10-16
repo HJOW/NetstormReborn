@@ -107,6 +107,7 @@ add_executable(netstorm_tests
     ArcherAnimationTests.cpp
     CrossbowAnimationTests.cpp
     CannonFireTests.cpp
+    CrossbowMissileTests.cpp
     IslandRuntimeTests.cpp
     TerrainWorldBindingTests.cpp
     TempleRitualTests.cpp
@@ -1137,3 +1138,7 @@ set_source_files_properties(CrossbowAnimationTests.cpp PROPERTIES COMPILE_DEFINI
 
 set_source_files_properties(CannonFireTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CANNON_FIRE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/cannon-fire-x86.tsv\"")
+
+# 실제 크로스보우 포구·생성·방향·비행의 독립 원본 결과다.
+set_source_files_properties(CrossbowMissileTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CROSSBOW_MISSILE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/crossbow-missile-x86.tsv\"")

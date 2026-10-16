@@ -253,3 +253,36 @@ TEST_CASE(CampaignManOWar_ActualPostPopAndBaseProcess) {
     }
     CHECK(core.bookkeeping.depth==0); // 재귀 그림자 Pop 뒤 부모의 공통 장부도 한 번만 완료되어야 한다.
 }
+
+// 실제 데모 Start·전체 Kernel이 만든 화살의 이동과 공통 가상 삭제/Host 정리를 확인한다.
+TEST_CASE(CampaignCrossbow_ActualArrowFlightAndDestroy) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);
+    ConfigInterface config([&](std::string_view path) { return assets.files.TryRead(path); });ConfigureStart(config);MissionScript script(config,"DissolvedAlliance");
+    StartExternal external;auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());
+    RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),external.Services());session.Load();
+    GameClock clock;MissionFrameGateState gate;MissionStartState state;MissionStartGlobals globals;MissionAiSettingsState ai;gate.demo=1;ai.stuffRefreshRate=4;
+    auto effects=external.Effects();effects.gameSeconds=[&] { return clock.GameSeconds(0); };
+    RawCampaignMissionStartBindings start(session,script,gate,state,globals,ai,std::move(effects));start.Start();
+    auto core=session.Core();Sid projectile{},missileForm{};std::array<std::uint32_t,2> initial{};bool moved=false;
+    // 현재20프레임의 별도 피해 처리 경계 앞에서 실제 첫 화살의 생성·이동만 관찰한다.
+    for (std::uint32_t frame=1;frame<=19 && !moved;++frame) {
+        session.RunFrame(clock.Capture(frame*25),false);
+        // 등록된 실제 Missile에서 TYPE140 부모·TYPE81 표시를 가진 첫 자산만 찾는다.
+        for (std::uint32_t number=5;number<core.pool.Capacity();++number) {
+            const Sid form{static_cast<std::uint16_t>(number)};const auto raw=core.pool.Slot(form);
+            if ((raw[11]&7) || raw[10]!=28) continue;
+            auto* missile=dynamic_cast<Missile*>(core.processes.FromForm(form));CHECK(missile!=nullptr);if (!missile) continue;
+            if (core.pool.Slot(missile->Fields().Firing())[10]!=140) continue;
+            const auto parent=missile->Parent();const auto asset=core.pool.Slot(parent);CHECK(asset[10]==81);
+            CHECK(Get(asset,0)==0x501dd0 && Get(asset,36)<core.frames[81].Codes().size());
+            const std::array<std::uint32_t,2> position{Get(asset,14),Get(asset,18)};
+            if (!projectile.value) { projectile=parent;missileForm=form;initial=position; }
+            else if (parent==projectile && position!=initial) moved=true;
+        }
+    }
+    CHECK(projectile.value && missileForm.value && moved);if (!projectile.value || !missileForm.value) return;
+    // 명시 삭제 입력으로 공통81 가상 Pre/Post와 실제 공간/연결 Form 해제를 검사한다. 피해 완주로 세지 않는다.
+    session.World().Destroy(projectile,0);CHECK((core.pool.Slot(projectile)[11]&1)!=0);
+    CHECK((core.pool.Slot(missileForm)[11]&1)!=0 && core.processes.FromForm(missileForm)==nullptr);
+    CHECK(core.bookkeeping.depth==0 && gate.started==1);
+}

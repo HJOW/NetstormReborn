@@ -209,7 +209,7 @@ struct InstallScene {
             missileTypes[type].firingSound=firingSound && !firingSound->empty() ? type : 0;
             missileTypes[type].impactSound=impactSound && !impactSound->empty() ? type : 0;
             auto& geometry=projectileTypes[type];geometry.defaultFrame=asset.definition.specialFrames.defaultFrame;
-            geometry.frameCount=archerTypes[type].frameCount;geometry.heightExtension=target.heightExtension;
+            geometry.frameCount=archerTypes[type].frameCount;geometry.directions=archerTypes[type].directions;geometry.heightExtension=target.heightExtension;
             // 각 물리 SHP header 마지막 두 WORD를 그대로 읽으며 표시 hotspot과 혼용하지 않는다.
             for (std::size_t frame=0;frame<core.shapes[type].frames.size();++frame) {
                 const auto header=assets.game.Shapes().SquidHeader(asset.block,frame);
@@ -242,7 +242,9 @@ struct InstallScene {
             }
             return std::array<float,2>{-10000,-10000};
         };
-        combatEffects.missile.muzzle=[this](Sid sid) { return projectileGeometry->ArcherMuzzle(sid); };
+        combatEffects.missile.muzzle=[this](Sid sid) { return projectileGeometry->Muzzle(sid); };
+        combatEffects.missile.hotspot=[this](Sid sid) { return projectileGeometry->Hotspot(sid); };
+        combatEffects.missile.directionFrame=[this](std::array<float,2> from,std::array<float,2> to,std::uint32_t type) { return projectileGeometry->DirectionFrame(from,to,type); };
         combatEffects.missile.targetDimensions=[this](Sid sid) { return projectileGeometry->Dimensions(sid); };
         combatEffects.missile.targetBounds=[this](Sid sid,std::array<float,2> point) { return projectileGeometry->TargetBounds(sid,point); };
         combatEffects.missile.firingSound=[this](float,float,std::uint32_t token) { external.push_back("Missile 발사음:"+std::to_string(token)); };

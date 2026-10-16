@@ -58,7 +58,8 @@ struct RawCampaignHitBindings::Impl {
     // 실제 가상 표가 공통 Pre/Post를 쓰는 두 자산만 현재 수명 분배에 포함한다.
     bool CommonAsset(o::Sid sid) const {
         const auto raw=core.pool.Slot(sid);const bool patch=core.pool.Edition()==o::OriginalEdition::Patch1078;
-        return (raw[10]==83 && HitTable(raw)==(patch ? 0x50b570U : 0x501440U)) || impact->Handles(sid);
+        return (raw[10]==83 && HitTable(raw)==(patch ? 0x50b570U : 0x501440U)) ||
+            (patch && raw[10]==81 && HitTable(raw)==0x501dd0U) || impact->Handles(sid);
     }
 };
 // 초기 객체 생성 전에 실제 하위 모듈의 동일 Pool 계약을 확인한다.

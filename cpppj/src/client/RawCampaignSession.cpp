@@ -380,7 +380,7 @@ struct RawCampaignSession::Impl {
             missileTypes[type].firingSound=firingSound && !firingSound->empty() ? soundNames.Lookup(*firingSound) : 0;
             missileTypes[type].impactSound=impactSound && !impactSound->empty() ? soundNames.Lookup(*impactSound) : 0;
             auto& geometry=projectileTypes[type];geometry.defaultFrame=asset.definition.specialFrames.defaultFrame;
-            geometry.frameCount=archerTypes[type].frameCount;geometry.heightExtension=target.heightExtension;
+            geometry.frameCount=archerTypes[type].frameCount;geometry.directions=archerTypes[type].directions;geometry.heightExtension=target.heightExtension;
             // 각 물리 SHP header 마지막 두 WORD를 그대로 읽으며 표시 hotspot과 혼용하지 않는다.
             for (std::size_t frame=0;frame<core.shapes[type].frames.size();++frame) {
                 const auto header=assets.game.Shapes().SquidHeader(asset.block,frame);
@@ -401,7 +401,11 @@ struct RawCampaignSession::Impl {
         FillMissing(hitEffects.dudes.createBurning);FillMissing(hitEffects.dudes.pathEndpoint);FillMissing(hitEffects.dudes.startPath);
         hits=std::make_unique<RawCampaignHitBindings>(world,*priests,hp,random,dudeSpeeds,assetState.residences,
             priestDamageState,burningState,impactState,std::move(hitEffects));
-        gunHit=std::make_unique<RawGunHit>(core.pool,core.types,hitTypes,hits->DamageHooks(GunHitHooks{SessionMissing<void,Sid,std::int32_t,std::uint8_t,Sid>(),[this](Sid sid) { core.building.NotifySurface(sid); }}));
+        // 미복원 가상 피해는 실제 공격자/표적 TYPE를 기록해 다음 원본 복원 지점을 식별한다.
+        gunHit=std::make_unique<RawGunHit>(core.pool,core.types,hitTypes,hits->DamageHooks(GunHitHooks{
+            [this](Sid victim,std::int32_t,std::uint8_t,Sid attacker) {
+                throw std::logic_error("실제 세션 총 피해 미복원: 공격 TYPE"+std::to_string(core.pool.Slot(attacker)[10])+" → 표적 TYPE"+std::to_string(core.pool.Slot(victim)[10]));
+            },[this](Sid sid) { core.building.NotifySurface(sid); }}));
         projectileGeometry=std::make_unique<RawProjectileGeometry>(core.pool,core.types,projectileTypes);
         fenceTarget=std::make_unique<RawFenceTarget>(core.pool,core.hash,core.types,projectileTypes,*gunTarget,gunTargetState,gunState);
         auto combatEffects=services.archer;
@@ -415,7 +419,9 @@ struct RawCampaignSession::Impl {
         };
         if (!combatEffects.animation.common.targetPoint) combatEffects.animation.common.targetPoint=
             [this](Sid firing,Sid target) { return fenceTarget->Point(firing,target); };
-        combatEffects.missile.muzzle=[this](Sid sid) { return projectileGeometry->ArcherMuzzle(sid); };
+        combatEffects.missile.muzzle=[this](Sid sid) { return projectileGeometry->Muzzle(sid); };
+        combatEffects.missile.hotspot=[this](Sid sid) { return projectileGeometry->Hotspot(sid); };
+        combatEffects.missile.directionFrame=[this](std::array<float,2> from,std::array<float,2> to,std::uint32_t type) { return projectileGeometry->DirectionFrame(from,to,type); };
         combatEffects.missile.targetDimensions=[this](Sid sid) { return projectileGeometry->Dimensions(sid); };
         combatEffects.missile.targetBounds=[this](Sid sid,std::array<float,2> point) { return projectileGeometry->TargetBounds(sid,point); };
         FillMissing(combatEffects.missile.firingSound);FillMissing(combatEffects.missile.impactSound);

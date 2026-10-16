@@ -66,10 +66,12 @@ void RawMissile::FrameNumber(Sid sid,std::uint32_t frame) const { const bool pat
 Sid RawMissile::Construct(MissileFields& fields,const GunProjectileRequest& request) const {
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;const auto layout=patch ? kPatch : kCd;const auto firing=Slot(request.firing),target=Slot(request.target);
     const bool archer=firing[10]==state_.sunArcherType;
-    if (request.ricochet || (!archer && firing[10]!=state_.sunCannonType) || Valid(request.firingPosition)) throw std::logic_error("Missile 미복원 반사/부모/포구 생성 경로 TYPE"+std::to_string(firing[10]));
-    if (types_[firing[10]].group!=(archer ? 0 : 1)) throw std::logic_error("Missile 실제부모 group 계약 오류");
+    // group0 탄도와 썬 디스크 발사기71 전용 포구 보정 생략을 독립 판정한다.
+    const bool groupZero=archer || (patch && firing[10]==state_.crossbowType);
+    if (request.ricochet || (!groupZero && firing[10]!=state_.sunCannonType) || Valid(request.firingPosition)) throw std::logic_error("Missile 미복원 반사/부모/포구 생성 경로 TYPE"+std::to_string(firing[10]));
+    if (types_[firing[10]].group!=(groupZero ? 0 : 1)) throw std::logic_error("Missile 실제부모 group 계약 오류");
     if (!std::isfinite(request.speed) || request.speed<=0 || !Valid(request.targetPosition)) throw std::invalid_argument("Missile 생성 좌표/속도 오류");
-    if (!hooks_.muzzle || (!archer && (!hooks_.hotspot || !hooks_.rayEnd)) || !hooks_.targetDimensions || !hooks_.create || !hooks_.owner || !hooks_.pop || (request.effectType && !hooks_.flightEffect)) throw std::logic_error("Missile 실제 생성/Pop/비행 효과 경계 누락");
+    if (!hooks_.muzzle || (!archer && !hooks_.hotspot) || (!groupZero && !hooks_.rayEnd) || !hooks_.targetDimensions || !hooks_.create || !hooks_.owner || !hooks_.pop || (request.effectType && !hooks_.flightEffect)) throw std::logic_error("Missile 실제 생성/Pop/비행 효과 경계 누락");
     if (request.displayType>=types_.size()) throw std::out_of_range("Missile 표시 타입 오류");
     Put(fields.bytes,0,patch ? 0x50d630U : 0x501ca0U);Put(fields.bytes,kForm,0);Put(fields.bytes,kParent,0);
     // 원본 초기 사각형과 직전 위치는 invalid 좌표 -10000이다.
@@ -78,7 +80,7 @@ Sid RawMissile::Construct(MissileFields& fields,const GunProjectileRequest& requ
     Put(fields.bytes,kRicochet,0);Put(fields.bytes,kPassed,0);PutPoint(fields.bytes,layout.previous,{-10000,-10000});
     const bool corner=Valid(request.targetCenter);
     // 패치의 +32/+36 초기화는 group1 코너 분기에만 있으며 group0의 기존 바이트는 보존한다.
-    if (patch) { if (corner && !archer) { Put(fields.bytes,32,0);Put(fields.bytes,36,0); }Put(fields.bytes,40,0);Put(fields.bytes,44,0);PutPoint(fields.bytes,80,request.targetCenter); }
+    if (patch) { if (corner && !groupZero) { Put(fields.bytes,32,0);Put(fields.bytes,36,0); }Put(fields.bytes,40,0);Put(fields.bytes,44,0);PutPoint(fields.bytes,80,request.targetCenter); }
     auto origin=hooks_.muzzle(request.firing);const auto& type=types_[firing[10]];
     // SunArcher71은원본처럼SHP/type hotspot보정을생략한다.기존128의두float저장은그대로다.
     if (!archer) {
@@ -89,7 +91,7 @@ Sid RawMissile::Construct(MissileFields& fields,const GunProjectileRequest& requ
     const auto dimensions=hooks_.targetDimensions(request.target);const std::array<float,2> targetCenter{static_cast<float>(static_cast<double>(request.targetPosition[0])-dimensions[0]*0.5),static_cast<float>(static_cast<double>(request.targetPosition[1])-dimensions[1]*0.5)};PutPoint(fields.bytes,layout.endpoint,targetCenter);
     PutPoint(fields.bytes,layout.position,corner ? request.targetCenter : request.targetPosition);Put(fields.bytes,kCorner,corner ? 1U : 0U);
     // group0 코너의 종점은 패치에서 코너이며 CD10.72에서는 표적 치수로 보정한 중심이다.
-    auto endpoint=Clamp(archer ? (patch && corner ? request.targetCenter : targetCenter) : hooks_.rayEnd(origin,corner ? request.targetCenter : targetCenter,request.firing));origin=Clamp(origin);PutPoint(fields.bytes,layout.endpoint,endpoint);PutPoint(fields.bytes,layout.origin,origin);
+    auto endpoint=Clamp(groupZero ? (patch && corner ? request.targetCenter : targetCenter) : hooks_.rayEnd(origin,corner ? request.targetCenter : targetCenter,request.firing));origin=Clamp(origin);PutPoint(fields.bytes,layout.endpoint,endpoint);PutPoint(fields.bytes,layout.origin,origin);
     if (!Valid(origin) || !Valid(endpoint) || ((firing[11]&1) && (target[11]&1))) throw std::logic_error("Missile 실제 생성 좌표/자산 원본 assert");
     PutFloat(fields.bytes,layout.allowance,0);const float distance=static_cast<float>(Distance(origin,endpoint));if (distance<0 || distance>=256) throw std::out_of_range("Missile 생성 거리 원본 assert");
     PutDouble(fields.bytes,layout.start,state_.now);PutDouble(fields.bytes,layout.end,static_cast<double>(distance)/request.speed+state_.now);
@@ -106,7 +108,9 @@ Sid RawMissile::Construct(MissileFields& fields,const GunProjectileRequest& requ
 void RawMissile::Frame(MissileFields& fields) const {
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;const auto layout=patch ? kPatch : kCd;const auto firing=Slot(fields.Firing()),target=Slot(fields.Target()),asset=Slot(fields.Parent());
     const bool archer=firing[10]==state_.sunArcherType;
-    if ((!archer && firing[10]!=state_.sunCannonType) || Read(fields.bytes,kRicochet) || (patch && (Read(fields.bytes,40) || Read(fields.bytes,44)))) throw std::logic_error("Missile 미복원 frame 파생/반사/빗나감 경로");
+    // 원본 group0 사거리/코너 종료는 크로스보우에도 같고71 전용 포구와 무관하다.
+    const bool groupZero=archer || (patch && firing[10]==state_.crossbowType);
+    if ((!groupZero && firing[10]!=state_.sunCannonType) || Read(fields.bytes,kRicochet) || (patch && (Read(fields.bytes,40) || Read(fields.bytes,44)))) throw std::logic_error("Missile 미복원 frame 파생/반사/빗나감 경로");
     if (!hooks_.unpop || !hooks_.pop || !hooks_.destroy || !hooks_.center) throw std::logic_error("Missile 실제 이동/삭제 경계 누락");
     const auto origin=Point(fields.bytes,layout.origin),endpoint=Point(fields.bytes,layout.endpoint);const auto end=Double(fields.bytes,layout.end),start=Double(fields.bytes,layout.start);
     const double remaining=patch ? end-state_.now : static_cast<float>(end-state_.now);const double duration=patch ? end-start : static_cast<float>(end-start);
@@ -128,10 +132,12 @@ void RawMissile::Frame(MissileFields& fields) const {
     }
     const auto currentCenter=hooks_.center(fields.Firing());const float currentDistance=static_cast<float>(Distance(current,currentCenter));
     bool exhausted;
-    if (corner) { const auto endCenter=hooks_.center(fields.Firing());exhausted=patch && !archer ? Distance(endpoint,endCenter)<currentDistance : static_cast<float>(Distance(endpoint,currentCenter))+4.0f<Distance(current,endCenter); }
+    if (corner) { const auto endCenter=hooks_.center(fields.Firing());exhausted=patch && !groupZero ? Distance(endpoint,endCenter)<currentDistance : static_cast<float>(Distance(endpoint,currentCenter))+4.0f<Distance(current,endCenter); }
     else { const float range=missileTypes_[firing[10]].range;exhausted=patch ? range+4.0f<currentDistance : range+4.0f<Distance(current,currentCenter); }
     auto last=current;
     if (hit) {
+        // 실제146 클라우드 플로터의 확률 회피는 난수 몸체를 연결하기 전 성공으로 대신하지 않는다.
+        if (patch && target[10]==146) throw std::logic_error("Missile 클라우드 플로터 확률 회피 미복원");
         last={static_cast<float>((static_cast<double>(current[0])+previous[0])*0.5),static_cast<float>((static_cast<double>(current[1])+previous[1])*0.5)};
         if (!(target[11]&1)) {
             if (corner) { if (!hooks_.impact) throw std::logic_error("Missile 실제 배리어 충돌 효과 경계 누락");hooks_.impact(last[0],last[1],2,0.02f);const auto sound=missileTypes_[state_.cornerImpactType].impactSound;if (!hooks_.impactSound) throw std::logic_error("Missile 실제 충돌 사운드 경계 누락");hooks_.impactSound(last[0],last[1],sound); }
