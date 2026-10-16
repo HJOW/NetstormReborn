@@ -1232,3 +1232,7 @@ set_source_files_properties(CarrierMenuTests.cpp PROPERTIES COMPILE_DEFINITIONS
 target_sources(netstorm_tests PRIVATE PlayerIdentityTests.cpp)
 set_source_files_properties(PlayerIdentityTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PLAYER_IDENTITY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/player-identity-x86.tsv\"")
+# 실제 PATCH Player 메뉴 전체의 반환/정적 버퍼/효과 원문이다.
+target_sources(netstorm_tests PRIVATE PlayerMenuTests.cpp)
+set_source_files_properties(PlayerMenuTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PLAYER_MENU_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/player-menu-x86.tsv\"")

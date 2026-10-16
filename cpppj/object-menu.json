@@ -63,9 +63,9 @@
       "cpppj/src/client/RawObjectMenu.h": "41436f4f64e69da224fe045ff4bc4a68352e603d61ed342d7f29a3075645c082",
       "cpppj/src/client/RawObjectMenu.cpp": "ef92b668ec60c211d8a54722f864664d4262a25358ce0f2b1aaa95d572a558d5",
       "cpppj/tests/ObjectMenuTests.cpp": "7485055d8b76db99eb8e2fc117f9d89eb4892c2620112c1afbb1ed267710aa37",
-      "cpppj/tests/RawMenuControlsTests.cpp": "8f162b339419c44b4a64f54f6cd05bb7bfe6c40744cd881f8c42bb5445ed86b8",
-      "cpppj/src/client/CMakeLists.txt": "d5bf5ae4aa05e5fa22b856c0e2f84dc9036f79d00624eed7507f9e5971222caf",
-      "cpppj/tests/CMakeLists.txt": "2548de0b0b7602c29d8a7e30727234f3ecada65df5635d5a3c3b46502ab90e56"
+      "cpppj/tests/RawMenuControlsTests.cpp": "df26ef116d9971df27bf12f1f857a398dec99ecfe0d72d82c13600244b17d1dd",
+      "cpppj/src/client/CMakeLists.txt": "23ddc1948fa51a8674fe70b2c74435f9b5b637bfd9f08fded39bd8d923a01b17",
+      "cpppj/tests/CMakeLists.txt": "ae00cbe262dbbe1452e6fefe373dea7893911f99f9ce65917b6e0b61e036e5a9"
     }
   },
   "integration_updates": [
@@ -123,6 +123,30 @@
         "failed_checks": 0,
         "exit_code": 0,
         "seconds": 208.55
+      }
+    },
+    {
+      "date": "2026-10-17",
+      "reason": "unit116 actual PATCH Player menu and common tree integration; prior native fixtures preserved",
+      "shared_sha256": {
+        "cpppj/tests/RawMenuControlsTests.cpp": {
+          "previous": "8f162b339419c44b4a64f54f6cd05bb7bfe6c40744cd881f8c42bb5445ed86b8",
+          "current": "df26ef116d9971df27bf12f1f857a398dec99ecfe0d72d82c13600244b17d1dd"
+        },
+        "cpppj/src/client/CMakeLists.txt": {
+          "previous": "d5bf5ae4aa05e5fa22b856c0e2f84dc9036f79d00624eed7507f9e5971222caf",
+          "current": "23ddc1948fa51a8674fe70b2c74435f9b5b637bfd9f08fded39bd8d923a01b17"
+        },
+        "cpppj/tests/CMakeLists.txt": {
+          "previous": "2548de0b0b7602c29d8a7e30727234f3ecada65df5635d5a3c3b46502ab90e56",
+          "current": "ae00cbe262dbbe1452e6fefe373dea7893911f99f9ce65917b6e0b61e036e5a9"
+        }
+      },
+      "full_ctest": {
+        "tests": 1472,
+        "failed_checks": 0,
+        "exit_code": 0,
+        "seconds": 227.4
       }
     }
   ]

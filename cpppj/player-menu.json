@@ -1,0 +1,56 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-17",
+  "last_full_decompile_host": "HJOW-Athlon",
+  "observations": 292,
+  "normal_returns": 584,
+  "precisions": [
+    53,
+    64
+  ],
+  "precision_differences": 0,
+  "instructions": 684032,
+  "os_calls": 0,
+  "boundaries": [
+    "C locale stricmp·문자열CRT",
+    "GUI 생성/서식/스택/작성",
+    "주소 parser·신뢰도·ignore/whisper 목록·분산SP"
+  ],
+  "limits": [
+    "실제 PATCH Player 부모/Identity/사제/번호/동맹/SP 비교 helper 실행",
+    "CD004c4cd0은 문서 대응만 기록하며 실행/이식하지 않음",
+    "실제 Client Session/명령 실행/GUI 픽셀/건설은 별도"
+  ],
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_object_menu.py": "883d1b6b694f773acebdb682161665954b020fe6d7068ff6677a7cdbbf3dd6be",
+    "tools/decomp_player_identity.py": "6bffee51f463d5fc19699df7fd0e97811e9a01ce7b5fe0d8e05329958034a374",
+    "tools/decomp_player_menu.py": "5119506d6ebc6ceed5f86f730863a0ca8967a9e4e15d5268b52a390c829d8290",
+    "cpppj/tests/fixtures/player-menu-x86.tsv": "373a6cbeaf047c4ecb123016efd071e4fcd13ab8a2be41b7dfc0633e6cb0d942"
+  },
+  "product_validation": {
+    "configuration": "Release",
+    "build_exit_code": 0,
+    "build_warnings": 0,
+    "build_errors": 0,
+    "native_rows_compared": 292,
+    "focused_tests": 2,
+    "common_tree_tests": 1,
+    "full_tests": 1472,
+    "failed_checks": 0,
+    "ctest_exit_code": 0,
+    "ctest_seconds": 227.4,
+    "build_log": "extracted/goal-player-menu-20261017-build2.log",
+    "full_output": "extracted/goal-player-menu-20261017-ctest-output.log",
+    "actual_client_session_enabled": false,
+    "sha256": {
+      "cpppj/src/client/RawPlayerMenu.h": "2cd899e5e10ad3e3e5a687abbb67b3b934f1c0c8383a9fd1c4bd102b45989ea4",
+      "cpppj/src/client/RawPlayerMenu.cpp": "72ebb0dda2fbdf399aff406d35163f7d605a2fd9c5f7093970ebdb5cc5e73806",
+      "cpppj/src/o/RawPlayerIdentity.h": "331f03a8693685a6bf1f4fadc24e7cdee4c5a1c8813d3a7cc02c46697a09c6c4",
+      "cpppj/src/o/RawPlayerIdentity.cpp": "3dc55d9fd0fac8fd4fb7d2caf3f4fc46618c6df9416709aaf1548629daf99e41",
+      "cpppj/tests/PlayerMenuTests.cpp": "3097ac8bbf9c9a3fd463a9ae55daf5b5134fa1bf31fa97fbd237e87e9c2ca73d",
+      "cpppj/tests/RawMenuControlsTests.cpp": "df26ef116d9971df27bf12f1f857a398dec99ecfe0d72d82c13600244b17d1dd"
+    }
+  }
+}

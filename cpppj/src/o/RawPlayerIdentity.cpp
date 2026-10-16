@@ -97,4 +97,12 @@ std::uint32_t RawPlayerIdentity::OwnerForSubscriber(std::uint32_t subscriber) co
 std::uint32_t RawPlayerIdentity::AddressForSubscriber(std::uint32_t subscriber) const { PlayerIdentityRecord record{};Initialize(record,2);Put(record,4,subscriber);Resolve(record);return Read(record,kAddress); }
 // 이름 실패의 mutable SOMEONE 문자열만 명시 경계로 읽는다.
 std::string RawPlayerIdentity::NameForSubscriber(std::uint32_t subscriber) const { PlayerIdentityRecord record{};Initialize(record,0);Put(record,4,subscriber);return std::string(Resolve(record) ? Text(record,kName,kNameBytes) : Required(reads_.unknownName)()); }
+// 실제 조회 몸체와 같은 원본 판본이다.
+OriginalEdition RawPlayerIdentity::Edition() const { return edition_; }
+// 호출자가 같은 현재9 Player를 사용하게 한다.
+std::span<const std::uint8_t> RawPlayerIdentity::PlayerRecords() const { return players_; }
+// 메뉴 metadata는 같은40개 기록을 빌린다.
+std::span<const std::uint8_t> RawPlayerIdentity::MetaRecords() const { return meta_; }
+// 현재 모드/로컬 식별자 getter를 다른 실제 소비자와 공유한다.
+const PlayerIdentityReads& RawPlayerIdentity::CurrentInputs() const { return reads_; }
 }

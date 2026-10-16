@@ -68,6 +68,7 @@ target_sources(netstorm PRIVATE
     RawPriestMenu.cpp RawPriestMenu.h
     RawObjectMenu.cpp RawObjectMenu.h
     RawCarrierMenu.cpp RawCarrierMenu.h
+    RawPlayerMenu.cpp RawPlayerMenu.h
     GumpFormBinding.cpp GumpFormBinding.h
     MenuGumpInput.cpp MenuGumpInput.h
     MenuGumpDraw.cpp MenuGumpDraw.h

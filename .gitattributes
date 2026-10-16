@@ -1001,3 +1001,10 @@ cpppj/tests/fixtures/player-identity-x86.tsv text eol=lf
 cpppj/src/o/RawPlayerIdentity.* text eol=lf
 cpppj/tests/PlayerIdentityTests.cpp text eol=lf
 docs/exe/cpp-player-identity-20261017.md text eol=lf
+# 실제 PATCH Player 메뉴의 원문/정적 버퍼/제품을 같은 UTF-8/LF로 보존한다.
+tools/decomp_player_menu.py text eol=lf
+cpppj/player-menu.json text eol=lf
+cpppj/tests/fixtures/player-menu-x86.tsv text eol=lf
+cpppj/src/client/RawPlayerMenu.* text eol=lf
+cpppj/tests/PlayerMenuTests.cpp text eol=lf
+docs/exe/cpp-player-menu-20261017.md text eol=lf

@@ -34,6 +34,11 @@ public:
     std::uint32_t AddressForSubscriber(std::uint32_t subscriber) const;
     // PATCH00484410/CD00401890: subscriber 이름이며 조회 실패 시 현재 unknownName이다.
     std::string NameForSubscriber(std::uint32_t subscriber) const;
+    // 실제 메뉴가 같은 판본/기록/전역을 사용하도록 원본 참조를 빌린다. 재복사하지 않는다.
+    OriginalEdition Edition() const;
+    std::span<const std::uint8_t> PlayerRecords() const;
+    std::span<const std::uint8_t> MetaRecords() const;
+    const PlayerIdentityReads& CurrentInputs() const;
 private:
     // 정렬되지 않은DWORD와 NUL 바이트 문자열을 읽고 원문이 쓴 폭만 갱신한다.
     static std::uint32_t Read(std::span<const std::uint8_t> bytes,std::size_t offset);

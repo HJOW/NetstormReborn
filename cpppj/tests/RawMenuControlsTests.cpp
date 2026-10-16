@@ -4,6 +4,7 @@
 #include "client/RawButtonControls.h"
 #include "client/RawObjectMenu.h"
 #include "client/RawCarrierMenu.h"
+#include "client/RawPlayerMenu.h"
 #include <filesystem>
 #include <sstream>
 
@@ -140,10 +141,14 @@ TEST_CASE(RawMenuControls_CarrierAndObjectMenuChain) {
     reads.localOwner=[&] { return common.localOwner; };reads.subscriber=[] { return 0xfedcba98U; };reads.address=[] { return 0x12345678U; };reads.name=[] { return std::string_view("Player1"); };
     reads.battle=[] { return true; };reads.editor=[&] { return common.editor; };reads.metamap=[] { return false; };reads.unknownName=[] { return std::string_view("SOMEONE"); };
     RawPlayerIdentity identity(OriginalEdition::Patch1078,players,{},chat,reads);BindObjectMenuIdentity(objects,identity);
+    Put(players,180+44,0xfedcba98);std::copy_n("Player1",8,players.begin()+180+12);players[180+80]=0x23;
+    std::array<std::uint32_t,81> alliances{};std::array<std::uint8_t,9> hidden{};std::array<std::uint32_t,9> priestStates{};
+    PlayerMenuState playerState;PlayerMenuHooks playerHooks;playerHooks.mission=[] { return true; };playerHooks.fort=[] { return false; };playerHooks.ignored=[](std::uint32_t) { return false; };playerHooks.whispered=[](std::uint32_t) { return std::uint8_t{}; };
+    playerHooks.translate=[](std::string_view key) { return std::string(key); };playerHooks.print=hooks.format;
     const auto open=[&] { client.poll={InputCode::kRelease,0,0};client.buttons.Poll(client.poll);client.menus->Open({160,120},[&](const auto& widgets,const auto& controls,const auto& menus) {
         widgets.BeginVertical();BindObjectMenuControls(objects,controls,menus,config,[](std::string_view)->std::uint32_t { throw std::logic_error("검사 미등록 정적 문자열"); });
-        // Player 전체 몸체는 이 검사의 명시 경계다. 하위 노드/등록은 실제 builder를 쓴다.
-        objects.playerMenu=[&](std::uint32_t subscriber,bool first,bool second) { CHECK(subscriber==0xfedcba98U && first && !second);widgets.BeginVertical();controls.AddHeader(identity.NameForSubscriber(subscriber));return menus.TakeCurrent(); };
+        // 같은 실제 Player/사제/동맹 상태와 실제 Player 메뉴 몸체를 사용한다. 목록 조회는 명시 검사 입력이다.
+        BindPlayerMenuControls(playerHooks,widgets,controls,menus);RawPlayerMenu playerMenu(identity,alliances,hidden,priestStates,playerState,playerHooks);BindObjectPlayerMenu(objects,playerMenu);
         RawObjectMenu base(pool,client.assets.TypeTable().Types(),common,objects);BindCarrierMenuControls(hooks,controls);BindCarrierMenuBase(hooks,base);
         RawCarrierMenu carrier(pool,client.assets.TypeTable().Types(),finder,state,hooks);PriestMenuHooks priest;BindPriestMenuCarrier(priest,carrier);priest.baseMenu(Sid{50});
     }); };open();
@@ -153,5 +158,12 @@ TEST_CASE(RawMenuControls_CarrierAndObjectMenuChain) {
     // 실제 명령 선택은 메뉴를 닫으므로 About 선택 전 새 수명으로 다시 연다.
     client.menus->Close();open();const auto about=client.menus->Point("About Temple");CHECK(about.has_value());if (about) client.Click(*about);
     CHECK(client.commands.size()==2);if (client.commands.size()==2) CHECK(client.commands[1][0]==common.helpCommand && client.commands[1][2]==123);
+    client.menus->Close();open();const auto player=client.menus->Point("Player");CHECK(player.has_value());if (player) {
+        client.Click(*player);
+        // 실제 확장 프레임으로 Player 하위 메뉴를 표시한다.
+        for (int frame=0;frame<2;++frame) client.buttons.Poll({InputCode::kRelease,player->x,player->y});
+        const auto find=client.menus->Point("Find Priest!");CHECK(find.has_value());if (find) client.Click(*find);
+    }
+    CHECK(client.commands.size()==3);if (client.commands.size()==3) CHECK(client.commands[2][0]==playerState.findPriest && client.commands[2][2]==1);
     client.menus->Close();CHECK(!client.menus->HasMenus());
 }

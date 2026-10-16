@@ -29,8 +29,8 @@
     "cpppj/tests/fixtures/type-required-energy-x86.tsv": "8bcb3e215c958f5df0a395365059f5481801b1660569f2f04c0720f394f14f4c",
     "cpppj/tests/TypeRequiredEnergyTests.cpp": "0802ab400413ec5da3f2d03a4ac6b6f88e2d088915646609a2ca0bb39a02b05c",
     "cpppj/src/o/CMakeLists.txt": "46579dbd727e16177530beba64a9c8ab6d4eec7f1c8c3f002ac3c9ce52321da0",
-    "cpppj/src/client/CMakeLists.txt": "d5bf5ae4aa05e5fa22b856c0e2f84dc9036f79d00624eed7507f9e5971222caf",
-    "cpppj/tests/CMakeLists.txt": "2548de0b0b7602c29d8a7e30727234f3ecada65df5635d5a3c3b46502ab90e56"
+    "cpppj/src/client/CMakeLists.txt": "23ddc1948fa51a8674fe70b2c74435f9b5b637bfd9f08fded39bd8d923a01b17",
+    "cpppj/tests/CMakeLists.txt": "ae00cbe262dbbe1452e6fefe373dea7893911f99f9ce65917b6e0b61e036e5a9"
   },
   "product_validation": {
     "configuration": "Release",
@@ -1154,6 +1154,26 @@
         "failed_checks": 0,
         "exit_code": 0,
         "seconds": 208.55
+      }
+    },
+    {
+      "date": "2026-10-17",
+      "reason": "unit116 actual PATCH Player menu and common tree integration; prior native fixtures preserved",
+      "shared_sha256": {
+        "cpppj/src/client/CMakeLists.txt": {
+          "previous": "d5bf5ae4aa05e5fa22b856c0e2f84dc9036f79d00624eed7507f9e5971222caf",
+          "current": "23ddc1948fa51a8674fe70b2c74435f9b5b637bfd9f08fded39bd8d923a01b17"
+        },
+        "cpppj/tests/CMakeLists.txt": {
+          "previous": "2548de0b0b7602c29d8a7e30727234f3ecada65df5635d5a3c3b46502ab90e56",
+          "current": "ae00cbe262dbbe1452e6fefe373dea7893911f99f9ce65917b6e0b61e036e5a9"
+        }
+      },
+      "full_ctest": {
+        "tests": 1472,
+        "failed_checks": 0,
+        "exit_code": 0,
+        "seconds": 227.4
       }
     }
   ]
