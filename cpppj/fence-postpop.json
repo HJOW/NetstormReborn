@@ -1,0 +1,65 @@
+{
+  "host": "VM-W11-Codex",
+  "date": "2026-10-16",
+  "last_full_refined_host": "VM-W11-Codex",
+  "last_full_refined_date": "2026-10-16",
+  "observations": 330,
+  "precision_replays": [
+    639,
+    895
+  ],
+  "status": "native-compared-product-session-connected",
+  "game_gui_runs": 0,
+  "boundary": "원본00457560만 실행한다. TYPE원소/이웃/연결선삭제/연결수/힙/Regular/Damageable은 명시 외부 입력이다. 전체250BYTE/호출/SEH/반환/스택/비휘발/허용쓰기를 대조하며 게임 자연 플레이 관찰은 아니다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_fence_postpop.py": "3d3477aec14fab8431aa0b7512b8b5d6a8c09b708535b8d54e7c32e75b33ba4b",
+    "tools/decomp_local_mission_transport.py": "db71da65079aa9a985a3a833edd224f089ba9a20137d92042551cb346937eb78",
+    "cpppj/src/o/RawFencePostPop.h": "d4e677170685b39275b8111b42008b84794114587f625b003a8f36eec029703a",
+    "cpppj/src/o/RawFencePostPop.cpp": "8c081a4f98b06a379e69cdfdfe17cf900755bb694d123ad4283c8ab273f5d9c6",
+    "cpppj/tests/FencePostPopTests.cpp": "e9c824db9e0a56960f77bd56079bb2707cba1834b9c3a2c244104b722daf1f69",
+    "cpppj/tests/fixtures/fence-postpop-x86.tsv": "aafbea1ba70bc8485b858d5e4936ec0b8910030e83c5de9b4793d9ffdd708d8e"
+  },
+  "product_validation": {
+    "configuration": "Release",
+    "build_exit_code": 0,
+    "warnings": 0,
+    "errors": 0,
+    "fence_focused_tests": 11,
+    "fence_failed_checks": 0,
+    "mission_start_tests": 3,
+    "mission_start_failed_checks": 0,
+    "protected_missions": [
+      "Tutorial1",
+      "Tutorial2",
+      "Tutorial3",
+      "Tutorial4",
+      "Tutorial5",
+      "Tutorial6",
+      "TheWarBegins",
+      "MasterOfWhirligigs"
+    ],
+    "ctest_exit_code": 0,
+    "internal_tests": 1327,
+    "failed_checks": 0,
+    "test_seconds": 120.45,
+    "total_seconds": 120.47,
+    "limits": "실제 Load/Start와 헤드리스 회귀 결과이며 자연 완주나 GUI 동일성의 증거는 아니다.",
+    "integration_source_sha256": {
+      "cpppj/src/client/RawCampaignSession.cpp": "ad63f37adb9f45f24ae410b75525995a0d793f6a30e50bac8df9ceac126c5a54",
+      "cpppj/src/o/RawAssetPostPop.h": "585849c5cbdcb0f8fd1e03406e72685484080bec64fb82413011fa61a8184e60",
+      "cpppj/src/o/RawAssetPostPop.cpp": "edac8d2770de0c83df95f03937ecaa033cf9c4060548ff4e19243624a24f4df6",
+      "cpppj/src/o/CMakeLists.txt": "3d34c8830c42c7ec5af757e981950804322219d73dfba1703855f6dc83c81a07",
+      "cpppj/tests/CMakeLists.txt": "3950e26689f74b5abb70e241e538259fdb5ab725c4fc58901fccca7d9b242d94",
+      "cpppj/tests/CampaignMissionStartTests.cpp": "19c42f7d645e5b4b9192007d9ac5cad469ade8c22547d4acc83fea4cc72bd52c"
+    },
+    "log_sha256": {
+      "extracted/goal-fence-20261016-build.log": "5219e5f2a84481386ebe612dd1284f1c6a5e95e8b6be93bf5aae043c211fb696",
+      "extracted/goal-fence-20261016-focused-fixed.log": "05bbe5b7abd7d2d197c176eb10ac9cea4d4fc1bbf1d90986cda2857eff0e3764",
+      "extracted/goal-fence-20261016-start.log": "1e89a4ce2ee011d7454f66ab7d5a50eaece3c1304ef743512ca84e320ac8612f",
+      "extracted/goal-fence-20261016-ctest.log": "06ac12cf17aff5293e22c0077a20963839cc3c43397b92ec76642d4fbc5a6a2b",
+      "extracted/goal-fence-20261016-tests.log": "6f53a02f86891a29aaab7a5370912d214be0cb2012b9f61c60250c1576ca97c0"
+    }
+  }
+}

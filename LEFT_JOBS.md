@@ -6,13 +6,14 @@
 - [x] 원본/공유 번역 JSON/게임 UI·코드 심벌·과거 기록은 변경하지 않았다. 표시 이름 설명에는 내부명을 직역하지 않고 확인된 표시 이름을 사용한다. 현재/마지막 전체 정밀 PC는 **VM-W11-Codex / 2026-10-16**이다. 읽기 전용 타입 덤프와 텍스트 추출이며 게임 실행은 아니다. 아래 cpppj 목표는 계속 active다.
 - [ ] 이후 작업에서 새 대응이 확인되면 **판본·TYPE 번호·내부명·표시명·근거**를 이 별도 문서에 계속 추가한다. CD10.72는 별도 확인 전10.78 표를 그대로 적용하지 않는다.
 
-## 2026-10-16 목표 재개·이관 검사 및 썬 펜스 후처리 진행 (`VM-W11-Codex`)
+## 2026-10-16 목표 재개·이관 검사 및 단위76 썬 바리케이드 최초 후처리 완료 (`VM-W11-Codex`)
 
 - [x] 사용자의 새 `/goal` 요청으로 Early Missions1~6·캠페인1-1/1-2·데모3개 목표를 재개했다. 아래 과거 중단 문구는 현재 중단 지시가 아니다. AGENTS.md와 두 LEFT_JOBS·단위75 중단 기록을 확인했고 시작 작업 트리는 깨끗했다. 기준 커밋은 `c2b4401`이다. 현재/마지막 전체 정밀 디컴파일 PC는 **VM-W11-Codex / 2026-10-16**으로 일치하며 새 전체 디컴파일은 필요 없다. 목표는 **active·미달성**이다.
 - [x] 이관 감사 중 썬 아비어리1,734입력 SHA는 통과했다. 요구에너지2,352입력의 SHA 불일치는 세 제품 파일의 과거 CRLF 기록과 한 테스트 파일의 체크아웃 CRLF 때문임을 이전/현재 전체 바이트로 확인했다. 네 파일 모두 줄바꿈 이외 차이가 없고 기존 제품/fixture 의미를 유지한다. `.gitattributes`로 LF를 고정하고 보고서에 이전/현재 SHA를 보존한 뒤 `--verify`를 통과했다.
 - [x] 이관 검사 완료: Release 전체 재빌드 **종료0·경고0·오류0**. 펜스 제품 변경 전 실행 파일의 전체 회귀는 **내부1,321개 중1,320개 통과·실패1 / CTest 종료8·검사132.92초·전체133.21초**다. 유일한 실패는 기존 Tutorial6·SID15006·TYPE136·VT00509470이다. 로그 `extracted/goal-resume-20261016-{build,ctest,tests}.log`와 [검사 기록](docs/exe/cpp-resume-verification-20261016.md)을 따른다. 이전 이관 검사의 미완료 항목은 이 결과로 완료했다. 새 펜스 제품의 결과로 사용하지 않는다.
-- [ ] 다음 단위 진행: 타입136은 **썬 펜스**, 실제 최초 후처리는 **00457560**이다. `RawFencePostPop.*`·`RawFenceNeighbors.*`·`RawFenceLine.*`·독립 관찰기3개·검사6개와 실제 Session 조립을 준비했다. 원본 고유 **2,333입력**(접두330·최근접/사거리1,904·mode0좌표99)은 두 x87 정밀도에서 통과했다. 현재 **미커밋·CMake 등록·라이브러리 빌드 중·C++ 검사 미실행**이다. 관찰의 외부 경계와 실제 게임 연결은 별개로 기록하며 이웃/선/연결수의 빈 콜백으로 우회하지 않는다. 최초 Load 뒤 실제 펜스의 Regular2도 확인해야 한다.
-- [ ] 다음: 새 펜스 빌드·C++2,333대조·필수 경계/실제 해시 검사·보호8미션 Start·전체 회귀를 수행한다. 펜스 Regular의 실제 Handle/공격·소유자 변경·생성/삭제는 아직 복원하지 않았다. 모든 목표 미션의 실제 GUI 진입·자연 완주·승패·다음 미션·그래픽/음향 동일성은 계속 남아 있다. 원격 push·보호 원본/AGENTS/dotnetpj 변경·전체화면 DirectDraw 오류 수정은 하지 않는다.
+- [x] **단위76 완료:** TYPE136=`sunFence`의 표시 이름은 **Sun Barricade/썬 바리케이드**다. 실제 최초 후처리00457560과 최근접/방향별 동맹/축 사거리/기존 연결선 mode0를 `RawFencePostPop.*`·`RawFenceNeighbors.*`·`RawFenceLine.*`로 복원해 같은 실제 Session 해시/프레임/동맹81DWORD/장부/Regular/Damageable에 연결했다. 원본 고유 **2,333입력**(접두330·최근접/사거리1,904·좌표99)을 두 x87 정밀도에서 재생하고 C++ 전수 대조했다. [상세](docs/exe/cpp-sun-fence-20261016.md)의 외부 경계와 실제 게임 연결 범위를 구별한다.
+- [x] 최종 Release **종료0·경고0·오류0**. `Fence`11개·실패0, `CampaignMissionStart_`3개·실패0, **실제 Tutorial1~6·TheWarBegins·MasterOfWhirligigs Load/Start 모두 통과**. Tutorial6 펜스의 실제 Kernel 사건2/payload0.1/최초 owner DWORD 검사에도 도달했다. 전체 CTest **1/1·종료0 / 내부1,327개·실패0 / 검사120.45초·전체120.47초**. 로그 `extracted/goal-fence-20261016-{library-build,build,focused-fixed,start,ctest,tests}.log`를 따른다. 초기760CHECK는 관찰기 finder 현재 위치+30/+34 혼동으로 확인·교정하고 원문을 재생했다. 제품 선택 몸체·기대 판정·미션 목록을 완화하지 않았다.
+- [ ] 다음: **데모3개 DemoStormRages·GuardMyBack·DissolvedAlliance의 실제 StartDemo(+68) 흐름과 현재 Session 연결**을 확인한다. 썬 바리케이드 Regular의 실제 Handle/공격·mode1 선 생성·소유자 변경·파생 삭제 및 휘리기그73/BaseFlyer0045c1b0은 미완료다. 모든 목표 미션의 실제 GUI 진입·자연 완주·승패·다음 미션·그래픽/음향 동일성은 계속 남아 있다. 원격 push·보호 원본/AGENTS/dotnetpj 변경·전체화면 DirectDraw 오류 수정은 하지 않는다. 목표는 active·미달성이며 이 단위의 완료를 자연 완주로 세지 않는다.
 
 ## 2026-10-16 cpppj 사전 정밀 디컴파일 완료 (`VM-W11-Codex`)
 

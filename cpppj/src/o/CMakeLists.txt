@@ -245,3 +245,6 @@ target_sources(netstorm PRIVATE RawBuriedPostPop.cpp RawBuriedPostPop.h)
 
 # 썬 아비어리 최초 부착/프레임/상태 패킷의 실제 Kernel 객체다.
 target_sources(netstorm PRIVATE RawSunAviaryProcess.cpp RawSunAviaryProcess.h)
+
+# 썬 펜스 최초 후처리의 이웃/연결선/Regular를 같은 월드에 연결한다.
+target_sources(netstorm PRIVATE RawFencePostPop.cpp RawFencePostPop.h RawFenceNeighbors.cpp RawFenceNeighbors.h RawFenceLine.cpp RawFenceLine.h)

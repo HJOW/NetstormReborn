@@ -68,6 +68,13 @@ TEST_CASE(CampaignMissionStart_ProtectedEightMissions) {
             const auto core=session.Core();const auto form=FindAttachedProcess(core.pool,object.sid,32);CHECK(form.value!=0);auto* process=form.value ? dynamic_cast<SunAviaryProcess*>(core.processes.FromForm(form)) : nullptr;
             CHECK(process && process->Parent()==object.sid && process->Fields().Form()==form && process->Fields().Stage()==1 && process->Fields().Dirty()==0);
         }
+        std::size_t fences{}; // 저장된 실제 펜스의 최초 후처리와 같은 Kernel 사건을 확인한다.
+        for (const auto& object:session.World().Objects()) if (object.object.type==136) { // 다른 타입을 펜스의 대체 객체로 만들지 않는다.
+            ++fences;auto core=session.Core();const auto raw=core.pool.Slot(object.sid);const auto* regular=core.processes.FindEvent(object.sid,2);
+            CHECK(raw[42]<=8 && raw[43]==0 && raw[44]==0 && raw[45]==0);
+            CHECK(regular && regular->Parent()==object.sid && regular->Count()==0 && std::bit_cast<std::uint32_t>(regular->Payload())==0x3dcccccd);
+        }
+        if (input.name=="Tutorial6") CHECK(fences>0 && session.Core().bookkeeping.depth==0);
         if (input.name=="Tutorial5") {
             auto core=session.Core();std::size_t buried{}; // 보호 원문은 QA114의 buried 두 개를 저장한다.
             // 실제 풀에서만 대상을 찾고 별도 관찰용 객체/예약 목록을 만들지 않는다.

@@ -2,6 +2,9 @@
 # (첫 구성 때 인터넷에서 내려받을 것이 없다).
 # 테스트 파일을 만들면 아래 목록에 더한다. 파일 안의 TEST_CASE 는 자동으로 등록된다.
 add_executable(netstorm_tests
+    FencePostPopTests.cpp
+    FenceNeighborsTests.cpp
+    FenceLineTests.cpp
     SunAviaryProcessTests.cpp
     BuriedPostPopTests.cpp
     DialogBodyLayoutTests.cpp
@@ -1066,3 +1069,11 @@ set_source_files_properties(BuriedPostPopTests.cpp PROPERTIES COMPILE_DEFINITION
 # 썬 아비어리의 네 원문 범위를 독립 기계어 기대값으로 대조한다.
 set_source_files_properties(SunAviaryProcessTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_SUN_AVIARY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/sun-aviary-x86.tsv\"")
+
+# 펜스 접두/이웃/검색점은 서로 다른 원문 관찰 자료로 대조한다.
+set_source_files_properties(FencePostPopTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FENCE_POSTPOP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fence-postpop-x86.tsv\"")
+set_source_files_properties(FenceNeighborsTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FENCE_NEIGHBORS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fence-neighbors-x86.tsv\"")
+set_source_files_properties(FenceLineTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FENCE_LINE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fence-line-x86.tsv\"")
