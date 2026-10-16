@@ -2,6 +2,7 @@
 #include "DudeSpawnSupport.h"
 #include "client/RawCampaignMissionStartBindings.h"
 #include "o/RawSunAviaryProcess.h"
+#include "o/RawRainAviaryProcess.h"
 #include <unordered_set>
 
 using namespace netstorm::client;
@@ -132,6 +133,14 @@ void StartProtectedDemo(std::string_view name) {
     MissionScript script(config,name);CHECK(script.Loaded());StartExternal external;auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());
     std::fprintf(stderr,"실제 데모 Load 검사: %s\n",std::string(name).c_str()); // 미복원 파생 몸체의 실제 진입 미션을 보존한다.
     RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),external.Services());session.Load();
+    if (name=="DemoStormRages") {
+        std::size_t pools{};auto core=session.Core(); // 실제 저장 맨 오 워 풀마다 타입60 Form과 같은 Kernel 객체가 있어야 한다.
+        for (const auto& object:session.World().Objects()) if (object.object.type==143) { // 기술/관찰 전용 대체 객체를 새로 만들지 않는다.
+            ++pools;const auto form=FindAttachedProcess(core.pool,object.sid,60);auto* process=form.value ? dynamic_cast<RainAviaryProcess*>(core.processes.FromForm(form)) : nullptr;
+            CHECK(process && process->Parent()==object.sid && process->Fields().Parent()==object.sid && process->Fields().Form()==form && process->Fields().Stage()==1 && process->Fields().Dirty()==0);
+        }
+        CHECK(pools>0 && core.bookkeeping.depth==0);
+    }
     MissionFrameGateState gate;MissionStartState state;MissionStartGlobals globals;MissionAiSettingsState ai;ai.stuffRefreshRate=4;
     // 원본 StartDemo는00463b70의 현재 미션 생성 뒤00463a00으로 실제+68에1을 쓴다. 스크립트 demo 키로 대체하지 않는다.
     gate.demo=1;RawCampaignMissionStartBindings start(session,script,gate,state,globals,ai,external.Effects());

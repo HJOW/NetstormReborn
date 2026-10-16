@@ -19,9 +19,9 @@ a game developed by Activision in 1997 and abandoned long ago.
 
 ## Latest C++ reconstruction
 
-The same session now connects SP, technology, priest participation, AI creation/initial update, and the common mission Start. Headless Load/Start checks pass for Early Missions 1–6, Campaign 1-1/1-2, and demos 2/3. GUI Start/StartDemo, Guide and mission-frame integration, AI strategy, natural playthroughs and full visual/audio parity remain unfinished.
+The same session now connects SP, technology, priest participation, AI creation/initial update, and the common mission Start. Headless Load/Start checks pass for Early Missions 1–6, Campaign 1-1/1-2, and all three demos. GUI Start/StartDemo, Guide and mission-frame integration, AI strategy, natural playthroughs and full visual/audio parity remain unfinished.
 
-The October 16 Release build has **zero warnings/errors**. The full suite reports **1,334 of 1,335 cases passed, one failure (CTest exit 8)**: unsupported Man o'War Pool (TYPE143) post-processing during demo 1, `DemoStormRages`. These checks do not establish GUI playthrough parity. Fixing the legacy DirectDraw fullscreen error remains excluded from the current specified-mission reconstruction task, and is **mandatory in C++ phase 2** under the October 16 AGENTS.md update.
+The October 16 Release build has **zero warnings/errors**. The full suite reports **1,340 cases passed, zero failures (1/1 CTest passed, exit 0)**. Restoring Man o'War Pool (TYPE143) post-processing and process type 60 resolved demo 1 initialization; all three demo Load/Start checks pass. These checks do not establish GUI playthrough parity. Fixing the legacy DirectDraw fullscreen error remains excluded from the current specified-mission reconstruction task, and is **mandatory in C++ phase 2** under the October 16 AGENTS.md update.
 
 Development is **active**. See the [C++/shared handover](LEFT_JOBS.md), [demo initialization](docs/exe/cpp-demo-initialization-20261016.md), [AI colors](docs/exe/cpp-player-color-20261016.md), and [demo/campaign correspondence](docs/gameplay/demo-campaign-map.md).
 

@@ -19,11 +19,11 @@ AI 를 이용해 되살리는 프로젝트입니다.
 
 ## C++ 복원판의 최신 상태
 
-같은 실제 세션에 SP·기술·사제 참여·AI 생성/초기 갱신과 공통 미션 Start를 연결했습니다. Early Missions1~6·캠페인1-1/1-2 및 데모2·3은 원본 자원의 헤드리스 Load/Start 검사를 통과했습니다. GUI의 공통 Start/StartDemo·Guide·미션 프레임 연결과 AI 전략·자연 완주는 남아 있습니다.
+같은 실제 세션에 SP·기술·사제 참여·AI 생성/초기 갱신과 공통 미션 Start를 연결했습니다. Early Missions1~6·캠페인1-1/1-2 및 데모3개는 원본 자원의 헤드리스 Load/Start 검사를 통과했습니다. GUI의 공통 Start/StartDemo·Guide·미션 프레임 연결과 AI 전략·자연 완주는 남아 있습니다.
 
-2026-10-16 최종 기록은 Release 게임·검사 빌드 **경고0·오류0**, 전체 CTest **1335개 중1334개 통과·1개 실패(exit8)**입니다. 유일한 실패는 데모1 `DemoStormRages`의 맨 오 워 풀(TYPE143) 후처리 미지원입니다. 원본 함수 대조와 Load/Start 검사는 실제 GUI 플레이 완주·전체 그래픽/음향 동일성 검증과 구별합니다. 기존 DirectDraw 전체화면 오류 수정은 현재 Early Missions·캠페인1-1~1-2·데모3개 복원 작업에서 제외되어 있으며, **cpppj 2차 목표에서 반드시 수정합니다**(AGENTS.md 2026-10-16 변경).
+2026-10-16 최종 기록은 Release 게임·검사 빌드 **경고0·오류0**, 전체 CTest **1340개·실패0(1/1 통과·exit0)**입니다. 데모1의 맨 오 워 풀(TYPE143) 후처리·타입60 프로세스를 복원해 데모3개의 Load/Start가 모두 통과했습니다. 원본 함수 대조와 Load/Start 검사는 실제 GUI 플레이 완주·전체 그래픽/음향 동일성 검증과 구별합니다. 기존 DirectDraw 전체화면 오류 수정은 현재 Early Missions·캠페인1-1~1-2·데모3개 복원 작업에서 제외되어 있으며, **cpppj 2차 목표에서 반드시 수정합니다**(AGENTS.md 2026-10-16 변경).
 
-완주 동일성 개발은 **재개하여 진행 중**입니다. 다음 순서와 미완료 경계는 [cpppj·공통 인수인계](LEFT_JOBS.md)를 따릅니다. 최근 근거는 [데모 초기화](docs/exe/cpp-demo-initialization-20261016.md), [AI 색 변경](docs/exe/cpp-player-color-20261016.md), [데모/캠페인 대응](docs/gameplay/demo-campaign-map.md)에 있습니다.
+완주 동일성 개발은 **재개하여 진행 중**입니다. 다음 순서와 미완료 경계는 [cpppj·공통 인수인계](LEFT_JOBS.md)를 따릅니다. 최근 근거는 [데모 초기화](docs/exe/cpp-demo-initialization-20261016.md), [AI 색 변경](docs/exe/cpp-player-color-20261016.md), [맨 오 워 풀](docs/exe/cpp-rain-aviary-20261016.md), [데모/캠페인 대응](docs/gameplay/demo-campaign-map.md)에 있습니다.
 
 ## C# + MonoGame 클론의 최신 상태
 

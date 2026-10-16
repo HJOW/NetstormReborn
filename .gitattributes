@@ -77,6 +77,13 @@ cpppj/tests/PlayerColorTests.cpp text eol=lf
 cpppj/tests/fixtures/player-color-x86.tsv text eol=lf
 tools/decomp_player_color.py text eol=lf
 cpppj/player-color.json text eol=lf
+
+# 맨 오 워 풀의 원문/제품/관찰 기대값을 PC 간 같은 바이트로 유지한다.
+cpppj/src/o/RawRainAviaryProcess.* text eol=lf
+cpppj/tests/RainAviaryProcessTests.cpp text eol=lf
+cpppj/tests/fixtures/rain-aviary-x86.tsv text eol=lf
+tools/decomp_rain_aviary.py text eol=lf
+cpppj/rain-aviary.json text eol=lf
 # 썬 아비어리의 원문/관찰/검사 바이트를 Windows 체크아웃에서도 보존한다.
 cpppj/src/o/RawSunAviaryProcess.* text eol=lf
 cpppj/tests/SunAviaryProcessTests.cpp text eol=lf

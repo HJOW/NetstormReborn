@@ -45,6 +45,7 @@ struct AssetPostPopHooks {
     std::function<void(Sid,std::uint32_t,float)> addRegular; // 실제 Regular 생성자에 event·SID·지연을 넘긴다.
     std::function<void(Sid)> createGunProcess; // new(0x38)·GunProcess 생성/부착 전체 경계다.
     std::function<void(Sid,std::uint32_t)> sunAviaryPostPop; // 실제0045ec50의 생성/부착/Damageable 전체 몸체다.
+    std::function<void(Sid,std::uint32_t)> rainAviaryPostPop; // 실제0045ed10의 편집 관문/타입60 생성·부착/Damageable 전체 몸체다.
     std::function<void(Sid)> removeAnimation; // 썬 디스크 발사기의 현재 애니메이션 제거다.
     std::function<void(Sid)> checkForms; // 켜진 진단의 checkForms() assert를 검사한다.
     std::function<std::int32_t(std::int32_t)> gunFrame; // 현재 총 각도에서 실제 Gunanim 프레임을 조회한다.

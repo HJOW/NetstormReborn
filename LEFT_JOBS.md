@@ -1,5 +1,15 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-16 단위80 완료: 맨 오 워 풀의 실제 후처리/생산 프로세스60 연결 (`VM-W11-Codex`)
+
+- [x] 직전 턴은 단위78의 AI 색/데모2개 시작과 대응 문서·로컬 커밋까지 완료한 진행 턴이다. AGENTS.md·양 LEFT_JOBS와 현재 작업 트리를 다시 읽었고 사용자 요청의2차 DirectDraw 목표 문서 반영을 단위79/`40c6152`로 먼저 마쳤다. 현재/마지막 전체 정밀 PC는 **VM-W11-Codex / 2026-10-16**이며 일치한다. 목표는 active·미달성이다.
+- [x] 맨 오 워 풀(TYPE143·rainAviary)의 원본0045ed10/0045d810/0045dde0/0045d870→0045b2a0과 직접helper를 관찰했다. **1602고유입력**(생성18·후처리386·Frame174·writer1024)을 두 x87 정밀도에서 재생했다. 별도 fort/친군 사격 관문, 미정48BYTE/비서버 상태, 맨 오 워 생산/소리·좌표(-0.5,-2), 비서버도 상태5/지연3, 실제 패킷**0x73**을 보존한다. 큰 효과/힙/Frame/생성/Pop/BaseFlyer는 명시 외부 경계다.
+- [x] `RawRainAviaryProcess.*`와 원본 전수 비교5개를 작성하고 가상표005099e8의 별도 PostPop→같은 실제 Pool/Host/타입60·flags8/Kernel/writer/송신에 연결했다. 현재 fort는core.ownerMode.fort,0055a490은기존 gunTargetState.friendlyFire를 같이 읽어 별도 사본을 만들지 않는다. BaseFlyer0045c1b0은 여전히 미복원 오류 경계이며 빈 성공으로 바꾸지 않았다.
+- [x] 최종 Release 경고0·오류0, 새집중5개 실패0·원본1602행 전수 일치, **실제 데모3개 모두 Load/Start 통과**다. 데모1의 저장 맨 오 워 풀마다 실제 타입60 Form/같은 Kernel 객체·현재Parent/Form/상태1·송신후dirty0·후처리깊이0도 확인했다. 최종 소스는 다시 빌드/링크했다. 전체 CTest **1/1·exit0, 내부1340개·실패0, 검사131.57초·전체131.72초**다. 기존8미션 Start도 포함한다. [상세 기록](docs/exe/cpp-rain-aviary-20261016.md)과 `extracted/goal-rain-aviary-20261016-{build,focused,demo,final-build,ctest,tests}.log`를 따른다.
+- [x] 새1602입력/기존휘리베이스1734·요구에너지2352 SHA, Python구문·UTF-8·링크·공백을 감사했다. CMake의 이전/현재 SHA를 요구에너지 이력에 보존했다. 인접assetpostpop 과거감사는 옛 제품/검사5파일과 CRLF2파일을 고정해 실패한다. 원본PE/도구/선택내보내기는 일치하며 기존보고서 SHA를 덮어쓰지 않았다. **기존1636개 원문을 별도경로에 재생해 현재fixture와 정규화 후 전체바이트 동일**을 확인했다. 이는 새 고유입력이 아니다. 비교자료는 `extracted/rain-aviary-adjacent-20261016/comparison.json`, 실패/경계기록은 `cpppj/rain-aviary.json`이다.
+- [x] 이 단위를 `20261016-12 CP 맨 오 워 풀 생산 프로세스 복원과 데모 3개 시작 검증`으로 로컬 커밋한다. 게임/GUI·보호원본·AGENTS·dotnetpj 변경은 없다. 현재/마지막 전체 정밀 PC는 **VM-W11-Codex / 2026-10-16**이다. 목표는 active·미달성이며 이번 결과를 자연 플레이 완주로 세지 않는다.
+- [ ] 다음은 실제 미션 Start 뒤 첫/연속 Kernel 프레임의 미연결 소비자를 확인한다. **BaseFlyer0045c1b0·실제플라이어 생성/이동/공격/귀환, 데빌 메이커, 썬 바리케이드 Regular/공격, AP5의 생산 재시작 상위호출자**, AI전략·GUI Start/StartDemo·Guide/미션프레임·현재 Player/색 조회가 남아 있다. 자연재생/승패/저장/다음 미션/전체화면이 아닌 원본 그래픽/음향 동일성을 계속 검증한다. 역사적assetpostpop 제품 SHA의 현재트리 감사는 기존lineage/별도현재검증 범위를 구별해 후속 근거정리에서 다룬다.
+
 ## 2026-10-16 단위79 완료: AGENTS.md의2차 목표·DirectDraw 오류 수정 필수 반영 (`VM-W11-Codex`)
 
 - [x] 사용자 요청으로 AGENTS.md를 다시 읽고 사용자 커밋 `71f8171`의 변경을 확인했다. **cpppj 2차 목표에서 Windows10/11의 DirectDraw 오류도 반드시 수정**한다. AGENTS.md 자체는 수정하지 않았다. 현재 Early Missions1~6·캠페인1-1/1-2·데모3개 1차 복원 요청의 일시 제외는 유지하며 후속2차 목표에서 누락하지 않는다.

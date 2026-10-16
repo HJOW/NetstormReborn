@@ -1,0 +1,110 @@
+{
+  "host": "VM-W11-Codex",
+  "date": "2026-10-16",
+  "last_full_refined_host": "VM-W11-Codex",
+  "last_full_refined_date": "2026-10-16",
+  "observations": 1602,
+  "scopes": {
+    "C": 18,
+    "P": 386,
+    "F": 174,
+    "W": 1024
+  },
+  "status": "native-compared-product-registered-current-session-three-demo-starts-passed",
+  "game_gui_runs": 0,
+  "boundary": "실제 생성/후처리/Frame/writer 및 타이머/QA/부모/첫 Process helper를 실행한다. 힙/부착/Damageable/프레임 지정/장치/플라이어 생성·소유자·Pop·BaseFlyer 연결은 명시 외부 경계다. 원본 Rain Frame의 재전송 호출은 없으며 미검토 함수로 허용하지 않는다. 개발자 Frame 진단은 꺼진 입력이며 전체48BYTE/객체5개/현재28BYTE 전역/64BYTE패킷/호출/스택/비휘발/쓰기 guard를 대조한다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_rain_aviary.py": "06d726909a157c4158c584f0ffd7c86c388f11d6a37bf58b2fa3441fcafda915",
+    "tools/decomp_local_mission_transport.py": "db71da65079aa9a985a3a833edd224f089ba9a20137d92042551cb346937eb78",
+    "cpppj/src/o/RawRainAviaryProcess.h": "5601966cd330b486c4d8b3c2178ead646607712a587cd8cda9969a4eccf3b9c6",
+    "cpppj/src/o/RawRainAviaryProcess.cpp": "85f16a0bba501f5e743fbc7e464d622f0c2b06b7dadc6e999c151338a36ac26b",
+    "cpppj/tests/RainAviaryProcessTests.cpp": "12420700f079b6d695e1d9c72588c863af637668a6d848b6c7c37164a8278059",
+    "cpppj/tests/fixtures/rain-aviary-x86.tsv": "0fbbc25c029fa02cd8b7f9c919bb499d7d92b2cc55eb85c3725d2a1b2286ea26"
+  },
+  "precision_replays": [
+    639,
+    895
+  ],
+  "product_validation": {
+    "configuration": "Release",
+    "build_exit_code": 0,
+    "build_warnings": 0,
+    "build_errors": 0,
+    "build_log": "extracted/goal-rain-aviary-20261016-final-build.log",
+    "focused_tests": 5,
+    "focused_failed_checks": 0,
+    "focused_log": "extracted/goal-rain-aviary-20261016-focused.log",
+    "actual_demo_starts_passed": [
+      "DemoStormRages",
+      "GuardMyBack",
+      "DissolvedAlliance"
+    ],
+    "demo_log": "extracted/goal-rain-aviary-20261016-demo.log",
+    "full_ctest": {
+      "tests": 1340,
+      "passed": 1340,
+      "failed_checks": 0,
+      "exit_code": 0,
+      "test_seconds": 131.57,
+      "total_seconds": 131.72,
+      "log": "extracted/goal-rain-aviary-20261016-ctest.log"
+    },
+    "integration_source_sha256": {
+      "cpppj/src/client/RawCampaignSession.cpp": "b73902928e2ea84a490ce9953feb489af33f4ee6960de76bf5cd70b54330d159",
+      "cpppj/src/o/RawAssetPostPop.h": "ee7c011bbbe33927b97870daf46e94dff3398dd5e4f138a5cec1cb946800a728",
+      "cpppj/src/o/RawAssetPostPop.cpp": "ce2d0a5216a23a698e954de869340d7cd789dcf20a1c88c06af14d81dbff0dec",
+      "cpppj/tests/CampaignMissionStartTests.cpp": "c3d06c3e9051157463ba95ad61db8bbee6b2d9e82be0879300fe55c4699ecd19",
+      "cpppj/src/o/CMakeLists.txt": "0061ce7e49d51b3d54b3af6068b7b2a6fd7b6a6c75a1efb4355c7b3c95c0ea68",
+      "cpppj/tests/CMakeLists.txt": "b23175408cf5732cd836e49a0e186147a5d4cc97718921526f3aefd3d5b222b0"
+    }
+  },
+  "adjacent_legacy_audit": {
+    "command": "python tools/decomp_assetpostpop_oracle.py --verify",
+    "exit_code": 1,
+    "historical_report_unchanged": true,
+    "mismatches": {
+      "cpppj/tests/fixtures/assetpostpop-x86.tsv": {
+        "historical": "706afb7e0bd78de2527e97a1ec1bbe1f35a202aafbd2c81a0dc8d77d99198741",
+        "current": "10682166af93d6f17bb1d3942ece783d475f1b3171591b39225b3ae5300973e4",
+        "crlf_lf_only": true
+      },
+      "tools/ghidra/assetpostpop-functions.json": {
+        "historical": "68c75e3d8d04079f1a810eb7a8244b058fa1b305d7aa4470771152c6833405f0",
+        "current": "8aebeab14c2986cd01c848d924d286f67aa1ec095450ff5ddbe6b0de66960c4e",
+        "crlf_lf_only": true
+      },
+      "cpppj/src/o/SquidPostPop.h": {
+        "historical": "18953c52f52797429251ca742f16cf52b12679ea6d15982a22c1f442d92fe569",
+        "current": "9d6edf5f147ac5defc2f779a53c705302d8c86fe6c358b3e3e218e5b16242038",
+        "crlf_lf_only": false
+      },
+      "cpppj/src/o/SquidPostPop.cpp": {
+        "historical": "5332f1d9f5a2bd5ebffb002f218a61aa728f9951d2bed7c7f50a5671e681b78f",
+        "current": "f0a751d92e335edac8b7e707ed21b990acb6a596eacf044f3e6d5a2a10718fc8",
+        "crlf_lf_only": false
+      },
+      "cpppj/src/o/RawAssetPostPop.h": {
+        "historical": "f0c007a2a6fa843105ed5c92fed9d401d1c3ba353cbc1a4f2e5e5986e2ecce24",
+        "current": "ee7c011bbbe33927b97870daf46e94dff3398dd5e4f138a5cec1cb946800a728",
+        "crlf_lf_only": false
+      },
+      "cpppj/src/o/RawAssetPostPop.cpp": {
+        "historical": "a76cd4d2d76b3919240c2b297fb7690a033fa4132ee16f7d3ba2a0404bef60c0",
+        "current": "ce2d0a5216a23a698e954de869340d7cd789dcf20a1c88c06af14d81dbff0dec",
+        "crlf_lf_only": false
+      },
+      "cpppj/tests/AssetPostPopTests.cpp": {
+        "historical": "a99a36213c34721085ad5e04ffcff857e47c1cabbdfff1b6eaddd7c7aa0dfb38",
+        "current": "a8651007aad5baef16c7ff19b388844920830f4ab85d0379b29539a569987252",
+        "crlf_lf_only": false
+      }
+    },
+    "native_replayed_rows": 1636,
+    "new_unique_observations": 0,
+    "fixture_normalized_bytes_identical": true,
+    "comparison": "extracted/rain-aviary-adjacent-20261016/comparison.json",
+    "replay_log": "extracted/goal-rain-aviary-20261016-adjacent-replay.log"
+  }
+}
