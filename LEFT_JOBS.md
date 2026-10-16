@@ -1,5 +1,15 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-16 단위81 완료: 레지던스 좌표 정정·실제 11미션 연속 Kernel 경계 검사 (`VM-W11-Codex`)
+
+- [x] AGENTS.md와 양 인수인계를 다시 읽었다. 현재/마지막 전체 정밀 PC는 **VM-W11-Codex / 2026-10-16**으로 일치한다. 단위79에서 변경된 2차 DirectDraw 필수 목표 문서는 반영 완료다. 현재 목표는 active·미달성이다.
+- [x] `CampaignMissionStartTests.cpp`에 실제 보호 미션을 Load/Start한 뒤 동일 Kernel을 25ms 외부 시각 간격으로400회 호출하는 검사11개를 추가했다. 이는 원본 고정 FPS의 주장이나 Guide/GUI/AI전략을 포함한 완주 검사가 아니다. 예외를 성공으로 취급하거나 보호 자료를 바꾸지 않는다.
+- [x] 첫 빌드 성공. 집중11개 중5개(Tutorial1/2/3·TheWarBegins·MasterOfWhirligigs)는400프레임 통과했다. Tutorial4는 첫 프레임 SID15002 TYPE89(레지던스) event1의 난수 범위0, Tutorial5·DissolvedAlliance는TYPE112 event0, Tutorial6·GuardMyBack은TYPE136 event0, TheStormRages는103프레임/2.575초 TYPE144의 미복원 파생 Pop에서 실패했다. 실제 Regular 경계에 SID/TYPE/event/count/payload를 남기고 예외를 그대로 재전파하는 진단을 추가했다.
+- [x] 원본0049a674 이후 두 cdecl 인수를 push한 채 남긴8바이트를 추적했다. 둘째 범위의 ESP+20은원래Y이므로 **X-32 하한은 원본 결함이 아닌 C++/문서 복원 오류**였다. Y-32로 고쳤고 임의 난수0 반환/소비 우회는 없다. 현재 정밀 범위로 두 판본·좌표8쌍·난수36·장식3개 **1728고유 입력**을 두 x87 정밀도로 관찰했다. 전체 부모/이웃 프레임/반환/난수/효과를 C++2개에서 비교했고 기존1976행도 일치한다. 기존 보고서/fixture는 보존했다. [상세](docs/exe/cpp-residence-coordinates-20261016.md).
+- [x] 집중6개 실패0, Tutorial4도400프레임 통과하여 실제11개 중6개 성공이다. 전체 CTest **1353개 중1348통과·5실패,118.19초**다. 실패는 TYPE112 두 미션/TYPE136 두 미션/TYPE144 한 미션으로 위의 새 검사에 한정된다. 기존1340개/새좌표2개는 성공했다. Release 경고0·오류0, 추가 원본1728개/요구에너지2352 SHA·UTF-8/링크/공백을 확인한다. 과거assetregular 제품3파일 SHA/이 PC의 옛 선택 내보내기8개 누락은 새 보고서에 구분했다. 로그는 `extracted/goal-kernel-20261016-*`다.
+- [x] 작업 중 다른 PC의 문서 커밋 `f847efd`(DN13)·`401d172`(CM14)가 들어왔다. 그 dotnetpj 계획/인수인계는 보존하고 README cpppj 부분만 최신화했다. 이 단위는 문서/인수인계 뒤 **`20261016-15 CP 레지던스 좌표 정정과 실제 미션 연속 프레임 검사`**로 로컬 커밋한다. 보호 원본/AGENTS/dotnetpj 변경 및 게임/GUI 실행·push는 없다. 현재/마지막 전체 정밀 PC는 **VM-W11-Codex / 2026-10-16**이다.
+- [ ] 다음 미복원 지점은 buried(TYPE112) Handle **004622f0**·썬 바리케이드(TYPE136) Handle **00457a50**, rainFlyer(TYPE144) Pop/BaseFlyer다. 실제 GUI·미션 Guide·AI전략·승패/저장/다음 미션 연결도 남는다. 새5실패를 성공/건너뜀으로 바꾸지 않고 실제 몸체를 복원한다. 목표는 active·미달성이다.
+
 ## 2026-10-16 단위80 완료: 맨 오 워 풀의 실제 후처리/생산 프로세스60 연결 (`VM-W11-Codex`)
 
 - [x] 직전 턴은 단위78의 AI 색/데모2개 시작과 대응 문서·로컬 커밋까지 완료한 진행 턴이다. AGENTS.md·양 LEFT_JOBS와 현재 작업 트리를 다시 읽었고 사용자 요청의2차 DirectDraw 목표 문서 반영을 단위79/`40c6152`로 먼저 마쳤다. 현재/마지막 전체 정밀 PC는 **VM-W11-Codex / 2026-10-16**이며 일치한다. 목표는 active·미달성이다.

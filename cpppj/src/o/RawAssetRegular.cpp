@@ -126,8 +126,8 @@ float RawAssetRegular::Residence(Sid sid,std::uint32_t event,std::uint32_t,float
         const auto raw=pool_.Slot(sid);const auto x=static_cast<double>(std::bit_cast<float>(Read(raw,14)));
         const auto y=static_cast<double>(std::bit_cast<float>(Read(raw,18)));
         auto searchX=Range(random_,Truncate(x-48.0),Truncate(x+32.0));
-        // 패치 기계어는 둘째 범위 하한에 X-32를 읽고 CD는 Y-32를 읽는다. 원본 결함도 그대로 보존한다.
-        auto searchY=Range(random_,Truncate((patch ? x : y)-32.0),Truncate(y+32.0));
+        // 두 cdecl 인수가 스택에 남은 뒤의 +20은 Y다. 두 판본 모두 Y-32부터 Y+32 사이에서 고른다.
+        auto searchY=Range(random_,Truncate(y-32.0),Truncate(y+32.0));
         searchX=std::clamp(searchX,10,246);searchY=std::clamp(searchY,10,246);
         const auto bottom=Truncate(std::min(static_cast<double>(static_cast<float>(y+32.0)),246.0));
         RawSquidFinder finder(pool_,hash_,types_);auto candidate=finder.Begin({searchX-1,searchY-3,searchX+1,bottom});

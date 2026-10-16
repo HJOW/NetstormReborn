@@ -1,0 +1,111 @@
+{
+  "host": "VM-W11-Codex",
+  "last_full_decompile_host": "VM-W11-Codex",
+  "last_full_decompile_date": "2026-10-16",
+  "total": 1728,
+  "editions": {
+    "originals": {
+      "cases": 864,
+      "returns": 1728,
+      "assertions": 0,
+      "external": {
+        "004acee0": 4
+      }
+    },
+    "originalCD": {
+      "cases": 864,
+      "returns": 1728,
+      "assertions": 0,
+      "external": {
+        "004acbc0": 4
+      }
+    }
+  },
+  "files": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_residence_coordinates.py": "6f668b68dfb387d99007c10327686e5fdf734e6164eeddbe9fcc8a74a9ca584d",
+    "tools/decomp_assetregular_oracle.py": "f2f726ce5d51b94b02c8f8a43b2a66519f92ce472df44339f0fe9f705fc0e7da",
+    "tools/ghidra/assetregular-functions.json": "b735e482ba4b036dfcaef654d83a494b8030a37c4dff1c2f86cb6c35c3b159b2",
+    "tools/ghidra/frameadvance-functions.json": "569f6227c1564d1a0b9ad3918e80131df6a1a83ea05883edb3e765fa0d0c7853",
+    "extracted/bridgeeffects/originals/creation.c": "ac1856212fbd285650dc4ec999fa996a306ba536a3e42d605fba4ab26178fdbc",
+    "extracted/bridgeeffects/originals/functions.tsv": "485cd05093884690ffc94c433c4e040282cd6ca26eb7da469732f74e1c983cec",
+    "extracted/finder/originals/creation.c": "2f6baf5e3cf77598e067963196c8fcd5c7d15ee09db54f3f68e8071191ea9070",
+    "extracted/finder/originals/functions.tsv": "7ee781ffc6200c8f6b231381c4dae7ce88e5c0158f4b8effb222090bf8345704",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/bridgeeffects/originalCD/creation.c": "76acd15962cfadb844dd6689014a8a67ee0fc744d16c5a32528d4cafdb7fb911",
+    "extracted/bridgeeffects/originalCD/functions.tsv": "b99e5f65a90d402a49be3353263e66080fbf1d3825b19685d7a49edd2e4c4abd",
+    "extracted/finder/originalCD/creation.c": "822eece37b0a0edde482232eacb0710ae8cf11c759417bc3108fa5ecc0585972",
+    "extracted/finder/originalCD/functions.tsv": "60cf1f9e4a7832ebe882a869af2bd2cd69e549e761fb03d7d4d64bb5fb3c5935",
+    "extracted/refined/originalCD/functions.tsv": "453aa383c27baf8eefa00d97bf44051d18460150556511c2eb7a46f111e92def",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "cpppj/tests/fixtures/residence-coordinates-x86.tsv": "300c31e61c97d0a51c95bac788675e54223547cfd74cf35ae84f74ab0e9d7777",
+    "cpppj/src/o/RawAssetRegular.cpp": "57426fd87e639b7334c0bed1fdf9fabca583db22da5936525fea2e2ca2c1acdb",
+    "cpppj/tests/AssetRegularTests.cpp": "64c95a65b8cef62ad2df1ba725bdb3040f8fa2ad35315dd6771485a6e7dcd573",
+    "tools/decomp_rawfinder_oracle.py": "08914eaa23cce0b3e1540799003c71c64062bad64f37383bdd647ede5ab2e2a7",
+    "tools/decomp_bridgeeffects_oracle.py": "ed8e76931f972ffec24be024a17e65ddf3224eb487f215764f60b8abfbbaf462",
+    "tools/decomp_bridgedecay_oracle.py": "887979f3b82cd56a93a4620d473b8048a579807e72022dfa8dddcf873c81641f"
+  },
+  "limits": [
+    "게임/GUI/OS 실행 없음. 기존 finder 입력 등록과 명시 하위 표시 효과 경계를 재사용한다.",
+    "선택 범위는 현재 정밀 디컴파일에서 읽는다. 과거 assetregular 보고서/fixture는 덮어쓰지 않는다.",
+    "호출 기록은 실제 원본 스택 인수다. C++ 비교는 반환값/공유 난수/최대 탐색/모든 효과/전체 부모 및 이웃 프레임을 사용한다.",
+    "Guide/AI전략/미션 완주/GUI 동일성을 증명하지 않는다."
+  ],
+  "source_line_endings": {
+    "cpppj/tests/AssetRegularTests.cpp": {
+      "observed_sha256": "6d92d7e9b28c76db7d806feded4adc370747cf42db9409c689e6b3f9c86088f8",
+      "canonical_sha256": "64c95a65b8cef62ad2df1ba725bdb3040f8fa2ad35315dd6771485a6e7dcd573",
+      "change": "CRLF to LF only; exact old.replace(CRLF,LF)==current; no token/result changes"
+    }
+  },
+  "legacy_assetregular_audit": {
+    "current_tree_matches_historical_report": false,
+    "differences": [
+      [
+        "cpppj/src/o/RawAssetRegular.h",
+        "historical SHA mismatch"
+      ],
+      [
+        "cpppj/src/o/RawAssetRegular.cpp",
+        "historical SHA mismatch"
+      ],
+      [
+        "cpppj/tests/AssetRegularTests.cpp",
+        "historical SHA mismatch"
+      ],
+      [
+        "extracted/assetregular/originals/creation.c",
+        "missing old export"
+      ],
+      [
+        "extracted/assetregular/originals/functions.tsv",
+        "missing old export"
+      ],
+      [
+        "extracted/frameadvance/originals/creation.c",
+        "missing old export"
+      ],
+      [
+        "extracted/frameadvance/originals/functions.tsv",
+        "missing old export"
+      ],
+      [
+        "extracted/assetregular/originalCD/creation.c",
+        "missing old export"
+      ],
+      [
+        "extracted/assetregular/originalCD/functions.tsv",
+        "missing old export"
+      ],
+      [
+        "extracted/frameadvance/originalCD/creation.c",
+        "missing old export"
+      ],
+      [
+        "extracted/frameadvance/originalCD/functions.tsv",
+        "missing old export"
+      ]
+    ],
+    "interpretation": "Historical report retained. Current C++ replays all 1976 old observations and the 1728 new independent coordinate observations. Missing selected exports are not fabricated; current refined function ranges are used."
+  }
+}

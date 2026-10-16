@@ -35,6 +35,11 @@ tools/decomp_derived_oracle.py text eol=lf
 # raw 공간 해제의 기계어 검증 기록·도구·가상 주소 표를 재현 가능한 LF로 고정한다.
 cpppj/unpop.json text eol=lf
 cpppj/src/o/UnpopVtables.inc text eol=lf
+tools/decomp_residence_coordinates.py text eol=lf
+cpppj/tests/fixtures/residence-coordinates-x86.tsv text eol=lf
+cpppj/residence-coordinates.json text eol=lf
+docs/exe/cpp-residence-coordinates-20261016.md text eol=lf
+cpppj/tests/AssetRegularTests.cpp text eol=lf
 
 # 요구에너지 근거 SHA가 PC의 자동 줄바꿈 변환에 따라 달라지지 않도록 고정한다.
 cpppj/src/o/RawTypeRequiredEnergy.* text eol=lf

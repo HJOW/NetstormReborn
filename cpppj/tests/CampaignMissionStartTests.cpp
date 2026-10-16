@@ -175,3 +175,42 @@ TEST_CASE(CampaignDemoStart_TheStormRages) { StartProtectedDemo("DemoStormRages"
 TEST_CASE(CampaignDemoStart_GuardMyBack) { StartProtectedDemo("GuardMyBack"); }
 // 세 소유자와 배신 동맹 설정이 있는 세 번째 원본 데모다.
 TEST_CASE(CampaignDemoStart_DissolvedAlliance) { StartProtectedDemo("DissolvedAlliance"); }
+
+namespace {
+// 원본 자원을 바꾸지 않고 실제 Start 뒤 같은 Session의 Kernel을10초 진행한다. Guide/GUI 경로 검사는 별도다.
+void RunProtectedKernelFrames(std::string_view name,bool demo) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);ConfigInterface config([&](std::string_view path) { return assets.files.TryRead(path); });ConfigureStart(config);MissionScript script(config,name);
+    StartExternal external;auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),external.Services());session.Load();
+    GameClock clock;MissionFrameGateState gate;MissionStartState state;MissionStartGlobals globals;MissionAiSettingsState ai;gate.demo=demo ? 1U : 0U;ai.stuffRefreshRate=4;
+    auto effects=external.Effects();effects.gameSeconds=[&] { return clock.GameSeconds(0); }; // 같은 세션의 초기 시각0을 실제 Start에 공급한다.
+    RawCampaignMissionStartBindings start(session,script,gate,state,globals,ai,std::move(effects));start.Start();CHECK(gate.started==1);
+    for (std::uint32_t frame=1;frame<=400;++frame) { //25ms는 명시 외부 시계 입력이며 원본 고정 FPS를 뜻하지 않는다.
+        const auto time=clock.Capture(frame*25);
+        try { session.RunFrame(time,false); }
+        catch (const std::exception& error) { throw std::runtime_error(std::string(name)+" Kernel frame"+std::to_string(frame)+" game"+std::to_string(time.game)+": "+error.what()); }
+    }
+    CHECK(session.Core().bookkeeping.depth==0 && gate.started==1);std::fprintf(stderr,"실제 Kernel400프레임 완료: %s\n",std::string(name).c_str()); // 전체 정상 완료와 첫 예외 위치를 구별한다.
+}
+}
+// 각각 독립 실행해 첫 미복원 경계가 다른 목표 미션을 감추지 않게 한다.
+TEST_CASE(CampaignKernelFrames_Tutorial1) { RunProtectedKernelFrames("Tutorial1",false); }
+// Early Missions2의 실제 예약/내용물/사제 프레임이다.
+TEST_CASE(CampaignKernelFrames_Tutorial2) { RunProtectedKernelFrames("Tutorial2",false); }
+// Early Missions3의 실제 월드/프로세스 프레임이다.
+TEST_CASE(CampaignKernelFrames_Tutorial3) { RunProtectedKernelFrames("Tutorial3",false); }
+// Early Missions4의 같은 원본 배치다.
+TEST_CASE(CampaignKernelFrames_Tutorial4) { RunProtectedKernelFrames("Tutorial4",false); }
+// Early Missions5의 매립/예약/총 프레임이다.
+TEST_CASE(CampaignKernelFrames_Tutorial5) { RunProtectedKernelFrames("Tutorial5",false); }
+// Early Missions6의 실제 썬 바리케이드 사건도 실행한다.
+TEST_CASE(CampaignKernelFrames_Tutorial6) { RunProtectedKernelFrames("Tutorial6",false); }
+// 캠페인1-1의 같은 AI 생성 뒤 실제 프로세스다.
+TEST_CASE(CampaignKernelFrames_TheWarBegins) { RunProtectedKernelFrames("TheWarBegins",false); }
+// 캠페인1-2의 실제 휘리베이스/총 등 현재 배치다.
+TEST_CASE(CampaignKernelFrames_MasterOfWhirligigs) { RunProtectedKernelFrames("MasterOfWhirligigs",false); }
+// 데모1의 로컬AI/맨 오 워 풀 등 실제 현재 프레임이다.
+TEST_CASE(CampaignKernelFrames_TheStormRages) { RunProtectedKernelFrames("DemoStormRages",true); }
+// 데모2의 네 참여자 배치와 실제 색 변경 뒤 상태다.
+TEST_CASE(CampaignKernelFrames_GuardMyBack) { RunProtectedKernelFrames("GuardMyBack",true); }
+// 데모3의 실제 현재 동맹/프로세스다.
+TEST_CASE(CampaignKernelFrames_DissolvedAlliance) { RunProtectedKernelFrames("DissolvedAlliance",true); }

@@ -4,6 +4,7 @@
 #include "o/SquidPostPop.h"
 #include "o/RawSquidDestroy.h"
 #include <cstdio>
+#include <filesystem>
 
 using namespace netstorm::o;
 using namespace netstorm::test::rawscene;
@@ -169,3 +170,36 @@ TEST_CASE(AssetRegular_RejectsMissingEffectsAndForeignPool) {
     try { RawAssetRegular foreign(scene.pool,scene.hash,scene.types,scene.frames,scene.elements,other.setter,other.advance,scene.random,scene.assets,scene.state,{}); }
     catch (const std::invalid_argument&) { failed=true; }CHECK(failed);
 }
+
+namespace {
+// 별도 원본 관찰의 축 교차/경계 좌표를 같은 실제 Handle/Finder/난수 저장소에서 대조한다.
+void ReplayResidenceCoordinates(std::string_view edition) {
+    const auto path=(std::filesystem::path(NETSTORM_ASSETREGULAR_FIXTURE).parent_path()/"residence-coordinates-x86.tsv").string();
+    const auto rows=LoadFixture(path.c_str()).rows;
+    AssetRegularScene scene(edition=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072);
+    std::size_t count{}; // 같은 판본의 전수 비교 행 수다.
+    for (const auto& row:rows) { // 좌표는 입력 그대로 넣으며 탐색 범위/기대값을 재계산하지 않는다.
+        if (row[0]!=edition) continue;CHECK(row.size()==11);scene.Prepare(row);
+        Put(scene.pool.AllocatedBytes(kSource),14,Number(row[2]));Put(scene.pool.AllocatedBytes(kSource),18,Number(row[3]));scene.hash.Reset();
+        for (const auto sid:{Sid{62},Sid{61},Sid{60},kSource}) { // 바뀐 입력 위치에 실제 네 단계 해시 중 단계1의 체인을 다시 등록한다.
+            auto raw=scene.pool.AllocatedBytes(sid);const auto x=std::bit_cast<float>(Get(raw,14)),y=std::bit_cast<float>(Get(raw,18));
+            raw[scene.patch ? 33 : 31]=1; // 원본 추가 입력과 같은1×1 프레임의 저장 단계를 모든 이웃에도 지정한다.
+            auto& bucket=scene.hash.Bucket(1,x,y);Put(raw,4,bucket,2);bucket=sid.value;
+        }
+        const auto result=scene.regular->Handle(kSource,scene.input[1],scene.input[2],std::bit_cast<float>(scene.input[3]));
+        std::string events; // 실제 표시 효과의 순서 문자열이다.
+        for (const auto& event:scene.events) { if (!events.empty()) events+=';';events+=event; } // 원본에서 기록한 모든 호출과 비교한다.
+        if (events.empty()) events="-";
+        const auto neighbors=std::to_string(scene.Frame(Sid{60}))+','+std::to_string(scene.Frame(Sid{61}))+','+std::to_string(scene.Frame(Sid{62}));
+        const bool same=std::bit_cast<std::uint32_t>(result)==Number(row[4]) && scene.random.State()==Number(row[5]) &&
+            scene.state.maxDecorationScan==Number(row[6]) && events==row[7] && Hex(scene.pool.Slot(kSource))==row[8] && neighbors==row[9];
+        CHECK(same);++count;
+        if (!same) { std::fprintf(stderr,"레지던스 좌표 %s 행%zu 입력%s x%s y%s 호출%s\n",std::string(edition).c_str(),count,row[1].c_str(),row[2].c_str(),row[3].c_str(),row[10].c_str());break; }
+    }
+    CHECK(count==864);
+}
+}
+// 패치10.78에서 X-Y=64였던 경우도 원본처럼 나눗셈 오류 없이 동일 결과로 반환해야 한다.
+TEST_CASE(AssetRegular_ResidenceCoordinatesPatch) { ReplayResidenceCoordinates("originals"); }
+// CD10.72의 별도 명령/배치를 같은 추가 좌표 입력으로 검증한다.
+TEST_CASE(AssetRegular_ResidenceCoordinatesCd) { ReplayResidenceCoordinates("originalCD"); }
