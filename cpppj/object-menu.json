@@ -63,9 +63,35 @@
       "cpppj/src/client/RawObjectMenu.h": "779fa9cc64126ccb35f7c6a24f32972c3249817026b4ea77eea4e3abfee1fe08",
       "cpppj/src/client/RawObjectMenu.cpp": "7c751ff5cb8cc1f7df57f4d18483819c774e23837215f4d925cbe65874699dae",
       "cpppj/tests/ObjectMenuTests.cpp": "849f3bfabd854e40b451c3f727ed21db9d6d524c516191012da9f8a568875590",
-      "cpppj/tests/RawMenuControlsTests.cpp": "028c7a23580088cf6754dd655d2afa91a96e4ab6b6b0128b1adc3ca6c9ab5434",
-      "cpppj/src/client/CMakeLists.txt": "fa3fc0ac28ee2078b97dc0a515ed05c9e680e72d08b30f3f0ed04099f7a4f85b",
-      "cpppj/tests/CMakeLists.txt": "a62a4bf30e59fd1830cc4711447159708ef3b76b398a4064b0acdd58d4e177e9"
+      "cpppj/tests/RawMenuControlsTests.cpp": "3ea0a940b2693a8889eb742505a81a8284b8f023c561c9adfdf612ad8b2860ea",
+      "cpppj/src/client/CMakeLists.txt": "d5bf5ae4aa05e5fa22b856c0e2f84dc9036f79d00624eed7507f9e5971222caf",
+      "cpppj/tests/CMakeLists.txt": "75fa404983d2115305854d7acd1a192d64b067938b42c6194440441725205c05"
     }
-  }
+  },
+  "integration_updates": [
+    {
+      "date": "2026-10-17",
+      "reason": "unit114 Carrier menu registration/integration test; prior native fixtures and core bodies unchanged",
+      "shared_sha256": {
+        "cpppj/src/client/CMakeLists.txt": {
+          "previous": "fa3fc0ac28ee2078b97dc0a515ed05c9e680e72d08b30f3f0ed04099f7a4f85b",
+          "current": "d5bf5ae4aa05e5fa22b856c0e2f84dc9036f79d00624eed7507f9e5971222caf"
+        },
+        "cpppj/tests/CMakeLists.txt": {
+          "previous": "a62a4bf30e59fd1830cc4711447159708ef3b76b398a4064b0acdd58d4e177e9",
+          "current": "75fa404983d2115305854d7acd1a192d64b067938b42c6194440441725205c05"
+        },
+        "cpppj/tests/RawMenuControlsTests.cpp": {
+          "previous": "028c7a23580088cf6754dd655d2afa91a96e4ab6b6b0128b1adc3ca6c9ab5434",
+          "current": "3ea0a940b2693a8889eb742505a81a8284b8f023c561c9adfdf612ad8b2860ea"
+        }
+      },
+      "full_ctest": {
+        "tests": 1466,
+        "failed_checks": 0,
+        "exit_code": 0,
+        "seconds": 213.96
+      }
+    }
+  ]
 }

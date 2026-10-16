@@ -3,6 +3,7 @@
 #include "client/RawMenuControls.h"
 #include "client/RawButtonControls.h"
 #include "client/RawObjectMenu.h"
+#include "client/RawCarrierMenu.h"
 #include <filesystem>
 #include <sstream>
 
@@ -116,5 +117,37 @@ TEST_CASE(RawMenuControls_ObjectMenuCommandsAndCurrentConfig) {
     CHECK(!config.Configuration().GetRaw("salvageSid"));client.menus->Close();state.denySalvage=0;open();
     // 실제 Config.Set의 global. 경로는 현재 기본 설정의 salvageSid 키에 쓴다.
     CHECK(config.GetInt("salvageSid")==50);CHECK(client.commands.size()==2);if (client.commands.size()==2) CHECK(client.commands[1][0]==state.salvageCommand && client.commands[1][2]==50);
+    client.menus->Close();CHECK(!client.menus->HasMenus());
+}
+// 사제 기본 호출→Carrier→회수/객체 메뉴를 같은 실제 트리에서 조립하고 Cast 입력을 전달한다.
+TEST_CASE(RawMenuControls_CarrierAndObjectMenuChain) {
+    MenuClient client;SidPool pool(OriginalEdition::Patch1078,24000,true);
+    // 실제 부모50과 내용물60을 같은 클라이언트 영역에 확보한다.
+    for (std::uint32_t number=5;number<=60;++number) CHECK(pool.Allocate(2).value==number);
+    auto parent=pool.AllocatedBytes(Sid{50});parent[10]=158;parent[34]=1;Put(parent,6,60,2);
+    auto content=pool.AllocatedBytes(Sid{60});content[10]=6;Put(content,18,123,2);Put(content,20,1,2);
+    ContainedFinderState finder;ObjectMenuState common;common.helpWord="ObjectHelp";std::int32_t limit=256;float cdSp=0;
+    CarrierMenuState state{common.localOwner,common.editor,limit,cdSp,common.helpCommand};CarrierMenuHooks hooks;ObjectMenuHooks objects;
+    ConfigInterface config([](std::string_view)->std::optional<std::vector<std::uint8_t>> { return std::nullopt; });
+    hooks.groundImmobile=[](Sid) { return false; };hooks.movementType=[](std::uint32_t) { return 54U; };hooks.findPath=[](Sid,std::uint32_t) { return Sid{}; };
+    hooks.dropPoint=[](Sid,std::uint32_t) { return std::array<float,2>{40,50}; };hooks.patchCost=[](std::uint32_t) { return 400; };hooks.money=[](std::uint32_t) { return 1000.0F; };hooks.hasEvent=[](Sid,std::uint32_t) { return false; };hooks.description=[](std::uint32_t) { return "Temple"; };
+    hooks.format=[](std::string_view key,std::span<const PriestMenuArgument> arguments) { std::string result;std::size_t argument=0;
+        // 고정 원본 서식에 대한 검사 번역 경계이며 제품 서식 계산을 대체하지 않는다.
+        for (std::size_t index=0;index<key.size();++index) { if (key[index]!='%') { result+=key[index];continue; }++index;if (key[index]=='s') result+=std::get<std::string>(arguments[argument++]);else result+=std::to_string(std::get<std::int32_t>(arguments[argument++])); }CHECK(argument==arguments.size());return result;
+    };
+    objects.format=hooks.format;objects.count=[](Sid) { return 1U; };objects.salvageRefund=[](Sid,std::uint32_t,std::uint32_t) { return 0; };objects.playerName=[](std::uint32_t) { return "Player1"; };
+    const auto open=[&] { client.poll={InputCode::kRelease,0,0};client.buttons.Poll(client.poll);client.menus->Open({160,120},[&](const auto& widgets,const auto& controls,const auto& menus) {
+        widgets.BeginVertical();BindObjectMenuControls(objects,controls,menus,config,[](std::string_view)->std::uint32_t { throw std::logic_error("검사 미등록 정적 문자열"); });
+        // Player 전체 몸체는 이 검사의 명시 경계다. 하위 노드/등록은 실제 builder를 쓴다.
+        objects.playerMenu=[&](std::string_view text,bool first,bool second) { CHECK(first && !second);widgets.BeginVertical();controls.AddHeader(text);return menus.TakeCurrent(); };
+        RawObjectMenu base(pool,client.assets.TypeTable().Types(),common,objects);BindCarrierMenuControls(hooks,controls);BindCarrierMenuBase(hooks,base);
+        RawCarrierMenu carrier(pool,client.assets.TypeTable().Types(),finder,state,hooks);PriestMenuHooks priest;BindPriestMenuCarrier(priest,carrier);priest.baseMenu(Sid{50});
+    }); };open();
+    const auto regions=client.menus->Controls();CHECK(regions.size()>=4);if (regions.empty()) return;
+    client.Click({(regions[0].rect.left+regions[0].rect.right)/2,(regions[0].rect.top+regions[0].rect.bottom)/2});
+    CHECK(client.commands.size()==1);if (client.commands.size()==1) CHECK(client.commands[0][0]==state.castCommand && client.commands[0][2]==50);
+    // 실제 명령 선택은 메뉴를 닫으므로 About 선택 전 새 수명으로 다시 연다.
+    client.menus->Close();open();const auto about=client.menus->Point("About Temple");CHECK(about.has_value());if (about) client.Click(*about);
+    CHECK(client.commands.size()==2);if (client.commands.size()==2) CHECK(client.commands[1][0]==common.helpCommand && client.commands[1][2]==123);
     client.menus->Close();CHECK(!client.menus->HasMenus());
 }

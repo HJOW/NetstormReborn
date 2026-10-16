@@ -987,3 +987,10 @@ cpppj/tests/fixtures/object-menu-x86.tsv text eol=lf
 cpppj/src/client/RawObjectMenu.* text eol=lf
 cpppj/tests/ObjectMenuTests.cpp text eol=lf
 docs/exe/cpp-object-menu-20261017.md text eol=lf
+# Carrier 메뉴의 두 원문과 실제 메뉴 연결 제품을 같은 바이트로 유지한다.
+tools/decomp_carrier_menu.py text eol=lf
+cpppj/carrier-menu.json text eol=lf
+cpppj/tests/fixtures/carrier-menu-x86.tsv text eol=lf
+cpppj/src/client/RawCarrierMenu.* text eol=lf
+cpppj/tests/CarrierMenuTests.cpp text eol=lf
+docs/exe/cpp-carrier-menu-20261017.md text eol=lf

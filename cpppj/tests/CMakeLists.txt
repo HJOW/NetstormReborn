@@ -1224,3 +1224,7 @@ target_sources(netstorm_tests PRIVATE RawMenuControlsTests.cpp)
 target_sources(netstorm_tests PRIVATE ObjectMenuTests.cpp)
 set_source_files_properties(ObjectMenuTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_OBJECT_MENU_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/object-menu-x86.tsv\"")
+# 두 판본 Carrier의 실제 운반물/주문 메뉴 전체 원문이다.
+target_sources(netstorm_tests PRIVATE CarrierMenuTests.cpp)
+set_source_files_properties(CarrierMenuTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CARRIER_MENU_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrier-menu-x86.tsv\"")

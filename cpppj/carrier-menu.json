@@ -1,0 +1,56 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-17",
+  "last_full_decompile_host": "HJOW-Athlon",
+  "observations": 628,
+  "normal_returns": 1256,
+  "precisions": [
+    53,
+    64
+  ],
+  "precision_differences": 0,
+  "instructions": 340232,
+  "os_calls": 0,
+  "boundaries": [
+    "TYPE/description·contained finder 결과",
+    "지면 불가·현재 이동 종류/종속/process 활성·사건",
+    "전체 내려놓기 위치·PATCH SP",
+    "번역/CRT 문자열 서식·실제 메뉴 작성·Damageable 기본 메뉴"
+  ],
+  "limits": [
+    "Carrier 전체 몸체와 실제 ftol/CD 비용·SP/상태 wrapper를 실행",
+    "공간 배치/이동/기본 객체/GUI 픽셀 및 실제 Session/명령 실행은 별도",
+    "원본 게임/OS 실행 없음"
+  ],
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originalCD/functions.tsv": "453aa383c27baf8eefa00d97bf44051d18460150556511c2eb7a46f111e92def",
+    "tools/decomp_object_menu.py": "883d1b6b694f773acebdb682161665954b020fe6d7068ff6677a7cdbbf3dd6be",
+    "tools/decomp_carrier_menu.py": "067c8fc0421cfe670ae6777da697255bb09ab26e8e729e7924bd2ac977fdeddb",
+    "cpppj/tests/fixtures/carrier-menu-x86.tsv": "67b2b04f934fc272ec07e95da3abd8dd9c7d3935166b4376144943dc090d98b8"
+  },
+  "product_validation": {
+    "configuration": "Release",
+    "build_exit_code": 0,
+    "build_warnings": 0,
+    "build_errors": 0,
+    "native_rows_compared": 628,
+    "focused_tests": 2,
+    "common_tree_input_tests": 1,
+    "full_tests": 1466,
+    "failed_checks": 0,
+    "ctest_exit_code": 0,
+    "ctest_seconds": 213.96,
+    "build_log": "extracted/goal-carrier-menu-20261017-build2.log",
+    "full_output": "extracted/goal-carrier-menu-20261017-ctest-output.log",
+    "actual_client_session_enabled": false,
+    "sha256": {
+      "cpppj/src/client/RawCarrierMenu.h": "549eb57a893ffbb4aee1bdd5945fffb2e8a5fc45ec9cb9a294420f0737a292bd",
+      "cpppj/src/client/RawCarrierMenu.cpp": "0cea02b171cccc0909d96d55ccc09551dfabfec0d65473b14ff687a28eae7e88",
+      "cpppj/tests/CarrierMenuTests.cpp": "2cd7dfcaffb42c49ab5916e3521263bee768a6eed94a8ee66bca3567c39d2313",
+      "cpppj/tests/RawMenuControlsTests.cpp": "3ea0a940b2693a8889eb742505a81a8284b8f023c561c9adfdf612ad8b2860ea"
+    }
+  }
+}
