@@ -22,6 +22,7 @@
 #include "o/RawSpStoreNoticeBindings.h"
 #include "o/RawPlayerTechnology.h"
 #include "o/RawAiCreate.h"
+#include "o/RawPlayerColor.h"
 #include "o/RawAiBrainInitialUpdate.h"
 #include "o/RawPriestLookup.h"
 #include "o/RawRunePostPop.h"
@@ -587,7 +588,7 @@ struct RawCampaignSession::Impl {
             PlayerGeyserBoundsState{core.ownerMode.battle,objectState.mission,core.ownerMode.challenge,geyserMapSize,piece,playerDirections},
             recentGeysers,assetState.geysers,std::move(effects));
     }
-    // 실제 AI의 모든 계산/현재 저장소는 Session이 연결하고 언어/채팅/색만 실제 외부 소비자에 남긴다.
+    // 실제 AI 계산/색 표/섬 프레임은 Session이 연결하고 언어/채팅/표시 통지는 외부 소비자에 남긴다.
     void ConnectAi() {
         auto hooks=services.ai.participation; // brain 수명은 외부 관찰 callback에 맡기지 않는다.
         hooks.destructBrain=[this](std::uint32_t token) { aiConstructor->Destruct(token); };
@@ -613,7 +614,8 @@ struct RawCampaignSession::Impl {
             AiBrainInitialUpdateGlobals{aiMissionFallback,aiExcludedType,aiWorkshops,[this] { return globals.missionPost ? 1U : 0U; }},std::move(initialHooks));
         AiCreateHooks createHooks;
         createHooks.changeColor=[this](std::uint32_t owner,std::uint32_t color) {
-            if (!services.ai.changeColor) throw std::logic_error("실제 Session AI 색 변경0043ca70 미연결");services.ai.changeColor(owner,color);
+            ChangePlayerColor(core.pool,core.bridgeState,owner,color,[this](Sid sid,std::int32_t frame,std::uint32_t flags) { core.frame.Set(sid,frame,flags); }); // 같은 실제 색 표/프레임/표시 갱신을 실행한다.
+            if (services.ai.changeColor) services.ai.changeColor(owner,color); // 외부 화면이 필요할 때만 완료 통지를 받으며 게임 계산을 대신하지 않는다.
         };
         createHooks.firstRegion=[this](std::uint32_t owner) {
             if (owner>=9) throw std::out_of_range("실제 Session AI 첫 지역 owner 범위 오류");return Read(players,owner*0xb4+0x78);

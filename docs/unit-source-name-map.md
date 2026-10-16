@@ -69,6 +69,21 @@
 
 이 표의 `description` 존재만으로 해당 보조 객체가 독립적인 생산/선택 UI를 가진다고 판단하지 않는다. 주문·효과·보조 객체는 실제 사용 위치를 확인하면서 계속 추가한다.
 
+## 색 변경·아비어리 분석에서 확인한 내부 보조 타입
+
+2026-10-16 같은10.78 등록 덤프와 원본0043ca70/0045ec50/0045ed10/0045edf0에서 확인했다. 아래 타입에는 별도 사용자 표시 이름을 붙이지 않는다. 건물·유닛 자체와 이를 조작하는 프로세스는 서로 다른 객체다.
+
+| 10.78 TYPE | 실제 등록 이름 | 소스/분석에서 쓰는 전체 이름 | 대응 또는 역할 |
+| ---: | --- | --- | --- |
+| 31 | `baseFlyerProcessType` | `baseFlyerProcessType` | 플라이어 공통 동작 프로세스. |
+| 32 | `sunAviaryProcessType` | `sunAviaryProcessType` | 휘리베이스(TYPE72·sunAviary)의 생산 동작 프로세스. |
+| 59 | `windAviaryProcessTyp` | `windAviaryProcessType` | 데빌 메이커(TYPE139·windAviary)의 생산 동작 프로세스. |
+| 60 | `rainAviaryProcessTyp` | `rainAviaryProcessType` | 맨 오 워 풀(TYPE143·rainAviary)의 생산 동작 프로세스. |
+| 94 | `island` | `island` | 섬 받침. 지형 본체인 TYPE97·isle과 구별한다. |
+| 95 | `islandStalag` | `islandStalag` | 섬 받침 아래 종유석. 받침과 함께 소유자 색 프레임이 바뀐다. |
+
+프로세스의 TYPE 이름 필드는20바이트여서 TYPE59/60의 끝 `e`가 잘린다. 전체 소스 이름과 등록 덤프의 문자열 차이를 별도 유닛으로 오인하지 않는다. TYPE94/95의 `island` 명칭도 사용자 유닛 이름을 번역할 근거는 아니다.
+
 ## 근거와 갱신 방법
 
 - 보호 원본 [netstorm.tarc](../originals/netstorm.tarc)의 `.type` 텍스트에서 `typename`과 `description`을 대조했다. [수치표](gameplay/types.md)도 같은 속성을 표시하지만 자동 생성 문서이므로 이 명칭 확인 작업에서 직접 수정하지 않는다.

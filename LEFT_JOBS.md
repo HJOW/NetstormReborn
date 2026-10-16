@@ -1,5 +1,16 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-16 단위78 완료: 실제 AI 색 변경0043ca70과 공유 받침/종유석 프레임 (`VM-W11-Codex`)
+
+- [x] 단위77의 GuardMyBack Start 실패에서 이어 실제0043ca70·iterator0040eb40·색 프레임004421a0을 분석했다. 현재/마지막 전체 정밀 PC는 **VM-W11-Codex / 2026-10-16**이다. `RawPlayerColor.h`로 같은 `core.bridgeState.ownerColors`를 먼저 쓰고 같은 풀의 모든 받침94/종유석95를 실제 `core.frame.Set`에 연결했다. 이전 필수 외부 changeColor는 게임 계산 뒤 선택형 화면 완료 통지로 바꿨다. 원본은 변경 소유자와 다른 섬도 갱신하며 free만 제외하고 dead/void/abstract는 포함한다.
+- [x] `tools/decomp_player_color.py`의 원본216고유입력 관찰을 완료했다. 실제 두 하위 iterator/색 계산을 실행하며 큰 Frame은 인자·DWORD쓰기의 명시 외부 대체다. 표36BYTE·입력16슬롯800BYTE·호출 순서·풀의 나머지 영역·ABI/허용 밖 쓰기를 확인한다. `PlayerColor_`2개 및 GuardMyBack 실제 시작 뒤 색 표/전체 받침 프레임 검사를 작성했다.
+- [x] 최종 Release 경고0·오류0, 색 집중2개 실패0, **GuardMyBack·DissolvedAlliance Load/Start 통과**다. 원본 GuardMyBack의 별도 받침94/종유석95는 중립50개/소유자4의6개다. 모든 참여 소유자에 별도 받침이 있다고 가정한 첫 검사를 바로잡아 실제4번 받침의 시작 전후 변화/레드 프레임1과 전체 표/대상을 확인했다. 자연 지형97/98과 혼동하지 않는다. 임시 진단은 제거했고 결과/한계는 [상세 기록](docs/exe/cpp-player-color-20261016.md)을 따른다.
+- [x] 전체 CTest **1335개·1334통과·1실패, exit8, 검사118.07초·전체118.12초**다. 유일한 실패는 DemoStormRages Load의 **맨 오 워 풀 TYPE143·VT005099e8 PostPop 미지원**이다. 실패 검사는 유지했다. 기존8미션 시작은 통과한다. 로그 `extracted/goal-color-20261016-{native,focused,final-build,final-demo,ctest,tests}.log`를 따른다.
+- [x] 새216고유입력·인접 Graph초기16/총각도518/Graph재구성288/휘리베이스1734·기존 요구에너지2352 SHA와 Python구문/UTF-8/링크/공백을 감사했다. CMake의 이전/현재 SHA를 요구에너지 이력에 보존했다. 보조6타입의 명칭 대응을 갱신했고 새 inline 헤더를 IDE 목록에 등록했다. 이 단위를 `20261016-10 CP AI 색 표와 받침 프레임 복원 및 데모 2개 시작 검증`으로 로컬 커밋한다. 목표는 active·미달성이다.
+- [ ] 다음은 위 TYPE143의 실제 후처리/타입60 프로세스를 생성/Frame/패킷/Host까지 연결한다. 데빌 메이커·플라이어·썬 바리케이드 Regular/공격, 실제 GUI Start/StartDemo·Guide/미션 프레임·현재 Player/색 조회와 자연 완주가 남아 있다. GUI `GameWorld::Players()`/Remap은 여전히 이전 화면 snapshot이므로 실제 화면 색 동일성을 완료로 세지 않는다.
+- [x] 사용자 제보의 데모/캠페인 대응은 별도 문서 커밋 `55ca44f`에 완료했다. 게임/GUI 실행은 없고 AGENTS·보호 원본·dotnetpj는 변경하지 않는다. 외부 원본 설정 변경2개는 계속 제외한다.
+- [x] 후속 조사: 맨 오 워 풀은 PostPop0045ed10→new0x30/생성0045d810→inner+20/타입60이며 실제 Frame0045dde0이다. 데빌 메이커는 PostPop0045edf0→new0x50/생성0045d730→inner+38/타입59이며 실제 Frame0045f0a0이다. 원본 함수표/가상표로 확인했고 둘을 휘리베이스32의 같은 Frame으로 대체하지 않는다. 맨 오 워 풀 Frame은 시작0→상태2/사운드manOWarBuild.wav, 프레임11 뒤 상태6, 실제rainFlyer 생성/부착 후 상태5로 간다. 아직 구현/새 native 관찰은 하지 않았다. 대응표에 보조6타입과 TYPE59/60 이름의20BYTE 잘림을 기록했다.
+
 ## 2026-10-16 사용자 제보 확인: 데모2·3과 캠페인2-4·1-6 대응 (`VM-W11-Codex`)
 
 - [x] 사용자 제보를 원본10.78 아카이브로 확인했다. 데모2 **GuardMyBack=캠페인2-4**, 데모3 **DissolvedAlliance=캠페인1-6**이며 양쪽 메뉴는 실제 같은 미션 키/스크립트/Fort를 쓴다. `GuardMyBack` 원문에는 ai1 설정이 데모 전용이라는 주석도 있다. [별도 대응 기록](docs/gameplay/demo-campaign-map.md)에 실제 메뉴 행·4엔트리 본문 SHA·로컬AI/데모 플래그/360초 수명/승패 섹션 차이와 후속 대조 항목을 기록했다.

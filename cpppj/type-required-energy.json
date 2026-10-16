@@ -28,9 +28,9 @@
     "cpppj/src/client/AiTypeRequiredEnergy.cpp": "a77ecbbece0a23b295c26e35ba5f788ea1c61a660b95880a83abc6988ef559c0",
     "cpppj/tests/fixtures/type-required-energy-x86.tsv": "8bcb3e215c958f5df0a395365059f5481801b1660569f2f04c0720f394f14f4c",
     "cpppj/tests/TypeRequiredEnergyTests.cpp": "0802ab400413ec5da3f2d03a4ac6b6f88e2d088915646609a2ca0bb39a02b05c",
-    "cpppj/src/o/CMakeLists.txt": "3d34c8830c42c7ec5af757e981950804322219d73dfba1703855f6dc83c81a07",
+    "cpppj/src/o/CMakeLists.txt": "ac4999bfcf5860aaaae54a4a0f2a39a3533865838595dc5fb9708eb94d20668f",
     "cpppj/src/client/CMakeLists.txt": "bb8941e288248d13c7d8be90ae2020c23431129f06ca1b2d059fdfdfaa415ab1",
-    "cpppj/tests/CMakeLists.txt": "ccdf6efa7ad81526ec863fac9454d871411f9a07ae3f3f739f45e271047d5f03"
+    "cpppj/tests/CMakeLists.txt": "f07e60e3f4b514fac89628dcfb2c6f097bb85e59d876ec4219052d7c825fc650"
   },
   "product_validation": {
     "configuration": "Release",
@@ -363,6 +363,34 @@
           "CampaignDemoStart_GuardMyBack"
         ],
         "log": "extracted/goal-demo-20261016-ctest.log"
+      }
+    },
+    {
+      "date": "2026-10-16",
+      "host": "VM-W11-Codex",
+      "reason": "단위78 색 변경 검사2개 및 총 각도/색 변경 inline 헤더의 IDE 목록 등록. 기존 요구에너지 제품/2352입력은 변경하지 않았다.",
+      "cmake_sha256": {
+        "cpppj/src/o/CMakeLists.txt": {
+          "previous": "3d34c8830c42c7ec5af757e981950804322219d73dfba1703855f6dc83c81a07",
+          "current": "ac4999bfcf5860aaaae54a4a0f2a39a3533865838595dc5fb9708eb94d20668f"
+        },
+        "cpppj/tests/CMakeLists.txt": {
+          "previous": "ccdf6efa7ad81526ec863fac9454d871411f9a07ae3f3f739f45e271047d5f03",
+          "current": "f07e60e3f4b514fac89628dcfb2c6f097bb85e59d876ec4219052d7c825fc650"
+        }
+      },
+      "full_ctest": {
+        "tests": 1335,
+        "passed": 1334,
+        "failed_checks": 1,
+        "exit_code": 8,
+        "test_seconds": 118.07,
+        "total_seconds": 118.12,
+        "failed_tests": [
+          "CampaignDemoStart_TheStormRages"
+        ],
+        "failure": "DemoStormRages Load SID15035 TYPE143 VT005099e8 PostPop 미지원",
+        "log": "extracted/goal-color-20261016-ctest.log"
       }
     }
   ]

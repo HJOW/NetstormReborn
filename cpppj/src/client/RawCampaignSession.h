@@ -27,11 +27,11 @@ struct CampaignMissionOutcomeUi {
     std::function<void()> closeTransient; // 성공한 섹션 뒤 원본 임시 Gump 정리를 실행한다.
     std::function<void()> onSection; // 성공한 섹션 뒤 현재 미션 가상 통지/정지 소유권을 처리한다.
 };
-// AI의 게임 계산은 같은 Session이 소유하고 현재 언어/채팅/색/할당 입력만 실제 외부 경계로 받는다.
+// AI의 게임 계산과 색 표는 같은 Session이 소유하고 현재 언어/채팅/할당 및 표시 통지만 외부에서 받는다.
 struct CampaignAiServices {
     o::RawAiBrainMemory::Fill allocationBytes; // 실제 host 할당 직후의 입력 바이트다. 누락을 임의 0채움 성공으로 바꾸지 않는다.
     std::function<std::string()> defaultName; // 현재 defaultAiName 설정의 원본 좁은문자열을 반환한다.
-    std::function<void(std::uint32_t,std::uint32_t)> changeColor; // PATCH0043ca70의 실제 색 변경 전체이며 nonzero Color에서만 필요하다.
+    std::function<void(std::uint32_t,std::uint32_t)> changeColor; // 실제0043ca70의 표/섬 프레임 변경을 마친 뒤 보내는 선택형 화면 통지다.
     o::PlayerParticipationHooks participation; // 실제 Chat/동맹 송신/연결·진단이다. brain 소멸/반납은 Session의 실제 소유자로 교체한다.
     std::function<bool()> localTransport; // CheckLogin이 현재 로컬 전송 모드를 읽는 실제 경계다.
 };

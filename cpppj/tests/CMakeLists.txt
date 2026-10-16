@@ -2,6 +2,7 @@
 # (첫 구성 때 인터넷에서 내려받을 것이 없다).
 # 테스트 파일을 만들면 아래 목록에 더한다. 파일 안의 TEST_CASE 는 자동으로 등록된다.
 add_executable(netstorm_tests
+    PlayerColorTests.cpp
     GraphResetTests.cpp
     GunAngleTests.cpp
     FencePostPopTests.cpp
@@ -1087,3 +1088,7 @@ set_source_files_properties(GunAngleTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 원본 Graph 초기화는 전체255행의 바이트 보존과 대조한다.
 set_source_files_properties(GraphResetTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_GRAPH_RESET_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/graph-reset-x86.tsv\"")
+
+# 실제 색 표/섬 프레임 요청은 원본216개 독립 입력과 대조한다.
+set_source_files_properties(PlayerColorTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PLAYER_COLOR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/player-color-x86.tsv\"")

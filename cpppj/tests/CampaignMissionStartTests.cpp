@@ -137,10 +137,27 @@ void StartProtectedDemo(std::string_view name) {
     gate.demo=1;RawCampaignMissionStartBindings start(session,script,gate,state,globals,ai,external.Effects());
     CHECK(start.FindLivePriest(session.LocalOwner())!=0);std::array<bool,9> live{};std::size_t requested{}; // Start 이전 실제 사제의 참여 입력이다.
     for (std::uint32_t owner=1;owner<9;++owner) { live[owner]=start.FindLivePriest(owner)!=0;if (live[owner]) ++requested; } // 데모는 로컬 소유자도 AI 생성에 포함한다.
+    std::vector<std::pair<Sid,std::uint32_t>> coloredSupports; // 시작 전 실제4번 받침의 프레임 입력이며 기대 출력은 독립 색 red=2에서 정한다.
+    if (name=="GuardMyBack") for (std::uint32_t number=2;number<session.Core().pool.Capacity();++number) { // 자연 지형97/98을 별도 받침94/95로 오인하지 않는다.
+        const Sid sid{static_cast<std::uint16_t>(number)};const auto raw=session.Core().pool.Slot(sid);
+        if (!(raw[11]&1U) && raw[34]==4 && (raw[10]==94 || raw[10]==95)) coloredSupports.emplace_back(sid,Get(raw,36));
+    }
     std::fprintf(stderr,"실제 데모 Start 검사: %s\n",std::string(name).c_str());start.Start();
     CHECK(gate.demo==1 && gate.started==1 && gate.startSeconds==123.5 && gate.demoEndSeconds==483.5);
     CHECK(external.settings==requested && session.Participation().Brain(session.LocalOwner())!=0 && session.Core().bookkeeping.depth==0);
     for (std::uint32_t owner=1;owner<9;++owner) if (live[owner]) CHECK(session.Participation().Brain(owner)!=0); // 같은 실제 사제 소유자는 모두 현재 AI에 연결되어야 한다.
+    if (name=="GuardMyBack") {
+        constexpr std::array<std::int32_t,9> expected{0,1,5,8,2,5,6,7,8}; // 원본 ai2Color=purple/ai3=orange/ai4=red와 나머지 초기 색이다.
+        auto core=session.Core();CHECK(core.bridgeState.ownerColors==expected);std::array<std::size_t,9> islands{}; // 실제 받침/종유석까지 같은 표를 소비했는지 센다.
+        for (std::uint32_t number=2;number<core.pool.Capacity();++number) { // 별도 화면 snapshot 대신 현재 raw 풀의 모든 유효 대상만 읽는다.
+            const auto raw=core.pool.Slot(Sid{static_cast<std::uint16_t>(number)});if ((raw[11]&1U) || (raw[10]!=94 && raw[10]!=95)) continue;
+            const auto owner=raw[34];CHECK(owner<9);if (owner>=9) continue;++islands[owner];
+            CHECK(std::bit_cast<std::int32_t>(netstorm::test::rawscene::Get(raw,36))==(owner ? expected[owner]-1 : 8));
+        }
+        CHECK(islands[4]>0 && !coloredSupports.empty());std::size_t changed{}; // 원본 Fort의4번 별도 받침에서 실제 프레임 변화가 있어야 한다.
+        for (const auto& [sid,before]:coloredSupports) { const auto after=Get(core.pool.Slot(sid),36);CHECK(after==1);if (before!=after) ++changed; } // red=2의 기대 프레임1과 시작 전 입력을 함께 확인한다.
+        CHECK(changed>0);
+    }
 }
 }
 // 원본 DEMOVILLE의 세 StartDemo 입력은 독립 검사로 실행해 첫 실패가 뒤 미션을 감추지 않게 한다.

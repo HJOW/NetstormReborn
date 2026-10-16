@@ -2,6 +2,8 @@
 # 클라이언트와 서버가 함께 쓰던 코드로 보인다. 이 폴더의 코드는 client/ 와 platform/ 을 포함하지 않는다.
 # 다시 만든 파일을 아래 목록에 더한다. 파일 이름은 SOURCE_MAP.md 의 "cpppj 경로"를 따른다.
 target_sources(netstorm PRIVATE
+    # 총 방향과 같은 실제 소유자 색 표/섬 프레임 변경의 원문 계산이다.
+    RawGunAngle.h RawPlayerColor.h
     # 원본 Guide 반복과 현재 실제 사제 참여 상태를 같은 저장소에서 처리한다.
     RawMissionGuide.cpp RawMissionGuide.h
     RawPriestParticipation.cpp RawPriestParticipation.h

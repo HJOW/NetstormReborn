@@ -70,6 +70,13 @@ tools/decomp_graph_reset.py text eol=lf
 cpppj/tests/GraphResetTests.cpp text eol=lf
 cpppj/tests/fixtures/graph-reset-x86.tsv text eol=lf
 cpppj/graph-reset.json text eol=lf
+
+# AI 색 변경의 실제 공유 표와 원본 관찰 바이트를 보존한다.
+cpppj/src/o/RawPlayerColor.h text eol=lf
+cpppj/tests/PlayerColorTests.cpp text eol=lf
+cpppj/tests/fixtures/player-color-x86.tsv text eol=lf
+tools/decomp_player_color.py text eol=lf
+cpppj/player-color.json text eol=lf
 # 썬 아비어리의 원문/관찰/검사 바이트를 Windows 체크아웃에서도 보존한다.
 cpppj/src/o/RawSunAviaryProcess.* text eol=lf
 cpppj/tests/SunAviaryProcessTests.cpp text eol=lf
