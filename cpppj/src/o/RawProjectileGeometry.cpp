@@ -1,5 +1,6 @@
 // 원본 x87 나눗셈/덧셈 뒤 float 저장과 현재 raw frame 폭을 보존한다.
 #include "o/RawProjectileGeometry.h"
+#include "o/RawGunMode.h"
 #include <algorithm>
 #include <bit>
 #include <cmath>
@@ -23,10 +24,11 @@ std::array<float,2> Clamp(std::array<float,2> point) { return {std::clamp(point[
 }
 // 실제 판본 전체 표/유한 양수 픽셀 배율을 확인한다.
 RawProjectileGeometry::RawProjectileGeometry(const SidPool& pool,std::span<const RiftTypeRecord> types,
-    std::span<const ProjectileGeometryType> geometry,float scaleX,float scaleY)
-    :pool_(pool),types_(types),geometry_(geometry),scaleX_(scaleX),scaleY_(scaleY) {
+    std::span<const ProjectileGeometryType> geometry,float scaleX,float scaleY,const RawGunMode* gunMode)
+    :pool_(pool),types_(types),geometry_(geometry),scaleX_(scaleX),scaleY_(scaleY),gunMode_(gunMode) {
     if (types.size()!=(pool.Edition()==OriginalEdition::Patch1078 ? 188U : 171U) || geometry.size()!=types.size() ||
         !std::isfinite(scaleX) || !std::isfinite(scaleY) || scaleX<=0 || scaleY<=0) throw std::invalid_argument("Projectile geometry 판본/배율 오류");
+    if (gunMode_ && &gunMode_->Pool()!=&pool_) throw std::invalid_argument("Projectile geometry/방향 getter 풀 불일치");
 }
 // 유효 실제 자산만 허용하며 free/dead 여부는 호출자 몸체가 판단한다.
 std::span<const std::uint8_t> RawProjectileGeometry::Slot(Sid sid) const {
@@ -54,25 +56,29 @@ std::array<float,2> RawProjectileGeometry::ArcherMuzzle(Sid firing) const {
 std::array<float,2> RawProjectileGeometry::Muzzle(Sid firing) const {
     const auto raw=Slot(firing);
     if (raw[10]==71) return ArcherMuzzle(firing);
-    // PATCH TYPE128 썬 캐논의 +0xb4 getter(0041c110)는 원시 x/y 좌표를 그대로 복사한다.
-    if (pool_.Edition()==OriginalEdition::Patch1078 && raw[10]==128)
+    // PATCH TYPE128/131의 +0xb4 getter(0041c110)는 원시 x/y 좌표를 그대로 복사한다.
+    if (pool_.Edition()==OriginalEdition::Patch1078 && (raw[10]==128 || raw[10]==131))
         return {std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18))};
     if (pool_.Edition()==OriginalEdition::Patch1078 && raw[10]==140)
         return {std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18))};
     throw std::logic_error("Projectile 실제 가상 포구 미복원 TYPE"+std::to_string(raw[10]));
 }
-// 실제00481750의 썬 캐논 분기다. 방향 불일치는 난수 없이 TYPE 사정거리의 정수 변환으로 보정한다.
+// 실제00481750의 썬/썬더 분기다. 방향 불일치는 난수 없이 TYPE 사정거리의 정수 변환으로 보정한다.
 std::array<float,2> RawProjectileGeometry::CannonRayEnd(std::array<float,2> from,std::array<float,2> to,Sid firing) const {
     const auto raw=Slot(firing);
-    if (pool_.Edition()!=OriginalEdition::Patch1078 || raw[10]!=128) throw std::logic_error("Cannon rayEnd 미복원 판본/TYPE");
+    if (pool_.Edition()!=OriginalEdition::Patch1078 || (raw[10]!=128 && raw[10]!=131)) throw std::logic_error("Cannon rayEnd 미복원 판본/TYPE");
     if (!std::isfinite(from[0]) || !std::isfinite(from[1]) || !std::isfinite(to[0]) || !std::isfinite(to[1])) throw std::invalid_argument("Cannon rayEnd 비유한 좌표");
     const float dx=static_cast<float>(static_cast<double>(to[0])-from[0]),dy=static_cast<float>(static_cast<double>(to[1])-from[1]);
     const std::int32_t direction=std::abs(dx)<=std::abs(dy) ? (dy>0 ? 4 : 0) : (dx<=0 ? 6 : 2);
     const auto frame=std::bit_cast<std::int32_t>(Read(raw,36));
     std::int32_t frameDirection=-1;
-    if (frame>=0 && frame<4) frameDirection=kSunCannonFrameDirections[static_cast<std::size_t>(frame)];
+    if (raw[10]==131) {
+        if (!gunMode_) throw std::logic_error("썬더 사정선의 실제 방향 getter 미연결");
+        frameDirection=static_cast<std::int32_t>(gunMode_->Get(firing));
+    } else if (frame>=0 && frame<4) frameDirection=kSunCannonFrameDirections[static_cast<std::size_t>(frame)];
     else if (frame>=24 && frame<28) frameDirection=kSunCannonFrameDirections[static_cast<std::size_t>(frame-24)];
     else throw std::logic_error("Cannon rayEnd 미복원 물리 프레임"+std::to_string(frame));
+    if (frameDirection!=0 && frameDirection!=2 && frameDirection!=4 && frameDirection!=6) throw std::logic_error("캐논 사정선의 원본 cardinal 방향 진단");
     if (frameDirection!=direction) {
         const auto range=geometry_[raw[10]].range;
         if (!std::isfinite(range) || range<-2147483648.0 || range>=2147483648.0)

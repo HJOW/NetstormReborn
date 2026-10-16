@@ -13,6 +13,7 @@ namespace {
 struct StartExternal {
     SoundList sounds{OriginalEdition::Patch1078}; // 실제원본음향이름표이며장치는열지않는다.
     std::unordered_set<SoundHandle> playing; // 재생계층외부입력의현재핸들이다.
+    std::vector<SoundHandle> once; // 자연 발사에서 실제 전달된 한 번 재생 토큰을 보존한다.
     std::array<std::uint8_t,4> you{'Y','o','u',0}; // 원본번역키의명시영어입력이다.
     std::size_t refreshed{},commanded{},camera{},settings{},randomGeysers{},ui{}; // 실제선택된외부요청만관찰한다.
     // 실제월드설치에필요한장치/표시경계를공급하고그외게임규칙은Session몸체에맡긴다.
@@ -20,7 +21,7 @@ struct StartExternal {
         sounds.Initialize();RawCampaignSessionServices s;s.soundNames=&sounds;s.unixSeconds=[] { return 946684800; };
         s.sound.wallSeconds=[] { return 100.0; };
         s.sound.playLoopAt=[this](float,float,SoundHandle current,SoundHandle sound) { const auto token=current ? current : sound;playing.insert(token);return token; };
-        s.sound.playOnceAt=[](float,float,SoundHandle sound,std::uint32_t,std::uint32_t) { return sound; };
+        s.sound.playOnceAt=[this](float,float,SoundHandle sound,std::uint32_t,std::uint32_t) { once.push_back(sound);return sound; };
         s.sound.play=[this](SoundHandle sound,std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t) { playing.insert(sound);return sound; };
         s.sound.stop=[this](SoundHandle sound) { playing.erase(sound); };s.sound.isPlaying=[this](SoundHandle sound) { return playing.contains(sound) ? 1U : 0U; };
         s.priest.ownerNotice=[this](Sid) { ++ui; };s.priest.shield.noticeSound=[this](const PriestShieldNotice&) { ++ui; };
@@ -258,6 +259,39 @@ TEST_CASE(CampaignParticles_DissolvedAllianceNaturalShot) {
     session.SetParticleView({cameraX,cameraY,0,0,128,128},{[&] { return renderer.FullRedrawPending(); },[&](SquidDisplayRect rect,std::uint32_t flags) { renderer.Invalidate({rect.left,rect.top,rect.right,rect.bottom},flags); }});
     auto sprites=session.ParticleSprites({0,0,128,128});CHECK(!sprites.empty());renderer.SetScene(std::move(sprites));const auto image=renderer.SceneImage();
     CHECK(std::count(image.indices.begin(),image.indices.end(),196)>3 && core.bookkeeping.depth==0);
+    const auto token=fields->token; // 부모80의 자연 삭제 뒤에도 역참조하지 않을 원래 표시 토큰이다.
+    // 최초 썬 미사일이 자연 종료하는159프레임까지 같은 Kernel/종속 삭제를 실행한다.
+    for (std::uint32_t frame=116;frame<=159;++frame) session.RunFrame(clock.Capture(frame*25),false);
+    CHECK(rendering.Lookup(token)==nullptr && core.bookkeeping.depth==0);
+}
+
+// 같은 보호 데모의 최초 썬더 발사가 실제132 자산/28 Form과 같은 Kernel을 사용해야 한다.
+TEST_CASE(CampaignThunderMissile_DissolvedAllianceNaturalShot) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);ConfigInterface config([&](std::string_view path) { return assets.files.TryRead(path); });ConfigureStart(config);MissionScript script(config,"DissolvedAlliance");
+    StartExternal external;auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),external.Services());session.Load();
+    GameClock clock;MissionFrameGateState gate;MissionStartState state;MissionStartGlobals globals;MissionAiSettingsState ai;gate.demo=1;ai.stuffRefreshRate=4;
+    auto effects=external.Effects();effects.gameSeconds=[&] { return clock.GameSeconds(0); };RawCampaignMissionStartBindings start(session,script,gate,state,globals,ai,std::move(effects));start.Start();
+    // 실제 총/표적/시각/HP/난수를 고치지 않고 기존145프레임의 자연 생성 경계를 실행한다.
+    for (std::uint32_t frame=1;frame<=145;++frame) session.RunFrame(clock.Capture(frame*25),false);
+    const auto core=session.Core();std::size_t found=0;std::vector<std::pair<ProcessId,const BaseProcess*>> tracked; // 원래 프로세스의 삭제 여부만 주소 비교로 확인한다.
+    // 관찰용 투사체를 만들지 않고 현재 실제 Kernel에서 원래 Missile만 찾는다.
+    for (ProcessId id=1;id<=core.kernel.Capacity();++id) {
+        const auto* process=dynamic_cast<const Missile*>(core.kernel.Get(id));if (!process) continue;const auto& fields=process->Fields();
+        if (core.pool.Slot(fields.Firing())[10]!=131) continue;
+        const auto display=core.pool.Slot(fields.Parent());CHECK(display[10]==132 && Get(display,0)==0x50b570 && Get(display,36)<12);
+        CHECK(core.pool.Slot(fields.Form())[10]==28 && core.processes.FromForm(fields.Form())==process);
+        CHECK(FindAttachedProcess(core.pool,fields.Parent(),11).value==0);tracked.emplace_back(id,process);++found;
+    }
+    CHECK(found>0 && core.bookkeeping.depth==0 && gate.started==1);
+    const auto fire=external.sounds.Lookup("thunderCannon.wav");CHECK(fire!=0 && std::find(external.once.begin(),external.once.end(),fire)!=external.once.end());
+    bool removed=false; // 선행 썬 미사일의159프레임 종료와 썬더 자신의 자연 삭제를 혼동하지 않는다.
+    // 실제 썬더가 원래 Kernel 슬롯에서 삭제될 때까지 진행하며 전체400프레임 안에서 종료해야 한다.
+    for (std::uint32_t frame=146;frame<=400 && !removed;++frame) {
+        session.RunFrame(clock.Capture(frame*25),false);
+        removed=std::any_of(tracked.begin(),tracked.end(),[&](const auto& item) { return core.kernel.Get(item.first)!=item.second; });
+        if (removed) std::fprintf(stderr,"실제 썬더 투사체 자연 삭제: frame%u game%.6f\n",frame,clock.GameSeconds(frame*25));
+    }
+    CHECK(removed && core.bookkeeping.depth==0);
 }
 
 // 실제 데모 배치의 생산 건물/동일 factory/공간/Host로 최초 비행 Pop만 분리해 검사한다. Frame 완주 검사와 구별한다.

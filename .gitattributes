@@ -893,3 +893,9 @@ cpppj/fierytail-pixels.json text eol=lf
 cpppj/tests/fixtures/fierytail-pixels-x86.tsv text eol=lf
 docs/exe/cpp-campaign-particles-20261017.md text eol=lf
 docs/exe/cpp-fierytail-notes-20261016.md text eol=lf
+# 썬더 캐논의 독립 원본 수치/종점 근거와 새 검사를 같은 바이트로 유지한다.
+tools/decomp_thunder_missile.py text eol=lf
+cpppj/thunder-missile.json text eol=lf
+cpppj/tests/fixtures/thunder-missile-x86.tsv text eol=lf
+cpppj/tests/ThunderMissileTests.cpp text eol=lf
+docs/exe/cpp-thunder-missile-20261017.md text eol=lf

@@ -69,8 +69,10 @@ struct RawCampaignHitBindings::Impl {
     // 실제 가상 표가 공통 Pre/Post를 쓰는 두 자산만 현재 수명 분배에 포함한다.
     bool CommonAsset(o::Sid sid) const {
         const auto raw=core.pool.Slot(sid);const bool patch=core.pool.Edition()==o::OriginalEdition::Patch1078;
-        return (raw[10]==83 && HitTable(raw)==(patch ? 0x50b570U : 0x501440U)) ||
-            (patch && raw[10]==81 && HitTable(raw)==0x501dd0U) || impact->Handles(sid);
+        // PATCH132는83과 같은0046a6c0 생성자/0050b570 가상 표를 사용하므로 같은 실제 공통 삭제를 따른다.
+        // PATCH80/81은 기본00501dd0이며80에 부착된 실제 Fiery Tail도 같은 종속 삭제가 정리한다.
+        return ((raw[10]==83 || (patch && raw[10]==132)) && HitTable(raw)==(patch ? 0x50b570U : 0x501440U)) ||
+            (patch && (raw[10]==80 || raw[10]==81) && HitTable(raw)==0x501dd0U) || impact->Handles(sid);
     }
 };
 // 초기 객체 생성 전에 실제 하위 모듈의 동일 Pool 계약을 확인한다.
@@ -103,7 +105,7 @@ o::SquidDestroyHooks RawCampaignHitBindings::DestroyHooks(o::SquidDestroyHooks f
 o::SquidAssetDestroy RawCampaignHitBindings::Destroy(o::SquidAssetDestroy fallback) const {
     return [this,fallback=std::move(fallback)](o::Sid sid,std::uint32_t flags,const o::SquidDestroyHooks& hooks) {
         if (impl_->CommonAsset(sid)) return impl_->core.virtualDestroy.Destroy(sid,flags,hooks);
-        if (!fallback) throw std::logic_error("캠페인 다른 실제 자산 가상 삭제 미연결");return fallback(sid,flags,hooks);
+        if (!fallback) throw std::logic_error("캠페인 다른 실제 자산 가상 삭제 미연결 TYPE"+std::to_string(impl_->core.pool.Slot(sid)[10])+" SID"+std::to_string(sid.value));return fallback(sid,flags,hooks);
     };
 }
 // 후속 실제 소비자는 같은 모듈/저장소를 재사용한다.

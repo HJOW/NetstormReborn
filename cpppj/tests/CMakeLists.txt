@@ -16,7 +16,11 @@ set_source_files_properties(FieryTailLifetimeTests.cpp PROPERTIES COMPILE_DEFINI
 # 실제 Draw→화면 wrapper→VFX의 전체 픽셀 원문을 새 표시 통합 검사에 공급한다.
 set_source_files_properties(ParticleRenderingTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_FIERYTAIL_PIXELS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fierytail-pixels-x86.tsv\"")
+# 썬더의 실제 포구/종점·Missile 생성/프레임 전체 원문을 새 검사에서만 읽는다.
+set_source_files_properties(ThunderMissileTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_THUNDER_MISSILE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/thunder-missile-x86.tsv\"")
 add_executable(netstorm_tests
+    ThunderMissileTests.cpp
     ParticleRenderingTests.cpp
     FieryTailVisualSystemTests.cpp
     FieryTailLifetimeTests.cpp

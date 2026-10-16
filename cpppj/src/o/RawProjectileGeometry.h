@@ -3,6 +3,7 @@
 #include "o/RawGunTarget.h"
 
 namespace netstorm::o {
+class RawGunMode; // 같은 풀의 실제 현재 프레임 방향 getter를 참조하며 별도 방향 캐시는 만들지 않는다.
 // TYPE 기본 프레임과 SHP 추가 헤더의 마지막 두 signed WORD다.
 struct ProjectileGeometryType {
     std::int32_t defaultFrame{},frameCount{}; // 실제 가상78 기본프레임과 TYPE+114 클러스터 수다.
@@ -16,12 +17,12 @@ class RawProjectileGeometry {
 public:
     // 모든 입력 표와 풀은 이 객체보다 오래 살아야 한다. scale은 현재 BoardCoord 픽셀 배율이다.
     RawProjectileGeometry(const SidPool& pool,std::span<const RiftTypeRecord> types,
-        std::span<const ProjectileGeometryType> geometry,float scaleX=16,float scaleY=11);
+        std::span<const ProjectileGeometryType> geometry,float scaleX=16,float scaleY=11,const RawGunMode* gunMode=nullptr);
     // PATCH0046a780/CD00437390: 기본+현재 물리 SHP 포구 픽셀을 더한 뒤 현재 좌표에 반영한다.
     std::array<float,2> ArcherMuzzle(Sid firing) const;
-    // 실제 가상+b4를 분배한다.71은 두 SHP 포구의 합,10.78의128·140은 현재 자산 좌표다.
+    // 실제 가상+b4를 분배한다.71은 두 SHP 포구의 합,10.78의128·131·140은 현재 자산 좌표다.
     std::array<float,2> Muzzle(Sid firing) const;
-    // PATCH00481750: 현재 썬 캐논 프레임의 허용 방향을 택하고 불일치하면 절삭한 사정거리로 종점을 보정한다.
+    // PATCH00481750: 썬은 허용 프레임, 썬더는 같은 RawGunMode로 방향을 읽고 불일치하면 절삭 사정거리로 보정한다.
     std::array<float,2> CannonRayEnd(std::array<float,2> from,std::array<float,2> to,Sid firing) const;
     // 현재 물리 SHP header+20/+22를 읽는다. 기본 프레임과 합산하지 않는다.
     std::array<std::int32_t,2> Hotspot(Sid firing) const;
@@ -41,5 +42,6 @@ private:
     std::span<const RiftTypeRecord> types_; // 실제 발자국과 레이어 flags다.
     std::span<const ProjectileGeometryType> geometry_; // 같은 TYPE 순서의 SHP/기본 프레임 입력이다.
     float scaleX_,scaleY_; // 같은 원본 BoardCoord.add의 현재 픽셀 배율이다.
+    const RawGunMode* gunMode_; // 썬더 사정선에서 같은 현재 raw 프레임 문자를 읽는 장기 모듈이다.
 };
 }

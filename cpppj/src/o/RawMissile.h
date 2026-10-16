@@ -31,6 +31,12 @@ struct MissileState {
     std::uint32_t sunCannonType{128},sunDiscType{83},sunArcherType{71};
     // crossbowType: 10.78의 group0 화살 발사기이며 포구 보정은71과 구별한다.
     std::uint32_t crossbowType{140};
+    // thunderCannonType: 같은 group1 Missile 경로를 사용하는10.78 썬더 캐논의 현재 타입이다.
+    std::uint32_t thunderCannonType{131};
+    // thunderMissileType: 사거리 종료 여유를 별도로 읽는10.78 썬더 표시 타입이다.
+    std::uint32_t thunderMissileType{132};
+    // rangeMargin/thunderRangeMargin: 원본00540bb4/00540bb8의 일반4·썬더10 정수 여유다.
+    std::int32_t rangeMargin{4},thunderRangeMargin{10};
     // processType: 실제 missileProcessType이며 원본 두 판본 모두28이다.
     std::uint32_t processType{28};
     // cornerImpactType: incomingCorner 충돌에 쓰는 공통 타입 사운드 번호다.

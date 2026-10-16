@@ -68,7 +68,8 @@ Sid RawMissile::Construct(MissileFields& fields,const GunProjectileRequest& requ
     const bool archer=firing[10]==state_.sunArcherType;
     // group0 탄도와 썬 디스크 발사기71 전용 포구 보정 생략을 독립 판정한다.
     const bool groupZero=archer || (patch && firing[10]==state_.crossbowType);
-    if (request.ricochet || (!groupZero && firing[10]!=state_.sunCannonType) || Valid(request.firingPosition)) throw std::logic_error("Missile 미복원 반사/부모/포구 생성 경로 TYPE"+std::to_string(firing[10]));
+    const bool cannon=firing[10]==state_.sunCannonType || (patch && firing[10]==state_.thunderCannonType); // 복원한 두 group1 파생만 허용한다.
+    if (request.ricochet || (!groupZero && !cannon) || Valid(request.firingPosition)) throw std::logic_error("Missile 미복원 반사/부모/포구 생성 경로 TYPE"+std::to_string(firing[10]));
     if (types_[firing[10]].group!=(groupZero ? 0 : 1)) throw std::logic_error("Missile 실제부모 group 계약 오류");
     if (!std::isfinite(request.speed) || request.speed<=0 || !Valid(request.targetPosition)) throw std::invalid_argument("Missile 생성 좌표/속도 오류");
     if (!hooks_.muzzle || (!archer && !hooks_.hotspot) || (!groupZero && !hooks_.rayEnd) || !hooks_.targetDimensions || !hooks_.create || !hooks_.owner || !hooks_.pop || (request.effectType && !hooks_.flightEffect)) throw std::logic_error("Missile 실제 생성/Pop/비행 효과 경계 누락 TYPE"+std::to_string(firing[10])+" effect"+std::to_string(request.effectType));
@@ -110,7 +111,9 @@ void RawMissile::Frame(MissileFields& fields) const {
     const bool archer=firing[10]==state_.sunArcherType;
     // 원본 group0 사거리/코너 종료는 크로스보우에도 같고71 전용 포구와 무관하다.
     const bool groupZero=archer || (patch && firing[10]==state_.crossbowType);
-    if ((!groupZero && firing[10]!=state_.sunCannonType) || Read(fields.bytes,kRicochet) || (patch && (Read(fields.bytes,40) || Read(fields.bytes,44)))) throw std::logic_error("Missile 미복원 frame 파생/반사/빗나감 경로");
+    const bool cannon=firing[10]==state_.sunCannonType || (patch && firing[10]==state_.thunderCannonType); // 썬더도 같은 원본 group1 충돌/만료를 따른다.
+    if ((!groupZero && !cannon) || Read(fields.bytes,kRicochet) || (patch && (Read(fields.bytes,40) || Read(fields.bytes,44)))) throw std::logic_error("Missile 미복원 frame 파생/반사/빗나감 경로");
+    const float margin=static_cast<float>(patch && asset[10]==state_.thunderMissileType ? state_.thunderRangeMargin : state_.rangeMargin); // 실제 Pop 이전에 현재 int 여유를 float에 저장한다.
     if (!hooks_.unpop || !hooks_.pop || !hooks_.destroy || !hooks_.center) throw std::logic_error("Missile 실제 이동/삭제 경계 누락");
     const auto origin=Point(fields.bytes,layout.origin),endpoint=Point(fields.bytes,layout.endpoint);const auto end=Double(fields.bytes,layout.end),start=Double(fields.bytes,layout.start);
     const double remaining=patch ? end-state_.now : static_cast<float>(end-state_.now);const double duration=patch ? end-start : static_cast<float>(end-start);
@@ -132,8 +135,11 @@ void RawMissile::Frame(MissileFields& fields) const {
     }
     const auto currentCenter=hooks_.center(fields.Firing());const float currentDistance=static_cast<float>(Distance(current,currentCenter));
     bool exhausted;
-    if (corner) { const auto endCenter=hooks_.center(fields.Firing());exhausted=patch && !groupZero ? Distance(endpoint,endCenter)<currentDistance : static_cast<float>(Distance(endpoint,currentCenter))+4.0f<Distance(current,endCenter); }
-    else { const float range=missileTypes_[firing[10]].range;exhausted=patch ? range+4.0f<currentDistance : range+4.0f<Distance(current,currentCenter); }
+    if (corner) { const auto endCenter=hooks_.center(fields.Firing());exhausted=patch && !groupZero ? Distance(endpoint,endCenter)<currentDistance : static_cast<float>(Distance(endpoint,currentCenter))+margin<Distance(current,endCenter); }
+    else {
+        const float range=missileTypes_[firing[10]].range;
+        exhausted=patch ? range+margin<currentDistance : range+margin<Distance(current,currentCenter);
+    }
     auto last=current;
     if (hit) {
         // 실제146 클라우드 플로터의 확률 회피는 난수 몸체를 연결하기 전 성공으로 대신하지 않는다.

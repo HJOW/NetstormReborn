@@ -1,0 +1,118 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "uniqueInputs": 1118,
+  "inputKinds": {
+    "0": 320,
+    "1": 454,
+    "2": 8,
+    "3": 336
+  },
+  "returnsPerPrecision": 1118,
+  "precisionDifferentInputs": [],
+  "nativeCalls": {
+    "00481a50": 320,
+    "0041c110": 328,
+    "004ac550": 1353,
+    "0049a840": 5792,
+    "0041d180": 640,
+    "0049a900": 1657,
+    "0040e800": 1992,
+    "004ac950": 1023,
+    "00481750": 656,
+    "0041ce90": 656,
+    "0045ae60": 656,
+    "004d4d00": 656,
+    "004ad680": 656,
+    "004adea0": 1337,
+    "0049ace0": 486,
+    "004e49c0": 1286,
+    "0041d0d0": 1704,
+    "0041cfc0": 1161,
+    "0041d6e0": 320,
+    "0043fa50": 320,
+    "00482340": 454,
+    "00431f90": 59,
+    "0040e880": 289,
+    "0040e8f0": 289,
+    "00468cc0": 226
+  },
+  "boundaries": {
+    "00419850": 320,
+    "004af530": 320,
+    "20000110": 320,
+    "20000120": 774,
+    "0041bd20": 320,
+    "004a9c30": 259,
+    "20000130": 454,
+    "00436d00": 59,
+    "0049af10": 59,
+    "00470ac0": 28,
+    "004d4f00": 28,
+    "20000140": 238,
+    "0045a750": 28,
+    "004d5000": 210
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_thunder_missile.py": "b556de87937ff814794abccb6a4d392af7224a8556d6b827b0fe518e80b71122",
+    "tools/decomp_crossbow_missile.py": "e54abc592c7c07a866814a591f25e37ac9d654c39cb67ff4bf8a10e10196468f",
+    "tools/decomp_gunmissile_oracle.py": "4671a0a69ee91d6e0280a6c4af73d38e6ca6b096ee04161aeaef8d2d3e5c0fd1",
+    "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
+    "cpppj/tests/fixtures/thunder-missile-x86.tsv": "803773b09acb9e67dc17c534347b5067132b7cbd4e79f97dbe534cbd31957c64"
+  },
+  "limitations": [
+    "포구/사정선/방향/타입·치수/중심과 Missile 수치 몸체는 실제 PE 코드다.",
+    "SHP hotspot 자료·자산 가상 생성/소유자/공간·소리/피해/갱신/일반 충돌 상자는 명시 외부 경계다.",
+    "독립 합성 입력이다. 실제 Session 완주/장치 픽셀/원본 실제 게임 실행 증거로 합산하지 않는다."
+  ],
+  "staticPEEvidence": {
+    "displayConstructor": "0046a6c0",
+    "displayVtable": "0050b570",
+    "lifetimeSlots": {
+      "10": "004af780",
+      "14": "004b0950",
+      "18": "004b0840",
+      "24": "0041c100"
+    },
+    "rangeMargin": 4,
+    "thunderRangeMargin": 10
+  },
+  "product_validation": {
+    "baseline_commit": "c258c7f",
+    "focused_new_tests": 5,
+    "native_cpp_inputs": 1118,
+    "normal_fiery_deletion": {
+      "frame": 159,
+      "game_seconds": 3.975,
+      "display_type": 80
+    },
+    "thunder_deletion": {
+      "frame": 244,
+      "game_seconds": 6.1,
+      "display_type": 132
+    },
+    "demo3_kernel_frames": 400,
+    "demo3_game_seconds": 10,
+    "source_sound_key": "fireSound",
+    "natural_firing_sound": "thunderCannon.wav",
+    "ctest": {
+      "total": 1434,
+      "passed": 1433,
+      "failed": 1,
+      "total_seconds": 224.6,
+      "exit_code": 8,
+      "log": "extracted/goal-thunder-missile-20261017-ctest.log"
+    },
+    "user_natural_completion": false,
+    "remaining_kernel_boundary": {
+      "mission": "DemoStormRages",
+      "frame": 145,
+      "game_seconds": 3.625,
+      "type": 148,
+      "stage": 5
+    }
+  }
+}

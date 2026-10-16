@@ -380,7 +380,8 @@ struct RawCampaignSession::Impl {
             firingIntervals[type]=static_cast<float>(asset.definition.Number("delayBetweenShots").value_or(0));
             archerTypes[type]=ReadRawArcherTypeData(asset.definition);missileTypes[type].range=target.range;
             missileTypes[type].frameCount=archerTypes[type].directions;
-            const auto firingSound=asset.definition.String("firingSound"),impactSound=asset.definition.String("impactSound");
+            // 원본 TYPE의 실제 키는 fireSound이며 firingSound라는 별칭은 없다.
+            const auto firingSound=asset.definition.String("fireSound"),impactSound=asset.definition.String("impactSound");
             missileTypes[type].firingSound=firingSound && !firingSound->empty() ? soundNames.Lookup(*firingSound) : 0;
             missileTypes[type].impactSound=impactSound && !impactSound->empty() ? soundNames.Lookup(*impactSound) : 0;
             auto& geometry=projectileTypes[type];geometry.defaultFrame=asset.definition.specialFrames.defaultFrame;
@@ -445,7 +446,7 @@ struct RawCampaignSession::Impl {
             [this](Sid victim,std::int32_t,std::uint8_t,Sid attacker) {
                 throw std::logic_error("실제 세션 총 피해 미복원: 공격 TYPE"+std::to_string(core.pool.Slot(attacker)[10])+" → 표적 TYPE"+std::to_string(core.pool.Slot(victim)[10]));
             },[this](Sid sid) { core.building.NotifySurface(sid); }}));
-        projectileGeometry=std::make_unique<RawProjectileGeometry>(core.pool,core.types,projectileTypes);
+        projectileGeometry=std::make_unique<RawProjectileGeometry>(core.pool,core.types,projectileTypes,16.0F,11.0F,gunMode.get());
         fenceTarget=std::make_unique<RawFenceTarget>(core.pool,core.hash,core.types,projectileTypes,*gunTarget,gunTargetState,gunState);
         particles=std::make_unique<RawCampaignParticles>(core,random,assets.game.Palette());
         auto combatEffects=services.archer;
@@ -470,7 +471,13 @@ struct RawCampaignSession::Impl {
             if (type==11) { particles->Add(type,parent);return; }
             if (!other) throw std::logic_error("실제 비행 표시 효과 미복원 TYPE"+std::to_string(type));other(type,parent);
         };
-        FillMissing(combatEffects.missile.firingSound);FillMissing(combatEffects.missile.impactSound);
+        // 파생 음향 재정의가 없으면 같은 SoundPlayer의 실제 위치 한 번 재생 경계로 전달한다.
+        const auto missileSound=[this](float x,float y,std::uint32_t token) {
+            if (!services.sound.playOnceAt) throw std::logic_error("캠페인 투사체 실제 위치 음향 미연결");
+            static_cast<void>(services.sound.playOnceAt(x,y,token,0,0));
+        };
+        if (!combatEffects.missile.firingSound) combatEffects.missile.firingSound=missileSound;
+        if (!combatEffects.missile.impactSound) combatEffects.missile.impactSound=missileSound;
         combatEffects.missile=hits->MissileHooks(*gunHit,missileState,std::move(combatEffects.missile));
         combat=std::make_unique<RawCampaignArcherBindings>(world,*gunTarget,random,archerTypes,metadata.frames,missileTypes,archerState,missileState,std::move(combatEffects));
         auto assetEffects=services.assets;assetEffects.postPop.reserveRegular=[] { return true; };
