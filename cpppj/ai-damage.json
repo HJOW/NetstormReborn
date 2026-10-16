@@ -1,0 +1,59 @@
+{
+  "host": "VM-W11-Codex",
+  "date": "2026-10-16",
+  "observations": 149,
+  "normal_returns": 298,
+  "x87_control_words": [
+    "027f",
+    "037f"
+  ],
+  "precision_differences": 0,
+  "entries": [
+    "00415460",
+    "00411200",
+    "00414450"
+  ],
+  "boundaries": [
+    "0045c100 actual FlyerProcess home response",
+    "004105b0 actual log request; output filtering/formatting is outside boundary"
+  ],
+  "checks": [
+    "whole0xb08brain/four32bytebackinglists/wholeinputslots/events",
+    "stack/nonvolatile/x87/SEH/writeguard"
+  ],
+  "scope": "PATCH only; no GUI/game process/new decompile; CD and whole AI strategy not observed",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "02fcb4d010e0558e969eaf3e9c55bc21d14779d8eb147d3fc2ecbcaeca7a9c2c",
+    "tools/decomp_ai_damage.py": "4ff2358e7c0ba9424356fd9d0fdd8b921a7f8fe147f1a4c6d0d720cc910e8c24",
+    "cpppj/tests/fixtures/ai-damage-x86.tsv": "eaa90a665618f23d59365df1e65b330499f7a4fd87fac6280d9955b5ca05ab3a",
+    "cpppj/src/o/RawAiDamage.h": "425fb62eb0421aae079c4bf01b200ec47f664342985bb4cc912bc587490815e2",
+    "cpppj/src/o/RawAiDamage.cpp": "e3e6a1571fe33df0d83f779a848564165fcf45500b2a08dceb9d76cfcb8432bb"
+  },
+  "input_domain_correction": {
+    "initial_capacity": 20000,
+    "current_capacity": 24000,
+    "reason": "The first native synthetic capacity20000 is a valid native input, but the restored C++ SidPool requires capacity>predictableFirst23001+1; the actual Session uses24000. Re-observe native boundary23999/24000 in the same domain; no C++ expected values calculated.",
+    "initial_observations": 147,
+    "initial_fixture_sha256": "7dbbc63d77616d609c804a36512db60c9089d913a17bbeaf3746d0b85b159295",
+    "initial_report_sha256": "79aa2ab610bfc433d16418ed4be6fe4af33c18f37622369027852e2d943af189",
+    "initial_fixture_path": "extracted\\goal-campaign-damage-20261016-ai-capacity20000.tsv",
+    "initial_report_path": "extracted\\goal-campaign-damage-20261016-ai-capacity20000.json",
+    "product_algorithm_unchanged": true,
+    "product_sha256": {
+      "cpppj/src/o/RawAiDamage.h": "425fb62eb0421aae079c4bf01b200ec47f664342985bb4cc912bc587490815e2",
+      "cpppj/src/o/RawAiDamage.cpp": "e3e6a1571fe33df0d83f779a848564165fcf45500b2a08dceb9d76cfcb8432bb"
+    }
+  },
+  "actual_genus_extension": {
+    "prior_fixture_sha256": "30e69e98fe0a7c27d38ac58bc7b09703ccdb37a44b983e66487d6fe471090225",
+    "prior_report_sha256": "01c06b1a95b05ff569e2ce7d44ef08b18e967d3cdc575568a8105d7e1fbfc9e5",
+    "preserved_cpp_passed_rows": 147,
+    "all_prior_keys_and_output_fields_unchanged": true,
+    "new_observations": 2,
+    "genus": "08040010",
+    "scope": "The native victim metadata remains non-Altar TYPE71 with independently supplied actual TYPE131 genus.00415460 only tests victim type==Altar164, then genus and tracked/guard lists. Attacker TYPE140 has Flyer bit clear. These two inputs distinguish initial tracked0 natural no-response and explicit tracked1 reaction; they do not synthesize AI strategy population."
+  }
+}

@@ -243,7 +243,8 @@ void UberGump::BeginMission(std::string name) {
     auto players=o::MissionPlayers::Load([this](std::string_view key) { return mission_->Get(key); },fort,client_.Assets().TypeTable(),6500);
     // 1-1/1-2도 원본 missionType은 Tutorial이다. 지원 두 종류 모두 같은 실제 raw 월드를 생성한다.
     auto services=MakeCampaignClientServices(client_,*rawButtons_,{
-        [this] { RefreshWindowTitle(); },[this](std::string_view key) { Tell(std::string(key)); }}); // 현재 클라이언트의 설정·음향·입력·UI다.
+        [this] { RefreshWindowTitle(); },[this](std::string_view key) { Tell(std::string(key)); },
+        [this](std::int32_t kind,std::int32_t player,std::int32_t parameter) { warnings_->Remove(kind,player,parameter);rebuild_=true; }}); // 현재 클라이언트의 설정·음향·입력·UI다.
     auto world=std::make_unique<GameWorld>(client_.Assets(),client_.Files(),std::move(fort),std::move(players),
         mission_->FortName(),std::move(services),ScreenPoint{client_.GetScreen().Width(),client_.GetScreen().Height()});
     world->elapsed=[this]() { return client_.Time().delta; }; world->paused=[this]() { return client_.Paused(); };

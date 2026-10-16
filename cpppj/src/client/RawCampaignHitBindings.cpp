@@ -1,9 +1,12 @@
 // 실제 Host/HP/감시/공간 효과를 연결하며 필요한 외부 생성 경계는 원래 요청 시점에 남긴다.
 #include "client/RawCampaignHitBindings.h"
 #include "o/RawContainedLookup.h"
+#include "o/RawPathSearch.h"
+#include "o/RawSquidDefense.h"
 #include <stdexcept>
 namespace netstorm::client {
 namespace {
+#include "o/CampaignDamageVtables.inc"
 // 현재 raw 가상 표의 little endian DWORD만 읽는다.
 std::uint32_t HitTable(std::span<const std::uint8_t> raw) {
     std::uint32_t value=0;
@@ -20,12 +23,13 @@ struct RawCampaignHitBindings::Impl {
     o::RawContainedLookup contained; // 같은 Form 체인의 현재 typed 프로세스 조회다.
     std::unique_ptr<o::RawDamageableBurning> burning; // 현재 HP/효과 분기의 실제 몸체다.
     std::unique_ptr<o::RawPriestDamage> priestDamage; // 실제 회복 취소/HP1/감시 해제를 수행한다.
+    std::unique_ptr<o::RawDamageableHit> generalDamage; // 현재 일반 HP·방어·경고·서버 죽음의 실제 몸체다.
     std::unique_ptr<o::RawDudeNotice> dudes; // 실제 finder/현재task/거주 구역 대피 요청 처리기다.
     std::unique_ptr<o::RawGunImpact> impact; // 같은 Factory/Host의 실제 anim 생성/예약/삭제다.
     // 모든 callback은 동일 Core와 외부 장기 상태만 읽는다.
     Impl(RawSurfaceWorld& input,const RawPriestWorldBindings& priestWorld,const o::SquidReward& hp,
         o::GameRandom& random,std::span<o::DudeNoticeTypeData> speeds,const o::SquidPostPopList& residences,
-        o::PriestDamageState& priestState,o::DamageableBurningState& burningState,o::GunImpactState& impactState,
+        o::PriestDamageState& priestState,o::DamageableHitState& generalState,o::DamageableBurningState& burningState,o::GunImpactState& impactState,
         RawCampaignHitEffects effects)
         :world(input),core(input.Core()),priests(priestWorld),contained(core.pool,[this](o::Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); }) {
         if (&priests.PriestState().Pool()!=&core.pool || &hp.Pool()!=&core.pool) throw std::invalid_argument("캠페인 피격 현재 Pool 불일치");
@@ -43,6 +47,13 @@ struct RawCampaignHitBindings::Impl {
         damage.setHitPoints=[this](o::Sid victim,std::int32_t value) { priests.SetHitPoints(victim,value); };
         damage.damageableRefresh=[this](o::Sid victim) { burning->Refresh(victim); };
         priestDamage=std::make_unique<o::RawPriestDamage>(core.pool,core.types,core.frames,priestState,std::move(damage),&core.dependencies);
+        auto general=std::move(effects.general); // 현재 일반 피해만 원본 가상 분배에 연결한다.
+        general.destroy=[this](o::Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
+        general.unrealize=[this](o::Sid sid) { core.display.Update(core.pool.Slot(sid),0); };
+        general.islandAt=[this](float x,float y) { return o::RawPathSurfaceAt(core.hash,{x,y}); };
+        general=o::MakeRawSquidDefenseHooks(core.pool,kCampaignDamageDefenseEntries,std::move(general));
+        general=o::MakeDamageableHitBurningHooks(core.pool,*burning,std::move(general));
+        generalDamage=std::make_unique<o::RawDamageableHit>(core.pool,core.types,generalState,std::move(general));
         auto notice=std::move(effects.dudes);
         notice.setFrame=[this](o::Sid sid,std::int32_t frame,std::uint32_t flags) { core.frame.Set(sid,frame,flags); };
         notice.notifySurface=[this](o::Sid sid) { core.building.NotifySurface(sid); };
@@ -65,12 +76,13 @@ struct RawCampaignHitBindings::Impl {
 // 초기 객체 생성 전에 실제 하위 모듈의 동일 Pool 계약을 확인한다.
 RawCampaignHitBindings::RawCampaignHitBindings(RawSurfaceWorld& world,const RawPriestWorldBindings& priests,const o::SquidReward& hp,
     o::GameRandom& random,std::span<o::DudeNoticeTypeData> speeds,const o::SquidPostPopList& residences,
-    o::PriestDamageState& priestState,o::DamageableBurningState& burningState,o::GunImpactState& impactState,RawCampaignHitEffects effects)
-    :impl_(std::make_unique<Impl>(world,priests,hp,random,speeds,residences,priestState,burningState,impactState,std::move(effects))) {}
+    o::PriestDamageState& priestState,o::DamageableHitState& generalState,o::DamageableBurningState& burningState,o::GunImpactState& impactState,RawCampaignHitEffects effects)
+    :impl_(std::make_unique<Impl>(world,priests,hp,random,speeds,residences,priestState,generalState,burningState,impactState,std::move(effects))) {}
 // 상위가 같은 Kernel을 비운 뒤 callback 대상 모듈을 해제한다.
 RawCampaignHitBindings::~RawCampaignHitBindings()=default;
-// 현재 실제 사제 body만 추가하며 다른 표적 callback은 그대로 유지한다.
+// 현재 raw VT의 실제 피격 진입을 대조하고 사제·일반·특수 파생을 구별한다.
 o::GunHitHooks RawCampaignHitBindings::DamageHooks(o::GunHitHooks hooks) const {
+    hooks=o::MakeDamageableGunHitHooks(*impl_->generalDamage,kCampaignDamageHitEntries,std::move(hooks));
     auto fallback=std::move(hooks.damage);return o::MakePriestGunHitHooks(impl_->core.pool,*impl_->priestDamage,std::move(hooks),std::move(fallback));
 }
 // 실제 충돌 생성/주변 통지/피해 시간 압축을 기존 Missile 몸체에 연결한다.
@@ -99,5 +111,6 @@ const o::RawPriestDamage& RawCampaignHitBindings::PriestDamage() const { return 
 const o::RawGunImpact& RawCampaignHitBindings::Impact() const { return *impl_->impact; }
 const o::RawDudeNotice& RawCampaignHitBindings::Dudes() const { return *impl_->dudes; }
 const o::RawDamageableBurning& RawCampaignHitBindings::Burning() const { return *impl_->burning; }
+const o::RawDamageableHit& RawCampaignHitBindings::GeneralDamage() const { return *impl_->generalDamage; }
 const o::SidPool& RawCampaignHitBindings::Pool() const { return impl_->core.pool; }
 }

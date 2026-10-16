@@ -32,7 +32,7 @@ RawPriestDamage::RawPriestDamage(SidPool& pool,std::span<const RiftTypeRecord> t
 }
 // 플레이어0또는보정차단은원본처럼 피해값을그대로 보존한다.
 std::int32_t RawPriestDamage::Adjust(std::int32_t damage,std::uint32_t attackerOwner,std::uint32_t victimOwner,const PriestDamageState& state,OriginalEdition edition) {
-    if (state.levelCorrectionDisabled || !attackerOwner || !victimOwner) return damage;
+    if ((state.levelCorrectionDisabledRead ? state.levelCorrectionDisabledRead() : state.levelCorrectionDisabled) || !attackerOwner || !victimOwner) return damage;
     const bool patch=edition==OriginalEdition::Patch1078;
     if (!patch && (attackerOwner>=state.levels.size() || victimOwner>=state.levels.size())) throw std::out_of_range("피해 레벨 소유자 범위 오류");
     // 원본패치getter는실제플레이어1..8 밖의owner에레벨0을반환한다.

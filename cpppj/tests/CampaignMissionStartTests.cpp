@@ -5,6 +5,7 @@
 #include "o/RawRainAviaryProcess.h"
 #include "o/RawFlyerProcess.h"
 #include <unordered_set>
+#include <map>
 
 using namespace netstorm::client;
 namespace {
@@ -28,6 +29,7 @@ struct StartExternal {
         s.install.translateYou=[this] { return std::span<const std::uint8_t>(you); };s.install.setConfig=[this](std::string_view,std::span<const std::uint8_t>) { ++ui; };
         s.install.refreshWindowTitle=[this] { ++ui; };s.install.resetCamera=[this] { ++ui; };
         s.assets.postPop.playImpactSound=[this](std::uint32_t) { ++ui; };s.assets.queueCommand=[this](std::uint32_t,std::int32_t,std::int32_t) { ++ui; };
+        s.hit.general.warningEvent=[this] { ++ui; }; // 실제event12 경고 표시의 외부 요청만 관찰한다.
         s.player.log=[this](std::uint32_t,std::string_view) { ++ui; };s.deletion.selected=[] { return Sid{}; };
         s.dependencyTransmit=[this](Sid,std::uint32_t) { ++ui; };s.playerContent.gump=[](std::uint32_t) { return 0U; };
         s.ai.allocationBytes=[](std::span<std::uint8_t> bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0xb3}); };
@@ -286,3 +288,119 @@ TEST_CASE(CampaignCrossbow_ActualArrowFlightAndDestroy) {
     CHECK((core.pool.Slot(missileForm)[11]&1)!=0 && core.processes.FromForm(missileForm)==nullptr);
     CHECK(core.bookkeeping.depth==0 && gate.started==1);
 }
+
+// Start 전 실제 저장 배치의 같은 Kernel이 화살 자연 충돌·일반HP·효과·삭제를 완료해야 한다.
+TEST_CASE(CampaignCrossbow_ActualNaturalDamageBeforeAiStart) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078); // 보호10.78 자원을 읽는 동일 입력이다.
+    ConfigInterface config([&](std::string_view path) { return assets.files.TryRead(path); });ConfigureStart(config);MissionScript script(config,"DissolvedAlliance");
+    StartExternal external;auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable()); // 실제 저장 객체를 재배치하거나 HP를 바꾸지 않는다.
+    RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),external.Services());session.Load();auto core=session.Core();
+    std::vector<std::pair<Sid,std::int32_t>> initialTargets; // Load 직후 실제 썬더 캐논 HP를 독립 입력으로 보존한다.
+    // 같은 원본 배치의 TYPE131만 읽으며 관찰용 자산이나 가짜 GunProcess를 생성하지 않는다.
+    for (const auto& object:session.World().Objects()) if (object.object.type==131) {
+        CHECK(session.HitPoints().HasHitPoints(object.sid));initialTargets.emplace_back(object.sid,std::bit_cast<std::int32_t>(Get(core.pool.Slot(object.sid),26)));
+    }
+    CHECK(!initialTargets.empty() && session.AiMemory().Allocations().empty());
+    GameClock clock;Sid projectile{},missileForm{},victim{},firing{}; // 동일 실제 프로세스/자산을 충돌 뒤까지 추적한다.
+    std::array<std::uint32_t,2> initialPosition{};std::int32_t before{},after{}; // 실제 포구·초기HP·피격 뒤HP 입력이다.
+    bool moved=false,damaged=false,naturallyDeleted=false,impactCreated=false;std::uint32_t collisionFrame{}; // 생성/비행/피해/효과/삭제의 서로 다른 관찰이다.
+    // 최초 자연 충돌이 끝나면 멈춘다. 이후 미복원 전투나 실제Start/AI를 이 검사에서 대신하지 않는다.
+    for (std::uint32_t frame=1;frame<=80 && !naturallyDeleted;++frame) {
+        session.RunFrame(clock.Capture(frame*25),false);
+        // 실제 Missile과 같은 source GunProcess를 찾아 원본131 표적을 가진 첫 화살을 관찰한다.
+        for (std::uint32_t number=5;number<core.pool.Capacity();++number) {
+            const Sid form{static_cast<std::uint16_t>(number)};const auto raw=core.pool.Slot(form);if ((raw[11]&7) || raw[10]!=28) continue;
+            auto* missile=dynamic_cast<Missile*>(core.processes.FromForm(form));CHECK(missile!=nullptr);if (!missile) continue;
+            const auto source=missile->Fields().Firing(),target=missile->Fields().Target();if (core.pool.Slot(source)[10]!=140 || core.pool.Slot(target)[10]!=131) continue;
+            const auto parent=missile->Parent();const auto asset=core.pool.Slot(parent);CHECK(asset[10]==81 && Get(asset,0)==0x501dd0);
+            if (!projectile.value) {
+                projectile=parent;missileForm=form;victim=target;firing=source;initialPosition={Get(asset,14),Get(asset,18)};
+                // Load 때 보존한 같은 실제 표적의 HP를 찾아 피격 결과와 구별한다.
+                for (const auto& [sid,health]:initialTargets) if (sid==victim) before=health;
+                const auto gunForm=FindAttachedProcess(core.pool,firing,34);auto* gun=gunForm.value ? dynamic_cast<GunProcess*>(core.processes.FromForm(gunForm)) : nullptr; // 같은 부모의 실제 총 상태 기계다.
+                CHECK(gun && gun->Parent()==firing && gun->Fields().Parent()==firing && before>1);
+            } else if (parent==projectile && std::array<std::uint32_t,2>{Get(asset,14),Get(asset,18)}!=initialPosition) moved=true;
+        }
+        if (!projectile.value) continue;
+        after=std::bit_cast<std::int32_t>(Get(core.pool.Slot(victim),26));damaged=after>0 && after<before;
+        naturallyDeleted=(core.pool.Slot(projectile)[11]&1)!=0;
+        if (naturallyDeleted) {
+            collisionFrame=frame;CHECK(damaged && moved && !(core.pool.Slot(victim)[11]&3));
+            CHECK((core.pool.Slot(missileForm)[11]&1)!=0 && core.processes.FromForm(missileForm)==nullptr);
+            // 원본 풀의 실제 반납 기록에서도81 자산과28 Form의 자연 삭제를 확인한다.
+            bool assetRecorded=false,formRecorded=false;
+            // 두 번호 영역의 최근 삭제 기록을 모두 읽어 예측/서버 배치 차이를 허용한다.
+            for (const bool client:{false,true}) {
+                // 타입까지 대조해 같은 SID의 다른 과거 삭제를 혼동하지 않는다.
+                for (const auto& record:core.pool.Deletions(client)) {
+                    if (record.sid==projectile.value && record.type==81) assetRecorded=true;
+                    if (record.sid==missileForm.value && record.type==28) formRecorded=true;
+                }
+            }
+            CHECK(assetRecorded && formRecorded);
+            // 충돌이 만든 실제 D구간 anim160과 같은 Regular 예약을 검사한다.
+            for (const auto& object:session.World().Objects()) if (object.object.type==160) {
+                const auto raw=core.pool.Slot(object.sid);const auto physical=Get(raw,36);const auto codes=core.frames[160].Codes();if (physical>=codes.size() || codes[physical].side!='D') continue;
+                const auto* regular=core.processes.FindEvent(object.sid,3);CHECK(regular && regular->Parent()==object.sid && std::bit_cast<std::uint32_t>(regular->Payload())==0x3ca3d70a);impactCreated=true;
+            }
+        }
+    }
+    CHECK(projectile.value && victim.value && firing.value && moved && damaged && naturallyDeleted && impactCreated);
+    CHECK(session.AiMemory().Allocations().empty() && core.bookkeeping.depth==0);
+    std::fprintf(stderr,"실제 Start 전 화살 자연 피격: frame%u source%u target%u HP%d→%d projectile%u Form%u\n",collisionFrame,firing.value,victim.value,before,after,projectile.value,missileForm.value);
+}
+namespace {
+// 실제 StartDemo의 자연 피격에서 명시 감시 목록 입력의 유무를 구별한다.
+void CheckStartedDemoAiReaction(bool tracked) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);
+    ConfigInterface config([&](std::string_view path) { return assets.files.TryRead(path); });ConfigureStart(config);MissionScript script(config,"DissolvedAlliance");
+    StartExternal external;auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());
+    RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),external.Services());session.Load();auto core=session.Core();
+    std::map<std::uint16_t,std::int32_t> health; // 실제 저장 썬더 캐논의 시작 HP이며 쓰기 없이 비교한다.
+    std::map<std::uint16_t,Sid> sources; // 자연 Missile이 이미 기록한 표적별 실제 크로스보우 SID다.
+    // 저장된 자연 배치에서만 표적 HP를 읽으며 새 공격 객체를 만들지 않는다.
+    for (const auto& object:session.World().Objects()) if (object.object.type==131) health.emplace(object.sid.value,std::bit_cast<std::int32_t>(Get(core.pool.Slot(object.sid),26)));
+    CHECK(!health.empty());GameClock clock;MissionFrameGateState gate;MissionStartState state;MissionStartGlobals globals;MissionAiSettingsState ai;gate.demo=1;ai.stuffRefreshRate=4;
+    auto effects=external.Effects();effects.gameSeconds=[&] { return clock.GameSeconds(0); };RawCampaignMissionStartBindings start(session,script,gate,state,globals,ai,std::move(effects));start.Start();
+    Sid trackedTarget{}; // 실제 첫 화살에서 확인한 표적 한 개만 용량2의 원본 감시 목록에 명시한다.
+    bool observed=false; // 첫 자연 피격 뒤 같은 현재 AI 목록에서 공격자가 확인됐는지 기록한다.
+    // 이번 검사는 최초 피해와 목록 반응까지만 실행하며 이후 전투 완주를 주장하지 않는다.
+    for (std::uint32_t frame=1;frame<=40 && !observed;++frame) {
+        // 현재 Missile의 실제 발사/표적 관계를 피격 전 같은 Pool에서 보존한다.
+        for (std::uint32_t number=5;number<core.pool.Capacity();++number) {
+            const Sid form{static_cast<std::uint16_t>(number)};const auto raw=core.pool.Slot(form);if ((raw[11]&7U) || raw[10]!=28) continue;
+            auto* missile=dynamic_cast<Missile*>(core.processes.FromForm(form));if (!missile || core.pool.Slot(missile->Fields().Firing())[10]!=140) continue;
+            sources[missile->Fields().Target().value]=missile->Fields().Firing();
+            if (tracked && !trackedTarget.value && health.contains(missile->Fields().Target().value)) {
+                // 피격 전 검사 입력이며 AI 전략의 자동 감시 선택을 구현한 것으로 세지 않는다. HP/좌표/발사는 그대로다.
+                trackedTarget=missile->Fields().Target();auto& memory=const_cast<RawAiBrainMemory&>(session.AiMemory());
+                const auto token=session.Participation().Brain(core.pool.Slot(trackedTarget)[34]);CHECK(token!=0);if (!token) continue;
+                auto brain=memory.Bytes(token);const auto count=Get(brain,0x38c),capacity=Get(brain,0x388);CHECK(count<capacity);if (count>=capacity) continue;
+                Put(memory.Bytes(Get(brain,0x384)),count*4,trackedTarget.value);Put(brain,0x38c,count+1);
+            }
+        }
+        session.RunFrame(clock.Capture(frame*25),false);
+        // HP가 자연 감소한 첫 썬더 캐논의 실제 소유자 AI를 같은 Player+0xb0에서 조회한다.
+        for (const auto& [number,before]:health) {
+            if (tracked && number!=trackedTarget.value) continue;
+            const auto raw=core.pool.Slot(Sid{number});if (std::bit_cast<std::int32_t>(Get(raw,26))>=before) continue;
+            CHECK(sources.contains(number));if (!sources.contains(number)) continue;const auto attacker=sources.at(number);
+            const auto token=session.Participation().Brain(raw[34]);CHECK(token!=0);if (!token) continue;const auto brain=session.AiMemory().Bytes(token);
+            // 두 원본 목록의 실제 backing에 이번 공격자가 들어갔는지 검사한다.
+            for (const auto offset:{0x36cU,0x378U}) {
+                const auto count=Get(brain,offset+8);const auto list=session.AiMemory().Bytes(Get(brain,offset));bool found=false;
+                // 논리 count 범위만 검색하여 보존된 padding을 데이터로 세지 않는다.
+                for (std::uint32_t index=0;index<count;++index) if (Get(list,index*4)==attacker.value) found=true;
+                if (tracked) CHECK(found);
+                else { CHECK(!found && count==0);CHECK(Get(brain,0x38c)==0 && core.types[raw[10]].flags2==0x08040010U); }
+            }
+            CHECK(core.pool.Slot(attacker)[10]==140 && core.bookkeeping.depth==0);observed=true;break;
+        }
+    }
+    CHECK(observed && gate.started==1 && gate.demo==1);
+}
+}
+// 실제 기본 AI의 비감시 캐논 피격은 원문대로 목록을 바꾸지 않고 HP·충돌만 진행한다.
+TEST_CASE(CampaignDamage_StartedDemoUntrackedAiNaturalReturn) { CheckStartedDemoAiReaction(false); }
+// 명시 감시 목록 초기 입력 뒤 실제 자연 피격이 같은 AI의 두 공격자 목록을 갱신한다.
+TEST_CASE(CampaignDamage_StartedDemoTrackedAiReaction) { CheckStartedDemoAiReaction(true); }

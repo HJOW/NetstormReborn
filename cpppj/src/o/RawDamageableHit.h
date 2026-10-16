@@ -20,6 +20,10 @@ struct DamageableHitState {
     // killedVictim/killerOwner: 원본 서버 사망 직전에 기록하는 두 DWORD 전역이다.
     Sid killedVictim{};
     std::uint32_t killerOwner{};
+    // serverRead/localOwnerRead/primaryIslandRead: 세션의 현재 원본 저장소를 읽는다. 미지정 시 위 독립 입력을 사용한다.
+    std::function<bool()> serverRead;
+    std::function<std::uint8_t()> localOwnerRead;
+    std::function<std::int32_t(std::uint8_t)> primaryIslandRead;
 };
 // 실제 가상 방어/삭제/소유자 통지/공간·경고 UI를 같은 월드에 연결한다.
 struct DamageableHitHooks {

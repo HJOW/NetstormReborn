@@ -264,3 +264,5 @@ target_sources(netstorm PRIVATE RawSunAviaryProcess.cpp RawSunAviaryProcess.h)
 
 # 썬 펜스 최초 후처리의 이웃/연결선/Regular를 같은 월드에 연결한다.
 target_sources(netstorm PRIVATE RawFencePostPop.cpp RawFencePostPop.h RawFenceNeighbors.cpp RawFenceNeighbors.h RawFenceLine.cpp RawFenceLine.h)
+# 실제 AI 피격의 네 목록과 조건부 공격자·홈 반응을 같은 본체 메모리에 적용한다.
+target_sources(netstorm PRIVATE RawAiDamage.cpp RawAiDamage.h)

@@ -1,0 +1,204 @@
+{
+  "schema": 1,
+  "host": "VM-W11-Codex",
+  "date": "2026-10-16",
+  "last_full_refined_host": "VM-W11-Codex",
+  "unique_inputs": 117,
+  "normal_returns": 234,
+  "precision_controls": [
+    639,
+    895
+  ],
+  "precision_differences": 0,
+  "groups": {
+    "0": 48,
+    "1": 32,
+    "2": 18,
+    "3": 19
+  },
+  "metadata": {
+    "victimType": 131,
+    "attackerType": 140,
+    "vtable": "0050bad0",
+    "hit": "0044c8e0",
+    "defense": "0043d9b0"
+  },
+  "executions": [
+    {
+      "control": 639,
+      "returns": 117,
+      "assertions": 0,
+      "native_calls": {
+        "0044c8e0": 117,
+        "004adc60": 117,
+        "0049a840": 394,
+        "004add10": 115,
+        "0043d9b0": 111,
+        "0044bfe0": 111,
+        "0041c5b0": 122,
+        "0044c060": 105,
+        "004ac550": 112,
+        "004ac200": 10,
+        "004acdf0": 26,
+        "004acda0": 14,
+        "004180a0": 11,
+        "00418070": 11,
+        "0049fce0": 8
+      },
+      "boundaries": {
+        "00416760": 101,
+        "004af780": 10,
+        "0040eaf0": 26,
+        "00460d70": 22,
+        "004d3090": 10,
+        "004a9cb0": 10,
+        "004a89c0": 10,
+        "004cf960": 10,
+        "004ad500": 1,
+        "004b1a90": 8,
+        "00424090": 3,
+        "20000180": 1
+      },
+      "instructions": 24050
+    },
+    {
+      "control": 895,
+      "returns": 117,
+      "assertions": 0,
+      "native_calls": {
+        "0044c8e0": 117,
+        "004adc60": 117,
+        "0049a840": 394,
+        "004add10": 115,
+        "0043d9b0": 111,
+        "0044bfe0": 111,
+        "0041c5b0": 122,
+        "0044c060": 105,
+        "004ac550": 112,
+        "004ac200": 10,
+        "004acdf0": 26,
+        "004acda0": 14,
+        "004180a0": 11,
+        "00418070": 11,
+        "0049fce0": 8
+      },
+      "boundaries": {
+        "00416760": 101,
+        "004af780": 10,
+        "0040eaf0": 26,
+        "00460d70": 22,
+        "004d3090": 10,
+        "004a9cb0": 10,
+        "004a89c0": 10,
+        "004cf960": 10,
+        "004ad500": 1,
+        "004b1a90": 8,
+        "00424090": 3,
+        "20000180": 1
+      },
+      "instructions": 24050
+    }
+  ],
+  "limitations": [
+    "현재 전체 정밀 범위와 보호10.78 PE를 사용한다. 기존5846행/보고서 기대값은 변경하지 않는다.",
+    "실제TYPE131 가상 표와 기본false 방어·피격/레벨/HP/burning 판단을 실행한다. TYPE 필드·rank·HP·지면 입력은 선언한 합성 자료다.",
+    "서버 삭제/공간unrealize·소유자AI·벽시계/알림UI·burning 생성/삭제는 명시 경계이며 전체 실제 피해/죽음 완주로 세지 않는다.",
+    "전체150BYTE/사망·경고 전역16BYTE/효과 순서/반환·스택/비휘발/x87/SEH/쓰기guard를 대조한다."
+  ],
+  "game_gui_runs": 0,
+  "sha256": {
+    "cpppj/tests/fixtures/campaign-damage-x86.tsv": "5e9f0bc49ae7fdee8f39cb88988ff83d2de1d6f5b3f426fb3dec420d831aa2cc",
+    "extracted/owner/originals/creation.c": "f9919c046d5259526946f106b47b6259fe5e04971f743d6fa02d6a5361b9dc16",
+    "extracted/owner/originals/functions.tsv": "3ea66dace80a85999a8b2c2dbadb4d5f1bd18b0dcdb0768f9c41075206c7c72d",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_campaign_damage.py": "fabad81431196695dd99e4cb3eee5c240d7e44efc37ff14c91039d45884a0e7d",
+    "tools/decomp_damageablehit_oracle.py": "e37031afe031259aecb4d9effec45f78f7d10f547d21ba752fcce1a64a55c1f0",
+    "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
+    "tools/decomp_priestdamage_oracle.py": "4f04a22dad8ad8ea31b2156432bcc2b93557a1752fbc6fe3208a18a285aa6084",
+    "tools/decomp_prieststate_oracle.py": "318f2f0f67ae946cec0325413da74eb6d0ab0be439b4d9d88baa070a266b1997"
+  },
+  "integration_snapshot": {
+    "host": "VM-W11-Codex",
+    "date": "2026-10-16",
+    "unit": 92,
+    "base_commit": "db13f25",
+    "current_cpp_sha256": {
+      "cpppj/src/client/CampaignClientServices.cpp": "f37794eeef8b843183157712dbc2864c457d353afabb895075546354f2e6bcbe",
+      "cpppj/src/client/CampaignClientServices.h": "d0b19f5feecbf90d8536e63227fc2892ffb6bab99077d78b1ff23a4a3bd50897",
+      "cpppj/src/client/RawCampaignHitBindings.cpp": "4e279ff1709724554faef72883cad8d7580c9a965c87f55fcb3b280d5ceb1c5c",
+      "cpppj/src/client/RawCampaignHitBindings.h": "8c1ab2e210d52dc66978cd142f83815589d9c3954e448ea846d8b01c88dfcccf",
+      "cpppj/src/client/RawCampaignSession.cpp": "806bbfd99f08761b130498f53970734b89d255121cb63c26eb6021a318531494",
+      "cpppj/src/client/UberGump.cpp": "dde67e30799a4b62084dfbdaae12d304a9ac02e4f519b1d4b11fae7c5a7516e1",
+      "cpppj/src/client/WarningMessages.cpp": "16fc489a7fdd92bb1ef8976aef8a074bedfc96345616b702f80d124b7e5a5ae9",
+      "cpppj/src/client/WarningMessages.h": "a0e13e4b306aa7e69efb4893eb518e8dc861b35f523a244029e1296e6148fdd5",
+      "cpppj/src/o/CMakeLists.txt": "4c34f3ac08eac561a2df92fe47f797a3321acb0bf35ea93f730bbb99f9fb1d4b",
+      "cpppj/src/o/RawDamageableHit.cpp": "ed432708aa90bda0a314b0d463ba8d8d794525dbcd423d248ae05287e27dec22",
+      "cpppj/src/o/RawDamageableHit.h": "b673e42eebd3421df427fab7e7e671dc5243a1bf9a4a85e510c994fa89b6f19f",
+      "cpppj/src/o/RawPriestDamage.cpp": "de3cd99656f9a8112532b574003d1aa9818ebb02b860d23187b7241a9c077d65",
+      "cpppj/src/o/RawPriestDamage.h": "6a8b27d59ef5dbdcd2fa2717652d9faa166b2a0f2df1fd6b0f80cc71c350c757",
+      "cpppj/src/o/RawMissile.cpp": "880af785ce9545a10d697901d533cb6eb5dadb3e832ad949366843d98573bc19",
+      "cpppj/src/o/RawAiDamage.cpp": "e3e6a1571fe33df0d83f779a848564165fcf45500b2a08dceb9d76cfcb8432bb",
+      "cpppj/src/o/RawAiDamage.h": "425fb62eb0421aae079c4bf01b200ec47f664342985bb4cc912bc587490815e2",
+      "cpppj/src/o/CampaignDamageVtables.inc": "d5e9575934d1add7c00d64d7b6ae16be94198a3ef38ec077f4637ae6bbfc6a51",
+      "cpppj/tests/CMakeLists.txt": "ccce5d8e0717623aaa7956a72a7ac2b06c46aab6b1d0a0331f3270e5cc32df5d",
+      "cpppj/tests/CampaignInstallSupport.h": "adebbbdf1654f52c6a8d608d1ec91170431dcea319f9b2fd78dcf6e0ec05898f",
+      "cpppj/tests/CampaignMissionStartTests.cpp": "91e2ebc91b9b548271568ae55dfb1ff0cbd0df5aadd374e51a21454a5a737f18",
+      "cpppj/tests/CampaignDamageTests.cpp": "e04539f267b47b3c1006743122f2c55548e2927ca235c8fbe25aaf5e0d8a4e28",
+      "cpppj/tests/AiDamageTests.cpp": "63c17f0e20cd132818bf15a6ec17bd020fcc0d0cf65e2ba328a0f71d32fa6ef5"
+    },
+    "release_warnings": 0,
+    "release_errors": 0,
+    "ctest": {
+      "total": 1411,
+      "passed": 1409,
+      "failed": 2,
+      "test_seconds": 129.97,
+      "total_seconds": 130.04,
+      "shell_exit_code": 1,
+      "ctest_exit_code": null,
+      "log": "extracted/goal-campaign-damage-20261016-final-ctest.log"
+    },
+    "focused": {
+      "campaign_damage_tests": 7,
+      "ai_damage_tests": 2,
+      "campaign_crossbow_tests": 2,
+      "failed_checks": 0,
+      "actual_session_natural_collision_frame": 20,
+      "source": 15003,
+      "target": 15305,
+      "hp_before": 1000,
+      "hp_after": 988,
+      "projectile": 120,
+      "missile_form": 121
+    },
+    "failures": [
+      {
+        "demo": 1,
+        "frame": 145,
+        "seconds": 3.625,
+        "type": 148,
+        "stage": 5
+      },
+      {
+        "demo": 3,
+        "frame": 113,
+        "seconds": 2.825,
+        "type": 128,
+        "effect": 11
+      }
+    ],
+    "tracked_list_test": "Explicit one-target input before natural collision; native capacity2 retained; no automatic strategy population claim.",
+    "corrected_test_expectations": [
+      "All damage must react was false: actual genus08040010 untracked0 returns naturally without hate/very.",
+      "Inserting all saved cannons exceeded original tracked capacity2; select the first actual Missile target only. Product and native fixture unchanged."
+    ],
+    "original_general_5846_history": "Historical fixture data rows preserved; old selected exports20 missing, CRLF9 normalized-equal pins, old RawPathSearch semantic changes2 and header-only fixture change remain explicit; no old pin repair.",
+    "goal": "Pause after current unit documentation and local commit at explicit user request; objective not achieved.",
+    "game_gui_runs": 0,
+    "new_decompiles": 0,
+    "originals_modified": 0,
+    "line_endings_after_validation": "WarningMessages two files restored to Windows CRLF only; executable source text unchanged."
+  }
+}

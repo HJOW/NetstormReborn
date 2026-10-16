@@ -34,9 +34,9 @@ std::int32_t RawDamageableHit::Health(Sid victim) const { const auto raw=Slot(vi
 bool RawDamageableHit::HasHitPoints(Sid victim) const { const auto raw=Slot(victim);const auto& type=types_[raw[10]];return type.flags2&kDais ? (raw[pool_.Edition()==OriginalEdition::Patch1078 ? 40U : 35U]&1)!=0 : (type.flags1&kHasHp)!=0; }
 // 현재 실제 주 섬에 대한 경고만 표시하고 원본 double 시계+float 간격의 저장 순서를 유지한다.
 void RawDamageableHit::WarnOwner(Sid victim) const {
-    const bool patch=pool_.Edition()==OriginalEdition::Patch1078;const auto raw=Slot(victim);const auto owner=raw[patch ? 34U : 32U];if (owner!=state_.localOwner) return;if (owner>=state_.primaryIslands.size() || !hooks_.islandAt) throw std::logic_error("일반 피해 실제 주 섬 조회 경계 누락");
+    const bool patch=pool_.Edition()==OriginalEdition::Patch1078;const auto raw=Slot(victim);const auto owner=raw[patch ? 34U : 32U];if (owner!=(state_.localOwnerRead ? state_.localOwnerRead() : state_.localOwner)) return;if (owner>=state_.primaryIslands.size() || !hooks_.islandAt) throw std::logic_error("일반 피해 실제 주 섬 조회 경계 누락");
     const auto island=hooks_.islandAt(std::bit_cast<float>(ReadHit(raw,14)),std::bit_cast<float>(ReadHit(raw,18)));if (!island.value) return;const auto ground=Slot(island);const auto genus=types_[ground[10]].flags2;if (!(genus&kIsland) || (genus&kIsland3x3)) return;
-    const auto islandId=genus&kBridge ? -1 : static_cast<std::int32_t>(ReadHit(ground,8,2));if (islandId!=state_.primaryIslands[owner]) return;if (!hooks_.realTime) throw std::logic_error("일반 피해 실제 경고 시계 누락");
+    const auto islandId=genus&kBridge ? -1 : static_cast<std::int32_t>(ReadHit(ground,8,2));if (islandId!=(state_.primaryIslandRead ? state_.primaryIslandRead(owner) : state_.primaryIslands[owner])) return;if (!hooks_.realTime) throw std::logic_error("일반 피해 실제 경고 시계 누락");
     if (state_.warningTime<=hooks_.realTime()) { if (!hooks_.warningSound || (patch && (!hooks_.warningEvent || !hooks_.warningText))) throw std::logic_error("일반 피해 실제 섬 피격 알림 경계 누락");if (patch) hooks_.warningEvent();hooks_.warningSound();if (patch) hooks_.warningText(); }
     const auto now=hooks_.realTime();state_.warningTime=now+static_cast<double>(state_.warningDelay);
 }
@@ -45,7 +45,7 @@ bool RawDamageableHit::BaseHit(Sid victim,std::int32_t damage,std::uint32_t atta
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;const auto raw=Slot(victim);if ((raw[11]&2) && patch) throw std::logic_error("일반 피해 dead 원본 assert");if (raw[11]&3) return true;const auto extra=raw[patch ? 40U : 35U];if (extra&9) { if (patch && state_.checking) throw std::logic_error("일반 피해 held 원본 assert");return true; }
     if (!hooks_.rejectDamage) throw std::logic_error("일반 피해 실제 가상 방어 판정 누락");if (state_.levels.invulnerable) damage=0;if (hooks_.rejectDamage(victim,attacker)) return true;
     const auto owner=Slot(victim)[patch ? 34U : 32U];damage=RawPriestDamage::Adjust(damage,attackerOwner,owner,state_.levels,pool_.Edition());const auto next=Subtract(Health(victim),damage);
-    if (next<1 && state_.server) { if (!hooks_.destroy) throw std::logic_error("일반 피해 실제 서버 삭제 경계 누락");state_.killedVictim=victim;state_.killerOwner=attackerOwner;const auto ownerMask=attackerOwner ? attackerOwner<<16 : 0U;std::uint32_t flags=ownerMask|0x100000U;if (attacker.value && (types_[Slot(attacker)[10]].flags2&0x100)) flags=ownerMask|0x4100000U;hooks_.destroy(victim,flags);return false; }
+    if (next<1 && (state_.serverRead ? state_.serverRead() : state_.server)) { if (!hooks_.destroy) throw std::logic_error("일반 피해 실제 서버 삭제 경계 누락");state_.killedVictim=victim;state_.killerOwner=attackerOwner;const auto ownerMask=attackerOwner ? attackerOwner<<16 : 0U;std::uint32_t flags=ownerMask|0x100000U;if (attacker.value && (types_[Slot(attacker)[10]].flags2&0x100)) flags=ownerMask|0x4100000U;hooks_.destroy(victim,flags);return false; }
     if (!hooks_.ownerDamageNotice) throw std::logic_error("일반 피해 실제 현재 owner 통지 누락");SetRawSquidHitPoints(pool_,victim,next<1 ? 1 : next);hooks_.ownerDamageNotice(Slot(victim)[patch ? 34U : 32U],victim,attacker);return true;
 }
 // 실제 Damageable의 HAS_HP·주 섬·unrealize·기본 피해·burning 순서를 수행한다.

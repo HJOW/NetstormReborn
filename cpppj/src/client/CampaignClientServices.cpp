@@ -40,7 +40,7 @@ void BindCampaignAiClientServices(Client& client,CampaignAiServices& ai) {
 }
 // 원본 time32/번역/설정/음향/입력을 동일 클라이언트의 저장소와 장치에 연결한다.
 RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonControls& controls,CampaignClientUi ui) {
-    if (!ui.refreshWindowTitle || !ui.tell)
+    if (!ui.refreshWindowTitle || !ui.tell || !ui.removeMessage)
         throw std::invalid_argument("실제 캠페인 클라이언트 UI 경계 누락");
     auto& audio=client.WorldAudio(); // noAudio도 같은 실제 이름표/비활성 재생 계층을 사용한다.
     auto& player=audio.Sounds(); // 반환한 콜백이 빌리는 장기 실제 SoundPlayer다.
@@ -95,6 +95,7 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
     // 00493d30은 004a89c0으로 인자 없는 Tell 키를 포맷한다. Xlat으로 섹션 이름을 바꾸지 않는다.
     services.priest.shield.translate=[](std::string_view key) { return std::string(key); };
     services.priest.shield.tell=std::move(ui.tell); // 실제 Tell이 안내 창과 게임 시계 정지를 처리한다.
+    services.hit.general.warningEvent=[remove=std::move(ui.removeMessage)] { remove(12,0,0); }; // 원본 섬 경고는 종류12 삭제 뒤 음향·Tell 순서다.
     services.priest.fallSound=MakePriestFallSound(player); // 사제 낙하의 현재 위치/파일명/반복 없음이다.
     // Vortex PostPop의 TYPE+74 전역 재생은 반복·음량·좌우·우선·한도가 모두 0이다.
     services.assets.postPop.playImpactSound=[&player](std::uint32_t sound) { player.Play(sound,0,0,0,0,0); };

@@ -18,6 +18,8 @@ struct PriestDamageState {
     bool levelCorrectionDisabled{};
     // levels: 패치Challenge+0x4f의rank BYTE와 CD Player+0x68 level BYTE를소유자번호로공급한다.
     std::array<std::int32_t,40> levels{};
+    // levelCorrectionDisabledRead: 같은 미션 전역을 호출 시 읽는다. 독립 입력은 위 bool을 사용한다.
+    std::function<bool()> levelCorrectionDisabledRead;
 };
 // 사제 피격의 현재 가상 프레임/HP/소유자/효과를 실제 월드에 연결한다.
 struct PriestDamageHooks {

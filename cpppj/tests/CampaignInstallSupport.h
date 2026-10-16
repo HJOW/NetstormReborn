@@ -78,6 +78,7 @@ struct InstallScene {
     std::unique_ptr<RawGunTarget> gunTarget; // 실제 finder/ray/필터의 같은 Core 인스턴스다.
     std::unique_ptr<RawGunHit> gunHit; // 실제 Q16 시간 압축과 현재 피해 getter다.
     PriestDamageState priestDamageState; // 실제 미션 레벨보정 차단/HP1 감시 권한이다.
+    DamageableHitState generalDamageState{priestDamageState}; // 같은 레벨/로컬 소유자와 주 섬의 일반 피해 입력이다.
     DamageableBurningState burningState; // 현재 nonzero damageEffect의 실제 생성 판정 전역이다.
     GunImpactState impactState; // 현재 충돌 시각 효과 억제/anim160 전역이다.
     std::vector<DudeNoticeTypeData> dudeSpeeds; // 실제 TYPE 이동속도의 현재 mutable 보충 표다.
@@ -224,12 +225,17 @@ struct InstallScene {
         hitEffects.priest.defaultFrame=[this](Sid sid) { return projectileTypes[core.pool.Slot(sid)[10]].defaultFrame; };
         // 소유자 AI/알림은 현재 외부 요청으로 관찰한다. 실제 HP/회복/감시 처리는 바인딩의 원본 몸체다.
         hitEffects.priest.ownerDamageNotice=[this](std::uint8_t owner,Sid victim,Sid attacker) { external.push_back("사제 피해 통지:"+std::to_string(owner)+':'+std::to_string(victim.value)+':'+std::to_string(attacker.value)); };
+        hitEffects.general.ownerDamageNotice=[this](std::uint8_t owner,Sid victim,Sid attacker) { external.push_back("일반 자산 피해 통지:"+std::to_string(owner)+':'+std::to_string(victim.value)+':'+std::to_string(attacker.value)); };
+        hitEffects.general.realTime=[this] { return missileState.now; };
+        hitEffects.general.warningEvent=[this] { external.push_back("경고 종류12 제거"); };
+        hitEffects.general.warningSound=[this] { external.push_back("섬 피격 전역 음향"); };
+        hitEffects.general.warningText=[this] { external.push_back("섬 피격 Tell"); };
         hitEffects.burning.create=InstallForbidden<Sid,Sid>();hitEffects.burning.bulfSound=InstallForbidden<void,Sid,float,float>();
         hitEffects.dudes.createBurning=InstallForbidden<void,Sid>();
         hitEffects.dudes.pathEndpoint=InstallForbidden<std::optional<std::array<float,2>>,Sid>();
         hitEffects.dudes.startPath=InstallForbidden<bool,Sid,float,float>();
         hits=std::make_unique<RawCampaignHitBindings>(world,*priests,hp,random,dudeSpeeds,assetState.residences,
-            priestDamageState,burningState,impactState,std::move(hitEffects));
+            priestDamageState,generalDamageState,burningState,impactState,std::move(hitEffects));
         gunHit=std::make_unique<RawGunHit>(core.pool,core.types,hitTypes,hits->DamageHooks(GunHitHooks{InstallForbidden<void,Sid,std::int32_t,std::uint8_t,Sid>(),[this](Sid sid) { core.building.NotifySurface(sid); }}));
         projectileGeometry=std::make_unique<RawProjectileGeometry>(core.pool,core.types,projectileTypes);
         RawCampaignArcherEffects combatEffects;

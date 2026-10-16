@@ -1,0 +1,766 @@
+{
+  "schema": 1,
+  "host": "VM-W11-Codex",
+  "date": "2026-10-16",
+  "last_full_refined_host": "VM-W11-Codex",
+  "edition": "10.78",
+  "evidence": "보호 PE 데이터 슬롯의 읽기 전용 정적 관찰",
+  "static_vtables": 83,
+  "static_slots": 166,
+  "dynamic_executions": 0,
+  "game_gui_runs": 0,
+  "offsets": {
+    "hit": "00000098",
+    "defense": "0000009c"
+  },
+  "distributions": {
+    "hit": {
+      "00448b70": 1,
+      "0044c8e0": 31,
+      "0048ef20": 1,
+      "00494380": 1,
+      "004add10": 45,
+      "004dba40": 4
+    },
+    "defense": {
+      "0043d9b0": 82,
+      "0048ef70": 1
+    }
+  },
+  "rows": [
+    {
+      "vtable": "00501dd0",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        74,
+        80,
+        81,
+        84,
+        91,
+        92,
+        93,
+        96,
+        97,
+        98,
+        102,
+        104,
+        107,
+        127,
+        130,
+        151,
+        162
+      ]
+    },
+    {
+      "vtable": "00501ea0",
+      "hit": "0044c8e0",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        75,
+        76,
+        77
+      ]
+    },
+    {
+      "vtable": "00502370",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        113,
+        114,
+        115,
+        168
+      ]
+    },
+    {
+      "vtable": "00502448",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        116
+      ]
+    },
+    {
+      "vtable": "00502510",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        117
+      ]
+    },
+    {
+      "vtable": "005025d8",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        171
+      ]
+    },
+    {
+      "vtable": "005026a0",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        179
+      ]
+    },
+    {
+      "vtable": "00502778",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        180
+      ]
+    },
+    {
+      "vtable": "00502840",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        181
+      ]
+    },
+    {
+      "vtable": "00502908",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        175
+      ]
+    },
+    {
+      "vtable": "005029d0",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        183
+      ]
+    },
+    {
+      "vtable": "00502aa8",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        182
+      ]
+    },
+    {
+      "vtable": "00502b70",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        178
+      ]
+    },
+    {
+      "vtable": "00502c38",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        174
+      ]
+    },
+    {
+      "vtable": "00502cf0",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        176
+      ]
+    },
+    {
+      "vtable": "00502db0",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        177
+      ]
+    },
+    {
+      "vtable": "00502e68",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        172
+      ]
+    },
+    {
+      "vtable": "00502f30",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        173
+      ]
+    },
+    {
+      "vtable": "00502ff8",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        118
+      ]
+    },
+    {
+      "vtable": "005030c0",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        119
+      ]
+    },
+    {
+      "vtable": "00503188",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        120
+      ]
+    },
+    {
+      "vtable": "00503360",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        155
+      ]
+    },
+    {
+      "vtable": "005034c8",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        82
+      ]
+    },
+    {
+      "vtable": "00503d80",
+      "hit": "0044c8e0",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        137
+      ]
+    },
+    {
+      "vtable": "00503e50",
+      "hit": "0044c8e0",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        135
+      ]
+    },
+    {
+      "vtable": "00503f20",
+      "hit": "0044c8e0",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        156
+      ]
+    },
+    {
+      "vtable": "00503ff0",
+      "hit": "0044c8e0",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        187
+      ]
+    },
+    {
+      "vtable": "005040c0",
+      "hit": "0044c8e0",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        111,
+        141
+      ]
+    },
+    {
+      "vtable": "00504198",
+      "hit": "0044c8e0",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        146
+      ]
+    },
+    {
+      "vtable": "00506d98",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        94
+      ]
+    },
+    {
+      "vtable": "00506e50",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        95
+      ]
+    },
+    {
+      "vtable": "00506f08",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        157
+      ]
+    },
+    {
+      "vtable": "005070c0",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        134
+      ]
+    },
+    {
+      "vtable": "005075d8",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        166
+      ]
+    },
+    {
+      "vtable": "005076b8",
+      "hit": "00448b70",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        164
+      ]
+    },
+    {
+      "vtable": "00507770",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        167
+      ]
+    },
+    {
+      "vtable": "00507950",
+      "hit": "0044c8e0",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        165
+      ]
+    },
+    {
+      "vtable": "00508cc8",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        70
+      ]
+    },
+    {
+      "vtable": "00509148",
+      "hit": "0044c8e0",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        85,
+        86,
+        87,
+        88
+      ]
+    },
+    {
+      "vtable": "00509210",
+      "hit": "0044c8e0",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        126
+      ]
+    },
+    {
+      "vtable": "005092d0",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        90
+      ]
+    },
+    {
+      "vtable": "00509388",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        170
+      ]
+    },
+    {
+      "vtable": "00509470",
+      "hit": "0044c8e0",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        136
+      ]
+    },
+    {
+      "vtable": "005096a0",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        106
+      ]
+    },
+    {
+      "vtable": "00509758",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        160
+      ]
+    },
+    {
+      "vtable": "00509810",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        105
+      ]
+    },
+    {
+      "vtable": "00509930",
+      "hit": "0044c8e0",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        72
+      ]
+    },
+    {
+      "vtable": "005099e8",
+      "hit": "0044c8e0",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        143
+      ]
+    },
+    {
+      "vtable": "00509aa0",
+      "hit": "0044c8e0",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        139
+      ]
+    },
+    {
+      "vtable": "00509b98",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        163
+      ]
+    },
+    {
+      "vtable": "0050a050",
+      "hit": "0044c8e0",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        138
+      ]
+    },
+    {
+      "vtable": "0050a1e8",
+      "hit": "0044c8e0",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        73
+      ]
+    },
+    {
+      "vtable": "0050a388",
+      "hit": "0044c8e0",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        144
+      ]
+    },
+    {
+      "vtable": "0050a748",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        112
+      ]
+    },
+    {
+      "vtable": "0050a820",
+      "hit": "0044c8e0",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        100,
+        101,
+        184,
+        185
+      ]
+    },
+    {
+      "vtable": "0050a8e8",
+      "hit": "0044c8e0",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        121
+      ]
+    },
+    {
+      "vtable": "0050b570",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        83,
+        132
+      ]
+    },
+    {
+      "vtable": "0050b6e8",
+      "hit": "0044c8e0",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        140
+      ]
+    },
+    {
+      "vtable": "0050b7c0",
+      "hit": "0044c8e0",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        148
+      ]
+    },
+    {
+      "vtable": "0050b888",
+      "hit": "0044c8e0",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        71
+      ]
+    },
+    {
+      "vtable": "0050b9b8",
+      "hit": "0044c8e0",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        128,
+        129
+      ]
+    },
+    {
+      "vtable": "0050bad0",
+      "hit": "0044c8e0",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        131
+      ]
+    },
+    {
+      "vtable": "0050c3b0",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        103
+      ]
+    },
+    {
+      "vtable": "0050c9f0",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        108,
+        109
+      ]
+    },
+    {
+      "vtable": "0050cc08",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        161
+      ]
+    },
+    {
+      "vtable": "0050da88",
+      "hit": "0044c8e0",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        122
+      ]
+    },
+    {
+      "vtable": "0050db78",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        99
+      ]
+    },
+    {
+      "vtable": "0050dc30",
+      "hit": "0044c8e0",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        154
+      ]
+    },
+    {
+      "vtable": "0050e568",
+      "hit": "0044c8e0",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        133
+      ]
+    },
+    {
+      "vtable": "0050e668",
+      "hit": "0044c8e0",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        149
+      ]
+    },
+    {
+      "vtable": "0050e738",
+      "hit": "0044c8e0",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        145
+      ]
+    },
+    {
+      "vtable": "0050e888",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        150
+      ]
+    },
+    {
+      "vtable": "0050e940",
+      "hit": "0044c8e0",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        78,
+        147
+      ]
+    },
+    {
+      "vtable": "0050ea08",
+      "hit": "0048ef20",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        79
+      ]
+    },
+    {
+      "vtable": "0050ead0",
+      "hit": "0044c8e0",
+      "defense": "0048ef70",
+      "constructor_types": [
+        142
+      ]
+    },
+    {
+      "vtable": "0050eb98",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        110
+      ]
+    },
+    {
+      "vtable": "0050ee08",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        152
+      ]
+    },
+    {
+      "vtable": "0050f210",
+      "hit": "00494380",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        158
+      ]
+    },
+    {
+      "vtable": "0050f540",
+      "hit": "004add10",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        89
+      ]
+    },
+    {
+      "vtable": "005196f0",
+      "hit": "004dba40",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        124
+      ]
+    },
+    {
+      "vtable": "005197a8",
+      "hit": "004dba40",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        186
+      ]
+    },
+    {
+      "vtable": "00519860",
+      "hit": "004dba40",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        123
+      ]
+    },
+    {
+      "vtable": "00519918",
+      "hit": "004dba40",
+      "defense": "0043d9b0",
+      "constructor_types": [
+        125
+      ]
+    }
+  ],
+  "unresolved_constructor_types": [
+    {
+      "type": 153,
+      "constructor": "004429e0"
+    },
+    {
+      "type": 159,
+      "constructor": "004429e0"
+    },
+    {
+      "type": 169,
+      "constructor": "0044a420"
+    }
+  ],
+  "default_defense": {
+    "address": "0043d9b0",
+    "bytes": "33c0c20400",
+    "behavior": "xor eax,eax; ret4"
+  },
+  "supported_common_hit_addresses": [
+    "004add10",
+    "0044c8e0"
+  ],
+  "supported_common_defense_address": "0043d9b0",
+  "limitations": [
+    "83 VT와 두 슬롯166개는 정적 데이터 행이며 원본 동적 실행·고유 입력 수가 아니다.",
+    "특수 피해·방어 주소는 보존하며 일반 몸체로 바꾸지 않는다. 소비자가 별도 파생 또는 명시 경계로 분배해야 한다.",
+    "TYPE 주석은 기존 생성자 메타데이터의 관계다. 현재 자산의 가상 표를 TYPE 번호만으로 추정하는 분배를 허용하지 않는다.",
+    "미복원 생성자 TYPE153/159/169는 관계표에서 제외한다. CD10.72와 실제 미션의 피해·삭제·경고·AI 완료 증거는 아니다."
+  ],
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "cpppj/src/o/UnpopVtables.inc": "118ba9490b81c09f9a3ee5154917a5fa83cdbd7b3f3098bb433669961d31ca0b",
+    "cpppj/src/o/TypeConstructors.inc": "bfac943af8c22cf91a0c267200f3e94133b021f2fe0e02507544978a7e08bd27",
+    "cpppj/src/o/DerivedConstructors.inc": "fac1a032778ba7e6745476904a13446c36b79625e38c40120195bc009a798b00",
+    "tools/decomp_campaign_damage_vtables.py": "6dd8155361be02e67310fcdf6fe151d460286d0b74b6fb54ab625cd840d48763",
+    "cpppj/src/o/CampaignDamageVtables.inc": "d5e9575934d1add7c00d64d7b6ae16be94198a3ef38ec077f4637ae6bbfc6a51"
+  }
+}

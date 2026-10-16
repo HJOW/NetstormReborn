@@ -71,7 +71,7 @@ Sid RawMissile::Construct(MissileFields& fields,const GunProjectileRequest& requ
     if (request.ricochet || (!groupZero && firing[10]!=state_.sunCannonType) || Valid(request.firingPosition)) throw std::logic_error("Missile 미복원 반사/부모/포구 생성 경로 TYPE"+std::to_string(firing[10]));
     if (types_[firing[10]].group!=(groupZero ? 0 : 1)) throw std::logic_error("Missile 실제부모 group 계약 오류");
     if (!std::isfinite(request.speed) || request.speed<=0 || !Valid(request.targetPosition)) throw std::invalid_argument("Missile 생성 좌표/속도 오류");
-    if (!hooks_.muzzle || (!archer && !hooks_.hotspot) || (!groupZero && !hooks_.rayEnd) || !hooks_.targetDimensions || !hooks_.create || !hooks_.owner || !hooks_.pop || (request.effectType && !hooks_.flightEffect)) throw std::logic_error("Missile 실제 생성/Pop/비행 효과 경계 누락");
+    if (!hooks_.muzzle || (!archer && !hooks_.hotspot) || (!groupZero && !hooks_.rayEnd) || !hooks_.targetDimensions || !hooks_.create || !hooks_.owner || !hooks_.pop || (request.effectType && !hooks_.flightEffect)) throw std::logic_error("Missile 실제 생성/Pop/비행 효과 경계 누락 TYPE"+std::to_string(firing[10])+" effect"+std::to_string(request.effectType));
     if (request.displayType>=types_.size()) throw std::out_of_range("Missile 표시 타입 오류");
     Put(fields.bytes,0,patch ? 0x50d630U : 0x501ca0U);Put(fields.bytes,kForm,0);Put(fields.bytes,kParent,0);
     // 원본 초기 사각형과 직전 위치는 invalid 좌표 -10000이다.

@@ -28,6 +28,7 @@
 #include "o/RawAiCreate.h"
 #include "o/RawPlayerColor.h"
 #include "o/RawAiBrainInitialUpdate.h"
+#include "o/RawAiDamage.h"
 #include "o/RawPriestLookup.h"
 #include "o/RawRunePostPop.h"
 #include "o/RawVortexPreDestroy.h"
@@ -153,10 +154,12 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawGunTarget> gunTarget; // 실제 finder/ray/필터의 같은 Core 인스턴스다.
     std::unique_ptr<RawGunHit> gunHit; // 실제 Q16 시간 압축과 현재 피해 getter다.
     PriestDamageState priestDamageState; // 실제 미션 레벨보정 차단/HP1 감시 권한이다.
+    DamageableHitState generalDamageState{priestDamageState}; // 같은 레벨·현재 서버/로컬 소유자·주 섬의 일반 피해 전역이다.
     DamageableBurningState burningState; // 현재 nonzero damageEffect의 실제 생성 판정 전역이다.
     GunImpactState impactState; // 현재 충돌 시각 효과 억제/anim160 전역이다.
     std::vector<DudeNoticeTypeData> dudeSpeeds; // 실제 TYPE 이동속도의 현재 mutable 보충 표다.
     std::unique_ptr<RawPlayerDamageNotice> playerDamage; // 같은 Player9/모드의 실제 AI 조회와 피해 통지 래퍼다.
+    std::unique_ptr<RawAiDamage> aiDamage; // 같은 AI 본체·목록에 실제 피해 대상/공격자 반응을 기록한다.
     std::unique_ptr<RawCampaignHitBindings> hits; // 같은 피해/감시/충돌/주변Dude/자산수명 처리기다.
     SoundList& soundNames; // 실제 보호막 파일명의 원본 이름표/opaque handle 조회다.
     SoundProcessState soundState; // 실제47 프로세스의 현재 frame/TYPE 중복 재생 전역이다.
@@ -391,16 +394,50 @@ struct RawCampaignSession::Impl {
         gunMode=std::make_unique<RawGunMode>(core.pool,core.frames,gunState.windArcherType);
         gunTarget=std::make_unique<RawGunTarget>(core.pool,core.hash,core.types,gunTypes,core.shapes,gunTargetState);
         priestDamageState.levelCorrectionDisabled=globals.missionPost;priestDamageState.boss=assetState.boss;
+        priestDamageState.levelCorrectionDisabledRead=[this] { return globals.missionPost; };
+        generalDamageState.serverRead=[this] { return core.processState.server; };
+        generalDamageState.localOwnerRead=[this] { return static_cast<std::uint8_t>(assetState.localOwner); };
+        generalDamageState.primaryIslandRead=[this](std::uint8_t owner) { return std::bit_cast<std::int32_t>(Read(players,owner*0xb4U+0x78)); };
         auto hitEffects=services.hit;
         hitEffects.priest.defaultFrame=[this](Sid sid) { return projectileTypes[core.pool.Slot(sid)[10]].defaultFrame; };
-        playerDamage=std::make_unique<RawPlayerDamageNotice>(players,core.ownerMode);
+        AiDamageHooks aiDamageEffects; // 현재 비행 홈과 실제 로그 출력만 외부 경계에 연결한다.
+        aiDamageEffects.home=[this](Sid sid) {
+            const auto raw=core.pool.Slot(sid);if (raw[11]&3U) return Sid{};
+            const auto form=FindAttachedProcess(core.pool,sid,31);if (!form.value) return Sid{};
+            auto* process=dynamic_cast<FlyerProcess*>(core.processes.FromForm(form));
+            if (!process) throw std::logic_error("AI 피격 비행 홈의 실제 프로세스31 미연결");return process->Fields().Home();
+        };
+        aiDamageEffects.log=[this](std::uint32_t token,const AiDamageLog& value) {
+            if (value.type>=core.types.size()) throw std::out_of_range("AI 피격 로그 현재 TYPE 범위 오류");
+            const auto text=std::string("I hate ")+(value.more ? "MORE " : "")+core.types[value.type].name+" at ("+std::to_string(value.x)+","+std::to_string(value.y)+")\n";
+            const auto raw=aiMemory.Bytes(token);if (!Read(raw,0xb00)) return;
+            if (!services.player.log) throw std::logic_error("AI 피격 실제 로그 출력 소비자 미연결");
+            services.player.log(29,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(raw,0x260)))+": "+text+"\n");
+        };
+        aiDamage=std::make_unique<RawAiDamage>(aiMemory,core.pool,core.types,std::move(aiDamageEffects));
+        playerDamage=std::make_unique<RawPlayerDamageNotice>(players,core.ownerMode,
+            [this](std::uint32_t token,Sid victim,Sid attacker) { aiDamage->Notice(token,victim,attacker); });
         // 실제 Player AI가 없는 자연 반환은 래퍼가 판단한다. 비영 AI의 미복원 몸체는 명시 오류를 유지한다.
         if (!hitEffects.priest.ownerDamageNotice) hitEffects.priest.ownerDamageNotice=
             [this](std::uint8_t owner,Sid victim,Sid attacker) { playerDamage->Notice(owner,victim,attacker); };
+        if (!hitEffects.general.ownerDamageNotice) hitEffects.general.ownerDamageNotice=
+            [this](std::uint8_t owner,Sid victim,Sid attacker) { playerDamage->Notice(owner,victim,attacker); };
+        if (!hitEffects.general.realTime) hitEffects.general.realTime=services.sound.wallSeconds;
+        if (!hitEffects.general.warningSound) hitEffects.general.warningSound=[this] {
+            if (!services.sound.play) throw std::logic_error("실제 섬 피격 전역 음향 소비자 미연결");
+            services.sound.play(soundNames.Lookup("islandUnderAttack.wav"),0,0,0,1,0);
+        };
+        if (!hitEffects.general.warningText) hitEffects.general.warningText=[this] {
+            if (!services.priest.shield.tell) throw std::logic_error("실제 섬 피격 Tell 소비자 미연결");
+            services.priest.shield.tell("islandUnderAttack");
+        };
+        FillMissing(hitEffects.general.realTime);FillMissing(hitEffects.general.warningEvent);
+        // MessageBoard::Show의 현재00594fa4 억제 조건을 같은 미션 전역에서 읽고 실제 UI 삭제에 적용한다.
+        hitEffects.general.warningEvent=[this,remove=std::move(hitEffects.general.warningEvent)] { if (!globals.missionPost) remove(); };
         FillMissing(hitEffects.burning.create);FillMissing(hitEffects.burning.bulfSound);
         FillMissing(hitEffects.dudes.createBurning);FillMissing(hitEffects.dudes.pathEndpoint);FillMissing(hitEffects.dudes.startPath);
         hits=std::make_unique<RawCampaignHitBindings>(world,*priests,hp,random,dudeSpeeds,assetState.residences,
-            priestDamageState,burningState,impactState,std::move(hitEffects));
+            priestDamageState,generalDamageState,burningState,impactState,std::move(hitEffects));
         // 미복원 가상 피해는 실제 공격자/표적 TYPE를 기록해 다음 원본 복원 지점을 식별한다.
         gunHit=std::make_unique<RawGunHit>(core.pool,core.types,hitTypes,hits->DamageHooks(GunHitHooks{
             [this](Sid victim,std::int32_t,std::uint8_t,Sid attacker) {

@@ -135,6 +135,8 @@ void WarningMessages::SetView(int width,int height,const PaletteColorTable& pale
 }
 // Warning은 기존 대화상자 상태/일시정지/입력을 바꾸지 않는다.
 void WarningMessages::Add(std::string_view styledText) { impl_->board->Show(17,0,true,0,styledText); }
+// 새 메시지를 만들지 않고 기존 MessageBoard의 실제 검색·Kill 경로를 사용한다.
+void WarningMessages::Remove(std::int32_t kind,std::int32_t player,std::int32_t parameter) { impl_->board->Show(kind,player,false,parameter,""); }
 // 원본 idle 순회에서 만료 노드를 Kill하고 지연 큐를 정리한다.
 bool WarningMessages::Idle() {
     const bool prior=std::exchange(impl_->changed,false);impl_->frame->Idle();impl_->lifetime->Cleanup();return std::exchange(impl_->changed,false)||prior;

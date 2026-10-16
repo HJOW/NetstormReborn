@@ -108,6 +108,8 @@ add_executable(netstorm_tests
     CrossbowAnimationTests.cpp
     CannonFireTests.cpp
     CrossbowMissileTests.cpp
+    CampaignDamageTests.cpp
+    AiDamageTests.cpp
     IslandRuntimeTests.cpp
     TerrainWorldBindingTests.cpp
     TempleRitualTests.cpp
@@ -1142,3 +1144,11 @@ set_source_files_properties(CannonFireTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 실제 크로스보우 포구·생성·방향·비행의 독립 원본 결과다.
 set_source_files_properties(CrossbowMissileTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CROSSBOW_MISSILE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/crossbow-missile-x86.tsv\"")
+
+# 썬더 캐논의 실제 가상 피해·방어/HP/권한·섬 경고를 독립 원본과 대조한다.
+set_source_files_properties(CampaignDamageTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CAMPAIGN_DAMAGE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/campaign-damage-x86.tsv\"")
+
+# 실제 AI 피해 목록의 전체 본체/네 backing/효과 순서를 독립 원본과 대조한다.
+set_source_files_properties(AiDamageTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_AI_DAMAGE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/ai-damage-x86.tsv\"")

@@ -1,6 +1,7 @@
 // 실제 StyleText/TextGump/Gump 수명으로 표시하는 원본 Warning 안내다.
 #pragma once
 #include <functional>
+#include <cstdint>
 #include <memory>
 #include <string>
 #include <string_view>
@@ -20,6 +21,8 @@ public:
     void SetView(int width,int height,const PaletteColorTable& palette);
     // 원본 Warning 명령의 종류17/플레이어0/표시1/매개변수0으로 생성한다.
     void Add(std::string_view styledText);
+    // 원본 Show의 enabled=false로 같은 종류/플레이어/매개변수 메시지를 지연 삭제한다.
+    void Remove(std::int32_t kind,std::int32_t player,std::int32_t parameter);
     // 원본 idle 시간 판정과 실제 지연 삭제를 처리하고 표시 변화 여부를 반환한다.
     bool Idle();
     // TextGump의 실제 기준선/클립/StyleText 출력 순서를 Renderer에 제출한다.
