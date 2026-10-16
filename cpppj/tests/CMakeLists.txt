@@ -106,6 +106,7 @@ add_executable(netstorm_tests
     ArcherMissileTests.cpp
     ArcherAnimationTests.cpp
     CrossbowAnimationTests.cpp
+    CannonFireTests.cpp
     IslandRuntimeTests.cpp
     TerrainWorldBindingTests.cpp
     TempleRitualTests.cpp
@@ -1133,3 +1134,6 @@ set_source_files_properties(FlyerTargetTests.cpp PROPERTIES COMPILE_DEFINITIONS
 
 set_source_files_properties(CrossbowAnimationTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CROSSBOW_ANIMATION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/crossbow-animation-x86.tsv\"")
+
+set_source_files_properties(CannonFireTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CANNON_FIRE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/cannon-fire-x86.tsv\"")

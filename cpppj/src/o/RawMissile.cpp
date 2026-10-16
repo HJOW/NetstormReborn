@@ -66,7 +66,7 @@ void RawMissile::FrameNumber(Sid sid,std::uint32_t frame) const { const bool pat
 Sid RawMissile::Construct(MissileFields& fields,const GunProjectileRequest& request) const {
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;const auto layout=patch ? kPatch : kCd;const auto firing=Slot(request.firing),target=Slot(request.target);
     const bool archer=firing[10]==state_.sunArcherType;
-    if (request.ricochet || (!archer && firing[10]!=state_.sunCannonType) || Valid(request.firingPosition)) throw std::logic_error("Missile 미복원 반사/부모/포구 생성 경로");
+    if (request.ricochet || (!archer && firing[10]!=state_.sunCannonType) || Valid(request.firingPosition)) throw std::logic_error("Missile 미복원 반사/부모/포구 생성 경로 TYPE"+std::to_string(firing[10]));
     if (types_[firing[10]].group!=(archer ? 0 : 1)) throw std::logic_error("Missile 실제부모 group 계약 오류");
     if (!std::isfinite(request.speed) || request.speed<=0 || !Valid(request.targetPosition)) throw std::invalid_argument("Missile 생성 좌표/속도 오류");
     if (!hooks_.muzzle || (!archer && (!hooks_.hotspot || !hooks_.rayEnd)) || !hooks_.targetDimensions || !hooks_.create || !hooks_.owner || !hooks_.pop || (request.effectType && !hooks_.flightEffect)) throw std::logic_error("Missile 실제 생성/Pop/비행 효과 경계 누락");

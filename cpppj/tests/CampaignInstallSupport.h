@@ -248,7 +248,7 @@ struct InstallScene {
         combatEffects.missile.firingSound=[this](float,float,std::uint32_t token) { external.push_back("Missile 발사음:"+std::to_string(token)); };
         combatEffects.missile.impactSound=[this](float,float,std::uint32_t token) { external.push_back("Missile 충돌음:"+std::to_string(token)); };
         combatEffects.missile=hits->MissileHooks(*gunHit,missileState,std::move(combatEffects.missile));
-        combat=std::make_unique<RawCampaignArcherBindings>(world,*gunTarget,random,archerTypes,missileTypes,archerState,missileState,std::move(combatEffects));
+        combat=std::make_unique<RawCampaignArcherBindings>(world,*gunTarget,random,archerTypes,metadata.frames,missileTypes,archerState,missileState,std::move(combatEffects));
         RawCampaignAssetEffects assetEffects;assetEffects.postPop.reserveRegular=[] { return true; };
         assetEffects.gun=MakeCampaignGunQueryHooks(core,*gunMode,*gunTarget,*gunHit,gunState,firingIntervals,std::move(assetEffects.gun));
         assetEffects.gun=MakeGunTargetHooks(core.pool,*gunTarget,std::move(assetEffects.gun));

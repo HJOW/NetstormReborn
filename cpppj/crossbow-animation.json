@@ -71,7 +71,7 @@
       "seconds": 0.125,
       "type": 131,
       "stage": 5,
-      "name": "아이스 캐논"
+      "name": "썬더 캐논"
     }
   ],
   "limits_cpp": "원문2638입력의 전체 이미지/네 슬롯/효과와 현재 회전/발사를 대조한다. 실제 Host 생성 검사는 void 부모의 클래스/시계 범위다. RawMissile은 부모71/128만 허용하고 포구도71 전용이므로 크로스보우 실제 arrow의 포구·비행/충돌은 별도 미완료다.",
@@ -202,5 +202,16 @@
     "extracted/goal-crossbow-animation-20261016-tests-final.log": "501b6e049a9e487b146dc9579a45a02b0ecebf466f56883a3b05e40cc79b0260",
     "extracted/goal-crossbow-animation-20261016-tests-first.log": "2d8b36158dca583e0203c33b49f530365a9e611591e6aa44b9f35effbac802e8"
   },
-  "follow_up": "TYPE131의004689c0 group/theme 생성 분배·발사와 TYPE148의 단계표/빔을 복원한다. 크로스보우 group0 Missile/가상 포구, 썬 캐논/발사기의 초기화 이후 무효 좌표 인수와 실제 사용자 플레이/자연 완주도 검증한다."
+  "follow_up": "TYPE131(thunderCannon/Thunder Cannon)의004689c0 group/theme 생성 분배·발사와 TYPE148의 단계표/빔을 복원한다. 크로스보우 group0 Missile/가상 포구, 썬 캐논/발사기의 초기화 이후 무효 좌표 인수와 실제 사용자 플레이/자연 완주도 검증한다.",
+  "label_corrections": [
+    {
+      "date": "2026-10-16",
+      "type": 131,
+      "previous_name": "아이스 캐논",
+      "name": "썬더 캐논",
+      "source_name": "thunderCannon",
+      "display_name": "Thunder Cannon",
+      "evidence": "docs/unit-source-name-map.md; original10.78 DWORD00541264=131. Raw observations, frames5/time0.125 and counters unchanged."
+    }
+  ]
 }

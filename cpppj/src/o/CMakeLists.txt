@@ -92,6 +92,7 @@ target_sources(netstorm PRIVATE
     RawPriestRitualActions.cpp RawPriestRitualActions.h
     RawArcherAnimation.cpp RawArcherAnimation.h
     RawCrossbowAnimation.cpp RawCrossbowAnimation.h
+    RawCannonFire.cpp RawCannonFire.h
     RawIslandRuntime.cpp RawIslandRuntime.h
     RawSquidHitPoints.cpp RawSquidHitPoints.h
     RawRunePostPop.cpp RawRunePostPop.h

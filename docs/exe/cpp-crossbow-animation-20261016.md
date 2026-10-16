@@ -24,7 +24,7 @@ TYPE140 `windArcher`의 실제 표시 이름은 **Crossbow/크로스보우**다.
 
 ## 검사와 후속 범위
 
-최종 Release 빌드는 **경고0·오류0**이다. 새 CrossbowAnimation4개, CampaignFire4개와 기존 ArcherAnimation/GunAnimation 각4개가 통과했다. 전체 CTest는 **1391개 중1389통과·2실패, 검사127.44초/전체127.51초, 종료8**이다. 모든11미션 Load/Start와9미션400프레임은 유지된다. 데모3은 **3프레임/0.075초→5프레임/0.125초**의 TYPE131 `rainCannon`/Ice Cannon/아이스 캐논 stage5로 진행했다. 데모1은145프레임/3.625초의 TYPE148 반더 타워 stage5 그대로다. 전체 결과와 현재 소스/역사 SHA 차이는 [보고서](../../cpppj/crossbow-animation.json)와 [인수인계](../../LEFT_JOBS.md)에 기록한다. 로그는 `extracted/goal-crossbow-animation-20261016-*`다.
+최종 Release 빌드는 **경고0·오류0**이다. 새 CrossbowAnimation4개, CampaignFire4개와 기존 ArcherAnimation/GunAnimation 각4개가 통과했다. 전체 CTest는 **1391개 중1389통과·2실패, 검사127.44초/전체127.51초, 종료8**이다. 모든11미션 Load/Start와9미션400프레임은 유지된다. 데모3은 **3프레임/0.075초→5프레임/0.125초**의 TYPE131 `thunderCannon`/Thunder Cannon/썬더 캐논 stage5로 진행했다. 데모1은145프레임/3.625초의 TYPE148 반더 타워 stage5 그대로다. 전체 결과와 현재 소스/역사 SHA 차이는 [보고서](../../cpppj/crossbow-animation.json)와 [인수인계](../../LEFT_JOBS.md)에 기록한다. 로그는 `extracted/goal-crossbow-animation-20261016-*`다.
 
 현재 `RawMissile::Construct`는 부모 TYPE71/128에 한정되어 있고, Session 포구도 `ArcherMuzzle`의 TYPE71 전용이다. 따라서 **크로스보우의 회전/발사 상태와 생성 인자 복원은 실제 arrow의 포구·비행·충돌/피해 완료와 구별**한다. 후속 단계에서 실제 group0 공통 ctor와 TYPE140 가상 포구/표시를 원본으로 확인해 연결해야 한다. 썬 캐논의 포구·비행 효과도 남아 있다.
 

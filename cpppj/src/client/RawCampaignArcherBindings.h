@@ -1,9 +1,10 @@
-// 실제 캠페인의 썬 디스크 발사기·썬 캐논·크로스보우 애니메이션을 같은 Core/Host에 조립한다.
+// 실제 캠페인의 썬 디스크 발사기·썬/썬더 캐논·크로스보우 애니메이션을 같은 Core/Host에 조립한다.
 #pragma once
 #include "client/RawSurfaceWorld.h"
 #include "o/RawArcherAnimation.h"
 #include "o/RawGunTarget.h"
 #include "o/SpStore.h"
+#include "o/RawPriestPlacementGeometry.h"
 #include <memory>
 
 namespace netstorm::client {
@@ -15,9 +16,9 @@ struct RawCampaignArcherEffects {
 // 같은 풀의 실제 Archer/Missile 몸체를 고정 주소에 소유한다.
 class RawCampaignArcherBindings {
 public:
-    // Core/TYPE 보충 표/전역/난수는 이 연결 객체보다 오래 살아야 한다.
+    // Core/TYPE 보충 표/실제 프레임 코드/전역/난수는 이 연결 객체보다 오래 살아야 한다.
     RawCampaignArcherBindings(RawSurfaceWorld& world,const o::RawGunTarget& target,o::GameRandom& random,
-        std::span<const o::ArcherTypeData> animationTypes,std::span<const o::MissileTypeData> missileTypes,
+        std::span<const o::ArcherTypeData> animationTypes,std::span<const o::PriestPlainCanonType> frameTypes,std::span<const o::MissileTypeData> missileTypes,
         o::ArcherAnimationState& animation,o::MissileState& missile,RawCampaignArcherEffects effects);
     // 해제 전에 상위가 같은 Kernel을 비우고 반환 callback 사용을 끝내야 한다.
     ~RawCampaignArcherBindings();
@@ -25,7 +26,7 @@ public:
     RawCampaignArcherBindings& operator=(const RawCampaignArcherBindings&)=delete; // 다른 Core로 복사하지 않는다.
     // 같은 시계의 게임 시각/경과를 다음 전체 Kernel 실행 전에 공급한다.
     void PrepareFrame(o::FrameTime time);
-    // 기존 다른 총 경계를 보존하며 실제 타입71/128/140의 원본 생성기에 연결한다.
+    // 기존 다른 총 경계를 보존하며 실제 타입71/128/131/140의 원본 생성기에 연결한다.
     o::GunProcessHooks GunHooks(o::GunProcessHooks hooks) const;
     // 실제 썬 디스크의 예약 프레임 처리를 같은 지정기에 연결한다.
     o::RegularHandler Handler(o::RegularHandler fallback={}) const;
