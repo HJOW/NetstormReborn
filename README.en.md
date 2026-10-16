@@ -10,12 +10,12 @@ a game developed by Activision in 1997 and abandoned long ago.
 
 # Current development status
 
-**C++ status: October 16, 2026; C# status: October 15, 2026.** Playability and fidelity to the original are assessed separately below.
+**Status as of October 16, 2026 for both C++ and C#.** Playability and fidelity to the original are assessed separately below.
 
 | Project | Execution and playability | Fidelity and remaining work |
 | --- | --- | --- |
 | `cpppj/` — C++ reconstruction | On Windows in windowed mode, menu → campaign → briefing → fort, terrain, object and dialog display, selection, priest movement, some live combat and return to the menu work. | Reconstruction uses decompilation and comparisons against version 10.78 machine code. **Construct is disabled.** Construction, production, bridges, harvesting, transport, sacrifice, GUI Start/StartDemo and AI strategy frames, and live mission progression through outcome saving still need integration. Natural completion of Early Missions and Campaign 1-1/1-2, and full visual/audio parity, remain unfinished. |
-| `dotnetpj/` — C# + MonoGame clone | Campaign **1-1 The War Begins!** and **1-2 Master of Whirligigs** have playable implementations with construction, production, movement and combat controls. English/Korean UI, help, context menus and options are available. | Original data is reused while rules are reconstructed. Provisional AI/construction rules and timing, frame and rendering differences remain. Recent session-clock and tutorial-frame changes have only been build-checked. A full playthrough → progress save → restart → next-mission unlock and complete original parity still need verification. |
+| `dotnetpj/` — C# + MonoGame clone | Campaign **1-1 The War Begins!** and **1-2 Master of Whirligigs** have playable implementations with construction, production, movement and combat controls. English/Korean UI, help, context menus and options are available. Early Missions (tutorials) and demos cannot be opened from the menu yet. | Original data is reused while rules verified by cpppj against original machine code are ported. So far, the common mission frame, player participation/directional alliances, the build ledger and the Tutorial 1 stage logic match original expected values (14 fixtures). Construction, combat, pathing, SP, AI and timing rules are still observation-based approximations. A [porting plan](docs/dotnet-cpp-port-plan-20261016.md) sequences the remaining cpppj results. A full playthrough → progress save → restart → next-mission unlock and complete original parity still need verification. |
 
 ## Latest C++ reconstruction
 
@@ -29,9 +29,9 @@ Development is **active**. See the [C++/shared handover](LEFT_JOBS.md), [demo in
 
 The campaign menu reads chapters, prerequisite completion conditions and saved progress from the original scripts, while restricting access to supported missions. Options include resolution, windowed/fullscreen mode, sound, volume, wind noise and speaker swap. Help and F1 provide the original help content; priest, workshop and production-item context menus are available. See the [feature and progress-saving review](docs/dotnet-review-20261011.md), [recording-analysis coverage](docs/screens/recorded-ui-clone-20261002.md), and [Campaign 1-1](docs/gameplay/campaign-one.md)/[1-2 implementation](docs/gameplay/campaign-two.md). The latest handover takes precedence over early implementation notes.
 
-On October 12–13, the original numeric clock was connected to the session and nested pauses, followed by the initial 10-frame briefing delay, 7-frame resume delay, subsequent 0.5-second/10-frame dialog scheduling, and Tutorial 2's 2/4-second timers. Behavioral, GUI and independent original-code comparisons after those integrations are pending. The full solution's October 14 Release build had **zero warnings/errors**. The earlier October 12 results—**990 unit tests passed** and **12 GUI runs/188 assertions passed**—do not verify those later changes.
+On October 15, four original-verified cpppj results were ported and connected to the session: the common mission frame gate (328 original rows), player participation and directional alliances (608 rows), the build ledger (52 rows), and the Tutorial 1 stage logic (266 rows). The human-side `myAllyList` key is no longer read because it does not exist in the original executable; this changes alliance results in 21 original missions. Clone-window smoke tests (run after approval) and a headless screen-path completion of Tutorial 2 passed. The October 16 baseline is a Release build with **zero warnings/errors** and **1,057 unit tests passed** (Assets 343, Core 714).
 
-Next work includes validating the recent clock/dialog integrations, migrating remaining movement, combat, construction, production, harvesting, ritual, AI and animation timers, resolving the 24 Hz/eight-tick cap, and verifying full playthroughs and saved progress. See the [C# handover](LEFT_JOBS.dotnetpj.md), [session clock](docs/dotnet-session-clock-20261012.md), and [tutorial frames and timers](docs/dotnet-stage-frames-20261013.md).
+Next work follows the [cpppj → dotnetpj porting plan](docs/dotnet-cpp-port-plan-20261016.md). It first builds an original world core that matches cpppj's live session: object creation, registration and deletion; Kernel/Regular timing; and the SP store with its random-number use. With that core, the start state of the eleven target missions (Early Missions 1–6, Campaign 1-1/1-2 and three demos) is matched against cpppj. Priests, pathing, construction, combat, sacrifice, outcomes, rendering, UI and sound follow, verified by natural playthroughs. Behavior that cpppj has not restored yet, such as AI strategy, stays approximate and is tracked in a list. The checklist is in the [C# handover](LEFT_JOBS.dotnetpj.md).
 
 The linked analysis and handover documents are written in Korean.
 
@@ -39,7 +39,7 @@ The linked analysis and handover documents are written in Korean.
 
 `cpppj` proceeds in this order: **① version 10.78 single-player reconstruction → ② stable Windows 10/11 execution (including mandatory DirectDraw error fixes) → ③ Korean support → ④ TCP/IP LAN multiplayer and outposts → ⑤ added requirements and MCP**. It is Windows only. Multiplayer-only outposts belong to phase 4; official-server access is not restored. Comparison records for CD version 10.72 are also retained.
 
-`dotnetpj` uses C# and MonoGame. Its existing clone will later be refined by analyzing the completed `cpppj`, first matching the original behavior and then adding new requirements. GUI Linux support and multiplayer have lower priority. Final requirements include fullscreen, 16:9/16:10/4:3 aspect ratios, fullscreen edge scrolling, and English/Korean support. Animation first targets the original cadence, with 60/120-frame support afterwards.
+`dotnetpj` uses C# and MonoGame. The existing clone receives the parts of `cpppj` already verified against original machine code, one area at a time, to match the original behavior first (October 16 porting plan). Once `cpppj` is complete, everything is compared again before new requirements are added. GUI Linux support and multiplayer have lower priority. Final requirements include fullscreen, 16:9/16:10/4:3 aspect ratios, fullscreen edge scrolling, and English/Korean support. Animation first targets the original cadence, with 60/120-frame support afterwards.
 
 | Path | Purpose |
 | --- | --- |
@@ -176,6 +176,7 @@ With the Visual Studio generator, the executable is `cpppj/build/bin/Release/Net
 
 - [C++/shared handover](LEFT_JOBS.md) / [C# handover](LEFT_JOBS.dotnetpj.md): latest completed work, remaining boundaries and resume order
 - [C++ roadmap](docs/cpp-roadmap.md) / [playable reconstruction plan](docs/cpp-playable-plan.md): development stages and reconstruction plans
+- [cpppj → dotnetpj porting plan](docs/dotnet-cpp-port-plan-20261016.md): porting units and order for matching dotnetpj to the original
 - [Clone game data](assets/README.md): asset layout, provenance and build inclusion
 - [Original-game/separate-window execution rules](docs/execution-confirmation.md): execution conditions for AI work
 
