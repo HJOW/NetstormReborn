@@ -3,6 +3,7 @@
 #include "client/RawCampaignMissionStartBindings.h"
 #include "o/RawSunAviaryProcess.h"
 #include "o/RawRainAviaryProcess.h"
+#include "o/RawFlyerProcess.h"
 #include <unordered_set>
 
 using namespace netstorm::client;
@@ -231,3 +232,24 @@ TEST_CASE(CampaignKernelFrames_TheStormRages) { RunProtectedKernelFrames("DemoSt
 TEST_CASE(CampaignKernelFrames_GuardMyBack) { RunProtectedKernelFrames("GuardMyBack",true); }
 // 데모3의 실제 현재 동맹/프로세스다.
 TEST_CASE(CampaignKernelFrames_DissolvedAlliance) { RunProtectedKernelFrames("DissolvedAlliance",true); }
+
+// 실제 데모 배치의 생산 건물/동일 factory/공간/Host로 최초 비행 Pop만 분리해 검사한다. Frame 완주 검사와 구별한다.
+TEST_CASE(CampaignManOWar_ActualPostPopAndBaseProcess) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);
+    ConfigInterface config([&](std::string_view path) { return assets.files.TryRead(path); });ConfigureStart(config);MissionScript script(config,"DemoStormRages");CHECK(script.Loaded());
+    auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());StartExternal external;
+    RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),external.Services());session.Load();auto core=session.Core();Sid home{};
+    for (const auto& object:session.World().Objects()) if (object.object.type==143) { home=object.sid;break; } // 실제 배치의 첫 맨 오 워 풀을 사용한다.
+    CHECK(home.value!=0);if (!home.value) return;const auto rawHome=core.pool.Slot(home);
+    const auto x=std::bit_cast<float>(Get(rawHome,14))-.5f,y=std::bit_cast<float>(Get(rawHome,18))-2.0f;const auto owner=rawHome[34];
+    const auto sid=session.World().Create(144,0);Put(core.pool.AllocatedBytes(sid),36,0);core.owner.Set(sid,owner);Put(core.pool.AllocatedBytes(sid),12,home.value,2);session.World().Pop(sid,x,y,0);
+    const auto form=FindAttachedProcess(core.pool,sid,31);CHECK(form.value!=0);auto* process=form.value ? dynamic_cast<FlyerProcess*>(core.processes.FromForm(form)) : nullptr;
+    CHECK(process && process->Parent()==sid && process->Fields().Form()==form && process->Fields().Parent()==sid && process->Fields().Home()==home);
+    if (process) { CHECK(Get(process->Fields().bytes,0)==0x509f60 && Get(process->Fields().bytes,48)==0x509f40);CHECK(process->Fields().bytes[8]==0);CHECK(Get(process->Fields().bytes,84)==0 && Get(process->Fields().bytes,96)==0 && Get(process->Fields().bytes,104)==0); }
+    const auto raw=core.pool.Slot(sid);const Sid shadow{static_cast<std::uint16_t>(Get(raw,8,2))};CHECK(shadow.value!=0);
+    if (shadow.value) {
+        const auto back=core.pool.Slot(shadow);CHECK(back[10]==144 && (back[40]&8U) && !(back[11]&5U));CHECK(Get(back,36)==core.frames[144].Codes().size());
+        CHECK(std::bit_cast<float>(Get(back,14))==x+.5f && std::bit_cast<float>(Get(back,18))==y+.5f);CHECK(FindAttachedProcess(core.pool,shadow,31).value==0);
+    }
+    CHECK(core.bookkeeping.depth==0); // 재귀 그림자 Pop 뒤 부모의 공통 장부도 한 번만 완료되어야 한다.
+}

@@ -7,6 +7,7 @@ add_executable(netstorm_tests
     FenceCreateTests.cpp
     BuriedRegularTests.cpp
     RainAviaryProcessTests.cpp
+    FlyerPostPopTests.cpp
     PlayerColorTests.cpp
     GraphResetTests.cpp
     GunAngleTests.cpp
@@ -1117,3 +1118,6 @@ set_source_files_properties(FenceMarkerClearTests.cpp PROPERTIES COMPILE_DEFINIT
 # 실제 표식/포스필드/재생성의 독립 원본 전체 결과를 비교한다.
 set_source_files_properties(FenceCreateTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_FENCE_CREATE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fence-create-x86.tsv\"")
+
+set_source_files_properties(FlyerPostPopTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FLYER_POSTPOP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/flyer-postpop-x86.tsv\"")

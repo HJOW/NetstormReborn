@@ -111,6 +111,12 @@ cpppj/player-color.json text eol=lf
 
 # 맨 오 워 풀의 원문/제품/관찰 기대값을 PC 간 같은 바이트로 유지한다.
 cpppj/src/o/RawRainAviaryProcess.* text eol=lf
+cpppj/src/o/RawFlyerProcess.* text eol=lf
+cpppj/tests/FlyerPostPopTests.cpp text eol=lf
+cpppj/tests/fixtures/flyer-postpop-x86.tsv text eol=lf
+cpppj/flyer-postpop.json text eol=lf
+tools/decomp_flyer_postpop.py text eol=lf
+docs/exe/cpp-flyer-postpop-20261016.md text eol=lf
 cpppj/tests/RainAviaryProcessTests.cpp text eol=lf
 cpppj/tests/fixtures/rain-aviary-x86.tsv text eol=lf
 tools/decomp_rain_aviary.py text eol=lf

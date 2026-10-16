@@ -10,6 +10,7 @@
 #include "o/RawDudeSpawn.h"
 #include "o/RawPlayerWorld.h"
 #include "o/RawBuriedPostPop.h"
+#include "o/RawFlyerProcess.h"
 #include "o/SquidPop.h"
 #include "o/RawIslandPostPop.h"
 #include <algorithm>
@@ -76,7 +77,10 @@ bool SquidPostPop::HandlesIsland(Sid sid) const {
     return islandPrefix_ && Vtable(pool_.Slot(sid))==expected;
 }
 // 파생 표는 서로 다른 주소이므로 한 종류만 참이 된다.
-bool SquidPostPop::HandlesDerived(Sid sid) const { return HandlesBridge(sid) || HandlesIsland(sid) || HandlesSurface(sid) || HandlesPriest(sid) || HandlesForcefield(sid) || HandlesCarrier(sid) || HandlesDamageable(sid) || HandlesAsset(sid) || HandlesFactory(sid) || HandlesRune(sid) || HandlesDais(sid) || HandlesDude(sid) || HandlesPlayer(sid) || HandlesBuried(sid); }
+bool SquidPostPop::HandlesDerived(Sid sid) const { return HandlesBridge(sid) || HandlesIsland(sid) || HandlesSurface(sid) || HandlesPriest(sid) || HandlesForcefield(sid) || HandlesCarrier(sid) || HandlesDamageable(sid) || HandlesAsset(sid) || HandlesFactory(sid) || HandlesRune(sid) || HandlesDais(sid) || HandlesDude(sid) || HandlesPlayer(sid) || HandlesBuried(sid) || HandlesFlyer(sid); }
+// 단일 풀과 실제 전체 몸체 둘 다 확인한다.
+void SquidPostPop::SetFlyerPostPop(const RawFlyerPostPop* postPop) { if (postPop && &postPop->Pool()!=&pool_) throw std::invalid_argument("비행 PostPop/공통 풀 불일치");flyerPostPop_=postPop; }
+bool SquidPostPop::HandlesFlyer(Sid sid) const { return flyerPostPop_ && flyerPostPop_->Handles(sid); } // 다른 비행 파생 표를 임의로 허용하지 않는다.
 // 다른 월드의 QA와 장부를 조합하지 않도록 실제 풀을 확인한다.
 void SquidPostPop::SetBuriedPostPop(const RawBuriedPostPop* postPop) { if (postPop && &postPop->Pool()!=&pool_) throw std::invalid_argument("buried Pop/후처리 풀 불일치");buriedPostPop_=postPop; }
 // 주소 표를 넓히지 않고 완성한 실제 몸체에 파생 지원 여부를 위임한다.
@@ -238,6 +242,11 @@ void SquidPostPop::ValidateBase(Sid sid,std::uint32_t flags,const RawGraphPop* p
 // 성공한 공간 Pop의 flags로 가상 후처리를 분배한다. 전체 사제 wrapper는 자기 공통 깊이를 감소시킨다.
 void SquidPostPop::Activate(Sid sid,std::uint32_t flags) {
     Validate(sid,flags);const auto before=state_.depth; ++state_.depth;
+    // 맨 오 워는 자신의 그림자 재귀 Pop과 Damageable 뒤 공통 깊이를 한 번 줄인다.
+    if (HandlesFlyer(sid)) {
+        flyerPostPop_->PostPop(sid,flags);
+        if (state_.depth!=before) throw std::logic_error("비행 Activate 공통 깊이 불일치");return;
+    }
     // Player는 현재9기록/SID와 조건부예약 뒤 자기 몸체에서 공통 장부를 한 번 호출한다.
     if (HandlesPlayer(sid)) {
         playerPostPop_->PostPop(sid,flags);

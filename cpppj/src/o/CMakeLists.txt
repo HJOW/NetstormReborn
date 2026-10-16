@@ -11,6 +11,7 @@ target_sources(netstorm PRIVATE
     RawBuriedRegular.cpp RawBuriedRegular.h
     # 맨 오 워 풀의 실제 후처리/48BYTE 프로세스/0x73 writer를 같은 Kernel에서 실행한다.
     RawRainAviaryProcess.cpp RawRainAviaryProcess.h
+    RawFlyerProcess.cpp RawFlyerProcess.h
     # 총 방향과 같은 실제 소유자 색 표/섬 프레임 변경의 원문 계산이다.
     RawGunAngle.h RawPlayerColor.h
     # 원본 Guide 반복과 현재 실제 사제 참여 상태를 같은 저장소에서 처리한다.

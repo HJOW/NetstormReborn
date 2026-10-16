@@ -28,9 +28,9 @@
     "cpppj/src/client/AiTypeRequiredEnergy.cpp": "a77ecbbece0a23b295c26e35ba5f788ea1c61a660b95880a83abc6988ef559c0",
     "cpppj/tests/fixtures/type-required-energy-x86.tsv": "8bcb3e215c958f5df0a395365059f5481801b1660569f2f04c0720f394f14f4c",
     "cpppj/tests/TypeRequiredEnergyTests.cpp": "0802ab400413ec5da3f2d03a4ac6b6f88e2d088915646609a2ca0bb39a02b05c",
-    "cpppj/src/o/CMakeLists.txt": "085b02c275c08affa7753891e7100828ee47a82e9815ec5fcbd0e8bc2043d30f",
+    "cpppj/src/o/CMakeLists.txt": "153363cd3dcc57d7f4e673b9986db5f404c3c1bee144ec8e25e81a83fb831673",
     "cpppj/src/client/CMakeLists.txt": "bb8941e288248d13c7d8be90ae2020c23431129f06ca1b2d059fdfdfaa415ab1",
-    "cpppj/tests/CMakeLists.txt": "2f2a7fe717478b44d0f247668088077a3a6a87e9eaeaddb77ee183b217b6238b"
+    "cpppj/tests/CMakeLists.txt": "a0e572985fee458038234b24b91b77d6cf6bac043d4e9c4eaddb1cb44c9419b8"
   },
   "product_validation": {
     "configuration": "Release",
@@ -506,6 +506,35 @@
           "CampaignKernelFrames_DissolvedAlliance"
         ],
         "log": "extracted/goal-fence-create-20261016-ctest.log"
+      }
+    },
+    {
+      "date": "2026-10-16",
+      "host": "VM-W11-Codex",
+      "reason": "Unit85 Man o War PostPop, base flyer constructor, binding and writer registered; 2352 required-energy inputs and product unchanged.",
+      "cmake_sha256": {
+        "cpppj/src/o/CMakeLists.txt": {
+          "previous": "085b02c275c08affa7753891e7100828ee47a82e9815ec5fcbd0e8bc2043d30f",
+          "current": "153363cd3dcc57d7f4e673b9986db5f404c3c1bee144ec8e25e81a83fb831673"
+        },
+        "cpppj/tests/CMakeLists.txt": {
+          "previous": "2f2a7fe717478b44d0f247668088077a3a6a87e9eaeaddb77ee183b217b6238b",
+          "current": "a0e572985fee458038234b24b91b77d6cf6bac043d4e9c4eaddb1cb44c9419b8"
+        }
+      },
+      "full_ctest": {
+        "full_tests": 1372,
+        "passed": 1370,
+        "failed_checks": 2,
+        "ctest_passed": false,
+        "shell_exit_code": 8,
+        "test_seconds": 155.92,
+        "total_seconds": 156.0,
+        "failing_cases": [
+          "CampaignKernelFrames_TheStormRages",
+          "CampaignKernelFrames_DissolvedAlliance"
+        ],
+        "log": "extracted/goal-flyer-postpop-20261016-ctest.log"
       }
     }
   ]
