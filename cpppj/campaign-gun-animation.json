@@ -1,0 +1,244 @@
+{
+  "schema": 1,
+  "unit": 88,
+  "date": "2026-10-16",
+  "host": "VM-W11-Codex",
+  "last_full_refined_host": "VM-W11-Codex",
+  "last_full_refined_date": "2026-10-16",
+  "unit_start_commit": "1801496",
+  "rules_update_commit": "6209841",
+  "status": "sun-cannon-factory-and-clock-integrated-other-guns-pending",
+  "new_native_inputs": 0,
+  "game_gui_runs": 0,
+  "new_decompilations": 0,
+  "natural_user_completion": false,
+  "scope": "같은 Pool/Host/World/Missile에서 TYPE128 stage2/5/8의 실제 생성 분배와 현재 시계를 연결한다. 실제 건설 완료·Pop이나 전체 미션 플레이의 증거가 아니다.",
+  "projectile_boundary": "세션의 ArcherMuzzle은 TYPE71만 지원한다. 이번 검사는 launch를 실행하지 않으며 썬 캐논 포구·비행 효과와 실제 발사/충돌/피해 연결은 미완료다.",
+  "naming": {
+    "Vander Tower": "반더 타워",
+    "shared_entry_count": 56,
+    "historical_sha_pinned_names": "기존 명칭 감사·원본 관찰 보고서는 당시 바이트로 보존한다."
+  },
+  "focused_tests": {
+    "CampaignFire": 3,
+    "GunAnimation": 4,
+    "ArcherAnimation": 4,
+    "failed": 0
+  },
+  "ctest": {
+    "total": 1386,
+    "passed": 1384,
+    "failed": 2,
+    "test_seconds": 123.89,
+    "total_seconds": 123.95,
+    "exit_code": 8
+  },
+  "mission_load_start_passed": 11,
+  "mission_400_frames_passed": 9,
+  "remaining_kernel_boundaries": [
+    {
+      "mission": "DemoStormRages",
+      "frames": 145,
+      "seconds": 3.625,
+      "type": 148,
+      "source_name": "thunderArcher",
+      "display_name": "Vander Tower",
+      "korean_name": "반더 타워",
+      "stage": 5
+    },
+    {
+      "mission": "DissolvedAlliance",
+      "frames": 3,
+      "seconds": 0.075,
+      "type": 140,
+      "source_name": "windArcher",
+      "display_name": "Crossbow",
+      "korean_name": "크로스보우",
+      "stage": 2
+    }
+  ],
+  "excluded_attempts": {
+    "first_demo_logs": "빌드 핸들 종료 전 실행된 이전 검사 바이너리이므로 새 코드 검증에서 제외한다.",
+    "initial_cannon_pop": "실제 서버/로딩 관문에서 거부되었다. 관문을 완화하지 않고 최종 검사를 void 부모의 생성 분배/시계로 한정했다. 건설 완료/Pop은 후속 검증이다."
+  },
+  "historical_verifiers": {
+    "gunanimation": {
+      "exit_code": 1,
+      "reason": "GunAnimation SHA 불일치 cpppj/tests/fixtures/gunanimation-x86.tsv",
+      "unchanged_from_unit_start": {
+        "tools/decomp_gunanimation_oracle.py": {
+          "unit_start_sha256": "7dad644a16ef1e166f96e995de12dc516768874dbde5ee43c5bf146b08af4f3e",
+          "current_sha256": "7dad644a16ef1e166f96e995de12dc516768874dbde5ee43c5bf146b08af4f3e"
+        },
+        "cpppj/gunanimation.json": {
+          "unit_start_sha256": "2f468cf4c58059b79d2f1213f51d9f2fd86f2eaa11652dc083c6059b4923257b",
+          "current_sha256": "2f468cf4c58059b79d2f1213f51d9f2fd86f2eaa11652dc083c6059b4923257b"
+        },
+        "cpppj/tests/fixtures/gunanimation-x86.tsv": {
+          "unit_start_sha256": "7ed89da7895a89b1d65efcbdbef0bddbc5855d525ef51b30d17305b3c7145d6f",
+          "current_sha256": "7ed89da7895a89b1d65efcbdbef0bddbc5855d525ef51b30d17305b3c7145d6f"
+        }
+      },
+      "log": "extracted/goal-campaign-cannon-20261016-gunanimation-verify.log"
+    },
+    "gunmissile": {
+      "exit_code": 1,
+      "reason": "Missile SHA 불일치 cpppj/tests/fixtures/gunmissile-x86.tsv",
+      "unchanged_from_unit_start": {
+        "tools/decomp_gunmissile_oracle.py": {
+          "unit_start_sha256": "4671a0a69ee91d6e0280a6c4af73d38e6ca6b096ee04161aeaef8d2d3e5c0fd1",
+          "current_sha256": "4671a0a69ee91d6e0280a6c4af73d38e6ca6b096ee04161aeaef8d2d3e5c0fd1"
+        },
+        "cpppj/gunmissile.json": {
+          "unit_start_sha256": "7c1c8a266aa0f840eb2895291383dfce7feced4ed21dab8243572d8b15779168",
+          "current_sha256": "7c1c8a266aa0f840eb2895291383dfce7feced4ed21dab8243572d8b15779168"
+        },
+        "cpppj/tests/fixtures/gunmissile-x86.tsv": {
+          "unit_start_sha256": "3bf00d1918ac56c7cdfeab8ae9d1247f99f459e56d8be7aa53f75e0b778c2b67",
+          "current_sha256": "3bf00d1918ac56c7cdfeab8ae9d1247f99f459e56d8be7aa53f75e0b778c2b67"
+        }
+      },
+      "log": "extracted/goal-campaign-cannon-20261016-gunmissile-verify.log"
+    },
+    "archermissile": {
+      "exit_code": 1,
+      "reason": "Archer Missile 행수/baseline lineage 오류",
+      "unchanged_from_unit_start": {
+        "tools/decomp_archermissile_oracle.py": {
+          "unit_start_sha256": "73a314f1d48cb5168d3375637fde4d8282774a30624adb3a34e80b0d51cf16ff",
+          "current_sha256": "73a314f1d48cb5168d3375637fde4d8282774a30624adb3a34e80b0d51cf16ff"
+        },
+        "cpppj/archermissile.json": {
+          "unit_start_sha256": "aebc02ef0999f3b5c6f17d57b3b6c95ab923abdd454d5f25f0cf60d5a39a0895",
+          "current_sha256": "aebc02ef0999f3b5c6f17d57b3b6c95ab923abdd454d5f25f0cf60d5a39a0895"
+        },
+        "cpppj/tests/fixtures/archermissile-x86.tsv": {
+          "unit_start_sha256": "dca76f0dfcaf30463522d79931c57a8ef77712d6cc03428bffcbe033572d9b7b",
+          "current_sha256": "dca76f0dfcaf30463522d79931c57a8ef77712d6cc03428bffcbe033572d9b7b"
+        }
+      },
+      "log": "extracted/goal-campaign-cannon-20261016-archermissile-verify.log"
+    }
+  },
+  "historical_name_audit": {
+    "exit_code": 1,
+    "stale_paths": {
+      "cpppj/src/client/RawCampaignArcherBindings.h": {
+        "historical_sha256": "973f33a96db3b899fcbec7ef955230e7d53bdeb409bec4d46ec5c8ebe6314b98",
+        "unit_start_sha256": "973f33a96db3b899fcbec7ef955230e7d53bdeb409bec4d46ec5c8ebe6314b98",
+        "current_sha256": "694871101abe6b6d207b7b071151c7c39355ab1892f987677866a247e6d68591"
+      },
+      "cpppj/src/client/RawCampaignSession.cpp": {
+        "historical_sha256": "64090c17193c2ca580ad597aec730c9142e9de59e4424d5a8ea21848a3d58ef6",
+        "unit_start_sha256": "8b9707cc0aba8e11237f1618fb0179e9fdfcd460c581b83313f2da793c56c1f8",
+        "current_sha256": "8b9707cc0aba8e11237f1618fb0179e9fdfcd460c581b83313f2da793c56c1f8"
+      },
+      "cpppj/tests/CampaignFireTests.cpp": {
+        "historical_sha256": "991d1d520c6dcf9e31d1f379da0c1802ccdd9382906776b1d85bf7184d27e4da",
+        "unit_start_sha256": "991d1d520c6dcf9e31d1f379da0c1802ccdd9382906776b1d85bf7184d27e4da",
+        "current_sha256": "26f74b5b0169538f139381f7fdd1bd8f59d9c0ba089b14ea6a67d8a1b4bbb9f4"
+      },
+      "cpppj/type-required-energy.json": {
+        "historical_sha256": "1372a8f396884a4f2af3bfc4d6b912af1de34c48a5b6ee20bd4097b99d43615f",
+        "unit_start_sha256": "d25dd1a732e197384058dc758a778d8dcdee82ae8110c554c4b71df75e3bc8ed",
+        "current_sha256": "d25dd1a732e197384058dc758a778d8dcdee82ae8110c554c4b71df75e3bc8ed"
+      }
+    },
+    "reason": "이전 명칭 교정 snapshot은 후속 기능 수정의 현재 소스를 허용하는 검사가 아니다. 당시 보고서를 덮어쓰지 않고 기능 변경 경로의 전후 SHA를 구분한다.",
+    "shared_json_name_check_passed": true
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "cpppj/src/client/RawCampaignArcherBindings.cpp": "163766ee8352dcc33df9454f0034354203874662cf1f1fbba8abaff353f60303",
+    "cpppj/src/client/RawCampaignArcherBindings.h": "694871101abe6b6d207b7b071151c7c39355ab1892f987677866a247e6d68591",
+    "cpppj/tests/CampaignFireTests.cpp": "26f74b5b0169538f139381f7fdd1bd8f59d9c0ba089b14ea6a67d8a1b4bbb9f4",
+    "cpppj/src/o/RawGunAnimation.cpp": "47b68d054e3e8825cc0d77bf5fd7681727b89e1a701234e7aad1ad0dbea30d5a",
+    "cpppj/src/o/RawGunAnimation.h": "43f96c7b90235d444ab70f2a8a12672166bcf03571eeaacdc99c4324c19f2769",
+    "cpppj/src/o/RawArcherAnimation.cpp": "48031291759684998c09e6f87c0ea5563465cd58af1bf95696738198437350ba",
+    "cpppj/src/o/RawArcherAnimation.h": "ef097148909fdb14e56711232aa79bf0c591fa1d708af1a15815a5f77dd7316c",
+    "cpppj/src/o/RawMissile.cpp": "a6edcb7d2d925eb9186f9b48165974a829ec588aafcf2424a55768da67681532",
+    "cpppj/src/o/RawMissile.h": "93386ab9d5c26b5adfc78518afcca90dee2f477fe469b8675ae15152f62626dc",
+    "cpppj/build/bin/Release/netstorm_tests.exe": "96b7b97306f60db2193d4f218070849904fc278093e70265bf21a532c8f24885",
+    "cpppj/build/bin/Release/NetstormCpp.exe": "9d62d200177bdac823d9a7096ec541cd62009003c460fcbfc1dc8a5dd892471f",
+    "assets/unit-names.korean.json": "adfc7c4342bc5aabb2af4fdc5cdea67f378607206e5d33d64b88cde7f7081e62"
+  },
+  "static_pe_evidence": {
+    "0050b120": {
+      "18": {
+        "target": "004674c0",
+        "raw": "c0744600"
+      },
+      "20": {
+        "target": "004680e0",
+        "raw": "e0804600"
+      },
+      "24": {
+        "target": "004680d0",
+        "raw": "d0804600"
+      },
+      "28": {
+        "target": "004429e0",
+        "raw": "e0294400"
+      },
+      "30": {
+        "target": "00468320",
+        "raw": "20834600"
+      }
+    },
+    "0050b170": {
+      "18": {
+        "target": "00467330",
+        "raw": "30734600"
+      },
+      "20": {
+        "target": "00468640",
+        "raw": "40864600"
+      },
+      "24": {
+        "target": "00466a40",
+        "raw": "406a4600"
+      },
+      "28": {
+        "target": "00468120",
+        "raw": "20814600"
+      },
+      "30": {
+        "target": "00468040",
+        "raw": "40804600"
+      },
+      "48": {
+        "target": "00468130",
+        "raw": "30814600"
+      }
+    },
+    "0050b450": {
+      "18": {
+        "target": "00467940",
+        "raw": "40794600"
+      },
+      "2c": {
+        "target": "00468820",
+        "raw": "20884600"
+      }
+    }
+  },
+  "logs": {
+    "extracted/goal-campaign-cannon-20261016-archer-regression.log": "585d5e3d485c51065651d088f144b2ce577ccea049e2218cf40ae6372525b85e",
+    "extracted/goal-campaign-cannon-20261016-archermissile-verify.log": "908a77f41757615d2d2cc55f1b8f0d6d25f13061cdc486e45b2c5626f338b6ca",
+    "extracted/goal-campaign-cannon-20261016-build.log": "e2ed6f29a2d5abe1f2758eebfa1bb08f8fb887cf3924b5579aee308660cbe563",
+    "extracted/goal-campaign-cannon-20261016-ctest.log": "f6b8f89a3e286be6071029cf90ec3fa5ee0293d95682832bc0c6e43aa4b1b564",
+    "extracted/goal-campaign-cannon-20261016-demo1-built.log": "7ab8c90a67f5ba0daed42032d91e86e29b4ae9fb1d5d08936f7b42f7f03a2bc7",
+    "extracted/goal-campaign-cannon-20261016-demo1-first.log": "c09efbfd2ba77856a20ebaa9d35af3162401f7525d038c92b18a8bfc7632f99b",
+    "extracted/goal-campaign-cannon-20261016-demo3-built.log": "f023f5aae33051934ab50f7f298c1ca9b0c33485c0890567d7169bac45904968",
+    "extracted/goal-campaign-cannon-20261016-demo3-first.log": "c0e2d9c98afb4d7b05aef9ea6f275c5a2fea2ced38efbd27273c3635aacdc6d9",
+    "extracted/goal-campaign-cannon-20261016-factory-build.log": "b8cdcd487ffaf0854bc6fd198d7e227f64e0c4535416b531c3a447b3f9a48253",
+    "extracted/goal-campaign-cannon-20261016-final-build.log": "b8cdcd487ffaf0854bc6fd198d7e227f64e0c4535416b531c3a447b3f9a48253",
+    "extracted/goal-campaign-cannon-20261016-fire-tests-final.log": "fbf5b6071cbb926f0f5381c0a3b81b12eb57fd21b7f3e583f454145372208763",
+    "extracted/goal-campaign-cannon-20261016-fire-tests.log": "50f7d3a185552b330f984bf947303c44a824eb31421a50a03c724a5a46225401",
+    "extracted/goal-campaign-cannon-20261016-gun-regression.log": "7bb9267c744aa413995788134bf4c07d7ab3a790afe22d91c877be41c7531a35",
+    "extracted/goal-campaign-cannon-20261016-gunanimation-verify.log": "08ec66cb6ba8c5be7b8cdc6872fd8b71cd056266b520500e83e23734e53d9763",
+    "extracted/goal-campaign-cannon-20261016-gunmissile-verify.log": "f2f43e2c362d74fa2444c8567ad27ca4038bbf710ff8cb6899f1ce937d7422a5",
+    "extracted/goal-campaign-cannon-20261016-name-history-verify.log": "4591275698ef54ce9de12788dd9859f7055c75fabfa1e3c0103f1851118d84ce"
+  }
+}

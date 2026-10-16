@@ -15,6 +15,8 @@ struct RawCampaignArcherBindings::Impl {
     o::MissileState& missileState; // 투사체가 읽는 같은 게임 시각이다.
     std::unique_ptr<o::RawMissile> missile; // 같은 자산 생성/Host에 연결한 기존 실제 몸체다.
     std::unique_ptr<o::RawArcherAnimation> animation; // 같은 타입 방향수와 Fire 각상태 몸체다.
+    o::GunAnimationState cannonState; // 같은 Kernel 시각을 읽는 실제 썬 캐논 전용 전역이다.
+    std::unique_ptr<o::RawGunAnimation> cannon; // 기존 검증된 썬 캐논 회전/발사/원위치의 같은 월드 본체다.
     std::unique_ptr<o::RawDiscRegular> disc; // 실제 투사체 예약의 방향별 modulo 처리기다.
     // 모든 실제 공간/Host를 구성한 뒤 같은 원본 모듈에 공급한다.
     Impl(RawSurfaceWorld& input,const o::RawGunTarget& finder,o::GameRandom& rng,
@@ -39,6 +41,9 @@ struct RawCampaignArcherBindings::Impl {
             return low+static_cast<std::int32_t>(random.Next(static_cast<std::uint32_t>(high-low)));
         };
         hooks.notifySurface=[this](o::Sid sid) { core.building.NotifySurface(sid); };
+        auto cannonHooks=o::MakeGunAnimationHostHooks(core.processes,hooks.common); // 실제 Cannon의 notify/kill 타입을 Archer와 구별한다.
+        cannonHooks=o::MakeGunMissileHooks(core.processes,*missile,std::move(cannonHooks));
+        cannon=std::make_unique<o::RawGunAnimation>(core.pool,core.types,cannonState,std::move(cannonHooks));
         hooks=o::MakeArcherAnimationHostHooks(core.processes,std::move(hooks));
         hooks=o::MakeArcherMissileHooks(core.processes,*missile,std::move(hooks));
         animation=std::make_unique<o::RawArcherAnimation>(core.pool,core.types,animationTypes,animationState,std::move(hooks));
@@ -54,10 +59,18 @@ RawCampaignArcherBindings::~RawCampaignArcherBindings()=default;
 // 원본 경과는 Archer에서 float로 읽으므로 여기서는 double 입력을 임의 고정하지 않는다.
 void RawCampaignArcherBindings::PrepareFrame(o::FrameTime time) {
     if (!std::isfinite(time.game) || !std::isfinite(time.delta) || time.delta<0) throw std::invalid_argument("Archer 현재 clock/경과 오류");
-    impl_->animationState.now=time.game;impl_->animationState.delta=time.delta;impl_->missileState.now=time.game;
+    impl_->animationState.now=time.game;impl_->animationState.delta=time.delta;impl_->missileState.now=time.game;impl_->cannonState.now=time.game;
 }
-// 기존 factory fallback을 보존하고 실제71 생성/부착/각초기화 순서를 재사용한다.
-o::GunProcessHooks RawCampaignArcherBindings::GunHooks(o::GunProcessHooks hooks) const { return o::MakeArcherAnimationProcessHooks(impl_->core.processes,*impl_->animation,std::move(hooks)); }
+// 실제71/128을 부모 TYPE으로 분배하고 원래 소비자가 있는 다른 종류는 보존한다.
+o::GunProcessHooks RawCampaignArcherBindings::GunHooks(o::GunProcessHooks hooks) const {
+    hooks.startAnimation=[this,fallback=std::move(hooks.startAnimation)](std::uint32_t stage,o::Sid form,o::Sid target) {
+        const auto* gun=dynamic_cast<const o::GunProcess*>(impl_->core.processes.FromForm(form));if (!gun) throw std::logic_error("캠페인 총 애니메이션의 현재 GunProcess 조회 실패");
+        const auto type=impl_->core.pool.Slot(gun->Parent())[10];
+        if (type==impl_->cannon->SunCannonType()) { if (!o::CreateGunAnimation(impl_->core.processes,*impl_->cannon,stage,form,target)) throw std::logic_error("캠페인 썬 캐논 애니메이션 부착 실패");return; }
+        if (!fallback) throw std::logic_error("캠페인 총 애니메이션 미복원 TYPE"+std::to_string(type)+" stage"+std::to_string(stage));fallback(stage,form,target);
+    };
+    return o::MakeArcherAnimationProcessHooks(impl_->core.processes,*impl_->animation,std::move(hooks));
+}
 // 같은 Kernel의 예약 처리에서 실제 투사체 가상 Handle만 추가한다.
 o::RegularHandler RawCampaignArcherBindings::Handler(o::RegularHandler fallback) const { return impl_->disc->Handler(std::move(fallback)); }
 // 같은 몸체를 후속 연결/검사에 제공한다.

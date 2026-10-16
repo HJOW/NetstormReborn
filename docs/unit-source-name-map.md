@@ -49,7 +49,7 @@
 | 145 | `rainFence` | Acid Barricade | 애시드 바리케이드 |
 | 146 | `rainBalloon` | Cloud Floater | 클라우드 플로터 |
 | 147 | `rainBlocker` | Ice Tower | 아이스 타워 |
-| 148 | `thunderArcher` | Vander Tower | 밴더 타워 |
+| 148 | `thunderArcher` | Vander Tower | 반더 타워 |
 | 149 | `thunderFence` | Arc Spire | 아크 스파이어 |
 | 154 | `nugget` | Storm Crystal | 스톰 크리스탈 |
 | 156 | `rainWalker` | Crystal Crab | 크리스탈 크랩 |

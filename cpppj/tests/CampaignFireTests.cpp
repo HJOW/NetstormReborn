@@ -1,6 +1,7 @@
 // 실제 보호 캠페인의 같은 Kernel에서 썬 디스크 발사기 각상태와 발사 생성 경계를 검사한다.
 #include "CampaignInstallSupport.h"
 #include "RawSceneSupport.h"
+#include "o/RawSunAviaryProcess.h"
 using namespace netstorm::test::rawscene;
 
 // 현재 저장 총과 사제의 실제 위치를 확인하여 전투 입력을 같은 월드에서 선택한다.
@@ -50,4 +51,22 @@ TEST_CASE(CampaignFire_ActualWarBeginsLaunchAndFlight) {
     }
     CHECK(sawFire && projectile.value && moved && scene.core.bookkeeping.depth==0);
     std::printf("실제 Fire→Missile 첫 이동: 표적%u 투사체%u\n",target.value,projectile.value);
+}
+
+// 같은 보호 자원/Host에서 썬 캐논의 세 원본 factory와 현재 시계가 실제로 연결되어야 한다.
+TEST_CASE(CampaignFire_ActualSunCannonFactoriesAndClock) {
+    InstallScene scene;scene.runtime->Load();Sid target{};
+    for (const auto id:scene.priestState.priests.priests.Items()) { // 실제 저장된 플레이어1 사제를 표적으로 사용한다.
+        const Sid sid{static_cast<std::uint16_t>(id)};if (scene.core.pool.Slot(sid)[34]==1) target=sid;
+    }
+    CHECK(target.value!=0);const auto cannon=scene.core.factory.Create(128,0);scene.core.owner.Set(cannon,2);
+    auto* gun=CreateGunProcess(scene.core.processes,scene.assetBindings->Gun(),cannon,scene.gunState.processType);CHECK(gun!=nullptr);if (!gun) return;const auto form=gun->Form(); // 이 검사는 void 부모의 실제 생성 분배만 확인하며 건설 완료/Pop을 대신하지 않는다.
+    auto hooks=scene.combat->GunHooks(GunProcessHooks{});
+    for (const auto stage:{2U,5U,8U}) { // 각 생성 뒤 같은 Host로 정리해 다른 애니메이션과 겹치지 않는다.
+        const double now=40.0+stage;scene.combat->PrepareFrame({now,now,.025,stage});hooks.startAnimation(stage,form,stage==8 ? Sid{} : target);
+        const auto animationForm=FindAttachedProcess(scene.core.pool,cannon,stage==5 ? 35U : 36U);auto* animation=animationForm.value ? dynamic_cast<GunAnimation*>(scene.core.processes.FromForm(animationForm)) : nullptr;
+        CHECK(animation!=nullptr);if (!animation) continue;const auto& fields=animation->Fields();CHECK(fields.Parent()==cannon && fields.Form()==animationForm && fields.GunForm()==form && fields.Time()==now);CHECK(fields.Target()==(stage==8 ? Sid{} : target));
+        scene.core.processes.Kill(*animation,0x10);
+    }
+    CHECK(scene.core.bookkeeping.depth==0);
 }
