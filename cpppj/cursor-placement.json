@@ -1,0 +1,49 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "entries": [
+    "00445440",
+    "00445340",
+    "004458e0"
+  ],
+  "uniqueInputs": 573,
+  "normalReturns": 1146,
+  "instructions": 621724,
+  "precisionDifferentInputs": [],
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_placement.py": "6c4e191a60923df578f16cc36cf47474267ebdb4159d541d1033362146e2f810",
+    "cpppj/tests/fixtures/cursor-placement-x86.tsv": "92948f3001f745d088ec58fb8212f3a42e6c02514e1c69fef7e77bc3a12e742f",
+    "cpppj/src/client/RawCursorPlacement.h": "166517cced3912fc85a15fd673c47af5dd4b7933b8e1b788c18ba154cf88cb21",
+    "cpppj/src/client/RawCursorPlacement.cpp": "8ea2e225c067bae0a73ea379da8ad9d8f11f4e67f935de2f8772ee0753bfedb3",
+    "cpppj/tests/CursorPlacementTests.cpp": "1aa900f0e8bcffd1115f300ce391a130f116ba345fcb19f0cc35144477730e26",
+    "cpppj/src/client/CMakeLists.txt": "5e4bba87824dd21833f5f4d5e18bf30076a6cac4b9cf2b3e783e5795a78096ec",
+    "cpppj/tests/CMakeLists.txt": "40c04ec1576325161ea35d36fc11e020ae7eb794453fd2b2c227091d85437210"
+  },
+  "limitations": [
+    "세 커서 몸체와 실제 CRT 절삭/floor만 실행한다. decoder/SHP/설명/GUI/지역/투영/화면 갱신은 명시 경계다.",
+    "445627..445736 표시 여백은 정밀 C 출력에서 빠져 실제 기계어로 교정했다. source flags20은 SP 부족 판정이 아니다.",
+    "실제 Client 세션/미리보기 생성445b30/일반 건설 배치/사용자 플레이와 전체 화면 동일성은 별도다."
+  ],
+  "product_validation": {
+    "configuration": "Release",
+    "build_exit_code": 0,
+    "build_warnings": 0,
+    "build_errors": 0,
+    "native_rows_compared": 573,
+    "focused_tests": 2,
+    "full_tests": 1474,
+    "failed_checks": 0,
+    "ctest_exit_code": 0,
+    "ctest_seconds": 213.68,
+    "build_log": "extracted/goal-cursor-placement-20261017-build3.log",
+    "focused_log": "extracted/goal-cursor-placement-20261017-focused.log",
+    "full_output": "extracted/goal-cursor-placement-20261017-ctest-output.log",
+    "instruction_observations_include_boundary_entries": true,
+    "actual_client_session_enabled": false,
+    "cursor_intermittent_failure_root_cause_unresolved": true
+  }
+}

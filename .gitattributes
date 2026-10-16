@@ -1008,3 +1008,11 @@ cpppj/tests/fixtures/player-menu-x86.tsv text eol=lf
 cpppj/src/client/RawPlayerMenu.* text eol=lf
 cpppj/tests/PlayerMenuTests.cpp text eol=lf
 docs/exe/cpp-player-menu-20261017.md text eol=lf
+# 실제 커서 위치/연관 지역/갱신 사각형 원문과 제품을 UTF-8/LF로 보존한다.
+tools/decomp_cursor_placement.py text eol=lf
+cpppj/cursor-placement.json text eol=lf
+# 빈 마지막 설명 필드의 탭도 독립 원문 자료이므로 행 끝 공백으로 제거하지 않는다.
+cpppj/tests/fixtures/cursor-placement-x86.tsv text eol=lf whitespace=-blank-at-eol
+cpppj/src/client/RawCursorPlacement.* text eol=lf
+cpppj/tests/CursorPlacementTests.cpp text eol=lf
+docs/exe/cpp-cursor-placement-20261017.md text eol=lf

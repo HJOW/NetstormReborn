@@ -1216,6 +1216,9 @@ set_source_files_properties(OwnerCaptureTests.cpp PROPERTIES COMPILE_DEFINITIONS
 
 # 실제 커서 취득/취소/임시 삭제의 전체 원문과 보호 자산 연결을 비교한다.
 target_sources(netstorm_tests PRIVATE CursorLifecycleTests.cpp)
+target_sources(netstorm_tests PRIVATE CursorPlacementTests.cpp)
+set_source_files_properties(CursorPlacementTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CURSOR_PLACEMENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/cursor-placement-x86.tsv\"")
 set_source_files_properties(CursorLifecycleTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CURSOR_LIFECYCLE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/cursor-lifecycle-x86.tsv\"")
 # 실제 Client 공통 트리의 원본 메뉴 입력/제목/하위 메뉴/픽셀과 삭제를 검사한다.

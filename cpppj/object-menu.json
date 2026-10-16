@@ -64,8 +64,8 @@
       "cpppj/src/client/RawObjectMenu.cpp": "ef92b668ec60c211d8a54722f864664d4262a25358ce0f2b1aaa95d572a558d5",
       "cpppj/tests/ObjectMenuTests.cpp": "7485055d8b76db99eb8e2fc117f9d89eb4892c2620112c1afbb1ed267710aa37",
       "cpppj/tests/RawMenuControlsTests.cpp": "df26ef116d9971df27bf12f1f857a398dec99ecfe0d72d82c13600244b17d1dd",
-      "cpppj/src/client/CMakeLists.txt": "23ddc1948fa51a8674fe70b2c74435f9b5b637bfd9f08fded39bd8d923a01b17",
-      "cpppj/tests/CMakeLists.txt": "ae00cbe262dbbe1452e6fefe373dea7893911f99f9ce65917b6e0b61e036e5a9"
+      "cpppj/src/client/CMakeLists.txt": "5e4bba87824dd21833f5f4d5e18bf30076a6cac4b9cf2b3e783e5795a78096ec",
+      "cpppj/tests/CMakeLists.txt": "40c04ec1576325161ea35d36fc11e020ae7eb794453fd2b2c227091d85437210"
     }
   },
   "integration_updates": [
@@ -148,6 +148,21 @@
         "exit_code": 0,
         "seconds": 227.4
       }
+    },
+    {
+      "date": "2026-10-17",
+      "reason": "단위117 실제 커서 위치/연관 지역/갱신 영역 통합; 과거 원문 fixture 보존",
+      "shared_sha256": {
+        "cpppj/src/client/CMakeLists.txt": {
+          "previous": "23ddc1948fa51a8674fe70b2c74435f9b5b637bfd9f08fded39bd8d923a01b17",
+          "current": "5e4bba87824dd21833f5f4d5e18bf30076a6cac4b9cf2b3e783e5795a78096ec"
+        },
+        "cpppj/tests/CMakeLists.txt": {
+          "previous": "ae00cbe262dbbe1452e6fefe373dea7893911f99f9ce65917b6e0b61e036e5a9",
+          "current": "40c04ec1576325161ea35d36fc11e020ae7eb794453fd2b2c227091d85437210"
+        }
+      },
+      "previous_fixture_preserved": true
     }
   ]
 }
