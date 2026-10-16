@@ -1,6 +1,7 @@
 // 실제 모듈의 동일 풀·공간·시간 계약을 연결하고 미공급 효과는 선택 시 거부한다.
 #include "client/RawCampaignArcherBindings.h"
 #include "o/RawDiscRegular.h"
+#include "o/RawCrossbowAnimation.h"
 #include <cmath>
 #include <stdexcept>
 
@@ -17,6 +18,10 @@ struct RawCampaignArcherBindings::Impl {
     std::unique_ptr<o::RawArcherAnimation> animation; // 같은 타입 방향수와 Fire 각상태 몸체다.
     o::GunAnimationState cannonState; // 같은 Kernel 시각을 읽는 실제 썬 캐논 전용 전역이다.
     std::unique_ptr<o::RawGunAnimation> cannon; // 기존 검증된 썬 캐논 회전/발사/원위치의 같은 월드 본체다.
+    o::ArcherAnimationState crossbowRotateState; // TYPE140의 실제 공유 회전이 읽는 같은 현재 시계다.
+    o::CrossbowAnimationState crossbowState; // 실제 크로스보우 발사 getter와 현재 시계다.
+    std::unique_ptr<o::RawArcherAnimation> crossbowRotate; //00467940의 실제 공통 회전만 재사용한다.
+    std::unique_ptr<o::RawCrossbowAnimation> crossbow; // 별도004674c0의 크로스보우 발사 본체다.
     std::unique_ptr<o::RawDiscRegular> disc; // 실제 투사체 예약의 방향별 modulo 처리기다.
     // 모든 실제 공간/Host를 구성한 뒤 같은 원본 모듈에 공급한다.
     Impl(RawSurfaceWorld& input,const o::RawGunTarget& finder,o::GameRandom& rng,
@@ -44,8 +49,13 @@ struct RawCampaignArcherBindings::Impl {
         auto cannonHooks=o::MakeGunAnimationHostHooks(core.processes,hooks.common); // 실제 Cannon의 notify/kill 타입을 Archer와 구별한다.
         cannonHooks=o::MakeGunMissileHooks(core.processes,*missile,std::move(cannonHooks));
         cannon=std::make_unique<o::RawGunAnimation>(core.pool,core.types,cannonState,std::move(cannonHooks));
+        auto crossbowHooks=o::MakeCrossbowAnimationHostHooks(core.processes,hooks.common); // 같은 공간/Missile과 별도 발사 클래스의 수명을 연결한다.
+        crossbowHooks=o::MakeGunMissileHooks(core.processes,*missile,std::move(crossbowHooks));
+        crossbow=std::make_unique<o::RawCrossbowAnimation>(core.pool,core.types,animationTypes,crossbowState,std::move(crossbowHooks));
         hooks=o::MakeArcherAnimationHostHooks(core.processes,std::move(hooks));
         hooks=o::MakeArcherMissileHooks(core.processes,*missile,std::move(hooks));
+        crossbowRotateState.type=140;
+        crossbowRotate=std::make_unique<o::RawArcherAnimation>(core.pool,core.types,animationTypes,crossbowRotateState,hooks);
         animation=std::make_unique<o::RawArcherAnimation>(core.pool,core.types,animationTypes,animationState,std::move(hooks));
     }
 };
@@ -60,13 +70,16 @@ RawCampaignArcherBindings::~RawCampaignArcherBindings()=default;
 void RawCampaignArcherBindings::PrepareFrame(o::FrameTime time) {
     if (!std::isfinite(time.game) || !std::isfinite(time.delta) || time.delta<0) throw std::invalid_argument("Archer 현재 clock/경과 오류");
     impl_->animationState.now=time.game;impl_->animationState.delta=time.delta;impl_->missileState.now=time.game;impl_->cannonState.now=time.game;
+    impl_->crossbowRotateState.now=time.game;impl_->crossbowRotateState.delta=time.delta;impl_->crossbowState.now=time.game;
 }
-// 실제71/128을 부모 TYPE으로 분배하고 원래 소비자가 있는 다른 종류는 보존한다.
+// 실제71/128/140을 부모 TYPE/단계로 분배하고 원래 다른 소비자는 보존한다.
 o::GunProcessHooks RawCampaignArcherBindings::GunHooks(o::GunProcessHooks hooks) const {
     hooks.startAnimation=[this,fallback=std::move(hooks.startAnimation)](std::uint32_t stage,o::Sid form,o::Sid target) {
         const auto* gun=dynamic_cast<const o::GunProcess*>(impl_->core.processes.FromForm(form));if (!gun) throw std::logic_error("캠페인 총 애니메이션의 현재 GunProcess 조회 실패");
         const auto type=impl_->core.pool.Slot(gun->Parent())[10];
         if (type==impl_->cannon->SunCannonType()) { if (!o::CreateGunAnimation(impl_->core.processes,*impl_->cannon,stage,form,target)) throw std::logic_error("캠페인 썬 캐논 애니메이션 부착 실패");return; }
+        if (type==impl_->crossbow->Type() && stage==2) { if (!o::CreateArcherAnimation(impl_->core.processes,*impl_->crossbowRotate,stage,form,target)) throw std::logic_error("캠페인 크로스보우 회전 부착 실패");return; }
+        if (type==impl_->crossbow->Type() && stage==5) { if (!o::CreateCrossbowAnimation(impl_->core.processes,*impl_->crossbow,form,target)) throw std::logic_error("캠페인 크로스보우 발사 부착 실패");return; }
         if (!fallback) throw std::logic_error("캠페인 총 애니메이션 미복원 TYPE"+std::to_string(type)+" stage"+std::to_string(stage));fallback(stage,form,target);
     };
     return o::MakeArcherAnimationProcessHooks(impl_->core.processes,*impl_->animation,std::move(hooks));

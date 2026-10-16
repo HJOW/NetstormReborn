@@ -1,0 +1,206 @@
+{
+  "host": "VM-W11-Codex",
+  "date": "2026-10-16",
+  "last_full_refined_host": "VM-W11-Codex",
+  "unique_inputs": 2638,
+  "normal_returns": 5276,
+  "precision_controls": [
+    639,
+    895
+  ],
+  "precision_differences": 0,
+  "kinds": {
+    "0": 812,
+    "1": 1816,
+    "2": 1,
+    "3": 1,
+    "4": 8
+  },
+  "invalid_coordinate_setup": {
+    "entry_fragment": "004af182-004af196",
+    "runs": 2,
+    "scope": "실제 초기화 함수의 마지막 두 쓰기만 실행한다. 전체 초기화나 새 독립 입력으로 계수하지 않는다."
+  },
+  "limits": "실제 회전/발사/공통 launch/getter/생성자를 실행한다. 공간/중심/Host/HP/난수/문자열 format/Missile ctor는 명시 외부 입력이다. ctor 경계를 대체했으므로 전체 투사체/게임 완주 증거가 아니다. 전체 객체/네 슬롯200BYTE/순서/반환/스택/비휘발/x87/SEH/쓰기guard를 대조한다.",
+  "game_gui_runs": 0,
+  "sha256": {
+    "cpppj/tests/fixtures/crossbow-animation-x86.tsv": "d7658e001e1f9e85af7c4ac140e8d34acb96500e16f4880ce32eb8dd10ab75be",
+    "extracted/owner/originals/creation.c": "f9919c046d5259526946f106b47b6259fe5e04971f743d6fa02d6a5361b9dc16",
+    "extracted/owner/originals/functions.tsv": "3ea66dace80a85999a8b2c2dbadb4d5f1bd18b0dcdb0768f9c41075206c7c72d",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_crossbow_animation.py": "084528d7a621507fe708fcacc1e51d439da4eb4c32629996d4f00417244f1f46",
+    "tools/decomp_gunanimation_oracle.py": "7dad644a16ef1e166f96e995de12dc516768874dbde5ee43c5bf146b08af4f3e",
+    "tools/decomp_gunarcher_oracle.py": "964f87ac4e39b1a832eaf452db87e972d403de1df21f99139c7106a90b06562e",
+    "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb"
+  },
+  "unit_start_commit": "c92c990",
+  "status": "native-and-cpp-crossbow-animation-validated-session-integrated",
+  "ctest": {
+    "total": 1391,
+    "passed": 1389,
+    "failed": 2,
+    "test_seconds": 127.44,
+    "total_seconds": 127.51,
+    "exit_code": 8
+  },
+  "focused_tests": {
+    "CrossbowAnimation": 4,
+    "CampaignFire": 4,
+    "ArcherAnimation": 4,
+    "GunAnimation": 4,
+    "failed": 0
+  },
+  "mission_load_start_passed": 11,
+  "mission_400_frames_passed": 9,
+  "natural_user_completion": false,
+  "remaining_kernel_boundaries": [
+    {
+      "mission": "DemoStormRages",
+      "frames": 145,
+      "seconds": 3.625,
+      "type": 148,
+      "stage": 5,
+      "name": "반더 타워"
+    },
+    {
+      "mission": "DissolvedAlliance",
+      "previous_frames": 3,
+      "previous_seconds": 0.075,
+      "frames": 5,
+      "seconds": 0.125,
+      "type": 131,
+      "stage": 5,
+      "name": "아이스 캐논"
+    }
+  ],
+  "limits_cpp": "원문2638입력의 전체 이미지/네 슬롯/효과와 현재 회전/발사를 대조한다. 실제 Host 생성 검사는 void 부모의 클래스/시계 범위다. RawMissile은 부모71/128만 허용하고 포구도71 전용이므로 크로스보우 실제 arrow의 포구·비행/충돌은 별도 미완료다.",
+  "initial_failures": {
+    "missing_selected_exports": "과거 gunanimation 선택 추출 경로 누락. 현재 PC 전체 정련과 검토한 PE 구간으로 교체했다.",
+    "uninitialized_coordinate": "최초 C++ 대조의 descriptor 차이는 게임 초기화 전 PE 전역0 때문이었다. 실제004af182-004af196의 두 쓰기를 실행한 뒤 원본2638입력을 다시 관찰했다. 기존 기대값을 C++ 결과에 맞추지 않는다.",
+    "preserved_local_evidence": [
+      "extracted/goal-crossbow-animation-20261016-uninitialized.tsv",
+      "extracted/goal-crossbow-animation-20261016-uninitialized.json",
+      "extracted/goal-crossbow-animation-20261016-tests-first.log"
+    ]
+  },
+  "integration_snapshot_sha256": {
+    "cpppj/src/o/RawCrossbowAnimation.cpp": "486fe2f0c02a7cbe2e463a472887914f4d642b6e9a847ede93fe2fbe688f4b75",
+    "cpppj/src/o/RawCrossbowAnimation.h": "0d5b5bf12a95626f98ae39143959d75b7e3d280ea945dc1dbffc3f60ab9ea510",
+    "cpppj/src/o/RawArcherAnimation.cpp": "48031291759684998c09e6f87c0ea5563465cd58af1bf95696738198437350ba",
+    "cpppj/src/o/RawArcherAnimation.h": "ef097148909fdb14e56711232aa79bf0c591fa1d708af1a15815a5f77dd7316c",
+    "cpppj/src/client/RawCampaignArcherBindings.cpp": "f5b87dd34ef055dff35df42dda993cc8a12acddc9bfcc92d147e2c85a522a1cb",
+    "cpppj/src/client/RawCampaignArcherBindings.h": "570d77e859d684bf0cba7c12f5957e9736c571bbd6564181991fe8c2878383f2",
+    "cpppj/src/client/RawCampaignSession.cpp": "8b9707cc0aba8e11237f1618fb0179e9fdfcd460c581b83313f2da793c56c1f8",
+    "cpppj/tests/CrossbowAnimationTests.cpp": "5db5c4c93a810996725713647cf075ff4c2da241f204e40ea3613d86c6c5351b",
+    "cpppj/tests/CampaignFireTests.cpp": "52fe251598e9e64b82b5286da2d535c5ce5515ca07336f6a818322b7aa08325f",
+    "cpppj/src/o/CMakeLists.txt": "85fcdb2a9b226233b410b0806dc821a7852b01f094fbd020f558e07105671cb8",
+    "cpppj/tests/CMakeLists.txt": "303a5a173d2f67fc39f52f1b447b52c8a726a61be4a6a831459e135b6252d663",
+    "cpppj/build/bin/Release/NetstormCpp.exe": "e0d5cf8f76435f9a79a7d8f44d365a6ee42158fbded0983828385b245517023a",
+    "cpppj/build/bin/Release/netstorm_tests.exe": "cc6dd28603451e08c5fbd8cc24a36c3092db205e5f0c2fa92d5e07c1983ea39e",
+    "cpppj/type-required-energy.json": "7d0e2a9333b9e42fed96871792019e41edef5fa09be6eceab0483458228fa4d9"
+  },
+  "historical_reports": {
+    "cpppj/campaign-gun-animation.json": {
+      "report_sha256": "436be348a7e3276b457affbf96002595299cfdad601d0b784b8dac98bd2098b2",
+      "unchanged_from_unit_start": true,
+      "snapshot_differences": {
+        "cpppj/src/client/RawCampaignArcherBindings.cpp": {
+          "historical": "163766ee8352dcc33df9454f0034354203874662cf1f1fbba8abaff353f60303",
+          "unit_start": "163766ee8352dcc33df9454f0034354203874662cf1f1fbba8abaff353f60303",
+          "current": "f5b87dd34ef055dff35df42dda993cc8a12acddc9bfcc92d147e2c85a522a1cb",
+          "changed_in_this_unit": true
+        },
+        "cpppj/src/client/RawCampaignArcherBindings.h": {
+          "historical": "694871101abe6b6d207b7b071151c7c39355ab1892f987677866a247e6d68591",
+          "unit_start": "694871101abe6b6d207b7b071151c7c39355ab1892f987677866a247e6d68591",
+          "current": "570d77e859d684bf0cba7c12f5957e9736c571bbd6564181991fe8c2878383f2",
+          "changed_in_this_unit": true
+        },
+        "cpppj/tests/CampaignFireTests.cpp": {
+          "historical": "26f74b5b0169538f139381f7fdd1bd8f59d9c0ba089b14ea6a67d8a1b4bbb9f4",
+          "unit_start": "26f74b5b0169538f139381f7fdd1bd8f59d9c0ba089b14ea6a67d8a1b4bbb9f4",
+          "current": "52fe251598e9e64b82b5286da2d535c5ce5515ca07336f6a818322b7aa08325f",
+          "changed_in_this_unit": true
+        },
+        "cpppj/build/bin/Release/netstorm_tests.exe": {
+          "historical": "96b7b97306f60db2193d4f218070849904fc278093e70265bf21a532c8f24885",
+          "unit_start": null,
+          "current": "cc6dd28603451e08c5fbd8cc24a36c3092db205e5f0c2fa92d5e07c1983ea39e",
+          "changed_in_this_unit": null
+        },
+        "cpppj/build/bin/Release/NetstormCpp.exe": {
+          "historical": "9d62d200177bdac823d9a7096ec541cd62009003c460fcbfc1dc8a5dd892471f",
+          "unit_start": null,
+          "current": "e0d5cf8f76435f9a79a7d8f44d365a6ee42158fbded0983828385b245517023a",
+          "changed_in_this_unit": null
+        }
+      }
+    },
+    "cpppj/flyer-target.json": {
+      "report_sha256": "0a113d98fe37c39f83e50c5a957438c356ac43e1f047dd9e7b2479287babbbe3",
+      "unchanged_from_unit_start": true,
+      "snapshot_differences": {
+        "cpppj/src/o/CMakeLists.txt": {
+          "historical": "b6f4167ac5ff46887da61a70bcc940ce419a9525bb357b8dcdce1aa3dfeca3ac",
+          "unit_start": "b6f4167ac5ff46887da61a70bcc940ce419a9525bb357b8dcdce1aa3dfeca3ac",
+          "current": "85fcdb2a9b226233b410b0806dc821a7852b01f094fbd020f558e07105671cb8",
+          "changed_in_this_unit": true
+        },
+        "cpppj/tests/CMakeLists.txt": {
+          "historical": "d109952745a9d6243c7ad51543af7b30821092f26883a940e5bc144230ad92bf",
+          "unit_start": "d109952745a9d6243c7ad51543af7b30821092f26883a940e5bc144230ad92bf",
+          "current": "303a5a173d2f67fc39f52f1b447b52c8a726a61be4a6a831459e135b6252d663",
+          "changed_in_this_unit": true
+        }
+      }
+    },
+    "cpppj/flyer-frame.json": {
+      "report_sha256": "331e32285b8837ed32d1e1946b063ddb913a10c3e58fbd3567329d1b3e50b691",
+      "unchanged_from_unit_start": true,
+      "snapshot_differences": {
+        "cpppj/src/client/RawCampaignSession.cpp": {
+          "historical": "02330084e9a179eb76c6f78c6ffe4117cf3e69caa7257e4728c98d55e27eea4f",
+          "unit_start": "8b9707cc0aba8e11237f1618fb0179e9fdfcd460c581b83313f2da793c56c1f8",
+          "current": "8b9707cc0aba8e11237f1618fb0179e9fdfcd460c581b83313f2da793c56c1f8",
+          "changed_in_this_unit": false
+        },
+        "cpppj/src/o/CMakeLists.txt": {
+          "historical": "2ec03e08df88e43593359077ba7d4bd26b74d173fc8d1b929256da382d56ea3e",
+          "unit_start": "b6f4167ac5ff46887da61a70bcc940ce419a9525bb357b8dcdce1aa3dfeca3ac",
+          "current": "85fcdb2a9b226233b410b0806dc821a7852b01f094fbd020f558e07105671cb8",
+          "changed_in_this_unit": true
+        },
+        "cpppj/tests/CMakeLists.txt": {
+          "historical": "8af7e46c2cc9364c2d16c950aba2b1c5a06a55124260db626189ea52ba174968",
+          "unit_start": "d109952745a9d6243c7ad51543af7b30821092f26883a940e5bc144230ad92bf",
+          "current": "303a5a173d2f67fc39f52f1b447b52c8a726a61be4a6a831459e135b6252d663",
+          "changed_in_this_unit": true
+        },
+        "assets/unit-names.korean.json": {
+          "historical": "0a6c6d58f252d3134df720327b455b0322f604a081910e860a06e2c26504a371",
+          "unit_start": "adfc7c4342bc5aabb2af4fdc5cdea67f378607206e5d33d64b88cde7f7081e62",
+          "current": "adfc7c4342bc5aabb2af4fdc5cdea67f378607206e5d33d64b88cde7f7081e62",
+          "changed_in_this_unit": false
+        }
+      }
+    }
+  },
+  "logs": {
+    "extracted/goal-crossbow-animation-20261016-archer-tests.log": "585d5e3d485c51065651d088f144b2ce577ccea049e2218cf40ae6372525b85e",
+    "extracted/goal-crossbow-animation-20261016-build.log": "140403ae8363e48b4ffb4089595291d1ad877fea4fcf0c7e9bc673f3b72e6072",
+    "extracted/goal-crossbow-animation-20261016-ctest.log": "fc79f33ecb624d9031b070da1b90d69446196b9be14c53a2c0b4658c7bae8b1e",
+    "extracted/goal-crossbow-animation-20261016-demo3.log": "5dc7f0f6aca15b8ef72c7ab6aa7fd989d5d30892b121739a963aeb48550b380e",
+    "extracted/goal-crossbow-animation-20261016-final-build.log": "e2ed6f29a2d5abe1f2758eebfa1bb08f8fb887cf3924b5579aee308660cbe563",
+    "extracted/goal-crossbow-animation-20261016-fire-tests.log": "1b3ac6c74aa541a15c01c77eba203e024e673c850090b65f2c0330ae87ee3e5c",
+    "extracted/goal-crossbow-animation-20261016-gun-tests.log": "7bb9267c744aa413995788134bf4c07d7ab3a790afe22d91c877be41c7531a35",
+    "extracted/goal-crossbow-animation-20261016-native-final.log": "1dfcf77204fcd4392878ae03d663bc220cec54f9b6166eebd3e794c143a59a28",
+    "extracted/goal-crossbow-animation-20261016-native-smoke.log": "bf7ca088d85bafcfc9a9ecf9b2cdcbdfb6b3b5fdbc72a446114f97ac62c40dae",
+    "extracted/goal-crossbow-animation-20261016-native-smoke2.log": "c5304353ccab6fa8505bf5716ddccb4cb281701d91a84d08173500a205d732bf",
+    "extracted/goal-crossbow-animation-20261016-native-smoke3.log": "587b9cf328f7d7a7f598bf5a2182f8fbb2c8a863a2d11d1d00f23719af15dce0",
+    "extracted/goal-crossbow-animation-20261016-native.log": "1dfcf77204fcd4392878ae03d663bc220cec54f9b6166eebd3e794c143a59a28",
+    "extracted/goal-crossbow-animation-20261016-tests-final.log": "501b6e049a9e487b146dc9579a45a02b0ecebf466f56883a3b05e40cc79b0260",
+    "extracted/goal-crossbow-animation-20261016-tests-first.log": "2d8b36158dca583e0203c33b49f530365a9e611591e6aa44b9f35effbac802e8"
+  },
+  "follow_up": "TYPE131의004689c0 group/theme 생성 분배·발사와 TYPE148의 단계표/빔을 복원한다. 크로스보우 group0 Missile/가상 포구, 썬 캐논/발사기의 초기화 이후 무효 좌표 인수와 실제 사용자 플레이/자연 완주도 검증한다."
+}

@@ -1,4 +1,4 @@
-// 실제 캠페인의 썬 디스크 발사기·썬 캐논 애니메이션과 각각의 Missile을 같은 Core/Host에 조립한다.
+// 실제 캠페인의 썬 디스크 발사기·썬 캐논·크로스보우 애니메이션을 같은 Core/Host에 조립한다.
 #pragma once
 #include "client/RawSurfaceWorld.h"
 #include "o/RawArcherAnimation.h"
@@ -25,7 +25,7 @@ public:
     RawCampaignArcherBindings& operator=(const RawCampaignArcherBindings&)=delete; // 다른 Core로 복사하지 않는다.
     // 같은 시계의 게임 시각/경과를 다음 전체 Kernel 실행 전에 공급한다.
     void PrepareFrame(o::FrameTime time);
-    // 기존 다른 총 경계를 보존하며 실제 타입71/128의 원본 생성기에 연결한다.
+    // 기존 다른 총 경계를 보존하며 실제 타입71/128/140의 원본 생성기에 연결한다.
     o::GunProcessHooks GunHooks(o::GunProcessHooks hooks) const;
     // 실제 썬 디스크의 예약 프레임 처리를 같은 지정기에 연결한다.
     o::RegularHandler Handler(o::RegularHandler fallback={}) const;
