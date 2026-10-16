@@ -31,7 +31,14 @@ set_source_files_properties(LightningLifetimeTests.cpp PROPERTIES COMPILE_DEFINI
 # 반더 발사와 두 빔 wrapper의 독립 원문 전체 상태를 새 검사에서만 읽는다.
 set_source_files_properties(VanderFireTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_VANDER_FIRE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/vander-fire-x86.tsv\"")
+# 픽셀 파편과 플라이어 전용 Pre의 독립 원문을 각각 새 검사에 공급한다.
+set_source_files_properties(ShrapnelFrameTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_SHRAPNEL_FRAME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/shrapnel-frame-x86.tsv\"")
+set_source_files_properties(FlyerPreDestroyTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FLYER_PREDESTROY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/flyer-predestroy-x86.tsv\"")
 add_executable(netstorm_tests
+    ShrapnelFrameTests.cpp
+    FlyerPreDestroyTests.cpp
     VanderFireTests.cpp
     LightningLifetimeTests.cpp
     LightningVisualSystemTests.cpp

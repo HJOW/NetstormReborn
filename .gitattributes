@@ -928,3 +928,16 @@ cpppj/vander-fire.json text eol=lf
 cpppj/tests/fixtures/vander-fire-x86.tsv text eol=lf
 cpppj/tests/VanderFireTests.cpp text eol=lf
 docs/exe/cpp-vander-fire-20261017.md text eol=lf
+# 플라이어 파괴 전처리와 픽셀 파편의 원문/계산 제품을 같은 바이트로 유지한다.
+tools/decomp_flyer_predestroy.py text eol=lf
+tools/decomp_shrapnel_frame.py text eol=lf
+cpppj/flyer-predestroy.json text eol=lf
+cpppj/shrapnel-frame.json text eol=lf
+cpppj/tests/fixtures/flyer-predestroy-x86.tsv text eol=lf
+cpppj/tests/fixtures/shrapnel-frame-x86.tsv text eol=lf
+cpppj/src/o/RawFlyerPreDestroy.* text eol=lf
+cpppj/src/o/RawShrapnelFrame.* text eol=lf
+cpppj/src/o/CrtRandom.* text eol=lf
+cpppj/tests/FlyerPreDestroyTests.cpp text eol=lf
+cpppj/tests/ShrapnelFrameTests.cpp text eol=lf
+docs/exe/cpp-shrapnel-frame-20261017.md text eol=lf

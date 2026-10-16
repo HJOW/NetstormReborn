@@ -1,0 +1,18 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "uniqueInputs": 96,
+  "normalReturns": 192,
+  "precisionDifferentInputs": [],
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "tools/decomp_flyer_predestroy.py": "0d259a56ba2ad3865b266dc0508c8c4fc2ab3d05296833f2c2b6793c91ead99a",
+    "cpppj/tests/fixtures/flyer-predestroy-x86.tsv": "ead377fce65804b6537696768edb5f7ed0480a6aaa38d7d7ad36dd1eba06c202"
+  },
+  "limitations": [
+    "실제0045e7e0의 WORD/분기/호출 순서를 실행했다. 대상의 가상 삭제와 Damageable Pre는 명시 callback이다.",
+    "전체 네 raw/flags/재진입을 보존한다. 실제 전체 삭제/폭발/사용자 완주 증거와 구별한다."
+  ]
+}

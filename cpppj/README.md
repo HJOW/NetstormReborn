@@ -1,5 +1,9 @@
 # cpppj — NetStorm C++ 빌드
 
+2026-10-17 단위108 (`HJOW-Athlon`) 현재: **[플라이어 전처리와 픽셀 파편 계산](../docs/exe/cpp-shrapnel-frame-20261017.md)**을 원본96/980고유 입력으로 대조했다. 전체 의미 필드·입자·두 난수·요청·실제 clip/padding 픽셀이 C++와 일치한다. Release 경고0·오류0, 집중3개 통과, 전체 **1448개 중1447통과·기존1실패**다. 데모1의232프레임 TYPE144 전투 삭제는 실제 캡처/효과 수명/Session 연결이 남아 있다. 다른10개 미션의400프레임 검사를 사용자 플레이/자연 완주 증거로 합산하지 않는다. 전체 목표는 active이며 마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-16**이다. 전체화면 DirectDraw는 이번1차 범위에서 제외한다.
+
+앞 단계 기록:
+
 2026-10-17 (`HJOW-Athlon`) 현재: **[실제 원본 데모3의 Fiery Tail heap](../docs/exe/cpp-fierytail-live-heap-20261017.md)**을 읽기 전용으로 관찰했다. 복원한11색과 원본 생성자 결과가 같으며, 배열 바로 뒤 DWORD는 이번 한 실행에서 **1**이었다. 이 값을 보장 색/상수로 제품에 추가하지 않았다. 실제 heap mode1과 CRT는 HeapAlloc(heap,0,44) 분기다. 게임/녹화는 종료했고 원문·SHA·한계를 보존했다. C++ 변경이 없어 빌드/CTest를 재실행하지 않았다. 실제 런타임 할당/화면 픽셀·Session 연결과 사용자 자연 완주는 미완료다. 목표는 active이며 마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-16**이다.
 
 직전 단위100: 2026-10-16 (`HJOW-Athlon`) 현재: **[공통 표시 목록과 Fiery Tail 실제 프로세스](../docs/exe/cpp-render-process-system-20261016.md)**를 연결했다. 건설과 process11이 같은 raw 풀·Host/Kernel·registry·토큰·수집/깊이 정렬/Draw 분배를 사용한다. 실제 Form 삭제 통지는 **고유48입력·두 정밀도96정상 반환·차이0**과 C++ DWORD 전체가 일치한다. Release 전체 빌드 경고0·오류0, 집중25검사 통과, 전체 **1424개 중1422통과·기존2실패**다. 데모1의145프레임 TYPE148 stage5와 데모3의113프레임 TYPE128 effect11 경계는 그대로다. 실제 장치 픽셀·인접 색 메모리·Session 연결과 사용자 자연 완주는 미완료다. [남은 연결](../docs/exe/cpp-fierytail-notes-20261016.md). 목표는 active이며 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-16**이다.

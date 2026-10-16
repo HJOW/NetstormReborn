@@ -1,0 +1,50 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "uniqueInputs": 980,
+  "observationsPerPrecision": 1016,
+  "normalReturns": 3200,
+  "precisionDifferentInputs": [],
+  "inputsByKind": {
+    "0": 198,
+    "1": 782
+  },
+  "nativeCalls": {
+    "00460000": 216,
+    "004e49c0": 167668,
+    "0045fc70": 216,
+    "00488100": 216,
+    "boundary-004e4391": 432,
+    "00487ab0": 216,
+    "boundary-004e4354": 216,
+    "00418400": 216,
+    "0045fd60": 800,
+    "00418430": 800,
+    "boundary-0041bf10": 216,
+    "00460200": 604,
+    "00455930": 604,
+    "004e64ab": 51828,
+    "boundary-004ea61d": 51828,
+    "004600a0": 1812,
+    "00487b20": 5994,
+    "00453040": 31090,
+    "00487ba0": 584,
+    "boundary-00499310": 1168,
+    "0045fef0": 584,
+    "004a2230": 25096,
+    "004602f0": 604,
+    "004603e0": 604
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "tools/decomp_shrapnel_frame.py": "292bc3ede10241c2244f79b5efd860b4c0525ead91d9afbea56a5bf8d4186265",
+    "cpppj/tests/fixtures/shrapnel-frame-x86.tsv": "6c7f82e6713691dca43dc48f106c9dc68b4487507110351582f086dee6d38e92"
+  },
+  "limitations": [
+    "실제 세 묶음 생성/Append/CRT rand/GameRandom/시간/Frame/Draw/픽셀을 실행했다.",
+    "new/free·TLS 주소·dirty 큐 소비·Form 삭제만 명시 외부 경계다. 캡처 이미지/부모는 입력이며 실제 생성/Host/캠페인 연결과 구별한다.",
+    "입자의 색 주소만 캡처 bitmap offset+1로 정규화한다. 기본53비트 원문과 비교64비트 차이를 보존한다."
+  ]
+}

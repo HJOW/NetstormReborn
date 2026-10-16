@@ -288,3 +288,5 @@ target_sources(netstorm PRIVATE RawLightningPath.cpp RawLightningPath.h)
 target_sources(netstorm PRIVATE RawLightningFrame.cpp RawLightningFrame.h)
 # 공유 빔의 생성/색/경로 반납과 실제 process19 Host/Kernel 소유권이다.
 target_sources(netstorm PRIVATE RawLightningLifetime.cpp RawLightningLifetime.h LightningVisualSystem.cpp LightningVisualSystem.h)
+# 실제 전투 플라이어 Pre와 별도 CRT 스트림/픽셀 파편 수치·표시 본체다.
+target_sources(netstorm PRIVATE RawFlyerPreDestroy.cpp RawFlyerPreDestroy.h CrtRandom.cpp CrtRandom.h RawShrapnelFrame.cpp RawShrapnelFrame.h)
