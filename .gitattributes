@@ -46,6 +46,19 @@ tools/decomp_buried_regular.py text eol=lf
 cpppj/tests/fixtures/buried-regular-x86.tsv text eol=lf
 cpppj/buried-regular.json text eol=lf
 docs/exe/cpp-buried-regular-20261016.md text eol=lf
+cpppj/src/o/RawFenceRegular.* text eol=lf
+cpppj/tests/FenceRegularTests.cpp text eol=lf
+tools/decomp_fence_regular.py text eol=lf
+cpppj/tests/fixtures/fence-regular-x86.tsv text eol=lf
+cpppj/fence-regular.json text eol=lf
+cpppj/src/o/RawFenceMarkerClear.* text eol=lf
+cpppj/tests/FenceMarkerClearTests.cpp text eol=lf
+tools/decomp_fence_marker_clear.py text eol=lf
+cpppj/tests/fixtures/fence-marker-clear-x86.tsv text eol=lf
+cpppj/fence-marker-clear.json text eol=lf
+cpppj/tests/FenceLineTests.cpp text eol=lf
+docs/exe/cpp-fence-regular-20261016.md text eol=lf
+docs/unit-source-name-map.md text eol=lf
 
 # 요구에너지 근거 SHA가 PC의 자동 줄바꿈 변환에 따라 달라지지 않도록 고정한다.
 cpppj/src/o/RawTypeRequiredEnergy.* text eol=lf

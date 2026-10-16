@@ -2,6 +2,8 @@
 # (첫 구성 때 인터넷에서 내려받을 것이 없다).
 # 테스트 파일을 만들면 아래 목록에 더한다. 파일 안의 TEST_CASE 는 자동으로 등록된다.
 add_executable(netstorm_tests
+    FenceRegularTests.cpp
+    FenceMarkerClearTests.cpp
     BuriedRegularTests.cpp
     RainAviaryProcessTests.cpp
     PlayerColorTests.cpp
@@ -1102,3 +1104,11 @@ set_source_files_properties(RainAviaryProcessTests.cpp PROPERTIES COMPILE_DEFINI
 # 실제 오벨리스크 Handle의 전체 바이트/반환/난수/표시 순서를 대조한다.
 set_source_files_properties(BuriedRegularTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_BURIED_REGULAR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/buried-regular-x86.tsv\"")
+
+# 썬 바리케이드의 실제 제어/재조회/선택 효과 순서를 독립 원본과 대조한다.
+set_source_files_properties(FenceRegularTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FENCE_REGULAR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fence-regular-x86.tsv\"")
+
+# 실제 일반 finder와 끝점 태그의 원본 삭제 선택을 비교한다.
+set_source_files_properties(FenceMarkerClearTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FENCE_MARKER_CLEAR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fence-marker-clear-x86.tsv\"")

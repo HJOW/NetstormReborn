@@ -1,0 +1,88 @@
+{
+  "host": "VM-W11-Codex",
+  "last_full_decompile_host": "VM-W11-Codex",
+  "last_full_decompile_date": "2026-10-16",
+  "total": 1372,
+  "scopes": {
+    "A": 1305,
+    "E": 18,
+    "D": 49
+  },
+  "normal_returns": 2744,
+  "os_calls": 0,
+  "sha256": {
+    "tools/decomp_fence_regular.py": "ceed7d00a07871ca9cefc5d6ea5268956b7f224e861f0aeb1c6b9198cd8d956b",
+    "tools/decomp_local_mission_transport.py": "db71da65079aa9a985a3a833edd224f089ba9a20137d92042551cb346937eb78",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "cpppj/tests/fixtures/fence-regular-x86.tsv": "a87290020823e235540e7f38fe98cc43bafa363dd52edfc1995ccf79280dd9d4",
+    "cpppj/src/o/RawFenceRegular.h": "2c490d4fb012085deccdc47b04eb673f009be6e800dd21dc1372665a7291a4ed",
+    "cpppj/src/o/RawFenceRegular.cpp": "ab6bfb44ed8faeb80c4349df81957929621fa3ff87c41be1c5a075954187546c",
+    "cpppj/tests/FenceRegularTests.cpp": "b1946efea5f06ff5c5e329940f22cce41c91b53ef31dc76072f30f80c3d31351",
+    "cpppj/src/client/RawCampaignSession.cpp": "f0bc94db47b79a15c8efd510379fce2885854c0d83cb3c17052158169c9a2794",
+    "cpppj/src/o/CMakeLists.txt": "bb5861a9e800d9d873ca1f726230ec94fd049bd4bcaaea678aac533f055da69f",
+    "cpppj/tests/CMakeLists.txt": "b7b76803f306ba9f952670e5b3f131d35af214e4edeecf94defb3090d4648fae",
+    "cpppj/tests/FenceLineTests.cpp": "bd8905c20c9653fa63c42afdd5fe976600547fced0f45cd3fd250e1a0144767d"
+  },
+  "limits": [
+    "실제 Handle/TYPE/방향 getter 명령이며 이웃/연결수/선·mark삭제/힙/예약/이웃갱신/재생성/프레임·Damageable은 명시 외부 경계다.",
+    "C++ 비교는 실제 SquidFrame을 사용한다. Session은 기존 실제 이웃/연결선/Kernel을 사용하고 미복원 하위는 오류로 유지한다.",
+    "보호bit20 없는 사건3의 잔류ST0 반환은 미관찰·미복원이며 임의0/-1로 대신하지 않는다.",
+    "전체 썬 바리케이드 공격/표시/자연 게임 완주의 증거가 아니다."
+  ],
+  "historical_reports": {
+    "cpppj/buried-regular.json": {
+      "report_sha256": "42439ec45ddcd4139144ae9c75521ae83c5404268479bb6736d5abf3ced88c13",
+      "differences": [
+        {
+          "file": "cpppj/src/client/RawCampaignSession.cpp",
+          "recorded_sha256": "fa5f4cf82ada9bb1fabbeee421f439f6624bba581a70da965313a98016f16a21",
+          "current_sha256": "f0bc94db47b79a15c8efd510379fce2885854c0d83cb3c17052158169c9a2794"
+        },
+        {
+          "file": "cpppj/src/o/CMakeLists.txt",
+          "recorded_sha256": "ea8e75d5f6e307768905b912ecad98e30041585a46a40d504456639998a2434a",
+          "current_sha256": "bb5861a9e800d9d873ca1f726230ec94fd049bd4bcaaea678aac533f055da69f"
+        },
+        {
+          "file": "cpppj/tests/CMakeLists.txt",
+          "recorded_sha256": "49aa00de35ef78960e52130f166c15eac6818f47de436fcb84309323c73b05c0",
+          "current_sha256": "b7b76803f306ba9f952670e5b3f131d35af214e4edeecf94defb3090d4648fae"
+        }
+      ],
+      "scope": "Historical report retained; its unchanged native/product observations are covered by current C++ regression. Current integration hashes are recorded in this report."
+    },
+    "cpppj/fence-line.json": {
+      "report_sha256": "ecdbbe27e9e746037228d563989431739554db42dcd0598acdd7c9dd8a62ff78",
+      "differences": [
+        {
+          "file": "cpppj/tests/FenceLineTests.cpp",
+          "recorded_sha256": "19cd772d798635b893b70bd9d4e3f12e1afb28b21dd31ba7200417a90886d972",
+          "current_sha256": "bd8905c20c9653fa63c42afdd5fe976600547fced0f45cd3fd250e1a0144767d"
+        }
+      ],
+      "scope": "Historical report retained; its unchanged native/product observations are covered by current C++ regression. Current integration hashes are recorded in this report."
+    }
+  },
+  "cpp_validation": {
+    "release_warnings": 0,
+    "release_errors": 0,
+    "focused_tests": 17,
+    "focused_failures": 0,
+    "full_tests": 1362,
+    "passed": 1358,
+    "failed_checks": 4,
+    "ctest_passed": false,
+    "shell_exit_code": 1,
+    "test_seconds": 117.22,
+    "total_seconds": 117.28,
+    "failing_cases": [
+      "CampaignKernelFrames_Tutorial6",
+      "CampaignKernelFrames_TheStormRages",
+      "CampaignKernelFrames_GuardMyBack",
+      "CampaignKernelFrames_DissolvedAlliance"
+    ],
+    "log": "extracted/goal-fence-regular-20261016-ctest.log",
+    "interpretation": "Seven of eleven protected missions run 400 raw Kernel frames. Two reach the real connection rebuild boundary after event control and marker deletion. GUI/AI strategy/natural playthrough remains unverified."
+  }
+}

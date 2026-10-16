@@ -2,6 +2,9 @@
 # 클라이언트와 서버가 함께 쓰던 코드로 보인다. 이 폴더의 코드는 client/ 와 platform/ 을 포함하지 않는다.
 # 다시 만든 파일을 아래 목록에 더한다. 파일 이름은 SOURCE_MAP.md 의 "cpppj 경로"를 따른다.
 target_sources(netstorm PRIVATE
+    # 썬 바리케이드의 현재 프레임/소유자/연결 수 변경과 실제 사건 위임이다.
+    RawFenceRegular.cpp RawFenceRegular.h
+    RawFenceMarkerClear.cpp RawFenceMarkerClear.h
     # 오벨리스크의 signed 사건 횟수/현재 프레임/공유 난수 지연이다.
     RawBuriedRegular.cpp RawBuriedRegular.h
     # 맨 오 워 풀의 실제 후처리/48BYTE 프로세스/0x73 writer를 같은 Kernel에서 실행한다.

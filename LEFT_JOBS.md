@@ -1,5 +1,15 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-16 단위83 완료: 썬 바리케이드 Regular 제어·기존 표식 삭제·포스 필드 번호 정정 (`VM-W11-Codex`)
+
+- [x] 직전 턴은 원본384입력/오벨리스크 및 같은 Kernel 연결·문서·커밋07c71e6을 완료한 **진행**이다. AGENTS.md와 양 인수인계를 다시 읽었고 트리는 깨끗하다. 현재/마지막 전체 정밀 PC는 **VM-W11-Codex / 2026-10-16**으로 일치한다. 목표는 active·미달성이다.
+- [x] `RawFenceRegular.*`로 Handle00457a50의0/1/2/기본 제어를 복원했다. 현재 프레임의 signed절대나머지/owner와 연결수의 독립 변경/두 번 연결수 조회/네 방향 스냅샷/효과 뒤 좌표 재조회/각 할당 실패/같은 Kernel 사건2 예약을 유지한다. 실제 RawFenceNeighbors::Connections·RawFenceLine::Clear·Damageable/Pool/Frame/Host를 연결했다. **1372고유 입력/2744정상 반환**의 전체250BYTE/반환/호출 순서를 C++3개에서 대조하고 누락/부분쓰기1개도 통과했다.
+- [x] `RawFenceMarkerClear.*`로004566d0의 실제 중심/Rect/floor·ceil/일반finder/QA 또는 packedQB/graph 태그/현재 가상 삭제를 연결했다. **259고유 입력/518정상 반환**의 전체300BYTE/Begin영역/삭제 순서가 C++에서 전수 일치한다. 삭제 뒤 후보 태그/보관 next도 관찰했다. [상세](docs/exe/cpp-fence-regular-20261016.md).
+- [x] 원본 전역 **005411c0=90은내부fencemark**, **00541300=170은포스필드fenceShield**다. Session이 두 번째도90으로 연결한 복원 오류를170으로 고쳤고 선 삭제 검사/별도 명칭 문서에 반영했다. 기존99검색점 fixture/보고서를 덮어쓰지 않았다. 펜스 관련 집중17개 실패0, Release 경고0·오류0이다.
+- [x] 실제11미션 중7개는 여전히400프레임 통과하며, Tutorial6/GuardMyBack은 사건0/기존표식 삭제를 지나 **사건2의00457460 연결 재생성**에서 실패한다. 데모1 TYPE144/데모3 다른 총animation 실패도 유지한다. 전체 CTest **1362개 중1358통과·4실패, 검사117.22초/전체117.28초**다. 새6개/기존 검사에서 회귀는 없다. 로그는 `extracted/goal-fence-regular-20261016-*`와 `extracted/goal-fence-marker-clear-20261016-native.log`다.
+- [x] 새1631고유 입력/요구에너지2352 SHA·Python구문·UTF-8/신규 주석/링크/공백을 감사했다. CMake 이전/현재SHA와 전체검사를 요구에너지 이력에 보존한다. 과거buried 보고서의 Session/CMake3파일과 fence-line 보고서의 변경된 검사1파일 SHA는 역사로 보존하고 현재 연결/검증 근거는 새 fence-regular 보고서에 기록한다. 보호원본/AGENTS/dotnetpj·게임/GUI 실행·push는 없다. 이 단위는 문서/인수인계 뒤 **`20261016-17 CP 썬 바리케이드 사건 제어와 기존 연결 표식 삭제 복원`**으로 로컬 커밋한다. 현재/마지막 전체 정밀 PC는 **VM-W11-Codex / 2026-10-16**이다.
+- [ ] 다음은00457460의 실제 재생성과00456460(fencemark 생성)·00455b20(mode1 포스필드 생성),004578f0/004577f0 이웃 갱신을 복원한다. **보호bit20 없는 사건3**은 실제 명령에서 float 반환을 명시하지 않으므로 호출자 x87 상태 관찰 전 임의0/-1로 대신하지 않는다. TYPE144 rainFlyer Pop/BaseFlyer·다른 총 animation·GUI/Guide/AI전략/사용자 명령/자연완주/저장·다음미션/전체 그래픽·음향 동일성도 후속이다. 목표는 active·미달성이다.
+
 ## 2026-10-16 단위82 완료: 오벨리스크(`buried`) 실제 Handle·Kernel 연결 (`VM-W11-Codex`)
 
 - [x] 단위81은 `0b7bc95`로 로컬 커밋했다. 현재/마지막 전체 정밀 PC는 **VM-W11-Codex / 2026-10-16**으로 일치한다. 원본TYPE112 가상표0050a748의+5c는004622f0이며 사용자 표시명은 명칭 대응표의 **Obelisk/오벨리스크**다.

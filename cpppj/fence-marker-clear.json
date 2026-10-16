@@ -1,0 +1,30 @@
+{
+  "host": "VM-W11-Codex",
+  "last_full_decompile_host": "VM-W11-Codex",
+  "last_full_decompile_date": "2026-10-16",
+  "total": 259,
+  "normal_returns": 518,
+  "os_calls": 0,
+  "sha256": {
+    "tools/decomp_fence_marker_clear.py": "21dc20ae3860e93eda5d7bce80f1a1373932baaf7ff1ba158578af01f2d4d5c6",
+    "tools/decomp_rawfinder_oracle.py": "08914eaa23cce0b3e1540799003c71c64062bad64f37383bdd647ede5ab2e2a7",
+    "tools/decomp_bridgeeffects_oracle.py": "ed8e76931f972ffec24be024a17e65ddf3224eb487f215764f60b8abfbbaf462",
+    "tools/decomp_bridgedecay_oracle.py": "887979f3b82cd56a93a4620d473b8048a579807e72022dfa8dddcf873c81641f",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "cpppj/tests/fixtures/fence-marker-clear-x86.tsv": "9dbf35a118c9b319062a3ef6a126142ab0e152c0b3951bc72fccff2a63294c27",
+    "cpppj/src/o/RawFenceMarkerClear.h": "1f5c90b0116ca4b8687fb6f550126f4ad594ca89b7309d0aeded20313e6b1e3b",
+    "cpppj/src/o/RawFenceMarkerClear.cpp": "05349cbbdc934d52c7bc23bc97590dc6f8005251a6dad2b1b4e7ac1eed5d737c",
+    "cpppj/tests/FenceMarkerClearTests.cpp": "de939a82f394e971483e02115e588a75d82cbc7af1d5201d6d2e38acf7baac09",
+    "extracted/bridgeeffects/originals/creation.c": "ac1856212fbd285650dc4ec999fa996a306ba536a3e42d605fba4ab26178fdbc",
+    "extracted/bridgeeffects/originals/functions.tsv": "485cd05093884690ffc94c433c4e040282cd6ca26eb7da469732f74e1c983cec",
+    "extracted/finder/originals/creation.c": "2f6baf5e3cf77598e067963196c8fcd5c7d15ee09db54f3f68e8071191ea9070",
+    "extracted/finder/originals/functions.tsv": "7ee781ffc6200c8f6b231381c4dae7ce88e5c0158f4b8effb222090bf8345704",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658"
+  },
+  "limits": [
+    "선택/중심/Rect/floor·ceil/실제 일반 finder/태그 getter는 실제 원본 명령이다.",
+    "가상 삭제는 인수 관찰과 명시 raw변경 경계이며 전체 Damageable/목록/Graph 삭제의 새 관찰이 아니다.",
+    "입력은 현재 버킷/발자국이며 C++도 실제 같은 형태의 hash/finder를 사용한다.",
+    "포스필드170 삭제/재생성/전체 미션 완주를 증명하지 않는다."
+  ]
+}

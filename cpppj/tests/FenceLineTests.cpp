@@ -18,11 +18,11 @@ TEST_CASE(FenceLine_Native99) {
 // 현재 해시/방향 코드가 맞는 mark만 삭제하며 누락한 삭제 소비자는 선택 위치에서 거부한다.
 TEST_CASE(FenceLine_CurrentHashFrameAndRequiredDeletion) {
     SidPool pool{OriginalEdition::Patch1078,24000,false};SquidHash hash; // 같은 실제 입력 슬롯/해시다.
-    std::vector<RiftTypeRecord> types(188);std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({}));std::uint32_t markType=90; // 현재 타입/프레임/실제mark 번호다.
-    types[90].footX=types[90].footY=1;types[136].footX=types[136].footY=1;frames[90]=RiftTypeFrames({{'J',0,0,0},{'K',0,0,0}});
+    std::vector<RiftTypeRecord> types(188);std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({}));std::uint32_t markType=170; //실제00541300은 포스 필드170이며 내부 fencemark90과 다르다.
+    types[170].footX=types[170].footY=1;types[90].footX=types[90].footY=1;frames[170]=RiftTypeFrames({{'J',0,0,0},{'K',0,0,0}});
     for (;;) { const auto sid=pool.Allocate(2);if (sid.value==53) break;if (!sid.value || sid.value>53) throw std::logic_error("펜스 선 검사 슬롯 확보 실패"); } // 네 후보를 실제 할당한다.
     for (std::uint16_t number=50;number<=53;++number) { // 세mark와 타입이 다른 객체를 실제 해시에 등록한다.
-        auto raw=pool.AllocatedBytes(Sid{number});std::fill(raw.begin(),raw.end(),std::uint8_t{});raw[10]=number==53 ? 136 : 90;Put(raw,14,std::bit_cast<std::uint32_t>(49.0f));Put(raw,18,std::bit_cast<std::uint32_t>(40.0f+number-50));Put(raw,36,number==51 ? 1U : 0U);
+        auto raw=pool.AllocatedBytes(Sid{number});std::fill(raw.begin(),raw.end(),std::uint8_t{});raw[10]=number==53 ? 90 : 170;Put(raw,14,std::bit_cast<std::uint32_t>(49.0f));Put(raw,18,std::bit_cast<std::uint32_t>(40.0f+number-50));Put(raw,36,number==51 ? 1U : 0U);
         auto& head=hash.Bucket(1,49,40.0f+number-50);Put(raw,4,head,2);head=number;
     }
     std::vector<Sid> removed; // 외부 가상 삭제의 실제 요청을 관찰한다.
