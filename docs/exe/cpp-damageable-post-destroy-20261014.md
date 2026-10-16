@@ -92,12 +92,12 @@ Path 담당은 실제 Dais400000/Altar48 삭제의 `flags&0x300000==0` 범위부
 
 Root는 기준11 **5bdb5be** 이후 `RegularProcess::SetInitialCount(uint32_t)`를 추가하고 기존39자료/전체몸체 역변환을 별도 lineage로 보존했다. 이 API는 새 Regular의 +20 count만 직접 쓰고 event/payload/time/Form을 보존한다. 위 절의 API 대기 설명은 첫4412 관찰 당시 상태이며 현재 API 준비가 완료됐다.
 
-새 `DamageablePostDestroyHostTests.cpp`의 **TEST_CASE1개**는 기존2검사와 분리했다. 같은 실제 Factory로 생성한 레지던스/후보, HP Max/중심/finder/Hash, 단일 Pool/Kernel/ProcessHost에서 packed count를 새 Regular에 쓴다. 두 판본×최대HP100/131073의4장면에서 event6699/payload0/현재double시각17.25/Form을 확인하고, 시각 전에는 실행하지 않으며 첫 Kernel 호출에 원본 packed count65587/131073을 전달하는지 확인한다. handler는 **명시 관찰 후0반환**이며 실제 ProcessForm Unpop/Kernel 제거/번호 반환과 삭제깊이0 복구를 확인한다. 실제 DamageableHandle/지면 피해/가상 HP까지 완료됐다고 주장하지 않는다.
+새 `DamageablePostDestroyHostTests.cpp`의 **TEST_CASE1개**는 기존2검사와 분리했다. 같은 실제 Factory로 생성한 거주 구역/후보, HP Max/중심/finder/Hash, 단일 Pool/Kernel/ProcessHost에서 packed count를 새 Regular에 쓴다. 두 판본×최대HP100/131073의4장면에서 event6699/payload0/현재double시각17.25/Form을 확인하고, 시각 전에는 실행하지 않으며 첫 Kernel 호출에 원본 packed count65587/131073을 전달하는지 확인한다. handler는 **명시 관찰 후0반환**이며 실제 ProcessForm Unpop/Kernel 제거/번호 반환과 삭제깊이0 복구를 확인한다. 실제 DamageableHandle/지면 피해/가상 HP까지 완료됐다고 주장하지 않는다.
 
 기존 Post h/cpp·기존2검사·4412 fixture·두 보고서·두 도구 **전체8파일**을 `hist/damageablepo-a3bd8`에 그대로 보존했다. 현재와 보존된 전체바이트는 동일하며 `analyze_damageablepost_host_binding.py`가 현재 Root count lineage·새consumer·기존전체 의존성과 연결한다. **새native0, 생산 부모 변경0, 고유4412 유지**다. 새 검사와 기존2검사의 공유 빌드 결과는 아직 대기한다. 첫4412 native보고서의 실제Host 미완료 범위는 원문으로 보존하고 현재 소비자 확인 범위는 이 후속 보고서에만 연결했다.
 
 12의 세 번째 공유빌드 후 **기존 Post2검사/4412전수는 모두 통과**했다. 별도 Host1은 group의 기본값 **NO_GROUP(-1)** 을 그대로 두어 원본의 `group==0||group==1||vortex` 주변피해 조건을 충족하지 못했다. 첫 실패/3차build로그와 이전consumer/binding/tool/doc·기존 두history·전체4412 원문을 새 `damageablepo-fa8db`에 보존했다.
 
-선택 입력에 **합성group0**을 명시하고 tuple의60을uint16,6699/0을DWORD로 지정했다. 이것은 실제 레지던스 원래group을 재분류한 변경이 아니다. `analyze_damageablepost_host_group_lineage.py`가 두정확문자열 역변환·현재 source·이전전체출처를 연결하며 **생산/native/4412 결과 변경0**이다. 현재 최종 Post Host 감사는 이 successor를 사용한다. 실제Host1 재대조 및 단위12 전체검사는 대기한다.
+선택 입력에 **합성group0**을 명시하고 tuple의60을uint16,6699/0을DWORD로 지정했다. 이것은 실제 거주 구역 원래group을 재분류한 변경이 아니다. `analyze_damageablepost_host_group_lineage.py`가 두정확문자열 역변환·현재 source·이전전체출처를 연결하며 **생산/native/4412 결과 변경0**이다. 현재 최종 Post Host 감사는 이 successor를 사용한다. 실제Host1 재대조 및 단위12 전체검사는 대기한다.
 
 Root의 최종 증분 Release는 **경고0·오류0**으로 완료됐고, **기존 Post2검사/4412행과 실제 Host1검사가 모두 통과**했다. 새18검사와 기존24검사도 모두 통과했으며 단위12 전체1056검사는 현재 진행 중이다. 위 대기 설명은 해당 교정 전 상태로 보존한다. Host 검사의 완료 범위는 실제 초기 count 쓰기와 첫 Kernel 인자 전달이며, 관찰용 handler를 실제 DamageableHandle/HP 피해 완료로 확장하지 않는다. 생산/Test/tool/report/fixture는 최종 교정 상태로 동결한다.

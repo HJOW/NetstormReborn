@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""썬 펜스00457560의 전체 접두/호출/쓰기만 실제10.78 명령으로 격리 관찰한다."""
+"""썬 바리케이드00457560의 전체 접두/호출/쓰기만 실제10.78 명령으로 격리 관찰한다."""
 import csv
 import json
 import socket

@@ -194,11 +194,11 @@
     }
   },
   "files": {
-    "cpppj/src/o/RawAltarSacrifice.cpp": "c45c6083846aa97aec3d1dc0cd2dda2d0beab45fcd7addb07c755d1e2482f464",
-    "cpppj/src/o/RawAltarSacrifice.h": "1df83640935f495e4b6687c41ac5d181a8947f2bc6f349659870acea225b89c3",
+    "cpppj/src/o/RawAltarSacrifice.cpp": "987b5a4654bcf8bd66c7eaef93258b36f92f14707f95de1101f652bfaf24893b",
+    "cpppj/src/o/RawAltarSacrifice.h": "b5ea76ade31afcc5e075060d4847c2db774f97456c1f7d5678c979c8c027e964",
     "cpppj/src/o/RawDaisRegular.cpp": "c1a167728b02f382cbae23454e4aba1046c91a7284dbe4c6e206e856ccc4c433",
     "cpppj/src/o/RawDaisRegular.h": "fdc080a0ae1ff54909a1cf59a6b9be626e7a7d96c5103072c9325d13efb88ed3",
-    "cpppj/tests/AltarSacrificeTests.cpp": "4a26329a07ed5e93912c56a87fcc296a4dc61a92d7bd4748d249d55310c65ed1",
+    "cpppj/tests/AltarSacrificeTests.cpp": "b920c0644365682a1067005957c78b521f5ce751836e93986540a3193bc2780b",
     "cpppj/tests/DaisRegularTests.cpp": "95ab33f6dbf170375d1d7ccc109f15f4bdfda3fbf7e50bb96f6f3b5a4f093527",
     "cpppj/tests/fixtures/altarsacrifice-x86.tsv": "10ff5e1a36607b575a7de140023ee353263ea79da90991b2d58f03cd2ddccac1",
     "extracted/altarsacrifice/originalCD/creation.c": "e5034176c7a40f40d247cd4fcf0a799b9df577bd383f2ce3e0bd0c18bedb6b08",
@@ -237,7 +237,7 @@
     "extracted/templeritual/originals/functions.tsv": "4e7a6bb750bcd2232033641a3c457d577dc71ea0281dabce752c64679ef7453d",
     "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
-    "tools/decomp_altarsacrifice_oracle.py": "8eaa4b8a06f651d841ab8c0749c5b5437c4868a26c864188416eb896549f7eae",
+    "tools/decomp_altarsacrifice_oracle.py": "1d10306453d260e41582fe070b3fe0309f8f9c11c6f2be4e6d1566f6e441dc0e",
     "tools/decomp_bridgedecay_oracle.py": "887979f3b82cd56a93a4620d473b8048a579807e72022dfa8dddcf873c81641f",
     "tools/decomp_bridgeeffects_oracle.py": "ed8e76931f972ffec24be024a17e65ddf3224eb487f215764f60b8abfbbaf462",
     "tools/decomp_daisregular_oracle.py": "70160d59fe9f11736026df8df99e830bd4da7929040f39828c0afe24816e8ead",
@@ -251,5 +251,5 @@
     "tools/ghidra/templeritual-functions.json": "2d8fabc0bcb8774371707aad07bc36dbe6011b0dcf5208a15f1c7cf745748cec"
   },
   "game_runs": 0,
-  "scope": "실제알터/해방/Dais전처리/Finish 상위 몸체. Frame/가상공간/공통Damageable/음향/UI/FromForm·Type효과 경계. 실제같은Host/Pool C++소비자는후속."
+  "scope": "실제제단/해방/Dais전처리/Finish 상위 몸체. Frame/가상공간/공통Damageable/음향/UI/FromForm·Type효과 경계. 실제같은Host/Pool C++소비자는후속."
 }

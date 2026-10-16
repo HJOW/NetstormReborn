@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""알터초기smoke/중심helper확대/실제Frame단계입력/최종근거closure를원문과동일입력으로연결한다."""
+"""제단초기smoke/중심helper확대/실제Frame단계입력/최종근거closure를원문과동일입력으로연결한다."""
 import argparse,hashlib,json
 from pathlib import Path
 
@@ -51,7 +51,7 @@ def main(verify):
     value=build()
     if verify:assert json.loads(REPORT.read_text(encoding='utf-8'))==value
     else:REPORT.write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
-    print('알터동일입력successor/불변production감사:',value['current_normal'])
+    print('제단동일입력successor/불변production감사:',value['current_normal'])
 
 # 명시CLI요청만저장/현재역사원문감사를실행한다.
 if __name__=='__main__':

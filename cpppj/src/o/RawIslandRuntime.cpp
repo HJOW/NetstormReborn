@@ -159,7 +159,7 @@ void RawIslandRuntime::FirstRegion(std::uint32_t owner,std::int32_t region) {
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078; // 실제 저장폭은 두 판본 모두DWORD다.
     const auto field=owner*(patch ? 0xb4U : 0xacU)+(patch ? 0x78U : 0x70U); // 현재owner의 첫 지역 주소다.
     const auto value=std::bit_cast<std::uint32_t>(region); // 부호와 무관하게 원본 비트를 저장한다.
-    // 인접 신전/레지던스 필드를 바꾸지 않는다.
+    // 인접 신전/거주 구역 필드를 바꾸지 않는다.
     for (std::size_t index=0;index<4;++index) players_[field+index]=static_cast<std::uint8_t>(value>>(index*8));
 }
 }

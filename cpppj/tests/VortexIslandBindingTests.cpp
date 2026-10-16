@@ -12,7 +12,7 @@ struct LiveIslandScene {
     SquidHash hash; // 같은월드의 표면/공간해시다.
     std::array<std::uint8_t,RawIslandRuntime::kBytes> records{}; // countDWORD와100개32바이트기록의 단일저장소다.
     FortFinishOwnerState modes; // 실제목록이 참조하는fort/Player 모드다.
-    SquidPostPopList residences; // 현재레지던스 등록목록이며 Count는 수정하지 않는다.
+    SquidPostPopList residences; // 현재거주 구역 등록목록이며 Count는 수정하지 않는다.
     std::uint32_t revision{}; // owner변경revision DWORD다.
     std::uint32_t changed{}; // 패치의별도owner변경 DWORD다.
     std::vector<std::uint8_t> spots; // 실제65536칸 공유spot다.
@@ -34,7 +34,7 @@ struct LiveIslandScene {
     explicit LiveIslandScene(OriginalEdition edition)
         :pool(edition,kCapacity,false),spots(65536),types(edition==OriginalEdition::Patch1078 ? 188U : 171U),
         islands(pool,hash,records,modes,residences,revision,changed,{
-            [](Sid,std::uint32_t) { throw std::logic_error("Count의레지던스owner 호출"); },
+            [](Sid,std::uint32_t) { throw std::logic_error("Count의거주 구역owner 호출"); },
             [](IslandRuntimeAssertion) { throw std::logic_error("Count의missing 진단 호출"); }}),
         ascend(pool,hash,spots,types,islands,random,state,AscendHooks()) {}
 };

@@ -53,7 +53,7 @@
   },
   "os_calls": 0,
   "files": {
-    "tools/decomp_islandruntime_oracle.py": "cf0ad9958569df9d40ff2fd949c03e100058b22cda00bc5d6cda3b0d0eeb91f3",
+    "tools/decomp_islandruntime_oracle.py": "a3a35c2991bff51babffa5a34902b16f6e9231c883e777a1fb140910785a0f0b",
     "tools/ghidra/island-runtime-functions.json": "95076e78e1e9e4ce2fbaa9c17445396b6955932900d9eef3107a94ecafb3c419",
     "cpppj/tests/fixtures/islandruntime-x86.tsv": "bc220732f4d41892cd82c847196ae01507598a3e0edb0ae0d3e1ceed2eaaa180",
     "extracted/regionpaint/originals/creation.c": "54191908282833173cdd2181b46ac549e8cb494fe1ec2e58973968cc6745479f",
@@ -74,7 +74,7 @@
   },
   "limits": [
     "실제100개32바이트기록/owner/currentmode/Bounds/표면helper와현재Player첫지역을실행한다.",
-    "레지던스가상owner/assert만외부경계이며callback뒤현재목록/표면/mode/Player변경을다시읽는다.",
+    "거주 구역이상owner/assert만외부경계이며callback뒤현재목록/표면/mode/Player변경을다시읽는다.",
     "정상과원본assert입력은분리한다. GUI/전체Map생성/실제파생owner·캠페인완주검증이아니다.",
     "물리100기록밖GetBounds/Add의원본메모리접근은정상입력으로계수하지않는다."
   ]

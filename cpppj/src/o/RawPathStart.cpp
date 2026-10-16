@@ -108,7 +108,7 @@ void RawPathStart::NotifyStarted(Sid parent,RawPathPoint destination,RawPathProc
     if (type==state_.teleportType) return; // 양쪽 부모 가상+44/+40은 실제 빈 ret 몸체다.
     if (type!=state_.priestType) throw std::logic_error("다른 부모 이동 통지 미복원 경계");
     const int x=static_cast<int>(destination.x),y=static_cast<int>(destination.y);RawSquidFinder finder(pool_,hash_,types_);auto candidate=finder.Begin({x,y,x,y},1);
-    // 원본은 첫 일치에서 멈추지 않고 마지막 가이저를targetA에 기록한다.
+    // 원본은 첫 일치에서 멈추지 않고 마지막 간헐천을targetA에 기록한다.
     while (candidate.value) { if (pool_.Slot(candidate)[10]==state_.geyserType) process.Runtime().SetTargets(candidate.value,process.Runtime().TargetB());candidate=finder.Next(); }
     // 두 사건 각각을 처음부터 다시 검색하므로 삭제 callback이 추가한 같은 사건도 원본처럼 처리한다.
     for (const auto event:{0x25cU,0x25dU}) {

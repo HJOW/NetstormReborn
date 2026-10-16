@@ -68,9 +68,9 @@
     "extracted/geysermined/originals/functions.tsv": "615450fa256540bf888ceb8c1ace70a07c12c07874890f72c7412a7d8b6b7a5f",
     "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
-    "tools/decomp_geysermined_oracle.py": "0adac43758ece6fd3f6844f3e06741da8b04363bb549f743092a4dc9f90316a5",
+    "tools/decomp_geysermined_oracle.py": "ad0d01a2d648589a8b41c8c6318c292141783a01f020c3d13d18f556b8990fe2",
     "tools/decomp_reward_oracle.py": "ca25b2b1befd0f4626759c17dde1af5eb080e86e4137f7a2b384d97f25a7a143",
-    "tools/ghidra/geysermined-functions.json": "49c7ba0b226f789411977d6bf9eed2ebc9ebeeaece54c3bbecd63ee40d494574",
+    "tools/ghidra/geysermined-functions.json": "1f53f96a55228a1e9bc8f8d641483378727cf6c5a8559c44a303eeb66b799657",
     "tools/analyze_geysermined_shadow_lineage.py": "0bfead98b2de6f2689dea88a780d71c3e894d8e369483e6e94e2cafcae0502e7"
   },
   "game_runs": 0,

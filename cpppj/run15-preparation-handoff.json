@@ -46,7 +46,7 @@
   "files": {
     "cpppj/burningframe-draft-lineage.json": "9702a0190fe223bab3f64a2e709dbacdab7f3be165acd2ccad1a81f9f43e82c2",
     "cpppj/burningframe.json": "28c6315a3fa1c03acfb36989606ea9fd2c2fce52d81e04151008a24851475308",
-    "cpppj/campaign-path-bindings.json": "44c8691d48a448d9d7100f1e6314f5dee8a5808238a8aa5e0b6980259ce5d52a",
+    "cpppj/campaign-path-bindings.json": "823d4ca9669849945f492dece0389cd92d92b9c0fa9beca27edbd1b0747a7a59",
     "cpppj/campaign-worldload.json": "c8dcbc696501c32cf887045f39f6f8e1fe4e2591416691554980fed561630758",
     "cpppj/player-regular.json": "32a2e5712b7f833dd4242f800aadfecd8ddaba387e572b9a5d8a6719222a88a8",
     "cpppj/src/client/BurningFrameCapture.cpp": "dabfe21f7aed591ac6586f5757bf158e181cf0bb2199046c82740589cd746637",

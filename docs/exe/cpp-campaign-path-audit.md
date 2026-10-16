@@ -17,7 +17,7 @@
 | 내 시작 지식 | `sunWalker;rainBattery;sunAviary;sunCannon` |
 | 적 AI | `The Jailer`, `sunWalker;windBattery;sunArcher`, 시작 SP 0, `aiGeyserAttachments=1`, `aiCollectors=1`, 행동 간격 6초, 능력 `!ENCIRCLE_ENEMY_ISLAND;!USE_PRIEST_TO_COLLECT` |
 | 내 Terr00 | 간헐천 1, 사제 1, 거주 구역 1, Rain Temple(`rainVortex`) 1 |
-| 적 Terr01 | 사제 1, 거주 구역 1, 썬 디스크 발사기(`sunArcher`) 9, 썬 배리케이드(`sunBlocker`) 8, 윈드 제네레이터(`windBattery`) 3, Wind Temple(`windVortex`) 1 |
+| 적 Terr01 | 사제 1, 거주 구역 1, 썬 디스크 발사기(`sunArcher`) 9, 썬 바리케이드(`sunBlocker`) 8, 윈드 제네레이터(`windBattery`) 3, Wind Temple(`windVortex`) 1 |
 | Chaff | 다리 15, 간헐천 13, `noIsland` 117 |
 | 저장 목록 | Technology 26개, Deck 38개. 시작 지식 4개와 별도 목록 |
 | 브리핑 | `[A.]`, `Review Knowledge,ShowTechnology,55`, `Play Mission,DoNothing,0` |

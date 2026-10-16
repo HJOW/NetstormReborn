@@ -26,7 +26,7 @@
     "extracted/priestmenu/originals/creation.c": "5dd262b868fbd108a43f02166cdf0f1a624b97f4309f4c22d907545d0fcf2f59",
     "extracted/priestmenu/originals/functions.tsv": "d06a50acf33ca02d99d1ea2c8ef299f728b7e0ffd4f101c1adc935a39c51a42e",
     "tools/ghidra/priestmenu-functions.json": "c1ff270ce889835ed326a355fe523162403c11ed91fb437a2120eba63ea86339",
-    "tools/decomp_priestmenu.py": "72d14bfa36091dc86a273ad9b1998c940f575bb954195d0e0920e5e63ea10bc7",
+    "tools/decomp_priestmenu.py": "02fcb4d010e0558e969eaf3e9c55bc21d14779d8eb147d3fc2ecbcaeca7a9c2c",
     "cpppj/src/client/RawPriestMenu.cpp": "ced6ef18b8ecba70bac5c9566dff15f44794d9d502d416ac7c19d98e69ddc50b",
     "cpppj/src/client/RawPriestMenu.h": "697ce519d27ff4d4ea695dfcd549e0f4ddabe8df4597b249ee91517c2fc99284",
     "cpppj/tests/PriestMenuTests.cpp": "51b46963c14c553e98939f0e3772440b839846294c6ec82a0228255a6af553ac",

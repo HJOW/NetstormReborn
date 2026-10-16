@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""주변 Dude 실제finder/notice·현재Regular·거주지선택·속도/대피요청을두PE로관찰한다."""
+"""주변 Dude 실제finder/notice·현재Regular·거주 구역선택·속도/대피요청을두PE로관찰한다."""
 import argparse
 import collections
 import csv
@@ -17,7 +17,7 @@ SPEC={
  'originals':dict(around=0x451470,nearest=0x48fd30,point=0x4505a0,masked=0x4afbe0,new=0x4e4391,attach=0x41bd20,burningCtor=0x423b20,path=0x489080,fromform=0x4ae2d0,frame=0x4acee0,now=0x55b4d0,residences=0x59a9d8,grid=0x542508,board=0x531928,capacity=0x5c847c,pathType=0x5410d0,burningType=0x5410a8),
  'originalCD':dict(around=0x4e8e70,nearest=0x406ef0,point=0x4e8a30,masked=0x4ac9c0,new=0x4f1650,attach=0x48f590,burningCtor=0x4a5a50,path=0x47d150,fromform=0x4af4e0,frame=0x4acbc0,now=0x5484a8,residences=0x565ae0,grid=0x5670c0,board=0x52e9a8,capacity=0x5395f4,pathType=0x51c9c0,burningType=0x51c998),
 }
-# 격리객체/코드/거주지목록과네해시배열은호스트와무관한가상메모리다.
+# 격리객체/코드/거주 구역목록과네해시배열은호스트와무관한가상메모리다.
 REGULAR,PATH,DUMMY,CODES,POINT,LIST,MAP=0x11318000,0x11319000,0x1131a000,0x1131b000,0x1131c000,0x1131d000,0x13000000
 SCALES=(1,2,4,16)
 KEYS=('kind','dead','task','regular','burning','targetmode','path','made','speed','frame','now')
@@ -41,7 +41,7 @@ def sample(**kwargs):
 
 
 def inputs():
-    """task/dead/기존Regular/Burning·거주지/기존경로·분수속도·원본double시각을교차한다."""
+    """task/dead/기존Regular/Burning·거주 구역/기존경로·분수속도·원본double시각을교차한다."""
     rows=[]
     # 기본Around는각자연반환과실제notice가도달하는두생성요청을포함한다.
     for task,dead,regular,burning,target in itertools.product((0x5101,0x5104,0x5105,0x5107),(0,2),(0,1),(0,1),range(4)):
@@ -102,9 +102,9 @@ class DudeNoticeOracle(OwnerOracle):
         self.boundaries[f'{address:08x}']+=1;mu.reg_write(UC_X86_REG_EAX,value);mu.reg_write(UC_X86_REG_ESP,esp+4+purge);mu.reg_write(UC_X86_REG_EIP,ret)
 
     def prepare(self,case):
-        """기대값없이실제원본slot/타입/Regular/거주지순서/endpoint입력만공급한다."""
+        """기대값없이실제원본slot/타입/Regular/거주 구역순서/endpoint입력만공급한다."""
         self.case=case;self.events=[];mu=self.mu;p=self.p;patch=self.edition=='originals';mu.mem_write(MAP,bytes(self.mapEnd-MAP));mu.mem_write(POOL,bytes(128*self.stride));mu.mem_write(TYPES,bytes(0x20000));mu.mem_write(CODES,b'AP\0\0IP\0\0');mu.mem_write(POINT,bytes(8));mu.mem_write(p['now'],struct.pack('<Q',case['now']));mu.mem_write(p['burningType'],struct.pack('<I',14));mu.mem_write(p['pathType'],struct.pack('<I',24))
-        # 70현재Dude와89거주지의발자국/코드/분수속도자료다.
+        # 70현재Dude와89거주 구역의발자국/코드/분수속도자료다.
         for typeid,genus,width,height in ((70,0x400,1,1),(89,0x40000000,3,3)):
             typ=TYPES+typeid*self.type_stride;mu.mem_write(typ+0xec,struct.pack('<I',genus));mu.mem_write(typ+(0x1d4 if patch else 0x1b4),struct.pack('<ii',width,height));mu.mem_write(typ+0x124,struct.pack('<I',CODES));mu.mem_write(typ+0x130,bytes(4))
         if case['kind']==2:mu.mem_write(TYPES+89*self.type_stride+0xec,struct.pack('<I',(0,0x40000000,0x10000000,0x40000)[case['targetmode']]))
@@ -147,8 +147,8 @@ def generate(smoke):
         editions[edition]=dict(returns=oracle.returns,instructions=oracle.instructions,assertions=oracle.assertions,native_calls=dict(oracle.native_calls),boundaries=dict(oracle.boundaries));files.update(oracle.exports);files.add(ROOT/oracle.spec['binary']);print(edition,oracle.returns,flush=True)
     if smoke:return
     for path in ('cpppj/src/o/RawDudeNotice.cpp','cpppj/src/o/RawDudeNotice.h','cpppj/tests/DudeNoticeTests.cpp','cpppj/src/o/SquidProcess.cpp','cpppj/src/o/SquidProcess.h','cpppj/src/o/RawSquidFinder.cpp','cpppj/src/o/SquidPostPop.cpp','cpppj/dude-regular-reset-lineage.json'):files.add(ROOT/path)
-    FIXTURE.write_text('# 실제Dude around/notice·Regular상태·거주지/대피요청. Burning14(mode0)/Path24 ctor와frame 효과는관찰경계다.\n'+'\n'.join('\t'.join(map(str,row)) for row in rows)+'\n',encoding='utf-8');files.add(FIXTURE)
-    REPORT.write_text(json.dumps(dict(schema=1,host='HJOW-Athlon',total=len(rows),editions=editions,files={p.relative_to(ROOT).as_posix():digest(p) for p in sorted(files)},new_burning_constructors_completed=0,new_path_constructors_completed=0,os_calls=0,limitations=['일반finder/현재task/Regular숫자쓰기/거주지선택/속도2배와절삭복원·현재단계조회는원본몸체다.','힙/기존Regular조회/부착·Burning14(mode0) ctor/Path24 생성/기존경로객체조회/SetFrame은명시관찰경계다.','현저한분수speed/정밀double now를공급하며C++Fixture는같은실제Host Regular와좁은ResetTask를소비한다.','기존type14/24 Form과거주지배열은명시입력이며실제Burning 효과/전체경로이동을완료로세지않는다.']),ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    FIXTURE.write_text('# 실제Dude around/notice·Regular상태·거주 구역/대피요청. Burning14(mode0)/Path24 ctor와frame 효과는관찰경계다.\n'+'\n'.join('\t'.join(map(str,row)) for row in rows)+'\n',encoding='utf-8');files.add(FIXTURE)
+    REPORT.write_text(json.dumps(dict(schema=1,host='HJOW-Athlon',total=len(rows),editions=editions,files={p.relative_to(ROOT).as_posix():digest(p) for p in sorted(files)},new_burning_constructors_completed=0,new_path_constructors_completed=0,os_calls=0,limitations=['일반finder/현재task/Regular숫자쓰기/거주 구역선택/속도2배와절삭복원·현재단계조회는원본몸체다.','힙/기존Regular조회/부착·Burning14(mode0) ctor/Path24 생성/기존경로객체조회/SetFrame은명시관찰경계다.','현저한분수speed/정밀double now를공급하며C++Fixture는같은실제Host Regular와좁은ResetTask를소비한다.','기존type14/24 Form과거주 구역배열은명시입력이며실제Burning 효과/전체경로이동을완료로세지않는다.']),ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 
 
 def verify():

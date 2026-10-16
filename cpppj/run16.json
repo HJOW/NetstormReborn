@@ -14,11 +14,11 @@
   "failed_checks": 0,
   "files": {
     ".gitattributes": "42a2c7d438d2318b5b31edd794b2dfc2cc0ccf701e7edd216fa7ae51ef841a1d",
-    "cpppj/asset-player.json": "30c14242f5c6da21df4a78ab2ee3849411e496328cf93dcb9b812abc78281265",
-    "cpppj/assetpostpop.json": "304afebe7339127991718e767b0fcf402ba89f5e2cc3d650457f47acfbe103e5",
+    "cpppj/asset-player.json": "fd5feca0e74835eefb613e64cbb858e525da3f88a20e8eb5efbdcda345550d0e",
+    "cpppj/assetpostpop.json": "9cd0cee64bbe382ad0469a3223a69f037dd8a6931a83132c01ef6937de8f81aa",
     "cpppj/build/bin/Release/NetstormCpp.exe": "bdd9351a5d5a70b65685acdb58f48aebe43320de8a258fa4044dcf7bb9a6dacd",
     "cpppj/build/bin/Release/netstorm_tests.exe": "ad08563d97e84fccffd692ddcfd78903290c55397333ffb881712c22a5ffcb8d",
-    "cpppj/campaign-path-bindings.json": "44c8691d48a448d9d7100f1e6314f5dee8a5808238a8aa5e0b6980259ce5d52a",
+    "cpppj/campaign-path-bindings.json": "823d4ca9669849945f492dece0389cd92d92b9c0fa9beca27edbd1b0747a7a59",
     "cpppj/hist/run16-base/capture.json": "41e79dc5db1974704e8a74cae8f03a5061ab10e305f5b006e022ad96a6be48f2",
     "cpppj/hist/run16-fail/cpppj/tests/RawSurfaceWorldTests.cpp": "5709653e26c29cd15cff147607b102ffe67e02a447cce241557fb8d20c92e24e",
     "cpppj/hist/run16-fail/extracted/run16-world.log": "fa4629205a5860cdaeda089d1f6c63925716a247fcd5d5942b6152075195c8a8",
@@ -50,6 +50,6 @@
     "tools/analyze_campaign_path_bindings.py": "e50f6af3f1a4505e86fcad843ad9fbaf54c10f634cc0f848a37ac5ee5df88308",
     "tools/check_campaign16.py": "c15e761b2722ac59d728521a2aa6f8a1f5408efc6b85e0ba6cf9e4e25141b69d",
     "tools/decomp_asset_players.py": "62d3bdf7532bb2c18438063ef57fad59bcb0dfabc9bf0132aa1172448840ae0a",
-    "tools/decomp_assetpostpop_oracle.py": "347af1e5202ecf14b5f32125f19046e83fdd1ee420018510333437c001154e31"
+    "tools/decomp_assetpostpop_oracle.py": "15c27f3ccb10defe5f2bb366aaaa9c3412214c27602238bdda1ab817196c3df6"
   }
 }

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Fort 레지던스 owner 후처리·실제 시각 seed·AddRandom/local PRNG의 두 PE 정상 반환을 관찰한다."""
+"""Fort 거주 구역 owner 후처리·실제 시각 seed·AddRandom/local PRNG의 두 PE 정상 반환을 관찰한다."""
 import argparse,collections,csv,itertools,json,struct
 from pathlib import Path
 from decomp_fortobjectload_oracle import FortOracle,DATA,ROOT,sha,TYPES,POOL,STOP,STACK

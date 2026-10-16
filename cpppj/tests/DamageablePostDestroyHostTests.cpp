@@ -23,7 +23,7 @@ TEST_CASE(DamageablePostDestroy_ActualHostInitialCountAndFirstKernelCall) {
             std::vector<RiftTypeFrames> frames(types.size(),RiftTypeFrames({}));auto& residence=types[89];
             residence.constructorAddress=TypeConstructorAddress(edition,89);residence.flags1=0x10;residence.maxHitPoints=maximum;residence.footX=residence.footY=3;residence.group=0; // native와같은합성group0이주변피해Regular분기를선택한다.
             SquidFactory factory(pool,types);
-            // 실제 짧은 레지던스 생성자와 공통 HP postCreate로 관찰번호5..60을 확보한다.
+            // 실제 짧은 거주 구역 생성자와 공통 HP postCreate로 관찰번호5..60을 확보한다.
             for (std::uint16_t id=5;id<=60;++id) CHECK(factory.Create(89,2)==Sid{id});
             const bool patch=edition==OriginalEdition::Patch1078;const Sid source{50},victim{60};
             auto parent=pool.AllocatedBytes(source);parent[11]=2;Put(parent,14,std::bit_cast<std::uint32_t>(20.5F));Put(parent,18,std::bit_cast<std::uint32_t>(20.5F));

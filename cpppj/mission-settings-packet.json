@@ -45,7 +45,7 @@
   "sha256": {
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
     "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
-    "tools/decomp_priestmenu.py": "72d14bfa36091dc86a273ad9b1998c940f575bb954195d0e0920e5e63ea10bc7",
+    "tools/decomp_priestmenu.py": "02fcb4d010e0558e969eaf3e9c55bc21d14779d8eb147d3fc2ecbcaeca7a9c2c",
     "tools/decomp_mission_settings_packet.py": "9f9c205cc8fb045bf17463fae4a395c088ce9fcc51bc3beab2e7f8906be99fd5",
     "cpppj/src/o/RawPacketDispatch.h": "db9603cb8e42ab382a3b43312cb329ab9b3b3b208012608d3f1cdbe5fdf59738",
     "cpppj/src/o/RawPacketDispatch.cpp": "3f9628dad2707355aa7e10419ebbab17e25578e595d2335e03d48d1a1303928a",

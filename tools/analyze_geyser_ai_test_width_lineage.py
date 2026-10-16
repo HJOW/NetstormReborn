@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""가이저AI 검사 A5 입력의 정수폭 경고만 교정하고 기존604/전체자료를 보존한다."""
+"""간헐천AI 검사 A5 입력의 정수폭 경고만 교정하고 기존604/전체자료를 보존한다."""
 import argparse
 import hashlib
 import importlib.util

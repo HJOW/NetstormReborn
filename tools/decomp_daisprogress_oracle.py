@@ -1,6 +1,6 @@
 ﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""다이스 Progress/Rune304/감김306과 실제 알터 payload를 별도 제한 x86 입력으로 관찰한다."""
+"""다이스 Progress/Rune304/감김306과 실제 제단 payload를 별도 제한 x86 입력으로 관찰한다."""
 import argparse,csv,itertools,json,struct
 from pathlib import Path
 from decomp_altarsacrifice_oracle import AltarOracle,ROOT,HEAP,VTABLE,STACK,STOP,CALLER,TEMP,FPU_CONTROLS,PLAYER_STORAGE,bits,sha
@@ -102,7 +102,7 @@ def generate(smoke):
             rows.append([edition,json.dumps(case,sort_keys=True,separators=(',',':')),*result])
         editions[edition]=dict(returns=oracle.progress_returns,entries=dict(oracle.hits),boundaries=dict(oracle.stub_calls),asserts=oracle.assertions);files.update(oracle.paths);files.add(ROOT/('originals/Netstorm.exe' if edition=='originals' else 'originalCD/NETSTORM.EXE'))
     FIXTURE.write_text('# edition inputJSON returnBits effects raw5,6,7,9,10 soundStart0,1 RNG playerResults\n'+'\n'.join('\t'.join(row) for row in rows)+'\n',encoding='utf-8',newline='\n')
-    REPORT.write_text(json.dumps(dict(host='HJOW-Athlon',decompile_date='2026-10-14',total=len(rows),smoke=smoke,game_runs=0,editions=editions,files={path.relative_to(ROOT).as_posix():sha(path) for path in sorted(files)},scope='실제Progress/Rune304/감김306와알터payload. 음향장치/벽시계/가상공간/Factory/마지막전체Damageable는명시경계. Bridge 실제Path와전체같은Host/Pool 의식소비자는아직미완료.'),ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n');print('다이스 상위/알터 새 payload 독립 관찰:',len(rows))
+    REPORT.write_text(json.dumps(dict(host='HJOW-Athlon',decompile_date='2026-10-14',total=len(rows),smoke=smoke,game_runs=0,editions=editions,files={path.relative_to(ROOT).as_posix():sha(path) for path in sorted(files)},scope='실제Progress/Rune304/감김306와제단payload. 음향장치/벽시계/가상공간/Factory/마지막전체Damageable는명시경계. Bridge 실제Path와전체같은Host/Pool 의식소비자는아직미완료.'),ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n');print('다이스 상위/제단 새 payload 독립 관찰:',len(rows))
 
 def verify():
     """현재 전체 SHA/고유 입력/두 x87 정상 반환을 모두 확인한다."""
@@ -110,7 +110,7 @@ def verify():
     assert len({(row[0],row[1]) for row in rows})==len(rows)
     for name,value in data['files'].items():assert sha(ROOT/name)==value,name
     for edition,item in data['editions'].items():assert item['returns']==2*sum(row[0]==edition for row in rows) and item['asserts']==0
-    print('현재 다이스 상위/알터 payload 전체 SHA·반환 감사:',len(rows))
+    print('현재 다이스 상위/제단 payload 전체 SHA·반환 감사:',len(rows))
 
 # 명시 CLI 요청에서만 원본 독립 관찰을 만들거나 보존 근거를 감사한다.
 if __name__=='__main__':

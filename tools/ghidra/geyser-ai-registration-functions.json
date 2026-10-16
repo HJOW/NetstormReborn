@@ -1,7 +1,12 @@
 {
-  "description": "최초 가이저 PostPop이 실제 현재 Player 9기록의 AI 포인터를 조회하는 00416720/CD004d8670을 내보낸다. Player1..8의 null AI 순회가 독립 실행 대상이며 nonnull AI의 PATCH004153c0/CD inlined 하위 몸체는 명시 미완료 경계로 거부한다. PATCH callback도 의미 감사용으로 읽되 완료 몸체로 합산하지 않는다. 현재/마지막 디컴파일 PC HJOW-Athlon, 2026-10-14.",
+  "description": "최초 간헐천 PostPop이 실제 현재 Player 9기록의 AI 포인터를 조회하는 00416720/CD004d8670을 내보낸다. Player1..8의 null AI 순회가 독립 실행 대상이며 nonnull AI의 PATCH004153c0/CD inlined 하위 몸체는 명시 미완료 경계로 거부한다. PATCH callback도 의미 감사용으로 읽되 완료 몸체로 합산하지 않는다. 현재/마지막 디컴파일 PC HJOW-Athlon, 2026-10-14.",
   "editions": {
-    "originals": ["00416720", "004153c0"],
-    "originalCD": ["004d8670"]
+    "originals": [
+      "00416720",
+      "004153c0"
+    ],
+    "originalCD": [
+      "004d8670"
+    ]
   }
 }

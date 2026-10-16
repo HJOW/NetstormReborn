@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""두 보호 PE의 실제 가이저 채집·난수·수량WORD·isle 조회를 독립 실행한다."""
+"""두 보호 PE의 실제 간헐천 채집·난수·수량WORD·isle 조회를 독립 실행한다."""
 import argparse
 import collections
 import csv
@@ -117,7 +117,7 @@ def generate(smoke=False):
     FIXTURE.write_text('# edition quantity,cost,seed,free,boss,surface,mutation rng events raw born\n'+'\n'.join('\t'.join(map(str,row)) for row in rows)+'\n',encoding='utf-8',newline='\n')
     files.update(ROOT/name for name in ('cpppj/src/o/RawGeyserMined.h','cpppj/src/o/RawGeyserMined.cpp','cpppj/tests/GeyserMinedTests.cpp','tools/decomp_reward_oracle.py','cpppj/src/o/SpStore.h','cpppj/src/o/SpStore.cpp','cpppj/src/o/RawPacketDispatch.h','cpppj/src/o/RawPacketDispatch.cpp','cpppj/src/o/RawPacketLengths.h'))
     REPORT.write_text(json.dumps(dict(host='HJOW-Athlon',total=len(rows),normal_total=sum(e['normal_cases'] for e in editions.values()),assertion_total=sum(e['assertion_cases'] for e in editions.values()),editions=editions,files={p.relative_to(ROOT).as_posix():digest(p) for p in sorted(files) if p.exists()},game_runs=0,limits=['음향/서식정리·가상삭제/생성/Pop과 assert 보고는 명시 관찰 경계다. 패치 assert 입력8개는 기록 뒤 C++예외로 대조하며 정상 입력에 더하지 않는다. 실제 상위Carrier도착/채집예약/packet송신은 미연결이다.']),ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
-    print('가이저 채집 native 입력:',len(rows))
+    print('간헐천 채집 native 입력:',len(rows))
 
 
 def verify():
@@ -131,7 +131,7 @@ def verify():
         assert item['entries'][f'{SPEC[edition]["entry"]:08x}']==item['returns'];assert set(item['boundaries'])<= {'format','sound','destroy','create','pop'}
         assert item['assertion_cases']==sum('A' in row[3].split(';') for row in chosen) and item['asserts']==2*item['assertion_cases']
         assert item['normal_cases']+item['assertion_cases']==len(chosen)
-    print('가이저 채집 SHA/실제몸체/반환 감사:',len(rows))
+    print('간헐천 채집 SHA/실제몸체/반환 감사:',len(rows))
 
 
 # 명시 호출에서만 native 관찰 생성 또는 저장 근거 감사를 수행한다.

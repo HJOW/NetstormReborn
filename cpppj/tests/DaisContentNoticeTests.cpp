@@ -30,7 +30,7 @@ TEST_CASE(rawDaisContentNotice_native_attach_remove_plain_frame_word_and_current
         SidPool pool(edition,24000,true);SquidHash hash;std::vector<RiftTypeRecord> types(patch ? 188 : 171);std::vector<RiftTypeFrames> frames(types.size(),RiftTypeFrames({}));std::array<std::span<std::uint8_t>,12> slots;
         // 비교 슬롯 외의 raw도 원본 입력처럼 zero로 둔다.
         for (std::uint16_t sid=5;sid<=11;++sid) { CHECK(pool.Allocate(2)==Sid{sid});slots[sid]=pool.AllocatedBytes(Sid{sid});std::fill(slots[sid].begin(),slots[sid].end(),std::uint8_t{}); }
-        // 실제 입력 체인의 Dais→사제→알터 삽입 순서를 그대로 준비한다.
+        // 실제 입력 체인의 Dais→사제→제단 삽입 순서를 그대로 준비한다.
         const auto insert=[&](Sid sid,std::uint32_t type) { auto raw=slots[sid.value];Put(raw,0,kVtable);raw[10]=static_cast<std::uint8_t>(type);Put(raw,14,std::bit_cast<std::uint32_t>(40.75F));Put(raw,18,std::bit_cast<std::uint32_t>(41.25F));auto& head=hash.Bucket(1,40.75F,41.25F);Put(raw,4,head,2);head=sid.value;raw[patch ? 33 : 31]=1;raw[patch ? 34 : 32]=1; };
         insert(Sid{5},165);insert(Sid{6},158);insert(Sid{7},164);Put(slots[5],0,patch ? kPatchDaisVtable : kCdDaisVtable);Put(slots[7],0,patch ? kPatchAltarVtable : kCdAltarVtable);Put(slots[5],patch ? 36 : 34,14,patch ? 4 : 1);Put(slots[7],patch ? 36 : 34,13,patch ? 4 : 1);Put(slots[7],12,2,2);slots[5][patch ? 34 : 32]=static_cast<std::uint8_t>(number("owner"));types[165].footX=types[165].footY=3;types[164].footX=types[164].footY=1;
         types[158].footX=types[158].footY=1; // 같은 원본 입력 체인의 사제 후보는 1×1 발자국이다.
@@ -45,7 +45,7 @@ TEST_CASE(rawDaisContentNotice_native_attach_remove_plain_frame_word_and_current
         hooks.unpop=[&](Sid sid,std::uint32_t flags) { CHECK(sid==Sid{7} && flags==0);effects.push_back("unpop:7,0"); };
         hooks.repop=[&](Sid sid,std::uint32_t flags) { CHECK(sid==Sid{7} && flags==0);effects.push_back("repop:7,0"); };
         hooks.stopVoice=[&](std::uint32_t cue,std::uint32_t zero,std::uint32_t flags) { CHECK(cue==99 && zero==0 && flags==0);effects.push_back("V:99,0,0"); };
-        hooks.notifySurface=[](Sid) { throw std::logic_error("현재 알터 타입은 다리 WORD 표면 통지 대상이 아니다"); };
+        hooks.notifySurface=[](Sid) { throw std::logic_error("현재 제단 타입은 다리 WORD 표면 통지 대상이 아니다"); };
         RawDaisContentNotice notice(pool,frames,rune,state,std::move(hooks));notice.Notice(Sid{5},Sid{10},number("reason"));CHECK(NoticeEffects(effects)==row[2]);const auto images=Split(row[3],';');CHECK(images.size()==3);
         // 주입한 실제 VT 주소 DWORD 외의 raw 전체를 독립 원본과 비교한다.
         for (std::size_t index=0;index<3;++index) { const auto sid=std::array<std::uint16_t,3>{{5,7,10}}[index];const auto image=Hex(pool.Slot(Sid{sid}));CHECK(image.size()==images[index].size() && image.substr(8)==images[index].substr(8)); }

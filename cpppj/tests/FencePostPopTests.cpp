@@ -1,4 +1,4 @@
-// 썬 펜스 부모의 분기를 독립 원본 출력으로 확인하고 미연결 하위의 부분 쓰기를 검사한다.
+// 썬 바리케이드 부모의 분기를 독립 원본 출력으로 확인하고 미연결 하위의 부분 쓰기를 검사한다.
 #include "RawSceneSupport.h"
 #include "o/RawFencePostPop.h"
 using namespace netstorm::o;

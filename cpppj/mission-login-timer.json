@@ -50,7 +50,7 @@
   "sha256": {
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
     "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
-    "tools/decomp_priestmenu.py": "72d14bfa36091dc86a273ad9b1998c940f575bb954195d0e0920e5e63ea10bc7",
+    "tools/decomp_priestmenu.py": "02fcb4d010e0558e969eaf3e9c55bc21d14779d8eb147d3fc2ecbcaeca7a9c2c",
     "tools/decomp_mission_login_timer.py": "17f766b78e0167f4af1bc4792cef5ab8ce584334a942f4c7ed592f81d32c6d4c",
     "cpppj/src/o/RawMissionLoginTimer.h": "6d02e1dfb1b176dfc0f8a257ae862ab15f5206f996f576b7b8b3f7a82c372f91",
     "cpppj/src/o/RawMissionLoginTimer.cpp": "34727e857f4cb47965d708a97f6c979fb8409a7ed2b581f3b6585046085a40de",

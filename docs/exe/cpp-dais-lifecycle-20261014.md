@@ -1,26 +1,26 @@
-# 다이스·알터 최초Pop와 삭제 전후 복원 준비 — 2026-10-14
+# 다이스·제단 최초Pop와 삭제 전후 복원 준비 — 2026-10-14
 
 마지막 디컴파일 PC/날짜는 **HJOW-Athlon, 2026-10-14**다. `daislifecycle`의 패치10.78/CD10.72 각5개 실제몸체를 Refined readOnly로 내보냈고 종료0이다. 단위11의 좁은Dais/Altar관찰과 구분해 **후속단위12**에등록한다.
 
 | 실제몸체 | 패치10.78 | CD10.72 |
 | --- | --- | --- |
-| 알터 preDestroy |0044a4d0|004836b0|
-| 알터 postPop |00448ad0|004835c0|
-| 알터 postDestroy 직접위임 |00448b60|00483660|
+| 제단 preDestroy |0044a4d0|004836b0|
+| 제단 postPop |00448ad0|004835c0|
+| 제단 postDestroy 직접위임 |00448b60|00483660|
 | 다이스 postPop |00449320|00481360|
 | 다이스 postDestroy |00449580|00481620|
 
 ## 현재 새몸체
 
-`RawDaisLifecycle`는 동일한Pool/Hash/기존발자국/Temple count·Stage/Altar typed조회/Carrier DamageablePostPop/DamageablePreDestroy를 공유한다. 최초다이스Pop은 저장한플레이어개수로첫프레임을보정하고현재개수BYTE를갱신한다. flags1/2의서로다른Player SID쌍을등록한다. 로딩중boss이면 현재단계를초기화하는가상Unpop→plain frame쓰기→Repop 뒤현재알터타입을생성해owner와전체Pop를요청한다. 현재로컬/비로딩/홈섬불일치는설정과억제전역을다시읽어경고한다.
+`RawDaisLifecycle`는 동일한Pool/Hash/기존발자국/Temple count·Stage/Altar typed조회/Carrier DamageablePostPop/DamageablePreDestroy를 공유한다. 최초다이스Pop은 저장한플레이어개수로첫프레임을보정하고현재개수BYTE를갱신한다. flags1/2의서로다른Player SID쌍을등록한다. 로딩중boss이면 현재단계를초기화하는가상Unpop→plain frame쓰기→Repop 뒤현재제단타입을생성해owner와전체Pop를요청한다. 현재로컬/비로딩/홈섬불일치는설정과억제전역을다시읽어경고한다.
 
-알터 최초Pop은 **로컬21 Regular**를현재저항주기3초전역으로예약한뒤실제Damageable후처리에위임한다. SharedRegular로대체하지않는다. 알터preDestroy는flags400000이없고같은현재다이스가dead가아니면동일flags의가상삭제를먼저요청한다. 현재발자국의abstractRune를서버또는client번호권한에따라flags0으로지우고실제DamageablePreDestroy를호출한다.
+제단 최초Pop은 **로컬21 Regular**를현재저항주기3초전역으로예약한뒤실제Damageable후처리에위임한다. SharedRegular로대체하지않는다. 제단preDestroy는flags400000이없고같은현재다이스가dead가아니면동일flags의가상삭제를먼저요청한다. 현재발자국의abstractRune를서버또는client번호권한에따라flags0으로지우고실제DamageablePreDestroy를호출한다.
 
-다이스postDestroy는현재owner의등록된SID두쌍중현재다이스와일치하는쌍만0으로지운다. 다른SID와그mirror는유지한다. 마지막은 **전체DamageablePostDestroy**이며알터postDestroy도그전체몸체로직접위임한다.
+다이스postDestroy는현재owner의등록된SID두쌍중현재다이스와일치하는쌍만0으로지운다. 다른SID와그mirror는유지한다. 마지막은 **전체DamageablePostDestroy**이며제단postDestroy도그전체몸체로직접위임한다.
 
 ## 독립 관찰과 새검사 초안
 
-`daislifecycle-x86.tsv`는 **1928정상/assert0**이다. 판본당964입력을각각두x87정밀도에서실행해1928정상반환/판본을확인했다. 전체새5/5본문의분기/Player BYTE·SID쌍/플레이어일치·비일치/로딩·권한·억제/알터예약/추상Rune조건을원본PE에서읽었다. 초기smoke20과같은입력재관찰/기존Dais668·Altar2866/helper는1928에합산하지않는다.
+`daislifecycle-x86.tsv`는 **1928정상/assert0**이다. 판본당964입력을각각두x87정밀도에서실행해1928정상반환/판본을확인했다. 전체새5/5본문의분기/Player BYTE·SID쌍/플레이어일치·비일치/로딩·권한·억제/제단예약/추상Rune조건을원본PE에서읽었다. 초기smoke20과같은입력재관찰/기존Dais668·Altar2866/helper는1928에합산하지않는다.
 
 최초도구 `decomp_daislifecycle_oracle.py`와1928보고서는 당시production/전수test초안/전체import/export/PE/fixture의전체SHA,중복없는입력키,정상x87/SEH/스택복구를기록했다. `DaisLifecycleTests.cpp`는현재1928입력의동일풀·실제typed/finder·Player상태를대조한다. 마지막전체Damageable 진입에서원본의명시효과경계에맞춰관찰하고전용예외로중단한다. 단위12에1검사로등록해첫공유빌드를진행중이며 **그예외검사를전체파괴완료로표시하지않는다.**
 
@@ -38,4 +38,4 @@ Frame/가상공간/Factory/음향/UI/표면조회와마지막전체Damageable는
 
 마지막DamageablePostDestroy **0044b9e0/CD00461b40**과그첫드롭helper **0044b830/CD00461970**은asset담당이새 `RawDamageablePostDestroy`로별도복원중이다. 첫드롭을기존RawDamageableRelease로대체하지않는다. 섬정리 **0046e6c0/CD0048f960**만기존RawConstructionEffects.DropIsland를재사용한다. 현재전수body가새API `PostDestroy(Sid,std::uint32_t) const`로준비되면같은풀의실제파생삭제에연결한다.
 
-현재이자료는알터→다이스전체삭제완료/캠페인1-1의식완주/승패·UI동일성을완료로표시하지않는다. 이전완료소스/관찰/보호원본을유지한다.
+현재이자료는제단→다이스전체삭제완료/캠페인1-1의식완주/승패·UI동일성을완료로표시하지않는다. 이전완료소스/관찰/보호원본을유지한다.

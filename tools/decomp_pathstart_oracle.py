@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""실제 이동 시작·flags0 Init·BFS·Prepare·사제 가이저 finder/이벤트 취소를 두 PE에서 실행한다."""
+"""실제 이동 시작·flags0 Init·BFS·Prepare·사제 간헐천 finder/이벤트 취소를 두 PE에서 실행한다."""
 import argparse
 import collections
 import csv
@@ -188,7 +188,7 @@ def generate(smoke=False):
     FIXTURE.write_text('# edition type,profile,boss,legacy,replace,pending success events command_fields points frame pending604,pending605,retry\n'+'\n'.join('\t'.join(map(str,row)) for row in rows)+'\n',encoding='utf-8',newline='\n')
     TYPE_FIXTURE.write_text('# edition type genus result assertion\n'+'\n'.join('\t'.join(map(str,row)) for row in type_rows)+'\n',encoding='utf-8',newline='\n')
     files.update(ROOT/name for name in ('cpppj/src/o/RawPathStart.h','cpppj/src/o/RawPathStart.cpp','cpppj/src/o/RawPathRuntime.h','cpppj/src/o/RawPathRuntime.cpp','cpppj/src/client/RawPriestWorldBindings.h','cpppj/src/client/RawPriestWorldBindings.cpp','cpppj/tests/RawPathStartTests.cpp','tools/decomp_rawfinder_oracle.py','tools/decomp_bridgeeffects_oracle.py','tools/decomp_bridgedecay_oracle.py'))
-    REPORT.write_text(json.dumps(dict(total=len(rows),new_unique_cases=len(rows),type_total=len(type_rows),regression_type_cases=len(type_rows),host='HJOW-Athlon',editions=editions,files={p.relative_to(ROOT).as_posix():sha(p) for p in sorted(files) if p.exists()},precision_differences=differences,os_calls=0,limits=['실제 상위 Start/종류선택/ctor/flags0 Init/BFS/Prepare/사제 가이저 finder/취소 루프를 실행한다. 종류선택718개는 이전2872개에 포함되는 회귀이며 신규 합산하지 않는다.','힙·구 경로 조회/삭제·이벤트 조회/삭제·Host 부착·프레임 갱신·profiling 시계는 명시 관찰 경계다.','실제 운반/의식·삭제 cleanup·캠페인 완주/GUI 검증으로 세지 않는다.']),ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
+    REPORT.write_text(json.dumps(dict(total=len(rows),new_unique_cases=len(rows),type_total=len(type_rows),regression_type_cases=len(type_rows),host='HJOW-Athlon',editions=editions,files={p.relative_to(ROOT).as_posix():sha(p) for p in sorted(files) if p.exists()},precision_differences=differences,os_calls=0,limits=['실제 상위 Start/종류선택/ctor/flags0 Init/BFS/Prepare/사제 간헐천 finder/취소 루프를 실행한다. 종류선택718개는 이전2872개에 포함되는 회귀이며 신규 합산하지 않는다.','힙·구 경로 조회/삭제·이벤트 조회/삭제·Host 부착·프레임 갱신·profiling 시계는 명시 관찰 경계다.','실제 운반/의식·삭제 cleanup·캠페인 완주/GUI 검증으로 세지 않는다.']),ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
     print('PathStart 실제 입력:',len(rows),'정밀도 차이:',len(differences))
 
 

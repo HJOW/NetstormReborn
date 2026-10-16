@@ -99,12 +99,12 @@ void SquidPostPop::SetRunePostPop(const RawRunePostPop* postPop) {
 }
 // 타입/가상표판단은등록된실제몸체에위임한다.
 bool SquidPostPop::HandlesRune(Sid sid) const { return runePostPop_ && runePostPop_->Handles(sid); }
-// 실제 다이스/알터 수명 전체몸체를 같은 풀에만 등록한다.
+// 실제 다이스/제단 수명 전체몸체를 같은 풀에만 등록한다.
 void SquidPostPop::SetDaisPostPop(const RawDaisLifecycle* postPop) {
-    if (postPop && &postPop->Pool()!=&pool_) throw std::invalid_argument("다이스/알터 Pop 후처리 풀 불일치");
+    if (postPop && &postPop->Pool()!=&pool_) throw std::invalid_argument("다이스/제단 Pop 후처리 풀 불일치");
     daisPostPop_=postPop;
 }
-// 실제 다이스/알터 수명 타입과 가상표의 판단은 등록된 몸체를 재사용한다.
+// 실제 다이스/제단 수명 타입과 가상표의 판단은 등록된 몸체를 재사용한다.
 bool SquidPostPop::HandlesDais(Sid sid) const { return daisPostPop_ && daisPostPop_->Handles(sid); }
 // 실제 Dude 후처리의 전체 몸체를 같은 풀에만 명시 등록한다.
 void SquidPostPop::SetDudePostPop(const RawDudePostPop* postPop) {
@@ -265,10 +265,10 @@ void SquidPostPop::Activate(Sid sid,std::uint32_t flags) {
         if (state_.depth!=before) throw std::logic_error("Dude Activate 공통 깊이 불일치");
         return;
     }
-    // 다이스/알터는 자기 전체 몸체 안에서 Damageable와 공통 장부를 한 번 호출한다.
+    // 다이스/제단은 자기 전체 몸체 안에서 Damageable와 공통 장부를 한 번 호출한다.
     if (HandlesDais(sid)) {
         daisPostPop_->PostPop(sid,flags);
-        if (state_.depth!=before) throw std::logic_error("다이스/알터 Activate 공통 깊이 불일치");
+        if (state_.depth!=before) throw std::logic_error("다이스/제단 Activate 공통 깊이 불일치");
         return;
     }
     // Rune은304예약/건설후공통몸체를자신의내부에서한번호출한다.

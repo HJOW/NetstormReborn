@@ -13,7 +13,7 @@ class RawCarrierPostPop;
 class RawAssetPostPop;
 class RawFactoryPostPop;
 class RawRunePostPop; // Rune166의 실제304/건설/공통후처리몸체를명시연결한다.
-class RawDaisLifecycle; // 다이스165/알터164의 실제 최초예약·등록·공통후처리를 연결한다.
+class RawDaisLifecycle; // 다이스165/제단164의 실제 최초예약·등록·공통후처리를 연결한다.
 class RawDudePostPop; // Dude70의 실제 idle/population/I 프레임·공통후처리를 연결한다.
 class RawPlayerWorld; // Player152의 실제 최초 기록·예약·공통후처리를 연결한다.
 class RawBuriedPostPop; // buried112의 최초 예약/QA/공통후처리를 같은 풀에 연결한다.
@@ -80,11 +80,11 @@ public:
     bool HandlesCarrier(Sid sid) const;
     // 가상 표가 직접 Damageable 후처리를 사용하며 그 전체 몸체가 연결됐는가.
     bool HandlesDamageable(Sid sid) const;
-    // Gun/제네레이터/레지던스/배리케이드/가이저/신전의 실제 전용 몸체를 같은 풀에 연결한다.
+    // Gun/제네레이터/거주 구역/바리케이드/간헐천/신전의 실제 전용 몸체를 같은 풀에 연결한다.
     void SetAssetPostPop(const RawAssetPostPop* postPop);
     // 실제 가상 표의 전용 자산 후처리가 명시 등록돼 있는가.
     bool HandlesAsset(Sid sid) const;
-    // 실제 Factory/썬 아비어리 전체 후처리를 같은 풀에 등록한다. nullptr은 연결을 해제한다.
+    // 실제 Factory/훨리베이스 전체 후처리를 같은 풀에 등록한다. nullptr은 연결을 해제한다.
     void SetFactoryPostPop(const RawFactoryPostPop* postPop);
     // 해당 가상 표의 몸체와 같은 월드 연결이 모두 준비돼 있는지 확인한다.
     bool HandlesFactory(Sid sid) const;
@@ -92,9 +92,9 @@ public:
     void SetRunePostPop(const RawRunePostPop* postPop);
     // 현재Rune타입/실제가상표이며전용전체몸체가등록돼있는가.
     bool HandlesRune(Sid sid) const;
-    // 다이스/알터의 전체 최초 Pop 몸체를 같은 풀에 등록하며 nullptr은 등록을 해제한다.
+    // 다이스/제단의 전체 최초 Pop 몸체를 같은 풀에 등록하며 nullptr은 등록을 해제한다.
     void SetDaisPostPop(const RawDaisLifecycle* postPop);
-    // 실제 다이스/알터 타입과 생성자 가상표가 등록된 전체 몸체와 일치하는가.
+    // 실제 다이스/제단 타입과 생성자 가상표가 등록된 전체 몸체와 일치하는가.
     bool HandlesDais(Sid sid) const;
     // Dude의 실제 최초 등록 전체 몸체를 같은 풀에 등록하며 nullptr은 연결을 해제한다.
     void SetDudePostPop(const RawDudePostPop* postPop);
@@ -148,7 +148,7 @@ private:
     const RawAssetPostPop* assetPostPop_{}; // 초기 요새 건물의 전체 후처리다. 내부에서 공통 깊이를 한 번 줄인다.
     const RawFactoryPostPop* factoryPostPop_{}; // 같은 해시/목록의 Factory wrapper를 실행하고 공통 깊이를 한 번 줄인다.
     const RawRunePostPop* runePostPop_{}; // 실제Rune예약/건설다음공통깊이를한번감소시키는전체몸체다.
-    const RawDaisLifecycle* daisPostPop_{}; // 최초 Player 등록/알터 생성·21 예약 뒤 같은 공통 깊이를 한 번 줄인다.
+    const RawDaisLifecycle* daisPostPop_{}; // 최초 Player 등록/제단 생성·21 예약 뒤 같은 공통 깊이를 한 번 줄인다.
     const RawDudePostPop* dudePostPop_{}; // idle/population/I 프레임 뒤 같은 공통 깊이를 한 번 줄이는 전체 몸체다.
     const RawPlayerWorld* playerPostPop_{}; // 같은9기록/SID·최초예약 뒤 공통 깊이를 한 번 줄이는 전체 몸체다.
 };

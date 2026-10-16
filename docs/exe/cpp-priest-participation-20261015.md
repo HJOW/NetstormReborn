@@ -16,7 +16,7 @@
 | 6 | `00494f10` | 첫 Dais가 있고 dead bit2가 없으며 **Altar 자체의 `+0xc WORD 전체`가 player DWORD와 같으면** Altar SID를 저장하고 계속 순회한다. 끝까지 Carrier가 없으면 **마지막 일치 Altar**를 반환한다. 첫 Dais가 죽었으면 뒤의 다른 Dais로 대체하지 않는다. |
 | 7 | `00495060` | 다시 실제 `Find`를 수행한다. 결과0이면2, 결과의 현재 타입이 currentPriestType이면0, 나머지는1이다. 현재 타입 읽기 이후 player1..8에만 기존 `PriestPostPopState::ownerState`를 쓴다. player0/9/음수 비트도 조회는 수행하며 쓰기만 생략한다. |
 
-Altar의 `DaisAt`은 현재 Session에 아직 설치되지 않은 알터 전체 의식/해방 객체를 필수 생성하지 않도록, 기존 `RawSquidFinder`의 전체 typed 조회를 직접 조합하는 생성자를 제공한다. 실제 `RawAltarSacrifice`가 설치된 월드는 마지막 인자에 그 객체를 전달하면 **기존 `DaisAt` 몸체를 직접 호출**한다. 두 경로 모두 동일 풀을 검사하며 외부 선택 결과나 포획 bool을 공급받지 않는다. 일반 typed 조회의 좌표 helper `0041d770`은 거의 올림이 아닌 실제0방향 절삭이다.
+Altar의 `DaisAt`은 현재 Session에 아직 설치되지 않은 제단 전체 의식/해방 객체를 필수 생성하지 않도록, 기존 `RawSquidFinder`의 전체 typed 조회를 직접 조합하는 생성자를 제공한다. 실제 `RawAltarSacrifice`가 설치된 월드는 마지막 인자에 그 객체를 전달하면 **기존 `DaisAt` 몸체를 직접 호출**한다. 두 경로 모두 동일 풀을 검사하며 외부 선택 결과나 포획 bool을 공급받지 않는다. 일반 typed 조회의 좌표 helper `0041d770`은 거의 올림이 아닌 실제0방향 절삭이다.
 
 ## 후속 실제 로그인 종료에 연결하는 방법
 

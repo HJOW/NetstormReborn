@@ -8,7 +8,7 @@
 
 namespace netstorm::o {
 namespace {
-// 원본 Dude task WORD와 가까운거주지 최초거리 및스냅float 바이어스다.
+// 원본 Dude task WORD와 가까운거주 구역 최초거리 및스냅float 바이어스다.
 constexpr std::uint16_t kNoticeTask=0x5107,kFallTask=0x5105;
 constexpr float kFarDistance=9999.0f,kSnapBias=0.9999f;
 // 원본비정렬little endian DWORD/WORD/BYTE를 읽는다.
@@ -21,7 +21,7 @@ std::uint32_t ReadDude(std::span<const std::uint8_t> raw,std::size_t offset,std:
 // 현재좌표float의원본비트를 읽는다.
 float DudeCoordinate(std::span<const std::uint8_t> raw,std::size_t offset) { return std::bit_cast<float>(ReadDude(raw,offset)); }
 }
-// 현재실제타입/프레임/속도배열의판본별전체크기와거주지count를검사한다.
+// 현재실제타입/프레임/속도배열의판본별전체크기와거주 구역count를검사한다.
 RawDudeNotice::RawDudeNotice(SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,
     std::span<const RiftTypeFrames> frames,std::span<DudeNoticeTypeData> speeds,const SquidPostPopList& residences,DudeNoticeState state,DudeNoticeHooks hooks)
     :pool_(pool),hash_(hash),types_(types),frames_(frames),speeds_(speeds),residences_(residences),state_(state),hooks_(std::move(hooks)) {
@@ -61,9 +61,9 @@ void RawDudeNotice::Around(float x,float y) const {
 // 현재owner/좌표를읽고각후보후best float저장을유지한다. 같은거리에서는앞선후보가남는다.
 Sid RawDudeNotice::NearestResidence(Sid sid) const {
     const auto raw=Slot(sid);const auto owner=raw[pool_.Edition()==OriginalEdition::Patch1078 ? 34U : 32U];const double x=DudeCoordinate(raw,14),y=DudeCoordinate(raw,18);float best=kFarDistance;Sid result;
-    // 실제거주지active DWORD 목록을현재순서대로만조회한다.
+    // 실제거주 구역active DWORD 목록을현재순서대로만조회한다.
     for (const auto number:residences_.Items()) {
-        if (!number || number>=pool_.Capacity()) throw std::out_of_range("Dude notice 거주지 SID 오류");const auto candidate=pool_.Slot(Sid{static_cast<std::uint16_t>(number)});
+        if (!number || number>=pool_.Capacity()) throw std::out_of_range("Dude notice 거주 구역 SID 오류");const auto candidate=pool_.Slot(Sid{static_cast<std::uint16_t>(number)});
         if (candidate[pool_.Edition()==OriginalEdition::Patch1078 ? 34U : 32U]!=owner) continue;const double dx=x-DudeCoordinate(candidate,14),dy=y-DudeCoordinate(candidate,18);const double distance=std::sqrt(dx*dx+dy*dy);
         if (distance<best) { best=static_cast<float>(distance);result={static_cast<std::uint16_t>(number)}; }
     }
@@ -71,7 +71,7 @@ Sid RawDudeNotice::NearestResidence(Sid sid) const {
 }
 // 일반Gun center와달리x−footX*0.5 절삭+0.5 및타입높이/현재genus로y를보정한다.
 std::array<float,2> RawDudeNotice::ResidencePoint(Sid sid) const {
-    const auto raw=Slot(sid);const auto& type=types_[raw[10]];const float x=DudeCoordinate(raw,14);if (!std::isfinite(x) || x<0 || x>256) throw std::out_of_range("Dude notice 거주지좌표 오류");float y=DudeCoordinate(raw,18)-static_cast<float>(type.footY);
+    const auto raw=Slot(sid);const auto& type=types_[raw[10]];const float x=DudeCoordinate(raw,14);if (!std::isfinite(x) || x<0 || x>256) throw std::out_of_range("Dude notice 거주 구역좌표 오류");float y=DudeCoordinate(raw,18)-static_cast<float>(type.footY);
     const double entranceX=static_cast<double>(x)-static_cast<double>(type.footX)*0.5;
     if (!(type.flags2&state_.raisedGenusMask)) y-=0.5f;else if (type.flags2&0x10040000) y+=1.0f;return {static_cast<float>(static_cast<int>(entranceX))+0.5f,y};
 }
@@ -91,7 +91,7 @@ bool RawDudeNotice::Move(Sid sid,std::array<float,2> destination,bool quickly) c
     }
     return made;
 }
-// 상태/Regular→Burning→최근같은owner거주지→원본대피 요청 순서를유지한다.
+// 상태/Regular→Burning→최근같은owner거주 구역→원본대피 요청 순서를유지한다.
 void RawDudeNotice::Notice(Sid sid) const {
     const auto raw=Slot(sid);const auto task=ReadDude(raw,12,2);if ((raw[11]&2) || task==kNoticeTask || task==kFallTask) return;
     if (!hooks_.taskRegular) throw std::logic_error("Dude notice 현재Regular조회 미연결");auto* regular=hooks_.taskRegular(sid);

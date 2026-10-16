@@ -14,11 +14,11 @@
   "sha256": {
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
     "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
-    "tools/decomp_fence_postpop.py": "3d3477aec14fab8431aa0b7512b8b5d6a8c09b708535b8d54e7c32e75b33ba4b",
+    "tools/decomp_fence_postpop.py": "49263398d88139fefd2b19fdf610dd85e18b926fc3dffafc496368704f1949b4",
     "tools/decomp_local_mission_transport.py": "db71da65079aa9a985a3a833edd224f089ba9a20137d92042551cb346937eb78",
-    "cpppj/src/o/RawFencePostPop.h": "d4e677170685b39275b8111b42008b84794114587f625b003a8f36eec029703a",
-    "cpppj/src/o/RawFencePostPop.cpp": "8c081a4f98b06a379e69cdfdfe17cf900755bb694d123ad4283c8ab273f5d9c6",
-    "cpppj/tests/FencePostPopTests.cpp": "e9c824db9e0a56960f77bd56079bb2707cba1834b9c3a2c244104b722daf1f69",
+    "cpppj/src/o/RawFencePostPop.h": "9e925b99481e7740ded1733753779bc58b94d898749d98162043ceac63c58c15",
+    "cpppj/src/o/RawFencePostPop.cpp": "82a1e4aea0dcc87169554d6e12f49060a3883fc370957008958ae9b998a90388",
+    "cpppj/tests/FencePostPopTests.cpp": "84a6e84930daa35cc05f9d043bdad8c5580625ac767ada32ebf250cccc971267",
     "cpppj/tests/fixtures/fence-postpop-x86.tsv": "aafbea1ba70bc8485b858d5e4936ec0b8910030e83c5de9b4793d9ffdd708d8e"
   },
   "product_validation": {

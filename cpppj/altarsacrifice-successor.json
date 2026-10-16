@@ -48,7 +48,7 @@
   ],
   "scope": "상위Altar/DaisPre/Finish관찰및Frame입력교정. 실제전체DamageablePostDestroy/파생Pop및GameWorld의의식완주는완료로세지않는다.",
   "files": {
-    "cpppj/altarsacrifice.json": "062716d2f3f2f1a5c3b68227a9088b831dbdf5f23a22d904104bd996e22d506b",
+    "cpppj/altarsacrifice.json": "59bdbb1758846dffba4bbe351ce1b3bff9b4dff7e8ca5f007921849088c4c772",
     "cpppj/hist/altarsacrifi-6e4d0/cpppj/altarsacrifice.json": "8357b782582d046c48172dd44e20de2f86055aa4c49e3dba147f032e810c7e5b",
     "cpppj/hist/altarsacrifi-6e4d0/cpppj/src/o/RawAltarSacrifice.cpp": "c45c6083846aa97aec3d1dc0cd2dda2d0beab45fcd7addb07c755d1e2482f464",
     "cpppj/hist/altarsacrifi-6e4d0/cpppj/src/o/RawAltarSacrifice.h": "1df83640935f495e4b6687c41ac5d181a8947f2bc6f349659870acea225b89c3",
@@ -64,10 +64,10 @@
     "cpppj/hist/altarsacrifi-af04e/extracted/altarsacrifice/originals/functions.tsv": "46c417a80fc52830a63a626326fbe7d4880e5e5054cc88e40046fd2fdbfed6d9",
     "cpppj/hist/altarsacrifi-af04e/tools/decomp_altarsacrifice_oracle.py": "d0126821ffce568130f93d11fe7ff74e3fdae39b0788062582a33abcc18d51fc",
     "cpppj/hist/altarsacrifi-af04e/tools/ghidra/altarsacrifice-functions.json": "55ceee319687d56c7c1c3ab3f83699bab43b2b002ab2a29491520075550278f3",
-    "cpppj/src/o/RawAltarSacrifice.cpp": "c45c6083846aa97aec3d1dc0cd2dda2d0beab45fcd7addb07c755d1e2482f464",
-    "cpppj/src/o/RawAltarSacrifice.h": "1df83640935f495e4b6687c41ac5d181a8947f2bc6f349659870acea225b89c3",
+    "cpppj/src/o/RawAltarSacrifice.cpp": "987b5a4654bcf8bd66c7eaef93258b36f92f14707f95de1101f652bfaf24893b",
+    "cpppj/src/o/RawAltarSacrifice.h": "b5ea76ade31afcc5e075060d4847c2db774f97456c1f7d5678c979c8c027e964",
     "cpppj/tests/fixtures/altarsacrifice-x86.tsv": "10ff5e1a36607b575a7de140023ee353263ea79da90991b2d58f03cd2ddccac1",
-    "tools/analyze_altarsacrifice_successor.py": "dd32d197b9a844796a0332255ec8d08bfa3046a7b733927da9fb48c156bedafd",
-    "tools/decomp_altarsacrifice_oracle.py": "8eaa4b8a06f651d841ab8c0749c5b5437c4868a26c864188416eb896549f7eae"
+    "tools/analyze_altarsacrifice_successor.py": "1123baea89efbf9f7420db133dd9701fcde01ca32105b06bb1f76a1fb1018ba7",
+    "tools/decomp_altarsacrifice_oracle.py": "1d10306453d260e41582fe070b3fe0309f8f9c11c6f2be4e6d1566f6e441dc0e"
   }
 }

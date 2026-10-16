@@ -7,7 +7,7 @@
 
 namespace netstorm::o {
 namespace {
-// 원본 레지던스 genus와 raw 타입/소유자 위치, 각 AddRandom의 최대 시도 횟수다.
+// 원본 거주 구역 genus와 raw 타입/소유자 위치, 각 AddRandom의 최대 시도 횟수다.
 constexpr std::uint32_t kResidence=0x40000000,kAttempts=1000;
 constexpr std::size_t kType=10,kPatchOwner=34,kCdOwner=32;
 // 시각 seed의 원본 double 배율과 DWORD 계수다.
@@ -21,7 +21,7 @@ std::int32_t Truncate(double value) {
 // limit<1은 local PRNG를 소비하지 않는 원본 Random helper의 분기다.
 std::uint32_t Next(GameRandom& random,std::int32_t limit) { return limit<1 ? 0U : random.Next(static_cast<std::uint32_t>(limit)); }
 }
-// 같은 판본의 현재 타입/실제 레지던스 목록과 모든 외부 효과를 요구한다.
+// 같은 판본의 현재 타입/실제 거주 구역 목록과 모든 외부 효과를 요구한다.
 RawFortFinishOwner::RawFortFinishOwner(const SidPool& pool,std::span<const RiftTypeRecord> types,SquidPostPopList& residences,
     FortFinishOwnerState& state,FortFinishOwnerHooks hooks)
     :pool_(pool),types_(types),residences_(residences),state_(state),hooks_(std::move(hooks)) {

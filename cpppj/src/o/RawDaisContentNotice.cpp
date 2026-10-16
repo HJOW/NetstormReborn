@@ -1,4 +1,4 @@
-// 최초 부착 알림은 알터 Unpop 뒤 현재 타입을 다시 읽고 plain 프레임/WORD를 지정한다.
+// 최초 부착 알림은 제단 Unpop 뒤 현재 타입을 다시 읽고 plain 프레임/WORD를 지정한다.
 #include "o/RawDaisContentNotice.h"
 #include <bit>
 #include <stdexcept>
@@ -43,7 +43,7 @@ void RawDaisContentNotice::Notice(Sid dais,Sid form,std::uint32_t reason) const 
     if (!(reason&1) || Read(pool_.Slot(form),18,2)!=state_.priestType) return;
     const auto altar=rune_.AltarAt(dais);
     if (altar.value) {
-        hooks_.unpop(altar,0);const auto type=pool_.Slot(altar)[10];if (type>=frames_.size()) throw std::out_of_range("다이스 알림의 현재 알터 타입 범위");
+        hooks_.unpop(altar,0);const auto type=pool_.Slot(altar)[10];if (type>=frames_.size()) throw std::out_of_range("다이스 알림의 현재 제단 타입 범위");
         WriteFrame(altar,frames_[type].Run('O').first);WriteWord(altar,static_cast<std::uint16_t>(Read(pool_.Slot(form),12,2)&127));hooks_.repop(altar,0);
     }
     if (pool_.Slot(dais)[pool_.Edition()==OriginalEdition::Patch1078 ? 34 : 32]==state_.localOwner) hooks_.stopVoice(state_.cue,0,0);

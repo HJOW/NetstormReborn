@@ -1,4 +1,4 @@
-// PATCH10.78 썬 펜스의 최초 후처리를 실제 이웃/연결선/Regular 소비자와 조합한다.
+// PATCH10.78 썬 바리케이드의 최초 후처리를 실제 이웃/연결선/Regular 소비자와 조합한다.
 #pragma once
 #include "o/RawGraph.h"
 #include "o/SidPool.h"

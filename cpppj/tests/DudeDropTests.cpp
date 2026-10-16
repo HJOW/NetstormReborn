@@ -15,7 +15,7 @@ std::vector<std::string> SpawnInput(const std::vector<std::string>& row) { retur
 struct DropScene:SpawnScene {
     std::vector<RiftTypeRecord> sourceTypes; // 부모89의 명시 발자국/genus 입력이며 새 Dude70은 보호 자료다.
     std::vector<DudeNoticeTypeData> speeds; // 진입점과 같은 현재 타입 배열이며 이동 요청은 실행하지 않는다.
-    SquidPostPopList residences; // 현재 부모의 진입점 계산은 거주지 후보 목록을 조회하지 않는다.
+    SquidPostPopList residences; // 현재 부모의 진입점 계산은 거주 구역 후보 목록을 조회하지 않는다.
     RawSquidDestroy destroy; // 실제 Regular Form의 같은 풀/공간 수명 처리기다.
     Kernel kernel; // 실제 새 Regular 객체를 소유한다.
     SquidProcessState clock; // 부모의 float 지연에 더하는 실제 double 입력 시각이다.

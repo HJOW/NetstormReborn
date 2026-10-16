@@ -17,7 +17,7 @@ RawGeyserMined::RawGeyserMined(SidPool& pool,const SquidHash& hash,std::span<con
     GameRandom& random,GeyserMinedState& state,GeyserMinedHooks hooks)
     :pool_(pool),hash_(hash),types_(types),random_(random),state_(state),hooks_(std::move(hooks)) {
     if (types.size()!=(pool.Edition()==OriginalEdition::Patch1078 ? 188U : 171U) || !hooks_.sound || !hooks_.destroy || !hooks_.create || !hooks_.pop)
-        throw std::invalid_argument("가이저 채집 타입/효과 연결 오류");
+        throw std::invalid_argument("간헐천 채집 타입/효과 연결 오류");
 }
 // 비정렬 float 비트를 little endian 바이트 순서대로 조합한다.
 float RawGeyserMined::Coordinate(std::span<const std::uint8_t> bytes,std::size_t offset) {
@@ -58,7 +58,7 @@ void RawGeyserMined::Handle(Sid geyser) const {
     const auto choice=(random_.Next(kSoundChoices)+kSoundMinimum)/1000;
     const auto sound="geyserMined"+std::to_string(choice)+".wav";
     hooks_.sound(Coordinate(raw,14),Coordinate(raw,18),sound,0);
-    if (state_.nuggetType>=types_.size()) throw std::out_of_range("가이저 채집 현재 nugget 타입 범위");
+    if (state_.nuggetType>=types_.size()) throw std::out_of_range("간헐천 채집 현재 nugget 타입 범위");
     SetQuantity(geyser,ReducedQuantity(Quantity(pool_.Slot(geyser)),types_[state_.nuggetType].cost));
     if (!state_.boss || Quantity(pool_.Slot(geyser))!=0) return;
     const auto current=pool_.Slot(geyser);const float x=Coordinate(current,14),y=Coordinate(current,18);
@@ -67,7 +67,7 @@ void RawGeyserMined::Handle(Sid geyser) const {
 }
 // packet SID 검사는 byte 범위만 수행하고 free 여부는 실제 handler가 현재 raw에서 검사한다.
 void RawGeyserMined::HandlePacket(std::span<const std::uint8_t> packet) const {
-    if (packet.size()<6) throw std::out_of_range("가이저 채집 packet SID 범위");
+    if (packet.size()<6) throw std::out_of_range("간헐천 채집 packet SID 범위");
     Handle(Sid{static_cast<std::uint16_t>(packet[4]|(static_cast<std::uint16_t>(packet[5])<<8))});
 }
 // 생성/packet 어댑터의 같은 월드 확인용 참조다.

@@ -32,7 +32,7 @@
     "cpppj/hist/daisbridge-i-00c54/tools/decomp_daisbridge_oracle.py": "714192215b5bb6b6a499d2bb97e33b8c543aa32c74e5d86afaac6a5f60f52223"
   },
   "files": {
-    "cpppj/daisbridge.json": "08539886a3ff3028fc32c39e84fcdd3fc8f14cec5052f8ea098f82d9050208fa",
+    "cpppj/daisbridge.json": "e5c292f0b84c2386f201b160fd3cab07979ff0b32a36e4e80097400c54bf9e5c",
     "cpppj/src/client/RawPriestWorldBindings.cpp": "f8c54dfcce6b31cbf96de451c5853e3fb97127f1eee9bcab80844a756a693b69",
     "cpppj/src/client/RawPriestWorldBindings.h": "581e4e155cdff0d13bb9ae455801b156ba3afb72d73395069ecf2995b49acd24",
     "cpppj/src/o/RawCarrierPreDestroy.cpp": "42f6891929dff560c88eec1dddf021ac45e29d1a29fe3d74e15b87d65cbddddb",
@@ -51,8 +51,8 @@
     "cpppj/src/o/RawPathRuntime.h": "40b7ecedada3010cb7533f2007fcdb21b6470ad8ea98fc61379029c11c0601ef",
     "cpppj/src/o/RawPathSearch.cpp": "09d5e57d46312785431500a0debab20e799db3844a03491edeb265c54417123c",
     "cpppj/src/o/RawPathSearch.h": "69e69c720f8af7e5961e58ae7db0d29197d79fed1d5030b468790dd9822b8464",
-    "cpppj/src/o/RawPathStart.cpp": "a778ad764975ce4abdd96ad36cd4eebd7c0d5871e0b8e99d844a201a4477090c",
-    "cpppj/src/o/RawPathStart.h": "c41ca85f2f4635e58727f8e8ae556c8f4d26264defde470a7d4bd37d14755545",
+    "cpppj/src/o/RawPathStart.cpp": "4c3ca34ae35666b09ce7c1714139987cbdcff45d9653c4a9e5fff3983d361a1f",
+    "cpppj/src/o/RawPathStart.h": "feaf7f0e7d2c9e1905ab3ecdcdd91baf638a5e6d433b87866e2088ce0f0d56fd",
     "cpppj/src/o/RawPriestRitualActions.cpp": "b26565b1f79e08785bca766c6c6d34632b552df3c697da6b0a10c6c5d9d486ae",
     "cpppj/src/o/RawPriestRitualActions.h": "ccc14f6b619803f544dd377d578927af5942c5c99d50429f4540ed0261b981bd",
     "cpppj/src/o/RawRunePostPop.cpp": "ca10766ced498c5aab0c92fbcca0d0d4ad39c5d9e5c91ce7865dd0523b2f6ab0",

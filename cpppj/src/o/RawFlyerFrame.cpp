@@ -67,7 +67,7 @@ void RawFlyerFrame::ClearTarget(FlyerProcessFields& fields) const {
 void RawFlyerFrame::Notify(FlyerProcessFields& fields,std::uint32_t message,std::uint32_t,std::uint32_t info2) const {
     if (message!=2 || !globals_.server) return;if (info2!=Target(fields).value) Need(hooks_.assertion)(0x2ba);ClearTarget(fields);
 }
-// 윈드 플라이어와0/ffff 홈은 통지를 생략한다. 현재 홈이 실제 live일 때만 가상+34다.
+// 더스트 데빌과0/ffff 홈은 통지를 생략한다. 현재 홈이 실제 live일 때만 가상+34다.
 void RawFlyerFrame::ParentDying(FlyerProcessFields& fields) const {
     if (pool_.Slot(fields.Parent())[10]==globals_.windType) return;const auto home=fields.Home();if (!home.value || home.value==0xffff || home.value>=pool_.Capacity()) return;
     if (!(pool_.Slot(home)[11]&3U)) Need(hooks_.homeNotice)(home,0,0);

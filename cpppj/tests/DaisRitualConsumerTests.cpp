@@ -1,4 +1,4 @@
-// 실제 최초 Pop/포획 부모 알림/알터24/전체 파생삭제를 같은 Pool·Host·Kernel에서 이어간다.
+// 실제 최초 Pop/포획 부모 알림/제단24/전체 파생삭제를 같은 Pool·Host·Kernel에서 이어간다.
 #include "RawSceneSupport.h"
 #include "o/RawDaisLifecycle.h"
 #include "o/RawDaisContentNotice.h"
@@ -77,10 +77,10 @@ TEST_CASE(rawDaisRitual_real_first_pop_capture_notice_altar24_full_post_and_rele
         DaisContentNoticeState noticeState{priestType,localOwner};noticeState.cue=99;DaisContentNoticeHooks noticeHooks;
         noticeHooks.unpop=[&](Sid sid,std::uint32_t flags) { unpop.Unpop(sid,types[pool.Slot(sid)[10]],flags); };noticeHooks.repop=[&](Sid sid,std::uint32_t flags) { const auto raw=pool.Slot(sid);CHECK(pop.Pop(sid,types[raw[10]],1,1,std::bit_cast<float>(Get(raw,14)),std::bit_cast<float>(Get(raw,18)),flags)==RawPopResult::Registered); };noticeHooks.stopVoice=[&](std::uint32_t cue,std::uint32_t zero,std::uint32_t flags) { CHECK(zero==0 && flags==0);cues.push_back(cue); };noticeHooks.notifySurface=RitualForbidden<void,Sid>();RawDaisContentNotice notice(pool,frames,rune,noticeState,std::move(noticeHooks));ContentFormHost contents(pool,types,[&](Sid parent,Sid form,std::uint32_t reason) { notice.Notice(parent,form,reason); });ContentLifetimeState contentState;ContentLifetimeHooks contentHooks;
         contentHooks.cancelCursor=RitualForbidden<void>();contentHooks.localNotice=RitualForbidden<void,std::uint32_t>();contentHooks.remoteNotice=RitualForbidden<void,std::uint32_t>();contentHooks.wallet=RitualForbidden<void,std::uint32_t,std::int32_t>();contentHooks.addSp=RitualForbidden<void,std::uint32_t,float,bool>();contentHooks.sound=RitualForbidden<void,float,float>();ContentFormLifetime contentLife(pool,types,contents,destroy,contentState,std::move(contentHooks),assets,&reward);SquidFormDispatch dispatch(pool,destroy,assets,[&](Sid sid,std::uint32_t flags,const SquidDestroyHooks& hooks) { destroy.Destroy(sid,flags,hooks);return true; });dispatch.Bind(host);dispatch.Bind(contentLife);dispatchPointer=&dispatch;
-        // 실제 생성자/owner/프레임/최초 Pop에서 파생 알터 생성과 로컬21을 확인한다.
+        // 실제 생성자/owner/프레임/최초 Pop에서 파생 제단 생성과 로컬21을 확인한다.
         // void 입력은 실제 StoreLevel로 준비해 Set이 최초 Pop 전에 단계 변경 Repop를 요청하지 않게 한다.
         const auto daisSid=factory.Create(165,2);CHECK(daisSid==Sid{5});owner.Set(daisSid,1);SetRawSquidHitPoints(pool,daisSid,200);frame.StoreLevel(daisSid);frame.Set(daisSid,47,0);CHECK(pop.Pop(daisSid,types[165],1,1,40.75F,41.25F,0)==RawPopResult::Registered);CHECK(createdAltar.value>=pool.Layout().serverFirst && pool.Slot(createdAltar)[10]==164);CHECK(host.FindEvent(createdAltar,21) && host.FindEvent(createdAltar,21)->Count()==0 && host.FindEvent(createdAltar,21)->Payload()==3.0F);CHECK(lifecycleState.players[1].first==daisSid && lifecycleState.players[1].firstMirror==daisSid && book.depth==0);
-        // 실제 type6 생성/정렬Attach의 부모알림은 알터 O프레임·원래owner WORD를 지정한다.
+        // 실제 type6 생성/정렬Attach의 부모알림은 제단 O프레임·원래owner WORD를 지정한다.
         const auto captured=factory.CreateContained(2);auto capturedRaw=pool.AllocatedBytes(captured);Put(capturedRaw,12,2,2);Put(capturedRaw,18,158,2);Put(capturedRaw,20,36,2);contents.Attach(captured,daisSid,0x10);CHECK(Get(pool.Slot(createdAltar),patch ? 36 : 34,patch ? 4 : 1)==static_cast<std::uint32_t>(frames[164].Run('O').first) && Get(pool.Slot(createdAltar),12,2)==2);CHECK(cues==std::vector<std::uint32_t>{99});
         // 실제 같은 Host의24 재예약/감김/포획삭제/부모400000 및 모든 파생 pre/post를 이어간다.
         host.SetRegularHandler([&](Sid sid,std::uint32_t event,std::uint32_t count,float payload) { CHECK(sid==createdAltar);if (event==24) ++finishCalls;return altar.Handle(sid,event,count,payload); });dais.AltarEscape(createdAltar);CHECK(host.FindEvent(createdAltar,24) && host.FindEvent(createdAltar,24)->Payload()==0.12F);

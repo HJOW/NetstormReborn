@@ -32,9 +32,9 @@ struct GunProcessState {
     // checking: 검사 여부.
     bool boss{true},server{true},fortMode{},fixedMode{},disabled{},friendlyFire{},checking{};
     // processType: 프로세스 타입.
-    // windArcherType: 윈드 아처 자산을 타입 표에서 찾는 번호.
+    // windArcherType: 크로스보우 자산을 타입 표에서 찾는 번호.
     // thunderCannonType: 썬더 캐논 자산을 타입 표에서 찾는 번호.
-    // rainCannonType: 레인 캐논 자산을 타입 표에서 찾는 번호.
+    // rainCannonType: 아이스 캐논 자산을 타입 표에서 찾는 번호.
     std::uint32_t processType{34},windArcherType{140},thunderCannonType{131},rainCannonType{129};
     // allies: 동맹.
     std::array<std::array<bool,kPlayerCount+1>,kPlayerCount+1> allies{};

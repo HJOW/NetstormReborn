@@ -24,7 +24,7 @@ constexpr std::array<PostPopTable,19> kPatchTables{{
     {0x50b888,kGunArcher},{0x50b570,kGunDecoration},{0x50f540,kResidence},
     {0x50e940,kBlocker},{0x50ea08,kBlocker},{0x50ead0,kBlocker},{0x50da88,kGeyser},
     {0x5196f0,kVortexRain},{0x519860,kVortexWind},{0x5197a8,kVortexWind},{0x519918,kVortexThunder},{0x509930,kSunAviary},{0x509470,kSunFence},{0x5099e8,kRainAviary}}};
-// CD10.72는 캐논 부류의 두 가상 표와 레지던스/제네레이터 위치가 다르다.
+// CD10.72는 캐논 부류의 두 가상 표와 거주 구역/제네레이터 위치가 다르다.
 constexpr std::array<PostPopTable,15> kCdTables{{
     {0x5022f8,kGenerator},{0x5011e8,kGunAngle},{0x5012b0,kGunFirst},{0x501120,kGunSun},{0x501378,kGunSun},
     {0x5014f8,kGunArcher},{0x501440,kGunDecoration},{0x501b90,kResidence},
@@ -105,13 +105,13 @@ void RawAssetPostPop::Validate(Sid sid,std::uint32_t flags,const RawGraphPop* po
     const auto kind=Kind(sid);const auto raw=pool_.Slot(sid);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     if (!kind || raw[10]>=types_.size()) throw std::invalid_argument("자산 postPop 가상 표/타입 미복원");
     base_.ValidateBase(sid,flags,pop);
-    if (kind==kSunAviary) { if (!hooks_.sunAviaryPostPop) throw std::logic_error("썬 아비어리 실제 전체 후처리 미연결");return; } // 일반 Factory/신전 몸체로 분배하지 않는다.
-    if (kind==kRainAviary) { if (!hooks_.rainAviaryPostPop) throw std::logic_error("맨 오 워 풀 실제 전체 후처리 미연결");return; } // 휘리베이스의 상태 기계로 대체하지 않는다.
-    if (kind==kSunFence) { if (!hooks_.sunFencePostPop) throw std::logic_error("썬 펜스 실제 전체 후처리 미연결");return; } // 다른 Damageable의 공통 몸체만 호출하지 않는다.
+    if (kind==kSunAviary) { if (!hooks_.sunAviaryPostPop) throw std::logic_error("훨리베이스 실제 전체 후처리 미연결");return; } // 일반 Factory/신전 몸체로 분배하지 않는다.
+    if (kind==kRainAviary) { if (!hooks_.rainAviaryPostPop) throw std::logic_error("맨 오 워 풀 실제 전체 후처리 미연결");return; } // 훨리베이스의 상태 기계로 대체하지 않는다.
+    if (kind==kSunFence) { if (!hooks_.sunFencePostPop) throw std::logic_error("썬 바리케이드 실제 전체 후처리 미연결");return; } // 다른 Damageable의 공통 몸체만 호출하지 않는다.
     if (kind==kGenerator) return;
     if (kind==kBlocker) {
         if (state_.inBattle && (flags&1) && !state_.loadingDepth && !hooks_.startBlocker)
-            throw std::invalid_argument("배리케이드 최초 프로세스 경계 누락");
+            throw std::invalid_argument("바리케이드 최초 프로세스 경계 누락");
         return;
     }
     if (kind>=kGunAngle && kind<=kGunArcher) {
@@ -127,9 +127,9 @@ void RawAssetPostPop::Validate(Sid sid,std::uint32_t flags,const RawGraphPop* po
     if (!(flags&1) && kind<kVortexRain) return;
     if (!hooks_.reserveRegular || !hooks_.addRegular) throw std::invalid_argument("자산 postPop Regular 경계 누락");
     if (kind==kResidence && (!hooks_.surface || !hooks_.setOwner || !hooks_.notifySurface))
-        throw std::invalid_argument("레지던스 지면/소유자/연결 경계 누락");
+        throw std::invalid_argument("거주 구역 지면/소유자/연결 경계 누락");
     if (kind==kGeyser && (!hooks_.geyserRegistration || !hooks_.atPosition || !hooks_.unpop || !hooks_.repop))
-        throw std::invalid_argument("가이저 등록/공간 경계 누락");
+        throw std::invalid_argument("간헐천 등록/공간 경계 누락");
     if (kind>=kVortexRain && (!hooks_.typeDword || !hooks_.playImpactSound || !hooks_.setOwner || !hooks_.islandNumber ||
         !hooks_.islandExists || !hooks_.registerTemple || !hooks_.regionNumber || !hooks_.destroy || !hooks_.hasContent ||
         !hooks_.createSlot || !hooks_.refreshProduction || !hooks_.clearPlacement || (!patch && !hooks_.islandTemple)))
@@ -182,7 +182,7 @@ void RawAssetPostPop::Residence(Sid sid,std::uint32_t flags) const {
     }
     base_.PostPopBase(sid,flags);
 }
-// 가이저의 비용이 실제 결정량 WORD가 된다. 주변 iterator는 원본 순서로 현재 raw 타입을 다시 읽는다.
+// 간헐천의 비용이 실제 결정량 WORD가 된다. 주변 iterator는 원본 순서로 현재 raw 타입을 다시 읽는다.
 void RawAssetPostPop::Geyser(Sid sid,std::uint32_t flags) const {
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     if ((flags&1) && !(pool_.Slot(sid)[patch ? 40 : 35]&9)) {

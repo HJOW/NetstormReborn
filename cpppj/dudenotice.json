@@ -80,14 +80,14 @@
   },
   "files": {
     "cpppj/dude-regular-reset-lineage.json": "1cf10279e383cc03142c4ee4cd409346755ed921457c50c5f460b2307583a680",
-    "cpppj/src/o/RawDudeNotice.cpp": "338e8bd6321fee6514f0beb8a469dc1661fff682f57145c5d81326f7a409c182",
-    "cpppj/src/o/RawDudeNotice.h": "043871673a6bb3708d5bd66066b1d82d830aecf1abd0d1ec79d5f7ae89d4e548",
+    "cpppj/src/o/RawDudeNotice.cpp": "00b5878e7c8517145a12b9302ee93f41aabf75c530d614f34ec2f0c7438be350",
+    "cpppj/src/o/RawDudeNotice.h": "660ca3cc52fc3988d6c158e2b1525a43171b4734fb0575329118f3a2651ac9da",
     "cpppj/src/o/RawSquidFinder.cpp": "74f8141e46a2a1fa8e5b64fc91eb8a15a8b806b718b555414fbc1bd1614c8694",
     "cpppj/src/o/SquidPostPop.cpp": "9a88465d2b1d6e7cbdd1c7516fe051741012612805a28a8c848739763fccdcfb",
     "cpppj/src/o/SquidProcess.cpp": "188376ba728d8544d0bfafb92cc6f66403aea92434a81fa98efe894ed9f042e5",
     "cpppj/src/o/SquidProcess.h": "96f0b2275393d53307b01d36732f51fc8bcb8c341b2d15339d3f5a37cb702bcd",
-    "cpppj/tests/DudeNoticeTests.cpp": "83b4de62c62efc44f49272b86aa42807ca4c1b1ceed5a23a8de3949304c033bb",
-    "cpppj/tests/fixtures/dudenotice-x86.tsv": "2b8f9e950743140662d0487cef5f49a5e11f94d9fc9d009a5021baf9c395e314",
+    "cpppj/tests/DudeNoticeTests.cpp": "e89cdccb4b047e31006b0f9b2ac8362417d5888f400c9f9e276668a820735b6f",
+    "cpppj/tests/fixtures/dudenotice-x86.tsv": "5bb484c7c4ab8636d56f1b1d58aea358ab2f1da3daff664575f345c94a33c56b",
     "extracted/gunimpact-dude/originalCD/creation.c": "96d87df17df76415929521e9bc411e88d7210841f648b1af72d2c66367e3a160",
     "extracted/gunimpact-dude/originalCD/functions.tsv": "21e747b2c2beeb6956d9ad13d03c7accbd71bcafbc498bda4d4da4d7ae9e76df",
     "extracted/gunimpact-dude/originals/creation.c": "b25d1805d378c8cf752fffb2cc589c2e7aa4c94d1623b70861fea5a5ca59da4c",
@@ -102,7 +102,7 @@
     "extracted/owner/originals/functions.tsv": "3ea66dace80a85999a8b2c2dbadb4d5f1bd18b0dcdb0768f9c41075206c7c72d",
     "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
-    "tools/decomp_dudenotice_oracle.py": "15f4578b9f89c61f3545046f38ab25c0957a340da5aba915d0fc37c063affa09",
+    "tools/decomp_dudenotice_oracle.py": "9203e9a2780d89c6d1df52d441be3f6fc906c29fe188ac97f7f41bd0f88b67ab",
     "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
     "tools/ghidra/gunimpact-dude-functions.json": "ea414b23df896785566fd988c1bf8475d0eeb49f977ad83c1448750e268671de",
     "tools/ghidra/gunimpact-dude-helper-functions.json": "834289cdaba5bea79b8ec3ba2ce05633d37ecb38aa1795578a06f1fbcb823dfe"
@@ -110,10 +110,10 @@
   "new_path_constructors_completed": 0,
   "os_calls": 0,
   "limitations": [
-    "일반finder/현재task/Regular숫자쓰기/거주지선택/속도2배와절삭복원·현재단계조회는원본몸체다.",
+    "일반finder/현재task/Regular숫자쓰기/거주 구역선택/속도2배와절삭복원·현재단계조회는원본몸체다.",
     "힙/기존Regular조회/부착·Burning14(mode0) ctor/Path24 생성/기존경로객체조회/SetFrame은명시관찰경계다.",
     "현저한분수speed/정밀double now를공급하며C++Fixture는같은실제Host Regular와좁은ResetTask를소비한다.",
-    "기존type14/24 Form과거주지배열은명시입력이며실제Burning 효과/전체경로이동을완료로세지않는다."
+    "기존type14/24 Form과거주 구역배열은명시입력이며실제Burning 효과/전체경로이동을완료로세지않는다."
   ],
   "new_burning_constructors_completed": 0,
   "draft_lineage": {

@@ -32,11 +32,11 @@ RawPriestParticipation::RawPriestParticipation(const SidPool& pool,const SquidHa
     if (&carrier.Pool()!=&pool || types.size()!=(pool.Edition()==OriginalEdition::Patch1078 ? 188U : 171U))
         throw std::invalid_argument("사제 참여의 같은 풀/현재 타입 표 연결 누락");
 }
-// 알터의 실제 typed 조회가 준비되어 있으면 동일 풀임을 확인하고 그 몸체를 사용한다.
+// 제단의 실제 typed 조회가 준비되어 있으면 동일 풀임을 확인하고 그 몸체를 사용한다.
 RawPriestParticipation::RawPriestParticipation(const SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,
     PriestPostPopState& priests,const RawCarrierPreDestroy& carrier,PriestParticipationState state,const RawAltarSacrifice& altar)
     :RawPriestParticipation(pool,hash,types,priests,carrier,state) {
-    if (&altar.Pool()!=&pool) throw std::invalid_argument("사제 참여/알터의 SID 풀이 다릅니다");
+    if (&altar.Pool()!=&pool) throw std::invalid_argument("사제 참여/제단의 SID 풀이 다릅니다");
     altar_=&altar;
 }
 // 기존 Altar.DaisAt과 동일한 전체 typed helper이며 결과를 가짜 포획 여부로 공급받지 않는다.

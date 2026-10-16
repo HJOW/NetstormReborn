@@ -214,7 +214,7 @@ def main():
         return
     oracle = Oracle();rows = [];rng = random.Random(0x494870)
     base = [1, 1, 0, 0, 0, 0, 1, 0, 1023, 15, 1, 400, fbits(3000), 0]
-    # 소유/493·신전/알타·모드/기술·상태·부족금액의 독립 조합이다.
+    # 소유/493·신전/제단·모드/기술·상태·부족금액의 독립 조합이다.
     cases = [base.copy()]
     for column, choices in ((0, [0, 2]), (2, [1]), (3, [1]), (4, [1]), (5, [-1, 9, 10, 14, 15]), (6, range(16)), (7, range(16)), (8, [0, 7, 8, 120, 128, 256, 1023]), (9, range(16)), (10, range(4)), (12, [fbits(0), fbits(399), fbits(400), fbits(float('nan'))]), (13, [1, 128, 256, 1023])):
         for value in choices:

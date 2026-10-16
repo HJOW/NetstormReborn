@@ -1,4 +1,4 @@
-// 실제 썬 아처 포구와 Missile 표적 치수/사각형의 원본 조회를 복원한다.
+// 실제 썬 디스크 발사기 포구와 Missile 표적 치수/사각형의 원본 조회를 복원한다.
 #pragma once
 #include "o/RawGunTarget.h"
 

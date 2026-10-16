@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""보호 두 PE의 썬 아처 포구/TYPE 치수/충돌 상자를 격리 x86에서 실행한다."""
+"""보호 두 PE의 썬 디스크 발사기 포구/TYPE 치수/충돌 상자를 격리 x86에서 실행한다."""
 import csv
 import itertools
 import json

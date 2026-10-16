@@ -1,4 +1,4 @@
-// 가이저 채집 통지의 현재 수량/cost·게임 난수·고갈 삭제/emptyGeyser 생성을 복원한다.
+// 간헐천 채집 통지의 현재 수량/cost·게임 난수·고갈 삭제/emptyGeyser 생성을 복원한다.
 #pragma once
 #include "o/SidPool.h"
 #include "o/SquidHash.h"
@@ -16,7 +16,7 @@ struct GeyserMinedState {
 // 음향·가상 삭제/생성·Pop은 같은 raw 월드에 연결해야 하는 효과 경계다.
 struct GeyserMinedHooks {
     std::function<void(float,float,std::string_view,std::uint32_t)> sound; // geyserMined1..6.wav를 현재 위치에서 flags0으로 요청한다.
-    std::function<void(Sid,std::uint32_t)> destroy; // 고갈한 가이저의 실제 +0x10(flags0x1000)이다.
+    std::function<void(Sid,std::uint32_t)> destroy; // 고갈한 간헐천의 실제 +0x10(flags0x1000)이다.
     std::function<Sid(std::uint32_t,std::uint32_t)> create; // emptyGeyser의 실제 factory(type,flags0)이다.
     std::function<void(Sid,float,float,std::uint32_t)> pop; // 생성물의 가상 +0x90에 삭제 전 보존한 좌표와 flags0을 넘긴다.
 };
@@ -44,7 +44,7 @@ private:
     void SetQuantity(Sid sid,std::uint16_t quantity) const;
     // 좌표를 편향 없이 절삭해 현재 hash0 머리의 타입을 확인한다. Graph/소유자를 추가 조건으로 쓰지 않는다.
     bool OnIsle(float x,float y) const;
-    SidPool& pool_; // 실제 가이저/생성물의 유일한 raw 슬롯 저장소다.
+    SidPool& pool_; // 실제 간헐천/생성물의 유일한 raw 슬롯 저장소다.
     const SquidHash& hash_; // 삭제 callback이 바꾼 현재 표면 머리를 읽는다.
     std::span<const RiftTypeRecord> types_; // sound 뒤 현재 nugget 타입 cost를 읽는 공유 타입 표다.
     GameRandom& random_; // 소리 하나마다 정확히 한 번 전진하는 전역 게임 난수다.

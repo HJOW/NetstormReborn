@@ -11,8 +11,8 @@ struct FlyerFrameGlobals {
     const bool& checking; // 005e4794의 원본 진단이다.
     const double& now; // 0055b4d0의 현재 게임 시각이다.
     const std::uint32_t& frame; // 0055b4a8의 현재 프레임 번호다.
-    const std::uint32_t& sunType; // 0054117c의 현재 썬 플라이어73이다.
-    const std::uint32_t& windType; // 00541280의 현재 윈드 플라이어138이다.
+    const std::uint32_t& sunType; // 0054117c의 현재 훨리기그73이다.
+    const std::uint32_t& windType; // 00541280의 현재 더스트 데빌138이다.
     const std::uint32_t& rainType; // 00541298의 현재 맨 오 워144이다.
     const std::uint32_t& sunAviaryProcess; // 005410f0의 현재 타입32다.
     const std::uint32_t& soundProcess; // 0054112c의 현재 소리 프로세스 타입47이며 실제 음향 장부와 공유한다.
@@ -50,7 +50,7 @@ struct FlyerFrameHooks {
     std::function<double(FlyerProcessFields&)> returnDelay; // 현재 outer+c의 실제 반환 지연이다.
     std::function<void(Sid,std::uint32_t)> command; // 004e2e30의 비행 명령2/3이다.
     std::function<SunAviaryProcessFields&(Sid,std::uint32_t)> sunProcess; // 실제 첫 타입32 Form의 같은 이미지다.
-    std::function<void(SunAviaryProcessFields&)> refreshSun; // 같은 썬 아비어리의 실제 Form 갱신이다.
+    std::function<void(SunAviaryProcessFields&)> refreshSun; // 같은 훨리베이스의 실제 Form 갱신이다.
     std::function<void(Sid,std::uint32_t,std::uint32_t)> homeNotice; // 살아 있는 홈의 가상+34(0,0)이다.
     std::function<std::int32_t(Sid)> runCount; // 004af110의 현재 프레임 글자 개수다.
     std::function<void(Sid,Sid,std::uint32_t)> launch; // 맨 오 워의00472690(flyer,target,0)이다.

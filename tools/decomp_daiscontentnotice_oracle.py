@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""다이스 실제 내용물 알림+24의 부착/제거·알터 plain 프레임/WORD·로컬cue를 제한 x86에서 관찰한다."""
+"""다이스 실제 내용물 알림+24의 부착/제거·제단 plain 프레임/WORD·로컬cue를 제한 x86에서 관찰한다."""
 import argparse,csv,itertools,json,struct
 from pathlib import Path
 from decomp_altarsacrifice_oracle import AltarOracle,ROOT,HEAP,VTABLE,STACK,STOP,FPU_CONTROLS,bits,sha
@@ -11,11 +11,11 @@ FIXTURE=ROOT/'cpppj/tests/fixtures/daiscontentnotice-x86.tsv' # 현재 입력/�
 REPORT=ROOT/'cpppj/daiscontentnotice.json' # 새1/1 몸체만의 출처와 명시 공간/장치 경계다.
 
 def inputs():
-    """현재 reason/kind/owner/로컬/알터 존재/WORD를 교차한다."""
+    """현재 reason/kind/owner/로컬/제단 존재/WORD를 교차한다."""
     result=[]
     for reason,kind,owner,local,exists,word in itertools.product((0,1,2,3),(0,158,165),(0,1,2),(1,2),(0,1),(0,2,0x82,0x1234,0xffff)):
         result.append(dict(reason=reason,kind=kind,owner=owner,local=local,exists=exists,word=word,first=3))
-    # plain 쓰기는 현재 알터 타입의 첫표를 읽으며 기존 현재frame로 대신하지 않는다.
+    # plain 쓰기는 현재 제단 타입의 첫표를 읽으며 기존 현재frame로 대신하지 않는다.
     for first in (1,7):result.append(dict(reason=1,kind=158,owner=1,local=1,exists=1,word=0x82,first=first))
     return result
 
@@ -37,7 +37,7 @@ class NoticeOracle(AltarOracle):
         base=dict(mode='count',daisFrame=14,altarFrame=13,count=0,seed=0,boss=1,reserve=0,captured=0,oldOwner=2,alliance=0,local=value['local'],suppress=0,forms=0,extra=0,owner=value['owner']);super().run(base,control);self.hits=saved_hits;self.stub_calls=saved_stubs
         self.table(164,'A'*value['first']+'O'*4+'P'*8);self.put(self.slot(10)+18,value['kind'],2);self.put(self.slot(10)+12,value['word'],2);self.put(self.n['cue'],99);self.put(self.n['priest'],158)
         if not value['exists']:
-            # 실제 해시에서 알터를 제외하며 읽지 않는 슬롯의 raw는 보존한다.
+            # 실제 해시에서 제단을 제외하며 읽지 않는 슬롯의 raw는 보존한다.
             address=self.bases[1]+((41//2)*128+40//2)*2;assert self.read(address,2)==7;self.put(address,self.read(self.slot(7)+4,2),2)
         for register in (UC_X86_REG_EAX,UC_X86_REG_EBX,UC_X86_REG_EDX,UC_X86_REG_ESI,UC_X86_REG_EDI,UC_X86_REG_EBP):self.mu.reg_write(register,0)
         self.mu.reg_write(UC_X86_REG_ESP,STACK);self.mu.reg_write(UC_X86_REG_ECX,self.slot(5));self.mu.reg_write(UC_X86_REG_EFLAGS,2);self.mu.reg_write(UC_X86_REG_FPCW,control);self.mu.reg_write(UC_X86_REG_FPSW,0);self.mu.mem_write(0,bytes(4));self.mu.mem_write(STACK,struct.pack('<III',STOP,10,value['reason']));self.events=[];self.write_ranges=[(HEAP,HEAP+0x10000)];self.mu.emu_start(self.n['notice'],STOP,count=4000000)

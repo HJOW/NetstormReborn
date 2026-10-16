@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""실제 mutable IslandList의100개기록/현재owner·원래owner/레지던스전파/Player첫지역을 두 PE에서 실행한다."""
+"""실제 mutable IslandList의100개기록/현재owner·원래owner/거주 구역전파/Player첫지역을 두 PE에서 실행한다."""
 import argparse
 import collections
 import csv
@@ -134,7 +134,7 @@ class IslandOracle(PaintOracle):
         if number<100:self.put(ISLANDS+4+number*32+4,exists)
         for name,current in (('fort',fort),('special',special),('chaff',chaff),('revision',revision),('changed',changed),('rescount',4)):self.put(s[name],current)
         for index in range(9):self.put(PLAYERS+index*s['player_stride']+s['player_region'],127)
-        # 각레지던스의현재SID/type/float와현재표면의소유자BYTE를별도입력한다.
+        # 각거주 구역의현재SID/type/float와현재표면의소유자BYTE를별도입력한다.
         for index,(x,y) in enumerate(POINTS):
             sid=60+index;raw=POOL+sid*p['stride'];self.put(raw,CODES+0x2000);self.put(raw+10,89,1);self.put(raw+p['owner'],7,1)
             self.put(raw+14,struct.unpack('<I',struct.pack('<f',x))[0]);self.put(raw+18,struct.unpack('<I',struct.pack('<f',y))[0]);self.put(LISTS+index*4,sid)
@@ -177,7 +177,7 @@ def generate(smoke=False):
     files.extend(ROOT/name for name in ('tools/decomp_regionpaint_oracle.py','cpppj/src/o/RawIslandRuntime.h','cpppj/src/o/RawIslandRuntime.cpp','cpppj/tests/IslandRuntimeTests.cpp') if (ROOT/name).exists())
     REPORT.write_text(json.dumps(dict(total=len(rows),host='HJOW-Athlon',editions=editions,os_calls=0,files={path.relative_to(ROOT).as_posix():digest(path) for path in dict.fromkeys(files)},limits=[
         '실제100개32바이트기록/owner/currentmode/Bounds/표면helper와현재Player첫지역을실행한다.',
-        '레지던스가상owner/assert만외부경계이며callback뒤현재목록/표면/mode/Player변경을다시읽는다.',
+        '거주 구역이상owner/assert만외부경계이며callback뒤현재목록/표면/mode/Player변경을다시읽는다.',
         '정상과원본assert입력은분리한다. GUI/전체Map생성/실제파생owner·캠페인완주검증이아니다.',
         '물리100기록밖GetBounds/Add의원본메모리접근은정상입력으로계수하지않는다.']),ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
     print(json.dumps({'total':len(rows)}))

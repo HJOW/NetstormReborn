@@ -9,7 +9,7 @@ namespace netstorm::o {
 class SquidFrame;
 // 원본이 직접 읽는 타입 번호와 권한은 기존 자산 상태의 boss·목록과 함께 사용한다.
 struct FactoryPostPopTypes {
-    std::uint32_t firstTimerFactory{85}; // DAT005411ac/CD0051ca98: 썬 팩토리85의 최초 event2를 8초 뒤에 예약하는 타입이다.
+    std::uint32_t firstTimerFactory{85}; // DAT005411ac/CD0051ca98: 썬 워크샾85의 최초 event2를 8초 뒤에 예약하는 타입이다.
     std::uint32_t secondTimer{87}; // DAT005411b4/CD0051caa0: 최초 event1을 0.5초 뒤에 예약하는 타입이다.
     std::uint32_t fixedFrame{126}; // DAT00541250/CD0051cb3c: 상태별 프레임 보정을 건너뛰는 타입이다.
 };
@@ -55,7 +55,7 @@ private:
     std::span<const RiftTypeFrames> frames_; // 상태별 첫 프레임/개수 구간을 읽는 현재 프레임 표다.
     SquidPostPop& base_; // 공통 장부와 postPop 깊이를 공유한다.
     const RawCarrierPostPop& damageable_; // 직접 Damageable 후처리를 한 번 실행한다.
-    AssetPostPopState& state_; // boss·아웃포스트/레지던스 목록을 다른 후처리와 공유한다.
+    AssetPostPopState& state_; // boss·아웃포스트/거주 구역 목록을 다른 후처리와 공유한다.
     FactoryPostPopHooks hooks_; // 실제 외부 효과의 수명은 이 처리기보다 길어야 한다.
     FactoryPostPopTypes numbers_; // 원본 타입 번호 전역의 현재 값을 보관한다.
 };

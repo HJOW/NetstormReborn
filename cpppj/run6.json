@@ -27,9 +27,9 @@
   "all_tests": 974,
   "build_warnings": 0,
   "files": {
-    "tools/analyze_campaign_runtime6.py": "351892b630004015512739a1cb16349b3604f88dad56426e625962a481bd9d55",
+    "tools/analyze_campaign_runtime6.py": "6446b0f2f20b4c26a74301cbb62f933cb7110f64692aea4e0cb4bf0ba19dcfce",
     "tools/analyze_campaign_runtime4.py": "f988e5162560d05ab9b7c7bc6c7c6b06db52775067f77d84b9cc9997021d1941",
-    "cpppj/geysermined.json": "280823af1aa70a35d4d382a7f6d76f761e58f0baa7920563c2df1728cad1d77a",
+    "cpppj/geysermined.json": "ca023f076739d97cfbb0a6038408698cc7dbf82a7b611115274d01555a7c9b5d",
     "cpppj/tests/fixtures/geysermined-x86.tsv": "29abf72063278eecebd954401b6af4a2e67fe8ad236e51bb60ce3db141bfd5aa",
     "cpppj/priestdamage.json": "48dc6441097cfc1ae2a2f88a0cf4b1e8881dc9d1f88323908049c7733dd4a18c",
     "cpppj/tests/fixtures/priestdamage-x86.tsv": "68004b70e556920ec30490ccb1145d5e0cc7ff2708ac3031b648886e9d602a0b",
@@ -41,7 +41,7 @@
     "extracted/run6-RegionPaint_-final.log": "aea33691253b92919889b9f651b42a6ba092f72a6396508c55d6eb9bd90eb6f6",
     "extracted/run6-all-final.log": "c8767c728020b054bf837e355a36e72c75dff31bc08bad066395b831eab056d2",
     "extracted/run6-build-final.log": "657f2faabd0a0c73c75d79e1da33ee394a6bc9084d8d2700780f90976f4c7588",
-    "cpppj/run5.json": "0266add06f81c666e5743d0379ca2e72d0c1c43df66a4bd2b946754f3b5fedc1",
+    "cpppj/run5.json": "a77e9c957154da3ca6a4cc1d0d8d885a73bbf4f09645244ab344ab286682060a",
     "cpppj/src/o/RawFrameChoose.cpp": "153ebec3c49993006dcd24ee6cd19c33d19f21b49e96de5b486a8297103478ad",
     "cpppj/src/o/RawFrameChoose.h": "76b17d1fa1c65f9f9c7f8bc59e0a544708a01cd172009af3ed130784d58252b8",
     "cpppj/src/o/RawRegionPaint.cpp": "8242ef06c28ce36784e2d79a9b34cc751654f32567953152431df83e9d736178",
@@ -63,7 +63,7 @@
   "limitations": [
     "GameWorld·GUI·실제 캠페인 완주 근거가 아니다.",
     "nonzero burning 생성/애니메이션과 일반 표적 피해는 별도 미완료다.",
-    "가이저 상위 CarrierArrival·채굴 통지 작성/송신·실제 음향 재생은 미연결이다.",
+    "간헐천 상위 CarrierArrival·채굴 통지 작성/송신·실제 음향 재생은 미연결이다.",
     "이전 지형 후보484개는 기존 몸체 공유의 회귀이며 신규 입력으로 더하지 않는다."
   ]
 }

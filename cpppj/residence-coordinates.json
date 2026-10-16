@@ -23,9 +23,9 @@
   },
   "files": {
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
-    "tools/decomp_residence_coordinates.py": "6f668b68dfb387d99007c10327686e5fdf734e6164eeddbe9fcc8a74a9ca584d",
-    "tools/decomp_assetregular_oracle.py": "f2f726ce5d51b94b02c8f8a43b2a66519f92ce472df44339f0fe9f705fc0e7da",
-    "tools/ghidra/assetregular-functions.json": "b735e482ba4b036dfcaef654d83a494b8030a37c4dff1c2f86cb6c35c3b159b2",
+    "tools/decomp_residence_coordinates.py": "16dde4e10b6f1576b13d618cb9d80a27a2a7ff54c9b1343dd0523d80039fd06b",
+    "tools/decomp_assetregular_oracle.py": "259d6c82db1b7f89d075d9f9a3b45c4f53c9c1c29e5a68ea18b0a0249658711d",
+    "tools/ghidra/assetregular-functions.json": "fb55b857013bb093a8031cc907dba662a1fce905f9f7e77860bdea89a6524bc8",
     "tools/ghidra/frameadvance-functions.json": "569f6227c1564d1a0b9ad3918e80131df6a1a83ea05883edb3e765fa0d0c7853",
     "extracted/bridgeeffects/originals/creation.c": "ac1856212fbd285650dc4ec999fa996a306ba536a3e42d605fba4ab26178fdbc",
     "extracted/bridgeeffects/originals/functions.tsv": "485cd05093884690ffc94c433c4e040282cd6ca26eb7da469732f74e1c983cec",
@@ -39,8 +39,8 @@
     "extracted/refined/originalCD/functions.tsv": "453aa383c27baf8eefa00d97bf44051d18460150556511c2eb7a46f111e92def",
     "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
     "cpppj/tests/fixtures/residence-coordinates-x86.tsv": "300c31e61c97d0a51c95bac788675e54223547cfd74cf35ae84f74ab0e9d7777",
-    "cpppj/src/o/RawAssetRegular.cpp": "57426fd87e639b7334c0bed1fdf9fabca583db22da5936525fea2e2ca2c1acdb",
-    "cpppj/tests/AssetRegularTests.cpp": "64c95a65b8cef62ad2df1ba725bdb3040f8fa2ad35315dd6771485a6e7dcd573",
+    "cpppj/src/o/RawAssetRegular.cpp": "09c48cbec14c7732b6941e43f2e1db12a33727f2910511c9e575bfcabfcc10e2",
+    "cpppj/tests/AssetRegularTests.cpp": "110a6dc0c4627ec792c980ea23f68a24d7558fdc5985cd96e0e3f4a7c57011c7",
     "tools/decomp_rawfinder_oracle.py": "08914eaa23cce0b3e1540799003c71c64062bad64f37383bdd647ede5ab2e2a7",
     "tools/decomp_bridgeeffects_oracle.py": "ed8e76931f972ffec24be024a17e65ddf3224eb487f215764f60b8abfbbaf462",
     "tools/decomp_bridgedecay_oracle.py": "887979f3b82cd56a93a4620d473b8048a579807e72022dfa8dddcf873c81641f"

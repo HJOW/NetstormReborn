@@ -46,7 +46,7 @@ struct InstallScene {
     std::array<std::uint8_t,RawIslandRuntime::kBytes> islandBytes{}; // 실제3204BYTE 섬 목록이다.
     std::vector<std::uint8_t> players=std::vector<std::uint8_t>(9*0xb4); // 부모/Owner/신전이 공유하는 실제9 기록이다.
     FortFinishOwnerState finishState; // 실제 미션 chaffMode의 자연 반환 조건이다.
-    AssetPostPopState assetState; // 실제 신전/레지던스/간헐천/아웃포스트 목록이다.
+    AssetPostPopState assetState; // 실제 신전/거주 구역/간헐천/아웃포스트 목록이다.
     RawPriestWorldState priestState; // 실제 사제/Carrier/보호막 장기 전역이다.
     PlayerWorldState playerState; // 현재 battleOwner와 templateOwner는 별도 상태다.
     FortObjectLoadState objectState; // 저장객체의 실제 미션/로딩 상태다.

@@ -12,7 +12,7 @@ from decomp_local_mission_transport import Oracle as BaseOracle, ROOT, HEAP, PLA
 from unicorn import UC_HOOK_MEM_WRITE
 from unicorn.x86_const import UC_X86_REG_EAX, UC_X86_REG_EBX, UC_X86_REG_ECX, UC_X86_REG_EDX, UC_X86_REG_ESI, UC_X86_REG_EDI, UC_X86_REG_EBP, UC_X86_REG_ESP, UC_X86_REG_FPCW, UC_X86_REG_FPTAG, UC_X86_REG_FPSW
 
-# 원문 객체7개/112BYTE 프로세스/48BYTE 썬 아비어리와 실제 TYPE 표의 격리 위치다.
+# 원문 객체7개/112BYTE 프로세스/48BYTE 훨리베이스와 실제 TYPE 표의 격리 위치다.
 POOL,FIELDS,SUN,TYPES=PLAYERS,HEAP,HEAP+0x1000,TABLE
 IDS=(50,51,60,61,62,63,70)
 TYPE_IDS=(72,73,80,138,144)
@@ -234,7 +234,7 @@ def main():
     with fixture.open('w',encoding='utf-8',newline='') as stream:
         writer=csv.writer(stream,delimiter='\t',lineterminator='\n');writer.writerow(['kind','input','fields','objects','globals','stamps','sun','result','trace']);writer.writerows(rows)
     paths=['originals/Netstorm.exe','extracted/refined/originals/functions.tsv','tools/decomp_flyer_frame.py','tools/decomp_local_mission_transport.py','cpppj/src/o/RawFlyerFrame.h','cpppj/src/o/RawFlyerFrame.cpp','cpppj/tests/FlyerFrameTests.cpp','cpppj/tests/fixtures/flyer-frame-x86.tsv']
-    facts={'host':socket.gethostname(),'date':datetime.now().date().isoformat(),'last_full_refined_host':'VM-W11-Codex','last_full_refined_date':'2026-10-16','observations':len(rows),'scopes':dict(Counter(r[0] for r in rows)),'precision_replays':[0x027f,0x037f],'normal_returns':len(rows)*2,'extended_differences':len(differing),'status':'native-observed-cpp-validation-pending','game_gui_runs':0,'limits':'실제 공통 제어/이동 산술/타이머/맨 오 워 수명·프레임/홈·표적 제어를 실행한다. 큰 검색/표적 검증/포위/의존/Host·썬 아비어리 조회·전송/공간/피해·무기/소리/명령/개발자진단은 선언한 경계다. 중심/offset/거리/클램프/ftol은 실제 명령이다. 전체112BYTE/7객체350BYTE/20BYTE전역/5TYPE stamp/48BYTE Sun/호출/반환/스택/비휘발/SEH/FPU/쓰기guard를 확인한다. 두 x87 재생을 고유 입력에 중복 합산하지 않는다.','sha256':{name:digest(ROOT/name) for name in paths}}
+    facts={'host':socket.gethostname(),'date':datetime.now().date().isoformat(),'last_full_refined_host':'VM-W11-Codex','last_full_refined_date':'2026-10-16','observations':len(rows),'scopes':dict(Counter(r[0] for r in rows)),'precision_replays':[0x027f,0x037f],'normal_returns':len(rows)*2,'extended_differences':len(differing),'status':'native-observed-cpp-validation-pending','game_gui_runs':0,'limits':'실제 공통 제어/이동 산술/타이머/맨 오 워 수명·프레임/홈·표적 제어를 실행한다. 큰 검색/표적 검증/포위/의존/Host·훨리베이스 조회·전송/공간/피해·무기/소리/명령/개발자진단은 선언한 경계다. 중심/offset/거리/클램프/ftol은 실제 명령이다. 전체112BYTE/7객체350BYTE/20BYTE전역/5TYPE stamp/48BYTE Sun/호출/반환/스택/비휘발/SEH/FPU/쓰기guard를 확인한다. 두 x87 재생을 고유 입력에 중복 합산하지 않는다.','sha256':{name:digest(ROOT/name) for name in paths}}
     report.write_text(json.dumps(facts,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n');print('Flyer Frame native:',len(rows),facts['scopes'],'extended differences',len(differing))
 
 

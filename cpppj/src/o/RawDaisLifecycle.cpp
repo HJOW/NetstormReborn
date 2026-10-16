@@ -37,7 +37,7 @@ void RawDaisLifecycle::Player(std::uint32_t owner) const { if (owner>kPlayerCoun
 bool RawDaisLifecycle::Handles(Sid sid) const { const auto raw=pool_.Slot(sid);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;const auto vt=Read(raw,0);return (raw[10]==daisState_.rune.daisType && vt==(patch ? kPatchDaisVtable : kCdDaisVtable)) || (raw[10]==daisState_.rune.altarType && vt==(patch ? kPatchAltarVtable : kCdAltarVtable)); }
 // 실제 최초 Pop의 타입과 초기 Player 범위를 공간쓰기 전에 검사한다.
 void RawDaisLifecycle::Validate(Sid sid,std::uint32_t flags) const {
-    if (!Handles(sid)) throw std::invalid_argument("다이스/알터 Pop 검사 타입/가상표 오류");
+    if (!Handles(sid)) throw std::invalid_argument("다이스/제단 Pop 검사 타입/가상표 오류");
     if (pool_.Slot(sid)[10]!=daisState_.rune.daisType) return;
     Player(Owner(sid));
     if (!daisState_.rune.suppressDuration && state_.gameTime==0 && (flags&7) && daisState_.grantFlags[Owner(sid)]>=kNextFirst.size())
@@ -63,13 +63,13 @@ void RawDaisLifecycle::DaisPostPop(Sid sid,std::uint32_t flags) const {
     }
     postPop_.DamageablePostPop(sid,flags);
 }
-// 알터의21은로컬전용이며최초예약뒤항상공통Damageable후처리를실행한다.
+// 제단의21은로컬전용이며최초예약뒤항상공통Damageable후처리를실행한다.
 void RawDaisLifecycle::PostPop(Sid sid,std::uint32_t flags) const {
     if (!Handles(sid)) throw std::invalid_argument("다이스 수명 Pop 타입/가상표오류");if (pool_.Slot(sid)[10]==daisState_.rune.daisType) { DaisPostPop(sid,flags);return; }if ((flags&1) && hooks_.reserveRegular()) hooks_.addRegular(sid,21,altarState_.struggleSeconds);postPop_.DamageablePostPop(sid,flags);
 }
-// 알터삭제가같은살아있는다이스삭제를요청해도공통Destroy의dead재진입차단을재사용한다.
+// 제단삭제가같은살아있는다이스삭제를요청해도공통Destroy의dead재진입차단을재사용한다.
 void RawDaisLifecycle::AltarPreDestroy(Sid altar,std::uint32_t flags) const {
-    if (!Handles(altar) || pool_.Slot(altar)[10]!=daisState_.rune.altarType) throw std::invalid_argument("알터 파생전처리 타입/가상표오류");if (!(flags&0x400000)) { const auto dais=altar_.DaisAt(altar);if (dais.value && dais.value<pool_.Capacity() && !(pool_.Slot(dais)[11]&2)) hooks_.destroy(dais,flags); }
+    if (!Handles(altar) || pool_.Slot(altar)[10]!=daisState_.rune.altarType) throw std::invalid_argument("제단 파생전처리 타입/가상표오류");if (!(flags&0x400000)) { const auto dais=altar_.DaisAt(altar);if (dais.value && dais.value<pool_.Capacity() && !(pool_.Slot(dais)[11]&2)) hooks_.destroy(dais,flags); }
     const auto area=footprint_.Footprint(altar);RawSquidFinder finder(pool_,hash_,types_);
     // 다음링크저장/현재extra/서버또는client번호권한의원본순서다.
     for (auto current=finder.Begin({Cell(area.left),Cell(area.top),Cell(area.right),Cell(area.bottom)},0);current.value;current=finder.Next()) if (pool_.Slot(current)[10]==daisState_.ritual.runeType && (pool_.Slot(current)[pool_.Edition()==OriginalEdition::Patch1078 ? 40 : 35]&1) && (pool_.IsServer() || (current.value>4 && current.value<pool_.Layout().serverFirst))) hooks_.destroy(current,0);

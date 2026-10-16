@@ -51,7 +51,7 @@
     "extracted/fortfinishowner/originals/functions.tsv": "58428ba159bcf2c7ee5f1fef36e802921fbb98725081e2cc659c9668a3395f22",
     "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
-    "tools/decomp_fortfinishowner_oracle.py": "d676c70b7931f2aeffd7a52c0d6d4415810534190b2765b5eb2b4f4e1df35592",
+    "tools/decomp_fortfinishowner_oracle.py": "59d4e38d99cac87c9752c87ba3aff8bcf09ec27a6eb6f0019d137646214b178d",
     "tools/decomp_fortobjectload_oracle.py": "efc9faa3865fe20a9a85bf3285dbc78903ba9ea5923ccc147edd05fc8f53e51f",
     "tools/ghidra/fortfinishowner-functions.json": "0001831952126951b279e3c6d4679b2a7eb8e6ba096e80e1e69b92b327d5a165"
   },

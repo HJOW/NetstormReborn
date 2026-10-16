@@ -6,7 +6,7 @@
 using namespace netstorm::o;
 using namespace netstorm::test::rawscene;
 namespace {
-// 실제 원본실행기에 준 네float비트와 레지던스 현재좌표 입력이다.
+// 실제 원본실행기에 준 네float비트와 거주 구역 현재좌표 입력이다.
 constexpr std::array<std::array<std::uint32_t,4>,9> kRuntimeBounds{{
     {0x41200000,0x41a00000,0x42700000,0x428c0000},{0,0,0x42700000,0x428c0000},
     {0xc0000000,0x41a00000,0x42700000,0x428c0000},{0x42480000,0x42540000,0x42480000,0x42540000},
@@ -20,21 +20,21 @@ const std::vector<std::vector<std::string>>& RuntimeRows() {
 }
 // 단일 raw pool/hash/record와 기존모드/Player/등록목록의 입력 장면이다.
 struct IslandRuntimeScene {
-    SidPool pool; // 현재 레지던스와 표면의 단일 raw 풀이다.
+    SidPool pool; // 현재 거주 구역과 표면의 단일 raw 풀이다.
     SquidHash hash; // 기존 RawPathSurfaceAt이 사용하는 현재 hash0다.
     std::array<std::uint8_t,RawIslandRuntime::kBytes> records{}; // CoreData와 같은3204BYTE mutable목록이다.
     FortFinishOwnerState modes; // 기존fort/special/chaff/Player첫지역을 공유한다.
     SquidPostPopList residences; // 실제 AssetPostPop의 등록목록이다.
     std::uint32_t revision{},changed{}; // 원본의 두 독립 DWORD다.
     std::vector<std::uint32_t> input; // 실행기에 전달한15개 명시 입력이다.
-    std::vector<std::string> events; // 원본assert/레지던스 가상owner의 효과 순서다.
+    std::vector<std::string> events; // 원본assert/거주 구역 가상owner의 효과 순서다.
     std::uint32_t assertions{}; // 원본진단 callback의 호출 수다.
     bool patch; // 현재 raw ownerBYTE의 판본 배치다.
     std::unique_ptr<RawIslandRuntime> runtime; // 위 단일 자료에서 실행하는 복원 몸체다.
     std::vector<std::uint8_t> players; // 공유모드에서 원본 첫 지역을 저장하는 실제9 Player BYTE다.
     // 원본입력 SID를 미리 client 정책으로 확보한다.
     explicit IslandRuntimeScene(OriginalEdition edition):pool(edition,kCapacity,false),patch(edition==OriginalEdition::Patch1078) {
-        // 레지던스/표면의 명시 공간번호를 모두 확보한다.
+        // 거주 구역/표면의 명시 공간번호를 모두 확보한다.
         for (std::uint16_t sid=5;sid<=127;++sid) CHECK(pool.Allocate(2)==Sid{sid});
     }
     // 가상owner의 실제raw 효과와 callback 직후 현재목록/모드/Player 변화를 관찰한다.

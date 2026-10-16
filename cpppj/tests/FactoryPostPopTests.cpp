@@ -17,7 +17,7 @@ struct FactoryScene {
     std::vector<RiftTypeFrames> frames; // 현재 상태별 첫 프레임/개수 구간이다.
     SquidPostPopState baseState; // 공통 깊이를 정확히 한 번 감소시키는 장부다.
     CarrierPostPopState carrierState; // 직접 Damageable의 권한/로딩 상태다.
-    AssetPostPopState state; // 기존 레지던스와 공유하는 목록/권한이다.
+    AssetPostPopState state; // 기존 거주 구역과 공유하는 목록/권한이다.
     std::vector<std::string> events; // 원본 명시 효과의 호출 순서다.
     std::uint32_t reserveMask{},alloc{},mutation{}; // 확보 성공 비트·현재 확보 위치·callback 변경 입력이다.
     // native의 client 번호50/60/61을 확보하며 미션 초기화 자체를 검증하지는 않는다.

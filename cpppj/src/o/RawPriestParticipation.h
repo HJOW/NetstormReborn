@@ -5,11 +5,11 @@
 #include "o/RawSquidFinder.h"
 
 namespace netstorm::o {
-class RawAltarSacrifice; // 이미 설치된 알터가 있으면 동일한 실제 DaisAt 몸체를 재사용한다.
+class RawAltarSacrifice; // 이미 설치된 제단이 있으면 동일한 실제 DaisAt 몸체를 재사용한다.
 // 세 타입 전역은 매 조회 시 읽으며 호출자는 실제 세션의 장기 저장소를 공급한다.
 struct PriestParticipationState {
     const std::uint32_t& priestType; // 005412d0 / CD0051cbbc의 현재 사제 타입 DWORD다.
-    const std::uint32_t& altarType; // 005412e8 / CD0051cbd4의 현재 알터 타입 DWORD다.
+    const std::uint32_t& altarType; // 005412e8 / CD0051cbd4의 현재 제단 타입 DWORD다.
     const std::uint32_t& daisType; // 005412ec / CD0051cbd8의 현재 다이스 타입 DWORD다.
 };
 // 00494f10/00495060의 전체 참여 조회와 기존 ownerState00595428 갱신이다.
@@ -18,7 +18,7 @@ public:
     // live 목록·Carrier·일반 typed Dais 조회가 모두 같은 풀을 사용한다. 참조 대상은 더 오래 살아야 한다.
     RawPriestParticipation(const SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,
         PriestPostPopState& priests,const RawCarrierPreDestroy& carrier,PriestParticipationState state);
-    // 실제 알터 몸체가 설치되어 있으면 그 DaisAt을 사용하고 다른 풀은 첫 조회 전에 거부한다.
+    // 실제 제단 몸체가 설치되어 있으면 그 DaisAt을 사용하고 다른 풀은 첫 조회 전에 거부한다.
     RawPriestParticipation(const SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,
         PriestPostPopState& priests,const RawCarrierPreDestroy& carrier,PriestParticipationState state,const RawAltarSacrifice& altar);
     // 살아 있는 목록의 첫 SID, 첫 일치 Carrier, 마지막 일치 Altar 순서다. 없으면0이다.
@@ -38,6 +38,6 @@ private:
     PriestPostPopState& priests_; // 사제 등록/제거 목록과 참여 결과9DWORD를 그대로 공유한다.
     const RawCarrierPreDestroy& carrier_; // 실제004ac9f0의 종속 타입/kind/mask 조회 몸체다.
     PriestParticipationState state_; // 복사된 판정값이 아닌 실제 현재 타입 전역의 참조다.
-    const RawAltarSacrifice* altar_{}; // 설치된 경우 기존 실제 알터 조회를 호출한다. 없으면 동일 typed finder를 직접 사용한다.
+    const RawAltarSacrifice* altar_{}; // 설치된 경우 기존 실제 제단 조회를 호출한다. 없으면 동일 typed finder를 직접 사용한다.
 };
 }

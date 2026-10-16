@@ -59,7 +59,7 @@
     "tools/decomp_buildingspace_oracle.py": "01abe6e64276d2247f7df98b09792a5a0ec35ab7701180b9d9743583eb081b02",
     "cpppj/assetpostpop.json": "ddf93f76d0d9a362dacc228d1b18a6f002e932f80e2d76717b087dfd5625c1a1",
     "cpppj/tests/fixtures/assetpostpop-x86.tsv": "706afb7e0bd78de2527e97a1ec1bbe1f35a202aafbd2c81a0dc8d77d99198741",
-    "tools/decomp_assetpostpop_oracle.py": "347af1e5202ecf14b5f32125f19046e83fdd1ee420018510333437c001154e31",
+    "tools/decomp_assetpostpop_oracle.py": "15c27f3ccb10defe5f2bb366aaaa9c3412214c27602238bdda1ab817196c3df6",
     "cpppj/sprotate.json": "e9a2a6e34e66a75a22adcae25ce307800aa1c713dfa4f6074a89416586b4ecd3",
     "cpppj/tests/fixtures/sprotate-x86.tsv": "4497a9bc627a0a0ce2dc2da721c4c5e2599e5f07796a1009e3bbfcbc54d4fefc",
     "tools/decomp_sprotate_oracle.py": "798acdfe3a9c1be1d6bb1ab15511bd75c0c74012abf15c19c5d2befefecade01",

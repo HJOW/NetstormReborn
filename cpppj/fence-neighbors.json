@@ -16,7 +16,7 @@
     "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
     "tools/decomp_fence_neighbors.py": "8f9b56f161e52ce2a2b3a8248b6b06fa3e10ee48889583eb473b82c4badd2e56",
     "tools/decomp_local_mission_transport.py": "db71da65079aa9a985a3a833edd224f089ba9a20137d92042551cb346937eb78",
-    "cpppj/src/o/RawFenceNeighbors.h": "6439b5d753ec297f423275a33ed0d68be554f71e0936969be7d3ae6695afe9be",
+    "cpppj/src/o/RawFenceNeighbors.h": "7b4758a52e35f80a452d5bd7d8137b08b1440f4b210b95cdbd1c76c57a2a599e",
     "cpppj/src/o/RawFenceNeighbors.cpp": "9e314859503223ab3054378be4b4f5088df869e0fbc07a27cfe2df0ad43fdb27",
     "cpppj/tests/FenceNeighborsTests.cpp": "8fcbedc3f78001771715b8cdadb8cbdff79ca2caf142159d06f607a567a6fa65",
     "cpppj/tests/fixtures/fence-neighbors-x86.tsv": "79cbc909b122529f0738a4c40b9cce847c40484fc25d23388301fc509dc646a4"

@@ -1,4 +1,4 @@
-// 실제 캠페인의 썬 아처 Fire와 썬 디스크 Missile을 같은 Core/Host에 조립한다.
+// 실제 캠페인의 썬 디스크 발사기 Fire와 썬 디스크 Missile을 같은 Core/Host에 조립한다.
 #pragma once
 #include "client/RawSurfaceWorld.h"
 #include "o/RawArcherAnimation.h"

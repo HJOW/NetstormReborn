@@ -30,8 +30,8 @@
   "game_runs": 0,
   "os_calls": 0,
   "files": {
-    "cpppj/src/o/RawGeyserAiRegistration.cpp": "8469ef44e9c1e93c04800afa70deb47a16a0c9968849e71bbb5427ee03688acc",
-    "cpppj/src/o/RawGeyserAiRegistration.h": "3282b52b26061b23d5e760382f4dfeb37821aae7feae500183b42c6e46be6f19",
+    "cpppj/src/o/RawGeyserAiRegistration.cpp": "1f0c6f4c96f677e661e0182879a229f1ebd13ec9ef10179942790e73313a97fe",
+    "cpppj/src/o/RawGeyserAiRegistration.h": "47a3de633d1eb88c3fff574b7392da8753f1d4dc659de941abceb4e3dd77ae7d",
     "cpppj/tests/fixtures/geyser-ai-registration-x86.tsv": "d7b6d2a738a8c84fe5b9ec8ebe92776bb7a9d69bd0e55684aff0e58304e89850",
     "cpppj/tests/GeyserAiRegistrationTests.cpp": "1009890fc40e31897ab8165a037919ad103da267c3110db2a4c86914836c1898",
     "extracted/geyser-ai-registration/originalCD/creation.c": "328e52dc19ecdaa77ef39019f583368abb4a59d16f87a4147bd45524b51feef9",
@@ -40,9 +40,9 @@
     "extracted/geyser-ai-registration/originals/functions.tsv": "55cf6a8669396a86e9874d20ee7e8c26f8d0183b6147a61136f470bcd91b4847",
     "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
-    "tools/decomp_geyser_ai_registration_oracle.py": "0143da8d9f8c6620543ff100b4367b48c5f4390194eb9202fa73f16c3fbb96dc",
+    "tools/decomp_geyser_ai_registration_oracle.py": "7ffaa3e02159962a8bc90417d7bf09b79fe3c88493bb6d854f7629393b34dabb",
     "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
-    "tools/ghidra/geyser-ai-registration-functions.json": "be5001beeacf9662abd7c0842eaf00bc8532a5116afdfb744d6b652144af9757"
+    "tools/ghidra/geyser-ai-registration-functions.json": "2318c0cd2bf3a99b2b9142a7ad06df407a76d206675facaee32ba09cfc57a7d8"
   },
   "limitations": [
     "원본 null AI 등록 순회만 정상 완료 범위다. nonnull 첫 요청은 원본 하위 실행 전 중단하고 C++도 명시 거부한다.",

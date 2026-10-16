@@ -206,7 +206,7 @@ bool RawGunTarget::MayTarget(const GunTargetQuery& query,Sid target) const {
     if (Coordinate(raw,14)==query.x && Coordinate(raw,18)==query.y) return false;
     return MayShoot(query,target);
 }
-// 썬더 아처는 flyer/balloon 외에는 MayTarget 이전에 거부한다.
+// 밴더 타워는 flyer/balloon 외에는 MayTarget 이전에 거부한다.
 bool RawGunTarget::ArcherTarget(const GunTargetQuery& query,Sid target) const {
     if (query.type==state_.thunderArcherType && !(types_[pool_.Slot(target)[10]].flags2&0x120000)) return false;
     return MayTarget(query,target) && ArcherShot(query,target);

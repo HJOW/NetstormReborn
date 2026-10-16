@@ -20,14 +20,14 @@
   "extended_differences": 0,
   "status": "native-and-cpp-flight-control-validated-targeting-and-effects-pending",
   "game_gui_runs": 0,
-  "limits": "실제 공통 제어/이동 산술/타이머/맨 오 워 수명·프레임/홈·표적 제어를 실행한다. 큰 검색/표적 검증/포위/의존/Host·썬 아비어리 조회·전송/공간/피해·무기/소리/명령/개발자진단은 선언한 경계다. 중심/offset/거리/클램프/ftol은 실제 명령이다. 전체112BYTE/7객체350BYTE/20BYTE전역/5TYPE stamp/48BYTE Sun/호출/반환/스택/비휘발/SEH/FPU/쓰기guard를 확인한다. 두 x87 재생을 고유 입력에 중복 합산하지 않는다.",
+  "limits": "실제 공통 제어/이동 산술/타이머/맨 오 워 수명·프레임/홈·표적 제어를 실행한다. 큰 검색/표적 검증/포위/의존/Host·훨리베이스 조회·전송/공간/피해·무기/소리/명령/개발자진단은 선언한 경계다. 중심/offset/거리/클램프/ftol은 실제 명령이다. 전체112BYTE/7객체350BYTE/20BYTE전역/5TYPE stamp/48BYTE Sun/호출/반환/스택/비휘발/SEH/FPU/쓰기guard를 확인한다. 두 x87 재생을 고유 입력에 중복 합산하지 않는다.",
   "sha256": {
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
     "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
-    "tools/decomp_flyer_frame.py": "01a53cebbedde37d8feb2fb253812312af6e41c33f1d642b52e5bdd0d905d712",
+    "tools/decomp_flyer_frame.py": "c67f5954b8166d1792fca78faf7f082e1ef25358ef5a5183c12afb89f45d69a2",
     "tools/decomp_local_mission_transport.py": "db71da65079aa9a985a3a833edd224f089ba9a20137d92042551cb346937eb78",
-    "cpppj/src/o/RawFlyerFrame.h": "66e591165423f060a530439dab1f95d42f56f3c9e220b13d301df8d00df46a7a",
-    "cpppj/src/o/RawFlyerFrame.cpp": "f2c2ca29d03de925c2a5102e475eb9d57b2f5d0a3f7db8fc942e8abc64feabc0",
+    "cpppj/src/o/RawFlyerFrame.h": "695af9b9a800869681fc0589e65b9ade96f58fba30814448b37a500fb1ab05b3",
+    "cpppj/src/o/RawFlyerFrame.cpp": "14328231b8acfa0cf63d453d8ff76d4f31530309b80f61dfb73c5cffdddb02f1",
     "cpppj/tests/FlyerFrameTests.cpp": "26252f6809f8262960fcaaee695251ba1eab7d7db0738c91f176bd46afe1ccba",
     "cpppj/tests/fixtures/flyer-frame-x86.tsv": "627270d186495d6929cac8a1d4e74c29e92c69294558e020b7d774854b0dfc85"
   },

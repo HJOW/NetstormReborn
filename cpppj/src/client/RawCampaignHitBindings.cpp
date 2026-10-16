@@ -20,7 +20,7 @@ struct RawCampaignHitBindings::Impl {
     o::RawContainedLookup contained; // 같은 Form 체인의 현재 typed 프로세스 조회다.
     std::unique_ptr<o::RawDamageableBurning> burning; // 현재 HP/효과 분기의 실제 몸체다.
     std::unique_ptr<o::RawPriestDamage> priestDamage; // 실제 회복 취소/HP1/감시 해제를 수행한다.
-    std::unique_ptr<o::RawDudeNotice> dudes; // 실제 finder/현재task/거주지 대피 요청 처리기다.
+    std::unique_ptr<o::RawDudeNotice> dudes; // 실제 finder/현재task/거주 구역 대피 요청 처리기다.
     std::unique_ptr<o::RawGunImpact> impact; // 같은 Factory/Host의 실제 anim 생성/예약/삭제다.
     // 모든 callback은 동일 Core와 외부 장기 상태만 읽는다.
     Impl(RawSurfaceWorld& input,const RawPriestWorldBindings& priestWorld,const o::SquidReward& hp,

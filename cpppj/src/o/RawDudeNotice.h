@@ -1,4 +1,4 @@
-// 원본 충돌 주변 Dude의 현재task/Regular·거주지 선택·대피 요청을 같은 raw 월드에 연결한다.
+// 원본 충돌 주변 Dude의 현재task/Regular·거주 구역 선택·대피 요청을 같은 raw 월드에 연결한다.
 #pragma once
 #include "o/RawSquidFinder.h"
 #include "o/SquidPostPop.h"
@@ -38,7 +38,7 @@ public:
     void Around(float x,float y) const;
     // 패치00450db0/CD인라인: dead/notice/fall은그대로두고현재Regular5107·프로세스·대피요청을수행한다.
     void Notice(Sid sid) const;
-    // 0048fd30/CD00406ef0: 현재owner가맞는거주지중float 저장거리보다엄격히가까운첫후보다.
+    // 0048fd30/CD00406ef0: 현재owner가맞는거주 구역중float 저장거리보다엄격히가까운첫후보다.
     Sid NearestResidence(Sid sid) const;
     // 004505a0/CD004e8a30의현재표적 발자국 진입점이다. 일반Gun 중심과구별한다.
     std::array<float,2> ResidencePoint(Sid sid) const;
@@ -56,7 +56,7 @@ private:
     std::span<const RiftTypeRecord> types_; // 현재타입의genus/발자국/판본자료다.
     std::span<const RiftTypeFrames> frames_; // Move후현재단계와A구간을조회하는실제코드표다.
     std::span<DudeNoticeTypeData> speeds_; // 경로요청과공유하는현재속도저장소다.
-    const SquidPostPopList& residences_; // RawAssetPostPop의현재거주지active 목록이다.
+    const SquidPostPopList& residences_; // RawAssetPostPop의현재거주 구역active 목록이다.
     DudeNoticeState state_; // 같은현재Host시계와원본타입/분류 전역참조다.
     DudeNoticeHooks hooks_; // 실제Regular/Burning/DudePath 생성및현재경로조회경계다.
 };

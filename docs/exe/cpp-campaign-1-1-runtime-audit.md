@@ -24,7 +24,7 @@ Fort는 35섹션·파일2546바이트·마지막 미해석56바이트, `TypeName
 | Terr01 | 123 윈드 신전(`windVortex`) | 1 | owner2, 저장 frame 없음, 내용물 타입133 항목1 |
 | Terr01 | 89 거주 구역 | 1 | owner2, 저장 frame 없음, 실제 randframe 대상 |
 | Terr01 | 71 썬 디스크 발사기(`sunArcher`) | 9 | 모두 owner2, 저장 frame 없음 |
-| Terr01 | 78 썬 배리케이드(`sunBlocker`) | 8 | 모두 owner2, 저장 frame 없음 |
+| Terr01 | 78 썬 바리케이드(`sunBlocker`) | 8 | 모두 owner2, 저장 frame 없음 |
 | Terr01 | 75 윈드 제네레이터(`windBattery`) | 3 | 모두 owner2, 저장 frame 없음 |
 | Chaff | 82 다리 | 15 | 약식 storedType253 → owner2, 저장 bridge frame: 35/3/41/35/35/3/41/23/41/41/41/29/41/13/35 |
 | Chaff | 122 간헐천 | 13 | 모두 저장 owner0, 저장 frame 없음 |
@@ -34,7 +34,7 @@ Fort는 35섹션·파일2546바이트·마지막 미해석56바이트, `TypeName
 
 청크 안 상대 위치는 Terr00 사제 `chunk0 (14,12)`, 간헐천 `chunk1 (6,10)`, 신전 `chunk3 (9,4)`, 거주 구역 `chunk5 (5,14)`다. Terr01 사제 `chunk1 (0,11)`, 신전 `chunk1 (12,12)`, 거주 구역 `chunk2 (5,9)`다. Terr의 chunk 번호는 섹션 내 y/x 선택 순번이므로 그 자체를 월드 `(chunkX,chunkY)`로 사용하면 안 된다. 실제 위치는 저장 Territory의 `IslandBuilder`/현재 지역 지도에서 얻는다. Chaff의 chunk 번호는 전체16×16의 행 우선 번호다.
 
-**썬 아비어리72·썬 팩토리85·아웃포스트126·썬 캐논128은 초기 공간 저장에 각각0개다.** 썬 아비어리는 시작 지식/지식 표시와 해당 건설 선택 이후 필요한 실제 타입이다. 초기 공간 이관을 위해 Factory85를 필수 새 자산으로 생성할 이유는 없다. 기존 자료 일부의 `sunAviary=85`, `sunWalker=137`은 번호 오류다. 현재 타입 표에서85는 `sunFactory`,72는 `sunAviary`,133은 `sunWalker`,137은 `windWalker`다.
+**훨리베이스72·썬 워크샾85·아웃포스트126·썬 캐논128은 초기 공간 저장에 각각0개다.** 훨리베이스는 시작 지식/지식 표시와 해당 건설 선택 이후 필요한 실제 타입이다. 초기 공간 이관을 위해 Factory85를 필수 새 자산으로 생성할 이유는 없다. 기존 자료 일부의 `sunAviary=85`, `sunWalker=137`은 번호 오류다. 현재 타입 표에서85는 `sunFactory`,72는 `sunAviary`,133은 `sunWalker`,137은 `windWalker`다.
 
 ## 원본 로딩 순서와 현재 차이
 
@@ -60,20 +60,20 @@ Fort는 35섹션·파일2546바이트·마지막 미해석56바이트, `TypeName
 | 레인/윈드 신전124/123 ×1씩 | `004dce40/004dd020` → 공통 `004dc700` → event1 payload0.08; 로딩 중 생산 slot 자동 생성 분기는 억제, 이후 저장 내용물 Form 생성 | **`004dc220` Handle 필수**. 최초 event1은 실제 frame advance `004afc90`; 이후 생산/신전 사건의 공통 분배를 사용. postPop의 현재 player 신전/섬 등록/소유자/소리·slot/생산 경계도 같은 상태에 연결 |
 | 썬 디스크 발사기71 ×9 | `0046a810`, 기존 애니메이션 제거→`0046a1a0` GunProcess 생성/flags0 부착 | 최초 Gun은 **일반 Regular가 아닌 전용 Kernel Process**다. `RawGunProcess` 생성/상태 기계/송신과 현재 `RawGunTarget` Archer finder는 복원. 실제 Gun animation/투사체/피해·sound/삭제 연결은 여전히 필요 |
 | 윈드 제네레이터75 ×3 | `0041c150`→Damageable/공통; 별도 최초 Regular 없음 | 발전/에너지 공급 효과는 Mana/생산/건설 흐름에서 필요. 임의 Regular를 추가하지 않음 |
-| 썬 배리케이드78 ×8 | `0048eda0`는 최초·전투 **및 loadingDepth0**에서만 startBlocker | 저장 로딩은 depth>0이므로 이 시작 분기를 억제한다. 이후 새 건설/비로딩 경로와 현재 Damageable 연결까지 완성된 것은 아님 |
+| 썬 바리케이드78 ×8 | `0048eda0`는 최초·전투 **및 loadingDepth0**에서만 startBlocker | 저장 로딩은 depth>0이므로 이 시작 분기를 억제한다. 이후 새 건설/비로딩 경로와 현재 Damageable 연결까지 완성된 것은 아님 |
 
 가상 표는 실제 PE에서 직접 읽었다: 사제 `0050f210/+5c=00494580`, 거주 구역 `0050f540/+5c=0049a4e0`, 간헐천 `0050da88/+5c=00485640`, 레인/윈드 신전 `005196f0/00519860`의 `+5c=004dc220`이다. 클래스 이름을 기준으로 공통 payload 반환을 넣는 방식은 이 첫 프레임 효과를 생략한다.
 
-썬 팩토리85는 초기에는 없지만 실제 `00509148/+20=004538f0`의 예약은 event2 payload8 및 패치 event5 payload0.5다. **`+5c=004549c0`의 상태 frame/업그레이드 Handle**과 연결해야 동작한다. Factory postPop 자체는 `RawFactoryPostPop`에 이미 복원됐다. 이것을 초기 사제/신전 Regular의 대용으로 쓰지 않는다.
+썬 워크샾85는 초기에는 없지만 실제 `00509148/+20=004538f0`의 예약은 event2 payload8 및 패치 event5 payload0.5다. **`+5c=004549c0`의 상태 frame/업그레이드 Handle**과 연결해야 동작한다. Factory postPop 자체는 `RawFactoryPostPop`에 이미 복원됐다. 이것을 초기 사제/신전 Regular의 대용으로 쓰지 않는다.
 
-썬 아비어리72는 Factory85와 다른 `00509930/+20=0045ec50`이다. 원본은 server/최초 조건에서 **전용 sunAviaryProcess** 중복 검사를 하고 new0x30/`0045d690` → 내장 Process+0x20 → `0041bd20(..., flags8)`로 붙인 뒤 Damageable로 이어진다. 일반 Regular/Factory 후처리로 대신할 수 없다. 이 몸체는 초기 공간 저장에서는 도달하지 않지만 **시작 지식에 있는 썬 아비어리 건설을 선택하는 실제 1-1 플레이**에서 필수 후속이다.
+훨리베이스72는 Factory85와 다른 `00509930/+20=0045ec50`이다. 원본은 server/최초 조건에서 **전용 sunAviaryProcess** 중복 검사를 하고 new0x30/`0045d690` → 내장 Process+0x20 → `0041bd20(..., flags8)`로 붙인 뒤 Damageable로 이어진다. 일반 Regular/Factory 후처리로 대신할 수 없다. 이 몸체는 초기 공간 저장에서는 도달하지 않지만 **시작 지식에 있는 훨리베이스 건설을 선택하는 실제 1-1 플레이**에서 필수 후속이다.
 
 ## 실제 이관 우선순위와 남은 최소 전체 사슬
 
 1. **초기 동일 월드:** `RawSurfaceWorld::Core/BeginLoad/FinishLoad/Create/Pop/BindRuntime`의 실제 pool/hash/spot/types/frames/Graph/장부/Owner/Kernel을 사용해 현재 `GameWorld::objects_`의 비표면 객체를 이관한다. `RawFortObjectLoad`, 실제 지형/간헐천 생성 순서, `RawFortFinishOwner`, `RawContainedCreate`/Form 분배기를 조립한다. 선택·그림·체력·내용물도 같은 SID를 읽어야 한다. 사제/일반 자산 postPop/삭제를 미리 연결하고 depth와 inBattle/boss/미션 전역을 실제 단계에 공급한다.
 2. **첫 Kernel 프레임:** 사제는 기존 `RawPriestWorldBindings`와 회복/보호막/낙하·삭제를 재사용하고, 거주 구역 `0049a4e0`·간헐천 `00485640`·신전 `004dc220`의 현재 필요한 Handle를 복원/등록한다. 적 썬 디스크 발사기의 실제 GunProcess와 Archer target를 연결한다. payload fallback으로 미연결 자산을 정상 처리하지 않는다.
 3. **브리핑과 실제 생산/명령:** `[A.]`의 지식55는 저장 Technology26에서 골렘을 제외한25개 카드와 같은 자료를 사용한다. 시작 지식4와 혼합하지 않는다. 사제 Construct/신전 골렘 생산/Deck38의 실제 시간·내용물/기술/SP·커서/배치 입력을 연결한다. `GameWorld::MoveSelected`의 임시 GroundGrid 이동을 실제 Path 명령으로 교체한다. `RawPathSearch/RawPathRuntime/RawPathProcess`와 최신 `RawPathData`는 기존 몸체지만 **00489080 시작 분배와 타입54 사제/40 골렘/23 운반 프로세스의 가상 도착·명령 행동**이 모두 연결됐다는 뜻은 아니다.
-4. **첫 썬 캐논의 전체 건설:** 기존 CursorDrop→Local→Request/Confirm/Notice→Place→Builder/Arrival→ConstructionProcess/Visual/Sound/삭제를 조립한다. 비용400, 실제 needsBuilder 플래그와 teleportEffect134/manaBolt105·공급원/에너지 소비→Path23 도착→서버 SID에 duration0.6초의 사슬을 유지한다. 기존 [건설 감사](cpp-construction-runtime-audit.md)와 [도착 몸체](cpp-construction-arrival.md)를 따른다. 시작 지식의 레인 배터리·썬 아비어리도 선택 가능한 실제 기능이므로 1-1 전체 동작 동일성 범위에서 제외할 수 없다.
+4. **첫 썬 캐논의 전체 건설:** 기존 CursorDrop→Local→Request/Confirm/Notice→Place→Builder/Arrival→ConstructionProcess/Visual/Sound/삭제를 조립한다. 비용400, 실제 needsBuilder 플래그와 teleportEffect134/manaBolt105·공급원/에너지 소비→Path23 도착→서버 SID에 duration0.6초의 사슬을 유지한다. 기존 [건설 감사](cpp-construction-runtime-audit.md)와 [도착 몸체](cpp-construction-arrival.md)를 따른다. 시작 지식의 레인 제네레이터·훨리베이스도 선택 가능한 실제 기능이므로 1-1 전체 동작 동일성 범위에서 제외할 수 없다.
 5. **전투/경제/AI/승리까지:** 새/기존 Gun의 animation→발사/투사체→피해/파괴·sound, 간헐천 자원/골렘 수확/운반, 적 AI의 실제6초 행동/간헐천 부착/콜렉터와 제한 능력을 연결한다. 신전 파괴→적 사제 보호막/포획→골렘 운반→제단의 다섯 룬 의식→사제 사망을 거쳐 기존 `RawMissionOutcome::Check`와 `[BadTeamDead]` 성공 사건을 실제 목록/상태에 연결한다. **신전 파괴 즉시 승리는 원본 1-1이 아니다.** 성공 inline Config/정지/`Done{fileName}` 저장/다음 미션 버튼도 종단 사슬이다.
 
 기존 `RawRegionOwnership`의 `00455380` 투표/테마 선택/도장 요청은 **이미 복원**됐다. 실제 flood/지형 frame 도장 `00470900`과 현재 섬/표면 owner 변경 효과, Damageable 로딩 claim `0044bd20` 등 외부 효과의 조립은 별도다. 도장을 연결할 때 existing outposts/temples 목록을 그대로 공유하고 투표 본체를 다시 구현하거나 신규 관찰로 합산하지 않는다. 본섬의 초기 생성·소유자 도장과 신전 파괴 후 지형 전환의 같은 raw 표면/Frame/Display 연결은 실제 원본 동일성에 필요한 작업이다.

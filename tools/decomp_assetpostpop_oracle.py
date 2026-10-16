@@ -64,7 +64,7 @@ def inputs():
     for kind,extra,load,has in itertools.product((9,10,11),(0,8),(0,1),(0,1)):
         result.append(dict(kind=kind,flags=1,extra=extra,battle=1,load=load,boss=1,reserve=7,
             animation=0,word=7,f1=0x1000,cost=1000,selected=0,has=has,list_count=0))
-    # 원본 레지던스의 signed DWORD /2·6단계 경계·CD 하위 byte를 독립 관찰한다.
+    # 원본 거주 구역의 signed DWORD /2·6단계 경계·CD 하위 byte를 독립 관찰한다.
     for word,animation in itertools.product((0,5,6,11,12,17,18,25,0xffffffff,0xfffffffb,0x80000000,0x7fffffff),(0,1)):
         result.append(dict(kind=6,flags=1,extra=0,battle=1,load=1,boss=0,reserve=7,
             animation=animation,word=word,f1=0x1000,cost=1000,selected=0,has=0,list_count=0))

@@ -31,7 +31,7 @@
     "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
     "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
     "tools/decomp_asset_players.py": "62d3bdf7532bb2c18438063ef57fad59bcb0dfabc9bf0132aa1172448840ae0a",
-    "tools/decomp_assetpostpop_oracle.py": "347af1e5202ecf14b5f32125f19046e83fdd1ee420018510333437c001154e31",
+    "tools/decomp_assetpostpop_oracle.py": "15c27f3ccb10defe5f2bb366aaaa9c3412214c27602238bdda1ab817196c3df6",
     "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb"
   }
 }

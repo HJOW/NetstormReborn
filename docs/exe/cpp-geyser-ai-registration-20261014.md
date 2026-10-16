@@ -1,4 +1,4 @@
-# 최초 가이저 등록의 현재 Player AI 순회
+# 최초 간헐천 등록의 현재 Player AI 순회
 
 ## 범위와 출처
 
@@ -6,7 +6,7 @@
 
 | 용도 | 10.78 | CD10.72 |
 | --- | --- | --- |
-| 모든 Player에 가이저 등록/제거 전달 | `00416720` | `004d8670` |
+| 모든 Player에 간헐천 등록/제거 전달 | `00416720` | `004d8670` |
 | 직접 AI callback | `004153c0` | 등록 몸체 안에 inlined |
 | 실제 Player 배열 전역 | `0059534c` | `0050f834` |
 | Player 한 기록 크기/AI 필드 | `0xb4` / `+0xb0` | `0xac` / `+0xa8` |
@@ -22,7 +22,7 @@ nonnull AI를 처음 발견하면 `GeyserAiRegistrationBoundary`에 **owner/AI p
 
 ## 독립 원본 관찰
 
-`tools/decomp_geyser_ai_registration_oracle.py`는 새 정밀 등록 entry의 실제 x86 명령만 실행한다. 현재 Player AI 읽기순서, 첫 하위 요청의 인자, 전체9기록 불변과 스택/x87 상태를 관찰한다. 실제 가이저나 AI 힙·원본 게임·GUI·OS 호출은 만들거나 실행하지 않는다.
+`tools/decomp_geyser_ai_registration_oracle.py`는 새 정밀 등록 entry의 실제 x86 명령만 실행한다. 현재 Player AI 읽기순서, 첫 하위 요청의 인자, 전체9기록 불변과 스택/x87 상태를 관찰한다. 실제 간헐천나 AI 힙·원본 게임·GUI·OS 호출은 만들거나 실행하지 않는다.
 
 | 판본 | 정상 null AI 고유 입력 | 미복원 하위 거부 고유 입력 | assert 입력 | 정상 반복 반환 | 하위 반복 중단 |
 | --- | ---: | ---: | ---: | ---: | ---: |

@@ -1,4 +1,4 @@
-# cpppj 중단 인수인계 — 썬 아비어리 단위75
+# cpppj 중단 인수인계 — 훨리베이스 단위75
 
 2026-10-16, 현재 PC **HJOW-Athlon**. 사용자가 작업 중지를 요청한 뒤 **“검사도 다음으로 넘겨. 검사 필요까지 바로 인수인계해줘”**라고 지시했다. 구현과 검사를 중단했으며 새 검사 없이 현재 자료를 로컬 커밋으로 보존한다. 전체 목표는 미달성 상태로 일시 중단한다. 서브 AI `construction_audit`·`energy_finish`·`session_audit`는 모두 중지 상태다. 사용자가 재개하기 전에는 구현이나 검사를 다시 시작하지 않는다.
 
@@ -50,6 +50,6 @@ cpppj/build/bin/Release/netstorm_tests.exe --filter CampaignMissionStart_
 
 첫 구현 재개 지점은 Tutorial6의 **TYPE136·VT00509470** 실제 파생 후처리다. 이름/가상 함수 주소와 원본 호출 경계를 정밀 산출물에서 확인한 뒤 복원해야 한다. 그 이후에도 현재 보호8미션의 전체 통과를 확인해야 한다.
 
-썬 아비어리 stage6의 썬 플라이어73 파생 후처리/이동과0045c1b0 BaseFlyer 연결은 미복원이다. 현재 Session은 해당 미복원 경계를 명시적으로 실패시킨다. 개발자 frameCheck는 정상 타입 코드 범위만 연결했으며 잘못된 메모리/GUI 진단 전체를 복원한 것은 아니다. 힙·부착·Damageable·장치·플라이어 생성/Owner/Pop·BaseFlyer·재전송은 native 관찰의 명시 외부 경계다.
+훨리베이스 stage6의 훨리기그73 파생 후처리/이동과0045c1b0 BaseFlyer 연결은 미복원이다. 현재 Session은 해당 미복원 경계를 명시적으로 실패시킨다. 개발자 frameCheck는 정상 타입 코드 범위만 연결했으며 잘못된 메모리/GUI 진단 전체를 복원한 것은 아니다. 힙·부착·Damageable·장치·플라이어 생성/Owner/Pop·BaseFlyer·재전송은 native 관찰의 명시 외부 경계다.
 
-Early Missions1~6, 데모3개(`DemoStormRages`·`GuardMyBack`·`DissolvedAlliance`), 캠페인1-1/1-2의 실제 GUI 진입과 자연 플레이·승패·다음 미션·저장·그래픽/음향 동일성은 여전히 미완료다. 자세한 구현 경계는 [썬 아비어리 기록](cpp-sun-aviary-20261016.md)과 [LEFT_JOBS](../../LEFT_JOBS.md)를 따른다. 이번 인수인계가 과거의 재개/active 문구보다 우선한다.
+Early Missions1~6, 데모3개(`DemoStormRages`·`GuardMyBack`·`DissolvedAlliance`), 캠페인1-1/1-2의 실제 GUI 진입과 자연 플레이·승패·다음 미션·저장·그래픽/음향 동일성은 여전히 미완료다. 자세한 구현 경계는 [훨리베이스 기록](cpp-sun-aviary-20261016.md)과 [LEFT_JOBS](../../LEFT_JOBS.md)를 따른다. 이번 인수인계가 과거의 재개/active 문구보다 우선한다.

@@ -37,7 +37,7 @@ std::array<std::int16_t,2> RawProjectileGeometry::Offset(std::uint32_t type,std:
 // 두 SHP 헤더의 signed short를 먼저 정수로 더하며 타입 hotspot을 추가로 빼지 않는다.
 std::array<float,2> RawProjectileGeometry::ArcherMuzzle(Sid firing) const {
     const auto raw=Slot(firing);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
-    if (raw[10]!=71) throw std::logic_error("Projectile 포구의 썬 아처 외 파생 미복원");
+    if (raw[10]!=71) throw std::logic_error("Projectile 포구의 썬 디스크 발사기 외 파생 미복원");
     const bool abstract=(raw[patch ? 40U : 35U]&1)!=0;
     const auto first=Offset(raw[10],geometry_[raw[10]].defaultFrame,abstract);
     const auto current=Offset(raw[10],patch ? std::bit_cast<std::int32_t>(Read(raw,36)) : raw[34],abstract);

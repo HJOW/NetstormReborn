@@ -77,7 +77,7 @@ def main():
             '미니맵 실제 큐/Refresh를 복원하고 Pop/Unpop에 연결했으나 bitmap 표시 재생성·실제 셀 그림은 필수 외부 경계다.',
             'Path 공유 버퍼와 서버 flags0 부착/송신을 연결했고 CD의 override 무시를 교정했다.',
             'Prepare48개는 원본게임 x87 53비트 결과이며 64비트의16개 1ULP 차이는 별도 보존한다.',
-            'Factory 파생 wrapper는 아웃포스트126이며 실제 썬 아비어리72는 별도 미복원 몸체다.',
+            'Factory 파생 wrapper는 아웃포스트126이며 실제 훨리베이스72는 별도 미복원 몸체다.',
             'GameWorld 비표면 이관·실제 지형 도장·Gun 애니메이션/투사체·사제 운반/의식/승패 및 캠페인1-1 완주가 남아 있다.'])
     REPORT.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
     print(json.dumps({'tests':report['tests'],'native_cases':5310,'campaign_completed':False},ensure_ascii=False))

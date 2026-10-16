@@ -1,4 +1,4 @@
-// 실제 레지던스/가이저/신전의 가상 Handle와 공통 Damageable 사건을 분기별로 복원한다.
+// 실제 거주 구역/간헐천/신전의 가상 Handle와 공통 Damageable 사건을 분기별로 복원한다.
 #include "o/RawAssetRegular.h"
 #include "o/RawPathAnimation.h"
 #include <algorithm>
@@ -110,11 +110,11 @@ RegularHandler RawAssetRegular::Handler(RegularHandler fallback) const {
         return fallback(sid,event,count,payload);
     };
 }
-// 원본 레지던스는 마지막 base Handle에서 payload를 그대로 반환한다.
+// 원본 거주 구역은 마지막 base Handle에서 payload를 그대로 반환한다.
 float RawAssetRegular::Residence(Sid sid,std::uint32_t event,std::uint32_t,float payload) const {
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     if (event==0) {
-        Require(hooks_.notifySurface,"레지던스 주민 통지 몸체 누락");
+        Require(hooks_.notifySurface,"거주 구역 주민 통지 몸체 누락");
         auto raw=pool_.AllocatedBytes(sid);const auto word=Read(raw,12,2);
         Write(raw,12,(word&0xfff0U)|((word&15U)==0 ? 1U : 0U),2);
         hooks_.notifySurface(sid);
@@ -138,7 +138,7 @@ float RawAssetRegular::Residence(Sid sid,std::uint32_t event,std::uint32_t,float
             const auto object=pool_.Slot(candidate);const auto type=object[10];
             if (type==state_.decorationType) {
                 const auto current=CurrentFrame(candidate);const auto& codes=frames_[type].Codes();
-                if (current<0 || static_cast<std::size_t>(current)>=codes.size()) throw std::out_of_range("레지던스 장식 프레임 오류");
+                if (current<0 || static_cast<std::size_t>(current)>=codes.size()) throw std::out_of_range("거주 구역 장식 프레임 오류");
                 const auto flags=static_cast<std::int8_t>(codes[static_cast<std::size_t>(current)].flags);
                 if (flags&8) { setter_.Set(candidate,Add(current,1),0);changed=true; }
                 else if (flags&16) { setter_.Set(candidate,Add(current,-1),0);changed=true; }
@@ -147,9 +147,9 @@ float RawAssetRegular::Residence(Sid sid,std::uint32_t event,std::uint32_t,float
         }
         state_.maxDecorationScan=std::max(state_.maxDecorationScan,checked);return 1.0f;
     }
-    if (event==2) { Require(hooks_.residenceEvent2,"레지던스 event2 몸체 누락");hooks_.residenceEvent2(sid); }
+    if (event==2) { Require(hooks_.residenceEvent2,"거주 구역 event2 몸체 누락");hooks_.residenceEvent2(sid); }
     if (event==3 && patch) {
-        Require(hooks_.surface,"레지던스 지면 조회 누락");Require(hooks_.setOwner,"레지던스 소유자 지정 누락");
+        Require(hooks_.surface,"거주 구역 지면 조회 누락");Require(hooks_.setOwner,"거주 구역 소유자 지정 누락");
         const auto raw=pool_.Slot(sid);const auto support=hooks_.surface(std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18)));
         if (support.value) hooks_.setOwner(sid,pool_.Slot(support)[34]);
         auto theme=0;
@@ -157,7 +157,7 @@ float RawAssetRegular::Residence(Sid sid,std::uint32_t event,std::uint32_t,float
         for (const auto value:assets_.temples.Items()) {
             const auto temple=pool_.Slot(Sid{static_cast<std::uint16_t>(value)});
             if (temple[34]!=pool_.Slot(sid)[34]) continue;
-            const auto type=temple[10];if (type>=elements_.size()) throw std::out_of_range("레지던스 신전 원소 오류");
+            const auto type=temple[10];if (type>=elements_.size()) throw std::out_of_range("거주 구역 신전 원소 오류");
             const auto element=elements_[type]; // 원본004ac970은 설정 조회 전에 현재 TYPE+98을 읽는다.
             const bool enabled=hooks_.themeMode ? hooks_.themeMode()!=0 : state_.themeMode; // 실제 옵션 조회는 첫 일치 신전에서만 수행한다.
             if (enabled) theme=element==2 ? 1 : element==0 ? 2 : element==1 ? 3 : 0;
@@ -170,10 +170,10 @@ float RawAssetRegular::Residence(Sid sid,std::uint32_t event,std::uint32_t,float
     }
     return payload;
 }
-// 패치 가이저는 직접 frame DWORD를 쓰며 CD는 실제 공통 frame 진행기를 사용한다.
+// 패치 간헐천은 직접 frame DWORD를 쓰며 CD는 실제 공통 frame 진행기를 사용한다.
 float RawAssetRegular::Geyser(Sid sid,std::uint32_t event,std::uint32_t count,float payload) const {
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
-    if (patch) { Require(hooks_.displayUpdate,"가이저 표시 갱신 누락");hooks_.displayUpdate(sid,0); }
+    if (patch) { Require(hooks_.displayUpdate,"간헐천 표시 갱신 누락");hooks_.displayUpdate(sid,0); }
     if (event==0) {
         if (!patch) advance_.Advance(sid,1,0);
         const auto raw=pool_.Slot(sid);const auto ratio=static_cast<double>(Read(raw,12,2))/static_cast<double>(types_[raw[10]].cost);

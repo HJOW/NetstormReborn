@@ -8,10 +8,10 @@ namespace netstorm::o {
 enum class IslandRuntimeAssertion {
     // MissingIsland: 존재/범위 검사에 실패한 섬의 getter/setter를 요청했다.
     MissingIsland,
-    // InvalidBounds: owner변경 뒤 원본 경계 검사에 실패해 현재 레지던스 전파 전에 보고한다.
+    // InvalidBounds: owner변경 뒤 원본 경계 검사에 실패해 현재 거주 구역 전파 전에 보고한다.
     InvalidBounds
 };
-// 지면 소유자를 실제 레지던스 가상owner에 전달하고 원본 진단을 소비자에게 보고한다.
+// 지면 소유자를 실제 거주 구역 가상owner에 전달하고 원본 진단을 소비자에게 보고한다.
 struct IslandRuntimeHooks {
     // setResidenceOwner: 현재residences의 실제 SID에 가상+0x74를 실행한다. 같은 raw pool을 갱신해야 한다.
     std::function<void(Sid,std::uint32_t)> setResidenceOwner;
@@ -81,7 +81,7 @@ private:
     const SquidHash& hash_;
     // records_: CoreData가 소유한 실제count/100개 mutable32바이트기록이다.
     std::span<std::uint8_t> records_;
-    // modes_: 기존 FortFinishOwner의fort/special/chaff/Player첫지역/레지던스타입을 공유한다.
+    // modes_: 기존 FortFinishOwner의fort/special/chaff/Player첫지역/거주 구역타입을 공유한다.
     FortFinishOwnerState& modes_;
     // residences_: AssetPostPop의 실제 등록목록이며 매 반복 currentcount/entries를 다시 읽는다.
     SquidPostPopList& residences_;
@@ -89,7 +89,7 @@ private:
     std::uint32_t& revision_;
     // ownerChanged_: 패치 owner변경에서만1을 쓰는 별도DWORD다. CD는 유지한다.
     std::uint32_t& ownerChanged_;
-    // hooks_: 필수 실제레지던스owner와 원본 진단효과다.
+    // hooks_: 필수 실제거주 구역owner와 원본 진단효과다.
     IslandRuntimeHooks hooks_;
     // worldExtent_: 실제isValid에서float로 읽는 원본월드상한DWORD다.
     std::int32_t worldExtent_;

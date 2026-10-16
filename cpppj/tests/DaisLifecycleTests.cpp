@@ -1,4 +1,4 @@
-// 다이스/알터 최초Pop·Player SID쌍·알터전처리의 독립 상위출력을 같은풀에 대조한다.
+// 다이스/제단 최초Pop·Player SID쌍·제단전처리의 독립 상위출력을 같은풀에 대조한다.
 #include "RawSceneSupport.h"
 #include "o/RawDaisLifecycle.h"
 #include "o/RawSquidHitPoints.h"
@@ -8,7 +8,7 @@
 using namespace netstorm::o;
 using namespace netstorm::test::rawscene;
 namespace {
-// 현재typed조회만쓰는알터모듈의그외실행은반환형과관계없이명시적으로거부한다.
+// 현재typed조회만쓰는제단모듈의그외실행은반환형과관계없이명시적으로거부한다.
 template<class Result,class... Arguments> std::function<Result(Arguments...)> LifecycleForbidden() { return [](Arguments...)->Result { throw std::logic_error("수명 typed 조회의 미선언 하위효과"); }; }
 // typedDais 조회는생성/희생/소리/삭제를수행하지않는다. 무효성공callback을공급하지않는다.
 AltarSacrificeHooks LifecycleAltarHooks() {
@@ -27,7 +27,7 @@ void LifecycleAssets(std::vector<RiftTypeRecord>& types,std::vector<RiftTypeFram
     }
     // Temple helper의 세 자산 HP 입력을 앞668 관찰과 동일하게 공급한다.
     for (const auto type:{158U,165U,166U}) { types[type].maxHitPoints=200;types[type].flags1=16; }
-    // 새 알터 관찰의 입력코드만 기존 실제 구간표로 바꾼다.
+    // 새 제단 관찰의 입력코드만 기존 실제 구간표로 바꾼다.
     for (const auto& [type,pattern]:std::array<std::pair<std::uint32_t,std::string>,2>{{{165,std::string(8,'K')+std::string(8,'L')+std::string(8,'M')+std::string(8,'N')+std::string(8,'O')+std::string(8,'P')+std::string(132,'A')},{164,std::string(3,'A')+std::string(4,'O')+std::string(3,'M')+std::string(3,'L')+std::string(3,'P')}}}) {
         std::vector<FrameCode> codes;
         // 실제출력은계산하지않고동일입력side/number만공급한다.
@@ -68,7 +68,7 @@ TEST_CASE(rawDaisLifecycle_native_initial_pop_player_pairs_and_delete_prefix) {
         RunePostPopState runeState;RunePostPopHooks runeHooks;runeHooks.reserveRegular=[]()->bool { throw std::logic_error("첫Dais범위는Rune304확보를실행하지않는다"); };runeHooks.addRegular=[](Sid,std::uint32_t,float) { throw std::logic_error("첫Dais범위는Rune304부착을실행하지않는다"); };runeHooks.startConstruction=[](Sid,float) { throw std::logic_error("첫Dais범위는Rune건설을실행하지않는다"); };RawRunePostPop rune(pool,hash,types,runeState,base,std::move(runeHooks));std::uint32_t localOwner=book.localOwner;DaisRegularState state{templeState,runeState,clock,rewardState,localOwner};state.alliances[2+number("owner")*9]=static_cast<std::int32_t>(alliance);DaisRegularHooks hooks;hooks.setFrame=setFrame;hooks.reserveShared=[&] { effects.push_back("N:40");return reserve!=0; };hooks.addShared=[&](Sid sid,std::uint32_t event,float payload) { effects.push_back("S:"+std::to_string(event)+','+std::to_string(sid.value)+','+std::to_string(std::bit_cast<std::uint32_t>(payload))); };hooks.playAt=[&](float x,float y,std::string_view name,std::uint32_t flags) { effects.push_back("A:"+std::to_string(std::bit_cast<std::uint32_t>(x))+','+std::to_string(std::bit_cast<std::uint32_t>(y))+','+std::string(name)+','+std::to_string(flags)); };
         // 미수행상위효과는빈함수로넘기지않고실행시실패한다.
         hooks.destroy=[&](Sid sid,std::uint32_t flags) { effects.push_back("destroy:"+std::to_string(sid.value)+','+std::to_string(flags)); };hooks.reserveSound=[]()->bool { throw std::logic_error("첫Dais범위는희생소리확보를실행하지않는다"); };hooks.loadSound=[](std::string_view,std::uint32_t,std::uint32_t)->std::uint32_t { throw std::logic_error("첫Dais범위는희생소리조회를실행하지않는다"); };hooks.attachSound=[](Sid,std::uint32_t,std::uint32_t,std::uint32_t)->std::uintptr_t { throw std::logic_error("첫Dais범위는희생소리부착을실행하지않는다"); };hooks.wallSeconds=[]()->double { throw std::logic_error("첫Dais범위는벽시계를실행하지않는다"); };hooks.setSoundStart=[](std::uintptr_t,double) { throw std::logic_error("첫Dais범위는지연시각을실행하지않는다"); };hooks.stopVoice=[&](std::uint32_t cue,std::uint32_t a,std::uint32_t b) { effects.push_back("V:"+std::to_string(cue)+','+std::to_string(a)+','+std::to_string(b)); };hooks.processType=[](std::uint32_t)->std::uint32_t { throw std::logic_error("첫Dais범위는Dais Path조회를실행하지않는다"); };hooks.pathMetadata=[](Sid)->RawPathStartType { throw std::logic_error("첫Dais범위는Dais Path메타를실행하지않는다"); };hooks.damageable=[](Sid,std::uint32_t,std::uint32_t,float)->float { throw std::logic_error("첫Dais범위는나머지Damageable를실행하지않는다"); };hooks.addLocalSp=[&](float delta) { if (patch) effects.push_back("SP:"+std::to_string(std::bit_cast<std::uint32_t>(delta)));else { rewardState.cdLocalSp+=delta;effects.push_back("SP:"+std::to_string(std::bit_cast<std::uint32_t>(rewardState.cdLocalSp))); } };hooks.normalizeForeignSp=[](std::uint32_t) { throw std::logic_error("첫Dais범위는다른SP변환을실행하지않는다"); };hooks.grantForeignType=[&](std::uint32_t owner,std::uint32_t type) { effects.push_back("H:"+std::to_string(owner)+','+std::to_string(type)); };hooks.localSpecial=[&](std::uint32_t value) { effects.push_back("L:"+std::to_string(value)); };hooks.localType=[&](std::uint32_t type) { effects.push_back("T:"+std::to_string(type)); };hooks.refreshOwner=[&](std::uint32_t owner) { effects.push_back("R:"+std::to_string(owner)); };hooks.refreshLocal=[&] { if (patch) { effects.push_back("UI:0x44fc00");effects.push_back("UI:0x4beb30");effects.push_back("UI:0x4bfac0"); }else effects.push_back("UI:0x4825f0"); };hooks.priestExists=[](std::uint32_t) { return true; };hooks.multiplayerStatus=[] { return 3U; };hooks.chat=[&](const DaisChat& message) { std::string_view key;switch (message.kind) { case DaisChat::Kind::Upgrade:key="AltarUpgrade";break;case DaisChat::Kind::Stormpower:key="SacrificeForStormpower";break;case DaisChat::Kind::LocalPriestDead:key=patch ? "MultiplayerPriestDead(%s,%s,%d)" : "MultiplayerPriestDead(%s,%d)";break;case DaisChat::Kind::OtherPriestDead:key=patch ? "MultiplayerOtherPriestDead(%s,%s,%s,%s)" : "MultiplayerOtherPriestDead(%s,%s)";break; }effects.push_back("CHAT:"+std::string(key)); };RawDaisRegular dais(pool,hash,types,frames,ritual,rune,carrier,host,lookup,path,state,std::move(hooks));
-        // 원본과같은현재해시단계/owner/알터WORD/초기시각입력이다.
+        // 원본과같은현재해시단계/owner/제단WORD/초기시각입력이다.
         // 독립원본과같은현재raw/로딩/초기시각/Player쌍의입력이다.
         for (const auto sid:{5U,6U,7U}) slots[sid][patch ? 33 : 31]=1;
         slots[5][patch ? 34 : 32]=static_cast<std::uint8_t>(number("owner"));slots[5][11]=static_cast<std::uint8_t>(number("dead") ? 2 : 0);Put(slots[7],0,patch ? kPatchAltarVtable : kCdAltarVtable);Put(slots[7],12,2,2);localOwner=number("local");runeState.suppressDuration=number("suppress")!=0;templeState.boss=number("boss")!=0;state.grantFlags.fill(static_cast<std::uint8_t>(number("saved")));auto raw9=slots[9];Put(raw9,0,kVtable);raw9[10]=static_cast<std::uint8_t>(mode=="apre" ? 166 : 91);raw9[patch ? 40 : 35]=static_cast<std::uint8_t>(number("runeExtra"));Put(raw9,14,std::bit_cast<std::uint32_t>(40.75F));Put(raw9,18,std::bit_cast<std::uint32_t>(41.25F));

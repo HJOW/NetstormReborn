@@ -94,8 +94,8 @@
   },
   "os_calls": 0,
   "files": {
-    "tools/decomp_assetregular_oracle.py": "f2f726ce5d51b94b02c8f8a43b2a66519f92ce472df44339f0fe9f705fc0e7da",
-    "tools/ghidra/assetregular-functions.json": "b735e482ba4b036dfcaef654d83a494b8030a37c4dff1c2f86cb6c35c3b159b2",
+    "tools/decomp_assetregular_oracle.py": "259d6c82db1b7f89d075d9f9a3b45c4f53c9c1c29e5a68ea18b0a0249658711d",
+    "tools/ghidra/assetregular-functions.json": "fb55b857013bb093a8031cc907dba662a1fce905f9f7e77860bdea89a6524bc8",
     "cpppj/tests/fixtures/assetregular-x86.tsv": "8e54f5ff7ad6a766a862bddd1ea1e476dadf474bfa2e81e9dd4bfddaf741654c",
     "cpppj/src/o/RawAssetRegular.h": "0f09ec677577d0899195d89782f6e8f9e998870bc966694783430d135ccf0048",
     "cpppj/src/o/RawAssetRegular.cpp": "193c371424afd15e582a4695f71673334db4fc632d2d87aa5ba527272303e928",

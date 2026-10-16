@@ -31,7 +31,7 @@ struct GunTargetState {
     bool checking{}; // 패치의 미지원 group에 대한 flyer 원본 assert를 적용한다.
     bool showRanges{}; // 원본 진단 사각형 그리기를 켠다. 필요한 sink가 없으면 예외다.
     std::uint32_t sunCannonType{128},sunFenceType{136},windArcherType{140},thunderArcherType{148}; // 원본 전역 타입 번호다.
-    float windHalfAngle{30}; // 005409c0/CD0051a198: 윈드 아처 관측각의 절반이다.
+    float windHalfAngle{30}; // 005409c0/CD0051a198: 크로스보우 관측각의 절반이다.
     float scaleX{16},scaleY{11}; // Cannon SHP 핫스폿을 칸 좌표로 바꾸는 현재 픽셀 배율이다.
     std::array<std::uint32_t,kPlayerCount+1> allyMasks{}; // Player+54의 소유자별 동맹 비트 마스크다.
     std::array<std::uint8_t,kPlayerCount+1> playerFlags{}; // Player+50의 진단 ray 표시 억제 bit20이다.
@@ -80,7 +80,7 @@ private:
     bool ArcherShot(const GunTargetQuery& query,Sid target) const;
     // 실제 Cannon ray와 현재 확장 발자국의 접촉을 검사한다.
     bool CannonShot(const GunTargetQuery& query,Sid target) const;
-    // 썬더 아처의 walker/flyer 필터와 추가 ArcherShot을 실행한다.
+    // 밴더 타워의 walker/flyer 필터와 추가 ArcherShot을 실행한다.
     bool ArcherTarget(const GunTargetQuery& query,Sid target) const;
     // 사각형의 발사자 방향 경계점을 원본 RectPoint/RectCoord로 선택한다.
     std::array<float,2> HitPoint(const GunTargetQuery& query,GunTargetRect rect) const;

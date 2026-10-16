@@ -28,7 +28,7 @@
     "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
     "tools/ghidra/player-participation-functions.json": "db33c6b3ace3152d78541034d309a7a1be53693ea955b724549310449466dcdd",
     "tools/decomp_player_participation.py": "f43100ce44ff51c28135fa914b76d59a2703722a65c2ac523a7481e267a93fe7",
-    "tools/decomp_priestmenu.py": "72d14bfa36091dc86a273ad9b1998c940f575bb954195d0e0920e5e63ea10bc7",
+    "tools/decomp_priestmenu.py": "02fcb4d010e0558e969eaf3e9c55bc21d14779d8eb147d3fc2ecbcaeca7a9c2c",
     "cpppj/src/o/RawPlayerParticipation.cpp": "039641ef6a777345d47019bdbd045d8e9ecf927070b27a41957ce72633235b8f",
     "cpppj/src/o/RawPlayerParticipation.h": "79d2b5e8f0b7f77bc32dcd59c0b2501dbc108400d4066d541086d346e65eaf27",
     "cpppj/tests/PlayerParticipationTests.cpp": "1cafa8796c73d4c5dbe2f3edb57377415bd9f30df398ba578071f455075998bb",

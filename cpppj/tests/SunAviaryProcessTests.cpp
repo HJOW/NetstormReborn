@@ -1,4 +1,4 @@
-// 썬 아비어리의 네 원문 범위를 전체 이미지/객체/현재 전역/패킷/호출 순서로 대조한다.
+// 훨리베이스의 네 원문 범위를 전체 이미지/객체/현재 전역/패킷/호출 순서로 대조한다.
 #include "RawSceneSupport.h"
 #include "o/RawSunAviaryProcess.h"
 #include <cstdio>

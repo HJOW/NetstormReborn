@@ -1,4 +1,4 @@
-// 보호 TYPE188/프레임/SHP와 같은 실제 공간/삭제/가이저 후처리에서 받침 확정 사슬을 검사한다.
+// 보호 TYPE188/프레임/SHP와 같은 실제 공간/삭제/간헐천 후처리에서 받침 확정 사슬을 검사한다.
 #include "DudeSpawnSupport.h"
 #include "client/PriestPlacementAssets.h"
 #include "client/RawCampaignConstructionBindings.h"

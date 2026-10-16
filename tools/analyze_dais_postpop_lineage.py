@@ -32,7 +32,7 @@ def cut(body,start,end):
 def restore(name,body):
     """새 등록/검사만 역제거해 기준11의 전체 소스를 정확히 되살린다."""
     if name.endswith('SquidPostPop.h'):
-        prefixes=('class RawDaisLifecycle;','    // 다이스/알터의 전체 최초 Pop','    void SetDaisPostPop(','    // 실제 다이스/알터 타입과 생성자','    bool HandlesDais(','    const RawDaisLifecycle* daisPostPop_')
+        prefixes=('class RawDaisLifecycle;','    // 다이스/제단의 전체 최초 Pop','    void SetDaisPostPop(','    // 실제 다이스/제단 타입과 생성자','    bool HandlesDais(','    const RawDaisLifecycle* daisPostPop_')
         lines=body.splitlines(keepends=True);removed=[line for line in lines if line.startswith(prefixes)];assert len(removed)==6
         return ''.join(line for line in lines if line not in removed)
     if name.endswith('RawDaisLifecycle.h'):
@@ -43,8 +43,8 @@ def restore(name,body):
     new_include='#include "o/RawDaisLifecycle.h"\n';new_handle=' || HandlesDais(sid)';new_validate='    if (HandlesDais(sid)) daisPostPop_->Validate(sid,flags);\n'
     assert body.count(new_include)==body.count(new_handle)==body.count(new_validate)==1
     body=body.replace(new_include,'').replace(new_handle,'').replace(new_validate,'')
-    body=cut(body,'// 실제 다이스/알터 수명 전체몸체를','// 복원한 전용 자산 몸체를')
-    return cut(body,'    // 다이스/알터는 자기 전체 몸체 안에서','    // Rune은304예약')
+    body=cut(body,'// 실제 다이스/제단 수명 전체몸체를','// 복원한 전용 자산 몸체를')
+    return cut(body,'    // 다이스/제단은 자기 전체 몸체 안에서','    // Rune은304예약')
 
 def observe(commit):
     """전체 기존 소스/토큰과 당시 보고서·독립 수명 입력의 불변을 모두 확인한다."""

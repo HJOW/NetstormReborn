@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""가이저 채집·사제 피격과 후보 선택 공유의 원본/C++ 실행 근거를 고정한다."""
+"""간헐천 채집·사제 피격과 후보 선택 공유의 원본/C++ 실행 근거를 고정한다."""
 import argparse
 import json
 import re
@@ -89,7 +89,7 @@ def generate():
               'files': {path.relative_to(ROOT).as_posix(): digest(path) for path in paths},
               'limitations': ['GameWorld·GUI·실제 캠페인 완주 근거가 아니다.',
                               'nonzero burning 생성/애니메이션과 일반 표적 피해는 별도 미완료다.',
-                              '가이저 상위 CarrierArrival·채굴 통지 작성/송신·실제 음향 재생은 미연결이다.',
+                              '간헐천 상위 CarrierArrival·채굴 통지 작성/송신·실제 음향 재생은 미연결이다.',
                               '이전 지형 후보484개는 기존 몸체 공유의 회귀이며 신규 입력으로 더하지 않는다.']}
     REPORT.write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')
     print(f'채집·사제 피해 정상5728/assert8·기존 후보 회귀484·전체{total}검사 근거 생성')

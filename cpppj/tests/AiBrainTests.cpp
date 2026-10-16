@@ -29,7 +29,7 @@ struct BrainScene {
     SquidHash hash; //빈실제지면이며좌표지역반환만별도경계다.
     std::array<std::uint8_t,3204> islandBytes{}; //실제100개IslandList원문이다.
     FortFinishOwnerState modes; //지역owner의현재fort/special/chaff전역이다.
-    SquidPostPopList residences; //이번장면은빈실제레지던스목록이다.
+    SquidPostPopList residences; //이번장면은빈실제거주 구역목록이다.
     std::uint32_t revision{},ownerChanged{}; // 현재 실제 섬/소유자 변경 전역이다.
     std::uint8_t invalidGraph{254}; // 실제 장부와 같은 BYTE backing이며 DWORD 임시 참조를 만들지 않는다.
     std::int32_t noRegion{127}; //실제첫지역없음전역이다.

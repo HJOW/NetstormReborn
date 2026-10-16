@@ -35,7 +35,7 @@ struct AssetPostPopState {
     std::array<AssetPostPopPlayer,kPlayerCount+1> players{};
     // residences: 거주건물.
     // temples: 신전.
-    // geysers: 가이저.
+    // geysers: 간헐천.
     SquidPostPopList residences,temples,geysers;
     SquidPostPopList outposts; // DAT0055a70c/CD005670e0: 신전/아웃포스트의 섬 소유권 재계산에 쓰는 별도 목록이다.
 };
@@ -53,7 +53,7 @@ struct AssetPostPopHooks {
     std::function<Sid(float,float)> surface; // Residence의 현재 지면 SID 조회다.
     std::function<void(Sid,std::uint32_t)> setOwner; // 가상 +0x74, Vortex/Residence 파생 분배를 포함한다.
     std::function<void(Sid)> notifySurface; // 연결을 재평가하는 004214a0/CD 00448c10이다.
-    std::function<void(Sid)> startBlocker; // 비로딩 배리케이드의 0046ae80/CD 대응 몸체다.
+    std::function<void(Sid)> startBlocker; // 비로딩 바리케이드의 0046ae80/CD 대응 몸체다.
     std::function<void(Sid,std::uint32_t)> geyserRegistration; // 00416720/CD 004d8670(sid,1)이다.
     std::function<std::vector<Sid>(float,float)> atPosition; // 실제 one-point Squid iterator 순서다.
     std::function<void(Sid,std::uint32_t)> unpop; // 가상 +0x48이다.
@@ -82,7 +82,7 @@ public:
     bool Handles(Sid sid) const;
     // 공간 쓰기 전에 현재 분기가 요구하는 외부 효과와 공통 장부를 확인한다.
     void Validate(Sid sid,std::uint32_t flags,const RawGraphPop* pop=nullptr) const;
-    // Gun·제네레이터·레지던스·배리케이드·가이저·신전 전체 재정의 순서를 실행한다.
+    // Gun·제네레이터·거주 구역·바리케이드·간헐천·신전 전체 재정의 순서를 실행한다.
     void PostPop(Sid sid,std::uint32_t flags) const;
     // 실제9 Player BYTE를 공유한다. 현재 localOwner 포인터를 주면 외부 효과 후에도 그 DWORD를 다시 읽는다.
     // 기록은 PATCH0xb4/CD0xac 크기9개이며 이 모듈보다 오래 살아야 한다. 생략한 owner는 state.localOwner다.
@@ -96,9 +96,9 @@ private:
     void Regular(Sid sid,std::uint32_t event,float delay) const;
     // Gun 몸체의 네 분기·현재 raw 재조회·flags1 0x1000의 WORD/extra 쓰기다.
     void Gun(Sid sid,std::uint32_t flags,std::uint32_t kind) const;
-    // 레지던스 최초 소유자·목록·예약·연결·패치의 잔여 프레임을 처리한다.
+    // 거주 구역 최초 소유자·목록·예약·연결·패치의 잔여 프레임을 처리한다.
     void Residence(Sid sid,std::uint32_t flags) const;
-    // 가이저 최초 비용 WORD·목록·주변 받침 neutral 프레임·Damageable을 처리한다.
+    // 간헐천 최초 비용 WORD·목록·주변 받침 neutral 프레임·Damageable을 처리한다.
     void Geyser(Sid sid,std::uint32_t flags) const;
     // 신전 공통 몸체 후 각 원소 wrapper의 extra/예약을 처리한다.
     void Vortex(Sid sid,std::uint32_t flags,std::uint32_t kind) const;

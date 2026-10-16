@@ -91,7 +91,7 @@ Ready는 Player+50의0x40, 원본 login timer/Begin 수신, pending State 및 GU
 | 신전123/124×1씩 | Vortex 실제 ctor/Asset PostPop/Regular/지역·섬setter | 실제 impactSound/typeDword, 동일 Runtime·목록·Player; 내부 contained 슬롯은 별도 실제 Form |
 | 간헐천122×14 | 실제 ctor/Asset PostPop/Regular, 새 nullAI 등록 | nonnull AI 거리/목록/후속 등록은 아직 거부, 실제 주변 받침 Unpop/Repop·장부를 연결 |
 | 썬 디스크 발사기71×9 | 실제 ctor/Gun PostPop/RawGunProcess/Archer animation | 실제 GunProcess 생성/부착/초기 Frame/SHP/두 난수/전송·목록. 일반 공격 이후 모든 handler 완료와 구분 |
-| 윈드 배터리75×3·썬 블로커78×8 | 실제 ctor/Asset PostPop 및 공통 장부 | 실제 타입 metadata와 로딩 depth로 선택된 경계를 확인. 비로딩 blocker start와 현재 초기 선택을 구분 |
+| 윈드 제네레이터75×3·스톤 타워78×8 | 실제 ctor/Asset PostPop 및 공통 장부 | 실제 타입 metadata와 로딩 depth로 선택된 경계를 확인. 비로딩 blocker start와 현재 초기 선택을 구분 |
 | 다리82×15·noIsland157×117 | 같은 Core의 실제 표면/Owner/Frame/Pop/Hash/Graph | Chaff 저장순 그대로 설치, 수동 배열 정렬·ground support 대입 제거 |
 | contained sunWalker133 | `RawContainedCreate`/ContentFormHost/Lifetime/같은 Form dispatch | Form6의 storedType WORD이며 공간 walker133 생성으로 대체하지 않음 |
 | Player152(172 밖의 사전 객체) | ctor491660/CD407950의 Recipe는 이미 존재 | 생성 wrapper490250/CD407400 및 PostPop4905d0/CD407cc0의 실제Player SID 기록·event1/payload5.0f 예약 미복원 |

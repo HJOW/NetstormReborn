@@ -9,7 +9,7 @@ class RawGunMode {
 public:
     // 실제 판본의 프레임 표와 현재 windArcher 타입은 객체보다 오래 살아야 한다.
     RawGunMode(const SidPool& pool,std::span<const RiftTypeFrames> frames,const std::uint32_t& windArcherType);
-    // 비astral 윈드 아처는 현재graphBYTE×2, 나머지는 signed 프레임문자×2-152의0..7만 반환한다.
+    // 비astral 크로스보우는 현재graphBYTE×2, 나머지는 signed 프레임문자×2-152의0..7만 반환한다.
     std::uint32_t Get(Sid sid) const;
     // 다른 월드의 Gun 검색에 연결하지 않도록 같은 Pool을 제공한다.
     const SidPool& Pool() const;

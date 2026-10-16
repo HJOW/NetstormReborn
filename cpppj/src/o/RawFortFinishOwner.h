@@ -1,4 +1,4 @@
-// Fort 로딩 뒤 소유 레지던스의 자연 반환과 실제 지역/반복 랜덤 배치 흐름을 복원한다.
+// Fort 로딩 뒤 소유 거주 구역의 자연 반환과 실제 지역/반복 랜덤 배치 흐름을 복원한다.
 #pragma once
 #include "o/RawFortObjectLoad.h"
 
@@ -8,7 +8,7 @@ struct FortFinishOwnerState {
     bool chaffMode{},special{},fort{}; // 00594fa4/005c85a4/00594fb8 및 대응 CD 전역이다.
     std::array<std::int32_t,9> playerRegions{127,127,127,127,127,127,127,127,127}; // Player+0x78/CD+0x70다. 실제 미션 지역으로 초기화한다.
     std::int32_t invalidRegion{127}; // 두 PE의 invalidRegion 전역 초기값이다.
-    std::uint32_t residenceType{89}; // 005411bc/CD0051caa8의 실제 레지던스 타입 초기값이다.
+    std::uint32_t residenceType{89}; // 005411bc/CD0051caa8의 실제 거주 구역 타입 초기값이다.
 };
 // 지역 사각형은 원본 네 float의 저장 순서를 그대로 보관한다.
 struct FortRandomRectangle { /* left: 사각형의 왼쪽 경계. */ /* top: 사각형의 위쪽 경계. */ /* right: 사각형의 오른쪽 경계. */ /* bottom: 사각형의 아래쪽 경계. */ float left{},top{},right{},bottom{}; };
@@ -24,7 +24,7 @@ struct FortFinishOwnerHooks {
     std::function<std::uint32_t(GameRandom&,const FortRandomPlaceRequest&)> place; // 실제 placement 전체, local PRNG도 전달한다.
     std::function<void()> invalidType; // AddRandom의 타입0/-1 진단이며 반환값0을 유지한다.
 };
-// 전체 entry·시각 seed·현재 레지던스 재조회·하위1000회 배치 재시도를 한 월드에서 실행한다.
+// 전체 entry·시각 seed·현재 거주 구역 재조회·하위1000회 배치 재시도를 한 월드에서 실행한다.
 class RawFortFinishOwner {
 public:
     // types/residences/state/pool은 이 객체보다 오래 살아야 한다. residences는 AssetPostPopState.residences 자체다.

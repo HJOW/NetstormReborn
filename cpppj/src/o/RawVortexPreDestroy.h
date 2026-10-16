@@ -9,7 +9,7 @@ struct VortexPreDestroyHooks {
     std::function<bool(std::int32_t)> islandExists; // 0046ee30의 현재 존재 판정이다.
     std::function<std::uint32_t(std::int32_t)> islandTemple; // 0046f260의 현재 신전 SID다.
     std::function<void(std::int32_t)> clearIslandTemple; // 004db890(region,0)의 존재 검사→Temple0→생산 갱신 전체다.
-    std::function<void(std::int32_t,std::uint32_t)> islandOwner; // 0046ef10의 실제 소유자/레지던스 전파다.
+    std::function<void(std::int32_t,std::uint32_t)> islandOwner; // 0046ef10의 실제 소유자/거주 구역 전파다.
     std::function<void(float,float)> regionOwnership; // 00455380의 같은 현재 지도/Factory 투표다.
     std::function<void(Sid,std::uint32_t)> damageablePre; // 0044b4b0의 실제 해방/공통 PreDestroy다.
     std::function<void()> refreshProduction; // 0047d890의 현재 생산 표시 갱신이다.

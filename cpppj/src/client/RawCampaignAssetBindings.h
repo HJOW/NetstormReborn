@@ -23,7 +23,7 @@ struct RawCampaignAssetEffects {
     o::FactoryPostPopHooks factory; // 실제 Factory/아웃포스트 중복 진단과 지역 소유권의 외부 하위다.
     std::function<void(o::SquidLevelAssertion)> levelAssertion; // 실제 Factory 저장 상태의 원본 범위 진단이다.
     o::AssetPostPopHooks postPop; // 실제 TYPE sound토큰/가상 Vortex owner/region/UI/Slot 등 Core 밖의 몸체다.
-    o::AssetRegularHooks regular; // 실제 Ascend/이탈/레지던스 사건2/피해/건설/음향/UI 하위다.
+    o::AssetRegularHooks regular; // 실제 Ascend/이탈/거주 구역 사건2/피해/건설/음향/UI 하위다.
     o::GunProcessHooks gun; // 실제 검색/표적감시/사거리통지/Animation/shot의 추가 소비자다.
     std::function<void(std::uint32_t,std::int32_t,std::int32_t)> queueCommand; // 동일 실제 InputQueue::PushCommand에 command/SID/0을 넣는다.
     std::function<void(std::span<const std::uint8_t>)> sendGunPacket; // 실제 flags0의 현재 GunProcess packet 전체바이트를 같은 송신기로 전달한다.

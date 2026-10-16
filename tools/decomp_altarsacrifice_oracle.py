@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""알터20~24/해방/다이스삭제 전처리와 실제 희생완료 몸체를 두 보호PE의 제한x86에서 관찰한다."""
+"""제단20~24/해방/다이스삭제 전처리와 실제 희생완료 몸체를 두 보호PE의 제한x86에서 관찰한다."""
 import argparse,collections,csv,itertools,json,struct
 from pathlib import Path
 from decomp_daisregular_oracle import DaisOracle,ROOT,HEAP,VTABLE,STACK,STOP,CALLER,TEMP,PROCESS,FPU_CONTROLS,bits,sha
@@ -23,7 +23,7 @@ def inputs():
     def add(mode,**changes):
         """행의 입력전역을 명시하고 중복은 뒤에서 제거한다."""
         value=dict(mode=mode,daisFrame=14,altarFrame=3,count=0,seed=0,boss=1,reserve=1,captured=158,oldOwner=2,alliance=0,local=1,suppress=0,forms=1,extra=0,owner=1);value.update(changes);cases.append(value)
-    # 알터 방향 O 구간의 앞/뒤 감김과 다른방향, payload9.25 기본반환이다.
+    # 제단 방향 O 구간의 앞/뒤 감김과 다른방향, payload9.25 기본반환이다.
     for event,frame,count,seed,boss in itertools.product((20,21,22,23,24),(0,3,4,6,7,10,13),(0,1,2,3,4),(0,1,0x12345678),(0,1)):
         add('handle',event=event,altarFrame=frame,count=count,seed=seed,boss=boss)
     # 다이스K 최종 가상삭제/확보실패/동맹 자동해방의 판본차이를 분리한다.
@@ -39,7 +39,7 @@ def inputs():
     return list({json.dumps(case,sort_keys=True):case for case in cases}.values())
 
 class AltarOracle(DaisOracle):
-    """실제 알터·Dais Finish·프레임 진행·범위 난수와 일반/종속/form walker를 실행한다."""
+    """실제 제단·Dais Finish·프레임 진행·범위 난수와 일반/종속/form walker를 실행한다."""
     def __init__(self,edition):
         """현재 readOnly8/7과 같은PC의 기존 완료 helper 범위만 추가한다."""
         super().__init__(edition);self.a=SPEC[edition];self.returns=0
@@ -115,14 +115,14 @@ class AltarOracle(DaisOracle):
         elif label=='playerPrefix':mu.mem_write(args[0],b'P\0')
         elif label=='spDisplay':self.events.append('SP:'+str(self.read(0x5120d4)))
         elif label=='find':assert args[0]==604;purge=4;result=0
-        elif label=='kill':raise RuntimeError('새알터입력의미선언604삭제')
+        elif label=='kill':raise RuntimeError('새제단입력의미선언604삭제')
         else:return super().on_instruction(mu,address,size,data)
         mu.reg_write(UC_X86_REG_EAX,result);mu.reg_write(UC_X86_REG_ESP,sp+4+purge);mu.reg_write(UC_X86_REG_EIP,ret)
 
     def run(self,value,control):
         """독립 원본 입력을 구성하고 실제 caller 반환/raw/RNG/player를 읽는다."""
         super().run(('can',3,'A',0,0,1,1,1,0x210000,1,0),control);self.input=value
-        # 기존 입력 준비가 Temple용 가상표를 갱신하므로 새 알터효과의 주소를 다시 공급한다.
+        # 기존 입력 준비가 Temple용 가상표를 갱신하므로 새 제단효과의 주소를 다시 공급한다.
         for offset,address in ((0x10,DESTROY),(0x48,UNPOP),(0x4c,REPOP),(0x74,OWNER),(0x90,POP)):self.put(VTABLE+offset,address)
         self.table(165,'K'*8+'L'*8+'M'*8+'N'*8+'O'*8+'P'*8+'A'*132);self.table(164,'A'*3+'O'*4+'M'*3+'L'*3+'P'*3)
         # 실제Frame consumer의현재1칸SHP와일치하는해시단계입력이다. 해시는이미1단계버킷에등록돼있다.
@@ -155,7 +155,7 @@ def generate(smoke=False):
             except Exception as error:raise RuntimeError(f'{edition} #{index} {case}: {error}') from error
             if result is not None:rows.append([edition,json.dumps(case,sort_keys=True,separators=(',',':')),*result])
         editions[edition]=dict(returns=oracle.returns,entries=dict(oracle.hits),boundaries=dict(oracle.stub_calls),asserts=oracle.assertions);files.update(oracle.paths);files.add(ROOT/('originals/Netstorm.exe' if edition=='originals' else 'originalCD/NETSTORM.EXE'))
-    FIXTURE.write_text('# edition inputJSON returnBits effects raw5,6,7,8,10 RNG playerResults\n'+'\n'.join('\t'.join(row) for row in rows)+'\n',encoding='utf-8',newline='\n');REPORT.write_text(json.dumps(dict(host='HJOW-Athlon',decompile_date='2026-10-14',total=len(rows),smoke=smoke,editions=editions,files={path.relative_to(ROOT).as_posix():sha(path) for path in sorted(files)},game_runs=0,scope='실제알터/해방/Dais전처리/Finish 상위 몸체. Frame/가상공간/공통Damageable/음향/UI/FromForm·Type효과 경계. 실제같은Host/Pool C++소비자는후속.'),ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n');print('알터/다이스 새 독립 원본 관찰:',len(rows))
+    FIXTURE.write_text('# edition inputJSON returnBits effects raw5,6,7,8,10 RNG playerResults\n'+'\n'.join('\t'.join(row) for row in rows)+'\n',encoding='utf-8',newline='\n');REPORT.write_text(json.dumps(dict(host='HJOW-Athlon',decompile_date='2026-10-14',total=len(rows),smoke=smoke,editions=editions,files={path.relative_to(ROOT).as_posix():sha(path) for path in sorted(files)},game_runs=0,scope='실제제단/해방/Dais전처리/Finish 상위 몸체. Frame/가상공간/공통Damageable/음향/UI/FromForm·Type효과 경계. 실제같은Host/Pool C++소비자는후속.'),ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n');print('제단/다이스 새 독립 원본 관찰:',len(rows))
 
 def verify():
     """같은원본입력·두정밀도반환·현재source/fixture/import SHA를전부감사한다."""
@@ -163,7 +163,7 @@ def verify():
     assert len({(row[0],row[1]) for row in rows})==len(rows)
     for name,value in data['files'].items():assert sha(ROOT/name)==value,name
     for edition,item in data['editions'].items():assert item['returns']==2*sum(row[0]==edition for row in rows) and item['asserts']==0
-    print('알터 현재전체SHA/독립원본반환감사:',len(rows))
+    print('제단 현재전체SHA/독립원본반환감사:',len(rows))
 
 # 명시 요청으로만 독립 PE관찰을실행한다.
 if __name__=='__main__':

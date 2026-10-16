@@ -17,7 +17,7 @@
     "tools/ghidra/ai-initial-update-functions.json": "208ea19c3e44bfc0c1059a69446b0c19655507126cd81cc8020e4f452c258d64",
     "tools/decomp_ai_initial_update.py": "17f64a845661654876de209546dc20b168eb51bd6ec0d8751f13be2a7e51e2b9",
     "tools/decomp_player_technology.py": "23c1641c7ddd917f5f7fef295529d0fff8c65e99148e143741c20e523fbe02be",
-    "tools/decomp_priestmenu.py": "72d14bfa36091dc86a273ad9b1998c940f575bb954195d0e0920e5e63ea10bc7",
+    "tools/decomp_priestmenu.py": "02fcb4d010e0558e969eaf3e9c55bc21d14779d8eb147d3fc2ecbcaeca7a9c2c",
     "cpppj/src/o/RawAiBrainInitialUpdate.h": "f9f6e28a29acf8c7e8828cc4c71eeb30f29edca97e8c25d2c82ec44e4a1f0022",
     "cpppj/src/o/RawAiBrainInitialUpdate.cpp": "952ca7ef83c8e2285ed42c8ce83bd9207eb8b08106c8b2139d33a9621ce8180e",
     "cpppj/tests/AiBrainInitialUpdateTests.cpp": "bf818c7f496c5cea2cba2c61287522147fd913ba7c12d07d990788a020563e76",

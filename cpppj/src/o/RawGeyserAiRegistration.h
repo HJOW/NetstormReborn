@@ -1,4 +1,4 @@
-// 최초 가이저 등록에서 같은 현재 Player 원본 기록을 읽고 미복원 AI 하위 요청을 드러낸다.
+// 최초 간헐천 등록에서 같은 현재 Player 원본 기록을 읽고 미복원 AI 하위 요청을 드러낸다.
 #pragma once
 #include "o/RiftType.h"
 #include <cstddef>
@@ -10,7 +10,7 @@ namespace netstorm::o {
 // nonnull AI를 빈 callback으로 처리하지 않도록 첫 실제 하위 요청의 인자를 보존하는 예외다.
 class GeyserAiRegistrationBoundary final : public std::runtime_error {
 public:
-    // 첫 미복원 요청의 Player 번호·원본 AI 포인터·가이저 SID·등록/제거 DWORD를 저장한다.
+    // 첫 미복원 요청의 Player 번호·원본 AI 포인터·간헐천 SID·등록/제거 DWORD를 저장한다.
     GeyserAiRegistrationBoundary(std::uint32_t player,std::uint32_t pointer,
         std::uint32_t geyser,std::uint32_t operation);
     std::uint32_t owner; // 실제 순회에서 발견한 Player1..8 번호다.

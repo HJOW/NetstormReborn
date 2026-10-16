@@ -62,7 +62,7 @@ TEST_CASE(rawDaisBridge_native_actual_path_start_prepare_depth_and_host) {
         for (int y=9;y<20;++y) {
             for (int x=9;x<20;++x) { const Sid sid{next++};insert(sid,83,static_cast<float>(x),static_cast<float>(y),0);pool.AllocatedBytes(sid)[patch ? 30 : 28]=3;spots[y*256+x]=6; }
         }
-        // blocked 입력은 표면 머리만 지우며 사제/알터/포획 자격 조건을 유지한다.
+        // blocked 입력은 표면 머리만 지우며 사제/제단/포획 자격 조건을 유지한다.
         if (number("blocked")) for (int y=0;y<256;++y) for (int x=0;x<256;++x) hash.Cell(0,x,y)=0;
         for (const auto sid:{5U,60U,61U}) pool.AllocatedBytes(Sid{static_cast<std::uint16_t>(sid)})[patch ? 34 : 32]=1;
         Put(pool.AllocatedBytes(Sid{5}),26,200,patch ? 4 : 2);Put(pool.AllocatedBytes(Sid{60}),6,63,2);auto captured=pool.AllocatedBytes(Sid{63});Put(captured,0,kVtable);captured[10]=6;Put(captured,12,2,2);Put(captured,18,158,2);Put(captured,20,32,2);

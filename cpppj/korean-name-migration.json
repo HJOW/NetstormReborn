@@ -1,0 +1,3473 @@
+{
+  "schema": 1,
+  "baseline_commit": "442eb18293dc3bd3d8909737460a71ce8864d0fa",
+  "host": "VM-W11-Codex",
+  "date": "2026-10-16",
+  "last_full_decompile_host": "VM-W11-Codex",
+  "last_full_decompile_date": "2026-10-16",
+  "new_native_inputs": 0,
+  "game_runs": 0,
+  "tool_sha256": "d1e2e073cac8d4ee04b1eabb10e4585866cde9a0901d9f46eb71535e4040fda0",
+  "changes": {
+    "cpppj/ai-brain.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "67da3e938366b71e2b471f5ee53ce9934458dc377be2f763b13a88c8d5a8c1bc",
+      "current_sha256": "078e2677cfdb07d7d2f30e736e6d7f7412075001ec3e6cb097ba01297f3b50e8",
+      "hash_links": [
+        {
+          "field": "sha256",
+          "path": "tools/decomp_priestmenu.py"
+        },
+        {
+          "field": "sha256",
+          "path": "cpppj/tests/AiBrainTests.cpp"
+        }
+      ]
+    },
+    "cpppj/ai-initial-update.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "1e7d340f2ce998047c2fac3402738546c790e3fafeda790eb0bb22ffbf95be4d",
+      "current_sha256": "0a9a6cd7aade9b16122e66d1b4258e98c9f8d6bfeb61f91c416b01986824551a",
+      "hash_links": [
+        {
+          "field": "sha256",
+          "path": "tools/decomp_priestmenu.py"
+        }
+      ]
+    },
+    "cpppj/altarsacrifice-successor.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "bc7cd92f68f8bbbdc1c87fc8c3dea31de1d05f2188ec0cd972e15af253d7f34b",
+      "current_sha256": "5df0f2a0c663427ef12903e7a0a3ca5b5d0e2dd6c8cc6691e74fd2ad3495731b",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "cpppj/altarsacrifice.json"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawAltarSacrifice.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawAltarSacrifice.h"
+        },
+        {
+          "field": "files",
+          "path": "tools/analyze_altarsacrifice_successor.py"
+        },
+        {
+          "field": "files",
+          "path": "tools/decomp_altarsacrifice_oracle.py"
+        }
+      ]
+    },
+    "cpppj/altarsacrifice.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "062716d2f3f2f1a5c3b68227a9088b831dbdf5f23a22d904104bd996e22d506b",
+      "current_sha256": "59bdbb1758846dffba4bbe351ce1b3bff9b4dff7e8ca5f007921849088c4c772",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawAltarSacrifice.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawAltarSacrifice.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/AltarSacrificeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "tools/decomp_altarsacrifice_oracle.py"
+        }
+      ]
+    },
+    "cpppj/asset-player.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "30c14242f5c6da21df4a78ab2ee3849411e496328cf93dcb9b812abc78281265",
+      "current_sha256": "fd5feca0e74835eefb613e64cbb858e525da3f88a20e8eb5efbdcda345550d0e",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "tools/decomp_assetpostpop_oracle.py"
+        }
+      ]
+    },
+    "cpppj/assetpostpop.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "304afebe7339127991718e767b0fcf402ba89f5e2cc3d650457f47acfbe103e5",
+      "current_sha256": "9cd0cee64bbe382ad0469a3223a69f037dd8a6931a83132c01ef6937de8f81aa",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "tools/decomp_assetpostpop_oracle.py"
+        },
+        {
+          "field": "files",
+          "path": "docs/exe/cpp-asset-postpop.md"
+        }
+      ]
+    },
+    "cpppj/assetregular.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "13373206dfd6ba298106de10c6dfd34a8abdf00d0008aebdb8721ce5366953c2",
+      "current_sha256": "64c9c37220f493233249411cf0e62af6a2f1280adab72a96824ddf11a5456390",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "tools/decomp_assetregular_oracle.py"
+        },
+        {
+          "field": "files",
+          "path": "tools/ghidra/assetregular-functions.json"
+        }
+      ]
+    },
+    "cpppj/campaign-current-alliance.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "b4aed43fc215e9d7d6535f495ae26f38d31c2f34f9bde3a108d3c5e5b0262307",
+      "current_sha256": "6bebfe20b317520b15c182c4e916fd5eb78822a6887cd7d0deb9427ad2cef253",
+      "hash_links": [
+        {
+          "field": "sha256",
+          "path": "cpppj/src/o/RawGunProcess.h"
+        }
+      ]
+    },
+    "cpppj/campaign-path-bindings.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "44c8691d48a448d9d7100f1e6314f5dee8a5808238a8aa5e0b6980259ce5d52a",
+      "current_sha256": "823d4ca9669849945f492dece0389cd92d92b9c0fa9beca27edbd1b0747a7a59",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawPathStart.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawPathStart.h"
+        }
+      ]
+    },
+    "cpppj/campaign-process.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "7e41e5450094b4d26b8a817a6f99634486777e8b9fe064e16db99daa23d62933",
+      "current_sha256": "69b2f3044855f7b9eb148d45c62021921987818a3b2f186e6ec1d2a234ab1d4b",
+      "hash_links": [
+        {
+          "field": "sha256",
+          "path": "cpppj/fortfinishowner.json"
+        },
+        {
+          "field": "sha256",
+          "path": "tools/decomp_fortfinishowner_oracle.py"
+        }
+      ]
+    },
+    "cpppj/campaign-target-path.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "3d25bd36d83829533770fc07e2b56844ae5a49989821d6f8225e6d167189bed0",
+      "current_sha256": "3dc22c66d6f467d29e15daa8d38ba5b353ff208824eeb8b98c966ba4dbd7bdfc",
+      "hash_links": [
+        {
+          "field": "sha256",
+          "path": "tools/analyze_campaign_target_path.py"
+        }
+      ]
+    },
+    "cpppj/campaign-world.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "e0c8391e10a096f44ee7620cf870b65bc6be5cdf7d9fcfca642883954a843551",
+      "current_sha256": "f059fdd40399ecf167d6c359001bd733059bfb6dcd33b5c1f187873df7d3dabf",
+      "hash_links": [
+        {
+          "field": "sha256",
+          "path": "tools/decomp_assetpostpop_oracle.py"
+        }
+      ]
+    },
+    "cpppj/chat-channels.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "395f49fee38597c962ef0db532061d14124e471a0c034d4c44cd91d7d10fa264",
+      "current_sha256": "ff93a65e452dd156655d1d4a0ace5626ab8c5e9bfcbedaab3b1ff0b624215c06",
+      "hash_links": [
+        {
+          "field": "sha256",
+          "path": "tools/decomp_priestmenu.py"
+        }
+      ]
+    },
+    "cpppj/dais-ritual-consumer-binding.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "b1c771a30907d8cc56844470a92b2c5e44154cfd6379475fd9d3312a1863a222",
+      "current_sha256": "3949bcd5c0218420e871f3167300c8bc0bd7f8b10a522c89776632e58b641421",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "cpppj/daiscontentnotice.json"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/daislifecycle-current.json"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/daisprogress.json"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawAltarSacrifice.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawAltarSacrifice.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisContentNotice.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisContentNotice.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisLifecycle.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisLifecycle.h"
+        }
+      ]
+    },
+    "cpppj/daisbridge-cpp-binding.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "e43ce1ba6f26c76bb2c47e532cac190ed020eeda5f15940fe3a5c96300e9420c",
+      "current_sha256": "5811a7985f079ed9fa1f83efae56169d245a0d319bc0925c50d2b66a6a3e5fec",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "cpppj/daisbridge.json"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawPathStart.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawPathStart.h"
+        }
+      ]
+    },
+    "cpppj/daisbridge.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "08539886a3ff3028fc32c39e84fcdd3fc8f14cec5052f8ea098f82d9050208fa",
+      "current_sha256": "e5c292f0b84c2386f201b160fd3cab07979ff0b32a36e4e80097400c54bf9e5c",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawPathStart.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawPathStart.h"
+        },
+        {
+          "field": "files",
+          "path": "tools/decomp_pathstart_oracle.py"
+        }
+      ]
+    },
+    "cpppj/daiscontentnotice.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "f6c2df2b4f9e3fc922e94dceabcc82e3339e3011f0c667a383f212c59ac4973b",
+      "current_sha256": "c19e57e53ad014c56a84dbf7b95dceed3745054fe57fd2de6402090a920dc293",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisContentNotice.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisContentNotice.h"
+        },
+        {
+          "field": "files",
+          "path": "tools/decomp_altarsacrifice_oracle.py"
+        },
+        {
+          "field": "files",
+          "path": "tools/decomp_daiscontentnotice_oracle.py"
+        }
+      ]
+    },
+    "cpppj/daislifecycle-current.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "98fd9dd8e01f5b87e2cc69feda8c0aaa877e04f2faec08520047ce32193c8326",
+      "current_sha256": "ebddbaf5d99a5ef65d2fba8140316571cdec4e3f8de7b2dcd4b131fa4b4ffb29",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisLifecycle.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisLifecycle.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisLifecycleTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "tools/decomp_altarsacrifice_oracle.py"
+        },
+        {
+          "field": "files",
+          "path": "tools/decomp_daislifecycle_current_oracle.py"
+        },
+        {
+          "field": "files",
+          "path": "tools/ghidra/daislifecycle-functions.json"
+        }
+      ]
+    },
+    "cpppj/daislifecycle.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "a681e4610f02530c0a2d2ecbb14341dd598c554361b3e20b39db5b3bd29a170b",
+      "current_sha256": "dd1ad9badf7cab305050910bbf5a85a613be5c3fbdc129ad03c1705bda07ceaa",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisLifecycleTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "tools/decomp_altarsacrifice_oracle.py"
+        },
+        {
+          "field": "files",
+          "path": "tools/decomp_daislifecycle_oracle.py"
+        },
+        {
+          "field": "files",
+          "path": "tools/ghidra/daislifecycle-functions.json"
+        }
+      ]
+    },
+    "cpppj/daisprogress-cpp-binding.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "7f12d67ce01e1e47a5e8a6fb5dfba30edd43fc9690b7aaf540e3c1b018a079a8",
+      "current_sha256": "09323a93b171f2b1fd8063db1b04adab6e7467a6ceced34afcfa460bc23fe275",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "cpppj/daisprogress.json"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawAltarSacrifice.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawAltarSacrifice.h"
+        },
+        {
+          "field": "files",
+          "path": "tools/decomp_daisprogress_oracle.py"
+        }
+      ]
+    },
+    "cpppj/daisprogress-cpp-correction.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "c41ed66a8496839a811ac4d25356a8d0e4ede7f9561efaf7c62abf484c8293ce",
+      "current_sha256": "7368cd7634257ce82924955359936f583db08cbf57f30c414227090eb484bd6d",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisProgressTests.cpp"
+        }
+      ]
+    },
+    "cpppj/daisprogress.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "217a63a2642d7041970746229779de9cafc9d7d11c4375cd896ed3b600375c3c",
+      "current_sha256": "231f0f5c69197cf430830e483f0a9dff1585e437f9740e9f149641030b5dc31c",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawAltarSacrifice.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawAltarSacrifice.h"
+        },
+        {
+          "field": "files",
+          "path": "tools/decomp_altarsacrifice_oracle.py"
+        },
+        {
+          "field": "files",
+          "path": "tools/decomp_daisprogress_oracle.py"
+        }
+      ]
+    },
+    "cpppj/damageablepost-host-group-lineage.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "b978e02003280938eabb08582b475a720e73b0680ee8b1b142807d3ba96b3524",
+      "current_sha256": "aa9ba6d9c4649305196cd73877b2f5ed41edf5851d8b89df51e81ba579175b28",
+      "hash_links": []
+    },
+    "cpppj/dudedrop.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "d80eb8e96f0b5b86a732b93f2cfc0a5a562fb6d45f047f31cb3438a7e5b15348",
+      "current_sha256": "254b1f70b0b62ef9e6735f9b8a8dd937b906550895c8e5b64df8918c00570503",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDudeNotice.cpp"
+        }
+      ]
+    },
+    "cpppj/dudenotice.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "9c0688eb39c8907b658526b0a4ddf7869ac885bcf49c74b7508ae06c260e3010",
+      "current_sha256": "94e1ecbf204eb64a6bfcd73bd2a60962c3a3b74ba8da9ce76266932f2cd73923",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDudeNotice.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDudeNotice.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DudeNoticeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/fixtures/dudenotice-x86.tsv"
+        },
+        {
+          "field": "files",
+          "path": "tools/decomp_dudenotice_oracle.py"
+        }
+      ]
+    },
+    "cpppj/fence-neighbors.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "45c065cadab07dc786f32fb0c3ffa93e1575cced9f494db2cd4179114691ad0f",
+      "current_sha256": "f3b54cfa44ce689ea08343294e259eb50ee12ddbdc65ee1bf549d0962faa778c",
+      "hash_links": [
+        {
+          "field": "sha256",
+          "path": "cpppj/src/o/RawFenceNeighbors.h"
+        }
+      ]
+    },
+    "cpppj/fence-postpop.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "0cb4e3f68716711f1e620fdbfe3c0fe8b49ec592e806eb27ec769db1af03938a",
+      "current_sha256": "3586d9f292941c7ff17bcfb847b2ac79262d36ccd73f4979edc30667f97e3197",
+      "hash_links": [
+        {
+          "field": "sha256",
+          "path": "tools/decomp_fence_postpop.py"
+        },
+        {
+          "field": "sha256",
+          "path": "cpppj/src/o/RawFencePostPop.h"
+        },
+        {
+          "field": "sha256",
+          "path": "cpppj/src/o/RawFencePostPop.cpp"
+        },
+        {
+          "field": "sha256",
+          "path": "cpppj/tests/FencePostPopTests.cpp"
+        }
+      ]
+    },
+    "cpppj/flyer-frame.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "7104e0c84b4672b26cae3dd353bd4dd1377153e8c2e9b6187a50e59813aba80d",
+      "current_sha256": "331e32285b8837ed32d1e1946b063ddb913a10c3e58fbd3567329d1b3e50b691",
+      "hash_links": [
+        {
+          "field": "sha256",
+          "path": "tools/decomp_flyer_frame.py"
+        },
+        {
+          "field": "sha256",
+          "path": "cpppj/src/o/RawFlyerFrame.h"
+        },
+        {
+          "field": "sha256",
+          "path": "cpppj/src/o/RawFlyerFrame.cpp"
+        }
+      ]
+    },
+    "cpppj/fort-image-packets.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "ed657656821677b600e70abf10ce6338eb67afc3d2aca712ad8a2991897f9094",
+      "current_sha256": "2011862bff94d0a8790a4218a137968d43adad56ea2cfcd16fdaabc6c07b5fbb",
+      "hash_links": [
+        {
+          "field": "sha256",
+          "path": "tools/decomp_priestmenu.py"
+        }
+      ]
+    },
+    "cpppj/fortfinishowner.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "7eae9e5a95b8a5230f8cc055037dce2d6c90d597e593ce99ee212a81c35a0843",
+      "current_sha256": "55722e4fd11ff074224f51b1c5bfe159c3652507d3a79daa4330b9e2a0d03cbf",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "tools/decomp_fortfinishowner_oracle.py"
+        }
+      ]
+    },
+    "cpppj/geyser-ai-registration.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "4fb53faa65404fbc63929c7a3157abd53bcb724182a93e0b719ec1776f37cf3d",
+      "current_sha256": "0794aec9af1bd793126de9237e7be2d3ac823526f193268a6aeecb386918b041",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawGeyserAiRegistration.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawGeyserAiRegistration.h"
+        },
+        {
+          "field": "files",
+          "path": "tools/decomp_geyser_ai_registration_oracle.py"
+        },
+        {
+          "field": "files",
+          "path": "tools/ghidra/geyser-ai-registration-functions.json"
+        }
+      ]
+    },
+    "cpppj/geysermined.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "280823af1aa70a35d4d382a7f6d76f761e58f0baa7920563c2df1728cad1d77a",
+      "current_sha256": "ca023f076739d97cfbb0a6038408698cc7dbf82a7b611115274d01555a7c9b5d",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "tools/decomp_geysermined_oracle.py"
+        },
+        {
+          "field": "files",
+          "path": "tools/ghidra/geysermined-functions.json"
+        }
+      ]
+    },
+    "cpppj/islandruntime.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "c65715b9c21eb12f81253d5d7276000deed0d73556e5cc382909e450871bacab",
+      "current_sha256": "3053a1c0dcc7c2e67ebdb667325f1bf32e2f3d2612058e1238a202e2a7b00925",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "tools/decomp_islandruntime_oracle.py"
+        }
+      ]
+    },
+    "cpppj/mission-guide.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "b513dc4f2a80aec9785238debb40ef5314164fc3a1569cc3fb51da6668ef06bc",
+      "current_sha256": "e72ada98cf215feed3867b6d123f9e10458695340f03d469931a2ef78c61cf6d",
+      "hash_links": [
+        {
+          "field": "sha256",
+          "path": "tools/decomp_priestmenu.py"
+        }
+      ]
+    },
+    "cpppj/mission-login-timer.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "ffae20d51873933186bd37b39e5bfc8705cd62033a42c860537064a17b310909",
+      "current_sha256": "8c5e071ed0aab50faab5be1dc1f88151190f5f39455b218d1a0ad1be19778572",
+      "hash_links": [
+        {
+          "field": "sha256",
+          "path": "tools/decomp_priestmenu.py"
+        }
+      ]
+    },
+    "cpppj/mission-settings-packet.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "18d35f1737024f52dd595c570aa5a4536b1300c45b932ecb443ec5eed1553ba3",
+      "current_sha256": "901265d98580ce4ef44a380507fef847617ff0252a60fb8ca5884c61aae184c4",
+      "hash_links": [
+        {
+          "field": "sha256",
+          "path": "tools/decomp_priestmenu.py"
+        }
+      ]
+    },
+    "cpppj/mission-start.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "633c297d96927ece699037cf46f6262d40ec37a2c7528b05f6bfe2660abc2299",
+      "current_sha256": "05df998f772a412657f67cc48fcc0fff4f45758020d13c35e2973f88dd0ad752",
+      "hash_links": [
+        {
+          "field": "sha256",
+          "path": "tools/decomp_priestmenu.py"
+        }
+      ]
+    },
+    "cpppj/pathstart.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "e2551d2900a8f40c81f6f5be326b5397bcae4bf7bb66e7f8b859f78168e1b2e6",
+      "current_sha256": "e12e74189f2b193457ce4b06985060d5a5983a56989eb74c0119187ce8402bbd",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawPathStart.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawPathStart.h"
+        },
+        {
+          "field": "files",
+          "path": "tools/decomp_pathstart_oracle.py"
+        }
+      ]
+    },
+    "cpppj/player-participation.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "f94b7d41be51c8f2e65a87ac9ad6e8ce3186a54e3c0efcb32cfd10a3b4f573a3",
+      "current_sha256": "3ca898bd20bc477f937ff3bacbd2c38f7fd7d84d5055902ce0b4fafefc056569",
+      "hash_links": [
+        {
+          "field": "sha256",
+          "path": "tools/decomp_priestmenu.py"
+        }
+      ]
+    },
+    "cpppj/player-technology.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "0dcaaacc479d9167553f325789ba55c7b69bab40ac7c4128f1de7b1dd2f1df8e",
+      "current_sha256": "3cbff81cf5211b33d1afbdc86b26b9d2b702eeca440ba7d1a38519e2e20622d8",
+      "hash_links": [
+        {
+          "field": "sha256",
+          "path": "tools/decomp_priestmenu.py"
+        }
+      ]
+    },
+    "cpppj/priestmenu.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "9a41172941d9fb2b97a4a4303d28c5206f286de1c207b42c21f3e70633c9ed02",
+      "current_sha256": "5e16843b091a983ac7cdb3f858be3a531122be52e518b6363b49f12f0d2853bc",
+      "hash_links": [
+        {
+          "field": "sha256",
+          "path": "tools/decomp_priestmenu.py"
+        }
+      ]
+    },
+    "cpppj/residence-coordinates.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "704dad1aed90e8a03129024a1cb08418a4a593f82b0767ae4e95feacb9a9b8b3",
+      "current_sha256": "b52982a6bc393862186be756e282a74d5a38fb53cc2021915500b94f76e50156",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "tools/decomp_residence_coordinates.py"
+        },
+        {
+          "field": "files",
+          "path": "tools/decomp_assetregular_oracle.py"
+        },
+        {
+          "field": "files",
+          "path": "tools/ghidra/assetregular-functions.json"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawAssetRegular.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/AssetRegularTests.cpp"
+        }
+      ]
+    },
+    "cpppj/run10.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "0684126ae7e1b7518ef901daf21d07a64538122594e2d0b3f8e099df8bd0344a",
+      "current_sha256": "f81994b8233678a15669bbc94d1ae468a6729e6e3280f148f1425eab4f403a0c",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "tools/analyze_campaign_runtime6.py"
+        }
+      ]
+    },
+    "cpppj/run11.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "ca72e82f3358a8f7d3c8a026b2732dc6a37eb5470a572f48eb6b2c64366d1b28",
+      "current_sha256": "6fb5350770882030491b30447483a97b0f014e4517553c789f2afb78210f24b5",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "tools/analyze_campaign_runtime11.py"
+        },
+        {
+          "field": "files",
+          "path": "tools/analyze_campaign_runtime6.py"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/altarsacrifice.json"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/dudenotice.json"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/fixtures/dudenotice-x86.tsv"
+        },
+        {
+          "field": "files",
+          "path": "tools/decomp_altarsacrifice_oracle.py"
+        },
+        {
+          "field": "files",
+          "path": "tools/analyze_altarsacrifice_successor.py"
+        },
+        {
+          "field": "files",
+          "path": "tools/decomp_dudenotice_oracle.py"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/altarsacrifice-successor.json"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawAltarSacrifice.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawAltarSacrifice.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDudeNotice.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDudeNotice.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/AltarSacrificeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DudeNoticeTests.cpp"
+        }
+      ]
+    },
+    "cpppj/run12.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "0b1cf5f2cd034610dacfd47e2b902cb6e3088c29020bad217c5e67e2dadf8d90",
+      "current_sha256": "e703f76dfec675953a0620ca0bed4ce6bec61b7579f64aa1c0c6f9784827d443",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "tools/analyze_campaign_runtime6.py"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/daislifecycle-current.json"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/daisprogress.json"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/daiscontentnotice.json"
+        },
+        {
+          "field": "files",
+          "path": "tools/analyze_dais_postpop_lineage.py"
+        },
+        {
+          "field": "files",
+          "path": "tools/decomp_daislifecycle_current_oracle.py"
+        },
+        {
+          "field": "files",
+          "path": "tools/analyze_damageablepost_host_group_lineage.py"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/daisprogress-cpp-binding.json"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/dais-ritual-consumer-binding.json"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/daisprogress-cpp-correction.json"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/damageablepost-host-group-lineage.json"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/run11.json"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisLifecycle.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisLifecycle.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisContentNotice.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisContentNotice.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisLifecycleTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisProgressTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DamageablePostDestroyHostTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisContentNoticeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisRitualConsumerTests.cpp"
+        }
+      ]
+    },
+    "cpppj/run13.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "d6895fe56e3f1f4c1092b888069f8b66e4c1c757c1b992e8825b8d9c73eefaae",
+      "current_sha256": "13721fa3cd222be48b775d663c1ed3f412c22175593480dd7e85988949a96944",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "tools/analyze_campaign_runtime6.py"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/dudedrop.json"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/daisbridge.json"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/daisbridge-cpp-binding.json"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/run12.json"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DudeDropTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisBridgeTests.cpp"
+        }
+      ]
+    },
+    "cpppj/run14.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "dd793f88b04f91e66ce0ced5fc339533c7fb175a9ccee3720ac08496f0f1a16c",
+      "current_sha256": "0eef3a620b74fa69b486bff73347d895e6fdc2065e3657729b24cde3353f5c2d",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "tools/analyze_campaign_runtime6.py"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/geyser-ai-registration.json"
+        },
+        {
+          "field": "files",
+          "path": "tools/analyze_geyser_ai_test_width_lineage.py"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawGeyserAiRegistration.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawGeyserAiRegistration.cpp"
+        }
+      ]
+    },
+    "cpppj/run15-preparation-handoff.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "3c47a55f91370ff1e6214b5ee40c2114018dd1577945708f49d4abfce3340df8",
+      "current_sha256": "b2b31498c0de558f1d4e04fe04f23eb7b19979e3208c379f03f80d53b05053f7",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "cpppj/campaign-path-bindings.json"
+        }
+      ]
+    },
+    "cpppj/run15.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "2ae8c0788fbadb7ec5b93eff2a3cb15a0c2a72dcc879efa51c596c4a5b90bb12",
+      "current_sha256": "44dedc0d0ff57d565a85633d922e1f7a914be54d4e5f25f18c5b07a1819cf72e",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "cpppj/campaign-path-bindings.json"
+        }
+      ]
+    },
+    "cpppj/run16.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "e95d9e69d3297305b815ba29328058625485b75cce526de3c9c4ae00efcb086c",
+      "current_sha256": "601dfafd796e0f706777d9e910fd74e974f8892120617db622c03a0ab85d1f89",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "cpppj/asset-player.json"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/assetpostpop.json"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/campaign-path-bindings.json"
+        },
+        {
+          "field": "files",
+          "path": "tools/decomp_assetpostpop_oracle.py"
+        }
+      ]
+    },
+    "cpppj/run17.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "4f0f17338717f944f7d73cbe9526ff348648041e9cd39606503c3f4f93dd203e",
+      "current_sha256": "7bc5d306fe9e46faa8deef262fa29fc7aaeb1a0ea4cbc34a08fc8fe262cb20b9",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "cpppj/fortfinishowner.json"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/run16.json"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawFortFinishOwner.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawFortFinishOwner.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawIslandRuntime.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawIslandRuntime.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/IslandRuntimeTests.cpp"
+        }
+      ]
+    },
+    "cpppj/run18.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "5e1febd87cb9040aaf1fcb3b2d285304523f11007db0c71f1a955fb0a5d3a862",
+      "current_sha256": "beb9c998d370194514f5bfb126bf2a97f1315320c9d2a1ef6ea0b0c76378d0fd",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawAltarSacrifice.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawAltarSacrifice.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisContentNotice.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisContentNotice.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisLifecycle.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisLifecycle.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDudeNotice.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDudeNotice.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawFortFinishOwner.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawFortFinishOwner.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawGeyserAiRegistration.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawGeyserAiRegistration.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawIslandRuntime.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawIslandRuntime.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/AltarSacrificeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisBridgeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisContentNoticeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisLifecycleTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisProgressTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisRitualConsumerTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DamageablePostDestroyHostTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DudeDropTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DudeNoticeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/IslandRuntimeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/fixtures/dudenotice-x86.tsv"
+        }
+      ]
+    },
+    "cpppj/run19.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "affcc9805e61fce8312c96db6a33d8e5b480c92b0de4dc0490fe8bf6f1f11bef",
+      "current_sha256": "6d9888fa7bcf7b1e13dd408db59a26410e9e3cef6d1fad987e20c464d6e0dc76",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "cpppj/run18.json"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawAltarSacrifice.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawAltarSacrifice.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisContentNotice.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisContentNotice.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisLifecycle.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisLifecycle.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDudeNotice.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDudeNotice.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawFortFinishOwner.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawFortFinishOwner.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawGeyserAiRegistration.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawGeyserAiRegistration.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawIslandRuntime.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawIslandRuntime.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/AltarSacrificeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/CampaignMotionTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisBridgeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisContentNoticeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisLifecycleTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisProgressTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisRitualConsumerTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DamageablePostDestroyHostTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DudeDropTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DudeNoticeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/IslandRuntimeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/fixtures/dudenotice-x86.tsv"
+        }
+      ]
+    },
+    "cpppj/run20.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "f81e9b85806ea54b9df979f24a7aaff82ef7507dddc1d94afa6af23c92f78cf5",
+      "current_sha256": "32392f746feb46f4dc1ef51c23d38a2e04a36e3abaa9fde4b676c2c17ed699a2",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "cpppj/run19.json"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/client/RawCampaignAssetBindings.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawAltarSacrifice.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawAltarSacrifice.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisContentNotice.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisContentNotice.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisLifecycle.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisLifecycle.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDudeNotice.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDudeNotice.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawFactoryPostPop.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawFortFinishOwner.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawFortFinishOwner.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawGeyserAiRegistration.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawGeyserAiRegistration.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawGunMode.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawIslandRuntime.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawIslandRuntime.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/AltarSacrificeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/CampaignFrameTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/CampaignMotionTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisBridgeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisContentNoticeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisLifecycleTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisProgressTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisRitualConsumerTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DamageablePostDestroyHostTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DudeDropTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DudeNoticeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/IslandRuntimeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/fixtures/dudenotice-x86.tsv"
+        },
+        {
+          "field": "files",
+          "path": "docs/exe/cpp-run20-20261015.md"
+        },
+        {
+          "field": "files",
+          "path": "tools/decomp_altarsacrifice_oracle.py"
+        },
+        {
+          "field": "files",
+          "path": "tools/decomp_assetpostpop_oracle.py"
+        },
+        {
+          "field": "files",
+          "path": "tools/decomp_assetregular_oracle.py"
+        },
+        {
+          "field": "files",
+          "path": "tools/decomp_daiscontentnotice_oracle.py"
+        },
+        {
+          "field": "files",
+          "path": "tools/decomp_daislifecycle_current_oracle.py"
+        },
+        {
+          "field": "files",
+          "path": "tools/decomp_daislifecycle_oracle.py"
+        },
+        {
+          "field": "files",
+          "path": "tools/decomp_daisprogress_oracle.py"
+        },
+        {
+          "field": "files",
+          "path": "tools/decomp_dudenotice_oracle.py"
+        },
+        {
+          "field": "files",
+          "path": "tools/decomp_fortfinishowner_oracle.py"
+        },
+        {
+          "field": "files",
+          "path": "tools/decomp_geyser_ai_registration_oracle.py"
+        },
+        {
+          "field": "files",
+          "path": "tools/decomp_geysermined_oracle.py"
+        },
+        {
+          "field": "files",
+          "path": "tools/decomp_islandruntime_oracle.py"
+        },
+        {
+          "field": "files",
+          "path": "tools/decomp_pathstart_oracle.py"
+        }
+      ]
+    },
+    "cpppj/run21.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "cf6f7a0312fda99a6562378f789b87441c9c7e0e58eb30dea5ebfeade533923e",
+      "current_sha256": "a794e0d3095ed2a00c1329cd95a1272f8f927a26b521b8fd2c56f7a8b08f402a",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "cpppj/run20.json"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/client/RawCampaignAssetBindings.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/client/RawCampaignAssetBindings.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawAltarSacrifice.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawAltarSacrifice.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisContentNotice.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisContentNotice.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisLifecycle.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisLifecycle.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDudeNotice.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDudeNotice.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawFactoryPostPop.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawFortFinishOwner.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawFortFinishOwner.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawGeyserAiRegistration.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawGeyserAiRegistration.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawGunMode.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawIslandRuntime.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawIslandRuntime.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/AltarSacrificeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/CampaignFrameTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/CampaignMotionTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisBridgeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisContentNoticeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisLifecycleTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisProgressTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisRitualConsumerTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DamageablePostDestroyHostTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DudeDropTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DudeNoticeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/IslandRuntimeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/fixtures/dudenotice-x86.tsv"
+        }
+      ]
+    },
+    "cpppj/run22.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "dee63e4f1910a959b988748ba43621a1d4594ada5bc414eb9b44a7cbeebad807",
+      "current_sha256": "3758f5cdad3bd38fd7ec2f0cc44f2ce3aebcd00cad6eef97657a0ea6a307c292",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "cpppj/run21.json"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/client/RawCampaignArcherBindings.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/client/RawCampaignAssetBindings.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/client/RawCampaignAssetBindings.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawAltarSacrifice.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawAltarSacrifice.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisContentNotice.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisContentNotice.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisLifecycle.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisLifecycle.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDudeNotice.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDudeNotice.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawFactoryPostPop.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawFortFinishOwner.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawFortFinishOwner.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawGeyserAiRegistration.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawGeyserAiRegistration.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawGunMode.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawIslandRuntime.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawIslandRuntime.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawProjectileGeometry.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawProjectileGeometry.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/AltarSacrificeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/CampaignFireTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/CampaignFrameTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/CampaignMotionTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisBridgeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisContentNoticeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisLifecycleTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisProgressTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisRitualConsumerTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DamageablePostDestroyHostTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DudeDropTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DudeNoticeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/IslandRuntimeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/fixtures/dudenotice-x86.tsv"
+        },
+        {
+          "field": "files",
+          "path": "docs/exe/cpp-run22-20261015.md"
+        },
+        {
+          "field": "files",
+          "path": "tools/decomp_projectile_geom.py"
+        }
+      ]
+    },
+    "cpppj/run23.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "cdd4eb148d38e07ec4e2d3091e01cb67d8fb16ae8b2f830d31cd76ddd3150230",
+      "current_sha256": "e29f9286a2c79f91ba40b843f7e8618404154b261c876ef89281e26607f9fbf1",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "cpppj/dudenotice.json"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/run22.json"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/client/RawCampaignArcherBindings.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/client/RawCampaignAssetBindings.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/client/RawCampaignAssetBindings.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/client/RawCampaignHitBindings.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawAltarSacrifice.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawAltarSacrifice.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisContentNotice.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisContentNotice.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisLifecycle.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisLifecycle.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDudeNotice.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDudeNotice.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawFactoryPostPop.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawFortFinishOwner.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawFortFinishOwner.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawGeyserAiRegistration.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawGeyserAiRegistration.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawGunMode.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawIslandRuntime.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawIslandRuntime.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawProjectileGeometry.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawProjectileGeometry.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/AltarSacrificeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/CampaignFireTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/CampaignFrameTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/CampaignHitTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/CampaignMotionTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisBridgeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisContentNoticeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisLifecycleTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisProgressTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisRitualConsumerTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DamageablePostDestroyHostTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DudeDropTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DudeNoticeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/IslandRuntimeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/fixtures/dudenotice-x86.tsv"
+        }
+      ]
+    },
+    "cpppj/run24.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "23d5b6cd4481af300689a12308b114f517a5257df66ec6153e8df32a32570e3b",
+      "current_sha256": "62efde7b4ae21d9cf83f43ae7854ce16ad602f899f5b44591b6187b877d59223",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "cpppj/run23.json"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/client/RawCampaignArcherBindings.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/client/RawCampaignAssetBindings.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/client/RawCampaignAssetBindings.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/client/RawCampaignHitBindings.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawAltarSacrifice.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawAltarSacrifice.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisContentNotice.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisContentNotice.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisLifecycle.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisLifecycle.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDudeNotice.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDudeNotice.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawFactoryPostPop.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawFortFinishOwner.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawFortFinishOwner.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawGeyserAiRegistration.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawGeyserAiRegistration.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawGunMode.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawIslandRuntime.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawIslandRuntime.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawProjectileGeometry.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawProjectileGeometry.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/AltarSacrificeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/CampaignFireTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/CampaignFrameTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/CampaignHitTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/CampaignMotionTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisBridgeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisContentNoticeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisLifecycleTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisProgressTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisRitualConsumerTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DamageablePostDestroyHostTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DudeDropTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DudeNoticeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/IslandRuntimeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/fixtures/dudenotice-x86.tsv"
+        }
+      ]
+    },
+    "cpppj/run25.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "ea2386535b13271710e9f634bbb97e2959f08ad5af6d4f1bead00be017429b0e",
+      "current_sha256": "4316ed56e28cc2e38c5b3e0790c08c0642a32100d00cf33102b6127a95fd283a",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "cpppj/src/client/RawCampaignArcherBindings.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/client/RawCampaignAssetBindings.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/client/RawCampaignAssetBindings.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/client/RawCampaignHitBindings.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawAltarSacrifice.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawAltarSacrifice.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisContentNotice.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisContentNotice.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisLifecycle.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisLifecycle.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDudeNotice.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDudeNotice.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawFactoryPostPop.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawFortFinishOwner.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawFortFinishOwner.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawGeyserAiRegistration.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawGeyserAiRegistration.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawGunMode.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawIslandRuntime.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawIslandRuntime.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawProjectileGeometry.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawProjectileGeometry.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/AltarSacrificeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/CampaignFireTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/CampaignFrameTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/CampaignHitTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/CampaignInstallSupport.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/CampaignMotionTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisBridgeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisContentNoticeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisLifecycleTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisProgressTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisRitualConsumerTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DamageablePostDestroyHostTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DudeDropTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DudeNoticeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/IslandRuntimeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/fixtures/dudenotice-x86.tsv"
+        }
+      ]
+    },
+    "cpppj/run26.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "e3d4d9b9398f965fe5431ce701b54b9671f633216f5f061dd8db875e229437d2",
+      "current_sha256": "2029b1c1a10d2210457a28d1a3a5cd42cca4504fd42592bad3d6e8d4ade15ebf",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "cpppj/src/client/RawCampaignArcherBindings.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/client/RawCampaignAssetBindings.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/client/RawCampaignAssetBindings.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/client/RawCampaignHitBindings.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawAltarSacrifice.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawAltarSacrifice.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisContentNotice.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisContentNotice.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisLifecycle.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDaisLifecycle.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDudeNotice.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawDudeNotice.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawFactoryPostPop.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawFortFinishOwner.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawFortFinishOwner.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawGeyserAiRegistration.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawGeyserAiRegistration.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawGunMode.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawIslandRuntime.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawIslandRuntime.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawProjectileGeometry.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/src/o/RawProjectileGeometry.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/AltarSacrificeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/CampaignFireTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/CampaignFrameTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/CampaignHitTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/CampaignInstallSupport.h"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/CampaignMotionTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisBridgeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisContentNoticeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisLifecycleTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisProgressTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DaisRitualConsumerTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DamageablePostDestroyHostTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DudeDropTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/DudeNoticeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/IslandRuntimeTests.cpp"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/tests/fixtures/dudenotice-x86.tsv"
+        }
+      ]
+    },
+    "cpppj/run4.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "a378c812adf6424030ad5a3c304a54c0d65a75c524eb2c5d75d7505080deb37c",
+      "current_sha256": "102add5f78b5338e89bc6bb90fe22c5c6ba75c8b7ce427adf065cfe6f00d4d3e",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "cpppj/pathstart.json"
+        }
+      ]
+    },
+    "cpppj/run5.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "0266add06f81c666e5743d0379ca2e72d0c1c43df66a4bd2b946754f3b5fedc1",
+      "current_sha256": "a77e9c957154da3ca6a4cc1d0d8d885a73bbf4f09645244ab344ab286682060a",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "cpppj/run4.json"
+        }
+      ]
+    },
+    "cpppj/run6.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "5a331352a3fbd19719bb1a436cdb64a6a0192869bac2b5742b96c037aec96f88",
+      "current_sha256": "66125184e731f3857abe5abb9bdc88a031ed1e433ea77b884533e983f77f29b7",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "tools/analyze_campaign_runtime6.py"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/geysermined.json"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/run5.json"
+        }
+      ]
+    },
+    "cpppj/run7.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "a8d5099c6b56a2e87c841456c38563f8ff3ae8803cf8c1e238aedfee90ecefa5",
+      "current_sha256": "88b3234718fd801a5c2cc6927b97e0d4b105168375d40721c25864688b850b82",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "tools/analyze_campaign_runtime6.py"
+        },
+        {
+          "field": "files",
+          "path": "cpppj/run6.json"
+        }
+      ]
+    },
+    "cpppj/run8.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "848c032e2e740fac9936ee34642d69ad77a2ac265062b4a1530785c6841d540b",
+      "current_sha256": "a522bb577e136398bc18adf3443c114b93b685ad9835ef19dae030368dcf538f",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "tools/analyze_campaign_runtime6.py"
+        }
+      ]
+    },
+    "cpppj/run9.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "12dae87e3be9812fc05e02fd323db0ae7f67305fe5ffaba8f11772c3a20a984e",
+      "current_sha256": "787f008a0a0c8c6174008b57a19884e7b3e9a4986187959a92f4e99cde05427c",
+      "hash_links": [
+        {
+          "field": "files",
+          "path": "tools/analyze_campaign_runtime6.py"
+        }
+      ]
+    },
+    "cpppj/src/client/RawCampaignArcherBindings.h": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "d17bfb088f73be8eba5773f90966223895447d4fc1d8a14ecb08a27c3d538e3a",
+      "current_sha256": "973f33a96db3b899fcbec7ef955230e7d53bdeb409bec4d46ec5c8ebe6314b98",
+      "hash_links": []
+    },
+    "cpppj/src/client/RawCampaignAssetBindings.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "584bb0a8b3b5174f4f843768d765b5a844f2c525a354c4fae612d7c4f72b51b1",
+      "current_sha256": "72303f0a08d8eb08997bbb795e66392472862f76fa0015d2f1d9542fcafd4d81",
+      "hash_links": []
+    },
+    "cpppj/src/client/RawCampaignAssetBindings.h": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "8348cea0822879e1d4f18eeecc25a0f9908247cda7ecf59c81a329d65f7f4b2d",
+      "current_sha256": "ab49414fca330edc3b2f5fdae0d59b28bb0675e31ac236d810e63d20457612ed",
+      "hash_links": []
+    },
+    "cpppj/src/client/RawCampaignHitBindings.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "07ff4567fdfc1cf51451e10928c06baa1d0b7c4658bf260932c6f623fa5445f9",
+      "current_sha256": "5759ab0d9110d08fa94f2b236b62366412e98ec3766b46660aba0fe588666872",
+      "hash_links": []
+    },
+    "cpppj/src/client/RawCampaignSession.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "02330084e9a179eb76c6f78c6ffe4117cf3e69caa7257e4728c98d55e27eea4f",
+      "current_sha256": "64090c17193c2ca580ad597aec730c9142e9de59e4424d5a8ea21848a3d58ef6",
+      "hash_links": []
+    },
+    "cpppj/src/o/RawAltarSacrifice.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "c45c6083846aa97aec3d1dc0cd2dda2d0beab45fcd7addb07c755d1e2482f464",
+      "current_sha256": "987b5a4654bcf8bd66c7eaef93258b36f92f14707f95de1101f652bfaf24893b",
+      "hash_links": []
+    },
+    "cpppj/src/o/RawAltarSacrifice.h": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "1df83640935f495e4b6687c41ac5d181a8947f2bc6f349659870acea225b89c3",
+      "current_sha256": "b5ea76ade31afcc5e075060d4847c2db774f97456c1f7d5678c979c8c027e964",
+      "hash_links": []
+    },
+    "cpppj/src/o/RawAssetPostPop.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "ce2d0a5216a23a698e954de869340d7cd789dcf20a1c88c06af14d81dbff0dec",
+      "current_sha256": "dc740254ea2c3f94fd8158d47971ee9cf8980c7042110b019f5d2ca4e7b4146a",
+      "hash_links": []
+    },
+    "cpppj/src/o/RawAssetPostPop.h": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "ee7c011bbbe33927b97870daf46e94dff3398dd5e4f138a5cec1cb946800a728",
+      "current_sha256": "fe7dff2a01ad32ba1c3866c141011b20cb5d28efe55eea7c1cb07b4d78abc646",
+      "hash_links": []
+    },
+    "cpppj/src/o/RawAssetRegular.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "57426fd87e639b7334c0bed1fdf9fabca583db22da5936525fea2e2ca2c1acdb",
+      "current_sha256": "09c48cbec14c7732b6941e43f2e1db12a33727f2910511c9e575bfcabfcc10e2",
+      "hash_links": []
+    },
+    "cpppj/src/o/RawAssetRegular.h": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "a4bef741f3a6e51eb4503f886aaf42fe766b6c7683b1ca2407d91709385121b1",
+      "current_sha256": "0245d78abd9ce8b3ac3ac0a35e8deef4ba19285b1bd7533da1fa688b710b2261",
+      "hash_links": []
+    },
+    "cpppj/src/o/RawDaisContentNotice.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "1e6dfbaed79d003429c07de2481fca0b9a562f8b8d450a80b6a384f89b7808cb",
+      "current_sha256": "b9e133088cc63b2e3edd85e3001691fd9f7b9c4975300b65d9a77ff0d2723426",
+      "hash_links": []
+    },
+    "cpppj/src/o/RawDaisContentNotice.h": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "4ac7b652ac317d4216bb633794b1c754e8361bf1bc90409bc73ef15ccd395428",
+      "current_sha256": "b6f9537d0ee19137440f0f63f10ea5436b6acafdcead95270792f6d2810fbc6f",
+      "hash_links": []
+    },
+    "cpppj/src/o/RawDaisLifecycle.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "6ab1d6fb19058f4b241fe2dc61c943af299828ce24bf61242d9f109521ac2db7",
+      "current_sha256": "b1b059a8701afcf9dd31a1efc44c13e15c5d27138f8bd1bd60a469eccb2670e1",
+      "hash_links": []
+    },
+    "cpppj/src/o/RawDaisLifecycle.h": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "3d6e48e336e01273730dcfd789d6aa622dce0dd12254aefb062d06e5b9b628eb",
+      "current_sha256": "f319e757a65b541ef068418d154c369f0e39b4a77b08fd0b09dd0af472e7f365",
+      "hash_links": []
+    },
+    "cpppj/src/o/RawDudeNotice.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "338e8bd6321fee6514f0beb8a469dc1661fff682f57145c5d81326f7a409c182",
+      "current_sha256": "00b5878e7c8517145a12b9302ee93f41aabf75c530d614f34ec2f0c7438be350",
+      "hash_links": []
+    },
+    "cpppj/src/o/RawDudeNotice.h": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "043871673a6bb3708d5bd66066b1d82d830aecf1abd0d1ec79d5f7ae89d4e548",
+      "current_sha256": "660ca3cc52fc3988d6c158e2b1525a43171b4734fb0575329118f3a2651ac9da",
+      "hash_links": []
+    },
+    "cpppj/src/o/RawFactoryPostPop.h": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "c88a75837a2f902485f504aaf52f95256e85c4c5b5b45a736404955b6a495461",
+      "current_sha256": "2f7540b0321625908ed136e0fc18b5c07c03e0d85dc1ebdb20ecf17891b2e9ec",
+      "hash_links": []
+    },
+    "cpppj/src/o/RawFenceNeighbors.h": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "6439b5d753ec297f423275a33ed0d68be554f71e0936969be7d3ae6695afe9be",
+      "current_sha256": "7b4758a52e35f80a452d5bd7d8137b08b1440f4b210b95cdbd1c76c57a2a599e",
+      "hash_links": []
+    },
+    "cpppj/src/o/RawFencePostPop.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "8c081a4f98b06a379e69cdfdfe17cf900755bb694d123ad4283c8ab273f5d9c6",
+      "current_sha256": "82a1e4aea0dcc87169554d6e12f49060a3883fc370957008958ae9b998a90388",
+      "hash_links": []
+    },
+    "cpppj/src/o/RawFencePostPop.h": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "d4e677170685b39275b8111b42008b84794114587f625b003a8f36eec029703a",
+      "current_sha256": "9e925b99481e7740ded1733753779bc58b94d898749d98162043ceac63c58c15",
+      "hash_links": []
+    },
+    "cpppj/src/o/RawFlyerFrame.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "f2c2ca29d03de925c2a5102e475eb9d57b2f5d0a3f7db8fc942e8abc64feabc0",
+      "current_sha256": "14328231b8acfa0cf63d453d8ff76d4f31530309b80f61dfb73c5cffdddb02f1",
+      "hash_links": []
+    },
+    "cpppj/src/o/RawFlyerFrame.h": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "66e591165423f060a530439dab1f95d42f56f3c9e220b13d301df8d00df46a7a",
+      "current_sha256": "695af9b9a800869681fc0589e65b9ade96f58fba30814448b37a500fb1ab05b3",
+      "hash_links": []
+    },
+    "cpppj/src/o/RawFortFinishOwner.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "e9b43ea2937c3f4c050e43f2be4fab756d91e57fe59da2180ed5978f16434abe",
+      "current_sha256": "b5cd2ffbbb1ff0469b2b64a965cd88421998ce69079632ab2c7505ef2b66dcff",
+      "hash_links": []
+    },
+    "cpppj/src/o/RawFortFinishOwner.h": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "f880679db9b6035e8a9ffd1f18018e706953ed8dca7ea4e867f9e2a1248a8a8a",
+      "current_sha256": "8096cd2d7df7ece764a9eaf637bf3edd24870bf89c90e4e9188d8ea18765549a",
+      "hash_links": []
+    },
+    "cpppj/src/o/RawGeyserAiRegistration.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "8469ef44e9c1e93c04800afa70deb47a16a0c9968849e71bbb5427ee03688acc",
+      "current_sha256": "1f0c6f4c96f677e661e0182879a229f1ebd13ec9ef10179942790e73313a97fe",
+      "hash_links": []
+    },
+    "cpppj/src/o/RawGeyserAiRegistration.h": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "3282b52b26061b23d5e760382f4dfeb37821aae7feae500183b42c6e46be6f19",
+      "current_sha256": "47a3de633d1eb88c3fff574b7392da8753f1d4dc659de941abceb4e3dd77ae7d",
+      "hash_links": []
+    },
+    "cpppj/src/o/RawGeyserMined.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "56377d46c0b6b0d4aa149c572623bbd166eba634fe583fd782516a895e9a0053",
+      "current_sha256": "9e5e8f6ff201fa6bfacf530f0a33271beaf26909c3d1fd050928f27679eb6839",
+      "hash_links": []
+    },
+    "cpppj/src/o/RawGeyserMined.h": {
+      "kind": "text",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "b5f888a42414bfca904cccb8e147126177db66746cca933f4c6f40d1eeb77ac1",
+      "current_sha256": "c1489cd8c7818626429802a79541f6f5022a8133c9ca0762e17344992e5bd202",
+      "hash_links": []
+    },
+    "cpppj/src/o/RawGunMode.h": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "836ef0b63cc117f0e1ace6daf19de30c8a7841f39a964f0f80ea7ee496fcd99d",
+      "current_sha256": "588ceef75e500e8b8d680c36f277078411bdc0799c034bce73730584fa619f8b",
+      "hash_links": []
+    },
+    "cpppj/src/o/RawGunProcess.h": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "807bfccc91f1c61677aea6e92c8c908e72f8094408cb8705b32b09b1f6a49319",
+      "current_sha256": "cbb10a7a9625f426d595767ada3b1a1fe9626610eae4c6e7a9a5870d77088e2f",
+      "hash_links": []
+    },
+    "cpppj/src/o/RawGunTarget.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "cb211ae94a716e763fad9eee16cb0c6aa059ad2be436c901b7ea181ec62f8cf3",
+      "current_sha256": "c14e541e11ed5ad770f4851b08a6a11c088dccd4da2ad3d3aaa6d0ae140bcc3d",
+      "hash_links": []
+    },
+    "cpppj/src/o/RawGunTarget.h": {
+      "kind": "text",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "808e18f8e4808ade3f091dae26a898a8fb334ab3a2b54df918b43aa5d80914d8",
+      "current_sha256": "e080687a331b91ba83abca43bf304688aaf1f3e20152fdb7e7e641a4fe55d1e4",
+      "hash_links": []
+    },
+    "cpppj/src/o/RawIslandRuntime.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "9f3bfd0e6c469673aca7666b74fb35d4df25f3bf6e698d079434610f379dd785",
+      "current_sha256": "90adf210fd4d3c372e9d5e4b19b9e14b8c0f1e3784df20c78e27e9f8aaa05f07",
+      "hash_links": []
+    },
+    "cpppj/src/o/RawIslandRuntime.h": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "9bbc1cf7e4cf3972d66b19f349058c740c1b3b16da49fcc73782438e41de42f5",
+      "current_sha256": "a6caa96ddd7f8ba46dbd3e5e7710cc6db49f7273570fdd1f60e732df9d41386c",
+      "hash_links": []
+    },
+    "cpppj/src/o/RawMissionOutcome.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "9dd675a37c61a57dea3bcb63ecd44cef0d15207ce7dd5f0112ec24a12d71d583",
+      "current_sha256": "bb4ac6cbcd21eed90f652dbbdca7a3369357a4854fb851fea8f72b24fc536f87",
+      "hash_links": []
+    },
+    "cpppj/src/o/RawPathStart.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "a778ad764975ce4abdd96ad36cd4eebd7c0d5871e0b8e99d844a201a4477090c",
+      "current_sha256": "4c3ca34ae35666b09ce7c1714139987cbdcff45d9653c4a9e5fff3983d361a1f",
+      "hash_links": []
+    },
+    "cpppj/src/o/RawPathStart.h": {
+      "kind": "text",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "c41ca85f2f4635e58727f8e8ae556c8f4d26264defde470a7d4bd37d14755545",
+      "current_sha256": "feaf7f0e7d2c9e1905ab3ecdcdd91baf638a5e6d433b87866e2088ce0f0d56fd",
+      "hash_links": []
+    },
+    "cpppj/src/o/RawPriestParticipation.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "93160b835cc3d2b60ec98f3969aa4af853db82601511edbb490c7671687eb479",
+      "current_sha256": "b14b3e3e9f51f7728d131af3833621bc0bb570e5de1240c0db425437f4a40d7b",
+      "hash_links": []
+    },
+    "cpppj/src/o/RawPriestParticipation.h": {
+      "kind": "text",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "283f34fc983482540c628ee2f15e299d497f78f76e8a33ff68637bd0d3a3f3f8",
+      "current_sha256": "2e7e26383995d93c2b3d3ac97491e3a59be61236b00227656cca0d56a2687770",
+      "hash_links": []
+    },
+    "cpppj/src/o/RawProjectileGeometry.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "bc4bf6237fae6d794668c6306c1b61be3903dd4d5781bde1715dff0b3d6bdbac",
+      "current_sha256": "6242f38451c346528264b64498c9cbe7f3ebe892f866444a89ac65971cc5dbb9",
+      "hash_links": []
+    },
+    "cpppj/src/o/RawProjectileGeometry.h": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "1e538000ec837e612b558f92d93e90974dda1aab697f95d4a0f99531b7db421a",
+      "current_sha256": "282867531f6da0ef171f62ea2f7cf8b13b828e87309aae445800d12cb7733caa",
+      "hash_links": []
+    },
+    "cpppj/src/o/RawSunAviaryProcess.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "58b0bc5bec96469793ef802ba52c728168684f1d3b5f2b3b40d80d5530a0f588",
+      "current_sha256": "eea427a3274871ca93ba8744d75e404d863e717cd6b2f495bb27f1ff3d1ee7bd",
+      "hash_links": []
+    },
+    "cpppj/src/o/RawSunAviaryProcess.h": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "af0b47499c801d16044c7cf9af1b6ddc94fe99ace10aee69f8f4679927ea63d0",
+      "current_sha256": "ddb2bc2a0b7f29304f8d40c00cdb29d80d99ba558c381a5e6e457a1d59b7043c",
+      "hash_links": []
+    },
+    "cpppj/src/o/RawVortexPreDestroy.h": {
+      "kind": "text",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "de0ec28e830a37dc3fc11832cd64940b7d8868946cf4493928dda97ae76f23f7",
+      "current_sha256": "5a09a4f138baa2f2d68ffff4c2573dbdb1a25237b8c3f62592a7c0af3398807c",
+      "hash_links": []
+    },
+    "cpppj/src/o/SquidPostPop.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "0cfdb750db8571241e7197d36f0e7567afa09d73656b02e9106e17c5bdb3b9ca",
+      "current_sha256": "79b1fa443d0e6dbc5e9fd8dbd394952cf92b1270e1449f6438160932964a11b7",
+      "hash_links": []
+    },
+    "cpppj/src/o/SquidPostPop.h": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "2ce0f228e8e9201a6e68beb292f2beb3b3360c57c6340e0216912c63a121ea14",
+      "current_sha256": "5aacc745a6ba35f135e00728e5aa09bba4a954741b69da1476b0331cc9e3b307",
+      "hash_links": []
+    },
+    "cpppj/sun-aviary.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "ed7e5a5f0033a7ea540b4930f63f9d943f35bd41bf6b393bb9eb7b6d8f8fca78",
+      "current_sha256": "3a7bf54038607b7e9bf78e084c57d6a9ce1431247e6dc98cb6577ff5c9d7e0d1",
+      "hash_links": [
+        {
+          "field": "sha256",
+          "path": "tools/decomp_sun_aviary.py"
+        },
+        {
+          "field": "sha256",
+          "path": "cpppj/src/o/RawSunAviaryProcess.h"
+        },
+        {
+          "field": "sha256",
+          "path": "cpppj/src/o/RawSunAviaryProcess.cpp"
+        },
+        {
+          "field": "sha256",
+          "path": "cpppj/tests/SunAviaryProcessTests.cpp"
+        }
+      ]
+    },
+    "cpppj/tests/AiBrainTests.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "e98c3fb0f20fec05b6511d774221df2622173fc24ce4545515490e183c5a7171",
+      "current_sha256": "dd5b6ab9ffbd923260907b0ea35e2ecb2d036c6614e488263eef7d5b23615b64",
+      "hash_links": []
+    },
+    "cpppj/tests/AltarSacrificeTests.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "4a26329a07ed5e93912c56a87fcc296a4dc61a92d7bd4748d249d55310c65ed1",
+      "current_sha256": "b920c0644365682a1067005957c78b521f5ce751836e93986540a3193bc2780b",
+      "hash_links": []
+    },
+    "cpppj/tests/AssetRegularTests.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "64c95a65b8cef62ad2df1ba725bdb3040f8fa2ad35315dd6771485a6e7dcd573",
+      "current_sha256": "110a6dc0c4627ec792c980ea23f68a24d7558fdc5985cd96e0e3f4a7c57011c7",
+      "hash_links": []
+    },
+    "cpppj/tests/CampaignConstructionTests.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "f2503b961f02f4d44fd5ccdf64326c59103c717d719f202148232e1a30f38231",
+      "current_sha256": "4a81d4de4e6d63623ca85344c67433e53b93f068c7b8837363ff64fdc3252998",
+      "hash_links": []
+    },
+    "cpppj/tests/CampaignFireTests.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "cf981dfe610dc5074e9486271357155d77bc4ae3159335cf9e0f5ba44db50704",
+      "current_sha256": "991d1d520c6dcf9e31d1f379da0c1802ccdd9382906776b1d85bf7184d27e4da",
+      "hash_links": []
+    },
+    "cpppj/tests/CampaignFrameTests.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "40952f427eb4664bf93f1da6a40c18fff55d5d970f6d5b20ffda7e39e496d469",
+      "current_sha256": "118bd58237503daae1ec66744b75f9ae42c6c386c78e18ad819d546dbfe1fcbb",
+      "hash_links": []
+    },
+    "cpppj/tests/CampaignHitTests.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "4a90f5432fecef802fcb31538ef5cee6a3480de2a3726e7fcad850468238d523",
+      "current_sha256": "e385b4b291d64d4066f407716c678fbd855a2848e2f41a87381aaddc59127853",
+      "hash_links": []
+    },
+    "cpppj/tests/CampaignInstallSupport.h": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "d986a5b433faa25432c4694f7ed8a91e4b1bc4c35c8ae592e7066c42d8ab2f5e",
+      "current_sha256": "a737fbe508062e138dabc70c8eeb6f34a14362b4e120f68e026aef689d65da3a",
+      "hash_links": []
+    },
+    "cpppj/tests/CampaignMissionStartTests.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "e37ef86b5cf89bee2f986e9d53f96355dab3333d46f39f9b6b911e663ed6a526",
+      "current_sha256": "505f3b23152730193cce5434092c427574abf7c17106706f5a0b01a2f91d6ec7",
+      "hash_links": []
+    },
+    "cpppj/tests/CampaignMotionTests.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "cb1b08d04189f4838b0a5a36c41f55ca6ded0d540cd5d0d6687e12ed2c3b726f",
+      "current_sha256": "adc773667aef1299f0553ab838649717491b2584f5bfba4d176b03080fa7b2a3",
+      "hash_links": []
+    },
+    "cpppj/tests/CampaignSessionTests.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "a41031caab5bf357b5ca77f3b8eb630bb4cc80ece076816a2f383a6c32507d34",
+      "current_sha256": "09c0453acbb659a93aeb9b054d5ddd125b3c859dca7ed6f23c9de22f07872ac1",
+      "hash_links": []
+    },
+    "cpppj/tests/DaisBridgeTests.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "505fc5251b558dd2df8eae19f05d82885b0e8dc1ba9e117bdf6bdeff5a91a492",
+      "current_sha256": "4b98116984802558d993dee8a444497ad5f14329ae03e065244b4f8cb41a8ee7",
+      "hash_links": []
+    },
+    "cpppj/tests/DaisContentNoticeTests.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "43c5a5edab8e9bad89f561bf2bf7a358e5f91e03b1ac2112f398dc815c6f2589",
+      "current_sha256": "0910eea05e084038064d47340c0bba546b74b292f6a25491db8fecb1744fe1d3",
+      "hash_links": []
+    },
+    "cpppj/tests/DaisLifecycleTests.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "2e7ff00aafcfed84d4c0e0d7712f941458dee8eddf7f82f57a47753c6f334973",
+      "current_sha256": "7bfa99f40e12b3796b6109ba8fed36c7cfdb911fbb8d898ba43cf0438d187ba4",
+      "hash_links": []
+    },
+    "cpppj/tests/DaisProgressTests.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "5bfc1a37fe2d93d90c37e86bce74f6ff5b51146f46efe1f25f7296a18f270afa",
+      "current_sha256": "6e8d437815d1b8cd191d4e9fc4c4310538d85de0347722f0ede081c75362c192",
+      "hash_links": []
+    },
+    "cpppj/tests/DaisRitualConsumerTests.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "081e8982a791a0606eadca7e516e8fc8618ad274ff6eaeb05d2d066910baffd4",
+      "current_sha256": "d7281b79127c73900f1b4e68292e8b51e4ed7d386d57cc0ee90f6b78cc7e45e5",
+      "hash_links": []
+    },
+    "cpppj/tests/DamageablePostDestroyHostTests.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "a5150f05dd64d094aeaf4cb0f5204c8fe16c5da13709f5b41aaf0f204a366871",
+      "current_sha256": "1cff10d68fb521e57fdeeb7f27900a292fc7f1013b134534748c4d494894509a",
+      "hash_links": []
+    },
+    "cpppj/tests/DudeDropTests.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "d710fc602cdfad2f186acf25bb2beffe28d542ccaca61bb502b1e08b890fb506",
+      "current_sha256": "0b2a01d11cf59c566a7fe0e18fe5d48187a2fc3eaa3670976ed1e47a880acca7",
+      "hash_links": []
+    },
+    "cpppj/tests/DudeNoticeTests.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "83b4de62c62efc44f49272b86aa42807ca4c1b1ceed5a23a8de3949304c033bb",
+      "current_sha256": "e89cdccb4b047e31006b0f9b2ac8362417d5888f400c9f9e276668a820735b6f",
+      "hash_links": []
+    },
+    "cpppj/tests/FactoryPostPopTests.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "c5f1395723216df70b3a62cf70e5d52e7e3d76648c190ed64d2bd5eee0d0ee89",
+      "current_sha256": "d3d23ea00883583b322acdab0aa9d52eb317ab8b0aa0c78019ca3b847666b2d7",
+      "hash_links": []
+    },
+    "cpppj/tests/FarmClusterTests.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "baaa8b8c557998f53a283b20bf2a728d5be03b5bd2ad1ea878acc259b1ddfbf1",
+      "current_sha256": "0ccd19746bc46e27b514113c33b9ee3efaa8f30841ce7e733a76b944b4497e57",
+      "hash_links": []
+    },
+    "cpppj/tests/FencePostPopTests.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "e9c824db9e0a56960f77bd56079bb2707cba1834b9c3a2c244104b722daf1f69",
+      "current_sha256": "84a6e84930daa35cc05f9d043bdad8c5580625ac767ada32ebf250cccc971267",
+      "hash_links": []
+    },
+    "cpppj/tests/GeyserMinedTests.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "5498bd4f456af7767297d62a8be6b9c6610c7e49a596e2a181afaf362c7625bf",
+      "current_sha256": "a5eb618206c8a35d92d52a39202e8d94bb6f8295a8196a769d203f30095f76dd",
+      "hash_links": []
+    },
+    "cpppj/tests/IslandRuntimeTests.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "6829f96d02e5bf4b67c2f46f675e8353ea0970f9cf0a4fde387e045e0634fb67",
+      "current_sha256": "2ed08983761898b19e394b3e7e7446fa9235dbdaeacf1b4fabc972d8924889e4",
+      "hash_links": []
+    },
+    "cpppj/tests/NormalTerrainWorldBindingTests.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "c94298a7998ba369a29099c85b48b1ff034fc20cfe7456c31df4f24f8d3f009d",
+      "current_sha256": "c9f161f9835598f5fc0d4f9871de10c17c7d4d745108bd14c86eaeb77aa80e2c",
+      "hash_links": []
+    },
+    "cpppj/tests/RawPathStartTests.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "3245f60fc5547655cd7b0ed4debd770aa5ad8b2c77baa74be8417ecd0390093a",
+      "current_sha256": "4c86eafcb4a753706525636b3dc38e461eaf51bc22b4fb0f793c9aae2a6f62cc",
+      "hash_links": []
+    },
+    "cpppj/tests/SunAviaryProcessTests.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "6f8b68949136a6d839aa318f49ef3615002e24aa668497072a2126f33a0931ce",
+      "current_sha256": "00d97e56b7d27adfcc45f50c88a56c5f98df0852b93ce79df94107b675ae7cc6",
+      "hash_links": []
+    },
+    "cpppj/tests/VortexIslandBindingTests.cpp": {
+      "kind": "text",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "32acb55ae4db50d4c86c38e94247882b66674c71a684ea8f8cd4e665651dba43",
+      "current_sha256": "14c0af8620debef34548fad3a6e05ed5664863dc823287c2f2ec58f54666a2c6",
+      "hash_links": []
+    },
+    "cpppj/tests/fixtures/dudenotice-x86.tsv": {
+      "kind": "fixture",
+      "baseline_line_endings": "git",
+      "previous_sha256": "2b8f9e950743140662d0487cef5f49a5e11f94d9fc9d009a5021baf9c395e314",
+      "current_sha256": "5bb484c7c4ab8636d56f1b1d58aea358ab2f1da3daff664575f345c94a33c56b",
+      "hash_links": []
+    },
+    "cpppj/type-required-energy.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "5656a8d165fa2c8aa1c029c056f986b9e18ab34909a7da0481cd9b323e472dc7",
+      "current_sha256": "1372a8f396884a4f2af3bfc4d6b912af1de34c48a5b6ee20bd4097b99d43615f",
+      "hash_links": [
+        {
+          "field": "sha256",
+          "path": "tools/decomp_priestmenu.py"
+        }
+      ]
+    },
+    "docs/exe/cpp-altar-sacrifice-20261014.md": {
+      "kind": "text",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "d7e6905b9fe85efb35a1e5b57472f20f6683b8b23713c975f1f174c2830243c8",
+      "current_sha256": "fd10d053614be3eedbf3ed6a7ccdbf12db8533994ed32a5455697f306d384fa9",
+      "hash_links": []
+    },
+    "docs/exe/cpp-asset-postpop.md": {
+      "kind": "text",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "72747b4f4b7da070fa2d065ca5d68007018b258ccfec236f587f7b29429f3dd1",
+      "current_sha256": "a9bf73a1305271b8a43199055d9d5330ee00df37d1ba1168dbefd2aa45f71eaa",
+      "hash_links": []
+    },
+    "docs/exe/cpp-campaign-1-1-runtime-audit.md": {
+      "kind": "text",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "383d7bcd4f7922b7d6dac03dc0db18cbc7753be31b910995c450a4e644f7ef45",
+      "current_sha256": "ce06c595e761c16a9a1fad27f9330a75e06eb50d2ea97487ee2f091202d2c787",
+      "hash_links": []
+    },
+    "docs/exe/cpp-campaign-path-audit.md": {
+      "kind": "text",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "7c875fb5e59bc7c4f330313140288c03acc07ac97c820bb409a20e830f5d6a72",
+      "current_sha256": "6316935e35acb5f924faa14b8898b8c036938f7d4dbdde8a813da5c932e008d2",
+      "hash_links": []
+    },
+    "docs/exe/cpp-campaign-world-bindings-20261013.md": {
+      "kind": "text",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "abde01345171d60a4e37e23ac84716dc33a3bb5dc158f771d1930bf6e8f8a04c",
+      "current_sha256": "81c3bd01a10861b10e17017251d441d82cf168545c2f7c435fe9f9ffb868dc09",
+      "hash_links": []
+    },
+    "docs/exe/cpp-dais-bridge-20261014.md": {
+      "kind": "text",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "51b1858c3485c73b6eba1eafcf4e062da64f59ab20e1571498ec2befffc35dd4",
+      "current_sha256": "eee89f14514cce6bb0e983f28343ee6bd5274dcdef587887d2e3c19e5adae80d",
+      "hash_links": []
+    },
+    "docs/exe/cpp-dais-content-notice-20261014.md": {
+      "kind": "text",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "c289511de00a510e9dfbb78803ab0ca24e0ecaff125afefb96007cfea2249fce",
+      "current_sha256": "17d2a9eeb3c44d55b6355dc511562ae5bddf4bac71e26e56f904085c404d4efd",
+      "hash_links": []
+    },
+    "docs/exe/cpp-dais-lifecycle-20261014.md": {
+      "kind": "text",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "21eb9da0e8ef727d38ef65313fd8e4962ed11693cbe67fb8af9a49ca4e281a94",
+      "current_sha256": "d3144cbccf59302dc15371182ede77462b9ce856f0b69c9b61b6a0c2ce37e54a",
+      "hash_links": []
+    },
+    "docs/exe/cpp-dais-progress-20261014.md": {
+      "kind": "text",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "18899bc2f23af6dd6b70cb607bbcbf5076408456308ebca4a994e4ab65b126e5",
+      "current_sha256": "883d3a3482f7b21f8f3ac0669c56ec520a98f924bd928be042c3f3ba8d4188bb",
+      "hash_links": []
+    },
+    "docs/exe/cpp-dais-regular-20261014.md": {
+      "kind": "text",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "a6cf24becc6be4ba9222f6fd35445c483c162d8df4998ccaa2f452a4b6bb91dd",
+      "current_sha256": "835081e34ba8e5e3f5ef681d9ce6230cba14cb57168b1c26d749da664a8593c7",
+      "hash_links": []
+    },
+    "docs/exe/cpp-dais-ritual-consumer-20261014.md": {
+      "kind": "text",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "bb22e8586798f8dcbfbd8e4085f8c8f9592d13a93ed94de1f9704f41f0074649",
+      "current_sha256": "6ad5f1ad3f8fdf3b4cea6c8542de8dc0ba9587e30198d93eecd9d3cd67088f22",
+      "hash_links": []
+    },
+    "docs/exe/cpp-damageable-post-destroy-20261014.md": {
+      "kind": "text",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "fcde557553cdc8e9b2e5f80200da46a6d18626fc7af4fc4559c3024ab799eb1a",
+      "current_sha256": "5c5739dd12d80c75570dc1cd415f740c78fa67fa76e6c0e4572a79bb8255d0af",
+      "hash_links": []
+    },
+    "docs/exe/cpp-factory-postpop.md": {
+      "kind": "text",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "0144005050f7fc92092e7fe8dc83ce9bf416234edabf2222e78ccb1051daa5aa",
+      "current_sha256": "a690ce05abf9b32ad2fc0f2a7ad660c2302c9ed88968c73f0dfa1a2a1124d71e",
+      "hash_links": []
+    },
+    "docs/exe/cpp-flyer-frame-20261016.md": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "feb6c53e39d2848c2285a52bd17097be1c662379e1159c92911206f30cb8897c",
+      "current_sha256": "abf00776c9a4817869bf7daec861dae404d67ed2d7bc6ff973250a8bf4c94634",
+      "hash_links": []
+    },
+    "docs/exe/cpp-geyser-ai-registration-20261014.md": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "4fcd656e4b099b1be1b44aeab0db304c78a1be207c060fe7f08fab9aa3528616",
+      "current_sha256": "43a58a3b613dcdcb7fb2451721cebcd083962bcc0c79a38e94143ab8adf60ed1",
+      "hash_links": []
+    },
+    "docs/exe/cpp-gun-target.md": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "41cadd95f1f9fc68c4923fd569bbd8d061de63bc05d8bf409eb3a68586097638",
+      "current_sha256": "9451e5d13bc12bff8271988102c2afe1d4106bff620e82bdb74c8d3cf6d87f68",
+      "hash_links": []
+    },
+    "docs/exe/cpp-pause-handoff-20261016-sun-aviary.md": {
+      "kind": "text",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "64b593b6f4df0dd805e8a70325f96d4a46317568a6f0806f762bf5e8a0609531",
+      "current_sha256": "8e0e42f5c10337d42a6865db8580d820e1209ae2a2fdb7562deea9df09f19d6c",
+      "hash_links": []
+    },
+    "docs/exe/cpp-priest-participation-20261015.md": {
+      "kind": "text",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "0fc7ffe61bfdea1165490d133d00ae7c64681f3ee70f2bff136ea12e9311dd59",
+      "current_sha256": "32570ede0b08d2f39fc7dfbaae6cf420bd8236f4eff4ebd830fdfd9ef35db1b1",
+      "hash_links": []
+    },
+    "docs/exe/cpp-raw-fort-install-boundaries-audit-2-72d4d.md": {
+      "kind": "text",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "28682b381f0518903853c7c5969b32da0b2575d6fe29ecebf4180dd2be21532f",
+      "current_sha256": "c6bcc5b6ebc9803f2a546231af82288ffc34eaf72bce1a9cb79df69dd6635e9c",
+      "hash_links": []
+    },
+    "docs/exe/cpp-raw-fort-world-loading-analysis.md": {
+      "kind": "text",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "6bc3a38748930ca7d0da5ba6bdc2f6a7a5ca005ef547f4a614d6e6d243428d8b",
+      "current_sha256": "93a4299a08a803eadb5a637349d93f6e047ad1df7193c61d4179142ffc846b53",
+      "hash_links": []
+    },
+    "docs/exe/cpp-raw-path-search.md": {
+      "kind": "text",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "75f6b8fd63612dbcfe726cd25a7e63eac30a61d76685e8940062f9b15bbf24ae",
+      "current_sha256": "e83b43f9b3602ebfafd9775b4a63703d3c670f3f30643f4f6973ed05650f994c",
+      "hash_links": []
+    },
+    "docs/exe/cpp-raw-path-start.md": {
+      "kind": "text",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "df4630f69f711af0eb42967f80203dff0a2e27c70192e6ec8be65f5167198829",
+      "current_sha256": "76d16bfe09f8383537a7e8faf51f6e49fd0d1b2f32c85c9db9b91ad6c4563b04",
+      "hash_links": []
+    },
+    "docs/exe/cpp-resume-verification-20261016.md": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "89a6a9c1d7ed981405f26af814c3eb36e45105fbe363a0b4ce3640b77527c1a5",
+      "current_sha256": "b8ac8b3e50be37bf07e3dbe79c85a5dba0d95b0a64733935cb212792ef8c483e",
+      "hash_links": []
+    },
+    "docs/exe/cpp-run20-20261015.md": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "a6a8acec33e4f93065f51f165194feac734f54ed528c747b3a7eb74ab2b772ed",
+      "current_sha256": "0c99bb7b20be6e2750f1cbfdef0f9496a17d706b124ee1ec7a6b16c5fbe6cf18",
+      "hash_links": []
+    },
+    "docs/exe/cpp-run22-20261015.md": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "023cbcf029afdc14766e9c3aaa75dbcb93177965d8f6eb7c2be4f7bee37caa5c",
+      "current_sha256": "9eadee3c2fd6b4122738c352ddb7c9403e3aae2ddf8eaf69cdd0ec3477e4e650",
+      "hash_links": []
+    },
+    "docs/exe/cpp-sun-aviary-20261016.md": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "3e3b151a52d06c66daf0873abf1125613d0e67d983f1704c4ef7b5073b1c162c",
+      "current_sha256": "965035135799efae27443ea3d42cf0f40bcca9a454c028d2475b5fce0be046ea",
+      "hash_links": []
+    },
+    "tools/analyze_altarsacrifice_successor.py": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "dd32d197b9a844796a0332255ec8d08bfa3046a7b733927da9fb48c156bedafd",
+      "current_sha256": "1123baea89efbf9f7420db133dd9701fcde01ca32105b06bb1f76a1fb1018ba7",
+      "hash_links": []
+    },
+    "tools/analyze_campaign_runtime11.py": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "7780e756c2e7378bc01411a37c1b736a4a9334eadbfe8a262e48867fc9842ddf",
+      "current_sha256": "85c261f06ecb619067901dd806f84f423ea569a181331583d5deaba972918824",
+      "hash_links": []
+    },
+    "tools/analyze_campaign_runtime6.py": {
+      "kind": "text",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "351892b630004015512739a1cb16349b3604f88dad56426e625962a481bd9d55",
+      "current_sha256": "6446b0f2f20b4c26a74301cbb62f933cb7110f64692aea4e0cb4bf0ba19dcfce",
+      "hash_links": []
+    },
+    "tools/analyze_campaign_target_path.py": {
+      "kind": "text",
+      "baseline_line_endings": "crlf",
+      "previous_sha256": "1c5d869da7369bddbfcb220c9814190aadd0d0b19f01c87fb4f6812a26d3dec5",
+      "current_sha256": "39e083fb42b4663cbced743355e163755af8f8601c4b98591c32a29fa8d101fc",
+      "hash_links": []
+    },
+    "tools/analyze_dais_postpop_lineage.py": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "cfb510bd400288fbaf5fd74a90e53e04cf6d33654d3ef5aa1778e71f02081983",
+      "current_sha256": "4d5bcd02ab68f975ecb605a08888ed18dcb63117264cb55b641cd6e88e5690a3",
+      "hash_links": []
+    },
+    "tools/analyze_damageablepost_host_group_lineage.py": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "e0529e0e9cf84cfdc43144b1aef4a3e0562ecf09a9a9ac7224a58c43dc0d5c91",
+      "current_sha256": "eaecc978101793484f1d59af62ac8654f5302b542af968fd233b6280980068a9",
+      "hash_links": []
+    },
+    "tools/analyze_geyser_ai_test_width_lineage.py": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "12786bb3a37474703a23dd21a5b319e8655484dba21a5b31edd633078a0259c6",
+      "current_sha256": "df5d79fabbfc974994e6a4fd6f794fd8aa4e9252b95255a1319ef9a8f8f6eeb5",
+      "hash_links": []
+    },
+    "tools/decomp_altarsacrifice_oracle.py": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "8eaa4b8a06f651d841ab8c0749c5b5437c4868a26c864188416eb896549f7eae",
+      "current_sha256": "1d10306453d260e41582fe070b3fe0309f8f9c11c6f2be4e6d1566f6e441dc0e",
+      "hash_links": []
+    },
+    "tools/decomp_assetpostpop_oracle.py": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "347af1e5202ecf14b5f32125f19046e83fdd1ee420018510333437c001154e31",
+      "current_sha256": "15c27f3ccb10defe5f2bb366aaaa9c3412214c27602238bdda1ab817196c3df6",
+      "hash_links": []
+    },
+    "tools/decomp_assetregular_oracle.py": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "f2f726ce5d51b94b02c8f8a43b2a66519f92ce472df44339f0fe9f705fc0e7da",
+      "current_sha256": "259d6c82db1b7f89d075d9f9a3b45c4f53c9c1c29e5a68ea18b0a0249658711d",
+      "hash_links": []
+    },
+    "tools/decomp_daiscontentnotice_oracle.py": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "405061b1e36d38b810b04e1d3a91a06bf0bf6720f0ad43de0ef126b2f08540c3",
+      "current_sha256": "67d4e18a7f889d3314c3f26478bc8bff6042326ea7c963dc7de494f027bf4525",
+      "hash_links": []
+    },
+    "tools/decomp_daislifecycle_current_oracle.py": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "62e8d0378c8e26e4e52f6f67bc44d4f9a6b7c3951ca56fd84d909440436f8a8a",
+      "current_sha256": "882055d096cf239bb741702f334e4e735252abbbfda97242148c383f6b1583db",
+      "hash_links": []
+    },
+    "tools/decomp_daislifecycle_oracle.py": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "5444566279bdcea5aee819a7bfa6ebfd2aa5d96a9b1fe06d5070719be01995b2",
+      "current_sha256": "54fc150fd510371da34a2c8acc0982cb593263225f60b1af067907af44972696",
+      "hash_links": []
+    },
+    "tools/decomp_daisprogress_oracle.py": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "e52ae7f83b8c3332a6b29412821380cf94717cce37faadebd1f60a04e762e1fe",
+      "current_sha256": "081edea9e73b40d71ef10b79357a354fb257076eef68f02fa8b575dcfba1af24",
+      "hash_links": []
+    },
+    "tools/decomp_dudenotice_oracle.py": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "15f4578b9f89c61f3545046f38ab25c0957a340da5aba915d0fc37c063affa09",
+      "current_sha256": "9203e9a2780d89c6d1df52d441be3f6fc906c29fe188ac97f7f41bd0f88b67ab",
+      "hash_links": []
+    },
+    "tools/decomp_fence_postpop.py": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "3d3477aec14fab8431aa0b7512b8b5d6a8c09b708535b8d54e7c32e75b33ba4b",
+      "current_sha256": "49263398d88139fefd2b19fdf610dd85e18b926fc3dffafc496368704f1949b4",
+      "hash_links": []
+    },
+    "tools/decomp_flyer_frame.py": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "01a53cebbedde37d8feb2fb253812312af6e41c33f1d642b52e5bdd0d905d712",
+      "current_sha256": "c67f5954b8166d1792fca78faf7f082e1ef25358ef5a5183c12afb89f45d69a2",
+      "hash_links": []
+    },
+    "tools/decomp_fortfinishowner_oracle.py": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "d676c70b7931f2aeffd7a52c0d6d4415810534190b2765b5eb2b4f4e1df35592",
+      "current_sha256": "59d4e38d99cac87c9752c87ba3aff8bcf09ec27a6eb6f0019d137646214b178d",
+      "hash_links": []
+    },
+    "tools/decomp_geyser_ai_registration_oracle.py": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "0143da8d9f8c6620543ff100b4367b48c5f4390194eb9202fa73f16c3fbb96dc",
+      "current_sha256": "7ffaa3e02159962a8bc90417d7bf09b79fe3c88493bb6d854f7629393b34dabb",
+      "hash_links": []
+    },
+    "tools/decomp_geysermined_oracle.py": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "0adac43758ece6fd3f6844f3e06741da8b04363bb549f743092a4dc9f90316a5",
+      "current_sha256": "ad0d01a2d648589a8b41c8c6318c292141783a01f020c3d13d18f556b8990fe2",
+      "hash_links": []
+    },
+    "tools/decomp_islandruntime_oracle.py": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "cf0ad9958569df9d40ff2fd949c03e100058b22cda00bc5d6cda3b0d0eeb91f3",
+      "current_sha256": "a3a35c2991bff51babffa5a34902b16f6e9231c883e777a1fb140910785a0f0b",
+      "hash_links": []
+    },
+    "tools/decomp_pathstart_oracle.py": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "4374788b2cc4815990ffe7f48c656f768fdd1edb14fbe5743a80a55a5e94a89b",
+      "current_sha256": "b53feb1cacba2674347ec8bd41d475ed36a00a2e64550e1ab205054a100b3c0f",
+      "hash_links": []
+    },
+    "tools/decomp_priestmenu.py": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "72d14bfa36091dc86a273ad9b1998c940f575bb954195d0e0920e5e63ea10bc7",
+      "current_sha256": "02fcb4d010e0558e969eaf3e9c55bc21d14779d8eb147d3fc2ecbcaeca7a9c2c",
+      "hash_links": []
+    },
+    "tools/decomp_projectile_geom.py": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "dfbe9bc05c452a0d720047946a7bc829679182e21889698cb8c4bc680e516021",
+      "current_sha256": "bf1cc41e6001c5ed658fc5dedeba36d9ec3a120aa247d60147024d18b2e353fd",
+      "hash_links": []
+    },
+    "tools/decomp_residence_coordinates.py": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "6f668b68dfb387d99007c10327686e5fdf734e6164eeddbe9fcc8a74a9ca584d",
+      "current_sha256": "16dde4e10b6f1576b13d618cb9d80a27a2a7ff54c9b1343dd0523d80039fd06b",
+      "hash_links": []
+    },
+    "tools/decomp_sun_aviary.py": {
+      "kind": "text",
+      "baseline_line_endings": "git",
+      "previous_sha256": "07ef452c508b028ace987a2e70315e22c4f02f0c34ad5619332df8ffa3dc41f5",
+      "current_sha256": "4a918866a27d15f36c344ffeaa6321a5ce110706241441cf1993469ebc1e95c0",
+      "hash_links": []
+    },
+    "tools/ghidra/assetregular-functions.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "b735e482ba4b036dfcaef654d83a494b8030a37c4dff1c2f86cb6c35c3b159b2",
+      "current_sha256": "fb55b857013bb093a8031cc907dba662a1fce905f9f7e77860bdea89a6524bc8",
+      "hash_links": []
+    },
+    "tools/ghidra/daislifecycle-functions.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "71d8f56780eabdbde6851f85e669f436e0c6ac7829612e1688a151c65f50273d",
+      "current_sha256": "03954e8ae5a986b0c28c63c4499006c83ed4e6cf765db6b3c9967a3a223d7032",
+      "hash_links": []
+    },
+    "tools/ghidra/geyser-ai-registration-functions.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "be5001beeacf9662abd7c0842eaf00bc8532a5116afdfb744d6b652144af9757",
+      "current_sha256": "2318c0cd2bf3a99b2b9142a7ad06df407a76d206675facaee32ba09cfc57a7d8",
+      "hash_links": []
+    },
+    "tools/ghidra/geysermined-functions.json": {
+      "kind": "evidence",
+      "baseline_line_endings": "git",
+      "previous_sha256": "49c7ba0b226f789411977d6bf9eed2ebc9ebeeaece54c3bbecd63ee40d494574",
+      "current_sha256": "1f53f96a55228a1e9bc8f8d641483378727cf6c5a8559c44a303eeb66b799657",
+      "hash_links": []
+    }
+  },
+  "limits": [
+    "지정 한국어 명칭·조사와 설명, 직전에도 유효했던 files SHA 연결만 바꾼다.",
+    "원본 영어 심벌·타입·키와 fixture의 관찰 행, 역사 사본·내장 원문/diff는 보존한다.",
+    "이미 실패하던 출처 감사와 게임 복원 미완료 경계는 이 기록으로 통과시키지 않는다."
+  ]
+}

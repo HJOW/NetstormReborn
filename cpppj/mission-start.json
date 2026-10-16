@@ -21,7 +21,7 @@
     "extracted/mission-start/originals/functions.tsv": "912b476f6974c0e8fe38f0fe8652f33cad7a8dbddc66f48b1779f50f1d430407",
     "tools/ghidra/mission-start-functions.json": "e5f1b7d3e210d1e75d1cd935628d58ac5cef6f3f8503e1570bf72b8d261af938",
     "tools/decomp_mission_start.py": "6a6e083f2ef8a4bf4c50e048b5f7d413f7a8c82faaca36312018be74b08298e6",
-    "tools/decomp_priestmenu.py": "72d14bfa36091dc86a273ad9b1998c940f575bb954195d0e0920e5e63ea10bc7",
+    "tools/decomp_priestmenu.py": "02fcb4d010e0558e969eaf3e9c55bc21d14779d8eb147d3fc2ecbcaeca7a9c2c",
     "cpppj/src/o/RawMissionAiSettings.h": "2911508487a9a8744ccc09ae9b8d84435db189ebffbcb3bc4dcf59a67138db3b",
     "cpppj/src/o/RawMissionAiSettings.cpp": "829c863cd55aab291b2b3df2992d59a5c181a5cd12ab2960b937ba0a261309bc",
     "cpppj/src/o/RawMissionStart.h": "d78189022d2255d1cab41c70b23bf56101930503b2ce10844495c078aec83545",

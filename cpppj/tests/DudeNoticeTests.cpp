@@ -18,10 +18,10 @@ struct DudeScene {
     SidPool pool; // 원본번호50/60/61/77/78/83/84를공유하는판본별저장소다.
     SquidHash hash; // 원본과같은수동등록입력의네단계버킷이다.
     std::vector<std::uint8_t> spots; // 공통삭제처리기의현재spot이며fixture에서는표시공간을실행하지않는다.
-    std::vector<RiftTypeRecord> types; // 현재Dude70/거주지89의genus/발자국이다.
+    std::vector<RiftTypeRecord> types; // 현재Dude70/거주 구역89의genus/발자국이다.
     std::vector<RiftTypeFrames> frames; // 현재A/I 단계의합성실제형식코드입력이다.
     std::vector<DudeNoticeTypeData> speeds; // native와같은분수속도저장소다.
-    SquidPostPopList residences; // 현재active DWORD 거주지목록이다.
+    SquidPostPopList residences; // 현재active DWORD 거주 구역목록이다.
     SquidUnpop unpop; // 실제같은풀/해시의Host 삭제경로를제공한다.
     RawSquidDestroy destroy; // 실제Form/종속수명에사용하는현재삭제몸체다.
     Kernel kernel; // 현재Regular 객체를실제로소유한다.
@@ -35,7 +35,7 @@ struct DudeScene {
         // 같은관찰번호앞의슬롯만입력배치로확보한다.
         for (std::uint16_t id=5;id<=82;++id) CHECK(pool.Allocate(2)==Sid{id});
         frames[70]=RiftTypeFrames({{'A','P',0,0},{'I','P',0,0}});speeds[70].speed=std::bit_cast<float>(Number(row[9]));
-        // 현재source/두거주지의raw폭과등록입력만공급한다.
+        // 현재source/두거주 구역의raw폭과등록입력만공급한다.
         for (const auto [sid,type,x,y,owner]:{std::tuple{std::uint16_t{50},std::uint8_t{70},20.75f,21.9f,std::uint8_t{1}},std::tuple{std::uint16_t{60},std::uint8_t{89},24.75f,24.5f,static_cast<std::uint8_t>(Number(row[6])==2 ? 2 : 1)},std::tuple{std::uint16_t{61},std::uint8_t{89},16.75f,19.3f,std::uint8_t{1}}}) {
             auto raw=pool.AllocatedBytes(Sid{sid});std::fill(raw.begin(),raw.end(),std::uint8_t{});raw[10]=type;raw[patch ? 34U : 32U]=owner;Put(raw,14,std::bit_cast<std::uint32_t>(x));Put(raw,18,std::bit_cast<std::uint32_t>(y));Put(raw,12,sid==50 ? Number(row[3]) : 0U,2);Put(raw,patch ? 36U : 34U,sid==50 ? Number(row[10]) : 0U,patch ? 4U : 1U);
         }

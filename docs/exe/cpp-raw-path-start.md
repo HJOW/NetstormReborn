@@ -4,7 +4,7 @@
 
 `RawPathStart`는 패치 `00489080`/CD `0047d150`의 상위 순서를 복원한다. 목적지 clamp와 사제 스냅, 현재 타입에 따른 파생 경로 선택, boss일 때 기존 같은 종류 경로의 두 대상 저장/삭제, 실제 파생 생성, flags0 Init wrapper, 명령 DWORD와 패치 목적지 필드 쓰기, 유효 경로 검사, 연속 시작 꼭짓점 보정, 실제 Prepare, 같은 Host 부착, 부모의 `+44`/`+40` 통지 순서다.
 
-타입 선택은 기존 `RawPriestWorldBindings`의 몸체를 `client::SelectMovementProcessType` 공유 함수로 노출했다. 기존 바인딩과 PathStart의 `processType` 훅은 이 한 몸체를 재사용하며 O 계층은 client 헤더를 포함하지 않는다. 패치 `00488fe0`은 썬 워커(골렘)133와 empty187을 먼저 wormProcess40으로 처리하며, 윈드 워커137/레인 워커156은 simpleWalkerProcess38, balloon genus는 balloonProcess42, teleportEffect134/bulf135/dude70/priest158/manaBolt105는23/41/24/54/39다. CD `0047d020`은133만 wormProcess40으로 먼저 처리하며 다른 알려지지 않은 타입에서는 assert한다. 현재 mutable 번호를 받는 상태를 사용하므로 타입/genus 우선순위를 상수 switch로 대체하지 않는다. 명칭은 실제 `TypeLoadOrder`/`RiftTypeTable`과 대조했다. 초기 새 O 선택 몸체는 기존 구현의 중복이어서 제거했고 제네레이터/볼텍스/운반 표기도 교정했다.
+타입 선택은 기존 `RawPriestWorldBindings`의 몸체를 `client::SelectMovementProcessType` 공유 함수로 노출했다. 기존 바인딩과 PathStart의 `processType` 훅은 이 한 몸체를 재사용하며 O 계층은 client 헤더를 포함하지 않는다. 패치 `00488fe0`은 골렘(골렘)133와 empty187을 먼저 wormProcess40으로 처리하며, 세일 스케이터137/크리스탈 크랩156은 simpleWalkerProcess38, balloon genus는 balloonProcess42, teleportEffect134/bulf135/dude70/priest158/manaBolt105는23/41/24/54/39다. CD `0047d020`은133만 wormProcess40으로 먼저 처리하며 다른 알려지지 않은 타입에서는 assert한다. 현재 mutable 번호를 받는 상태를 사용하므로 타입/genus 우선순위를 상수 switch로 대체하지 않는다. 명칭은 실제 `TypeLoadOrder`/`RiftTypeTable`과 대조했다. 초기 새 O 선택 몸체는 기존 구현의 중복이어서 제거했고 제네레이터/볼텍스/운반 표기도 교정했다.
 
 기존 미등록 `RawPathStart` 소스에서 세 차이를 교정했다. 패치의 기존 경로 시작 좌표 보정은 `start <= destination`에서 0.5를 빼며, `replaceStart`가 쓰는 좌표는 이 보정된 start다. 실패 finder의 오른쪽·아래 경계는 거의 올림이다. `RawPathRuntime`에는 명령 DWORD 세 개/패치 전용 목적지 쓰기와 시각·방향을 보존한 꼭짓점 좌표 쓰기를 추가했다. `tailByte`라는 이름의 인자도 실제 원본은 DWORD 전체를 쓴다.
 

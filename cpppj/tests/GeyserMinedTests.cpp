@@ -102,9 +102,9 @@ TEST_CASE(rawGeyserMined_real_packet_factory_destroy_and_space) {
         packetHooks.record=[&](PacketConnection& current,std::span<const std::uint8_t> packet,std::uint16_t length) {
             CHECK(&current==&connection && current.depth==0 && current.received==723 && length==6 && packet[1]==0x5b);++recorded;
         };
-        packetHooks.terminate=[](PacketConnection&) { throw std::logic_error("가이저 채집의 mismatch0은 버전 종료를 요청하지 않는다"); };
-        packetHooks.close=[](PacketConnection&) { throw std::logic_error("가이저 채집은 이 연결을 닫지 않는다"); };
-        packetHooks.release=[](PacketConnection&) { throw std::logic_error("가이저 채집은 이 연결을 해제하지 않는다"); };
+        packetHooks.terminate=[](PacketConnection&) { throw std::logic_error("간헐천 채집의 mismatch0은 버전 종료를 요청하지 않는다"); };
+        packetHooks.close=[](PacketConnection&) { throw std::logic_error("간헐천 채집은 이 연결을 닫지 않는다"); };
+        packetHooks.release=[](PacketConnection&) { throw std::logic_error("간헐천 채집은 이 연결을 해제하지 않는다"); };
         RawPacketDispatch dispatch(edition,std::move(packetHooks));RegisterGeyserMined(dispatch,handler);
         CHECK(&handler.Pool()==&pool);const auto& registration=dispatch.Registration(0x5b);CHECK(registration.length==6 && registration.version==1 && registration.mismatch==0 && !registration.observer && registration.receive);
         const std::array<std::uint8_t,6> packet{0xff,0x5b,6,0,static_cast<std::uint8_t>(geyser.value),static_cast<std::uint8_t>(geyser.value>>8)};

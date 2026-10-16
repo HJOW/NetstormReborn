@@ -139,7 +139,7 @@ void Replay(const char* edition) {
 }
 // 패치10.78 실제 Handle/기계어 입력을 같은 pool/hash/Frame/Finder에서 대조한다.
 TEST_CASE(AssetRegular_ReplaysPatch) { Replay("originals"); }
-// CD10.72의 다른 가이저 주기·레지던스 분기와 같은 신전/공통 사건을 독립 대조한다.
+// CD10.72의 다른 간헐천 주기·거주 구역 분기와 같은 신전/공통 사건을 독립 대조한다.
 TEST_CASE(AssetRegular_ReplaysCd) { Replay("originalCD"); }
 
 // 시각/float payload를 혼동하지 않고 postPop 등록된 첫 Regular가 현재 Kernel에서 바로 호출되는지 검사한다.
@@ -194,7 +194,7 @@ void ReplayResidenceCoordinates(std::string_view edition) {
         const bool same=std::bit_cast<std::uint32_t>(result)==Number(row[4]) && scene.random.State()==Number(row[5]) &&
             scene.state.maxDecorationScan==Number(row[6]) && events==row[7] && Hex(scene.pool.Slot(kSource))==row[8] && neighbors==row[9];
         CHECK(same);++count;
-        if (!same) { std::fprintf(stderr,"레지던스 좌표 %s 행%zu 입력%s x%s y%s 호출%s\n",std::string(edition).c_str(),count,row[1].c_str(),row[2].c_str(),row[3].c_str(),row[10].c_str());break; }
+        if (!same) { std::fprintf(stderr,"거주 구역 좌표 %s 행%zu 입력%s x%s y%s 호출%s\n",std::string(edition).c_str(),count,row[1].c_str(),row[2].c_str(),row[3].c_str(),row[10].c_str());break; }
     }
     CHECK(count==864);
 }

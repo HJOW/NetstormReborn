@@ -131,7 +131,7 @@ std::uint32_t RawMissionOutcome::Demo() const { return current_.players.empty() 
 std::uint32_t RawMissionOutcome::TellBlocked() const { return current_.players.empty() ? state_.tellBlocked : current_.tellBlocked(); }
 // 실제 객체 조회/상태 연결이 동일한 월드를 사용하는지 확인한다.
 const SidPool& RawMissionOutcome::Pool() const { return pool_; }
-// 기존 최대 HP의 사제 특수 모드/알타 조건도 재구현 없이 실제 몸체를 사용한다.
+// 기존 최대 HP의 사제 특수 모드/제단 조건도 재구현 없이 실제 몸체를 사용한다.
 MissionOutcomeHooks MakeMissionOutcomeHooks(const SidPool& pool,const SquidReward& reward,MissionOutcomeHooks hooks) {
     if (&reward.Pool()!=&pool) throw std::invalid_argument("미션 승패와 최대 HP의 SID 풀이 다릅니다");
     hooks.maxHitPoints=[&reward](Sid sid) { return reward.MaxHitPoints(sid); };return hooks;

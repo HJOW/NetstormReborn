@@ -17,7 +17,7 @@ struct RawPathStartState {
     std::uint32_t& teleportType; // 00541270/CD0051cb5c: type23 생성/자연 부모 통지를 선택한다.
     std::uint32_t& manaBoltType; // 005411fc/CD0051cae8: client Path 부착 대상이다.
     std::uint32_t& priestType; // 005412d0/CD0051cbbc: 실제 사제 +44/+40의 부모 타입이다.
-    std::uint32_t& geyserType; // 00541240/CD0051cb2c: 사제 목적지 가이저 finder가 마지막 일치를 targetA로 기록한다.
+    std::uint32_t& geyserType; // 00541240/CD0051cb2c: 사제 목적지 간헐천 finder가 마지막 일치를 targetA로 기록한다.
     bool& snapPriestDestination; // 00595180/CD0052da98: 사제 목적지 거의올림-0.5 전역이다.
     bool& retrying; // 패치005951b0: 무효 경로 정리 후 재귀를 한 번 제어하는 실제 guard다.
 };
@@ -50,7 +50,7 @@ private:
     RawPathPoint Position(Sid sid) const;
     static RawPathPoint CeilPoint(RawPathPoint point);
     SquidSearchArea Footprint(Sid sid) const;
-    // 사제의 목적지 가이저 조회와 사건604/605 전체 삭제·기본 프레임 지정이다. teleport 통지는 실제 빈 ret다.
+    // 사제의 목적지 간헐천 조회와 사건604/605 전체 삭제·기본 프레임 지정이다. teleport 통지는 실제 빈 ret다.
     void NotifyStarted(Sid parent,RawPathPoint destination,RawPathProcess& process);
     SidPool& pool_; // 유일한 실제 SID 저장소다.
     const SquidHash& hash_; // Init 검색/부모 목적지/실패 정리와 같은 공간 해시다.

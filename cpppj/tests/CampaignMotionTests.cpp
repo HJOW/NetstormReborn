@@ -10,7 +10,7 @@ struct MotionScene {
     PlayerPlacementAnchorState anchorState; // 실제 Graph getter의 현재 mutable 상태다.
     std::unique_ptr<RawPlayerPlacementAnchor> anchor; // 같은 Core hash0/장부를 읽는 실제 getter다.
     RawCampaignMotionState state; // 실제 Halt/Arrival/cleanup/BFS 전역의 소유자다.
-    std::uint32_t geyserType{122}; // 현재 원본 가이저 타입 DWORD다.
+    std::uint32_t geyserType{122}; // 현재 원본 간헐천 타입 DWORD다.
     bool snap{true},retrying{}; // 원본 사제 목적지 스냅과 실패 재귀 guard다.
     RawPathStartState start; // 같은 Host clock과 사제 월드의 이동 타입을 직접 참조한다.
     RawPathProcessState process; // 같은 Kernel clock의 actual54 과정 상태다.

@@ -1,4 +1,4 @@
-// 썬 펜스의 이웃 스냅샷과 효과 이후 현재 좌표/소유자 재조회를 보존한다.
+// 썬 바리케이드의 이웃 스냅샷과 효과 이후 현재 좌표/소유자 재조회를 보존한다.
 #include "o/RawFencePostPop.h"
 #include <bit>
 #include <stdexcept>
@@ -6,7 +6,7 @@
 
 namespace netstorm::o {
 namespace {
-constexpr std::uint32_t kFenceVtable=0x00509470; // PATCH 썬 펜스 생성자의 실제 가상 주소다.
+constexpr std::uint32_t kFenceVtable=0x00509470; // PATCH 썬 바리케이드 생성자의 실제 가상 주소다.
 // 비정렬 DWORD를 읽으며 원본 포인터를 호스트 주소로 실행하지 않는다.
 std::uint32_t ReadFence(std::span<const std::uint8_t> raw,std::size_t offset) {
     std::uint32_t value{}; // 원본 little endian 네 바이트의 결합 결과다.
@@ -19,19 +19,19 @@ void WriteFence(std::span<std::uint8_t> raw,std::size_t offset,std::uint32_t val
 }
 // 미연결 효과는 선택 위치에서 실패시키며 앞선 쓰기와 예약을 보존한다.
 template<class Function> const Function& NeedFence(const Function& function) {
-    if (!function) throw std::logic_error("썬 펜스 후처리의 실제 하위 소비자 미연결");
+    if (!function) throw std::logic_error("썬 바리케이드 후처리의 실제 하위 소비자 미연결");
     return function;
 }
 }
 // CD의 다른 펜스 동작을 PATCH로 간주하지 않는다.
 RawFencePostPop::RawFencePostPop(SidPool& pool,FencePostPopHooks hooks):pool_(pool),hooks_(std::move(hooks)) {
-    if (pool.Edition()!=OriginalEdition::Patch1078) throw std::invalid_argument("썬 펜스 후처리는 PATCH10.78만 복원했습니다");
+    if (pool.Edition()!=OriginalEdition::Patch1078) throw std::invalid_argument("썬 바리케이드 후처리는 PATCH10.78만 복원했습니다");
 }
 // 실제 가상 표만 분배하며 타입 번호만 같은 다른 몸체를 허용하지 않는다.
 bool RawFencePostPop::Handles(Sid sid) const { return ReadFence(pool_.Slot(sid),0)==kFenceVtable; }
 // projected 위치를 현재 공통 후처리의 검사에 그대로 전달한다.
 void RawFencePostPop::Validate(Sid sid,std::uint32_t flags,const RawGraphPop* projected) const {
-    if (!Handles(sid)) throw std::invalid_argument("썬 펜스 실제 가상 표 불일치");
+    if (!Handles(sid)) throw std::invalid_argument("썬 바리케이드 실제 가상 표 불일치");
     if (hooks_.validateBase) hooks_.validateBase(sid,flags,projected);
 }
 // 매 할당의 독립 실패는 해당 생성자만 생략한다. float0.1의 비트도 유지한다.

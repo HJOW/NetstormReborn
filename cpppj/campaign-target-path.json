@@ -39,7 +39,7 @@
     "cpppj/tests/MetadisplayDirtyTests.cpp": "0e47b828aba2178ddf824536b240c86058beed67cb8c741e3b1c8e2fa1a9b0ba",
     "cpppj/tests/RawPathDataTests.cpp": "531f1d4b1066cbdd6eea1ea8165a8fa1ca6db9cb11a0547411e51061d7a7d4f3",
     "cpppj/tests/FactoryPostPopTests.cpp": "0054a03a87f860443bc1adc4f1093bd3108beca7421f22956af9fca3137b781e",
-    "tools/analyze_campaign_target_path.py": "1c5d869da7369bddbfcb220c9814190aadd0d0b19f01c87fb4f6812a26d3dec5",
+    "tools/analyze_campaign_target_path.py": "39e083fb42b4663cbced743355e163755af8f8601c4b98591c32a29fa8d101fc",
     "extracted/campaign-target-path-build-final.log": "25ccb1f7d56425bc61f6b4437f6e7d6939fe23820fac721b3fd71e88e00fff61",
     "extracted/campaign-target-path-ctest-final.log": "c3d9f83eed75455e4f9e28961c3e6976e920e19f3a7bac0e12a9d030f4390fb2",
     "extracted/campaign-target-path-tests-final.log": "d0d94e7d7ca6eff90307f1243899acf5793fed163b0ed45f0321bc074308c09b",
@@ -148,7 +148,7 @@
     "미니맵 실제 큐/Refresh를 복원하고 Pop/Unpop에 연결했으나 bitmap 표시 재생성·실제 셀 그림은 필수 외부 경계다.",
     "Path 공유 버퍼와 서버 flags0 부착/송신을 연결했고 CD의 override 무시를 교정했다.",
     "Prepare48개는 원본게임 x87 53비트 결과이며 64비트의16개 1ULP 차이는 별도 보존한다.",
-    "Factory 파생 wrapper는 아웃포스트126이며 실제 썬 아비어리72는 별도 미복원 몸체다.",
+    "Factory 파생 wrapper는 아웃포스트126이며 실제 훨리베이스72는 별도 미복원 몸체다.",
     "GameWorld 비표면 이관·실제 지형 도장·Gun 애니메이션/투사체·사제 운반/의식/승패 및 캠페인1-1 완주가 남아 있다."
   ]
 }

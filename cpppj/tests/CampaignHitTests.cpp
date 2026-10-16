@@ -68,7 +68,7 @@ TEST_CASE(CampaignHit_PatchNativeGunToPriest) {
     for (const auto& row:LoadFixture(NETSTORM_CAMPAIGN_HIT_FIXTURE).rows) {
         if (row[0]!="originals") continue;
         InstallScene scene;scene.runtime->Load();const auto target=MyCampaignPriest(scene);Sid firing{};
-        // 실제 저장된 적 썬 아처를 발사 부모로 선택한다.
+        // 실제 저장된 적 썬 디스크 발사기를 발사 부모로 선택한다.
         for (const auto& object:scene.world.Objects()) if (object.object.type==71 && object.object.owner==2) { firing=object.sid;break; }
         CHECK(firing.value!=0 && scene.priests->PriestState().CurrentHitPoints(target)==100);
         const auto now=std::stod(row[2]);scene.core.processState.now=now;scene.assetBindings->PrepareFrame(now);

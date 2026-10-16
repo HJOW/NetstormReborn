@@ -1,4 +1,4 @@
-// 실제 썬 아비어리의 현재 읽기 위치와 효과 이후 상태/시각 재조회를 보존한다.
+// 실제 훨리베이스의 현재 읽기 위치와 효과 이후 상태/시각 재조회를 보존한다.
 #include "o/RawSunAviaryProcess.h"
 #include <algorithm>
 #include <bit>
@@ -14,7 +14,7 @@ std::uint32_t Read(std::span<const std::uint8_t> bytes,std::size_t at,std::size_
 // 다른 payload를 건드리지 않고 실제 store 폭만 쓴다.
 void Put(std::span<std::uint8_t> bytes,std::size_t at,std::uint32_t value,std::size_t width=4) { for (std::size_t i=0;i<width;++i) bytes[at+i]=static_cast<std::uint8_t>(value>>(8*i)); } // 원문 WORD/DWORD 폭을 보존한다.
 // 선택되지 않은 경계는 요구하지 않으며 선택된 누락은 앞선 쓰기를 보존하고 거부한다.
-template<class Function> const Function& Need(const Function& function) { if (!function) throw std::logic_error("썬 아비어리 실제 하위 소비자 미연결");return function; }
+template<class Function> const Function& Need(const Function& function) { if (!function) throw std::logic_error("훨리베이스 실제 하위 소비자 미연결");return function; }
 // 원본 signed 값의 덧셈은 낮은 DWORD에서 감긴다.
 std::int32_t Add(std::int32_t value,int delta) { return std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(value)+static_cast<std::uint32_t>(delta)); }
 // 실제 double 저장을 두 DWORD로 나누고 padding을 보존한다.
@@ -42,7 +42,7 @@ Sid FindAttachedProcess(const SidPool& pool,Sid parent,std::uint32_t type) {
     return {};
 }
 RawSunAviaryProcess::RawSunAviaryProcess(SidPool& pool,SunAviaryProcessGlobals globals,SunAviaryProcessHooks hooks)
-    :pool_(pool),globals_(globals),hooks_(std::move(hooks)) { if (pool.Edition()!=OriginalEdition::Patch1078) throw std::invalid_argument("썬 아비어리 프로세스는 PATCH만 복원했습니다"); } // 다른 판본 ABI를 임의 허용하지 않는다.
+    :pool_(pool),globals_(globals),hooks_(std::move(hooks)) { if (pool.Edition()!=OriginalEdition::Patch1078) throw std::invalid_argument("훨리베이스 프로세스는 PATCH만 복원했습니다"); } // 다른 판본 ABI를 임의 허용하지 않는다.
 // 비서버는 state를 초기화하지 않는 원문과 unused padding을 보존한다.
 void RawSunAviaryProcess::Initialize(SunAviaryProcessFields& fields) const {
     StoreTime(fields,0);fields.bytes[kDirty]=0xff;Put(fields.bytes,32,0x5019ec);Put(fields.bytes,kParent,0);Put(fields.bytes,kForm,0);
@@ -104,7 +104,7 @@ void RawSunAviaryProcess::Frame(SunAviaryProcessFields& fields) const {
 // 0045d6e0의 현재 inner 인자 선택과0045b070의 BYTE/WORD/DWORD 쓰기를 결합한다.
 std::uint16_t RawSunAviaryProcess::WriteProcess(SunAviaryProcessFields& fields,std::span<std::uint8_t> packet,bool includeParent,bool force,std::uint8_t protocol,std::uint8_t message) {
     const auto parent=(includeParent || force) ? fields.Parent().value : 0;const auto dirty=force ? 0xffU : fields.Dirty();const auto length=9U+(parent ? 4U : 0U)+((dirty&2U) ? 8U : 0U)+((dirty&4U) ? 4U : 0U);
-    if (packet.size()<length) throw std::out_of_range("썬 아비어리 패킷 버퍼 크기 오류");if (force) fields.bytes[kDirty]=0xff;
+    if (packet.size()<length) throw std::out_of_range("훨리베이스 패킷 버퍼 크기 오류");if (force) fields.bytes[kDirty]=0xff;
     packet[0]=protocol;packet[1]=message;Put(packet,4,fields.Form().value);std::size_t at=9;
     if (parent) { fields.bytes[kDirty]|=1;Put(packet,at,parent);at+=4; }
     if (fields.Dirty()&2U) { std::copy_n(fields.bytes.begin()+kTime,8,packet.begin()+static_cast<std::ptrdiff_t>(at));at+=8; }

@@ -171,7 +171,7 @@
   "cpp_test_result": "공유재빌드/실제Host1검사대기",
   "limits": [
     "초기types[89].group는기본NO_GROUP(-1)이었고원본조건group0/1 또는vortex를충족하지않아Regular를만들지않았다.",
-    "입력에합성group0을명시해기존4412원본격자의주변피해분기를선택한다. 실제레지던스의원래metadata가group0이라고주장하지않는다.",
+    "입력에합성group0을명시해기존4412원본격자의주변피해분기를선택한다. 실제거주 구역의원래metadata가group0이라고주장하지않는다.",
     "tuple검사의60은명시uint16,6699/0은DWORD로지정해C4244를해소한다. 기대packed값은변경하지않는다.",
     "기존4412 fixture/원본도구/생산hcpp/기존2검사/보고서및Root초기count역사는불변이며새원본0이다."
   ]

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""썬 아비어리 생성/후처리/프레임/상태 writer를 실제10.78 명령으로 격리 관찰한다."""
+"""훨리베이스 생성/후처리/프레임/상태 writer를 실제10.78 명령으로 격리 관찰한다."""
 import csv
 import json
 import socket

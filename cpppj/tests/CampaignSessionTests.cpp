@@ -193,7 +193,7 @@ TEST_CASE(CampaignSession_LocalGeysersUseCurrentInputs) {
     CHECK(core.pool.FreeCount()==free && local.Recent().count==3 && local.ResourcePool()==3000);core.ownerMode.fort=false;
     CHECK(core.bookkeeping.depth==0 && core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0);
 }
-// 실제CreateAi뒤가이저등록은미복원AI하위를명시거부하며임시성공이나빈AI로대체하지않는다.
+// 실제CreateAi뒤간헐천등록은미복원AI하위를명시거부하며임시성공이나빈AI로대체하지않는다.
 TEST_CASE(CampaignSession_LocalGeysersKeepNonnullAiBoundary) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
     auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());auto services=external.Services();

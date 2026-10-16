@@ -14,7 +14,7 @@ from unicorn.x86_const import (UC_X86_REG_EAX,UC_X86_REG_EBX,UC_X86_REG_ECX,UC_X
     UC_X86_REG_ESI,UC_X86_REG_EDI,UC_X86_REG_EBP,UC_X86_REG_ESP,UC_X86_REG_EFLAGS,
     UC_X86_REG_FPCW,UC_X86_REG_FPSW)
 
-# 새 Player 전체 9기록의 독립 주소이며 가이저/AI 힙을 만들지 않는다.
+# 새 Player 전체 9기록의 독립 주소이며 간헐천/AI 힙을 만들지 않는다.
 PLAYERS=0x11c00000
 # x87 반복은 독립 입력으로 다시 세지 않는다. 이 정수 몸체의 상태 불변도 확인한다.
 CONTROLS=(0x027f,0x037f)
@@ -22,7 +22,7 @@ CONTROLS=(0x027f,0x037f)
 PLAN={
     'originals':dict(binary='originals/Netstorm.exe',entry=0x416720,players=0x59534c,stride=0xb4,ai=0xb0,boundary=0x4153c0),
     'originalCD':dict(binary='originalCD/NETSTORM.EXE',entry=0x4d8670,players=0x50f834,stride=0xac,ai=0xa8,boundary=0x4d86a0)}
-# 이번 좁은 등록 관찰은 기존 가이저 채집/AssetPostPop 완료 자료와 분리한다.
+# 이번 좁은 등록 관찰은 기존 간헐천 채집/AssetPostPop 완료 자료와 분리한다.
 FIXTURE=ROOT/'cpppj/tests/fixtures/geyser-ai-registration-x86.tsv'
 REPORT=ROOT/'cpppj/geyser-ai-registration.json'
 
@@ -151,7 +151,7 @@ def verify():
     rows=[line.split('\t') for line in FIXTURE.read_text(encoding='utf-8').splitlines() if line and not line.startswith('#')]
     assert len(rows)==report['total']==604 and report['normal_total']==168 and report['unrestored_boundary_total']==436
     assert sum(row[2]=='normal' for row in rows)==168 and sum(row[2]=='boundary' for row in rows)==436
-    print('가이저 AI 등록 정상168/하위명시거부436 및 전체 출처 SHA 감사 통과')
+    print('간헐천 AI 등록 정상168/하위명시거부436 및 전체 출처 SHA 감사 통과')
 
 
 if __name__=='__main__':

@@ -38,7 +38,7 @@ struct FarmScene {
     bool patch; // 현재vtable/owner/HP/frame 폭이다.
     // 원본영역보다큰pool과필수runtime경계를유지한다.
     explicit FarmScene(OriginalEdition edition):pool(edition,32768,false),types(edition==OriginalEdition::Patch1078 ? 188U : 171U),frames(types.size(),RiftTypeFrames({})),
-        islands(pool,hash,records,modes,residences,revision,changed,{[](Sid,std::uint32_t) { throw std::runtime_error("군집예상밖레지던스owner"); },
+        islands(pool,hash,records,modes,residences,revision,changed,{[](Sid,std::uint32_t) { throw std::runtime_error("군집예상밖거주 구역owner"); },
             [](IslandRuntimeAssertion) { throw std::runtime_error("군집예상밖IslandRuntime진단"); }}),patch(edition==OriginalEdition::Patch1078) {}
     // native합성입력슬롯을구성한다. 게임allocator행동의대조로계수하지않는다.
     std::span<std::uint8_t> Raw(Sid sid) { return {const_cast<std::uint8_t*>(pool.Slot(sid).data()),pool.Layout().stride}; }

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""두 PE의 레지던스·가이저·신전 Handle/공통 피해 사건/실제 finder·Advance·난수를 격리 실행한다."""
+"""두 PE의 거주 구역·간헐천·신전 Handle/공통 피해 사건/실제 finder·Advance·난수를 격리 실행한다."""
 import argparse
 import collections
 import csv
@@ -76,7 +76,7 @@ def inputs():
         case(kind=2,event=3,count=count,word=word,boss=boss,suppress=suppress,dead=dead)
     for count,checking in itertools.product((0,1,4,5,0x7fffffff,0x80000000,0xffffffff),(0,1)):
         case(kind=2,event=4,count=count,checking=checking)
-    # Damageable 원본 분배는 가이저와 신전 default 경유 양쪽에서 실행한다.
+    # Damageable 원본 분배는 간헐천과 신전 default 경유 양쪽에서 실행한다.
     for kind,hit,genus,count in itertools.product((1,2,3),(0,1),(0,0x200000),(0,0xffff,0x80000005,0x12345678)):
         case(kind=kind,event=6699,hit=hit,genus=genus,count=count)
     for kind,extra,attached in itertools.product((1,2,3),(0,1,8,9),(0,1)):
@@ -107,7 +107,7 @@ class AssetRegularOracle(FinderOracle):
             path=ROOT/'extracted/refined/originals/functions.tsv';self.body_paths.append(path)
             with path.open(encoding='utf-8') as stream:
                 rows=[row for row in csv.DictReader(stream,delimiter='\t') if int(row['entry'],16)==self.p['theme']]
-            if len(rows)!=1:raise RuntimeError('최신 레지던스 테마 helper 범위 누락')
+            if len(rows)!=1:raise RuntimeError('최신 거주 구역 테마 helper 범위 누락')
             self.entries.add(self.p['theme'])
             for span in rows[0]['ranges'].split(';'):
                 low,high=(int(value,16) for value in span.split('-'))
@@ -220,7 +220,7 @@ class AssetRegularOracle(FinderOracle):
             self.put(base+0x124,codes)
             self.mu.mem_write(base+0x130,struct.pack('<16i',0,8,16,24,32,40,*([-1]*10)))
             self.mu.mem_write(base+0x170,struct.pack('<16i',8,8,8,8,8,8,*([0]*10)))
-        # 초기 프레임 밖 입력은 패치 가이저의 직접 쓰기/레지던스 event0에만 도달하며 native 코드 조회에 쓰지 않는다.
+        # 초기 프레임 밖 입력은 패치 간헐천의 직접 쓰기/거주 구역 event0에만 도달하며 native 코드 조회에 쓰지 않는다.
         self.put(p['random'],c['rng']);self.put(p['fort'],c['fort']);self.put(p['boss'],c['boss']);self.put(p['suppress'],c['suppress']);self.put(p['checking'],c['checking'])
         self.put(p['decoration'],91);self.put(p['maxscan'],c['maxscan']);self.put(p['generation'],3);self.put(p['animation'],17)
         self.put(p['damageevent'],6699);self.put(p['ghostevent'],6700);self.put(p['ghosttype'],30)

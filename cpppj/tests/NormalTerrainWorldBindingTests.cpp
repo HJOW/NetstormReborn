@@ -22,7 +22,7 @@ struct NormalWorldScene {
     ChunkMap chunks; // 성장·도장·군집의 현재 청크 지역/seed/패턴 레코드다.
     std::array<std::uint8_t,RawIslandRuntime::kBytes> islandBytes{}; // 실제 mutable3204BYTE 원본 목록이다.
     FortFinishOwnerState modes; // 원래ownerBYTE와 현재ownerDWORD를 읽는 기존 모드다.
-    SquidPostPopList residences; // owner setter가 현재 읽을 실제 레지던스 목록이다.
+    SquidPostPopList residences; // owner setter가 현재 읽을 실제 거주 구역 목록이다.
     std::uint32_t revision{},changed{},diagnostics{}; // 지역 revision/변경 전역과 진단 관찰 수다.
     std::unique_ptr<RawIslandRuntime> islands; // 같은 Pool/hash와 위 원본 바이트를 빌린다.
     std::vector<PriestPlainCanonType> plainFrames; // 기존 pipeline의 프레임 인수 형식으로 같은 불변 입력을 보관한다.

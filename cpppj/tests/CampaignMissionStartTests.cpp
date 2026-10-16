@@ -66,7 +66,7 @@ TEST_CASE(CampaignMissionStart_ProtectedEightMissions) {
         auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());StartExternal external;
         RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),external.Services());session.Load();
         std::fprintf(stderr,"실제 미션 Load 완료: %s\n",input.name.data()); // Start 이전 저장객체 Pop 실패와 시작 효과 실패를 구별한다.
-        for (const auto& object:session.World().Objects()) if (object.object.type==72) { // 저장 썬 아비어리는 같은 실제 타입32 Form과 Kernel 객체를 소유해야 한다.
+        for (const auto& object:session.World().Objects()) if (object.object.type==72) { // 저장 훨리베이스는 같은 실제 타입32 Form과 Kernel 객체를 소유해야 한다.
             const auto core=session.Core();const auto form=FindAttachedProcess(core.pool,object.sid,32);CHECK(form.value!=0);auto* process=form.value ? dynamic_cast<SunAviaryProcess*>(core.processes.FromForm(form)) : nullptr;
             CHECK(process && process->Parent()==object.sid && process->Fields().Form()==form && process->Fields().Stage()==1 && process->Fields().Dirty()==0);
         }
@@ -224,7 +224,7 @@ TEST_CASE(CampaignKernelFrames_Tutorial5) { RunProtectedKernelFrames("Tutorial5"
 TEST_CASE(CampaignKernelFrames_Tutorial6) { RunProtectedKernelFrames("Tutorial6",false); }
 // 캠페인1-1의 같은 AI 생성 뒤 실제 프로세스다.
 TEST_CASE(CampaignKernelFrames_TheWarBegins) { RunProtectedKernelFrames("TheWarBegins",false); }
-// 캠페인1-2의 실제 휘리베이스/총 등 현재 배치다.
+// 캠페인1-2의 실제 훨리베이스/총 등 현재 배치다.
 TEST_CASE(CampaignKernelFrames_MasterOfWhirligigs) { RunProtectedKernelFrames("MasterOfWhirligigs",false); }
 // 데모1의 로컬AI/맨 오 워 풀 등 실제 현재 프레임이다.
 TEST_CASE(CampaignKernelFrames_TheStormRages) { RunProtectedKernelFrames("DemoStormRages",true); }

@@ -1,4 +1,4 @@
-// 실제 보호 캠페인의 같은 Kernel에서 썬 아처 각상태와 발사 생성 경계를 검사한다.
+// 실제 보호 캠페인의 같은 Kernel에서 썬 디스크 발사기 각상태와 발사 생성 경계를 검사한다.
 #include "CampaignInstallSupport.h"
 #include "RawSceneSupport.h"
 using namespace netstorm::test::rawscene;

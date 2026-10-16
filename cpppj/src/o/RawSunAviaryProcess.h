@@ -1,4 +1,4 @@
-// PATCH 썬 아비어리의 실제 최초 후처리/0x30 생성자/프레임/상태 패킷을 같은 Kernel에 연결한다.
+// PATCH 훨리베이스의 실제 최초 후처리/0x30 생성자/프레임/상태 패킷을 같은 Kernel에 연결한다.
 #pragma once
 #include "o/SquidProcess.h"
 #include <array>

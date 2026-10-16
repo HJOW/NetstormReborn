@@ -1,4 +1,4 @@
-// 다이스/알터의 실제 최초 Pop과 플레이어 SID 등록·삭제 후처리 및 알터 파생 preDestroy다.
+// 다이스/제단의 실제 최초 Pop과 플레이어 SID 등록·삭제 후처리 및 제단 파생 preDestroy다.
 #pragma once
 #include "o/RawAltarSacrifice.h"
 #include "o/RawCarrierPostPop.h"
@@ -8,7 +8,7 @@ namespace netstorm::o {
 struct DaisPlayerSlots {
     Sid first{},firstMirror{}; // patch+8c/+90, CD+84/+88: flags1 등록/삭제다.
     Sid second{},secondMirror{}; // patch+94/+98, CD+8c/+90: flags2 등록/삭제다.
-    std::uint32_t homeIsland{}; // patch+78/CD+70: 새알터가현재홈섬에있는지비교하는번호다.
+    std::uint32_t homeIsland{}; // patch+78/CD+70: 새제단이현재홈섬에있는지비교하는번호다.
 };
 // 로딩/게임초기시각/원래플레이어 저장소를 실제 공통모듈과 공유한다.
 struct DaisLifecycleState {
@@ -21,9 +21,9 @@ struct DaisLifecycleHooks {
     std::function<void(Sid,std::int32_t,std::uint32_t)> setFrame; // 실제 SquidFrame.Set이다.
     std::function<void(Sid,std::uint32_t)> unpop,repop; // 로딩중stage초기화의가상+48/+4c flags0이다.
     std::function<Sid(std::uint32_t,std::uint32_t)> create; // 같은Factory의현재altarType/flags0이다.
-    std::function<void(Sid,std::uint32_t)> setOwner; // 새알터의현재다이스owner 가상지정이다.
-    std::function<void(Sid,float,float,std::uint32_t)> pop; // 새알터의실제전체Pop이다. 자체후처리21예약도포함한다.
-    std::function<bool()> reserveRegular; // 알터의독립로컬new0x28 성공여부다.
+    std::function<void(Sid,std::uint32_t)> setOwner; // 새제단의현재다이스owner 가상지정이다.
+    std::function<void(Sid,float,float,std::uint32_t)> pop; // 새제단의실제전체Pop이다. 자체후처리21예약도포함한다.
+    std::function<bool()> reserveRegular; // 제단의독립로컬new0x28 성공여부다.
     std::function<void(Sid,std::uint32_t,float)> addRegular; // 같은Host의로컬21 Regular다.
     std::function<Sid(float,float)> surface; // 같은현재지면의실제표면조회다.
     std::function<bool(Sid)> hasIsland; // 원본004acdf0/CD004acad0의현재섬번호존재조건이다.
@@ -61,7 +61,7 @@ private:
     const RawCarrierPostPop& postPop_; // 마지막전체Damageable→공통후처리다.
     const RawDamageablePreDestroy& preDestroy_; // 마지막전체Damageable→공통전처리다.
     DaisRegularState& daisState_; // 같은현재boss·suppress·player개수전역이다.
-    AltarSacrificeState& altarState_; // 같은알터21현재저항지연이다.
+    AltarSacrificeState& altarState_; // 같은제단21현재저항지연이다.
     DaisLifecycleState& state_; // 현재SID쌍/초기시각/로딩전역이다.
     DaisLifecycleHooks hooks_; // 실제동일풀의생성/가상공간/UI/삭제효과다.
 };

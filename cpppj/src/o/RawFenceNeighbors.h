@@ -1,4 +1,4 @@
-// PATCH 썬 펜스의 방향별 최근접 검색과 실제 연결 개수를 같은 공간 해시에 연결한다.
+// PATCH 썬 바리케이드의 방향별 최근접 검색과 실제 연결 개수를 같은 공간 해시에 연결한다.
 #pragma once
 #include "o/RawSquidFinder.h"
 #include <array>

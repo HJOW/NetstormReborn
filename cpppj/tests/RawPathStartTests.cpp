@@ -41,7 +41,7 @@ std::string StartSharedEvents(const std::string& text) {
 struct StartScene {
     OriginalEdition edition; // 두 원본 판본의 실제 필드 폭을 고른다.
     SidPool pool; // 서버와 클라이언트 번호를 실제 원본 free list로 배분하는 유일한 풀이다.
-    SquidHash hash; // 초기 표면과 사제 가이저 조회가 공유하는 네 단계 해시다.
+    SquidHash hash; // 초기 표면과 사제 간헐천 조회가 공유하는 네 단계 해시다.
     std::vector<RiftTypeRecord> types; // 현재 genus/발자국을 매 조회에 공급하는 실제 타입 레코드다.
     std::vector<RiftTypeFrames> frames; // AA 표면 프레임을 실제 접합 계산에 공급한다.
     std::vector<SquidDisplayShape> shapes; // 실행하지 않는 걷기 애니메이션의 명시 입력 저장소다.
@@ -50,7 +50,7 @@ struct StartScene {
     SquidProcessState clock; // 같은 Prepare/Host가 읽는 시계와 boss 입력이다.
     RawPathProcessState pathState; // 실제 Path 프로세스의 공유 상태다.
     std::vector<std::string> effects; // PE와 공유하는 외부 효과 요청의 관찰 기록이다.
-    std::uint32_t dude{70},teleport{134},mana{105},priest{158},geyser{122}; // 원본 mutable 부모 및 가이저 타입 번호다.
+    std::uint32_t dude{70},teleport{134},mana{105},priest{158},geyser{122}; // 원본 mutable 부모 및 간헐천 타입 번호다.
     bool snap{},retry{}; // 목적지 스냅과 실패 재귀 guard를 참조로 공유한다.
     // 원본과 같은 client5..53 번호를 장면 입력으로 확보하며 결과를 계산하지 않는다.
     explicit StartScene(OriginalEdition chosen):edition(chosen),pool(chosen,32768,true),types(chosen==OriginalEdition::Patch1078 ? 188 : 171),frames(types.size(),RiftTypeFrames({})),shapes(types.size()),pathState{clock} {

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""실제Dais/Altar 최초Pop·알터삭제전처리·Player SID쌍정리를원본PE의제한x86에서관찰한다."""
+"""실제Dais/Altar 최초Pop·제단삭제전처리·Player SID쌍정리를원본PE의제한x86에서관찰한다."""
 import argparse,collections,csv,itertools,json,struct
 from pathlib import Path
 from decomp_altarsacrifice_oracle import AltarOracle,ROOT,HEAP,VTABLE,STACK,STOP,FPU_CONTROLS,PLAYER_STORAGE,bits,sha
@@ -32,7 +32,7 @@ def inputs():
     return list({json.dumps(case,sort_keys=True):case for case in result}.values())
 
 class LifecycleOracle(AltarOracle):
-    """기존알터입력준비/실제helper를재사용하고새5/5 몸체를각독립진입에서실행한다."""
+    """기존제단입력준비/실제helper를재사용하고새5/5 몸체를각독립진입에서실행한다."""
     def __init__(self,edition):
         """현재정밀readOnly범위와필수외부ABI만추가한다."""
         super().__init__(edition);self.l=SPEC[edition];self.lifecycle_returns=0;self.mu.mem_map(SURFACE_STORAGE,0x20000)
@@ -100,14 +100,14 @@ def generate(smoke):
             except Exception as error:raise RuntimeError(f'{edition} #{index} {case}: {error}') from error
             rows.append([edition,json.dumps(case,sort_keys=True,separators=(',',':')),*result])
         editions[edition]=dict(returns=oracle.lifecycle_returns,entries=dict(oracle.hits),boundaries=dict(oracle.stub_calls),asserts=oracle.assertions);files.update(oracle.paths);files.add(ROOT/('originals/Netstorm.exe' if edition=='originals' else 'originalCD/NETSTORM.EXE'))
-    FIXTURE.write_text('# edition inputJSON effects raw5,7,8,9 playerFlag,first,mirror,second,mirror\n'+'\n'.join('\t'.join(row) for row in rows)+'\n',encoding='utf-8',newline='\n');REPORT.write_text(json.dumps(dict(host='HJOW-Athlon',decompile_date='2026-10-14',total=len(rows),smoke=smoke,game_runs=0,editions=editions,files={path.relative_to(ROOT).as_posix():sha(path) for path in sorted(files)},scope='Dais/Altar5/5 상위수명. 가상공간/Factory/소리/UI/지면조회 및 마지막전체Damageable는명시경계. 전체파괴/의식완료주장없음.'),ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n');print('다이스/알터 새 수명관찰:',len(rows))
+    FIXTURE.write_text('# edition inputJSON effects raw5,7,8,9 playerFlag,first,mirror,second,mirror\n'+'\n'.join('\t'.join(row) for row in rows)+'\n',encoding='utf-8',newline='\n');REPORT.write_text(json.dumps(dict(host='HJOW-Athlon',decompile_date='2026-10-14',total=len(rows),smoke=smoke,game_runs=0,editions=editions,files={path.relative_to(ROOT).as_posix():sha(path) for path in sorted(files)},scope='Dais/Altar5/5 상위수명. 가상공간/Factory/소리/UI/지면조회 및 마지막전체Damageable는명시경계. 전체파괴/의식완료주장없음.'),ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n');print('다이스/제단 새 수명관찰:',len(rows))
 
 def verify():
     """현재whole-source SHA와고유입력/두정밀도반환을전수감사한다."""
     data=json.loads(REPORT.read_text(encoding='utf-8'));rows=[row.split('\t') for row in FIXTURE.read_text(encoding='utf-8').splitlines() if row and not row.startswith('#')];assert len(rows)==data['total'] and not data['smoke'] and data['game_runs']==0;assert len({(row[0],row[1]) for row in rows})==len(rows)
     for name,value in data['files'].items():assert sha(ROOT/name)==value,name
     for edition,item in data['editions'].items():assert item['returns']==2*sum(row[0]==edition for row in rows) and item['asserts']==0
-    print('현재다이스/알터수명SHA·정상반환감사:',len(rows))
+    print('현재다이스/제단수명SHA·정상반환감사:',len(rows))
 
 # 명시CLI요청에서만새독립관찰을실행한다.
 if __name__=='__main__':

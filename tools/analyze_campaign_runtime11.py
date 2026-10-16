@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""실제타입/좁은의식·알타후속/섬배치·Money·피해반응의단위11 최종근거를기록한다."""
+"""실제타입/좁은의식·제단후속/섬배치·Money·피해반응의단위11 최종근거를기록한다."""
 import argparse
 import json
 import re
