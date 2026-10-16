@@ -22,7 +22,11 @@ set_source_files_properties(ThunderMissileTests.cpp PROPERTIES COMPILE_DEFINITIO
 # 공유 빔의 실제64BYTE/중간 상태/120입자 원문을 새 경로 검사에서만 읽는다.
 set_source_files_properties(LightningPathTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_LIGHTNING_PATH_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/lightning-path-x86.tsv\"")
+# 공유 빔 Frame/Draw의 독립 전체 상태/출력 요청을 새 검사에서만 읽는다.
+set_source_files_properties(LightningFrameTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_LIGHTNING_FRAME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/lightning-frame-x86.tsv\"")
 add_executable(netstorm_tests
+    LightningFrameTests.cpp
     LightningPathTests.cpp
     ThunderMissileTests.cpp
     ParticleRenderingTests.cpp

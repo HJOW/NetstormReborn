@@ -1,0 +1,65 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "uniqueInputs": 250,
+  "observationsPerPrecision": 254,
+  "normalReturns": 1034,
+  "precisionDifferentInputs": [],
+  "nativeCalls": {
+    "00471b20": 86,
+    "004adea0": 172,
+    "0049a840": 172,
+    "0049a900": 172,
+    "00472310": 224,
+    "0041bfb0": 224,
+    "00418400": 24,
+    "004720f0": 24,
+    "00487b20": 996,
+    "004724f0": 207,
+    "00418470": 287,
+    "00472180": 287,
+    "00455930": 18564,
+    "004239f0": 8658,
+    "00487ba0": 240,
+    "004e49c0": 17922,
+    "boundary-00499310": 480,
+    "00471fc0": 948,
+    "004558c0": 816,
+    "boundary-004dade0": 5364,
+    "00471f60": 24,
+    "boundary-0041bf10": 47,
+    "boundary-004a9d70": 12
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "tools/decomp_lightning_path.py": "9e19f521ec61aa2a1f2dc0514cedcb3d93b3f32a91ffd1de917108f3209d710a",
+    "tools/decomp_lightning_frame.py": "b0c73ed434cde3a7f0f47cd03d0c613cde6b47251a1de9773334adfeee7c7a68",
+    "cpppj/tests/fixtures/lightning-frame-x86.tsv": "5a2b4663cf78ed261d44aac90071b5c0afce8a241b8d3466ecf3a2693b301849"
+  },
+  "limitations": [
+    "실제 Frame/Draw·경로·시간·난수·영역·ftol 몸체를 실행했다.",
+    "dirty 큐 소비499310·선 래스터4dade0·파일명 음향4a9d70·월드 삭제41bf10은 요청 관찰 경계다. 실제 픽셀/재생/삭제 구현 증거와 구별한다.",
+    "독립 빔 필드와 경로 생성자로 준비한 입력이다. 빔 생성/Host/등록/공유 팔레트/캠페인 발사는 다음 연결 대상이다."
+  ],
+  "product_validation": {
+    "baseline_commit": "7a5d297",
+    "native_cpp_unique_inputs": 250,
+    "focused_tests": 2,
+    "focused_failed": 0,
+    "build_exit_code": 0,
+    "build_warnings": 0,
+    "build_errors": 0,
+    "ctest": {
+      "total": 1438,
+      "passed": 1437,
+      "failed": 1,
+      "total_seconds": 214.86,
+      "exit_code": 8,
+      "log": "extracted/goal-lightning-frame-20261017-ctest.log"
+    },
+    "beam_runtime_connected": false,
+    "user_natural_completion": false
+  }
+}

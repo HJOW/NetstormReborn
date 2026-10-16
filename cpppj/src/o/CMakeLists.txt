@@ -284,3 +284,5 @@ target_sources(netstorm PRIVATE FieryTailVisualSystem.cpp FieryTailVisualSystem.
 
 # 반더 타워/맨 오 워 공유 빔의 snapshot 경로와 재귀 입자 생성이다.
 target_sources(netstorm PRIVATE RawLightningPath.cpp RawLightningPath.h)
+# 같은 공유 빔의 실제 시간 조각/전체 용량 수명과 굵기 선을 복원한다.
+target_sources(netstorm PRIVATE RawLightningFrame.cpp RawLightningFrame.h)
