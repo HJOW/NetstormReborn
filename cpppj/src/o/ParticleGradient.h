@@ -30,7 +30,7 @@ ParticleGradient BuildParticleGradient(std::span<const std::uint32_t,kParticlePa
 // PATCH00487d20: 최대3개의 연속 색 띠에서 요청 색 수만큼 앞 항목 번호를 차례로 합친다.
 // 실제 선택 수와 요청 색 수가 다를 때도 원본처럼 요청 수를 사용한다. 인접 할당 메모리는 포함하지 않는다.
 std::vector<std::uint32_t> MergeParticleGradients(std::span<const ParticleGradient> gradients);
-// PATCH00457ea0: 실제 PE의 RGB double 상수와8+3색으로 Fiery Tail의11색 표를 만든다.
+// PATCH00457ea0: 실제 PE의 RGB double 상수로 어두운 빨강→주황8색과 주황→밝은색3색을 만든다.
 // 초기 입자가 읽을 수 있는 배열 뒤의 인접 할당 DWORD는 이 반환값에 임의로 추가하지 않는다.
 std::vector<std::uint32_t> BuildFieryTailPalette(std::span<const std::uint32_t,kParticlePaletteColors> palette);
 }

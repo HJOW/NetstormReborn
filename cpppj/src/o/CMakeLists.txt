@@ -272,3 +272,6 @@ target_sources(netstorm PRIVATE ParticleGradient.cpp ParticleGradient.h)
 
 # 실제 Fiery Tail의 시간 조각·난수·입자와 선 출력 요청 몸체다.
 target_sources(netstorm PRIVATE RawFieryTailFrame.cpp RawFieryTailFrame.h)
+
+# 실제 Fiery Tail 생성·공통 표시 등록·120입자 확보와 반납 순서다.
+target_sources(netstorm PRIVATE RawFieryTailLifetime.cpp RawFieryTailLifetime.h)

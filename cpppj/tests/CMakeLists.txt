@@ -3,11 +3,15 @@
 # 테스트 파일을 만들면 아래 목록에 더한다. 파일 안의 TEST_CASE 는 자동으로 등록된다.
 # 실제 색 띠·CRT 정렬·팔레트 병합의 독립 원본 입력을 새 검사에서만 읽는다.
 set_source_files_properties(ParticleGradientTests.cpp PROPERTIES COMPILE_DEFINITIONS
-    "NETSTORM_PARTICLE_GRADIENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/particle-gradient-x86.tsv\"")
+    "NETSTORM_PARTICLE_GRADIENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/particle-gradient-x86.tsv\";NETSTORM_FIERYTAIL_LIFETIME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fierytail-lifetime-x86.tsv\"")
 # 실제 Fiery Tail Frame/Draw의 독립 원본 비트는 이 검사에서만 읽는다.
 set_source_files_properties(FieryTailFrameTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_FIERYTAIL_FRAME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fierytail-frame-x86.tsv\"")
+# 실제 생성·등록·120입자 초기화·공유 색/반납 순서의 원본 관찰이다.
+set_source_files_properties(FieryTailLifetimeTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FIERYTAIL_LIFETIME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fierytail-lifetime-x86.tsv\"")
 add_executable(netstorm_tests
+    FieryTailLifetimeTests.cpp
     FieryTailFrameTests.cpp
     ParticleGradientTests.cpp
     FenceRegularTests.cpp

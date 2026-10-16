@@ -116,18 +116,18 @@ TEST_CASE(ParticleGradient_Native027f) {
     CHECK(compared==kNativeGradientCases);
     CHECK(extended==kNativeGradientCases);
 }
-// fixture가 전달한 RGB를 쓰지 않는 실제 Fiery Tail 전용 생성 경로를 원본3팔레트와 비교한다.
+// 실제 생성자 관찰을 사용해 두 RGB 끝점의 순서와8+3 구성을3팔레트에서 검증한다.
 TEST_CASE(ParticleGradient_FieryTailPeConstants) {
-    std::ifstream input(NETSTORM_PARTICLE_GRADIENT_FIXTURE);
+    std::ifstream input(NETSTORM_FIERYTAIL_LIFETIME_FIXTURE);
     if (!input) throw std::runtime_error("Fiery Tail 색 표 원본 fixture 없음");
     std::string line;std::size_t count=0;
-    // 실제 팔레트의 Fiery Tail 입력만 골라 생성자 상수/8+3 구성을 별도로 검증한다.
+    // 단위99 생성자의 cold 기본 입력만 고른다. 명시 RGB helper 입력을 생성자의 증거로 쓰지 않는다.
     while (std::getline(input,line)) {
         if (!line.empty() && line.back()=='\r') line.pop_back();
         if (line.empty() || line.front()=='#') continue;
-        const auto row=Split(line,'\t');if (row.size()!=16) throw std::runtime_error("Fiery Tail 색 표 원본 열 수 오류");
-        if (std::stoul(row[1])!=0x027f || !std::string_view(row[0]).ends_with(".COL-3")) continue;
-        const auto actual=BuildFieryTailPalette(Palette(row[2]));const auto expected=Hex(row[13]);
+        const auto row=Split(line,'\t');if (row.size()!=12) throw std::runtime_error("Fiery Tail 생성자 색 표 원본 열 수 오류");
+        if (std::stoul(row[1])!=0x027f || row[2].find(".COL,0,0,-1,50,127,0,1")==std::string::npos) continue;
+        const auto actual=BuildFieryTailPalette(Palette(row[3]));const auto expected=Hex(row[6]);
         CHECK(actual.size()==11 && expected.size()==44);
         // 생성된11개 색 번호를 원본 병합 결과와 직접 비교한다.
         for (std::size_t index=0;index<actual.size();++index) CHECK(actual[index]==Number(expected,index*4,4));

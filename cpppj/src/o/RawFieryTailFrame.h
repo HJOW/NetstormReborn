@@ -19,6 +19,7 @@ struct FieryTailFrameFields {
     double lastTime{},elapsed{}; // 원본 +30/+38의 마지막 시각과 누적 delta다.
     float delta{},scaledDelta{}; // 원본 +40/+44의10배 시간 간격과 배율 적용 값이다.
     bool first{}; // 원본 +48: 최초10입자 생성을 완료했는지 나타낸다.
+    std::uint32_t palette{}; // +50: 월드가 소유하는 공유 색 표 토큰이며 효과 소멸 때 반납하지 않는다.
     std::int32_t maximumLife{4}; // +54: 생성 입자의 수명과 색 표 분모다.
     float previousX{},previousY{}; // +58/+5c: 직전 부모의 픽셀 좌표다.
     std::int32_t offset{}; // +60: 후속 방출 좌표와 선의 끝에 더하는 정수다.

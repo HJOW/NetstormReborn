@@ -181,9 +181,9 @@ std::vector<std::uint32_t> MergeParticleGradients(std::span<const ParticleGradie
     }
     return result;
 }
-// 실제 생성자가 요청하는 두 색 띠와 병합의 순서를 보존한다.
+// 실제 생성자는 어두운 빨강→주황8색, 주황→밝은색3색을 순서대로 요청한다.
 std::vector<std::uint32_t> BuildFieryTailPalette(std::span<const std::uint32_t,kParticlePaletteColors> palette) {
-    const std::array<ParticleGradient,2> gradients{BuildParticleGradient(palette,kFieryStart,kFieryDark,8),
+    const std::array<ParticleGradient,2> gradients{BuildParticleGradient(palette,kFieryDark,kFieryStart,8),
         BuildParticleGradient(palette,kFieryStart,kFieryLight,3)};
     return MergeParticleGradients(gradients);
 }

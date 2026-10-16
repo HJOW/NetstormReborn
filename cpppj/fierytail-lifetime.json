@@ -1,0 +1,81 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "uniqueInputs": 31,
+  "returns": {
+    "constructor": 62,
+    "destructor": 62
+  },
+  "precisionDifferentInputs": [],
+  "nativeCalls": {
+    "0040f1b0": 62,
+    "0041bd00": 62,
+    "00423aa0": 62,
+    "00439de0": 62,
+    "0043a0c0": 118840,
+    "0043a300": 26792,
+    "0043a3d0": 26192,
+    "0043a4a0": 48,
+    "0043a660": 12288,
+    "0043a8e0": 48,
+    "0043abe0": 48,
+    "0043ad20": 48,
+    "0043fa50": 48,
+    "004437f0": 62,
+    "0044fd70": 62,
+    "00457ea0": 62,
+    "00487880": 62,
+    "00487ab0": 62,
+    "00487cb0": 24,
+    "00487d20": 24,
+    "00487fd0": 62,
+    "00488100": 62,
+    "00488190": 62,
+    "004882c0": 62,
+    "004e49c0": 96,
+    "004e4a40": 62,
+    "004e5fa0": 2288,
+    "004e6010": 144,
+    "attach-boundary": 50,
+    "free-boundary": 128,
+    "new-boundary": 148
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "tools/decomp_fierytail_lifetime.py": "4f9998ca709ff75e124e3c736e6d2a9a3139bfd24a9856477b13683d34f5f51a",
+    "cpppj/tests/fixtures/fierytail-lifetime-x86.tsv": "0bdf2958f9e393cb06c926544ca4364b7cae2611e3899fab74186b93fb40570e",
+    "originals/d/GIFCLOUD.COL": "785a2cda6ac1d3e295d375815b6d9650720683099db7c249382d598b5da00532",
+    "originals/d/BULF.COL": "7c8f515015eae9db694bcc12885010de615029f2bdca0a3e92d6ff96f44136f4",
+    "originals/d/SUNCANNON.COL": "b6a1b913c91adb420e977499d87401d416ffc2ce6d5a61b1346195959b44ab69"
+  },
+  "limitations": [
+    "생성자/목록 등록/초기화/색 띠/CRT 정렬/병합/삭제는 실제 PE 몸체다.",
+    "new/free의 성공·주소와 BaseProcess 부착은 명시 외부 경계다. 실제 Host/Kernel이나 게임 heap을 실행하지 않았다.",
+    "실제8+3색44바이트 뒤 메모리는 이 생성/삭제 관찰로 확인하지 않았다. 임의12번째 색을 공급하지 않는다.",
+    "기본53비트027f를 C++에서 대조한다. 비교037f 차이는 별도로 보존한다.",
+    "실제 게임/GUI/Session 진행·사용자 자연 완주의 증거가 아니다."
+  ],
+  "productValidation": {
+    "configuration": "Release",
+    "buildExitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "focusedTests": 4,
+    "focusedFailures": 0,
+    "nativeDefaultRowsCompared": 31,
+    "constructorPaletteCasesReused": 3,
+    "correction": "실제 생성자는 어두운 빨강→주황8색을 요청한다. 기존 반대 방향 제품 호출을 고쳤으며 이전 일반 helper fixture와 기대값은 보존했다.",
+    "ctest": {
+      "total": 1419,
+      "passed": 1417,
+      "failed": 2,
+      "totalSeconds": 198.2,
+      "toolExitCode": 1,
+      "ctestExitCode": null,
+      "exitCodeNote": "PowerShell stderr 처리 뒤 외부 도구 종료1. CTest 자체 종료 코드는 별도 보존하지 못했으며 전체 종료 로그로 내부 검사 수와 기존2실패를 확인했다.",
+      "log": "extracted/goal-fierytail-lifetime-20261016-ctest.log"
+    }
+  }
+}

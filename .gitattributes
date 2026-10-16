@@ -865,3 +865,9 @@ tools/decomp_ai_damage.py text eol=lf
 cpppj/ai-damage.json text eol=lf
 cpppj/tests/AiDamageTests.cpp text eol=lf
 cpppj/tests/fixtures/ai-damage-x86.tsv text eol=lf
+# Fiery Tail 수명 검증의 원본 입력/도구·제품 코드를 UTF-8/LF 바이트로 유지한다.
+tools/decomp_fierytail_lifetime.py text eol=lf
+cpppj/fierytail-lifetime.json text eol=lf
+cpppj/tests/fixtures/fierytail-lifetime-x86.tsv text eol=lf
+cpppj/src/o/RawFieryTailLifetime.* text eol=lf
+cpppj/tests/FieryTailLifetimeTests.cpp text eol=lf
